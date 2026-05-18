@@ -1,0 +1,28 @@
+{
+  "name": "pokerth-web-client",
+  "version": "0.1.0-alpha",
+  "description": "Experimental modern web client for PokerTH using a WebSocket-to-TCP proxy.",
+  "main": "proxy.js",
+  "private": false,
+  "scripts": {
+    "start": "node proxy.js",
+    "start:lan": "node proxy.js --notls",
+    "start:insecure": "node proxy.js --insecure"
+  },
+  "keywords": [
+    "pokerth",
+    "poker",
+    "texas-holdem",
+    "websocket",
+    "web-client",
+    "protobuf"
+  ],
+  "author": "Arnaud Obscur",
+  "license": "AGPL-3.0-or-later",
+  "dependencies": {
+    "ws": "^8.18.0"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
