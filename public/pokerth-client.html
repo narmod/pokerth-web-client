@@ -584,6 +584,66 @@ body {
   .game-area { padding-bottom: 90px !important; }
 }
 
+
+/* ══ HANDS HELP OVERLAY ══ */
+#hands-overlay {
+  position: fixed; inset: 0; z-index: 200;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(0,0,0,0.82); padding: 12px;
+  animation: fadeIn 0.2s ease;
+}
+.hands-card {
+  background: linear-gradient(160deg,#071206 0%,#0e2010 60%,#071206 100%);
+  border: 1px solid var(--gold-dim); border-top: 3px solid var(--gold);
+  border-radius: 10px; padding: 16px 18px;
+  max-width: min(460px, 96vw); max-height: 90dvh;
+  overflow-y: auto; width: 100%;
+  box-shadow: 0 0 60px rgba(200,168,74,0.18), 0 20px 50px rgba(0,0,0,0.8);
+}
+.hands-title {
+  font-family: 'Cinzel', serif; font-size: 0.75rem;
+  letter-spacing: 0.25em; text-transform: uppercase;
+  color: var(--gold); text-align: center;
+  padding-bottom: 12px; border-bottom: 1px solid var(--border);
+  margin-bottom: 10px;
+}
+.hand-row {
+  display: flex; align-items: center; gap: 10px;
+  padding: 7px 6px; border-bottom: 1px solid rgba(200,168,74,0.07);
+  border-radius: 4px; transition: background 0.12s;
+}
+.hand-row:hover { background: rgba(255,255,255,0.03); }
+.hand-rank {
+  width: 20px; text-align: center; flex-shrink: 0;
+  font-size: 0.65rem; color: var(--gold-dim); font-family: 'Cinzel', serif;
+}
+.hand-cards { display: flex; gap: 2px; flex-shrink: 0; }
+.hc {
+  width: 22px; height: 32px; border-radius: 3px;
+  background: #f8f5ee; border: 1px solid #ccc;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  font-size: 0.55rem; font-weight: 700; line-height: 1.1;
+  color: #111; box-shadow: 0 1px 3px rgba(0,0,0,0.4);
+}
+.hc.r { color: #c0392b; }
+.hc.hi { background: linear-gradient(135deg,#fff9e6,#f5e6b0); border-color: var(--gold); box-shadow: 0 0 5px rgba(200,168,74,0.5); }
+.hand-info { flex: 1; min-width: 0; }
+.hand-name {
+  font-size: 0.78rem; color: var(--text-hi); font-weight: 600;
+  font-family: 'Cinzel', serif; letter-spacing: 0.04em;
+}
+.hand-desc { font-size: 0.64rem; color: var(--text); margin-top: 1px; }
+.hands-close {
+  display: block; width: 100%; margin-top: 14px;
+  background: rgba(200,168,74,0.12); border: 1px solid var(--gold-dim);
+  color: var(--gold); padding: 9px; border-radius: 4px;
+  font-family: 'Cinzel', serif; font-size: 0.75rem;
+  letter-spacing: 0.1em; cursor: pointer; text-align: center;
+  transition: background 0.15s;
+}
+.hands-close:hover { background: rgba(200,168,74,0.22); }
+
 /* Loading dots */
 @keyframes blink {
   0%,80%,100% { opacity: 0.2; }
@@ -3241,6 +3301,13 @@ function toggleLobbyChat() {
   }
 }
 
+
+function toggleHandsHelp() {
+  var ov = document.getElementById('hands-overlay');
+  if (!ov) return;
+  ov.style.display = ov.style.display === 'none' ? 'flex' : 'none';
+}
+
 function toggleGameChat() {
   var panel = document.getElementById('g-chat-panel');
   var btn   = document.getElementById('chat-toggle-btn');
@@ -3294,6 +3361,7 @@ function toggleLog() {
     <button class="btn-sm" id="chat-toggle-btn" onclick="toggleGameChat()">💬</button>
     <button class="btn-sm" id="admin-start-btn" onclick="App.startWithBots()" style="display:none;color:var(--green);border-color:rgba(39,174,96,0.4)" title="Start with bots">▶ Bots</button>
     <button class="btn-sm" id="admin-close-btn" onclick="App.closeTable()" style="display:none;color:#e67e22;border-color:rgba(230,126,34,0.4)" title="Close table">🔒 Close</button>
+    <button class="btn-sm" onclick="toggleHandsHelp()" title="Combinaisons du poker" style="font-weight:700">?</button>
     <button class="btn-sm" onclick="App.leaveGame()" style="color:var(--red);border-color:rgba(192,57,43,0.4)">✕</button>
   </div>
   <div id="pot-strip">
@@ -3312,6 +3380,124 @@ function toggleLog() {
     <div class="chat-input" style="border-top:1px solid var(--border);flex-shrink:0">
       <input id="g-chat-in" placeholder="Message…" onkeydown="if(event.key==='Enter')App.sendGameChat()">
       <button class="chat-send" onclick="App.sendGameChat()">▶</button>
+    </div>
+  </div>
+  <!-- ══ HANDS HELP OVERLAY ══ -->
+  <div id="hands-overlay" style="display:none" onclick="if(event.target===this)toggleHandsHelp()">
+    <div class="hands-card">
+      <div class="hands-title">♠ Combinaisons du Poker ♥</div>
+
+      <div class="hand-row">
+        <div class="hand-rank">1</div>
+        <div class="hand-cards">
+          <div class="hc hi">A<br>♠</div><div class="hc hi">K<br>♠</div><div class="hc hi">Q<br>♠</div><div class="hc hi">J<br>♠</div><div class="hc hi">10<br>♠</div>
+        </div>
+        <div class="hand-info">
+          <div class="hand-name">Quinte Flush Royale</div>
+          <div class="hand-desc">A K Q J 10 de la même couleur — la main absolue</div>
+        </div>
+      </div>
+
+      <div class="hand-row">
+        <div class="hand-rank">2</div>
+        <div class="hand-cards">
+          <div class="hc">9<br>♣</div><div class="hc">8<br>♣</div><div class="hc">7<br>♣</div><div class="hc">6<br>♣</div><div class="hc">5<br>♣</div>
+        </div>
+        <div class="hand-info">
+          <div class="hand-name">Quinte Flush</div>
+          <div class="hand-desc">5 cartes consécutives de la même couleur</div>
+        </div>
+      </div>
+
+      <div class="hand-row">
+        <div class="hand-rank">3</div>
+        <div class="hand-cards">
+          <div class="hc">K<br>♠</div><div class="hc r">K<br>♥</div><div class="hc r">K<br>♦</div><div class="hc">K<br>♣</div><div class="hc">8<br>♣</div>
+        </div>
+        <div class="hand-info">
+          <div class="hand-name">Carré</div>
+          <div class="hand-desc">4 cartes de même valeur</div>
+        </div>
+      </div>
+
+      <div class="hand-row">
+        <div class="hand-rank">4</div>
+        <div class="hand-cards">
+          <div class="hc">Q<br>♣</div><div class="hc r">Q<br>♥</div><div class="hc">Q<br>♠</div><div class="hc r">J<br>♦</div><div class="hc">J<br>♣</div>
+        </div>
+        <div class="hand-info">
+          <div class="hand-name">Full House</div>
+          <div class="hand-desc">Un brelan + une paire</div>
+        </div>
+      </div>
+
+      <div class="hand-row">
+        <div class="hand-rank">5</div>
+        <div class="hand-cards">
+          <div class="hc r">A<br>♦</div><div class="hc r">J<br>♦</div><div class="hc r">8<br>♦</div><div class="hc r">5<br>♦</div><div class="hc r">2<br>♦</div>
+        </div>
+        <div class="hand-info">
+          <div class="hand-name">Couleur (Flush)</div>
+          <div class="hand-desc">5 cartes de la même couleur (non consécutives)</div>
+        </div>
+      </div>
+
+      <div class="hand-row">
+        <div class="hand-rank">6</div>
+        <div class="hand-cards">
+          <div class="hc">9<br>♠</div><div class="hc r">8<br>♥</div><div class="hc">7<br>♣</div><div class="hc r">6<br>♦</div><div class="hc">5<br>♠</div>
+        </div>
+        <div class="hand-info">
+          <div class="hand-name">Suite (Straight)</div>
+          <div class="hand-desc">5 cartes consécutives de couleurs différentes</div>
+        </div>
+      </div>
+
+      <div class="hand-row">
+        <div class="hand-rank">7</div>
+        <div class="hand-cards">
+          <div class="hc">7<br>♠</div><div class="hc r">7<br>♦</div><div class="hc">7<br>♣</div><div class="hc">K<br>♠</div><div class="hc r">4<br>♥</div>
+        </div>
+        <div class="hand-info">
+          <div class="hand-name">Brelan</div>
+          <div class="hand-desc">3 cartes de même valeur</div>
+        </div>
+      </div>
+
+      <div class="hand-row">
+        <div class="hand-rank">8</div>
+        <div class="hand-cards">
+          <div class="hc">J<br>♣</div><div class="hc r">J<br>♥</div><div class="hc r">5<br>♦</div><div class="hc">5<br>♠</div><div class="hc">A<br>♣</div>
+        </div>
+        <div class="hand-info">
+          <div class="hand-name">Deux Paires</div>
+          <div class="hand-desc">Deux paires de cartes de même valeur</div>
+        </div>
+      </div>
+
+      <div class="hand-row">
+        <div class="hand-rank">9</div>
+        <div class="hand-cards">
+          <div class="hc r">A<br>♥</div><div class="hc">A<br>♠</div><div class="hc r">9<br>♦</div><div class="hc">6<br>♣</div><div class="hc">3<br>♠</div>
+        </div>
+        <div class="hand-info">
+          <div class="hand-name">Paire</div>
+          <div class="hand-desc">Deux cartes de même valeur</div>
+        </div>
+      </div>
+
+      <div class="hand-row">
+        <div class="hand-rank">10</div>
+        <div class="hand-cards">
+          <div class="hc hi">A<br>♠</div><div class="hc r">K<br>♦</div><div class="hc">9<br>♣</div><div class="hc r">5<br>♥</div><div class="hc">2<br>♠</div>
+        </div>
+        <div class="hand-info">
+          <div class="hand-name">Carte Haute</div>
+          <div class="hand-desc">Aucune combinaison — la carte la plus haute joue</div>
+        </div>
+      </div>
+
+      <button class="hands-close" onclick="toggleHandsHelp()">Fermer ✕</button>
     </div>
   </div>
   <div id="g-winner-overlay" class="winner-overlay" style="display:none" onclick="App.dismissWinner()"></div>
