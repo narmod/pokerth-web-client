@@ -591,6 +591,7 @@ body {
   position: relative;
   flex-wrap: nowrap;
   align-items: center;
+  overflow: visible;
 }
 
 /* Bouton ⋯ : caché sur desktop */
@@ -3452,7 +3453,8 @@ function renderHandsHelp() {
     + '<button class="hands-close" onclick="toggleHandsHelp()">' + t('handsClose') + '</button>';
 }
 
-function toggleHeaderOverflow() {
+function toggleHeaderOverflow(e) {
+  if (e) e.stopPropagation();
   var m = document.getElementById('g-overflow-menu');
   if (!m) return;
   m.classList.toggle('open');
@@ -3533,7 +3535,7 @@ function toggleLog() {
     <button class="btn-sm" id="chat-toggle-btn" onclick="toggleGameChat()">💬</button>
     <button class="btn-sm" id="admin-start-btn" onclick="App.startWithBots()" style="display:none;color:var(--green);border-color:rgba(39,174,96,0.4)" title="Start with bots">▶ Bots</button>
     <button class="btn-sm" id="admin-close-btn" onclick="App.closeTable()" style="display:none;color:#e67e22;border-color:rgba(230,126,34,0.4)" title="Close table">🔒 Close</button>
-    <button class="btn-sm" id="g-overflow-btn" onclick="toggleHeaderOverflow()" title="Plus" style="letter-spacing:0.05em">•••</button>
+    <button class="btn-sm" id="g-overflow-btn" onclick="toggleHeaderOverflow(event)" title="Plus" style="letter-spacing:0.05em">•••</button>
     <button class="btn-sm" onclick="App.leaveGame();closeHeaderOverflow()" style="color:var(--red);border-color:rgba(192,57,43,0.4)">✕</button>
     <div id="g-overflow-menu">
       <button class="btn-sm" onclick="toggleFullscreen();closeHeaderOverflow()">⛶ Fullscreen</button>
