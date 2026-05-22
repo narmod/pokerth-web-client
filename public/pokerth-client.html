@@ -1196,6 +1196,8 @@ var LANG = {
     handLabel:'H#', preflop:'Pre-flop', flop:'Flop', turn:'Turn', river:'River',
     fold:'Fold', check:'Check', call:'Call', raise:'Raise', allin:'All-In',
     pot:'Pot:', journal:'📋', chat:'💬', sound:'🔊', mute:'🔇',
+    thinking:'is thinking…', myCards:'My cards:', gameStart:'Start',
+    bet:'Bet', wins:'wins', handOf:'Hand',
     closeTable:'🔒 Close', startBots:'▶ Bots', leave:'✕',
     youWon:'You won!', handWinner:'Hand winner', communityCards:'Community cards',
     results:'Results', continueBtn:'Continue ▶', yourStack:'Your stack:',
@@ -1246,6 +1248,8 @@ var LANG = {
     handLabel:'M#', preflop:'Pré-flop', flop:'Flop', turn:'Tournant', river:'Rivière',
     fold:'Fold', check:'Check', call:'Call', raise:'Relance', allin:'All-In',
     pot:'Pot :', journal:'📋', chat:'💬', sound:'🔊', mute:'🔇',
+    thinking:'réfléchit…', myCards:'Mes cartes :', gameStart:'Début',
+    bet:'Mise', wins:'gagne', handOf:'Main',
     closeTable:'🔒 Fermer', startBots:'▶ Bots', leave:'✕',
     youWon:'Vous avez gagné !', handWinner:'Gagnant de la main', communityCards:'Cartes communes',
     results:'Résultats', continueBtn:'Continuer ▶', yourStack:'Votre stack :',
@@ -1312,6 +1316,16 @@ function setLang(l) {
   if (er && er.options.length >= 3) { er.options[0].text = t('blindDouble'); er.options[1].text = t('blindToValue'); er.options[2].text = t('blindKeepLast'); }
   var gt = document.getElementById('cf-game-type');
   if (gt && gt.options.length >= 3) { gt.options[0].text = t('gameNormal'); gt.options[1].text = t('gameRegistered'); gt.options[2].text = t('gameInvite'); }
+  // Refresh game screen dynamic elements if in game
+  var gRound = document.getElementById('g-round');
+  if (gRound && typeof gameState !== 'undefined') {
+    var rMap = [t('preflop'),t('flop'),t('turn'),t('river'),t('preflop')+' (SB)',t('preflop')+' (BB)'];
+    gRound.textContent = rMap[gameState] || gRound.textContent;
+  }
+  // Sync lang buttons state on all screens
+  document.querySelectorAll('.lang-btn').forEach(function(b){
+    b.classList.toggle('active', b.dataset.lang === _lang);
+  });
   // Update more/less options label
   var ml = document.getElementById('cf-more-label');
   if (ml) { var cfOpen = document.getElementById('cf-more-opts'); ml.textContent = (cfOpen && cfOpen.style.display !== 'none') ? t('lessOptions') : t('moreOptions'); }
@@ -2202,7 +2216,7 @@ const App = (() => {
         commCards = [null, null, null, null, null];
         const scEl=document.getElementById('g-myseat-cards'); if(scEl) scEl.innerHTML='<div class="pk sm back"></div><div class="pk sm back"></div>';
         amInGame = true;
-        $('g-round').textContent = 'Début';
+        $('g-round').textContent = t('gameStart');
         // Demander les infos de chaque joueur assis
         for (const pid of seats) {
           if (!players[pid]) {
@@ -2218,8 +2232,8 @@ const App = (() => {
       case T.HandStart: {
         // HandStartMessage: gameId=1, plainCards=2 {card1:1, card2:2}, smallBlind=4, seatStates=5, dealerPlayerId=6
         handNum++;
-        $('g-hand').textContent = 'M#' + handNum;
-        $('g-round').textContent = 'Pré-flop';
+        $('g-hand').textContent = t('handLabel') + handNum;
+        $('g-round').textContent = t('preflop');
         gameState = 0; // preflop
         commCards = [null, null, null, null, null];
         pot = 0; collectedPot = 0; highestBet = 0; minRaise = 0;
@@ -2250,11 +2264,11 @@ const App = (() => {
         renderMyCards();
         renderComm();
         renderSeats();
-        renderGameWaiting('Main ' + handNum + ' — Blinds: ' + sb + '/' + (sb*2));
-        logAction('══ Main ' + handNum + ' — Blinds ' + sb + '/' + (sb*2) + ' ══');
+        renderGameWaiting(t('handOf') + ' ' + handNum + ' — Blinds: ' + sb + '/' + (sb*2));
+        logAction('══ ' + t('handOf') + ' ' + handNum + ' — Blinds ' + sb + '/' + (sb*2) + ' ══');
         // Show my hole cards in log
         if (myCards[0] != null && myCards[1] != null) {
-          logAction('Mes cartes: ' + cardName(myCards[0], false) + ' ' + cardName(myCards[1], false));
+          logAction(t('myCards') + ' ' + cardName(myCards[0], false) + ' ' + cardName(myCards[1], false));
         }
         break;
       }
@@ -2263,11 +2277,11 @@ const App = (() => {
         // PlayersTurnMessage: gameId=1, playerId=2, gameState=3
         turnPid   = Proto.u32(sub, 2);
         gameState = Proto.u32(sub, 3);
-        const rounds = ['Pré-flop','Flop','Tournant','Rivière','Pré-flop (SB)','Pré-flop (BB)'];
-        $('g-round').textContent = rounds[gameState] || 'Tour';
+        const rounds = [t('preflop'),t('flop'),t('turn'),t('river'),t('preflop')+' (SB)',t('preflop')+' (BB)'];
+        $('g-round').textContent = rounds[gameState] || t('preflop');
         startTurnTimer();
         if (turnPid === myId) renderMyTurnActions();
-        else renderGameWaiting(getPlayerName(turnPid) + ' réfléchit...');
+        else renderGameWaiting(getPlayerName(turnPid) + ' ' + t('thinking'));
         break;
       }
 
@@ -2291,8 +2305,8 @@ const App = (() => {
         for (const p of seats) if (seatData[p]) pot += seatData[p].bet;
         pot = collectedPot;
         for (const p2 of seats) if (seatData[p2]) pot += seatData[p2].bet;
-        $('g-pot').textContent = 'Pot: ' + pot;
-        if ($('g-potbar')) $('g-potbar').textContent = 'Pot: ' + pot;
+        $('g-pot').textContent = t('pot') + ' ' + pot;
+        if ($('g-potbar')) $('g-potbar').textContent = t('pot') + ' ' + pot;
         logAction(getPlayerName(pid) + ': ' + aLabel + (bet ? ' ' + bet : ''));
         if (pid === myId) {
           const myMon = (seatData[myId] || {}).money || 0;
@@ -2315,15 +2329,15 @@ const App = (() => {
         console.log('[DealFlop] fields:', allVals, '| A=', fA, 'B=', fB, '| chosen=', commCards);
         const dbg = 'FLOP sub:'+allVals+' →['+commCards.join(',')+']';
         if ($('g-debug')) $('g-debug').textContent = dbg;
-        $('g-round').textContent = 'Flop';
+        $('g-round').textContent = t('flop');
         gameState = 1;
         // Collect preflop bets into pot
         let flopBets = 0;
         for (const p of seats) if (seatData[p] && seatData[p].bet) { flopBets += seatData[p].bet; seatData[p].bet = 0; }
         collectedPot += flopBets;
         pot = collectedPot;
-        $('g-pot').textContent = 'Pot: ' + pot;
-        if ($('g-potbar')) $('g-potbar').textContent = 'Pot: ' + pot;
+        $('g-pot').textContent = t('pot') + ' ' + pot;
+        if ($('g-potbar')) $('g-potbar').textContent = t('pot') + ' ' + pot;
         const flopStr = commCards.filter(n=>n!=null).map(n=>cardName(n,true)).join(', ');
         renderComm();
         renderSeats();
@@ -2335,16 +2349,16 @@ const App = (() => {
         const tv = Proto.u32(sub, 2);
         console.log('[DealTurn] sub fields:', Object.keys(sub).map(f=>f+'='+Proto.u32(sub,+f)).join(' '));
         commCards.push(tv != null ? tv : Proto.u32(sub, 1));
-        $('g-round').textContent = 'Tournant';
+        $('g-round').textContent = t('turn');
         gameState = 2;
         let turnBets = 0;
         for (const p of seats) if (seatData[p] && seatData[p].bet) { turnBets += seatData[p].bet; seatData[p].bet = 0; }
         collectedPot += turnBets;
         pot = collectedPot;
-        $('g-pot').textContent = 'Pot: ' + pot;
-        if ($('g-potbar')) $('g-potbar').textContent = 'Pot: ' + pot;
+        $('g-pot').textContent = t('pot') + ' ' + pot;
+        if ($('g-potbar')) $('g-potbar').textContent = t('pot') + ' ' + pot;
         const tvCard = commCards[3]; const tvName = tvCard != null ? cardName(tvCard, true) : '?';
-        logAction('--- Tournant [' + tvName + '] ---');
+        logAction('--- ' + t('turn') + ' [' + tvName + '] ---');
         renderComm();
         break;
       }
@@ -2353,16 +2367,16 @@ const App = (() => {
         const rv = Proto.u32(sub, 2);
         console.log('[DealRiver] sub fields:', Object.keys(sub).map(f=>f+'='+Proto.u32(sub,+f)).join(' '));
         commCards.push(rv || Proto.u32(sub, 1));
-        $('g-round').textContent = 'Rivière';
+        $('g-round').textContent = t('river');
         gameState = 3;
         let rvBets = 0;
         for (const p of seats) if (seatData[p] && seatData[p].bet) { rvBets += seatData[p].bet; seatData[p].bet = 0; }
         collectedPot += rvBets;
         pot = collectedPot;
-        $('g-pot').textContent = 'Pot: ' + pot;
-        if ($('g-potbar')) $('g-potbar').textContent = 'Pot: ' + pot;
+        $('g-pot').textContent = t('pot') + ' ' + pot;
+        if ($('g-potbar')) $('g-potbar').textContent = t('pot') + ' ' + pot;
         const rvCard = commCards[4]; const rvName = rvCard != null ? cardName(rvCard, true) : '?';
-        logAction('--- Rivière [' + rvName + '] ---');
+        logAction('--- ' + t('river') + ' [' + rvName + '] ---');
         renderComm();
         break;
       }
@@ -2400,7 +2414,7 @@ const App = (() => {
           }
           if (won > 0) {
             winners.push({ pid, won, cash, c1, c2 });
-            addChat(null, '🏆 ' + getPlayerName(pid) + ' gagne ' + won + ' jetons !', 'sys');
+            addChat(null, '🏆 ' + getPlayerName(pid) + ' ' + t('wins') + ' ' + won + ' ¥!', 'sys');
             logAction('🏆 ' + getPlayerName(pid) + ' +' + won);
           }
         }
@@ -2807,11 +2821,11 @@ const App = (() => {
     const callLabel = canCheck ? 'Check' : ('Call <b>' + toCall + '</b>');
     const callAction = canCheck ? 'App.doAction(2,0)' : ('App.doAction(3,' + toCall + ')');
     const callClass  = canCheck ? 'btn-check' : 'btn-call';
-    const raiseLabel = highestBet > 0 ? 'Relance' : 'Mise';
+    const raiseLabel = highestBet > 0 ? t('raise') : t('bet');
 
     const h = '<div class="action-grid">'
       + '<div class="action-top-row">'
-      +   '<button class="btn-action btn-fold" onclick="App.doAction(1,0)">Fold</button>'
+      +   '<button class="btn-action btn-fold" onclick="App.doAction(1,0)">' + t('fold') + '</button>'
       +   '<button class="btn-action ' + callClass + '" onclick="' + callAction + '">' + callLabel + '</button>'
       + '</div>'
       + '<div class="pct-row">'
@@ -2837,7 +2851,7 @@ const App = (() => {
 
   function doAction(action, bet) {
     send(MSG.buildMyAction(gId, handNum, gameState, action, bet));
-    $('g-actions').innerHTML = '<div class="waiting-msg">Action envoyée...</div>';
+    $('g-actions').innerHTML = '<div class="waiting-msg">' + t('actionSent') + '</div>';
     stopTurnTimer();
   }
   function doRaise() {
@@ -3358,6 +3372,8 @@ function toggleLog() {
     <button class="btn-sm" id="fs-btn-game" onclick="toggleFullscreen()" title="Fullscreen">⛶</button>
     <button class="btn-sm" id="sound-toggle-btn" onclick="toggleSound()" title="Couper/Unmute">🔊</button>
     <button class="btn-sm" onclick="toggleHandsHelp()" title="Combinaisons du poker" style="font-weight:700">?</button>
+    <button class="lang-btn btn-sm" data-lang="en" onclick="setLang('en')" title="English">🇬🇧</button>
+    <button class="lang-btn btn-sm" data-lang="fr" onclick="setLang('fr')" title="Français">🇫🇷</button>
     <button class="btn-sm" id="log-toggle-btn" onclick="toggleLog()">📋</button>
     <button class="btn-sm" id="chat-toggle-btn" onclick="toggleGameChat()">💬</button>
     <button class="btn-sm" id="admin-start-btn" onclick="App.startWithBots()" style="display:none;color:var(--green);border-color:rgba(39,174,96,0.4)" title="Start with bots">▶ Bots</button>
