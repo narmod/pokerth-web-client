@@ -2457,10 +2457,11 @@ const App = (() => {
   // ─── Card rendering ───
   // Card name for log display
   function cardName(n, isComm) {
+    // FIX: encodage unifié 0-indexé (PokerTH envoie 0–51 pour hole et comm cards)
     if (n == null) return '?';
     let si, ri;
-    if (isComm) { si = Math.floor(n/13); ri = n%13; }
-    else { si = Math.floor((n-1)/13); ri = (n-1)%13; }
+    si = Math.floor(n / 13);
+    ri = n % 13;
     const suits = isComm ? ['♦','♣','♠','♥'] : ['♣','♠','♥','♦'];
     const ranks = ['2','3','4','5','6','7','8','9','10','J','Q','K','A'];
     return (ranks[ri]||'?') + (suits[si]||'?');
@@ -2490,10 +2491,11 @@ const App = (() => {
 
   // ─── My cards ───
   function cardHtml(n, cls, isComm) {
-    if (!n) return '<div class="pk '+cls+' back"></div>';
+    // FIX: if(!n) traitait 0 comme falsy → carte dos incorrecte ; encodage unifié 0-indexé
+    if (n == null) return '<div class="pk '+cls+' back"></div>';
     var si, ri;
-    if (isComm) { si=Math.floor(n/13); ri=n%13; }
-    else { si=Math.floor((n-1)/13); ri=(n-1)%13; }
+    si = Math.floor(n / 13);
+    ri = n % 13;
     const suits = isComm ? ['♦','♣','♠','♥'] : ['♣','♠','♥','♦'];
     const rank=['2','3','4','5','6','7','8','9','10','J','Q','K','A'][ri]||'?';
     const red=(isComm?(si===0||si===3):(si>=2))?' red':'';
@@ -2857,11 +2859,11 @@ function showWinnerOverlay(winners) {
     html += '<div class="wc-player-stack">' + (sd.money != null ? sd.money + " ¥" : "—") + '</div>';
     html += '</div>';
     // Show cards if revealed
-    if (sd.card1 || sd.card2) {
+    if (sd.card1 != null || sd.card2 != null) { // FIX: || test falsy ratait les cartes à valeur 0
       html += '<div class="wc-player-cards">';
       html += cardHtml(sd.card1||null,"xsm",false) + cardHtml(sd.card2||null,"xsm",false);
       html += '</div>';
-    } else if (isMe && myCards[0]) {
+    } else if (isMe && myCards[0] != null) { // FIX: idem, valeur 0 = falsy
       html += '<div class="wc-player-cards">';
       html += cardHtml(myCards[0],"xsm",false) + cardHtml(myCards[1],"xsm",false);
       html += '</div>';
