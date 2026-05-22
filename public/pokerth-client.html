@@ -1198,6 +1198,18 @@ var LANG = {
     pot:'Pot:', journal:'📋', chat:'💬', sound:'🔊', mute:'🔇',
     thinking:'is thinking…', myCards:'My cards:', gameStart:'Start',
     bet:'Bet', wins:'wins', handOf:'Hand',
+    handsTitle:'♠ Poker Hand Rankings ♥',
+    h1n:'Royal Flush', h1d:'A K Q J 10 of the same suit — the absolute best hand',
+    h2n:'Straight Flush', h2d:'5 consecutive cards of the same suit',
+    h3n:'Four of a Kind', h3d:'4 cards of the same rank',
+    h4n:'Full House', h4d:'Three of a kind + a pair',
+    h5n:'Flush', h5d:'5 cards of the same suit (not consecutive)',
+    h6n:'Straight', h6d:'5 consecutive cards of different suits',
+    h7n:'Three of a Kind', h7d:'3 cards of the same rank',
+    h8n:'Two Pair', h8d:'Two pairs of matching cards',
+    h9n:'One Pair', h9d:'Two cards of the same rank',
+    h10n:'High Card', h10d:'No combination — the highest card plays',
+    handsClose:'Close ✕',
     closeTable:'🔒 Close', startBots:'▶ Bots', leave:'✕',
     youWon:'You won!', handWinner:'Hand winner', communityCards:'Community cards',
     results:'Results', continueBtn:'Continue ▶', yourStack:'Your stack:',
@@ -1250,6 +1262,18 @@ var LANG = {
     pot:'Pot :', journal:'📋', chat:'💬', sound:'🔊', mute:'🔇',
     thinking:'réfléchit…', myCards:'Mes cartes :', gameStart:'Début',
     bet:'Mise', wins:'gagne', handOf:'Main',
+    handsTitle:'♠ Combinaisons du Poker ♥',
+    h1n:'Quinte Flush Royale', h1d:'A K Q J 10 de la même couleur — la main absolue',
+    h2n:'Quinte Flush', h2d:'5 cartes consécutives de la même couleur',
+    h3n:'Carré', h3d:'4 cartes de même valeur',
+    h4n:'Full House', h4d:'Un brelan + une paire',
+    h5n:'Couleur (Flush)', h5d:'5 cartes de la même couleur (non consécutives)',
+    h6n:'Suite (Straight)', h6d:'5 cartes consécutives de couleurs différentes',
+    h7n:'Brelan', h7d:'3 cartes de même valeur',
+    h8n:'Deux Paires', h8d:'Deux paires de cartes de même valeur',
+    h9n:'Paire', h9d:'Deux cartes de même valeur',
+    h10n:'Carte Haute', h10d:'Aucune combinaison — la carte la plus haute joue',
+    handsClose:'Fermer ✕',
     closeTable:'🔒 Fermer', startBots:'▶ Bots', leave:'✕',
     youWon:'Vous avez gagné !', handWinner:'Gagnant de la main', communityCards:'Cartes communes',
     results:'Résultats', continueBtn:'Continuer ▶', yourStack:'Votre stack :',
@@ -1289,6 +1313,7 @@ var LANG = {
 };
 var _lang = (function(){ try { return localStorage.getItem('pth_lang')||'en'; } catch(e){ return 'en'; } })();
 function t(k) { return (LANG[_lang]||LANG.en)[k] || (LANG.en[k]) || k; }
+function toggleLang() { setLang(_lang === 'en' ? 'fr' : 'en'); }
 function setLang(l) {
   _lang = l;
   try { localStorage.setItem('pth_lang', l); } catch(e) {}
@@ -1316,15 +1341,20 @@ function setLang(l) {
   if (er && er.options.length >= 3) { er.options[0].text = t('blindDouble'); er.options[1].text = t('blindToValue'); er.options[2].text = t('blindKeepLast'); }
   var gt = document.getElementById('cf-game-type');
   if (gt && gt.options.length >= 3) { gt.options[0].text = t('gameNormal'); gt.options[1].text = t('gameRegistered'); gt.options[2].text = t('gameInvite'); }
+  // Re-render aide si elle est ouverte
+  var ho = document.getElementById('hands-overlay');
+  if (ho && ho.style.display !== 'none') renderHandsHelp();
   // Refresh game screen dynamic elements if in game
   var gRound = document.getElementById('g-round');
   if (gRound && typeof gameState !== 'undefined') {
     var rMap = [t('preflop'),t('flop'),t('turn'),t('river'),t('preflop')+' (SB)',t('preflop')+' (BB)'];
     gRound.textContent = rMap[gameState] || gRound.textContent;
   }
-  // Sync lang buttons state on all screens
-  document.querySelectorAll('.lang-btn').forEach(function(b){
-    b.classList.toggle('active', b.dataset.lang === _lang);
+  // Sync bouton toggle unique sur tous les écrans
+  var flag = _lang === 'fr' ? '🇫🇷' : '🇬🇧';
+  ['lang-toggle-connect','lang-toggle-lobby','lang-toggle-game'].forEach(function(id){
+    var b = document.getElementById(id);
+    if (b) b.textContent = flag;
   });
   // Update more/less options label
   var ml = document.getElementById('cf-more-label');
@@ -1435,8 +1465,7 @@ document.addEventListener("DOMContentLoaded", function() {
 <!-- ╚════════════════════╝ -->
 <div id="s-connect" class="screen active">
   <div style="position:absolute;top:12px;right:16px;display:flex;gap:6px;z-index:10">
-    <button class="lang-btn btn-sm" data-lang="en" onclick="setLang('en')">🇬🇧 EN</button>
-    <button class="lang-btn btn-sm" data-lang="fr" onclick="setLang('fr')">🇫🇷 FR</button>
+    <button class="btn-sm" id="lang-toggle-connect" onclick="toggleLang()" title="Switch language" style="font-size:0.85rem;min-width:34px">🇬🇧</button>
     <button class="btn-sm" id="fs-btn-connect" onclick="toggleFullscreen()" title="Fullscreen">⛶</button>
   </div>
   <div class="card">
@@ -1510,8 +1539,7 @@ document.addEventListener("DOMContentLoaded", function() {
       <span class="pill" id="h-players">—</span>
     </div>
     <button class="btn-sm" id="fs-btn-lobby" onclick="toggleFullscreen()" title="Fullscreen">⛶</button>
-    <button class="lang-btn btn-sm" data-lang="en" onclick="setLang('en')">🇬🇧</button>
-    <button class="lang-btn btn-sm" data-lang="fr" onclick="setLang('fr')">🇫🇷</button>
+    <button class="btn-sm" id="lang-toggle-lobby" onclick="toggleLang()" title="Switch language" style="font-size:0.85rem;min-width:34px">🇬🇧</button>
     <button class="btn-sm" id="lobby-chat-btn" onclick="toggleLobbyChat()">💬</button>
     <button class="btn-sm" onclick="App.disconnect()" data-i18n="disconnect">✕ Disconnect</button>
   </div>
@@ -3316,10 +3344,40 @@ function toggleLobbyChat() {
 }
 
 
+function renderHandsHelp() {
+  var hands = [
+    { cards: '<div class="hc hi">A<br>♠</div><div class="hc hi">K<br>♠</div><div class="hc hi">Q<br>♠</div><div class="hc hi">J<br>♠</div><div class="hc hi">10<br>♠</div>', n:'h1n', d:'h1d' },
+    { cards: '<div class="hc">9<br>♣</div><div class="hc">8<br>♣</div><div class="hc">7<br>♣</div><div class="hc">6<br>♣</div><div class="hc">5<br>♣</div>', n:'h2n', d:'h2d' },
+    { cards: '<div class="hc">K<br>♠</div><div class="hc r">K<br>♥</div><div class="hc r">K<br>♦</div><div class="hc">K<br>♣</div><div class="hc">8<br>♣</div>', n:'h3n', d:'h3d' },
+    { cards: '<div class="hc">Q<br>♣</div><div class="hc r">Q<br>♥</div><div class="hc">Q<br>♠</div><div class="hc r">J<br>♦</div><div class="hc">J<br>♣</div>', n:'h4n', d:'h4d' },
+    { cards: '<div class="hc r">A<br>♦</div><div class="hc r">J<br>♦</div><div class="hc r">8<br>♦</div><div class="hc r">5<br>♦</div><div class="hc r">2<br>♦</div>', n:'h5n', d:'h5d' },
+    { cards: '<div class="hc">9<br>♠</div><div class="hc r">8<br>♥</div><div class="hc">7<br>♣</div><div class="hc r">6<br>♦</div><div class="hc">5<br>♠</div>', n:'h6n', d:'h6d' },
+    { cards: '<div class="hc">7<br>♠</div><div class="hc r">7<br>♦</div><div class="hc">7<br>♣</div><div class="hc">K<br>♠</div><div class="hc r">4<br>♥</div>', n:'h7n', d:'h7d' },
+    { cards: '<div class="hc">J<br>♣</div><div class="hc r">J<br>♥</div><div class="hc r">5<br>♦</div><div class="hc">5<br>♠</div><div class="hc">A<br>♣</div>', n:'h8n', d:'h8d' },
+    { cards: '<div class="hc r">A<br>♥</div><div class="hc">A<br>♠</div><div class="hc r">9<br>♦</div><div class="hc">6<br>♣</div><div class="hc">3<br>♠</div>', n:'h9n', d:'h9d' },
+    { cards: '<div class="hc hi">A<br>♠</div><div class="hc r">K<br>♦</div><div class="hc">9<br>♣</div><div class="hc r">5<br>♥</div><div class="hc">2<br>♠</div>', n:'h10n', d:'h10d' },
+  ];
+  var inner = document.getElementById('hands-card-inner');
+  if (!inner) return;
+  var rows = hands.map(function(h, i) {
+    return '<div class="hand-row">'
+      + '<div class="hand-rank">' + (i+1) + '</div>'
+      + '<div class="hand-cards">' + h.cards + '</div>'
+      + '<div class="hand-info">'
+      +   '<div class="hand-name">' + t(h.n) + '</div>'
+      +   '<div class="hand-desc">' + t(h.d) + '</div>'
+      + '</div></div>';
+  }).join('');
+  inner.innerHTML = '<div class="hands-title">' + t('handsTitle') + '</div>'
+    + rows
+    + '<button class="hands-close" onclick="toggleHandsHelp()">' + t('handsClose') + '</button>';
+}
 function toggleHandsHelp() {
   var ov = document.getElementById('hands-overlay');
   if (!ov) return;
-  ov.style.display = ov.style.display === 'none' ? 'flex' : 'none';
+  var opening = ov.style.display === 'none';
+  if (opening) renderHandsHelp();
+  ov.style.display = opening ? 'flex' : 'none';
 }
 
 function toggleGameChat() {
@@ -3372,8 +3430,7 @@ function toggleLog() {
     <button class="btn-sm" id="fs-btn-game" onclick="toggleFullscreen()" title="Fullscreen">⛶</button>
     <button class="btn-sm" id="sound-toggle-btn" onclick="toggleSound()" title="Couper/Unmute">🔊</button>
     <button class="btn-sm" onclick="toggleHandsHelp()" title="Combinaisons du poker" style="font-weight:700">?</button>
-    <button class="lang-btn btn-sm" data-lang="en" onclick="setLang('en')" title="English">🇬🇧</button>
-    <button class="lang-btn btn-sm" data-lang="fr" onclick="setLang('fr')" title="Français">🇫🇷</button>
+    <button class="btn-sm" id="lang-toggle-game" onclick="toggleLang()" title="Switch language" style="font-size:0.85rem;min-width:34px">🇬🇧</button>
     <button class="btn-sm" id="log-toggle-btn" onclick="toggleLog()">📋</button>
     <button class="btn-sm" id="chat-toggle-btn" onclick="toggleGameChat()">💬</button>
     <button class="btn-sm" id="admin-start-btn" onclick="App.startWithBots()" style="display:none;color:var(--green);border-color:rgba(39,174,96,0.4)" title="Start with bots">▶ Bots</button>
@@ -3400,121 +3457,7 @@ function toggleLog() {
   </div>
   <!-- ══ HANDS HELP OVERLAY ══ -->
   <div id="hands-overlay" style="display:none" onclick="if(event.target===this)toggleHandsHelp()">
-    <div class="hands-card">
-      <div class="hands-title">♠ Combinaisons du Poker ♥</div>
-
-      <div class="hand-row">
-        <div class="hand-rank">1</div>
-        <div class="hand-cards">
-          <div class="hc hi">A<br>♠</div><div class="hc hi">K<br>♠</div><div class="hc hi">Q<br>♠</div><div class="hc hi">J<br>♠</div><div class="hc hi">10<br>♠</div>
-        </div>
-        <div class="hand-info">
-          <div class="hand-name">Quinte Flush Royale</div>
-          <div class="hand-desc">A K Q J 10 de la même couleur — la main absolue</div>
-        </div>
-      </div>
-
-      <div class="hand-row">
-        <div class="hand-rank">2</div>
-        <div class="hand-cards">
-          <div class="hc">9<br>♣</div><div class="hc">8<br>♣</div><div class="hc">7<br>♣</div><div class="hc">6<br>♣</div><div class="hc">5<br>♣</div>
-        </div>
-        <div class="hand-info">
-          <div class="hand-name">Quinte Flush</div>
-          <div class="hand-desc">5 cartes consécutives de la même couleur</div>
-        </div>
-      </div>
-
-      <div class="hand-row">
-        <div class="hand-rank">3</div>
-        <div class="hand-cards">
-          <div class="hc">K<br>♠</div><div class="hc r">K<br>♥</div><div class="hc r">K<br>♦</div><div class="hc">K<br>♣</div><div class="hc">8<br>♣</div>
-        </div>
-        <div class="hand-info">
-          <div class="hand-name">Carré</div>
-          <div class="hand-desc">4 cartes de même valeur</div>
-        </div>
-      </div>
-
-      <div class="hand-row">
-        <div class="hand-rank">4</div>
-        <div class="hand-cards">
-          <div class="hc">Q<br>♣</div><div class="hc r">Q<br>♥</div><div class="hc">Q<br>♠</div><div class="hc r">J<br>♦</div><div class="hc">J<br>♣</div>
-        </div>
-        <div class="hand-info">
-          <div class="hand-name">Full House</div>
-          <div class="hand-desc">Un brelan + une paire</div>
-        </div>
-      </div>
-
-      <div class="hand-row">
-        <div class="hand-rank">5</div>
-        <div class="hand-cards">
-          <div class="hc r">A<br>♦</div><div class="hc r">J<br>♦</div><div class="hc r">8<br>♦</div><div class="hc r">5<br>♦</div><div class="hc r">2<br>♦</div>
-        </div>
-        <div class="hand-info">
-          <div class="hand-name">Couleur (Flush)</div>
-          <div class="hand-desc">5 cartes de la même couleur (non consécutives)</div>
-        </div>
-      </div>
-
-      <div class="hand-row">
-        <div class="hand-rank">6</div>
-        <div class="hand-cards">
-          <div class="hc">9<br>♠</div><div class="hc r">8<br>♥</div><div class="hc">7<br>♣</div><div class="hc r">6<br>♦</div><div class="hc">5<br>♠</div>
-        </div>
-        <div class="hand-info">
-          <div class="hand-name">Suite (Straight)</div>
-          <div class="hand-desc">5 cartes consécutives de couleurs différentes</div>
-        </div>
-      </div>
-
-      <div class="hand-row">
-        <div class="hand-rank">7</div>
-        <div class="hand-cards">
-          <div class="hc">7<br>♠</div><div class="hc r">7<br>♦</div><div class="hc">7<br>♣</div><div class="hc">K<br>♠</div><div class="hc r">4<br>♥</div>
-        </div>
-        <div class="hand-info">
-          <div class="hand-name">Brelan</div>
-          <div class="hand-desc">3 cartes de même valeur</div>
-        </div>
-      </div>
-
-      <div class="hand-row">
-        <div class="hand-rank">8</div>
-        <div class="hand-cards">
-          <div class="hc">J<br>♣</div><div class="hc r">J<br>♥</div><div class="hc r">5<br>♦</div><div class="hc">5<br>♠</div><div class="hc">A<br>♣</div>
-        </div>
-        <div class="hand-info">
-          <div class="hand-name">Deux Paires</div>
-          <div class="hand-desc">Deux paires de cartes de même valeur</div>
-        </div>
-      </div>
-
-      <div class="hand-row">
-        <div class="hand-rank">9</div>
-        <div class="hand-cards">
-          <div class="hc r">A<br>♥</div><div class="hc">A<br>♠</div><div class="hc r">9<br>♦</div><div class="hc">6<br>♣</div><div class="hc">3<br>♠</div>
-        </div>
-        <div class="hand-info">
-          <div class="hand-name">Paire</div>
-          <div class="hand-desc">Deux cartes de même valeur</div>
-        </div>
-      </div>
-
-      <div class="hand-row">
-        <div class="hand-rank">10</div>
-        <div class="hand-cards">
-          <div class="hc hi">A<br>♠</div><div class="hc r">K<br>♦</div><div class="hc">9<br>♣</div><div class="hc r">5<br>♥</div><div class="hc">2<br>♠</div>
-        </div>
-        <div class="hand-info">
-          <div class="hand-name">Carte Haute</div>
-          <div class="hand-desc">Aucune combinaison — la carte la plus haute joue</div>
-        </div>
-      </div>
-
-      <button class="hands-close" onclick="toggleHandsHelp()">Fermer ✕</button>
-    </div>
+    <div class="hands-card" id="hands-card-inner"></div>
   </div>
   <div id="g-winner-overlay" class="winner-overlay" style="display:none" onclick="App.dismissWinner()"></div>
   <div class="game-area">
