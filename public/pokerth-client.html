@@ -585,6 +585,78 @@ body {
 }
 
 
+
+/* ══ GAME HEADER — OVERFLOW MENU MOBILE ══ */
+#s-game .header {
+  position: relative;
+  flex-wrap: nowrap;
+  align-items: center;
+}
+
+/* Bouton ⋯ : caché sur desktop */
+#g-overflow-btn { display: none; }
+
+/* Menu déroulant */
+#g-overflow-menu {
+  display: none;
+  position: absolute;
+  top: 100%;
+  right: 0;
+  z-index: 200;
+  background: rgba(8,18,10,0.98);
+  border: 1px solid var(--border-hi);
+  border-top: none;
+  border-radius: 0 0 6px 6px;
+  padding: 6px 5px;
+  min-width: 150px;
+  flex-direction: column;
+  gap: 4px;
+  box-shadow: 0 12px 32px rgba(0,0,0,0.7);
+}
+#g-overflow-menu.open { display: flex; }
+#g-overflow-menu .btn-sm {
+  width: 100%;
+  text-align: left;
+  padding: 7px 12px;
+  border-radius: 3px;
+  font-size: 0.8rem;
+  justify-content: flex-start;
+}
+#g-overflow-menu .btn-sm:hover {
+  background: rgba(255,255,255,0.06);
+}
+
+/* Sur mobile : cacher les boutons secondaires, montrer ⋯ */
+@media (max-width: 540px) {
+  #g-overflow-btn { display: inline-flex !important; align-items: center; }
+  #fs-btn-game,
+  #lang-toggle-game,
+  #log-toggle-btn,
+  #admin-start-btn,
+  #admin-close-btn { display: none !important; }
+
+  /* Hauteur uniforme pour tous les btn-sm du header jeu */
+  #s-game .header .btn-sm {
+    height: 30px;
+    padding: 0 9px;
+    font-size: 0.82rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+  }
+  #s-game .header-brand {
+    font-size: 0.78rem;
+    flex-shrink: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  #s-game .header-pills { display: none; }
+  #s-game .header { gap: 4px; padding: 3px 8px; }
+}
+
 /* ══ HANDS HELP OVERLAY ══ */
 #hands-overlay {
   position: fixed; inset: 0; z-index: 200;
@@ -1352,7 +1424,7 @@ function setLang(l) {
   }
   // Sync bouton toggle unique sur tous les écrans
   var flag = _lang === 'fr' ? '🇫🇷' : '🇬🇧';
-  ['lang-toggle-connect','lang-toggle-lobby','lang-toggle-game'].forEach(function(id){
+  ['lang-toggle-connect','lang-toggle-lobby','lang-toggle-game','lang-toggle-game-mob'].forEach(function(id){
     var b = document.getElementById(id);
     if (b) b.textContent = flag;
   });
@@ -2137,6 +2209,10 @@ const App = (() => {
         if (acb) acb.style.display = amGameAdmin ? '' : 'none';
         var asb = document.getElementById('admin-start-btn');
         if (asb) asb.style.display = amGameAdmin ? '' : 'none';
+        var acbm = document.getElementById('admin-close-mob');
+        if (acbm) acbm.style.display = amGameAdmin ? '' : 'none';
+        var asbm = document.getElementById('admin-start-mob');
+        if (asbm) asbm.style.display = amGameAdmin ? '' : 'none';
         addChat(null, 'Rejoint la table ' + gId + (isAdmin ? ' (admin)' : '') + ' — attente du démarrage...', 'sys');
         show('s-game');
         const admBadge = document.getElementById('g-admin-badge');
@@ -3125,9 +3201,12 @@ function dismissWinner() {
       myCards = [null,null]; commCards = [];
       stopTurnTimer();
       dismissWinner();
+      closeHeaderOverflow();
       // Hide admin badge + close button
       var acb = document.getElementById('admin-close-btn');
       if (acb) acb.style.display = 'none';
+      var acbm = document.getElementById('admin-close-mob');
+      if (acbm) acbm.style.display = 'none';
       var badge = document.getElementById('g-admin-badge');
       if (badge) badge.style.display = 'none';
       show('s-lobby');  // back to lobby, stay connected
@@ -3372,6 +3451,25 @@ function renderHandsHelp() {
     + rows
     + '<button class="hands-close" onclick="toggleHandsHelp()">' + t('handsClose') + '</button>';
 }
+
+function toggleHeaderOverflow() {
+  var m = document.getElementById('g-overflow-menu');
+  if (!m) return;
+  m.classList.toggle('open');
+}
+function closeHeaderOverflow() {
+  var m = document.getElementById('g-overflow-menu');
+  if (m) m.classList.remove('open');
+}
+// Fermer le menu si on clique ailleurs
+document.addEventListener('click', function(e) {
+  var btn = document.getElementById('g-overflow-btn');
+  var menu = document.getElementById('g-overflow-menu');
+  if (menu && btn && !btn.contains(e.target) && !menu.contains(e.target)) {
+    menu.classList.remove('open');
+  }
+});
+
 function toggleHandsHelp() {
   var ov = document.getElementById('hands-overlay');
   if (!ov) return;
@@ -3430,12 +3528,20 @@ function toggleLog() {
     <button class="btn-sm" id="fs-btn-game" onclick="toggleFullscreen()" title="Fullscreen">⛶</button>
     <button class="btn-sm" id="sound-toggle-btn" onclick="toggleSound()" title="Couper/Unmute">🔊</button>
     <button class="btn-sm" onclick="toggleHandsHelp()" title="Combinaisons du poker" style="font-weight:700">?</button>
-    <button class="btn-sm" id="lang-toggle-game" onclick="toggleLang()" title="Switch language" style="font-size:0.85rem;min-width:34px">🇬🇧</button>
+    <button class="btn-sm" id="lang-toggle-game" onclick="toggleLang()" title="Switch language" style="font-size:0.85rem">🇬🇧</button>
     <button class="btn-sm" id="log-toggle-btn" onclick="toggleLog()">📋</button>
     <button class="btn-sm" id="chat-toggle-btn" onclick="toggleGameChat()">💬</button>
     <button class="btn-sm" id="admin-start-btn" onclick="App.startWithBots()" style="display:none;color:var(--green);border-color:rgba(39,174,96,0.4)" title="Start with bots">▶ Bots</button>
     <button class="btn-sm" id="admin-close-btn" onclick="App.closeTable()" style="display:none;color:#e67e22;border-color:rgba(230,126,34,0.4)" title="Close table">🔒 Close</button>
-    <button class="btn-sm" onclick="App.leaveGame()" style="color:var(--red);border-color:rgba(192,57,43,0.4)">✕</button>
+    <button class="btn-sm" id="g-overflow-btn" onclick="toggleHeaderOverflow()" title="Plus" style="letter-spacing:0.05em">•••</button>
+    <button class="btn-sm" onclick="App.leaveGame();closeHeaderOverflow()" style="color:var(--red);border-color:rgba(192,57,43,0.4)">✕</button>
+    <div id="g-overflow-menu">
+      <button class="btn-sm" onclick="toggleFullscreen();closeHeaderOverflow()">⛶ Fullscreen</button>
+      <button class="btn-sm" id="lang-toggle-game-mob" onclick="toggleLang();closeHeaderOverflow()" style="font-size:0.85rem">🇬🇧 Langue</button>
+      <button class="btn-sm" onclick="toggleLog();closeHeaderOverflow()">📋 Journal</button>
+      <button class="btn-sm" id="admin-start-mob" onclick="App.startWithBots();closeHeaderOverflow()" style="display:none;color:var(--green);border-color:rgba(39,174,96,0.4)">▶ Bots</button>
+      <button class="btn-sm" id="admin-close-mob" onclick="App.closeTable();closeHeaderOverflow()" style="display:none;color:#e67e22;border-color:rgba(230,126,34,0.4)">🔒 Close</button>
+    </div>
   </div>
   <div id="pot-strip">
     <span id="g-hand" class="pot-side">H#1</span>
