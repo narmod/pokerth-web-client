@@ -2026,16 +2026,17 @@ body:not(.in-game) .my-zone {
   padding: 8px 10px; border-bottom: 1px solid rgba(200,168,74,0.1);
   background: rgba(0,0,0,0.2); flex-shrink: 0;
 }
-.avp-tab-btn {
+.avp-tab {
   background: rgba(255,255,255,0.05);
   border: 1px solid transparent;
   border-radius: 5px;
-  font-size: 1.1rem;
-  cursor: pointer; padding: 3px 6px;
+  font-size: 1.05rem;
+  cursor: pointer; padding: 3px 7px;
   color: inherit;
   transition: border-color 0.12s, background 0.12s, transform 0.1s;
 }
-.avp-tab-btn:hover { transform: scale(1.12); border-color: rgba(200,168,74,0.5); }
+.avp-tab:hover { transform: scale(1.1); border-color: rgba(200,168,74,0.4); }
+.avp-tab.active { border-color: #c8a84a; background: rgba(200,168,74,0.18); }
 #avp-grid-wrap {
   overflow-y: auto; padding: 10px;
   scrollbar-width: thin; scrollbar-color: rgba(200,168,74,0.3) transparent;
