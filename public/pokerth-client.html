@@ -511,6 +511,126 @@ body {
 ══════════════════════════════════ */
 
 
+
+/* ── Confetti rain ── */
+@keyframes confettiFall {
+  0%   { transform: translateY(-20px) rotate(0deg);   opacity: 1; }
+  85%  { opacity: 1; }
+  100% { transform: translateY(105vh) rotate(720deg); opacity: 0; }
+}
+.confetti-piece {
+  position: fixed;
+  width: 10px; height: 10px;
+  top: -20px;
+  pointer-events: none;
+  z-index: 700;
+  border-radius: 2px;
+  animation: confettiFall linear forwards;
+}
+
+/* ── Urgence (≤5s) — pulsation rouge ── */
+@keyframes urgencyPulse {
+  0%,100% { box-shadow: inset 0 0 0 0 rgba(192,57,43,0); }
+  50%     { box-shadow: inset 0 0 60px 10px rgba(192,57,43,0.22); }
+}
+#s-game.urgent { animation: urgencyPulse 0.6s ease-in-out infinite; }
+
+/* ── Transition lobby → table ── */
+@keyframes tableEnter {
+  0%   { opacity: 0; transform: scale(0.94); }
+  100% { opacity: 1; transform: scale(1); }
+}
+#s-game.entering { animation: tableEnter 0.45s cubic-bezier(.2,.8,.3,1) both; }
+
+/* ── Hover fan mes cartes ── */
+.pb-cards:hover .pk:first-child {
+  transform: rotate(-8deg) translateY(-6px) translateX(-4px);
+  transition: transform 0.2s ease;
+  z-index: 2;
+}
+.pb-cards:hover .pk:last-child {
+  transform: rotate(8deg) translateY(-6px) translateX(4px);
+  transition: transform 0.2s ease;
+  z-index: 2;
+}
+.pb-cards .pk { transition: transform 0.2s ease; z-index: 1; }
+
+/* ── Joueur qui réfléchit — points animés ── */
+@keyframes thinkDot {
+  0%,80%,100% { opacity: 0.2; transform: translateY(0); }
+  40%         { opacity: 1;   transform: translateY(-3px); }
+}
+.thinking-dots { display: inline-flex; gap: 2px; margin-left: 4px; }
+.thinking-dots span {
+  width: 4px; height: 4px; border-radius: 50%;
+  background: var(--gold); display: inline-block;
+  animation: thinkDot 1.1s ease-in-out infinite;
+}
+.thinking-dots span:nth-child(2) { animation-delay: 0.18s; }
+.thinking-dots span:nth-child(3) { animation-delay: 0.36s; }
+
+/* ── Élimination joueur ── */
+@keyframes eliminatePlayer {
+  0%   { opacity: 1;  transform: translate(-50%,-50%) scale(1)  rotate(0deg); }
+  40%  { opacity: 0.7; transform: translate(-50%,-50%) scale(1.1) rotate(-5deg); }
+  100% { opacity: 0;  transform: translate(-50%,-50%) scale(0.3) rotate(15deg); }
+}
+.seat.eliminated { animation: eliminatePlayer 0.8s ease-in forwards; pointer-events: none; }
+
+/* ── Pot énorme — glow rouge/orange ── */
+@keyframes bigPotGlow {
+  0%,100% { color: var(--gold); text-shadow: 0 0 8px rgba(200,168,74,0.4); }
+  50%     { color: #ff8c42;     text-shadow: 0 0 20px rgba(255,100,30,0.7); }
+}
+.pot-huge { animation: bigPotGlow 1.2s ease-in-out infinite !important; }
+
+/* ── River — révélation dramatique ── */
+.pk-river {
+  animation: cardFlip 0.55s cubic-bezier(.2,.9,.3,1) both !important;
+  animation-delay: 0.1s !important;
+}
+
+/* ── Showdown — flip cartes adversaires ── */
+.pk-showdown {
+  animation: cardFlip 0.32s cubic-bezier(.3,0,.2,1) both;
+}
+
+/* ── Reset action fade entre mains ── */
+@keyframes actionFadeOut {
+  0%   { opacity: 1; transform: translateY(0); }
+  100% { opacity: 0; transform: translateY(4px); }
+}
+.seat-action-label.fading {
+  animation: actionFadeOut 0.4s ease-out forwards;
+}
+
+/* ── Dealer badge volant ── */
+.dealer-badge-fly {
+  position: fixed;
+  background: var(--gold); color: #110900;
+  border-radius: 50%; width: 18px; height: 18px;
+  font-size: 0.55rem; font-weight: 900;
+  display: flex; align-items: center; justify-content: center;
+  pointer-events: none; z-index: 600;
+  transition: left 0.6s cubic-bezier(.4,0,.2,1),
+              top  0.6s cubic-bezier(.4,0,.2,1),
+              opacity 0.2s ease 0.55s;
+}
+
+/* ── All-in chips multi ── */
+@keyframes allInChip {
+  0%   { transform: translate(0,0) scale(1) rotate(0deg);       opacity: 1; }
+  60%  { transform: translate(var(--ax),var(--ay)) scale(1.3) rotate(var(--ar)); opacity: 1; }
+  100% { transform: translate(var(--bx),var(--by)) scale(0.6) rotate(var(--ar)); opacity: 0; }
+}
+.allin-chip {
+  position: fixed;
+  width: 14px; height: 14px;
+  border-radius: 50%;
+  pointer-events: none; z-index: 550;
+  animation: allInChip 0.7s cubic-bezier(.3,0,.7,1) forwards;
+}
+
 /* ═══════════════════════════════════════════════════════════
    DESKTOP LARGE (≥ 900px) — Agrandissement table + cartes
    ═══════════════════════════════════════════════════════════ */
@@ -1762,6 +1882,181 @@ function _hideBanner() {
 // ═══════════════════════════════════════════════════════════
 // ANIMATIONS DE JEU
 // ═══════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════════
+// NOUVELLES ANIMATIONS
+// ═══════════════════════════════════════════════════════════
+
+var _prevDealerPid = -1;
+
+// Confetti rain
+function launchConfetti(count) {
+  var colors = ['#f0c040','#e74c3c','#3498db','#2ecc71','#9b59b6','#ff8c42','#fff'];
+  var shapes = ['▲','●','■','♠','♥','♦','♣'];
+  count = count || 60;
+  for (var i = 0; i < count; i++) {
+    (function(i) {
+      setTimeout(function() {
+        var el = document.createElement('div');
+        el.className = 'confetti-piece';
+        el.style.left = Math.random() * 100 + 'vw';
+        el.style.background = colors[Math.floor(Math.random() * colors.length)];
+        el.style.width  = (8 + Math.random() * 8) + 'px';
+        el.style.height = (8 + Math.random() * 8) + 'px';
+        el.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+        el.style.animationDuration = (2.5 + Math.random() * 2) + 's';
+        el.style.animationDelay = (Math.random() * 0.5) + 's';
+        document.body.appendChild(el);
+        setTimeout(function(){ el.remove(); }, 5000);
+      }, i * 35);
+    })(i);
+  }
+}
+
+// Transition lobby → table
+function animateTableEnter() {
+  var sg = document.getElementById('s-game');
+  if (!sg) return;
+  sg.classList.remove('entering');
+  void sg.offsetWidth;
+  sg.classList.add('entering');
+  setTimeout(function(){ sg.classList.remove('entering'); }, 500);
+}
+
+// Urgence timer (≤5s)
+function setUrgentMode(active) {
+  var sg = document.getElementById('s-game');
+  if (sg) sg.classList.toggle('urgent', active);
+}
+
+// Élimination joueur
+function animatePlayerEliminated(pid) {
+  var seats = document.querySelectorAll('.seat');
+  seats.forEach(function(s) {
+    var name = s.querySelector('.seat-name');
+    if (name && name.textContent.trim().startsWith(
+      (window.players && window.players[pid]) ? window.players[pid].charAt(0) : '#'
+    )) {
+      s.classList.add('eliminated');
+      setTimeout(function(){ s.classList.remove('eliminated'); }, 900);
+    }
+  });
+}
+
+// Pot énorme
+function updatePotSize(potVal) {
+  var maxStack = 3000; // valeur par défaut
+  if (window.seats && window.seats.length > 0) {
+    maxStack = Object.values(window.seatData || {})
+      .reduce(function(acc, sd){ return Math.max(acc, (sd.money||0) + (sd.bet||0)); }, 3000);
+  }
+  var threshold = maxStack * 0.6;
+  var el1 = document.getElementById('g-pot');
+  var el2 = document.getElementById('g-potbar');
+  [el1, el2].forEach(function(el) {
+    if (!el) return;
+    el.classList.toggle('pot-huge', potVal > threshold && potVal > 500);
+  });
+}
+
+// Dealer badge volant
+function animateDealerMove(fromPid, toPid) {
+  if (fromPid < 0 || fromPid === toPid) return;
+  // Trouver les positions des sièges
+  var seatEls = document.querySelectorAll('.seat');
+  var fromEl = null, toEl = null;
+  // Utiliser les coords absolues des sièges
+  // On crée le badge volant depuis la position du dealer précédent
+  var allSeats = Array.from(seatEls);
+  // Tenter de localiser par ordre dans rotated
+  var fromIdx = -1, toIdx = -1;
+  if (window.seats) {
+    var myIdx = window.seats.indexOf(window.myId || -1);
+    var rotated = myIdx >= 0
+      ? window.seats.slice(myIdx).concat(window.seats.slice(0, myIdx))
+      : window.seats;
+    fromIdx = rotated.indexOf(fromPid);
+    toIdx   = rotated.indexOf(toPid);
+  }
+  if (fromIdx < 0 || toIdx < 0 || !allSeats[fromIdx] || !allSeats[toIdx]) return;
+  var fr = allSeats[fromIdx].getBoundingClientRect();
+  var tr = allSeats[toIdx].getBoundingClientRect();
+
+  var badge = document.createElement('div');
+  badge.className = 'dealer-badge-fly';
+  badge.textContent = 'D';
+  badge.style.left = (fr.left + fr.width/2 - 9) + 'px';
+  badge.style.top  = (fr.top  + fr.height/2 - 9) + 'px';
+  document.body.appendChild(badge);
+
+  requestAnimationFrame(function() { requestAnimationFrame(function() {
+    badge.style.left = (tr.left + tr.width/2 - 9) + 'px';
+    badge.style.top  = (tr.top  + tr.height/2 - 9) + 'px';
+    setTimeout(function(){ badge.remove(); }, 900);
+  }); });
+}
+
+// All-in chips explosion
+function animateAllIn(fromPid) {
+  var seatEls = document.querySelectorAll('.seat');
+  if (window.seats) {
+    var myIdx = window.seats.indexOf(window.myId || -1);
+    var rotated = myIdx >= 0
+      ? window.seats.slice(myIdx).concat(window.seats.slice(0, myIdx))
+      : window.seats;
+    var idx = rotated.indexOf(fromPid);
+    if (idx < 0 || !seatEls[idx]) return;
+    var sr = seatEls[idx].getBoundingClientRect();
+    var sx = sr.left + sr.width/2;
+    var sy = sr.top + sr.height/2;
+    var colors = ['#f0c040','#c8a820','#ffe066','#b8960c'];
+    for (var i = 0; i < 12; i++) {
+      (function(i) {
+        var el = document.createElement('div');
+        el.className = 'allin-chip';
+        var angle = (i / 12) * Math.PI * 2;
+        var d1 = 40 + Math.random() * 30;
+        var d2 = 80 + Math.random() * 60;
+        el.style.setProperty('--ax', Math.cos(angle)*d1 + 'px');
+        el.style.setProperty('--ay', Math.sin(angle)*d1 + 'px');
+        el.style.setProperty('--bx', Math.cos(angle)*d2 + 'px');
+        el.style.setProperty('--by', Math.sin(angle)*d2 + 'px');
+        el.style.setProperty('--ar', (Math.random()*360) + 'deg');
+        el.style.background = colors[i % colors.length];
+        el.style.left = sx + 'px';
+        el.style.top  = sy + 'px';
+        el.style.animationDelay = (i * 0.03) + 's';
+        document.body.appendChild(el);
+        setTimeout(function(){ el.remove(); }, 1000);
+      })(i);
+    }
+  }
+}
+
+// Reset fade des actions entre mains
+function fadeOutAllActions() {
+  document.querySelectorAll('.seat-action-label').forEach(function(el) {
+    el.classList.add('fading');
+    setTimeout(function(){ el.classList.remove('fading'); el.textContent = ''; }, 450);
+  });
+}
+
+// Showdown — flip cartes adversaires
+function animateShowdownCards() {
+  var delay = 0;
+  document.querySelectorAll('.seat:not(.me) .pk.xsm').forEach(function(el) {
+    el.classList.remove('pk-showdown');
+    void el.offsetWidth;
+    el.style.animationDelay = (delay) + 's';
+    el.classList.add('pk-showdown');
+    delay += 0.12;
+  });
+}
+
+// Thinking dots (remplace le texte "réfléchit")
+function thinkingHtml(name) {
+  return name + '<span class="thinking-dots"><span></span><span></span><span></span></span>';
+}
+
 
 // Explosion d'étoiles sur victoire
 function burstStars(x, y, count) {
@@ -2803,6 +3098,7 @@ const App = (() => {
         if (asbm) asbm.style.display = amGameAdmin ? '' : 'none';
         addChat(null, 'Rejoint la table ' + gId + (isAdmin ? ' (admin)' : '') + ' — attente du démarrage...', 'sys');
         show('s-game');
+        setTimeout(animateTableEnter, 50);
         const admBadge = document.getElementById('g-admin-badge');
         if (admBadge) admBadge.style.display = amGameAdmin ? '' : 'none';
         setTimeout(function(){ autoScaleTable(); }, 200);
@@ -2944,8 +3240,14 @@ const App = (() => {
           setTimeout(function(){ renderSeats(); }, 120);
           renderGameWaiting('Partie démarrée ! En attente de la première main...');
         } else {
+          // Animer le déplacement du dealer + fade des actions
+          if (_prevDealerPid >= 0 && _prevDealerPid !== dealerPid) {
+            setTimeout(function(){ animateDealerMove(_prevDealerPid, dealerPid); }, 200);
+          }
+          fadeOutAllActions();
           renderSeats();
         }
+        _prevDealerPid = dealerPid;
         break;
       }
 
@@ -3013,7 +3315,7 @@ const App = (() => {
           setMyTurnActive(true);
         } else {
           setMyTurnActive(false);
-          renderGameWaiting(getPlayerName(turnPid) + ' ' + t('thinking'));
+          renderGameWaiting('<span style="font-family:inherit">' + getPlayerName(turnPid) + '</span>' + '<span class="thinking-dots"><span></span><span></span><span></span></span>');
         }
         break;
       }
@@ -3048,9 +3350,13 @@ const App = (() => {
         renderSeats();
         notifyAction();
         flashActionLabel(pid);
+        if (action === 6) animateAllIn(pid); // All-in
         if (bet > 0) {
           setTimeout(function(){ animateChipToPot(pid, bet); }, 80);
-          setTimeout(function(){ animatePot(pot); }, 550);
+          setTimeout(function(){
+            animatePot(pot);
+            updatePotSize(pot);
+          }, 550);
         }
         break;
       }
@@ -3118,8 +3424,8 @@ const App = (() => {
         if ($('g-potbar')) $('g-potbar').textContent = t('pot') + ' ' + pot;
         const rvCard = commCards[4]; const rvName = rvCard != null ? cardName(rvCard, true) : '?';
         logAction('--- ' + t('river') + ' [' + rvName + '] ---');
-        renderComm(true); // flip animation
-        notifyCard();
+        renderComm(true, true); // flip animation + dramatic river
+        playTone(350, 0.08, 0.08); setTimeout(function(){ notifyCard(); }, 200);
         break;
       }
 
@@ -3163,15 +3469,27 @@ const App = (() => {
         pot = 0; $('g-pot').textContent = 'Pot: 0';
         if ($('g-potbar')) $('g-potbar').textContent = 'Pot: 0';
         renderSeats();
-        // Burst d'étoiles si je gagne
-        if (winners.some(function(w){ return w.pid === myId; })) {
+        // Animations de fin de main
+        var iWon = winners.some(function(w){ return w.pid === myId; });
+        var bigWin = winners.reduce(function(s,w){ return s + w.won; }, 0) > 500;
+        if (iWon) {
           var ov = document.getElementById('g-winner-overlay');
           var cx = ov ? ov.getBoundingClientRect().left + ov.offsetWidth/2 : window.innerWidth/2;
           var cy = ov ? ov.getBoundingClientRect().top  + 80 : window.innerHeight * 0.3;
           burstStars(cx, cy, 16);
           setTimeout(function(){ burstStars(cx - 80, cy + 40, 8); }, 300);
           setTimeout(function(){ burstStars(cx + 80, cy + 40, 8); }, 500);
+          if (bigWin) setTimeout(function(){ launchConfetti(70); }, 200);
         }
+        // Showdown flip cartes adversaires
+        setTimeout(animateShowdownCards, 300);
+        // Reset glow pot
+        setTimeout(function(){
+          var p1 = document.getElementById('g-pot');
+          var p2 = document.getElementById('g-potbar');
+          if (p1) p1.classList.remove('pot-huge');
+          if (p2) p2.classList.remove('pot-huge');
+        }, 800);
         showWinnerOverlay(winners);
         renderGameWaiting('Prochaine main...');
         break;
@@ -3186,6 +3504,12 @@ const App = (() => {
         if (won > 0) addChat(null, getPlayerName(pid) + ' gagne ' + won + ' jetons', 'sys');
         pot = 0; $('g-pot').textContent = 'Pot: 0';
         renderSeats();
+        // Détection élimination (stack à 0)
+        for (var _ep of seats) {
+          if (_ep !== myId && seatData[_ep] && seatData[_ep].money === 0) {
+            setTimeout(function(p){ animatePlayerEliminated(p); }, 600, _ep);
+          }
+        }
         if (won > 0) showWinnerOverlay([{pid, won, cash, c1:null, c2:null}]);
         break;
       }
@@ -3358,12 +3682,14 @@ const App = (() => {
   }
 
   // ─── Community cards ───
-  function renderComm(animate) {
+  function renderComm(animate, isRiver) {
     const el = $('g-comm');
     let h = '';
     for (let i=0; i<5; i++) {
       const v = commCards[i];
-      const cls = (animate && v != null) ? ' pk-flip' : '';
+      let cls = (animate && v != null) ? ' pk-flip' : '';
+      // River (i=4) — révélation plus lente et dramatique
+      if (isRiver && i === 4 && v != null) cls = ' pk-flip pk-river';
       h += cardToHtml(v != null ? v : null, false, true, cls);
     }
     el.innerHTML = h;
@@ -3466,7 +3792,8 @@ const App = (() => {
     // Flash my-zone border
     var mz = document.querySelector('.my-zone');
     if (mz && turnPid === myId) mz.style.borderTopColor = urgent ? '#e74c3c' : '';
-    if (_timerSec <= 0) clearInterval(_timerID);
+    setUrgentMode(urgent && turnPid === myId);
+    if (_timerSec <= 0) { clearInterval(_timerID); setUrgentMode(false); }
   }
 
   function startTurnTimer() {
@@ -3486,6 +3813,7 @@ const App = (() => {
     if (pb) pb.textContent = '';
     var mz = document.querySelector('.my-zone');
     if (mz) mz.style.borderTopColor = '';
+    setUrgentMode(false);
   }
 
   function renderSeats() {
@@ -3610,7 +3938,12 @@ const App = (() => {
     const el = document.getElementById('raise-amt');
     if (el) { el.value = v; el.focus(); }
   }
-  window.setPct = setPct; // exposer au scope global pour les onclick inline
+  window.setPct = setPct;
+  // Exposer pour les animations (accès depuis fonctions globales)
+  Object.defineProperty(window, 'seats',    {get: function(){ return seats; }});
+  Object.defineProperty(window, 'seatData', {get: function(){ return seatData; }});
+  Object.defineProperty(window, 'myId',     {get: function(){ return myId; }});
+  Object.defineProperty(window, 'players',  {get: function(){ return players; }});
 
   function renderMyTurnActions() {
     const myMoney = (seatData[myId] || {}).money || 0;
