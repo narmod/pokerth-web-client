@@ -33,108 +33,10 @@ function toggleStats() {
   if (typeof window._toggleStats === "function") window._toggleStats();
 }
 
-var _avpCatTitles = ["🐾 Sauvages", "🌊 Marins", "🦅 Oiseaux", "🐶 Mignons", "🐉 Créatures", "🧙 Perso.", "⚔️ Guerriers"];
-function avpTab(idx) {
-  // Masquer tous les panneaux
-  document.querySelectorAll('.avp-panel').forEach(function(p){ p.style.display='none'; });
-  document.querySelectorAll('.avp-tab').forEach(function(t){ t.classList.remove('avp-tab-active'); });
-  // Afficher le panneau sélectionné
-  var panel = document.getElementById('avp-panel-'+idx);
-  if (panel) panel.style.display = '';
-  // Activer l'onglet
-  var tabs = document.querySelectorAll('.avp-tab');
-  // idx=-1 → Aa (index 0 dans la liste), sinon idx+1
-  var tabIdx = idx < 0 ? 0 : idx + 1;
-  if (tabs[tabIdx]) tabs[tabIdx].classList.add('avp-tab-active');
-  // Titre
-  var titleEl = document.getElementById('avp-cat-title');
-  if (titleEl) titleEl.textContent = idx < 0 ? 'Initiale' : (_avpCatTitles[idx] || '');
-}
-
-var _avCats = [
-  {icon:"🐾",name:"Sauvages",emojis:["🦁","🐯","🐻","🐼","🦊","🐺","🦝","🦌","🐘","🦒","🦓","🦬","🐆","🐅","🦏","🦛"]},
-  {icon:"🌊",name:"Marins",emojis:["🐬","🦈","🐙","🦑","🦀","🦞","🐊","🦎","🐢","🐍","🦭","🐋","🐡","🦐","🦧","🐳"]},
-  {icon:"🦅",name:"Oiseaux",emojis:["🦅","🦆","🦉","🦚","🦜","🐧","🦩","🦢","🦋","🐝","🐛","🪲","🦗","🕷️","🦂","🪳"]},
-  {icon:"🐶",name:"Mignons",emojis:["🐶","🐱","🐰","🐹","🐭","🐮","🐷","🐸","🐔","🐿️","🦔","🐇","🐩","🦙","🐓","🐑"]},
-  {icon:"🐉",name:"Créatures",emojis:["🐉","🦄","🐲","🧌","👾","🤖","👽","👻","💀","☠️","🎃","🔮","👹","👺","🌑","⚡"]},
-  {icon:"🧙",name:"Perso.",emojis:["🧙","🧝","🧛","🧟","🧜","🧞","🦸","🦹","🧚","🤠","👑","🎭","🃏","🎩","🕵️","🥷"]},
-  {icon:"⚔️",name:"Guerriers",emojis:["🤺","🛡️","⚔️","🗡️","🏹","🔱","🌟","💫","✨","🌪️","🔥","❄️","🌊","💎","🍀","🎲"]},
-];
-
-
-function _avpSelectCat(idx, activeBtn) {
-  // Réinitialiser les onglets
-  var tabBtns = document.querySelectorAll('#avp-tabs button');
-  tabBtns.forEach(function(b){
-    b.style.borderColor='#ffffff22';
-    b.style.background='#ffffff0a';
-  });
-  if (activeBtn) { activeBtn.style.borderColor='#c8a84a'; activeBtn.style.background='#c8a84a22'; }
-  var title = document.getElementById('avp-title');
-  if (title) title.textContent = idx < 0 ? 'Initiale' : (_avCats[idx].icon + ' ' + _avCats[idx].name);
-  var body = document.getElementById('avp-body');
-  if (body) _avpRenderGrid(body, idx);
-}
-
-function _avpRenderGrid(body, idx) {
-  body.innerHTML = '';
-  var grid = document.createElement('div');
-  grid.style.cssText = 'display:grid;grid-template-columns:repeat(8,38px);gap:4px;justify-content:center';
-
-  if (idx < 0) {
-    // Bouton "Aa"
-    var btn = document.createElement('button');
-    btn.type = 'button';
-    btn.textContent = 'Aa';
-    btn.style.cssText = 'width:38px;height:38px;background:#ffffff0a;border:2px solid #c8a84a44;border-radius:6px;font-size:0.65rem;font-family:serif;color:#ccc;cursor:pointer;display:flex;align-items:center;justify-content:center';
-    btn.onclick = function(){ selectAvatarPopup(''); };
-    grid.appendChild(btn);
-  } else {
-    _avCats[idx].emojis.forEach(function(e) {
-      var btn = document.createElement('button');
-      btn.type = 'button';
-      btn.textContent = e;
-      btn.dataset.av = e;
-      var saved = '';
-      try { saved = localStorage.getItem('pth_avatar')||''; } catch(x){}
-      btn.style.cssText = 'width:38px;height:38px;background:#ffffff0a;border:2px solid '+(saved===e?'#c8a84a':'transparent')+';border-radius:6px;font-size:1.3rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:border-color 0.1s,transform 0.1s';
-      btn.onmouseenter = function(){ this.style.transform='scale(1.15)'; this.style.borderColor='#c8a84a66'; };
-      btn.onmouseleave = function(){ var s=''; try{s=localStorage.getItem('pth_avatar')||'';}catch(x){} this.style.transform=''; this.style.borderColor=s===this.dataset.av?'#c8a84a':'transparent'; };
-      btn.onclick = function(){ selectAvatarPopup(this.dataset.av); };
-      grid.appendChild(btn);
-    });
-  }
-  body.appendChild(grid);
-}
-
 function toggleAvatarPopup() {
-  _buildAvatarPopup();
   var p = document.getElementById("avatar-popup");
-  var bg = document.getElementById("avatar-popup-bg");
   if (!p) return;
-  var isOpen = p.style.display !== "none" && p.style.display !== "";
-  if (isOpen) {
-    p.style.display = "none";
-    if (bg) bg.style.display = "none";
-  } else {
-    // Backdrop
-    if (!bg) {
-      bg = document.createElement("div");
-      bg.id = "avatar-popup-bg";
-      bg.style.cssText = "position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:9998;backdrop-filter:blur(2px)";
-      bg.onclick = function(){ toggleAvatarPopup(); };
-      document.body.appendChild(bg);
-    }
-    bg.style.display = "block";
-    p.style.display = "flex";
-    // Recentrer après affichage
-    p.style.position = "fixed";
-    p.style.top = "50%";
-    p.style.left = "50%";
-    p.style.transform = "translate(-50%,-50%)";
-    p.style.zIndex = "9999";
-    p.style.flexDirection = "column";
-  }
+  p.style.display = (p.style.display === "none" || !p.style.display) ? "block" : "none";
 }
 function selectAvatarPopup(emoji) {
   try { localStorage.setItem("pth_avatar", emoji); } catch(e) {}
@@ -155,8 +57,7 @@ function selectAvatarPopup(emoji) {
 </script>
 
 <script>
-/* ═══ Fonctions globales avatar (avant pokerth.js) ═══ */
-var _avCats = [
+var _avCats=[
   {icon:"🐾",name:"Sauvages",emojis:["🦁","🐯","🐻","🐼","🦊","🐺","🦝","🦌","🐘","🦒","🦓","🦬","🐆","🐅","🦏","🦛"]},
   {icon:"🌊",name:"Marins",emojis:["🐬","🦈","🐙","🦑","🦀","🦞","🐊","🦎","🐢","🐍","🦭","🐋","🐡","🦐","🦧","🐳"]},
   {icon:"🦅",name:"Oiseaux",emojis:["🦅","🦆","🦉","🦚","🦜","🐧","🦩","🦢","🦋","🐝","🐛","🪲","🦗","🕷️","🦂","🪳"]},
@@ -165,65 +66,67 @@ var _avCats = [
   {icon:"🧙",name:"Perso.",emojis:["🧙","🧝","🧛","🧟","🧜","🧞","🦸","🦹","🧚","🤠","👑","🎭","🃏","🎩","🕵️","🥷"]},
   {icon:"⚔️",name:"Guerriers",emojis:["🤺","🛡️","⚔️","🗡️","🏹","🔱","🌟","💫","✨","🌪️","🔥","❄️","🌊","💎","🍀","🎲"]}
 ];
-var _avpCurrentCat = 0;
 
-function toggleAvatarPopup() {
-  var dlg = document.getElementById('avp-dialog');
-  if (!dlg) return;
-  if (dlg.open) {
-    dlg.close();
-  } else {
-    avpShowCat(0);
-    dlg.showModal();
-  }
+function toggleAvatarPopup(){
+  var d=document.getElementById('avp-dialog');
+  if(!d)return;
+  if(d.open){d.close();}
+  else{avpShowCat(0);d.showModal();}
 }
-
-function avpShowCat(idx) {
-  _avpCurrentCat = idx;
-  var titleEl = document.getElementById('avp-title');
-  if (titleEl) titleEl.textContent = idx < 0 ? 'Initiale' : (_avCats[idx].icon + ' ' + _avCats[idx].name);
-  // Onglets
-  document.querySelectorAll('.avp-tab').forEach(function(b, i) {
-    b.classList.toggle('active', i === idx + 1);
+function avpShowCat(idx){
+  var t=document.getElementById('avp-title');
+  if(t)t.textContent=idx<0?'Initiale':(_avCats[idx].icon+' '+_avCats[idx].name);
+  document.querySelectorAll('.avp-tab').forEach(function(b,i){
+    b.classList.toggle('active',i===idx+1);
   });
-  // Grille
-  var grid = document.getElementById('avp-grid');
-  if (!grid) return;
-  grid.innerHTML = '';
-  var saved = '';
-  try { saved = localStorage.getItem('pth_avatar') || ''; } catch(e) {}
-  if (idx < 0) {
-    var b = document.createElement('button');
-    b.className = 'avp-emoji-btn'; b.textContent = 'Aa';
-    b.style.fontSize = '0.7rem'; b.style.fontFamily = 'serif';
-    b.style.borderColor = saved === '' ? '#c8a84a' : 'transparent';
-    b.onclick = function(){ selectAvatarPopup(''); };
-    grid.appendChild(b);
-  } else {
-    _avCats[idx].emojis.forEach(function(e) {
-      var b = document.createElement('button');
-      b.className = 'avp-emoji-btn'; b.textContent = e; b.dataset.av = e;
-      b.style.borderColor = saved === e ? '#c8a84a' : 'transparent';
-      b.onclick = function(){ selectAvatarPopup(this.dataset.av); };
-      grid.appendChild(b);
+  var g=document.getElementById('avp-grid');
+  if(!g)return;
+  g.innerHTML='';
+  var sv='';try{sv=localStorage.getItem('pth_avatar')||'';}catch(e){}
+  if(idx<0){
+    var b=document.createElement('button');
+    b.className='avp-eb';b.textContent='Aa';
+    b.style.cssText='width:38px;height:38px;font-size:0.7rem;font-family:serif;border:2px solid '+(sv===''?'#c8a84a':'transparent')+';background:rgba(255,255,255,0.05);border-radius:6px;cursor:pointer;color:#ccc';
+    b.onclick=function(){selectAvatarPopup('');};
+    g.appendChild(b);
+  }else{
+    _avCats[idx].emojis.forEach(function(e){
+      var b=document.createElement('button');
+      b.className='avp-eb';b.textContent=e;b.dataset.av=e;
+      b.style.cssText='width:38px;height:38px;font-size:1.25rem;border:2px solid '+(sv===e?'#c8a84a':'transparent')+';background:rgba(255,255,255,0.04);border-radius:6px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:transform 0.1s,border-color 0.1s';
+      b.onmouseenter=function(){this.style.transform='scale(1.15)';this.style.borderColor='rgba(200,168,74,0.5)';};
+      b.onmouseleave=function(){var s='';try{s=localStorage.getItem('pth_avatar')||'';}catch(x){}this.style.transform='';this.style.borderColor=s===this.dataset.av?'#c8a84a':'transparent';};
+      b.onclick=function(){selectAvatarPopup(this.dataset.av);};
+      g.appendChild(b);
     });
   }
 }
-
-function selectAvatarPopup(emoji) {
-  try { localStorage.setItem('pth_avatar', emoji); } catch(e) {}
-  // Highlight bouton trigger
-  var trigger = document.getElementById('av-trigger');
-  if (trigger) { trigger.textContent = emoji || '🎭'; trigger.classList.toggle('has-avatar', !!emoji); }
-  // Fermer
-  var dlg = document.getElementById('avp-dialog');
-  if (dlg && dlg.open) dlg.close();
-  // Màj UI en jeu
-  if (typeof window.refreshMyAvatar === 'function') window.refreshMyAvatar();
-  if (typeof window._renderSeats === 'function') window._renderSeats();
-  if (typeof window._broadcastMyAvatar === 'function') window._broadcastMyAvatar(emoji);
+function selectAvatarPopup(emoji){
+  try{localStorage.setItem('pth_avatar',emoji);}catch(e){}
+  var tr=document.getElementById('av-trigger');
+  if(tr){tr.textContent=emoji||'🎭';tr.classList.toggle('has-avatar',!!emoji);}
+  var d=document.getElementById('avp-dialog');
+  if(d&&d.open)d.close();
+  if(typeof window.refreshMyAvatar==='function')window.refreshMyAvatar();
+  if(typeof window._renderSeats==='function')window._renderSeats();
+  if(typeof window._broadcastMyAvatar==='function')window._broadcastMyAvatar(emoji);
 }
 </script>
+<style>
+#avp-dialog{border:1px solid rgba(200,168,74,.45);border-radius:10px;padding:0;background:#060e08;width:min(360px,94vw);max-height:80vh;box-shadow:0 12px 50px rgba(0,0,0,.85);}
+#avp-dialog::backdrop{background:rgba(0,0,0,.72);backdrop-filter:blur(3px);}
+#avp-di{display:flex;flex-direction:column;max-height:80vh;overflow:hidden;}
+#avp-dh{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-bottom:1px solid rgba(200,168,74,.2);background:rgba(0,0,0,.4);flex-shrink:0;}
+#avp-title{font-size:.62rem;letter-spacing:.15em;text-transform:uppercase;color:#c8a84a;font-family:'Cinzel',serif;}
+#avp-x{background:none;border:none;color:#999;cursor:pointer;font-size:1rem;line-height:1;}
+#avp-x:hover{color:#fff;}
+#avp-dt{display:flex;gap:4px;flex-wrap:wrap;padding:7px 10px;border-bottom:1px solid rgba(200,168,74,.12);background:rgba(0,0,0,.25);flex-shrink:0;}
+.avp-tab{background:rgba(255,255,255,.05);border:1px solid transparent;border-radius:5px;font-size:1rem;cursor:pointer;padding:3px 7px;color:inherit;transition:border-color .12s,background .12s,transform .1s;}
+.avp-tab:hover{transform:scale(1.1);border-color:rgba(200,168,74,.45);}
+.avp-tab.active{border-color:#c8a84a!important;background:rgba(200,168,74,.18)!important;}
+#avp-dg{overflow-y:auto;padding:10px;flex:1;scrollbar-width:thin;scrollbar-color:rgba(200,168,74,.3) transparent;}
+#avp-grid{display:grid;grid-template-columns:repeat(8,38px);gap:5px;justify-content:center;}
+</style>
 </head>
 <body>
 
@@ -240,17 +143,7 @@ function selectAvatarPopup(emoji) {
     <button class="btn-sm" onclick="location.reload()" title="Refresh / Rafraîchir" style="font-size:1rem;padding:3px 8px">↺</button>
     <button class="btn-sm" id="fs-btn-connect" onclick="toggleFullscreen()" title="Fullscreen">⛶</button>
   </div>
-  <div class="card" style="position:relative">
-      
-                  <div class="avp-tabs-row">
-          <button type="button" class="avp-tab" onclick="avpShowCat(-1)">Aa</button>
-          <button type="button" class="avp-tab" onclick="avpShowCat(0)" title="Sauvages">🐾</button><button type="button" class="avp-tab" onclick="avpShowCat(1)" title="Marins">🌊</button><button type="button" class="avp-tab" onclick="avpShowCat(2)" title="Oiseaux">🦅</button><button type="button" class="avp-tab" onclick="avpShowCat(3)" title="Mignons">🐶</button><button type="button" class="avp-tab" onclick="avpShowCat(4)" title="Créatures">🐉</button><button type="button" class="avp-tab" onclick="avpShowCat(5)" title="Perso.">🧙</button><button type="button" class="avp-tab" onclick="avpShowCat(6)" title="Guerriers">⚔️</button>
-        </div>
-        <div class="avp-grid-wrap"></div>
-      </div>
-    </div>
-</div>
-
+  <div class="card">
     <div class="card-logo" style="padding:20px 0 18px">
       <div class="card-suits-row" style="font-size:1.4rem;letter-spacing:0.3em;margin-bottom:8px"><span>♠</span><span class="r">♥</span><span class="r">♦</span><span>♣</span></div>
       <div class="card-title-big" style="font-size:2rem;letter-spacing:0.18em">PokerTH</div>
@@ -295,7 +188,18 @@ function selectAvatarPopup(emoji) {
                 style="width:42px;height:42px;font-size:1.5rem;background:rgba(255,255,255,0.06);border:1px solid var(--border);border-radius:4px;cursor:pointer;flex-shrink:0;transition:border-color 0.2s">🎭</button>
       </div>
     </div>
-    
+    <!-- Popup sélection avatar -->
+    <div id="avatar-popup" style="display:none">
+      <div class="avp-header">
+        <span>Choisir un avatar</span>
+        <button type="button" onclick="toggleAvatarPopup()" style="background:none;border:none;color:var(--text);cursor:pointer;font-size:1rem">✕</button>
+      </div>
+      <div class="avp-grid">
+        <button type="button" class="avp-btn avp-none" data-av="" onclick="selectAvatarPopup('')">Aa</button>
+<button type="button" class="avp-btn" data-av="🦁" onclick="selectAvatarPopup('🦁')">🦁</button><button type="button" class="avp-btn" data-av="🐯" onclick="selectAvatarPopup('🐯')">🐯</button><button type="button" class="avp-btn" data-av="🐻" onclick="selectAvatarPopup('🐻')">🐻</button><button type="button" class="avp-btn" data-av="🦊" onclick="selectAvatarPopup('🦊')">🦊</button><button type="button" class="avp-btn" data-av="🐺" onclick="selectAvatarPopup('🐺')">🐺</button><button type="button" class="avp-btn" data-av="🦝" onclick="selectAvatarPopup('🦝')">🦝</button><button type="button" class="avp-btn" data-av="🐸" onclick="selectAvatarPopup('🐸')">🐸</button><button type="button" class="avp-btn" data-av="🐧" onclick="selectAvatarPopup('🐧')">🐧</button><button type="button" class="avp-btn" data-av="🦅" onclick="selectAvatarPopup('🦅')">🦅</button><button type="button" class="avp-btn" data-av="🦆" onclick="selectAvatarPopup('🦆')">🦆</button><button type="button" class="avp-btn" data-av="🦋" onclick="selectAvatarPopup('🦋')">🦋</button><button type="button" class="avp-btn" data-av="🐬" onclick="selectAvatarPopup('🐬')">🐬</button><button type="button" class="avp-btn" data-av="🦈" onclick="selectAvatarPopup('🦈')">🦈</button><button type="button" class="avp-btn" data-av="🐙" onclick="selectAvatarPopup('🐙')">🐙</button><button type="button" class="avp-btn" data-av="🦑" onclick="selectAvatarPopup('🦑')">🦑</button><button type="button" class="avp-btn" data-av="🦎" onclick="selectAvatarPopup('🦎')">🦎</button><button type="button" class="avp-btn" data-av="🐉" onclick="selectAvatarPopup('🐉')">🐉</button><button type="button" class="avp-btn" data-av="🦄" onclick="selectAvatarPopup('🦄')">🦄</button><button type="button" class="avp-btn" data-av="🐲" onclick="selectAvatarPopup('🐲')">🐲</button><button type="button" class="avp-btn" data-av="🦓" onclick="selectAvatarPopup('🦓')">🦓</button><button type="button" class="avp-btn" data-av="🦏" onclick="selectAvatarPopup('🦏')">🦏</button><button type="button" class="avp-btn" data-av="🦛" onclick="selectAvatarPopup('🦛')">🦛</button><button type="button" class="avp-btn" data-av="🐘" onclick="selectAvatarPopup('🐘')">🐘</button><button type="button" class="avp-btn" data-av="🐊" onclick="selectAvatarPopup('🐊')">🐊</button><button type="button" class="avp-btn" data-av="🤠" onclick="selectAvatarPopup('🤠')">🤠</button><button type="button" class="avp-btn" data-av="👑" onclick="selectAvatarPopup('👑')">👑</button><button type="button" class="avp-btn" data-av="🧙" onclick="selectAvatarPopup('🧙')">🧙</button><button type="button" class="avp-btn" data-av="🧝" onclick="selectAvatarPopup('🧝')">🧝</button><button type="button" class="avp-btn" data-av="🧛" onclick="selectAvatarPopup('🧛')">🧛</button><button type="button" class="avp-btn" data-av="🧟" onclick="selectAvatarPopup('🧟')">🧟</button><button type="button" class="avp-btn" data-av="🦸" onclick="selectAvatarPopup('🦸')">🦸</button><button type="button" class="avp-btn" data-av="🦹" onclick="selectAvatarPopup('🦹')">🦹</button><button type="button" class="avp-btn" data-av="🧜" onclick="selectAvatarPopup('🧜')">🧜</button><button type="button" class="avp-btn" data-av="🧞" onclick="selectAvatarPopup('🧞')">🧞</button><button type="button" class="avp-btn" data-av="🧌" onclick="selectAvatarPopup('🧌')">🧌</button><button type="button" class="avp-btn" data-av="👾" onclick="selectAvatarPopup('👾')">👾</button><button type="button" class="avp-btn" data-av="👹" onclick="selectAvatarPopup('👹')">👹</button><button type="button" class="avp-btn" data-av="👺" onclick="selectAvatarPopup('👺')">👺</button><button type="button" class="avp-btn" data-av="👻" onclick="selectAvatarPopup('👻')">👻</button><button type="button" class="avp-btn" data-av="🎃" onclick="selectAvatarPopup('🎃')">🎃</button>
+      </div>
+    </div>
+
     <div class="f" id="f-pass" style="display:none">
       <label>Password</label>
       <input id="pass" type="password" maxlength="128" placeholder="••••••••"
@@ -314,37 +218,6 @@ function selectAvatarPopup(emoji) {
     <button class="btn-primary" onclick="App.connect()" data-i18n="connect">CONNECT</button>
     <div id="cstatus" class="status"></div>
   </div>
-      <div class="avp-tabs"><button type="button" class="avp-tab avp-tab-none" onclick="avpTab(-1)" title="Initiale">Aa</button><button type="button" class="avp-tab avp-tab-active" onclick="avpTab(0)" title="Sauvages">🐾</button><button type="button" class="avp-tab" onclick="avpTab(1)" title="Marins">🌊</button><button type="button" class="avp-tab" onclick="avpTab(2)" title="Oiseaux">🦅</button><button type="button" class="avp-tab" onclick="avpTab(3)" title="Mignons">🐶</button><button type="button" class="avp-tab" onclick="avpTab(4)" title="Créatures">🐉</button><button type="button" class="avp-tab" onclick="avpTab(5)" title="Perso.">🧙</button><button type="button" class="avp-tab" onclick="avpTab(6)" title="Guerriers">⚔️</button></div>
-      <div class="avp-body">
-<div class="avp-panel" id="avp-panel--1" style="display:none"><div class="avp-panel-grid"><button type="button" class="avp-btn avp-none selected" data-av="" onclick="selectAvatarPopup('')">Aa<br><span style="font-size:0.5rem;opacity:0.6">Initiale</span></button></div></div>
-<div class="avp-panel" id="avp-panel-0"><div class="avp-panel-grid"><button type="button" class="avp-btn" data-av="🦁" onclick="selectAvatarPopup('🦁')">🦁</button><button type="button" class="avp-btn" data-av="🐯" onclick="selectAvatarPopup('🐯')">🐯</button><button type="button" class="avp-btn" data-av="🐻" onclick="selectAvatarPopup('🐻')">🐻</button><button type="button" class="avp-btn" data-av="🐼" onclick="selectAvatarPopup('🐼')">🐼</button><button type="button" class="avp-btn" data-av="🦊" onclick="selectAvatarPopup('🦊')">🦊</button><button type="button" class="avp-btn" data-av="🐺" onclick="selectAvatarPopup('🐺')">🐺</button><button type="button" class="avp-btn" data-av="🦝" onclick="selectAvatarPopup('🦝')">🦝</button><button type="button" class="avp-btn" data-av="🦌" onclick="selectAvatarPopup('🦌')">🦌</button><button type="button" class="avp-btn" data-av="🐘" onclick="selectAvatarPopup('🐘')">🐘</button><button type="button" class="avp-btn" data-av="🦏" onclick="selectAvatarPopup('🦏')">🦏</button><button type="button" class="avp-btn" data-av="🦛" onclick="selectAvatarPopup('🦛')">🦛</button><button type="button" class="avp-btn" data-av="🦒" onclick="selectAvatarPopup('🦒')">🦒</button><button type="button" class="avp-btn" data-av="🦓" onclick="selectAvatarPopup('🦓')">🦓</button><button type="button" class="avp-btn" data-av="🦬" onclick="selectAvatarPopup('🦬')">🦬</button><button type="button" class="avp-btn" data-av="🐆" onclick="selectAvatarPopup('🐆')">🐆</button><button type="button" class="avp-btn" data-av="🐅" onclick="selectAvatarPopup('🐅')">🐅</button></div></div>
-<div class="avp-panel" id="avp-panel-1" style="display:none"><div class="avp-panel-grid"><button type="button" class="avp-btn" data-av="🐬" onclick="selectAvatarPopup('🐬')">🐬</button><button type="button" class="avp-btn" data-av="🦈" onclick="selectAvatarPopup('🦈')">🦈</button><button type="button" class="avp-btn" data-av="🐙" onclick="selectAvatarPopup('🐙')">🐙</button><button type="button" class="avp-btn" data-av="🦑" onclick="selectAvatarPopup('🦑')">🦑</button><button type="button" class="avp-btn" data-av="🦀" onclick="selectAvatarPopup('🦀')">🦀</button><button type="button" class="avp-btn" data-av="🦞" onclick="selectAvatarPopup('🦞')">🦞</button><button type="button" class="avp-btn" data-av="🐊" onclick="selectAvatarPopup('🐊')">🐊</button><button type="button" class="avp-btn" data-av="🦎" onclick="selectAvatarPopup('🦎')">🦎</button><button type="button" class="avp-btn" data-av="🐢" onclick="selectAvatarPopup('🐢')">🐢</button><button type="button" class="avp-btn" data-av="🐍" onclick="selectAvatarPopup('🐍')">🐍</button><button type="button" class="avp-btn" data-av="🦭" onclick="selectAvatarPopup('🦭')">🦭</button><button type="button" class="avp-btn" data-av="🐋" onclick="selectAvatarPopup('🐋')">🐋</button><button type="button" class="avp-btn" data-av="🐡" onclick="selectAvatarPopup('🐡')">🐡</button><button type="button" class="avp-btn" data-av="🦐" onclick="selectAvatarPopup('🦐')">🦐</button><button type="button" class="avp-btn" data-av="🦧" onclick="selectAvatarPopup('🦧')">🦧</button><button type="button" class="avp-btn" data-av="🐳" onclick="selectAvatarPopup('🐳')">🐳</button></div></div>
-<div class="avp-panel" id="avp-panel-2" style="display:none"><div class="avp-panel-grid"><button type="button" class="avp-btn" data-av="🦅" onclick="selectAvatarPopup('🦅')">🦅</button><button type="button" class="avp-btn" data-av="🦆" onclick="selectAvatarPopup('🦆')">🦆</button><button type="button" class="avp-btn" data-av="🦉" onclick="selectAvatarPopup('🦉')">🦉</button><button type="button" class="avp-btn" data-av="🦚" onclick="selectAvatarPopup('🦚')">🦚</button><button type="button" class="avp-btn" data-av="🦜" onclick="selectAvatarPopup('🦜')">🦜</button><button type="button" class="avp-btn" data-av="🐧" onclick="selectAvatarPopup('🐧')">🐧</button><button type="button" class="avp-btn" data-av="🦩" onclick="selectAvatarPopup('🦩')">🦩</button><button type="button" class="avp-btn" data-av="🦢" onclick="selectAvatarPopup('🦢')">🦢</button><button type="button" class="avp-btn" data-av="🦋" onclick="selectAvatarPopup('🦋')">🦋</button><button type="button" class="avp-btn" data-av="🐝" onclick="selectAvatarPopup('🐝')">🐝</button><button type="button" class="avp-btn" data-av="🐛" onclick="selectAvatarPopup('🐛')">🐛</button><button type="button" class="avp-btn" data-av="🪲" onclick="selectAvatarPopup('🪲')">🪲</button><button type="button" class="avp-btn" data-av="🦗" onclick="selectAvatarPopup('🦗')">🦗</button><button type="button" class="avp-btn" data-av="🕷️" onclick="selectAvatarPopup('🕷️')">🕷️</button><button type="button" class="avp-btn" data-av="🦂" onclick="selectAvatarPopup('🦂')">🦂</button><button type="button" class="avp-btn" data-av="🪳" onclick="selectAvatarPopup('🪳')">🪳</button></div></div>
-<div class="avp-panel" id="avp-panel-3" style="display:none"><div class="avp-panel-grid"><button type="button" class="avp-btn" data-av="🐶" onclick="selectAvatarPopup('🐶')">🐶</button><button type="button" class="avp-btn" data-av="🐱" onclick="selectAvatarPopup('🐱')">🐱</button><button type="button" class="avp-btn" data-av="🐰" onclick="selectAvatarPopup('🐰')">🐰</button><button type="button" class="avp-btn" data-av="🐹" onclick="selectAvatarPopup('🐹')">🐹</button><button type="button" class="avp-btn" data-av="🐭" onclick="selectAvatarPopup('🐭')">🐭</button><button type="button" class="avp-btn" data-av="🐮" onclick="selectAvatarPopup('🐮')">🐮</button><button type="button" class="avp-btn" data-av="🐷" onclick="selectAvatarPopup('🐷')">🐷</button><button type="button" class="avp-btn" data-av="🐸" onclick="selectAvatarPopup('🐸')">🐸</button><button type="button" class="avp-btn" data-av="🐔" onclick="selectAvatarPopup('🐔')">🐔</button><button type="button" class="avp-btn" data-av="🐿️" onclick="selectAvatarPopup('🐿️')">🐿️</button><button type="button" class="avp-btn" data-av="🦔" onclick="selectAvatarPopup('🦔')">🦔</button><button type="button" class="avp-btn" data-av="🐇" onclick="selectAvatarPopup('🐇')">🐇</button><button type="button" class="avp-btn" data-av="🐩" onclick="selectAvatarPopup('🐩')">🐩</button><button type="button" class="avp-btn" data-av="🦙" onclick="selectAvatarPopup('🦙')">🦙</button><button type="button" class="avp-btn" data-av="🐓" onclick="selectAvatarPopup('🐓')">🐓</button><button type="button" class="avp-btn" data-av="🐑" onclick="selectAvatarPopup('🐑')">🐑</button></div></div>
-<div class="avp-panel" id="avp-panel-4" style="display:none"><div class="avp-panel-grid"><button type="button" class="avp-btn" data-av="🐉" onclick="selectAvatarPopup('🐉')">🐉</button><button type="button" class="avp-btn" data-av="🦄" onclick="selectAvatarPopup('🦄')">🦄</button><button type="button" class="avp-btn" data-av="🐲" onclick="selectAvatarPopup('🐲')">🐲</button><button type="button" class="avp-btn" data-av="🧌" onclick="selectAvatarPopup('🧌')">🧌</button><button type="button" class="avp-btn" data-av="👾" onclick="selectAvatarPopup('👾')">👾</button><button type="button" class="avp-btn" data-av="🤖" onclick="selectAvatarPopup('🤖')">🤖</button><button type="button" class="avp-btn" data-av="👽" onclick="selectAvatarPopup('👽')">👽</button><button type="button" class="avp-btn" data-av="👻" onclick="selectAvatarPopup('👻')">👻</button><button type="button" class="avp-btn" data-av="💀" onclick="selectAvatarPopup('💀')">💀</button><button type="button" class="avp-btn" data-av="☠️" onclick="selectAvatarPopup('☠️')">☠️</button><button type="button" class="avp-btn" data-av="🎃" onclick="selectAvatarPopup('🎃')">🎃</button><button type="button" class="avp-btn" data-av="🔮" onclick="selectAvatarPopup('🔮')">🔮</button><button type="button" class="avp-btn" data-av="👹" onclick="selectAvatarPopup('👹')">👹</button><button type="button" class="avp-btn" data-av="👺" onclick="selectAvatarPopup('👺')">👺</button><button type="button" class="avp-btn" data-av="🌑" onclick="selectAvatarPopup('🌑')">🌑</button><button type="button" class="avp-btn" data-av="⚡" onclick="selectAvatarPopup('⚡')">⚡</button></div></div>
-<div class="avp-panel" id="avp-panel-5" style="display:none"><div class="avp-panel-grid"><button type="button" class="avp-btn" data-av="🧙" onclick="selectAvatarPopup('🧙')">🧙</button><button type="button" class="avp-btn" data-av="🧝" onclick="selectAvatarPopup('🧝')">🧝</button><button type="button" class="avp-btn" data-av="🧛" onclick="selectAvatarPopup('🧛')">🧛</button><button type="button" class="avp-btn" data-av="🧟" onclick="selectAvatarPopup('🧟')">🧟</button><button type="button" class="avp-btn" data-av="🧜" onclick="selectAvatarPopup('🧜')">🧜</button><button type="button" class="avp-btn" data-av="🧞" onclick="selectAvatarPopup('🧞')">🧞</button><button type="button" class="avp-btn" data-av="🦸" onclick="selectAvatarPopup('🦸')">🦸</button><button type="button" class="avp-btn" data-av="🦹" onclick="selectAvatarPopup('🦹')">🦹</button><button type="button" class="avp-btn" data-av="🧚" onclick="selectAvatarPopup('🧚')">🧚</button><button type="button" class="avp-btn" data-av="🤠" onclick="selectAvatarPopup('🤠')">🤠</button><button type="button" class="avp-btn" data-av="👑" onclick="selectAvatarPopup('👑')">👑</button><button type="button" class="avp-btn" data-av="🎭" onclick="selectAvatarPopup('🎭')">🎭</button><button type="button" class="avp-btn" data-av="🃏" onclick="selectAvatarPopup('🃏')">🃏</button><button type="button" class="avp-btn" data-av="🎩" onclick="selectAvatarPopup('🎩')">🎩</button><button type="button" class="avp-btn" data-av="🕵️" onclick="selectAvatarPopup('🕵️')">🕵️</button><button type="button" class="avp-btn" data-av="🥷" onclick="selectAvatarPopup('🥷')">🥷</button></div></div>
-<div class="avp-panel" id="avp-panel-6" style="display:none"><div class="avp-panel-grid"><button type="button" class="avp-btn" data-av="🤺" onclick="selectAvatarPopup('🤺')">🤺</button><button type="button" class="avp-btn" data-av="🛡️" onclick="selectAvatarPopup('🛡️')">🛡️</button><button type="button" class="avp-btn" data-av="⚔️" onclick="selectAvatarPopup('⚔️')">⚔️</button><button type="button" class="avp-btn" data-av="🗡️" onclick="selectAvatarPopup('🗡️')">🗡️</button><button type="button" class="avp-btn" data-av="🏹" onclick="selectAvatarPopup('🏹')">🏹</button><button type="button" class="avp-btn" data-av="🔱" onclick="selectAvatarPopup('🔱')">🔱</button><button type="button" class="avp-btn" data-av="🌟" onclick="selectAvatarPopup('🌟')">🌟</button><button type="button" class="avp-btn" data-av="💫" onclick="selectAvatarPopup('💫')">💫</button><button type="button" class="avp-btn" data-av="✨" onclick="selectAvatarPopup('✨')">✨</button><button type="button" class="avp-btn" data-av="🌪️" onclick="selectAvatarPopup('🌪️')">🌪️</button><button type="button" class="avp-btn" data-av="🔥" onclick="selectAvatarPopup('🔥')">🔥</button><button type="button" class="avp-btn" data-av="❄️" onclick="selectAvatarPopup('❄️')">❄️</button><button type="button" class="avp-btn" data-av="🌊" onclick="selectAvatarPopup('🌊')">🌊</button><button type="button" class="avp-btn" data-av="💎" onclick="selectAvatarPopup('💎')">💎</button><button type="button" class="avp-btn" data-av="🍀" onclick="selectAvatarPopup('🍀')">🍀</button><button type="button" class="avp-btn" data-av="🎲" onclick="selectAvatarPopup('🎲')">🎲</button></div></div>
-      </div>
-    </div>
-      <div class="avp-scroll">
-        <button type="button" class="avp-btn avp-none" data-av="" onclick="selectAvatarPopup('')">Aa</button>
-        <div class="avp-cat-header">🐾 Animaux sauvages</div>
-        <div class="avp-cat-grid"><button type="button" class="avp-btn" data-av="🦁" onclick="selectAvatarPopup('🦁')">🦁</button><button type="button" class="avp-btn" data-av="🐯" onclick="selectAvatarPopup('🐯')">🐯</button><button type="button" class="avp-btn" data-av="🐻" onclick="selectAvatarPopup('🐻')">🐻</button><button type="button" class="avp-btn" data-av="🐼" onclick="selectAvatarPopup('🐼')">🐼</button><button type="button" class="avp-btn" data-av="🦊" onclick="selectAvatarPopup('🦊')">🦊</button><button type="button" class="avp-btn" data-av="🐺" onclick="selectAvatarPopup('🐺')">🐺</button><button type="button" class="avp-btn" data-av="🦝" onclick="selectAvatarPopup('🦝')">🦝</button><button type="button" class="avp-btn" data-av="🦌" onclick="selectAvatarPopup('🦌')">🦌</button><button type="button" class="avp-btn" data-av="🐘" onclick="selectAvatarPopup('🐘')">🐘</button><button type="button" class="avp-btn" data-av="🦏" onclick="selectAvatarPopup('🦏')">🦏</button><button type="button" class="avp-btn" data-av="🦛" onclick="selectAvatarPopup('🦛')">🦛</button><button type="button" class="avp-btn" data-av="🦒" onclick="selectAvatarPopup('🦒')">🦒</button><button type="button" class="avp-btn" data-av="🦓" onclick="selectAvatarPopup('🦓')">🦓</button><button type="button" class="avp-btn" data-av="🦬" onclick="selectAvatarPopup('🦬')">🦬</button><button type="button" class="avp-btn" data-av="🐆" onclick="selectAvatarPopup('🐆')">🐆</button><button type="button" class="avp-btn" data-av="🐅" onclick="selectAvatarPopup('🐅')">🐅</button></div>
-        <div class="avp-cat-header">🌊 Animaux marins & reptiles</div>
-        <div class="avp-cat-grid"><button type="button" class="avp-btn" data-av="🐬" onclick="selectAvatarPopup('🐬')">🐬</button><button type="button" class="avp-btn" data-av="🦈" onclick="selectAvatarPopup('🦈')">🦈</button><button type="button" class="avp-btn" data-av="🐙" onclick="selectAvatarPopup('🐙')">🐙</button><button type="button" class="avp-btn" data-av="🦑" onclick="selectAvatarPopup('🦑')">🦑</button><button type="button" class="avp-btn" data-av="🦀" onclick="selectAvatarPopup('🦀')">🦀</button><button type="button" class="avp-btn" data-av="🦞" onclick="selectAvatarPopup('🦞')">🦞</button><button type="button" class="avp-btn" data-av="🐊" onclick="selectAvatarPopup('🐊')">🐊</button><button type="button" class="avp-btn" data-av="🦎" onclick="selectAvatarPopup('🦎')">🦎</button><button type="button" class="avp-btn" data-av="🐢" onclick="selectAvatarPopup('🐢')">🐢</button><button type="button" class="avp-btn" data-av="🐍" onclick="selectAvatarPopup('🐍')">🐍</button><button type="button" class="avp-btn" data-av="🦭" onclick="selectAvatarPopup('🦭')">🦭</button><button type="button" class="avp-btn" data-av="🐋" onclick="selectAvatarPopup('🐋')">🐋</button><button type="button" class="avp-btn" data-av="🐡" onclick="selectAvatarPopup('🐡')">🐡</button><button type="button" class="avp-btn" data-av="🦐" onclick="selectAvatarPopup('🦐')">🦐</button><button type="button" class="avp-btn" data-av="🪸" onclick="selectAvatarPopup('🪸')">🪸</button><button type="button" class="avp-btn" data-av="🦧" onclick="selectAvatarPopup('🦧')">🦧</button></div>
-        <div class="avp-cat-header">🦋 Oiseaux & insectes</div>
-        <div class="avp-cat-grid"><button type="button" class="avp-btn" data-av="🦅" onclick="selectAvatarPopup('🦅')">🦅</button><button type="button" class="avp-btn" data-av="🦆" onclick="selectAvatarPopup('🦆')">🦆</button><button type="button" class="avp-btn" data-av="🦉" onclick="selectAvatarPopup('🦉')">🦉</button><button type="button" class="avp-btn" data-av="🦚" onclick="selectAvatarPopup('🦚')">🦚</button><button type="button" class="avp-btn" data-av="🦜" onclick="selectAvatarPopup('🦜')">🦜</button><button type="button" class="avp-btn" data-av="🐧" onclick="selectAvatarPopup('🐧')">🐧</button><button type="button" class="avp-btn" data-av="🦩" onclick="selectAvatarPopup('🦩')">🦩</button><button type="button" class="avp-btn" data-av="🦢" onclick="selectAvatarPopup('🦢')">🦢</button><button type="button" class="avp-btn" data-av="🦋" onclick="selectAvatarPopup('🦋')">🦋</button><button type="button" class="avp-btn" data-av="🐝" onclick="selectAvatarPopup('🐝')">🐝</button><button type="button" class="avp-btn" data-av="🐛" onclick="selectAvatarPopup('🐛')">🐛</button><button type="button" class="avp-btn" data-av="🪲" onclick="selectAvatarPopup('🪲')">🪲</button><button type="button" class="avp-btn" data-av="🦗" onclick="selectAvatarPopup('🦗')">🦗</button><button type="button" class="avp-btn" data-av="🕷️" onclick="selectAvatarPopup('🕷️')">🕷️</button><button type="button" class="avp-btn" data-av="🦂" onclick="selectAvatarPopup('🦂')">🦂</button><button type="button" class="avp-btn" data-av="🪳" onclick="selectAvatarPopup('🪳')">🪳</button></div>
-        <div class="avp-cat-header">🐾 Animaux domestiques & mignons</div>
-        <div class="avp-cat-grid"><button type="button" class="avp-btn" data-av="🐶" onclick="selectAvatarPopup('🐶')">🐶</button><button type="button" class="avp-btn" data-av="🐱" onclick="selectAvatarPopup('🐱')">🐱</button><button type="button" class="avp-btn" data-av="🐰" onclick="selectAvatarPopup('🐰')">🐰</button><button type="button" class="avp-btn" data-av="🐹" onclick="selectAvatarPopup('🐹')">🐹</button><button type="button" class="avp-btn" data-av="🐭" onclick="selectAvatarPopup('🐭')">🐭</button><button type="button" class="avp-btn" data-av="🐮" onclick="selectAvatarPopup('🐮')">🐮</button><button type="button" class="avp-btn" data-av="🐷" onclick="selectAvatarPopup('🐷')">🐷</button><button type="button" class="avp-btn" data-av="🐸" onclick="selectAvatarPopup('🐸')">🐸</button><button type="button" class="avp-btn" data-av="🐔" onclick="selectAvatarPopup('🐔')">🐔</button><button type="button" class="avp-btn" data-av="🐿️" onclick="selectAvatarPopup('🐿️')">🐿️</button><button type="button" class="avp-btn" data-av="🦔" onclick="selectAvatarPopup('🦔')">🦔</button><button type="button" class="avp-btn" data-av="🐇" onclick="selectAvatarPopup('🐇')">🐇</button><button type="button" class="avp-btn" data-av="🦜" onclick="selectAvatarPopup('🦜')">🦜</button><button type="button" class="avp-btn" data-av="🐩" onclick="selectAvatarPopup('🐩')">🐩</button><button type="button" class="avp-btn" data-av="🦙" onclick="selectAvatarPopup('🦙')">🦙</button><button type="button" class="avp-btn" data-av="🐓" onclick="selectAvatarPopup('🐓')">🐓</button></div>
-        <div class="avp-cat-header">🐉 Créatures imaginaires</div>
-        <div class="avp-cat-grid"><button type="button" class="avp-btn" data-av="🐉" onclick="selectAvatarPopup('🐉')">🐉</button><button type="button" class="avp-btn" data-av="🦄" onclick="selectAvatarPopup('🦄')">🦄</button><button type="button" class="avp-btn" data-av="🐲" onclick="selectAvatarPopup('🐲')">🐲</button><button type="button" class="avp-btn" data-av="🧌" onclick="selectAvatarPopup('🧌')">🧌</button><button type="button" class="avp-btn" data-av="👾" onclick="selectAvatarPopup('👾')">👾</button><button type="button" class="avp-btn" data-av="🤖" onclick="selectAvatarPopup('🤖')">🤖</button><button type="button" class="avp-btn" data-av="👽" onclick="selectAvatarPopup('👽')">👽</button><button type="button" class="avp-btn" data-av="👻" onclick="selectAvatarPopup('👻')">👻</button><button type="button" class="avp-btn" data-av="💀" onclick="selectAvatarPopup('💀')">💀</button><button type="button" class="avp-btn" data-av="☠️" onclick="selectAvatarPopup('☠️')">☠️</button><button type="button" class="avp-btn" data-av="🎃" onclick="selectAvatarPopup('🎃')">🎃</button><button type="button" class="avp-btn" data-av="🕯️" onclick="selectAvatarPopup('🕯️')">🕯️</button><button type="button" class="avp-btn" data-av="🧿" onclick="selectAvatarPopup('🧿')">🧿</button><button type="button" class="avp-btn" data-av="🔮" onclick="selectAvatarPopup('🔮')">🔮</button><button type="button" class="avp-btn" data-av="🌑" onclick="selectAvatarPopup('🌑')">🌑</button><button type="button" class="avp-btn" data-av="⚡" onclick="selectAvatarPopup('⚡')">⚡</button></div>
-        <div class="avp-cat-header">🧙 Personnages fantastiques</div>
-        <div class="avp-cat-grid"><button type="button" class="avp-btn" data-av="🧙" onclick="selectAvatarPopup('🧙')">🧙</button><button type="button" class="avp-btn" data-av="🧝" onclick="selectAvatarPopup('🧝')">🧝</button><button type="button" class="avp-btn" data-av="🧛" onclick="selectAvatarPopup('🧛')">🧛</button><button type="button" class="avp-btn" data-av="🧟" onclick="selectAvatarPopup('🧟')">🧟</button><button type="button" class="avp-btn" data-av="🧜" onclick="selectAvatarPopup('🧜')">🧜</button><button type="button" class="avp-btn" data-av="🧞" onclick="selectAvatarPopup('🧞')">🧞</button><button type="button" class="avp-btn" data-av="🦸" onclick="selectAvatarPopup('🦸')">🦸</button><button type="button" class="avp-btn" data-av="🦹" onclick="selectAvatarPopup('🦹')">🦹</button><button type="button" class="avp-btn" data-av="🧚" onclick="selectAvatarPopup('🧚')">🧚</button><button type="button" class="avp-btn" data-av="🧒" onclick="selectAvatarPopup('🧒')">🧒</button><button type="button" class="avp-btn" data-av="🤠" onclick="selectAvatarPopup('🤠')">🤠</button><button type="button" class="avp-btn" data-av="👑" onclick="selectAvatarPopup('👑')">👑</button><button type="button" class="avp-btn" data-av="🎭" onclick="selectAvatarPopup('🎭')">🎭</button><button type="button" class="avp-btn" data-av="🃏" onclick="selectAvatarPopup('🃏')">🃏</button><button type="button" class="avp-btn" data-av="🎩" onclick="selectAvatarPopup('🎩')">🎩</button><button type="button" class="avp-btn" data-av="🕵️" onclick="selectAvatarPopup('🕵️')">🕵️</button></div>
-        <div class="avp-cat-header">⚔️ Guerriers & légendes</div>
-        <div class="avp-cat-grid"><button type="button" class="avp-btn" data-av="🥷" onclick="selectAvatarPopup('🥷')">🥷</button><button type="button" class="avp-btn" data-av="🧟" onclick="selectAvatarPopup('🧟')">🧟</button><button type="button" class="avp-btn" data-av="💂" onclick="selectAvatarPopup('💂')">💂</button><button type="button" class="avp-btn" data-av="🤺" onclick="selectAvatarPopup('🤺')">🤺</button><button type="button" class="avp-btn" data-av="🛡️" onclick="selectAvatarPopup('🛡️')">🛡️</button><button type="button" class="avp-btn" data-av="⚔️" onclick="selectAvatarPopup('⚔️')">⚔️</button><button type="button" class="avp-btn" data-av="🗡️" onclick="selectAvatarPopup('🗡️')">🗡️</button><button type="button" class="avp-btn" data-av="🏹" onclick="selectAvatarPopup('🏹')">🏹</button><button type="button" class="avp-btn" data-av="🔱" onclick="selectAvatarPopup('🔱')">🔱</button><button type="button" class="avp-btn" data-av="🌟" onclick="selectAvatarPopup('🌟')">🌟</button><button type="button" class="avp-btn" data-av="💫" onclick="selectAvatarPopup('💫')">💫</button><button type="button" class="avp-btn" data-av="✨" onclick="selectAvatarPopup('✨')">✨</button><button type="button" class="avp-btn" data-av="🌪️" onclick="selectAvatarPopup('🌪️')">🌪️</button><button type="button" class="avp-btn" data-av="🌊" onclick="selectAvatarPopup('🌊')">🌊</button><button type="button" class="avp-btn" data-av="🔥" onclick="selectAvatarPopup('🔥')">🔥</button><button type="button" class="avp-btn" data-av="❄️" onclick="selectAvatarPopup('❄️')">❄️</button></div>
-      </div>
-    </div>
-
 </div>
 
 <!-- ║   LOBBY SCREEN     ║ -->
@@ -593,15 +466,14 @@ if ('serviceWorker' in navigator) {
 }
 </script>
 
-
 <dialog id="avp-dialog">
-  <div id="avp-dialog-inner">
-    <div id="avp-dheader">
+  <div id="avp-di">
+    <div id="avp-dh">
       <span id="avp-title">🐾 Sauvages</span>
-      <button type="button" id="avp-close" onclick="toggleAvatarPopup()">✕</button>
+      <button type="button" onclick="toggleAvatarPopup()" id="avp-x">✕</button>
     </div>
-    <div id="avp-dtabs"><button type="button" class="avp-tab" onclick="avpShowCat(-1)">Aa</button><button type="button" class="avp-tab" onclick="avpShowCat(0)" title="Sauvages">🐾</button><button type="button" class="avp-tab" onclick="avpShowCat(1)" title="Marins">🌊</button><button type="button" class="avp-tab" onclick="avpShowCat(2)" title="Oiseaux">🦅</button><button type="button" class="avp-tab" onclick="avpShowCat(3)" title="Mignons">🐶</button><button type="button" class="avp-tab" onclick="avpShowCat(4)" title="Créatures">🐉</button><button type="button" class="avp-tab" onclick="avpShowCat(5)" title="Perso.">🧙</button><button type="button" class="avp-tab" onclick="avpShowCat(6)" title="Guerriers">⚔️</button></div>
-    <div id="avp-dgrid-wrap"><div id="avp-grid"></div></div>
+    <div id="avp-dt"><button type="button" class="avp-tab" onclick="avpShowCat(-1)">Aa</button><button type="button" class="avp-tab" onclick="avpShowCat(0)" title="Sauvages">🐾</button><button type="button" class="avp-tab" onclick="avpShowCat(1)" title="Marins">🌊</button><button type="button" class="avp-tab" onclick="avpShowCat(2)" title="Oiseaux">🦅</button><button type="button" class="avp-tab" onclick="avpShowCat(3)" title="Mignons">🐶</button><button type="button" class="avp-tab" onclick="avpShowCat(4)" title="Créatures">🐉</button><button type="button" class="avp-tab" onclick="avpShowCat(5)" title="Perso.">🧙</button><button type="button" class="avp-tab" onclick="avpShowCat(6)" title="Guerriers">⚔️</button></div>
+    <div id="avp-dg"><div id="avp-grid"></div></div>
   </div>
 </dialog>
 </body>
