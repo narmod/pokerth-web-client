@@ -3098,7 +3098,9 @@ const App = (() => {
   let loaded    = false;
   let autoAction = false;
   let amGameAdmin = false;  // true if we created this game
-  let _lastConnectParams = null; // pour la reconnexion auto
+  let _lastConnectParams = null;
+  let _lastMsgWasReaction = false; // true si le dernier chat envoyé était une réaction
+  let _chatRejectShown = false;    // n'afficher l'avertissement LAN qu'une seule fois // pour la reconnexion auto
   let _reconnectAttempts = 0;
   let _intentionalDisconnect = false;
   let _wasAuthenticated = false; // true seulement après InitAck réussi
@@ -3344,8 +3346,29 @@ const App = (() => {
 
       case T.ChatReject: {
         const rejText = Proto.str(sub, 1);
-        if (!amInGame) addChat(null, '⚠ Chat refusé: ' + rejText, 'sys');
-        else addGameChat(null, '⚠ Chat refusé — en mode LAN, le chat en jeu nécessite un compte.', 'sys');
+        if (_lastMsgWasReaction) {
+          // Réaction rejetée (mode LAN/invité) — afficher badge local uniquement
+          _lastMsgWasReaction = false;
+          if (!_chatRejectShown) {
+            _chatRejectShown = true;
+            // Note discrète dans la barre de réactions
+            var rb = document.getElementById('reaction-bar');
+            if (rb) {
+              var note = document.createElement('div');
+              note.style.cssText = 'font-size:0.52rem;color:rgba(255,180,50,0.7);text-align:center;width:100%;margin-top:2px;font-style:italic';
+              note.textContent = '⚠ Mode invité : réactions visibles localement seulement';
+              rb.appendChild(note);
+              setTimeout(function(){ note.style.opacity='0'; note.style.transition='opacity 1s'; setTimeout(function(){ note.remove(); }, 1000); }, 5000);
+            }
+          }
+        } else {
+          _lastMsgWasReaction = false;
+          if (!amInGame) addChat(null, '⚠ Chat refusé: ' + rejText, 'sys');
+          else if (!_chatRejectShown) {
+            _chatRejectShown = true;
+            addGameChat(null, '⚠ Mode invité : chat en jeu non disponible en mode LAN.', 'sys');
+          }
+        }
         break;
       }
 
@@ -4621,6 +4644,8 @@ function dismissWinner() {
       myCards = [null,null]; commCards = [];
       stopTurnTimer();
       dismissWinner();
+      _chatRejectShown = false;
+      _lastMsgWasReaction = false;
       var acb = document.getElementById('admin-close-btn');
       if (acb) acb.style.display = 'none';
       var badge = document.getElementById('g-admin-badge');
@@ -4650,8 +4675,8 @@ function dismissWinner() {
 
     sendReaction(emoji) {
       if (!ws || !gId) return;
-      // Envoyer via le chat avec préfixe spécial reconnaissable
-      var msg = '🎯' + emoji;
+      _lastMsgWasReaction = true;
+      var msg = '\uD83C\uDFAF' + emoji; // 🎯 + emoji
       send(MSG.buildChat(msg, gId || 0));
       // Afficher immédiatement pour moi
       handleIncomingReaction(myId, emoji);
@@ -4664,6 +4689,7 @@ function dismissWinner() {
       var text = input.value.trim();
       if (!text || !ws) return;
       input.value = '';
+      _lastMsgWasReaction = false;
       send(MSG.buildChat(text, gId || 0));
       addGameChat(myName, text, 'mine');
     },
