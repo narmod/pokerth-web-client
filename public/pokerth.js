@@ -3237,10 +3237,7 @@ function autoScaleTable() {
   var tzW = tz.clientWidth, tzH = tz.clientHeight;
   var scW = sc.scrollWidth, scH = sc.scrollHeight;
   var ov = document.querySelector('.felt-oval');
-  if (ov) { var ovr = ov.getBoundingClientRect(); console.log('[Scale] oval rect:', Math.round(ovr.left), Math.round(ovr.top), Math.round(ovr.width), Math.round(ovr.height)); }
   var ga = document.querySelector('.game-area');
-  if (ga) { var gar = ga.getBoundingClientRect(); console.log('[Scale] game-area top:', Math.round(gar.top), 'h:', ga.clientHeight); }
-  if (sg) { var sgr = sg.getBoundingClientRect(); console.log('[Scale] s-game top:', Math.round(sgr.top), 'h:', Math.round(sgr.height)); }
   if (!tzW || !scW || !tzH || !scH) {
     sc.style.transform = 'scale(1)';
     return;
