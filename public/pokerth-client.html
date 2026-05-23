@@ -173,9 +173,31 @@ function _avpRenderGrid(body, idx) {
 function toggleAvatarPopup() {
   _buildAvatarPopup();
   var p = document.getElementById("avatar-popup");
+  var bg = document.getElementById("avatar-popup-bg");
   if (!p) return;
-  var isOpen = p.style.display === "flex";
-  p.style.display = isOpen ? "none" : "flex";
+  var isOpen = p.style.display !== "none" && p.style.display !== "";
+  if (isOpen) {
+    p.style.display = "none";
+    if (bg) bg.style.display = "none";
+  } else {
+    // Backdrop
+    if (!bg) {
+      bg = document.createElement("div");
+      bg.id = "avatar-popup-bg";
+      bg.style.cssText = "position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:9998;backdrop-filter:blur(2px)";
+      bg.onclick = function(){ toggleAvatarPopup(); };
+      document.body.appendChild(bg);
+    }
+    bg.style.display = "block";
+    p.style.display = "flex";
+    // Recentrer après affichage
+    p.style.position = "fixed";
+    p.style.top = "50%";
+    p.style.left = "50%";
+    p.style.transform = "translate(-50%,-50%)";
+    p.style.zIndex = "9999";
+    p.style.flexDirection = "column";
+  }
 }
 function selectAvatarPopup(emoji) {
   try { localStorage.setItem("pth_avatar", emoji); } catch(e) {}
