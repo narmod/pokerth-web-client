@@ -56,77 +56,6 @@ function selectAvatarPopup(emoji) {
 }
 </script>
 
-<script>
-var _avCats=[
-  {icon:"🐾",name:"Sauvages",emojis:["🦁","🐯","🐻","🐼","🦊","🐺","🦝","🦌","🐘","🦒","🦓","🦬","🐆","🐅","🦏","🦛"]},
-  {icon:"🌊",name:"Marins",emojis:["🐬","🦈","🐙","🦑","🦀","🦞","🐊","🦎","🐢","🐍","🦭","🐋","🐡","🦐","🦧","🐳"]},
-  {icon:"🦅",name:"Oiseaux",emojis:["🦅","🦆","🦉","🦚","🦜","🐧","🦩","🦢","🦋","🐝","🐛","🪲","🦗","🕷️","🦂","🪳"]},
-  {icon:"🐶",name:"Mignons",emojis:["🐶","🐱","🐰","🐹","🐭","🐮","🐷","🐸","🐔","🐿️","🦔","🐇","🐩","🦙","🐓","🐑"]},
-  {icon:"🐉",name:"Créatures",emojis:["🐉","🦄","🐲","🧌","👾","🤖","👽","👻","💀","☠️","🎃","🔮","👹","👺","🌑","⚡"]},
-  {icon:"🧙",name:"Perso.",emojis:["🧙","🧝","🧛","🧟","🧜","🧞","🦸","🦹","🧚","🤠","👑","🎭","🃏","🎩","🕵️","🥷"]},
-  {icon:"⚔️",name:"Guerriers",emojis:["🤺","🛡️","⚔️","🗡️","🏹","🔱","🌟","💫","✨","🌪️","🔥","❄️","🌊","💎","🍀","🎲"]}
-];
-
-function toggleAvatarPopup(){
-  var d=document.getElementById('avp-dialog');
-  if(!d)return;
-  if(d.open){d.close();}
-  else{avpShowCat(0);d.showModal();}
-}
-function avpShowCat(idx){
-  var t=document.getElementById('avp-title');
-  if(t)t.textContent=idx<0?'Initiale':(_avCats[idx].icon+' '+_avCats[idx].name);
-  document.querySelectorAll('.avp-tab').forEach(function(b,i){
-    b.classList.toggle('active',i===idx+1);
-  });
-  var g=document.getElementById('avp-grid');
-  if(!g)return;
-  g.innerHTML='';
-  var sv='';try{sv=localStorage.getItem('pth_avatar')||'';}catch(e){}
-  if(idx<0){
-    var b=document.createElement('button');
-    b.className='avp-eb';b.textContent='Aa';
-    b.style.cssText='width:38px;height:38px;font-size:0.7rem;font-family:serif;border:2px solid '+(sv===''?'#c8a84a':'transparent')+';background:rgba(255,255,255,0.05);border-radius:6px;cursor:pointer;color:#ccc';
-    b.onclick=function(){selectAvatarPopup('');};
-    g.appendChild(b);
-  }else{
-    _avCats[idx].emojis.forEach(function(e){
-      var b=document.createElement('button');
-      b.className='avp-eb';b.textContent=e;b.dataset.av=e;
-      b.style.cssText='width:38px;height:38px;font-size:1.25rem;border:2px solid '+(sv===e?'#c8a84a':'transparent')+';background:rgba(255,255,255,0.04);border-radius:6px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:transform 0.1s,border-color 0.1s';
-      b.onmouseenter=function(){this.style.transform='scale(1.15)';this.style.borderColor='rgba(200,168,74,0.5)';};
-      b.onmouseleave=function(){var s='';try{s=localStorage.getItem('pth_avatar')||'';}catch(x){}this.style.transform='';this.style.borderColor=s===this.dataset.av?'#c8a84a':'transparent';};
-      b.onclick=function(){selectAvatarPopup(this.dataset.av);};
-      g.appendChild(b);
-    });
-  }
-}
-function selectAvatarPopup(emoji){
-  try{localStorage.setItem('pth_avatar',emoji);}catch(e){}
-  var tr=document.getElementById('av-trigger');
-  if(tr){tr.textContent=emoji||'🎭';tr.classList.toggle('has-avatar',!!emoji);}
-  var d=document.getElementById('avp-dialog');
-  if(d&&d.open)d.close();
-  if(typeof window.refreshMyAvatar==='function')window.refreshMyAvatar();
-  if(typeof window._renderSeats==='function')window._renderSeats();
-  if(typeof window._broadcastMyAvatar==='function')window._broadcastMyAvatar(emoji);
-}
-</script>
-<style>
-#avp-dialog{border:1px solid rgba(200,168,74,.45);border-radius:10px;padding:0;background:#060e08;width:min(360px,94vw);max-height:80vh;box-shadow:0 12px 50px rgba(0,0,0,.85);}
-#avp-dialog::backdrop{background:rgba(0,0,0,.72);backdrop-filter:blur(3px);}
-#avp-di{display:flex;flex-direction:column;max-height:80vh;overflow:hidden;}
-#avp-dh{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-bottom:1px solid rgba(200,168,74,.2);background:rgba(0,0,0,.4);flex-shrink:0;}
-#avp-title{font-size:.62rem;letter-spacing:.15em;text-transform:uppercase;color:#c8a84a;font-family:'Cinzel',serif;}
-#avp-x{background:none;border:none;color:#999;cursor:pointer;font-size:1rem;line-height:1;}
-#avp-x:hover{color:#fff;}
-#avp-dt{display:flex;gap:4px;flex-wrap:wrap;padding:7px 10px;border-bottom:1px solid rgba(200,168,74,.12);background:rgba(0,0,0,.25);flex-shrink:0;}
-.avp-tab{background:rgba(255,255,255,.05);border:1px solid transparent;border-radius:5px;font-size:1rem;cursor:pointer;padding:3px 7px;color:inherit;transition:border-color .12s,background .12s,transform .1s;}
-.avp-tab:hover{transform:scale(1.1);border-color:rgba(200,168,74,.45);}
-.avp-tab.active{border-color:#c8a84a!important;background:rgba(200,168,74,.18)!important;}
-#avp-dg{overflow-y:auto;padding:10px;flex:1;scrollbar-width:thin;scrollbar-color:rgba(200,168,74,.3) transparent;}
-#avp-grid{display:grid;grid-template-columns:repeat(8,38px);gap:5px;justify-content:center;}
-</style>
 </head>
 <body>
 
@@ -465,16 +394,5 @@ if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('/sw.js').catch(function(){});
 }
 </script>
-
-<dialog id="avp-dialog">
-  <div id="avp-di">
-    <div id="avp-dh">
-      <span id="avp-title">🐾 Sauvages</span>
-      <button type="button" onclick="toggleAvatarPopup()" id="avp-x">✕</button>
-    </div>
-    <div id="avp-dt"><button type="button" class="avp-tab" onclick="avpShowCat(-1)">Aa</button><button type="button" class="avp-tab" onclick="avpShowCat(0)" title="Sauvages">🐾</button><button type="button" class="avp-tab" onclick="avpShowCat(1)" title="Marins">🌊</button><button type="button" class="avp-tab" onclick="avpShowCat(2)" title="Oiseaux">🦅</button><button type="button" class="avp-tab" onclick="avpShowCat(3)" title="Mignons">🐶</button><button type="button" class="avp-tab" onclick="avpShowCat(4)" title="Créatures">🐉</button><button type="button" class="avp-tab" onclick="avpShowCat(5)" title="Perso.">🧙</button><button type="button" class="avp-tab" onclick="avpShowCat(6)" title="Guerriers">⚔️</button></div>
-    <div id="avp-dg"><div id="avp-grid"></div></div>
-  </div>
-</dialog>
 </body>
 </html>
