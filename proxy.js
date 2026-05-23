@@ -246,8 +246,7 @@ wss.on('connection', (ws, req) => {
       // ── Relais réactions (message texte REACT:pid:emoji) ──
       if (!isBinary) {
         const text = data.toString();
-        if (text.startsWith('REACT:')) {
-          console.log('[REACT] relais → ' + (_allClients.size - 1) + ' autres clients');
+        if (text.startsWith('REACT:') || text.startsWith('AVATAR:')) {
           _allClients.forEach(client => {
             if (client !== ws && client.readyState === 1) client.send(text);
           });
