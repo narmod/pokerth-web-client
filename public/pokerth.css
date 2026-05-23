@@ -1334,6 +1334,89 @@ body {
 }
 .hands-close:hover { background: rgba(200,168,74,0.22); }
 
+/* ══ ANIMATIONS — Distribution, jetons, flip, stats ══ */
+
+/* Carte volante lors de la distribution */
+.fly-card {
+  position: fixed; pointer-events: none; z-index: 400;
+  width: 26px; height: 37px;
+  background: linear-gradient(135deg, #1a3a8a 0%, #2a5acc 60%, #1a3a8a 100%);
+  border-radius: 3px; border: 1px solid rgba(255,255,255,0.25);
+  box-shadow: 0 3px 10px rgba(0,0,0,0.5);
+  transition: left 0.42s cubic-bezier(.2,.8,.3,1),
+              top  0.42s cubic-bezier(.2,.8,.3,1),
+              transform 0.42s ease, opacity 0.15s ease;
+}
+.fly-card.mine {
+  background: linear-gradient(135deg, #1a5c2a 0%, #27ae60 60%, #1a5c2a 100%);
+}
+
+/* Jeton volant vers le pot */
+.fly-chip {
+  position: fixed; pointer-events: none; z-index: 400;
+  width: 20px; height: 20px; border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #f5e67a, #c8a850 60%, #8b6914);
+  border: 2px solid #5a3800;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.6);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.38rem; font-weight: 900; color: #3d2b00;
+  transition: left 0.5s cubic-bezier(.3,.9,.4,1),
+              top  0.5s cubic-bezier(.3,.9,.4,1),
+              opacity 0.2s ease 0.35s, transform 0.5s ease;
+}
+
+/* Flip 3D des cartes communes */
+@keyframes flipCard3D {
+  0%   { transform: perspective(400px) rotateY(-90deg) scale(0.85); opacity: 0; }
+  55%  { transform: perspective(400px) rotateY(8deg)   scale(1.04); opacity: 1; }
+  80%  { transform: perspective(400px) rotateY(-3deg)  scale(1); }
+  100% { transform: perspective(400px) rotateY(0deg)   scale(1); opacity: 1; }
+}
+.pk.flip-reveal {
+  animation: flipCard3D 0.45s cubic-bezier(.25,.8,.25,1) both;
+}
+
+/* Panneau statistiques de session */
+#stats-overlay {
+  position: fixed; top: 36px; right: 0;
+  width: 240px; max-height: calc(100vh - 36px);
+  background: rgba(4,10,6,0.97);
+  border-left: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  z-index: 200; overflow-y: auto;
+  animation: slideDown 0.2s ease;
+}
+.stats-header {
+  padding: 8px 12px; border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+  font-size: 0.62rem; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--gold-dim);
+}
+.stats-body { padding: 10px 12px; display: flex; flex-direction: column; gap: 8px; }
+.stat-row { display: flex; justify-content: space-between; align-items: center; }
+.stat-label { font-size: 0.62rem; color: var(--text); }
+.stat-val { font-size: 0.72rem; font-weight: 700; font-family: 'Inconsolata', monospace; }
+.stat-val.pos { color: #4cff88; }
+.stat-val.neg { color: #ff6b6b; }
+.stat-divider { border: none; border-top: 1px solid var(--border); margin: 4px 0; }
+.hand-hist-item {
+  background: rgba(255,255,255,0.03); border: 1px solid var(--border);
+  border-radius: 4px; padding: 6px 8px; font-size: 0.58rem;
+}
+.hand-hist-cards { display: flex; gap: 3px; margin-top: 3px; }
+.hand-hist-result { margin-top: 3px; font-weight: 700; }
+
+/* Probabilité de gain */
+#win-prob-bar {
+  position: relative; height: 4px;
+  background: rgba(255,255,255,0.1); border-radius: 2px; margin-top: 4px; overflow: hidden;
+}
+#win-prob-fill {
+  position: absolute; left: 0; top: 0; height: 100%; border-radius: 2px;
+  background: linear-gradient(90deg, #e74c3c, #f39c12, #27ae60);
+  transition: width 0.5s ease;
+}
+
 /* Loading dots */
 @keyframes blink {
   0%,80%,100% { opacity: 0.2; }
