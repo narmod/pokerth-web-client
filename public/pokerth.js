@@ -1934,7 +1934,9 @@ const App = (() => {
         if (turnPid === myId) {
           renderMyTurnActions();
           setMyTurnActive(true);
+          notifyMyTurn();
         } else {
+          clearTurnNotif();
           setMyTurnActive(false);
           // isHtml=true : HTML interne sûr, pas du contenu utilisateur
           renderGameWaiting(
