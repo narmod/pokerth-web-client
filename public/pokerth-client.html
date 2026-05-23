@@ -2196,27 +2196,7 @@ function flashActionLabel(pid) {
 
 
 
-// Détection bot vs humain
-function isBot(pid) {
-  var name = (players[pid] || '').toLowerCase();
-  // PokerTH bots s'appellent "Computer1", "Computer2", etc.
-  return name.startsWith('computer') || name.startsWith('bot') || name === 'bot';
-}
-
-// Icône / initiale selon le type de joueur
-function getPlayerInitial(pid) {
-  if (pid === myId) return myName.charAt(0).toUpperCase();
-  if (isBot(pid))   return '🖥';  // ordinateur
-  var name = players[pid] || '';
-  return name.charAt(0).toUpperCase() || '?';
-}
-
-// Badge type joueur (petit indicateur)
-function getPlayerTypeBadge(pid) {
-  if (pid === myId) return ''; // pas de badge pour moi
-  if (isBot(pid)) return '<span class="player-type-badge badge-bot" title="Bot">⚙</span>';
-  return '<span class="player-type-badge badge-human" title="Humain">👤</span>';
-}
+// isBot/getPlayerInitial/getPlayerTypeBadge → déplacées dans la closure (voir renderSeats)
 
 // Palette de couleurs pour les avatars joueurs (12 couleurs)
 var AVATAR_PALETTE = [
@@ -3925,6 +3905,23 @@ const App = (() => {
     var mz = document.querySelector('.my-zone');
     if (mz) mz.style.borderTopColor = '';
     setUrgentMode(false);
+  }
+
+  // ── Détection bot vs humain (dans la closure = accès à players/myId/myName) ──
+  function isBot(pid) {
+    var name = (players[pid] || '').toLowerCase();
+    return name.startsWith('computer') || name.startsWith('bot') || name === 'bot';
+  }
+  function getPlayerInitial(pid) {
+    if (pid === myId) return myName.charAt(0).toUpperCase();
+    if (isBot(pid))   return '🖥';
+    var name = players[pid] || '';
+    return name.charAt(0).toUpperCase() || '?';
+  }
+  function getPlayerTypeBadge(pid) {
+    if (pid === myId) return '';
+    if (isBot(pid)) return '<span class="player-type-badge badge-bot" title="Bot">⚙</span>';
+    return '<span class="player-type-badge badge-human" title="Humain">👤</span>';
   }
 
   function renderSeats() {
