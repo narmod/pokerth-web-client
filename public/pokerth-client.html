@@ -2635,23 +2635,6 @@ function evaluatePreFlopHand(c1, c2) {
   return { stars: -1, fr: 'Main faible', en: 'Weak hand' };
 }
 
-function renderPreFlopStrength() {
-  var el = document.getElementById('hand-strength');
-  if (!el) return;
-  // Seulement avant le flop
-  if (commCards.filter(function(c){ return c!=null; }).length > 0) return;
-  if (myCards[0] == null || myCards[1] == null) { el.style.display='none'; return; }
-  var res = evaluatePreFlopHand(myCards[0], myCards[1]);
-  if (!res) { el.style.display='none'; return; }
-  var label = (_lang==='fr' ? res.fr : res.en);
-  var stars = res.stars >= 0
-    ? ' ' + ('★'.repeat(res.stars+1) + '☆'.repeat(2-res.stars)).slice(0,3)
-    : '';
-  el.textContent = label + stars;
-  var cols = ['#aaa','#7ec8e3','#a8d8a8','#f0c040','#e74c3c'];
-  el.style.color = cols[Math.max(0, res.stars+1)] || '#aaa';
-  el.style.display = 'block';
-}
 
 
 function normalizeHoleCard(n) {
@@ -4217,6 +4200,24 @@ const App = (() => {
 
 
   // ─── Force de la main ───
+  function renderPreFlopStrength() {
+    var el = document.getElementById('hand-strength');
+    if (!el) return;
+    if (commCards.filter(function(c){ return c!=null; }).length > 0) return;
+    if (myCards[0] == null || myCards[1] == null) { el.style.display='none'; return; }
+    var res = evaluatePreFlopHand(myCards[0], myCards[1]);
+    if (!res) { el.style.display='none'; return; }
+    var label = (_lang==='fr' ? res.fr : res.en);
+    var stars = res.stars >= 0
+      ? ' ' + ('★'.repeat(res.stars+1) + '☆☆').slice(0,3)
+      : '';
+    el.textContent = label + stars;
+    var cols = ['#aaa','#7ec8e3','#a8d8a8','#f0c040','#e74c3c'];
+    el.style.color = cols[Math.max(0, res.stars+1)] || '#aaa';
+    el.style.display = 'block';
+  }
+
+  // ─── Force de la main ───
   function renderHandStrength() {
     var el = document.getElementById('hand-strength');
     if (!el) return;
@@ -4849,8 +4850,7 @@ function dismissWinner() {
             console.log('[REACT] reçue de pid=' + fromPid + ' emoji=' + reactEmoji);
             if (fromPid !== myId) {
               handleIncomingReaction(fromPid, reactEmoji);
-              var who = players[fromPid] || ('#'+fromPid);
-              addGameChat(who, reactEmoji, 'reaction');
+              // Pas d'affichage dans le chat — uniquement animation flottante
             }
           }
           return;
