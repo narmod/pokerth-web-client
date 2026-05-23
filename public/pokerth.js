@@ -594,6 +594,13 @@ function showKeyHint(text) {
 }
 
 
+function selectAvatar(emoji) {
+  try { localStorage.setItem('pth_avatar', emoji); } catch(e) {}
+  document.querySelectorAll('.av-btn').forEach(function(b) {
+    b.classList.toggle('selected', b.dataset.av === emoji);
+  });
+}
+
 function toggleLang() { setLang(_lang === 'en' ? 'fr' : 'en'); }
 
 // ═══════════════════════════════════════════════════════════
@@ -976,6 +983,12 @@ document.addEventListener("DOMContentLoaded", function() {
       if (nickEl) nickEl.value = savedLanNick;
       if (rmEl) rmEl.checked = true;
     }
+  } catch(e) {}
+  // Restaurer l'avatar sauvegardé
+  try {
+    var savedAv = localStorage.getItem('pth_avatar') || '';
+    if (savedAv) selectAvatar(savedAv);
+    else selectAvatar(''); // sélectionner 'Aa' par défaut
   } catch(e) {}
   // Restore sound button state
   var sbtn = document.getElementById('sound-toggle-btn');
@@ -2408,8 +2421,11 @@ const App = (() => {
     return name.startsWith('computer') || name.startsWith('bot') || name === 'bot';
   }
   function getPlayerInitial(pid) {
-    if (pid === myId) return myName.charAt(0).toUpperCase();
-    if (isBot(pid))   return '🤖';
+    if (pid === myId) {
+      try { var av = localStorage.getItem('pth_avatar'); if (av) return av; } catch(e) {}
+      return myName.charAt(0).toUpperCase();
+    }
+    if (isBot(pid)) return '🤖';
     var name = players[pid] || '';
     return name.charAt(0).toUpperCase() || '?';
   }
@@ -2502,7 +2518,12 @@ const App = (() => {
       const cls = ['seat', isMe?'me':'', isDealer?'dealer':'', isActive?'active':'', sd.folded?'folded':''].filter(Boolean).join(' ');
       const initial    = getPlayerInitial(pid);
       const typeBadge  = getPlayerTypeBadge(pid);
-      const avatarType = isMe ? '' : (isBot(pid) ? ' is-bot' : ' is-human');
+      var _hasEmojiAv = isMe && (function(){
+        try { var av = localStorage.getItem('pth_avatar'); return av && av.length > 0; } catch(e){ return false; }
+      })();
+      const avatarType = isMe
+        ? (_hasEmojiAv ? ' emoji-av' : '')
+        : (isBot(pid) ? ' is-bot' : ' is-human');
       const moneyStr = sd.money != null && sd.money >= 0 ? sd.money + ' ¥' : '—';
       // Cartes sous le siège : uniquement les adversaires au showdown
       // (mes propres cartes sont déjà visibles dans la player-bar en bas)
