@@ -2356,8 +2356,9 @@ const App = (() => {
   let _intentionalDisconnect = false;
   let _wasAuthenticated = false; // true seulement après InitAck réussi
   let _lastConnectTime = 0;      // timestamp de la dernière tentative
+  let _lastConnectFailed = false; // true si la dernière tentative a échoué
   let _ipBlockUntil = 0;         // timestamp de fin de blocage IP
-  const MIN_CONNECT_INTERVAL = 8000; // 8s minimum entre tentatives
+  const MIN_CONNECT_INTERVAL = 3000; // 3s minimum entre tentatives (anti double-clic)
 
   // ── DOM ──
   const $ = id => document.getElementById(id);
@@ -2443,8 +2444,9 @@ const App = (() => {
 
       // Connexion acceptée
       case T.InitAck: {
-        _wasAuthenticated = true; // connexion établie avec succès
-        _reconnectAttempts = 0;   // réinitialiser le compteur
+        _wasAuthenticated = true;
+        _lastConnectFailed = false; // connexion réussie
+        _reconnectAttempts = 0;
         myId = Proto.u32(sub, 2);
         $('h-nick').textContent = '♠ ' + myName;
         show('s-lobby');
@@ -2463,6 +2465,7 @@ const App = (() => {
       }
 
       case T.Error: {
+        _lastConnectFailed = true;
         const codes = {1:'Version incompatible',2:'Serveur plein',3:'Auth échouée',
           4:'Pseudo déjà pris',5:'Pseudo invalide',6:'Maintenance',7:'Bloqué'};
         const r = Proto.u32(sub, 1);
@@ -3592,7 +3595,8 @@ function dismissWinner() {
         _startIpBlockCountdown();
         return;
       }
-      if (now - _lastConnectTime < MIN_CONNECT_INTERVAL) {
+      // Rate limiter seulement après un échec (pas après une déco normale)
+      if (_lastConnectFailed && now - _lastConnectTime < MIN_CONNECT_INTERVAL) {
         const wait = Math.ceil((MIN_CONNECT_INTERVAL - (now - _lastConnectTime)) / 1000);
         setStatus('⏸ Attendez ' + wait + 's avant de retenter…', 'err');
         return;
@@ -3655,7 +3659,7 @@ function dismissWinner() {
 
       ws.binaryType = 'arraybuffer';
       ws.onopen    = () => setStatus('Proxy connecté — attente du serveur PokerTH...');
-      ws.onerror   = () => setStatus('Erreur WebSocket. Le proxy est-il lancé ?', 'err');
+      ws.onerror   = () => { _lastConnectFailed = true; setStatus('Erreur WebSocket. Le proxy est-il lancé ?', 'err'); };
       ws.onmessage = e => onRawData(e.data);
       ws.onclose = function(e) {
         ws = null;
@@ -3742,6 +3746,7 @@ function dismissWinner() {
     disconnect() {
       _intentionalDisconnect = true;
       _wasAuthenticated = false;
+      _lastConnectFailed = false; // déco propre → pas de rate limit
       _hideBanner();
       if (ws) { ws.close(); ws = null; }
       games = {};
