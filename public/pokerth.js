@@ -1278,7 +1278,6 @@ const App = (() => {
   let handNum   = 0;   // hand counter
   let gameState = 0;   // preflop/flop/turn/river
   let seats     = [];  // player IDs in seat order (from GameStartInitial) — figé après 1ère main
-  let _seatsFixed = false; // true une fois l'ordre figé
   let seatData  = {};  // {pid: {money, bet, action, active, folded}}
   let myCards   = [null, null];
   let commCards = [];
@@ -1725,9 +1724,16 @@ const App = (() => {
           const scEl = document.getElementById('g-myseat-cards');
           if (scEl) scEl.innerHTML = '<div class="pk sm back"></div><div class="pk sm back"></div>';
         }
-        // Si un joueur apparaît dans newSeats mais pas dans seats (late join) → l'ajouter
+        // Late joins : ajouter les nouveaux joueurs à la fin
         for (const pid of newSeats) {
           if (!seats.includes(pid)) seats.push(pid);
+        }
+        // Marquer les joueurs qui ont quitté comme inactifs
+        for (const pid of seats) {
+          if (!newSeats.includes(pid)) {
+            if (!seatData[pid]) seatData[pid] = {};
+            seatData[pid].active = false;
+          }
         }
 
 
@@ -2995,7 +3001,6 @@ function dismissWinner() {
       if (ws && gId) { try { send(MSG.buildLeaveGame(gId)); } catch(e) {} }
       amInGame = false; amGameAdmin = false;
       gId = 0; seats = []; seatData = {};
-      _seatsFixed = false; // permettre le gel sur la prochaine partie
       myCards = [null,null]; commCards = [];
       stopTurnTimer();
       dismissWinner();
