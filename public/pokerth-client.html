@@ -690,22 +690,28 @@ body {
 
 /* ══ HAND STRENGTH DISPLAY ══ */
 #hand-strength {
-  font-size: 0.62rem;
+  /* Pastille centrée au-dessus des boutons dans my-zone */
+  position: absolute;
+  top: -22px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.6rem;
   color: var(--gold);
   font-family: 'Cinzel', serif;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.04em;
   text-align: center;
-  padding: 2px 6px;
-  margin-top: 1px;
-  background: rgba(200,168,74,0.08);
-  border-radius: 3px;
-  border: 1px solid rgba(200,168,74,0.15);
-  min-width: 80px;
-  transition: all 0.3s ease;
+  padding: 2px 10px;
+  background: rgba(4,10,6,0.92);
+  border-radius: 20px;
+  border: 1px solid rgba(200,168,74,0.3);
   white-space: nowrap;
-  max-width: 160px;
+  max-width: calc(100vw - 24px);
   overflow: hidden;
   text-overflow: ellipsis;
+  pointer-events: none;
+  transition: color 0.3s ease, border-color 0.3s ease;
+  z-index: 28;
+  box-shadow: 0 -2px 8px rgba(0,0,0,0.4);
 }
 
 /* ══ RECONNECT BANNER ══ */
@@ -1036,6 +1042,8 @@ body {
   background: rgba(4,10,6,0.95);
   border-top: 1px solid var(--border);
   gap: 8px;
+  /* Nécessaire pour que #hand-strength se positionne par rapport à this */
+  overflow: visible;
 }
 
 .my-cards {
@@ -1545,20 +1553,20 @@ function _evalFive(cards) {
   var top2 = byFreq[1];
   var rn = RANK_NAMES;
   if (isFlush && isStraight) {
-    if (straightHigh===12) return { r:9, fr:'Quinte Flush Royale', en:'Royal Flush' };
-    return { r:8, fr:'Quinte Flush, '+rn[straightHigh]+' haute', en:'Straight Flush, '+rn[straightHigh]+' high' };
+    if (straightHigh===12) return { r:9, fr:'⭐ Quinte Flush Royale', en:'⭐ Royal Flush' };
+    return { r:8, fr:'🃏 Quinte Flush '+rn[straightHigh], en:'🃏 Straight Flush '+rn[straightHigh] };
   }
-  if (freq[0]===4) return { r:7, fr:'Carré de '+rn[top], en:'Four of a Kind, '+rn[top]+'s' };
-  if (freq[0]===3 && freq[1]===2) return { r:6, fr:'Full aux '+rn[top]+'/'+rn[top2], en:'Full House, '+rn[top]+'s full of '+rn[top2]+'s' };
-  if (isFlush) return { r:5, fr:'Couleur', en:'Flush' };
-  if (isStraight) return { r:4, fr:'Suite au '+rn[straightHigh], en:'Straight, '+rn[straightHigh]+' high' };
-  if (freq[0]===3) return { r:3, fr:'Brelan de '+rn[top], en:'Three of a Kind, '+rn[top]+'s' };
+  if (freq[0]===4) return { r:7, fr:'🟥 Carré '+rn[top], en:'🟥 Four '+rn[top]+'s' };
+  if (freq[0]===3 && freq[1]===2) return { r:6, fr:'🔴 Full '+rn[top]+'/'+rn[top2], en:'🔴 Full House '+rn[top]+'/'+rn[top2] };
+  if (isFlush) return { r:5, fr:'🟠 Couleur', en:'🟠 Flush' };
+  if (isStraight) return { r:4, fr:'🟡 Suite '+rn[straightHigh], en:'🟡 Straight '+rn[straightHigh] };
+  if (freq[0]===3) return { r:3, fr:'🟢 Brelan '+rn[top], en:'🟢 Three '+rn[top]+'s' };
   if (freq[0]===2 && freq[1]===2) {
     var p1=rn[top], p2=rn[top2];
-    return { r:2, fr:'Deux paires '+p1+'/'+p2, en:'Two Pair, '+p1+'s and '+p2+'s' };
+    return { r:2, fr:'🔵 Deux paires '+p1+'/'+p2, en:'🔵 Two Pair '+p1+'/'+p2 };
   }
-  if (freq[0]===2) return { r:1, fr:'Paire de '+rn[top], en:'Pair of '+rn[top]+'s' };
-  return { r:0, fr:'Carte haute '+rn[ranks[0]], en:'High Card '+rn[ranks[0]] };
+  if (freq[0]===2) return { r:1, fr:'⚪ Paire '+rn[top], en:'⚪ Pair of '+rn[top]+'s' };
+  return { r:0, fr:'— Carte haute '+rn[ranks[0]], en:'— High Card '+rn[ranks[0]] };
 }
 
 function evaluateBestHand(holeCards, commCards) {
@@ -4014,13 +4022,13 @@ function toggleLog() {
         <div class="pb-cards" id="g-myseat-cards">
           <div class="pk sm back"></div><div class="pk sm back"></div>
         </div>
-        <div id="hand-strength" style="display:none"></div>
         <div class="pb-action" id="g-myseat-action"></div>
         <div id="pb-timer" style="font-size:0.72rem;color:var(--gold);font-family:'Inconsolata',monospace;font-weight:700;min-width:28px;text-align:right"></div>
       </div>
     </div>
     <!-- MY ZONE -->
     <div class="my-zone">
+      <div id="hand-strength" style="display:none"></div>
       <div id="g-actions" class="action-bar"></div>
     </div>
   </div>
