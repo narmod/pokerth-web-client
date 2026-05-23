@@ -2008,3 +2008,16 @@ body:not(.in-game) .my-zone {
 .g-chat-input { display:flex; gap:6px; padding:5px 10px; background:rgba(4,10,6,0.97); border-bottom:1px solid var(--border); }
 .g-chat-input input { flex:1; background:rgba(255,255,255,0.05); border:1px solid var(--border); border-radius:2px; color:var(--cream); padding:4px 7px; font-family:'Inconsolata',monospace; font-size:0.76rem; outline:none; }
 .g-chat-input input:focus { border-color:var(--gold); }
+
+/* Badge timer sous le cercle avatar */
+.seat-timer-badge {
+  font-size: 0.58rem;
+  font-family: 'Inconsolata', monospace;
+  font-weight: 900;
+  color: gold;
+  letter-spacing: 0.03em;
+  line-height: 1;
+  min-height: 0.7rem;
+  text-align: center;
+  text-shadow: 0 0 6px rgba(200,168,74,0.8);
+}
