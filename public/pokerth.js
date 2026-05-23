@@ -1332,6 +1332,7 @@ const App = (() => {
   let handNum   = 0;   // hand counter
   let gameState = 0;   // preflop/flop/turn/river
   let _playerAvatars = {}; // pid → emoji avatar (reçu des autres joueurs via proxy)
+  let _myAvatarCache  = ''; // cache de l'avatar local (évite les lectures localStorage répétées)
   let seats     = [];  // player IDs in seat order (from GameStartInitial) — figé après 1ère main
   let seatData  = {};  // {pid: {money, bet, action, active, folded}}
   let myCards   = [null, null];
