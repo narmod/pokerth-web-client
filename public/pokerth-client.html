@@ -135,6 +135,25 @@ function selectAvatarPopup(emoji) {
                 style="width:42px;height:42px;font-size:1.5rem;background:rgba(255,255,255,0.06);border:1px solid var(--border);border-radius:4px;cursor:pointer;flex-shrink:0;transition:border-color 0.2s">🎭</button>
       </div>
     </div>
+
+    <div class="f" id="f-pass" style="display:none">
+      <label>Password</label>
+      <input id="pass" type="password" maxlength="128" placeholder="••••••••"
+             onkeydown="if(event.key==='Enter') App.connect()">
+    </div>
+
+    <label class="tls-row">
+      <input type="checkbox" id="remember-me" style="accent-color:var(--gold);flex-shrink:0" onchange="App.onRememberMe()">
+      <span style="font-size:0.72rem" data-i18n="rememberMe">Remember nickname / login &amp; password</span>
+    </label>
+    <label class="tls-row">
+      <input type="checkbox" id="use-tls" style="accent-color:var(--gold);flex-shrink:0">
+      <span data-i18n="tlsLabel">TLS — required for pokerth.net, uncheck for LAN</span>
+    </label>
+
+    <button class="btn-primary" onclick="App.connect()" data-i18n="connect">CONNECT</button>
+    <div id="cstatus" class="status"></div>
+  </div>
     <!-- Popup sélection avatar -->
     <div id="avatar-popup" style="display:none">
       <div class="avp-header">
@@ -172,24 +191,6 @@ function selectAvatarPopup(emoji) {
       </div>
     </div>
 
-    <div class="f" id="f-pass" style="display:none">
-      <label>Password</label>
-      <input id="pass" type="password" maxlength="128" placeholder="••••••••"
-             onkeydown="if(event.key==='Enter') App.connect()">
-    </div>
-
-    <label class="tls-row">
-      <input type="checkbox" id="remember-me" style="accent-color:var(--gold);flex-shrink:0" onchange="App.onRememberMe()">
-      <span style="font-size:0.72rem" data-i18n="rememberMe">Remember nickname / login &amp; password</span>
-    </label>
-    <label class="tls-row">
-      <input type="checkbox" id="use-tls" style="accent-color:var(--gold);flex-shrink:0">
-      <span data-i18n="tlsLabel">TLS — required for pokerth.net, uncheck for LAN</span>
-    </label>
-
-    <button class="btn-primary" onclick="App.connect()" data-i18n="connect">CONNECT</button>
-    <div id="cstatus" class="status"></div>
-  </div>
 </div>
 
 <!-- ║   LOBBY SCREEN     ║ -->
