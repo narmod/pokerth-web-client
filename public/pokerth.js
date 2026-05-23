@@ -2920,7 +2920,8 @@ const App = (() => {
   });
   // Exposer pour les fonctions globales (avatar, etc.)
   window._renderSeats = function() { if (seats.length) renderSeats(); };
-  window.toggleStats = toggleStats;
+  window.toggleStats  = toggleStats;
+  window._toggleStats = toggleStats;
   window._broadcastMyAvatar = function(emoji) {
     if (ws && ws.readyState === WebSocket.OPEN && !directWS && myId) {
       ws.send('AVATAR:' + myId + ':' + (emoji || ''));
