@@ -4494,8 +4494,21 @@ const App = (() => {
       pbAv.textContent = myName.charAt(0).toUpperCase();
       // Garder le vert pour moi (pas de couleur palette)
     }
-    const myBlind = myId === sbPid ? ' 🔵SB' : (myId === bbPid ? ' 🟣BB' : '');
-    if (pbName) pbName.textContent = myName + (myId === dealerPid ? ' 🎴D' : '') + myBlind;
+    // Chips SVG dans la player bar
+    const myBlindChip = myId === sbPid
+      ? chipSvg('SB','#1565c0','#fff','#0a3d7a')
+      : (myId === bbPid ? chipSvg('BB','#b71c1c','#fff','#6d0c0c') : '');
+    const myDealerBadge = myId === dealerPid
+      ? '<span style="display:inline-flex;align-items:center;justify-content:center;'
+        + 'width:14px;height:14px;border-radius:50%;background:var(--gold);'
+        + 'color:#110900;font-size:0.45rem;font-weight:900;margin-left:3px">D</span>' : '';
+    if (pbName) {
+      pbName.textContent = myName;
+      // Ajouter les badges après le texte via innerHTML (chips SVG + D badge)
+      pbName.innerHTML = myName
+        + (myDealerBadge ? '<span style="margin-left:4px;vertical-align:middle">' + myDealerBadge + '</span>' : '')
+        + (myBlindChip   ? '<span style="margin-left:4px;vertical-align:middle;display:inline-block;position:relative;top:-1px">' + myBlindChip.replace('class="blind-chip"','style="filter:drop-shadow(0 1px 3px rgba(0,0,0,0.4));vertical-align:middle"') + '</span>' : '');
+    }
     if (pbMon)  pbMon.textContent  = mySd.money != null ? mySd.money + ' ¥' : '—';
     if (pbAct)  pbAct.textContent  = mySd.action || '';
     if (pbBar)  pbBar.classList.toggle('pb-active', myId === turnPid);
