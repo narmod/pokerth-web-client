@@ -136,11 +136,19 @@ body {
 
 /* ══ POPUP AVATAR ══ */
 #avatar-popup {
-  background: rgba(4,10,6,0.98);
-  border: 1px solid var(--border);
-  border-radius: 6px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: min(380px, 92vw);
+  max-height: 70vh;
+  background: rgba(4,10,6,0.99);
+  border: 1px solid var(--gold-dim);
+  border-radius: 8px;
   padding: 0;
   overflow: hidden;
+  z-index: 500;
+  box-shadow: 0 8px 40px rgba(0,0,0,0.8);
   animation: slideDown 0.2s ease;
 }
 .avp-header {
@@ -173,9 +181,10 @@ body {
 .avp-tab-none { font-size: 0.65rem !important; font-family: 'Cinzel', serif; color: var(--text); padding: 4px 7px !important; }
 .avp-body { padding: 8px; }
 .avp-panel-grid {
-  display: grid;
-  grid-template-columns: repeat(8, 1fr);
+  display: grid !important;
+  grid-template-columns: repeat(8, 36px);
   gap: 4px;
+  justify-content: center;
 }
 /* Conserver .avp-grid pour compatibilité */
 .avp-grid {
@@ -185,13 +194,14 @@ body {
   padding: 10px;
 }
 .avp-btn {
-  aspect-ratio: 1;
+  width: 36px; height: 36px;
   background: rgba(255,255,255,0.04);
   border: 2px solid transparent;
   border-radius: 6px;
   font-size: 1.3rem;
   cursor: pointer;
-  display: flex; align-items: center; justify-content: center;
+  display: flex !important; align-items: center; justify-content: center;
+  flex-shrink: 0;
   transition: border-color 0.12s, transform 0.1s, background 0.12s;
   padding: 0;
 }
