@@ -598,6 +598,7 @@ function showKeyHint(text) {
 window.refreshMyAvatar = function() {
   var av = '';
   try { av = localStorage.getItem('pth_avatar') || ''; } catch(e) {}
+  _myAvatarCache = av; // synchroniser le cache
   var display = av || (typeof myName !== 'undefined' ? (myName||'').charAt(0).toUpperCase() : '?');
   // Player-bar
   var pbAv = document.getElementById('g-myseat-av');
@@ -2715,8 +2716,12 @@ const App = (() => {
   }
   function getPlayerInitial(pid) {
     if (pid === myId) {
-      try { var av = localStorage.getItem('pth_avatar'); if (av) return av; } catch(e) {}
-      return myName.charAt(0).toUpperCase();
+      // Utiliser le cache ; recharger depuis localStorage si vide
+      if (!_myAvatarCache) {
+        try { _myAvatarCache = localStorage.getItem('pth_avatar') || ''; } catch(e) {}
+      }
+      if (_myAvatarCache) return _myAvatarCache;
+      return myName ? myName.charAt(0).toUpperCase() : '?';
     }
     if (isBot(pid)) return '🤖';
     // Avatar reçu des autres joueurs via proxy
@@ -2856,6 +2861,20 @@ const App = (() => {
     });
     el.innerHTML = h;
     _lastPixPos = pixPos;
+    // Patcher l'avatar du joueur local immédiatement après le rendu
+    if (_myAvatarCache) {
+      requestAnimationFrame(function() {
+        var mySeats = document.querySelectorAll('#g-seats .seat.me');
+        mySeats.forEach(function(seat) {
+          var ini = seat.querySelector('.seat-initial');
+          if (ini && ini.textContent !== _myAvatarCache) {
+            ini.textContent = _myAvatarCache;
+            var av2 = seat.querySelector('.seat-avatar');
+            if (av2) av2.classList.add('emoji-av');
+          }
+        });
+      });
+    }
     var _ov2 = document.querySelector('.felt-oval');
     if (_ov2) { var _or2 = _ov2.getBoundingClientRect();
       _potCenter = { x: _or2.left + _or2.width/2, y: _or2.top + _or2.height/2 }; }
@@ -2948,6 +2967,7 @@ const App = (() => {
   window.toggleStats  = toggleStats;
   window._toggleStats = toggleStats;
   window._broadcastMyAvatar = function(emoji) {
+    _myAvatarCache = emoji || ''; // màj du cache immédiatement
     if (ws && ws.readyState === WebSocket.OPEN && !directWS && myId) {
       ws.send('AVATAR:' + myId + ':' + (emoji || ''));
     }
