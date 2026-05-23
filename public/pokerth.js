@@ -2504,11 +2504,10 @@ const App = (() => {
       const typeBadge  = getPlayerTypeBadge(pid);
       const avatarType = isMe ? '' : (isBot(pid) ? ' is-bot' : ' is-human');
       const moneyStr = sd.money != null && sd.money >= 0 ? sd.money + ' ¥' : '—';
+      // Cartes sous le siège : uniquement les adversaires au showdown
+      // (mes propres cartes sont déjà visibles dans la player-bar en bas)
       let cardStr = '';
-      if (isMe && myCards && myCards.length === 2) {
-        cardStr = '<div style="display:flex;gap:2px;margin-top:2px">'
-          + cardHtml(myCards[0],'xsm',false) + cardHtml(myCards[1],'xsm',false) + '</div>';
-      } else if (!isMe && sd.card1 != null && sd.card2 != null) {
+      if (!isMe && sd.card1 != null && sd.card2 != null) {
         cardStr = '<div style="display:flex;gap:2px;margin-top:1px">'
           + cardHtml(sd.card1,'xsm') + cardHtml(sd.card2,'xsm') + '</div>';
       }
