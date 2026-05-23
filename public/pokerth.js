@@ -2672,6 +2672,13 @@ const App = (() => {
     get: function(){ return _ipBlockUntil; },
     set: function(v){ _ipBlockUntil = v; }
   });
+  // Exposer pour les fonctions globales (avatar, etc.)
+  window._renderSeats = function() { if (seats.length) renderSeats(); };
+  window._broadcastMyAvatar = function(emoji) {
+    if (ws && ws.readyState === WebSocket.OPEN && !directWS && myId) {
+      ws.send('AVATAR:' + myId + ':' + (emoji || ''));
+    }
+  };
 
   function renderMyTurnActions() {
     const myMoney = (seatData[myId] || {}).money || 0;
