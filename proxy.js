@@ -122,8 +122,14 @@ const httpServer = http.createServer((req, res) => {
   const publicPath = path.join(__dirname, 'public', path.basename(req.url.split('?')[0]));
   if (fs.existsSync(publicPath) && fs.statSync(publicPath).isFile()) {
     const ext = path.extname(publicPath).toLowerCase();
-    const type = ext === '.svg' ? 'image/svg+xml' : ext === '.ico' ? 'image/x-icon' : ext === '.png' ? 'image/png' : 'application/octet-stream';
-    res.writeHead(200, { 'Content-Type': type, 'Cache-Control': 'public, max-age=86400' });
+    const type = ext === '.css' ? 'text/css; charset=utf-8'
+           : ext === '.js'  ? 'application/javascript; charset=utf-8'
+           : ext === '.svg' ? 'image/svg+xml'
+           : ext === '.ico' ? 'image/x-icon'
+           : ext === '.png' ? 'image/png'
+           : 'application/octet-stream';
+    const maxAge = (ext === '.css' || ext === '.js') ? 3600 : 86400;
+    res.writeHead(200, { 'Content-Type': type, 'Cache-Control': 'public, max-age=' + maxAge });
     return fs.createReadStream(publicPath).pipe(res);
   }
   res.writeHead(404); res.end('Not found');
