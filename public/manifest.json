@@ -1,0 +1,29 @@
+{
+  "name": "PokerTH Web Client",
+  "short_name": "PokerTH",
+  "description": "Client web pour les serveurs PokerTH \u2014 Texas Hold'em",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#040a06",
+  "theme_color": "#0a1a0c",
+  "orientation": "any",
+  "icons": [
+    {
+      "src": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxOTIgMTkyIj48cmVjdCB3aWR0aD0iMTkyIiBoZWlnaHQ9IjE5MiIgcng9IjI0IiBmaWxsPSIjMGExYTBjIi8+PHRleHQgeD0iOTYiIHk9IjEzMiIgZm9udC1mYW1pbHk9InNlcmlmIiBmb250LXNpemU9IjExMiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iI2M4YTg0YSI+4pmiPC90ZXh0Pjwvc3ZnPg==",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cmVjdCB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgcng9IjY0IiBmaWxsPSIjMGExYTBjIi8+PHRleHQgeD0iMjU2IiB5PSIzNTAiIGZvbnQtZmFtaWx5PSJzZXJpZiIgZm9udC1zaXplPSIzMDAiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZpbGw9IiNjOGE4NGEiPuKZoTwvdGV4dD48L3N2Zz4=",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": [
+    "games",
+    "entertainment"
+  ],
+  "lang": "fr"
+}
