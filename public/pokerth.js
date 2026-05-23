@@ -1537,7 +1537,11 @@ const App = (() => {
           while (pos < p.length) { const r = Proto.decodeVarint(p, pos); pos = r.pos; pc++; }
         }
 
-        games[id] = { name, mode, players:pc, maxPlayers:maxp, type:gtype, priv:!!priv };
+        // Extraire le timeout depuis GameInfo (netTimeOutPlayerAction)
+        var _ginfo = sub[13] ? Proto.decode(sub[13][0]) : (sub[5] ? Proto.decode(sub[5][0]) : null);
+        var _gto = _ginfo ? (Proto.u32(_ginfo, 11) || Proto.u32(_ginfo, 9)) : 0;
+        games[id] = { name, mode, players:pc, maxPlayers:maxp, type:gtype, priv:!!priv,
+                      timeout: _gto || 15 };
         if (!loaded) { loaded = true; }
         renderGames();
         break;
