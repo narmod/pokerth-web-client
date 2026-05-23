@@ -1270,7 +1270,7 @@ var LANG = {
     fold:'Fold', check:'Check', call:'Call', raise:'Raise', allin:'All-In',
     pot:'Pot:', journal:'📋', chat:'💬', sound:'🔊', mute:'🔇',
     thinking:'is thinking…', myCards:'My cards:', gameStart:'Start',
-    bet:'Bet', wins:'wins', handOf:'Hand',
+    bet:'Bet', wins:'wins', handOf:'Hand #',
     handsTitle:'♠ Poker Hand Rankings ♥',
     h1n:'Royal Flush', h1d:'A K Q J 10 of the same suit — the absolute best hand',
     h2n:'Straight Flush', h2d:'5 consecutive cards of the same suit',
@@ -1334,7 +1334,7 @@ var LANG = {
     fold:'Fold', check:'Check', call:'Call', raise:'Relance', allin:'All-In',
     pot:'Pot :', journal:'📋', chat:'💬', sound:'🔊', mute:'🔇',
     thinking:'réfléchit…', myCards:'Mes cartes :', gameStart:'Début',
-    bet:'Mise', wins:'gagne', handOf:'Main',
+    bet:'Mise', wins:'gagne', handOf:'Main #',
     handsTitle:'♠ Combinaisons du Poker ♥',
     h1n:'Quinte Flush Royale', h1d:'A K Q J 10 de la même couleur — la main absolue',
     h2n:'Quinte Flush', h2d:'5 cartes consécutives de la même couleur',
@@ -2365,7 +2365,7 @@ const App = (() => {
       case T.HandStart: {
         // HandStartMessage: gameId=1, plainCards=2 {card1:1, card2:2}, smallBlind=4, seatStates=5, dealerPlayerId=6
         handNum++;
-        $('g-hand').textContent = t('handLabel') + handNum;
+        $('g-hand').textContent = t('handOf') + handNum;
         $('g-round').textContent = t('preflop');
         gameState = 0; // preflop
         commCards = [null, null, null, null, null];
