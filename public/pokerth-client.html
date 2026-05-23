@@ -3099,6 +3099,7 @@ const App = (() => {
   let autoAction = false;
   let amGameAdmin = false;  // true if we created this game
   let _lastConnectParams = null;
+  let _currentLoginMode = 'lan';
   let _lastMsgWasReaction = false; // true si le dernier chat envoyé était une réaction
   let _chatRejectShown = false;    // n'afficher l'avertissement LAN qu'une seule fois // pour la reconnexion auto
   let _reconnectAttempts = 0;
