@@ -2651,13 +2651,7 @@ const App = (() => {
       + ' stroke="'+col+'"'
       + ' stroke-dasharray="'+circ.toFixed(1)+'"'
       + ' stroke-dashoffset="'+offset+'"/>'
-      // Disque central opaque (masque l'initiale en dessous)
-      + '<circle class="center-bg" cx="'+cx+'" cy="'+cy+'" r="13"/>'
-      // Chiffre : contre-rotation pour rester droit
-      + '<text x="'+cx+'" y="'+cy+'"'
-      + ' fill="'+col+'"'
-      + ' style="transform:rotate(90deg) translate(0px,-50px);font-size:11px;font-family:monospace;font-weight:900;text-anchor:middle;dominant-baseline:middle">'
-      + (secs > 0 ? secs : '') + '</text>'
+      // Pas de disque central ni de texte : le chiffre est affiché hors du cercle
       + '</svg>';
   }
 
@@ -2677,6 +2671,9 @@ const App = (() => {
       el.textContent = _timerSec > 0 ? _timerSec + 's' : '';
       el.style.transform = 'rotate(90deg) translate(0,-50px)';
     });
+    // Badge timer sous chaque siège
+    var stb = document.getElementById('stb-' + turnPid);
+    if (stb) { stb.textContent = _timerSec > 0 ? _timerSec + 's' : ''; stb.style.color = col; }
     // Player bar counter
     var pb = document.getElementById('pb-timer');
     if (pb && turnPid === myId) {
@@ -2853,6 +2850,9 @@ const App = (() => {
         + dealerChip
         + typeBadge
         + '</div>';
+      // Badge timer sous l'avatar (visible et non confondu avec l'emoji)
+      if (isActive) h += '<div class="seat-timer-badge" id="stb-'+pid+'">'
+        + ((_timerSec > 0) ? _timerSec + 's' : '') + '</div>';
       h += '<div class="seat-name">' + esc(isMe ? myName : getPlayerName(pid)) + '</div>';
       h += '<div class="seat-money">' + moneyStr + '</div>';
       if (sd.bet) h += '<div class="seat-bet">' + sd.bet + '</div>';
