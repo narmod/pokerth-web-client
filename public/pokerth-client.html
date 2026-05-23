@@ -231,10 +231,10 @@ var _avCats = [
 var _avpCurrentCat = 0;
 
 function toggleAvatarPopup() {
-  var overlay = document.getElementById('avp-overlay');
-  if (!overlay) return;
-  var isOpen = overlay.style.display === 'flex';
-  overlay.style.display = isOpen ? 'none' : 'flex';
+  var p = document.getElementById('avp-popup');
+  if (!p) return;
+  var isOpen = p.style.display === 'flex';
+  p.style.display = isOpen ? 'none' : 'flex';
   if (!isOpen) avpShowCat(0);
 }
 
@@ -243,9 +243,8 @@ function avpShowCat(idx) {
   var titleEl = document.getElementById('avp-title');
   if (titleEl) titleEl.textContent = idx < 0 ? 'Initiale' : (_avCats[idx].icon + ' ' + _avCats[idx].name);
   // Onglets
-  document.querySelectorAll('.avp-tab-btn').forEach(function(b, i) {
-    b.style.borderColor = i === idx + 1 ? '#c8a84a' : 'transparent';
-    b.style.background  = i === idx + 1 ? 'rgba(200,168,74,0.2)' : 'rgba(255,255,255,0.05)';
+  document.querySelectorAll('.avp-tab').forEach(function(b, i) {
+    b.classList.toggle('active', i === idx + 1);
   });
   // Grille
   var grid = document.getElementById('avp-grid');
@@ -277,8 +276,8 @@ function selectAvatarPopup(emoji) {
   var trigger = document.getElementById('av-trigger');
   if (trigger) { trigger.textContent = emoji || '🎭'; trigger.classList.toggle('has-avatar', !!emoji); }
   // Fermer
-  var overlay = document.getElementById('avp-overlay');
-  if (overlay) overlay.style.display = 'none';
+  var popup = document.getElementById('avp-popup');
+  if (popup) popup.style.display = 'none';
   // Màj UI en jeu
   if (typeof window.refreshMyAvatar === 'function') window.refreshMyAvatar();
   if (typeof window._renderSeats === 'function') window._renderSeats();
@@ -301,7 +300,21 @@ function selectAvatarPopup(emoji) {
     <button class="btn-sm" onclick="location.reload()" title="Refresh / Rafraîchir" style="font-size:1rem;padding:3px 8px">↺</button>
     <button class="btn-sm" id="fs-btn-connect" onclick="toggleFullscreen()" title="Fullscreen">⛶</button>
   </div>
-  <div class="card">
+  <div class="card" style="position:relative">
+    <!-- Popup avatar — dans la card, overlay absolu -->
+    <div id="avp-popup" style="display:none;position:absolute;inset:0;background:#040a06;border-radius:8px;z-index:20;flex-direction:column;overflow:hidden">
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-bottom:1px solid rgba(200,168,74,0.25);background:rgba(0,0,0,0.5);flex-shrink:0">
+        <span id="avp-title" style="font-size:0.62rem;letter-spacing:0.15em;text-transform:uppercase;color:#c8a84a;font-family:'Cinzel',serif">🐾 Sauvages</span>
+        <button onclick="toggleAvatarPopup()" style="background:none;border:none;color:#aaa;cursor:pointer;font-size:1.1rem;line-height:1;padding:0 4px">✕</button>
+      </div>
+      <div style="display:flex;gap:4px;flex-wrap:wrap;padding:8px 10px;border-bottom:1px solid rgba(200,168,74,0.12);background:rgba(0,0,0,0.3);flex-shrink:0">
+        <button type="button" class="avp-tab" onclick="avpShowCat(-1)">Aa</button><button type="button" class="avp-tab" onclick="avpShowCat(0)" title="Sauvages">🐾</button><button type="button" class="avp-tab" onclick="avpShowCat(1)" title="Marins">🌊</button><button type="button" class="avp-tab" onclick="avpShowCat(2)" title="Oiseaux">🦅</button><button type="button" class="avp-tab" onclick="avpShowCat(3)" title="Mignons">🐶</button><button type="button" class="avp-tab" onclick="avpShowCat(4)" title="Créatures">🐉</button><button type="button" class="avp-tab" onclick="avpShowCat(5)" title="Perso.">🧙</button><button type="button" class="avp-tab" onclick="avpShowCat(6)" title="Guerriers">⚔️</button>
+      </div>
+      <div style="overflow-y:auto;padding:10px;flex:1">
+        <div id="avp-grid" style="display:grid;grid-template-columns:repeat(7,40px);gap:5px;justify-content:center"></div>
+      </div>
+    </div>
+
     <div class="card-logo" style="padding:20px 0 18px">
       <div class="card-suits-row" style="font-size:1.4rem;letter-spacing:0.3em;margin-bottom:8px"><span>♠</span><span class="r">♥</span><span class="r">♦</span><span>♣</span></div>
       <div class="card-title-big" style="font-size:2rem;letter-spacing:0.18em">PokerTH</div>
@@ -644,16 +657,5 @@ if ('serviceWorker' in navigator) {
 }
 </script>
 
-<!-- ═══ OVERLAY AVATAR ═══ -->
-<div id="avp-overlay" onclick="if(event.target===this)toggleAvatarPopup()" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:9999;align-items:center;justify-content:center;backdrop-filter:blur(3px)">
-  <div id="avp-modal">
-    <div id="avp-header">
-      <span id="avp-title">🐾 Sauvages</span>
-      <button onclick="toggleAvatarPopup()" id="avp-close">✕</button>
-    </div>
-    <div id="avp-tabs"><button type="button" class="avp-tab-btn" onclick="avpShowCat(-1)" title="Initiale" style="font-size:0.65rem;font-family:serif">Aa</button><button type="button" class="avp-tab-btn" onclick="avpShowCat(0)" title="Sauvages">🐾</button><button type="button" class="avp-tab-btn" onclick="avpShowCat(1)" title="Marins">🌊</button><button type="button" class="avp-tab-btn" onclick="avpShowCat(2)" title="Oiseaux">🦅</button><button type="button" class="avp-tab-btn" onclick="avpShowCat(3)" title="Mignons">🐶</button><button type="button" class="avp-tab-btn" onclick="avpShowCat(4)" title="Créatures">🐉</button><button type="button" class="avp-tab-btn" onclick="avpShowCat(5)" title="Perso.">🧙</button><button type="button" class="avp-tab-btn" onclick="avpShowCat(6)" title="Guerriers">⚔️</button></div>
-    <div id="avp-grid-wrap"><div id="avp-grid"></div></div>
-  </div>
-</div>
 </body>
 </html>
