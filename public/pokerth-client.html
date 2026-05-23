@@ -2014,8 +2014,19 @@ var LANG = {
     errInvalidGame:'Cannot join this game',
     moreOptions:'More options', lessOptions:'Less options',
     addPassword:'Add a password (optional)', tablePassword:'Password:',
-    rememberMe:'Remember nickname / login & password',
+    rememberMe:'Se souvenir du pseudo / identifiants',
     tlsLabel:'TLS — required for pokerth.net, uncheck for LAN',
+    privateGuestStatus:'✅ Chat & reactions available on private server.',
+    enterNickFree:'Nickname (free, min 3 chars)',
+    enterNickGuest:'Guest nickname (Guest + 5 digits)',
+    enterAccount:'pokerth.net account name',
+    enterCredentials:'Enter your pokerth.net credentials.',
+    chatAvailPrivate:'✅ Chat & reactions available on private server.',
+    connProxy:'Connecting to proxy...',
+    connDirect:'Direct connection to pokerth.net...',
+    fillFields:'Please fill all fields.',
+    enterPassword:'Please enter your password.',
+    lanModeNote:'LAN mode: in-game chat is limited.',
     urlProxy:'WebSocket Proxy URL', pokerServer:'PokerTH Server', port:'Port',
     loginMode:'Login Mode', nickLabel:'Nickname', passLabel:'Password',
   },
@@ -2084,6 +2095,17 @@ var LANG = {
     addPassword:'Ajouter un mot de passe (optionnel)', tablePassword:'Mot de passe :',
     rememberMe:'Se souvenir du pseudo / login et mot de passe',
     tlsLabel:'TLS — requis pour pokerth.net, décocher pour LAN',
+    privateGuestStatus:'✅ Chat et réactions disponibles sur serveur privé.',
+    enterNickFree:'Pseudo (libre, min 3 chars)',
+    enterNickGuest:'Pseudo invité (Guest + 5 chiffres)',
+    enterAccount:'Nom du compte pokerth.net',
+    enterCredentials:'Entrez vos identifiants pokerth.net.',
+    chatAvailPrivate:'✅ Chat et réactions disponibles sur serveur privé.',
+    connProxy:'Connexion au proxy...',
+    connDirect:'Connexion directe à pokerth.net...',
+    fillFields:'Remplissez tous les champs.',
+    enterPassword:'Entrez votre mot de passe.',
+    lanModeNote:'Mode LAN : chat en jeu limité.',
     urlProxy:'URL du Proxy WebSocket', pokerServer:'Serveur PokerTH', port:'Port',
     loginMode:'Mode de connexion', nickLabel:'Pseudo', passLabel:'Mot de passe',
   }
@@ -2945,11 +2967,11 @@ document.addEventListener("DOMContentLoaded", function() {
 
     <label class="tls-row">
       <input type="checkbox" id="remember-me" style="accent-color:var(--gold);flex-shrink:0" onchange="App.onRememberMe()">
-      <span style="font-size:0.72rem">Remember nickname / login &amp; password</span>
+      <span style="font-size:0.72rem" data-i18n="rememberMe">Remember nickname / login &amp; password</span>
     </label>
     <label class="tls-row">
       <input type="checkbox" id="use-tls" style="accent-color:var(--gold);flex-shrink:0">
-      <span>TLS — requis pour pokerth.net, décocher pour LAN</span>
+      <span data-i18n="tlsLabel">TLS — required for pokerth.net, uncheck for LAN</span>
     </label>
 
     <button class="btn-primary" onclick="App.connect()" data-i18n="connect">CONNECT</button>
@@ -4805,38 +4827,33 @@ function dismissWinner() {
       const port       = window.location.port || '8080';
 
       if (mode === 'lan') {
-        // Mode LAN : loginType 0, pseudo libre, pas de TLS, serveur local
-        $('nick-label').textContent = 'Pseudo (libre, min 3 chars)';
+        $('nick-label').textContent = t('enterNickFree');
         $('nick').placeholder = 'VotrePrenom';
         $('use-tls').checked = false;
         if (proxyInput) proxyInput.value = proto + '//' + (autoHost||'localhost') + ':' + port;
         if (hostInput && autoHost) hostInput.value = autoHost;
-        setStatus('Mode LAN : chat en jeu limité.');
+        setStatus(t('lanModeNote'));
       } else if (mode === 'unauth') {
-        // Mode Serveur privé Invité : loginType 2, pseudo libre, serveur custom
-        // ✅ Chat en jeu disponible si ServerRestrictGuestLogin=0
-        $('nick-label').textContent = 'Pseudo (libre, min 3 chars)';
+        $('nick-label').textContent = t('enterNickFree');
         $('nick').placeholder = 'VotrePrenom';
         $('use-tls').checked = false;
         if (proxyInput) proxyInput.value = proto + '//' + (autoHost||'localhost') + ':' + port;
         if (hostInput && autoHost) hostInput.value = autoHost;
-        setStatus('✅ Chat et réactions disponibles sur serveur privé.');
+        setStatus(t('chatAvailPrivate'));
       } else if (mode === 'guest') {
-        // Mode pokerth.net Invité : loginType 2, directWS, pseudo Guest+chiffres
-        $('nick-label').textContent = 'Pseudo invité (Guest + 5 chiffres)';
+        $('nick-label').textContent = t('enterNickGuest');
         $('nick').placeholder = 'Guest' + String(Math.floor(10000 + Math.random()*90000));
         $('use-tls').checked = true;
         if (proxyInput) proxyInput.value = proto + '//' + (autoHost||'localhost') + ':' + port;
         if (hostInput) hostInput.value = 'pokerth.net';
         setStatus('');
       } else {
-        // Mode pokerth.net Compte enregistré : loginType 1, directWS
-        $('nick-label').textContent = 'Nom du compte pokerth.net';
+        $('nick-label').textContent = t('enterAccount');
         $('nick').placeholder = 'MonCompte';
         $('use-tls').checked = true;
         if (proxyInput) proxyInput.value = proto + '//' + (autoHost||'localhost') + ':' + port;
         if (hostInput) hostInput.value = 'pokerth.net';
-        setStatus('Entrez vos identifiants pokerth.net.', '');
+        setStatus(t('enterCredentials'));
       }
     },
 
@@ -4875,12 +4892,12 @@ function dismissWinner() {
         myName = 'Guest' + String(Math.floor(10000 + Math.random()*90000));
         $('nick').value = myName;
       }
-      if (!myName) { setStatus('Entrez un pseudo.', 'err'); return; }
-      if (myName.length < 3) { setStatus('Pseudo trop court (min 3 chars).', 'err'); return; }
-      if (!proxyUrl || !host) { setStatus('Remplissez tous les champs.', 'err'); return; }
+      if (!myName) { setStatus(t('enterNick'), 'err'); return; }
+      if (myName.length < 3) { setStatus(t('nickTooShort'), 'err'); return; }
+      if (!proxyUrl || !host) { setStatus(t('fillFields'), 'err'); return; }
 
       if (loginMode === 'auth' && (!$('pass') || !$('pass').value.trim())) {
-        setStatus('Entrez votre mot de passe.', 'err');
+        setStatus(t('enterPassword'), 'err');
         return;
       }
 
@@ -4907,7 +4924,7 @@ function dismissWinner() {
         ? 'wss://www.pokerth.net:443/pthlive'
         : proxyUrl + '?host=' + encodeURIComponent(host) + '&port=' + encodeURIComponent(port) + '&tls=' + tlsParam;
 
-      setStatus(directWS ? 'Connexion directe à pokerth.net…' : 'Connexion au proxy...');
+      setStatus(directWS ? t('connDirect') : t('connProxy'));
 
       // Sauvegarder les paramètres pour la reconnexion auto
       _lastConnectParams = { host, port, loginMode, finalUrl, myName,
