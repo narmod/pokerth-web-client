@@ -5260,7 +5260,17 @@ function autoScaleTable() {
   var ov = document.querySelector('.felt-oval');
   if (ov) { var ovr = ov.getBoundingClientRect(); console.log('[Scale] oval rect:', Math.round(ovr.left), Math.round(ovr.top), Math.round(ovr.width), Math.round(ovr.height)); }
   var ga = document.querySelector('.game-area');
-  if (ga) { console.log('[Scale] game-area display:', getComputedStyle(ga).display, 'h:', ga.clientHeight); }
+  if (ga) { var gar = ga.getBoundingClientRect(); console.log('[Scale] game-area top:', Math.round(gar.top), 'h:', ga.clientHeight); }
+  var sg = document.getElementById('s-game');
+  if (sg) { var sgr = sg.getBoundingClientRect(); console.log('[Scale] s-game top:', Math.round(sgr.top), 'h:', Math.round(sgr.height)); }
+  // Lister tous les enfants directs de s-game avec leur hauteur
+  if (sg) {
+    Array.from(sg.children).forEach(function(c) {
+      var r2 = c.getBoundingClientRect();
+      var cs = getComputedStyle(c);
+      console.log('[Scale] child', c.id||c.className.split(' ')[0], 'top:', Math.round(r2.top), 'h:', Math.round(r2.height), 'display:', cs.display, 'pos:', cs.position);
+    });
+  }
   if (!tzW || !scW || !tzH || !scH) {
     console.log('[Scale] dimensions nulles — fallback scale(1)');
     sc.style.transform = 'scale(1)';
