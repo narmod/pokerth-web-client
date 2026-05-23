@@ -26,6 +26,23 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Inconsolata:wght@300;400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="pokerth.css">
+<script>
+function toggleAvatarPopup() {
+  var p = document.getElementById("avatar-popup");
+  if (!p) return;
+  p.style.display = (p.style.display === "none" || !p.style.display) ? "block" : "none";
+}
+function selectAvatarPopup(emoji) {
+  try { localStorage.setItem("pth_avatar", emoji); } catch(e) {}
+  document.querySelectorAll(".avp-btn").forEach(function(b) {
+    b.classList.toggle("selected", b.dataset.av === emoji);
+  });
+  var trigger = document.getElementById("av-trigger");
+  if (trigger) { trigger.textContent = emoji || "\uD83C\uDFAD"; trigger.classList.toggle("has-avatar", !!emoji); }
+  var p = document.getElementById("avatar-popup");
+  if (p) p.style.display = "none";
+}
+</script>
 
 </head>
 <body>
