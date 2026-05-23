@@ -3546,7 +3546,7 @@ const App = (() => {
           console.log('[Reaction] reçue de pid=' + pid + ' emoji=' + reactEmoji);
           if (pid !== myId) {
             handleIncomingReaction(pid, reactEmoji);
-            addGameChat(who, reactEmoji + ' (réaction)', 'reaction');
+            // Pas d'affichage dans le chat — animation seule
           }
         } else {
           addChat(who, text, cls);
