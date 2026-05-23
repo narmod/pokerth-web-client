@@ -2734,13 +2734,12 @@ const App = (() => {
   function renderSeats() {
     const el = $('g-seats');
     if (!seats.length) { el.innerHTML = ''; return; }
-    // Filtrer les joueurs actifs (ceux qui jouent cette main)
+    // Joueurs actifs dans l'ordre naturel du serveur (sans rotation)
     const activeSeats = seats.filter(function(pid) {
       return !seatData[pid] || seatData[pid].active !== false;
     });
     const n = activeSeats.length;
-    const myIdx = activeSeats.indexOf(myId);
-    const rotated = myIdx >= 0 ? [...activeSeats.slice(myIdx), ...activeSeats.slice(0, myIdx)] : activeSeats;
+    const rotated = activeSeats; // pas de rotation — chacun à sa place naturelle
     // Position seats using actual pixel coords from getBoundingClientRect
     const oval = document.querySelector('.felt-oval');
     const zone = document.getElementById('g-table-zone');
