@@ -1623,22 +1623,6 @@ function animateChipToPot(pid, amount) {
   });
 }
 
-function renderHandStrength() {
-  var el = document.getElementById('hand-strength');
-  if (!el) return;
-  var validComm = commCards.filter(function(c){ return c != null; });
-  if (myCards[0] == null || myCards[1] == null || validComm.length === 0) {
-    el.style.display = 'none'; return;
-  }
-  var result = evaluateBestHand([myCards[0], myCards[1]], validComm);
-  if (!result) { el.style.display = 'none'; return; }
-  el.textContent = _lang === 'fr' ? result.fr : result.en;
-  el.style.display = 'block';
-  // Couleur selon force
-  var colors = ['#aaa','#aaa','#7ec8e3','#7ec8e3','#a8d8a8','#6dbe6d','#f0c040','#f09030','#e07020','#e74c3c'];
-  el.style.color = colors[result.r] || 'var(--gold)';
-  el.style.borderColor = (colors[result.r]||'var(--gold)').replace(')',',0.25)').replace('rgb','rgba');
-}
 
 
 function setLang(l) {
@@ -2986,6 +2970,23 @@ const App = (() => {
     if (pb) pb.innerHTML = cardHtml(c1,'md') + cardHtml(c2,'md');
   }
 
+
+  // ─── Force de la main ───
+  function renderHandStrength() {
+    var el = document.getElementById('hand-strength');
+    if (!el) return;
+    var validComm = commCards.filter(function(c){ return c != null; });
+    if (myCards[0] == null || myCards[1] == null || validComm.length === 0) {
+      el.style.display = 'none'; return;
+    }
+    var result = evaluateBestHand([myCards[0], myCards[1]], validComm);
+    if (!result) { el.style.display = 'none'; return; }
+    el.textContent = _lang === 'fr' ? result.fr : result.en;
+    el.style.display = 'block';
+    var colors = ['#aaa','#aaa','#7ec8e3','#7ec8e3','#a8d8a8','#6dbe6d','#f0c040','#f09030','#e07020','#e74c3c'];
+    el.style.color = colors[result.r] || 'var(--gold)';
+    el.style.borderColor = (colors[result.r]||'var(--gold)').replace(')',',0.25)').replace('rgb','rgba');
+  }
 
   // ─── Community cards ───
   function renderComm(animate) {
