@@ -135,22 +135,7 @@ body {
 .seat-avatar.emoji-av .seat-initial { font-size: 1.05em; line-height: 1; }
 
 /* ══ POPUP AVATAR ══ */
-#avatar-popup {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: min(380px, 92vw);
-  max-height: 70vh;
-  background: rgba(4,10,6,0.99);
-  border: 1px solid var(--gold-dim);
-  border-radius: 8px;
-  padding: 0;
-  overflow: hidden;
-  z-index: 500;
-  box-shadow: 0 8px 40px rgba(0,0,0,0.8);
-  animation: slideDown 0.2s ease;
-}
+
 .avp-header {
   display: flex; align-items: center; justify-content: space-between;
   padding: 8px 12px;
@@ -159,40 +144,7 @@ body {
   border-bottom: 1px solid var(--border);
   background: rgba(0,0,0,0.3);
 }
-/* ── Avatar popup avec onglets ── */
-.avp-tabs {
-  display: flex; gap: 4px; flex-wrap: wrap;
-  padding: 6px 8px;
-  border-bottom: 1px solid var(--border);
-  background: rgba(0,0,0,0.2);
-}
-.avp-tab {
-  background: rgba(255,255,255,0.04);
-  border: 1px solid var(--border);
-  border-radius: 5px;
-  font-size: 1.1rem;
-  cursor: pointer;
-  padding: 3px 6px;
-  transition: border-color 0.12s, background 0.12s, transform 0.1s;
-  line-height: 1.2;
-}
-.avp-tab:hover { border-color: var(--gold-dim); transform: scale(1.12); }
-.avp-tab-active { border-color: var(--gold) !important; background: rgba(200,168,74,0.18) !important; }
-.avp-tab-none { font-size: 0.65rem !important; font-family: 'Cinzel', serif; color: var(--text); padding: 4px 7px !important; }
-.avp-body { padding: 8px; }
-.avp-panel-grid {
-  display: grid !important;
-  grid-template-columns: repeat(8, 36px);
-  gap: 4px;
-  justify-content: center;
-}
-/* Conserver .avp-grid pour compatibilité */
-.avp-grid {
-  display: grid;
-  grid-template-columns: repeat(8, 1fr);
-  gap: 4px;
-  padding: 10px;
-}
+
 .avp-btn {
   width: 36px; height: 36px;
   background: rgba(255,255,255,0.04);
