@@ -594,11 +594,29 @@ function showKeyHint(text) {
 }
 
 
-function selectAvatar(emoji) {
+function toggleAvatarPopup() {
+  var popup = document.getElementById('avatar-popup');
+  if (!popup) return;
+  var open = popup.style.display === 'none' || popup.style.display === '';
+  popup.style.display = open ? 'block' : 'none';
+}
+
+function selectAvatarPopup(emoji) {
+  // Sauvegarder
   try { localStorage.setItem('pth_avatar', emoji); } catch(e) {}
-  document.querySelectorAll('.av-btn').forEach(function(b) {
+  // Mettre à jour les boutons du popup
+  document.querySelectorAll('.avp-btn').forEach(function(b) {
     b.classList.toggle('selected', b.dataset.av === emoji);
   });
+  // Mettre à jour le bouton déclencheur
+  var trigger = document.getElementById('av-trigger');
+  if (trigger) {
+    trigger.textContent = emoji || '🎭';
+    trigger.classList.toggle('has-avatar', !!emoji);
+  }
+  // Fermer le popup
+  var popup = document.getElementById('avatar-popup');
+  if (popup) popup.style.display = 'none';
 }
 
 function toggleLang() { setLang(_lang === 'en' ? 'fr' : 'en'); }
@@ -987,8 +1005,7 @@ document.addEventListener("DOMContentLoaded", function() {
   // Restaurer l'avatar sauvegardé
   try {
     var savedAv = localStorage.getItem('pth_avatar') || '';
-    if (savedAv) selectAvatar(savedAv);
-    else selectAvatar(''); // sélectionner 'Aa' par défaut
+    selectAvatarPopup(savedAv);
   } catch(e) {}
   // Restore sound button state
   var sbtn = document.getElementById('sound-toggle-btn');
@@ -1290,6 +1307,7 @@ const App = (() => {
   let smallBlind = 10;  // small blind value
   let handNum   = 0;   // hand counter
   let gameState = 0;   // preflop/flop/turn/river
+  let _playerAvatars = {}; // pid → emoji avatar (reçu des autres joueurs via proxy)
   let seats     = [];  // player IDs in seat order (from GameStartInitial) — figé après 1ère main
   let seatData  = {};  // {pid: {money, bet, action, active, folded}}
   let myCards   = [null, null];
@@ -1613,6 +1631,15 @@ const App = (() => {
         addChat(null, 'Rejoint la table ' + gId + (isAdmin ? ' (admin)' : '') + ' — attente du démarrage...', 'sys');
         show('s-game');
         document.body.classList.add('in-game');
+        // Diffuser l'avatar aux autres joueurs via le proxy
+        setTimeout(function() {
+          try {
+            var myAv = localStorage.getItem('pth_avatar') || '';
+            if (ws && ws.readyState === WebSocket.OPEN && !directWS) {
+              ws.send('AVATAR:' + myId + ':' + myAv);
+            }
+          } catch(e) {}
+        }, 500);
         // Plusieurs tentatives pour s'assurer que la table s'affiche
         [100, 300, 600, 1200].forEach(function(d){
           setTimeout(function(){
@@ -1694,7 +1721,7 @@ const App = (() => {
       case T.RemovedFromGame: {
         addChat(null, 'Vous avez été retiré de la partie.', 'sys');
         amInGame = false;
-        gId = 0; seats = []; seatData = {};
+        gId = 0; seats = []; seatData = {}; _playerAvatars = {};
         show('s-lobby');
         break;
       }
@@ -1773,6 +1800,13 @@ const App = (() => {
           }
         }
 
+        // Re-diffuser l'avatar à chaque début de main (pour les nouveaux connectés)
+        try {
+          var myAv2 = localStorage.getItem('pth_avatar') || '';
+          if (ws && ws.readyState === WebSocket.OPEN && !directWS) {
+            ws.send('AVATAR:' + myId + ':' + myAv2);
+          }
+        } catch(e) {}
         if (isFirstDeal) {
           setTimeout(function(){ renderSeats(); }, 120);
           renderGameWaiting('Partie démarrée ! En attente de la première main...');
@@ -2426,6 +2460,8 @@ const App = (() => {
       return myName.charAt(0).toUpperCase();
     }
     if (isBot(pid)) return '🤖';
+    // Avatar reçu des autres joueurs via proxy
+    if (_playerAvatars[pid]) return _playerAvatars[pid];
     var name = players[pid] || '';
     return name.charAt(0).toUpperCase() || '?';
   }
@@ -2518,12 +2554,12 @@ const App = (() => {
       const cls = ['seat', isMe?'me':'', isDealer?'dealer':'', isActive?'active':'', sd.folded?'folded':''].filter(Boolean).join(' ');
       const initial    = getPlayerInitial(pid);
       const typeBadge  = getPlayerTypeBadge(pid);
-      var _hasEmojiAv = isMe && (function(){
-        try { var av = localStorage.getItem('pth_avatar'); return av && av.length > 0; } catch(e){ return false; }
-      })();
+      var _hasEmojiAv = isMe
+        ? (function(){ try { var av = localStorage.getItem('pth_avatar'); return !!av; } catch(e){ return false; } })()
+        : !!_playerAvatars[pid];
       const avatarType = isMe
         ? (_hasEmojiAv ? ' emoji-av' : '')
-        : (isBot(pid) ? ' is-bot' : ' is-human');
+        : (isBot(pid) ? ' is-bot' : (_hasEmojiAv ? ' emoji-av is-human' : ' is-human'));
       const moneyStr = sd.money != null && sd.money >= 0 ? sd.money + ' ¥' : '—';
       // Cartes sous le siège : uniquement les adversaires au showdown
       // (mes propres cartes sont déjà visibles dans la player-bar en bas)
@@ -2910,6 +2946,16 @@ function dismissWinner() {
       ws.onmessage = function(e) {
         if (typeof e.data === 'string') {
           // Message texte = protocole proxy (réactions)
+          if (e.data.startsWith('AVATAR:')) {
+            var avParts = e.data.split(':');
+            var avPid = parseInt(avParts[1]);
+            var avEmoji = avParts[2] || '';
+            if (avPid && avPid !== myId) {
+              _playerAvatars[avPid] = avEmoji;
+              if (typeof renderSeats === 'function' && seats.length) renderSeats();
+            }
+            return;
+          }
           if (e.data.startsWith('REACT:')) {
             var parts = e.data.split(':');
             var fromPid = parseInt(parts[1]);
