@@ -3356,7 +3356,9 @@ const App = (() => {
             if (rb) {
               var note = document.createElement('div');
               note.style.cssText = 'font-size:0.52rem;color:rgba(255,180,50,0.7);text-align:center;width:100%;margin-top:2px;font-style:italic';
-              note.textContent = '⚠ Mode invité : réactions visibles localement seulement';
+              note.textContent = _currentLoginMode === 'lan'
+                ? '⚠ Mode LAN : réactions locales. Utilisez Internet Invité pour les partager.'
+                : '⚠ Réactions locales seulement (chat refusé par le serveur)';
               rb.appendChild(note);
               setTimeout(function(){ note.style.opacity='0'; note.style.transition='opacity 1s'; setTimeout(function(){ note.remove(); }, 1000); }, 5000);
             }
@@ -3366,7 +3368,16 @@ const App = (() => {
           if (!amInGame) addChat(null, '⚠ Chat refusé: ' + rejText, 'sys');
           else if (!_chatRejectShown) {
             _chatRejectShown = true;
-            addGameChat(null, '⚠ Mode invité : chat en jeu non disponible en mode LAN.', 'sys');
+            if (_currentLoginMode === 'lan') {
+              addGameChat(null,
+                '⚠ Mode LAN : chat en jeu désactivé. ' +
+                'Connectez-vous en mode "Internet Invité" pour activer le chat et les réactions.',
+                'sys');
+            } else {
+              addGameChat(null,
+                '⚠ Chat refusé par le serveur. Vérifiez que ServerRestrictGuestLogin=0 dans la config.',
+                'sys');
+            }
           }
         }
         break;
@@ -3387,6 +3398,17 @@ const App = (() => {
         addChat(null, 'Rejoint la table ' + gId + (isAdmin ? ' (admin)' : '') + ' — attente du démarrage...', 'sys');
         show('s-game');
         setTimeout(animateTableEnter, 50);
+        // Mettre à jour le label de la barre de réactions selon le mode
+        var rbl = document.getElementById('reaction-bar-label');
+        if (rbl) {
+          if (_currentLoginMode === 'lan') {
+            rbl.textContent = 'Réactions (locales — mode LAN)';
+            rbl.style.color = 'rgba(255,180,50,0.6)';
+          } else {
+            rbl.textContent = 'Réactions';
+            rbl.style.color = '';
+          }
+        }
         const admBadge = document.getElementById('g-admin-badge');
         if (admBadge) admBadge.style.display = amGameAdmin ? '' : 'none';
         setTimeout(function(){ autoScaleTable(); }, 200);
@@ -4533,6 +4555,7 @@ function dismissWinner() {
       _reconnectAttempts = 0;
       _intentionalDisconnect = false;
       _wasAuthenticated = false;
+      _currentLoginMode = loginMode; // sauvegarder pour ChatReject
       try {
         ws = new WebSocket(finalUrl);
       } catch (e) {
@@ -5043,7 +5066,7 @@ function toggleLog() {
     <div class="g-chat-panel-header"><span style="font-size:0.65rem;color:var(--gold-dim);letter-spacing:0.15em;text-transform:uppercase">💬 Chat</span><button onclick="toggleGameChat()" style="background:none;border:none;color:var(--text);cursor:pointer;font-size:0.85rem;padding:0 4px">✕</button></div>
     <div class="chat-msgs" id="g-chat-msgs" style="flex:1;min-height:60px;overflow-y:auto;padding:6px 12px;background:rgba(4,10,5,0.97)"></div>
     <div class="reaction-bar" id="reaction-bar">
-      <div class="reaction-bar-label">Réactions</div>
+      <div class="reaction-bar-label" id="reaction-bar-label">Réactions</div>
       <button class="reaction-btn" onclick="App.sendReaction('👏')" title="👏">👏<span class="react-count" id="rc-0"></span></button>
       <button class="reaction-btn" onclick="App.sendReaction('😱')" title="😱">😱<span class="react-count" id="rc-1"></span></button>
       <button class="reaction-btn" onclick="App.sendReaction('🤣')" title="🤣">🤣<span class="react-count" id="rc-2"></span></button>
