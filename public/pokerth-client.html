@@ -32,6 +32,28 @@
 function toggleStats() {
   if (typeof window._toggleStats === "function") window._toggleStats();
 }
+
+function toggleAvatarPopup() {
+  var p = document.getElementById("avatar-popup");
+  if (!p) return;
+  p.style.display = (p.style.display === "none" || !p.style.display) ? "block" : "none";
+}
+function selectAvatarPopup(emoji) {
+  try { localStorage.setItem("pth_avatar", emoji); } catch(e) {}
+  document.querySelectorAll(".avp-btn").forEach(function(b) {
+    b.classList.toggle("selected", b.dataset.av === emoji);
+  });
+  var trigger = document.getElementById("av-trigger");
+  if (trigger) { trigger.textContent = emoji || "\uD83C\uDFAD"; trigger.classList.toggle("has-avatar", !!emoji); }
+  var p = document.getElementById("avatar-popup");
+  if (p) p.style.display = "none";
+  // Rafraîchir immédiatement l'affichage
+  if (typeof window.refreshMyAvatar === "function") window.refreshMyAvatar();
+  // Mettre à jour le siège autour de la table
+  if (typeof window._renderSeats === "function") window._renderSeats();
+  // Diffuser aux autres joueurs
+  if (typeof window._broadcastMyAvatar === "function") window._broadcastMyAvatar(emoji);
+}
 </script>
 
 <script>
@@ -159,9 +181,25 @@ function selectAvatarPopup(emoji){
 
     <div class="f" id="f-nick">
       <label id="nick-label">Nickname</label>
-          </div>
+      <div style="display:flex;gap:8px;align-items:center">
+        <input id="nick" value="" maxlength="64" placeholder="VotrePrenom"
+               onkeydown="if(event.key==='Enter') App.connect()" style="flex:1">
+        <button type="button" id="av-trigger" onclick="toggleAvatarPopup()" title="Choisir un avatar"
+                style="width:42px;height:42px;font-size:1.5rem;background:rgba(255,255,255,0.06);border:1px solid var(--border);border-radius:4px;cursor:pointer;flex-shrink:0;transition:border-color 0.2s">🎭</button>
+      </div>
+    </div>
     <!-- Popup sélection avatar -->
-    
+    <div id="avatar-popup" style="display:none">
+      <div class="avp-header">
+        <span>Choisir un avatar</span>
+        <button type="button" onclick="toggleAvatarPopup()" style="background:none;border:none;color:var(--text);cursor:pointer;font-size:1rem">✕</button>
+      </div>
+      <div class="avp-grid">
+        <button type="button" class="avp-btn avp-none" data-av="" onclick="selectAvatarPopup('')">Aa</button>
+<button type="button" class="avp-btn" data-av="🦁" onclick="selectAvatarPopup('🦁')">🦁</button><button type="button" class="avp-btn" data-av="🐯" onclick="selectAvatarPopup('🐯')">🐯</button><button type="button" class="avp-btn" data-av="🐻" onclick="selectAvatarPopup('🐻')">🐻</button><button type="button" class="avp-btn" data-av="🦊" onclick="selectAvatarPopup('🦊')">🦊</button><button type="button" class="avp-btn" data-av="🐺" onclick="selectAvatarPopup('🐺')">🐺</button><button type="button" class="avp-btn" data-av="🦝" onclick="selectAvatarPopup('🦝')">🦝</button><button type="button" class="avp-btn" data-av="🐸" onclick="selectAvatarPopup('🐸')">🐸</button><button type="button" class="avp-btn" data-av="🐧" onclick="selectAvatarPopup('🐧')">🐧</button><button type="button" class="avp-btn" data-av="🦅" onclick="selectAvatarPopup('🦅')">🦅</button><button type="button" class="avp-btn" data-av="🦆" onclick="selectAvatarPopup('🦆')">🦆</button><button type="button" class="avp-btn" data-av="🦋" onclick="selectAvatarPopup('🦋')">🦋</button><button type="button" class="avp-btn" data-av="🐬" onclick="selectAvatarPopup('🐬')">🐬</button><button type="button" class="avp-btn" data-av="🦈" onclick="selectAvatarPopup('🦈')">🦈</button><button type="button" class="avp-btn" data-av="🐙" onclick="selectAvatarPopup('🐙')">🐙</button><button type="button" class="avp-btn" data-av="🦑" onclick="selectAvatarPopup('🦑')">🦑</button><button type="button" class="avp-btn" data-av="🦎" onclick="selectAvatarPopup('🦎')">🦎</button><button type="button" class="avp-btn" data-av="🐉" onclick="selectAvatarPopup('🐉')">🐉</button><button type="button" class="avp-btn" data-av="🦄" onclick="selectAvatarPopup('🦄')">🦄</button><button type="button" class="avp-btn" data-av="🐲" onclick="selectAvatarPopup('🐲')">🐲</button><button type="button" class="avp-btn" data-av="🦓" onclick="selectAvatarPopup('🦓')">🦓</button><button type="button" class="avp-btn" data-av="🦏" onclick="selectAvatarPopup('🦏')">🦏</button><button type="button" class="avp-btn" data-av="🦛" onclick="selectAvatarPopup('🦛')">🦛</button><button type="button" class="avp-btn" data-av="🐘" onclick="selectAvatarPopup('🐘')">🐘</button><button type="button" class="avp-btn" data-av="🐊" onclick="selectAvatarPopup('🐊')">🐊</button><button type="button" class="avp-btn" data-av="🤠" onclick="selectAvatarPopup('🤠')">🤠</button><button type="button" class="avp-btn" data-av="👑" onclick="selectAvatarPopup('👑')">👑</button><button type="button" class="avp-btn" data-av="🧙" onclick="selectAvatarPopup('🧙')">🧙</button><button type="button" class="avp-btn" data-av="🧝" onclick="selectAvatarPopup('🧝')">🧝</button><button type="button" class="avp-btn" data-av="🧛" onclick="selectAvatarPopup('🧛')">🧛</button><button type="button" class="avp-btn" data-av="🧟" onclick="selectAvatarPopup('🧟')">🧟</button><button type="button" class="avp-btn" data-av="🦸" onclick="selectAvatarPopup('🦸')">🦸</button><button type="button" class="avp-btn" data-av="🦹" onclick="selectAvatarPopup('🦹')">🦹</button><button type="button" class="avp-btn" data-av="🧜" onclick="selectAvatarPopup('🧜')">🧜</button><button type="button" class="avp-btn" data-av="🧞" onclick="selectAvatarPopup('🧞')">🧞</button><button type="button" class="avp-btn" data-av="🧌" onclick="selectAvatarPopup('🧌')">🧌</button><button type="button" class="avp-btn" data-av="👾" onclick="selectAvatarPopup('👾')">👾</button><button type="button" class="avp-btn" data-av="👹" onclick="selectAvatarPopup('👹')">👹</button><button type="button" class="avp-btn" data-av="👺" onclick="selectAvatarPopup('👺')">👺</button><button type="button" class="avp-btn" data-av="👻" onclick="selectAvatarPopup('👻')">👻</button><button type="button" class="avp-btn" data-av="🎃" onclick="selectAvatarPopup('🎃')">🎃</button>
+      </div>
+    </div>
+
     <div class="f" id="f-pass" style="display:none">
       <label>Password</label>
       <input id="pass" type="password" maxlength="128" placeholder="••••••••"
