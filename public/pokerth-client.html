@@ -1060,15 +1060,12 @@ body {
 
 /* ══ PANNEAU RÉACTIONS FLOTTANT (header) ══ */
 #g-reaction-panel {
-  display: none;
   flex-direction: column;
   background: rgba(4,10,6,0.98);
   border-bottom: 1px solid var(--border);
   padding: 10px 14px 12px;
   flex-shrink: 0;
-  animation: slideDown 0.2s ease;
 }
-#g-reaction-panel.open { display: flex; }
 @keyframes slideDown {
   from { opacity: 0; transform: translateY(-8px); }
   to   { opacity: 1; transform: translateY(0); }
@@ -1746,6 +1743,12 @@ body {
 .winner-dismiss { background:var(--gold); color:#110900; border:none; padding:9px 24px; font-family:'Cinzel',serif; font-size:0.76rem; font-weight:700; border-radius:4px; cursor:pointer; letter-spacing:0.08em; transition:background 0.15s; display:block; width:100%; margin-top:4px; }
 .winner-dismiss:hover { background:var(--gold-hi); }
 
+
+/* ── Player bar + my-zone : cachées hors jeu (contrôlées par body.in-game) ── */
+body:not(.in-game) .player-bar,
+body:not(.in-game) .my-zone {
+  display: none !important;
+}
 
 /* ── Player bar (me) ── */
 .player-bar {
@@ -3616,6 +3619,7 @@ const App = (() => {
         if (asbm) asbm.style.display = amGameAdmin ? '' : 'none';
         addChat(null, 'Rejoint la table ' + gId + (isAdmin ? ' (admin)' : '') + ' — attente du démarrage...', 'sys');
         show('s-game');
+        document.body.classList.add('in-game');
         setTimeout(animateTableEnter, 50);
         // Mettre à jour le label de la barre de réactions selon le mode
         var rbl = document.getElementById('reaction-bar-label');
@@ -4959,6 +4963,7 @@ function dismissWinner() {
       dismissWinner();
       _chatRejectShown = false;
       _lastMsgWasReaction = false;
+      document.body.classList.remove('in-game');
       var acb = document.getElementById('admin-close-btn');
       if (acb) acb.style.display = 'none';
       var badge = document.getElementById('g-admin-badge');
@@ -5291,6 +5296,7 @@ function toggleGameChat() {
   if (!panel) return;
   var open = panel.style.display === 'none';
   panel.style.display = open ? 'flex' : 'none';
+  setTimeout(function(){ autoScaleTable(); if(typeof renderSeats==='function' && typeof seats!=='undefined' && seats.length) renderSeats(); }, 50);
   if (btn) {
     btn.style.background  = open ? 'rgba(200,168,74,0.2)' : '';
     btn.style.borderColor = open ? 'var(--gold-dim)' : '';
@@ -5318,13 +5324,14 @@ function toggleReactionPanel() {
   var panel = document.getElementById('g-reaction-panel');
   var btn   = document.getElementById('react-toggle-btn');
   if (!panel) return;
-  var open = !panel.classList.contains('open');
-  panel.classList.toggle('open', open);
+  var open = panel.style.display === 'none' || panel.style.display === '';
+  panel.style.display = open ? 'flex' : 'none';
   if (btn) {
     btn.style.background  = open ? 'rgba(200,168,74,0.2)' : '';
     btn.style.borderColor = open ? 'var(--gold-dim)' : '';
     btn.style.color       = open ? 'var(--gold)' : '';
   }
+  if (open) setTimeout(function(){ autoScaleTable(); }, 50);
 }
 
 function toggleLog() {
@@ -5394,7 +5401,7 @@ function toggleLog() {
     <div class="hands-card" id="hands-card-inner"></div>
   </div>
   <!-- Panneau réactions (dropdown header) -->
-  <div id="g-reaction-panel">
+  <div id="g-reaction-panel" style="display:none">
     <div class="react-panel-title">
       <span>😊 Réactions</span>
       <button class="react-panel-close" onclick="toggleReactionPanel()">✕</button>
