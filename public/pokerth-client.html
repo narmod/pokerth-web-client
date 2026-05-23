@@ -4947,6 +4947,7 @@ function dismissWinner() {
       _intentionalDisconnect = true;
       _wasAuthenticated = false;
       _lastConnectFailed = false; // déco propre → pas de rate limit
+      document.body.classList.remove('in-game');
       _hideBanner();
       if (ws) { ws.close(); ws = null; }
       games = {};
