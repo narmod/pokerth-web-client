@@ -1283,6 +1283,9 @@ var LANG = {
     h9n:'One Pair', h9d:'Two cards of the same rank',
     h10n:'High Card', h10d:'No combination — the highest card plays',
     handsClose:'Close ✕',
+    youWon:'You won!', handWinner:'Hand winner',
+    totalPot:'Total pot', players:'Players', blinds:'Blinds',
+    commCards:'Community cards', results:'Results', continue:'Continue ▶',
     closeTable:'🔒 Close', startBots:'▶ Bots', leave:'✕',
     youWon:'You won!', handWinner:'Hand winner', communityCards:'Community cards',
     results:'Results', continueBtn:'Continue ▶', yourStack:'Your stack:',
@@ -1347,6 +1350,9 @@ var LANG = {
     h9n:'Paire', h9d:'Deux cartes de même valeur',
     h10n:'Carte Haute', h10d:'Aucune combinaison — la carte la plus haute joue',
     handsClose:'Fermer ✕',
+    youWon:'Vous avez gagné !', handWinner:'Gagnant de la main',
+    totalPot:'Pot total', players:'Joueurs', blinds:'Blinds',
+    commCards:'Cartes communes', results:'Résultats', continue:'Continuer ▶',
     closeTable:'🔒 Fermer', startBots:'▶ Bots', leave:'✕',
     youWon:'Vous avez gagné !', handWinner:'Gagnant de la main', communityCards:'Cartes communes',
     results:'Résultats', continueBtn:'Continuer ▶', yourStack:'Votre stack :',
@@ -3012,7 +3018,7 @@ function showWinnerOverlay(winners) {
   html += '<div class="wc-header">';
   html += '<div class="wc-trophy">' + trophy + '</div>';
   html += '<div class="wc-titles">';
-  html += '<div class="wc-label">' + (isMyWin ? "Vous avez gagné !" : "Gagnant de la main") + '</div>';
+  html += '<div class="wc-label">' + (isMyWin ? t('youWon') : t('handWinner')) + '</div>';
   html += '<div class="wc-name">' + winnerNames + '</div>';
   html += '</div>';
   html += '<div class="wc-gain">+' + totalWon + ' ¥</div>';
@@ -3020,23 +3026,23 @@ function showWinnerOverlay(winners) {
 
   // ── Stats ──
   html += '<div class="wc-stats">';
-  html += '<div class="wc-stat"><div class="wc-stat-label">Main</div><div class="wc-stat-value">#' + handNum + '</div></div>';
-  html += '<div class="wc-stat"><div class="wc-stat-label">Pot total</div><div class="wc-stat-value">' + totalWon + ' ¥</div></div>';
-  html += '<div class="wc-stat"><div class="wc-stat-label">Joueurs</div><div class="wc-stat-value">' + seats.length + '</div></div>';
-  html += '<div class="wc-stat"><div class="wc-stat-label">Blinds</div><div class="wc-stat-value">' + smallBlind + "/" + (smallBlind*2) + '</div></div>';
+  html += '<div class="wc-stat"><div class="wc-stat-label">' + t('handOf') + '</div><div class="wc-stat-value">' + handNum + '</div></div>';
+  html += '<div class="wc-stat"><div class="wc-stat-label">' + t('totalPot') + '</div><div class="wc-stat-value">' + totalWon + ' ¥</div></div>';
+  html += '<div class="wc-stat"><div class="wc-stat-label">' + t('players') + '</div><div class="wc-stat-value">' + seats.length + '</div></div>';
+  html += '<div class="wc-stat"><div class="wc-stat-label">' + t('blinds') + '</div><div class="wc-stat-value">' + smallBlind + '/' + (smallBlind*2) + '</div></div>';
   html += '</div>';
 
   // ── Board (community cards) ──
   var comm = commCards.filter(function(n){ return n != null; });
   if (comm.length) {
-    html += '<div class="wc-section">Cartes communes</div>';
+    html += '<div class="wc-section">' + t('commCards') + '</div>';
     html += '<div class="wc-cards-row">';
     comm.forEach(function(n){ html += cardHtml(n, "sm", true); });
     html += '</div>';
   }
 
   // ── Players results ──
-  html += '<div class="wc-section">Résultats</div>';
+  html += '<div class="wc-section">' + t('results') + '</div>';
   html += '<div class="wc-players">';
 
   // Sort: winners first, then by money desc
@@ -3068,7 +3074,7 @@ function showWinnerOverlay(winners) {
     // Show cards if revealed
     if (sd.card1 != null || sd.card2 != null) { // FIX: || test falsy ratait les cartes à valeur 0
       html += '<div class="wc-player-cards">';
-      html += cardHtml(sd.card1||null,"xsm",false) + cardHtml(sd.card2||null,"xsm",false);
+      html += cardHtml(sd.card1 != null ? sd.card1 : null,"xsm",false) + cardHtml(sd.card2 != null ? sd.card2 : null,"xsm",false);
       html += '</div>';
     } else if (isMe && myCards[0] != null) { // FIX: idem, valeur 0 = falsy
       html += '<div class="wc-player-cards">';
@@ -3080,7 +3086,7 @@ function showWinnerOverlay(winners) {
   });
 
   html += '</div>';
-  html += '<button class="winner-dismiss" onclick="App.dismissWinner()">Continuer ▶</button>';
+  html += '<button class="winner-dismiss" onclick="App.dismissWinner()">' + t('continue') + '</button>';
   html += '</div>';
 
   ov.innerHTML = html;
