@@ -151,27 +151,31 @@ body {
   border-bottom: 1px solid var(--border);
   background: rgba(0,0,0,0.3);
 }
-.avp-scroll {
-  max-height: 340px;
-  overflow-y: auto;
-  padding: 8px 10px;
-  scrollbar-width: thin;
-  scrollbar-color: var(--border) transparent;
-}
-.avp-cat-header {
-  font-size: 0.58rem;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--gold-dim);
-  padding: 6px 2px 3px;
+/* ── Avatar popup avec onglets ── */
+.avp-tabs {
+  display: flex; gap: 4px; flex-wrap: wrap;
+  padding: 6px 8px;
   border-bottom: 1px solid var(--border);
-  margin-bottom: 4px;
+  background: rgba(0,0,0,0.2);
 }
-.avp-cat-grid {
+.avp-tab {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  font-size: 1.1rem;
+  cursor: pointer;
+  padding: 3px 6px;
+  transition: border-color 0.12s, background 0.12s, transform 0.1s;
+  line-height: 1.2;
+}
+.avp-tab:hover { border-color: var(--gold-dim); transform: scale(1.12); }
+.avp-tab-active { border-color: var(--gold) !important; background: rgba(200,168,74,0.18) !important; }
+.avp-tab-none { font-size: 0.65rem !important; font-family: 'Cinzel', serif; color: var(--text); padding: 4px 7px !important; }
+.avp-body { padding: 8px; }
+.avp-panel-grid {
   display: grid;
   grid-template-columns: repeat(8, 1fr);
-  gap: 3px;
-  margin-bottom: 6px;
+  gap: 4px;
 }
 /* Conserver .avp-grid pour compatibilité */
 .avp-grid {
