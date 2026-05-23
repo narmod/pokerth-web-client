@@ -134,6 +134,48 @@ body {
 /* Emoji avatar dans le siège */
 .seat-avatar.emoji-av .seat-initial { font-size: 1.05em; line-height: 1; }
 
+/* ══ POPUP AVATAR ══ */
+#avatar-popup {
+  background: rgba(4,10,6,0.98);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 0;
+  overflow: hidden;
+  animation: slideDown 0.2s ease;
+}
+.avp-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 8px 12px;
+  font-size: 0.65rem; letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--gold-dim);
+  border-bottom: 1px solid var(--border);
+  background: rgba(0,0,0,0.3);
+}
+.avp-grid {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 4px;
+  padding: 10px;
+}
+.avp-btn {
+  aspect-ratio: 1;
+  background: rgba(255,255,255,0.04);
+  border: 2px solid transparent;
+  border-radius: 6px;
+  font-size: 1.3rem;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: border-color 0.12s, transform 0.1s, background 0.12s;
+  padding: 0;
+}
+.avp-btn:hover { border-color: var(--gold-dim); transform: scale(1.15); background: rgba(200,168,74,0.1); }
+.avp-btn.selected { border-color: var(--gold); background: rgba(200,168,74,0.2); }
+.avp-none { font-size: 0.7rem !important; font-family: 'Cinzel',serif; color: var(--text); }
+#av-trigger.has-avatar { border-color: var(--gold-dim); background: rgba(200,168,74,0.1); }
+
+/* Emoji avatar dans le siège */
+.seat-avatar.emoji-av .seat-initial { font-size: 1.1em; line-height: 1; }
+
 .tls-row { display: flex; align-items: flex-start; gap: 8px; cursor: pointer; font-size: 0.76rem; color: var(--text); line-height: 1.4; }
 
 .row2 { display: flex; gap: 12px; }
