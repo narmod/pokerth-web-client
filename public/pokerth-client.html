@@ -301,12 +301,6 @@ function selectAvatarPopup(emoji) {
     <button class="btn-sm" id="fs-btn-connect" onclick="toggleFullscreen()" title="Fullscreen">⛶</button>
   </div>
   <div class="card" style="position:relative">
-    <!-- Popup avatar — dans la card, overlay absolu -->
-    <div id="avp-popup" style="display:none;position:absolute;inset:0;background:#040a06;border-radius:8px;z-index:20;flex-direction:column;overflow:hidden">
-      <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-bottom:1px solid rgba(200,168,74,0.25);background:rgba(0,0,0,0.5);flex-shrink:0">
-        <span id="avp-title" style="font-size:0.62rem;letter-spacing:0.15em;text-transform:uppercase;color:#c8a84a;font-family:'Cinzel',serif">🐾 Sauvages</span>
-        <button onclick="toggleAvatarPopup()" style="background:none;border:none;color:#aaa;cursor:pointer;font-size:1.1rem;line-height:1;padding:0 4px">✕</button>
-      </div>
       <div style="display:flex;gap:4px;flex-wrap:wrap;padding:8px 10px;border-bottom:1px solid rgba(200,168,74,0.12);background:rgba(0,0,0,0.3);flex-shrink:0">
         <button type="button" class="avp-tab" onclick="avpShowCat(-1)">Aa</button><button type="button" class="avp-tab" onclick="avpShowCat(0)" title="Sauvages">🐾</button><button type="button" class="avp-tab" onclick="avpShowCat(1)" title="Marins">🌊</button><button type="button" class="avp-tab" onclick="avpShowCat(2)" title="Oiseaux">🦅</button><button type="button" class="avp-tab" onclick="avpShowCat(3)" title="Mignons">🐶</button><button type="button" class="avp-tab" onclick="avpShowCat(4)" title="Créatures">🐉</button><button type="button" class="avp-tab" onclick="avpShowCat(5)" title="Perso.">🧙</button><button type="button" class="avp-tab" onclick="avpShowCat(6)" title="Guerriers">⚔️</button>
       </div>
@@ -358,6 +352,27 @@ function selectAvatarPopup(emoji) {
         <button type="button" id="av-trigger" onclick="toggleAvatarPopup()" title="Choisir un avatar"
                 style="width:42px;height:42px;font-size:1.5rem;background:rgba(255,255,255,0.06);border:1px solid var(--border);border-radius:4px;cursor:pointer;flex-shrink:0;transition:border-color 0.2s">🎭</button>
       </div>
+    <div id="avp-popup" style="display:none">
+      <div class="avp-popup-inner">
+        <div class="avp-popup-header">
+          <span id="avp-title">🐾 Sauvages</span>
+          <button type="button" onclick="toggleAvatarPopup()" class="avp-close-btn">✕</button>
+        </div>
+        <div class="avp-tabs-row">
+<button type="button" class="avp-tab" onclick="avpShowCat(-1)">Aa</button>
+        <button type="button" class="avp-tab" onclick="avpShowCat(0)" title="Sauvages">🐾</button>
+        <button type="button" class="avp-tab" onclick="avpShowCat(1)" title="Marins">🌊</button>
+        <button type="button" class="avp-tab" onclick="avpShowCat(2)" title="Oiseaux">🦅</button>
+        <button type="button" class="avp-tab" onclick="avpShowCat(3)" title="Mignons">🐶</button>
+        <button type="button" class="avp-tab" onclick="avpShowCat(4)" title="Créatures">🐉</button>
+        <button type="button" class="avp-tab" onclick="avpShowCat(5)" title="Perso.">🧙</button>
+        <button type="button" class="avp-tab" onclick="avpShowCat(6)" title="Guerriers">⚔️</button>
+        </div>
+        <div class="avp-grid-wrap">
+          <div id="avp-grid"></div>
+        </div>
+      </div>
+    </div>
     </div>
 
     <div class="f" id="f-pass" style="display:none">
