@@ -217,6 +217,74 @@ function selectAvatarPopup(emoji) {
 }
 </script>
 
+<script>
+/* ═══ Fonctions globales avatar (avant pokerth.js) ═══ */
+var _avCats = [
+  {icon:"🐾",name:"Sauvages",emojis:["🦁","🐯","🐻","🐼","🦊","🐺","🦝","🦌","🐘","🦒","🦓","🦬","🐆","🐅","🦏","🦛"]},
+  {icon:"🌊",name:"Marins",emojis:["🐬","🦈","🐙","🦑","🦀","🦞","🐊","🦎","🐢","🐍","🦭","🐋","🐡","🦐","🦧","🐳"]},
+  {icon:"🦅",name:"Oiseaux",emojis:["🦅","🦆","🦉","🦚","🦜","🐧","🦩","🦢","🦋","🐝","🐛","🪲","🦗","🕷️","🦂","🪳"]},
+  {icon:"🐶",name:"Mignons",emojis:["🐶","🐱","🐰","🐹","🐭","🐮","🐷","🐸","🐔","🐿️","🦔","🐇","🐩","🦙","🐓","🐑"]},
+  {icon:"🐉",name:"Créatures",emojis:["🐉","🦄","🐲","🧌","👾","🤖","👽","👻","💀","☠️","🎃","🔮","👹","👺","🌑","⚡"]},
+  {icon:"🧙",name:"Perso.",emojis:["🧙","🧝","🧛","🧟","🧜","🧞","🦸","🦹","🧚","🤠","👑","🎭","🃏","🎩","🕵️","🥷"]},
+  {icon:"⚔️",name:"Guerriers",emojis:["🤺","🛡️","⚔️","🗡️","🏹","🔱","🌟","💫","✨","🌪️","🔥","❄️","🌊","💎","🍀","🎲"]}
+];
+var _avpCurrentCat = 0;
+
+function toggleAvatarPopup() {
+  var overlay = document.getElementById('avp-overlay');
+  if (!overlay) return;
+  var isOpen = overlay.style.display === 'flex';
+  overlay.style.display = isOpen ? 'none' : 'flex';
+  if (!isOpen) avpShowCat(0);
+}
+
+function avpShowCat(idx) {
+  _avpCurrentCat = idx;
+  var titleEl = document.getElementById('avp-title');
+  if (titleEl) titleEl.textContent = idx < 0 ? 'Initiale' : (_avCats[idx].icon + ' ' + _avCats[idx].name);
+  // Onglets
+  document.querySelectorAll('.avp-tab-btn').forEach(function(b, i) {
+    b.style.borderColor = i === idx + 1 ? '#c8a84a' : 'transparent';
+    b.style.background  = i === idx + 1 ? 'rgba(200,168,74,0.2)' : 'rgba(255,255,255,0.05)';
+  });
+  // Grille
+  var grid = document.getElementById('avp-grid');
+  if (!grid) return;
+  grid.innerHTML = '';
+  var saved = '';
+  try { saved = localStorage.getItem('pth_avatar') || ''; } catch(e) {}
+  if (idx < 0) {
+    var b = document.createElement('button');
+    b.className = 'avp-emoji-btn'; b.textContent = 'Aa';
+    b.style.fontSize = '0.7rem'; b.style.fontFamily = 'serif';
+    b.style.borderColor = saved === '' ? '#c8a84a' : 'transparent';
+    b.onclick = function(){ selectAvatarPopup(''); };
+    grid.appendChild(b);
+  } else {
+    _avCats[idx].emojis.forEach(function(e) {
+      var b = document.createElement('button');
+      b.className = 'avp-emoji-btn'; b.textContent = e; b.dataset.av = e;
+      b.style.borderColor = saved === e ? '#c8a84a' : 'transparent';
+      b.onclick = function(){ selectAvatarPopup(this.dataset.av); };
+      grid.appendChild(b);
+    });
+  }
+}
+
+function selectAvatarPopup(emoji) {
+  try { localStorage.setItem('pth_avatar', emoji); } catch(e) {}
+  // Highlight bouton trigger
+  var trigger = document.getElementById('av-trigger');
+  if (trigger) { trigger.textContent = emoji || '🎭'; trigger.classList.toggle('has-avatar', !!emoji); }
+  // Fermer
+  var overlay = document.getElementById('avp-overlay');
+  if (overlay) overlay.style.display = 'none';
+  // Màj UI en jeu
+  if (typeof window.refreshMyAvatar === 'function') window.refreshMyAvatar();
+  if (typeof window._renderSeats === 'function') window._renderSeats();
+  if (typeof window._broadcastMyAvatar === 'function') window._broadcastMyAvatar(emoji);
+}
+</script>
 </head>
 <body>
 
@@ -575,5 +643,17 @@ if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('/sw.js').catch(function(){});
 }
 </script>
+
+<!-- ═══ OVERLAY AVATAR ═══ -->
+<div id="avp-overlay" onclick="if(event.target===this)toggleAvatarPopup()" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:9999;align-items:center;justify-content:center;backdrop-filter:blur(3px)">
+  <div id="avp-modal">
+    <div id="avp-header">
+      <span id="avp-title">🐾 Sauvages</span>
+      <button onclick="toggleAvatarPopup()" id="avp-close">✕</button>
+    </div>
+    <div id="avp-tabs"><button type="button" class="avp-tab-btn" onclick="avpShowCat(-1)" title="Initiale" style="font-size:0.65rem;font-family:serif">Aa</button><button type="button" class="avp-tab-btn" onclick="avpShowCat(0)" title="Sauvages">🐾</button><button type="button" class="avp-tab-btn" onclick="avpShowCat(1)" title="Marins">🌊</button><button type="button" class="avp-tab-btn" onclick="avpShowCat(2)" title="Oiseaux">🦅</button><button type="button" class="avp-tab-btn" onclick="avpShowCat(3)" title="Mignons">🐶</button><button type="button" class="avp-tab-btn" onclick="avpShowCat(4)" title="Créatures">🐉</button><button type="button" class="avp-tab-btn" onclick="avpShowCat(5)" title="Perso.">🧙</button><button type="button" class="avp-tab-btn" onclick="avpShowCat(6)" title="Guerriers">⚔️</button></div>
+    <div id="avp-grid-wrap"><div id="avp-grid"></div></div>
+  </div>
+</div>
 </body>
 </html>
