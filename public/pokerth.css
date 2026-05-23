@@ -110,6 +110,30 @@ body {
 .sel-wrap select option { background: #0c1e0e; color: var(--cream); }
 .sel-arr { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); color: var(--gold); pointer-events: none; font-size: 0.8rem; }
 
+.avatar-picker {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 5px;
+}
+.av-btn {
+  background: rgba(255,255,255,0.04);
+  border: 2px solid var(--border);
+  border-radius: 6px;
+  font-size: 1.25rem;
+  cursor: pointer;
+  padding: 4px 2px;
+  transition: border-color 0.15s, transform 0.1s, background 0.15s;
+  line-height: 1.2;
+  text-align: center;
+  color: var(--text-hi);
+}
+.av-btn:hover { border-color: var(--gold-dim); transform: scale(1.1); background: rgba(200,168,74,0.08); }
+.av-btn.selected { border-color: var(--gold); background: rgba(200,168,74,0.18); box-shadow: 0 0 6px rgba(200,168,74,0.3); }
+.av-btn.av-none { font-size: 0.72rem; font-family: 'Cinzel', serif; color: var(--text); letter-spacing: 0.05em; }
+
+/* Emoji avatar dans le siège */
+.seat-avatar.emoji-av .seat-initial { font-size: 1.05em; line-height: 1; }
+
 .tls-row { display: flex; align-items: flex-start; gap: 8px; cursor: pointer; font-size: 0.76rem; color: var(--text); line-height: 1.4; }
 
 .row2 { display: flex; gap: 12px; }
