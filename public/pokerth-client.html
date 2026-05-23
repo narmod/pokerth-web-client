@@ -3325,7 +3325,7 @@ const App = (() => {
   let _lastConnectTime = 0;      // timestamp de la dernière tentative
   let _lastConnectFailed = false; // true si la dernière tentative a échoué
   let _ipBlockUntil = 0;         // timestamp de fin de blocage IP
-  const MIN_CONNECT_INTERVAL = 3000; // 3s minimum entre tentatives (anti double-clic)
+  const MIN_CONNECT_INTERVAL = 1500; // 1.5s minimum (anti double-clic) — espacer via proxy
 
   // ── DOM ──
   const $ = id => document.getElementById(id);
@@ -4539,11 +4539,15 @@ const App = (() => {
     }
   }
   window.setPct = setPct;
-  // Exposer pour les animations (accès depuis fonctions globales)
-  Object.defineProperty(window, 'seats',    {get: function(){ return seats; }});
-  Object.defineProperty(window, 'seatData', {get: function(){ return seatData; }});
-  Object.defineProperty(window, 'myId',     {get: function(){ return myId; }});
-  Object.defineProperty(window, 'players',  {get: function(){ return players; }});
+  // Exposer pour les animations + fonctions globales
+  Object.defineProperty(window, 'seats',       {get: function(){ return seats; }});
+  Object.defineProperty(window, 'seatData',    {get: function(){ return seatData; }});
+  Object.defineProperty(window, 'myId',        {get: function(){ return myId; }});
+  Object.defineProperty(window, 'players',     {get: function(){ return players; }});
+  Object.defineProperty(window, '_ipBlockUntil',{
+    get: function(){ return _ipBlockUntil; },
+    set: function(v){ _ipBlockUntil = v; }
+  });
 
   function renderMyTurnActions() {
     const myMoney = (seatData[myId] || {}).money || 0;
