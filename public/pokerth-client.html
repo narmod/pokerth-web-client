@@ -1320,7 +1320,7 @@ body {
 
 .table-zone { display:flex; align-items:center; justify-content:center; overflow:visible; position:relative;
   flex: 1;
-  min-height: 0;
+  min-height: 160px; /* garde-fou : ne jamais s'effondrer */
   overflow: hidden;
   display: flex;
   align-items: center;
@@ -3819,8 +3819,10 @@ const App = (() => {
         renderMyCards();
         renderComm();
         renderSeats();
+        // Recalculer la table (important si chat ouvert)
+        setTimeout(function(){ autoScaleTable(); renderSeats(); }, 100);
         // Force pré-flop
-        setTimeout(renderPreFlopStrength, 300);
+        setTimeout(renderPreFlopStrength, 350);
         // Sons + animations deal
         setTimeout(function(){
           notifyCard();
@@ -4501,7 +4503,11 @@ const App = (() => {
       h += '</div>';
     });
     el.innerHTML = h;
-    setTimeout(autoScaleTable, 60);
+    // Double appel pour garantir que les dimensions sont calculées
+    requestAnimationFrame(function() {
+      autoScaleTable();
+      setTimeout(autoScaleTable, 150);
+    });
   }
 
   function renderGameWaiting(msg, isHtml) {
@@ -5336,7 +5342,11 @@ function toggleReactionPanel() {
     btn.style.borderColor = open ? 'var(--gold-dim)' : '';
     btn.style.color       = open ? 'var(--gold)' : '';
   }
-  if (open) setTimeout(function(){ autoScaleTable(); }, 50);
+  setTimeout(function(){
+    autoScaleTable();
+    if(typeof renderSeats==='function' && typeof seats!=='undefined' && seats.length)
+      renderSeats();
+  }, 80);
 }
 
 function toggleLog() {
