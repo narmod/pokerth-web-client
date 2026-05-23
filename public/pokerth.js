@@ -2548,7 +2548,8 @@ const App = (() => {
     const pbAct  = document.getElementById('g-myseat-action');
     const pbBar  = document.querySelector('.player-bar');
     if (pbAv) {
-      pbAv.textContent = myName.charAt(0).toUpperCase();
+      var _av = ''; try { _av = localStorage.getItem('pth_avatar') || ''; } catch(e) {}
+      pbAv.textContent = _av || myName.charAt(0).toUpperCase();
       // Garder le vert pour moi (pas de couleur palette)
     }
     // Chips SVG dans la player bar
