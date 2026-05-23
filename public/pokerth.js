@@ -1344,6 +1344,7 @@ const App = (() => {
   let _timerID  = null;   // setInterval handle
   let _timerSec = 0;      // seconds remaining
   let _timerTot = 30;     // total seconds
+  let gameTimeout = 15;   // timeout par joueur (depuis les settings de la partie)
   let amInGame  = false;
   let myName    = '';
   let games     = {};   // gameId → {name, mode, players, maxPlayers, type, priv}
@@ -1592,7 +1593,9 @@ const App = (() => {
       }
       case T.TimeoutWarning: {
         const sec = Proto.u32(sub, 2);
-        _timerSec = sec; // Sync with server
+        _timerSec = sec; // Sync avec le serveur
+        // Si le serveur donne plus de temps que prévu, ajuster le total
+        if (sec > _timerTot) _timerTot = sec;
         addChat(null, '⏰ Délai: ' + sec + 's — jouez vite !', 'sys');
         // Auto-reset timeout
         const rtm = Proto.encode([[1,0,68],[69,2,new Uint8Array(0)]]);
@@ -1642,6 +1645,8 @@ const App = (() => {
       case T.JoinGameAck: {
         gId = Proto.u32(sub, 1);
         const isAdmin = Proto.u32(sub, 2);
+        // Appliquer le timeout de la partie (depuis games[] si on rejoint, sinon celui créé)
+        if (games[gId] && games[gId].timeout) gameTimeout = games[gId].timeout;
         amGameAdmin = !!isAdmin;
         var acb = document.getElementById('admin-close-btn');
         if (acb) acb.style.display = amGameAdmin ? '' : 'none';
@@ -2454,7 +2459,7 @@ const App = (() => {
 
   function startTurnTimer() {
     clearInterval(_timerID);
-    _timerSec = _timerTot = 30;
+    _timerSec = _timerTot = (gameTimeout > 0 ? gameTimeout : 15);
     renderSeats();  // Draws the SVG
     _timerID = setInterval(_updateTimer, 1000);
   }
@@ -3269,6 +3274,7 @@ function dismissWinner() {
       window._createWithBots  = bots;
       window._minHumansNeeded = bots ? minHuman : 0;
       window._humansJoined    = 1;
+      gameTimeout = timeout; // mémoriser le timeout pour le timer
       const tablePass = (document.getElementById('cf-use-password')?.checked) ? (document.getElementById('cf-password')?.value || '') : '';
       const opts = {
         raiseMode:    sv('cf-raise-mode',    1),
