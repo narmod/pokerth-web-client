@@ -2888,6 +2888,14 @@ const App = (() => {
       var ry  = i === 0 ? ryMe : ryPx;
       return { top: oCY + ry*Math.sin(ang), left: oCX + rxPx*Math.cos(ang) };
     });
+    // ── Calcul SB / BB à partir du dealer ──
+    const dealerIdx = seats.indexOf(dealerPid);
+    const sbPid = dealerIdx >= 0 && seats.length > 1
+      ? seats[(dealerIdx + 1) % seats.length] : -1;
+    const bbPid = dealerIdx >= 0 && seats.length > 2
+      ? seats[(dealerIdx + 2) % seats.length]
+      : (seats.length === 2 ? seats[dealerIdx] : -1); // heads-up: dealer = SB
+
     // Update player-bar
     const mySd = seatData[myId] || {};
     const pbAv   = document.getElementById('g-myseat-av');
@@ -2901,14 +2909,6 @@ const App = (() => {
     if (pbMon)  pbMon.textContent  = mySd.money != null ? mySd.money + ' ¥' : '—';
     if (pbAct)  pbAct.textContent  = mySd.action || '';
     if (pbBar)  pbBar.classList.toggle('pb-active', myId === turnPid);
-    // ── Calcul SB / BB à partir du dealer ──
-    // Ordre des seats (original, non rotaté) pour trouver les positions
-    const dealerIdx = seats.indexOf(dealerPid);
-    const sbPid = dealerIdx >= 0 && seats.length > 1
-      ? seats[(dealerIdx + 1) % seats.length] : -1;
-    const bbPid = dealerIdx >= 0 && seats.length > 2
-      ? seats[(dealerIdx + 2) % seats.length]
-      : (seats.length === 2 ? seats[dealerIdx] : -1); // heads-up: dealer = SB
 
     let h = '';
     rotated.forEach((pid, i) => {
