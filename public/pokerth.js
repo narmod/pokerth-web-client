@@ -2409,13 +2409,13 @@ const App = (() => {
   }
   function getPlayerInitial(pid) {
     if (pid === myId) return myName.charAt(0).toUpperCase();
-    if (isBot(pid))   return '🖥';
+    if (isBot(pid))   return '🤖';
     var name = players[pid] || '';
     return name.charAt(0).toUpperCase() || '?';
   }
   function getPlayerTypeBadge(pid) {
     if (pid === myId) return '';
-    if (isBot(pid)) return '<span class="player-type-badge badge-bot" title="Bot">⚙</span>';
+    if (isBot(pid)) return ''; // 🤖 déjà dans l'avatar, pas besoin de badge supplémentaire
     return '<span class="player-type-badge badge-human" title="Humain">👤</span>';
   }
 
