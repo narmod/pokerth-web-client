@@ -2275,15 +2275,20 @@ function _evalFive(cards) {
   return { r:0, fr:'— Carte haute '+rn[ranks[0]], en:'— High Card '+rn[ranks[0]] };
 }
 
-// Convertit une hole card (1-indexed, suit=['♣','♠','♥','♦'])
-// vers l'encodage canonique (0-indexed, suit=['♦','♣','♠','♥'])
-// afin que le suit comparison dans _evalFive soit cohérent avec les comm cards.
-// Remap suit: ♣(0)→1, ♠(1)→2, ♥(2)→3, ♦(3)→0
+// Convertit une hole card vers l'encodage canonique des comm cards.
+//
+// Encodages PokerTH (tous 0-indexés, 0-51) :
+//   Hole cards : suit=['♣','♠','♥','♦'] → ♣=0, ♠=1, ♥=2, ♦=3
+//   Comm cards : suit=['♦','♣','♠','♥'] → ♦=0, ♣=1, ♠=2, ♥=3
+//
+// Remap hole→comm : ♣(0)→1, ♠(1)→2, ♥(2)→3, ♦(3)→0
+// Vérification : n=7  → si=0(♣), ri=7(9) → 9♣ → canonical 1*13+7=20 (9♣ comm) ✓
+//               n=40 → si=3(♦), ri=1(3) → 3♦ → canonical 0*13+1=1  (3♦ comm) ✓
 function normalizeHoleCard(n) {
-  if (n == null || n < 1 || n > 52) return null;
-  var si = Math.floor((n - 1) / 13); // suit 0-3 (♣♠♥♦)
-  var ri = (n - 1) % 13;             // rank 0-12
-  var suitRemap = [1, 2, 3, 0];      // ♣→♣, ♠→♠, ♥→♥, ♦→♦ en canonique
+  if (n == null || n < 0 || n > 51) return null;
+  var si = Math.floor(n / 13);  // 0-indexé (♣=0, ♠=1, ♥=2, ♦=3)
+  var ri = n % 13;
+  var suitRemap = [1, 2, 3, 0]; // ♣→1, ♠→2, ♥→3, ♦→0 (ordre comm canonique)
   return suitRemap[si] * 13 + ri;
 }
 
