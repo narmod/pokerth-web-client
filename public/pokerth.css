@@ -1591,7 +1591,7 @@ body {
 .seat-timer circle.arc { fill:none; stroke-width:4; stroke-linecap:round; }
 /* Fond opaque derrière le chiffre */
 .seat-timer circle.center-bg {
-  fill: rgba(0,0,0,0.72);
+  fill: transparent;
   stroke: none;
 }
 .seat-timer text {
@@ -1601,8 +1601,9 @@ body {
   text-anchor: middle;
   dominant-baseline: middle;
 }
-/* Quand le timer tourne : cacher l'initiale, estomper nom+stack */
-.seat-avatar.timing > .seat-initial { display: none; }
+/* Quand le timer tourne : cacher l'initiale (lettre), mais PAS l'emoji avatar */
+.seat-avatar.timing:not(.emoji-av) > .seat-initial { display: none; }
+.seat-avatar.emoji-av.timing > .seat-initial { display: flex; position: relative; z-index: 5; }
 .seat.active .seat-name,
 .seat.active .seat-money { opacity: 0.35; transition: opacity 0.3s; }
 /* Dealer chip : rendu via SVG chipSvg() dans renderSeats */
