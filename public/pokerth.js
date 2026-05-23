@@ -2018,8 +2018,9 @@ const App = (() => {
       }
 
       case T.DealTurn: {
-        const tv = Proto.u32(sub, 2);
-        commCards.push(tv != null ? tv : Proto.u32(sub, 1));
+        // Fix : utiliser sub[2] pour détecter la présence du champ
+        const tv = sub[2] !== undefined ? Proto.u32(sub, 2) : Proto.u32(sub, 1);
+        commCards.push(tv);
         $('g-round').textContent = t('turn');
         gameState = 2;
         let turnBets = 0;
@@ -2036,8 +2037,10 @@ const App = (() => {
       }
 
       case T.DealRiver: {
-        const rv = Proto.u32(sub, 2);
-        commCards.push(rv || Proto.u32(sub, 1));
+        // Fix : sub[2] présent ? utiliser field 2 ; sinon field 1
+        // rv || fallback est FAUX pour rv=0 (carte 2♦)
+        const rv = sub[2] !== undefined ? Proto.u32(sub, 2) : Proto.u32(sub, 1);
+        commCards.push(rv);
         $('g-round').textContent = t('river');
         gameState = 3;
         let rvBets = 0;
