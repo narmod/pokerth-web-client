@@ -2269,6 +2269,8 @@ const App = (() => {
       si = Math.floor((n-1) / 13);  // 1-indexed suits: ♣=0 ♠=1 ♥=2 ♦=3
       ri = (n-1) % 13;
     }
+    // Protection : si hors limites → dos de carte plutôt que '?'
+    if (si < 0 || si > 3 || ri < 0 || ri > 12) return '<div class="pk' + sz + ' back' + extraCls + '"></div>';
     const suits = isComm ? ['♦','♣','♠','♥'] : ['♣','♠','♥','♦'];
     const suit  = suits[si] || '?';
     const rank  = ['2','3','4','5','6','7','8','9','10','J','Q','K','A'][ri] || '?';
