@@ -27,6 +27,10 @@
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Inconsolata:wght@300;400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="pokerth.css">
 <script>
+function toggleStats() {
+  if (typeof window._toggleStats === "function") window._toggleStats();
+}
+
 function toggleAvatarPopup() {
   var p = document.getElementById("avatar-popup");
   if (!p) return;
@@ -243,7 +247,6 @@ function selectAvatarPopup(emoji) {
     <div class="header-brand"><span>♠</span>&nbsp;<span id="g-name">TABLE</span><span id="g-admin-badge" style="display:none;font-size:0.7rem;color:var(--green);margin-left:6px" title="Vous êtes créateur de cette table">👑</span></div>
     <div class="header-pills"></div>
     <button class="btn-sm btn-icon" id="fs-btn-game" onclick="toggleFullscreen()" title="Fullscreen">⛶</button>
-    <button class="btn-sm btn-icon" onclick="toggleStats()" title="Statistiques de session">📊</button>
     <button class="btn-sm btn-icon" id="sound-toggle-btn" onclick="toggleSound()" title="Couper/Unmute">🔊</button>
     <button class="btn-sm btn-icon" onclick="toggleHandsHelp()" title="Combinaisons du poker" style="font-weight:700">?</button>
     <button class="btn-sm btn-icon" id="lang-toggle-game" onclick="toggleLang()" title="Switch language">🇬🇧</button>
@@ -340,7 +343,7 @@ function selectAvatarPopup(emoji) {
     <!-- PLAYER BAR -->
     <div class="player-bar">
       <div class="player-bar-left">
-        <div class="pb-avatar" id="g-myseat-av">N</div>
+        <div class="pb-avatar" id="g-myseat-av" onclick="toggleStats()" title="Statistiques de session" style="cursor:pointer;transition:box-shadow 0.2s" onmouseenter="this.style.boxShadow='0 0 14px rgba(200,168,74,0.7)'" onmouseleave="this.style.boxShadow=''">N</div>
         <div class="pb-info">
           <div class="pb-name" id="g-myseat-name">—</div>
           <div class="pb-money" id="g-myseat-money">—</div>
