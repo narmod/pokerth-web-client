@@ -159,13 +159,7 @@ function selectAvatarPopup(emoji){
 
     <div class="f" id="f-nick">
       <label id="nick-label">Nickname</label>
-      <div style="display:flex;gap:8px;align-items:center">
-        <input id="nick" value="" maxlength="64" placeholder="VotrePrenom"
-               onkeydown="if(event.key==='Enter') App.connect()" style="flex:1">
-        <button type="button" id="av-trigger" onclick="toggleAvatarPopup()" title="Choisir un avatar"
-                style="width:42px;height:42px;font-size:1.5rem;background:rgba(255,255,255,0.06);border:1px solid var(--border);border-radius:4px;cursor:pointer;flex-shrink:0;transition:border-color 0.2s">🎭</button>
-      </div>
-    </div>
+          </div>
     <!-- Popup sélection avatar -->
     <div id="avatar-popup" style="display:none">
       <div class="avp-header">
