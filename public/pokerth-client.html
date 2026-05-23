@@ -2275,6 +2275,18 @@ function _evalFive(cards) {
   return { r:0, fr:'— Carte haute '+rn[ranks[0]], en:'— High Card '+rn[ranks[0]] };
 }
 
+// Convertit une hole card (1-indexed, suit=['♣','♠','♥','♦'])
+// vers l'encodage canonique (0-indexed, suit=['♦','♣','♠','♥'])
+// afin que le suit comparison dans _evalFive soit cohérent avec les comm cards.
+// Remap suit: ♣(0)→1, ♠(1)→2, ♥(2)→3, ♦(3)→0
+function normalizeHoleCard(n) {
+  if (n == null || n < 1 || n > 52) return null;
+  var si = Math.floor((n - 1) / 13); // suit 0-3 (♣♠♥♦)
+  var ri = (n - 1) % 13;             // rank 0-12
+  var suitRemap = [1, 2, 3, 0];      // ♣→♣, ♠→♠, ♥→♥, ♦→♦ en canonique
+  return suitRemap[si] * 13 + ri;
+}
+
 function evaluateBestHand(holeCards, commCards) {
   var all = holeCards.concat(commCards).filter(function(c){ return c != null && c >= 0 && c < 52; });
   if (all.length < 2) return null;
@@ -3763,7 +3775,12 @@ const App = (() => {
     if (myCards[0] == null || myCards[1] == null || validComm.length === 0) {
       el.style.display = 'none'; return;
     }
-    var result = evaluateBestHand([myCards[0], myCards[1]], validComm);
+    // Normaliser les hole cards (1-indexed) vers l'encodage canonique (0-indexed)
+    var holeNorm = [myCards[0], myCards[1]]
+      .filter(function(c){ return c != null; })
+      .map(normalizeHoleCard)
+      .filter(function(c){ return c != null; });
+    var result = evaluateBestHand(holeNorm, validComm);
     if (!result) { el.style.display = 'none'; return; }
     el.textContent = _lang === 'fr' ? result.fr : result.en;
     el.style.display = 'block';
