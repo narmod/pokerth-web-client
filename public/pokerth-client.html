@@ -255,6 +255,7 @@ body {
 }
 
 .lang-btn.active { background: rgba(200,168,74,0.2) !important; border-color: var(--gold-dim) !important; color: var(--gold) !important; }
+.btn-watch { background: rgba(52,152,219,0.15); border: 1px solid rgba(52,152,219,0.35); color: #7ec8e3; }
 .btn-sm {
   background: transparent;
   border: 1px solid var(--border);
@@ -657,6 +658,72 @@ body {
   #s-game .header-pills { display: none; }
   #s-game .header { gap: 4px; padding: 3px 8px; }
 }
+
+/* ══ CARD FLIP ANIMATION ══ */
+@keyframes cardFlip {
+  0%   { transform: rotateY(90deg) scale(0.85); opacity: 0; }
+  60%  { transform: rotateY(-8deg) scale(1.04); opacity: 1; }
+  100% { transform: rotateY(0deg)  scale(1);    opacity: 1; }
+}
+.pk-flip { animation: cardFlip 0.32s cubic-bezier(.4,0,.2,1) both; }
+.pk-flip:nth-child(2) { animation-delay: 0.07s; }
+.pk-flip:nth-child(3) { animation-delay: 0.14s; }
+.pk-flip:nth-child(4) { animation-delay: 0.21s; }
+.pk-flip:nth-child(5) { animation-delay: 0.28s; }
+
+/* ══ CHIP ANIMATION ══ */
+.flying-chip {
+  position: fixed;
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #f0c040, #c8a820);
+  border: 2px solid rgba(255,255,255,0.4);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.5);
+  font-size: 0.45rem; color: #3a2000; font-weight: 900;
+  display: flex; align-items: center; justify-content: center;
+  pointer-events: none; z-index: 500;
+  transition: left 0.55s cubic-bezier(.4,0,.2,1),
+              top  0.55s cubic-bezier(.4,0,.2,1),
+              opacity 0.2s ease 0.45s,
+              transform 0.55s ease;
+}
+
+/* ══ HAND STRENGTH DISPLAY ══ */
+#hand-strength {
+  font-size: 0.62rem;
+  color: var(--gold);
+  font-family: 'Cinzel', serif;
+  letter-spacing: 0.06em;
+  text-align: center;
+  padding: 2px 6px;
+  margin-top: 1px;
+  background: rgba(200,168,74,0.08);
+  border-radius: 3px;
+  border: 1px solid rgba(200,168,74,0.15);
+  min-width: 80px;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+  max-width: 160px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ══ RECONNECT BANNER ══ */
+#reconnect-banner {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 999;
+  background: rgba(192,57,43,0.95);
+  color: #fff; text-align: center;
+  padding: 6px 12px; font-size: 0.8rem;
+  font-family: 'Cinzel', serif; letter-spacing: 0.08em;
+  display: none; align-items: center; justify-content: center; gap: 10px;
+  animation: fadeIn 0.3s ease;
+}
+#reconnect-banner.visible { display: flex; }
+#reconnect-banner .rc-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: #fff; animation: pulse 1s infinite;
+}
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
 
 /* ══ HANDS HELP OVERLAY ══ */
 #hands-overlay {
@@ -1242,6 +1309,14 @@ function playTone(freq, dur, vol) {
     o.start(); o.stop(ctx.currentTime + dur);
   } catch(e) {}
 }
+function notifyCard() {
+  // Bruit de carte distribuée : bref clic
+  playTone(1200, 0.04, 0.12);
+}
+function notifyAction() {
+  // Action d'un joueur : thud sourd
+  playTone(220, 0.1, 0.1);
+}
 function notifyMyTurn() {
   playTone(523, 0.15, 0.25);
   setTimeout(function(){ playTone(659, 0.2, 0.2); }, 120);
@@ -1418,7 +1493,154 @@ var LANG = {
 };
 var _lang = (function(){ try { return localStorage.getItem('pth_lang')||'en'; } catch(e){ return 'en'; } })();
 function t(k) { return (LANG[_lang]||LANG.en)[k] || (LANG.en[k]) || k; }
+function _showBanner(msg) {
+  var b = document.getElementById('reconnect-banner');
+  var m = document.getElementById('reconnect-msg');
+  if (b) b.classList.add('visible');
+  if (m) m.textContent = msg;
+}
+function _hideBanner() {
+  var b = document.getElementById('reconnect-banner');
+  if (b) b.classList.remove('visible');
+}
 function toggleLang() { setLang(_lang === 'en' ? 'fr' : 'en'); }
+
+// ═══════════════════════════════════════════════════════════
+// ÉVALUATEUR DE MAIN POKER — Texas Hold'em
+// Cards encodées 0-51 : suit=floor(n/13), rank=n%13
+// ranks: 0=2 … 12=A  |  suits: 0=♦ 1=♣ 2=♠ 3=♥
+// ═══════════════════════════════════════════════════════════
+function _getCombos(arr, k) {
+  if (k === arr.length) return [arr.slice()];
+  if (k === 1) return arr.map(function(x){ return [x]; });
+  var res = [];
+  for (var i = 0; i <= arr.length - k; i++) {
+    var rest = _getCombos(arr.slice(i+1), k-1);
+    for (var j = 0; j < rest.length; j++) res.push([arr[i]].concat(rest[j]));
+  }
+  return res;
+}
+
+function _evalFive(cards) {
+  var RANK_NAMES = ['2','3','4','5','6','7','8','9','10','J','Q','K','A'];
+  var ranks = cards.map(function(c){ return c % 13; }).sort(function(a,b){ return b-a; });
+  var suits = cards.map(function(c){ return Math.floor(c/13); });
+  var isFlush = suits.every(function(s){ return s === suits[0]; });
+  var rankSet = ranks.filter(function(v,i,a){ return a.indexOf(v)===i; }).sort(function(a,b){return b-a;});
+  var isStraight = false, straightHigh = ranks[0];
+  if (rankSet.length === 5) {
+    if (ranks[0] - ranks[4] === 4) { isStraight = true; straightHigh = ranks[0]; }
+    // Roue : A-2-3-4-5
+    else if (ranks[0]===12 && ranks[1]===3 && ranks[2]===2 && ranks[3]===1 && ranks[4]===0) {
+      isStraight = true; straightHigh = 3;
+    }
+  }
+  var counts = {};
+  ranks.forEach(function(r){ counts[r] = (counts[r]||0)+1; });
+  var freq = Object.values(counts).sort(function(a,b){return b-a;});
+  var byFreq = Object.keys(counts).map(Number).sort(function(a,b){
+    return counts[b]!==counts[a] ? counts[b]-counts[a] : b-a;
+  });
+  var top = byFreq[0];
+  var top2 = byFreq[1];
+  var rn = RANK_NAMES;
+  if (isFlush && isStraight) {
+    if (straightHigh===12) return { r:9, fr:'Quinte Flush Royale', en:'Royal Flush' };
+    return { r:8, fr:'Quinte Flush, '+rn[straightHigh]+' haute', en:'Straight Flush, '+rn[straightHigh]+' high' };
+  }
+  if (freq[0]===4) return { r:7, fr:'Carré de '+rn[top], en:'Four of a Kind, '+rn[top]+'s' };
+  if (freq[0]===3 && freq[1]===2) return { r:6, fr:'Full aux '+rn[top]+'/'+rn[top2], en:'Full House, '+rn[top]+'s full of '+rn[top2]+'s' };
+  if (isFlush) return { r:5, fr:'Couleur', en:'Flush' };
+  if (isStraight) return { r:4, fr:'Suite au '+rn[straightHigh], en:'Straight, '+rn[straightHigh]+' high' };
+  if (freq[0]===3) return { r:3, fr:'Brelan de '+rn[top], en:'Three of a Kind, '+rn[top]+'s' };
+  if (freq[0]===2 && freq[1]===2) {
+    var p1=rn[top], p2=rn[top2];
+    return { r:2, fr:'Deux paires '+p1+'/'+p2, en:'Two Pair, '+p1+'s and '+p2+'s' };
+  }
+  if (freq[0]===2) return { r:1, fr:'Paire de '+rn[top], en:'Pair of '+rn[top]+'s' };
+  return { r:0, fr:'Carte haute '+rn[ranks[0]], en:'High Card '+rn[ranks[0]] };
+}
+
+function evaluateBestHand(holeCards, commCards) {
+  var all = holeCards.concat(commCards).filter(function(c){ return c != null && c >= 0 && c < 52; });
+  if (all.length < 2) return null;
+  var k = Math.min(5, all.length);
+  var combos = _getCombos(all, k);
+  var best = null;
+  for (var i = 0; i < combos.length; i++) {
+    var res = _evalFive(combos[i]);
+    if (!best || res.r > best.r) best = res;
+  }
+  return best;
+}
+
+
+function animateChipToPot(pid, amount) {
+  // Trouver la position du siège du joueur
+  var seatEls = document.querySelectorAll('.seat');
+  var fromEl = null;
+  seatEls.forEach(function(el) {
+    // Le siège actif est celui du pid en cours
+    if (!fromEl && el.style.top) fromEl = el;
+  });
+  // Position cible : le pot-bar ou centre de l'écran
+  var potBar = document.getElementById('g-potbar');
+  var targetRect = potBar ? potBar.getBoundingClientRect() : null;
+  if (!targetRect) return;
+  var tx = targetRect.left + targetRect.width/2;
+  var ty = targetRect.top + targetRect.height/2;
+
+  // Position source : siège du joueur
+  var zone = document.getElementById('g-table-zone');
+  if (!zone) return;
+  var myIdx = seats.indexOf(myId);
+  var rotated = myIdx >= 0 ? [...seats.slice(myIdx), ...seats.slice(0,myIdx)] : seats;
+  var seatIdx = rotated.indexOf(pid);
+  var seatEl = seatEls[seatIdx];
+  if (!seatEl) return;
+  var sr = seatEl.getBoundingClientRect();
+  var sx = sr.left + sr.width/2;
+  var sy = sr.top + sr.height/2;
+
+  // Créer le jeton volant
+  var chip = document.createElement('div');
+  chip.className = 'flying-chip';
+  chip.textContent = amount > 0 ? (amount > 999 ? Math.round(amount/100)/10+'k' : amount) : '';
+  chip.style.left = sx + 'px';
+  chip.style.top  = sy + 'px';
+  chip.style.transform = 'scale(0.7)';
+  document.body.appendChild(chip);
+
+  // Déclencher l'animation après un frame
+  requestAnimationFrame(function() {
+    requestAnimationFrame(function() {
+      chip.style.left = tx + 'px';
+      chip.style.top  = ty + 'px';
+      chip.style.transform = 'scale(1.1)';
+      chip.style.opacity = '0';
+      setTimeout(function(){ if(chip.parentNode) chip.parentNode.removeChild(chip); }, 700);
+    });
+  });
+}
+
+function renderHandStrength() {
+  var el = document.getElementById('hand-strength');
+  if (!el) return;
+  var validComm = commCards.filter(function(c){ return c != null; });
+  if (myCards[0] == null || myCards[1] == null || validComm.length === 0) {
+    el.style.display = 'none'; return;
+  }
+  var result = evaluateBestHand([myCards[0], myCards[1]], validComm);
+  if (!result) { el.style.display = 'none'; return; }
+  el.textContent = _lang === 'fr' ? result.fr : result.en;
+  el.style.display = 'block';
+  // Couleur selon force
+  var colors = ['#aaa','#aaa','#7ec8e3','#7ec8e3','#a8d8a8','#6dbe6d','#f0c040','#f09030','#e07020','#e74c3c'];
+  el.style.color = colors[result.r] || 'var(--gold)';
+  el.style.borderColor = (colors[result.r]||'var(--gold)').replace(')',',0.25)').replace('rgb','rgba');
+}
+
+
 function setLang(l) {
   _lang = l;
   try { localStorage.setItem('pth_lang', l); } catch(e) {}
@@ -2008,6 +2230,9 @@ const App = (() => {
   let loaded    = false;
   let autoAction = false;
   let amGameAdmin = false;  // true if we created this game
+  let _lastConnectParams = null; // pour la reconnexion auto
+  let _reconnectAttempts = 0;
+  let _intentionalDisconnect = false;
 
   // ── DOM ──
   const $ = id => document.getElementById(id);
@@ -2429,6 +2654,10 @@ const App = (() => {
         renderMyCards();
         renderComm();
         renderSeats();
+        // Sons et reset force
+        setTimeout(function(){ notifyCard(); setTimeout(notifyCard, 80); }, 200);
+        var hs = document.getElementById('hand-strength');
+        if (hs) hs.style.display = 'none';
         renderGameWaiting(t('handOf') + ' ' + handNum + ' — Blinds: ' + sb + '/' + (sb*2));
         logAction('══ ' + t('handOf') + ' ' + handNum + ' — Blinds ' + sb + '/' + (sb*2) + ' ══');
         // Show my hole cards in log
@@ -2478,6 +2707,8 @@ const App = (() => {
           if ($('g-mystack')) $('g-mystack').textContent = myMon > 0 ? myMon + ' ¥' : '';
         }
         renderSeats();
+        notifyAction();
+        if (bet > 0) setTimeout(function(){ animateChipToPot(pid, bet); }, 80);
         break;
       }
       case T.DealFlop: {
@@ -2504,9 +2735,10 @@ const App = (() => {
         $('g-pot').textContent = t('pot') + ' ' + pot;
         if ($('g-potbar')) $('g-potbar').textContent = t('pot') + ' ' + pot;
         const flopStr = commCards.filter(n=>n!=null).map(n=>cardName(n,true)).join(', ');
-        renderComm();
+        renderComm(true); // flip animation
         renderSeats();
         logAction('--- Flop [' + flopStr + '] ---');
+        notifyCard(); notifyCard(); notifyCard();
         break;
       }
 
@@ -2524,7 +2756,8 @@ const App = (() => {
         if ($('g-potbar')) $('g-potbar').textContent = t('pot') + ' ' + pot;
         const tvCard = commCards[3]; const tvName = tvCard != null ? cardName(tvCard, true) : '?';
         logAction('--- ' + t('turn') + ' [' + tvName + '] ---');
-        renderComm();
+        renderComm(true); // flip animation
+        notifyCard();
         break;
       }
 
@@ -2542,7 +2775,8 @@ const App = (() => {
         if ($('g-potbar')) $('g-potbar').textContent = t('pot') + ' ' + pot;
         const rvCard = commCards[4]; const rvName = rvCard != null ? cardName(rvCard, true) : '?';
         logAction('--- ' + t('river') + ' [' + rvName + '] ---');
-        renderComm();
+        renderComm(true); // flip animation
+        notifyCard();
         break;
       }
 
@@ -2643,6 +2877,9 @@ const App = (() => {
       const type   = GTYPE[g.type] || '';
       const lock   = (g.priv || g.type === 3) ? '🔒 ' : '';
       const joinLabel = ((g.priv || g.type === 3) ? '🔒 ' : '▶ ') + (typeof t === 'function' ? t('joinBtn') || 'Join' : 'Join');
+      const watchBtn = g.mode === 2
+        ? '<button class="btn-xs btn-watch" onclick="App.spectateGame(' + gid + ')">👁 ' + (t('watchBtn')||(_lang==='fr'?'Regarder':'Watch')) + '</button>'
+        : '';
       const joinBtn = g.mode !== 3
         ? '<button class="btn-join" onclick="event.stopPropagation();App.joinGame(' + parseInt(gid) + ')">' + joinLabel + '</button>'
         : '';
@@ -2656,7 +2893,7 @@ const App = (() => {
         + '</div></div>'
         + '<div style="display:flex;align-items:center;gap:10px">'
         + '<div class="game-count">' + g.players + (g.maxPlayers ? '/'+g.maxPlayers : '') + '</div>'
-        + joinBtn
+        + joinBtn + watchBtn
         + '</div></div>';
     }).join('');
   }
@@ -2724,7 +2961,7 @@ const App = (() => {
     const suit  = suits[si] || '?';
     const rank  = ['2','3','4','5','6','7','8','9','10','J','Q','K','A'][ri] || '?';
     const red   = (isComm ? (si===0||si===3) : (si>=2)) ? ' red' : '';
-    return '<div class="pk' + sz + red + '"><span class="c-rank">' + rank + '</span><span class="c-suit">' + suit + '</span></div>';
+    return '<div class="pk' + sz + red + extraCls + '"><span class="c-rank">' + rank + '</span><span class="c-suit">' + suit + '</span></div>';
   }
 
 
@@ -2751,16 +2988,17 @@ const App = (() => {
 
 
   // ─── Community cards ───
-  function renderComm() {
+  function renderComm(animate) {
     const el = $('g-comm');
     let h = '';
     for (let i=0; i<5; i++) {
       const v = commCards[i];
-      // Community cards: 0-indexed. null/undefined = not yet dealt
-      h += cardToHtml(v != null ? v : null, false, true);
+      const cls = (animate && v != null) ? ' pk-flip' : '';
+      h += cardToHtml(v != null ? v : null, false, true, cls);
     }
     el.innerHTML = h;
     console.log('[CommCards]', commCards);
+    renderHandStrength();
   }
 
   // ─── Seat positions (% of oval) — 10 max, starting from bottom going clockwise ───
@@ -3237,6 +3475,11 @@ function dismissWinner() {
 
       setStatus(directWS ? 'Connexion directe à pokerth.net…' : 'Connexion au proxy...');
 
+      // Sauvegarder les paramètres pour la reconnexion auto
+      _lastConnectParams = { host, port, loginMode, finalUrl, myName,
+        pass: $('pass') ? $('pass').value : '' };
+      _reconnectAttempts = 0;
+      _intentionalDisconnect = false;
       try {
         ws = new WebSocket(finalUrl);
       } catch (e) {
@@ -3251,17 +3494,82 @@ function dismissWinner() {
       ws.onclose = function(e) {
         ws = null;
         clearTimeout(window._reconnectTimer);
-        // Add delay before showing connect screen to avoid initBlocked
+        if (_intentionalDisconnect || !_lastConnectParams) {
+          // Déconnexion volontaire
+          show('s-connect');
+          setStatus(t('disconnected') || 'Déconnecté. Reconnectez-vous.');
+          _hideBanner();
+          return;
+        }
+        // Reconnexion automatique
+        _reconnectAttempts++;
+        var maxAttempts = 8;
+        if (_reconnectAttempts > maxAttempts) {
+          _hideBanner();
+          show('s-connect');
+          setStatus('Reconnexion échouée. Vérifiez votre connexion.', 'err');
+          return;
+        }
+        var delay = Math.min(2000 * _reconnectAttempts, 12000);
+        var secs = Math.round(delay/1000);
+        _showBanner((_lang==='fr'?'Reconnexion dans ':'Reconnecting in ') + secs + 's… (' + _reconnectAttempts + '/' + maxAttempts + ')');
         window._reconnectTimer = setTimeout(function() {
-          if (!ws) {
-            show('s-connect');
-            setStatus('Déconnecté du serveur. Reconnectez-vous.');
+          if (ws) return; // déjà reconnecté
+          _showBanner((_lang==='fr'?'Reconnexion en cours…':'Reconnecting…'));
+          try {
+            ws = new WebSocket(_lastConnectParams.finalUrl);
+            ws.binaryType = 'arraybuffer';
+            ws.onopen = function() {
+              _showBanner((_lang==='fr'?'Connecté — ré-authentification…':'Connected — re-authenticating…'));
+            };
+            ws.onerror = function() {
+              ws = null;
+              // Déclencher onclose pour retenter
+              var fakeClose = new Event('close');
+              ws && ws.dispatchEvent(fakeClose);
+            };
+            ws.onmessage = function(e) {
+              onRawData(e.data);
+              // Si on reçoit des données, la connexion est OK
+              if (_reconnectAttempts > 0) {
+                _reconnectAttempts = 0;
+                setTimeout(_hideBanner, 1500);
+              }
+            };
+            ws.onclose = arguments.callee.caller || function(){};
+            // Réutiliser le même handler onclose pour les tentatives suivantes
+            ws.onclose = function() {
+              ws = null;
+              clearTimeout(window._reconnectTimer);
+              // Relancer le processus de reconnexion
+              App && App.connect && App._reconnectContinue && App._reconnectContinue();
+            };
+          } catch(err) {
+            _showBanner('Erreur: ' + err.message);
           }
-        }, 2500);
+        }, delay);
       };
     },
 
+    _reconnectContinue() {
+      // Relancer le processus de reconnexion (appelé depuis le handler onclose)
+      if (!_lastConnectParams || _intentionalDisconnect) return;
+      _reconnectAttempts++;
+      var maxAttempts = 8;
+      if (_reconnectAttempts > maxAttempts) {
+        _hideBanner();
+        show('s-connect');
+        setStatus('Reconnexion échouée.', 'err');
+        return;
+      }
+      var delay = Math.min(2000 * _reconnectAttempts, 12000);
+      _showBanner((_lang==='fr'?'Reconnexion dans ':'Reconnecting in ') + Math.round(delay/1000) + 's…');
+      window._reconnectTimer = setTimeout(function() { App.connect(); }, delay);
+    },
+
     disconnect() {
+      _intentionalDisconnect = true;
+      _hideBanner();
       if (ws) { ws.close(); ws = null; }
       games = {};
       show('s-connect');
@@ -3320,6 +3628,15 @@ function dismissWinner() {
       // Affichage optimiste
       addChat(myName, text, 'mine');
     },
+    spectateGame(gameId) {
+      var g = games[gameId];
+      if (!g) return;
+      addChat(null, '👁 ' + (_lang==='fr'?'Observation de la table ':'Spectating table ') + (g.name||('#'+gameId)) + '…', 'sys');
+      // JoinExistingGame avec flag spectateur (field 3 = spectator dans proto PokerTH)
+      var msg = Proto.encode([[1,0,gameId],[3,0,1]]);
+      send(Proto.encode([[1,0,21],[22,2,msg]]));
+    },
+
     autoJoinOrCreate() {
       autoAction = true;
       const btn = document.getElementById('btn-autojoin');
@@ -3652,6 +3969,12 @@ function toggleLog() {
       <button class="chat-send" onclick="App.sendGameChat()">▶</button>
     </div>
   </div>
+  <!-- ══ RECONNECT BANNER ══ -->
+  <div id="reconnect-banner">
+    <div class="rc-dot"></div>
+    <span id="reconnect-msg">Reconnexion en cours...</span>
+  </div>
+
   <!-- ══ HANDS HELP OVERLAY ══ -->
   <div id="hands-overlay" style="display:none" onclick="if(event.target===this)toggleHandsHelp()">
     <div class="hands-card" id="hands-card-inner"></div>
@@ -3680,6 +4003,7 @@ function toggleLog() {
         <div class="pb-cards" id="g-myseat-cards">
           <div class="pk sm back"></div><div class="pk sm back"></div>
         </div>
+        <div id="hand-strength" style="display:none"></div>
         <div class="pb-action" id="g-myseat-action"></div>
         <div id="pb-timer" style="font-size:0.72rem;color:var(--gold);font-family:'Inconsolata',monospace;font-weight:700;min-width:28px;text-align:right"></div>
       </div>
