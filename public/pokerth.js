@@ -2008,16 +2008,6 @@ const App = (() => {
         renderSeats();
         logAction('--- Flop [' + flopStr + '] ---');
         notifyCard(); notifyCard(); notifyCard();
-        // Probabilité de gain après flop
-        setTimeout(function(){
-          var prob = calcWinProb();
-          var bar = document.getElementById('win-prob-fill');
-          if (bar && prob >= 0) bar.style.width = prob + '%';
-          var wpb = document.getElementById('win-prob-bar');
-          if (wpb && prob >= 0) wpb.style.display = '';
-          var hs = document.getElementById('hand-strength');
-          if (hs && prob >= 0) hs.title = prob + '% de gagner';
-        }, 600);
         break;
       }
 
@@ -2036,11 +2026,6 @@ const App = (() => {
         logAction('--- ' + t('turn') + ' [' + tvName + '] ---');
         renderComm(true); // flip animation
         notifyCard();
-        setTimeout(function(){
-          var prob2 = calcWinProb();
-          var bar2 = document.getElementById('win-prob-fill');
-          if (bar2 && prob2 >= 0) bar2.style.width = prob2 + '%';
-        }, 400);
         break;
       }
 
@@ -2059,11 +2044,7 @@ const App = (() => {
         logAction('--- ' + t('river') + ' [' + rvName + '] ---');
         renderComm(true, true); // flip animation + dramatic river
         playTone(350, 0.08, 0.08); setTimeout(function(){ notifyCard(); }, 200);
-        setTimeout(function(){
-          var prob3 = calcWinProb();
-          var bar3 = document.getElementById('win-prob-fill');
-          if (bar3 && prob3 >= 0) bar3.style.width = prob3 + '%';
-        }, 400);
+
         break;
       }
 
@@ -2528,8 +2509,6 @@ const App = (() => {
     var validComm = commCards.filter(function(c){ return c != null; });
     if (myCards[0] == null || myCards[1] == null || validComm.length === 0) {
       el.style.display = 'none';
-      var wpb0 = document.getElementById('win-prob-bar');
-      if (wpb0) wpb0.style.display = 'none';
       return;
     }
     // Normaliser les hole cards (1-indexed) vers l'encodage canonique (0-indexed)
