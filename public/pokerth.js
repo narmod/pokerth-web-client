@@ -1463,6 +1463,10 @@ const App = (() => {
         myId = Proto.u32(sub, 2);
         $('h-nick').textContent = '♠ ' + myName;
         show('s-lobby');
+        // Demander la permission pour les notifications
+        if ('Notification' in window && Notification.permission === 'default') {
+          Notification.requestPermission().catch(function(){});
+        }
         addChat(null, 'Connecté en tant qu\'invité "' + myName + '" (ID ' + myId + ')', 'sys');
         const cfName = document.getElementById('cf-name');
         if (cfName) cfName.value = 'Table de ' + myName;  // always update with current name
@@ -1893,11 +1897,11 @@ const App = (() => {
           }
         }
 
+        clearTurnNotif();
         renderMyCards();
         renderComm();
         renderSeats();
         setTimeout(function(){ autoScaleTable(); renderSeats(); }, 100);
-        // Animation distribution après que les sièges soient positionnés
         setTimeout(animateCardDeal, 200);
         setTimeout(renderPreFlopStrength, 350);
         // Init stats
@@ -2899,6 +2903,40 @@ const App = (() => {
     set: function(v){ _ipBlockUntil = v; }
   });
   // Exposer pour les fonctions globales (avatar, etc.)
+  // ── Notification + titre dynamique quand c'est mon tour ──
+  var _origTitle = 'PokerTH Web';
+  var _titleBlinkID = null;
+
+  function notifyMyTurn() {
+    var msg = _lang === 'fr' ? '⚡ TON TOUR !' : '⚡ YOUR TURN!';
+    var sub = _lang === 'fr' ? 'C\'est à toi de jouer sur PokerTH' : 'It\'s your move on PokerTH';
+    // Notification navigateur (si onglet en arrière-plan)
+    if (document.hidden && 'Notification' in window && Notification.permission === 'granted') {
+      try { new Notification(msg, { body: sub, icon: '/favicon.ico', tag: 'pokerth-turn', silent: false }); } catch(e) {}
+    }
+    // Titre d'onglet dynamique + clignotement
+    clearInterval(_titleBlinkID);
+    var blink = true;
+    document.title = msg + ' — PokerTH';
+    _titleBlinkID = setInterval(function() {
+      document.title = blink ? (msg + ' — PokerTH') : _origTitle;
+      blink = !blink;
+    }, 900);
+    // Arrêter quand l'onglet est de nouveau actif
+    document.addEventListener('visibilitychange', function handler() {
+      if (!document.hidden) {
+        clearInterval(_titleBlinkID);
+        document.title = _origTitle;
+        document.removeEventListener('visibilitychange', handler);
+      }
+    });
+  }
+
+  function clearTurnNotif() {
+    clearInterval(_titleBlinkID);
+    document.title = _origTitle;
+  }
+
   window._renderSeats = function() { if (seats.length) renderSeats(); };
   window.toggleStats  = toggleStats;
   window._toggleStats = toggleStats;
