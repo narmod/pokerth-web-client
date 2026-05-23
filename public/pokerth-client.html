@@ -1312,7 +1312,7 @@ body {
   flex: 1;
   display: flex;
   flex-direction: column;
-  min-height: 0;
+  min-height: 300px; /* fallback si flex échoue */
   overflow: visible;
   /* Space for fixed bottom bars */
   padding-bottom: clamp(110px, 17dvh, 140px);
@@ -1334,6 +1334,8 @@ body {
   justify-content: center;
   transform-origin: center center;
   flex-shrink: 0;
+  min-width: 300px;  /* garantit scrollWidth > 0 */
+  min-height: 150px;
 }
 
 .felt-oval::before {
@@ -3650,7 +3652,14 @@ const App = (() => {
         addChat(null, 'Rejoint la table ' + gId + (isAdmin ? ' (admin)' : '') + ' — attente du démarrage...', 'sys');
         show('s-game');
         document.body.classList.add('in-game');
-        setTimeout(animateTableEnter, 50);
+        // Plusieurs tentatives pour s'assurer que la table s'affiche
+        [100, 300, 600, 1200].forEach(function(d){
+          setTimeout(function(){
+            autoScaleTable();
+            if (seats.length > 0) renderSeats();
+          }, d);
+        });
+        setTimeout(animateTableEnter, 100);
         // Mettre à jour le label de la barre de réactions selon le mode
         var rbl = document.getElementById('reaction-bar-label');
         if (rbl) {
@@ -5242,9 +5251,16 @@ function autoScaleTable() {
   var sc = document.getElementById('g-table-scaler');
   if (!tz || !sc) return;
   sc.style.transform = 'scale(1)';
+  // Forcer un reflow avant de lire les dimensions
+  void sc.offsetWidth;
   var tzW = tz.clientWidth, tzH = tz.clientHeight;
   var scW = sc.scrollWidth, scH = sc.scrollHeight;
-  if (!tzW || !scW || !tzH || !scH) return; // dimensions pas prêtes
+  console.log('[Scale] tzW=' + tzW + ' tzH=' + tzH + ' scW=' + scW + ' scH=' + scH);
+  if (!tzW || !scW || !tzH || !scH) {
+    console.log('[Scale] dimensions nulles — fallback scale(1)');
+    sc.style.transform = 'scale(1)';
+    return;
+  }
   // Scale to 68% of max: leaves 32% room for seat overflow around the oval
   // Sur desktop, on autorise jusqu'à 1.0 max
   // Sur mobile, on peut réduire en dessous de 1 pour tout faire tenir
