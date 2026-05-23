@@ -4437,6 +4437,7 @@ const App = (() => {
   }
 
   function renderSeats() {
+    console.log('[Seats] renderSeats appelée, seats=', seats.length, 'myId=', myId);
     const el = $('g-seats');
     if (!seats.length) { el.innerHTML = ''; return; }
     const n = seats.length;
@@ -5256,6 +5257,10 @@ function autoScaleTable() {
   var tzW = tz.clientWidth, tzH = tz.clientHeight;
   var scW = sc.scrollWidth, scH = sc.scrollHeight;
   console.log('[Scale] tzW=' + tzW + ' tzH=' + tzH + ' scW=' + scW + ' scH=' + scH);
+  var ov = document.querySelector('.felt-oval');
+  if (ov) { var ovr = ov.getBoundingClientRect(); console.log('[Scale] oval rect:', Math.round(ovr.left), Math.round(ovr.top), Math.round(ovr.width), Math.round(ovr.height)); }
+  var ga = document.querySelector('.game-area');
+  if (ga) { console.log('[Scale] game-area display:', getComputedStyle(ga).display, 'h:', ga.clientHeight); }
   if (!tzW || !scW || !tzH || !scH) {
     console.log('[Scale] dimensions nulles — fallback scale(1)');
     sc.style.transform = 'scale(1)';
