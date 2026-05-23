@@ -2293,44 +2293,72 @@ const App = (() => {
 
       case T.GameStartInitial: {
         // GameStartInitialMessage: gameId=1, startDealerPlayerId=2, playerSeats=3 (packed uint32)
-        gId        = Proto.u32(sub, 3 > 0 ? 1 : 1);
-        dealerPid  = Proto.u32(sub, 2);
-        // playerSeats: can be packed Uint8Array (wt=2) or repeated varint (wt=0)
-        seats = [];
+        gId       = Proto.u32(sub, 1);
+        dealerPid = Proto.u32(sub, 2);
+
+        // Décoder la liste de sièges envoyée par le serveur
+        const newSeats = [];
         if (sub[3] && sub[3].length > 0) {
           if (sub[3][0] instanceof Uint8Array) {
-            // packed repeated uint32
             let pos = 0, buf = sub[3][0];
             while (pos < buf.length) {
               const r = Proto.decodeVarint(buf, pos);
-              seats.push(r.value); pos = r.pos;
+              newSeats.push(r.value); pos = r.pos;
             }
           } else {
-            // repeated varint (each pid is a separate number)
-            seats = sub[3].map(v => +v);
+            newSeats.push(...sub[3].map(v => +v));
           }
         }
-        console.log('[GameStartInitial] seats=', seats, 'myId=', myId, 'dealer=', dealerPid);
-        // debug removed
-        // Init seatData
+
+        // FIX : le serveur renvoie GameStartInitial avant chaque main avec un ordre
+        // potentiellement différent (rotation du dealer). On fige l'ordre de la
+        // PREMIÈRE réception et on ne le change plus — évite que les joueurs
+        // "tournent" visuellement autour de la table à chaque nouvelle main.
+        const isFirstDeal = (seats.length === 0);
+        if (isFirstDeal) {
+          seats  = newSeats;
+          handNum = 0;
+          const scEl = document.getElementById('g-myseat-cards');
+          if (scEl) scEl.innerHTML = '<div class="pk sm back"></div><div class="pk sm back"></div>';
+        }
+        // Si un joueur apparaît dans newSeats mais pas dans seats (late join) → l'ajouter
+        for (const pid of newSeats) {
+          if (!seats.includes(pid)) seats.push(pid);
+        }
+
+        console.log('[GameStartInitial] seats=', seats, 'newSeats=', newSeats,
+                    'myId=', myId, 'dealer=', dealerPid,
+                    isFirstDeal ? '(1re main — ordre figé)' : '(manche suivante — ordre conservé)');
+
+        // Mettre à jour seatData pour tous les joueurs
         for (const pid of seats) {
           if (!seatData[pid]) seatData[pid] = {};
-          Object.assign(seatData[pid], {money:0,bet:0,action:'',active:true,folded:false});
+          if (isFirstDeal) {
+            Object.assign(seatData[pid], {money:0, bet:0, action:'', active:true, folded:false});
+          } else {
+            // Conserver le stack, réinitialiser uniquement l'état de la main
+            Object.assign(seatData[pid], {bet:0, action:'', active:true, folded:false});
+          }
         }
-        handNum = 0;
+
         commCards = [null, null, null, null, null];
-        const scEl=document.getElementById('g-myseat-cards'); if(scEl) scEl.innerHTML='<div class="pk sm back"></div><div class="pk sm back"></div>';
-        amInGame = true;
+        amInGame  = true;
         $('g-round').textContent = t('gameStart');
-        // Demander les infos de chaque joueur assis
+
+        // Demander les infos des joueurs inconnus
         for (const pid of seats) {
           if (!players[pid]) {
             const req = Proto.encode([[1,0,pid]]);
             send(Proto.encode([[1,0,T.PlayerInfoRequest],[19,2,req]]));
           }
         }
-        setTimeout(function(){ renderSeats(); }, 120);
-        renderGameWaiting('Partie démarrée ! En attente de la première main...');
+
+        if (isFirstDeal) {
+          setTimeout(function(){ renderSeats(); }, 120);
+          renderGameWaiting('Partie démarrée ! En attente de la première main...');
+        } else {
+          renderSeats();
+        }
         break;
       }
 
