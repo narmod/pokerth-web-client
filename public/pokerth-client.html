@@ -1196,10 +1196,37 @@ body {
   width: min(520px, 90vw);
   height: min(240px, min(46vw, calc(100dvh - 250px)));
   min-height: 110px;
-  background: radial-gradient(ellipse 80% 60% at 50% 50%, #1e6b1e 0%, #0f3d0f 55%, #091f09 100%);
+  background:
+    /* Halo éclairage central (lampe au-dessus) */
+    radial-gradient(ellipse 55% 45% at 50% 45%, rgba(255,255,220,0.07) 0%, transparent 70%),
+    /* Ombres de bord (profondeur) */
+    radial-gradient(ellipse 90% 80% at 50% 50%, transparent 60%, rgba(0,0,0,0.35) 100%),
+    /* Texture tissu — lignes diagonales très fines */
+    repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 3px,
+      rgba(0,0,0,0.06) 3px,
+      rgba(0,0,0,0.06) 4px
+    ),
+    repeating-linear-gradient(
+      -45deg,
+      transparent,
+      transparent 3px,
+      rgba(0,0,0,0.04) 3px,
+      rgba(0,0,0,0.04) 4px
+    ),
+    /* Couleur de base dégradée */
+    radial-gradient(ellipse 80% 60% at 50% 50%, #1e6b1e 0%, #0f3d0f 55%, #091f09 100%);
   border-radius: 50% / 45%;
   border: 8px solid #6b3e18;
-  box-shadow: 0 0 0 2px #3a2208, inset 0 2px 12px rgba(0,0,0,0.4), 0 16px 48px rgba(0,0,0,0.7);
+  box-shadow:
+    0 0 0 3px #3a2208,
+    0 0 0 5px rgba(107,62,24,0.3),
+    inset 0 2px 16px rgba(0,0,0,0.5),
+    inset 0 -4px 20px rgba(0,0,0,0.3),
+    0 20px 60px rgba(0,0,0,0.8),
+    0 0 40px rgba(0,0,0,0.4);
   position: relative;
   overflow: visible;
   flex-shrink: 0;
@@ -1313,7 +1340,20 @@ body {
 }
 .blind-badge.sb { background: #2980b9; color: #fff; }
 .blind-badge.bb { background: #8e44ad; color: #fff; }
-.seat.folded .seat-avatar { opacity: 0.4; filter: grayscale(1); }
+/* Fold : grisé + croix discrète */
+.seat.folded .seat-avatar {
+  opacity: 0.35;
+  filter: grayscale(1) brightness(0.7);
+}
+.seat.folded .seat-avatar::before {
+  content: '✕';
+  position: absolute;
+  font-size: 0.7rem;
+  color: rgba(255,80,80,0.9);
+  font-weight: 900;
+  z-index: 3;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.8);
+}
 .seat.me .seat-avatar { border-color: var(--green); }
 
 .seat-name {
@@ -1349,8 +1389,14 @@ body {
   display: flex; flex-direction: column;
   align-items: center; justify-content: center;
   font-size: 1rem; font-weight: 800;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.5);
-  border: 1px solid rgba(0,0,0,0.12);
+  /* Ombre portée multi-couche pour effet 3D */
+  box-shadow:
+    0 1px 0 rgba(255,255,255,0.8) inset,
+    0 -1px 0 rgba(0,0,0,0.1) inset,
+    2px 4px 8px rgba(0,0,0,0.45),
+    4px 8px 20px rgba(0,0,0,0.25),
+    0 0 0 1px rgba(0,0,0,0.08);
+  border: 1px solid rgba(0,0,0,0.15);
   line-height: 1.1; user-select: none; flex-shrink: 0;
 }
 .pk.red { color: #c0392b; }
@@ -2129,6 +2175,26 @@ function flashActionLabel(pid) {
   });
 }
 
+
+
+// Palette de couleurs pour les avatars joueurs (12 couleurs)
+var AVATAR_PALETTE = [
+  { bg: '#c0392b', border: '#e74c3c', text: '#fff' }, // rouge
+  { bg: '#2471a3', border: '#3498db', text: '#fff' }, // bleu
+  { bg: '#1e8449', border: '#27ae60', text: '#fff' }, // vert
+  { bg: '#d68910', border: '#f39c12', text: '#fff' }, // orange
+  { bg: '#7d3c98', border: '#9b59b6', text: '#fff' }, // violet
+  { bg: '#1a5276', border: '#2980b9', text: '#fff' }, // bleu foncé
+  { bg: '#a04000', border: '#ca6f1e', text: '#fff' }, // brun
+  { bg: '#117a65', border: '#1abc9c', text: '#fff' }, // turquoise
+  { bg: '#943126', border: '#c0392b', text: '#fff' }, // bordeaux
+  { bg: '#1f618d', border: '#2e86c1', text: '#fff' }, // cobalt
+  { bg: '#616a6b', border: '#95a5a6', text: '#fff' }, // gris
+  { bg: '#b7950b', border: '#d4ac0d', text: '#fff' }, // or
+];
+function getAvatarColor(pid) {
+  return AVATAR_PALETTE[Math.abs(pid || 0) % AVATAR_PALETTE.length];
+}
 
 function toggleLang() { setLang(_lang === 'en' ? 'fr' : 'en'); }
 
@@ -3867,7 +3933,10 @@ const App = (() => {
     const pbMon  = document.getElementById('g-myseat-money');
     const pbAct  = document.getElementById('g-myseat-action');
     const pbBar  = document.querySelector('.player-bar');
-    if (pbAv)   pbAv.textContent   = myName.charAt(0).toUpperCase();
+    if (pbAv) {
+      pbAv.textContent = myName.charAt(0).toUpperCase();
+      // Garder le vert pour moi (pas de couleur palette)
+    }
     const myBlind = myId === sbPid ? ' 🔵SB' : (myId === bbPid ? ' 🟣BB' : '');
     if (pbName) pbName.textContent = myName + (myId === dealerPid ? ' 🎴D' : '') + myBlind;
     if (pbMon)  pbMon.textContent  = mySd.money != null ? mySd.money + ' ¥' : '—';
@@ -3900,7 +3969,12 @@ const App = (() => {
       else if (isBB) blindBadge = '<span class="blind-badge bb">BB</span>';
       const timerSvg = isActive ? _timerSvg(_timerSec, _timerTot) : '';
       const avatarCls = 'seat-avatar' + (isActive ? ' timing' : '');
-      h += '<div class="' + avatarCls + '" style="position:relative">'
+      // Couleur unique par joueur (basée sur pid)
+      const aColor = isMe ? null : getAvatarColor(pid);
+      const avatarStyle = aColor
+        ? 'position:relative;background:' + aColor.bg + ';border-color:' + aColor.border + ';color:' + aColor.text + ';box-shadow:0 0 0 2px ' + aColor.border + '44'
+        : 'position:relative';
+      h += '<div class="' + avatarCls + '" style="' + avatarStyle + '">'
         + '<span class="seat-initial">' + initial + '</span>'
         + timerSvg
         + blindBadge
