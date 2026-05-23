@@ -2404,20 +2404,21 @@ const App = (() => {
         + '</div>';
     }).join('') : '<div style="color:var(--text);font-size:0.62rem">Aucune main jouée</div>';
 
+    var isFr = (_lang === 'fr');
     el.innerHTML = '<div class="stats-header">'
-      + '<span>📊 Session</span>'
+      + '<span>📊 ' + (isFr ? 'Session' : 'Session') + '</span>'
       + '<button onclick="toggleStats()" style="background:none;border:none;color:var(--text);cursor:pointer;font-size:0.9rem">✕</button>'
       + '</div>'
       + '<div class="stats-body">'
-      + '<div class="stat-row"><span class="stat-label">Mains jouées</span><span class="stat-val">'+s.handsPlayed+'</span></div>'
-      + '<div class="stat-row"><span class="stat-label">Victoires</span><span class="stat-val pos">'+s.handsWon+'</span></div>'
-      + '<div class="stat-row"><span class="stat-label">Taux de victoire</span><span class="stat-val">'+wr+'%</span></div>'
+      + '<div class="stat-row"><span class="stat-label">'+(isFr?'Mains jouées':'Hands played')+'</span><span class="stat-val">'+s.handsPlayed+'</span></div>'
+      + '<div class="stat-row"><span class="stat-label">'+(isFr?'Victoires':'Wins')+'</span><span class="stat-val pos">'+s.handsWon+'</span></div>'
+      + '<div class="stat-row"><span class="stat-label">'+(isFr?'Taux de victoire':'Win rate')+'</span><span class="stat-val">'+wr+'%</span></div>'
       + '<hr class="stat-divider">'
-      + '<div class="stat-row"><span class="stat-label">Gain/Perte net</span><span class="stat-val '+gainCls+'">'+(gain>0?'+':'')+gain+' ¥</span></div>'
-      + '<div class="stat-row"><span class="stat-label">Meilleur gain</span><span class="stat-val pos">+'+s.bigWin+' ¥</span></div>'
-      + '<div class="stat-row"><span class="stat-label">Pire perte</span><span class="stat-val neg">'+s.bigLoss+' ¥</span></div>'
+      + '<div class="stat-row"><span class="stat-label">'+(isFr?'Gain/Perte net':'Net gain/loss')+'</span><span class="stat-val '+gainCls+'">'+(gain>0?'+':'')+gain+' ¥</span></div>'
+      + '<div class="stat-row"><span class="stat-label">'+(isFr?'Meilleur gain':'Best win')+'</span><span class="stat-val pos">+'+s.bigWin+' ¥</span></div>'
+      + '<div class="stat-row"><span class="stat-label">'+(isFr?'Pire perte':'Worst loss')+'</span><span class="stat-val neg">'+s.bigLoss+' ¥</span></div>'
       + '<hr class="stat-divider">'
-      + '<div style="font-size:0.58rem;color:var(--gold-dim);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:4px">Dernières mains</div>'
+      + '<div style="font-size:0.58rem;color:var(--gold-dim);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:4px">'+(isFr?'Dernières mains':'Recent hands')+'</div>'
       + histHtml
       + '</div>';
   }
