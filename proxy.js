@@ -142,6 +142,9 @@ console.log('  • Serveur LAN sans TLS → decochez TLS dans le navigateur');
 console.log('  • pokerth.net          → TLS coche, login registered requis');
 console.log('\nEn attente...\n');
 
+// Ensemble de tous les clients connectés (pour relais réactions)
+const _allClients = new Set();
+
 wss.on('connection', (ws, req) => {
   const params = new URLSearchParams(url.parse(req.url).query);
   const host   = params.get('host') || 'pokerth.net';
@@ -207,7 +210,22 @@ wss.on('connection', (ws, req) => {
       setTimeout(() => { try { ws.close(); } catch (_) {} }, 300);
     });
 
-    ws.on('message', (data, isBinary) => {
+    // Enregistrer ce client pour le relais
+  _allClients.add(ws);
+  ws.on('close', () => _allClients.delete(ws));
+
+  ws.on('message', (data, isBinary) => {
+      // ── Relais réactions (message texte REACT:pid:emoji) ──
+      if (!isBinary) {
+        const text = data.toString();
+        if (text.startsWith('REACT:')) {
+          console.log('[REACT] relais → ' + (_allClients.size - 1) + ' autres clients');
+          _allClients.forEach(client => {
+            if (client !== ws && client.readyState === 1) client.send(text);
+          });
+          return;
+        }
+      }
       if (!connected || !sock?.writable) return;
       const buf = Buffer.from(isBinary ? data : data.toString());
       if (buf.length >= 4) {
