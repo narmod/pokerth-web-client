@@ -51,10 +51,131 @@ function avpTab(idx) {
   if (titleEl) titleEl.textContent = idx < 0 ? 'Initiale' : (_avpCatTitles[idx] || '');
 }
 
+var _avCats = [
+  {icon:"🐾",name:"Sauvages",emojis:["🦁","🐯","🐻","🐼","🦊","🐺","🦝","🦌","🐘","🦒","🦓","🦬","🐆","🐅","🦏","🦛"]},
+  {icon:"🌊",name:"Marins",emojis:["🐬","🦈","🐙","🦑","🦀","🦞","🐊","🦎","🐢","🐍","🦭","🐋","🐡","🦐","🦧","🐳"]},
+  {icon:"🦅",name:"Oiseaux",emojis:["🦅","🦆","🦉","🦚","🦜","🐧","🦩","🦢","🦋","🐝","🐛","🪲","🦗","🕷️","🦂","🪳"]},
+  {icon:"🐶",name:"Mignons",emojis:["🐶","🐱","🐰","🐹","🐭","🐮","🐷","🐸","🐔","🐿️","🦔","🐇","🐩","🦙","🐓","🐑"]},
+  {icon:"🐉",name:"Créatures",emojis:["🐉","🦄","🐲","🧌","👾","🤖","👽","👻","💀","☠️","🎃","🔮","👹","👺","🌑","⚡"]},
+  {icon:"🧙",name:"Perso.",emojis:["🧙","🧝","🧛","🧟","🧜","🧞","🦸","🦹","🧚","🤠","👑","🎭","🃏","🎩","🕵️","🥷"]},
+  {icon:"⚔️",name:"Guerriers",emojis:["🤺","🛡️","⚔️","🗡️","🏹","🔱","🌟","💫","✨","🌪️","🔥","❄️","🌊","💎","🍀","🎲"]},
+];
+
+
+function _buildAvatarPopup() {
+  if (document.getElementById('avatar-popup')) return;
+  var overlay = document.createElement('div');
+  overlay.id = 'avatar-popup';
+  overlay.style.cssText = [
+    'display:none','position:fixed','top:50%','left:50%',
+    'transform:translate(-50%,-50%)','width:min(360px,94vw)',
+    'max-height:80vh','background:#040a06','border:1px solid #c8a84a55',
+    'border-radius:8px','z-index:9999','box-shadow:0 8px 40px #000c',
+    'font-family:sans-serif','overflow:hidden','flex-direction:column'
+  ].join(';');
+
+  // Header
+  var hdr = document.createElement('div');
+  hdr.style.cssText = 'display:flex;align-items:center;justify-content:space-between;padding:8px 12px;border-bottom:1px solid #c8a84a33;background:#00000044';
+  var title = document.createElement('span');
+  title.id = 'avp-title';
+  title.style.cssText = 'font-size:0.65rem;letter-spacing:0.12em;text-transform:uppercase;color:#c8a84a99';
+  title.textContent = _avCats[0].icon + ' ' + _avCats[0].name;
+  var closeBtn = document.createElement('button');
+  closeBtn.textContent = '✕';
+  closeBtn.style.cssText = 'background:none;border:none;color:#ccc;cursor:pointer;font-size:1rem;padding:0 4px';
+  closeBtn.onclick = function(){ toggleAvatarPopup(); };
+  hdr.appendChild(title); hdr.appendChild(closeBtn);
+
+  // Onglets
+  var tabs = document.createElement('div');
+  tabs.id = 'avp-tabs';
+  tabs.style.cssText = 'display:flex;gap:3px;flex-wrap:wrap;padding:6px 8px;border-bottom:1px solid #c8a84a22;background:#00000033';
+
+  // Bouton "Aa"
+  var aaBtn = document.createElement('button');
+  aaBtn.type = 'button';
+  aaBtn.textContent = 'Aa';
+  aaBtn.style.cssText = 'background:#ffffff0a;border:1px solid #ffffff22;border-radius:4px;font-size:0.62rem;font-family:serif;color:#ccc;cursor:pointer;padding:3px 6px;transition:border-color 0.1s';
+  aaBtn.onclick = function(){ _avpSelectCat(-1, aaBtn); };
+  tabs.appendChild(aaBtn);
+
+  _avCats.forEach(function(cat, i) {
+    var btn = document.createElement('button');
+    btn.type = 'button';
+    btn.textContent = cat.icon;
+    btn.style.cssText = 'background:#ffffff0a;border:1px solid #ffffff22;border-radius:4px;font-size:1rem;cursor:pointer;padding:2px 5px;transition:border-color 0.1s,background 0.1s';
+    btn.title = cat.name;
+    if (i === 0) { btn.style.borderColor='#c8a84a'; btn.style.background='#c8a84a22'; }
+    btn.onclick = function(){ _avpSelectCat(i, btn); };
+    tabs.appendChild(btn);
+  });
+
+  // Corps — grille d'emojis
+  var body = document.createElement('div');
+  body.id = 'avp-body';
+  body.style.cssText = 'overflow-y:auto;padding:8px;max-height:calc(80vh - 100px)';
+
+  // Afficher la 1ère catégorie
+  _avpRenderGrid(body, 0);
+
+  overlay.appendChild(hdr);
+  overlay.appendChild(tabs);
+  overlay.appendChild(body);
+  document.body.appendChild(overlay);
+}
+
+function _avpSelectCat(idx, activeBtn) {
+  // Réinitialiser les onglets
+  var tabBtns = document.querySelectorAll('#avp-tabs button');
+  tabBtns.forEach(function(b){
+    b.style.borderColor='#ffffff22';
+    b.style.background='#ffffff0a';
+  });
+  if (activeBtn) { activeBtn.style.borderColor='#c8a84a'; activeBtn.style.background='#c8a84a22'; }
+  var title = document.getElementById('avp-title');
+  if (title) title.textContent = idx < 0 ? 'Initiale' : (_avCats[idx].icon + ' ' + _avCats[idx].name);
+  var body = document.getElementById('avp-body');
+  if (body) _avpRenderGrid(body, idx);
+}
+
+function _avpRenderGrid(body, idx) {
+  body.innerHTML = '';
+  var grid = document.createElement('div');
+  grid.style.cssText = 'display:grid;grid-template-columns:repeat(8,38px);gap:4px;justify-content:center';
+
+  if (idx < 0) {
+    // Bouton "Aa"
+    var btn = document.createElement('button');
+    btn.type = 'button';
+    btn.textContent = 'Aa';
+    btn.style.cssText = 'width:38px;height:38px;background:#ffffff0a;border:2px solid #c8a84a44;border-radius:6px;font-size:0.65rem;font-family:serif;color:#ccc;cursor:pointer;display:flex;align-items:center;justify-content:center';
+    btn.onclick = function(){ selectAvatarPopup(''); };
+    grid.appendChild(btn);
+  } else {
+    _avCats[idx].emojis.forEach(function(e) {
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.textContent = e;
+      btn.dataset.av = e;
+      var saved = '';
+      try { saved = localStorage.getItem('pth_avatar')||''; } catch(x){}
+      btn.style.cssText = 'width:38px;height:38px;background:#ffffff0a;border:2px solid '+(saved===e?'#c8a84a':'transparent')+';border-radius:6px;font-size:1.3rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:border-color 0.1s,transform 0.1s';
+      btn.onmouseenter = function(){ this.style.transform='scale(1.15)'; this.style.borderColor='#c8a84a66'; };
+      btn.onmouseleave = function(){ var s=''; try{s=localStorage.getItem('pth_avatar')||'';}catch(x){} this.style.transform=''; this.style.borderColor=s===this.dataset.av?'#c8a84a':'transparent'; };
+      btn.onclick = function(){ selectAvatarPopup(this.dataset.av); };
+      grid.appendChild(btn);
+    });
+  }
+  body.appendChild(grid);
+}
+
 function toggleAvatarPopup() {
+  _buildAvatarPopup();
   var p = document.getElementById("avatar-popup");
   if (!p) return;
-  p.style.display = (p.style.display === "none" || !p.style.display) ? "block" : "none";
+  var isOpen = p.style.display === "flex";
+  p.style.display = isOpen ? "none" : "flex";
 }
 function selectAvatarPopup(emoji) {
   try { localStorage.setItem("pth_avatar", emoji); } catch(e) {}
@@ -154,12 +275,6 @@ function selectAvatarPopup(emoji) {
     <button class="btn-primary" onclick="App.connect()" data-i18n="connect">CONNECT</button>
     <div id="cstatus" class="status"></div>
   </div>
-    <!-- Popup sélection avatar -->
-    <div id="avatar-popup" style="display:none">
-      <div class="avp-header">
-        <span id="avp-cat-title">🐾 Animaux sauvages</span>
-        <button type="button" onclick="toggleAvatarPopup()" style="background:none;border:none;color:var(--text);cursor:pointer;font-size:1rem">✕</button>
-      </div>
       <div class="avp-tabs"><button type="button" class="avp-tab avp-tab-none" onclick="avpTab(-1)" title="Initiale">Aa</button><button type="button" class="avp-tab avp-tab-active" onclick="avpTab(0)" title="Sauvages">🐾</button><button type="button" class="avp-tab" onclick="avpTab(1)" title="Marins">🌊</button><button type="button" class="avp-tab" onclick="avpTab(2)" title="Oiseaux">🦅</button><button type="button" class="avp-tab" onclick="avpTab(3)" title="Mignons">🐶</button><button type="button" class="avp-tab" onclick="avpTab(4)" title="Créatures">🐉</button><button type="button" class="avp-tab" onclick="avpTab(5)" title="Perso.">🧙</button><button type="button" class="avp-tab" onclick="avpTab(6)" title="Guerriers">⚔️</button></div>
       <div class="avp-body">
 <div class="avp-panel" id="avp-panel--1" style="display:none"><div class="avp-panel-grid"><button type="button" class="avp-btn avp-none selected" data-av="" onclick="selectAvatarPopup('')">Aa<br><span style="font-size:0.5rem;opacity:0.6">Initiale</span></button></div></div>
