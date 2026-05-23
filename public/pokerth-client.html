@@ -255,7 +255,21 @@ body {
 }
 
 .lang-btn.active { background: rgba(200,168,74,0.2) !important; border-color: var(--gold-dim) !important; color: var(--gold) !important; }
-.btn-watch { background: rgba(52,152,219,0.15); border: 1px solid rgba(52,152,219,0.35); color: #7ec8e3; }
+.btn-watch {
+  background: rgba(52,152,219,0.12);
+  border: 1px solid rgba(52,152,219,0.35);
+  color: #7ec8e3;
+  padding: 4px 10px;
+  font-family: 'Cinzel', serif;
+  font-size: 0.68rem;
+  font-weight: 700;
+  border-radius: 2px;
+  cursor: pointer;
+  letter-spacing: 0.08em;
+  transition: background 0.15s;
+  flex-shrink: 0;
+}
+.btn-watch:hover { background: rgba(52,152,219,0.25); }
 .btn-sm {
   background: transparent;
   border: 1px solid var(--border);
@@ -1391,7 +1405,7 @@ var LANG = {
     h8n:'Two Pair', h8d:'Two pairs of matching cards',
     h9n:'One Pair', h9d:'Two cards of the same rank',
     h10n:'High Card', h10d:'No combination — the highest card plays',
-    handsClose:'Close ✕',
+    handsClose:'Close ✕', watchBtn:'Watch',
     youWon:'You won!', handWinner:'Hand winner',
     totalPot:'Total pot', players:'Players', blinds:'Blinds',
     commCards:'Community cards', results:'Results', continue:'Continue ▶',
@@ -1458,7 +1472,7 @@ var LANG = {
     h8n:'Deux Paires', h8d:'Deux paires de cartes de même valeur',
     h9n:'Paire', h9d:'Deux cartes de même valeur',
     h10n:'Carte Haute', h10d:'Aucune combinaison — la carte la plus haute joue',
-    handsClose:'Fermer ✕',
+    handsClose:'Fermer ✕', watchBtn:'Regarder',
     youWon:'Vous avez gagné !', handWinner:'Gagnant de la main',
     totalPot:'Pot total', players:'Joueurs', blinds:'Blinds',
     commCards:'Cartes communes', results:'Résultats', continue:'Continuer ▶',
@@ -2875,7 +2889,7 @@ const App = (() => {
       const lock   = (g.priv || g.type === 3) ? '🔒 ' : '';
       const joinLabel = ((g.priv || g.type === 3) ? '🔒 ' : '▶ ') + (typeof t === 'function' ? t('joinBtn') || 'Join' : 'Join');
       const watchBtn = g.mode === 2
-        ? '<button class="btn-xs btn-watch" onclick="App.spectateGame(' + gid + ')">👁 ' + (t('watchBtn')||(_lang==='fr'?'Regarder':'Watch')) + '</button>'
+        ? '<button class="btn-xs btn-watch" onclick="App.spectateGame(' + gid + ')">👁 ' + t('watchBtn') + '</button>'
         : '';
       const joinBtn = g.mode !== 3
         ? '<button class="btn-join" onclick="event.stopPropagation();App.joinGame(' + parseInt(gid) + ')">' + joinLabel + '</button>'
