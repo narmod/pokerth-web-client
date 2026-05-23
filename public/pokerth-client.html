@@ -1387,6 +1387,18 @@ body {
   font-family: 'Inconsolata',monospace; font-size: 0.78rem; text-align: center;
 }
 .btn-pct:hover { background: rgba(200,168,74,0.28); }
+.btn-pct:disabled,
+.btn-action:disabled {
+  opacity: 0.28;
+  cursor: not-allowed;
+  filter: grayscale(0.7);
+  pointer-events: none;
+}
+.raise-input:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+  background: rgba(255,255,255,0.02) !important;
+}
 .raise-row { display: flex; gap: 5px; align-items: stretch; }
 .raise-row .raise-input { flex: 1; }
 .raise-row .btn-raise { flex: 2; }
@@ -3409,19 +3421,24 @@ const App = (() => {
     const callClass  = canCheck ? 'btn-check' : 'btn-call';
     const raiseLabel = highestBet > 0 ? t('raise') : t('bet');
 
+    // Peut relancer : doit avoir plus que le montant du call ET >= mise min
+    const canRaise = myMoney > toCall && myMoney >= minBet;
+    const da = canRaise ? '' : ' disabled'; // disabled attribute
+    const allInOnly = myMoney <= toCall;    // ne peut que call ou all-in
+
     const h = '<div class="action-grid">'
       + '<div class="action-top-row">'
       +   '<button class="btn-action btn-fold" onclick="App.doAction(1,0)">' + t('fold') + '</button>'
       +   '<button class="btn-action ' + callClass + '" onclick="' + callAction + '">' + callLabel + '</button>'
       + '</div>'
       + '<div class="pct-row">'
-      +   '<button class="btn-pct" onclick="setPct(' + p33  + ')">33%</button>'
-      +   '<button class="btn-pct" onclick="setPct(' + p50  + ')">50%</button>'
-      +   '<button class="btn-pct" onclick="setPct(' + p100 + ')">100%</button>'
+      +   '<button class="btn-pct"' + da + ' onclick="setPct(' + p33  + ')">33%</button>'
+      +   '<button class="btn-pct"' + da + ' onclick="setPct(' + p50  + ')">50%</button>'
+      +   '<button class="btn-pct"' + da + ' onclick="setPct(' + p100 + ')">100%</button>'
       + '</div>'
       + '<div class="raise-row">'
-      +   '<input class="raise-input" id="raise-amt" type="number" min="' + minBet + '" max="' + myMoney + '" value="' + minBet + '">'
-      +   '<button class="btn-action btn-raise raise-btn" onclick="App.doRaise()">' + raiseLabel + '</button>'
+      +   '<input class="raise-input" id="raise-amt" type="number" min="' + minBet + '" max="' + myMoney + '" value="' + minBet + '"' + da + '>'
+      +   '<button class="btn-action btn-raise raise-btn"' + da + ' onclick="App.doRaise()">' + raiseLabel + '</button>'
       + '</div>'
       + '<button class="btn-action btn-allin" onclick="App.doAction(6,' + myMoney + ')">All-In <b>' + myMoney + '</b></button>'
       + '</div>';
