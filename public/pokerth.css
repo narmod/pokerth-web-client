@@ -1992,74 +1992,65 @@ body:not(.in-game) .my-zone {
   text-shadow: 0 0 6px rgba(200,168,74,0.8);
 }
 
-/* ═══ OVERLAY AVATAR ═══ */
-#avp-modal {
-  background: #060e08;
-  border: 1px solid rgba(200,168,74,0.4);
-  border-radius: 10px;
-  width: min(380px, 95vw);
-  max-height: 85vh;
-  display: flex;
-  flex-direction: column;
+/* ═══ POPUP AVATAR INLINE ═══ */
+#avp-popup { width: 100%; }
+.avp-popup-inner {
+  border: 1px solid rgba(200,168,74,0.35);
+  border-radius: 7px;
   overflow: hidden;
-  box-shadow: 0 12px 50px rgba(0,0,0,0.9);
-  animation: slideDown 0.18s ease;
+  background: rgba(2,8,4,0.98);
+  margin-bottom: 6px;
 }
-#avp-header {
+.avp-popup-header {
   display: flex; align-items: center; justify-content: space-between;
-  padding: 10px 14px;
-  border-bottom: 1px solid rgba(200,168,74,0.2);
+  padding: 8px 12px;
+  border-bottom: 1px solid rgba(200,168,74,0.18);
   background: rgba(0,0,0,0.4);
-  flex-shrink: 0;
 }
 #avp-title {
-  font-size: 0.65rem; letter-spacing: 0.15em; text-transform: uppercase;
+  font-size: 0.6rem; letter-spacing: 0.14em; text-transform: uppercase;
   color: #c8a84a; font-family: 'Cinzel', serif;
 }
-#avp-close {
-  background: none; border: none; color: #aaa; cursor: pointer;
-  font-size: 1rem; padding: 0 2px; line-height: 1;
+.avp-close-btn {
+  background: none; border: none; color: #999; cursor: pointer;
+  font-size: 1rem; line-height: 1; padding: 0;
 }
-#avp-close:hover { color: #fff; }
-#avp-tabs {
+.avp-close-btn:hover { color: #fff; }
+.avp-tabs-row {
   display: flex; gap: 4px; flex-wrap: wrap;
-  padding: 8px 10px; border-bottom: 1px solid rgba(200,168,74,0.1);
-  background: rgba(0,0,0,0.2); flex-shrink: 0;
+  padding: 6px 8px;
+  border-bottom: 1px solid rgba(200,168,74,0.1);
+  background: rgba(0,0,0,0.25);
 }
 .avp-tab {
   background: rgba(255,255,255,0.05);
   border: 1px solid transparent;
   border-radius: 5px;
-  font-size: 1.05rem;
-  cursor: pointer; padding: 3px 7px;
+  font-size: 1rem; cursor: pointer; padding: 3px 6px;
   color: inherit;
   transition: border-color 0.12s, background 0.12s, transform 0.1s;
 }
 .avp-tab:hover { transform: scale(1.1); border-color: rgba(200,168,74,0.4); }
-.avp-tab.active { border-color: #c8a84a; background: rgba(200,168,74,0.18); }
-#avp-grid-wrap {
-  overflow-y: auto; padding: 10px;
+.avp-tab.active { border-color: #c8a84a !important; background: rgba(200,168,74,0.18) !important; }
+.avp-grid-wrap {
+  padding: 8px;
+  max-height: 200px; overflow-y: auto;
   scrollbar-width: thin; scrollbar-color: rgba(200,168,74,0.3) transparent;
 }
 #avp-grid {
-  display: grid;
-  grid-template-columns: repeat(8, 40px);
-  gap: 5px;
+  display: grid !important;
+  grid-template-columns: repeat(7, 38px) !important;
+  gap: 4px;
   justify-content: center;
 }
 .avp-emoji-btn {
-  width: 40px; height: 40px;
+  width: 38px !important; height: 38px !important;
   background: rgba(255,255,255,0.04);
   border: 2px solid transparent;
-  border-radius: 7px;
-  font-size: 1.35rem;
+  border-radius: 6px; font-size: 1.25rem;
   cursor: pointer;
-  display: flex; align-items: center; justify-content: center;
-  flex-shrink: 0;
-  transition: border-color 0.12s, transform 0.1s, background 0.12s;
+  display: flex !important; align-items: center; justify-content: center;
+  transition: border-color 0.1s, transform 0.1s, background 0.1s;
 }
-.avp-emoji-btn:hover {
-  transform: scale(1.18);
-  background: rgba(200,168,74,0.12);
-  border-color: rgba(200,168,74,0.5);
-}
+.avp-emoji-btn:hover { transform: scale(1.15); border-color: rgba(200,168,74,0.5); }
+.avp-emoji-btn.sel { border-color: #c8a84a; background: rgba(200,168,74,0.18); }
