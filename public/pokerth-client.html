@@ -2217,6 +2217,7 @@ const App = (() => {
   let _lastConnectParams = null; // pour la reconnexion auto
   let _reconnectAttempts = 0;
   let _intentionalDisconnect = false;
+  let _wasAuthenticated = false; // true seulement après InitAck réussi
 
   // ── DOM ──
   const $ = id => document.getElementById(id);
@@ -2302,6 +2303,8 @@ const App = (() => {
 
       // Connexion acceptée
       case T.InitAck: {
+        _wasAuthenticated = true; // connexion établie avec succès
+        _reconnectAttempts = 0;   // réinitialiser le compteur
         myId = Proto.u32(sub, 2);
         $('h-nick').textContent = '♠ ' + myName;
         show('s-lobby');
@@ -2328,6 +2331,8 @@ const App = (() => {
           ws.close(); return;
         }
         if (r === 7) {
+          _intentionalDisconnect = true; // ne pas retenter — IP bloquée
+          _hideBanner();
           setStatus('⏳ IP bloquée — attendez 5 minutes puis réessayez.', 'err'); return;
         }
         if (r === 4) {
@@ -3481,6 +3486,7 @@ function dismissWinner() {
         pass: $('pass') ? $('pass').value : '' };
       _reconnectAttempts = 0;
       _intentionalDisconnect = false;
+      _wasAuthenticated = false;
       try {
         ws = new WebSocket(finalUrl);
       } catch (e) {
@@ -3495,23 +3501,25 @@ function dismissWinner() {
       ws.onclose = function(e) {
         ws = null;
         clearTimeout(window._reconnectTimer);
-        if (_intentionalDisconnect || !_lastConnectParams) {
-          // Déconnexion volontaire
+        if (_intentionalDisconnect || !_lastConnectParams || !_wasAuthenticated) {
+          // Déconnexion volontaire ou jamais authentifié → écran connexion
           show('s-connect');
           setStatus(t('disconnected') || 'Déconnecté. Reconnectez-vous.');
           _hideBanner();
           return;
         }
-        // Reconnexion automatique
+        // Reconnexion automatique — seulement si on était bien connecté
         _reconnectAttempts++;
-        var maxAttempts = 8;
+        var maxAttempts = 3; // max 3 tentatives pour éviter le blocage IP
         if (_reconnectAttempts > maxAttempts) {
           _hideBanner();
+          _wasAuthenticated = false;
           show('s-connect');
-          setStatus('Reconnexion échouée. Vérifiez votre connexion.', 'err');
+          setStatus('Reconnexion échouée après ' + maxAttempts + ' tentatives. Reconnectez-vous manuellement.', 'err');
           return;
         }
-        var delay = Math.min(2000 * _reconnectAttempts, 12000);
+        // Délai croissant : 5s, 15s, 30s — assez long pour ne pas spammer
+        var delay = [5000, 15000, 30000][_reconnectAttempts - 1] || 30000;
         var secs = Math.round(delay/1000);
         _showBanner((_lang==='fr'?'Reconnexion dans ':'Reconnecting in ') + secs + 's… (' + _reconnectAttempts + '/' + maxAttempts + ')');
         window._reconnectTimer = setTimeout(function() {
@@ -3570,6 +3578,7 @@ function dismissWinner() {
 
     disconnect() {
       _intentionalDisconnect = true;
+      _wasAuthenticated = false;
       _hideBanner();
       if (ws) { ws.close(); ws = null; }
       games = {};
