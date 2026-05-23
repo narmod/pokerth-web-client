@@ -1052,6 +1052,88 @@ body {
   box-shadow: 0 -2px 8px rgba(0,0,0,0.4);
 }
 
+/* ══ RÉACTIONS RAPIDES ══ */
+.reaction-bar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 10px;
+  background: rgba(4,10,6,0.95);
+  border-top: 1px solid var(--border);
+  flex-shrink: 0;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.reaction-bar-label {
+  font-size: 0.55rem;
+  color: var(--text);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  flex-basis: 100%;
+  text-align: center;
+  margin-bottom: 1px;
+  opacity: 0.6;
+}
+.reaction-btn {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 4px 10px;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: transform 0.12s ease, background 0.15s, border-color 0.15s;
+  display: flex; align-items: center; gap: 4px;
+  line-height: 1;
+  position: relative;
+  overflow: visible;
+}
+.reaction-btn:hover {
+  background: rgba(200,168,74,0.15);
+  border-color: var(--gold-dim);
+  transform: scale(1.15);
+}
+.reaction-btn:active { transform: scale(0.92); }
+.reaction-btn .react-count {
+  font-size: 0.6rem;
+  font-family: monospace;
+  color: var(--gold);
+  min-width: 10px;
+}
+
+/* Emoji flottant animé au-dessus de la table */
+@keyframes floatReaction {
+  0%   { transform: translateY(0)  scale(0.5) rotate(-8deg); opacity: 0; }
+  15%  { transform: translateY(-20px) scale(1.3) rotate(5deg);  opacity: 1; }
+  70%  { transform: translateY(-120px) scale(1) rotate(-3deg); opacity: 1; }
+  100% { transform: translateY(-180px) scale(0.8) rotate(8deg); opacity: 0; }
+}
+.floating-reaction {
+  position: fixed;
+  font-size: 2.2rem;
+  pointer-events: none;
+  z-index: 650;
+  animation: floatReaction 2.2s cubic-bezier(.2,.8,.3,1) forwards;
+  filter: drop-shadow(0 2px 8px rgba(0,0,0,0.5));
+}
+
+/* Badge réaction sur avatar joueur */
+@keyframes reactionBadge {
+  0%   { transform: scale(0) rotate(-20deg); opacity: 0; }
+  30%  { transform: scale(1.3) rotate(5deg);  opacity: 1; }
+  70%  { transform: scale(1)   rotate(0deg);  opacity: 1; }
+  100% { transform: scale(0.9) rotate(0deg);  opacity: 0; }
+}
+.seat-reaction {
+  position: absolute;
+  top: -18px; left: 50%;
+  transform: translateX(-50%);
+  font-size: 1.4rem;
+  pointer-events: none;
+  animation: reactionBadge 2.5s ease forwards;
+  z-index: 10;
+  filter: drop-shadow(0 2px 6px rgba(0,0,0,0.6));
+}
+
 /* ══ RECONNECT BANNER ══ */
 #reconnect-banner {
   position: fixed; top: 0; left: 0; right: 0; z-index: 999;
@@ -2284,6 +2366,76 @@ function _evalFive(cards) {
 // Remap hole→comm : ♣(0)→1, ♠(1)→2, ♥(2)→3, ♦(3)→0
 // Vérification : n=7  → si=0(♣), ri=7(9) → 9♣ → canonical 1*13+7=20 (9♣ comm) ✓
 //               n=40 → si=3(♦), ri=1(3) → 3♦ → canonical 0*13+1=1  (3♦ comm) ✓
+
+// ═══════════════════════════════════════════════════════════
+// RÉACTIONS RAPIDES
+// ═══════════════════════════════════════════════════════════
+var _reactionCounts = {}; // { emoji: count }
+var _reactionTimers = {}; // timers de reset des compteurs
+
+// Affiche un emoji flottant qui monte depuis le bas de l'écran
+function showFloatingReaction(emoji, fromX, fromY) {
+  var el = document.createElement('div');
+  el.className = 'floating-reaction';
+  el.textContent = emoji;
+  // Position de départ : bas de l'écran, position aléatoire si pas de coords
+  var x = fromX || (window.innerWidth * 0.3 + Math.random() * window.innerWidth * 0.4);
+  var y = fromY || (window.innerHeight * 0.75);
+  el.style.left = x + 'px';
+  el.style.top  = y + 'px';
+  document.body.appendChild(el);
+  setTimeout(function(){ el.remove(); }, 2400);
+}
+
+// Affiche la réaction sur l'avatar du joueur dans les sièges
+function showSeatReaction(pid, emoji) {
+  var seatEls = document.querySelectorAll('.seat');
+  if (!window.seats) return;
+  var myIdx = seats.indexOf(myId);
+  var rotated = myIdx >= 0
+    ? seats.slice(myIdx).concat(seats.slice(0, myIdx))
+    : seats;
+  var idx = rotated.indexOf(pid);
+  if (idx < 0 || !seatEls[idx]) return;
+  var existing = seatEls[idx].querySelector('.seat-reaction');
+  if (existing) existing.remove();
+  var badge = document.createElement('div');
+  badge.className = 'seat-reaction';
+  badge.textContent = emoji;
+  seatEls[idx].style.overflow = 'visible';
+  seatEls[idx].appendChild(badge);
+  setTimeout(function(){ if (badge.parentNode) badge.remove(); }, 2700);
+  // Position pour l'animation flottante
+  var sr = seatEls[idx].getBoundingClientRect();
+  showFloatingReaction(emoji, sr.left + sr.width/2, sr.top);
+}
+
+// Mettre à jour les compteurs affichés sur les boutons
+function updateReactionCount(emoji) {
+  var EMOJIS = ['👏','😱','🤣','🤔','🔥','😎','💰','😤'];
+  var idx = EMOJIS.indexOf(emoji);
+  if (idx < 0) return;
+  var count = _reactionCounts[emoji] || 0;
+  var el = document.getElementById('rc-' + idx);
+  if (el) el.textContent = count > 0 ? count : '';
+  // Reset après 6 secondes d'inactivité
+  clearTimeout(_reactionTimers[emoji]);
+  _reactionTimers[emoji] = setTimeout(function() {
+    _reactionCounts[emoji] = 0;
+    if (el) el.textContent = '';
+  }, 6000);
+}
+
+// Recevoir une réaction d'un autre joueur (via chat)
+function handleIncomingReaction(pid, emoji) {
+  _reactionCounts[emoji] = (_reactionCounts[emoji] || 0) + 1;
+  updateReactionCount(emoji);
+  showSeatReaction(pid, emoji);
+  // Notif sonore légère
+  if (typeof playTone === 'function') playTone(800, 0.05, 0.08);
+}
+
+
 function normalizeHoleCard(n) {
   if (n == null || n < 0 || n > 51) return null;
   var si = Math.floor(n / 13);  // 0-indexé (♣=0, ♠=1, ♥=2, ♦=3)
@@ -3164,11 +3316,19 @@ const App = (() => {
       // Message de chat
       case T.Chat: {
         const pid  = Proto.u32(sub, 2);
-        const ctype= Proto.u32(sub, 3); // 0=lobby,1=game,2=bot,3=broadcast,4=private
+        const ctype= Proto.u32(sub, 3);
         const text = Proto.str(sub, 4);
         const who  = players[pid] || (pid ? `#${pid}` : null);
         const cls  = ctype === 3 ? 'bc' : pid === myId ? 'mine' : '';
-        addChat(who, text, cls);
+        // Intercepter les réactions (préfixe 🎯)
+        if (text && text.startsWith('\uD83C\uDFAF') && text.length <= 4 && pid !== myId) {
+          const emoji = text.slice(2);
+          handleIncomingReaction(pid, emoji);
+          // Afficher aussi dans le chat avec style dédié
+          addGameChat(who, emoji, 'reaction');
+        } else {
+          addChat(who, text, cls);
+        }
         break;
       }
       case T.TimeoutWarning: {
@@ -4487,6 +4647,16 @@ function dismissWinner() {
       show('s-lobby');  // back to lobby, stay connected
     },
 
+    sendReaction(emoji) {
+      if (!ws || !gId) return;
+      // Envoyer via le chat avec préfixe spécial reconnaissable
+      var msg = '🎯' + emoji;
+      send(MSG.buildChat(msg, gId || 0));
+      // Afficher immédiatement pour moi
+      handleIncomingReaction(myId, emoji);
+      _reactionCounts[emoji] = (_reactionCounts[emoji] || 0); // déjà incrémenté dans handleIncomingReaction
+    },
+
     sendGameChat() {
       var input = document.getElementById('g-chat-in');
       if (!input) return;
@@ -4845,6 +5015,17 @@ function toggleLog() {
   <div id="g-chat-panel" style="display:none;flex-direction:column;max-height:min(260px,35dvh)">
     <div class="g-chat-panel-header"><span style="font-size:0.65rem;color:var(--gold-dim);letter-spacing:0.15em;text-transform:uppercase">💬 Chat</span><button onclick="toggleGameChat()" style="background:none;border:none;color:var(--text);cursor:pointer;font-size:0.85rem;padding:0 4px">✕</button></div>
     <div class="chat-msgs" id="g-chat-msgs" style="flex:1;min-height:60px;overflow-y:auto;padding:6px 12px;background:rgba(4,10,5,0.97)"></div>
+    <div class="reaction-bar" id="reaction-bar">
+      <div class="reaction-bar-label">Réactions</div>
+      <button class="reaction-btn" onclick="App.sendReaction('👏')" title="👏">👏<span class="react-count" id="rc-0"></span></button>
+      <button class="reaction-btn" onclick="App.sendReaction('😱')" title="😱">😱<span class="react-count" id="rc-1"></span></button>
+      <button class="reaction-btn" onclick="App.sendReaction('🤣')" title="🤣">🤣<span class="react-count" id="rc-2"></span></button>
+      <button class="reaction-btn" onclick="App.sendReaction('🤔')" title="🤔">🤔<span class="react-count" id="rc-3"></span></button>
+      <button class="reaction-btn" onclick="App.sendReaction('🔥')" title="🔥">🔥<span class="react-count" id="rc-4"></span></button>
+      <button class="reaction-btn" onclick="App.sendReaction('😎')" title="😎">😎<span class="react-count" id="rc-5"></span></button>
+      <button class="reaction-btn" onclick="App.sendReaction('💰')" title="💰">💰<span class="react-count" id="rc-6"></span></button>
+      <button class="reaction-btn" onclick="App.sendReaction('😤')" title="😤">😤<span class="react-count" id="rc-7"></span></button>
+    </div>
     <div class="chat-input" style="border-top:1px solid var(--border);flex-shrink:0">
       <input id="g-chat-in" placeholder="Message…" onkeydown="if(event.key==='Enter')App.sendGameChat()">
       <button class="chat-send" onclick="App.sendGameChat()">▶</button>
