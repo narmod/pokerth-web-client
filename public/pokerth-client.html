@@ -3315,7 +3315,11 @@ const App = (() => {
           setMyTurnActive(true);
         } else {
           setMyTurnActive(false);
-          renderGameWaiting('<span style="font-family:inherit">' + getPlayerName(turnPid) + '</span>' + '<span class="thinking-dots"><span></span><span></span><span></span></span>');
+          // isHtml=true : HTML interne sûr, pas du contenu utilisateur
+          renderGameWaiting(
+            '<span style="font-family:inherit">' + esc(getPlayerName(turnPid)) + '</span>'
+            + '<span class="thinking-dots"><span></span><span></span><span></span></span>',
+            true);
         }
         break;
       }
@@ -3912,8 +3916,9 @@ const App = (() => {
     setTimeout(autoScaleTable, 60);
   }
 
-  function renderGameWaiting(msg) {
-    $('g-actions').innerHTML = '<div class="waiting-msg">' + esc(msg) + '</div>';
+  function renderGameWaiting(msg, isHtml) {
+    // isHtml=true : msg contient du HTML interne sûr (généré par notre code)
+    $('g-actions').innerHTML = '<div class="waiting-msg">' + (isHtml ? msg : esc(msg)) + '</div>';
     updateBottomLayout();
   }
 
