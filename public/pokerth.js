@@ -1345,6 +1345,15 @@ const App = (() => {
   let _timerSec = 0;      // seconds remaining
   let _timerTot = 30;     // total seconds
   let gameTimeout = 15;   // timeout par joueur (depuis les settings de la partie)
+
+  // ── Statistiques de session ──
+  var _stats = { handsPlayed:0, handsWon:0, startMoney:0, peakMoney:0, totalGain:0,
+                 bigWin:0, bigLoss:0, history:[] };
+  var _statsInited = false;
+
+  // ── Positions des sièges (pour les animations) ──
+  var _lastPixPos = [];  // [{top, left}] dans l'ordre de rotated
+  var _potCenter  = {x:0, y:0}; // centre du pot à l'écran
   let amInGame  = false;
   let myName    = '';
   let games     = {};   // gameId → {name, mode, players, maxPlayers, type, priv}
@@ -1887,10 +1896,13 @@ const App = (() => {
         renderMyCards();
         renderComm();
         renderSeats();
-        // Recalculer la table (important si chat ouvert)
         setTimeout(function(){ autoScaleTable(); renderSeats(); }, 100);
-        // Force pré-flop
+        // Animation distribution après que les sièges soient positionnés
+        setTimeout(animateCardDeal, 200);
         setTimeout(renderPreFlopStrength, 350);
+        // Init stats
+        var startMon = (seatData[myId]||{}).money || 0;
+        if (!_statsInited && startMon > 0) initStats(startMon);
         // Sons + animations deal
         setTimeout(function(){
           notifyCard();
@@ -2068,6 +2080,13 @@ const App = (() => {
           }
           if (won > 0) {
             winners.push({ pid, won, cash, c1, c2 });
+            // Stats si c'est moi
+            if (pid === myId) {
+              var prevMon = (_stats.startMoney || 0) + _stats.totalGain;
+              var delta2 = won - (prevMon - cash);
+              var myPair2 = myCards.map && myCards.map(function(c){ return { r: cardName(c,false).slice(0,-1), s: cardName(c,false).slice(-1), red: ['♥','♦'].indexOf(cardName(c,false).slice(-1))>=0 }; });
+              recordHand(true, won, myPair2);
+            }
             addChat(null, '🏆 ' + getPlayerName(pid) + ' ' + t('wins') + ' ' + won + ' ¥!', 'sys');
             logAction('🏆 ' + getPlayerName(pid) + ' +' + won);
           }
@@ -2269,6 +2288,200 @@ const App = (() => {
     if (pb) pb.innerHTML = cardHtml(c1,'md') + cardHtml(c2,'md');
   }
 
+
+
+  // ═══════════════════════════════════════════════════════════
+  // ANIMATIONS — Distribution, jetons, stats
+  // ═══════════════════════════════════════════════════════════
+
+  // ── Distribution des cartes ──
+  function animateCardDeal() {
+    if (!_lastPixPos.length) return;
+    var cx = _potCenter.x, cy = _potCenter.y;
+    if (!cx) return;
+    var n = _lastPixPos.length; // nombre de joueurs
+    var delay = 0;
+    var STEP = 180; // ms entre chaque carte
+    // 2 cartes par joueur, dealer en premier
+    for (var card = 0; card < 2; card++) {
+      for (var i = 0; i < n; i++) {
+        (function(pos, d, isMe) {
+          setTimeout(function() {
+            var el = document.createElement('div');
+            el.className = 'fly-card' + (isMe ? ' mine' : '');
+            el.style.left = (cx - 13) + 'px';
+            el.style.top  = (cy - 18) + 'px';
+            el.style.transform = 'rotate(' + (Math.random()*16-8) + 'deg) scale(0.7)';
+            el.style.opacity = '1';
+            document.body.appendChild(el);
+            requestAnimationFrame(function() {
+              el.style.left = (pos.left - 13) + 'px';
+              el.style.top  = (pos.top  - 18) + 'px';
+              el.style.transform = 'rotate(0deg) scale(1)';
+            });
+            setTimeout(function() {
+              el.style.opacity = '0';
+              setTimeout(function() { el.remove(); }, 200);
+            }, 380);
+          }, d);
+        })(_lastPixPos[i], delay, _lastPixPos[i] === _lastPixPos[0]);
+        delay += STEP;
+      }
+    }
+  }
+
+  // ── Jeton qui glisse vers le pot ──
+  function animateChipToPot(pid, amount) {
+    var myIdx = seats.indexOf(myId);
+    var rotated2 = myIdx >= 0 ? seats.slice(myIdx).concat(seats.slice(0,myIdx)) : seats;
+    var seatIdx = rotated2.indexOf(pid);
+    if (seatIdx < 0 || !_lastPixPos[seatIdx]) return;
+    var from = _lastPixPos[seatIdx];
+    var to   = _potCenter;
+    if (!to.x) return;
+    var el = document.createElement('div');
+    el.className = 'fly-chip';
+    el.textContent = amount > 999 ? (amount/1000).toFixed(1)+'k' : amount;
+    el.style.left = (from.left - 10) + 'px';
+    el.style.top  = (from.top  - 10) + 'px';
+    document.body.appendChild(el);
+    requestAnimationFrame(function() {
+      el.style.left = (to.x - 10) + 'px';
+      el.style.top  = (to.y - 10) + 'px';
+      el.style.transform = 'scale(0.5)';
+      el.style.opacity = '0';
+    });
+    setTimeout(function() { el.remove(); }, 600);
+  }
+
+  // ── Flip 3D des cartes communes ──
+  function flipCommCards(startIdx, endIdx) {
+    var els = document.querySelectorAll('#g-comm .pk');
+    for (var i = startIdx; i <= endIdx && i < els.length; i++) {
+      (function(el2, delay) {
+        setTimeout(function() {
+          el2.classList.remove('flip-reveal');
+          void el2.offsetWidth; // force reflow
+          el2.classList.add('flip-reveal');
+        }, delay);
+      })(els[i], (i - startIdx) * 120);
+    }
+  }
+
+  // ── Panneau statistiques ──
+  var _statsOpen = false;
+  function toggleStats() {
+    _statsOpen = !_statsOpen;
+    var el = document.getElementById('stats-overlay');
+    if (!el) {
+      el = document.createElement('div');
+      el.id = 'stats-overlay';
+      document.body.appendChild(el);
+    }
+    el.style.display = _statsOpen ? '' : 'none';
+    if (_statsOpen) renderStats();
+  }
+
+  function renderStats() {
+    var el = document.getElementById('stats-overlay');
+    if (!el) return;
+    var s = _stats;
+    var gain = s.totalGain;
+    var gainCls = gain > 0 ? 'pos' : gain < 0 ? 'neg' : '';
+    var wr = s.handsPlayed > 0 ? Math.round(s.handsWon/s.handsPlayed*100) : 0;
+    var hist = s.history.slice().reverse().slice(0,5);
+    var histHtml = hist.length ? hist.map(function(h2) {
+      var dcls = h2.delta > 0 ? 'pos' : h2.delta < 0 ? 'neg' : '';
+      return '<div class="hand-hist-item">'
+        + '<div style="display:flex;justify-content:space-between">'
+        + '<span style="color:var(--gold-dim);font-size:0.55rem">Main #'+h2.num+'</span>'
+        + '<span class="hand-hist-result '+dcls+'">'+(h2.delta>0?'+':'')+h2.delta+' ¥</span>'
+        + '</div>'
+        + '<div class="hand-hist-cards">'
+        + (h2.cards ? h2.cards.map(function(c){ return '<span style="background:#fff;color:'+(c.red?'#c0392b':'#111')+';border-radius:2px;padding:1px 3px;font-size:0.6rem;font-weight:700">'+c.r+c.s+'</span>'; }).join('') : '')
+        + '</div>'
+        + '</div>';
+    }).join('') : '<div style="color:var(--text);font-size:0.62rem">Aucune main jouée</div>';
+
+    el.innerHTML = '<div class="stats-header">'
+      + '<span>📊 Session</span>'
+      + '<button onclick="toggleStats()" style="background:none;border:none;color:var(--text);cursor:pointer;font-size:0.9rem">✕</button>'
+      + '</div>'
+      + '<div class="stats-body">'
+      + '<div class="stat-row"><span class="stat-label">Mains jouées</span><span class="stat-val">'+s.handsPlayed+'</span></div>'
+      + '<div class="stat-row"><span class="stat-label">Victoires</span><span class="stat-val pos">'+s.handsWon+'</span></div>'
+      + '<div class="stat-row"><span class="stat-label">Taux de victoire</span><span class="stat-val">'+wr+'%</span></div>'
+      + '<hr class="stat-divider">'
+      + '<div class="stat-row"><span class="stat-label">Gain/Perte net</span><span class="stat-val '+gainCls+'">'+(gain>0?'+':'')+gain+' ¥</span></div>'
+      + '<div class="stat-row"><span class="stat-label">Meilleur gain</span><span class="stat-val pos">+'+s.bigWin+' ¥</span></div>'
+      + '<div class="stat-row"><span class="stat-label">Pire perte</span><span class="stat-val neg">'+s.bigLoss+' ¥</span></div>'
+      + '<hr class="stat-divider">'
+      + '<div style="font-size:0.58rem;color:var(--gold-dim);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:4px">Dernières mains</div>'
+      + histHtml
+      + '</div>';
+  }
+
+  // Initialiser les stats au début d'une partie
+  function initStats(startMoney) {
+    if (_statsInited) return;
+    _stats.startMoney = startMoney;
+    _stats.peakMoney  = startMoney;
+    _statsInited = true;
+  }
+
+  // Enregistrer le résultat d'une main
+  function recordHand(won, delta, myCardsPair) {
+    _stats.handsPlayed++;
+    if (won) _stats.handsWon++;
+    _stats.totalGain += delta;
+    if (delta > _stats.bigWin) _stats.bigWin = delta;
+    if (delta < _stats.bigLoss) _stats.bigLoss = delta;
+    _stats.history.push({ num: handNum, delta: delta, won: won,
+      cards: myCardsPair });
+    if (_stats.history.length > 20) _stats.history.shift();
+    if (_statsOpen) renderStats();
+  }
+
+  // ── Probabilité de gain (Monte Carlo simplifié) ──
+  function calcWinProb() {
+    if (!myCards[0] || !myCards[1]) return -1;
+    var comm = commCards.filter(function(c){ return c != null; });
+    if (comm.length < 3) return -1; // seulement après le flop
+    var known = [myCards[0], myCards[1]].concat(comm);
+    // Deck restant
+    var deck = [];
+    for (var i = 0; i < 52; i++) { if (known.indexOf(i) < 0) deck.push(i); }
+    var needed = 5 - comm.length;
+    var nOpp = Math.max(1, seats.filter(function(p){ return p !== myId && seatData[p] && !seatData[p].folded; }).length);
+    var wins = 0, total = 200;
+    for (var t = 0; t < total; t++) {
+      // Shuffle deck (Fisher-Yates partiel)
+      var d = deck.slice();
+      for (var i2 = d.length-1; i2 > 0; i2--) {
+        var j = Math.floor(Math.random()*(i2+1));
+        var tmp = d[i2]; d[i2] = d[j]; d[j] = tmp;
+      }
+      // Cartes communes restantes
+      var extraComm = d.slice(0, needed);
+      var fullComm = comm.concat(extraComm);
+      var pos = needed;
+      // Évaluer ma main
+      var myScore = evaluateBestHand([myCards[0], myCards[1]], fullComm);
+      // Évaluer les adversaires
+      var iWin = true;
+      for (var o = 0; o < nOpp; o++) {
+        var oc1 = d[pos++], oc2 = d[pos++];
+        if (oc1 === undefined || oc2 === undefined) { iWin = false; break; }
+        var oppScore = evaluateBestHand([oc1, oc2], fullComm);
+        if (oppScore && myScore && oppScore.rank > myScore.rank) { iWin = false; break; }
+        if (oppScore && myScore && oppScore.rank === myScore.rank) {
+          if ((oppScore.high||0) > (myScore.high||0)) { iWin = false; break; }
+        }
+      }
+      if (iWin) wins++;
+    }
+    return Math.round(wins / total * 100);
+  }
 
   // ─── Force de la main ───
   function renderPreFlopStrength() {
@@ -2628,7 +2841,10 @@ const App = (() => {
       h += '</div>';
     });
     el.innerHTML = h;
-    // Double appel pour garantir que les dimensions sont calculées
+    _lastPixPos = pixPos;
+    var _ov2 = document.querySelector('.felt-oval');
+    if (_ov2) { var _or2 = _ov2.getBoundingClientRect();
+      _potCenter = { x: _or2.left + _or2.width/2, y: _or2.top + _or2.height/2 }; }
     requestAnimationFrame(function() {
       autoScaleTable();
       setTimeout(autoScaleTable, 150);
@@ -2681,6 +2897,7 @@ const App = (() => {
   });
   // Exposer pour les fonctions globales (avatar, etc.)
   window._renderSeats = function() { if (seats.length) renderSeats(); };
+  window.toggleStats = toggleStats;
   window._broadcastMyAvatar = function(emoji) {
     if (ws && ws.readyState === WebSocket.OPEN && !directWS && myId) {
       ws.send('AVATAR:' + myId + ':' + (emoji || ''));
