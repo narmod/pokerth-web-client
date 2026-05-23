@@ -3142,14 +3142,14 @@ function dismissWinner() {
       } else if (mode === 'guest') {
         $('nick-label').textContent = t('enterNickGuest');
         $('nick').placeholder = 'Guest' + String(Math.floor(10000 + Math.random()*90000));
-        $('use-tls').checked = true;
+        $('use-tls').checked = false;
         if (proxyInput) proxyInput.value = proto + '//' + (autoHost||'localhost') + ':' + port;
         if (hostInput) hostInput.value = 'pokerth.net';
         setStatus('');
       } else {
         $('nick-label').textContent = t('enterAccount');
         $('nick').placeholder = 'MonCompte';
-        $('use-tls').checked = true;
+        $('use-tls').checked = false;
         if (proxyInput) proxyInput.value = proto + '//' + (autoHost||'localhost') + ':' + port;
         if (hostInput) hostInput.value = 'pokerth.net';
         setStatus(t('enterCredentials'));
