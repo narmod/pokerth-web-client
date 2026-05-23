@@ -686,6 +686,8 @@ body {
 
 /* Tablet */
 @media (max-width: 768px) {
+  .blind-chip  { width: 16px !important; height: 16px !important; top: -9px !important; left: -9px !important; }
+  .dealer-chip { width: 16px !important; height: 16px !important; top: -9px !important; right: -9px !important; }
   .seat-avatar { width: 28px; height: 28px; font-size: 0.7rem; }
   .seat-name,.seat-money,.seat-action-label,.seat-bet { font-size: 0.48rem; }
 .pill { font-size: 0.6rem; padding: 2px 5px; }
@@ -709,6 +711,9 @@ body {
   .pk { width: 28px; height: 40px; font-size: 0.68rem; }
   .pk.sm { width: 22px; height: 32px; font-size: 0.54rem; }
 
+  /* Chips : très excentrés pour éviter le chevauchement avec le timer */
+  .blind-chip  { width: 13px !important; height: 13px !important; top: -11px !important; left: -11px !important; }
+  .dealer-chip { width: 13px !important; height: 13px !important; top: -11px !important; right: -11px !important; }
   /* Seats: tiny for 10-player tables */
   .seat-avatar { width: 18px; height: 18px; font-size: 0.46rem; }
   .seat-name { font-size: 0.36rem; }
@@ -745,6 +750,8 @@ body {
 
 /* ── Phone LANDSCAPE (wide, short) ── */
 @media (max-height: 500px) and (orientation: landscape) {
+  .blind-chip  { width: 14px !important; height: 14px !important; top: -10px !important; left: -10px !important; }
+  .dealer-chip { width: 14px !important; height: 14px !important; top: -10px !important; right: -10px !important; }
   /* Oval: small, left side */
   .felt-oval::before {
   content: '';
@@ -1457,14 +1464,14 @@ body {
 .seat.active .seat-money { opacity: 0.35; transition: opacity 0.3s; }
 /* Dealer chip : rendu via SVG chipSvg() dans renderSeats */
 .dealer-chip {
-  position: absolute; top:-7px; right:-7px;
+  position: absolute; top:-8px; right:-8px;
   z-index: 3; pointer-events: none;
   filter: drop-shadow(0 2px 4px rgba(0,0,0,0.7));
   animation: chipPop 0.4s cubic-bezier(.17,.67,.35,1.45) both;
 }
 /* Badges SB / BB */
 .blind-chip {
-  position: absolute; top:-7px; left:-7px;
+  position: absolute; top:-8px; left:-8px;
   z-index: 4; pointer-events: none;
   filter: drop-shadow(0 2px 4px rgba(0,0,0,0.6));
   animation: chipPop 0.4s cubic-bezier(.17,.67,.35,1.45) both;
