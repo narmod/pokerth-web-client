@@ -41,6 +41,8 @@ function selectAvatarPopup(emoji) {
   if (trigger) { trigger.textContent = emoji || "\uD83C\uDFAD"; trigger.classList.toggle("has-avatar", !!emoji); }
   var p = document.getElementById("avatar-popup");
   if (p) p.style.display = "none";
+  // Rafraîchir immédiatement l'affichage
+  if (typeof window.refreshMyAvatar === "function") window.refreshMyAvatar();
 }
 </script>
 
