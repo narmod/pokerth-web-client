@@ -1491,37 +1491,16 @@ body {
   display: flex; align-items: center; justify-content: center;
 }
 /* Badges SB / BB */
-.blind-badge {
-  position: absolute; top:-4px; left:-4px;
-  border-radius: 50%; width: 13px; height: 13px;
-  font-size: 0.42rem; font-weight: 900;
-  display: flex; align-items: center; justify-content: center;
-  letter-spacing: -0.02em;
+.blind-chip {
+  position: absolute; top:-7px; left:-7px;
+  z-index: 4; pointer-events: none;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.6));
+  animation: chipPop 0.4s cubic-bezier(.17,.67,.35,1.45) both;
 }
-.blind-badge.sb { background: #2980b9; color: #fff; }
-.blind-badge.bb { background: #8e44ad; color: #fff; }
-/* Fold : grisé + croix discrète */
-/* Avatar bot — icône plus petite pour l'emoji */
-.seat-avatar.is-bot .seat-initial { font-size: 0.85em; line-height: 1; }
-.seat-avatar.is-human .seat-initial { font-size: 0.95em; }
-/* Badge type joueur (petit coin haut-droit pour les humains) */
-.seat-avatar .player-type-badge {
-  position: absolute;
-  bottom: -3px; right: -3px;
-  width: 11px; height: 11px;
-  border-radius: 50%;
-  font-size: 0.42rem;
-  display: flex; align-items: center; justify-content: center;
-  border: 1px solid rgba(0,0,0,0.3);
-  line-height: 1;
-  z-index: 2;
-}
-.seat-avatar .player-type-badge.badge-bot   { background: #2c3e50; color: #95a5a6; }
-.seat-avatar .player-type-badge.badge-human { background: #1a5276; color: #aed6f1; }
-
-.seat.folded .seat-avatar {
-  opacity: 0.35;
-  filter: grayscale(1) brightness(0.7);
+@keyframes chipPop {
+  0%   { transform: scale(0) rotate(-40deg); opacity: 0; }
+  65%  { transform: scale(1.25) rotate(8deg); opacity: 1; }
+  100% { transform: scale(1) rotate(0deg); opacity: 1; }
 }
 .seat.folded .seat-avatar::before {
   content: '✕';
@@ -4346,6 +4325,25 @@ const App = (() => {
     return layouts[n] || layouts[10].slice(0, n);
   }
 
+  // ─── Jeton de blind SVG (casino chip style) ───
+  function chipSvg(label, bg, fg, edge) {
+    var notches = '';
+    for (var i = 0; i < 8; i++) {
+      var rot = i * 45;
+      notches += '<rect x="13" y="0.5" width="6" height="7" rx="2" fill="white"'
+               + ' transform="rotate(' + rot + ' 16 16)" opacity="0.9"/>';
+    }
+    return '<svg class="blind-chip" viewBox="0 0 32 32" width="20" height="20" xmlns="http://www.w3.org/2000/svg">'
+      + '<circle cx="16" cy="16" r="15.5" fill="' + (edge||'#000') + '"/>'
+      + '<circle cx="16" cy="16" r="13" fill="' + bg + '"/>'
+      + notches
+      + '<circle cx="16" cy="16" r="9" fill="' + bg + '" stroke="rgba(255,255,255,0.7)" stroke-width="1.5"/>'
+      + '<text x="16" y="16.5" text-anchor="middle" dominant-baseline="central"'
+      + ' fill="' + fg + '" font-size="7" font-weight="900"'
+      + ' font-family="Arial Black,Arial,sans-serif">' + label + '</text>'
+      + '</svg>';
+  }
+
   function getPlayerName(pid) { return players[pid] || (pid === myId ? myName : '#'+pid); }
 
   // ══ TURN TIMER ══
@@ -4526,8 +4524,8 @@ const App = (() => {
       const isSB = pid === sbPid;
       const isBB = pid === bbPid;
       let blindBadge = '';
-      if (isSB) blindBadge = '<span class="blind-badge sb">SB</span>';
-      else if (isBB) blindBadge = '<span class="blind-badge bb">BB</span>';
+      if (isSB) blindBadge = chipSvg('SB','#1565c0','#fff','#0a3d7a');
+      else if (isBB) blindBadge = chipSvg('BB','#b71c1c','#fff','#6d0c0c');
       const timerSvg = isActive ? _timerSvg(_timerSec, _timerTot) : '';
       const avatarCls = 'seat-avatar' + (isActive ? ' timing' : '') + avatarType;
       // Couleur unique par joueur (basée sur pid)
