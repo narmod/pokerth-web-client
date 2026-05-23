@@ -1086,23 +1086,29 @@ body {
 }
 .react-grid {
   display: grid;
-  grid-template-columns: repeat(10, 1fr);
-  gap: 5px;
+  grid-template-columns: repeat(13, 1fr);
+  gap: 4px;
+}
+@media (max-width: 900px) {
+  .react-grid { grid-template-columns: repeat(9, 1fr); gap: 3px; }
 }
 @media (max-width: 600px) {
-  .react-grid { grid-template-columns: repeat(5, 1fr); }
+  .react-grid { grid-template-columns: repeat(6, 1fr); gap: 3px; }
 }
 .react-btn {
   aspect-ratio: 1;
   background: rgba(255,255,255,0.04);
   border: 1px solid var(--border);
-  border-radius: 8px;
-  font-size: 1.35rem;
+  border-radius: 6px;
+  font-size: 1rem;
   cursor: pointer;
   display: flex; align-items: center; justify-content: center;
   transition: transform 0.12s ease, background 0.12s, border-color 0.12s;
   position: relative;
-  padding: 0;
+  padding: 2px;
+}
+@media (max-width: 600px) {
+  .react-btn { font-size: 0.9rem; border-radius: 5px; }
 }
 .react-btn:hover {
   background: rgba(200,168,74,0.15);
@@ -5503,6 +5509,11 @@ function toggleLog() {
         <button class="react-btn" onclick="App.sendReaction('🙌')" title="🙌">🙌<span class="rc" id="rcp-17"></span></button>
         <button class="react-btn" onclick="App.sendReaction('🤦')" title="🤦">🤦<span class="rc" id="rcp-18"></span></button>
         <button class="react-btn" onclick="App.sendReaction('😴')" title="😴">😴<span class="rc" id="rcp-19"></span></button>
+        <button class="react-btn" onclick="App.sendReaction('🤑')" title="🤑">🤑<span class="rc" id="rcp-20"></span></button>
+        <button class="react-btn" onclick="App.sendReaction('💀')" title="💀">💀<span class="rc" id="rcp-21"></span></button>
+        <button class="react-btn" onclick="App.sendReaction('👀')" title="👀">👀<span class="rc" id="rcp-22"></span></button>
+        <button class="react-btn" onclick="App.sendReaction('😬')" title="😬">😬<span class="rc" id="rcp-23"></span></button>
+        <button class="react-btn" onclick="App.sendReaction('🥳')" title="🥳">🥳<span class="rc" id="rcp-24"></span></button>
     </div>
   </div>
   <div id="g-winner-overlay" class="winner-overlay" style="display:none" onclick="App.dismissWinner()"></div>
