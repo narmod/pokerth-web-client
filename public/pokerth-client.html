@@ -43,6 +43,10 @@ function selectAvatarPopup(emoji) {
   if (p) p.style.display = "none";
   // Rafraîchir immédiatement l'affichage
   if (typeof window.refreshMyAvatar === "function") window.refreshMyAvatar();
+  // Mettre à jour le siège autour de la table
+  if (typeof window._renderSeats === "function") window._renderSeats();
+  // Diffuser aux autres joueurs
+  if (typeof window._broadcastMyAvatar === "function") window._broadcastMyAvatar(emoji);
 }
 </script>
 
