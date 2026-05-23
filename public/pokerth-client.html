@@ -3328,12 +3328,16 @@ const App = (() => {
         const text = Proto.str(sub, 4);
         const who  = players[pid] || (pid ? `#${pid}` : null);
         const cls  = ctype === 3 ? 'bc' : pid === myId ? 'mine' : '';
-        // Intercepter les réactions (préfixe 🎯)
-        if (text && text.startsWith('\uD83C\uDFAF') && text.length <= 4 && pid !== myId) {
-          const emoji = text.slice(2);
-          handleIncomingReaction(pid, emoji);
-          // Afficher aussi dans le chat avec style dédié
-          addGameChat(who, emoji, 'reaction');
+        // Logging de tous les messages chat (debug réactions)
+        console.log('[Chat] pid=' + pid + ' ctype=' + ctype + ' text=' + JSON.stringify(text));
+        // Intercepter les réactions (préfixe ASCII [R])
+        if (text && text.startsWith('[R]') && text.length < 12) {
+          var reactEmoji = text.slice(3);
+          console.log('[Reaction] reçue de pid=' + pid + ' emoji=' + reactEmoji);
+          if (pid !== myId) {
+            handleIncomingReaction(pid, reactEmoji);
+            addGameChat(who, reactEmoji + ' (réaction)', 'reaction');
+          }
         } else {
           addChat(who, text, cls);
         }
@@ -4715,7 +4719,9 @@ function dismissWinner() {
     sendReaction(emoji) {
       if (!ws || !gId) return;
       _lastMsgWasReaction = true;
-      var msg = '\uD83C\uDFAF' + emoji; // 🎯 + emoji
+      // Préfixe ASCII [R] — plus robuste que emoji pour le transport protobuf
+      var msg = '[R]' + emoji;
+      console.log('[Reaction] envoi:', msg, 'gId:', gId);
       send(MSG.buildChat(msg, gId || 0));
       // Afficher immédiatement pour moi
       handleIncomingReaction(myId, emoji);
