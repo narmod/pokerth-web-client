@@ -4343,6 +4343,23 @@ const App = (() => {
       + '</svg>';
   }
 
+  function dealerChipSvg() {
+    var notches = '';
+    for (var i = 0; i < 8; i++) {
+      notches += '<rect x="13" y="0.5" width="6" height="7" rx="2" fill="#c8a850"'
+               + ' transform="rotate(' + (i*45) + ' 16 16)" opacity="0.9"/>';
+    }
+    return '<svg class="dealer-chip" viewBox="0 0 32 32" width="20" height="20" xmlns="http://www.w3.org/2000/svg">'
+      + '<circle cx="16" cy="16" r="15.5" fill="#3d2b00"/>'
+      + '<circle cx="16" cy="16" r="13" fill="#1a1a1a"/>'
+      + notches
+      + '<circle cx="16" cy="16" r="9" fill="#1a1a1a" stroke="#c8a850" stroke-width="1.5"/>'
+      + '<text x="16" y="16.5" text-anchor="middle" dominant-baseline="central"'
+      + ' fill="#ffd700" font-size="9" font-weight="900"'
+      + ' font-family="Arial Black,Arial,sans-serif">D</text>'
+      + '</svg>';
+  }
+
   function getPlayerName(pid) { return players[pid] || (pid === myId ? myName : '#'+pid); }
 
   // ══ TURN TIMER ══
@@ -4542,10 +4559,12 @@ const App = (() => {
       const avatarStyle = aColor
         ? 'position:relative;background:' + aColor.bg + ';border-color:' + aColor.border + ';color:' + aColor.text + ';box-shadow:0 0 0 2px ' + aColor.border + '44'
         : 'position:relative';
+      const dealerChip = isDealer ? dealerChipSvg() : '';
       h += '<div class="' + avatarCls + '" style="' + avatarStyle + '">'
         + '<span class="seat-initial">' + initial + '</span>'
         + timerSvg
         + blindBadge
+        + dealerChip
         + typeBadge
         + '</div>';
       h += '<div class="seat-name">' + esc(isMe ? myName : getPlayerName(pid)) + '</div>';
