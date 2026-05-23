@@ -145,6 +145,25 @@ console.log('\nEn attente...\n');
 // Ensemble de tous les clients connectés (pour relais réactions)
 const _allClients = new Set();
 
+// ── File d'attente pour espacer les connexions TCP vers PokerTH ──
+// Évite le blocage IP quand plusieurs utilisateurs se connectent
+// via le même proxy en rafale
+const _connQueue  = [];       // file des connexions en attente
+let   _lastConnAt = 0;        // timestamp de la dernière connexion TCP ouverte
+const MIN_CONN_GAP = 2500;    // ms minimum entre deux connexions au même serveur
+
+function _scheduleConn(fn) {
+  const now  = Date.now();
+  const wait = Math.max(0, (_lastConnAt + MIN_CONN_GAP) - now);
+  if (wait === 0) {
+    _lastConnAt = now;
+    fn();
+  } else {
+    console.log('[>] Connexion différée de ' + wait + 'ms (anti-blocage IP)');
+    setTimeout(() => { _lastConnAt = Date.now(); fn(); }, wait);
+  }
+}
+
 wss.on('connection', (ws, req) => {
   const params = new URLSearchParams(url.parse(req.url).query);
   const host   = params.get('host') || 'pokerth.net';
@@ -156,6 +175,7 @@ wss.on('connection', (ws, req) => {
 
   let sock, connected = false, rxBuf = Buffer.alloc(0), n = 0;
 
+  _scheduleConn(() => {
   dns.lookup(host, { family: 4 }, (err, addr) => {
     addr = err ? host : addr;
     const isIp = /^\d+\.\d+\.\d+\.\d+$/.test(addr);
@@ -209,6 +229,8 @@ wss.on('connection', (ws, req) => {
       console.log('[-] Serveur ferme (' + n + ' msg recus)');
       setTimeout(() => { try { ws.close(); } catch (_) {} }, 300);
     });
+
+  }); // fin _scheduleConn
 
     // Enregistrer ce client pour le relais
   _allClients.add(ws);
