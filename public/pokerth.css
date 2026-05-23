@@ -1066,29 +1066,32 @@ body {
 }
 .react-grid {
   display: grid;
-  grid-template-columns: repeat(13, 1fr);
-  gap: 4px;
+  grid-template-columns: repeat(13, 36px); /* 13 colonnes de 36px */
+  gap: 3px;
+  justify-content: center;
 }
 @media (max-width: 900px) {
-  .react-grid { grid-template-columns: repeat(9, 1fr); gap: 3px; }
+  .react-grid { grid-template-columns: repeat(9, 36px); }
 }
 @media (max-width: 600px) {
-  .react-grid { grid-template-columns: repeat(6, 1fr); gap: 3px; }
+  .react-grid { grid-template-columns: repeat(6, 32px); }
 }
 .react-btn {
   aspect-ratio: 1;
   background: rgba(255,255,255,0.04);
   border: 1px solid var(--border);
-  border-radius: 6px;
-  font-size: 1rem;
+  border-radius: 5px;
+  font-size: 1.3rem;   /* emoji plus grand */
   cursor: pointer;
   display: flex; align-items: center; justify-content: center;
   transition: transform 0.12s ease, background 0.12s, border-color 0.12s;
   position: relative;
-  padding: 2px;
+  padding: 0;          /* pas de padding → cellule compacte */
+  width: 36px;         /* taille fixe petite */
+  height: 36px;
 }
 @media (max-width: 600px) {
-  .react-btn { font-size: 0.9rem; border-radius: 5px; }
+  .react-btn { font-size: 1.1rem; width: 32px; height: 32px; }
 }
 .react-btn:hover {
   background: rgba(200,168,74,0.15);
