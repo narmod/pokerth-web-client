@@ -877,6 +877,16 @@ body {
   font-size: 0.48rem; font-weight: 900;
   display: flex; align-items: center; justify-content: center;
 }
+/* Badges SB / BB */
+.blind-badge {
+  position: absolute; top:-4px; left:-4px;
+  border-radius: 50%; width: 13px; height: 13px;
+  font-size: 0.42rem; font-weight: 900;
+  display: flex; align-items: center; justify-content: center;
+  letter-spacing: -0.02em;
+}
+.blind-badge.sb { background: #2980b9; color: #fff; }
+.blind-badge.bb { background: #8e44ad; color: #fff; }
 .seat.folded .seat-avatar { opacity: 0.4; filter: grayscale(1); }
 .seat.me .seat-avatar { border-color: var(--green); }
 
@@ -2886,10 +2896,20 @@ const App = (() => {
     const pbAct  = document.getElementById('g-myseat-action');
     const pbBar  = document.querySelector('.player-bar');
     if (pbAv)   pbAv.textContent   = myName.charAt(0).toUpperCase();
-    if (pbName) pbName.textContent = myName + (myId === dealerPid ? ' 🎴D' : '');
+    const myBlind = myId === sbPid ? ' 🔵SB' : (myId === bbPid ? ' 🟣BB' : '');
+    if (pbName) pbName.textContent = myName + (myId === dealerPid ? ' 🎴D' : '') + myBlind;
     if (pbMon)  pbMon.textContent  = mySd.money != null ? mySd.money + ' ¥' : '—';
     if (pbAct)  pbAct.textContent  = mySd.action || '';
     if (pbBar)  pbBar.classList.toggle('pb-active', myId === turnPid);
+    // ── Calcul SB / BB à partir du dealer ──
+    // Ordre des seats (original, non rotaté) pour trouver les positions
+    const dealerIdx = seats.indexOf(dealerPid);
+    const sbPid = dealerIdx >= 0 && seats.length > 1
+      ? seats[(dealerIdx + 1) % seats.length] : -1;
+    const bbPid = dealerIdx >= 0 && seats.length > 2
+      ? seats[(dealerIdx + 2) % seats.length]
+      : (seats.length === 2 ? seats[dealerIdx] : -1); // heads-up: dealer = SB
+
     let h = '';
     rotated.forEach((pid, i) => {
       const px = pixPos[i];
@@ -2909,7 +2929,16 @@ const App = (() => {
           + cardHtml(sd.card1,'xsm') + cardHtml(sd.card2,'xsm') + '</div>';
       }
       h += '<div class="' + cls + '" style="position:absolute;top:' + px.top.toFixed(1) + 'px;left:' + px.left.toFixed(1) + 'px;transform:translate(-50%,-50%)">';
-      h += '<div class="seat-avatar" style="position:relative">' + initial + (isActive ? _timerSvg(_timerSec, _timerTot) : '') + '</div>';
+      const isSB = pid === sbPid;
+      const isBB = pid === bbPid;
+      let blindBadge = '';
+      if (isSB) blindBadge = '<span class="blind-badge sb">SB</span>';
+      else if (isBB) blindBadge = '<span class="blind-badge bb">BB</span>';
+      h += '<div class="seat-avatar" style="position:relative">'
+        + initial
+        + (isActive ? _timerSvg(_timerSec, _timerTot) : '')
+        + blindBadge
+        + '</div>';
       h += '<div class="seat-name">' + esc(isMe ? myName : getPlayerName(pid)) + (isDealer ? ' 🎴' : '') + '</div>';
       h += '<div class="seat-money">' + moneyStr + '</div>';
       if (sd.bet) h += '<div class="seat-bet">' + sd.bet + '</div>';
