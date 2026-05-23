@@ -861,14 +861,30 @@ body {
 /* Countdown arc around active seat avatar */
 .seat-timer {
   position: absolute;
-  width: 140%; height: 140%;
-  top: -20%; left: -20%;
+  width: 160%; height: 160%;
+  top: -30%; left: -30%;
   pointer-events: none;
   overflow: visible;
+  z-index: 2;
 }
-.seat-timer circle.bg { fill:none; stroke:rgba(255,255,255,0.1); stroke-width:3; }
-.seat-timer circle.arc { fill:none; stroke-width:3; stroke-linecap:round; }
-.seat-timer text { font-size:9px; fill:var(--gold); text-anchor:middle; dominant-baseline:middle; font-family:monospace; font-weight:700; }
+.seat-timer circle.bg  { fill:none; stroke:rgba(0,0,0,0.45); stroke-width:4.5; }
+.seat-timer circle.arc { fill:none; stroke-width:4; stroke-linecap:round; }
+/* Fond opaque derrière le chiffre */
+.seat-timer circle.center-bg {
+  fill: rgba(0,0,0,0.72);
+  stroke: none;
+}
+.seat-timer text {
+  font-size: 10px;
+  font-family: monospace;
+  font-weight: 900;
+  text-anchor: middle;
+  dominant-baseline: middle;
+}
+/* Quand le timer tourne : cacher l'initiale, estomper nom+stack */
+.seat-avatar.timing > .seat-initial { display: none; }
+.seat.active .seat-name,
+.seat.active .seat-money { opacity: 0.35; transition: opacity 0.3s; }
 .seat.dealer .seat-avatar::after {
   content: 'D';
   position: absolute; top:-4px; right:-4px;
@@ -2791,21 +2807,29 @@ const App = (() => {
 
   // ══ TURN TIMER ══
   function _timerSvg(secs, total) {
-    var r = 22, cx = 25, cy = 25;
+    var r = 20, cx = 25, cy = 25;
     var circ = 2 * Math.PI * r;
     var frac = Math.max(0, secs / (total || 30));
-    var offset = circ * (1 - frac);
+    var offset = (circ * (1 - frac)).toFixed(1);
     var urgent = secs <= 8;
-    var col = urgent ? '#e74c3c' : 'gold';
+    var col = urgent ? '#e74c3c' : '#f0c040';
+    // Arc dessiné dans le sens des aiguilles d'une montre (rotation -90°)
     return '<svg class="seat-timer" viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg"'
-      + ' style="transform:rotate(-90deg)">'
+      + ' style="transform:rotate(-90deg);overflow:visible">'
+      // Fond de piste (anneau gris foncé)
       + '<circle class="bg" cx="'+cx+'" cy="'+cy+'" r="'+r+'"/>'
+      // Arc de progression
       + '<circle class="arc" cx="'+cx+'" cy="'+cy+'" r="'+r+'"'
       + ' stroke="'+col+'"'
       + ' stroke-dasharray="'+circ.toFixed(1)+'"'
-      + ' stroke-dashoffset="'+offset.toFixed(1)+'"/>'
-      + '<text x="'+cx+'" y="'+cy+'" style="transform:rotate(90deg) translate(0,-50px);font-size:9px;fill:'+col+';text-anchor:middle;dominant-baseline:middle;font-family:monospace;font-weight:700">'
-      + (secs > 0 ? secs+'s' : '') + '</text>'
+      + ' stroke-dashoffset="'+offset+'"/>'
+      // Disque central opaque (masque l'initiale en dessous)
+      + '<circle class="center-bg" cx="'+cx+'" cy="'+cy+'" r="13"/>'
+      // Chiffre : contre-rotation pour rester droit
+      + '<text x="'+cx+'" y="'+cy+'"'
+      + ' fill="'+col+'"'
+      + ' style="transform:rotate(90deg) translate(0px,-50px);font-size:11px;font-family:monospace;font-weight:900;text-anchor:middle;dominant-baseline:middle">'
+      + (secs > 0 ? secs : '') + '</text>'
       + '</svg>';
   }
 
@@ -2813,7 +2837,7 @@ const App = (() => {
     _timerSec = Math.max(0, _timerSec - 1);
     // Update SVG arcs in place — no full re-render
     var urgent = _timerSec <= 8;
-    var col = urgent ? '#e74c3c' : 'gold';
+    var col = urgent ? '#e74c3c' : '#f0c040';
     var r = 22, circ = 2 * Math.PI * r;
     var offset = (circ * (1 - _timerSec / (_timerTot || 30))).toFixed(1);
     document.querySelectorAll('.seat-timer .arc').forEach(function(el) {
@@ -2934,9 +2958,11 @@ const App = (() => {
       let blindBadge = '';
       if (isSB) blindBadge = '<span class="blind-badge sb">SB</span>';
       else if (isBB) blindBadge = '<span class="blind-badge bb">BB</span>';
-      h += '<div class="seat-avatar" style="position:relative">'
-        + initial
-        + (isActive ? _timerSvg(_timerSec, _timerTot) : '')
+      const timerSvg = isActive ? _timerSvg(_timerSec, _timerTot) : '';
+      const avatarCls = 'seat-avatar' + (isActive ? ' timing' : '');
+      h += '<div class="' + avatarCls + '" style="position:relative">'
+        + '<span class="seat-initial">' + initial + '</span>'
+        + timerSvg
         + blindBadge
         + '</div>';
       h += '<div class="seat-name">' + esc(isMe ? myName : getPlayerName(pid)) + (isDealer ? ' 🎴' : '') + '</div>';
