@@ -806,8 +806,13 @@ body {
   .action-grid { flex-direction: row !important; flex-wrap: wrap; gap: 3px; max-width: 100%; }
   .action-top-row { flex: none; display: flex; gap: 3px; }
   .action-top-row .btn-action { padding: 6px 10px; font-size: 0.68rem; }
-  .pct-row { flex: none; gap: 3px; }
-  .btn-pct { padding: 5px 7px; font-size: 0.64rem; }
+  .pct-row { flex: none; gap: 4px; }
+  .btn-pct {
+    padding: 9px 6px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    border-width: 1.5px;
+  }
   .raise-row { flex: none; gap: 3px; }
   .raise-input { width: 52px; padding: 5px 4px; font-size: 0.68rem; }
   .btn-action { padding: 6px 10px; font-size: 0.68rem; }
@@ -4293,7 +4298,14 @@ const App = (() => {
   }
   function setPct(v) {
     const el = document.getElementById('raise-amt');
-    if (el) { el.value = v; el.focus(); }
+    if (!el) return;
+    el.value = v;
+    if (window.innerWidth < 640) {
+      // Mobile : appliquer directement, pas de clavier
+      App.doRaise();
+    } else {
+      el.focus(); // Desktop : focus pour permettre l'ajustement
+    }
   }
   window.setPct = setPct;
   // Exposer pour les animations (accès depuis fonctions globales)
@@ -4332,7 +4344,8 @@ const App = (() => {
       +   '<button class="btn-pct"' + da + ' onclick="setPct(' + p100 + ')">100%</button>'
       + '</div>'
       + '<div class="raise-row">'
-      +   '<input class="raise-input" id="raise-amt" type="number" min="' + minBet + '" max="' + myMoney + '" value="' + minBet + '"' + da + '>'
+      +   '<input class="raise-input" id="raise-amt" type="number" min="' + minBet + '" max="' + myMoney + '" value="' + minBet + '"' + da
+      +   (window.innerWidth < 640 ? ' readonly style="cursor:default;opacity:0.7"' : '') + '>'
       +   '<button class="btn-action btn-raise raise-btn"' + da + ' onclick="App.doRaise()">' + raiseLabel + '</button>'
       + '</div>'
       + '<button class="btn-action btn-allin" onclick="App.doAction(6,' + myMoney + ')">All-In <b>' + myMoney + '</b></button>'
