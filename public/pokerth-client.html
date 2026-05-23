@@ -1482,13 +1482,12 @@ body {
 .seat-avatar.timing > .seat-initial { display: none; }
 .seat.active .seat-name,
 .seat.active .seat-money { opacity: 0.35; transition: opacity 0.3s; }
-.seat.dealer .seat-avatar::after {
-  content: 'D';
-  position: absolute; top:-4px; right:-4px;
-  background: var(--gold); color: #110900;
-  border-radius: 50%; width: 13px; height: 13px;
-  font-size: 0.48rem; font-weight: 900;
-  display: flex; align-items: center; justify-content: center;
+/* Dealer chip : rendu via SVG chipSvg() dans renderSeats */
+.dealer-chip {
+  position: absolute; top:-7px; right:-7px;
+  z-index: 3; pointer-events: none;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.7));
+  animation: chipPop 0.4s cubic-bezier(.17,.67,.35,1.45) both;
 }
 /* Badges SB / BB */
 .blind-chip {
@@ -4498,10 +4497,7 @@ const App = (() => {
     const myBlindChip = myId === sbPid
       ? chipSvg('SB','#1565c0','#fff','#0a3d7a')
       : (myId === bbPid ? chipSvg('BB','#b71c1c','#fff','#6d0c0c') : '');
-    const myDealerBadge = myId === dealerPid
-      ? '<span style="display:inline-flex;align-items:center;justify-content:center;'
-        + 'width:14px;height:14px;border-radius:50%;background:var(--gold);'
-        + 'color:#110900;font-size:0.45rem;font-weight:900;margin-left:3px">D</span>' : '';
+    const myDealerBadge = myId === dealerPid ? dealerChipSvg().replace('class="dealer-chip"','style="filter:drop-shadow(0 1px 3px rgba(0,0,0,0.5));vertical-align:middle"') : '';
     if (pbName) {
       pbName.textContent = myName;
       // Ajouter les badges après le texte via innerHTML (chips SVG + D badge)
@@ -4552,7 +4548,7 @@ const App = (() => {
         + blindBadge
         + typeBadge
         + '</div>';
-      h += '<div class="seat-name">' + esc(isMe ? myName : getPlayerName(pid)) + (isDealer ? ' 🎴' : '') + '</div>';
+      h += '<div class="seat-name">' + esc(isMe ? myName : getPlayerName(pid)) + '</div>';
       h += '<div class="seat-money">' + moneyStr + '</div>';
       if (sd.bet) h += '<div class="seat-bet">' + sd.bet + '</div>';
       if (sd.action) h += '<div class="seat-action-label">' + esc(sd.action) + '</div>';
