@@ -594,14 +594,14 @@ function showKeyHint(text) {
 }
 
 
-function toggleAvatarPopup() {
+window.toggleAvatarPopup = function() {
   var popup = document.getElementById('avatar-popup');
   if (!popup) return;
   var open = popup.style.display === 'none' || popup.style.display === '';
   popup.style.display = open ? 'block' : 'none';
-}
+};
 
-function selectAvatarPopup(emoji) {
+window.selectAvatarPopup = function selectAvatarPopup(emoji) {
   // Sauvegarder
   try { localStorage.setItem('pth_avatar', emoji); } catch(e) {}
   // Mettre à jour les boutons du popup
