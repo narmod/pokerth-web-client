@@ -1277,7 +1277,8 @@ const App = (() => {
   let smallBlind = 10;  // small blind value
   let handNum   = 0;   // hand counter
   let gameState = 0;   // preflop/flop/turn/river
-  let seats     = [];  // player IDs in seat order (from GameStartInitial)
+  let seats     = [];  // player IDs in seat order (from GameStartInitial) — figé après 1ère main
+  let _seatsFixed = false; // true une fois l'ordre figé
   let seatData  = {};  // {pid: {money, bet, action, active, folded}}
   let myCards   = [null, null];
   let commCards = [];
@@ -2415,9 +2416,13 @@ const App = (() => {
   function renderSeats() {
     const el = $('g-seats');
     if (!seats.length) { el.innerHTML = ''; return; }
-    const n = seats.length;
-    const myIdx = seats.indexOf(myId);
-    const rotated = myIdx >= 0 ? [...seats.slice(myIdx), ...seats.slice(0, myIdx)] : seats;
+    // Filtrer les joueurs actifs (ceux qui jouent cette main)
+    const activeSeats = seats.filter(function(pid) {
+      return !seatData[pid] || seatData[pid].active !== false;
+    });
+    const n = activeSeats.length;
+    const myIdx = activeSeats.indexOf(myId);
+    const rotated = myIdx >= 0 ? [...activeSeats.slice(myIdx), ...activeSeats.slice(0, myIdx)] : activeSeats;
     // Position seats using actual pixel coords from getBoundingClientRect
     const oval = document.querySelector('.felt-oval');
     const zone = document.getElementById('g-table-zone');
@@ -2990,6 +2995,7 @@ function dismissWinner() {
       if (ws && gId) { try { send(MSG.buildLeaveGame(gId)); } catch(e) {} }
       amInGame = false; amGameAdmin = false;
       gId = 0; seats = []; seatData = {};
+      _seatsFixed = false; // permettre le gel sur la prochaine partie
       myCards = [null,null]; commCards = [];
       stopTurnTimer();
       dismissWinner();
