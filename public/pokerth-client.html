@@ -32,28 +32,6 @@
 function toggleStats() {
   if (typeof window._toggleStats === "function") window._toggleStats();
 }
-
-function toggleAvatarPopup() {
-  var p = document.getElementById("avatar-popup");
-  if (!p) return;
-  p.style.display = (p.style.display === "none" || !p.style.display) ? "block" : "none";
-}
-function selectAvatarPopup(emoji) {
-  try { localStorage.setItem("pth_avatar", emoji); } catch(e) {}
-  document.querySelectorAll(".avp-btn").forEach(function(b) {
-    b.classList.toggle("selected", b.dataset.av === emoji);
-  });
-  var trigger = document.getElementById("av-trigger");
-  if (trigger) { trigger.textContent = emoji || "\uD83C\uDFAD"; trigger.classList.toggle("has-avatar", !!emoji); }
-  var p = document.getElementById("avatar-popup");
-  if (p) p.style.display = "none";
-  // Rafraîchir immédiatement l'affichage
-  if (typeof window.refreshMyAvatar === "function") window.refreshMyAvatar();
-  // Mettre à jour le siège autour de la table
-  if (typeof window._renderSeats === "function") window._renderSeats();
-  // Diffuser aux autres joueurs
-  if (typeof window._broadcastMyAvatar === "function") window._broadcastMyAvatar(emoji);
-}
 </script>
 
 <script>
