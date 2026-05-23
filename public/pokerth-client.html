@@ -2307,6 +2307,74 @@ function getAvatarColor(pid) {
   return AVATAR_PALETTE[Math.abs(pid || 0) % AVATAR_PALETTE.length];
 }
 
+
+// ═══════════════════════════════════════════════════════════
+// RACCOURCIS CLAVIER
+// F=Fold  C/Space=Call/Check  R=Raise  A=All-in  Esc=annule
+// ═══════════════════════════════════════════════════════════
+document.addEventListener('keydown', function(e) {
+  // Ne pas intercepter si on tape dans un input/textarea
+  var tag = (e.target.tagName || '').toLowerCase();
+  if (tag === 'input' || tag === 'textarea' || e.target.isContentEditable) return;
+  // Seulement en jeu et si c'est mon tour
+  if (typeof amInGame === 'undefined' || !amInGame) return;
+  if (typeof turnPid !== 'undefined' && turnPid !== myId) return;
+
+  var key = e.key.toLowerCase();
+
+  if (key === 'f') {
+    // Fold
+    var btn = document.querySelector('.btn-fold:not([disabled])');
+    if (btn) { e.preventDefault(); btn.click(); showKeyHint('F — Fold'); }
+  } else if (key === 'c' || key === ' ') {
+    // Call ou Check
+    e.preventDefault();
+    var btn = document.querySelector('.btn-call:not([disabled]), .btn-check:not([disabled])');
+    if (btn) { btn.click(); showKeyHint(btn.classList.contains('btn-check') ? 'C — Check' : 'C — Call'); }
+  } else if (key === 'r') {
+    // Raise — focus sur l'input
+    var inp = document.getElementById('raise-amt');
+    var btn = document.querySelector('.btn-raise:not([disabled])');
+    if (inp && !inp.disabled) {
+      e.preventDefault();
+      if (window.innerWidth >= 640) {
+        inp.focus(); inp.select();
+        showKeyHint('R — Raise (ajustez le montant)');
+      } else if (btn) {
+        btn.click(); showKeyHint('R — Raise');
+      }
+    }
+  } else if (key === 'a') {
+    // All-in
+    var btn = document.querySelector('.btn-allin:not([disabled])');
+    if (btn) { e.preventDefault(); btn.click(); showKeyHint('A — All-In'); }
+  } else if (key === 'enter') {
+    // Confirmer la relance si l'input est focusé
+    var inp = document.getElementById('raise-amt');
+    if (document.activeElement === inp) {
+      e.preventDefault();
+      var btn2 = document.querySelector('.btn-raise:not([disabled])');
+      if (btn2) btn2.click();
+    }
+  }
+});
+
+// Petit toast d'indication du raccourci
+function showKeyHint(text) {
+  var existing = document.getElementById('key-hint');
+  if (existing) existing.remove();
+  var el = document.createElement('div');
+  el.id = 'key-hint';
+  el.textContent = '⌨ ' + text;
+  el.style.cssText = 'position:fixed;bottom:80px;left:50%;transform:translateX(-50%);' +
+    'background:rgba(200,168,74,0.9);color:#1a0a00;padding:5px 14px;border-radius:20px;' +
+    'font-family:monospace;font-size:0.75rem;font-weight:700;z-index:999;' +
+    'animation:fadeIn 0.15s ease;pointer-events:none;';
+  document.body.appendChild(el);
+  setTimeout(function(){ el.style.opacity='0'; el.style.transition='opacity 0.4s'; setTimeout(function(){ el.remove(); }, 400); }, 1200);
+}
+
+
 function toggleLang() { setLang(_lang === 'en' ? 'fr' : 'en'); }
 
 // ═══════════════════════════════════════════════════════════
@@ -2441,6 +2509,78 @@ function handleIncomingReaction(pid, emoji) {
   showSeatReaction(pid, emoji);
   // Notif sonore légère
   if (typeof playTone === 'function') playTone(800, 0.05, 0.08);
+}
+
+
+
+// ═══════════════════════════════════════════════════════════
+// FORCE DE MAIN PRÉ-FLOP
+// Encodage hole cards : si=floor(n/13) ♣=0♠=1♥=2♦=3, ri=n%13 2=0..A=12
+// ═══════════════════════════════════════════════════════════
+function evaluatePreFlopHand(c1, c2) {
+  if (c1 == null || c2 == null) return null;
+  var r1 = c1 % 13, r2 = c2 % 13;
+  var s1 = Math.floor(c1 / 13), s2 = Math.floor(c2 / 13);
+  var hi = Math.max(r1, r2), lo = Math.min(r1, r2);
+  var isPair    = r1 === r2;
+  var isSuited  = s1 === s2;
+  var gap       = hi - lo; // 0=pair, 1=connected, 2=1-gap, etc.
+
+  // ─ Premium ★★★
+  if (isPair && hi >= 10) // AA KK QQ JJ TT
+    return { stars: 3, fr: 'Main premium', en: 'Premium hand',
+             detail_fr: ['AA','KK','QQ','JJ','TT'][12-hi] + (hi>=10?'':' ') };
+  if (hi===12 && lo===11) // AK
+    return { stars: 3, fr: isSuited ? 'AK couleur ★★★' : 'AK bicolore ★★★', en: isSuited?'AKs Premium':'AKo Premium' };
+
+  // ─ Très bonnes ★★☆
+  if (isPair && hi >= 7) // 77 88 99
+    return { stars: 2, fr: 'Paire intermédiaire', en: 'Mid pair' };
+  if (hi===12 && lo>=9 && isSuited) // AQs AJs ATs
+    return { stars: 2, fr: 'As couleur fort', en: 'Strong suited Ace' };
+  if (hi===12 && lo>=9) // AQ AJ AT
+    return { stars: 2, fr: 'As fort', en: 'Strong Ace' };
+  if (hi===11 && lo===10 && isSuited) // KQs
+    return { stars: 2, fr: 'KQ couleur', en: 'KQs' };
+  if (hi===11 && lo===10) // KQ
+    return { stars: 2, fr: 'KQ', en: 'KQo' };
+
+  // ─ Bonnes ★☆☆
+  if (isPair && hi >= 4) // 44 55 66
+    return { stars: 1, fr: 'Petite paire', en: 'Small pair' };
+  if (isSuited && gap === 1 && lo >= 7) // connecteurs couleur hauts
+    return { stars: 1, fr: 'Connecteurs couleur', en: 'Suited connectors' };
+  if (isSuited && hi >= 10 && lo >= 8)
+    return { stars: 1, fr: 'Deux cartes hautes couleur', en: 'Suited broadways' };
+  if (hi===12 && lo >= 6) // As faible
+    return { stars: 1, fr: 'As avec kicker', en: 'Ace with kicker' };
+
+  // ─ Moyennes — connecteurs
+  if (gap <= 2 && lo >= 5 && isSuited)
+    return { stars: 0, fr: 'Connecteurs couleur', en: 'Suited connectors' };
+  if (gap <= 1 && lo >= 4)
+    return { stars: 0, fr: 'Connecteurs', en: 'Connectors' };
+
+  // ─ Faibles
+  return { stars: -1, fr: 'Main faible', en: 'Weak hand' };
+}
+
+function renderPreFlopStrength() {
+  var el = document.getElementById('hand-strength');
+  if (!el) return;
+  // Seulement avant le flop
+  if (commCards.filter(function(c){ return c!=null; }).length > 0) return;
+  if (myCards[0] == null || myCards[1] == null) { el.style.display='none'; return; }
+  var res = evaluatePreFlopHand(myCards[0], myCards[1]);
+  if (!res) { el.style.display='none'; return; }
+  var label = (_lang==='fr' ? res.fr : res.en);
+  var stars = res.stars >= 0
+    ? ' ' + ('★'.repeat(res.stars+1) + '☆'.repeat(2-res.stars)).slice(0,3)
+    : '';
+  el.textContent = label + stars;
+  var cols = ['#aaa','#7ec8e3','#a8d8a8','#f0c040','#e74c3c'];
+  el.style.color = cols[Math.max(0, res.stars+1)] || '#aaa';
+  el.style.display = 'block';
 }
 
 
@@ -2641,6 +2781,18 @@ document.addEventListener("DOMContentLoaded", function() {
   }
   var n = document.getElementById("nick");
   if (!n.value) n.value = "Guest" + Math.floor(10000 + Math.random()*90000);
+
+  // Restaurer le serveur préféré sauvegardé
+  try {
+    var savedHost  = localStorage.getItem('pth_host');
+    var savedPort  = localStorage.getItem('pth_port');
+    var savedProxy = localStorage.getItem('pth_proxy');
+    var savedMode  = localStorage.getItem('pth_login_mode');
+    if (savedHost)  { var hi = document.getElementById('host');  if (hi) hi.value = savedHost; }
+    if (savedPort)  { var pi = document.getElementById('port');  if (pi) pi.value = savedPort; }
+    if (savedProxy) { var xi = document.getElementById('proxy'); if (xi) xi.value = savedProxy; }
+    if (savedMode)  { var mi = document.getElementById('login-mode'); if (mi) { mi.value = savedMode; App.onLoginModeChange && App.onLoginModeChange(); } }
+  } catch(e) {}
 
   // Auto-fill proxy URL from current page URL
   var proto = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
@@ -3610,6 +3762,8 @@ const App = (() => {
         renderMyCards();
         renderComm();
         renderSeats();
+        // Force pré-flop
+        setTimeout(renderPreFlopStrength, 300);
         // Sons + animations deal
         setTimeout(function(){
           notifyCard();
@@ -4325,7 +4479,13 @@ const App = (() => {
     const p33  = Math.min(myMoney, Math.max(minBet, Math.round(pot * 0.33)));
     const p50  = Math.min(myMoney, Math.max(minBet, Math.round(pot * 0.5)));
     const p100 = Math.min(myMoney, Math.max(minBet, pot));
-    const callLabel = canCheck ? 'Check' : ('Call <b>' + toCall + '</b>');
+    // Pot odds : toCall / (pot + toCall) * 100
+    var potOdds = '';
+    if (!canCheck && toCall > 0 && pot + toCall > 0) {
+      var oddsP = Math.round(toCall / (pot + toCall) * 100);
+      potOdds = ' <span style="font-size:0.7em;opacity:0.8">(' + oddsP + '%)</span>';
+    }
+    const callLabel = canCheck ? 'Check' : ('Call <b>' + toCall + '</b>' + potOdds);
     const callAction = canCheck ? 'App.doAction(2,0)' : ('App.doAction(3,' + toCall + ')');
     const callClass  = canCheck ? 'btn-check' : 'btn-call';
     const raiseLabel = highestBet > 0 ? t('raise') : t('bet');
@@ -4337,8 +4497,8 @@ const App = (() => {
 
     const h = '<div class="action-grid">'
       + '<div class="action-top-row">'
-      +   '<button class="btn-action btn-fold" onclick="App.doAction(1,0)">' + t('fold') + '</button>'
-      +   '<button class="btn-action ' + callClass + '" onclick="' + callAction + '">' + callLabel + '</button>'
+      +   '<button class="btn-action btn-fold" onclick="App.doAction(1,0)" title="Fold (F)">' + t('fold') + '</button>'
+      +   '<button class="btn-action ' + callClass + '" onclick="' + callAction + '" title="Call/Check (C)">' + callLabel + '</button>'
       + '</div>'
       + '<div class="pct-row">'
       +   '<button class="btn-pct"' + da + ' onclick="setPct(' + p33  + ')">33%</button>'
@@ -4348,9 +4508,9 @@ const App = (() => {
       + '<div class="raise-row">'
       +   '<input class="raise-input" id="raise-amt" type="number" min="' + minBet + '" max="' + myMoney + '" value="' + minBet + '"' + da
       +   (window.innerWidth < 640 ? ' readonly style="cursor:default;opacity:0.7"' : '') + '>'
-      +   '<button class="btn-action btn-raise raise-btn"' + da + ' onclick="App.doRaise()">' + raiseLabel + '</button>'
+      +   '<button class="btn-action btn-raise raise-btn"' + da + ' onclick="App.doRaise()" title="Raise (R)">' + raiseLabel + '</button>'
       + '</div>'
-      + '<button class="btn-action btn-allin" onclick="App.doAction(6,' + myMoney + ')">All-In <b>' + myMoney + '</b></button>'
+      + '<button class="btn-action btn-allin" onclick="App.doAction(6,' + myMoney + ')" title="All-In (A)">All-In <b>' + myMoney + '</b></button>'
       + '</div>';
 
     $('g-actions').innerHTML = h;
@@ -4540,6 +4700,14 @@ function dismissWinner() {
         return;
       }
       _lastConnectTime = now;
+      // Sauvegarder le serveur préféré
+      try {
+        var lm2 = $('login-mode'); var hv = $('host'); var pv = $('port'); var xv = $('proxy');
+        if (lm2) localStorage.setItem('pth_login_mode', lm2.value);
+        if (hv)  localStorage.setItem('pth_host',  hv.value.trim());
+        if (pv)  localStorage.setItem('pth_port',  pv.value.trim());
+        if (xv)  localStorage.setItem('pth_proxy', xv.value.trim());
+      } catch(e) {}
       const proxyUrl  = $('proxy').value.trim();
       const host      = $('host').value.trim();
       const port      = $('port').value.trim() || '7234';
@@ -4601,7 +4769,24 @@ function dismissWinner() {
       ws.binaryType = 'arraybuffer';
       ws.onopen    = () => setStatus('Proxy connecté — attente du serveur PokerTH...');
       ws.onerror   = () => { _lastConnectFailed = true; setStatus('Erreur WebSocket. Le proxy est-il lancé ?', 'err'); };
-      ws.onmessage = e => onRawData(e.data);
+      ws.onmessage = function(e) {
+        if (typeof e.data === 'string') {
+          // Message texte = protocole proxy (réactions)
+          if (e.data.startsWith('REACT:')) {
+            var parts = e.data.split(':');
+            var fromPid = parseInt(parts[1]);
+            var reactEmoji = parts[2];
+            console.log('[REACT] reçue de pid=' + fromPid + ' emoji=' + reactEmoji);
+            if (fromPid !== myId) {
+              handleIncomingReaction(fromPid, reactEmoji);
+              var who = players[fromPid] || ('#'+fromPid);
+              addGameChat(who, reactEmoji, 'reaction');
+            }
+          }
+          return;
+        }
+        onRawData(e.data);
+      };
       ws.onclose = function(e) {
         ws = null;
         clearTimeout(window._reconnectTimer);
@@ -4733,11 +4918,17 @@ function dismissWinner() {
 
     sendReaction(emoji) {
       if (!ws || !gId) return;
-      _lastMsgWasReaction = true;
-      // Préfixe ASCII [R] — plus robuste que emoji pour le transport protobuf
-      var msg = '[R]' + emoji;
-      console.log('[Reaction] envoi:', msg, 'gId:', gId);
-      send(MSG.buildChat(msg, gId || 0));
+      // Envoyer via le proxy en message TEXTE WebSocket (pas PokerTH protocol)
+      // → contourne les restrictions chat du serveur PokerTH
+      if (ws && !directWS && ws.readyState === WebSocket.OPEN) {
+        var reactMsg = 'REACT:' + myId + ':' + emoji;
+        console.log('[Reaction] envoi proxy:', reactMsg);
+        ws.send(reactMsg); // text frame, pas binaire
+      } else {
+        // Fallback directWS : tenter via PokerTH chat
+        _lastMsgWasReaction = true;
+        send(MSG.buildChat('[R]' + emoji, gId || 0));
+      }
       // Afficher immédiatement pour moi
       handleIncomingReaction(myId, emoji);
       _reactionCounts[emoji] = (_reactionCounts[emoji] || 0); // déjà incrémenté dans handleIncomingReaction
