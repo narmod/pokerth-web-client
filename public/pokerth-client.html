@@ -510,6 +510,85 @@ body {
    RESPONSIVE — orientation-aware
 ══════════════════════════════════ */
 
+
+/* ═══════════════════════════════════════════════════════════
+   DESKTOP LARGE (≥ 900px) — Agrandissement table + cartes
+   ═══════════════════════════════════════════════════════════ */
+@media (min-width: 900px) {
+
+  /* ── Ovale de la table ── */
+  .felt-oval {
+    width:  min(760px, 78vw) !important;
+    height: min(340px, min(40vw, calc(100dvh - 300px))) !important;
+  }
+
+  /* ── Cartes communes (flop/turn/river) ── */
+  .comm-row .pk {
+    width: 62px !important;
+    height: 90px !important;
+    font-size: 1.4rem !important;
+    border-radius: 5px !important;
+  }
+  .comm-row { gap: 8px !important; }
+
+  /* ── Mes cartes dans la player-bar ── */
+  .pb-cards .pk {
+    width: 58px !important;
+    height: 84px !important;
+    font-size: 1.3rem !important;
+  }
+  .pb-cards { gap: 7px !important; }
+
+  /* ── Avatars des joueurs ── */
+  .seat-avatar {
+    width: 42px !important;
+    height: 42px !important;
+    font-size: 1rem !important;
+  }
+  .seat-name   { font-size: 0.75rem !important; max-width: 90px !important; }
+  .seat-money  { font-size: 0.72rem !important; }
+  .seat-bet    { font-size: 0.6rem !important; }
+  .seat-action-label { font-size: 0.58rem !important; }
+  .seat { min-width: 60px !important; max-width: 95px !important; }
+
+  /* Dealer badge + blind badges un peu plus grands */
+  .seat.dealer .seat-avatar::after {
+    width: 16px !important; height: 16px !important;
+    font-size: 0.56rem !important;
+    top: -5px !important; right: -5px !important;
+  }
+  .blind-badge {
+    width: 16px !important; height: 16px !important;
+    font-size: 0.5rem !important;
+    top: -5px !important; left: -5px !important;
+  }
+
+  /* Cartes adversaires (xsm → un peu plus grandes) */
+  .seat .pk.xsm {
+    width: 26px !important;
+    height: 38px !important;
+    font-size: 0.64rem !important;
+  }
+
+  /* ── Scaler : plus de marge pour les sièges qui débordent ── */
+  .table-scaler { padding: 60px 90px !important; }
+
+  /* ── Player bar — plus haute, infos plus lisibles ── */
+  .pb-avatar {
+    width: 46px !important; height: 46px !important;
+    font-size: 1.15rem !important;
+  }
+  .pb-name  { font-size: 0.9rem !important; }
+  .pb-money { font-size: 0.8rem !important; }
+  .pb-info  { min-width: 110px !important; }
+
+  /* ── Timer SVG autour de l'avatar ── */
+  .seat-timer {
+    width: 170% !important; height: 170% !important;
+    top: -35% !important; left: -35% !important;
+  }
+}
+
 /* Tablet */
 @media (max-width: 768px) {
   .seat-avatar { width: 28px; height: 28px; font-size: 0.7rem; }
@@ -3856,7 +3935,11 @@ function autoScaleTable() {
   var scW = sc.scrollWidth, scH = sc.scrollHeight;
   if (!tzW || !scW || !tzH || !scH) return;
   // Scale to 68% of max: leaves 32% room for seat overflow around the oval
-  var scale = Math.min(1, tzW / scW, tzH / scH);
+  // Sur desktop, on autorise jusqu'à 1.0 max
+  // Sur mobile, on peut réduire en dessous de 1 pour tout faire tenir
+  var isMobScale = window.innerWidth < 900;
+  var scaleMax = isMobScale ? 1 : 1;
+  var scale = Math.min(scaleMax, tzW / scW, tzH / scH);
   sc.style.transform = 'scale(' + scale.toFixed(3) + ')';
   sc.style.transformOrigin = 'center center';
 }
