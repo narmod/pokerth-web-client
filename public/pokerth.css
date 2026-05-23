@@ -1406,16 +1406,7 @@ body {
 .hand-hist-cards { display: flex; gap: 3px; margin-top: 3px; }
 .hand-hist-result { margin-top: 3px; font-weight: 700; }
 
-/* Probabilité de gain */
-#win-prob-bar {
-  position: relative; height: 4px;
-  background: rgba(255,255,255,0.1); border-radius: 2px; margin-top: 4px; overflow: hidden;
-}
-#win-prob-fill {
-  position: absolute; left: 0; top: 0; height: 100%; border-radius: 2px;
-  background: linear-gradient(90deg, #e74c3c, #f39c12, #27ae60);
-  transition: width 0.5s ease;
-}
+
 
 /* Loading dots */
 @keyframes blink {
