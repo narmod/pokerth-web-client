@@ -3393,6 +3393,7 @@ const App = (() => {
     const el = document.getElementById('raise-amt');
     if (el) { el.value = v; el.focus(); }
   }
+  window.setPct = setPct; // exposer au scope global pour les onclick inline
 
   function renderMyTurnActions() {
     const myMoney = (seatData[myId] || {}).money || 0;
