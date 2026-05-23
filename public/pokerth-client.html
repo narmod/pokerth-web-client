@@ -1612,6 +1612,24 @@ var LANG = {
 };
 var _lang = (function(){ try { return localStorage.getItem('pth_lang')||'en'; } catch(e){ return 'en'; } })();
 function t(k) { return (LANG[_lang]||LANG.en)[k] || (LANG.en[k]) || k; }
+function _startIpBlockCountdown() {
+  // Met à jour le statut toutes les secondes avec le temps restant
+  var _blockInterval = setInterval(function() {
+    var rem = Math.max(0, Math.ceil((_ipBlockUntil - Date.now()) / 1000));
+    var mins = Math.floor(rem / 60), secs = rem % 60;
+    var txt = '⏳ IP bloquée — ' + (mins > 0 ? mins + 'min ' : '') + secs + 's';
+    // Mettre à jour seulement si on est sur l'écran de connexion
+    var cs = document.getElementById('cstatus');
+    if (cs) cs.textContent = rem > 0 ? txt : '✅ Vous pouvez vous reconnecter.';
+    if (rem <= 0) {
+      clearInterval(_blockInterval);
+      _ipBlockUntil = 0;
+      var cs2 = document.getElementById('cstatus');
+      if (cs2) { cs2.textContent = '✅ Vous pouvez vous reconnecter.'; cs2.className = 'status ok'; }
+    }
+  }, 1000);
+}
+
 function _showBanner(msg) {
   var b = document.getElementById('reconnect-banner');
   var m = document.getElementById('reconnect-msg');
@@ -2337,6 +2355,9 @@ const App = (() => {
   let _reconnectAttempts = 0;
   let _intentionalDisconnect = false;
   let _wasAuthenticated = false; // true seulement après InitAck réussi
+  let _lastConnectTime = 0;      // timestamp de la dernière tentative
+  let _ipBlockUntil = 0;         // timestamp de fin de blocage IP
+  const MIN_CONNECT_INTERVAL = 8000; // 8s minimum entre tentatives
 
   // ── DOM ──
   const $ = id => document.getElementById(id);
@@ -2450,8 +2471,11 @@ const App = (() => {
           ws.close(); return;
         }
         if (r === 7) {
-          _intentionalDisconnect = true; // ne pas retenter — IP bloquée
+          _intentionalDisconnect = true;
+          _wasAuthenticated = false;
           _hideBanner();
+          _ipBlockUntil = Date.now() + 5 * 60 * 1000; // 5 minutes
+          _startIpBlockCountdown();
           setStatus('⏳ IP bloquée — attendez 5 minutes puis réessayez.', 'err'); return;
         }
         if (r === 4) {
@@ -3559,6 +3583,21 @@ function dismissWinner() {
     },
 
     connect() {
+      // ── Rate limiter : éviter le spam qui provoque le blocage IP ──
+      const now = Date.now();
+      if (_ipBlockUntil > now) {
+        const remaining = Math.ceil((_ipBlockUntil - now) / 1000);
+        const mins = Math.floor(remaining / 60), secs = remaining % 60;
+        setStatus('⏳ IP bloquée — attendre encore ' + (mins > 0 ? mins + 'min ' : '') + secs + 's', 'err');
+        _startIpBlockCountdown();
+        return;
+      }
+      if (now - _lastConnectTime < MIN_CONNECT_INTERVAL) {
+        const wait = Math.ceil((MIN_CONNECT_INTERVAL - (now - _lastConnectTime)) / 1000);
+        setStatus('⏸ Attendez ' + wait + 's avant de retenter…', 'err');
+        return;
+      }
+      _lastConnectTime = now;
       const proxyUrl  = $('proxy').value.trim();
       const host      = $('host').value.trim();
       const port      = $('port').value.trim() || '7234';
@@ -3621,14 +3660,18 @@ function dismissWinner() {
       ws.onclose = function(e) {
         ws = null;
         clearTimeout(window._reconnectTimer);
-        if (_intentionalDisconnect || !_lastConnectParams || !_wasAuthenticated) {
-          // Déconnexion volontaire ou jamais authentifié → écran connexion
-          show('s-connect');
-          setStatus(t('disconnected') || 'Déconnecté. Reconnectez-vous.');
-          _hideBanner();
-          return;
+        _hideBanner();
+        _wasAuthenticated = false;
+        show('s-connect');
+        // Reconnexion automatique désactivée pour éviter le blocage IP
+        // L'utilisateur peut se reconnecter manuellement après 8 secondes
+        if (_intentionalDisconnect) {
+          setStatus(t('disconnected') || 'Déconnecté.');
+        } else {
+          setStatus('Connexion perdue. Vous pouvez vous reconnecter dans quelques secondes.', 'err');
         }
-        // Reconnexion automatique — seulement si on était bien connecté
+        return;
+        // --- RECONNEXION AUTO DÉSACTIVÉE (risque blocage IP) ---
         _reconnectAttempts++;
         var maxAttempts = 3; // max 3 tentatives pour éviter le blocage IP
         if (_reconnectAttempts > maxAttempts) {
