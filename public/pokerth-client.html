@@ -1058,6 +1058,72 @@ body {
   box-shadow: 0 -2px 8px rgba(0,0,0,0.4);
 }
 
+/* ══ PANNEAU RÉACTIONS FLOTTANT (header) ══ */
+#g-reaction-panel {
+  display: none;
+  flex-direction: column;
+  background: rgba(4,10,6,0.98);
+  border-bottom: 1px solid var(--border);
+  padding: 10px 14px 12px;
+  flex-shrink: 0;
+  animation: slideDown 0.2s ease;
+}
+#g-reaction-panel.open { display: flex; }
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.react-panel-title {
+  font-size: 0.52rem;
+  color: var(--gold-dim);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.react-panel-close {
+  background: none; border: none; color: var(--text);
+  cursor: pointer; font-size: 0.9rem; padding: 0 2px; line-height: 1;
+}
+.react-grid {
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  gap: 5px;
+}
+@media (max-width: 600px) {
+  .react-grid { grid-template-columns: repeat(5, 1fr); }
+}
+.react-btn {
+  aspect-ratio: 1;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 1.35rem;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: transform 0.12s ease, background 0.12s, border-color 0.12s;
+  position: relative;
+  padding: 0;
+}
+.react-btn:hover {
+  background: rgba(200,168,74,0.15);
+  border-color: var(--gold-dim);
+  transform: scale(1.2);
+}
+.react-btn:active { transform: scale(0.92); }
+.react-btn .rc {
+  position: absolute;
+  bottom: 1px; right: 3px;
+  font-size: 0.45rem;
+  font-family: monospace;
+  color: var(--gold);
+  line-height: 1;
+  pointer-events: none;
+}
+
+/* Ancien .reaction-bar (dans chat) — masqué */
 /* ══ RÉACTIONS RAPIDES ══ */
 .reaction-bar {
   display: flex;
@@ -2488,11 +2554,15 @@ function showSeatReaction(pid, emoji) {
 
 // Mettre à jour les compteurs affichés sur les boutons
 function updateReactionCount(emoji) {
-  var EMOJIS = ['👏','😱','🤣','🤔','🔥','😎','💰','😤'];
+  var EMOJIS = ["👏", "😱", "🤣", "🤔", "🔥", "😎", "💰", "😤", "🤩", "💪", "👍", "😡", "💎", "🎰", "🍀", "🎉", "😂", "🙌", "🤦", "😴"];
   var idx = EMOJIS.indexOf(emoji);
   if (idx < 0) return;
   var count = _reactionCounts[emoji] || 0;
-  var el = document.getElementById('rc-' + idx);
+  // Mettre à jour dans le panneau principal (rcp-N)
+  var el = document.getElementById('rcp-' + idx);
+  if (el) el.textContent = count > 0 ? count : '';
+  // Ancien panneau chat (rc-N) si encore présent
+  var el2 = document.getElementById('rc-' + idx);
   if (el) el.textContent = count > 0 ? count : '';
   // Reset après 6 secondes d'inactivité
   clearTimeout(_reactionTimers[emoji]);
@@ -5244,6 +5314,19 @@ function joinWithPassword() {
   }
 }
 
+function toggleReactionPanel() {
+  var panel = document.getElementById('g-reaction-panel');
+  var btn   = document.getElementById('react-toggle-btn');
+  if (!panel) return;
+  var open = !panel.classList.contains('open');
+  panel.classList.toggle('open', open);
+  if (btn) {
+    btn.style.background  = open ? 'rgba(200,168,74,0.2)' : '';
+    btn.style.borderColor = open ? 'var(--gold-dim)' : '';
+    btn.style.color       = open ? 'var(--gold)' : '';
+  }
+}
+
 function toggleLog() {
   var panel = document.getElementById('g-log-panel');
   var btn   = document.getElementById('log-toggle-btn');
@@ -5267,6 +5350,7 @@ function toggleLog() {
     <button class="btn-sm btn-icon" onclick="toggleHandsHelp()" title="Combinaisons du poker" style="font-weight:700">?</button>
     <button class="btn-sm btn-icon" id="lang-toggle-game" onclick="toggleLang()" title="Switch language">🇬🇧</button>
     <button class="btn-sm btn-icon" id="log-toggle-btn" onclick="toggleLog()" title="Journal">📋</button>
+    <button class="btn-sm btn-icon" id="react-toggle-btn" onclick="toggleReactionPanel()" title="Réactions">😊</button>
     <button class="btn-sm btn-icon" id="chat-toggle-btn" onclick="toggleGameChat()" title="Chat">💬</button>
     <button class="btn-sm" id="admin-start-btn" onclick="App.startWithBots()" style="display:none;color:var(--green);border-color:rgba(39,174,96,0.4)" title="Start with bots">▶ Bots</button>
     <button class="btn-sm" id="admin-close-btn" onclick="App.closeTable()" style="display:none;color:#e67e22;border-color:rgba(230,126,34,0.4)" title="Close table">🔒 Close</button>
@@ -5293,16 +5377,6 @@ function toggleLog() {
   <div id="g-chat-panel" style="display:none;flex-direction:column;max-height:min(260px,35dvh)">
     <div class="g-chat-panel-header"><span style="font-size:0.65rem;color:var(--gold-dim);letter-spacing:0.15em;text-transform:uppercase">💬 Chat</span><button onclick="toggleGameChat()" style="background:none;border:none;color:var(--text);cursor:pointer;font-size:0.85rem;padding:0 4px">✕</button></div>
     <div class="chat-msgs" id="g-chat-msgs" style="flex:1;min-height:60px;overflow-y:auto;padding:6px 12px;background:rgba(4,10,5,0.97)"></div>
-    <div class="reaction-bar" id="reaction-bar">
-      <div class="reaction-bar-label" id="reaction-bar-label">Réactions</div>
-      <button class="reaction-btn" onclick="App.sendReaction('👏')" title="👏">👏<span class="react-count" id="rc-0"></span></button>
-      <button class="reaction-btn" onclick="App.sendReaction('😱')" title="😱">😱<span class="react-count" id="rc-1"></span></button>
-      <button class="reaction-btn" onclick="App.sendReaction('🤣')" title="🤣">🤣<span class="react-count" id="rc-2"></span></button>
-      <button class="reaction-btn" onclick="App.sendReaction('🤔')" title="🤔">🤔<span class="react-count" id="rc-3"></span></button>
-      <button class="reaction-btn" onclick="App.sendReaction('🔥')" title="🔥">🔥<span class="react-count" id="rc-4"></span></button>
-      <button class="reaction-btn" onclick="App.sendReaction('😎')" title="😎">😎<span class="react-count" id="rc-5"></span></button>
-      <button class="reaction-btn" onclick="App.sendReaction('💰')" title="💰">💰<span class="react-count" id="rc-6"></span></button>
-      <button class="reaction-btn" onclick="App.sendReaction('😤')" title="😤">😤<span class="react-count" id="rc-7"></span></button>
     </div>
     <div class="chat-input" style="border-top:1px solid var(--border);flex-shrink:0">
       <input id="g-chat-in" placeholder="Message…" onkeydown="if(event.key==='Enter')App.sendGameChat()">
@@ -5318,6 +5392,35 @@ function toggleLog() {
   <!-- ══ HANDS HELP OVERLAY ══ -->
   <div id="hands-overlay" style="display:none" onclick="if(event.target===this)toggleHandsHelp()">
     <div class="hands-card" id="hands-card-inner"></div>
+  </div>
+  <!-- Panneau réactions (dropdown header) -->
+  <div id="g-reaction-panel">
+    <div class="react-panel-title">
+      <span>😊 Réactions</span>
+      <button class="react-panel-close" onclick="toggleReactionPanel()">✕</button>
+    </div>
+    <div class="react-grid">
+        <button class="react-btn" onclick="App.sendReaction('👏')" title="👏">👏<span class="rc" id="rcp-0"></span></button>
+        <button class="react-btn" onclick="App.sendReaction('😱')" title="😱">😱<span class="rc" id="rcp-1"></span></button>
+        <button class="react-btn" onclick="App.sendReaction('🤣')" title="🤣">🤣<span class="rc" id="rcp-2"></span></button>
+        <button class="react-btn" onclick="App.sendReaction('🤔')" title="🤔">🤔<span class="rc" id="rcp-3"></span></button>
+        <button class="react-btn" onclick="App.sendReaction('🔥')" title="🔥">🔥<span class="rc" id="rcp-4"></span></button>
+        <button class="react-btn" onclick="App.sendReaction('😎')" title="😎">😎<span class="rc" id="rcp-5"></span></button>
+        <button class="react-btn" onclick="App.sendReaction('💰')" title="💰">💰<span class="rc" id="rcp-6"></span></button>
+        <button class="react-btn" onclick="App.sendReaction('😤')" title="😤">😤<span class="rc" id="rcp-7"></span></button>
+        <button class="react-btn" onclick="App.sendReaction('🤩')" title="🤩">🤩<span class="rc" id="rcp-8"></span></button>
+        <button class="react-btn" onclick="App.sendReaction('💪')" title="💪">💪<span class="rc" id="rcp-9"></span></button>
+        <button class="react-btn" onclick="App.sendReaction('👍')" title="👍">👍<span class="rc" id="rcp-10"></span></button>
+        <button class="react-btn" onclick="App.sendReaction('😡')" title="😡">😡<span class="rc" id="rcp-11"></span></button>
+        <button class="react-btn" onclick="App.sendReaction('💎')" title="💎">💎<span class="rc" id="rcp-12"></span></button>
+        <button class="react-btn" onclick="App.sendReaction('🎰')" title="🎰">🎰<span class="rc" id="rcp-13"></span></button>
+        <button class="react-btn" onclick="App.sendReaction('🍀')" title="🍀">🍀<span class="rc" id="rcp-14"></span></button>
+        <button class="react-btn" onclick="App.sendReaction('🎉')" title="🎉">🎉<span class="rc" id="rcp-15"></span></button>
+        <button class="react-btn" onclick="App.sendReaction('😂')" title="😂">😂<span class="rc" id="rcp-16"></span></button>
+        <button class="react-btn" onclick="App.sendReaction('🙌')" title="🙌">🙌<span class="rc" id="rcp-17"></span></button>
+        <button class="react-btn" onclick="App.sendReaction('🤦')" title="🤦">🤦<span class="rc" id="rcp-18"></span></button>
+        <button class="react-btn" onclick="App.sendReaction('😴')" title="😴">😴<span class="rc" id="rcp-19"></span></button>
+    </div>
   </div>
   <div id="g-winner-overlay" class="winner-overlay" style="display:none" onclick="App.dismissWinner()"></div>
   <div class="game-area">
