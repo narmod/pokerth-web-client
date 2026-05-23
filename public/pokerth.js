@@ -2489,9 +2489,7 @@ const App = (() => {
     return name.charAt(0).toUpperCase() || '?';
   }
   function getPlayerTypeBadge(pid) {
-    if (pid === myId) return '';
-    if (isBot(pid)) return ''; // 🤖 déjà dans l'avatar, pas besoin de badge supplémentaire
-    return '<span class="player-type-badge badge-human" title="Humain">👤</span>';
+    return ''; // Badges supprimés : 🤖 identifie les bots, pas de 👤 pour les humains
   }
 
   function renderSeats() {
