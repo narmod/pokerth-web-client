@@ -1864,7 +1864,8 @@ var LANG = {
   en: {
     connect:'Connect', disconnect:'✕ Disconnect', connecting:'Connecting…',
     nickname:'Nickname', password:'Password', useTLS:'Use TLS',
-    lan:'LAN (free nickname)', guest:'Internet Guest', auth:'Registered Account',
+    lan:'LAN (free nickname)', privateGuest:'Private Server — Internet Guest ✓',
+    guest:'pokerth.net — Internet Guest', auth:'pokerth.net — Registered Account',
     loginMode:'Login Mode', server:'PokerTH Server', proxy:'WebSocket Proxy', port:'Port',
     joinOrCreate:'⚡ Join or Create', configure:'⚙', createTable:'＋ Create table',
     tableName:'Table name', maxPlayers:'Max players', smallBlind:'Small blind',
@@ -1931,7 +1932,8 @@ var LANG = {
   fr: {
     connect:'Se connecter', disconnect:'✕ Déconnecter', connecting:'Connexion en cours…',
     nickname:'Pseudo', password:'Mot de passe', useTLS:'Utiliser TLS',
-    lan:'LAN (pseudo libre)', guest:'Invité Internet', auth:'Compte enregistré',
+    lan:'LAN (pseudo libre)', privateGuest:'Serveur privé — Invité Internet ✓',
+    guest:'pokerth.net — Invité', auth:'pokerth.net — Compte enregistré',
     loginMode:'Mode de connexion', server:'Serveur PokerTH', proxy:'Proxy WebSocket', port:'Port',
     joinOrCreate:'⚡ Rejoindre ou Créer', configure:'⚙', createTable:'＋ Créer cette table',
     tableName:'Nom de la table', maxPlayers:'Joueurs max', smallBlind:'Petite blind',
@@ -2526,8 +2528,9 @@ function setLang(l) {
   var lm = document.getElementById('login-mode');
   if (lm) {
     lm.options[0].text = t('lan');
-    lm.options[1].text = t('guest');
-    if (lm.options[2]) lm.options[2].text = t('auth');
+    lm.options[1].text = t('privateGuest');
+    if (lm.options[2]) lm.options[2].text = t('guest');
+    if (lm.options[3]) lm.options[3].text = t('auth');
   }
   // Update create form selects
   var rm = document.getElementById('cf-raise-mode');
@@ -2690,9 +2693,10 @@ document.addEventListener("DOMContentLoaded", function() {
       <label data-i18n="loginMode">Login Mode</label>
       <div class="sel-wrap">
         <select id="login-mode" onchange="App.onLoginModeChange()">
-          <option value="unauth">LAN — Nickname libre (recommandé)</option>
-          <option value="guest">Invité — Guest + chiffres</option>
-          <option value="auth">Registered Account (pokerth.net)</option>
+          <option value="lan">LAN (pseudo libre)</option>
+          <option value="unauth" selected>Serveur privé — Invité Internet ✓</option>
+          <option value="guest">pokerth.net — Invité</option>
+          <option value="auth">pokerth.net — Compte enregistré</option>
         </select>
         <span class="sel-arr">▾</span>
       </div>
@@ -3181,9 +3185,9 @@ const App = (() => {
           ws.close(); return;
         }
         let loginType;
-        if (loginMode === 'unauth') loginType = 2;
+        if (loginMode === 'unauth' || loginMode === 'guest') loginType = 2;
         else if (loginMode === 'auth') loginType = 1;
-        else loginType = 0;
+        else loginType = 0; // lan
         const typeLabel = ['LAN','Internet (no-auth)','Internet (auth)'][stype] || 'Serveur';
         setStatus('Connexion ' + typeLabel + ' v' + pMaj + '.' + pMin + ' — ' + np + ' joueur(s)...');
         lastMajor = pMaj; lastMinor = pMin; lastLoginType = loginType;
@@ -4464,16 +4468,25 @@ function dismissWinner() {
       const proto      = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
       const port       = window.location.port || '8080';
 
-      if (mode === 'unauth') {
-        // LAN mode: proxy = current page server, PokerTH server = same host
+      if (mode === 'lan') {
+        // Mode LAN : loginType 0, pseudo libre, pas de TLS, serveur local
         $('nick-label').textContent = 'Pseudo (libre, min 3 chars)';
         $('nick').placeholder = 'VotrePrenom';
         $('use-tls').checked = false;
         if (proxyInput) proxyInput.value = proto + '//' + (autoHost||'localhost') + ':' + port;
         if (hostInput && autoHost) hostInput.value = autoHost;
-        setStatus('');
+        setStatus('Mode LAN : chat en jeu limité.');
+      } else if (mode === 'unauth') {
+        // Mode Serveur privé Invité : loginType 2, pseudo libre, serveur custom
+        // ✅ Chat en jeu disponible si ServerRestrictGuestLogin=0
+        $('nick-label').textContent = 'Pseudo (libre, min 3 chars)';
+        $('nick').placeholder = 'VotrePrenom';
+        $('use-tls').checked = false;
+        if (proxyInput) proxyInput.value = proto + '//' + (autoHost||'localhost') + ':' + port;
+        if (hostInput && autoHost) hostInput.value = autoHost;
+        setStatus('✅ Chat et réactions disponibles sur serveur privé.');
       } else if (mode === 'guest') {
-        // Internet guest
+        // Mode pokerth.net Invité : loginType 2, directWS, pseudo Guest+chiffres
         $('nick-label').textContent = 'Pseudo invité (Guest + 5 chiffres)';
         $('nick').placeholder = 'Guest' + String(Math.floor(10000 + Math.random()*90000));
         $('use-tls').checked = true;
@@ -4481,7 +4494,7 @@ function dismissWinner() {
         if (hostInput) hostInput.value = 'pokerth.net';
         setStatus('');
       } else {
-        // Registered account
+        // Mode pokerth.net Compte enregistré : loginType 1, directWS
         $('nick-label').textContent = 'Nom du compte pokerth.net';
         $('nick').placeholder = 'MonCompte';
         $('use-tls').checked = true;
@@ -4541,9 +4554,11 @@ function dismissWinner() {
       loaded  = false;
 
       // Direct WSS for Internet modes (guest/auth to pokerth.net)
-      const isInternet = (loginMode === 'guest' || loginMode === 'auth');
+      // directWS uniquement pour les modes pokerth.net (guest/auth)
+      // unauth (serveur privé) passe toujours par le proxy
+      const isPokerThDirect = (loginMode === 'guest' || loginMode === 'auth');
       const targetIsPokerTH = host.includes('pokerth.net');
-      directWS = isInternet && targetIsPokerTH;
+      directWS = isPokerThDirect && targetIsPokerTH;
       const finalUrl = directWS
         ? 'wss://www.pokerth.net:443/pthlive'
         : proxyUrl + '?host=' + encodeURIComponent(host) + '&port=' + encodeURIComponent(port) + '&tls=' + tlsParam;
