@@ -594,6 +594,29 @@ function showKeyHint(text) {
 }
 
 
+// Rafraîchit immédiatement l'avatar du joueur local dans l'UI
+window.refreshMyAvatar = function() {
+  var av = '';
+  try { av = localStorage.getItem('pth_avatar') || ''; } catch(e) {}
+  var display = av || (typeof myName !== 'undefined' ? (myName||'').charAt(0).toUpperCase() : '?');
+  // Player-bar
+  var pbAv = document.getElementById('g-myseat-av');
+  if (pbAv) pbAv.textContent = display;
+  // Siège autour de la table
+  var seatEls = document.querySelectorAll('#g-seats .seat');
+  seatEls.forEach(function(seat) {
+    if (seat.classList.contains('me')) {
+      var ini = seat.querySelector('.seat-initial');
+      if (ini) ini.textContent = display;
+      seat.querySelector('.seat-avatar') && (function(av2){
+        var avatarEl = seat.querySelector('.seat-avatar');
+        if (av2) avatarEl.classList.add('emoji-av');
+        else avatarEl.classList.remove('emoji-av');
+      })(av);
+    }
+  });
+};
+
 window.toggleAvatarPopup = function() {
   var popup = document.getElementById('avatar-popup');
   if (!popup) return;
