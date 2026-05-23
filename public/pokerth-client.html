@@ -2935,9 +2935,10 @@ const App = (() => {
   // PokerTH card encoding:
   //   Hole cards (plainCards):  1-indexed, suits [♣,♠,♥,♦], card 1=2♣ … 52=A♦
   //   Community cards (flop…):  0-indexed, suits [♦,♣,♠,♥], card 0=2♦ … 51=A♥
-  function cardToHtml(n, sm, isComm) {
+  function cardToHtml(n, sm, isComm, extraCls) {
+    extraCls = extraCls || '';
     const sz = sm ? ' sm' : '';
-    if (n === null || n === undefined) return '<div class="pk' + sz + ' back"></div>';
+    if (n === null || n === undefined) return '<div class="pk' + sz + ' back' + extraCls + '"></div>';
     let si, ri;
     if (isComm) {
       si = Math.floor(n / 13);      // 0-indexed suits: ♦=0 ♣=1 ♠=2 ♥=3
