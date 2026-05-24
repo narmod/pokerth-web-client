@@ -2835,22 +2835,26 @@ const App = (() => {
       });
     if (!pids.includes(myId) && myId) pids.push(myId);
 
-    // PREVIOUS BUG: 'current' used to read games[gId].players, which is
-    // the lobby-side count maintained by GameListPlayerJoined / Left.
-    // Once a client enters a game, the server stops sending GameList*
-    // events to it, so that counter freezes at whatever value it had
-    // when the join happened — typically 1 (just the admin). Meanwhile
-    // seatData/pids continued to grow correctly via GamePlayerJoined,
-    // so the panel displayed an obviously-wrong 'Players: 1 / 5' next
-    // to a list of two pseudos, and the 'Start now' bot button never
-    // appeared because the threshold check (current >= minHumans) saw
-    // the stale 1 instead of the real 2.
+    // 'current' MUST come from the same source as the player list below
+    // so the two can't disagree visually. We tried using games[gId].players
+    // as a fallback (commit 6e03ed1) and as a 'safety net' value here, but
+    // both lead to inconsistencies:
     //
-    // Fix: use pids.length as the single source of truth. The fallback
-    // to g.players is preserved for the half-second between JoinGameAck
-    // and the first GamePlayerJoined of our table neighbours, where
-    // seatData is still being primed.
-    const current = Math.max(pids.length, g.players || 1, 1);
+    //   * games[gId].players is the LOBBY counter, only updated by
+    //     GameListPlayerJoined / Left. Once a client enters a game, the
+    //     server stops sending those messages to it, so this counter
+    //     freezes at its last value — typically reflecting the state
+    //     when the user joined.
+    //
+    //   * Combining it via Math.max with pids.length produces:
+    //         lobby counter=2 (stale), pids.length=1 (real)  → shows 2
+    //     even though the list right below only has 1 pseudo. This was
+    //     visible after a user disconnected and reconnected.
+    //
+    // pids is the same array we iterate to build the list below. By
+    // anchoring current on pids.length we guarantee count and list
+    // always agree.
+    const current = Math.max(pids.length, 1);
 
     // Build the player list rows
     let rows = '';
