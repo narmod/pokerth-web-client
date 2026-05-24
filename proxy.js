@@ -131,12 +131,18 @@ const httpServer = http.createServer((req, res) => {
     const type = ext === '.css'  ? 'text/css; charset=utf-8'
            : ext === '.js'   ? 'application/javascript; charset=utf-8'
            : ext === '.mjs'  ? 'application/javascript; charset=utf-8'
+           : ext === '.html' ? 'text/html; charset=utf-8'
            : ext === '.json' ? 'application/json; charset=utf-8'
            : ext === '.proto'? 'text/plain; charset=utf-8'
+           : ext === '.txt'  ? 'text/plain; charset=utf-8'
+           : ext === '.md'   ? 'text/markdown; charset=utf-8'
            : ext === '.map'  ? 'application/json; charset=utf-8'
            : ext === '.svg'  ? 'image/svg+xml'
            : ext === '.ico'  ? 'image/x-icon'
            : ext === '.png'  ? 'image/png'
+           : ext === '.webp' ? 'image/webp'
+           : ext === '.woff' ? 'font/woff'
+           : ext === '.woff2'? 'font/woff2'
            : 'application/octet-stream';
     const maxAge = (ext === '.css' || ext === '.js' || ext === '.mjs') ? 3600 : 86400;
     res.writeHead(200, { 'Content-Type': type, 'Cache-Control': 'public, max-age=' + maxAge });
