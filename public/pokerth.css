@@ -2093,3 +2093,75 @@ body:not(.in-game) .my-zone {
   margin: 8px 0 4px;
   letter-spacing: 0.04em;
 }
+
+
+/* ══ WAITING PANEL ══
+   Rich waiting-room display shown between JoinGameAck and
+   GameStartInitial. Lives inside the same #g-actions container that
+   normally hosts the action buttons; replaces the previous plain
+   .waiting-msg italic string. */
+.waiting-panel {
+  display: flex; flex-direction: column; align-items: center;
+  gap: 7px; padding: 10px 14px; max-width: 480px; margin: 0 auto;
+}
+.wp-title {
+  font-family: 'Cinzel', serif; font-size: 0.9rem; letter-spacing: 0.1em;
+  color: var(--gold); text-transform: uppercase;
+}
+.wp-count {
+  font-size: 0.88rem; color: var(--cream);
+}
+.wp-count b { color: var(--gold); font-weight: 700; }
+.wp-bar {
+  display: flex; gap: 6px; margin: 2px 0;
+}
+.wp-dot {
+  width: 10px; height: 10px; border-radius: 50%;
+  border: 1px solid var(--gold-dim);
+}
+.wp-dot-on  { background: var(--gold); box-shadow: 0 0 6px rgba(200,168,74,0.7); }
+.wp-dot-off { background: transparent; }
+.wp-ok, .wp-need {
+  font-size: 0.78rem; font-weight: 600; letter-spacing: 0.04em;
+  padding: 2px 0;
+}
+.wp-ok   { color: #58c97a; }
+.wp-need { color: #e0a040; }
+.wp-list {
+  list-style: none; margin: 4px 0 0; padding: 0;
+  display: flex; flex-wrap: wrap; justify-content: center; gap: 6px 10px;
+  width: 100%;
+}
+.wp-player {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 3px 10px 3px 4px;
+  font-size: 0.78rem;
+}
+.wp-av {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 22px; height: 22px; border-radius: 50%;
+  background: rgba(255,255,255,0.05);
+}
+.wp-av.emoji-av { font-size: 1.05rem; line-height: 1; }
+.wp-av-letter   { font-size: 0.7rem; font-weight: 700; color: var(--gold); }
+.wp-name  { color: var(--cream); }
+.wp-me    {
+  font-size: 0.6rem; color: var(--gold);
+  text-transform: uppercase; letter-spacing: 0.1em;
+  background: rgba(200,168,74,0.12); padding: 1px 5px; border-radius: 3px;
+}
+.wp-hint {
+  font-size: 0.74rem; color: var(--gold-dim);
+  font-style: italic; margin-top: 4px; text-align: center;
+}
+.wp-hint-admin { color: #58c97a; font-style: normal; font-weight: 600; }
+/* On mobile, keep things compact */
+@media (max-width: 640px) {
+  .waiting-panel { padding: 8px 10px; gap: 5px; }
+  .wp-title { font-size: 0.82rem; }
+  .wp-player { font-size: 0.72rem; padding: 2px 8px 2px 3px; }
+  .wp-av { width: 20px; height: 20px; }
+}
