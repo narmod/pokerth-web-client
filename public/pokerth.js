@@ -1058,9 +1058,14 @@ document.addEventListener("DOMContentLoaded", function() {
   // Auto-fill PokerTH server host (same machine by default on LAN)
   var hostInput = document.getElementById("host");
   if (hostInput && host !== 'localhost' && host !== '127.0.0.1') {
-    // If accessing from another PC, the PokerTH server is likely on the same machine as the proxy
-    hostInput.value = host;
     hostInput.dataset.autoHost = host; // remember the auto-detected value
+    // Do NOT override the host if the current login mode targets pokerth.net
+    // (onLoginModeChange already set it correctly above).
+    var __modeEl = document.getElementById('login-mode');
+    var __currentMode = __modeEl ? __modeEl.value : '';
+    if (__currentMode !== 'guest' && __currentMode !== 'auth') {
+      hostInput.value = host;
+    }
   }
 });
 
@@ -3292,13 +3297,16 @@ function dismissWinner() {
         $('use-tls').checked = false;
         if (proxyInput) proxyInput.value = proto + '//' + (autoHost||'localhost') + ':' + port;
         if (hostInput) hostInput.value = 'pokerth.net';
+        if ($('port')) $('port').value = '7234';   // pokerth.net standard port
         setStatus('');
       } else {
+        // mode === 'auth'  (pokerth.net registered account)
         $('nick-label').textContent = t('enterAccount');
         $('nick').placeholder = 'MonCompte';
         $('use-tls').checked = false;
         if (proxyInput) proxyInput.value = proto + '//' + (autoHost||'localhost') + ':' + port;
         if (hostInput) hostInput.value = 'pokerth.net';
+        if ($('port')) $('port').value = '7234';   // pokerth.net standard port
         setStatus(t('enterCredentials'));
       }
     },
