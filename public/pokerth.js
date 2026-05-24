@@ -862,49 +862,45 @@ function evaluateBestHand(holeCards, commCards) {
 
 
 function animateChipToPot(pid, amount) {
-  // Trouver la position du siège du joueur
-  var seatEls = document.querySelectorAll('.seat');
-  var fromEl = null;
-  seatEls.forEach(function(el) {
-    // Le siège actif est celui du pid en cours
-    if (!fromEl && el.style.top) fromEl = el;
-  });
-  // Position cible : le pot-bar ou centre de l'écran
-  var potBar = document.getElementById('g-potbar');
-  var targetRect = potBar ? potBar.getBoundingClientRect() : null;
-  if (!targetRect) return;
-  var tx = targetRect.left + targetRect.width/2;
-  var ty = targetRect.top + targetRect.height/2;
-
-  // Position source : siège du joueur
-  var zone = document.getElementById('g-table-zone');
-  if (!zone) return;
-  var myIdx = seats.indexOf(myId);
-  var rotated = myIdx >= 0 ? [...seats.slice(myIdx), ...seats.slice(0,myIdx)] : seats;
-  var seatIdx = rotated.indexOf(pid);
-  var seatEl = seatEls[seatIdx];
+  // Source : siège du joueur localisé via data-pid (fiable indépendamment de l'ordre DOM)
+  var seatEl = document.querySelector('#g-seats [data-pid="' + pid + '"]');
   if (!seatEl) return;
   var sr = seatEl.getBoundingClientRect();
-  var sx = sr.left + sr.width/2;
-  var sy = sr.top + sr.height/2;
+  var sx = sr.left + sr.width  / 2;
+  var sy = sr.top  + sr.height / 2;
+
+  // Cible : libellé du pot (#g-pot dans le pot-strip)
+  var potEl = document.getElementById('g-pot');
+  var zone  = document.getElementById('g-table-zone');
+  var tx, ty;
+  if (potEl) {
+    var pr = potEl.getBoundingClientRect();
+    tx = pr.left + pr.width  / 2;
+    ty = pr.top  + pr.height / 2;
+  } else if (zone) {
+    var zr = zone.getBoundingClientRect();
+    tx = zr.left + zr.width  / 2;
+    ty = zr.top  + zr.height / 2;
+  } else {
+    return;
+  }
 
   // Créer le jeton volant
   var chip = document.createElement('div');
   chip.className = 'flying-chip';
-  chip.textContent = amount > 0 ? (amount > 999 ? Math.round(amount/100)/10+'k' : amount) : '';
-  chip.style.left = sx + 'px';
-  chip.style.top  = sy + 'px';
+  chip.textContent = amount > 0 ? (amount > 999 ? Math.round(amount / 100) / 10 + 'k' : amount) : '';
+  chip.style.left      = sx + 'px';
+  chip.style.top       = sy + 'px';
   chip.style.transform = 'scale(0.7)';
   document.body.appendChild(chip);
 
-  // Déclencher l'animation après un frame
   requestAnimationFrame(function() {
     requestAnimationFrame(function() {
-      chip.style.left = tx + 'px';
-      chip.style.top  = ty + 'px';
+      chip.style.left      = tx + 'px';
+      chip.style.top       = ty + 'px';
       chip.style.transform = 'scale(1.1)';
-      chip.style.opacity = '0';
-      setTimeout(function(){ if(chip.parentNode) chip.parentNode.removeChild(chip); }, 700);
+      chip.style.opacity   = '0';
+      setTimeout(function() { if (chip.parentNode) chip.parentNode.removeChild(chip); }, 700);
     });
   });
 }
@@ -2014,6 +2010,7 @@ const App = (() => {
         const flopStr = commCards.filter(n=>n!=null).map(n=>cardName(n,true)).join(', ');
         renderComm(true); // flip animation
         renderSeats();
+        setTimeout(renderHandStrength, 500); // force de la main au flop
         logAction('--- Flop [' + flopStr + '] ---');
         notifyCard(); notifyCard(); notifyCard();
         break;
@@ -2034,6 +2031,7 @@ const App = (() => {
         const tvCard = commCards[3]; const tvName = tvCard != null ? cardName(tvCard, true) : '?';
         logAction('--- ' + t('turn') + ' [' + tvName + '] ---');
         renderComm(true); // flip animation
+        setTimeout(renderHandStrength, 500); // force de la main au turn
         notifyCard();
         break;
       }
@@ -2054,6 +2052,7 @@ const App = (() => {
         const rvCard = commCards[4]; const rvName = rvCard != null ? cardName(rvCard, true) : '?';
         logAction('--- ' + t('river') + ' [' + rvName + '] ---');
         renderComm(true, true); // flip animation + dramatic river
+        setTimeout(renderHandStrength, 600); // force de la main à la river
         playTone(350, 0.08, 0.08); setTimeout(function(){ notifyCard(); }, 200);
 
         break;
@@ -2829,7 +2828,7 @@ const App = (() => {
         cardStr = '<div style="display:flex;gap:2px;margin-top:1px">'
           + cardHtml(sd.card1,'xsm') + cardHtml(sd.card2,'xsm') + '</div>';
       }
-      h += '<div class="' + cls + '" style="position:absolute;top:' + px.top.toFixed(1) + 'px;left:' + px.left.toFixed(1) + 'px;transform:translate(-50%,-50%)">';
+      h += '<div class="' + cls + '" data-pid="' + pid + '" style="position:absolute;top:' + px.top.toFixed(1) + 'px;left:' + px.left.toFixed(1) + 'px;transform:translate(-50%,-50%)">';
       const isSB = pid === sbPid;
       const isBB = pid === bbPid;
       let blindBadge = '';
@@ -2913,8 +2912,11 @@ const App = (() => {
     if (!el) return;
     el.value = v;
     if (window.innerWidth < 640) {
-      // Mobile : appliquer directement, pas de clavier
-      App.doRaise();
+      // Mobile : synchroniser slider + display, l'utilisateur valide avec le bouton Raise
+      var slider  = document.getElementById('raise-slider');
+      var display = document.getElementById('raise-display');
+      if (slider)  slider.value       = v;
+      if (display) display.textContent = v;
     } else {
       el.focus(); // Desktop : focus pour permettre l'ajustement
     }
@@ -2999,6 +3001,20 @@ const App = (() => {
     const da = canRaise ? '' : ' disabled'; // disabled attribute
     const allInOnly = myMoney <= toCall;    // ne peut que call ou all-in
 
+    const isMobile = window.innerWidth < 640;
+    const raiseRowHtml = isMobile
+      ? '<div class="raise-row raise-row-mobile">'
+        + '<input class="raise-slider" id="raise-slider" type="range" min="' + minBet + '" max="' + myMoney + '" value="' + minBet + '" step="1"' + da
+        + ' oninput="document.getElementById(\'raise-amt\').value=this.value;document.getElementById(\'raise-display\').textContent=this.value">'
+        + '<span class="raise-display" id="raise-display">' + minBet + '</span>'
+        + '<input id="raise-amt" type="hidden" value="' + minBet + '"' + da + '>'
+        + '<button class="btn-action btn-raise raise-btn"' + da + ' onclick="App.doRaise()" title="Raise (R)">' + raiseLabel + '</button>'
+        + '</div>'
+      : '<div class="raise-row">'
+        + '<input class="raise-input" id="raise-amt" type="number" min="' + minBet + '" max="' + myMoney + '" value="' + minBet + '"' + da + '>'
+        + '<button class="btn-action btn-raise raise-btn"' + da + ' onclick="App.doRaise()" title="Raise (R)">' + raiseLabel + '</button>'
+        + '</div>';
+
     const h = '<div class="action-grid">'
       + '<div class="action-top-row">'
       +   '<button class="btn-action btn-fold" onclick="App.doAction(1,0)" title="Fold (F)">' + t('fold') + '</button>'
@@ -3009,11 +3025,7 @@ const App = (() => {
       +   '<button class="btn-pct"' + da + ' onclick="setPct(' + p50  + ')">50%</button>'
       +   '<button class="btn-pct"' + da + ' onclick="setPct(' + p100 + ')">100%</button>'
       + '</div>'
-      + '<div class="raise-row">'
-      +   '<input class="raise-input" id="raise-amt" type="number" min="' + minBet + '" max="' + myMoney + '" value="' + minBet + '"' + da
-      +   (window.innerWidth < 640 ? ' readonly style="cursor:default;opacity:0.7"' : '') + '>'
-      +   '<button class="btn-action btn-raise raise-btn"' + da + ' onclick="App.doRaise()" title="Raise (R)">' + raiseLabel + '</button>'
-      + '</div>'
+      + raiseRowHtml
       + '<button class="btn-action btn-allin" onclick="App.doAction(6,' + myMoney + ')" title="All-In (A)">All-In <b>' + myMoney + '</b></button>'
       + '</div>';
 
@@ -3078,6 +3090,28 @@ function showWinnerOverlay(winners) {
     html += '<div class="wc-cards-row">';
     comm.forEach(function(n){ html += cardHtml(n, "sm", true); });
     html += '</div>';
+  }
+
+  // ── Combinaison gagnante ──
+  if (comm.length >= 3) {
+    // Chercher la meilleure main parmi les gagnants (cartes connues)
+    var bestHandLabel = '';
+    for (var _wi = 0; _wi < winners.length && !bestHandLabel; _wi++) {
+      var _wpid = winners[_wi].pid;
+      var _wsd  = seatData[_wpid] || {};
+      var _hc1  = (_wpid === myId) ? myCards[0] : _wsd.card1;
+      var _hc2  = (_wpid === myId) ? myCards[1] : _wsd.card2;
+      if (_hc1 != null && _hc2 != null) {
+        var _holeNorm = [_hc1, _hc2].map(normalizeHoleCard).filter(function(c){ return c != null; });
+        if (_holeNorm.length === 2) {
+          var _res = evaluateBestHand(_holeNorm, comm);
+          if (_res) bestHandLabel = _lang === 'fr' ? _res.fr : _res.en;
+        }
+      }
+    }
+    if (bestHandLabel) {
+      html += '<div class="wc-best-hand">' + bestHandLabel + '</div>';
+    }
   }
 
   // ── Players results ──
