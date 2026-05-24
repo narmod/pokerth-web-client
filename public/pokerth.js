@@ -2290,7 +2290,8 @@ const App = (() => {
     const suit  = suits[si] || '?';
     const rank  = ['2','3','4','5','6','7','8','9','10','J','Q','K','A'][ri] || '?';
     const red   = (isComm ? (si===0||si===3) : (si>=2)) ? ' red' : '';
-    return '<div class="pk' + sz + red + extraCls + '"><span class="c-rank">' + rank + '</span><span class="c-suit">' + suit + '</span></div>';
+    const spade = (isComm ? si===2 : si===1) ? ' spade' : '';
+    return '<div class="pk' + sz + red + spade + extraCls + '"><span class="c-rank">' + rank + '</span><span class="c-suit">' + suit + '</span></div>';
   }
 
 
@@ -2304,7 +2305,8 @@ const App = (() => {
     const suits = isComm ? ['♦','♣','♠','♥'] : ['♣','♠','♥','♦'];
     const rank=['2','3','4','5','6','7','8','9','10','J','Q','K','A'][ri]||'?';
     const red=(isComm?(si===0||si===3):(si>=2))?' red':'';
-    return '<div class="pk '+cls+red+'"><span class="c-rank">'+rank+'</span><span class="c-suit">'+suits[si]+'</span></div>';
+    const spade2=(isComm?si===2:si===1)?' spade':'';
+    return '<div class="pk '+cls+red+spade2+'"><span class="c-rank">'+rank+'</span><span class="c-suit">'+suits[si]+'</span></div>';
   }
 
   function renderMyCards() {
@@ -2475,8 +2477,11 @@ const App = (() => {
     if (myCards[0] == null || myCards[1] == null) return -1;
     var comm = commCards.filter(function(c){ return c != null; });
     if (comm.length < 3) return -1; // seulement après le flop
-    var known = [myCards[0], myCards[1]].concat(comm);
-    // Deck restant
+    // Normaliser mes hole cards vers comm encoding (même échelle que commCards)
+    var myNorm = [myCards[0], myCards[1]].map(normalizeHoleCard).filter(function(c){ return c != null; });
+    if (myNorm.length < 2) return -1;
+    // Le deck est en comm encoding (0-51). On exclut mes cartes normalisées + comm cards.
+    var known = myNorm.concat(comm);
     var deck = [];
     for (var i = 0; i < 52; i++) { if (known.indexOf(i) < 0) deck.push(i); }
     var needed = 5 - comm.length;
@@ -2489,21 +2494,25 @@ const App = (() => {
         var j = Math.floor(Math.random()*(i2+1));
         var tmp = d[i2]; d[i2] = d[j]; d[j] = tmp;
       }
-      // Cartes communes restantes
+      // Cartes communes restantes (en comm encoding)
       var extraComm = d.slice(0, needed);
       var fullComm = comm.concat(extraComm);
       var pos = needed;
-      // Évaluer ma main
-      var myScore = evaluateBestHand([myCards[0], myCards[1]], fullComm);
-      // Évaluer les adversaires
+      // Évaluer ma main (myNorm est déjà en comm encoding)
+      var myScore = evaluateBestHand(myNorm, fullComm);
+      // Évaluer les adversaires (cartes piochées dans le deck comm)
       var iWin = true;
       for (var o = 0; o < nOpp; o++) {
         var oc1 = d[pos++], oc2 = d[pos++];
         if (oc1 === undefined || oc2 === undefined) { iWin = false; break; }
+        // Les cartes adverses simulées sont en comm encoding (piochées du deck comm)
         var oppScore = evaluateBestHand([oc1, oc2], fullComm);
-        if (oppScore && myScore && oppScore.rank > myScore.rank) { iWin = false; break; }
-        if (oppScore && myScore && oppScore.rank === myScore.rank) {
-          if ((oppScore.high||0) > (myScore.high||0)) { iWin = false; break; }
+        if (oppScore && myScore && oppScore.r > myScore.r) { iWin = false; break; }
+        if (oppScore && myScore && oppScore.r === myScore.r) {
+          // Départager sur la carte haute
+          var myHigh  = Math.max.apply(null, myNorm.map(function(c){ return c%13; }));
+          var oppHigh = Math.max.apply(null, [oc1,oc2].map(function(c){ return c%13; }));
+          if (oppHigh > myHigh) { iWin = false; break; }
         }
       }
       if (iWin) wins++;
