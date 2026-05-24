@@ -3303,7 +3303,7 @@ function dismissWinner() {
         // mode === 'auth'  (pokerth.net registered account)
         $('nick-label').textContent = t('enterAccount');
         $('nick').placeholder = 'MonCompte';
-        $('use-tls').checked = false;
+        $('use-tls').checked = true;   // TLS is mandatory for credentialed login
         if (proxyInput) proxyInput.value = proto + '//' + (autoHost||'localhost') + ':' + port;
         if (hostInput) hostInput.value = 'pokerth.net';
         if ($('port')) $('port').value = '7234';   // pokerth.net standard port
@@ -3368,17 +3368,17 @@ function dismissWinner() {
       players = {};
       loaded  = false;
 
-      // Direct WSS only for guest mode on pokerth.net (the /pthlive endpoint
-      // accepts unauthenticated/guest sessions). Authenticated login must
-      // hit the regular PokerTH server on port 7234 via the TLS-capable proxy.
-      const isPokerThDirect = (loginMode === 'guest');
+      // Direct WSS for any pokerth.net mode (guest or authenticated). The
+      // /pthlive endpoint is the only one publicly exposed by pokerth.net
+      // (port 7234 is not reachable in TLS from the outside). It accepts
+      // authenticated logins as long as the InitMessage carries the password
+      // in clientUserData.
+      const isPokerThDirect = (loginMode === 'guest' || loginMode === 'auth');
       const targetIsPokerTH = host.includes('pokerth.net');
       directWS = isPokerThDirect && targetIsPokerTH;
-      // For auth mode targeting pokerth.net, force TLS on the proxy hop.
-      const effectiveTlsParam = (loginMode === 'auth' && targetIsPokerTH) ? '1' : tlsParam;
       const finalUrl = directWS
         ? 'wss://www.pokerth.net:443/pthlive'
-        : proxyUrl + '?host=' + encodeURIComponent(host) + '&port=' + encodeURIComponent(port) + '&tls=' + effectiveTlsParam;
+        : proxyUrl + '?host=' + encodeURIComponent(host) + '&port=' + encodeURIComponent(port) + '&tls=' + tlsParam;
 
       setStatus(directWS ? t('connDirect') : t('connProxy'));
 
