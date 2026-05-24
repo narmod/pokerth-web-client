@@ -116,6 +116,8 @@ const LANG = {
     allowSpectators:'Spectators',
     allowOn:'Allowed',
     allowOff:'Blocked',
+    waitingReadyForBots:'Ready — {n} human(s) present, you can fill with bots',
+    waitingStartNow:'Start now',
 },
   fr: {
     connect:'Se connecter', disconnect:'✕ Déconnecter', connecting:'Connexion en cours…',
@@ -219,6 +221,8 @@ const LANG = {
     allowSpectators:'Spectateurs',
     allowOn:'Autorisés',
     allowOff:'Interdits',
+    waitingReadyForBots:'Prêt — {n} humain(s) présent(s), vous pouvez remplir avec des bots',
+    waitingStartNow:'Lancer maintenant',
 }
 };
 
