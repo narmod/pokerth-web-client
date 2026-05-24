@@ -768,6 +768,8 @@ body {
   .pk { width: 36px; height: 52px; font-size: 0.86rem; }
   .pk.sm { width: 28px; height: 40px; font-size: 0.66rem; }
   /* table-zone padding handled by table-scaler */
+  /* Oval moins large : libère de l'espace pour les joueurs sur les côtés */
+  .felt-oval { width: min(400px, 72vw) !important; }
 }
 @media (max-width: 500px) and (orientation: portrait) {
   /* Oval: compact to fit 10 seats */
@@ -779,7 +781,7 @@ body {
   border: 2px solid rgba(255,255,255,0.07);
   pointer-events: none;
 }
-.felt-oval { overflow: visible; width: 95vw; height: 42vw; min-height: 140px; }
+.felt-oval { overflow: visible; width: 68vw; height: 42vw; min-height: 130px; }
 
   /* Cards */
   .pk { width: 28px; height: 40px; font-size: 0.68rem; }
