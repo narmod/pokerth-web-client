@@ -1,0 +1,25 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "lib": ["ES2022", "DOM", "DOM.Iterable", "WebWorker"],
+    "checkJs": false,
+    "allowJs": true,
+    "resolveJsonModule": true,
+    "baseUrl": ".",
+    "paths": {
+      "@proto/*": ["public/proto/*"],
+      "@modules/*": ["public/modules/*"]
+    }
+  },
+  "include": [
+    "proxy.js",
+    "public/**/*.js",
+    "public/**/*.mjs"
+  ],
+  "exclude": [
+    "node_modules",
+    "public/proto/pokerth-bundle.mjs"
+  ]
+}

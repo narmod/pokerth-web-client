@@ -119,18 +119,34 @@ const httpServer = http.createServer((req, res) => {
     }
   }
   
-  const publicPath = path.join(__dirname, 'public', path.basename(req.url.split('?')[0]));
-  if (fs.existsSync(publicPath) && fs.statSync(publicPath).isFile()) {
-    const ext = path.extname(publicPath).toLowerCase();
-    const type = ext === '.css' ? 'text/css; charset=utf-8'
-           : ext === '.js'  ? 'application/javascript; charset=utf-8'
-           : ext === '.svg' ? 'image/svg+xml'
-           : ext === '.ico' ? 'image/x-icon'
-           : ext === '.png' ? 'image/png'
+  // Support subdirectories under public/ while preventing path traversal.
+  const publicRoot = path.join(__dirname, 'public');
+  const urlPath = decodeURIComponent(req.url.split('?')[0]);
+  const candidate = path.normalize(path.join(publicRoot, urlPath));
+  if (!candidate.startsWith(publicRoot + path.sep) && candidate !== publicRoot) {
+    res.writeHead(403); res.end('Forbidden'); return;
+  }
+  if (fs.existsSync(candidate) && fs.statSync(candidate).isFile()) {
+    const ext = path.extname(candidate).toLowerCase();
+    const type = ext === '.css'  ? 'text/css; charset=utf-8'
+           : ext === '.js'   ? 'application/javascript; charset=utf-8'
+           : ext === '.mjs'  ? 'application/javascript; charset=utf-8'
+           : ext === '.html' ? 'text/html; charset=utf-8'
+           : ext === '.json' ? 'application/json; charset=utf-8'
+           : ext === '.proto'? 'text/plain; charset=utf-8'
+           : ext === '.txt'  ? 'text/plain; charset=utf-8'
+           : ext === '.md'   ? 'text/markdown; charset=utf-8'
+           : ext === '.map'  ? 'application/json; charset=utf-8'
+           : ext === '.svg'  ? 'image/svg+xml'
+           : ext === '.ico'  ? 'image/x-icon'
+           : ext === '.png'  ? 'image/png'
+           : ext === '.webp' ? 'image/webp'
+           : ext === '.woff' ? 'font/woff'
+           : ext === '.woff2'? 'font/woff2'
            : 'application/octet-stream';
-    const maxAge = (ext === '.css' || ext === '.js') ? 3600 : 86400;
+    const maxAge = (ext === '.css' || ext === '.js' || ext === '.mjs') ? 3600 : 86400;
     res.writeHead(200, { 'Content-Type': type, 'Cache-Control': 'public, max-age=' + maxAge });
-    return fs.createReadStream(publicPath).pipe(res);
+    return fs.createReadStream(candidate).pipe(res);
   }
   res.writeHead(404); res.end('Not found');
 });
