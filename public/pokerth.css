@@ -2021,3 +2021,40 @@ body:not(.in-game) .my-zone {
   text-align: center;
   text-shadow: 0 0 6px rgba(200,168,74,0.8);
 }
+
+/* ══ Slider de mise mobile ══════════════════════════════════ */
+.raise-row-mobile {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.raise-slider {
+  flex: 1;
+  accent-color: var(--gold, #c8a84a);
+  height: 4px;
+  cursor: pointer;
+  min-width: 0;
+}
+.raise-display {
+  font-family: 'Inconsolata', monospace;
+  font-size: 0.85rem;
+  color: var(--gold, #c8a84a);
+  font-weight: 700;
+  min-width: 42px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+/* ══ Combinaison gagnante dans l'overlay winner ═════════════ */
+.wc-best-hand {
+  text-align: center;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--gold, #c8a84a);
+  background: rgba(200, 168, 74, 0.1);
+  border: 1px solid rgba(200, 168, 74, 0.3);
+  border-radius: 6px;
+  padding: 8px 14px;
+  margin: 8px 0 4px;
+  letter-spacing: 0.04em;
+}
