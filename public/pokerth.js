@@ -2822,9 +2822,17 @@ const App = (() => {
     const maxP    = g.maxPlayers || 5;
     const minToStart = 2;
 
-    // Collect the pids we know about for this table. seatData is
-    // populated by GamePlayerJoined; we always know ourselves.
-    const pids = Object.keys(seatData).map(Number);
+    // Collect the pids currently present at this table. seatData is
+    // populated by GamePlayerJoined and gets active=false on GamePlayerLeft
+    // (we keep the entry around because the table view uses it to show
+    // the 'OUT' badge for eliminated players during the game). Before
+    // the game has actually started though, a player who left the room
+    // is gone for good — drop them from the waiting panel entirely.
+    const pids = Object.keys(seatData)
+      .map(Number)
+      .filter(function(pid) {
+        return !seatData[pid] || seatData[pid].active !== false;
+      });
     if (!pids.includes(myId) && myId) pids.push(myId);
 
     // PREVIOUS BUG: 'current' used to read games[gId].players, which is
