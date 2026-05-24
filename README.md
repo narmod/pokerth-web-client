@@ -1,183 +1,119 @@
 # PokerTH Web Client
 
-> Client web moderne pour PokerTH — jouez au Texas Hold'em directement depuis votre navigateur, sans installation.
+An experimental modern web client for [PokerTH](https://github.com/pokerth/pokerth), the open-source Texas Hold'em poker game.
 
-[![Version](https://img.shields.io/badge/version-0.1.0--alpha-gold)](https://github.com/narmod/pokerth-web-client)
-[![Node.js](https://img.shields.io/badge/Node.js-18%2B-green)](https://nodejs.org)
-[![License](https://img.shields.io/badge/license-GPL--2.0-blue)](LICENSE)
+The goal of this project is to let players connect to existing PokerTH servers directly from a browser through a small WebSocket-to-TCP/TLS proxy.
 
----
+## Project status
 
-## 📖 Présentation
+This project is currently an **alpha prototype**. It is suitable for testing, development, and experimentation, but it should not yet be considered production-ready.
 
-**PokerTH Web Client** est une alternative web au client historique PokerTH (C++/Qt).  
-Il permet de se connecter à n'importe quel serveur PokerTH directement depuis un navigateur moderne, sans rien installer, via un proxy WebSocket-to-TCP.
+Current capabilities include:
 
-### Objectifs
-- Remplacer le client lourd par une interface web responsive
-- Compatibilité totale avec les serveurs PokerTH existants (protocole Protobuf)
-- Utilisable sur ordinateur, tablette et mobile
+- Browser-based PokerTH interface
+- WebSocket-to-TCP/TLS Node.js proxy
+- Guest connection flow
+- Lobby display
+- Player list
+- Game list
+- Join existing games
+- Create new games
+- Basic poker table interface
+- Game and lobby chat
+- Responsive interface foundations
 
----
+## Architecture
 
-## ✨ Fonctionnalités
+Browsers cannot directly open raw TCP/TLS connections to classic PokerTH servers. This project uses a Node.js proxy as a bridge:
 
-### Connexion
-- 4 modes : LAN, Serveur privé Invité, pokerth.net Invité, pokerth.net Compte
-- Sauvegarde des identifiants (localStorage)
-- Support TLS optionnel
-- Reconnexion automatique
-
-### Lobby
-- Liste des tables en temps réel
-- Rejoindre ou créer une partie en un clic (⚡ Join or Create)
-- Création avancée : blindes, timeout, bots, joueurs min, mot de passe
-- Mode spectateur
-
-### Table de poker
-- Affichage complet de la table ovale avec sièges positionnés
-- Jetons SVG style casino (SB 🔵, BB 🔴, D ⚫) avec animation
-- Cartes communes avec retournement flip 3D (flop/turn/river)
-- Distribution animée des cartes en début de main
-- Jetons animés glissant vers le pot lors des mises
-- Timer arc SVG + badge secondes sous chaque avatar
-- Force de la main affichée (pré-flop → river)
-
-### Joueur
-- Avatar emoji personnalisé (43 choix : famille, animaux, créatures, personnages)
-- Visible par tous les joueurs via le proxy (`AVATAR:pid:emoji`)
-- Statistiques de session : mains jouées, victoires, gain/perte, historique
-- Panneau stats accessible en cliquant sur son avatar
-
-### Chat & social
-- Chat lobby et chat en partie
-- 25 réactions emoji animées avec compteur
-- Diffusion temps réel via proxy WebSocket
-
-### Confort
-- Notifications navigateur quand c'est votre tour
-- Titre d'onglet dynamique (⚡ TON TOUR / YOUR TURN)
-- Raccourcis clavier : F=Fold, C=Call, R=Raise, A=All-in
-- Son : actions, victoire, timer urgent
-- Mode plein écran
-- Bascule langue EN/FR complète
-
-### PWA
-- Installable comme application native (manifest.json + Service Worker)
-- Fonctionne hors-ligne (cache statique)
-
----
-
-## 🏗️ Architecture
-
-```
-Navigateur (WebSocket)
-        ↕
-   proxy.js (Node.js)        ← pont WebSocket ↔ TCP/TLS
-        ↕
-Serveur PokerTH (TCP/TLS)
+```text
+Browser WebSocket <-> Node.js proxy <-> PokerTH TCP/TLS server
 ```
 
-### Fichiers principaux
-| Fichier | Rôle |
-|---|---|
-| `proxy.js` | Serveur Node.js : proxy WebSocket→TCP + HTTP statique |
-| `public/pokerth-client.html` | Interface HTML (65 KB) |
-| `public/pokerth.js` | Logique applicative JS (164 KB) |
-| `public/pokerth.css` | Styles (64 KB) |
-| `public/manifest.json` | PWA manifest |
-| `public/sw.js` | Service Worker |
+## Requirements
 
-### Messages proxy custom (texte, broadcast à tous les clients)
-| Message | Description |
-|---|---|
-| `REACT:pid:emoji` | Réaction emoji d'un joueur |
-| `AVATAR:pid:emoji` | Avatar emoji d'un joueur |
+- Node.js 18 or newer
+- npm
+- A modern browser
 
----
-
-## 🚀 Installation & démarrage
-
-### Prérequis
-- Node.js 18+
-- Un serveur PokerTH accessible
-
-### Démarrage rapide
+## Installation
 
 ```bash
-git clone https://github.com/narmod/pokerth-web-client.git
-cd pokerth-web-client
 npm install
-node proxy.js
 ```
 
-Ouvrir [http://localhost:8080](http://localhost:8080)
+## Run
 
-### Options de lancement
+Start the proxy:
+
 ```bash
-node proxy.js            # TLS activé (pour pokerth.net)
-node proxy.js --notls    # Sans TLS (LAN / serveur privé)
-node proxy.js --insecure # TLS sans vérification de certificat
-node proxy.js 9090       # Port personnalisé
+npm start
 ```
 
-### Avec PM2 (production)
+Then open:
+
+```text
+http://localhost:8080
+```
+
+You can also choose a custom port:
+
 ```bash
-npm install -g pm2
-pm2 start proxy.js --name pokerth-web
-pm2 save
+node proxy.js 8090
 ```
 
----
+For a LAN server without TLS:
 
-## ⚙️ Configuration du serveur PokerTH
-
-Pour un serveur privé avec le mode invité activé :
-
-```ini
-# pokerth.cfg
-ServerRestrictGuestLogin=0    # Autoriser les invités
-ServerAllowSpectator=1        # Autoriser les spectateurs
+```bash
+npm run start:lan
 ```
 
----
+For development against a server with an untrusted certificate:
 
-## 🖥️ Compatibilité
-
-| Navigateur | Support |
-|---|---|
-| Chrome / Edge 90+ | ✅ Complet |
-| Firefox 88+ | ✅ Complet |
-| Safari 15+ | ✅ Complet |
-| Mobile Chrome/Safari | ✅ Responsive |
-
----
-
-## 📁 Structure du projet
-
+```bash
+npm run start:insecure
 ```
+
+> Warning: `--insecure` disables TLS certificate verification and should only be used for local development.
+
+## Repository layout
+
+```text
 pokerth-web-client/
-├── proxy.js              # Serveur proxy Node.js
-├── package.json
 ├── public/
-│   ├── pokerth-client.html   # HTML principal
-│   ├── pokerth.js            # JS applicatif
-│   ├── pokerth.css           # Styles
-│   ├── manifest.json         # PWA
-│   ├── sw.js                 # Service Worker
-│   └── favicon.*             # Icônes (svg, ico, png)
-└── docs/                     # Documentation
+│   ├── pokerth-client.html
+│   └── favicon files
+├── docs/
+│   ├── PROJECT.md
+│   ├── ROADMAP.md
+│   └── SECURITY.md
+├── proxy.js
+├── package.json
+├── .gitignore
+├── LICENSE
+└── README.md
 ```
 
----
+## Known limitations
 
-## 📜 Licence
+- The PokerTH Protobuf protocol is still handled manually in parts of the client.
+- Registered account authentication is not fully implemented.
+- Reconnection handling needs improvement.
+- The client code is currently mostly contained in one HTML file and should be refactored into modules.
+- More protocol tests are needed before considering the client stable.
 
-GPL-2.0 — comme PokerTH lui-même.
+## Recommended next steps
 
----
+1. Replace manual Protobuf parsing with generated classes from `pokerth.proto`.
+2. Split the client into maintainable JavaScript modules.
+3. Add automated protocol tests.
+4. Improve reconnection and error handling.
+5. Add Docker support.
+6. Improve the mobile interface.
+7. Complete authentication support.
 
-## 🙏 Crédits
+## License
 
-- [PokerTH](https://www.pokerth.net/) — le serveur et protocole open source
-- Développé avec ❤️ par [narmod](https://github.com/narmod)
+This project is licensed under the GNU Affero General Public License v3.0 or later.
+
+PokerTH is also licensed under AGPL-3.0.
