@@ -1807,23 +1807,17 @@ const App = (() => {
         for (const pid of newSeats) {
           if (!seats.includes(pid)) seats.push(pid);
         }
-        // Marquer les joueurs qui ont quitté comme inactifs
-        for (const pid of seats) {
-          if (!newSeats.includes(pid)) {
-            if (!seatData[pid]) seatData[pid] = {};
-            seatData[pid].active = false;
-          }
-        }
-
 
         // Mettre à jour seatData pour tous les joueurs
+        // active = vrai UNIQUEMENT si le joueur est dans newSeats (cette main)
         for (const pid of seats) {
+          const inGame = newSeats.includes(pid);
           if (!seatData[pid]) seatData[pid] = {};
           if (isFirstDeal) {
-            Object.assign(seatData[pid], {money:0, bet:0, action:'', active:true, folded:false});
+            Object.assign(seatData[pid], {money:0, bet:0, action:'', active:inGame, folded:false});
           } else {
             // Conserver le stack, réinitialiser uniquement l'état de la main
-            Object.assign(seatData[pid], {bet:0, action:'', active:true, folded:false});
+            Object.assign(seatData[pid], {bet:0, action:'', active:inGame, folded:false});
           }
         }
 
