@@ -644,22 +644,6 @@ body {
   animation: actionFadeOut 0.4s ease-out forwards;
 }
 
-/* ── Win streak badge ── */
-.seat-streak {
-  position: absolute;
-  top: -14px; right: -10px;
-  font-size: 0.63rem; font-weight: 700;
-  background: rgba(255, 130, 0, 0.88);
-  color: #fff;
-  border-radius: 20px;
-  padding: 1px 6px;
-  white-space: nowrap;
-  animation: chipPop 0.3s cubic-bezier(.3,0,.2,1);
-  z-index: 4;
-  pointer-events: none;
-  text-shadow: 0 1px 2px rgba(0,0,0,0.4);
-}
-
 /* ── Dealer badge volant ── */
 .dealer-badge-fly {
   position: fixed;
