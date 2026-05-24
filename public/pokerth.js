@@ -1749,15 +1749,7 @@ const App = (() => {
           if ($('g-mystack')) $('g-mystack').textContent = myMon > 0 ? myMon + ' ¥' : '';
         }
         renderSeats();
-        // Audio cue depends on the action code (PokerTH PlayerAction enum):
-        //   1 = Fold       → notifyFold (descending pair)
-        //   5 = Raise/Bet  → notifyRaise (ascending pair)
-        //   6 = All-in     → notifyAllIn (fanfare + gong)
-        //   2 = Check, 3 = Call, 4 = Bet → notifyAction (neutral thud)
-        if      (action === 1)                  (typeof notifyFold  === 'function') && notifyFold();
-        else if (action === 4 || action === 5)  (typeof notifyRaise === 'function') && notifyRaise();
-        else if (action === 6)                  (typeof notifyAllIn === 'function') && notifyAllIn();
-        else                                    notifyAction();
+        notifyAction();
         flashActionLabel(pid);
         if (action === 6) animateAllIn(pid); // All-in
         if (bet > 0) {
@@ -2592,13 +2584,16 @@ const App = (() => {
   function renderSeats() {
     const el = $('g-seats');
     if (!seats.length) { el.innerHTML = ''; return; }
-    // Filtrer les joueurs actifs (ceux qui jouent cette main)
-    const activeSeats = seats.filter(function(pid) {
-      return !seatData[pid] || seatData[pid].active !== false;
-    });
-    const n = activeSeats.length;
-    const myIdx = activeSeats.indexOf(myId);
-    const rotated = myIdx >= 0 ? [...activeSeats.slice(myIdx), ...activeSeats.slice(0, myIdx)] : activeSeats;
+    // Keep ALL original seats when computing pixel positions. Previously
+    // we filtered to active-only seats here, which caused the remaining
+    // players to visually rotate / re-space themselves around the felt
+    // every time someone got eliminated. Users found that disorienting:
+    // "the players keep moving around between hands". Now we always
+    // place against the original seating order and mark the eliminated
+    // ones as .seat-out so they render visually faded but in place.
+    const n = seats.length;
+    const myIdx = seats.indexOf(myId);
+    const rotated = myIdx >= 0 ? [...seats.slice(myIdx), ...seats.slice(0, myIdx)] : seats;
     // Position seats using actual pixel coords from getBoundingClientRect
     const oval = document.querySelector('.felt-oval');
     const zone = document.getElementById('g-table-zone');
@@ -2700,7 +2695,8 @@ const App = (() => {
       const sd = seatData[pid] || {};
       const isDealer = pid === dealerPid;
       const isActive = pid === turnPid;
-      const cls = ['seat', isMe?'me':'', isDealer?'dealer':'', isActive?'active':'', sd.folded?'folded':''].filter(Boolean).join(' ');
+      const isOut = sd.active === false; // eliminated or sitting out this hand
+      const cls = ['seat', isMe?'me':'', isDealer?'dealer':'', isActive?'active':'', sd.folded?'folded':'', isOut?'seat-out':''].filter(Boolean).join(' ');
       const initial    = getPlayerInitial(pid);
       const typeBadge  = getPlayerTypeBadge(pid);
       var _hasEmojiAv = isMe
