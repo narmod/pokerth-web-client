@@ -2863,6 +2863,33 @@ const App = (() => {
       ? '<div class="wp-hint wp-hint-admin">' + t('waitingHintAdmin') + '</div>'
       : '<div class="wp-hint">' + t('waitingHintGuest') + '</div>';
 
+    // Start-now banner: shown to the ADMIN only, when the table was
+    // created with the 'fill with bots' option AND the configured minimum
+    // number of humans is reached. The banner contains a pulsing button
+    // that triggers the existing App.startWithBots() flow. It replaces the
+    // implicit (and broken) auto-start that the original code seemed to
+    // promise but never wired up: window._minHumansNeeded was written but
+    // never read anywhere.
+    //
+    // We re-evaluate the threshold every render (panel refreshes on join/
+    // leave/PlayerInfoReply), so the banner appears/disappears as people
+    // come and go.
+    let readyBlock = '';
+    if (amGameAdmin
+        && window._createWithBots
+        && (window._minHumansNeeded || 0) > 0
+        && current >= window._minHumansNeeded) {
+      readyBlock =
+        '<div class="wp-ready-row">' +
+          '<div class="wp-ready-label">✓ ' +
+            t('waitingReadyForBots').replace('{n}', window._minHumansNeeded) +
+          '</div>' +
+          '<button class="wp-ready-btn" onclick="App.startWithBots()">▶ ' +
+            t('waitingStartNow') +
+          '</button>' +
+        '</div>';
+    }
+
     const html =
       '<div class="waiting-panel">' +
         '<div class="wp-title">⏳ ' + t('waitingStart') + '</div>' +
@@ -2870,6 +2897,7 @@ const App = (() => {
         '<div class="wp-bar">' + dots + '</div>' +
         statusLine +
         '<ul class="wp-list">' + rows + '</ul>' +
+        readyBlock +
         hint +
       '</div>';
     renderGameWaiting(html, true);
