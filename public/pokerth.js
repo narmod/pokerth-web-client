@@ -1116,6 +1116,7 @@ const App = (() => {
   let loaded    = false;
   let autoAction = false;
   let amGameAdmin = false;  // true if we created this game
+  let _gameStarted = false; // flips true on GameStartInitial; freezes waiting-panel updates
   let _lastConnectParams = null;
   let _currentLoginMode = 'lan';
   let _lastMsgWasReaction = false; // true si le dernier chat envoyé était une réaction
@@ -1286,6 +1287,9 @@ const App = (() => {
         const info = Proto.sub(sub, 2);
         const name = Proto.str(info, 1);
         if (name) players[pid] = name;
+        // If the waiting panel is visible, update it so the new pseudo
+        // appears in place of the temporary '#<pid>' placeholder.
+        if (!_gameStarted && amInGame) renderWaitingPanel();
         break;
       }
 
@@ -1463,7 +1467,14 @@ const App = (() => {
         const admBadge = document.getElementById('g-admin-badge');
         if (admBadge) admBadge.style.display = amGameAdmin ? '' : 'none';
         setTimeout(function(){ autoScaleTable(); }, 200);
-        renderGameWaiting('En attente du démarrage...');
+        renderWaitingPanel();
+        // The list of already-present players arrives via subsequent
+        // GamePlayerJoined messages from the server. Schedule a few
+        // refreshes so the panel populates as those messages land,
+        // and so PlayerInfoRequest replies catch up.
+        [200, 600, 1200, 2500].forEach(function(d){
+          setTimeout(function(){ if (!_gameStarted) renderWaitingPanel(); }, d);
+        });
         break;
       }
 
@@ -1507,6 +1518,16 @@ const App = (() => {
         if (!seatData[pid]) seatData[pid] = {money:0,bet:0,action:'',active:false,folded:false};
         const name = players[pid] || '#'+pid;
         addChat(null, name + ' rejoint la table', 'sys');
+        // Ask the server for this player's name if we don't have it yet,
+        // so the waiting panel can display a real pseudo rather than '#42'.
+        if (!players[pid]) {
+          try {
+            const req = Proto.encode([[1,0,pid]]);
+            send(Proto.encode([[1,0,T.PlayerInfoRequest],[19,2,req]]));
+          } catch(e) {}
+        }
+        // Refresh the waiting panel if the game hasn't started yet.
+        if (!_gameStarted) renderWaitingPanel();
         break;
       }
 
@@ -1516,6 +1537,8 @@ const App = (() => {
         addChat(null, name + ' quitte la table', 'sys');
         if (seatData[pid]) seatData[pid].active = false;
         renderSeats();
+        // Refresh the waiting panel if the game hasn't started yet.
+        if (!_gameStarted) renderWaitingPanel();
         break;
       }
 
@@ -1536,6 +1559,7 @@ const App = (() => {
       }
 
       case T.GameStartInitial: {
+        _gameStarted = true;
         // GameStartInitialMessage: gameId=1, startDealerPlayerId=2, playerSeats=3 (packed uint32)
         gId       = Proto.u32(sub, 1);
         dealerPid = Proto.u32(sub, 2);
@@ -2747,6 +2771,76 @@ const App = (() => {
     updateBottomLayout();
   }
 
+  // ─────────────────────────────────────────────────────────────────
+  // Waiting-room panel — shown between JoinGameAck and GameStartInitial.
+  // Displays:
+  //   * current/max player count + progress bar
+  //   * minimum-to-start indicator (poker needs 2 humans/bots)
+  //   * the list of players currently in the room, each with their
+  //     avatar (cached emoji or '?') and pseudo
+  //   * admin-vs-guest action hint
+  // Refreshed automatically by GamePlayerJoined, GamePlayerLeft and
+  // PlayerInfoReply handlers; frozen once GameStartInitial fires.
+  // ─────────────────────────────────────────────────────────────────
+  function renderWaitingPanel() {
+    if (_gameStarted) return;
+    const g = games[gId] || {};
+    const current = Math.max(g.players || 1, 1); // at minimum, we are here
+    const maxP    = g.maxPlayers || 5;
+    const minToStart = 2;
+
+    // Collect the pids we know about for this table. seatData is
+    // populated by GamePlayerJoined; we always know ourselves.
+    const pids = Object.keys(seatData).map(Number);
+    if (!pids.includes(myId) && myId) pids.push(myId);
+
+    // Build the player list rows
+    let rows = '';
+    for (const pid of pids) {
+      const isMe = pid === myId;
+      const nick = isMe
+        ? (document.getElementById('nick') ? document.getElementById('nick').value : (players[pid] || ''))
+        : (players[pid] || ('#' + pid));
+      const av = isMe
+        ? (_myAvatarCache || (function(){ try { return localStorage.getItem('pth_avatar') || ''; } catch(e){ return ''; } })())
+        : (_playerAvatars[pid] || '');
+      const avChip = av
+        ? '<span class="wp-av emoji-av">' + esc(av) + '</span>'
+        : '<span class="wp-av wp-av-letter">' + esc((nick[0] || '?').toUpperCase()) + '</span>';
+      const meTag  = isMe ? ' <span class="wp-me">' + t('waitingYou') + '</span>' : '';
+      rows += '<li class="wp-player">' + avChip + '<span class="wp-name">' + esc(nick) + '</span>' + meTag + '</li>';
+    }
+
+    // Progress bar (filled circles for present, empty for missing)
+    let dots = '';
+    for (let i = 0; i < maxP; i++) {
+      dots += (i < current) ? '<span class="wp-dot wp-dot-on"></span>'
+                            : '<span class="wp-dot wp-dot-off"></span>';
+    }
+
+    // Minimum-to-start message
+    const enough = current >= minToStart;
+    const statusLine = enough
+      ? '<div class="wp-ok">' + t('waitingEnough') + '</div>'
+      : '<div class="wp-need">' + t('waitingNeedMore').replace('{n}', (minToStart - current)) + '</div>';
+
+    // Admin hint
+    const hint = amGameAdmin
+      ? '<div class="wp-hint wp-hint-admin">' + t('waitingHintAdmin') + '</div>'
+      : '<div class="wp-hint">' + t('waitingHintGuest') + '</div>';
+
+    const html =
+      '<div class="waiting-panel">' +
+        '<div class="wp-title">⏳ ' + t('waitingStart') + '</div>' +
+        '<div class="wp-count">' + t('waitingPlayerCount') + ' <b>' + current + '</b> / ' + maxP + '</div>' +
+        '<div class="wp-bar">' + dots + '</div>' +
+        statusLine +
+        '<ul class="wp-list">' + rows + '</ul>' +
+        hint +
+      '</div>';
+    renderGameWaiting(html, true);
+  }
+
   function updateBottomLayout() {
     var pb = document.querySelector('.player-bar');
     var mz = document.querySelector('.my-zone');
@@ -3301,7 +3395,7 @@ function dismissWinner() {
     closeTable() {
       // Admin closes table: send leave, server closes game for all
       if (ws && gId) { try { send(MSG.buildLeaveGame(gId)); } catch(e) {} }
-      amInGame = false; amGameAdmin = false;
+      amInGame = false; amGameAdmin = false; _gameStarted = false;
       gId = 0; seats = []; seatData = {};
       myCards = [null,null]; commCards = [];
       stopTurnTimer();
@@ -3320,7 +3414,7 @@ function dismissWinner() {
     leaveGame() {
       // Send proper leave request then stay connected (return to lobby)
       if (ws && gId) { try { send(MSG.buildLeaveGame(gId)); } catch(e) {} }
-      amInGame = false; amGameAdmin = false;
+      amInGame = false; amGameAdmin = false; _gameStarted = false;
       gId = 0; seats = []; seatData = {};
       myCards = [null,null]; commCards = [];
       stopTurnTimer();
