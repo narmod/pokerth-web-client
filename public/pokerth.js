@@ -1117,6 +1117,7 @@ const App = (() => {
   let autoAction = false;
   let amGameAdmin = false;  // true if we created this game
   let _gameStarted = false; // flips true on GameStartInitial; freezes waiting-panel updates
+  let _seatsFrozen = false; // one-way latch: true once the original seating order is set, never unset until leave/closeTable
   let _lastConnectParams = null;
   let _currentLoginMode = 'lan';
   let _lastMsgWasReaction = false; // true si le dernier chat envoyé était une réaction
@@ -1545,7 +1546,7 @@ const App = (() => {
       case T.RemovedFromGame: {
         addChat(null, 'Vous avez été retiré de la partie.', 'sys');
         amInGame = false;
-        gId = 0; seats = []; seatData = {}; _playerAvatars = {};
+        gId = 0; seats = []; seatData = {}; _playerAvatars = {}; _seatsFrozen = false;
         show('s-lobby');
         break;
       }
@@ -1579,12 +1580,24 @@ const App = (() => {
         }
 
         // FIX : le serveur renvoie GameStartInitial avant chaque main avec un ordre
-        // potentiellement différent (rotation du dealer). On fige l'ordre de la
-        // PREMIÈRE réception et on ne le change plus — évite que les joueurs
+        // potentiellement différent (rotation du dealer). On fige l'ordre dès
+        // la PREMIÈRE réception et on ne le change plus — évite que les joueurs
         // "tournent" visuellement autour de la table à chaque nouvelle main.
-        const isFirstDeal = (seats.length === 0);
+        //
+        // PREVIOUS BUG: the freeze used `seats.length === 0` as the gate, which
+        // is fragile — any path that empties seats[] without setting _seatsFrozen
+        // back to false re-opens the freeze and the server's new (rotated) order
+        // gets written. Browser logs proved this was happening: hand#1 seats
+        // [724,722,723,712,721] but hand#2 [712,721,722,723,724], hand#3
+        // [721,712,722,723,724], etc. The dealer rotation visibly cycled the
+        // array on every GameStartInitial.
+        //
+        // The new gate is a dedicated one-way flag `_seatsFrozen`, set to true
+        // here and only reset by RemovedFromGame / leaveGame / closeTable.
+        const isFirstDeal = !_seatsFrozen;
         if (isFirstDeal) {
-          seats  = newSeats;
+          seats  = newSeats.slice(); // copy, defensive
+          _seatsFrozen = true;
           handNum = 0;
           const scEl = document.getElementById('g-myseat-cards');
           if (scEl) scEl.innerHTML = '<div class="pk sm back"></div><div class="pk sm back"></div>';
@@ -2590,25 +2603,6 @@ const App = (() => {
   function renderSeats() {
     const el = $('g-seats');
     if (!seats.length) { el.innerHTML = ''; return; }
-    // DEBUG (temporary): log the order computed by every renderSeats call.
-    // Toggle off with window.PTH_DEBUG_SEATS = false in the console. This
-    // log is here to track down a reported visual rotation of players
-    // between hands; remove once the cause is confirmed.
-    if (window.PTH_DEBUG_SEATS !== false) {
-      try {
-        var _myIdx = seats.indexOf(myId);
-        var _rot = _myIdx >= 0 ? seats.slice(_myIdx).concat(seats.slice(0,_myIdx)) : seats;
-        console.log('[renderSeats] hand#' + handNum
-          + '  dealer=' + dealerPid
-          + '  myId=' + myId
-          + '  seats=' + JSON.stringify(seats)
-          + '  myIdx=' + _myIdx
-          + '  rotated=' + JSON.stringify(_rot)
-          + '  active=' + JSON.stringify(seats.map(function(p){
-              return (seatData[p] && seatData[p].active===false) ? 'OUT' : 'in';
-            })));
-      } catch(e) {}
-    }
     // Keep ALL original seats when computing pixel positions. Previously
     // we filtered to active-only seats here, which caused the remaining
     // players to visually rotate / re-space themselves around the felt
@@ -3498,7 +3492,7 @@ function dismissWinner() {
     closeTable() {
       // Admin closes table: send leave, server closes game for all
       if (ws && gId) { try { send(MSG.buildLeaveGame(gId)); } catch(e) {} }
-      amInGame = false; amGameAdmin = false; _gameStarted = false;
+      amInGame = false; amGameAdmin = false; _gameStarted = false; _seatsFrozen = false;
       gId = 0; seats = []; seatData = {};
       var _ego = document.getElementById('g-endgame-overlay');
       if (_ego) _ego.style.display = 'none';
@@ -3536,7 +3530,7 @@ function dismissWinner() {
     leaveGame() {
       // Send proper leave request then stay connected (return to lobby)
       if (ws && gId) { try { send(MSG.buildLeaveGame(gId)); } catch(e) {} }
-      amInGame = false; amGameAdmin = false; _gameStarted = false;
+      amInGame = false; amGameAdmin = false; _gameStarted = false; _seatsFrozen = false;
       gId = 0; seats = []; seatData = {};
       var _ego = document.getElementById('g-endgame-overlay');
       if (_ego) _ego.style.display = 'none';
