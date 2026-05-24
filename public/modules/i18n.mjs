@@ -92,7 +92,14 @@ const LANG = {
     lanModeNote:'LAN mode: in-game chat is limited.',
     urlProxy:'WebSocket Proxy URL', pokerServer:'PokerTH Server', port:'Port',
     loginMode:'Login Mode', nickLabel:'Nickname', passLabel:'Password',
-  },
+      waitingStart:'Waiting to start',
+    waitingPlayerCount:'Players:',
+    waitingEnough:'Ready to play — admin can start',
+    waitingNeedMore:'{n} more player(s) needed to start',
+    waitingHintAdmin:'You\'re the admin — start when ready or fill with bots',
+    waitingHintGuest:'The admin will start the game when enough players are ready',
+    waitingYou:'You',
+},
   fr: {
     connect:'Se connecter', disconnect:'✕ Déconnecter', connecting:'Connexion en cours…',
     nickname:'Pseudo', password:'Mot de passe', useTLS:'Utiliser TLS',
@@ -171,7 +178,14 @@ const LANG = {
     lanModeNote:'Mode LAN : chat en jeu limité.',
     urlProxy:'URL du Proxy WebSocket', pokerServer:'Serveur PokerTH', port:'Port',
     loginMode:'Mode de connexion', nickLabel:'Pseudo', passLabel:'Mot de passe',
-  }
+      waitingStart:'En attente du démarrage',
+    waitingPlayerCount:'Joueurs :',
+    waitingEnough:'Prêt à jouer — l\'admin peut démarrer',
+    waitingNeedMore:'Il manque {n} joueur(s) pour démarrer',
+    waitingHintAdmin:'Vous êtes l\'admin — lancez la partie ou remplissez avec des bots',
+    waitingHintGuest:'L\'admin lancera la partie quand il y aura assez de joueurs',
+    waitingYou:'Vous',
+}
 };
 
 
