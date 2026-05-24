@@ -16,9 +16,26 @@ This project is a **web frontend** that connects to any PokerTH server directly 
 
 ---
 
-## Screenshots / Demo
+## Screenshots
 
-> *(add screenshots here once you have them)*
+<table>
+  <tr>
+    <td align="center"><strong>Connect screen</strong></td>
+    <td align="center"><strong>Lobby</strong></td>
+  </tr>
+  <tr>
+    <td><img src="docs/screenshots/01-connect.png" alt="Connect screen" width="240"/></td>
+    <td><img src="docs/screenshots/02-lobby.png" alt="Lobby" width="240"/></td>
+  </tr>
+  <tr>
+    <td align="center"><strong>Game table</strong></td>
+    <td align="center"><strong>Action bar</strong></td>
+  </tr>
+  <tr>
+    <td><img src="docs/screenshots/03-game.png" alt="Game table" width="240"/></td>
+    <td><img src="docs/screenshots/04-actions.png" alt="Action bar" width="240"/></td>
+  </tr>
+</table>
 
 ---
 
@@ -99,6 +116,8 @@ pokerth-web-client/
 │   ├── pokerth.css          # Styles (65 KB)
 │   ├── manifest.json        # PWA manifest
 │   └── sw.js                # Service Worker
+├── docs/
+│   └── screenshots/         # Screenshots used in this README
 ├── package.json
 ├── .gitignore
 ├── LICENSE
