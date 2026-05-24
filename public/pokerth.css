@@ -1,3 +1,14 @@
+/* ─────────────────────────────────────────────────────────────────────
+   Disable iOS double-tap-to-zoom on interactive content.
+   `touch-action: manipulation` preserves single tap, pan (scroll), and
+   pinch-to-zoom (accessibility), but turns off the legacy double-tap
+   zoom gesture. As a side benefit, this also removes the 300 ms tap
+   latency that older iOS versions added to detect double-taps.
+   Applies globally because every clickable surface in the app should
+   feel snappy and stable (avatar picker, reaction buttons, action
+   buttons during a hand, etc.).
+   ───────────────────────────────────────────────────────────────────── */
+html { touch-action: manipulation; }
 
 :root {
   --felt:       #182e1a;
