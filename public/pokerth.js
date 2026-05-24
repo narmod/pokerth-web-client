@@ -2772,11 +2772,12 @@ const App = (() => {
     // On mobile: use larger vertical spread to prevent lateral player overlap
     // rx must clear oval half-width + 8px border + ~10px seat radius
     const borderClear = isMob ? 20 : 24; // px to add beyond oval half-size
+    const isSmall = window.innerWidth < 900; // mobile + tablet
     const rxRaw = oRect.width  / 2 + borderClear + (isMob ? oRect.width*0.06 : oRect.width*0.16);
-    // ryRaw : distance verticale des joueurs haut/bas (réduite pour rapprocher de l'ovale)
-    const ryRaw = oRect.height / 2 + borderClear + (isMob ? oRect.height*0.30 : oRect.height*0.18);
-    // ryMeRaw : distance du joueur local en bas (réduite significativement)
-    const ryMeRaw = oRect.height / 2 + borderClear + (isMob ? oRect.height*0.38 : oRect.height*0.22);
+    // ryRaw : distance verticale des joueurs haut/bas — plus grand sur mob/tablet pour écarter les paires G/D
+    const ryRaw = oRect.height / 2 + borderClear + (isMob ? oRect.height*0.52 : (isSmall ? oRect.height*0.34 : oRect.height*0.18));
+    // ryMeRaw : distance du joueur local en bas
+    const ryMeRaw = oRect.height / 2 + borderClear + (isMob ? oRect.height*0.58 : (isSmall ? oRect.height*0.40 : oRect.height*0.22));
     // Clamp to zone boundaries
     const margin = isMob ? 24 : 36;
     const rxPx = Math.min(rxRaw, Math.min(oCX, zRect.width - oCX) - margin);
