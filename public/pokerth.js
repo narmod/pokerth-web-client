@@ -2580,31 +2580,40 @@ const App = (() => {
     //   yMulTop : seats in the upper half (sin<=0)
     //   yMulMe  : the local player (i=0), kept slightly lower than the other
     //             bottom seats to leave breathing room above the player-bar.
-    const yMulBot = isMob ? 0.20 : (isSmall ? 0.34 : 0.18);
-    const yMulTop = isMob ? 0.38 : (isSmall ? 0.34 : 0.18);
-    const yMulMe  = isMob ? 0.24 : (isSmall ? 0.40 : 0.22);
-    const ryBotRaw = oRect.height / 2 + borderClear + oRect.height * yMulBot;
-    const ryTopRaw = oRect.height / 2 + borderClear + oRect.height * yMulTop;
-    const ryMeRaw  = oRect.height / 2 + borderClear + oRect.height * yMulMe;
+    const yMulBot   = isMob ? 0.20 : (isSmall ? 0.34 : 0.18);
+    const yMulTop   = isMob ? 0.38 : (isSmall ? 0.34 : 0.18);
+    // The seat sitting EXACTLY at the top-centre (sinAng ≈ -1, exists only
+    // when n is even: 4, 6, 8, 10…) is lowered slightly toward the table
+    // because the latitude angle gives it the maximum vertical projection.
+    // For all other top-half seats (sinAng > -0.95), we keep yMulTop so the
+    // lateral pairs don't drift horizontally toward each other.
+    const yMulTopC  = isMob ? 0.30 : (isSmall ? 0.34 : 0.18);
+    const yMulMe    = isMob ? 0.24 : (isSmall ? 0.40 : 0.22);
+    const ryBotRaw  = oRect.height / 2 + borderClear + oRect.height * yMulBot;
+    const ryTopRaw  = oRect.height / 2 + borderClear + oRect.height * yMulTop;
+    const ryTopCRaw = oRect.height / 2 + borderClear + oRect.height * yMulTopC;
+    const ryMeRaw   = oRect.height / 2 + borderClear + oRect.height * yMulMe;
     // Clamp to zone boundaries (top seats clamped against space ABOVE the
     // oval, bottom seats clamped against space BELOW)
     const margin = isMob ? 24 : 36;
-    const rxPx = Math.min(rxRaw, Math.min(oCX, zRect.width - oCX) - margin);
-    const ryTop = Math.min(ryTopRaw, oCY - margin);
-    const ryBot = Math.min(ryBotRaw, zRect.height - oCY - margin);
-    const ryMe  = Math.min(ryMeRaw,  zRect.height - oCY - margin);
+    const rxPx  = Math.min(rxRaw,    Math.min(oCX, zRect.width - oCX) - margin);
+    const ryTop = Math.min(ryTopRaw,  oCY - margin);
+    const ryTopC= Math.min(ryTopCRaw, oCY - margin);
+    const ryBot = Math.min(ryBotRaw,  zRect.height - oCY - margin);
+    const ryMe  = Math.min(ryMeRaw,   zRect.height - oCY - margin);
     const stepA = 360 / n;
     const pixPos = rotated.map(function(_, i) {
       var ang = (90 - i * stepA) * Math.PI / 180;
       var sinAng = Math.sin(ang);
-      // i === 0 is the local player (sin=1 by construction). Other seats:
-      // choose ryBot if they lie in the lower half, ryTop otherwise. A seat
-      // exactly on the horizontal axis (sin=0, n=4) gets ryTop but its top
-      // offset is 0 anyway, so the choice is moot.
+      // i === 0 is the local player (sin=1 by construction).
+      // sinAng > 0       → bottom half → ryBot
+      // sinAng < -0.95   → exact top-centre seat → ryTopC (only when n even)
+      // otherwise        → top-half lateral pairs → ryTop
       var ry;
-      if (i === 0)            ry = ryMe;
-      else if (sinAng > 0)    ry = ryBot;
-      else                    ry = ryTop;
+      if      (i === 0)         ry = ryMe;
+      else if (sinAng > 0)      ry = ryBot;
+      else if (sinAng < -0.95)  ry = ryTopC;
+      else                      ry = ryTop;
       return { top: oCY + ry*sinAng, left: oCX + rxPx*Math.cos(ang) };
     });
     // ── Calcul SB / BB à partir du dealer ──
