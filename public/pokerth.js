@@ -1,65 +1,4 @@
-var _audioCtx = null;
-function getAudioCtx() {
-  if (!_audioCtx) try { _audioCtx = new (window.AudioContext||window.webkitAudioContext)(); } catch(e) {}
-  return _audioCtx;
-}
-function playTone(freq, dur, vol) {
-  if (!_soundEnabled) return;
-  var ctx = getAudioCtx(); if (!ctx) return;
-  try {
-    if (ctx.state === 'suspended') ctx.resume();
-    var o = ctx.createOscillator(), g = ctx.createGain();
-    o.connect(g); g.connect(ctx.destination);
-    o.frequency.value = freq;
-    g.gain.setValueAtTime(vol||0.2, ctx.currentTime);
-    g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + dur);
-    o.start(); o.stop(ctx.currentTime + dur);
-  } catch(e) {}
-}
-function notifyCard() {
-  // Bruit de carte distribuée : bref clic
-  playTone(1200, 0.04, 0.12);
-}
-function notifyAction() {
-  // Action d'un joueur : thud sourd
-  playTone(220, 0.1, 0.1);
-}
-function notifyMyTurn() {
-  playTone(523, 0.15, 0.25);
-  setTimeout(function(){ playTone(659, 0.2, 0.2); }, 120);
-  if (_soundEnabled && navigator.vibrate) navigator.vibrate([80, 60, 80]);
-  var mz = document.querySelector('.my-zone');
-  if (mz) { mz.style.borderTopColor='gold'; setTimeout(function(){ mz.style.borderTopColor=''; }, 1200); }
-}
-function notifyWinner(isMine) {
-  if (isMine) {
-    [523,659,784,1047].forEach(function(f,i){ setTimeout(function(){ playTone(f,0.15,0.28-i*0.03); }, i*110); });
-    if (_soundEnabled && navigator.vibrate) navigator.vibrate([100,50,100,50,200]);
-  } else {
-    playTone(440,0.15,0.15); setTimeout(function(){ playTone(349,0.2,0.1); },150);
-    if (_soundEnabled && navigator.vibrate) navigator.vibrate([60]);
-  }
-}
-function notifyChat() {
-  playTone(880, 0.07, 0.1);
-  if (_soundEnabled && navigator.vibrate) navigator.vibrate([25]);
-}
-// Mute state
-var _soundEnabled = (function() {
-  try { return localStorage.getItem('pth_sound') !== '0'; } catch(e) { return true; }
-})();
-
-function toggleSound() {
-  _soundEnabled = !_soundEnabled;
-  try { localStorage.setItem('pth_sound', _soundEnabled ? '1' : '0'); } catch(e) {}
-  var btn = document.getElementById('sound-toggle-btn');
-  if (btn) {
-    btn.textContent  = _soundEnabled ? '🔊' : '🔇';
-    btn.style.color  = _soundEnabled ? '' : 'rgba(255,255,255,0.35)';
-    btn.style.borderColor = _soundEnabled ? '' : 'rgba(255,255,255,0.15)';
-    btn.title = _soundEnabled ? 'Mute' : 'Unmute';
-  }
-}
+// [Phase 2] audio (AudioContext, playTone, notify*, toggleSound) moved to public/modules/sounds.mjs
 
 // ══ i18n ══
 // [Phase 2] i18n moved to public/modules/i18n.mjs (LANG, _lang, t)
@@ -783,7 +722,7 @@ function _updateFsButtons() {
   .forEach(function(evt) { document.addEventListener(evt, _updateFsButtons); });
 
 // Unlock audio on first interaction
-document.addEventListener('click', function() { getAudioCtx(); }, { once: true });
+// [Phase 2] AudioContext warm-up moved to public/modules/sounds.mjs
 
 /* ═══════════════════ */
 
