@@ -43,7 +43,9 @@ This project is a **web frontend** that connects to any PokerTH server directly 
 
 ### Connection
 - **4 login modes**: LAN (free nickname), Private server – Guest, pokerth.net – Guest, pokerth.net – Registered account
-- TLS support (required for pokerth.net, optional for LAN)
+- **Authenticated login on pokerth.net** — credentials are carried in the `InitMessage.clientUserData` field as per the v2.0 protocol (TLS-wrapped, no more SCRAM-SHA-1)
+- TLS support (required for pokerth.net, optional for LAN). The TLS box auto-checks itself when you pick the registered-account mode.
+- Auto-fill of `host = pokerth.net` and `port = 7234` when a pokerth.net mode is selected — other modes keep the auto-detected hostname
 - Remember nickname / credentials via `localStorage`
 - Refresh button and fullscreen toggle on every screen
 
@@ -61,7 +63,9 @@ This project is a **web frontend** that connects to any PokerTH server directly 
 - **Card deal animation**: cards fly from the centre to each seat at the start of every hand
 - **Chip slide animation**: chips glide toward the pot on bet / call / raise
 - **3D flip animation** for community cards (flop × 3, turn, river)
-- Pre-flop hand-strength hint displayed below the table
+- Pre-flop hand-strength hint (Sklansky-Malmuth chart)
+- **Post-flop win probability** — Monte Carlo simulation against random opponent ranges
+- **Spades vs clubs visual distinction**: spades get a subtle blue tint so ♠ and ♣ never get confused on small screens
 - Pot strip showing hand number, total pot, and current betting round
 
 ### Player experience
@@ -70,6 +74,7 @@ This project is a **web frontend** that connects to any PokerTH server directly 
 - Anti-flicker cache so avatars survive seat re-renders
 - Bots always show 🤖
 - **Session statistics** panel (click your avatar): hands played, wins, win rate, net gain/loss, best/worst hand, last 5 hands with card history
+- **Win streak badge** on seats for players on a hot run
 
 ### Chat & reactions
 - In-lobby chat and in-game chat (dropdown panels)
@@ -79,14 +84,31 @@ This project is a **web frontend** that connects to any PokerTH server directly 
 - Browser notifications when it is your turn (background tab)
 - Tab title flashes: ⚡ YOUR TURN — PokerTH
 - Keyboard shortcuts: **F** = Fold, **C** / Space = Call, **R** = Raise, **A** = All-in
-- Sound effects: actions, win fanfare, urgent-timer warning
+- Sound effects: distinct sounds for fold / check / call / raise / all-in / shuffle / drumroll / bad-beat / win fanfare, plus urgent-timer warning
 - Full EN / FR language toggle (complete i18n)
 - Fullscreen mode on all screens
 - Poker hand reference overlay (? button)
+- Exponential-backoff auto-reconnect with live countdown
 
 ### PWA
-- `manifest.json` + Service Worker (`sw.js`) for offline caching
+- `manifest.json` + Service Worker (`sw.js`) with versioned **network-first** cache
+- New-version notification: the page tells the user when an updated service worker is ready and applies the update on the next reload
 - Installable on mobile and desktop ("Add to Home Screen")
+
+---
+
+## Login modes & transport
+
+Each login mode uses a different transport. Knowing which is which can save a lot of head-scratching when debugging a connection problem.
+
+| Mode | Target server | Transport | Notes |
+|---|---|---|---|
+| **LAN** (free nickname) | your local PokerTH server | proxy → TCP raw | TLS off by default |
+| **Private server — Guest** (`unauth`) | your private remote PokerTH server | proxy → TCP or TLS (your choice) | The default for self-hosted setups |
+| **pokerth.net — Guest** | `wss://www.pokerth.net:443/pthlive` | direct WebSocket (TLS) | Bypasses the proxy entirely |
+| **pokerth.net — Registered account** | `wss://www.pokerth.net:443/pthlive` | direct WebSocket (TLS) | Same endpoint as guest; the password is sent in `InitMessage.clientUserData` |
+
+> Notice that for both pokerth.net modes the proxy is **not used** — the browser opens a direct WebSocket to `pokerth.net:443`. The proxy is only needed for LAN and self-hosted servers, which speak raw TCP/TLS.
 
 ---
 
@@ -97,6 +119,8 @@ Browsers cannot open raw TCP/TLS connections to classic PokerTH servers. This pr
 ```text
 Browser WebSocket  ⇄  proxy.js (Node.js)  ⇄  PokerTH TCP/TLS server
 ```
+
+For the pokerth.net public server, the browser connects **directly** to the official `wss://www.pokerth.net:443/pthlive` endpoint and the proxy is bypassed.
 
 The proxy also serves the static files and relays two custom broadcast messages to all connected clients:
 
@@ -109,18 +133,20 @@ The proxy also serves the static files and relays two custom broadcast messages 
 
 ```text
 pokerth-web-client/
-├── proxy.js                 # WS→TCP proxy + static HTTP server
+├── proxy.js                 # WS→TCP/TLS proxy + static HTTP server (~11 KB)
 ├── public/
-│   ├── pokerth-client.html  # HTML shell + inline head scripts (72 KB)
-│   ├── pokerth.js           # Full application logic (164 KB)
-│   ├── pokerth.css          # Styles (65 KB)
+│   ├── pokerth-client.html  # HTML shell + inline head scripts (~74 KB)
+│   ├── pokerth.js           # Full application logic (~174 KB)
+│   ├── pokerth.css          # Styles (~66 KB)
 │   ├── manifest.json        # PWA manifest
-│   └── sw.js                # Service Worker
+│   ├── sw.js                # Service Worker (versioned cache)
+│   └── favicon-*.png        # PWA icons
 ├── docs/
 │   └── screenshots/         # Screenshots used in this README
+├── Dockerfile               # Multi-arch image (node:20-alpine base)
+├── docker-compose.yml       # One-shot self-host config
 ├── package.json
-├── .gitignore
-├── LICENSE
+├── LICENSE                  # AGPL-3.0-or-later
 └── README.md
 ```
 
@@ -131,7 +157,7 @@ pokerth-web-client/
 - **Node.js 18** or newer
 - **npm**
 - A modern browser (Chrome, Firefox, Safari, Edge)
-- A running PokerTH server (local LAN or remote)
+- A running PokerTH server (local LAN, your own remote server, or pokerth.net)
 
 ---
 
@@ -147,7 +173,7 @@ npm install
 
 ## Running
 
-### Standard (with TLS, for pokerth.net)
+### Standard (TLS enabled, recommended)
 
 ```bash
 npm start
@@ -182,6 +208,16 @@ pm2 start proxy.js --name pokerth-web
 pm2 save
 ```
 
+### Docker
+
+The repository ships with a `Dockerfile` and a `docker-compose.yml` for one-command self-hosting:
+
+```bash
+docker compose up -d
+```
+
+The proxy will be available on `http://<host>:8080/`.
+
 ---
 
 ## Quick start — LAN family game
@@ -194,25 +230,35 @@ pm2 save
 
 ---
 
+## Protocol notes
+
+PokerTH speaks a length-prefixed Protobuf-based protocol over TCP. This client parses and emits a hand-written subset of those messages — there is no full Protobuf runtime in the browser, which keeps the bundle small.
+
+A few things worth knowing if you plan to hack on this:
+
+- The official PokerTH **v2.0** release (Feb 2026) dropped the `gsasl` dependency and **replaced SCRAM-SHA-1 with plain-text credentials inside the mandatory TLS tunnel**. Authenticated logins now simply set `InitMessage.login = authenticatedLogin (1)` and put the password (UTF-8, ≤ 256 bytes) into `InitMessage.clientUserData`.
+- The proxy logs every parsed message in hex with a short description, which makes protocol debugging straightforward (`pm2 logs pokerth-web` if you run under PM2).
+- Wire-type field numbers used by this client are documented inline in `public/pokerth.js` next to each `Proto.encode([...])` call, with references to `pokerth.proto` in the upstream repository.
+
+---
+
 ## Known limitations
 
-- Registered-account authentication is not fully implemented.
-- The PokerTH Protobuf protocol is still handled manually in parts of the code.
-- Reconnection handling can be improved.
-- The client code is mostly contained in a single HTML/JS file and would benefit from a module split.
-- More protocol tests are needed before calling the client production-ready.
+- The Protobuf protocol is still handled by a small hand-written encoder/decoder rather than generated classes.
+- The client code is mostly contained in a single JS file and would benefit from a module split.
+- More automated protocol tests are needed before calling the client production-ready.
+- Spectator mode works but lacks a few quality-of-life touches (e.g. you cannot see other players' cards at showdown the same way the native client does).
 
 ---
 
 ## Roadmap / Suggested next steps
 
-1. Replace manual Protobuf parsing with generated classes from `pokerth.proto`.
+1. Replace the hand-written Protobuf encoder/decoder with generated classes from `pokerth.proto`.
 2. Split the client into maintainable ES modules.
-3. Add automated protocol tests.
-4. Improve reconnection and error handling.
-5. Docker image for easy self-hosting.
-6. Complete registered-account authentication.
-7. More avatar options and customisation.
+3. Add automated protocol tests with a mock PokerTH server.
+4. Polish reconnection edge cases (currently exponential backoff with a 5-attempt cap).
+5. More avatar options and a custom-emoji import.
+6. Optional spectator-only view (read-only embed for streamers).
 
 ---
 
