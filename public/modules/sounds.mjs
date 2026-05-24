@@ -52,8 +52,29 @@ function notifyCard() {
   playTone(1200, 0.04, 0.12);
 }
 function notifyAction() {
-  // Action d'un joueur : thud sourd
+  // Action d'un joueur : thud sourd (utilisé pour Check, Call, Bet)
   playTone(220, 0.1, 0.1);
+}
+function notifyFold() {
+  // Fold = "abandonner". Deux notes descendantes (effet défaitiste, qui
+  // tombe). Volume modéré pour rester discret comme un soupir.
+  playTone(330, 0.08, 0.10);
+  setTimeout(function(){ playTone(180, 0.12, 0.08); }, 90);
+}
+function notifyRaise() {
+  // Raise/Bet = "monter la mise". Deux notes ascendantes, plus brillantes.
+  playTone(440, 0.06, 0.14);
+  setTimeout(function(){ playTone(660, 0.10, 0.16); }, 70);
+}
+function notifyAllIn() {
+  // All-in = moment dramatique. Fanfare ascendante rapide (440 → 660 → 880),
+  // puis un coup de gong grave (220 Hz, longue queue) pour la gravité.
+  // Vibre aussi sur mobile pour souligner l'instant.
+  playTone(440, 0.08, 0.20);
+  setTimeout(function(){ playTone(660, 0.08, 0.20); }, 80);
+  setTimeout(function(){ playTone(880, 0.10, 0.22); }, 160);
+  setTimeout(function(){ playTone(220, 0.40, 0.18); }, 280);
+  if (_soundEnabled && navigator.vibrate) navigator.vibrate([60, 40, 60, 40, 120]);
 }
 function notifyMyTurn() {
   playTone(523, 0.15, 0.25);
@@ -106,7 +127,8 @@ document.addEventListener('click', function() { getAudioCtx(); }, { once: true }
 // ─── Modern ES module exports ───────────────────────────────────────────
 export {
   getAudioCtx, playTone,
-  notifyCard, notifyAction, notifyMyTurn, notifyWinner, notifyChat,
+  notifyCard, notifyAction, notifyFold, notifyRaise, notifyAllIn,
+  notifyMyTurn, notifyWinner, notifyChat,
   toggleSound, isSoundEnabled,
 };
 
@@ -115,6 +137,9 @@ window.getAudioCtx   = getAudioCtx;
 window.playTone      = playTone;
 window.notifyCard    = notifyCard;
 window.notifyAction  = notifyAction;
+window.notifyFold    = notifyFold;
+window.notifyRaise   = notifyRaise;
+window.notifyAllIn   = notifyAllIn;
 window.notifyMyTurn  = notifyMyTurn;
 window.notifyWinner  = notifyWinner;
 window.notifyChat    = notifyChat;
@@ -138,6 +163,7 @@ Object.defineProperty(window, '_soundEnabled', {
 // Single namespaced entry point for migration-aware code.
 window.SOUNDS = {
   getAudioCtx, playTone,
-  notifyCard, notifyAction, notifyMyTurn, notifyWinner, notifyChat,
+  notifyCard, notifyAction, notifyFold, notifyRaise, notifyAllIn,
+  notifyMyTurn, notifyWinner, notifyChat,
   toggleSound, isSoundEnabled,
 };
