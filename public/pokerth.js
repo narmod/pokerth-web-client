@@ -2590,6 +2590,25 @@ const App = (() => {
   function renderSeats() {
     const el = $('g-seats');
     if (!seats.length) { el.innerHTML = ''; return; }
+    // DEBUG (temporary): log the order computed by every renderSeats call.
+    // Toggle off with window.PTH_DEBUG_SEATS = false in the console. This
+    // log is here to track down a reported visual rotation of players
+    // between hands; remove once the cause is confirmed.
+    if (window.PTH_DEBUG_SEATS !== false) {
+      try {
+        var _myIdx = seats.indexOf(myId);
+        var _rot = _myIdx >= 0 ? seats.slice(_myIdx).concat(seats.slice(0,_myIdx)) : seats;
+        console.log('[renderSeats] hand#' + handNum
+          + '  dealer=' + dealerPid
+          + '  myId=' + myId
+          + '  seats=' + JSON.stringify(seats)
+          + '  myIdx=' + _myIdx
+          + '  rotated=' + JSON.stringify(_rot)
+          + '  active=' + JSON.stringify(seats.map(function(p){
+              return (seatData[p] && seatData[p].active===false) ? 'OUT' : 'in';
+            })));
+      } catch(e) {}
+    }
     // Keep ALL original seats when computing pixel positions. Previously
     // we filtered to active-only seats here, which caused the remaining
     // players to visually rotate / re-space themselves around the felt
