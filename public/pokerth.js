@@ -548,8 +548,17 @@ function updateReactionCount(emoji) {
   }, 6000);
 }
 
-// Recevoir une réaction d'un autre joueur (via chat)
+// Recevoir une réaction d'un autre joueur (via chat).
+// IMPORTANT: the proxy broadcasts REACT:pid:emoji messages to EVERY
+// connected client, regardless of which table they sit at. Until we
+// route reactions through the actual PokerTH game-chat (which is
+// table-scoped), we filter here client-side: if the sender is not at
+// our table, ignore the reaction completely — no counter increment,
+// no seat badge, no sound. Without this filter, reactions from another
+// table would silently bump our counters and play the `playTone` chime,
+// which is what the user reported hearing.
 function handleIncomingReaction(pid, emoji) {
+  if (!window.seats || seats.indexOf(pid) < 0) return;
   _reactionCounts[emoji] = (_reactionCounts[emoji] || 0) + 1;
   updateReactionCount(emoji);
   showSeatReaction(pid, emoji);
