@@ -20,9 +20,81 @@ function notifyCard() {
   // Bruit de carte distribuée : bref clic
   playTone(1200, 0.04, 0.12);
 }
-function notifyAction() {
-  // Action d'un joueur : thud sourd
+// Sons distincts par action (1=Fold 2=Check 3=Call 4=Bet 5=Raise 6=All-in)
+var _actionSounds = {
+  1: function() { playTone(300,0.15,0.07); setTimeout(function(){playTone(210,0.22,0.05);},130); },
+  2: function() { playTone(950,0.035,0.09); },
+  3: function() { playTone(440,0.055,0.11); setTimeout(function(){playTone(560,0.055,0.09);},85); },
+  4: function() { [440,554,660].forEach(function(f,i){setTimeout(function(){playTone(f,0.1,0.14);},i*65);}); },
+  5: function() { [523,659,784].forEach(function(f,i){setTimeout(function(){playTone(f,0.12,0.18);},i*70);}); }
+};
+function notifyAction(action) {
+  if (!_soundEnabled) return;
+  if (action && _actionSounds[action]) { _actionSounds[action](); return; }
   playTone(220, 0.1, 0.1);
+}
+// Fanfare all-in (sawtooth — cuivres synthétiques)
+function notifyAllIn() {
+  if (!_soundEnabled) return;
+  var ctx = getAudioCtx(); if (!ctx) return;
+  try {
+    if (ctx.state === 'suspended') ctx.resume();
+    [130.81, 196, 261.63, 392].forEach(function(f, i) {
+      var o = ctx.createOscillator(), g = ctx.createGain();
+      o.type = 'sawtooth'; o.connect(g); g.connect(ctx.destination);
+      o.frequency.value = f;
+      var t0 = ctx.currentTime + i * 0.06;
+      g.gain.setValueAtTime(0, t0);
+      g.gain.linearRampToValueAtTime(0.07, t0 + 0.04);
+      g.gain.exponentialRampToValueAtTime(0.001, t0 + 0.75);
+      o.start(t0); o.stop(t0 + 0.8);
+    });
+  } catch(e) {}
+}
+// Roulement de caisse claire (suspens river)
+var _drumRollId = null;
+function drumRoll(duration) {
+  if (!_soundEnabled) return;
+  stopDrumRoll();
+  var interval = 190, elapsed = 0;
+  function beat() {
+    playTone(110 + Math.random() * 80, 0.03, 0.13);
+    elapsed += interval;
+    interval = Math.max(32, interval * 0.86);
+    if (elapsed < duration) _drumRollId = setTimeout(beat, interval);
+  }
+  _drumRollId = setTimeout(beat, 0);
+}
+function stopDrumRoll() { if (_drumRollId) { clearTimeout(_drumRollId); _drumRollId = null; } }
+// Shuffle cards (bruit blanc filtré — mélange de cartes)
+function notifyShuffle() {
+  if (!_soundEnabled) return;
+  var ctx = getAudioCtx(); if (!ctx) return;
+  try {
+    if (ctx.state === 'suspended') ctx.resume();
+    [0, 85, 170].forEach(function(delay) {
+      setTimeout(function() {
+        var bufSize = Math.floor(ctx.sampleRate * 0.038);
+        var buf = ctx.createBuffer(1, bufSize, ctx.sampleRate);
+        var d = buf.getChannelData(0);
+        for (var j = 0; j < bufSize; j++) d[j] = (Math.random() * 2 - 1) * 0.38;
+        var filt = ctx.createBiquadFilter();
+        filt.type = 'highpass'; filt.frequency.value = 2200;
+        var src = ctx.createBufferSource(); src.buffer = buf;
+        var g = ctx.createGain(); g.gain.value = 0.20;
+        src.connect(filt); filt.connect(g); g.connect(ctx.destination);
+        src.start();
+      }, delay);
+    });
+  } catch(e) {}
+}
+// Accord mineur descendant — bad beat
+function notifyBadBeat() {
+  if (!_soundEnabled) return;
+  [[440,0],[370,170],[330,340],[294,540]].forEach(function(item) {
+    setTimeout(function() { playTone(item[0], 0.38, 0.11); }, item[1]);
+  });
+  if (navigator.vibrate) navigator.vibrate([200, 80, 200]);
 }
 function notifyMyTurn() {
   playTone(523, 0.15, 0.25);
@@ -1857,6 +1929,7 @@ const App = (() => {
 
       case T.HandStart: {
         // HandStartMessage: gameId=1, plainCards=2 {card1:1, card2:2}, smallBlind=4, seatStates=5, dealerPlayerId=6
+        notifyShuffle();
         handNum++;
         $('g-hand').textContent = t('handOf') + handNum;
         $('g-round').textContent = t('preflop');
@@ -1961,9 +2034,9 @@ const App = (() => {
           if ($('g-mystack')) $('g-mystack').textContent = myMon > 0 ? myMon + ' ¥' : '';
         }
         renderSeats();
-        notifyAction();
+        notifyAction(action);
         flashActionLabel(pid);
-        if (action === 6) animateAllIn(pid); // All-in
+        if (action === 6) { animateAllIn(pid); notifyAllIn(); } // All-in
         if (bet > 0) {
           setTimeout(function(){ animateChipToPot(pid, bet); }, 80);
           setTimeout(function(){
@@ -2031,6 +2104,8 @@ const App = (() => {
         commCards.push(rv);
         $('g-round').textContent = t('river');
         gameState = 3;
+        var _activePlayers = seats.filter(function(p){ return seatData[p] && !seatData[p].folded; });
+        if (_activePlayers.length >= 2) { stopDrumRoll(); drumRoll(900); }
         let rvBets = 0;
         for (const p of seats) if (seatData[p] && seatData[p].bet) { rvBets += seatData[p].bet; seatData[p].bet = 0; }
         collectedPot += rvBets;
@@ -2104,6 +2179,30 @@ const App = (() => {
         }
         pot = 0; $('g-pot').textContent = 'Pot: 0';
         if ($('g-potbar')) $('g-potbar').textContent = 'Pot: 0';
+        // ── Win streak tracking ──
+        var _winnerIds = winners.map(function(w){ return w.pid; });
+        seats.forEach(function(pid) {
+          if (!seatData[pid]) return;
+          if (_winnerIds.indexOf(pid) >= 0) {
+            seatData[pid].streak = (seatData[pid].streak || 0) + 1;
+          } else {
+            seatData[pid].streak = 0;
+          }
+          if (pid === myId && ws && !directWS && ws.readyState === WebSocket.OPEN) {
+            ws.send('STREAK:' + myId + ':' + seatData[pid].streak);
+          }
+        });
+        // ── Bad beat (perd avec full house ou mieux) ──
+        if (!_winnerIds.some(function(p){ return p === myId; })) {
+          var _commFull = commCards.filter(function(c){ return c != null; });
+          if (_commFull.length >= 3 && myCards[0] != null && myCards[1] != null) {
+            var _myNormBB = [myCards[0], myCards[1]].map(normalizeHoleCard).filter(function(c){ return c != null; });
+            if (_myNormBB.length === 2) {
+              var _bbRes = evaluateBestHand(_myNormBB, _commFull);
+              if (_bbRes && _bbRes.score >= 7) notifyBadBeat();
+            }
+          }
+        }
         renderSeats();
         // Animations de fin de main
         var iWon = winners.some(function(w){ return w.pid === myId; });
@@ -2900,6 +2999,7 @@ const App = (() => {
       h += '<div class="seat-money">' + moneyStr + '</div>';
       if (sd.bet) h += '<div class="seat-bet">' + sd.bet + '</div>';
       if (sd.action) h += '<div class="seat-action-label">' + esc(sd.action) + '</div>';
+      if (sd.streak >= 2) h += '<div class="seat-streak">🔥×' + sd.streak + '</div>';
       h += cardStr;
       h += '</div>';
     });
@@ -3153,8 +3253,17 @@ function showWinnerOverlay(winners) {
         }
       }
     }
+    var HAND_EMOJIS = {
+      'Royal Flush':'👑','Straight Flush':'⚡','Four of a Kind':'🃏',
+      'Full House':'🏠','Flush':'💧','Straight':'🎯',
+      'Three of a Kind':'3️⃣','Two Pair':'👫','One Pair':'👍','High Card':'🌟',
+      'Quinte Flush Royale':'👑','Quinte Flush':'⚡','Carré':'🃏',
+      'Full':'🏠','Couleur':'💧','Suite':'🎯',
+      'Brelan':'3️⃣','Double Paire':'👫','Paire':'👍','Carte Haute':'🌟'
+    };
     if (bestHandLabel) {
-      html += '<div class="wc-best-hand">' + bestHandLabel + '</div>';
+      var _hEmoji = HAND_EMOJIS[bestHandLabel] || '';
+      html += '<div class="wc-best-hand">' + (_hEmoji ? _hEmoji + ' ' : '') + bestHandLabel + '</div>';
     }
   }
 
@@ -3366,6 +3475,15 @@ function dismissWinner() {
             if (fromPid !== myId) {
               handleIncomingReaction(fromPid, reactEmoji);
               // Pas d'affichage dans le chat — uniquement animation flottante
+            }
+          }
+          if (e.data.startsWith('STREAK:')) {
+            var stParts = e.data.split(':');
+            var stPid   = parseInt(stParts[1]);
+            var stCount = parseInt(stParts[2]) || 0;
+            if (stPid && stPid !== myId && seatData[stPid]) {
+              seatData[stPid].streak = stCount;
+              if (seats.length) renderSeats();
             }
           }
           return;
