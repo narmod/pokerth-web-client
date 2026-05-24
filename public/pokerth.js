@@ -1528,6 +1528,10 @@ const App = (() => {
       case T.GamePlayerJoined: {
         const pid = Proto.u32(sub, 2);
         if (!seatData[pid]) seatData[pid] = {money:0,bet:0,action:'',active:false,folded:false};
+        // 'gone' means the player has been seen leaving (GamePlayerLeft).
+        // We reset it to false here because the same pid can rejoin (rare,
+        // but possible if the player closes and reopens the tab fast).
+        seatData[pid].gone = false;
         const name = players[pid] || '#'+pid;
         addChat(null, name + ' rejoint la table', 'sys');
         // Ask the server for this player's name if we don't have it yet,
@@ -1547,7 +1551,7 @@ const App = (() => {
         const pid = Proto.u32(sub, 2);
         const name = players[pid] || '#'+pid;
         addChat(null, name + ' quitte la table', 'sys');
-        if (seatData[pid]) seatData[pid].active = false;
+        if (seatData[pid]) { seatData[pid].active = false; seatData[pid].gone = true; }
         renderSeats();
         // Refresh the waiting panel if the game hasn't started yet.
         if (!_gameStarted) renderWaitingPanel();
@@ -2822,16 +2826,19 @@ const App = (() => {
     const maxP    = g.maxPlayers || 5;
     const minToStart = 2;
 
-    // Collect the pids currently present at this table. seatData is
-    // populated by GamePlayerJoined and gets active=false on GamePlayerLeft
-    // (we keep the entry around because the table view uses it to show
-    // the 'OUT' badge for eliminated players during the game). Before
-    // the game has actually started though, a player who left the room
-    // is gone for good — drop them from the waiting panel entirely.
+    // Collect the pids currently AT THE TABLE. We can't use seatData.active
+    // because that flag is per-hand (it's set true on HandStart, false when
+    // the player folds or sits out). Before the first hand has even started,
+    // every newly-joined player is created with active=false by design — so
+    // filtering on 'active' would hide them all in the waiting panel.
+    //
+    // Instead we use a dedicated 'gone' flag, set by the GamePlayerLeft
+    // handler and reset by GamePlayerJoined. A pid is at the table iff its
+    // seatData entry exists AND .gone is not true.
     const pids = Object.keys(seatData)
       .map(Number)
       .filter(function(pid) {
-        return !seatData[pid] || seatData[pid].active !== false;
+        return seatData[pid] && !seatData[pid].gone;
       });
     if (!pids.includes(myId) && myId) pids.push(myId);
 
