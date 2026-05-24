@@ -336,6 +336,13 @@ function selectAvatarPopup(emoji) {
         </div>
   </div>
   <div id="g-winner-overlay" class="winner-overlay" style="display:none" onclick="App.dismissWinner()"></div>
+  <!-- End-of-game overlay: full-screen panel shown when the server sends
+       EndOfGameMessage. Holds a trophy headline, the winner's name and
+       avatar, the local player's session stats, and two buttons (close
+       and back-to-lobby). Filled at runtime by showEndGameOverlay(); the
+       buttons are wired via the App.endGameClose() and App.endGameLeave()
+       methods. -->
+  <div id="g-endgame-overlay" class="endgame-overlay" style="display:none"></div>
   <div class="game-area">
     <!-- TABLE -->
     <div class="table-zone" id="g-table-zone">
