@@ -2158,6 +2158,20 @@ body:not(.in-game) .my-zone {
   font-style: italic; margin-top: 4px; text-align: center;
 }
 .wp-hint-admin { color: #58c97a; font-style: normal; font-weight: 600; }
+/* When the action-bar hosts the waiting panel (no real action buttons
+   yet), override its default right-alignment so the panel sits in the
+   middle of the bottom strip. Once the game starts, .waiting-panel is
+   replaced by buttons and the default flex-end alignment kicks back in. */
+.action-bar:has(.waiting-panel) {
+  justify-content: center;
+}
+/* Fallback for browsers that don't support :has() — we also widen the
+   panel itself so it occupies the full bar width and centres its inner
+   contents via its own align-items:center. Modern browsers (Chrome 105+,
+   Safari 15.4+, Firefox 121+) all support :has(), but this belt-and-
+   braces approach makes the centring work even on older mobile Safari. */
+.waiting-panel { width: 100%; }
+
 /* On mobile, keep things compact */
 @media (max-width: 640px) {
   .waiting-panel { padding: 8px 10px; gap: 5px; }
