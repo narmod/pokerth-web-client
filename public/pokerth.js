@@ -1030,6 +1030,16 @@ const MSG = (() => {
     const guiSpeed     = opts.guiSpeed     || 5;
     const delayHands   = opts.delayHands   || 7;
     const gameType     = opts.gameType     || 1;
+    // allowSpectators: proto field 15, optional bool, default true server-side.
+    // We forward the bit explicitly so the UI can flip it.
+    // - When opts.allowSpectators is undefined (older callers): omit the
+    //   field so the server's default of true applies.
+    // - When opts.allowSpectators is false: emit [15, 0, 0].
+    // - When opts.allowSpectators is true: emit [15, 0, 1] (explicit, in
+    //   case a future server changes the default).
+    const allowSpec    = (typeof opts.allowSpectators === 'boolean')
+                         ? (opts.allowSpectators ? 1 : 0)
+                         : null;
     const gameInfo = Proto.encode([
       [1,  2, name || 'WebGame'],
       [2,  0, gameType],
@@ -1043,6 +1053,7 @@ const MSG = (() => {
       [11, 0, timeout||30],
       [12, 0, smallBlind||10],
       [13, 0, startMoney||3000],
+      ...(allowSpec !== null ? [[15, 0, allowSpec]] : []),
     ]);
     const joinFields = [[1, 2, gameInfo]];
     if (opts.password) joinFields.push([2, 2, opts.password]);
@@ -3690,15 +3701,21 @@ function dismissWinner() {
       window._humansJoined    = 1;
       gameTimeout = timeout; // mémoriser le timeout pour le timer
       const tablePass = (document.getElementById('cf-use-password')?.checked) ? (document.getElementById('cf-password')?.value || '') : '';
+      // Spectators are allowed by default (true) when the field is missing
+      // (older clients, or when the form hasn't been opened) — matches the
+      // proto's default. The UI dropdown sends '1' = allowed, '0' = blocked.
+      const allowSpecRaw = document.getElementById('cf-allow-spectators');
+      const allowSpec = allowSpecRaw ? (allowSpecRaw.value !== '0') : true;
       const opts = {
-        raiseMode:    sv('cf-raise-mode',    1),
-        raiseEvery:   iv('cf-raise-every',   7),
-        endRaiseMode: sv('cf-end-raise',     1),
-        endRaiseValue:iv('cf-end-raise-val', 200),
-        guiSpeed:     iv('cf-gui-speed',     5),
-        delayHands:   iv('cf-delay',         7),
-        gameType:     sv('cf-game-type',     1),
-        password:     tablePass,
+        raiseMode:       sv('cf-raise-mode',    1),
+        raiseEvery:      iv('cf-raise-every',   7),
+        endRaiseMode:    sv('cf-end-raise',     1),
+        endRaiseValue:   iv('cf-end-raise-val', 200),
+        guiSpeed:        iv('cf-gui-speed',     5),
+        delayHands:      iv('cf-delay',         7),
+        gameType:        sv('cf-game-type',     1),
+        allowSpectators: allowSpec,
+        password:        tablePass,
       };
       addChat(null, '+ Creating "' + name + '" (' + nplayers + 'p' + (bots ? ' + bots' : '') + ')...', 'sys');
       send(MSG.buildCreateGame(name, nplayers, blind, stack, timeout, opts));
