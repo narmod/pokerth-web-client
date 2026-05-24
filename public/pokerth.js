@@ -1206,19 +1206,35 @@ const MSG = (() => {
     return { type, sub };
   }
 
-  // Construit un InitMessage (connexion invité)
+  // Construit un InitMessage (guest, unauth ou authenticated user)
   // buildId = (CLIENT_TYPE_QT_WIDGET<<24)|(MAJOR<<16)|(MINOR<<8)|PATCH
   // = (0x01<<24)|(2<<16)|(0<<8)|6 = 0x01020006 = 16908294 (PokerTH 2.0.6)
+  // Auth (loginType=1) : password en clair dans clientUserData (tag 7),
+  //   sécurisé par TLS (mandatory côté serveur v2.0+).
+  //   Ref: pokerth/src/net/clientstate.cpp:1465-1469 + serverlobbythread.cpp:1255-1256
   function buildInit(nick, major, minor, loginType, password) {
     loginType = loginType !== undefined ? loginType : 0;
     const BUILD_ID = 16908294; // 0x01020006 — source: pokerth-live/src/constants/gameDefs.js
     const ver = Proto.encode([[1,0,major],[2,0,minor]]);
-    const init = Proto.encode([
-      [1,2,ver],      // requestedVersion (= protocolVersion from Announce)
-      [2,0,BUILD_ID], // buildId composite: (type<<24)|(major<<16)|(minor<<8)|patch
-      [5,0,loginType],// login: 0=guestLogin, 2=unauthenticatedLogin
-      [6,2,nick],     // nickName
-    ]);
+    const fields = [
+      [1,2,ver],       // requestedVersion (= protocolVersion from Announce)
+      [2,0,BUILD_ID],  // buildId composite: (type<<24)|(major<<16)|(minor<<8)|patch
+      [5,0,loginType], // login: 0=guestLogin, 1=authenticatedLogin, 2=unauthenticatedLogin
+      [6,2,nick],      // nickName (utilisé aussi pour authenticated login)
+    ];
+    // Authenticated login : password en bytes dans clientUserData (tag 7, max 256 bytes).
+    // Tronqué si nécessaire pour rester sous la limite imposée par le serveur.
+    if (loginType === 1 && password) {
+      let pwd = String(password);
+      // Sanity check : max 256 bytes UTF-8 (cf. netpacketvalidator.cpp:184)
+      const enc = new TextEncoder().encode(pwd);
+      if (enc.length > 256) {
+        console.warn('[buildInit] password > 256 bytes UTF-8, truncated');
+        pwd = new TextDecoder().decode(enc.slice(0, 256));
+      }
+      fields.push([7, 2, pwd]); // clientUserData
+    }
+    const init = Proto.encode(fields);
     return Proto.encode([[1,0,T.Init],[3,2,init]]);
   }
 
