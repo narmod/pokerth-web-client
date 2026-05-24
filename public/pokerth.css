@@ -2193,3 +2193,131 @@ body:not(.in-game) .my-zone {
   .wp-player { font-size: 0.72rem; padding: 2px 8px 2px 3px; }
   .wp-av { width: 20px; height: 20px; }
 }
+
+
+/* ══ END-OF-GAME OVERLAY ══
+   Full-screen panel shown when the tournament finishes (EndOfGame
+   message). Style is heavier than the per-hand winner-overlay:
+   bigger trophy, dramatic gold gradient, dedicated stats section. */
+.endgame-overlay {
+  position: fixed; inset: 0; z-index: 110;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(0,0,0,0.85);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  animation: endgameFadeIn 0.4s ease-out;
+}
+@keyframes endgameFadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+.endgame-card {
+  background: linear-gradient(160deg, #0a1f0a 0%, #142a18 50%, #08160a 100%);
+  border: 1px solid var(--gold);
+  border-top: 4px solid var(--gold);
+  border-radius: 12px;
+  padding: 22px 28px;
+  max-width: 480px; width: calc(100% - 32px);
+  box-shadow: 0 8px 40px rgba(0,0,0,0.8), 0 0 60px rgba(200,168,74,0.15);
+  display: flex; flex-direction: column; gap: 14px;
+  animation: endgamePop 0.55s cubic-bezier(0.2,0.9,0.3,1.1);
+}
+@keyframes endgamePop {
+  0%   { transform: scale(0.85) translateY(20px); opacity: 0; }
+  100% { transform: scale(1)    translateY(0);    opacity: 1; }
+}
+.eg-trophy {
+  text-align: center; font-size: 3rem; line-height: 1;
+  filter: drop-shadow(0 4px 12px rgba(255,200,80,0.4));
+  animation: trophyBob 2.2s ease-in-out infinite;
+}
+@keyframes trophyBob {
+  0%,100% { transform: translateY(0) rotate(-2deg); }
+  50%     { transform: translateY(-4px) rotate(2deg); }
+}
+.eg-title {
+  text-align: center;
+  font-family: 'Cinzel', serif;
+  font-size: 1.25rem; letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--gold);
+  text-shadow: 0 2px 8px rgba(200,168,74,0.3);
+}
+.eg-winner {
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+  padding: 10px 14px;
+  background: rgba(200,168,74,0.08);
+  border: 1px solid var(--gold-dim);
+  border-radius: 6px;
+}
+.eg-winner-av {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 38px; height: 38px; border-radius: 50%;
+  background: rgba(255,255,255,0.05);
+  font-size: 1.6rem; line-height: 1;
+  border: 2px solid var(--gold);
+}
+.eg-winner-av.letter { font-size: 1.1rem; font-weight: 700; color: var(--gold); }
+.eg-winner-label { font-size: 0.65rem; color: var(--gold-dim);
+  text-transform: uppercase; letter-spacing: 0.12em; }
+.eg-winner-name  { font-size: 1.05rem; color: var(--cream); font-weight: 600; }
+.eg-winner.me {
+  background: rgba(88,201,122,0.12);
+  border-color: rgba(88,201,122,0.5);
+}
+.eg-winner.me .eg-winner-av { border-color: #58c97a; }
+.eg-stats-section {
+  background: rgba(0,0,0,0.35);
+  border: 1px solid var(--border);
+  border-radius: 6px; padding: 12px 14px;
+}
+.eg-stats-title {
+  font-size: 0.62rem; color: var(--gold-dim);
+  text-transform: uppercase; letter-spacing: 0.15em;
+  margin-bottom: 8px;
+}
+.eg-stat-row {
+  display: flex; justify-content: space-between; align-items: center;
+  font-size: 0.78rem; padding: 3px 0;
+}
+.eg-stat-label { color: var(--text); }
+.eg-stat-val   { color: var(--cream); font-weight: 600; font-family: 'Inconsolata',monospace; }
+.eg-stat-val.pos { color: #58c97a; }
+.eg-stat-val.neg { color: #e07070; }
+.eg-stat-divider {
+  border: none; border-top: 1px solid var(--border);
+  margin: 6px 0;
+}
+.eg-actions {
+  display: flex; gap: 10px; margin-top: 4px;
+}
+.eg-btn {
+  flex: 1; padding: 10px 14px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  color: var(--cream);
+  font-family: 'Cinzel', serif;
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+.eg-btn:hover { background: rgba(255,255,255,0.08); border-color: var(--gold-dim); }
+.eg-btn.primary {
+  background: linear-gradient(180deg, rgba(200,168,74,0.25), rgba(200,168,74,0.12));
+  border-color: var(--gold);
+  color: var(--gold-hi);
+}
+.eg-btn.primary:hover {
+  background: linear-gradient(180deg, rgba(200,168,74,0.4), rgba(200,168,74,0.2));
+}
+@media (max-width: 640px) {
+  .endgame-card { padding: 16px 18px; gap: 10px; }
+  .eg-trophy { font-size: 2.4rem; }
+  .eg-title { font-size: 1rem; letter-spacing: 0.14em; }
+  .eg-winner-av { width: 32px; height: 32px; font-size: 1.4rem; }
+  .eg-winner-name { font-size: 0.95rem; }
+  .eg-stat-row { font-size: 0.74rem; }
+}
