@@ -2086,17 +2086,22 @@ body:not(.in-game) .my-zone {
 /* ══ HAND STRENGTH — taille augmentée sur tablette & desktop (pas sur mobile) ══ */
 @media (min-width: 768px) {
   #hand-strength {
-    font-size: 0.68rem;
-    padding: 3px 12px;
-    top: -24px;
+    /* Repositionné en haut, juste sous la barre du pot, hors zone de jeu */
+    position: fixed;
+    top: 64px;
+    left: 50%;
+    right: auto;
+    bottom: auto;
+    transform: translateX(-50%);
+    font-size: 0.72rem;
+    padding: 4px 14px;
+    z-index: 25;
   }
 }
 @media (min-width: 1280px) {
   #hand-strength {
-    /* Décalé à droite pour éviter la superposition avec les jetons de mise sud-centre */
-    left: auto;
-    right: 14px;
-    transform: none;
-    top: -28px;
+    top: 72px;
+    font-size: 0.78rem;
+    padding: 5px 16px;
   }
 }
