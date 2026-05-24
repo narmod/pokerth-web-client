@@ -393,7 +393,13 @@ function selectAvatarPopup(emoji) {
   </div>
 </div>
 
-<script src="pokerth.js"></script>
+<!-- ES module: must load BEFORE the main script so its window.* aliases
+     are available when pokerth.js starts executing. Modules are deferred
+     by default, and the main script below uses `defer` too — defer
+     scripts execute in document order, so this ordering is reliable. -->
+<script type="module" src="modules/i18n.mjs"></script>
+<script type="module" src="modules/sounds.mjs"></script>
+<script src="pokerth.js" defer></script>
 <script>
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('/sw.js').catch(function(){});
