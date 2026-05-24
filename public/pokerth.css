@@ -748,6 +748,14 @@ body {
     width: 170% !important; height: 170% !important;
     top: -35% !important; left: -35% !important;
   }
+
+  /* ── Badge décompte : plus grand et écarté de l'arc sur grand écran ── */
+  .seat-timer-badge {
+    font-size: 0.88rem !important;
+    margin-top: 16px !important;
+    padding: 2px 7px !important;
+    min-width: 32px !important;
+  }
 }
 
 /* Tablet */
@@ -1601,8 +1609,8 @@ body {
   text-anchor: middle;
   dominant-baseline: middle;
 }
-/* Quand le timer tourne : cacher l'initiale (lettre), mais PAS l'emoji avatar */
-.seat-avatar.timing:not(.emoji-av) > .seat-initial { display: none; }
+/* Quand le timer tourne : initiale ET emoji toujours visibles (au-dessus du SVG arc) */
+.seat-avatar.timing > .seat-initial { position: relative; z-index: 5; }
 .seat-avatar.emoji-av.timing > .seat-initial { display: flex; position: relative; z-index: 5; }
 .seat.active .seat-name,
 .seat.active .seat-money { opacity: 0.35; transition: opacity 0.3s; }
@@ -2011,15 +2019,21 @@ body:not(.in-game) .my-zone {
 
 /* Badge timer sous le cercle avatar */
 .seat-timer-badge {
-  font-size: 0.58rem;
+  font-size: 0.72rem;
   font-family: 'Inconsolata', monospace;
   font-weight: 900;
-  color: gold;
-  letter-spacing: 0.03em;
+  color: #ffe234;
+  letter-spacing: 0.05em;
   line-height: 1;
-  min-height: 0.7rem;
+  min-width: 26px;
   text-align: center;
-  text-shadow: 0 0 6px rgba(200,168,74,0.8);
+  margin-top: 10px;
+  padding: 1px 5px;
+  background: rgba(0,0,0,0.62);
+  border-radius: 3px;
+  border: 1px solid rgba(200,168,74,0.35);
+  text-shadow: 0 0 8px rgba(255,220,50,0.9), 0 1px 3px rgba(0,0,0,1);
+  box-shadow: 0 1px 5px rgba(0,0,0,0.55);
 }
 
 /* ══ Slider de mise mobile ══════════════════════════════════ */
