@@ -1500,8 +1500,9 @@ const App = (() => {
         const codes = {1:'Version incompatible',2:'Serveur plein',3:'Auth échouée',
           4:'Pseudo déjà pris',5:'Pseudo invalide',6:'Maintenance',7:'Bloqué'};
         const r = Proto.u32(sub, 1);
-        if (r === 3 && directWS) {
-          setStatus('⚠ Login enregistré non supporté via WebSocket. Utilisez le mode Invité.', 'err');
+        if (r === 3) {
+          // initAuthFailure: login/password rejected by server
+          setStatus('⚠ Identifiants pokerth.net invalides (utilisateur ou mot de passe).', 'err');
           ws.close(); return;
         }
         if (r === 7) {
@@ -3359,15 +3360,17 @@ function dismissWinner() {
       players = {};
       loaded  = false;
 
-      // Direct WSS for Internet modes (guest/auth to pokerth.net)
-      // directWS uniquement pour les modes pokerth.net (guest/auth)
-      // unauth (serveur privé) passe toujours par le proxy
-      const isPokerThDirect = (loginMode === 'guest' || loginMode === 'auth');
+      // Direct WSS only for guest mode on pokerth.net (the /pthlive endpoint
+      // accepts unauthenticated/guest sessions). Authenticated login must
+      // hit the regular PokerTH server on port 7234 via the TLS-capable proxy.
+      const isPokerThDirect = (loginMode === 'guest');
       const targetIsPokerTH = host.includes('pokerth.net');
       directWS = isPokerThDirect && targetIsPokerTH;
+      // For auth mode targeting pokerth.net, force TLS on the proxy hop.
+      const effectiveTlsParam = (loginMode === 'auth' && targetIsPokerTH) ? '1' : tlsParam;
       const finalUrl = directWS
         ? 'wss://www.pokerth.net:443/pthlive'
-        : proxyUrl + '?host=' + encodeURIComponent(host) + '&port=' + encodeURIComponent(port) + '&tls=' + tlsParam;
+        : proxyUrl + '?host=' + encodeURIComponent(host) + '&port=' + encodeURIComponent(port) + '&tls=' + effectiveTlsParam;
 
       setStatus(directWS ? t('connDirect') : t('connProxy'));
 
