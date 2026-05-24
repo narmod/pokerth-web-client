@@ -118,6 +118,10 @@ const LANG = {
     allowOff:'Blocked',
     waitingReadyForBots:'Ready — {n} human(s) present, you can fill with bots',
     waitingStartNow:'Start now',
+    autoCheckLabel:'Auto-check next turn',
+    autoFoldLabel:'Auto-fold next turn',
+    autoChecked:'Auto-checked',
+    autoFolded:'Auto-folded',
 },
   fr: {
     connect:'Se connecter', disconnect:'✕ Déconnecter', connecting:'Connexion en cours…',
@@ -223,6 +227,10 @@ const LANG = {
     allowOff:'Interdits',
     waitingReadyForBots:'Prêt — {n} humain(s) présent(s), vous pouvez remplir avec des bots',
     waitingStartNow:'Lancer maintenant',
+    autoCheckLabel:'Auto-check au prochain tour',
+    autoFoldLabel:'Auto-fold au prochain tour',
+    autoChecked:'Auto-check effectué',
+    autoFolded:'Auto-fold effectué',
 }
 };
 
