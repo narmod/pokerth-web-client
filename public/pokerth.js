@@ -1129,6 +1129,7 @@ const App = (() => {
   let amGameAdmin = false;  // true if we created this game
   let _gameStarted = false; // flips true on GameStartInitial; freezes waiting-panel updates
   let _seatsFrozen = false; // one-way latch: true once the original seating order is set, never unset until leave/closeTable
+  let _autoCheckFold = false; // armed by the per-turn checkbox; auto-resets every HandStart
   let _lastConnectParams = null;
   let _currentLoginMode = 'lan';
   let _lastMsgWasReaction = false; // true si le dernier chat envoyé était une réaction
@@ -1672,6 +1673,10 @@ const App = (() => {
       case T.HandStart: {
         // HandStartMessage: gameId=1, plainCards=2 {card1:1, card2:2}, smallBlind=4, seatStates=5, dealerPlayerId=6
         handNum++;
+        // Reset auto-check/fold on every new hand. Standard poker-client
+        // safety: the user must see each hand's hole cards before deciding
+        // anything automatic.
+        _autoCheckFold = false;
         $('g-hand').textContent = t('handOf') + handNum;
         $('g-round').textContent = t('preflop');
         gameState = 0; // preflop
@@ -1736,6 +1741,28 @@ const App = (() => {
         $('g-round').textContent = rounds[gameState] || t('preflop');
         startTurnTimer();
         if (turnPid === myId) {
+          // Auto check/fold path: if the user armed the option on a
+          // previous turn (this same hand), play the auto action without
+          // showing the action buttons. canCheck (no money to put in)
+          // → check. Otherwise → fold.
+          if (_autoCheckFold) {
+            const myBet0   = (seatData[myId] || {}).bet || 0;
+            const toCall0  = Math.max(0, highestBet - myBet0);
+            const canCheck0 = toCall0 === 0;
+            // Disarm immediately so the option is one-shot per hand even if
+            // we get multiple turns within the same hand (re-arming is up
+            // to the user every turn).
+            _autoCheckFold = false;
+            // Brief delay so the user sees a visual cue rather than an
+            // instant invisible action.
+            renderGameWaiting(canCheck0 ? '⏩ ' + t('autoChecked') : '⏩ ' + t('autoFolded'));
+            setMyTurnActive(true);
+            setTimeout(function() {
+              if (canCheck0) doAction(2, 0);
+              else           doAction(1, 0);
+            }, 180);
+            break;
+          }
           renderMyTurnActions();
           setMyTurnActive(true);
           notifyMyTurn();
@@ -3137,7 +3164,22 @@ const App = (() => {
         + '<button class="btn-action btn-raise raise-btn"' + da + ' onclick="App.doRaise()" title="Raise (R)">' + raiseLabel + '</button>'
         + '</div>';
 
-    const h = '<div class="action-grid">'
+    // Auto check/fold toggle: shown above the action buttons, lets the user
+    // arm the option NOW so it takes effect on the NEXT turn this hand.
+    // The label text adapts to what the auto action will be next time —
+    // 'Auto-check' when we currently have nothing to call, 'Auto-fold'
+    // otherwise. The checkbox state is bound to window._autoCheckFold via
+    // App.toggleAutoCheckFold.
+    const autoLabel = canCheck
+      ? t('autoCheckLabel')
+      : t('autoFoldLabel');
+    const autoRow = '<label class="auto-cf-row">' +
+      '<input type="checkbox" id="auto-cf-chk"' + (_autoCheckFold ? ' checked' : '') +
+        ' onchange="App.toggleAutoCheckFold(this.checked)">' +
+      '<span>' + autoLabel + '</span>' +
+      '</label>';
+
+    const h = autoRow + '<div class="action-grid">'
       + '<div class="action-top-row">'
       +   '<button class="btn-action btn-fold" onclick="App.doAction(1,0)" title="Fold (F)">' + t('fold') + '</button>'
       +   '<button class="btn-action ' + callClass + '" onclick="' + callAction + '" title="Call/Check (C)">' + callLabel + '</button>'
@@ -3599,6 +3641,15 @@ function dismissWinner() {
       var el = document.getElementById('g-endgame-overlay');
       if (el) el.style.display = 'none';
       this.leaveGame();
+    },
+
+    toggleAutoCheckFold(on) {
+      // Flips the per-hand auto check/fold state. Bound to the checkbox
+      // injected by renderMyTurnActions(). The flag is consumed on the
+      // NEXT PlayersTurn message for our pid within the same hand, and
+      // is force-reset on every HandStart so the user never plays a
+      // fresh hand on autopilot.
+      _autoCheckFold = !!on;
     },
 
     leaveGame() {
