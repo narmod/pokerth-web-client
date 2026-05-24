@@ -2093,6 +2093,10 @@ body:not(.in-game) .my-zone {
 }
 @media (min-width: 1280px) {
   #hand-strength {
-    top: -34px;
+    /* Décalé à droite pour éviter la superposition avec les jetons de mise sud-centre */
+    left: auto;
+    right: 14px;
+    transform: none;
+    top: -28px;
   }
 }
