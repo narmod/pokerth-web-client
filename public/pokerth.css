@@ -2093,8 +2093,6 @@ body:not(.in-game) .my-zone {
 }
 @media (min-width: 1280px) {
   #hand-strength {
-    font-size: 0.74rem;
-    padding: 3px 13px;
-    top: -25px;
+    top: -34px;
   }
 }
