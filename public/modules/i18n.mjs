@@ -112,6 +112,10 @@ const LANG = {
     endGameWorstLoss:'Worst loss',
     endGameClose:'Close',
     endGameBackToLobby:'Back to lobby',
+    gameRanking:'Ranking',
+    allowSpectators:'Spectators',
+    allowOn:'Allowed',
+    allowOff:'Blocked',
 },
   fr: {
     connect:'Se connecter', disconnect:'✕ Déconnecter', connecting:'Connexion en cours…',
@@ -211,6 +215,10 @@ const LANG = {
     endGameWorstLoss:'Pire perte',
     endGameClose:'Fermer',
     endGameBackToLobby:'Retour au lobby',
+    gameRanking:'Classée',
+    allowSpectators:'Spectateurs',
+    allowOn:'Autorisés',
+    allowOff:'Interdits',
 }
 };
 
