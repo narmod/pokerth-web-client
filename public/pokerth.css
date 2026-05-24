@@ -2086,17 +2086,16 @@ body:not(.in-game) .my-zone {
 /* ══ HAND STRENGTH — taille augmentée sur tablette & desktop (pas sur mobile) ══ */
 @media (min-width: 768px) {
   #hand-strength {
-    font-size: 0.92rem;
-    padding: 6px 18px;
-    letter-spacing: 0.06em;
-    top: -32px;
-    border-width: 1.5px;
+    font-size: 0.78rem;
+    padding: 4px 14px;
+    letter-spacing: 0.05em;
+    top: -26px;
   }
 }
 @media (min-width: 1280px) {
   #hand-strength {
-    font-size: 1.05rem;
-    padding: 8px 22px;
-    top: -38px;
+    font-size: 0.86rem;
+    padding: 5px 16px;
+    top: -30px;
   }
 }
