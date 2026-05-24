@@ -2819,7 +2819,6 @@ const App = (() => {
   function renderWaitingPanel() {
     if (_gameStarted) return;
     const g = games[gId] || {};
-    const current = Math.max(g.players || 1, 1); // at minimum, we are here
     const maxP    = g.maxPlayers || 5;
     const minToStart = 2;
 
@@ -2827,6 +2826,23 @@ const App = (() => {
     // populated by GamePlayerJoined; we always know ourselves.
     const pids = Object.keys(seatData).map(Number);
     if (!pids.includes(myId) && myId) pids.push(myId);
+
+    // PREVIOUS BUG: 'current' used to read games[gId].players, which is
+    // the lobby-side count maintained by GameListPlayerJoined / Left.
+    // Once a client enters a game, the server stops sending GameList*
+    // events to it, so that counter freezes at whatever value it had
+    // when the join happened — typically 1 (just the admin). Meanwhile
+    // seatData/pids continued to grow correctly via GamePlayerJoined,
+    // so the panel displayed an obviously-wrong 'Players: 1 / 5' next
+    // to a list of two pseudos, and the 'Start now' bot button never
+    // appeared because the threshold check (current >= minHumans) saw
+    // the stale 1 instead of the real 2.
+    //
+    // Fix: use pids.length as the single source of truth. The fallback
+    // to g.players is preserved for the half-second between JoinGameAck
+    // and the first GamePlayerJoined of our table neighbours, where
+    // seatData is still being primed.
+    const current = Math.max(pids.length, g.players || 1, 1);
 
     // Build the player list rows
     let rows = '';
