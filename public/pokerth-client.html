@@ -132,12 +132,13 @@ function selectAvatarPopup(emoji) {
     <div class="f" id="f-pass" style="display:none">
       <label>Password</label>
       <input id="pass" type="password" maxlength="128" placeholder="••••••••"
+             autocomplete="off"
              onkeydown="if(event.key==='Enter') App.connect()">
     </div>
 
     <label class="tls-row">
       <input type="checkbox" id="remember-me" style="accent-color:var(--gold);flex-shrink:0" onchange="App.onRememberMe()">
-      <span style="font-size:0.72rem" data-i18n="rememberMe">Remember nickname / login &amp; password</span>
+      <span style="font-size:0.72rem" data-i18n="rememberMe">Remember nickname (password is never stored)</span>
     </label>
     <label class="tls-row">
       <input type="checkbox" id="use-tls" style="accent-color:var(--gold);flex-shrink:0">
