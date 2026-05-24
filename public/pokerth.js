@@ -2839,7 +2839,7 @@ const App = (() => {
         : !!_playerAvatars[pid];
       const avatarType = isMe
         ? (_hasEmojiAv ? ' emoji-av' : '')
-        : (isBot(pid) ? ' is-bot' : (_hasEmojiAv ? ' emoji-av is-human' : ' is-human'));
+        : (isBot(pid) ? ' is-bot emoji-av' : (_hasEmojiAv ? ' emoji-av is-human' : ' is-human'));
       const moneyStr = sd.money != null && sd.money >= 0 ? sd.money + ' ¥' : '—';
       // Cartes sous le siège : uniquement les adversaires au showdown
       // (mes propres cartes sont déjà visibles dans la player-bar en bas)
