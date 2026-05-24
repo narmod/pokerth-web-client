@@ -836,7 +836,9 @@ function evaluatePreFlopHand(c1, c2) {
 
 
 function normalizeHoleCard(n) {
-  if (n == null || n < 0 || n > 51) return null;
+  // FIX bug-proofing : Number.isFinite capture NaN/Infinity ; sinon les tests `n<0||n>51` échouent
+  // pour NaN (toujours false) et le calcul produirait NaN qui se propagerait jusqu'à l'évaluation des mains.
+  if (n == null || !Number.isInteger(n) || n < 0 || n > 51) return null;
   var si = Math.floor(n / 13);  // 0-indexé (♣=0, ♠=1, ♥=2, ♦=3)
   var ri = n % 13;
   var suitRemap = [1, 2, 3, 0]; // ♣→1, ♠→2, ♥→3, ♦→0 (ordre comm canonique)
@@ -1867,8 +1869,10 @@ const App = (() => {
         pot = 0; collectedPot = 0; highestBet = 0; minRaise = 0;
 
         // My cards (plainCards sub-message at field 2)
+        // FIX : pour un SPECTATEUR le serveur peut envoyer plainCards vide ou sans les champs 1/2.
+        // u32orNull distingue "champ absent" (null → carte cachée) de "valeur 0" (carte 2♣ valide).
         const pc = sub[2] ? Proto.decode(sub[2][0]) : {};
-        myCards = [Proto.u32(pc, 1), Proto.u32(pc, 2)];
+        myCards = [Proto.u32orNull(pc, 1), Proto.u32orNull(pc, 2)];
         const hsFields = Object.keys(sub).sort((a,b)=>+a-+b).map(f=>f+':'+Proto.u32(sub,+f)).join(' ');
 
         const sb = Proto.u32(sub, 4);
@@ -1976,20 +1980,21 @@ const App = (() => {
         break;
       }
       case T.DealFlop: {
-        // DealFlopCardsMessage: champs selon version proto
-        // Essai A : gameId=1, card1=2, card2=3, card3=4 (proto officiel)
-        const fA = [Proto.u32(sub,2), Proto.u32(sub,3), Proto.u32(sub,4)];
-        // Essai B : sans gameId : card1=1, card2=2, card3=3 (ancienne version)
-        const fB = [Proto.u32(sub,1), Proto.u32(sub,2), Proto.u32(sub,3)];
+        // DealFlopCardsMessage : deux formats possibles selon la version proto.
+        // Essai A : gameId=1, card1=2, card2=3, card3=4 (proto officiel actuel)
+        // Essai B : card1=1, card2=2, card3=3 (ancienne version, sans gameId)
+        // FIX bug rare : on utilise u32orNull pour DISTINGUER "champ absent" (null) de "valeur 0" (le 2♦).
+        // L'ancienne logique avec u32 (défaut 0) confondait les deux et pouvait accepter fA = [card2, card3, 0]
+        // dans le format ancien, traitant 0 comme une 3e carte valide (le 2♦) à tort.
+        const fA = [Proto.u32orNull(sub,2), Proto.u32orNull(sub,3), Proto.u32orNull(sub,4)];
+        const fB = [Proto.u32orNull(sub,1), Proto.u32orNull(sub,2), Proto.u32orNull(sub,3)];
         const allFields = Object.keys(sub).sort((a,b)=>+a-+b);
         const allVals = allFields.map(f => f+'='+Proto.u32(sub,+f)).join(' ');
-        // Choisir: si fA[0] correspond à une carte valide (1-52), utiliser A sinon B
-        // FIX bug rare : le 2♦ a l'encodage n=0 (0-indexed). n>=1 l'excluait à tort
-        // et basculait sur fB (utilisant gameId comme première carte → carte dos).
-        // On accepte la plage étendue 0..52 ; si fA est plausible globalement on le prend.
-        const isPlausibleCard = n => n >= 0 && n <= 52;
-        const allPlausible = a => a.every(isPlausibleCard);
-        commCards = allPlausible(fA) ? fA : (allPlausible(fB) ? fB : fA);
+        // Une carte est valide si elle est PRÉSENTE (≠null) et dans la plage 0..51
+        const isValidCard = n => n !== null && n >= 0 && n <= 51;
+        const allValid = a => a.every(isValidCard);
+        // Préférer fA (format officiel) ; basculer sur fB si fA incomplet ; sinon garder fA tel quel (cardToHtml affichera des dos)
+        commCards = allValid(fA) ? fA : (allValid(fB) ? fB : fA);
         const dbg = 'FLOP sub:'+allVals+' →['+commCards.join(',')+']';
         if ($('g-debug')) $('g-debug').textContent = dbg;
         $('g-round').textContent = t('flop');
@@ -2269,6 +2274,8 @@ const App = (() => {
   function cardName(n, isComm) {
     // FIX: encodage unifié 0-indexé (PokerTH envoie 0–51 pour hole et comm cards)
     if (n == null) return '?';
+    // FIX bug-proofing : alignement avec cardHtml — toute valeur non-entière dans [0..51] devient '?'
+    if (!Number.isInteger(n) || n < 0 || n > 51) return '?';
     let si, ri;
     si = Math.floor(n / 13);
     ri = n % 13;
@@ -2278,18 +2285,24 @@ const App = (() => {
   }
 
   // PokerTH card encoding:
-  //   Hole cards (plainCards):  1-indexed, suits [♣,♠,♥,♦], card 1=2♣ … 52=A♦
+  //   Hole cards (plainCards):  0-indexed, suits [♣,♠,♥,♦], card 0=2♣ … 51=A♦
   //   Community cards (flop…):  0-indexed, suits [♦,♣,♠,♥], card 0=2♦ … 51=A♥
+  // (les hole cards étaient documentées 1-indexed mais le serveur officiel actuel envoie 0-indexed
+  //  — cf. normalizeHoleCard et cardName ; la branche else 1-indexed n'est plus utilisée en pratique)
   function cardToHtml(n, sm, isComm, extraCls) {
     extraCls = extraCls || '';
     const sz = sm ? ' sm' : '';
     if (n === null || n === undefined) return '<div class="pk' + sz + ' back' + extraCls + '"></div>';
+    // FIX bug-proofing : capture NaN, Infinity, strings, etc. — tout ce qui n'est pas un entier valide dans [0..51]
+    if (!Number.isInteger(n) || n < 0 || n > (isComm ? 51 : 52)) {
+      return '<div class="pk' + sz + ' back' + extraCls + '"></div>';
+    }
     let si, ri;
     if (isComm) {
       si = Math.floor(n / 13);      // 0-indexed suits: ♦=0 ♣=1 ♠=2 ♥=3
       ri = n % 13;
     } else {
-      si = Math.floor((n-1) / 13);  // 1-indexed suits: ♣=0 ♠=1 ♥=2 ♦=3
+      si = Math.floor((n-1) / 13);  // 1-indexed suits: ♣=0 ♠=1 ♥=2 ♦=3 (branche conservée mais non utilisée)
       ri = (n-1) % 13;
     }
     // Protection : si hors limites → dos de carte plutôt que '?'
@@ -2309,7 +2322,7 @@ const App = (() => {
     if (n == null) return '<div class="pk '+cls+' back"></div>';
     // FIX bug "rang sans couleur" : si la valeur est hors de la plage 0..51,
     // afficher un dos de carte (alignement avec cardToHtml ligne ~2288).
-    if (typeof n !== 'number' || !Number.isFinite(n) || n < 0 || n > 51) {
+    if (!Number.isInteger(n) || n < 0 || n > 51) {
       return '<div class="pk '+cls+' back"></div>';
     }
     var si = Math.floor(n / 13);
