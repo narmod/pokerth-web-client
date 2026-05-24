@@ -248,15 +248,15 @@ function selectAvatarPopup(emoji) {
   <div class="header">
     <div class="header-brand"><span>♠</span>&nbsp;<span id="g-name">TABLE</span><span id="g-admin-badge" style="display:none;font-size:0.7rem;color:var(--green);margin-left:6px" title="Vous êtes créateur de cette table">👑</span></div>
     <div class="header-pills"></div>
-    <button class="btn-sm btn-icon" id="fs-btn-game" onclick="toggleFullscreen()" title="Fullscreen">⛶</button>
-    <button class="btn-sm btn-icon" id="sound-toggle-btn" onclick="toggleSound()" title="Couper/Unmute">🔊</button>
+    <button class="btn-sm" id="admin-start-btn" onclick="App.startWithBots()" style="display:none;color:var(--green);border-color:rgba(39,174,96,0.4)" title="Start with bots">▶ Bots</button>
     <button class="btn-sm btn-icon" onclick="toggleHandsHelp()" title="Combinaisons du poker">🂡</button>
-    <button class="btn-sm btn-icon" id="lang-toggle-game" onclick="toggleLang()" title="Switch language">🇬🇧</button>
-    <button class="btn-sm btn-icon" id="log-toggle-btn" onclick="toggleLog()" title="Journal">📋</button>
     <button class="btn-sm btn-icon" id="react-toggle-btn" onclick="toggleReactionPanel()" title="Réactions">😊</button>
     <button class="btn-sm btn-icon" id="chat-toggle-btn" onclick="toggleGameChat()" title="Chat">💬</button>
-    <button class="btn-sm" id="admin-start-btn" onclick="App.startWithBots()" style="display:none;color:var(--green);border-color:rgba(39,174,96,0.4)" title="Start with bots">▶ Bots</button>
+    <button class="btn-sm btn-icon" id="log-toggle-btn" onclick="toggleLog()" title="Journal">📋</button>
     <button class="btn-sm" id="admin-close-btn" onclick="App.closeTable()" style="display:none;color:#e67e22;border-color:rgba(230,126,34,0.4)" title="Close table">🔒 Close</button>
+    <button class="btn-sm btn-icon" id="fs-btn-game" onclick="toggleFullscreen()" title="Fullscreen">⛶</button>
+    <button class="btn-sm btn-icon" id="sound-toggle-btn" onclick="toggleSound()" title="Couper/Unmute">🔊</button>
+    <button class="btn-sm btn-icon" id="lang-toggle-game" onclick="toggleLang()" title="Switch language">🇬🇧</button>
     <button class="btn-sm btn-icon" id="g-overflow-btn" onclick="toggleHeaderOverflow(event)" title="Plus">•••</button>
     <button class="btn-sm btn-icon" onclick="App.leaveGame();closeHeaderOverflow()" title="Quitter" style="color:var(--red);border-color:rgba(192,57,43,0.3)">✕</button>
     <div id="g-overflow-menu">
