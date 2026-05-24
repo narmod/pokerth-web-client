@@ -1749,7 +1749,15 @@ const App = (() => {
           if ($('g-mystack')) $('g-mystack').textContent = myMon > 0 ? myMon + ' ¥' : '';
         }
         renderSeats();
-        notifyAction();
+        // Audio cue depends on the action code (PokerTH PlayerAction enum):
+        //   1 = Fold       → notifyFold (descending pair)
+        //   5 = Raise/Bet  → notifyRaise (ascending pair)
+        //   6 = All-in     → notifyAllIn (fanfare + gong)
+        //   2 = Check, 3 = Call, 4 = Bet → notifyAction (neutral thud)
+        if      (action === 1)                  (typeof notifyFold  === 'function') && notifyFold();
+        else if (action === 4 || action === 5)  (typeof notifyRaise === 'function') && notifyRaise();
+        else if (action === 6)                  (typeof notifyAllIn === 'function') && notifyAllIn();
+        else                                    notifyAction();
         flashActionLabel(pid);
         if (action === 6) animateAllIn(pid); // All-in
         if (bet > 0) {
