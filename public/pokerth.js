@@ -752,7 +752,7 @@ function showSeatReaction(pid, emoji) {
 
 // Mettre à jour les compteurs affichés sur les boutons
 function updateReactionCount(emoji) {
-  var EMOJIS = ["👏", "😱", "🤣", "🤔", "🔥", "😎", "💰", "😤", "🤩", "💪", "👍", "😡", "💎", "🎰", "🍀", "🎉", "😂", "🙌", "🤦", "😴", "🤑", "💀", "👀", "😬", "🥳"];
+  var EMOJIS = ["🎉", "🥳", "👏", "🙌", "💪", "🤣", "😂", "😬", "🤦", "😴", "👍", "😎", "🤩", "👀", "🤔", "😱", "😡", "😤", "🔥", "😮", "💰", "💎", "🎰", "🍀", "🃏", "💀", "🤑", "🫵", "🫡", "🤫"];
   var idx = EMOJIS.indexOf(emoji);
   if (idx < 0) return;
   var count = _reactionCounts[emoji] || 0;
