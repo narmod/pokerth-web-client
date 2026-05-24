@@ -2545,11 +2545,31 @@ const App = (() => {
       .filter(function(c){ return c != null; });
     var result = evaluateBestHand(holeNorm, validComm);
     if (!result) { el.style.display = 'none'; return; }
-    el.textContent = _lang === 'fr' ? result.fr : result.en;
-    el.style.display = 'block';
+    var handLabel = _lang === 'fr' ? result.fr : result.en;
     var colors = ['#aaa','#aaa','#7ec8e3','#7ec8e3','#a8d8a8','#6dbe6d','#f0c040','#f09030','#e07020','#e74c3c'];
-    el.style.color = colors[result.r] || 'var(--gold)';
-    el.style.borderColor = (colors[result.r]||'var(--gold)').replace(')',',0.25)').replace('rgb','rgba');
+    var handColor = colors[result.r] || 'var(--gold)';
+    // Afficher le nom immédiatement, calcul win% en async
+    el.textContent = handLabel + (validComm.length >= 3 ? ' …' : '');
+    el.style.color = handColor;
+    el.style.borderColor = handColor.replace(')',',0.25)').replace('rgb','rgba');
+    el.style.display = 'block';
+    // Monte Carlo win% seulement si >= 3 cartes communes
+    if (validComm.length >= 3) {
+      var _captureComm = validComm.slice();
+      var _captureHole = [myCards[0], myCards[1]];
+      setTimeout(function() {
+        // Vérifier que le contexte n'a pas changé (nouvelle main, fold…)
+        var currComm = commCards.filter(function(c){ return c != null; });
+        if (currComm.length !== _captureComm.length) return;
+        var pct = calcWinProb();
+        if (pct < 0) return;
+        var elNow = document.getElementById('hand-strength');
+        if (!elNow) return;
+        // Indicateur couleur : vert brillant ≥71%, vert 51-70%, jaune 36-50%, orange 26-35%, rouge ≤25%
+        var pctEmoji = pct >= 71 ? '🟢' : pct >= 51 ? '🟡' : pct >= 36 ? '🟡' : pct >= 26 ? '🟠' : '🔴';
+        elNow.textContent = handLabel + ' — ' + pct + '% ' + pctEmoji;
+      }, 0);
+    }
   }
 
   // ─── Community cards ───
@@ -3410,19 +3430,34 @@ function dismissWinner() {
     },
 
     _reconnectContinue() {
-      // Relancer le processus de reconnexion (appelé depuis le handler onclose)
+      // Relancer le processus de reconnexion — backoff exponentiel
       if (!_lastConnectParams || _intentionalDisconnect) return;
       _reconnectAttempts++;
-      var maxAttempts = 8;
+      var maxAttempts = 6;
       if (_reconnectAttempts > maxAttempts) {
         _hideBanner();
         show('s-connect');
-        setStatus('Reconnexion échouée.', 'err');
+        setStatus((_lang==='fr'?'Reconnexion échouée après '+maxAttempts+' tentatives. Reconnectez-vous manuellement.':'Reconnection failed after '+maxAttempts+' attempts. Please reconnect manually.'), 'err');
         return;
       }
-      var delay = Math.min(2000 * _reconnectAttempts, 12000);
-      _showBanner((_lang==='fr'?'Reconnexion dans ':'Reconnecting in ') + Math.round(delay/1000) + 's…');
-      window._reconnectTimer = setTimeout(function() { App.connect(); }, delay);
+      // Exponentiel : 3s → 6s → 12s → 24s → 30s → 30s
+      var delay = Math.min(3000 * Math.pow(2, _reconnectAttempts - 1), 30000);
+      var secsTotal = Math.round(delay / 1000);
+      // Countdown live dans le banner
+      clearInterval(window._reconnectCountdown);
+      var secsLeft = secsTotal;
+      function _updateBannerCountdown() {
+        var pfx = _lang==='fr' ? 'Reconnexion dans ' : 'Reconnecting in ';
+        var sfx = ' ('+_reconnectAttempts+'/'+maxAttempts+')';
+        _showBanner(pfx + secsLeft + 's' + sfx);
+        if (secsLeft > 0) secsLeft--;
+      }
+      _updateBannerCountdown();
+      window._reconnectCountdown = setInterval(_updateBannerCountdown, 1000);
+      window._reconnectTimer = setTimeout(function() {
+        clearInterval(window._reconnectCountdown);
+        App.connect();
+      }, delay);
     },
 
     disconnect() {
