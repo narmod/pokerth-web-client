@@ -1967,8 +1967,14 @@ const App = (() => {
       }
 
       case T.EndOfGame: {
+        const winnerPid = Proto.u32(sub, 2);
         addChat(null, 'Partie terminée !', 'sys');
-        amInGame = false;
+        // Keep amInGame true until the user dismisses the overlay, so the
+        // table screen stays visible behind it. Stop the turn timer and
+        // suppress any further winner pop-ups.
+        stopTurnTimer();
+        dismissWinner();
+        showEndGameOverlay(winnerPid);
         break;
       }
     }
@@ -2845,6 +2851,80 @@ const App = (() => {
     renderGameWaiting(html, true);
   }
 
+  // ─────────────────────────────────────────────────────────────────
+  // End-of-game overlay — shown when EndOfGame fires (server signals
+  // the tournament is over). Displays:
+  //   * 🏆 trophy + 'TOURNAMENT ENDED' headline
+  //   * winner avatar + nickname (with 'YOU WON' styling if winner === me)
+  //   * the local player's session-stats card
+  //   * two buttons: 'Close' (dismiss overlay, stay on table view) and
+  //     'Back to lobby' (full leaveGame).
+  // The user must click one of the two buttons — no auto-dismiss, no
+  // background click escape.
+  // ─────────────────────────────────────────────────────────────────
+  function showEndGameOverlay(winnerPid) {
+    const el = document.getElementById('g-endgame-overlay');
+    if (!el) return;
+
+    const isMyWin = winnerPid === myId;
+    const winnerName = players[winnerPid] || (isMyWin
+      ? (document.getElementById('nick') ? document.getElementById('nick').value : 'You')
+      : ('#' + winnerPid));
+    const winnerAv = isMyWin
+      ? (_myAvatarCache || (function(){ try { return localStorage.getItem('pth_avatar')||''; } catch(e){ return ''; }})())
+      : (_playerAvatars[winnerPid] || '');
+
+    // Build winner block
+    const avChip = winnerAv
+      ? '<span class="eg-winner-av">' + esc(winnerAv) + '</span>'
+      : '<span class="eg-winner-av letter">' + esc((winnerName[0] || '?').toUpperCase()) + '</span>';
+    const winnerCls = 'eg-winner' + (isMyWin ? ' me' : '');
+    const winnerLabel = isMyWin ? t('endGameYouWon') : t('endGameWinner');
+
+    // Stats — reuse the _stats object that was already being maintained
+    const s = _stats || { handsPlayed:0, handsWon:0, totalGain:0, bigWin:0, bigLoss:0, startMoney:0 };
+    const wr = s.handsPlayed > 0 ? Math.round(s.handsWon / s.handsPlayed * 100) : 0;
+    const finalStack = (s.startMoney || 0) + (s.totalGain || 0);
+    const gainCls = (s.totalGain > 0) ? 'pos' : (s.totalGain < 0) ? 'neg' : '';
+
+    // Trophy emoji depends on outcome
+    const trophy = isMyWin ? '🏆' : '🎲';
+    const titleKey = isMyWin ? 'endGameTitleWin' : 'endGameTitleEnd';
+
+    el.innerHTML =
+      '<div class="endgame-card" onclick="event.stopPropagation()">' +
+        '<div class="eg-trophy">' + trophy + '</div>' +
+        '<div class="eg-title">' + t(titleKey) + '</div>' +
+        '<div class="' + winnerCls + '">' +
+          avChip +
+          '<div>' +
+            '<div class="eg-winner-label">' + winnerLabel + '</div>' +
+            '<div class="eg-winner-name">' + esc(winnerName) + '</div>' +
+          '</div>' +
+        '</div>' +
+        '<div class="eg-stats-section">' +
+          '<div class="eg-stats-title">📊 ' + t('endGameYourStats') + '</div>' +
+          '<div class="eg-stat-row"><span class="eg-stat-label">' + t('endGameHandsPlayed') + '</span><span class="eg-stat-val">' + s.handsPlayed + '</span></div>' +
+          '<div class="eg-stat-row"><span class="eg-stat-label">' + t('endGameHandsWon') + '</span><span class="eg-stat-val pos">' + s.handsWon + ' (' + wr + '%)</span></div>' +
+          '<hr class="eg-stat-divider">' +
+          '<div class="eg-stat-row"><span class="eg-stat-label">' + t('endGameFinalStack') + '</span><span class="eg-stat-val">' + finalStack + ' ¥</span></div>' +
+          '<div class="eg-stat-row"><span class="eg-stat-label">' + t('endGameNetGain') + '</span><span class="eg-stat-val ' + gainCls + '">' + (s.totalGain > 0 ? '+' : '') + s.totalGain + ' ¥</span></div>' +
+          '<div class="eg-stat-row"><span class="eg-stat-label">' + t('endGameBestWin') + '</span><span class="eg-stat-val pos">+' + s.bigWin + ' ¥</span></div>' +
+          '<div class="eg-stat-row"><span class="eg-stat-label">' + t('endGameWorstLoss') + '</span><span class="eg-stat-val neg">' + s.bigLoss + ' ¥</span></div>' +
+        '</div>' +
+        '<div class="eg-actions">' +
+          '<button class="eg-btn" onclick="App.endGameClose()">' + t('endGameClose') + '</button>' +
+          '<button class="eg-btn primary" onclick="App.endGameLeave()">' + t('endGameBackToLobby') + '</button>' +
+        '</div>' +
+      '</div>';
+    el.style.display = '';
+
+    // Audio cue: winner fanfare for the local player, neutral chime otherwise
+    if (typeof notifyWinner === 'function') {
+      setTimeout(function(){ notifyWinner(isMyWin); }, 200);
+    }
+  }
+
   function updateBottomLayout() {
     var pb = document.querySelector('.player-bar');
     var mz = document.querySelector('.my-zone');
@@ -3401,6 +3481,8 @@ function dismissWinner() {
       if (ws && gId) { try { send(MSG.buildLeaveGame(gId)); } catch(e) {} }
       amInGame = false; amGameAdmin = false; _gameStarted = false;
       gId = 0; seats = []; seatData = {};
+      var _ego = document.getElementById('g-endgame-overlay');
+      if (_ego) _ego.style.display = 'none';
       myCards = [null,null]; commCards = [];
       stopTurnTimer();
       dismissWinner();
@@ -3415,11 +3497,30 @@ function dismissWinner() {
       addChat(null, '🔒 Table fermée.', 'sys');
     },
 
+    endGameClose() {
+      // Just dismiss the end-of-game overlay; the user stays on the
+      // table view (final stacks visible, chat still readable).
+      var el = document.getElementById('g-endgame-overlay');
+      if (el) el.style.display = 'none';
+    },
+
+    endGameLeave() {
+      // Dismiss the overlay then perform the normal leaveGame() flow:
+      // send a LeaveGame to the server, reset client state, and return
+      // to the lobby. Reuses everything leaveGame() already does so
+      // there's no special-case cleanup path to maintain.
+      var el = document.getElementById('g-endgame-overlay');
+      if (el) el.style.display = 'none';
+      this.leaveGame();
+    },
+
     leaveGame() {
       // Send proper leave request then stay connected (return to lobby)
       if (ws && gId) { try { send(MSG.buildLeaveGame(gId)); } catch(e) {} }
       amInGame = false; amGameAdmin = false; _gameStarted = false;
       gId = 0; seats = []; seatData = {};
+      var _ego = document.getElementById('g-endgame-overlay');
+      if (_ego) _ego.style.display = 'none';
       myCards = [null,null]; commCards = [];
       stopTurnTimer();
       dismissWinner();
