@@ -730,19 +730,18 @@ document.addEventListener("DOMContentLoaded", function() {
   // Auto-fill nick
   // Restore saved credentials
   try {
-    var savedLogin   = localStorage.getItem('pth_login');
-    var savedPass    = localStorage.getItem('pth_pass');
+    // Security: never store or restore credentials (login or password)
+    // client-side. Older versions of this client used to write them to
+    // localStorage on connect; we now scrub any residuals on every boot
+    // so the keys cannot survive a client upgrade.
+    try {
+      localStorage.removeItem('pth_pass');
+      localStorage.removeItem('pth_login');
+    } catch(e) {}
+
     var savedLanNick = localStorage.getItem('pth_lan_nick');
     var rmEl = document.getElementById('remember-me');
-    if (savedLogin && savedPass) {
-      window._savedLogin = savedLogin;
-      window._savedPass  = savedPass;
-      var passEl = document.getElementById('pass');
-      if (passEl) passEl.value = savedPass;
-      if (rmEl) rmEl.checked = true;
-    }
     if (savedLanNick) {
-      window._savedLanNick = savedLanNick;
       var nickEl = document.getElementById('nick');
       if (nickEl) nickEl.value = savedLanNick;
       if (rmEl) rmEl.checked = true;
