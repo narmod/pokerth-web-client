@@ -1143,10 +1143,12 @@ const Proto = (() => {
   // Helpers d'accès aux champs
   const str  = (f, n) => f[n] ? dec.decode(f[n][0]) : '';
   const u32  = (f, n, d=0) => f[n] ? f[n][0] : d;
+  // FIX bug "card=0 fantôme" : distingue champ absent (null) vs valeur 0 (carte 2♣/2♦)
+  const u32orNull = (f, n) => f[n] ? f[n][0] : null;
   const sub  = (f, n) => f[n] ? decode(f[n][0]) : {};
   const raw  = (f, n) => f[n] ? f[n][0] : null;
 
-  return { encode, decode, encodeVarint, decodeVarint, str, u32, sub, raw };
+  return { encode, decode, encodeVarint, decodeVarint, str, u32, u32orNull, sub, raw };
 })();
 
 
@@ -1982,8 +1984,12 @@ const App = (() => {
         const allFields = Object.keys(sub).sort((a,b)=>+a-+b);
         const allVals = allFields.map(f => f+'='+Proto.u32(sub,+f)).join(' ');
         // Choisir: si fA[0] correspond à une carte valide (1-52), utiliser A sinon B
-        const isValidCard = n => n >= 1 && n <= 52;
-        commCards = isValidCard(fA[0]) ? fA : fB;
+        // FIX bug rare : le 2♦ a l'encodage n=0 (0-indexed). n>=1 l'excluait à tort
+        // et basculait sur fB (utilisant gameId comme première carte → carte dos).
+        // On accepte la plage étendue 0..52 ; si fA est plausible globalement on le prend.
+        const isPlausibleCard = n => n >= 0 && n <= 52;
+        const allPlausible = a => a.every(isPlausibleCard);
+        commCards = allPlausible(fA) ? fA : (allPlausible(fB) ? fB : fA);
         const dbg = 'FLOP sub:'+allVals+' →['+commCards.join(',')+']';
         if ($('g-debug')) $('g-debug').textContent = dbg;
         $('g-round').textContent = t('flop');
@@ -2053,8 +2059,9 @@ const App = (() => {
         for (const ab of allIns) {
           const a   = Proto.decode(ab);
           const pid = Proto.u32(a, 1);
-          const c1  = Proto.u32(a, 2);
-          const c2  = Proto.u32(a, 3);
+          // FIX : un joueur sans carte révélée → null (pas 0 qui serait le 2♣)
+          const c1  = Proto.u32orNull(a, 2);
+          const c2  = Proto.u32orNull(a, 3);
           if (seatData[pid]) { seatData[pid].card1 = c1; seatData[pid].card2 = c2; }
         }
         renderSeats();
@@ -2067,8 +2074,9 @@ const App = (() => {
         for (const rb of results) {
           const r   = Proto.decode(rb);
           const pid = Proto.u32(r, 1);
-          const c1  = Proto.u32(r, 2);
-          const c2  = Proto.u32(r, 3);
+          // FIX : joueur qui a foldé ne révèle pas ses cartes → null (pas 0 = 2♣ fantôme)
+          const c1  = Proto.u32orNull(r, 2);
+          const c2  = Proto.u32orNull(r, 3);
           const won = Proto.u32(r, 5);
           const cash= Proto.u32(r, 6);
           if (seatData[pid]) {
@@ -2299,14 +2307,19 @@ const App = (() => {
   function cardHtml(n, cls, isComm) {
     // FIX: if(!n) traitait 0 comme falsy → carte dos incorrecte ; encodage unifié 0-indexé
     if (n == null) return '<div class="pk '+cls+' back"></div>';
-    var si, ri;
-    si = Math.floor(n / 13);
-    ri = n % 13;
+    // FIX bug "rang sans couleur" : si la valeur est hors de la plage 0..51,
+    // afficher un dos de carte (alignement avec cardToHtml ligne ~2288).
+    if (typeof n !== 'number' || !Number.isFinite(n) || n < 0 || n > 51) {
+      return '<div class="pk '+cls+' back"></div>';
+    }
+    var si = Math.floor(n / 13);
+    var ri = n % 13;
     const suits = isComm ? ['♦','♣','♠','♥'] : ['♣','♠','♥','♦'];
-    const rank=['2','3','4','5','6','7','8','9','10','J','Q','K','A'][ri]||'?';
-    const red=(isComm?(si===0||si===3):(si>=2))?' red':'';
-    const spade2=(isComm?si===2:si===1)?' spade':'';
-    return '<div class="pk '+cls+red+spade2+'"><span class="c-rank">'+rank+'</span><span class="c-suit">'+suits[si]+'</span></div>';
+    const rank = ['2','3','4','5','6','7','8','9','10','J','Q','K','A'][ri] || '?';
+    const suit = suits[si] || '?'; // defense-in-depth (comme cardName)
+    const red = (isComm ? (si===0||si===3) : (si>=2)) ? ' red' : '';
+    const spade2 = (isComm ? si===2 : si===1) ? ' spade' : '';
+    return '<div class="pk '+cls+red+spade2+'"><span class="c-rank">'+rank+'</span><span class="c-suit">'+suit+'</span></div>';
   }
 
   function renderMyCards() {
