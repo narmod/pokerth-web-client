@@ -304,16 +304,12 @@ function setUrgentMode(active) {
 
 // Élimination joueur
 function animatePlayerEliminated(pid) {
-  var seats = document.querySelectorAll('.seat');
-  seats.forEach(function(s) {
-    var name = s.querySelector('.seat-name');
-    if (name && name.textContent.trim().startsWith(
-      (window.players && window.players[pid]) ? window.players[pid].charAt(0) : '#'
-    )) {
-      s.classList.add('eliminated');
-      setTimeout(function(){ s.classList.remove('eliminated'); }, 900);
-    }
-  });
+  // Cibler le siège via data-pid (fiable même si deux joueurs ont la même initiale)
+  var seatEl = document.querySelector('#g-seats [data-pid="' + pid + '"]');
+  if (seatEl) {
+    seatEl.classList.add('eliminated');
+    setTimeout(function(){ seatEl.classList.remove('eliminated'); }, 900);
+  }
 }
 
 // Pot énorme
@@ -1961,10 +1957,8 @@ const App = (() => {
           seatData[pid].folded = action === 1;
           seatData[pid].action = aLabel;
         }
-        pot = 0;
-        for (const p of seats) if (seatData[p]) pot += seatData[p].bet;
         pot = collectedPot;
-        for (const p2 of seats) if (seatData[p2]) pot += seatData[p2].bet;
+        for (const p of seats) if (seatData[p]) pot += seatData[p].bet;
         $('g-pot').textContent = t('pot') + ' ' + pot;
         if ($('g-potbar')) $('g-potbar').textContent = t('pot') + ' ' + pot;
         logAction(getPlayerName(pid) + ': ' + aLabel + (bet ? ' ' + bet : ''));
@@ -2102,6 +2096,18 @@ const App = (() => {
             logAction('🏆 ' + getPlayerName(pid) + ' +' + won);
           }
         }
+        // Enregistrer la perte si je ne suis pas dans les gagnants
+        if (!winners.some(function(w){ return w.pid === myId; })) {
+          var myEndMon = (seatData[myId] || {}).money;
+          if (myEndMon != null) {
+            var myStartMon = (_stats.startMoney || 0) + _stats.totalGain;
+            var myLoss = myEndMon - myStartMon;
+            var myPairLoss = myCards.map && myCards.map(function(c){
+              return { r: cardName(c,false).slice(0,-1), s: cardName(c,false).slice(-1), red: ['♥','♦'].indexOf(cardName(c,false).slice(-1))>=0 };
+            });
+            recordHand(false, myLoss, myPairLoss);
+          }
+        }
         pot = 0; $('g-pot').textContent = 'Pot: 0';
         if ($('g-potbar')) $('g-potbar').textContent = 'Pot: 0';
         renderSeats();
@@ -2138,6 +2144,20 @@ const App = (() => {
         const cash = Proto.u32(sub, 4);
         if (seatData[pid]) { seatData[pid].money = cash; if(won) seatData[pid].action = '+'+won; }
         if (won > 0) addChat(null, getPlayerName(pid) + ' gagne ' + won + ' jetons', 'sys');
+        // Enregistrer ma perte (cartes non révélées, je ne suis pas le gagnant)
+        if (pid !== myId) {
+          var myHideMon = (seatData[myId] || {}).money;
+          if (myHideMon != null) {
+            var myHideStart = (_stats.startMoney || 0) + _stats.totalGain;
+            var myHideLoss  = myHideMon - myHideStart;
+            if (myHideLoss < 0) {
+              var myPairHide = myCards.map && myCards.map(function(c){
+                return { r: cardName(c,false).slice(0,-1), s: cardName(c,false).slice(-1), red: ['♥','♦'].indexOf(cardName(c,false).slice(-1))>=0 };
+              });
+              recordHand(false, myHideLoss, myPairHide);
+            }
+          }
+        }
         pot = 0; $('g-pot').textContent = 'Pot: 0';
         renderSeats();
         // Détection élimination (stack à 0)
@@ -2458,7 +2478,7 @@ const App = (() => {
 
   // ── Probabilité de gain (Monte Carlo simplifié) ──
   function calcWinProb() {
-    if (!myCards[0] || !myCards[1]) return -1;
+    if (myCards[0] == null || myCards[1] == null) return -1;
     var comm = commCards.filter(function(c){ return c != null; });
     if (comm.length < 3) return -1; // seulement après le flop
     var known = [myCards[0], myCards[1]].concat(comm);
