@@ -2676,17 +2676,18 @@ body:not(.in-game) .my-zone {
   box-sizing: border-box;
 }
 .players-search input:focus { border-color: var(--gold); }
+/* Body container — the inline style on the element sets flex/min-height/
+   overflow/padding/background to match the chat panel pattern exactly.
+   This rule keeps only the bits inline styles don't cover. */
 .players-list {
-  flex: 1;
-  overflow-y: auto;
-  padding: 4px 0;
-  background: rgba(4,10,5,0.97);
+  font-family: 'Inconsolata', monospace;
+  font-size: 0.78rem;
 }
 .players-list .pl-row {
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 4px 12px;
+  padding: 4px 0;          /* container provides the 12px lateral padding now */
   font-family: 'Inconsolata', monospace;
   font-size: 0.78rem;
   color: var(--cream);
