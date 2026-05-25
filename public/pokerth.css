@@ -1853,14 +1853,44 @@ body {
   border-bottom: 1px solid var(--border);
   box-shadow: 0 4px 20px rgba(0,0,0,0.6);
 }
+/* Log panel — same visual treatment as #g-chat-panel so the two
+   feel like siblings (the user opens them with adjacent header
+   buttons). Only difference is z-index 99 vs 100, keeping the chat
+   one tick above when both are open. */
 #g-log-panel {
   position: fixed !important;
   top: 36px;
   left: 0; right: 0;
   z-index: 99;
+  max-height: min(280px, 38dvh) !important;
   background: rgba(4,10,6,0.97);
   border-bottom: 1px solid var(--border);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.6);
+  display: flex; /* makes flex-direction:column from inline style effective */
+  flex-direction: column;
 }
+/* Log message rows — mirror the .chat-msgs basic look without the
+   bubble-style backgrounds (log lines are denser, more like a
+   monospace journal). */
+.log-msgs {
+  font-family: 'Inconsolata', monospace;
+  font-size: 0.74rem;
+  line-height: 1.45;
+  color: var(--cream);
+}
+.log-msgs > div {
+  padding: 1px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.03);
+}
+.log-msgs > div:last-child { border-bottom: none; }
+/* Custom scrollbar matching the chat panel */
+.log-msgs::-webkit-scrollbar { width: 6px; }
+.log-msgs::-webkit-scrollbar-track { background: transparent; }
+.log-msgs::-webkit-scrollbar-thumb {
+  background: rgba(200,168,74,0.18);
+  border-radius: 3px;
+}
+.log-msgs::-webkit-scrollbar-thumb:hover { background: rgba(200,168,74,0.32); }
 
 .g-chat-panel-header { display:flex; align-items:center; justify-content:space-between; padding:4px 10px; background:rgba(0,0,0,0.4); border-bottom:1px solid var(--border); flex-shrink:0; }
 .gchat-input { display:flex; gap:5px; padding:5px 10px; background:rgba(4,10,6,0.97); border-bottom:1px solid var(--border); flex-shrink:0; }
