@@ -3562,6 +3562,13 @@ function dismissWinner() {
     onLoginModeChange() {
       const mode = $('login-mode').value;
       $('f-pass').style.display = mode === 'auth' ? '' : 'none';
+      // TLS is only ever meaningful when connecting to pokerth.net
+      // (which mandates it). On LAN / private servers it's almost
+      // always uncheck-and-forget, so we just hide the row there to
+      // declutter the form. The setting itself stays in the DOM —
+      // each branch below still sets $('use-tls').checked appropriately.
+      var tlsRow = document.getElementById('tls-row');
+      if (tlsRow) tlsRow.style.display = (mode === 'guest' || mode === 'auth') ? '' : 'none';
 
       const hostInput  = $('host');
       const proxyInput = $('proxy');
