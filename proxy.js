@@ -54,18 +54,48 @@ function pbDecode(buf) {
   return fields;
 }
 
+// Tous les types de messages PokerTH (1..81), tirés de pokerth.proto.
+// Le suffixe "Message" est sous-entendu. Sert uniquement à rendre les
+// logs proxy lisibles (pas de logique métier qui dépend de ce dict).
 const MSG_NAMES = {
+  // Connexion / authentification (1-6)
   1:'Announce', 2:'Init', 3:'AuthServerChallenge', 4:'AuthClientResponse',
-  5:'AuthServerVerification', 6:'InitAck', 12:'PlayerList',
+  5:'AuthServerVerification', 6:'InitAck',
+  // Avatars (7-11) — ancien système d'upload d'images PokerTH desktop
+  7:'AvatarRequest', 8:'AvatarHeader', 9:'AvatarData', 10:'AvatarEnd', 11:'UnknownAvatar',
+  // Lobby (12-20)
+  12:'PlayerList',
   13:'GameListNew', 14:'GameListUpdate', 15:'GameListPlayerJoined', 16:'GameListPlayerLeft',
-  18:'PlayerInfoRequest', 19:'PlayerInfoReply',
-  21:'JoinExisting', 22:'JoinNew', 24:'JoinGameAck', 25:'JoinGameFailed',
-  26:'GamePlayerJoined', 27:'GamePlayerLeft', 29:'RemovedFromGame',
-  36:'StartEvent', 38:'GameStartInitial', 40:'HandStart', 41:'PlayersTurn',
-  42:'MyActionRequest', 43:'YourActionRejected', 44:'PlayersActionDone', 45:'DealFlop', 46:'DealTurn', 47:'DealRiver',
-  49:'EndOfHandShow', 50:'EndOfHandHide', 53:'EndOfGame',
+  17:'GameListAdminChanged',
+  18:'PlayerInfoRequest', 19:'PlayerInfoReply', 20:'SubscriptionRequest',
+  // Rejoindre / quitter une table (21-29)
+  21:'JoinExisting', 22:'JoinNew', 23:'RejoinExisting', 24:'JoinGameAck', 25:'JoinGameFailed',
+  26:'GamePlayerJoined', 27:'GamePlayerLeft', 28:'GameAdminChanged', 29:'RemovedFromGame',
+  // Kick / leave / invite (30-35)
+  30:'KickPlayerRequest', 31:'LeaveGameRequest',
+  32:'InvitePlayerToGame', 33:'InviteNotify', 34:'RejectGameInvitation', 35:'RejectInvNotify',
+  // Démarrage de partie (36-39)
+  36:'StartEvent', 37:'StartEventAck', 38:'GameStartInitial', 39:'GameStartRejoin',
+  // Déroulement d'une main (40-53)
+  40:'HandStart', 41:'PlayersTurn', 42:'MyActionRequest', 43:'YourActionRejected',
+  44:'PlayersActionDone', 45:'DealFlop', 46:'DealTurn', 47:'DealRiver',
+  48:'AllInShowCards', 49:'EndOfHandShow', 50:'EndOfHandHide',
+  51:'ShowMyCardsRequest', 52:'AfterHandShowCards', 53:'EndOfGame',
+  // Vote-kick (54-61)
+  54:'PlayerIdChanged', 55:'AskKickPlayer', 56:'AskKickDenied',
+  57:'StartKickPetition', 58:'VoteKickRequest', 59:'VoteKickReply',
+  60:'KickPetitionUpdate', 61:'EndKickPetition',
+  // Statistiques / chat / dialog (62-66)
   62:'Statistics', 63:'ChatRequest', 64:'Chat', 65:'ChatReject', 66:'Dialog',
-  67:'TimeoutWarning', 73:'Error',
+  // Timeout / report (67-72)
+  67:'TimeoutWarning', 68:'ResetTimeout',
+  69:'ReportAvatar', 70:'ReportAvatarAck', 71:'ReportGame', 72:'ReportGameAck',
+  // Erreur + admin (73-77)
+  73:'Error',
+  74:'AdminRemoveGame', 75:'AdminRemoveGameAck', 76:'AdminBanPlayer', 77:'AdminBanPlayerAck',
+  // Spectateurs (78-81)
+  78:'GameListSpectatorJoined', 79:'GameListSpectatorLeft',
+  80:'GameSpectatorJoined', 81:'GameSpectatorLeft',
 };
 
 const ERROR_REASONS = {
