@@ -166,6 +166,8 @@ const LANG = {
     disconnectQuit:'Disconnect',
     disconnectTooltip:'Disconnect',
     playersOnline:'player(s)',
+    playersOnlineTitle:'Players online',
+    playersSearchPlaceholder:'Search\u2026',
 },
   fr: {
     connect:'Se connecter', disconnect:'✕ Déconnecter', connecting:'Connexion en cours…',
@@ -319,6 +321,8 @@ const LANG = {
     disconnectQuit:'Se d\u00e9connecter',
     disconnectTooltip:'Se d\u00e9connecter',
     playersOnline:'joueur(s)',
+    playersOnlineTitle:'Joueurs en ligne',
+    playersSearchPlaceholder:'Rechercher\u2026',
 }
 };
 
