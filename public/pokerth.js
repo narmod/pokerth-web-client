@@ -4561,7 +4561,16 @@ function togglePlayersPanel() {
 function renderPlayersList() {
   var body = document.getElementById('players-list-body');
   var countEl = document.getElementById('players-panel-count');
+  var titleEl = document.getElementById('players-panel-title');
   if (!body) return;
+  // Rebuild the title from scratch so it stays in sync with the
+  // active language and the running count. Structure mirrors the
+  // game-chat panel header (single inline span).
+  if (titleEl) {
+    var lbl = (typeof t === 'function') ? t('playersOnlineTitle') : 'Players online';
+    titleEl.innerHTML = '👥 ' + lbl + ' — <span id="players-panel-count">0</span>';
+    countEl = document.getElementById('players-panel-count'); // re-resolve after innerHTML
+  }
   // Build the list of {pid, name} from _lobbyPids (defined inside
   // the IIFE; we read it via window-level references).
   var pids = window._readLobbyPids ? window._readLobbyPids() : [];
