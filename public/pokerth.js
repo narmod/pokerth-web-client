@@ -1023,12 +1023,25 @@ const MSG = (() => {
 
 
   // JoinExistingGameMessage: gameId=1, password=2, autoLeave=3, spectateOnly=4
-  function buildJoinGame(gameId, spectateOnly) {
-    const msg = Proto.encode([
-      [1,0,gameId],
-      [3,0,spectateOnly ? 1 : 0],   // autoLeave (use spectate mode for now)
-      [4,0,spectateOnly ? 1 : 0],   // spectateOnly
-    ]);
+  function buildJoinGame(gameId, spectateOnly, password) {
+    // JoinExistingGameMessage per proto:
+    //   field 1: gameId       (required uint32)
+    //   field 2: password     (optional string)
+    //   field 3: autoLeave    (optional bool, default false)
+    //   field 4: spectateOnly (optional bool, default false)
+    //
+    // The previous version set autoLeave=true whenever the caller asked
+    // for spectate. That's wrong: autoLeave has nothing to do with
+    // spectator mode (it tells the server 'kick me out of any other
+    // games I'm in'). Sending autoLeave=true alongside a spectate request
+    // was confusing the server enough that it never replied with
+    // JoinGameAck — the 'Joining…' status hung forever.
+    //
+    // Emit only the fields the caller actually requested:
+    const fields = [[1, 0, gameId]];
+    if (password) fields.push([2, 2, password]);
+    if (spectateOnly) fields.push([4, 0, 1]);
+    const msg = Proto.encode(fields);
     return Proto.encode([[1,0,T.JoinExisting],[22,2,msg]]);
   }
 
@@ -3936,9 +3949,12 @@ function dismissWinner() {
       // with a message instead of fold/call buttons).
       _amSpectator = true;
       addChat(null, '👁 ' + (_lang==='fr'?'Observation de la table ':'Spectating table ') + (g.name||('#'+gameId)) + '…', 'sys');
-      // JoinExistingGame avec flag spectateur (field 3 = spectator dans proto PokerTH)
-      var msg = Proto.encode([[1,0,gameId],[3,0,1]]);
-      send(Proto.encode([[1,0,21],[22,2,msg]]));
+      // Use the shared MSG.buildJoinGame helper which now correctly
+      // encodes spectateOnly into field 4. The previous hand-rolled
+      // message set field 3 (autoLeave) instead, which the server did
+      // not interpret as spectate, and silently dropped the request —
+      // the user saw 'Joining…' but never got a JoinGameAck back.
+      send(MSG.buildJoinGame(gameId, true));
     },
 
     autoJoinOrCreate() {
