@@ -1272,7 +1272,7 @@ const App = (() => {
         else if (loginMode === 'auth') loginType = 1;
         else loginType = 0; // lan
         const typeLabel = ['LAN','Internet (no-auth)','Internet (auth)'][stype] || 'Serveur';
-        setStatus('Connexion ' + typeLabel + ' v' + pMaj + '.' + pMin + ' — ' + np + ' joueur(s)...');
+        setStatus(t('connectingPlayers').replace('{type}', typeLabel).replace('{ver}', pMaj + '.' + pMin).replace('{n}', np));
         lastMajor = pMaj; lastMinor = pMin; lastLoginType = loginType;
         const authPass = (loginType === 1) ? ($('pass') ? $('pass').value : '') : null;
         send(MSG.buildInit(myName, pMaj, pMin, loginType, authPass));
@@ -1291,7 +1291,7 @@ const App = (() => {
         if ('Notification' in window && Notification.permission === 'default') {
           Notification.requestPermission().catch(function(){});
         }
-        addChat(null, 'Connecté en tant qu\'invité "' + myName + '" (ID ' + myId + ')', 'sys');
+        addChat(null, t('connectedAsGuest').replace('{name}', myName).replace('{id}', myId), 'sys');
         const cfName = document.getElementById('cf-name');
         if (cfName) cfName.value = 'Table de ' + myName;  // always update with current name
         break;
@@ -1312,7 +1312,7 @@ const App = (() => {
         const r = Proto.u32(sub, 1);
         if (r === 3) {
           // initAuthFailure: login/password rejected by server
-          setStatus('⚠ Identifiants pokerth.net invalides (utilisateur ou mot de passe).', 'err');
+          setStatus(t('errBadCreds'), 'err');
           ws.close(); return;
         }
         if (r === 7) {
@@ -1327,12 +1327,12 @@ const App = (() => {
           // Name in use: auto-retry with random suffix
           const suffix = Math.floor(Math.random()*999)+1;
           myName = myName.replace(/_\d+$/, '') + '_' + suffix;
-          setStatus('Pseudo déjà pris — nouvel essai avec "' + myName + '"…');
+          setStatus(t('errNickTakenRetry').replace('{name}', myName));
           setTimeout(() => {
             send(MSG.buildInit(myName, lastMajor || 5, lastMinor || 1, lastLoginType || 0));
           }, 400);
         } else {
-          setStatus('Erreur : ' + (codes[r] || 'code ' + r), 'err');
+          setStatus(t('errGeneric').replace('{code}', codes[r] || ('code ' + r)), 'err');
         }
         break;
       }
@@ -1501,7 +1501,7 @@ const App = (() => {
         if (acbm) acbm.style.display = amGameAdmin ? '' : 'none';
         var asbm = document.getElementById('admin-start-mob');
         if (asbm) asbm.style.display = amGameAdmin ? '' : 'none';
-        addChat(null, 'Rejoint la table ' + gId + (isAdmin ? ' (admin)' : '') + ' — attente du démarrage...', 'sys');
+        addChat(null, t('joinedTableWaiting').replace('{gid}', gId).replace('{admin}', isAdmin ? ' (admin)' : ''), 'sys');
         show('s-game');
         // ── Spectator UI mode ──
         // If we joined via spectateGame(), flip the banner up top and put
@@ -1638,7 +1638,7 @@ const App = (() => {
       case T.GamePlayerLeft: {
         const pid = Proto.u32(sub, 2);
         const name = players[pid] || '#'+pid;
-        addChat(null, name + ' quitte la table', 'sys');
+        addChat(null, t('playerLeftTable').replace('{name}', name), 'sys');
         if (seatData[pid]) { seatData[pid].active = false; seatData[pid].gone = true; }
         renderSeats();
         // Refresh the waiting panel if the game hasn't started yet.
@@ -1647,7 +1647,7 @@ const App = (() => {
       }
 
       case T.RemovedFromGame: {
-        addChat(null, 'Vous avez été retiré de la partie.', 'sys');
+        addChat(null, t('youWereRemoved'), 'sys');
         amInGame = false;
         gId = 0; seats = []; seatData = {}; _playerAvatars = {}; _seatsFrozen = false; _amSpectator = false; var _sb1 = document.getElementById('g-spectator-banner'); if (_sb1) _sb1.style.display = 'none';
         show('s-lobby');
@@ -1658,7 +1658,7 @@ const App = (() => {
         // Répondre avec StartEventAck
         const evGameId = Proto.u32(sub, 1);
         send(MSG.buildStartEventAck(evGameId));
-        addChat(null, 'Partie en cours de démarrage...', 'sys');
+        addChat(null, t('gameStarting'), 'sys');
         break;
       }
 
@@ -1744,7 +1744,7 @@ const App = (() => {
         } catch(e) {}
         if (isFirstDeal) {
           setTimeout(function(){ renderSeats(); }, 120);
-          renderGameWaiting('Partie démarrée ! En attente de la première main...');
+          renderGameWaiting(t('gameStartedWaitHand'));
         } else {
           // Animer le déplacement du dealer + fade des actions
           if (_prevDealerPid >= 0 && _prevDealerPid !== dealerPid) {
@@ -2168,7 +2168,7 @@ const App = (() => {
 
   // ── AFFICHAGE DES TABLES ──
   const MODE_DOT   = {1:'dot-open', 2:'dot-run', 3:'dot-closed'};
-  const MODE_LABEL = {1:'En attente', 2:'En cours', 3:'Fermée'};
+  const MODE_LABEL = {1: t('modeWaiting'), 2: t('modeInProgress'), 3: t('modeClosed')};
   const GTYPE      = {1:'Normal', 2:'Inscrits', 3:'Sur invitation', 4:'Classé'};
 
   function renderGames() {
@@ -2179,7 +2179,7 @@ const App = (() => {
 
     if (entries.length === 0) {
       $('g-list').innerHTML = loaded
-        ? '<div class="empty">Aucune table disponible actuellement.</div>'
+        ? '<div class="empty">' + t('noTablesAvailable') + '</div>'
         : '<div class="empty">Chargement des tables<br><span class="ld"><span>●</span><span>●</span><span>●</span></span></div>';
       return;
     }
@@ -3520,14 +3520,14 @@ function dismissWinner() {
 
       if (mode === 'lan') {
         $('nick-label').textContent = t('enterNickFree');
-        $('nick').placeholder = 'VotrePrenom';
+        $('nick').placeholder = t('nickPlaceholder');
         $('use-tls').checked = false;
         if (proxyInput) proxyInput.value = proto + '//' + (autoHost||'localhost') + ':' + port;
         if (hostInput && autoHost) hostInput.value = autoHost;
         setStatus(t('lanModeNote'));
       } else if (mode === 'unauth') {
         $('nick-label').textContent = t('enterNickFree');
-        $('nick').placeholder = 'VotrePrenom';
+        $('nick').placeholder = t('nickPlaceholder');
         $('use-tls').checked = false;
         if (proxyInput) proxyInput.value = proto + '//' + (autoHost||'localhost') + ':' + port;
         if (hostInput && autoHost) hostInput.value = autoHost;
@@ -3752,7 +3752,7 @@ function dismissWinner() {
       }
 
       ws.binaryType = 'arraybuffer';
-      ws.onopen    = () => setStatus('Proxy connecté — attente du serveur PokerTH...');
+      ws.onopen    = () => setStatus(t('proxyConnectedWait'));
       ws.onerror   = () => { _lastConnectFailed = true; setStatus('Erreur WebSocket. Le proxy est-il lancé ?', 'err'); };
       ws.onmessage = function(e) {
         if (typeof e.data === 'string') {
@@ -3791,7 +3791,7 @@ function dismissWinner() {
         if (_intentionalDisconnect) {
           setStatus(t('disconnected') || 'Déconnecté.');
         } else {
-          setStatus('Connexion perdue. Vous pouvez vous reconnecter dans quelques secondes.', 'err');
+          setStatus(t('errConnLost'), 'err');
         }
         return;
         // --- RECONNEXION AUTO DÉSACTIVÉE (risque blocage IP) ---
@@ -4042,10 +4042,10 @@ function dismissWinner() {
         if (g && !g.started && g.players < g.maxPlayers) { target = id; break; }
       }
       if (target) {
-        addChat(null, '⚡ Table trouvée — rejoindre #' + target, 'sys');
+        addChat(null, t('autoTableFound').replace('{n}', target), 'sys');
         send(MSG.buildJoinGame(parseInt(target), false));
       } else {
-        addChat(null, '⚡ Aucune table — création en cours...', 'sys');
+        addChat(null, t('autoNoTable'), 'sys');
         send(MSG.buildCreateGame('WebGame-' + myName, 2, 10, 3000, 30));
       }
     },
