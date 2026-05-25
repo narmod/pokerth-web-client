@@ -1131,6 +1131,17 @@ const App = (() => {
   let _seatsFrozen = false; // one-way latch: true once the original seating order is set, never unset until leave/closeTable
   let _autoCheckFold = false; // armed by the per-turn checkbox; auto-resets every HandStart
   let _lastConnectParams = null;
+  // Track mode + name of last Init sent so we can detect 'rapid mode swap'
+  // patterns that the PokerTH server's anti-brute-force flags as
+  // suspicious. When the user switches between login modes (guest /
+  // unauth / auth / LAN) without enough time between Init messages, the
+  // server temporarily blocks the IP. We enforce a minimum gap if the
+  // mode or nickname changes between two connect() calls.
+  let _lastInitMode = null;     // string: 'lan' / 'unauth' / 'guest' / 'auth'
+  let _lastInitNick = null;     // user-typed nickname at time of last Init
+  let _lastInitTime = 0;        // timestamp of last Init sent
+  let _connectingNow = false;   // re-entrancy guard to ignore double-clicks
+  const MODE_SWAP_MIN_GAP = 3000;  // ms — server blocks below ~2s in tests
   let _currentLoginMode = 'lan';
   let _lastMsgWasReaction = false; // true si le dernier chat envoyé était une réaction
   let _chatRejectShown = false;    // n'afficher l'avertissement LAN qu'une seule fois // pour la reconnexion auto
@@ -3384,7 +3395,14 @@ function dismissWinner() {
     },
 
     connect() {
-      // ── SW-ready gate ──
+      // ── Fix 2 + 3: re-entrancy guard ──
+      // Disable double-clicks: if a connect() is already in progress
+      // (either waiting on SW, waiting on previous WS to close, or
+      // waiting for mode-swap gap), ignore the new click.
+      if (_connectingNow) {
+        return;
+      }
+      // ── SW-ready gate (one-shot per page lifetime) ──
       // First-time visitors trigger a Service Worker install on page load.
       // The SW does skipWaiting() + clients.claim(), which can take control
       // of the page WHILE our first WebSocket is being established. The
@@ -3400,18 +3418,88 @@ function dismissWinner() {
       if (!window._swReadyOnce && 'serviceWorker' in navigator) {
         window._swReadyOnce = true;
         var self = this;
-        // 1500ms safety timeout in case ready never resolves (very rare,
-        // but better than hanging the UI forever).
         var fired = false;
         var go = function() {
           if (fired) return; fired = true;
           self.connect();
         };
-        setStatus('⏳ Initialisation…');
+        setStatus('⏳ ' + (t('initializing') || 'Initialisation…'));
         navigator.serviceWorker.ready.then(go);
-        setTimeout(go, 1500);
+        setTimeout(go, 1500);   // safety timeout
         return;
       }
+
+      // ── Fix 1: anti-blocage 'rapid mode swap' ──
+      // Read the current mode + nickname BEFORE doing any rate-limit check
+      // so we can decide whether this call needs the extra mode-swap delay.
+      const _curMode = $('login-mode') ? $('login-mode').value : 'guest';
+      const _curNick = ($('nick') ? $('nick').value.trim() : '');
+      const _modeChanged = (_lastInitMode !== null) &&
+                           (_curMode !== _lastInitMode || _curNick !== _lastInitNick);
+      const _gapNow = Date.now() - _lastInitTime;
+      if (_modeChanged && _gapNow < MODE_SWAP_MIN_GAP) {
+        const wait_ms = MODE_SWAP_MIN_GAP - _gapNow;
+        const wait_s = Math.ceil(wait_ms / 1000);
+        const that = this;
+        // Disable the connect button so the user can't pile clicks
+        _connectingNow = true;
+        var btn = document.querySelector('#s-connect .btn-primary');
+        if (btn) btn.disabled = true;
+        // Live countdown so the user understands what's happening
+        var remain = wait_s;
+        setStatus('⏳ ' + t('preparingConnection').replace('{n}', remain));
+        var iv = setInterval(function(){
+          remain--;
+          if (remain > 0) setStatus('⏳ ' + t('preparingConnection').replace('{n}', remain));
+        }, 1000);
+        setTimeout(function() {
+          clearInterval(iv);
+          if (btn) btn.disabled = false;
+          _connectingNow = false;
+          that.connect();
+        }, wait_ms);
+        return;
+      }
+
+      // ── Fix 2: properly close any lingering WebSocket before reopening ──
+      // The original code did `ws.close()` then immediately created a new
+      // one. That works most of the time, but `ws.close()` is async — the
+      // socket can stay in CLOSING state for a few hundred ms. If we open
+      // the new one immediately, the server briefly sees two active
+      // connections from the same IP, which can also trigger initBlocked.
+      // Defer the rest of connect() until the old WS reaches CLOSED, with
+      // a 500ms hard cap so we never hang.
+      if (ws && ws.readyState !== WebSocket.CLOSED) {
+        _connectingNow = true;
+        var that2 = this;
+        var btn2 = document.querySelector('#s-connect .btn-primary');
+        if (btn2) btn2.disabled = true;
+        setStatus('⏳ ' + (t('closingPrevious') || 'Fermeture de la connexion précédente…'));
+        // Detach the old onclose to avoid the disconnect handler kicking in
+        var prevWs = ws;
+        prevWs.onclose = null;
+        prevWs.onerror = null;
+        try { prevWs.close(); } catch(e) {}
+        ws = null;
+        var done = false;
+        var resume = function() {
+          if (done) return; done = true;
+          if (btn2) btn2.disabled = false;
+          _connectingNow = false;
+          that2.connect();
+        };
+        // The CLOSING → CLOSED transition is typically <50ms. We poll for
+        // it instead of relying on an event because we removed the
+        // listeners above.
+        var poll = setInterval(function() {
+          if (!prevWs || prevWs.readyState === WebSocket.CLOSED) {
+            clearInterval(poll); resume();
+          }
+        }, 30);
+        setTimeout(function(){ clearInterval(poll); resume(); }, 500);
+        return;
+      }
+
       // ── Rate limiter : éviter le spam qui provoque le blocage IP ──
       const now = Date.now();
       if (_ipBlockUntil > now) {
@@ -3483,6 +3571,11 @@ function dismissWinner() {
       setStatus(directWS ? t('connDirect') : t('connProxy'));
 
       // Sauvegarder les paramètres pour la reconnexion auto
+      // Record this Init's identity so the NEXT connect() can compare
+      // and apply the mode-swap delay if needed.
+      _lastInitMode = loginMode;
+      _lastInitNick = myName;
+      _lastInitTime = Date.now();
       _lastConnectParams = { host, port, loginMode, finalUrl, myName,
         pass: $('pass') ? $('pass').value : '' };
       _reconnectAttempts = 0;
