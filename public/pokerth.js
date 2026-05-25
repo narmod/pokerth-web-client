@@ -956,7 +956,7 @@ const MSG = (() => {
     GameListNew:13, GameListUpdate:14, GameListPlayerJoined:15, GameListPlayerLeft:16,
     GameListAdminChanged:17,
     PlayerInfoRequest:18, PlayerInfoReply:19,
-    JoinExisting:21, JoinNew:22, RejoinExisting:23,
+    JoinExisting:21, JoinNew:22, RejoinExisting:23, GameStartRejoin:39,
     JoinNew:22, JoinGameAck:24, JoinGameFailed:25,
     GamePlayerJoined:26, GamePlayerLeft:27, GameAdminChanged:28, RemovedFromGame:29,
     StartEvent:36, StartEventAck:37, GameStartInitial:38,
@@ -1121,7 +1121,17 @@ const MSG = (() => {
     return Proto.encode([[1,0,31],[32,2,msg]]);
   }
 
-  return { T, parse, buildInit, buildChat, buildJoin, buildJoinGame, buildStartEventAck, buildMyAction, buildCreateGame, buildLeaveGame, buildStartWithBots };
+  // RejoinExistingGameMessage: gameId=1, autoLeave=2 (default false).
+  // Sent when the user wants to come back to a paused table. The server
+  // either replies with JoinGameAck (joined seat) + GameStartRejoin
+  // (full state replay) OR with JoinGameFailed (reason rejoinFailed=11
+  // if seat timed out, or noSpectatorsAllowed/etc).
+  function buildRejoinGame(gameId) {
+    const msg = Proto.encode([[1,0,gameId]]);
+    return Proto.encode([[1,0,T.RejoinExisting],[24,2,msg]]);
+  }
+
+  return { T, parse, buildInit, buildChat, buildJoin, buildJoinGame, buildStartEventAck, buildMyAction, buildCreateGame, buildLeaveGame, buildRejoinGame, buildStartWithBots };
 })();
 
 
@@ -1490,6 +1500,13 @@ const App = (() => {
       case T.JoinGameAck: {
         gId = Proto.u32(sub, 1);
         const isAdmin = Proto.u32(sub, 2);
+        // Now that we are inside a game, hide any leftover Resume banner.
+        // For a rejoin this is correct (we are back). For any other
+        // successful join it is also correct (the paused table is no
+        // longer the focus). We do NOT clear localStorage here — only
+        // discardResumeGame() / leaveGame(without keepSeat) do that.
+        var _rb = document.getElementById('resume-banner');
+        if (_rb) _rb.style.display = 'none';
         // Appliquer le timeout de la partie (depuis games[] si on rejoint, sinon celui créé)
         if (games[gId] && games[gId].timeout) gameTimeout = games[gId].timeout;
         amGameAdmin = !!isAdmin;
@@ -1567,6 +1584,13 @@ const App = (() => {
       }
 
       case T.JoinGameFailed: {
+        // If this failure was a rejoin attempt (reason 11), drop the
+        // paused-game stash so the user isn't repeatedly told to
+        // 'resume' a seat that no longer exists.
+        try {
+          var _r = Proto.u32(sub, 2);
+          if (_r === 11) localStorage.removeItem('pth_pause');
+        } catch(e) {}
         const failedGameId = Proto.u32(sub, 1);
         const failCode = Proto.u32(sub, 2);
         // PokerTH JoinGameFailureReason codes from pokerth.proto:
@@ -1754,6 +1778,67 @@ const App = (() => {
           renderSeats();
         }
         _prevDealerPid = dealerPid;
+        break;
+      }
+
+      case T.GameStartRejoin: {
+        // GameStartRejoinMessage: sent by the server when the user has
+        // rejoined a game-in-progress via RejoinExistingGameMessage. Carries
+        // everything we need to restore the table state:
+        //   field 1: gameId
+        //   field 2: startDealerPlayerId
+        //   field 3: handNum  (we adopt it minus 1 so the next HandStart
+        //                       increments it back to the right value)
+        //   field 4: repeated RejoinPlayerData { playerId=1, playerMoney=2 }
+        //
+        // We treat it almost identically to GameStartInitial: flip
+        // _gameStarted, freeze the seat order, populate seats[] from the
+        // pids embedded in the message, and prime each seatData entry
+        // with the current money level so the seat badge shows the
+        // correct stack immediately.
+        _gameStarted = true;
+        gId        = Proto.u32(sub, 1);
+        dealerPid  = Proto.u32(sub, 2);
+        const incomingHand = Proto.u32(sub, 3);
+        // -1 so the very next HandStart++ lands on incomingHand.
+        if (incomingHand > 0) handNum = incomingHand - 1;
+        // Parse the repeated RejoinPlayerData array. The varint parser
+        // returns sub[4] as an array of length-delimited buffers when
+        // the field is repeated; we walk it and decode each one.
+        const newSeats = [];
+        const seatMoney = {};
+        const rData = sub[4] || [];
+        for (const blob of rData) {
+          const d = Proto.decode(blob);
+          const pid = Proto.u32(d, 1);
+          const mon = Proto.u32(d, 2);
+          newSeats.push(pid);
+          seatMoney[pid] = mon;
+        }
+        // Apply to client state.
+        if (!_seatsFrozen) {
+          seats = newSeats.slice();
+          _seatsFrozen = true;
+        } else {
+          // Defensive: if for some reason we already had a seats[] (rare),
+          // append the rejoin pids that weren't already known.
+          for (const pid of newSeats) {
+            if (!seats.includes(pid)) seats.push(pid);
+          }
+        }
+        for (const pid of seats) {
+          if (!seatData[pid]) seatData[pid] = {money:0,bet:0,action:'',active:true,folded:false};
+          if (seatMoney[pid] != null) seatData[pid].money = seatMoney[pid];
+          seatData[pid].gone = false;
+        }
+        renderSeats();
+        // Clear the action area placeholder. The real PlayersTurn /
+        // HandStart will repopulate it as the live stream catches up.
+        renderGameWaiting(t('rejoinSent') || 'Rejoining your table…');
+        // Hide the leave dialog if it was still open somehow.
+        var _ld = document.getElementById('leave-dialog');
+        if (_ld) _ld.style.display = 'none';
+        addChat(null, '🔄 ' + (t('rejoinSent') || 'Rejoining…'), 'sys');
         break;
       }
 
@@ -2184,6 +2269,9 @@ const App = (() => {
       return;
     }
 
+    // Refresh the Resume banner state whenever the lobby list is rebuilt,
+    // so users see (or stop seeing) it without waiting for a manual refresh.
+    if (typeof checkResumeBanner === 'function') checkResumeBanner();
     $('g-list').innerHTML = entries.map(([gid, g]) => {
       const dotcls = MODE_DOT[g.mode] || 'dot-closed';
       const label  = MODE_LABEL[g.mode] || '?';
@@ -2772,6 +2860,31 @@ const App = (() => {
   function getPlayerTypeBadge(pid) {
     return ''; // Badges supprimés : 🤖 identifie les bots, pas de 👤 pour les humains
   }
+
+  // Update the lobby's Resume banner based on localStorage state.
+  // Called from renderGamesList() so the banner is in sync with the
+  // current lobby state, and from show('s-lobby') paths to guarantee
+  // we refresh it whenever the user lands on the lobby view.
+  function checkResumeBanner() {
+    var rb  = document.getElementById('resume-banner');
+    var sub = document.getElementById('resume-banner-sub');
+    if (!rb) return;
+    var raw;
+    try { raw = localStorage.getItem('pth_pause'); } catch(e) {}
+    if (!raw) { rb.style.display = 'none'; return; }
+    var info; try { info = JSON.parse(raw); } catch(e) {}
+    if (!info || !info.gameId) { rb.style.display = 'none'; return; }
+    // Only show the banner if we are connected to the SAME server we
+    // paused on. Otherwise the gameId means nothing here.
+    var hostnow = document.getElementById('host') ? document.getElementById('host').value : '';
+    var portnow = document.getElementById('port') ? document.getElementById('port').value : '';
+    if (info.host && info.host !== hostnow) { rb.style.display = 'none'; return; }
+    if (info.port && String(info.port) !== String(portnow)) { rb.style.display = 'none'; return; }
+    // Looks good — show the banner with the paused table's name.
+    if (sub) sub.textContent = (t('resumeBannerSub') || 'You paused {name}').replace('{name}', info.name || ('#' + info.gameId));
+    rb.style.display = '';
+  }
+  window.checkResumeBanner = checkResumeBanner;
 
   function renderSeatsImmediate() {
     const el = $('g-seats');
@@ -3927,9 +4040,94 @@ function dismissWinner() {
       _autoCheckFold = !!on;
     },
 
-    leaveGame() {
-      // Send proper leave request then stay connected (return to lobby)
-      if (ws && gId) { try { send(MSG.buildLeaveGame(gId)); } catch(e) {} }
+    openLeaveDialog() {
+      // Show the 3-way confirmation modal. Public entry-point for the
+      // header ✕ button. Closing the menu first ensures the dropdown
+      // doesn't sit on top of the dialog on mobile.
+      closeHeaderOverflow();
+      var ld = document.getElementById('leave-dialog');
+      if (ld) ld.style.display = 'flex';
+    },
+
+    dialogKeepPlace() {
+      // 'Garder ma place' — stash rejoin context, return to lobby, do
+      // NOT send LeaveGame.
+      var ld = document.getElementById('leave-dialog');
+      if (ld) ld.style.display = 'none';
+      this.leaveGame({ keepSeat: true });
+    },
+
+    dialogQuitForever() {
+      // 'Quitter définitivement' — clear stash, send LeaveGame, return
+      // to lobby. The full standard leave path.
+      var ld = document.getElementById('leave-dialog');
+      if (ld) ld.style.display = 'none';
+      this.leaveGame();
+    },
+
+    dialogCancelLeave() {
+      // Cancel — just close the modal, stay in the table.
+      var ld = document.getElementById('leave-dialog');
+      if (ld) ld.style.display = 'none';
+    },
+
+    resumeGame() {
+      // User clicked 'Reprendre' in the lobby. Read the stashed gameId
+      // and send RejoinExistingGameMessage. The server will reply with
+      // JoinGameAck + GameStartRejoin (or JoinGameFailed reason 11).
+      var raw;
+      try { raw = localStorage.getItem('pth_pause'); } catch(e) {}
+      if (!raw) return;
+      var info; try { info = JSON.parse(raw); } catch(e) {}
+      if (!info || !info.gameId) return;
+      addChat(null, '🔄 ' + (t('rejoinSent') || 'Rejoining…'), 'sys');
+      // Hide the banner immediately so the user sees the click took.
+      var rb = document.getElementById('resume-banner');
+      if (rb) rb.style.display = 'none';
+      try {
+        send(MSG.buildRejoinGame(info.gameId));
+      } catch(e) {
+        // If something fails (e.g. ws not open), restore the banner.
+        if (rb) rb.style.display = '';
+      }
+    },
+
+    discardResumeGame() {
+      // User clicked 'Oublier' — clear the stash so the banner doesn't
+      // come back next time the lobby renders.
+      try { localStorage.removeItem('pth_pause'); } catch(e) {}
+      var rb = document.getElementById('resume-banner');
+      if (rb) rb.style.display = 'none';
+    },
+
+    leaveGame(opts) {
+      opts = opts || {};
+      // When keepSeat is true, we do NOT send LeaveGame — the server
+      // keeps our pid in its game roster so we can come back via
+      // RejoinExistingGameMessage. Otherwise the LeaveGame frees our
+      // seat for good.
+      if (opts.keepSeat) {
+        // Remember the gameId + table name + host/port so the lobby's
+        // Resume banner can recognise it. We bind it to host:port to
+        // avoid offering a Resume that points at the wrong server if
+        // the user later connects elsewhere.
+        try {
+          var hostnow = document.getElementById('host') ? document.getElementById('host').value : '';
+          var portnow = document.getElementById('port') ? document.getElementById('port').value : '';
+          var nm = (games[gId] && games[gId].name) || '#' + gId;
+          localStorage.setItem('pth_pause', JSON.stringify({
+            gameId: gId,
+            name:   nm,
+            host:   hostnow,
+            port:   portnow,
+            ts:     Date.now()
+          }));
+        } catch(e) {}
+      } else {
+        // Standard 'leave for good' path.
+        if (ws && gId) { try { send(MSG.buildLeaveGame(gId)); } catch(e) {} }
+        try { localStorage.removeItem('pth_pause'); } catch(e) {}
+      }
       amInGame = false; amGameAdmin = false; _gameStarted = false; _seatsFrozen = false; _amSpectator = false; var _sb2 = document.getElementById('g-spectator-banner'); if (_sb2) _sb2.style.display = 'none';
       gId = 0; seats = []; seatData = {};
       var _ego = document.getElementById('g-endgame-overlay');
