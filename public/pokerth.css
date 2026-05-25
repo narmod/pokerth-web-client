@@ -2488,3 +2488,70 @@ body:not(.in-game) .my-zone {
 @media (max-width: 640px) {
   .spectator-message { padding: 14px 10px; font-size: 0.72rem; }
 }
+
+
+/* ══ QUIT-GAME CONFIRMATION DIALOG ══
+   Centred modal with 2 buttons: Quit / Cancel. Shown when the user
+   clicks the ✕ from inside a game. Gold-bordered card matching the
+   rest of the UI, with backdrop blur and a soft pop animation. */
+#leave-dialog {
+  position: fixed; inset: 0; z-index: 120;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(0,0,0,0.7);
+  backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px);
+  animation: ldFade 0.25s ease-out;
+}
+@keyframes ldFade { from { opacity: 0; } to { opacity: 1; } }
+.ld-card {
+  background: linear-gradient(160deg, #0c1a0e 0%, #142a18 60%, #08160a 100%);
+  border: 1px solid var(--gold-dim);
+  border-top: 3px solid var(--gold);
+  border-radius: 8px;
+  padding: 22px 24px;
+  max-width: 400px; width: calc(100% - 32px);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.7);
+  animation: ldPop 0.35s cubic-bezier(0.2,0.9,0.3,1.1);
+}
+@keyframes ldPop {
+  from { transform: scale(0.9) translateY(8px); opacity: 0; }
+  to   { transform: scale(1)   translateY(0);   opacity: 1; }
+}
+.ld-title {
+  font-family: 'Cinzel', serif;
+  font-size: 1rem; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--gold); text-align: center; margin-bottom: 12px;
+}
+.ld-body {
+  font-size: 0.85rem; color: var(--cream);
+  text-align: center; margin-bottom: 18px; line-height: 1.4;
+}
+.ld-buttons {
+  display: flex; flex-direction: column; gap: 8px;
+}
+.ld-btn {
+  padding: 10px 16px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  color: var(--cream);
+  font-family: 'Cinzel', serif;
+  font-size: 0.78rem;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s, transform 0.1s;
+}
+.ld-btn:hover  { background: rgba(255,255,255,0.08); }
+.ld-btn:active { transform: scale(0.98); }
+.ld-btn.ld-quit {
+  background: linear-gradient(180deg, rgba(192,57,43,0.22), rgba(192,57,43,0.1));
+  border-color: rgba(192,57,43,0.5);
+  color: #fad6d0;
+}
+.ld-btn.ld-quit:hover { background: linear-gradient(180deg, rgba(192,57,43,0.35), rgba(192,57,43,0.18)); }
+.ld-btn.ld-cancel { color: var(--gold-dim); }
+@media (max-width: 640px) {
+  .ld-card { padding: 16px 18px; }
+  .ld-title { font-size: 0.9rem; }
+  .ld-body { font-size: 0.78rem; }
+  .ld-btn { padding: 9px 12px; font-size: 0.72rem; }
+}
