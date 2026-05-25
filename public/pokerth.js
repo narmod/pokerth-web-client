@@ -2011,6 +2011,13 @@ const App = (() => {
         for (const p of seats) if (seatData[p] && seatData[p].bet) { flopBets += seatData[p].bet; seatData[p].bet = 0; }
         collectedPot += flopBets;
         pot = collectedPot;
+        // FIX 2024-XX : reset des stats par round.
+        // Sans ce reset, le premier joueur à parler au flop voyait son
+        // bouton afficher "Call X" (X étant la mise du round précédent)
+        // alors que personne n'avait encore misé → le serveur rejetait
+        // (rejectedActionNotAllowed) et le joueur restait coincé.
+        highestBet = 0;
+        minRaise   = 0;
         $('g-pot').textContent = t('pot') + ' ' + pot;
         if ($('g-potbar')) $('g-potbar').textContent = t('pot') + ' ' + pot;
         const flopStr = commCards.filter(n=>n!=null).map(n=>cardName(n,true)).join(', ');
@@ -2032,6 +2039,10 @@ const App = (() => {
         for (const p of seats) if (seatData[p] && seatData[p].bet) { turnBets += seatData[p].bet; seatData[p].bet = 0; }
         collectedPot += turnBets;
         pot = collectedPot;
+        // Voir DealFlop pour le commentaire — reset des stats par round
+        // pour éviter que le bouton Call affiche un montant périmé.
+        highestBet = 0;
+        minRaise   = 0;
         $('g-pot').textContent = t('pot') + ' ' + pot;
         if ($('g-potbar')) $('g-potbar').textContent = t('pot') + ' ' + pot;
         const tvCard = commCards[3]; const tvName = tvCard != null ? cardName(tvCard, true) : '?';
@@ -2053,6 +2064,10 @@ const App = (() => {
         for (const p of seats) if (seatData[p] && seatData[p].bet) { rvBets += seatData[p].bet; seatData[p].bet = 0; }
         collectedPot += rvBets;
         pot = collectedPot;
+        // Voir DealFlop pour le commentaire — reset des stats par round
+        // pour éviter que le bouton Call affiche un montant périmé.
+        highestBet = 0;
+        minRaise   = 0;
         $('g-pot').textContent = t('pot') + ' ' + pot;
         if ($('g-potbar')) $('g-potbar').textContent = t('pot') + ' ' + pot;
         const rvCard = commCards[4]; const rvName = rvCard != null ? cardName(rvCard, true) : '?';
