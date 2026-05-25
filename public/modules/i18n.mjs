@@ -122,6 +122,9 @@ const LANG = {
     autoFoldLabel:'Auto-fold next turn',
     autoChecked:'Auto-checked',
     autoFolded:'Auto-folded',
+    initializing:'Initialising…',
+    preparingConnection:'Preparing new connection ({n}s)…',
+    closingPrevious:'Closing previous connection…',
 },
   fr: {
     connect:'Se connecter', disconnect:'✕ Déconnecter', connecting:'Connexion en cours…',
@@ -231,6 +234,9 @@ const LANG = {
     autoFoldLabel:'Auto-fold au prochain tour',
     autoChecked:'Auto-check effectué',
     autoFolded:'Auto-fold effectué',
+    initializing:'Initialisation…',
+    preparingConnection:'Préparation de la nouvelle connexion ({n}s)…',
+    closingPrevious:'Fermeture de la connexion précédente…',
 }
 };
 
