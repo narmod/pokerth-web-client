@@ -108,10 +108,17 @@ function selectAvatarPopup(emoji) {
       </div>
     </div>
 
+    <!-- Login form wrapping nick + pass. Having a real <form> with
+         autocomplete attributes lets browsers offer their password
+         manager (keychain) integration for the 'pokerth.net Registered'
+         mode. The onsubmit handler bridges to App.connect() while
+         preventing the default form submission (no page reload). -->
+    <form id="login-form" autocomplete="on" onsubmit="App.connect(); return false;">
     <div class="f" id="f-nick">
       <label id="nick-label">Nickname</label>
       <div style="display:flex;gap:8px;align-items:center">
         <input id="nick" value="" maxlength="64" placeholder="YourName" data-i18n-placeholder="nickPlaceholder"
+               name="username" autocomplete="username"
                onkeydown="if(event.key==='Enter') App.connect()" style="flex:1">
         <button type="button" id="av-trigger" onclick="toggleAvatarPopup()" title="Choose an avatar" data-i18n-title="chooseAvatar"
                 style="width:42px;height:42px;font-size:1.5rem;background:rgba(255,255,255,0.06);border:1px solid var(--border);border-radius:4px;cursor:pointer;flex-shrink:0;transition:border-color 0.2s">🎭</button>
@@ -133,14 +140,11 @@ function selectAvatarPopup(emoji) {
     <div class="f" id="f-pass" style="display:none">
       <label>Password</label>
       <input id="pass" type="password" maxlength="128" placeholder="••••••••"
-             autocomplete="off"
+             name="password" autocomplete="current-password"
              onkeydown="if(event.key==='Enter') App.connect()">
     </div>
+    </form>
 
-    <label class="tls-row">
-      <input type="checkbox" id="remember-me" style="accent-color:var(--gold);flex-shrink:0" onchange="App.onRememberMe()">
-      <span style="font-size:0.72rem" data-i18n="rememberMe">Remember nickname (password is never stored)</span>
-    </label>
     <label class="tls-row">
       <input type="checkbox" id="use-tls" style="accent-color:var(--gold);flex-shrink:0">
       <span data-i18n="tlsLabel">TLS — required for pokerth.net, uncheck for LAN</span>
