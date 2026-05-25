@@ -4032,22 +4032,57 @@ function dismissWinner() {
     },
 
     autoJoinOrCreate() {
-      autoAction = true;
-      const btn = document.getElementById('btn-autojoin');
-      if (btn) { btn.textContent = '⏳...'; btn.disabled = true; }
-      // Find first open (not started, not full) table
+      // ⚡ Quick Game button. Two paths:
+      //   1) A joinable table (not started, not full) exists → join it
+      //      directly, no questions asked.
+      //   2) No joinable table → ask the user how many players the new
+      //      table should support via the quick-create modal. Avoids
+      //      the previous behaviour of silently creating a 2-player
+      //      table (too restrictive on busy servers).
       let target = null;
       for (const id of Object.keys(games)) {
         const g = games[id];
         if (g && !g.started && g.players < g.maxPlayers) { target = id; break; }
       }
       if (target) {
+        autoAction = true;
+        const btn = document.getElementById('btn-autojoin');
+        if (btn) { btn.textContent = '⏳...'; btn.disabled = true; }
         addChat(null, t('autoTableFound').replace('{n}', target), 'sys');
         send(MSG.buildJoinGame(parseInt(target), false));
       } else {
-        addChat(null, t('autoNoTable'), 'sys');
-        send(MSG.buildCreateGame('WebGame-' + myName, 2, 10, 3000, 30));
+        // No table — show the player-count dialog. The actual CreateGame
+        // is dispatched by confirmQuickCreate() if the user confirms.
+        var qc = document.getElementById('quick-create-dialog');
+        if (qc) qc.style.display = 'flex';
       }
+    },
+
+    confirmQuickCreate() {
+      // 'Create' clicked in the quick-create dialog. Read the player
+      // count, clamp to the allowed range 2..10, and dispatch the
+      // CreateGame request with the same other defaults the previous
+      // hardcoded path used (10s blind / 3000 stack / 30s timeout).
+      var qc = document.getElementById('quick-create-dialog');
+      var inp = document.getElementById('qc-players');
+      var n = parseInt(inp && inp.value, 10);
+      if (!Number.isFinite(n)) n = 5;
+      if (n < 2) n = 2;
+      if (n > 10) n = 10;
+      if (qc) qc.style.display = 'none';
+      autoAction = true;
+      const btn = document.getElementById('btn-autojoin');
+      if (btn) { btn.textContent = '⏳...'; btn.disabled = true; }
+      addChat(null, t('autoNoTable'), 'sys');
+      send(MSG.buildCreateGame('WebGame-' + myName, n, 10, 3000, 30));
+    },
+
+    cancelQuickCreate() {
+      // 'Cancel' clicked — just close the dialog and leave the lobby
+      // alone. The Quick Game button is NOT disabled in this path, so
+      // the user can try again right away.
+      var qc = document.getElementById('quick-create-dialog');
+      if (qc) qc.style.display = 'none';
     },
 
     joinGameWithPassword(gameId, pass) {
