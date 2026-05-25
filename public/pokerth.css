@@ -2555,3 +2555,49 @@ body:not(.in-game) .my-zone {
   .ld-body { font-size: 0.78rem; }
   .ld-btn { padding: 9px 12px; font-size: 0.72rem; }
 }
+
+
+/* ══ QUICK-CREATE DIALOG ══
+   Reuses the .ld-* styles from the leave-dialog (gold card, backdrop,
+   buttons). Adds a centred input row and a green 'Create' button to
+   match the semantic 'positive action' colour used elsewhere. */
+#quick-create-dialog {
+  position: fixed; inset: 0; z-index: 120;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(0,0,0,0.7);
+  backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px);
+  animation: ldFade 0.25s ease-out;
+}
+.qc-control {
+  display: flex; align-items: center; justify-content: center;
+  gap: 12px; margin: 0 0 18px;
+}
+.qc-control label {
+  font-family: 'Cinzel', serif;
+  font-size: 0.78rem; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--gold-dim);
+}
+.qc-control input[type="number"] {
+  width: 70px;
+  padding: 8px 10px;
+  background: rgba(0,0,0,0.4);
+  border: 1px solid var(--gold-dim);
+  border-radius: 4px;
+  color: var(--cream);
+  font-family: 'Inconsolata', monospace;
+  font-size: 1.1rem;
+  text-align: center;
+  outline: none;
+  transition: border-color 0.15s;
+}
+.qc-control input[type="number"]:focus { border-color: var(--gold); }
+.ld-btn.ld-create {
+  background: linear-gradient(180deg, rgba(88,201,122,0.22), rgba(88,201,122,0.1));
+  border-color: rgba(88,201,122,0.5);
+  color: #d6f5dc;
+}
+.ld-btn.ld-create:hover { background: linear-gradient(180deg, rgba(88,201,122,0.35), rgba(88,201,122,0.18)); }
+@media (max-width: 640px) {
+  .qc-control { gap: 8px; }
+  .qc-control input[type="number"] { font-size: 1rem; width: 60px; padding: 6px 8px; }
+}
