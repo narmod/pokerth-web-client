@@ -2402,6 +2402,14 @@ body:not(.in-game) .my-zone {
   user-select: none;
   border-radius: 3px;
   transition: color 0.15s, background 0.15s;
+  /* Force the checkbox row to take its own line above the action grid,
+     regardless of viewport width. Without this, on desktop and tablet
+     the .action-bar's justify-content:flex-end shoves it to the left
+     of the action-grid (the rest of the bar), producing the cosmetic
+     desync the user reported. flex-basis:100% guarantees the row
+     wraps to its own line in every breakpoint. */
+  flex-basis: 100%;
+  justify-content: center;
 }
 .auto-cf-row:hover {
   color: var(--gold);
