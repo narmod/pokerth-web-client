@@ -1173,6 +1173,8 @@ const App = (() => {
   let _gameStarted = false; // flips true on GameStartInitial; freezes waiting-panel updates
   let _seatsFrozen = false; // one-way latch: true once the original seating order is set, never unset until leave/closeTable
   let _amSpectator = false; // true when we joined via 'Regarder' / spectateGame() — disables actions, shows banner
+  let _lobbyPlayerCount = 0; // running tally of players online; updated by PlayerListMessage + StatisticsMessage
+  let _hasStatistics = false; // true once we've seen a StatisticsMessage; takes precedence over the PlayerList tally
   let _autoCheckFold = false; // armed by the per-turn checkbox; auto-resets every HandStart
   let _lastConnectParams = null;
   // Track mode + name of last Init sent so we can detect 'rapid mode swap'
@@ -1337,13 +1339,34 @@ const App = (() => {
         break;
       }
 
+      // ── Lobby player roster (PlayerListMessage) ──
+      // Sent by the server when a player joins or leaves the lobby.
+      // We maintain a local _lobbyPlayerCount fallback for servers
+      // (typical of LAN / private deployments) that don't send the
+      // periodic StatisticsMessage. If StatisticsMessage IS received,
+      // its value takes precedence — see _hasStatistics flag.
+      case T.PlayerList: {
+        // PlayerListMessage: playerId=1, notification=2 (0=new, 1=left)
+        const notif = Proto.u32(sub, 2);
+        if (notif === 0)      _lobbyPlayerCount++;
+        else if (notif === 1) _lobbyPlayerCount = Math.max(0, _lobbyPlayerCount - 1);
+        if (!_hasStatistics) {
+          $('h-players').textContent = _lobbyPlayerCount + ' ' + t('playersOnline');
+        }
+        break;
+      }
+
       // Statistiques (nombre de joueurs connectés)
       case T.Statistics: {
         const arr = sub[1] || [];
         for (const d of arr) {
           const s = Proto.decode(d);
           if (Proto.u32(s,1) === 1) {
-            $('h-players').textContent = `${Proto.u32(s,2)} joueurs en ligne`;
+            // Server-authoritative count. Mark the flag so PlayerList
+            // updates stop overriding the header pill from below.
+            _hasStatistics = true;
+            _lobbyPlayerCount = Proto.u32(s,2);
+            $('h-players').textContent = _lobbyPlayerCount + ' ' + t('playersOnline');
           }
         }
         break;
@@ -3919,6 +3942,10 @@ function dismissWinner() {
       _hideBanner();
       if (ws) { ws.close(); ws = null; }
       games = {};
+      // Reset lobby counters so the next connect starts at 0 instead
+      // of inheriting the previous session's tally.
+      _lobbyPlayerCount = 0;
+      _hasStatistics = false;
       show('s-connect');
     },
 
