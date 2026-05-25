@@ -171,13 +171,7 @@ function selectAvatarPopup(emoji) {
        consistent. Lists every pid we know about in the lobby with
        its real name (looked up from players{}). -->
   <div id="players-panel" style="display:none;flex-direction:column">
-    <div class="g-chat-panel-header">
-      <span style="font-size:0.65rem;color:var(--gold-dim);letter-spacing:0.15em;text-transform:uppercase">
-        👥 <span data-i18n="playersOnlineTitle">Players online</span>
-        — <span id="players-panel-count">0</span>
-      </span>
-      <button onclick="togglePlayersPanel()" style="background:none;border:none;color:var(--text);cursor:pointer;font-size:0.85rem;padding:0 4px">✕</button>
-    </div>
+    <div class="g-chat-panel-header"><span id="players-panel-title" style="font-size:0.65rem;color:var(--gold-dim);letter-spacing:0.15em;text-transform:uppercase">👥 Players online — <span id="players-panel-count">0</span></span><button onclick="togglePlayersPanel()" style="background:none;border:none;color:var(--text);cursor:pointer;font-size:0.85rem;padding:0 4px">✕</button></div>
     <div class="players-search">
       <input id="players-search-in" placeholder="Search…" data-i18n-placeholder="playersSearchPlaceholder"
              oninput="renderPlayersList()" />
