@@ -230,7 +230,7 @@ function selectAvatarPopup(emoji) {
   <div class="lobby-body">
     <div class="pane-games">
       <div class="create-bar">
-        <button class="btn-create" id="btn-autojoin" onclick="App.autoJoinOrCreate()" data-i18n="joinOrCreate">⚡ Join or Create</button>
+        <button class="btn-create" id="btn-autojoin" onclick="App.autoJoinOrCreate()" data-i18n="quickGameBtn">⚡ Quick Game</button>
         <button class="btn-create-manual" onclick="App.toggleCreateForm()" title="Configure">⚙</button>
       </div>
       <div class="pane-header">
@@ -421,6 +421,24 @@ function selectAvatarPopup(emoji) {
      a game. Driven by App.confirmLeaveGame() (open) and
      App.cancelLeaveGame() (close). Confirming calls leaveGame() as
      before — no behaviour change for the leave path itself. -->
+<!-- Quick-create dialog: when ⚡ Quick Game is clicked AND no joinable
+     table exists, this asks the user how many players the new table
+     should support before sending the CreateGame request. Same gold
+     style as the leave-game dialog. -->
+<div id="quick-create-dialog" style="display:none">
+  <div class="ld-card">
+    <div class="ld-title" data-i18n="quickCreateTitle">Create a new table</div>
+    <div class="ld-body"  data-i18n="quickCreateBody">No tables found. How many players?</div>
+    <div class="qc-control">
+      <label for="qc-players" data-i18n="quickCreateLabel">Players:</label>
+      <input id="qc-players" type="number" min="2" max="10" value="5" />
+    </div>
+    <div class="ld-buttons">
+      <button class="ld-btn ld-create" onclick="App.confirmQuickCreate()" data-i18n="quickCreateBtn">Create</button>
+      <button class="ld-btn ld-cancel" onclick="App.cancelQuickCreate()"  data-i18n="leaveCancel">Cancel</button>
+    </div>
+  </div>
+</div>
 <div id="leave-dialog" style="display:none">
   <div class="ld-card">
     <div class="ld-title" data-i18n="leaveDialogTitle">Leave the game?</div>
