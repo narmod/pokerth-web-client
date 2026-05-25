@@ -62,7 +62,7 @@ const MSG_NAMES = {
   21:'JoinExisting', 22:'JoinNew', 24:'JoinGameAck', 25:'JoinGameFailed',
   26:'GamePlayerJoined', 27:'GamePlayerLeft', 29:'RemovedFromGame',
   36:'StartEvent', 38:'GameStartInitial', 40:'HandStart', 41:'PlayersTurn',
-  42:'MyActionRequest', 44:'PlayersActionDone', 45:'DealFlop', 46:'DealTurn', 47:'DealRiver',
+  42:'MyActionRequest', 43:'YourActionRejected', 44:'PlayersActionDone', 45:'DealFlop', 46:'DealTurn', 47:'DealRiver',
   49:'EndOfHandShow', 50:'EndOfHandHide', 53:'EndOfGame',
   62:'Statistics', 63:'ChatRequest', 64:'Chat', 65:'ChatReject', 66:'Dialog',
   67:'TimeoutWarning', 73:'Error',
