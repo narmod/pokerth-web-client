@@ -2168,7 +2168,18 @@ const App = (() => {
 
   // ── AFFICHAGE DES TABLES ──
   const MODE_DOT   = {1:'dot-open', 2:'dot-run', 3:'dot-closed'};
-  const MODE_LABEL = {1: t('modeWaiting'), 2: t('modeInProgress'), 3: t('modeClosed')};
+  // Resolve mode labels via t() at CALL time, not at module-init time —
+  // when this file loads, the i18n table from modules/i18n.mjs hasn't
+  // been attached to the closure yet (its <script type=module> defers
+  // until after this file's IIFE runs). Building the dict eagerly threw
+  // 'ReferenceError: t is not defined', which broke the entire IIFE and
+  // left App undefined — that's why no header button worked.
+  function MODE_LABEL(mode) {
+    if (mode === 1) return t('modeWaiting');
+    if (mode === 2) return t('modeInProgress');
+    if (mode === 3) return t('modeClosed');
+    return '?';
+  }
   const GTYPE      = {1:'Normal', 2:'Inscrits', 3:'Sur invitation', 4:'Classé'};
 
   function renderGames() {
@@ -2186,7 +2197,7 @@ const App = (() => {
 
     $('g-list').innerHTML = entries.map(([gid, g]) => {
       const dotcls = MODE_DOT[g.mode] || 'dot-closed';
-      const label  = MODE_LABEL[g.mode] || '?';
+      const label  = MODE_LABEL(g.mode);
       const type   = GTYPE[g.type] || '';
       const lock   = (g.priv || g.type === 3) ? '🔒 ' : '';
       // The i18n joinBtn string already includes a '▶ ' prefix
