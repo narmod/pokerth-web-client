@@ -3935,6 +3935,29 @@ function dismissWinner() {
       _autoCheckFold = !!on;
     },
 
+    confirmLeaveGame() {
+      // Public entry point for the header ✕ button. Opens the quit
+      // confirmation modal — clicking 'Quit' will then call leaveGame()
+      // as usual; clicking 'Cancel' just dismisses the modal.
+      closeHeaderOverflow();
+      var ld = document.getElementById('leave-dialog');
+      if (ld) ld.style.display = 'flex';
+    },
+
+    confirmLeaveQuit() {
+      // Confirmed — close the modal and perform the standard leave
+      // flow (send LeaveGame, reset client state, back to lobby).
+      var ld = document.getElementById('leave-dialog');
+      if (ld) ld.style.display = 'none';
+      this.leaveGame();
+    },
+
+    cancelLeaveGame() {
+      // Cancelled — just hide the modal, user stays in the game.
+      var ld = document.getElementById('leave-dialog');
+      if (ld) ld.style.display = 'none';
+    },
+
     leaveGame() {
       // Send proper leave request then stay connected (return to lobby)
       if (ws && gId) { try { send(MSG.buildLeaveGame(gId)); } catch(e) {} }
