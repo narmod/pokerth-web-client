@@ -127,6 +127,10 @@ const LANG = {
     closingPrevious:'Closing previous connection…',
     spectatorBanner:'Spectator mode — you are watching',
     spectatorActionMsg:'You are watching as a spectator. Players are deciding…',
+    leaveDialogTitle:'Leave the game?',
+    leaveDialogBody:'You will lose your seat and return to the lobby.',
+    leaveQuit:'Quit',
+    leaveCancel:'Cancel',
 },
   fr: {
     connect:'Se connecter', disconnect:'✕ Déconnecter', connecting:'Connexion en cours…',
@@ -241,6 +245,10 @@ const LANG = {
     closingPrevious:'Fermeture de la connexion précédente…',
     spectatorBanner:'Mode spectateur — vous regardez la partie',
     spectatorActionMsg:'Vous regardez en spectateur. Les joueurs sont en train de décider…',
+    leaveDialogTitle:'Quitter la partie\u00a0?',
+    leaveDialogBody:'Vous perdrez votre place et reviendrez au lobby.',
+    leaveQuit:'Quitter',
+    leaveCancel:'Annuler',
 }
 };
 
