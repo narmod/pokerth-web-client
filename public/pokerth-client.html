@@ -269,6 +269,13 @@ function selectAvatarPopup(emoji) {
       <button class="btn-sm" id="admin-close-mob" onclick="App.closeTable();closeHeaderOverflow()" style="display:none;color:#e67e22;border-color:rgba(230,126,34,0.4)">🔒 Close</button>
     </div>
   </div>
+  <!-- Spectator banner: shown only when the user joined the table via
+       the 'Regarder' (spectate) button. Hidden by default; flipped on
+       in JoinGameAck when _amSpectator is true. -->
+  <div id="g-spectator-banner" style="display:none">
+    <span class="sb-eye">👁</span>
+    <span class="sb-text" data-i18n="spectatorBanner">Mode spectateur — vous regardez la partie</span>
+  </div>
   <div id="pot-strip">
     <span id="g-hand" class="pot-side">H#1</span>
     <span id="g-pot"  class="pot-center">POT: 0</span>
