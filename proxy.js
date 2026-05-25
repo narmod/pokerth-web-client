@@ -172,7 +172,16 @@ const _allClients = new Set();
 // via le même proxy en rafale
 const _connQueue  = [];       // file des connexions en attente
 let   _lastConnAt = 0;        // timestamp de la dernière connexion TCP ouverte
-const MIN_CONN_GAP = 2500;    // ms minimum entre deux connexions au même serveur
+const MIN_CONN_GAP = 5000;    // ms minimum entre deux connexions au même serveur
+                              // Bumped from 2500 → 5000 because some PokerTH
+                              // server configurations (notably self-hosted
+                              // instances with strict anti-brute-force) flag
+                              // back-to-back Init messages from the same IP
+                              // within 3-4 seconds as suspicious and return
+                              // initBlocked. Five seconds gives the server
+                              // enough cooldown between two distinct sessions
+                              // (different browser tabs / mobile + desktop /
+                              // PWA + browser) sharing the same public IP.
 
 function _scheduleConn(fn) {
   const now  = Date.now();
