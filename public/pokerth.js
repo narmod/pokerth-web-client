@@ -3568,7 +3568,7 @@ function dismissWinner() {
       // declutter the form. The setting itself stays in the DOM —
       // each branch below still sets $('use-tls').checked appropriately.
       var tlsRow = document.getElementById('tls-row');
-      if (tlsRow) tlsRow.style.display = (mode === 'guest' || mode === 'auth') ? '' : 'none';
+      if (tlsRow) tlsRow.style.display = (mode === 'auth') ? '' : 'none';
 
       const hostInput  = $('host');
       const proxyInput = $('proxy');
