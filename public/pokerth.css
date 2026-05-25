@@ -2430,3 +2430,61 @@ body:not(.in-game) .my-zone {
   .auto-cf-row { font-size: 0.66rem; padding: 3px 6px; margin-bottom: 4px; }
   .auto-cf-row input[type="checkbox"] { width: 12px; height: 12px; }
 }
+
+
+/* ══ SPECTATOR BANNER ══
+   Shown at the top of the game screen (just below the header,
+   above the pot strip) when the user is watching as a spectator.
+   Subtle blue tint to differentiate from regular player view, with
+   a small animated pulse on the eye emoji to draw attention without
+   being noisy. */
+#g-spectator-banner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 6px 12px;
+  background: linear-gradient(180deg, rgba(80,140,200,0.15), rgba(80,140,200,0.05));
+  border-bottom: 1px solid rgba(80,140,200,0.35);
+  font-size: 0.75rem;
+  color: #a8d0f0;
+  font-family: 'Cinzel', serif;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+#g-spectator-banner .sb-eye {
+  font-size: 1rem;
+  animation: sbEyePulse 2.4s ease-in-out infinite;
+}
+@keyframes sbEyePulse {
+  0%,100% { opacity: 0.75; transform: scale(1); }
+  50%     { opacity: 1;    transform: scale(1.15); }
+}
+@media (max-width: 640px) {
+  #g-spectator-banner { padding: 5px 10px; font-size: 0.66rem; }
+  #g-spectator-banner .sb-eye { font-size: 0.9rem; }
+}
+
+/* Replacement message that occupies the action area when the user
+   is a spectator. Same vertical footprint as the action buttons so
+   the layout doesn't jump around between hands. */
+.spectator-message {
+  width: 100%;
+  padding: 18px 14px;
+  text-align: center;
+  font-size: 0.78rem;
+  color: var(--gold-dim);
+  background: rgba(80,140,200,0.06);
+  border: 1px solid rgba(80,140,200,0.25);
+  border-radius: 4px;
+  font-style: italic;
+}
+.spectator-message .sm-icon {
+  font-size: 1.4rem;
+  display: block;
+  margin-bottom: 4px;
+  font-style: normal;
+}
+@media (max-width: 640px) {
+  .spectator-message { padding: 14px 10px; font-size: 0.72rem; }
+}
