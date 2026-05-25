@@ -1751,7 +1751,12 @@ const App = (() => {
         renderMyCards();
         renderComm();
         renderSeats();
-        setTimeout(function(){ autoScaleTable(); renderSeats(); }, 100);
+        // Fix #3: was 'autoScaleTable + renderSeats' — the second renderSeats
+        // here was redundant (we just called it 100ms earlier) and produced
+        // a brief flicker as the same DOM was rebuilt twice in quick
+        // succession. autoScaleTable() is enough — it adjusts the CSS
+        // transform of the parent without touching the seat DOM at all.
+        setTimeout(autoScaleTable, 100);
         setTimeout(animateCardDeal, 200);
         setTimeout(renderPreFlopStrength, 350);
         // Init stats
@@ -1798,10 +1803,12 @@ const App = (() => {
             // instant invisible action.
             renderGameWaiting(canCheck0 ? '⏩ ' + t('autoChecked') : '⏩ ' + t('autoFolded'));
             setMyTurnActive(true);
+            // Fix #6: 60ms instead of 180ms. Plenty of time for the
+            // 'Auto-folded' badge to flash, no perceived lag.
             setTimeout(function() {
               if (canCheck0) doAction(2, 0);
               else           doAction(1, 0);
-            }, 180);
+            }, 60);
             break;
           }
           renderMyTurnActions();
@@ -1849,11 +1856,17 @@ const App = (() => {
         flashActionLabel(pid);
         if (action === 6) animateAllIn(pid); // All-in
         if (bet > 0) {
-          setTimeout(function(){ animateChipToPot(pid, bet); }, 80);
+          // Fix #2: chip starts moving immediately (was 80ms) so the
+          // user's click → visual response loop feels instant.
+          animateChipToPot(pid, bet);
+          // Fix #1: pot updates 200ms after instead of 550ms. The chip
+          // animation lasts ~700ms so the pot grows roughly as the
+          // chip arrives — looks coherent without the long lag that
+          // made rapid bot turns feel choppy.
           setTimeout(function(){
             animatePot(pot);
             updatePotSize(pot);
-          }, 550);
+          }, 200);
         }
         break;
       }
@@ -1887,7 +1900,7 @@ const App = (() => {
         const flopStr = commCards.filter(n=>n!=null).map(n=>cardName(n,true)).join(', ');
         renderComm(true); // flip animation
         renderSeats();
-        setTimeout(renderHandStrength, 500); // force de la main au flop
+        setTimeout(renderHandStrength, 150); // force de la main au flop (was 500ms)
         logAction('--- Flop [' + flopStr + '] ---');
         notifyCard(); notifyCard(); notifyCard();
         break;
@@ -1908,7 +1921,7 @@ const App = (() => {
         const tvCard = commCards[3]; const tvName = tvCard != null ? cardName(tvCard, true) : '?';
         logAction('--- ' + t('turn') + ' [' + tvName + '] ---');
         renderComm(true); // flip animation
-        setTimeout(renderHandStrength, 500); // force de la main au turn
+        setTimeout(renderHandStrength, 150); // force de la main au turn (was 500ms)
         notifyCard();
         break;
       }
@@ -1929,7 +1942,7 @@ const App = (() => {
         const rvCard = commCards[4]; const rvName = rvCard != null ? cardName(rvCard, true) : '?';
         logAction('--- ' + t('river') + ' [' + rvName + '] ---');
         renderComm(true, true); // flip animation + dramatic river
-        setTimeout(renderHandStrength, 600); // force de la main à la river
+        setTimeout(renderHandStrength, 200); // force de la main à la river (was 600ms)
         playTone(350, 0.08, 0.08); setTimeout(function(){ notifyCard(); }, 200);
 
         break;
@@ -2683,7 +2696,7 @@ const App = (() => {
     return ''; // Badges supprimés : 🤖 identifie les bots, pas de 👤 pour les humains
   }
 
-  function renderSeats() {
+  function renderSeatsImmediate() {
     const el = $('g-seats');
     if (!seats.length) { el.innerHTML = ''; return; }
     // Keep ALL original seats when computing pixel positions. Previously
@@ -2868,6 +2881,22 @@ const App = (() => {
     requestAnimationFrame(function() {
       autoScaleTable();
       setTimeout(autoScaleTable, 150);
+    });
+  }
+
+  // ── Coalesced public entry point ──
+  // Multiple back-to-back renderSeats() calls (bot bursts, PlayersActionDone
+  // floods, server replays) used to each trigger a full DOM rebuild + reflow.
+  // With this wrapper, all calls within the same animation frame share ONE
+  // actual render at the next rAF tick (~16 ms). The DOM still reflects the
+  // latest game state — we never skip data, we just batch the paint.
+  let _seatsRenderPending = false;
+  function renderSeats() {
+    if (_seatsRenderPending) return;
+    _seatsRenderPending = true;
+    requestAnimationFrame(function() {
+      _seatsRenderPending = false;
+      renderSeatsImmediate();
     });
   }
 
