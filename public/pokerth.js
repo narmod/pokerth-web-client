@@ -475,15 +475,12 @@ function _evalFive(cards) {
   return { r:0, fr:'— Carte haute '+rn[ranks[0]], en:'— High Card '+rn[ranks[0]] };
 }
 
-// Convertit une hole card vers l'encodage canonique des comm cards.
-//
-// Encodages PokerTH (tous 0-indexés, 0-51) :
-//   Hole cards : suit=['♣','♠','♥','♦'] → ♣=0, ♠=1, ♥=2, ♦=3
-//   Comm cards : suit=['♦','♣','♠','♥'] → ♦=0, ♣=1, ♠=2, ♥=3
-//
-// Remap hole→comm : ♣(0)→1, ♠(1)→2, ♥(2)→3, ♦(3)→0
-// Vérification : n=7  → si=0(♣), ri=7(9) → 9♣ → canonical 1*13+7=20 (9♣ comm) ✓
-//               n=40 → si=3(♦), ri=1(3) → 3♦ → canonical 0*13+1=1  (3♦ comm) ✓
+// Encodage PokerTH UNIQUE pour toutes les cartes (0-indexé, 0..51) :
+//   suit=['♦','♥','♠','♣'] → ♦=0, ♥=1, ♠=2, ♣=3
+//   rank=['2','3',…,'K','A'] → 0..12
+// Vérifié sur les assets PNG officiels (data/gfx/cards/default/*.png) :
+//   0=2♦  12=A♦  13=2♥  25=A♥  26=2♠  38=A♠  39=2♣  51=A♣
+// normalizeHoleCard() est désormais l'identité (validation seule).
 
 // ═══════════════════════════════════════════════════════════
 // RÉACTIONS RAPIDES
@@ -623,13 +620,13 @@ function evaluatePreFlopHand(c1, c2) {
 
 
 function normalizeHoleCard(n) {
-  // FIX bug-proofing : Number.isFinite capture NaN/Infinity ; sinon les tests `n<0||n>51` échouent
-  // pour NaN (toujours false) et le calcul produirait NaN qui se propagerait jusqu'à l'évaluation des mains.
+  // FIX 2024-XX : suppression du remap suits → l'encodage est UNIQUE pour
+  // hole et comm cards (vérifié sur les assets PNG officiels PokerTH :
+  // 0..12=♦, 13..25=♥, 26..38=♠, 39..51=♣). La fonction reste pour
+  // compat. binaire (les call sites passent toujours par .map(normalizeHoleCard))
+  // mais devient une simple validation + identité.
   if (n == null || !Number.isInteger(n) || n < 0 || n > 51) return null;
-  var si = Math.floor(n / 13);  // 0-indexé (♣=0, ♠=1, ♥=2, ♦=3)
-  var ri = n % 13;
-  var suitRemap = [1, 2, 3, 0]; // ♣→1, ♠→2, ♥→3, ♦→0 (ordre comm canonique)
-  return suitRemap[si] * 13 + ri;
+  return n;
 }
 
 function evaluateBestHand(holeCards, commCards) {
@@ -2305,66 +2302,58 @@ const App = (() => {
   // ─── Card rendering ───
   // Card name for log display
   function cardName(n, isComm) {
-    // FIX: encodage unifié 0-indexé (PokerTH envoie 0–51 pour hole et comm cards)
+    // FIX 2024-XX : encodage PokerTH UNIQUE pour hole et comm cards.
+    // Vérifié sur les assets PNG officiels (data/gfx/cards/default/*.png) :
+    //   0..12  = ♦ 2..A     13..25 = ♥ 2..A
+    //   26..38 = ♠ 2..A     39..51 = ♣ 2..A
+    // Le paramètre isComm est ignoré (conservé pour compat. binaire).
     if (n == null) return '?';
-    // FIX bug-proofing : alignement avec cardHtml — toute valeur non-entière dans [0..51] devient '?'
     if (!Number.isInteger(n) || n < 0 || n > 51) return '?';
-    let si, ri;
-    si = Math.floor(n / 13);
-    ri = n % 13;
-    const suits = isComm ? ['♦','♣','♠','♥'] : ['♣','♠','♥','♦'];
+    var si = Math.floor(n / 13);
+    var ri = n % 13;
+    const suits = ['♦','♥','♠','♣'];
     const ranks = ['2','3','4','5','6','7','8','9','10','J','Q','K','A'];
     return (ranks[ri]||'?') + (suits[si]||'?');
   }
 
-  // PokerTH card encoding:
-  //   Hole cards (plainCards):  0-indexed, suits [♣,♠,♥,♦], card 0=2♣ … 51=A♦
-  //   Community cards (flop…):  0-indexed, suits [♦,♣,♠,♥], card 0=2♦ … 51=A♥
-  // (les hole cards étaient documentées 1-indexed mais le serveur officiel actuel envoie 0-indexed
-  //  — cf. normalizeHoleCard et cardName ; la branche else 1-indexed n'est plus utilisée en pratique)
+  // PokerTH card encoding — UNIQUE et 0-indexé pour TOUTES les cartes
+  // (hole cards, flop, turn, river, all-in show, end-of-hand show).
+  // Vérifié sur les assets officiels data/gfx/cards/default/*.png :
+  //   0..12  = ♦ 2..A      13..25 = ♥ 2..A
+  //   26..38 = ♠ 2..A      39..51 = ♣ 2..A
+  // Le paramètre isComm est conservé pour compat binaire mais ignoré pour le mapping.
   function cardToHtml(n, sm, isComm, extraCls) {
     extraCls = extraCls || '';
     const sz = sm ? ' sm' : '';
     if (n === null || n === undefined) return '<div class="pk' + sz + ' back' + extraCls + '"></div>';
-    // FIX bug-proofing : capture NaN, Infinity, strings, etc. — tout ce qui n'est pas un entier valide dans [0..51]
-    if (!Number.isInteger(n) || n < 0 || n > (isComm ? 51 : 52)) {
+    if (!Number.isInteger(n) || n < 0 || n > 51) {
       return '<div class="pk' + sz + ' back' + extraCls + '"></div>';
     }
-    let si, ri;
-    if (isComm) {
-      si = Math.floor(n / 13);      // 0-indexed suits: ♦=0 ♣=1 ♠=2 ♥=3
-      ri = n % 13;
-    } else {
-      si = Math.floor((n-1) / 13);  // 1-indexed suits: ♣=0 ♠=1 ♥=2 ♦=3 (branche conservée mais non utilisée)
-      ri = (n-1) % 13;
-    }
-    // Protection : si hors limites → dos de carte plutôt que '?'
-    if (si < 0 || si > 3 || ri < 0 || ri > 12) return '<div class="pk' + sz + ' back' + extraCls + '"></div>';
-    const suits = isComm ? ['♦','♣','♠','♥'] : ['♣','♠','♥','♦'];
+    var si = Math.floor(n / 13);
+    var ri = n % 13;
+    const suits = ['♦','♥','♠','♣'];
     const suit  = suits[si] || '?';
     const rank  = ['2','3','4','5','6','7','8','9','10','J','Q','K','A'][ri] || '?';
-    const red   = (isComm ? (si===0||si===3) : (si>=2)) ? ' red' : '';
-    const spade = (isComm ? si===2 : si===1) ? ' spade' : '';
+    const red   = (si < 2) ? ' red' : '';     // ♦ (0) et ♥ (1) sont rouges
+    const spade = (si === 2) ? ' spade' : ''; // ♠ (2)
     return '<div class="pk' + sz + red + spade + extraCls + '"><span class="c-rank">' + rank + '</span><span class="c-suit">' + suit + '</span></div>';
   }
 
 
   // ─── My cards ───
+  // Même encodage unique que cardToHtml — voir commentaire ci-dessus.
   function cardHtml(n, cls, isComm) {
-    // FIX: if(!n) traitait 0 comme falsy → carte dos incorrecte ; encodage unifié 0-indexé
     if (n == null) return '<div class="pk '+cls+' back"></div>';
-    // FIX bug "rang sans couleur" : si la valeur est hors de la plage 0..51,
-    // afficher un dos de carte (alignement avec cardToHtml ligne ~2288).
     if (!Number.isInteger(n) || n < 0 || n > 51) {
       return '<div class="pk '+cls+' back"></div>';
     }
     var si = Math.floor(n / 13);
     var ri = n % 13;
-    const suits = isComm ? ['♦','♣','♠','♥'] : ['♣','♠','♥','♦'];
+    const suits = ['♦','♥','♠','♣'];
     const rank = ['2','3','4','5','6','7','8','9','10','J','Q','K','A'][ri] || '?';
-    const suit = suits[si] || '?'; // defense-in-depth (comme cardName)
-    const red = (isComm ? (si===0||si===3) : (si>=2)) ? ' red' : '';
-    const spade2 = (isComm ? si===2 : si===1) ? ' spade' : '';
+    const suit = suits[si] || '?';
+    const red = (si < 2) ? ' red' : '';     // ♦ (0) et ♥ (1) sont rouges
+    const spade2 = (si === 2) ? ' spade' : ''; // ♠ (2)
     return '<div class="pk '+cls+red+spade2+'"><span class="c-rank">'+rank+'</span><span class="c-suit">'+suit+'</span></div>';
   }
 
