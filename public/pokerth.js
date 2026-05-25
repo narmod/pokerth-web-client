@@ -1175,6 +1175,8 @@ const App = (() => {
   let _amSpectator = false; // true when we joined via 'Regarder' / spectateGame() — disables actions, shows banner
   let _lobbyPlayerCount = 0; // running tally of players online; updated by PlayerListMessage + StatisticsMessage
   let _hasStatistics = false; // true once we've seen a StatisticsMessage; takes precedence over the PlayerList tally
+  let _lobbyPids = new Set(); // pids currently online in the lobby (driven by PlayerList add/remove events)
+  let _pendingNameRequests = new Set(); // pids we've already asked the server about, to avoid spamming PlayerInfoRequest
   let _autoCheckFold = false; // armed by the per-turn checkbox; auto-resets every HandStart
   let _lastConnectParams = null;
   // Track mode + name of last Init sent so we can detect 'rapid mode swap'
@@ -1347,12 +1349,32 @@ const App = (() => {
       // its value takes precedence — see _hasStatistics flag.
       case T.PlayerList: {
         // PlayerListMessage: playerId=1, notification=2 (0=new, 1=left)
+        const _pid_pl = Proto.u32(sub, 1);
         const notif = Proto.u32(sub, 2);
-        if (notif === 0)      _lobbyPlayerCount++;
-        else if (notif === 1) _lobbyPlayerCount = Math.max(0, _lobbyPlayerCount - 1);
+        if (notif === 0) {
+          _lobbyPlayerCount++;
+          _lobbyPids.add(_pid_pl);
+          // Fetch the player's name so the players-online panel can
+          // show something better than '#42'. Skip if we already
+          // know the name OR have already asked.
+          if (!players[_pid_pl] && !_pendingNameRequests.has(_pid_pl)) {
+            _pendingNameRequests.add(_pid_pl);
+            try {
+              const req = Proto.encode([[1,0,_pid_pl]]);
+              send(Proto.encode([[1,0,T.PlayerInfoRequest],[19,2,req]]));
+            } catch(e) {}
+          }
+        } else if (notif === 1) {
+          _lobbyPlayerCount = Math.max(0, _lobbyPlayerCount - 1);
+          _lobbyPids.delete(_pid_pl);
+          _pendingNameRequests.delete(_pid_pl);
+        }
         if (!_hasStatistics) {
           $('h-players').textContent = _lobbyPlayerCount + ' ' + t('playersOnline');
         }
+        // Refresh the panel if it's open.
+        var _pp = document.getElementById('players-panel');
+        if (_pp && _pp.style.display !== 'none' && typeof renderPlayersList === 'function') renderPlayersList();
         break;
       }
 
@@ -1378,9 +1400,13 @@ const App = (() => {
         const info = Proto.sub(sub, 2);
         const name = Proto.str(info, 1);
         if (name) players[pid] = name;
+        _pendingNameRequests.delete(pid); // got the reply, free for retry if needed
         // If the waiting panel is visible, update it so the new pseudo
         // appears in place of the temporary '#<pid>' placeholder.
         if (!_gameStarted && amInGame) renderWaitingPanel();
+        // Same idea for the lobby players panel.
+        var _pp2 = document.getElementById('players-panel');
+        if (_pp2 && _pp2.style.display !== 'none' && typeof renderPlayersList === 'function') renderPlayersList();
         break;
       }
 
@@ -3946,6 +3972,8 @@ function dismissWinner() {
       // of inheriting the previous session's tally.
       _lobbyPlayerCount = 0;
       _hasStatistics = false;
+      _lobbyPids.clear();
+      _pendingNameRequests.clear();
       show('s-connect');
     },
 
@@ -4247,6 +4275,17 @@ function dismissWinner() {
       var f = document.getElementById('create-form');
       if (f) { f.style.display = 'none'; f.classList.remove('open'); }
     },
+    getLobbyState() {
+      // Read-only snapshot of the bits the players-panel renderer
+      // needs. Returning a fresh object each time so the consumer
+      // can sort/filter freely without affecting our internal state.
+      return {
+        pids:    Array.from(_lobbyPids),
+        players: players,
+        myId:    myId,
+      };
+    },
+
     onRememberMe() {
       var cb = document.getElementById('remember-me');
       if (cb && !cb.checked) {
@@ -4255,6 +4294,35 @@ function dismissWinner() {
     },
   };
 })();
+
+// Bridge: window-scope getters so the players-panel renderer
+// (defined outside the IIFE) can read the IIFE-private state.
+// Defined right after the IIFE so the closures capture the latest
+// references. The renderer falls back to empty data if these
+// haven't been set up yet.
+window._readLobbyPids = function() {
+  // We can't access _lobbyPids directly from out here. Instead we
+  // proxy through App.getLobbyState() which the IIFE will expose.
+  if (typeof App !== 'undefined' && App.getLobbyState) {
+    var s = App.getLobbyState();
+    return s.pids || [];
+  }
+  return [];
+};
+window._readPlayers = function() {
+  if (typeof App !== 'undefined' && App.getLobbyState) {
+    var s = App.getLobbyState();
+    return s.players || {};
+  }
+  return {};
+};
+window._readMyId = function() {
+  if (typeof App !== 'undefined' && App.getLobbyState) {
+    var s = App.getLobbyState();
+    return s.myId || 0;
+  }
+  return 0;
+};
 
 
 // ── Game chat (mirrors lobby addChat) ──
@@ -4454,4 +4522,65 @@ function toggleLog() {
   if (btn) btn.style.background = isHidden ? 'rgba(200,168,74,0.2)' : '';
   if (btn) btn.style.borderColor = isHidden ? 'var(--gold-dim)' : '';
   if (btn) btn.style.color       = isHidden ? 'var(--gold)' : '';
+}
+
+// ── Players online panel ──
+// Wired to the #h-players pill in the lobby header. Toggles a
+// dropdown that lists every pid in _lobbyPids with its name (or
+// '#<pid>' if the PlayerInfoReply hasn't arrived yet).
+function togglePlayersPanel() {
+  var panel = document.getElementById('players-panel');
+  if (!panel) return;
+  var isHidden = panel.style.display === 'none';
+  if (isHidden) {
+    // Close sibling dropdowns so only one is open at a time.
+    ['lobby-chat-panel'].forEach(function(id) {
+      var el = document.getElementById(id);
+      if (el) el.style.display = 'none';
+    });
+    panel.style.display = '';
+    renderPlayersList();
+    // Focus the search input so the user can type right away.
+    var inp = document.getElementById('players-search-in');
+    if (inp) setTimeout(function(){ inp.focus(); }, 50);
+  } else {
+    panel.style.display = 'none';
+  }
+}
+
+function renderPlayersList() {
+  var body = document.getElementById('players-list-body');
+  var countEl = document.getElementById('players-panel-count');
+  if (!body) return;
+  // Build the list of {pid, name} from _lobbyPids (defined inside
+  // the IIFE; we read it via window-level references).
+  var pids = window._readLobbyPids ? window._readLobbyPids() : [];
+  var nameMap = window._readPlayers ? window._readPlayers() : {};
+  var myId = window._readMyId ? window._readMyId() : 0;
+  // Build display rows
+  var rows = pids.map(function(pid) {
+    return { pid: pid, name: nameMap[pid] || ('#' + pid), isMe: pid === myId };
+  });
+  // Filter by search input
+  var q = (document.getElementById('players-search-in') || {}).value || '';
+  q = q.toLowerCase().trim();
+  if (q) rows = rows.filter(function(r) { return r.name.toLowerCase().includes(q); });
+  // Sort: me first, then alphabetical
+  rows.sort(function(a, b) {
+    if (a.isMe && !b.isMe) return -1;
+    if (b.isMe && !a.isMe) return 1;
+    return a.name.localeCompare(b.name);
+  });
+  if (countEl) countEl.textContent = pids.length;
+  if (rows.length === 0) {
+    body.innerHTML = '<div class="pl-empty">' + (q ? '— ' : '—') + '</div>';
+    return;
+  }
+  body.innerHTML = rows.map(function(r) {
+    var esc = function(s) { return String(s).replace(/[<>&"]/g, function(c){return {'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;'}[c];}); };
+    return '<div class="pl-row' + (r.isMe ? ' pl-me' : '') + '">' +
+             '<span class="pl-name">' + esc(r.name) + '</span>' +
+             '<span class="pl-id">#' + r.pid + '</span>' +
+           '</div>';
+  }).join('');
 }
