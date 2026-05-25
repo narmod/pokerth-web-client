@@ -132,6 +132,30 @@ const LANG = {
     leaveQuit:'Quit',
     leaveCancel:'Cancel',
     chooseAvatar:'Choose an avatar',
+    modeUnauth:'Private server — Internet Guest \u2713',
+    modeGuest:'pokerth.net — Guest',
+    modeAuth:'pokerth.net — Registered account',
+    nickPlaceholder:'YourName',
+    quitTooltip:'Quit',
+    reconnectInProgress:'Reconnecting\u2026',
+    connectingPlayers:'Connecting {type} v{ver} \u2014 {n} player(s)\u2026',
+    connectedAsGuest:'Connected as guest \u201c{name}\u201d (ID {id})',
+    errBadCreds:'\u26a0 Invalid pokerth.net credentials (username or password).',
+    errNickTakenRetry:'Nickname already taken \u2014 retrying with \u201c{name}\u201d\u2026',
+    errGeneric:'Error: {code}',
+    joinedTableWaiting:'Joined table {gid}{admin} \u2014 waiting for start\u2026',
+    playerLeftTable:'{name} left the table',
+    youWereRemoved:'You were removed from the game.',
+    gameStarting:'Game is starting\u2026',
+    gameStartedWaitHand:'Game started! Waiting for the first hand\u2026',
+    modeWaiting:'Waiting',
+    modeInProgress:'In progress',
+    modeClosed:'Closed',
+    noTablesAvailable:'No tables available right now.',
+    proxyConnectedWait:'Proxy connected \u2014 waiting for PokerTH server\u2026',
+    errConnLost:'Connection lost. You can reconnect in a few seconds.',
+    autoTableFound:'\u26a1 Table found \u2014 joining #{n}',
+    autoNoTable:'\u26a1 No tables \u2014 creating one\u2026',
 },
   fr: {
     connect:'Se connecter', disconnect:'✕ Déconnecter', connecting:'Connexion en cours…',
@@ -251,6 +275,30 @@ const LANG = {
     leaveQuit:'Quitter',
     leaveCancel:'Annuler',
     chooseAvatar:'Choisir un avatar',
+    modeUnauth:'Serveur priv\u00e9 \u2014 Invit\u00e9 Internet \u2713',
+    modeGuest:'pokerth.net \u2014 Invit\u00e9',
+    modeAuth:'pokerth.net \u2014 Compte enregistr\u00e9',
+    nickPlaceholder:'VotrePr\u00e9nom',
+    quitTooltip:'Quitter',
+    reconnectInProgress:'Reconnexion en cours\u2026',
+    connectingPlayers:'Connexion {type} v{ver} \u2014 {n} joueur(s)\u2026',
+    connectedAsGuest:'Connect\u00e9 en tant qu\u2019invit\u00e9 \u00ab\u202f{name}\u202f\u00bb (ID {id})',
+    errBadCreds:'\u26a0 Identifiants pokerth.net invalides (utilisateur ou mot de passe).',
+    errNickTakenRetry:'Pseudo d\u00e9j\u00e0 pris \u2014 nouvel essai avec \u00ab\u202f{name}\u202f\u00bb\u2026',
+    errGeneric:'Erreur\u00a0: {code}',
+    joinedTableWaiting:'Rejoint la table {gid}{admin} \u2014 attente du d\u00e9marrage\u2026',
+    playerLeftTable:'{name} quitte la table',
+    youWereRemoved:'Vous avez \u00e9t\u00e9 retir\u00e9 de la partie.',
+    gameStarting:'Partie en cours de d\u00e9marrage\u2026',
+    gameStartedWaitHand:'Partie d\u00e9marr\u00e9e\u00a0! En attente de la premi\u00e8re main\u2026',
+    modeWaiting:'En attente',
+    modeInProgress:'En cours',
+    modeClosed:'Ferm\u00e9e',
+    noTablesAvailable:'Aucune table disponible actuellement.',
+    proxyConnectedWait:'Proxy connect\u00e9 \u2014 attente du serveur PokerTH\u2026',
+    errConnLost:'Connexion perdue. Vous pouvez vous reconnecter dans quelques secondes.',
+    autoTableFound:'\u26a1 Table trouv\u00e9e \u2014 rejoindre la #{n}',
+    autoNoTable:'\u26a1 Aucune table \u2014 cr\u00e9ation en cours\u2026',
 }
 };
 
@@ -276,6 +324,11 @@ function setLang(l) {
   });
   document.querySelectorAll('[data-i18n-title]').forEach(function(el) {
     el.title = t(el.getAttribute('data-i18n-title'));
+  });
+  // Same treatment for placeholder attributes — used by <input> elements
+  // like the nickname field. Added alongside data-i18n-title for symmetry.
+  document.querySelectorAll('[data-i18n-placeholder]').forEach(function(el) {
+    el.placeholder = t(el.getAttribute('data-i18n-placeholder'));
   });
   // Update select options
   var lm = document.getElementById('login-mode');
