@@ -165,7 +165,7 @@ const LANG = {
     disconnectDialogBody:'You will be returned to the login screen.',
     disconnectQuit:'Disconnect',
     disconnectTooltip:'Disconnect',
-    playersOnline:'players online',
+    playersOnline:'player(s)',
 },
   fr: {
     connect:'Se connecter', disconnect:'✕ Déconnecter', connecting:'Connexion en cours…',
@@ -318,7 +318,7 @@ const LANG = {
     disconnectDialogBody:'Vous reviendrez \u00e0 l\u2019\u00e9cran de connexion.',
     disconnectQuit:'Se d\u00e9connecter',
     disconnectTooltip:'Se d\u00e9connecter',
-    playersOnline:'joueurs en ligne',
+    playersOnline:'joueur(s)',
 }
 };
 
