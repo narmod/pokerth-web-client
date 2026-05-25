@@ -163,7 +163,7 @@ function selectAvatarPopup(emoji) {
     <button class="btn-sm btn-icon" id="fs-btn-lobby" onclick="toggleFullscreen()" title="Fullscreen">⛶</button>
     <button class="btn-sm btn-icon" id="lang-toggle-lobby" onclick="toggleLang()" title="Switch language">🇬🇧</button>
     <button class="btn-sm btn-icon" id="lobby-chat-btn" onclick="toggleLobbyChat()" title="Chat">💬</button>
-    <button class="btn-sm btn-icon" onclick="App.disconnect()" title="Disconnect" style="color:var(--red);border-color:rgba(192,57,43,0.3)">✕</button>
+    <button class="btn-sm btn-icon" onclick="App.confirmDisconnect()" title="Disconnect" data-i18n-title="disconnectTooltip" style="color:var(--red);border-color:rgba(192,57,43,0.3)">✕</button>
   </div>
 
   <!-- Lobby chat -->
@@ -440,6 +440,22 @@ function selectAvatarPopup(emoji) {
     <div class="ld-buttons">
       <button class="ld-btn ld-create" onclick="App.confirmQuickCreate()" data-i18n="quickCreateBtn">Create</button>
       <button class="ld-btn ld-cancel" onclick="App.cancelQuickCreate()"  data-i18n="leaveCancel">Cancel</button>
+    </div>
+  </div>
+</div>
+<!-- Disconnect confirmation dialog: shown when the user clicks ✕
+     from the lobby. Same gold style as the leave-game dialog,
+     but its 'Quit' equivalent disconnects from the proxy/server
+     entirely (return to login screen). Driven by
+     App.confirmDisconnect() / App.confirmDisconnectQuit() /
+     App.cancelDisconnect(). -->
+<div id="disconnect-dialog" style="display:none">
+  <div class="ld-card">
+    <div class="ld-title" data-i18n="disconnectDialogTitle">Disconnect?</div>
+    <div class="ld-body"  data-i18n="disconnectDialogBody">You will be returned to the login screen.</div>
+    <div class="ld-buttons">
+      <button class="ld-btn ld-quit"   onclick="App.confirmDisconnectQuit()" data-i18n="disconnectQuit">Disconnect</button>
+      <button class="ld-btn ld-cancel" onclick="App.cancelDisconnect()"      data-i18n="leaveCancel">Cancel</button>
     </div>
   </div>
 </div>
