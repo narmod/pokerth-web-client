@@ -928,6 +928,7 @@ const MSG = (() => {
     26:27, 27:28, 28:29, 29:30,               // GamePlayer*
     36:37, 37:38, 38:39,                       // StartEvent, StartEventAck, GameStartInitial
     40:41, 41:42, 42:43,                       // HandStart, PlayersTurn, MyActionRequest
+    43:44,                                     // YourActionRejected
     44:45,                                     // PlayersActionDone
     45:46, 46:47, 47:48,                       // DealFlop, DealTurn, DealRiver
     48:49,                                     // AllInShowCards
@@ -949,6 +950,7 @@ const MSG = (() => {
     GamePlayerJoined:26, GamePlayerLeft:27, GameAdminChanged:28, RemovedFromGame:29,
     StartEvent:36, StartEventAck:37, GameStartInitial:38,
     HandStart:40, PlayersTurn:41, MyActionRequest:42,
+    YourActionRejected:43,
     PlayersActionDone:44, DealFlop:45, DealTurn:46, DealRiver:47,
     AllInShowCards:48, EndOfHandShow:49, EndOfHandHide:50, EndOfGame:53,
     Statistics:62, ChatRequest:63, Chat:64, ChatReject:65,
@@ -2189,6 +2191,42 @@ const App = (() => {
         break;
       }
 
+      case T.YourActionRejected: {
+        // YourActionRejectedMessage: gameId=1, gameState=2, yourAction=3,
+        //   yourRelativeBet=4, rejectionReason=5
+        // Sent by the server when our MyActionRequest is invalid (game state
+        // drift, no longer our turn, or action not allowed). Without this
+        // handler the UI used to hang on "Action envoyée" and the server
+        // would silently time-out our turn → counted as Fold.
+        // Most common trigger: 4-player all-in cascades where local
+        // gameState lags the server's by one round.
+        const rejGameState = Proto.u32(sub, 2);
+        const rejAction    = Proto.u32(sub, 3);
+        const rejBet       = Proto.u32(sub, 4);
+        const reason       = Proto.u32(sub, 5);
+        const actNames     = ['','Fold','Check','Call','Bet','Raise','All-in'];
+        const reasonLabels = {
+          1: _lang === 'fr' ? 'état de jeu invalide (désynchro)' : 'invalid game state (out-of-sync)',
+          2: _lang === 'fr' ? 'plus votre tour'                 : 'no longer your turn',
+          3: _lang === 'fr' ? 'action non autorisée'            : 'action not allowed',
+        };
+        const reasonStr = reasonLabels[reason] || ('code ' + reason);
+        const actStr    = actNames[rejAction] || ('?' + rejAction);
+        logAction('⚠ ' + actStr + (rejBet ? ' ' + rejBet : '') + ' — ' + reasonStr);
+        addGameChat(null, '⚠ ' + (_lang === 'fr' ? 'Action rejetée' : 'Action rejected') +
+                          ' (' + actStr + ') — ' + reasonStr, 'sys');
+        // If we're still the active player according to the local state,
+        // the server may give us a second chance — re-render the action
+        // buttons so the user can retry. The local turn timer was already
+        // stopped by doAction; restart it so the user has the full delay
+        // again instead of a stale countdown.
+        if (turnPid === myId && !_amSpectator) {
+          renderMyTurnActions();
+          startTurnTimer();
+        }
+        break;
+      }
+
       case T.EndOfGame: {
         const winnerPid = Proto.u32(sub, 2);
         addChat(null, 'Partie terminée !', 'sys');
@@ -3412,6 +3450,21 @@ const App = (() => {
   // ─── Patch App with action methods ───
 
   function doAction(action, bet) {
+    // Guard contre les envois sur un WebSocket fermé/en cours de fermeture.
+    // Sur mobile, une micro-coupure réseau (transition Wifi/4G) peut fermer
+    // le WS sans qu'on s'en rende compte avant la prochaine action. send()
+    // est silencieux si le WS n'est pas OPEN — on évitait donc d'envoyer
+    // sans le savoir, puis on stoppait le timer et l'UI affichait
+    // "Action envoyée" alors que rien n'avait quitté la machine.
+    if (!ws || ws.readyState !== WebSocket.OPEN) {
+      $('g-actions').innerHTML = '<div class="waiting-msg" style="color:#e74c3c">⚠ '
+        + (_lang === 'fr' ? 'Connexion perdue — action non envoyée'
+                          : 'Connection lost — action not sent')
+        + '</div>';
+      logAction('⚠ ' + (_lang === 'fr' ? 'Envoi impossible (WS fermé)'
+                                       : 'Send failed (WS closed)'));
+      return;
+    }
     setMyTurnActive(false);
     send(MSG.buildMyAction(gId, handNum, gameState, action, bet));
     $('g-actions').innerHTML = '<div class="waiting-msg">' + t('actionSent') + '</div>';
