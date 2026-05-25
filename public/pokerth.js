@@ -768,8 +768,38 @@ document.addEventListener("DOMContentLoaded", function() {
     sbtn.style.color = 'rgba(255,255,255,0.35)';
     sbtn.title = 'Unmute';
   }
+  /**
+   * Returns a stable Guest-XXXXX name persisted in localStorage.
+   *
+   * Without this, each tab / reload would generate a different random
+   * Guest name. When several tabs of the same browser hit the server
+   * within a few seconds (or worse: a desktop tab + a phone tab + a
+   * PWA), the PokerTH server sees the same IP sending different Init
+   * messages back-to-back and flags it as a brute-force attempt,
+   * returning initBlocked for ~1 minute.
+   *
+   * By persisting one name per browser, all simultaneous sessions
+   * from the same machine identify themselves with the same string,
+   * which the server doesn't flag.
+   *
+   * Falls through to a fresh random name if localStorage is unavailable
+   * (private mode under some browsers, disabled storage policy, etc.).
+   */
+  window.getOrCreateGuestName = function() {
+    try {
+      var k = 'pth_guest_name';
+      var existing = localStorage.getItem(k);
+      if (existing && /^Guest\d{5}$/.test(existing)) return existing;
+      var fresh = 'Guest' + Math.floor(10000 + Math.random()*90000);
+      localStorage.setItem(k, fresh);
+      return fresh;
+    } catch (e) {
+      return 'Guest' + Math.floor(10000 + Math.random()*90000);
+    }
+  };
+
   var n = document.getElementById("nick");
-  if (!n.value) n.value = "Guest" + Math.floor(10000 + Math.random()*90000);
+  if (!n.value) n.value = window.getOrCreateGuestName();
 
   // Restaurer le serveur préféré sauvegardé
   try {
@@ -3376,7 +3406,7 @@ function dismissWinner() {
         setStatus(t('chatAvailPrivate'));
       } else if (mode === 'guest') {
         $('nick-label').textContent = t('enterNickGuest');
-        $('nick').placeholder = 'Guest' + String(Math.floor(10000 + Math.random()*90000));
+        $('nick').placeholder = (window.getOrCreateGuestName && window.getOrCreateGuestName()) || ('Guest' + String(Math.floor(10000 + Math.random()*90000)));
         $('use-tls').checked = false;
         if (proxyInput) proxyInput.value = proto + '//' + (autoHost||'localhost') + ':' + port;
         if (hostInput) hostInput.value = 'pokerth.net';
@@ -3531,7 +3561,11 @@ function dismissWinner() {
       myName          = $('nick').value.trim();
 
       if (!myName && loginMode === 'guest') {
-        myName = 'Guest' + String(Math.floor(10000 + Math.random()*90000));
+        // Persistent Guest name: re-use the same identifier across tabs
+        // and reloads so the server doesn't see different pseudos flooding
+        // from the same IP (a key trigger of the initBlocked behaviour).
+        myName = (window.getOrCreateGuestName && window.getOrCreateGuestName())
+                 || ('Guest' + String(Math.floor(10000 + Math.random()*90000)));
         $('nick').value = myName;
       }
       if (!myName) { setStatus(t('enterNick'), 'err'); return; }
