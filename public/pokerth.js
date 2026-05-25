@@ -1159,6 +1159,7 @@ const App = (() => {
   let amGameAdmin = false;  // true if we created this game
   let _gameStarted = false; // flips true on GameStartInitial; freezes waiting-panel updates
   let _seatsFrozen = false; // one-way latch: true once the original seating order is set, never unset until leave/closeTable
+  let _amSpectator = false; // true when we joined via 'Regarder' / spectateGame() — disables actions, shows banner
   let _autoCheckFold = false; // armed by the per-turn checkbox; auto-resets every HandStart
   let _lastConnectParams = null;
   // Track mode + name of last Init sent so we can detect 'rapid mode swap'
@@ -1489,6 +1490,26 @@ const App = (() => {
         if (asbm) asbm.style.display = amGameAdmin ? '' : 'none';
         addChat(null, 'Rejoint la table ' + gId + (isAdmin ? ' (admin)' : '') + ' — attente du démarrage...', 'sys');
         show('s-game');
+        // ── Spectator UI mode ──
+        // If we joined via spectateGame(), flip the banner up top and put
+        // a 'You are watching' message in place of the action bar. Player
+        // join paths leave _amSpectator untouched (still false) so this
+        // branch is skipped and the regular waiting panel logic applies.
+        var _specBan = document.getElementById('g-spectator-banner');
+        if (_amSpectator) {
+          if (_specBan) _specBan.style.display = '';
+          // Replace action area with a static spectator message.
+          // renderGameWaiting() targets #g-actions, perfect for this.
+          renderGameWaiting(
+            '<div class="spectator-message">' +
+              '<span class="sm-icon">👁</span>' +
+              t('spectatorActionMsg') +
+            '</div>',
+            true
+          );
+        } else {
+          if (_specBan) _specBan.style.display = 'none';
+        }
         document.body.classList.add('in-game');
         // Diffuser l'avatar aux autres joueurs via le proxy
         setTimeout(function() {
@@ -1603,7 +1624,7 @@ const App = (() => {
       case T.RemovedFromGame: {
         addChat(null, 'Vous avez été retiré de la partie.', 'sys');
         amInGame = false;
-        gId = 0; seats = []; seatData = {}; _playerAvatars = {}; _seatsFrozen = false;
+        gId = 0; seats = []; seatData = {}; _playerAvatars = {}; _seatsFrozen = false; _amSpectator = false; var _sb1 = document.getElementById('g-spectator-banner'); if (_sb1) _sb1.style.display = 'none';
         show('s-lobby');
         break;
       }
@@ -3196,6 +3217,20 @@ const App = (() => {
   };
 
   function renderMyTurnActions() {
+    // Defensive: never render action buttons in spectator mode. The
+    // server normally won't send PlayersTurn to spectators, but we
+    // guard against it anyway so a stray message can't accidentally
+    // give the user an action UI they shouldn't have.
+    if (_amSpectator) {
+      renderGameWaiting(
+        '<div class="spectator-message">' +
+          '<span class="sm-icon">👁</span>' +
+          t('spectatorActionMsg') +
+        '</div>',
+        true
+      );
+      return;
+    }
     const myMoney = (seatData[myId] || {}).money || 0;
     const myBet   = (seatData[myId] || {}).bet || 0;
     const toCall  = Math.max(0, highestBet - myBet);
@@ -3792,7 +3827,7 @@ function dismissWinner() {
     closeTable() {
       // Admin closes table: send leave, server closes game for all
       if (ws && gId) { try { send(MSG.buildLeaveGame(gId)); } catch(e) {} }
-      amInGame = false; amGameAdmin = false; _gameStarted = false; _seatsFrozen = false;
+      amInGame = false; amGameAdmin = false; _gameStarted = false; _seatsFrozen = false; _amSpectator = false; var _sb2 = document.getElementById('g-spectator-banner'); if (_sb2) _sb2.style.display = 'none';
       gId = 0; seats = []; seatData = {};
       var _ego = document.getElementById('g-endgame-overlay');
       if (_ego) _ego.style.display = 'none';
@@ -3839,7 +3874,7 @@ function dismissWinner() {
     leaveGame() {
       // Send proper leave request then stay connected (return to lobby)
       if (ws && gId) { try { send(MSG.buildLeaveGame(gId)); } catch(e) {} }
-      amInGame = false; amGameAdmin = false; _gameStarted = false; _seatsFrozen = false;
+      amInGame = false; amGameAdmin = false; _gameStarted = false; _seatsFrozen = false; _amSpectator = false; var _sb2 = document.getElementById('g-spectator-banner'); if (_sb2) _sb2.style.display = 'none';
       gId = 0; seats = []; seatData = {};
       var _ego = document.getElementById('g-endgame-overlay');
       if (_ego) _ego.style.display = 'none';
@@ -3896,6 +3931,10 @@ function dismissWinner() {
     spectateGame(gameId) {
       var g = games[gameId];
       if (!g) return;
+      // Remember that we joined as spectator. Used by JoinGameAck to flip
+      // the UI into 'watch only' mode (banner up top, action area replaced
+      // with a message instead of fold/call buttons).
+      _amSpectator = true;
       addChat(null, '👁 ' + (_lang==='fr'?'Observation de la table ':'Spectating table ') + (g.name||('#'+gameId)) + '…', 'sys');
       // JoinExistingGame avec flag spectateur (field 3 = spectator dans proto PokerTH)
       var msg = Proto.encode([[1,0,gameId],[3,0,1]]);
