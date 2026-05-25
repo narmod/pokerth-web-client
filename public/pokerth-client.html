@@ -170,20 +170,57 @@ function selectAvatarPopup(emoji) {
        #h-players pill. Same dropdown chrome as chat/log so it feels
        consistent. Lists every pid we know about in the lobby with
        its real name (looked up from players{}). -->
-  <div id="players-panel" style="display:none;flex-direction:column;max-height:min(240px,32dvh)">
+  <div id="players-panel" style="display:none;flex-direction:column">
     <div class="g-chat-panel-header">
       <span style="font-size:0.65rem;color:var(--gold-dim);letter-spacing:0.15em;text-transform:uppercase">
         👥 <span data-i18n="playersOnlineTitle">Players online</span>
         — <span id="players-panel-count">0</span>
       </span>
-      <button onclick="togglePlayersPanel()" style="background:none;border:none;color:var(--text);cursor:pointer;font-size:0.85rem;padding:0 4px">X</button>
+      <button onclick="togglePlayersPanel()" style="background:none;border:none;color:var(--text);cursor:pointer;font-size:0.85rem;padding:0 4px">✕</button>
     </div>
     <div class="players-search">
       <input id="players-search-in" placeholder="Search…" data-i18n-placeholder="playersSearchPlaceholder"
              oninput="renderPlayersList()" />
     </div>
-    <div class="players-list" id="players-list-body" style="flex:1;min-height:50px;overflow-y:auto;background:rgba(4,10,5,0.97)"></div>
+    <div class="players-list" id="players-list-body"></div>
   </div>
+
+  <!-- Lobby chat -->
+  <div id="lobby-chat-panel" style="display:none;flex-direction:column;max-height:min(200px,28dvh)">
+    <div class="g-chat-panel-header"><span style="font-size:0.65rem;color:var(--gold-dim);letter-spacing:0.15em;text-transform:uppercase">Chat</span><button onclick="toggleLobbyChat()" style="background:none;border:none;color:var(--text);cursor:pointer;font-size:0.85rem;padding:0 4px">X</button></div>
+    <div class="chat-msgs" id="chat" style="flex:1;min-height:50px;max-height:120px;overflow-y:auto;padding:5px 10px;background:rgba(4,10,5,0.97)"></div>
+    <div class="chat-input" style="border-top:1px solid var(--border);flex-shrink:0">
+      <input id="chat-in" placeholder="Message…" onkeydown="if(event.key==='Enter') App.sendChat()">
+      <button class="chat-send" onclick="App.sendChat()">▶</button>
+    </div>
+  </div>
+
+  <!-- Create form -->
+  <div id="create-form" style="display:none;background:rgba(8,18,10,0.98);border-bottom:1px solid var(--gold-dim);padding:12px 14px;flex-shrink:0;z-index:10">
+    <div class="create-fields">
+      <div class="cf"><label data-i18n="tableName">Table name</label><input id="cf-name" placeholder="Table..."></div>
+      <div class="cf cf-sm"><label data-i18n="maxPlayers">Max players</label><input id="cf-players" type="number" min="2" max="10" value="5"></div>
+      <div class="cf cf-sm"><label data-i18n="smallBlind">Small blind</label><input id="cf-blind" type="number" min="1" value="10"></div>
+      <div class="cf cf-sm"><label data-i18n="stack">Stack</label><input id="cf-stack" type="number" min="100" value="3000"></div>
+      <div class="cf cf-sm"><label data-i18n="timeout">Timeout (s)</label><input id="cf-timeout" type="number" min="5" max="120" value="15"></div>
+    </div>
+    <div style="margin:8px 0 2px">
+      <button type="button" onclick="App.toggleMoreOptions()" id="cf-more-btn" style="background:none;border:none;color:var(--gold-dim);cursor:pointer;font-size:0.64rem;letter-spacing:0.12em;text-transform:uppercase;padding:2px 0;display:flex;align-items:center;gap:5px">
+        <span id="cf-more-arrow">&#9658;</span> <span id="cf-more-label" data-i18n="moreOptions">More options</span>
+      </button>
+    </div>
+    <div id="cf-more-opts" style="display:none">
+      <div class="create-fields">
+        <div class="cf cf-sm"><label data-i18n="raiseEvery">Raise every</label><select id="cf-raise-mode" style="background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:2px;color:var(--cream);padding:4px 6px;font-size:0.78rem;outline:none"><option value="1" data-i18n-opt="nHands">N hands</option><option value="2" data-i18n-opt="nMinutes">N minutes</option></select></div>
+        <div class="cf cf-sm"><label data-i18n="raiseN">N</label><input id="cf-raise-every" type="number" min="1" max="100" value="7"></div>
+        <div class="cf cf-sm"><label data-i18n="blindRaise">Blind raise</label><select id="cf-end-raise" onchange="var r=document.getElementById('cf-end-raise-val-row');if(r)r.style.display=this.value=='2'?'':' none'" style="background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:2px;color:var(--cream);padding:4px 6px;font-size:0.78rem;outline:none"><option value="1" data-i18n-opt="blindDouble">Double</option><option value="2" data-i18n-opt="blindToValue">To value</option><option value="3" data-i18n-opt="blindKeepLast">Keep last</option></select></div>
+        <div class="cf cf-sm" id="cf-end-raise-val-row" style="display:none"><label data-i18n="targetBlind">Target blind</label><input id="cf-end-raise-val" type="number" min="1" value="200"></div>
+        <div class="cf cf-sm"><label data-i18n="speed">Speed (1-10)</label><input id="cf-gui-speed" type="number" min="1" max="10" value="5"></div>
+        <div class="cf cf-sm"><label data-i18n="delayHands">Delay (hands)</label><input id="cf-delay" type="number" min="0" max="20" value="7"></div>
+        <div class="cf cf-sm"><label data-i18n="gameType">Game type</label><select id="cf-game-type" style="background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:2px;color:var(--cream);padding:4px 6px;font-size:0.78rem;outline:none"><option value="1" data-i18n-opt="gameNormal">Normal</option><option value="2" data-i18n-opt="gameRegistered">Registered only</option><option value="3" data-i18n-opt="gameInvite">Invite only</option><option value="4" data-i18n-opt="gameRanking">Ranking</option></select></div>
+        <div class="cf cf-sm"><label data-i18n="allowSpectators">Spectators</label><select id="cf-allow-spectators" style="background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:2px;color:var(--cream);padding:4px 6px;font-size:0.78rem;outline:none"><option value="1" data-i18n-opt="allowOn">Allowed</option><option value="0" data-i18n-opt="allowOff">Blocked</option></select></div>
+      </div>
+    </div>
     <!-- Password -->
     <div style="margin-top:8px">
       <label class="tls-row" style="cursor:pointer;font-size:0.72rem;color:var(--text);gap:8px">
