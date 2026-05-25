@@ -3387,9 +3387,24 @@ const App = (() => {
       var oddsP = Math.round(toCall / (pot + toCall) * 100);
       potOdds = ' <span style="font-size:0.7em;opacity:0.8">(' + oddsP + '%)</span>';
     }
-    const callLabel = canCheck ? 'Check' : ('Call <b>' + toCall + '</b>' + potOdds);
-    const callAction = canCheck ? 'App.doAction(2,0)' : ('App.doAction(3,' + toCall + ')');
-    const callClass  = canCheck ? 'btn-check' : 'btn-call';
+    // Si toCall >= myMoney, le call consommerait tout le stack — c'est
+    // un all-in implicite. On route vers action=6 (All-in) au lieu de
+    // action=3 (Call), sinon le serveur rejette (montant > stack).
+    // Le label affiche le montant disponible avec un indicateur "(All-In)".
+    let callLabel, callAction, callClass;
+    if (canCheck) {
+      callLabel  = 'Check';
+      callAction = 'App.doAction(2,0)';
+      callClass  = 'btn-check';
+    } else if (toCall >= myMoney) {
+      callLabel  = 'Call <b>' + myMoney + '</b> <span style="font-size:0.75em;opacity:0.85">(' + t('allin') + ')</span>';
+      callAction = 'App.doAction(6,' + myMoney + ')';
+      callClass  = 'btn-call';
+    } else {
+      callLabel  = 'Call <b>' + toCall + '</b>' + potOdds;
+      callAction = 'App.doAction(3,' + toCall + ')';
+      callClass  = 'btn-call';
+    }
     const raiseLabel = highestBet > 0 ? t('raise') : t('bet');
 
     // Peut relancer : doit avoir plus que le montant du call ET >= mise min
@@ -3471,8 +3486,27 @@ const App = (() => {
     stopTurnTimer();
   }
   function doRaise() {
-    const amt = parseInt((document.getElementById('raise-amt')||{}).value) || 0;
-    doAction(highestBet > 0 ? 5 : 4, amt);
+    // Validation préventive du montant avant envoi : sans ce clamp, un
+    // input édité hors-bornes (valeur < minBet, > stack, vide ou non
+    // numérique) provoquait un rejet serveur YourActionRejected. Les
+    // attributs HTML min/max ne sont qu'indicatifs et ne bloquent pas
+    // la soumission programmatique.
+    const myMoney = (seatData[myId] || {}).money || 0;
+    const myBet   = (seatData[myId] || {}).bet   || 0;
+    const minBet  = minRaise > 0
+      ? minRaise
+      : Math.max(highestBet > 0 ? highestBet : smallBlind * 2, smallBlind * 2);
+    let amt = parseInt((document.getElementById('raise-amt')||{}).value, 10);
+    if (!Number.isFinite(amt) || amt <= 0) amt = minBet;
+    // Clamp dans [minBet, myMoney]. Si le résultat atteint le stack,
+    // on bascule explicitement en All-in (action=6) — sémantiquement
+    // plus juste et évite tout doute sur l'interprétation serveur.
+    amt = Math.max(minBet, Math.min(amt, myMoney));
+    if (amt >= myMoney) {
+      doAction(6, myMoney);
+    } else {
+      doAction(highestBet > 0 ? 5 : 4, amt);
+    }
   }
 
   // ── Winner overlay ──
