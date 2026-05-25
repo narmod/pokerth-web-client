@@ -158,12 +158,31 @@ function selectAvatarPopup(emoji) {
     <div class="header-brand"><span>♠</span> POKERTH</div>
     <div class="header-pills">
       <span class="pill" id="h-nick">—</span>
-      <span class="pill" id="h-players">—</span>
+      <span class="pill" id="h-players" onclick="togglePlayersPanel()" style="cursor:pointer">—</span>
     </div>
     <button class="btn-sm btn-icon" id="fs-btn-lobby" onclick="toggleFullscreen()" title="Fullscreen">⛶</button>
     <button class="btn-sm btn-icon" id="lang-toggle-lobby" onclick="toggleLang()" title="Switch language">🇬🇧</button>
     <button class="btn-sm btn-icon" id="lobby-chat-btn" onclick="toggleLobbyChat()" title="Chat">💬</button>
     <button class="btn-sm btn-icon" onclick="App.confirmDisconnect()" title="Disconnect" data-i18n-title="disconnectTooltip" style="color:var(--red);border-color:rgba(192,57,43,0.3)">✕</button>
+  </div>
+
+  <!-- Players-online dropdown panel: shows when the user clicks the
+       #h-players pill. Same dropdown chrome as chat/log so it feels
+       consistent. Lists every pid we know about in the lobby with
+       its real name (looked up from players{}). -->
+  <div id="players-panel" style="display:none;flex-direction:column">
+    <div class="g-chat-panel-header">
+      <span style="font-size:0.65rem;color:var(--gold-dim);letter-spacing:0.15em;text-transform:uppercase">
+        👥 <span data-i18n="playersOnlineTitle">Players online</span>
+        — <span id="players-panel-count">0</span>
+      </span>
+      <button onclick="togglePlayersPanel()" style="background:none;border:none;color:var(--text);cursor:pointer;font-size:0.85rem;padding:0 4px">✕</button>
+    </div>
+    <div class="players-search">
+      <input id="players-search-in" placeholder="Search…" data-i18n-placeholder="playersSearchPlaceholder"
+             oninput="renderPlayersList()" />
+    </div>
+    <div class="players-list" id="players-list-body"></div>
   </div>
 
   <!-- Lobby chat -->
