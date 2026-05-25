@@ -3877,6 +3877,29 @@ function dismissWinner() {
       }, delay);
     },
 
+    confirmDisconnect() {
+      // Public entry point for the lobby ✕ button. Opens a small
+      // confirmation modal — clicking 'Disconnect' then routes to the
+      // existing disconnect() flow; clicking 'Cancel' just closes the
+      // modal and leaves the user in the lobby.
+      var dd = document.getElementById('disconnect-dialog');
+      if (dd) dd.style.display = 'flex';
+    },
+
+    confirmDisconnectQuit() {
+      // Confirmed — hide the modal and disconnect normally. The user
+      // lands on the login screen via the ws.onclose handler.
+      var dd = document.getElementById('disconnect-dialog');
+      if (dd) dd.style.display = 'none';
+      this.disconnect();
+    },
+
+    cancelDisconnect() {
+      // Cancelled — just dismiss the modal. The connection stays open.
+      var dd = document.getElementById('disconnect-dialog');
+      if (dd) dd.style.display = 'none';
+    },
+
     disconnect() {
       _intentionalDisconnect = true;
       _wasAuthenticated = false;
