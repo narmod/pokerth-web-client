@@ -100,9 +100,9 @@ function selectAvatarPopup(emoji) {
       <div class="sel-wrap">
         <select id="login-mode" onchange="App.onLoginModeChange()">
           <option value="lan">LAN (pseudo libre)</option>
-          <option value="unauth" selected>Serveur privé — Invité Internet ✓</option>
-          <option value="guest">pokerth.net — Invité</option>
-          <option value="auth">pokerth.net — Compte enregistré</option>
+          <option value="unauth" selected data-i18n="modeUnauth">Private server — Internet Guest ✓</option>
+          <option value="guest" data-i18n="modeGuest">pokerth.net — Guest</option>
+          <option value="auth" data-i18n="modeAuth">pokerth.net — Registered account</option>
         </select>
         <span class="sel-arr">▾</span>
       </div>
@@ -111,7 +111,7 @@ function selectAvatarPopup(emoji) {
     <div class="f" id="f-nick">
       <label id="nick-label">Nickname</label>
       <div style="display:flex;gap:8px;align-items:center">
-        <input id="nick" value="" maxlength="64" placeholder="VotrePrenom"
+        <input id="nick" value="" maxlength="64" placeholder="YourName" data-i18n-placeholder="nickPlaceholder"
                onkeydown="if(event.key==='Enter') App.connect()" style="flex:1">
         <button type="button" id="av-trigger" onclick="toggleAvatarPopup()" title="Choose an avatar" data-i18n-title="chooseAvatar"
                 style="width:42px;height:42px;font-size:1.5rem;background:rgba(255,255,255,0.06);border:1px solid var(--border);border-radius:4px;cursor:pointer;flex-shrink:0;transition:border-color 0.2s">🎭</button>
@@ -261,7 +261,7 @@ function selectAvatarPopup(emoji) {
     <button class="btn-sm" id="admin-start-btn" onclick="App.startWithBots()" style="display:none;color:var(--green);border-color:rgba(39,174,96,0.4)" title="Start with bots">▶ Bots</button>
     <button class="btn-sm" id="admin-close-btn" onclick="App.closeTable()" style="display:none;color:#e67e22;border-color:rgba(230,126,34,0.4)" title="Close table">🔒 Close</button>
     <button class="btn-sm btn-icon" id="g-overflow-btn" onclick="toggleHeaderOverflow(event)" title="Plus">•••</button>
-    <button class="btn-sm btn-icon" onclick="App.confirmLeaveGame()" title="Quitter" style="color:var(--red);border-color:rgba(192,57,43,0.3)">✕</button>
+    <button class="btn-sm btn-icon" onclick="App.confirmLeaveGame()" title="Quit" data-i18n-title="quitTooltip" style="color:var(--red);border-color:rgba(192,57,43,0.3)">✕</button>
     <div id="g-overflow-menu">
       <button class="btn-sm" onclick="toggleFullscreen();closeHeaderOverflow()">⛶ Fullscreen</button>
       <button class="btn-sm" id="lang-toggle-game-mob" onclick="toggleLang();closeHeaderOverflow()" style="font-size:0.85rem">🇬🇧 Langue</button>
@@ -298,7 +298,7 @@ function selectAvatarPopup(emoji) {
   <!-- ══ RECONNECT BANNER ══ -->
   <div id="reconnect-banner">
     <div class="rc-dot"></div>
-    <span id="reconnect-msg">Reconnexion en cours...</span>
+    <span id="reconnect-msg" data-i18n="reconnectInProgress">Reconnecting…</span>
   </div>
 
   <!-- ══ HANDS HELP OVERLAY ══ -->
