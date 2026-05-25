@@ -1183,6 +1183,8 @@ const App = (() => {
   let _gameStarted = false; // flips true on GameStartInitial; freezes waiting-panel updates
   let _seatsFrozen = false; // one-way latch: true once the original seating order is set, never unset until leave/closeTable
   let _amSpectator = false; // true when we joined via 'Regarder' / spectateGame() — disables actions, shows banner
+  let _pendingRejoin = null; // {gameId} — set by App.resumeGame(), consumed at next InitAck
+  let _suppressConnectScreen = false; // briefly true during a Resume reconnect to keep the lobby visible
   let _autoCheckFold = false; // armed by the per-turn checkbox; auto-resets every HandStart
   let _lastConnectParams = null;
   // Track mode + name of last Init sent so we can detect 'rapid mode swap'
@@ -1296,6 +1298,33 @@ const App = (() => {
         _reconnectAttempts = 0;
         myId = Proto.u32(sub, 2);
         $('h-nick').textContent = '♠ ' + myName;
+
+        // ── REJOIN AUTO-DISPATCH ──
+        // If the connection was kicked off by App.resumeGame(), we have
+        // a gameId waiting to be rejoined. Send RejoinExistingGame
+        // immediately instead of showing the lobby. The server will
+        // reply with JoinGameAck + GameStartRejoin, which navigates
+        // to s-game. We clear the flag here so the handler is one-shot.
+        if (_pendingRejoin && _pendingRejoin.gameId) {
+          var rj = _pendingRejoin;
+          _pendingRejoin = null;
+          _suppressConnectScreen = false;
+          _intentionalDisconnect = false;
+          addChat(null, '🔄 ' + (t('rejoinSent') || 'Rejoining…'), 'sys');
+          try {
+            send(MSG.buildRejoinGame(rj.gameId));
+          } catch (e) {
+            // If the send fails (very unlikely — ws was just opened),
+            // fall back to the lobby so the user can try Resume again
+            // or quit cleanly.
+            show('s-lobby');
+          }
+          // Do NOT show s-lobby here — wait for GameStartRejoin to
+          // flip us to s-game. The InitMessage's standard lobby
+          // transition is intentionally skipped.
+          break;
+        }
+        // Standard lobby transition for a regular Connect.
         show('s-lobby');
         // Demander la permission pour les notifications
         if ('Notification' in window && Notification.permission === 'default') {
@@ -1586,10 +1615,18 @@ const App = (() => {
       case T.JoinGameFailed: {
         // If this failure was a rejoin attempt (reason 11), drop the
         // paused-game stash so the user isn't repeatedly told to
-        // 'resume' a seat that no longer exists.
+        // 'resume' a seat that no longer exists. Also make sure we
+        // are actually on the lobby screen — a failed Resume could
+        // otherwise leave the user on an empty s-game canvas.
         try {
           var _r = Proto.u32(sub, 2);
-          if (_r === 11) localStorage.removeItem('pth_pause');
+          if (_r === 11) {
+            localStorage.removeItem('pth_pause');
+            var _rrb = document.getElementById('resume-banner');
+            if (_rrb) _rrb.style.display = 'none';
+            show('s-lobby');
+            addChat(null, '⚠ ' + (t('rejoinFailedMsg') || 'Rejoin failed.'), 'sys');
+          }
         } catch(e) {}
         const failedGameId = Proto.u32(sub, 1);
         const failCode = Proto.u32(sub, 2);
@@ -1782,6 +1819,13 @@ const App = (() => {
       }
 
       case T.GameStartRejoin: {
+        // Switch to the game screen. JoinGameAck (if it comes BEFORE
+        // this — typical server order) already did show('s-game'), but
+        // belt-and-braces: a Resume from lobby may not always emit
+        // JoinGameAck first, so we ensure the transition here too.
+        amInGame = true;
+        show('s-game');
+        document.body.classList.add('in-game');
         // GameStartRejoinMessage: sent by the server when the user has
         // rejoined a game-in-progress via RejoinExistingGameMessage. Carries
         // everything we need to restore the table state:
@@ -3890,6 +3934,12 @@ function dismissWinner() {
         clearTimeout(window._reconnectTimer);
         _hideBanner();
         _wasAuthenticated = false;
+        // During a Resume reconnect we briefly close+reopen the WS.
+        // Bouncing to s-connect mid-flow would flash the login screen,
+        // confusing the user. Skip the redirect while the flag is set.
+        if (_suppressConnectScreen) {
+          return;
+        }
         show('s-connect');
         // Reconnexion automatique désactivée pour éviter le blocage IP
         // L'utilisateur peut se reconnecter manuellement après 8 secondes
@@ -4072,24 +4122,68 @@ function dismissWinner() {
     },
 
     resumeGame() {
-      // User clicked 'Reprendre' in the lobby. Read the stashed gameId
-      // and send RejoinExistingGameMessage. The server will reply with
-      // JoinGameAck + GameStartRejoin (or JoinGameFailed reason 11).
+      // User clicked 'Reprendre' in the lobby. The PokerTH protocol
+      // requires a full reconnect cycle for this to work: send LeaveGame
+      // (or simply drop the WebSocket), reconnect via Init, then send
+      // RejoinExistingGame against the same gameId. The server keeps
+      // the seat allocated for a short timeout window after disconnect
+      // and replies with JoinGameAck + GameStartRejoin (full state
+      // replay) — or JoinGameFailed reason=11 if the seat already
+      // timed out.
+      //
+      // We orchestrate that here automatically:
+      //   1. Read the stashed gameId from localStorage
+      //   2. Set _pendingRejoin = {gameId} as a 'flag' for the
+      //      InitAck handler downstream
+      //   3. Force-close the current WebSocket — onclose will skip
+      //      the usual 'show(s-connect)' bounce because we set
+      //      _intentionalDisconnect briefly
+      //   4. Call App.connect() to start a fresh connection cycle
+      //      with the same credentials/host as before
+      //   5. When InitAck arrives and sees _pendingRejoin set, it
+      //      sends RejoinExistingGameMessage and skips the lobby
+      //      transition
+      //   6. When GameStartRejoin arrives, the handler flips us to
+      //      the game screen
       var raw;
       try { raw = localStorage.getItem('pth_pause'); } catch(e) {}
       if (!raw) return;
       var info; try { info = JSON.parse(raw); } catch(e) {}
       if (!info || !info.gameId) return;
+
+      // Arm the rejoin trigger BEFORE closing the socket. The InitAck
+      // handler reads this and dispatches the rejoin message.
+      _pendingRejoin = { gameId: info.gameId };
+
+      // Visual feedback in the lobby chat + hide the banner immediately
+      // to prevent double-clicks.
       addChat(null, '🔄 ' + (t('rejoinSent') || 'Rejoining…'), 'sys');
-      // Hide the banner immediately so the user sees the click took.
       var rb = document.getElementById('resume-banner');
       if (rb) rb.style.display = 'none';
-      try {
-        send(MSG.buildRejoinGame(info.gameId));
-      } catch(e) {
-        // If something fails (e.g. ws not open), restore the banner.
-        if (rb) rb.style.display = '';
+
+      // Pre-fill the connect form with the stashed host/port if not
+      // already done — needed so the upcoming connect() call uses the
+      // right server.
+      var hostEl = document.getElementById('host');
+      var portEl = document.getElementById('port');
+      if (info.host && hostEl && !hostEl.value) hostEl.value = info.host;
+      if (info.port && portEl && !portEl.value) portEl.value = info.port;
+
+      // Force-close the existing socket. Mark the disconnect as
+      // intentional so the onclose handler does not bounce us to the
+      // login screen — we want to stay on the lobby visually while
+      // the reconnection happens.
+      _intentionalDisconnect = true;
+      _suppressConnectScreen = true;
+      if (ws) {
+        try { ws.onclose = null; ws.onerror = null; ws.close(); } catch(e) {}
+        ws = null;
       }
+
+      // Now kick off a fresh connection cycle. connect() will see the
+      // _suppressConnectScreen flag and avoid showing the login form.
+      var self = this;
+      setTimeout(function() { self.connect(); }, 100);
     },
 
     discardResumeGame() {
