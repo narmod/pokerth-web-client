@@ -131,6 +131,7 @@ const LANG = {
     leaveDialogBody:'You will lose your seat and return to the lobby.',
     leaveQuit:'Quit',
     leaveCancel:'Cancel',
+    chooseAvatar:'Choose an avatar',
 },
   fr: {
     connect:'Se connecter', disconnect:'✕ Déconnecter', connecting:'Connexion en cours…',
@@ -249,6 +250,7 @@ const LANG = {
     leaveDialogBody:'Vous perdrez votre place et reviendrez au lobby.',
     leaveQuit:'Quitter',
     leaveCancel:'Annuler',
+    chooseAvatar:'Choisir un avatar',
 }
 };
 
