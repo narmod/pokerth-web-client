@@ -168,6 +168,7 @@ const LANG = {
     playersOnline:'player(s)',
     playersOnlineTitle:'Players online',
     playersSearchPlaceholder:'Search\u2026',
+    tableCount:'table(s)',
 },
   fr: {
     connect:'Se connecter', disconnect:'✕ Déconnecter', connecting:'Connexion en cours…',
@@ -323,6 +324,7 @@ const LANG = {
     playersOnline:'joueur(s)',
     playersOnlineTitle:'Joueurs en ligne',
     playersSearchPlaceholder:'Rechercher\u2026',
+    tableCount:'table(s)',
 }
 };
 
