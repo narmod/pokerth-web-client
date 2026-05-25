@@ -160,6 +160,7 @@ const LANG = {
     quickCreateBody:'No tables found. How many players?',
     quickCreateLabel:'Players:',
     quickCreateBtn:'Create',
+    logPanelTitle:'Log',
 },
   fr: {
     connect:'Se connecter', disconnect:'✕ Déconnecter', connecting:'Connexion en cours…',
@@ -307,6 +308,7 @@ const LANG = {
     quickCreateBody:'Aucune table trouv\u00e9e. Combien de joueurs\u00a0?',
     quickCreateLabel:'Joueurs\u00a0:',
     quickCreateBtn:'Cr\u00e9er',
+    logPanelTitle:'Journal',
 }
 };
 
