@@ -228,18 +228,6 @@ function selectAvatarPopup(emoji) {
   <!-- Lobby body -->
   <div class="lobby-body">
     <div class="pane-games">
-      <!-- Resume-game banner: shown when localStorage holds a paused gameId
-           that the user can rejoin. Filled and toggled by checkResumeGame()
-           in pokerth.js. -->
-      <div id="resume-banner" style="display:none">
-        <span class="rb-icon">🔄</span>
-        <div class="rb-text">
-          <div class="rb-title" data-i18n="resumeBannerTitle">Game in progress</div>
-          <div class="rb-sub"   id="resume-banner-sub"></div>
-        </div>
-        <button class="rb-btn-resume"  id="rb-resume"  onclick="App.resumeGame()"        data-i18n="resumeBtn">Resume</button>
-        <button class="rb-btn-discard" id="rb-discard" onclick="App.discardResumeGame()" data-i18n="discardBtn">Discard</button>
-      </div>
       <div class="create-bar">
         <button class="btn-create" id="btn-autojoin" onclick="App.autoJoinOrCreate()" data-i18n="joinOrCreate">⚡ Join or Create</button>
         <button class="btn-create-manual" onclick="App.toggleCreateForm()" title="Configure">⚙</button>
@@ -272,7 +260,7 @@ function selectAvatarPopup(emoji) {
     <button class="btn-sm" id="admin-start-btn" onclick="App.startWithBots()" style="display:none;color:var(--green);border-color:rgba(39,174,96,0.4)" title="Start with bots">▶ Bots</button>
     <button class="btn-sm" id="admin-close-btn" onclick="App.closeTable()" style="display:none;color:#e67e22;border-color:rgba(230,126,34,0.4)" title="Close table">🔒 Close</button>
     <button class="btn-sm btn-icon" id="g-overflow-btn" onclick="toggleHeaderOverflow(event)" title="Plus">•••</button>
-    <button class="btn-sm btn-icon" onclick="App.openLeaveDialog()" title="Quitter" style="color:var(--red);border-color:rgba(192,57,43,0.3)">✕</button>
+    <button class="btn-sm btn-icon" onclick="App.leaveGame();closeHeaderOverflow()" title="Quitter" style="color:var(--red);border-color:rgba(192,57,43,0.3)">✕</button>
     <div id="g-overflow-menu">
       <button class="btn-sm" onclick="toggleFullscreen();closeHeaderOverflow()">⛶ Fullscreen</button>
       <button class="btn-sm" id="lang-toggle-game-mob" onclick="toggleLang();closeHeaderOverflow()" style="font-size:0.85rem">🇬🇧 Langue</button>
@@ -427,20 +415,6 @@ function selectAvatarPopup(emoji) {
      scripts execute in document order, so this ordering is reliable. -->
 <script type="module" src="modules/i18n.mjs"></script>
 <script type="module" src="modules/sounds.mjs"></script>
-<!-- Leave-game dialog: 3 options when user clicks ✕ from the table screen.
-     Driven by App.openLeaveDialog() / App.dialogKeepPlace() /
-     App.dialogQuitForever() / App.dialogCancelLeave(). -->
-<div id="leave-dialog" style="display:none">
-  <div class="ld-card">
-    <div class="ld-title" data-i18n="leaveDialogTitle">Leaving the game</div>
-    <div class="ld-body"  data-i18n="leaveDialogBody">Do you want to keep your seat so you can come back?</div>
-    <div class="ld-buttons">
-      <button class="ld-btn ld-keep"   onclick="App.dialogKeepPlace()"   data-i18n="leaveKeep">Keep my seat</button>
-      <button class="ld-btn ld-quit"   onclick="App.dialogQuitForever()" data-i18n="leaveQuit">Quit for good</button>
-      <button class="ld-btn ld-cancel" onclick="App.dialogCancelLeave()" data-i18n="leaveCancel">Cancel</button>
-    </div>
-  </div>
-</div>
 <script src="pokerth.js" defer></script>
 <script>
 if ('serviceWorker' in navigator) {
