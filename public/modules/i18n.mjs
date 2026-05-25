@@ -20,7 +20,7 @@ const LANG = {
     lan:'LAN (free nickname)', privateGuest:'Private Server — Internet Guest ✓',
     guest:'pokerth.net — Internet Guest', auth:'pokerth.net — Registered Account',
     loginMode:'Login Mode', server:'PokerTH Server', proxy:'WebSocket Proxy', port:'Port',
-    joinOrCreate:'⚡ Join or Create', configure:'⚙', createTable:'＋ Create table',
+    quickGameBtn:'⚡ Quick Game', configure:'⚙', createTable:'＋ Create table',
     tableName:'Table name', maxPlayers:'Max players', smallBlind:'Small blind',
     stack:'Stack', timeout:'Timeout (s)', fillBots:'Fill with bots (optional)',
     minHumans:'Min humans before bots:', availTables:'Available tables',
@@ -156,6 +156,10 @@ const LANG = {
     errConnLost:'Connection lost. You can reconnect in a few seconds.',
     autoTableFound:'\u26a1 Table found \u2014 joining #{n}',
     autoNoTable:'\u26a1 No tables \u2014 creating one\u2026',
+    quickCreateTitle:'Create a new table',
+    quickCreateBody:'No tables found. How many players?',
+    quickCreateLabel:'Players:',
+    quickCreateBtn:'Create',
 },
   fr: {
     connect:'Se connecter', disconnect:'✕ Déconnecter', connecting:'Connexion en cours…',
@@ -163,7 +167,7 @@ const LANG = {
     lan:'LAN (pseudo libre)', privateGuest:'Serveur privé — Invité Internet ✓',
     guest:'pokerth.net — Invité', auth:'pokerth.net — Compte enregistré',
     loginMode:'Mode de connexion', server:'Serveur PokerTH', proxy:'Proxy WebSocket', port:'Port',
-    joinOrCreate:'⚡ Rejoindre ou Créer', configure:'⚙', createTable:'＋ Créer cette table',
+    quickGameBtn:'⚡ Partie rapide', configure:'⚙', createTable:'＋ Créer cette table',
     tableName:'Nom de la table', maxPlayers:'Joueurs max', smallBlind:'Petite blind',
     stack:'Stack', timeout:'Timeout (s)', fillBots:'Compléter avec des bots (optionnel)',
     minHumans:'Humains min avant bots :', availTables:'Tables disponibles',
@@ -299,6 +303,10 @@ const LANG = {
     errConnLost:'Connexion perdue. Vous pouvez vous reconnecter dans quelques secondes.',
     autoTableFound:'\u26a1 Table trouv\u00e9e \u2014 rejoindre la #{n}',
     autoNoTable:'\u26a1 Aucune table \u2014 cr\u00e9ation en cours\u2026',
+    quickCreateTitle:'Cr\u00e9er une nouvelle table',
+    quickCreateBody:'Aucune table trouv\u00e9e. Combien de joueurs\u00a0?',
+    quickCreateLabel:'Joueurs\u00a0:',
+    quickCreateBtn:'Cr\u00e9er',
 }
 };
 
