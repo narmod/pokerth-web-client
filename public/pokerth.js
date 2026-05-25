@@ -2189,7 +2189,15 @@ const App = (() => {
       const label  = MODE_LABEL[g.mode] || '?';
       const type   = GTYPE[g.type] || '';
       const lock   = (g.priv || g.type === 3) ? '🔒 ' : '';
-      const joinLabel = ((g.priv || g.type === 3) ? '🔒 ' : '▶ ') + (typeof t === 'function' ? t('joinBtn') || 'Join' : 'Join');
+      // The i18n joinBtn string already includes a '▶ ' prefix
+      // ('▶ Rejoindre' in FR, '▶ Join' in EN). Previously we
+      // prepended ANOTHER '▶ ' here, giving the visible '▶▶' double-
+      // arrow look. Now we only prepend a prefix when we need to
+      // REPLACE the arrow with a lock (for private/locked tables).
+      var rawJoin = (typeof t === 'function' ? t('joinBtn') || '▶ Join' : '▶ Join');
+      const joinLabel = (g.priv || g.type === 3)
+        ? '🔒 ' + rawJoin.replace(/^▶\s*/, '')
+        : rawJoin;
       const watchBtn = g.mode === 2
         ? '<button class="btn-xs btn-watch" onclick="App.spectateGame(' + gid + ')">👁 ' + t('watchBtn') + '</button>'
         : '';
