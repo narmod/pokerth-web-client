@@ -4074,7 +4074,9 @@ function dismissWinner() {
       const btn = document.getElementById('btn-autojoin');
       if (btn) { btn.textContent = '⏳...'; btn.disabled = true; }
       addChat(null, t('autoNoTable'), 'sys');
-      send(MSG.buildCreateGame('WebGame-' + myName, n, 10, 3000, 30));
+      // Quick Game default timeout lowered from 30s → 15s per user
+      // request so games feel snappier (matches the 'Quick' branding).
+      send(MSG.buildCreateGame('WebGame-' + myName, n, 10, 3000, 15));
     },
 
     cancelQuickCreate() {
