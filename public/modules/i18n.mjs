@@ -161,6 +161,10 @@ const LANG = {
     quickCreateLabel:'Players:',
     quickCreateBtn:'Create',
     logPanelTitle:'Log',
+    disconnectDialogTitle:'Disconnect?',
+    disconnectDialogBody:'You will be returned to the login screen.',
+    disconnectQuit:'Disconnect',
+    disconnectTooltip:'Disconnect',
 },
   fr: {
     connect:'Se connecter', disconnect:'✕ Déconnecter', connecting:'Connexion en cours…',
@@ -309,6 +313,10 @@ const LANG = {
     quickCreateLabel:'Joueurs\u00a0:',
     quickCreateBtn:'Cr\u00e9er',
     logPanelTitle:'Journal',
+    disconnectDialogTitle:'Se d\u00e9connecter\u00a0?',
+    disconnectDialogBody:'Vous reviendrez \u00e0 l\u2019\u00e9cran de connexion.',
+    disconnectQuit:'Se d\u00e9connecter',
+    disconnectTooltip:'Se d\u00e9connecter',
 }
 };
 
