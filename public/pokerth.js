@@ -4531,14 +4531,16 @@ function toggleLog() {
 function togglePlayersPanel() {
   var panel = document.getElementById('players-panel');
   if (!panel) return;
-  var isHidden = panel.style.display === 'none';
+  var isHidden = panel.style.display === 'none' || !panel.style.display;
   if (isHidden) {
     // Close sibling dropdowns so only one is open at a time.
+    // Both #lobby-chat-panel and our own use the same inline-in-flow
+    // layout, so opening one auto-closes the other.
     ['lobby-chat-panel'].forEach(function(id) {
       var el = document.getElementById(id);
       if (el) el.style.display = 'none';
     });
-    panel.style.display = '';
+    panel.style.display = 'flex';   // matches lobby-chat-panel pattern
     renderPlayersList();
     // Focus the search input so the user can type right away.
     var inp = document.getElementById('players-search-in');
@@ -4547,6 +4549,23 @@ function togglePlayersPanel() {
     panel.style.display = 'none';
   }
 }
+
+// Auto-close players-panel whenever the lobby-chat panel is opened
+// (symmetric counterpart to togglePlayersPanel's own auto-close).
+// We patch the existing toggleLobbyChat function rather than
+// modifying it inline so future refactors stay easy.
+(function() {
+  var orig = window.toggleLobbyChat;
+  if (typeof orig === 'function' && !orig._patchedForPlayersPanel) {
+    window.toggleLobbyChat = function() {
+      var pp = document.getElementById('players-panel');
+      var lc = document.getElementById('lobby-chat-panel');
+      if (pp && lc && lc.style.display === 'none') pp.style.display = 'none';
+      return orig.apply(this, arguments);
+    };
+    window.toggleLobbyChat._patchedForPlayersPanel = true;
+  }
+})();
 
 function renderPlayersList() {
   var body = document.getElementById('players-list-body');
