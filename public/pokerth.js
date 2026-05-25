@@ -1608,6 +1608,18 @@ const App = (() => {
         // We reset it to false here because the same pid can rejoin (rare,
         // but possible if the player closes and reopens the tab fast).
         seatData[pid].gone = false;
+        // ── SPECTATOR LATE-ARRIVAL FIX ──
+        // When the game has already started (HandStart was processed), we
+        // append late-arriving pids straight to seats[] so they appear
+        // visually around the felt. For player mode this is a no-op
+        // (GameStartInitial populated seats[] before the first
+        // GamePlayerJoined, and the includes() check skips the duplicate).
+        // For spectator mode it's the only path that learns about
+        // newcomers after our HandStart bootstrap.
+        if (_gameStarted && !seats.includes(pid)) {
+          seats.push(pid);
+          renderSeats();
+        }
         const name = players[pid] || '#'+pid;
         addChat(null, name + ' rejoint la table', 'sys');
         // Ask the server for this player's name if we don't have it yet,
@@ -1752,6 +1764,37 @@ const App = (() => {
         // safety: the user must see each hand's hole cards before deciding
         // anything automatic.
         _autoCheckFold = false;
+
+        // ── SPECTATOR BOOTSTRAP ──
+        // When the user joined as spectator of a hand-in-progress, the
+        // server never sends GameStartInitial — only the live messages
+        // (HandStart, DealFlop, PlayersTurn, etc.). Both _gameStarted
+        // and seats[] therefore stay at their initial empty/false state,
+        // and the table shows the waiting panel forever with no seats
+        // around the felt.
+        //
+        // Use the FIRST HandStart we receive as a synthetic 'game has
+        // started' event to repair both:
+        //   * _gameStarted = true → the waiting panel gets hidden
+        //   * _seatsFrozen = true → the freeze latch is armed so no later
+        //                            GameStartInitial (unlikely but possible)
+        //                            can shuffle the order under us
+        //   * seats[] is populated from every pid we know about via the
+        //     GamePlayerJoined messages that arrived since join time.
+        //     The .gone filter excludes pids that have already left.
+        //
+        // For a normal player join this branch is a no-op: GameStartInitial
+        // already flipped _gameStarted and populated seats[] before the
+        // first HandStart fires, so the condition is false.
+        if (!_gameStarted) {
+          _gameStarted = true;
+          _seatsFrozen = true;
+        }
+        if (seats.length === 0) {
+          seats = Object.keys(seatData)
+            .map(Number)
+            .filter(function(pid) { return !seatData[pid].gone; });
+        }
         $('g-hand').textContent = t('handOf') + handNum;
         $('g-round').textContent = t('preflop');
         gameState = 0; // preflop
