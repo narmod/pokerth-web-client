@@ -1264,7 +1264,7 @@ const App = (() => {
           _intentionalDisconnect = true;
           _wasAuthenticated = false;
           _hideBanner();
-          _ipBlockUntil = Date.now() + 5 * 60 * 1000; // 5 minutes
+          _ipBlockUntil = Date.now() + 1 * 60 * 1000; // 1 minute (was 5 — server usually clears earlier)
           _startIpBlockCountdown();
           setStatus('⏳ IP bloquée — attendez 5 minutes puis réessayez.', 'err'); return;
         }
@@ -3384,6 +3384,34 @@ function dismissWinner() {
     },
 
     connect() {
+      // ── SW-ready gate ──
+      // First-time visitors trigger a Service Worker install on page load.
+      // The SW does skipWaiting() + clients.claim(), which can take control
+      // of the page WHILE our first WebSocket is being established. The
+      // takeover kills the in-flight WS (browser closes it with code 1005),
+      // and the PokerTH server interprets that as a suspicious connect-then-
+      // immediately-drop pattern, blocking the IP for a few minutes.
+      //
+      // Fix: on the FIRST call only, wait until the SW is settled before
+      // actually opening the upstream. Uses navigator.serviceWorker.ready,
+      // which resolves the moment the SW has reached the 'activated' state
+      // — usually <100ms when already installed, up to a second on first
+      // visit while the SW caches assets.
+      if (!window._swReadyOnce && 'serviceWorker' in navigator) {
+        window._swReadyOnce = true;
+        var self = this;
+        // 1500ms safety timeout in case ready never resolves (very rare,
+        // but better than hanging the UI forever).
+        var fired = false;
+        var go = function() {
+          if (fired) return; fired = true;
+          self.connect();
+        };
+        setStatus('⏳ Initialisation…');
+        navigator.serviceWorker.ready.then(go);
+        setTimeout(go, 1500);
+        return;
+      }
       // ── Rate limiter : éviter le spam qui provoque le blocage IP ──
       const now = Date.now();
       if (_ipBlockUntil > now) {
