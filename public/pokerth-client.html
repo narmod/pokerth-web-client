@@ -260,7 +260,7 @@ function selectAvatarPopup(emoji) {
     <button class="btn-sm" id="admin-start-btn" onclick="App.startWithBots()" style="display:none;color:var(--green);border-color:rgba(39,174,96,0.4)" title="Start with bots">▶ Bots</button>
     <button class="btn-sm" id="admin-close-btn" onclick="App.closeTable()" style="display:none;color:#e67e22;border-color:rgba(230,126,34,0.4)" title="Close table">🔒 Close</button>
     <button class="btn-sm btn-icon" id="g-overflow-btn" onclick="toggleHeaderOverflow(event)" title="Plus">•••</button>
-    <button class="btn-sm btn-icon" onclick="App.leaveGame();closeHeaderOverflow()" title="Quitter" style="color:var(--red);border-color:rgba(192,57,43,0.3)">✕</button>
+    <button class="btn-sm btn-icon" onclick="App.confirmLeaveGame()" title="Quitter" style="color:var(--red);border-color:rgba(192,57,43,0.3)">✕</button>
     <div id="g-overflow-menu">
       <button class="btn-sm" onclick="toggleFullscreen();closeHeaderOverflow()">⛶ Fullscreen</button>
       <button class="btn-sm" id="lang-toggle-game-mob" onclick="toggleLang();closeHeaderOverflow()" style="font-size:0.85rem">🇬🇧 Langue</button>
@@ -415,6 +415,21 @@ function selectAvatarPopup(emoji) {
      scripts execute in document order, so this ordering is reliable. -->
 <script type="module" src="modules/i18n.mjs"></script>
 <script type="module" src="modules/sounds.mjs"></script>
+<!-- Quit-game confirmation dialog: 2 buttons (Quit / Cancel).
+     Shown when the user clicks the ✕ button in the header from inside
+     a game. Driven by App.confirmLeaveGame() (open) and
+     App.cancelLeaveGame() (close). Confirming calls leaveGame() as
+     before — no behaviour change for the leave path itself. -->
+<div id="leave-dialog" style="display:none">
+  <div class="ld-card">
+    <div class="ld-title" data-i18n="leaveDialogTitle">Leave the game?</div>
+    <div class="ld-body"  data-i18n="leaveDialogBody">You will lose your seat and return to the lobby.</div>
+    <div class="ld-buttons">
+      <button class="ld-btn ld-quit"   onclick="App.confirmLeaveQuit()"  data-i18n="leaveQuit">Quit</button>
+      <button class="ld-btn ld-cancel" onclick="App.cancelLeaveGame()"   data-i18n="leaveCancel">Cancel</button>
+    </div>
+  </div>
+</div>
 <script src="pokerth.js" defer></script>
 <script>
 if ('serviceWorker' in navigator) {
