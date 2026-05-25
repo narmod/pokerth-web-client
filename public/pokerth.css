@@ -2645,15 +2645,17 @@ body:not(.in-game) .my-zone {
    Same visual chrome as #g-chat-panel / #g-log-panel so the three
    dropdowns feel like siblings. Adds a search input row above the
    scrollable list for quick filtering when many players are online. */
-/* Players-online panel — sits inline in the lobby flow, exactly
-   like #lobby-chat-panel (it pushes the games list down when open
-   instead of overlaying it). Same visual chrome (.g-chat-panel-header)
-   ensures the three lobby dropdowns (players, chat, log) look like
-   siblings. The max-height + flex layout keeps the body scrollable. */
 #players-panel {
-  max-height: min(360px, 50dvh);
+  position: fixed !important;
+  top: 36px;
+  left: 0; right: 0;
+  z-index: 99;
+  max-height: min(360px, 50dvh) !important;
   background: rgba(4,10,6,0.97);
   border-bottom: 1px solid var(--border);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.6);
+  display: flex;
+  flex-direction: column;
 }
 .players-search {
   padding: 6px 10px;
