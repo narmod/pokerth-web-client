@@ -125,6 +125,8 @@ const LANG = {
     initializing:'Initialising…',
     preparingConnection:'Preparing new connection ({n}s)…',
     closingPrevious:'Closing previous connection…',
+    spectatorBanner:'Spectator mode — you are watching',
+    spectatorActionMsg:'You are watching as a spectator. Players are deciding…',
 },
   fr: {
     connect:'Se connecter', disconnect:'✕ Déconnecter', connecting:'Connexion en cours…',
@@ -237,6 +239,8 @@ const LANG = {
     initializing:'Initialisation…',
     preparingConnection:'Préparation de la nouvelle connexion ({n}s)…',
     closingPrevious:'Fermeture de la connexion précédente…',
+    spectatorBanner:'Mode spectateur — vous regardez la partie',
+    spectatorActionMsg:'Vous regardez en spectateur. Les joueurs sont en train de décider…',
 }
 };
 
