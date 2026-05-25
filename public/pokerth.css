@@ -2524,7 +2524,14 @@ body:not(.in-game) .my-zone {
    Centred modal with 2 buttons: Quit / Cancel. Shown when the user
    clicks the ✕ from inside a game. Gold-bordered card matching the
    rest of the UI, with backdrop blur and a soft pop animation. */
-#leave-dialog {
+/* Shared modal container for the three confirmation dialogs:
+   #leave-dialog (quit a game in progress)
+   #disconnect-dialog (disconnect from the lobby)
+   #quick-create-dialog (set player count on a quick-create) — this one
+   already has its own rule because it was added in a separate commit
+   with the same body; consolidating could be a future cleanup. */
+#leave-dialog,
+#disconnect-dialog {
   position: fixed; inset: 0; z-index: 120;
   display: flex; align-items: center; justify-content: center;
   background: rgba(0,0,0,0.7);
