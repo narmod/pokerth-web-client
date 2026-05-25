@@ -737,25 +737,16 @@ function _updateFsButtons() {
 
 document.addEventListener("DOMContentLoaded", function() {
   // Auto-fill nick
-  // Restore saved credentials
-  try {
-    // Security: never store or restore credentials (login or password)
-    // client-side. Older versions of this client used to write them to
-    // localStorage on connect; we now scrub any residuals on every boot
-    // so the keys cannot survive a client upgrade.
-    try {
-      localStorage.removeItem('pth_pass');
-      localStorage.removeItem('pth_login');
-    } catch(e) {}
-
-    var savedLanNick = localStorage.getItem('pth_lan_nick');
-    var rmEl = document.getElementById('remember-me');
-    if (savedLanNick) {
-      var nickEl = document.getElementById('nick');
-      if (nickEl) nickEl.value = savedLanNick;
-      if (rmEl) rmEl.checked = true;
-    }
-  } catch(e) {}
+  // One-time housekeeping: scrub the legacy 'pth_pass' key in case
+  // it's still in localStorage from an older client version. The
+  // password is NEVER persisted by this app — only the browser's
+  // own keychain (via the <input autocomplete='current-password'>
+  // attribute) holds it.
+  try { localStorage.removeItem('pth_pass'); } catch(e) {}
+  // Note: nickname restore for all modes is handled inside
+  // App.onLoginModeChange(), which fires below once the saved mode
+  // is reapplied. This gives us a single source of truth for the
+  // 'which nickname to show for this mode' logic.
   // Restaurer l'avatar sauvegardé
   try {
     var savedAv = localStorage.getItem('pth_avatar') || '';
@@ -3578,9 +3569,28 @@ function dismissWinner() {
       const proto      = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
       const port       = window.location.port || '8080';
 
+      // Helper: read a string from localStorage with try/catch so private
+      // browsing modes that disable storage don't crash the page.
+      var lsGet = function(k) {
+        try { return localStorage.getItem(k); } catch(e) { return null; }
+      };
+
+      // Nick field state machine. Per the user spec:
+      //   LAN     → editable, prefilled from pth_lan_nick (per-mode key)
+      //   unauth  → editable, prefilled from pth_unauth_nick (per-mode key)
+      //   guest   → READONLY, always set to the persistent GuestXXXXX
+      //   auth    → editable, prefilled from pth_auth_login (login only,
+      //             never the password — browser keychain handles that)
+      var nickEl = $('nick');
+      // Always reset the readonly flag first; only Guest re-applies it.
+      if (nickEl) nickEl.removeAttribute('readonly');
+
       if (mode === 'lan') {
         $('nick-label').textContent = t('enterNickFree');
         $('nick').placeholder = t('nickPlaceholder');
+        // Restore the per-mode saved pseudo (overrides whatever was
+        // typed under another mode — same UX as switching profiles).
+        if (nickEl) nickEl.value = lsGet('pth_lan_nick') || '';
         $('use-tls').checked = false;
         if (proxyInput) proxyInput.value = proto + '//' + (autoHost||'localhost') + ':' + port;
         if (hostInput && autoHost) hostInput.value = autoHost;
@@ -3588,13 +3598,23 @@ function dismissWinner() {
       } else if (mode === 'unauth') {
         $('nick-label').textContent = t('enterNickFree');
         $('nick').placeholder = t('nickPlaceholder');
+        if (nickEl) nickEl.value = lsGet('pth_unauth_nick') || '';
         $('use-tls').checked = false;
         if (proxyInput) proxyInput.value = proto + '//' + (autoHost||'localhost') + ':' + port;
         if (hostInput && autoHost) hostInput.value = autoHost;
         setStatus(t('chatAvailPrivate'));
       } else if (mode === 'guest') {
         $('nick-label').textContent = t('enterNickGuest');
-        $('nick').placeholder = (window.getOrCreateGuestName && window.getOrCreateGuestName()) || ('Guest' + String(Math.floor(10000 + Math.random()*90000)));
+        // Compute the stable GuestXXXXX name, put it in the field,
+        // and lock it. The user CAN'T change a Guest nick — the
+        // server-issued IDs are not user-controllable anyway.
+        var guestName = (window.getOrCreateGuestName && window.getOrCreateGuestName())
+                       || ('Guest' + String(Math.floor(10000 + Math.random()*90000)));
+        if (nickEl) {
+          nickEl.value = guestName;
+          nickEl.setAttribute('readonly', 'readonly');
+          nickEl.placeholder = guestName;
+        }
         $('use-tls').checked = false;
         if (proxyInput) proxyInput.value = proto + '//' + (autoHost||'localhost') + ':' + port;
         if (hostInput) hostInput.value = 'pokerth.net';
@@ -3603,7 +3623,11 @@ function dismissWinner() {
       } else {
         // mode === 'auth'  (pokerth.net registered account)
         $('nick-label').textContent = t('enterAccount');
-        $('nick').placeholder = 'MonCompte';
+        $('nick').placeholder = 'MyAccount';
+        // Prefill the login if we saved one previously. The password
+        // is NEVER persisted in localStorage — that's what the browser
+        // keychain (via autocomplete='current-password') is for.
+        if (nickEl) nickEl.value = lsGet('pth_auth_login') || '';
         $('use-tls').checked = true;   // TLS is mandatory for credentialed login
         if (proxyInput) proxyInput.value = proto + '//' + (autoHost||'localhost') + ':' + port;
         if (hostInput) hostInput.value = 'pokerth.net';
@@ -3741,6 +3765,18 @@ function dismissWinner() {
         if (hv)  localStorage.setItem('pth_host',  hv.value.trim());
         if (pv)  localStorage.setItem('pth_port',  pv.value.trim());
         if (xv)  localStorage.setItem('pth_proxy', xv.value.trim());
+        // Auto-save the nickname per-mode (no Remember-me checkbox
+        // needed — silent persistence is the new default). Guest is
+        // skipped because it manages its own pth_guest_name key, and
+        // auth saves only the LOGIN (never the password — that's the
+        // browser keychain's job via autocomplete='current-password').
+        var nickVal = ($('nick') && $('nick').value || '').trim();
+        if (nickVal && lm2) {
+          var mv = lm2.value;
+          if      (mv === 'lan')    localStorage.setItem('pth_lan_nick',    nickVal);
+          else if (mv === 'unauth') localStorage.setItem('pth_unauth_nick', nickVal);
+          else if (mv === 'auth')   localStorage.setItem('pth_auth_login',  nickVal);
+        }
       } catch(e) {}
       const proxyUrl  = $('proxy').value.trim();
       const host      = $('host').value.trim();
@@ -4287,10 +4323,10 @@ function dismissWinner() {
     },
 
     onRememberMe() {
-      var cb = document.getElementById('remember-me');
-      if (cb && !cb.checked) {
-        try { localStorage.removeItem('pth_login'); localStorage.removeItem('pth_pass'); localStorage.removeItem('pth_lan_nick'); window._savedLogin=null; window._savedPass=null; window._savedLanNick=null; } catch(e) {}
-      }
+      // Legacy no-op. The 'Remember nickname' checkbox was removed
+      // in favour of automatic per-mode persistence. Kept as a stub
+      // so any older HTML cached by a Service Worker doesn't 500
+      // when its onchange handler fires.
     },
   };
 })();
