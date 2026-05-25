@@ -4538,6 +4538,16 @@ function togglePlayersPanel() {
       var el = document.getElementById(id);
       if (el) el.style.display = 'none';
     });
+    // Position the panel right below the header. The CSS rule uses
+    // a hard-coded top:36px, but the header padding is clamp()-based
+    // and produces 36–52 px depending on viewport. Measure the actual
+    // bottom of the lobby header at open time so the panel always
+    // starts flush against it, never overlapping or leaving a gap.
+    var hdr = document.querySelector('#s-lobby .header');
+    if (hdr) {
+      var rect = hdr.getBoundingClientRect();
+      panel.style.top = Math.round(rect.bottom) + 'px';
+    }
     panel.style.display = '';
     renderPlayersList();
     // Focus the search input so the user can type right away.
