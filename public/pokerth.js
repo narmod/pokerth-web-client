@@ -3938,6 +3938,9 @@ function dismissWinner() {
       _intentionalDisconnect = false;
       _wasAuthenticated = false;
       _currentLoginMode = loginMode; // sauvegarder pour ChatReject
+      // The CreateGame form defaults depend on this mode. Refresh them
+      // now so the values are correct the first time the user opens it.
+      try { App._applyCreateFormDefaults(true); } catch (e) {}
       try {
         ws = new WebSocket(finalUrl);
       } catch (e) {
@@ -4276,6 +4279,9 @@ function dismissWinner() {
       } else {
         // No table — show the player-count dialog. The actual CreateGame
         // is dispatched by confirmQuickCreate() if the user confirms.
+        // Pre-fill the player-count field with the per-mode default (2
+        // for LAN/private, 5 for pokerth.net public).
+        this._applyCreateFormDefaults(false);
         var qc = document.getElementById('quick-create-dialog');
         if (qc) qc.style.display = 'flex';
       }
@@ -4297,9 +4303,11 @@ function dismissWinner() {
       const btn = document.getElementById('btn-autojoin');
       if (btn) { btn.textContent = '⏳...'; btn.disabled = true; }
       addChat(null, t('autoNoTable'), 'sys');
-      // Quick Game default timeout lowered from 30s → 15s per user
-      // request so games feel snappier (matches the 'Quick' branding).
-      send(MSG.buildCreateGame('WebGame-' + myName, n, 10, 3000, 15));
+      // Use the per-login-mode defaults so a Quick Game on pokerth.net
+      // behaves like the public server (30s timeout) and a Quick Game on
+      // a LAN/private box stays snappy (15s).
+      var d = this._getCreateDefaults();
+      send(MSG.buildCreateGame('WebGame-' + myName, n, d.blind, d.stack, d.timeout));
     },
 
     cancelQuickCreate() {
@@ -4343,12 +4351,110 @@ function dismissWinner() {
     doAction(action, bet) { doAction(action, bet); },
     doRaise() { doRaise(); },
 
+    // ── Per-login-mode CreateGame defaults ───────────────────────────────
+    //
+    // The form should feel different depending on who's likely to be on the
+    // other side of the table:
+    //   • LAN / Private server (unauth) → friends & family. Small table (5
+    //     seats), short 15s timeout, "fill with bots" pre-checked so you
+    //     can start dealing as soon as 2 humans have joined.
+    //   • pokerth.net (guest / registered) → public strangers. Standard 8-
+    //     seat full ring, longer 30s timeout to give players time to think,
+    //     blinds rise every 10 hands (slower), bots OFF by default and the
+    //     minimum-humans-before-bots fallback set higher (5).
+    //
+    // Returns an object whose keys map 1:1 to the form's element ids (minus
+    // the 'cf-' prefix). _applyCreateFormDefaults() walks this object and
+    // writes each value into the corresponding input.
+    _getCreateDefaults() {
+      var mode = _currentLoginMode || 'unauth';
+      var isPublic = (mode === 'guest' || mode === 'auth');
+      if (isPublic) {
+        return {
+          name: (myName ? (myName + "'s table") : 'My table'),
+          players: 8,
+          blind: 10,
+          stack: 3000,
+          timeout: 30,
+          raiseEvery: 10,
+          guiSpeed: 5,
+          delayHands: 7,
+          bots: false,
+          minHumans: 5,
+          tag: 'public', // for the QuickGame dialog
+        };
+      }
+      return {
+        name: 'Table de ' + (myName || 'PokerTH'),
+        players: 5,
+        blind: 10,
+        stack: 3000,
+        timeout: 15,
+        raiseEvery: 7,
+        guiSpeed: 5,
+        delayHands: 7,
+        bots: true,
+        minHumans: 2,
+        tag: 'lan',
+      };
+    },
+
+    // Apply the per-mode defaults to the create-form inputs. We only
+    // overwrite empty fields (or fields still holding the previous mode's
+    // default) so a user who already typed a custom value isn't surprised
+    // by their input being clobbered.
+    _applyCreateFormDefaults(force) {
+      var d = this._getCreateDefaults();
+      var set = function(id, val, options) {
+        var el = document.getElementById(id);
+        if (!el) return;
+        var isCheckbox = el.type === 'checkbox';
+        var current = isCheckbox ? el.checked : el.value;
+        var defaultMarker = el.dataset.modeDefault; // last value we wrote ourselves
+        // Don't overwrite if the user typed something different from our
+        // previous default. Force=true (form just opened) always rewrites.
+        if (!force && defaultMarker !== undefined && current !== defaultMarker) return;
+        if (isCheckbox) {
+          el.checked = !!val;
+        } else {
+          el.value = val;
+        }
+        el.dataset.modeDefault = isCheckbox ? (!!val) : String(val);
+      };
+      set('cf-name',        d.name);
+      set('cf-players',     d.players);
+      set('cf-blind',       d.blind);
+      set('cf-stack',       d.stack);
+      set('cf-timeout',     d.timeout);
+      set('cf-raise-every', d.raiseEvery);
+      set('cf-gui-speed',   d.guiSpeed);
+      set('cf-delay',       d.delayHands);
+      set('cf-bots',        d.bots);
+      set('cf-min-humans',  d.minHumans);
+      // Sync the "min humans before bots" row visibility with the checkbox.
+      var mhRow = document.getElementById('cf-min-humans-row');
+      if (mhRow) mhRow.style.display = d.bots ? 'flex' : 'none';
+      // Same for the QuickGame dialog default
+      var qc = document.getElementById('qc-players');
+      if (qc) {
+        var qcCurrent = qc.value;
+        var qcMarker = qc.dataset.modeDefault;
+        if (force || qcMarker === undefined || qcCurrent === qcMarker) {
+          qc.value = d.players === 8 ? 5 : 2; // 5 for public, 2 for LAN
+          qc.dataset.modeDefault = qc.value;
+        }
+      }
+    },
+
     toggleCreateForm() {
       var f = document.getElementById('create-form');
       if (!f) return;
       var open = !f.classList.contains('open');
       f.classList.toggle('open', open);
       f.style.display = open ? 'block' : 'none';
+      // Apply per-login-mode defaults the first time the form opens (or
+      // whenever the user has not yet customized a field).
+      if (open) this._applyCreateFormDefaults(false);
       var btn = document.querySelector('.btn-create-manual');
       if (btn) { btn.style.background = open ? 'rgba(200,168,74,0.15)' : ''; btn.style.borderColor = open ? 'var(--gold-dim)' : ''; btn.style.color = open ? 'var(--gold)' : ''; }
     },
