@@ -33,6 +33,7 @@ const DEFAULT_ALLOWED_HOSTS = [
   'pokerth.net',
   'www.pokerth.net',
   'cookmed.ddns.net',
+  'pokerth.ddns.net',
   'localhost',
   '127.0.0.1',
   '::1'
