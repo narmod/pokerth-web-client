@@ -2714,3 +2714,60 @@ body:not(.in-game) .my-zone {
   border-radius: 3px;
 }
 .players-list::-webkit-scrollbar-thumb:hover { background: rgba(200,168,74,0.32); }
+/* ═══════════════════════════════════════════════════════════════════
+   Inline SVG flag (used by the language-toggle button).
+   We size against the inherited font-size so the flag scales with
+   the button text — same look on mobile and desktop. The aspect
+   ratio (2:1) matches the viewBox in i18n.mjs.
+   ═══════════════════════════════════════════════════════════════════ */
+.lang-flag {
+  width: 1.5em;
+  height: 0.75em;
+  vertical-align: middle;
+  display: inline-block;
+  border-radius: 1.5px;
+  box-shadow: 0 0 0 0.5px rgba(0, 0, 0, 0.4);
+  pointer-events: none;
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   Credits footer (connect screen only).
+   Sits at the bottom of #s-connect without disturbing the centered
+   login card. Hidden on lobby/game screens to avoid eating playable
+   space. Mentions only the repo for this fork — no upstream PokerTH
+   link (to stay respectfully unaffiliated).
+   ═══════════════════════════════════════════════════════════════════ */
+.connect-footer {
+  position: absolute;
+  bottom: 10px;
+  left: 0;
+  right: 0;
+  text-align: center;
+  color: var(--gold-dim);
+  font-family: 'Inconsolata', monospace;
+  font-size: 0.62rem;
+  letter-spacing: 0.04em;
+  line-height: 1.5;
+  opacity: 0.7;
+  pointer-events: auto;
+  z-index: 1;
+}
+.connect-footer-line {
+  margin: 1px 0;
+}
+.connect-footer a {
+  color: var(--gold-dim);
+  text-decoration: none;
+  border-bottom: 1px dotted rgba(200, 168, 74, 0.3);
+  transition: color 0.2s, border-color 0.2s;
+}
+.connect-footer a:hover {
+  color: var(--gold);
+  border-bottom-color: var(--gold);
+}
+/* On very short screens (e.g. landscape mobile) hide the footer so
+   the login card has more room. */
+@media (max-height: 540px) {
+  .connect-footer { display: none; }
+}
+
