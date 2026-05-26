@@ -2731,6 +2731,29 @@ body:not(.in-game) .my-zone {
 }
 
 /* ═══════════════════════════════════════════════════════════════════
+   Connect-screen top-right button bar.
+   The lang/refresh/fullscreen trio sits outside any `.header` block,
+   so the global `.header .btn-sm` uniformization rule doesn't reach
+   them. Apply the same dimensions here so the three (or four) buttons
+   line up neatly.
+   ═══════════════════════════════════════════════════════════════════ */
+#s-connect > div:first-child .btn-sm {
+  height: 30px;
+  min-width: 30px;
+  padding: 0 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  font-size: 0.75rem;
+  line-height: 1;
+}
+#s-connect > div:first-child .btn-icon {
+  width: 30px;
+  padding: 0;
+}
+
+/* ═══════════════════════════════════════════════════════════════════
    Credits footer (connect screen only).
    Sits at the bottom of #s-connect without disturbing the centered
    login card. Hidden on lobby/game screens to avoid eating playable
