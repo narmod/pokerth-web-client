@@ -67,19 +67,30 @@ function notifyRaise() {
   setTimeout(function(){ playTone(660, 0.10, 0.16); }, 70);
 }
 function notifyAllIn() {
-  // All-in = moment dramatique. Fanfare ascendante rapide (440 → 660 → 880),
-  // puis un coup de gong grave (220 Hz, longue queue) pour la gravité.
-  // Vibre aussi sur mobile pour souligner l'instant.
-  playTone(440, 0.08, 0.20);
-  setTimeout(function(){ playTone(660, 0.08, 0.20); }, 80);
-  setTimeout(function(){ playTone(880, 0.10, 0.22); }, 160);
-  setTimeout(function(){ playTone(220, 0.40, 0.18); }, 280);
-  if (_soundEnabled && navigator.vibrate) navigator.vibrate([60, 40, 60, 40, 120]);
+  // Casino roulette spin — a fast ascending arpeggio (the spinning ball
+  // climbing rim notches) terminated by a clean high "ding!" (ball lands
+  // on a slot). Six tones, exponentially spaced freq, then the bell.
+  // Vibrate pattern mimics the rattle + the click.
+  var arp = [392, 466, 554, 659, 784, 932]; // G4 → A#5, 6 chip-drop notes
+  arp.forEach(function(f, i) {
+    setTimeout(function() { playTone(f, 0.07, 0.18 - i * 0.005); }, i * 55);
+  });
+  // The "ding!" — sharp, brilliant, longer decay. Plays after the trill.
+  setTimeout(function() { playTone(1568, 0.5, 0.30); }, arp.length * 55 + 80);  // G6
+  // Subtle bell harmonic right after for that casino chime feel.
+  setTimeout(function() { playTone(2093, 0.4, 0.18); }, arp.length * 55 + 130); // C7
+  if (_soundEnabled && navigator.vibrate) {
+    navigator.vibrate([30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 100, 60, 200]);
+  }
 }
 function notifyMyTurn() {
-  playTone(523, 0.15, 0.25);
-  setTimeout(function(){ playTone(659, 0.2, 0.2); }, 120);
-  if (_soundEnabled && navigator.vibrate) navigator.vibrate([80, 60, 80]);
+  // Poker doorbell "ding-dong" — two bright, well-spaced bell tones
+  // (high C → A) with a perceptible decay. Easy to identify from across
+  // the room, distinct from any other game sound. Vibrates noticeably
+  // on mobile so the user can recognize their turn without looking.
+  playTone(1047, 0.35, 0.28);                                // DING (C6)
+  setTimeout(function(){ playTone(880, 0.45, 0.26); }, 220); // DONG (A5)
+  if (_soundEnabled && navigator.vibrate) navigator.vibrate([100, 80, 100]);
   var mz = document.querySelector('.my-zone');
   if (mz) { mz.style.borderTopColor='gold'; setTimeout(function(){ mz.style.borderTopColor=''; }, 1200); }
 }
@@ -90,6 +101,34 @@ function notifyWinner(isMine) {
   } else {
     playTone(440,0.15,0.15); setTimeout(function(){ playTone(349,0.2,0.1); },150);
     if (_soundEnabled && navigator.vibrate) navigator.vibrate([60]);
+  }
+}
+function notifyBigWin() {
+  // Confetti pop! Fired when the user wins a substantially-sized pot.
+  // Distinct from notifyWinner (which plays on any win): this is a
+  // multi-burst celebration to underline the moment.
+  //   • Burst 1: ascending arpeggio (the toss into the air)
+  //   • Burst 2: shimmer cluster of high tones (confetti falling)
+  //   • Burst 3: final triumphant chord
+  // Total duration ~1.4 s; vibrates in three thumps on mobile.
+  var arp = [523, 659, 784, 1047, 1319]; // C5 → E6, fast climb
+  arp.forEach(function(f, i) {
+    setTimeout(function() { playTone(f, 0.10, 0.26 - i * 0.02); }, i * 70);
+  });
+  // Shimmer: fast cluster of overlapping high tones (the "sparkle")
+  setTimeout(function() {
+    [1568, 1865, 2093, 2349].forEach(function(f, i) {
+      setTimeout(function() { playTone(f, 0.18, 0.16); }, i * 35);
+    });
+  }, 450);
+  // Final chord — C major triad (C6 + E6 + G6) for a "ta-daaa" feel.
+  setTimeout(function() {
+    playTone(1047, 0.45, 0.24);
+    playTone(1319, 0.45, 0.22);
+    playTone(1568, 0.45, 0.20);
+  }, 900);
+  if (_soundEnabled && navigator.vibrate) {
+    navigator.vibrate([120, 80, 120, 80, 200]);
   }
 }
 function notifyChat() {
@@ -128,7 +167,7 @@ document.addEventListener('click', function() { getAudioCtx(); }, { once: true }
 export {
   getAudioCtx, playTone,
   notifyCard, notifyAction, notifyFold, notifyRaise, notifyAllIn,
-  notifyMyTurn, notifyWinner, notifyChat,
+  notifyMyTurn, notifyWinner, notifyBigWin, notifyChat,
   toggleSound, isSoundEnabled,
 };
 
@@ -142,6 +181,7 @@ window.notifyRaise   = notifyRaise;
 window.notifyAllIn   = notifyAllIn;
 window.notifyMyTurn  = notifyMyTurn;
 window.notifyWinner  = notifyWinner;
+window.notifyBigWin  = notifyBigWin;
 window.notifyChat    = notifyChat;
 window.toggleSound   = toggleSound;
 
@@ -164,6 +204,6 @@ Object.defineProperty(window, '_soundEnabled', {
 window.SOUNDS = {
   getAudioCtx, playTone,
   notifyCard, notifyAction, notifyFold, notifyRaise, notifyAllIn,
-  notifyMyTurn, notifyWinner, notifyChat,
+  notifyMyTurn, notifyWinner, notifyBigWin, notifyChat,
   toggleSound, isSoundEnabled,
 };
