@@ -1980,7 +1980,15 @@ const App = (() => {
           if ($('g-mystack')) $('g-mystack').textContent = myMon > 0 ? myMon + ' ¥' : '';
         }
         renderSeats();
-        notifyAction();
+        // Sound: regular thud for fold/check/call/bet/raise; dedicated
+        // casino-roulette + ding fanfare for all-in moments. The visual
+        // animateAllIn() pop is paired with the audio cue so the moment
+        // gets its own identity.
+        if (action === 6) {
+          if (typeof notifyAllIn === 'function') notifyAllIn();
+        } else {
+          notifyAction();
+        }
         flashActionLabel(pid);
         if (action === 6) animateAllIn(pid); // All-in
         if (bet > 0) {
@@ -3551,7 +3559,19 @@ function showWinnerOverlay(winners) {
 
   var mainWinner = winners[0];
   var isMyWin = winners.some(function(w){ return w.pid === myId; });
-  if (typeof notifyWinner === 'function') notifyWinner(isMyWin);
+  // Big-win sound trigger: when *I* win, decide between a regular winner
+  // chirp and the full confetti-pop. Threshold is intentionally generous
+  // (>= 30 × small blind) so the fanfare doesn't fire on every micro pot
+  // but does on anything meaningful. Falls back to plain notifyWinner if
+  // notifyBigWin isn't loaded for any reason (defensive against old SW
+  // caches serving an older sounds.mjs).
+  var _totalWon = winners.reduce(function(s,w){ return s + (w.won||0); }, 0);
+  var BIG_WIN_THRESHOLD = Math.max(300, smallBlind * 30);
+  if (isMyWin && _totalWon >= BIG_WIN_THRESHOLD && typeof notifyBigWin === 'function') {
+    notifyBigWin();
+  } else if (typeof notifyWinner === 'function') {
+    notifyWinner(isMyWin);
+  }
   var trophy = isMyWin ? "🎉" : "🏆";
 
   // Build header
