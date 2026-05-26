@@ -1,5 +1,13 @@
 /**
- * PokerTH WebSocket <-> TLS/TCP Proxy v2.3
+ * PokerTH WebSocket <-> TLS/TCP Proxy v2.4
+ *
+ * Environment variables:
+ *   ALLOWED_HOSTS   — comma-separated allowlist of upstream hosts the proxy
+ *                     is allowed to dial out to. If unset, falls back to a
+ *                     sensible default that covers the public PokerTH server
+ *                     and localhost. Any host outside the allowlist receives
+ *                     a 4403 close code.
+ *                     Example: ALLOWED_HOSTS="pokerth.net,www.pokerth.net,mybox.example.com,localhost,127.0.0.1"
  */
 
 const WebSocket = require('ws');
@@ -16,9 +24,32 @@ const PROXY_PORT  = parseInt(args.find(a => /^\d+$/.test(a)) || '8080', 10);
 const FORCE_NOTLS = args.includes('--notls');
 const INSECURE_TLS = args.includes('--insecure');
 
+// ── Upstream allowlist (anti open-relay) ──
+// Without this, anyone who can hit the WebSocket can use the proxy to open
+// a TCP tunnel to any host:port on the Internet — effectively turning the
+// proxy into an anonymous port-scanner / generic relay. The allowlist
+// constrains which destinations the proxy is willing to dial.
+const DEFAULT_ALLOWED_HOSTS = [
+  'pokerth.net',
+  'www.pokerth.net',
+  'cookmed.ddns.net',
+  'localhost',
+  '127.0.0.1',
+  '::1'
+];
+const ALLOWED_HOSTS = (process.env.ALLOWED_HOSTS
+  ? process.env.ALLOWED_HOSTS.split(',').map(s => s.trim()).filter(Boolean)
+  : DEFAULT_ALLOWED_HOSTS
+).map(s => s.toLowerCase());
+
+function isHostAllowed(h) {
+  if (!h) return false;
+  return ALLOWED_HOSTS.includes(String(h).toLowerCase());
+}
+
 dns.setDefaultResultOrder('ipv4first');
 
-// ── Décodeur protobuf minimal ──
+// ── Decoder protobuf minimal ──
 function readVarint(buf, pos) {
   let r = 0, shift = 0;
   while (pos < buf.length) {
@@ -30,8 +61,8 @@ function readVarint(buf, pos) {
   return { v: r >>> 0, pos };
 }
 
-// Décode un buffer en { fieldNum: value[] }
-// valeurs = number (varint) ou Buffer (length-delimited)
+// Decode a buffer to { fieldNum: value[] }
+// values = number (varint) or Buffer (length-delimited)
 function pbDecode(buf) {
   const fields = {};
   let pos = 0;
@@ -54,29 +85,29 @@ function pbDecode(buf) {
   return fields;
 }
 
-// Tous les types de messages PokerTH (1..81), tirés de pokerth.proto.
-// Le suffixe "Message" est sous-entendu. Sert uniquement à rendre les
-// logs proxy lisibles (pas de logique métier qui dépend de ce dict).
+// All PokerTH message types (1..81), taken from pokerth.proto.
+// The "Message" suffix is implicit. Used only to make proxy logs readable
+// (no business logic depends on this dict).
 const MSG_NAMES = {
-  // Connexion / authentification (1-6)
+  // Connection / authentication (1-6)
   1:'Announce', 2:'Init', 3:'AuthServerChallenge', 4:'AuthClientResponse',
   5:'AuthServerVerification', 6:'InitAck',
-  // Avatars (7-11) — ancien système d'upload d'images PokerTH desktop
+  // Avatars (7-11) — legacy desktop image-upload protocol
   7:'AvatarRequest', 8:'AvatarHeader', 9:'AvatarData', 10:'AvatarEnd', 11:'UnknownAvatar',
   // Lobby (12-20)
   12:'PlayerList',
   13:'GameListNew', 14:'GameListUpdate', 15:'GameListPlayerJoined', 16:'GameListPlayerLeft',
   17:'GameListAdminChanged',
   18:'PlayerInfoRequest', 19:'PlayerInfoReply', 20:'SubscriptionRequest',
-  // Rejoindre / quitter une table (21-29)
+  // Join / leave a table (21-29)
   21:'JoinExisting', 22:'JoinNew', 23:'RejoinExisting', 24:'JoinGameAck', 25:'JoinGameFailed',
   26:'GamePlayerJoined', 27:'GamePlayerLeft', 28:'GameAdminChanged', 29:'RemovedFromGame',
   // Kick / leave / invite (30-35)
   30:'KickPlayerRequest', 31:'LeaveGameRequest',
   32:'InvitePlayerToGame', 33:'InviteNotify', 34:'RejectGameInvitation', 35:'RejectInvNotify',
-  // Démarrage de partie (36-39)
+  // Game start (36-39)
   36:'StartEvent', 37:'StartEventAck', 38:'GameStartInitial', 39:'GameStartRejoin',
-  // Déroulement d'une main (40-53)
+  // Hand flow (40-53)
   40:'HandStart', 41:'PlayersTurn', 42:'MyActionRequest', 43:'YourActionRejected',
   44:'PlayersActionDone', 45:'DealFlop', 46:'DealTurn', 47:'DealRiver',
   48:'AllInShowCards', 49:'EndOfHandShow', 50:'EndOfHandHide',
@@ -85,15 +116,15 @@ const MSG_NAMES = {
   54:'PlayerIdChanged', 55:'AskKickPlayer', 56:'AskKickDenied',
   57:'StartKickPetition', 58:'VoteKickRequest', 59:'VoteKickReply',
   60:'KickPetitionUpdate', 61:'EndKickPetition',
-  // Statistiques / chat / dialog (62-66)
+  // Stats / chat / dialog (62-66)
   62:'Statistics', 63:'ChatRequest', 64:'Chat', 65:'ChatReject', 66:'Dialog',
   // Timeout / report (67-72)
   67:'TimeoutWarning', 68:'ResetTimeout',
   69:'ReportAvatar', 70:'ReportAvatarAck', 71:'ReportGame', 72:'ReportGameAck',
-  // Erreur + admin (73-77)
+  // Error + admin (73-77)
   73:'Error',
   74:'AdminRemoveGame', 75:'AdminRemoveGameAck', 76:'AdminBanPlayer', 77:'AdminBanPlayerAck',
-  // Spectateurs (78-81)
+  // Spectators (78-81)
   78:'GameListSpectatorJoined', 79:'GameListSpectatorLeft',
   80:'GameSpectatorJoined', 81:'GameSpectatorLeft',
 };
@@ -112,18 +143,18 @@ function describeMsg(payload) {
     const msgType = outer[1] ? outer[1][0] : null;
     const name = msgType !== null ? (MSG_NAMES[msgType] || 'Type#' + msgType) : '?';
 
-    // Chercher le champ d'ErrorMessage (field 74 dans PokerTHMessage)
+    // Look up the ErrorMessage field (field 74 in PokerTHMessage)
     let extra = '';
     if (msgType === 73 && outer[74] && outer[74][0]) {
       const errMsg = pbDecode(outer[74][0]);
       // ErrorMessage.errorReason = field 1 (varint)
       const reason = errMsg[1] ? errMsg[1][0] : null;
-      extra = ' *** ERREUR: ' + (reason !== null ? (ERROR_REASONS[reason] || 'code '+reason) : '?') + ' ***';
+      extra = ' *** ERROR: ' + (reason !== null ? (ERROR_REASONS[reason] || 'code '+reason) : '?') + ' ***';
     }
     if (msgType === 6 && outer[7] && outer[7][0]) { // InitAck
       const ack = pbDecode(outer[7][0]);
       const pid = ack[2] ? ack[2][0] : '?';
-      extra = ' ✓ CONNECTE! playerId=' + pid;
+      extra = ' ✓ CONNECTED! playerId=' + pid;
     }
     if (msgType === 1 && outer[2] && outer[2][0]) { // Announce
       const ann = pbDecode(outer[2][0]);
@@ -131,7 +162,7 @@ function describeMsg(payload) {
       const major = sv[1] ? sv[1][0] : '?';
       const minor = sv[2] ? sv[2][0] : '?';
       const np    = ann[5] ? ann[5][0] : '?';
-      extra = ' (protocol v' + major + '.' + minor + ', ' + np + ' joueurs)';
+      extra = ' (protocol v' + major + '.' + minor + ', ' + np + ' players)';
     }
     return { name, extra };
   } catch(e) {
@@ -148,10 +179,17 @@ const httpServer = http.createServer((req, res) => {
       return fs.createReadStream(p).pipe(res);
     }
   }
-  
+
   // Support subdirectories under public/ while preventing path traversal.
+  // decodeURIComponent throws on malformed sequences (e.g. '%c0'); guard
+  // against that so a single bad URL doesn't crash the request handler.
   const publicRoot = path.join(__dirname, 'public');
-  const urlPath = decodeURIComponent(req.url.split('?')[0]);
+  let urlPath;
+  try {
+    urlPath = decodeURIComponent(req.url.split('?')[0]);
+  } catch (e) {
+    res.writeHead(400); res.end('Bad request'); return;
+  }
   const candidate = path.normalize(path.join(publicRoot, urlPath));
   if (!candidate.startsWith(publicRoot + path.sep) && candidate !== publicRoot) {
     res.writeHead(403); res.end('Forbidden'); return;
@@ -184,25 +222,25 @@ const httpServer = http.createServer((req, res) => {
 const wss = new WebSocket.Server({ server: httpServer });
 
 console.log('\n╔═══════════════════════════════════════════════╗');
-console.log('║     PokerTH WebSocket Proxy v2.3              ║');
+console.log('║     PokerTH WebSocket Proxy v2.4              ║');
 console.log('╚═══════════════════════════════════════════════╝');
 console.log('\n▶ Proxy : ws://localhost:' + PROXY_PORT + '  /  http://localhost:' + PROXY_PORT + '/');
-console.log('▶ TLS   : ' + (FORCE_NOTLS ? 'DESACTIVE (--notls)' : 'ACTIVE par defaut'));
-console.log('▶ Certs : ' + (INSECURE_TLS ? 'verification DESACTIVEE (--insecure)' : 'verification active'));
-console.log('\nConseils:');
-console.log('  • Serveur LAN sans TLS → decochez TLS dans le navigateur');
-console.log('  • pokerth.net          → TLS coche, login registered requis');
-console.log('\nEn attente...\n');
+console.log('▶ TLS   : ' + (FORCE_NOTLS ? 'DISABLED (--notls)' : 'ENABLED by default'));
+console.log('▶ Certs : ' + (INSECURE_TLS ? 'verification DISABLED (--insecure)' : 'verification active'));
+console.log('▶ Allow : ' + ALLOWED_HOSTS.join(', '));
+console.log('\nTips:');
+console.log('  • LAN server without TLS → uncheck TLS in the browser');
+console.log('  • pokerth.net            → TLS checked, registered login needed');
+console.log('\nWaiting for connections...\n');
 
-// Ensemble de tous les clients connectés (pour relais réactions)
+// Set of all connected clients (used to relay reactions / avatars)
 const _allClients = new Set();
 
-// ── File d'attente pour espacer les connexions TCP vers PokerTH ──
-// Évite le blocage IP quand plusieurs utilisateurs se connectent
-// via le même proxy en rafale
-const _connQueue  = [];       // file des connexions en attente
-let   _lastConnAt = 0;        // timestamp de la dernière connexion TCP ouverte
-const MIN_CONN_GAP = 5000;    // ms minimum entre deux connexions au même serveur
+// ── Throttle outbound TCP connections to PokerTH servers ──
+// Avoids tripping per-IP anti-brute-force when many clients connect to the
+// same server in quick succession through this proxy.
+let   _lastConnAt = 0;        // timestamp of the last TCP connection opened
+const MIN_CONN_GAP = 5000;    // ms minimum between two connections to the same server
                               // Bumped from 2500 → 5000 because some PokerTH
                               // server configurations (notably self-hosted
                               // instances with strict anti-brute-force) flag
@@ -220,7 +258,7 @@ function _scheduleConn(fn) {
     _lastConnAt = now;
     fn();
   } else {
-    console.log('[>] Connexion différée de ' + wait + 'ms (anti-blocage IP)');
+    console.log('[>] Connection deferred by ' + wait + 'ms (anti-throttle)');
     setTimeout(() => { _lastConnAt = Date.now(); fn(); }, wait);
   }
 }
@@ -230,6 +268,13 @@ wss.on('connection', (ws, req) => {
   const host   = params.get('host') || 'pokerth.net';
   const port   = parseInt(params.get('port') || '7234', 10);
   const useTls = params.get('tls') !== '0' && !FORCE_NOTLS;
+
+  // ── Reject hosts outside the allowlist ──
+  if (!isHostAllowed(host)) {
+    console.warn('[!] Rejected connection to non-allowed host: ' + host + ':' + port);
+    try { ws.close(4403, 'Host not in allowlist'); } catch (_) {}
+    return;
+  }
 
   console.log('──────────────────────────────────────');
   console.log('[>] ' + (useTls ? 'TLS' : 'TCP') + ' → ' + host + ':' + port);
@@ -244,8 +289,8 @@ wss.on('connection', (ws, req) => {
 
     const onConn = () => {
       connected = true;
-      const info = useTls ? '(TLS ' + (sock.getCipher() ? sock.getCipher().name : '?') + ')' : '(TCP brut)';
-      console.log('[+] Connecté ' + info + ' → ' + addr + ':' + port);
+      const info = useTls ? '(TLS ' + (sock.getCipher() ? sock.getCipher().name : '?') + ')' : '(raw TCP)';
+      console.log('[+] Connected ' + info + ' → ' + addr + ':' + port);
 
     };
 
@@ -258,7 +303,7 @@ wss.on('connection', (ws, req) => {
       while (rxBuf.length >= 4) {
         const msgLen = rxBuf.readUInt32BE(0);
         if (msgLen === 0 || msgLen > 2_000_000) {
-          console.error('[-] Frame invalide (' + msgLen + ') – fermeture');
+          console.error('[-] Invalid frame (' + msgLen + ') – closing');
           ws.close(1011, 'bad frame'); sock.destroy(); return;
         }
         if (rxBuf.length < 4 + msgLen) break;
@@ -270,7 +315,7 @@ wss.on('connection', (ws, req) => {
 
         const d = describeMsg(payload);
         console.log('[S→C] #' + n + ' ' + d.name + ' (' + msgLen + 'b)' + d.extra);
-        // Afficher hex pour diagnostics
+        // Hex dump for diagnostics
         if (msgLen <= 64 || d.name.includes('Error') || d.name === '?' || d.name.includes('Flop') || d.name.includes('Turn') || d.name.includes('River') || d.name.includes('Hand'))
           console.log('      hex: ' + payload.toString('hex'));
 
@@ -279,26 +324,26 @@ wss.on('connection', (ws, req) => {
     });
 
     sock.on('error', err => {
-      let hint = err.code === 'ECONNREFUSED'             ? '  → PokerTH tourne-t-il ?' 
-               : err.message.includes('wrong version')   ? '  → Serveur sans TLS: decochez TLS'
-               : err.code === 'ECONNRESET'               ? '  → Connexion coupee brutalement' : '';
-      console.error('[-] Erreur socket: ' + err.message + hint);
+      let hint = err.code === 'ECONNREFUSED'             ? '  → is the PokerTH server up?'
+               : err.message.includes('wrong version')   ? '  → server without TLS: uncheck TLS'
+               : err.code === 'ECONNRESET'               ? '  → connection abruptly cut' : '';
+      console.error('[-] Socket error: ' + err.message + hint);
       try { ws.close(1011, err.message); } catch (_) {}
     });
 
     sock.on('close', () => {
-      console.log('[-] Serveur ferme (' + n + ' msg recus)');
+      console.log('[-] Server closed (' + n + ' msg received)');
       setTimeout(() => { try { ws.close(); } catch (_) {} }, 300);
     });
 
-  }); // fin _scheduleConn
+  }); // end _scheduleConn
 
-    // Enregistrer ce client pour le relais
+    // Track this client so we can relay broadcasts to it.
   _allClients.add(ws);
   ws.on('close', () => _allClients.delete(ws));
 
   ws.on('message', (data, isBinary) => {
-      // ── Relais réactions (message texte REACT:pid:emoji) ──
+      // ── Relay reactions / avatars (text frames REACT:pid:emoji, AVATAR:pid:emoji) ──
       if (!isBinary) {
         const text = data.toString();
         if (text.startsWith('REACT:') || text.startsWith('AVATAR:')) {
@@ -324,4 +369,4 @@ wss.on('connection', (ws, req) => {
   });
 });
 
-httpServer.listen(PROXY_PORT, () => console.log('Prêt → http://localhost:' + PROXY_PORT + '/\n'));
+httpServer.listen(PROXY_PORT, () => console.log('Ready → http://localhost:' + PROXY_PORT + '/\n'));
