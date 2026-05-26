@@ -4,6 +4,16 @@
 
 ---
 
+## 🎮 Live demo
+
+**Try it now: [https://pokerth.ddns.net/](https://pokerth.ddns.net/)**
+
+Pick the **Private server — Internet Guest** login mode, choose any nickname, and play right away — no account, no install. The demo is hosted on a small VPS connected to a private PokerTH server, so feel free to create a table and invite friends.
+
+> Tip: it works just as well on mobile — add it to your home screen for a fullscreen app feel.
+
+---
+
 ## Why this project exists
 
 I have been playing PokerTH for years and have a deep appreciation for the incredible work the PokerTH team has put into this game over so many years. **Thank you** to every contributor who built and maintained it. ❤️
@@ -133,16 +143,23 @@ The proxy also serves the static files and relays two custom broadcast messages 
 
 ```text
 pokerth-web-client/
-├── proxy.js                 # WS→TCP/TLS proxy + static HTTP server (~11 KB)
+├── proxy.js                 # WS→TCP/TLS proxy + static HTTP server (~14 KB)
 ├── public/
-│   ├── pokerth-client.html  # HTML shell + inline head scripts (~74 KB)
-│   ├── pokerth.js           # Full application logic (~174 KB)
-│   ├── pokerth.css          # Styles (~66 KB)
+│   ├── pokerth-client.html  # HTML shell + inline head scripts (~82 KB)
+│   ├── pokerth.js           # Full application logic (~217 KB)
+│   ├── pokerth.css          # Styles (~88 KB)
 │   ├── manifest.json        # PWA manifest
 │   ├── sw.js                # Service Worker (versioned cache)
+│   ├── modules/             # ES modules (i18n, sounds)
+│   ├── proto/               # Protobuf bundle & helpers
 │   └── favicon-*.png        # PWA icons
 ├── docs/
+│   ├── PROJECT.md
+│   ├── ROADMAP.md
+│   ├── SECURITY.md
 │   └── screenshots/         # Screenshots used in this README
+├── scripts/
+│   └── build-proto.mjs      # Regenerates the protobuf bundle from .proto
 ├── Dockerfile               # Multi-arch image (node:20-alpine base)
 ├── docker-compose.yml       # One-shot self-host config
 ├── package.json
@@ -154,14 +171,55 @@ pokerth-web-client/
 
 ## Requirements
 
-- **Node.js 18** or newer
-- **npm**
+- **Node.js 18** or newer (Node 20 LTS recommended)
+- **npm** (shipped with Node.js)
+- **git**
 - A modern browser (Chrome, Firefox, Safari, Edge)
 - A running PokerTH server (local LAN, your own remote server, or pokerth.net)
 
 ---
 
-## Installation
+## Installation — fresh server (Ubuntu / Debian)
+
+This walkthrough assumes a clean Ubuntu 22.04 / 24.04 or Debian 12 VPS. Adapt commands for other distributions.
+
+### 1. Update the system
+
+```bash
+sudo apt update && sudo apt upgrade -y
+```
+
+### 2. Install build tools, git and curl
+
+```bash
+sudo apt install -y curl git build-essential
+```
+
+### 3. Install Node.js 20 LTS (via NodeSource)
+
+The Node.js shipped in Ubuntu's default repos is often too old. Use the official NodeSource repo to get a recent LTS:
+
+```bash
+curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+sudo apt install -y nodejs
+```
+
+Verify:
+
+```bash
+node -v   # should print v20.x.x or newer
+npm -v    # should print 10.x or newer
+```
+
+### 4. Install PM2 globally (process manager)
+
+PM2 keeps the proxy alive in the background and restarts it automatically at boot or after a crash.
+
+```bash
+sudo npm install -g pm2
+```
+
+### 5. Clone the project and install dependencies
 
 ```bash
 git clone https://github.com/narmod/pokerth-web-client.git
@@ -169,9 +227,111 @@ cd pokerth-web-client
 npm install
 ```
 
+You may see two `npm WARN deprecated` lines about `inflight` and `glob` — these are pulled in by `protobufjs-cli` (a dev-only dependency used to rebuild the protobuf bundle). They are harmless at runtime. `npm audit` should report **0 vulnerabilities**.
+
+### 6. Open the firewall
+
+If `ufw` is active on the server:
+
+```bash
+sudo ufw allow 8080/tcp     # if you serve directly on 8080
+# OR (recommended) 80/443 if you put Nginx in front
+sudo ufw allow 80/tcp
+sudo ufw allow 443/tcp
+```
+
+Cloud providers (IONOS, OVH, Hetzner, etc.) often have their **own firewall in front of the VPS** that is independent of `ufw`. Make sure to open the same ports in their control panel too, otherwise the port stays unreachable from outside.
+
+### 7. Start the proxy with PM2
+
+```bash
+pm2 start proxy.js --name pokerth-web
+pm2 save
+pm2 startup       # then run the command it prints, to enable boot-time start
+```
+
+Verify:
+
+```bash
+pm2 status
+pm2 logs pokerth-web --lines 30
+```
+
+The client is now live at `http://<your-server-ip>:8080`.
+
+### 8. (Recommended) Add HTTPS with Nginx + Let's Encrypt
+
+A direct WebSocket on port 8080 works, but many mobile browsers and corporate networks **block plain `ws://` connections**. Adding HTTPS via Nginx solves this for free and gives you a clean URL.
+
+You need a domain name pointing to the server's IP. Free options include [No-IP](https://www.noip.com/) (`yourname.ddns.net`) or [DuckDNS](https://www.duckdns.org/) (`yourname.duckdns.org`).
+
+Install Nginx and Certbot:
+
+```bash
+sudo apt install -y nginx certbot python3-certbot-nginx
+```
+
+Create `/etc/nginx/sites-available/pokerth` (replace `your-domain.example` with your real hostname):
+
+```nginx
+server {
+    listen 80;
+    server_name your-domain.example;
+
+    location / {
+        proxy_pass http://localhost:8080;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_read_timeout 86400;
+        proxy_send_timeout 86400;
+    }
+}
+```
+
+Enable and reload:
+
+```bash
+sudo ln -s /etc/nginx/sites-available/pokerth /etc/nginx/sites-enabled/
+sudo rm -f /etc/nginx/sites-enabled/default
+sudo nginx -t
+sudo systemctl reload nginx
+```
+
+Obtain the certificate (Certbot will edit the config to add HTTPS automatically):
+
+```bash
+sudo certbot --nginx -d your-domain.example
+```
+
+Pick option `2 — Redirect HTTP to HTTPS` when asked. Renewal is automatic via a systemd timer.
+
+The client is now live at `https://your-domain.example`. In the connect form, the WebSocket Proxy URL field will auto-fill with `wss://your-domain.example` (the JS detects the protocol).
+
+### 9. Updating the proxy later
+
+```bash
+cd ~/pokerth-web-client
+git pull
+npm install              # only if package.json changed
+pm2 restart pokerth-web
+```
+
 ---
 
-## Running
+## Running locally (development)
+
+If you only want to play around on your own machine:
+
+```bash
+git clone https://github.com/narmod/pokerth-web-client.git
+cd pokerth-web-client
+npm install
+```
 
 ### Standard (TLS enabled, recommended)
 
@@ -200,13 +360,6 @@ npm run start:insecure
 ```
 
 > ⚠️ `--insecure` disables TLS certificate verification. Use only for local development.
-
-### PM2 (production / persistent)
-
-```bash
-pm2 start proxy.js --name pokerth-web
-pm2 save
-```
 
 ### Docker
 
