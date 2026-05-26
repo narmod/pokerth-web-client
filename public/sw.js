@@ -1,29 +1,48 @@
 /**
- * PokerTH Service Worker — v2
- * ⚠ Bumper CACHE_VERSION à chaque déploiement pour forcer la mise à jour
- *    ex: 'pokerth-v2025-05-24' ou juste incrémenter le numéro
+ * PokerTH Service Worker — v3
+ * ⚠ Bump CACHE_VERSION on every deploy to force update.
+ *    e.g. 'pokerth-v2026-05-26' or just increment the number.
+ *
+ * Strategy:
+ *   • install   — precache the critical app shell (HTML, JS, CSS, modules,
+ *                 manifest, key PWA icons)
+ *   • activate  — drop stale caches, claim clients, notify pages
+ *   • fetch     — network-first for same-origin GETs, cache fallback when
+ *                 offline; cross-origin (fonts, etc.) and WS upgrades are
+ *                 left untouched
  */
-const CACHE_VERSION = 'pokerth-v2';
+const CACHE_VERSION = 'pokerth-v3';
+
+// Critical app shell precached on install. Keep this list tight — anything
+// large or rarely used (e.g. the protobuf bundle) is fetched on demand and
+// served from cache afterward thanks to the network-first handler below.
 const ASSETS = [
   '/',
   '/pokerth-client.html',
   '/pokerth.js',
   '/pokerth.css',
-  '/manifest.json'
+  '/manifest.json',
+  '/modules/i18n.mjs',
+  '/modules/sounds.mjs',
+  '/favicon.ico',
+  '/favicon.svg',
+  '/favicon-32.png',
+  '/favicon-192.png',
+  '/favicon-512.png'
 ];
 
-// ── Install : précharger les assets ──
+// ── Install : precache the app shell ──
 self.addEventListener('install', function(e) {
   e.waitUntil(
     caches.open(CACHE_VERSION)
       .then(function(c) { return c.addAll(ASSETS); })
-      .catch(function() { /* ignore si hors-ligne */ })
+      .catch(function() { /* offline during install — skip */ })
   );
-  // Prendre la main immédiatement (sans attendre fermeture des onglets)
+  // Take over immediately without waiting for all tabs to close.
   self.skipWaiting();
 });
 
-// ── Activate : supprimer les anciens caches ──
+// ── Activate : drop old caches ──
 self.addEventListener('activate', function(e) {
   e.waitUntil(
     caches.keys().then(function(keys) {
@@ -31,15 +50,15 @@ self.addEventListener('activate', function(e) {
         keys
           .filter(function(k) { return k !== CACHE_VERSION; })
           .map(function(k) {
-            console.log('[SW] Suppression ancien cache:', k);
+            console.log('[SW] Dropping old cache:', k);
             return caches.delete(k);
           })
       );
     }).then(function() {
-      // Contrôler toutes les pages ouvertes immédiatement
+      // Start controlling all open pages immediately.
       return self.clients.claim();
     }).then(function() {
-      // Notifier les clients qu'une nouvelle version est active
+      // Tell pages a new version is live so they can offer a reload prompt.
       return self.clients.matchAll({ type: 'window' }).then(function(clients) {
         clients.forEach(function(client) {
           client.postMessage({ type: 'SW_UPDATED', version: CACHE_VERSION });
@@ -49,32 +68,32 @@ self.addEventListener('activate', function(e) {
   );
 });
 
-// ── Message : SKIP_WAITING (depuis la page) ──
+// ── Message : SKIP_WAITING (from the page) ──
 self.addEventListener('message', function(e) {
   if (e.data && e.data.type === 'SKIP_WAITING') {
     self.skipWaiting();
   }
 });
 
-// ── Fetch : Network-first, cache en fallback offline ──
+// ── Fetch : network-first, cache fallback when offline ──
 self.addEventListener('fetch', function(e) {
   if (e.request.method !== 'GET') return;
-  // Ne pas intercepter les WebSocket ni les requêtes cross-origin
+  // Don't intercept WebSocket upgrades or cross-origin requests (fonts etc.)
   var url = new URL(e.request.url);
   if (url.origin !== self.location.origin) return;
-  // Stratégie : réseau d'abord, cache si réseau indisponible
+  // Strategy: network first, fall back to cache when offline.
   e.respondWith(
     fetch(e.request).then(function(response) {
-      // Mettre à jour le cache si la réponse est valide
+      // Refresh the cache when we got a valid response.
       if (response && response.status === 200) {
         var clone = response.clone();
         caches.open(CACHE_VERSION).then(function(c) { c.put(e.request, clone); });
       }
       return response;
     }).catch(function() {
-      // Hors-ligne : servir depuis le cache
+      // Offline — serve from cache if we have it.
       return caches.match(e.request).then(function(cached) {
-        return cached || new Response('Offline — rechargez quand vous êtes connecté', {
+        return cached || new Response('Offline — reload when you are back online', {
           status: 503,
           headers: { 'Content-Type': 'text/plain; charset=utf-8' }
         });
