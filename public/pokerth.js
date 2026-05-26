@@ -1144,6 +1144,12 @@ const App = (() => {
   let _timerSec = 0;      // seconds remaining
   let _timerTot = 30;     // total seconds
   let gameTimeout = 15;   // timeout par joueur (depuis les settings de la partie)
+  // Starting stack for this table. Pulled from NetGameInfo.startMoney
+  // (field 13, written by buildCreateGame) or set directly by the table
+  // creator. Used as the default money value when GameStartInitial
+  // initializes seatData — without this the stacks all start at 0 and the
+  // Call button mis-fires as "Call 0 (All-In)" before any action lands.
+  let gameStartMoney = 3000;
 
   // ── Statistiques de session ──
   var _stats = { handsPlayed:0, handsWon:0, startMoney:0, peakMoney:0, totalGain:0,
@@ -1432,8 +1438,12 @@ const App = (() => {
         // had set. NetGameInfo.playerActionTimeout is field 11 (see
         // buildCreateGame above, which writes the same key).
         var _gto = Proto.u32(gi, 11) || 0;
+        // NetGameInfo.startMoney is field 13 — same key the table creator
+        // wrote via buildCreateGame(). Default to 3000 if absent (matches
+        // the PokerTH server default for unconfigured games).
+        var _gsm = Proto.u32(gi, 13) || 0;
         games[id] = { name, mode, players:pc, maxPlayers:maxp, type:gtype, priv:!!priv,
-                      timeout: _gto || 15 };
+                      timeout: _gto || 15, startMoney: _gsm || 3000 };
         if (!loaded) { loaded = true; }
         renderGames();
         break;
@@ -1543,6 +1553,12 @@ const App = (() => {
         const isAdmin = Proto.u32(sub, 2);
         // Appliquer le timeout de la partie (depuis games[] si on rejoint, sinon celui créé)
         if (games[gId] && games[gId].timeout) gameTimeout = games[gId].timeout;
+        // Same for starting stack so the seat-data init (line ~1770) uses
+        // the real configured value instead of 0. When *we* are the
+        // creator, createGame() already wrote gameStartMoney directly —
+        // this branch handles the case where we joined someone else's
+        // table and discovered the settings via GameListNew.
+        if (games[gId] && games[gId].startMoney) gameStartMoney = games[gId].startMoney;
         amGameAdmin = !!isAdmin;
         var acb = document.getElementById('admin-close-btn');
         if (acb) acb.style.display = amGameAdmin ? '' : 'none';
@@ -1767,7 +1783,14 @@ const App = (() => {
           const inGame = newSeats.includes(pid);
           if (!seatData[pid]) seatData[pid] = {};
           if (isFirstDeal) {
-            Object.assign(seatData[pid], {money:0, bet:0, action:'', active:inGame, folded:false});
+            // Use the table's configured startMoney as the initial stack
+            // for every seat. The server only sends per-player money in
+            // PlayersActionDone, which means a seat that has NOT acted yet
+            // (everyone except SB/BB on hand #1) keeps its 0 default —
+            // which then makes the Call button mis-route to All-In once
+            // toCall >= 0. Seeding with the real startMoney fixes that
+            // misfire until PlayersActionDone corrects each seat's value.
+            Object.assign(seatData[pid], {money: gameStartMoney || 3000, bet:0, action:'', active:inGame, folded:false});
           } else {
             // Conserver le stack, réinitialiser uniquement l'état de la main
             Object.assign(seatData[pid], {bet:0, action:'', active:inGame, folded:false});
@@ -4533,6 +4556,11 @@ function dismissWinner() {
       window._minHumansNeeded = bots ? minHuman : 0;
       window._humansJoined    = 1;
       gameTimeout = timeout; // mémoriser le timeout pour le timer
+      gameStartMoney = stack;  // same idea for the starting stack: the
+                               // GameListNew message will eventually echo
+                               // this back, but writing it here ensures
+                               // it's available immediately for our own
+                               // JoinGameAck → GameStartInitial pipeline.
       const tablePass = (document.getElementById('cf-use-password')?.checked) ? (document.getElementById('cf-password')?.value || '') : '';
       // Spectators are allowed by default (true) when the field is missing
       // (older clients, or when the form hasn't been opened) — matches the
