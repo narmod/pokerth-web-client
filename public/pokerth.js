@@ -1424,9 +1424,14 @@ const App = (() => {
           while (pos < p.length) { const r = Proto.decodeVarint(p, pos); pos = r.pos; pc++; }
         }
 
-        // Extraire le timeout depuis GameInfo (netTimeOutPlayerAction)
-        var _ginfo = sub[13] ? Proto.decode(sub[13][0]) : (sub[5] ? Proto.decode(sub[5][0]) : null);
-        var _gto = _ginfo ? (Proto.u32(_ginfo, 11) || Proto.u32(_ginfo, 9)) : 0;
+        // Pull playerActionTimeout from the NetGameInfo we already decoded
+        // above (field 6 of GameListNewMessage). Previous attempts probed
+        // sub[13] / sub[5] for a NetGameInfo that lives under neither —
+        // both came back null, so `timeout` always fell through to the
+        // hard-coded 15 s default regardless of what the table creator
+        // had set. NetGameInfo.playerActionTimeout is field 11 (see
+        // buildCreateGame above, which writes the same key).
+        var _gto = Proto.u32(gi, 11) || 0;
         games[id] = { name, mode, players:pc, maxPlayers:maxp, type:gtype, priv:!!priv,
                       timeout: _gto || 15 };
         if (!loaded) { loaded = true; }
