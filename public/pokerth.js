@@ -3657,7 +3657,13 @@ function showWinnerOverlay(winners) {
   html += '<div class="wc-players">';
 
   // Sort: winners first, then by money desc
-  var allPids = seats.length ? seats : Object.keys(seatData).map(Number);
+  // CRITICAL: .slice() to clone seats — otherwise allPids.sort() below
+  // mutates the global seats array IN PLACE (since assignment shares the
+  // reference), rotating every player's visual position around the table
+  // after each showdown. The bug looked like 'seats randomly reordered
+  // every few hands' and was masked by _seatsFrozen which only guarded
+  // against GameStartInitial rewrites, not external mutations.
+  var allPids = seats.length ? seats.slice() : Object.keys(seatData).map(Number);
   var winnerPids = winners.map(function(w){ return w.pid; });
   allPids.sort(function(a,b){
     var aW = winnerPids.indexOf(a) >= 0 ? 1 : 0;
