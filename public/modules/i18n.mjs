@@ -442,3 +442,18 @@ Object.defineProperty(window, '_lang', {
 // Also expose a single namespaced object for the migration-aware code
 // that wants a clean entry point.
 window.I18N = { LANG, t, setLang, toggleLang, getLang };
+
+// ─── Auto-init: apply the current language on first DOM-ready ───────────
+// Without this, the language-toggle buttons stay empty until the user
+// clicks them (because setLang() is the function that injects the SVG
+// flag). Run it as soon as the DOM is parsed.
+function _initI18n() {
+    try { setLang(_lang); } catch (e) { console.warn('[i18n] init failed:', e); }
+}
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', _initI18n, { once: true });
+} else {
+    // DOM already parsed (defer scripts, late module load) — run now.
+    _initI18n();
+}
+
