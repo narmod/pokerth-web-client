@@ -329,6 +329,14 @@ const LANG = {
 };
 
 
+// ── Flag SVGs ─────────────────────────────────────────────────────────
+// Tiny inline SVGs used by the language toggle buttons. Rendering through
+// SVG avoids the Windows-Segoe-UI-Emoji limitation, which doesn't include
+// regional-indicator pairs (the 🇬🇧 / 🇫🇷 emoji render as plain "GB" / "FR"
+// letters on Windows 10/11 because the system font has no glyphs for them).
+const FLAG_GB_SVG = '<svg class="lang-flag" viewBox="0 0 60 30" xmlns="http://www.w3.org/2000/svg" aria-label="English"><clipPath id="ujt"><path d="M30,15h30v15zv15h-30zh-30v-15zv-15h30z"/></clipPath><path d="M0,0v30h60V0z" fill="#012169"/><path d="M0,0 60,30M60,0 0,30" stroke="#fff" stroke-width="6"/><path d="M0,0 60,30M60,0 0,30" clip-path="url(#ujt)" stroke="#C8102E" stroke-width="4"/><path d="M30,0v30M0,15h60" stroke="#fff" stroke-width="10"/><path d="M30,0v30M0,15h60" stroke="#C8102E" stroke-width="6"/></svg>';
+const FLAG_FR_SVG = '<svg class="lang-flag" viewBox="0 0 60 30" xmlns="http://www.w3.org/2000/svg" aria-label="Français"><rect width="20" height="30" fill="#0055A4"/><rect x="20" width="20" height="30" fill="#fff"/><rect x="40" width="20" height="30" fill="#EF4135"/></svg>';
+
 let _lang = (function(){
     try { return localStorage.getItem('pth_lang') || 'en'; }
     catch(e) { return 'en'; }
@@ -380,12 +388,18 @@ function setLang(l) {
     var rMap = [t('preflop'),t('flop'),t('turn'),t('river'),t('preflop')+' (SB)',t('preflop')+' (BB)'];
     gRound.textContent = rMap[gameState] || gRound.textContent;
   }
-  // Sync bouton toggle unique sur tous les écrans
-  var flag = _lang === 'fr' ? '🇫🇷' : '🇬🇧';
-  ['lang-toggle-connect','lang-toggle-lobby','lang-toggle-game','lang-toggle-game-mob'].forEach(function(id){
+  // Sync language-toggle buttons across all screens.
+  // We use an SVG flag rather than a regional-indicator emoji because
+  // Windows lacks glyphs for those pairs (renders as plain "GB"/"FR").
+  var flagSvg = _lang === 'fr' ? FLAG_FR_SVG : FLAG_GB_SVG;
+  var langLabel = _lang === 'fr' ? 'Langue' : 'Language';
+  ['lang-toggle-connect','lang-toggle-lobby','lang-toggle-game'].forEach(function(id){
     var b = document.getElementById(id);
-    if (b) b.textContent = flag;
+    if (b) b.innerHTML = flagSvg;
   });
+  // Mobile overflow-menu entry keeps a text label alongside the flag.
+  var bMob = document.getElementById('lang-toggle-game-mob');
+  if (bMob) bMob.innerHTML = flagSvg + ' ' + langLabel;
   // Update more/less options label
   var ml = document.getElementById('cf-more-label');
   if (ml) { var cfOpen = document.getElementById('cf-more-opts'); ml.textContent = (cfOpen && cfOpen.style.display !== 'none') ? t('lessOptions') : t('moreOptions'); }
