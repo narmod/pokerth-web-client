@@ -1964,7 +1964,12 @@ const App = (() => {
           }
           renderMyTurnActions();
           setMyTurnActive(true);
-          notifyMyTurn();
+          // Play the audio ding-dong (from sounds.mjs, attached to window)
+          // AND trigger the visual cue (tab title blink, browser notification).
+          // These used to be one call but the visual function shadowed the
+          // audio one, silencing the chime entirely.
+          if (typeof window.notifyMyTurn === 'function') window.notifyMyTurn();
+          notifyMyTurnVisuals();
         } else {
           clearTurnNotif();
           setMyTurnActive(false);
@@ -3376,7 +3381,12 @@ const App = (() => {
   var _origTitle = 'PokerTH Web';
   var _titleBlinkID = null;
 
-  function notifyMyTurn() {
+  // BUG FIX: this function used to be named notifyMyTurn(), which
+  // shadowed the sound-playing notifyMyTurn() exported by sounds.mjs onto
+  // window. As a result, the audio "ding-dong" never played -- only the
+  // browser-tab title blink. Renamed to notifyMyTurnVisuals so the audio
+  // and the visual cue are both fired explicitly (see call sites below).
+  function notifyMyTurnVisuals() {
     var msg = _lang === 'fr' ? '⚡ TON TOUR !' : '⚡ YOUR TURN!';
     var sub = _lang === 'fr' ? 'C\'est à toi de jouer sur PokerTH' : 'It\'s your move on PokerTH';
     // Notification navigateur (si onglet en arrière-plan)
@@ -3522,7 +3532,11 @@ const App = (() => {
       + '</div>';
 
     $('g-actions').innerHTML = h;
-    if (typeof notifyMyTurn === 'function') notifyMyTurn();
+    // Same fix as in PlayersTurn handler: fire BOTH the audio chime and the
+    // visual notification (they used to be one call, but the local function
+    // shadowed the audio one).
+    if (typeof window.notifyMyTurn === 'function') window.notifyMyTurn();
+    if (typeof notifyMyTurnVisuals === 'function') notifyMyTurnVisuals();
     // Tell server we're alive (avoid timeout)
     const rtm = Proto.encode([[1,0,68],[69,2,new Uint8Array(0)]]);
     send(rtm);
