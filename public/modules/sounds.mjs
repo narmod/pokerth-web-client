@@ -84,13 +84,37 @@ function notifyAllIn() {
   }
 }
 function notifyMyTurn() {
-  // Poker doorbell "ding-dong" — two bright, well-spaced bell tones
-  // (high C → A) with a perceptible decay. Easy to identify from across
-  // the room, distinct from any other game sound. Vibrates noticeably
-  // on mobile so the user can recognize their turn without looking.
-  playTone(1047, 0.35, 0.28);                                // DING (C6)
-  setTimeout(function(){ playTone(880, 0.45, 0.26); }, 220); // DONG (A5)
-  if (_soundEnabled && navigator.vibrate) navigator.vibrate([100, 80, 100]);
+  // Water-bubble "plop!" — a single short tone whose pitch sweeps upward
+  // very quickly, mimicking a bubble surfacing. Designed to be DISTINCT
+  // but UNFATIGUING over many hands: one event, ~180ms total, mid-range.
+  // Replaces the previous "ding-dong" which felt obtrusive after a while.
+  //
+  // Implementation: instead of playTone() (which holds a fixed freq), we
+  // schedule frequency.exponentialRampToValueAtTime so the oscillator
+  // glides from 440Hz to 880Hz in 80ms. That upward chirp is the
+  // hallmark of a bubble. A short exponential decay on gain provides
+  // the natural "plop" envelope.
+  if (!_soundEnabled) return;
+  var ctx = getAudioCtx(); if (!ctx) return;
+  try {
+    if (ctx.state === 'suspended') ctx.resume();
+    var o = ctx.createOscillator(), g = ctx.createGain();
+    o.type = 'sine'; // smoothest waveform, closest to a real bubble
+    o.connect(g); g.connect(ctx.destination);
+    var t0 = ctx.currentTime;
+    // Pitch sweep: 440Hz -> 880Hz over 80ms (the bubble rising)
+    o.frequency.setValueAtTime(440, t0);
+    o.frequency.exponentialRampToValueAtTime(880, t0 + 0.08);
+    // Volume envelope: small attack, exp decay over 180ms
+    g.gain.setValueAtTime(0.0001, t0);
+    g.gain.exponentialRampToValueAtTime(0.25, t0 + 0.01);
+    g.gain.exponentialRampToValueAtTime(0.001, t0 + 0.18);
+    o.start(t0);
+    o.stop(t0 + 0.20);
+  } catch(e) {}
+  // Keep the gentle vibration cue on mobile (single short pulse)
+  if (_soundEnabled && navigator.vibrate) navigator.vibrate(80);
+  // Keep the golden glow on the player zone
   var mz = document.querySelector('.my-zone');
   if (mz) { mz.style.borderTopColor='gold'; setTimeout(function(){ mz.style.borderTopColor=''; }, 1200); }
 }
