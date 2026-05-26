@@ -338,8 +338,21 @@ const FLAG_GB_SVG = '<svg class="lang-flag" viewBox="0 0 60 30" xmlns="http://ww
 const FLAG_FR_SVG = '<svg class="lang-flag" viewBox="0 0 60 30" xmlns="http://www.w3.org/2000/svg" aria-label="Français"><rect width="20" height="30" fill="#0055A4"/><rect x="20" width="20" height="30" fill="#fff"/><rect x="40" width="20" height="30" fill="#EF4135"/></svg>';
 
 let _lang = (function(){
-    try { return localStorage.getItem('pth_lang') || 'en'; }
-    catch(e) { return 'en'; }
+    try {
+        // 1. The user has manually picked a language before — respect that.
+        var saved = localStorage.getItem('pth_lang');
+        if (saved === 'en' || saved === 'fr') return saved;
+        // 2. First visit: auto-detect from the browser locale. Any French
+        //    locale (fr-FR / fr-BE / fr-CA / fr-CH / fr) → French UI.
+        //    Everything else → English (the project's default reach).
+        //    This avoids serving English UI to a French speaker (which
+        //    triggers the browser's "Translate this page?" banner) while
+        //    still defaulting to English for the international audience.
+        var bl = (navigator.language || '').toLowerCase();
+        return bl.startsWith('fr') ? 'fr' : 'en';
+    } catch (e) {
+        return 'en';
+    }
 })();
 
 function t(k) {
@@ -349,6 +362,10 @@ function t(k) {
 function setLang(l) {
   _lang = l;
   try { localStorage.setItem('pth_lang', l); } catch(e) {}
+  // Keep <html lang> in sync with the active UI language. The browser
+  // uses this attribute to decide whether to offer a translation banner;
+  // matching the user's locale here makes the banner disappear.
+  try { document.documentElement.lang = l; } catch(e) {}
   document.querySelectorAll('[data-i18n]').forEach(function(el) {
     var k = el.getAttribute('data-i18n');
     el.textContent = t(k);
