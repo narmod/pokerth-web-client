@@ -1167,6 +1167,13 @@ const App = (() => {
   let _hasStatistics = false; // true once we've seen a StatisticsMessage; takes precedence over the PlayerList tally
   let _lobbyPids = new Set(); // pids currently online in the lobby (driven by PlayerList add/remove events)
   let _pendingNameRequests = new Set(); // pids we've already asked the server about, to avoid spamming PlayerInfoRequest
+  // ── Feature flag: auto-check / auto-fold next-turn checkbox ────────
+  // When true, the action bar shows a checkbox above the action buttons
+  // that arms an automatic fold (or check, if currently free) for the
+  // user's next turn this hand. When false, the checkbox is not rendered
+  // at all but the underlying logic stays intact — flipping this back to
+  // `true` reinstates the feature without touching anything else.
+  const FEATURE_AUTO_CHECK_FOLD = false;
   let _autoCheckFold = false; // armed by the per-turn checkbox; auto-resets every HandStart
   let _lastConnectParams = null;
   // Track mode + name of last Init sent so we can detect 'rapid mode swap'
@@ -3447,14 +3454,22 @@ const App = (() => {
     // 'Auto-check' when we currently have nothing to call, 'Auto-fold'
     // otherwise. The checkbox state is bound to window._autoCheckFold via
     // App.toggleAutoCheckFold.
-    const autoLabel = canCheck
-      ? t('autoCheckLabel')
-      : t('autoFoldLabel');
-    const autoRow = '<label class="auto-cf-row">' +
-      '<input type="checkbox" id="auto-cf-chk"' + (_autoCheckFold ? ' checked' : '') +
-        ' onchange="App.toggleAutoCheckFold(this.checked)">' +
-      '<span>' + autoLabel + '</span>' +
-      '</label>';
+    //
+    // The whole row is hidden behind FEATURE_AUTO_CHECK_FOLD so the
+    // checkbox can be enabled or disabled in one place without removing
+    // the underlying logic. When the flag is false, `autoRow` is empty
+    // and the action bar starts directly with the fold/call/raise grid.
+    let autoRow = '';
+    if (FEATURE_AUTO_CHECK_FOLD) {
+      const autoLabel = canCheck
+        ? t('autoCheckLabel')
+        : t('autoFoldLabel');
+      autoRow = '<label class="auto-cf-row">' +
+        '<input type="checkbox" id="auto-cf-chk"' + (_autoCheckFold ? ' checked' : '') +
+          ' onchange="App.toggleAutoCheckFold(this.checked)">' +
+        '<span>' + autoLabel + '</span>' +
+        '</label>';
+    }
 
     const h = autoRow + '<div class="action-grid">'
       + '<div class="action-top-row">'
