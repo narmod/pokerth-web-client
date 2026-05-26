@@ -1536,10 +1536,14 @@ body {
   flex-shrink: 0;
 }
 
-/* Community cards — centred inside oval */
+/* Community cards — centred inside oval.
+   The previous value top:56% pushed the row 6% below center, which on
+   mobile/tablet visibly drifted the cards toward the bottom rim of the
+   felt. Pure 50% centers them on the vertical axis of the oval (the
+   gradient halo and shadow ring are already designed around 50%/45%). */
 .comm-row {
   position: absolute;
-  top: 56%; left: 50%;
+  top: 50%; left: 50%;
   transform: translate(-50%, -50%);
   display: flex;
   gap: 5px;
