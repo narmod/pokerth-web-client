@@ -58,7 +58,7 @@ function selectAvatarPopup(emoji) {
 <!-- ╚════════════════════╝ -->
 <div id="s-connect" class="screen active">
   <div style="position:absolute;top:12px;right:16px;display:flex;gap:6px;z-index:10">
-    <button class="btn-sm" id="lang-toggle-connect" onclick="toggleLang()" title="Switch language" style="font-size:0.85rem;min-width:34px">🇬🇧</button>
+    <button class="btn-sm btn-icon" id="lang-toggle-connect" onclick="toggleLang()" title="Switch language" aria-label="Switch language"></button>
     <button class="btn-sm" onclick="location.reload()" title="Refresh / Rafraîchir" style="font-size:1rem;padding:3px 8px">↺</button>
     <button class="btn-sm" id="fs-btn-connect" onclick="toggleFullscreen()" title="Fullscreen">⛶</button>
   </div>
@@ -143,6 +143,17 @@ function selectAvatarPopup(emoji) {
     <button class="btn-primary" onclick="App.connect()" data-i18n="connect">CONNECT</button>
     <div id="cstatus" class="status"></div>
   </div>
+  <!-- Credits footer (shown only on the connect screen; absent from
+       lobby & game so it doesn't eat playable space). -->
+  <div class="connect-footer">
+    <div class="connect-footer-line">
+      <span>♠ PokerTH Web Client · AGPL-3.0</span>
+    </div>
+    <div class="connect-footer-line">
+      Source:
+      <a href="https://github.com/narmod/pokerth-web-client" target="_blank" rel="noopener noreferrer">github.com/narmod/pokerth-web-client</a>
+    </div>
+  </div>
 </div>
 
 <!-- ║   LOBBY SCREEN     ║ -->
@@ -155,7 +166,7 @@ function selectAvatarPopup(emoji) {
       <span class="pill" id="h-players" onclick="togglePlayersPanel()" style="cursor:pointer">—</span>
     </div>
     <button class="btn-sm btn-icon" id="fs-btn-lobby" onclick="toggleFullscreen()" title="Fullscreen">⛶</button>
-    <button class="btn-sm btn-icon" id="lang-toggle-lobby" onclick="toggleLang()" title="Switch language">🇬🇧</button>
+    <button class="btn-sm btn-icon" id="lang-toggle-lobby" onclick="toggleLang()" title="Switch language" aria-label="Switch language"></button>
     <button class="btn-sm btn-icon" id="lobby-chat-btn" onclick="toggleLobbyChat()" title="Chat">💬</button>
     <button class="btn-sm btn-icon" onclick="App.confirmDisconnect()" title="Disconnect" data-i18n-title="disconnectTooltip" style="color:var(--red);border-color:rgba(192,57,43,0.3)">✕</button>
   </div>
@@ -261,7 +272,7 @@ function selectAvatarPopup(emoji) {
     <button class="btn-sm btn-icon" id="fs-btn-game" onclick="toggleFullscreen()" title="Fullscreen">⛶</button>
     <button class="btn-sm btn-icon" id="sound-toggle-btn" onclick="toggleSound()" title="Couper/Unmute">🔊</button>
     <button class="btn-sm btn-icon" onclick="toggleHandsHelp()" title="Combinaisons du poker">🂡</button>
-    <button class="btn-sm btn-icon" id="lang-toggle-game" onclick="toggleLang()" title="Switch language">🇬🇧</button>
+    <button class="btn-sm btn-icon" id="lang-toggle-game" onclick="toggleLang()" title="Switch language" aria-label="Switch language"></button>
     <button class="btn-sm btn-icon" id="log-toggle-btn" onclick="toggleLog()" title="Journal">📋</button>
     <button class="btn-sm btn-icon" id="react-toggle-btn" onclick="toggleReactionPanel()" title="Réactions">😊</button>
     <button class="btn-sm btn-icon" id="chat-toggle-btn" onclick="toggleGameChat()" title="Chat">💬</button>
@@ -271,7 +282,7 @@ function selectAvatarPopup(emoji) {
     <button class="btn-sm btn-icon" onclick="App.confirmLeaveGame()" title="Quit" data-i18n-title="quitTooltip" style="color:var(--red);border-color:rgba(192,57,43,0.3)">✕</button>
     <div id="g-overflow-menu">
       <button class="btn-sm" onclick="toggleFullscreen();closeHeaderOverflow()">⛶ Fullscreen</button>
-      <button class="btn-sm" id="lang-toggle-game-mob" onclick="toggleLang();closeHeaderOverflow()" style="font-size:0.85rem">🇬🇧 Langue</button>
+      <button class="btn-sm" id="lang-toggle-game-mob" onclick="toggleLang();closeHeaderOverflow()" style="font-size:0.85rem"></button>
       <button class="btn-sm" onclick="toggleLog();closeHeaderOverflow()">📋 Journal</button>
       <button class="btn-sm" id="admin-start-mob" onclick="App.startWithBots();closeHeaderOverflow()" style="display:none;color:var(--green);border-color:rgba(39,174,96,0.4)">▶ Bots</button>
       <button class="btn-sm" id="admin-close-mob" onclick="App.closeTable();closeHeaderOverflow()" style="display:none;color:#e67e22;border-color:rgba(230,126,34,0.4)">🔒 Close</button>
