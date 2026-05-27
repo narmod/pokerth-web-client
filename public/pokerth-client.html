@@ -256,7 +256,7 @@ function selectAvatarPopup(emoji) {
   <div class="header">
     <div class="header-brand"><span>♠</span> POKERTH</div>
     <div class="header-pills">
-      <span class="pill" id="h-nick">—</span>
+      <span class="pill pill-clickable" id="h-nick" onclick="openPlayerInfoPopup()" title="Mon profil">—</span>
       <span class="pill" id="h-players" onclick="togglePlayersPanel()" style="cursor:pointer">—</span>
     </div>
     <button class="btn-sm btn-icon" id="fs-btn-lobby" onclick="toggleFullscreen()" title="Fullscreen">⛶</button>
@@ -592,5 +592,21 @@ if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('/sw.js').catch(function(){});
 }
 </script>
+
+<!-- Player info modal: opened by clicking the #h-nick pill in the
+     lobby header. Shows the local player's avatar + pseudo, and a
+     button to change the avatar via the existing avatar-popup
+     (re-used in 'modal mode' via the .avatar-popup-as-modal class
+     added by the JS, see openAvatarPickerFromLobby). -->
+<div id="player-info-modal" style="display:none">
+  <div class="pim-backdrop" onclick="closePlayerInfoPopup()"></div>
+  <div class="pim-card" role="dialog" aria-labelledby="pim-name">
+    <button class="pim-close" type="button" onclick="closePlayerInfoPopup()" title="Fermer" aria-label="Fermer">✕</button>
+    <div class="pim-avatar" id="pim-avatar"></div>
+    <div class="pim-name" id="pim-name">—</div>
+    <button class="btn-primary pim-change" type="button" onclick="openAvatarPickerFromLobby()" data-i18n="changeAvatar">Changer d'avatar</button>
+  </div>
+</div>
+
 </body>
 </html>
