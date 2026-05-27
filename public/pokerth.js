@@ -1433,6 +1433,27 @@ const App = (() => {
   // Expose so tests / debug can call it.
   window._avatarChipHtml = _avatarChipHtml;
 
+  // Re-evaluate visibility of the "▶ Start" (no-bots) button based on
+  // how many humans are currently at the table. Called from the
+  // waiting-panel renderer on every refresh so the button appears as
+  // soon as the second human arrives and disappears if they leave.
+  //
+  // Safety: only ever shows the button to the game admin. If the
+  // admin button is hidden (we're not the admin) the function does
+  // nothing — extra cheap-guard before counting.
+  function refreshStartNoBotsVisibility() {
+    if (!amGameAdmin) return;
+    var humansAtTable = Object.keys(seatData)
+      .map(function(s){ return parseInt(s,10); })
+      .filter(function(p){ return seatData[p] && !seatData[p].gone; }).length;
+    var showIt = humansAtTable >= 2;
+    var btn  = document.getElementById('admin-startnobots-btn');
+    var btnM = document.getElementById('admin-startnobots-mob');
+    if (btn)  btn.style.display  = showIt ? '' : 'none';
+    if (btnM) btnM.style.display = showIt ? '' : 'none';
+  }
+  window._refreshStartNoBotsVisibility = refreshStartNoBotsVisibility;
+
   // ──────────────────────────────────────────────────────────────
   // Lobby pseudo pill: avatar + name, click opens the player-info
   // modal (which has a 'Change avatar' button).
@@ -4027,6 +4048,13 @@ const App = (() => {
     // We re-evaluate the threshold every render (panel refreshes on join/
     // leave/PlayerInfoReply), so the banner appears/disappears as people
     // come and go.
+    // Side-effect: refresh the standalone "▶ Start (no bots)" admin
+    // button visibility. We do it here rather than in the JoinGameAck
+    // handler because admins typically have count=1 at JoinGameAck
+    // (just themselves) — the second human is what makes the button
+    // useful, and that join triggers a re-render of this panel.
+    try { refreshStartNoBotsVisibility(); } catch(e) {}
+
     let readyBlock = '';
     if (amGameAdmin
         && window._createWithBots
@@ -5151,6 +5179,10 @@ function dismissWinner() {
       if (akb) akb.style.display = 'none';
       var akbm = document.getElementById('admin-kick-mob');
       if (akbm) akbm.style.display = 'none';
+      var asnb = document.getElementById('admin-startnobots-btn');
+      if (asnb) asnb.style.display = 'none';
+      var asnbm = document.getElementById('admin-startnobots-mob');
+      if (asnbm) asnbm.style.display = 'none';
       var badge = document.getElementById('g-admin-badge');
       if (badge) badge.style.display = 'none';
       show('s-lobby');
@@ -5499,6 +5531,33 @@ function dismissWinner() {
       if (!gId) return;
       addGameChat(null, '▶ Starting with bots…', 'sys');
       send(MSG.buildStartWithBots(gId, true));
+    },
+    // Start the game with the humans currently at the table and NO
+    // auto-filling with bots. Same StartEventMessage as startWithBots,
+    // just with fillWithComputerPlayers = false.
+    //
+    // Per the user-validated design (Q1=b): button is only shown when
+    // there are at least 2 humans at the table — startWithoutBotsButtonVisible()
+    // updates its visibility on every join / leave / player-info event.
+    // We re-check the count here defensively because the visibility
+    // is just UI gating, not enforcement.
+    startNoBots() {
+      if (!gId) return;
+      var humansAtTable = Object.keys(seatData)
+        .map(function(s){ return parseInt(s,10); })
+        .filter(function(p){ return seatData[p] && !seatData[p].gone; }).length;
+      if (humansAtTable < 2) {
+        // Should never reach here because the button is hidden, but
+        // catch it anyway so a stray click on a stale UI can't send
+        // a bad request.
+        var fr = (typeof _lang === 'undefined' || _lang !== 'en');
+        addGameChat(null, '⚠ ' + (fr
+          ? 'Au moins 2 joueurs sont nécessaires pour démarrer.'
+          : 'At least 2 players are needed to start.'), 'sys');
+        return;
+      }
+      addGameChat(null, '▶ Starting (humans only)…', 'sys');
+      send(MSG.buildStartWithBots(gId, false));
     },
     createGame() {
       const g = id => document.getElementById(id);
