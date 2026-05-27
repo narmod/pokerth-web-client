@@ -3483,3 +3483,42 @@ body:not(.in-game) .my-zone {
   font-weight: 600;
 }
 .kcm-confirm:hover { background: rgba(192,57,43,0.4); }
+
+
+/* ── Waiting-panel start buttons (2-button variant) ──
+   The .wp-ready-row used to host a single LANCER MAINTENANT button.
+   With the introduction of startNoBots() the row now offers two:
+   "▶ Démarrer" (humans only) + "▶ + Bots" (fill with bots).
+   They sit side by side and wrap to two lines on very narrow widths. */
+.wp-ready-btn-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+}
+.wp-ready-btn-row .wp-ready-btn {
+  flex: 1 1 auto;
+  min-width: 110px;
+  max-width: 220px;
+}
+/* "+ Bots" variant: same green family but slightly darker tint so
+   the user can tell the two apart without having to read the labels. */
+.wp-ready-btn.wp-ready-btn-bots {
+  background: linear-gradient(180deg, rgba(88,201,122,0.22), rgba(88,201,122,0.10));
+  border-color: rgba(88,201,122,0.65);
+  /* Slightly faded — "start" is the primary action, "+ bots" the secondary. */
+  opacity: 0.94;
+}
+.wp-ready-btn.wp-ready-btn-bots:hover {
+  background: linear-gradient(180deg, rgba(88,201,122,0.4), rgba(88,201,122,0.2));
+  opacity: 1;
+}
+/* On very small phones, give the buttons a touch more vertical room
+   so the labels don't wrap awkwardly inside a single button. */
+@media (max-width: 380px) {
+  .wp-ready-btn-row .wp-ready-btn {
+    flex: 1 1 100%;
+    max-width: 280px;
+  }
+}
