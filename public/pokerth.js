@@ -2798,9 +2798,15 @@ const App = (() => {
         smallBlind = sb;
         dealerPid = Proto.u32(sub, 6) || dealerPid;
 
-        // Reset seat data for new hand
+        // Reset seat data for new hand. IMPORTANT: skip pids flagged
+        // as .gone (player left the table — GamePlayerLeft handler
+        // set this). If we reset their .active to true here, they
+        // re-appear at the felt as if they were still playing, and
+        // the server's subsequent PlayersTurn for the next live
+        // player gets confused. Keep gone pids OUT permanently;
+        // they'll be rendered as ghost seats by renderSeats().
         for (const pid of seats) {
-          if (seatData[pid]) {
+          if (seatData[pid] && !seatData[pid].gone) {
             seatData[pid].bet    = 0;
             seatData[pid].action = '';
             seatData[pid].folded = false;
@@ -3971,8 +3977,16 @@ const App = (() => {
       const sd = seatData[pid] || {};
       const isDealer = pid === dealerPid;
       const isActive = pid === turnPid;
-      const isOut = sd.active === false; // eliminated or sitting out this hand
-      const cls = ['seat', isMe?'me':'', isDealer?'dealer':'', isActive?'active':'', sd.folded?'folded':'', isOut?'seat-out':''].filter(Boolean).join(' ');
+      const isOut  = sd.active === false; // eliminated or sitting out this hand
+      const isGone = !!sd.gone; // player left the table — ghost seat
+      // Ghost seats take precedence over eliminated: a gone player gets
+      // the minimal-visibility .seat-ghost class instead of .seat-out.
+      // The two are mutually exclusive (gone implies active=false), but
+      // we still gate the seat-out class on !isGone to be explicit.
+      const cls = ['seat', isMe?'me':'', isDealer?'dealer':'', isActive?'active':'',
+                   sd.folded && !isGone ? 'folded' : '',
+                   isOut && !isGone ? 'seat-out' : '',
+                   isGone ? 'seat-ghost' : ''].filter(Boolean).join(' ');
       const initial    = getPlayerInitial(pid);
       const typeBadge  = getPlayerTypeBadge(pid);
       var _hasEmojiAv = isMe
