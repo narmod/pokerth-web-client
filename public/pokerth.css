@@ -901,10 +901,12 @@ body {
 }
 
 /* Bouton ⋯ : caché sur desktop */
-#g-overflow-btn { display: none; }
+#g-overflow-btn,
+#l-overflow-btn { display: none; }
 
 /* Menu déroulant */
-#g-overflow-menu {
+#g-overflow-menu,
+#l-overflow-menu {
   display: none;
   position: absolute;
   top: 100%;
@@ -920,8 +922,10 @@ body {
   gap: 4px;
   box-shadow: 0 12px 32px rgba(0,0,0,0.7);
 }
-#g-overflow-menu.open { display: flex; }
-#g-overflow-menu .btn-sm {
+#g-overflow-menu.open,
+#l-overflow-menu.open { display: flex; }
+#g-overflow-menu .btn-sm,
+#l-overflow-menu .btn-sm {
   width: 100%;
   text-align: left;
   padding: 7px 12px;
@@ -929,18 +933,23 @@ body {
   font-size: 0.8rem;
   justify-content: flex-start;
 }
-#g-overflow-menu .btn-sm:hover {
+#g-overflow-menu .btn-sm:hover,
+#l-overflow-menu .btn-sm:hover {
   background: rgba(255,255,255,0.06);
 }
 
 /* Sur mobile : cacher les boutons secondaires, montrer ⋯ */
 @media (max-width: 540px) {
-  #g-overflow-btn { display: inline-flex !important; align-items: center; }
+  #g-overflow-btn,
+  #l-overflow-btn { display: inline-flex !important; align-items: center; }
   #fs-btn-game,
   #lang-toggle-game,
   #log-toggle-btn,
   #admin-start-btn,
-  #admin-close-btn { display: none !important; }
+  #admin-close-btn,
+  /* Lobby: hide buttons now moved into the ••• overflow menu */
+  #fs-btn-lobby,
+  #lang-toggle-lobby { display: none !important; }
 
   /* Hauteur uniforme pour tous les btn-sm du header jeu */
   #s-game .header .btn-sm {
