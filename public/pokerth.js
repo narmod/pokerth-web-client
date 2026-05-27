@@ -1187,7 +1187,17 @@ const MSG = (() => {
     return Proto.encode([[1,0,31],[32,2,msg]]);
   }
 
-  return { T, parse, buildInit, buildChat, buildJoin, buildJoinGame, buildStartEventAck, buildMyAction, buildCreateGame, buildLeaveGame, buildStartWithBots };
+  // KickPlayerRequestMessage (type 30, sub-field 31). Admin only.
+  // The server replies with GamePlayerLeft (leftKicked) broadcast to
+  // all clients and a RemovedFromGame (kickedFromGame) to the kicked
+  // player. We don't need to await a direct ack — the existing handlers
+  // already update the seat list when they see GamePlayerLeft.
+  function buildKickPlayer(gameId, playerId) {
+    const msg = Proto.encode([[1,0,gameId],[2,0,playerId]]);
+    return Proto.encode([[1,0,30],[31,2,msg]]);
+  }
+
+  return { T, parse, buildInit, buildChat, buildJoin, buildJoinGame, buildStartEventAck, buildMyAction, buildCreateGame, buildLeaveGame, buildStartWithBots, buildKickPlayer };
 })();
 
 
@@ -2289,6 +2299,12 @@ const App = (() => {
         if (asb) asb.style.display = amGameAdmin ? '' : 'none';
         var acbm = document.getElementById('admin-close-mob');
         if (acbm) acbm.style.display = amGameAdmin ? '' : 'none';
+        // Kick button: shown only to admins (server ignores non-admin
+        // KickPlayerRequest anyway, but exposing it would be confusing).
+        var akb = document.getElementById('admin-kick-btn');
+        if (akb) akb.style.display = amGameAdmin ? '' : 'none';
+        var akbm = document.getElementById('admin-kick-mob');
+        if (akbm) akbm.style.display = amGameAdmin ? '' : 'none';
         var asbm = document.getElementById('admin-start-mob');
         if (asbm) asbm.style.display = amGameAdmin ? '' : 'none';
         addChat(null, t('joinedTableWaiting').replace('{gid}', gId).replace('{admin}', isAdmin ? ' (admin)' : ''), 'sys');
@@ -4969,6 +4985,132 @@ function dismissWinner() {
       show('s-connect');
     },
 
+
+    // ──────────────────────────────────────────────────────────
+    // Kick player flow (admin only). See pokerth.proto:
+    //   KickPlayerRequestMessage (type 30) → server broadcasts
+    //   GamePlayerLeft(leftKicked) to all + RemovedFromGame to victim.
+    //   Existing handlers in this file already remove the player
+    //   from seats[] on receipt, so the UI updates itself.
+    // ──────────────────────────────────────────────────────────
+    openKickModal() {
+      if (!amGameAdmin) return; // double-check; button shouldn't be visible
+      var modal = document.getElementById('kick-modal');
+      var list  = document.getElementById('km-list');
+      if (!modal || !list) return;
+      // Build the list from seatData (covers both pre-game and in-game
+      // phases; GamePlayerJoined writes here on first sight). Filter out
+      // pids the server has marked as gone, just in case.
+      var pids = Object.keys(seatData).map(function(s){ return parseInt(s,10); })
+                       .filter(function(p){ return !seatData[p].gone; });
+      // Sort: me first, then alphabetical by name.
+      pids.sort(function(a, b) {
+        if (a === myId && b !== myId) return -1;
+        if (b === myId && a !== myId) return 1;
+        var na = (players[a] || ('#' + a)).toLowerCase();
+        var nb = (players[b] || ('#' + b)).toLowerCase();
+        return na < nb ? -1 : na > nb ? 1 : 0;
+      });
+      if (!pids.length) {
+        list.innerHTML = '<div class="km-empty">— ' +
+          ((typeof _lang !== 'undefined' && _lang === 'en')
+            ? 'No players at the table' : 'Aucun joueur à la table') +
+          ' —</div>';
+      } else {
+        var fr = (typeof _lang === 'undefined' || _lang !== 'en');
+        var html = pids.map(function(pid) {
+          var name = players[pid] || ('#' + pid);
+          var sd   = seatData[pid] || {};
+          var stack= (typeof sd.money === 'number') ? (sd.money + ' ¥') : '';
+          var isMe = (pid === myId);
+          var avChip = (typeof window._avatarChipHtml === 'function')
+            ? window._avatarChipHtml(pid, name, 'km-av')
+            : '<span class="km-av letter">' + (name[0] || '?').toUpperCase() + '</span>';
+          // No kick button for self (admin can't kick themselves; the
+          // server would reject it anyway).
+          var rowCls = 'km-row' + (isMe ? ' km-self' : '');
+          // Escape name for safe HTML injection
+          var escName = String(name).replace(/[<>&"]/g, function(c){
+            return {'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;'}[c];
+          });
+          var btn = isMe ? '' :
+            '<button class="km-kick" type="button" ' +
+              'onclick="App.askConfirmKick(' + pid + ')" ' +
+              'title="' + (fr ? 'Kicker ' + escName : 'Kick ' + escName) + '" ' +
+              'aria-label="Kick">🗑️</button>';
+          return '<div class="' + rowCls + '">' +
+                   avChip +
+                   '<div class="km-info">' +
+                     '<div class="km-name">' + escName + '</div>' +
+                     (stack ? '<div class="km-meta">' + stack + '</div>' : '') +
+                   '</div>' +
+                   btn +
+                 '</div>';
+        }).join('');
+        list.innerHTML = html;
+      }
+      modal.style.display = 'flex';
+    },
+    closeKickModal() {
+      var modal = document.getElementById('kick-modal');
+      if (modal) modal.style.display = 'none';
+    },
+    // Step 2: ask confirmation before sending the kick.
+    askConfirmKick(pid) {
+      if (!amGameAdmin) return;
+      var name = players[pid] || ('#' + pid);
+      var fr = (typeof _lang === 'undefined' || _lang !== 'en');
+      var msgEl = document.getElementById('kcm-msg');
+      var titleEl = document.getElementById('kcm-title');
+      if (titleEl) {
+        titleEl.textContent = fr ? 'Kicker ce joueur ?' : 'Kick this player?';
+      }
+      if (msgEl) {
+        msgEl.textContent = fr
+          ? 'Le joueur "' + name + '" sera expulsé de la table.'
+          : 'Player "' + name + '" will be removed from the table.';
+      }
+      // Stash the target pid for the confirm button.
+      window._pendingKickPid = pid;
+      var modal = document.getElementById('kick-confirm-modal');
+      if (modal) modal.style.display = 'flex';
+    },
+    cancelKickConfirm() {
+      window._pendingKickPid = null;
+      var modal = document.getElementById('kick-confirm-modal');
+      if (modal) modal.style.display = 'none';
+    },
+    doKickConfirmed() {
+      var pid = window._pendingKickPid;
+      var modal = document.getElementById('kick-confirm-modal');
+      if (modal) modal.style.display = 'none';
+      if (!pid || !amGameAdmin || !gId) {
+        window._pendingKickPid = null;
+        return;
+      }
+      var name = players[pid] || ('#' + pid);
+      try { send(MSG.buildKickPlayer(gId, pid)); } catch(e) {}
+      // Optimistic log so the admin gets immediate feedback even
+      // before the server broadcasts GamePlayerLeft. Localised.
+      var fr = (typeof _lang === 'undefined' || _lang !== 'en');
+      addGameChat(null, '🗑️ ' + (fr
+        ? 'Kick demandé pour ' + name
+        : 'Kick requested for ' + name), 'sys');
+      window._pendingKickPid = null;
+      // Refresh the kick list so the row disappears once the server
+      // confirms. We don't close the modal automatically: if the admin
+      // wants to kick several players in a row, they can.
+      // (We do trigger a re-render after a short delay to give the
+      // GamePlayerLeft message time to arrive.)
+      setTimeout(function() {
+        var m = document.getElementById('kick-modal');
+        if (m && m.style.display === 'flex') {
+          // Re-open / re-render with the (hopefully) updated seatData
+          App.openKickModal();
+        }
+      }, 600);
+    },
+
     closeTable() {
       // Admin closes table: send leave, server closes game for all
       if (ws && gId) { try { send(MSG.buildLeaveGame(gId)); } catch(e) {} }
@@ -4984,6 +5126,10 @@ function dismissWinner() {
       document.body.classList.remove('in-game');
       var acb = document.getElementById('admin-close-btn');
       if (acb) acb.style.display = 'none';
+      var akb = document.getElementById('admin-kick-btn');
+      if (akb) akb.style.display = 'none';
+      var akbm = document.getElementById('admin-kick-mob');
+      if (akbm) akbm.style.display = 'none';
       var badge = document.getElementById('g-admin-badge');
       if (badge) badge.style.display = 'none';
       show('s-lobby');
