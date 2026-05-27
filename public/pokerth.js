@@ -2846,6 +2846,18 @@ const App = (() => {
         // PlayersTurnMessage: gameId=1, playerId=2, gameState=3
         turnPid   = Proto.u32(sub, 2);
         gameState = Proto.u32(sub, 3);
+        // Defensive guard: if the server (older PokerTH versions, e.g.
+        // the Debian 1.1.2-2 package) mistakenly sends PlayersTurn for
+        // a player who has already left the table, ignore it. The
+        // server should normally skip gone pids and assign the turn to
+        // the next live one. We still set turnPid above (for any UI
+        // consistency code that may inspect it) but bail out of the
+        // turn-handling logic so we don't render a ghost as active.
+        if (turnPid && seatData[turnPid] && seatData[turnPid].gone) {
+          console.warn('[PlayersTurn] server assigned turn to a gone pid', turnPid, '— ignoring');
+          renderSeats();
+          break;
+        }
         const rounds = [t('preflop'),t('flop'),t('turn'),t('river'),t('preflop')+' (SB)',t('preflop')+' (BB)'];
         $('g-round').textContent = rounds[gameState] || t('preflop');
         startTurnTimer();
