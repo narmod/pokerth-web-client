@@ -5,6 +5,7 @@
 function _startIpBlockCountdown() {
   // Met à jour le statut toutes les secondes avec le temps restant
   var _blockInterval = setInterval(function() {
+  console.log('[PokerTH] Build: game-info-modal feature + sw v4 — ' + new Date().toISOString().slice(0,16));
     var rem = Math.max(0, Math.ceil((_ipBlockUntil - Date.now()) / 1000));
     var mins = Math.floor(rem / 60), secs = rem % 60;
     var txt = '⏳ IP bloquée — ' + (mins > 0 ? mins + 'min ' : '') + secs + 's';
