@@ -1129,6 +1129,14 @@ const App = (() => {
   let handNum   = 0;   // hand counter
   let gameState = 0;   // preflop/flop/turn/river
   let _playerAvatars = {}; // pid → emoji avatar (reçu des autres joueurs via proxy)
+  // Step 1 of "PokerTH official avatar" feature: when PlayerInfoReply
+  // arrives for a registered player who uploaded an avatar on pokerth.net,
+  // it carries an AvatarData sub-message (field 5) with the hash + format.
+  // We just record what we see here; downloading + displaying come later.
+  //   _pthAvatarHashes[pid] = { type: 1|2|3, hashHex: 'a3f5...' }
+  //   type: NetAvatarType from proto -- 1=PNG, 2=JPG, 3=GIF
+  //   hashHex: lower-case hex string (easy logging & future cache keys)
+  let _pthAvatarHashes = {};
   let _myAvatarCache  = ''; // cache de l'avatar local (évite les lectures localStorage répétées)
   let seats     = [];  // player IDs in seat order (from GameStartInitial) — figé après 1ère main
   let seatData  = {};  // {pid: {money, bet, action, active, folded}}
@@ -1404,6 +1412,29 @@ const App = (() => {
         const name = Proto.str(info, 1);
         if (name) players[pid] = name;
         _pendingNameRequests.delete(pid); // got the reply, free for retry if needed
+        // ── Step 1 (PokerTH avatar): peek for the optional AvatarData
+        // sub-message (field 5). Present only for registered players who
+        // uploaded an avatar on pokerth.net. We just log + memoize.
+        // The download (AvatarRequest/Header/Data/End) is intentionally
+        // NOT done yet -- this step exists to verify hashes are
+        // detected correctly before we add anything else.
+        const avData = Proto.sub(info, 5);
+        if (avData && Object.keys(avData).length > 0) {
+          const avType = Proto.u32(avData, 1); // 1=PNG, 2=JPG, 3=GIF
+          const avHashBytes = Proto.raw(avData, 2);
+          if (avHashBytes && avHashBytes.length > 0) {
+            // Convert bytes to lower-case hex string for logging.
+            let hashHex = '';
+            for (let i = 0; i < avHashBytes.length; i++) {
+              const h = avHashBytes[i].toString(16);
+              hashHex += (h.length === 1 ? '0' : '') + h;
+            }
+            _pthAvatarHashes[pid] = { type: avType, hashHex: hashHex };
+            const typeLabel = (avType === 1 ? 'PNG' : avType === 2 ? 'JPG' : avType === 3 ? 'GIF' : '?');
+            console.debug('[pth-avatar] pid=' + pid + ' name=' + (name || '?') +
+                          ' type=' + typeLabel + ' hash=' + hashHex);
+          }
+        }
         // If the waiting panel is visible, update it so the new pseudo
         // appears in place of the temporary '#<pid>' placeholder.
         if (!_gameStarted && amInGame) renderWaitingPanel();
@@ -1716,7 +1747,7 @@ const App = (() => {
       case T.RemovedFromGame: {
         addChat(null, t('youWereRemoved'), 'sys');
         amInGame = false;
-        gId = 0; seats = []; seatData = {}; _playerAvatars = {}; _seatsFrozen = false; _amSpectator = false; var _sb1 = document.getElementById('g-spectator-banner'); if (_sb1) _sb1.style.display = 'none';
+        gId = 0; seats = []; seatData = {}; _playerAvatars = {}; _pthAvatarHashes = {}; _seatsFrozen = false; _amSpectator = false; var _sb1 = document.getElementById('g-spectator-banner'); if (_sb1) _sb1.style.display = 'none';
         show('s-lobby');
         break;
       }
