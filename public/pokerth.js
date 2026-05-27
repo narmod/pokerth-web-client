@@ -1414,6 +1414,121 @@ const App = (() => {
   }
   // Expose so tests / debug can call it.
   window._avatarChipHtml = _avatarChipHtml;
+
+  // ──────────────────────────────────────────────────────────────
+  // Lobby pseudo pill: avatar + name, click opens the player-info
+  // modal (which has a 'Change avatar' button).
+  // ──────────────────────────────────────────────────────────────
+  function updateLobbyPill() {
+    var el = document.getElementById('h-nick');
+    if (!el) return;
+    if (!myName) { el.textContent = '—'; return; }
+    // The unified avatar chip helper handles all 5 fallback cases
+    // (real PokerTH image / placeholder logo / emoji / bot / initial).
+    // Wrap it in a tiny span so the CSS can size it independently of
+    // whatever the chip class would normally enforce.
+    var chip = _avatarChipHtml(myId, myName, 'h-nick-av');
+    // Build: <span class="h-nick-av"...>...</span> <name>
+    el.innerHTML = chip + ' ' + esc(myName);
+  }
+  window.updateLobbyPill = updateLobbyPill;
+
+  // ──────────────────────────────────────────────────────────────
+  // Player-info modal -- shows the local player's avatar + name,
+  // plus a 'Change avatar' button that opens the avatar picker.
+  // ──────────────────────────────────────────────────────────────
+  function openPlayerInfoPopup() {
+    var modal = document.getElementById('player-info-modal');
+    if (!modal) return;
+    // Fill the big avatar (96px circle). Reuse _avatarChipHtml but
+    // bypass the chip class -- we just want the inner image/emoji
+    // so the existing .pim-avatar can keep its own circle border.
+    var avEl = document.getElementById('pim-avatar');
+    var nameEl = document.getElementById('pim-name');
+    if (avEl) {
+      avEl.classList.remove('is-letter');
+      // Decide what to show: PokerTH image > placeholder logo > emoji
+      // > initial. Re-derive the choice here so the modal stays in
+      // sync with whatever the user just picked.
+      var pthUrl = (typeof _pthAvatarFor === 'function')
+        ? _pthAvatarFor(myId) : null;
+      var stored = null;
+      try { stored = localStorage.getItem('pth_avatar'); } catch(e) {}
+      if (pthUrl && stored !== null && stored !== '__pth__') pthUrl = null;
+      if (!pthUrl && stored === '__pth__') pthUrl = '/img/pokerth-logo.png';
+      if (pthUrl) {
+        avEl.innerHTML = '<img src="' + pthUrl + '" alt="" draggable="false">';
+      } else if (stored && stored !== '__pth__') {
+        avEl.textContent = stored;
+      } else {
+        // initial letter
+        avEl.classList.add('is-letter');
+        avEl.textContent = (myName && myName[0] ? myName[0] : '?').toUpperCase();
+      }
+    }
+    if (nameEl) nameEl.textContent = myName || '';
+    modal.style.display = 'flex';
+  }
+  window.openPlayerInfoPopup = openPlayerInfoPopup;
+
+  function closePlayerInfoPopup() {
+    var modal = document.getElementById('player-info-modal');
+    if (modal) modal.style.display = 'none';
+  }
+  window.closePlayerInfoPopup = closePlayerInfoPopup;
+
+  // ──────────────────────────────────────────────────────────────
+  // Open the existing avatar-popup as a floating modal, from the
+  // lobby (i.e. from inside the player-info modal). Difference vs
+  // the connect-screen behaviour: we add .avatar-popup-as-modal so
+  // the CSS positions it fixed/centered with a backdrop, and we
+  // hook a one-shot click handler to close everything once the
+  // user picks an avatar.
+  // ──────────────────────────────────────────────────────────────
+  function openAvatarPickerFromLobby() {
+    var picker = document.getElementById('avatar-popup');
+    if (!picker) return;
+    picker.classList.add('avatar-popup-as-modal');
+    picker.style.display = 'block';
+    // Close-on-backdrop: click on the popup itself (not its children)
+    // closes the picker.
+    function backdropClick(e) {
+      if (e.target === picker) {
+        picker.removeEventListener('click', backdropClick);
+        closeAvatarPickerFromLobby();
+      }
+    }
+    picker.addEventListener('click', backdropClick);
+    // When user picks an avatar (any .avp-btn click), the existing
+    // selectAvatarPopup() fires and sets display:'none' on the popup.
+    // We need to also strip the modal class so the next open from
+    // the connect screen keeps the original positioning, AND refresh
+    // the player-info modal + lobby pill to reflect the new pick.
+    function btnClick(e) {
+      var btn = e.target.closest('.avp-btn');
+      if (!btn) return;
+      // selectAvatarPopup is going to run synchronously via the
+      // onclick attr -- we just need to clean up afterwards.
+      setTimeout(function() {
+        closeAvatarPickerFromLobby();
+        // Refresh the info modal so the new avatar appears immediately
+        // (without closing it).
+        openPlayerInfoPopup();
+        updateLobbyPill();
+      }, 0);
+    }
+    // Use a one-shot listener for the next click only.
+    picker.addEventListener('click', btnClick, { once: true, capture: true });
+  }
+  window.openAvatarPickerFromLobby = openAvatarPickerFromLobby;
+
+  function closeAvatarPickerFromLobby() {
+    var picker = document.getElementById('avatar-popup');
+    if (!picker) return;
+    picker.classList.remove('avatar-popup-as-modal');
+    picker.style.display = 'none';
+  }
+  window.closeAvatarPickerFromLobby = closeAvatarPickerFromLobby;
   let seats     = [];  // player IDs in seat order (from GameStartInitial) — figé après 1ère main
   let seatData  = {};  // {pid: {money, bet, action, active, folded}}
   let myCards   = [null, null];
@@ -1576,7 +1691,7 @@ const App = (() => {
         _lastConnectFailed = false; // connexion réussie
         _reconnectAttempts = 0;
         myId = Proto.u32(sub, 2);
-        $('h-nick').textContent = '♠ ' + myName;
+        updateLobbyPill();
         show('s-lobby');
         // Demander la permission pour les notifications
         if ('Notification' in window && Notification.permission === 'default') {
@@ -3876,6 +3991,11 @@ const App = (() => {
     if (ws && ws.readyState === WebSocket.OPEN && !directWS && myId) {
       ws.send('AVATAR:' + myId + ':' + (emoji || ''));
     }
+    // Lobby pill is now an avatar+name combo (clickable, opens the
+    // player-info modal). Refresh it so the user sees their pick
+    // immediately, both when picking from the connect screen popup
+    // AND when picking from the in-lobby popup.
+    try { if (typeof updateLobbyPill === 'function') updateLobbyPill(); } catch(e) {}
   };
 
   function renderMyTurnActions() {
