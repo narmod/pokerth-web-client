@@ -1661,12 +1661,16 @@ body {
    When a player has uploaded an avatar on their pokerth.net account, we
    slot it in as an <img class="seat-pth-img"> inside the circular avatar
    wrapper. The wrapper gets .has-pth-avatar so we know to:
-     - clip the image to the circle (overflow:hidden)
      - hide the text fallback (.seat-initial)
      - drop the background tint (the image fills the whole area)
-   The image itself uses object-fit:cover so a non-square avatar still
-   nicely fills the circle without distortion. */
-.seat-avatar.has-pth-avatar { overflow: hidden; background: rgba(0,0,0,0.2); }
+   The image clips itself to a circle via border-radius:50% (no need to
+   clip the parent). This is CRITICAL: setting overflow:hidden on the
+   .seat-avatar would also clip the SB/BB chip (positioned top:-8px,
+   left:-8px) and the dealer chip (top:-8px, right:-8px), which sit
+   intentionally outside the circle for visibility. By keeping the
+   parent overflow:visible and clipping only the <img> itself, we get
+   the round avatar AND the chips remain visible on top. */
+.seat-avatar.has-pth-avatar { background: rgba(0,0,0,0.2); }
 .seat-avatar.has-pth-avatar > .seat-initial { display: none; }
 .seat-avatar > .seat-pth-img {
   position: absolute;
@@ -1674,19 +1678,18 @@ body {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  /* border-radius on a replaced element (<img>) clips the image content
+     itself -- no overflow:hidden on the parent needed. */
   border-radius: 50%;
-  /* Avoid the image blocking pointer events on overlapping badges
-     (dealer chip, SB/BB chip, timer SVG, type badge). */
+  /* Image must not block pointer events on overlapping chips/badges. */
   pointer-events: none;
-  /* Keep image BELOW the overlays (timer ring, badges) so they remain
-     visible on top. The badges have higher z-index in their own rules. */
+  /* Stay BELOW the overlays. Badges/timer have explicit z-index >= 3. */
   z-index: 0;
 }
-/* Same treatment for the player-bar avatar (your own seat at the bottom). */
-.pb-avatar.has-pth-avatar {
-  overflow: hidden;
-  padding: 0;
-}
+/* Same treatment for the player-bar avatar (your own seat at the bottom).
+   No overflow:hidden here either -- the green ring and shadow stay
+   intact, the image clips itself via border-radius. */
+.pb-avatar.has-pth-avatar { padding: 0; }
 .pb-avatar > .pb-pth-img {
   width: 100%;
   height: 100%;
