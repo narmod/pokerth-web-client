@@ -1272,6 +1272,7 @@ body {
   #log-toggle-btn,
   #admin-start-btn,
   #admin-close-btn,
+  #admin-kick-btn,
   /* Lobby: hide buttons now moved into the ••• overflow menu */
   #fs-btn-lobby,
   #lang-toggle-lobby { display: none !important; }
