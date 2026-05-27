@@ -1485,40 +1485,60 @@ const App = (() => {
   // hook a one-shot click handler to close everything once the
   // user picks an avatar.
   // ──────────────────────────────────────────────────────────────
+  // Track where the popup originally lived so we can put it back when
+  // the user is done. The popup is statically defined inside #s-connect
+  // (so the connect-screen avatar trigger can use it in flow), but when
+  // we open it from the lobby #s-connect is display:none which would
+  // hide the popup along with all its other descendants. So we move
+  // the popup to <body> while showing it as a modal, then move it back.
+  var _avatarPopupOrigParent = null;
+  var _avatarPopupOrigNextSibling = null;
+  var _avatarPickerBackdropHandler = null;
+  var _avatarPickerBtnHandler = null;
+
   function openAvatarPickerFromLobby() {
     var picker = document.getElementById('avatar-popup');
     if (!picker) return;
+    // Remember the original location so closeAvatarPickerFromLobby
+    // can put the popup back exactly where it was.
+    if (!_avatarPopupOrigParent) {
+      _avatarPopupOrigParent = picker.parentNode;
+      _avatarPopupOrigNextSibling = picker.nextSibling;
+    }
+    // Detach + re-attach to body so the parent's display:none can't
+    // hide us. We do this every open in case the DOM was changed by
+    // something else in between.
+    if (picker.parentNode !== document.body) {
+      document.body.appendChild(picker);
+    }
     picker.classList.add('avatar-popup-as-modal');
     picker.style.display = 'block';
-    // Close-on-backdrop: click on the popup itself (not its children)
-    // closes the picker.
-    function backdropClick(e) {
+    // Close-on-backdrop: a click on the popup background (NOT on any
+    // child like the avatar buttons or the header) closes the picker.
+    _avatarPickerBackdropHandler = function(e) {
       if (e.target === picker) {
-        picker.removeEventListener('click', backdropClick);
         closeAvatarPickerFromLobby();
       }
-    }
-    picker.addEventListener('click', backdropClick);
-    // When user picks an avatar (any .avp-btn click), the existing
-    // selectAvatarPopup() fires and sets display:'none' on the popup.
-    // We need to also strip the modal class so the next open from
-    // the connect screen keeps the original positioning, AND refresh
-    // the player-info modal + lobby pill to reflect the new pick.
-    function btnClick(e) {
+    };
+    picker.addEventListener('click', _avatarPickerBackdropHandler);
+    // When the user picks an avatar, the existing selectAvatarPopup()
+    // (attached as an inline onclick on each .avp-btn) sets the popup's
+    // inline display:'none'. We piggy-back on that to also strip the
+    // modal class and put the popup back in its original place. Using
+    // capture phase + once:true so we run exactly once before the
+    // onclick attribute fires (or right after, both are fine here).
+    _avatarPickerBtnHandler = function(e) {
       var btn = e.target.closest('.avp-btn');
       if (!btn) return;
-      // selectAvatarPopup is going to run synchronously via the
-      // onclick attr -- we just need to clean up afterwards.
+      // Let the inline onclick run first (it saves + closes), then
+      // we clean up and refresh on the next tick.
       setTimeout(function() {
         closeAvatarPickerFromLobby();
-        // Refresh the info modal so the new avatar appears immediately
-        // (without closing it).
         openPlayerInfoPopup();
         updateLobbyPill();
       }, 0);
-    }
-    // Use a one-shot listener for the next click only.
-    picker.addEventListener('click', btnClick, { once: true, capture: true });
+    };
+    picker.addEventListener('click', _avatarPickerBtnHandler, { once: true, capture: true });
   }
   window.openAvatarPickerFromLobby = openAvatarPickerFromLobby;
 
@@ -1527,6 +1547,20 @@ const App = (() => {
     if (!picker) return;
     picker.classList.remove('avatar-popup-as-modal');
     picker.style.display = 'none';
+    // Detach our backdrop handler (the btn handler was once:true).
+    if (_avatarPickerBackdropHandler) {
+      picker.removeEventListener('click', _avatarPickerBackdropHandler);
+      _avatarPickerBackdropHandler = null;
+    }
+    // Put the popup back into its original parent so the connect
+    // screen's static layout keeps working.
+    if (_avatarPopupOrigParent && picker.parentNode !== _avatarPopupOrigParent) {
+      if (_avatarPopupOrigNextSibling && _avatarPopupOrigNextSibling.parentNode === _avatarPopupOrigParent) {
+        _avatarPopupOrigParent.insertBefore(picker, _avatarPopupOrigNextSibling);
+      } else {
+        _avatarPopupOrigParent.appendChild(picker);
+      }
+    }
   }
   window.closeAvatarPickerFromLobby = closeAvatarPickerFromLobby;
   let seats     = [];  // player IDs in seat order (from GameStartInitial) — figé après 1ère main
