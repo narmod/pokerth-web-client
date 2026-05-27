@@ -173,7 +173,12 @@ function selectAvatarPopup(emoji) {
     <button class="btn-sm btn-icon" id="fs-btn-lobby" onclick="toggleFullscreen()" title="Fullscreen">⛶</button>
     <button class="btn-sm btn-icon" id="lang-toggle-lobby" onclick="toggleLang()" title="Switch language" aria-label="Switch language"></button>
     <button class="btn-sm btn-icon" id="lobby-chat-btn" onclick="toggleLobbyChat()" title="Chat">💬</button>
+    <button class="btn-sm btn-icon" id="l-overflow-btn" onclick="toggleLobbyOverflow(event)" title="Plus">•••</button>
     <button class="btn-sm btn-icon" onclick="App.confirmDisconnect()" title="Disconnect" data-i18n-title="disconnectTooltip" style="color:var(--red);border-color:rgba(192,57,43,0.3)">✕</button>
+    <div id="l-overflow-menu">
+      <button class="btn-sm" onclick="toggleFullscreen();closeLobbyOverflow()">⛶ Fullscreen</button>
+      <button class="btn-sm" id="lang-toggle-lobby-mob" onclick="toggleLang();closeLobbyOverflow()" style="font-size:0.85rem"></button>
+    </div>
   </div>
 
   <!-- Players-online dropdown panel: shows when the user clicks the
