@@ -1656,6 +1656,44 @@ body {
   position: relative;
   transition: border-color 0.3s, box-shadow 0.3s;
 }
+
+/* ── PokerTH official avatar (downloaded from pokerth.net) ──
+   When a player has uploaded an avatar on their pokerth.net account, we
+   slot it in as an <img class="seat-pth-img"> inside the circular avatar
+   wrapper. The wrapper gets .has-pth-avatar so we know to:
+     - clip the image to the circle (overflow:hidden)
+     - hide the text fallback (.seat-initial)
+     - drop the background tint (the image fills the whole area)
+   The image itself uses object-fit:cover so a non-square avatar still
+   nicely fills the circle without distortion. */
+.seat-avatar.has-pth-avatar { overflow: hidden; background: rgba(0,0,0,0.2); }
+.seat-avatar.has-pth-avatar > .seat-initial { display: none; }
+.seat-avatar > .seat-pth-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+  /* Avoid the image blocking pointer events on overlapping badges
+     (dealer chip, SB/BB chip, timer SVG, type badge). */
+  pointer-events: none;
+  /* Keep image BELOW the overlays (timer ring, badges) so they remain
+     visible on top. The badges have higher z-index in their own rules. */
+  z-index: 0;
+}
+/* Same treatment for the player-bar avatar (your own seat at the bottom). */
+.pb-avatar.has-pth-avatar {
+  overflow: hidden;
+  padding: 0;
+}
+.pb-avatar > .pb-pth-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+  pointer-events: none;
+}
 .me-oval-seat .seat-avatar {
   border: 2px solid var(--green) !important;
   box-shadow: 0 0 8px rgba(39,174,96,0.4);
