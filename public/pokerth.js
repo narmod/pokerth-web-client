@@ -370,24 +370,57 @@ function showKeyHint(text) {
 
 // Rafraîchit immédiatement l'avatar du joueur local dans l'UI
 window.refreshMyAvatar = function() {
+  // Q1=A: official PokerTH avatar wins over the emoji-from-localStorage.
+  // Order of preference: PokerTH avatar -> emoji custom -> initial.
+  var pthUrl = (typeof window._pthAvatarFor === 'function' && typeof myId !== 'undefined')
+    ? window._pthAvatarFor(myId)
+    : null;
   var av = '';
   try { av = localStorage.getItem('pth_avatar') || ''; } catch(e) {}
-  _myAvatarCache = av; // synchroniser le cache
+  _myAvatarCache = av;
   var display = av || (typeof myName !== 'undefined' ? (myName||'').charAt(0).toUpperCase() : '?');
   // Player-bar
   var pbAv = document.getElementById('g-myseat-av');
-  if (pbAv) pbAv.textContent = display;
+  if (pbAv) {
+    if (pthUrl) {
+      // Replace contents with an <img>. Reuse the same .pb-avatar wrapper
+      // so the green ring, shadow, etc. stay identical. We use innerHTML
+      // because we are swapping between text and <img>.
+      pbAv.innerHTML = '<img class="pb-pth-img" src="' + pthUrl + '" alt="" draggable="false">';
+      pbAv.classList.add('has-pth-avatar');
+    } else {
+      pbAv.textContent = display;
+      pbAv.classList.remove('has-pth-avatar');
+    }
+  }
   // Siège autour de la table
   var seatEls = document.querySelectorAll('#g-seats .seat');
   seatEls.forEach(function(seat) {
     if (seat.classList.contains('me')) {
-      var ini = seat.querySelector('.seat-initial');
+      var avatarEl = seat.querySelector('.seat-avatar');
+      if (!avatarEl) return;
+      // Manage the <img class="seat-pth-img"> inside the avatar circle:
+      // create / update / remove based on whether we have an URL.
+      var img = avatarEl.querySelector('.seat-pth-img');
+      if (pthUrl) {
+        if (!img) {
+          img = document.createElement('img');
+          img.className = 'seat-pth-img';
+          img.draggable = false;
+          img.alt = '';
+          avatarEl.insertBefore(img, avatarEl.firstChild);
+        }
+        if (img.src !== pthUrl) img.src = pthUrl;
+        avatarEl.classList.add('has-pth-avatar');
+      } else {
+        if (img) img.remove();
+        avatarEl.classList.remove('has-pth-avatar');
+      }
+      // Keep the text fallback in sync regardless.
+      var ini = avatarEl.querySelector('.seat-initial');
       if (ini) ini.textContent = display;
-      seat.querySelector('.seat-avatar') && (function(av2){
-        var avatarEl = seat.querySelector('.seat-avatar');
-        if (av2) avatarEl.classList.add('emoji-av');
-        else avatarEl.classList.remove('emoji-av');
-      })(av);
+      if (av) avatarEl.classList.add('emoji-av');
+      else avatarEl.classList.remove('emoji-av');
     }
   });
 };
@@ -1161,6 +1194,109 @@ const App = (() => {
   // Monotonic counter for AvatarRequest.requestId. Starts at 1 because
   // some servers refuse 0. Wraps around at 2^32 (we'll be long dead).
   let _pthNextAvatarReqId = 1;
+  // Step 3: assembled Data URLs keyed by hashHex (the actual displayable
+  // image, e.g. 'data:image/png;base64,iVBORw0KG...'). Built from chunks
+  // at AvatarEnd, or restored from localStorage cache on startup.
+  let _pthDataUrls = {};
+
+  // LRU cache in localStorage (Q3=B, capped at 200 entries).
+  // Keys:
+  //   pthAv:<hashHex>  -> '<typeNum>|<dataUrl>'   (one entry per avatar)
+  //   pthAv:_lru       -> JSON array of hashHex, most-recent first
+  // 200 entries * ~5KB ~= 1MB which is comfortable within 5MB quota.
+  const PTH_AV_MAX = 200;
+  const PTH_AV_KEY = function(h) { return 'pthAv:' + h; };
+  const PTH_AV_LRU_KEY = 'pthAv:_lru';
+
+  function _pthLoadLruList() {
+    try {
+      const raw = localStorage.getItem(PTH_AV_LRU_KEY);
+      if (!raw) return [];
+      const arr = JSON.parse(raw);
+      return Array.isArray(arr) ? arr : [];
+    } catch(e) { return []; }
+  }
+  function _pthSaveLruList(list) {
+    try { localStorage.setItem(PTH_AV_LRU_KEY, JSON.stringify(list)); }
+    catch(e) { /* quota -- best-effort */ }
+  }
+  function _pthCacheGet(hashHex) {
+    try {
+      const raw = localStorage.getItem(PTH_AV_KEY(hashHex));
+      if (!raw) return null;
+      const i = raw.indexOf('|');
+      if (i < 0) return null;
+      const type = parseInt(raw.slice(0, i), 10) || 1;
+      const dataUrl = raw.slice(i + 1);
+      // Touch LRU: move this hash to the front.
+      let lru = _pthLoadLruList().filter(function(h){ return h !== hashHex; });
+      lru.unshift(hashHex);
+      _pthSaveLruList(lru);
+      return { type: type, dataUrl: dataUrl };
+    } catch(e) { return null; }
+  }
+  function _pthCachePut(hashHex, type, dataUrl) {
+    try {
+      localStorage.setItem(PTH_AV_KEY(hashHex), type + '|' + dataUrl);
+      let lru = _pthLoadLruList().filter(function(h){ return h !== hashHex; });
+      lru.unshift(hashHex);
+      // Evict oldest beyond cap.
+      while (lru.length > PTH_AV_MAX) {
+        const drop = lru.pop();
+        try { localStorage.removeItem(PTH_AV_KEY(drop)); } catch(e) {}
+      }
+      _pthSaveLruList(lru);
+    } catch(e) {
+      // Quota exceeded or storage disabled. Try to evict half the cache
+      // and retry once. If it still fails, just give up silently --
+      // the avatar will simply be re-downloaded next time.
+      try {
+        let lru = _pthLoadLruList();
+        const evictCount = Math.max(1, Math.floor(lru.length / 2));
+        for (let i = 0; i < evictCount && lru.length > 0; i++) {
+          const drop = lru.pop();
+          try { localStorage.removeItem(PTH_AV_KEY(drop)); } catch(e2) {}
+        }
+        _pthSaveLruList(lru);
+        localStorage.setItem(PTH_AV_KEY(hashHex), type + '|' + dataUrl);
+        lru.unshift(hashHex);
+        _pthSaveLruList(lru);
+      } catch(e3) { /* really give up */ }
+    }
+  }
+
+  // Concatenate the per-request Uint8Array chunks and convert to a
+  // data: URL the browser can render directly as <img src>.
+  function _pthAssembleDataUrl(chunks, type) {
+    let total = 0;
+    for (let i = 0; i < chunks.length; i++) total += chunks[i].length;
+    const merged = new Uint8Array(total);
+    let off = 0;
+    for (let i = 0; i < chunks.length; i++) {
+      merged.set(chunks[i], off);
+      off += chunks[i].length;
+    }
+    // btoa needs a binary string. Build it in batches to avoid the
+    // "Maximum call stack size exceeded" trap on String.fromCharCode(...arr).
+    let bin = '';
+    const STEP = 4096;
+    for (let i = 0; i < merged.length; i += STEP) {
+      const slice = merged.subarray(i, Math.min(i + STEP, merged.length));
+      bin += String.fromCharCode.apply(null, slice);
+    }
+    const mime = type === 2 ? 'image/jpeg' : type === 3 ? 'image/gif' : 'image/png';
+    return 'data:' + mime + ';base64,' + btoa(bin);
+  }
+
+  // Public helper used by the renderer: returns a Data URL for the
+  // player or null. Considers cache + freshly assembled images.
+  function _pthAvatarFor(pid) {
+    const meta = _pthAvatarHashes[pid];
+    if (!meta) return null;
+    return _pthDataUrls[meta.hashHex] || null;
+  }
+  // Expose for refreshMyAvatar (defined at module top level)
+  window._pthAvatarFor = _pthAvatarFor;
   let _myAvatarCache  = ''; // cache de l'avatar local (évite les lectures localStorage répétées)
   let seats     = [];  // player IDs in seat order (from GameStartInitial) — figé après 1ère main
   let seatData  = {};  // {pid: {money, bet, action, active, folded}}
@@ -1457,10 +1593,26 @@ const App = (() => {
             const typeLabel = (avType === 1 ? 'PNG' : avType === 2 ? 'JPG' : avType === 3 ? 'GIF' : '?');
             console.debug('[pth-avatar] pid=' + pid + ' name=' + (name || '?') +
                           ' type=' + typeLabel + ' hash=' + hashHex);
-            // ── Step 2: kick off an AvatarRequest for this hash, unless
-            // we've already started (or finished) downloading it. Q2 = A
-            // (dedup by hash): a single download serves all players who
-            // share the same avatar, even default ones.
+            // ── Step 3: cache hit?
+            // If the same hash has been downloaded in a previous session
+            // and is still in localStorage, restore it immediately --
+            // no network round-trip, no AvatarRequest, no waiting.
+            if (!_pthAvatarsByHash[hashHex] && !_pthDataUrls[hashHex]) {
+              const cached = _pthCacheGet(hashHex);
+              if (cached) {
+                _pthAvatarsByHash[hashHex] = {
+                  status: 'done', type: cached.type, expectedSize: 0,
+                  chunks: [], received: 0,
+                };
+                _pthDataUrls[hashHex] = cached.dataUrl;
+                console.debug('[pth-avatar] CACHE HIT hash=' + hashHex);
+                // Re-render so the seat picks up the image right away.
+                if (typeof window._renderSeats === 'function') window._renderSeats();
+                if (typeof window.refreshMyAvatar === 'function') window.refreshMyAvatar();
+              }
+            }
+            // ── Step 2: cache miss -> kick off an AvatarRequest. Dedup
+            // by hash so two players sharing an avatar download once.
             if (!_pthAvatarsByHash[hashHex]) {
               _pthAvatarsByHash[hashHex] = {
                 status: 'pending', // 'pending' | 'done' | 'unknown' | 'error'
@@ -1471,16 +1623,15 @@ const App = (() => {
               };
               const reqId = _pthNextAvatarReqId++;
               _pthAvatarReqIdToHash[reqId] = hashHex;
-              // Encode AvatarRequestMessage: { requestId=1 (varint), avatarHash=2 (bytes) }
               const reqMsg = Proto.encode([
                 [1, 0, reqId],
                 [2, 2, avHashBytes],
               ]);
-              // Wrap as PokerTHMessage { messageType=1 (varint=7), avatarRequestMessage=8 (bytes) }
               send(Proto.encode([[1, 0, T.AvatarRequest], [8, 2, reqMsg]]));
               console.debug('[pth-avatar] -> AvatarRequest reqId=' + reqId + ' hash=' + hashHex);
-            } else {
-              console.debug('[pth-avatar] hash=' + hashHex + ' already pending/done, skip request');
+            } else if (_pthAvatarsByHash[hashHex].status === 'done') {
+              // Already cached this session -- nothing to do, the
+              // re-render path will pick it up.
             }
           }
         }
@@ -1536,14 +1687,27 @@ const App = (() => {
         const entry = hashHex ? _pthAvatarsByHash[hashHex] : null;
         if (entry) {
           entry.status = 'done';
+          // ── Step 3: assemble chunks into a Data URL, cache it,
+          // free the chunk buffers, then trigger a re-render so the
+          // freshly arrived image appears at the table.
+          try {
+            const dataUrl = _pthAssembleDataUrl(entry.chunks, entry.type);
+            _pthDataUrls[hashHex] = dataUrl;
+            _pthCachePut(hashHex, entry.type, dataUrl);
+            // Release chunk references so the GC can reclaim them.
+            entry.chunks = [];
+          } catch(e) {
+            console.warn('[pth-avatar] assembly failed for hash=' + hashHex, e);
+            entry.status = 'error';
+          }
         }
         console.debug('[pth-avatar] <- AvatarEnd reqId=' + reqId +
                       ' hash=' + (hashHex || '?') +
                       ' total=' + (entry ? entry.received : '?') + 'B' +
-                      ' chunks=' + (entry ? entry.chunks.length : '?'));
-        // Step 3 (assembly) and step 5 (display) will hook in here.
-        // Clean up the reqId -> hash mapping; the entry stays in
-        // _pthAvatarsByHash for the rest of the session.
+                      ' status=' + (entry ? entry.status : '?'));
+        // Re-render: seats around the table + my own seat in the bar.
+        if (typeof window._renderSeats === 'function') window._renderSeats();
+        if (typeof window.refreshMyAvatar === 'function') window.refreshMyAvatar();
         if (hashHex) delete _pthAvatarReqIdToHash[reqId];
         break;
       }
@@ -3216,7 +3380,18 @@ const App = (() => {
         ? 'position:relative;background:' + aColor.bg + ';border-color:' + aColor.border + ';color:' + aColor.text + ';box-shadow:0 0 0 2px ' + aColor.border + '44'
         : 'position:relative';
       const dealerChip = isDealer ? dealerChipSvg() : '';
-      h += '<div class="' + avatarCls + '" style="' + avatarStyle + '">'
+      // ── Step 3 display: if we have a downloaded PokerTH avatar for
+      // this pid, slot it in as <img> on top of the initial/emoji.
+      // Q1=A: official PokerTH avatar takes precedence over emoji custom.
+      // The <span class="seat-initial"> stays in the markup as a fallback
+      // in case the image fails to decode (broken bytes etc.).
+      const pthAvUrl = _pthAvatarFor(pid);
+      const pthImg = pthAvUrl
+        ? '<img class="seat-pth-img" src="' + pthAvUrl + '" alt="" draggable="false">'
+        : '';
+      const avCls2 = avatarCls + (pthAvUrl ? ' has-pth-avatar' : '');
+      h += '<div class="' + avCls2 + '" style="' + avatarStyle + '">'
+        + pthImg
         + '<span class="seat-initial">' + initial + '</span>'
         + timerSvg
         + blindBadge
