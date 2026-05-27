@@ -1334,6 +1334,28 @@ const App = (() => {
   // Expose for refreshMyAvatar (defined at module top level)
   window._pthAvatarFor = _pthAvatarFor;
   let _myAvatarCache  = ''; // cache de l'avatar local (évite les lectures localStorage répétées)
+  // Avatar feature: returns the emoji to display for the local player,
+  // or '' if there is none. Crucially treats the '__pth__' sentinel as
+  // "no emoji" so the literal string never leaks into the UI as text.
+  // Use this everywhere we want an avatar-as-string (player-bar text
+  // fallback, waiting list, winner overlay, etc.) -- do NOT read
+  // localStorage.pth_avatar directly for display purposes.
+  function _myAvatarDisplay() {
+    var v = _myAvatarCache;
+    if (!v) {
+      try { v = localStorage.getItem('pth_avatar') || ''; } catch(e) { v = ''; }
+    }
+    return (v === '__pth__') ? '' : v;
+  }
+  // Same idea for broadcasting to other players: don't send the
+  // sentinel over the wire (it would show as 4 weird chars on their
+  // seat). When the local player picked '__pth__', they get the real
+  // PokerTH avatar through their own PlayerInfoReply flow.
+  function _myAvatarToBroadcast() {
+    var v = '';
+    try { v = localStorage.getItem('pth_avatar') || ''; } catch(e) {}
+    return (v === '__pth__') ? '' : v;
+  }
   let seats     = [];  // player IDs in seat order (from GameStartInitial) — figé après 1ère main
   let seatData  = {};  // {pid: {money, bet, action, active, folded}}
   let myCards   = [null, null];
@@ -1919,10 +1941,15 @@ const App = (() => {
           if (_specBan) _specBan.style.display = 'none';
         }
         document.body.classList.add('in-game');
-        // Diffuser l'avatar aux autres joueurs via le proxy
+        // Diffuser l'avatar aux autres joueurs via le proxy. We use
+        // _myAvatarToBroadcast() which collapses the '__pth__' sentinel
+        // to '' -- the other players will then receive an empty avatar
+        // and render our initial. They'll still get our real PokerTH
+        // avatar (if any) through their own PlayerInfoReply flow, so
+        // sending the sentinel would just produce visual garbage.
         setTimeout(function() {
           try {
-            var myAv = localStorage.getItem('pth_avatar') || '';
+            var myAv = _myAvatarToBroadcast();
             if (ws && ws.readyState === WebSocket.OPEN && !directWS) {
               ws.send('AVATAR:' + myId + ':' + myAv);
             }
@@ -2137,9 +2164,11 @@ const App = (() => {
           }
         }
 
-        // Re-diffuser l'avatar à chaque début de main (pour les nouveaux connectés)
+        // Re-diffuser l'avatar à chaque début de main (pour les nouveaux
+        // connectés). Same '__pth__' guard as the initial broadcast: we
+        // never send the sentinel over the wire.
         try {
-          var myAv2 = localStorage.getItem('pth_avatar') || '';
+          var myAv2 = _myAvatarToBroadcast();
           if (ws && ws.readyState === WebSocket.OPEN && !directWS) {
             ws.send('AVATAR:' + myId + ':' + myAv2);
           }
@@ -3337,8 +3366,12 @@ const App = (() => {
     const pbAct  = document.getElementById('g-myseat-action');
     const pbBar  = document.querySelector('.player-bar');
     if (pbAv) {
-      var _av = ''; try { _av = localStorage.getItem('pth_avatar') || ''; } catch(e) {}
-      pbAv.textContent = _av || myName.charAt(0).toUpperCase();
+      // Don't write to pbAv directly here -- refreshMyAvatar() owns
+      // the player-bar avatar rendering and knows about the '__pth__'
+      // sentinel, the PokerTH logo placeholder (Q2=b), and the real
+      // downloaded image. Calling it keeps a single source of truth
+      // and prevents this update path from clobbering our <img>.
+      try { window.refreshMyAvatar && window.refreshMyAvatar(); } catch(e) {}
       // Garder le vert pour moi (pas de couleur palette)
     }
     // Chips SVG dans la player bar
@@ -3436,8 +3469,13 @@ const App = (() => {
     });
     el.innerHTML = h;
     _lastPixPos = pixPos;
-    // Patcher l'avatar du joueur local immédiatement après le rendu
-    if (_myAvatarCache) {
+    // Patcher l'avatar du joueur local immédiatement après le rendu.
+    // Anti-flicker safety net: re-applies the emoji to .seat-initial
+    // after a renderSeats() in case it lost it. Skipped entirely when
+    // the user picked the PokerTH avatar -- in that case the renderer
+    // already put an <img> in place and the .seat-initial is hidden
+    // by .has-pth-avatar > .seat-initial { display:none } anyway.
+    if (_myAvatarCache && _myAvatarCache !== '__pth__') {
       requestAnimationFrame(function() {
         var mySeats = document.querySelectorAll('#g-seats .seat.me');
         mySeats.forEach(function(seat) {
@@ -3542,8 +3580,11 @@ const App = (() => {
       const nick = isMe
         ? (document.getElementById('nick') ? document.getElementById('nick').value : (players[pid] || ''))
         : (players[pid] || ('#' + pid));
+      // For ME, use the sentinel-aware helper so '__pth__' falls
+      // back to the letter (we don't have a tiny PokerTH chip widget
+      // in the waiting list -- the letter is the right fallback).
       const av = isMe
-        ? (_myAvatarCache || (function(){ try { return localStorage.getItem('pth_avatar') || ''; } catch(e){ return ''; } })())
+        ? _myAvatarDisplay()
         : (_playerAvatars[pid] || '');
       const avChip = av
         ? '<span class="wp-av emoji-av">' + esc(av) + '</span>'
@@ -3629,8 +3670,11 @@ const App = (() => {
     const winnerName = players[winnerPid] || (isMyWin
       ? (document.getElementById('nick') ? document.getElementById('nick').value : 'You')
       : ('#' + winnerPid));
+    // For ME, route through the helper so '__pth__' falls back to the
+    // initial-letter avatar in the winner overlay (no tiny PokerTH logo
+    // there -- the letter is the right thing).
     const winnerAv = isMyWin
-      ? (_myAvatarCache || (function(){ try { return localStorage.getItem('pth_avatar')||''; } catch(e){ return ''; }})())
+      ? _myAvatarDisplay()
       : (_playerAvatars[winnerPid] || '');
 
     // Build winner block
