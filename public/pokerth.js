@@ -2606,6 +2606,38 @@ const App = (() => {
         renderSeats();
         // Refresh the waiting panel if the game hasn't started yet.
         if (!_gameStarted) renderWaitingPanel();
+        // ── Detect "only one player left" and force end-of-game ──
+        // PokerTH server 1.1.2-2 is known to OMIT EndOfGameMessage
+        // when a player leaves voluntarily (vs being eliminated by
+        // a losing all-in). Without this, the remaining human keeps
+        // posting blinds and 'winning' lonely hands forever.
+        // The user-validated rule (Q1=c): if total non-gone seats
+        // drop to <= 1, fire the overlay locally with the last
+        // remaining pid as the winner. The eg-overlay handler itself
+        // is idempotent — calling it again if EndOfGame eventually
+        // arrives from the server is harmless.
+        if (_gameStarted) {
+          var stillIn = seats.filter(function(p) {
+            return seatData[p] && !seatData[p].gone;
+          });
+          if (stillIn.length <= 1) {
+            // Don't re-trigger if an end-game overlay is already up.
+            var _egoEl = document.getElementById('g-endgame-overlay');
+            var alreadyShown = _egoEl && _egoEl.style.display !== 'none' && _egoEl.style.display !== '';
+            // (empty string defaults to block via CSS; treat that as visible)
+            // Stricter check: simply look at the offsetParent.
+            var visible = _egoEl && _egoEl.offsetParent !== null;
+            if (!visible) {
+              var winnerPid = stillIn[0] || myId;
+              addChat(null, '⚠ ' + (_lang === 'en'
+                ? 'Only one player left — ending the game.'
+                : 'Plus qu\'un joueur — fin de la partie.'), 'sys');
+              stopTurnTimer();
+              dismissWinner();
+              showEndGameOverlay(winnerPid);
+            }
+          }
+        }
         break;
       }
 
