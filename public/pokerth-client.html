@@ -37,20 +37,39 @@ function toggleAvatarPopup() {
   p.style.display = (p.style.display === "none" || !p.style.display) ? "block" : "none";
 }
 function selectAvatarPopup(emoji) {
+  // Sentinel "__pth__" means: use my official PokerTH avatar instead of an
+  // emoji. We store the same value as everything else in localStorage so
+  // the existing wiring (refreshMyAvatar, render path) can branch on it.
   try { localStorage.setItem("pth_avatar", emoji); } catch(e) {}
   document.querySelectorAll(".avp-btn").forEach(function(b) {
     b.classList.toggle("selected", b.dataset.av === emoji);
   });
   var trigger = document.getElementById("av-trigger");
-  if (trigger) { trigger.textContent = emoji || "\uD83C\uDFAD"; trigger.classList.toggle("has-avatar", !!emoji); }
+  if (trigger) {
+    if (emoji === "__pth__") {
+      // Render the trigger as the ID-card glyph so the user knows the
+      // PokerTH avatar is the active choice. The actual image is shown
+      // in the seat / player-bar by the existing render code.
+      trigger.textContent = "\uD83E\uDEAA"; // 🪪
+      trigger.classList.add("has-avatar");
+    } else {
+      trigger.textContent = emoji || "\uD83C\uDFAD"; // fallback 🎭
+      trigger.classList.toggle("has-avatar", !!emoji);
+    }
+  }
   var p = document.getElementById("avatar-popup");
   if (p) p.style.display = "none";
   // Rafraîchir immédiatement l'affichage
   if (typeof window.refreshMyAvatar === "function") window.refreshMyAvatar();
   // Mettre à jour le siège autour de la table
   if (typeof window._renderSeats === "function") window._renderSeats();
-  // Diffuser aux autres joueurs
-  if (typeof window._broadcastMyAvatar === "function") window._broadcastMyAvatar(emoji);
+  // Diffuser aux autres joueurs. Don't broadcast the sentinel -- other
+  // players don't have access to our PokerTH avatar anyway, they will
+  // fetch their own copy from the server via the existing flow. Sending
+  // "__pth__" as an emoji would just show 4 weird chars on their seat.
+  if (emoji !== "__pth__" && typeof window._broadcastMyAvatar === "function") {
+    window._broadcastMyAvatar(emoji);
+  }
 }
 </script>
 
@@ -126,6 +145,12 @@ function selectAvatarPopup(emoji) {
         <button type="button" onclick="toggleAvatarPopup()" style="background:none;border:none;color:var(--text);cursor:pointer;font-size:1rem">✕</button>
       </div>
       <div class="avp-grid">
+<!-- PokerTH official avatar option. Hidden by default; shown only when
+     we are connected as a registered pokerth.net user who has uploaded
+     an avatar (the JS toggles inline display below). The 🪪 (id card)
+     glyph indicates "this is my official identity". data-av is the
+     sentinel "__pth__" the JS branches on. -->
+<button type="button" class="avp-btn avp-pth" data-av="__pth__" id="avp-btn-pth" style="display:none" onclick="selectAvatarPopup('__pth__')" title="Mon avatar PokerTH">🪪</button>
 <button type="button" class="avp-btn avp-none" data-av="" onclick="selectAvatarPopup('')">Aa</button>
 
 <button type="button" class="avp-btn" data-av="👨" onclick="selectAvatarPopup('👨')">👨</button><button type="button" class="avp-btn" data-av="👩" onclick="selectAvatarPopup('👩')">👩</button><button type="button" class="avp-btn" data-av="👦" onclick="selectAvatarPopup('👦')">👦</button><button type="button" class="avp-btn" data-av="👧" onclick="selectAvatarPopup('👧')">👧</button><button type="button" class="avp-btn" data-av="🧔" onclick="selectAvatarPopup('🧔')">🧔</button><button type="button" class="avp-btn" data-av="👱" onclick="selectAvatarPopup('👱')">👱</button><button type="button" class="avp-btn" data-av="🧓" onclick="selectAvatarPopup('🧓')">🧓</button><button type="button" class="avp-btn" data-av="👴" onclick="selectAvatarPopup('👴')">👴</button><button type="button" class="avp-btn" data-av="🤴" onclick="selectAvatarPopup('🤴')">🤴</button><button type="button" class="avp-btn" data-av="👸" onclick="selectAvatarPopup('👸')">👸</button><button type="button" class="avp-btn" data-av="🤠" onclick="selectAvatarPopup('🤠')">🤠</button><button type="button" class="avp-btn" data-av="👑" onclick="selectAvatarPopup('👑')">👑</button><button type="button" class="avp-btn" data-av="🥷" onclick="selectAvatarPopup('🥷')">🥷</button><button type="button" class="avp-btn" data-av="🥸" onclick="selectAvatarPopup('🥸')">🥸</button><button type="button" class="avp-btn" data-av="🤡" onclick="selectAvatarPopup('🤡')">🤡</button><button type="button" class="avp-btn" data-av="🃏" onclick="selectAvatarPopup('🃏')">🃏</button><button type="button" class="avp-btn" data-av="👨‍🚀" onclick="selectAvatarPopup('👨‍🚀')">👨‍🚀</button><button type="button" class="avp-btn" data-av="👽" onclick="selectAvatarPopup('👽')">👽</button><button type="button" class="avp-btn" data-av="👾" onclick="selectAvatarPopup('👾')">👾</button><button type="button" class="avp-btn" data-av="👻" onclick="selectAvatarPopup('👻')">👻</button><button type="button" class="avp-btn" data-av="🎃" onclick="selectAvatarPopup('🎃')">🎃</button><button type="button" class="avp-btn" data-av="🧙" onclick="selectAvatarPopup('🧙')">🧙</button><button type="button" class="avp-btn" data-av="🧝" onclick="selectAvatarPopup('🧝')">🧝</button><button type="button" class="avp-btn" data-av="🧚" onclick="selectAvatarPopup('🧚')">🧚</button><button type="button" class="avp-btn" data-av="🧞" onclick="selectAvatarPopup('🧞')">🧞</button><button type="button" class="avp-btn" data-av="🦸" onclick="selectAvatarPopup('🦸')">🦸</button><button type="button" class="avp-btn" data-av="🦹" onclick="selectAvatarPopup('🦹')">🦹</button><button type="button" class="avp-btn" data-av="🧌" onclick="selectAvatarPopup('🧌')">🧌</button><button type="button" class="avp-btn" data-av="🧛" onclick="selectAvatarPopup('🧛')">🧛</button><button type="button" class="avp-btn" data-av="🧟" onclick="selectAvatarPopup('🧟')">🧟</button><button type="button" class="avp-btn" data-av="👹" onclick="selectAvatarPopup('👹')">👹</button><button type="button" class="avp-btn" data-av="👺" onclick="selectAvatarPopup('👺')">👺</button><button type="button" class="avp-btn" data-av="🦄" onclick="selectAvatarPopup('🦄')">🦄</button><button type="button" class="avp-btn" data-av="🐉" onclick="selectAvatarPopup('🐉')">🐉</button><button type="button" class="avp-btn" data-av="🐲" onclick="selectAvatarPopup('🐲')">🐲</button><button type="button" class="avp-btn" data-av="🦋" onclick="selectAvatarPopup('🦋')">🦋</button><button type="button" class="avp-btn" data-av="🌹" onclick="selectAvatarPopup('🌹')">🌹</button><button type="button" class="avp-btn" data-av="🐶" onclick="selectAvatarPopup('🐶')">🐶</button><button type="button" class="avp-btn" data-av="🐱" onclick="selectAvatarPopup('🐱')">🐱</button><button type="button" class="avp-btn" data-av="🦁" onclick="selectAvatarPopup('🦁')">🦁</button><button type="button" class="avp-btn" data-av="🐯" onclick="selectAvatarPopup('🐯')">🐯</button><button type="button" class="avp-btn" data-av="🐻" onclick="selectAvatarPopup('🐻')">🐻</button><button type="button" class="avp-btn" data-av="🐼" onclick="selectAvatarPopup('🐼')">🐼</button><button type="button" class="avp-btn" data-av="🦊" onclick="selectAvatarPopup('🦊')">🦊</button><button type="button" class="avp-btn" data-av="🐺" onclick="selectAvatarPopup('🐺')">🐺</button><button type="button" class="avp-btn" data-av="🦝" onclick="selectAvatarPopup('🦝')">🦝</button><button type="button" class="avp-btn" data-av="🐘" onclick="selectAvatarPopup('🐘')">🐘</button><button type="button" class="avp-btn" data-av="🐊" onclick="selectAvatarPopup('🐊')">🐊</button><button type="button" class="avp-btn" data-av="🐬" onclick="selectAvatarPopup('🐬')">🐬</button><button type="button" class="avp-btn" data-av="🦈" onclick="selectAvatarPopup('🦈')">🦈</button><button type="button" class="avp-btn" data-av="🐙" onclick="selectAvatarPopup('🐙')">🐙</button><button type="button" class="avp-btn" data-av="🦅" onclick="selectAvatarPopup('🦅')">🦅</button><button type="button" class="avp-btn" data-av="🦉" onclick="selectAvatarPopup('🦉')">🦉</button><button type="button" class="avp-btn" data-av="🦆" onclick="selectAvatarPopup('🦆')">🦆</button><button type="button" class="avp-btn" data-av="🐧" onclick="selectAvatarPopup('🐧')">🐧</button>
