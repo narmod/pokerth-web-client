@@ -182,12 +182,17 @@ body {
 .avp-btn:hover { border-color: var(--gold-dim); transform: scale(1.15); background: rgba(200,168,74,0.1); }
 .avp-btn.selected { border-color: var(--gold); background: rgba(200,168,74,0.2); }
 .avp-none { font-size: 0.7rem !important; font-family: 'Cinzel',serif; color: var(--text); }
-/* PokerTH official avatar entry -- accent color to distinguish from
-   emojis (it represents a real identity, not a costume). The id-card
-   glyph 🪪 is large enough not to need any extra sizing. */
+/* PokerTH official avatar entry -- accent color to distinguish it
+   from the emoji costumes (this is a real identity, not a mask).
+   Hosts an <img> of the PokerTH chip logo; tighten padding so the
+   image fills the button nicely and centers properly. */
 .avp-pth {
   background: rgba(39,174,96,0.12) !important;
   border-color: rgba(39,174,96,0.4) !important;
+  padding: 0 !important;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
 }
 .avp-pth:hover { background: rgba(39,174,96,0.22) !important; border-color: var(--green) !important; }
 .avp-pth.selected { background: rgba(39,174,96,0.3) !important; border-color: var(--green) !important; }
