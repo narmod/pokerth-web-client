@@ -1563,6 +1563,145 @@ const App = (() => {
     }
   }
   window.closeAvatarPickerFromLobby = closeAvatarPickerFromLobby;
+
+  // ──────────────────────────────────────────────────────────────
+  // Game info modal -- snapshot of the current table's settings +
+  // state, opened by clicking the "TABLE" label in the game header.
+  // Per the user-validated design (Q1=c, Q2=a, Q3=b):
+  //   - All sections EXCEPT the player list (saves vertical space).
+  //   - Snapshot at click time, not live-updated.
+  //   - Subtle underline hover on the trigger.
+  // ──────────────────────────────────────────────────────────────
+  function _gameTypeLabel(t) {
+    // PokerTH NetGameInfo.netGameType enum (from the protocol):
+    //   1 = normal game (the default created via the UI)
+    //   2 = registered-only
+    //   3 = invite-only
+    // The server has no separate "limit/no-limit" field exposed in
+    // the listing -- it's always No Limit Texas Hold'em here.
+    switch (t) {
+      case 2: return (lang === 'fr') ? 'Inscrits seulement' : 'Registered only';
+      case 3: return (lang === 'fr') ? 'Sur invitation' : 'Invite only';
+      default: return (lang === 'fr') ? 'Partie normale' : 'Normal game';
+    }
+  }
+
+  function openGameInfoPopup() {
+    var modal = document.getElementById('game-info-modal');
+    if (!modal) return;
+    var titleEl = document.getElementById('gim-title');
+    var subEl   = document.getElementById('gim-subtitle');
+    var bodyEl  = document.getElementById('gim-body');
+    if (!titleEl || !bodyEl) return;
+
+    var fr   = (lang === 'fr');
+    var meta = _gameMeta || {
+      id: gId, name: '—', type: 1, maxPlayers: 0,
+      priv: false, timeout: gameTimeout, startMoney: gameStartMoney,
+    };
+
+    titleEl.textContent = meta.name + ' · #' + meta.id;
+
+    // Subtitle: row of badges (admin / private). Hidden if both false.
+    var badges = [];
+    if (amGameAdmin) {
+      badges.push('<span class="gim-badge">👑 ' + (fr ? 'Admin' : 'Admin') + '</span>');
+    }
+    if (meta.priv) {
+      badges.push('<span class="gim-badge">🔒 ' + (fr ? 'Privée' : 'Private') + '</span>');
+    } else {
+      badges.push('<span class="gim-badge">🌐 ' + (fr ? 'Publique' : 'Public') + '</span>');
+    }
+    subEl.innerHTML = badges.join(' ');
+
+    // Body: 3 sections of label/value rows.
+    var pot = 0;
+    var potEl = document.getElementById('g-pot');
+    if (potEl) {
+      // Extract numeric part from "POT: 1234" / "Pot : 1234"
+      var m = String(potEl.textContent || '').match(/[\d]+/);
+      pot = m ? parseInt(m[0], 10) : 0;
+    }
+    var round = '—';
+    var roundEl = document.getElementById('g-round');
+    if (roundEl) round = (roundEl.textContent || '—').trim();
+
+    // Count current players from seatData / seats. Spectators don't
+    // count, only seated players that the server told us about.
+    var activeCount = 0;
+    if (Array.isArray(seats) && seats.length) {
+      seats.forEach(function(pid){
+        var sd = seatData[pid] || {};
+        // Eliminated/sitting-out players still "exist" at the table but
+        // are not actively playing this hand. We count them as joined
+        // (they're at the table) but mark eliminated ones separately.
+        if (sd.active !== false || sd.money > 0) activeCount++;
+        else activeCount++; // count them anyway -- they're seated
+      });
+    }
+    if (!activeCount) activeCount = Object.keys(seatData || {}).length;
+
+    var sections = [];
+
+    // ── Section 1: General info ──
+    sections.push({
+      title: fr ? 'Informations' : 'Information',
+      rows: [
+        [fr ? 'Type' : 'Type',          _gameTypeLabel(meta.type)],
+      ],
+    });
+
+    // ── Section 2: Configuration ──
+    sections.push({
+      title: fr ? 'Configuration' : 'Configuration',
+      rows: [
+        [fr ? 'Blindes' : 'Blinds',
+            (smallBlind || 0) + ' / ' + ((smallBlind || 0) * 2) + ' ¥'],
+        [fr ? 'Tapis de départ' : 'Starting stack',
+            (meta.startMoney || 0) + ' ¥'],
+        [fr ? "Timer d'action" : 'Action timer',
+            (meta.timeout || gameTimeout || 15) + ' s'],
+      ],
+    });
+
+    // ── Section 3: État de la partie ──
+    sections.push({
+      title: fr ? 'État de la partie' : 'Game state',
+      rows: [
+        [fr ? 'Joueurs' : 'Players',
+            activeCount + ' / ' + (meta.maxPlayers || '?')],
+        [fr ? 'Main n°' : 'Hand #',
+            (handNum > 0) ? ('H#' + handNum) : (fr ? 'Pas démarrée' : 'Not started')],
+        [fr ? 'Pot' : 'Pot',
+            pot + ' ¥'],
+        [fr ? 'Phase' : 'Phase',
+            round],
+      ],
+    });
+
+    var html = '';
+    sections.forEach(function(s){
+      html += '<div class="gim-section">';
+      html += '<div class="gim-section-title">' + esc(s.title) + '</div>';
+      s.rows.forEach(function(r){
+        html += '<div class="gim-row">'
+              + '<span class="gim-row-label">' + esc(r[0]) + '</span>'
+              + '<span class="gim-row-value">' + esc(r[1]) + '</span>'
+              + '</div>';
+      });
+      html += '</div>';
+    });
+    bodyEl.innerHTML = html;
+
+    modal.style.display = 'flex';
+  }
+  window.openGameInfoPopup = openGameInfoPopup;
+
+  function closeGameInfoPopup() {
+    var modal = document.getElementById('game-info-modal');
+    if (modal) modal.style.display = 'none';
+  }
+  window.closeGameInfoPopup = closeGameInfoPopup;
   let seats     = [];  // player IDs in seat order (from GameStartInitial) — figé après 1ère main
   let seatData  = {};  // {pid: {money, bet, action, active, folded}}
   let myCards   = [null, null];
@@ -1599,6 +1738,13 @@ const App = (() => {
   let loaded    = false;
   let autoAction = false;
   let amGameAdmin = false;  // true if we created this game
+
+  // Snapshot of the current table's settings, captured at JoinGameAck.
+  // games[gId] is deleted from the lobby dict when the table closes
+  // (GameListUpdate with mode === 3), so we keep our own copy. Used
+  // by openGameInfoPopup() to populate the table-info modal even
+  // after the table no longer appears in the lobby list.
+  let _gameMeta = null;
   let _gameStarted = false; // flips true on GameStartInitial; freezes waiting-panel updates
   let _seatsFrozen = false; // one-way latch: true once the original seating order is set, never unset until leave/closeTable
   let _amSpectator = false; // true when we joined via 'Regarder' / spectateGame() — disables actions, shows banner
@@ -2117,6 +2263,25 @@ const App = (() => {
         // table and discovered the settings via GameListNew.
         if (games[gId] && games[gId].startMoney) gameStartMoney = games[gId].startMoney;
         amGameAdmin = !!isAdmin;
+        // Snapshot the lobby's view of this table for openGameInfoPopup.
+        // Fields we care about: name, type, maxPlayers, priv, timeout,
+        // startMoney. All of these come from NetGameInfo when the table
+        // was originally listed. Default the name to "#<gId>" if missing.
+        var _gm = (games[gId] || {});
+        _gameMeta = {
+          id:         gId,
+          name:       _gm.name || ('#' + gId),
+          type:       _gm.type || 1,       // 1=NoLimit Hold'em (default)
+          maxPlayers: _gm.maxPlayers || 0,
+          priv:       !!_gm.priv,
+          timeout:    _gm.timeout || gameTimeout || 15,
+          startMoney: _gm.startMoney || gameStartMoney || 3000,
+        };
+        // Also update the table name in the game header (used to be
+        // hard-coded "TABLE"). It's clickable now so the real name is
+        // worth showing.
+        var _gn = document.getElementById('g-name');
+        if (_gn) _gn.textContent = _gameMeta.name;
         var acb = document.getElementById('admin-close-btn');
         if (acb) acb.style.display = amGameAdmin ? '' : 'none';
         var asb = document.getElementById('admin-start-btn');
@@ -2275,7 +2440,7 @@ const App = (() => {
         break;
       }
 
-      case T.RemovedFromGame: {
+      case T.RemovedFromGame: { _gameMeta = null;
         addChat(null, t('youWereRemoved'), 'sys');
         amInGame = false;
         gId = 0; seats = []; seatData = {}; _playerAvatars = {}; _pthAvatarHashes = {}; _pthAvatarsByHash = {}; _pthAvatarReqIdToHash = {}; _seatsFrozen = false; _amSpectator = false; var _sb1 = document.getElementById('g-spectator-banner'); if (_sb1) _sb1.style.display = 'none';
