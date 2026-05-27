@@ -1477,6 +1477,45 @@ body {
 .btn-join:hover { background: var(--gold-hi); }
 .game-row { cursor: pointer; }
 
+/* ═══ MOBILE: compact buttons in the available-tables list ═══
+   On screens up to 540px, the Rejoindre + Regarder buttons were
+   eating the entire row width, truncating the table name to
+   "WebGame-o..." (see screenshot IMG_8007). The cluster on the
+   right used to be: '2/2  ▶ REJOINDRE  👁 REGARDER'. We shrink the
+   buttons and the count badge, drop the letter-spacing so the
+   labels are tighter, and use shorter padding. The .game-info
+   container already has flex:1 + min-width:0 (line 438), so any
+   space freed here is automatically given to the name. */
+@media (max-width: 540px) {
+  .game-row { gap: 8px; padding: 10px 12px; }
+  .game-name { font-size: 0.82rem; }
+  .game-meta { font-size: 0.66rem; gap: 6px; }
+  .game-count { font-size: 0.78rem; }
+  .btn-join {
+    padding: 4px 8px;
+    font-size: 0.62rem;
+    letter-spacing: 0.04em;
+  }
+  .btn-watch {
+    padding: 4px 7px;
+    font-size: 0.6rem;
+    letter-spacing: 0.04em;
+  }
+  /* Shrink the gap inside the right-hand button cluster */
+  .game-row > div:last-child { gap: 6px !important; }
+}
+
+/* Even tighter on very narrow phones (e.g. iPhone SE, ~320-400px wide).
+   The Rejoindre label has been "REJOINDRE / Partie rapide" stuff and
+   risks dominating the row again. Just trim further. */
+@media (max-width: 400px) {
+  .game-row { padding: 9px 10px; gap: 6px; }
+  .btn-join  { padding: 3px 6px; font-size: 0.58rem; }
+  .btn-watch { padding: 3px 5px; font-size: 0.56rem; }
+  .game-count { font-size: 0.7rem; }
+  .game-row > div:last-child { gap: 4px !important; }
+}
+
 /* ═══ GAME SCREEN ═══ */
 #s-game { overflow: visible; flex-direction: column; }
 
