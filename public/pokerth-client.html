@@ -366,7 +366,7 @@ function selectAvatarPopup(emoji) {
 
 <div id="s-game" class="screen">
   <div class="header">
-    <div class="header-brand"><span>♠</span>&nbsp;<span id="g-name">TABLE</span><span id="g-admin-badge" style="display:none;font-size:0.7rem;color:var(--green);margin-left:6px" title="Vous êtes créateur de cette table">👑</span></div>
+    <div class="header-brand"><span>♠</span>&nbsp;<span id="g-name" class="g-name-clickable" onclick="openGameInfoPopup()" title="Détails de la partie">TABLE</span><span id="g-admin-badge" style="display:none;font-size:0.7rem;color:var(--green);margin-left:6px" title="Vous êtes créateur de cette table">👑</span></div>
     <div class="header-pills"></div>
     <button class="btn-sm btn-icon" id="fs-btn-game" onclick="toggleFullscreen()" title="Fullscreen">⛶</button>
     <button class="btn-sm btn-icon" id="sound-toggle-btn" onclick="toggleSound()" title="Couper/Unmute">🔊</button>
@@ -605,6 +605,22 @@ if ('serviceWorker' in navigator) {
     <div class="pim-avatar" id="pim-avatar"></div>
     <div class="pim-name" id="pim-name">—</div>
     <button class="btn-primary pim-change" type="button" onclick="openAvatarPickerFromLobby()" data-i18n="changeAvatar">Changer d'avatar</button>
+  </div>
+</div>
+
+
+<!-- Game info modal: opened by clicking the "TABLE" label in the
+     game header. Snapshot of the current game's settings + state at
+     the moment of the click. -->
+<div id="game-info-modal" style="display:none">
+  <div class="gim-backdrop" onclick="closeGameInfoPopup()"></div>
+  <div class="gim-card" role="dialog" aria-labelledby="gim-title">
+    <button class="gim-close" type="button" onclick="closeGameInfoPopup()" title="Fermer" aria-label="Fermer">✕</button>
+    <div class="gim-header">
+      <div class="gim-title" id="gim-title">—</div>
+      <div class="gim-subtitle" id="gim-subtitle"></div>
+    </div>
+    <div class="gim-body" id="gim-body"></div>
   </div>
 </div>
 
