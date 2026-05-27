@@ -398,7 +398,12 @@ window.refreshMyAvatar = function() {
       });
     }
     var trig = document.getElementById('av-trigger');
-    if (trig) { trig.textContent = '\uD83E\uDEAA'; trig.classList.add('has-avatar'); }
+    if (trig) {
+      // Match the head selectAvatarPopup behaviour: trigger shows the
+      // PokerTH chip logo, not the id-card emoji.
+      trig.innerHTML = '<img src="/img/pokerth-logo.png" alt="PokerTH" draggable="false" style="width:26px;height:26px;object-fit:contain;pointer-events:none">';
+      trig.classList.add('has-avatar');
+    }
   }
   // Effective choice: 'pth' | 'initial' | 'emoji-xxx'
   var usePth   = (stored === '__pth__') && !!pthUrl;
@@ -412,6 +417,13 @@ window.refreshMyAvatar = function() {
     if (usePth) {
       pbAv.innerHTML = '<img class="pb-pth-img" src="' + pthUrl + '" alt="" draggable="false">';
       pbAv.classList.add('has-pth-avatar');
+    } else if (stored === '__pth__') {
+      // Q2=b: user picked the PokerTH avatar but no image is available
+      // (e.g. they're a LAN player, or a pokerth.net guest, or the
+      // avatar hasn't been downloaded yet). Show the official PokerTH
+      // chip logo as a graceful placeholder instead of an initial.
+      pbAv.innerHTML = '<img class="pb-pth-img" src="/img/pokerth-logo.png" alt="" draggable="false">';
+      pbAv.classList.add('has-pth-avatar');
     } else {
       pbAv.textContent = display;
       pbAv.classList.remove('has-pth-avatar');
@@ -424,7 +436,14 @@ window.refreshMyAvatar = function() {
       var avatarEl = seat.querySelector('.seat-avatar');
       if (!avatarEl) return;
       var img = avatarEl.querySelector('.seat-pth-img');
-      if (usePth) {
+      // Decide which URL to use, in order of preference:
+      //   1) the player's actual downloaded pokerth.net avatar
+      //   2) the PokerTH chip logo (placeholder if the user picked
+      //      '__pth__' but nothing is available yet -- Q2=b)
+      //   3) nothing (fall back to emoji or initial)
+      var effectiveUrl = usePth ? pthUrl
+                       : (stored === '__pth__' ? '/img/pokerth-logo.png' : null);
+      if (effectiveUrl) {
         if (!img) {
           img = document.createElement('img');
           img.className = 'seat-pth-img';
@@ -432,7 +451,7 @@ window.refreshMyAvatar = function() {
           img.alt = '';
           avatarEl.insertBefore(img, avatarEl.firstChild);
         }
-        if (img.src !== pthUrl) img.src = pthUrl;
+        if (img.getAttribute('src') !== effectiveUrl) img.src = effectiveUrl;
         avatarEl.classList.add('has-pth-avatar');
       } else {
         if (img) img.remove();
@@ -460,23 +479,12 @@ window.toggleAvatarPopup = function() {
   popup.style.display = open ? 'block' : 'none';
 };
 
-window.selectAvatarPopup = function selectAvatarPopup(emoji) {
-  // Sauvegarder
-  try { localStorage.setItem('pth_avatar', emoji); } catch(e) {}
-  // Mettre à jour les boutons du popup
-  document.querySelectorAll('.avp-btn').forEach(function(b) {
-    b.classList.toggle('selected', b.dataset.av === emoji);
-  });
-  // Mettre à jour le bouton déclencheur
-  var trigger = document.getElementById('av-trigger');
-  if (trigger) {
-    trigger.textContent = emoji || '🎭';
-    trigger.classList.toggle('has-avatar', !!emoji);
-  }
-  // Fermer le popup
-  var popup = document.getElementById('avatar-popup');
-  if (popup) popup.style.display = 'none';
-}
+// selectAvatarPopup() lives in the <head> of pokerth-client.html. It
+// must be defined inline so that buttons with onclick="selectAvatarPopup()"
+// in the connect screen can call it before pokerth.js has loaded. A
+// duplicate copy used to live here; it shadowed the head version and
+// didn't know about the '__pth__' sentinel, leading to the visible
+// '__pth__' string leaking into the trigger button. Removed.
 
 // [Phase 2] toggleLang moved to public/modules/i18n.mjs (still global via window.toggleLang)
 
