@@ -3266,7 +3266,14 @@ const App = (() => {
       if (!_myAvatarCache) {
         try { _myAvatarCache = localStorage.getItem('pth_avatar') || ''; } catch(e) {}
       }
-      if (_myAvatarCache) return _myAvatarCache;
+      // Never return the '__pth__' sentinel as an "initial". The seat
+      // builder renders the result inside <span class="seat-initial">;
+      // returning the raw sentinel surfaced as '_PTH_' on every seat
+      // when the user picked the PokerTH avatar but had no image
+      // downloaded yet (LAN, guest, etc). Falling back to the name's
+      // first letter is the right text fallback; the image (real or
+      // placeholder logo) is layered on top by the renderer.
+      if (_myAvatarCache && _myAvatarCache !== '__pth__') return _myAvatarCache;
       return myName ? myName.charAt(0).toUpperCase() : '?';
     }
     if (isBot(pid)) return '🤖';
@@ -3436,13 +3443,20 @@ const App = (() => {
       // user choose explicitly (popup, sentinel '__pth__'). If they
       // picked an emoji or initial, we honour that here.
       let pthAvUrl = _pthAvatarFor(pid);
-      if (pthAvUrl && isMe) {
+      if (isMe) {
         let myChoice = null;
         try { myChoice = localStorage.getItem('pth_avatar'); } catch(e) {}
-        // If a real user choice is recorded and it's not the PokerTH
-        // sentinel, suppress the image for the local seat only.
-        if (myChoice !== null && myChoice !== '__pth__') {
+        // If the user picked an emoji (or initial), suppress the
+        // real avatar image for the local seat only.
+        if (pthAvUrl && myChoice !== null && myChoice !== '__pth__') {
           pthAvUrl = null;
+        }
+        // Q2=b: user picked '__pth__' but no real image is available.
+        // Show the local PokerTH chip logo as a placeholder so the
+        // seat reflects their stated preference instead of falling
+        // back to a bare initial letter.
+        if (!pthAvUrl && myChoice === '__pth__') {
+          pthAvUrl = '/img/pokerth-logo.png';
         }
       }
       const pthImg = pthAvUrl
