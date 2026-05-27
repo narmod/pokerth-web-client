@@ -3931,11 +3931,31 @@ const App = (() => {
       return { top: oCY + ry*sinAng, left: oCX + rxPx*Math.cos(ang) };
     });
     // ── Calcul SB / BB à partir du dealer ──
+    // We must SKIP seats whose player has left (.gone) -- otherwise
+    // the SB/BB chips get assigned to a ghost seat that hides all
+    // its badges via CSS, leaving the table with no visible blinds.
+    // Walk around the table until we find a non-gone seat.
     const dealerIdx = seats.indexOf(dealerPid);
+    function nextActiveSeat(fromIdx, offset) {
+      if (fromIdx < 0 || !seats.length) return -1;
+      var n = seats.length;
+      // At most n steps — if everyone is gone we give up gracefully.
+      var idx = fromIdx;
+      var stepped = 0;
+      for (var k = 0; k < n; k++) {
+        idx = (idx + 1) % n;
+        if (!seatData[seats[idx]] || !seatData[seats[idx]].gone) {
+          stepped++;
+          if (stepped === offset) return seats[idx];
+        }
+      }
+      return -1;
+    }
     const sbPid = dealerIdx >= 0 && seats.length > 1
-      ? seats[(dealerIdx + 1) % seats.length] : -1;
+      ? nextActiveSeat(dealerIdx, 1)
+      : -1;
     const bbPid = dealerIdx >= 0 && seats.length > 2
-      ? seats[(dealerIdx + 2) % seats.length]
+      ? nextActiveSeat(dealerIdx, 2)
       : (seats.length === 2 ? seats[dealerIdx] : -1); // heads-up: dealer = SB
 
     // Update player-bar
