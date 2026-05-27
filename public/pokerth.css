@@ -960,7 +960,15 @@ body {
     text-overflow: ellipsis;
     white-space: nowrap;
   }
-  #s-game .header-pills { display: none; }
+  /* Keep header-pills as a flex:1 spacer (still empty in #s-game) so that
+     the action buttons get pushed to the RIGHT edge of the header on
+     mobile. Previously this was display:none, which collapsed the spacer
+     and left the buttons clustered near the centre-left -- the brand on
+     the far left and a large gap on the right. */
+  #s-game .header-pills {
+    flex: 1;
+    min-width: 0;
+  }
   #s-game .header { gap: 4px; padding: 3px 8px; }
 }
 
