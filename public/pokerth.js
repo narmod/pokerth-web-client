@@ -370,22 +370,46 @@ function showKeyHint(text) {
 
 // Rafraîchit immédiatement l'avatar du joueur local dans l'UI
 window.refreshMyAvatar = function() {
-  // Q1=A: official PokerTH avatar wins over the emoji-from-localStorage.
-  // Order of preference: PokerTH avatar -> emoji custom -> initial.
+  // Resolve which avatar to use for ME (the local player).
+  // Step 4 introduced a 3-way choice stored in localStorage.pth_avatar:
+  //   '__pth__'  -> use the official PokerTH avatar image
+  //   ''         -> use the initial letter
+  //   anything else (e.g. '🦊') -> use that emoji
+  // First-login auto-pick (Q2=c): if the user never expressed a choice
+  // (key missing from localStorage, NOT just empty) AND we already have a
+  // PokerTH avatar downloaded, default to the official one. Once the user
+  // makes any selection in the popup, this auto-pick stops kicking in.
   var pthUrl = (typeof window._pthAvatarFor === 'function' && typeof myId !== 'undefined')
     ? window._pthAvatarFor(myId)
     : null;
-  var av = '';
-  try { av = localStorage.getItem('pth_avatar') || ''; } catch(e) {}
+  var stored = null;
+  try { stored = localStorage.getItem('pth_avatar'); } catch(e) {}
+  if (stored === null && pthUrl) {
+    // First-login auto-pick: persist the sentinel.
+    try { localStorage.setItem('pth_avatar', '__pth__'); } catch(e) {}
+    stored = '__pth__';
+    // Reflect the choice on the trigger and selected button if the popup
+    // already exists. Safe no-ops if elements aren't there yet.
+    var btnPth = document.getElementById('avp-btn-pth');
+    if (btnPth) {
+      btnPth.style.display = '';
+      document.querySelectorAll('.avp-btn').forEach(function(b){
+        b.classList.toggle('selected', b.dataset.av === '__pth__');
+      });
+    }
+    var trig = document.getElementById('av-trigger');
+    if (trig) { trig.textContent = '\uD83E\uDEAA'; trig.classList.add('has-avatar'); }
+  }
+  // Effective choice: 'pth' | 'initial' | 'emoji-xxx'
+  var usePth   = (stored === '__pth__') && !!pthUrl;
+  var emojiAv  = (stored && stored !== '__pth__') ? stored : '';
+  var av = emojiAv; // back-compat var name used in the rest of the function
   _myAvatarCache = av;
   var display = av || (typeof myName !== 'undefined' ? (myName||'').charAt(0).toUpperCase() : '?');
   // Player-bar
   var pbAv = document.getElementById('g-myseat-av');
   if (pbAv) {
-    if (pthUrl) {
-      // Replace contents with an <img>. Reuse the same .pb-avatar wrapper
-      // so the green ring, shadow, etc. stay identical. We use innerHTML
-      // because we are swapping between text and <img>.
+    if (usePth) {
       pbAv.innerHTML = '<img class="pb-pth-img" src="' + pthUrl + '" alt="" draggable="false">';
       pbAv.classList.add('has-pth-avatar');
     } else {
@@ -399,10 +423,8 @@ window.refreshMyAvatar = function() {
     if (seat.classList.contains('me')) {
       var avatarEl = seat.querySelector('.seat-avatar');
       if (!avatarEl) return;
-      // Manage the <img class="seat-pth-img"> inside the avatar circle:
-      // create / update / remove based on whether we have an URL.
       var img = avatarEl.querySelector('.seat-pth-img');
-      if (pthUrl) {
+      if (usePth) {
         if (!img) {
           img = document.createElement('img');
           img.className = 'seat-pth-img';
@@ -416,13 +438,15 @@ window.refreshMyAvatar = function() {
         if (img) img.remove();
         avatarEl.classList.remove('has-pth-avatar');
       }
-      // Keep the text fallback in sync regardless.
       var ini = avatarEl.querySelector('.seat-initial');
       if (ini) ini.textContent = display;
       if (av) avatarEl.classList.add('emoji-av');
       else avatarEl.classList.remove('emoji-av');
     }
   });
+  // Toggle the PokerTH option in the popup based on availability.
+  var btnPth2 = document.getElementById('avp-btn-pth');
+  if (btnPth2) btnPth2.style.display = pthUrl ? '' : 'none';
 };
 
 window.toggleAvatarPopup = function() {
@@ -3382,10 +3406,20 @@ const App = (() => {
       const dealerChip = isDealer ? dealerChipSvg() : '';
       // ── Step 3 display: if we have a downloaded PokerTH avatar for
       // this pid, slot it in as <img> on top of the initial/emoji.
-      // Q1=A: official PokerTH avatar takes precedence over emoji custom.
-      // The <span class="seat-initial"> stays in the markup as a fallback
-      // in case the image fails to decode (broken bytes etc.).
-      const pthAvUrl = _pthAvatarFor(pid);
+      // Q1=A: official PokerTH avatar takes precedence over emoji custom
+      // -- BUT only for OTHER players. For MY OWN seat, step 4 lets the
+      // user choose explicitly (popup, sentinel '__pth__'). If they
+      // picked an emoji or initial, we honour that here.
+      let pthAvUrl = _pthAvatarFor(pid);
+      if (pthAvUrl && isMe) {
+        let myChoice = null;
+        try { myChoice = localStorage.getItem('pth_avatar'); } catch(e) {}
+        // If a real user choice is recorded and it's not the PokerTH
+        // sentinel, suppress the image for the local seat only.
+        if (myChoice !== null && myChoice !== '__pth__') {
+          pthAvUrl = null;
+        }
+      }
       const pthImg = pthAvUrl
         ? '<img class="seat-pth-img" src="' + pthAvUrl + '" alt="" draggable="false">'
         : '';
