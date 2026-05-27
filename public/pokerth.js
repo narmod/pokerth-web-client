@@ -1618,9 +1618,6 @@ const App = (() => {
               hashHex += (h.length === 1 ? '0' : '') + h;
             }
             _pthAvatarHashes[pid] = { type: avType, hashHex: hashHex };
-            const typeLabel = (avType === 1 ? 'PNG' : avType === 2 ? 'JPG' : avType === 3 ? 'GIF' : '?');
-            console.debug('[pth-avatar] pid=' + pid + ' name=' + (name || '?') +
-                          ' type=' + typeLabel + ' hash=' + hashHex);
             // ── Step 3: cache hit?
             // If the same hash has been downloaded in a previous session
             // and is still in localStorage, restore it immediately --
@@ -1633,7 +1630,6 @@ const App = (() => {
                   chunks: [], received: 0,
                 };
                 _pthDataUrls[hashHex] = cached.dataUrl;
-                console.debug('[pth-avatar] CACHE HIT hash=' + hashHex);
                 // Re-render so the seat picks up the image right away.
                 if (typeof window._renderSeats === 'function') window._renderSeats();
                 if (typeof window.refreshMyAvatar === 'function') window.refreshMyAvatar();
@@ -1656,7 +1652,6 @@ const App = (() => {
                 [2, 2, avHashBytes],
               ]);
               send(Proto.encode([[1, 0, T.AvatarRequest], [8, 2, reqMsg]]));
-              console.debug('[pth-avatar] -> AvatarRequest reqId=' + reqId + ' hash=' + hashHex);
             } else if (_pthAvatarsByHash[hashHex].status === 'done') {
               // Already cached this session -- nothing to do, the
               // re-render path will pick it up.
@@ -1688,10 +1683,6 @@ const App = (() => {
           // Server may correct the type vs what PlayerInfoReply said
           if (avType) entry.type = avType;
         }
-        const typeLabel = (avType === 1 ? 'PNG' : avType === 2 ? 'JPG' : avType === 3 ? 'GIF' : '?');
-        console.debug('[pth-avatar] <- AvatarHeader reqId=' + reqId +
-                      ' type=' + typeLabel + ' size=' + size +
-                      ' hash=' + (hashHex || '(unknown reqId)'));
         break;
       }
       case T.AvatarData: {
@@ -1703,10 +1694,6 @@ const App = (() => {
           entry.chunks.push(block);
           entry.received += block.length;
         }
-        console.debug('[pth-avatar] <- AvatarData reqId=' + reqId +
-                      ' chunk=' + (block ? block.length : 0) + 'B' +
-                      ' total=' + (entry ? entry.received : '?') + '/' +
-                      (entry ? entry.expectedSize : '?'));
         break;
       }
       case T.AvatarEnd: {
@@ -1729,10 +1716,6 @@ const App = (() => {
             entry.status = 'error';
           }
         }
-        console.debug('[pth-avatar] <- AvatarEnd reqId=' + reqId +
-                      ' hash=' + (hashHex || '?') +
-                      ' total=' + (entry ? entry.received : '?') + 'B' +
-                      ' status=' + (entry ? entry.status : '?'));
         // Re-render: seats around the table + my own seat in the bar.
         if (typeof window._renderSeats === 'function') window._renderSeats();
         if (typeof window.refreshMyAvatar === 'function') window.refreshMyAvatar();
@@ -1746,9 +1729,6 @@ const App = (() => {
         if (entry) {
           entry.status = 'unknown';
         }
-        console.debug('[pth-avatar] <- UnknownAvatar reqId=' + reqId +
-                      ' hash=' + (hashHex || '?') +
-                      ' (server has no data for this hash)');
         if (hashHex) delete _pthAvatarReqIdToHash[reqId];
         break;
       }
