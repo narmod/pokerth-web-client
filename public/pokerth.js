@@ -1032,6 +1032,10 @@ const MSG = (() => {
     Statistics:62, ChatRequest:63, Chat:64, ChatReject:65,
     TimeoutWarning:67, ResetTimeout:68, Error:73,
     GameListSpectatorJoined:78, GameListSpectatorLeft:79,
+    // Spectators on the table we're currently in (or watching).
+    // Type 80/81 — separate from the lobby-level 78/79 which track
+    // spectator counts across all tables.
+    GameSpectatorJoined:80, GameSpectatorLeft:81,
   };
 
   // Parse un buffer en {type, sub: champs du sous-message}
@@ -1731,6 +1735,30 @@ const App = (() => {
       ],
     });
 
+    // ── Section 4: Spectateurs (only if any) ──
+    // Built from _specPids, populated by GameSpectatorJoined handlers.
+    // Each row gets the same avatar treatment as the kick / players
+    // list (via _avatarChipHtml: PokerTH image > emoji > initial > 🤖).
+    // The user themselves is filtered out (we don't add ourselves to
+    // _specPids in the join handler) so the list shows OTHER specs.
+    // When the local user is themselves a spectator, we add a "(vous)"
+    // entry up top so they see they're not invisible.
+    var specRows = [];
+    if (_amSpectator && myId) {
+      // Show ourselves first, marked as such.
+      var meName = (myName || ('#' + myId)) + ' ' +
+                   '<span class="gim-spec-me">' +
+                   (fr ? '(vous)' : '(you)') +
+                   '</span>';
+      specRows.push({ pid: myId, html: meName });
+    }
+    _specPids.forEach(function(sp) {
+      specRows.push({
+        pid: sp,
+        html: players[sp] ? esc(players[sp]) : ('#' + sp),
+      });
+    });
+
     var html = '';
     sections.forEach(function(s){
       html += '<div class="gim-section">';
@@ -1743,7 +1771,37 @@ const App = (() => {
       });
       html += '</div>';
     });
+
+    // Spectators section: rendered separately because it uses a
+    // different row layout (avatar chip + name, like the kick modal).
+    if (specRows.length) {
+      html += '<div class="gim-section">';
+      html += '<div class="gim-section-title">' +
+              '👁 ' + esc(fr ? 'Spectateurs' : 'Spectators') +
+              ' <span class="gim-section-count">(' + specRows.length + ')</span>' +
+              '</div>';
+      html += '<div class="gim-spec-list">';
+      specRows.forEach(function(r) {
+        var avChip = (typeof window._avatarChipHtml === 'function')
+          ? window._avatarChipHtml(r.pid, players[r.pid] || ('#' + r.pid), 'gim-spec-av')
+          : '<span class="gim-spec-av letter">?</span>';
+        html += '<div class="gim-spec-row">' + avChip +
+                '<span class="gim-spec-name">' + r.html + '</span></div>';
+      });
+      html += '</div></div>';
+    }
+
     bodyEl.innerHTML = html;
+
+    // Also add a "👁 N" badge to the subtitle when there's at least
+    // one spectator (besides ourselves). Tiny detail but it makes
+    // the spectator presence visible WITHOUT having to scroll the
+    // modal — the badges are right under the title.
+    if (_specPids.size > 0) {
+      var specBadge = '<span class="gim-badge gim-badge-spec">👁 ' +
+                      _specPids.size + '</span>';
+      subEl.innerHTML = subEl.innerHTML + ' ' + specBadge;
+    }
 
     modal.style.display = 'flex';
   }
@@ -1800,6 +1858,11 @@ const App = (() => {
   let _gameStarted = false; // flips true on GameStartInitial; freezes waiting-panel updates
   let _seatsFrozen = false; // one-way latch: true once the original seating order is set, never unset until leave/closeTable
   let _amSpectator = false; // true when we joined via 'Regarder' / spectateGame() — disables actions, shows banner
+  // Spectators present on the current table. Populated by
+  // GameSpectatorJoined messages from the server (one is sent per
+  // existing spectator when we ourselves join, plus live updates
+  // as people come and go). Reset on JoinGameAck / closeTable.
+  let _specPids = new Set();
   let _lobbyPlayerCount = 0; // running tally of players online; updated by PlayerListMessage + StatisticsMessage
   let _hasStatistics = false; // true once we've seen a StatisticsMessage; takes precedence over the PlayerList tally
   let _lobbyPids = new Set(); // pids currently online in the lobby (driven by PlayerList add/remove events)
@@ -2232,6 +2295,49 @@ const App = (() => {
       }
       case T.GameListSpectatorLeft: { break; }
 
+      // ── Spectator events SCOPED to the current game ──
+      // Type 80/81. The lobby-level 78/79 above are different (they
+      // tick a spectator count on each table card in the games list).
+      // 80/81 only arrive while we're inside a game (player OR
+      // spectator) and refer to OTHER spectators watching the same
+      // table. The server replays Joined for each existing spectator
+      // right after our JoinGameAck, so we don't need a separate
+      // "fetch initial list" round-trip.
+      case T.GameSpectatorJoined: {
+        const spid = Proto.u32(sub, 2);
+        if (spid && spid !== myId) {
+          _specPids.add(spid);
+          // Request the pseudo if we don't have it yet. PlayerInfoReply
+          // will populate players[spid] and the modal renderer reads
+          // straight from there, so the row updates next time the modal
+          // is opened (or right now if it's already open).
+          if (!players[spid]) {
+            try {
+              const req = Proto.encode([[1,0,spid]]);
+              send(Proto.encode([[1,0,T.PlayerInfoRequest],[19,2,req]]));
+            } catch(e) {}
+          }
+          // If the modal is currently open, re-render it so the new
+          // spectator appears live.
+          var _gim = document.getElementById('game-info-modal');
+          if (_gim && _gim.style.display === 'flex') {
+            try { openGameInfoPopup(); } catch(e) {}
+          }
+        }
+        break;
+      }
+      case T.GameSpectatorLeft: {
+        const spid = Proto.u32(sub, 2);
+        if (spid) {
+          _specPids.delete(spid);
+          var _gim2 = document.getElementById('game-info-modal');
+          if (_gim2 && _gim2.style.display === 'flex') {
+            try { openGameInfoPopup(); } catch(e) {}
+          }
+        }
+        break;
+      }
+
       // Message de chat
       case T.Chat: {
         const pid  = Proto.u32(sub, 2);
@@ -2305,6 +2411,10 @@ const App = (() => {
 
       case T.JoinGameAck: {
         gId = Proto.u32(sub, 1);
+        // Fresh game = empty spectator set. The server will replay
+        // GameSpectatorJoined for each existing spectator so we'll
+        // rebuild the set within milliseconds.
+        _specPids = new Set();
         const isAdmin = Proto.u32(sub, 2);
         // Appliquer le timeout de la partie (depuis games[] si on rejoint, sinon celui créé)
         if (games[gId] && games[gId].timeout) gameTimeout = games[gId].timeout;
@@ -5234,7 +5344,7 @@ function dismissWinner() {
       // Admin closes table: send leave, server closes game for all
       if (ws && gId) { try { send(MSG.buildLeaveGame(gId)); } catch(e) {} }
       amInGame = false; amGameAdmin = false; _gameStarted = false; _seatsFrozen = false; _amSpectator = false; var _sb2 = document.getElementById('g-spectator-banner'); if (_sb2) _sb2.style.display = 'none';
-      gId = 0; seats = []; seatData = {};
+      gId = 0; seats = []; seatData = {}; _specPids = new Set();
       var _ego = document.getElementById('g-endgame-overlay');
       if (_ego) _ego.style.display = 'none';
       myCards = [null,null]; commCards = [];
@@ -5312,7 +5422,7 @@ function dismissWinner() {
       // Send proper leave request then stay connected (return to lobby)
       if (ws && gId) { try { send(MSG.buildLeaveGame(gId)); } catch(e) {} }
       amInGame = false; amGameAdmin = false; _gameStarted = false; _seatsFrozen = false; _amSpectator = false; var _sb2 = document.getElementById('g-spectator-banner'); if (_sb2) _sb2.style.display = 'none';
-      gId = 0; seats = []; seatData = {};
+      gId = 0; seats = []; seatData = {}; _specPids = new Set();
       var _ego = document.getElementById('g-endgame-overlay');
       if (_ego) _ego.style.display = 'none';
       myCards = [null,null]; commCards = [];
