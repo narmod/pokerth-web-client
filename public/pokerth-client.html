@@ -366,7 +366,7 @@ function selectAvatarPopup(emoji) {
 
 <div id="s-game" class="screen">
   <div class="header">
-    <div class="header-brand"><span>♠</span>&nbsp;<span id="g-name" class="g-name-clickable" onclick="(function(){ var msg = '[DEBUG] Click reçu. openGameInfoPopup type: ' + typeof openGameInfoPopup; alert(msg); try { if (typeof openGameInfoPopup === 'function') openGameInfoPopup(); } catch(e) { alert('Erreur: ' + e.message); } })()" title="Détails de la partie">TABLE</span><span id="g-admin-badge" style="display:none;font-size:0.7rem;color:var(--green);margin-left:6px" title="Vous êtes créateur de cette table">👑</span></div>
+    <div class="header-brand"><span>♠</span>&nbsp;<span id="g-name" class="g-name-clickable" onclick="openGameInfoPopup()" title="Détails de la partie">TABLE</span><span id="g-admin-badge" style="display:none;font-size:0.7rem;color:var(--green);margin-left:6px" title="Vous êtes créateur de cette table">👑</span></div>
     <div class="header-pills"></div>
     <button class="btn-sm btn-icon" id="fs-btn-game" onclick="toggleFullscreen()" title="Fullscreen">⛶</button>
     <button class="btn-sm btn-icon" id="sound-toggle-btn" onclick="toggleSound()" title="Couper/Unmute">🔊</button>
