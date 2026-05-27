@@ -377,6 +377,7 @@ function selectAvatarPopup(emoji) {
     <button class="btn-sm btn-icon" id="chat-toggle-btn" onclick="toggleGameChat()" title="Chat">💬</button>
     <button class="btn-sm" id="admin-start-btn" onclick="App.startWithBots()" style="display:none;color:var(--green);border-color:rgba(39,174,96,0.4)" title="Start with bots">▶ Bots</button>
     <button class="btn-sm" id="admin-close-btn" onclick="App.closeTable()" style="display:none;color:#e67e22;border-color:rgba(230,126,34,0.4)" title="Close table">🔒 Close</button>
+    <button class="btn-sm" id="admin-kick-btn" onclick="App.openKickModal()" style="display:none;color:#e67e22;border-color:rgba(230,126,34,0.4)" title="Kick player">👥 Kick</button>
     <button class="btn-sm btn-icon" id="g-overflow-btn" onclick="toggleHeaderOverflow(event)" title="Plus">•••</button>
     <button class="btn-sm btn-icon" onclick="App.confirmLeaveGame()" title="Quit" data-i18n-title="quitTooltip" style="color:var(--red);border-color:rgba(192,57,43,0.3)">✕</button>
     <div id="g-overflow-menu">
@@ -385,6 +386,7 @@ function selectAvatarPopup(emoji) {
       <button class="btn-sm" onclick="toggleLog();closeHeaderOverflow()">📋 Journal</button>
       <button class="btn-sm" id="admin-start-mob" onclick="App.startWithBots();closeHeaderOverflow()" style="display:none;color:var(--green);border-color:rgba(39,174,96,0.4)">▶ Bots</button>
       <button class="btn-sm" id="admin-close-mob" onclick="App.closeTable();closeHeaderOverflow()" style="display:none;color:#e67e22;border-color:rgba(230,126,34,0.4)">🔒 Close</button>
+      <button class="btn-sm" id="admin-kick-mob" onclick="App.openKickModal();closeHeaderOverflow()" style="display:none;color:#e67e22;border-color:rgba(230,126,34,0.4)">👥 Kick</button>
     </div>
   </div>
   <!-- Spectator banner: shown only when the user joined the table via
@@ -621,6 +623,39 @@ if ('serviceWorker' in navigator) {
       <div class="gim-subtitle" id="gim-subtitle"></div>
     </div>
     <div class="gim-body" id="gim-body"></div>
+  </div>
+</div>
+
+
+<!-- Kick player modal: opened by clicking the "👥 Kick" admin button.
+     Lists every player currently at the table (except the admin
+     themselves) with their avatar + pseudo + stack + a small trash
+     icon to kick. Filled dynamically by App.openKickModal(). -->
+<div id="kick-modal" style="display:none">
+  <div class="km-backdrop" onclick="App.closeKickModal()"></div>
+  <div class="km-card" role="dialog" aria-labelledby="km-title">
+    <button class="km-close" type="button" onclick="App.closeKickModal()" title="Fermer" aria-label="Fermer">✕</button>
+    <div class="km-title" id="km-title">👥 Kicker un joueur</div>
+    <div class="km-subtitle" id="km-subtitle">Sélectionnez un joueur à expulser de la table</div>
+    <div class="km-list" id="km-list">
+      <div class="km-empty">— Aucun joueur —</div>
+    </div>
+  </div>
+</div>
+
+<!-- Kick-confirm modal: nested confirmation before sending the kick
+     request to the server (no undo). Avoids accidental taps on
+     mobile. Filled by App.askConfirmKick(). -->
+<div id="kick-confirm-modal" style="display:none">
+  <div class="km-backdrop" onclick="App.cancelKickConfirm()"></div>
+  <div class="kcm-card" role="alertdialog" aria-labelledby="kcm-title">
+    <div class="kcm-icon">⚠️</div>
+    <div class="kcm-title" id="kcm-title">Kicker ce joueur ?</div>
+    <div class="kcm-msg" id="kcm-msg">—</div>
+    <div class="kcm-btns">
+      <button class="kcm-cancel" type="button" onclick="App.cancelKickConfirm()">Annuler</button>
+      <button class="kcm-confirm" type="button" onclick="App.doKickConfirmed()">🗑️ Kicker</button>
+    </div>
   </div>
 </div>
 
