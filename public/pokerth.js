@@ -1442,11 +1442,24 @@ const App = (() => {
   // admin button is hidden (we're not the admin) the function does
   // nothing — extra cheap-guard before counting.
   function refreshStartNoBotsVisibility() {
-    if (!amGameAdmin) return;
-    var humansAtTable = Object.keys(seatData)
+    if (!amGameAdmin || _gameStarted) {
+      // Hide explicitly once the game has started — the renderer's
+      // early-return otherwise leaves the button stuck on screen.
+      var b1 = document.getElementById('admin-startnobots-btn');
+      var b2 = document.getElementById('admin-startnobots-mob');
+      if (b1) b1.style.display = 'none';
+      if (b2) b2.style.display = 'none';
+      return;
+    }
+    // Build the same pid set as renderWaitingPanel(): pids present in
+    // seatData with .gone falsy, PLUS myId if missing (myId only
+    // enters seatData via GamePlayerJoined for ourselves, which the
+    // server sometimes elides — the renderer compensates the same way).
+    var pids = Object.keys(seatData)
       .map(function(s){ return parseInt(s,10); })
-      .filter(function(p){ return seatData[p] && !seatData[p].gone; }).length;
-    var showIt = humansAtTable >= 2;
+      .filter(function(p){ return seatData[p] && !seatData[p].gone; });
+    if (myId && pids.indexOf(myId) === -1) pids.push(myId);
+    var showIt = pids.length >= 2;
     var btn  = document.getElementById('admin-startnobots-btn');
     var btnM = document.getElementById('admin-startnobots-mob');
     if (btn)  btn.style.display  = showIt ? '' : 'none';
@@ -2504,6 +2517,20 @@ const App = (() => {
 
       case T.GameStartInitial: {
         _gameStarted = true;
+        // Clear the waiting panel ("EN ATTENTE…") immediately when the
+        // game starts. It used to linger until our first MyActionRequest
+        // because that's the next thing that writes to #g-actions —
+        // meaning if another player goes first, the user sees the
+        // start-now banner and the live table at the same time.
+        var _ga = document.getElementById('g-actions');
+        if (_ga) _ga.innerHTML = '';
+        // Same goes for the "▶ Start" / "▶ Bots" admin buttons in the
+        // header: once the game has started they no longer make sense.
+        // Hide all four (desktop + mobile-overflow variants) defensively.
+        ['admin-start-btn','admin-start-mob','admin-startnobots-btn','admin-startnobots-mob'].forEach(function(id){
+          var el = document.getElementById(id);
+          if (el) el.style.display = 'none';
+        });
         // GameStartInitialMessage: gameId=1, startDealerPlayerId=2, playerSeats=3 (packed uint32)
         gId       = Proto.u32(sub, 1);
         dealerPid = Proto.u32(sub, 2);
@@ -5145,6 +5172,24 @@ function dismissWinner() {
       addGameChat(null, '🗑️ ' + (fr
         ? 'Kick demandé pour ' + name + ' (en attente du serveur…)'
         : 'Kick requested for ' + name + ' (waiting for server…)'), 'sys');
+      // Watchdog: if the server hasn't broadcast a GamePlayerLeft
+      // within 3s, the kick has almost certainly failed silently.
+      // This happens on PokerTH servers older than v2.0.6 (March 2026,
+      // changelog: "admin actions functional again"). Warn the admin.
+      (function(targetPid, targetName, gameAtRequest) {
+        setTimeout(function() {
+          // Bail if we left the table / changed game in the meantime.
+          if (gId !== gameAtRequest) return;
+          // Player still present means the kick was not honoured.
+          if (seatData[targetPid] && !seatData[targetPid].gone) {
+            addGameChat(null, '⚠ ' + (fr
+              ? 'Le serveur n\'a pas traité le kick de ' + targetName +
+                ' — version PokerTH < 2.0.6 probable.'
+              : 'Server did not process kick of ' + targetName +
+                ' — likely PokerTH server < 2.0.6.'), 'sys');
+          }
+        }, 3000);
+      })(pid, name, gId);
       window._pendingKickPid = null;
       // Refresh the kick list so the row disappears once the server
       // confirms. We don't close the modal automatically: if the admin
