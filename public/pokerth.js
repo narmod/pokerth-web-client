@@ -1081,6 +1081,14 @@ const MSG = (() => {
     return Proto.encode([[1,0,T.ChatRequest],[64,2,req]]);
   }
 
+  // Chat scoped to a specific table (targetGameId = field 1). The
+  // server admin bot uses this scoping to know whether to interpret
+  // a leading "/" as a game-admin command (notably /kick <name>).
+  function buildGameChat(gameId, text) {
+    const req = Proto.encode([[1,0,gameId],[3,2,text]]);
+    return Proto.encode([[1,0,T.ChatRequest],[64,2,req]]);
+  }
+
   // Rejoindre une table existante
   function buildJoin(gameId) {
     const join = Proto.encode([[1,0,gameId]]);
@@ -1197,7 +1205,7 @@ const MSG = (() => {
     return Proto.encode([[1,0,30],[31,2,msg]]);
   }
 
-  return { T, parse, buildInit, buildChat, buildJoin, buildJoinGame, buildStartEventAck, buildMyAction, buildCreateGame, buildLeaveGame, buildStartWithBots, buildKickPlayer };
+  return { T, parse, buildInit, buildChat, buildGameChat, buildJoin, buildJoinGame, buildStartEventAck, buildMyAction, buildCreateGame, buildLeaveGame, buildStartWithBots, buildKickPlayer };
 })();
 
 
@@ -5089,13 +5097,26 @@ function dismissWinner() {
         return;
       }
       var name = players[pid] || ('#' + pid);
+      // Try BOTH paths so we work with both server implementations:
+      //   1. KickPlayerRequestMessage (type 30) — the proto-level
+      //      admin action. Some PokerTH servers honour this, others
+      //      ignore it for non-real-player pids (e.g. bots) or have
+      //      it disabled for stability reasons (see ChangeLog v2.0.6
+      //      "admin actions functional again" — i.e. it was broken).
+      //   2. "/kick <name>" via game-scoped chat — the canonical
+      //      path documented on the PokerTH forum ("the game admin
+      //      can kick a user by typing /kick username at the chat").
+      //      The server's admin bot / chatcleaner parses this.
+      // Whichever the server supports, one of the two will work; the
+      // other is a no-op (server ignores it).
       try { send(MSG.buildKickPlayer(gId, pid)); } catch(e) {}
+      try { send(MSG.buildGameChat(gId, '/kick ' + name)); } catch(e) {}
       // Optimistic log so the admin gets immediate feedback even
       // before the server broadcasts GamePlayerLeft. Localised.
       var fr = (typeof _lang === 'undefined' || _lang !== 'en');
       addGameChat(null, '🗑️ ' + (fr
-        ? 'Kick demandé pour ' + name
-        : 'Kick requested for ' + name), 'sys');
+        ? 'Kick demandé pour ' + name + ' (en attente du serveur…)'
+        : 'Kick requested for ' + name + ' (waiting for server…)'), 'sys');
       window._pendingKickPid = null;
       // Refresh the kick list so the row disappears once the server
       // confirms. We don't close the modal automatically: if the admin
