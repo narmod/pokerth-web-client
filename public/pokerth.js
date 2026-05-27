@@ -4082,19 +4082,44 @@ const App = (() => {
     // useful, and that join triggers a re-render of this panel.
     try { refreshStartNoBotsVisibility(); } catch(e) {}
 
+    // ── Admin start panel ─────────────────────────────────────
+    //
+    // Shown to the admin whenever there are >= 2 humans at the table
+    // (the minimum required by the server to start a hand). It used
+    // to require _createWithBots + _minHumansNeeded — those gates are
+    // gone now because the panel offers BOTH choices side by side:
+    //
+    //   ▶ Démarrer      → App.startNoBots()    (humans only)
+    //   ▶ + Bots        → App.startWithBots()  (fill empty seats)
+    //
+    // We use the existing wp-ready-* style language for visual
+    // continuity (green theme, soft pulse), and label them concisely
+    // so they fit on one row even on the smallest mobile widths.
+    // The same buttons also exist in the header (▶ Start / ▶ Bots)
+    // and one click on either path is enough — duplicating them in
+    // the waiting panel is a deliberate UX choice: that's where the
+    // admin is already looking, especially on mobile where the
+    // header buttons are tucked into the ••• overflow.
     let readyBlock = '';
-    if (amGameAdmin
-        && window._createWithBots
-        && (window._minHumansNeeded || 0) > 0
-        && current >= window._minHumansNeeded) {
+    if (amGameAdmin && current >= 2) {
+      var fr_wp = (typeof _lang === 'undefined' || _lang !== 'en');
       readyBlock =
         '<div class="wp-ready-row">' +
           '<div class="wp-ready-label">✓ ' +
-            t('waitingReadyForBots').replace('{n}', window._minHumansNeeded) +
+            (fr_wp
+              ? 'Prêt à jouer — choisissez le mode de démarrage'
+              : 'Ready to play — choose how to start') +
           '</div>' +
-          '<button class="wp-ready-btn" onclick="App.startWithBots()">▶ ' +
-            t('waitingStartNow') +
-          '</button>' +
+          '<div class="wp-ready-btn-row">' +
+            '<button class="wp-ready-btn" onclick="App.startNoBots()" ' +
+              'title="' + (fr_wp ? 'Démarrer avec les humains présents uniquement' : 'Start with humans only') + '">' +
+              '▶ ' + (fr_wp ? 'Démarrer' : 'Start') +
+            '</button>' +
+            '<button class="wp-ready-btn wp-ready-btn-bots" onclick="App.startWithBots()" ' +
+              'title="' + (fr_wp ? 'Remplir les sièges vides avec des bots' : 'Fill empty seats with bots') + '">' +
+              '▶ + ' + (fr_wp ? 'Bots' : 'Bots') +
+            '</button>' +
+          '</div>' +
         '</div>';
     }
 
