@@ -3592,3 +3592,36 @@ body:not(.in-game) .my-zone {
   border-color: rgba(120,160,200,0.4);
   color: #a4c3df;
 }
+
+
+/* ── Ghost seat — player has LEFT the table (not just eliminated) ──
+   A player who left during a game stays in seats[] to preserve the
+   pixel positions of every other seat around the felt (re-shuffling
+   them is disorienting; see the seat-out commentary). But unlike a
+   merely-eliminated player they should look essentially gone:
+   no name, no money, no actions, no OUT badge. The avatar fades to
+   ~15% opacity so the position is still discoverable on close
+   inspection but doesn't compete for the player's attention.
+
+   Difference at a glance:
+     .seat-out   = eliminated, still at the table → opacity 0.35 + OUT badge
+     .seat-ghost = left the table → opacity 0.15, no text, no badge */
+.seat.seat-ghost {
+  opacity: 0.15;
+  filter: grayscale(1);
+  pointer-events: none;
+}
+.seat.seat-ghost .seat-name,
+.seat.seat-ghost .seat-money,
+.seat.seat-ghost .seat-bet,
+.seat.seat-ghost .seat-action,
+.seat.seat-ghost .blind-chip,
+.seat.seat-ghost .dealer-chip {
+  display: none !important;
+}
+/* Suppress the OUT pseudo-element specifically: .seat-ghost wins over
+   .seat-out (we made them mutually exclusive in the class string, but
+   this is defence-in-depth in case something else adds .seat-out). */
+.seat.seat-ghost::after {
+  content: none !important;
+}
