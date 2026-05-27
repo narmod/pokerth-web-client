@@ -3522,3 +3522,73 @@ body:not(.in-game) .my-zone {
     max-width: 280px;
   }
 }
+
+
+/* ── Spectators section in #game-info-modal ──
+   Shown only when there's at least one spectator watching the table.
+   The list reuses the same row pattern as the kick modal (.km-row)
+   but with smaller avatars (28px) since this is informational, not
+   actionable. */
+.gim-section-count {
+  color: var(--gold-dim);
+  font-size: 0.7rem;
+  font-weight: normal;
+  letter-spacing: 0.05em;
+}
+.gim-spec-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 6px;
+}
+.gim-spec-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 8px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.04);
+  border-radius: 3px;
+}
+.gim-spec-row .gim-spec-av {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.05);
+  font-size: 1.2rem;
+  line-height: 1;
+}
+.gim-spec-row .gim-spec-av.letter {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--gold);
+}
+.gim-spec-row .gim-spec-av.has-pth-avatar {
+  background: rgba(0,0,0,0.2);
+  padding: 0;
+  overflow: visible;
+}
+.gim-spec-row .gim-spec-name {
+  flex: 1;
+  color: var(--cream);
+  font-family: 'Inconsolata', monospace;
+  font-size: 0.82rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.gim-spec-me {
+  color: var(--gold-dim);
+  font-size: 0.7rem;
+  font-style: italic;
+  margin-left: 4px;
+}
+.gim-badge.gim-badge-spec {
+  background: rgba(120,160,200,0.15);
+  border-color: rgba(120,160,200,0.4);
+  color: #a4c3df;
+}
