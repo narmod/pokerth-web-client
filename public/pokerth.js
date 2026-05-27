@@ -921,6 +921,7 @@ const MSG = (() => {
   // Type IDs → numéro de champ dans PokerTHMessage
   const TYPE_FIELD = {
     1:2, 2:3, 3:4, 4:5, 5:6, 6:7,           // Announce,Init,AuthChallenge,…,InitAck
+    7:8, 8:9, 9:10, 10:11, 11:12,             // AvatarRequest, AvatarHeader, AvatarData, AvatarEnd, UnknownAvatar
     12:13,                                     // PlayerList
     13:14, 14:15, 15:16, 16:17, 17:18,        // GameList*
     18:19, 19:20,                              // PlayerInfo req/reply
@@ -941,6 +942,12 @@ const MSG = (() => {
 
   const T = {
     Announce:1, Init:2, AuthChallenge:3, AuthClientResp:4, AuthServerVerif:5, InitAck:6,
+    // Avatar download flow (step 2 of pokerth.net avatar feature):
+    // client sends AvatarRequest with a unique requestId + 16-byte hash,
+    // server replies with AvatarHeader (size+type), then 1..N
+    // AvatarData chunks (~256 bytes each), then AvatarEnd. If the server
+    // does not have the avatar, it replies with UnknownAvatar instead.
+    AvatarRequest:7, AvatarHeader:8, AvatarData:9, AvatarEnd:10, UnknownAvatar:11,
     PlayerList:12,
     GameListNew:13, GameListUpdate:14, GameListPlayerJoined:15, GameListPlayerLeft:16,
     GameListAdminChanged:17,
@@ -1137,6 +1144,23 @@ const App = (() => {
   //   type: NetAvatarType from proto -- 1=PNG, 2=JPG, 3=GIF
   //   hashHex: lower-case hex string (easy logging & future cache keys)
   let _pthAvatarHashes = {};
+  // Step 2: outgoing AvatarRequest tracking. Keyed by hashHex so the same
+  // avatar shared by N players is downloaded ONCE (Q2=A, dedup by hash).
+  //   _pthAvatarsByHash[hex] = {
+  //     status: 'pending' | 'done' | 'unknown' | 'error',
+  //     type:   1|2|3,
+  //     expectedSize: <bytes from AvatarHeader>,
+  //     chunks: [Uint8Array, ...],   // not concatenated yet (step 3)
+  //     received: <running total>,
+  //   }
+  let _pthAvatarsByHash = {};
+  // requestId -> hashHex, so AvatarHeader/Data/End handlers can map
+  // their requestId back to the right entry (the server's reply does
+  // NOT echo the hash, only the requestId we chose).
+  let _pthAvatarReqIdToHash = {};
+  // Monotonic counter for AvatarRequest.requestId. Starts at 1 because
+  // some servers refuse 0. Wraps around at 2^32 (we'll be long dead).
+  let _pthNextAvatarReqId = 1;
   let _myAvatarCache  = ''; // cache de l'avatar local (évite les lectures localStorage répétées)
   let seats     = [];  // player IDs in seat order (from GameStartInitial) — figé après 1ère main
   let seatData  = {};  // {pid: {money, bet, action, active, folded}}
@@ -1433,6 +1457,31 @@ const App = (() => {
             const typeLabel = (avType === 1 ? 'PNG' : avType === 2 ? 'JPG' : avType === 3 ? 'GIF' : '?');
             console.debug('[pth-avatar] pid=' + pid + ' name=' + (name || '?') +
                           ' type=' + typeLabel + ' hash=' + hashHex);
+            // ── Step 2: kick off an AvatarRequest for this hash, unless
+            // we've already started (or finished) downloading it. Q2 = A
+            // (dedup by hash): a single download serves all players who
+            // share the same avatar, even default ones.
+            if (!_pthAvatarsByHash[hashHex]) {
+              _pthAvatarsByHash[hashHex] = {
+                status: 'pending', // 'pending' | 'done' | 'unknown' | 'error'
+                type:   avType,
+                expectedSize: 0,   // filled by AvatarHeader
+                chunks: [],        // Uint8Array[] -- joined at AvatarEnd
+                received: 0,       // running total bytes
+              };
+              const reqId = _pthNextAvatarReqId++;
+              _pthAvatarReqIdToHash[reqId] = hashHex;
+              // Encode AvatarRequestMessage: { requestId=1 (varint), avatarHash=2 (bytes) }
+              const reqMsg = Proto.encode([
+                [1, 0, reqId],
+                [2, 2, avHashBytes],
+              ]);
+              // Wrap as PokerTHMessage { messageType=1 (varint=7), avatarRequestMessage=8 (bytes) }
+              send(Proto.encode([[1, 0, T.AvatarRequest], [8, 2, reqMsg]]));
+              console.debug('[pth-avatar] -> AvatarRequest reqId=' + reqId + ' hash=' + hashHex);
+            } else {
+              console.debug('[pth-avatar] hash=' + hashHex + ' already pending/done, skip request');
+            }
           }
         }
         // If the waiting panel is visible, update it so the new pseudo
@@ -1441,6 +1490,74 @@ const App = (() => {
         // Same idea for the lobby players panel.
         var _pp2 = document.getElementById('players-panel');
         if (_pp2 && _pp2.style.display !== 'none' && typeof renderPlayersList === 'function') renderPlayersList();
+        break;
+      }
+
+      // ──────────────────────────────────────────────────────────────
+      // PokerTH avatar download flow -- STEP 2: parse server replies.
+      // No assembly into a Blob/Data URL yet, no display. Just log so
+      // we can verify the server actually streams the bytes back.
+      // ──────────────────────────────────────────────────────────────
+      case T.AvatarHeader: {
+        const reqId = Proto.u32(sub, 1);
+        const avType = Proto.u32(sub, 2);
+        const size = Proto.u32(sub, 3);
+        const hashHex = _pthAvatarReqIdToHash[reqId];
+        const entry = hashHex ? _pthAvatarsByHash[hashHex] : null;
+        if (entry) {
+          entry.expectedSize = size;
+          // Server may correct the type vs what PlayerInfoReply said
+          if (avType) entry.type = avType;
+        }
+        const typeLabel = (avType === 1 ? 'PNG' : avType === 2 ? 'JPG' : avType === 3 ? 'GIF' : '?');
+        console.debug('[pth-avatar] <- AvatarHeader reqId=' + reqId +
+                      ' type=' + typeLabel + ' size=' + size +
+                      ' hash=' + (hashHex || '(unknown reqId)'));
+        break;
+      }
+      case T.AvatarData: {
+        const reqId = Proto.u32(sub, 1);
+        const block = Proto.raw(sub, 2); // Uint8Array of this chunk
+        const hashHex = _pthAvatarReqIdToHash[reqId];
+        const entry = hashHex ? _pthAvatarsByHash[hashHex] : null;
+        if (entry && block) {
+          entry.chunks.push(block);
+          entry.received += block.length;
+        }
+        console.debug('[pth-avatar] <- AvatarData reqId=' + reqId +
+                      ' chunk=' + (block ? block.length : 0) + 'B' +
+                      ' total=' + (entry ? entry.received : '?') + '/' +
+                      (entry ? entry.expectedSize : '?'));
+        break;
+      }
+      case T.AvatarEnd: {
+        const reqId = Proto.u32(sub, 1);
+        const hashHex = _pthAvatarReqIdToHash[reqId];
+        const entry = hashHex ? _pthAvatarsByHash[hashHex] : null;
+        if (entry) {
+          entry.status = 'done';
+        }
+        console.debug('[pth-avatar] <- AvatarEnd reqId=' + reqId +
+                      ' hash=' + (hashHex || '?') +
+                      ' total=' + (entry ? entry.received : '?') + 'B' +
+                      ' chunks=' + (entry ? entry.chunks.length : '?'));
+        // Step 3 (assembly) and step 5 (display) will hook in here.
+        // Clean up the reqId -> hash mapping; the entry stays in
+        // _pthAvatarsByHash for the rest of the session.
+        if (hashHex) delete _pthAvatarReqIdToHash[reqId];
+        break;
+      }
+      case T.UnknownAvatar: {
+        const reqId = Proto.u32(sub, 1);
+        const hashHex = _pthAvatarReqIdToHash[reqId];
+        const entry = hashHex ? _pthAvatarsByHash[hashHex] : null;
+        if (entry) {
+          entry.status = 'unknown';
+        }
+        console.debug('[pth-avatar] <- UnknownAvatar reqId=' + reqId +
+                      ' hash=' + (hashHex || '?') +
+                      ' (server has no data for this hash)');
+        if (hashHex) delete _pthAvatarReqIdToHash[reqId];
         break;
       }
 
@@ -1747,7 +1864,7 @@ const App = (() => {
       case T.RemovedFromGame: {
         addChat(null, t('youWereRemoved'), 'sys');
         amInGame = false;
-        gId = 0; seats = []; seatData = {}; _playerAvatars = {}; _pthAvatarHashes = {}; _seatsFrozen = false; _amSpectator = false; var _sb1 = document.getElementById('g-spectator-banner'); if (_sb1) _sb1.style.display = 'none';
+        gId = 0; seats = []; seatData = {}; _playerAvatars = {}; _pthAvatarHashes = {}; _pthAvatarsByHash = {}; _pthAvatarReqIdToHash = {}; _seatsFrozen = false; _amSpectator = false; var _sb1 = document.getElementById('g-spectator-banner'); if (_sb1) _sb1.style.display = 'none';
         show('s-lobby');
         break;
       }
