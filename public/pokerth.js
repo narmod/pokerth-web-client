@@ -5588,13 +5588,22 @@ function dismissWinner() {
     // is just UI gating, not enforcement.
     startNoBots() {
       if (!gId) return;
-      var humansAtTable = Object.keys(seatData)
+      // Same counting heuristic as refreshStartNoBotsVisibility() AND
+      // renderWaitingPanel(): seatData pids with .gone falsy, PLUS myId
+      // if missing (the server doesn't always echo GamePlayerJoined for
+      // ourselves, especially when we're the admin who just created the
+      // table — myId never enters seatData via that path).
+      // BUG FIX: previously this counted only seatData and refused with
+      // "At least 2 players are needed" even though the visible panel
+      // showed "Joueurs: 2/5" (because the renderer DID inject myId).
+      var pids = Object.keys(seatData)
         .map(function(s){ return parseInt(s,10); })
-        .filter(function(p){ return seatData[p] && !seatData[p].gone; }).length;
-      if (humansAtTable < 2) {
-        // Should never reach here because the button is hidden, but
-        // catch it anyway so a stray click on a stale UI can't send
-        // a bad request.
+        .filter(function(p){ return seatData[p] && !seatData[p].gone; });
+      if (myId && pids.indexOf(myId) === -1) pids.push(myId);
+      if (pids.length < 2) {
+        // Should never reach here because the button is hidden when
+        // pids.length < 2, but catch it anyway so a stray click on a
+        // stale UI can't send a bad request to the server.
         var fr = (typeof _lang === 'undefined' || _lang !== 'en');
         addGameChat(null, '⚠ ' + (fr
           ? 'Au moins 2 joueurs sont nécessaires pour démarrer.'
