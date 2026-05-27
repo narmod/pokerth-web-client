@@ -2325,6 +2325,35 @@ body:not(.in-game) .my-zone {
 }
 .wp-av.emoji-av { font-size: 1.05rem; line-height: 1; }
 .wp-av-letter   { font-size: 0.7rem; font-weight: 700; color: var(--gold); }
+
+/* ── Unified avatar-chip rules for compact UI lists ──
+   The _avatarChipHtml helper produces <span class="<chipClass>
+   has-pth-avatar"><img class="chip-pth-img" src="..."></span> when a
+   PokerTH image is available. We need a single CSS rule that handles
+   the image regardless of which chipClass (wp-av, eg-winner-av,
+   wc-player-av) wraps it. Trick: target the image directly via its
+   own class, and rely on the fact that <img> is a replaced element
+   so border-radius alone clips its content -- no overflow:hidden on
+   the parent needed (which would clip any sibling badge). */
+.chip-pth-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+  display: block;
+  pointer-events: none;
+}
+/* Drop the background tint when the chip hosts an image; the image
+   already fills the circle, the tint would only show through if the
+   image were transparent (the PokerTH logo placeholder has a tiny
+   transparent margin -- a darker tint reads better than white). */
+.wp-av.has-pth-avatar,
+.eg-winner-av.has-pth-avatar,
+.wc-player-av.has-pth-avatar {
+  background: rgba(0,0,0,0.2);
+  padding: 0;
+  overflow: visible;  /* badges (none currently here, but future-proof) */
+}
 .wp-name  { color: var(--cream); }
 .wp-me    {
   font-size: 0.6rem; color: var(--gold);
