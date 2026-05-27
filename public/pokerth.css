@@ -3271,3 +3271,213 @@ body:not(.in-game) .my-zone {
   .connect-footer { display: none; }
 }
 
+
+
+/* ── Kick player modal (opened by admin from header) ──
+   Lists table players with an inline trash button to kick. Same
+   visual language as #player-info-modal and #game-info-modal. */
+#kick-modal,
+#kick-confirm-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+.km-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.65);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+}
+.km-card {
+  position: relative;
+  background: rgba(8, 18, 10, 0.98);
+  border: 1px solid var(--gold-dim);
+  border-radius: 8px;
+  padding: 18px 18px 16px;
+  width: min(360px, 100%);
+  max-height: min(80vh, 600px);
+  overflow-y: auto;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.6);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  -webkit-overflow-scrolling: touch;
+  animation: slideDown 0.18s ease;
+}
+.km-close {
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  background: none;
+  border: none;
+  color: var(--text);
+  cursor: pointer;
+  font-size: 1rem;
+  padding: 2px 6px;
+  line-height: 1;
+}
+.km-close:hover { color: var(--gold); }
+.km-title {
+  font-size: 1.1rem;
+  color: var(--cream);
+  font-family: 'Cinzel', serif;
+  font-weight: 600;
+  text-align: center;
+  padding-right: 24px;
+  letter-spacing: 0.04em;
+}
+.km-subtitle {
+  font-size: 0.72rem;
+  color: var(--gold-dim);
+  text-align: center;
+  letter-spacing: 0.05em;
+  border-bottom: 1px solid rgba(200,168,74,0.15);
+  padding-bottom: 8px;
+  margin-bottom: 2px;
+}
+.km-list {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.km-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.05);
+  border-radius: 4px;
+}
+.km-row .km-av {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.05);
+  font-size: 1.4rem;
+  line-height: 1;
+}
+.km-row .km-av.letter { font-size: 0.9rem; font-weight: 700; color: var(--gold); }
+.km-row .km-av.has-pth-avatar { background: rgba(0,0,0,0.2); padding: 0; overflow: visible; }
+.km-row .km-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.km-row .km-name {
+  color: var(--cream);
+  font-family: 'Inconsolata', monospace;
+  font-size: 0.85rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.km-row .km-meta {
+  color: var(--gold-dim);
+  font-family: 'Inconsolata', monospace;
+  font-size: 0.66rem;
+  letter-spacing: 0.05em;
+}
+.km-row .km-kick {
+  flex-shrink: 0;
+  background: rgba(192,57,43,0.18);
+  border: 1px solid rgba(192,57,43,0.4);
+  color: #ff7a6e;
+  border-radius: 4px;
+  padding: 6px 10px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s, transform 0.05s;
+}
+.km-row .km-kick:hover {
+  background: rgba(192,57,43,0.35);
+  border-color: var(--red);
+}
+.km-row .km-kick:active { transform: scale(0.95); }
+.km-row.km-self {
+  /* Yourself: shown for context but no kick button */
+  opacity: 0.7;
+}
+.km-row.km-self .km-name::after {
+  content: ' (vous, admin)';
+  color: var(--gold-dim);
+  font-size: 0.7rem;
+}
+.km-empty {
+  text-align: center;
+  color: var(--gold-dim);
+  font-style: italic;
+  padding: 18px;
+}
+
+/* ── Kick-confirm modal ── small nested alert dialog */
+.kcm-card {
+  position: relative;
+  background: rgba(8, 18, 10, 0.98);
+  border: 1px solid var(--red);
+  border-radius: 8px;
+  padding: 24px 20px 18px;
+  width: min(320px, 100%);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.7);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  animation: slideDown 0.18s ease;
+}
+.kcm-icon { font-size: 2.2rem; line-height: 1; }
+.kcm-title {
+  font-size: 1.05rem;
+  color: var(--cream);
+  font-family: 'Cinzel', serif;
+  font-weight: 600;
+  text-align: center;
+}
+.kcm-msg {
+  font-size: 0.85rem;
+  color: var(--text);
+  text-align: center;
+  font-family: 'Inconsolata', monospace;
+  word-break: break-word;
+}
+.kcm-btns {
+  display: flex;
+  gap: 10px;
+  width: 100%;
+  margin-top: 4px;
+}
+.kcm-cancel,
+.kcm-confirm {
+  flex: 1;
+  padding: 9px 12px;
+  border-radius: 4px;
+  font-family: 'Cinzel', serif;
+  font-size: 0.82rem;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+.kcm-cancel {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid var(--border);
+  color: var(--text);
+}
+.kcm-cancel:hover { background: rgba(255,255,255,0.1); }
+.kcm-confirm {
+  background: rgba(192,57,43,0.25);
+  border: 1px solid var(--red);
+  color: #ff7a6e;
+  font-weight: 600;
+}
+.kcm-confirm:hover { background: rgba(192,57,43,0.4); }
