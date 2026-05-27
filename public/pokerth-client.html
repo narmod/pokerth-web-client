@@ -375,6 +375,7 @@ function selectAvatarPopup(emoji) {
     <button class="btn-sm btn-icon" id="log-toggle-btn" onclick="toggleLog()" title="Journal">📋</button>
     <button class="btn-sm btn-icon" id="react-toggle-btn" onclick="toggleReactionPanel()" title="Réactions">😊</button>
     <button class="btn-sm btn-icon" id="chat-toggle-btn" onclick="toggleGameChat()" title="Chat">💬</button>
+    <button class="btn-sm" id="admin-startnobots-btn" onclick="App.startNoBots()" style="display:none;color:var(--green);border-color:rgba(39,174,96,0.4)" title="Start without bots (humans only)">▶ Start</button>
     <button class="btn-sm" id="admin-start-btn" onclick="App.startWithBots()" style="display:none;color:var(--green);border-color:rgba(39,174,96,0.4)" title="Start with bots">▶ Bots</button>
     <button class="btn-sm" id="admin-close-btn" onclick="App.closeTable()" style="display:none;color:#e67e22;border-color:rgba(230,126,34,0.4)" title="Close table">🔒 Close</button>
     <button class="btn-sm" id="admin-kick-btn" onclick="App.openKickModal()" style="display:none;color:#e67e22;border-color:rgba(230,126,34,0.4)" title="Kick player">👥 Kick</button>
@@ -384,6 +385,7 @@ function selectAvatarPopup(emoji) {
       <button class="btn-sm" onclick="toggleFullscreen();closeHeaderOverflow()">⛶ Fullscreen</button>
       <button class="btn-sm" id="lang-toggle-game-mob" onclick="toggleLang();closeHeaderOverflow()" style="font-size:0.85rem"></button>
       <button class="btn-sm" onclick="toggleLog();closeHeaderOverflow()">📋 Journal</button>
+      <button class="btn-sm" id="admin-startnobots-mob" onclick="App.startNoBots();closeHeaderOverflow()" style="display:none;color:var(--green);border-color:rgba(39,174,96,0.4)">▶ Start</button>
       <button class="btn-sm" id="admin-start-mob" onclick="App.startWithBots();closeHeaderOverflow()" style="display:none;color:var(--green);border-color:rgba(39,174,96,0.4)">▶ Bots</button>
       <button class="btn-sm" id="admin-close-mob" onclick="App.closeTable();closeHeaderOverflow()" style="display:none;color:#e67e22;border-color:rgba(230,126,34,0.4)">🔒 Close</button>
       <button class="btn-sm" id="admin-kick-mob" onclick="App.openKickModal();closeHeaderOverflow()" style="display:none;color:#e67e22;border-color:rgba(230,126,34,0.4)">👥 Kick</button>
