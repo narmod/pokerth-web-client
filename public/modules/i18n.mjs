@@ -414,9 +414,12 @@ function setLang(l) {
     var b = document.getElementById(id);
     if (b) b.innerHTML = flagSvg;
   });
-  // Mobile overflow-menu entry keeps a text label alongside the flag.
-  var bMob = document.getElementById('lang-toggle-game-mob');
-  if (bMob) bMob.innerHTML = flagSvg + ' ' + langLabel;
+  // Mobile overflow-menu entries (one in the game header, one in the
+  // lobby header) keep a text label alongside the flag.
+  ['lang-toggle-game-mob', 'lang-toggle-lobby-mob'].forEach(function(id){
+    var bMob = document.getElementById(id);
+    if (bMob) bMob.innerHTML = flagSvg + ' ' + langLabel;
+  });
   // Update more/less options label
   var ml = document.getElementById('cf-more-label');
   if (ml) { var cfOpen = document.getElementById('cf-more-opts'); ml.textContent = (cfOpen && cfOpen.style.display !== 'none') ? t('lessOptions') : t('moreOptions'); }
