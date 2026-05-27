@@ -892,8 +892,13 @@ body {
 
 
 
-/* ══ GAME HEADER — OVERFLOW MENU MOBILE ══ */
-#s-game .header {
+/* ══ HEADERS WITH OVERFLOW MENU (game + lobby) ══ */
+/* Both screens host a ••• dropdown (#g-overflow-menu / #l-overflow-menu)
+   that uses position:absolute relative to its containing .header. The
+   lobby was missing position:relative here, so its menu was escaping
+   to the viewport and rendering off-screen. Same chrome for both now. */
+#s-game .header,
+#s-lobby .header {
   position: relative;
   flex-wrap: nowrap;
   align-items: center;
