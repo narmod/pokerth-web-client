@@ -5,7 +5,6 @@
 function _startIpBlockCountdown() {
   // Met à jour le statut toutes les secondes avec le temps restant
   var _blockInterval = setInterval(function() {
-  console.log('[PokerTH] Build: game-info-modal feature + sw v4 — ' + new Date().toISOString().slice(0,16));
     var rem = Math.max(0, Math.ceil((_ipBlockUntil - Date.now()) / 1000));
     var mins = Math.floor(rem / 60), secs = rem % 60;
     var txt = '⏳ IP bloquée — ' + (mins > 0 ? mins + 'min ' : '') + secs + 's';
@@ -1581,9 +1580,9 @@ const App = (() => {
     // The server has no separate "limit/no-limit" field exposed in
     // the listing -- it's always No Limit Texas Hold'em here.
     switch (t) {
-      case 2: return (lang === 'fr') ? 'Inscrits seulement' : 'Registered only';
-      case 3: return (lang === 'fr') ? 'Sur invitation' : 'Invite only';
-      default: return (lang === 'fr') ? 'Partie normale' : 'Normal game';
+      case 2: return (_lang === 'fr') ? 'Inscrits seulement' : 'Registered only';
+      case 3: return (_lang === 'fr') ? 'Sur invitation' : 'Invite only';
+      default: return (_lang === 'fr') ? 'Partie normale' : 'Normal game';
     }
   }
 
@@ -1595,7 +1594,7 @@ const App = (() => {
     var bodyEl  = document.getElementById('gim-body');
     if (!titleEl || !bodyEl) return;
 
-    var fr   = (lang === 'fr');
+    var fr   = (_lang === 'fr');
     var meta = _gameMeta || {
       id: gId, name: '—', type: 1, maxPlayers: 0,
       priv: false, timeout: gameTimeout, startMoney: gameStartMoney,
