@@ -2277,11 +2277,12 @@ const App = (() => {
           timeout:    _gm.timeout || gameTimeout || 15,
           startMoney: _gm.startMoney || gameStartMoney || 3000,
         };
-        // Also update the table name in the game header (used to be
-        // hard-coded "TABLE"). It's clickable now so the real name is
-        // worth showing.
-        var _gn = document.getElementById('g-name');
-        if (_gn) _gn.textContent = _gameMeta.name;
+        // Note: we intentionally keep the static "TABLE" label in the
+        // header rather than swapping in _gameMeta.name. Long table
+        // names like "WebGame-Nono le rigolo" overflow the header on
+        // mobile and hide the admin badge + control buttons. The full
+        // name is still shown as the title of the game-info modal
+        // when the user clicks "TABLE".
         var acb = document.getElementById('admin-close-btn');
         if (acb) acb.style.display = amGameAdmin ? '' : 'none';
         var asb = document.getElementById('admin-start-btn');
