@@ -4776,12 +4776,31 @@ function closeHeaderOverflow() {
   var m = document.getElementById('g-overflow-menu');
   if (m) m.classList.remove('open');
 }
-// Fermer le menu si on clique ailleurs
+// Lobby twin: identical behaviour but targets the lobby overflow menu.
+// Kept as a separate pair of functions so the inline onclick handlers in
+// the lobby HTML stay self-explanatory ('Lobby' in the name), and so we
+// don't have to thread a menu id through every callsite.
+function toggleLobbyOverflow(e) {
+  if (e) e.stopPropagation();
+  var m = document.getElementById('l-overflow-menu');
+  if (!m) return;
+  m.classList.toggle('open');
+}
+function closeLobbyOverflow() {
+  var m = document.getElementById('l-overflow-menu');
+  if (m) m.classList.remove('open');
+}
+// Fermer le menu si on clique ailleurs (game + lobby)
 document.addEventListener('click', function(e) {
   var btn = document.getElementById('g-overflow-btn');
   var menu = document.getElementById('g-overflow-menu');
   if (menu && btn && !btn.contains(e.target) && !menu.contains(e.target)) {
     menu.classList.remove('open');
+  }
+  var lbtn = document.getElementById('l-overflow-btn');
+  var lmenu = document.getElementById('l-overflow-menu');
+  if (lmenu && lbtn && !lbtn.contains(e.target) && !lmenu.contains(e.target)) {
+    lmenu.classList.remove('open');
   }
 });
 
