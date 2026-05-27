@@ -5716,7 +5716,14 @@ function renderPlayersList() {
   }
   body.innerHTML = rows.map(function(r) {
     var esc = function(s) { return String(s).replace(/[<>&"]/g, function(c){return {'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;'}[c];}); };
+    // Avatar chip via the unified helper (same priority order as
+    // every other compact list in the app: real PokerTH image >
+    // placeholder logo > emoji > 🤖 > initial letter).
+    var avChip = (typeof window._avatarChipHtml === 'function')
+      ? window._avatarChipHtml(r.pid, r.name, 'pl-av')
+      : '<span class="pl-av letter">' + esc((r.name[0] || '?').toUpperCase()) + '</span>';
     return '<div class="pl-row' + (r.isMe ? ' pl-me' : '') + '">' +
+             avChip +
              '<span class="pl-name">' + esc(r.name) + '</span>' +
              '<span class="pl-id">#' + r.pid + '</span>' +
            '</div>';
