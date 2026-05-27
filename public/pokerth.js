@@ -444,9 +444,13 @@ window.refreshMyAvatar = function() {
       else avatarEl.classList.remove('emoji-av');
     }
   });
-  // Toggle the PokerTH option in the popup based on availability.
-  var btnPth2 = document.getElementById('avp-btn-pth');
-  if (btnPth2) btnPth2.style.display = pthUrl ? '' : 'none';
+  // Option (i): the PokerTH button stays visible in the popup at all
+  // times (even before connect / for LAN users). If the user clicks it
+  // but no avatar is ever downloaded, usePth ends up false (because the
+  // && !!pthUrl guard above) and the rendering falls back gracefully to
+  // the initial. This makes the popup behave consistently across all
+  // login modes and lets users pre-pick "PokerTH avatar" before they
+  // even connect.
 };
 
 window.toggleAvatarPopup = function() {
