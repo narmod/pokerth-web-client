@@ -1356,6 +1356,64 @@ const App = (() => {
     try { v = localStorage.getItem('pth_avatar') || ''; } catch(e) {}
     return (v === '__pth__') ? '' : v;
   }
+
+  // Unified avatar-chip renderer for compact UI lists (waiting room,
+  // winner banner, end-of-hand results table, etc.). Returns a single
+  // HTML <span> -- already escaped where needed. The caller wraps it
+  // in whatever container they want (no <li> / <div> assumed here).
+  //
+  // Decision tree per player (same priority order as the table seats):
+  //   1. Real PokerTH avatar image downloaded for this pid -> <img>
+  //   2. For me + I chose '__pth__' but image not downloaded ->
+  //      placeholder /img/pokerth-logo.png
+  //   3. Emoji (mine from localStorage, others' from _playerAvatars)
+  //   4. Bot fallback -> 🤖
+  //   5. Final fallback -> first letter of the pseudo
+  //
+  // Args:
+  //   pid        : player id (number)
+  //   nick       : pseudo to use for the initial-letter fallback
+  //   chipClass  : the CSS class on the wrapping <span>. Caller-defined
+  //                because the 3 surfaces (wp-av, eg-winner-av,
+  //                wc-player-av) have different sizes and colors.
+  function _avatarChipHtml(pid, nick, chipClass) {
+    var isMe = (pid === myId);
+    // 1) real image?
+    var pthUrl = (typeof _pthAvatarFor === 'function') ? _pthAvatarFor(pid) : null;
+    // For me, honour the explicit choice (so picking an emoji or
+    // initial suppresses my real downloaded image on these surfaces
+    // too, same as on the table seat).
+    if (pthUrl && isMe) {
+      var myChoice = null;
+      try { myChoice = localStorage.getItem('pth_avatar'); } catch(e) {}
+      if (myChoice !== null && myChoice !== '__pth__') pthUrl = null;
+    }
+    // 2) placeholder logo for me when I chose __pth__ but no image yet
+    if (!pthUrl && isMe) {
+      var myChoice2 = null;
+      try { myChoice2 = localStorage.getItem('pth_avatar'); } catch(e) {}
+      if (myChoice2 === '__pth__') pthUrl = '/img/pokerth-logo.png';
+    }
+    if (pthUrl) {
+      return '<span class="' + chipClass + ' has-pth-avatar">'
+           + '<img class="chip-pth-img" src="' + pthUrl + '" alt="" draggable="false">'
+           + '</span>';
+    }
+    // 3) emoji? (mine via the sentinel-aware helper, others via _playerAvatars)
+    var emoji = isMe ? _myAvatarDisplay() : (_playerAvatars[pid] || '');
+    if (emoji) {
+      return '<span class="' + chipClass + ' emoji-av">' + esc(emoji) + '</span>';
+    }
+    // 4) bots
+    if (isBot(pid)) {
+      return '<span class="' + chipClass + ' emoji-av">🤖</span>';
+    }
+    // 5) initial-letter fallback
+    var letter = ((nick && nick[0]) || '?').toUpperCase();
+    return '<span class="' + chipClass + ' letter">' + esc(letter) + '</span>';
+  }
+  // Expose so tests / debug can call it.
+  window._avatarChipHtml = _avatarChipHtml;
   let seats     = [];  // player IDs in seat order (from GameStartInitial) — figé après 1ère main
   let seatData  = {};  // {pid: {money, bet, action, active, folded}}
   let myCards   = [null, null];
@@ -3594,15 +3652,9 @@ const App = (() => {
       const nick = isMe
         ? (document.getElementById('nick') ? document.getElementById('nick').value : (players[pid] || ''))
         : (players[pid] || ('#' + pid));
-      // For ME, use the sentinel-aware helper so '__pth__' falls
-      // back to the letter (we don't have a tiny PokerTH chip widget
-      // in the waiting list -- the letter is the right fallback).
-      const av = isMe
-        ? _myAvatarDisplay()
-        : (_playerAvatars[pid] || '');
-      const avChip = av
-        ? '<span class="wp-av emoji-av">' + esc(av) + '</span>'
-        : '<span class="wp-av wp-av-letter">' + esc((nick[0] || '?').toUpperCase()) + '</span>';
+      // Unified chip: real PokerTH image > placeholder logo > emoji >
+      // bot icon > initial letter. Same decision tree as the seat.
+      const avChip = _avatarChipHtml(pid, nick, 'wp-av');
       const meTag  = isMe ? ' <span class="wp-me">' + t('waitingYou') + '</span>' : '';
       rows += '<li class="wp-player">' + avChip + '<span class="wp-name">' + esc(nick) + '</span>' + meTag + '</li>';
     }
@@ -3684,17 +3736,10 @@ const App = (() => {
     const winnerName = players[winnerPid] || (isMyWin
       ? (document.getElementById('nick') ? document.getElementById('nick').value : 'You')
       : ('#' + winnerPid));
-    // For ME, route through the helper so '__pth__' falls back to the
-    // initial-letter avatar in the winner overlay (no tiny PokerTH logo
-    // there -- the letter is the right thing).
-    const winnerAv = isMyWin
-      ? _myAvatarDisplay()
-      : (_playerAvatars[winnerPid] || '');
-
-    // Build winner block
-    const avChip = winnerAv
-      ? '<span class="eg-winner-av">' + esc(winnerAv) + '</span>'
-      : '<span class="eg-winner-av letter">' + esc((winnerName[0] || '?').toUpperCase()) + '</span>';
+    // Build winner avatar via the unified helper. Same priority order
+    // everywhere: real PokerTH image > placeholder logo > emoji > 🤖 >
+    // initial letter.
+    const avChip = _avatarChipHtml(winnerPid, winnerName, 'eg-winner-av');
     const winnerCls = 'eg-winner' + (isMyWin ? ' me' : '');
     const winnerLabel = isMyWin ? t('endGameYouWon') : t('endGameWinner');
 
@@ -4104,7 +4149,7 @@ function showWinnerOverlay(winners) {
     var rowClass = "wc-player-row" + (isW ? " wc-winner" : "") + (isMe ? " wc-me-row" : "");
 
     html += '<div class="' + rowClass + '">';
-    html += '<div class="wc-player-av">' + name.charAt(0).toUpperCase() + '</div>';
+    html += _avatarChipHtml(pid, name, 'wc-player-av');
     html += '<div class="wc-player-info">';
     html += '<div class="wc-player-name">' + esc(name) + (isW ? " 🏆" : "") + (isMe ? " 👤" : "") + '</div>';
     html += '<div class="wc-player-stack">' + (sd.money != null ? sd.money + " ¥" : "—") + '</div>';
