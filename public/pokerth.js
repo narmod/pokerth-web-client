@@ -3020,9 +3020,15 @@ const App = (() => {
           __sd.folded = false;
           __sd.card1  = null;
           __sd.card2  = null;
-          // Only reactivate players who still have chips. Bust (0 ¥)
-          // players stay .active = false → marked as eliminated.
-          __sd.active = (__sd.money > 0);
+          // Mark as eliminated ONLY if we KNOW for sure the player is
+          // bust (money is defined AND <= 0). When money is null/
+          // undefined we have no info yet — default to active=true so
+          // we don't incorrectly grey out live players. This matters
+          // particularly in spectator mode where HandStart arrives
+          // before the stacks have been synced to seatData, so a
+          // bare `money > 0` check was making EVERY seat look OUT.
+          var __knownBust = (__sd.money != null && __sd.money <= 0);
+          __sd.active = !__knownBust;
         }
 
         clearTurnNotif();
