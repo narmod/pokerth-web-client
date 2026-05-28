@@ -620,7 +620,9 @@ body {
   padding: clamp(4px,1.2vh,10px) clamp(8px,2vw,20px);
   background: var(--panel);
   border-bottom: 1px solid var(--border);
-  gap: clamp(4px,1.2vw,14px);
+  /* Wider gap so the action buttons are more spaced out horizontally
+     (requested by narmod). Was clamp(4px,1.2vw,14px). */
+  gap: clamp(6px,2.2vw,18px);
   flex-shrink: 0;
   min-height: 36px;
   overflow: hidden;
@@ -696,7 +698,7 @@ body {
 .header .btn-sm {
   height: 30px;
   min-width: 30px;
-  padding: 0 10px;
+  padding: 0 13px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -704,9 +706,9 @@ body {
   font-size: 0.75rem;
   line-height: 1;
 }
-/* Bouton carré (icône seule) */
+/* Bouton carré (icône seule) — un peu plus large pour respirer */
 .header .btn-icon {
-  width: 30px;
+  width: 34px;
   padding: 0;
 }
 
