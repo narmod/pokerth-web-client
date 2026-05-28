@@ -3585,7 +3585,11 @@ const App = (() => {
     const suits = ['♦','♥','♠','♣'];
     const suit  = suits[si] || '?';
     const rank  = ['2','3','4','5','6','7','8','9','10','J','Q','K','A'][ri] || '?';
-    const red   = (si < 2) ? ' red' : '';     // ♦ (0) et ♥ (1) sont rouges
+    // si: 0=♦ carreau, 1=♥ cœur, 2=♠ pique, 3=♣ trèfle
+    // Les deux rouges (♦/♥) reçoivent des classes différentes pour
+    // permettre au CSS d'utiliser des nuances de rouge distinctes
+    // (narmod: confusion ♥/♦ à cause d'une couleur identique).
+    const red   = (si === 0) ? ' red diamond' : (si === 1 ? ' red' : '');
     const spade = (si === 2) ? ' spade' : ''; // ♠ (2)
     return '<div class="pk' + sz + red + spade + extraCls + '"><span class="c-rank">' + rank + '</span><span class="c-suit">' + suit + '</span></div>';
   }
@@ -3603,7 +3607,9 @@ const App = (() => {
     const suits = ['♦','♥','♠','♣'];
     const rank = ['2','3','4','5','6','7','8','9','10','J','Q','K','A'][ri] || '?';
     const suit = suits[si] || '?';
-    const red = (si < 2) ? ' red' : '';     // ♦ (0) et ♥ (1) sont rouges
+    // ♦ et ♥ partagent la classe .red ; ♦ ajoute .diamond pour
+    // une teinte vermillon différente du rouge profond du ♥.
+    const red = (si === 0) ? ' red diamond' : (si === 1 ? ' red' : '');
     const spade2 = (si === 2) ? ' spade' : ''; // ♠ (2)
     return '<div class="pk '+cls+red+spade2+'"><span class="c-rank">'+rank+'</span><span class="c-suit">'+suit+'</span></div>';
   }
