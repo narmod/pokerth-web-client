@@ -858,6 +858,10 @@ document.addEventListener("DOMContentLoaded", function() {
   var n = document.getElementById("nick");
   if (!n.value) n.value = window.getOrCreateGuestName();
 
+  // Filter the avatar grid to a single category on load (otherwise the
+  // connect-screen picker would show every category's emojis at once).
+  try { if (typeof avpApplyDefaultCat === 'function') avpApplyDefaultCat(); } catch(e) {}
+
   // ── Share-link parameters (?host=&port=&tls=&table=) ──────────
   // If the page was opened from a "copy table link", prefill the
   // connect form with the encoded server params and remember which
@@ -1652,6 +1656,11 @@ const App = (() => {
     }
     picker.classList.add('avatar-popup-as-modal');
     picker.style.display = 'block';
+    // Apply the default/saved emoji category so the grid is filtered
+    // (otherwise every category's emojis would show at once on first
+    // open from the lobby). avpApplyDefaultCat is defined in the HTML
+    // <head> script; guard in case of load-order differences.
+    try { if (typeof avpApplyDefaultCat === 'function') avpApplyDefaultCat(); } catch(e) {}
     // Close-on-backdrop: a click on the popup background (NOT on any
     // child like the avatar buttons or the header) closes the picker.
     _avatarPickerBackdropHandler = function(e) {
