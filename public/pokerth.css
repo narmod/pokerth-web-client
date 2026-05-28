@@ -3726,3 +3726,14 @@ body:not(.in-game) .my-zone {
   display: inline-block;
   vertical-align: middle;
 }
+
+
+/* ── Player bar when locally eliminated (.pb-out) ──
+   Mirror the .seat-out look on the seats: grey out the avatar/name/stack,
+   show clearly that the player has busted out of the tournament. The
+   "OUT" prefix is added inline by JS in the money line. */
+.player-bar.pb-out {
+  opacity: 0.45;
+  filter: grayscale(0.6);
+}
+.player-bar.pb-out .pb-cards .pk { opacity: 0.5; }
