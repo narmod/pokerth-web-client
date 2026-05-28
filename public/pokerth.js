@@ -858,6 +858,45 @@ document.addEventListener("DOMContentLoaded", function() {
   var n = document.getElementById("nick");
   if (!n.value) n.value = window.getOrCreateGuestName();
 
+  // ── Share-link parameters (?host=&port=&tls=&table=) ──────────
+  // If the page was opened from a "copy table link", prefill the
+  // connect form with the encoded server params and remember which
+  // table to auto-join once the lobby has loaded.
+  let _pendingAutoJoin = 0; // gameId to join after connect, 0 = none
+  (function parseShareLink() {
+    try {
+      var sp = new URLSearchParams(window.location.search);
+      var h = sp.get('host'), p = sp.get('port'),
+          tls = sp.get('tls'), table = sp.get('table');
+      if (h) { var hi = document.getElementById('host'); if (hi) hi.value = h; }
+      if (p) { var pi = document.getElementById('port'); if (pi) pi.value = p; }
+      if (tls !== null) {
+        var ti = document.getElementById('use-tls');
+        if (ti) ti.checked = (tls === '1');
+      }
+      if (table) {
+        var t = parseInt(table, 10);
+        if (t > 0) _pendingAutoJoin = t;
+      }
+      // When a share link targets a specific server, the most likely
+      // intent is "join my friend's private server as an internet
+      // guest". Pre-select that login mode so the guest doesn't have
+      // to fiddle with the dropdown. Only override if a table was
+      // actually specified (a bare host link could be anything).
+      if (table) {
+        var lm = document.getElementById('login-mode');
+        if (lm && lm.value === 'auth') { /* keep credentialed if chosen */ }
+        else if (lm) { lm.value = 'unauth'; if (App && App.onLoginModeChange) App.onLoginModeChange(); }
+      }
+      // Clean the URL so a manual refresh doesn't re-trigger auto-join
+      // (and so the link doesn't linger in the address bar). We keep
+      // the pending join in memory.
+      if (h || p || table) {
+        try { window.history.replaceState({}, '', window.location.pathname); } catch(e) {}
+      }
+    } catch(e) {}
+  })();
+
   // Restaurer le serveur préféré sauvegardé
   try {
     var savedHost  = localStorage.getItem('pth_host');
@@ -1791,6 +1830,24 @@ const App = (() => {
       html += '</div></div>';
     }
 
+    // ── Share / copy-link action ──
+    // A full-width button at the bottom of the modal that copies a
+    // deep link to this table (server + port + tls + table id). See
+    // App.copyTableLink(). Only shown while actually in a game.
+    if (gId) {
+      html += '<div class="gim-section gim-share-section">' +
+                '<button id="gim-copy-link-btn" class="gim-copy-link-btn" type="button" ' +
+                  'onclick="App.copyTableLink()">' +
+                  '🔗 ' + esc(fr ? 'Copier le lien d\'invitation' : 'Copy invite link') +
+                '</button>' +
+                '<div class="gim-share-hint">' +
+                  esc(fr
+                    ? 'Le destinataire rejoindra directement cette table.'
+                    : 'The recipient will join this table directly.') +
+                '</div>' +
+              '</div>';
+    }
+
     bodyEl.innerHTML = html;
 
     // Also add a "👁 N" badge to the subtitle when there's at least
@@ -1858,6 +1915,42 @@ const App = (() => {
   let _gameStarted = false; // flips true on GameStartInitial; freezes waiting-panel updates
   let _seatsFrozen = false; // one-way latch: true once the original seating order is set, never unset until leave/closeTable
   let _amSpectator = false; // true when we joined via 'Regarder' / spectateGame() — disables actions, shows banner
+
+  // ── Haptic feedback (mobile) ──────────────────────────────────
+  // Vibrates the device when it becomes the user's turn. Especially
+  // useful when the app is backgrounded (sound may be muted by the
+  // OS but vibration still fires). Gated by a persisted flag so the
+  // user can turn it off; defaults ON. navigator.vibrate is a no-op
+  // / undefined on desktop browsers and iOS Safari (which doesn't
+  // support the Vibration API), so we feature-detect every call.
+  let _hapticEnabled = (function() {
+    try { return localStorage.getItem('pth_haptic') !== '0'; } catch(e) { return true; }
+  })();
+  function hapticBuzz(pattern) {
+    if (!_hapticEnabled) return;
+    try {
+      if (navigator && typeof navigator.vibrate === 'function') {
+        navigator.vibrate(pattern || 60);
+      }
+    } catch(e) {}
+  }
+  function toggleHaptic() {
+    _hapticEnabled = !_hapticEnabled;
+    try { localStorage.setItem('pth_haptic', _hapticEnabled ? '1' : '0'); } catch(e) {}
+    // Give immediate tactile + textual confirmation.
+    if (_hapticEnabled) hapticBuzz(40);
+    var fr = (typeof _lang === 'undefined' || _lang !== 'en');
+    var label = _hapticEnabled
+      ? (fr ? 'Vibration activée' : 'Vibration on')
+      : (fr ? 'Vibration désactivée' : 'Vibration off');
+    if (typeof showKeyHint === 'function') showKeyHint(label);
+    // Refresh the menu button label/emoji.
+    var b = document.getElementById('haptic-toggle-mob');
+    if (b) b.innerHTML = (_hapticEnabled ? '📳' : '📴') + ' ' +
+      (fr ? 'Vibration' : 'Vibration');
+    return _hapticEnabled;
+  }
+  window.toggleHaptic = toggleHaptic;
   // Spectators present on the current table. Populated by
   // GameSpectatorJoined messages from the server (one is sent per
   // existing spectator when we ourselves join, plus live updates
@@ -2264,6 +2357,23 @@ const App = (() => {
                       timeout: _gto || 15, startMoney: _gsm || 3000 };
         if (!loaded) { loaded = true; }
         renderGames();
+        // ── Auto-join from a share link ──
+        // If we arrived via a "copy table link" URL and this is the
+        // table it pointed to, join it now (the lobby has just told
+        // us it exists). Clear the pending id so we only do it once.
+        if (_pendingAutoJoin && id === _pendingAutoJoin && !amInGame) {
+          var _aj = _pendingAutoJoin;
+          _pendingAutoJoin = 0;
+          var fr = (typeof _lang === 'undefined' || _lang !== 'en');
+          addChat(null, '🔗 ' + (fr
+            ? 'Table partagée trouvée — connexion…'
+            : 'Shared table found — joining…'), 'sys');
+          // Defer slightly so renderGames() has painted and games[id]
+          // is fully populated before joinGame reads it.
+          setTimeout(function(){
+            try { if (App && App.joinGame) App.joinGame(_aj); } catch(e) {}
+          }, 150);
+        }
         break;
       }
 
@@ -2932,6 +3042,7 @@ const App = (() => {
           // audio one, silencing the chime entirely.
           if (typeof window.notifyMyTurn === 'function') window.notifyMyTurn();
           notifyMyTurnVisuals();
+          hapticBuzz([90, 50, 90]); // "your turn" double-buzz
         } else {
           clearTurnNotif();
           setMyTurnActive(false);
@@ -4601,6 +4712,7 @@ const App = (() => {
     // shadowed the audio one).
     if (typeof window.notifyMyTurn === 'function') window.notifyMyTurn();
     if (typeof notifyMyTurnVisuals === 'function') notifyMyTurnVisuals();
+    hapticBuzz([90, 50, 90]); // "your turn" double-buzz (mobile only)
     // Tell server we're alive (avoid timeout)
     const rtm = Proto.encode([[1,0,68],[69,2,new Uint8Array(0)]]);
     send(rtm);
@@ -5553,6 +5665,83 @@ function dismissWinner() {
       // Affichage optimiste
       addChat(myName, text, 'mine');
     },
+    // ── Copy a shareable link to the current table ──────────────
+    // Produces a URL like:
+    //   https://<thispage>/?host=cookmed.ddns.net&port=7234&tls=0&table=72
+    // When a guest opens it, parseShareLink() (run at load) prefills
+    // the connect form with host/port/tls and stashes the table id;
+    // after the lobby loads we auto-join that table (see the
+    // _pendingAutoJoin logic in the GameListNew handler).
+    //
+    // The link is copied to the clipboard via the async Clipboard
+    // API with a legacy execCommand fallback for older / insecure
+    // (non-HTTPS) contexts where navigator.clipboard is unavailable.
+    copyTableLink() {
+      var fr = (typeof _lang === 'undefined' || _lang !== 'en');
+      if (!gId) {
+        if (typeof showKeyHint === 'function')
+          showKeyHint(fr ? 'Aucune table active' : 'No active table');
+        return;
+      }
+      // Pull the connection params the user actually connected with.
+      var host = '', port = '', tls = '0';
+      try { host = (document.getElementById('host')  || {}).value || ''; } catch(e) {}
+      try { port = (document.getElementById('port')  || {}).value || ''; } catch(e) {}
+      try { tls  = (document.getElementById('use-tls') && document.getElementById('use-tls').checked) ? '1' : '0'; } catch(e) {}
+      host = String(host).trim();
+      port = String(port).trim();
+      // Build the URL from the current page origin + path (so it works
+      // whatever domain the client is served from), with our params.
+      var base = window.location.origin + window.location.pathname;
+      var qs = 'host=' + encodeURIComponent(host) +
+               '&port=' + encodeURIComponent(port) +
+               '&tls=' + tls +
+               '&table=' + encodeURIComponent(gId);
+      var url = base + '?' + qs;
+
+      // Copy with graceful fallbacks.
+      function done(ok) {
+        if (typeof showKeyHint === 'function') {
+          showKeyHint(ok
+            ? (fr ? '🔗 Lien copié !' : '🔗 Link copied!')
+            : (fr ? 'Copie impossible — lien affiché' : 'Copy failed — link shown'));
+        }
+        // Reflect status on the modal button if present.
+        var btn = document.getElementById('gim-copy-link-btn');
+        if (btn) {
+          var orig = btn.getAttribute('data-orig') || btn.innerHTML;
+          btn.setAttribute('data-orig', orig);
+          btn.innerHTML = ok ? '✓ ' + (fr ? 'Copié' : 'Copied') : '⚠';
+          setTimeout(function(){ btn.innerHTML = orig; }, 1800);
+        }
+        if (!ok) {
+          // Last resort: show the URL so the user can copy by hand.
+          try { window.prompt(fr ? 'Copiez ce lien :' : 'Copy this link:', url); } catch(e) {}
+        }
+      }
+      try {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(url).then(function(){ done(true); }, function(){ legacyCopy(); });
+        } else {
+          legacyCopy();
+        }
+      } catch(e) { legacyCopy(); }
+
+      function legacyCopy() {
+        try {
+          var ta = document.createElement('textarea');
+          ta.value = url;
+          ta.style.position = 'fixed';
+          ta.style.opacity = '0';
+          document.body.appendChild(ta);
+          ta.focus(); ta.select();
+          var ok = document.execCommand('copy');
+          document.body.removeChild(ta);
+          done(!!ok);
+        } catch(e) { done(false); }
+      }
+    },
+
     spectateGame(gameId) {
       var g = games[gameId];
       if (!g) return;
@@ -6035,6 +6224,22 @@ function toggleHeaderOverflow(e) {
   if (e) e.stopPropagation();
   var m = document.getElementById('g-overflow-menu');
   if (!m) return;
+  // Sync the haptic toggle label/emoji with the current state before
+  // the menu becomes visible (📳 = on, 📴 = off).
+  try {
+    var hb = document.getElementById('haptic-toggle-mob');
+    if (hb) {
+      var on = true;
+      try { on = localStorage.getItem('pth_haptic') !== '0'; } catch(e2) {}
+      var fr = (typeof window._lang === 'undefined') ? true : (window._lang !== 'en');
+      // window._lang may not be exposed; fall back to checking <html lang>.
+      try {
+        var lg = document.documentElement.getAttribute('lang');
+        if (lg) fr = (lg !== 'en');
+      } catch(e3) {}
+      hb.innerHTML = (on ? '📳' : '📴') + ' ' + (fr ? 'Vibration' : 'Vibration');
+    }
+  } catch(e4) {}
   m.classList.toggle('open');
 }
 function closeHeaderOverflow() {
