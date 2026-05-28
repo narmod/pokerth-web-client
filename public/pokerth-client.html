@@ -34,7 +34,51 @@ function toggleStats() {
 function toggleAvatarPopup() {
   var p = document.getElementById("avatar-popup");
   if (!p) return;
-  p.style.display = (p.style.display === "none" || !p.style.display) ? "block" : "none";
+  var showing = (p.style.display === "none" || !p.style.display);
+  p.style.display = showing ? "block" : "none";
+  if (showing) avpApplyDefaultCat();
+}
+
+// Filter the emoji grid by category. Pinned buttons (.avp-pin: the
+// PokerTH avatar + the "none" option) are never touched so they stay
+// accessible in every category. The selected tab gets the .selected
+// class. The chosen category is remembered so the picker reopens where
+// the user left off.
+function avpShowCat(cat, btn) {
+  document.querySelectorAll(".avp-cat").forEach(function(c) {
+    c.classList.toggle("selected", c.dataset.cat === cat);
+  });
+  document.querySelectorAll(".avp-btn").forEach(function(b) {
+    if (b.classList.contains("avp-pin")) return; // keep __pth__ + none
+    b.style.display = (b.dataset.cat === cat) ? "" : "none";
+  });
+  try { localStorage.setItem("pth_avatar_cat", cat); } catch(e) {}
+  // Scroll the grid back to the top when switching categories so the
+  // user always starts at the first emoji of the new set.
+  var grid = document.querySelector(".avp-grid");
+  if (grid) grid.scrollTop = 0;
+}
+
+// Decide which category to show when the popup opens: prefer the one
+// containing the user's currently-selected avatar (so they see their
+// active choice), else the last category they browsed, else the first.
+function avpApplyDefaultCat() {
+  var cat = null;
+  try {
+    var cur = localStorage.getItem("pth_avatar");
+    if (cur && cur !== "__pth__" && cur !== "") {
+      var curBtn = document.querySelector('.avp-btn[data-av="' + cur + '"]:not(.avp-pin)');
+      if (curBtn && curBtn.dataset.cat) cat = curBtn.dataset.cat;
+    }
+  } catch(e) {}
+  if (!cat) {
+    try { cat = localStorage.getItem("pth_avatar_cat"); } catch(e) {}
+  }
+  if (!cat) {
+    var first = document.querySelector(".avp-cat");
+    cat = first ? first.dataset.cat : "people";
+  }
+  avpShowCat(cat);
 }
 function selectAvatarPopup(emoji) {
   // Sentinel "__pth__" means: use my official PokerTH avatar instead of an
@@ -148,76 +192,381 @@ function selectAvatarPopup(emoji) {
         <span data-i18n="chooseAvatar">Choose an avatar</span>
         <button type="button" onclick="toggleAvatarPopup()" style="background:none;border:none;color:var(--text);cursor:pointer;font-size:1rem">✕</button>
       </div>
+      <div class="avp-cats" role="tablist">
+        <button type="button" class="avp-cat selected" data-cat="people" onclick="avpShowCat('people', this)" title="Visages" aria-label="Visages">😀</button>
+        <button type="button" class="avp-cat" data-cat="animals" onclick="avpShowCat('animals', this)" title="Animaux" aria-label="Animaux">🐶</button>
+        <button type="button" class="avp-cat" data-cat="fantasy" onclick="avpShowCat('fantasy', this)" title="Fantastique" aria-label="Fantastique">✨</button>
+        <button type="button" class="avp-cat" data-cat="objects" onclick="avpShowCat('objects', this)" title="Objets" aria-label="Objets">🎩</button>
+        <button type="button" class="avp-cat" data-cat="flags" onclick="avpShowCat('flags', this)" title="Drapeaux" aria-label="Drapeaux">🚩</button>
+        <button type="button" class="avp-cat" data-cat="sport" onclick="avpShowCat('sport', this)" title="Sport" aria-label="Sport">⚽</button>
+        <button type="button" class="avp-cat" data-cat="food" onclick="avpShowCat('food', this)" title="Nourriture" aria-label="Nourriture">🍔</button>
+      </div>
       <div class="avp-grid">
 <!-- PokerTH official avatar option. Hidden by default; shown only when
      we are connected as a registered pokerth.net user who has uploaded
      an avatar (the JS toggles inline display below). The 🪪 (id card)
      glyph indicates "this is my official identity". data-av is the
      sentinel "__pth__" the JS branches on. -->
-<button type="button" class="avp-btn avp-pth" data-av="__pth__" id="avp-btn-pth" onclick="selectAvatarPopup('__pth__')" title="Mon avatar PokerTH"><img src="/img/pokerth-logo.png" alt="PokerTH" draggable="false" style="width:26px;height:26px;object-fit:contain;pointer-events:none"></button>
-<button type="button" class="avp-btn avp-none" data-av="" onclick="selectAvatarPopup('')">Aa</button>
-<button type="button" class="avp-btn" data-av="👨" onclick="selectAvatarPopup('👨')">👨</button>
-<button type="button" class="avp-btn" data-av="👩" onclick="selectAvatarPopup('👩')">👩</button>
-<button type="button" class="avp-btn" data-av="👦" onclick="selectAvatarPopup('👦')">👦</button>
-<button type="button" class="avp-btn" data-av="👧" onclick="selectAvatarPopup('👧')">👧</button>
-<button type="button" class="avp-btn" data-av="🧔" onclick="selectAvatarPopup('🧔')">🧔</button>
-<button type="button" class="avp-btn" data-av="👱" onclick="selectAvatarPopup('👱')">👱</button>
-<button type="button" class="avp-btn" data-av="🧓" onclick="selectAvatarPopup('🧓')">🧓</button>
-<button type="button" class="avp-btn" data-av="👴" onclick="selectAvatarPopup('👴')">👴</button>
-<button type="button" class="avp-btn" data-av="🤴" onclick="selectAvatarPopup('🤴')">🤴</button>
-<button type="button" class="avp-btn" data-av="👸" onclick="selectAvatarPopup('👸')">👸</button>
-<button type="button" class="avp-btn" data-av="🤠" onclick="selectAvatarPopup('🤠')">🤠</button>
-<button type="button" class="avp-btn" data-av="👑" onclick="selectAvatarPopup('👑')">👑</button>
-<button type="button" class="avp-btn" data-av="🥷" onclick="selectAvatarPopup('🥷')">🥷</button>
-<button type="button" class="avp-btn" data-av="🥸" onclick="selectAvatarPopup('🥸')">🥸</button>
-<button type="button" class="avp-btn" data-av="🤡" onclick="selectAvatarPopup('🤡')">🤡</button>
-<button type="button" class="avp-btn" data-av="🃏" onclick="selectAvatarPopup('🃏')">🃏</button>
-<button type="button" class="avp-btn" data-av="👨‍🚀" onclick="selectAvatarPopup('👨‍🚀')">👨‍🚀</button>
-<button type="button" class="avp-btn" data-av="👽" onclick="selectAvatarPopup('👽')">👽</button>
-<button type="button" class="avp-btn" data-av="👾" onclick="selectAvatarPopup('👾')">👾</button>
-<button type="button" class="avp-btn" data-av="👻" onclick="selectAvatarPopup('👻')">👻</button>
-<button type="button" class="avp-btn" data-av="🎃" onclick="selectAvatarPopup('🎃')">🎃</button>
-<button type="button" class="avp-btn" data-av="🧙" onclick="selectAvatarPopup('🧙')">🧙</button>
-<button type="button" class="avp-btn" data-av="🧝" onclick="selectAvatarPopup('🧝')">🧝</button>
-<button type="button" class="avp-btn" data-av="🧚" onclick="selectAvatarPopup('🧚')">🧚</button>
-<button type="button" class="avp-btn" data-av="🧞" onclick="selectAvatarPopup('🧞')">🧞</button>
-<button type="button" class="avp-btn" data-av="🦸" onclick="selectAvatarPopup('🦸')">🦸</button>
-<button type="button" class="avp-btn" data-av="🦹" onclick="selectAvatarPopup('🦹')">🦹</button>
-<button type="button" class="avp-btn" data-av="🧌" onclick="selectAvatarPopup('🧌')">🧌</button>
-<button type="button" class="avp-btn" data-av="🧛" onclick="selectAvatarPopup('🧛')">🧛</button>
-<button type="button" class="avp-btn" data-av="🧟" onclick="selectAvatarPopup('🧟')">🧟</button>
-<button type="button" class="avp-btn" data-av="👹" onclick="selectAvatarPopup('👹')">👹</button>
-<button type="button" class="avp-btn" data-av="👺" onclick="selectAvatarPopup('👺')">👺</button>
-<button type="button" class="avp-btn" data-av="🧜" onclick="selectAvatarPopup('🧜')">🧜</button>
-<button type="button" class="avp-btn" data-av="🦄" onclick="selectAvatarPopup('🦄')">🦄</button>
-<button type="button" class="avp-btn" data-av="🐉" onclick="selectAvatarPopup('🐉')">🐉</button>
-<button type="button" class="avp-btn" data-av="🐲" onclick="selectAvatarPopup('🐲')">🐲</button>
-<button type="button" class="avp-btn" data-av="🦖" onclick="selectAvatarPopup('🦖')">🦖</button>
-<button type="button" class="avp-btn" data-av="🦋" onclick="selectAvatarPopup('🦋')">🦋</button>
-<button type="button" class="avp-btn" data-av="🌹" onclick="selectAvatarPopup('🌹')">🌹</button>
-<button type="button" class="avp-btn" data-av="🐢" onclick="selectAvatarPopup('🐢')">🐢</button>
-<button type="button" class="avp-btn" data-av="🐸" onclick="selectAvatarPopup('🐸')">🐸</button>
-<button type="button" class="avp-btn" data-av="🐶" onclick="selectAvatarPopup('🐶')">🐶</button>
-<button type="button" class="avp-btn" data-av="🐱" onclick="selectAvatarPopup('🐱')">🐱</button>
-<button type="button" class="avp-btn" data-av="🦁" onclick="selectAvatarPopup('🦁')">🦁</button>
-<button type="button" class="avp-btn" data-av="🐯" onclick="selectAvatarPopup('🐯')">🐯</button>
-<button type="button" class="avp-btn" data-av="🐻" onclick="selectAvatarPopup('🐻')">🐻</button>
-<button type="button" class="avp-btn" data-av="🐼" onclick="selectAvatarPopup('🐼')">🐼</button>
-<button type="button" class="avp-btn" data-av="🦊" onclick="selectAvatarPopup('🦊')">🦊</button>
-<button type="button" class="avp-btn" data-av="🐺" onclick="selectAvatarPopup('🐺')">🐺</button>
-<button type="button" class="avp-btn" data-av="🦝" onclick="selectAvatarPopup('🦝')">🦝</button>
-<button type="button" class="avp-btn" data-av="🐘" onclick="selectAvatarPopup('🐘')">🐘</button>
-<button type="button" class="avp-btn" data-av="🐊" onclick="selectAvatarPopup('🐊')">🐊</button>
-<button type="button" class="avp-btn" data-av="🐍" onclick="selectAvatarPopup('🐍')">🐍</button>
-<button type="button" class="avp-btn" data-av="🐬" onclick="selectAvatarPopup('🐬')">🐬</button>
-<button type="button" class="avp-btn" data-av="🦈" onclick="selectAvatarPopup('🦈')">🦈</button>
-<button type="button" class="avp-btn" data-av="🐙" onclick="selectAvatarPopup('🐙')">🐙</button>
-<button type="button" class="avp-btn" data-av="🦅" onclick="selectAvatarPopup('🦅')">🦅</button>
-<button type="button" class="avp-btn" data-av="🦉" onclick="selectAvatarPopup('🦉')">🦉</button>
-<button type="button" class="avp-btn" data-av="🦆" onclick="selectAvatarPopup('🦆')">🦆</button>
-<button type="button" class="avp-btn" data-av="🦜" onclick="selectAvatarPopup('🦜')">🦜</button>
-<button type="button" class="avp-btn" data-av="🦩" onclick="selectAvatarPopup('🦩')">🦩</button>
-<button type="button" class="avp-btn" data-av="🐧" onclick="selectAvatarPopup('🐧')">🐧</button>
+<button type="button" class="avp-btn avp-pth avp-pin" data-av="__pth__" id="avp-btn-pth" onclick="selectAvatarPopup('__pth__')" title="Mon avatar PokerTH"><img src="/img/pokerth-logo.png" alt="PokerTH" draggable="false" style="width:26px;height:26px;object-fit:contain;pointer-events:none"></button>
+<button type="button" class="avp-btn avp-none avp-pin" data-av="" onclick="selectAvatarPopup('')">Aa</button>
+<button type="button" class="avp-btn" data-av="👨" data-cat="people" onclick="selectAvatarPopup('👨')">👨</button>
+<button type="button" class="avp-btn" data-av="👩" data-cat="people" onclick="selectAvatarPopup('👩')">👩</button>
+<button type="button" class="avp-btn" data-av="👦" data-cat="people" onclick="selectAvatarPopup('👦')">👦</button>
+<button type="button" class="avp-btn" data-av="👧" data-cat="people" onclick="selectAvatarPopup('👧')">👧</button>
+<button type="button" class="avp-btn" data-av="🧔" data-cat="people" onclick="selectAvatarPopup('🧔')">🧔</button>
+<button type="button" class="avp-btn" data-av="👱" data-cat="people" onclick="selectAvatarPopup('👱')">👱</button>
+<button type="button" class="avp-btn" data-av="🧓" data-cat="people" onclick="selectAvatarPopup('🧓')">🧓</button>
+<button type="button" class="avp-btn" data-av="👴" data-cat="people" onclick="selectAvatarPopup('👴')">👴</button>
+<button type="button" class="avp-btn" data-av="🤴" data-cat="people" onclick="selectAvatarPopup('🤴')">🤴</button>
+<button type="button" class="avp-btn" data-av="👸" data-cat="people" onclick="selectAvatarPopup('👸')">👸</button>
+<button type="button" class="avp-btn" data-av="🤠" data-cat="people" onclick="selectAvatarPopup('🤠')">🤠</button>
+<button type="button" class="avp-btn" data-av="👑" data-cat="people" onclick="selectAvatarPopup('👑')">👑</button>
+<button type="button" class="avp-btn" data-av="🥷" data-cat="people" onclick="selectAvatarPopup('🥷')">🥷</button>
+<button type="button" class="avp-btn" data-av="🥸" data-cat="people" onclick="selectAvatarPopup('🥸')">🥸</button>
+<button type="button" class="avp-btn" data-av="🤡" data-cat="people" onclick="selectAvatarPopup('🤡')">🤡</button>
+<button type="button" class="avp-btn" data-av="👮" data-cat="people" onclick="selectAvatarPopup('👮')">👮</button>
+<button type="button" class="avp-btn" data-av="👷" data-cat="people" onclick="selectAvatarPopup('👷')">👷</button>
+<button type="button" class="avp-btn" data-av="💂" data-cat="people" onclick="selectAvatarPopup('💂')">💂</button>
+<button type="button" class="avp-btn" data-av="🕵️" data-cat="people" onclick="selectAvatarPopup('🕵️')">🕵️</button>
+<button type="button" class="avp-btn" data-av="👰" data-cat="people" onclick="selectAvatarPopup('👰')">👰</button>
+<button type="button" class="avp-btn" data-av="🤵" data-cat="people" onclick="selectAvatarPopup('🤵')">🤵</button>
+<button type="button" class="avp-btn" data-av="🎅" data-cat="people" onclick="selectAvatarPopup('🎅')">🎅</button>
+<button type="button" class="avp-btn" data-av="🤶" data-cat="people" onclick="selectAvatarPopup('🤶')">🤶</button>
+<button type="button" class="avp-btn" data-av="🧑‍🎤" data-cat="people" onclick="selectAvatarPopup('🧑‍🎤')">🧑‍🎤</button>
+<button type="button" class="avp-btn" data-av="👨‍🚀" data-cat="people" onclick="selectAvatarPopup('👨‍🚀')">👨‍🚀</button>
+<button type="button" class="avp-btn" data-av="👨‍🍳" data-cat="people" onclick="selectAvatarPopup('👨‍🍳')">👨‍🍳</button>
+<button type="button" class="avp-btn" data-av="👨‍⚕️" data-cat="people" onclick="selectAvatarPopup('👨‍⚕️')">👨‍⚕️</button>
+<button type="button" class="avp-btn" data-av="👨‍🎓" data-cat="people" onclick="selectAvatarPopup('👨‍🎓')">👨‍🎓</button>
+<button type="button" class="avp-btn" data-av="👨‍🏫" data-cat="people" onclick="selectAvatarPopup('👨‍🏫')">👨‍🏫</button>
+<button type="button" class="avp-btn" data-av="👨‍🌾" data-cat="people" onclick="selectAvatarPopup('👨‍🌾')">👨‍🌾</button>
+<button type="button" class="avp-btn" data-av="👨‍🔧" data-cat="people" onclick="selectAvatarPopup('👨‍🔧')">👨‍🔧</button>
+<button type="button" class="avp-btn" data-av="👨‍🚒" data-cat="people" onclick="selectAvatarPopup('👨‍🚒')">👨‍🚒</button>
+<button type="button" class="avp-btn" data-av="👨‍🎨" data-cat="people" onclick="selectAvatarPopup('👨‍🎨')">👨‍🎨</button>
+<button type="button" class="avp-btn" data-av="👨‍💻" data-cat="people" onclick="selectAvatarPopup('👨‍💻')">👨‍💻</button>
+<button type="button" class="avp-btn" data-av="🧑‍🔬" data-cat="people" onclick="selectAvatarPopup('🧑‍🔬')">🧑‍🔬</button>
+<button type="button" class="avp-btn" data-av="💁" data-cat="people" onclick="selectAvatarPopup('💁')">💁</button>
+<button type="button" class="avp-btn" data-av="🙋" data-cat="people" onclick="selectAvatarPopup('🙋')">🙋</button>
+<button type="button" class="avp-btn" data-av="🙆" data-cat="people" onclick="selectAvatarPopup('🙆')">🙆</button>
+<button type="button" class="avp-btn" data-av="🤷" data-cat="people" onclick="selectAvatarPopup('🤷')">🤷</button>
+<button type="button" class="avp-btn" data-av="🤦" data-cat="people" onclick="selectAvatarPopup('🤦')">🤦</button>
+<button type="button" class="avp-btn" data-av="💆" data-cat="people" onclick="selectAvatarPopup('💆')">💆</button>
+<button type="button" class="avp-btn" data-av="🧖" data-cat="people" onclick="selectAvatarPopup('🧖')">🧖</button>
+<button type="button" class="avp-btn" data-av="🤰" data-cat="people" onclick="selectAvatarPopup('🤰')">🤰</button>
+<button type="button" class="avp-btn" data-av="👲" data-cat="people" onclick="selectAvatarPopup('👲')">👲</button>
+<button type="button" class="avp-btn" data-av="👳" data-cat="people" onclick="selectAvatarPopup('👳')">👳</button>
+<button type="button" class="avp-btn" data-av="🧕" data-cat="people" onclick="selectAvatarPopup('🧕')">🧕</button>
+<button type="button" class="avp-btn" data-av="👼" data-cat="people" onclick="selectAvatarPopup('👼')">👼</button>
+<button type="button" class="avp-btn" data-av="🤱" data-cat="people" onclick="selectAvatarPopup('🤱')">🤱</button>
+<button type="button" class="avp-btn" data-av="🐶" data-cat="animals" style="display:none" onclick="selectAvatarPopup('🐶')">🐶</button>
+<button type="button" class="avp-btn" data-av="🐱" data-cat="animals" style="display:none" onclick="selectAvatarPopup('🐱')">🐱</button>
+<button type="button" class="avp-btn" data-av="🦁" data-cat="animals" style="display:none" onclick="selectAvatarPopup('🦁')">🦁</button>
+<button type="button" class="avp-btn" data-av="🐯" data-cat="animals" style="display:none" onclick="selectAvatarPopup('🐯')">🐯</button>
+<button type="button" class="avp-btn" data-av="🐻" data-cat="animals" style="display:none" onclick="selectAvatarPopup('🐻')">🐻</button>
+<button type="button" class="avp-btn" data-av="🐼" data-cat="animals" style="display:none" onclick="selectAvatarPopup('🐼')">🐼</button>
+<button type="button" class="avp-btn" data-av="🦊" data-cat="animals" style="display:none" onclick="selectAvatarPopup('🦊')">🦊</button>
+<button type="button" class="avp-btn" data-av="🐺" data-cat="animals" style="display:none" onclick="selectAvatarPopup('🐺')">🐺</button>
+<button type="button" class="avp-btn" data-av="🦝" data-cat="animals" style="display:none" onclick="selectAvatarPopup('🦝')">🦝</button>
+<button type="button" class="avp-btn" data-av="🐘" data-cat="animals" style="display:none" onclick="selectAvatarPopup('🐘')">🐘</button>
+<button type="button" class="avp-btn" data-av="🐊" data-cat="animals" style="display:none" onclick="selectAvatarPopup('🐊')">🐊</button>
+<button type="button" class="avp-btn" data-av="🐍" data-cat="animals" style="display:none" onclick="selectAvatarPopup('🐍')">🐍</button>
+<button type="button" class="avp-btn" data-av="🐬" data-cat="animals" style="display:none" onclick="selectAvatarPopup('🐬')">🐬</button>
+<button type="button" class="avp-btn" data-av="🦈" data-cat="animals" style="display:none" onclick="selectAvatarPopup('🦈')">🦈</button>
+<button type="button" class="avp-btn" data-av="🐙" data-cat="animals" style="display:none" onclick="selectAvatarPopup('🐙')">🐙</button>
+<button type="button" class="avp-btn" data-av="🦅" data-cat="animals" style="display:none" onclick="selectAvatarPopup('🦅')">🦅</button>
+<button type="button" class="avp-btn" data-av="🦉" data-cat="animals" style="display:none" onclick="selectAvatarPopup('🦉')">🦉</button>
+<button type="button" class="avp-btn" data-av="🦆" data-cat="animals" style="display:none" onclick="selectAvatarPopup('🦆')">🦆</button>
+<button type="button" class="avp-btn" data-av="🦜" data-cat="animals" style="display:none" onclick="selectAvatarPopup('🦜')">🦜</button>
+<button type="button" class="avp-btn" data-av="🦩" data-cat="animals" style="display:none" onclick="selectAvatarPopup('🦩')">🦩</button>
+<button type="button" class="avp-btn" data-av="🐧" data-cat="animals" style="display:none" onclick="selectAvatarPopup('🐧')">🐧</button>
+<button type="button" class="avp-btn" data-av="🐢" data-cat="animals" style="display:none" onclick="selectAvatarPopup('🐢')">🐢</button>
+<button type="button" class="avp-btn" data-av="🐸" data-cat="animals" style="display:none" onclick="selectAvatarPopup('🐸')">🐸</button>
+<button type="button" class="avp-btn" data-av="🐵" data-cat="animals" style="display:none" onclick="selectAvatarPopup('🐵')">🐵</button>
+<button type="button" class="avp-btn" data-av="🙈" data-cat="animals" style="display:none" onclick="selectAvatarPopup('🙈')">🙈</button>
+<button type="button" class="avp-btn" data-av="🐭" data-cat="animals" style="display:none" onclick="selectAvatarPopup('🐭')">🐭</button>
+<button type="button" class="avp-btn" data-av="🐹" data-cat="animals" style="display:none" onclick="selectAvatarPopup('🐹')">🐹</button>
+<button type="button" class="avp-btn" data-av="🐰" data-cat="animals" style="display:none" onclick="selectAvatarPopup('🐰')">🐰</button>
+<button type="button" class="avp-btn" data-av="🐨" data-cat="animals" style="display:none" onclick="selectAvatarPopup('🐨')">🐨</button>
+<button type="button" class="avp-btn" data-av="🐮" data-cat="animals" style="display:none" onclick="selectAvatarPopup('🐮')">🐮</button>
+<button type="button" class="avp-btn" data-av="🐷" data-cat="animals" style="display:none" onclick="selectAvatarPopup('🐷')">🐷</button>
+<button type="button" class="avp-btn" data-av="🐗" data-cat="animals" style="display:none" onclick="selectAvatarPopup('🐗')">🐗</button>
+<button type="button" class="avp-btn" data-av="🐴" data-cat="animals" style="display:none" onclick="selectAvatarPopup('🐴')">🐴</button>
+<button type="button" class="avp-btn" data-av="🦄" data-cat="animals" style="display:none" onclick="selectAvatarPopup('🦄')">🦄</button>
+<button type="button" class="avp-btn" data-av="🐝" data-cat="animals" style="display:none" onclick="selectAvatarPopup('🐝')">🐝</button>
+<button type="button" class="avp-btn" data-av="🐛" data-cat="animals" style="display:none" onclick="selectAvatarPopup('🐛')">🐛</button>
+<button type="button" class="avp-btn" data-av="🦋" data-cat="animals" style="display:none" onclick="selectAvatarPopup('🦋')">🦋</button>
+<button type="button" class="avp-btn" data-av="🐌" data-cat="animals" style="display:none" onclick="selectAvatarPopup('🐌')">🐌</button>
+<button type="button" class="avp-btn" data-av="🐞" data-cat="animals" style="display:none" onclick="selectAvatarPopup('🐞')">🐞</button>
+<button type="button" class="avp-btn" data-av="🐜" data-cat="animals" style="display:none" onclick="selectAvatarPopup('🐜')">🐜</button>
+<button type="button" class="avp-btn" data-av="🦂" data-cat="animals" style="display:none" onclick="selectAvatarPopup('🦂')">🦂</button>
+<button type="button" class="avp-btn" data-av="🦓" data-cat="animals" style="display:none" onclick="selectAvatarPopup('🦓')">🦓</button>
+<button type="button" class="avp-btn" data-av="🦒" data-cat="animals" style="display:none" onclick="selectAvatarPopup('🦒')">🦒</button>
+<button type="button" class="avp-btn" data-av="🦏" data-cat="animals" style="display:none" onclick="selectAvatarPopup('🦏')">🦏</button>
+<button type="button" class="avp-btn" data-av="🦛" data-cat="animals" style="display:none" onclick="selectAvatarPopup('🦛')">🦛</button>
+<button type="button" class="avp-btn" data-av="🐅" data-cat="animals" style="display:none" onclick="selectAvatarPopup('🐅')">🐅</button>
+<button type="button" class="avp-btn" data-av="🐆" data-cat="animals" style="display:none" onclick="selectAvatarPopup('🐆')">🐆</button>
+<button type="button" class="avp-btn" data-av="🐃" data-cat="animals" style="display:none" onclick="selectAvatarPopup('🐃')">🐃</button>
+<button type="button" class="avp-btn" data-av="🐄" data-cat="animals" style="display:none" onclick="selectAvatarPopup('🐄')">🐄</button>
+<button type="button" class="avp-btn" data-av="🐎" data-cat="animals" style="display:none" onclick="selectAvatarPopup('🐎')">🐎</button>
+<button type="button" class="avp-btn" data-av="🐖" data-cat="animals" style="display:none" onclick="selectAvatarPopup('🐖')">🐖</button>
+<button type="button" class="avp-btn" data-av="🐏" data-cat="animals" style="display:none" onclick="selectAvatarPopup('🐏')">🐏</button>
+<button type="button" class="avp-btn" data-av="🐑" data-cat="animals" style="display:none" onclick="selectAvatarPopup('🐑')">🐑</button>
+<button type="button" class="avp-btn" data-av="🦙" data-cat="animals" style="display:none" onclick="selectAvatarPopup('🦙')">🦙</button>
+<button type="button" class="avp-btn" data-av="🐐" data-cat="animals" style="display:none" onclick="selectAvatarPopup('🐐')">🐐</button>
+<button type="button" class="avp-btn" data-av="🦌" data-cat="animals" style="display:none" onclick="selectAvatarPopup('🦌')">🦌</button>
+<button type="button" class="avp-btn" data-av="🐕" data-cat="animals" style="display:none" onclick="selectAvatarPopup('🐕')">🐕</button>
+<button type="button" class="avp-btn" data-av="🐩" data-cat="animals" style="display:none" onclick="selectAvatarPopup('🐩')">🐩</button>
+<button type="button" class="avp-btn" data-av="🐈" data-cat="animals" style="display:none" onclick="selectAvatarPopup('🐈')">🐈</button>
+<button type="button" class="avp-btn" data-av="🐓" data-cat="animals" style="display:none" onclick="selectAvatarPopup('🐓')">🐓</button>
+<button type="button" class="avp-btn" data-av="🦃" data-cat="animals" style="display:none" onclick="selectAvatarPopup('🦃')">🦃</button>
+<button type="button" class="avp-btn" data-av="🦚" data-cat="animals" style="display:none" onclick="selectAvatarPopup('🦚')">🦚</button>
+<button type="button" class="avp-btn" data-av="🦡" data-cat="animals" style="display:none" onclick="selectAvatarPopup('🦡')">🦡</button>
+<button type="button" class="avp-btn" data-av="🦔" data-cat="animals" style="display:none" onclick="selectAvatarPopup('🦔')">🦔</button>
+<button type="button" class="avp-btn" data-av="🐿️" data-cat="animals" style="display:none" onclick="selectAvatarPopup('🐿️')">🐿️</button>
+<button type="button" class="avp-btn" data-av="🦫" data-cat="animals" style="display:none" onclick="selectAvatarPopup('🦫')">🦫</button>
+<button type="button" class="avp-btn" data-av="🦦" data-cat="animals" style="display:none" onclick="selectAvatarPopup('🦦')">🦦</button>
+<button type="button" class="avp-btn" data-av="🦥" data-cat="animals" style="display:none" onclick="selectAvatarPopup('🦥')">🦥</button>
+<button type="button" class="avp-btn" data-av="🐳" data-cat="animals" style="display:none" onclick="selectAvatarPopup('🐳')">🐳</button>
+<button type="button" class="avp-btn" data-av="🐋" data-cat="animals" style="display:none" onclick="selectAvatarPopup('🐋')">🐋</button>
+<button type="button" class="avp-btn" data-av="🦭" data-cat="animals" style="display:none" onclick="selectAvatarPopup('🦭')">🦭</button>
+<button type="button" class="avp-btn" data-av="🐠" data-cat="animals" style="display:none" onclick="selectAvatarPopup('🐠')">🐠</button>
+<button type="button" class="avp-btn" data-av="🐡" data-cat="animals" style="display:none" onclick="selectAvatarPopup('🐡')">🐡</button>
+<button type="button" class="avp-btn" data-av="🦞" data-cat="animals" style="display:none" onclick="selectAvatarPopup('🦞')">🦞</button>
+<button type="button" class="avp-btn" data-av="🦀" data-cat="animals" style="display:none" onclick="selectAvatarPopup('🦀')">🦀</button>
+<button type="button" class="avp-btn" data-av="👽" data-cat="fantasy" style="display:none" onclick="selectAvatarPopup('👽')">👽</button>
+<button type="button" class="avp-btn" data-av="👾" data-cat="fantasy" style="display:none" onclick="selectAvatarPopup('👾')">👾</button>
+<button type="button" class="avp-btn" data-av="👻" data-cat="fantasy" style="display:none" onclick="selectAvatarPopup('👻')">👻</button>
+<button type="button" class="avp-btn" data-av="🎃" data-cat="fantasy" style="display:none" onclick="selectAvatarPopup('🎃')">🎃</button>
+<button type="button" class="avp-btn" data-av="🧙" data-cat="fantasy" style="display:none" onclick="selectAvatarPopup('🧙')">🧙</button>
+<button type="button" class="avp-btn" data-av="🧝" data-cat="fantasy" style="display:none" onclick="selectAvatarPopup('🧝')">🧝</button>
+<button type="button" class="avp-btn" data-av="🧚" data-cat="fantasy" style="display:none" onclick="selectAvatarPopup('🧚')">🧚</button>
+<button type="button" class="avp-btn" data-av="🧞" data-cat="fantasy" style="display:none" onclick="selectAvatarPopup('🧞')">🧞</button>
+<button type="button" class="avp-btn" data-av="🦸" data-cat="fantasy" style="display:none" onclick="selectAvatarPopup('🦸')">🦸</button>
+<button type="button" class="avp-btn" data-av="🦹" data-cat="fantasy" style="display:none" onclick="selectAvatarPopup('🦹')">🦹</button>
+<button type="button" class="avp-btn" data-av="🧌" data-cat="fantasy" style="display:none" onclick="selectAvatarPopup('🧌')">🧌</button>
+<button type="button" class="avp-btn" data-av="🧛" data-cat="fantasy" style="display:none" onclick="selectAvatarPopup('🧛')">🧛</button>
+<button type="button" class="avp-btn" data-av="🧟" data-cat="fantasy" style="display:none" onclick="selectAvatarPopup('🧟')">🧟</button>
+<button type="button" class="avp-btn" data-av="👹" data-cat="fantasy" style="display:none" onclick="selectAvatarPopup('👹')">👹</button>
+<button type="button" class="avp-btn" data-av="👺" data-cat="fantasy" style="display:none" onclick="selectAvatarPopup('👺')">👺</button>
+<button type="button" class="avp-btn" data-av="🧜" data-cat="fantasy" style="display:none" onclick="selectAvatarPopup('🧜')">🧜</button>
+<button type="button" class="avp-btn" data-av="🐉" data-cat="fantasy" style="display:none" onclick="selectAvatarPopup('🐉')">🐉</button>
+<button type="button" class="avp-btn" data-av="🐲" data-cat="fantasy" style="display:none" onclick="selectAvatarPopup('🐲')">🐲</button>
+<button type="button" class="avp-btn" data-av="🦖" data-cat="fantasy" style="display:none" onclick="selectAvatarPopup('🦖')">🦖</button>
+<button type="button" class="avp-btn" data-av="🤖" data-cat="fantasy" style="display:none" onclick="selectAvatarPopup('🤖')">🤖</button>
+<button type="button" class="avp-btn" data-av="💀" data-cat="fantasy" style="display:none" onclick="selectAvatarPopup('💀')">💀</button>
+<button type="button" class="avp-btn" data-av="☠️" data-cat="fantasy" style="display:none" onclick="selectAvatarPopup('☠️')">☠️</button>
+<button type="button" class="avp-btn" data-av="👿" data-cat="fantasy" style="display:none" onclick="selectAvatarPopup('👿')">👿</button>
+<button type="button" class="avp-btn" data-av="😈" data-cat="fantasy" style="display:none" onclick="selectAvatarPopup('😈')">😈</button>
+<button type="button" class="avp-btn" data-av="🦇" data-cat="fantasy" style="display:none" onclick="selectAvatarPopup('🦇')">🦇</button>
+<button type="button" class="avp-btn" data-av="🕸️" data-cat="fantasy" style="display:none" onclick="selectAvatarPopup('🕸️')">🕸️</button>
+<button type="button" class="avp-btn" data-av="🔮" data-cat="fantasy" style="display:none" onclick="selectAvatarPopup('🔮')">🔮</button>
+<button type="button" class="avp-btn" data-av="🧿" data-cat="fantasy" style="display:none" onclick="selectAvatarPopup('🧿')">🧿</button>
+<button type="button" class="avp-btn" data-av="⚡" data-cat="fantasy" style="display:none" onclick="selectAvatarPopup('⚡')">⚡</button>
+<button type="button" class="avp-btn" data-av="🔥" data-cat="fantasy" style="display:none" onclick="selectAvatarPopup('🔥')">🔥</button>
+<button type="button" class="avp-btn" data-av="❄️" data-cat="fantasy" style="display:none" onclick="selectAvatarPopup('❄️')">❄️</button>
+<button type="button" class="avp-btn" data-av="🌟" data-cat="fantasy" style="display:none" onclick="selectAvatarPopup('🌟')">🌟</button>
+<button type="button" class="avp-btn" data-av="💫" data-cat="fantasy" style="display:none" onclick="selectAvatarPopup('💫')">💫</button>
+<button type="button" class="avp-btn" data-av="✨" data-cat="fantasy" style="display:none" onclick="selectAvatarPopup('✨')">✨</button>
+<button type="button" class="avp-btn" data-av="🌈" data-cat="fantasy" style="display:none" onclick="selectAvatarPopup('🌈')">🌈</button>
+<button type="button" class="avp-btn" data-av="☄️" data-cat="fantasy" style="display:none" onclick="selectAvatarPopup('☄️')">☄️</button>
+<button type="button" class="avp-btn" data-av="🪄" data-cat="fantasy" style="display:none" onclick="selectAvatarPopup('🪄')">🪄</button>
+<button type="button" class="avp-btn" data-av="🧪" data-cat="fantasy" style="display:none" onclick="selectAvatarPopup('🧪')">🧪</button>
+<button type="button" class="avp-btn" data-av="⚗️" data-cat="fantasy" style="display:none" onclick="selectAvatarPopup('⚗️')">⚗️</button>
+<button type="button" class="avp-btn" data-av="🗿" data-cat="fantasy" style="display:none" onclick="selectAvatarPopup('🗿')">🗿</button>
+<button type="button" class="avp-btn" data-av="🃏" data-cat="objects" style="display:none" onclick="selectAvatarPopup('🃏')">🃏</button>
+<button type="button" class="avp-btn" data-av="🎴" data-cat="objects" style="display:none" onclick="selectAvatarPopup('🎴')">🎴</button>
+<button type="button" class="avp-btn" data-av="🀄" data-cat="objects" style="display:none" onclick="selectAvatarPopup('🀄')">🀄</button>
+<button type="button" class="avp-btn" data-av="🎩" data-cat="objects" style="display:none" onclick="selectAvatarPopup('🎩')">🎩</button>
+<button type="button" class="avp-btn" data-av="🕶️" data-cat="objects" style="display:none" onclick="selectAvatarPopup('🕶️')">🕶️</button>
+<button type="button" class="avp-btn" data-av="👓" data-cat="objects" style="display:none" onclick="selectAvatarPopup('👓')">👓</button>
+<button type="button" class="avp-btn" data-av="🎓" data-cat="objects" style="display:none" onclick="selectAvatarPopup('🎓')">🎓</button>
+<button type="button" class="avp-btn" data-av="👒" data-cat="objects" style="display:none" onclick="selectAvatarPopup('👒')">👒</button>
+<button type="button" class="avp-btn" data-av="🧢" data-cat="objects" style="display:none" onclick="selectAvatarPopup('🧢')">🧢</button>
+<button type="button" class="avp-btn" data-av="⛑️" data-cat="objects" style="display:none" onclick="selectAvatarPopup('⛑️')">⛑️</button>
+<button type="button" class="avp-btn" data-av="💍" data-cat="objects" style="display:none" onclick="selectAvatarPopup('💍')">💍</button>
+<button type="button" class="avp-btn" data-av="💎" data-cat="objects" style="display:none" onclick="selectAvatarPopup('💎')">💎</button>
+<button type="button" class="avp-btn" data-av="🎭" data-cat="objects" style="display:none" onclick="selectAvatarPopup('🎭')">🎭</button>
+<button type="button" class="avp-btn" data-av="🎰" data-cat="objects" style="display:none" onclick="selectAvatarPopup('🎰')">🎰</button>
+<button type="button" class="avp-btn" data-av="🎲" data-cat="objects" style="display:none" onclick="selectAvatarPopup('🎲')">🎲</button>
+<button type="button" class="avp-btn" data-av="🎯" data-cat="objects" style="display:none" onclick="selectAvatarPopup('🎯')">🎯</button>
+<button type="button" class="avp-btn" data-av="🏆" data-cat="objects" style="display:none" onclick="selectAvatarPopup('🏆')">🏆</button>
+<button type="button" class="avp-btn" data-av="🥇" data-cat="objects" style="display:none" onclick="selectAvatarPopup('🥇')">🥇</button>
+<button type="button" class="avp-btn" data-av="🥈" data-cat="objects" style="display:none" onclick="selectAvatarPopup('🥈')">🥈</button>
+<button type="button" class="avp-btn" data-av="🥉" data-cat="objects" style="display:none" onclick="selectAvatarPopup('🥉')">🥉</button>
+<button type="button" class="avp-btn" data-av="🪙" data-cat="objects" style="display:none" onclick="selectAvatarPopup('🪙')">🪙</button>
+<button type="button" class="avp-btn" data-av="💰" data-cat="objects" style="display:none" onclick="selectAvatarPopup('💰')">💰</button>
+<button type="button" class="avp-btn" data-av="💸" data-cat="objects" style="display:none" onclick="selectAvatarPopup('💸')">💸</button>
+<button type="button" class="avp-btn" data-av="🎸" data-cat="objects" style="display:none" onclick="selectAvatarPopup('🎸')">🎸</button>
+<button type="button" class="avp-btn" data-av="🎺" data-cat="objects" style="display:none" onclick="selectAvatarPopup('🎺')">🎺</button>
+<button type="button" class="avp-btn" data-av="🎻" data-cat="objects" style="display:none" onclick="selectAvatarPopup('🎻')">🎻</button>
+<button type="button" class="avp-btn" data-av="🎹" data-cat="objects" style="display:none" onclick="selectAvatarPopup('🎹')">🎹</button>
+<button type="button" class="avp-btn" data-av="🥁" data-cat="objects" style="display:none" onclick="selectAvatarPopup('🥁')">🥁</button>
+<button type="button" class="avp-btn" data-av="🎷" data-cat="objects" style="display:none" onclick="selectAvatarPopup('🎷')">🎷</button>
+<button type="button" class="avp-btn" data-av="🎮" data-cat="objects" style="display:none" onclick="selectAvatarPopup('🎮')">🎮</button>
+<button type="button" class="avp-btn" data-av="🕹️" data-cat="objects" style="display:none" onclick="selectAvatarPopup('🕹️')">🕹️</button>
+<button type="button" class="avp-btn" data-av="🎧" data-cat="objects" style="display:none" onclick="selectAvatarPopup('🎧')">🎧</button>
+<button type="button" class="avp-btn" data-av="📷" data-cat="objects" style="display:none" onclick="selectAvatarPopup('📷')">📷</button>
+<button type="button" class="avp-btn" data-av="📸" data-cat="objects" style="display:none" onclick="selectAvatarPopup('📸')">📸</button>
+<button type="button" class="avp-btn" data-av="🎬" data-cat="objects" style="display:none" onclick="selectAvatarPopup('🎬')">🎬</button>
+<button type="button" class="avp-btn" data-av="🚀" data-cat="objects" style="display:none" onclick="selectAvatarPopup('🚀')">🚀</button>
+<button type="button" class="avp-btn" data-av="✈️" data-cat="objects" style="display:none" onclick="selectAvatarPopup('✈️')">✈️</button>
+<button type="button" class="avp-btn" data-av="🚗" data-cat="objects" style="display:none" onclick="selectAvatarPopup('🚗')">🚗</button>
+<button type="button" class="avp-btn" data-av="🏎️" data-cat="objects" style="display:none" onclick="selectAvatarPopup('🏎️')">🏎️</button>
+<button type="button" class="avp-btn" data-av="🚓" data-cat="objects" style="display:none" onclick="selectAvatarPopup('🚓')">🚓</button>
+<button type="button" class="avp-btn" data-av="🏍️" data-cat="objects" style="display:none" onclick="selectAvatarPopup('🏍️')">🏍️</button>
+<button type="button" class="avp-btn" data-av="⚓" data-cat="objects" style="display:none" onclick="selectAvatarPopup('⚓')">⚓</button>
+<button type="button" class="avp-btn" data-av="⛵" data-cat="objects" style="display:none" onclick="selectAvatarPopup('⛵')">⛵</button>
+<button type="button" class="avp-btn" data-av="🛸" data-cat="objects" style="display:none" onclick="selectAvatarPopup('🛸')">🛸</button>
+<button type="button" class="avp-btn" data-av="🎁" data-cat="objects" style="display:none" onclick="selectAvatarPopup('🎁')">🎁</button>
+<button type="button" class="avp-btn" data-av="💣" data-cat="objects" style="display:none" onclick="selectAvatarPopup('💣')">💣</button>
+<button type="button" class="avp-btn" data-av="🗡️" data-cat="objects" style="display:none" onclick="selectAvatarPopup('🗡️')">🗡️</button>
+<button type="button" class="avp-btn" data-av="⚔️" data-cat="objects" style="display:none" onclick="selectAvatarPopup('⚔️')">⚔️</button>
+<button type="button" class="avp-btn" data-av="🛡️" data-cat="objects" style="display:none" onclick="selectAvatarPopup('🛡️')">🛡️</button>
+<button type="button" class="avp-btn" data-av="🔑" data-cat="objects" style="display:none" onclick="selectAvatarPopup('🔑')">🔑</button>
+<button type="button" class="avp-btn" data-av="💡" data-cat="objects" style="display:none" onclick="selectAvatarPopup('💡')">💡</button>
+<button type="button" class="avp-btn" data-av="📚" data-cat="objects" style="display:none" onclick="selectAvatarPopup('📚')">📚</button>
+<button type="button" class="avp-btn" data-av="🖌️" data-cat="objects" style="display:none" onclick="selectAvatarPopup('🖌️')">🖌️</button>
+<button type="button" class="avp-btn" data-av="🎨" data-cat="objects" style="display:none" onclick="selectAvatarPopup('🎨')">🎨</button>
+<button type="button" class="avp-btn" data-av="🧭" data-cat="objects" style="display:none" onclick="selectAvatarPopup('🧭')">🧭</button>
+<button type="button" class="avp-btn" data-av="🇫🇷" data-cat="flags" style="display:none" onclick="selectAvatarPopup('🇫🇷')">🇫🇷</button>
+<button type="button" class="avp-btn" data-av="🇧🇪" data-cat="flags" style="display:none" onclick="selectAvatarPopup('🇧🇪')">🇧🇪</button>
+<button type="button" class="avp-btn" data-av="🇨🇭" data-cat="flags" style="display:none" onclick="selectAvatarPopup('🇨🇭')">🇨🇭</button>
+<button type="button" class="avp-btn" data-av="🇨🇦" data-cat="flags" style="display:none" onclick="selectAvatarPopup('🇨🇦')">🇨🇦</button>
+<button type="button" class="avp-btn" data-av="🇺🇸" data-cat="flags" style="display:none" onclick="selectAvatarPopup('🇺🇸')">🇺🇸</button>
+<button type="button" class="avp-btn" data-av="🇬🇧" data-cat="flags" style="display:none" onclick="selectAvatarPopup('🇬🇧')">🇬🇧</button>
+<button type="button" class="avp-btn" data-av="🇩🇪" data-cat="flags" style="display:none" onclick="selectAvatarPopup('🇩🇪')">🇩🇪</button>
+<button type="button" class="avp-btn" data-av="🇪🇸" data-cat="flags" style="display:none" onclick="selectAvatarPopup('🇪🇸')">🇪🇸</button>
+<button type="button" class="avp-btn" data-av="🇮🇹" data-cat="flags" style="display:none" onclick="selectAvatarPopup('🇮🇹')">🇮🇹</button>
+<button type="button" class="avp-btn" data-av="🇵🇹" data-cat="flags" style="display:none" onclick="selectAvatarPopup('🇵🇹')">🇵🇹</button>
+<button type="button" class="avp-btn" data-av="🇳🇱" data-cat="flags" style="display:none" onclick="selectAvatarPopup('🇳🇱')">🇳🇱</button>
+<button type="button" class="avp-btn" data-av="🇸🇪" data-cat="flags" style="display:none" onclick="selectAvatarPopup('🇸🇪')">🇸🇪</button>
+<button type="button" class="avp-btn" data-av="🇳🇴" data-cat="flags" style="display:none" onclick="selectAvatarPopup('🇳🇴')">🇳🇴</button>
+<button type="button" class="avp-btn" data-av="🇩🇰" data-cat="flags" style="display:none" onclick="selectAvatarPopup('🇩🇰')">🇩🇰</button>
+<button type="button" class="avp-btn" data-av="🇫🇮" data-cat="flags" style="display:none" onclick="selectAvatarPopup('🇫🇮')">🇫🇮</button>
+<button type="button" class="avp-btn" data-av="🇮🇪" data-cat="flags" style="display:none" onclick="selectAvatarPopup('🇮🇪')">🇮🇪</button>
+<button type="button" class="avp-btn" data-av="🇵🇱" data-cat="flags" style="display:none" onclick="selectAvatarPopup('🇵🇱')">🇵🇱</button>
+<button type="button" class="avp-btn" data-av="🇷🇺" data-cat="flags" style="display:none" onclick="selectAvatarPopup('🇷🇺')">🇷🇺</button>
+<button type="button" class="avp-btn" data-av="🇺🇦" data-cat="flags" style="display:none" onclick="selectAvatarPopup('🇺🇦')">🇺🇦</button>
+<button type="button" class="avp-btn" data-av="🇯🇵" data-cat="flags" style="display:none" onclick="selectAvatarPopup('🇯🇵')">🇯🇵</button>
+<button type="button" class="avp-btn" data-av="🇨🇳" data-cat="flags" style="display:none" onclick="selectAvatarPopup('🇨🇳')">🇨🇳</button>
+<button type="button" class="avp-btn" data-av="🇰🇷" data-cat="flags" style="display:none" onclick="selectAvatarPopup('🇰🇷')">🇰🇷</button>
+<button type="button" class="avp-btn" data-av="🇧🇷" data-cat="flags" style="display:none" onclick="selectAvatarPopup('🇧🇷')">🇧🇷</button>
+<button type="button" class="avp-btn" data-av="🇦🇷" data-cat="flags" style="display:none" onclick="selectAvatarPopup('🇦🇷')">🇦🇷</button>
+<button type="button" class="avp-btn" data-av="🇲🇽" data-cat="flags" style="display:none" onclick="selectAvatarPopup('🇲🇽')">🇲🇽</button>
+<button type="button" class="avp-btn" data-av="🇦🇺" data-cat="flags" style="display:none" onclick="selectAvatarPopup('🇦🇺')">🇦🇺</button>
+<button type="button" class="avp-btn" data-av="🇮🇳" data-cat="flags" style="display:none" onclick="selectAvatarPopup('🇮🇳')">🇮🇳</button>
+<button type="button" class="avp-btn" data-av="🇲🇦" data-cat="flags" style="display:none" onclick="selectAvatarPopup('🇲🇦')">🇲🇦</button>
+<button type="button" class="avp-btn" data-av="🇩🇿" data-cat="flags" style="display:none" onclick="selectAvatarPopup('🇩🇿')">🇩🇿</button>
+<button type="button" class="avp-btn" data-av="🇹🇳" data-cat="flags" style="display:none" onclick="selectAvatarPopup('🇹🇳')">🇹🇳</button>
+<button type="button" class="avp-btn" data-av="🇬🇷" data-cat="flags" style="display:none" onclick="selectAvatarPopup('🇬🇷')">🇬🇷</button>
+<button type="button" class="avp-btn" data-av="🇹🇷" data-cat="flags" style="display:none" onclick="selectAvatarPopup('🇹🇷')">🇹🇷</button>
+<button type="button" class="avp-btn" data-av="🇪🇬" data-cat="flags" style="display:none" onclick="selectAvatarPopup('🇪🇬')">🇪🇬</button>
+<button type="button" class="avp-btn" data-av="🇿🇦" data-cat="flags" style="display:none" onclick="selectAvatarPopup('🇿🇦')">🇿🇦</button>
+<button type="button" class="avp-btn" data-av="🇸🇳" data-cat="flags" style="display:none" onclick="selectAvatarPopup('🇸🇳')">🇸🇳</button>
+<button type="button" class="avp-btn" data-av="🇨🇮" data-cat="flags" style="display:none" onclick="selectAvatarPopup('🇨🇮')">🇨🇮</button>
+<button type="button" class="avp-btn" data-av="🇱🇺" data-cat="flags" style="display:none" onclick="selectAvatarPopup('🇱🇺')">🇱🇺</button>
+<button type="button" class="avp-btn" data-av="🇦🇹" data-cat="flags" style="display:none" onclick="selectAvatarPopup('🇦🇹')">🇦🇹</button>
+<button type="button" class="avp-btn" data-av="🇨🇿" data-cat="flags" style="display:none" onclick="selectAvatarPopup('🇨🇿')">🇨🇿</button>
+<button type="button" class="avp-btn" data-av="🇭🇺" data-cat="flags" style="display:none" onclick="selectAvatarPopup('🇭🇺')">🇭🇺</button>
+<button type="button" class="avp-btn" data-av="🏴‍☠️" data-cat="flags" style="display:none" onclick="selectAvatarPopup('🏴‍☠️')">🏴‍☠️</button>
+<button type="button" class="avp-btn" data-av="🏁" data-cat="flags" style="display:none" onclick="selectAvatarPopup('🏁')">🏁</button>
+<button type="button" class="avp-btn" data-av="🚩" data-cat="flags" style="display:none" onclick="selectAvatarPopup('🚩')">🚩</button>
+<button type="button" class="avp-btn" data-av="🏳️‍🌈" data-cat="flags" style="display:none" onclick="selectAvatarPopup('🏳️‍🌈')">🏳️‍🌈</button>
+<button type="button" class="avp-btn" data-av="⚽" data-cat="sport" style="display:none" onclick="selectAvatarPopup('⚽')">⚽</button>
+<button type="button" class="avp-btn" data-av="🏀" data-cat="sport" style="display:none" onclick="selectAvatarPopup('🏀')">🏀</button>
+<button type="button" class="avp-btn" data-av="🏈" data-cat="sport" style="display:none" onclick="selectAvatarPopup('🏈')">🏈</button>
+<button type="button" class="avp-btn" data-av="⚾" data-cat="sport" style="display:none" onclick="selectAvatarPopup('⚾')">⚾</button>
+<button type="button" class="avp-btn" data-av="🎾" data-cat="sport" style="display:none" onclick="selectAvatarPopup('🎾')">🎾</button>
+<button type="button" class="avp-btn" data-av="🏐" data-cat="sport" style="display:none" onclick="selectAvatarPopup('🏐')">🏐</button>
+<button type="button" class="avp-btn" data-av="🏉" data-cat="sport" style="display:none" onclick="selectAvatarPopup('🏉')">🏉</button>
+<button type="button" class="avp-btn" data-av="🎱" data-cat="sport" style="display:none" onclick="selectAvatarPopup('🎱')">🎱</button>
+<button type="button" class="avp-btn" data-av="🏓" data-cat="sport" style="display:none" onclick="selectAvatarPopup('🏓')">🏓</button>
+<button type="button" class="avp-btn" data-av="🏸" data-cat="sport" style="display:none" onclick="selectAvatarPopup('🏸')">🏸</button>
+<button type="button" class="avp-btn" data-av="🥊" data-cat="sport" style="display:none" onclick="selectAvatarPopup('🥊')">🥊</button>
+<button type="button" class="avp-btn" data-av="🥋" data-cat="sport" style="display:none" onclick="selectAvatarPopup('🥋')">🥋</button>
+<button type="button" class="avp-btn" data-av="⛳" data-cat="sport" style="display:none" onclick="selectAvatarPopup('⛳')">⛳</button>
+<button type="button" class="avp-btn" data-av="🏌️" data-cat="sport" style="display:none" onclick="selectAvatarPopup('🏌️')">🏌️</button>
+<button type="button" class="avp-btn" data-av="🏇" data-cat="sport" style="display:none" onclick="selectAvatarPopup('🏇')">🏇</button>
+<button type="button" class="avp-btn" data-av="🏂" data-cat="sport" style="display:none" onclick="selectAvatarPopup('🏂')">🏂</button>
+<button type="button" class="avp-btn" data-av="⛷️" data-cat="sport" style="display:none" onclick="selectAvatarPopup('⛷️')">⛷️</button>
+<button type="button" class="avp-btn" data-av="🏄" data-cat="sport" style="display:none" onclick="selectAvatarPopup('🏄')">🏄</button>
+<button type="button" class="avp-btn" data-av="🚴" data-cat="sport" style="display:none" onclick="selectAvatarPopup('🚴')">🚴</button>
+<button type="button" class="avp-btn" data-av="🏊" data-cat="sport" style="display:none" onclick="selectAvatarPopup('🏊')">🏊</button>
+<button type="button" class="avp-btn" data-av="🤺" data-cat="sport" style="display:none" onclick="selectAvatarPopup('🤺')">🤺</button>
+<button type="button" class="avp-btn" data-av="🤸" data-cat="sport" style="display:none" onclick="selectAvatarPopup('🤸')">🤸</button>
+<button type="button" class="avp-btn" data-av="🏋️" data-cat="sport" style="display:none" onclick="selectAvatarPopup('🏋️')">🏋️</button>
+<button type="button" class="avp-btn" data-av="🤼" data-cat="sport" style="display:none" onclick="selectAvatarPopup('🤼')">🤼</button>
+<button type="button" class="avp-btn" data-av="🤾" data-cat="sport" style="display:none" onclick="selectAvatarPopup('🤾')">🤾</button>
+<button type="button" class="avp-btn" data-av="⛹️" data-cat="sport" style="display:none" onclick="selectAvatarPopup('⛹️')">⛹️</button>
+<button type="button" class="avp-btn" data-av="🤽" data-cat="sport" style="display:none" onclick="selectAvatarPopup('🤽')">🤽</button>
+<button type="button" class="avp-btn" data-av="🧗" data-cat="sport" style="display:none" onclick="selectAvatarPopup('🧗')">🧗</button>
+<button type="button" class="avp-btn" data-av="🚣" data-cat="sport" style="display:none" onclick="selectAvatarPopup('🚣')">🚣</button>
+<button type="button" class="avp-btn" data-av="🎽" data-cat="sport" style="display:none" onclick="selectAvatarPopup('🎽')">🎽</button>
+<button type="button" class="avp-btn" data-av="🛹" data-cat="sport" style="display:none" onclick="selectAvatarPopup('🛹')">🛹</button>
+<button type="button" class="avp-btn" data-av="🛼" data-cat="sport" style="display:none" onclick="selectAvatarPopup('🛼')">🛼</button>
+<button type="button" class="avp-btn" data-av="🥏" data-cat="sport" style="display:none" onclick="selectAvatarPopup('🥏')">🥏</button>
+<button type="button" class="avp-btn" data-av="🎿" data-cat="sport" style="display:none" onclick="selectAvatarPopup('🎿')">🎿</button>
+<button type="button" class="avp-btn" data-av="🏹" data-cat="sport" style="display:none" onclick="selectAvatarPopup('🏹')">🏹</button>
+<button type="button" class="avp-btn" data-av="🎣" data-cat="sport" style="display:none" onclick="selectAvatarPopup('🎣')">🎣</button>
+<button type="button" class="avp-btn" data-av="🍔" data-cat="food" style="display:none" onclick="selectAvatarPopup('🍔')">🍔</button>
+<button type="button" class="avp-btn" data-av="🍟" data-cat="food" style="display:none" onclick="selectAvatarPopup('🍟')">🍟</button>
+<button type="button" class="avp-btn" data-av="🍕" data-cat="food" style="display:none" onclick="selectAvatarPopup('🍕')">🍕</button>
+<button type="button" class="avp-btn" data-av="🌭" data-cat="food" style="display:none" onclick="selectAvatarPopup('🌭')">🌭</button>
+<button type="button" class="avp-btn" data-av="🥪" data-cat="food" style="display:none" onclick="selectAvatarPopup('🥪')">🥪</button>
+<button type="button" class="avp-btn" data-av="🌮" data-cat="food" style="display:none" onclick="selectAvatarPopup('🌮')">🌮</button>
+<button type="button" class="avp-btn" data-av="🌯" data-cat="food" style="display:none" onclick="selectAvatarPopup('🌯')">🌯</button>
+<button type="button" class="avp-btn" data-av="🥙" data-cat="food" style="display:none" onclick="selectAvatarPopup('🥙')">🥙</button>
+<button type="button" class="avp-btn" data-av="🍗" data-cat="food" style="display:none" onclick="selectAvatarPopup('🍗')">🍗</button>
+<button type="button" class="avp-btn" data-av="🍖" data-cat="food" style="display:none" onclick="selectAvatarPopup('🍖')">🍖</button>
+<button type="button" class="avp-btn" data-av="🥩" data-cat="food" style="display:none" onclick="selectAvatarPopup('🥩')">🥩</button>
+<button type="button" class="avp-btn" data-av="🍳" data-cat="food" style="display:none" onclick="selectAvatarPopup('🍳')">🍳</button>
+<button type="button" class="avp-btn" data-av="🥞" data-cat="food" style="display:none" onclick="selectAvatarPopup('🥞')">🥞</button>
+<button type="button" class="avp-btn" data-av="🧇" data-cat="food" style="display:none" onclick="selectAvatarPopup('🧇')">🧇</button>
+<button type="button" class="avp-btn" data-av="🧀" data-cat="food" style="display:none" onclick="selectAvatarPopup('🧀')">🧀</button>
+<button type="button" class="avp-btn" data-av="🥨" data-cat="food" style="display:none" onclick="selectAvatarPopup('🥨')">🥨</button>
+<button type="button" class="avp-btn" data-av="🥐" data-cat="food" style="display:none" onclick="selectAvatarPopup('🥐')">🥐</button>
+<button type="button" class="avp-btn" data-av="🥖" data-cat="food" style="display:none" onclick="selectAvatarPopup('🥖')">🥖</button>
+<button type="button" class="avp-btn" data-av="🍞" data-cat="food" style="display:none" onclick="selectAvatarPopup('🍞')">🍞</button>
+<button type="button" class="avp-btn" data-av="🥗" data-cat="food" style="display:none" onclick="selectAvatarPopup('🥗')">🥗</button>
+<button type="button" class="avp-btn" data-av="🍝" data-cat="food" style="display:none" onclick="selectAvatarPopup('🍝')">🍝</button>
+<button type="button" class="avp-btn" data-av="🍜" data-cat="food" style="display:none" onclick="selectAvatarPopup('🍜')">🍜</button>
+<button type="button" class="avp-btn" data-av="🍲" data-cat="food" style="display:none" onclick="selectAvatarPopup('🍲')">🍲</button>
+<button type="button" class="avp-btn" data-av="🍣" data-cat="food" style="display:none" onclick="selectAvatarPopup('🍣')">🍣</button>
+<button type="button" class="avp-btn" data-av="🍱" data-cat="food" style="display:none" onclick="selectAvatarPopup('🍱')">🍱</button>
+<button type="button" class="avp-btn" data-av="🍤" data-cat="food" style="display:none" onclick="selectAvatarPopup('🍤')">🍤</button>
+<button type="button" class="avp-btn" data-av="🍙" data-cat="food" style="display:none" onclick="selectAvatarPopup('🍙')">🍙</button>
+<button type="button" class="avp-btn" data-av="🍚" data-cat="food" style="display:none" onclick="selectAvatarPopup('🍚')">🍚</button>
+<button type="button" class="avp-btn" data-av="🍛" data-cat="food" style="display:none" onclick="selectAvatarPopup('🍛')">🍛</button>
+<button type="button" class="avp-btn" data-av="🥘" data-cat="food" style="display:none" onclick="selectAvatarPopup('🥘')">🥘</button>
+<button type="button" class="avp-btn" data-av="🍰" data-cat="food" style="display:none" onclick="selectAvatarPopup('🍰')">🍰</button>
+<button type="button" class="avp-btn" data-av="🎂" data-cat="food" style="display:none" onclick="selectAvatarPopup('🎂')">🎂</button>
+<button type="button" class="avp-btn" data-av="🧁" data-cat="food" style="display:none" onclick="selectAvatarPopup('🧁')">🧁</button>
+<button type="button" class="avp-btn" data-av="🍩" data-cat="food" style="display:none" onclick="selectAvatarPopup('🍩')">🍩</button>
+<button type="button" class="avp-btn" data-av="🍪" data-cat="food" style="display:none" onclick="selectAvatarPopup('🍪')">🍪</button>
+<button type="button" class="avp-btn" data-av="🍫" data-cat="food" style="display:none" onclick="selectAvatarPopup('🍫')">🍫</button>
+<button type="button" class="avp-btn" data-av="🍬" data-cat="food" style="display:none" onclick="selectAvatarPopup('🍬')">🍬</button>
+<button type="button" class="avp-btn" data-av="🍭" data-cat="food" style="display:none" onclick="selectAvatarPopup('🍭')">🍭</button>
+<button type="button" class="avp-btn" data-av="🍦" data-cat="food" style="display:none" onclick="selectAvatarPopup('🍦')">🍦</button>
+<button type="button" class="avp-btn" data-av="🍨" data-cat="food" style="display:none" onclick="selectAvatarPopup('🍨')">🍨</button>
+<button type="button" class="avp-btn" data-av="🍺" data-cat="food" style="display:none" onclick="selectAvatarPopup('🍺')">🍺</button>
+<button type="button" class="avp-btn" data-av="🍷" data-cat="food" style="display:none" onclick="selectAvatarPopup('🍷')">🍷</button>
+<button type="button" class="avp-btn" data-av="🍸" data-cat="food" style="display:none" onclick="selectAvatarPopup('🍸')">🍸</button>
+<button type="button" class="avp-btn" data-av="🍹" data-cat="food" style="display:none" onclick="selectAvatarPopup('🍹')">🍹</button>
+<button type="button" class="avp-btn" data-av="🍾" data-cat="food" style="display:none" onclick="selectAvatarPopup('🍾')">🍾</button>
+<button type="button" class="avp-btn" data-av="🥂" data-cat="food" style="display:none" onclick="selectAvatarPopup('🥂')">🥂</button>
+<button type="button" class="avp-btn" data-av="🥃" data-cat="food" style="display:none" onclick="selectAvatarPopup('🥃')">🥃</button>
+<button type="button" class="avp-btn" data-av="☕" data-cat="food" style="display:none" onclick="selectAvatarPopup('☕')">☕</button>
+<button type="button" class="avp-btn" data-av="🍵" data-cat="food" style="display:none" onclick="selectAvatarPopup('🍵')">🍵</button>
+<button type="button" class="avp-btn" data-av="🧉" data-cat="food" style="display:none" onclick="selectAvatarPopup('🧉')">🧉</button>
+<button type="button" class="avp-btn" data-av="🥤" data-cat="food" style="display:none" onclick="selectAvatarPopup('🥤')">🥤</button>
+<button type="button" class="avp-btn" data-av="🍎" data-cat="food" style="display:none" onclick="selectAvatarPopup('🍎')">🍎</button>
+<button type="button" class="avp-btn" data-av="🍊" data-cat="food" style="display:none" onclick="selectAvatarPopup('🍊')">🍊</button>
+<button type="button" class="avp-btn" data-av="🍋" data-cat="food" style="display:none" onclick="selectAvatarPopup('🍋')">🍋</button>
+<button type="button" class="avp-btn" data-av="🍓" data-cat="food" style="display:none" onclick="selectAvatarPopup('🍓')">🍓</button>
+<button type="button" class="avp-btn" data-av="🍇" data-cat="food" style="display:none" onclick="selectAvatarPopup('🍇')">🍇</button>
+<button type="button" class="avp-btn" data-av="🍉" data-cat="food" style="display:none" onclick="selectAvatarPopup('🍉')">🍉</button>
+<button type="button" class="avp-btn" data-av="🍑" data-cat="food" style="display:none" onclick="selectAvatarPopup('🍑')">🍑</button>
+<button type="button" class="avp-btn" data-av="🍒" data-cat="food" style="display:none" onclick="selectAvatarPopup('🍒')">🍒</button>
+<button type="button" class="avp-btn" data-av="🥑" data-cat="food" style="display:none" onclick="selectAvatarPopup('🥑')">🥑</button>
       </div>
     </div>
 
