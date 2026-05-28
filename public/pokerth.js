@@ -867,6 +867,10 @@ document.addEventListener("DOMContentLoaded", function() {
   // pending table id on window._pendingAutoJoin, which the GameListNew
   // handler inside the IIFE reads. A bare `let _pendingAutoJoin` here
   // would be invisible to handleMsg and throw 'ReferenceError'.
+  // window._shareLinkActive records that we arrived from a share link,
+  // so the saved-prefs restore block below knows NOT to clobber the
+  // host/port/mode we just prefilled, and so we can auto-connect.
+  window._shareLinkActive = false;
   (function parseShareLink() {
     try {
       var sp = new URLSearchParams(window.location.search);
@@ -895,25 +899,31 @@ document.addEventListener("DOMContentLoaded", function() {
         if (lm && lm.value === 'auth') { /* keep credentialed if chosen */ }
         else if (lm) { lm.value = 'unauth'; if (App && App.onLoginModeChange) App.onLoginModeChange(); }
       }
-      // Clean the URL so a manual refresh doesn't re-trigger auto-join
-      // (and so the link doesn't linger in the address bar). We keep
-      // the pending join in memory.
       if (h || p || table) {
+        window._shareLinkActive = true;
+        // Clean the URL so a manual refresh doesn't re-trigger auto-join
+        // (and so the link doesn't linger in the address bar). We keep
+        // the pending join in memory (window._pendingAutoJoin).
         try { window.history.replaceState({}, '', window.location.pathname); } catch(e) {}
       }
     } catch(e) {}
   })();
 
-  // Restaurer le serveur préféré sauvegardé
+  // Restaurer le serveur préféré sauvegardé — SAUF si on arrive d'un
+  // lien de partage, auquel cas les paramètres du lien doivent gagner
+  // (sinon le host sauvegardé d'une session précédente écrase celui
+  // du lien d'invitation).
   try {
-    var savedHost  = localStorage.getItem('pth_host');
-    var savedPort  = localStorage.getItem('pth_port');
-    var savedProxy = localStorage.getItem('pth_proxy');
-    var savedMode  = localStorage.getItem('pth_login_mode');
-    if (savedHost)  { var hi = document.getElementById('host');  if (hi) hi.value = savedHost; }
-    if (savedPort)  { var pi = document.getElementById('port');  if (pi) pi.value = savedPort; }
-    if (savedProxy) { var xi = document.getElementById('proxy'); if (xi) xi.value = savedProxy; }
-    if (savedMode)  { var mi = document.getElementById('login-mode'); if (mi) { mi.value = savedMode; App.onLoginModeChange && App.onLoginModeChange(); } }
+    if (!window._shareLinkActive) {
+      var savedHost  = localStorage.getItem('pth_host');
+      var savedPort  = localStorage.getItem('pth_port');
+      var savedProxy = localStorage.getItem('pth_proxy');
+      var savedMode  = localStorage.getItem('pth_login_mode');
+      if (savedHost)  { var hi = document.getElementById('host');  if (hi) hi.value = savedHost; }
+      if (savedPort)  { var pi = document.getElementById('port');  if (pi) pi.value = savedPort; }
+      if (savedProxy) { var xi = document.getElementById('proxy'); if (xi) xi.value = savedProxy; }
+      if (savedMode)  { var mi = document.getElementById('login-mode'); if (mi) { mi.value = savedMode; App.onLoginModeChange && App.onLoginModeChange(); } }
+    }
   } catch(e) {}
 
   // Auto-fill proxy URL from current page URL
@@ -929,12 +939,39 @@ document.addEventListener("DOMContentLoaded", function() {
   if (hostInput && host !== 'localhost' && host !== '127.0.0.1') {
     hostInput.dataset.autoHost = host; // remember the auto-detected value
     // Do NOT override the host if the current login mode targets pokerth.net
-    // (onLoginModeChange already set it correctly above).
+    // (onLoginModeChange already set it correctly above) — and NOT if we
+    // arrived from a share link (its host param must win).
     var __modeEl = document.getElementById('login-mode');
     var __currentMode = __modeEl ? __modeEl.value : '';
-    if (__currentMode !== 'guest' && __currentMode !== 'auth') {
+    if (!window._shareLinkActive && __currentMode !== 'guest' && __currentMode !== 'auth') {
       hostInput.value = host;
     }
+  }
+
+  // ── Auto-connect from a share link ────────────────────────────
+  // If we arrived via a "copy table link", connect automatically so
+  // the guest lands straight in the lobby (and then auto-joins the
+  // shared table via window._pendingAutoJoin). The nick field is
+  // already populated — either a saved per-mode nick or a generated
+  // guest name — so connect() has everything it needs. If for some
+  // reason the nick is empty, we focus it instead and let the user
+  // hit Connect themselves.
+  if (window._shareLinkActive) {
+    setTimeout(function() {
+      try {
+        var nickEl = document.getElementById('nick');
+        var hasNick = nickEl && nickEl.value.trim();
+        if (!hasNick) {
+          // No usable nick — focus the field so the user just types
+          // a name and hits enter/Connect.
+          if (nickEl) { nickEl.focus(); }
+          return;
+        }
+        if (App && typeof App.connect === 'function') {
+          App.connect();
+        }
+      } catch(e) {}
+    }, 350); // small delay so the SW-ready gate + form are settled
   }
 });
 
