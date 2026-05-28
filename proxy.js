@@ -173,7 +173,14 @@ function describeMsg(payload) {
 
 // ── HTTP server ──
 const httpServer = http.createServer((req, res) => {
-  if (req.url === '/') {
+  // Serve the SPA shell for the root path. We strip the query string
+  // before comparing so deep links like
+  //   /?host=cookmed.ddns.net&port=7234&tls=0&table=106
+  // (produced by the "copy table link" feature) still resolve to the
+  // index HTML instead of falling through to the static-file branch
+  // and 404'ing on a nonexistent file named "/?host=...".
+  const reqPathOnly = req.url.split('?')[0];
+  if (reqPathOnly === '/' || reqPathOnly === '/index.html') {
     const p = path.join(__dirname, 'public', 'pokerth-client.html');
     if (fs.existsSync(p)) {
       res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'no-store, no-cache, must-revalidate', 'Pragma': 'no-cache' });
