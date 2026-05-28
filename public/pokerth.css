@@ -426,9 +426,11 @@ body {
   overflow: visible;
 }
 #avatar-popup.avatar-popup-as-modal .avp-header,
+#avatar-popup.avatar-popup-as-modal .avp-cats,
 #avatar-popup.avatar-popup-as-modal .avp-grid {
-  /* The two children become the visible "card". Both stretched
-     to the same fixed width so they look like one panel. */
+  /* These children become the visible "card". All stretched to the
+     same fixed width so they look like one panel (header on top, the
+     category tabs in the middle, the emoji grid below). */
   background: rgba(8, 18, 10, 0.98);
   width: min(360px, 100%);
   max-width: 360px;
@@ -473,6 +475,35 @@ body {
   grid-template-columns: repeat(8, 1fr);
   gap: 4px;
   padding: 10px;
+}
+/* ── Category tab row above the emoji grid ── */
+.avp-cats {
+  display: flex;
+  gap: 3px;
+  padding: 7px 8px;
+  border-bottom: 1px solid var(--border);
+  background: rgba(0,0,0,0.25);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none; /* Firefox: hide the scrollbar, swipe instead */
+}
+.avp-cats::-webkit-scrollbar { display: none; } /* WebKit: hide too */
+.avp-cat {
+  flex: 0 0 auto;
+  width: 34px; height: 34px;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid transparent;
+  border-radius: 6px;
+  font-size: 1.15rem;
+  cursor: pointer;
+  transition: border-color 0.12s, background 0.12s, transform 0.1s;
+  padding: 0;
+}
+.avp-cat:hover { background: rgba(200,168,74,0.1); transform: scale(1.1); }
+.avp-cat.selected {
+  border-color: var(--gold);
+  background: rgba(200,168,74,0.2);
 }
 .avp-btn {
   aspect-ratio: 1;
