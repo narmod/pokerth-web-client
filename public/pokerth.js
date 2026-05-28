@@ -4513,8 +4513,40 @@ const App = (() => {
     const finalStack = (s.startMoney || 0) + (s.totalGain || 0);
     const gainCls = (s.totalGain > 0) ? 'pos' : (s.totalGain < 0) ? 'neg' : '';
 
-    // Trophy emoji depends on outcome
-    const trophy = isMyWin ? '🏆' : '🎲';
+    // Outcome icon: 🏆 trophy when the local player wins, otherwise a
+    // fan of the four aces (♣ ♦ ♥ ♠) — far more on-theme for poker
+    // than the old 🎲 dice. Inline SVG so it's crisp at any size and
+    // identical across platforms (the dice/emoji rendered differently
+    // per OS). The aces keep the gold card-border of the rest of the UI.
+    const ACES_SVG =
+      '<svg viewBox="0 0 120 96" width="92" height="74" xmlns="http://www.w3.org/2000/svg" class="eg-aces" aria-hidden="true">' +
+        '<defs><filter id="egAceSh" x="-20%" y="-20%" width="140%" height="140%">' +
+          '<feDropShadow dx="0" dy="1.5" stdDeviation="1.5" flood-color="#000" flood-opacity="0.5"/>' +
+        '</filter></defs>' +
+        '<g filter="url(#egAceSh)">' +
+          '<g transform="rotate(-26 60 74)">' +
+            '<rect x="41" y="32" width="25" height="37" rx="3.4" fill="#fdfdf8" stroke="#c8a84a" stroke-width="1"/>' +
+            '<text x="44.5" y="43" font-family="Georgia, serif" font-size="8.5" font-weight="bold" fill="#1a1a1a">A</text>' +
+            '<text x="53.5" y="58" font-family="serif" font-size="14" fill="#1a1a1a" text-anchor="middle">\u2663</text>' +
+          '</g>' +
+          '<g transform="rotate(-9 60 74)">' +
+            '<rect x="46" y="26" width="25" height="37" rx="3.4" fill="#fdfdf8" stroke="#c8a84a" stroke-width="1"/>' +
+            '<text x="49.5" y="37" font-family="Georgia, serif" font-size="8.5" font-weight="bold" fill="#c0392b">A</text>' +
+            '<text x="58.5" y="52" font-family="serif" font-size="14" fill="#c0392b" text-anchor="middle">\u2666</text>' +
+          '</g>' +
+          '<g transform="rotate(9 60 74)">' +
+            '<rect x="49" y="26" width="25" height="37" rx="3.4" fill="#fdfdf8" stroke="#c8a84a" stroke-width="1"/>' +
+            '<text x="52.5" y="37" font-family="Georgia, serif" font-size="8.5" font-weight="bold" fill="#c0392b">A</text>' +
+            '<text x="58.5" y="52" font-family="serif" font-size="14" fill="#c0392b" text-anchor="middle">\u2665</text>' +
+          '</g>' +
+          '<g transform="rotate(26 60 74)">' +
+            '<rect x="54" y="32" width="25" height="37" rx="3.4" fill="#fdfdf8" stroke="#c8a84a" stroke-width="1"/>' +
+            '<text x="57.5" y="43" font-family="Georgia, serif" font-size="8.5" font-weight="bold" fill="#1a1a1a">A</text>' +
+            '<text x="66.5" y="58" font-family="serif" font-size="14" fill="#1a1a1a" text-anchor="middle">\u2660</text>' +
+          '</g>' +
+        '</g>' +
+      '</svg>';
+    const trophy = isMyWin ? '🏆' : ACES_SVG;
     const titleKey = isMyWin ? 'endGameTitleWin' : 'endGameTitleEnd';
 
     el.innerHTML =
