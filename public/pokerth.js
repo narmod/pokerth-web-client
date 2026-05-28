@@ -4149,12 +4149,19 @@ const App = (() => {
     function nextActiveSeat(fromIdx, offset) {
       if (fromIdx < 0 || !seats.length) return -1;
       var n = seats.length;
-      // At most n steps — if everyone is gone we give up gracefully.
+      // At most n steps — if everyone is gone/out we give up gracefully.
       var idx = fromIdx;
       var stepped = 0;
       for (var k = 0; k < n; k++) {
         idx = (idx + 1) % n;
-        if (!seatData[seats[idx]] || !seatData[seats[idx]].gone) {
+        var __sd2 = seatData[seats[idx]];
+        // Skip seats that are either:
+        //   - gone (player left voluntarily), or
+        //   - eliminated (money <= 0 and not playing this hand,
+        //     i.e. active=false) — narmod reported SB chip landing
+        //     on an OUT seat. The dealer chip should walk past them.
+        var __skip = !__sd2 || __sd2.gone || (__sd2.active === false) || (__sd2.money != null && __sd2.money <= 0);
+        if (!__skip) {
           stepped++;
           if (stepped === offset) return seats[idx];
         }
