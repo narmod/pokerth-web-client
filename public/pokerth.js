@@ -3079,6 +3079,10 @@ const App = (() => {
           renderSeats();
           break;
         }
+        // A seat whose turn the server just assigned is by definition
+        // in the hand — force active=true. Safety net for spectators
+        // who joined mid-hand and missed the HandStart reset.
+        if (turnPid && seatData[turnPid]) seatData[turnPid].active = true;
         const rounds = [t('preflop'),t('flop'),t('turn'),t('river'),t('preflop')+' (SB)',t('preflop')+' (BB)'];
         $('g-round').textContent = rounds[gameState] || t('preflop');
         startTurnTimer();
