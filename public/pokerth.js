@@ -2989,28 +2989,40 @@ const App = (() => {
         // u32orNull distingue "champ absent" (null → carte cachée) de "valeur 0" (carte 2♣ valide).
         const pc = sub[2] ? Proto.decode(sub[2][0]) : {};
         myCards = [Proto.u32orNull(pc, 1), Proto.u32orNull(pc, 2)];
+        // If I'm bust (lost my whole stack last hand), the server may
+        // still echo cards for the deal but I'm not actually in the
+        // hand. Force-clear so the player bar shows card backs and
+        // matches the eliminated state shown on my seat.
+        if (seatData[myId] && seatData[myId].money <= 0 && !seatData[myId].gone) {
+          myCards = [null, null];
+        }
         const hsFields = Object.keys(sub).sort((a,b)=>+a-+b).map(f=>f+':'+Proto.u32(sub,+f)).join(' ');
 
         const sb = Proto.u32(sub, 4);
         smallBlind = sb;
         dealerPid = Proto.u32(sub, 6) || dealerPid;
 
-        // Reset seat data for new hand. IMPORTANT: skip pids flagged
-        // as .gone (player left the table — GamePlayerLeft handler
-        // set this). If we reset their .active to true here, they
-        // re-appear at the felt as if they were still playing, and
-        // the server's subsequent PlayersTurn for the next live
-        // player gets confused. Keep gone pids OUT permanently;
-        // they'll be rendered as ghost seats by renderSeats().
+        // Reset seat data for new hand. IMPORTANT exclusions:
+        //  - .gone pids (player left voluntarily, GamePlayerLeft set
+        //    this) → keep as ghost seats forever.
+        //  - players with money <= 0 (eliminated last hand by losing
+        //    their stack, e.g. lost an all-in) → keep .active = false
+        //    so renderSeats keeps the .seat-out greyed-out class and
+        //    OUT badge, and skip them in the dealer rotation. The
+        //    server doesn't deal them cards anyway; this just prevents
+        //    the UI from showing them as live + clearing their stale
+        //    cards from the previous hand.
         for (const pid of seats) {
-          if (seatData[pid] && !seatData[pid].gone) {
-            seatData[pid].bet    = 0;
-            seatData[pid].action = '';
-            seatData[pid].folded = false;
-            seatData[pid].active = true;
-            seatData[pid].card1  = null;
-            seatData[pid].card2  = null;
-          }
+          var __sd = seatData[pid];
+          if (!__sd || __sd.gone) continue;
+          __sd.bet    = 0;
+          __sd.action = '';
+          __sd.folded = false;
+          __sd.card1  = null;
+          __sd.card2  = null;
+          // Only reactivate players who still have chips. Bust (0 ¥)
+          // players stay .active = false → marked as eliminated.
+          __sd.active = (__sd.money > 0);
         }
 
         clearTurnNotif();
@@ -4184,9 +4196,20 @@ const App = (() => {
         + (myDealerBadge ? '<span style="margin-left:4px;vertical-align:middle">' + myDealerBadge + '</span>' : '')
         + (myBlindChip   ? '<span style="margin-left:4px;vertical-align:middle;display:inline-block;position:relative;top:-1px">' + myBlindChip.replace('class="blind-chip"','style="filter:drop-shadow(0 1px 3px rgba(0,0,0,0.4));vertical-align:middle"') + '</span>' : '');
     }
-    if (pbMon)  pbMon.textContent  = mySd.money != null ? mySd.money + ' ¥' : '—';
+    // If I'm eliminated (money <= 0 and not gone voluntarily), show
+    // a clear "OUT" indicator next to my stack and dim the player bar.
+    var __amOut = !!(mySd && mySd.money != null && mySd.money <= 0 && !mySd.gone && !_amSpectator);
+    if (pbMon) {
+      pbMon.textContent = mySd.money != null ? mySd.money + ' ¥' : '—';
+      if (__amOut) {
+        pbMon.innerHTML = '<span style="color:var(--red);font-weight:700;letter-spacing:0.1em">OUT</span> · ' + pbMon.innerHTML;
+      }
+    }
     if (pbAct)  pbAct.textContent  = mySd.action || '';
-    if (pbBar)  pbBar.classList.toggle('pb-active', myId === turnPid);
+    if (pbBar)  {
+      pbBar.classList.toggle('pb-active', myId === turnPid);
+      pbBar.classList.toggle('pb-out', __amOut);
+    }
 
     let h = '';
     rotated.forEach((pid, i) => {
