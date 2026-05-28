@@ -862,7 +862,11 @@ document.addEventListener("DOMContentLoaded", function() {
   // If the page was opened from a "copy table link", prefill the
   // connect form with the encoded server params and remember which
   // table to auto-join once the lobby has loaded.
-  let _pendingAutoJoin = 0; // gameId to join after connect, 0 = none
+  // NOTE: this DOMContentLoaded block runs at GLOBAL scope (it is NOT
+  // inside the App IIFE that contains handleMsg). So we publish the
+  // pending table id on window._pendingAutoJoin, which the GameListNew
+  // handler inside the IIFE reads. A bare `let _pendingAutoJoin` here
+  // would be invisible to handleMsg and throw 'ReferenceError'.
   (function parseShareLink() {
     try {
       var sp = new URLSearchParams(window.location.search);
@@ -876,7 +880,10 @@ document.addEventListener("DOMContentLoaded", function() {
       }
       if (table) {
         var t = parseInt(table, 10);
-        if (t > 0) _pendingAutoJoin = t;
+        // Published on window because parseShareLink runs at GLOBAL
+        // scope (outside the App IIFE) — the GameListNew handler
+        // inside the IIFE reads window._pendingAutoJoin.
+        if (t > 0) window._pendingAutoJoin = t;
       }
       // When a share link targets a specific server, the most likely
       // intent is "join my friend's private server as an internet
@@ -2361,9 +2368,11 @@ const App = (() => {
         // If we arrived via a "copy table link" URL and this is the
         // table it pointed to, join it now (the lobby has just told
         // us it exists). Clear the pending id so we only do it once.
-        if (_pendingAutoJoin && id === _pendingAutoJoin && !amInGame) {
-          var _aj = _pendingAutoJoin;
-          _pendingAutoJoin = 0;
+        // window._pendingAutoJoin is set by parseShareLink() which
+        // runs at global scope (outside this IIFE).
+        if (window._pendingAutoJoin && id === window._pendingAutoJoin && !amInGame) {
+          var _aj = window._pendingAutoJoin;
+          window._pendingAutoJoin = 0;
           var fr = (typeof _lang === 'undefined' || _lang !== 'en');
           addChat(null, '🔗 ' + (fr
             ? 'Table partagée trouvée — connexion…'
