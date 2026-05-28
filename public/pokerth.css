@@ -2366,7 +2366,14 @@ body {
   background: linear-gradient(160deg, #091808 0%, #0f2410 60%, #081508 100%);
   border: 1px solid var(--gold-dim); border-top: 3px solid var(--gold);
   border-radius: 10px; padding: 18px 22px;
-  max-width: min(440px, 94vw); max-height: 90dvh; overflow-y: auto; width: 100%;
+  max-width: min(440px, 94vw); width: 100%;
+  /* Flex column so the players list can be the ONLY scrollable part,
+     keeping the header / common cards / Continue button always visible
+     even with a full 10-player results list. Previously the whole card
+     was a single overflow:auto block, so with 10 players the Continue
+     button fell below the fold and was unreachable on small phones. */
+  display: flex; flex-direction: column;
+  max-height: 88dvh; overflow: hidden;
   box-shadow: 0 0 80px rgba(200,168,74,0.2), 0 24px 60px rgba(0,0,0,0.8);
   animation: popIn 0.3s cubic-bezier(0.175,0.885,0.32,1.275);
 }
@@ -2383,7 +2390,15 @@ body {
 .wc-stat-value { font-size:0.85rem; color:var(--cream); font-weight:700; }
 .wc-section { font-size:0.58rem; letter-spacing:0.18em; text-transform:uppercase; color:var(--gold-dim); margin-bottom:5px; }
 .wc-cards-row { display:flex; gap:4px; margin-bottom:12px; flex-wrap:wrap; }
-.wc-players { margin-bottom:14px; }
+.wc-players {
+  margin-bottom:14px;
+  /* Only this region scrolls; flex:1 lets it take the remaining space,
+     min-height:0 allows it to shrink below its content height so the
+     overflow actually kicks in inside the flex column. */
+  flex: 1 1 auto; min-height: 0; overflow-y: auto;
+  /* a touch of right padding so the scrollbar doesn't overlap deltas */
+  padding-right: 2px;
+}
 .wc-player-row { display:flex; align-items:center; gap:7px; padding:5px 7px; border-radius:4px; margin-bottom:3px; background:rgba(255,255,255,0.02); }
 .wc-player-row.wc-winner { background:rgba(200,168,74,0.08); border:1px solid rgba(200,168,74,0.2); }
 .wc-player-row.wc-me-row { border-left:3px solid var(--green); }
@@ -2395,7 +2410,7 @@ body {
 .wc-player-delta { font-size:0.76rem; font-weight:700; flex-shrink:0; min-width:48px; text-align:right; }
 .wc-player-delta.pos { color:#4cff88; }
 .wc-player-delta.neg { color:rgba(255,100,100,0.75); }
-.winner-dismiss { background:var(--gold); color:#110900; border:none; padding:9px 24px; font-family:'Cinzel',serif; font-size:0.76rem; font-weight:700; border-radius:4px; cursor:pointer; letter-spacing:0.08em; transition:background 0.15s; display:block; width:100%; margin-top:4px; }
+.winner-dismiss { background:var(--gold); color:#110900; border:none; padding:9px 24px; font-family:'Cinzel',serif; font-size:0.76rem; font-weight:700; border-radius:4px; cursor:pointer; letter-spacing:0.08em; transition:background 0.15s; display:block; width:100%; margin-top:4px; flex:0 0 auto; }
 .winner-dismiss:hover { background:var(--gold-hi); }
 
 
