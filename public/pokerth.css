@@ -2201,7 +2201,11 @@ body {
   border: 1px solid rgba(0,0,0,0.15);
   line-height: 1.1; user-select: none; flex-shrink: 0;
 }
+/* ♥ cœur : rouge profond classique */
 .pk.red { color: #c0392b; }
+/* ♦ carreau : rouge plus orangé/vermillon pour le distinguer du ♥ (narmod)
+   — les deux étant identiquement rouges, les confondre était facile. */
+.pk.diamond { color: #e85a2c; }
 .pk.back {
   background: linear-gradient(135deg, #1a3a8a 0%, #2a5acc 100%);
   color: transparent; font-size: 0;
@@ -2211,8 +2215,12 @@ body {
 .pk.md { width: 46px; height: 66px; font-size: 1.05rem; font-weight: 800; }
 .pk.xsm { width: 20px; height: 29px; font-size: 0.5rem; font-weight: 700; border-radius: 3px; }
 .pk.lg { width: 58px; height: 84px; font-size: 1.35rem; font-weight: 900; }
-.pk .c-rank { font-size: 1em; line-height: 1; }
-.pk .c-suit { font-size: 0.9em; line-height: 1; }
+/* Plus grosses lettres + plus gros symboles de couleur pour lisibilité (narmod).
+   La 'couleur' (suit) prend ~1.3em au lieu de 0.9em, le rang ~1.35em au lieu de 1em.
+   Avec `line-height:1` et flex-column, deux lignes de ~2.6em tiennent
+   dans toutes les tailles de carte (xsm/sm/md/lg) sans débordement. */
+.pk .c-rank { font-size: 1.35em; line-height: 1; }
+.pk .c-suit { font-size: 1.3em; line-height: 1; margin-top: 1px; }
 /* ♠ pique : fond légèrement bleuté pour distinguer de ♣ trèfle (tous deux noirs) */
 .pk.spade { background: linear-gradient(160deg, #f4f7ff 0%, #edf1fc 100%); }
 
