@@ -3625,3 +3625,34 @@ body:not(.in-game) .my-zone {
 .seat.seat-ghost::after {
   content: none !important;
 }
+
+
+/* ── Copy invite-link button in #game-info-modal ── */
+.gim-share-section {
+  text-align: center;
+}
+.gim-copy-link-btn {
+  width: 100%;
+  padding: 10px 14px;
+  background: linear-gradient(180deg, rgba(200,168,74,0.2), rgba(200,168,74,0.1));
+  border: 1px solid var(--border-hi);
+  border-radius: 5px;
+  color: var(--gold-hi);
+  font-family: 'Cinzel', serif;
+  font-size: 0.85rem;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s, transform 0.05s;
+}
+.gim-copy-link-btn:hover {
+  background: linear-gradient(180deg, rgba(200,168,74,0.35), rgba(200,168,74,0.18));
+  border-color: var(--gold);
+}
+.gim-copy-link-btn:active { transform: scale(0.98); }
+.gim-share-hint {
+  margin-top: 6px;
+  font-size: 0.66rem;
+  color: var(--gold-dim);
+  font-style: italic;
+  letter-spacing: 0.03em;
+}
