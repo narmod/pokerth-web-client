@@ -5958,13 +5958,17 @@ function dismissWinner() {
       var mode = _currentLoginMode || 'unauth';
       var isPublic = (mode === 'guest' || mode === 'auth');
       if (isPublic) {
+        // Defaults aligned with the official PokerTH desktop client's
+        // "Create Internet Game" preset (10 max players, 20s timeout,
+        // 3000 starting stack, blinds rising every 7 hands). narmod
+        // asked for 10 players as the default everywhere.
         return {
           name: (myName ? (myName + "'s table") : 'My table'),
-          players: 8,
+          players: 10,
           blind: 10,
           stack: 3000,
-          timeout: 30,
-          raiseEvery: 10,
+          timeout: 20,
+          raiseEvery: 7,
           guiSpeed: 5,
           delayHands: 7,
           bots: false,
@@ -5972,12 +5976,16 @@ function dismissWinner() {
           tag: 'public', // for the QuickGame dialog
         };
       }
+      // LAN / private-server profile. Same 10-player / 20s timeout
+      // defaults as the public profile (narmod wants 10 by default
+      // everywhere), but bots default ON with a low min-humans
+      // threshold so small/local sessions can start fast.
       return {
         name: 'Table de ' + (myName || 'PokerTH'),
-        players: 5,
+        players: 10,
         blind: 10,
         stack: 3000,
-        timeout: 15,
+        timeout: 20,
         raiseEvery: 7,
         guiSpeed: 5,
         delayHands: 7,
@@ -6028,7 +6036,9 @@ function dismissWinner() {
         var qcCurrent = qc.value;
         var qcMarker = qc.dataset.modeDefault;
         if (force || qcMarker === undefined || qcCurrent === qcMarker) {
-          qc.value = d.players === 8 ? 5 : 2; // 5 for public, 2 for LAN
+          // narmod wants 10 max players by default everywhere, so the
+          // quick-game dialog mirrors d.players (the per-mode default).
+          qc.value = d.players;
           qc.dataset.modeDefault = qc.value;
         }
       }
