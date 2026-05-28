@@ -475,6 +475,12 @@ body {
   grid-template-columns: repeat(8, 1fr);
   gap: 4px;
   padding: 10px;
+  /* Cap the height + scroll so a big filtered category can't push the
+     grid past the SE CONNECTER button / footer on the connect screen.
+     The lobby modal overrides this with its own 60vh cap below. */
+  max-height: 42vh;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 /* ── Category tab row above the emoji grid ── */
 .avp-cats {
