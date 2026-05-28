@@ -3656,3 +3656,9 @@ body:not(.in-game) .my-zone {
   font-style: italic;
   letter-spacing: 0.03em;
 }
+
+
+/* ── Poker-hands help button (inline SVG, replaces the 🂡 glyph) ── */
+.btn-hands { color: var(--gold); }
+.btn-hands:hover { color: var(--gold-hi); border-color: var(--border-hi); }
+.btn-hands svg { display: block; }
