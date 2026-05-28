@@ -3662,3 +3662,13 @@ body:not(.in-game) .my-zone {
 .btn-hands { color: var(--gold); }
 .btn-hands:hover { color: var(--gold-hi); border-color: var(--border-hi); }
 .btn-hands svg { display: block; }
+
+
+/* ── 4-aces SVG inside the end-game overlay (replaces 🎲) ──
+   .eg-trophy already provides the bob animation + gold drop-shadow;
+   we just need the inline SVG to center and sit inline-block so the
+   text-align:center on the parent applies. */
+.eg-trophy .eg-aces {
+  display: inline-block;
+  vertical-align: middle;
+}
