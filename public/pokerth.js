@@ -5958,16 +5958,17 @@ function dismissWinner() {
       var mode = _currentLoginMode || 'unauth';
       var isPublic = (mode === 'guest' || mode === 'auth');
       if (isPublic) {
-        // Defaults aligned with the official PokerTH desktop client's
-        // "Create Internet Game" preset (10 max players, 20s timeout,
-        // 3000 starting stack, blinds rising every 7 hands). narmod
-        // asked for 10 players as the default everywhere.
+        // Defaults for pokerth.net (guest + registered). 10 max players
+        // and 3000-stack/blind-10/raise-every-7 follow the desktop
+        // client recommendation, BUT narmod requested a SHORT 5s
+        // turn timer on pokerth.net so public games keep moving (real
+        // strangers, can't afford long thinking turns).
         return {
           name: (myName ? (myName + "'s table") : 'My table'),
           players: 10,
           blind: 10,
           stack: 3000,
-          timeout: 20,
+          timeout: 5,
           raiseEvery: 7,
           guiSpeed: 5,
           delayHands: 7,
@@ -5976,16 +5977,18 @@ function dismissWinner() {
           tag: 'public', // for the QuickGame dialog
         };
       }
-      // LAN / private-server profile. Same 10-player / 20s timeout
-      // defaults as the public profile (narmod wants 10 by default
-      // everywhere), but bots default ON with a low min-humans
-      // threshold so small/local sessions can start fast.
+      // LAN / private-server profile (covers both the 'lan' login mode
+      // and the 'unauth' private-server-guest mode). 10 max players
+      // like everywhere, but a more relaxed 15s turn timer than the
+      // pokerth.net public profile — narmod wants more thinking time
+      // when playing among friends. Bots default ON so a small group
+      // can start a hand fast.
       return {
         name: 'Table de ' + (myName || 'PokerTH'),
         players: 10,
         blind: 10,
         stack: 3000,
-        timeout: 20,
+        timeout: 15,
         raiseEvery: 7,
         guiSpeed: 5,
         delayHands: 7,
