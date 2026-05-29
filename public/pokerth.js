@@ -557,18 +557,122 @@ function _evalFive(cards) {
 var _reactionCounts = {}; // { emoji: count }
 var _reactionTimers = {}; // timers de reset des compteurs
 
-// Affiche un emoji flottant qui monte depuis le bas de l'écran
+// ── Catalogue des effets animés par réaction ──
+// a = animation de l'emoji ; p = particules (objet, ou preset 'sparkle'/'shock'/'confetti')
+var REACTION_FX = {
+  '🎉':{a:'pop',p:'confetti'}, '🥳':{a:'pop',p:'confetti'}, '🎊':{a:'pop',p:'confetti'},
+  '🔥':{a:'fire',p:{chars:['🔥','✦'],count:9,size:14,a0:-150,a1:-30,dist:70,g:-24,life:1000,rot:1}},
+  '💰':{a:'pop',p:{chars:['🪙','💵','✦'],count:12,size:16,a0:-170,a1:-10,dist:72,g:90,life:1200,rot:1}},
+  '🤑':{a:'pop',p:{chars:['🪙','💵'],count:10,size:16,a0:-170,a1:-10,dist:70,g:90,life:1100,rot:1}},
+  '💎':{a:'shine',p:{chars:['✨','✦'],count:9,size:13,a0:0,a1:360,dist:64,life:850,rot:1}},
+  '🤩':{a:'shine',p:{chars:['✨'],count:8,size:13,a0:0,a1:360,dist:60,life:800,rot:1}},
+  '😂':{a:'shake',p:{chars:['💧'],count:7,size:13,a0:-30,a1:210,dist:55,g:36,life:850}},
+  '🤣':{a:'shake',p:{chars:['💧'],count:7,size:13,a0:-30,a1:210,dist:55,g:36,life:850}},
+  '👏':{a:'beat',p:{chars:['✦','✧'],count:9,color:'#e0c070',size:13,a0:0,a1:360,dist:60,life:750}},
+  '🙌':{a:'beat',p:{chars:['✦','✧'],count:9,color:'#e0c070',size:13,a0:0,a1:360,dist:62,life:780}},
+  '💪':{a:'flex',p:{chars:['✦'],count:6,color:'#e0c070',size:13,a0:0,a1:360,dist:50,life:700}},
+  '😱':{a:'shake',p:{chars:['💦'],count:6,size:12,a0:-120,a1:-60,dist:48,g:50,life:780}},
+  '🤯':{a:'pop',p:'shock'},
+  '🍀':{a:'spin',p:{chars:['✨','🍀'],count:8,color:'#7ee37e',size:13,a0:0,a1:360,dist:62,life:950,rot:1}},
+  '🎰':{a:'spin',p:{chars:['✨','🪙'],count:9,size:14,a0:0,a1:360,dist:66,life:950,rot:1}},
+  '👑':{a:'shine',p:{chars:['✨','⭐'],count:10,color:'#e0c070',size:14,a0:0,a1:360,dist:70,life:1000,rot:1}},
+  '😎':{a:'pop',p:'sparkle'}, '👍':{a:'beat',p:'sparkle'}, '🫡':{a:'pop',p:'sparkle'},
+  '😍':{a:'beat',p:{chars:['❤️','💖'],count:8,size:16,a0:-160,a1:-20,dist:64,g:-30,life:1100}}
+};
+function _rfxDefault(){ return { a:'pop', p:'sparkle' }; }
+
+// Génère les particules d'un effet dans le conteneur c (centré sur 0,0 du conteneur)
+function _rfxSpawn(c, spec){
+  if (spec === 'sparkle') spec = {chars:['✦','✧'],count:7,color:'#e0c070',size:12,a0:0,a1:360,dist:54,life:700};
+  if (spec === 'confetti'){ _rfxConfetti(c); return; }
+  if (spec === 'shock'){
+    var r = document.createElement('div'); r.className = 'rfx-ring';
+    c.appendChild(r); setTimeout(function(){ r.remove(); }, 800);
+    spec = {chars:['💥','✦'],count:8,size:15,a0:0,a1:360,dist:70,life:800};
+  }
+  if (!spec || typeof spec !== 'object') return;
+  for (var i = 0; i < spec.count; i++){
+    var p = document.createElement('span'); p.className = 'rfx-pt';
+    if (spec.chars){ p.textContent = spec.chars[(Math.random()*spec.chars.length)|0]; p.style.fontSize = (spec.size||14)+'px'; }
+    else { p.style.width = p.style.height = (spec.size||7)+'px'; p.style.background = spec.color||'#c8a84a'; p.style.borderRadius = spec.square?'1px':'50%'; }
+    c.appendChild(p);
+    var ang = (spec.a0 + Math.random()*(spec.a1 - spec.a0)) * Math.PI/180;
+    var d = spec.dist * (0.55 + Math.random()*0.6);
+    var dx = Math.cos(ang)*d, dy = Math.sin(ang)*d, g = spec.g||0;
+    var rot = spec.rot ? (Math.random()*720 - 360) : 0, life = spec.life||1000;
+    p.animate([
+      {transform:'translate(-50%,-50%)', opacity:1, offset:0},
+      {transform:'translate(calc(-50% + '+dx+'px), calc(-50% + '+dy+'px)) rotate('+rot+'deg)', opacity:1, offset:.65},
+      {transform:'translate(calc(-50% + '+dx+'px), calc(-50% + '+(dy+g)+'px)) rotate('+rot+'deg)', opacity:0, offset:1}
+    ], {duration: life, easing:'cubic-bezier(.15,.7,.4,1)'});
+    (function(el){ setTimeout(function(){ el.remove(); }, life + 60); })(p);
+  }
+}
+function _rfxConfetti(c){
+  var cols = ['#c8a84a','#e0c070','#27ae60','#c0392b','#7ec8e3','#e67e22','#ffffff'];
+  for (var i = 0; i < 24; i++){
+    var p = document.createElement('span'); p.className = 'rfx-pt';
+    p.style.width = (5 + Math.random()*4)+'px'; p.style.height = (7 + Math.random()*4)+'px';
+    p.style.background = cols[(Math.random()*cols.length)|0]; p.style.borderRadius = '1px';
+    c.appendChild(p);
+    var ang = (-170 + Math.random()*160) * Math.PI/180, d = 70 + Math.random()*60;
+    var dx = Math.cos(ang)*d, dy = Math.sin(ang)*d, rot = Math.random()*720 - 360, life = 1300 + Math.random()*400;
+    p.animate([
+      {transform:'translate(-50%,-50%)', opacity:1, offset:0},
+      {transform:'translate(calc(-50% + '+dx+'px), calc(-50% + '+dy+'px)) rotate('+rot+'deg)', opacity:1, offset:.5},
+      {transform:'translate(calc(-50% + '+(dx*1.1)+'px), calc(-50% + '+(dy+130)+'px)) rotate('+(rot+120)+'deg)', opacity:0, offset:1}
+    ], {duration: life, easing:'cubic-bezier(.2,.6,.4,1)'});
+    (function(el){ setTimeout(function(){ el.remove(); }, life + 80); })(p);
+  }
+}
+
+// Joue la chorégraphie animée d'une réaction à la position (x,y) — le siège du joueur
+function playReactionFx(emoji, x, y){
+  var reduce = false;
+  try { reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches; } catch(e){}
+  var fx = REACTION_FX[emoji] || _rfxDefault();
+  var c = document.createElement('div'); c.className = 'rfx';
+  c.style.left = (x || window.innerWidth * 0.5) + 'px';
+  c.style.top  = (y || window.innerHeight * 0.7) + 'px';
+  document.body.appendChild(c);
+  var big = document.createElement('span');
+  big.className = 'rfx-big rfx-anim-' + (reduce ? 'pop' : fx.a);
+  big.textContent = emoji;
+  c.appendChild(big);
+  if (!reduce) _rfxSpawn(c, fx.p);
+  setTimeout(function(){ if (c.parentNode) c.remove(); }, 1800);
+}
+
+// Rend les boutons du sélecteur "vivants" (idle loop par emoji). Exécuté une fois.
+function _initReactionIdles(){
+  var MAP = {
+    '🔥':'i-fire', '🎰':'i-spin', '🍀':'i-spin',
+    '👏':'i-beat','🙌':'i-beat','💪':'i-beat','🤩':'i-beat','🥳':'i-beat','🤯':'i-beat','😍':'i-beat','👍':'i-beat',
+    '🎉':'i-sway','🎊':'i-sway','🃏':'i-sway',
+    '💰':'i-bob','💎':'i-bob','🤑':'i-bob','👑':'i-bob','😎':'i-bob','🫡':'i-bob','💵':'i-bob',
+    '😂':'i-shiver','🤣':'i-shiver','😱':'i-shiver','😬':'i-shiver','😡':'i-shiver','😤':'i-shiver','😴':'i-shiver','🤦':'i-shiver'
+  };
+  document.querySelectorAll('.react-btn').forEach(function(b){
+    if (b.querySelector('.rfx-emo')) return; // déjà initialisé
+    var e = (b.getAttribute('title') || '').trim();
+    var first = b.firstChild;
+    if (first && first.nodeType === 3 && first.textContent.trim()){
+      var span = document.createElement('span');
+      span.className = 'rfx-emo ' + (MAP[e] || 'i-bob');
+      span.textContent = first.textContent.trim();
+      b.replaceChild(span, first);
+    }
+  });
+}
+try {
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', _initReactionIdles);
+  else _initReactionIdles();
+} catch(e){}
+
+// Affiche la réaction animée (chorégraphie) à la position fournie (siège du joueur).
+// Conserve la signature historique : appelée par showSeatReaction avec les coords du siège.
 function showFloatingReaction(emoji, fromX, fromY) {
-  var el = document.createElement('div');
-  el.className = 'floating-reaction';
-  el.textContent = emoji;
-  // Position de départ : bas de l'écran, position aléatoire si pas de coords
-  var x = fromX || (window.innerWidth * 0.3 + Math.random() * window.innerWidth * 0.4);
-  var y = fromY || (window.innerHeight * 0.75);
-  el.style.left = x + 'px';
-  el.style.top  = y + 'px';
-  document.body.appendChild(el);
-  setTimeout(function(){ el.remove(); }, 2400);
+  playReactionFx(emoji, fromX, fromY);
 }
 
 // Affiche la réaction sur l'avatar du joueur dans les sièges
