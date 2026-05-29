@@ -2146,7 +2146,30 @@ const App = (() => {
   function show(id) {
     document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
     $(id).classList.add('active');
+    // Keep the screen awake only while at the table.
+    if (id === 's-game') acquireWakeLock(); else releaseWakeLock();
   }
+
+  // ── Screen Wake Lock ──────────────────────────────────────────────────
+  // Keeps the phone screen from dimming/locking while seated at a table (a
+  // turn-based game means long idle waits). The OS releases the lock when the
+  // tab is hidden, so we re-acquire it when the game screen regains focus.
+  // No-ops gracefully where the API is unavailable (older browsers).
+  var _wakeLock = null;
+  function acquireWakeLock() {
+    if (!('wakeLock' in navigator) || _wakeLock) return;
+    navigator.wakeLock.request('screen').then(function (wl) {
+      _wakeLock = wl;
+      wl.addEventListener('release', function () { _wakeLock = null; });
+    }).catch(function () { /* denied or not visible — ignore */ });
+  }
+  function releaseWakeLock() {
+    if (_wakeLock) { try { _wakeLock.release(); } catch (e) {} _wakeLock = null; }
+  }
+  document.addEventListener('visibilitychange', function () {
+    var sg = document.getElementById('s-game');
+    if (!document.hidden && sg && sg.classList.contains('active')) acquireWakeLock();
+  });
 
   function setStatus(txt, cls='') {
     const el = $('cstatus');
