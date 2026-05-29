@@ -2033,6 +2033,23 @@ const App = (() => {
   var _potCenter  = {x:0, y:0}; // centre du pot à l'écran
   let amInGame  = false;
   let myName    = '';
+
+  // Nom de table par défaut localisé (FR: "Table de X", EN: "X's table").
+  function _localDefaultName() {
+    var tpl = (typeof t === 'function' && t('tableNameDefault')) || 'Table {name}';
+    return tpl.replace('{name}', myName || 'PokerTH');
+  }
+  // Re-localise le champ "nom de la table" au changement de langue, MAIS seulement
+  // s'il est vide ou contient encore un nom par défaut connu (on ne touche jamais à
+  // un nom personnalisé par l'utilisateur). Appelé depuis setLang (i18n.mjs).
+  window._localizeCreateNameField = function() {
+    var el = document.getElementById('cf-name');
+    if (!el) return;
+    var cur = (el.value || '').trim();
+    var nm = myName || 'PokerTH';
+    var known = ['Table de ' + nm, nm + "'s table", 'Table ' + nm, 'My table', ''];
+    if (known.indexOf(cur) >= 0) el.value = _localDefaultName();
+  };
   let games     = {};   // gameId → {name, mode, players, maxPlayers, type, priv}
   let players   = {};   // playerId → name
   let loaded    = false;
@@ -2220,7 +2237,7 @@ const App = (() => {
         }
         addChat(null, t('connectedAsGuest').replace('{name}', myName).replace('{id}', myId), 'sys');
         const cfName = document.getElementById('cf-name');
-        if (cfName) cfName.value = 'Table de ' + myName;  // always update with current name
+        if (cfName) cfName.value = _localDefaultName();  // nom par défaut localisé
         break;
       }
 
@@ -6130,7 +6147,7 @@ function dismissWinner() {
         // turn timer on pokerth.net so public games keep moving (real
         // strangers, can't afford long thinking turns).
         return {
-          name: (myName ? (myName + "'s table") : 'My table'),
+          name: _localDefaultName(),
           players: 10,
           blind: 10,
           stack: 3000,
@@ -6150,7 +6167,7 @@ function dismissWinner() {
       // when playing among friends. Bots default ON so a small group
       // can start a hand fast.
       return {
-        name: 'Table de ' + (myName || 'PokerTH'),
+        name: _localDefaultName(),
         players: 10,
         blind: 10,
         stack: 3000,
@@ -6329,7 +6346,7 @@ function dismissWinner() {
       const g = id => document.getElementById(id);
       const iv = (id, def) => parseInt(g(id)?.value) || def;
       const sv = (id, def) => parseInt(g(id)?.value) || def;
-      const name    = (g('cf-name')?.value.trim()) || ('Table ' + myName);
+      const name    = (g('cf-name')?.value.trim()) || _localDefaultName();
       const nplayers= iv('cf-players', 2);
       const blind   = iv('cf-blind',   10);
       const stack   = iv('cf-stack',   3000);

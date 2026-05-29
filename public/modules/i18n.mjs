@@ -21,7 +21,7 @@ const LANG = {
     guest:'pokerth.net — Internet Guest', auth:'pokerth.net — Registered Account',
     loginMode:'Login Mode', server:'PokerTH Server', proxy:'WebSocket Proxy', port:'Port',
     quickGameBtn:'⚡ Join / Quick Game', configure:'⚙', createTable:'＋ Create table',
-    tableName:'Table name', maxPlayers:'Max players', smallBlind:'Small blind',
+    tableName:'Table name', tableNameDefault:"{name}'s table", maxPlayers:'Max players', smallBlind:'Small blind',
     stack:'Stack', timeout:'Timeout (s)', fillBots:'Fill with bots (optional)',
     minHumans:'Min humans before bots:', availTables:'Available tables',
     loadingTables:'Loading tables…', noTables:'No tables available',
@@ -182,7 +182,7 @@ const LANG = {
     guest:'pokerth.net — Invité', auth:'pokerth.net — Compte enregistré',
     loginMode:'Mode de connexion', server:'Serveur PokerTH', proxy:'Proxy WebSocket', port:'Port',
     quickGameBtn:'⚡ Rejoindre partie / Partie rapide', configure:'⚙', createTable:'＋ Créer cette table',
-    tableName:'Nom de la table', maxPlayers:'Joueurs max', smallBlind:'Petite blind',
+    tableName:'Nom de la table', tableNameDefault:'Table de {name}', maxPlayers:'Joueurs max', smallBlind:'Petite blind',
     stack:'Stack', timeout:'Timeout (s)', fillBots:'Compléter avec des bots (optionnel)',
     minHumans:'Humains min avant bots :', availTables:'Tables disponibles',
     loadingTables:'Chargement des tables…', noTables:'Aucune table disponible',
@@ -435,6 +435,8 @@ function setLang(l) {
   if (ml) { var cfOpen = document.getElementById('cf-more-opts'); ml.textContent = (cfOpen && cfOpen.style.display !== 'none') ? t('lessOptions') : t('moreOptions'); }
   // Re-render the lobby game list so badges/labels follow the language
   try { if (typeof window.renderGames === 'function') window.renderGames(); } catch(e) {}
+  // Re-localise le nom de table par défaut s'il n'a pas été personnalisé
+  try { if (typeof window._localizeCreateNameField === 'function') window._localizeCreateNameField(); } catch(e) {}
   // Update lang toggle buttons
   document.querySelectorAll('.lang-btn').forEach(function(b){
     b.classList.toggle('active', b.dataset.lang === _lang);
