@@ -21,6 +21,27 @@
   <meta name="application-name"           content="PokerTH">
   <meta name="theme-color"                content="#0a1a0c">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<script>
+/* Normalise la largeur de mise en page sur les téléphones dont la largeur
+   CSS est plus grande que l'iPhone (DPR plus bas, ex. nombreux Android).
+   On verrouille une largeur de référence (= iPhone) et le navigateur met
+   la page à l'échelle pour remplir l'écran → rendu identique à iOS, partout.
+   Ne touche PAS : iPhones (<440px), tablettes (>=760px), ni desktop. */
+(function () {
+  try {
+    var mq = window.matchMedia;
+    var isPhone = mq && mq('(pointer: coarse)').matches && mq('(hover: none)').matches;
+    if (!isPhone) return;
+    var w = window.innerWidth ||
+            (document.documentElement && document.documentElement.clientWidth) || 0;
+    var DESIGN = 393; // largeur de référence (iPhone)
+    if (w > 440 && w < 760) {
+      var m = document.querySelector('meta[name="viewport"]');
+      if (m) m.setAttribute('content', 'width=' + DESIGN + ', viewport-fit=cover');
+    }
+  } catch (e) {}
+})();
+</script>
 <title>PokerTH Web Client</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Inconsolata:wght@300;400;500&display=swap" rel="stylesheet">
