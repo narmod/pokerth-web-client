@@ -473,19 +473,35 @@ const LANG = {
 const FLAG_GB_SVG = '<svg class="lang-flag" viewBox="0 0 60 30" xmlns="http://www.w3.org/2000/svg" aria-label="English"><clipPath id="ujt"><path d="M30,15h30v15zv15h-30zh-30v-15zv-15h30z"/></clipPath><path d="M0,0v30h60V0z" fill="#012169"/><path d="M0,0 60,30M60,0 0,30" stroke="#fff" stroke-width="6"/><path d="M0,0 60,30M60,0 0,30" clip-path="url(#ujt)" stroke="#C8102E" stroke-width="4"/><path d="M30,0v30M0,15h60" stroke="#fff" stroke-width="10"/><path d="M30,0v30M0,15h60" stroke="#C8102E" stroke-width="6"/></svg>';
 const FLAG_FR_SVG = '<svg class="lang-flag" viewBox="0 0 60 30" xmlns="http://www.w3.org/2000/svg" aria-label="Français"><rect width="20" height="30" fill="#0055A4"/><rect x="20" width="20" height="30" fill="#fff"/><rect x="40" width="20" height="30" fill="#EF4135"/></svg>';
 
+// Per-language presentation: flag SVG + native name. To add a language,
+// add its object to LANG above and one entry here. If a flag is missing,
+// the UI falls back to the uppercased language code, so nothing breaks.
+const LANG_META = {
+  en: { flag: FLAG_GB_SVG, label: 'English' },
+  fr: { flag: FLAG_FR_SVG, label: 'Français' },
+};
+function _flagFor(code) {
+  return (LANG_META[code] && LANG_META[code].flag)
+    || ('<span class="lang-flag lang-flag-code" style="font:700 0.72rem/1 monospace;letter-spacing:.05em">' + String(code).toUpperCase() + '</span>');
+}
+function _labelFor(code) {
+  return (LANG_META[code] && LANG_META[code].label) || String(code).toUpperCase();
+}
+
 let _lang = (function(){
+    var avail = Object.keys(LANG);
     try {
-        // 1. The user has manually picked a language before — respect that.
+        // 1. The user has manually picked a language before — respect it
+        //    (only if that language is still available).
         var saved = localStorage.getItem('pth_lang');
-        if (saved === 'en' || saved === 'fr') return saved;
-        // 2. First visit: auto-detect from the browser locale. Any French
-        //    locale (fr-FR / fr-BE / fr-CA / fr-CH / fr) → French UI.
-        //    Everything else → English (the project's default reach).
-        //    This avoids serving English UI to a French speaker (which
-        //    triggers the browser's "Translate this page?" banner) while
-        //    still defaulting to English for the international audience.
-        var bl = (navigator.language || '').toLowerCase();
-        return bl.startsWith('fr') ? 'fr' : 'en';
+        if (saved && avail.indexOf(saved) !== -1) return saved;
+        // 2. First visit: match the browser locale against the available
+        //    languages by primary subtag (fr-CA → fr, es-MX → es). This
+        //    avoids the browser's "Translate this page?" banner for a
+        //    speaker whose language we support. Fall back to English.
+        var bl = (navigator.language || '').toLowerCase().split('-')[0];
+        if (avail.indexOf(bl) !== -1) return bl;
+        return 'en';
     } catch (e) {
         return 'en';
     }
@@ -544,8 +560,8 @@ function setLang(l) {
   // Sync language-toggle buttons across all screens.
   // We use an SVG flag rather than a regional-indicator emoji because
   // Windows lacks glyphs for those pairs (renders as plain "GB"/"FR").
-  var flagSvg = _lang === 'fr' ? FLAG_FR_SVG : FLAG_GB_SVG;
-  var langLabel = _lang === 'fr' ? 'Langue' : 'Language';
+  var flagSvg = _flagFor(_lang);
+  var langLabel = _labelFor(_lang);
   ['lang-toggle-connect','lang-toggle-lobby','lang-toggle-game'].forEach(function(id){
     var b = document.getElementById(id);
     if (b) b.innerHTML = flagSvg;
@@ -571,7 +587,9 @@ function setLang(l) {
 
 
 function toggleLang() {
-    setLang(_lang === 'en' ? 'fr' : 'en');
+    var ks = Object.keys(LANG);
+    var i = ks.indexOf(_lang);
+    setLang(ks[(i + 1) % ks.length] || 'en');
 }
 
 function getLang() {
