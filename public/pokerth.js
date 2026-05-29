@@ -7,7 +7,7 @@ function _startIpBlockCountdown() {
   var _blockInterval = setInterval(function() {
     var rem = Math.max(0, Math.ceil((_ipBlockUntil - Date.now()) / 1000));
     var mins = Math.floor(rem / 60), secs = rem % 60;
-    var txt = '⏳ IP bloquée — ' + (mins > 0 ? mins + 'min ' : '') + secs + 's';
+    var txt = t('ipBlockedPrefix') + (mins > 0 ? mins + 'min ' : '') + secs + 's';
     // Mettre à jour seulement si on est sur l'écran de connexion
     var cs = document.getElementById('cstatus');
     if (cs) cs.textContent = rem > 0 ? txt : '✅ Vous pouvez vous reconnecter.';
@@ -2244,15 +2244,15 @@ const App = (() => {
       // Erreur serveur
       case T.AuthChallenge: {
         // SCRAM removed on server — reply with empty response
-        setStatus('Vérification du compte...');
+        setStatus(t('verifyingAccount'));
         send(MSG.buildAuthResponse());
         break;
       }
 
       case T.Error: {
         _lastConnectFailed = true;
-        const codes = {1:'Version incompatible',2:'Serveur plein',3:'Auth échouée',
-          4:'Pseudo déjà pris',5:'Pseudo invalide',6:'Maintenance',7:'Bloqué'};
+        const codes = {1:t('connErrVersion'),2:t('connErrFull'),3:t('connErrAuth'),
+          4:t('connErrNickTaken'),5:t('connErrNickInvalid'),6:t('connErrMaintenance'),7:t('connErrBlocked')};
         const r = Proto.u32(sub, 1);
         if (r === 3) {
           // initAuthFailure: login/password rejected by server
@@ -2265,7 +2265,7 @@ const App = (() => {
           _hideBanner();
           _ipBlockUntil = Date.now() + 1 * 60 * 1000; // 1 minute (was 5 — server usually clears earlier)
           _startIpBlockCountdown();
-          setStatus('⏳ IP bloquée — attendez 5 minutes puis réessayez.', 'err'); return;
+          setStatus(t('ipBlockedRetry'), 'err'); return;
         }
         if (r === 4) {
           // Name in use: auto-retry with random suffix
@@ -2517,9 +2517,7 @@ const App = (() => {
           var _aj = window._pendingAutoJoin;
           window._pendingAutoJoin = 0;
           var fr = (typeof _lang === 'undefined' || _lang !== 'en');
-          addChat(null, '🔗 ' + (fr
-            ? 'Table partagée trouvée — connexion…'
-            : 'Shared table found — joining…'), 'sys');
+          addChat(null, t('sharedTableJoining'), 'sys');
           // Defer slightly so renderGames() has painted and games[id]
           // is fully populated before joinGame reads it.
           setTimeout(function(){
@@ -2625,7 +2623,7 @@ const App = (() => {
         _timerSec = sec; // Sync avec le serveur
         // Si le serveur donne plus de temps que prévu, ajuster le total
         if (sec > _timerTot) _timerTot = sec;
-        addChat(null, '⏰ Délai: ' + sec + 's — jouez vite !', 'sys');
+        addChat(null, t('timerHurry').replace('{s}', sec), 'sys');
         // Auto-reset timeout
         const rtm = Proto.encode([[1,0,68],[69,2,new Uint8Array(0)]]);
         send(rtm);
@@ -2653,7 +2651,7 @@ const App = (() => {
           }
         } else {
           _lastMsgWasReaction = false;
-          if (!amInGame) addChat(null, '⚠ Chat refusé: ' + rejText, 'sys');
+          if (!amInGame) addChat(null, t('chatRefusedReason').replace('{r}', rejText), 'sys');
           else if (!_chatRejectShown) {
             _chatRejectShown = true;
             if (_currentLoginMode === 'lan') {
@@ -2770,10 +2768,10 @@ const App = (() => {
         var rbl = document.getElementById('reaction-bar-label');
         if (rbl) {
           if (_currentLoginMode === 'lan') {
-            rbl.textContent = 'Réactions (locales — mode LAN)';
+            rbl.textContent = t('reactionsLanLocal');
             rbl.style.color = 'rgba(255,180,50,0.6)';
           } else {
-            rbl.textContent = 'Réactions';
+            rbl.textContent = t('reactionsLabel');
             rbl.style.color = '';
           }
         }
@@ -3560,7 +3558,7 @@ const App = (() => {
 
       case T.EndOfGame: {
         const winnerPid = Proto.u32(sub, 2);
-        addChat(null, 'Partie terminée !', 'sys');
+        addChat(null, t('gameOverMsg'), 'sys');
         // Keep amInGame true until the user dismisses the overlay, so the
         // table screen stays visible behind it. Stop the turn timer and
         // suppress any further winner pop-ups.
@@ -3586,7 +3584,7 @@ const App = (() => {
     if (mode === 3) return t('modeClosed');
     return '?';
   }
-  const GTYPE      = {1:'Normal', 2:'Inscrits', 3:'Sur invitation', 4:'Classé'};
+  function GTYPE(tp) { return ({1:t('gtypeNormal'), 2:t('gtypeRegistered'), 3:t('gtypeInvite'), 4:t('gtypeRanked')})[tp]; }
 
   function renderGames() {
     // Utiliser entries() pour avoir l'id ET l'objet
@@ -3603,7 +3601,7 @@ const App = (() => {
 
     $('g-list').innerHTML = entries.map(([gid, g]) => {
       const label  = MODE_LABEL(g.mode);
-      const type   = GTYPE[g.type] || '';
+      const type   = GTYPE(g.type) || '';
       const lock   = (g.priv || g.type === 3) ? '🔒 ' : '';
       const badgeCls = g.mode === 2 ? 'live' : (g.mode === 3 ? 'closed' : 'wait');
       var rawJoin = (typeof t === 'function' ? t('joinBtn') || '\u25B6 Join' : '\u25B6 Join');
@@ -3856,7 +3854,7 @@ const App = (() => {
         + (h2.cards ? h2.cards.map(function(c){ return '<span style="background:#fff;color:'+(c.red?'#c0392b':'#111')+';border-radius:2px;padding:1px 3px;font-size:0.6rem;font-weight:700">'+c.r+c.s+'</span>'; }).join('') : '')
         + '</div>'
         + '</div>';
-    }).join('') : '<div style="color:var(--text);font-size:0.62rem">Aucune main jouée</div>';
+    }).join('') : '<div style="color:var(--text);font-size:0.62rem">' + t('noHandsPlayed') + '</div>';
 
     var isFr = (_lang === 'fr');
     el.innerHTML = '<div class="stats-header">'
@@ -5374,7 +5372,7 @@ function dismissWinner() {
       if (_ipBlockUntil > now) {
         const remaining = Math.ceil((_ipBlockUntil - now) / 1000);
         const mins = Math.floor(remaining / 60), secs = remaining % 60;
-        setStatus('⏳ IP bloquée — attendre encore ' + (mins > 0 ? mins + 'min ' : '') + secs + 's', 'err');
+        setStatus(t('ipBlockedWaitPrefix') + (mins > 0 ? mins + 'min ' : '') + secs + 's', 'err');
         _startIpBlockCountdown();
         return;
       }
@@ -5479,7 +5477,7 @@ function dismissWinner() {
 
       ws.binaryType = 'arraybuffer';
       ws.onopen    = () => setStatus(t('proxyConnectedWait'));
-      ws.onerror   = () => { _lastConnectFailed = true; setStatus('Erreur WebSocket. Le proxy est-il lancé ?', 'err'); };
+      ws.onerror   = () => { _lastConnectFailed = true; setStatus(t('wsError'), 'err'); };
       ws.onmessage = function(e) {
         if (typeof e.data === 'string') {
           // Message texte = protocole proxy (réactions)
@@ -5527,7 +5525,7 @@ function dismissWinner() {
           _hideBanner();
           _wasAuthenticated = false;
           show('s-connect');
-          setStatus('Reconnexion échouée après ' + maxAttempts + ' tentatives. Reconnectez-vous manuellement.', 'err');
+          setStatus(t('reconnFailed').replace('{n}', maxAttempts), 'err');
           return;
         }
         // Délai croissant : 5s, 15s, 30s — assez long pour ne pas spammer
@@ -5580,7 +5578,7 @@ function dismissWinner() {
       if (_reconnectAttempts > maxAttempts) {
         _hideBanner();
         show('s-connect');
-        setStatus((_lang==='fr'?'Reconnexion échouée après '+maxAttempts+' tentatives. Reconnectez-vous manuellement.':'Reconnection failed after '+maxAttempts+' attempts. Please reconnect manually.'), 'err');
+        setStatus(t('reconnFailed').replace('{n}', maxAttempts), 'err');
         return;
       }
       // Exponentiel : 3s → 6s → 12s → 24s → 30s → 30s
@@ -5826,7 +5824,7 @@ function dismissWinner() {
       var badge = document.getElementById('g-admin-badge');
       if (badge) badge.style.display = 'none';
       show('s-lobby');
-      addChat(null, '🔒 Table fermée.', 'sys');
+      addChat(null, t('tableClosedMsg'), 'sys');
     },
 
     endGameClose() {
