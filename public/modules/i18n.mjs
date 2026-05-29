@@ -534,6 +534,20 @@ function _labelFor(code) {
   return (LANG_META[code] && LANG_META[code].label) || String(code).toUpperCase();
 }
 
+// Dev flag controlling i18n diagnostics (parity check + missing-key
+// warnings). Off by default; opt in with ?i18ndebug in the URL,
+// localStorage.setItem('pth_i18n_debug','1'), or by running on localhost.
+const I18N_DEBUG = (function() {
+    try {
+        return /[?&]i18ndebug\b/.test(location.search)
+            || localStorage.getItem('pth_i18n_debug') === '1'
+            || location.hostname === 'localhost'
+            || location.hostname === '127.0.0.1';
+    } catch (e) {
+        return false;
+    }
+})();
+
 let _lang = (function(){
     var avail = Object.keys(LANG);
     try {
@@ -553,8 +567,51 @@ let _lang = (function(){
     }
 })();
 
-function t(k) {
-    return (LANG[_lang] || LANG.en)[k] || (LANG.en[k]) || k;
+// Translate key `k`. Optional `params` interpolates {token} placeholders,
+// so callers no longer hand-roll `.replace('{x}', …)` chains and every
+// language gets the same substitution logic for free:
+//     t('voiceWins', { name: 'Ada', n: 500 })  ->  "Ada wins 500"
+// Resolution order: active language → English fallback → raw key.
+function t(k, params) {
+    var dict = LANG[_lang] || LANG.en;
+    var s = dict[k];
+    if (s == null) {
+        s = LANG.en[k];
+        if (s == null) {
+            // No EN fallback either: a genuine missing-key bug, not just an
+            // untranslated string. Surface it in dev, stay silent in prod.
+            if (I18N_DEBUG) console.warn('[i18n] missing key (no EN fallback):', k);
+            return k;
+        }
+    }
+    if (params) {
+        s = s.replace(/\{(\w+)\}/g, function(m, name) {
+            return (params[name] != null) ? String(params[name]) : m;
+        });
+    }
+    return s;
+}
+
+// Dev-only catalogue health check: for every non-English language, report
+// the keys it is missing (these silently fall back to English) and any
+// keys it has that English doesn't (typos / dead entries). Gated by
+// I18N_DEBUG so it never spams real users' consoles in production.
+function checkI18nParity() {
+    if (!I18N_DEBUG) return;
+    var ref = Object.keys(LANG.en);
+    var refSet = {};
+    ref.forEach(function(k){ refSet[k] = true; });
+    Object.keys(LANG).forEach(function(code) {
+        if (code === 'en') return;
+        var own = Object.keys(LANG[code]);
+        var ownSet = {};
+        own.forEach(function(k){ ownSet[k] = true; });
+        var missing = ref.filter(function(k){ return !ownSet[k]; });
+        var extra = own.filter(function(k){ return !refSet[k]; });
+        if (missing.length) console.warn('[i18n] "' + code + '" is missing ' + missing.length + ' key(s) (fall back to EN):', missing);
+        if (extra.length) console.warn('[i18n] "' + code + '" has ' + extra.length + ' key(s) not in EN (typo/dead?):', extra);
+        if (!missing.length && !extra.length) console.info('[i18n] "' + code + '" \u2713 full parity with EN (' + ref.length + ' keys)');
+    });
 }
 
 function setLang(l) {
@@ -568,14 +625,12 @@ function setLang(l) {
     var k = el.getAttribute('data-i18n');
     el.textContent = t(k);
   });
-  document.querySelectorAll('[data-i18n-ph]').forEach(function(el) {
-    el.placeholder = t(el.getAttribute('data-i18n-ph'));
-  });
   document.querySelectorAll('[data-i18n-title]').forEach(function(el) {
     el.title = t(el.getAttribute('data-i18n-title'));
   });
-  // Same treatment for placeholder attributes — used by <input> elements
-  // like the nickname field. Added alongside data-i18n-title for symmetry.
+  // Placeholder attributes (e.g. the nickname and chat inputs). Single
+  // mechanism: data-i18n-placeholder. (The old data-i18n-ph alias was
+  // dropped — it had zero uses in the HTML.)
   document.querySelectorAll('[data-i18n-placeholder]').forEach(function(el) {
     el.placeholder = t(el.getAttribute('data-i18n-placeholder'));
   });
@@ -635,7 +690,7 @@ function getLang() {
 }
 
 // ─── Modern ES module exports ───────────────────────────────────────────
-export { LANG, t, setLang, toggleLang, getLang };
+export { LANG, t, setLang, toggleLang, getLang, checkI18nParity };
 
 // ─── Legacy global compatibility ────────────────────────────────────────
 // pokerth.js (the un-refactored majority) still references these as bare
@@ -657,7 +712,7 @@ Object.defineProperty(window, '_lang', {
 
 // Also expose a single namespaced object for the migration-aware code
 // that wants a clean entry point.
-window.I18N = { LANG, t, setLang, toggleLang, getLang };
+window.I18N = { LANG, t, setLang, toggleLang, getLang, checkParity: checkI18nParity };
 
 // ─── Auto-init: apply the current language on first DOM-ready ───────────
 // Without this, the language-toggle buttons stay empty until the user
@@ -665,6 +720,7 @@ window.I18N = { LANG, t, setLang, toggleLang, getLang };
 // flag). Run it as soon as the DOM is parsed.
 function _initI18n() {
     try { setLang(_lang); } catch (e) { console.warn('[i18n] init failed:', e); }
+    try { checkI18nParity(); } catch (e) {}
 }
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', _initI18n, { once: true });
