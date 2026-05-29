@@ -3491,9 +3491,9 @@ const App = (() => {
       var rawJoin = (typeof t === 'function' ? t('joinBtn') || '\u25B6 Join' : '\u25B6 Join');
       const joinLabel = (g.priv || g.type === 3)
         ? '🔒 ' + rawJoin.replace(/^\u25B6\s*/, '')
-        : rawJoin;
+        : rawJoin.replace(/^\u25B6\s*/, '');
       const watchBtn = g.mode === 2
-        ? '<button class="btn-xs btn-watch" onclick="event.stopPropagation();App.spectateGame(' + gid + ')">👁 ' + t('watchBtn') + '</button>'
+        ? '<button class="btn-xs btn-watch" title="' + t('watchTitle') + '" onclick="event.stopPropagation();App.spectateGame(' + gid + ')">👁</button>'
         : '';
       const joinBtn = g.mode !== 3
         ? '<button class="btn-join" onclick="event.stopPropagation();App.joinGame(' + parseInt(gid) + ')">' + joinLabel + '</button>'

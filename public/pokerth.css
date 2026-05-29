@@ -3753,7 +3753,7 @@ body:not(.in-game) .my-zone {
     ordinateur : création en colonne latérale + tables en grille).
    ═══════════════════════════════════════════════════════════════════ */
 .lobby-body { display: block; overflow-y: auto; padding: 16px 14px 32px; }
-.lobby-grid { display: grid; gap: 18px; grid-template-columns: 1fr; max-width: 880px; margin: 0 auto; align-items: start; }
+.lobby-grid { display: grid; gap: 18px; grid-template-columns: 1fr; max-width: none; align-items: start; }
 
 /* Bouton repliable "Créer une table" */
 .create-toggle {
@@ -3803,7 +3803,31 @@ body:not(.in-game) .my-zone {
 .seat-dot { width: 9px; height: 9px; border-radius: 50%; background: rgba(255,255,255,0.06); border: 1px solid var(--border); }
 .seat-dot.on { background: var(--gold); border-color: var(--gold); box-shadow: 0 0 5px rgba(200,168,74,0.5); }
 .gcard-btns { display: flex; gap: 8px; }
-.game-row.gcard .btn-join { flex: 1; }
+/* Boutons façon maquette v3 : Rejoindre en vert (extensible) + œil compact */
+.game-row.gcard .btn-join {
+  flex: 1;
+  border: 1.5px solid var(--green);
+  background: rgba(39,174,96,0.12);
+  color: #7be0a0;
+  border-radius: 8px;
+  padding: 10px;
+  font-family: 'Cinzel', serif;
+  font-weight: 600;
+  font-size: 0.88rem;
+}
+.game-row.gcard .btn-join:hover { background: rgba(39,174,96,0.28); }
+.game-row.gcard .btn-watch {
+  flex: 0 0 auto;
+  border: 1px solid var(--border);
+  background: rgba(255,255,255,0.04);
+  color: var(--text);
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 1.05rem;
+  line-height: 1;
+  cursor: pointer;
+}
+.game-row.gcard .btn-watch:hover { border-color: var(--gold-dim); color: var(--gold); background: rgba(255,255,255,0.06); }
 
 /* La grille auto-fit ci-dessus gère seule téléphone / tablette / ordinateur :
    les cartes se répartissent en 1, 2 ou 3 colonnes selon la largeur. */
