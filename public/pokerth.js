@@ -4530,7 +4530,7 @@ const App = (() => {
     //   yMulTop : seats in the upper half (sin<=0)
     //   yMulMe  : the local player (i=0), kept slightly lower than the other
     //             bottom seats to leave breathing room above the player-bar.
-    const yMulBot   = isMob ? 0.20 : (isSmall ? 0.34 : 0.18);
+    const yMulBot   = isMob ? 0.30 : (isSmall ? 0.40 : 0.18);
     const yMulTop   = isMob ? 0.28 : (isSmall ? 0.34 : 0.18);
     // The seat sitting EXACTLY at the top-centre (sinAng ≈ -1, exists only
     // when n is even: 4, 6, 8, 10…) is lowered slightly toward the table
@@ -4538,7 +4538,7 @@ const App = (() => {
     // For all other top-half seats (sinAng > -0.95), we keep yMulTop so the
     // lateral pairs don't drift horizontally toward each other.
     const yMulTopC  = isMob ? 0.22 : (isSmall ? 0.34 : 0.18);
-    const yMulMe    = isMob ? 0.24 : (isSmall ? 0.40 : 0.22);
+    const yMulMe    = isMob ? 0.32 : (isSmall ? 0.46 : 0.22);
     const ryBotRaw  = oRect.height / 2 + borderClear + oRect.height * yMulBot;
     const ryTopRaw  = oRect.height / 2 + borderClear + oRect.height * yMulTop;
     const ryTopCRaw = oRect.height / 2 + borderClear + oRect.height * yMulTopC;
