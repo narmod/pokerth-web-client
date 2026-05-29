@@ -1287,6 +1287,14 @@ const MSG = (() => {
     return Proto.encode([[1,0,T.JoinExisting],[22,2,msg]]);
   }
 
+  // RejoinExistingGameMessage: gameId=1, autoLeave=2 — message type 23,
+  // envelope field 24. Reclaims the seat the server held after we dropped
+  // (restores stack/position) instead of joining the table fresh.
+  function buildRejoinGame(gameId) {
+    const msg = Proto.encode([[1, 0, gameId]]);
+    return Proto.encode([[1,0,T.RejoinExisting],[24,2,msg]]);
+  }
+
   // StartEventAckMessage: gameId=1
   function buildStartEventAck(gameId) {
     const msg = Proto.encode([[1,0,gameId]]);
@@ -1373,7 +1381,7 @@ const MSG = (() => {
     return Proto.encode([[1,0,30],[31,2,msg]]);
   }
 
-  return { T, parse, buildInit, buildChat, buildGameChat, buildJoin, buildJoinGame, buildStartEventAck, buildMyAction, buildCreateGame, buildLeaveGame, buildStartWithBots, buildKickPlayer };
+  return { T, parse, buildInit, buildChat, buildGameChat, buildJoin, buildJoinGame, buildRejoinGame, buildStartEventAck, buildMyAction, buildCreateGame, buildLeaveGame, buildStartWithBots, buildKickPlayer };
 })();
 
 
@@ -2229,6 +2237,8 @@ const App = (() => {
   let _chatRejectShown = false;    // n'afficher l'avertissement LAN qu'une seule fois // pour la reconnexion auto
   let _reconnectAttempts = 0;
   let _intentionalDisconnect = false;
+  let _pendingRejoin = 0;        // gameId to auto-rejoin after reconnect (0 = none)
+  let _rejoinNickRetries = 0;    // retries waiting for our ghost's nick to free up
   let _wasAuthenticated = false; // true seulement après InitAck réussi
   let _lastConnectTime = 0;      // timestamp de la dernière tentative
   let _lastConnectFailed = false; // true si la dernière tentative a échoué
@@ -2350,6 +2360,23 @@ const App = (() => {
         _lastConnectFailed = false; // connexion réussie
         _reconnectAttempts = 0;
         myId = Proto.u32(sub, 2);
+        _rejoinNickRetries = 0;
+        // Auto-rejoin the table we dropped from, if any. Source: the in-memory
+        // flag (transient drop) or a recent persisted marker (full reload).
+        // Same nickname required so we don't hijack another player's seat.
+        var _rt = _pendingRejoin;
+        if (!_rt) {
+          try {
+            var _rs = JSON.parse(localStorage.getItem('pth_resume') || 'null');
+            if (_rs && _rs.n === myName && (Date.now() - _rs.t) < 5 * 60 * 1000) _rt = _rs.g;
+          } catch (e) {}
+        }
+        if (_rt) {
+          _pendingRejoin = _rt;
+          _showBanner(t('rejoinInProgress'));
+          try { send(MSG.buildRejoinGame(_rt)); } catch (e) {}
+          break;   // JoinGameAck → game screen; JoinGameFailed → lobby fallback
+        }
         updateLobbyPill();
         show('s-lobby');
         // Demander la permission pour les notifications
@@ -2389,13 +2416,27 @@ const App = (() => {
           setStatus(t('ipBlockedRetry'), 'err'); return;
         }
         if (r === 4) {
-          // Name in use: auto-retry with random suffix
-          const suffix = Math.floor(Math.random()*999)+1;
-          myName = myName.replace(/_\d+$/, '') + '_' + suffix;
-          setStatus(t('errNickTakenRetry').replace('{name}', myName));
-          setTimeout(() => {
-            send(MSG.buildInit(myName, lastMajor || 5, lastMinor || 1, lastLoginType || 0));
-          }, 400);
+          if (_pendingRejoin && _rejoinNickRetries < 6) {
+            // Our own ghost still holds the nick. Keep it and wait for the
+            // server to drop the dead session, then retry the SAME nick so we
+            // can reclaim the seat (renaming would lose our identity).
+            _rejoinNickRetries++;
+            setStatus(t('rejoinWaitNick'));
+            _showBanner(t('rejoinWaitNick'));
+            setTimeout(() => {
+              try { send(MSG.buildInit(myName, lastMajor || 5, lastMinor || 1, lastLoginType || 0)); } catch(e) {}
+            }, 2500);
+          } else {
+            // Give up reclaiming the seat: usual rename + retry.
+            _pendingRejoin = 0;
+            try { localStorage.removeItem('pth_resume'); } catch(e) {}
+            const suffix = Math.floor(Math.random()*999)+1;
+            myName = myName.replace(/_\d+$/, '') + '_' + suffix;
+            setStatus(t('errNickTakenRetry').replace('{name}', myName));
+            setTimeout(() => {
+              send(MSG.buildInit(myName, lastMajor || 5, lastMinor || 1, lastLoginType || 0));
+            }, 400);
+          }
         } else {
           setStatus(t('errGeneric').replace('{code}', codes[r] || ('code ' + r)), 'err');
         }
@@ -2787,6 +2828,10 @@ const App = (() => {
 
       case T.JoinGameAck: {
         gId = Proto.u32(sub, 1);
+        // Back at the table — clear any pending rejoin and the banner.
+        _pendingRejoin = 0; _rejoinNickRetries = 0;
+        try { localStorage.removeItem('pth_resume'); } catch(e) {}
+        _hideBanner();
         // Fresh game = empty spectator set. The server will replay
         // GameSpectatorJoined for each existing spectator so we'll
         // rebuild the set within milliseconds.
@@ -2908,6 +2953,17 @@ const App = (() => {
       case T.JoinGameFailed: {
         const failedGameId = Proto.u32(sub, 1);
         const failCode = Proto.u32(sub, 2);
+        if (_pendingRejoin) {
+          // We were reclaiming our seat but it's gone (grace window elapsed)
+          // or the rejoin was refused — drop cleanly to the lobby.
+          _pendingRejoin = 0; _rejoinNickRetries = 0;
+          try { localStorage.removeItem('pth_resume'); } catch(e) {}
+          _hideBanner();
+          updateLobbyPill();
+          show('s-lobby');
+          setStatus(t('rejoinFailed'), 'err');
+          break;
+        }
         // PokerTH JoinGameFailureReason codes from pokerth.proto:
         // 1=invalidGame, 2=gameIsFull, 3=gameIsRunning, 4=invalidPassword,
         // 5=notAllowedAsGuest, 6=notInvited, 7=gameNameInUse, 8=badGameName,
@@ -3018,6 +3074,7 @@ const App = (() => {
       case T.RemovedFromGame: { _gameMeta = null;
         addChat(null, t('youWereRemoved'), 'sys');
         amInGame = false;
+        _pendingRejoin = 0; try { localStorage.removeItem('pth_resume'); } catch(e) {}
         gId = 0; seats = []; seatData = {}; _playerAvatars = {}; _pthAvatarHashes = {}; _pthAvatarsByHash = {}; _pthAvatarReqIdToHash = {}; _seatsFrozen = false; _amSpectator = false; var _sb1 = document.getElementById('g-spectator-banner'); if (_sb1) _sb1.style.display = 'none';
         show('s-lobby');
         break;
@@ -5702,16 +5759,7 @@ function dismissWinner() {
         ws = null;
         clearTimeout(window._reconnectTimer);
         _hideBanner();
-        _wasAuthenticated = false;
-        show('s-connect');
-        // Reconnexion automatique désactivée pour éviter le blocage IP
-        // L'utilisateur peut se reconnecter manuellement après 8 secondes
-        if (_intentionalDisconnect) {
-          setStatus(t('disconnected') || 'Déconnecté.');
-        } else {
-          setStatus(t('errConnLost'), 'err');
-        }
-        return;
+
         // --- RECONNEXION AUTO DÉSACTIVÉE (risque blocage IP) ---
         _reconnectAttempts++;
         var maxAttempts = 3; // max 3 tentatives pour éviter le blocage IP
