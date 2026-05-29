@@ -1160,7 +1160,7 @@ const MSG = (() => {
     18:19, 19:20,                              // PlayerInfo req/reply
     21:22, 22:23, 23:24, 24:25, 25:26,        // Join*
     26:27, 27:28, 28:29, 29:30,               // GamePlayer*
-    36:37, 37:38, 38:39, 39:40,                // StartEvent, StartEventAck, GameStartInitial, GameStartRejoin
+    36:37, 37:38, 38:39,                       // StartEvent, StartEventAck, GameStartInitial
     40:41, 41:42, 42:43,                       // HandStart, PlayersTurn, MyActionRequest
     43:44,                                     // YourActionRejected
     44:45,                                     // PlayersActionDone
@@ -1188,7 +1188,7 @@ const MSG = (() => {
     JoinExisting:21, JoinNew:22, RejoinExisting:23,
     JoinNew:22, JoinGameAck:24, JoinGameFailed:25,
     GamePlayerJoined:26, GamePlayerLeft:27, GameAdminChanged:28, RemovedFromGame:29,
-    StartEvent:36, StartEventAck:37, GameStartInitial:38, GameStartRejoin:39,
+    StartEvent:36, StartEventAck:37, GameStartInitial:38,
     HandStart:40, PlayersTurn:41, MyActionRequest:42,
     YourActionRejected:43,
     PlayersActionDone:44, DealFlop:45, DealTurn:46, DealRiver:47,
@@ -3221,44 +3221,6 @@ const App = (() => {
           renderSeats();
         }
         _prevDealerPid = dealerPid;
-        break;
-      }
-
-      // Sent by the server right after we reclaim our seat (RejoinExisting),
-      // to drop us back into the hand in progress instead of waiting for the
-      // next one. On a brief drop the page never reloaded, so seats[],
-      // seatData{}, commCards[] and myCards[] are still in memory and valid
-      // for this hand — we just re-anchor (dealer/handNum) and re-render.
-      case T.GameStartRejoin: {
-        // gameId=1, startDealerPlayerId=2, handNum=3, rejoinPlayerData=4
-        // (per-player stacks; we rely on in-memory stacks + the subsequent
-        // PlayersActionDone messages rather than parsing the repeated field).
-        gId = Proto.u32(sub, 1);
-        var _rjDealer = Proto.u32(sub, 2); if (_rjDealer) dealerPid = _rjDealer;
-        var _rjHand   = Proto.u32(sub, 3);
-        _gameStarted = true;
-        amInGame = true;
-        _hideBanner();
-        if (seats.length === 0) {
-          // No in-memory seat order (e.g. a full reload) — can't reconstruct
-          // the live hand from this message alone; wait for the next hand.
-          renderGameWaiting(t('gameStartedWaitHand'));
-          break;
-        }
-        // If a new hand began while we were away, our board + hole cards are
-        // stale: clear them. Otherwise keep the live snapshot as-is.
-        if (_rjHand && handNum && _rjHand !== handNum) {
-          handNum = _rjHand;
-          commCards = [null, null, null, null, null];
-          myCards = [null, null];
-          var _scR = document.getElementById('g-myseat-cards');
-          if (_scR) _scR.innerHTML = '<div class="pk sm back"></div><div class="pk sm back"></div>';
-        } else if (_rjHand) {
-          handNum = _rjHand;
-        }
-        _prevDealerPid = dealerPid;
-        renderSeats();
-        renderComm();
         break;
       }
 
