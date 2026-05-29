@@ -6067,6 +6067,7 @@ function dismissWinner() {
           el.checked = !!val;
         } else {
           el.value = val;
+          if (el.type === 'range') el.dispatchEvent(new Event('input'));
         }
         el.dataset.modeDefault = isCheckbox ? (!!val) : String(val);
       };
@@ -6121,7 +6122,7 @@ function dismissWinner() {
       };
       var v = P[name];
       if (!v) return;
-      var set = function(id, val){ var e = document.getElementById(id); if (e) e.value = val; };
+      var set = function(id, val){ var e = document.getElementById(id); if (e) { e.value = val; e.dispatchEvent(new Event('input')); } };
       set('cf-players', v.players);
       set('cf-stack',   v.stack);
       set('cf-blind',   v.blind);

@@ -837,10 +837,18 @@ function selectAvatarPopup(emoji) {
 
     <div class="create-fields">
       <div class="cf"><label data-i18n="tableName">Table name</label><input id="cf-name" placeholder="Table..."></div>
-      <div class="cf cf-sm"><label data-i18n="maxPlayers">Max players</label><input id="cf-players" type="number" min="2" max="10" value="10"></div>
       <div class="cf cf-sm"><label data-i18n="smallBlind">Small blind</label><input id="cf-blind" type="number" min="1" value="10"></div>
-      <div class="cf cf-sm"><label data-i18n="stack">Stack</label><input id="cf-stack" type="number" min="100" value="3000"></div>
       <div class="cf cf-sm"><label data-i18n="timeout">Timeout (s)</label><input id="cf-timeout" type="number" min="5" max="120" value="15"></div>
+    </div>
+    <div class="cf-sliders">
+      <div class="cf-slider">
+        <label><span data-i18n="maxPlayers">Max players</span><span class="cf-range-val" id="cf-players-val">10</span></label>
+        <input id="cf-players" class="cf-range" type="range" min="2" max="10" step="1" value="10" oninput="var e=document.getElementById('cf-players-val');if(e)e.textContent=this.value">
+      </div>
+      <div class="cf-slider">
+        <label><span data-i18n="stack">Stack</span><span class="cf-range-val" id="cf-stack-val">3000</span></label>
+        <input id="cf-stack" class="cf-range" type="range" min="500" max="1000000" step="500" value="3000" oninput="var e=document.getElementById('cf-stack-val');if(e)e.textContent=this.value">
+      </div>
     </div>
     <div style="margin:8px 0 2px">
       <button type="button" onclick="App.toggleMoreOptions()" id="cf-more-btn" style="background:none;border:none;color:var(--gold-dim);cursor:pointer;font-size:0.64rem;letter-spacing:0.12em;text-transform:uppercase;padding:2px 0;display:flex;align-items:center;gap:5px">

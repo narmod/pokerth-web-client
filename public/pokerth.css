@@ -3784,6 +3784,18 @@ body:not(.in-game) .my-zone {
 .cf-preset .cfp-n { font-family: 'Cinzel', serif; font-size: 0.86rem; font-weight: 600; }
 .cf-preset .cfp-d { font-size: 0.56rem; color: var(--gold-dim); }
 
+/* Curseurs (sliders) Joueurs max / Stack */
+.cf-sliders { display: grid; gap: 14px; margin-top: 14px; }
+.cf-slider label { display: flex; justify-content: space-between; align-items: baseline; font-size: 0.6rem; color: var(--gold-dim); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 8px; }
+.cf-range-val { font-family: 'Inconsolata', monospace; font-size: 1rem; font-weight: 700; color: var(--cream); letter-spacing: 0; }
+.cf-range { -webkit-appearance: none; appearance: none; width: 100%; height: 6px; border-radius: 3px; background: rgba(255,255,255,0.09); outline: none; cursor: pointer; }
+.cf-range::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 20px; height: 20px; border-radius: 50%; background: var(--gold); border: 2px solid #1a1408; cursor: pointer; box-shadow: 0 0 7px rgba(200,168,74,0.5); transition: transform 0.1s; }
+.cf-range::-webkit-slider-thumb:active { transform: scale(1.12); }
+.cf-range::-moz-range-thumb { width: 20px; height: 20px; border-radius: 50%; background: var(--gold); border: 2px solid #1a1408; cursor: pointer; box-shadow: 0 0 7px rgba(200,168,74,0.5); }
+.cf-range::-moz-range-track { height: 6px; border-radius: 3px; background: rgba(255,255,255,0.09); }
+.cf-range:hover::-webkit-slider-thumb { background: var(--gold-hi); }
+.cf-range:hover::-moz-range-thumb { background: var(--gold-hi); }
+
 /* Liste des tables : grille + cartes détaillées */
 .games-col .pane-header { border: none; padding: 0 2px 10px; }
 .games-scroll { display: grid; gap: 12px; grid-template-columns: 1fr; overflow: visible; }
