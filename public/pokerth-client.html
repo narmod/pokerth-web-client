@@ -837,17 +837,55 @@ function selectAvatarPopup(emoji) {
 
     <div class="create-fields">
       <div class="cf"><label data-i18n="tableName">Table name</label><input id="cf-name" placeholder="Table..."></div>
-      <div class="cf cf-sm"><label data-i18n="smallBlind">Small blind</label><input id="cf-blind" type="number" min="1" value="10"></div>
-      <div class="cf cf-sm"><label data-i18n="timeout">Timeout (s)</label><input id="cf-timeout" type="number" min="5" max="120" value="15"></div>
     </div>
     <div class="cf-sliders">
       <div class="cf-slider">
-        <label><span data-i18n="maxPlayers">Max players</span><span class="cf-range-val" id="cf-players-val">10</span></label>
-        <input id="cf-players" class="cf-range" type="range" min="2" max="10" step="1" value="10" oninput="var e=document.getElementById('cf-players-val');if(e)e.textContent=this.value">
+        <label>
+          <span data-i18n="maxPlayers">Max players</span>
+          <span class="cf-num-wrap">
+            <input type="number" id="cf-players" class="cf-range-num" min="2" max="10" step="1" value="10"
+                   oninput="App.rangeFromNum('cf-players-range', this)" onchange="App.clampNum(this);App.rangeFromNum('cf-players-range', this)">
+            <span class="cf-unit cf-unit-ico">👤</span>
+          </span>
+        </label>
+        <input id="cf-players-range" class="cf-range" type="range" min="2" max="10" step="1" value="10"
+               oninput="App.numFromRange('cf-players', this)">
       </div>
       <div class="cf-slider">
-        <label><span data-i18n="stack">Stack</span><span class="cf-range-val" id="cf-stack-val">3000</span></label>
-        <input id="cf-stack" class="cf-range" type="range" min="500" max="1000000" step="500" value="3000" oninput="var e=document.getElementById('cf-stack-val');if(e)e.textContent=this.value">
+        <label>
+          <span data-i18n="smallBlind">Small blind</span>
+          <span class="cf-num-wrap">
+            <input type="number" id="cf-blind" class="cf-range-num" min="1" max="1000000" step="1" value="10"
+                   oninput="App.rangeFromNum('cf-blind-range', this)" onchange="App.clampNum(this);App.rangeFromNum('cf-blind-range', this)">
+            <span class="cf-money">¥</span>
+          </span>
+        </label>
+        <input id="cf-blind-range" class="cf-range" type="range" min="1" max="1000" step="1" value="10"
+               oninput="App.numFromRange('cf-blind', this)">
+      </div>
+      <div class="cf-slider">
+        <label>
+          <span data-i18n="stack">Stack</span>
+          <span class="cf-num-wrap">
+            <input type="number" id="cf-stack" class="cf-range-num" min="500" max="1000000" step="1" value="3000"
+                   oninput="App.rangeFromNum('cf-stack-range', this)" onchange="App.clampNum(this);App.rangeFromNum('cf-stack-range', this)">
+            <span class="cf-money">¥</span>
+          </span>
+        </label>
+        <input id="cf-stack-range" class="cf-range" type="range" min="500" max="1000000" step="500" value="3000"
+               oninput="App.numFromRange('cf-stack', this)">
+      </div>
+      <div class="cf-slider">
+        <label>
+          <span data-i18n="timeout">Timeout (s)</span>
+          <span class="cf-num-wrap">
+            <input type="number" id="cf-timeout" class="cf-range-num" min="5" max="120" step="1" value="15"
+                   oninput="App.rangeFromNum('cf-timeout-range', this)" onchange="App.clampNum(this);App.rangeFromNum('cf-timeout-range', this)">
+            <span class="cf-unit">s</span>
+          </span>
+        </label>
+        <input id="cf-timeout-range" class="cf-range" type="range" min="5" max="120" step="1" value="15"
+               oninput="App.numFromRange('cf-timeout', this)">
       </div>
     </div>
     <div style="margin:8px 0 2px">
@@ -876,16 +914,6 @@ function selectAvatarPopup(emoji) {
       <div id="cf-password-row" style="display:none;margin-top:6px;align-items:center;gap:8px">
         <label data-i18n="tablePassword" style="font-size:0.66rem;color:var(--gold-dim);text-transform:uppercase;letter-spacing:0.1em;white-space:nowrap">Password:</label>
         <input id="cf-password" type="password" maxlength="64" style="flex:1;background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:2px;color:var(--cream);padding:4px 8px;font-family:'Inconsolata',monospace;font-size:0.82rem;outline:none" placeholder="••••••">
-      </div>
-    </div>
-    <div id="cf-bots-section" style="margin-top:10px">
-      <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:0.72rem;color:var(--text)">
-        <input type="checkbox" id="cf-bots" style="accent-color:var(--gold)" onchange="App.toggleMinHumans()">
-        <span data-i18n="fillBots">Fill with bots (optional)</span>
-      </label>
-      <div id="cf-min-humans-row" style="display:none;margin-top:6px;align-items:center;gap:8px">
-        <label data-i18n="minHumans" style="font-size:0.66rem;color:var(--gold-dim);text-transform:uppercase;letter-spacing:0.1em;white-space:nowrap">Min humans before bots:</label>
-        <input id="cf-min-humans" type="number" min="1" max="9" value="1" style="width:55px;background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:2px;color:var(--cream);padding:4px 6px;font-family:'Inconsolata',monospace;font-size:0.82rem">
       </div>
     </div>
     <button class="btn-primary" data-i18n="createTable" onclick="App.createGame()" style="margin-top:14px;width:100%;padding:10px">+ Create table</button>

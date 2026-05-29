@@ -6067,7 +6067,7 @@ function dismissWinner() {
           el.checked = !!val;
         } else {
           el.value = val;
-          if (el.type === 'range') el.dispatchEvent(new Event('input'));
+          el.dispatchEvent(new Event('input'));
         }
         el.dataset.modeDefault = isCheckbox ? (!!val) : String(val);
       };
@@ -6131,6 +6131,27 @@ function dismissWinner() {
       for (var i = 0; i < all.length; i++) all[i].classList.remove('active');
       var sel = btn || document.querySelector('.cf-preset[data-preset="' + name + '"]');
       if (sel) sel.classList.add('active');
+    },
+    // ── Synchronisation curseur ↔ champ chiffré éditable ──
+    // Le champ chiffré (id cf-players / cf-stack) est la valeur lue par
+    // createGame ; le curseur (…-range) le pilote et inversement.
+    numFromRange(numId, rangeEl) {
+      var n = document.getElementById(numId);
+      if (n) n.value = rangeEl.value;
+    },
+    rangeFromNum(rangeId, numEl) {
+      var r = document.getElementById(rangeId);
+      if (!r) return;
+      var v = parseInt(numEl.value, 10);
+      if (!isNaN(v)) r.value = v;   // le curseur borne tout seul l'affichage
+    },
+    clampNum(el) {
+      var v = parseInt(el.value, 10);
+      var mn = parseInt(el.min, 10), mx = parseInt(el.max, 10);
+      if (isNaN(v)) v = isNaN(mn) ? 0 : mn;
+      if (!isNaN(mn) && v < mn) v = mn;
+      if (!isNaN(mx) && v > mx) v = mx;
+      el.value = v;
     },
     toggleMoreOptions() {
       var el = document.getElementById('cf-more-opts');
