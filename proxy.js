@@ -171,6 +171,45 @@ function describeMsg(payload) {
   }
 }
 
+// ── Family leaderboard storage ──
+// Lightweight per-nickname lifetime snapshots, persisted to stats.json next
+// to this file. Each web client pushes only its OWN player's snapshot, so
+// there is no double counting and last-write-wins per name is correct.
+const STATS_FILE = path.join(__dirname, 'stats.json');
+let statsStore = {};
+try { statsStore = JSON.parse(fs.readFileSync(STATS_FILE, 'utf8')) || {}; } catch (e) { statsStore = {}; }
+let _statsSaveTimer = null;
+function saveStatsSoon() {
+  if (_statsSaveTimer) return;
+  _statsSaveTimer = setTimeout(function () {
+    _statsSaveTimer = null;
+    fs.writeFile(STATS_FILE, JSON.stringify(statsStore), function (err) {
+      if (err) console.error('[stats] write failed:', err.message);
+    });
+  }, 800);
+}
+function readJsonBody(req, cb) {
+  let body = '';
+  req.on('data', function (c) { body += c; if (body.length > 16384) req.destroy(); });
+  req.on('end', function () { try { cb(JSON.parse(body || '{}')); } catch (e) { cb(null); } });
+  req.on('error', function () { cb(null); });
+}
+function sanitizeSnapshot(d) {
+  const num = function (v) { v = Number(v); return isFinite(v) ? Math.round(v) : 0; };
+  return {
+    handsPlayed: Math.max(0, num(d.handsPlayed)),
+    handsWon:    Math.max(0, num(d.handsWon)),
+    net:         num(d.net),
+    bigWin:      num(d.bigWin),
+    bigLoss:     num(d.bigLoss),
+    gamesPlayed: Math.max(0, num(d.gamesPlayed)),
+    gamesWon:    Math.max(0, num(d.gamesWon)),
+    bestStreak:  Math.max(0, num(d.bestStreak)),
+    avatar:      (typeof d.avatar === 'string') ? d.avatar.slice(0, 8) : '',
+    ts:          Date.now()
+  };
+}
+
 // ── HTTP server ──
 const httpServer = http.createServer((req, res) => {
   // Serve the SPA shell for the root path. We strip the query string
@@ -203,6 +242,33 @@ const httpServer = http.createServer((req, res) => {
     });
     res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' });
     res.end(JSON.stringify({ v: Math.floor(newest) }));
+    return;
+  }
+
+  // ── Family leaderboard API ──
+  // GET  /stats        → the full {name: snapshot} map (rendered as the board)
+  // POST /stats {name,…}→ upsert one player's snapshot ({_delete:true} removes)
+  if (reqPathOnly === '/stats') {
+    if (req.method === 'GET') {
+      res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' });
+      res.end(JSON.stringify(statsStore));
+      return;
+    }
+    if (req.method === 'POST') {
+      readJsonBody(req, function (d) {
+        if (!d || typeof d.name !== 'string' || !d.name.trim()) {
+          res.writeHead(400, { 'Content-Type': 'application/json; charset=utf-8' }); res.end('{"ok":false}'); return;
+        }
+        const name = d.name.trim().slice(0, 32);
+        if (d._delete) delete statsStore[name];
+        else statsStore[name] = sanitizeSnapshot(d);
+        saveStatsSoon();
+        res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' });
+        res.end('{"ok":true}');
+      });
+      return;
+    }
+    res.writeHead(405); res.end('Method not allowed');
     return;
   }
 

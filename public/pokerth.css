@@ -1884,6 +1884,41 @@ body {
 .stat-val.pos { color: #4cff88; }
 .stat-val.neg { color: #ff6b6b; }
 .stat-divider { border: none; border-top: 1px solid var(--border); margin: 4px 0; }
+/* Stats panel tabs (Session / Total / Ranking) */
+.stats-tabs { display: flex; border-bottom: 1px solid var(--border); }
+.stats-tab {
+  flex: 1; background: none; border: none; cursor: pointer;
+  padding: 7px 4px; font-size: 0.6rem; letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--text); font-family: 'Cinzel', serif;
+  border-bottom: 2px solid transparent; transition: color 0.12s, border-color 0.12s;
+}
+.stats-tab.active { color: var(--gold); border-bottom-color: var(--gold); }
+.stat-note { font-size: 0.58rem; color: var(--gold-dim); line-height: 1.3; margin-bottom: 2px; }
+.stat-empty { font-size: 0.62rem; color: var(--text); text-align: center; padding: 14px 0; }
+.stats-reset {
+  margin-top: 2px; background: rgba(192,57,43,0.12); color: #ff8a7a;
+  border: 1px solid rgba(192,57,43,0.4); border-radius: 5px; cursor: pointer;
+  padding: 7px; font-size: 0.62rem; font-family: 'Cinzel', serif; letter-spacing: 0.06em;
+  transition: background 0.12s;
+}
+.stats-reset:hover { background: rgba(192,57,43,0.22); }
+/* Leaderboard rows: rank · avatar · name · net on top, sub-line below */
+.board-list { display: flex; flex-direction: column; }
+.board-row {
+  display: grid; align-items: center;
+  grid-template-columns: 1.6rem 1.4rem 1fr auto;
+  grid-template-areas: "rank av name net" "sub sub sub sub";
+  column-gap: 6px; row-gap: 1px;
+  padding: 6px 0; border-bottom: 1px solid var(--border);
+}
+.board-row.me { background: rgba(200,168,74,0.10); border-radius: 4px; padding-left: 4px; padding-right: 4px; }
+.board-rank { grid-area: rank; font-size: 0.8rem; text-align: center; }
+.board-av   { grid-area: av; font-size: 1rem; text-align: center; line-height: 1; }
+.board-name { grid-area: name; font-size: 0.66rem; color: var(--cream); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.board-net  { grid-area: net; font-size: 0.72rem; font-weight: 700; font-family: 'Inconsolata', monospace; }
+.board-net.pos { color: #4cff88; }
+.board-net.neg { color: #ff6b6b; }
+.board-sub  { grid-area: sub; font-size: 0.55rem; color: var(--gold-dim); font-family: 'Inconsolata', monospace; }
 .hand-hist-item {
   background: rgba(255,255,255,0.03); border: 1px solid var(--border);
   border-radius: 4px; padding: 6px 8px; font-size: 0.58rem;

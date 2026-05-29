@@ -2024,6 +2024,54 @@ const App = (() => {
   var _stats = { handsPlayed:0, handsWon:0, startMoney:0, peakMoney:0, totalGain:0,
                  bigWin:0, bigLoss:0, history:[] };
   var _statsInited = false;
+
+  // ── Lifetime stats + family leaderboard ───────────────────────────────
+  // Persisted per nickname in localStorage; pushed to the proxy (/stats) so
+  // every device sees the same board. Recorded ONLY on private-server / LAN
+  // connections (set true at connect) — pokerth.net modes are never tracked.
+  var _statsEligible = false;
+  var _gameCounted = false;          // guard: count each finished game once
+  function _lifeAll()       { try { return JSON.parse(localStorage.getItem('pth_life') || '{}') || {}; } catch(e) { return {}; } }
+  function _lifeSaveAll(o)  { try { localStorage.setItem('pth_life', JSON.stringify(o)); } catch(e) {} }
+  function _lifeBlank()     { return { handsPlayed:0, handsWon:0, net:0, bigWin:0, bigLoss:0, gamesPlayed:0, gamesWon:0, bestStreak:0, streak:0 }; }
+  function _lifeGet(name)   { var a=_lifeAll(); return a[name] || _lifeBlank(); }
+  var _lifePushTimer = null;
+  function _pushStats() {
+    if (!_statsEligible || !myName) return;
+    if (_lifePushTimer) clearTimeout(_lifePushTimer);
+    _lifePushTimer = setTimeout(function() {
+      var s = _lifeGet(myName);
+      var av = ''; try { av = localStorage.getItem('pth_avatar') || ''; } catch(e) {}
+      fetch('/stats', { method:'POST', headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({ name:myName, avatar:av,
+          handsPlayed:s.handsPlayed, handsWon:s.handsWon, net:s.net, bigWin:s.bigWin,
+          bigLoss:s.bigLoss, gamesPlayed:s.gamesPlayed, gamesWon:s.gamesWon, bestStreak:s.bestStreak })
+      }).catch(function(){});
+    }, 1500);
+  }
+  function _lifeRecordHand(won, delta) {
+    if (!_statsEligible || !myName) return;
+    var a = _lifeAll(); var s = a[myName] || _lifeBlank();
+    s.handsPlayed++;
+    if (won) { s.handsWon++; s.streak = (s.streak||0)+1; if (s.streak > s.bestStreak) s.bestStreak = s.streak; }
+    else { s.streak = 0; }
+    s.net += delta;
+    if (delta > s.bigWin)  s.bigWin  = delta;
+    if (delta < s.bigLoss) s.bigLoss = delta;
+    a[myName] = s; _lifeSaveAll(a); _pushStats();
+  }
+  function _lifeRecordGame(won) {
+    if (!_statsEligible || !myName) return;
+    var a = _lifeAll(); var s = a[myName] || _lifeBlank();
+    s.gamesPlayed++; if (won) s.gamesWon++;
+    a[myName] = s; _lifeSaveAll(a); _pushStats();
+  }
+  function _lifeReset() {
+    if (!myName) return;
+    var a = _lifeAll(); delete a[myName]; _lifeSaveAll(a);
+    try { fetch('/stats', { method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ name:myName, _delete:true }) }).catch(function(){}); } catch(e) {}
+  }
   var _myStackAtHandStart = null;    // mon stack réel au début de la main (avant blinds)
   var _seatStackAtHandStart = {};    // {pid: stack début de main} → net exact de chaque joueur
 
@@ -2284,6 +2332,10 @@ const App = (() => {
         if (loginMode === 'unauth' || loginMode === 'guest') loginType = 2;
         else if (loginMode === 'auth') loginType = 1;
         else loginType = 0; // lan
+        // Track lifetime stats / leaderboard only on the private server & LAN
+        // (cookmed / LAN). pokerth.net modes (guest + registered) are never
+        // recorded — strangers and throwaway guest names would pollute it.
+        _statsEligible = (loginMode === 'unauth' || loginMode === 'lan');
         const typeLabel = ['LAN','Internet (no-auth)','Internet (auth)'][stype] || 'Serveur';
         setStatus(t('connectingPlayers').replace('{type}', typeLabel).replace('{ver}', pMaj + '.' + pMin).replace('{n}', np));
         lastMajor = pMaj; lastMinor = pMin; lastLoginType = loginType;
@@ -3040,6 +3092,7 @@ const App = (() => {
           _stats.peakMoney = 0; _stats.totalGain = 0; _stats.bigWin = 0;
           _stats.bigLoss = 0; _stats.history = [];
           _statsInited = false;
+          _gameCounted = false;
           _myStackAtHandStart = null; _seatStackAtHandStart = {};
           if (_statsOpen) renderStats();
           const scEl = document.getElementById('g-myseat-cards');
@@ -3899,9 +3952,33 @@ const App = (() => {
     if (_statsOpen) renderStats();
   }
 
+  var _statsTab = 'session';
+  function _statsSetTab(tab) { _statsTab = tab; renderStats(); }
+  window._statsSetTab = _statsSetTab;
+
+  function _statsRow(label, val, cls) {
+    return '<div class="stat-row"><span class="stat-label">'+label+'</span><span class="stat-val '+(cls||'')+'">'+val+'</span></div>';
+  }
+
   function renderStats() {
     var el = document.getElementById('stats-overlay');
     if (!el) return;
+    var titles = { session: t('statSession'), life: t('statTabLife'), board: t('statTabBoard') };
+    function tb(id, label) {
+      return '<button class="stats-tab'+(_statsTab===id?' active':'')+'" onclick="window._statsSetTab(\''+id+'\')">'+label+'</button>';
+    }
+    var tabs = '<div class="stats-tabs">'+tb('session',t('statTabSession'))+tb('life',t('statTabLife'))+tb('board',t('statTabBoard'))+'</div>';
+    var body;
+    if (_statsTab === 'life')       body = _statsBodyLife();
+    else if (_statsTab === 'board') body = '<div id="stats-board-body" class="stats-body"><div class="stat-empty">…</div></div>';
+    else                            body = _statsBodySession();
+    el.innerHTML = '<div class="stats-header"><span>📊 '+titles[_statsTab]+'</span>'
+      + '<button onclick="toggleStats()" style="background:none;border:none;color:var(--text);cursor:pointer;font-size:0.9rem">✕</button>'
+      + '</div>' + tabs + body;
+    if (_statsTab === 'board') renderBoard();
+  }
+
+  function _statsBodySession() {
     var s = _stats;
     var gain = s.totalGain;
     var gainCls = gain > 0 ? 'pos' : gain < 0 ? 'neg' : '';
@@ -3919,24 +3996,78 @@ const App = (() => {
         + '</div>'
         + '</div>';
     }).join('') : '<div style="color:var(--text);font-size:0.62rem">' + t('noHandsPlayed') + '</div>';
-
-    var isFr = (_lang === 'fr');
-    el.innerHTML = '<div class="stats-header">'
-      + '<span>📊 ' + t('statSession') + '</span>'
-      + '<button onclick="toggleStats()" style="background:none;border:none;color:var(--text);cursor:pointer;font-size:0.9rem">✕</button>'
-      + '</div>'
-      + '<div class="stats-body">'
-      + '<div class="stat-row"><span class="stat-label">'+t('statHandsPlayed')+'</span><span class="stat-val">'+s.handsPlayed+'</span></div>'
-      + '<div class="stat-row"><span class="stat-label">'+t('statWins')+'</span><span class="stat-val pos">'+s.handsWon+'</span></div>'
-      + '<div class="stat-row"><span class="stat-label">'+t('statWinRate')+'</span><span class="stat-val">'+wr+'%</span></div>'
+    return '<div class="stats-body">'
+      + _statsRow(t('statHandsPlayed'), s.handsPlayed)
+      + _statsRow(t('statWins'), s.handsWon, 'pos')
+      + _statsRow(t('statWinRate'), wr+'%')
       + '<hr class="stat-divider">'
-      + '<div class="stat-row"><span class="stat-label">'+t('statNet')+'</span><span class="stat-val '+gainCls+'">'+(gain>0?'+':'')+gain+' ¥</span></div>'
-      + '<div class="stat-row"><span class="stat-label">'+t('statBestWin')+'</span><span class="stat-val pos">+'+s.bigWin+' ¥</span></div>'
-      + '<div class="stat-row"><span class="stat-label">'+t('statWorstLoss')+'</span><span class="stat-val neg">'+s.bigLoss+' ¥</span></div>'
+      + _statsRow(t('statNet'), (gain>0?'+':'')+gain+' ¥', gainCls)
+      + _statsRow(t('statBestWin'), '+'+s.bigWin+' ¥', 'pos')
+      + _statsRow(t('statWorstLoss'), s.bigLoss+' ¥', 'neg')
       + '<hr class="stat-divider">'
       + '<div style="font-size:0.58rem;color:var(--gold-dim);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:4px">'+t('statRecentHands')+'</div>'
       + histHtml
       + '</div>';
+  }
+
+  function _statsBodyLife() {
+    var s = _lifeGet(myName);
+    var gain = s.net;
+    var gainCls = gain > 0 ? 'pos' : gain < 0 ? 'neg' : '';
+    var wr = s.handsPlayed > 0 ? Math.round(s.handsWon/s.handsPlayed*100) : 0;
+    var note = _statsEligible ? '' : '<div class="stat-note">'+t('statLifeOnlyPrivate')+'</div>';
+    return '<div class="stats-body">'
+      + note
+      + _statsRow(t('statGamesPlayed'), s.gamesPlayed)
+      + _statsRow(t('statGamesWon'), s.gamesWon, 'pos')
+      + _statsRow(t('statStreak'), s.bestStreak, 'pos')
+      + '<hr class="stat-divider">'
+      + _statsRow(t('statHandsPlayed'), s.handsPlayed)
+      + _statsRow(t('statWins'), s.handsWon, 'pos')
+      + _statsRow(t('statWinRate'), wr+'%')
+      + '<hr class="stat-divider">'
+      + _statsRow(t('statNet'), (gain>0?'+':'')+gain+' ¥', gainCls)
+      + _statsRow(t('statBestWin'), '+'+s.bigWin+' ¥', 'pos')
+      + _statsRow(t('statWorstLoss'), s.bigLoss+' ¥', 'neg')
+      + '<hr class="stat-divider">'
+      + '<button class="stats-reset" onclick="window._statsReset()">'+t('statReset')+'</button>'
+      + '</div>';
+  }
+  function _statsReset() {
+    if (!confirm(t('statResetConfirm'))) return;
+    _lifeReset();
+    renderStats();
+  }
+  window._statsReset = _statsReset;
+
+  function renderBoard() {
+    fetch('/stats', { cache:'no-store' })
+      .then(function(r){ return r.ok ? r.json() : {}; })
+      .then(function(data){
+        var box = document.getElementById('stats-board-body');
+        if (!box) return;
+        var arr = Object.keys(data || {}).map(function(name){ var v = data[name] || {}; v.name = name; return v; });
+        arr.sort(function(a, b){ return (b.net||0) - (a.net||0); });
+        if (!arr.length) { box.innerHTML = '<div class="stat-empty">'+t('boardEmpty')+'</div>'; return; }
+        var rows = arr.map(function(p, i){
+          var net = p.net||0, ncls = net>0?'pos':net<0?'neg':'';
+          var mine = (p.name === myName) ? ' me' : '';
+          var av = p.avatar ? p.avatar : (p.name ? p.name.charAt(0).toUpperCase() : '?');
+          var medal = i===0?'🥇':i===1?'🥈':i===2?'🥉':('#'+(i+1));
+          return '<div class="board-row'+mine+'">'
+            + '<span class="board-rank">'+medal+'</span>'
+            + '<span class="board-av">'+esc(av)+'</span>'
+            + '<span class="board-name">'+esc(p.name)+'</span>'
+            + '<span class="board-net '+ncls+'">'+(net>0?'+':'')+net+' ¥</span>'
+            + '<span class="board-sub">🏆'+(p.gamesWon||0)+' · '+(p.handsWon||0)+'</span>'
+            + '</div>';
+        }).join('');
+        box.innerHTML = '<div class="board-list">'+rows+'</div>';
+      })
+      .catch(function(){
+        var box = document.getElementById('stats-board-body');
+        if (box) box.innerHTML = '<div class="stat-empty">'+t('boardEmpty')+'</div>';
+      });
   }
 
   // Initialiser les stats au début d'une partie
@@ -3957,6 +4088,7 @@ const App = (() => {
     _stats.history.push({ num: handNum, delta: delta, won: won,
       cards: myCardsPair });
     if (_stats.history.length > 20) _stats.history.shift();
+    _lifeRecordHand(won, delta);
     if (_statsOpen) renderStats();
   }
 
@@ -4733,6 +4865,7 @@ const App = (() => {
     if (!el) return;
 
     const isMyWin = winnerPid === myId;
+    if (!_gameCounted) { _gameCounted = true; _lifeRecordGame(isMyWin); }
     const winnerName = players[winnerPid] || (isMyWin
       ? (document.getElementById('nick') ? document.getElementById('nick').value : 'You')
       : ('#' + winnerPid));
