@@ -1234,8 +1234,8 @@ if ('serviceWorker' in navigator) {
     var lbl = (typeof window.t === 'function') ? tr('updateNow') : 'Mettre à jour';
     var bar = document.createElement('div');
     bar.id = 'update-banner';
-    var span = document.createElement('span'); span.textContent = msg;
-    var btn = document.createElement('button'); btn.textContent = lbl;
+    var span = document.createElement('span'); span.textContent = msg; span.setAttribute('data-i18n', 'updateAvailable');
+    var btn = document.createElement('button'); btn.textContent = lbl; btn.setAttribute('data-i18n', 'updateNow');
     btn.onclick = function () {
       btn.disabled = true;
       // If a new SW is waiting, activate it; then reload to pull fresh assets
