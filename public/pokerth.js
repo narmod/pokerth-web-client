@@ -4804,7 +4804,7 @@ const App = (() => {
     var sub = t('notifTurnBody');
     // Notification navigateur (si onglet en arrière-plan)
     if (document.hidden && 'Notification' in window && Notification.permission === 'granted') {
-      try { new Notification(msg, { body: sub, icon: '/favicon.ico', tag: 'pokerth-turn', silent: false }); } catch(e) {}
+      try { new Notification(msg, { body: sub, icon: '/favicon.ico', tag: 'pokerth-turn', silent: false, vibrate: _hapticEnabled ? [90, 50, 90] : [] }); } catch(e) {}
     }
     // Titre d'onglet dynamique + clignotement
     clearInterval(_titleBlinkID);
