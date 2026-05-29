@@ -525,16 +525,6 @@ body {
 .avp-btn:hover { border-color: var(--gold-dim); transform: scale(1.15); background: rgba(200,168,74,0.1); }
 .avp-btn.selected { border-color: var(--gold); background: rgba(200,168,74,0.2); }
 .avp-none { font-size: 0.7rem !important; font-family: 'Cinzel',serif; color: var(--text); }
-/* Pile de polices emoji : pousse chaque OS vers sa police emoji couleur la
-   plus cohérente. Appliquée uniquement aux éléments 100 % emoji (donc pas le
-   bouton « Aa » .avp-none ni l'avatar-image .avp-pth). Les polices emoji
-   n'ont pas de glyphes latins, donc tout texte retombe sur sans-serif. */
-.avp-btn:not(.avp-none):not(.avp-pth),
-.react-btn,
-#av-trigger,
-.seat-avatar.emoji-av .seat-initial {
-  font-family: 'Apple Color Emoji','Segoe UI Emoji','Noto Color Emoji','Android Emoji',sans-serif;
-}
 /* PokerTH official avatar entry -- accent color to distinguish it
    from the emoji costumes (this is a real identity, not a mask).
    Hosts an <img> of the PokerTH chip logo; tighten padding so the
