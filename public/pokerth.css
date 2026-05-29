@@ -8,7 +8,7 @@
    feel snappy and stable (avatar picker, reaction buttons, action
    buttons during a hand, etc.).
    ───────────────────────────────────────────────────────────────────── */
-html { touch-action: manipulation; }
+html { touch-action: manipulation; -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
 
 :root {
   --felt:       #182e1a;
@@ -922,7 +922,7 @@ body {
 @media (min-width: 1100px)  { :root { --oval-w: 520px; --oval-h: 210px; } }
 @media (max-width: 900px)   { :root { --oval-w: 320px; --oval-h: 132px; } }
 @media (max-width: 700px)   { :root { --oval-w: 240px; --oval-h: 100px; } }
-@media (max-width: 500px) and (orientation: portrait)  { :root { --oval-w: min(58vw,240px); --oval-h: min(24vw,100px); } }
+@media (max-width: 740px) and (orientation: portrait)  { :root { --oval-w: min(58vw,240px); --oval-h: min(24vw,100px); } }
 @media (max-height: 500px) and (orientation: landscape){ :root { --oval-w: min(40vw,240px); --oval-h: min(18vh,88px); } }
 
    RESPONSIVE — orientation-aware
@@ -1149,7 +1149,7 @@ body {
   /* Oval moins large : libère de l'espace pour les joueurs sur les côtés */
   .felt-oval { width: min(400px, 72vw) !important; }
 }
-@media (max-width: 500px) and (orientation: portrait) {
+@media (max-width: 740px) and (orientation: portrait) {
   /* Oval: compact to fit 10 seats */
   .felt-oval::before {
   content: '';
