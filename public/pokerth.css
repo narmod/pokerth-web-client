@@ -1193,14 +1193,17 @@ body {
 .header-brand { font-size: 0.85rem; }
   #g-blind { display: none; }
 }
-  .btn-action { padding: 12px 14px; font-size: 0.84rem; flex: 1; min-width: 80px; text-align: center; }
-  .pct-row { display: flex; gap: 5px; width: 100%; }
-  .pct-row .btn-pct { flex: 1; padding: 10px 4px; font-size: 0.76rem; }
-  .raise-row { display: flex; gap: 5px; flex: 2; min-width: 160px; }
-  .raise-row .raise-input { flex: 1; padding: 10px 6px; font-size: 0.84rem; }
-  .btn-allin { flex: 1.5; }
+
+/* Global action-bar layout (applies at all sizes). These flex containers
+   are required for the FOLD / CALL / RAISE / ALL-IN buttons to lay out
+   correctly. Previously orphaned after a stray closing brace. */
+.btn-action { padding: 12px 14px; font-size: 0.84rem; flex: 1; min-width: 80px; text-align: center; }
+.pct-row { display: flex; gap: 5px; width: 100%; }
+.pct-row .btn-pct { flex: 1; padding: 10px 4px; font-size: 0.76rem; }
+.raise-row { display: flex; gap: 5px; flex: 2; min-width: 160px; }
+.raise-row .raise-input { flex: 1; padding: 10px 6px; font-size: 0.84rem; }
+.btn-allin { flex: 1.5; }
 #g-blind { display: none; }
-}
 
 /* ── Phone LANDSCAPE (wide, short) ── */
 @media (max-height: 500px) and (orientation: landscape) {
