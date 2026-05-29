@@ -529,19 +529,19 @@ function _evalFive(cards) {
   var rn = RANK_NAMES;
   if (isFlush && isStraight) {
     if (straightHigh===12) return { r:9, label: t('hsRoyal') };
-    return { r:8, label: t('hsSF').replace('{r}', rn[straightHigh]) };
+    return { r:8, label: t('hsSF', { r: rn[straightHigh] }) };
   }
-  if (freq[0]===4) return { r:7, label: t('hsFour').replace('{r}', rn[top]) };
-  if (freq[0]===3 && freq[1]===2) return { r:6, label: t('hsFull').replace('{a}', rn[top]).replace('{b}', rn[top2]) };
+  if (freq[0]===4) return { r:7, label: t('hsFour', { r: rn[top] }) };
+  if (freq[0]===3 && freq[1]===2) return { r:6, label: t('hsFull', { a: rn[top], b: rn[top2] }) };
   if (isFlush) return { r:5, label: t('hsFlush') };
-  if (isStraight) return { r:4, label: t('hsStraight').replace('{r}', rn[straightHigh]) };
-  if (freq[0]===3) return { r:3, label: t('hsThree').replace('{r}', rn[top]) };
+  if (isStraight) return { r:4, label: t('hsStraight', { r: rn[straightHigh] }) };
+  if (freq[0]===3) return { r:3, label: t('hsThree', { r: rn[top] }) };
   if (freq[0]===2 && freq[1]===2) {
     var p1=rn[top], p2=rn[top2];
-    return { r:2, label: t('hsTwoPair').replace('{a}', p1).replace('{b}', p2) };
+    return { r:2, label: t('hsTwoPair', { a: p1, b: p2 }) };
   }
-  if (freq[0]===2) return { r:1, label: t('hsPair').replace('{r}', rn[top]) };
-  return { r:0, label: t('hsHigh').replace('{r}', rn[ranks[0]]) };
+  if (freq[0]===2) return { r:1, label: t('hsPair', { r: rn[top] }) };
+  return { r:0, label: t('hsHigh', { r: rn[ranks[0]] }) };
 }
 
 // Encodage PokerTH UNIQUE pour toutes les cartes (0-indexé, 0..51) :
@@ -2365,7 +2365,7 @@ const App = (() => {
         // recorded — strangers and throwaway guest names would pollute it.
         _statsEligible = (loginMode === 'unauth' || loginMode === 'lan');
         const typeLabel = ['LAN','Internet (no-auth)','Internet (auth)'][stype] || 'Serveur';
-        setStatus(t('connectingPlayers').replace('{type}', typeLabel).replace('{ver}', pMaj + '.' + pMin).replace('{n}', np));
+        setStatus(t('connectingPlayers', { type: typeLabel, ver: pMaj + '.' + pMin, n: np }));
         lastMajor = pMaj; lastMinor = pMin; lastLoginType = loginType;
         const authPass = (loginType === 1) ? ($('pass') ? $('pass').value : '') : null;
         send(MSG.buildInit(myName, pMaj, pMin, loginType, authPass));
@@ -2401,7 +2401,7 @@ const App = (() => {
         if ('Notification' in window && Notification.permission === 'default') {
           Notification.requestPermission().catch(function(){});
         }
-        addChat(null, t('connectedAsGuest').replace('{name}', myName).replace('{id}', myId), 'sys');
+        addChat(null, t('connectedAsGuest', { name: myName, id: myId }), 'sys');
         const cfName = document.getElementById('cf-name');
         if (cfName) cfName.value = _localDefaultName();  // nom par défaut localisé
         break;
@@ -2450,13 +2450,13 @@ const App = (() => {
             try { localStorage.removeItem('pth_resume'); } catch(e) {}
             const suffix = Math.floor(Math.random()*999)+1;
             myName = myName.replace(/_\d+$/, '') + '_' + suffix;
-            setStatus(t('errNickTakenRetry').replace('{name}', myName));
+            setStatus(t('errNickTakenRetry', { name: myName }));
             setTimeout(() => {
               send(MSG.buildInit(myName, lastMajor || 5, lastMinor || 1, lastLoginType || 0));
             }, 400);
           }
         } else {
-          setStatus(t('errGeneric').replace('{code}', codes[r] || ('code ' + r)), 'err');
+          setStatus(t('errGeneric', { code: codes[r] || ('code ' + r) }), 'err');
         }
         break;
       }
@@ -2803,7 +2803,7 @@ const App = (() => {
         _timerSec = sec; // Sync avec le serveur
         // Si le serveur donne plus de temps que prévu, ajuster le total
         if (sec > _timerTot) _timerTot = sec;
-        addChat(null, t('timerHurry').replace('{s}', sec), 'sys');
+        addChat(null, t('timerHurry', { s: sec }), 'sys');
         // Auto-reset timeout
         const rtm = Proto.encode([[1,0,68],[69,2,new Uint8Array(0)]]);
         send(rtm);
@@ -2831,7 +2831,7 @@ const App = (() => {
           }
         } else {
           _lastMsgWasReaction = false;
-          if (!amInGame) addChat(null, t('chatRefusedReason').replace('{r}', rejText), 'sys');
+          if (!amInGame) addChat(null, t('chatRefusedReason', { r: rejText }), 'sys');
           else if (!_chatRejectShown) {
             _chatRejectShown = true;
             if (_currentLoginMode === 'lan') {
@@ -2898,7 +2898,7 @@ const App = (() => {
         if (akbm) akbm.style.display = amGameAdmin ? '' : 'none';
         var asbm = document.getElementById('admin-start-mob');
         if (asbm) asbm.style.display = amGameAdmin ? '' : 'none';
-        addChat(null, t('joinedTableWaiting').replace('{gid}', gId).replace('{admin}', isAdmin ? ' (admin)' : ''), 'sys');
+        addChat(null, t('joinedTableWaiting', { gid: gId, admin: isAdmin ? ' (admin)' : '' }), 'sys');
         show('s-game');
         // ── Spectator UI mode ──
         // If we joined via spectateGame(), flip the banner up top and put
@@ -3051,7 +3051,7 @@ const App = (() => {
       case T.GamePlayerLeft: {
         const pid = Proto.u32(sub, 2);
         const name = players[pid] || '#'+pid;
-        addChat(null, t('playerLeftTable').replace('{name}', name), 'sys');
+        addChat(null, t('playerLeftTable', { name: name }), 'sys');
         if (seatData[pid]) { seatData[pid].active = false; seatData[pid].gone = true; }
         renderSeats();
         // Refresh the waiting panel if the game hasn't started yet.
@@ -3626,7 +3626,7 @@ const App = (() => {
             }
             addChat(null, '🏆 ' + getPlayerName(pid) + ' ' + t('wins') + ' ' + won + ' ¥!', 'sys');
             logAction('🏆 ' + getPlayerName(pid) + ' +' + won);
-        speak(t('voiceWins').replace('{name}', getPlayerName(pid)).replace('{n}', won));
+        speak(t('voiceWins', { name: getPlayerName(pid), n: won }));
           }
         }
         // Enregistrer la perte si je ne suis pas dans les gagnants
@@ -4847,7 +4847,7 @@ const App = (() => {
     const enough = current >= minToStart;
     const statusLine = enough
       ? '<div class="wp-ok">' + t('waitingEnough') + '</div>'
-      : '<div class="wp-need">' + t('waitingNeedMore').replace('{n}', (minToStart - current)) + '</div>';
+      : '<div class="wp-need">' + t('waitingNeedMore', { n: (minToStart - current) }) + '</div>';
 
     // Admin hint
     const hint = amGameAdmin
@@ -5583,10 +5583,10 @@ function dismissWinner() {
         if (btn) btn.disabled = true;
         // Live countdown so the user understands what's happening
         var remain = wait_s;
-        setStatus('⏳ ' + t('preparingConnection').replace('{n}', remain));
+        setStatus('⏳ ' + t('preparingConnection', { n: remain }));
         var iv = setInterval(function(){
           remain--;
-          if (remain > 0) setStatus('⏳ ' + t('preparingConnection').replace('{n}', remain));
+          if (remain > 0) setStatus('⏳ ' + t('preparingConnection', { n: remain }));
         }, 1000);
         setTimeout(function() {
           clearInterval(iv);
@@ -5785,7 +5785,7 @@ function dismissWinner() {
           _hideBanner();
           _wasAuthenticated = false;
           show('s-connect');
-          setStatus(t('reconnFailed').replace('{n}', maxAttempts), 'err');
+          setStatus(t('reconnFailed', { n: maxAttempts }), 'err');
           return;
         }
         // Délai croissant : 5s, 15s, 30s — assez long pour ne pas spammer
@@ -5838,7 +5838,7 @@ function dismissWinner() {
       if (_reconnectAttempts > maxAttempts) {
         _hideBanner();
         show('s-connect');
-        setStatus(t('reconnFailed').replace('{n}', maxAttempts), 'err');
+        setStatus(t('reconnFailed', { n: maxAttempts }), 'err');
         return;
       }
       // Exponentiel : 3s → 6s → 12s → 24s → 30s → 30s
@@ -5979,7 +5979,7 @@ function dismissWinner() {
         titleEl.textContent = t('kickThisPlayer');
       }
       if (msgEl) {
-        msgEl.textContent = t('kickConfirmMsg').replace('{name}', name);
+        msgEl.textContent = t('kickConfirmMsg', { name: name });
       }
       // Stash the target pid for the confirm button.
       window._pendingKickPid = pid;
@@ -6017,7 +6017,7 @@ function dismissWinner() {
       // Optimistic log so the admin gets immediate feedback even
       // before the server broadcasts GamePlayerLeft. Localised.
       var fr = (typeof _lang === 'undefined' || _lang !== 'en');
-      addGameChat(null, '🗑️ ' + t('kickRequested').replace('{name}', name), 'sys');
+      addGameChat(null, '🗑️ ' + t('kickRequested', { name: name }), 'sys');
       // Watchdog: if the server hasn't broadcast a GamePlayerLeft
       // within 3s, the kick has almost certainly failed silently.
       // This happens on PokerTH servers older than v2.0.6 (March 2026,
@@ -6028,7 +6028,7 @@ function dismissWinner() {
           if (gId !== gameAtRequest) return;
           // Player still present means the kick was not honoured.
           if (seatData[targetPid] && !seatData[targetPid].gone) {
-            addGameChat(null, '⚠ ' + t('kickNotProcessed').replace('{name}', targetName), 'sys');
+            addGameChat(null, '⚠ ' + t('kickNotProcessed', { name: targetName }), 'sys');
           }
         }, 3000);
       })(pid, name, gId);
@@ -6292,7 +6292,7 @@ function dismissWinner() {
         autoAction = true;
         const btn = document.getElementById('btn-autojoin');
         if (btn) { btn.textContent = '⏳...'; btn.disabled = true; }
-        addChat(null, t('autoTableFound').replace('{n}', target), 'sys');
+        addChat(null, t('autoTableFound', { n: target }), 'sys');
         send(MSG.buildJoinGame(parseInt(target), false));
       } else {
         // No table — show the player-count dialog. The actual CreateGame
