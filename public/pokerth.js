@@ -1833,9 +1833,9 @@ const App = (() => {
       badges.push('<span class="gim-badge">👑 ' + (fr ? 'Admin' : 'Admin') + '</span>');
     }
     if (meta.priv) {
-      badges.push('<span class="gim-badge">🔒 ' + (fr ? 'Privée' : 'Private') + '</span>');
+      badges.push('<span class="gim-badge">🔒 ' + t('piPrivate') + '</span>');
     } else {
-      badges.push('<span class="gim-badge">🌐 ' + (fr ? 'Publique' : 'Public') + '</span>');
+      badges.push('<span class="gim-badge">🌐 ' + t('piPublic') + '</span>');
     }
     subEl.innerHTML = badges.join(' ');
 
@@ -1870,36 +1870,36 @@ const App = (() => {
 
     // ── Section 1: General info ──
     sections.push({
-      title: fr ? 'Informations' : 'Information',
+      title: t('piInformation'),
       rows: [
-        [fr ? 'Type' : 'Type',          _gameTypeLabel(meta.type)],
+        [t('piType'),          _gameTypeLabel(meta.type)],
       ],
     });
 
     // ── Section 2: Configuration ──
     sections.push({
-      title: fr ? 'Configuration' : 'Configuration',
+      title: t('piConfiguration'),
       rows: [
-        [fr ? 'Blindes' : 'Blinds',
+        [t('blinds'),
             (smallBlind || 0) + ' / ' + ((smallBlind || 0) * 2) + ' ¥'],
-        [fr ? 'Tapis de départ' : 'Starting stack',
+        [t('piStartingStack'),
             (meta.startMoney || 0) + ' ¥'],
-        [fr ? "Timer d'action" : 'Action timer',
+        [t('piActionTimer'),
             (meta.timeout || gameTimeout || 15) + ' s'],
       ],
     });
 
     // ── Section 3: État de la partie ──
     sections.push({
-      title: fr ? 'État de la partie' : 'Game state',
+      title: t('piGameState'),
       rows: [
-        [fr ? 'Joueurs' : 'Players',
+        [t('players'),
             activeCount + ' / ' + (meta.maxPlayers || '?')],
-        [fr ? 'Main n°' : 'Hand #',
-            (handNum > 0) ? ('H#' + handNum) : (fr ? 'Pas démarrée' : 'Not started')],
-        [fr ? 'Pot' : 'Pot',
+        [t('piHandNo'),
+            (handNum > 0) ? ('H#' + handNum) : t('piNotStarted')],
+        [t('piPot'),
             pot + ' ¥'],
-        [fr ? 'Phase' : 'Phase',
+        [t('piPhase'),
             round],
       ],
     });
@@ -1917,7 +1917,7 @@ const App = (() => {
       // Show ourselves first, marked as such.
       var meName = (myName || ('#' + myId)) + ' ' +
                    '<span class="gim-spec-me">' +
-                   (fr ? '(vous)' : '(you)') +
+                   t('piYou') +
                    '</span>';
       specRows.push({ pid: myId, html: meName });
     }
@@ -1946,7 +1946,7 @@ const App = (() => {
     if (specRows.length) {
       html += '<div class="gim-section">';
       html += '<div class="gim-section-title">' +
-              '👁 ' + esc(fr ? 'Spectateurs' : 'Spectators') +
+              '👁 ' + esc(t('piSpectators')) +
               ' <span class="gim-section-count">(' + specRows.length + ')</span>' +
               '</div>';
       html += '<div class="gim-spec-list">';
@@ -2090,13 +2090,13 @@ const App = (() => {
     if (_hapticEnabled) hapticBuzz(40);
     var fr = (typeof _lang === 'undefined' || _lang !== 'en');
     var label = _hapticEnabled
-      ? (fr ? 'Vibration activée' : 'Vibration on')
-      : (fr ? 'Vibration désactivée' : 'Vibration off');
+      ? t('hapticOn')
+      : t('hapticOff');
     if (typeof showKeyHint === 'function') showKeyHint(label);
     // Refresh the menu button label/emoji.
     var b = document.getElementById('haptic-toggle-mob');
     if (b) b.innerHTML = (_hapticEnabled ? '📳' : '📴') + ' ' +
-      (fr ? 'Vibration' : 'Vibration');
+      t('hapticLabel');
     return _hapticEnabled;
   }
   window.toggleHaptic = toggleHaptic;
@@ -2642,8 +2642,8 @@ const App = (() => {
               var note = document.createElement('div');
               note.style.cssText = 'font-size:0.52rem;color:rgba(255,180,50,0.7);text-align:center;width:100%;margin-top:2px;font-style:italic';
               note.textContent = _currentLoginMode === 'lan'
-                ? '⚠ Mode LAN : réactions locales. Utilisez Internet Invité pour les partager.'
-                : '⚠ Réactions locales seulement (chat refusé par le serveur)';
+                ? t('reactLanLocalNote')
+                : t('reactLocalOnlyNote');
               rb.appendChild(note);
               setTimeout(function(){ note.style.opacity='0'; note.style.transition='opacity 1s'; setTimeout(function(){ note.remove(); }, 1000); }, 5000);
             }
@@ -2654,14 +2654,9 @@ const App = (() => {
           else if (!_chatRejectShown) {
             _chatRejectShown = true;
             if (_currentLoginMode === 'lan') {
-              addGameChat(null,
-                '⚠ Mode LAN : chat en jeu désactivé. ' +
-                'Connectez-vous en mode "Internet Invité" pour activer le chat et les réactions.',
-                'sys');
+              addGameChat(null, t('chatLanDisabled'), 'sys');
             } else {
-              addGameChat(null,
-                '⚠ Chat refusé par le serveur. Vérifiez que ServerRestrictGuestLogin=0 dans la config.',
-                'sys');
+              addGameChat(null, t('chatServerRefused'), 'sys');
             }
           }
         }
@@ -2888,9 +2883,7 @@ const App = (() => {
             var visible = _egoEl && _egoEl.offsetParent !== null;
             if (!visible) {
               var winnerPid = stillIn[0] || myId;
-              addChat(null, '⚠ ' + (_lang === 'en'
-                ? 'Only one player left — ending the game.'
-                : 'Plus qu\'un joueur — fin de la partie.'), 'sys');
+              addChat(null, '⚠ ' + t('onePlayerLeft'), 'sys');
               stopTurnTimer();
               dismissWinner();
               showEndGameOverlay(winnerPid);
@@ -3534,14 +3527,14 @@ const App = (() => {
         const reason       = Proto.u32(sub, 5);
         const actNames     = ['','Fold','Check','Call','Bet','Raise','All-in'];
         const reasonLabels = {
-          1: _lang === 'fr' ? 'état de jeu invalide (désynchro)' : 'invalid game state (out-of-sync)',
-          2: _lang === 'fr' ? 'plus votre tour'                 : 'no longer your turn',
-          3: _lang === 'fr' ? 'action non autorisée'            : 'action not allowed',
+          1: t('rejInvalidState'),
+          2: t('rejNotYourTurn'),
+          3: t('rejNotAllowed'),
         };
         const reasonStr = reasonLabels[reason] || ('code ' + reason);
         const actStr    = actNames[rejAction] || ('?' + rejAction);
         logAction('⚠ ' + actStr + (rejBet ? ' ' + rejBet : '') + ' — ' + reasonStr);
-        addGameChat(null, '⚠ ' + (_lang === 'fr' ? 'Action rejetée' : 'Action rejected') +
+        addGameChat(null, '⚠ ' + t('actionRejected') +
                           ' (' + actStr + ') — ' + reasonStr, 'sys');
         // If we're still the active player according to the local state,
         // the server may give us a second chance — re-render the action
@@ -3857,19 +3850,19 @@ const App = (() => {
 
     var isFr = (_lang === 'fr');
     el.innerHTML = '<div class="stats-header">'
-      + '<span>📊 ' + (isFr ? 'Session' : 'Session') + '</span>'
+      + '<span>📊 ' + t('statSession') + '</span>'
       + '<button onclick="toggleStats()" style="background:none;border:none;color:var(--text);cursor:pointer;font-size:0.9rem">✕</button>'
       + '</div>'
       + '<div class="stats-body">'
-      + '<div class="stat-row"><span class="stat-label">'+(isFr?'Mains jouées':'Hands played')+'</span><span class="stat-val">'+s.handsPlayed+'</span></div>'
-      + '<div class="stat-row"><span class="stat-label">'+(isFr?'Victoires':'Wins')+'</span><span class="stat-val pos">'+s.handsWon+'</span></div>'
-      + '<div class="stat-row"><span class="stat-label">'+(isFr?'Taux de victoire':'Win rate')+'</span><span class="stat-val">'+wr+'%</span></div>'
+      + '<div class="stat-row"><span class="stat-label">'+t('statHandsPlayed')+'</span><span class="stat-val">'+s.handsPlayed+'</span></div>'
+      + '<div class="stat-row"><span class="stat-label">'+t('statWins')+'</span><span class="stat-val pos">'+s.handsWon+'</span></div>'
+      + '<div class="stat-row"><span class="stat-label">'+t('statWinRate')+'</span><span class="stat-val">'+wr+'%</span></div>'
       + '<hr class="stat-divider">'
-      + '<div class="stat-row"><span class="stat-label">'+(isFr?'Gain/Perte net':'Net gain/loss')+'</span><span class="stat-val '+gainCls+'">'+(gain>0?'+':'')+gain+' ¥</span></div>'
-      + '<div class="stat-row"><span class="stat-label">'+(isFr?'Meilleur gain':'Best win')+'</span><span class="stat-val pos">+'+s.bigWin+' ¥</span></div>'
-      + '<div class="stat-row"><span class="stat-label">'+(isFr?'Pire perte':'Worst loss')+'</span><span class="stat-val neg">'+s.bigLoss+' ¥</span></div>'
+      + '<div class="stat-row"><span class="stat-label">'+t('statNet')+'</span><span class="stat-val '+gainCls+'">'+(gain>0?'+':'')+gain+' ¥</span></div>'
+      + '<div class="stat-row"><span class="stat-label">'+t('statBestWin')+'</span><span class="stat-val pos">+'+s.bigWin+' ¥</span></div>'
+      + '<div class="stat-row"><span class="stat-label">'+t('statWorstLoss')+'</span><span class="stat-val neg">'+s.bigLoss+' ¥</span></div>'
       + '<hr class="stat-divider">'
-      + '<div style="font-size:0.58rem;color:var(--gold-dim);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:4px">'+(isFr?'Dernières mains':'Recent hands')+'</div>'
+      + '<div style="font-size:0.58rem;color:var(--gold-dim);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:4px">'+t('statRecentHands')+'</div>'
       + histHtml
       + '</div>';
   }
@@ -4624,18 +4617,16 @@ const App = (() => {
       readyBlock =
         '<div class="wp-ready-row">' +
           '<div class="wp-ready-label">✓ ' +
-            (fr_wp
-              ? 'Prêt à jouer — choisissez le mode de démarrage'
-              : 'Ready to play — choose how to start') +
+            t('wpReady') +
           '</div>' +
           '<div class="wp-ready-btn-row">' +
             '<button class="wp-ready-btn" onclick="App.startNoBots()" ' +
-              'title="' + (fr_wp ? 'Démarrer avec les humains présents uniquement' : 'Start with humans only') + '">' +
-              '▶ ' + (fr_wp ? 'Démarrer' : 'Start') +
+              'title="' + t('wpStartHumansTip') + '">' +
+              '▶ ' + t('wpStart') +
             '</button>' +
             '<button class="wp-ready-btn wp-ready-btn-bots" onclick="App.startWithBots()" ' +
-              'title="' + (fr_wp ? 'Remplir les sièges vides avec des bots' : 'Fill empty seats with bots') + '">' +
-              '▶ + ' + (fr_wp ? 'Bots' : 'Bots') +
+              'title="' + t('wpFillBotsTip') + '">' +
+              '▶ + Bots' +
             '</button>' +
           '</div>' +
         '</div>';
@@ -4809,8 +4800,8 @@ const App = (() => {
   // browser-tab title blink. Renamed to notifyMyTurnVisuals so the audio
   // and the visual cue are both fired explicitly (see call sites below).
   function notifyMyTurnVisuals() {
-    var msg = _lang === 'fr' ? '⚡ TON TOUR !' : '⚡ YOUR TURN!';
-    var sub = _lang === 'fr' ? 'C\'est à toi de jouer sur PokerTH' : 'It\'s your move on PokerTH';
+    var msg = t('notifTurnTitle');
+    var sub = t('notifTurnBody');
     // Notification navigateur (si onglet en arrière-plan)
     if (document.hidden && 'Notification' in window && Notification.permission === 'granted') {
       try { new Notification(msg, { body: sub, icon: '/favicon.ico', tag: 'pokerth-turn', silent: false }); } catch(e) {}
@@ -4982,11 +4973,9 @@ const App = (() => {
     // "Action envoyée" alors que rien n'avait quitté la machine.
     if (!ws || ws.readyState !== WebSocket.OPEN) {
       $('g-actions').innerHTML = '<div class="waiting-msg" style="color:#e74c3c">⚠ '
-        + (_lang === 'fr' ? 'Connexion perdue — action non envoyée'
-                          : 'Connection lost — action not sent')
+        + t('wsLostAction')
         + '</div>';
-      logAction('⚠ ' + (_lang === 'fr' ? 'Envoi impossible (WS fermé)'
-                                       : 'Send failed (WS closed)'));
+      logAction('⚠ ' + t('wsSendFailed'));
       return;
     }
     setMyTurnActive(false);
@@ -5530,15 +5519,15 @@ function dismissWinner() {
         // Délai croissant : 5s, 15s, 30s — assez long pour ne pas spammer
         var delay = [5000, 15000, 30000][_reconnectAttempts - 1] || 30000;
         var secs = Math.round(delay/1000);
-        _showBanner((_lang==='fr'?'Reconnexion dans ':'Reconnecting in ') + secs + 's… (' + _reconnectAttempts + '/' + maxAttempts + ')');
+        _showBanner(t('reconnIn') + secs + 's… (' + _reconnectAttempts + '/' + maxAttempts + ')');
         window._reconnectTimer = setTimeout(function() {
           if (ws) return; // déjà reconnecté
-          _showBanner((_lang==='fr'?'Reconnexion en cours…':'Reconnecting…'));
+          _showBanner(t('reconnInProgress'));
           try {
             ws = new WebSocket(_lastConnectParams.finalUrl);
             ws.binaryType = 'arraybuffer';
             ws.onopen = function() {
-              _showBanner((_lang==='fr'?'Connecté — ré-authentification…':'Connected — re-authenticating…'));
+              _showBanner(t('reauthBanner'));
             };
             ws.onerror = function() {
               ws = null;
@@ -5587,7 +5576,7 @@ function dismissWinner() {
       clearInterval(window._reconnectCountdown);
       var secsLeft = secsTotal;
       function _updateBannerCountdown() {
-        var pfx = _lang==='fr' ? 'Reconnexion dans ' : 'Reconnecting in ';
+        var pfx = t('reconnIn');
         var sfx = ' ('+_reconnectAttempts+'/'+maxAttempts+')';
         _showBanner(pfx + secsLeft + 's' + sfx);
         if (secsLeft > 0) secsLeft--;
@@ -5667,10 +5656,7 @@ function dismissWinner() {
         return na < nb ? -1 : na > nb ? 1 : 0;
       });
       if (!pids.length) {
-        list.innerHTML = '<div class="km-empty">— ' +
-          ((typeof _lang !== 'undefined' && _lang === 'en')
-            ? 'No players at the table' : 'Aucun joueur à la table') +
-          ' —</div>';
+        list.innerHTML = '<div class="km-empty">— ' + t('kickNoPlayers') + ' —</div>';
       } else {
         var fr = (typeof _lang === 'undefined' || _lang !== 'en');
         var html = pids.map(function(pid) {
@@ -5718,12 +5704,10 @@ function dismissWinner() {
       var msgEl = document.getElementById('kcm-msg');
       var titleEl = document.getElementById('kcm-title');
       if (titleEl) {
-        titleEl.textContent = fr ? 'Kicker ce joueur ?' : 'Kick this player?';
+        titleEl.textContent = t('kickThisPlayer');
       }
       if (msgEl) {
-        msgEl.textContent = fr
-          ? 'Le joueur "' + name + '" sera expulsé de la table.'
-          : 'Player "' + name + '" will be removed from the table.';
+        msgEl.textContent = t('kickConfirmMsg').replace('{name}', name);
       }
       // Stash the target pid for the confirm button.
       window._pendingKickPid = pid;
@@ -5761,9 +5745,7 @@ function dismissWinner() {
       // Optimistic log so the admin gets immediate feedback even
       // before the server broadcasts GamePlayerLeft. Localised.
       var fr = (typeof _lang === 'undefined' || _lang !== 'en');
-      addGameChat(null, '🗑️ ' + (fr
-        ? 'Kick demandé pour ' + name + ' (en attente du serveur…)'
-        : 'Kick requested for ' + name + ' (waiting for server…)'), 'sys');
+      addGameChat(null, '🗑️ ' + t('kickRequested').replace('{name}', name), 'sys');
       // Watchdog: if the server hasn't broadcast a GamePlayerLeft
       // within 3s, the kick has almost certainly failed silently.
       // This happens on PokerTH servers older than v2.0.6 (March 2026,
@@ -5774,11 +5756,7 @@ function dismissWinner() {
           if (gId !== gameAtRequest) return;
           // Player still present means the kick was not honoured.
           if (seatData[targetPid] && !seatData[targetPid].gone) {
-            addGameChat(null, '⚠ ' + (fr
-              ? 'Le serveur n\'a pas traité le kick de ' + targetName +
-                ' — version PokerTH < 2.0.6 probable.'
-              : 'Server did not process kick of ' + targetName +
-                ' — likely PokerTH server < 2.0.6.'), 'sys');
+            addGameChat(null, '⚠ ' + t('kickNotProcessed').replace('{name}', targetName), 'sys');
           }
         }, 3000);
       })(pid, name, gId);
@@ -5947,7 +5925,7 @@ function dismissWinner() {
       var fr = (typeof _lang === 'undefined' || _lang !== 'en');
       if (!gId) {
         if (typeof showKeyHint === 'function')
-          showKeyHint(fr ? 'Aucune table active' : 'No active table');
+          showKeyHint(t('noActiveTable'));
         return;
       }
       // Pull the connection params the user actually connected with.
@@ -5970,20 +5948,20 @@ function dismissWinner() {
       function done(ok) {
         if (typeof showKeyHint === 'function') {
           showKeyHint(ok
-            ? (fr ? '🔗 Lien copié !' : '🔗 Link copied!')
-            : (fr ? 'Copie impossible — lien affiché' : 'Copy failed — link shown'));
+            ? t('linkCopied')
+            : t('linkCopyFailed'));
         }
         // Reflect status on the modal button if present.
         var btn = document.getElementById('gim-copy-link-btn');
         if (btn) {
           var orig = btn.getAttribute('data-orig') || btn.innerHTML;
           btn.setAttribute('data-orig', orig);
-          btn.innerHTML = ok ? '✓ ' + (fr ? 'Copié' : 'Copied') : '⚠';
+          btn.innerHTML = ok ? '✓ ' + t('copiedShort') : '⚠';
           setTimeout(function(){ btn.innerHTML = orig; }, 1800);
         }
         if (!ok) {
           // Last resort: show the URL so the user can copy by hand.
-          try { window.prompt(fr ? 'Copiez ce lien :' : 'Copy this link:', url); } catch(e) {}
+          try { window.prompt(t('copyThisLink'), url); } catch(e) {}
         }
       }
       try {
@@ -6016,7 +5994,7 @@ function dismissWinner() {
       // the UI into 'watch only' mode (banner up top, action area replaced
       // with a message instead of fold/call buttons).
       _amSpectator = true;
-      addChat(null, '👁 ' + (_lang==='fr'?'Observation de la table ':'Spectating table ') + (g.name||('#'+gameId)) + '…', 'sys');
+      addChat(null, '👁 ' + t('spectatingTable') + (g.name||('#'+gameId)) + '…', 'sys');
       // Use the shared MSG.buildJoinGame helper which now correctly
       // encodes spectateOnly into field 4. The previous hand-rolled
       // message set field 3 (autoLeave) instead, which the server did
@@ -6331,9 +6309,7 @@ function dismissWinner() {
         // pids.length < 2, but catch it anyway so a stray click on a
         // stale UI can't send a bad request to the server.
         var fr = (typeof _lang === 'undefined' || _lang !== 'en');
-        addGameChat(null, '⚠ ' + (fr
-          ? 'Au moins 2 joueurs sont nécessaires pour démarrer.'
-          : 'At least 2 players are needed to start.'), 'sys');
+        addGameChat(null, '⚠ ' + t('kickAtLeast2'), 'sys');
         return;
       }
       addGameChat(null, '▶ Starting (humans only)…', 'sys');
@@ -6582,7 +6558,7 @@ function toggleHeaderOverflow(e) {
         var lg = document.documentElement.getAttribute('lang');
         if (lg) fr = (lg !== 'en');
       } catch(e3) {}
-      hb.innerHTML = (on ? '📳' : '📴') + ' ' + (fr ? 'Vibration' : 'Vibration');
+      hb.innerHTML = (on ? '📳' : '📴') + ' ' + t('hapticLabel');
     }
   } catch(e4) {}
   m.classList.toggle('open');

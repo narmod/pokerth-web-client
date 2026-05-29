@@ -69,6 +69,44 @@ const LANG = {
     pfStrongAceS:'Strong suited Ace', pfStrongAce:'Strong Ace', pfKQs:'KQs', pfKQo:'KQo',
     pfSmallPair:'Small pair', pfSuitedConn:'Suited connectors', pfSuitedBroad:'Suited broadways',
     pfAceKicker:'Ace with kicker', pfConnectors:'Connectors', pfWeak:'Weak hand',
+    // ── Player-info modal ──
+    piPrivate:'Private', piPublic:'Public', piInformation:'Information', piType:'Type',
+    piConfiguration:'Configuration', piStartingStack:'Starting stack', piActionTimer:'Action timer',
+    piGameState:'Game state', piHandNo:'Hand #', piNotStarted:'Not started', piPot:'Pot', piPhase:'Phase',
+    // ── Haptic ──
+    hapticOn:'Vibration on', hapticOff:'Vibration off', hapticLabel:'Vibration',
+    // ── LAN / chat warnings ──
+    reactLanLocalNote:'⚠ LAN mode: local reactions. Use Internet Guest to share them.',
+    reactLocalOnlyNote:'⚠ Local reactions only (chat refused by server)',
+    chatLanDisabled:'⚠ LAN mode: in-game chat disabled. Connect in "Internet Guest" mode to enable chat and reactions.',
+    chatServerRefused:'⚠ Chat refused by server. Check that ServerRestrictGuestLogin=0 in the config.',
+    onePlayerLeft:'Only one player left — ending the game.',
+    // ── Action rejected ──
+    rejInvalidState:'invalid game state (out-of-sync)', rejNotYourTurn:'no longer your turn', rejNotAllowed:'action not allowed',
+    actionRejected:'Action rejected',
+    // ── Session stats ──
+    statSession:'Session', statHandsPlayed:'Hands played', statWins:'Wins', statWinRate:'Win rate',
+    statNet:'Net gain/loss', statBestWin:'Best win', statWorstLoss:'Worst loss', statRecentHands:'Recent hands',
+    // ── Waiting to start ──
+    wpReady:'Ready to play — choose how to start', wpStart:'Start',
+    wpStartHumansTip:'Start with humans only', wpFillBotsTip:'Fill empty seats with bots',
+    // ── Notifications ──
+    notifTurnTitle:'⚡ YOUR TURN!', notifTurnBody:"It's your move on PokerTH",
+    // ── WS closed ──
+    wsLostAction:'Connection lost — action not sent', wsSendFailed:'Send failed (WS closed)',
+    reauthBanner:'Connected — re-authenticating…',
+    // ── Kick ──
+    kickNoPlayers:'No players at the table', kickThisPlayer:'Kick this player?',
+    kickConfirmMsg:'Player "{name}" will be removed from the table.',
+    kickRequested:'Kick requested for {name} (waiting for server…)',
+    kickNotProcessed:'Server did not process kick of {name} — likely PokerTH server < 2.0.6.',
+    kickAtLeast2:'At least 2 players are needed to start.',
+    // ── Copy link ──
+    linkCopied:'🔗 Link copied!', linkCopyFailed:'Copy failed — link shown', copiedShort:'Copied',
+    piYou:'(you)', piSpectators:'Spectators', reconnIn:'Reconnecting in ', reconnInProgress:'Reconnecting…',
+    noActiveTable:'No active table', copyThisLink:'Copy this link:', spectatingTable:'Spectating table ',
+    avCatPeople:'People', avCatFantasy:'Fantasy', avCatPoker:'Poker', avCatAnimals:'Animals',
+    avCatPlants:'Plants & Flowers', avCatSport:'Sport', avCatObjects:'Objects', avCatFlags:'Flags',
     youWon:'You won!', handWinner:'Hand winner',
     totalPot:'Total pot', players:'Players', blinds:'Blinds',
     commCards:'Community cards', results:'Results', continue:'Continue ▶',
@@ -255,6 +293,44 @@ const LANG = {
     pfStrongAceS:'As couleur fort', pfStrongAce:'As fort', pfKQs:'KQ couleur', pfKQo:'KQ',
     pfSmallPair:'Petite paire', pfSuitedConn:'Connecteurs couleur', pfSuitedBroad:'Deux cartes hautes couleur',
     pfAceKicker:'As avec kicker', pfConnectors:'Connecteurs', pfWeak:'Main faible',
+    // ── Modale infos joueur ──
+    piPrivate:'Privée', piPublic:'Publique', piInformation:'Informations', piType:'Type',
+    piConfiguration:'Configuration', piStartingStack:'Tapis de départ', piActionTimer:"Timer d'action",
+    piGameState:'État de la partie', piHandNo:'Main n°', piNotStarted:'Pas démarrée', piPot:'Pot', piPhase:'Phase',
+    // ── Vibration ──
+    hapticOn:'Vibration activée', hapticOff:'Vibration désactivée', hapticLabel:'Vibration',
+    // ── Avertissements LAN / chat ──
+    reactLanLocalNote:'⚠ Mode LAN : réactions locales. Utilisez Internet Invité pour les partager.',
+    reactLocalOnlyNote:'⚠ Réactions locales seulement (chat refusé par le serveur)',
+    chatLanDisabled:'⚠ Mode LAN : chat en jeu désactivé. Connectez-vous en mode "Internet Invité" pour activer le chat et les réactions.',
+    chatServerRefused:'⚠ Chat refusé par le serveur. Vérifiez que ServerRestrictGuestLogin=0 dans la config.',
+    onePlayerLeft:"Plus qu'un joueur — fin de la partie.",
+    // ── Action rejetée ──
+    rejInvalidState:'état de jeu invalide (désynchro)', rejNotYourTurn:'plus votre tour', rejNotAllowed:'action non autorisée',
+    actionRejected:'Action rejetée',
+    // ── Stats de session ──
+    statSession:'Session', statHandsPlayed:'Mains jouées', statWins:'Victoires', statWinRate:'Taux de victoire',
+    statNet:'Gain/Perte net', statBestWin:'Meilleur gain', statWorstLoss:'Pire perte', statRecentHands:'Dernières mains',
+    // ── Attente de démarrage ──
+    wpReady:'Prêt à jouer — choisissez le mode de démarrage', wpStart:'Démarrer',
+    wpStartHumansTip:'Démarrer avec les humains présents uniquement', wpFillBotsTip:'Remplir les sièges vides avec des bots',
+    // ── Notifications ──
+    notifTurnTitle:'⚡ TON TOUR !', notifTurnBody:"C'est à toi de jouer sur PokerTH",
+    // ── WS fermé ──
+    wsLostAction:'Connexion perdue — action non envoyée', wsSendFailed:'Envoi impossible (WS fermé)',
+    reauthBanner:'Connecté — ré-authentification…',
+    // ── Expulsion ──
+    kickNoPlayers:'Aucun joueur à la table', kickThisPlayer:'Kicker ce joueur ?',
+    kickConfirmMsg:'Le joueur "{name}" sera expulsé de la table.',
+    kickRequested:'Kick demandé pour {name} (en attente du serveur…)',
+    kickNotProcessed:"Le serveur n'a pas traité le kick de {name} — version PokerTH < 2.0.6 probable.",
+    kickAtLeast2:'Au moins 2 joueurs sont nécessaires pour démarrer.',
+    // ── Copie du lien ──
+    linkCopied:'🔗 Lien copié !', linkCopyFailed:'Copie impossible — lien affiché', copiedShort:'Copié',
+    piYou:'(vous)', piSpectators:'Spectateurs', reconnIn:'Reconnexion dans ', reconnInProgress:'Reconnexion en cours…',
+    noActiveTable:'Aucune table active', copyThisLink:'Copiez ce lien :', spectatingTable:'Observation de la table ',
+    avCatPeople:'Personnes', avCatFantasy:'Fantastique', avCatPoker:'Poker', avCatAnimals:'Animaux',
+    avCatPlants:'Plantes & Fleurs', avCatSport:'Sport', avCatObjects:'Objets', avCatFlags:'Drapeaux',
     youWon:'Vous avez gagné !', handWinner:'Gagnant de la main',
     totalPot:'Pot total', players:'Joueurs', blinds:'Blinds',
     commCards:'Cartes communes', results:'Résultats', continue:'Continuer ▶',
