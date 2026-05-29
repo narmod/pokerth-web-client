@@ -2094,6 +2094,28 @@ const App = (() => {
     var tpl = (typeof t === 'function' && t('tableNameDefault')) || 'Table {name}';
     return tpl.replace('{name}', myName || 'PokerTH');
   }
+  // Make a game name the PokerTH server will accept. Server rule
+  // (serverlobbythread.cpp): the name is trimmed, then rejected as
+  // badGameName if it is empty OR isprint() is false for its first *byte*.
+  // In the server's C locale isprint() is false for bytes >127, so a name
+  // whose first character is non-ASCII (Cyrillic, Arabic, CJK, an emoji…)
+  // is refused — e.g. the Russian default "Стол…" starts with 0xD0. We
+  // guarantee a printable-ASCII leading character; the rest may be any
+  // script (only the first byte is checked server-side).
+  function _safeGameName(raw) {
+    var s = (raw || '').trim();
+    var leadOk = function(str) {
+      if (!str) return false;
+      var c = str.charCodeAt(0);
+      return c >= 0x20 && c <= 0x7E;
+    };
+    if (leadOk(s)) return s;
+    if (!s) {                              // empty after trim
+      var nm = (myName || '').trim();
+      return leadOk(nm) ? nm : 'PokerTH';
+    }
+    return 'PokerTH - ' + s;               // keep the user's text, ASCII lead
+  }
   // Re-localise le champ "nom de la table" au changement de langue, MAIS seulement
   // s'il est vide ou contient encore un nom par défaut connu (on ne touche jamais à
   // un nom personnalisé par l'utilisateur). Appelé depuis setLang (i18n.mjs).
@@ -6325,7 +6347,7 @@ function dismissWinner() {
       // behaves like the public server (30s timeout) and a Quick Game on
       // a LAN/private box stays snappy (15s).
       var d = this._getCreateDefaults();
-      send(MSG.buildCreateGame('WebGame-' + myName, n, d.blind, d.stack, d.timeout));
+      send(MSG.buildCreateGame(_safeGameName('WebGame-' + myName), n, d.blind, d.stack, d.timeout));
     },
 
     cancelQuickCreate() {
@@ -6591,7 +6613,7 @@ function dismissWinner() {
       const g = id => document.getElementById(id);
       const iv = (id, def) => parseInt(g(id)?.value) || def;
       const sv = (id, def) => parseInt(g(id)?.value) || def;
-      const name    = (g('cf-name')?.value.trim()) || _localDefaultName();
+      const name    = _safeGameName((g('cf-name')?.value.trim()) || _localDefaultName());
       const nplayers= iv('cf-players', 2);
       const blind   = iv('cf-blind',   10);
       const stack   = iv('cf-stack',   3000);
