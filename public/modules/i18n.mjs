@@ -205,7 +205,7 @@ const LANG = {
     leaveDialogBody:'You will lose your seat and return to the lobby.',
     leaveQuit:'Quit',
     leaveCancel:'Cancel',
-    chooseAvatar:'Choose an avatar',
+    chooseAvatar:'Choose an avatar', changeAvatar:'Change avatar',
     modeUnauth:'Private server — Internet Guest \u2713',
     modeGuest:'pokerth.net — Guest',
     modeAuth:'pokerth.net — Registered account',
@@ -247,6 +247,19 @@ const LANG = {
     playersOnlineTitle:'Players online',
     playersSearchPlaceholder:'Search\u2026',
     tableCount:'table(s)',
+    // ── Tooltips wired from previously-hardcoded title= attributes ──
+    handsHelpTooltip:'Poker hand rankings', soundTooltip:'Mute / unmute', logTooltip:'Log',
+    chatTooltip:'Chat', moreTooltip:'More', closeTooltip:'Close', refreshTooltip:'Refresh',
+    avatarTooltip:'My PokerTH avatar', profileTooltip:'My profile', gameDetailsTooltip:'Game details',
+    adminBadgeTooltip:'You created this table', statsTooltip:'Session statistics',
+    kickTooltip:'Kick player', closeTableTooltip:'Close table', langTooltip:'Switch language',
+    fullscreenTooltip:'Fullscreen',
+    chatPlaceholder:'Message\u2026',
+    // ── Keyboard-shortcut hints (letter prefix stays, verb translates) ──
+    hintFold:'F — Fold', hintCheck:'C — Check', hintCall:'C — Call',
+    hintRaise:'R — Raise', hintRaiseAdjust:'R — Raise (adjust amount)', hintAllin:'A — All-In',
+    // ── Create-form option labels (raise frequency) ──
+    nHands:'N hands', nMinutes:'N minutes',
 },
   fr: {
     connect:'Se connecter', disconnect:'✕ Déconnecter', connecting:'Connexion en cours…',
@@ -439,7 +452,7 @@ const LANG = {
     leaveDialogBody:'Vous perdrez votre place et reviendrez au lobby.',
     leaveQuit:'Quitter',
     leaveCancel:'Annuler',
-    chooseAvatar:'Choisir un avatar',
+    chooseAvatar:'Choisir un avatar', changeAvatar:"Changer d'avatar",
     modeUnauth:'Serveur priv\u00e9 \u2014 Invit\u00e9 Internet \u2713',
     modeGuest:'pokerth.net \u2014 Invit\u00e9',
     modeAuth:'pokerth.net \u2014 Compte enregistr\u00e9',
@@ -481,6 +494,19 @@ const LANG = {
     playersOnlineTitle:'Joueurs en ligne',
     playersSearchPlaceholder:'Rechercher\u2026',
     tableCount:'table(s)',
+    // ── Infobulles (auparavant codées en dur dans title=) ──
+    handsHelpTooltip:'Combinaisons du poker', soundTooltip:'Couper / réactiver le son', logTooltip:'Journal',
+    chatTooltip:'Chat', moreTooltip:'Plus', closeTooltip:'Fermer', refreshTooltip:'Rafraîchir',
+    avatarTooltip:'Mon avatar PokerTH', profileTooltip:'Mon profil', gameDetailsTooltip:'Détails de la partie',
+    adminBadgeTooltip:'Vous êtes créateur de cette table', statsTooltip:'Statistiques de session',
+    kickTooltip:'Expulser le joueur', closeTableTooltip:'Fermer la table', langTooltip:'Changer de langue',
+    fullscreenTooltip:'Plein écran',
+    chatPlaceholder:'Message…',
+    // ── Aides raccourcis clavier (le préfixe lettre reste, le verbe se traduit) ──
+    hintFold:'F — Se coucher', hintCheck:'C — Parole', hintCall:'C — Suivre',
+    hintRaise:'R — Relancer', hintRaiseAdjust:'R — Relancer (ajustez le montant)', hintAllin:'A — Tapis',
+    // ── Libellés d'options du formulaire de création (fréquence des blindes) ──
+    nHands:'N mains', nMinutes:'N minutes',
 }
 };
 
@@ -553,21 +579,13 @@ function setLang(l) {
   document.querySelectorAll('[data-i18n-placeholder]').forEach(function(el) {
     el.placeholder = t(el.getAttribute('data-i18n-placeholder'));
   });
-  // Update select options
-  var lm = document.getElementById('login-mode');
-  if (lm) {
-    lm.options[0].text = t('lan');
-    lm.options[1].text = t('privateGuest');
-    if (lm.options[2]) lm.options[2].text = t('guest');
-    if (lm.options[3]) lm.options[3].text = t('auth');
-  }
-  // Update create form selects
-  var rm = document.getElementById('cf-raise-mode');
-  if (rm && rm.options.length >= 2) { rm.options[0].text = t('raiseEvery')+' N '+t('raiseN')+' main(s)'; rm.options[1].text = t('raiseEvery')+' N min'; }
-  var er = document.getElementById('cf-end-raise');
-  if (er && er.options.length >= 3) { er.options[0].text = t('blindDouble'); er.options[1].text = t('blindToValue'); er.options[2].text = t('blindKeepLast'); }
-  var gt = document.getElementById('cf-game-type');
-  if (gt && gt.options.length >= 3) { gt.options[0].text = t('gameNormal'); gt.options[1].text = t('gameRegistered'); gt.options[2].text = t('gameInvite'); }
+  // Localise every <option> tagged with data-i18n-opt. This replaces the
+  // previous index-based per-select patching (login-mode, cf-raise-mode,
+  // cf-end-raise, cf-game-type): adding a new translatable <option> now
+  // only requires the attribute in the HTML, never a change here.
+  document.querySelectorAll('[data-i18n-opt]').forEach(function(el) {
+    el.textContent = t(el.getAttribute('data-i18n-opt'));
+  });
   // Re-render aide si elle est ouverte
   var ho = document.getElementById('hands-overlay');
   if (ho && ho.style.display !== 'none') renderHandsHelp();
