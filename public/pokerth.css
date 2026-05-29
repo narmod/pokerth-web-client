@@ -1324,6 +1324,10 @@ body {
   #admin-startnobots-btn,
   #admin-close-btn,
   #admin-kick-btn,
+  /* Vibration + voice live in the ••• menu on mobile, so hide their
+     direct header twins here (they show on tablet/desktop instead). */
+  #haptic-toggle-btn,
+  #voice-toggle-btn,
   /* Lobby: hide buttons now moved into the ••• overflow menu */
   #fs-btn-lobby,
   #lang-toggle-lobby { display: none !important; }

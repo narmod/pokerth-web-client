@@ -2153,6 +2153,9 @@ const App = (() => {
     var b = document.getElementById('haptic-toggle-mob');
     if (b) b.innerHTML = (_hapticEnabled ? '📳' : '📴') + ' ' +
       t('hapticLabel');
+    // Direct header twin (tablet/desktop): icon-only.
+    var bd = document.getElementById('haptic-toggle-btn');
+    if (bd) bd.textContent = (_hapticEnabled ? '📳' : '📴');
     return _hapticEnabled;
   }
   window.toggleHaptic = toggleHaptic;
@@ -2197,12 +2200,27 @@ const App = (() => {
     if (typeof showKeyHint === 'function') showKeyHint(label);
     var b = document.getElementById('voice-toggle-mob');
     if (b) b.innerHTML = (_voiceEnabled ? '🗣️' : '🔇') + ' ' + t('voiceLabel');
+    // Direct header twin (tablet/desktop): icon-only.
+    var vd = document.getElementById('voice-toggle-btn');
+    if (vd) vd.textContent = (_voiceEnabled ? '🗣️' : '🔇');
     // Spoken confirmation (also primes the engine on first user gesture).
     if (_voiceEnabled) speak(t('voiceOn'));
     else if ('speechSynthesis' in window) { try { window.speechSynthesis.cancel(); } catch(e) {} }
     return _voiceEnabled;
   }
   window.toggleVoice = toggleVoice;
+  // Sync the direct (tablet/desktop) header toggle icons with the persisted
+  // state on load, so 📳/📴 and 🗣️/🔇 reflect reality before any toggle.
+  function _syncMediaToggleButtons() {
+    try {
+      var hb = document.getElementById('haptic-toggle-btn');
+      if (hb) hb.textContent = (_hapticEnabled ? '📳' : '📴');
+      var vb = document.getElementById('voice-toggle-btn');
+      if (vb) vb.textContent = (_voiceEnabled ? '🗣️' : '🔇');
+    } catch(e) {}
+  }
+  window._syncMediaToggleButtons = _syncMediaToggleButtons;
+  _syncMediaToggleButtons();
   // Spectators present on the current table. Populated by
   // GameSpectatorJoined messages from the server (one is sent per
   // existing spectator when we ourselves join, plus live updates
