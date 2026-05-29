@@ -3792,10 +3792,10 @@ body:not(.in-game) .my-zone {
   align-items: stretch; flex-direction: column; gap: 9px; padding: 13px 14px;
 }
 .game-row.gcard:hover { border-color: var(--gold-dim); background: rgba(255,255,255,0.045); }
-.gcard-main { width: 100%; min-width: 0; }
-.game-row.gcard .game-name { white-space: normal; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
-.game-row.gcard .game-meta { flex-wrap: wrap; gap: 4px 10px; }
-.game-badge { font-size: 0.58rem; font-weight: 700; letter-spacing: 0.05em; padding: 2px 7px; border-radius: 20px; text-transform: uppercase; white-space: nowrap; }
+.gcard-main { min-width: 0; }
+.game-row.gcard .game-name { white-space: normal; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; font-size: 0.95rem; }
+.game-row.gcard .game-meta { flex-wrap: wrap; gap: 4px 10px; font-size: 0.74rem; }
+.game-badge { font-size: 0.6rem; font-weight: 700; letter-spacing: 0.05em; padding: 2px 7px; border-radius: 20px; text-transform: uppercase; white-space: nowrap; }
 .game-badge.live   { color: #7be0a0; background: rgba(39,174,96,0.15); border: 1px solid rgba(39,174,96,0.4); }
 .game-badge.wait   { color: var(--gold); background: rgba(200,168,74,0.12); border: 1px solid rgba(200,168,74,0.4); }
 .game-badge.closed { color: #999; background: rgba(255,255,255,0.04); border: 1px solid var(--border); }
@@ -3829,5 +3829,28 @@ body:not(.in-game) .my-zone {
 }
 .game-row.gcard .btn-watch:hover { border-color: var(--gold-dim); color: var(--gold); background: rgba(255,255,255,0.06); }
 
-/* La grille auto-fit ci-dessus gère seule téléphone / tablette / ordinateur :
-   les cartes se répartissent en 1, 2 ou 3 colonnes selon la largeur. */
+/* ── Téléphone (base) : boutons SOUS la carte, texte lisible ──
+   ── Tablette (≥640) : boutons sur le FLANC DROIT, texte un cran plus grand ──
+   ── Ordinateur (≥1024) : texte plus grand encore ── */
+@media (min-width: 640px) {
+  .game-row.gcard { flex-direction: row; align-items: center; gap: 14px; }
+  .gcard-main { flex: 1 1 auto; }
+  .gcard-btns { flex: 0 0 auto; align-self: center; }
+  .game-row.gcard .btn-join { flex: 0 0 auto; font-size: 0.92rem; }
+  .game-row.gcard .game-name { font-size: 1.02rem; }
+  .game-row.gcard .game-meta { font-size: 0.78rem; }
+  .create-toggle { font-size: 1.15rem; }
+}
+@media (min-width: 1024px) {
+  .game-row.gcard .game-name { font-size: 1.16rem; }
+  .game-row.gcard .game-meta { font-size: 0.88rem; }
+  .game-badge { font-size: 0.66rem; }
+  .game-row.gcard .btn-join { font-size: 1rem; padding: 11px 20px; }
+  .game-row.gcard .btn-watch { font-size: 1.2rem; padding: 11px 16px; }
+  .create-toggle { font-size: 1.32rem; padding: 16px 18px; }
+  .seat-dot { width: 10px; height: 10px; }
+  #create-form .cf label { font-size: 0.62rem; }
+  #create-form .cf input, #create-form .cf select { font-size: 0.9rem; padding: 7px 9px; }
+  .cf-preset .cfp-n { font-size: 0.95rem; }
+  .cf-preset .cfp-d { font-size: 0.62rem; }
+}
