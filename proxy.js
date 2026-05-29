@@ -188,6 +188,24 @@ const httpServer = http.createServer((req, res) => {
     }
   }
 
+  // ── Version marker for the in-app update banner ──
+  // Returns the newest mtime across the core assets. A deploy (git pull)
+  // bumps these file mtimes, so the page can poll this cheaply and offer a
+  // one-tap reload when it changes. Never cached.
+  if (reqPathOnly === '/__ver') {
+    let newest = 0;
+    ['pokerth.js', 'pokerth.css', 'pokerth-client.html',
+     'modules/i18n.mjs', 'modules/sounds.mjs', 'sw.js'].forEach(function (f) {
+      try {
+        const s = fs.statSync(path.join(__dirname, 'public', f));
+        if (s.mtimeMs > newest) newest = s.mtimeMs;
+      } catch (e) { /* missing file — ignore */ }
+    });
+    res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' });
+    res.end(JSON.stringify({ v: Math.floor(newest) }));
+    return;
+  }
+
   // Support subdirectories under public/ while preventing path traversal.
   // decodeURIComponent throws on malformed sequences (e.g. '%c0'); guard
   // against that so a single bad URL doesn't crash the request handler.
@@ -220,8 +238,12 @@ const httpServer = http.createServer((req, res) => {
            : ext === '.woff' ? 'font/woff'
            : ext === '.woff2'? 'font/woff2'
            : 'application/octet-stream';
-    const maxAge = (ext === '.css' || ext === '.js' || ext === '.mjs') ? 3600 : 86400;
-    res.writeHead(200, { 'Content-Type': type, 'Cache-Control': 'public, max-age=' + maxAge });
+    // CSS/JS/MJS must always revalidate so a deploy is picked up without a
+    // hard refresh; static media (images/fonts) can still be cached a day.
+    const cacheCtl = (ext === '.css' || ext === '.js' || ext === '.mjs')
+      ? 'no-cache, must-revalidate'
+      : 'public, max-age=86400';
+    res.writeHead(200, { 'Content-Type': type, 'Cache-Control': cacheCtl });
     return fs.createReadStream(candidate).pipe(res);
   }
   res.writeHead(404); res.end('Not found');

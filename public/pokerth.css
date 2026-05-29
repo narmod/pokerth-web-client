@@ -1698,6 +1698,31 @@ body {
 .rfx-anim-flex { animation: rfxFlex 1.6s ease-out forwards; }
 
 /* ══ RECONNECT BANNER ══ */
+/* In-app "new version available" banner (bottom, gold accent). Created on
+   the fly by the inline SW-update checker when /__ver changes after a deploy. */
+#update-banner {
+  position: fixed; left: 50%; bottom: 16px; transform: translateX(-50%);
+  z-index: 1000;
+  display: flex; align-items: center; gap: 12px;
+  background: rgba(8,18,10,0.97);
+  border: 1px solid var(--gold);
+  border-radius: 8px;
+  padding: 9px 12px 9px 16px;
+  box-shadow: 0 6px 22px rgba(0,0,0,0.55);
+  font-family: 'Cinzel', serif; font-size: 0.82rem;
+  color: var(--cream); letter-spacing: 0.04em;
+  max-width: calc(100% - 24px);
+  animation: fadeIn 0.3s ease;
+}
+#update-banner button {
+  background: var(--gold); color: #1a1207; border: none;
+  border-radius: 5px; padding: 6px 14px; cursor: pointer;
+  font-family: 'Cinzel', serif; font-weight: 700; font-size: 0.78rem;
+  letter-spacing: 0.06em; white-space: nowrap;
+  transition: filter 0.12s;
+}
+#update-banner button:hover { filter: brightness(1.12); }
+
 #reconnect-banner {
   position: fixed; top: 0; left: 0; right: 0; z-index: 999;
   background: rgba(192,57,43,0.95);

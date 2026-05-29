@@ -104,6 +104,7 @@ const LANG = {
     // ── Copy link ──
     linkCopied:'🔗 Link copied!', linkCopyFailed:'Copy failed — link shown', copiedShort:'Copied',
     piYou:'(you)', piSpectators:'Spectators', reconnIn:'Reconnecting in ', reconnInProgress:'Reconnecting…',
+    updateAvailable:'New version available', updateNow:'Update',
     noActiveTable:'No active table', copyThisLink:'Copy this link:', spectatingTable:'Spectating table ',
     avCatPeople:'People', avCatFantasy:'Fantasy', avCatPoker:'Poker', avCatAnimals:'Animals',
     avCatPlants:'Plants & Flowers', avCatSport:'Sport', avCatObjects:'Objects', avCatFlags:'Flags',
@@ -328,6 +329,7 @@ const LANG = {
     // ── Copie du lien ──
     linkCopied:'🔗 Lien copié !', linkCopyFailed:'Copie impossible — lien affiché', copiedShort:'Copié',
     piYou:'(vous)', piSpectators:'Spectateurs', reconnIn:'Reconnexion dans ', reconnInProgress:'Reconnexion en cours…',
+    updateAvailable:'Nouvelle version disponible', updateNow:'Mettre à jour',
     noActiveTable:'Aucune table active', copyThisLink:'Copiez ce lien :', spectatingTable:'Observation de la table ',
     avCatPeople:'Personnes', avCatFantasy:'Fantastique', avCatPoker:'Poker', avCatAnimals:'Animaux',
     avCatPlants:'Plantes & Fleurs', avCatSport:'Sport', avCatObjects:'Objets', avCatFlags:'Drapeaux',

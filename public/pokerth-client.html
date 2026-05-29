@@ -1204,8 +1204,65 @@ function selectAvatarPopup(emoji) {
 <script src="pokerth.js" defer></script>
 <script>
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('/sw.js').catch(function(){});
+  // updateViaCache:'none' => the browser always fetches sw.js fresh, so a
+  // bumped CACHE_VERSION is detected promptly.
+  navigator.serviceWorker.register('/sw.js', { updateViaCache: 'none' }).catch(function(){});
+  // Ask the SW to re-check itself whenever we come back to the app.
+  document.addEventListener('visibilitychange', function () {
+    if (!document.hidden) {
+      navigator.serviceWorker.getRegistration().then(function (r) {
+        if (r) r.update().catch(function () {});
+      }).catch(function () {});
+    }
+  });
 }
+
+// ── In-app update detection ──────────────────────────────────────────────
+// Polls /__ver (newest asset mtime). When it changes after a deploy we show a
+// one-tap "update" banner instead of forcing the user to hard-refresh.
+(function () {
+  var knownVer = null, shown = false;
+
+  function showBanner() {
+    if (shown || document.getElementById('update-banner')) return;
+    shown = true;
+    var tr = (typeof window.t === 'function') ? window.t : function (k) { return k; };
+    var msg = (typeof window.t === 'function') ? tr('updateAvailable') : 'Nouvelle version disponible';
+    var lbl = (typeof window.t === 'function') ? tr('updateNow') : 'Mettre à jour';
+    var bar = document.createElement('div');
+    bar.id = 'update-banner';
+    var span = document.createElement('span'); span.textContent = msg;
+    var btn = document.createElement('button'); btn.textContent = lbl;
+    btn.onclick = function () {
+      btn.disabled = true;
+      // If a new SW is waiting, activate it; then reload to pull fresh assets
+      // (CSS/JS now revalidate server-side, so a normal reload is enough).
+      navigator.serviceWorker && navigator.serviceWorker.getRegistration &&
+        navigator.serviceWorker.getRegistration().then(function (r) {
+          if (r && r.waiting) r.waiting.postMessage({ type: 'SKIP_WAITING' });
+        }).catch(function () {});
+      setTimeout(function () { location.reload(); }, 80);
+    };
+    bar.appendChild(span); bar.appendChild(btn);
+    document.body.appendChild(bar);
+  }
+
+  function check() {
+    fetch('/__ver', { cache: 'no-store' })
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (d) {
+        if (!d || typeof d.v === 'undefined') return;
+        if (knownVer === null) { knownVer = d.v; return; }
+        if (d.v !== knownVer) showBanner();
+      })
+      .catch(function () { /* offline / proxy busy — retry later */ });
+  }
+
+  check();
+  document.addEventListener('visibilitychange', function () { if (!document.hidden) check(); });
+  window.addEventListener('focus', check);
+  setInterval(check, 60000);
+})();
 </script>
 
 <!-- Player info modal: opened by clicking the #h-nick pill in the
