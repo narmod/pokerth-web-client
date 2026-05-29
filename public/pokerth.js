@@ -318,12 +318,12 @@ document.addEventListener('keydown', function(e) {
   if (key === 'f') {
     // Fold
     var btn = document.querySelector('.btn-fold:not([disabled])');
-    if (btn) { e.preventDefault(); btn.click(); showKeyHint('F — Fold'); }
+    if (btn) { e.preventDefault(); btn.click(); showKeyHint(t('hintFold')); }
   } else if (key === 'c' || key === ' ') {
     // Call ou Check
     e.preventDefault();
     var btn = document.querySelector('.btn-call:not([disabled]), .btn-check:not([disabled])');
-    if (btn) { btn.click(); showKeyHint(btn.classList.contains('btn-check') ? 'C — Check' : 'C — Call'); }
+    if (btn) { btn.click(); showKeyHint(btn.classList.contains('btn-check') ? t('hintCheck') : t('hintCall')); }
   } else if (key === 'r') {
     // Raise — focus sur l'input
     var inp = document.getElementById('raise-amt');
@@ -332,15 +332,15 @@ document.addEventListener('keydown', function(e) {
       e.preventDefault();
       if (window.innerWidth >= 640) {
         inp.focus(); inp.select();
-        showKeyHint('R — Raise (ajustez le montant)');
+        showKeyHint(t('hintRaiseAdjust'));
       } else if (btn) {
-        btn.click(); showKeyHint('R — Raise');
+        btn.click(); showKeyHint(t('hintRaise'));
       }
     }
   } else if (key === 'a') {
     // All-in
     var btn = document.querySelector('.btn-allin:not([disabled])');
-    if (btn) { e.preventDefault(); btn.click(); showKeyHint('A — All-In'); }
+    if (btn) { e.preventDefault(); btn.click(); showKeyHint(t('hintAllin')); }
   } else if (key === 'enter') {
     // Confirmer la relance si l'input est focusé
     var inp = document.getElementById('raise-amt');
