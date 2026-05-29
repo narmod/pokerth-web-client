@@ -752,6 +752,12 @@ body {
 .btn-create-manual:hover { background: rgba(255,255,255,0.1); }
 .create-form { padding: 12px 14px; background: rgba(8,18,10,0.98); border-bottom: 1px solid var(--border); }
 .create-fields { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 8px 12px; margin-bottom: 0; }
+/* Le nom de la table occupe toute la largeur du cadre : on sort ce champ de la
+   grille auto-fill (sinon il reste cantonné à une colonne de ~130px) et on force
+   l'input à 100% de la largeur du cadre. */
+.cf-name-wrap { display: block; }
+.cf-name-wrap .cf { width: 100%; }
+.cf-name-wrap .cf input { width: 100%; box-sizing: border-box; }
 .cf { display: flex; flex-direction: column; gap: 3px; }
 .cf-sm { min-width: 80px; }
 .cf label { font-size: 0.55rem; color: var(--gold-dim); letter-spacing: 0.1em; text-transform: uppercase; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
