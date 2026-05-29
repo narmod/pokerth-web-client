@@ -60,6 +60,15 @@ const LANG = {
     wsError:'WebSocket error. Is the proxy running?',
     reconnFailed:'Reconnection failed after {n} attempts. Please reconnect manually.',
     tableNamePh:'Table name…',
+    // ── Hand strength: post-flop ──
+    hsRoyal:'⭐ Royal Flush', hsSF:'🃏 Straight Flush {r}', hsFour:'🟥 Four {r}s',
+    hsFull:'🔴 Full House {a}/{b}', hsFlush:'🟠 Flush', hsStraight:'🟡 Straight {r}',
+    hsThree:'🟢 Three {r}s', hsTwoPair:'🔵 Two Pair {a}/{b}', hsPair:'⚪ Pair of {r}s', hsHigh:'— High Card {r}',
+    // ── Hand strength: pre-flop ──
+    pfPremium:'Premium hand', pfAKs:'AKs Premium', pfAKo:'AKo Premium', pfMidPair:'Mid pair',
+    pfStrongAceS:'Strong suited Ace', pfStrongAce:'Strong Ace', pfKQs:'KQs', pfKQo:'KQo',
+    pfSmallPair:'Small pair', pfSuitedConn:'Suited connectors', pfSuitedBroad:'Suited broadways',
+    pfAceKicker:'Ace with kicker', pfConnectors:'Connectors', pfWeak:'Weak hand',
     youWon:'You won!', handWinner:'Hand winner',
     totalPot:'Total pot', players:'Players', blinds:'Blinds',
     commCards:'Community cards', results:'Results', continue:'Continue ▶',
@@ -237,6 +246,15 @@ const LANG = {
     wsError:'Erreur WebSocket. Le proxy est-il lancé ?',
     reconnFailed:'Reconnexion échouée après {n} tentatives. Reconnectez-vous manuellement.',
     tableNamePh:'Nom de la table…',
+    // ── Force de main : post-flop ──
+    hsRoyal:'⭐ Quinte Flush Royale', hsSF:'🃏 Quinte Flush {r}', hsFour:'🟥 Carré {r}',
+    hsFull:'🔴 Full {a}/{b}', hsFlush:'🟠 Couleur', hsStraight:'🟡 Suite {r}',
+    hsThree:'🟢 Brelan {r}', hsTwoPair:'🔵 Deux paires {a}/{b}', hsPair:'⚪ Paire {r}', hsHigh:'— Carte haute {r}',
+    // ── Force de main : pré-flop ──
+    pfPremium:'Main premium', pfAKs:'AK couleur ★★★', pfAKo:'AK bicolore ★★★', pfMidPair:'Paire intermédiaire',
+    pfStrongAceS:'As couleur fort', pfStrongAce:'As fort', pfKQs:'KQ couleur', pfKQo:'KQ',
+    pfSmallPair:'Petite paire', pfSuitedConn:'Connecteurs couleur', pfSuitedBroad:'Deux cartes hautes couleur',
+    pfAceKicker:'As avec kicker', pfConnectors:'Connecteurs', pfWeak:'Main faible',
     youWon:'Vous avez gagné !', handWinner:'Gagnant de la main',
     totalPot:'Pot total', players:'Joueurs', blinds:'Blinds',
     commCards:'Cartes communes', results:'Résultats', continue:'Continuer ▶',

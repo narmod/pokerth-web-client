@@ -528,20 +528,20 @@ function _evalFive(cards) {
   var top2 = byFreq[1];
   var rn = RANK_NAMES;
   if (isFlush && isStraight) {
-    if (straightHigh===12) return { r:9, fr:'⭐ Quinte Flush Royale', en:'⭐ Royal Flush' };
-    return { r:8, fr:'🃏 Quinte Flush '+rn[straightHigh], en:'🃏 Straight Flush '+rn[straightHigh] };
+    if (straightHigh===12) return { r:9, label: t('hsRoyal') };
+    return { r:8, label: t('hsSF').replace('{r}', rn[straightHigh]) };
   }
-  if (freq[0]===4) return { r:7, fr:'🟥 Carré '+rn[top], en:'🟥 Four '+rn[top]+'s' };
-  if (freq[0]===3 && freq[1]===2) return { r:6, fr:'🔴 Full '+rn[top]+'/'+rn[top2], en:'🔴 Full House '+rn[top]+'/'+rn[top2] };
-  if (isFlush) return { r:5, fr:'🟠 Couleur', en:'🟠 Flush' };
-  if (isStraight) return { r:4, fr:'🟡 Suite '+rn[straightHigh], en:'🟡 Straight '+rn[straightHigh] };
-  if (freq[0]===3) return { r:3, fr:'🟢 Brelan '+rn[top], en:'🟢 Three '+rn[top]+'s' };
+  if (freq[0]===4) return { r:7, label: t('hsFour').replace('{r}', rn[top]) };
+  if (freq[0]===3 && freq[1]===2) return { r:6, label: t('hsFull').replace('{a}', rn[top]).replace('{b}', rn[top2]) };
+  if (isFlush) return { r:5, label: t('hsFlush') };
+  if (isStraight) return { r:4, label: t('hsStraight').replace('{r}', rn[straightHigh]) };
+  if (freq[0]===3) return { r:3, label: t('hsThree').replace('{r}', rn[top]) };
   if (freq[0]===2 && freq[1]===2) {
     var p1=rn[top], p2=rn[top2];
-    return { r:2, fr:'🔵 Deux paires '+p1+'/'+p2, en:'🔵 Two Pair '+p1+'/'+p2 };
+    return { r:2, label: t('hsTwoPair').replace('{a}', p1).replace('{b}', p2) };
   }
-  if (freq[0]===2) return { r:1, fr:'⚪ Paire '+rn[top], en:'⚪ Pair of '+rn[top]+'s' };
-  return { r:0, fr:'— Carte haute '+rn[ranks[0]], en:'— High Card '+rn[ranks[0]] };
+  if (freq[0]===2) return { r:1, label: t('hsPair').replace('{r}', rn[top]) };
+  return { r:0, label: t('hsHigh').replace('{r}', rn[ranks[0]]) };
 }
 
 // Encodage PokerTH UNIQUE pour toutes les cartes (0-indexé, 0..51) :
@@ -727,41 +727,40 @@ function evaluatePreFlopHand(c1, c2) {
 
   // ─ Premium ★★★
   if (isPair && hi >= 10) // AA KK QQ JJ TT
-    return { stars: 3, fr: 'Main premium', en: 'Premium hand',
-             detail_fr: ['AA','KK','QQ','JJ','TT'][12-hi] + (hi>=10?'':' ') };
+    return { stars: 3, label: t('pfPremium') };
   if (hi===12 && lo===11) // AK
-    return { stars: 3, fr: isSuited ? 'AK couleur ★★★' : 'AK bicolore ★★★', en: isSuited?'AKs Premium':'AKo Premium' };
+    return { stars: 3, label: isSuited ? t('pfAKs') : t('pfAKo') };
 
   // ─ Très bonnes ★★☆
   if (isPair && hi >= 7) // 77 88 99
-    return { stars: 2, fr: 'Paire intermédiaire', en: 'Mid pair' };
+    return { stars: 2, label: t('pfMidPair') };
   if (hi===12 && lo>=9 && isSuited) // AQs AJs ATs
-    return { stars: 2, fr: 'As couleur fort', en: 'Strong suited Ace' };
+    return { stars: 2, label: t('pfStrongAceS') };
   if (hi===12 && lo>=9) // AQ AJ AT
-    return { stars: 2, fr: 'As fort', en: 'Strong Ace' };
+    return { stars: 2, label: t('pfStrongAce') };
   if (hi===11 && lo===10 && isSuited) // KQs
-    return { stars: 2, fr: 'KQ couleur', en: 'KQs' };
+    return { stars: 2, label: t('pfKQs') };
   if (hi===11 && lo===10) // KQ
-    return { stars: 2, fr: 'KQ', en: 'KQo' };
+    return { stars: 2, label: t('pfKQo') };
 
   // ─ Bonnes ★☆☆
   if (isPair && hi >= 4) // 44 55 66
-    return { stars: 1, fr: 'Petite paire', en: 'Small pair' };
+    return { stars: 1, label: t('pfSmallPair') };
   if (isSuited && gap === 1 && lo >= 7) // connecteurs couleur hauts
-    return { stars: 1, fr: 'Connecteurs couleur', en: 'Suited connectors' };
+    return { stars: 1, label: t('pfSuitedConn') };
   if (isSuited && hi >= 10 && lo >= 8)
-    return { stars: 1, fr: 'Deux cartes hautes couleur', en: 'Suited broadways' };
+    return { stars: 1, label: t('pfSuitedBroad') };
   if (hi===12 && lo >= 6) // As faible
-    return { stars: 1, fr: 'As avec kicker', en: 'Ace with kicker' };
+    return { stars: 1, label: t('pfAceKicker') };
 
   // ─ Moyennes — connecteurs
   if (gap <= 2 && lo >= 5 && isSuited)
-    return { stars: 0, fr: 'Connecteurs couleur', en: 'Suited connectors' };
+    return { stars: 0, label: t('pfSuitedConn') };
   if (gap <= 1 && lo >= 4)
-    return { stars: 0, fr: 'Connecteurs', en: 'Connectors' };
+    return { stars: 0, label: t('pfConnectors') };
 
   // ─ Faibles
-  return { stars: -1, fr: 'Main faible', en: 'Weak hand' };
+  return { stars: -1, label: t('pfWeak') };
 }
 
 
@@ -3952,7 +3951,7 @@ const App = (() => {
     if (myCards[0] == null || myCards[1] == null) { el.style.display='none'; return; }
     var res = evaluatePreFlopHand(myCards[0], myCards[1]);
     if (!res) { el.style.display='none'; return; }
-    var label = (_lang==='fr' ? res.fr : res.en);
+    var label = res.label;
     var stars = res.stars >= 0
       ? ' ' + ('★'.repeat(res.stars+1) + '☆☆').slice(0,3)
       : '';
@@ -3978,7 +3977,7 @@ const App = (() => {
       .filter(function(c){ return c != null; });
     var result = evaluateBestHand(holeNorm, validComm);
     if (!result) { el.style.display = 'none'; return; }
-    var handLabel = _lang === 'fr' ? result.fr : result.en;
+    var handLabel = result.label;
     var colors = ['#aaa','#aaa','#7ec8e3','#7ec8e3','#a8d8a8','#6dbe6d','#f0c040','#f09030','#e07020','#e74c3c'];
     var handColor = colors[result.r] || 'var(--gold)';
     // Afficher le nom immédiatement, calcul win% en async
@@ -5087,7 +5086,7 @@ function showWinnerOverlay(winners) {
         var _holeNorm = [_hc1, _hc2].map(normalizeHoleCard).filter(function(c){ return c != null; });
         if (_holeNorm.length === 2) {
           var _res = evaluateBestHand(_holeNorm, comm);
-          if (_res) bestHandLabel = _lang === 'fr' ? _res.fr : _res.en;
+          if (_res) bestHandLabel = _res.label;
         }
       }
     }
