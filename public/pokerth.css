@@ -3391,6 +3391,17 @@ body:not(.in-game) .my-zone {
   pointer-events: none;
 }
 
+/* Overflow-menu language entries (lobby + game headers): the flag SVG is
+   followed directly by the language label, separated only by a literal
+   space that collapses against the inline-block flag. Give the flag a
+   right margin so flag and label don't touch. Scoped to these two
+   buttons only — the icon-only header buttons and the dropdown picker
+   (which already uses flex `gap`) are untouched. */
+#lang-toggle-game-mob .lang-flag,
+#lang-toggle-lobby-mob .lang-flag {
+  margin-right: 8px;
+}
+
 /* ═══════════════════════════════════════════════════════════════════
    Connect-screen top-right button bar.
    The lang/refresh/fullscreen trio sits outside any `.header` block,
