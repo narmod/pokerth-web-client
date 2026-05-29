@@ -3764,7 +3764,7 @@ body:not(.in-game) .my-zone {
 }
 .create-toggle:hover { background: rgba(200,168,74,0.13); }
 .create-toggle .ct-ico { font-size: 1.25rem; }
-.create-toggle .ct-arrow { margin-left: auto; color: var(--gold-dim); transition: transform 0.25s; }
+.create-toggle .ct-arrow { margin-left: auto; width: 0; height: 0; border-style: solid; border-width: 6px 0 6px 9px; border-color: transparent transparent transparent var(--gold-dim); transition: transform 0.25s; }
 .create-toggle.open { border-radius: 10px 10px 0 0; }
 .create-toggle.open .ct-arrow { transform: rotate(90deg); }
 
