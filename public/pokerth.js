@@ -1947,6 +1947,8 @@ const App = (() => {
   var _stats = { handsPlayed:0, handsWon:0, startMoney:0, peakMoney:0, totalGain:0,
                  bigWin:0, bigLoss:0, history:[] };
   var _statsInited = false;
+  var _myStackAtHandStart = null;    // mon stack réel au début de la main (avant blinds)
+  var _seatStackAtHandStart = {};    // {pid: stack début de main} → net exact de chaque joueur
 
   // ── Positions des sièges (pour les animations) ──
   var _lastPixPos = [];  // [{top, left}] dans l'ordre de rotated
@@ -2876,6 +2878,15 @@ const App = (() => {
           seats  = newSeats.slice(); // copy, defensive
           _seatsFrozen = true;
           handNum = 0;
+          // Nouvelle table → repartir de zéro pour les stats de session
+          // (sinon le stack de départ et l'historique de la table précédente
+          // persistent et faussent le « gain net »).
+          _stats.handsPlayed = 0; _stats.handsWon = 0; _stats.startMoney = 0;
+          _stats.peakMoney = 0; _stats.totalGain = 0; _stats.bigWin = 0;
+          _stats.bigLoss = 0; _stats.history = [];
+          _statsInited = false;
+          _myStackAtHandStart = null; _seatStackAtHandStart = {};
+          if (_statsOpen) renderStats();
           const scEl = document.getElementById('g-myseat-cards');
           if (scEl) scEl.innerHTML = '<div class="pk sm back"></div><div class="pk sm back"></div>';
         }
@@ -2903,6 +2914,14 @@ const App = (() => {
             Object.assign(seatData[pid], {bet:0, action:'', active:inGame, folded:false});
           }
         }
+
+        // Mémoriser le stack de chaque joueur AU DÉBUT de la main (avant blinds),
+        // pour calculer le gain/perte NET exact (mien + bonus popup gagnant).
+        _seatStackAtHandStart = {};
+        for (const _sp of seats) {
+          if (seatData[_sp] && seatData[_sp].money != null) _seatStackAtHandStart[_sp] = seatData[_sp].money;
+        }
+        _myStackAtHandStart = (_seatStackAtHandStart[myId] != null) ? _seatStackAtHandStart[myId] : null;
 
         commCards = [null, null, null, null, null];
         amInGame  = true;
@@ -3314,10 +3333,12 @@ const App = (() => {
             winners.push({ pid, won, cash, c1, c2 });
             // Stats si c'est moi
             if (pid === myId) {
-              var prevMon = (_stats.startMoney || 0) + _stats.totalGain;
-              var delta2 = won - (prevMon - cash);
+              // Gain NET de la main = stack final − stack au début de la main
+              // (et NON le pot brut « won », qui inclut ma propre mise).
+              var myStartHand = (_myStackAtHandStart != null) ? _myStackAtHandStart : ((_stats.startMoney || 0) + _stats.totalGain);
+              var netWin = cash - myStartHand;
               var myPair2 = myCards.map && myCards.map(function(c){ return { r: cardName(c,false).slice(0,-1), s: cardName(c,false).slice(-1), red: ['♥','♦'].indexOf(cardName(c,false).slice(-1))>=0 }; });
-              recordHand(true, won, myPair2);
+              recordHand(true, netWin, myPair2);
             }
             addChat(null, '🏆 ' + getPlayerName(pid) + ' ' + t('wins') + ' ' + won + ' ¥!', 'sys');
             logAction('🏆 ' + getPlayerName(pid) + ' +' + won);
@@ -3327,7 +3348,7 @@ const App = (() => {
         if (!winners.some(function(w){ return w.pid === myId; })) {
           var myEndMon = (seatData[myId] || {}).money;
           if (myEndMon != null) {
-            var myStartMon = (_stats.startMoney || 0) + _stats.totalGain;
+            var myStartMon = (_myStackAtHandStart != null) ? _myStackAtHandStart : ((_stats.startMoney || 0) + _stats.totalGain);
             var myLoss = myEndMon - myStartMon;
             var myPairLoss = myCards.map && myCards.map(function(c){
               return { r: cardName(c,false).slice(0,-1), s: cardName(c,false).slice(-1), red: ['♥','♦'].indexOf(cardName(c,false).slice(-1))>=0 };
@@ -3371,18 +3392,20 @@ const App = (() => {
         const cash = Proto.u32(sub, 4);
         if (seatData[pid]) { seatData[pid].money = cash; if(won) seatData[pid].action = '+'+won; }
         if (won > 0) addChat(null, getPlayerName(pid) + ' gagne ' + won + ' jetons', 'sys');
-        // Enregistrer ma perte (cartes non révélées, je ne suis pas le gagnant)
-        if (pid !== myId) {
-          var myHideMon = (seatData[myId] || {}).money;
-          if (myHideMon != null) {
-            var myHideStart = (_stats.startMoney || 0) + _stats.totalGain;
-            var myHideLoss  = myHideMon - myHideStart;
-            if (myHideLoss < 0) {
-              var myPairHide = myCards.map && myCards.map(function(c){
-                return { r: cardName(c,false).slice(0,-1), s: cardName(c,false).slice(-1), red: ['♥','♦'].indexOf(cardName(c,false).slice(-1))>=0 };
-              });
-              recordHand(false, myHideLoss, myPairHide);
-            }
+        // Enregistrer le résultat de la main pour moi (fin sans abattage).
+        var myHideMon = (seatData[myId] || {}).money;
+        if (myHideMon != null) {
+          var myHideStart = (_myStackAtHandStart != null) ? _myStackAtHandStart : ((_stats.startMoney || 0) + _stats.totalGain);
+          var myHideNet   = myHideMon - myHideStart;
+          var myPairHide  = myCards.map && myCards.map(function(c){
+            return { r: cardName(c,false).slice(0,-1), s: cardName(c,false).slice(-1), red: ['♥','♦'].indexOf(cardName(c,false).slice(-1))>=0 };
+          });
+          if (pid === myId) {
+            // J'ai gagné sans abattage (tout le monde s'est couché) → victoire comptée.
+            recordHand(true, myHideNet, myPairHide);
+          } else if (myHideNet < 0) {
+            // Quelqu'un d'autre a gagné et j'ai perdu des jetons (blinds/mise).
+            recordHand(false, myHideNet, myPairHide);
           }
         }
         pot = 0; $('g-pot').textContent = 'Pot: 0';
@@ -4568,7 +4591,8 @@ const App = (() => {
     // Stats — reuse the _stats object that was already being maintained
     const s = _stats || { handsPlayed:0, handsWon:0, totalGain:0, bigWin:0, bigLoss:0, startMoney:0 };
     const wr = s.handsPlayed > 0 ? Math.round(s.handsWon / s.handsPlayed * 100) : 0;
-    const finalStack = (s.startMoney || 0) + (s.totalGain || 0);
+    const _realStk = (seatData[myId] && seatData[myId].money != null) ? seatData[myId].money : null;
+    const finalStack = (_realStk != null) ? _realStk : ((s.startMoney || 0) + (s.totalGain || 0));
     const gainCls = (s.totalGain > 0) ? 'pos' : (s.totalGain < 0) ? 'neg' : '';
 
     // Outcome icon: 🏆 trophy when the local player wins, otherwise a
@@ -5005,8 +5029,22 @@ function showWinnerOverlay(winners) {
     var isMe  = pid === myId;
     var name  = getPlayerName(pid);
     var wObj  = winners.find(function(w){ return w.pid === pid; });
-    var delta = isW ? (wObj ? wObj.won : 0) : "";
-    var deltaClass = isW ? "pos" : "neg";
+    // Net réel de la main pour ce joueur = stack final − stack au début de la main.
+    var _startStk = _seatStackAtHandStart[pid];
+    var _net = (_startStk != null && sd.money != null) ? (sd.money - _startStk) : null;
+    var deltaClass, deltaTxt;
+    if (isW) {
+      // Gagnant : on affiche le pot ramassé (cohérent avec l'en-tête).
+      deltaClass = "pos";
+      deltaTxt = "+" + (wObj ? wObj.won : 0) + " ¥";
+    } else if (_net != null && _net < 0) {
+      // Perdant : perte nette de la main, en rouge.
+      deltaClass = "neg";
+      deltaTxt = _net + " ¥";
+    } else {
+      deltaClass = "";
+      deltaTxt = "";
+    }
     var rowClass = "wc-player-row" + (isW ? " wc-winner" : "") + (isMe ? " wc-me-row" : "");
 
     html += '<div class="' + rowClass + '">';
@@ -5025,7 +5063,7 @@ function showWinnerOverlay(winners) {
       html += cardHtml(myCards[0],"xsm",false) + cardHtml(myCards[1],"xsm",false);
       html += '</div>';
     }
-    html += '<div class="wc-player-delta ' + deltaClass + '">' + (isW ? "+" + delta + " ¥" : "") + '</div>';
+    html += '<div class="wc-player-delta ' + deltaClass + '">' + deltaTxt + '</div>';
     html += '</div>';
   });
 
