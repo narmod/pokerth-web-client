@@ -661,6 +661,8 @@ body {
   min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
+  display: inline-flex;
+  align-items: center;
 }
 
 .lang-btn.active { background: rgba(200,168,74,0.2) !important; border-color: var(--gold-dim) !important; color: var(--gold) !important; }
