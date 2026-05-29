@@ -152,6 +152,10 @@ const LANG = {
     modeInProgress:'In progress',
     modeClosed:'Closed',
     noTablesAvailable:'No tables available right now.',
+    createTableHdr:'Create a table', gameStyle:'Game style',
+    presetCalmName:'🐢 Relaxed', presetCalmDesc:'long games',
+    presetNormalName:'⚖️ Normal', presetNormalDesc:'balanced',
+    presetFastName:'⚡ Fast', presetFastDesc:'fast-paced!',
     proxyConnectedWait:'Proxy connected \u2014 waiting for PokerTH server\u2026',
     errConnLost:'Connection lost. You can reconnect in a few seconds.',
     autoTableFound:'\u26a1 Table found \u2014 joining #{n}',
@@ -308,6 +312,10 @@ const LANG = {
     modeInProgress:'En cours',
     modeClosed:'Ferm\u00e9e',
     noTablesAvailable:'Aucune table disponible actuellement.',
+    createTableHdr:'Créer une table', gameStyle:'Style de partie',
+    presetCalmName:'🐢 Tranquille', presetCalmDesc:'parties longues',
+    presetNormalName:'⚖️ Normal', presetNormalDesc:'équilibré',
+    presetFastName:'⚡ Rapide', presetFastDesc:'ça va vite !',
     proxyConnectedWait:'Proxy connect\u00e9 \u2014 attente du serveur PokerTH\u2026',
     errConnLost:'Connexion perdue. Vous pouvez vous reconnecter dans quelques secondes.',
     autoTableFound:'\u26a1 Table trouv\u00e9e \u2014 rejoindre la #{n}',
@@ -423,6 +431,8 @@ function setLang(l) {
   // Update more/less options label
   var ml = document.getElementById('cf-more-label');
   if (ml) { var cfOpen = document.getElementById('cf-more-opts'); ml.textContent = (cfOpen && cfOpen.style.display !== 'none') ? t('lessOptions') : t('moreOptions'); }
+  // Re-render the lobby game list so badges/labels follow the language
+  try { if (typeof window.renderGames === 'function') window.renderGames(); } catch(e) {}
   // Update lang toggle buttons
   document.querySelectorAll('.lang-btn').forEach(function(b){
     b.classList.toggle('active', b.dataset.lang === _lang);

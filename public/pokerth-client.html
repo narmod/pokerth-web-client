@@ -815,8 +815,26 @@ function selectAvatarPopup(emoji) {
     </div>
   </div>
 
-  <!-- Create form -->
-  <div id="create-form" style="display:none;background:rgba(8,18,10,0.98);border-bottom:1px solid var(--gold-dim);padding:12px 14px;flex-shrink:0;z-index:10">
+  <!-- Lobby body : création (repliable) au-dessus des tables -->
+  <div class="lobby-body">
+   <div class="lobby-grid">
+
+    <!-- Colonne création -->
+    <div class="create-col">
+      <button class="create-toggle" id="create-toggle-btn" onclick="App.toggleCreateForm()">
+        <span class="ct-ico">🛠️</span>
+        <span data-i18n="createTableHdr">Créer une table</span>
+        <span class="ct-arrow">▶</span>
+      </button>
+      <div id="create-form" style="display:none">
+        <!-- Préréglages : remplissent les champs en un clic -->
+        <div class="cf-presets-label" data-i18n="gameStyle">Style de partie</div>
+        <div class="cf-presets">
+          <button type="button" class="cf-preset" data-preset="tranquille" onclick="App.applyPreset('tranquille',this)"><span class="cfp-n" data-i18n="presetCalmName">🐢 Tranquille</span><span class="cfp-d" data-i18n="presetCalmDesc">parties longues</span></button>
+          <button type="button" class="cf-preset" data-preset="normal" onclick="App.applyPreset('normal',this)"><span class="cfp-n" data-i18n="presetNormalName">⚖️ Normal</span><span class="cfp-d" data-i18n="presetNormalDesc">équilibré</span></button>
+          <button type="button" class="cf-preset" data-preset="rapide" onclick="App.applyPreset('rapide',this)"><span class="cfp-n" data-i18n="presetFastName">⚡ Rapide</span><span class="cfp-d" data-i18n="presetFastDesc">ça va vite !</span></button>
+        </div>
+
     <div class="create-fields">
       <div class="cf"><label data-i18n="tableName">Table name</label><input id="cf-name" placeholder="Table..."></div>
       <div class="cf cf-sm"><label data-i18n="maxPlayers">Max players</label><input id="cf-players" type="number" min="2" max="10" value="10"></div>
@@ -863,15 +881,11 @@ function selectAvatarPopup(emoji) {
       </div>
     </div>
     <button class="btn-primary" data-i18n="createTable" onclick="App.createGame()" style="margin-top:14px;width:100%;padding:10px">+ Create table</button>
-  </div>
-
-  <!-- Lobby body -->
-  <div class="lobby-body">
-    <div class="pane-games">
-      <div class="create-bar">
-        <button class="btn-create" id="btn-autojoin" onclick="App.autoJoinOrCreate()" data-i18n="quickGameBtn">⚡ Join / Quick Game</button>
-        <button class="btn-create-manual" onclick="App.toggleCreateForm()" title="Configure">⚙</button>
       </div>
+    </div>
+
+    <!-- Colonne tables -->
+    <div class="games-col">
       <div class="pane-header">
         <span data-i18n="availTables">Available tables</span>
         <span id="g-count" style="color:var(--text)">0 <span data-i18n="tableCount">table(s)</span></span>
@@ -880,6 +894,8 @@ function selectAvatarPopup(emoji) {
         <div class="empty">Loading tables<br><span class="ld"><span>●</span><span>●</span><span>●</span></span></div>
       </div>
     </div>
+
+   </div>
   </div>
 </div>
 

@@ -3484,37 +3484,40 @@ const App = (() => {
     }
 
     $('g-list').innerHTML = entries.map(([gid, g]) => {
-      const dotcls = MODE_DOT[g.mode] || 'dot-closed';
       const label  = MODE_LABEL(g.mode);
       const type   = GTYPE[g.type] || '';
-      const lock   = (g.priv || g.type === 3) ? '🔒 ' : '';
-      // The i18n joinBtn string already includes a '▶ ' prefix
-      // ('▶ Rejoindre' in FR, '▶ Join' in EN). Previously we
-      // prepended ANOTHER '▶ ' here, giving the visible '▶▶' double-
-      // arrow look. Now we only prepend a prefix when we need to
-      // REPLACE the arrow with a lock (for private/locked tables).
-      var rawJoin = (typeof t === 'function' ? t('joinBtn') || '▶ Join' : '▶ Join');
+      const lock   = (g.priv || g.type === 3) ? '\U0001F512 ' : '';
+      const badgeCls = g.mode === 2 ? 'live' : (g.mode === 3 ? 'closed' : 'wait');
+      var rawJoin = (typeof t === 'function' ? t('joinBtn') || '\u25B6 Join' : '\u25B6 Join');
       const joinLabel = (g.priv || g.type === 3)
-        ? '🔒 ' + rawJoin.replace(/^▶\s*/, '')
+        ? '\U0001F512 ' + rawJoin.replace(/^\u25B6\s*/, '')
         : rawJoin;
       const watchBtn = g.mode === 2
-        ? '<button class="btn-xs btn-watch" onclick="App.spectateGame(' + gid + ')">👁 ' + t('watchBtn') + '</button>'
+        ? '<button class="btn-xs btn-watch" onclick="event.stopPropagation();App.spectateGame(' + gid + ')">\U0001F441 ' + t('watchBtn') + '</button>'
         : '';
       const joinBtn = g.mode !== 3
         ? '<button class="btn-join" onclick="event.stopPropagation();App.joinGame(' + parseInt(gid) + ')">' + joinLabel + '</button>'
         : '';
-      return '<div class="game-row" onclick="App.joinGame(' + parseInt(gid) + ')">'
-        + '<div class="game-info">'
-        + '<div class="game-name">' + lock + esc(g.name) + '</div>'
-        + '<div class="game-meta">'
-        + '<span class="game-type">' + type + '</span>'
-        + '<span> · </span>'
-        + '<span>' + label + '</span>'
-        + '</div></div>'
-        + '<div style="display:flex;align-items:center;gap:10px">'
-        + '<div class="game-count">' + g.players + (g.maxPlayers ? '/'+g.maxPlayers : '') + '</div>'
-        + joinBtn + watchBtn
-        + '</div></div>';
+      // Seat dots from the REAL lobby counts (filled = taken, hollow =
+      // free). The lobby list gives only player counts \u2014 no per-seat
+      // identities \u2014 so we visualise occupancy, never fake avatars.
+      var seatDots = '';
+      var cap = Math.min(g.maxPlayers || 0, 10);
+      for (var s = 0; s < cap; s++) seatDots += '<span class="seat-dot' + (s < g.players ? ' on' : '') + '"></span>';
+      var metaBits = [];
+      if (type) metaBits.push('<span class="game-type">' + type + '</span>');
+      metaBits.push('<span>\U0001F465 ' + g.players + (g.maxPlayers ? '/' + g.maxPlayers : '') + '</span>');
+      if (g.startMoney) metaBits.push('<span>\U0001FA99 ' + g.startMoney + '</span>');
+      if (g.timeout)    metaBits.push('<span>\u23F1 ' + g.timeout + 's</span>');
+      return '<div class="game-row gcard" onclick="App.joinGame(' + parseInt(gid) + ')">'
+        + '<div class="gcard-main">'
+        + '<div class="game-name">' + lock + esc(g.name)
+        + ' <span class="game-badge ' + badgeCls + '">' + label + '</span></div>'
+        + '<div class="game-meta">' + metaBits.join('') + '</div>'
+        + (seatDots ? '<div class="game-seats">' + seatDots + '</div>' : '')
+        + '</div>'
+        + '<div class="gcard-btns">' + joinBtn + watchBtn + '</div>'
+        + '</div>';
     }).join('');
   }
 
@@ -4720,6 +4723,7 @@ const App = (() => {
   }
 
   window._renderSeats = function() { if (seats.length) renderSeats(); };
+  window.renderGames = renderGames;
   window.toggleStats  = toggleStats;
   window._toggleStats = toggleStats;
   window._broadcastMyAvatar = function(emoji) {
@@ -6102,8 +6106,30 @@ function dismissWinner() {
       // Apply per-login-mode defaults the first time the form opens (or
       // whenever the user has not yet customized a field).
       if (open) this._applyCreateFormDefaults(false);
-      var btn = document.querySelector('.btn-create-manual');
-      if (btn) { btn.style.background = open ? 'rgba(200,168,74,0.15)' : ''; btn.style.borderColor = open ? 'var(--gold-dim)' : ''; btn.style.color = open ? 'var(--gold)' : ''; }
+      // Rotate the header toggle arrow / square off its bottom corners.
+      var btn = document.getElementById('create-toggle-btn');
+      if (btn) btn.classList.toggle('open', open);
+    },
+    // Quick-style presets: fill the create-form numeric fields in one tap.
+    // The full form stays fully editable afterwards — presets are just a
+    // friendly starting point (kid-friendly: Relaxed / Normal / Fast).
+    applyPreset(name, btn) {
+      var P = {
+        tranquille: { players:8, stack:5000, blind:10, timeout:30 },
+        normal:     { players:6, stack:3000, blind:10, timeout:15 },
+        rapide:     { players:6, stack:1500, blind:25, timeout:5  }
+      };
+      var v = P[name];
+      if (!v) return;
+      var set = function(id, val){ var e = document.getElementById(id); if (e) e.value = val; };
+      set('cf-players', v.players);
+      set('cf-stack',   v.stack);
+      set('cf-blind',   v.blind);
+      set('cf-timeout', v.timeout);
+      var all = document.querySelectorAll('.cf-preset');
+      for (var i = 0; i < all.length; i++) all[i].classList.remove('active');
+      var sel = btn || document.querySelector('.cf-preset[data-preset="' + name + '"]');
+      if (sel) sel.classList.add('active');
     },
     toggleMoreOptions() {
       var el = document.getElementById('cf-more-opts');
