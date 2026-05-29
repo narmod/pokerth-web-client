@@ -6502,30 +6502,51 @@ function toggleLobbyChat() {
 
 
 function renderHandsHelp() {
+  // Icône + couleur de force (vert fort → gris faible) par combinaison
+  var ICONS = ['👑','🔥','🎯','🏠','💧','🪜','✦','✌️','👥','⬆️'];
+  var RAMP  = ['#2ecc71','#4cc56a','#79c25c','#a6bd4f','#c9b144','#d09a3c','#cf8038','#b86a37','#946035','#6f6353'];
+  // c = cartes [valeur, couleur] ; k = 1 si la carte COMPTE (éclairée), 0 si inutile (estompée)
   var hands = [
-    { cards: '<div class="hc hi">A<br>♠</div><div class="hc hi">K<br>♠</div><div class="hc hi">Q<br>♠</div><div class="hc hi">J<br>♠</div><div class="hc hi">10<br>♠</div>', n:'h1n', d:'h1d' },
-    { cards: '<div class="hc">9<br>♣</div><div class="hc">8<br>♣</div><div class="hc">7<br>♣</div><div class="hc">6<br>♣</div><div class="hc">5<br>♣</div>', n:'h2n', d:'h2d' },
-    { cards: '<div class="hc">K<br>♠</div><div class="hc r">K<br>♥</div><div class="hc r">K<br>♦</div><div class="hc">K<br>♣</div><div class="hc">8<br>♣</div>', n:'h3n', d:'h3d' },
-    { cards: '<div class="hc">Q<br>♣</div><div class="hc r">Q<br>♥</div><div class="hc">Q<br>♠</div><div class="hc r">J<br>♦</div><div class="hc">J<br>♣</div>', n:'h4n', d:'h4d' },
-    { cards: '<div class="hc r">A<br>♦</div><div class="hc r">J<br>♦</div><div class="hc r">8<br>♦</div><div class="hc r">5<br>♦</div><div class="hc r">2<br>♦</div>', n:'h5n', d:'h5d' },
-    { cards: '<div class="hc">9<br>♠</div><div class="hc r">8<br>♥</div><div class="hc">7<br>♣</div><div class="hc r">6<br>♦</div><div class="hc">5<br>♠</div>', n:'h6n', d:'h6d' },
-    { cards: '<div class="hc">7<br>♠</div><div class="hc r">7<br>♦</div><div class="hc">7<br>♣</div><div class="hc">K<br>♠</div><div class="hc r">4<br>♥</div>', n:'h7n', d:'h7d' },
-    { cards: '<div class="hc">J<br>♣</div><div class="hc r">J<br>♥</div><div class="hc r">5<br>♦</div><div class="hc">5<br>♠</div><div class="hc">A<br>♣</div>', n:'h8n', d:'h8d' },
-    { cards: '<div class="hc r">A<br>♥</div><div class="hc">A<br>♠</div><div class="hc r">9<br>♦</div><div class="hc">6<br>♣</div><div class="hc">3<br>♠</div>', n:'h9n', d:'h9d' },
-    { cards: '<div class="hc hi">A<br>♠</div><div class="hc r">K<br>♦</div><div class="hc">9<br>♣</div><div class="hc r">5<br>♥</div><div class="hc">2<br>♠</div>', n:'h10n', d:'h10d' },
+    { c:[['A','♠'],['K','♠'],['Q','♠'],['J','♠'],['10','♠']], k:[1,1,1,1,1], n:'h1n', d:'h1d' },
+    { c:[['9','♣'],['8','♣'],['7','♣'],['6','♣'],['5','♣']],   k:[1,1,1,1,1], n:'h2n', d:'h2d' },
+    { c:[['K','♠'],['K','♥'],['K','♦'],['K','♣'],['8','♣']],   k:[1,1,1,1,0], n:'h3n', d:'h3d' },
+    { c:[['Q','♣'],['Q','♥'],['Q','♠'],['J','♦'],['J','♣']],   k:[1,1,1,1,1], n:'h4n', d:'h4d' },
+    { c:[['A','♦'],['J','♦'],['8','♦'],['5','♦'],['2','♦']],   k:[1,1,1,1,1], n:'h5n', d:'h5d' },
+    { c:[['9','♠'],['8','♥'],['7','♣'],['6','♦'],['5','♠']],   k:[1,1,1,1,1], n:'h6n', d:'h6d' },
+    { c:[['7','♠'],['7','♦'],['7','♣'],['K','♠'],['4','♥']],   k:[1,1,1,0,0], n:'h7n', d:'h7d' },
+    { c:[['J','♣'],['J','♥'],['5','♦'],['5','♠'],['A','♣']],   k:[1,1,1,1,0], n:'h8n', d:'h8d' },
+    { c:[['A','♥'],['A','♠'],['9','♦'],['6','♣'],['3','♠']],   k:[1,1,0,0,0], n:'h9n', d:'h9d' },
+    { c:[['A','♠'],['K','♦'],['9','♣'],['5','♥'],['2','♠']],   k:[1,0,0,0,0], n:'h10n', d:'h10d' },
   ];
   var inner = document.getElementById('hands-card-inner');
   if (!inner) return;
+  function cardHtml(card, isKey) {
+    var suit = card[1];
+    var red  = (suit === '♥' || suit === '♦');
+    var cls  = 'hc' + (red ? ' r' : '') + (isKey ? ' key' : ' kick');
+    return '<div class="' + cls + '">' + card[0] + '<br>' + suit + '</div>';
+  }
   var rows = hands.map(function(h, i) {
+    var cards = h.c.map(function(card, j) { return cardHtml(card, h.k[j]); }).join('');
+    // Description : "base||exemple" → l'exemple est mis en valeur (or)
+    var parts = String(t(h.d)).split('||');
+    var desc  = parts[0] + (parts[1] ? ' <span class="hand-ex">' + parts[1] + '</span>' : '');
     return '<div class="hand-row">'
-      + '<div class="hand-rank">' + (i+1) + '</div>'
-      + '<div class="hand-cards">' + h.cards + '</div>'
+      + '<div class="hand-rail" style="background:' + RAMP[i] + '"></div>'
+      + '<div class="hand-rank" style="color:' + RAMP[i] + '">' + (i + 1) + '</div>'
+      + '<div class="hand-cards">' + cards + '</div>'
       + '<div class="hand-info">'
-      +   '<div class="hand-name">' + t(h.n) + '</div>'
-      +   '<div class="hand-desc">' + t(h.d) + '</div>'
+      +   '<div class="hand-name"><span class="hand-ico">' + ICONS[i] + '</span>' + t(h.n) + '</div>'
+      +   '<div class="hand-desc">' + desc + '</div>'
       + '</div></div>';
   }).join('');
+  var legend = '<div class="hands-legend">'
+    + '<span class="hl"><span class="hl-mini bright"></span>' + t('handsLegOk') + '</span>'
+    + '<span class="hl"><span class="hl-mini dim"></span>' + t('handsLegNo') + '</span>'
+    + '<span class="hl"><span class="hl-grad"></span>' + t('handsLegForce') + '</span>'
+    + '</div>';
   inner.innerHTML = '<div class="hands-title">' + t('handsTitle') + '</div>'
+    + legend
     + rows
     + '<button class="hands-close" onclick="toggleHandsHelp()">' + t('handsClose') + '</button>';
 }

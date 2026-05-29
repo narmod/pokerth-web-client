@@ -1758,8 +1758,29 @@ body {
 .hand-name {
   font-size: 0.78rem; color: var(--text-hi); font-weight: 600;
   font-family: 'Cinzel', serif; letter-spacing: 0.04em;
+  display: flex; align-items: center; gap: 6px;
 }
+.hand-ico { font-size: 0.95rem; line-height: 1; flex-shrink: 0; }
 .hand-desc { font-size: 0.64rem; color: var(--text); margin-top: 1px; }
+.hand-desc .hand-ex { color: var(--gold-hi); }
+/* Rail de force (vert fort → gris faible) à gauche de chaque ligne */
+.hand-rail { width: 4px; border-radius: 3px; flex-shrink: 0; align-self: stretch; }
+/* Carte qui COMPTE = éclairée ; carte inutile = estompée */
+.hc.key  { box-shadow: 0 0 0 1.5px var(--gold-hi), 0 0 7px rgba(224,192,112,0.55); }
+.hc.kick { opacity: 0.34; filter: grayscale(0.55); }
+/* Légende pédagogique */
+.hands-legend {
+  display: flex; align-items: center; justify-content: center;
+  gap: 12px; flex-wrap: wrap; font-size: 0.6rem; color: var(--text);
+  padding: 8px 0 7px; margin-bottom: 4px;
+  border-bottom: 1px solid rgba(200,168,74,0.07);
+}
+.hands-legend .hl { display: flex; align-items: center; gap: 5px; }
+.hl-mini { width: 13px; height: 18px; border-radius: 2px; background: #f8f5ee; border: 1px solid #ccc; display: inline-block; }
+.hl-mini.bright { box-shadow: 0 0 0 1.5px var(--gold-hi), 0 0 5px rgba(224,192,112,0.6); }
+.hl-mini.dim { opacity: 0.34; filter: grayscale(0.5); }
+.hl-grad { width: 46px; height: 7px; border-radius: 4px; display: inline-block;
+  background: linear-gradient(90deg,#2ecc71,#c9b144,#6f6353); }
 .hands-close {
   display: block; width: 100%; margin-top: 14px;
   background: rgba(200,168,74,0.12); border: 1px solid var(--gold-dim);
