@@ -643,32 +643,6 @@ function playReactionFx(emoji, x, y){
   setTimeout(function(){ if (c.parentNode) c.remove(); }, 1800);
 }
 
-// Rend les boutons du sélecteur "vivants" (idle loop par emoji). Exécuté une fois.
-function _initReactionIdles(){
-  var MAP = {
-    '🔥':'i-fire', '🎰':'i-spin', '🍀':'i-spin',
-    '👏':'i-beat','🙌':'i-beat','💪':'i-beat','🤩':'i-beat','🥳':'i-beat','🤯':'i-beat','😍':'i-beat','👍':'i-beat',
-    '🎉':'i-sway','🎊':'i-sway','🃏':'i-sway',
-    '💰':'i-bob','💎':'i-bob','🤑':'i-bob','👑':'i-bob','😎':'i-bob','🫡':'i-bob','💵':'i-bob',
-    '😂':'i-shiver','🤣':'i-shiver','😱':'i-shiver','😬':'i-shiver','😡':'i-shiver','😤':'i-shiver','😴':'i-shiver','🤦':'i-shiver'
-  };
-  document.querySelectorAll('.react-btn').forEach(function(b){
-    if (b.querySelector('.rfx-emo')) return; // déjà initialisé
-    var e = (b.getAttribute('title') || '').trim();
-    var first = b.firstChild;
-    if (first && first.nodeType === 3 && first.textContent.trim()){
-      var span = document.createElement('span');
-      span.className = 'rfx-emo ' + (MAP[e] || 'i-bob');
-      span.textContent = first.textContent.trim();
-      b.replaceChild(span, first);
-    }
-  });
-}
-try {
-  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', _initReactionIdles);
-  else _initReactionIdles();
-} catch(e){}
-
 // Affiche la réaction animée (chorégraphie) à la position fournie (siège du joueur).
 // Conserve la signature historique : appelée par showSeatReaction avec les coords du siège.
 function showFloatingReaction(emoji, fromX, fromY) {
