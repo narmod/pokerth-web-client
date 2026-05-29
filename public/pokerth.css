@@ -1275,9 +1275,25 @@ body {
   overflow: visible;
 }
 
-/* Bouton ⋯ : caché sur desktop */
+/* ••• overflow menu is used at EVERY screen size for a consistent header
+   across phone / tablet / desktop (requested by narmod). The ••• button is
+   always visible, and the secondary actions live exclusively in its menu. */
 #g-overflow-btn,
-#l-overflow-btn { display: none; }
+#l-overflow-btn { display: inline-flex; align-items: center; }
+
+/* Direct header twins of the menu actions: hidden at all sizes (they are
+   provided by the ••• menu now). Was previously a mobile-only rule. */
+#fs-btn-game,
+#lang-toggle-game,
+#log-toggle-btn,
+#admin-start-btn,
+#admin-startnobots-btn,
+#admin-close-btn,
+#admin-kick-btn,
+#haptic-toggle-btn,
+#voice-toggle-btn,
+#fs-btn-lobby,
+#lang-toggle-lobby { display: none !important; }
 
 /* Menu déroulant */
 #g-overflow-menu,
@@ -1313,25 +1329,9 @@ body {
   background: rgba(255,255,255,0.06);
 }
 
-/* Sur mobile : cacher les boutons secondaires, montrer ⋯ */
+/* Mobile-only sizing tweaks (the ••• show / secondary-hide rules are now
+   global, applied above for all screen sizes). */
 @media (max-width: 740px) {
-  #g-overflow-btn,
-  #l-overflow-btn { display: inline-flex !important; align-items: center; }
-  #fs-btn-game,
-  #lang-toggle-game,
-  #log-toggle-btn,
-  #admin-start-btn,
-  #admin-startnobots-btn,
-  #admin-close-btn,
-  #admin-kick-btn,
-  /* Vibration + voice live in the ••• menu on mobile, so hide their
-     direct header twins here (they show on tablet/desktop instead). */
-  #haptic-toggle-btn,
-  #voice-toggle-btn,
-  /* Lobby: hide buttons now moved into the ••• overflow menu */
-  #fs-btn-lobby,
-  #lang-toggle-lobby { display: none !important; }
-
   /* Hauteur uniforme pour tous les btn-sm du header jeu */
   #s-game .header .btn-sm {
     height: 30px;
