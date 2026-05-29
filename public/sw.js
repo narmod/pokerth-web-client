@@ -11,7 +11,7 @@
  *                 offline; cross-origin (fonts, etc.) and WS upgrades are
  *                 left untouched
  */
-const CACHE_VERSION = 'pokerth-v7';
+const CACHE_VERSION = 'pokerth-v8';
 
 // Critical app shell precached on install. Keep this list tight — anything
 // large or rarely used (e.g. the protobuf bundle) is fetched on demand and
@@ -23,6 +23,8 @@ const ASSETS = [
   '/pokerth.css',
   '/manifest.json',
   '/modules/i18n.mjs',
+  '/modules/lang/en.mjs',
+  '/modules/lang/fr.mjs',
   '/modules/sounds.mjs',
   '/favicon.ico',
   '/favicon.svg',
