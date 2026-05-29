@@ -2100,6 +2100,53 @@ const App = (() => {
     return _hapticEnabled;
   }
   window.toggleHaptic = toggleHaptic;
+
+  // ── Voice announcements (Web Speech API) ──────────────────────────────
+  // Speaks game events (player actions, your turn, winner) in the active
+  // language. Opt-in (default OFF), persisted, toggled from the ••• menu.
+  // No-ops gracefully where speechSynthesis is unavailable.
+  let _voiceEnabled = (function() {
+    try { return localStorage.getItem('pth_voice') === '1'; } catch(e) { return false; }
+  })();
+  function speak(text) {
+    if (!_voiceEnabled || !text) return;
+    if (!('speechSynthesis' in window)) return;
+    try {
+      var lang = (typeof _lang !== 'undefined' && _lang) ? _lang : 'fr';
+      var u = new SpeechSynthesisUtterance(String(text));
+      u.lang = (lang === 'en') ? 'en-US' : 'fr-FR';
+      u.rate = 1.05;
+      try {
+        var vs = window.speechSynthesis.getVoices() || [];
+        var pref = vs.filter(function(v){ return v.lang && v.lang.toLowerCase().indexOf(u.lang.slice(0,2)) === 0; });
+        if (pref.length) u.voice = pref[0];
+      } catch(e) {}
+      // Cancel any pending speech so announcements stay in step with play.
+      window.speechSynthesis.cancel();
+      window.speechSynthesis.speak(u);
+    } catch(e) {}
+  }
+  // Localized verb for a server action code (1=Fold … 6=All-in).
+  function voiceActionPhrase(action, pid, bet) {
+    var verbs = ['', t('vFold'), t('vCheck'), t('vCall'), t('vBet'), t('vRaise'), t('vAllin')];
+    var verb = verbs[action] || '';
+    if (!verb) return '';
+    var amt = (action >= 3 && bet) ? ' ' + bet : '';   // call/bet/raise/all-in carry the amount
+    return getPlayerName(pid) + ' ' + verb + amt;
+  }
+  function toggleVoice() {
+    _voiceEnabled = !_voiceEnabled;
+    try { localStorage.setItem('pth_voice', _voiceEnabled ? '1' : '0'); } catch(e) {}
+    var label = _voiceEnabled ? t('voiceOn') : t('voiceOff');
+    if (typeof showKeyHint === 'function') showKeyHint(label);
+    var b = document.getElementById('voice-toggle-mob');
+    if (b) b.innerHTML = (_voiceEnabled ? '🗣️' : '🔇') + ' ' + t('voiceLabel');
+    // Spoken confirmation (also primes the engine on first user gesture).
+    if (_voiceEnabled) speak(t('voiceOn'));
+    else if ('speechSynthesis' in window) { try { window.speechSynthesis.cancel(); } catch(e) {} }
+    return _voiceEnabled;
+  }
+  window.toggleVoice = toggleVoice;
   // Spectators present on the current table. Populated by
   // GameSpectatorJoined messages from the server (one is sent per
   // existing spectator when we ourselves join, plus live updates
@@ -3280,6 +3327,7 @@ const App = (() => {
         $('g-pot').textContent = t('pot') + ' ' + pot;
         if ($('g-potbar')) $('g-potbar').textContent = t('pot') + ' ' + pot;
         logAction(getPlayerName(pid) + ': ' + aLabel + (bet ? ' ' + bet : ''));
+        speak(voiceActionPhrase(action, pid, bet));
         if (pid === myId) {
           const myMon = (seatData[myId] || {}).money || 0;
           if ($('g-mystack')) $('g-mystack').textContent = myMon > 0 ? myMon + ' ¥' : '';
@@ -3450,6 +3498,7 @@ const App = (() => {
             }
             addChat(null, '🏆 ' + getPlayerName(pid) + ' ' + t('wins') + ' ' + won + ' ¥!', 'sys');
             logAction('🏆 ' + getPlayerName(pid) + ' +' + won);
+        speak(t('voiceWins').replace('{name}', getPlayerName(pid)).replace('{n}', won));
           }
         }
         // Enregistrer la perte si je ne suis pas dans les gagnants
@@ -4825,6 +4874,7 @@ const App = (() => {
   function notifyMyTurnVisuals() {
     var msg = t('notifTurnTitle');
     var sub = t('notifTurnBody');
+    speak(t('voiceYourTurn'));
     // Notification navigateur (si onglet en arrière-plan)
     if (document.hidden && 'Notification' in window && Notification.permission === 'granted') {
       try { new Notification(msg, { body: sub, icon: '/favicon.ico', tag: 'pokerth-turn', silent: false, vibrate: _hapticEnabled ? [90, 50, 90] : [] }); } catch(e) {}
@@ -6584,6 +6634,15 @@ function toggleHeaderOverflow(e) {
       hb.innerHTML = (on ? '📳' : '📴') + ' ' + t('hapticLabel');
     }
   } catch(e4) {}
+  // Same for the voice-announcement toggle (🗣️ = on, 🔇 = off).
+  try {
+    var vb = document.getElementById('voice-toggle-mob');
+    if (vb) {
+      var von = false;
+      try { von = localStorage.getItem('pth_voice') === '1'; } catch(e5) {}
+      vb.innerHTML = (von ? '🗣️' : '🔇') + ' ' + t('voiceLabel');
+    }
+  } catch(e6) {}
   m.classList.toggle('open');
 }
 function closeHeaderOverflow() {
