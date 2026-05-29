@@ -3486,14 +3486,14 @@ const App = (() => {
     $('g-list').innerHTML = entries.map(([gid, g]) => {
       const label  = MODE_LABEL(g.mode);
       const type   = GTYPE[g.type] || '';
-      const lock   = (g.priv || g.type === 3) ? '\U0001F512 ' : '';
+      const lock   = (g.priv || g.type === 3) ? '🔒 ' : '';
       const badgeCls = g.mode === 2 ? 'live' : (g.mode === 3 ? 'closed' : 'wait');
       var rawJoin = (typeof t === 'function' ? t('joinBtn') || '\u25B6 Join' : '\u25B6 Join');
       const joinLabel = (g.priv || g.type === 3)
-        ? '\U0001F512 ' + rawJoin.replace(/^\u25B6\s*/, '')
+        ? '🔒 ' + rawJoin.replace(/^\u25B6\s*/, '')
         : rawJoin;
       const watchBtn = g.mode === 2
-        ? '<button class="btn-xs btn-watch" onclick="event.stopPropagation();App.spectateGame(' + gid + ')">\U0001F441 ' + t('watchBtn') + '</button>'
+        ? '<button class="btn-xs btn-watch" onclick="event.stopPropagation();App.spectateGame(' + gid + ')">👁 ' + t('watchBtn') + '</button>'
         : '';
       const joinBtn = g.mode !== 3
         ? '<button class="btn-join" onclick="event.stopPropagation();App.joinGame(' + parseInt(gid) + ')">' + joinLabel + '</button>'
@@ -3506,8 +3506,8 @@ const App = (() => {
       for (var s = 0; s < cap; s++) seatDots += '<span class="seat-dot' + (s < g.players ? ' on' : '') + '"></span>';
       var metaBits = [];
       if (type) metaBits.push('<span class="game-type">' + type + '</span>');
-      metaBits.push('<span>\U0001F465 ' + g.players + (g.maxPlayers ? '/' + g.maxPlayers : '') + '</span>');
-      if (g.startMoney) metaBits.push('<span>\U0001FA99 ' + g.startMoney + '</span>');
+      metaBits.push('<span>👥 ' + g.players + (g.maxPlayers ? '/' + g.maxPlayers : '') + '</span>');
+      if (g.startMoney) metaBits.push('<span>🪙 ' + g.startMoney + '</span>');
       if (g.timeout)    metaBits.push('<span>\u23F1 ' + g.timeout + 's</span>');
       return '<div class="game-row gcard" onclick="App.joinGame(' + parseInt(gid) + ')">'
         + '<div class="gcard-main">'
