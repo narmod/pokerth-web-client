@@ -16,13 +16,14 @@
 import enLang from './lang/en.mjs';
 import frLang from './lang/fr.mjs';
 import deLang from './lang/de.mjs';
+import esLang from './lang/es.mjs';
 
 // ── Language registry ───────────────────────────────────────────────────
 // Single place to wire a language. To add one: create ./lang/<code>.mjs
 // (copy en.mjs and translate), add an import above, then add it here.
 // LANG (the string tables) and LANG_META (flag / label / dir) are assembled
 // automatically from each module's exports — no other code changes needed.
-const LANG_MODULES = { en: enLang, fr: frLang, de: deLang };
+const LANG_MODULES = { en: enLang, fr: frLang, de: deLang, es: esLang };
 
 const LANG = {};
 const LANG_META = {};
