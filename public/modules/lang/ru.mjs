@@ -33,7 +33,7 @@ export const strings = {
     configure: '⚙',
     createTable: '＋ Создать стол',
     tableName: 'Название стола',
-    tableNameDefault: 'Стол игрока {name}',
+    tableNameDefault: '{name} — стол',
     maxPlayers: 'Макс. игроков',
     smallBlind: 'Малый блайнд',
     stack: 'Стек',
