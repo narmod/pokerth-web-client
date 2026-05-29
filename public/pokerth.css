@@ -1314,7 +1314,7 @@ body {
 }
 
 /* Sur mobile : cacher les boutons secondaires, montrer ⋯ */
-@media (max-width: 540px) {
+@media (max-width: 740px) {
   #g-overflow-btn,
   #l-overflow-btn { display: inline-flex !important; align-items: center; }
   #fs-btn-game,
@@ -1903,7 +1903,7 @@ body {
    labels are tighter, and use shorter padding. The .game-info
    container already has flex:1 + min-width:0 (line 438), so any
    space freed here is automatically given to the name. */
-@media (max-width: 540px) {
+@media (max-width: 740px) {
   .game-row { gap: 8px; padding: 10px 12px; }
   .game-name { font-size: 0.82rem; }
   .game-meta { font-size: 0.66rem; gap: 6px; }
