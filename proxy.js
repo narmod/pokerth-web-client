@@ -240,6 +240,17 @@ const httpServer = http.createServer((req, res) => {
         if (s.mtimeMs > newest) newest = s.mtimeMs;
       } catch (e) { /* missing file — ignore */ }
     });
+    // Per-language catalogue files live in modules/lang/ — fold their mtimes
+    // in too, so a translation-only deploy still bumps the update banner.
+    try {
+      const langDir = path.join(__dirname, 'public', 'modules', 'lang');
+      fs.readdirSync(langDir).forEach(function (f) {
+        try {
+          const s = fs.statSync(path.join(langDir, f));
+          if (s.mtimeMs > newest) newest = s.mtimeMs;
+        } catch (e) { /* ignore */ }
+      });
+    } catch (e) { /* no lang dir yet — ignore */ }
     res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' });
     res.end(JSON.stringify({ v: Math.floor(newest) }));
     return;
