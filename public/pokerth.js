@@ -990,6 +990,20 @@ document.addEventListener("DOMContentLoaded", function() {
     } catch(e) {}
   })();
 
+  // Detect the page's own host/port FIRST, before restoring the saved mode
+  // (which triggers onLoginModeChange). onLoginModeChange's LAN/private
+  // branches read hostInput.dataset.autoHost to reset the server host back to
+  // this machine; if autoHost isn't set yet, switching from a pokerth.net
+  // mode to LAN/private wouldn't restore the local host and the form kept
+  // pokerth.net:7234 — which is exactly why it only worked after a refresh.
+  (function () {
+    var _h = window.location.hostname;
+    var _hi = document.getElementById('host');
+    if (_hi && _h && _h !== 'localhost' && _h !== '127.0.0.1') {
+      _hi.dataset.autoHost = _h;
+    }
+  })();
+
   // Restaurer le serveur préféré sauvegardé — SAUF si on arrive d'un
   // lien de partage, auquel cas les paramètres du lien doivent gagner
   // (sinon le host sauvegardé d'une session précédente écrase celui
@@ -5792,7 +5806,7 @@ function dismissWinner() {
 
       ws.binaryType = 'arraybuffer';
       ws.onopen    = () => setStatus(t('proxyConnectedWait'));
-      ws.onerror   = () => { _lastConnectFailed = true; setStatus(t('wsError'), 'err'); };
+      ws.onerror   = () => { _lastConnectFailed = true; setStatus(t('wsError') + ' [' + finalUrl + ']', 'err'); };
       ws.onmessage = function(e) {
         if (typeof e.data === 'string') {
           // Message texte = protocole proxy (réactions)
