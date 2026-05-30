@@ -2419,6 +2419,7 @@ const App = (() => {
           break;   // JoinGameAck → game screen; JoinGameFailed → lobby fallback
         }
         updateLobbyPill();
+        App._resetGameState();   // ensure a clean lobby baseline (no-op on first connect)
         show('s-lobby');
         // Demander la permission pour les notifications
         if ('Notification' in window && Notification.permission === 'default') {
@@ -2997,9 +2998,12 @@ const App = (() => {
         const failCode = Proto.u32(sub, 2);
         if (_pendingRejoin) {
           // We were reclaiming our seat but it's gone (grace window elapsed)
-          // or the rejoin was refused — drop cleanly to the lobby.
+          // or the rejoin was refused — drop cleanly to the lobby. Clear the
+          // in-game/admin state too, otherwise the client still thinks it's
+          // in (and admin of) the dead table, which blocks creating a new one.
           _pendingRejoin = 0; _rejoinNickRetries = 0;
           try { localStorage.removeItem('pth_resume'); } catch(e) {}
+          App._resetGameState();
           _hideBanner();
           updateLobbyPill();
           show('s-lobby');
@@ -3115,9 +3119,9 @@ const App = (() => {
 
       case T.RemovedFromGame: { _gameMeta = null;
         addChat(null, t('youWereRemoved'), 'sys');
-        amInGame = false;
         _pendingRejoin = 0; try { localStorage.removeItem('pth_resume'); } catch(e) {}
-        gId = 0; seats = []; seatData = {}; _playerAvatars = {}; _pthAvatarHashes = {}; _pthAvatarsByHash = {}; _pthAvatarReqIdToHash = {}; _seatsFrozen = false; _amSpectator = false; var _sb1 = document.getElementById('g-spectator-banner'); if (_sb1) _sb1.style.display = 'none';
+        _playerAvatars = {}; _pthAvatarHashes = {}; _pthAvatarsByHash = {}; _pthAvatarReqIdToHash = {};
+        App._resetGameState();
         show('s-lobby');
         break;
       }
@@ -6188,6 +6192,31 @@ function dismissWinner() {
       // Cancelled — just hide the modal, user stays in the game.
       var ld = document.getElementById('leave-dialog');
       if (ld) ld.style.display = 'none';
+    },
+
+    // Reset all in-game / table state back to a clean lobby baseline.
+    // Pure local cleanup: it sends nothing on the wire, does NOT touch
+    // _pendingRejoin/pth_resume (each caller manages those), and does NOT
+    // navigate (each caller decides where to go). Used by every path that
+    // lands back in the lobby — leaving, being removed, a failed rejoin, or
+    // a fresh InitAck — so they all clear the same state and none can leave
+    // a stale "still in my game / still admin" flag that blocks creating a
+    // new table.
+    _resetGameState() {
+      amInGame = false; amGameAdmin = false; _gameStarted = false;
+      _seatsFrozen = false; _amSpectator = false;
+      gId = 0; seats = []; seatData = {};
+      try { stopTurnTimer(); } catch (e) {}
+      try { dismissWinner(); } catch (e) {}
+      document.body.classList.remove('in-game');
+      [ 'admin-close-btn', 'admin-close-mob',
+        'admin-start-btn', 'admin-start-mob',
+        'admin-kick-btn', 'admin-kick-mob',
+        'g-admin-badge', 'g-spectator-banner', 'g-endgame-overlay'
+      ].forEach(function (id) {
+        var el = document.getElementById(id);
+        if (el) el.style.display = 'none';
+      });
     },
 
     leaveGame() {
