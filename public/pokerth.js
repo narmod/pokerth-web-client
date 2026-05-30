@@ -1411,6 +1411,33 @@ const App = (() => {
   let lastMajor = 5, lastMinor = 1, lastLoginType = 0; // for name-retry
   let smallBlind = 10;  // small blind value
   let handNum   = 0;   // hand counter
+
+  // ── Chip display mode: absolute value (¥) or big blinds (BB) ──
+  // Pure display feature, no protocol impact. Toggled from the in-game
+  // overflow menu and persisted. fmtChips() is the single formatter used
+  // everywhere a live game amount is shown (pot, stacks, bets, action
+  // buttons) so the whole table switches consistently.
+  let _displayBB = false;
+  try { _displayBB = (localStorage.getItem('pth_display_bb') === '1'); } catch (e) {}
+  // Format a raw chip amount as either "1234 ¥" or "61,7 BB" depending on
+  // the current mode. The big blind is smallBlind*2; if it's not known yet
+  // (0, before the first hand) we fall back to the raw value to avoid a
+  // divide-by-zero. One decimal, shown only when non-zero, with the decimal
+  // separator following the active language.
+  function fmtChips(amount) {
+    var v = (typeof amount === 'number') ? amount : parseInt(amount, 10) || 0;
+    if (!_displayBB) return v + ' ¥';
+    var bb = (smallBlind || 0) * 2;
+    if (!bb) return v + ' ¥';
+    var n = v / bb;
+    // Round to 1 decimal, drop a trailing .0
+    var r = Math.round(n * 10) / 10;
+    var s = (Math.abs(r % 1) < 1e-9) ? String(Math.round(r)) : r.toFixed(1);
+    // Localised decimal separator: comma for every language except English.
+    if (typeof _lang !== 'undefined' && _lang !== 'en') s = s.replace('.', ',');
+    return s + ' BB';
+  }
+
   let gameState = 0;   // preflop/flop/turn/river
   let _playerAvatars = {}; // pid → emoji avatar (reçu des autres joueurs via proxy)
   // Step 1 of "PokerTH official avatar" feature: when PlayerInfoReply
@@ -2196,7 +2223,50 @@ const App = (() => {
   }
   window.toggleHaptic = toggleHaptic;
 
-  // ── Voice announcements (Web Speech API) ──────────────────────────────
+  // ── Toggle chip display between absolute value (¥) and big blinds (BB) ──
+  function toggleDisplayBB() {
+    _displayBB = !_displayBB;
+    try { localStorage.setItem('pth_display_bb', _displayBB ? '1' : '0'); } catch (e) {}
+    refreshDisplayBBButton();
+    // Repaint everything that shows a live amount.
+    try { if (typeof renderSeats === 'function' && seats.length) renderSeats(); } catch (e) {}
+    // Re-render the action buttons only if they're currently showing (i.e.
+    // it's our turn — the bar holds a raise input). Otherwise they'll be
+    // rebuilt with the right unit on the next turn anyway.
+    try {
+      if (typeof renderMyTurnActions === 'function' &&
+          document.getElementById('raise-amt')) renderMyTurnActions();
+    } catch (e) {}
+    try { repaintPot(); } catch (e) {}
+    if (typeof showKeyHint === 'function') showKeyHint(_displayBB ? 'BB' : '¥');
+    return _displayBB;
+  }
+  // Update the menu button label (short toggle "BB / ¥", active side marked).
+  function refreshDisplayBBButton() {
+    var b = document.getElementById('displaybb-toggle-mob');
+    if (b) b.innerHTML = '🎚️ ' + (_displayBB
+      ? '<b style="color:var(--gold)">BB</b> / ¥'
+      : 'BB / <b style="color:var(--gold)">¥</b>');
+    var bd = document.getElementById('displaybb-toggle-btn');
+    if (bd) bd.textContent = _displayBB ? 'BB' : '¥';
+  }
+  // Re-render the pot label from the last known pot value, in the current
+  // mode. We keep the last numeric pot in _lastPotValue (set by setPot) so a
+  // mode switch can repaint without a server message.
+  var _lastPotValue = null;
+  function setPot(pot) {
+    _lastPotValue = (typeof pot === 'number') ? pot : (parseInt(pot, 10) || 0);
+    var a = document.getElementById('g-pot');
+    var b = document.getElementById('g-potbar');
+    if (a) a.textContent = t('pot') + ' ' + fmtChips(_lastPotValue);
+    if (b) b.textContent = t('pot') + ' ' + fmtChips(_lastPotValue);
+  }
+  function repaintPot() {
+    if (typeof _lastPotValue !== 'number') return;
+    setPot(_lastPotValue);
+  }
+  window.toggleDisplayBB = toggleDisplayBB;
+
   // Speaks game events (player actions, your turn, winner) in the active
   // language. Opt-in (default OFF), persisted, toggled from the ••• menu.
   // No-ops gracefully where speechSynthesis is unavailable.
@@ -3494,13 +3564,12 @@ const App = (() => {
         }
         pot = collectedPot;
         for (const p of seats) if (seatData[p]) pot += seatData[p].bet;
-        $('g-pot').textContent = t('pot') + ' ' + pot;
-        if ($('g-potbar')) $('g-potbar').textContent = t('pot') + ' ' + pot;
+        setPot(pot);
         logAction(getPlayerName(pid) + ': ' + aLabel + (bet ? ' ' + bet : ''));
         speak(voiceActionPhrase(action, pid, bet));
         if (pid === myId) {
           const myMon = (seatData[myId] || {}).money || 0;
-          if ($('g-mystack')) $('g-mystack').textContent = myMon > 0 ? myMon + ' ¥' : '';
+          if ($('g-mystack')) $('g-mystack').textContent = myMon > 0 ? fmtChips(myMon) : '';
         }
         renderSeats();
         // Sound: regular thud for fold/check/call/bet/raise; dedicated
@@ -3561,8 +3630,7 @@ const App = (() => {
         // (rejectedActionNotAllowed) et le joueur restait coincé.
         highestBet = 0;
         minRaise   = 0;
-        $('g-pot').textContent = t('pot') + ' ' + pot;
-        if ($('g-potbar')) $('g-potbar').textContent = t('pot') + ' ' + pot;
+        setPot(pot);
         const flopStr = commCards.filter(n=>n!=null).map(n=>cardName(n,true)).join(', ');
         renderComm(true); // flip animation
         renderSeats();
@@ -3586,8 +3654,7 @@ const App = (() => {
         // pour éviter que le bouton Call affiche un montant périmé.
         highestBet = 0;
         minRaise   = 0;
-        $('g-pot').textContent = t('pot') + ' ' + pot;
-        if ($('g-potbar')) $('g-potbar').textContent = t('pot') + ' ' + pot;
+        setPot(pot);
         const tvCard = commCards[3]; const tvName = tvCard != null ? cardName(tvCard, true) : '?';
         logAction('--- ' + t('turn') + ' [' + tvName + '] ---');
         renderComm(true); // flip animation
@@ -3611,8 +3678,7 @@ const App = (() => {
         // pour éviter que le bouton Call affiche un montant périmé.
         highestBet = 0;
         minRaise   = 0;
-        $('g-pot').textContent = t('pot') + ' ' + pot;
-        if ($('g-potbar')) $('g-potbar').textContent = t('pot') + ' ' + pot;
+        setPot(pot);
         const rvCard = commCards[4]; const rvName = rvCard != null ? cardName(rvCard, true) : '?';
         logAction('--- ' + t('river') + ' [' + rvName + '] ---');
         renderComm(true, true); // flip animation + dramatic river
@@ -4673,7 +4739,7 @@ const App = (() => {
     // a clear "OUT" indicator next to my stack and dim the player bar.
     var __amOut = !!(mySd && mySd.money != null && mySd.money <= 0 && !mySd.gone && !_amSpectator);
     if (pbMon) {
-      pbMon.textContent = mySd.money != null ? mySd.money + ' ¥' : '—';
+      pbMon.textContent = mySd.money != null ? fmtChips(mySd.money) : '—';
       if (__amOut) {
         pbMon.innerHTML = '<span style="color:var(--red);font-weight:700;letter-spacing:0.1em">OUT</span> · ' + pbMon.innerHTML;
       }
@@ -4709,7 +4775,7 @@ const App = (() => {
       const avatarType = isMe
         ? (_hasEmojiAv ? ' emoji-av' : '')
         : (isBot(pid) ? ' is-bot emoji-av' : (_hasEmojiAv ? ' emoji-av is-human' : ' is-human'));
-      const moneyStr = sd.money != null && sd.money >= 0 ? sd.money + ' ¥' : '—';
+      const moneyStr = sd.money != null && sd.money >= 0 ? fmtChips(sd.money) : '—';
       // Cartes sous le siège : uniquement les adversaires au showdown
       // (mes propres cartes sont déjà visibles dans la player-bar en bas)
       let cardStr = '';
@@ -4771,7 +4837,7 @@ const App = (() => {
         + ((_timerSec > 0) ? _timerSec + 's' : '') + '</div>';
       h += '<div class="seat-name">' + esc(isMe ? myName : getPlayerName(pid)) + '</div>';
       h += '<div class="seat-money">' + moneyStr + '</div>';
-      if (sd.bet) h += '<div class="seat-bet">' + sd.bet + '</div>';
+      if (sd.bet) h += '<div class="seat-bet">' + fmtChips(sd.bet) + '</div>';
       if (sd.action) h += '<div class="seat-action-label">' + esc(sd.action) + '</div>';
       h += cardStr;
       h += '</div>';
@@ -5225,11 +5291,11 @@ const App = (() => {
       callAction = 'App.doAction(2,0)';
       callClass  = 'btn-check';
     } else if (toCall >= myMoney) {
-      callLabel  = 'Call <b>' + myMoney + '</b> <span style="font-size:0.75em;opacity:0.85">(' + t('allin') + ')</span>';
+      callLabel  = 'Call <b>' + fmtChips(myMoney) + '</b> <span style="font-size:0.75em;opacity:0.85">(' + t('allin') + ')</span>';
       callAction = 'App.doAction(6,' + myMoney + ')';
       callClass  = 'btn-call';
     } else {
-      callLabel  = 'Call <b>' + toCall + '</b>' + potOdds;
+      callLabel  = 'Call <b>' + fmtChips(toCall) + '</b>' + potOdds;
       callAction = 'App.doAction(3,' + toCall + ')';
       callClass  = 'btn-call';
     }
@@ -5288,7 +5354,7 @@ const App = (() => {
       +   '<button class="btn-pct"' + da + ' onclick="setPct(' + p100 + ')">100%</button>'
       + '</div>'
       + raiseRowHtml
-      + '<button class="btn-action btn-allin" onclick="App.doAction(6,' + myMoney + ')" title="All-In (A)">All-In <b>' + myMoney + '</b></button>'
+      + '<button class="btn-action btn-allin" onclick="App.doAction(6,' + myMoney + ')" title="All-In (A)">All-In <b>' + fmtChips(myMoney) + '</b></button>'
       + '</div>';
 
     $('g-actions').innerHTML = h;
@@ -6022,7 +6088,7 @@ function dismissWinner() {
         var html = pids.map(function(pid) {
           var name = players[pid] || ('#' + pid);
           var sd   = seatData[pid] || {};
-          var stack= (typeof sd.money === 'number') ? (sd.money + ' ¥') : '';
+          var stack= (typeof sd.money === 'number') ? fmtChips(sd.money) : '';
           var isMe = (pid === myId);
           var avChip = (typeof window._avatarChipHtml === 'function')
             ? window._avatarChipHtml(pid, name, 'km-av')
@@ -6955,6 +7021,17 @@ function toggleHeaderOverflow(e) {
       vb.innerHTML = (von ? '🗣️' : '🔇') + ' ' + t('voiceLabel');
     }
   } catch(e6) {}
+  // Same for the chip-display toggle (short "BB / ¥", active side in gold).
+  try {
+    var db = document.getElementById('displaybb-toggle-mob');
+    if (db) {
+      var bbOn = false;
+      try { bbOn = localStorage.getItem('pth_display_bb') === '1'; } catch(e7) {}
+      db.innerHTML = '🎚️ ' + (bbOn
+        ? '<b style="color:var(--gold)">BB</b> / ¥'
+        : 'BB / <b style="color:var(--gold)">¥</b>');
+    }
+  } catch(e8) {}
   m.classList.toggle('open');
 }
 function closeHeaderOverflow() {
