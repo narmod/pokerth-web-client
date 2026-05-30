@@ -10,12 +10,12 @@ function _startIpBlockCountdown() {
     var txt = t('ipBlockedPrefix') + (mins > 0 ? mins + 'min ' : '') + secs + 's';
     // Mettre à jour seulement si on est sur l'écran de connexion
     var cs = document.getElementById('cstatus');
-    if (cs) cs.textContent = rem > 0 ? txt : '✅ Vous pouvez vous reconnecter.';
+    if (cs) cs.textContent = rem > 0 ? txt : t('canReconnect');
     if (rem <= 0) {
       clearInterval(_blockInterval);
       _ipBlockUntil = 0;
       var cs2 = document.getElementById('cstatus');
-      if (cs2) { cs2.textContent = '✅ Vous pouvez vous reconnecter.'; cs2.className = 'status ok'; }
+      if (cs2) { cs2.textContent = t('canReconnect'); cs2.className = 'status ok'; }
     }
   }, 1000);
 }
@@ -5690,7 +5690,7 @@ function dismissWinner() {
       // Rate limiter seulement après un échec (pas après une déco normale)
       if (_lastConnectFailed && now - _lastConnectTime < MIN_CONNECT_INTERVAL) {
         const wait = Math.ceil((MIN_CONNECT_INTERVAL - (now - _lastConnectTime)) / 1000);
-        setStatus('⏸ Attendez ' + wait + 's avant de retenter…', 'err');
+        setStatus(t('waitBeforeRetry', { n: wait }), 'err');
         return;
       }
       _lastConnectTime = now;
@@ -5782,7 +5782,7 @@ function dismissWinner() {
       try {
         ws = new WebSocket(finalUrl);
       } catch (e) {
-        setStatus('URL invalide: ' + e.message, 'err');
+        setStatus(t('invalidUrl', { msg: e.message }), 'err');
         return;
       }
 
