@@ -6566,13 +6566,29 @@ function dismissWinner() {
     _getCreateDefaults() {
       var mode = _currentLoginMode || 'unauth';
       var isPublic = (mode === 'guest' || mode === 'auth');
+      // Last-used settings (saved by createGame) take priority over the
+      // per-mode baseline, so the form re-opens with what the user actually
+      // used last time. The table name is never restored — always fresh.
+      var saved = null;
+      try { saved = JSON.parse(localStorage.getItem('pth_last_create') || 'null'); } catch (e) { saved = null; }
+      var withSaved = function (base) {
+        if (saved && typeof saved === 'object') {
+          for (var k in saved) {
+            // Copy every saved key except the table name (always fresh).
+            // Advanced keys (raiseMode, gameType…) aren't in the baseline
+            // object, so we must NOT require hasOwnProperty here.
+            if (k !== 'name' && saved[k] != null) base[k] = saved[k];
+          }
+        }
+        return base;
+      };
       if (isPublic) {
         // Defaults for pokerth.net (guest + registered). 10 max players
         // and 3000-stack/blind-10/raise-every-7 follow the desktop
         // client recommendation, BUT narmod requested a SHORT 5s
         // turn timer on pokerth.net so public games keep moving (real
         // strangers, can't afford long thinking turns).
-        return {
+        return withSaved({
           name: _localDefaultName(),
           players: 10,
           blind: 10,
@@ -6584,7 +6600,7 @@ function dismissWinner() {
           bots: false,
           minHumans: 5,
           tag: 'public', // for the QuickGame dialog
-        };
+        });
       }
       // LAN / private-server profile (covers both the 'lan' login mode
       // and the 'unauth' private-server-guest mode). 10 max players
@@ -6592,7 +6608,7 @@ function dismissWinner() {
       // pokerth.net public profile — narmod wants more thinking time
       // when playing among friends. Bots default ON so a small group
       // can start a hand fast.
-      return {
+      return withSaved({
         name: _localDefaultName(),
         players: 10,
         blind: 10,
@@ -6604,7 +6620,7 @@ function dismissWinner() {
         bots: true,
         minHumans: 2,
         tag: 'lan',
-      };
+      });
     },
 
     // Apply the per-mode defaults to the create-form inputs. We only
@@ -6640,6 +6656,17 @@ function dismissWinner() {
       set('cf-delay',       d.delayHands);
       set('cf-bots',        d.bots);
       set('cf-min-humans',  d.minHumans);
+      // Advanced options: only present in `d` when restored from a saved
+      // session (withSaved copies them in). Apply them when available so the
+      // "More options" panel also reflects the last-used config.
+      if (d.raiseMode     != null) set('cf-raise-mode',   d.raiseMode);
+      if (d.endRaiseMode  != null) set('cf-end-raise',    d.endRaiseMode);
+      if (d.endRaiseValue != null) set('cf-end-raise-val',d.endRaiseValue);
+      if (d.gameType      != null) set('cf-game-type',    d.gameType);
+      if (d.allowSpectators != null) {
+        var asEl = document.getElementById('cf-allow-spectators');
+        if (asEl) asEl.value = d.allowSpectators ? '1' : '0';
+      }
       // Sync the "min humans before bots" row visibility with the checkbox.
       var mhRow = document.getElementById('cf-min-humans-row');
       if (mhRow) mhRow.style.display = d.bots ? 'flex' : 'none';
@@ -6805,6 +6832,20 @@ function dismissWinner() {
       };
       addChat(null, '+ Creating "' + name + '" (' + nplayers + 'p' + (bots ? ' + bots' : '') + ')...', 'sys');
       send(MSG.buildCreateGame(name, nplayers, blind, stack, timeout, opts));
+      // Remember these settings so the next time the create form opens it
+      // starts from what the user actually used last (not just the per-mode
+      // default). Display-only convenience; the name itself is intentionally
+      // NOT saved (it's re-generated fresh each time via _localDefaultName).
+      try {
+        localStorage.setItem('pth_last_create', JSON.stringify({
+          players: nplayers, blind: blind, stack: stack, timeout: timeout,
+          raiseEvery: opts.raiseEvery, guiSpeed: opts.guiSpeed,
+          delayHands: opts.delayHands, bots: bots, minHumans: minHuman,
+          raiseMode: opts.raiseMode, endRaiseMode: opts.endRaiseMode,
+          endRaiseValue: opts.endRaiseValue, gameType: opts.gameType,
+          allowSpectators: opts.allowSpectators,
+        }));
+      } catch (e) {}
       var f = document.getElementById('create-form');
       if (f) { f.style.display = 'none'; f.classList.remove('open'); }
     },
