@@ -30,13 +30,21 @@ import svLang from './lang/sv.mjs';
 import nbLang from './lang/nb.mjs';
 import daLang from './lang/da.mjs';
 import fiLang from './lang/fi.mjs';
+import csLang from './lang/cs.mjs';
+import skLang from './lang/sk.mjs';
+import roLang from './lang/ro.mjs';
+import huLang from './lang/hu.mjs';
+import elLang from './lang/el.mjs';
+import bgLang from './lang/bg.mjs';
+import hrLang from './lang/hr.mjs';
+import srLang from './lang/sr.mjs';
 
 // ── Language registry ───────────────────────────────────────────────────
 // Single place to wire a language. To add one: create ./lang/<code>.mjs
 // (copy en.mjs and translate), add an import above, then add it here.
 // LANG (the string tables) and LANG_META (flag / label / dir) are assembled
 // automatically from each module's exports — no other code changes needed.
-const LANG_MODULES = { en: enLang, fr: frLang, de: deLang, es: esLang, it: itLang, pt: ptLang, nl: nlLang, pl: plLang, ru: ruLang, zh: zhLang, tr: trLang, uk: ukLang, ja: jaLang, sv: svLang, nb: nbLang, da: daLang, fi: fiLang };
+const LANG_MODULES = { en: enLang, fr: frLang, de: deLang, es: esLang, it: itLang, pt: ptLang, nl: nlLang, pl: plLang, ru: ruLang, zh: zhLang, tr: trLang, uk: ukLang, ja: jaLang, sv: svLang, nb: nbLang, da: daLang, fi: fiLang, cs: csLang, sk: skLang, ro: roLang, hu: huLang, el: elLang, bg: bgLang, hr: hrLang, sr: srLang };
 
 const LANG = {};
 const LANG_META = {};
