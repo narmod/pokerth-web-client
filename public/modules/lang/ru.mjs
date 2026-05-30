@@ -392,6 +392,8 @@ export const strings = {
     modeInProgress: 'В процессе',
     modeClosed: 'Закрыт',
     noTablesAvailable: 'В данный момент нет доступных столов.',
+    filterAll: 'Все', filterOpen: '🟢 Открытые', filterNoPass: '🔓 Без пароля', filterLive: '👁 Идут',
+    noTablesForFilter: 'Нет столов по этому фильтру',
     createTableHdr: 'Создать стол',
     gameStyle: 'Стиль игры',
     presetCalmName: 'Спокойный',

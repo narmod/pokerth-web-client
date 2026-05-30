@@ -392,6 +392,8 @@ export const strings = {
     modeInProgress: 'In corso',
     modeClosed: 'Chiuso',
     noTablesAvailable: 'Nessun tavolo disponibile al momento.',
+    filterAll: 'Tutti', filterOpen: '🟢 Aperti', filterNoPass: '🔓 Senza password', filterLive: '👁 In corso',
+    noTablesForFilter: 'Nessun tavolo corrisponde a questo filtro',
     createTableHdr: 'Crea un tavolo',
     gameStyle: 'Stile di gioco',
     presetCalmName: 'Rilassato',

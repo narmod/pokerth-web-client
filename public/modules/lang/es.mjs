@@ -393,6 +393,8 @@ export const strings = {
     modeInProgress: 'En curso',
     modeClosed: 'Cerrada',
     noTablesAvailable: 'No hay mesas disponibles ahora mismo.',
+    filterAll: 'Todas', filterOpen: '🟢 Abiertas', filterNoPass: '🔓 Sin contraseña', filterLive: '👁 En curso',
+    noTablesForFilter: 'Ninguna mesa coincide con este filtro',
     createTableHdr: 'Crear una mesa',
     gameStyle: 'Estilo de juego',
     presetCalmName: 'Relajado',

@@ -2181,6 +2181,11 @@ const App = (() => {
   let games     = {};   // gameId → {name, mode, players, maxPlayers, type, priv}
   let players   = {};   // playerId → name
   let loaded    = false;
+  // Table-list filter (design A chips): 'all' | 'open' | 'nopass' | 'live'.
+  // Persisted so the choice survives reloads, like other lobby prefs.
+  let _tableFilter = (function(){
+    try { return localStorage.getItem('pth_table_filter') || 'all'; } catch(e) { return 'all'; }
+  })();
   let autoAction = false;
   let amGameAdmin = false;  // true if we created this game
 
@@ -3896,20 +3901,58 @@ const App = (() => {
   }
   function GTYPE(tp) { return ({1:t('gtypeNormal'), 2:t('gtypeRegistered'), 3:t('gtypeInvite'), 4:t('gtypeRanked')})[tp]; }
 
+  // Predicate for the table-list filter (design A).
+  //   open   = waiting (mode 1) and not full        → joinable now
+  //   nopass = not password-protected / invite-only
+  //   live   = game in progress (mode 2)             → watchable
+  function _tableMatches(g, filter) {
+    var prot = g.priv || g.type === 3;
+    switch (filter) {
+      case 'open':   return g.mode === 1 && g.players < (g.maxPlayers || 0);
+      case 'nopass': return !prot;
+      case 'live':   return g.mode === 2;
+      default:       return true; // 'all'
+    }
+  }
+  function _refreshFilterChips(entries) {
+    // Counts are computed on the FULL set so each chip shows how many
+    // tables it would reveal, regardless of the currently active filter.
+    var ids = ['all', 'open', 'nopass', 'live'];
+    ids.forEach(function(f) {
+      var el = document.getElementById('fc-' + f);
+      if (el) el.textContent = '(' + entries.filter(function(e){ return _tableMatches(e[1], f); }).length + ')';
+    });
+    document.querySelectorAll('#g-filter-bar .filter-chip').forEach(function(b) {
+      b.classList.toggle('active', b.dataset.filter === _tableFilter);
+    });
+  }
+
   function renderGames() {
     // Utiliser entries() pour avoir l'id ET l'objet
     const entries = Object.entries(games);
     entries.sort(([,a],[,b]) => a.mode - b.mode);
-    $('g-count').textContent = entries.length + ' table(s)';
+
+    // Per-chip counts + active highlight (on the full set).
+    _refreshFilterChips(entries);
 
     if (entries.length === 0) {
+      $('g-count').textContent = '0 table(s)';
       $('g-list').innerHTML = loaded
         ? '<div class="empty">' + t('noTablesAvailable') + '</div>'
         : '<div class="empty">Chargement des tables<br><span class="ld"><span>●</span><span>●</span><span>●</span></span></div>';
       return;
     }
 
-    $('g-list').innerHTML = entries.map(([gid, g]) => {
+    // Apply the active filter.
+    const shown = entries.filter(function(e){ return _tableMatches(e[1], _tableFilter); });
+    $('g-count').textContent = shown.length + ' table(s)';
+
+    if (shown.length === 0) {
+      $('g-list').innerHTML = '<div class="empty">' + t('noTablesForFilter') + '</div>';
+      return;
+    }
+
+    $('g-list').innerHTML = shown.map(([gid, g]) => {
       const label  = MODE_LABEL(g.mode);
       const type   = GTYPE(g.type) || '';
       const lock   = (g.priv || g.type === 3) ? '🔒 ' : '';
@@ -3933,7 +3976,7 @@ const App = (() => {
       var metaBits = [];
       if (type) metaBits.push('<span class="game-type">' + type + '</span>');
       metaBits.push('<span>👥 ' + g.players + (g.maxPlayers ? '/' + g.maxPlayers : '') + '</span>');
-      if (g.startMoney) metaBits.push('<span>🪙 ' + g.startMoney + '</span>');
+      if (g.startMoney) metaBits.push('<span>🪙 ' + _groupThousands(g.startMoney) + '</span>');
       if (g.timeout)    metaBits.push('<span>\u23F1 ' + g.timeout + 's</span>');
       return '<div class="game-row gcard" onclick="App.joinGame(' + parseInt(gid) + ')">'
         + '<div class="gcard-main">'
@@ -6554,6 +6597,12 @@ function dismissWinner() {
       }
       addChat(null, 'Joining "' + esc(g.name) + '"...', 'sys');
       send(MSG.buildJoinGame(parseInt(gameId), false));
+    },
+    setTableFilter(f) {
+      if (['all','open','nopass','live'].indexOf(f) === -1) f = 'all';
+      _tableFilter = f;
+      try { localStorage.setItem('pth_table_filter', f); } catch(e) {}
+      renderGames();
     },
     dismissWinner() { dismissWinner(); },
     doAction(action, bet) { doAction(action, bet); },

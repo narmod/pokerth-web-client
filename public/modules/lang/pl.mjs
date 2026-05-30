@@ -393,6 +393,8 @@ export const strings = {
     modeInProgress: 'W toku',
     modeClosed: 'Zamknięty',
     noTablesAvailable: 'Obecnie brak dostępnych stołów.',
+    filterAll: 'Wszystkie', filterOpen: '🟢 Otwarte', filterNoPass: '🔓 Bez hasła', filterLive: '👁 W toku',
+    noTablesForFilter: 'Żaden stół nie pasuje do tego filtru',
     createTableHdr: 'Utwórz stół',
     gameStyle: 'Styl gry',
     presetCalmName: 'Spokojny',

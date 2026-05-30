@@ -392,6 +392,8 @@ export const strings = {
     modeInProgress: 'Bezig',
     modeClosed: 'Gesloten',
     noTablesAvailable: 'Op dit moment geen tafels beschikbaar.',
+    filterAll: 'Alle', filterOpen: '🟢 Open', filterNoPass: '🔓 Zonder wachtwoord', filterLive: '👁 Bezig',
+    noTablesForFilter: 'Geen tafels komen overeen met dit filter',
     createTableHdr: 'Een tafel maken',
     gameStyle: 'Spelstijl',
     presetCalmName: 'Ontspannen',
