@@ -6293,6 +6293,7 @@ function dismissWinner() {
       gId = 0; seats = []; seatData = {};
       try { stopTurnTimer(); } catch (e) {}
       try { dismissWinner(); } catch (e) {}
+      try { if (typeof clearUnreadChat === 'function') clearUnreadChat(); } catch (e) {}
       document.body.classList.remove('in-game');
       [ 'admin-close-btn', 'admin-close-mob',
         'admin-start-btn', 'admin-start-mob',
@@ -6918,6 +6919,7 @@ function addGameChat(sender, text, cls) {
   if (cBtn && cls !== 'mine' && (!cPan || cPan.style.display === 'none')) {
     cBtn.style.color = 'var(--gold)';
     cBtn.style.borderColor = 'var(--gold-dim)';
+    if (typeof bumpUnreadChat === 'function') bumpUnreadChat();
     clearTimeout(window._chatFlashTimer);
     window._chatFlashTimer = setTimeout(function(){
       if (!cPan || cPan.style.display === 'none') { cBtn.style.color=''; cBtn.style.borderColor=''; }
@@ -6976,6 +6978,7 @@ function toggleLobbyChat() {
     btn.style.color       = open ? 'var(--gold)' : '';
   }
   if (open) {
+    if (typeof clearUnreadChat === 'function') clearUnreadChat();
     var el = document.getElementById('chat');
     if (el) el.scrollTop = el.scrollHeight;
     setTimeout(function(){ var ci = document.getElementById('chat-in'); if(ci) ci.focus(); }, 80);
@@ -7130,6 +7133,36 @@ function toggleHandsHelp() {
   ov.style.display = opening ? 'flex' : 'none';
 }
 
+// ── Unread-chat badge ──────────────────────────────────────────────
+// A small red counter on the 💬 buttons (game header, lobby header, and
+// the floating FAB) so a closed chat panel never hides incoming messages.
+// Incremented from addGameChat/addChat when the relevant panel is closed,
+// and cleared when the user opens the chat.
+window._unreadChat = 0;
+function _chatBadgeHtml(n) {
+  return '<span class="chat-badge">' + (n > 99 ? '99+' : n) + '</span>';
+}
+function _renderChatBadge() {
+  var n = window._unreadChat || 0;
+  ['chat-toggle-btn', 'lobby-chat-btn', 'gchat-fab'].forEach(function (id) {
+    var btn = document.getElementById(id);
+    if (!btn) return;
+    var old = btn.querySelector('.chat-badge');
+    if (old) old.remove();
+    if (n > 0) {
+      btn.insertAdjacentHTML('beforeend', _chatBadgeHtml(n));
+    }
+  });
+}
+function bumpUnreadChat() {
+  window._unreadChat = (window._unreadChat || 0) + 1;
+  _renderChatBadge();
+}
+function clearUnreadChat() {
+  window._unreadChat = 0;
+  _renderChatBadge();
+}
+
 function toggleGameChat() {
   var panel = document.getElementById('g-chat-panel');
   var btn   = document.getElementById('chat-toggle-btn');
@@ -7143,6 +7176,7 @@ function toggleGameChat() {
     btn.style.color       = open ? 'var(--gold)' : '';
   }
   if (open) {
+    if (typeof clearUnreadChat === 'function') clearUnreadChat();
     var m = document.getElementById('g-chat-msgs');
     if (m) m.scrollTop = m.scrollHeight;
     var inp = document.getElementById('g-chat-in');

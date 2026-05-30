@@ -724,6 +724,37 @@ body {
   padding: 0;
 }
 
+/* ── Unread-chat badge ── */
+/* Red counter pinned to the top-right of a 💬 button (game/lobby header
+   and the floating FAB) so a closed chat panel never hides new messages. */
+#chat-toggle-btn, #lobby-chat-btn, #gchat-fab { position: relative; }
+.chat-badge {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  min-width: 16px;
+  height: 16px;
+  padding: 0 4px;
+  border-radius: 8px;
+  background: var(--red);
+  color: #fff;
+  font-family: 'Inconsolata', monospace;
+  font-size: 0.62rem;
+  font-weight: 700;
+  line-height: 16px;
+  text-align: center;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.5);
+  pointer-events: none;
+  z-index: 6;
+  animation: chatBadgePop 0.25s ease;
+}
+@keyframes chatBadgePop {
+  0%   { transform: scale(0); }
+  70%  { transform: scale(1.25); }
+  100% { transform: scale(1); }
+}
+#gchat-fab .chat-badge { top: -3px; right: -3px; }
+
 /* Body */
 .lobby-body {
   flex: 1;
