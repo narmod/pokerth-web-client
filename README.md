@@ -160,6 +160,7 @@ pokerth-web-client/
 │   └── screenshots/         # Screenshots used in this README
 ├── scripts/
 │   └── build-proto.mjs      # Regenerates the protobuf bundle from .proto
+├── install.sh               # One-line installer (Node.js + PM2 + service)
 ├── Dockerfile               # Multi-arch image (node:20-alpine base)
 ├── docker-compose.yml       # One-shot self-host config
 ├── package.json
@@ -179,9 +180,50 @@ pokerth-web-client/
 
 ---
 
-## Installation — fresh server (Ubuntu / Debian)
+## Quick install (one-liner)
 
-This walkthrough assumes a clean Ubuntu 22.04 / 24.04 or Debian 12 VPS. Adapt commands for other distributions.
+On a fresh **Debian/Ubuntu** machine you can install everything — Node.js, PM2, the project, and a boot-persistent service — with a single command:
+
+```bash
+curl -sSL https://raw.githubusercontent.com/narmod/pokerth-web-client/HEAD/install.sh | bash
+```
+
+The installer asks a couple of questions (port, LAN/TLS mode, install directory), then runs the proxy under PM2 as a **non-root** user with start-on-boot. It is safe to re-run: an existing install is updated rather than duplicated.
+
+> **Prefer to read before you run?** A healthy instinct for any `curl | bash` installer. Download and inspect it first:
+>
+> ```bash
+> curl -sSL https://raw.githubusercontent.com/narmod/pokerth-web-client/HEAD/install.sh -o install.sh
+> less install.sh        # review what it does
+> bash install.sh        # then run it
+> ```
+
+When run without a terminal (CI / automation) the installer is fully non-interactive and takes its settings from environment variables:
+
+| Variable | Default | Purpose |
+|---|---|---|
+| `PORT` | `8080` | HTTP / WebSocket port |
+| `NO_TLS` | _(unset)_ | set to `1` for LAN mode (`--notls`) |
+| `INSTALL_DIR` | `<run-user home>/pokerth-web-client` | install location |
+| `RUN_USER` | invoking user, or `pokerth` when run as root | non-root user that runs PM2 |
+| `APP_NAME` | `pokerth-web` | PM2 process name |
+| `SETUP_FIREWALL` | _(unset)_ | set to `1` to open the port in `ufw` |
+| `ASSUME_YES` | _(unset)_ | set to `1` to skip the confirmation prompt |
+
+Example:
+
+```bash
+PORT=8090 NO_TLS=1 ASSUME_YES=1 \
+  bash -c "$(curl -sSL https://raw.githubusercontent.com/narmod/pokerth-web-client/HEAD/install.sh)"
+```
+
+For HTTPS (recommended — many mobile browsers block plain `ws://`), follow the Nginx + Let's Encrypt steps in the manual installation below.
+
+---
+
+## Manual installation (Ubuntu / Debian)
+
+Prefer to do it by hand, or need a custom setup? These are the full steps the one-liner automates. This walkthrough assumes a clean Ubuntu 22.04 / 24.04 or Debian 12 VPS. Adapt commands for other distributions.
 
 ### 1. Update the system
 
