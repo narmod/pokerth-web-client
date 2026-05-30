@@ -5521,7 +5521,12 @@ function dismissWinner() {
       const proxyInput = $('proxy');
       const autoHost   = hostInput ? (hostInput.dataset.autoHost || window.location.hostname) : '';
       const proto      = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-      const port       = window.location.port || '8080';
+      // Match the page-load auto-fill: when served on a standard port (e.g.
+      // 443 behind an HTTPS reverse proxy) window.location.port is EMPTY, so
+      // fall back to the scheme default (443/80), NOT 8080. Falling back to
+      // 8080 rebuilt wss://host:8080 on every mode change — a direct-TLS URL
+      // to a plain-HTTP port — which failed until a refresh restored :443.
+      const port       = window.location.port || (proto === 'wss:' ? '443' : '80');
 
       // Helper: read a string from localStorage with try/catch so private
       // browsing modes that disable storage don't crash the page.
@@ -5806,7 +5811,7 @@ function dismissWinner() {
 
       ws.binaryType = 'arraybuffer';
       ws.onopen    = () => setStatus(t('proxyConnectedWait'));
-      ws.onerror   = () => { _lastConnectFailed = true; setStatus(t('wsError') + ' [' + finalUrl + '] dWS=' + directWS + ' sw=' + (!!window._swReadyOnce) + ' rs=' + (ws ? ws.readyState : 'null'), 'err'); };
+      ws.onerror   = () => { _lastConnectFailed = true; setStatus(t('wsError'), 'err'); };
       ws.onmessage = function(e) {
         if (typeof e.data === 'string') {
           // Message texte = protocole proxy (réactions)
