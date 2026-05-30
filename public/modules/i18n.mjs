@@ -51,6 +51,16 @@ function _flagFor(code) {
 function _labelFor(code) {
   return (LANG_META[code] && LANG_META[code].label) || String(code).toUpperCase();
 }
+// Registered language codes sorted alphabetically by their native label, so
+// the picker and the toggle cycle stay in alphabetical order and any future
+// language slots itself in automatically (no manual ordering needed).
+// localeCompare keeps Latin labels A–Z and places non-Latin scripts
+// (Cyrillic, CJK) consistently after them.
+function _langCodesSorted() {
+  return Object.keys(LANG).sort(function (a, b) {
+    return _labelFor(a).localeCompare(_labelFor(b), undefined, { sensitivity: 'base' });
+  });
+}
 
 // Dev flag controlling i18n diagnostics (parity check + missing-key
 // warnings). Off by default; opt in with ?i18ndebug in the URL,
@@ -208,7 +218,7 @@ function setLang(l) {
 // programmatic shortcut; the UI now uses the picker menu below instead, which
 // scales cleanly past two languages (a cycling button does not).
 function toggleLang() {
-    var ks = Object.keys(LANG);
+    var ks = _langCodesSorted();
     var i = ks.indexOf(_lang);
     setLang(ks[(i + 1) % ks.length] || 'en');
 }
@@ -235,7 +245,7 @@ function closeLangMenu() {
 function openLangMenu(ev) {
     try { if (ev && ev.stopPropagation) ev.stopPropagation(); } catch (e) {}
     closeLangMenu();
-    var codes = Object.keys(LANG);
+    var codes = _langCodesSorted();
     if (codes.length < 2) return; // nothing to choose
 
     var overlay = document.createElement('div');
