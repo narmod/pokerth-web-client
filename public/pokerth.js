@@ -2376,6 +2376,7 @@ const App = (() => {
         const loginMode = $('login-mode') ? $('login-mode').value : 'guest';
         if (stype === 2 && loginMode !== 'guest' && loginMode !== 'auth') {
           setStatus('This server requires authentication.', 'err');
+          _intentionalDisconnect = true; // fatal config error — don't auto-retry
           ws.close(); return;
         }
         let loginType;
@@ -2445,6 +2446,7 @@ const App = (() => {
         if (r === 3) {
           // initAuthFailure: login/password rejected by server
           setStatus(t('errBadCreds'), 'err');
+          _intentionalDisconnect = true; // bad credentials — retrying won't help
           ws.close(); return;
         }
         if (r === 7) {
@@ -5816,9 +5818,18 @@ function dismissWinner() {
       ws.onclose = function(e) {
         ws = null;
         clearTimeout(window._reconnectTimer);
+        clearInterval(window._reconnectCountdown);
         _hideBanner();
 
-        // --- RECONNEXION AUTO DÉSACTIVÉE (risque blocage IP) ---
+        // User asked to leave (clicked ✕ / disconnect): do NOT auto-reconnect.
+        // Without this guard, ws.close() from disconnect() falls through to the
+        // reconnect scheduler below and drops the user back into the lobby a few
+        // seconds after they returned to the home screen.
+        if (_intentionalDisconnect) {
+          return;
+        }
+
+        // --- RECONNEXION AUTO (limitée pour éviter le blocage IP) ---
         _reconnectAttempts++;
         var maxAttempts = 3; // max 3 tentatives pour éviter le blocage IP
         if (_reconnectAttempts > maxAttempts) {
@@ -5930,7 +5941,21 @@ function dismissWinner() {
       _lastConnectFailed = false; // déco propre → pas de rate limit
       document.body.classList.remove('in-game');
       _hideBanner();
-      if (ws) { ws.close(); ws = null; }
+      // Cancel any pending auto-reconnect that a previous onclose may have
+      // scheduled, so it can't fire after we're back on the home screen.
+      clearTimeout(window._reconnectTimer);
+      clearInterval(window._reconnectCountdown);
+      _reconnectAttempts = 0;
+      if (ws) {
+        // Detach handlers BEFORE closing: ws.close() triggers onclose
+        // synchronously-ish, and we don't want the reconnect scheduler to run.
+        ws.onclose = null;
+        ws.onerror = null;
+        ws.onmessage = null;
+        ws.onopen = null;
+        try { ws.close(); } catch (e) {}
+        ws = null;
+      }
       games = {};
       // Reset lobby counters so the next connect starts at 0 instead
       // of inheriting the previous session's tally.
