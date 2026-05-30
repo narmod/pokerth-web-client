@@ -1013,9 +1013,7 @@ document.addEventListener("DOMContentLoaded", function() {
   var port  = window.location.port || (proto === 'wss:' ? '443' : '80');
   var wsUrl = proto + '//' + host + ':' + port;
   var proxyInput = document.getElementById("proxy");
-  // Only auto-fill when empty, so a saved/typed proxy URL (restored from
-  // localStorage just above) is preserved instead of being overwritten.
-  if (proxyInput && !proxyInput.value.trim()) proxyInput.value = wsUrl;
+  if (proxyInput) proxyInput.value = wsUrl;
 
   // Auto-fill PokerTH server host (same machine by default on LAN)
   var hostInput = document.getElementById("host");
@@ -5509,23 +5507,7 @@ function dismissWinner() {
       const proxyInput = $('proxy');
       const autoHost   = hostInput ? (hostInput.dataset.autoHost || window.location.hostname) : '';
       const proto      = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-      // Match the page-load auto-fill logic: when the page is served over a
-      // standard port (443/80, e.g. behind an HTTPS reverse proxy),
-      // window.location.port is EMPTY — fall back to the default port for the
-      // scheme, NOT to 8080. Using 8080 here was the bug: switching modes
-      // rebuilt a wss://host:8080 URL that didn't match the TLS route, so the
-      // connection failed until a refresh restored the correct saved value.
-      const port       = window.location.port || (proto === 'wss:' ? '443' : '80');
-      // Apply an auto-computed proxy URL ONLY when the field is empty. The
-      // proxy URL is meaningful only for LAN / private-server modes and is
-      // auto-filled once at install time from the page's own DNS/IP; once it
-      // holds a value (typed or saved) we must preserve it across mode
-      // switches instead of clobbering it.
-      var _setProxyIfEmpty = function () {
-        if (proxyInput && !proxyInput.value.trim()) {
-          proxyInput.value = proto + '//' + (autoHost || 'localhost') + ':' + port;
-        }
-      };
+      const port       = window.location.port || '8080';
 
       // Helper: read a string from localStorage with try/catch so private
       // browsing modes that disable storage don't crash the page.
@@ -5550,7 +5532,7 @@ function dismissWinner() {
         // typed under another mode — same UX as switching profiles).
         if (nickEl) nickEl.value = lsGet('pth_lan_nick') || '';
         $('use-tls').checked = false;
-        _setProxyIfEmpty();
+        if (proxyInput) proxyInput.value = proto + '//' + (autoHost||'localhost') + ':' + port;
         if (hostInput && autoHost) hostInput.value = autoHost;
         setStatus(t('lanModeNote'));
       } else if (mode === 'unauth') {
@@ -5558,7 +5540,7 @@ function dismissWinner() {
         $('nick').placeholder = t('nickPlaceholder');
         if (nickEl) nickEl.value = lsGet('pth_unauth_nick') || '';
         $('use-tls').checked = false;
-        _setProxyIfEmpty();
+        if (proxyInput) proxyInput.value = proto + '//' + (autoHost||'localhost') + ':' + port;
         if (hostInput && autoHost) hostInput.value = autoHost;
         setStatus(t('chatAvailPrivate'));
       } else if (mode === 'guest') {
@@ -5574,7 +5556,7 @@ function dismissWinner() {
           nickEl.placeholder = guestName;
         }
         $('use-tls').checked = false;
-        _setProxyIfEmpty();
+        if (proxyInput) proxyInput.value = proto + '//' + (autoHost||'localhost') + ':' + port;
         if (hostInput) hostInput.value = 'pokerth.net';
         if ($('port')) $('port').value = '7234';   // pokerth.net standard port
         setStatus('');
@@ -5587,7 +5569,7 @@ function dismissWinner() {
         // keychain (via autocomplete='current-password') is for.
         if (nickEl) nickEl.value = lsGet('pth_auth_login') || '';
         $('use-tls').checked = true;   // TLS is mandatory for credentialed login
-        _setProxyIfEmpty();
+        if (proxyInput) proxyInput.value = proto + '//' + (autoHost||'localhost') + ':' + port;
         if (hostInput) hostInput.value = 'pokerth.net';
         if ($('port')) $('port').value = '7234';   // pokerth.net standard port
         setStatus(t('enterCredentials'));
