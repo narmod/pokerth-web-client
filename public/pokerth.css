@@ -1551,32 +1551,48 @@ body {
 }
 .react-grid {
   display: grid;
-  grid-template-columns: repeat(13, 36px); /* 13 colonnes de 36px */
+  /* Desktop: all 30 reactions on a single line. 1fr tracks fill the
+     available width so they never overflow; max-width keeps the cells
+     from ballooning on ultra-wide screens, margin auto re-centres. */
+  grid-template-columns: repeat(30, 1fr);
   gap: 3px;
-  justify-content: center;
+  max-width: 1120px;
+  margin: 0 auto;
 }
 @media (max-width: 900px) {
-  .react-grid { grid-template-columns: repeat(9, 36px); }
+  /* Tablet: 2 lines (15 + 15). */
+  .react-grid { grid-template-columns: repeat(15, 1fr); max-width: none; }
 }
 @media (max-width: 600px) {
-  .react-grid { grid-template-columns: repeat(6, 32px); }
+  /* Phone: 9 columns → 4 lines (9+9+9+3), validated for thumb comfort.
+     Cap height with a scroll fallback so the panel never eats more than
+     ~4 rows of the table if the reaction set grows later. */
+  .react-grid {
+    grid-template-columns: repeat(9, 1fr);
+    max-height: min(180px, 26dvh);
+    overflow-y: auto;
+  }
 }
 .react-btn {
-  aspect-ratio: 1;
+  aspect-ratio: 1;       /* square, height follows the column width */
+  width: 100%;           /* fill the grid track (size set by .react-grid) */
   background: rgba(255,255,255,0.04);
   border: 1px solid var(--border);
   border-radius: 5px;
-  font-size: 1.3rem;   /* emoji plus grand */
+  font-size: 1.15rem;    /* desktop emoji size (cells ~34px) */
   cursor: pointer;
   display: flex; align-items: center; justify-content: center;
   transition: transform 0.12s ease, background 0.12s, border-color 0.12s;
   position: relative;
-  padding: 0;          /* pas de padding → cellule compacte */
-  width: 36px;         /* taille fixe petite */
-  height: 36px;
+  padding: 0;            /* no padding → compact cell */
+}
+@media (max-width: 900px) {
+  /* Tablet: bigger cells → bigger glyphs. */
+  .react-btn { font-size: 1.5rem; }
 }
 @media (max-width: 600px) {
-  .react-btn { font-size: 1.1rem; width: 32px; height: 32px; }
+  /* Phone (9 cols ≈ 38–40px cells). */
+  .react-btn { font-size: 1.2rem; }
 }
 .react-btn:hover {
   background: rgba(200,168,74,0.15);
