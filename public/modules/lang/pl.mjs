@@ -355,6 +355,7 @@ export const strings = {
     waitingStartNow: 'Zacznij teraz',
     autoCheckLabel: 'Auto-check następna kolej',
     autoFoldLabel: 'Auto-fold następna kolej',
+    autoRearmHint: 'odnawia się co kolejkę',
     autoChecked: 'Auto-check',
     autoFolded: 'Auto-fold',
     initializing: 'Inicjalizacja…',

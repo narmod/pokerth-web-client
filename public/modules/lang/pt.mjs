@@ -354,6 +354,7 @@ export const strings = {
     waitingStartNow: 'Começar agora',
     autoCheckLabel: 'Auto-check na próxima vez',
     autoFoldLabel: 'Auto-fold na próxima vez',
+    autoRearmHint: 'reativa-se a cada vez',
     autoChecked: 'Auto-check',
     autoFolded: 'Auto-fold',
     initializing: 'Inicializando…',

@@ -354,6 +354,7 @@ export const strings = {
     waitingStartNow: 'Начать сейчас',
     autoCheckLabel: 'Авто-чек следующий ход',
     autoFoldLabel: 'Авто-фолд следующий ход',
+    autoRearmHint: 'сбрасывается каждый ход',
     autoChecked: 'Авто-чек',
     autoFolded: 'Авто-фолд',
     initializing: 'Инициализация…',

@@ -355,6 +355,7 @@ export const strings = {
     waitingStartNow: 'Empezar ahora',
     autoCheckLabel: 'Auto-check siguiente turno',
     autoFoldLabel: 'Auto-fold siguiente turno',
+    autoRearmHint: 'se rearma cada turno',
     autoChecked: 'Auto-check',
     autoFolded: 'Auto-fold',
     initializing: 'Inicializando…',

@@ -2484,7 +2484,7 @@ body {
 
 .btn-action {
   padding: 8px 14px;
-  border-radius: 3px;
+  border-radius: 8px;
   font-family: 'Cinzel', serif;
   font-size: 0.72rem;
   font-weight: 700;
@@ -2501,7 +2501,15 @@ body {
 .btn-check { background: #1a5c1a; color: #c0ffc0; }
 .btn-call  { background: #1a4a8a; color: #c0d8ff; }
 .btn-raise { background: var(--gold); color: #110900; }
-.btn-allin { background: #8a1a1a; color: #ffd0d0; outline: 2px solid #c0392b; }
+/* All-In as a SECONDARY action: outlined, not a big red bar — avoids the
+   red-on-red clash with Fold and discourages accidental taps. */
+.btn-allin {
+  background: transparent; color: #e88a8a;
+  border: 1.5px solid #c0392b; outline: none;
+  padding: 8px 12px; font-size: 0.7rem; letter-spacing: 0.1em;
+}
+.btn-allin:hover { background: rgba(192,57,43,0.15); filter: none; }
+.btn-allin b { color: #f4b0b0; }
 
 .raise-input {
   background: rgba(255,255,255,0.06);
@@ -2756,11 +2764,14 @@ body:not(.in-game) .my-zone {
 }
 .btn-pct {
   flex: 1;
-  background: rgba(200,168,74,0.12); border: 1px solid var(--gold-dim);
-  color: var(--gold); padding: 8px 6px; border-radius: 3px; cursor: pointer;
-  font-family: 'Inconsolata',monospace; font-size: 0.78rem; text-align: center;
+  display: flex; flex-direction: column; align-items: center; gap: 1px;
+  background: rgba(200,168,74,0.1); border: 1px solid var(--gold-dim);
+  color: var(--gold); padding: 7px 4px; border-radius: 7px; cursor: pointer;
+  font-family: 'Inconsolata',monospace; text-align: center;
 }
-.btn-pct:hover { background: rgba(200,168,74,0.28); }
+.btn-pct .pct-p { font-size: 0.74rem; font-weight: 700; color: var(--gold); }
+.btn-pct .pct-amt { font-size: 0.6rem; font-weight: 400; color: var(--text); }
+.btn-pct:hover { background: rgba(200,168,74,0.22); }
 .btn-pct:disabled,
 .btn-action:disabled {
   opacity: 0.28;
@@ -2814,11 +2825,15 @@ body:not(.in-game) .my-zone {
   box-shadow: 0 1px 5px rgba(0,0,0,0.55);
 }
 
-/* ══ Slider de mise mobile ══════════════════════════════════ */
+/* ══ Slider de mise mobile (design A : conteneur + bulle de valeur) ══ */
 .raise-row-mobile {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
+  background: rgba(0,0,0,0.3);
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  padding: 6px 8px;
 }
 .raise-slider {
   flex: 1;
@@ -2829,13 +2844,17 @@ body:not(.in-game) .my-zone {
 }
 .raise-display {
   font-family: 'Inconsolata', monospace;
-  font-size: 0.85rem;
-  color: var(--gold, #c8a84a);
+  font-size: 0.8rem;
+  color: #110900;
   font-weight: 700;
-  min-width: 42px;
+  min-width: 52px;
   text-align: center;
   flex-shrink: 0;
+  background: var(--gold, #c8a84a);
+  border-radius: 14px;
+  padding: 3px 11px;
 }
+.raise-row-mobile .btn-raise { flex: 0 0 auto; padding: 10px 20px; }
 
 /* ══ Combinaison gagnante dans l'overlay winner ═════════════ */
 .wc-best-hand {
@@ -3152,41 +3171,32 @@ body:not(.in-game) .my-zone {
    Deliberately discreet — small, low-contrast — because it represents
    a fully optional courtesy feature, not a primary action button. */
 .auto-cf-row {
-  display: flex; align-items: center; gap: 6px;
-  padding: 4px 8px; margin: 0 0 6px;
-  font-size: 0.72rem;
-  color: var(--gold-dim);
-  cursor: pointer;
-  user-select: none;
-  border-radius: 3px;
-  transition: color 0.15s, background 0.15s;
-  /* Force the checkbox row to take its own line above the action grid,
-     regardless of viewport width. Without this, on desktop and tablet
-     the .action-bar's justify-content:flex-end shoves it to the left
-     of the action-grid (the rest of the bar), producing the cosmetic
-     desync the user reported. flex-basis:100% guarantees the row
-     wraps to its own line in every breakpoint. */
-  flex-basis: 100%;
-  justify-content: center;
-}
-.auto-cf-row:hover {
-  color: var(--gold);
+  display: flex; align-items: center; gap: 9px;
   background: rgba(200,168,74,0.06);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 7px 11px; margin: 0 0 7px;
+  cursor: pointer; user-select: none;
+  flex-basis: 100%;
+  transition: background 0.15s, border-color 0.15s;
 }
-.auto-cf-row input[type="checkbox"] {
-  accent-color: var(--gold);
-  width: 14px; height: 14px;
-  cursor: pointer;
-}
-.auto-cf-row input:checked + span {
-  color: var(--gold);
-  font-weight: 600;
-}
-/* On mobile, push the checkbox flush with the action grid so it doesn't
-   eat too much vertical space. */
+.auto-cf-row:hover { background: rgba(200,168,74,0.1); border-color: var(--gold-dim); }
+.auto-cf-label { font-size: 0.72rem; color: var(--gold-dim); font-weight: 500; font-family: 'Inconsolata', monospace; }
+.auto-cf-row:has(input:checked) .auto-cf-label { color: var(--cream); font-weight: 700; }
+.auto-cf-hint { margin-left: auto; font-size: 0.58rem; color: var(--gold-dim); font-style: italic; }
+/* iOS-style toggle switch */
+.auto-switch { position: relative; display: inline-block; width: 38px; height: 21px; flex-shrink: 0; }
+.auto-switch input { position: absolute; opacity: 0; width: 0; height: 0; }
+.auto-switch-track { position: absolute; inset: 0; background: rgba(255,255,255,0.12);
+  border: 1px solid var(--gold-dim); border-radius: 21px; transition: 0.2s; }
+.auto-switch-track::before { content: ""; position: absolute; height: 15px; width: 15px; left: 2px; top: 2px;
+  background: var(--cream); border-radius: 50%; transition: 0.2s; }
+.auto-switch input:checked + .auto-switch-track { background: rgba(39,174,96,0.5); border-color: var(--green); }
+.auto-switch input:checked + .auto-switch-track::before { transform: translateX(17px); background: #d7ffe0; }
 @media (max-width: 640px) {
-  .auto-cf-row { font-size: 0.66rem; padding: 3px 6px; margin-bottom: 4px; }
-  .auto-cf-row input[type="checkbox"] { width: 12px; height: 12px; }
+  .auto-cf-row { padding: 6px 9px; margin-bottom: 5px; gap: 8px; }
+  .auto-cf-label { font-size: 0.68rem; }
+  .auto-cf-hint { font-size: 0.54rem; }
 }
 
 

@@ -195,6 +195,7 @@ export const strings = {
     waitingStartNow:'Start now',
     autoCheckLabel:'Auto-check next turn',
     autoFoldLabel:'Auto-fold next turn',
+    autoRearmHint:'re-arms each turn',
     autoChecked:'Auto-checked',
     autoFolded:'Auto-folded',
     initializing:'Initialising…',

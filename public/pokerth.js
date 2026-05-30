@@ -2357,7 +2357,7 @@ const App = (() => {
   // user's next turn this hand. When false, the checkbox is not rendered
   // at all but the underlying logic stays intact — flipping this back to
   // `true` reinstates the feature without touching anything else.
-  const FEATURE_AUTO_CHECK_FOLD = false;
+  const FEATURE_AUTO_CHECK_FOLD = true;
   let _autoCheckFold = false; // armed by the per-turn checkbox; auto-resets every HandStart
   let _lastConnectParams = null;
   // Track mode + name of last Init sent so we can detect 'rapid mode swap'
@@ -5390,9 +5390,13 @@ const App = (() => {
         ? t('autoCheckLabel')
         : t('autoFoldLabel');
       autoRow = '<label class="auto-cf-row">' +
-        '<input type="checkbox" id="auto-cf-chk"' + (_autoCheckFold ? ' checked' : '') +
-          ' onchange="App.toggleAutoCheckFold(this.checked)">' +
-        '<span>' + autoLabel + '</span>' +
+        '<span class="auto-switch">' +
+          '<input type="checkbox" id="auto-cf-chk"' + (_autoCheckFold ? ' checked' : '') +
+            ' onchange="App.toggleAutoCheckFold(this.checked)">' +
+          '<span class="auto-switch-track"></span>' +
+        '</span>' +
+        '<span class="auto-cf-label">' + autoLabel + '</span>' +
+        '<span class="auto-cf-hint">' + t('autoRearmHint') + '</span>' +
         '</label>';
     }
 
@@ -5402,9 +5406,9 @@ const App = (() => {
       +   '<button class="btn-action ' + callClass + '" onclick="' + callAction + '" title="Call/Check (C)">' + callLabel + '</button>'
       + '</div>'
       + '<div class="pct-row">'
-      +   '<button class="btn-pct"' + da + ' onclick="setPct(' + p33  + ')">33%</button>'
-      +   '<button class="btn-pct"' + da + ' onclick="setPct(' + p50  + ')">50%</button>'
-      +   '<button class="btn-pct"' + da + ' onclick="setPct(' + p100 + ')">100%</button>'
+      +   '<button class="btn-pct"' + da + ' onclick="setPct(' + p33  + ')"><span class="pct-p">33%</span><span class="pct-amt">' + fmtChips(p33) + '</span></button>'
+      +   '<button class="btn-pct"' + da + ' onclick="setPct(' + p50  + ')"><span class="pct-p">50%</span><span class="pct-amt">' + fmtChips(p50) + '</span></button>'
+      +   '<button class="btn-pct"' + da + ' onclick="setPct(' + p100 + ')"><span class="pct-p">100%</span><span class="pct-amt">' + fmtChips(p100) + '</span></button>'
       + '</div>'
       + raiseRowHtml
       + '<button class="btn-action btn-allin" onclick="App.doAction(6,' + myMoney + ')" title="All-In (A)">All-In <b>' + fmtChips(myMoney) + '</b></button>'
