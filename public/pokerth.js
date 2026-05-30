@@ -5806,7 +5806,7 @@ function dismissWinner() {
 
       ws.binaryType = 'arraybuffer';
       ws.onopen    = () => setStatus(t('proxyConnectedWait'));
-      ws.onerror   = () => { _lastConnectFailed = true; setStatus(t('wsError') + ' [' + finalUrl + ']', 'err'); };
+      ws.onerror   = () => { _lastConnectFailed = true; setStatus(t('wsError') + ' [' + finalUrl + '] dWS=' + directWS + ' sw=' + (!!window._swReadyOnce) + ' rs=' + (ws ? ws.readyState : 'null'), 'err'); };
       ws.onmessage = function(e) {
         if (typeof e.data === 'string') {
           // Message texte = protocole proxy (réactions)
