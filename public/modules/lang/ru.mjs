@@ -376,6 +376,7 @@ export const strings = {
     connectingPlayers: 'Подключение {type} v{ver} — {n} игроков…',
     connectedAsGuest: 'Подключено как гость «{name}» (ID {id})',
     errBadCreds: '⚠ Неверные данные pokerth.net (имя пользователя или пароль).',
+    serverRequiresAuth: '⚠ Этот сервер требует аутентификации. Войдите через аккаунт pokerth.net или как гость.',
     errNickTakenRetry: 'Никнейм уже занят — повтор с «{name}»…',
     errGeneric: 'Ошибка: {code}',
     joinedTableWaiting: 'Вошёл за стол {gid}{admin} — ожидание старта…',

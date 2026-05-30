@@ -216,6 +216,7 @@ export const strings = {
     connectingPlayers:'Connecting {type} v{ver} \u2014 {n} player(s)\u2026',
     connectedAsGuest:'Connected as guest \u201c{name}\u201d (ID {id})',
     errBadCreds:'\u26a0 Invalid pokerth.net credentials (username or password).',
+    serverRequiresAuth:'\u26a0 This server requires authentication. Switch to a pokerth.net account or guest login.',
     errNickTakenRetry:'Nickname already taken \u2014 retrying with \u201c{name}\u201d\u2026',
     errGeneric:'Error: {code}',
     joinedTableWaiting:'Joined table {gid}{admin} \u2014 waiting for start\u2026',

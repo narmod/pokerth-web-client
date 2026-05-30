@@ -216,6 +216,7 @@ export const strings = {
     connectingPlayers:'Connexion {type} v{ver} \u2014 {n} joueur(s)\u2026',
     connectedAsGuest:'Connect\u00e9 en tant qu\u2019invit\u00e9 \u00ab\u202f{name}\u202f\u00bb (ID {id})',
     errBadCreds:'\u26a0 Identifiants pokerth.net invalides (utilisateur ou mot de passe).',
+    serverRequiresAuth:'\u26a0 Ce serveur exige une authentification. Choisissez un compte pokerth.net ou le mode invité.',
     errNickTakenRetry:'Pseudo d\u00e9j\u00e0 pris \u2014 nouvel essai avec \u00ab\u202f{name}\u202f\u00bb\u2026',
     errGeneric:'Erreur\u00a0: {code}',
     joinedTableWaiting:'Rejoint la table {gid}{admin} \u2014 attente du d\u00e9marrage\u2026',

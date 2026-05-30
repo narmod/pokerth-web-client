@@ -376,6 +376,7 @@ export const strings = {
     connectingPlayers: 'Connessione {type} v{ver} — {n} giocatori…',
     connectedAsGuest: 'Connesso come ospite «{name}» (ID {id})',
     errBadCreds: '⚠ Credenziali pokerth.net non valide (nome utente o password).',
+    serverRequiresAuth: '⚠ Questo server richiede l\'autenticazione. Passa a un account pokerth.net o al login ospite.',
     errNickTakenRetry: 'Nickname già in uso — nuovo tentativo con «{name}»…',
     errGeneric: 'Errore: {code}',
     joinedTableWaiting: 'Entrato al tavolo {gid}{admin} — in attesa di iniziare…',

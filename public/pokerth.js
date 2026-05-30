@@ -2375,7 +2375,7 @@ const App = (() => {
 
         const loginMode = $('login-mode') ? $('login-mode').value : 'guest';
         if (stype === 2 && loginMode !== 'guest' && loginMode !== 'auth') {
-          setStatus('This server requires authentication.', 'err');
+          setStatus(t('serverRequiresAuth'), 'err');
           _intentionalDisconnect = true; // fatal config error — don't auto-retry
           ws.close(); return;
         }

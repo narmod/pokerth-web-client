@@ -376,6 +376,7 @@ export const strings = {
     connectingPlayers: 'Verbinden {type} v{ver} — {n} speler(s)…',
     connectedAsGuest: 'Verbonden als gast „{name}" (ID {id})',
     errBadCreds: '⚠ Ongeldige pokerth.net-gegevens (gebruikersnaam of wachtwoord).',
+    serverRequiresAuth: '⚠ Deze server vereist authenticatie. Schakel over naar een pokerth.net-account of gastlogin.',
     errNickTakenRetry: 'Bijnaam al in gebruik — opnieuw proberen met „{name}"…',
     errGeneric: 'Fout: {code}',
     joinedTableWaiting: 'Aan tafel {gid}{admin} gegaan — wachten op start…',

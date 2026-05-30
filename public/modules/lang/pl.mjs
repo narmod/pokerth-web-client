@@ -377,6 +377,7 @@ export const strings = {
     connectingPlayers: 'Łączenie {type} v{ver} — {n} graczy…',
     connectedAsGuest: 'Połączono jako gość „{name}" (ID {id})',
     errBadCreds: '⚠ Nieprawidłowe dane pokerth.net (nazwa użytkownika lub hasło).',
+    serverRequiresAuth: '⚠ Ten serwer wymaga uwierzytelnienia. Przełącz się na konto pokerth.net lub logowanie gościa.',
     errNickTakenRetry: 'Pseudonim już zajęty — ponowna próba z „{name}"…',
     errGeneric: 'Błąd: {code}',
     joinedTableWaiting: 'Dołączono do stołu {gid}{admin} — oczekiwanie na start…',
