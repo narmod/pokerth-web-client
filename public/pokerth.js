@@ -1424,11 +1424,21 @@ const App = (() => {
   // (0, before the first hand) we fall back to the raw value to avoid a
   // divide-by-zero. One decimal, shown only when non-zero, with the decimal
   // separator following the active language.
+  // Group a whole number with thousands separators following the active
+  // language: French (and most others) use a thin/regular space — 1 000 000;
+  // English uses a comma — 1,000,000. Improves readability of big stacks/pots.
+  function _groupThousands(n) {
+    var neg = n < 0;
+    var s = String(Math.abs(Math.round(n)));
+    var sep = (typeof _lang !== 'undefined' && _lang === 'en') ? ',' : '\u202F'; // narrow no-break space
+    s = s.replace(/\B(?=(\d{3})+(?!\d))/g, sep);
+    return (neg ? '-' : '') + s;
+  }
   function fmtChips(amount) {
     var v = (typeof amount === 'number') ? amount : parseInt(amount, 10) || 0;
-    if (!_displayBB) return v + ' ¥';
+    if (!_displayBB) return _groupThousands(v) + ' ¥';
     var bb = (smallBlind || 0) * 2;
-    if (!bb) return v + ' ¥';
+    if (!bb) return _groupThousands(v) + ' ¥';
     var n = v / bb;
     // Round to 1 decimal, drop a trailing .0
     var r = Math.round(n * 10) / 10;
@@ -1932,7 +1942,7 @@ const App = (() => {
         [t('blinds'),
             (smallBlind || 0) + ' / ' + ((smallBlind || 0) * 2) + ' ¥'],
         [t('piStartingStack'),
-            (meta.startMoney || 0) + ' ¥'],
+            _groupThousands(meta.startMoney || 0) + ' ¥'],
         [t('piActionTimer'),
             (meta.timeout || gameTimeout || 15) + ' s'],
       ],
@@ -1947,7 +1957,7 @@ const App = (() => {
         [t('piHandNo'),
             (handNum > 0) ? ('H#' + handNum) : t('piNotStarted')],
         [t('piPot'),
-            pot + ' ¥'],
+            _groupThousands(pot) + ' ¥'],
         [t('piPhase'),
             round],
       ],
@@ -4172,7 +4182,7 @@ const App = (() => {
       return '<div class="hand-hist-item">'
         + '<div style="display:flex;justify-content:space-between">'
         + '<span style="color:var(--gold-dim);font-size:0.55rem">Main #'+h2.num+'</span>'
-        + '<span class="hand-hist-result '+dcls+'">'+(h2.delta>0?'+':'')+h2.delta+' ¥</span>'
+        + '<span class="hand-hist-result '+dcls+'">'+(h2.delta>0?'+':'')+_groupThousands(h2.delta)+' ¥</span>'
         + '</div>'
         + '<div class="hand-hist-cards">'
         + (h2.cards ? h2.cards.map(function(c){ return '<span style="background:#fff;color:'+(c.red?'#c0392b':'#111')+';border-radius:2px;padding:1px 3px;font-size:0.6rem;font-weight:700">'+c.r+c.s+'</span>'; }).join('') : '')
@@ -4184,9 +4194,9 @@ const App = (() => {
       + _statsRow(t('statWins'), s.handsWon, 'pos')
       + _statsRow(t('statWinRate'), wr+'%')
       + '<hr class="stat-divider">'
-      + _statsRow(t('statNet'), (gain>0?'+':'')+gain+' ¥', gainCls)
-      + _statsRow(t('statBestWin'), '+'+s.bigWin+' ¥', 'pos')
-      + _statsRow(t('statWorstLoss'), s.bigLoss+' ¥', 'neg')
+      + _statsRow(t('statNet'), (gain>0?'+':'')+_groupThousands(gain)+' ¥', gainCls)
+      + _statsRow(t('statBestWin'), '+'+_groupThousands(s.bigWin)+' ¥', 'pos')
+      + _statsRow(t('statWorstLoss'), _groupThousands(s.bigLoss)+' ¥', 'neg')
       + '<hr class="stat-divider">'
       + '<div style="font-size:0.58rem;color:var(--gold-dim);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:4px">'+t('statRecentHands')+'</div>'
       + histHtml
@@ -4209,9 +4219,9 @@ const App = (() => {
       + _statsRow(t('statWins'), s.handsWon, 'pos')
       + _statsRow(t('statWinRate'), wr+'%')
       + '<hr class="stat-divider">'
-      + _statsRow(t('statNet'), (gain>0?'+':'')+gain+' ¥', gainCls)
-      + _statsRow(t('statBestWin'), '+'+s.bigWin+' ¥', 'pos')
-      + _statsRow(t('statWorstLoss'), s.bigLoss+' ¥', 'neg')
+      + _statsRow(t('statNet'), (gain>0?'+':'')+_groupThousands(gain)+' ¥', gainCls)
+      + _statsRow(t('statBestWin'), '+'+_groupThousands(s.bigWin)+' ¥', 'pos')
+      + _statsRow(t('statWorstLoss'), _groupThousands(s.bigLoss)+' ¥', 'neg')
       + '<hr class="stat-divider">'
       + '<button class="stats-reset" onclick="window._statsReset()">'+t('statReset')+'</button>'
       + '</div>';
@@ -4241,7 +4251,7 @@ const App = (() => {
             + '<span class="board-rank">'+medal+'</span>'
             + '<span class="board-av">'+esc(av)+'</span>'
             + '<span class="board-name">'+esc(p.name)+'</span>'
-            + '<span class="board-net '+ncls+'">'+(net>0?'+':'')+net+' ¥</span>'
+            + '<span class="board-net '+ncls+'">'+(net>0?'+':'')+_groupThousands(net)+' ¥</span>'
             + '<span class="board-sub">🏆'+(p.gamesWon||0)+' · '+(p.handsWon||0)+'</span>'
             + '</div>';
         }).join('');
@@ -5136,10 +5146,10 @@ const App = (() => {
           '<div class="eg-stat-row"><span class="eg-stat-label">' + t('endGameHandsPlayed') + '</span><span class="eg-stat-val">' + s.handsPlayed + '</span></div>' +
           '<div class="eg-stat-row"><span class="eg-stat-label">' + t('endGameHandsWon') + '</span><span class="eg-stat-val pos">' + s.handsWon + ' (' + wr + '%)</span></div>' +
           '<hr class="eg-stat-divider">' +
-          '<div class="eg-stat-row"><span class="eg-stat-label">' + t('endGameFinalStack') + '</span><span class="eg-stat-val">' + finalStack + ' ¥</span></div>' +
-          '<div class="eg-stat-row"><span class="eg-stat-label">' + t('endGameNetGain') + '</span><span class="eg-stat-val ' + gainCls + '">' + (s.totalGain > 0 ? '+' : '') + s.totalGain + ' ¥</span></div>' +
-          '<div class="eg-stat-row"><span class="eg-stat-label">' + t('endGameBestWin') + '</span><span class="eg-stat-val pos">+' + s.bigWin + ' ¥</span></div>' +
-          '<div class="eg-stat-row"><span class="eg-stat-label">' + t('endGameWorstLoss') + '</span><span class="eg-stat-val neg">' + s.bigLoss + ' ¥</span></div>' +
+          '<div class="eg-stat-row"><span class="eg-stat-label">' + t('endGameFinalStack') + '</span><span class="eg-stat-val">' + _groupThousands(finalStack) + ' ¥</span></div>' +
+          '<div class="eg-stat-row"><span class="eg-stat-label">' + t('endGameNetGain') + '</span><span class="eg-stat-val ' + gainCls + '">' + (s.totalGain > 0 ? '+' : '') + _groupThousands(s.totalGain) + ' ¥</span></div>' +
+          '<div class="eg-stat-row"><span class="eg-stat-label">' + t('endGameBestWin') + '</span><span class="eg-stat-val pos">+' + _groupThousands(s.bigWin) + ' ¥</span></div>' +
+          '<div class="eg-stat-row"><span class="eg-stat-label">' + t('endGameWorstLoss') + '</span><span class="eg-stat-val neg">' + _groupThousands(s.bigLoss) + ' ¥</span></div>' +
         '</div>' +
         '<div class="eg-actions">' +
           '<button class="eg-btn" onclick="App.endGameClose()">' + t('endGameClose') + '</button>' +
@@ -5449,13 +5459,13 @@ function showWinnerOverlay(winners) {
   html += '<div class="wc-label">' + (isMyWin ? t('youWon') : t('handWinner')) + '</div>';
   html += '<div class="wc-name">' + winnerNames + '</div>';
   html += '</div>';
-  html += '<div class="wc-gain">+' + totalWon + ' ¥</div>';
+  html += '<div class="wc-gain">+' + _groupThousands(totalWon) + ' ¥</div>';
   html += '</div>';
 
   // ── Stats ──
   html += '<div class="wc-stats">';
   html += '<div class="wc-stat"><div class="wc-stat-label">' + t('handOf') + '</div><div class="wc-stat-value">' + handNum + '</div></div>';
-  html += '<div class="wc-stat"><div class="wc-stat-label">' + t('totalPot') + '</div><div class="wc-stat-value">' + totalWon + ' ¥</div></div>';
+  html += '<div class="wc-stat"><div class="wc-stat-label">' + t('totalPot') + '</div><div class="wc-stat-value">' + _groupThousands(totalWon) + ' ¥</div></div>';
   html += '<div class="wc-stat"><div class="wc-stat-label">' + t('players') + '</div><div class="wc-stat-value">' + seats.length + '</div></div>';
   html += '<div class="wc-stat"><div class="wc-stat-label">' + t('blinds') + '</div><div class="wc-stat-value">' + smallBlind + '/' + (smallBlind*2) + '</div></div>';
   html += '</div>';
@@ -5524,11 +5534,11 @@ function showWinnerOverlay(winners) {
     if (isW) {
       // Gagnant : on affiche le pot ramassé (cohérent avec l'en-tête).
       deltaClass = "pos";
-      deltaTxt = "+" + (wObj ? wObj.won : 0) + " ¥";
+      deltaTxt = "+" + _groupThousands(wObj ? wObj.won : 0) + " ¥";
     } else if (_net != null && _net < 0) {
       // Perdant : perte nette de la main, en rouge.
       deltaClass = "neg";
-      deltaTxt = _net + " ¥";
+      deltaTxt = _groupThousands(_net) + " ¥";
     } else {
       deltaClass = "";
       deltaTxt = "";
@@ -5539,7 +5549,7 @@ function showWinnerOverlay(winners) {
     html += _avatarChipHtml(pid, name, 'wc-player-av');
     html += '<div class="wc-player-info">';
     html += '<div class="wc-player-name">' + esc(name) + (isW ? " 🏆" : "") + (isMe ? " 👤" : "") + '</div>';
-    html += '<div class="wc-player-stack">' + (sd.money != null ? sd.money + " ¥" : "—") + '</div>';
+    html += '<div class="wc-player-stack">' + (sd.money != null ? _groupThousands(sd.money) + " ¥" : "—") + '</div>';
     html += '</div>';
     // Show cards if revealed
     if (sd.card1 != null || sd.card2 != null) { // FIX: || test falsy ratait les cartes à valeur 0
