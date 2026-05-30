@@ -4,6 +4,29 @@
 
 ---
 
+## Contents
+
+<sub>📂 = collapsible section — click the **“Show…”** line to expand it.</sub>
+
+- [🎮 Live demo](#live-demo)
+- [Why this project exists](#why-this-project-exists)
+- [Screenshots](#screenshots)
+- [Features](#features)
+- [Login modes &amp; transport](#login-modes-transport)
+- [Architecture](#architecture)
+- [Requirements](#requirements)
+- [Quick install (one-liner)](#quick-install-one-liner) &nbsp;📂
+- [Manual installation (Ubuntu / Debian)](#manual-installation) &nbsp;📂
+- [Running locally (development)](#running-locally-development) &nbsp;📂
+- [Quick start — LAN family game](#quick-start-lan)
+- [Protocol notes](#protocol-notes)
+- [Known limitations](#known-limitations)
+- [Roadmap / Suggested next steps](#roadmap)
+- [License](#license)
+- [Acknowledgements](#acknowledgements)
+
+
+<a id="live-demo"></a>
 ## 🎮 Live demo
 
 **Try it now: [https://pokerth.ddns.net/](https://pokerth.ddns.net/)**
@@ -123,6 +146,7 @@ This project is a **web frontend** that connects to any PokerTH server directly 
 
 ---
 
+<a id="login-modes-transport"></a>
 ## Login modes & transport
 
 The client is designed first and foremost for **LAN and private self-hosted servers** — that is its intended use. Each mode uses a different transport, which is handy to know when debugging a connection problem.
@@ -196,6 +220,9 @@ pokerth-web-client/
 
 ## Quick install (one-liner)
 
+<details>
+<summary><b>📂 Show the one-liner install guide</b></summary>
+
 On a fresh **Debian/Ubuntu** machine you can install everything — Node.js, PM2, the project, and a boot-persistent service — with a single command:
 
 ```bash
@@ -251,9 +278,15 @@ curl -sSL https://raw.githubusercontent.com/narmod/pokerth-web-client/HEAD/insta
 
 For HTTPS (recommended — many mobile browsers block plain `ws://`), follow the Nginx + Let's Encrypt steps in the manual installation below.
 
+</details>
+
 ---
 
+<a id="manual-installation"></a>
 ## Manual installation (Ubuntu / Debian)
+
+<details>
+<summary><b>📂 Show the full step-by-step guide</b></summary>
 
 Prefer to do it by hand, or need a custom setup? These are the full steps the one-liner automates. This walkthrough assumes a clean Ubuntu 22.04 / 24.04 or Debian 12 VPS. Adapt commands for other distributions.
 
@@ -395,9 +428,14 @@ npm install              # only if package.json changed
 pm2 restart pokerth-web
 ```
 
+</details>
+
 ---
 
 ## Running locally (development)
+
+<details>
+<summary><b>📂 Show the local-development guide</b></summary>
 
 If you only want to play around on your own machine:
 
@@ -445,8 +483,11 @@ docker compose up -d
 
 The proxy will be available on `http://<host>:8080/`.
 
+</details>
+
 ---
 
+<a id="quick-start-lan"></a>
 ## Quick start — LAN family game
 
 1. Run the proxy on any computer on your local network.
@@ -477,6 +518,7 @@ A few things worth knowing if you plan to hack on this:
 
 ---
 
+<a id="roadmap"></a>
 ## Roadmap / Suggested next steps
 
 1. Replace the hand-written Protobuf encoder/decoder with generated classes from `pokerth.proto`.
