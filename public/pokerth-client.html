@@ -948,10 +948,10 @@ function selectAvatarPopup(emoji) {
         <span id="g-count" style="color:var(--text)">0 <span data-i18n="tableCount">table(s)</span></span>
       </div>
       <div class="filter-bar" id="g-filter-bar">
-        <button class="filter-chip active" data-filter="all" onclick="App.setTableFilter('all')"><span data-i18n="filterAll">All</span> <span class="cnt" id="fc-all"></span></button>
-        <button class="filter-chip" data-filter="open" onclick="App.setTableFilter('open')"><span data-i18n="filterOpen">Open</span> <span class="cnt" id="fc-open"></span></button>
-        <button class="filter-chip" data-filter="nopass" onclick="App.setTableFilter('nopass')"><span data-i18n="filterNoPass">No password</span> <span class="cnt" id="fc-nopass"></span></button>
-        <button class="filter-chip" data-filter="live" onclick="App.setTableFilter('live')"><span data-i18n="filterLive">Live</span> <span class="cnt" id="fc-live"></span></button>
+        <button class="filter-chip active" data-filter="all" onclick="App.setTableFilter('all')"><span class="fc-label" data-i18n="filterAll">All</span> <span class="cnt" id="fc-all"></span></button>
+        <button class="filter-chip" data-filter="open" onclick="App.setTableFilter('open')"><span class="fc-ic">🟢</span><span class="fc-label" data-i18n="filterOpen">Open</span> <span class="cnt" id="fc-open"></span></button>
+        <button class="filter-chip" data-filter="nopass" onclick="App.setTableFilter('nopass')"><span class="fc-ic">🔓</span><span class="fc-label" data-i18n="filterNoPass">No password</span> <span class="cnt" id="fc-nopass"></span></button>
+        <button class="filter-chip" data-filter="live" onclick="App.setTableFilter('live')"><span class="fc-ic">👁</span><span class="fc-label" data-i18n="filterLive">Live</span> <span class="cnt" id="fc-live"></span></button>
       </div>
       <div class="games-scroll" id="g-list">
         <div class="empty">Loading tables<br><span class="ld"><span>●</span><span>●</span><span>●</span></span></div>

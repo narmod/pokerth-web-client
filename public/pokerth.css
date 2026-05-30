@@ -4045,6 +4045,15 @@ body:not(.in-game) .my-zone {
 .filter-chip:hover { border-color: var(--gold-dim); color: var(--cream); }
 .filter-chip.active { background: rgba(200,168,74,0.14); border-color: var(--gold); color: var(--gold); font-weight: 700; }
 .filter-chip .cnt { font-size: 0.62rem; opacity: 0.65; }
+/* Compact icon, hidden on desktop (the i18n label already carries the emoji). */
+.filter-chip .fc-ic { display: none; }
+/* ── Mobile only: V4 compact — one row, equal chips, icons replace labels ── */
+@media (max-width: 600px) {
+  .filter-bar { flex-wrap: nowrap; gap: 6px; }
+  .filter-chip { flex: 1; min-width: 0; justify-content: center; padding: 7px 6px; gap: 4px; border-radius: 16px; }
+  .filter-chip .fc-ic { display: inline; }      /* show the icon… */
+  .filter-chip .fc-ic + .fc-label { display: none; } /* …and hide the word (but not on 'All', which has no icon) */
+}
 .games-scroll .empty { grid-column: 1 / -1; padding: 32px 10px; }
 .game-row.gcard {
   border: 1px solid var(--border); border-radius: 11px; background: rgba(255,255,255,0.025);
