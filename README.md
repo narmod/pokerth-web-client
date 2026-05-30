@@ -22,6 +22,8 @@ One day I wanted to play a family LAN game with my wife and teach poker to my ki
 
 So I sat down and built one.
 
+It started as a very simple interface — just enough to deal a hand around the table. But every family game brought new feedback ("I can't tell the suits apart on my phone", "whose turn is it?", "can we have avatars?"), and little by little those suggestions grew the bare-bones prototype into the much more complete client it is today.
+
 This project is a **web frontend** that connects to any PokerTH server directly from the browser, with no app installation needed. It is designed to work great on phones and tablets so that family poker nights are just a URL away.
 
 ---
@@ -53,7 +55,7 @@ This project is a **web frontend** that connects to any PokerTH server directly 
 
 ### Connection
 - **4 login modes**: LAN (free nickname), Private server – Guest, pokerth.net – Guest, pokerth.net – Registered account
-- **Authenticated login on pokerth.net** — credentials are carried in the `InitMessage.clientUserData` field as per the v2.0 protocol (TLS-wrapped, no more SCRAM-SHA-1)
+- Optional authenticated login over TLS
 - TLS support (required for pokerth.net, optional for LAN). The TLS box auto-checks itself when you pick the registered-account mode.
 - Auto-fill of `host = pokerth.net` and `port = 7234` when a pokerth.net mode is selected — other modes keep the auto-detected hostname
 - Remember nickname / credentials via `localStorage`
@@ -79,7 +81,7 @@ This project is a **web frontend** that connects to any PokerTH server directly 
 - Pot strip showing hand number, total pot, and current betting round
 
 ### Player experience
-- **Emoji avatar** selector: 🎭 button → 43 avatars (animals, fantasy, fun characters…)
+- **Emoji avatar** selector: 🎭 button → 500+ icons organised by category (animals, fantasy, fun characters…)
 - Avatars visible by all players in real time (broadcast via proxy `AVATAR:pid:emoji`)
 - Anti-flicker cache so avatars survive seat re-renders
 - Bots always show 🤖
@@ -88,14 +90,14 @@ This project is a **web frontend** that connects to any PokerTH server directly 
 
 ### Chat & reactions
 - In-lobby chat and in-game chat (dropdown panels)
-- 25 emoji reactions with 6-second counter, broadcast to all players
+- 30 emoji reactions with 6-second counter, broadcast to all players
 
 ### Comfort features
 - Browser notifications when it is your turn (background tab)
 - Tab title flashes: ⚡ YOUR TURN — PokerTH
 - Keyboard shortcuts: **F** = Fold, **C** / Space = Call, **R** = Raise, **A** = All-in
 - Sound effects: distinct sounds for fold / check / call / raise / all-in / shuffle / drumroll / bad-beat / win fanfare, plus urgent-timer warning
-- Full EN / FR language toggle (complete i18n)
+- Full i18n in 9 languages — German, English, Spanish, French, Italian, Dutch, Polish, Portuguese and Russian — switchable on the fly
 - Fullscreen mode on all screens
 - Poker hand reference overlay (? button)
 - Exponential-backoff auto-reconnect with live countdown
@@ -109,16 +111,14 @@ This project is a **web frontend** that connects to any PokerTH server directly 
 
 ## Login modes & transport
 
-Each login mode uses a different transport. Knowing which is which can save a lot of head-scratching when debugging a connection problem.
+The client is designed first and foremost for **LAN and private self-hosted servers** — that is its intended use. Each mode uses a different transport, which is handy to know when debugging a connection problem.
 
 | Mode | Target server | Transport | Notes |
 |---|---|---|---|
 | **LAN** (free nickname) | your local PokerTH server | proxy → TCP raw | TLS off by default |
 | **Private server — Guest** (`unauth`) | your private remote PokerTH server | proxy → TCP or TLS (your choice) | The default for self-hosted setups |
-| **pokerth.net — Guest** | `wss://www.pokerth.net:443/pthlive` | direct WebSocket (TLS) | Bypasses the proxy entirely |
-| **pokerth.net — Registered account** | `wss://www.pokerth.net:443/pthlive` | direct WebSocket (TLS) | Same endpoint as guest; the password is sent in `InitMessage.clientUserData` |
 
-> Notice that for both pokerth.net modes the proxy is **not used** — the browser opens a direct WebSocket to `pokerth.net:443`. The proxy is only needed for LAN and self-hosted servers, which speak raw TCP/TLS.
+The client can also connect to the public **pokerth.net** server (guest or registered account) over a direct TLS WebSocket, bypassing the proxy. Please use that responsibly and prefer your own LAN or private server for regular play, out of respect for the official PokerTH infrastructure.
 
 ---
 
@@ -130,7 +130,7 @@ Browsers cannot open raw TCP/TLS connections to classic PokerTH servers. This pr
 Browser WebSocket  ⇄  proxy.js (Node.js)  ⇄  PokerTH TCP/TLS server
 ```
 
-For the pokerth.net public server, the browser connects **directly** to the official `wss://www.pokerth.net:443/pthlive` endpoint and the proxy is bypassed.
+When connecting to the public pokerth.net server, the browser connects directly over a TLS WebSocket and the proxy is bypassed.
 
 The proxy also serves the static files and relays two custom broadcast messages to all connected clients:
 
@@ -143,14 +143,14 @@ The proxy also serves the static files and relays two custom broadcast messages 
 
 ```text
 pokerth-web-client/
-├── proxy.js                 # WS→TCP/TLS proxy + static HTTP server (~14 KB)
+├── proxy.js                 # WS→TCP/TLS proxy + static HTTP server
 ├── public/
-│   ├── pokerth-client.html  # HTML shell + inline head scripts (~82 KB)
-│   ├── pokerth.js           # Full application logic (~217 KB)
-│   ├── pokerth.css          # Styles (~88 KB)
+│   ├── pokerth-client.html  # HTML shell + inline head scripts
+│   ├── pokerth.js           # Full application logic
+│   ├── pokerth.css          # Styles
 │   ├── manifest.json        # PWA manifest
 │   ├── sw.js                # Service Worker (versioned cache)
-│   ├── modules/             # ES modules (i18n, sounds)
+│   ├── modules/             # ES modules: i18n, sounds, and lang/ (9 locales)
 │   ├── proto/               # Protobuf bundle & helpers
 │   └── favicon-*.png        # PWA icons
 ├── docs/
@@ -389,7 +389,6 @@ PokerTH speaks a length-prefixed Protobuf-based protocol over TCP. This client p
 
 A few things worth knowing if you plan to hack on this:
 
-- The official PokerTH **v2.0** release (Feb 2026) dropped the `gsasl` dependency and **replaced SCRAM-SHA-1 with plain-text credentials inside the mandatory TLS tunnel**. Authenticated logins now simply set `InitMessage.login = authenticatedLogin (1)` and put the password (UTF-8, ≤ 256 bytes) into `InitMessage.clientUserData`.
 - The proxy logs every parsed message in hex with a short description, which makes protocol debugging straightforward (`pm2 logs pokerth-web` if you run under PM2).
 - Wire-type field numbers used by this client are documented inline in `public/pokerth.js` next to each `Proto.encode([...])` call, with references to `pokerth.proto` in the upstream repository.
 
@@ -398,7 +397,7 @@ A few things worth knowing if you plan to hack on this:
 ## Known limitations
 
 - The Protobuf protocol is still handled by a small hand-written encoder/decoder rather than generated classes.
-- The client code is mostly contained in a single JS file and would benefit from a module split.
+- The bulk of the logic still lives in a single `pokerth.js` file, though i18n, sounds and the protocol layer have already been extracted into ES modules. Further splitting would help.
 - More automated protocol tests are needed before calling the client production-ready.
 - Spectator mode works but lacks a few quality-of-life touches (e.g. you cannot see other players' cards at showdown the same way the native client does).
 
@@ -407,7 +406,7 @@ A few things worth knowing if you plan to hack on this:
 ## Roadmap / Suggested next steps
 
 1. Replace the hand-written Protobuf encoder/decoder with generated classes from `pokerth.proto`.
-2. Split the client into maintainable ES modules.
+2. Split the client into maintainable ES modules *(in progress — i18n, sounds and the protocol layer are already extracted)*.
 3. Add automated protocol tests with a mock PokerTH server.
 4. Polish reconnection edge cases (currently exponential backoff with a 5-attempt cap).
 5. More avatar options and a custom-emoji import.
