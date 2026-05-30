@@ -4532,7 +4532,11 @@ const App = (() => {
     //   yMulTop : seats in the upper half (sin<=0)
     //   yMulMe  : the local player (i=0), kept slightly lower than the other
     //             bottom seats to leave breathing room above the player-bar.
-    const yMulBot   = isMob ? 0.30 : (isSmall ? 0.40 : 0.18);
+    // The two bottom side-seats (the opponents flanking the local player)
+    // were overlapping the felt rim on phones, so on MOBILE ONLY we push
+    // them a little lower by raising yMulBot. The local player uses yMulMe
+    // and is unaffected; tablet (isSmall) and desktop keep their values.
+    const yMulBot   = isMob ? 0.44 : (isSmall ? 0.40 : 0.18);
     const yMulTop   = isMob ? 0.28 : (isSmall ? 0.34 : 0.18);
     // The seat sitting EXACTLY at the top-centre (sinAng ≈ -1, exists only
     // when n is even: 4, 6, 8, 10…) is lowered slightly toward the table
@@ -4554,6 +4558,9 @@ const App = (() => {
     const ryBot = Math.min(ryBotRaw,  zRect.height - oCY - margin);
     const ryMe  = Math.min(ryMeRaw,   zRect.height - oCY - margin);
     const stepA = 360 / n;
+    // Lowest allowed vertical centre for a bottom seat (same floor the local
+    // player's clamp already enforces): keeps seats above the player-bar.
+    const botFloor = zRect.height - margin;
     const pixPos = rotated.map(function(_, i) {
       var ang = (90 - i * stepA) * Math.PI / 180;
       var sinAng = Math.sin(ang);
@@ -4566,7 +4573,18 @@ const App = (() => {
       else if (sinAng > 0)      ry = ryBot;
       else if (sinAng < -0.95)  ry = ryTopC;
       else                      ry = ryTop;
-      return { top: oCY + ry*sinAng, left: oCX + rxPx*Math.cos(ang) };
+      var topPos = oCY + ry * sinAng;
+      // MOBILE ONLY: the two bottom side-seats (opponents flanking the local
+      // player) only project sinAng (~0.5) of the radius downward, so the
+      // radius-level clamp on ryBot keeps them too high — overlapping the felt
+      // rim. Recompute them from the UNCLAMPED bottom radius and clamp the
+      // final position instead, so they drop just outside the rim. The local
+      // player (i===0) and the top seats are left exactly as before, and so
+      // are tablet/desktop.
+      if (isMob && i !== 0 && sinAng > 0) {
+        topPos = Math.min(oCY + ryBotRaw * sinAng, botFloor);
+      }
+      return { top: topPos, left: oCX + rxPx*Math.cos(ang) };
     });
     // ── Calcul SB / BB à partir du dealer ──
     // We must SKIP seats whose player has left (.gone) -- otherwise
