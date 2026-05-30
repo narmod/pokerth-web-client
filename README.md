@@ -160,7 +160,7 @@ pokerth-web-client/
 │   └── screenshots/         # Screenshots used in this README
 ├── scripts/
 │   └── build-proto.mjs      # Regenerates the protobuf bundle from .proto
-├── install.sh               # One-line installer (Node.js + PM2 + service)
+├── install.sh               # Installer / updater / uninstaller (one-liner)
 ├── Dockerfile               # Multi-arch image (node:20-alpine base)
 ├── docker-compose.yml       # One-shot self-host config
 ├── package.json
@@ -216,6 +216,24 @@ Example:
 PORT=8090 NO_TLS=1 ASSUME_YES=1 \
   bash -c "$(curl -sSL https://raw.githubusercontent.com/narmod/pokerth-web-client/HEAD/install.sh)"
 ```
+
+### Updating and uninstalling
+
+After a first install, a `pokerth-web` command is available to manage the service:
+
+```bash
+sudo pokerth-web update      # pull the latest version, reinstall deps, restart
+sudo pokerth-web uninstall   # stop and remove the service
+pokerth-web status           # show the PM2 status
+```
+
+The same actions work through the one-liner if you prefer not to use the command:
+
+```bash
+curl -sSL https://raw.githubusercontent.com/narmod/pokerth-web-client/HEAD/install.sh | bash -s -- update
+```
+
+`uninstall` removes the PM2 service, its boot entry, the state file and the `pokerth-web` command, then asks separately before deleting the install directory or the dedicated service user. It never touches Node.js, PM2 or apt packages.
 
 For HTTPS (recommended — many mobile browsers block plain `ws://`), follow the Nginx + Let's Encrypt steps in the manual installation below.
 
