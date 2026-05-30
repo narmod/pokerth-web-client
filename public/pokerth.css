@@ -640,6 +640,16 @@ body {
   flex-shrink: 0;
 }
 .header-brand span { opacity: 0.6; font-size: 1.1em; }
+/* The lobby ♠ is a tap target to reveal/hide the POKERTH word on phones. */
+#lobby-brand .brand-suit {
+  cursor: pointer;
+  transition: opacity 0.15s, transform 0.15s;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+#lobby-brand .brand-suit:hover { opacity: 0.95; }
+#lobby-brand .brand-suit:active { transform: scale(0.85); }
+#lobby-brand.brand-open .brand-suit { opacity: 1; }
 
 .header-pills {
   flex: 1;
@@ -1367,7 +1377,24 @@ body {
      space: collapse the brand to just the ♠ glyph, drop the standalone
      Fullscreen + language buttons (both still reachable via the ••• menu),
      and tighten the gap. The pills (flex:1) then get the room they need. */
-  #s-lobby .header-brand .brand-text { display: none; }
+  /* The ♠ acts as a toggle: tap it to slide POKERTH in/out. Collapsed by
+     default on narrow screens (max-width:0 + fade), expanded when JS adds
+     .brand-open to #lobby-brand. The width transition gives the small
+     reveal effect. */
+  #s-lobby .header-brand .brand-text {
+    display: inline-block;
+    max-width: 0;
+    opacity: 0;
+    overflow: hidden;
+    white-space: nowrap;
+    transition: max-width 0.28s ease, opacity 0.22s ease, margin 0.28s ease;
+    margin-left: 0;
+  }
+  #s-lobby #lobby-brand.brand-open .brand-text {
+    max-width: 8em;
+    opacity: 1;
+    margin-left: 0;
+  }
   #s-lobby #fs-btn-lobby,
   #s-lobby #lang-toggle-lobby { display: none; }
   #s-lobby .header { gap: 6px; padding: 3px 8px; }

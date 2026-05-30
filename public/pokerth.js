@@ -6956,6 +6956,21 @@ function closeLobbyOverflow() {
   var m = document.getElementById('l-overflow-menu');
   if (m) m.classList.remove('open');
 }
+// Lobby brand: tap the ♠ to slide the POKERTH word in/out. Only matters on
+// narrow screens (CSS keeps the word always visible on wide ones). Auto-folds
+// again after a few seconds so it doesn't permanently re-crowd the header.
+var _brandFoldTimer = null;
+function toggleBrandName() {
+  var b = document.getElementById('lobby-brand');
+  if (!b) return;
+  var nowOpen = b.classList.toggle('brand-open');
+  clearTimeout(_brandFoldTimer);
+  if (nowOpen) {
+    _brandFoldTimer = setTimeout(function () {
+      b.classList.remove('brand-open');
+    }, 4000);
+  }
+}
 // Fermer le menu si on clique ailleurs (game + lobby)
 document.addEventListener('click', function(e) {
   var btn = document.getElementById('g-overflow-btn');

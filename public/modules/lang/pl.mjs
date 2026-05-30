@@ -378,6 +378,7 @@ export const strings = {
     connectedAsGuest: 'Połączono jako gość „{name}" (ID {id})',
     errBadCreds: '⚠ Nieprawidłowe dane pokerth.net (nazwa użytkownika lub hasło).',
     serverRequiresAuth: '⚠ Ten serwer wymaga uwierzytelnienia. Przełącz się na konto pokerth.net lub logowanie gościa.',
+    brandToggleTooltip: 'Pokaż / ukryj nazwę',
     canReconnect: '✅ Możesz się teraz ponownie połączyć.',
     waitBeforeRetry: '⏸ Poczekaj {n}s przed ponowną próbą…',
     invalidUrl: 'Nieprawidłowy URL: {msg}',

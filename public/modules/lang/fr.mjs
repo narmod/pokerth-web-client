@@ -217,6 +217,7 @@ export const strings = {
     connectedAsGuest:'Connect\u00e9 en tant qu\u2019invit\u00e9 \u00ab\u202f{name}\u202f\u00bb (ID {id})',
     errBadCreds:'\u26a0 Identifiants pokerth.net invalides (utilisateur ou mot de passe).',
     serverRequiresAuth:'\u26a0 Ce serveur exige une authentification. Choisissez un compte pokerth.net ou le mode invité.',
+    brandToggleTooltip:'Afficher / masquer le nom',
     canReconnect:'\u2705 Vous pouvez vous reconnecter.',
     waitBeforeRetry:'\u23f8 Attendez {n}s avant de retenter\u2026',
     invalidUrl:'URL invalide : {msg}',

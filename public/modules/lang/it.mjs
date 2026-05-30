@@ -377,6 +377,7 @@ export const strings = {
     connectedAsGuest: 'Connesso come ospite «{name}» (ID {id})',
     errBadCreds: '⚠ Credenziali pokerth.net non valide (nome utente o password).',
     serverRequiresAuth: '⚠ Questo server richiede l\'autenticazione. Passa a un account pokerth.net o al login ospite.',
+    brandToggleTooltip: 'Mostra / nascondi il nome',
     canReconnect: '✅ Ora puoi riconnetterti.',
     waitBeforeRetry: '⏸ Attendi {n}s prima di riprovare…',
     invalidUrl: 'URL non valido: {msg}',

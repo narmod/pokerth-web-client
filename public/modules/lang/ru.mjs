@@ -377,6 +377,7 @@ export const strings = {
     connectedAsGuest: 'Подключено как гость «{name}» (ID {id})',
     errBadCreds: '⚠ Неверные данные pokerth.net (имя пользователя или пароль).',
     serverRequiresAuth: '⚠ Этот сервер требует аутентификации. Войдите через аккаунт pokerth.net или как гость.',
+    brandToggleTooltip: 'Показать / скрыть название',
     canReconnect: '✅ Теперь можно переподключиться.',
     waitBeforeRetry: '⏸ Подождите {n}с перед повторной попыткой…',
     invalidUrl: 'Неверный URL: {msg}',

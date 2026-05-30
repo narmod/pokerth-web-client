@@ -797,7 +797,7 @@ function selectAvatarPopup(emoji) {
 <!-- ╚════════════════════╝ -->
 <div id="s-lobby" class="screen">
   <div class="header">
-    <div class="header-brand"><span>♠</span> <span class="brand-text">POKERTH</span></div>
+    <div class="header-brand" id="lobby-brand"><span class="brand-suit" onclick="toggleBrandName()" role="button" tabindex="0" title="Afficher / masquer le nom" data-i18n-title="brandToggleTooltip">♠</span> <span class="brand-text">POKERTH</span></div>
     <div class="header-pills">
       <span class="pill pill-clickable" id="h-nick" onclick="openPlayerInfoPopup()" title="Mon profil" data-i18n-title="profileTooltip">—</span>
       <span class="pill" id="h-players" onclick="togglePlayersPanel()" style="cursor:pointer">—</span>

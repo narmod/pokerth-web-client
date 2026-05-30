@@ -217,6 +217,7 @@ export const strings = {
     connectedAsGuest:'Connected as guest \u201c{name}\u201d (ID {id})',
     errBadCreds:'\u26a0 Invalid pokerth.net credentials (username or password).',
     serverRequiresAuth:'\u26a0 This server requires authentication. Switch to a pokerth.net account or guest login.',
+    brandToggleTooltip:'Show / hide the name',
     canReconnect:'\u2705 You can reconnect now.',
     waitBeforeRetry:'\u23f8 Wait {n}s before retrying\u2026',
     invalidUrl:'Invalid URL: {msg}',
