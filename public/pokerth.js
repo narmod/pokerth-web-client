@@ -3742,8 +3742,8 @@ const App = (() => {
               var myPair2 = myCards.map && myCards.map(function(c){ return { r: cardName(c,false).slice(0,-1), s: cardName(c,false).slice(-1), red: ['♥','♦'].indexOf(cardName(c,false).slice(-1))>=0 }; });
               recordHand(true, netWin, myPair2);
             }
-            addChat(null, '🏆 ' + getPlayerName(pid) + ' ' + t('wins') + ' ' + won + ' ¥!', 'sys');
-            logAction('🏆 ' + getPlayerName(pid) + ' +' + won);
+            // Gain affiché dans le Journal 📋 (pas dans le chat, pour ne pas le noyer)
+            logAction('🏆 ' + getPlayerName(pid) + ' +' + _groupThousands(won));
         speak(t('voiceWins', { name: getPlayerName(pid), n: won }));
           }
         }
@@ -3794,7 +3794,7 @@ const App = (() => {
         const won  = Proto.u32(sub, 3);
         const cash = Proto.u32(sub, 4);
         if (seatData[pid]) { seatData[pid].money = cash; if(won) seatData[pid].action = '+'+won; }
-        if (won > 0) addChat(null, getPlayerName(pid) + ' gagne ' + won + ' jetons', 'sys');
+        if (won > 0) logAction('🏆 ' + getPlayerName(pid) + ' +' + _groupThousands(won));
         // Enregistrer le résultat de la main pour moi (fin sans abattage).
         var myHideMon = (seatData[myId] || {}).money;
         if (myHideMon != null) {
