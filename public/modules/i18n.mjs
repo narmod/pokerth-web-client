@@ -27,13 +27,16 @@ import trLang from './lang/tr.mjs';
 import ukLang from './lang/uk.mjs';
 import jaLang from './lang/ja.mjs';
 import svLang from './lang/sv.mjs';
+import nbLang from './lang/nb.mjs';
+import daLang from './lang/da.mjs';
+import fiLang from './lang/fi.mjs';
 
 // ── Language registry ───────────────────────────────────────────────────
 // Single place to wire a language. To add one: create ./lang/<code>.mjs
 // (copy en.mjs and translate), add an import above, then add it here.
 // LANG (the string tables) and LANG_META (flag / label / dir) are assembled
 // automatically from each module's exports — no other code changes needed.
-const LANG_MODULES = { en: enLang, fr: frLang, de: deLang, es: esLang, it: itLang, pt: ptLang, nl: nlLang, pl: plLang, ru: ruLang, zh: zhLang, tr: trLang, uk: ukLang, ja: jaLang, sv: svLang };
+const LANG_MODULES = { en: enLang, fr: frLang, de: deLang, es: esLang, it: itLang, pt: ptLang, nl: nlLang, pl: plLang, ru: ruLang, zh: zhLang, tr: trLang, uk: ukLang, ja: jaLang, sv: svLang, nb: nbLang, da: daLang, fi: fiLang };
 
 const LANG = {};
 const LANG_META = {};
@@ -76,6 +79,11 @@ let _lang = (function(){
         //    speaker whose language we support. Fall back to English.
         var bl = (navigator.language || '').toLowerCase().split('-')[0];
         if (avail.indexOf(bl) !== -1) return bl;
+        // 2b. A few locale codes don't match their catalogue code 1:1.
+        //    Norwegian browsers report 'nb', 'nn' or the macrolanguage 'no';
+        //    map them all onto the Bokmål catalogue we ship.
+        var alias = { no: 'nb', nn: 'nb' };
+        if (alias[bl] && avail.indexOf(alias[bl]) !== -1) return alias[bl];
         return 'en';
     } catch (e) {
         return 'en';
