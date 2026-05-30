@@ -20,7 +20,7 @@ const fs   = require('fs');
 const path = require('path');
 
 const args        = process.argv.slice(2);
-const PROXY_PORT  = parseInt(args.find(a => /^\d+$/.test(a)) || '8080', 10);
+const PROXY_PORT  = parseInt(args.find(a => /^\d+$/.test(a)) || process.env.PORT || '8080', 10);
 const FORCE_NOTLS = args.includes('--notls');
 const INSECURE_TLS = args.includes('--insecure');
 
@@ -175,7 +175,7 @@ function describeMsg(payload) {
 // Lightweight per-nickname lifetime snapshots, persisted to stats.json next
 // to this file. Each web client pushes only its OWN player's snapshot, so
 // there is no double counting and last-write-wins per name is correct.
-const STATS_FILE = path.join(__dirname, 'stats.json');
+const STATS_FILE = process.env.STATS_FILE || path.join(__dirname, 'stats.json');
 let statsStore = {};
 try { statsStore = JSON.parse(fs.readFileSync(STATS_FILE, 'utf8')) || {}; } catch (e) { statsStore = {}; }
 let _statsSaveTimer = null;

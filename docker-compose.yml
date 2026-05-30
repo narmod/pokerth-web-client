@@ -1,6 +1,29 @@
 services:
   pokerth-web-client:
     build: .
+    # Left side = host port (configurable via .env). The container always
+    # listens on 8080 internally.
     ports:
-      - "8080:8080"
+      - "${PORT:-8080}:8080"
+    environment:
+      # Comma-separated allowlist of PokerTH servers the proxy is allowed to
+      # dial. pokerth.net is included by default. ADD YOUR OWN SERVER HERE,
+      # otherwise the proxy refuses the connection ("Host not in allowlist").
+      # If your PokerTH server runs on the SAME machine as Docker, use
+      # host.docker.internal (Docker Desktop) or the host's LAN IP — NOT
+      # "localhost", which points to the container itself.
+      - ALLOWED_HOSTS=${ALLOWED_HOSTS:-pokerth.net,www.pokerth.net}
+    volumes:
+      # Persist per-player session statistics (written to /data/stats.json,
+      # see STATS_FILE in the Dockerfile) across container recreation.
+      - pokerth-stats:/data
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1:8080/"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+volumes:
+  pokerth-stats:

@@ -475,13 +475,36 @@ npm run start:insecure
 
 ### Docker
 
-The repository ships with a `Dockerfile` and a `docker-compose.yml` for one-command self-hosting:
+The repository ships with a `Dockerfile` and a `docker-compose.yml` for one-command self-hosting.
+
+**1. Configure the allowlist.** For anti-open-relay reasons the proxy only dials servers on an allowlist. `pokerth.net` works out of the box, but to reach **your own** LAN / private server you must add it. Copy the example env file and edit it:
+
+```bash
+cp .env.example .env
+# then edit .env and add your server to ALLOWED_HOSTS
+```
+
+```dotenv
+# .env
+PORT=8080
+ALLOWED_HOSTS=pokerth.net,www.pokerth.net,mybox.ddns.net,192.168.1.10
+```
+
+> If your PokerTH server runs on the **same machine** as Docker, use `host.docker.internal` (Docker Desktop) or the host's LAN IP in both `ALLOWED_HOSTS` and the connect form — **not** `localhost`, which from inside the container points to the container itself.
+
+**2. Start it:**
 
 ```bash
 docker compose up -d
 ```
 
-The proxy will be available on `http://<host>:8080/`.
+The proxy will be available on `http://<host>:8080/` (or whatever `PORT` you set).
+
+Notes:
+- The container runs as the non-root `node` user.
+- Per-player session statistics are persisted in a named volume (`pokerth-stats`), so they survive `docker compose down && up`.
+- A healthcheck pings the HTTP server every 30 s; `docker ps` shows the container as `healthy` once it is up.
+- `PORT` only changes the **published host port** — the container always listens on `8080` internally.
 
 </details>
 
