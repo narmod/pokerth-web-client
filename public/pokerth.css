@@ -1360,6 +1360,18 @@ body {
     min-width: 0;
   }
   #s-game .header { gap: 4px; padding: 3px 8px; }
+
+  /* ── Lobby header on narrow phones ──
+     On small/large-font devices the "POKERTH" word + redundant buttons
+     squeezed the name + player-count pills (they got clipped). Free the
+     space: collapse the brand to just the ♠ glyph, drop the standalone
+     Fullscreen + language buttons (both still reachable via the ••• menu),
+     and tighten the gap. The pills (flex:1) then get the room they need. */
+  #s-lobby .header-brand .brand-text { display: none; }
+  #s-lobby #fs-btn-lobby,
+  #s-lobby #lang-toggle-lobby { display: none; }
+  #s-lobby .header { gap: 6px; padding: 3px 8px; }
+  #s-lobby .header-pills { flex: 1; min-width: 0; }
 }
 
 
