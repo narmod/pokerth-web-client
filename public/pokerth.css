@@ -1564,14 +1564,17 @@ body {
   .react-grid { grid-template-columns: repeat(15, 1fr); max-width: none; }
 }
 @media (max-width: 600px) {
-  /* Phone: 9 columns → 4 lines (9+9+9+3), validated for thumb comfort.
-     Cap height with a scroll fallback so the panel never eats more than
-     ~4 rows of the table if the reaction set grows later. */
+  /* Phone: 10 columns → 3 lines (10+10+10). Tighter gap + the panel
+     padding reduction below reclaim width so cells stay ~36px even at
+     10 across. Height cap + scroll as a safety net. */
   .react-grid {
-    grid-template-columns: repeat(9, 1fr);
+    grid-template-columns: repeat(10, 1fr);
+    gap: 2px;
     max-height: min(180px, 26dvh);
     overflow-y: auto;
   }
+  /* Use nearly the full panel width on phones (was 14px each side). */
+  #g-reaction-panel { padding: 8px 5px 9px; }
 }
 .react-btn {
   aspect-ratio: 1;       /* square, height follows the column width */
@@ -1579,7 +1582,7 @@ body {
   background: rgba(255,255,255,0.04);
   border: 1px solid var(--border);
   border-radius: 5px;
-  font-size: 1.15rem;    /* desktop emoji size (cells ~34px) */
+  font-size: 1.3rem;     /* desktop emoji size (cells ~34px) */
   cursor: pointer;
   display: flex; align-items: center; justify-content: center;
   transition: transform 0.12s ease, background 0.12s, border-color 0.12s;
@@ -1588,11 +1591,11 @@ body {
 }
 @media (max-width: 900px) {
   /* Tablet: bigger cells → bigger glyphs. */
-  .react-btn { font-size: 1.5rem; }
+  .react-btn { font-size: 1.7rem; }
 }
 @media (max-width: 600px) {
-  /* Phone (9 cols ≈ 38–40px cells). */
-  .react-btn { font-size: 1.2rem; }
+  /* Phone (10 cols ≈ 36px cells): fill the cell more. */
+  .react-btn { font-size: 1.45rem; }
 }
 .react-btn:hover {
   background: rgba(200,168,74,0.15);
