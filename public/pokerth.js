@@ -906,6 +906,8 @@ document.addEventListener("DOMContentLoaded", function() {
     var savedAv = localStorage.getItem('pth_avatar') || '';
     selectAvatarPopup(savedAv);
   } catch(e) {}
+  // Initialiser l'apparence du bouton d'assistance (état mémorisé).
+  try { if (typeof window._applyAssistUI === 'function') window._applyAssistUI(); } catch(e) {}
   // Restore sound button state
   var sbtn = document.getElementById('sound-toggle-btn');
   if (sbtn && !_soundEnabled) {
@@ -1608,6 +1610,10 @@ const App = (() => {
   let gameState = 0;   // preflop/flop/turn/river
   let _playerAvatars = {}; // pid → emoji avatar (reçu des autres joueurs via proxy)
   let _playerImgAvatars = {}; // pid → data URL (avatar image perso diffusé via proxy)
+  // Assistance (aide « force de la main » affichée au-dessus des actions) :
+  // activée par défaut, mémorisée localement. '0' = désactivée.
+  let _assistOn = true;
+  try { _assistOn = (localStorage.getItem('pth_assist') !== '0'); } catch(e) {}
   // Step 1 of "PokerTH official avatar" feature: when PlayerInfoReply
   // arrives for a registered player who uploaded an avatar on pokerth.net,
   // it carries an AvatarData sub-message (field 5) with the hash + format.
@@ -4635,6 +4641,7 @@ const App = (() => {
   function renderPreFlopStrength() {
     var el = document.getElementById('hand-strength');
     if (!el) return;
+    if (!_assistOn) { el.style.display = 'none'; return; } // assistance désactivée
     if (commCards.filter(function(c){ return c!=null; }).length > 0) return;
     if (myCards[0] == null || myCards[1] == null) { el.style.display='none'; return; }
     var res = evaluatePreFlopHand(myCards[0], myCards[1]);
@@ -4653,6 +4660,7 @@ const App = (() => {
   function renderHandStrength() {
     var el = document.getElementById('hand-strength');
     if (!el) return;
+    if (!_assistOn) { el.style.display = 'none'; return; } // assistance désactivée
     var validComm = commCards.filter(function(c){ return c != null; });
     if (myCards[0] == null || myCards[1] == null || validComm.length === 0) {
       el.style.display = 'none';
@@ -5595,6 +5603,32 @@ const App = (() => {
     } catch(e) {}
   }
   window._rebroadcastAvatar = _rebroadcastAvatar;
+
+  // ── Assistance (aide « force de la main ») : bouton activer/désactiver ──
+  // Met à jour l'apparence du bouton et affiche/masque l'aide immédiatement.
+  function _applyAssistUI() {
+    var btn = document.getElementById('assist-toggle');
+    if (btn) {
+      btn.style.opacity = _assistOn ? '1' : '0.5';
+      btn.style.borderColor = _assistOn ? 'var(--gold-dim)' : 'var(--border)';
+    }
+    var dot = document.getElementById('assist-dot');
+    if (dot) dot.style.color = _assistOn ? '#3fb950' : '#777';
+    var hs = document.getElementById('hand-strength');
+    if (!_assistOn) {
+      if (hs) hs.style.display = 'none';
+    } else {
+      // Réafficher l'aide adaptée à la phase courante.
+      var nComm = (commCards || []).filter(function(c){ return c != null; }).length;
+      if (nComm > 0) renderHandStrength(); else renderPreFlopStrength();
+    }
+  }
+  window._applyAssistUI = _applyAssistUI;
+  window.toggleAssist = function() {
+    _assistOn = !_assistOn;
+    try { localStorage.setItem('pth_assist', _assistOn ? '1' : '0'); } catch(e) {}
+    _applyAssistUI();
+  };
 
   function renderMyTurnActions() {
     // Defensive: never render action buttons in spectator mode. The
