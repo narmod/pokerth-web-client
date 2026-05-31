@@ -2329,10 +2329,10 @@ const App = (() => {
     var label = _voiceEnabled ? t('voiceOn') : t('voiceOff');
     if (typeof showKeyHint === 'function') showKeyHint(label);
     var b = document.getElementById('voice-toggle-mob');
-    if (b) b.innerHTML = (_voiceEnabled ? '🗣️' : '🔇') + ' ' + t('voiceLabel');
+    if (b) b.innerHTML = (_voiceEnabled ? '🗣️' : '🤐') + ' ' + t('voiceLabel');
     // Direct header twin (tablet/desktop): icon-only.
     var vd = document.getElementById('voice-toggle-btn');
-    if (vd) vd.textContent = (_voiceEnabled ? '🗣️' : '🔇');
+    if (vd) vd.textContent = (_voiceEnabled ? '🗣️' : '🤐');
     // Spoken confirmation (also primes the engine on first user gesture).
     if (_voiceEnabled) speak(t('voiceOn'));
     else if ('speechSynthesis' in window) { try { window.speechSynthesis.cancel(); } catch(e) {} }
@@ -2340,13 +2340,13 @@ const App = (() => {
   }
   window.toggleVoice = toggleVoice;
   // Sync the direct (tablet/desktop) header toggle icons with the persisted
-  // state on load, so 📳/📴 and 🗣️/🔇 reflect reality before any toggle.
+  // state on load, so 📳/📴 and 🗣️/🤐 reflect reality before any toggle.
   function _syncMediaToggleButtons() {
     try {
       var hb = document.getElementById('haptic-toggle-btn');
       if (hb) hb.textContent = (_hapticEnabled ? '📳' : '📴');
       var vb = document.getElementById('voice-toggle-btn');
-      if (vb) vb.textContent = (_voiceEnabled ? '🗣️' : '🔇');
+      if (vb) vb.textContent = (_voiceEnabled ? '🗣️' : '🤐');
     } catch(e) {}
   }
   window._syncMediaToggleButtons = _syncMediaToggleButtons;
@@ -2382,7 +2382,7 @@ const App = (() => {
     if (!_showAutoBtn) _autoCheckFold = false; // disarm when hiding
     try { document.body.classList.toggle('hide-auto-btn', !_showAutoBtn); } catch (e) {}
     var b = document.getElementById('auto-pref-mob');
-    if (b) b.innerHTML = (_showAutoBtn ? '\u2611' : '\u2610') + ' ' + t('autoBtnLabel');
+    if (b) b.innerHTML = '\u23E9 ' + t('autoBtnLabel') + (_showAutoBtn ? ' \u2713' : '');
     return _showAutoBtn;
   }
   window.toggleAutoBtnPref = toggleAutoBtnPref;
@@ -7176,13 +7176,13 @@ function toggleHeaderOverflow(e) {
       hb.innerHTML = (on ? '📳' : '📴') + ' ' + t('hapticLabel');
     }
   } catch(e4) {}
-  // Same for the voice-announcement toggle (🗣️ = on, 🔇 = off).
+  // Same for the voice-announcement toggle (🗣️ = on, 🤐 = off).
   try {
     var vb = document.getElementById('voice-toggle-mob');
     if (vb) {
       var von = false;
       try { von = localStorage.getItem('pth_voice') === '1'; } catch(e5) {}
-      vb.innerHTML = (von ? '🗣️' : '🔇') + ' ' + t('voiceLabel');
+      vb.innerHTML = (von ? '🗣️' : '🤐') + ' ' + t('voiceLabel');
     }
   } catch(e6) {}
   // Same for the chip-display toggle (short "BB / ¥", active side in gold).
@@ -7202,7 +7202,7 @@ function toggleHeaderOverflow(e) {
     if (ab) {
       var aon = false;
       try { aon = localStorage.getItem('pth_show_auto') === '1'; } catch(e9) {}
-      ab.innerHTML = (aon ? '\u2611' : '\u2610') + ' ' + t('autoBtnLabel');
+      ab.innerHTML = '\u23E9 ' + t('autoBtnLabel') + (aon ? ' \u2713' : '');
     }
   } catch(e10) {}
   m.classList.toggle('open');
