@@ -4173,6 +4173,12 @@ body:not(.in-game) .my-zone {
 }
 .game-row.gcard .btn-watch:hover { border-color: var(--gold-dim); color: var(--gold); background: rgba(255,255,255,0.06); }
 
+/* Mobile (cards stacked): make the Rejoindre / Regarder buttons shorter. */
+@media (max-width: 639px) {
+  .game-row.gcard .btn-join  { padding: 5px 10px; font-size: 0.8rem; }
+  .game-row.gcard .btn-watch { padding: 5px 12px; font-size: 0.95rem; }
+}
+
 /* ── Téléphone (base) : boutons SOUS la carte, texte lisible ──
    ── Tablette (≥640) : boutons sur le FLANC DROIT, texte un cran plus grand ──
    ── Ordinateur (≥1024) : texte plus grand encore ── */
