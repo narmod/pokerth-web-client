@@ -11,6 +11,7 @@
 #   sudo pokerth-web update
 #   sudo pokerth-web uninstall
 #   pokerth-web status
+#   sudo pokerth-web reset-stats
 #
 # Prefer to read before you run? (recommended for any curl|bash installer):
 #   curl -sSL .../install.sh -o install.sh ; less install.sh ; bash install.sh
@@ -314,6 +315,7 @@ SUMMARY
     sudo pokerth-web update      # pull latest + restart
     sudo pokerth-web uninstall   # remove the service
     pokerth-web status           # show status
+    sudo pokerth-web reset-stats # reset the family leaderboard
 
   ${C_YELLOW}Recommended:${C_RESET} put Nginx + Let's Encrypt in front for HTTPS (many mobile
   browsers block plain ws://). See the README 'Manual installation' section.
@@ -427,6 +429,37 @@ do_status() {
   fi
 }
 
+# ── RESET STATS ───────────────────────────────────────────────────────────────
+do_reset_stats() {
+  step "PokerTH Web Client — reset leaderboard"
+  load_state
+  [ -n "$RUN_USER" ] || RUN_USER="$(id -un)"
+  if [ -z "$INSTALL_DIR" ] || [ ! -f "$INSTALL_DIR/scripts/reset-stats.mjs" ]; then
+    INSTALL_DIR="$(ask 'Path to the existing install' "${INSTALL_DIR:-$HOME/pokerth-web-client}")"
+  fi
+  [ -f "$INSTALL_DIR/scripts/reset-stats.mjs" ] || {
+    errln "reset-stats.mjs not found in $INSTALL_DIR — run 'pokerth-web update' first."; exit 1; }
+  warn "This wipes the shared family leaderboard (stats.json)."
+  warn "Per-device session stats (in each browser) are NOT affected."
+  if [ "${ASSUME_YES:-}" = "1" ]; then
+    :
+  elif [ "$HAS_TTY" -eq 1 ]; then
+    ask_yn 'Reset the leaderboard now?' 'N' || { info "Aborted. Nothing was changed."; exit 0; }
+  else
+    errln "Refusing to reset non-interactively. Re-run with ASSUME_YES=1 to force."
+    exit 1
+  fi
+  info "Clearing the leaderboard"
+  run_as node "$INSTALL_DIR/scripts/reset-stats.mjs"
+  info "Restarting PM2 process so the running proxy drops its in-memory copy"
+  if command -v pm2 >/dev/null 2>&1 && run_as pm2 describe "$APP_NAME" >/dev/null 2>&1; then
+    run_as pm2 restart "$APP_NAME" --update-env
+  else
+    warn "PM2 process '$APP_NAME' not found — restart the proxy manually if it is running."
+  fi
+  ok "Leaderboard reset."
+}
+
 usage() {
   cat <<USAGE
 PokerTH Web Client installer
@@ -438,6 +471,7 @@ Commands:
   update      Pull the latest version and restart
   uninstall   Stop and remove the service
   status      Show the current status
+  reset-stats Reset the shared family leaderboard (stats.json)
   help        Show this help
 
 Via the one-liner, pass a command after '-- ':
@@ -452,6 +486,7 @@ case "$CMD" in
   update)         do_update ;;
   uninstall)      do_uninstall ;;
   status)         do_status ;;
+  reset-stats|stats-reset) do_reset_stats ;;
   help|-h|--help) usage ;;
   *) errln "Unknown command: $CMD"; echo; usage; exit 1 ;;
 esac

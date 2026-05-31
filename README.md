@@ -573,7 +573,13 @@ The shared leaderboard (per-nickname **lifetime** stats) lives in `stats.json` o
 
 **Automatic reset.** The `STATS_RESET_PERIOD` environment variable controls how often the leaderboard wipes itself — `off`, `daily`, `monthly` (**default**) or `yearly`. The boundary is the server's local time, and the current period is remembered, so a restart never triggers a false reset.
 
-**On-demand reset — command line:**
+**On-demand reset — command line.** If you used the one-liner installer, a single command wipes the leaderboard and restarts the service:
+
+```bash
+sudo pokerth-web reset-stats
+```
+
+From a manual checkout, do it by hand:
 
 ```bash
 npm run stats:reset          # empties stats.json
