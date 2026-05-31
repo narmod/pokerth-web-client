@@ -5424,7 +5424,7 @@ const App = (() => {
         ' id="auto-cf-btn" onclick="App.toggleAutoCheckFold()"' +
         ' aria-pressed="' + (_autoCheckFold ? 'true' : 'false') + '"' +
         ' title="' + autoLabel + ' \u2014 ' + t('autoRearmHint') + '">' +
-        '<span class="auto-ic">\u23E9</span>' +
+        '<svg class="auto-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5 L11 12 L3 19 Z M12 5 L20 12 L12 19 Z" fill="currentColor"/></svg>' +
         '<span class="auto-tx">' + autoLabel + '</span>' +
         '</button>';
     }

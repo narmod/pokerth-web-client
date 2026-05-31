@@ -2518,16 +2518,27 @@ body {
 /* Compact auto check/fold toggle, sits next to Call/Check. Discreet at
    rest; turns green when armed for the next turn. Icon-only on narrow. */
 .btn-auto {
-  background: rgba(200,168,74,0.10);
-  color: var(--gold-dim);
+  flex: 0 0 auto;
+  min-width: 46px;
+  display: inline-flex; align-items: center; justify-content: center; gap: 7px;
+  background: rgba(200,168,74,0.08);
+  color: var(--gold);
   border: 1px solid var(--border);
-  display: inline-flex; align-items: center; gap: 6px;
-  font-size: 0.66rem;
+  font-size: 0.68rem;
 }
-.btn-auto .auto-ic { font-size: 1em; line-height: 1; }
-.btn-auto.armed { background: rgba(39,174,96,0.28); border-color: var(--green); color: #d7ffe0; }
-.action-top-row .btn-auto { flex: 0 0 auto; min-width: 0; }
-@media (max-width: 480px) { .btn-auto .auto-tx { display: none; } }
+.btn-auto .auto-ic { width: 16px; height: 16px; display: block; flex: none; }
+.btn-auto:hover { background: rgba(200,168,74,0.15); border-color: var(--gold-dim); }
+.btn-auto.armed {
+  background: rgba(39,174,96,0.22);
+  border-color: var(--green);
+  color: #d7ffe0;
+  box-shadow: 0 0 0 1px rgba(39,174,96,0.35), 0 0 12px rgba(39,174,96,0.25);
+}
+.action-top-row .btn-auto { flex: 0 0 auto; min-width: 46px; }
+@media (max-width: 480px) {
+  .btn-auto .auto-tx { display: none; }
+  .btn-auto { min-width: 48px; }
+}
 /* All-In as a SECONDARY action: outlined, not a big red bar — avoids the
    red-on-red clash with Fold and discourages accidental taps. */
 .btn-allin {
@@ -2784,7 +2795,7 @@ body:not(.in-game) .my-zone {
 .action-top-row {
   display: flex; gap: 6px;
 }
-.action-top-row .btn-action { flex: 1; }
+.action-top-row .btn-action:not(.btn-auto) { flex: 1; }
 
 .pct-row {
   display: flex; gap: 5px;
