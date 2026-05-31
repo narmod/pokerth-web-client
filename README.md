@@ -130,6 +130,7 @@ This project is a **web frontend** that connects to any PokerTH server directly 
 - Anti-flicker cache so avatars survive seat re-renders
 - Bots always show 🤖
 - **Session statistics** panel (click your avatar): hands played, wins, win rate, net gain/loss, best/worst hand, last 5 hands with card history
+- **Family leaderboard** (LAN / private server): a shared per-nickname ranking persisted on the server, with a configurable automatic reset (off / daily / monthly / yearly) plus on-demand reset
 - **Win streak badge** on seats for players on a hot run
 
 ### Chat & reactions
@@ -204,7 +205,8 @@ pokerth-web-client/
 │   ├── SECURITY.md
 │   └── screenshots/         # Screenshots used in this README
 ├── scripts/
-│   └── build-proto.mjs      # Regenerates the protobuf bundle from .proto
+│   ├── build-proto.mjs      # Regenerates the protobuf bundle from .proto
+│   └── reset-stats.mjs      # Clears the family leaderboard (npm run stats:reset)
 ├── install.sh               # Installer / updater / uninstaller (one-liner)
 ├── Dockerfile               # Multi-arch image (node:20-alpine base)
 ├── docker-compose.yml       # One-shot self-host config
@@ -517,7 +519,8 @@ The proxy will be available on `http://<host>:8080/` (or whatever `PORT` you set
 
 Notes:
 - The container runs as the non-root `node` user.
-- Per-player session statistics are persisted in a named volume (`pokerth-stats`), so they survive `docker compose down && up`.
+- The shared **family leaderboard** (`stats.json`) is persisted in a named volume (`pokerth-stats`), so it survives `docker compose down && up`. (Per-device session stats live in each browser, not on the server.)
+- Set `STATS_RESET_PERIOD` (and optionally `STATS_ADMIN_TOKEN`) in `.env` to control the leaderboard auto-reset — see [Resetting the family leaderboard](#leaderboard-reset).
 - A healthcheck pings the HTTP server every 30 s; `docker ps` shows the container as `healthy` once it is up.
 - `PORT` only changes the **published host port** — the container always listens on `8080` internally.
 
