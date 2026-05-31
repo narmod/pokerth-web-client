@@ -433,7 +433,7 @@ export const strings = {
     kickTooltip: 'Dă afară jucător',
     closeTableTooltip: 'Închide masa',
     langTooltip: 'Schimbă limba',
-    fullscreenTooltip: 'Ecran complet',
+    fullscreenTooltip: 'Ecran complet', autoBtnLabel:'Buton Auto-fold', quickBetLabel:'Butoane de pariere rapidă',
     chatPlaceholder: 'Mesaj…',
     hintFold: 'F — Fold',
     hintCheck: 'C — Check',
