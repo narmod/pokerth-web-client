@@ -1170,6 +1170,143 @@ const Proto = (() => {
 
 
 // ═══════════════════════════════════════════════════════════
+//  PTHCrypto — déchiffrement des cartes (comptes pokerth.net)
+//
+//  Sur pokerth.net, un joueur AUTHENTIFIÉ (compte enregistré + mot de
+//  passe) reçoit ses deux cartes dans HandStartMessage.encryptedCards
+//  (champ 3) au lieu de plainCards (champ 2). Le serveur les chiffre en
+//  AES-128-CBC avec une clé/IV dérivés du mot de passe (SHA-1, sans sel),
+//  exactement comme CryptHelper::BytesToKey + AES128Encrypt côté serveur.
+//  Le plaintext déchiffré est : "uniqueId gameId handId card0 card1".
+//
+//  Implémentation AES pure-JS (déchiffrement seul) — Web Crypto ne sait
+//  pas déchiffrer du CBC zéro-paddé (il exige du padding PKCS#7).
+//  Validé contre un vecteur NIST + des vecteurs de référence générés
+//  avec le même schéma que le serveur PokerTH.
+// ═══════════════════════════════════════════════════════════
+const PTHCrypto = (function () {
+  // S-box / inverse S-box AES
+  const _sb = (function () {
+    const p = new Uint8Array(256), inv = new Uint8Array(256);
+    let pp = 1;
+    do {
+      pp = (pp ^ (pp << 1) ^ ((pp & 0x80) ? 0x11b : 0)) & 0xff;
+      // approche par table : on recalcule via l'affine standard
+    } while (false);
+    // Construction directe de la S-box (méthode classique log/exp GF(2^8))
+    const log = new Uint8Array(256), exp = new Uint8Array(256);
+    let x = 1;
+    for (let i = 0; i < 255; i++) { exp[i] = x; log[x] = i; x ^= ((x << 1) ^ ((x & 0x80) ? 0x11b : 0)) & 0xff; x &= 0xff; }
+    function inverse(a){ return a === 0 ? 0 : exp[(255 - log[a]) % 255]; }
+    for (let i = 0; i < 256; i++) {
+      let s = inverse(i), y = s;
+      for (let k = 0; k < 4; k++) { y = (y << 1) | (y >>> 7); s ^= (y & 0xff); }
+      s = (s ^ 0x63) & 0xff;
+      p[i] = s; inv[s] = i;
+    }
+    return { box: p, inv };
+  })();
+  const SBOX_F = _sb.box, INV_SBOX = _sb.inv;
+
+  function mul(a, b){ let r = 0; for (let i = 0; i < 8; i++){ if (b & 1) r ^= a; const hi = a & 0x80; a = (a << 1) & 0xff; if (hi) a ^= 0x1b; b >>= 1; } return r & 0xff; }
+  const RCON = [0x01,0x02,0x04,0x08,0x10,0x20,0x40,0x80,0x1b,0x36];
+
+  function expandKey(key){
+    const w = new Uint8Array(176);
+    w.set(key.subarray(0, 16));
+    let n = 16, rc = 0; const t = new Uint8Array(4);
+    while (n < 176){
+      for (let i = 0; i < 4; i++) t[i] = w[n - 4 + i];
+      if (n % 16 === 0){
+        const tmp = t[0]; t[0] = t[1]; t[1] = t[2]; t[2] = t[3]; t[3] = tmp;
+        for (let i = 0; i < 4; i++) t[i] = SBOX_F[t[i]];
+        t[0] ^= RCON[rc++];
+      }
+      for (let i = 0; i < 4; i++){ w[n] = w[n - 16] ^ t[i]; n++; }
+    }
+    return w;
+  }
+  function invShiftRows(s){
+    let t;
+    t = s[13]; s[13] = s[9]; s[9] = s[5]; s[5] = s[1]; s[1] = t;
+    t = s[2]; s[2] = s[10]; s[10] = t; t = s[6]; s[6] = s[14]; s[14] = t;
+    t = s[3]; s[3] = s[7]; s[7] = s[11]; s[11] = s[15]; s[15] = t;
+  }
+  function invMixColumns(s){
+    for (let c = 0; c < 4; c++){
+      const i = c * 4, a0 = s[i], a1 = s[i+1], a2 = s[i+2], a3 = s[i+3];
+      s[i]   = mul(a0,14)^mul(a1,11)^mul(a2,13)^mul(a3,9);
+      s[i+1] = mul(a0,9)^mul(a1,14)^mul(a2,11)^mul(a3,13);
+      s[i+2] = mul(a0,13)^mul(a1,9)^mul(a2,14)^mul(a3,11);
+      s[i+3] = mul(a0,11)^mul(a1,13)^mul(a2,9)^mul(a3,14);
+    }
+  }
+  function decryptBlock(rk, inB, off, out){
+    const s = new Uint8Array(16);
+    for (let i = 0; i < 16; i++) s[i] = inB[off + i];
+    for (let i = 0; i < 16; i++) s[i] ^= rk[160 + i];
+    for (let round = 9; round >= 1; round--){
+      invShiftRows(s);
+      for (let i = 0; i < 16; i++) s[i] = INV_SBOX[s[i]];
+      for (let i = 0; i < 16; i++) s[i] ^= rk[round * 16 + i];
+      invMixColumns(s);
+    }
+    invShiftRows(s);
+    for (let i = 0; i < 16; i++) s[i] = INV_SBOX[s[i]];
+    for (let i = 0; i < 16; i++) out[i] = s[i] ^ rk[i];
+  }
+  function cbcDecrypt(cipher, key, iv){
+    const rk = expandKey(key);
+    const out = new Uint8Array(cipher.length);
+    const block = new Uint8Array(16);
+    let prev = iv;
+    for (let off = 0; off + 16 <= cipher.length; off += 16){
+      decryptBlock(rk, cipher, off, block);
+      for (let i = 0; i < 16; i++) out[off + i] = block[i] ^ prev[i];
+      prev = cipher.subarray(off, off + 16);
+    }
+    return out;
+  }
+
+  async function _sha1(bytes){ return new Uint8Array(await crypto.subtle.digest('SHA-1', bytes)); }
+  // BytesToKey de PokerTH (SHA-1, sans sel) :
+  //   key = SHA1(SHA1(pwd))[0:16]
+  //   iv  = SHA1(SHA1(pwd))[16:20] ++ SHA1(SHA1( SHA1(SHA1(pwd))++pwd ))[0:12]
+  async function deriveKeyIv(pwdBytes){
+    const keyBuf1 = await _sha1(await _sha1(pwdBytes));
+    const cat = new Uint8Array(20 + pwdBytes.length);
+    cat.set(keyBuf1, 0); cat.set(pwdBytes, 20);
+    const keyBuf2 = await _sha1(await _sha1(cat));
+    const key = new Uint8Array(keyBuf1.subarray(0, 16));
+    const iv = new Uint8Array(16);
+    iv.set(keyBuf1.subarray(16, 20), 0);
+    iv.set(keyBuf2.subarray(0, 12), 4);
+    return { key, iv };
+  }
+
+  // Déchiffre encryptedCards -> [card0, card1] (ou null si échec)
+  function decryptCards(cipherBytes, key, iv){
+    try {
+      if (!cipherBytes || !key || !iv) return null;
+      if (cipherBytes.length === 0 || (cipherBytes.length % 16) !== 0) return null;
+      const plain = cbcDecrypt(cipherBytes, key, iv);
+      let end = plain.length;
+      while (end > 0 && plain[end - 1] === 0) end--;        // retire le zéro-padding
+      const txt = new TextDecoder().decode(plain.subarray(0, end));
+      const toks = txt.trim().split(/\s+/);                  // uniqueId gameId handId card0 card1
+      if (toks.length < 5) return null;
+      const c0 = parseInt(toks[toks.length - 2], 10);
+      const c1 = parseInt(toks[toks.length - 1], 10);
+      if (!Number.isFinite(c0) || !Number.isFinite(c1) || c0 < 0 || c0 > 51 || c1 < 0 || c1 > 51) return null;
+      return [c0, c1];
+    } catch (e) { return null; }
+  }
+
+  return { deriveKeyIv, decryptCards, cbcDecrypt };
+})();
+
+
+// ═══════════════════════════════════════════════════════════
 //  MESSAGES POKERTH
 //  Types définis dans PokerTHMessage.PokerTHMessageType (proto)
 // ═══════════════════════════════════════════════════════════
@@ -2071,6 +2208,12 @@ const App = (() => {
   let seatData  = {};  // {pid: {money, bet, action, active, folded}}
   let myCards   = [null, null];
   let commCards = [];
+  // Clé/IV AES dérivés du mot de passe pour déchiffrer les cartes envoyées
+  // chiffrées par pokerth.net aux comptes authentifiés (encryptedCards,
+  // HandStart champ 3). Renseignés au moment de l'Init (mode 'auth'),
+  // nuls sinon (LAN / invité → plainCards en clair).
+  let _cardKey  = null;
+  let _cardIV   = null;
   let highestBet= 0;
   let minRaise  = 0;
   let pot          = 0;
@@ -2549,6 +2692,16 @@ const App = (() => {
         setStatus(t('connectingPlayers', { type: typeLabel, ver: pMaj + '.' + pMin, n: np }));
         lastMajor = pMaj; lastMinor = pMin; lastLoginType = loginType;
         const authPass = (loginType === 1) ? ($('pass') ? $('pass').value : '') : null;
+        // Compte authentifié : pokerth.net chiffre nos cartes (encryptedCards)
+        // avec une clé dérivée du mot de passe. On la pré-calcule maintenant
+        // (async, SHA-1) — prête bien avant le 1er HandStart. Sinon on efface
+        // toute clé résiduelle (passage auth → invité sans recharger la page).
+        _cardKey = null; _cardIV = null;
+        if (loginType === 1 && authPass) {
+          PTHCrypto.deriveKeyIv(new TextEncoder().encode(authPass))
+            .then(function (r) { _cardKey = r.key; _cardIV = r.iv; })
+            .catch(function () { _cardKey = null; _cardIV = null; });
+        }
         send(MSG.buildInit(myName, pMaj, pMin, loginType, authPass));
         break;
       }
@@ -2560,6 +2713,17 @@ const App = (() => {
         _reconnectAttempts = 0;
         myId = Proto.u32(sub, 2);
         _rejoinNickRetries = 0;
+        // Demander NOTRE PROPRE PlayerInfo : le serveur n'écho pas toujours
+        // notre arrivée dans PlayerList, donc sans ça on n'apprend jamais le
+        // hash de notre avatar pokerth.net. Le handler PlayerInfoReply
+        // déclenche ensuite le téléchargement/cache/rendu de l'avatar (et
+        // confirme notre pseudo canonique). Inoffensif pour invité/LAN
+        // (la réponse n'aura simplement pas de champ avatar).
+        try {
+          _pendingNameRequests.add(myId);
+          const _selfReq = Proto.encode([[1, 0, myId]]);
+          send(Proto.encode([[1, 0, T.PlayerInfoRequest], [19, 2, _selfReq]]));
+        } catch (e) {}
         // Auto-rejoin the table we dropped from, if any. Source: the in-memory
         // flag (transient drop) or a recent persisted marker (full reload).
         // Same nickname required so we don't hijack another player's seat.
@@ -3492,6 +3656,15 @@ const App = (() => {
         // u32orNull distingue "champ absent" (null → carte cachée) de "valeur 0" (carte 2♣ valide).
         const pc = sub[2] ? Proto.decode(sub[2][0]) : {};
         myCards = [Proto.u32orNull(pc, 1), Proto.u32orNull(pc, 2)];
+        // Comptes pokerth.net authentifiés : pas de plainCards (champ 2),
+        // les cartes arrivent dans encryptedCards (champ 3), chiffrées AES-128
+        // avec une clé dérivée du mot de passe. On les déchiffre ici. Le
+        // déchiffrement est synchrone (clé/IV déjà dérivés à l'Init).
+        if ((myCards[0] == null || myCards[1] == null) && sub[3] && _cardKey && _cardIV) {
+          const cipher = (sub[3][0] instanceof Uint8Array) ? sub[3][0] : null;
+          const dec = cipher ? PTHCrypto.decryptCards(cipher, _cardKey, _cardIV) : null;
+          if (dec) myCards = [dec[0], dec[1]];
+        }
         // If I'm bust (lost my whole stack last hand), the server may
         // still echo cards for the deal but I'm not actually in the
         // hand. Force-clear so the player bar shows card backs and
