@@ -436,7 +436,7 @@ export const strings = {
     kickTooltip: 'Espelli giocatore', kickSubtitle:'Seleziona un giocatore da espellere dal tavolo',
     closeTableTooltip: 'Chiudi tavolo',
     langTooltip: 'Cambia lingua',
-    fullscreenTooltip: 'Schermo intero',
+    fullscreenTooltip: 'Schermo intero', menuAdmin:'Admin',
     chatPlaceholder: 'Messaggio…',
     hintFold: 'F — Fold',
     hintCheck: 'C — Check',
