@@ -433,7 +433,7 @@ export const strings = {
     gameDetailsTooltip: 'Speldetails',
     adminBadgeTooltip: 'Jij hebt deze tafel gemaakt',
     statsTooltip: 'Sessiestatistieken',
-    kickTooltip: 'Speler verwijderen',
+    kickTooltip: 'Speler verwijderen', kickSubtitle:'Selecteer een speler om van tafel te verwijderen',
     closeTableTooltip: 'Tafel sluiten',
     langTooltip: 'Taal wijzigen',
     fullscreenTooltip: 'Volledig scherm',
