@@ -117,6 +117,17 @@ function selectAvatarPopup(emoji) {
       // because we swap between text (emoji) and <img>.
       trigger.innerHTML = "<img src=\"/img/pokerth-logo.png\" alt=\"PokerTH\" draggable=\"false\" style=\"width:26px;height:26px;object-fit:contain;pointer-events:none\">";
       trigger.classList.add("has-avatar");
+    } else if (emoji === "__img__") {
+      // Image perso choisie par l'utilisateur : afficher la vignette.
+      var imgData = "";
+      try { imgData = localStorage.getItem("pth_avatar_img") || ""; } catch(e) {}
+      if (imgData) {
+        trigger.innerHTML = "<img src=\"" + imgData + "\" alt=\"\" draggable=\"false\" style=\"width:38px;height:38px;object-fit:cover;border-radius:3px;pointer-events:none\">";
+        trigger.classList.add("has-avatar");
+      } else {
+        trigger.innerHTML = "\uD83C\uDFAD";
+        trigger.classList.remove("has-avatar");
+      }
     } else {
       // Use innerHTML (not textContent) so that switching from <img>
       // (when the previous choice was '__pth__') clears the image
@@ -136,10 +147,49 @@ function selectAvatarPopup(emoji) {
   // players don't have access to our PokerTH avatar anyway, they will
   // fetch their own copy from the server via the existing flow. Sending
   // "__pth__" as an emoji would just show 4 weird chars on their seat.
-  if (emoji !== "__pth__" && typeof window._broadcastMyAvatar === "function") {
+  if (emoji !== "__pth__" && emoji !== "__img__" && typeof window._broadcastMyAvatar === "function") {
     window._broadcastMyAvatar(emoji);
   }
 }
+
+// ── Avatar « image perso » ──────────────────────────────────────────
+// Le client web ne peut PAS récupérer l'avatar serveur d'un compte
+// pokerth.net : le serveur ne stocke pas d'avatar par compte, il le
+// reçoit du client à la connexion. On laisse donc l'utilisateur fournir
+// sa propre image, redimensionnée puis stockée en data URL localStorage.
+function pickAvatarImage() {
+  var inp = document.getElementById("avatar-file-input");
+  if (inp) { inp.value = ""; inp.click(); }
+}
+function onAvatarImageChosen(input) {
+  var file = input && input.files && input.files[0];
+  if (!file) return;
+  if (!/^image\//.test(file.type)) { alert("Veuillez choisir un fichier image."); return; }
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    var img = new Image();
+    img.onload = function() {
+      var dataUrl;
+      try {
+        var S = 96; // avatar carré, suffisant pour les sièges
+        var canvas = document.createElement("canvas");
+        canvas.width = S; canvas.height = S;
+        var ctx = canvas.getContext("2d");
+        var scale = Math.max(S / img.width, S / img.height); // cover
+        var w = img.width * scale, h = img.height * scale;
+        ctx.drawImage(img, (S - w) / 2, (S - h) / 2, w, h);
+        dataUrl = canvas.toDataURL("image/jpeg", 0.85);
+        localStorage.setItem("pth_avatar_img", dataUrl);
+        localStorage.setItem("pth_avatar", "__img__");
+      } catch (err) { alert("Impossible de traiter cette image."); return; }
+      selectAvatarPopup("__img__"); // met à jour trigger + sièges + barre
+    };
+    img.onerror = function() { alert("Image invalide."); };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
 </script>
 
 </head>
@@ -206,6 +256,7 @@ function selectAvatarPopup(emoji) {
                onkeydown="if(event.key==='Enter') App.connect()" style="flex:1">
         <button type="button" id="av-trigger" onclick="toggleAvatarPopup()" title="Choose an avatar" data-i18n-title="chooseAvatar"
                 style="width:42px;height:42px;font-size:1.5rem;background:rgba(255,255,255,0.06);border:1px solid var(--border);border-radius:4px;cursor:pointer;flex-shrink:0;transition:border-color 0.2s">🎭</button>
+        <input type="file" id="avatar-file-input" accept="image/*" style="display:none" onchange="onAvatarImageChosen(this)">
       </div>
     </div>
     <!-- Popup sélection avatar -->
@@ -231,6 +282,7 @@ function selectAvatarPopup(emoji) {
      glyph indicates "this is my official identity". data-av is the
      sentinel "__pth__" the JS branches on. -->
 <button type="button" class="avp-btn avp-pth avp-pin" data-av="__pth__" id="avp-btn-pth" onclick="selectAvatarPopup('__pth__')" title="Mon avatar PokerTH" data-i18n-title="avatarTooltip"><img src="/img/pokerth-logo.png" alt="PokerTH" draggable="false" style="width:26px;height:26px;object-fit:contain;pointer-events:none"></button>
+<button type="button" class="avp-btn avp-img avp-pin" data-av="__img__" id="avp-btn-img" onclick="pickAvatarImage()" title="Choisir une image perso / Custom image" data-i18n-title="avatarImageTooltip">📷</button>
 <button type="button" class="avp-btn avp-none avp-pin" data-av="" onclick="selectAvatarPopup('')">Aa</button>
 <button type="button" class="avp-btn" data-av="🌸" data-cat="plants" style="display:none" onclick="selectAvatarPopup('🌸')">🌸</button>
 <button type="button" class="avp-btn" data-av="🌺" data-cat="plants" style="display:none" onclick="selectAvatarPopup('🌺')">🌺</button>
