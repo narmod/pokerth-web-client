@@ -432,7 +432,7 @@ export const strings = {
     kickTooltip: 'Potki pelaaja',
     closeTableTooltip: 'Sulje pöytä',
     langTooltip: 'Vaihda kieli',
-    fullscreenTooltip: 'Koko näyttö',
+    fullscreenTooltip: 'Koko näyttö', autoBtnLabel:'Auto-fold-painike', quickBetLabel:'Pikapanostuspainikkeet',
     chatPlaceholder: 'Viesti…',
     hintFold: 'F — Luovuta',
     hintCheck: 'C — Tsekkaa',
