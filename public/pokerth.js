@@ -7244,6 +7244,16 @@ function toggleHeaderOverflow(e) {
       pb.innerHTML = '💰 ' + t('quickBetLabel') + (pon ? ' ✓' : '');
     }
   } catch(e12) {}
+  // ADMIN section divider: mirror the admin buttons' visibility (use the
+  // Close-table item as proxy — it's shown whenever the user is admin).
+  try {
+    var asep = document.getElementById('admin-sep-mob');
+    var aref = document.getElementById('admin-close-mob');
+    if (asep && aref) {
+      var adminOn = !(aref.style.display === 'none' || !aref.style.display);
+      asep.style.display = adminOn ? '' : 'none';
+    }
+  } catch(e13) {}
   m.classList.toggle('open');
 }
 function closeHeaderOverflow() {
