@@ -2408,8 +2408,7 @@ const App = (() => {
     if (typeof showKeyHint === 'function') showKeyHint(label);
     // Refresh the menu button label/emoji.
     var b = document.getElementById('haptic-toggle-mob');
-    if (b) b.innerHTML = (_hapticEnabled ? '📳' : '📴') + ' ' +
-      t('hapticLabel');
+    if (b) b.innerHTML = '📳 ' + t('hapticLabel') + _menuTick(_hapticEnabled);
     // Direct header twin (tablet/desktop): icon-only.
     var bd = document.getElementById('haptic-toggle-btn');
     if (bd) bd.textContent = (_hapticEnabled ? '📳' : '📴');
@@ -2499,7 +2498,7 @@ const App = (() => {
     var label = _voiceEnabled ? t('voiceOn') : t('voiceOff');
     if (typeof showKeyHint === 'function') showKeyHint(label);
     var b = document.getElementById('voice-toggle-mob');
-    if (b) b.innerHTML = (_voiceEnabled ? '🗣️' : '🤐') + ' ' + t('voiceLabel');
+    if (b) b.innerHTML = '🗣️ ' + t('voiceLabel') + _menuTick(_voiceEnabled);
     // Direct header twin (tablet/desktop): icon-only.
     var vd = document.getElementById('voice-toggle-btn');
     if (vd) vd.textContent = (_voiceEnabled ? '🗣️' : '🤐');
@@ -2552,7 +2551,7 @@ const App = (() => {
     if (!_showAutoBtn) _autoCheckFold = false; // disarm when hiding
     try { document.body.classList.toggle('hide-auto-btn', !_showAutoBtn); } catch (e) {}
     var b = document.getElementById('auto-pref-mob');
-    if (b) b.innerHTML = '🔁 ' + t('autoBtnLabel') + (_showAutoBtn ? ' \u2713' : '');
+    if (b) b.innerHTML = '🔁 ' + t('autoBtnLabel') + _menuTick(_showAutoBtn);
     return _showAutoBtn;
   }
   window.toggleAutoBtnPref = toggleAutoBtnPref;
@@ -2569,7 +2568,7 @@ const App = (() => {
     try { localStorage.setItem('pth_show_pct', _showPctBtns ? '1' : '0'); } catch (e) {}
     try { document.body.classList.toggle('hide-pct-btns', !_showPctBtns); } catch (e) {}
     var b = document.getElementById('pct-pref-mob');
-    if (b) b.innerHTML = '💰 ' + t('quickBetLabel') + (_showPctBtns ? ' ✓' : '');
+    if (b) b.innerHTML = '💰 ' + t('quickBetLabel') + _menuTick(_showPctBtns);
     return _showPctBtns;
   }
   window.toggleQuickBetPref = toggleQuickBetPref;
@@ -5609,8 +5608,8 @@ const App = (() => {
   function _applyAssistUI() {
     var st = document.getElementById('assist-state-mob');
     if (st) {
-      st.textContent = _assistOn ? '✓' : '✗';
-      st.style.color = _assistOn ? '#3fb950' : '#999';
+      st.textContent = _assistOn ? '\u2713' : '\u2717';
+      st.style.color = _assistOn ? 'var(--gold)' : '#888';
     }
     var hs = document.getElementById('hand-strength');
     if (!_assistOn) {
@@ -7447,6 +7446,15 @@ function renderHandsHelp() {
     + '<button class="hands-close" onclick="toggleHandsHelp()">' + t('handsClose') + '</button>';
 }
 
+// Indicateur d'état uniforme pour les bascules du menu •••  : ✓ doré quand
+// l'option est active, ✗ gris quand elle est inactive. Centralisé ici pour
+// que toutes les entrées (assistance, vibration, voix, auto, quick-bet…)
+// partagent exactement la même visualisation.
+function _menuTick(on) {
+  return ' <span style="font-weight:700;margin-left:auto;color:' + (on ? 'var(--gold)' : '#888') + '">' + (on ? '\u2713' : '\u2717') + '</span>';
+}
+window._menuTick = _menuTick;
+
 function toggleHeaderOverflow(e) {
   if (e) e.stopPropagation();
   var m = document.getElementById('g-overflow-menu');
@@ -7464,7 +7472,7 @@ function toggleHeaderOverflow(e) {
         var lg = document.documentElement.getAttribute('lang');
         if (lg) fr = (lg !== 'en');
       } catch(e3) {}
-      hb.innerHTML = (on ? '📳' : '📴') + ' ' + t('hapticLabel');
+      hb.innerHTML = '📳 ' + t('hapticLabel') + _menuTick(on);
     }
   } catch(e4) {}
   // Same for the voice-announcement toggle (🗣️ = on, 🤐 = off).
@@ -7473,7 +7481,7 @@ function toggleHeaderOverflow(e) {
     if (vb) {
       var von = false;
       try { von = localStorage.getItem('pth_voice') === '1'; } catch(e5) {}
-      vb.innerHTML = (von ? '🗣️' : '🤐') + ' ' + t('voiceLabel');
+      vb.innerHTML = '🗣️ ' + t('voiceLabel') + _menuTick(von);
     }
   } catch(e6) {}
   // Same for the chip-display toggle (short "BB / ¥", active side in gold).
@@ -7493,7 +7501,7 @@ function toggleHeaderOverflow(e) {
     if (ab) {
       var aon = false;
       try { aon = localStorage.getItem('pth_show_auto') === '1'; } catch(e9) {}
-      ab.innerHTML = '🔁 ' + t('autoBtnLabel') + (aon ? ' \u2713' : '');
+      ab.innerHTML = '🔁 ' + t('autoBtnLabel') + _menuTick(aon);
     }
   } catch(e10) {}
   // Quick-bet (33/50/100) visibility toggle — same scheme as the auto button.
@@ -7502,7 +7510,7 @@ function toggleHeaderOverflow(e) {
     if (pb) {
       var pon = false;
       try { pon = localStorage.getItem('pth_show_pct') === '1'; } catch(e11) {}
-      pb.innerHTML = '💰 ' + t('quickBetLabel') + (pon ? ' ✓' : '');
+      pb.innerHTML = '💰 ' + t('quickBetLabel') + _menuTick(pon);
     }
   } catch(e12) {}
   // ADMIN section divider: mirror the admin buttons' visibility (use the
