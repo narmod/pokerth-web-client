@@ -509,10 +509,10 @@ wss.on('connection', (ws, req) => {
   ws.on('close', () => _allClients.delete(ws));
 
   ws.on('message', (data, isBinary) => {
-      // ── Relay reactions / avatars (text frames REACT:pid:emoji, AVATAR:pid:emoji) ──
+      // ── Relay reactions / avatars (text frames REACT:pid:emoji, AVATAR:pid:emoji, AVATARIMG:pid:dataurl) ──
       if (!isBinary) {
         const text = data.toString();
-        if (text.startsWith('REACT:') || text.startsWith('AVATAR:')) {
+        if (text.startsWith('REACT:') || text.startsWith('AVATAR:') || text.startsWith('AVATARIMG:')) {
           _allClients.forEach(client => {
             if (client !== ws && client.readyState === 1) client.send(text);
           });
