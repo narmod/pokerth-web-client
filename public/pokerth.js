@@ -3066,6 +3066,21 @@ const App = (() => {
         if (asbm) asbm.style.display = amGameAdmin ? '' : 'none';
         addChat(null, t('joinedTableWaiting', { gid: gId, admin: isAdmin ? ' (admin)' : '' }), 'sys');
         show('s-game');
+        // Clear any leftover felt from a previously-viewed table. After
+        // leaveGame the rendered seats / pot / community stay in the DOM,
+        // and since seats[] is empty on entry renderSeats() won't redraw —
+        // so the previous hand would remain visible behind the waiting
+        // panel. The server replays the real state right after JoinGameAck,
+        // so starting from a clean felt is always correct (and a harmless
+        // no-op when joining a genuinely fresh table).
+        try {
+          pot = 0; collectedPot = 0;
+          if ($('g-pot'))    $('g-pot').textContent = 'Pot: 0';
+          if ($('g-potbar')) $('g-potbar').textContent = 'Pot: 0';
+          commCards = [];
+          var _czComm  = document.getElementById('g-comm');  if (_czComm)  _czComm.innerHTML  = '';
+          var _czSeats = document.getElementById('g-seats'); if (_czSeats) _czSeats.innerHTML = '';
+        } catch(e) {}
         // ── Spectator UI mode ──
         // If we joined via spectateGame(), flip the banner up top and put
         // a 'You are watching' message in place of the action bar. Player
