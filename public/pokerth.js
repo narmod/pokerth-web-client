@@ -5608,8 +5608,8 @@ const App = (() => {
   function _applyAssistUI() {
     var st = document.getElementById('assist-state-mob');
     if (st) {
-      st.textContent = _assistOn ? '\u2713' : '\u2717';
-      st.style.color = _assistOn ? 'var(--gold)' : '#888';
+      st.textContent = _assistOn ? '\u2713' : '';
+      st.style.color = '#3fb950';
     }
     var hs = document.getElementById('hand-strength');
     if (!_assistOn) {
@@ -5625,7 +5625,7 @@ const App = (() => {
     _assistOn = !_assistOn;
     try { localStorage.setItem('pth_assist', _assistOn ? '1' : '0'); } catch(e) {}
     _applyAssistUI();
-    if (typeof showKeyHint === 'function') showKeyHint(t('assist') + ' ' + (_assistOn ? '✓' : '✗'));
+    if (typeof showKeyHint === 'function') showKeyHint(t('assist') + (_assistOn ? ' \u2713' : ''));
   };
 
   function renderMyTurnActions() {
@@ -7446,12 +7446,12 @@ function renderHandsHelp() {
     + '<button class="hands-close" onclick="toggleHandsHelp()">' + t('handsClose') + '</button>';
 }
 
-// Indicateur d'état uniforme pour les bascules du menu •••  : ✓ doré quand
-// l'option est active, ✗ gris quand elle est inactive. Centralisé ici pour
-// que toutes les entrées (assistance, vibration, voix, auto, quick-bet…)
-// partagent exactement la même visualisation.
+// Indicateur d'état uniforme pour les bascules du menu •••  : ✓ vert quand
+// l'option est active, rien quand elle est inactive (pas de croix). Centralisé
+// ici pour que toutes les entrées (assistance, vibration, voix, auto,
+// quick-bet…) partagent exactement la même visualisation.
 function _menuTick(on) {
-  return ' <span style="font-weight:700;margin-left:auto;color:' + (on ? 'var(--gold)' : '#888') + '">' + (on ? '\u2713' : '\u2717') + '</span>';
+  return on ? ' <span style="font-weight:700;margin-left:auto;color:#3fb950">\u2713</span>' : '';
 }
 window._menuTick = _menuTick;
 
