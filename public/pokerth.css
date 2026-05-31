@@ -1412,6 +1412,34 @@ body {
 #l-overflow-menu .btn-sm:hover {
   background: rgba(255,255,255,0.06);
 }
+/* Group separators inside the ••• menu. Plain hairline between groups,
+   and a centred labelled divider for the (admin-only) action block. */
+#g-overflow-menu .menu-sep {
+  height: 1px;
+  background: var(--border);
+  margin: 5px 8px;
+  border: 0;
+  flex-shrink: 0;
+}
+#g-overflow-menu .menu-sep-admin {
+  height: auto;
+  background: none;
+  margin: 8px 4px 3px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.56rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--gold-dim);
+}
+#g-overflow-menu .menu-sep-admin::before,
+#g-overflow-menu .menu-sep-admin::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
 
 /* Mobile-only sizing tweaks (the ••• show / secondary-hide rules are now
    global, applied above for all screen sizes). */
