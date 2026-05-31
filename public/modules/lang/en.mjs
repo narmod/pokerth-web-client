@@ -262,7 +262,7 @@ export const strings = {
     chatTooltip:'Chat', moreTooltip:'More', closeTooltip:'Close', refreshTooltip:'Refresh',
     avatarTooltip:'My PokerTH avatar', profileTooltip:'My profile', gameDetailsTooltip:'Game details',
     adminBadgeTooltip:'You created this table', statsTooltip:'Session statistics',
-    kickTooltip:'Kick player', closeTableTooltip:'Close table', langTooltip:'Switch language',
+    kickTooltip:'Kick player', kickSubtitle:'Select a player to remove from the table', closeTableTooltip:'Close table', langTooltip:'Switch language',
     fullscreenTooltip:'Fullscreen',
     chatPlaceholder:'Message\u2026',
     // ── Keyboard-shortcut hints (letter prefix stays, verb translates) ──
