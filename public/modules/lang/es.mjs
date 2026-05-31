@@ -434,7 +434,7 @@ export const strings = {
     gameDetailsTooltip: 'Detalles de la partida',
     adminBadgeTooltip: 'Has creado esta mesa',
     statsTooltip: 'Estadísticas de la sesión',
-    kickTooltip: 'Expulsar jugador',
+    kickTooltip: 'Expulsar jugador', kickSubtitle:'Selecciona un jugador para expulsarlo de la mesa',
     closeTableTooltip: 'Cerrar mesa',
     langTooltip: 'Cambiar idioma',
     fullscreenTooltip: 'Pantalla completa',
