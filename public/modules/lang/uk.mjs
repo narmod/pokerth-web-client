@@ -429,7 +429,7 @@ export const strings = {
     gameDetailsTooltip: 'Деталі гри',
     adminBadgeTooltip: 'Ви створили цей стіл',
     statsTooltip: 'Статистика сесії',
-    kickTooltip: 'Вигнати гравця',
+    kickTooltip: 'Вигнати гравця', kickSubtitle:'Виберіть гравця для видалення зі столу',
     closeTableTooltip: 'Закрити стіл',
     langTooltip: 'Змінити мову',
     fullscreenTooltip: 'Повний екран', autoBtnLabel:'Кнопка Auto-fold', quickBetLabel:'Кнопки швидкої ставки',
