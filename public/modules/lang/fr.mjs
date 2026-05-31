@@ -263,7 +263,7 @@ export const strings = {
     avatarTooltip:'Mon avatar PokerTH', profileTooltip:'Mon profil', gameDetailsTooltip:'Détails de la partie',
     adminBadgeTooltip:'Vous êtes créateur de cette table', statsTooltip:'Statistiques de session',
     kickTooltip:'Expulser le joueur', kickSubtitle:'Sélectionnez un joueur à expulser de la table', closeTableTooltip:'Fermer la table', langTooltip:'Changer de langue',
-    fullscreenTooltip:'Plein écran',
+    fullscreenTooltip:'Plein écran', menuAdmin:'Admin',
     chatPlaceholder:'Message…',
     // ── Aides raccourcis clavier (le préfixe lettre reste, le verbe se traduit) ──
     hintFold:'F — Se coucher', hintCheck:'C — Parole', hintCall:'C — Suivre',
