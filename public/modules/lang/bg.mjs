@@ -430,7 +430,7 @@ export const strings = {
     gameDetailsTooltip: 'Детайли за играта',
     adminBadgeTooltip: 'Вие създадохте тази маса',
     statsTooltip: 'Статистика на сесията',
-    kickTooltip: 'Изгони играч',
+    kickTooltip: 'Изгони играч', kickSubtitle:'Изберете играч за премахване от масата',
     closeTableTooltip: 'Затвори масата',
     langTooltip: 'Смени езика',
     fullscreenTooltip: 'Цял екран', autoBtnLabel:'Бутон Auto-fold', quickBetLabel:'Бутони за бърз залог',
