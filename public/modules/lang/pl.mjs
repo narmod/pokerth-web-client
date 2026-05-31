@@ -436,7 +436,7 @@ export const strings = {
     kickTooltip: 'Wyrzuć gracza',
     closeTableTooltip: 'Zamknij stół',
     langTooltip: 'Zmień język',
-    fullscreenTooltip: 'Pełny ekran',
+    fullscreenTooltip: 'Pełny ekran', autoBtnLabel:'Przycisk Auto-fold', quickBetLabel:'Przyciski szybkiego zakładu',
     chatPlaceholder: 'Wiadomość…',
     hintFold: 'F — Fold',
     hintCheck: 'C — Check',
