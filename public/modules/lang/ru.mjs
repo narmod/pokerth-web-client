@@ -432,7 +432,7 @@ export const strings = {
     gameDetailsTooltip: 'Детали игры',
     adminBadgeTooltip: 'Вы создали этот стол',
     statsTooltip: 'Статистика сессии',
-    kickTooltip: 'Выгнать игрока',
+    kickTooltip: 'Выгнать игрока', kickSubtitle:'Выберите игрока для удаления из-за стола',
     closeTableTooltip: 'Закрыть стол',
     langTooltip: 'Сменить язык',
     fullscreenTooltip: 'Полный экран', autoBtnLabel:'Кнопка Auto-fold', quickBetLabel:'Кнопки быстрой ставки',
