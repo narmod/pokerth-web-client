@@ -431,7 +431,7 @@ export const strings = {
     gameDetailsTooltip: 'விளையாட்டு விவரங்கள்',
     adminBadgeTooltip: 'இந்த மேசையை நீங்கள் உருவாக்கினீர்கள்',
     statsTooltip: 'அமர்வு புள்ளிவிவரங்கள்',
-    kickTooltip: 'வீரரை வெளியேற்று',
+    kickTooltip: 'வீரரை வெளியேற்று', kickSubtitle:'மேசையிலிருந்து நீக்க ஒரு வீரரைத் தேர்ந்தெடுக்கவும்',
     closeTableTooltip: 'மேசையை மூடு',
     langTooltip: 'மொழியை மாற்று',
     fullscreenTooltip: 'முழுத்திரை', autoBtnLabel:'Auto-fold பொத்தான்', quickBetLabel:'விரைவு பந்தயப் பொத்தான்கள்',
