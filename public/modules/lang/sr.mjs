@@ -433,7 +433,7 @@ export const strings = {
     kickTooltip: 'Izbaci igrača', kickSubtitle:'Izaberite igrača za izbacivanje sa stola',
     closeTableTooltip: 'Zatvori sto',
     langTooltip: 'Promeni jezik',
-    fullscreenTooltip: 'Ceo ekran', autoBtnLabel:'Dugme Auto-fold', quickBetLabel:'Dugmad za brzu okladu',
+    fullscreenTooltip: 'Ceo ekran', menuAdmin:'Admin', autoBtnLabel:'Dugme Auto-fold', quickBetLabel:'Dugmad za brzu okladu',
     chatPlaceholder: 'Poruka…',
     hintFold: 'F — Fold',
     hintCheck: 'C — Check',
