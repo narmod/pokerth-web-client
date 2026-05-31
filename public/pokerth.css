@@ -1309,8 +1309,8 @@ body {
   /* Fixed bars: very compact */
   .pot-bar { font-size: 0.65rem; padding: 1px 0; }
   .my-zone {
-    bottom: 40px !important;
-    padding: 4px 8px !important;
+    bottom: 44px !important;
+    padding: 3px 6px !important;
   }
   .player-bar { padding: 2px 6px !important; }
   .player-bar-left { padding: 2px 8px; gap: 5px; }
@@ -1320,33 +1320,25 @@ body {
   .pb-info { min-width: 45px; }
   .pb-cards .pk { width: 22px; height: 32px; font-size: 0.56rem; }
 
-  /* Actions: ONE compact horizontal row. The primary buttons (Fold / Call /
-     Raise / All-in) sit first so they stay visible; presets & raise input
-     scroll into view if the row is wider than the screen. Keeping it a single
-     row means the bottom control band stays short and never covers the table
-     or the low seats. */
-  .action-grid {
-    flex-direction: row !important;
-    flex-wrap: nowrap !important;
-    align-items: center;
-    justify-content: flex-start;
-    gap: 4px;
-    width: 100%;
-    max-width: 100%;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
+  /* Actions: horizontal, compact */
+  .action-grid { flex-direction: row !important; flex-wrap: wrap; gap: 3px; max-width: 100%; }
+  .action-top-row { flex: none; display: flex; gap: 3px; }
+  .action-top-row .btn-action { padding: 6px 10px; font-size: 0.68rem; }
+  .pct-row { flex: none; gap: 4px; }
+  .btn-pct {
+    padding: 9px 6px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    border-width: 1.5px;
   }
-  .action-top-row, .pct-row, .raise-row { flex: 0 0 auto; display: flex; gap: 4px; }
-  .action-top-row .btn-action,
-  .btn-action { padding: 6px 9px; font-size: 0.64rem; flex: 0 0 auto; min-width: 0; }
-  .btn-pct { padding: 6px 7px; font-size: 0.62rem; font-weight: 700; border-width: 1.5px; flex: 0 0 auto; }
-  .raise-row { gap: 3px; }
-  .raise-input { width: 50px; padding: 5px 4px; font-size: 0.66rem; flex: 0 0 auto; }
+  .raise-row { flex: none; gap: 3px; }
+  .raise-input { width: 52px; padding: 5px 4px; font-size: 0.68rem; }
+  .btn-action { padding: 6px 10px; font-size: 0.68rem; }
 
 .header { padding: 2px 6px; }
 .pill { font-size: 0.56rem; padding: 1px 4px; }
   #g-blind, #g-players { display: none; }
-  .game-area { padding-bottom: 96px !important; }
+  .game-area { padding-bottom: 90px !important; }
 }
 
 
