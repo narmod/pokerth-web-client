@@ -430,7 +430,7 @@ export const strings = {
     gameDetailsTooltip: 'Chi tiết ván chơi',
     adminBadgeTooltip: 'Bạn đã tạo bàn này',
     statsTooltip: 'Thống kê phiên',
-    kickTooltip: 'Đuổi người chơi',
+    kickTooltip: 'Đuổi người chơi', kickSubtitle:'Chọn một người chơi để loại khỏi bàn',
     closeTableTooltip: 'Đóng bàn',
     langTooltip: 'Đổi ngôn ngữ',
     fullscreenTooltip: 'Toàn màn hình', autoBtnLabel:'Nút Auto-fold', quickBetLabel:'Nút cược nhanh',
