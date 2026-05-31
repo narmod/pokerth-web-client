@@ -256,6 +256,8 @@ When run without a terminal (CI / automation) the installer is fully non-interac
 | `APP_NAME` | `pokerth-web` | PM2 process name |
 | `SETUP_FIREWALL` | _(unset)_ | set to `1` to open the port in `ufw` |
 | `ASSUME_YES` | _(unset)_ | set to `1` to skip the confirmation prompt |
+| `STATS_RESET_PERIOD` | `monthly` | leaderboard auto-reset: `off` / `daily` / `monthly` / `yearly` |
+| `STATS_ADMIN_TOKEN` | _(unset)_ | token enabling the remote leaderboard-reset endpoint |
 
 Example:
 
@@ -264,15 +266,21 @@ PORT=8090 NO_TLS=1 ASSUME_YES=1 \
   bash -c "$(curl -sSL https://raw.githubusercontent.com/narmod/pokerth-web-client/HEAD/install.sh)"
 ```
 
-### Updating and uninstalling
+### Managing the service
 
-After a first install, a `pokerth-web` command is available to manage the service:
+After a first install, a `pokerth-web` command is available to manage everything — no need to touch PM2 by hand:
 
 ```bash
-sudo pokerth-web update      # pull the latest version, reinstall deps, restart
-sudo pokerth-web uninstall   # stop and remove the service
-pokerth-web status           # show the PM2 status
+sudo pokerth-web update              # pull the latest version, reinstall deps, restart
+pokerth-web status                   # show the PM2 status
+sudo pokerth-web set-period yearly   # leaderboard auto-reset: off | daily | monthly | yearly
+sudo pokerth-web reset-stats         # wipe the family leaderboard now
+sudo pokerth-web set-token SECRET    # enable the remote reset endpoint (run with no token to disable)
+sudo pokerth-web uninstall           # stop and remove the service
+pokerth-web help                     # list every command
 ```
+
+`set-period` and `set-token` are saved to `/etc/pokerth-web.conf` and **re-applied automatically on every update and reboot**, so you set them once.
 
 The same actions work through the one-liner if you prefer not to use the command:
 
