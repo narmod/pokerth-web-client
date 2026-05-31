@@ -5604,16 +5604,14 @@ const App = (() => {
   }
   window._rebroadcastAvatar = _rebroadcastAvatar;
 
-  // ── Assistance (aide « force de la main ») : bouton activer/désactiver ──
-  // Met à jour l'apparence du bouton et affiche/masque l'aide immédiatement.
+  // ── Assistance (aide « force de la main ») : entrée du menu •••  ──
+  // Met à jour l'indicateur d'état du menu et affiche/masque l'aide.
   function _applyAssistUI() {
-    var btn = document.getElementById('assist-toggle');
-    if (btn) {
-      btn.style.opacity = _assistOn ? '1' : '0.5';
-      btn.style.borderColor = _assistOn ? 'var(--gold-dim)' : 'var(--border)';
+    var st = document.getElementById('assist-state-mob');
+    if (st) {
+      st.textContent = _assistOn ? '✓' : '✗';
+      st.style.color = _assistOn ? '#3fb950' : '#999';
     }
-    var dot = document.getElementById('assist-dot');
-    if (dot) dot.style.color = _assistOn ? '#3fb950' : '#777';
     var hs = document.getElementById('hand-strength');
     if (!_assistOn) {
       if (hs) hs.style.display = 'none';
@@ -5628,6 +5626,7 @@ const App = (() => {
     _assistOn = !_assistOn;
     try { localStorage.setItem('pth_assist', _assistOn ? '1' : '0'); } catch(e) {}
     _applyAssistUI();
+    if (typeof showKeyHint === 'function') showKeyHint(t('assist') + ' ' + (_assistOn ? '✓' : '✗'));
   };
 
   function renderMyTurnActions() {
