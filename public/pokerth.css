@@ -1414,7 +1414,8 @@ body {
 }
 /* Group separators inside the ••• menu. Plain hairline between groups,
    and a centred labelled divider for the (admin-only) action block. */
-#g-overflow-menu .menu-sep {
+#g-overflow-menu .menu-sep,
+#l-overflow-menu .menu-sep {
   height: 1px;
   background: var(--border);
   margin: 5px 8px;
