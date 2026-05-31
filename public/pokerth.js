@@ -5418,14 +5418,18 @@ const App = (() => {
       const autoLabel = canCheck
         ? t('autoCheckLabel')
         : t('autoFoldLabel');
-      // Compact toggle button sitting next to Call/Check (no full-width row).
-      // 'armed' class reflects window._autoCheckFold; tapping flips it.
+      // Compact toggle next to Call/Check. Shows AUTO + the action it will
+      // take next turn: a check tick (will auto-check, nothing to call) or a
+      // cross (will auto-fold). 'armed' reflects window._autoCheckFold.
+      const glyph = canCheck
+        ? '<svg class="auto-ic ic-check" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 13 L10 18 L19 6" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+        : '<svg class="auto-ic ic-fold" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6 L18 18 M18 6 L6 18" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg>';
       autoBtn = '<button class="btn-action btn-auto' + (_autoCheckFold ? ' armed' : '') + '"' +
         ' id="auto-cf-btn" onclick="App.toggleAutoCheckFold()"' +
         ' aria-pressed="' + (_autoCheckFold ? 'true' : 'false') + '"' +
         ' title="' + autoLabel + ' \u2014 ' + t('autoRearmHint') + '">' +
-        '<svg class="auto-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5 L11 12 L3 19 Z M12 5 L20 12 L12 19 Z" fill="currentColor"/></svg>' +
-        '<span class="auto-tx">' + autoLabel + '</span>' +
+        '<span class="auto-tx">AUTO</span>' +
+        glyph +
         '</button>';
     }
 

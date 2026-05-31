@@ -2520,13 +2520,15 @@ body {
 .btn-auto {
   flex: 0 0 auto;
   min-width: 46px;
-  display: inline-flex; align-items: center; justify-content: center; gap: 7px;
+  display: inline-flex; align-items: center; justify-content: center; gap: 5px;
   background: rgba(200,168,74,0.08);
   color: var(--gold);
   border: 1px solid var(--border);
-  font-size: 0.68rem;
 }
+.btn-auto .auto-tx { font-size: 0.6rem; font-weight: 700; letter-spacing: 0.06em; }
 .btn-auto .auto-ic { width: 16px; height: 16px; display: block; flex: none; }
+.btn-auto .auto-ic.ic-check { color: #5fd089; } /* will auto-check */
+.btn-auto .auto-ic.ic-fold  { color: #e08a6f; } /* will auto-fold  */
 .btn-auto:hover { background: rgba(200,168,74,0.15); border-color: var(--gold-dim); }
 .btn-auto.armed {
   background: rgba(39,174,96,0.22);
@@ -2534,11 +2536,9 @@ body {
   color: #d7ffe0;
   box-shadow: 0 0 0 1px rgba(39,174,96,0.35), 0 0 12px rgba(39,174,96,0.25);
 }
+.btn-auto.armed .auto-ic { color: #eafff0; } /* light glyph for contrast on green */
 .action-top-row .btn-auto { flex: 0 0 auto; min-width: 46px; }
-@media (max-width: 480px) {
-  .btn-auto .auto-tx { display: none; }
-  .btn-auto { min-width: 48px; }
-}
+@media (max-width: 480px) { .btn-auto { min-width: 48px; } }
 /* All-In as a SECONDARY action: outlined, not a big red bar — avoids the
    red-on-red clash with Fold and discourages accidental taps. */
 .btn-allin {
