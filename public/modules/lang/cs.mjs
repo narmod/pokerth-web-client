@@ -433,7 +433,7 @@ export const strings = {
     kickTooltip: 'Vyhodit hráče',
     closeTableTooltip: 'Zavřít stůl',
     langTooltip: 'Změnit jazyk',
-    fullscreenTooltip: 'Celá obrazovka',
+    fullscreenTooltip: 'Celá obrazovka', autoBtnLabel:'Tlačítko Auto-fold', quickBetLabel:'Tlačítka rychlé sázky',
     chatPlaceholder: 'Zpráva…',
     hintFold: 'F — Fold',
     hintCheck: 'C — Check',
