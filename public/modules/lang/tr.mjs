@@ -432,7 +432,7 @@ export const strings = {
     gameDetailsTooltip: 'Oyun ayrıntıları',
     adminBadgeTooltip: 'Bu masayı sen oluşturdun',
     statsTooltip: 'Oturum istatistikleri',
-    kickTooltip: 'Oyuncuyu at',
+    kickTooltip: 'Oyuncuyu at', kickSubtitle:'Masadan çıkarılacak bir oyuncu seçin',
     closeTableTooltip: 'Masayı kapat',
     langTooltip: 'Dili değiştir',
     fullscreenTooltip: 'Tam ekran', autoBtnLabel:'Auto-fold düğmesi', quickBetLabel:'Hızlı bahis düğmeleri',
