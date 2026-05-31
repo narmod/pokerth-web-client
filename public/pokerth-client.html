@@ -1318,8 +1318,8 @@ if ('serviceWorker' in navigator) {
   <div class="km-backdrop" onclick="App.closeKickModal()"></div>
   <div class="km-card" role="dialog" aria-labelledby="km-title">
     <button class="km-close" type="button" onclick="App.closeKickModal()" title="Fermer" data-i18n-title="closeTooltip" aria-label="Fermer">✕</button>
-    <div class="km-title" id="km-title">👥 Kicker un joueur</div>
-    <div class="km-subtitle" id="km-subtitle">Sélectionnez un joueur à expulser de la table</div>
+    <div class="km-title" id="km-title">👥 <span data-i18n="kickTooltip">Kick player</span></div>
+    <div class="km-subtitle" id="km-subtitle" data-i18n="kickSubtitle">Select a player to remove from the table</div>
     <div class="km-list" id="km-list">
       <div class="km-empty">— Aucun joueur —</div>
     </div>
