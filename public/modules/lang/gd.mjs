@@ -434,7 +434,7 @@ export const strings = {
     kickTooltip: 'Cuir cluicheadair a-mach', kickSubtitle:'Tagh cluicheadair airson a chur far a bhùird',
     closeTableTooltip: 'Dùin am bòrd',
     langTooltip: 'Atharraich cànan',
-    fullscreenTooltip: 'Làn-sgrìn', autoBtnLabel:'Putan Auto-fold', quickBetLabel:'Putanan geall luath',
+    fullscreenTooltip: 'Làn-sgrìn', menuAdmin:'Admin', autoBtnLabel:'Putan Auto-fold', quickBetLabel:'Putanan geall luath',
     chatPlaceholder: 'Teachdaireachd…',
     hintFold: 'F — Fold',
     hintCheck: 'C — Check',
