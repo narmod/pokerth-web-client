@@ -433,7 +433,7 @@ export const strings = {
     kickTooltip: 'Pašalinti žaidėją', kickSubtitle:'Pasirinkite žaidėją, kurį norite pašalinti nuo stalo',
     closeTableTooltip: 'Uždaryti stalą',
     langTooltip: 'Keisti kalbą',
-    fullscreenTooltip: 'Visas ekranas', autoBtnLabel:'Auto-fold mygtukas', quickBetLabel:'Greito statymo mygtukai',
+    fullscreenTooltip: 'Visas ekranas', menuAdmin:'Admin', autoBtnLabel:'Auto-fold mygtukas', quickBetLabel:'Greito statymo mygtukai',
     chatPlaceholder: 'Žinutė…',
     hintFold: 'F — Fold',
     hintCheck: 'C — Check',
