@@ -239,7 +239,7 @@ export const strings = {
     results: '結果',
     continue: '続ける ▶',
     closeTable: '🔒 テーブルを閉じる',
-    startBots: '▶ ボット',
+    startBots: '▶ ボット', startWithBots:'▶ ボットありで開始', startNoBots:'▶ 開始（ボットなし）',
     leave: '✕',
     communityCards: 'コミュニティカード',
     continueBtn: '続ける ▶',

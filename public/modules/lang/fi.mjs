@@ -239,7 +239,7 @@ export const strings = {
     results: 'Tulokset',
     continue: 'Jatka ▶',
     closeTable: '🔒 Sulje pöytä',
-    startBots: '▶ Botit',
+    startBots: '▶ Botit', startWithBots:'▶ Aloita boteilla', startNoBots:'▶ Aloita (ilman botteja)',
     leave: '✕',
     communityCards: 'Yhteiset kortit',
     continueBtn: 'Jatka ▶',

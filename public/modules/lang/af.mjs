@@ -240,7 +240,7 @@ export const strings = {
     results: 'Resultate',
     continue: 'Gaan voort ▶',
     closeTable: '🔒 Sluit die tafel',
-    startBots: '▶ Bots',
+    startBots: '▶ Bots', startWithBots:'▶ Begin met bots', startNoBots:'▶ Begin (sonder bots)',
     leave: '✕',
     communityCards: 'Gemeenskaplike kaarte',
     continueBtn: 'Gaan voort ▶',

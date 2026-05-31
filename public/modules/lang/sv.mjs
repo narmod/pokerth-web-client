@@ -239,7 +239,7 @@ export const strings = {
     results: 'Resultat',
     continue: 'Fortsätt ▶',
     closeTable: '🔒 Stäng bordet',
-    startBots: '▶ Bottar',
+    startBots: '▶ Bottar', startWithBots:'▶ Starta med bottar', startNoBots:'▶ Starta (utan bottar)',
     leave: '✕',
     communityCards: 'Gemensamma kort',
     continueBtn: 'Fortsätt ▶',

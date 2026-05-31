@@ -246,7 +246,7 @@ export const strings = {
     results: 'Resultados',
     continue: 'Continuar ▶',
     closeTable: '🔒 Cerrar mesa',
-    startBots: '▶ Bots',
+    startBots: '▶ Bots', startWithBots:'▶ Empezar con bots', startNoBots:'▶ Empezar (sin bots)',
     leave: '✕',
     communityCards: 'Cartas comunitarias',
     continueBtn: 'Continuar ▶',

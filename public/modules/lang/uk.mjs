@@ -239,7 +239,7 @@ export const strings = {
     results: 'Результати',
     continue: 'Продовжити ▶',
     closeTable: '🔒 Закрити стіл',
-    startBots: '▶ Боти',
+    startBots: '▶ Боти', startWithBots:'▶ Старт з ботами', startNoBots:'▶ Старт (без ботів)',
     leave: '✕',
     communityCards: 'Спільні карти',
     continueBtn: 'Продовжити ▶',

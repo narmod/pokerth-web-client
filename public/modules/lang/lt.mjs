@@ -240,7 +240,7 @@ export const strings = {
     results: 'Rezultatai',
     continue: 'Tęsti ▶',
     closeTable: '🔒 Uždaryti stalą',
-    startBots: '▶ Botai',
+    startBots: '▶ Botai', startWithBots:'▶ Pradėti su botais', startNoBots:'▶ Pradėti (be botų)',
     leave: '✕',
     communityCards: 'Bendros kortos',
     continueBtn: 'Tęsti ▶',

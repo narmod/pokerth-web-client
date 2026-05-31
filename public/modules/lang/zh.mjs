@@ -241,7 +241,7 @@ export const strings = {
     results: '结果',
     continue: '继续 ▶',
     closeTable: '🔒 关闭牌桌',
-    startBots: '▶ 机器人',
+    startBots: '▶ 机器人', startWithBots:'▶ 带机器人开始', startNoBots:'▶ 开始（无机器人）',
     leave: '✕',
     communityCards: '公共牌',
     continueBtn: '继续 ▶',

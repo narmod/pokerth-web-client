@@ -240,7 +240,7 @@ export const strings = {
     results: 'Eredmények',
     continue: 'Folytatás ▶',
     closeTable: '🔒 Asztal bezárása',
-    startBots: '▶ Botok',
+    startBots: '▶ Botok', startWithBots:'▶ Indítás botokkal', startNoBots:'▶ Indítás (botok nélkül)',
     leave: '✕',
     communityCards: 'Közös lapok',
     continueBtn: 'Folytatás ▶',

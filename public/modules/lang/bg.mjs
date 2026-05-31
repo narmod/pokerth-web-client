@@ -240,7 +240,7 @@ export const strings = {
     results: 'Резултати',
     continue: 'Продължи ▶',
     closeTable: '🔒 Затвори масата',
-    startBots: '▶ Ботове',
+    startBots: '▶ Ботове', startWithBots:'▶ Старт с ботове', startNoBots:'▶ Старт (без ботове)',
     leave: '✕',
     communityCards: 'Общи карти',
     continueBtn: 'Продължи ▶',

@@ -242,7 +242,7 @@ export const strings = {
     results: 'Sonuçlar',
     continue: 'Devam ▶',
     closeTable: '🔒 Masayı kapat',
-    startBots: '▶ Botlar',
+    startBots: '▶ Botlar', startWithBots:'▶ Botlarla başlat', startNoBots:'▶ Başlat (botsuz)',
     leave: '✕',
     communityCards: 'Ortak kartlar',
     continueBtn: 'Devam ▶',

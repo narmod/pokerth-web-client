@@ -240,7 +240,7 @@ export const strings = {
     results: 'Resultados',
     continue: 'Continuar ▶',
     closeTable: '🔒 Pechar a mesa',
-    startBots: '▶ Bots',
+    startBots: '▶ Bots', startWithBots:'▶ Comezar con bots', startNoBots:'▶ Comezar (sen bots)',
     leave: '✕',
     communityCards: 'Cartas comúns',
     continueBtn: 'Continuar ▶',

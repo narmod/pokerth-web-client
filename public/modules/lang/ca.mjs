@@ -240,7 +240,7 @@ export const strings = {
     results: 'Resultats',
     continue: 'Continua ▶',
     closeTable: '🔒 Tanca la taula',
-    startBots: '▶ Bots',
+    startBots: '▶ Bots', startWithBots:'▶ Comença amb bots', startNoBots:'▶ Comença (sense bots)',
     leave: '✕',
     communityCards: 'Cartes comunes',
     continueBtn: 'Continua ▶',

@@ -245,7 +245,7 @@ export const strings = {
     results: 'Результаты',
     continue: 'Продолжить ▶',
     closeTable: '🔒 Закрыть стол',
-    startBots: '▶ Боты',
+    startBots: '▶ Боты', startWithBots:'▶ Старт с ботами', startNoBots:'▶ Старт (без ботов)',
     leave: '✕',
     communityCards: 'Общие карты',
     continueBtn: 'Продолжить ▶',

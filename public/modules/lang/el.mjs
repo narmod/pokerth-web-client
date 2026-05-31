@@ -240,7 +240,7 @@ export const strings = {
     results: 'Αποτελέσματα',
     continue: 'Συνέχεια ▶',
     closeTable: '🔒 Κλείσιμο τραπεζιού',
-    startBots: '▶ Μποτ',
+    startBots: '▶ Μποτ', startWithBots:'▶ Έναρξη με μποτ', startNoBots:'▶ Έναρξη (χωρίς μποτ)',
     leave: '✕',
     communityCards: 'Κοινά φύλλα',
     continueBtn: 'Συνέχεια ▶',

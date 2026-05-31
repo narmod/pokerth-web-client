@@ -240,7 +240,7 @@ export const strings = {
     results: 'Rezultati',
     continue: 'Nastavi ▶',
     closeTable: '🔒 Zatvori stol',
-    startBots: '▶ Botovi',
+    startBots: '▶ Botovi', startWithBots:'▶ Pokreni s botovima', startNoBots:'▶ Pokreni (bez botova)',
     leave: '✕',
     communityCards: 'Zajedničke karte',
     continueBtn: 'Nastavi ▶',

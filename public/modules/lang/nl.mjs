@@ -245,7 +245,7 @@ export const strings = {
     results: 'Resultaten',
     continue: 'Doorgaan ▶',
     closeTable: '🔒 Tafel sluiten',
-    startBots: '▶ Bots',
+    startBots: '▶ Bots', startWithBots:'▶ Starten met bots', startNoBots:'▶ Starten (zonder bots)',
     leave: '✕',
     communityCards: 'Gemeenschappelijke kaarten',
     continueBtn: 'Doorgaan ▶',

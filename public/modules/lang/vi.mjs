@@ -240,7 +240,7 @@ export const strings = {
     results: 'Kết quả',
     continue: 'Tiếp tục ▶',
     closeTable: '🔒 Đóng bàn',
-    startBots: '▶ Bot',
+    startBots: '▶ Bot', startWithBots:'▶ Bắt đầu với bot', startNoBots:'▶ Bắt đầu (không có bot)',
     leave: '✕',
     communityCards: 'Bài chung',
     continueBtn: 'Tiếp tục ▶',

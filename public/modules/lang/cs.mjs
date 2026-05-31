@@ -240,7 +240,7 @@ export const strings = {
     results: 'Výsledky',
     continue: 'Pokračovat ▶',
     closeTable: '🔒 Zavřít stůl',
-    startBots: '▶ Boti',
+    startBots: '▶ Boti', startWithBots:'▶ Spustit s boty', startNoBots:'▶ Spustit (bez botů)',
     leave: '✕',
     communityCards: 'Společné karty',
     continueBtn: 'Pokračovat ▶',

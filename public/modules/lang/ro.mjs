@@ -240,7 +240,7 @@ export const strings = {
     results: 'Rezultate',
     continue: 'Continuă ▶',
     closeTable: '🔒 Închide masa',
-    startBots: '▶ Boți',
+    startBots: '▶ Boți', startWithBots:'▶ Pornește cu boți', startNoBots:'▶ Pornește (fără boți)',
     leave: '✕',
     communityCards: 'Cărți comune',
     continueBtn: 'Continuă ▶',
