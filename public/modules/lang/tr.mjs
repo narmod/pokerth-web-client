@@ -435,7 +435,7 @@ export const strings = {
     kickTooltip: 'Oyuncuyu at',
     closeTableTooltip: 'Masayı kapat',
     langTooltip: 'Dili değiştir',
-    fullscreenTooltip: 'Tam ekran',
+    fullscreenTooltip: 'Tam ekran', autoBtnLabel:'Auto-fold düğmesi', quickBetLabel:'Hızlı bahis düğmeleri',
     chatPlaceholder: 'Mesaj…',
     hintFold: 'F — Fold',
     hintCheck: 'C — Pas',
