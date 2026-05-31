@@ -6266,7 +6266,6 @@ function dismissWinner() {
     askConfirmKick(pid) {
       if (!amGameAdmin) return;
       var name = players[pid] || ('#' + pid);
-      var fr = (typeof _lang === 'undefined' || _lang !== 'en');
       var msgEl = document.getElementById('kcm-msg');
       var titleEl = document.getElementById('kcm-title');
       if (titleEl) {
