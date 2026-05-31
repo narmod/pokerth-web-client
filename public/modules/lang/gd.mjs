@@ -431,7 +431,7 @@ export const strings = {
     gameDetailsTooltip: 'Mion-fhiosrachadh a\' gheama',
     adminBadgeTooltip: 'Chruthaich thu am bòrd seo',
     statsTooltip: 'Staitistig an t-seisein',
-    kickTooltip: 'Cuir cluicheadair a-mach',
+    kickTooltip: 'Cuir cluicheadair a-mach', kickSubtitle:'Tagh cluicheadair airson a chur far a bhùird',
     closeTableTooltip: 'Dùin am bòrd',
     langTooltip: 'Atharraich cànan',
     fullscreenTooltip: 'Làn-sgrìn', autoBtnLabel:'Putan Auto-fold', quickBetLabel:'Putanan geall luath',
