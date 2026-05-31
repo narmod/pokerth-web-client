@@ -2381,19 +2381,6 @@ body {
   text-shadow: 0 1px 3px rgba(0,0,0,0.8);
 }
 .seat.me .seat-avatar { border-color: var(--green); }
-/* Hero seat sits at the very bottom edge of the felt. Stacking its
-   labels DOWNWARD (like every other seat) doesn't fit there — the
-   name/stack/bet/action run past the felt and bleed into the action
-   buttons below as faint "ghost" text. So for the local seat only we
-   reverse the column and anchor it by its BOTTOM (see the JS, which
-   uses translate(-50%,-100%) for isMe): the avatar stays put just
-   above the action area, and its info stacks UPWARD toward the table
-   centre where there's room. */
-.seat.me { flex-direction: column-reverse; }
-/* In the reversed column the timer badge ends up just above the
-   avatar; neutralise its downward push and give it a little breathing
-   room from the avatar instead. */
-.seat.me .seat-timer-badge { margin-top: 0 !important; margin-bottom: 3px; }
 
 /* Eliminated / sitting-out seat: stays in place around the felt so the
    other players don't visually rotate between hands, but appears faded
