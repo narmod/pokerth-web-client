@@ -433,7 +433,7 @@ export const strings = {
     kickTooltip: 'Изгони играч',
     closeTableTooltip: 'Затвори масата',
     langTooltip: 'Смени езика',
-    fullscreenTooltip: 'Цял екран',
+    fullscreenTooltip: 'Цял екран', autoBtnLabel:'Бутон Auto-fold', quickBetLabel:'Бутони за бърз залог',
     chatPlaceholder: 'Съобщение…',
     hintFold: 'F — Fold',
     hintCheck: 'C — Check',
