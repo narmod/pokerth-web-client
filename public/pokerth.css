@@ -3212,12 +3212,6 @@ body:not(.in-game) .my-zone {
   .auto-cf-label { font-size: 0.68rem; }
   .auto-cf-hint { font-size: 0.54rem; }
 }
-@media (max-width: 400px) {
-  /* Tiny screens: drop the re-arm hint so the row is one line shorter,
-     leaving more height for the felt / community cards. */
-  .auto-cf-hint { display: none; }
-  .auto-cf-row { padding: 5px 8px; margin-bottom: 4px; }
-}
 
 
 /* ══ SPECTATOR BANNER ══
