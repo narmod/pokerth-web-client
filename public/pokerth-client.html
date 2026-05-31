@@ -183,6 +183,8 @@ function onAvatarImageChosen(input) {
         localStorage.setItem("pth_avatar", "__img__");
       } catch (err) { alert("Impossible de traiter cette image."); return; }
       selectAvatarPopup("__img__"); // met à jour trigger + sièges + barre
+      // Diffuser l'image aux autres joueurs connectés au proxy.
+      if (typeof window._broadcastMyAvatar === "function") window._broadcastMyAvatar("__img__");
     };
     img.onerror = function() { alert("Image invalide."); };
     img.src = e.target.result;
