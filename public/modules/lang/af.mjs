@@ -433,7 +433,7 @@ export const strings = {
     kickTooltip: 'Skop speler uit', kickSubtitle:'Kies speler om van die tafel te verwyder',
     closeTableTooltip: 'Sluit die tafel',
     langTooltip: 'Verander taal',
-    fullscreenTooltip: 'Volskerm', autoBtnLabel:'Auto-fold-knoppie', quickBetLabel:'Vinnige inset-knoppies',
+    fullscreenTooltip: 'Volskerm', menuAdmin:'Admin', autoBtnLabel:'Auto-fold-knoppie', quickBetLabel:'Vinnige inset-knoppies',
     chatPlaceholder: 'Boodskap…',
     hintFold: 'F — Fold',
     hintCheck: 'C — Check',
