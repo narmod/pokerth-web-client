@@ -433,7 +433,7 @@ export const strings = {
     kickTooltip: 'Expulsa un jugador',
     closeTableTooltip: 'Tanca la taula',
     langTooltip: 'Canvia d\'idioma',
-    fullscreenTooltip: 'Pantalla completa',
+    fullscreenTooltip: 'Pantalla completa', autoBtnLabel:'Botó Auto-fold', quickBetLabel:'Apostes ràpides',
     chatPlaceholder: 'Missatge…',
     hintFold: 'F — Fold',
     hintCheck: 'C — Check',
