@@ -430,7 +430,7 @@ export const strings = {
     gameDetailsTooltip: 'Detalji igre',
     adminBadgeTooltip: 'Vi ste stvorili ovaj stol',
     statsTooltip: 'Statistika sesije',
-    kickTooltip: 'Izbaci igrača',
+    kickTooltip: 'Izbaci igrača', kickSubtitle:'Odaberite igrača za izbacivanje sa stola',
     closeTableTooltip: 'Zatvori stol',
     langTooltip: 'Promijeni jezik',
     fullscreenTooltip: 'Cijeli zaslon', autoBtnLabel:'Gumb Auto-fold', quickBetLabel:'Gumbi za brzu okladu',
