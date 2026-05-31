@@ -4893,7 +4893,14 @@ const App = (() => {
         cardStr = '<div style="display:flex;gap:2px;margin-top:1px">'
           + cardHtml(sd.card1,'xsm') + cardHtml(sd.card2,'xsm') + '</div>';
       }
-      h += '<div class="' + cls + '" data-pid="' + pid + '" style="position:absolute;top:' + px.top.toFixed(1) + 'px;left:' + px.left.toFixed(1) + 'px;transform:translate(-50%,-50%)">';
+      // Hero seat (isMe) is anchored by its BOTTOM edge (translate Y
+      // -100%) and uses a reversed column (see .seat.me CSS), so its
+      // avatar stays pinned just above the action area while name /
+      // stack / bet / action stack UPWARD toward the felt instead of
+      // overflowing down into the buttons. Every other seat keeps the
+      // centred anchor.
+      const seatTr = isMe ? 'translate(-50%,-100%)' : 'translate(-50%,-50%)';
+      h += '<div class="' + cls + '" data-pid="' + pid + '" style="position:absolute;top:' + px.top.toFixed(1) + 'px;left:' + px.left.toFixed(1) + 'px;transform:' + seatTr + '">';
       const isSB = pid === sbPid;
       const isBB = pid === bbPid;
       let blindBadge = '';
