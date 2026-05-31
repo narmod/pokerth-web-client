@@ -60,6 +60,19 @@ for (const code in LANG_MODULES) {
   LANG[code] = LANG_MODULES[code].strings;
   LANG_META[code] = LANG_MODULES[code].meta;
 }
+// ── Clé 'assist' (bouton activer/désactiver l'aide « force de la main »).
+// Ajoutée ici pour les 33 langues en un seul endroit plutôt que d'éditer
+// chaque ./lang/*.mjs. Toute langue absente retombe sur l'anglais via t().
+const _ASSIST_I18N = {
+  en: 'Assistance', fr: 'Assistance', de: 'Hilfe', es: 'Ayuda', it: 'Aiuto',
+  'pt-BR': 'Ajuda', 'pt-PT': 'Ajuda', nl: 'Hulp', pl: 'Pomoc', ru: 'Помощь',
+  zh: '辅助', tr: 'Yardım', uk: 'Допомога', ja: 'アシスト', sv: 'Hjälp',
+  nb: 'Hjelp', da: 'Hjælp', fi: 'Apu', cs: 'Nápověda', sk: 'Pomoc',
+  ro: 'Asistență', hu: 'Segítség', el: 'Βοήθεια', bg: 'Помощ', hr: 'Pomoć',
+  sr: 'Помоћ', af: 'Hulp', ca: 'Ajuda', gl: 'Axuda', gd: 'Cuideachadh',
+  lt: 'Pagalba', ta: 'உதவி', vi: 'Trợ giúp'
+};
+for (const _c in _ASSIST_I18N) { if (LANG[_c]) LANG[_c].assist = _ASSIST_I18N[_c]; }
 function _flagFor(code) {
   return (LANG_META[code] && LANG_META[code].flag)
     || ('<span class="lang-flag lang-flag-code" style="font:700 0.72rem/1 monospace;letter-spacing:.05em">' + String(code).toUpperCase() + '</span>');
