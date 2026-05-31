@@ -73,6 +73,37 @@ const _ASSIST_I18N = {
   lt: 'Pagalba', ta: 'உதவி', vi: 'Trợ giúp'
 };
 for (const _c in _ASSIST_I18N) { if (LANG[_c]) LANG[_c].assist = _ASSIST_I18N[_c]; }
+// ── Clés 'displayBB' / 'displayChips' : message clair du toast quand on
+// bascule l'unité d'affichage (grosses blindes ↔ jetons). Ajoutées ici pour
+// les 33 langues. Repli EN automatique via t().
+const _DISPLAYBB_I18N = {
+  en: 'Amounts in big blinds', fr: 'Montants en grosses blindes', de: 'Beträge in Big Blinds',
+  es: 'Cantidades en ciegas grandes', it: 'Importi in big blind', 'pt-BR': 'Valores em big blinds',
+  'pt-PT': 'Valores em big blinds', nl: 'Bedragen in big blinds', pl: 'Kwoty w dużych ciemnych',
+  ru: 'Суммы в больших блайндах', zh: '以大盲注显示', tr: 'Büyük blind cinsinden',
+  uk: 'Суми у великих блайндах', ja: 'ビッグブラインドで表示', sv: 'Belopp i stora mörkar',
+  nb: 'Beløp i store blinder', da: 'Beløb i store blinds', fi: 'Summat isoina blindeina',
+  cs: 'Částky ve velkých blindech', sk: 'Sumy vo veľkých blindoch', ro: 'Sume în blinduri mari',
+  hu: 'Összegek nagyvakban', el: 'Ποσά σε big blinds', bg: 'Суми в големи блайндове',
+  hr: 'Iznosi u velikim blindovima', sr: 'Износи у великим блайндовима', af: 'Bedrae in groot blinds',
+  ca: 'Imports en cegues grans', gl: 'Importes en cegas grandes', gd: 'Suimean ann am big blinds',
+  lt: 'Sumos didžiaisiais blaindais', ta: 'பெரிய பிளைண்டுகளில்', vi: 'Số tiền theo big blind'
+};
+const _DISPLAYCHIPS_I18N = {
+  en: 'Amounts in chips', fr: 'Montants en jetons', de: 'Beträge in Chips',
+  es: 'Cantidades en fichas', it: 'Importi in fiche', 'pt-BR': 'Valores em fichas',
+  'pt-PT': 'Valores em fichas', nl: 'Bedragen in fiches', pl: 'Kwoty w żetonach',
+  ru: 'Суммы в фишках', zh: '以筹码显示', tr: 'Çip cinsinden',
+  uk: 'Суми у фішках', ja: 'チップで表示', sv: 'Belopp i marker',
+  nb: 'Beløp i sjetonger', da: 'Beløb i jetoner', fi: 'Summat pelimerkkeinä',
+  cs: 'Částky v žetonech', sk: 'Sumy v žetónoch', ro: 'Sume în jetoane',
+  hu: 'Összegek zsetonban', el: 'Ποσά σε μάρκες', bg: 'Суми в чипове',
+  hr: 'Iznosi u žetonima', sr: 'Износи у жетонима', af: 'Bedrae in fiches',
+  ca: 'Imports en fitxes', gl: 'Importes en fichas', gd: 'Suimean ann an tòcanan',
+  lt: 'Sumos žetonais', ta: 'சிப்களில்', vi: 'Số tiền theo chip'
+};
+for (const _c in _DISPLAYBB_I18N) { if (LANG[_c]) LANG[_c].displayBB = _DISPLAYBB_I18N[_c]; }
+for (const _c in _DISPLAYCHIPS_I18N) { if (LANG[_c]) LANG[_c].displayChips = _DISPLAYCHIPS_I18N[_c]; }
 function _flagFor(code) {
   return (LANG_META[code] && LANG_META[code].flag)
     || ('<span class="lang-flag lang-flag-code" style="font:700 0.72rem/1 monospace;letter-spacing:.05em">' + String(code).toUpperCase() + '</span>');
