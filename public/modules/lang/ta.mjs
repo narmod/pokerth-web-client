@@ -434,7 +434,7 @@ export const strings = {
     kickTooltip: 'வீரரை வெளியேற்று',
     closeTableTooltip: 'மேசையை மூடு',
     langTooltip: 'மொழியை மாற்று',
-    fullscreenTooltip: 'முழுத்திரை',
+    fullscreenTooltip: 'முழுத்திரை', autoBtnLabel:'Auto-fold பொத்தான்', quickBetLabel:'விரைவு பந்தயப் பொத்தான்கள்',
     chatPlaceholder: 'செய்தி…',
     hintFold: 'F — Fold',
     hintCheck: 'C — Check',
