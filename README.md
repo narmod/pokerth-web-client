@@ -92,11 +92,17 @@ This project is a **web frontend** that connects to any PokerTH server directly 
   </tr>
   <tr>
     <td align="center"><strong>Showdown &amp; results</strong></td>
-    <td align="center"><strong>Session statistics</strong></td>
+    <td align="center"><strong>Table menu &amp; options</strong></td>
   </tr>
   <tr>
     <td align="center"><img src="docs/screenshots/05-win.png" alt="Showdown and results" width="240"/></td>
-    <td align="center"><img src="docs/screenshots/06-stats.png" alt="Session statistics" width="240"/></td>
+    <td align="center"><img src="docs/screenshots/06-menu.png" alt="Table menu and options" width="240"/></td>
+  </tr>
+  <tr>
+    <td align="center" colspan="2"><strong>Avatar picker</strong></td>
+  </tr>
+  <tr>
+    <td align="center" colspan="2"><img src="docs/screenshots/08-avatar-picker.png" alt="Avatar picker" width="240"/></td>
   </tr>
 </table>
 
