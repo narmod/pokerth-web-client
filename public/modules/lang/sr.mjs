@@ -430,7 +430,7 @@ export const strings = {
     gameDetailsTooltip: 'Detalji igre',
     adminBadgeTooltip: 'Vi ste napravili ovaj sto',
     statsTooltip: 'Statistika sesije',
-    kickTooltip: 'Izbaci igrača',
+    kickTooltip: 'Izbaci igrača', kickSubtitle:'Izaberite igrača za izbacivanje sa stola',
     closeTableTooltip: 'Zatvori sto',
     langTooltip: 'Promeni jezik',
     fullscreenTooltip: 'Ceo ekran', autoBtnLabel:'Dugme Auto-fold', quickBetLabel:'Dugmad za brzu okladu',
