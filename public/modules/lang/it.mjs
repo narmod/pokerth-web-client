@@ -354,7 +354,7 @@ export const strings = {
     waitingStartNow: 'Inizia ora',
     autoCheckLabel: 'Auto-check prossimo turno',
     autoFoldLabel: 'Auto-fold prossimo turno',
-    autoBtnLabel:'Pulsante Auto-fold',
+    autoBtnLabel:'Pulsante Auto-fold', quickBetLabel:'Pulsanti di puntata rapida',
     autoRearmHint: 'si riarma ogni turno',
     autoChecked: 'Auto-check',
     autoFolded: 'Auto-fold',
