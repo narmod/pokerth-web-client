@@ -430,7 +430,7 @@ export const strings = {
     gameDetailsTooltip: 'Detalls de la partida',
     adminBadgeTooltip: 'Has creat aquesta taula',
     statsTooltip: 'Estadístiques de la sessió',
-    kickTooltip: 'Expulsa un jugador',
+    kickTooltip: 'Expulsa un jugador', kickSubtitle:'Selecciona un jugador per expulsar de la taula',
     closeTableTooltip: 'Tanca la taula',
     langTooltip: 'Canvia d\'idioma',
     fullscreenTooltip: 'Pantalla completa', autoBtnLabel:'Botó Auto-fold', quickBetLabel:'Apostes ràpides',
