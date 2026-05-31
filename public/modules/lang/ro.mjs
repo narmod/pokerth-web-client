@@ -430,7 +430,7 @@ export const strings = {
     gameDetailsTooltip: 'Detalii joc',
     adminBadgeTooltip: 'Ai creat această masă',
     statsTooltip: 'Statistici sesiune',
-    kickTooltip: 'Dă afară jucător',
+    kickTooltip: 'Dă afară jucător', kickSubtitle:'Selectează un jucător pentru a-l elimina de la masă',
     closeTableTooltip: 'Închide masa',
     langTooltip: 'Schimbă limba',
     fullscreenTooltip: 'Ecran complet', autoBtnLabel:'Buton Auto-fold', quickBetLabel:'Butoane de pariere rapidă',
