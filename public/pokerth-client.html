@@ -809,7 +809,7 @@ function selectAvatarPopup(emoji) {
     <button class="btn-sm btn-icon" id="l-overflow-btn" onclick="toggleLobbyOverflow(event)" title="Plus" data-i18n-title="moreTooltip">•••</button>
     <button class="btn-sm btn-icon" onclick="App.confirmDisconnect()" title="Disconnect" data-i18n-title="disconnectTooltip" style="color:var(--red);border-color:rgba(192,57,43,0.3)">✕</button>
     <div id="l-overflow-menu">
-      <button class="btn-sm" onclick="toggleFullscreen();closeLobbyOverflow()">⛶ Fullscreen</button>
+      <button class="btn-sm" onclick="toggleFullscreen();closeLobbyOverflow()"><span style="margin-right:5px">⛶</span><span data-i18n="fullscreenTooltip">Fullscreen</span></button>
       <button class="btn-sm" id="lang-toggle-lobby-mob" onclick="closeLobbyOverflow();openLangMenu(event)" style="font-size:0.85rem"></button>
     </div>
   </div>
@@ -1001,7 +1001,7 @@ function selectAvatarPopup(emoji) {
     <button class="btn-sm btn-icon" id="g-overflow-btn" onclick="toggleHeaderOverflow(event)" title="Plus" data-i18n-title="moreTooltip">•••</button>
     <button class="btn-sm btn-icon" onclick="App.confirmLeaveGame()" title="Quit" data-i18n-title="quitTooltip" style="color:var(--red);border-color:rgba(192,57,43,0.3)">✕</button>
     <div id="g-overflow-menu">
-      <button class="btn-sm" onclick="toggleFullscreen();closeHeaderOverflow()">⛶ <span data-i18n="fullscreenTooltip">Fullscreen</span></button>
+      <button class="btn-sm" onclick="toggleFullscreen();closeHeaderOverflow()"><span style="margin-right:5px">⛶</span><span data-i18n="fullscreenTooltip">Fullscreen</span></button>
       <button class="btn-sm" id="lang-toggle-game-mob" onclick="closeHeaderOverflow();openLangMenu(event)" style="font-size:0.85rem"></button>
       <button class="btn-sm" onclick="toggleLog();closeHeaderOverflow()">📋 Journal</button>
       <button class="btn-sm" id="haptic-toggle-mob" onclick="toggleHaptic()">📳 Vibration</button>
