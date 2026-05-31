@@ -13,21 +13,25 @@
 - [Screenshots](#screenshots)
 - [Features](#features)
 - [Login modes &amp; transport](#login-modes-transport)
+- [Playing a game](#playing-a-game)
 - [Architecture](#architecture)
 - [Requirements](#requirements)
-- [Quick install (one-liner)](#quick-install-one-liner) &nbsp;📂
-  - [Managing the service](#managing-the-service) — `update` · `set-period` · `reset-stats` · …
-- [Manual installation (Ubuntu / Debian)](#manual-installation) &nbsp;📂
-- [Running locally (development)](#running-locally-development) &nbsp;📂
-- [Quick start — LAN family game](#quick-start-lan)
-- [Self-hosting on a Raspberry Pi](#raspberry-pi)
-- [Resetting the family leaderboard](#leaderboard-reset)
+- [Self-hosting](#self-hosting)
+  - [Quick install (one-liner)](#quick-install-one-liner) &nbsp;📂
+  - [Docker](#docker) &nbsp;📂
+  - [Manual installation (Ubuntu / Debian)](#manual-installation) &nbsp;📂
+  - [Self-hosting on a Raspberry Pi](#raspberry-pi)
+- [Managing &amp; resetting](#managing-resetting)
+  - [Managing the service](#managing-the-service)
+  - [Resetting the family leaderboard](#leaderboard-reset)
+- [Development (running from source)](#development) &nbsp;📂
 - [Protocol notes](#protocol-notes)
 - [Known limitations](#known-limitations)
 - [Roadmap / Suggested next steps](#roadmap)
 - [License](#license)
 - [Acknowledgements](#acknowledgements)
 
+---
 
 <a id="live-demo"></a>
 ## 🎮 Live demo
@@ -168,6 +172,22 @@ The client can also connect to the public **pokerth.net** server (guest or regis
 
 ---
 
+<a id="playing-a-game"></a>
+## Playing a game
+
+Just want to deal a hand with the family? Start a private table in seconds:
+
+<a id="quick-start-lan"></a>
+### Quick start — LAN family game
+
+1. Run the proxy on any computer on your local network.
+2. Find that computer's local IP (e.g. `192.168.1.10`).
+3. Open `http://192.168.1.10:8080` on any phone or tablet on the same Wi-Fi.
+4. Choose **LAN** login mode, pick a nickname, and join or create a table.
+5. Deal cards and enjoy!
+
+---
+
 ## Architecture
 
 Browsers cannot open raw TCP/TLS connections to classic PokerTH servers. This project bridges the gap with a tiny Node.js proxy:
@@ -227,6 +247,20 @@ pokerth-web-client/
 
 ---
 
+<a id="self-hosting"></a>
+## Self-hosting
+
+Run your own PokerTH proxy with whichever method suits you:
+
+- [Quick install (one-liner)](#quick-install-one-liner) — fastest, on Debian/Ubuntu
+- [Docker](#docker) — containerised, multi-arch
+- [Manual installation](#manual-installation) — step by step, full control
+- [Self-hosting on a Raspberry Pi](#raspberry-pi) — host it at home
+
+Once running, manage it from one place — see [Managing & resetting](#managing-resetting).
+
+---
+
 ## Quick install (one-liner)
 
 <details>
@@ -269,31 +303,49 @@ PORT=8090 NO_TLS=1 ASSUME_YES=1 \
   bash -c "$(curl -sSL https://raw.githubusercontent.com/narmod/pokerth-web-client/HEAD/install.sh)"
 ```
 
-### Managing the service
-
-After a first install, a `pokerth-web` command is available to manage everything — no need to touch PM2 by hand:
-
-```bash
-sudo pokerth-web update              # pull the latest version, reinstall deps, restart
-pokerth-web status                   # show the PM2 status
-sudo pokerth-web set-period yearly   # leaderboard auto-reset: off | daily | monthly | yearly
-sudo pokerth-web reset-stats         # wipe the family leaderboard now
-sudo pokerth-web set-token SECRET    # enable the remote reset endpoint (run with no token to disable)
-sudo pokerth-web uninstall           # stop and remove the service
-pokerth-web help                     # list every command
-```
-
-`set-period` and `set-token` are saved to `/etc/pokerth-web.conf` and **re-applied automatically on every update and reboot**, so you set them once.
-
-The same actions work through the one-liner if you prefer not to use the command:
-
-```bash
-curl -sSL https://raw.githubusercontent.com/narmod/pokerth-web-client/HEAD/install.sh | bash -s -- update
-```
-
-`uninstall` removes the PM2 service, its boot entry, the state file and the `pokerth-web` command, then asks separately before deleting the install directory or the dedicated service user. It never touches Node.js, PM2 or apt packages.
-
 For HTTPS (recommended — many mobile browsers block plain `ws://`), follow the Nginx + Let's Encrypt steps in the manual installation below.
+
+</details>
+
+---
+
+<a id="docker"></a>
+## Docker
+
+<details>
+<summary><b>📂 Show the Docker guide</b></summary>
+
+The repository ships with a `Dockerfile` and a `docker-compose.yml` for one-command self-hosting.
+
+**1. Configure the allowlist.** For anti-open-relay reasons the proxy only dials servers on an allowlist. `pokerth.net` works out of the box, but to reach **your own** LAN / private server you must add it. Copy the example env file and edit it:
+
+```bash
+cp .env.example .env
+# then edit .env and add your server to ALLOWED_HOSTS
+```
+
+```dotenv
+# .env
+PORT=8080
+ALLOWED_HOSTS=pokerth.net,www.pokerth.net,mybox.ddns.net,192.168.1.10
+```
+
+> If your PokerTH server runs on the **same machine** as Docker, use `host.docker.internal` (Docker Desktop) or the host's LAN IP in both `ALLOWED_HOSTS` and the connect form — **not** `localhost`, which from inside the container points to the container itself.
+
+**2. Start it:**
+
+```bash
+docker compose up -d
+```
+
+The proxy will be available on `http://<host>:8080/` (or whatever `PORT` you set).
+
+Notes:
+- The container runs as the non-root `node` user.
+- The shared **family leaderboard** (`stats.json`) is persisted in a named volume (`pokerth-stats`), so it survives `docker compose down && up`. (Per-device session stats live in each browser, not on the server.)
+- Set `STATS_RESET_PERIOD` (and optionally `STATS_ADMIN_TOKEN`) in `.env` to control the leaderboard auto-reset — see [Resetting the family leaderboard](#leaderboard-reset).
+- A healthcheck pings the HTTP server every 30 s; `docker ps` shows the container as `healthy` once it is up.
+- `PORT` only changes the **published host port** — the container always listens on `8080` internally.
 
 </details>
 
@@ -436,106 +488,17 @@ Pick option `2 — Redirect HTTP to HTTPS` when asked. Renewal is automatic via 
 
 The client is now live at `https://your-domain.example`. In the connect form, the WebSocket Proxy URL field will auto-fill with `wss://your-domain.example` (the JS detects the protocol).
 
-### 9. Updating the proxy later
+### 9. Updating later
+
+Update in one command — see [Managing & resetting](#managing-resetting):
 
 ```bash
-cd ~/pokerth-web-client
-git pull
-npm install              # only if package.json changed
-pm2 restart pokerth-web
+sudo pokerth-web update
 ```
+
+If you set things up manually (no `pokerth-web` command), update from your checkout: `git pull --ff-only`, then `npm install --omit=dev` and `pm2 restart pokerth-web --update-env && pm2 save`.
 
 </details>
-
----
-
-## Running locally (development)
-
-<details>
-<summary><b>📂 Show the local-development guide</b></summary>
-
-If you only want to play around on your own machine:
-
-```bash
-git clone https://github.com/narmod/pokerth-web-client.git
-cd pokerth-web-client
-npm install
-```
-
-### Standard (TLS enabled, recommended)
-
-```bash
-npm start
-```
-
-Then open **http://localhost:8080** in your browser.
-
-### LAN (no TLS)
-
-```bash
-npm run start:lan
-```
-
-### Custom port
-
-```bash
-node proxy.js 8090
-```
-
-### Development (ignore untrusted TLS certificate)
-
-```bash
-npm run start:insecure
-```
-
-> ⚠️ `--insecure` disables TLS certificate verification. Use only for local development.
-
-### Docker
-
-The repository ships with a `Dockerfile` and a `docker-compose.yml` for one-command self-hosting.
-
-**1. Configure the allowlist.** For anti-open-relay reasons the proxy only dials servers on an allowlist. `pokerth.net` works out of the box, but to reach **your own** LAN / private server you must add it. Copy the example env file and edit it:
-
-```bash
-cp .env.example .env
-# then edit .env and add your server to ALLOWED_HOSTS
-```
-
-```dotenv
-# .env
-PORT=8080
-ALLOWED_HOSTS=pokerth.net,www.pokerth.net,mybox.ddns.net,192.168.1.10
-```
-
-> If your PokerTH server runs on the **same machine** as Docker, use `host.docker.internal` (Docker Desktop) or the host's LAN IP in both `ALLOWED_HOSTS` and the connect form — **not** `localhost`, which from inside the container points to the container itself.
-
-**2. Start it:**
-
-```bash
-docker compose up -d
-```
-
-The proxy will be available on `http://<host>:8080/` (or whatever `PORT` you set).
-
-Notes:
-- The container runs as the non-root `node` user.
-- The shared **family leaderboard** (`stats.json`) is persisted in a named volume (`pokerth-stats`), so it survives `docker compose down && up`. (Per-device session stats live in each browser, not on the server.)
-- Set `STATS_RESET_PERIOD` (and optionally `STATS_ADMIN_TOKEN`) in `.env` to control the leaderboard auto-reset — see [Resetting the family leaderboard](#leaderboard-reset).
-- A healthcheck pings the HTTP server every 30 s; `docker ps` shows the container as `healthy` once it is up.
-- `PORT` only changes the **published host port** — the container always listens on `8080` internally.
-
-</details>
-
----
-
-<a id="quick-start-lan"></a>
-## Quick start — LAN family game
-
-1. Run the proxy on any computer on your local network.
-2. Find that computer's local IP (e.g. `192.168.1.10`).
-3. Open `http://192.168.1.10:8080` on any phone or tablet on the same Wi-Fi.
-4. Choose **LAN** login mode, pick a nickname, and join or create a table.
-5. Deal cards and enjoy!
 
 ---
 
@@ -578,8 +541,36 @@ Both the PokerTH server **and** this web proxy are extremely light: PokerTH is a
 
 ---
 
+<a id="managing-resetting"></a>
+## Managing & resetting
+
+<a id="managing-the-service"></a>
+### Managing the service
+
+After a first install, a `pokerth-web` command is available to manage everything — no need to touch PM2 by hand:
+
+```bash
+sudo pokerth-web update              # pull the latest version, reinstall deps, restart
+pokerth-web status                   # show the PM2 status
+sudo pokerth-web set-period yearly   # leaderboard auto-reset: off | daily | monthly | yearly
+sudo pokerth-web reset-stats         # wipe the family leaderboard now
+sudo pokerth-web set-token SECRET    # enable the remote reset endpoint (run with no token to disable)
+sudo pokerth-web uninstall           # stop and remove the service
+pokerth-web help                     # list every command
+```
+
+`set-period` and `set-token` are saved to `/etc/pokerth-web.conf` and **re-applied automatically on every update and reboot**, so you set them once.
+
+The same actions work through the one-liner if you prefer not to use the command:
+
+```bash
+curl -sSL https://raw.githubusercontent.com/narmod/pokerth-web-client/HEAD/install.sh | bash -s -- update
+```
+
+`uninstall` removes the PM2 service, its boot entry, the state file and the `pokerth-web` command, then asks separately before deleting the install directory or the dedicated service user. It never touches Node.js, PM2 or apt packages.
+
 <a id="leaderboard-reset"></a>
-## Resetting the family leaderboard
+### Resetting the family leaderboard
 
 The shared leaderboard (per-nickname **lifetime** stats) lives in `stats.json` on the server. Per-device **session** stats stay in each browser and are never touched by any of this.
 
@@ -620,6 +611,52 @@ Set these via `.env` under Docker, or pass them when (re)starting PM2, e.g. `STA
 
 ---
 
+<a id="development"></a>
+## Development (running from source)
+
+<details>
+<summary><b>📂 Show the local-development guide</b></summary>
+
+If you only want to play around on your own machine:
+
+```bash
+git clone https://github.com/narmod/pokerth-web-client.git
+cd pokerth-web-client
+npm install
+```
+
+### Standard (TLS enabled, recommended)
+
+```bash
+npm start
+```
+
+Then open **http://localhost:8080** in your browser.
+
+### LAN (no TLS)
+
+```bash
+npm run start:lan
+```
+
+### Custom port
+
+```bash
+node proxy.js 8090
+```
+
+### Development (ignore untrusted TLS certificate)
+
+```bash
+npm run start:insecure
+```
+
+> ⚠️ `--insecure` disables TLS certificate verification. Use only for local development.
+
+</details>
+
+---
+
 ## Protocol notes
 
 PokerTH speaks a length-prefixed Protobuf-based protocol over TCP. This client parses and emits a hand-written subset of those messages — there is no full Protobuf runtime in the browser, which keeps the bundle small.
@@ -645,12 +682,13 @@ A few things worth knowing if you plan to hack on this:
 <a id="roadmap"></a>
 ## Roadmap / Suggested next steps
 
-1. Replace the hand-written Protobuf encoder/decoder with generated classes from `pokerth.proto`.
-2. Split the client into maintainable ES modules *(in progress — i18n, sounds and the protocol layer are already extracted)*.
+1. **Adopt the generated Protobuf bindings.** A protobuf.js runtime and classes generated from `pokerth.proto` now live in `public/proto/`; what remains is switching `pokerth.js` over from its inline hand-written codec to that bundle.
+2. Split the client into maintainable ES modules *(in progress — i18n, sounds and the Protobuf bindings are already extracted; the bulk still lives in `pokerth.js`)*.
 3. Add automated protocol tests with a mock PokerTH server.
-4. Polish reconnection edge cases (currently exponential backoff with a 5-attempt cap).
-5. More avatar options and a custom-emoji import.
-6. Optional spectator-only view (read-only embed for streamers).
+4. Polish reconnection edge cases *(currently exponential backoff, capped at 3–6 attempts depending on the transport)*.
+5. Custom-emoji / image avatar import *(the built-in picker already ships 500+ emojis)*.
+6. A read-only embed for streamers *(spectating a table already works; this would add a dedicated streamer-friendly view)*.
+7. Native review of the machine-assisted translations *(33 languages ship today; some wordings — poker terms especially — would benefit from a native pass)*.
 
 ---
 
