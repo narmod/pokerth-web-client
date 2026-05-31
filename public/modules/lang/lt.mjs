@@ -433,7 +433,7 @@ export const strings = {
     kickTooltip: 'Pašalinti žaidėją',
     closeTableTooltip: 'Uždaryti stalą',
     langTooltip: 'Keisti kalbą',
-    fullscreenTooltip: 'Visas ekranas',
+    fullscreenTooltip: 'Visas ekranas', autoBtnLabel:'Auto-fold mygtukas', quickBetLabel:'Greito statymo mygtukai',
     chatPlaceholder: 'Žinutė…',
     hintFold: 'F — Fold',
     hintCheck: 'C — Check',
