@@ -431,7 +431,7 @@ export const strings = {
     gameDetailsTooltip: '游戏详情',
     adminBadgeTooltip: '你创建了此牌桌',
     statsTooltip: '本场统计',
-    kickTooltip: '踢出玩家',
+    kickTooltip: '踢出玩家', kickSubtitle:'选择要踢出牌桌的玩家',
     closeTableTooltip: '关闭牌桌',
     langTooltip: '切换语言',
     fullscreenTooltip: '全屏', autoBtnLabel:'Auto-fold 按钮', quickBetLabel:'快速下注按钮',
