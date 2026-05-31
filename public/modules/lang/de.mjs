@@ -433,7 +433,7 @@ export const strings = {
     gameDetailsTooltip: 'Spieldetails',
     adminBadgeTooltip: 'Du hast diesen Tisch erstellt',
     statsTooltip: 'Sitzungsstatistik',
-    kickTooltip: 'Spieler kicken',
+    kickTooltip: 'Spieler kicken', kickSubtitle:'Wähle einen Spieler zum Entfernen vom Tisch',
     closeTableTooltip: 'Tisch schließen',
     langTooltip: 'Sprache wechseln',
     fullscreenTooltip: 'Vollbild',
