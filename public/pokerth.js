@@ -7058,6 +7058,45 @@ function autoScaleTable() {
 }
 document.addEventListener('DOMContentLoaded', function() { setTimeout(autoScaleTable, 400); });
 
+// ── Keep the felt clear of the fixed bottom bars ──────────────────────────
+// .my-zone (the action bar) is position:fixed and its height varies a lot:
+// the auto-check/fold row, a wrapping fold/call/raise grid, the waiting
+// panel… On small screens a tall action bar used to overlap the bottom of
+// the felt and hide the community cards (e.g. the river). Instead of a fixed
+// padding-bottom on .game-area, reserve exactly the height the bottom stack
+// occupies right now, then rescale the table into the space that's left.
+function adjustBottomSpacing() {
+  var ga = document.querySelector('.game-area');
+  var mz = document.querySelector('.my-zone');
+  if (!ga || !mz) return;
+  var r = mz.getBoundingClientRect();
+  if (!r.height) return; // not in game / hidden — leave the CSS default
+  // r.top → viewport bottom is exactly what the fixed bars occupy
+  // (my-zone height + its bottom offset above the player-bar).
+  var reserve = Math.max(96, Math.round(window.innerHeight - r.top) + 8);
+  ga.style.paddingBottom = reserve + 'px';
+  autoScaleTable();
+}
+window.adjustBottomSpacing = adjustBottomSpacing;
+
+(function watchBottomBar() {
+  function setup() {
+    var mz = document.querySelector('.my-zone');
+    if (!mz) { setTimeout(setup, 300); return; }
+    if ('ResizeObserver' in window) {
+      var raf = null;
+      new ResizeObserver(function () {
+        if (raf) cancelAnimationFrame(raf);
+        raf = requestAnimationFrame(adjustBottomSpacing);
+      }).observe(mz);
+    }
+    window.addEventListener('resize', adjustBottomSpacing);
+    adjustBottomSpacing();
+  }
+  document.addEventListener('DOMContentLoaded', function () { setTimeout(setup, 500); });
+})();
+
+
 function toggleLobbyChat() {
   var panel = document.getElementById('lobby-chat-panel');
   var btn   = document.getElementById('lobby-chat-btn');
