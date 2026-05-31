@@ -433,7 +433,7 @@ export const strings = {
     kickTooltip: 'Expulsar un xogador', kickSubtitle:'Selecciona un xogador para expulsar da mesa',
     closeTableTooltip: 'Pechar a mesa',
     langTooltip: 'Cambiar de idioma',
-    fullscreenTooltip: 'Pantalla completa', autoBtnLabel:'Botón Auto-fold', quickBetLabel:'Botóns de aposta rápida',
+    fullscreenTooltip: 'Pantalla completa', menuAdmin:'Admin', autoBtnLabel:'Botón Auto-fold', quickBetLabel:'Botóns de aposta rápida',
     chatPlaceholder: 'Mensaxe…',
     hintFold: 'F — Fold',
     hintCheck: 'C — Check',
