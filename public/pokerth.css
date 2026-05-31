@@ -316,6 +316,9 @@ body {
   flex-direction: column;
   gap: 4px;
 }
+/* Breathing room above each section heading except the first, so
+   'CONFIGURATION' / 'GAME STATE' don't sit tight against the row above. */
+.gim-section + .gim-section { margin-top: 12px; }
 .gim-section-title {
   font-size: 0.6rem;
   color: var(--gold-dim);
