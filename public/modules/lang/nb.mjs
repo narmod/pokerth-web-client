@@ -432,7 +432,7 @@ export const strings = {
     kickTooltip: 'Kast ut spiller', kickSubtitle:'Velg en spiller som skal fjernes fra bordet',
     closeTableTooltip: 'Lukk bordet',
     langTooltip: 'Bytt språk',
-    fullscreenTooltip: 'Fullskjerm', autoBtnLabel:'Auto-fold-knapp', quickBetLabel:'Hurtiginnsats-knapper',
+    fullscreenTooltip: 'Fullskjerm', menuAdmin:'Admin', autoBtnLabel:'Auto-fold-knapp', quickBetLabel:'Hurtiginnsats-knapper',
     chatPlaceholder: 'Melding…',
     hintFold: 'F — Kast deg',
     hintCheck: 'C — Sjekk',
