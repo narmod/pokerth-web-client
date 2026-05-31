@@ -433,7 +433,7 @@ export const strings = {
     kickTooltip: 'Αποβολή παίκτη',
     closeTableTooltip: 'Κλείσιμο τραπεζιού',
     langTooltip: 'Αλλαγή γλώσσας',
-    fullscreenTooltip: 'Πλήρης οθόνη',
+    fullscreenTooltip: 'Πλήρης οθόνη', autoBtnLabel:'Κουμπί Auto-fold', quickBetLabel:'Κουμπιά γρήγορου στοιχήματος',
     chatPlaceholder: 'Μήνυμα…',
     hintFold: 'F — Fold',
     hintCheck: 'C — Check',
