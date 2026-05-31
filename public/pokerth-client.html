@@ -1189,6 +1189,12 @@ function onAvatarImageChosen(input) {
     </div>
     <!-- MY ZONE -->
     <div class="my-zone">
+      <div style="text-align:center;margin-bottom:3px">
+        <button id="assist-toggle" type="button" onclick="toggleAssist()" data-i18n-title="assist" title="Assistance"
+          style="display:inline-flex;align-items:center;gap:7px;padding:3px 13px;background:rgba(255,255,255,0.05);border:1px solid var(--gold-dim);border-radius:14px;color:var(--cream);font-family:'Cinzel',serif;font-size:0.66rem;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;transition:opacity .2s,border-color .2s">
+          <span>💡</span><span data-i18n="assist">Assistance</span><span id="assist-dot" style="font-size:0.58rem;color:#3fb950">●</span>
+        </button>
+      </div>
       <div id="hand-strength" style="display:none"></div>
       <div id="g-actions" class="action-bar"></div>
     </div>
