@@ -433,7 +433,7 @@ export const strings = {
     gameDetailsTooltip: 'Szczegóły gry',
     adminBadgeTooltip: 'Utworzyłeś ten stół',
     statsTooltip: 'Statystyki sesji',
-    kickTooltip: 'Wyrzuć gracza',
+    kickTooltip: 'Wyrzuć gracza', kickSubtitle:'Wybierz gracza do usunięcia ze stołu',
     closeTableTooltip: 'Zamknij stół',
     langTooltip: 'Zmień język',
     fullscreenTooltip: 'Pełny ekran', autoBtnLabel:'Przycisk Auto-fold', quickBetLabel:'Przyciski szybkiego zakładu',
