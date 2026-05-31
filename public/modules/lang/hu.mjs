@@ -430,7 +430,7 @@ export const strings = {
     gameDetailsTooltip: 'Játék részletei',
     adminBadgeTooltip: 'Te hoztad létre ezt az asztalt',
     statsTooltip: 'Munkamenet statisztika',
-    kickTooltip: 'Játékos kirúgása',
+    kickTooltip: 'Játékos kirúgása', kickSubtitle:'Válassz egy játékost az asztaltól való eltávolításhoz',
     closeTableTooltip: 'Asztal bezárása',
     langTooltip: 'Nyelvváltás',
     fullscreenTooltip: 'Teljes képernyő', autoBtnLabel:'Auto-fold gomb', quickBetLabel:'Gyors tét gombok',
