@@ -433,7 +433,7 @@ export const strings = {
     kickTooltip: 'Játékos kirúgása',
     closeTableTooltip: 'Asztal bezárása',
     langTooltip: 'Nyelvváltás',
-    fullscreenTooltip: 'Teljes képernyő',
+    fullscreenTooltip: 'Teljes képernyő', autoBtnLabel:'Auto-fold gomb', quickBetLabel:'Gyors tét gombok',
     chatPlaceholder: 'Üzenet…',
     hintFold: 'F — Fold',
     hintCheck: 'C — Check',
