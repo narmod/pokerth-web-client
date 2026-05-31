@@ -430,7 +430,7 @@ export const strings = {
     gameDetailsTooltip: 'Podrobnosti hry',
     adminBadgeTooltip: 'Tento stôl ste vytvorili',
     statsTooltip: 'Štatistiky relácie',
-    kickTooltip: 'Vyhodiť hráča',
+    kickTooltip: 'Vyhodiť hráča', kickSubtitle:'Vyberte hráča na vyhodenie od stola',
     closeTableTooltip: 'Zavrieť stôl',
     langTooltip: 'Zmeniť jazyk',
     fullscreenTooltip: 'Celá obrazovka', autoBtnLabel:'Tlačidlo Auto-fold', quickBetLabel:'Tlačidlá rýchlej stávky',
