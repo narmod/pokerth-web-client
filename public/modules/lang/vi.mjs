@@ -433,7 +433,7 @@ export const strings = {
     kickTooltip: 'Đuổi người chơi',
     closeTableTooltip: 'Đóng bàn',
     langTooltip: 'Đổi ngôn ngữ',
-    fullscreenTooltip: 'Toàn màn hình',
+    fullscreenTooltip: 'Toàn màn hình', autoBtnLabel:'Nút Auto-fold', quickBetLabel:'Nút cược nhanh',
     chatPlaceholder: 'Tin nhắn…',
     hintFold: 'F — Fold',
     hintCheck: 'C — Check',
