@@ -60,32 +60,36 @@ This project is a **web frontend** that connects to any PokerTH server directly 
   <em>Connect screen — pick a login mode and join in seconds</em>
 </p>
 
+<div align="center">
+
 <table>
   <tr>
     <td align="center"><strong>Lobby &amp; chat</strong></td>
     <td align="center"><strong>Profile &amp; avatar</strong></td>
   </tr>
   <tr>
-    <td><img src="docs/screenshots/02-lobby.png" alt="Lobby and chat" width="240"/></td>
-    <td><img src="docs/screenshots/07-avatar.png" alt="Profile and avatar" width="240"/></td>
+    <td align="center"><img src="docs/screenshots/02-lobby.png" alt="Lobby and chat" width="240"/></td>
+    <td align="center"><img src="docs/screenshots/07-avatar.png" alt="Profile and avatar" width="240"/></td>
   </tr>
   <tr>
     <td align="center"><strong>Game table</strong></td>
     <td align="center"><strong>Action bar &amp; hand strength</strong></td>
   </tr>
   <tr>
-    <td><img src="docs/screenshots/03-game.png" alt="Game table" width="240"/></td>
-    <td><img src="docs/screenshots/04-actions.png" alt="Action bar and hand strength" width="240"/></td>
+    <td align="center"><img src="docs/screenshots/03-game.png" alt="Game table" width="240"/></td>
+    <td align="center"><img src="docs/screenshots/04-actions.png" alt="Action bar and hand strength" width="240"/></td>
   </tr>
   <tr>
     <td align="center"><strong>Showdown &amp; results</strong></td>
     <td align="center"><strong>Session statistics</strong></td>
   </tr>
   <tr>
-    <td><img src="docs/screenshots/05-win.png" alt="Showdown and results" width="240"/></td>
-    <td><img src="docs/screenshots/06-stats.png" alt="Session statistics" width="240"/></td>
+    <td align="center"><img src="docs/screenshots/05-win.png" alt="Showdown and results" width="240"/></td>
+    <td align="center"><img src="docs/screenshots/06-stats.png" alt="Session statistics" width="240"/></td>
   </tr>
 </table>
+
+</div>
 
 ---
 
