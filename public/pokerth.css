@@ -110,6 +110,32 @@ body {
   filter: drop-shadow(0 4px 12px rgba(0,0,0,0.55));
 }
 
+/* Small / short screens (e.g. iPhone SE, landscape): compact the login
+   card so it fits without scrolling. The header block (chip, title, suits,
+   subtitle) is the biggest space user, so it shrinks the most. !important
+   overrides the inline sizing set in the markup. */
+@media (max-height: 760px) {
+  #s-connect { padding: 8px 14px; }
+  .card { gap: 8px; padding: 14px 18px; }
+  .card-logo { padding: 8px 0 10px !important; }
+  .card-chip { width: 54px; height: 54px; }
+  .card-title-big { font-size: 1.5rem !important; margin-top: 6px !important; }
+  .card-suits-row { font-size: 0.9rem !important; margin-top: 5px !important; }
+  .card-subtitle { font-size: 0.55rem !important; margin-top: 4px !important; }
+  .f { gap: 4px; }
+  .f input { padding: 7px 10px; font-size: 0.85rem; }
+  .sel-wrap select { padding: 7px 30px 7px 10px; }
+  #av-trigger { width: 38px !important; height: 38px !important; font-size: 1.2rem !important; }
+  .btn-primary { padding: 10px; }
+  .tls-row { font-size: 0.66rem; }
+}
+@media (max-height: 640px) {
+  .card-chip { width: 44px; height: 44px; }
+  .card-title-big { font-size: 1.3rem !important; }
+  .card-suits-row { display: none !important; }
+  .card { gap: 6px; }
+}
+
 .sel-wrap { position: relative; }
 .sel-wrap select {
   -webkit-appearance: none; appearance: none;
