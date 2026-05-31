@@ -432,7 +432,7 @@ export const strings = {
     kickTooltip: 'Smid spiller ud',
     closeTableTooltip: 'Luk bordet',
     langTooltip: 'Skift sprog',
-    fullscreenTooltip: 'Fuldskærm',
+    fullscreenTooltip: 'Fuldskærm', autoBtnLabel:'Auto-fold-knap', quickBetLabel:'Hurtige indsats-knapper',
     chatPlaceholder: 'Besked…',
     hintFold: 'F — Kast dig',
     hintCheck: 'C — Tjek',
