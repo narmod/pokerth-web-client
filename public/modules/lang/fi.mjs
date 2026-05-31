@@ -429,7 +429,7 @@ export const strings = {
     gameDetailsTooltip: 'Pelin tiedot',
     adminBadgeTooltip: 'Loit tämän pöydän',
     statsTooltip: 'Istunnon tilastot',
-    kickTooltip: 'Potki pelaaja',
+    kickTooltip: 'Potki pelaaja', kickSubtitle:'Valitse pelaaja poistettavaksi pöydästä',
     closeTableTooltip: 'Sulje pöytä',
     langTooltip: 'Vaihda kieli',
     fullscreenTooltip: 'Koko näyttö', autoBtnLabel:'Auto-fold-painike', quickBetLabel:'Pikapanostuspainikkeet',
