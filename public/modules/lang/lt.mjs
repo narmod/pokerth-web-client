@@ -430,7 +430,7 @@ export const strings = {
     gameDetailsTooltip: 'Žaidimo informacija',
     adminBadgeTooltip: 'Jūs sukūrėte šį stalą',
     statsTooltip: 'Sesijos statistika',
-    kickTooltip: 'Pašalinti žaidėją',
+    kickTooltip: 'Pašalinti žaidėją', kickSubtitle:'Pasirinkite žaidėją, kurį norite pašalinti nuo stalo',
     closeTableTooltip: 'Uždaryti stalą',
     langTooltip: 'Keisti kalbą',
     fullscreenTooltip: 'Visas ekranas', autoBtnLabel:'Auto-fold mygtukas', quickBetLabel:'Greito statymo mygtukai',
