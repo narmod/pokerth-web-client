@@ -433,7 +433,7 @@ export const strings = {
     gameDetailsTooltip: 'Dettagli della partita',
     adminBadgeTooltip: 'Hai creato questo tavolo',
     statsTooltip: 'Statistiche della sessione',
-    kickTooltip: 'Espelli giocatore',
+    kickTooltip: 'Espelli giocatore', kickSubtitle:'Seleziona un giocatore da espellere dal tavolo',
     closeTableTooltip: 'Chiudi tavolo',
     langTooltip: 'Cambia lingua',
     fullscreenTooltip: 'Schermo intero',
