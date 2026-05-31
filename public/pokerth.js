@@ -7250,7 +7250,7 @@ function toggleHeaderOverflow(e) {
     var asep = document.getElementById('admin-sep-mob');
     var aref = document.getElementById('admin-close-mob');
     if (asep && aref) {
-      var adminOn = !(aref.style.display === 'none' || !aref.style.display);
+      var adminOn = (aref.style.display !== 'none');
       asep.style.display = adminOn ? '' : 'none';
     }
   } catch(e13) {}
