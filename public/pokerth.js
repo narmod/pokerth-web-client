@@ -1607,6 +1607,7 @@ const App = (() => {
 
   let gameState = 0;   // preflop/flop/turn/river
   let _playerAvatars = {}; // pid → emoji avatar (reçu des autres joueurs via proxy)
+  let _playerImgAvatars = {}; // pid → data URL (avatar image perso diffusé via proxy)
   // Step 1 of "PokerTH official avatar" feature: when PlayerInfoReply
   // arrives for a registered player who uploaded an avatar on pokerth.net,
   // it carries an AvatarData sub-message (field 5) with the hash + format.
@@ -1799,6 +1800,8 @@ const App = (() => {
       }
       if (!pthUrl && myChoice2 === '__pth__') pthUrl = '/img/pokerth-logo.png';
     }
+    // Autres joueurs : image perso reçue via le proxy (prioritaire sur l'emoji).
+    if (!isMe && _playerImgAvatars[pid]) pthUrl = _playerImgAvatars[pid];
     if (pthUrl) {
       return '<span class="' + chipClass + ' has-pth-avatar">'
            + '<img class="chip-pth-img" src="' + pthUrl + '" alt="" draggable="false">'
@@ -1895,9 +1898,12 @@ const App = (() => {
       try { stored = localStorage.getItem('pth_avatar'); } catch(e) {}
       if (pthUrl && stored !== null && stored !== '__pth__') pthUrl = null;
       if (!pthUrl && stored === '__pth__') pthUrl = '/img/pokerth-logo.png';
+      if (!pthUrl && stored === '__img__') {
+        try { pthUrl = localStorage.getItem('pth_avatar_img') || null; } catch(e) { pthUrl = null; }
+      }
       if (pthUrl) {
         avEl.innerHTML = '<img src="' + pthUrl + '" alt="" draggable="false">';
-      } else if (stored && stored !== '__pth__') {
+      } else if (stored && stored !== '__pth__' && stored !== '__img__') {
         avEl.textContent = stored;
       } else {
         // initial letter
@@ -2267,6 +2273,7 @@ const App = (() => {
     _lifePushTimer = setTimeout(function() {
       var s = _lifeGet(myName);
       var av = ''; try { av = localStorage.getItem('pth_avatar') || ''; } catch(e) {}
+      if (av === '__pth__' || av === '__img__') av = ''; // ne pas envoyer le sentinelle
       fetch('/stats', { method:'POST', headers:{'Content-Type':'application/json'},
         body: JSON.stringify({ name:myName, avatar:av,
           handsPlayed:s.handsPlayed, handsWon:s.handsWon, net:s.net, bigWin:s.bigWin,
@@ -3303,14 +3310,7 @@ const App = (() => {
         // and render our initial. They'll still get our real PokerTH
         // avatar (if any) through their own PlayerInfoReply flow, so
         // sending the sentinel would just produce visual garbage.
-        setTimeout(function() {
-          try {
-            var myAv = _myAvatarToBroadcast();
-            if (ws && ws.readyState === WebSocket.OPEN && !directWS) {
-              ws.send('AVATAR:' + myId + ':' + myAv);
-            }
-          } catch(e) {}
-        }, 500);
+        setTimeout(function() { _rebroadcastAvatar(); }, 500);
         // Plusieurs tentatives pour s'assurer que la table s'affiche
         [100, 300, 600, 1200].forEach(function(d){
           setTimeout(function(){
@@ -3471,7 +3471,7 @@ const App = (() => {
       case T.RemovedFromGame: { _gameMeta = null;
         addChat(null, t('youWereRemoved'), 'sys');
         _pendingRejoin = 0; try { localStorage.removeItem('pth_resume'); } catch(e) {}
-        _playerAvatars = {}; _pthAvatarHashes = {}; _pthAvatarsByHash = {}; _pthAvatarReqIdToHash = {};
+        _playerAvatars = {}; _playerImgAvatars = {}; _pthAvatarHashes = {}; _pthAvatarsByHash = {}; _pthAvatarReqIdToHash = {};
         App._resetGameState();
         show('s-lobby');
         break;
@@ -3598,14 +3598,8 @@ const App = (() => {
         }
 
         // Re-diffuser l'avatar à chaque début de main (pour les nouveaux
-        // connectés). Same '__pth__' guard as the initial broadcast: we
-        // never send the sentinel over the wire.
-        try {
-          var myAv2 = _myAvatarToBroadcast();
-          if (ws && ws.readyState === WebSocket.OPEN && !directWS) {
-            ws.send('AVATAR:' + myId + ':' + myAv2);
-          }
-        } catch(e) {}
+        // connectés). Respecte le choix image / emoji / initiale.
+        _rebroadcastAvatar();
         if (isFirstDeal) {
           setTimeout(function(){ renderSeats(); }, 120);
           renderGameWaiting(t('gameStartedWaitHand'));
@@ -4884,7 +4878,7 @@ const App = (() => {
       // downloaded yet (LAN, guest, etc). Falling back to the name's
       // first letter is the right text fallback; the image (real or
       // placeholder logo) is layered on top by the renderer.
-      if (_myAvatarCache && _myAvatarCache !== '__pth__') return _myAvatarCache;
+      if (_myAvatarCache && _myAvatarCache !== '__pth__' && _myAvatarCache !== '__img__') return _myAvatarCache;
       return myName ? myName.charAt(0).toUpperCase() : '?';
     }
     if (isBot(pid)) return '🤖';
@@ -5084,7 +5078,7 @@ const App = (() => {
       const initial    = getPlayerInitial(pid);
       const typeBadge  = getPlayerTypeBadge(pid);
       var _hasEmojiAv = isMe
-        ? (function(){ try { var av = localStorage.getItem('pth_avatar'); return !!av; } catch(e){ return false; } })()
+        ? (function(){ try { var av = localStorage.getItem('pth_avatar'); return !!av && av !== '__pth__' && av !== '__img__'; } catch(e){ return false; } })()
         : !!_playerAvatars[pid];
       const avatarType = isMe
         ? (_hasEmojiAv ? ' emoji-av' : '')
@@ -5138,6 +5132,8 @@ const App = (() => {
           try { pthAvUrl = localStorage.getItem('pth_avatar_img') || pthAvUrl; } catch(e) {}
         }
       }
+      // Autres joueurs : image perso reçue via le proxy (prioritaire sur l'emoji).
+      if (!isMe && _playerImgAvatars[pid]) pthAvUrl = _playerImgAvatars[pid];
       const pthImg = pthAvUrl
         ? '<img class="seat-pth-img" src="' + pthAvUrl + '" alt="" draggable="false">'
         : '';
@@ -5168,7 +5164,7 @@ const App = (() => {
     // the user picked the PokerTH avatar -- in that case the renderer
     // already put an <img> in place and the .seat-initial is hidden
     // by .has-pth-avatar > .seat-initial { display:none } anyway.
-    if (_myAvatarCache && _myAvatarCache !== '__pth__') {
+    if (_myAvatarCache && _myAvatarCache !== '__pth__' && _myAvatarCache !== '__img__') {
       requestAnimationFrame(function() {
         var mySeats = document.querySelectorAll('#g-seats .seat.me');
         mySeats.forEach(function(seat) {
@@ -5564,9 +5560,18 @@ const App = (() => {
   window.toggleStats  = toggleStats;
   window._toggleStats = toggleStats;
   window._broadcastMyAvatar = function(emoji) {
-    _myAvatarCache = emoji || ''; // màj du cache immédiatement
+    _myAvatarCache = (emoji && emoji !== '__img__' && emoji !== '__pth__') ? emoji : '';
     if (ws && ws.readyState === WebSocket.OPEN && !directWS && myId) {
-      ws.send('AVATAR:' + myId + ':' + (emoji || ''));
+      if (emoji === '__img__') {
+        // Diffuser l'image perso (data URL) aux autres clients du proxy.
+        var img = ''; try { img = localStorage.getItem('pth_avatar_img') || ''; } catch(e) {}
+        if (img) ws.send('AVATARIMG:' + myId + ':' + img);
+      } else {
+        // Emoji / initiale : diffuser l'emoji ET purger toute image perso
+        // précédemment diffusée chez les autres (sinon elle resterait affichée).
+        ws.send('AVATAR:' + myId + ':' + (_myAvatarToBroadcast()));
+        ws.send('AVATARIMG:' + myId + ':');
+      }
     }
     // Lobby pill is now an avatar+name combo (clickable, opens the
     // player-info modal). Refresh it so the user sees their pick
@@ -5574,6 +5579,22 @@ const App = (() => {
     // AND when picking from the in-lobby popup.
     try { if (typeof updateLobbyPill === 'function') updateLobbyPill(); } catch(e) {}
   };
+  // Re-diffusion de l'avatar (appelée au début de chaque main et à l'entrée
+  // en partie, pour les joueurs qui viennent d'arriver). Respecte le choix
+  // image / emoji / initiale courant.
+  function _rebroadcastAvatar() {
+    try {
+      if (!(ws && ws.readyState === WebSocket.OPEN && !directWS && myId)) return;
+      var choice = ''; try { choice = localStorage.getItem('pth_avatar') || ''; } catch(e) {}
+      if (choice === '__img__') {
+        var img = ''; try { img = localStorage.getItem('pth_avatar_img') || ''; } catch(e) {}
+        if (img) ws.send('AVATARIMG:' + myId + ':' + img);
+      } else {
+        ws.send('AVATAR:' + myId + ':' + _myAvatarToBroadcast());
+      }
+    } catch(e) {}
+  }
+  window._rebroadcastAvatar = _rebroadcastAvatar;
 
   function renderMyTurnActions() {
     // Defensive: never render action buttons in spectator mode. The
@@ -6213,6 +6234,22 @@ function dismissWinner() {
       ws.onmessage = function(e) {
         if (typeof e.data === 'string') {
           // Message texte = protocole proxy (réactions)
+          // Avatar IMAGE perso diffusé via le proxy. Le data URL contient
+          // des ':' -> on découpe uniquement sur le 1er séparateur après le pid.
+          if (e.data.startsWith('AVATARIMG:')) {
+            var imgRest = e.data.slice(10); // après "AVATARIMG:"
+            var imgSep  = imgRest.indexOf(':');
+            if (imgSep > 0) {
+              var imgPid = parseInt(imgRest.slice(0, imgSep), 10);
+              var imgUrl = imgRest.slice(imgSep + 1);
+              if (imgPid && imgPid !== myId) {
+                if (imgUrl && imgUrl.slice(0, 5) === 'data:') _playerImgAvatars[imgPid] = imgUrl;
+                else delete _playerImgAvatars[imgPid]; // vide = effacer l'image
+                if (typeof renderSeats === 'function' && seats.length) renderSeats();
+              }
+            }
+            return;
+          }
           if (e.data.startsWith('AVATAR:')) {
             var avParts = e.data.split(':');
             var avPid = parseInt(avParts[1]);
