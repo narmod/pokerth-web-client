@@ -241,7 +241,7 @@ export const strings = {
     results: 'முடிவுகள்',
     continue: 'தொடரவும் ▶',
     closeTable: '🔒 மேசையை மூடு',
-    startBots: '▶ பாட்கள்',
+    startBots: '▶ பாட்கள்', startNoBots:'▶ தொடங்கு (பாட்கள் இல்லை)', startWithBots:'▶ பாட்களுடன் தொடங்கு',
     leave: '✕',
     communityCards: 'பொது சீட்டுகள்',
     continueBtn: 'தொடரவும் ▶',
