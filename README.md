@@ -16,6 +16,7 @@
 - [Architecture](#architecture)
 - [Requirements](#requirements)
 - [Quick install (one-liner)](#quick-install-one-liner) &nbsp;📂
+  - [Managing the service](#managing-the-service) — `update` · `set-period` · `reset-stats` · …
 - [Manual installation (Ubuntu / Debian)](#manual-installation) &nbsp;📂
 - [Running locally (development)](#running-locally-development) &nbsp;📂
 - [Quick start — LAN family game](#quick-start-lan)
