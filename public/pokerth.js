@@ -2431,7 +2431,7 @@ const App = (() => {
           document.getElementById('raise-amt')) renderMyTurnActions();
     } catch (e) {}
     try { repaintPot(); } catch (e) {}
-    if (typeof showKeyHint === 'function') showKeyHint(_displayBB ? 'BB' : '¥');
+    if (typeof showKeyHint === 'function') showKeyHint(_displayBB ? t('displayBB') : t('displayChips'));
     return _displayBB;
   }
   // Update the menu button label (short toggle "BB / ¥", active side marked).
