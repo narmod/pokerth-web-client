@@ -2368,6 +2368,24 @@ const App = (() => {
   // `true` reinstates the feature without touching anything else.
   const FEATURE_AUTO_CHECK_FOLD = true;
   let _autoCheckFold = false; // armed by the per-turn checkbox; auto-resets every HandStart
+  // User preference: show the compact auto check/fold button in the action
+  // bar. OFF by default (some players — e.g. kids — found it confusing).
+  // Toggled from the header ••• menu and remembered in localStorage. The
+  // button is always rendered but hidden via a <body> class when off, so the
+  // toggle takes effect instantly without re-rendering the action bar.
+  let _showAutoBtn = false;
+  try { _showAutoBtn = localStorage.getItem('pth_show_auto') === '1'; } catch (e) {}
+  try { document.body.classList.toggle('hide-auto-btn', !_showAutoBtn); } catch (e) {}
+  function toggleAutoBtnPref() {
+    _showAutoBtn = !_showAutoBtn;
+    try { localStorage.setItem('pth_show_auto', _showAutoBtn ? '1' : '0'); } catch (e) {}
+    if (!_showAutoBtn) _autoCheckFold = false; // disarm when hiding
+    try { document.body.classList.toggle('hide-auto-btn', !_showAutoBtn); } catch (e) {}
+    var b = document.getElementById('auto-pref-mob');
+    if (b) b.innerHTML = (_showAutoBtn ? '\u2611' : '\u2610') + ' ' + t('autoBtnLabel');
+    return _showAutoBtn;
+  }
+  window.toggleAutoBtnPref = toggleAutoBtnPref;
   let _lastConnectParams = null;
   // Track mode + name of last Init sent so we can detect 'rapid mode swap'
   // patterns that the PokerTH server's anti-brute-force flags as
@@ -7178,6 +7196,15 @@ function toggleHeaderOverflow(e) {
         : 'BB / <b style="color:var(--gold)">¥</b>');
     }
   } catch(e8) {}
+  // Auto-button visibility toggle (☑ shown / ☐ hidden), localised each open.
+  try {
+    var ab = document.getElementById('auto-pref-mob');
+    if (ab) {
+      var aon = false;
+      try { aon = localStorage.getItem('pth_show_auto') === '1'; } catch(e9) {}
+      ab.innerHTML = (aon ? '\u2611' : '\u2610') + ' ' + t('autoBtnLabel');
+    }
+  } catch(e10) {}
   m.classList.toggle('open');
 }
 function closeHeaderOverflow() {

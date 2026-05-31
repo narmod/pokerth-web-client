@@ -195,6 +195,7 @@ export const strings = {
     waitingStartNow:'Lancer maintenant',
     autoCheckLabel:'Auto-check au prochain tour',
     autoFoldLabel:'Auto-fold au prochain tour',
+    autoBtnLabel:'Bouton Auto-fold',
     autoRearmHint:'se r\u00e9arme chaque tour',
     autoChecked:'Auto-check effectué',
     autoFolded:'Auto-fold effectué',

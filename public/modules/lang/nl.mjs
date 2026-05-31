@@ -354,6 +354,7 @@ export const strings = {
     waitingStartNow: 'Nu beginnen',
     autoCheckLabel: 'Auto-check volgende beurt',
     autoFoldLabel: 'Auto-fold volgende beurt',
+    autoBtnLabel:'Auto-fold-knop',
     autoRearmHint: 'opnieuw elke beurt',
     autoChecked: 'Auto-check',
     autoFolded: 'Auto-fold',
