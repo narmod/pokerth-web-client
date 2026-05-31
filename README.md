@@ -19,6 +19,7 @@
 - [Manual installation (Ubuntu / Debian)](#manual-installation) &nbsp;📂
 - [Running locally (development)](#running-locally-development) &nbsp;📂
 - [Quick start — LAN family game](#quick-start-lan)
+- [Self-hosting on a Raspberry Pi](#raspberry-pi)
 - [Protocol notes](#protocol-notes)
 - [Known limitations](#known-limitations)
 - [Roadmap / Suggested next steps](#roadmap)
@@ -134,7 +135,7 @@ This project is a **web frontend** that connects to any PokerTH server directly 
 - Tab title flashes: ⚡ YOUR TURN — PokerTH
 - Keyboard shortcuts: **F** = Fold, **C** / Space = Call, **R** = Raise, **A** = All-in
 - Sound effects: distinct sounds for fold / check / call / raise / all-in / shuffle / drumroll / bad-beat / win fanfare, plus urgent-timer warning
-- Full i18n in 9 languages — German, English, Spanish, French, Italian, Dutch, Polish, Portuguese and Russian — switchable on the fly
+- **Full i18n in 33 languages**, switchable on the fly and auto-detected from the browser locale — the complete official PokerTH language set plus Ukrainian, Romanian, Croatian and Serbian, with Brazilian and European Portuguese shipped as separate catalogues (pt-BR / pt-PT)
 - Fullscreen mode on all screens
 - Poker hand reference overlay (? button)
 - Exponential-backoff auto-reconnect with live countdown
@@ -188,7 +189,7 @@ pokerth-web-client/
 │   ├── pokerth.css          # Styles
 │   ├── manifest.json        # PWA manifest
 │   ├── sw.js                # Service Worker (versioned cache)
-│   ├── modules/             # ES modules: i18n, sounds, and lang/ (9 locales)
+│   ├── modules/             # ES modules: i18n, sounds, and lang/ (33 locales)
 │   ├── proto/               # Protobuf bundle & helpers
 │   └── favicon-*.png        # PWA icons
 ├── docs/
@@ -521,6 +522,41 @@ Notes:
 
 ---
 
+<a id="raspberry-pi"></a>
+## Self-hosting on a Raspberry Pi 🥧
+
+Both the PokerTH server **and** this web proxy are extremely light: PokerTH is a turn-based card game exchanging small Protobuf messages, so a 10-player table is a trivial load. The players' phones do all the rendering — the Pi just relays messages and serves static files. That makes a Pi a perfect always-on box for family / LAN games.
+
+**Which model?**
+
+| Model | Verdict |
+|---|---|
+| **Pi 4 (2 GB)** | ✅ Recommended sweet spot — Gigabit Ethernet, comfortable headroom, smooth `npm install` / `git`. |
+| **Pi 5** | Overkill but fastest; great if you want room for other services. |
+| **Pi 3B+ (1 GB)** | Works fine for runtime. |
+| **Pi Zero 2 W (512 MB, Wi-Fi only)** | Not recommended — tight RAM for `npm install`, no wired Ethernet. |
+
+**For a smooth game, the network matters more than the Pi:**
+
+- Connect the Pi to your router by **wired Ethernet** — the server stays rock-solid.
+- The quality of your **Wi-Fi / access point** affects the 10 players more than the Pi's CPU.
+- Prefer booting from a **USB SSD** (Pi 4/5) over a microSD for reliability with PM2 logs; otherwise use a good A1/A2 card.
+
+**Install:**
+
+1. Flash a **64-bit, Debian-based OS** — **Raspberry Pi OS (64-bit) is recommended** (Debian arm64 works too). An `apt`-based system is required: the one-liner installer needs `apt` and stops cleanly on non-apt distros (Alpine, Fedora…).
+2. Install the PokerTH server — it is packaged for Debian / Ubuntu including ARM:
+   ```bash
+   sudo apt update && sudo apt install pokerth-server
+   ```
+   (If your distro doesn't ship it, build it from the [upstream sources](https://github.com/pokerth/pokerth).) Run `pokerth_server`; it listens on TCP **7234** by default.
+3. Install the web proxy exactly as in [Manual installation](#manual-installation) (Node 20 LTS + PM2 + this repo). The one-liner installer works on ARM too.
+4. From any phone on the same Wi-Fi, open `http://<pi-ip>:8080`, choose **LAN** mode, and deal.
+
+> **PWA extras (install to home screen, offline, notifications) need HTTPS** — see [Known limitations](#known-limitations). The game itself works perfectly over plain `http://` / `ws://` on the LAN.
+
+---
+
 ## Protocol notes
 
 PokerTH speaks a length-prefixed Protobuf-based protocol over TCP. This client parses and emits a hand-written subset of those messages — there is no full Protobuf runtime in the browser, which keeps the bundle small.
@@ -538,6 +574,7 @@ A few things worth knowing if you plan to hack on this:
 - The bulk of the logic still lives in a single `pokerth.js` file, though i18n, sounds and the protocol layer have already been extracted into ES modules. Further splitting would help.
 - More automated protocol tests are needed before calling the client production-ready.
 - Spectator mode works but lacks a few quality-of-life touches (e.g. you cannot see other players' cards at showdown the same way the native client does).
+- **PWA features (install to home screen, offline Service Worker, background notifications) require a *secure context*** — i.e. HTTPS, or `localhost`. Over plain `http://` on a LAN IP (e.g. `192.168.1.10:8080`) the game plays perfectly, but the browser disables those three features by design. To get them on a LAN, serve the client over HTTPS — e.g. [`mkcert`](https://github.com/FiloSottile/mkcert) for a locally-trusted certificate, a self-signed cert, a real domain with Let's Encrypt, or a tunnel such as Cloudflare Tunnel / Tailscale.
 
 ---
 
