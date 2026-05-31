@@ -2382,7 +2382,7 @@ const App = (() => {
     if (!_showAutoBtn) _autoCheckFold = false; // disarm when hiding
     try { document.body.classList.toggle('hide-auto-btn', !_showAutoBtn); } catch (e) {}
     var b = document.getElementById('auto-pref-mob');
-    if (b) b.innerHTML = '\u23E9 ' + t('autoBtnLabel') + (_showAutoBtn ? ' \u2713' : '');
+    if (b) b.innerHTML = '🔁 ' + t('autoBtnLabel') + (_showAutoBtn ? ' \u2713' : '');
     return _showAutoBtn;
   }
   window.toggleAutoBtnPref = toggleAutoBtnPref;
@@ -7202,7 +7202,7 @@ function toggleHeaderOverflow(e) {
     if (ab) {
       var aon = false;
       try { aon = localStorage.getItem('pth_show_auto') === '1'; } catch(e9) {}
-      ab.innerHTML = '\u23E9 ' + t('autoBtnLabel') + (aon ? ' \u2713' : '');
+      ab.innerHTML = '🔁 ' + t('autoBtnLabel') + (aon ? ' \u2713' : '');
     }
   } catch(e10) {}
   m.classList.toggle('open');
