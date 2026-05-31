@@ -6480,7 +6480,7 @@ function dismissWinner() {
       } else {
         // Fallback directWS : tenter via PokerTH chat
         _lastMsgWasReaction = true;
-        send(MSG.buildChat('[R]' + emoji, gId || 0));
+        send(gId ? MSG.buildGameChat(gId, '[R]' + emoji) : MSG.buildChat('[R]' + emoji));
       }
       // Afficher immédiatement pour moi
       handleIncomingReaction(myId, emoji);
@@ -6494,7 +6494,7 @@ function dismissWinner() {
       if (!text || !ws) return;
       input.value = '';
       _lastMsgWasReaction = false;
-      send(MSG.buildChat(text, gId || 0));
+      send(gId ? MSG.buildGameChat(gId, text) : MSG.buildChat(text));
       addGameChat(myName, text, 'mine');
     },
     sendChat() {
