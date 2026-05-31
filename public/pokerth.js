@@ -6225,7 +6225,6 @@ function dismissWinner() {
       if (!pids.length) {
         list.innerHTML = '<div class="km-empty">— ' + t('kickNoPlayers') + ' —</div>';
       } else {
-        var fr = (typeof _lang === 'undefined' || _lang !== 'en');
         var html = pids.map(function(pid) {
           var name = players[pid] || ('#' + pid);
           var sd   = seatData[pid] || {};
@@ -6244,7 +6243,7 @@ function dismissWinner() {
           var btn = isMe ? '' :
             '<button class="km-kick" type="button" ' +
               'onclick="App.askConfirmKick(' + pid + ')" ' +
-              'title="' + (fr ? 'Kicker ' + escName : 'Kick ' + escName) + '" ' +
+              'title="' + t('kickTooltip') + '" ' +
               'aria-label="Kick">🗑️</button>';
           return '<div class="' + rowCls + '">' +
                    avChip +
