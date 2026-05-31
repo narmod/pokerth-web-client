@@ -429,7 +429,7 @@ export const strings = {
     gameDetailsTooltip: 'ゲームの詳細',
     adminBadgeTooltip: 'あなたがこのテーブルを作成しました',
     statsTooltip: 'セッション統計',
-    kickTooltip: 'プレイヤーをキック',
+    kickTooltip: 'プレイヤーをキック', kickSubtitle:'テーブルからキックするプレイヤーを選択',
     closeTableTooltip: 'テーブルを閉じる',
     langTooltip: '言語を切り替え',
     fullscreenTooltip: '全画面', autoBtnLabel:'Auto-fold ボタン', quickBetLabel:'クイックベットボタン',
