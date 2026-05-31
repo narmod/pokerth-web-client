@@ -354,7 +354,7 @@ export const strings = {
     waitingStartNow: 'Jetzt starten',
     autoCheckLabel: 'Nächster Zug: Auto-Check',
     autoFoldLabel: 'Nächster Zug: Auto-Fold',
-    autoBtnLabel:'Auto-Fold-Button',
+    autoBtnLabel:'Auto-Fold-Button', quickBetLabel:'Schnelleinsatz-Tasten',
     autoRearmHint: 'erneuert sich jede Runde',
     autoChecked: 'Auto-Check',
     autoFolded: 'Auto-Fold',
