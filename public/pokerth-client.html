@@ -1336,8 +1336,8 @@ if ('serviceWorker' in navigator) {
     <div class="kcm-title" id="kcm-title">Kicker ce joueur ?</div>
     <div class="kcm-msg" id="kcm-msg">—</div>
     <div class="kcm-btns">
-      <button class="kcm-cancel" type="button" onclick="App.cancelKickConfirm()">Annuler</button>
-      <button class="kcm-confirm" type="button" onclick="App.doKickConfirmed()">🗑️ Kicker</button>
+      <button class="kcm-cancel" type="button" onclick="App.cancelKickConfirm()" data-i18n="leaveCancel">Cancel</button>
+      <button class="kcm-confirm" type="button" onclick="App.doKickConfirmed()">🗑️ <span data-i18n="kickTooltip">Kick</span></button>
     </div>
   </div>
 </div>
