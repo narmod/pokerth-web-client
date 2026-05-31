@@ -430,7 +430,7 @@ export const strings = {
     gameDetailsTooltip: 'Detalhes do jogo',
     adminBadgeTooltip: 'Você criou esta mesa',
     statsTooltip: 'Estatísticas da sessão',
-    kickTooltip: 'Expulsar jogador',
+    kickTooltip: 'Expulsar jogador', kickSubtitle:'Selecione um jogador para remover da mesa',
     closeTableTooltip: 'Fechar mesa',
     langTooltip: 'Mudar idioma',
     fullscreenTooltip: 'Tela cheia',
