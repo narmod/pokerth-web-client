@@ -2515,6 +2515,19 @@ body {
 .btn-check { background: #1a5c1a; color: #c0ffc0; }
 .btn-call  { background: #1a4a8a; color: #c0d8ff; }
 .btn-raise { background: var(--gold); color: #110900; }
+/* Compact auto check/fold toggle, sits next to Call/Check. Discreet at
+   rest; turns green when armed for the next turn. Icon-only on narrow. */
+.btn-auto {
+  background: rgba(200,168,74,0.10);
+  color: var(--gold-dim);
+  border: 1px solid var(--border);
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 0.66rem;
+}
+.btn-auto .auto-ic { font-size: 1em; line-height: 1; }
+.btn-auto.armed { background: rgba(39,174,96,0.28); border-color: var(--green); color: #d7ffe0; }
+.action-top-row .btn-auto { flex: 0 0 auto; min-width: 0; }
+@media (max-width: 480px) { .btn-auto .auto-tx { display: none; } }
 /* All-In as a SECONDARY action: outlined, not a big red bar — avoids the
    red-on-red clash with Fold and discourages accidental taps. */
 .btn-allin {

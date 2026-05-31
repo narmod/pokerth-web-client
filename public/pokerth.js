@@ -5413,26 +5413,27 @@ const App = (() => {
     // checkbox can be enabled or disabled in one place without removing
     // the underlying logic. When the flag is false, `autoRow` is empty
     // and the action bar starts directly with the fold/call/raise grid.
-    let autoRow = '';
+    let autoBtn = '';
     if (FEATURE_AUTO_CHECK_FOLD) {
       const autoLabel = canCheck
         ? t('autoCheckLabel')
         : t('autoFoldLabel');
-      autoRow = '<label class="auto-cf-row">' +
-        '<span class="auto-switch">' +
-          '<input type="checkbox" id="auto-cf-chk"' + (_autoCheckFold ? ' checked' : '') +
-            ' onchange="App.toggleAutoCheckFold(this.checked)">' +
-          '<span class="auto-switch-track"></span>' +
-        '</span>' +
-        '<span class="auto-cf-label">' + autoLabel + '</span>' +
-        '<span class="auto-cf-hint">' + t('autoRearmHint') + '</span>' +
-        '</label>';
+      // Compact toggle button sitting next to Call/Check (no full-width row).
+      // 'armed' class reflects window._autoCheckFold; tapping flips it.
+      autoBtn = '<button class="btn-action btn-auto' + (_autoCheckFold ? ' armed' : '') + '"' +
+        ' id="auto-cf-btn" onclick="App.toggleAutoCheckFold()"' +
+        ' aria-pressed="' + (_autoCheckFold ? 'true' : 'false') + '"' +
+        ' title="' + autoLabel + ' \u2014 ' + t('autoRearmHint') + '">' +
+        '<span class="auto-ic">\u23E9</span>' +
+        '<span class="auto-tx">' + autoLabel + '</span>' +
+        '</button>';
     }
 
-    const h = autoRow + '<div class="action-grid">'
+    const h = '<div class="action-grid">'
       + '<div class="action-top-row">'
       +   '<button class="btn-action btn-fold" onclick="App.doAction(1,0)" title="Fold (F)">' + t('fold') + '</button>'
       +   '<button class="btn-action ' + callClass + '" onclick="' + callAction + '" title="Call/Check (C)">' + callLabel + '</button>'
+      +   autoBtn
       + '</div>'
       + '<div class="pct-row">'
       +   '<button class="btn-pct"' + da + ' onclick="setPct(' + p33  + ')"><span class="pct-p">33%</span><span class="pct-amt">' + fmtChips(p33) + '</span></button>'
@@ -6334,12 +6335,17 @@ function dismissWinner() {
     },
 
     toggleAutoCheckFold(on) {
-      // Flips the per-hand auto check/fold state. Bound to the checkbox
-      // injected by renderMyTurnActions(). The flag is consumed on the
-      // NEXT PlayersTurn message for our pid within the same hand, and
-      // is force-reset on every HandStart so the user never plays a
-      // fresh hand on autopilot.
-      _autoCheckFold = !!on;
+      // Flips the per-hand auto check/fold state. Now driven by a compact
+      // toggle button next to Call/Check (no arg = flip). The flag is
+      // consumed on the NEXT PlayersTurn for our pid within the same hand,
+      // and force-reset on every HandStart so the user never starts a fresh
+      // hand on autopilot.
+      _autoCheckFold = (on === undefined) ? !_autoCheckFold : !!on;
+      var b = document.getElementById('auto-cf-btn');
+      if (b) {
+        b.classList.toggle('armed', _autoCheckFold);
+        b.setAttribute('aria-pressed', _autoCheckFold ? 'true' : 'false');
+      }
     },
 
     confirmLeaveGame() {
