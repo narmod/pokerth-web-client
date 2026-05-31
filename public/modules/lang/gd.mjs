@@ -241,7 +241,7 @@ export const strings = {
     results: 'Toraidhean',
     continue: 'Lean air adhart ▶',
     closeTable: '🔒 Dùin am bòrd',
-    startBots: '▶ Bots',
+    startBots: '▶ Bots', startNoBots:'▶ Tòisich (gun bots)', startWithBots:'▶ Tòisich le bots',
     leave: '✕',
     communityCards: 'Cairtean coitcheann',
     continueBtn: 'Lean air adhart ▶',
