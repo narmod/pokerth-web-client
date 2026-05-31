@@ -2552,6 +2552,7 @@ const App = (() => {
     try { document.body.classList.toggle('hide-auto-btn', !_showAutoBtn); } catch (e) {}
     var b = document.getElementById('auto-pref-mob');
     if (b) b.innerHTML = '🔁 ' + t('autoBtnLabel') + _menuTick(_showAutoBtn);
+    if (typeof showKeyHint === 'function') showKeyHint(t('autoBtnLabel') + (_showAutoBtn ? ' \u2713' : ''));
     return _showAutoBtn;
   }
   window.toggleAutoBtnPref = toggleAutoBtnPref;
@@ -2569,6 +2570,7 @@ const App = (() => {
     try { document.body.classList.toggle('hide-pct-btns', !_showPctBtns); } catch (e) {}
     var b = document.getElementById('pct-pref-mob');
     if (b) b.innerHTML = '💰 ' + t('quickBetLabel') + _menuTick(_showPctBtns);
+    if (typeof showKeyHint === 'function') showKeyHint(t('quickBetLabel') + (_showPctBtns ? ' \u2713' : ''));
     return _showPctBtns;
   }
   window.toggleQuickBetPref = toggleQuickBetPref;
