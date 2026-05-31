@@ -25,5 +25,42 @@
     "games",
     "entertainment"
   ],
+  "shortcuts": [
+    {
+      "name": "Join or create a table",
+      "short_name": "Play",
+      "description": "Connect and jump straight into a game",
+      "url": "/?go=play"
+    },
+    {
+      "name": "Create a table",
+      "short_name": "Create",
+      "description": "Open the create-table form",
+      "url": "/?go=create"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/screenshots/social-preview.png",
+      "sizes": "1280x640",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "PokerTH Web Client \u2014 play Texas Hold'em in your browser"
+    },
+    {
+      "src": "/screenshots/game.png",
+      "sizes": "480x982",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "At the table on a phone"
+    },
+    {
+      "src": "/screenshots/lobby.png",
+      "sizes": "480x982",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Lobby \u2014 available tables"
+    }
+  ],
   "lang": "fr"
 }

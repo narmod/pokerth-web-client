@@ -956,7 +956,13 @@ document.addEventListener("DOMContentLoaded", function() {
     try {
       var sp = new URLSearchParams(window.location.search);
       var h = sp.get('host'), p = sp.get('port'),
-          tls = sp.get('tls'), table = sp.get('table');
+          tls = sp.get('tls'), table = sp.get('table'),
+          go = sp.get('go');
+      // PWA manifest shortcuts open /?go=play or /?go=create. Remember the
+      // intent on window so show('s-lobby') can fire it once the user has
+      // connected and the lobby is visible. Read at GLOBAL scope (the App
+      // IIFE's show() reads window._pendingGo).
+      if (go === 'play' || go === 'create') window._pendingGo = go;
       if (h) { var hi = document.getElementById('host'); if (hi) hi.value = h; }
       if (p) { var pi = document.getElementById('port'); if (pi) pi.value = p; }
       if (tls !== null) {
@@ -980,8 +986,11 @@ document.addEventListener("DOMContentLoaded", function() {
         if (lm && lm.value === 'auth') { /* keep credentialed if chosen */ }
         else if (lm) { lm.value = 'unauth'; if (App && App.onLoginModeChange) App.onLoginModeChange(); }
       }
-      if (h || p || table) {
-        window._shareLinkActive = true;
+      if (h || p || table || go) {
+        // Only treat as a "share link" (which suppresses saved-prefs
+        // restore of host/port/mode) when a server/table was actually
+        // encoded. A bare ?go= shortcut must keep the user's saved server.
+        if (h || p || table) window._shareLinkActive = true;
         // Clean the URL so a manual refresh doesn't re-trigger auto-join
         // (and so the link doesn't linger in the address bar). We keep
         // the pending join in memory (window._pendingAutoJoin).
@@ -2392,6 +2401,21 @@ const App = (() => {
     $(id).classList.add('active');
     // Keep the screen awake only while at the table.
     if (id === 's-game') acquireWakeLock(); else releaseWakeLock();
+    // PWA shortcut intent (?go=play|create): fire ONCE when the lobby first
+    // appears (i.e. right after a successful connect). Cleared immediately so
+    // later returns to the lobby (e.g. leaving a game) don't re-trigger it.
+    if (id === 's-lobby' && window._pendingGo) {
+      var _go = window._pendingGo; window._pendingGo = null;
+      setTimeout(function () {
+        try {
+          if (_go === 'create') {
+            if (App && App.toggleCreateForm) App.toggleCreateForm();
+          } else if (App && App.autoJoinOrCreate) {
+            App.autoJoinOrCreate();
+          }
+        } catch (e) {}
+      }, 700);
+    }
   }
 
   // ── Screen Wake Lock ──────────────────────────────────────────────────
@@ -5262,6 +5286,9 @@ const App = (() => {
     var msg = t('notifTurnTitle');
     var sub = t('notifTurnBody');
     speak(t('voiceYourTurn'));
+    // App-icon badge (installed PWA) — feature-detected global helper.
+    window._badgeTurn = true;
+    if (window.refreshAppBadge) window.refreshAppBadge();
     // Notification navigateur (si onglet en arrière-plan)
     if (document.hidden && 'Notification' in window && Notification.permission === 'granted') {
       try { new Notification(msg, { body: sub, icon: '/favicon.ico', tag: 'pokerth-turn', silent: false, vibrate: _hapticEnabled ? [90, 50, 90] : [] }); } catch(e) {}
@@ -5287,6 +5314,8 @@ const App = (() => {
   function clearTurnNotif() {
     clearInterval(_titleBlinkID);
     document.title = _origTitle;
+    window._badgeTurn = false;
+    if (window.refreshAppBadge) window.refreshAppBadge();
   }
 
   window._renderSeats = function() { if (seats.length) renderSeats(); };
@@ -7220,11 +7249,28 @@ function _renderChatBadge() {
 function bumpUnreadChat() {
   window._unreadChat = (window._unreadChat || 0) + 1;
   _renderChatBadge();
+  refreshAppBadge();
 }
 function clearUnreadChat() {
   window._unreadChat = 0;
   _renderChatBadge();
+  refreshAppBadge();
 }
+
+// ── App-icon badge (PWA Badging API) ────────────────────────────────
+// Shows a count on the installed app icon = unread chat + (1 if it's your
+// turn). Feature-detected: Chrome/Edge desktop+Android and installed
+// Safari/iOS support it; Firefox does not, so it silently no-ops there.
+window._badgeTurn = false;
+function refreshAppBadge() {
+  try {
+    if (!('setAppBadge' in navigator)) return;
+    var n = (window._unreadChat || 0) + (window._badgeTurn ? 1 : 0);
+    if (n > 0) navigator.setAppBadge(n);
+    else if ('clearAppBadge' in navigator) navigator.clearAppBadge();
+  } catch (e) { /* badge unavailable — ignore */ }
+}
+window.refreshAppBadge = refreshAppBadge;
 
 function toggleGameChat() {
   var panel = document.getElementById('g-chat-panel');
