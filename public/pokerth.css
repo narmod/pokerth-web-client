@@ -103,6 +103,12 @@ body {
   line-height: 1;
 }
 .card-subtitle { font-size: 0.6rem; letter-spacing: 0.4em; text-transform: uppercase; color: var(--text); }
+.card-chip {
+  display: block;
+  margin: 0 auto;
+  width: 86px; height: 86px;
+  filter: drop-shadow(0 4px 12px rgba(0,0,0,0.55));
+}
 
 .sel-wrap { position: relative; }
 .sel-wrap select {

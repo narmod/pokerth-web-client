@@ -1,7 +1,7 @@
 /**
  * PokerTH Service Worker — v3
  * ⚠ Bump CACHE_VERSION on every deploy to force update.
- *    e.g. 'pokerth-v2226-05-26' or just increment the number.
+ *    e.g. 'pokerth-v2326-05-26' or just increment the number.
  *
  * Strategy:
  *   • install   — precache the critical app shell (HTML, JS, CSS, modules,
@@ -11,7 +11,7 @@
  *                 offline; cross-origin (fonts, etc.) and WS upgrades are
  *                 left untouched
  */
-const CACHE_VERSION = 'pokerth-v22';
+const CACHE_VERSION = 'pokerth-v23';
 
 // Critical app shell precached on install. Keep this list tight — anything
 // large or rarely used (e.g. the protobuf bundle) is fetched on demand and
@@ -38,7 +38,8 @@ const ASSETS = [
   '/favicon.svg',
   '/favicon-32.png',
   '/favicon-192.png',
-  '/favicon-512.png'
+  '/favicon-512.png',
+  '/logo-chip.png'
 ];
 
 // ── Install : precache the app shell ──
