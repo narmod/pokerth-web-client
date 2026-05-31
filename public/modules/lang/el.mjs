@@ -433,7 +433,7 @@ export const strings = {
     kickTooltip: 'Αποβολή παίκτη', kickSubtitle:'Επιλέξτε έναν παίκτη για αποβολή από το τραπέζι',
     closeTableTooltip: 'Κλείσιμο τραπεζιού',
     langTooltip: 'Αλλαγή γλώσσας',
-    fullscreenTooltip: 'Πλήρης οθόνη', autoBtnLabel:'Κουμπί Auto-fold', quickBetLabel:'Κουμπιά γρήγορου στοιχήματος',
+    fullscreenTooltip: 'Πλήρης οθόνη', menuAdmin:'Διαχειριστής', autoBtnLabel:'Κουμπί Auto-fold', quickBetLabel:'Κουμπιά γρήγορου στοιχήματος',
     chatPlaceholder: 'Μήνυμα…',
     hintFold: 'F — Fold',
     hintCheck: 'C — Check',
