@@ -434,7 +434,7 @@ export const strings = {
     kickTooltip: '踢出玩家', kickSubtitle:'选择要踢出牌桌的玩家',
     closeTableTooltip: '关闭牌桌',
     langTooltip: '切换语言',
-    fullscreenTooltip: '全屏', autoBtnLabel:'Auto-fold 按钮', quickBetLabel:'快速下注按钮',
+    fullscreenTooltip: '全屏', menuAdmin:'管理员', autoBtnLabel:'Auto-fold 按钮', quickBetLabel:'快速下注按钮',
     chatPlaceholder: '消息…',
     hintFold: 'F — 弃牌',
     hintCheck: 'C — 过牌',
