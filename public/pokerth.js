@@ -405,9 +405,16 @@ window.refreshMyAvatar = function() {
       trig.classList.add('has-avatar');
     }
   }
-  // Effective choice: 'pth' | 'initial' | 'emoji-xxx'
+  // Image perso choisie par l'utilisateur (sentinelle '__img__') : le client
+  // web ne peut PAS récupérer l'avatar serveur d'un compte (le serveur ne le
+  // stocke pas par compte — il le reçoit du client à la connexion). On laisse
+  // donc l'utilisateur fournir sa propre image, stockée localement en data URL.
+  var customImg = (stored === '__img__')
+    ? (function(){ try { return localStorage.getItem('pth_avatar_img') || null; } catch(e){ return null; } })()
+    : null;
+  // Effective choice: 'pth' | 'img' | 'initial' | 'emoji-xxx'
   var usePth   = (stored === '__pth__') && !!pthUrl;
-  var emojiAv  = (stored && stored !== '__pth__') ? stored : '';
+  var emojiAv  = (stored && stored !== '__pth__' && stored !== '__img__') ? stored : '';
   var av = emojiAv; // back-compat var name used in the rest of the function
   _myAvatarCache = av;
   var display = av || (typeof myName !== 'undefined' ? (myName||'').charAt(0).toUpperCase() : '?');
@@ -416,6 +423,9 @@ window.refreshMyAvatar = function() {
   if (pbAv) {
     if (usePth) {
       pbAv.innerHTML = '<img class="pb-pth-img" src="' + pthUrl + '" alt="" draggable="false">';
+      pbAv.classList.add('has-pth-avatar');
+    } else if (customImg) {
+      pbAv.innerHTML = '<img class="pb-pth-img" src="' + customImg + '" alt="" draggable="false">';
       pbAv.classList.add('has-pth-avatar');
     } else if (stored === '__pth__') {
       // Q2=b: user picked the PokerTH avatar but no image is available
@@ -442,7 +452,8 @@ window.refreshMyAvatar = function() {
       //      '__pth__' but nothing is available yet -- Q2=b)
       //   3) nothing (fall back to emoji or initial)
       var effectiveUrl = usePth ? pthUrl
-                       : (stored === '__pth__' ? '/img/pokerth-logo.png' : null);
+                       : (customImg ? customImg
+                       : (stored === '__pth__' ? '/img/pokerth-logo.png' : null));
       if (effectiveUrl) {
         if (!img) {
           img = document.createElement('img');
@@ -1736,7 +1747,7 @@ const App = (() => {
     if (!v) {
       try { v = localStorage.getItem('pth_avatar') || ''; } catch(e) { v = ''; }
     }
-    return (v === '__pth__') ? '' : v;
+    return (v === '__pth__' || v === '__img__') ? '' : v;
   }
   // Same idea for broadcasting to other players: don't send the
   // sentinel over the wire (it would show as 4 weird chars on their
@@ -1745,7 +1756,7 @@ const App = (() => {
   function _myAvatarToBroadcast() {
     var v = '';
     try { v = localStorage.getItem('pth_avatar') || ''; } catch(e) {}
-    return (v === '__pth__') ? '' : v;
+    return (v === '__pth__' || v === '__img__') ? '' : v;
   }
 
   // Unified avatar-chip renderer for compact UI lists (waiting room,
@@ -1783,7 +1794,10 @@ const App = (() => {
     if (!pthUrl && isMe) {
       var myChoice2 = null;
       try { myChoice2 = localStorage.getItem('pth_avatar'); } catch(e) {}
-      if (myChoice2 === '__pth__') pthUrl = '/img/pokerth-logo.png';
+      if (myChoice2 === '__img__') {
+        try { pthUrl = localStorage.getItem('pth_avatar_img') || null; } catch(e) { pthUrl = null; }
+      }
+      if (!pthUrl && myChoice2 === '__pth__') pthUrl = '/img/pokerth-logo.png';
     }
     if (pthUrl) {
       return '<span class="' + chipClass + ' has-pth-avatar">'
@@ -5118,6 +5132,10 @@ const App = (() => {
         // back to a bare initial letter.
         if (!pthAvUrl && myChoice === '__pth__') {
           pthAvUrl = '/img/pokerth-logo.png';
+        }
+        // Image perso choisie localement : l'afficher sur mon siège.
+        if (myChoice === '__img__') {
+          try { pthAvUrl = localStorage.getItem('pth_avatar_img') || pthAvUrl; } catch(e) {}
         }
       }
       const pthImg = pthAvUrl
