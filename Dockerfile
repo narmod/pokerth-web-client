@@ -14,6 +14,7 @@ COPY . .
 # mounted here by docker-compose so stats survive container recreation.
 RUN mkdir -p /data && chown -R node:node /data
 ENV STATS_FILE=/data/stats.json
+ENV STATS_META_FILE=/data/stats.meta.json
 
 # Drop root privileges.
 USER node

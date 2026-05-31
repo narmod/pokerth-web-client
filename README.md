@@ -2,6 +2,11 @@
 
 > A modern, mobile-friendly browser client for [PokerTH](https://github.com/pokerth/pokerth) — the legendary open-source Texas Hold'em poker game.
 
+[![Publish Docker image](https://github.com/narmod/pokerth-web-client/actions/workflows/docker-publish.yml/badge.svg)](https://github.com/narmod/pokerth-web-client/actions/workflows/docker-publish.yml)
+[![Container image](https://img.shields.io/badge/ghcr.io-pokerth--web--client-2496ed?logo=docker&logoColor=white)](https://github.com/narmod/pokerth-web-client/pkgs/container/pokerth-web-client)
+[![Raspberry Pi ready](https://img.shields.io/badge/Raspberry%20Pi-ready-c51a4a?logo=raspberrypi&logoColor=white)](#raspberry-pi)
+[![License: AGPL v3](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)](LICENSE)
+
 ---
 
 ## Contents
@@ -315,7 +320,7 @@ For HTTPS (recommended — many mobile browsers block plain `ws://`), follow the
 <details>
 <summary><b>📂 Show the Docker guide</b></summary>
 
-The repository ships with a `Dockerfile` and a `docker-compose.yml` for one-command self-hosting.
+The repository ships with a `Dockerfile` and a `docker-compose.yml`. By default Compose **pulls a prebuilt multi-architecture image** from GHCR (`amd64` / `arm64` / `armv7`), so there is **nothing to compile** — ideal on a Raspberry Pi.
 
 **1. Configure the allowlist.** For anti-open-relay reasons the proxy only dials servers on an allowlist. `pokerth.net` works out of the box, but to reach **your own** LAN / private server you must add it. Copy the example env file and edit it:
 
@@ -335,10 +340,20 @@ ALLOWED_HOSTS=pokerth.net,www.pokerth.net,mybox.ddns.net,192.168.1.10
 **2. Start it:**
 
 ```bash
-docker compose up -d
+docker compose up -d      # pulls the prebuilt image and starts the proxy
+docker compose pull       # later: fetch the newest image, then `up -d` again
 ```
 
 The proxy will be available on `http://<host>:8080/` (or whatever `PORT` you set).
+
+**Without Compose** (e.g. a quick run on a Pi):
+
+```bash
+docker run -d --name pokerth-web -p 8080:8080 \
+  -e ALLOWED_HOSTS=pokerth.net,www.pokerth.net,mybox.ddns.net \
+  -v pokerth-stats:/data \
+  ghcr.io/narmod/pokerth-web-client:latest
+```
 
 Notes:
 - The container runs as the non-root `node` user.
@@ -346,6 +361,7 @@ Notes:
 - Set `STATS_RESET_PERIOD` (and optionally `STATS_ADMIN_TOKEN`) in `.env` to control the leaderboard auto-reset — see [Resetting the family leaderboard](#leaderboard-reset).
 - A healthcheck pings the HTTP server every 30 s; `docker ps` shows the container as `healthy` once it is up.
 - `PORT` only changes the **published host port** — the container always listens on `8080` internally.
+- Prefer to build the image yourself? Comment out `image:` in `docker-compose.yml` and uncomment `build: .`.
 
 </details>
 
