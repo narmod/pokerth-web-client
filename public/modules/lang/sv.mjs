@@ -429,7 +429,7 @@ export const strings = {
     gameDetailsTooltip: 'Spelinformation',
     adminBadgeTooltip: 'Du skapade detta bord',
     statsTooltip: 'Sessionsstatistik',
-    kickTooltip: 'Sparka ut spelare',
+    kickTooltip: 'Sparka ut spelare', kickSubtitle:'Välj en spelare att ta bort från bordet',
     closeTableTooltip: 'Stäng bordet',
     langTooltip: 'Byt språk',
     fullscreenTooltip: 'Helskärm', autoBtnLabel:'Auto-fold-knapp', quickBetLabel:'Snabbinsats-knappar',
