@@ -18,7 +18,8 @@ import frLang from './lang/fr.mjs';
 import deLang from './lang/de.mjs';
 import esLang from './lang/es.mjs';
 import itLang from './lang/it.mjs';
-import ptLang from './lang/pt.mjs';
+import ptBrLang from './lang/pt-br.mjs';
+import ptPtLang from './lang/pt-pt.mjs';
 import nlLang from './lang/nl.mjs';
 import plLang from './lang/pl.mjs';
 import ruLang from './lang/ru.mjs';
@@ -44,7 +45,7 @@ import srLang from './lang/sr.mjs';
 // (copy en.mjs and translate), add an import above, then add it here.
 // LANG (the string tables) and LANG_META (flag / label / dir) are assembled
 // automatically from each module's exports — no other code changes needed.
-const LANG_MODULES = { en: enLang, fr: frLang, de: deLang, es: esLang, it: itLang, pt: ptLang, nl: nlLang, pl: plLang, ru: ruLang, zh: zhLang, tr: trLang, uk: ukLang, ja: jaLang, sv: svLang, nb: nbLang, da: daLang, fi: fiLang, cs: csLang, sk: skLang, ro: roLang, hu: huLang, el: elLang, bg: bgLang, hr: hrLang, sr: srLang };
+const LANG_MODULES = { en: enLang, fr: frLang, de: deLang, es: esLang, it: itLang, 'pt-BR': ptBrLang, 'pt-PT': ptPtLang, nl: nlLang, pl: plLang, ru: ruLang, zh: zhLang, tr: trLang, uk: ukLang, ja: jaLang, sv: svLang, nb: nbLang, da: daLang, fi: fiLang, cs: csLang, sk: skLang, ro: roLang, hu: huLang, el: elLang, bg: bgLang, hr: hrLang, sr: srLang };
 
 const LANG = {};
 const LANG_META = {};
@@ -86,21 +87,36 @@ const I18N_DEBUG = (function() {
 
 let _lang = (function(){
     var avail = Object.keys(LANG);
+    // Region-specific catalogues whose code is a full locale, not a bare
+    // primary subtag. Maps a lower-cased browser/saved locale onto the
+    // catalogue code we ship.
+    var regionAlias = { 'pt-br': 'pt-BR', 'pt-pt': 'pt-PT' };
+    // Primary-subtag aliases: the browser reports a code that differs from
+    // our catalogue code, or a macrolanguage/legacy code we fold onto one
+    // variant. Bare 'pt' (and the old single 'pt' catalogue) → Brazilian,
+    // the larger Portuguese-speaking audience.
+    var alias = { no: 'nb', nn: 'nb', pt: 'pt-BR' };
     try {
         // 1. The user has manually picked a language before — respect it
-        //    (only if that language is still available).
+        //    (only if that language is still available). A legacy saved
+        //    code (e.g. the former single 'pt') is mapped forward.
         var saved = localStorage.getItem('pth_lang');
-        if (saved && avail.indexOf(saved) !== -1) return saved;
-        // 2. First visit: match the browser locale against the available
-        //    languages by primary subtag (fr-CA → fr, es-MX → es). This
-        //    avoids the browser's "Translate this page?" banner for a
-        //    speaker whose language we support. Fall back to English.
-        var bl = (navigator.language || '').toLowerCase().split('-')[0];
+        if (saved) {
+            if (avail.indexOf(saved) !== -1) return saved;
+            var sl = saved.toLowerCase();
+            if (regionAlias[sl] && avail.indexOf(regionAlias[sl]) !== -1) return regionAlias[sl];
+            if (alias[saved] && avail.indexOf(alias[saved]) !== -1) return alias[saved];
+        }
+        // 2. First visit: match the browser locale. Try the full locale
+        //    first (pt-BR vs pt-PT), then the primary subtag (fr-CA → fr,
+        //    es-MX → es). This avoids the browser's "Translate this page?"
+        //    banner for a speaker whose language we support.
+        var full = (navigator.language || '').toLowerCase();
+        if (regionAlias[full] && avail.indexOf(regionAlias[full]) !== -1) return regionAlias[full];
+        var bl = full.split('-')[0];
         if (avail.indexOf(bl) !== -1) return bl;
-        // 2b. A few locale codes don't match their catalogue code 1:1.
-        //    Norwegian browsers report 'nb', 'nn' or the macrolanguage 'no';
-        //    map them all onto the Bokmål catalogue we ship.
-        var alias = { no: 'nb', nn: 'nb' };
+        // 2b. A few locale codes don't match their catalogue code 1:1
+        //     (Norwegian nb/nn/no → Bokmål; bare 'pt' → Brazilian).
         if (alias[bl] && avail.indexOf(alias[bl]) !== -1) return alias[bl];
         return 'en';
     } catch (e) {

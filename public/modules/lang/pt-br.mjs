@@ -1,17 +1,11 @@
 // @ts-check
-// ─────────────────────────────────────────────────────────────────────────
-// public/modules/lang/pt.mjs — Portuguese (Português) catalogue.
-//
-// Serves both pt-PT and pt-BR (browser locales collapse to 'pt'). Neutral,
-// broadly-understood vocabulary, informal register. Keep {token} placeholders
-// and `||` separators exactly as in en.mjs. Action terms kept in English;
-// hand names localised (Quadra, Trinca, Sequência, Dois Pares, Carta Alta…).
-// ─────────────────────────────────────────────────────────────────────────
+// public/modules/lang/pt-br.mjs
+// Brazilian Portuguese. Mirrors en.mjs key-for-key.
 
 export const meta = {
-  label: 'Português',
+  label: 'Português (Brasil)',
   dir: 'ltr',
-  flag: '<svg class="lang-flag" viewBox="0 0 60 30" xmlns="http://www.w3.org/2000/svg" aria-label="Português"><rect width="60" height="30" fill="#FF0000"/><rect width="24" height="30" fill="#006600"/><circle cx="24" cy="15" r="6.5" fill="none" stroke="#FFCC00" stroke-width="2"/><circle cx="24" cy="15" r="2.6" fill="#fff" stroke="#FFCC00" stroke-width="1"/></svg>',
+  flag: '<svg class="lang-flag" viewBox="0 0 60 42" xmlns="http://www.w3.org/2000/svg" aria-label="Português (Brasil)"><rect width="60" height="42" fill="#009C3B"/><path d="M30 4 56 21 30 38 4 21z" fill="#FFDF00"/><circle cx="30" cy="21" r="8" fill="#002776"/></svg>',
 };
 
 export const strings = {
@@ -393,7 +387,10 @@ export const strings = {
     modeInProgress: 'Em andamento',
     modeClosed: 'Fechada',
     noTablesAvailable: 'Nenhuma mesa disponível no momento.',
-    filterAll: 'Todas', filterOpen: '🟢 Abertas', filterNoPass: '🔓 Sem palavra-passe', filterLive: '👁 A decorrer',
+    filterAll: 'Todas',
+    filterOpen: '🟢 Abertas',
+    filterNoPass: '🔓 Sem palavra-passe',
+    filterLive: '👁 A decorrer',
     noTablesForFilter: 'Nenhuma mesa corresponde a este filtro',
     createTableHdr: 'Criar uma mesa',
     gameStyle: 'Estilo de jogo',
