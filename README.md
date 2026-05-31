@@ -550,7 +550,11 @@ Both the PokerTH server **and** this web proxy are extremely light: PokerTH is a
    sudo apt update && sudo apt install pokerth-server
    ```
    (If your distro doesn't ship it, build it from the [upstream sources](https://github.com/pokerth/pokerth).) Run `pokerth_server`; it listens on TCP **7234** by default.
-3. Install the web proxy exactly as in [Manual installation](#manual-installation) (Node 20 LTS + PM2 + this repo). The one-liner installer works on ARM too.
+3. Install the web proxy with the one-liner — it sets up Node.js 20, PM2, the project and a boot service, and works on ARM:
+   ```bash
+   curl -sSL https://raw.githubusercontent.com/narmod/pokerth-web-client/HEAD/install.sh | bash
+   ```
+   Prefer to do it by hand, or inspect the script first? See [Manual installation](#manual-installation).
 4. From any phone on the same Wi-Fi, open `http://<pi-ip>:8080`, choose **LAN** mode, and deal.
 
 > **PWA extras (install to home screen, offline, notifications) need HTTPS** — see [Known limitations](#known-limitations). The game itself works perfectly over plain `http://` / `ws://` on the LAN.
@@ -575,6 +579,7 @@ A few things worth knowing if you plan to hack on this:
 - More automated protocol tests are needed before calling the client production-ready.
 - Spectator mode works but lacks a few quality-of-life touches (e.g. you cannot see other players' cards at showdown the same way the native client does).
 - **PWA features (install to home screen, offline Service Worker, background notifications) require a *secure context*** — i.e. HTTPS, or `localhost`. Over plain `http://` on a LAN IP (e.g. `192.168.1.10:8080`) the game plays perfectly, but the browser disables those three features by design. To get them on a LAN, serve the client over HTTPS — e.g. [`mkcert`](https://github.com/FiloSottile/mkcert) for a locally-trusted certificate, a self-signed cert, a real domain with Let's Encrypt, or a tunnel such as Cloudflare Tunnel / Tailscale.
+- **Translations are not yet natively reviewed.** The 33 language catalogues were produced with care but are largely machine-assisted, so some wordings — especially poker-specific terms — may be imperfect, the less common languages (e.g. Scottish Gaelic, Tamil) most of all. Corrections via issue or pull request are very welcome.
 
 ---
 
