@@ -238,7 +238,7 @@ export const strings = {
     commCards: 'コミュニティカード',
     results: '結果',
     continue: '続ける ▶',
-    closeTable: '🔒 閉じる',
+    closeTable: '🔒 テーブルを閉じる',
     startBots: '▶ ボット',
     leave: '✕',
     communityCards: 'コミュニティカード',

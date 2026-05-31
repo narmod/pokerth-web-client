@@ -239,7 +239,7 @@ export const strings = {
     commCards: 'Bài chung',
     results: 'Kết quả',
     continue: 'Tiếp tục ▶',
-    closeTable: '🔒 Đóng',
+    closeTable: '🔒 Đóng bàn',
     startBots: '▶ Bot',
     leave: '✕',
     communityCards: 'Bài chung',

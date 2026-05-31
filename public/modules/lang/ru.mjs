@@ -244,7 +244,7 @@ export const strings = {
     commCards: 'Общие карты',
     results: 'Результаты',
     continue: 'Продолжить ▶',
-    closeTable: '🔒 Закрыть',
+    closeTable: '🔒 Закрыть стол',
     startBots: '▶ Боты',
     leave: '✕',
     communityCards: 'Общие карты',

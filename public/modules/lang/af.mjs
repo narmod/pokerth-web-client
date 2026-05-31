@@ -239,7 +239,7 @@ export const strings = {
     commCards: 'Gemeenskaplike kaarte',
     results: 'Resultate',
     continue: 'Gaan voort ▶',
-    closeTable: '🔒 Maak toe',
+    closeTable: '🔒 Sluit die tafel',
     startBots: '▶ Bots',
     leave: '✕',
     communityCards: 'Gemeenskaplike kaarte',

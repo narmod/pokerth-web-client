@@ -121,7 +121,7 @@ export const strings = {
     youWon:'You won!', handWinner:'Hand winner',
     totalPot:'Total pot', players:'Players', blinds:'Blinds',
     commCards:'Community cards', results:'Results', continue:'Continue ▶',
-    closeTable:'🔒 Close', startBots:'▶ Bots', leave:'✕',
+    closeTable:'🔒 Close table', startBots:'▶ Bots', leave:'✕',
     youWon:'You won!', handWinner:'Hand winner', communityCards:'Community cards',
     results:'Results', continueBtn:'Continue ▶', yourStack:'Your stack:',
     totalPot:'Total pot', players:'Players', blinds:'Blinds', hand:'Hand',

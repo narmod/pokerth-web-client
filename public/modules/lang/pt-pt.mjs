@@ -238,7 +238,7 @@ export const strings = {
     commCards: 'Cartas comunitárias',
     results: 'Resultados',
     continue: 'Continuar ▶',
-    closeTable: '🔒 Fechar',
+    closeTable: '🔒 Fechar a mesa',
     startBots: '▶ Bots',
     leave: '✕',
     communityCards: 'Cartas comunitárias',

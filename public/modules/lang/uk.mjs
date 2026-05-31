@@ -238,7 +238,7 @@ export const strings = {
     commCards: 'Спільні карти',
     results: 'Результати',
     continue: 'Продовжити ▶',
-    closeTable: '🔒 Закрити',
+    closeTable: '🔒 Закрити стіл',
     startBots: '▶ Боти',
     leave: '✕',
     communityCards: 'Спільні карти',

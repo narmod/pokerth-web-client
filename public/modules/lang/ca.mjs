@@ -239,7 +239,7 @@ export const strings = {
     commCards: 'Cartes comunes',
     results: 'Resultats',
     continue: 'Continua ▶',
-    closeTable: '🔒 Tanca',
+    closeTable: '🔒 Tanca la taula',
     startBots: '▶ Bots',
     leave: '✕',
     communityCards: 'Cartes comunes',

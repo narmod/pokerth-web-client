@@ -239,7 +239,7 @@ export const strings = {
     commCards: 'Közös lapok',
     results: 'Eredmények',
     continue: 'Folytatás ▶',
-    closeTable: '🔒 Bezárás',
+    closeTable: '🔒 Asztal bezárása',
     startBots: '▶ Botok',
     leave: '✕',
     communityCards: 'Közös lapok',

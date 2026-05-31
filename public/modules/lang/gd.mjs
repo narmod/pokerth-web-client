@@ -240,7 +240,7 @@ export const strings = {
     commCards: 'Cairtean coitcheann',
     results: 'Toraidhean',
     continue: 'Lean air adhart ▶',
-    closeTable: '🔒 Dùin',
+    closeTable: '🔒 Dùin am bòrd',
     startBots: '▶ Bots',
     leave: '✕',
     communityCards: 'Cairtean coitcheann',

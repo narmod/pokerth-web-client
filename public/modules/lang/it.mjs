@@ -244,7 +244,7 @@ export const strings = {
     commCards: 'Carte comuni',
     results: 'Risultati',
     continue: 'Continua ▶',
-    closeTable: '🔒 Chiudi',
+    closeTable: '🔒 Chiudi tavolo',
     startBots: '▶ Bot',
     leave: '✕',
     communityCards: 'Carte comuni',

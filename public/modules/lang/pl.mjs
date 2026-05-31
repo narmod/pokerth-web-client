@@ -245,7 +245,7 @@ export const strings = {
     commCards: 'Karty wspólne',
     results: 'Wyniki',
     continue: 'Kontynuuj ▶',
-    closeTable: '🔒 Zamknij',
+    closeTable: '🔒 Zamknij stół',
     startBots: '▶ Boty',
     leave: '✕',
     communityCards: 'Karty wspólne',

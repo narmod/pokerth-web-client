@@ -239,7 +239,7 @@ export const strings = {
     commCards: 'Общи карти',
     results: 'Резултати',
     continue: 'Продължи ▶',
-    closeTable: '🔒 Затвори',
+    closeTable: '🔒 Затвори масата',
     startBots: '▶ Ботове',
     leave: '✕',
     communityCards: 'Общи карти',

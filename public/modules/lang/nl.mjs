@@ -244,7 +244,7 @@ export const strings = {
     commCards: 'Gemeenschappelijke kaarten',
     results: 'Resultaten',
     continue: 'Doorgaan ▶',
-    closeTable: '🔒 Sluiten',
+    closeTable: '🔒 Tafel sluiten',
     startBots: '▶ Bots',
     leave: '✕',
     communityCards: 'Gemeenschappelijke kaarten',

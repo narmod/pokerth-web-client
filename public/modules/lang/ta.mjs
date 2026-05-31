@@ -240,7 +240,7 @@ export const strings = {
     commCards: 'பொது சீட்டுகள்',
     results: 'முடிவுகள்',
     continue: 'தொடரவும் ▶',
-    closeTable: '🔒 மூடு',
+    closeTable: '🔒 மேசையை மூடு',
     startBots: '▶ பாட்கள்',
     leave: '✕',
     communityCards: 'பொது சீட்டுகள்',

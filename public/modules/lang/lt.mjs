@@ -239,7 +239,7 @@ export const strings = {
     commCards: 'Bendros kortos',
     results: 'Rezultatai',
     continue: 'Tęsti ▶',
-    closeTable: '🔒 Uždaryti',
+    closeTable: '🔒 Uždaryti stalą',
     startBots: '▶ Botai',
     leave: '✕',
     communityCards: 'Bendros kortos',

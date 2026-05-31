@@ -240,7 +240,7 @@ export const strings = {
     commCards: '公共牌',
     results: '结果',
     continue: '继续 ▶',
-    closeTable: '🔒 关闭',
+    closeTable: '🔒 关闭牌桌',
     startBots: '▶ 机器人',
     leave: '✕',
     communityCards: '公共牌',

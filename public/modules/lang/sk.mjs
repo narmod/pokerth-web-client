@@ -239,7 +239,7 @@ export const strings = {
     commCards: 'Spoločné karty',
     results: 'Výsledky',
     continue: 'Pokračovať ▶',
-    closeTable: '🔒 Zavrieť',
+    closeTable: '🔒 Zavrieť stôl',
     startBots: '▶ Boti',
     leave: '✕',
     communityCards: 'Spoločné karty',

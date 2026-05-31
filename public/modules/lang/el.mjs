@@ -239,7 +239,7 @@ export const strings = {
     commCards: 'Κοινά φύλλα',
     results: 'Αποτελέσματα',
     continue: 'Συνέχεια ▶',
-    closeTable: '🔒 Κλείσιμο',
+    closeTable: '🔒 Κλείσιμο τραπεζιού',
     startBots: '▶ Μποτ',
     leave: '✕',
     communityCards: 'Κοινά φύλλα',

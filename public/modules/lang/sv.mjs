@@ -238,7 +238,7 @@ export const strings = {
     commCards: 'Gemensamma kort',
     results: 'Resultat',
     continue: 'Fortsätt ▶',
-    closeTable: '🔒 Stäng',
+    closeTable: '🔒 Stäng bordet',
     startBots: '▶ Bottar',
     leave: '✕',
     communityCards: 'Gemensamma kort',

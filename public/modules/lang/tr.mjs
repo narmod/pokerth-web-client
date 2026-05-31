@@ -241,7 +241,7 @@ export const strings = {
     commCards: 'Ortak kartlar',
     results: 'Sonuçlar',
     continue: 'Devam ▶',
-    closeTable: '🔒 Kapat',
+    closeTable: '🔒 Masayı kapat',
     startBots: '▶ Botlar',
     leave: '✕',
     communityCards: 'Ortak kartlar',

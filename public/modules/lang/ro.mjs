@@ -239,7 +239,7 @@ export const strings = {
     commCards: 'Cărți comune',
     results: 'Rezultate',
     continue: 'Continuă ▶',
-    closeTable: '🔒 Închide',
+    closeTable: '🔒 Închide masa',
     startBots: '▶ Boți',
     leave: '✕',
     communityCards: 'Cărți comune',
