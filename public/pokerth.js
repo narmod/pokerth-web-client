@@ -2386,6 +2386,23 @@ const App = (() => {
     return _showAutoBtn;
   }
   window.toggleAutoBtnPref = toggleAutoBtnPref;
+  // User preference: show the 33% / 50% / 100% quick-bet buttons in the
+  // action bar. ON by default (most players use them) but some prefer a
+  // cleaner bar and can hide them from the ••• menu. Like the auto button,
+  // the row is always rendered and hidden via a <body> class so the toggle
+  // applies instantly without re-rendering the action bar.
+  let _showPctBtns = true;
+  try { _showPctBtns = localStorage.getItem('pth_show_pct') !== '0'; } catch (e) {}
+  try { document.body.classList.toggle('hide-pct-btns', !_showPctBtns); } catch (e) {}
+  function toggleQuickBetPref() {
+    _showPctBtns = !_showPctBtns;
+    try { localStorage.setItem('pth_show_pct', _showPctBtns ? '1' : '0'); } catch (e) {}
+    try { document.body.classList.toggle('hide-pct-btns', !_showPctBtns); } catch (e) {}
+    var b = document.getElementById('pct-pref-mob');
+    if (b) b.innerHTML = '💰 ' + t('quickBetLabel') + (_showPctBtns ? ' ✓' : '');
+    return _showPctBtns;
+  }
+  window.toggleQuickBetPref = toggleQuickBetPref;
   let _lastConnectParams = null;
   // Track mode + name of last Init sent so we can detect 'rapid mode swap'
   // patterns that the PokerTH server's anti-brute-force flags as
@@ -7220,6 +7237,15 @@ function toggleHeaderOverflow(e) {
       ab.innerHTML = '🔁 ' + t('autoBtnLabel') + (aon ? ' \u2713' : '');
     }
   } catch(e10) {}
+  // Quick-bet (33/50/100) visibility toggle — same scheme as the auto button.
+  try {
+    var pb = document.getElementById('pct-pref-mob');
+    if (pb) {
+      var pon = true;
+      try { pon = localStorage.getItem('pth_show_pct') !== '0'; } catch(e11) {}
+      pb.innerHTML = '💰 ' + t('quickBetLabel') + (pon ? ' ✓' : '');
+    }
+  } catch(e12) {}
   m.classList.toggle('open');
 }
 function closeHeaderOverflow() {
