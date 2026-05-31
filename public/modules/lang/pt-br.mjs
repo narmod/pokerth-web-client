@@ -348,7 +348,7 @@ export const strings = {
     waitingStartNow: 'Começar agora',
     autoCheckLabel: 'Auto-check na próxima vez',
     autoFoldLabel: 'Auto-fold na próxima vez',
-    autoBtnLabel:'Botão Auto-fold',
+    autoBtnLabel:'Botão Auto-fold', quickBetLabel:'Botões de aposta rápida',
     autoRearmHint: 'reativa-se a cada vez',
     autoChecked: 'Auto-check',
     autoFolded: 'Auto-fold',
