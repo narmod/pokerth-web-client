@@ -8,7 +8,8 @@
     "start": "node proxy.js",
     "start:lan": "node proxy.js --notls",
     "start:insecure": "node proxy.js --insecure",
-    "build:proto": "node scripts/build-proto.mjs"
+    "build:proto": "node scripts/build-proto.mjs",
+    "stats:reset": "node scripts/reset-stats.mjs"
   },
   "keywords": [
     "pokerth",

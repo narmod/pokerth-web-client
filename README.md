@@ -20,6 +20,7 @@
 - [Running locally (development)](#running-locally-development) &nbsp;📂
 - [Quick start — LAN family game](#quick-start-lan)
 - [Self-hosting on a Raspberry Pi](#raspberry-pi)
+- [Resetting the family leaderboard](#leaderboard-reset)
 - [Protocol notes](#protocol-notes)
 - [Known limitations](#known-limitations)
 - [Roadmap / Suggested next steps](#roadmap)
@@ -562,6 +563,32 @@ Both the PokerTH server **and** this web proxy are extremely light: PokerTH is a
 4. From any phone on the same Wi-Fi, open `http://<pi-ip>:8080`, choose **LAN** mode, and deal.
 
 > **PWA extras (install to home screen, offline, notifications) need HTTPS** — see [Known limitations](#known-limitations). The game itself works perfectly over plain `http://` / `ws://` on the LAN.
+
+---
+
+<a id="leaderboard-reset"></a>
+## Resetting the family leaderboard
+
+The shared leaderboard (per-nickname **lifetime** stats) lives in `stats.json` on the server. Per-device **session** stats stay in each browser and are never touched by any of this.
+
+**Automatic reset.** The `STATS_RESET_PERIOD` environment variable controls how often the leaderboard wipes itself — `off`, `daily`, `monthly` (**default**) or `yearly`. The boundary is the server's local time, and the current period is remembered, so a restart never triggers a false reset.
+
+**On-demand reset — command line:**
+
+```bash
+npm run stats:reset          # empties stats.json
+pm2 restart pokerth-web      # restart so a running proxy drops its in-memory copy
+```
+
+**On-demand reset — remote.** Set an `STATS_ADMIN_TOKEN`, then POST to `/stats` (the endpoint stays disabled until a token is set):
+
+```bash
+curl -X POST http://your-host:8080/stats \
+     -H 'Content-Type: application/json' \
+     -d '{"_resetAll":true,"token":"YOUR_TOKEN"}'
+```
+
+Set these via `.env` under Docker, or pass them when (re)starting PM2, e.g. `STATS_RESET_PERIOD=yearly pm2 restart pokerth-web --update-env`.
 
 ---
 

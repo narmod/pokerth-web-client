@@ -188,6 +188,53 @@ function saveStatsSoon() {
     });
   }, 800);
 }
+
+// ── Leaderboard reset policy ──
+// STATS_RESET_PERIOD = off | daily | monthly | yearly (default: monthly).
+// At startup and hourly, the current period (server local time) is compared to
+// the marker persisted in stats.meta.json; when it rolls over, the shared
+// leaderboard is wiped. Per-device session stats (browser localStorage) are
+// never touched. STATS_ADMIN_TOKEN (optional) enables an on-demand reset via
+// POST /stats {"_resetAll":true,"token":"…"}.
+const STATS_RESET_PERIOD = (process.env.STATS_RESET_PERIOD || 'monthly').toLowerCase();
+const STATS_META_FILE = process.env.STATS_META_FILE || path.join(__dirname, 'stats.meta.json');
+const STATS_ADMIN_TOKEN = process.env.STATS_ADMIN_TOKEN || '';
+let statsMeta = {};
+try { statsMeta = JSON.parse(fs.readFileSync(STATS_META_FILE, 'utf8')) || {}; } catch (e) { statsMeta = {}; }
+function saveStatsMeta() {
+  try { fs.writeFileSync(STATS_META_FILE, JSON.stringify(statsMeta)); }
+  catch (e) { console.error('[stats] meta write failed:', e.message); }
+}
+function statsPeriodKey() {
+  const d = new Date();
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  if (STATS_RESET_PERIOD === 'daily')   return y + '-' + m + '-' + day;
+  if (STATS_RESET_PERIOD === 'monthly') return y + '-' + m;
+  if (STATS_RESET_PERIOD === 'yearly')  return String(y);
+  return null; // 'off' or unknown → no scheduled reset
+}
+function wipeLeaderboard(reason) {
+  statsStore = {};
+  try { fs.writeFileSync(STATS_FILE, '{}'); }
+  catch (e) { console.error('[stats] reset write failed:', e.message); }
+  console.log('[stats] leaderboard reset (' + reason + ')');
+}
+function maybeRotateStats() {
+  const key = statsPeriodKey();
+  if (!key) return;                 // disabled (off / unknown)
+  if (!statsMeta.period) {          // first run: record the marker, do NOT wipe
+    statsMeta.period = key; saveStatsMeta(); return;
+  }
+  if (statsMeta.period !== key) {   // period rolled over → reset
+    wipeLeaderboard('scheduled ' + STATS_RESET_PERIOD);
+    statsMeta.period = key; saveStatsMeta();
+  }
+}
+maybeRotateStats();
+setInterval(maybeRotateStats, 60 * 60 * 1000); // hourly boundary check
+
 function readJsonBody(req, cb) {
   let body = '';
   req.on('data', function (c) { body += c; if (body.length > 16384) req.destroy(); });
@@ -267,6 +314,18 @@ const httpServer = http.createServer((req, res) => {
     }
     if (req.method === 'POST') {
       readJsonBody(req, function (d) {
+        // Admin: wipe the whole leaderboard at once. Disabled unless
+        // STATS_ADMIN_TOKEN is set; the request must echo the same token.
+        if (d && d._resetAll) {
+          if (!STATS_ADMIN_TOKEN || d.token !== STATS_ADMIN_TOKEN) {
+            res.writeHead(403, { 'Content-Type': 'application/json; charset=utf-8' });
+            res.end('{"ok":false,"error":"forbidden"}'); return;
+          }
+          wipeLeaderboard('manual endpoint');
+          const k = statsPeriodKey(); if (k) { statsMeta.period = k; saveStatsMeta(); }
+          res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' });
+          res.end('{"ok":true,"reset":true}'); return;
+        }
         if (!d || typeof d.name !== 'string' || !d.name.trim()) {
           res.writeHead(400, { 'Content-Type': 'application/json; charset=utf-8' }); res.end('{"ok":false}'); return;
         }
