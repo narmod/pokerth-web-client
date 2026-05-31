@@ -430,7 +430,7 @@ export const strings = {
     gameDetailsTooltip: 'Λεπτομέρειες παιχνιδιού',
     adminBadgeTooltip: 'Δημιουργήσατε αυτό το τραπέζι',
     statsTooltip: 'Στατιστικά συνεδρίας',
-    kickTooltip: 'Αποβολή παίκτη',
+    kickTooltip: 'Αποβολή παίκτη', kickSubtitle:'Επιλέξτε έναν παίκτη για αποβολή από το τραπέζι',
     closeTableTooltip: 'Κλείσιμο τραπεζιού',
     langTooltip: 'Αλλαγή γλώσσας',
     fullscreenTooltip: 'Πλήρης οθόνη', autoBtnLabel:'Κουμπί Auto-fold', quickBetLabel:'Κουμπιά γρήγορου στοιχήματος',
