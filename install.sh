@@ -12,6 +12,7 @@
 #   sudo pokerth-web uninstall
 #   pokerth-web status
 #   sudo pokerth-web reset-stats
+#   sudo pokerth-web set-period yearly
 #
 # Prefer to read before you run? (recommended for any curl|bash installer):
 #   curl -sSL .../install.sh -o install.sh ; less install.sh ; bash install.sh
@@ -38,6 +39,8 @@ RUN_USER="${RUN_USER:-}"
 APP_NAME="${APP_NAME:-}"
 SETUP_FIREWALL="${SETUP_FIREWALL:-}"
 ASSUME_YES="${ASSUME_YES:-}"
+STATS_RESET_PERIOD="${STATS_RESET_PERIOD:-}"
+STATS_ADMIN_TOKEN="${STATS_ADMIN_TOKEN:-}"
 DEFAULT_APP_NAME="pokerth-web"
 CONF="/etc/pokerth-web.conf"
 CREATED_USER=""
@@ -107,6 +110,8 @@ load_state() {
     [ -n "$PORT" ]        || PORT="$(conf_get PORT)"
     [ -n "$NO_TLS" ]      || NO_TLS="$(conf_get NO_TLS)"
     [ -n "$CREATED_USER" ] || CREATED_USER="$(conf_get CREATED_USER)"
+    [ -n "$STATS_RESET_PERIOD" ] || STATS_RESET_PERIOD="$(conf_get STATS_RESET_PERIOD)"
+    [ -n "$STATS_ADMIN_TOKEN" ]  || STATS_ADMIN_TOKEN="$(conf_get STATS_ADMIN_TOKEN)"
   fi
   APP_NAME="${APP_NAME:-$DEFAULT_APP_NAME}"
 }
@@ -119,6 +124,8 @@ APP_NAME=$APP_NAME
 PORT=$PORT
 NO_TLS=$NO_TLS
 CREATED_USER=$CREATED_USER
+STATS_RESET_PERIOD=$STATS_RESET_PERIOD
+STATS_ADMIN_TOKEN=$STATS_ADMIN_TOKEN
 EOF
 }
 
@@ -137,6 +144,23 @@ echo "pokerth-web: local install.sh not found; fetching from GitHub." >&2
 exec bash -c "$(curl -sSL https://raw.githubusercontent.com/narmod/pokerth-web-client/HEAD/install.sh)" -- "$@"
 WRAP
   as_root chmod +x /usr/local/bin/pokerth-web
+}
+
+# ── (Re)start the PM2 app with the persisted env applied, then save ───────────
+# Used by install / update / set-period / set-token so STATS_RESET_PERIOD and
+# STATS_ADMIN_TOKEN always follow the process — across updates and reboots.
+app_restart() {
+  local envv=()
+  [ -n "$STATS_RESET_PERIOD" ] && envv+=("STATS_RESET_PERIOD=$STATS_RESET_PERIOD")
+  [ -n "$STATS_ADMIN_TOKEN" ]  && envv+=("STATS_ADMIN_TOKEN=$STATS_ADMIN_TOKEN")
+  if run_as pm2 describe "$APP_NAME" >/dev/null 2>&1; then
+    run_as env "${envv[@]}" pm2 restart "$APP_NAME" --update-env
+  else
+    local pm2_args=("proxy.js" --name "$APP_NAME" -- "${PORT:-8080}")
+    [ -n "$NO_TLS" ] && pm2_args+=("--notls")
+    ( cd "$INSTALL_DIR" && run_as env "${envv[@]}" pm2 start "${pm2_args[@]}" )
+  fi
+  run_as pm2 save >/dev/null 2>&1 || true
 }
 
 # ── INSTALL ───────────────────────────────────────────────────────────────────
@@ -273,9 +297,12 @@ SUMMARY
     info "Process '$APP_NAME' exists — recreating it"
     run_as pm2 delete "$APP_NAME" >/dev/null 2>&1 || true
   fi
+  local envv=()
+  [ -n "$STATS_RESET_PERIOD" ] && envv+=("STATS_RESET_PERIOD=$STATS_RESET_PERIOD")
+  [ -n "$STATS_ADMIN_TOKEN" ]  && envv+=("STATS_ADMIN_TOKEN=$STATS_ADMIN_TOKEN")
   local pm2_args=("proxy.js" --name "$APP_NAME" -- "$PORT")
   [ -n "$NO_TLS" ] && pm2_args+=("--notls")
-  ( cd "$INSTALL_DIR" && run_as pm2 start "${pm2_args[@]}" )
+  ( cd "$INSTALL_DIR" && run_as env "${envv[@]}" pm2 start "${pm2_args[@]}" )
   run_as pm2 save
   ok "Proxy running as PM2 process '$APP_NAME'."
 
@@ -316,6 +343,7 @@ SUMMARY
     sudo pokerth-web uninstall   # remove the service
     pokerth-web status           # show status
     sudo pokerth-web reset-stats # reset the family leaderboard
+    sudo pokerth-web set-period yearly   # off | daily | monthly | yearly
 
   ${C_YELLOW}Recommended:${C_RESET} put Nginx + Let's Encrypt in front for HTTPS (many mobile
   browsers block plain ws://). See the README 'Manual installation' section.
@@ -338,16 +366,8 @@ do_update() {
   run_as git -C "$INSTALL_DIR" pull --ff-only
   info "npm install (runtime only)"
   ( cd "$INSTALL_DIR" && run_as npm install --omit=dev )
-  info "Restarting PM2 process"
-  if run_as pm2 describe "$APP_NAME" >/dev/null 2>&1; then
-    run_as pm2 restart "$APP_NAME" --update-env
-  else
-    warn "PM2 process '$APP_NAME' not found — starting it"
-    local pm2_args=("proxy.js" --name "$APP_NAME" -- "${PORT:-8080}")
-    [ -n "$NO_TLS" ] && pm2_args+=("--notls")
-    ( cd "$INSTALL_DIR" && run_as pm2 start "${pm2_args[@]}" )
-  fi
-  run_as pm2 save >/dev/null 2>&1 || true
+  info "Restarting PM2 process (re-applying saved settings)"
+  app_restart
   # refresh the wrapper + state in case paths changed
   install_wrapper 2>/dev/null || true
   write_state 2>/dev/null || true
@@ -460,6 +480,38 @@ do_reset_stats() {
   ok "Leaderboard reset."
 }
 
+# ── SET RESET PERIOD ──────────────────────────────────────────────────────────
+do_set_period() {
+  local val="${1:-}"
+  case "$val" in
+    off|daily|monthly|yearly) ;;
+    *) errln "Usage: pokerth-web set-period <off|daily|monthly|yearly>"; exit 1 ;;
+  esac
+  load_state
+  [ -n "$RUN_USER" ] || RUN_USER="$(id -un)"
+  [ -n "$INSTALL_DIR" ] || { errln "No install found (missing $CONF). Install first."; exit 1; }
+  step "PokerTH Web Client — set reset period: $val"
+  STATS_RESET_PERIOD="$val"
+  write_state
+  info "Applying and restarting"
+  app_restart
+  ok "Leaderboard reset period is now '$val'."
+}
+
+# ── SET ADMIN TOKEN ───────────────────────────────────────────────────────────
+do_set_token() {
+  load_state
+  [ -n "$RUN_USER" ] || RUN_USER="$(id -un)"
+  [ -n "$INSTALL_DIR" ] || { errln "No install found (missing $CONF). Install first."; exit 1; }
+  STATS_ADMIN_TOKEN="${1:-}"
+  step "PokerTH Web Client — set admin token"
+  write_state
+  info "Applying and restarting"
+  app_restart
+  if [ -n "$STATS_ADMIN_TOKEN" ]; then ok "Admin token set — remote reset endpoint enabled."
+  else ok "Admin token cleared — remote reset endpoint disabled."; fi
+}
+
 usage() {
   cat <<USAGE
 PokerTH Web Client installer
@@ -472,10 +524,15 @@ Commands:
   uninstall   Stop and remove the service
   status      Show the current status
   reset-stats Reset the shared family leaderboard (stats.json)
+  set-period  Set auto-reset period: off | daily | monthly | yearly
+  set-token   Set (or clear) the admin token for the remote reset endpoint
   help        Show this help
 
 Via the one-liner, pass a command after '-- ':
   curl -sSL .../install.sh | bash -s -- update
+
+You can also choose the reset period at install time, e.g.:
+  curl -sSL .../install.sh | STATS_RESET_PERIOD=yearly bash
 USAGE
 }
 
@@ -487,6 +544,8 @@ case "$CMD" in
   uninstall)      do_uninstall ;;
   status)         do_status ;;
   reset-stats|stats-reset) do_reset_stats ;;
+  set-period)     do_set_period "$2" ;;
+  set-token)      do_set_token "$2" ;;
   help|-h|--help) usage ;;
   *) errln "Unknown command: $CMD"; echo; usage; exit 1 ;;
 esac

@@ -573,6 +573,14 @@ The shared leaderboard (per-nickname **lifetime** stats) lives in `stats.json` o
 
 **Automatic reset.** The `STATS_RESET_PERIOD` environment variable controls how often the leaderboard wipes itself — `off`, `daily`, `monthly` (**default**) or `yearly`. The boundary is the server's local time, and the current period is remembered, so a restart never triggers a false reset.
 
+With the one-liner installer, set it with a single command — it's saved and re-applied automatically on every update and reboot:
+
+```bash
+sudo pokerth-web set-period yearly     # off | daily | monthly | yearly
+```
+
+You can also choose it at install time: `curl -sSL .../install.sh | STATS_RESET_PERIOD=yearly bash`.
+
 **On-demand reset — command line.** If you used the one-liner installer, a single command wipes the leaderboard and restarts the service:
 
 ```bash
@@ -593,6 +601,8 @@ curl -X POST http://your-host:8080/stats \
      -H 'Content-Type: application/json' \
      -d '{"_resetAll":true,"token":"YOUR_TOKEN"}'
 ```
+
+With the one-liner installer, set or clear that token in one command (saved and re-applied like the period): `sudo pokerth-web set-token YOUR_TOKEN` (run it with no token to disable the endpoint).
 
 Set these via `.env` under Docker, or pass them when (re)starting PM2, e.g. `STATS_RESET_PERIOD=yearly pm2 restart pokerth-web --update-env`.
 
