@@ -436,7 +436,7 @@ export const strings = {
     kickTooltip: 'Speler verwijderen', kickSubtitle:'Selecteer een speler om van tafel te verwijderen',
     closeTableTooltip: 'Tafel sluiten',
     langTooltip: 'Taal wijzigen',
-    fullscreenTooltip: 'Volledig scherm',
+    fullscreenTooltip: 'Volledig scherm', menuAdmin:'Admin',
     chatPlaceholder: 'Bericht…',
     hintFold: 'F — Fold',
     hintCheck: 'C — Check',
