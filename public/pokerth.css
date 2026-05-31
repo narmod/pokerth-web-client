@@ -2381,6 +2381,21 @@ body {
   text-shadow: 0 1px 3px rgba(0,0,0,0.8);
 }
 .seat.me .seat-avatar { border-color: var(--green); }
+/* The local player is already fully represented in the player-bar
+   (avatar, name, stack, cards, last action, countdown). The on-table
+   "me" seat sits at bottom-centre of the felt, where its stacked text
+   labels overflow DOWN into the action area and show through faintly
+   under the action bar as "ghost" text (the 14s timer badge, the bet
+   amount, the CHECK/CALL action label, name & stack). We keep the
+   avatar + its timer ring + blind/dealer chips on the felt, but hide
+   the redundant labels and the duplicate hole cards so nothing bleeds
+   into the buttons below. */
+.seat.me .seat-timer-badge,
+.seat.me .seat-name,
+.seat.me .seat-money,
+.seat.me .seat-bet,
+.seat.me .seat-action-label,
+.seat.me .pk { display: none; }
 
 /* Eliminated / sitting-out seat: stays in place around the felt so the
    other players don't visually rotate between hands, but appears faded
