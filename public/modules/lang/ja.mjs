@@ -432,7 +432,7 @@ export const strings = {
     kickTooltip: 'プレイヤーをキック',
     closeTableTooltip: 'テーブルを閉じる',
     langTooltip: '言語を切り替え',
-    fullscreenTooltip: '全画面',
+    fullscreenTooltip: '全画面', autoBtnLabel:'Auto-fold ボタン', quickBetLabel:'クイックベットボタン',
     chatPlaceholder: 'メッセージ…',
     hintFold: 'F — フォールド',
     hintCheck: 'C — チェック',
