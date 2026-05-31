@@ -646,9 +646,17 @@ body {
   flex-shrink: 0;
 }
 .header-brand span { opacity: 0.6; font-size: 1.1em; }
+.header-chip {
+  height: 1.6em;
+  width: auto;
+  vertical-align: middle;
+  display: inline-block;
+  filter: drop-shadow(0 1px 3px rgba(0,0,0,0.6));
+}
 /* The lobby ♠ is a tap target to reveal/hide the POKERTH word on phones. */
 #lobby-brand .brand-suit {
   cursor: pointer;
+  opacity: 0.9;
   transition: opacity 0.15s, transform 0.15s;
   user-select: none;
   -webkit-tap-highlight-color: transparent;

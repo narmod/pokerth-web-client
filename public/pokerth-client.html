@@ -798,7 +798,7 @@ function selectAvatarPopup(emoji) {
 <!-- ╚════════════════════╝ -->
 <div id="s-lobby" class="screen">
   <div class="header">
-    <div class="header-brand" id="lobby-brand"><span class="brand-suit" onclick="toggleBrandName()" role="button" tabindex="0" title="Afficher / masquer le nom" data-i18n-title="brandToggleTooltip">♠</span> <span class="brand-text">POKERTH</span></div>
+    <div class="header-brand" id="lobby-brand"><span class="brand-suit" onclick="toggleBrandName()" role="button" tabindex="0" title="Afficher / masquer le nom" data-i18n-title="brandToggleTooltip"><img class="header-chip" src="/logo-chip.png" alt=""></span> <span class="brand-text">POKERTH</span></div>
     <div class="header-pills">
       <span class="pill pill-clickable" id="h-nick" onclick="openPlayerInfoPopup()" title="Mon profil" data-i18n-title="profileTooltip">—</span>
       <span class="pill" id="h-players" onclick="togglePlayersPanel()" style="cursor:pointer">—</span>
@@ -968,7 +968,7 @@ function selectAvatarPopup(emoji) {
 
 <div id="s-game" class="screen">
   <div class="header">
-    <div class="header-brand"><span>♠</span>&nbsp;<span id="g-name" class="g-name-clickable" onclick="openGameInfoPopup()" title="Détails de la partie" data-i18n-title="gameDetailsTooltip">TABLE</span><span id="g-admin-badge" style="display:none;font-size:0.7rem;color:var(--green);margin-left:6px" title="Vous êtes créateur de cette table" data-i18n-title="adminBadgeTooltip">👑</span></div>
+    <div class="header-brand"><img class="header-chip" src="/logo-chip.png" alt="">&nbsp;<span id="g-name" class="g-name-clickable" onclick="openGameInfoPopup()" title="Détails de la partie" data-i18n-title="gameDetailsTooltip">TABLE</span><span id="g-admin-badge" style="display:none;font-size:0.7rem;color:var(--green);margin-left:6px" title="Vous êtes créateur de cette table" data-i18n-title="adminBadgeTooltip">👑</span></div>
     <div class="header-pills"></div>
     <button class="btn-sm btn-icon" id="fs-btn-game" onclick="toggleFullscreen()" title="Fullscreen" data-i18n-title="fullscreenTooltip">⛶</button>
     <button class="btn-sm btn-icon" id="sound-toggle-btn" onclick="toggleSound()" title="Couper/Unmute" data-i18n-title="soundTooltip">🔊</button>
