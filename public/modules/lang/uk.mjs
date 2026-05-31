@@ -432,7 +432,7 @@ export const strings = {
     kickTooltip: 'Вигнати гравця',
     closeTableTooltip: 'Закрити стіл',
     langTooltip: 'Змінити мову',
-    fullscreenTooltip: 'Повний екран',
+    fullscreenTooltip: 'Повний екран', autoBtnLabel:'Кнопка Auto-fold', quickBetLabel:'Кнопки швидкої ставки',
     chatPlaceholder: 'Повідомлення…',
     hintFold: 'F — Fold',
     hintCheck: 'C — Check',
