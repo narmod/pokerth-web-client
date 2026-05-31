@@ -3218,7 +3218,7 @@ const App = (() => {
           renderSeats();
         }
         const name = players[pid] || '#'+pid;
-        addChat(null, name + ' rejoint la table', 'sys');
+        addChat(null, name + ' ' + t('joinedGame'), 'sys');
         // Ask the server for this player's name if we don't have it yet,
         // so the waiting panel can display a real pseudo rather than '#42'.
         if (!players[pid]) {
