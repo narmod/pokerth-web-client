@@ -2570,6 +2570,7 @@ body {
 @media (max-width: 480px) { .btn-auto { min-width: 48px; } }
 /* Hidden by default; shown only when the user enables it from the ••• menu. */
 body.hide-auto-btn .btn-auto { display: none; }
+body.hide-pct-btns .pct-row { display: none; }
 /* All-In as a SECONDARY action: outlined, not a big red bar — avoids the
    red-on-red clash with Fold and discourages accidental taps. */
 .btn-allin {
