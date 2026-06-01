@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+    preActionTitle:'Преглед потеза', preActionHint:'додирни карте да затвориш',
     blindsNextTip:'за {n} руку', blindsEveryMin:'сваких {n} мин',
     connect: 'Poveži se',
     disconnect: '✕ Prekini vezu',
