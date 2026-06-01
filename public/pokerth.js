@@ -5565,6 +5565,19 @@ const App = (() => {
   }
 
   window._renderSeats = function() { if (seats.length) renderSeats(); };
+  // Repeindre la pastille "N joueur(s)" du header lobby dans la langue
+  // courante. Posée imperativement à la réception des messages serveur
+  // (PlayerList / Statistics), elle n'a pas de data-i18n et restait donc
+  // figée dans la langue précédente lors d'un changement de langue.
+  // Appelée par setLang() (i18n.mjs).
+  window._refreshPlayersPill = function() {
+    try {
+      var el = document.getElementById('h-players');
+      if (el && el.textContent !== '—') {
+        el.textContent = _lobbyPlayerCount + ' ' + t('playersOnline');
+      }
+    } catch (e) {}
+  };
   window.renderGames = renderGames;
   window.toggleStats  = toggleStats;
   window._toggleStats = toggleStats;
