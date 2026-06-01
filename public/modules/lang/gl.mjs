@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+    preActionTitle:'Vista previa de accións', preActionHint:'toca as cartas para pechar',
     blindsNextTip:'en {n} mans', blindsEveryMin:'cada {n} min',
     connect: 'Conectar',
     disconnect: '✕ Desconectar',
