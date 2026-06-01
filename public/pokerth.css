@@ -2757,65 +2757,31 @@ body {
 
 /* ── Panneau "aperçu des actions" (ouvert en tapant ses cartes) ── */
 .pb-cards { cursor: pointer; }
-.preaction-panel {
-  display: flex;
-  flex-direction: column;
-  gap: 7px;
-  padding: 8px 10px;
+/* Aperçu hors-tour : le MÊME panneau d'action que pendant notre tour, mais
+   rendu non interactif — tout est neutralisé au clic SAUF le bouton AUTO,
+   le seul réglage qu'on peut armer à l'avance. */
+.actions-preview {
+  position: relative;
   width: 100%;
   box-sizing: border-box;
+  pointer-events: none;            /* coupe Fold / Call / % / relance / All-In */
+  opacity: 0.96;
 }
-.preaction-panel .pa-head {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 8px;
-}
-.preaction-panel .pa-title {
-  font-family: 'Cinzel', serif;
-  font-size: 0.72rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--gold);
-}
-.preaction-panel .pa-hint {
+.actions-preview .btn-auto { pointer-events: auto; opacity: 1; }  /* AUTO reste activable */
+/* Pastille "œil" discrète en haut à droite : signale l'aperçu sans
+   modifier la structure du panneau (purement décorative). */
+.actions-preview::after {
+  content: "\1F441\FE0E";
+  position: absolute;
+  top: -8px; right: 6px;
   font-size: 0.6rem;
-  color: var(--text);
-  opacity: 0.7;
-}
-/* Aperçu : pseudo-boutons grisés, non interactifs. */
-.preaction-panel .pa-preview {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 5px;
-}
-.preaction-panel .pa-btn {
-  flex: 1 1 auto;
-  text-align: center;
-  padding: 7px 8px;
-  border-radius: 4px;
-  border: 1px dashed rgba(255,255,255,0.18);
-  background: rgba(255,255,255,0.04);
-  color: rgba(255,255,255,0.45);
-  font-family: 'Inconsolata', monospace;
-  font-size: 0.74rem;
-  font-weight: 600;
-  white-space: nowrap;
-  pointer-events: none;            /* aperçu : non cliquable */
-  user-select: none;
-}
-/* Le seul bouton activable : l'auto-check/fold. */
-.preaction-panel .pa-auto {
-  align-self: flex-start;
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  padding: 7px 12px;
-}
-.preaction-panel .pa-auto .pa-auto-lbl {
-  font-size: 0.7rem;
-  font-weight: 600;
-  letter-spacing: 0.02em;
+  line-height: 1;
+  color: var(--gold);
+  background: rgba(4,10,6,0.95);
+  border: 1px solid rgba(212,175,55,0.45);
+  border-radius: 999px;
+  padding: 2px 6px;
+  pointer-events: none;
 }
 /* Hidden by default; shown only when the user enables it from the ••• menu. */
 body.hide-auto-btn .btn-auto { display: none; }
