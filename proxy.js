@@ -429,15 +429,138 @@ function _scheduleConn(fn) {
   }
 }
 
-// ── Heartbeat ping/pong : détecter les WebSockets navigateurs MORTS ──
-// Quand un client disparaît brutalement (coupure wifi, bascule réseau), aucun
-// 'close' n'arrive avant le timeout TCP de l'OS (plusieurs minutes). Pendant
-// ce temps la connexion PokerTH amont reste ouverte → le joueur reste un
-// « fantôme » assis à la table et son pseudo reste pris (impossible de
-// rejoindre/recréer). On ping chaque client régulièrement ; ceux qui ne
-// répondent pas (pong) sont terminate() → déclenche ws.on('close') →
-// sock.destroy() → la session PokerTH est libérée en ~10–20 s.
+// ── Heartbeat + persistance de session ─────────────────────────────────
+// Heartbeat ping/pong : quand un navigateur disparaît brutalement (coupure
+// wifi, bascule réseau), aucun 'close' n'arrive avant le timeout TCP de l'OS.
+// On ping chaque client ; ceux qui ne « pong » pas sont terminate() → leur
+// ws.on('close') se déclenche.
+//
+// Persistance de session : au lieu de fermer la connexion PokerTH amont quand
+// le navigateur se coupe, on la GARDE vivante quelques secondes (grâce), on
+// tamponne les messages du serveur, et on REBRANCHE le nouveau WebSocket (même
+// 'sid') dessus quand le client revient. Le serveur PokerTH ne voit aucune
+// déconnexion ni nouvel Init → pas de collision de pseudo, pas de blocage IP,
+// siège + tapis conservés. Sans 'sid' (anciens clients, directWS) → repli sur
+// l'ancien comportement (fermeture immédiate de l'amont).
 function _heartbeat() { this.isAlive = true; }
+
+const _sessions = new Map();              // sid → S (session vivante)
+const SESSION_GRACE_MS = 90000;           // garder l'amont 90 s après coupure navigateur
+const SESSION_MAX_BUF  = 4 * 1024 * 1024; // plafond du tampon (octets) en attente de rebranchement
+
+function _destroySession(S) {
+  if (S.grace) { clearTimeout(S.grace); S.grace = null; }
+  if (S.sid && _sessions.get(S.sid) === S) _sessions.delete(S.sid);
+  try { S.sock && S.sock.destroy(); } catch (_) {}
+  S.sock = null; S.buf = []; S.bufBytes = 0;
+}
+
+// Ouvre la connexion TCP/TLS amont vers PokerTH pour la session S.
+function _openUpstream(S) {
+  _scheduleConn(() => {
+    dns.lookup(S.host, { family: 4 }, (err, addr) => {
+      addr = err ? S.host : addr;
+      const isIp = /^\d+\.\d+\.\d+\.\d+$/.test(addr);
+      const opts = { host: addr, port: S.port, ...(!isIp && { servername: S.host }) };
+      const onConn = () => {
+        S.connected = true;
+        const info = S.useTls ? '(TLS ' + (S.sock.getCipher() ? S.sock.getCipher().name : '?') + ')' : '(raw TCP)';
+        console.log('[+] Connected ' + info + ' → ' + addr + ':' + S.port);
+      };
+      S.sock = S.useTls
+        ? tls.connect({ ...opts, rejectUnauthorized: !INSECURE_TLS }, onConn)
+        : net.connect(opts, onConn);
+
+      S.sock.on('data', chunk => {
+        S.rxBuf = Buffer.concat([S.rxBuf, chunk]);
+        while (S.rxBuf.length >= 4) {
+          const msgLen = S.rxBuf.readUInt32BE(0);
+          if (msgLen === 0 || msgLen > 2_000_000) {
+            console.error('[-] Invalid frame (' + msgLen + ') – closing');
+            try { S.ws && S.ws.close(1011, 'bad frame'); } catch (_) {}
+            _destroySession(S); return;
+          }
+          if (S.rxBuf.length < 4 + msgLen) break;
+          const frame   = S.rxBuf.slice(0, 4 + msgLen);
+          const payload = S.rxBuf.slice(4, 4 + msgLen);
+          S.rxBuf = S.rxBuf.slice(4 + msgLen);
+          S.n++;
+          const d = describeMsg(payload);
+          console.log('[S→C] #' + S.n + ' ' + d.name + ' (' + msgLen + 'b)' + d.extra);
+          if (msgLen <= 64 || d.name.includes('Error') || d.name === '?' || d.name.includes('Flop') || d.name.includes('Turn') || d.name.includes('River') || d.name.includes('Hand'))
+            console.log('      hex: ' + payload.toString('hex'));
+          // Navigateur attaché → envoyer ; sinon (session en attente) → tamponner.
+          if (S.ws && S.ws.readyState === WebSocket.OPEN) {
+            S.ws.send(frame);
+          } else if (S.sid) {
+            S.buf.push(frame); S.bufBytes += frame.length;
+            while (S.bufBytes > SESSION_MAX_BUF && S.buf.length) { S.bufBytes -= S.buf.shift().length; }
+          }
+        }
+      });
+
+      S.sock.on('error', err => {
+        let hint = err.code === 'ECONNREFUSED'           ? '  → is the PokerTH server up?'
+                 : err.message.includes('wrong version') ? '  → server without TLS: uncheck TLS'
+                 : err.code === 'ECONNRESET'             ? '  → connection abruptly cut' : '';
+        console.error('[-] Socket error: ' + err.message + hint);
+        try { S.ws && S.ws.close(1011, err.message); } catch (_) {}
+        _destroySession(S);
+      });
+
+      S.sock.on('close', () => {
+        console.log('[-] Server closed (' + S.n + ' msg received)');
+        const w = S.ws;
+        _destroySession(S);
+        if (w) setTimeout(() => { try { w.close(); } catch (_) {} }, 300);
+      });
+    });
+  });
+}
+
+// Branche un WebSocket navigateur sur la session S (relais navigateur→serveur,
+// relais des réactions, gestion de la fermeture avec délai de grâce).
+function _attachWs(S, ws) {
+  S.ws = ws;
+  _allClients.add(ws);
+
+  ws.on('message', (data, isBinary) => {
+    if (!isBinary) {
+      const text = data.toString();
+      if (text.startsWith('REACT:') || text.startsWith('AVATAR:') || text.startsWith('AVATARIMG:')) {
+        _allClients.forEach(client => { if (client !== ws && client.readyState === 1) client.send(text); });
+        return;
+      }
+    }
+    if (!S.connected || !S.sock || !S.sock.writable) return;
+    const buf = Buffer.from(isBinary ? data : data.toString());
+    if (buf.length >= 4) {
+      const d = describeMsg(buf.slice(4, 4 + buf.readUInt32BE(0)));
+      console.log('[C→S] ' + d.name + ' (' + buf.readUInt32BE(0) + 'b)');
+      if (buf.readUInt32BE(0) <= 32) console.log('      hex: ' + buf.slice(4).toString('hex'));
+    }
+    S.sock.write(buf);
+  });
+
+  ws.on('close', code => {
+    _allClients.delete(ws);
+    if (S.ws !== ws) return;   // déjà remplacé par un rebranchement → rien à faire
+    S.ws = null;
+    if (S.sid && S.sock && !S.sock.destroyed) {
+      console.log('[~] Browser off (code ' + code + ') — session ' + S.sid.slice(0, 8) + ' gardée ' + (SESSION_GRACE_MS / 1000) + 's en attente de rebranchement');
+      clearTimeout(S.grace);
+      S.grace = setTimeout(() => {
+        console.log('[-] Grace expirée → fermeture session ' + S.sid.slice(0, 8) + '\n');
+        _destroySession(S);
+      }, SESSION_GRACE_MS);
+    } else {
+      console.log('[-] Browser off (code ' + code + ')\n');
+      _destroySession(S);
+    }
+  });
+
+  ws.on('error', err => { console.error('[-] WS: ' + err.message); });
+}
 
 wss.on('connection', (ws, req) => {
   ws.isAlive = true;
@@ -446,6 +569,7 @@ wss.on('connection', (ws, req) => {
   const host   = params.get('host') || 'pokerth.net';
   const port   = parseInt(params.get('port') || '7234', 10);
   const useTls = params.get('tls') !== '0' && !FORCE_NOTLS;
+  const sid    = params.get('sid') || null;
 
   // ── Reject hosts outside the allowlist ──
   if (!isHostAllowed(host)) {
@@ -454,97 +578,30 @@ wss.on('connection', (ws, req) => {
     return;
   }
 
+  // ── Rebranchement sur une session vivante (même sid) ──
+  if (sid && _sessions.has(sid)) {
+    const S = _sessions.get(sid);
+    if (S.sock && !S.sock.destroyed) {
+      console.log('──────────────────────────────────────');
+      console.log('[~] Rebranchement session ' + sid.slice(0, 8) + ' (' + S.buf.length + ' frames en tampon)');
+      if (S.grace) { clearTimeout(S.grace); S.grace = null; }
+      if (S.ws && S.ws !== ws) { _allClients.delete(S.ws); try { S.ws.terminate(); } catch (_) {} }
+      _attachWs(S, ws);
+      for (const f of S.buf) { if (ws.readyState === WebSocket.OPEN) ws.send(f); }
+      S.buf = []; S.bufBytes = 0;
+      return;
+    }
+    _sessions.delete(sid); // session morte → on ouvre une connexion neuve
+  }
+
+  // ── Nouvelle connexion amont ──
   console.log('──────────────────────────────────────');
-  console.log('[>] ' + (useTls ? 'TLS' : 'TCP') + ' → ' + host + ':' + port);
-
-  let sock, connected = false, rxBuf = Buffer.alloc(0), n = 0;
-
-  _scheduleConn(() => {
-  dns.lookup(host, { family: 4 }, (err, addr) => {
-    addr = err ? host : addr;
-    const isIp = /^\d+\.\d+\.\d+\.\d+$/.test(addr);
-    const opts  = { host: addr, port, ...(!isIp && { servername: host }) };
-
-    const onConn = () => {
-      connected = true;
-      const info = useTls ? '(TLS ' + (sock.getCipher() ? sock.getCipher().name : '?') + ')' : '(raw TCP)';
-      console.log('[+] Connected ' + info + ' → ' + addr + ':' + port);
-
-    };
-
-    sock = useTls
-      ? tls.connect({ ...opts, rejectUnauthorized: !INSECURE_TLS }, onConn)
-      : net.connect(opts, onConn);
-
-    sock.on('data', chunk => {
-      rxBuf = Buffer.concat([rxBuf, chunk]);
-      while (rxBuf.length >= 4) {
-        const msgLen = rxBuf.readUInt32BE(0);
-        if (msgLen === 0 || msgLen > 2_000_000) {
-          console.error('[-] Invalid frame (' + msgLen + ') – closing');
-          ws.close(1011, 'bad frame'); sock.destroy(); return;
-        }
-        if (rxBuf.length < 4 + msgLen) break;
-
-        const frame   = rxBuf.slice(0, 4 + msgLen);
-        const payload = rxBuf.slice(4, 4 + msgLen);
-        rxBuf = rxBuf.slice(4 + msgLen);
-        n++;
-
-        const d = describeMsg(payload);
-        console.log('[S→C] #' + n + ' ' + d.name + ' (' + msgLen + 'b)' + d.extra);
-        // Hex dump for diagnostics
-        if (msgLen <= 64 || d.name.includes('Error') || d.name === '?' || d.name.includes('Flop') || d.name.includes('Turn') || d.name.includes('River') || d.name.includes('Hand'))
-          console.log('      hex: ' + payload.toString('hex'));
-
-        if (ws.readyState === WebSocket.OPEN) ws.send(frame);
-      }
-    });
-
-    sock.on('error', err => {
-      let hint = err.code === 'ECONNREFUSED'             ? '  → is the PokerTH server up?'
-               : err.message.includes('wrong version')   ? '  → server without TLS: uncheck TLS'
-               : err.code === 'ECONNRESET'               ? '  → connection abruptly cut' : '';
-      console.error('[-] Socket error: ' + err.message + hint);
-      try { ws.close(1011, err.message); } catch (_) {}
-    });
-
-    sock.on('close', () => {
-      console.log('[-] Server closed (' + n + ' msg received)');
-      setTimeout(() => { try { ws.close(); } catch (_) {} }, 300);
-    });
-
-  }); // end _scheduleConn
-
-    // Track this client so we can relay broadcasts to it.
-  _allClients.add(ws);
-  ws.on('close', () => _allClients.delete(ws));
-
-  ws.on('message', (data, isBinary) => {
-      // ── Relay reactions / avatars (text frames REACT:pid:emoji, AVATAR:pid:emoji, AVATARIMG:pid:dataurl) ──
-      if (!isBinary) {
-        const text = data.toString();
-        if (text.startsWith('REACT:') || text.startsWith('AVATAR:') || text.startsWith('AVATARIMG:')) {
-          _allClients.forEach(client => {
-            if (client !== ws && client.readyState === 1) client.send(text);
-          });
-          return;
-        }
-      }
-      if (!connected || !sock?.writable) return;
-      const buf = Buffer.from(isBinary ? data : data.toString());
-      if (buf.length >= 4) {
-        const d = describeMsg(buf.slice(4, 4 + buf.readUInt32BE(0)));
-        console.log('[C→S] ' + d.name + ' (' + buf.readUInt32BE(0) + 'b)');
-        if (buf.readUInt32BE(0) <= 32)
-          console.log('      hex: ' + buf.slice(4).toString('hex'));
-      }
-      sock.write(buf);
-    });
-
-    ws.on('close', code => { console.log('[-] Browser off (code ' + code + ')\n'); sock?.destroy(); });
-    ws.on('error', err  => { console.error('[-] WS: ' + err.message); sock?.destroy(); });
-  });
+  console.log('[>] ' + (useTls ? 'TLS' : 'TCP') + ' → ' + host + ':' + port + (sid ? ' (sid ' + sid.slice(0, 8) + ')' : ''));
+  const S = { sid, host, port, useTls, sock: null, ws: null, connected: false,
+              rxBuf: Buffer.alloc(0), n: 0, buf: [], bufBytes: 0, grace: null };
+  if (sid) _sessions.set(sid, S);
+  _attachWs(S, ws);
+  _openUpstream(S);
 });
 
 const HEARTBEAT_MS = 10000; // ping toutes les 10 s
@@ -552,7 +609,7 @@ const _heartbeatTimer = setInterval(() => {
   wss.clients.forEach((ws) => {
     if (ws.isAlive === false) {
       console.log('[-] Heartbeat timeout → terminating dead client');
-      try { ws.terminate(); } catch (_) {}  // → ws.on('close') → sock.destroy()
+      try { ws.terminate(); } catch (_) {}  // → ws.on('close') → grâce (session) ou destroy
       return;
     }
     ws.isAlive = false;

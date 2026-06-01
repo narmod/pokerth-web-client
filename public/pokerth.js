@@ -2782,6 +2782,28 @@ const App = (() => {
   // table au lieu de la réclamer. Avec _pendingRejoin armé, le handler Error(4)
   // attend que le fantôme tombe (heartbeat proxy) puis réessaie le MÊME pseudo
   // → InitAck → buildRejoinGame → on récupère notre siège.
+  // ── Identifiant de session proxy (persistance réseau) ─────────────────
+  // Stable pour toute la durée de l'onglet (survit à un rechargement via
+  // sessionStorage). Transmis au proxy dans l'URL du WebSocket (?sid=…). À la
+  // reconnexion, le proxy rebranche le nouveau WebSocket sur la connexion
+  // PokerTH amont toujours vivante portant ce même sid → la table continue
+  // sans nouvel Init. Repli : si la session a expiré côté proxy, une connexion
+  // neuve (Announce → Init → rejoin) est créée comme avant.
+  function _getSessionId() {
+    try {
+      var s = sessionStorage.getItem('pth_sid');
+      if (!s) {
+        s = (window.crypto && crypto.randomUUID)
+          ? crypto.randomUUID()
+          : (Date.now() + '-' + Math.random().toString(36).slice(2));
+        sessionStorage.setItem('pth_sid', s);
+      }
+      return s;
+    } catch (e) {
+      return 'sid-' + Date.now() + '-' + Math.random().toString(36).slice(2);
+    }
+  }
+
   function _armRejoin() {
     if (_intentionalDisconnect) return;
     var sgEl = document.getElementById('s-game');
@@ -2808,7 +2830,10 @@ const App = (() => {
       ws = null;
     }
     try { _showBanner(t('reconnInProgress')); } catch(e) {}
-    try { App.connect(); } catch(e) {}
+    // preserve:true → on garde l'état de la table ; le proxy rebranche le
+    // WebSocket sur la session PokerTH toujours vivante (même sid) → la partie
+    // continue sans nouvel Init (pas de collision de pseudo, pas de blocage IP).
+    try { App.connect({ preserve: true }); } catch(e) {}
   }
 
   document.addEventListener('visibilitychange', function () {
@@ -2840,7 +2865,7 @@ const App = (() => {
     }
     _lastRxTime = Date.now(); // éviter que le watchdog ne re-déclenche aussitôt
     try { _showBanner(t('reconnInProgress')); } catch(e) {}
-    try { App.connect(); } catch(e) {}
+    try { App.connect({ preserve: true }); } catch(e) {}
   }
 
   // 'online' : la route réseau a changé (wifi→5G…) → l'ancien socket est quasi
@@ -6530,7 +6555,9 @@ function dismissWinner() {
       }
     },
 
-    connect() {
+    connect(opts) {
+      opts = opts || {};
+      var _preserve = !!opts.preserve;
       // ── Fix 2 + 3: re-entrancy guard ──
       // Disable double-clicks: if a connect() is already in progress
       // (either waiting on SW, waiting on previous WS to close, or
@@ -6704,19 +6731,27 @@ function dismissWinner() {
         ws = null;
       }
       rxBuf   = new Uint8Array(0);
-      games   = {};
-      players = {};
-      _playerCountries = {};
-      _raiseMode = 1; _raiseEvery = 0; _lastBlindsUpHand = 0;
-      _endRaiseMode = 1; _endRaiseValue = 0;
-      // Avatars : indexés par pid (stables tant que la session lobby dure) ou
-      // par hash (cache réutilisable). Donc même cycle de vie que 'players' :
-      // on ne les vide qu'à la déconnexion complète, pas en quittant une partie
-      // (sinon les avatars disparaissent au retour au lobby — les hashes/emojis
-      // ne sont re-reçus qu'une fois).
-      _playerAvatars = {}; _playerImgAvatars = {};
-      _pthAvatarHashes = {}; _pthAvatarsByHash = {}; _pthAvatarReqIdToHash = {}; _pthDataUrls = {};
-      loaded  = false;
+      // En reconnexion « preserve » (bascule réseau), on NE vide PAS l'état de
+      // la table / du lobby : le proxy rebranche le WebSocket sur la session
+      // PokerTH déjà en cours (pas de nouvel Announce/Init), donc le serveur ne
+      // renvoie pas la liste des joueurs/avatars — il faut les garder en mémoire
+      // pour ne pas afficher des sièges vides. Repli (session expirée) : on
+      // recevra un Announce → le flux normal repeuplera tout.
+      if (!_preserve) {
+        games   = {};
+        players = {};
+        _playerCountries = {};
+        _raiseMode = 1; _raiseEvery = 0; _lastBlindsUpHand = 0;
+        _endRaiseMode = 1; _endRaiseValue = 0;
+        // Avatars : indexés par pid (stables tant que la session lobby dure) ou
+        // par hash (cache réutilisable). Donc même cycle de vie que 'players' :
+        // on ne les vide qu'à la déconnexion complète, pas en quittant une partie
+        // (sinon les avatars disparaissent au retour au lobby — les hashes/emojis
+        // ne sont re-reçus qu'une fois).
+        _playerAvatars = {}; _playerImgAvatars = {};
+        _pthAvatarHashes = {}; _pthAvatarsByHash = {}; _pthAvatarReqIdToHash = {}; _pthDataUrls = {};
+        loaded  = false;
+      }
 
       // Direct WSS for any pokerth.net mode (guest or authenticated). The
       // /pthlive endpoint is the only one publicly exposed by pokerth.net
@@ -6728,7 +6763,7 @@ function dismissWinner() {
       directWS = isPokerThDirect && targetIsPokerTH;
       const finalUrl = directWS
         ? 'wss://www.pokerth.net:443/pthlive'
-        : proxyUrl + '?host=' + encodeURIComponent(host) + '&port=' + encodeURIComponent(port) + '&tls=' + tlsParam;
+        : proxyUrl + '?host=' + encodeURIComponent(host) + '&port=' + encodeURIComponent(port) + '&tls=' + tlsParam + '&sid=' + encodeURIComponent(_getSessionId());
 
       setStatus(directWS ? t('connDirect') : t('connProxy'));
 
@@ -6927,6 +6962,10 @@ function dismissWinner() {
       _intentionalDisconnect = true;
       _wasAuthenticated = false;
       _lastConnectFailed = false; // déco propre → pas de rate limit
+      // Déconnexion volontaire → faire tourner le sid : la prochaine connexion
+      // doit créer une session PokerTH NEUVE (pseudo éventuellement changé), et
+      // non se rebrancher sur l'ancienne que le proxy garde ~90 s.
+      try { sessionStorage.removeItem('pth_sid'); } catch (e) {}
       document.body.classList.remove('in-game');
       _hideBanner();
       // Cancel any pending auto-reconnect that a previous onclose may have
