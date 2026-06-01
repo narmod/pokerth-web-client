@@ -3561,6 +3561,7 @@ body:not(.in-game) .my-zone {
 .players-list .pl-row:hover { background: rgba(200,168,74,0.08); }
 .players-list .pl-name { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .players-list .pl-id   { color: var(--gold-dim); font-size: 0.66rem; }
+.players-list .pl-flag { font-size: 0.95rem; line-height: 1; min-width: 1.6em; text-align: right; margin-right: 8px; }
 .players-list .pl-row.pl-me { color: var(--gold); }
 .players-list .pl-row.pl-me .pl-id::before { content: '⭐ '; }
 /* ── Avatar chip in the players-online list ──
