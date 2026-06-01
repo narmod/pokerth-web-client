@@ -32,6 +32,8 @@ export const strings = {
     pot:'Pot:', journal:'📋', chat:'💬', sound:'🔊', mute:'🔇',
     thinking:'is thinking…', myCards:'My cards:', gameStart:'Start',
     bet:'Bet', wins:'wins', handOf:'Hand #',
+    blindsUp:'Blinds up', blindsNextTip:'Blinds up in {n} hand(s)',
+    blindsEveryMin:'Blinds up every {n} min',
     handsTitle:'♠ Poker Hand Rankings ♥',
     h1n:'Royal Flush', h1d:'A K Q J 10, all the same suit||the unbeatable hand!',
     h2n:'Straight Flush', h2d:'5 cards in a row, same suit',
