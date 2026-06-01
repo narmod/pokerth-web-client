@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+    blindsNextTip:'sau {n} ván', blindsEveryMin:'mỗi {n} phút',
     connect: 'Kết nối',
     disconnect: '✕ Ngắt kết nối',
     connecting: 'Đang kết nối…',
