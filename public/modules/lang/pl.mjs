@@ -16,6 +16,7 @@ export const meta = {
 };
 
 export const strings = {
+    blindsNextTip:'za {n} rozdań', blindsEveryMin:'co {n} min',
     connect: 'Połącz',
     disconnect: '✕ Rozłącz',
     connecting: 'Łączenie…',
