@@ -34,11 +34,36 @@ function getAudioCtx() {
   if (!_audioCtx) try { _audioCtx = new (window.AudioContext||window.webkitAudioContext)(); } catch(e) {}
   return _audioCtx;
 }
+// Relance le contexte dès qu'il n'est pas 'running'. iOS utilise DEUX états
+// d'arrêt : 'suspended' (avant 1er geste) ET 'interrupted' (PWA passée en
+// arrière-plan, appel entrant, autre app qui capte la sortie audio). Ne tester
+// que 'suspended' laissait le son muet jusqu'à fermeture/réouverture de l'app.
+// Sûr à appeler souvent ; resume() est idempotent.
+function _ensureRunning() {
+  var ctx = getAudioCtx();
+  if (ctx && ctx.state !== 'running' && typeof ctx.resume === 'function') {
+    try { ctx.resume(); } catch(e) {}
+  }
+  return ctx;
+}
+// Déverrouillage iOS « pour de vrai » : à exécuter DANS un geste utilisateur.
+// On reprend le contexte ET on joue un buffer silencieux de 1 échantillon —
+// sans ce buffer, certaines versions d'iOS gardent le contexte muet jusqu'au
+// geste suivant.
+function _unlockAudio() {
+  var ctx = getAudioCtx(); if (!ctx) return;
+  try {
+    if (ctx.state !== 'running' && ctx.resume) ctx.resume();
+    var buf = ctx.createBuffer(1, 1, 22050);
+    var src = ctx.createBufferSource();
+    src.buffer = buf; src.connect(ctx.destination); src.start(0);
+  } catch(e) {}
+}
 function playTone(freq, dur, vol) {
   if (!_soundEnabled) return;
   var ctx = getAudioCtx(); if (!ctx) return;
   try {
-    if (ctx.state === 'suspended') ctx.resume();
+    if (ctx.state !== 'running') { try { ctx.resume(); } catch(e) {} }
     var o = ctx.createOscillator(), g = ctx.createGain();
     o.connect(g); g.connect(ctx.destination);
     o.frequency.value = freq;
@@ -97,7 +122,7 @@ function notifyMyTurn() {
   if (!_soundEnabled) return;
   var ctx = getAudioCtx(); if (!ctx) return;
   try {
-    if (ctx.state === 'suspended') ctx.resume();
+    if (ctx.state !== 'running') { try { ctx.resume(); } catch(e) {} }
     var o = ctx.createOscillator(), g = ctx.createGain();
     o.type = 'sine'; // smoothest waveform, closest to a real bubble
     o.connect(g); g.connect(ctx.destination);
@@ -188,12 +213,36 @@ function isSoundEnabled() {
   return _soundEnabled;
 }
 
-// ─── iOS / Safari: resume audio on first user click ────────────────────
-// Browsers refuse to start AudioContext until a user gesture has occurred.
-// One-shot listener that primes the context as soon as the user clicks
-// anywhere. Previously lived in pokerth.js; moved here to keep all the
-// audio plumbing in one place.
-document.addEventListener('click', function() { getAudioCtx(); }, { once: true });
+// ─── iOS / Safari: déverrouillage & reprise audio robustes ─────────────
+// Les navigateurs refusent de démarrer l'AudioContext tant qu'un geste
+// utilisateur n'a pas eu lieu, et iOS le ré-arrête (suspended/interrupted)
+// quand la PWA passe en arrière-plan. Sans reprise, le son tombe muet
+// jusqu'à fermeture/réouverture de l'app — exactement le bug observé,
+// notamment après le rechargement consécutif à une mise à jour.
+//
+// 1) On déverrouille à CHAQUE geste tant que le contexte n'est pas 'running'
+//    (et non une seule fois) : un premier tap survenu sur un contexte pas
+//    encore prêt ne nous coince plus. Une fois 'running', on se désabonne.
+function _onUnlockGesture() {
+  _unlockAudio();
+  var ctx = getAudioCtx();
+  if (ctx && ctx.state === 'running') {
+    ['touchend', 'click', 'pointerdown', 'keydown'].forEach(function(ev) {
+      document.removeEventListener(ev, _onUnlockGesture, true);
+    });
+  }
+}
+['touchend', 'click', 'pointerdown', 'keydown'].forEach(function(ev) {
+  document.addEventListener(ev, _onUnlockGesture, true);
+});
+
+// 2) Au retour au premier plan (changement d'onglet, app PWA ré-ouverte) on
+//    relance le contexte. Couvre le cas iOS 'interrupted' après backgrounding.
+document.addEventListener('visibilitychange', function() {
+  if (!document.hidden) _ensureRunning();
+});
+window.addEventListener('pageshow', function() { _ensureRunning(); });
+window.addEventListener('focus', function() { _ensureRunning(); });
 
 // ─── Modern ES module exports ───────────────────────────────────────────
 export {
