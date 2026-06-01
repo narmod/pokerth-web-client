@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+    blindsNextTip:'oor {n} hand(e)', blindsEveryMin:'elke {n} min',
     connect: 'Koppel',
     disconnect: '✕ Ontkoppel',
     connecting: 'Koppel tans…',
