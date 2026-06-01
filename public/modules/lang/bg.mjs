@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+    preActionTitle:'Преглед на действията', preActionHint:'докосни картите за затваряне',
     blindsNextTip:'след {n} ръце', blindsEveryMin:'на всеки {n} мин',
     connect: 'Свързване',
     disconnect: '✕ Прекъсване',
