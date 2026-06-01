@@ -199,6 +199,7 @@ export const strings = {
     autoBtnLabel:'Bouton Auto-fold', quickBetLabel:'Boutons de mise rapide',
     autoRearmHint:'se r\u00e9arme chaque tour',
     autoChecked:'Auto-check effectué',
+    preActionTitle:'Aperçu des actions', preActionHint:'tape tes cartes pour fermer',
     autoFolded:'Auto-fold effectué',
     initializing:'Initialisation…',
     preparingConnection:'Préparation de la nouvelle connexion ({n}s)…',
