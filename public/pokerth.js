@@ -7897,6 +7897,7 @@ function renderPlayersList() {
              avChip +
              '<span class="pl-name">' + esc(r.name) + '</span>' +
              '<span class="pl-flag">' + flag + '</span>' +
+             '<span class="pl-star">' + (r.isMe ? '⭐' : '') + '</span>' +
              '<span class="pl-id">#' + r.pid + '</span>' +
            '</div>';
   }).join('');
