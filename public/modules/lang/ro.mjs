@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+    blindsNextTip:'în {n} mâini', blindsEveryMin:'la fiecare {n} min',
     connect: 'Conectează',
     disconnect: '✕ Deconectează',
     connecting: 'Se conectează…',
