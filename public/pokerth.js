@@ -1622,6 +1622,9 @@ const App = (() => {
   //   type: NetAvatarType from proto -- 1=PNG, 2=JPG, 3=GIF
   //   hashHex: lower-case hex string (easy logging & future cache keys)
   let _pthAvatarHashes = {};
+  // pid -> code pays ISO 3166-1 alpha-2 (ex. 'FR'), reçu via PlayerInfoReply
+  // (champ 4). Vide sur LAN / serveur privé qui ne le renseignent pas.
+  let _playerCountries = {};
   // Step 2: outgoing AvatarRequest tracking. Keyed by hashHex so the same
   // avatar shared by N players is downloaded ONCE (Q2=A, dedup by hash).
   //   _pthAvatarsByHash[hex] = {
@@ -1881,6 +1884,18 @@ const App = (() => {
   }
   window.updateLobbyPill = updateLobbyPill;
 
+  // Code pays ISO 3166-1 alpha-2 -> emoji drapeau (indicateurs régionaux).
+  // Renvoie '' si le code est invalide. Note: les drapeaux emoji s'affichent
+  // sur iOS/Android/macOS ; Windows les rend en 2 lettres (pas de glyphes).
+  function _ccToFlag(cc) {
+    if (!cc || typeof cc !== 'string') return '';
+    cc = cc.trim().toUpperCase();
+    if (!/^[A-Z]{2}$/.test(cc)) return '';
+    var A = 0x1F1E6; // 🇦
+    return String.fromCodePoint(A + (cc.charCodeAt(0) - 65))
+         + String.fromCodePoint(A + (cc.charCodeAt(1) - 65));
+  }
+
   // ──────────────────────────────────────────────────────────────
   // Player-info modal -- shows the local player's avatar + name,
   // plus a 'Change avatar' button that opens the avatar picker.
@@ -1895,29 +1910,46 @@ const App = (() => {
     var nameEl = document.getElementById('pim-name');
     if (avEl) {
       avEl.classList.remove('is-letter');
-      // Decide what to show: PokerTH image > placeholder logo > emoji
-      // > initial. Re-derive the choice here so the modal stays in
-      // sync with whatever the user just picked.
-      var pthUrl = (typeof _pthAvatarFor === 'function')
-        ? _pthAvatarFor(myId) : null;
+      // Ordre de priorité (identique à la barre joueur) :
+      //   1) avatar pokerth.net réel téléchargé   (si choix '__pth__')
+      //   2) logo PokerTH (repli quand '__pth__' choisi mais image absente)
+      //   3) image perso (data URL, si choix '__img__')
+      //   4) emoji
+      //   5) initiale
+      var realPth = (typeof _pthAvatarFor === 'function') ? _pthAvatarFor(myId) : null;
       var stored = null;
       try { stored = localStorage.getItem('pth_avatar'); } catch(e) {}
-      if (pthUrl && stored !== null && stored !== '__pth__') pthUrl = null;
-      if (!pthUrl && stored === '__pth__') pthUrl = '/img/pokerth-logo.png';
-      if (!pthUrl && stored === '__img__') {
-        try { pthUrl = localStorage.getItem('pth_avatar_img') || null; } catch(e) { pthUrl = null; }
+      var url = null;
+      if (stored === '__pth__') {
+        url = realPth || '/img/pokerth-logo.png';   // vrai avatar sinon logo
+      } else if (stored === '__img__') {
+        try { url = localStorage.getItem('pth_avatar_img') || null; } catch(e) { url = null; }
       }
-      if (pthUrl) {
-        avEl.innerHTML = '<img src="' + pthUrl + '" alt="" draggable="false">';
+      if (url) {
+        avEl.innerHTML = '<img src="' + url + '" alt="" draggable="false">';
       } else if (stored && stored !== '__pth__' && stored !== '__img__') {
         avEl.textContent = stored;
       } else {
-        // initial letter
+        // initiale
         avEl.classList.add('is-letter');
         avEl.textContent = (myName && myName[0] ? myName[0] : '?').toUpperCase();
       }
     }
     if (nameEl) nameEl.textContent = myName || '';
+    // Drapeau du pays (sous l'avatar) — code reçu via PlayerInfoReply.
+    // Surtout présent sur pokerth.net ; masqué si inconnu.
+    var flagEl = document.getElementById('pim-flag');
+    if (flagEl) {
+      var cc = _playerCountries[myId];
+      var flag = _ccToFlag(cc);
+      if (flag) {
+        flagEl.textContent = flag + ' ' + cc;
+        flagEl.style.display = '';
+      } else {
+        flagEl.textContent = '';
+        flagEl.style.display = 'none';
+      }
+    }
     _pimTab = 'session';
     _renderProfileStats();
     modal.style.display = 'flex';
@@ -2926,6 +2958,9 @@ const App = (() => {
         const info = Proto.sub(sub, 2);
         const name = Proto.str(info, 1);
         if (name) players[pid] = name;
+        // Code pays (champ 4, optionnel) — présent surtout sur pokerth.net.
+        var cc = Proto.str(info, 4);
+        if (cc) _playerCountries[pid] = cc.toUpperCase();
         _pendingNameRequests.delete(pid); // got the reply, free for retry if needed
         // ── Step 1 (PokerTH avatar): peek for the optional AvatarData
         // sub-message (field 5). Present only for registered players who
@@ -3509,7 +3544,7 @@ const App = (() => {
       case T.RemovedFromGame: { _gameMeta = null;
         addChat(null, t('youWereRemoved'), 'sys');
         _pendingRejoin = 0; try { localStorage.removeItem('pth_resume'); } catch(e) {}
-        _playerAvatars = {}; _playerImgAvatars = {}; _pthAvatarHashes = {}; _pthAvatarsByHash = {}; _pthAvatarReqIdToHash = {};
+        _playerAvatars = {}; _playerImgAvatars = {}; _pthAvatarHashes = {}; _pthAvatarsByHash = {}; _pthAvatarReqIdToHash = {}; _playerCountries = {};
         App._resetGameState();
         show('s-lobby');
         break;
