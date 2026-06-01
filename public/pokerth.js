@@ -5421,36 +5421,11 @@ const App = (() => {
   // Boutons d'action en APERÇU (désactivés) + le seul réglage activable :
   // l'auto-check/fold. Toujours rendu dans #g-actions.
   function _renderPreActionPanel() {
-    var myMoney = (seatData[myId] || {}).money || 0;
-    var myBet   = (seatData[myId] || {}).bet || 0;
-    var toCall  = Math.max(0, highestBet - myBet);
-    var canCheck = toCall === 0;
-    var callTxt = canCheck ? t('check') : (t('call') + ' ' + fmtChips(toCall));
-    // Étiquette de l'auto : check si rien à payer, sinon fold (comme à notre tour).
-    var autoLabel = canCheck ? t('autoCheckLabel') : t('autoFoldLabel');
-    var autoGlyph = canCheck
-      ? '<svg class="auto-ic ic-check" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 13 L10 18 L19 6" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>'
-      : '<svg class="auto-ic ic-fold" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6 L18 18 M18 6 L6 18" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg>';
-    var h = '<div class="preaction-panel">'
-      + '<div class="pa-head">'
-      +   '<span class="pa-title">' + t('preActionTitle') + '</span>'
-      +   '<span class="pa-hint">' + t('preActionHint') + '</span>'
-      + '</div>'
-      // Aperçu : boutons désactivés, non cliquables (juste pour voir les options).
-      + '<div class="pa-preview" aria-hidden="true">'
-      +   '<span class="pa-btn">' + t('fold') + '</span>'
-      +   '<span class="pa-btn">' + callTxt + '</span>'
-      +   '<span class="pa-btn">' + t('raise') + '</span>'
-      +   '<span class="pa-btn">' + t('allin') + ' ' + fmtChips(myMoney) + '</span>'
-      + '</div>'
-      // Seul réglage activable : auto-check/fold (réutilise _autoCheckFold).
-      + '<button class="btn-action btn-auto pa-auto' + (_autoCheckFold ? ' armed' : '') + '"'
-      +   ' onclick="App.togglePreAuto()" aria-pressed="' + (_autoCheckFold ? 'true' : 'false') + '">'
-      +   '<span class="auto-tx">AUTO</span>' + autoGlyph
-      +   '<span class="pa-auto-lbl">' + autoLabel + '</span>'
-      + '</button>'
-      + '</div>';
-    $('g-actions').innerHTML = h;
+    // Affiche EXACTEMENT le même panneau d'action que pendant notre tour
+    // (Fold / Call / %, relance, All-In, AUTO), mais en mode aperçu :
+    // tout est non cliquable sauf le bouton AUTO. Voir
+    // renderMyTurnActions(preview=true) et la classe CSS .actions-preview.
+    renderMyTurnActions(true);
   }
 
   // Ferme le panneau et restaure le message d'attente du tour courant.
@@ -5916,7 +5891,7 @@ const App = (() => {
     if (typeof showKeyHint === 'function') showKeyHint(t('assist') + (_assistOn ? ' \u2713' : ''));
   };
 
-  function renderMyTurnActions() {
+  function renderMyTurnActions(preview) {
     // Defensive: never render action buttons in spectator mode. The
     // server normally won't send PlayersTurn to spectators, but we
     // guard against it anyway so a stray message can't accidentally
@@ -6030,8 +6005,16 @@ const App = (() => {
       + '<button class="btn-action btn-allin" onclick="App.doAction(6,' + myMoney + ')" title="All-In (A)">All-In <b>' + fmtChips(myMoney) + '</b></button>'
       + '</div>';
 
+    if (preview) {
+      // Aperçu hors-tour : EXACTEMENT le même panneau, mais non interactif
+      // (la classe .actions-preview coupe pointer-events sauf sur AUTO).
+      // Aucun son, aucune vibration, aucun keepalive serveur.
+      $('g-actions').innerHTML =
+        '<div class="actions-preview" data-cap="' + esc(t('preActionTitle')) + '">' + h + '</div>';
+      updateBottomLayout();
+      return;
+    }
     $('g-actions').innerHTML = h;
-    // Same fix as in PlayersTurn handler: fire BOTH the audio chime and the
     // visual notification (they used to be one call, but the local function
     // shadowed the audio one).
     if (typeof window.notifyMyTurn === 'function') window.notifyMyTurn();
