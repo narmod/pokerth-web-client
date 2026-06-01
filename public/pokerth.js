@@ -5250,9 +5250,13 @@ const App = (() => {
         + (myDealerBadge ? '<span style="margin-left:4px;vertical-align:middle">' + myDealerBadge + '</span>' : '')
         + (myBlindChip   ? '<span style="margin-left:4px;vertical-align:middle;display:inline-block;position:relative;top:-1px">' + myBlindChip.replace('class="blind-chip"','style="filter:drop-shadow(0 1px 3px rgba(0,0,0,0.4));vertical-align:middle"') + '</span>' : '');
     }
-    // If I'm eliminated (money <= 0 and not gone voluntarily), show
-    // a clear "OUT" indicator next to my stack and dim the player bar.
-    var __amOut = !!(mySd && mySd.money != null && mySd.money <= 0 && !mySd.gone && !_amSpectator);
+    // Je suis "OUT" (éliminé) UNIQUEMENT si je n'ai plus de jetons ET que je
+    // ne suis plus dans la donne (active === false, posé au début de la main
+    // suivante en cas de bust). Un all-in laisse active === true → on NE grise
+    // PAS pendant l'all-in, on attend que la main soit résolue et que je sois
+    // réellement éliminé. Cohérent avec le critère des autres sièges (seat-out).
+    var __amOut = !!(mySd && mySd.money != null && mySd.money <= 0
+                     && mySd.active === false && !mySd.gone && !_amSpectator);
     if (pbMon) {
       pbMon.textContent = mySd.money != null ? fmtChips(mySd.money) : '—';
       if (__amOut) {
