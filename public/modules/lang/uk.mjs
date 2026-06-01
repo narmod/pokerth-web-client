@@ -9,6 +9,7 @@ export const meta = {
 };
 
 export const strings = {
+    preActionTitle:'Попередній перегляд дій', preActionHint:'торкніться карт, щоб закрити',
     blindsNextTip:'через {n} роздач', blindsEveryMin:'кожні {n} хв',
     connect: 'Підключитися',
     disconnect: '✕ Відключитися',
