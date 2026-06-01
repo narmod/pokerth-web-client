@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+    blindsNextTip:'po {n} rankų', blindsEveryMin:'kas {n} min',
     connect: 'Prisijungti',
     disconnect: '✕ Atsijungti',
     connecting: 'Jungiamasi…',
