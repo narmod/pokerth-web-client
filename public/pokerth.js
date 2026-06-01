@@ -2638,6 +2638,11 @@ const App = (() => {
   // `true` reinstates the feature without touching anything else.
   const FEATURE_AUTO_CHECK_FOLD = true;
   let _autoCheckFold = false; // armed by the per-turn checkbox; auto-resets every HandStart
+  // Panneau "aperçu des actions" ouvert en tapant ses cartes hors de son tour.
+  // N'expose qu'un seul réglage activable : l'auto-check/fold (réutilise
+  // _autoCheckFold). Les boutons d'action y sont affichés en APERÇU seulement
+  // (non cliquables). Se ferme automatiquement quand c'est notre tour.
+  let _preActionOpen = false;
   // User preference: show the compact auto check/fold button in the action
   // bar. OFF by default (some players — e.g. kids — found it confusing).
   // Toggled from the header ••• menu and remembered in localStorage. The
@@ -3748,6 +3753,7 @@ const App = (() => {
         // safety: the user must see each hand's hole cards before deciding
         // anything automatic.
         _autoCheckFold = false;
+        _preActionOpen = false; // referme tout panneau "aperçu" à chaque main
 
         // ── SPECTATOR BOOTSTRAP ──
         // When the user joined as spectator of a hand-in-progress, the
@@ -3945,6 +3951,9 @@ const App = (() => {
         $('g-round').textContent = rounds[gameState] || t('preflop');
         startTurnTimer();
         if (turnPid === myId) {
+          // C'est notre tour : on referme tout panneau "aperçu" pour ne pas
+          // interférer avec la barre d'actions normale (et tous ses effets).
+          _preActionOpen = false;
           // Auto check/fold path: if the user armed the option on a
           // previous turn (this same hand), play the auto action without
           // showing the action buttons. canCheck (no money to put in)
@@ -5399,9 +5408,62 @@ const App = (() => {
   }
 
   function renderGameWaiting(msg, isHtml) {
+    // Si le panneau "aperçu" est ouvert et que ce n'est pas notre tour, on
+    // affiche le panneau au lieu du message d'attente (et on le garde sticky
+    // face aux mises à jour serveur — tour d'un autre joueur, etc.).
+    if (_preActionOpen && turnPid !== myId) { _renderPreActionPanel(); updateBottomLayout(); return; }
     // isHtml=true : msg contient du HTML interne sûr (généré par notre code)
     $('g-actions').innerHTML = '<div class="waiting-msg">' + (isHtml ? msg : esc(msg)) + '</div>';
     updateBottomLayout();
+  }
+
+  // Rendu du panneau "aperçu des actions" (cartes tapées hors de notre tour).
+  // Boutons d'action en APERÇU (désactivés) + le seul réglage activable :
+  // l'auto-check/fold. Toujours rendu dans #g-actions.
+  function _renderPreActionPanel() {
+    var myMoney = (seatData[myId] || {}).money || 0;
+    var myBet   = (seatData[myId] || {}).bet || 0;
+    var toCall  = Math.max(0, highestBet - myBet);
+    var canCheck = toCall === 0;
+    var callTxt = canCheck ? t('check') : (t('call') + ' ' + fmtChips(toCall));
+    // Étiquette de l'auto : check si rien à payer, sinon fold (comme à notre tour).
+    var autoLabel = canCheck ? t('autoCheckLabel') : t('autoFoldLabel');
+    var autoGlyph = canCheck
+      ? '<svg class="auto-ic ic-check" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 13 L10 18 L19 6" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+      : '<svg class="auto-ic ic-fold" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6 L18 18 M18 6 L6 18" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg>';
+    var h = '<div class="preaction-panel">'
+      + '<div class="pa-head">'
+      +   '<span class="pa-title">' + t('preActionTitle') + '</span>'
+      +   '<span class="pa-hint">' + t('preActionHint') + '</span>'
+      + '</div>'
+      // Aperçu : boutons désactivés, non cliquables (juste pour voir les options).
+      + '<div class="pa-preview" aria-hidden="true">'
+      +   '<span class="pa-btn">' + t('fold') + '</span>'
+      +   '<span class="pa-btn">' + callTxt + '</span>'
+      +   '<span class="pa-btn">' + t('raise') + '</span>'
+      +   '<span class="pa-btn">' + t('allin') + ' ' + fmtChips(myMoney) + '</span>'
+      + '</div>'
+      // Seul réglage activable : auto-check/fold (réutilise _autoCheckFold).
+      + '<button class="btn-action btn-auto pa-auto' + (_autoCheckFold ? ' armed' : '') + '"'
+      +   ' onclick="App.togglePreAuto()" aria-pressed="' + (_autoCheckFold ? 'true' : 'false') + '">'
+      +   '<span class="auto-tx">AUTO</span>' + autoGlyph
+      +   '<span class="pa-auto-lbl">' + autoLabel + '</span>'
+      + '</button>'
+      + '</div>';
+    $('g-actions').innerHTML = h;
+  }
+
+  // Ferme le panneau et restaure le message d'attente du tour courant.
+  function _closePreActionPanel() {
+    _preActionOpen = false;
+    if (turnPid && turnPid !== myId && seatData[turnPid]) {
+      renderGameWaiting(
+        '<span style="font-family:inherit">' + esc(getPlayerName(turnPid)) + '</span>'
+        + '<span class="thinking-dots"><span></span><span></span><span></span></span>', true);
+    } else {
+      $('g-actions').innerHTML = '';
+      updateBottomLayout();
+    }
   }
 
   // ─────────────────────────────────────────────────────────────────
@@ -6898,6 +6960,27 @@ function dismissWinner() {
         b.classList.toggle('armed', _autoCheckFold);
         b.setAttribute('aria-pressed', _autoCheckFold ? 'true' : 'false');
       }
+    },
+
+    // Ouvre/ferme le panneau "aperçu" en tapant ses cartes. Volontairement
+    // sans effet à NOTRE tour (on ne change rien au fonctionnement actuel) ;
+    // requiert une main en cours avec des cartes, hors mode spectateur.
+    togglePreActionPanel() {
+      if (turnPid === myId) return;                 // à notre tour : inchangé
+      if (_amSpectator || !_gameStarted) return;
+      if (myCards[0] == null && myCards[1] == null) return; // pas de cartes
+      _preActionOpen = !_preActionOpen;
+      if (_preActionOpen) _renderPreActionPanel();
+      else _closePreActionPanel();
+    },
+
+    // Active/désactive l'auto-check/fold depuis le panneau, puis rafraîchit
+    // l'état affiché. Réutilise exactement le flag _autoCheckFold.
+    togglePreAuto() {
+      _autoCheckFold = !_autoCheckFold;
+      var b = document.getElementById('auto-cf-btn');
+      if (b) { b.classList.toggle('armed', _autoCheckFold); b.setAttribute('aria-pressed', _autoCheckFold ? 'true' : 'false'); }
+      if (_preActionOpen) _renderPreActionPanel();
     },
 
     confirmLeaveGame() {
