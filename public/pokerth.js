@@ -6052,16 +6052,20 @@ function showWinnerOverlay(winners) {
     html += '<div class="wc-player-name">' + esc(name) + (isW ? " 🏆" : "") + (isMe ? " 👤" : "") + '</div>';
     html += '<div class="wc-player-stack">' + (sd.money != null ? _groupThousands(sd.money) + " ¥" : "—") + '</div>';
     html += '</div>';
-    // Show cards if revealed
+    // Cartes : on rend TOUJOURS le conteneur (avec 2 cartes ou 2 dos en
+    // placeholder), sinon la ligne n'aurait que 3 colonnes et la grille
+    // décalerait les cartes des autres lignes.
+    html += '<div class="wc-player-cards">';
     if (sd.card1 != null || sd.card2 != null) { // FIX: || test falsy ratait les cartes à valeur 0
-      html += '<div class="wc-player-cards">';
       html += cardHtml(sd.card1 != null ? sd.card1 : null,"xsm",false) + cardHtml(sd.card2 != null ? sd.card2 : null,"xsm",false);
-      html += '</div>';
     } else if (isMe && myCards[0] != null) { // FIX: idem, valeur 0 = falsy
-      html += '<div class="wc-player-cards">';
       html += cardHtml(myCards[0],"xsm",false) + cardHtml(myCards[1],"xsm",false);
-      html += '</div>';
+    } else {
+      // Joueur couché / cartes non révélées : 2 dos estompés, juste pour
+      // réserver la largeur de la colonne et garder l'alignement.
+      html += '<div class="pk xsm back placeholder"></div><div class="pk xsm back placeholder"></div>';
     }
+    html += '</div>';
     html += '<div class="wc-player-delta ' + deltaClass + '">' + deltaTxt + '</div>';
     html += '</div>';
   });
