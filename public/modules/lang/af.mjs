@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+    preActionTitle:'Aksievoorskou', preActionHint:'tik op kaarte om te sluit',
     blindsNextTip:'oor {n} hand(e)', blindsEveryMin:'elke {n} min',
     connect: 'Koppel',
     disconnect: '✕ Ontkoppel',
