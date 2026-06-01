@@ -1003,6 +1003,16 @@ body {
 }
 .chat-send:hover { background: var(--gold-hi); }
 
+/* Lobby chat panel — fond unifié + bordure basse nette + ombre, pour que le
+   bas de la zone message soit clairement délimité du reste du lobby. */
+#lobby-chat-panel {
+  background: rgba(4,10,5,0.97);
+  border-bottom: 2px solid var(--border-hi);
+  box-shadow: 0 8px 16px rgba(0,0,0,0.5);
+  position: relative;
+  z-index: 6;
+}
+
 /* Scrollbars */
 ::-webkit-scrollbar { width: 3px; height: 3px; }
 ::-webkit-scrollbar-track { background: transparent; }
