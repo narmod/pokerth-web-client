@@ -7388,6 +7388,8 @@ function dismissWinner() {
         pids:    Array.from(_lobbyPids),
         players: players,
         myId:    myId,
+        countries: _playerCountries,
+        flagOf:  function(pid) { return _ccToFlag(_playerCountries[pid]); },
       };
     },
 
@@ -7859,6 +7861,9 @@ function renderPlayersList() {
   var pids = window._readLobbyPids ? window._readLobbyPids() : [];
   var nameMap = window._readPlayers ? window._readPlayers() : {};
   var myId = window._readMyId ? window._readMyId() : 0;
+  // Snapshot complet pour accéder aux drapeaux (flagOf) sans multiplier les ponts.
+  var _ls = (typeof App !== 'undefined' && App.getLobbyState) ? App.getLobbyState() : {};
+  var _flagOf = (_ls && typeof _ls.flagOf === 'function') ? _ls.flagOf : function() { return ''; };
   // Build display rows
   var rows = pids.map(function(pid) {
     return { pid: pid, name: nameMap[pid] || ('#' + pid), isMe: pid === myId };
@@ -7886,9 +7891,12 @@ function renderPlayersList() {
     var avChip = (typeof window._avatarChipHtml === 'function')
       ? window._avatarChipHtml(r.pid, r.name, 'pl-av')
       : '<span class="pl-av letter">' + esc((r.name[0] || '?').toUpperCase()) + '</span>';
+    // Drapeau du pays (colonne avant l'#id). Vide → span vide (garde l'alignement).
+    var flag = _flagOf(r.pid) || '';
     return '<div class="pl-row' + (r.isMe ? ' pl-me' : '') + '">' +
              avChip +
              '<span class="pl-name">' + esc(r.name) + '</span>' +
+             '<span class="pl-flag">' + flag + '</span>' +
              '<span class="pl-id">#' + r.pid + '</span>' +
            '</div>';
   }).join('');
