@@ -429,7 +429,19 @@ function _scheduleConn(fn) {
   }
 }
 
+// ── Heartbeat ping/pong : détecter les WebSockets navigateurs MORTS ──
+// Quand un client disparaît brutalement (coupure wifi, bascule réseau), aucun
+// 'close' n'arrive avant le timeout TCP de l'OS (plusieurs minutes). Pendant
+// ce temps la connexion PokerTH amont reste ouverte → le joueur reste un
+// « fantôme » assis à la table et son pseudo reste pris (impossible de
+// rejoindre/recréer). On ping chaque client régulièrement ; ceux qui ne
+// répondent pas (pong) sont terminate() → déclenche ws.on('close') →
+// sock.destroy() → la session PokerTH est libérée en ~10–20 s.
+function _heartbeat() { this.isAlive = true; }
+
 wss.on('connection', (ws, req) => {
+  ws.isAlive = true;
+  ws.on('pong', _heartbeat);
   const params = new URLSearchParams(url.parse(req.url).query);
   const host   = params.get('host') || 'pokerth.net';
   const port   = parseInt(params.get('port') || '7234', 10);
@@ -534,5 +546,19 @@ wss.on('connection', (ws, req) => {
     ws.on('error', err  => { console.error('[-] WS: ' + err.message); sock?.destroy(); });
   });
 });
+
+const HEARTBEAT_MS = 10000; // ping toutes les 10 s
+const _heartbeatTimer = setInterval(() => {
+  wss.clients.forEach((ws) => {
+    if (ws.isAlive === false) {
+      console.log('[-] Heartbeat timeout → terminating dead client');
+      try { ws.terminate(); } catch (_) {}  // → ws.on('close') → sock.destroy()
+      return;
+    }
+    ws.isAlive = false;
+    try { ws.ping(); } catch (_) {}
+  });
+}, HEARTBEAT_MS);
+wss.on('close', () => clearInterval(_heartbeatTimer));
 
 httpServer.listen(PROXY_PORT, () => console.log('Ready → http://localhost:' + PROXY_PORT + '/\n'));

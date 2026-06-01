@@ -2718,6 +2718,7 @@ const App = (() => {
   let _lastMsgWasReaction = false; // true si le dernier chat envoyé était une réaction
   let _chatRejectShown = false;    // n'afficher l'avertissement LAN qu'une seule fois // pour la reconnexion auto
   let _reconnectAttempts = 0;
+  let _lastRxTime = Date.now();  // horodatage du dernier message reçu (watchdog liveness)
   let _intentionalDisconnect = false;
   let _pendingRejoin = 0;        // gameId to auto-rejoin after reconnect (0 = none)
   let _rejoinNickRetries = 0;    // retries waiting for our ghost's nick to free up
@@ -2803,8 +2804,60 @@ const App = (() => {
     if (sg && sg.classList.contains('active')) acquireWakeLock();
     _maybeReconnectOnResume();
   });
-  window.addEventListener('online',  _maybeReconnectOnResume);
   window.addEventListener('pageshow', _maybeReconnectOnResume);
+
+  // ── Détection d'un socket MORT (bascule réseau, ex. wifi → 5G) ─────────
+  // Sur un changement de réseau, l'ancien WebSocket peut rester readyState
+  // === OPEN tout en étant un « zombie » (TCP mort). _maybeReconnectOnResume
+  // ne suffit pas (il fait confiance à OPEN). Ici on FORCE : on démonte le
+  // socket quel que soit son état, puis on relance une connexion propre
+  // (même chemin que la reconnexion auto → même re-join de table).
+  function _forceReconnect() {
+    if (_intentionalDisconnect || !_lastConnectParams) return;
+    var sg = document.getElementById('s-game');
+    var sl = document.getElementById('s-lobby');
+    if (!((sg && sg.classList.contains('active')) || (sl && sl.classList.contains('active')))) return;
+    clearTimeout(window._reconnectTimer);
+    clearInterval(window._reconnectCountdown);
+    _reconnectAttempts = 0;
+    if (ws) {
+      try { ws.onclose = null; ws.onerror = null; ws.onmessage = null; ws.onopen = null; ws.close(); } catch(e) {}
+      ws = null;
+    }
+    _lastRxTime = Date.now(); // éviter que le watchdog ne re-déclenche aussitôt
+    try { _showBanner(t('reconnInProgress')); } catch(e) {}
+    try { App.connect(); } catch(e) {}
+  }
+
+  // 'online' : la route réseau a changé (wifi→5G…) → l'ancien socket est quasi
+  // sûrement mort même s'il affiche OPEN → on force la reconnexion.
+  window.addEventListener('online', _forceReconnect);
+  // 'offline' : on prévient l'utilisateur ; la reconnexion se fera au retour du
+  // réseau ('online') ou via le watchdog ci-dessous.
+  window.addEventListener('offline', function () {
+    if (_intentionalDisconnect || !_lastConnectParams) return;
+    var sg = document.getElementById('s-game');
+    var sl = document.getElementById('s-lobby');
+    if (!((sg && sg.classList.contains('active')) || (sl && sl.classList.contains('active')))) return;
+    try { _showBanner(t('reconnInProgress')); } catch(e) {}
+  });
+
+  // Watchdog liveness : si AUCUN message reçu depuis _RX_WATCHDOG_MS alors qu'on
+  // est à une table, visible et « en ligne », le socket est présumé mort (cas
+  // d'une bascule réseau « transparente » où online/offline ne se déclenchent
+  // pas). Seuil large : les bots agissent toutes les <15 s, donc pas de faux
+  // positif en pratique. Ajustable ici si des tables humaines ont un timeout
+  // très long.
+  var _RX_WATCHDOG_MS = 45000;
+  setInterval(function () {
+    if (_intentionalDisconnect || !_lastConnectParams) return;
+    if (document.hidden) return;                                            // arrière-plan : timers gelés
+    if (typeof navigator.onLine === 'boolean' && !navigator.onLine) return; // hors-ligne géré ailleurs
+    var sg = document.getElementById('s-game');
+    if (!(sg && sg.classList.contains('active'))) return;                   // seulement à une table
+    if (!ws || ws.readyState !== WebSocket.OPEN) return;                    // sinon déjà géré
+    if (Date.now() - _lastRxTime > _RX_WATCHDOG_MS) _forceReconnect();
+  }, 5000);
 
   function setStatus(txt, cls='') {
     const el = $('cstatus');
@@ -2828,6 +2881,7 @@ const App = (() => {
   }
 
   function onRawData(chunk) {
+    _lastRxTime = Date.now();              // liveness : un message reçu = socket vivant
     if (typeof chunk === 'string') return; // ignore text frames
     if (directWS) {
       // Direct WSS: each WS message is one complete protobuf (no length prefix)
@@ -6670,7 +6724,7 @@ function dismissWinner() {
       }
 
       ws.binaryType = 'arraybuffer';
-      ws.onopen    = () => setStatus(t('proxyConnectedWait'));
+      ws.onopen    = () => { _lastRxTime = Date.now(); setStatus(t('proxyConnectedWait')); };
       ws.onerror   = () => { _lastConnectFailed = true; setStatus(t('wsError'), 'err'); };
       ws.onmessage = function(e) {
         if (typeof e.data === 'string') {
