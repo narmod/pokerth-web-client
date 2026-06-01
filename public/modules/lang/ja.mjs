@@ -9,6 +9,7 @@ export const meta = {
 };
 
 export const strings = {
+    preActionTitle:'アクションのプレビュー', preActionHint:'カードをタップして閉じる',
     blindsNextTip:'あと{n}ハンド', blindsEveryMin:'{n}分ごと',
     connect: '接続',
     disconnect: '✕ 切断',
