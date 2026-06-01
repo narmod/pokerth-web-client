@@ -1037,6 +1037,54 @@ body {
   text-align: center;
   flex: 1;
 }
+/* Compteur "blinds up" affiché à côté du n° de main dans le bandeau du pot. */
+.blinds-next {
+  display: inline-block;
+  margin-left: 6px;
+  padding: 0 5px;
+  border-radius: 8px;
+  background: rgba(200,168,74,0.16);
+  border: 1px solid var(--gold-dim);
+  color: var(--gold);
+  font-family: 'Inconsolata', monospace;
+  font-weight: 700;
+  font-size: 0.62rem;
+  letter-spacing: 0.04em;
+  vertical-align: middle;
+}
+/* Bandeau d'alerte au moment où les blinds montent. Centré en haut,
+   masqué par défaut, révélé via .show (transition). */
+.blinds-up-toast {
+  position: fixed;
+  top: 64px;
+  left: 50%;
+  transform: translate(-50%, -14px) scale(0.9);
+  z-index: 900;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 9px 18px;
+  border-radius: 26px;
+  background: linear-gradient(135deg, rgba(200,168,74,0.96), rgba(168,134,40,0.96));
+  color: #1a0a00;
+  font-family: 'Cinzel', serif;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  box-shadow: 0 8px 28px rgba(0,0,0,0.55), 0 0 0 1px rgba(255,255,255,0.25) inset;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.28s ease, transform 0.28s cubic-bezier(0.2,0.9,0.3,1.3);
+}
+.blinds-up-toast.show { opacity: 1; transform: translate(-50%, 0) scale(1); }
+.blinds-up-toast .bu-icon { font-size: 1.05rem; line-height: 1; }
+.blinds-up-toast .bu-text { font-size: 0.82rem; text-transform: uppercase; }
+.blinds-up-toast .bu-val {
+  font-family: 'Inconsolata', monospace;
+  font-size: 0.9rem;
+  background: rgba(0,0,0,0.16);
+  padding: 1px 8px;
+  border-radius: 6px;
+}
 
 /* ══ RESPONSIVE OVAL SIZE via CSS custom props ══ */
 :root { --oval-w: 440px; --oval-h: 180px; }
