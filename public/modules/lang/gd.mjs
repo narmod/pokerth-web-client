@@ -11,6 +11,7 @@ export const meta = {
 };
 
 export const strings = {
+    preActionTitle:'Ro-shealladh gnìomh', preActionHint:'thoir gnogadh air na cairtean gus dùnadh',
     blindsNextTip:'an ceann {n} làmh', blindsEveryMin:'gach {n} mion',
     connect: 'Ceangail',
     disconnect: '✕ Dì-cheangail',
