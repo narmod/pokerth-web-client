@@ -4508,11 +4508,19 @@ const App = (() => {
   function renderStats() {
     var el = document.getElementById('stats-overlay');
     if (!el) return;
+    // Onglets TOTAL (à vie) et CLASSEMENT (proxy) seulement dans les deux modes
+    // réseau (LAN + serveur privé) : sur pokerth.net direct il n'y a ni stats
+    // persistantes ni proxy de classement → seul SESSION a du sens.
+    var eligible = _statsEligible;
+    if (!eligible && _statsTab !== 'session') _statsTab = 'session';
     var titles = { session: t('statSession'), life: t('statTabLife'), board: t('statTabBoard') };
     function tb(id, label) {
       return '<button class="stats-tab'+(_statsTab===id?' active':'')+'" onclick="window._statsSetTab(\''+id+'\')">'+label+'</button>';
     }
-    var tabs = '<div class="stats-tabs">'+tb('session',t('statTabSession'))+tb('life',t('statTabLife'))+tb('board',t('statTabBoard'))+'</div>';
+    // Une seule vue dispo (pokerth.net) → pas de barre d'onglets.
+    var tabs = eligible
+      ? '<div class="stats-tabs">'+tb('session',t('statTabSession'))+tb('life',t('statTabLife'))+tb('board',t('statTabBoard'))+'</div>'
+      : '';
     var body;
     if (_statsTab === 'life')       body = _statsBodyLife();
     else if (_statsTab === 'board') body = '<div id="stats-board-body" class="stats-body"><div class="stat-empty">…</div></div>';
