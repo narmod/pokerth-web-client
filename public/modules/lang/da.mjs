@@ -9,6 +9,7 @@ export const meta = {
 };
 
 export const strings = {
+    blindsNextTip:'om {n} hænder', blindsEveryMin:'hver {n}. min',
     connect: 'Tilslut',
     disconnect: '✕ Afbryd',
     connecting: 'Forbinder…',
