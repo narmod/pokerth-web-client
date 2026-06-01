@@ -2881,7 +2881,7 @@ const App = (() => {
         if ('Notification' in window && Notification.permission === 'default') {
           Notification.requestPermission().catch(function(){});
         }
-        addChat(null, t('connectedAsGuest', { name: myName, id: myId }), 'sys');
+        addChat(null, t('connectedAsGuest', { name: myName, id: myId }), 'sys', { key: 'connectedAsGuest', params: { name: myName, id: myId } });
         const cfName = document.getElementById('cf-name');
         if (cfName) cfName.value = _localDefaultName();  // nom par défaut localisé
         break;
@@ -3191,7 +3191,7 @@ const App = (() => {
           var _aj = window._pendingAutoJoin;
           window._pendingAutoJoin = 0;
           var fr = (typeof _lang === 'undefined' || _lang !== 'en');
-          addChat(null, t('sharedTableJoining'), 'sys');
+          addChat(null, t('sharedTableJoining'), 'sys', { key: 'sharedTableJoining' });
           // Defer slightly so renderGames() has painted and games[id]
           // is fully populated before joinGame reads it.
           setTimeout(function(){
@@ -3297,7 +3297,7 @@ const App = (() => {
         _timerSec = sec; // Sync avec le serveur
         // Si le serveur donne plus de temps que prévu, ajuster le total
         if (sec > _timerTot) _timerTot = sec;
-        addChat(null, t('timerHurry', { s: sec }), 'sys');
+        addChat(null, t('timerHurry', { s: sec }), 'sys', { key: 'timerHurry', params: { s: sec } });
         // Auto-reset timeout
         const rtm = Proto.encode([[1,0,68],[69,2,new Uint8Array(0)]]);
         send(rtm);
@@ -3325,13 +3325,13 @@ const App = (() => {
           }
         } else {
           _lastMsgWasReaction = false;
-          if (!amInGame) addChat(null, t('chatRefusedReason', { r: rejText }), 'sys');
+          if (!amInGame) addChat(null, t('chatRefusedReason', { r: rejText }), 'sys', { key: 'chatRefusedReason', params: { r: rejText } });
           else if (!_chatRejectShown) {
             _chatRejectShown = true;
             if (_currentLoginMode === 'lan') {
-              addGameChat(null, t('chatLanDisabled'), 'sys');
+              addGameChat(null, t('chatLanDisabled'), 'sys', { key: 'chatLanDisabled' });
             } else {
-              addGameChat(null, t('chatServerRefused'), 'sys');
+              addGameChat(null, t('chatServerRefused'), 'sys', { key: 'chatServerRefused' });
             }
           }
         }
@@ -3398,7 +3398,7 @@ const App = (() => {
         if (akbm) akbm.style.display = amGameAdmin ? '' : 'none';
         var asbm = document.getElementById('admin-start-mob');
         if (asbm) asbm.style.display = amGameAdmin ? '' : 'none';
-        addChat(null, t('joinedTableWaiting', { gid: gId, admin: isAdmin ? ' (admin)' : '' }), 'sys');
+        addChat(null, t('joinedTableWaiting', { gid: gId, admin: isAdmin ? ' (admin)' : '' }), 'sys', { key: 'joinedTableWaiting', params: { gid: gId, admin: isAdmin ? ' (admin)' : '' } });
         show('s-game');
         // Clear any leftover felt from a previously-viewed table. After
         // leaveGame the rendered seats / pot / community stay in the DOM,
@@ -3545,7 +3545,7 @@ const App = (() => {
           renderSeats();
         }
         const name = players[pid] || '#'+pid;
-        addChat(null, name + ' ' + t('joinedGame'), 'sys');
+        addChat(null, name + ' ' + t('joinedGame'), 'sys', { prefix: name + ' ', key: 'joinedGame' });
         // Ask the server for this player's name if we don't have it yet,
         // so the waiting panel can display a real pseudo rather than '#42'.
         if (!players[pid]) {
@@ -3562,7 +3562,7 @@ const App = (() => {
       case T.GamePlayerLeft: {
         const pid = Proto.u32(sub, 2);
         const name = players[pid] || '#'+pid;
-        addChat(null, t('playerLeftTable', { name: name }), 'sys');
+        addChat(null, t('playerLeftTable', { name: name }), 'sys', { key: 'playerLeftTable', params: { name: name } });
         if (seatData[pid]) { seatData[pid].active = false; seatData[pid].gone = true; }
         renderSeats();
         // Refresh the waiting panel if the game hasn't started yet.
@@ -3590,7 +3590,7 @@ const App = (() => {
             var visible = _egoEl && _egoEl.offsetParent !== null;
             if (!visible) {
               var winnerPid = stillIn[0] || myId;
-              addChat(null, '⚠ ' + t('onePlayerLeft'), 'sys');
+              addChat(null, '⚠ ' + t('onePlayerLeft'), 'sys', { prefix: '⚠ ', key: 'onePlayerLeft' });
               stopTurnTimer();
               dismissWinner();
               showEndGameOverlay(winnerPid);
@@ -3601,7 +3601,7 @@ const App = (() => {
       }
 
       case T.RemovedFromGame: { _gameMeta = null;
-        addChat(null, t('youWereRemoved'), 'sys');
+        addChat(null, t('youWereRemoved'), 'sys', { key: 'youWereRemoved' });
         _pendingRejoin = 0; try { localStorage.removeItem('pth_resume'); } catch(e) {}
         App._resetGameState();
         show('s-lobby');
@@ -3612,7 +3612,7 @@ const App = (() => {
         // Répondre avec StartEventAck
         const evGameId = Proto.u32(sub, 1);
         send(MSG.buildStartEventAck(evGameId));
-        addChat(null, t('gameStarting'), 'sys');
+        addChat(null, t('gameStarting'), 'sys', { key: 'gameStarting' });
         break;
       }
 
@@ -4296,7 +4296,7 @@ const App = (() => {
         const actStr    = actNames[rejAction] || ('?' + rejAction);
         logAction('⚠ ' + actStr + (rejBet ? ' ' + rejBet : '') + ' — ' + reasonStr);
         addGameChat(null, '⚠ ' + t('actionRejected') +
-                          ' (' + actStr + ') — ' + reasonStr, 'sys');
+                          ' (' + actStr + ') — ' + reasonStr, 'sys', { prefix: '⚠ ', key: 'actionRejected', suffix: ' (' + actStr + ') — ' + reasonStr });
         // If we're still the active player according to the local state,
         // the server may give us a second chance — re-render the action
         // buttons so the user can retry. The local turn timer was already
@@ -4311,7 +4311,7 @@ const App = (() => {
 
       case T.EndOfGame: {
         const winnerPid = Proto.u32(sub, 2);
-        addChat(null, t('gameOverMsg'), 'sys');
+        addChat(null, t('gameOverMsg'), 'sys', { key: 'gameOverMsg' });
         // Keep amInGame true until the user dismisses the overlay, so the
         // table screen stays visible behind it. Stop the turn timer and
         // suppress any further winner pop-ups.
@@ -4429,8 +4429,8 @@ const App = (() => {
   }
 
   // ── CHAT ──
-  function addChat(sender, text, cls='') {
-    if (typeof addGameChat === 'function') addGameChat(sender, text, cls);
+  function addChat(sender, text, cls='', spec) {
+    if (typeof addGameChat === 'function') addGameChat(sender, text, cls, spec);
     // Flash lobby chat button on new message
     var lcp = document.getElementById('lobby-chat-panel');
     var lcb = document.getElementById('lobby-chat-btn');
@@ -4447,6 +4447,7 @@ const App = (() => {
     } else {
       d.innerHTML = `<span class="txt">${esc(text)}</span>`;
     }
+    if (spec && !sender) { try { d.dataset.sys = JSON.stringify(spec); } catch(e){} }
     el.appendChild(d);
     el.scrollTop = el.scrollHeight;
   }
@@ -6855,7 +6856,7 @@ function dismissWinner() {
       // Optimistic log so the admin gets immediate feedback even
       // before the server broadcasts GamePlayerLeft. Localised.
       var fr = (typeof _lang === 'undefined' || _lang !== 'en');
-      addGameChat(null, '🗑️ ' + t('kickRequested', { name: name }), 'sys');
+      addGameChat(null, '🗑️ ' + t('kickRequested', { name: name }), 'sys', { prefix: '🗑️ ', key: 'kickRequested', params: { name: name } });
       // Watchdog: if the server hasn't broadcast a GamePlayerLeft
       // within 3s, the kick has almost certainly failed silently.
       // This happens on PokerTH servers older than v2.0.6 (March 2026,
@@ -6866,7 +6867,7 @@ function dismissWinner() {
           if (gId !== gameAtRequest) return;
           // Player still present means the kick was not honoured.
           if (seatData[targetPid] && !seatData[targetPid].gone) {
-            addGameChat(null, '⚠ ' + t('kickNotProcessed', { name: targetName }), 'sys');
+            addGameChat(null, '⚠ ' + t('kickNotProcessed', { name: targetName }), 'sys', { prefix: '⚠ ', key: 'kickNotProcessed', params: { name: targetName } });
           }
         }, 3000);
       })(pid, name, gId);
@@ -6911,7 +6912,7 @@ function dismissWinner() {
       var badge = document.getElementById('g-admin-badge');
       if (badge) badge.style.display = 'none';
       show('s-lobby');
-      addChat(null, t('tableClosedMsg'), 'sys');
+      addChat(null, t('tableClosedMsg'), 'sys', { key: 'tableClosedMsg' });
     },
 
     endGameClose() {
@@ -7156,7 +7157,7 @@ function dismissWinner() {
       // the UI into 'watch only' mode (banner up top, action area replaced
       // with a message instead of fold/call buttons).
       _amSpectator = true;
-      addChat(null, '👁 ' + t('spectatingTable') + (g.name||('#'+gameId)) + '…', 'sys');
+      addChat(null, '👁 ' + t('spectatingTable') + (g.name||('#'+gameId)) + '…', 'sys', { prefix: '👁 ', key: 'spectatingTable', suffix: (g.name||('#'+gameId)) + '…' });
       // Use the shared MSG.buildJoinGame helper which now correctly
       // encodes spectateOnly into field 4. The previous hand-rolled
       // message set field 3 (autoLeave) instead, which the server did
@@ -7182,7 +7183,7 @@ function dismissWinner() {
         autoAction = true;
         const btn = document.getElementById('btn-autojoin');
         if (btn) { btn.textContent = '⏳...'; btn.disabled = true; }
-        addChat(null, t('autoTableFound', { n: target }), 'sys');
+        addChat(null, t('autoTableFound', { n: target }), 'sys', { key: 'autoTableFound', params: { n: target } });
         send(MSG.buildJoinGame(parseInt(target), false));
       } else {
         // No table — show the player-count dialog. The actual CreateGame
@@ -7210,7 +7211,7 @@ function dismissWinner() {
       autoAction = true;
       const btn = document.getElementById('btn-autojoin');
       if (btn) { btn.textContent = '⏳...'; btn.disabled = true; }
-      addChat(null, t('autoNoTable'), 'sys');
+      addChat(null, t('autoNoTable'), 'sys', { key: 'autoNoTable' });
       // Use the per-login-mode defaults so a Quick Game on pokerth.net
       // behaves like the public server (30s timeout) and a Quick Game on
       // a LAN/private box stays snappy (15s).
@@ -7504,7 +7505,7 @@ function dismissWinner() {
         // pids.length < 2, but catch it anyway so a stray click on a
         // stale UI can't send a bad request to the server.
         var fr = (typeof _lang === 'undefined' || _lang !== 'en');
-        addGameChat(null, '⚠ ' + t('kickAtLeast2'), 'sys');
+        addGameChat(null, '⚠ ' + t('kickAtLeast2'), 'sys', { prefix: '⚠ ', key: 'kickAtLeast2' });
         return;
       }
       addGameChat(null, '▶ Starting (humans only)…', 'sys');
@@ -7619,7 +7620,7 @@ window._readMyId = function() {
 
 
 // ── Game chat (mirrors lobby addChat) ──
-function addGameChat(sender, text, cls) {
+function addGameChat(sender, text, cls, spec) {
   var el = document.getElementById('g-chat-msgs');
   if (!el) return;
   var d = document.createElement('div');
@@ -7630,6 +7631,7 @@ function addGameChat(sender, text, cls) {
   } else {
     d.innerHTML = '<span class="txt">'+e(text)+'</span>';
   }
+  if (spec && !sender) { try { d.dataset.sys = JSON.stringify(spec); } catch(_e){} }
   el.appendChild(d);
   el.scrollTop = el.scrollHeight;
   var cBtn = document.getElementById('chat-toggle-btn');
@@ -7645,6 +7647,23 @@ function addGameChat(sender, text, cls) {
     if (typeof notifyChat === 'function') notifyChat();
   }
 }
+
+// Re-traduit en direct les messages systeme (cls 'sys') deja affiches dans
+// les deux panneaux de chat quand la langue change. Les messages tapes par
+// les joueurs (texte libre) ne sont pas touches. Appele depuis setLang().
+window._retranslateSysChat = function() {
+  ['chat', 'g-chat-msgs'].forEach(function(id) {
+    var c = document.getElementById(id); if (!c) return;
+    c.querySelectorAll('.msg[data-sys]').forEach(function(d) {
+      var s; try { s = JSON.parse(d.dataset.sys); } catch (e) { return; }
+      if (!s || !s.key) return;
+      var tr = (typeof window.t === 'function') ? window.t(s.key, s.params || {}) : s.key;
+      var txt = (s.prefix || '') + tr + (s.suffix || '');
+      var span = d.querySelector('.txt');
+      if (span) span.textContent = txt;
+    });
+  });
+};
 
 // click handled via inline onclick on game-row
 
