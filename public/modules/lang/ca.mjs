@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+    blindsNextTip:'en {n} mans', blindsEveryMin:'cada {n} min',
     connect: 'Connecta',
     disconnect: '✕ Desconnecta',
     connecting: 'Connectant…',
