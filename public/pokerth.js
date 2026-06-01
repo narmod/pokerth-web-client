@@ -1918,55 +1918,39 @@ const App = (() => {
       }
     }
     if (nameEl) nameEl.textContent = myName || '';
+    _pimTab = 'session';
     _renderProfileStats();
     modal.style.display = 'flex';
   }
   window.openPlayerInfoPopup = openPlayerInfoPopup;
 
-  // Remplit le bloc stats du popup de profil :
-  //  • SESSION : toujours (stats de la partie en cours, _stats, alimentées
-  //    dans tous les modes par recordHand()).
-  //  • TOTAL (serveur) : seulement en mode réseau (proxy/serveur privé), via
-  //    GET /stats → snapshot persistant du joueur. Absent sur pokerth.net
-  //    direct (pas de proxy) ou si le proxy n'a pas encore de données.
+  // Bloc stats du popup de profil — mêmes onglets que le panneau en jeu :
+  // SESSION (toujours) / TOTAL (à vie, + bouton reset) / CLASSEMENT (proxy).
+  // Les onglets TOTAL et CLASSEMENT n'apparaissent qu'en mode réseau (LAN +
+  // serveur privé, _statsEligible) : sur pokerth.net direct, seul SESSION.
+  // Réutilise _statsBodySession / _statsBodyLife / renderBoard pour rester
+  // strictement identique au jeu (y compris le reset).
+  var _pimTab = 'session';
+  function _pimSetTab(tab) { _pimTab = tab; _renderProfileStats(); }
+  window._pimSetTab = _pimSetTab;
+
   function _renderProfileStats() {
     var box = document.getElementById('pim-stats');
     if (!box) return;
-    var s = _stats || { handsPlayed: 0, handsWon: 0, totalGain: 0 };
-    var wr = s.handsPlayed > 0 ? Math.round(s.handsWon / s.handsPlayed * 100) : 0;
-    var g = s.totalGain || 0;
-    var gCls = g > 0 ? 'pos' : g < 0 ? 'neg' : '';
-    var session =
-        '<div class="pim-stats-title">' + t('statSession') + '</div>' +
-        _statsRow(t('statHandsPlayed'), s.handsPlayed || 0) +
-        _statsRow(t('statWins'), s.handsWon || 0, 'pos') +
-        _statsRow(t('statWinRate'), wr + '%') +
-        _statsRow(t('statNet'), (g > 0 ? '+' : '') + _groupThousands(g) + ' ¥', gCls);
-    box.innerHTML = '<div class="pim-stats-block">' + session + '</div>';
-
-    // Bloc TOTAL (serveur) — uniquement hors mode direct pokerth.net.
-    if (directWS || !myName) return;
-    fetch('/stats', { cache: 'no-store' })
-      .then(function (r) { return r.ok ? r.json() : {}; })
-      .then(function (data) {
-        var p = data && data[myName];
-        if (!p) return; // pas de stats proxy pour ce joueur → on garde juste SESSION
-        // Le popup a pu être refermé / rouvert entre-temps : revérifier la cible.
-        var box2 = document.getElementById('pim-stats');
-        if (!box2) return;
-        var wr2 = p.handsPlayed > 0 ? Math.round(p.handsWon / p.handsPlayed * 100) : 0;
-        var n = p.net || 0;
-        var nCls = n > 0 ? 'pos' : n < 0 ? 'neg' : '';
-        var total =
-            '<div class="pim-stats-title">' + t('statTabLife') + '</div>' +
-            _statsRow(t('statGamesWon'), p.gamesWon || 0, 'pos') +
-            _statsRow(t('statHandsPlayed'), p.handsPlayed || 0) +
-            _statsRow(t('statWins'), p.handsWon || 0, 'pos') +
-            _statsRow(t('statWinRate'), wr2 + '%') +
-            _statsRow(t('statNet'), (n > 0 ? '+' : '') + _groupThousands(n) + ' ¥', nCls);
-        box2.innerHTML += '<div class="pim-stats-block pim-stats-total">' + total + '</div>';
-      })
-      .catch(function () { /* pas de proxy / hors-ligne : SESSION seul, silencieux */ });
+    var eligible = _statsEligible;
+    if (!eligible && _pimTab !== 'session') _pimTab = 'session';
+    function tb(id, label) {
+      return '<button class="stats-tab'+(_pimTab===id?' active':'')+'" onclick="window._pimSetTab(\''+id+'\')">'+label+'</button>';
+    }
+    var tabs = eligible
+      ? '<div class="stats-tabs">'+tb('session',t('statTabSession'))+tb('life',t('statTabLife'))+tb('board',t('statTabBoard'))+'</div>'
+      : '';
+    var body;
+    if (_pimTab === 'life')       body = _statsBodyLife();
+    else if (_pimTab === 'board') body = '<div id="pim-board-body" class="stats-body"><div class="stat-empty">…</div></div>';
+    else                          body = _statsBodySession();
+    box.innerHTML = tabs + body;
+    if (_pimTab === 'board') renderBoard('pim-board-body');
   }
 
   function closePlayerInfoPopup() {
@@ -4590,14 +4574,21 @@ const App = (() => {
     if (!confirm(t('statResetConfirm'))) return;
     _lifeReset();
     renderStats();
+    // Rafraîchir aussi le popup de profil s'il est ouvert (il partage le
+    // même onglet TOTAL avec son bouton reset).
+    try {
+      var pim = document.getElementById('player-info-modal');
+      if (pim && pim.style.display !== 'none') _renderProfileStats();
+    } catch (e) {}
   }
   window._statsReset = _statsReset;
 
-  function renderBoard() {
+  function renderBoard(targetId) {
+    var boxId = targetId || 'stats-board-body';
     fetch('/stats', { cache:'no-store' })
       .then(function(r){ return r.ok ? r.json() : {}; })
       .then(function(data){
-        var box = document.getElementById('stats-board-body');
+        var box = document.getElementById(boxId);
         if (!box) return;
         var arr = Object.keys(data || {}).map(function(name){ var v = data[name] || {}; v.name = name; return v; });
         arr.sort(function(a, b){ return (b.net||0) - (a.net||0); });
@@ -4618,7 +4609,7 @@ const App = (() => {
         box.innerHTML = '<div class="board-list">'+rows+'</div>';
       })
       .catch(function(){
-        var box = document.getElementById('stats-board-body');
+        var box = document.getElementById(boxId);
         if (box) box.innerHTML = '<div class="stat-empty">'+t('boardEmpty')+'</div>';
       });
   }
