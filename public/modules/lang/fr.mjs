@@ -16,6 +16,7 @@ export const meta = {
 };
 
 export const strings = {
+    blindsNextTip:'dans {n} main(s)', blindsEveryMin:'toutes les {n} min',
     connect:'Se connecter', disconnect:'✕ Déconnecter', connecting:'Connexion en cours…',
     nickname:'Pseudo', password:'Mot de passe', useTLS:'Utiliser TLS',
     lan:'LAN (pseudo libre)', privateGuest:'Serveur privé — Invité Internet ✓',
@@ -32,8 +33,6 @@ export const strings = {
     pot:'Pot :', journal:'📋', chat:'💬', sound:'🔊', mute:'🔇',
     thinking:'réfléchit…', myCards:'Mes cartes :', gameStart:'Début',
     bet:'Mise', wins:'gagne', handOf:'Main #',
-    blindsUp:'Blinds ↑', blindsNextTip:'Montée des blinds dans {n} main(s)',
-    blindsEveryMin:'Montée des blinds toutes les {n} min',
     handsTitle:'♠ Combinaisons du Poker ♥',
     h1n:'Quinte Flush Royale', h1d:'A K Q J 10, tous de la même couleur||la main imbattable !',
     h2n:'Quinte Flush', h2d:'5 qui se suivent, même couleur',
