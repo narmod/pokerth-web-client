@@ -621,4 +621,29 @@ const _heartbeatTimer = setInterval(() => {
 }, HEARTBEAT_MS);
 wss.on('close', () => clearInterval(_heartbeatTimer));
 
-httpServer.listen(PROXY_PORT, () => console.log('Ready → http://localhost:' + PROXY_PORT + '/\n'));
+// ── Démarrage du serveur, résilient au port occupé (EADDRINUSE) ──────────
+// Lors d'un redémarrage rapide (pm2 restart), l'ancienne instance n'a parfois
+// pas encore libéré le port → EADDRINUSE. Plutôt que crasher en boucle, on
+// réessaie quelques fois ; si ça persiste (vraie instance concurrente), on sort
+// proprement et on laisse PM2 appliquer son backoff.
+let _listenRetries = 0;
+const _MAX_LISTEN_RETRIES = 6;
+const _LISTEN_RETRY_MS = 2000;
+httpServer.on('error', (err) => {
+  if (err && err.code === 'EADDRINUSE' && _listenRetries < _MAX_LISTEN_RETRIES) {
+    _listenRetries++;
+    console.error('[!] Port ' + PROXY_PORT + ' occupé (EADDRINUSE) — tentative '
+      + _listenRetries + '/' + _MAX_LISTEN_RETRIES + ' dans ' + (_LISTEN_RETRY_MS / 1000)
+      + ' s (l\'ancienne instance libère peut-être le port)…');
+    setTimeout(() => { try { httpServer.listen(PROXY_PORT); } catch (_) {} }, _LISTEN_RETRY_MS);
+    return;
+  }
+  console.error('[-] Impossible de démarrer le serveur sur le port ' + PROXY_PORT + ' : '
+    + (err && err.message ? err.message : err));
+  console.error('    → vérifie qu\'aucune autre instance ne tourne : ss -ltnp | grep ' + PROXY_PORT);
+  process.exit(1);
+});
+httpServer.listen(PROXY_PORT, () => {
+  _listenRetries = 0;
+  console.log('Ready → http://localhost:' + PROXY_PORT + '/\n');
+});

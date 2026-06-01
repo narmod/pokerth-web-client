@@ -2885,16 +2885,17 @@ const App = (() => {
     try { _showBanner(t('reconnInProgress')); } catch(e) {}
   });
 
-  // Watchdog liveness : si AUCUN message reçu depuis _RX_WATCHDOG_MS alors qu'on
-  // est à une table, visible et « en ligne », le socket est présumé mort (cas
-  // d'une bascule réseau « transparente » où online/offline ne se déclenchent
-  // pas). ⚠ Ce seuil DOIT rester supérieur au timeout d'action de la table :
-  // pendant TON tour, le serveur n'envoie rien tant que tu n'as pas joué, donc
-  // un seuil trop court (ex. 20 s) déclenche une reconnexion à tort si tu
-  // réfléchis longtemps. 45 s = filet de sécurité ; les vrais déclencheurs
-  // rapides sont online/focus/visibilitychange (et le rebranchement proxy est
-  // de toute façon transparent).
-  var _RX_WATCHDOG_MS = 45000;
+  // Watchdog liveness : si AUCUN message reçu depuis le seuil alors qu'on est à
+  // une table, visible et « en ligne », le socket est présumé mort (cas d'une
+  // bascule réseau « transparente » où online/offline ne se déclenchent pas).
+  // ⚠ Le seuil DOIT rester supérieur au timeout d'action de la table : pendant
+  // TON tour, le serveur n'envoie rien tant que tu n'as pas joué, donc un seuil
+  // trop court déclencherait une reconnexion à tort si tu réfléchis longtemps.
+  // → Seuil ADAPTATIF : max(45 s, timeout_table + 20 s de marge). gameTimeout
+  // est renseigné depuis NetGameInfo au JoinGameAck (défaut 15 s). C'est un
+  // filet de sécurité ; les vrais déclencheurs rapides sont
+  // online/focus/visibilitychange (et le rebranchement proxy est transparent).
+  var _RX_WATCHDOG_MIN_MS = 45000;
   setInterval(function () {
     if (_intentionalDisconnect || !_lastConnectParams) return;
     if (document.hidden) return;                                            // arrière-plan : timers gelés
@@ -2902,7 +2903,9 @@ const App = (() => {
     var sg = document.getElementById('s-game');
     if (!(sg && sg.classList.contains('active'))) return;                   // seulement à une table
     if (!ws || ws.readyState !== WebSocket.OPEN) return;                    // sinon déjà géré
-    if (Date.now() - _lastRxTime > _RX_WATCHDOG_MS) _forceReconnect();
+    var _tt  = (typeof gameTimeout === 'number' && gameTimeout > 0) ? gameTimeout : 15;
+    var _thr = Math.max(_RX_WATCHDOG_MIN_MS, (_tt + 20) * 1000);            // > timeout d'action de la table
+    if (Date.now() - _lastRxTime > _thr) _forceReconnect();
   }, 5000);
 
   function setStatus(txt, cls='') {
