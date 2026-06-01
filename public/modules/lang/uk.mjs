@@ -9,6 +9,7 @@ export const meta = {
 };
 
 export const strings = {
+    blindsNextTip:'через {n} роздач', blindsEveryMin:'кожні {n} хв',
     connect: 'Підключитися',
     disconnect: '✕ Відключитися',
     connecting: 'Підключення…',
