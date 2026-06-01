@@ -2754,6 +2754,69 @@ body {
 .btn-auto.armed .auto-ic { color: #eafff0; } /* light glyph for contrast on green */
 .action-top-row .btn-auto { flex: 0 0 auto; min-width: 46px; }
 @media (max-width: 480px) { .btn-auto { min-width: 48px; } }
+
+/* ── Panneau "aperçu des actions" (ouvert en tapant ses cartes) ── */
+.pb-cards { cursor: pointer; }
+.preaction-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  padding: 8px 10px;
+  width: 100%;
+  box-sizing: border-box;
+}
+.preaction-panel .pa-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+}
+.preaction-panel .pa-title {
+  font-family: 'Cinzel', serif;
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+.preaction-panel .pa-hint {
+  font-size: 0.6rem;
+  color: var(--text);
+  opacity: 0.7;
+}
+/* Aperçu : pseudo-boutons grisés, non interactifs. */
+.preaction-panel .pa-preview {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+.preaction-panel .pa-btn {
+  flex: 1 1 auto;
+  text-align: center;
+  padding: 7px 8px;
+  border-radius: 4px;
+  border: 1px dashed rgba(255,255,255,0.18);
+  background: rgba(255,255,255,0.04);
+  color: rgba(255,255,255,0.45);
+  font-family: 'Inconsolata', monospace;
+  font-size: 0.74rem;
+  font-weight: 600;
+  white-space: nowrap;
+  pointer-events: none;            /* aperçu : non cliquable */
+  user-select: none;
+}
+/* Le seul bouton activable : l'auto-check/fold. */
+.preaction-panel .pa-auto {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 12px;
+}
+.preaction-panel .pa-auto .pa-auto-lbl {
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
 /* Hidden by default; shown only when the user enables it from the ••• menu. */
 body.hide-auto-btn .btn-auto { display: none; }
 body.hide-pct-btns .pct-row { display: none; }
