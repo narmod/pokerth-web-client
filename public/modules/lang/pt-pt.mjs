@@ -9,6 +9,7 @@ export const meta = {
 };
 
 export const strings = {
+    preActionTitle:'Pré-visualização de ações', preActionHint:'toca nas cartas para fechar',
     blindsNextTip:'em {n} mão(s)', blindsEveryMin:'a cada {n} min',
     connect: 'Ligar',
     disconnect: '✕ Desligar',
