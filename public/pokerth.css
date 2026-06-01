@@ -433,6 +433,27 @@ body {
   margin-top: 4px;
   width: 100%;
 }
+/* ── Bloc stats du popup de profil (SESSION + TOTAL serveur) ── */
+.pim-stats {
+  width: 100%;
+  margin: 4px 0 2px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.pim-stats-block { display: flex; flex-direction: column; gap: 5px; }
+.pim-stats-block .stat-row { padding: 1px 0; }
+.pim-stats-title {
+  font-size: 0.58rem;
+  color: var(--gold-dim);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: 2px;
+}
+.pim-stats-total {
+  border-top: 1px solid var(--border);
+  padding-top: 9px;
+}
 
 /* ── Avatar picker shown as a floating modal (from the lobby) ──
    The existing #avatar-popup lives statically inside the connect
