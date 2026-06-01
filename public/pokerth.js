@@ -2413,6 +2413,11 @@ const App = (() => {
   }
   var _myStackAtHandStart = null;    // mon stack réel au début de la main (avant blinds)
   var _seatStackAtHandStart = {};    // {pid: stack début de main} → net exact de chaque joueur
+  // Snapshot des résultats figés à la FIN de la main (avant que la main
+  // suivante ne réinitialise les stacks). Lu par showWinnerOverlay() pour
+  // afficher des nets corrects, même si la donne suivante a déjà démarré.
+  // {pid: {money, net, card1, card2, folded, inHand}}
+  var _handResultSnapshot = {};
 
   // ── Positions des sièges (pour les animations) ──
   var _lastPixPos = [];  // [{top, left}] dans l'ordre de rotated
@@ -4226,6 +4231,7 @@ const App = (() => {
           if (p1) p1.classList.remove('pot-huge');
           if (p2) p2.classList.remove('pot-huge');
         }, 800);
+        _snapshotHandResults();
         showWinnerOverlay(winners);
         renderGameWaiting('Prochaine main...');
         break;
@@ -4262,7 +4268,7 @@ const App = (() => {
             setTimeout(function(p){ animatePlayerEliminated(p); }, 600, _ep);
           }
         }
-        if (won > 0) showWinnerOverlay([{pid, won, cash, c1:null, c2:null}]);
+        if (won > 0) { _snapshotHandResults(); showWinnerOverlay([{pid, won, cash, c1:null, c2:null}]); }
         break;
       }
 
@@ -6071,6 +6077,38 @@ const App = (() => {
     }
   }
 
+  // ── Snapshot de fin de main ──
+// Capture, au moment où la main se termine (EndOfHandShow / EndOfHandHide),
+// le stack final et le net EXACT de chaque joueur AVANT que la main suivante
+// ne réinitialise seatData/_seatStackAtHandStart. Sans ça, l'overlay (souvent
+// rendu après le démarrage de la donne suivante) afficherait des montants
+// faussés. On garde les joueurs couchés ; on marque hors-jeu les éliminés.
+function _snapshotHandResults() {
+  var snap = {};
+  var pids = seats.length ? seats.slice() : Object.keys(seatData).map(Number);
+  pids.forEach(function(pid) {
+    var sd    = seatData[pid] || {};
+    var start = _seatStackAtHandStart[pid];
+    var net   = (start != null && sd.money != null) ? (sd.money - start) : null;
+    // "Dans cette main" = avait des jetons au début de CE coup (start > 0),
+    // donc a bel et bien été distribué. Conséquences voulues :
+    //  • éliminé une main PRÉCÉDENTE → start = 0 → exclu ;
+    //  • busté PENDANT la main (all-in perdu) → start > 0 → conservé, avec sa
+    //    perte nette affichée ;
+    //  • couché (fold) → start > 0 → conservé.
+    var inHand = (start != null) && (start > 0);
+    snap[pid] = {
+      money:  sd.money,
+      net:    net,
+      card1:  sd.card1,
+      card2:  sd.card2,
+      folded: !!sd.folded,
+      inHand: inHand
+    };
+  });
+  _handResultSnapshot = snap;
+}
+
   // ── Winner overlay ──
 function showWinnerOverlay(winners) {
   var ov = document.getElementById('g-winner-overlay');
@@ -6093,6 +6131,15 @@ function showWinnerOverlay(winners) {
   }
   var trophy = isMyWin ? "🎉" : "🏆";
 
+  // Snapshot figé à la fin de la main (montants + qui était réellement engagé).
+  var snap = _handResultSnapshot || {};
+  var winnerPidsEarly = winners.map(function(w){ return w.pid; });
+  // Joueurs encore EN JEU dans cette main (couchés inclus, éliminés exclus).
+  var _playersInHand = Object.keys(snap).filter(function(k){
+    return (snap[k] && snap[k].inHand) || winnerPidsEarly.indexOf(Number(k)) >= 0;
+  }).length;
+  if (!_playersInHand) _playersInHand = seats.length; // garde-fou si snapshot vide
+
   // Build header
   var winnerNames = winners.map(function(w){ return esc(getPlayerName(w.pid)); }).join(" & ");
   var totalWon = winners.reduce(function(s,w){ return s+w.won; }, 0);
@@ -6113,7 +6160,7 @@ function showWinnerOverlay(winners) {
   html += '<div class="wc-stats">';
   html += '<div class="wc-stat"><div class="wc-stat-label">' + t('handOf') + '</div><div class="wc-stat-value">' + handNum + '</div></div>';
   html += '<div class="wc-stat"><div class="wc-stat-label">' + t('totalPot') + '</div><div class="wc-stat-value">' + _groupThousands(totalWon) + ' ¥</div></div>';
-  html += '<div class="wc-stat"><div class="wc-stat-label">' + t('players') + '</div><div class="wc-stat-value">' + seats.length + '</div></div>';
+  html += '<div class="wc-stat"><div class="wc-stat-label">' + t('players') + '</div><div class="wc-stat-value">' + _playersInHand + '</div></div>';
   html += '<div class="wc-stat"><div class="wc-stat-label">' + t('blinds') + '</div><div class="wc-stat-value">' + smallBlind + '/' + (smallBlind*2) + '</div></div>';
   html += '</div>';
 
@@ -6161,22 +6208,40 @@ function showWinnerOverlay(winners) {
   // against GameStartInitial rewrites, not external mutations.
   var allPids = seats.length ? seats.slice() : Object.keys(seatData).map(Number);
   var winnerPids = winners.map(function(w){ return w.pid; });
+  function _snapMoney(pid){ var s = snap[pid]; return (s && s.money != null) ? s.money : ((seatData[pid]||{}).money||0); }
   allPids.sort(function(a,b){
     var aW = winnerPids.indexOf(a) >= 0 ? 1 : 0;
     var bW = winnerPids.indexOf(b) >= 0 ? 1 : 0;
     if (aW !== bW) return bW - aW;
-    return ((seatData[b]||{}).money||0) - ((seatData[a]||{}).money||0);
+    return _snapMoney(b) - _snapMoney(a);
   });
 
   allPids.forEach(function(pid) {
     var sd    = seatData[pid] || {};
+    var snp   = snap[pid] || null;
     var isW   = winnerPids.indexOf(pid) >= 0;
     var isMe  = pid === myId;
+    // Ne lister que les joueurs réellement engagés dans CETTE main : on garde
+    // les couchés (fold), mais on retire les joueurs éliminés/sortis lors d'une
+    // main précédente (ils n'ont pas participé). Le(s) gagnant(s) restent
+    // toujours, par sécurité.
+    var _inHand = snp ? snp.inHand : ((_seatStackAtHandStart[pid] || 0) > 0);
+    if (!isW && !_inHand) return;
+
     var name  = getPlayerName(pid);
     var wObj  = winners.find(function(w){ return w.pid === pid; });
-    // Net réel de la main pour ce joueur = stack final − stack au début de la main.
-    var _startStk = _seatStackAtHandStart[pid];
-    var _net = (_startStk != null && sd.money != null) ? (sd.money - _startStk) : null;
+    // Montants figés à la fin de la main (snapshot) pour éviter que le
+    // démarrage de la main suivante ne fausse stack/net affichés.
+    var _money = (snp && snp.money != null) ? snp.money : sd.money;
+    var _net;
+    if (snp) {
+      _net = snp.net;
+    } else {
+      var _startStk = _seatStackAtHandStart[pid];
+      _net = (_startStk != null && sd.money != null) ? (sd.money - _startStk) : null;
+    }
+    var _c1 = (snp && snp.card1 != null) ? snp.card1 : sd.card1;
+    var _c2 = (snp && snp.card2 != null) ? snp.card2 : sd.card2;
     var deltaClass, deltaTxt;
     if (isW) {
       // Gagnant : on affiche le pot ramassé (cohérent avec l'en-tête).
@@ -6186,6 +6251,10 @@ function showWinnerOverlay(winners) {
       // Perdant : perte nette de la main, en rouge.
       deltaClass = "neg";
       deltaTxt = _groupThousands(_net) + " ¥";
+    } else if (_net != null && _net > 0) {
+      // Gain net positif sans être « le » gagnant (split pot / side pot).
+      deltaClass = "pos";
+      deltaTxt = "+" + _groupThousands(_net) + " ¥";
     } else {
       deltaClass = "";
       deltaTxt = "";
@@ -6196,14 +6265,14 @@ function showWinnerOverlay(winners) {
     html += _avatarChipHtml(pid, name, 'wc-player-av');
     html += '<div class="wc-player-info">';
     html += '<div class="wc-player-name">' + esc(name) + (isW ? " 🏆" : "") + (isMe ? " 👤" : "") + '</div>';
-    html += '<div class="wc-player-stack">' + (sd.money != null ? _groupThousands(sd.money) + " ¥" : "—") + '</div>';
+    html += '<div class="wc-player-stack">' + (_money != null ? _groupThousands(_money) + " ¥" : "—") + '</div>';
     html += '</div>';
     // Cartes : on rend TOUJOURS le conteneur (avec 2 cartes ou 2 dos en
     // placeholder), sinon la ligne n'aurait que 3 colonnes et la grille
     // décalerait les cartes des autres lignes.
     html += '<div class="wc-player-cards">';
-    if (sd.card1 != null || sd.card2 != null) { // FIX: || test falsy ratait les cartes à valeur 0
-      html += cardHtml(sd.card1 != null ? sd.card1 : null,"xsm",false) + cardHtml(sd.card2 != null ? sd.card2 : null,"xsm",false);
+    if (_c1 != null || _c2 != null) { // FIX: || test falsy ratait les cartes à valeur 0
+      html += cardHtml(_c1 != null ? _c1 : null,"xsm",false) + cardHtml(_c2 != null ? _c2 : null,"xsm",false);
     } else if (isMe && myCards[0] != null) { // FIX: idem, valeur 0 = falsy
       html += cardHtml(myCards[0],"xsm",false) + cardHtml(myCards[1],"xsm",false);
     } else {
