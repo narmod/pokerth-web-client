@@ -2888,11 +2888,13 @@ const App = (() => {
   // Watchdog liveness : si AUCUN message reçu depuis _RX_WATCHDOG_MS alors qu'on
   // est à une table, visible et « en ligne », le socket est présumé mort (cas
   // d'une bascule réseau « transparente » où online/offline ne se déclenchent
-  // pas). Un rebranchement est « gratuit » (le proxy garde la session amont, pas
-  // de nouvel Init), donc on peut être réactif sans craindre les faux positifs.
-  // Les bots/joueurs agissent en quelques secondes, donc 20 s ne se déclenche
-  // pas en jeu normal. Ajustable ici si des tables ont un timeout très long.
-  var _RX_WATCHDOG_MS = 20000;
+  // pas). ⚠ Ce seuil DOIT rester supérieur au timeout d'action de la table :
+  // pendant TON tour, le serveur n'envoie rien tant que tu n'as pas joué, donc
+  // un seuil trop court (ex. 20 s) déclenche une reconnexion à tort si tu
+  // réfléchis longtemps. 45 s = filet de sécurité ; les vrais déclencheurs
+  // rapides sont online/focus/visibilitychange (et le rebranchement proxy est
+  // de toute façon transparent).
+  var _RX_WATCHDOG_MS = 45000;
   setInterval(function () {
     if (_intentionalDisconnect || !_lastConnectParams) return;
     if (document.hidden) return;                                            // arrière-plan : timers gelés
