@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+    blindsNextTip:'o {n} hier', blindsEveryMin:'každých {n} min',
     connect: 'Pripojiť',
     disconnect: '✕ Odpojiť',
     connecting: 'Pripájanie…',
