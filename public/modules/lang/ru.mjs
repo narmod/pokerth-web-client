@@ -15,6 +15,7 @@ export const meta = {
 };
 
 export const strings = {
+    blindsNextTip:'через {n} раздач', blindsEveryMin:'каждые {n} мин',
     connect: 'Подключиться',
     disconnect: '✕ Отключиться',
     connecting: 'Подключение…',
