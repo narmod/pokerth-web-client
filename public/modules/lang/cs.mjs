@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+    preActionTitle:'Náhled akcí', preActionHint:'klepni na karty pro zavření',
     blindsNextTip:'za {n} her', blindsEveryMin:'každých {n} min',
     connect: 'Připojit',
     disconnect: '✕ Odpojit',
