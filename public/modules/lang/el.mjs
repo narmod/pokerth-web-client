@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+    preActionTitle:'Προεπισκόπηση ενεργειών', preActionHint:'πάτα τα φύλλα για κλείσιμο',
     blindsNextTip:'σε {n} χέρια', blindsEveryMin:'κάθε {n} λεπτά',
     connect: 'Σύνδεση',
     disconnect: '✕ Αποσύνδεση',
