@@ -12,6 +12,7 @@ export const meta = {
 };
 
 export const strings = {
+    blindsNextTip:'{n} el sonra', blindsEveryMin:'her {n} dk',
     connect: 'Bağlan',
     disconnect: '✕ Bağlantıyı kes',
     connecting: 'Bağlanıyor…',
