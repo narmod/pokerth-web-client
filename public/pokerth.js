@@ -3546,7 +3546,7 @@ const App = (() => {
       case T.RemovedFromGame: { _gameMeta = null;
         addChat(null, t('youWereRemoved'), 'sys');
         _pendingRejoin = 0; try { localStorage.removeItem('pth_resume'); } catch(e) {}
-        _playerAvatars = {}; _playerImgAvatars = {}; _pthAvatarHashes = {}; _pthAvatarsByHash = {}; _pthAvatarReqIdToHash = {}; _playerCountries = {};
+        _playerAvatars = {}; _playerImgAvatars = {}; _pthAvatarHashes = {}; _pthAvatarsByHash = {}; _pthAvatarReqIdToHash = {};
         App._resetGameState();
         show('s-lobby');
         break;
@@ -6349,6 +6349,7 @@ function dismissWinner() {
       rxBuf   = new Uint8Array(0);
       games   = {};
       players = {};
+      _playerCountries = {};
       loaded  = false;
 
       // Direct WSS for any pokerth.net mode (guest or authenticated). The
