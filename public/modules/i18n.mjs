@@ -251,6 +251,30 @@ function setLang(l) {
   document.querySelectorAll('[data-i18n-opt]').forEach(function(el) {
     el.textContent = t(el.getAttribute('data-i18n-opt'));
   });
+  // Re-traduire le label + placeholder du pseudo selon le mode de connexion.
+  // Ils sont posés imperativement par App.onLoginModeChange() (pas via
+  // data-i18n, car la clé dépend du mode choisi), donc un changement de langue
+  // les laissait figés dans la langue précédente. On ne touche QUE le label et
+  // le placeholder traduisible — jamais la VALEUR du pseudo — pour ne pas
+  // effacer un pseudo en cours de saisie lors d'un changement de langue.
+  try {
+    var _lm = document.getElementById('login-mode');
+    var _nl = document.getElementById('nick-label');
+    var _ni = document.getElementById('nick');
+    if (_lm && _nl) {
+      var _m = _lm.value;
+      if (_m === 'lan' || _m === 'unauth') {
+        _nl.textContent = t('enterNickFree');
+        if (_ni && !_ni.hasAttribute('readonly')) _ni.placeholder = t('nickPlaceholder');
+      } else if (_m === 'guest') {
+        _nl.textContent = t('enterNickGuest');
+        // placeholder = nom GuestXXXXX stable, laissé tel quel
+      } else if (_m === 'auth') {
+        _nl.textContent = t('enterAccount');
+        // placeholder = 'MyAccount' littéral, laissé tel quel
+      }
+    }
+  } catch(e) {}
   // Re-render aide si elle est ouverte
   var ho = document.getElementById('hands-overlay');
   if (ho && ho.style.display !== 'none') renderHandsHelp();
