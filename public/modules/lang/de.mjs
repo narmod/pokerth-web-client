@@ -15,6 +15,7 @@ export const meta = {
 };
 
 export const strings = {
+    blindsNextTip:'in {n} Händen', blindsEveryMin:'alle {n} Min',
     connect: 'Verbinden',
     disconnect: '✕ Trennen',
     connecting: 'Verbinde…',
