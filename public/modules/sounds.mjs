@@ -159,6 +159,14 @@ function notifyChat() {
   playTone(880, 0.07, 0.1);
   if (_soundEnabled && navigator.vibrate) navigator.vibrate([25]);
 }
+function notifyBlindsUp() {
+  // Montée des blinds : trois notes ascendantes "level up", brèves et
+  // brillantes, distinctes du notifyRaise (qui n'en a que deux).
+  playTone(660, 0.08, 0.16);
+  setTimeout(function(){ playTone(880, 0.08, 0.17); }, 90);
+  setTimeout(function(){ playTone(1175, 0.16, 0.18); }, 190);
+  if (_soundEnabled && navigator.vibrate) navigator.vibrate([40, 50, 40]);
+}
 // Mute state
 let _soundEnabled = (function() {
   try { return localStorage.getItem('pth_sound') !== '0'; } catch(e) { return true; }
@@ -191,7 +199,7 @@ document.addEventListener('click', function() { getAudioCtx(); }, { once: true }
 export {
   getAudioCtx, playTone,
   notifyCard, notifyAction, notifyFold, notifyRaise, notifyAllIn,
-  notifyMyTurn, notifyWinner, notifyBigWin, notifyChat,
+  notifyMyTurn, notifyWinner, notifyBigWin, notifyChat, notifyBlindsUp,
   toggleSound, isSoundEnabled,
 };
 
@@ -207,6 +215,7 @@ window.notifyMyTurn  = notifyMyTurn;
 window.notifyWinner  = notifyWinner;
 window.notifyBigWin  = notifyBigWin;
 window.notifyChat    = notifyChat;
+window.notifyBlindsUp = notifyBlindsUp;
 window.toggleSound   = toggleSound;
 
 // _audioCtx and _soundEnabled were declared with `var` at the top of
@@ -228,6 +237,6 @@ Object.defineProperty(window, '_soundEnabled', {
 window.SOUNDS = {
   getAudioCtx, playTone,
   notifyCard, notifyAction, notifyFold, notifyRaise, notifyAllIn,
-  notifyMyTurn, notifyWinner, notifyBigWin, notifyChat,
+  notifyMyTurn, notifyWinner, notifyBigWin, notifyChat, notifyBlindsUp,
   toggleSound, isSoundEnabled,
 };
