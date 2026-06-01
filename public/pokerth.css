@@ -2379,6 +2379,9 @@ body {
   z-index: 6;
 }
 .seat-avatar.emoji-av.timing > .seat-initial { display: flex; position: relative; z-index: 6; }
+/* Avatar image (photo perso / PokerTH) : ne JAMAIS afficher l'initiale par-dessus,
+   même pendant le timer. Plus specifique + !important pour battre la regle .timing. */
+.seat-avatar.timing.has-pth-avatar > .seat-initial { display: none !important; }
 .seat.active .seat-name,
 .seat.active .seat-money { opacity: 0.35; transition: opacity 0.3s; }
 /* Dealer chip : rendu via SVG chipSvg() dans renderSeats */
