@@ -5926,15 +5926,15 @@ const App = (() => {
     // Le label affiche le montant disponible avec un indicateur "(All-In)".
     let callLabel, callAction, callClass;
     if (canCheck) {
-      callLabel  = 'Check';
+      callLabel  = t('check');
       callAction = 'App.doAction(2,0)';
       callClass  = 'btn-check';
     } else if (toCall >= myMoney) {
-      callLabel  = 'Call <b>' + fmtChips(myMoney) + '</b> <span style="font-size:0.75em;opacity:0.85">(' + t('allin') + ')</span>';
+      callLabel  = t('call') + ' <b>' + fmtChips(myMoney) + '</b> <span style="font-size:0.75em;opacity:0.85">(' + t('allin') + ')</span>';
       callAction = 'App.doAction(6,' + myMoney + ')';
       callClass  = 'btn-call';
     } else {
-      callLabel  = 'Call <b>' + fmtChips(toCall) + '</b>' + potOdds;
+      callLabel  = t('call') + ' <b>' + fmtChips(toCall) + '</b>' + potOdds;
       callAction = 'App.doAction(3,' + toCall + ')';
       callClass  = 'btn-call';
     }
@@ -6002,7 +6002,7 @@ const App = (() => {
       +   '<button class="btn-pct"' + da + ' onclick="setPct(' + p100 + ')"><span class="pct-p">100%</span><span class="pct-amt">' + fmtChips(p100) + '</span></button>'
       + '</div>'
       + raiseRowHtml
-      + '<button class="btn-action btn-allin" onclick="App.doAction(6,' + myMoney + ')" title="All-In (A)">All-In <b>' + fmtChips(myMoney) + '</b></button>'
+      + '<button class="btn-action btn-allin" onclick="App.doAction(6,' + myMoney + ')" title="All-In (A)">' + t('allin') + ' <b>' + fmtChips(myMoney) + '</b></button>'
       + '</div>';
 
     if (preview) {
