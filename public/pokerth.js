@@ -3546,7 +3546,6 @@ const App = (() => {
       case T.RemovedFromGame: { _gameMeta = null;
         addChat(null, t('youWereRemoved'), 'sys');
         _pendingRejoin = 0; try { localStorage.removeItem('pth_resume'); } catch(e) {}
-        _playerAvatars = {}; _playerImgAvatars = {}; _pthAvatarHashes = {}; _pthAvatarsByHash = {}; _pthAvatarReqIdToHash = {};
         App._resetGameState();
         show('s-lobby');
         break;
@@ -6350,6 +6349,13 @@ function dismissWinner() {
       games   = {};
       players = {};
       _playerCountries = {};
+      // Avatars : indexés par pid (stables tant que la session lobby dure) ou
+      // par hash (cache réutilisable). Donc même cycle de vie que 'players' :
+      // on ne les vide qu'à la déconnexion complète, pas en quittant une partie
+      // (sinon les avatars disparaissent au retour au lobby — les hashes/emojis
+      // ne sont re-reçus qu'une fois).
+      _playerAvatars = {}; _playerImgAvatars = {};
+      _pthAvatarHashes = {}; _pthAvatarsByHash = {}; _pthAvatarReqIdToHash = {}; _pthDataUrls = {};
       loaded  = false;
 
       // Direct WSS for any pokerth.net mode (guest or authenticated). The
