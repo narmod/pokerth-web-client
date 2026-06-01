@@ -1037,11 +1037,11 @@ body {
   text-align: center;
   flex: 1;
 }
-/* Compteur "blinds up" affiché à côté du n° de main dans le bandeau du pot. */
+/* Compteur "blinds" cliquable à côté du n° de main dans le bandeau du pot. */
 .blinds-next {
   display: inline-block;
   margin-left: 6px;
-  padding: 0 5px;
+  padding: 0 6px;
   border-radius: 8px;
   background: rgba(200,168,74,0.16);
   border: 1px solid var(--gold-dim);
@@ -1051,9 +1051,12 @@ body {
   font-size: 0.62rem;
   letter-spacing: 0.04em;
   vertical-align: middle;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
 }
-/* Bandeau d'alerte au moment où les blinds montent. Centré en haut,
-   masqué par défaut, révélé via .show (transition). */
+.blinds-next:hover, .blinds-next:focus { background: rgba(200,168,74,0.3); border-color: var(--gold); outline: none; }
+/* Bandeau d'info/alerte blinds. Centré en haut, masqué par défaut, révélé
+   via .show (transition). Affiche : ↑ Blinds  cur → next  · quand. */
 .blinds-up-toast {
   position: fixed;
   top: 64px;
@@ -1062,14 +1065,18 @@ body {
   z-index: 900;
   display: flex;
   align-items: center;
-  gap: 9px;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 4px 8px;
+  max-width: min(90vw, 360px);
   padding: 9px 18px;
-  border-radius: 26px;
+  border-radius: 22px;
   background: linear-gradient(135deg, rgba(200,168,74,0.96), rgba(168,134,40,0.96));
   color: #1a0a00;
   font-family: 'Cinzel', serif;
   font-weight: 700;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.04em;
+  text-align: center;
   box-shadow: 0 8px 28px rgba(0,0,0,0.55), 0 0 0 1px rgba(255,255,255,0.25) inset;
   opacity: 0;
   pointer-events: none;
@@ -1077,13 +1084,24 @@ body {
 }
 .blinds-up-toast.show { opacity: 1; transform: translate(-50%, 0) scale(1); }
 .blinds-up-toast .bu-icon { font-size: 1.05rem; line-height: 1; }
-.blinds-up-toast .bu-text { font-size: 0.82rem; text-transform: uppercase; }
+.blinds-up-toast .bu-text { font-size: 0.8rem; text-transform: uppercase; }
 .blinds-up-toast .bu-val {
   font-family: 'Inconsolata', monospace;
   font-size: 0.9rem;
+  font-weight: 700;
   background: rgba(0,0,0,0.16);
   padding: 1px 8px;
   border-radius: 6px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+.blinds-up-toast .bu-arrow { opacity: 0.7; }
+.blinds-up-toast .bu-when {
+  font-family: 'Inconsolata', monospace;
+  font-size: 0.72rem;
+  font-weight: 500;
+  opacity: 0.85;
 }
 
 /* ══ RESPONSIVE OVAL SIZE via CSS custom props ══ */
