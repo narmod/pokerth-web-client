@@ -307,6 +307,9 @@ function setLang(l) {
   // Retraduire la pastille "N joueur(s)" du header lobby (posée par les
   // messages serveur, sans data-i18n — sinon figée dans la langue precedente).
   try { if (typeof window._refreshPlayersPill === 'function') window._refreshPlayersPill(); } catch(e) {}
+  // Retraduire tout panneau/popup ouvert dont le contenu est posé en JS
+  // (stats de session, liste des joueurs, détails de la partie, profil).
+  try { if (typeof window._refreshOpenPanels === 'function') window._refreshOpenPanels(); } catch(e) {}
   // Re-localise le nom de table par défaut s'il n'a pas été personnalisé
   try { if (typeof window._localizeCreateNameField === 'function') window._localizeCreateNameField(); } catch(e) {}
   // Update lang toggle buttons
