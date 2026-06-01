@@ -9,6 +9,7 @@ export const meta = {
 };
 
 export const strings = {
+    preActionTitle:'Forhåndsvisning af handlinger', preActionHint:'tryk på kortene for at lukke',
     blindsNextTip:'om {n} hænder', blindsEveryMin:'hver {n}. min',
     connect: 'Tilslut',
     disconnect: '✕ Afbryd',
