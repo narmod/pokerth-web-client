@@ -549,7 +549,11 @@ function _attachWs(S, ws) {
     _allClients.delete(ws);
     if (S.ws !== ws) return;   // déjà remplacé par un rebranchement → rien à faire
     S.ws = null;
-    if (S.sid && S.sock && !S.sock.destroyed) {
+    // Code 4001 = déconnexion VOLONTAIRE côté client (bouton quitter/déco) :
+    // on ferme la session amont tout de suite pour libérer le joueur/pseudo
+    // sur PokerTH, sans grâce (sinon le joueur reste un « fantôme » ~2 min).
+    var intentional = (code === 4001);
+    if (!intentional && S.sid && S.sock && !S.sock.destroyed) {
       console.log('[~] Browser off (code ' + code + ') — session ' + S.sid.slice(0, 8) + ' gardée ' + (SESSION_GRACE_MS / 1000) + 's en attente de rebranchement');
       clearTimeout(S.grace);
       S.grace = setTimeout(() => {
@@ -557,7 +561,7 @@ function _attachWs(S, ws) {
         _destroySession(S);
       }, SESSION_GRACE_MS);
     } else {
-      console.log('[-] Browser off (code ' + code + ')\n');
+      console.log((intentional ? '[x] Déconnexion volontaire (code 4001) — fermeture immédiate' : '[-] Browser off (code ' + code + ')') + (S.sid ? ' — session ' + S.sid.slice(0, 8) : '') + '\n');
       _destroySession(S);
     }
   });
