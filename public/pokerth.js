@@ -367,31 +367,29 @@ function showKeyHint(text) {
   setTimeout(function(){ el.style.opacity='0'; el.style.transition='opacity 0.4s'; setTimeout(function(){ el.remove(); }, 400); }, 1200);
 }
 
-// Bandeau "montée des blinds" : alerte bien visible au moment où le small
-// blind augmente. Autonome (ne lit que t() / notifyBlindsUp / le DOM) pour
-// être appelable depuis le handler HandStart sans souci de portée.
-function showBlindsUpToast(sbNew) {
-  var tf = (typeof t === 'function') ? t : function(k){ return k; };
-  var grp = (typeof _groupThousands === 'function')
-    ? _groupThousands
-    : function(n){ return String(n); };
+// Affichage du bandeau "blinds" (alerte au changement OU explication au tap).
+// Le contenu HTML est préparé dans le handler HandStart (où l'on a accès au
+// small blind, au mode de montée, etc.) et stocké dans window._blindsInfoHtml.
+// withSound=true → alerte (son), false → simple info au clic.
+function _showBlindsToast(html, withSound) {
+  if (!html) return;
   var prev = document.getElementById('blinds-up-toast');
   if (prev) prev.remove();
   var el = document.createElement('div');
   el.id = 'blinds-up-toast';
   el.className = 'blinds-up-toast';
-  el.innerHTML = '<span class="bu-icon">⬆</span>'
-    + '<span class="bu-text">' + tf('blindsUp') + '</span>'
-    + '<span class="bu-val">' + grp(sbNew) + ' / ' + grp(sbNew * 2) + '</span>';
+  el.innerHTML = html;
   document.body.appendChild(el);
   requestAnimationFrame(function(){ el.classList.add('show'); });
   setTimeout(function(){
     el.classList.remove('show');
     setTimeout(function(){ if (el.parentNode) el.remove(); }, 450);
-  }, 2600);
-  if (typeof notifyBlindsUp === 'function') notifyBlindsUp();
+  }, withSound ? 3000 : 2400);
+  if (withSound && typeof notifyBlindsUp === 'function') notifyBlindsUp();
 }
-window.showBlindsUpToast = showBlindsUpToast;
+window._showBlindsToast = _showBlindsToast;
+// Appelé au tap sur la pastille du bandeau (pas de son).
+window.showBlindsInfo = function() { _showBlindsToast(window._blindsInfoHtml, false); };
 
 
 // Rafraîchit immédiatement l'avatar du joueur local dans l'UI
@@ -1604,6 +1602,10 @@ const App = (() => {
   let _raiseMode = 1;
   let _raiseEvery = 0;
   let _lastBlindsUpHand = 0;
+  // endRaiseMode: 1=doubler, 2=ajouter _endRaiseValue, 3=garder la dernière.
+  // Sert à prédire la PROCHAINE valeur de blind affichée dans l'explication.
+  let _endRaiseMode = 1;
+  let _endRaiseValue = 0;
 
   // ── Chip display mode: absolute value (¥) or big blinds (BB) ──
   // Pure display feature, no protocol impact. Toggled from the in-game
@@ -3166,9 +3168,12 @@ const App = (() => {
         var _grmode  = Proto.u32(gi, 4) || 1;
         var _grhands = Proto.u32(gi, 5) || 0;
         var _grmins  = Proto.u32(gi, 6) || 0;
+        var _germode = Proto.u32(gi, 7) || 1;  // endRaiseMode (1=double,2=+val,3=keep)
+        var _gerval  = Proto.u32(gi, 8) || 0;  // endRaiseSmallBlindValue
         games[id] = { name, mode, players:pc, maxPlayers:maxp, type:gtype, priv:!!priv,
                       timeout: _gto || 15, startMoney: _gsm || 3000,
-                      raiseMode: _grmode, raiseHands: _grhands, raiseMins: _grmins };
+                      raiseMode: _grmode, raiseHands: _grhands, raiseMins: _grmins,
+                      endRaiseMode: _germode, endRaiseValue: _gerval };
         if (!loaded) { loaded = true; }
         renderGames();
         // ── Auto-join from a share link ──
@@ -3350,6 +3355,8 @@ const App = (() => {
         // Blind-raise schedule for the "blinds up" counter/alert.
         _raiseMode  = (games[gId] && games[gId].raiseMode)  || 1;
         _raiseEvery = (games[gId] && (_raiseMode === 2 ? games[gId].raiseMins : games[gId].raiseHands)) || 0;
+        _endRaiseMode  = (games[gId] && games[gId].endRaiseMode)  || 1;
+        _endRaiseValue = (games[gId] && games[gId].endRaiseValue) || 0;
         _lastBlindsUpHand = 0;
         amGameAdmin = !!isAdmin;
         // Snapshot the lobby's view of this table for openGameInfoPopup.
@@ -3804,30 +3811,53 @@ const App = (() => {
         const sb = Proto.u32(sub, 4);
         var _prevSB = smallBlind;
         smallBlind = sb;
-        // ── Alerte montée des blinds ──
-        // Au-delà de la 1ʳᵉ main, si le small blind a augmenté, on affiche
-        // un bandeau bien visible + un son. _lastBlindsUpHand évite tout
-        // double déclenchement sur la même main.
-        if (handNum > 1 && _prevSB > 0 && sb > _prevSB && _lastBlindsUpHand !== handNum) {
-          _lastBlindsUpHand = handNum;
-          if (typeof showBlindsUpToast === 'function') showBlindsUpToast(sb);
-        }
-        // ── Compteur "blinds up" dans le bandeau (à côté du n° de main) ──
-        // Mode 1 (toutes les N mains) : compte à rebours précis.
-        // Mode 2 (toutes les N minutes) : le protocole ne donne pas le temps
-        // restant exact, on affiche donc juste la cadence (icône horloge).
+        // ── Compteur + explication "blinds" ──
+        // On (re)construit à chaque main : la pastille compacte du bandeau
+        // (cliquable) et le texte d'explication détaillé stocké pour le tap.
         try {
-          var _bnHtml = '';
+          var grp = (typeof _groupThousands === 'function') ? _groupThousands : function(n){ return String(n); };
+          // Prochaine valeur de small blind selon le mode de fin de montée.
+          var _nextSB = null;
+          if (_endRaiseMode === 2 && _endRaiseValue > 0) _nextSB = sb + _endRaiseValue; // +valeur
+          else if (_endRaiseMode === 3) _nextSB = null;                                 // garde la dernière
+          else _nextSB = sb * 2;                                                         // doubler (défaut)
+
+          // Le "quand" + la pastille compacte selon le mode d'intervalle.
+          var _whenTxt = '', _chip = '';
           if (_raiseMode === 1 && _raiseEvery > 0) {
             var _left = _raiseEvery - ((handNum - 1) % _raiseEvery);
-            var _tip = t('blindsNextTip', { n: _left }).replace(/"/g, '');
-            _bnHtml = ' <span class="blinds-next" title="' + _tip + '">⬆\u202F' + _left + '</span>';
+            _whenTxt = t('blindsNextTip', { n: _left });
+            _chip = '↑\u202F' + _left;
           } else if (_raiseMode === 2 && _raiseEvery > 0) {
-            var _tip2 = t('blindsEveryMin', { n: _raiseEvery }).replace(/"/g, '');
-            _bnHtml = ' <span class="blinds-next" title="' + _tip2 + '">⬆\u202F⏱</span>';
+            _whenTxt = t('blindsEveryMin', { n: _raiseEvery });
+            _chip = '↑';
           }
-          if (_bnHtml) $('g-hand').insertAdjacentHTML('beforeend', _bnHtml);
+
+          // Texte d'explication (affiché au tap et lors de la montée).
+          // Ex : "Blinds 1600/3200 → 3200/6400 · dans 1 main".
+          var _curStr  = grp(sb) + '/' + grp(sb * 2);
+          var _nextStr = (_nextSB != null) ? (grp(_nextSB) + '/' + grp(_nextSB * 2)) : null;
+          window._blindsInfoHtml =
+            '<span class="bu-icon">↑</span>'
+            + '<span class="bu-text">' + t('blinds') + '</span>'
+            + '<span class="bu-val">' + _curStr + (_nextStr ? '<span class="bu-arrow">→</span>' + _nextStr : '') + '</span>'
+            + (_whenTxt ? '<span class="bu-when">' + _whenTxt + '</span>' : '');
+
+          // Pastille du bandeau : cliquable → affiche l'explication.
+          if (_chip) {
+            var _tip = (_whenTxt || '').replace(/"/g, '');
+            $('g-hand').insertAdjacentHTML('beforeend',
+              ' <span class="blinds-next" role="button" tabindex="0" title="' + _tip + '"'
+              + ' onclick="window.showBlindsInfo&&window.showBlindsInfo()">' + _chip + '</span>');
+          }
         } catch (e) {}
+        // ── Alerte au moment de la montée (les 2 modes) ──
+        // Si le small blind a augmenté (hors 1ʳᵉ main) : bandeau + son, en
+        // réutilisant l'explication qu'on vient de préparer.
+        if (handNum > 1 && _prevSB > 0 && sb > _prevSB && _lastBlindsUpHand !== handNum) {
+          _lastBlindsUpHand = handNum;
+          if (typeof _showBlindsToast === 'function') _showBlindsToast(window._blindsInfoHtml, true);
+        }
         dealerPid = Proto.u32(sub, 6) || dealerPid;
 
         // Reset seat data for new hand. IMPORTANT exclusions:
@@ -6424,6 +6454,7 @@ function dismissWinner() {
       players = {};
       _playerCountries = {};
       _raiseMode = 1; _raiseEvery = 0; _lastBlindsUpHand = 0;
+      _endRaiseMode = 1; _endRaiseValue = 0;
       // Avatars : indexés par pid (stables tant que la session lobby dure) ou
       // par hash (cache réutilisable). Donc même cycle de vie que 'players' :
       // on ne les vide qu'à la déconnexion complète, pas en quittant une partie
