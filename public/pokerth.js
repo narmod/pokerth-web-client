@@ -5578,6 +5578,30 @@ const App = (() => {
       }
     } catch (e) {}
   };
+  // Retraduire les panneaux/popups OUVERTS dont le contenu est posé
+  // impérativement (donc sans data-i18n, invisibles pour setLang). Si l'un
+  // d'eux est affiché au moment d'un changement de langue, son texte resterait
+  // figé dans la langue précédente jusqu'à fermeture/réouverture. Appelé par
+  // setLang() (i18n.mjs). Chaque bloc est gardé : on ne re-rend que si ouvert.
+  window._refreshOpenPanels = function() {
+    // Panneau statistiques de session
+    try { if (_statsOpen && typeof renderStats === 'function') renderStats(); } catch (e) {}
+    // Liste des joueurs en ligne (lobby)
+    try {
+      var pp = document.getElementById('players-panel');
+      if (pp && pp.style.display !== 'none' && typeof renderPlayersList === 'function') renderPlayersList();
+    } catch (e) {}
+    // Détails de la partie
+    try {
+      var gim = document.getElementById('game-info-modal');
+      if (gim && gim.style.display !== 'none' && typeof openGameInfoPopup === 'function') openGameInfoPopup();
+    } catch (e) {}
+    // Profil / avatar
+    try {
+      var pim = document.getElementById('player-info-modal');
+      if (pim && pim.style.display !== 'none' && typeof openPlayerInfoPopup === 'function') openPlayerInfoPopup();
+    } catch (e) {}
+  };
   window.renderGames = renderGames;
   window.toggleStats  = toggleStats;
   window._toggleStats = toggleStats;
