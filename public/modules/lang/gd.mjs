@@ -11,6 +11,7 @@ export const meta = {
 };
 
 export const strings = {
+    blindsNextTip:'an ceann {n} làmh', blindsEveryMin:'gach {n} mion',
     connect: 'Ceangail',
     disconnect: '✕ Dì-cheangail',
     connecting: 'A\' ceangal…',
