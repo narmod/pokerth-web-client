@@ -445,7 +445,10 @@ function _scheduleConn(fn) {
 function _heartbeat() { this.isAlive = true; }
 
 const _sessions = new Map();              // sid → S (session vivante)
-const SESSION_GRACE_MS = 90000;           // garder l'amont 90 s après coupure navigateur
+const SESSION_GRACE_MS = 120000;          // garder l'amont 2 min après coupure navigateur
+                                          // (un onglet mobile en arrière-plan est « gelé » par
+                                          // l'OS : ni timer ni event réseau ne tournent jusqu'au
+                                          // retour au premier plan — il faut une fenêtre large)
 const SESSION_MAX_BUF  = 4 * 1024 * 1024; // plafond du tampon (octets) en attente de rebranchement
 
 function _destroySession(S) {

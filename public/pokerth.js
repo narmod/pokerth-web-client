@@ -2921,6 +2921,14 @@ const App = (() => {
 
   function onRawData(chunk) {
     _lastRxTime = Date.now();              // liveness : un message reçu = socket vivant
+    // Données qui arrivent = lien rétabli. Sur un rebranchement transparent
+    // (le proxy a gardé la session PokerTH vivante), il n'y a NI Announce NI
+    // InitAck → aucun handler ne masquerait la bannière « reconnexion ». On la
+    // masque donc dès la 1ʳᵉ frame reçue.
+    try {
+      var _rb = document.getElementById('reconnect-banner');
+      if (_rb && _rb.classList.contains('visible')) _hideBanner();
+    } catch (e) {}
     if (typeof chunk === 'string') return; // ignore text frames
     if (directWS) {
       // Direct WSS: each WS message is one complete protobuf (no length prefix)
