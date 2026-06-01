@@ -437,6 +437,14 @@ body {
   text-align: center;
   word-break: break-word;
 }
+/* Drapeau pays sous l'avatar (popup de profil) */
+.pim-flag {
+  text-align: center;
+  font-size: 0.9rem;
+  letter-spacing: 0.04em;
+  color: var(--gold-dim);
+  margin-top: -2px;
+}
 .pim-change {
   margin-top: 4px;
   width: 100%;
