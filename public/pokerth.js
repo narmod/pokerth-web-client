@@ -7591,7 +7591,7 @@ function renderHandsHelp() {
 // ici pour que toutes les entrées (assistance, vibration, voix, auto,
 // quick-bet…) partagent exactement la même visualisation.
 function _menuTick(on) {
-  return on ? ' <span style="font-weight:700;margin-left:auto;color:#3fb950">\u2713</span>' : '';
+  return on ? ' <span class="menu-tick">\u2713</span>' : '';
 }
 window._menuTick = _menuTick;
 
