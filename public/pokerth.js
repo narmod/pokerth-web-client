@@ -3106,27 +3106,24 @@ const App = (() => {
           setStatus(t('ipBlockedRetry'), 'err'); return;
         }
         if (r === 4) {
-          if (_pendingRejoin && _rejoinNickRetries < 12) {
-            // Our own ghost still holds the nick. Keep it and wait for the
-            // server to drop the dead session, then retry the SAME nick so we
-            // can reclaim the seat (renaming would lose our identity).
-            _rejoinNickRetries++;
-            setStatus(t('rejoinWaitNick'));
-            _showBanner(t('rejoinWaitNick'));
-            setTimeout(() => {
-              try { send(MSG.buildInit(myName, lastMajor || 5, lastMinor || 1, lastLoginType || 0)); } catch(e) {}
-            }, 2500);
-          } else {
-            // Give up reclaiming the seat: usual rename + retry.
-            _pendingRejoin = 0;
-            try { localStorage.removeItem('pth_resume'); } catch(e) {}
-            const suffix = Math.floor(Math.random()*999)+1;
-            myName = myName.replace(/_\d+$/, '') + '_' + suffix;
-            setStatus(t('errNickTakenRetry', { name: myName }));
-            setTimeout(() => {
-              send(MSG.buildInit(myName, lastMajor || 5, lastMinor || 1, lastLoginType || 0));
-            }, 400);
-          }
+          // Pseudo déjà utilisé sur le serveur. On NE renomme JAMAIS (l'ancien
+          // code passait à « narmod_211 ») et on N'enchaîne PAS d'essais : ces
+          // deux comportements alimentaient une tempête de connexions qui
+          // finissait par faire bloquer l'IP (initBlocked). À la place : on
+          // informe clairement et on s'arrête. L'utilisateur attend que sa
+          // session précédente expire (~2 min, grâce proxy) ou choisit un autre
+          // pseudo, puis se reconnecte manuellement. (En multi-onglets, chaque
+          // onglet doit utiliser un pseudo distinct — ce message le rappelle.)
+          _pendingRejoin = 0; _rejoinNickRetries = 0;
+          _wasAuthenticated = false;
+          _intentionalDisconnect = true;             // stoppe toute reconnexion auto
+          try { localStorage.removeItem('pth_resume'); } catch (e) {}
+          _hideBanner();
+          var _fr = (typeof _lang === 'undefined' || _lang !== 'en');
+          var _msg = _fr
+            ? '« ' + myName + ' » est déjà utilisé. Une session précédente est peut-être encore active : patiente ~2 min, ou choisis un autre pseudo, puis reconnecte.'
+            : '“' + myName + '” is already in use. A previous session may still be active: wait ~2 min, or pick another nickname, then reconnect.';
+          setStatus(_msg, 'err');
         } else {
           setStatus(t('errGeneric', { code: codes[r] || ('code ' + r) }), 'err');
         }
