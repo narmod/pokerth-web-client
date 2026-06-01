@@ -2783,22 +2783,33 @@ const App = (() => {
   // attend que le fantôme tombe (heartbeat proxy) puis réessaie le MÊME pseudo
   // → InitAck → buildRejoinGame → on récupère notre siège.
   // ── Identifiant de session proxy (persistance réseau) ─────────────────
-  // Stocké en localStorage (et NON sessionStorage) : il doit survivre à un
-  // rechargement de page ET à un relancement de PWA (iOS vide sessionStorage
-  // quand il tue/relance une app ajoutée à l'écran d'accueil). Sinon, au
-  // retour, le client génère un nouveau sid → pas de rebranchement → nouvel
-  // Init avec un pseudo encore détenu par sa propre session « fantôme »
-  // (grâce proxy) → initPlayerNameInUse, puis collision de nom de table, puis
-  // initBlocked (tempête de reconnexions). Avec localStorage, il se rebranche
-  // sur la session vivante. Le sid est remis à zéro à la déconnexion volontaire.
+  // Choix du stockage selon le contexte :
+  //  • PWA « standalone » (ajoutée à l'écran d'accueil — iOS notamment) : une
+  //    seule instance, mais iOS vide sessionStorage quand il tue/relance l'app.
+  //    → localStorage, pour que le sid survive au relancement et que le client
+  //    se REBRANCHE sur sa session vivante (sinon : nouvel Init qui se heurte à
+  //    son propre fantôme → initPlayerNameInUse → collision → initBlocked).
+  //  • Onglet de navigateur classique (desktop multi-onglets) : on veut un sid
+  //    PAR ONGLET pour que chaque onglet soit une session/joueur distinct.
+  //    → sessionStorage (unique par onglet, survit au rechargement de l'onglet).
+  function _sidStore() {
+    try {
+      var standalone = (window.navigator && window.navigator.standalone === true)
+        || (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches);
+      return standalone ? window.localStorage : window.sessionStorage;
+    } catch (e) {
+      return window.sessionStorage;
+    }
+  }
   function _getSessionId() {
     try {
-      var s = localStorage.getItem('pth_sid');
+      var store = _sidStore();
+      var s = store.getItem('pth_sid');
       if (!s) {
         s = (window.crypto && crypto.randomUUID)
           ? crypto.randomUUID()
           : (Date.now() + '-' + Math.random().toString(36).slice(2));
-        localStorage.setItem('pth_sid', s);
+        store.setItem('pth_sid', s);
       }
       return s;
     } catch (e) {
@@ -6984,8 +6995,11 @@ function dismissWinner() {
       _lastConnectFailed = false; // déco propre → pas de rate limit
       // Déconnexion volontaire → faire tourner le sid : la prochaine connexion
       // doit créer une session PokerTH NEUVE (pseudo éventuellement changé), et
-      // non se rebrancher sur l'ancienne que le proxy garde ~2 min.
+      // non se rebrancher sur l'ancienne que le proxy garde ~2 min. On vide les
+      // deux stockages (le contexte standalone/onglet ne change pas, mais c'est
+      // sans risque et robuste).
       try { localStorage.removeItem('pth_sid'); } catch (e) {}
+      try { sessionStorage.removeItem('pth_sid'); } catch (e) {}
       document.body.classList.remove('in-game');
       _hideBanner();
       // Cancel any pending auto-reconnect that a previous onclose may have
