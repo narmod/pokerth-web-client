@@ -304,6 +304,9 @@ function setLang(l) {
   if (ml) { var cfOpen = document.getElementById('cf-more-opts'); ml.textContent = (cfOpen && cfOpen.style.display !== 'none') ? t('lessOptions') : t('moreOptions'); }
   // Re-render the lobby game list so badges/labels follow the language
   try { if (typeof window.renderGames === 'function') window.renderGames(); } catch(e) {}
+  // Retraduire la pastille "N joueur(s)" du header lobby (posée par les
+  // messages serveur, sans data-i18n — sinon figée dans la langue precedente).
+  try { if (typeof window._refreshPlayersPill === 'function') window._refreshPlayersPill(); } catch(e) {}
   // Re-localise le nom de table par défaut s'il n'a pas été personnalisé
   try { if (typeof window._localizeCreateNameField === 'function') window._localizeCreateNameField(); } catch(e) {}
   // Update lang toggle buttons
