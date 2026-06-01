@@ -422,6 +422,14 @@ body {
   font-weight: 700;
   color: var(--gold);
 }
+/* Avatar cliquable : ouvre le sélecteur d'avatar, comme le bouton. */
+.pim-avatar-clickable { cursor: pointer; transition: box-shadow 0.2s, transform 0.2s; }
+.pim-avatar-clickable:hover,
+.pim-avatar-clickable:focus-visible {
+  box-shadow: 0 0 20px rgba(200,168,74,0.75);
+  transform: scale(1.03);
+  outline: none;
+}
 .pim-name {
   font-size: 1.05rem;
   color: var(--cream);
