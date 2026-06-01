@@ -1357,7 +1357,10 @@ if ('serviceWorker' in navigator) {
   <div class="pim-backdrop" onclick="closePlayerInfoPopup()"></div>
   <div class="pim-card" role="dialog" aria-labelledby="pim-name">
     <button class="pim-close" type="button" onclick="closePlayerInfoPopup()" title="Fermer" data-i18n-title="closeTooltip" aria-label="Fermer">✕</button>
-    <div class="pim-avatar" id="pim-avatar"></div>
+    <div class="pim-avatar pim-avatar-clickable" id="pim-avatar" role="button" tabindex="0"
+         onclick="openAvatarPickerFromLobby()"
+         onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openAvatarPickerFromLobby();}"
+         data-i18n-title="changeAvatar" title="Changer d'avatar" aria-label="Changer d'avatar"></div>
     <div class="pim-name" id="pim-name">—</div>
     <div class="pim-stats" id="pim-stats"></div>
     <button class="btn-primary pim-change" type="button" onclick="openAvatarPickerFromLobby()" data-i18n="changeAvatar">Changer d'avatar</button>
