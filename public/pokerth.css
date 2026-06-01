@@ -1787,7 +1787,7 @@ body {
 #hand-strength {
   /* Pastille centrée au-dessus des boutons dans my-zone */
   position: absolute;
-  top: -22px;
+  top: -36px;
   left: 50%;
   transform: translateX(-50%);
   font-size: 0.6rem;
