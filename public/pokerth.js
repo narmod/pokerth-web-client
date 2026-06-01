@@ -908,6 +908,23 @@ function _updateFsButtons() {
 ['fullscreenchange','webkitfullscreenchange','mozfullscreenchange','MSFullscreenChange']
   .forEach(function(evt) { document.addEventListener(evt, _updateFsButtons); });
 
+// iOS (iPhone) Safari n'expose AUCUNE API Fullscreen sur les éléments : le
+// bouton ⛶ ne faisait donc rien. On masque toutes les commandes plein écran
+// quand l'API est absente (détection de capacité, pas de sniff d'UA → on
+// garde le bouton sur desktop / Android / iPad qui, eux, le supportent).
+function _hideFullscreenIfUnsupported() {
+  var de = document.documentElement;
+  var supported = !!(de.requestFullscreen || de.webkitRequestFullscreen
+                     || de.mozRequestFullScreen || de.msRequestFullscreen);
+  if (supported) return;
+  try {
+    document.querySelectorAll('[onclick*="toggleFullscreen"]').forEach(function(el) {
+      el.style.display = 'none';
+    });
+  } catch(e) {}
+}
+_hideFullscreenIfUnsupported();
+
 // Unlock audio on first interaction
 // [Phase 2] AudioContext warm-up moved to public/modules/sounds.mjs
 
@@ -2751,10 +2768,43 @@ const App = (() => {
   function releaseWakeLock() {
     if (_wakeLock) { try { _wakeLock.release(); } catch (e) {} _wakeLock = null; }
   }
-  document.addEventListener('visibilitychange', function () {
+  // ── Reconnexion immédiate au retour au premier plan ───────────────────
+  // iOS suspend la page en arrière-plan et FERME le WebSocket. Sans ça, on ne
+  // se reconnectait qu'au bout du backoff (5–30 s) → table « gelée » plusieurs
+  // secondes au retour. Dès qu'on redevient visible (ou qu'on récupère le
+  // réseau), si on est en session et que le socket n'est plus OPEN, on annule
+  // le backoff et on relance la connexion tout de suite (même chemin que la
+  // reconnexion auto, donc même re-join de table — juste sans l'attente).
+  function _maybeReconnectOnResume() {
+    if (_intentionalDisconnect) return;
+    if (!_lastConnectParams) return;                      // jamais connecté cette session
+    if (ws && ws.readyState === WebSocket.OPEN) return;   // socket encore vivant
     var sg = document.getElementById('s-game');
-    if (!document.hidden && sg && sg.classList.contains('active')) acquireWakeLock();
+    var sl = document.getElementById('s-lobby');
+    var inSession = (sg && sg.classList.contains('active'))
+                 || (sl && sl.classList.contains('active'));
+    if (!inSession) return;
+    // Annuler tout backoff déjà programmé par un onclose.
+    clearTimeout(window._reconnectTimer);
+    clearInterval(window._reconnectCountdown);
+    _reconnectAttempts = 0;
+    // Refermer proprement un éventuel socket zombie avant de rouvrir.
+    if (ws && ws.readyState !== WebSocket.CLOSED) {
+      try { ws.onclose = null; ws.onerror = null; ws.onmessage = null; ws.close(); } catch(e) {}
+      ws = null;
+    }
+    try { _showBanner(t('reconnInProgress')); } catch(e) {}
+    try { App.connect(); } catch(e) {}
+  }
+
+  document.addEventListener('visibilitychange', function () {
+    if (document.hidden) return;
+    var sg = document.getElementById('s-game');
+    if (sg && sg.classList.contains('active')) acquireWakeLock();
+    _maybeReconnectOnResume();
   });
+  window.addEventListener('online',  _maybeReconnectOnResume);
+  window.addEventListener('pageshow', _maybeReconnectOnResume);
 
   function setStatus(txt, cls='') {
     const el = $('cstatus');
