@@ -11,6 +11,7 @@ export const meta = {
 };
 
 export const strings = {
+    blindsNextTip:'{n} கைகளில்', blindsEveryMin:'ஒவ்வொரு {n} நிமிடம்',
     connect: 'இணை',
     disconnect: '✕ துண்டி',
     connecting: 'இணைக்கிறது…',
