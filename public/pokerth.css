@@ -1435,7 +1435,10 @@ body {
   border-top: none;
   border-radius: 0 0 6px 6px;
   padding: 6px 5px;
-  min-width: 150px;
+  /* Largeur FIXE : le menu ne doit plus s'élargir/rétrécir selon la
+     longueur du libellé (✓ présent ou non, FR/EN). */
+  width: 244px;
+  box-sizing: border-box;
   flex-direction: column;
   gap: 4px;
   box-shadow: 0 12px 32px rgba(0,0,0,0.7);
@@ -1445,11 +1448,29 @@ body {
 #g-overflow-menu .btn-sm,
 #l-overflow-menu .btn-sm {
   width: 100%;
+  box-sizing: border-box;
   text-align: left;
-  padding: 7px 12px;
+  /* padding-right généreux : on réserve la place du ✓ (positionné en
+     absolu à droite) pour que le texte ne passe jamais dessous. */
+  padding: 7px 30px 7px 12px;
   border-radius: 3px;
   font-size: 0.8rem;
-  justify-content: flex-start;
+  position: relative;
+  overflow: hidden;
+  text-overflow: ellipsis;   /* libellé trop long (autre langue) => "…" au lieu d'élargir */
+  white-space: nowrap;
+}
+/* Coche d'état : ancrée à droite, donc toujours au même endroit quelle
+   que soit la longueur du libellé ou la langue. */
+#g-overflow-menu .menu-tick,
+#l-overflow-menu .menu-tick {
+  position: absolute;
+  right: 11px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-weight: 700;
+  color: #3fb950;
+  pointer-events: none;
 }
 #g-overflow-menu .btn-sm:hover,
 #l-overflow-menu .btn-sm:hover {
