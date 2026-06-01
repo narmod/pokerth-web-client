@@ -1884,16 +1884,18 @@ const App = (() => {
   }
   window.updateLobbyPill = updateLobbyPill;
 
-  // Code pays ISO 3166-1 alpha-2 -> emoji drapeau (indicateurs régionaux).
-  // Renvoie '' si le code est invalide. Note: les drapeaux emoji s'affichent
-  // sur iOS/Android/macOS ; Windows les rend en 2 lettres (pas de glyphes).
-  function _ccToFlag(cc) {
+  // Code pays ISO 3166-1 alpha-2 -> balise <img> vers un drapeau SVG
+  // auto-hébergé (/flags/<cc>.svg). On utilise une image plutôt que l'emoji
+  // indicateur régional pour un rendu identique sur TOUS les OS (Windows
+  // n'a pas les glyphes drapeau). Renvoie '' si le code est invalide.
+  // `cls` : classe CSS optionnelle pour dimensionner selon le contexte.
+  function _ccToFlag(cc, cls) {
     if (!cc || typeof cc !== 'string') return '';
-    cc = cc.trim().toUpperCase();
-    if (!/^[A-Z]{2}$/.test(cc)) return '';
-    var A = 0x1F1E6; // 🇦
-    return String.fromCodePoint(A + (cc.charCodeAt(0) - 65))
-         + String.fromCodePoint(A + (cc.charCodeAt(1) - 65));
+    cc = cc.trim().toLowerCase();
+    if (!/^[a-z]{2}$/.test(cc)) return '';
+    return '<img class="cc-flag' + (cls ? ' ' + cls : '') + '" src="/flags/' + cc
+         + '.svg" alt="' + cc.toUpperCase() + '" title="' + cc.toUpperCase()
+         + '" draggable="false" loading="lazy" onerror="this.style.display=\'none\'">';
   }
 
   // ──────────────────────────────────────────────────────────────
@@ -1941,12 +1943,12 @@ const App = (() => {
     var flagEl = document.getElementById('pim-flag');
     if (flagEl) {
       var cc = _playerCountries[myId];
-      var flag = _ccToFlag(cc);
-      if (flag) {
-        flagEl.textContent = flag + ' ' + cc;
+      var flagImg = _ccToFlag(cc, 'cc-flag-lg');
+      if (flagImg) {
+        flagEl.innerHTML = flagImg + '<span class="pim-flag-code">' + String(cc).toUpperCase() + '</span>';
         flagEl.style.display = '';
       } else {
-        flagEl.textContent = '';
+        flagEl.innerHTML = '';
         flagEl.style.display = 'none';
       }
     }
