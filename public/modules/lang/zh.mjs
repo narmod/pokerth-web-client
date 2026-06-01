@@ -381,6 +381,7 @@ export const strings = {
     waitBeforeRetry: '⏸ 请等待 {n} 秒后重试…',
     invalidUrl: 'URL 无效：{msg}',
     errNickTakenRetry: '昵称已被占用 — 正在重试「{name}」…',
+    nickInUseStop:'“{name}” 已被占用。之前的会话可能仍然有效——请等待约 2 分钟，或换一个昵称后重新连接。',
     errGeneric: '错误：{code}',
     joinedTableWaiting: '已加入牌桌 {gid}{admin} — 等待开始…',
     playerLeftTable: '{name} 离开了牌桌',

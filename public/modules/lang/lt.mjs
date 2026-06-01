@@ -380,6 +380,7 @@ export const strings = {
     waitBeforeRetry: '⏸ Palaukite {n} s prieš bandydami vėl…',
     invalidUrl: 'Netinkamas URL: {msg}',
     errNickTakenRetry: 'Slapyvardis naudojamas — bandoma vėl su „{name}“…',
+    nickInUseStop:'„{name}“ jau naudojamas. Ankstesnė sesija gali būti dar aktyvi — palaukite ~2 min arba pasirinkite kitą slapyvardį ir prisijunkite iš naujo.',
     errGeneric: 'Klaida: {code}',
     joinedTableWaiting: 'Prisijungta prie stalo {gid}{admin} — laukiama pradžios…',
     playerLeftTable: '{name} paliko stalą',

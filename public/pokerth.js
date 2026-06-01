@@ -7011,11 +7011,7 @@ function dismissWinner() {
         ws.onerror = null;
         ws.onmessage = null;
         ws.onopen = null;
-        // Code 4001 = déconnexion VOLONTAIRE : indique au proxy de fermer la
-        // connexion PokerTH amont IMMÉDIATEMENT (pas de grâce de rebranchement)
-        // → le serveur libère le joueur/pseudo tout de suite, pas de fantôme.
-        // (Une coupure réseau ferme avec 1005/1006 → la grâce s'applique.)
-        try { ws.close(4001, 'bye'); } catch (e) { try { ws.close(); } catch (_) {} }
+        try { ws.close(); } catch (e) {}
         ws = null;
       }
       games = {};

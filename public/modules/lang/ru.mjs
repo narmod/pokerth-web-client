@@ -385,6 +385,7 @@ export const strings = {
     waitBeforeRetry: '⏸ Подождите {n}с перед повторной попыткой…',
     invalidUrl: 'Неверный URL: {msg}',
     errNickTakenRetry: 'Никнейм уже занят — повтор с «{name}»…',
+    nickInUseStop:'«{name}» уже используется. Предыдущая сессия, возможно, ещё активна — подождите ~2 мин или выберите другой ник, затем переподключитесь.',
     errGeneric: 'Ошибка: {code}',
     joinedTableWaiting: 'Вошёл за стол {gid}{admin} — ожидание старта…',
     playerLeftTable: '{name} покинул стол',

@@ -380,6 +380,7 @@ export const strings = {
     waitBeforeRetry: '⏸ Wag {n} s voor jy weer probeer…',
     invalidUrl: 'Ongeldige URL: {msg}',
     errNickTakenRetry: 'Bynaam in gebruik — probeer weer met «{name}»…',
+    nickInUseStop:'“{name}” is reeds in gebruik. ’n Vorige sessie is dalk nog aktief — wag ~2 min of kies ’n ander bynaam en koppel weer.',
     errGeneric: 'Fout: {code}',
     joinedTableWaiting: 'Het by tafel {gid}{admin} aangesluit — wag vir die begin…',
     playerLeftTable: '{name} het die tafel verlaat',

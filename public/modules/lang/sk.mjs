@@ -380,6 +380,7 @@ export const strings = {
     waitBeforeRetry: '⏸ Počkajte {n} s pred ďalším pokusom…',
     invalidUrl: 'Neplatná URL: {msg}',
     errNickTakenRetry: 'Prezývka obsadená — skúšam znova s «{name}»…',
+    nickInUseStop:'„{name}“ sa už používa. Predchádzajúca relácia môže byť stále aktívna — počkajte ~2 min alebo zvoľte inú prezývku a znova sa pripojte.',
     errGeneric: 'Chyba: {code}',
     joinedTableWaiting: 'Pripojil sa k stolu {gid}{admin} — čaká sa na začiatok…',
     playerLeftTable: '{name} opustil stôl',

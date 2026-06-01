@@ -379,6 +379,7 @@ export const strings = {
     waitBeforeRetry: '⏸ Vent {n}s før du prøver igjen…',
     invalidUrl: 'Ugyldig URL: {msg}',
     errNickTakenRetry: 'Kallenavnet er opptatt — prøver igjen med «{name}»…',
+    nickInUseStop:'”{name}” er allerede i bruk. En tidligere økt kan fortsatt være aktiv — vent ~2 min eller velg et annet kallenavn, og koble til på nytt.',
     errGeneric: 'Feil: {code}',
     joinedTableWaiting: 'Ble med ved bord {gid}{admin} — venter på start…',
     playerLeftTable: '{name} forlot bordet',

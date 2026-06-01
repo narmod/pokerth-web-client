@@ -380,6 +380,7 @@ export const strings = {
     waitBeforeRetry: '⏸ Espera {n} s abans de tornar a provar…',
     invalidUrl: 'URL no vàlida: {msg}',
     errNickTakenRetry: 'Sobrenom en ús — tornant a provar amb «{name}»…',
+    nickInUseStop:'«{name}» ja està en ús. Pot ser que una sessió anterior encara estigui activa — espera ~2 min o tria un altre àlies i torna a connectar.',
     errGeneric: 'Error: {code}',
     joinedTableWaiting: 'S\'ha unit a la taula {gid}{admin} — esperant l\'inici…',
     playerLeftTable: '{name} ha deixat la taula',

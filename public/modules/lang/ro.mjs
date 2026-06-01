@@ -380,6 +380,7 @@ export const strings = {
     waitBeforeRetry: '⏸ Așteaptă {n}s înainte de a reîncerca…',
     invalidUrl: 'URL invalid: {msg}',
     errNickTakenRetry: 'Pseudonim ocupat — se reîncearcă cu «{name}»…',
+    nickInUseStop:'„{name}“ este deja folosit. O sesiune anterioară poate fi încă activă — așteaptă ~2 min sau alege alt pseudonim, apoi reconectează-te.',
     errGeneric: 'Eroare: {code}',
     joinedTableWaiting: 'S-a alăturat mesei {gid}{admin} — se așteaptă startul…',
     playerLeftTable: '{name} a părăsit masa',

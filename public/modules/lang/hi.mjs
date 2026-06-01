@@ -211,6 +211,7 @@ export const strings = {
     waitBeforeRetry:'\u23f8 पुनः प्रयास से पहले {n}से. प्रतीक्षा करें\u2026',
     invalidUrl:'अमान्य URL: {msg}',
     errNickTakenRetry:'उपनाम पहले से लिया गया \u2014 \u201c{name}\u201d से पुनः प्रयास\u2026',
+    nickInUseStop:'"{name}" पहले से उपयोग में है। पिछला सत्र अब भी सक्रिय हो सकता है — ~2 मिनट प्रतीक्षा करें या कोई दूसरा उपनाम चुनें, फिर दोबारा कनेक्ट करें।',
     errGeneric:'त्रुटि: {code}',
     joinedTableWaiting:'टेबल {gid}{admin} में शामिल \u2014 शुरू की प्रतीक्षा\u2026',
     playerLeftTable:'{name} ने टेबल छोड़ी',

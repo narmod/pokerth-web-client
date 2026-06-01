@@ -379,6 +379,7 @@ export const strings = {
     waitBeforeRetry: '⏸ Odota {n} s ennen uutta yritystä…',
     invalidUrl: 'Virheellinen URL: {msg}',
     errNickTakenRetry: 'Nimimerkki varattu — yritetään uudelleen nimellä «{name}»…',
+    nickInUseStop:'”{name}” on jo käytössä. Aiempi istunto voi olla yhä aktiivinen — odota ~2 min tai valitse toinen nimimerkki ja yhdistä uudelleen.',
     errGeneric: 'Virhe: {code}',
     joinedTableWaiting: 'Liittyi pöytään {gid}{admin} — odotetaan aloitusta…',
     playerLeftTable: '{name} poistui pöydästä',

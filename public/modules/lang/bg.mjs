@@ -380,6 +380,7 @@ export const strings = {
     waitBeforeRetry: '⏸ Изчакайте {n} с преди нов опит…',
     invalidUrl: 'Невалиден URL: {msg}',
     errNickTakenRetry: 'Прякорът е зает — нов опит с «{name}»…',
+    nickInUseStop:'„{name}“ вече се използва. Предишна сесия може още да е активна — изчакайте ~2 мин или изберете друг прякор и се свържете отново.',
     errGeneric: 'Грешка: {code}',
     joinedTableWaiting: 'Се присъедини към маса {gid}{admin} — изчакване на старт…',
     playerLeftTable: '{name} напусна масата',

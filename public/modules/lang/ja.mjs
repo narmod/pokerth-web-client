@@ -379,6 +379,7 @@ export const strings = {
     waitBeforeRetry: '⏸ 再試行まで{n}秒お待ちください…',
     invalidUrl: '無効なURL：{msg}',
     errNickTakenRetry: 'ニックネームは使用中 — 「{name}」で再試行中…',
+    nickInUseStop:'「{name}」は既に使用されています。前のセッションがまだ有効な可能性があります — 約2分待つか、別のニックネームを選んでから再接続してください。',
     errGeneric: 'エラー：{code}',
     joinedTableWaiting: 'テーブル{gid}{admin}に参加しました — 開始待ち…',
     playerLeftTable: '{name}がテーブルを離れました',

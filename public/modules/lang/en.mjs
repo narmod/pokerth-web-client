@@ -226,6 +226,7 @@ export const strings = {
     waitBeforeRetry:'\u23f8 Wait {n}s before retrying\u2026',
     invalidUrl:'Invalid URL: {msg}',
     errNickTakenRetry:'Nickname already taken \u2014 retrying with \u201c{name}\u201d\u2026',
+    nickInUseStop:'“{name}” is already in use. A previous session may still be active — wait ~2 min or pick another nickname, then reconnect.',
     errGeneric:'Error: {code}',
     joinedTableWaiting:'Joined table {gid}{admin} \u2014 waiting for start\u2026',
     playerLeftTable:'{name} left the table',

@@ -386,6 +386,7 @@ export const strings = {
     waitBeforeRetry: '⏸ Wacht {n}s voordat je het opnieuw probeert…',
     invalidUrl: 'Ongeldige URL: {msg}',
     errNickTakenRetry: 'Bijnaam al in gebruik — opnieuw proberen met „{name}"…',
+    nickInUseStop:'“{name}” is al in gebruik. Een vorige sessie is mogelijk nog actief — wacht ~2 min of kies een andere bijnaam en verbind opnieuw.',
     errGeneric: 'Fout: {code}',
     joinedTableWaiting: 'Aan tafel {gid}{admin} gegaan — wachten op start…',
     playerLeftTable: '{name} heeft de tafel verlaten',

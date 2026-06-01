@@ -386,6 +386,7 @@ export const strings = {
     waitBeforeRetry: '⏸ Poczekaj {n}s przed ponowną próbą…',
     invalidUrl: 'Nieprawidłowy URL: {msg}',
     errNickTakenRetry: 'Pseudonim już zajęty — ponowna próba z „{name}"…',
+    nickInUseStop:'„{name}“ jest już używany. Poprzednia sesja może być nadal aktywna — odczekaj ~2 min lub wybierz inny pseudonim, a następnie połącz ponownie.',
     errGeneric: 'Błąd: {code}',
     joinedTableWaiting: 'Dołączono do stołu {gid}{admin} — oczekiwanie na start…',
     playerLeftTable: '{name} opuścił stół',

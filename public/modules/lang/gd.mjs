@@ -381,6 +381,7 @@ export const strings = {
     waitBeforeRetry: '⏸ Fuirich {n} s mus feuch thu a-rithist…',
     invalidUrl: 'URL mì-dhligheach: {msg}',
     errNickTakenRetry: 'Far-ainm ga chleachdadh — a\' feuchainn a-rithist le «{name}»…',
+    nickInUseStop:'Tha “{name}” ’ga chleachdadh mar-thà. Dh’fhaodadh seisean roimhe a bhith fhathast beò — fuirich ~2 mhionaid no tagh far-ainm eile, an uairsin ceangail a-rithist.',
     errGeneric: 'Mearachd: {code}',
     joinedTableWaiting: 'Ghabh pàirt aig bòrd {gid}{admin} — a\' feitheamh ris an toiseach…',
     playerLeftTable: 'Dh\'fhàg {name} am bòrd',

@@ -380,6 +380,7 @@ export const strings = {
     waitBeforeRetry: '⏸ Várj {n} mp-et az újrapróbálkozás előtt…',
     invalidUrl: 'Érvénytelen URL: {msg}',
     errNickTakenRetry: 'A becenév foglalt — újrapróbálkozás ezzel: «{name}»…',
+    nickInUseStop:'A(z) „{name}“ már használatban van. Egy korábbi munkamenet még aktív lehet — várj ~2 percet, vagy válassz másik becenevet, majd csatlakozz újra.',
     errGeneric: 'Hiba: {code}',
     joinedTableWaiting: 'Csatlakozott a(z) {gid}{admin} asztalhoz — várakozás a kezdésre…',
     playerLeftTable: '{name} elhagyta az asztalt',

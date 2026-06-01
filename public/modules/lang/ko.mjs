@@ -210,6 +210,7 @@ export const strings = {
     waitBeforeRetry:'\u23f8 다시 시도 전 {n}초 대기\u2026',
     invalidUrl:'잘못된 URL: {msg}',
     errNickTakenRetry:'이미 사용 중인 닉네임 \u2014 \u201c{name}\u201d(으)로 다시 시도\u2026',
+    nickInUseStop:'"{name}"은(는) 이미 사용 중입니다. 이전 세션이 아직 활성 상태일 수 있습니다 — 약 2분 기다리거나 다른 닉네임을 선택한 후 다시 연결하세요.',
     errGeneric:'오류: {code}',
     joinedTableWaiting:'테이블 {gid}{admin} 참가 \u2014 시작 대기 중\u2026',
     playerLeftTable:'{name}이(가) 테이블을 떠났습니다',

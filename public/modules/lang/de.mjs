@@ -386,6 +386,7 @@ export const strings = {
     waitBeforeRetry: '⏸ Warten Sie {n}s vor dem erneuten Versuch…',
     invalidUrl: 'Ungültige URL: {msg}',
     errNickTakenRetry: 'Spitzname bereits vergeben — neuer Versuch mit „{name}"…',
+    nickInUseStop:'„{name}“ wird bereits verwendet. Eine frühere Sitzung ist evtl. noch aktiv — warte ~2 Min. oder wähle einen anderen Spitznamen, dann verbinde neu.',
     errGeneric: 'Fehler: {code}',
     joinedTableWaiting: 'Tisch {gid}{admin} beigetreten — warte auf Start…',
     playerLeftTable: '{name} hat den Tisch verlassen',

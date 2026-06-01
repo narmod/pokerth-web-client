@@ -379,6 +379,7 @@ export const strings = {
     waitBeforeRetry: '⏸ Зачекайте {n} с перед повторною спробою…',
     invalidUrl: 'Недійсний URL: {msg}',
     errNickTakenRetry: 'Псевдонім зайнятий — повторна спроба з «{name}»…',
+    nickInUseStop:'«{name}» вже використовується. Попередня сесія, можливо, ще активна — зачекайте ~2 хв або виберіть інший нік, потім перепідключіться.',
     errGeneric: 'Помилка: {code}',
     joinedTableWaiting: 'Приєднався до столу {gid}{admin} — очікування початку…',
     playerLeftTable: '{name} залишив стіл',

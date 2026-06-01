@@ -380,6 +380,7 @@ export const strings = {
     waitBeforeRetry: '⏸ Περιμένετε {n} δ πριν ξαναδοκιμάσετε…',
     invalidUrl: 'Μη έγκυρο URL: {msg}',
     errNickTakenRetry: 'Το ψευδώνυμο χρησιμοποιείται — νέα προσπάθεια με «{name}»…',
+    nickInUseStop:'Το «{name}» χρησιμοποιείται ήδη. Μια προηγούμενη συνεδρία ίσως είναι ακόμα ενεργή — περίμενε ~2 λεπτά ή διάλεξε άλλο ψευδώνυμο και επανασυνδέσου.',
     errGeneric: 'Σφάλμα: {code}',
     joinedTableWaiting: 'Μπήκε στο τραπέζι {gid}{admin} — αναμονή για έναρξη…',
     playerLeftTable: 'Ο/Η {name} έφυγε από το τραπέζι',

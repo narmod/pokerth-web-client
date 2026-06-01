@@ -226,6 +226,7 @@ export const strings = {
     waitBeforeRetry:'\u23f8 Attendez {n}s avant de retenter\u2026',
     invalidUrl:'URL invalide : {msg}',
     errNickTakenRetry:'Pseudo d\u00e9j\u00e0 pris \u2014 nouvel essai avec \u00ab\u202f{name}\u202f\u00bb\u2026',
+    nickInUseStop:'« {name} » est déjà utilisé. Une session précédente est peut-être encore active — patiente ~2 min ou choisis un autre pseudo, puis reconnecte.',
     errGeneric:'Erreur\u00a0: {code}',
     joinedTableWaiting:'Rejoint la table {gid}{admin} \u2014 attente du d\u00e9marrage\u2026',
     playerLeftTable:'{name} quitte la table',

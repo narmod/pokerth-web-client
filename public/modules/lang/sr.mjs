@@ -380,6 +380,7 @@ export const strings = {
     waitBeforeRetry: '⏸ Sačekajte {n} s pre ponovnog pokušaja…',
     invalidUrl: 'Nevažeći URL: {msg}',
     errNickTakenRetry: 'Nadimak zauzet — ponovni pokušaj sa «{name}»…',
+    nickInUseStop:'„{name}“ се већ користи. Претходна сесија можда је још активна — сачекајте ~2 мин или изаберите други надимак па се поново повежите.',
     errGeneric: 'Greška: {code}',
     joinedTableWaiting: 'Pridružio se stolu {gid}{admin} — čekanje na početak…',
     playerLeftTable: '{name} je napustio sto',

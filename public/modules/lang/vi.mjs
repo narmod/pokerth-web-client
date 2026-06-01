@@ -380,6 +380,7 @@ export const strings = {
     waitBeforeRetry: '⏸ Chờ {n} giây trước khi thử lại…',
     invalidUrl: 'URL không hợp lệ: {msg}',
     errNickTakenRetry: 'Biệt danh đã được dùng — đang thử lại với «{name}»…',
+    nickInUseStop:'“{name}” đã được sử dụng. Một phiên trước đó có thể vẫn đang hoạt động — hãy đợi ~2 phút hoặc chọn biệt danh khác, rồi kết nối lại.',
     errGeneric: 'Lỗi: {code}',
     joinedTableWaiting: 'Đã vào bàn {gid}{admin} — đang chờ bắt đầu…',
     playerLeftTable: '{name} đã rời bàn',

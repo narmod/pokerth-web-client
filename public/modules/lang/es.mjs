@@ -387,6 +387,7 @@ export const strings = {
     waitBeforeRetry: '⏸ Espera {n}s antes de reintentar…',
     invalidUrl: 'URL no válida: {msg}',
     errNickTakenRetry: 'Apodo ya en uso — reintentando con «{name}»…',
+    nickInUseStop:'«{name}» ya está en uso. Puede que una sesión anterior siga activa — espera ~2 min o elige otro apodo y vuelve a conectar.',
     errGeneric: 'Error: {code}',
     joinedTableWaiting: 'Te uniste a la mesa {gid}{admin} — esperando el inicio…',
     playerLeftTable: '{name} salió de la mesa',

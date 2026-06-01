@@ -382,6 +382,7 @@ export const strings = {
     waitBeforeRetry: '⏸ Tekrar denemeden önce {n} sn bekleyin…',
     invalidUrl: 'Geçersiz URL: {msg}',
     errNickTakenRetry: 'Takma ad alınmış — «{name}» ile yeniden deneniyor…',
+    nickInUseStop:'“{name}” zaten kullanımda. Önceki bir oturum hâlâ etkin olabilir — ~2 dk bekle ya da başka bir takma ad seç, sonra yeniden bağlan.',
     errGeneric: 'Hata: {code}',
     joinedTableWaiting: '{gid}{admin} masasına katıldı — başlaması bekleniyor…',
     playerLeftTable: '{name} masadan ayrıldı',
