@@ -2843,6 +2843,10 @@ const App = (() => {
     _maybeReconnectOnResume();
   });
   window.addEventListener('pageshow', _maybeReconnectOnResume);
+  // 'focus' : certains navigateurs mobiles déclenchent 'focus' (et pas toujours
+  // 'visibilitychange') quand on revient sur l'onglet après une autre appli.
+  // Idempotent : _maybeReconnectOnResume ne fait rien si le socket est vivant.
+  window.addEventListener('focus', _maybeReconnectOnResume);
 
   // ── Détection d'un socket MORT (bascule réseau, ex. wifi → 5G) ─────────
   // Sur un changement de réseau, l'ancien WebSocket peut rester readyState
@@ -2884,10 +2888,11 @@ const App = (() => {
   // Watchdog liveness : si AUCUN message reçu depuis _RX_WATCHDOG_MS alors qu'on
   // est à une table, visible et « en ligne », le socket est présumé mort (cas
   // d'une bascule réseau « transparente » où online/offline ne se déclenchent
-  // pas). Seuil large : les bots agissent toutes les <15 s, donc pas de faux
-  // positif en pratique. Ajustable ici si des tables humaines ont un timeout
-  // très long.
-  var _RX_WATCHDOG_MS = 45000;
+  // pas). Un rebranchement est « gratuit » (le proxy garde la session amont, pas
+  // de nouvel Init), donc on peut être réactif sans craindre les faux positifs.
+  // Les bots/joueurs agissent en quelques secondes, donc 20 s ne se déclenche
+  // pas en jeu normal. Ajustable ici si des tables ont un timeout très long.
+  var _RX_WATCHDOG_MS = 20000;
   setInterval(function () {
     if (_intentionalDisconnect || !_lastConnectParams) return;
     if (document.hidden) return;                                            // arrière-plan : timers gelés
