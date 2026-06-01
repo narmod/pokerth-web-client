@@ -1437,7 +1437,7 @@ body {
   padding: 6px 5px;
   /* Largeur FIXE : le menu ne doit plus s'élargir/rétrécir selon la
      longueur du libellé (✓ présent ou non, FR/EN). */
-  width: 244px;
+  width: 232px;
   box-sizing: border-box;
   flex-direction: column;
   gap: 4px;
@@ -1519,6 +1519,20 @@ body {
     justify-content: center;
     box-sizing: border-box;
   }
+  /* Le menu ••• du jeu reprend le style "liste" (aligné à gauche, plus
+     compact) au lieu d'hériter du centrage/hauteur fixe des boutons du
+     header ci-dessus => menu nettement moins large. Sélecteur 2 ids pour
+     l'emporter sur "#s-game .header .btn-sm". */
+  #s-game .header #g-overflow-menu { width: 214px; }
+  #s-game .header #g-overflow-menu .btn-sm {
+    justify-content: flex-start;
+    text-align: left;
+    height: auto;
+    padding: 8px 24px 8px 11px;
+    font-size: 0.74rem;
+  }
+  #g-overflow-menu .menu-tick,
+  #l-overflow-menu .menu-tick { right: 9px; }
   #s-game .header-brand {
     font-size: 0.78rem;
     flex-shrink: 1;
