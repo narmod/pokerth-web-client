@@ -2776,6 +2776,18 @@ const App = (() => {
   // réseau), si on est en session et que le socket n'est plus OPEN, on annule
   // le backoff et on relance la connexion tout de suite (même chemin que la
   // reconnexion auto, donc même re-join de table — juste sans l'attente).
+  // Avant TOUTE reconnexion en cours de partie : mémoriser la table où l'on
+  // était (gId). Sans ça _pendingRejoin reste à 0 et, au pseudo « déjà pris »
+  // (Error 4, fantôme encore assis), le client se renomme et ABANDONNE la
+  // table au lieu de la réclamer. Avec _pendingRejoin armé, le handler Error(4)
+  // attend que le fantôme tombe (heartbeat proxy) puis réessaie le MÊME pseudo
+  // → InitAck → buildRejoinGame → on récupère notre siège.
+  function _armRejoin() {
+    if (_intentionalDisconnect) return;
+    var sgEl = document.getElementById('s-game');
+    if (gId && sgEl && sgEl.classList.contains('active')) _pendingRejoin = gId;
+  }
+
   function _maybeReconnectOnResume() {
     if (_intentionalDisconnect) return;
     if (!_lastConnectParams) return;                      // jamais connecté cette session
@@ -2785,6 +2797,7 @@ const App = (() => {
     var inSession = (sg && sg.classList.contains('active'))
                  || (sl && sl.classList.contains('active'));
     if (!inSession) return;
+    _armRejoin();
     // Annuler tout backoff déjà programmé par un onclose.
     clearTimeout(window._reconnectTimer);
     clearInterval(window._reconnectCountdown);
@@ -2817,6 +2830,7 @@ const App = (() => {
     var sg = document.getElementById('s-game');
     var sl = document.getElementById('s-lobby');
     if (!((sg && sg.classList.contains('active')) || (sl && sl.classList.contains('active')))) return;
+    _armRejoin();
     clearTimeout(window._reconnectTimer);
     clearInterval(window._reconnectCountdown);
     _reconnectAttempts = 0;
@@ -2945,6 +2959,18 @@ const App = (() => {
             .then(function (r) { _cardKey = r.key; _cardIV = r.iv; })
             .catch(function () { _cardKey = null; _cardIV = null; });
         }
+        // Pré-armer le rejoin AVANT d'envoyer Init : si une partie récente est
+        // mémorisée (pth_resume, même pseudo, < 5 min), on note _pendingRejoin
+        // pour que le handler Error(4) « pseudo pris » RÉCLAME le siège (attend
+        // que le fantôme tombe, réessaie le même pseudo) au lieu de renommer.
+        // Couvre le rechargement complet ; la coupure transitoire est déjà
+        // couverte par _armRejoin().
+        if (!_pendingRejoin) {
+          try {
+            var _rs0 = JSON.parse(localStorage.getItem('pth_resume') || 'null');
+            if (_rs0 && _rs0.n === myName && (Date.now() - _rs0.t) < 5 * 60 * 1000) _pendingRejoin = _rs0.g;
+          } catch (e) {}
+        }
         send(MSG.buildInit(myName, pMaj, pMin, loginType, authPass));
         break;
       }
@@ -3024,7 +3050,7 @@ const App = (() => {
           setStatus(t('ipBlockedRetry'), 'err'); return;
         }
         if (r === 4) {
-          if (_pendingRejoin && _rejoinNickRetries < 6) {
+          if (_pendingRejoin && _rejoinNickRetries < 12) {
             // Our own ghost still holds the nick. Keep it and wait for the
             // server to drop the dead session, then retry the SAME nick so we
             // can reclaim the seat (renaming would lose our identity).
@@ -3449,9 +3475,14 @@ const App = (() => {
 
       case T.JoinGameAck: {
         gId = Proto.u32(sub, 1);
-        // Back at the table — clear any pending rejoin and the banner.
+        // Back at the table — clear the transient pending-rejoin flag and the
+        // banner, mais ÉCRIRE un marqueur durable « je suis dans la partie gId »
+        // (pth_resume) : il permet de réintégrer la table après une coupure
+        // suivie d'un rechargement complet (page rechargée → DOM neuf). Pour une
+        // coupure transitoire (l'écran de jeu reste affiché), c'est _armRejoin()
+        // qui réarme _pendingRejoin au moment de la reconnexion.
         _pendingRejoin = 0; _rejoinNickRetries = 0;
-        try { localStorage.removeItem('pth_resume'); } catch(e) {}
+        try { localStorage.setItem('pth_resume', JSON.stringify({ n: myName, g: gId, t: Date.now() })); } catch(e) {}
         _hideBanner();
         // Fresh game = empty spectator set. The server will replay
         // GameSpectatorJoined for each existing spectator so we'll
@@ -6782,6 +6813,10 @@ function dismissWinner() {
           return;
         }
 
+        // Mémoriser la table pour réclamer le siège à la reconnexion (sinon on
+        // se ferait renommer au pseudo « déjà pris »).
+        _armRejoin();
+
         // --- RECONNEXION AUTO (limitée pour éviter le blocage IP) ---
         _reconnectAttempts++;
         var maxAttempts = 3; // max 3 tentatives pour éviter le blocage IP
@@ -7066,6 +7101,8 @@ function dismissWinner() {
     closeTable() {
       // Admin closes table: send leave, server closes game for all
       if (ws && gId) { try { send(MSG.buildLeaveGame(gId)); } catch(e) {} }
+      _pendingRejoin = 0; _rejoinNickRetries = 0;
+      try { localStorage.removeItem('pth_resume'); } catch(e) {}
       amInGame = false; amGameAdmin = false; _gameStarted = false; _seatsFrozen = false; _amSpectator = false; var _sb2 = document.getElementById('g-spectator-banner'); if (_sb2) _sb2.style.display = 'none';
       gId = 0; seats = []; seatData = {}; _specPids = new Set();
       var _ego = document.getElementById('g-endgame-overlay');
@@ -7196,6 +7233,10 @@ function dismissWinner() {
     leaveGame() {
       // Send proper leave request then stay connected (return to lobby)
       if (ws && gId) { try { send(MSG.buildLeaveGame(gId)); } catch(e) {} }
+      // Départ volontaire : oublier le marqueur de reprise (sinon on serait
+      // ré-aspiré dans la table à la prochaine reconnexion/réouverture).
+      _pendingRejoin = 0; _rejoinNickRetries = 0;
+      try { localStorage.removeItem('pth_resume'); } catch(e) {}
       amInGame = false; amGameAdmin = false; _gameStarted = false; _seatsFrozen = false; _amSpectator = false; var _sb2 = document.getElementById('g-spectator-banner'); if (_sb2) _sb2.style.display = 'none';
       gId = 0; seats = []; seatData = {}; _specPids = new Set();
       var _ego = document.getElementById('g-endgame-overlay');
