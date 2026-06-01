@@ -313,6 +313,8 @@ function setLang(l) {
   // Retraduire tout panneau/popup ouvert dont le contenu est posé en JS
   // (stats de session, liste des joueurs, détails de la partie, profil).
   try { if (typeof window._refreshOpenPanels === 'function') window._refreshOpenPanels(); } catch(e) {}
+  // Retraduire en direct les messages systeme deja affiches dans le chat.
+  try { if (typeof window._retranslateSysChat === 'function') window._retranslateSysChat(); } catch(e) {}
   // Re-localise le nom de table par défaut s'il n'a pas été personnalisé
   try { if (typeof window._localizeCreateNameField === 'function') window._localizeCreateNameField(); } catch(e) {}
   // Update lang toggle buttons
