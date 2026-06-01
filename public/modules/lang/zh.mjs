@@ -11,6 +11,7 @@ export const meta = {
 };
 
 export const strings = {
+    blindsNextTip:'{n} 手后', blindsEveryMin:'每 {n} 分钟',
     connect: '连接',
     disconnect: '✕ 断开连接',
     connecting: '连接中…',
