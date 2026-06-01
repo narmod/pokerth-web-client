@@ -15,6 +15,7 @@ export const meta = {
 };
 
 export const strings = {
+    preActionTitle:'Предпросмотр действий', preActionHint:'коснитесь карт, чтобы закрыть',
     blindsNextTip:'через {n} раздач', blindsEveryMin:'каждые {n} мин',
     connect: 'Подключиться',
     disconnect: '✕ Отключиться',
