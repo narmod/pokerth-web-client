@@ -9,6 +9,7 @@ export const meta = {
 };
 
 export const strings = {
+    blindsNextTip:'{n} käden päästä', blindsEveryMin:'joka {n} min',
     connect: 'Yhdistä',
     disconnect: '✕ Katkaise yhteys',
     connecting: 'Yhdistetään…',
