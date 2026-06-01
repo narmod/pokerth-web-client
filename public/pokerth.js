@@ -2783,20 +2783,22 @@ const App = (() => {
   // attend que le fantôme tombe (heartbeat proxy) puis réessaie le MÊME pseudo
   // → InitAck → buildRejoinGame → on récupère notre siège.
   // ── Identifiant de session proxy (persistance réseau) ─────────────────
-  // Stable pour toute la durée de l'onglet (survit à un rechargement via
-  // sessionStorage). Transmis au proxy dans l'URL du WebSocket (?sid=…). À la
-  // reconnexion, le proxy rebranche le nouveau WebSocket sur la connexion
-  // PokerTH amont toujours vivante portant ce même sid → la table continue
-  // sans nouvel Init. Repli : si la session a expiré côté proxy, une connexion
-  // neuve (Announce → Init → rejoin) est créée comme avant.
+  // Stocké en localStorage (et NON sessionStorage) : il doit survivre à un
+  // rechargement de page ET à un relancement de PWA (iOS vide sessionStorage
+  // quand il tue/relance une app ajoutée à l'écran d'accueil). Sinon, au
+  // retour, le client génère un nouveau sid → pas de rebranchement → nouvel
+  // Init avec un pseudo encore détenu par sa propre session « fantôme »
+  // (grâce proxy) → initPlayerNameInUse, puis collision de nom de table, puis
+  // initBlocked (tempête de reconnexions). Avec localStorage, il se rebranche
+  // sur la session vivante. Le sid est remis à zéro à la déconnexion volontaire.
   function _getSessionId() {
     try {
-      var s = sessionStorage.getItem('pth_sid');
+      var s = localStorage.getItem('pth_sid');
       if (!s) {
         s = (window.crypto && crypto.randomUUID)
           ? crypto.randomUUID()
           : (Date.now() + '-' + Math.random().toString(36).slice(2));
-        sessionStorage.setItem('pth_sid', s);
+        localStorage.setItem('pth_sid', s);
       }
       return s;
     } catch (e) {
@@ -6982,8 +6984,8 @@ function dismissWinner() {
       _lastConnectFailed = false; // déco propre → pas de rate limit
       // Déconnexion volontaire → faire tourner le sid : la prochaine connexion
       // doit créer une session PokerTH NEUVE (pseudo éventuellement changé), et
-      // non se rebrancher sur l'ancienne que le proxy garde ~90 s.
-      try { sessionStorage.removeItem('pth_sid'); } catch (e) {}
+      // non se rebrancher sur l'ancienne que le proxy garde ~2 min.
+      try { localStorage.removeItem('pth_sid'); } catch (e) {}
       document.body.classList.remove('in-game');
       _hideBanner();
       // Cancel any pending auto-reconnect that a previous onclose may have
@@ -7491,7 +7493,11 @@ function dismissWinner() {
       // behaves like the public server (30s timeout) and a Quick Game on
       // a LAN/private box stays snappy (15s).
       var d = this._getCreateDefaults();
-      send(MSG.buildCreateGame(_safeGameName('WebGame-' + myName), n, d.blind, d.stack, d.timeout));
+      // Suffixe court aléatoire : évite la collision avec une table du même nom
+      // qui traînerait encore (session « fantôme » gardée par la grâce proxy),
+      // ce qui ferait échouer/fermer la création côté serveur.
+      var _autoName = 'WebGame-' + myName + '-' + Math.random().toString(36).slice(2, 5);
+      send(MSG.buildCreateGame(_safeGameName(_autoName), n, d.blind, d.stack, d.timeout));
     },
 
     cancelQuickCreate() {
