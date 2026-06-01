@@ -5195,6 +5195,10 @@ const App = (() => {
         ? 'position:relative;background:' + aColor.bg + ';border-color:' + aColor.border + ';color:' + aColor.text + ';box-shadow:0 0 0 2px ' + aColor.border + '44'
         : 'position:relative';
       const dealerChip = isDealer ? dealerChipSvg() : '';
+      // Drapeau du pays sur l'avatar (coin bas-droite, comme un badge).
+      // Vide si pays inconnu → rien affiché.
+      const seatFlag = _ccToFlag(_playerCountries[pid]);
+      const flagBadge = seatFlag ? '<span class="seat-flag">' + seatFlag + '</span>' : '';
       // ── Step 3 display: if we have a downloaded PokerTH avatar for
       // this pid, slot it in as <img> on top of the initial/emoji.
       // Q1=A: official PokerTH avatar takes precedence over emoji custom
@@ -5234,6 +5238,7 @@ const App = (() => {
         + timerSvg
         + blindBadge
         + dealerChip
+        + flagBadge
         + typeBadge
         + '</div>';
       // Badge timer sous l'avatar (visible et non confondu avec l'emoji)
