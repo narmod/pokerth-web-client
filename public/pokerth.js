@@ -367,6 +367,32 @@ function showKeyHint(text) {
   setTimeout(function(){ el.style.opacity='0'; el.style.transition='opacity 0.4s'; setTimeout(function(){ el.remove(); }, 400); }, 1200);
 }
 
+// Bandeau "montée des blinds" : alerte bien visible au moment où le small
+// blind augmente. Autonome (ne lit que t() / notifyBlindsUp / le DOM) pour
+// être appelable depuis le handler HandStart sans souci de portée.
+function showBlindsUpToast(sbNew) {
+  var tf = (typeof t === 'function') ? t : function(k){ return k; };
+  var grp = (typeof _groupThousands === 'function')
+    ? _groupThousands
+    : function(n){ return String(n); };
+  var prev = document.getElementById('blinds-up-toast');
+  if (prev) prev.remove();
+  var el = document.createElement('div');
+  el.id = 'blinds-up-toast';
+  el.className = 'blinds-up-toast';
+  el.innerHTML = '<span class="bu-icon">⬆</span>'
+    + '<span class="bu-text">' + tf('blindsUp') + '</span>'
+    + '<span class="bu-val">' + grp(sbNew) + ' / ' + grp(sbNew * 2) + '</span>';
+  document.body.appendChild(el);
+  requestAnimationFrame(function(){ el.classList.add('show'); });
+  setTimeout(function(){
+    el.classList.remove('show');
+    setTimeout(function(){ if (el.parentNode) el.remove(); }, 450);
+  }, 2600);
+  if (typeof notifyBlindsUp === 'function') notifyBlindsUp();
+}
+window.showBlindsUpToast = showBlindsUpToast;
+
 
 // Rafraîchit immédiatement l'avatar du joueur local dans l'UI
 window.refreshMyAvatar = function() {
@@ -1570,6 +1596,14 @@ const App = (() => {
   let lastMajor = 5, lastMinor = 1, lastLoginType = 0; // for name-retry
   let smallBlind = 10;  // small blind value
   let handNum   = 0;   // hand counter
+
+  // ── Blind-raise schedule (forum: "better notification of blind increases") ──
+  // Captured from NetGameInfo at JoinGameAck. _raiseMode: 1=every N hands,
+  // 2=every N minutes. _raiseEvery: N (hands or minutes per mode).
+  // _lastBlindsUpHand dedupes the "blinds up" toast per hand.
+  let _raiseMode = 1;
+  let _raiseEvery = 0;
+  let _lastBlindsUpHand = 0;
 
   // ── Chip display mode: absolute value (¥) or big blinds (BB) ──
   // Pure display feature, no protocol impact. Toggled from the in-game
@@ -3126,8 +3160,15 @@ const App = (() => {
         // wrote via buildCreateGame(). Default to 3000 if absent (matches
         // the PokerTH server default for unconfigured games).
         var _gsm = Proto.u32(gi, 13) || 0;
+        // NetGameInfo raise schedule: field 4 = mode (1=every N hands,
+        // 2=every N minutes), field 5 = N hands (mode 1), field 6 = N
+        // minutes (mode 2). Used to show a "blinds up in X hands" counter.
+        var _grmode  = Proto.u32(gi, 4) || 1;
+        var _grhands = Proto.u32(gi, 5) || 0;
+        var _grmins  = Proto.u32(gi, 6) || 0;
         games[id] = { name, mode, players:pc, maxPlayers:maxp, type:gtype, priv:!!priv,
-                      timeout: _gto || 15, startMoney: _gsm || 3000 };
+                      timeout: _gto || 15, startMoney: _gsm || 3000,
+                      raiseMode: _grmode, raiseHands: _grhands, raiseMins: _grmins };
         if (!loaded) { loaded = true; }
         renderGames();
         // ── Auto-join from a share link ──
@@ -3306,6 +3347,10 @@ const App = (() => {
         // this branch handles the case where we joined someone else's
         // table and discovered the settings via GameListNew.
         if (games[gId] && games[gId].startMoney) gameStartMoney = games[gId].startMoney;
+        // Blind-raise schedule for the "blinds up" counter/alert.
+        _raiseMode  = (games[gId] && games[gId].raiseMode)  || 1;
+        _raiseEvery = (games[gId] && (_raiseMode === 2 ? games[gId].raiseMins : games[gId].raiseHands)) || 0;
+        _lastBlindsUpHand = 0;
         amGameAdmin = !!isAdmin;
         // Snapshot the lobby's view of this table for openGameInfoPopup.
         // Fields we care about: name, type, maxPlayers, priv, timeout,
@@ -3757,7 +3802,32 @@ const App = (() => {
         const hsFields = Object.keys(sub).sort((a,b)=>+a-+b).map(f=>f+':'+Proto.u32(sub,+f)).join(' ');
 
         const sb = Proto.u32(sub, 4);
+        var _prevSB = smallBlind;
         smallBlind = sb;
+        // ── Alerte montée des blinds ──
+        // Au-delà de la 1ʳᵉ main, si le small blind a augmenté, on affiche
+        // un bandeau bien visible + un son. _lastBlindsUpHand évite tout
+        // double déclenchement sur la même main.
+        if (handNum > 1 && _prevSB > 0 && sb > _prevSB && _lastBlindsUpHand !== handNum) {
+          _lastBlindsUpHand = handNum;
+          if (typeof showBlindsUpToast === 'function') showBlindsUpToast(sb);
+        }
+        // ── Compteur "blinds up" dans le bandeau (à côté du n° de main) ──
+        // Mode 1 (toutes les N mains) : compte à rebours précis.
+        // Mode 2 (toutes les N minutes) : le protocole ne donne pas le temps
+        // restant exact, on affiche donc juste la cadence (icône horloge).
+        try {
+          var _bnHtml = '';
+          if (_raiseMode === 1 && _raiseEvery > 0) {
+            var _left = _raiseEvery - ((handNum - 1) % _raiseEvery);
+            var _tip = t('blindsNextTip', { n: _left }).replace(/"/g, '');
+            _bnHtml = ' <span class="blinds-next" title="' + _tip + '">⬆\u202F' + _left + '</span>';
+          } else if (_raiseMode === 2 && _raiseEvery > 0) {
+            var _tip2 = t('blindsEveryMin', { n: _raiseEvery }).replace(/"/g, '');
+            _bnHtml = ' <span class="blinds-next" title="' + _tip2 + '">⬆\u202F⏱</span>';
+          }
+          if (_bnHtml) $('g-hand').insertAdjacentHTML('beforeend', _bnHtml);
+        } catch (e) {}
         dealerPid = Proto.u32(sub, 6) || dealerPid;
 
         // Reset seat data for new hand. IMPORTANT exclusions:
@@ -6353,6 +6423,7 @@ function dismissWinner() {
       games   = {};
       players = {};
       _playerCountries = {};
+      _raiseMode = 1; _raiseEvery = 0; _lastBlindsUpHand = 0;
       // Avatars : indexés par pid (stables tant que la session lobby dure) ou
       // par hash (cache réutilisable). Donc même cycle de vie que 'players' :
       // on ne les vide qu'à la déconnexion complète, pas en quittant une partie
