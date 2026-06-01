@@ -216,6 +216,19 @@ function onAvatarImageChosen(input) {
     </div>
 
     <div class="f">
+      <label data-i18n="loginMode">Login Mode</label>
+      <div class="sel-wrap">
+        <select id="login-mode" onchange="App.onLoginModeChange()">
+          <option value="lan" data-i18n="lan">LAN (pseudo libre)</option>
+          <option value="unauth" selected data-i18n="modeUnauth">Private server — Internet Guest ✓</option>
+          <option value="guest" data-i18n="modeGuest">pokerth.net — Guest</option>
+          <option value="auth" data-i18n="modeAuth">pokerth.net — Registered account</option>
+        </select>
+        <span class="sel-arr">▾</span>
+      </div>
+    </div>
+
+    <div class="f">
       <label data-i18n="urlProxy">WebSocket Proxy URL</label>
       <input id="proxy" value="ws://localhost:8080" placeholder="ws://localhost:8080">
     </div>
@@ -228,19 +241,6 @@ function onAvatarImageChosen(input) {
       <div class="f f-sm">
         <label data-i18n="port">Port</label>
         <input id="port" value="7234" type="number">
-      </div>
-    </div>
-
-    <div class="f">
-      <label data-i18n="loginMode">Login Mode</label>
-      <div class="sel-wrap">
-        <select id="login-mode" onchange="App.onLoginModeChange()">
-          <option value="lan" data-i18n="lan">LAN (pseudo libre)</option>
-          <option value="unauth" selected data-i18n="modeUnauth">Private server — Internet Guest ✓</option>
-          <option value="guest" data-i18n="modeGuest">pokerth.net — Guest</option>
-          <option value="auth" data-i18n="modeAuth">pokerth.net — Registered account</option>
-        </select>
-        <span class="sel-arr">▾</span>
       </div>
     </div>
 
