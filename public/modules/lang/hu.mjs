@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+    blindsNextTip:'{n} leosztás múlva', blindsEveryMin:'{n} percenként',
     connect: 'Csatlakozás',
     disconnect: '✕ Lecsatlakozás',
     connecting: 'Csatlakozás…',
