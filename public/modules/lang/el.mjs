@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+    blindsNextTip:'σε {n} χέρια', blindsEveryMin:'κάθε {n} λεπτά',
     connect: 'Σύνδεση',
     disconnect: '✕ Αποσύνδεση',
     connecting: 'Σύνδεση…',
