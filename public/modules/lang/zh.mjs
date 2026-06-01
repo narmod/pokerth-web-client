@@ -11,6 +11,7 @@ export const meta = {
 };
 
 export const strings = {
+    preActionTitle:'操作预览', preActionHint:'点击手牌关闭',
     blindsNextTip:'{n} 手后', blindsEveryMin:'每 {n} 分钟',
     connect: '连接',
     disconnect: '✕ 断开连接',
