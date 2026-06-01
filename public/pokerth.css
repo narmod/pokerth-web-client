@@ -439,12 +439,25 @@ body {
 }
 /* Drapeau pays sous l'avatar (popup de profil) */
 .pim-flag {
-  text-align: center;
-  font-size: 0.9rem;
-  letter-spacing: 0.04em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-size: 0.8rem;
+  letter-spacing: 0.06em;
   color: var(--gold-dim);
   margin-top: -2px;
 }
+.pim-flag-code { font-family: 'Inconsolata', monospace; }
+/* Image drapeau auto-hébergée (rendu identique sur tous les OS). */
+.cc-flag {
+  display: inline-block;
+  vertical-align: middle;
+  object-fit: cover;
+  border-radius: 2px;
+  box-shadow: 0 0 0 0.5px rgba(0,0,0,0.35);
+}
+.cc-flag-lg { width: 26px; height: 19px; border-radius: 3px; }
 .pim-change {
   margin-top: 4px;
   width: 100%;
@@ -1248,7 +1261,8 @@ body {
 @media (max-width: 768px) {
   .blind-chip  { width: 16px !important; height: 16px !important; top: -9px !important; left: -9px !important; }
   .dealer-chip { width: 16px !important; height: 16px !important; top: -9px !important; right: -9px !important; }
-  .seat-flag   { font-size: 12px !important; bottom: -6px !important; right: -6px !important; }
+  .seat-flag   { bottom: -6px !important; right: -6px !important; }
+  .seat-flag .cc-flag { width: 16px !important; height: 12px !important; }
   .seat-avatar { width: 28px; height: 28px; font-size: 0.7rem; }
   .seat-name,.seat-money,.seat-action-label,.seat-bet { font-size: 0.48rem; }
 .pill { font-size: 0.6rem; padding: 2px 5px; }
@@ -1277,7 +1291,8 @@ body {
   /* Chips : très excentrés pour éviter le chevauchement avec le timer */
   .blind-chip  { width: 13px !important; height: 13px !important; top: -11px !important; left: -11px !important; }
   .dealer-chip { width: 13px !important; height: 13px !important; top: -11px !important; right: -11px !important; }
-  .seat-flag   { font-size: 9px !important; bottom: -5px !important; right: -5px !important; }
+  .seat-flag   { bottom: -5px !important; right: -5px !important; }
+  .seat-flag .cc-flag { width: 12px !important; height: 9px !important; }
   /* Seats: tiny for 10-player tables */
   .seat-avatar { width: 18px; height: 18px; font-size: 0.46rem; }
   .seat-name { font-size: 0.36rem; }
@@ -1319,7 +1334,8 @@ body {
 @media (max-height: 500px) and (orientation: landscape) {
   .blind-chip  { width: 14px !important; height: 14px !important; top: -10px !important; left: -10px !important; }
   .dealer-chip { width: 14px !important; height: 14px !important; top: -10px !important; right: -10px !important; }
-  .seat-flag   { font-size: 10px !important; bottom: -5px !important; right: -5px !important; }
+  .seat-flag   { bottom: -5px !important; right: -5px !important; }
+  .seat-flag .cc-flag { width: 14px !important; height: 10px !important; }
   /* Oval: small, left side */
   .felt-oval::before {
   content: '';
@@ -2430,10 +2446,11 @@ body {
 .seat-flag {
   position: absolute; bottom: -6px; right: -6px;
   z-index: 4; pointer-events: none;
-  font-size: 13px; line-height: 1;
+  line-height: 0;
   filter: drop-shadow(0 1px 2px rgba(0,0,0,0.8));
   animation: chipPop 0.4s cubic-bezier(.17,.67,.35,1.45) both;
 }
+.seat-flag .cc-flag { width: 18px; height: 13px; display: block; }
 @keyframes chipPop {
   0%   { transform: scale(0) rotate(-40deg); opacity: 0; }
   65%  { transform: scale(1.25) rotate(8deg); opacity: 1; }
@@ -3573,6 +3590,7 @@ body:not(.in-game) .my-zone {
 .players-list .pl-row:hover { background: rgba(200,168,74,0.08); }
 .players-list .pl-name { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .players-list .pl-flag { flex: none; width: 1.8em; text-align: center; font-size: 0.95rem; line-height: 1; }
+.players-list .pl-flag .cc-flag { width: 20px; height: 15px; }
 .players-list .pl-star { flex: none; width: 1.4em; text-align: center; font-size: 0.8rem; line-height: 1; }
 .players-list .pl-id   { flex: none; min-width: 4.2em; text-align: right; color: var(--gold-dim); font-size: 0.66rem; }
 .players-list .pl-row.pl-me { color: var(--gold); }
