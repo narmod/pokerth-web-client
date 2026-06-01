@@ -185,6 +185,16 @@ function onAvatarImageChosen(input) {
       selectAvatarPopup("__img__"); // met à jour trigger + sièges + barre
       // Diffuser l'image aux autres joueurs connectés au proxy.
       if (typeof window._broadcastMyAvatar === "function") window._broadcastMyAvatar("__img__");
+      // Si le popup de profil (lobby) est ouvert, repeupler son gros avatar
+      // tout de suite. Le flux emoji passe par un clic sur .avp-btn qui
+      // rappelle openPlayerInfoPopup() ; le flux photo (input file) ne le
+      // déclenche pas, d'où l'avatar figé jusqu'à réouverture du popup.
+      try {
+        var _pi = document.getElementById("player-info-modal");
+        if (_pi && _pi.style.display !== "none" && typeof window.openPlayerInfoPopup === "function") {
+          window.openPlayerInfoPopup();
+        }
+      } catch (e) {}
     };
     img.onerror = function() { alert("Image invalide."); };
     img.src = e.target.result;
