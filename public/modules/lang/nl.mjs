@@ -15,6 +15,7 @@ export const meta = {
 };
 
 export const strings = {
+    preActionTitle:'Actievoorbeeld', preActionHint:'tik op kaarten om te sluiten',
     blindsNextTip:'over {n} hand(en)', blindsEveryMin:'elke {n} min',
     connect: 'Verbinden',
     disconnect: '✕ Verbinding verbreken',
