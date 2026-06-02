@@ -371,6 +371,7 @@ export const strings = {
     modeUnauth: 'LAN / Máy chủ riêng ✓',
     modeGuest: 'pokerth.net — Khách',
     modeAuth: 'pokerth.net — Tài khoản đã đăng ký',
+    srvDedicated:'LAN / Máy chủ riêng', guestMode:'Chế độ khách',
     nickPlaceholder: 'TênCủaBạn',
     quitTooltip: 'Rời',
     reconnectInProgress: 'Đang kết nối lại…',
