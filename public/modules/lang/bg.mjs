@@ -218,6 +218,7 @@ export const strings = {
     statResetConfirm: 'Да нулирате цялата си статистика? Това не може да бъде отменено.',
     statLifeOnlyPrivate: 'Проследява се само на частния сървър / LAN.',
     boardEmpty: 'Все още няма резултати',
+    boardPer100:'Нето / 100 ръце', boardYourRank:'Вие: #{n} от {m}',
     rejoinInProgress: 'Повторно свързване с вашата маса…',
     rejoinWaitNick: 'Освобождаване на предишната ви сесия…',
     rejoinFailed: 'Масата ви не можа да бъде възстановена — обратно в лобито.',
