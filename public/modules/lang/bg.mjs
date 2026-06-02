@@ -374,7 +374,7 @@ export const strings = {
     reconnectInProgress: 'Повторно свързване…',
     connectingPlayers: 'Свързване {type} v{ver} — {n} играчи…',
     connectedAsGuest: 'Свързан като гост «{name}» (ID {id})',
-    errBadCreds: '⚠ Невалидни данни за pokerth.net (потребителско име или парола).',
+    errBadCreds: '⚠ Невалидни данни (потребителско име или парола).',
     serverRequiresAuth: '⚠ Този сървър изисква автентикация. Преминете към акаунт pokerth.net или вход като гост.',
     brandToggleTooltip: 'Покажи / скрий името',
     canReconnect: '✅ Сега можете да се свържете отново.',
