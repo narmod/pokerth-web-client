@@ -1,23 +1,36 @@
 /**
- * PokerTH Service Worker — v3
+ * PokerTH Service Worker — v4
  * ⚠ Bump CACHE_VERSION on every static deploy to force clients to update.
  *    Format: 'pokerth-v{MAJOR}.{MINOR}.{N}' where {N} is a monotonic deploy
  *    counter that doubles as the release patch number. A release tag equals
  *    this string without the 'pokerth-' prefix (cache pokerth-v0.2.91 ↔ v0.2.91).
  *
- * Strategy:
+ * Strategy (v4):
  *   • install   — precache the critical app shell (HTML, JS, CSS, modules,
  *                 manifest, key PWA icons)
- *   • activate  — drop stale caches, claim clients, notify pages
- *   • fetch     — network-first for same-origin GETs, cache fallback when
- *                 offline; cross-origin (fonts, etc.) and WS upgrades are
- *                 left untouched
+ *   • activate  — drop stale caches, enable navigation preload, claim clients,
+ *                 notify pages
+ *   • fetch     — split by request type for the best of both worlds:
+ *                   – navigations (the HTML document) → NETWORK-FIRST, so a
+ *                     fresh deploy is picked up immediately; falls back to the
+ *                     cached shell when offline. Uses navigationPreload to
+ *                     start the network request in parallel with SW boot.
+ *                   – static assets (js, css, mjs, svg, png, fonts, proto…) →
+ *                     STALE-WHILE-REVALIDATE: served instantly from cache and
+ *                     refreshed in the background. Repeat loads are near
+ *                     instant and work fully offline; the CACHE_VERSION bump on
+ *                     each deploy still guarantees clients get the new files.
+ *                 Cross-origin requests (fonts CDN, etc.) and WS upgrades are
+ *                 left untouched.
  */
-const CACHE_VERSION = 'pokerth-v0.2.101';
+const CACHE_VERSION = 'pokerth-v0.2.102';
+
+// Where navigations fall back to when the network is unavailable.
+const NAV_FALLBACK = '/pokerth-client.html';
 
 // Critical app shell precached on install. Keep this list tight — anything
-// large or rarely used (e.g. the protobuf bundle) is fetched on demand and
-// served from cache afterward thanks to the network-first handler below.
+// large or rarely used (e.g. the protobuf bundle, individual flags) is fetched
+// on demand and then served from cache thanks to the SWR handler below.
 const ASSETS = [
   '/',
   '/pokerth-client.html',
@@ -55,7 +68,7 @@ self.addEventListener('install', function(e) {
   self.skipWaiting();
 });
 
-// ── Activate : drop old caches ──
+// ── Activate : drop old caches, enable nav preload ──
 self.addEventListener('activate', function(e) {
   e.waitUntil(
     caches.keys().then(function(keys) {
@@ -67,6 +80,12 @@ self.addEventListener('activate', function(e) {
             return caches.delete(k);
           })
       );
+    }).then(function() {
+      // Let the browser fetch the navigation request in parallel with SW
+      // startup so network-first navigations stay fast.
+      if (self.registration.navigationPreload) {
+        return self.registration.navigationPreload.enable();
+      }
     }).then(function() {
       // Start controlling all open pages immediately.
       return self.clients.claim();
@@ -88,29 +107,65 @@ self.addEventListener('message', function(e) {
   }
 });
 
-// ── Fetch : network-first, cache fallback when offline ──
-self.addEventListener('fetch', function(e) {
-  if (e.request.method !== 'GET') return;
-  // Don't intercept WebSocket upgrades or cross-origin requests (fonts etc.)
-  var url = new URL(e.request.url);
-  if (url.origin !== self.location.origin) return;
-  // Strategy: network first, fall back to cache when offline.
-  e.respondWith(
-    fetch(e.request).then(function(response) {
-      // Refresh the cache when we got a valid response.
+// Network-first, used for navigations (the HTML document). Prefers the preload
+// response when available, refreshes the cached shell, and falls back to cache
+// (then a tiny offline notice) when the network is down.
+function handleNavigation(e) {
+  return (async function() {
+    try {
+      var preload = await e.preloadResponse;
+      var response = preload || await fetch(e.request);
       if (response && response.status === 200) {
         var clone = response.clone();
         caches.open(CACHE_VERSION).then(function(c) { c.put(e.request, clone); });
       }
       return response;
-    }).catch(function() {
-      // Offline — serve from cache if we have it.
-      return caches.match(e.request).then(function(cached) {
-        return cached || new Response('Offline — reload when you are back online', {
+    } catch (err) {
+      var cached = await caches.match(e.request);
+      if (cached) return cached;
+      var shell = await caches.match(NAV_FALLBACK);
+      if (shell) return shell;
+      return new Response('Offline — reload when you are back online', {
+        status: 503,
+        headers: { 'Content-Type': 'text/plain; charset=utf-8' }
+      });
+    }
+  })();
+}
+
+// Stale-while-revalidate, used for static assets. Serve from cache at once and
+// refresh in the background; if nothing is cached, go to network and store it.
+function handleAsset(e) {
+  return caches.open(CACHE_VERSION).then(function(cache) {
+    return cache.match(e.request).then(function(cached) {
+      var network = fetch(e.request).then(function(response) {
+        if (response && response.status === 200) {
+          cache.put(e.request, response.clone());
+        }
+        return response;
+      }).catch(function() { return null; });
+      // Cache hit → instant response, network refresh happens in the background.
+      // Cache miss → wait for the network (and a real Response on failure).
+      return cached || network.then(function(r) {
+        return r || new Response('Offline', {
           status: 503,
           headers: { 'Content-Type': 'text/plain; charset=utf-8' }
         });
       });
-    })
-  );
+    });
+  });
+}
+
+// ── Fetch : route by request type ──
+self.addEventListener('fetch', function(e) {
+  if (e.request.method !== 'GET') return;
+  var url = new URL(e.request.url);
+  // Don't intercept WebSocket upgrades or cross-origin requests (fonts etc.)
+  if (url.origin !== self.location.origin) return;
+
+  if (e.request.mode === 'navigate') {
+    e.respondWith(handleNavigation(e));
+  } else {
+    e.respondWith(handleAsset(e));
+  }
 });
