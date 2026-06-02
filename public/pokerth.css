@@ -4557,3 +4557,18 @@ body:not(.in-game) .my-zone {
 }
 .app-toast.show { opacity: 1; transform: translate(-50%, 0); }
 .app-toast-tick { color: #3fb950; font-weight: 700; }
+
+/* Reset button: full "↺ Réinitialiser" label on tablet/desktop, icon-only on
+   phones (<640px, the app's phone/tablet boundary) to leave room for Create.
+   The label stays in the DOM (visually hidden) so it remains translated and
+   reachable by screen readers; the standalone ↺ is aria-hidden. */
+.btn-cf-reset .cf-reset-ico { display: none; }
+@media (max-width: 639px) {
+  .btn-cf-reset { padding: 10px 13px; }
+  .btn-cf-reset .cf-reset-ico { display: inline; font-size: 1.05rem; line-height: 1; }
+  .btn-cf-reset .cf-reset-lbl {
+    position: absolute; width: 1px; height: 1px;
+    padding: 0; margin: -1px; overflow: hidden;
+    clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+  }
+}
