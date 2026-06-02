@@ -218,6 +218,7 @@ export const strings = {
     statResetConfirm: 'Atstatyti visą jūsų statistiką? To atšaukti negalima.',
     statLifeOnlyPrivate: 'Sekama tik privačiame serveryje / LAN.',
     boardEmpty: 'Dar nėra rezultatų',
+    boardPer100:'Grynasis / 100 rankų', boardYourRank:'Jūs: #{n} iš {m}',
     rejoinInProgress: 'Jungiamasi prie jūsų stalo…',
     rejoinWaitNick: 'Atlaisvinama ankstesnė sesija…',
     rejoinFailed: 'Nepavyko tęsti jūsų stalo — grįžtama į vestibiulį.',
