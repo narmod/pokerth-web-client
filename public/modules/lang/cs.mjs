@@ -374,7 +374,7 @@ export const strings = {
     reconnectInProgress: 'Opětovné připojování…',
     connectingPlayers: 'Připojování {type} v{ver} — {n} hráčů…',
     connectedAsGuest: 'Připojeno jako host «{name}» (ID {id})',
-    errBadCreds: '⚠ Neplatné údaje pokerth.net (uživatelské jméno nebo heslo).',
+    errBadCreds: '⚠ Neplatné údaje (uživatelské jméno nebo heslo).',
     serverRequiresAuth: '⚠ Tento server vyžaduje ověření. Přepněte na účet pokerth.net nebo přihlášení hosta.',
     brandToggleTooltip: 'Zobrazit / skrýt název',
     canReconnect: '✅ Nyní se můžete znovu připojit.',
