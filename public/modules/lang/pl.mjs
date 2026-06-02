@@ -224,6 +224,7 @@ export const strings = {
     statResetConfirm: 'Wyzerować statystyki łączne? Nie można tego cofnąć.',
     statLifeOnlyPrivate: 'Rejestrowane tylko na serwerze prywatnym / LAN.',
     boardEmpty: 'Brak wyników',
+    boardPer100:'Netto / 100 rozdań', boardYourRank:'Ty: #{n} z {m}',
     rejoinInProgress: 'Powrót do twojego stołu…',
     rejoinWaitNick: 'Zwalnianie poprzedniej sesji…',
     rejoinFailed: 'Nie udało się wznowić stołu — powrót do lobby.',
