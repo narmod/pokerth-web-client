@@ -241,18 +241,50 @@ function readJsonBody(req, cb) {
   req.on('end', function () { try { cb(JSON.parse(body || '{}')); } catch (e) { cb(null); } });
   req.on('error', function () { cb(null); });
 }
+// Absolute sanity ceiling for chip totals. This is NOT anti-cheat: the model
+// is client-authoritative and custom stacks can be arbitrarily large, so a
+// tight per-hand cap would clip legitimate high-stakes play. It only rejects
+// overflow/garbage (net:1e15, NaN…) that would otherwise break the board.
+const STATS_MAX_CHIPS = 1e12;
+function clampChips(v) { return Math.max(-STATS_MAX_CHIPS, Math.min(STATS_MAX_CHIPS, v)); }
 function sanitizeSnapshot(d) {
   const num = function (v) { v = Number(v); return isFinite(v) ? Math.round(v) : 0; };
+  const handsPlayed = Math.max(0, num(d.handsPlayed));
+  const gamesPlayed = Math.max(0, num(d.gamesPlayed));
   return {
-    handsPlayed: Math.max(0, num(d.handsPlayed)),
-    handsWon:    Math.max(0, num(d.handsWon)),
-    net:         num(d.net),
-    bigWin:      num(d.bigWin),
-    bigLoss:     num(d.bigLoss),
-    gamesPlayed: Math.max(0, num(d.gamesPlayed)),
-    gamesWon:    Math.max(0, num(d.gamesWon)),
-    bestStreak:  Math.max(0, num(d.bestStreak)),
+    handsPlayed: handsPlayed,
+    // Wins can never exceed what was actually played; streak ≤ hands played.
+    handsWon:    Math.min(Math.max(0, num(d.handsWon)), handsPlayed),
+    net:         clampChips(num(d.net)),
+    bigWin:      Math.max(0, clampChips(num(d.bigWin))),
+    bigLoss:     Math.min(0, clampChips(num(d.bigLoss))),
+    gamesPlayed: gamesPlayed,
+    gamesWon:    Math.min(Math.max(0, num(d.gamesWon)), gamesPlayed),
+    bestStreak:  Math.min(Math.max(0, num(d.bestStreak)), handsPlayed),
     avatar:      (typeof d.avatar === 'string') ? d.avatar.slice(0, 8) : '',
+    ts:          Date.now()
+  };
+}
+
+// Monotonic merge: cumulative counters never regress, so a client pushing
+// from a fresh device (blank localStorage) can no longer wipe a player's
+// accumulated totals (bug: device-switch data loss). `net` follows the more
+// complete record (more hands played); bigWin keeps the max, bigLoss the min.
+function mergeSnapshot(prev, inc) {
+  if (!prev) return inc;
+  const hp = Math.max(prev.handsPlayed || 0, inc.handsPlayed || 0);
+  const gp = Math.max(prev.gamesPlayed || 0, inc.gamesPlayed || 0);
+  const incFresher = (inc.handsPlayed || 0) >= (prev.handsPlayed || 0);
+  return {
+    handsPlayed: hp,
+    gamesPlayed: gp,
+    handsWon:    Math.min(Math.max(prev.handsWon || 0, inc.handsWon || 0), hp),
+    gamesWon:    Math.min(Math.max(prev.gamesWon || 0, inc.gamesWon || 0), gp),
+    bestStreak:  Math.max(prev.bestStreak || 0, inc.bestStreak || 0),
+    bigWin:      Math.max(prev.bigWin || 0, inc.bigWin || 0),
+    bigLoss:     Math.min(prev.bigLoss || 0, inc.bigLoss || 0),
+    net:         incFresher ? (inc.net || 0) : (prev.net || 0),
+    avatar:      inc.avatar || prev.avatar || '',
     ts:          Date.now()
   };
 }
@@ -331,7 +363,7 @@ const httpServer = http.createServer((req, res) => {
         }
         const name = d.name.trim().slice(0, 32);
         if (d._delete) delete statsStore[name];
-        else statsStore[name] = sanitizeSnapshot(d);
+        else statsStore[name] = mergeSnapshot(statsStore[name], sanitizeSnapshot(d));
         saveStatsSoon();
         res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' });
         res.end('{"ok":true}');
