@@ -373,7 +373,7 @@ export const strings = {
     reconnectInProgress: 'Перепідключення…',
     connectingPlayers: 'Підключення {type} v{ver} — {n} гравців…',
     connectedAsGuest: 'Підключено як гість «{name}» (ID {id})',
-    errBadCreds: '⚠ Недійсні дані pokerth.net (ім’я користувача або пароль).',
+    errBadCreds: '⚠ Недійсні дані (ім’я користувача або пароль).',
     serverRequiresAuth: '⚠ Цей сервер потребує автентифікації. Перейдіть на акаунт pokerth.net або вхід гостя.',
     brandToggleTooltip: 'Показати / приховати назву',
     canReconnect: '✅ Тепер ви можете перепідключитися.',
