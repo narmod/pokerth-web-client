@@ -220,7 +220,7 @@ export const strings = {
     reconnectInProgress:'Reconnexion en cours\u2026',
     connectingPlayers:'Connexion {type} v{ver} \u2014 {n} joueur(s)\u2026',
     connectedAsGuest:'Connect\u00e9 en tant qu\u2019invit\u00e9 \u00ab\u202f{name}\u202f\u00bb (ID {id})',
-    errBadCreds:'\u26a0 Identifiants pokerth.net invalides (utilisateur ou mot de passe).',
+    errBadCreds:'\u26a0 Identifiants invalides (utilisateur ou mot de passe).',
     serverRequiresAuth:'\u26a0 Ce serveur exige une authentification. Choisissez un compte pokerth.net ou le mode invité.',
     brandToggleTooltip:'Afficher / masquer le nom',
     canReconnect:'\u2705 Vous pouvez vous reconnecter.',
