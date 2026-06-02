@@ -217,6 +217,7 @@ export const strings = {
     statResetConfirm: 'Nollställa din totala statistik? Detta kan inte ångras.',
     statLifeOnlyPrivate: 'Spåras endast på privat server / LAN.',
     boardEmpty: 'Inga poäng än',
+    boardPer100:'Netto / 100 händer', boardYourRank:'Du: #{n} av {m}',
     rejoinInProgress: 'Återansluter till ditt bord…',
     rejoinWaitNick: 'Frigör din tidigare session…',
     rejoinFailed: 'Kunde inte återuppta ditt bord — tillbaka till lobbyn.',
