@@ -381,7 +381,7 @@ export const strings = {
     reconnectInProgress: 'Reconectando…',
     connectingPlayers: 'Conectando {type} v{ver} — {n} jugador(es)…',
     connectedAsGuest: 'Conectado como invitado «{name}» (ID {id})',
-    errBadCreds: '⚠ Credenciales de pokerth.net no válidas (usuario o contraseña).',
+    errBadCreds: '⚠ Credenciales no válidas (usuario o contraseña).',
     serverRequiresAuth: '⚠ Este servidor requiere autenticación. Cambia a una cuenta de pokerth.net o al modo invitado.',
     brandToggleTooltip: 'Mostrar / ocultar el nombre',
     canReconnect: '✅ Ya puedes reconectarte.',
