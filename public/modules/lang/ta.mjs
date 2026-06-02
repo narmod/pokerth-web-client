@@ -375,7 +375,7 @@ export const strings = {
     reconnectInProgress: 'மீண்டும் இணைக்கிறது…',
     connectingPlayers: '{type} v{ver} இணைக்கிறது — {n} வீரர்கள்…',
     connectedAsGuest: 'விருந்தினராக இணைக்கப்பட்டது «{name}» (ID {id})',
-    errBadCreds: '⚠ தவறான pokerth.net விவரங்கள் (பயனர்பெயர் அல்லது கடவுச்சொல்).',
+    errBadCreds: '⚠ தவறான விவரங்கள் (பயனர்பெயர் அல்லது கடவுச்சொல்).',
     serverRequiresAuth: '⚠ இந்த சேவையகத்திற்கு அங்கீகாரம் தேவை. pokerth.net கணக்கு அல்லது விருந்தினர் உள்நுழைவுக்கு மாறவும்.',
     brandToggleTooltip: 'பெயரைக் காட்டு / மறை',
     canReconnect: '✅ இப்போது நீங்கள் மீண்டும் இணைக்கலாம்.',
