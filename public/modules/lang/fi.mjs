@@ -370,6 +370,7 @@ export const strings = {
     modeUnauth: 'LAN / Yksityinen palvelin ✓',
     modeGuest: 'pokerth.net — Vieras',
     modeAuth: 'pokerth.net — Rekisteröity tili',
+    srvDedicated:'LAN / Oma palvelin', guestMode:'Vierastila',
     nickPlaceholder: 'Nimesi',
     quitTooltip: 'Poistu',
     reconnectInProgress: 'Yhdistetään uudelleen…',
