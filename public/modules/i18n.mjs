@@ -328,6 +328,10 @@ function setLang(l) {
       }
     }
   } catch(e) {}
+  // Retraduire le hint de statut de l'écran de connexion (chatAvailPrivate /
+  // lanModeNote / enterCredentials selon le mode) : posé impérativement par
+  // setStatus, il restait figé dans la langue précédente.
+  try { if (typeof window._refreshConnectStatus === 'function') window._refreshConnectStatus(); } catch(e) {}
   // Re-render aide si elle est ouverte
   var ho = document.getElementById('hands-overlay');
   if (ho && ho.style.display !== 'none') renderHandsHelp();
