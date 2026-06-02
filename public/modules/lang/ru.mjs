@@ -223,6 +223,7 @@ export const strings = {
     statResetConfirm: 'Сбросить общую статистику? Это нельзя отменить.',
     statLifeOnlyPrivate: 'Учитывается только на частном сервере / LAN.',
     boardEmpty: 'Пока нет результатов',
+    boardPer100:'Нетто / 100 раздач', boardYourRank:'Вы: #{n} из {m}',
     rejoinInProgress: 'Возврат к вашему столу…',
     rejoinWaitNick: 'Освобождение предыдущей сессии…',
     rejoinFailed: 'Не удалось вернуться к столу — возврат в лобби.',
