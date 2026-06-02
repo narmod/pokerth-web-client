@@ -372,6 +372,7 @@ export const strings = {
     modeUnauth: 'LAN / தனிப்பட்ட சேவையகம் ✓',
     modeGuest: 'pokerth.net — விருந்தினர்',
     modeAuth: 'pokerth.net — பதிவுசெய்த கணக்கு',
+    srvDedicated:'LAN / பிரத்யேக சேவையகம்', guestMode:'விருந்தினர் முறை',
     nickPlaceholder: 'உங்கள்பெயர்',
     quitTooltip: 'வெளியேறு',
     reconnectInProgress: 'மீண்டும் இணைக்கிறது…',
