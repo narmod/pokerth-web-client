@@ -43,7 +43,7 @@
 
 **Try it now: [https://pokerth.ddns.net/](https://pokerth.ddns.net/)**
 
-Pick the **Private server — Internet Guest** login mode, choose any nickname, and play right away — no account, no install. The demo is hosted on a small VPS connected to a private PokerTH server, so feel free to create a table and invite friends.
+Pick the **LAN / Private server** login mode, choose any nickname, and play right away — no account, no install. The demo is hosted on a small VPS connected to a private PokerTH server, so feel free to create a table and invite friends.
 
 > Tip: it works just as well on mobile — add it to your home screen for a fullscreen app feel.
 
@@ -113,7 +113,7 @@ This project is a **web frontend** that connects to any PokerTH server directly 
 ## Features
 
 ### Connection
-- **4 login modes**: LAN (free nickname), Private server – Guest, pokerth.net – Guest, pokerth.net – Registered account
+- **4 login modes**: LAN / Private server, LAN / Private server (guest), pokerth.net – Guest, pokerth.net – Registered account
 - Optional authenticated login over TLS
 - TLS support (required for pokerth.net, optional for LAN). The TLS box auto-checks itself when you pick the registered-account mode.
 - Auto-fill of `host = pokerth.net` and `port = 7234` when a pokerth.net mode is selected — other modes keep the auto-detected hostname
@@ -157,7 +157,7 @@ This project is a **web frontend** that connects to any PokerTH server directly 
 - Tab title flashes: ⚡ YOUR TURN — PokerTH
 - Keyboard shortcuts: **F** = Fold, **C** / Space = Call, **R** = Raise, **A** = All-in
 - Sound effects: distinct sounds for fold / check / call / raise / all-in / shuffle / drumroll / bad-beat / win fanfare, plus urgent-timer warning
-- **Full i18n in 33 languages**, switchable on the fly and auto-detected from the browser locale — the complete official PokerTH language set plus Ukrainian, Romanian, Croatian and Serbian, with Brazilian and European Portuguese shipped as separate catalogues (pt-BR / pt-PT)
+- **Full i18n in 36 languages**, switchable on the fly and auto-detected from the browser locale — the complete official PokerTH language set plus community additions (Ukrainian, Romanian, Croatian, Serbian and more), with Brazilian and European Portuguese shipped as separate catalogues (pt-BR / pt-PT)
 - Fullscreen mode on all screens
 - Poker hand reference overlay (? button)
 - Exponential-backoff auto-reconnect with live countdown
@@ -176,8 +176,8 @@ The client is designed first and foremost for **LAN and private self-hosted serv
 
 | Mode | Target server | Transport | Notes |
 |---|---|---|---|
-| **LAN** (free nickname) | your local PokerTH server | proxy → TCP raw | TLS off by default |
-| **Private server — Guest** (`unauth`) | your private remote PokerTH server | proxy → TCP or TLS (your choice) | The default for self-hosted setups |
+| **LAN / Private server (guest)** (`lan`) | your local PokerTH server | proxy → TCP raw | Guest login, limited rights; TLS off by default |
+| **LAN / Private server** (`unauth`) | your private remote PokerTH server | proxy → TCP or TLS (your choice) | Default for self-hosted setups — full rights |
 
 The client can also connect to the public **pokerth.net** server (guest or registered account) over a direct TLS WebSocket, bypassing the proxy. Please use that responsibly and prefer your own LAN or private server for regular play, out of respect for the official PokerTH infrastructure.
 
@@ -697,7 +697,7 @@ A few things worth knowing if you plan to hack on this:
 - More automated protocol tests are needed before calling the client production-ready.
 - Spectator mode works but lacks a few quality-of-life touches (e.g. you cannot see other players' cards at showdown the same way the native client does).
 - **PWA features (install to home screen, offline Service Worker, background notifications) require a *secure context*** — i.e. HTTPS, or `localhost`. Over plain `http://` on a LAN IP (e.g. `192.168.1.10:8080`) the game plays perfectly, but the browser disables those three features by design. To get them on a LAN, serve the client over HTTPS — e.g. [`mkcert`](https://github.com/FiloSottile/mkcert) for a locally-trusted certificate, a self-signed cert, a real domain with Let's Encrypt, or a tunnel such as Cloudflare Tunnel / Tailscale.
-- **Translations are not yet natively reviewed.** The 33 language catalogues were produced with care but are largely machine-assisted, so some wordings — especially poker-specific terms — may be imperfect, the less common languages (e.g. Scottish Gaelic, Tamil) most of all. Corrections via issue or pull request are very welcome.
+- **Translations are not yet natively reviewed.** The 36 language catalogues were produced with care but are largely machine-assisted, so some wordings — especially poker-specific terms — may be imperfect, the less common languages (e.g. Scottish Gaelic, Tamil) most of all. Corrections via issue or pull request are very welcome.
 
 ---
 
@@ -710,7 +710,7 @@ A few things worth knowing if you plan to hack on this:
 4. Polish reconnection edge cases *(currently exponential backoff, capped at 3–6 attempts depending on the transport)*.
 5. Custom-emoji / image avatar import *(the built-in picker already ships 500+ emojis)*.
 6. A read-only embed for streamers *(spectating a table already works; this would add a dedicated streamer-friendly view)*.
-7. Native review of the machine-assisted translations *(33 languages ship today; some wordings — poker terms especially — would benefit from a native pass)*.
+7. Native review of the machine-assisted translations *(36 languages ship today; some wordings — poker terms especially — would benefit from a native pass)*.
 
 ---
 
