@@ -181,19 +181,6 @@ function selectAvatarPopup(emoji) {
   }
 }
 
-// Déplie/replie le sous-panneau « plus d'options » de l'écran de connexion
-// (mot de passe serveur). Pur DOM, appelé au clic donc après le rendu.
-function toggleConnectAdvanced() {
-  var o = document.getElementById("connect-adv-opts");
-  if (!o) return;
-  var willShow = (o.style.display === "none" || !o.style.display);
-  o.style.display = willShow ? "block" : "none";
-  if (willShow) {
-    var i = document.getElementById("server-pass");
-    if (i) { try { i.focus(); } catch (e) {} }
-  }
-}
-
 // ── Avatar « image perso » ──────────────────────────────────────────
 // Le client web ne peut PAS récupérer l'avatar serveur d'un compte
 // pokerth.net : le serveur ne stocke pas d'avatar par compte, il le
@@ -306,6 +293,18 @@ function onAvatarImageChosen(input) {
           <label data-i18n="port">Port</label>
           <input id="port" value="7234" type="number">
         </div>
+      </div>
+
+      <!-- Mot de passe SERVEUR (authServerPassword) — serveurs auto-hébergés
+           seulement. Vit dans le bloc roue crantée existant ; affiché par
+           onLoginModeChange uniquement en mode LAN / dédié. Vide ⇒ rien n'est
+           envoyé dans l'Init. Le placeholder traduit (gris, visible seulement
+           si le champ est vide) tient lieu d'indication « optionnel ». -->
+      <div class="f" id="f-server-pass" style="display:none">
+        <input id="server-pass" type="password" maxlength="128"
+               data-i18n-placeholder="serverPassword" placeholder="Server password (optional)"
+               autocomplete="off"
+               onkeydown="if(event.key==='Enter') App.connect()">
       </div>
     </div>
 
@@ -891,23 +890,6 @@ function onAvatarImageChosen(input) {
              onkeydown="if(event.key==='Enter') App.connect()">
     </div>
     </form>
-
-    <!-- Options avancées (serveurs auto-hébergés LAN / dédié uniquement).
-         Masqué par défaut : on ne le révèle qu'au clic sur « plus d'options »
-         (roue crantée) car en temps normal aucun mot de passe serveur n'est
-         requis. Champ vide ⇒ aucun authServerPassword envoyé dans l'Init. -->
-    <div id="connect-adv-wrap" style="display:none">
-      <button type="button" id="connect-adv-btn" onclick="toggleConnectAdvanced()"
-              style="background:none;border:none;color:var(--gold-dim);cursor:pointer;font-size:0.64rem;letter-spacing:0.12em;text-transform:uppercase;padding:4px 0 6px;display:flex;align-items:center;gap:6px">
-        <span id="connect-adv-arrow">&#9881;</span> <span data-i18n="moreOptions">More options</span>
-      </button>
-      <div class="f" id="connect-adv-opts" style="display:none">
-        <label data-i18n="serverPassword">Server password (optional)</label>
-        <input id="server-pass" type="password" maxlength="128" placeholder="••••••••"
-               autocomplete="off"
-               onkeydown="if(event.key==='Enter') App.connect()">
-      </div>
-    </div>
 
     <label class="tls-row" id="tls-row">
       <input type="checkbox" id="use-tls" style="accent-color:var(--gold);flex-shrink:0">
