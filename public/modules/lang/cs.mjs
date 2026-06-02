@@ -371,6 +371,7 @@ export const strings = {
     modeUnauth: 'LAN / Soukromý server ✓',
     modeGuest: 'pokerth.net — Host',
     modeAuth: 'pokerth.net — Registrovaný účet',
+    srvDedicated:'LAN / Vyhrazený server', guestMode:'Režim hosta',
     nickPlaceholder: 'VašeJméno',
     quitTooltip: 'Odejít',
     reconnectInProgress: 'Opětovné připojování…',
