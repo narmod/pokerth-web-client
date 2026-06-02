@@ -217,6 +217,7 @@ export const strings = {
     statResetConfirm: 'Repor todas as suas estatísticas? Isto não pode ser anulado.',
     statLifeOnlyPrivate: 'Registrado apenas no servidor privado / LAN.',
     boardEmpty: 'Ainda não há pontuações',
+    boardPer100:'Líquido / 100 mãos', boardYourRank:'Você: #{n} de {m}',
     rejoinInProgress: 'A ligar novamente à sua mesa…',
     rejoinWaitNick: 'A libertar a sua sessão anterior…',
     rejoinFailed: 'Não foi possível retomar a sua mesa — de volta ao átrio.',
