@@ -217,6 +217,7 @@ export const strings = {
     statResetConfirm: '累計統計をリセットしますか？元に戻せません。',
     statLifeOnlyPrivate: 'プライベートサーバー / LANでのみ記録されます。',
     boardEmpty: 'まだスコアがありません',
+    boardPer100:'純収支 / 100ハンド', boardYourRank:'あなた：{m}人中{n}位',
     rejoinInProgress: 'テーブルに再参加中…',
     rejoinWaitNick: '以前のセッションを解放中…',
     rejoinFailed: 'テーブルを再開できませんでした — ロビーに戻ります。',
