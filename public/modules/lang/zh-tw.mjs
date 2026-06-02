@@ -219,6 +219,7 @@ export const strings = {
     statResetConfirm: '重置你的累計統計？此操作無法撤銷。',
     statLifeOnlyPrivate: '僅在私人伺服器 / 區域網上記錄。',
     boardEmpty: '暫無成績',
+    boardPer100:'淨額 / 100 手', boardYourRank:'你：第{n}名（共{m}）',
     rejoinInProgress: '正在重新加入你的牌桌…',
     rejoinWaitNick: '正在釋放你之前的會話…',
     rejoinFailed: '無法恢復你的牌桌 — 返回大廳。',
