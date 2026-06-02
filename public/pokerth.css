@@ -622,26 +622,51 @@ body {
 .row2 .f:first-child { flex: 1; }
 .row2 .f-sm { width: 110px; }
 
-/* Toggle « Plus d'options » de l'écran de connexion (réutilise le style du
-   toggle du formulaire de création pour rester cohérent avec le design). */
+/* Toggle « Plus d'options » de l'écran de connexion : libellé centré encadré
+   de deux filets dégradés + chevron qui pivote. Le bloc avancé reprend le même
+   rythme vertical (gap 11px) que la carte et s'ouvre avec un léger fondu. */
 .conn-adv-toggle {
   display: flex;
   align-items: center;
-  gap: 5px;
-  margin: 2px 0 14px;
-  padding: 2px 0;
+  gap: 10px;
+  width: 100%;
+  margin: 0;
+  padding: 5px 0;
   background: none;
   border: none;
-  color: var(--gold-dim);
   cursor: pointer;
+  color: var(--gold-dim);
   font-family: inherit;
-  font-size: 0.64rem;
-  letter-spacing: 0.12em;
+  font-size: 0.62rem;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
   transition: color 0.2s;
 }
 .conn-adv-toggle:hover { color: var(--gold); }
-.conn-adv-toggle #conn-adv-arrow { font-size: 0.6rem; }
+.conn-adv-toggle .conn-adv-line {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--border) 50%, transparent);
+}
+.conn-adv-toggle .conn-adv-mid {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+}
+.conn-adv-chevron {
+  display: inline-block;
+  font-size: 0.62rem;
+  transition: transform 0.28s ease;
+}
+.conn-adv-toggle.open .conn-adv-chevron { transform: rotate(90deg); }
+
+#conn-advanced { display: flex; flex-direction: column; gap: 11px; }
+#conn-advanced.anim { animation: connAdvIn 0.28s ease; }
+@keyframes connAdvIn {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
 
 .f {
   display: flex;
