@@ -220,6 +220,7 @@ export const strings = {
     statResetConfirm: 'Tüm istatistiklerin sıfırlansın mı? Bu geri alınamaz.',
     statLifeOnlyPrivate: 'Yalnızca özel sunucu / LAN’da kaydedilir.',
     boardEmpty: 'Henüz skor yok',
+    boardPer100:'Net / 100 el', boardYourRank:'Sen: #{n}/{m}',
     rejoinInProgress: 'Masana yeniden katılınıyor…',
     rejoinWaitNick: 'Önceki oturumun serbest bırakılıyor…',
     rejoinFailed: 'Masan sürdürülemedi — lobiye dönülüyor.',
