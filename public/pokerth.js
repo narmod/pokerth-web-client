@@ -6605,7 +6605,14 @@ function dismissWinner() {
       // declutter the form. The setting itself stays in the DOM —
       // each branch below still sets $('use-tls').checked appropriately.
       var tlsRow = document.getElementById('tls-row');
-      if (tlsRow) tlsRow.style.display = (mode === 'auth') ? '' : 'none';
+      // TLS : option avancée dans TOUS les modes — visible uniquement quand la
+      // roue crantée est ouverte. La case ($('use-tls').checked) garde la valeur
+      // fixée par mode plus bas (TLS reste actif pour pokerth.net même masqué,
+      // d'autant que guest/auth passent par une connexion wss directe).
+      if (tlsRow) {
+        var advBtn = document.getElementById('conn-adv-btn');
+        tlsRow.style.display = (advBtn && advBtn.classList.contains('open')) ? '' : 'none';
+      }
 
       // Champ mot de passe SERVEUR : seuls les serveurs auto-hébergés
       // (LAN / dédié privé) peuvent en exiger un. pokerth.net est le build
@@ -6614,10 +6621,18 @@ function dismissWinner() {
       // doublement masqué tant que la roue n'est pas ouverte.
       var advWrap = document.getElementById('f-server-pass');
       if (advWrap) advWrap.style.display = (mode === 'lan' || mode === 'unauth') ? '' : 'none';
-      // Mot de passe UTILISATEUR (compte) : même portée que le mot de passe
-      // serveur — uniquement LAN / dédié, et dans la roue crantée.
+      // Mot de passe UTILISATEUR (compte) : option avancée placée sous le login.
+      // En mode LAN / dédié il suit l'état de la roue crantée (comme le TLS) ;
+      // sinon caché. Seul le login (pseudo) reste toujours visible.
       var userWrap = document.getElementById('f-user-pass');
-      if (userWrap) userWrap.style.display = (mode === 'lan' || mode === 'unauth') ? '' : 'none';
+      if (userWrap) {
+        if (mode === 'lan' || mode === 'unauth') {
+          var advBtnU = document.getElementById('conn-adv-btn');
+          userWrap.style.display = (advBtnU && advBtnU.classList.contains('open')) ? '' : 'none';
+        } else {
+          userWrap.style.display = 'none';
+        }
+      }
 
       const hostInput  = $('host');
       const proxyInput = $('proxy');
