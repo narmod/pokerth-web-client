@@ -375,7 +375,7 @@ export const strings = {
     reconnectInProgress: '重新连接中…',
     connectingPlayers: '正在连接 {type} v{ver} — {n} 名玩家…',
     connectedAsGuest: '已以访客「{name}」身份连接（ID {id}）',
-    errBadCreds: '⚠ pokerth.net 凭据无效（用户名或密码）。',
+    errBadCreds: '⚠ 凭据无效（用户名或密码）。',
     serverRequiresAuth: '⚠ 此服务器需要身份验证。请切换到 pokerth.net 账户或访客登录。',
     brandToggleTooltip: '显示 / 隐藏名称',
     canReconnect: '✅ 你现在可以重新连接。',
