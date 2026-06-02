@@ -370,6 +370,7 @@ export const strings = {
     modeUnauth: 'LAN / プライベートサーバー ✓',
     modeGuest: 'pokerth.net — ゲスト',
     modeAuth: 'pokerth.net — 登録アカウント',
+    srvDedicated:'LAN / 専用サーバー', guestMode:'ゲストモード',
     nickPlaceholder: 'あなたの名前',
     quitTooltip: '退出',
     reconnectInProgress: '再接続中…',
