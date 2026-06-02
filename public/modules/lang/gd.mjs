@@ -219,6 +219,7 @@ export const strings = {
     statResetConfirm: 'Ath-shuidhich na staitistig agad gu lèir? Cha ghabh seo a thilleadh.',
     statLifeOnlyPrivate: 'Air a chumail air an fhrithealaiche phrìobhaideach / LAN a-mhàin.',
     boardEmpty: 'Gun sgòran fhathast',
+    boardPer100:'Net / 100 làmhan', boardYourRank:'Thusa: #{n}/{m}',
     rejoinInProgress: 'Ag ath-cheangal ris a\' bhòrd agad…',
     rejoinWaitNick: 'A\' fuasgladh do sheisean roimhe…',
     rejoinFailed: 'Cha b\' urrainn an bòrd agad a leantainn — air ais dhan lobaidh.',
