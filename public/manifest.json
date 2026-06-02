@@ -3,10 +3,16 @@
   "short_name": "PokerTH",
   "description": "Client web pour les serveurs PokerTH \u2014 Texas Hold'em",
   "start_url": "/",
+  "id": "/",
+  "scope": "/",
   "display": "standalone",
+  "display_override": ["fullscreen", "standalone"],
   "background_color": "#040a06",
   "theme_color": "#0a1a0c",
   "orientation": "any",
+  "launch_handler": {
+    "client_mode": "focus-existing"
+  },
   "icons": [
     {
       "src": "/icon-192.png",
