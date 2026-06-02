@@ -218,6 +218,7 @@ export const strings = {
     statResetConfirm: 'Vynulovat všechny vaše statistiky? Toto nelze vrátit zpět.',
     statLifeOnlyPrivate: 'Sledováno jen na soukromém serveru / LAN.',
     boardEmpty: 'Zatím žádné skóre',
+    boardPer100:'Čistý / 100 rozdání', boardYourRank:'Vy: #{n} z {m}',
     rejoinInProgress: 'Opětovné připojení k vašemu stolu…',
     rejoinWaitNick: 'Uvolňování vaší předchozí relace…',
     rejoinFailed: 'Váš stůl nelze obnovit — zpět do lobby.',
