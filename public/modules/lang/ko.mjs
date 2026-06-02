@@ -98,6 +98,7 @@ export const strings = {
     statGamesPlayed:'플레이한 게임', statGamesWon:'이긴 게임', statStreak:'최고 연승',
     statReset:'내 통계 초기화', statResetConfirm:'누적 통계를 초기화할까요? 되돌릴 수 없습니다.',
     statLifeOnlyPrivate:'비공개 서버 / LAN에서만 기록됩니다.', boardEmpty:'아직 점수 없음',
+    boardPer100:'순수익 / 100핸드', boardYourRank:'나: {m}명 중 {n}위',
     rejoinInProgress:'테이블에 다시 참가 중…', rejoinWaitNick:'이전 세션 해제 중…',
     rejoinFailed:'테이블을 복구할 수 없음 — 로비로 돌아갑니다.', rejoinReconnectHint:'연결 끊김 — 테이블을 이어가려면 재접속하세요.',
     noActiveTable:'활성 테이블 없음', copyThisLink:'이 링크 복사:', spectatingTable:'관전 중인 테이블 ',
