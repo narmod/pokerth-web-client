@@ -79,6 +79,16 @@ function toggleConnAdvanced() {
     wrap.style.display = "none";
     wrap.classList.remove("anim");
   }
+  // Options avancées suivant la roue crantée : le TLS dans TOUS les modes ; le
+  // mot de passe utilisateur uniquement en LAN / serveur dédié.
+  var tlsRow = document.getElementById("tls-row");
+  if (tlsRow) tlsRow.style.display = open ? "" : "none";
+  var lm = document.getElementById("login-mode");
+  var mode = lm ? lm.value : "";
+  if (mode === "lan" || mode === "unauth") {
+    var userRow = document.getElementById("f-user-pass");
+    if (userRow) userRow.style.display = open ? "" : "none";
+  }
 }
 
 function toggleAvatarPopup() {
@@ -303,17 +313,6 @@ function onAvatarImageChosen(input) {
       <div class="f" id="f-server-pass" style="display:none">
         <input id="server-pass" type="password" maxlength="128"
                data-i18n-placeholder="serverPassword" placeholder="Server password (optional)"
-               autocomplete="off"
-               onkeydown="if(event.key==='Enter') App.connect()">
-      </div>
-      <!-- Mot de passe UTILISATEUR (compte) — clientUserData. Optionnel : vide ⇒
-           login normal du mode ; rempli ⇒ le client bascule en authenticatedLogin
-           pour authentifier l'utilisateur sur un serveur dédié avec gestion de
-           comptes. Comme le mot de passe serveur : seulement LAN / dédié et
-           visible uniquement quand la roue crantée est ouverte. -->
-      <div class="f" id="f-user-pass" style="display:none">
-        <input id="user-pass" type="password" maxlength="128"
-               data-i18n-placeholder="userPassword" placeholder="User password (optional)"
                autocomplete="off"
                onkeydown="if(event.key==='Enter') App.connect()">
       </div>
@@ -898,6 +897,16 @@ function onAvatarImageChosen(input) {
       <label>Password</label>
       <input id="pass" type="password" maxlength="128" placeholder="••••••••"
              name="password" autocomplete="current-password"
+             onkeydown="if(event.key==='Enter') App.connect()">
+    </div>
+    <!-- Mot de passe UTILISATEUR (compte) — placé juste après le login/pseudo.
+         clientUserData. Vide ⇒ login normal du mode ; rempli ⇒ bascule en
+         authenticatedLogin. Affiché par onLoginModeChange en mode LAN / dédié.
+         Placeholder traduit (gris, visible seulement si le champ est vide). -->
+    <div class="f" id="f-user-pass" style="display:none">
+      <input id="user-pass" type="password" maxlength="128"
+             data-i18n-placeholder="userPassword" placeholder="User password (optional)"
+             autocomplete="off"
              onkeydown="if(event.key==='Enter') App.connect()">
     </div>
     </form>
