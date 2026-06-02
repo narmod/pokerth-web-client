@@ -1720,6 +1720,8 @@ const App = (() => {
   // pid -> code pays ISO 3166-1 alpha-2 (ex. 'FR'), reçu via PlayerInfoReply
   // (champ 4). Vide sur LAN / serveur privé qui ne le renseignent pas.
   let _playerCountries = {};
+  // pid -> droits PokerTH (1=invité, 2=enregistré, 3=admin), via PlayerInfoReply.
+  let _playerRights = {};
   // Step 2: outgoing AvatarRequest tracking. Keyed by hashHex so the same
   // avatar shared by N players is downloaded ONCE (Q2=A, dedup by hash).
   //   _pthAvatarsByHash[hex] = {
@@ -3306,6 +3308,10 @@ const App = (() => {
         // Code pays (champ 4, optionnel) — présent surtout sur pokerth.net.
         var cc = Proto.str(info, 4);
         if (cc) _playerCountries[pid] = cc.toUpperCase();
+        // Droits (champ 3) : 1=invité, 2=enregistré, 3=admin. Sert à ne
+        // rendre cliquables que les joueurs ayant un compte pokerth.net.
+        var rights = Proto.u32(info, 3);
+        if (rights) _playerRights[pid] = rights;
         _pendingNameRequests.delete(pid); // got the reply, free for retry if needed
         // ── Step 1 (PokerTH avatar): peek for the optional AvatarData
         // sub-message (field 5). Present only for registered players who
@@ -6953,6 +6959,7 @@ function dismissWinner() {
         games   = {};
         players = {};
         _playerCountries = {};
+        _playerRights = {};
         _raiseMode = 1; _raiseEvery = 0; _lastBlindsUpHand = 0;
         _endRaiseMode = 1; _endRaiseValue = 0;
         // Avatars : indexés par pid (stables tant que la session lobby dure) ou
@@ -8118,6 +8125,7 @@ function dismissWinner() {
         players: players,
         myId:    myId,
         countries: _playerCountries,
+        rights:    _playerRights,
         flagOf:  function(pid) { return _ccToFlag(_playerCountries[pid]); },
       };
     },
@@ -8739,6 +8747,9 @@ function renderPlayersList() {
     body.innerHTML = '<div class="pl-empty">' + (q ? '— ' : '—') + '</div>';
     return;
   }
+  // Liens vers le profil pokerth.net : uniquement en mode pokerth.net (guest/auth).
+  var _modeEl = document.getElementById('login-mode');
+  var _onPokerthNet = !!(_modeEl && (_modeEl.value === 'guest' || _modeEl.value === 'auth'));
   body.innerHTML = rows.map(function(r) {
     var esc = function(s) { return String(s).replace(/[<>&"]/g, function(c){return {'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;'}[c];}); };
     // Avatar chip via the unified helper (same priority order as
@@ -8752,9 +8763,16 @@ function renderPlayersList() {
     var flag = _flagOf(r.pid) || '';
     var _ccRaw = (_ls.countries && _ls.countries[r.pid]) ? String(_ls.countries[r.pid]).trim().toUpperCase() : '';
     var cc = /^[A-Z]{2}$/.test(_ccRaw) ? _ccRaw : '';
+    // Nom cliquable → profil pokerth.net (?u=pseudo), nouvel onglet. Seulement
+    // pour les joueurs ENREGISTRÉS (droits 2=normal / 3=admin) ; pas les invités.
+    var _rg = _ls.rights ? _ls.rights[r.pid] : 0;
+    var _registered = _onPokerthNet && (_rg === 2 || _rg === 3);
+    var nameHtml = _registered
+      ? '<a class="pl-name-link" href="https://www.pokerth.net/app.php/player?u=' + encodeURIComponent(r.name) + '" target="_blank" rel="noopener noreferrer">' + esc(r.name) + '</a>'
+      : esc(r.name);
     return '<div class="pl-row' + (r.isMe ? ' pl-me' : '') + '">' +
              avChip +
-             '<span class="pl-name">' + esc(r.name) + '</span>' +
+             '<span class="pl-name">' + nameHtml + '</span>' +
              '<span class="pl-flag">' + flag + (cc ? '<span class="pl-cc">' + cc + '</span>' : '') + '</span>' +
              '<span class="pl-star">' + (r.isMe ? '⭐' : '') + '</span>' +
              '<span class="pl-id">#' + r.pid + '</span>' +
