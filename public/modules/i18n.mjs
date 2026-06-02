@@ -107,6 +107,18 @@ const _DISPLAYCHIPS_I18N = {
 };
 for (const _c in _DISPLAYBB_I18N) { if (LANG[_c]) LANG[_c].displayBB = _DISPLAYBB_I18N[_c]; }
 for (const _c in _DISPLAYCHIPS_I18N) { if (LANG[_c]) LANG[_c].displayChips = _DISPLAYCHIPS_I18N[_c]; }
+// ── Clé 'serverPassword' : libellé du champ (optionnel) du mot de passe
+// SERVEUR (authServerPassword), affiché sous « plus d'options » pour les
+// serveurs auto-hébergés. Ajoutée ici pour toutes les langues ; toute langue
+// absente retombe sur l'anglais via t().
+const _SERVERPASS_I18N = {
+  en: 'Server password (optional)', fr: 'Mot de passe serveur (optionnel)',
+  de: 'Serverpasswort (optional)', es: 'Contraseña del servidor (opcional)',
+  it: 'Password del server (opzionale)', 'pt-BR': 'Senha do servidor (opcional)',
+  'pt-PT': 'Palavra-passe do servidor (opcional)', nl: 'Serverwachtwoord (optioneel)',
+  pl: 'Hasło serwera (opcjonalne)', ru: 'Пароль сервера (необязательно)'
+};
+for (const _c in _SERVERPASS_I18N) { if (LANG[_c]) LANG[_c].serverPassword = _SERVERPASS_I18N[_c]; }
 function _flagFor(code) {
   return (LANG_META[code] && LANG_META[code].flag)
     || ('<span class="lang-flag lang-flag-code" style="font:700 0.72rem/1 monospace;letter-spacing:.05em">' + String(code).toUpperCase() + '</span>');
