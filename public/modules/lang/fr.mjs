@@ -114,6 +114,7 @@ export const strings = {
     statGamesPlayed:'Parties jouées', statGamesWon:'Parties gagnées', statStreak:'Meilleure série',
     statReset:'Réinitialiser mes stats', statResetConfirm:'Réinitialiser tes stats à vie ? Action irréversible.',
     statLifeOnlyPrivate:'Suivi uniquement sur serveur privé / LAN.', boardEmpty:"Aucun score pour l'instant",
+    boardPer100:'Net / 100 mains', boardYourRank:'Vous : #{n} sur {m}',
     rejoinInProgress:'Reprise de ta partie…', rejoinWaitNick:'Libération de ta session précédente…',
     rejoinFailed:'Reprise impossible — retour au lobby.', rejoinReconnectHint:'Connexion perdue — reconnecte-toi pour reprendre ta partie.',
     noActiveTable:'Aucune table active', copyThisLink:'Copiez ce lien :', spectatingTable:'Observation de la table ',
