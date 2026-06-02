@@ -374,7 +374,7 @@ export const strings = {
     reconnectInProgress: 'Jungiamasi iš naujo…',
     connectingPlayers: 'Jungiamasi {type} v{ver} — {n} žaidėjų…',
     connectedAsGuest: 'Prisijungta kaip svečias „{name}“ (ID {id})',
-    errBadCreds: '⚠ Netinkami pokerth.net duomenys (vartotojo vardas arba slaptažodis).',
+    errBadCreds: '⚠ Netinkami duomenys (vartotojo vardas arba slaptažodis).',
     serverRequiresAuth: '⚠ Šis serveris reikalauja autentifikavimo. Perjunkite į pokerth.net paskyrą arba svečio prisijungimą.',
     brandToggleTooltip: 'Rodyti / slėpti pavadinimą',
     canReconnect: '✅ Dabar galite prisijungti iš naujo.',
