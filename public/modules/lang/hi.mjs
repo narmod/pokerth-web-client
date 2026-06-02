@@ -205,7 +205,7 @@ export const strings = {
     reconnectInProgress:'पुनः कनेक्ट हो रहा है\u2026',
     connectingPlayers:'{type} v{ver} कनेक्ट हो रहा है \u2014 {n} खिलाड़ी\u2026',
     connectedAsGuest:'अतिथि के रूप में कनेक्टेड \u201c{name}\u201d (ID {id})',
-    errBadCreds:'\u26a0 अमान्य pokerth.net क्रेडेंशियल (उपयोगकर्ता नाम या पासवर्ड)।',
+    errBadCreds:'\u26a0 अमान्य क्रेडेंशियल (उपयोगकर्ता नाम या पासवर्ड)।',
     serverRequiresAuth:'\u26a0 इस सर्वर को प्रमाणीकरण चाहिए। pokerth.net खाते या अतिथि लॉगिन पर स्विच करें।',
     brandToggleTooltip:'नाम दिखाएँ / छिपाएँ',
     canReconnect:'\u2705 अब आप पुनः कनेक्ट कर सकते हैं।',
