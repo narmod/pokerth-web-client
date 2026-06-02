@@ -380,7 +380,7 @@ export const strings = {
     reconnectInProgress: 'Wiederverbindung…',
     connectingPlayers: 'Verbinde {type} v{ver} — {n} Spieler…',
     connectedAsGuest: 'Als Gast verbunden „{name}" (ID {id})',
-    errBadCreds: '⚠ Ungültige pokerth.net-Zugangsdaten (Benutzername oder Passwort).',
+    errBadCreds: '⚠ Ungültige Zugangsdaten (Benutzername oder Passwort).',
     serverRequiresAuth: '⚠ Dieser Server erfordert eine Anmeldung. Wechseln Sie zu einem pokerth.net-Konto oder Gast-Login.',
     brandToggleTooltip: 'Name ein-/ausblenden',
     canReconnect: '✅ Sie können sich jetzt wieder verbinden.',
