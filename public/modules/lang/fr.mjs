@@ -217,6 +217,7 @@ export const strings = {
     modeUnauth:'LAN / Serveur privé ✓',
     modeGuest:'pokerth.net \u2014 Invit\u00e9',
     modeAuth:'pokerth.net \u2014 Compte enregistr\u00e9',
+    srvDedicated:'LAN / Serveur dédié', guestMode:'Mode invité',
     nickPlaceholder:'VotrePr\u00e9nom',
     quitTooltip:'Quitter',
     reconnectInProgress:'Reconnexion en cours\u2026',
