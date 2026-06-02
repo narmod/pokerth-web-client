@@ -377,6 +377,7 @@ export const strings = {
     modeUnauth: 'LAN / Privéserver ✓',
     modeGuest: 'pokerth.net — Gast',
     modeAuth: 'pokerth.net — Geregistreerd account',
+    srvDedicated:'LAN / Toegewijde server', guestMode:'Gastmodus',
     nickPlaceholder: 'JouwNaam',
     quitTooltip: 'Verlaten',
     reconnectInProgress: 'Opnieuw verbinden…',
