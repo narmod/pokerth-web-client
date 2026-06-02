@@ -218,6 +218,7 @@ export const strings = {
     statResetConfirm: 'Visszaállítod az összes statisztikádat? Ez nem vonható vissza.',
     statLifeOnlyPrivate: 'Csak a privát szerveren / LAN-on követjük.',
     boardEmpty: 'Még nincs pontszám',
+    boardPer100:'Nettó / 100 leosztás', boardYourRank:'Te: #{n}/{m}',
     rejoinInProgress: 'Visszacsatlakozás az asztalodhoz…',
     rejoinWaitNick: 'Az előző munkameneted felszabadítása…',
     rejoinFailed: 'Az asztalod nem folytatható — vissza a lobbiba.',
