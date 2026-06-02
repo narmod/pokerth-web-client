@@ -52,19 +52,24 @@ function toggleStats() {
   if (typeof window._toggleStats === "function") window._toggleStats();
 }
 
-// Replie/déplie les champs de connexion avancés (proxy / serveur / port).
-// L'état est suivi par la classe .open sur le bouton (sans ambiguïté), ce qui
-// corrige le repliage. Le bloc est masqué via display:none (retiré du flux flex,
-// donc pas de gap fantôme) et joue une petite animation d'entrée à l'ouverture.
-// Réutilise les clés i18n moreOptions/lessOptions et window.t (i18n.mjs).
+// Replie/déplie les champs de connexion avancés (proxy / serveur / port) via la
+// roue crantée. L'état est suivi par la classe .open sur le bouton (sans
+// ambiguïté), ce qui corrige le repliage. Le bloc est masqué via display:none
+// (retiré du flux flex, donc pas de gap fantôme) et joue une petite animation
+// d'entrée. Le tooltip/aria-label bascule moreOptions<->lessOptions via window.t
+// (i18n.mjs) — aucun ajout de clé de traduction.
 function toggleConnAdvanced() {
   var wrap = document.getElementById("conn-advanced");
   var btn  = document.getElementById("conn-adv-btn");
-  var lbl  = document.getElementById("conn-adv-label");
   if (!wrap || !btn) return;
   var open = !btn.classList.contains("open");
   btn.classList.toggle("open", open);
   btn.setAttribute("aria-expanded", open ? "true" : "false");
+  var label = open
+    ? ((window.t && window.t("lessOptions")) || "Less options")
+    : ((window.t && window.t("moreOptions")) || "More options");
+  btn.setAttribute("title", label);
+  btn.setAttribute("aria-label", label);
   if (open) {
     wrap.style.display = "";          // revient au display:flex défini en CSS
     wrap.classList.remove("anim");
@@ -74,9 +79,6 @@ function toggleConnAdvanced() {
     wrap.style.display = "none";
     wrap.classList.remove("anim");
   }
-  if (lbl) lbl.textContent = open
-    ? ((window.t && window.t("lessOptions")) || "Less options")
-    : ((window.t && window.t("moreOptions")) || "More options");
 }
 
 function toggleAvatarPopup() {
@@ -254,27 +256,28 @@ function onAvatarImageChosen(input) {
 
     <div class="f">
       <label data-i18n="loginMode">Login Mode</label>
-      <div class="sel-wrap">
-        <select id="login-mode" onchange="App.onLoginModeChange()">
-          <option value="lan" data-i18n="lan">LAN (pseudo libre)</option>
-          <option value="unauth" selected data-i18n="modeUnauth">Private server — Internet Guest ✓</option>
-          <option value="guest" data-i18n="modeGuest">pokerth.net — Guest</option>
-          <option value="auth" data-i18n="modeAuth">pokerth.net — Registered account</option>
-        </select>
-        <span class="sel-arr">▾</span>
+      <div style="display:flex;gap:8px;align-items:stretch">
+        <div class="sel-wrap" style="flex:1">
+          <select id="login-mode" onchange="App.onLoginModeChange()">
+            <option value="lan" data-i18n="lan">LAN (pseudo libre)</option>
+            <option value="unauth" selected data-i18n="modeUnauth">Private server — Internet Guest ✓</option>
+            <option value="guest" data-i18n="modeGuest">pokerth.net — Guest</option>
+            <option value="auth" data-i18n="modeAuth">pokerth.net — Registered account</option>
+          </select>
+          <span class="sel-arr">▾</span>
+        </div>
+        <!-- Roue crantée : affiche/cache les champs techniques (proxy / serveur /
+             port), masqués par défaut pour simplifier l'écran aux novices. Les
+             champs restent dans le DOM avec leurs valeurs, donc App.connect() et
+             onLoginModeChange() fonctionnent à l'identique. -->
+        <button type="button" id="conn-adv-btn" class="conn-adv-gear" onclick="toggleConnAdvanced()"
+                aria-expanded="false" aria-controls="conn-advanced"
+                title="More options" data-i18n-title="moreOptions" aria-label="More options">
+          <span class="conn-adv-gear-ico">&#9881;</span>
+        </button>
       </div>
     </div>
 
-    <!-- Connexion avancée : les champs techniques (proxy / serveur / port) sont
-         masqués par défaut pour simplifier l'écran aux utilisateurs novices.
-         Ils restent dans le DOM avec leurs valeurs (par défaut ou mémorisées),
-         donc App.connect() et onLoginModeChange() fonctionnent à l'identique. -->
-    <button type="button" id="conn-adv-btn" class="conn-adv-toggle" onclick="toggleConnAdvanced()"
-            aria-expanded="false" aria-controls="conn-advanced">
-      <span class="conn-adv-line"></span>
-      <span class="conn-adv-mid"><span id="conn-adv-chevron" class="conn-adv-chevron">&#9656;</span> <span id="conn-adv-label" data-i18n="moreOptions">More options</span></span>
-      <span class="conn-adv-line"></span>
-    </button>
     <div id="conn-advanced" style="display:none">
       <div class="f">
         <label data-i18n="urlProxy">WebSocket Proxy URL</label>
