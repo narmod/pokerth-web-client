@@ -38,7 +38,7 @@ jobs:
         id: decide
         run: |
           set -euo pipefail
-          CACHE=$(grep -oE "pokerth-v[0-9]+\.[0-9]+\.[0-9]+" public/sw.js | head -1 || true)
+          CACHE=$(grep -E "^const CACHE_VERSION" public/sw.js | grep -oE "pokerth-v[0-9]+\.[0-9]+\.[0-9]+" | head -1 || true)
           if [ -z "${CACHE}" ]; then
             echo "::warning::CACHE_VERSION not in 'pokerth-v{MAJOR}.{MINOR}.{N}' format — skipping."
             echo "release=false" >> "$GITHUB_OUTPUT"; exit 0
