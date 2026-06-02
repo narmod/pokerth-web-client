@@ -8252,6 +8252,10 @@ document.addEventListener('DOMContentLoaded', function() { setTimeout(autoScaleT
 // de restauration entre sessions (les styles inline posés au glissement
 // persistent tant que la page vit, puis repartent au défaut au reload).
 // Idempotent : la poignée n'est créée qu'une fois (guard _resizable).
+// Marge entre le bas d'un panneau overlay du lobby (chat / joueurs) et le
+// début de la carte « Créer une table ».
+var LOBBY_PANEL_GAP = 14;
+
 function makeChatResizable(panel, msgs, onResize) {
   if (!panel || !msgs) return;
   panel._onResize = onResize || null;   // callback de suivi (mis à jour à chaque appel)
@@ -8342,11 +8346,11 @@ function toggleLobbyChat() {
     // Overlay : les tables suivent le panneau quand il rétrécit, mais restent
     // en place (recouvertes) quand il dépasse sa taille d'ouverture.
     makeChatResizable(panel, _chat, function(){
-      if (_lb) _lb.style.paddingTop = Math.min(panel.offsetHeight, _defReserve) + 'px';
+      if (_lb) _lb.style.paddingTop = (Math.min(panel.offsetHeight, _defReserve) + LOBBY_PANEL_GAP) + 'px';
     });
     resetChatSize(panel, _chat);              // toujours rouvrir à la taille par défaut
     _defReserve = panel.offsetHeight;
-    if (_lb) _lb.style.paddingTop = _defReserve + 'px';
+    if (_lb) _lb.style.paddingTop = (_defReserve + LOBBY_PANEL_GAP) + 'px';
     if (typeof clearUnreadChat === 'function') clearUnreadChat();
     if (_chat) _chat.scrollTop = _chat.scrollHeight;
     setTimeout(function(){ var ci = document.getElementById('chat-in'); if(ci) ci.focus(); }, 80);
@@ -8680,11 +8684,11 @@ function togglePlayersPanel() {
     // Overlay : les tables suivent quand le panneau rétrécit, restent en
     // place (recouvertes) quand il dépasse sa taille d'ouverture.
     makeChatResizable(panel, _list, function(){
-      if (_lb) _lb.style.paddingTop = Math.min(panel.offsetHeight, _defReserve) + 'px';
+      if (_lb) _lb.style.paddingTop = (Math.min(panel.offsetHeight, _defReserve) + LOBBY_PANEL_GAP) + 'px';
     });
     resetChatSize(panel, _list);                 // rouvrir à la taille par défaut
     _defReserve = panel.offsetHeight;
-    if (_lb) _lb.style.paddingTop = _defReserve + 'px';
+    if (_lb) _lb.style.paddingTop = (_defReserve + LOBBY_PANEL_GAP) + 'px';
     // Focus the search input so the user can type right away.
     var inp = document.getElementById('players-search-in');
     if (inp) setTimeout(function(){ inp.focus(); }, 50);
