@@ -373,7 +373,7 @@ export const strings = {
     reconnectInProgress: 'Återansluter…',
     connectingPlayers: 'Ansluter {type} v{ver} — {n} spelare…',
     connectedAsGuest: 'Ansluten som gäst «{name}» (ID {id})',
-    errBadCreds: '⚠ Ogiltiga pokerth.net-uppgifter (användarnamn eller lösenord).',
+    errBadCreds: '⚠ Ogiltiga uppgifter (användarnamn eller lösenord).',
     serverRequiresAuth: '⚠ Denna server kräver autentisering. Byt till ett pokerth.net-konto eller gästinloggning.',
     brandToggleTooltip: 'Visa / dölj namnet',
     canReconnect: '✅ Du kan återansluta nu.',
