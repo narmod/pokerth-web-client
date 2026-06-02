@@ -2933,6 +2933,20 @@ body.hide-pct-btns .pct-row { display: none; }
 .log-msgs::-webkit-scrollbar-thumb:hover { background: rgba(200,168,74,0.32); }
 
 .g-chat-panel-header { display:flex; align-items:center; justify-content:space-between; padding:4px 10px; background:rgba(0,0,0,0.4); border-bottom:1px solid var(--border); flex-shrink:0; }
+/* Poignée de redimensionnement du chat (bord bas) — glissable au doigt */
+.chat-resize-handle {
+  flex-shrink: 0; height: 18px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: ns-resize; touch-action: none;
+  -webkit-user-select: none; user-select: none;
+  background: rgba(0,0,0,0.35); border-top: 1px solid var(--border);
+}
+.chat-resize-handle .crh-grip {
+  width: 42px; height: 4px; border-radius: 3px;
+  background: var(--gold-dim); transition: background .15s, width .15s;
+}
+.chat-resize-handle:hover .crh-grip,
+.chat-resize-handle.dragging .crh-grip { background: var(--gold-hi); width: 54px; }
 .gchat-input { display:flex; gap:5px; padding:5px 10px; background:rgba(4,10,6,0.97); border-bottom:1px solid var(--border); flex-shrink:0; }
 .gchat-input input { flex:1; background:rgba(255,255,255,0.05); border:1px solid var(--border); border-radius:2px; color:var(--cream); padding:5px 8px; font-family:'Inconsolata',monospace; font-size:0.76rem; outline:none; }
 .gchat-input input:focus { border-color:var(--gold); }

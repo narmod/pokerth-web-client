@@ -8245,6 +8245,60 @@ function autoScaleTable() {
 }
 document.addEventListener('DOMContentLoaded', function() { setTimeout(autoScaleTable, 400); });
 
+// ── Chat redimensionnable au doigt ──────────────────────────────
+// Ajoute une poignée en bas du panneau. Le glissement (Pointer Events
+// = tactile + souris) ajuste la hauteur de la zone messages, bornée à
+// [50px, 75% de l'écran]. Le chat s'ouvre à sa taille par défaut ; pas
+// de restauration entre sessions (les styles inline posés au glissement
+// persistent tant que la page vit, puis repartent au défaut au reload).
+// Idempotent : la poignée n'est créée qu'une fois (guard _resizable).
+function makeChatResizable(panel, msgs) {
+  if (!panel || !msgs || panel._resizable) return;
+  panel._resizable = true;
+
+  var handle = document.createElement('div');
+  handle.className = 'chat-resize-handle';
+  handle.title = 'Glisser pour redimensionner';
+  var grip = document.createElement('div');
+  grip.className = 'crh-grip';
+  handle.appendChild(grip);
+  panel.appendChild(handle);
+
+  var dragging = false, startY = 0, startH = 0;
+  function maxH() { return Math.round(window.innerHeight * 0.75); } // 3/4 écran
+  function clamp(h) { return Math.max(50, Math.min(maxH(), h)); }
+
+  handle.addEventListener('pointerdown', function(e) {
+    dragging = true;
+    startY = e.clientY;
+    startH = msgs.getBoundingClientRect().height;
+    handle.classList.add('dragging');
+    // Lève les plafonds (max-height CSS !important du chat en jeu,
+    // max-height inline du chat lobby) pour laisser grandir le panneau.
+    panel.style.setProperty('max-height', 'none', 'important');
+    msgs.style.setProperty('max-height', 'none', 'important');
+    msgs.style.flex = 'none';
+    try { handle.setPointerCapture(e.pointerId); } catch (_) {}
+    e.preventDefault();
+  });
+  handle.addEventListener('pointermove', function(e) {
+    if (!dragging) return;
+    msgs.style.height = clamp(startH + (e.clientY - startY)) + 'px';
+  });
+  function end(e) {
+    if (!dragging) return;
+    dragging = false;
+    handle.classList.remove('dragging');
+    try { handle.releasePointerCapture(e.pointerId); } catch (_) {}
+  }
+  handle.addEventListener('pointerup', end);
+  handle.addEventListener('pointercancel', end);
+  // Re-borne si l'écran tourne / change de taille.
+  window.addEventListener('resize', function() {
+    if (msgs.style.height) msgs.style.height = clamp(parseInt(msgs.style.height, 10) || 0) + 'px';
+  });
+}
+
 function toggleLobbyChat() {
   var panel = document.getElementById('lobby-chat-panel');
   var btn   = document.getElementById('lobby-chat-btn');
@@ -8257,6 +8311,7 @@ function toggleLobbyChat() {
     btn.style.color       = open ? 'var(--gold)' : '';
   }
   if (open) {
+    makeChatResizable(panel, document.getElementById('chat'));
     if (typeof clearUnreadChat === 'function') clearUnreadChat();
     var el = document.getElementById('chat');
     if (el) el.scrollTop = el.scrollHeight;
@@ -8509,6 +8564,7 @@ function toggleGameChat() {
     btn.style.color       = open ? 'var(--gold)' : '';
   }
   if (open) {
+    makeChatResizable(panel, document.getElementById('g-chat-msgs'));
     if (typeof clearUnreadChat === 'function') clearUnreadChat();
     var m = document.getElementById('g-chat-msgs');
     if (m) m.scrollTop = m.scrollHeight;
