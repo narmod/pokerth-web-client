@@ -108,7 +108,6 @@ jobs:
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           tags: |
-            type=raw,value=latest
             type=raw,value=${{ steps.decide.outputs.ver }}
             type=semver,pattern={{major}}.{{minor}},value=${{ steps.decide.outputs.tag }}
 
