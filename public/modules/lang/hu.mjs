@@ -374,7 +374,7 @@ export const strings = {
     reconnectInProgress: 'Újracsatlakozás…',
     connectingPlayers: 'Csatlakozás {type} v{ver} — {n} játékos…',
     connectedAsGuest: 'Csatlakozva vendégként «{name}» (ID {id})',
-    errBadCreds: '⚠ Érvénytelen pokerth.net adatok (felhasználónév vagy jelszó).',
+    errBadCreds: '⚠ Érvénytelen adatok (felhasználónév vagy jelszó).',
     serverRequiresAuth: '⚠ Ez a szerver hitelesítést igényel. Válts pokerth.net fiókra vagy vendégbejelentkezésre.',
     brandToggleTooltip: 'Név megjelenítése / elrejtése',
     canReconnect: '✅ Most újracsatlakozhatsz.',
