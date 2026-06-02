@@ -373,7 +373,7 @@ export const strings = {
     reconnectInProgress: 'Yhdistetään uudelleen…',
     connectingPlayers: 'Yhdistetään {type} v{ver} — {n} pelaajaa…',
     connectedAsGuest: 'Yhdistetty vieraana «{name}» (ID {id})',
-    errBadCreds: '⚠ Virheelliset pokerth.net-tiedot (käyttäjänimi tai salasana).',
+    errBadCreds: '⚠ Virheelliset tiedot (käyttäjänimi tai salasana).',
     serverRequiresAuth: '⚠ Tämä palvelin vaatii todennuksen. Vaihda pokerth.net-tiliin tai vieraskirjautumiseen.',
     brandToggleTooltip: 'Näytä / piilota nimi',
     canReconnect: '✅ Voit yhdistää uudelleen nyt.',
