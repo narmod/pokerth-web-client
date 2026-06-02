@@ -218,6 +218,7 @@ export const strings = {
     statResetConfirm: 'Đặt lại toàn bộ thống kê của bạn? Không thể hoàn tác.',
     statLifeOnlyPrivate: 'Chỉ theo dõi trên máy chủ riêng / LAN.',
     boardEmpty: 'Chưa có điểm',
+    boardPer100:'Ròng / 100 ván', boardYourRank:'Bạn: #{n}/{m}',
     rejoinInProgress: 'Đang kết nối lại bàn của bạn…',
     rejoinWaitNick: 'Đang giải phóng phiên trước của bạn…',
     rejoinFailed: 'Không thể tiếp tục bàn của bạn — quay về sảnh.',
