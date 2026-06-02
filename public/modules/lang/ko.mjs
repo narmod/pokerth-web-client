@@ -201,6 +201,7 @@ export const strings = {
     modeUnauth:'LAN / 비공개 서버 ✓',
     modeGuest:'pokerth.net — 게스트',
     modeAuth:'pokerth.net — 등록 계정',
+    srvDedicated:'LAN / 전용 서버', guestMode:'게스트 모드',
     nickPlaceholder:'닉네임',
     quitTooltip:'나가기',
     reconnectInProgress:'재접속 중\u2026',
