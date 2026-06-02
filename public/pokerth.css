@@ -4572,3 +4572,8 @@ body:not(.in-game) .my-zone {
     clip: rect(0 0 0 0); white-space: nowrap; border: 0;
   }
 }
+
+/* Error variant of the reusable toast (showToast(msg,{tone:'error'})) —
+   orange hairline + icon, e.g. the "game name too long" guard. */
+.app-toast--error { border-color: var(--orange); }
+.app-toast--error .app-toast-tick { color: var(--orange); }

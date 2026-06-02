@@ -305,6 +305,7 @@ export const strings = {
     moreOptions: 'Lisää asetuksia',
     lessOptions: 'Vähemmän asetuksia',
     resetForm:'↺ Nollaa', fieldsReset:'Kentät nollattu',
+    nameTooLong:'Pöydän nimi on liian pitkä (enintään {max} merkkiä) — pöytää ei voi luoda.',
     addPassword: 'Lisää salasana (valinnainen)',
     tablePassword: 'Salasana:',
     rememberMe: 'Muista nimimerkki (salasanaa ei tallenneta koskaan)',

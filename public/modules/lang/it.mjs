@@ -311,6 +311,7 @@ export const strings = {
     moreOptions: 'Più opzioni',
     lessOptions: 'Meno opzioni',
     resetForm:'↺ Reimposta', fieldsReset:'Campi reimpostati',
+    nameTooLong:'Nome del tavolo troppo lungo (max {max} caratteri) — impossibile creare il tavolo.',
     addPassword: 'Aggiungi una password (opzionale)',
     tablePassword: 'Password:',
     rememberMe: 'Ricorda il nickname (la password non viene mai salvata)',

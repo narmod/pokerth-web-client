@@ -305,6 +305,7 @@ export const strings = {
     moreOptions: 'Більше параметрів',
     lessOptions: 'Менше параметрів',
     resetForm:'↺ Скинути', fieldsReset:'Поля скинуто',
+    nameTooLong:'Назва столу задовга (макс. {max} символів) — неможливо створити стіл.',
     addPassword: 'Додати пароль (необов’язково)',
     tablePassword: 'Пароль:',
     rememberMe: 'Запам’ятати псевдонім (пароль ніколи не зберігається)',

@@ -305,6 +305,7 @@ export const strings = {
     moreOptions: 'Flere alternativer',
     lessOptions: 'Færre alternativer',
     resetForm:'↺ Tilbakestill', fieldsReset:'Felt tilbakestilt',
+    nameTooLong:'Bordnavnet er for langt (maks {max} tegn) — bordet kan ikke opprettes.',
     addPassword: 'Legg til passord (valgfritt)',
     tablePassword: 'Passord:',
     rememberMe: 'Husk kallenavn (passord lagres aldri)',

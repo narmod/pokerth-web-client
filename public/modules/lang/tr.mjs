@@ -308,6 +308,7 @@ export const strings = {
     moreOptions: 'Daha fazla seçenek',
     lessOptions: 'Daha az seçenek',
     resetForm:'↺ Sıfırla', fieldsReset:'Alanlar sıfırlandı',
+    nameTooLong:'Masa adı çok uzun (en fazla {max} karakter) — masa oluşturulamıyor.',
     addPassword: 'Şifre ekle (isteğe bağlı)',
     tablePassword: 'Şifre:',
     rememberMe: 'Takma adı hatırla (şifre asla saklanmaz)',

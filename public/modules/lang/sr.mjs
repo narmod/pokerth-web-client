@@ -306,6 +306,7 @@ export const strings = {
     moreOptions: 'Više opcija',
     lessOptions: 'Manje opcija',
     resetForm:'↺ Ресетуј', fieldsReset:'Поља ресетована',
+    nameTooLong:'Назив стола је предугачак (највише {max} знакова) — сто се не може направити.',
     addPassword: 'Dodaj lozinku (opciono)',
     tablePassword: 'Lozinka:',
     rememberMe: 'Zapamti nadimak (lozinka se nikad ne čuva)',

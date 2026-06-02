@@ -305,6 +305,7 @@ export const strings = {
     moreOptions: 'Mais opções',
     lessOptions: 'Menos opções',
     resetForm:'↺ Redefinir', fieldsReset:'Campos redefinidos',
+    nameTooLong:'Nome da mesa muito longo (máx. {max} caracteres) — não é possível criar a mesa.',
     addPassword: 'Adicionar uma senha (opcional)',
     tablePassword: 'Senha:',
     rememberMe: 'Lembrar apelido (a senha nunca é salva)',

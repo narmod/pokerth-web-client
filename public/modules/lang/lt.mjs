@@ -306,6 +306,7 @@ export const strings = {
     moreOptions: 'Daugiau parinkčių',
     lessOptions: 'Mažiau parinkčių',
     resetForm:'↺ Atstatyti', fieldsReset:'Laukai atstatyti',
+    nameTooLong:'Stalo pavadinimas per ilgas (daugiausia {max} simbolių) — stalo sukurti nepavyks.',
     addPassword: 'Pridėti slaptažodį (nebūtina)',
     tablePassword: 'Slaptažodis:',
     rememberMe: 'Įsiminti slapyvardį (slaptažodis niekada nesaugomas)',

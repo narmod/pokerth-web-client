@@ -306,6 +306,7 @@ export const strings = {
     moreOptions: 'További beállítások',
     lessOptions: 'Kevesebb beállítás',
     resetForm:'↺ Visszaállítás', fieldsReset:'Mezők visszaállítva',
+    nameTooLong:'Az asztal neve túl hosszú (max. {max} karakter) — az asztal nem hozható létre.',
     addPassword: 'Jelszó hozzáadása (opcionális)',
     tablePassword: 'Jelszó:',
     rememberMe: 'Becenév megjegyzése (a jelszó soha nem mentődik)',

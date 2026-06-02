@@ -312,6 +312,7 @@ export const strings = {
     moreOptions: 'Więcej opcji',
     lessOptions: 'Mniej opcji',
     resetForm:'↺ Resetuj', fieldsReset:'Pola zresetowane',
+    nameTooLong:'Nazwa stołu za długa (maks. {max} znaków) — nie można utworzyć stołu.',
     addPassword: 'Dodaj hasło (opcjonalnie)',
     tablePassword: 'Hasło:',
     rememberMe: 'Zapamiętaj pseudonim (hasło nigdy nie jest zapisywane)',

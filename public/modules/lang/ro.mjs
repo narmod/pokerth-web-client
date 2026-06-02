@@ -306,6 +306,7 @@ export const strings = {
     moreOptions: 'Mai multe opțiuni',
     lessOptions: 'Mai puține opțiuni',
     resetForm:'↺ Resetează', fieldsReset:'Câmpuri resetate',
+    nameTooLong:'Numele mesei este prea lung (max. {max} caractere) — masa nu poate fi creată.',
     addPassword: 'Adaugă o parolă (opțional)',
     tablePassword: 'Parolă:',
     rememberMe: 'Reține pseudonimul (parola nu se salvează niciodată)',

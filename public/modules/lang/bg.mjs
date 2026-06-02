@@ -306,6 +306,7 @@ export const strings = {
     moreOptions: 'Още опции',
     lessOptions: 'По-малко опции',
     resetForm:'↺ Нулиране', fieldsReset:'Полетата са нулирани',
+    nameTooLong:'Името на масата е твърде дълго (макс. {max} знака) — масата не може да бъде създадена.',
     addPassword: 'Добави парола (по избор)',
     tablePassword: 'Парола:',
     rememberMe: 'Запомни прякора (паролата никога не се запазва)',

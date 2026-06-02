@@ -154,6 +154,7 @@ export const strings = {
     errInvalidGame:'Cannot join this game',
     moreOptions:'More options', lessOptions:'Less options',
     resetForm:'↺ Reset', fieldsReset:'Fields reset',
+    nameTooLong:'Table name too long (max {max} characters) — the table cannot be created.',
     addPassword:'Add a password (optional)', tablePassword:'Password:',
     rememberMe:'Remember nickname (password never stored)',
     tlsLabel:'TLS — required for pokerth.net, uncheck for LAN',

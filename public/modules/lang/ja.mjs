@@ -305,6 +305,7 @@ export const strings = {
     moreOptions: 'その他のオプション',
     lessOptions: 'オプションを減らす',
     resetForm:'↺ リセット', fieldsReset:'フィールドをリセットしました',
+    nameTooLong:'テーブル名が長すぎます（最大 {max} 文字）— テーブルを作成できません。',
     addPassword: 'パスワードを追加（任意）',
     tablePassword: 'パスワード：',
     rememberMe: 'ニックネームを記憶（パスワードは保存されません）',

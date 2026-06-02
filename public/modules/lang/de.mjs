@@ -311,6 +311,7 @@ export const strings = {
     moreOptions: 'Mehr Optionen',
     lessOptions: 'Weniger Optionen',
     resetForm:'↺ Zurücksetzen', fieldsReset:'Felder zurückgesetzt',
+    nameTooLong:'Tischname zu lang (max. {max} Zeichen) — der Tisch kann nicht erstellt werden.',
     addPassword: 'Passwort hinzufügen (optional)',
     tablePassword: 'Passwort:',
     rememberMe: 'Spitznamen merken (Passwort wird nie gespeichert)',

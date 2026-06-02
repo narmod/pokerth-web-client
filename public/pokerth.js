@@ -404,7 +404,7 @@ function showToast(msg, opts) {
   if (prev) prev.remove();
   var el = document.createElement('div');
   el.id = 'app-toast';
-  el.className = 'app-toast';
+  el.className = 'app-toast' + (opts.tone === 'error' ? ' app-toast--error' : '');
   if (opts.icon !== '') {
     var tick = document.createElement('span');
     tick.className = 'app-toast-tick';
@@ -2531,6 +2531,10 @@ const App = (() => {
   // is refused — e.g. the Russian default "Стол…" starts with 0xD0. We
   // guarantee a printable-ASCII leading character; the rest may be any
   // script (only the first byte is checked server-side).
+  // Max game-name length accepted, aligned with the official PokerTH client
+  // (createInternetGameDialog uses maxLength=48). The web client refuses to
+  // create a table when the typed name exceeds it, with a translated message.
+  const MAX_GAME_NAME = 48;
   function _safeGameName(raw) {
     var s = (raw || '').trim();
     var leadOk = function(str) {
@@ -8025,7 +8029,17 @@ function dismissWinner() {
       const g = id => document.getElementById(id);
       const iv = (id, def) => parseInt(g(id)?.value) || def;
       const sv = (id, def) => parseInt(g(id)?.value) || def;
-      const name    = _safeGameName((g('cf-name')?.value.trim()) || _localDefaultName());
+      // Guard rail: align with the PokerTH game-name length limit. Refuse to
+      // create (with a clear, translated message) when the typed name is too
+      // long, instead of letting the server reject it.
+      const rawName = (g('cf-name')?.value || '').trim();
+      if (rawName.length > MAX_GAME_NAME) {
+        if (typeof showToast === 'function') {
+          showToast(t('nameTooLong', { max: MAX_GAME_NAME }), { icon: '\u26A0', tone: 'error', duration: 3500 });
+        }
+        return;
+      }
+      const name    = _safeGameName(rawName || _localDefaultName());
       const nplayers= iv('cf-players', 2);
       const blind   = iv('cf-blind',   10);
       const stack   = iv('cf-stack',   3000);

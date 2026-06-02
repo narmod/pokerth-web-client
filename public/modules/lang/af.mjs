@@ -306,6 +306,7 @@ export const strings = {
     moreOptions: 'Meer opsies',
     lessOptions: 'Minder opsies',
     resetForm:'↺ Stel terug', fieldsReset:'Velde teruggestel',
+    nameTooLong:'Tafelnaam te lank (maks. {max} karakters) — die tafel kan nie geskep word nie.',
     addPassword: 'Voeg ’n wagwoord by (opsioneel)',
     tablePassword: 'Wagwoord:',
     rememberMe: 'Onthou die bynaam (die wagwoord word nooit gestoor nie)',

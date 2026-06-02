@@ -307,6 +307,7 @@ export const strings = {
     moreOptions: 'Barrachd roghainnean',
     lessOptions: 'Nas lugha roghainnean',
     resetForm:'↺ Ath-shuidhich', fieldsReset:'Chaidh na raointean ath-shuidheachadh',
+    nameTooLong:'Tha ainm a\' bhùird ro fhada (as motha {max} caractar) — cha ghabh am bòrd a chruthachadh.',
     addPassword: 'Cuir facal-faire ris (roghainneil)',
     tablePassword: 'Facal-faire:',
     rememberMe: 'Cuimhnich am far-ainm (cha tèid am facal-faire a shàbhaladh a-riamh)',

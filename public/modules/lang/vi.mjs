@@ -306,6 +306,7 @@ export const strings = {
     moreOptions: 'Thêm tùy chọn',
     lessOptions: 'Bớt tùy chọn',
     resetForm:'↺ Đặt lại', fieldsReset:'Đã đặt lại các trường',
+    nameTooLong:'Tên bàn quá dài (tối đa {max} ký tự) — không thể tạo bàn.',
     addPassword: 'Thêm mật khẩu (tùy chọn)',
     tablePassword: 'Mật khẩu:',
     rememberMe: 'Ghi nhớ biệt danh (mật khẩu không bao giờ được lưu)',

@@ -306,6 +306,7 @@ export const strings = {
     moreOptions: 'Více možností',
     lessOptions: 'Méně možností',
     resetForm:'↺ Obnovit', fieldsReset:'Pole obnovena',
+    nameTooLong:'Název stolu je příliš dlouhý (max. {max} znaků) — stůl nelze vytvořit.',
     addPassword: 'Přidat heslo (volitelné)',
     tablePassword: 'Heslo:',
     rememberMe: 'Zapamatovat přezdívku (heslo se nikdy neukládá)',

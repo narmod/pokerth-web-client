@@ -311,6 +311,7 @@ export const strings = {
     moreOptions: 'Больше опций',
     lessOptions: 'Меньше опций',
     resetForm:'↺ Сбросить', fieldsReset:'Поля сброшены',
+    nameTooLong:'Слишком длинное название стола (макс. {max} символов) — невозможно создать стол.',
     addPassword: 'Добавить пароль (опционально)',
     tablePassword: 'Пароль:',
     rememberMe: 'Запомнить никнейм (пароль никогда не сохраняется)',

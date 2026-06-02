@@ -307,6 +307,7 @@ export const strings = {
     moreOptions: '更多選項',
     lessOptions: '收起選項',
     resetForm:'↺ 重設', fieldsReset:'欄位已重設',
+    nameTooLong:'牌桌名稱過長（最多 {max} 個字元）— 無法建立牌桌。',
     addPassword: '新增密碼（可選）',
     tablePassword: '密碼：',
     rememberMe: '記住暱稱（絕不儲存密碼）',

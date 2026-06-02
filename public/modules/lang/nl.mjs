@@ -311,6 +311,7 @@ export const strings = {
     moreOptions: 'Meer opties',
     lessOptions: 'Minder opties',
     resetForm:'↺ Herstellen', fieldsReset:'Velden hersteld',
+    nameTooLong:'Tafelnaam te lang (max. {max} tekens) — de tafel kan niet worden aangemaakt.',
     addPassword: 'Wachtwoord toevoegen (optioneel)',
     tablePassword: 'Wachtwoord:',
     rememberMe: 'Bijnaam onthouden (wachtwoord wordt nooit opgeslagen)',

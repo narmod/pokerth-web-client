@@ -306,6 +306,7 @@ export const strings = {
     moreOptions: 'Més opcions',
     lessOptions: 'Menys opcions',
     resetForm:'↺ Restableix', fieldsReset:'Camps restablerts',
+    nameTooLong:'El nom de la taula és massa llarg (màx. {max} caràcters) — no es pot crear la taula.',
     addPassword: 'Afegeix una contrasenya (opcional)',
     tablePassword: 'Contrasenya:',
     rememberMe: 'Recorda el sobrenom (la contrasenya no es desa mai)',
