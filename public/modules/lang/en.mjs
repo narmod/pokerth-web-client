@@ -220,7 +220,7 @@ export const strings = {
     reconnectInProgress:'Reconnecting\u2026',
     connectingPlayers:'Connecting {type} v{ver} \u2014 {n} player(s)\u2026',
     connectedAsGuest:'Connected as guest \u201c{name}\u201d (ID {id})',
-    errBadCreds:'\u26a0 Invalid pokerth.net credentials (username or password).',
+    errBadCreds:'\u26a0 Invalid credentials (username or password).',
     serverRequiresAuth:'\u26a0 This server requires authentication. Switch to a pokerth.net account or guest login.',
     brandToggleTooltip:'Show / hide the name',
     canReconnect:'\u2705 You can reconnect now.',
