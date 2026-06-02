@@ -374,7 +374,7 @@ export const strings = {
     reconnectInProgress: 'Reconectando…',
     connectingPlayers: 'Conectando {type} v{ver} — {n} xogadores…',
     connectedAsGuest: 'Conectado como convidado «{name}» (ID {id})',
-    errBadCreds: '⚠ Datos de pokerth.net non válidos (nome de usuario ou contrasinal).',
+    errBadCreds: '⚠ Datos non válidos (nome de usuario ou contrasinal).',
     serverRequiresAuth: '⚠ Este servidor require autenticación. Cambia a unha conta pokerth.net ou a inicio de sesión de convidado.',
     brandToggleTooltip: 'Amosar / agochar o nome',
     canReconnect: '✅ Agora podes conectarte de novo.',
