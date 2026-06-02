@@ -8747,12 +8747,15 @@ function renderPlayersList() {
     var avChip = (typeof window._avatarChipHtml === 'function')
       ? window._avatarChipHtml(r.pid, r.name, 'pl-av')
       : '<span class="pl-av letter">' + esc((r.name[0] || '?').toUpperCase()) + '</span>';
-    // Drapeau du pays (colonne avant l'#id). Vide → span vide (garde l'alignement).
+    // Drapeau du pays + code ISO à 2 lettres à sa droite (certains drapeaux
+    // se ressemblent). Code lu depuis countries[pid]. Sans pays → rien.
     var flag = _flagOf(r.pid) || '';
+    var _ccRaw = (_ls.countries && _ls.countries[r.pid]) ? String(_ls.countries[r.pid]).trim().toUpperCase() : '';
+    var cc = /^[A-Z]{2}$/.test(_ccRaw) ? _ccRaw : '';
     return '<div class="pl-row' + (r.isMe ? ' pl-me' : '') + '">' +
              avChip +
              '<span class="pl-name">' + esc(r.name) + '</span>' +
-             '<span class="pl-flag">' + flag + '</span>' +
+             '<span class="pl-flag">' + flag + (cc ? '<span class="pl-cc">' + cc + '</span>' : '') + '</span>' +
              '<span class="pl-star">' + (r.isMe ? '⭐' : '') + '</span>' +
              '<span class="pl-id">#' + r.pid + '</span>' +
            '</div>';

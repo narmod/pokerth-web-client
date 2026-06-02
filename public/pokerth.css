@@ -3805,7 +3805,8 @@ body:not(.in-game) .my-zone {
 .players-list .pl-row:last-child { border-bottom: none; }
 .players-list .pl-row:hover { background: rgba(200,168,74,0.08); }
 .players-list .pl-name { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.players-list .pl-flag { flex: none; width: 1.8em; text-align: center; font-size: 0.95rem; line-height: 1; }
+.players-list .pl-flag { flex: none; display: inline-flex; align-items: center; justify-content: flex-end; gap: 4px; font-size: 0.95rem; line-height: 1; }
+.players-list .pl-cc { font-size: 0.6rem; color: var(--gold-dim); font-family: 'Inconsolata', monospace; letter-spacing: 0.04em; white-space: nowrap; }
 .players-list .pl-flag .cc-flag { width: 20px; height: 15px; }
 .players-list .pl-star { flex: none; width: 1.4em; text-align: center; font-size: 0.8rem; line-height: 1; }
 .players-list .pl-id   { flex: none; min-width: 4.2em; text-align: right; color: var(--gold-dim); font-size: 0.66rem; }
