@@ -218,6 +218,7 @@ export const strings = {
     statResetConfirm: 'Restablecer todas as túas estatísticas? Isto non se pode desfacer.',
     statLifeOnlyPrivate: 'Rexístrase só no servidor privado / LAN.',
     boardEmpty: 'Aínda non hai puntuacións',
+    boardPer100:'Neto / 100 mans', boardYourRank:'Ti: #{n} de {m}',
     rejoinInProgress: 'Reconectando á túa mesa…',
     rejoinWaitNick: 'Liberando a túa sesión anterior…',
     rejoinFailed: 'Non se puido retomar a túa mesa — de volta á sala.',
