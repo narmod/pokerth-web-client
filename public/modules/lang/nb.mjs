@@ -373,7 +373,7 @@ export const strings = {
     reconnectInProgress: 'Kobler til igjen…',
     connectingPlayers: 'Kobler til {type} v{ver} — {n} spillere…',
     connectedAsGuest: 'Tilkoblet som gjest «{name}» (ID {id})',
-    errBadCreds: '⚠ Ugyldige pokerth.net-detaljer (brukernavn eller passord).',
+    errBadCreds: '⚠ Ugyldige detaljer (brukernavn eller passord).',
     serverRequiresAuth: '⚠ Denne serveren krever autentisering. Bytt til en pokerth.net-konto eller gjesteinnlogging.',
     brandToggleTooltip: 'Vis / skjul navnet',
     canReconnect: '✅ Du kan koble til igjen nå.',
