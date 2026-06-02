@@ -43,7 +43,7 @@
 
 **Try it now: [https://pokerth.ddns.net/](https://pokerth.ddns.net/)**
 
-Pick the **LAN / Private server** login mode, choose any nickname, and play right away — no account, no install. The demo is hosted on a small VPS connected to a private PokerTH server, so feel free to create a table and invite friends.
+Leave the server selector on **LAN / Dedicated server** (the default) with **Guest mode** unchecked, choose any nickname, and play right away — no account, no install. The demo is hosted on a small VPS connected to a private PokerTH server, so feel free to create a table and invite friends.
 
 > Tip: it works just as well on mobile — add it to your home screen for a fullscreen app feel.
 
@@ -113,10 +113,10 @@ This project is a **web frontend** that connects to any PokerTH server directly 
 ## Features
 
 ### Connection
-- **4 login modes**: LAN / Private server, LAN / Private server (guest), pokerth.net – Guest, pokerth.net – Registered account
+- **2 server choices + a Guest-mode toggle**: pick **LAN / Dedicated server** or **pokerth.net**, then use the **Guest mode** checkbox (just above the Connect button, off by default) to switch the guest/registered variant of either. Internally this still maps to the four PokerTH login types.
 - Optional authenticated login over TLS
-- TLS support (required for pokerth.net, optional for LAN). The TLS box auto-checks itself when you pick the registered-account mode.
-- Auto-fill of `host = pokerth.net` and `port = 7234` when a pokerth.net mode is selected — other modes keep the auto-detected hostname
+- TLS support (required for pokerth.net, optional for LAN). The TLS box auto-checks itself when you turn **Guest mode** off on pokerth.net (registered-account login).
+- Auto-fill of `host = pokerth.net` and `port = 7234` when **pokerth.net** is selected — the dedicated-server choice keeps the auto-detected hostname
 - Remember nickname / credentials via `localStorage`
 - Refresh button and fullscreen toggle on every screen
 
@@ -172,14 +172,16 @@ This project is a **web frontend** that connects to any PokerTH server directly 
 <a id="login-modes-transport"></a>
 ## Login modes & transport
 
-The client is designed first and foremost for **LAN and private self-hosted servers** — that is its intended use. Each mode uses a different transport, which is handy to know when debugging a connection problem.
+The client is designed first and foremost for **LAN and private self-hosted servers** — that is its intended use. The connect screen exposes just **two server choices** plus a **Guest mode** checkbox (just above the Connect button, **off by default**). The combination of the two maps to the four underlying PokerTH login types, each with its own transport — handy to know when debugging a connection problem.
 
-| Mode | Target server | Transport | Notes |
-|---|---|---|---|
-| **LAN / Private server (guest)** (`lan`) | your local PokerTH server | proxy → TCP raw | Guest login, limited rights; TLS off by default |
-| **LAN / Private server** (`unauth`) | your private remote PokerTH server | proxy → TCP or TLS (your choice) | Default for self-hosted setups — full rights |
+| Server choice | Guest mode | Login type | Transport | Notes |
+|---|---|---|---|---|
+| **LAN / Dedicated server** | off *(default)* | Internet guest (`unauth`, type 2) | proxy → TCP or TLS (your choice) | Default for self-hosted setups; in-game chat & reactions **enabled** |
+| **LAN / Dedicated server** | on | Pure LAN (`lan`, type 0) | proxy → TCP raw | The server **refuses** in-game chat/reactions (reactions stay LAN-local) |
+| **pokerth.net** | on | Guest (`guest`, type 2) | direct TLS WebSocket | Throwaway guest on the public server |
+| **pokerth.net** | off | Registered account (`auth`, type 1) | direct TLS WebSocket | Login + password; TLS auto-enabled |
 
-The client can also connect to the public **pokerth.net** server (guest or registered account) over a direct TLS WebSocket, bypassing the proxy. Please use that responsibly and prefer your own LAN or private server for regular play, out of respect for the official PokerTH infrastructure.
+The pokerth.net rows connect **directly over a TLS WebSocket, bypassing the proxy**. Please use the public server responsibly and prefer your own LAN or private server for regular play, out of respect for the official PokerTH infrastructure.
 
 ---
 
@@ -194,7 +196,7 @@ Just want to deal a hand with the family? Start a private table in seconds:
 1. Run the proxy on any computer on your local network.
 2. Find that computer's local IP (e.g. `192.168.1.10`).
 3. Open `http://192.168.1.10:8080` on any phone or tablet on the same Wi-Fi.
-4. Choose **LAN** login mode, pick a nickname, and join or create a table.
+4. Leave the server selector on **LAN / Dedicated server** (the default), pick a nickname, and join or create a table.
 5. Deal cards and enjoy!
 
 ---
@@ -557,7 +559,7 @@ Both the PokerTH server **and** this web proxy are extremely light: PokerTH is a
    curl -sSL https://raw.githubusercontent.com/narmod/pokerth-web-client/HEAD/install.sh | bash
    ```
    Prefer to do it by hand, or inspect the script first? See [Manual installation](#manual-installation).
-4. From any phone on the same Wi-Fi, open `http://<pi-ip>:8080`, choose **LAN** mode, and deal.
+4. From any phone on the same Wi-Fi, open `http://<pi-ip>:8080`, leave the server on **LAN / Dedicated server**, and deal.
 
 > **PWA extras (install to home screen, offline, notifications) need HTTPS** — see [Known limitations](#known-limitations). The game itself works perfectly over plain `http://` / `ws://` on the LAN.
 
