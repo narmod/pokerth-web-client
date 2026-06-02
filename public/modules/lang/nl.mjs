@@ -223,6 +223,7 @@ export const strings = {
     statResetConfirm: 'Je totale statistieken wissen? Dit kan niet ongedaan worden gemaakt.',
     statLifeOnlyPrivate: 'Alleen bijgehouden op de privéserver / LAN.',
     boardEmpty: 'Nog geen scores',
+    boardPer100:'Netto / 100 handen', boardYourRank:'Jij: #{n} van {m}',
     rejoinInProgress: 'Terug naar je tafel…',
     rejoinWaitNick: 'Je vorige sessie vrijgeven…',
     rejoinFailed: 'Kon je tafel niet hervatten — terug naar de lobby.',
