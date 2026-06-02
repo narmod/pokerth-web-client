@@ -2964,11 +2964,29 @@ const App = (() => {
     if (Date.now() - _lastRxTime > _thr) _forceReconnect();
   }, 5000);
 
-  function setStatus(txt, cls='') {
+  var _statusKey = null;
+  function setStatus(txt, cls='', key) {
+    // Mémorise la clé i18n du message courant (null pour les messages
+    // transitoires : erreurs, « Initialisation… »), afin que _refreshConnectStatus
+    // puisse le retraduire à la volée lors d'un changement de langue.
+    _statusKey = key || null;
     const el = $('cstatus');
     el.textContent = txt;
     el.className = 'status ' + cls;
   }
+  // Re-applique le statut de l'écran de connexion dans la langue courante.
+  // Le hint dépend du mode (clé mémorisée par setStatus) ; posé impérativement
+  // (sans data-i18n) il restait figé dans la langue précédente. Les messages
+  // transitoires (sans clé) ne sont jamais réécrasés. Appelé par setLang().
+  window._refreshConnectStatus = function() {
+    try {
+      if (!_statusKey) return;
+      var sc = document.getElementById('s-connect');
+      if (!sc || !sc.classList.contains('active')) return;
+      var el = document.getElementById('cstatus');
+      if (el) el.textContent = t(_statusKey);
+    } catch (e) {}
+  };
 
   // ── RÉSEAU ──
   function send(data) {
@@ -6670,7 +6688,7 @@ function dismissWinner() {
         $('use-tls').checked = false;
         if (proxyInput) proxyInput.value = proto + '//' + (autoHost||'localhost') + ':' + port;
         if (hostInput && autoHost) hostInput.value = autoHost;
-        setStatus(t('lanModeNote'));
+        setStatus(t('lanModeNote'), '', 'lanModeNote');
       } else if (mode === 'unauth') {
         $('nick-label').textContent = t('enterNickFree');
         $('nick').placeholder = t('nickPlaceholder');
@@ -6678,7 +6696,7 @@ function dismissWinner() {
         $('use-tls').checked = false;
         if (proxyInput) proxyInput.value = proto + '//' + (autoHost||'localhost') + ':' + port;
         if (hostInput && autoHost) hostInput.value = autoHost;
-        setStatus(t('chatAvailPrivate'));
+        setStatus(t('chatAvailPrivate'), '', 'chatAvailPrivate');
       } else if (mode === 'guest') {
         $('nick-label').textContent = t('enterNickGuest');
         // Compute the stable GuestXXXXX name, put it in the field,
@@ -6708,7 +6726,7 @@ function dismissWinner() {
         if (proxyInput) proxyInput.value = proto + '//' + (autoHost||'localhost') + ':' + port;
         if (hostInput) hostInput.value = 'pokerth.net';
         if ($('port')) $('port').value = '7234';   // pokerth.net standard port
-        setStatus(t('enterCredentials'));
+        setStatus(t('enterCredentials'), '', 'enterCredentials');
       }
     },
 
