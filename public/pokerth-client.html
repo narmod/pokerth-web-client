@@ -306,6 +306,17 @@ function onAvatarImageChosen(input) {
                autocomplete="off"
                onkeydown="if(event.key==='Enter') App.connect()">
       </div>
+      <!-- Mot de passe UTILISATEUR (compte) — clientUserData. Optionnel : vide ⇒
+           login normal du mode ; rempli ⇒ le client bascule en authenticatedLogin
+           pour authentifier l'utilisateur sur un serveur dédié avec gestion de
+           comptes. Comme le mot de passe serveur : seulement LAN / dédié et
+           visible uniquement quand la roue crantée est ouverte. -->
+      <div class="f" id="f-user-pass" style="display:none">
+        <input id="user-pass" type="password" maxlength="128"
+               data-i18n-placeholder="userPassword" placeholder="User password (optional)"
+               autocomplete="off"
+               onkeydown="if(event.key==='Enter') App.connect()">
+      </div>
     </div>
 
     <!-- Login form wrapping nick + pass. Having a real <form> with
