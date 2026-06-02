@@ -202,6 +202,7 @@ export const strings = {
     modeUnauth:'LAN / निजी सर्वर ✓',
     modeGuest:'pokerth.net — अतिथि',
     modeAuth:'pokerth.net — पंजीकृत खाता',
+    srvDedicated:'LAN / समर्पित सर्वर', guestMode:'अतिथि मोड',
     nickPlaceholder:'आपका नाम',
     quitTooltip:'छोड़ें',
     reconnectInProgress:'पुनः कनेक्ट हो रहा है\u2026',
