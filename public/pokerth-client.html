@@ -53,16 +53,27 @@ function toggleStats() {
 }
 
 // Replie/déplie les champs de connexion avancés (proxy / serveur / port).
-// Réutilise les clés i18n existantes moreOptions/lessOptions (présentes dans
-// les 9 langues) et window.t exposé par i18n.mjs — aucun ajout de traduction.
+// L'état est suivi par la classe .open sur le bouton (sans ambiguïté), ce qui
+// corrige le repliage. Le bloc est masqué via display:none (retiré du flux flex,
+// donc pas de gap fantôme) et joue une petite animation d'entrée à l'ouverture.
+// Réutilise les clés i18n moreOptions/lessOptions et window.t (i18n.mjs).
 function toggleConnAdvanced() {
-  var el = document.getElementById("conn-advanced");
-  var arrow = document.getElementById("conn-adv-arrow");
-  var lbl = document.getElementById("conn-adv-label");
-  if (!el) return;
-  var open = (el.style.display === "none" || !el.style.display);
-  el.style.display = open ? "" : "none";
-  if (arrow) arrow.textContent = open ? "\u25BC" : "\u25B6";
+  var wrap = document.getElementById("conn-advanced");
+  var btn  = document.getElementById("conn-adv-btn");
+  var lbl  = document.getElementById("conn-adv-label");
+  if (!wrap || !btn) return;
+  var open = !btn.classList.contains("open");
+  btn.classList.toggle("open", open);
+  btn.setAttribute("aria-expanded", open ? "true" : "false");
+  if (open) {
+    wrap.style.display = "";          // revient au display:flex défini en CSS
+    wrap.classList.remove("anim");
+    void wrap.offsetWidth;            // reflow pour rejouer l'animation
+    wrap.classList.add("anim");
+  } else {
+    wrap.style.display = "none";
+    wrap.classList.remove("anim");
+  }
   if (lbl) lbl.textContent = open
     ? ((window.t && window.t("lessOptions")) || "Less options")
     : ((window.t && window.t("moreOptions")) || "More options");
@@ -258,8 +269,11 @@ function onAvatarImageChosen(input) {
          masqués par défaut pour simplifier l'écran aux utilisateurs novices.
          Ils restent dans le DOM avec leurs valeurs (par défaut ou mémorisées),
          donc App.connect() et onLoginModeChange() fonctionnent à l'identique. -->
-    <button type="button" id="conn-adv-btn" class="conn-adv-toggle" onclick="toggleConnAdvanced()">
-      <span id="conn-adv-arrow">&#9658;</span> <span id="conn-adv-label" data-i18n="moreOptions">More options</span>
+    <button type="button" id="conn-adv-btn" class="conn-adv-toggle" onclick="toggleConnAdvanced()"
+            aria-expanded="false" aria-controls="conn-advanced">
+      <span class="conn-adv-line"></span>
+      <span class="conn-adv-mid"><span id="conn-adv-chevron" class="conn-adv-chevron">&#9656;</span> <span id="conn-adv-label" data-i18n="moreOptions">More options</span></span>
+      <span class="conn-adv-line"></span>
     </button>
     <div id="conn-advanced" style="display:none">
       <div class="f">
