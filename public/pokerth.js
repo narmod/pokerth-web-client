@@ -8329,6 +8329,10 @@ function toggleLobbyChat() {
   }
   var _lb = document.querySelector('#s-lobby .lobby-body');
   if (open) {
+    var _pp = document.getElementById('players-panel');
+    if (_pp) _pp.style.display = 'none';          // un seul panneau ouvert à la fois
+    var _hdr = document.querySelector('#s-lobby .header');
+    if (_hdr) panel.style.top = Math.round(_hdr.getBoundingClientRect().bottom) + 'px';
     var _chat = document.getElementById('chat');
     makeChatResizable(panel, _chat);
     resetChatSize(panel, _chat);              // toujours rouvrir à la taille par défaut
@@ -8663,11 +8667,20 @@ function togglePlayersPanel() {
     }
     panel.style.display = '';
     renderPlayersList();
+    var _list = document.getElementById('players-list-body');
+    makeChatResizable(panel, _list);
+    resetChatSize(panel, _list);                 // rouvrir à la taille par défaut
+    // Overlay : réserve sous le panneau sa hauteur par défaut pour que les
+    // tables restent visibles à l'ouverture ; l'agrandissement les recouvre.
+    var _lb = document.querySelector('#s-lobby .lobby-body');
+    if (_lb) _lb.style.paddingTop = panel.offsetHeight + 'px';
     // Focus the search input so the user can type right away.
     var inp = document.getElementById('players-search-in');
     if (inp) setTimeout(function(){ inp.focus(); }, 50);
   } else {
     panel.style.display = 'none';
+    var _lb2 = document.querySelector('#s-lobby .lobby-body');
+    if (_lb2) _lb2.style.paddingTop = '';         // libère l'espace
   }
 }
 
