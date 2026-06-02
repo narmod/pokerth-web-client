@@ -371,6 +371,7 @@ export const strings = {
     modeUnauth: 'LAN / Privaat bediener ✓',
     modeGuest: 'pokerth.net — Gas',
     modeAuth: 'pokerth.net — Geregistreerde rekening',
+    srvDedicated:'LAN / Toegewyde bediener', guestMode:'Gasmodus',
     nickPlaceholder: 'JouNaam',
     quitTooltip: 'Verlaat',
     reconnectInProgress: 'Herkoppel…',
