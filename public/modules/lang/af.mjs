@@ -374,7 +374,7 @@ export const strings = {
     reconnectInProgress: 'Herkoppel…',
     connectingPlayers: 'Koppel {type} v{ver} — {n} spelers…',
     connectedAsGuest: 'Gekoppel as gas «{name}» (ID {id})',
-    errBadCreds: '⚠ Ongeldige pokerth.net-besonderhede (gebruikersnaam of wagwoord).',
+    errBadCreds: '⚠ Ongeldige besonderhede (gebruikersnaam of wagwoord).',
     serverRequiresAuth: '⚠ Hierdie bediener vereis stawing. Skakel oor na ’n pokerth.net-rekening of gas-aanmelding.',
     brandToggleTooltip: 'Wys / versteek die naam',
     canReconnect: '✅ Jy kan nou weer koppel.',
