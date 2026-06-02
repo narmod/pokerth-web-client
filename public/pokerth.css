@@ -2280,6 +2280,17 @@ body {
 .board-net.pos { color: #4cff88; }
 .board-net.neg { color: #ff6b6b; }
 .board-sub  { grid-area: sub; font-size: 0.55rem; color: var(--gold-dim); font-family: 'Inconsolata', monospace; }
+.board-sort { display: flex; align-items: center; gap: 6px; margin-bottom: 6px; }
+.board-sort > span { color: var(--gold-dim); font-size: 0.7rem; }
+.board-sort select {
+  flex: 1; background: rgba(255,255,255,0.05); border: 1px solid var(--border);
+  border-radius: 3px; color: var(--cream); padding: 3px 6px;
+  font-family: 'Inconsolata', monospace; font-size: 0.66rem; outline: none; cursor: pointer;
+}
+.board-myrank {
+  font-size: 0.62rem; color: var(--gold); font-family: 'Inconsolata', monospace;
+  text-align: center; padding: 2px 0 6px; letter-spacing: 0.04em;
+}
 .hand-hist-item {
   background: rgba(255,255,255,0.03); border: 1px solid var(--border);
   border-radius: 4px; padding: 6px 8px; font-size: 0.58rem;
