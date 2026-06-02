@@ -2428,6 +2428,40 @@ const App = (() => {
     try { fetch('/stats', { method:'POST', headers:{'Content-Type':'application/json'},
       body: JSON.stringify({ name:myName, _delete:true }) }).catch(function(){}); } catch(e) {}
   }
+  // Merge two lifetime records keeping the better of each (mirrors the proxy's
+  // monotonic merge): counters never regress, net follows the more complete
+  // record. Preserves the local current `streak` (not stored server-side).
+  function _lifeMerge(loc, srv) {
+    var hp = Math.max(loc.handsPlayed||0, srv.handsPlayed||0);
+    var gp = Math.max(loc.gamesPlayed||0, srv.gamesPlayed||0);
+    var srvFresher = (srv.handsPlayed||0) > (loc.handsPlayed||0);
+    return {
+      handsPlayed: hp, gamesPlayed: gp,
+      handsWon: Math.min(Math.max(loc.handsWon||0, srv.handsWon||0), hp),
+      gamesWon: Math.min(Math.max(loc.gamesWon||0, srv.gamesWon||0), gp),
+      bestStreak: Math.max(loc.bestStreak||0, srv.bestStreak||0),
+      bigWin: Math.max(loc.bigWin||0, srv.bigWin||0),
+      bigLoss: Math.min(loc.bigLoss||0, srv.bigLoss||0),
+      net: srvFresher ? (srv.net||0) : (loc.net||0),
+      streak: loc.streak||0
+    };
+  }
+  // Reseed this device's lifetime totals from the shared board at connect, so a
+  // fresh browser/device doesn't keep pushing a near-blank snapshot. The proxy
+  // would reject the regression anyway, but reseeding also fixes the TOTAL tab
+  // display on the new device. Runs once per connect when eligible.
+  function _lifeSeedFromServer() {
+    if (!_statsEligible || !myName) return;
+    fetch('/stats', { cache:'no-store' })
+      .then(function(r){ return r.ok ? r.json() : null; })
+      .then(function(data){
+        if (!data || !data[myName]) return;
+        var a = _lifeAll();
+        a[myName] = _lifeMerge(a[myName] || _lifeBlank(), data[myName]);
+        _lifeSaveAll(a);
+        if (_statsOpen) renderStats();
+      }).catch(function(){});
+  }
   var _myStackAtHandStart = null;    // mon stack réel au début de la main (avant blinds)
   var _seatStackAtHandStart = {};    // {pid: stack début de main} → net exact de chaque joueur
   // Snapshot des résultats figés à la FIN de la main (avant que la main
@@ -3001,6 +3035,7 @@ const App = (() => {
         // (cookmed / LAN). pokerth.net modes (guest + registered) are never
         // recorded — strangers and throwaway guest names would pollute it.
         _statsEligible = (loginMode === 'unauth' || loginMode === 'lan');
+        if (_statsEligible) _lifeSeedFromServer();
         const typeLabel = ['LAN','Internet (no-auth)','Internet (auth)'][stype] || 'Serveur';
         setStatus(t('connectingPlayers', { type: typeLabel, ver: pMaj + '.' + pMin, n: np }));
         lastMajor = pMaj; lastMinor = pMin; lastLoginType = loginType;
@@ -4923,6 +4958,26 @@ const App = (() => {
   }
   window._statsReset = _statsReset;
 
+  // Ranking criterion (persisted). net | per100 | winrate | games | streak.
+  var _boardSort = 'net';
+  try { _boardSort = localStorage.getItem('pth_board_sort') || 'net'; } catch(e) {}
+  function _boardPer100(p) { return (p.handsPlayed>0) ? (p.net||0)*100/p.handsPlayed : 0; }
+  function _boardWinRate(p){ return (p.handsPlayed>0) ? (p.handsWon||0)/p.handsPlayed : 0; }
+  function _boardCmp(key) {
+    if (key === 'per100')  return function(a,b){ return _boardPer100(b)-_boardPer100(a) || (b.net||0)-(a.net||0); };
+    if (key === 'winrate') return function(a,b){ return _boardWinRate(b)-_boardWinRate(a) || (b.handsPlayed||0)-(a.handsPlayed||0); };
+    if (key === 'games')   return function(a,b){ return (b.gamesWon||0)-(a.gamesWon||0) || (b.net||0)-(a.net||0); };
+    if (key === 'streak')  return function(a,b){ return (b.bestStreak||0)-(a.bestStreak||0) || (b.net||0)-(a.net||0); };
+    return function(a,b){ return (b.net||0)-(a.net||0); };
+  }
+  function _boardSetSort(k) {
+    _boardSort = k;
+    try { localStorage.setItem('pth_board_sort', k); } catch(e) {}
+    if (document.getElementById('stats-board-body')) renderBoard('stats-board-body');
+    if (document.getElementById('pim-board-body'))   renderBoard('pim-board-body');
+  }
+  window._boardSetSort = _boardSetSort;
+
   function renderBoard(targetId) {
     var boxId = targetId || 'stats-board-body';
     fetch('/stats', { cache:'no-store' })
@@ -4931,22 +4986,45 @@ const App = (() => {
         var box = document.getElementById(boxId);
         if (!box) return;
         var arr = Object.keys(data || {}).map(function(name){ var v = data[name] || {}; v.name = name; return v; });
-        arr.sort(function(a, b){ return (b.net||0) - (a.net||0); });
-        if (!arr.length) { box.innerHTML = '<div class="stat-empty">'+t('boardEmpty')+'</div>'; return; }
+        arr.sort(_boardCmp(_boardSort));
+        // Sort selector (↕). Labels reuse existing stat keys; only net/100 is new.
+        var opt = function(id, lbl){ return '<option value="'+id+'"'+(_boardSort===id?' selected':'')+'>'+esc(lbl)+'</option>'; };
+        var sortUI = '<div class="board-sort"><span>↕</span><select onchange="window._boardSetSort(this.value)">'
+          + opt('net', t('statNet'))
+          + opt('per100', t('boardPer100'))
+          + opt('winrate', t('statWinRate'))
+          + opt('games', t('statGamesWon'))
+          + opt('streak', t('statStreak'))
+          + '</select></div>';
+        if (!arr.length) { box.innerHTML = sortUI + '<div class="stat-empty">'+t('boardEmpty')+'</div>'; return; }
+        // My rank under the current criterion — shown even if far down the list.
+        var myIdx = -1;
+        for (var k=0;k<arr.length;k++){ if (arr[k].name===myName){ myIdx=k; break; } }
+        var rankLine = (myIdx>=0)
+          ? '<div class="board-myrank">'+t('boardYourRank', { n: myIdx+1, m: arr.length })+'</div>' : '';
         var rows = arr.map(function(p, i){
           var net = p.net||0, ncls = net>0?'pos':net<0?'neg':'';
           var mine = (p.name === myName) ? ' me' : '';
           var av = p.avatar ? p.avatar : (p.name ? p.name.charAt(0).toUpperCase() : '?');
           var medal = i===0?'🥇':i===1?'🥈':i===2?'🥉':('#'+(i+1));
+          var hp = p.handsPlayed||0;
+          var p100 = hp>0 ? Math.round(net*100/hp) : 0;
+          var wrp  = hp>0 ? Math.round((p.handsWon||0)/hp*100) : 0;
+          // Secondary line adapts to the active criterion so the ranked value is visible.
+          var sub;
+          if (_boardSort==='per100')       sub = (p100>0?'+':'')+_groupThousands(p100)+' ¥/100 · '+hp;
+          else if (_boardSort==='winrate') sub = wrp+'% · '+hp;
+          else if (_boardSort==='streak')  sub = '🔥 '+(p.bestStreak||0);
+          else                             sub = '🏆'+(p.gamesWon||0)+' · '+(p.handsWon||0);
           return '<div class="board-row'+mine+'">'
             + '<span class="board-rank">'+medal+'</span>'
             + '<span class="board-av">'+esc(av)+'</span>'
             + '<span class="board-name">'+esc(p.name)+'</span>'
             + '<span class="board-net '+ncls+'">'+(net>0?'+':'')+_groupThousands(net)+' ¥</span>'
-            + '<span class="board-sub">🏆'+(p.gamesWon||0)+' · '+(p.handsWon||0)+'</span>'
+            + '<span class="board-sub">'+sub+'</span>'
             + '</div>';
         }).join('');
-        box.innerHTML = '<div class="board-list">'+rows+'</div>';
+        box.innerHTML = sortUI + rankLine + '<div class="board-list">'+rows+'</div>';
       })
       .catch(function(){
         var box = document.getElementById(boxId);
