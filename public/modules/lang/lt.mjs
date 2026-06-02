@@ -371,6 +371,7 @@ export const strings = {
     modeUnauth: 'LAN / Privatus serveris ✓',
     modeGuest: 'pokerth.net — svečias',
     modeAuth: 'pokerth.net — registruota paskyra',
+    srvDedicated:'LAN / Skirtasis serveris', guestMode:'Svečio režimas',
     nickPlaceholder: 'JūsųVardas',
     quitTooltip: 'Palikti',
     reconnectInProgress: 'Jungiamasi iš naujo…',
