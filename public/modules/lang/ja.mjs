@@ -373,7 +373,7 @@ export const strings = {
     reconnectInProgress: '再接続中…',
     connectingPlayers: '接続中 {type} v{ver} — {n}人…',
     connectedAsGuest: 'ゲスト「{name}」として接続しました（ID {id}）',
-    errBadCreds: '⚠ pokerth.netの認証情報が無効です（ユーザー名またはパスワード）。',
+    errBadCreds: '⚠ 認証情報が無効です（ユーザー名またはパスワード）。',
     serverRequiresAuth: '⚠ このサーバーは認証が必要です。pokerth.netアカウントまたはゲストログインに切り替えてください。',
     brandToggleTooltip: '名前の表示 / 非表示',
     canReconnect: '✅ 今すぐ再接続できます。',
