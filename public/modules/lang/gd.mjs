@@ -306,6 +306,7 @@ export const strings = {
     errInvalidGame: 'Chan urrainn dhut a dhol dhan gheama seo',
     moreOptions: 'Barrachd roghainnean',
     lessOptions: 'Nas lugha roghainnean',
+    resetForm:'↺ Ath-shuidhich', fieldsReset:'Chaidh na raointean ath-shuidheachadh',
     addPassword: 'Cuir facal-faire ris (roghainneil)',
     tablePassword: 'Facal-faire:',
     rememberMe: 'Cuimhnich am far-ainm (cha tèid am facal-faire a shàbhaladh a-riamh)',

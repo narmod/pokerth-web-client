@@ -138,6 +138,7 @@ export const strings = {
     errGuestsNotAllowed:'केवल पंजीकृत खाते — अतिथि शामिल नहीं हो सकते',
     errInvalidGame:'इस खेल में शामिल नहीं हो सकते',
     moreOptions:'अधिक विकल्प', lessOptions:'कम विकल्प',
+    resetForm:'↺ रीसेट करें', fieldsReset:'फ़ील्ड रीसेट किए गए',
     addPassword:'पासवर्ड जोड़ें (वैकल्पिक)', tablePassword:'पासवर्ड:',
     rememberMe:'उपनाम याद रखें (पासवर्ड संग्रहीत नहीं)',
     tlsLabel:'TLS — pokerth.net के लिए आवश्यक, LAN के लिए अनचेक करें',

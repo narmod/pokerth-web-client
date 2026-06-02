@@ -305,6 +305,7 @@ export const strings = {
     errInvalidGame: 'Nem lehet csatlakozni ehhez a játékhoz',
     moreOptions: 'További beállítások',
     lessOptions: 'Kevesebb beállítás',
+    resetForm:'↺ Visszaállítás', fieldsReset:'Mezők visszaállítva',
     addPassword: 'Jelszó hozzáadása (opcionális)',
     tablePassword: 'Jelszó:',
     rememberMe: 'Becenév megjegyzése (a jelszó soha nem mentődik)',

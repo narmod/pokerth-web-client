@@ -304,6 +304,7 @@ export const strings = {
     errInvalidGame: 'Kan ikke deltage i dette spil',
     moreOptions: 'Flere indstillinger',
     lessOptions: 'Færre indstillinger',
+    resetForm:'↺ Nulstil', fieldsReset:'Felter nulstillet',
     addPassword: 'Tilføj adgangskode (valgfrit)',
     tablePassword: 'Adgangskode:',
     rememberMe: 'Husk kaldenavn (adgangskode gemmes aldrig)',

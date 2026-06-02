@@ -310,6 +310,7 @@ export const strings = {
     errInvalidGame: 'Не удаётся войти в эту игру',
     moreOptions: 'Больше опций',
     lessOptions: 'Меньше опций',
+    resetForm:'↺ Сбросить', fieldsReset:'Поля сброшены',
     addPassword: 'Добавить пароль (опционально)',
     tablePassword: 'Пароль:',
     rememberMe: 'Запомнить никнейм (пароль никогда не сохраняется)',

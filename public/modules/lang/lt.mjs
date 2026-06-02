@@ -305,6 +305,7 @@ export const strings = {
     errInvalidGame: 'Negalite prisijungti prie šio žaidimo',
     moreOptions: 'Daugiau parinkčių',
     lessOptions: 'Mažiau parinkčių',
+    resetForm:'↺ Atstatyti', fieldsReset:'Laukai atstatyti',
     addPassword: 'Pridėti slaptažodį (nebūtina)',
     tablePassword: 'Slaptažodis:',
     rememberMe: 'Įsiminti slapyvardį (slaptažodis niekada nesaugomas)',

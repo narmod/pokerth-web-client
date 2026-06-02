@@ -306,6 +306,7 @@ export const strings = {
     errInvalidGame: 'இந்த விளையாட்டில் சேர முடியாது',
     moreOptions: 'மேலும் விருப்பங்கள்',
     lessOptions: 'குறைவான விருப்பங்கள்',
+    resetForm:'↺ மீட்டமை', fieldsReset:'புலங்கள் மீட்டமைக்கப்பட்டன',
     addPassword: 'கடவுச்சொல் சேர் (விருப்பம்)',
     tablePassword: 'கடவுச்சொல்:',
     rememberMe: 'புனைப்பெயரை நினைவில் கொள் (கடவுச்சொல் ஒருபோதும் சேமிக்கப்படாது)',

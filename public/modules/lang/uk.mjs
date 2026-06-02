@@ -304,6 +304,7 @@ export const strings = {
     errInvalidGame: 'Не вдається приєднатися до цієї гри',
     moreOptions: 'Більше параметрів',
     lessOptions: 'Менше параметрів',
+    resetForm:'↺ Скинути', fieldsReset:'Поля скинуто',
     addPassword: 'Додати пароль (необов’язково)',
     tablePassword: 'Пароль:',
     rememberMe: 'Запам’ятати псевдонім (пароль ніколи не зберігається)',

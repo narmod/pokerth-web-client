@@ -305,6 +305,7 @@ export const strings = {
     errInvalidGame: 'K tejto hre sa nedá pripojiť',
     moreOptions: 'Viac možností',
     lessOptions: 'Menej možností',
+    resetForm:'↺ Obnoviť', fieldsReset:'Polia obnovené',
     addPassword: 'Pridať heslo (voliteľné)',
     tablePassword: 'Heslo:',
     rememberMe: 'Zapamätať prezývku (heslo sa nikdy neukladá)',

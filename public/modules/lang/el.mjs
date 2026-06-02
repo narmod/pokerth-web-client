@@ -305,6 +305,7 @@ export const strings = {
     errInvalidGame: 'Δεν μπορείτε να μπείτε σε αυτό το παιχνίδι',
     moreOptions: 'Περισσότερες επιλογές',
     lessOptions: 'Λιγότερες επιλογές',
+    resetForm:'↺ Επαναφορά', fieldsReset:'Τα πεδία επαναφέρθηκαν',
     addPassword: 'Προσθήκη κωδικού (προαιρετικό)',
     tablePassword: 'Κωδικός:',
     rememberMe: 'Απομνημόνευση ψευδωνύμου (ο κωδικός δεν αποθηκεύεται ποτέ)',

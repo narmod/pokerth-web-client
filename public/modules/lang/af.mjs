@@ -305,6 +305,7 @@ export const strings = {
     errInvalidGame: 'Jy kan nie by hierdie spel aansluit nie',
     moreOptions: 'Meer opsies',
     lessOptions: 'Minder opsies',
+    resetForm:'↺ Stel terug', fieldsReset:'Velde teruggestel',
     addPassword: 'Voeg ’n wagwoord by (opsioneel)',
     tablePassword: 'Wagwoord:',
     rememberMe: 'Onthou die bynaam (die wagwoord word nooit gestoor nie)',

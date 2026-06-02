@@ -311,6 +311,7 @@ export const strings = {
     errInvalidGame: 'Nie można dołączyć do tej gry',
     moreOptions: 'Więcej opcji',
     lessOptions: 'Mniej opcji',
+    resetForm:'↺ Resetuj', fieldsReset:'Pola zresetowane',
     addPassword: 'Dodaj hasło (opcjonalnie)',
     tablePassword: 'Hasło:',
     rememberMe: 'Zapamiętaj pseudonim (hasło nigdy nie jest zapisywane)',

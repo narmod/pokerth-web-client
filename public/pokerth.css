@@ -4509,3 +4509,51 @@ body:not(.in-game) .my-zone {
     padding-right: max(8px, env(safe-area-inset-right));
   }
 }
+
+/* ── Reset button in the create-table form (secondary, paired with Create) ── */
+.btn-cf-reset {
+  background: transparent;
+  color: var(--text-hi);
+  border: 1px solid var(--gold-dim);
+  border-radius: 2px;
+  font-family: 'Cinzel', serif;
+  font-size: 0.74rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  padding: 10px 14px;
+  cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: border-color 0.15s, color 0.15s, transform 0.1s;
+}
+.btn-cf-reset:hover  { border-color: var(--border-hi); color: var(--gold); }
+.btn-cf-reset:active { transform: scale(0.98); }
+
+/* ── Reusable toast (showToast in pokerth.js) ──
+   Styled to match the header ••• overflow menu: dark panel, gold-hi hairline
+   border, soft drop shadow, Inconsolata. */
+.app-toast {
+  position: fixed;
+  left: 50%;
+  bottom: 28px;
+  transform: translate(-50%, 20px);
+  z-index: 950;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  max-width: min(90vw, 360px);
+  padding: 8px 16px;
+  background: rgba(8,18,10,0.98);
+  border: 1px solid var(--border-hi);
+  border-radius: 6px;
+  box-shadow: 0 12px 32px rgba(0,0,0,0.7);
+  color: var(--text-hi);
+  font-family: 'Inconsolata', monospace;
+  font-size: 0.8rem;
+  letter-spacing: 0.02em;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+.app-toast.show { opacity: 1; transform: translate(-50%, 0); }
+.app-toast-tick { color: #3fb950; font-weight: 700; }

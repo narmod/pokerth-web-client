@@ -305,6 +305,7 @@ export const strings = {
     errInvalidGame: 'Не можете да се присъедините към тази игра',
     moreOptions: 'Още опции',
     lessOptions: 'По-малко опции',
+    resetForm:'↺ Нулиране', fieldsReset:'Полетата са нулирани',
     addPassword: 'Добави парола (по избор)',
     tablePassword: 'Парола:',
     rememberMe: 'Запомни прякора (паролата никога не се запазва)',

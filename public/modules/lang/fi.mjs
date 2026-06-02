@@ -304,6 +304,7 @@ export const strings = {
     errInvalidGame: 'Tähän peliin ei voi liittyä',
     moreOptions: 'Lisää asetuksia',
     lessOptions: 'Vähemmän asetuksia',
+    resetForm:'↺ Nollaa', fieldsReset:'Kentät nollattu',
     addPassword: 'Lisää salasana (valinnainen)',
     tablePassword: 'Salasana:',
     rememberMe: 'Muista nimimerkki (salasanaa ei tallenneta koskaan)',

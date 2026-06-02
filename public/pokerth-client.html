@@ -1077,7 +1077,10 @@ function onAvatarImageChosen(input) {
         <input id="cf-password" type="password" maxlength="64" style="flex:1;background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:2px;color:var(--cream);padding:4px 8px;font-family:'Inconsolata',monospace;font-size:0.82rem;outline:none" placeholder="••••••">
       </div>
     </div>
-    <button class="btn-primary" data-i18n="createTable" onclick="App.createGame()" style="margin-top:14px;width:100%;padding:10px">+ Create table</button>
+    <div class="cf-actions" style="display:flex;gap:10px;margin-top:14px">
+      <button type="button" class="btn-cf-reset" data-i18n="resetForm" onclick="App.resetCreateForm()">↺ Reset</button>
+      <button class="btn-primary" data-i18n="createTable" onclick="App.createGame()" style="flex:1;padding:10px">+ Create table</button>
+    </div>
       </div>
     </div>
 

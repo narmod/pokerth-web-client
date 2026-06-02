@@ -310,6 +310,7 @@ export const strings = {
     errInvalidGame: 'Diesem Spiel kann nicht beigetreten werden',
     moreOptions: 'Mehr Optionen',
     lessOptions: 'Weniger Optionen',
+    resetForm:'↺ Zurücksetzen', fieldsReset:'Felder zurückgesetzt',
     addPassword: 'Passwort hinzufügen (optional)',
     tablePassword: 'Passwort:',
     rememberMe: 'Spitznamen merken (Passwort wird nie gespeichert)',

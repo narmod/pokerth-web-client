@@ -306,6 +306,7 @@ export const strings = {
     errInvalidGame: '無法加入此遊戲',
     moreOptions: '更多選項',
     lessOptions: '收起選項',
+    resetForm:'↺ 重設', fieldsReset:'欄位已重設',
     addPassword: '新增密碼（可選）',
     tablePassword: '密碼：',
     rememberMe: '記住暱稱（絕不儲存密碼）',

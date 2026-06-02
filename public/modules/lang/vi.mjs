@@ -305,6 +305,7 @@ export const strings = {
     errInvalidGame: 'Không thể vào ván này',
     moreOptions: 'Thêm tùy chọn',
     lessOptions: 'Bớt tùy chọn',
+    resetForm:'↺ Đặt lại', fieldsReset:'Đã đặt lại các trường',
     addPassword: 'Thêm mật khẩu (tùy chọn)',
     tablePassword: 'Mật khẩu:',
     rememberMe: 'Ghi nhớ biệt danh (mật khẩu không bao giờ được lưu)',

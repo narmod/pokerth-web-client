@@ -153,6 +153,7 @@ export const strings = {
     errGuestsNotAllowed:'Registered accounts only — guests cannot join',
     errInvalidGame:'Cannot join this game',
     moreOptions:'More options', lessOptions:'Less options',
+    resetForm:'↺ Reset', fieldsReset:'Fields reset',
     addPassword:'Add a password (optional)', tablePassword:'Password:',
     rememberMe:'Remember nickname (password never stored)',
     tlsLabel:'TLS — required for pokerth.net, uncheck for LAN',

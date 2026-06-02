@@ -391,6 +391,39 @@ window._showBlindsToast = _showBlindsToast;
 // Appelé au tap sur la pastille du bandeau (pas de son).
 window.showBlindsInfo = function() { _showBlindsToast(window._blindsInfoHtml, false); };
 
+// ── Reusable toast ────────────────────────────────────────────────────────
+// Small transient confirmation, styled like the header ••• menu (.app-toast
+// in pokerth.css). Generic on purpose so any feature can call it:
+//   showToast(t('fieldsReset'));
+//   showToast('Copié', { icon: '📋', duration: 1200 });
+// Text is set via textContent (never innerHTML) so a translated/dynamic
+// message can never inject markup.
+function showToast(msg, opts) {
+  opts = opts || {};
+  var prev = document.getElementById('app-toast');
+  if (prev) prev.remove();
+  var el = document.createElement('div');
+  el.id = 'app-toast';
+  el.className = 'app-toast';
+  if (opts.icon !== '') {
+    var tick = document.createElement('span');
+    tick.className = 'app-toast-tick';
+    tick.textContent = opts.icon || '\u2713'; // ✓
+    el.appendChild(tick);
+  }
+  var txt = document.createElement('span');
+  txt.textContent = msg;
+  el.appendChild(txt);
+  document.body.appendChild(el);
+  requestAnimationFrame(function() { el.classList.add('show'); });
+  var dur = opts.duration || 1800;
+  setTimeout(function() {
+    el.classList.remove('show');
+    setTimeout(function() { if (el.parentNode) el.remove(); }, 300);
+  }, dur);
+}
+window.showToast = showToast;
+
 
 // Rafraîchit immédiatement l'avatar du joueur local dans l'UI
 window.refreshMyAvatar = function() {
@@ -7720,7 +7753,7 @@ function dismissWinner() {
     // Returns an object whose keys map 1:1 to the form's element ids (minus
     // the 'cf-' prefix). _applyCreateFormDefaults() walks this object and
     // writes each value into the corresponding input.
-    _getCreateDefaults() {
+    _getCreateDefaults(skipSaved) {
       var mode = _currentLoginMode || 'unauth';
       var isPublic = (mode === 'guest' || mode === 'auth');
       // Last-used settings (saved by createGame) take priority over the
@@ -7745,7 +7778,7 @@ function dismissWinner() {
         // client recommendation, BUT narmod requested a SHORT 5s
         // turn timer on pokerth.net so public games keep moving (real
         // strangers, can't afford long thinking turns).
-        return withSaved({
+        var basePublic = {
           name: _localDefaultName(),
           players: 10,
           blind: 10,
@@ -7757,7 +7790,8 @@ function dismissWinner() {
           bots: false,
           minHumans: 5,
           tag: 'public', // for the QuickGame dialog
-        });
+        };
+        return skipSaved ? basePublic : withSaved(basePublic);
       }
       // LAN / private-server profile (covers both the 'lan' login mode
       // and the 'unauth' private-server-guest mode). 10 max players
@@ -7765,7 +7799,7 @@ function dismissWinner() {
       // pokerth.net public profile — narmod wants more thinking time
       // when playing among friends. Bots default ON so a small group
       // can start a hand fast.
-      return withSaved({
+      var baseLan = {
         name: _localDefaultName(),
         players: 10,
         blind: 10,
@@ -7777,15 +7811,16 @@ function dismissWinner() {
         bots: true,
         minHumans: 2,
         tag: 'lan',
-      });
+      };
+      return skipSaved ? baseLan : withSaved(baseLan);
     },
 
     // Apply the per-mode defaults to the create-form inputs. We only
     // overwrite empty fields (or fields still holding the previous mode's
     // default) so a user who already typed a custom value isn't surprised
     // by their input being clobbered.
-    _applyCreateFormDefaults(force) {
-      var d = this._getCreateDefaults();
+    _applyCreateFormDefaults(force, skipSaved) {
+      var d = this._getCreateDefaults(skipSaved);
       var set = function(id, val, options) {
         var el = document.getElementById(id);
         if (!el) return;
@@ -7910,6 +7945,42 @@ function dismissWinner() {
       var cb = document.getElementById('cf-bots');
       var row = document.getElementById('cf-min-humans-row');
       if (row) row.style.display = (cb && cb.checked) ? 'flex' : 'none';
+    },
+    // Reset the create-table form to its FACTORY defaults: the per-mode
+    // baseline (LAN vs pokerth.net), explicitly IGNORING the last-used
+    // settings saved in localStorage (skipSaved=true). Resets every field —
+    // visible and hidden — plus the collapsible panels, presets and password
+    // section, then confirms with a toast styled like the header ••• menu.
+    resetCreateForm() {
+      // Core + numeric fields (and their linked range sliders, via the
+      // 'input' event dispatched inside _applyCreateFormDefaults).
+      this._applyCreateFormDefaults(true, true);
+      // Advanced options aren't part of the baseline object, so restore their
+      // markup defaults explicitly.
+      var setVal = function(id, v) {
+        var e = document.getElementById(id);
+        if (e) { e.value = v; e.dispatchEvent(new Event('input')); }
+      };
+      setVal('cf-raise-mode',       '1');
+      setVal('cf-end-raise',        '1');
+      setVal('cf-end-raise-val',    '200');
+      setVal('cf-game-type',        '1');
+      setVal('cf-allow-spectators', '1');
+      // Password section back to off / empty / hidden.
+      var pw  = document.getElementById('cf-use-password'); if (pw)  pw.checked = false;
+      var pwv = document.getElementById('cf-password');     if (pwv) pwv.value = '';
+      var pwr = document.getElementById('cf-password-row'); if (pwr) pwr.style.display = 'none';
+      // Collapse "More options" back to its default closed state.
+      var mo  = document.getElementById('cf-more-opts');   if (mo)  mo.style.display = 'none';
+      var moa = document.getElementById('cf-more-arrow');  if (moa) moa.textContent = '\u25B6';
+      var mol = document.getElementById('cf-more-label');  if (mol) mol.textContent = (t('moreOptions') || 'More options');
+      // Hide the conditional "target blind" row.
+      var erv = document.getElementById('cf-end-raise-val-row'); if (erv) erv.style.display = 'none';
+      // Clear any highlighted style preset.
+      var presets = document.querySelectorAll('.cf-preset');
+      for (var i = 0; i < presets.length; i++) presets[i].classList.remove('active');
+      // Confirmation toast.
+      if (typeof showToast === 'function') showToast(t('fieldsReset') || 'Fields reset');
     },
     startWithBots() {
       if (!gId) return;

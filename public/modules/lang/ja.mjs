@@ -304,6 +304,7 @@ export const strings = {
     errInvalidGame: 'このゲームに参加できません',
     moreOptions: 'その他のオプション',
     lessOptions: 'オプションを減らす',
+    resetForm:'↺ リセット', fieldsReset:'フィールドをリセットしました',
     addPassword: 'パスワードを追加（任意）',
     tablePassword: 'パスワード：',
     rememberMe: 'ニックネームを記憶（パスワードは保存されません）',

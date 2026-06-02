@@ -137,6 +137,7 @@ export const strings = {
     errGuestsNotAllowed:'등록 계정 전용 — 게스트는 참가할 수 없습니다',
     errInvalidGame:'이 게임에 참가할 수 없습니다',
     moreOptions:'추가 옵션', lessOptions:'옵션 접기',
+    resetForm:'↺ 초기화', fieldsReset:'필드가 초기화되었습니다',
     addPassword:'비밀번호 추가 (선택)', tablePassword:'비밀번호:',
     rememberMe:'닉네임 기억 (비밀번호는 저장 안 함)',
     tlsLabel:'TLS — pokerth.net에는 필수, LAN에서는 해제',

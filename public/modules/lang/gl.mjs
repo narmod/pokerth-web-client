@@ -305,6 +305,7 @@ export const strings = {
     errInvalidGame: 'Non te podes unir a esta partida',
     moreOptions: 'Máis opcións',
     lessOptions: 'Menos opcións',
+    resetForm:'↺ Restablecer', fieldsReset:'Campos restablecidos',
     addPassword: 'Engadir un contrasinal (opcional)',
     tablePassword: 'Contrasinal:',
     rememberMe: 'Lembrar o alcume (o contrasinal nunca se garda)',

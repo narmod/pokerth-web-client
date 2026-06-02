@@ -305,6 +305,7 @@ export const strings = {
     errInvalidGame: 'Nije moguće pridružiti se ovoj igri',
     moreOptions: 'Više opcija',
     lessOptions: 'Manje opcija',
+    resetForm:'↺ Ресетуј', fieldsReset:'Поља ресетована',
     addPassword: 'Dodaj lozinku (opciono)',
     tablePassword: 'Lozinka:',
     rememberMe: 'Zapamti nadimak (lozinka se nikad ne čuva)',

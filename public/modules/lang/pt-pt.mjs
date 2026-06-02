@@ -304,6 +304,7 @@ export const strings = {
     errInvalidGame: 'Não é possível entrar neste jogo',
     moreOptions: 'Mais opções',
     lessOptions: 'Menos opções',
+    resetForm:'↺ Repor', fieldsReset:'Campos repostos',
     addPassword: 'Adicionar palavra-passe (opcional)',
     tablePassword: 'Palavra-passe:',
     rememberMe: 'Memorizar a alcunha (a palavra-passe nunca é guardada)',

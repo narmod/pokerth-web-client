@@ -310,6 +310,7 @@ export const strings = {
     errInvalidGame: 'Kan niet meedoen aan dit spel',
     moreOptions: 'Meer opties',
     lessOptions: 'Minder opties',
+    resetForm:'↺ Herstellen', fieldsReset:'Velden hersteld',
     addPassword: 'Wachtwoord toevoegen (optioneel)',
     tablePassword: 'Wachtwoord:',
     rememberMe: 'Bijnaam onthouden (wachtwoord wordt nooit opgeslagen)',

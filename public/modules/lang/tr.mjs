@@ -307,6 +307,7 @@ export const strings = {
     errInvalidGame: 'Bu oyuna katılınamıyor',
     moreOptions: 'Daha fazla seçenek',
     lessOptions: 'Daha az seçenek',
+    resetForm:'↺ Sıfırla', fieldsReset:'Alanlar sıfırlandı',
     addPassword: 'Şifre ekle (isteğe bağlı)',
     tablePassword: 'Şifre:',
     rememberMe: 'Takma adı hatırla (şifre asla saklanmaz)',

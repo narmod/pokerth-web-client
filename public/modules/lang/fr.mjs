@@ -153,6 +153,7 @@ export const strings = {
     errGuestsNotAllowed:'Comptes enregistrés uniquement — les invités ne peuvent pas rejoindre',
     errInvalidGame:'Impossible de rejoindre cette partie',
     moreOptions:'Plus d\'options', lessOptions:'Moins d\'options',
+    resetForm:'↺ Réinitialiser', fieldsReset:'Champs réinitialisés',
     addPassword:'Ajouter un mot de passe (optionnel)', tablePassword:'Mot de passe :',
     rememberMe:'Mémoriser le pseudo (mot de passe non mémorisé)',
     tlsLabel:'TLS — requis pour pokerth.net, décocher pour LAN',

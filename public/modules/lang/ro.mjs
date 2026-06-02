@@ -305,6 +305,7 @@ export const strings = {
     errInvalidGame: 'Nu te poți alătura acestui joc',
     moreOptions: 'Mai multe opțiuni',
     lessOptions: 'Mai puține opțiuni',
+    resetForm:'↺ Resetează', fieldsReset:'Câmpuri resetate',
     addPassword: 'Adaugă o parolă (opțional)',
     tablePassword: 'Parolă:',
     rememberMe: 'Reține pseudonimul (parola nu se salvează niciodată)',
