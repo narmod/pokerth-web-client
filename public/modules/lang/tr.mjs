@@ -373,6 +373,7 @@ export const strings = {
     modeUnauth: 'LAN / Özel sunucu ✓',
     modeGuest: 'pokerth.net — Misafir',
     modeAuth: 'pokerth.net — Kayıtlı hesap',
+    srvDedicated:'LAN / Özel sunucu', guestMode:'Misafir modu',
     nickPlaceholder: 'Adın',
     quitTooltip: 'Çık',
     reconnectInProgress: 'Yeniden bağlanılıyor…',
