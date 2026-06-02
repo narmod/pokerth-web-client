@@ -374,7 +374,7 @@ export const strings = {
     reconnectInProgress: 'Đang kết nối lại…',
     connectingPlayers: 'Đang kết nối {type} v{ver} — {n} người chơi…',
     connectedAsGuest: 'Đã kết nối với tư cách khách «{name}» (ID {id})',
-    errBadCreds: '⚠ Thông tin pokerth.net không hợp lệ (tên đăng nhập hoặc mật khẩu).',
+    errBadCreds: '⚠ Thông tin không hợp lệ (tên đăng nhập hoặc mật khẩu).',
     serverRequiresAuth: '⚠ Máy chủ này yêu cầu xác thực. Hãy chuyển sang tài khoản pokerth.net hoặc đăng nhập khách.',
     brandToggleTooltip: 'Hiện / ẩn tên',
     canReconnect: '✅ Bây giờ bạn có thể kết nối lại.',
