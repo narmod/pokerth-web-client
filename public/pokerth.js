@@ -3031,7 +3031,15 @@ const App = (() => {
         const gMaj  = Proto.u32(gv, 1), gMin = Proto.u32(gv, 2);
 
         const loginMode = $('login-mode') ? $('login-mode').value : 'guest';
-        if (stype === 2 && loginMode !== 'guest' && loginMode !== 'auth') {
+        // Mot de passe de COMPTE optionnel sur serveur dédié / LAN : s'il est
+        // saisi (champ user-pass de la roue crantée), on bascule en
+        // authenticatedLogin pour l'envoyer dans clientUserData — permet à un
+        // serveur dédié avec gestion de comptes d'authentifier l'utilisateur.
+        // Vide ⇒ on garde le login normal du mode (unauthenticated / guest).
+        const userAcctPass = ((loginMode === 'unauth' || loginMode === 'lan') && $('user-pass'))
+          ? $('user-pass').value.trim() : '';
+        const useAcctAuth = !!userAcctPass;
+        if (stype === 2 && loginMode !== 'guest' && loginMode !== 'auth' && !useAcctAuth) {
           setStatus(t('serverRequiresAuth'), 'err');
           _intentionalDisconnect = true; // fatal config error — don't auto-retry
           ws.close(); return;
@@ -3040,6 +3048,7 @@ const App = (() => {
         if (loginMode === 'unauth' || loginMode === 'guest') loginType = 2;
         else if (loginMode === 'auth') loginType = 1;
         else loginType = 0; // lan
+        if (useAcctAuth) loginType = 1; // mot de passe utilisateur saisi ⇒ authenticatedLogin
         // Track lifetime stats / leaderboard only on the private server & LAN
         // (cookmed / LAN). pokerth.net modes (guest + registered) are never
         // recorded — strangers and throwaway guest names would pollute it.
@@ -3048,7 +3057,9 @@ const App = (() => {
         const typeLabel = ['LAN','Internet (no-auth)','Internet (auth)'][stype] || 'Serveur';
         setStatus(t('connectingPlayers', { type: typeLabel, ver: pMaj + '.' + pMin, n: np }));
         lastMajor = pMaj; lastMinor = pMin; lastLoginType = loginType;
-        const authPass = (loginType === 1) ? ($('pass') ? $('pass').value : '') : null;
+        const authPass = (loginType === 1)
+          ? (useAcctAuth ? userAcctPass : ($('pass') ? $('pass').value : ''))
+          : null;
         // Compte authentifié : pokerth.net chiffre nos cartes (encryptedCards)
         // avec une clé dérivée du mot de passe. On la pré-calcule maintenant
         // (async, SHA-1) — prête bien avant le 1er HandStart. Sinon on efface
@@ -6603,6 +6614,10 @@ function dismissWinner() {
       // doublement masqué tant que la roue n'est pas ouverte.
       var advWrap = document.getElementById('f-server-pass');
       if (advWrap) advWrap.style.display = (mode === 'lan' || mode === 'unauth') ? '' : 'none';
+      // Mot de passe UTILISATEUR (compte) : même portée que le mot de passe
+      // serveur — uniquement LAN / dédié, et dans la roue crantée.
+      var userWrap = document.getElementById('f-user-pass');
+      if (userWrap) userWrap.style.display = (mode === 'lan' || mode === 'unauth') ? '' : 'none';
 
       const hostInput  = $('host');
       const proxyInput = $('proxy');
