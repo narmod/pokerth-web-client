@@ -1396,13 +1396,19 @@ if ('serviceWorker' in navigator) {
     var btn = document.createElement('button'); btn.textContent = lbl; btn.setAttribute('data-i18n', 'updateNow');
     btn.onclick = function () {
       btn.disabled = true;
+      // Free the PokerTH player before reloading so the proxy doesn't keep a
+      // server-side "zombie" alive during its reconnect grace. (The ↺ refresh
+      // button intentionally does NOT do this — it relies on grace + sid rebind
+      // to preserve the session across a reload.) Small delay below lets the
+      // 4001 close frame reach the proxy before navigation tears the WS down.
+      try { if (window.App && App.teardownForReload) App.teardownForReload(); } catch (e) {}
       // If a new SW is waiting, activate it; then reload to pull fresh assets
       // (CSS/JS now revalidate server-side, so a normal reload is enough).
       navigator.serviceWorker && navigator.serviceWorker.getRegistration &&
         navigator.serviceWorker.getRegistration().then(function (r) {
           if (r && r.waiting) r.waiting.postMessage({ type: 'SKIP_WAITING' });
         }).catch(function () {});
-      setTimeout(function () { location.reload(); }, 80);
+      setTimeout(function () { location.reload(); }, 180);
     };
     bar.appendChild(span); bar.appendChild(btn);
     document.body.appendChild(bar);

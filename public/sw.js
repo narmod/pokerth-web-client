@@ -23,7 +23,7 @@
  *                 Cross-origin requests (fonts CDN, etc.) and WS upgrades are
  *                 left untouched.
  */
-const CACHE_VERSION = 'pokerth-v0.2.105';
+const CACHE_VERSION = 'pokerth-v0.2.106';
 
 // Where navigations fall back to when the network is unavailable.
 const NAV_FALLBACK = '/pokerth-client.html';

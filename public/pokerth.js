@@ -7170,6 +7170,22 @@ function dismissWinner() {
       if (dd) dd.style.display = 'none';
     },
 
+    // Clean teardown before an intentional page reload (version update ONLY):
+    // close the proxy WebSocket with code 4001 so the proxy frees the PokerTH
+    // player right away — no 2-min grace, no server-side zombie. The sid is
+    // deliberately kept, so if the close frame doesn't flush before navigation
+    // the reloaded page can still rebind to the grace session rather than
+    // collide with it. NOT used by the ↺ refresh button, which keeps the
+    // session alive via grace + sid rebind.
+    teardownForReload() {
+      try {
+        if (ws) {
+          ws.onclose = null; ws.onerror = null; ws.onmessage = null; ws.onopen = null;
+          ws.close(4001, 'reload');
+          ws = null;
+        }
+      } catch (e) {}
+    },
     disconnect() {
       _intentionalDisconnect = true;
       _wasAuthenticated = false;
@@ -7195,7 +7211,9 @@ function dismissWinner() {
         ws.onerror = null;
         ws.onmessage = null;
         ws.onopen = null;
-        try { ws.close(); } catch (e) {}
+        // Intentional disconnect → close with code 4001 so the proxy frees the
+        // PokerTH player immediately (no 2-min reconnect grace → no zombie).
+        try { ws.close(4001, 'user disconnect'); } catch (e) {}
         ws = null;
       }
       games = {};
