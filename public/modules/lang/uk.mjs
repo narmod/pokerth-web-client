@@ -217,6 +217,7 @@ export const strings = {
     statResetConfirm: 'Скинути всю вашу статистику? Це не можна скасувати.',
     statLifeOnlyPrivate: 'Відстежується лише на приватному сервері / LAN.',
     boardEmpty: 'Поки немає результатів',
+    boardPer100:'Нетто / 100 роздач', boardYourRank:'Ви: #{n} з {m}',
     rejoinInProgress: 'Повторне приєднання до вашого столу…',
     rejoinWaitNick: 'Звільнення вашої попередньої сесії…',
     rejoinFailed: 'Не вдалося відновити ваш стіл — повернення до лобі.',
