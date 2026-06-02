@@ -375,7 +375,7 @@ export const strings = {
     reconnectInProgress: 'Ag ath-cheangal…',
     connectingPlayers: 'A\' ceangal {type} v{ver} — {n} cluicheadairean…',
     connectedAsGuest: 'Ceangailte mar aoigh «{name}» (ID {id})',
-    errBadCreds: '⚠ Fiosrachadh pokerth.net mì-dhligheach (ainm-cleachdaiche no facal-faire).',
+    errBadCreds: '⚠ Fiosrachadh mì-dhligheach (ainm-cleachdaiche no facal-faire).',
     serverRequiresAuth: '⚠ Tha am frithealaiche seo ag iarraidh dearbhadh. Atharraich gu cunntas pokerth.net no clàradh aoigh.',
     brandToggleTooltip: 'Seall / falaich an t-ainm',
     canReconnect: '✅ \'S urrainn dhut ceangal a-rithist a-nis.',
