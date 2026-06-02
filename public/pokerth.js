@@ -8252,8 +8252,10 @@ document.addEventListener('DOMContentLoaded', function() { setTimeout(autoScaleT
 // de restauration entre sessions (les styles inline posés au glissement
 // persistent tant que la page vit, puis repartent au défaut au reload).
 // Idempotent : la poignée n'est créée qu'une fois (guard _resizable).
-function makeChatResizable(panel, msgs) {
-  if (!panel || !msgs || panel._resizable) return;
+function makeChatResizable(panel, msgs, onResize) {
+  if (!panel || !msgs) return;
+  panel._onResize = onResize || null;   // callback de suivi (mis à jour à chaque appel)
+  if (panel._resizable) return;
   panel._resizable = true;
   // Mémorise les valeurs par défaut (styles inline d'origine) pour pouvoir
   // réinitialiser à la taille d'ouverture (cf. resetChatSize).
@@ -8289,12 +8291,14 @@ function makeChatResizable(panel, msgs) {
   handle.addEventListener('pointermove', function(e) {
     if (!dragging) return;
     msgs.style.height = clamp(startH + (e.clientY - startY)) + 'px';
+    if (panel._onResize) panel._onResize();
   });
   function end(e) {
     if (!dragging) return;
     dragging = false;
     handle.classList.remove('dragging');
     try { handle.releasePointerCapture(e.pointerId); } catch (_) {}
+    if (panel._onResize) panel._onResize();
   }
   handle.addEventListener('pointerup', end);
   handle.addEventListener('pointercancel', end);
@@ -8334,12 +8338,15 @@ function toggleLobbyChat() {
     var _hdr = document.querySelector('#s-lobby .header');
     if (_hdr) panel.style.top = Math.round(_hdr.getBoundingClientRect().bottom) + 'px';
     var _chat = document.getElementById('chat');
-    makeChatResizable(panel, _chat);
+    var _defReserve = 0;
+    // Overlay : les tables suivent le panneau quand il rétrécit, mais restent
+    // en place (recouvertes) quand il dépasse sa taille d'ouverture.
+    makeChatResizable(panel, _chat, function(){
+      if (_lb) _lb.style.paddingTop = Math.min(panel.offsetHeight, _defReserve) + 'px';
+    });
     resetChatSize(panel, _chat);              // toujours rouvrir à la taille par défaut
-    // Le panneau est en overlay (position:fixed) : on réserve sous lui
-    // l'espace de sa hauteur par défaut pour que les tables restent
-    // visibles à l'ouverture. L'agrandissement recouvre alors les tables.
-    if (_lb) _lb.style.paddingTop = panel.offsetHeight + 'px';
+    _defReserve = panel.offsetHeight;
+    if (_lb) _lb.style.paddingTop = _defReserve + 'px';
     if (typeof clearUnreadChat === 'function') clearUnreadChat();
     if (_chat) _chat.scrollTop = _chat.scrollHeight;
     setTimeout(function(){ var ci = document.getElementById('chat-in'); if(ci) ci.focus(); }, 80);
@@ -8668,12 +8675,16 @@ function togglePlayersPanel() {
     panel.style.display = '';
     renderPlayersList();
     var _list = document.getElementById('players-list-body');
-    makeChatResizable(panel, _list);
-    resetChatSize(panel, _list);                 // rouvrir à la taille par défaut
-    // Overlay : réserve sous le panneau sa hauteur par défaut pour que les
-    // tables restent visibles à l'ouverture ; l'agrandissement les recouvre.
     var _lb = document.querySelector('#s-lobby .lobby-body');
-    if (_lb) _lb.style.paddingTop = panel.offsetHeight + 'px';
+    var _defReserve = 0;
+    // Overlay : les tables suivent quand le panneau rétrécit, restent en
+    // place (recouvertes) quand il dépasse sa taille d'ouverture.
+    makeChatResizable(panel, _list, function(){
+      if (_lb) _lb.style.paddingTop = Math.min(panel.offsetHeight, _defReserve) + 'px';
+    });
+    resetChatSize(panel, _list);                 // rouvrir à la taille par défaut
+    _defReserve = panel.offsetHeight;
+    if (_lb) _lb.style.paddingTop = _defReserve + 'px';
     // Focus the search input so the user can type right away.
     var inp = document.getElementById('players-search-in');
     if (inp) setTimeout(function(){ inp.focus(); }, 50);
