@@ -372,6 +372,7 @@ export const strings = {
     modeUnauth: 'LAN / Frithealaiche prìobhaideach ✓',
     modeGuest: 'pokerth.net — Aoigh',
     modeAuth: 'pokerth.net — Cunntas clàraichte',
+    srvDedicated:'LAN / Frithealadair sònraichte', guestMode:'Modh aoigh',
     nickPlaceholder: 'D\'AinmFhèin',
     quitTooltip: 'Fàg',
     reconnectInProgress: 'Ag ath-cheangal…',
