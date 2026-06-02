@@ -218,6 +218,7 @@ export const strings = {
     statResetConfirm: 'Poništiti svu vašu statistiku? Ovo se ne može poništiti.',
     statLifeOnlyPrivate: 'Prati se samo na privatnom serveru / LAN-u.',
     boardEmpty: 'Još nema rezultata',
+    boardPer100:'Neto / 100 ruku', boardYourRank:'Vi: #{n} od {m}',
     rejoinInProgress: 'Ponovno povezivanje na vaš sto…',
     rejoinWaitNick: 'Oslobađanje vaše prethodne sesije…',
     rejoinFailed: 'Vaš sto nije moguće nastaviti — nazad u predvorje.',
