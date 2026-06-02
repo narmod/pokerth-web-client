@@ -376,7 +376,7 @@ export const strings = {
     reconnectInProgress: 'Yeniden bağlanılıyor…',
     connectingPlayers: 'Bağlanılıyor {type} v{ver} — {n} oyuncu…',
     connectedAsGuest: '«{name}» misafiri olarak bağlandı (ID {id})',
-    errBadCreds: '⚠ Geçersiz pokerth.net bilgileri (kullanıcı adı veya şifre).',
+    errBadCreds: '⚠ Geçersiz bilgiler (kullanıcı adı veya şifre).',
     serverRequiresAuth: '⚠ Bu sunucu kimlik doğrulama gerektiriyor. pokerth.net hesabına veya misafir girişine geçin.',
     brandToggleTooltip: 'Adı göster / gizle',
     canReconnect: '✅ Şimdi yeniden bağlanabilirsin.',
