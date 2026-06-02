@@ -6598,10 +6598,10 @@ function dismissWinner() {
 
       // Champ mot de passe SERVEUR : seuls les serveurs auto-hébergés
       // (LAN / dédié privé) peuvent en exiger un. pokerth.net est le build
-      // officiel et l'ignore, donc on masque tout le bloc dans les modes
-      // guest/auth. Le sous-panneau reste replié tant qu'on ne clique pas
-      // sur « plus d'options ».
-      var advWrap = document.getElementById('connect-adv-wrap');
+      // officiel et l'ignore, donc on masque le champ dans les modes
+      // guest/auth. Il vit dans le bloc « roue crantée » (conn-advanced) :
+      // doublement masqué tant que la roue n'est pas ouverte.
+      var advWrap = document.getElementById('f-server-pass');
       if (advWrap) advWrap.style.display = (mode === 'lan' || mode === 'unauth') ? '' : 'none';
 
       const hostInput  = $('host');
