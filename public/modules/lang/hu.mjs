@@ -371,6 +371,7 @@ export const strings = {
     modeUnauth: 'LAN / Privát szerver ✓',
     modeGuest: 'pokerth.net — Vendég',
     modeAuth: 'pokerth.net — Regisztrált fiók',
+    srvDedicated:'LAN / Dedikált szerver', guestMode:'Vendég mód',
     nickPlaceholder: 'ANeved',
     quitTooltip: 'Kilépés',
     reconnectInProgress: 'Újracsatlakozás…',
