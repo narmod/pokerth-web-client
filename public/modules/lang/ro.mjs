@@ -218,6 +218,7 @@ export const strings = {
     statResetConfirm: 'Resetezi toate statisticile tale? Acest lucru nu poate fi anulat.',
     statLifeOnlyPrivate: 'Urmărit doar pe serverul privat / LAN.',
     boardEmpty: 'Încă niciun scor',
+    boardPer100:'Net / 100 mâini', boardYourRank:'Tu: #{n} din {m}',
     rejoinInProgress: 'Reconectare la masa ta…',
     rejoinWaitNick: 'Se eliberează sesiunea anterioară…',
     rejoinFailed: 'Masa ta nu a putut fi reluată — înapoi în lobby.',
