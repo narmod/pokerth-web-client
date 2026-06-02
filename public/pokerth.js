@@ -6771,6 +6771,32 @@ function dismissWinner() {
         if ($('port')) $('port').value = '7234';   // pokerth.net standard port
         setStatus(t('enterCredentials'), '', 'enterCredentials');
       }
+
+      // Garder les 2 contrôles visibles (serveur + case « Mode invité ») en
+      // phase avec le mode interne, quel que soit le chemin ayant fixé
+      // login-mode.value (choix utilisateur, restauration, lien partagé…).
+      try {
+        var _sm = $('server-mode'), _gc = $('guest-mode-cb');
+        if (_sm && _gc) {
+          if (mode === 'guest' || mode === 'auth') { _sm.value = 'pokerthnet'; _gc.checked = (mode === 'guest'); }
+          else { _sm.value = 'lan-dedi'; _gc.checked = (mode !== 'lan'); }
+        }
+      } catch (e) {}
+    },
+
+    // Mappe (serveur visible × case « Mode invité ») vers l'un des 4 modes
+    // internes, puis délègue à onLoginModeChange() — inchangé.
+    //   LAN/dédié + invité  → unauth   |  LAN/dédié sans invité → lan
+    //   pokerth.net + invité → guest   |  pokerth.net sans invité → auth
+    onServerOrGuestChange() {
+      var srvEl = $('server-mode'), gcEl = $('guest-mode-cb'), lmEl = $('login-mode');
+      if (srvEl && gcEl && lmEl) {
+        var guest = gcEl.checked;
+        lmEl.value = (srvEl.value === 'pokerthnet')
+          ? (guest ? 'guest' : 'auth')
+          : (guest ? 'unauth' : 'lan');
+      }
+      this.onLoginModeChange();
     },
 
     connect(opts) {
