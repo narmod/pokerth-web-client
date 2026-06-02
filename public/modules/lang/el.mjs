@@ -374,7 +374,7 @@ export const strings = {
     reconnectInProgress: 'Επανασύνδεση…',
     connectingPlayers: 'Σύνδεση {type} v{ver} — {n} παίκτες…',
     connectedAsGuest: 'Συνδεδεμένος ως επισκέπτης «{name}» (ID {id})',
-    errBadCreds: '⚠ Μη έγκυρα στοιχεία pokerth.net (όνομα χρήστη ή κωδικός).',
+    errBadCreds: '⚠ Μη έγκυρα στοιχεία (όνομα χρήστη ή κωδικός).',
     serverRequiresAuth: '⚠ Αυτός ο διακομιστής απαιτεί ταυτοποίηση. Μεταβείτε σε λογαριασμό pokerth.net ή σύνδεση επισκέπτη.',
     brandToggleTooltip: 'Εμφάνιση / απόκρυψη ονόματος',
     canReconnect: '✅ Μπορείτε να επανασυνδεθείτε τώρα.',
