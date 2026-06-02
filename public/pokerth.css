@@ -622,44 +622,40 @@ body {
 .row2 .f:first-child { flex: 1; }
 .row2 .f-sm { width: 110px; }
 
-/* Toggle « Plus d'options » de l'écran de connexion : libellé centré encadré
-   de deux filets dégradés + chevron qui pivote. Le bloc avancé reprend le même
-   rythme vertical (gap 11px) que la carte et s'ouvre avec un léger fondu. */
-.conn-adv-toggle {
+/* Roue crantée « Plus d'options » à droite du sélecteur de mode : même langage
+   visuel que le bouton avatar et la roue du lobby. Passe en or et l'icône pivote
+   quand les options sont ouvertes. Le bloc avancé reprend le rythme vertical
+   (gap 11px) de la carte et s'ouvre avec un léger fondu. */
+.conn-adv-gear {
+  flex-shrink: 0;
+  width: 44px;
   display: flex;
   align-items: center;
-  gap: 10px;
-  width: 100%;
-  margin: 0;
-  padding: 5px 0;
-  background: none;
-  border: none;
-  cursor: pointer;
+  justify-content: center;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid var(--border);
+  border-radius: 4px;
   color: var(--gold-dim);
-  font-family: inherit;
-  font-size: 0.62rem;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  transition: color 0.2s;
+  cursor: pointer;
+  font-size: 1.15rem;
+  line-height: 1;
+  transition: color 0.2s, border-color 0.2s, background 0.2s;
 }
-.conn-adv-toggle:hover { color: var(--gold); }
-.conn-adv-toggle .conn-adv-line {
-  flex: 1;
-  height: 1px;
-  background: linear-gradient(to right, transparent, var(--border) 50%, transparent);
+.conn-adv-gear:hover {
+  color: var(--gold);
+  border-color: var(--gold-dim);
+  background: rgba(255,255,255,0.1);
 }
-.conn-adv-toggle .conn-adv-mid {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  white-space: nowrap;
+.conn-adv-gear.open {
+  color: var(--gold);
+  border-color: var(--gold);
+  background: rgba(200,168,74,0.12);
 }
-.conn-adv-chevron {
+.conn-adv-gear-ico {
   display: inline-block;
-  font-size: 0.62rem;
-  transition: transform 0.28s ease;
+  transition: transform 0.3s ease;
 }
-.conn-adv-toggle.open .conn-adv-chevron { transform: rotate(90deg); }
+.conn-adv-gear.open .conn-adv-gear-ico { transform: rotate(90deg); }
 
 #conn-advanced { display: flex; flex-direction: column; gap: 11px; }
 #conn-advanced.anim { animation: connAdvIn 0.28s ease; }
