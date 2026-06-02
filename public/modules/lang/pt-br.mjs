@@ -217,6 +217,7 @@ export const strings = {
     statResetConfirm: 'Zerar suas estatísticas totais? Isto não pode ser desfeito.',
     statLifeOnlyPrivate: 'Registrado apenas no servidor privado / LAN.',
     boardEmpty: 'Ainda não há pontuações',
+    boardPer100:'Líquido / 100 mãos', boardYourRank:'Você: #{n} de {m}',
     rejoinInProgress: 'Voltando para sua mesa…',
     rejoinWaitNick: 'Liberando sua sessão anterior…',
     rejoinFailed: 'Não foi possível retomar sua mesa — de volta ao lobby.',
