@@ -204,7 +204,7 @@ export const strings = {
     reconnectInProgress:'재접속 중\u2026',
     connectingPlayers:'{type} v{ver} 접속 중 \u2014 {n}명\u2026',
     connectedAsGuest:'게스트로 접속됨 \u201c{name}\u201d (ID {id})',
-    errBadCreds:'\u26a0 잘못된 pokerth.net 로그인 정보 (아이디 또는 비밀번호).',
+    errBadCreds:'\u26a0 잘못된 로그인 정보 (아이디 또는 비밀번호).',
     serverRequiresAuth:'\u26a0 이 서버는 인증이 필요합니다. pokerth.net 계정 또는 게스트 로그인으로 전환하세요.',
     brandToggleTooltip:'이름 표시 / 숨기기',
     canReconnect:'\u2705 이제 다시 접속할 수 있습니다.',
