@@ -8255,6 +8255,11 @@ document.addEventListener('DOMContentLoaded', function() { setTimeout(autoScaleT
 function makeChatResizable(panel, msgs) {
   if (!panel || !msgs || panel._resizable) return;
   panel._resizable = true;
+  // Mémorise les valeurs par défaut (styles inline d'origine) pour pouvoir
+  // réinitialiser à la taille d'ouverture (cf. resetChatSize).
+  panel._origMaxH = panel.style.maxHeight || '';
+  msgs._origMaxH  = msgs.style.maxHeight || '';
+  msgs._origFlex  = msgs.style.flex || '';
 
   var handle = document.createElement('div');
   handle.className = 'chat-resize-handle';
@@ -8265,7 +8270,7 @@ function makeChatResizable(panel, msgs) {
   panel.appendChild(handle);
 
   var dragging = false, startY = 0, startH = 0;
-  function maxH() { return Math.round(window.innerHeight * 0.75); } // 3/4 écran
+  function maxH() { return Math.round(window.innerHeight * 0.6); } // 60% écran
   function clamp(h) { return Math.max(50, Math.min(maxH(), h)); }
 
   handle.addEventListener('pointerdown', function(e) {
@@ -8299,6 +8304,18 @@ function makeChatResizable(panel, msgs) {
   });
 }
 
+// Réinitialise un chat à sa taille d'ouverture par défaut (annule un
+// éventuel glissement précédent) en restaurant les styles inline d'origine.
+function resetChatSize(panel, msgs) {
+  if (!panel || !msgs) return;
+  panel.style.removeProperty('max-height');
+  if (panel._origMaxH) panel.style.maxHeight = panel._origMaxH;
+  msgs.style.height = '';
+  msgs.style.removeProperty('max-height');
+  if (msgs._origMaxH) msgs.style.maxHeight = msgs._origMaxH;
+  msgs.style.flex = msgs._origFlex || '';
+}
+
 function toggleLobbyChat() {
   var panel = document.getElementById('lobby-chat-panel');
   var btn   = document.getElementById('lobby-chat-btn');
@@ -8310,12 +8327,20 @@ function toggleLobbyChat() {
     btn.style.borderColor = open ? 'var(--gold-dim)' : '';
     btn.style.color       = open ? 'var(--gold)' : '';
   }
+  var _lb = document.querySelector('#s-lobby .lobby-body');
   if (open) {
-    makeChatResizable(panel, document.getElementById('chat'));
+    var _chat = document.getElementById('chat');
+    makeChatResizable(panel, _chat);
+    resetChatSize(panel, _chat);              // toujours rouvrir à la taille par défaut
+    // Le panneau est en overlay (position:fixed) : on réserve sous lui
+    // l'espace de sa hauteur par défaut pour que les tables restent
+    // visibles à l'ouverture. L'agrandissement recouvre alors les tables.
+    if (_lb) _lb.style.paddingTop = panel.offsetHeight + 'px';
     if (typeof clearUnreadChat === 'function') clearUnreadChat();
-    var el = document.getElementById('chat');
-    if (el) el.scrollTop = el.scrollHeight;
+    if (_chat) _chat.scrollTop = _chat.scrollHeight;
     setTimeout(function(){ var ci = document.getElementById('chat-in'); if(ci) ci.focus(); }, 80);
+  } else {
+    if (_lb) _lb.style.paddingTop = '';        // libère l'espace
   }
 }
 
