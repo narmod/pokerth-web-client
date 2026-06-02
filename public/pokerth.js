@@ -1431,7 +1431,7 @@ const MSG = (() => {
   // Auth (loginType=1) : password en clair dans clientUserData (tag 7),
   //   sécurisé par TLS (mandatory côté serveur v2.0+).
   //   Ref: pokerth/src/net/clientstate.cpp:1465-1469 + serverlobbythread.cpp:1255-1256
-  function buildInit(nick, major, minor, loginType, password) {
+  function buildInit(nick, major, minor, loginType, password, serverPass) {
     loginType = loginType !== undefined ? loginType : 0;
     const BUILD_ID = 16908294; // 0x01020006 — source: pokerth-live/src/constants/gameDefs.js
     const ver = Proto.encode([[1,0,major],[2,0,minor]]);
@@ -1441,6 +1441,15 @@ const MSG = (() => {
       [5,0,loginType], // login: 0=guestLogin, 1=authenticatedLogin, 2=unauthenticatedLogin
       [6,2,nick],      // nickName (utilisé aussi pour authenticated login)
     ];
+    // Mot de passe SERVEUR (authServerPassword, champ 4, string). Le serveur
+    // le vérifie pour TOUS les types de login sur un build non-officiel
+    // (config ServerPassword) — cf. serverlobbythread.cpp HandleNetPacketInit,
+    // AVANT la branche guest/unauth/auth. Vide/absent → champ totalement omis,
+    // pour qu'un serveur sans mot de passe voie "" == "" et accepte. Ignoré
+    // par pokerth.net (build officiel : tout le bloc est compilé out).
+    if (serverPass) {
+      fields.push([4, 2, String(serverPass)]); // authServerPassword
+    }
     // Authenticated login : password en bytes dans clientUserData (tag 7, max 256 bytes).
     // Tronqué si nécessaire pour rester sous la limite imposée par le serveur.
     if (loginType === 1 && password) {
@@ -3062,7 +3071,11 @@ const App = (() => {
             if (_rs0 && _rs0.n === myName && (Date.now() - _rs0.t) < 5 * 60 * 1000) _pendingRejoin = _rs0.g;
           } catch (e) {}
         }
-        send(MSG.buildInit(myName, pMaj, pMin, loginType, authPass));
+        // Mot de passe serveur (optionnel, masqué sous « plus d'options »).
+        // Trimmé ; vide → null donc omis de l'InitMessage. Lu directement ici
+        // (comme authPass) pour couvrir aussi les reconnexions automatiques.
+        const srvPass = ($('server-pass') ? $('server-pass').value.trim() : '') || null;
+        send(MSG.buildInit(myName, pMaj, pMin, loginType, authPass, srvPass));
         break;
       }
 
@@ -6582,6 +6595,14 @@ function dismissWinner() {
       // each branch below still sets $('use-tls').checked appropriately.
       var tlsRow = document.getElementById('tls-row');
       if (tlsRow) tlsRow.style.display = (mode === 'auth') ? '' : 'none';
+
+      // Champ mot de passe SERVEUR : seuls les serveurs auto-hébergés
+      // (LAN / dédié privé) peuvent en exiger un. pokerth.net est le build
+      // officiel et l'ignore, donc on masque tout le bloc dans les modes
+      // guest/auth. Le sous-panneau reste replié tant qu'on ne clique pas
+      // sur « plus d'options ».
+      var advWrap = document.getElementById('connect-adv-wrap');
+      if (advWrap) advWrap.style.display = (mode === 'lan' || mode === 'unauth') ? '' : 'none';
 
       const hostInput  = $('host');
       const proxyInput = $('proxy');
