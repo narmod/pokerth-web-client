@@ -20,10 +20,10 @@
  *                     refreshed in the background. Repeat loads are near
  *                     instant and work fully offline; the CACHE_VERSION bump on
  *                     each deploy still guarantees clients get the new files.
- *                 Cross-origin requests (fonts CDN, etc.) and WS upgrades are
- *                 left untouched.
+ *                 Cross-origin requests and WS upgrades are left untouched.
+ *                 (Fonts are now self-hosted and handled by SWR above.)
  */
-const CACHE_VERSION = 'pokerth-v0.2.113';
+const CACHE_VERSION = 'pokerth-v0.2.114';
 
 // Where navigations fall back to when the network is unavailable.
 const NAV_FALLBACK = '/pokerth-client.html';
@@ -36,6 +36,20 @@ const ASSETS = [
   '/pokerth-client.html',
   '/pokerth.js',
   '/pokerth.css',
+  // Self-hosted fonts (Cinzel + Inconsolata) — offline + privacy
+  '/fonts/fonts.css',
+  '/fonts/cinzel-latin-400-normal.woff2',
+  '/fonts/cinzel-latin-600-normal.woff2',
+  '/fonts/cinzel-latin-700-normal.woff2',
+  '/fonts/cinzel-latin-ext-400-normal.woff2',
+  '/fonts/cinzel-latin-ext-600-normal.woff2',
+  '/fonts/cinzel-latin-ext-700-normal.woff2',
+  '/fonts/inconsolata-latin-300-normal.woff2',
+  '/fonts/inconsolata-latin-400-normal.woff2',
+  '/fonts/inconsolata-latin-500-normal.woff2',
+  '/fonts/inconsolata-latin-ext-300-normal.woff2',
+  '/fonts/inconsolata-latin-ext-400-normal.woff2',
+  '/fonts/inconsolata-latin-ext-500-normal.woff2',
   '/manifest.json',
   '/modules/i18n.mjs',
   '/modules/lang/en.mjs',
