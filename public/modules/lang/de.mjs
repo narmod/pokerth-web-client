@@ -223,6 +223,7 @@ export const strings = {
     statResetConfirm: 'Lebenslange Statistik zurücksetzen? Das kann nicht rückgängig gemacht werden.',
     statLifeOnlyPrivate: 'Nur auf dem privaten Server / LAN erfasst.',
     boardEmpty: 'Noch keine Ergebnisse',
+    boardPer100:'Netto / 100 Hände', boardYourRank:'Du: #{n} von {m}',
     rejoinInProgress: 'Trete deinem Tisch wieder bei…',
     rejoinWaitNick: 'Vorherige Sitzung wird freigegeben…',
     rejoinFailed: 'Tisch konnte nicht fortgesetzt werden — zurück zur Lobby.',
