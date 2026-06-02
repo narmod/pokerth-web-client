@@ -2728,7 +2728,7 @@ body {
 /* ── Bottom zone: my cards + actions ── */
 .my-zone {
   position: fixed;
-  bottom: 56px; /* above player-bar */
+  bottom: calc(56px + env(safe-area-inset-bottom)); /* above player-bar, clears gesture nav */
   left: 0; right: 0;
   z-index: 29;
   display: flex;
@@ -4494,4 +4494,18 @@ body:not(.in-game) .my-zone {
   .cf-preset .cfp-ico { font-size: 1.75rem; }
   .cf-preset .cfp-n { font-size: 0.95rem; }
   .cf-preset .cfp-d { font-size: 0.62rem; }
+}
+
+/* ── PWA edge-to-edge: respect notch / status-bar in fullscreen mode ──
+   display_override lists "fullscreen" first, so an installed PWA on Android
+   may draw under the system status bar. These insets keep the game & lobby
+   headers clear of the notch and landscape camera cut-outs. Appended last so
+   the longhand padding-* wins over the mobile shorthand `padding:` rules. */
+@media (display-mode: fullscreen) {
+  #s-game .header,
+  #s-lobby .header {
+    padding-top: max(4px, env(safe-area-inset-top));
+    padding-left: max(8px, env(safe-area-inset-left));
+    padding-right: max(8px, env(safe-area-inset-right));
+  }
 }
