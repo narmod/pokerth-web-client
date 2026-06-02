@@ -218,6 +218,7 @@ export const strings = {
     statResetConfirm: 'Herstel al jou statistieke? Dit kan nie ongedaan gemaak word nie.',
     statLifeOnlyPrivate: 'Word net op die privaat bediener / LAN bygehou.',
     boardEmpty: 'Nog geen tellings nie',
+    boardPer100:'Netto / 100 hande', boardYourRank:'Jy: #{n} van {m}',
     rejoinInProgress: 'Herkoppel aan jou tafel…',
     rejoinWaitNick: 'Stel jou vorige sessie vry…',
     rejoinFailed: 'Kon nie jou tafel hervat nie — terug na die voorportaal.',
