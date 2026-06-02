@@ -217,6 +217,7 @@ export const strings = {
     statResetConfirm: 'Nollataanko koko tilastosi? Tätä ei voi perua.',
     statLifeOnlyPrivate: 'Seurataan vain yksityisellä palvelimella / LAN:ssa.',
     boardEmpty: 'Ei vielä pisteitä',
+    boardPer100:'Netto / 100 kättä', boardYourRank:'Sinä: #{n}/{m}',
     rejoinInProgress: 'Liitytään pöytääsi uudelleen…',
     rejoinWaitNick: 'Vapautetaan edellistä istuntoasi…',
     rejoinFailed: 'Pöytääsi ei voitu jatkaa — takaisin aulaan.',
