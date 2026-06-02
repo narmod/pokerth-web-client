@@ -23,7 +23,7 @@
  *                 Cross-origin requests and WS upgrades are left untouched.
  *                 (Fonts are now self-hosted and handled by SWR above.)
  */
-const CACHE_VERSION = 'pokerth-v0.2.114';
+const CACHE_VERSION = 'pokerth-v0.2.115';
 
 // Where navigations fall back to when the network is unavailable.
 const NAV_FALLBACK = '/pokerth-client.html';
@@ -62,13 +62,46 @@ const ASSETS = [
   '/modules/lang/nl.mjs',
   '/modules/lang/pl.mjs',
   '/modules/lang/ru.mjs',
+  // Remaining UI languages — i18n.mjs imports all of them statically,
+  // so they must be cached for the app to boot offline.
+  '/modules/lang/af.mjs',
+  '/modules/lang/bg.mjs',
+  '/modules/lang/ca.mjs',
+  '/modules/lang/cs.mjs',
+  '/modules/lang/da.mjs',
+  '/modules/lang/el.mjs',
+  '/modules/lang/fi.mjs',
+  '/modules/lang/gd.mjs',
+  '/modules/lang/gl.mjs',
+  '/modules/lang/hi.mjs',
+  '/modules/lang/hr.mjs',
+  '/modules/lang/hu.mjs',
+  '/modules/lang/ja.mjs',
+  '/modules/lang/ko.mjs',
+  '/modules/lang/lt.mjs',
+  '/modules/lang/nb.mjs',
+  '/modules/lang/ro.mjs',
+  '/modules/lang/sk.mjs',
+  '/modules/lang/sr.mjs',
+  '/modules/lang/sv.mjs',
+  '/modules/lang/ta.mjs',
+  '/modules/lang/tr.mjs',
+  '/modules/lang/uk.mjs',
+  '/modules/lang/vi.mjs',
+  '/modules/lang/zh.mjs',
+  '/modules/lang/zh-tw.mjs',
   '/modules/sounds.mjs',
   '/favicon.ico',
   '/favicon.svg',
   '/favicon-32.png',
   '/favicon-192.png',
   '/favicon-512.png',
-  '/logo-chip.png'
+  '/logo-chip.png',
+  // PWA install icons referenced by manifest.json
+  '/icon-192.png',
+  '/icon-512.png',
+  '/icon-maskable-192.png',
+  '/icon-maskable-512.png'
 ];
 
 // ── Install : precache the app shell ──
