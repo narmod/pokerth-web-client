@@ -374,7 +374,7 @@ export const strings = {
     reconnectInProgress: 'Se reconectează…',
     connectingPlayers: 'Se conectează {type} v{ver} — {n} jucători…',
     connectedAsGuest: 'Conectat ca oaspete «{name}» (ID {id})',
-    errBadCreds: '⚠ Date pokerth.net invalide (nume de utilizator sau parolă).',
+    errBadCreds: '⚠ Date invalide (nume de utilizator sau parolă).',
     serverRequiresAuth: '⚠ Acest server necesită autentificare. Treci la un cont pokerth.net sau la autentificare ca oaspete.',
     brandToggleTooltip: 'Afișează / ascunde numele',
     canReconnect: '✅ Te poți reconecta acum.',
