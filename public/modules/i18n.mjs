@@ -132,6 +132,31 @@ const _SERVERPASS_I18N = {
   'zh-TW': '伺服器密碼（選填）', hi: 'सर्वर पासवर्ड (वैकल्पिक)'
 };
 for (const _c in _SERVERPASS_I18N) { if (LANG[_c]) LANG[_c].serverPassword = _SERVERPASS_I18N[_c]; }
+// ── Clé 'userPassword' : libellé (placeholder) du champ mot de passe de
+// COMPTE (clientUserData) saisi par l'utilisateur dans la roue crantée en
+// mode LAN / serveur dédié. Rempli ⇒ le client bascule en authenticatedLogin.
+// Toutes les langues ; repli EN via t().
+const _USERPASS_I18N = {
+  en: 'User password (optional)', fr: 'Mot de passe utilisateur (optionnel)',
+  de: 'Benutzerpasswort (optional)', es: 'Contraseña de usuario (opcional)',
+  it: 'Password utente (opzionale)', 'pt-BR': 'Senha do usuário (opcional)',
+  'pt-PT': 'Palavra-passe do utilizador (opcional)', nl: 'Gebruikerswachtwoord (optioneel)',
+  pl: 'Hasło użytkownika (opcjonalne)', ru: 'Пароль пользователя (необязательно)',
+  zh: '用户密码（可选）', tr: 'Kullanıcı parolası (isteğe bağlı)',
+  uk: 'Пароль користувача (необовʼязково)', ja: 'ユーザーパスワード（任意）',
+  sv: 'Användarlösenord (valfritt)', nb: 'Brukerpassord (valgfritt)',
+  da: 'Brugeradgangskode (valgfrit)', fi: 'Käyttäjän salasana (valinnainen)',
+  cs: 'Uživatelské heslo (volitelné)', sk: 'Používateľské heslo (voliteľné)',
+  ro: 'Parolă utilizator (opțional)', hu: 'Felhasználói jelszó (opcionális)',
+  el: 'Κωδικός χρήστη (προαιρετικό)', bg: 'Потребителска парола (по избор)',
+  hr: 'Korisnička lozinka (neobavezno)', sr: 'Корисничка лозинка (опционо)',
+  af: 'Gebruikerwagwoord (opsioneel)', ca: 'Contrasenya d\'usuari (opcional)',
+  gl: 'Contrasinal de usuario (opcional)', gd: 'Facal-faire cleachdaiche (roghainneil)',
+  lt: 'Naudotojo slaptažodis (nebūtina)', ta: 'பயனர் கடவுச்சொல் (விருப்பத்தேர்வு)',
+  vi: 'Mật khẩu người dùng (tùy chọn)', ko: '사용자 비밀번호 (선택 사항)',
+  'zh-TW': '使用者密碼（選填）', hi: 'उपयोगकर्ता पासवर्ड (वैकल्पिक)'
+};
+for (const _c in _USERPASS_I18N) { if (LANG[_c]) LANG[_c].userPassword = _USERPASS_I18N[_c]; }
 function _flagFor(code) {
   return (LANG_META[code] && LANG_META[code].flag)
     || ('<span class="lang-flag lang-flag-code" style="font:700 0.72rem/1 monospace;letter-spacing:.05em">' + String(code).toUpperCase() + '</span>');
