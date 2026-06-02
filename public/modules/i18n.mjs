@@ -116,7 +116,20 @@ const _SERVERPASS_I18N = {
   de: 'Serverpasswort (optional)', es: 'Contraseña del servidor (opcional)',
   it: 'Password del server (opzionale)', 'pt-BR': 'Senha do servidor (opcional)',
   'pt-PT': 'Palavra-passe do servidor (opcional)', nl: 'Serverwachtwoord (optioneel)',
-  pl: 'Hasło serwera (opcjonalne)', ru: 'Пароль сервера (необязательно)'
+  pl: 'Hasło serwera (opcjonalne)', ru: 'Пароль сервера (необязательно)',
+  zh: '服务器密码（可选）', tr: 'Sunucu parolası (isteğe bağlı)',
+  uk: 'Пароль сервера (необов\u02bcязково)', ja: 'サーバーパスワード（任意）',
+  sv: 'Serverlösenord (valfritt)', nb: 'Serverpassord (valgfritt)',
+  da: 'Serveradgangskode (valgfrit)', fi: 'Palvelimen salasana (valinnainen)',
+  cs: 'Heslo serveru (volitelné)', sk: 'Heslo servera (voliteľné)',
+  ro: 'Parola serverului (opțional)', hu: 'Szerver jelszó (opcionális)',
+  el: 'Κωδικός διακομιστή (προαιρετικό)', bg: 'Парола за сървъра (по избор)',
+  hr: 'Lozinka poslužitelja (neobavezno)', sr: 'Лозинка сервера (опционо)',
+  af: 'Bedienerwagwoord (opsioneel)', ca: 'Contrasenya del servidor (opcional)',
+  gl: 'Contrasinal do servidor (opcional)', gd: 'Facal-faire an fhrithealaiche (roghainneil)',
+  lt: 'Serverio slaptažodis (nebūtina)', ta: 'சேவையகக் கடவுச்சொல் (விருப்பத்தேர்வு)',
+  vi: 'Mật khẩu máy chủ (tùy chọn)', ko: '서버 비밀번호 (선택 사항)',
+  'zh-TW': '伺服器密碼（選填）', hi: 'सर्वर पासवर्ड (वैकल्पिक)'
 };
 for (const _c in _SERVERPASS_I18N) { if (LANG[_c]) LANG[_c].serverPassword = _SERVERPASS_I18N[_c]; }
 function _flagFor(code) {
