@@ -374,7 +374,7 @@ export const strings = {
     reconnectInProgress: 'Reconnectant…',
     connectingPlayers: 'Connectant {type} v{ver} — {n} jugadors…',
     connectedAsGuest: 'Connectat com a convidat «{name}» (ID {id})',
-    errBadCreds: '⚠ Dades de pokerth.net no vàlides (nom d\'usuari o contrasenya).',
+    errBadCreds: '⚠ Dades no vàlides (nom d\'usuari o contrasenya).',
     serverRequiresAuth: '⚠ Aquest servidor requereix autenticació. Canvia a un compte pokerth.net o a inici de sessió de convidat.',
     brandToggleTooltip: 'Mostra / amaga el nom',
     canReconnect: '✅ Ara et pots connectar de nou.',
