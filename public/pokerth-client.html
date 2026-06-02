@@ -268,14 +268,22 @@ function onAvatarImageChosen(input) {
       <label data-i18n="loginMode">Login Mode</label>
       <div style="display:flex;gap:8px;align-items:stretch">
         <div class="sel-wrap" style="flex:1">
-          <select id="login-mode" onchange="App.onLoginModeChange()">
-            <option value="lan" data-i18n="lan">LAN / Private server (guest)</option>
-            <option value="unauth" selected data-i18n="modeUnauth">LAN / Private server ✓</option>
-            <option value="guest" data-i18n="modeGuest">pokerth.net — Guest</option>
-            <option value="auth" data-i18n="modeAuth">pokerth.net — Registered account</option>
+          <select id="server-mode" onchange="App.onServerOrGuestChange()">
+            <option value="lan-dedi" selected data-i18n="srvDedicated">LAN / Dedicated server</option>
+            <option value="pokerthnet">pokerth.net</option>
           </select>
           <span class="sel-arr">▾</span>
         </div>
+        <!-- Sélecteur de mode INTERNE (4 valeurs) — MASQUÉ. Piloté par
+             #server-mode + #guest-mode-cb via App.onServerOrGuestChange().
+             Conservé tel quel pour que TOUTE la logique existante qui lit
+             #login-mode (connect, restauration, lien partagé…) reste intacte. -->
+        <select id="login-mode" style="display:none" aria-hidden="true" tabindex="-1">
+          <option value="lan" selected data-i18n="lan">LAN / Private server (guest)</option>
+          <option value="unauth" data-i18n="modeUnauth">LAN / Private server ✓</option>
+          <option value="guest" data-i18n="modeGuest">pokerth.net — Guest</option>
+          <option value="auth" data-i18n="modeAuth">pokerth.net — Registered account</option>
+        </select>
         <!-- Roue crantée : affiche/cache les champs techniques (proxy / serveur /
              port), masqués par défaut pour simplifier l'écran aux novices. Les
              champs restent dans le DOM avec leurs valeurs, donc App.connect() et
@@ -914,6 +922,11 @@ function onAvatarImageChosen(input) {
     <label class="tls-row" id="tls-row">
       <input type="checkbox" id="use-tls" style="accent-color:var(--gold);flex-shrink:0">
       <span data-i18n="tlsLabel">TLS — required for pokerth.net, uncheck for LAN</span>
+    </label>
+
+    <label class="tls-row" id="guest-mode-row">
+      <input type="checkbox" id="guest-mode-cb" style="accent-color:var(--gold);flex-shrink:0" onchange="App.onServerOrGuestChange()">
+      <span data-i18n="guestMode">Guest mode</span>
     </label>
 
     <button class="btn-primary" onclick="App.connect()" data-i18n="connect">CONNECT</button>
