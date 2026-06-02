@@ -371,6 +371,7 @@ export const strings = {
     modeUnauth: 'LAN / Ιδιωτικός διακομιστής ✓',
     modeGuest: 'pokerth.net — Επισκέπτης',
     modeAuth: 'pokerth.net — Εγγεγραμμένος λογαριασμός',
+    srvDedicated:'LAN / Αποκλειστικός διακομιστής', guestMode:'Λειτουργία επισκέπτη',
     nickPlaceholder: 'ΤοΌνομαΣας',
     quitTooltip: 'Έξοδος',
     reconnectInProgress: 'Επανασύνδεση…',
