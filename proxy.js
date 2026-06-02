@@ -18,6 +18,7 @@ const http = require('http');
 const url  = require('url');
 const fs   = require('fs');
 const path = require('path');
+const zlib = require('zlib');
 
 const args        = process.argv.slice(2);
 const PROXY_PORT  = parseInt(args.find(a => /^\d+$/.test(a)) || process.env.PORT || '8080', 10);
@@ -289,6 +290,70 @@ function mergeSnapshot(prev, inc) {
   };
 }
 
+// ── Static file delivery: gzip/brotli compression + safety headers ──
+// Text assets (JS/CSS/MJS/HTML/JSON/SVG) are compressed the first time they're
+// requested at a given mtime, then cached in memory so the big files
+// (pokerth.js, the protobuf bundle) are only compressed once. Keying on mtime
+// means a static deploy (git pull, no pm2 restart) is picked up automatically.
+// Binary media (png/woff2/ico) is already compressed → streamed as-is.
+// Compression runs async (libuv threadpool) so it never blocks the event loop
+// that also serves the WebSocket proxy.
+const COMPRESSIBLE = /^(?:text\/|application\/(?:javascript|json)|image\/svg\+xml)/;
+const SECURITY_HEADERS = {
+  'X-Content-Type-Options': 'nosniff',
+  'Referrer-Policy': 'no-referrer-when-downgrade'
+};
+const _compCache = new Map(); // 'enc:path:mtime' -> Buffer
+
+function sendFile(req, res, filePath, type, cacheCtl) {
+  const headers = Object.assign({ 'Content-Type': type, 'Cache-Control': cacheCtl }, SECURITY_HEADERS);
+  let enc = null;
+  if (COMPRESSIBLE.test(type)) {
+    const ae = String(req.headers['accept-encoding'] || '');
+    if (/\bbr\b/.test(ae)) enc = 'br';
+    else if (/\bgzip\b/.test(ae)) enc = 'gzip';
+  }
+  if (!enc) {
+    res.writeHead(200, headers);
+    fs.createReadStream(filePath).pipe(res);
+    return;
+  }
+  let st;
+  try { st = fs.statSync(filePath); } catch (e) { res.writeHead(404); res.end('Not found'); return; }
+  const key = enc + ':' + filePath + ':' + st.mtimeMs;
+  const send = function (buf) {
+    headers['Content-Encoding'] = enc;
+    headers['Vary'] = 'Accept-Encoding';
+    headers['Content-Length'] = buf.length;
+    res.writeHead(200, headers);
+    res.end(buf);
+  };
+  const cached = _compCache.get(key);
+  if (cached) { send(cached); return; }
+  fs.readFile(filePath, function (err, raw) {
+    if (err) { res.writeHead(500); res.end('Read error'); return; }
+    const done = function (e, out) {
+      if (e || !out) { // compression failed — fall back to uncompressed
+        const h = Object.assign({ 'Content-Type': type, 'Cache-Control': cacheCtl, 'Vary': 'Accept-Encoding' }, SECURITY_HEADERS);
+        res.writeHead(200, h);
+        res.end(raw);
+        return;
+      }
+      if (_compCache.size > 256) _compCache.clear(); // bound memory across deploys
+      _compCache.set(key, out);
+      send(out);
+    };
+    if (enc === 'br') {
+      zlib.brotliCompress(raw, { params: {
+        [zlib.constants.BROTLI_PARAM_QUALITY]: 11,
+        [zlib.constants.BROTLI_PARAM_SIZE_HINT]: raw.length
+      } }, done);
+    } else {
+      zlib.gzip(raw, { level: 9 }, done);
+    }
+  });
+}
+
 // ── HTTP server ──
 const httpServer = http.createServer((req, res) => {
   // Serve the SPA shell for the root path. We strip the query string
@@ -301,8 +366,7 @@ const httpServer = http.createServer((req, res) => {
   if (reqPathOnly === '/' || reqPathOnly === '/index.html') {
     const p = path.join(__dirname, 'public', 'pokerth-client.html');
     if (fs.existsSync(p)) {
-      res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'no-store, no-cache, must-revalidate', 'Pragma': 'no-cache' });
-      return fs.createReadStream(p).pipe(res);
+      return sendFile(req, res, p, 'text/html; charset=utf-8', 'no-store, no-cache, must-revalidate');
     }
   }
 
@@ -411,8 +475,7 @@ const httpServer = http.createServer((req, res) => {
     const cacheCtl = (ext === '.css' || ext === '.js' || ext === '.mjs')
       ? 'no-cache, must-revalidate'
       : 'public, max-age=86400';
-    res.writeHead(200, { 'Content-Type': type, 'Cache-Control': cacheCtl });
-    return fs.createReadStream(candidate).pipe(res);
+    return sendFile(req, res, candidate, type, cacheCtl);
   }
   res.writeHead(404); res.end('Not found');
 });
