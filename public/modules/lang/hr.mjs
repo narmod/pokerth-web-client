@@ -371,6 +371,7 @@ export const strings = {
     modeUnauth: 'LAN / Privatni poslužitelj ✓',
     modeGuest: 'pokerth.net — Gost',
     modeAuth: 'pokerth.net — Registrirani račun',
+    srvDedicated:'LAN / Namjenski poslužitelj', guestMode:'Gostujući način',
     nickPlaceholder: 'VašeIme',
     quitTooltip: 'Izađi',
     reconnectInProgress: 'Ponovno spajanje…',
