@@ -372,6 +372,7 @@ export const strings = {
     modeUnauth: '局域网 / 私人服务器 ✓',
     modeGuest: 'pokerth.net — 访客',
     modeAuth: 'pokerth.net — 注册账户',
+    srvDedicated:'局域网 / 专用服务器', guestMode:'访客模式',
     nickPlaceholder: '你的名字',
     quitTooltip: '退出',
     reconnectInProgress: '重新连接中…',
