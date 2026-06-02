@@ -223,6 +223,7 @@ export const strings = {
     statResetConfirm: 'Azzerare le statistiche totali? Non può essere annullato.',
     statLifeOnlyPrivate: 'Registrate solo sul server privato / LAN.',
     boardEmpty: 'Ancora nessun punteggio',
+    boardPer100:'Netto / 100 mani', boardYourRank:'Tu: #{n} di {m}',
     rejoinInProgress: 'Rientro al tuo tavolo…',
     rejoinWaitNick: 'Rilascio della sessione precedente…',
     rejoinFailed: 'Impossibile riprendere il tuo tavolo — ritorno alla lobby.',
