@@ -1,7 +1,9 @@
 /**
  * PokerTH Service Worker — v3
- * ⚠ Bump CACHE_VERSION on every deploy to force update.
- *    e.g. 'pokerth-v70-05-26' or just increment the number.
+ * ⚠ Bump CACHE_VERSION on every static deploy to force clients to update.
+ *    Format: 'pokerth-v{MAJOR}.{MINOR}.{N}' where {N} is a monotonic deploy
+ *    counter that doubles as the release patch number. A release tag equals
+ *    this string without the 'pokerth-' prefix (cache pokerth-v0.2.91 ↔ v0.2.91).
  *
  * Strategy:
  *   • install   — precache the critical app shell (HTML, JS, CSS, modules,
@@ -11,7 +13,7 @@
  *                 offline; cross-origin (fonts, etc.) and WS upgrades are
  *                 left untouched
  */
-const CACHE_VERSION = 'pokerth-v91';
+const CACHE_VERSION = 'pokerth-v0.2.91';
 
 // Critical app shell precached on install. Keep this list tight — anything
 // large or rarely used (e.g. the protobuf bundle) is fetched on demand and
