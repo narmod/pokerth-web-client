@@ -52,6 +52,22 @@ function toggleStats() {
   if (typeof window._toggleStats === "function") window._toggleStats();
 }
 
+// Replie/déplie les champs de connexion avancés (proxy / serveur / port).
+// Réutilise les clés i18n existantes moreOptions/lessOptions (présentes dans
+// les 9 langues) et window.t exposé par i18n.mjs — aucun ajout de traduction.
+function toggleConnAdvanced() {
+  var el = document.getElementById("conn-advanced");
+  var arrow = document.getElementById("conn-adv-arrow");
+  var lbl = document.getElementById("conn-adv-label");
+  if (!el) return;
+  var open = (el.style.display === "none" || !el.style.display);
+  el.style.display = open ? "" : "none";
+  if (arrow) arrow.textContent = open ? "\u25BC" : "\u25B6";
+  if (lbl) lbl.textContent = open
+    ? ((window.t && window.t("lessOptions")) || "Less options")
+    : ((window.t && window.t("moreOptions")) || "More options");
+}
+
 function toggleAvatarPopup() {
   var p = document.getElementById("avatar-popup");
   if (!p) return;
@@ -238,19 +254,28 @@ function onAvatarImageChosen(input) {
       </div>
     </div>
 
-    <div class="f">
-      <label data-i18n="urlProxy">WebSocket Proxy URL</label>
-      <input id="proxy" value="ws://localhost:8080" placeholder="ws://localhost:8080">
-    </div>
-
-    <div class="row2">
+    <!-- Connexion avancée : les champs techniques (proxy / serveur / port) sont
+         masqués par défaut pour simplifier l'écran aux utilisateurs novices.
+         Ils restent dans le DOM avec leurs valeurs (par défaut ou mémorisées),
+         donc App.connect() et onLoginModeChange() fonctionnent à l'identique. -->
+    <button type="button" id="conn-adv-btn" class="conn-adv-toggle" onclick="toggleConnAdvanced()">
+      <span id="conn-adv-arrow">&#9658;</span> <span id="conn-adv-label" data-i18n="moreOptions">More options</span>
+    </button>
+    <div id="conn-advanced" style="display:none">
       <div class="f">
-        <label data-i18n="pokerServer">PokerTH Server</label>
-        <input id="host" value="pokerth.net">
+        <label data-i18n="urlProxy">WebSocket Proxy URL</label>
+        <input id="proxy" value="ws://localhost:8080" placeholder="ws://localhost:8080">
       </div>
-      <div class="f f-sm">
-        <label data-i18n="port">Port</label>
-        <input id="port" value="7234" type="number">
+
+      <div class="row2">
+        <div class="f">
+          <label data-i18n="pokerServer">PokerTH Server</label>
+          <input id="host" value="pokerth.net">
+        </div>
+        <div class="f f-sm">
+          <label data-i18n="port">Port</label>
+          <input id="port" value="7234" type="number">
+        </div>
       </div>
     </div>
 
