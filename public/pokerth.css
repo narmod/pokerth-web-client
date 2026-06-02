@@ -622,6 +622,27 @@ body {
 .row2 .f:first-child { flex: 1; }
 .row2 .f-sm { width: 110px; }
 
+/* Toggle « Plus d'options » de l'écran de connexion (réutilise le style du
+   toggle du formulaire de création pour rester cohérent avec le design). */
+.conn-adv-toggle {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin: 2px 0 14px;
+  padding: 2px 0;
+  background: none;
+  border: none;
+  color: var(--gold-dim);
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 0.64rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  transition: color 0.2s;
+}
+.conn-adv-toggle:hover { color: var(--gold); }
+.conn-adv-toggle #conn-adv-arrow { font-size: 0.6rem; }
+
 .f {
   display: flex;
   flex-direction: column;
