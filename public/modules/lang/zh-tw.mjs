@@ -11,6 +11,7 @@ export const meta = {
 };
 
 export const strings = {
+    srvOffline:'🤖 離線（對戰機器人）', offlineHint:'🤖 與機器人對戰 — 無需連線。',
     preActionTitle:'操作預覽', preActionHint:'點選手牌關閉',
     blindsNextTip:'{n} 手後', blindsEveryMin:'每 {n} 分鐘',
     connect: '連線',
