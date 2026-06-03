@@ -21,7 +21,7 @@ export class FakeServer {
     this.pace    = opts.pace || ((fn)=>fn());
     this.rng     = opts.rng  || Math.random;
     this.botPool = opts.botPool || [];
-    this.cfg = Object.assign({ startMoney:3000, smallBlind:10, raiseEvery:8, maxPlayers:6, timeout:30, gameName:'Offline' }, opts.config||{});
+    this.cfg = Object.assign({ startMoney:3000, smallBlind:10, raiseEvery:8, maxPlayers:6, timeout:30, gameName:'Offline', raiseMode:1, endRaiseMode:1, endRaiseValue:0, guiSpeed:5, delayHands:2 }, opts.config||{});
     this.meId = 1; this.gameId = 1;
     this.players = [{ id:1, name:(opts.me&&opts.me.name)||'You', isBot:false }];
     this.botCfg = {}; this._used = new Set();
@@ -38,7 +38,13 @@ export class FakeServer {
   _applyGameInfo(gi){
     const f=readFields(gi); const n=(k,d)=> (f[k]&&f[k][0]!=null)?f[k][0]:d;
     this.cfg.maxPlayers = Math.max(2, Math.min(10, n(3, this.cfg.maxPlayers)));
-    this.cfg.raiseEvery = n(5, this.cfg.raiseEvery) || this.cfg.raiseEvery;
+    this.cfg.raiseMode  = n(4, this.cfg.raiseMode) || 1;
+    // field 5 = raise every N hands (mode 1); field 6 = every N minutes (mode 2)
+    this.cfg.raiseEvery = (this.cfg.raiseMode === 2 ? n(6, this.cfg.raiseEvery) : n(5, this.cfg.raiseEvery)) || this.cfg.raiseEvery;
+    this.cfg.endRaiseMode  = n(7, this.cfg.endRaiseMode) || 1;
+    this.cfg.endRaiseValue = n(8, this.cfg.endRaiseValue) || 0;
+    this.cfg.guiSpeed   = Math.max(1, Math.min(10, n(9, this.cfg.guiSpeed) || 5));
+    this.cfg.delayHands = n(10, this.cfg.delayHands);
     this.cfg.timeout    = n(11, this.cfg.timeout);
     this.cfg.smallBlind = n(12, this.cfg.smallBlind);
     this.cfg.startMoney = n(13, this.cfg.startMoney);
@@ -128,6 +134,7 @@ export class FakeServer {
     this._send('GameStartInitial',[[1,0,this.gameId],[2,0,this.seatIds[0]],[3,2,packed(this.seatIds)]]);
     const ps = this.players.map(p=>({ id:p.id, name:p.name, isBot:p.isBot, stack:this.cfg.startMoney }));
     this.table = new OfflineTable({ players:ps, smallBlind:this.cfg.smallBlind, raiseEvery:this.cfg.raiseEvery,
+      raiseMode:this.cfg.raiseMode, endRaiseMode:this.cfg.endRaiseMode, endRaiseValue:this.cfg.endRaiseValue,
       rng:this.rng, gameId:this.gameId, onEvent:(ev)=>this._onEngine(ev) });
     this.pace(()=>this.table.start(), 300);
   }
@@ -155,7 +162,8 @@ export class FakeServer {
       case 'turn': {
         this._send('PlayersTurn',[[1,0,G],[2,0,ev.playerId],[3,0,GS[ev.gameState]]]);
         if(ev.playerId!==this.meId){
-          this.pace(()=>{ if(this.stopped||!this.table) return; const d=decide(ev,this.botCfg[ev.playerId]); this.table.act(ev.playerId,d.action,d.amountTo); }, 700+Math.floor(this.rng()*700));
+          var _sp=this.cfg.guiSpeed||5; var _think=Math.max(180, 1000-_sp*80);
+          this.pace(()=>{ if(this.stopped||!this.table) return; const d=decide(ev,this.botCfg[ev.playerId]); this.table.act(ev.playerId,d.action,d.amountTo); }, _think+Math.floor(this.rng()*_think*0.6));
         } break;
       }
       case 'actionDone':
@@ -170,7 +178,7 @@ export class FakeServer {
         this._send('EndOfHandShow', spec); break;
       }
       case 'endOfHandHide': this._send('EndOfHandHide',[[1,0,G],[2,0,ev.playerId],[3,0,ev.moneyWon],[4,0,ev.playerMoney]]); break;
-      case 'handComplete':  this.pace(()=>{ if(!this.stopped && this.table) this.table.nextHand(); }, 2500); break;
+      case 'handComplete':  { var _dh=Math.max(600, Math.min(4000, (this.cfg.delayHands||2)*380)); this.pace(()=>{ if(!this.stopped && this.table) this.table.nextHand(); }, _dh); break; }
       case 'gameOver':      this._send('EndOfGame',[[1,0,G],[2,0,ev.winnerId||this.meId]]); break;  // close happens on return-to-lobby (leave)
       default: break;
     }
