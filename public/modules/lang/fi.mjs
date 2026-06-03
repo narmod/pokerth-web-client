@@ -13,6 +13,7 @@ export const strings = {
 
     guestHint:'🌐 Vieraspeli pokerth.net-palvelimella — ei tiliä.',
     srvOffline:'🏋️ Harjoittelutila', offlineHint:'🤖 Peli botteja vastaan — ei yhteyttä tarvita.',
+    srvPokerthNet:'🌐 Internet / PokerTH.net',
     preActionTitle:'Toimintojen esikatselu', preActionHint:'sulje napauttamalla kortteja',
     blindsNextTip:'{n} käden päästä', blindsEveryMin:'joka {n} min',
     connect: 'Yhdistä',
