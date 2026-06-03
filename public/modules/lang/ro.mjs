@@ -10,6 +10,8 @@ export const meta = {
 };
 
 export const strings = {
+    botDifficulty:'Dificultatea boților', botEasy:'Ușor', botMixed:'Mixt', botNormal:'Normal', botHard:'Greu',
+
     guestHint:'🌐 Joc ca invitat pe pokerth.net — fără cont.',
     srvOffline:'🏋️ Mod antrenament', offlineHint:'🤖 Joc împotriva boților — fără conexiune.',
     preActionTitle:'Previzualizare acțiuni', preActionHint:'atinge cărțile pentru a închide',
