@@ -11,7 +11,7 @@ export const meta = {
 };
 
 export const strings = {
-    srvOffline:'🤖 離線（對戰機器人）', offlineHint:'🤖 與機器人對戰 — 無需連線。',
+    srvOffline:'🏋️ 訓練模式', offlineHint:'🤖 與機器人對戰 — 無需連線。',
     preActionTitle:'操作預覽', preActionHint:'點選手牌關閉',
     blindsNextTip:'{n} 手後', blindsEveryMin:'每 {n} 分鐘',
     connect: '連線',
@@ -373,7 +373,7 @@ export const strings = {
     modeUnauth: '區域網 / 私人伺服器 ✓',
     modeGuest: 'pokerth.net — 訪客',
     modeAuth: 'pokerth.net — 註冊賬戶',
-    srvDedicated:'區域網路 / 專用伺服器', guestMode:'訪客模式',
+    srvDedicated:'🖥️ 區域網路 / 專用伺服器', guestMode:'訪客模式',
     nickPlaceholder: '你的名字',
     quitTooltip: '退出',
     reconnectInProgress: '重新連線中…',
