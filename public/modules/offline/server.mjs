@@ -106,7 +106,10 @@ export class FakeServer {
       entry = pool[Math.floor(this.rng()*pool.length)];
       this._used.add(entry[0]);
     } else entry = ['Bot '+id, '🤖'];
+    // Prefer the live create-form choice (persisted to localStorage) so the lobby
+    // selector applies at bot-fill time; fall back to the connect-time value.
     let skill = this.botSkill;
+    try { if (typeof localStorage !== 'undefined') { const s = localStorage.getItem('pth_offline_skill'); if (s) skill = s; } } catch (e) {}
     if (skill === 'mixed' || (skill!=='easy' && skill!=='normal' && skill!=='hard')){
       const r = this.rng();                          // varied table: ~30% easy, ~50% normal, ~20% hard
       skill = r < 0.30 ? 'easy' : (r < 0.80 ? 'normal' : 'hard');
