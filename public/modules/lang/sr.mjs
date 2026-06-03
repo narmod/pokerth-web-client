@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+    guestHint:'🌐 Игра као гост на pokerth.net — без налога.',
     srvOffline:'🏋️ Режим вежбања', offlineHint:'🤖 Игра против ботова — без везе.',
     preActionTitle:'Преглед потеза', preActionHint:'додирни карте да затвориш',
     blindsNextTip:'за {n} руку', blindsEveryMin:'сваких {n} мин',
