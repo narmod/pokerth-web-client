@@ -45,6 +45,8 @@
 
 Leave the server selector on **LAN / Dedicated server** (the default) with **Guest mode** unchecked, choose any nickname, and play right away — no account, no install. The demo is hosted on a small VPS connected to a private PokerTH server, so feel free to create a table and invite friends.
 
+Want to try with **no server or connection at all**? Pick **🏋️ Training mode** and play instantly against bots — fully offline.
+
 > Tip: it works just as well on mobile — add it to your home screen for a fullscreen app feel.
 
 ---
@@ -113,7 +115,7 @@ This project is a **web frontend** that connects to any PokerTH server directly 
 ## Features
 
 ### Connection
-- **2 server choices + a Guest-mode toggle**: pick **LAN / Dedicated server** or **pokerth.net**, then use the **Guest mode** checkbox (just above the Connect button, off by default) to switch the guest/registered variant of either. Internally this still maps to the four PokerTH login types.
+- **3 server choices + a Guest-mode toggle**: pick **LAN / Dedicated server**, **pokerth.net**, or **🏋️ Training mode** (offline solo play against bots), then use the **Guest mode** checkbox (just above the Connect button, off by default) to switch the guest/registered variant of the two online choices. Internally the online choices still map to the four PokerTH login types; **Training mode runs entirely in the browser with no server, proxy, or connection**.
 - Optional authenticated login over TLS
 - TLS support (required for pokerth.net, optional for LAN). The TLS box auto-checks itself when you turn **Guest mode** off on pokerth.net (registered-account login).
 - Auto-fill of `host = pokerth.net` and `port = 7234` when **pokerth.net** is selected — the dedicated-server choice keeps the auto-detected hostname
@@ -172,10 +174,11 @@ This project is a **web frontend** that connects to any PokerTH server directly 
 <a id="login-modes-transport"></a>
 ## Login modes & transport
 
-The client is designed first and foremost for **LAN and private self-hosted servers** — that is its intended use. The connect screen exposes just **two server choices** plus a **Guest mode** checkbox (just above the Connect button, **off by default**). The combination of the two maps to the four underlying PokerTH login types, each with its own transport — handy to know when debugging a connection problem.
+The client is designed first and foremost for **LAN and private self-hosted servers** — that is its intended use. The connect screen exposes **three server choices** plus a **Guest mode** checkbox (just above the Connect button, **off by default**). One choice — **🏋️ Training mode** — is fully offline (solo play against bots, no server at all); the two online choices, combined with the Guest-mode checkbox, map to the four underlying PokerTH login types, each with its own transport — handy to know when debugging a connection problem.
 
 | Server choice | Guest mode | Login type | Transport | Notes |
 |---|---|---|---|---|
+| **🏋️ Training mode** | — | none — local engine | none — runs in the browser | **100% offline** solo play against bots; no server, proxy, or connection needed (works even as an installed PWA with no internet) |
 | **LAN / Dedicated server** | off *(default)* | Internet guest (`unauth`, type 2) | proxy → TCP or TLS (your choice) | Default for self-hosted setups; in-game chat & reactions **enabled** |
 | **LAN / Dedicated server** | on | Pure LAN (`lan`, type 0) | proxy → TCP raw | The server **refuses** in-game chat/reactions (reactions stay LAN-local) |
 | **pokerth.net** | on | Guest (`guest`, type 2) | direct TLS WebSocket | Throwaway guest on the public server |
@@ -229,7 +232,11 @@ pokerth-web-client/
 │   ├── pokerth.css          # Styles
 │   ├── manifest.json        # PWA manifest
 │   ├── sw.js                # Service Worker (versioned cache)
-│   ├── modules/             # ES modules: i18n, sounds, and lang/ (33 locales)
+│   ├── modules/             # ES modules
+│   │   ├── i18n.mjs         #   internationalisation (36 languages)
+│   │   ├── sounds.mjs       #   sound effects
+│   │   ├── lang/            #   36 language catalogues
+│   │   └── offline/         #   local game engine + bots (Training mode)
 │   ├── proto/               # Protobuf bundle & helpers
 │   └── favicon-*.png        # PWA icons
 ├── docs/
@@ -698,6 +705,7 @@ A few things worth knowing if you plan to hack on this:
 - The bulk of the logic still lives in a single `pokerth.js` file, though i18n, sounds and the protocol layer have already been extracted into ES modules. Further splitting would help.
 - More automated protocol tests are needed before calling the client production-ready.
 - Spectator mode works but lacks a few quality-of-life touches (e.g. you cannot see other players' cards at showdown the same way the native client does).
+- **Training-mode bots use a simple heuristic AI.** They're perfect for learning the flow, practising the interface, or playing offline with no server — but they won't bluff or adapt like a strong human opponent.
 - **PWA features (install to home screen, offline Service Worker, background notifications) require a *secure context*** — i.e. HTTPS, or `localhost`. Over plain `http://` on a LAN IP (e.g. `192.168.1.10:8080`) the game plays perfectly, but the browser disables those three features by design. To get them on a LAN, serve the client over HTTPS — e.g. [`mkcert`](https://github.com/FiloSottile/mkcert) for a locally-trusted certificate, a self-signed cert, a real domain with Let's Encrypt, or a tunnel such as Cloudflare Tunnel / Tailscale.
 - **Translations are not yet natively reviewed.** The 36 language catalogues were produced with care but are largely machine-assisted, so some wordings — especially poker-specific terms — may be imperfect, the less common languages (e.g. Scottish Gaelic, Tamil) most of all. Corrections via issue or pull request are very welcome.
 
