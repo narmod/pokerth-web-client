@@ -1170,6 +1170,17 @@ document.addEventListener("DOMContentLoaded", function() {
     }, 250);
   })();
 
+  // Keep the training pseudo fully isolated from the LAN / pokerth.net nicknames:
+  // persist it on every keystroke while in offline mode. Combined with reading
+  // pth_offline_nick only (no LAN fallback), the training name never mirrors nor
+  // gets overwritten by a network nick, and survives mode switches reliably.
+  (function () {
+    var _nk = document.getElementById('nick');
+    if (_nk) _nk.addEventListener('input', function () {
+      if (window._offlineMode) { try { localStorage.setItem('pth_offline_nick', _nk.value.trim()); } catch (e) {} }
+    });
+  })();
+
   // Auto-fill proxy URL from current page URL
   var proto = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
   var host  = window.location.hostname;
@@ -6889,7 +6900,7 @@ function dismissWinner() {
         if (_onk) {
           _onk.removeAttribute('readonly');
           _onk.placeholder = t('nickPlaceholder');
-          _onk.value = (lsGet('pth_offline_nick') || lsGet('pth_lan_nick') || lsGet('pth_unauth_nick') || '');
+          _onk.value = (lsGet('pth_offline_nick') || '');   // pseudo entraînement INDÉPENDANT (aucun repli sur le pseudo LAN)
         }
         var _onl = $('nick-label'); if (_onl) _onl.textContent = t('enterNickFree');
         if (typeof _stopIpBlockCountdown === 'function') _stopIpBlockCountdown();
@@ -8948,4 +8959,4 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.2.138'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.2.139'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
