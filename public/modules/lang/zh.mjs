@@ -11,7 +11,7 @@ export const meta = {
 };
 
 export const strings = {
-    srvOffline:'🤖 离线（对战机器人）', offlineHint:'🤖 与机器人对战 — 无需联网。',
+    srvOffline:'🏋️ 训练模式', offlineHint:'🤖 与机器人对战 — 无需联网。',
     preActionTitle:'操作预览', preActionHint:'点击手牌关闭',
     blindsNextTip:'{n} 手后', blindsEveryMin:'每 {n} 分钟',
     connect: '连接',
@@ -373,7 +373,7 @@ export const strings = {
     modeUnauth: '局域网 / 私人服务器 ✓',
     modeGuest: 'pokerth.net — 访客',
     modeAuth: 'pokerth.net — 注册账户',
-    srvDedicated:'局域网 / 专用服务器', guestMode:'访客模式',
+    srvDedicated:'🖥️ 局域网 / 专用服务器', guestMode:'访客模式',
     nickPlaceholder: '你的名字',
     quitTooltip: '退出',
     reconnectInProgress: '重新连接中…',
