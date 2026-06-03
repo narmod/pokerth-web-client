@@ -1166,6 +1166,14 @@ document.addEventListener("DOMContentLoaded", function() {
         last = sm.value;
         try { if (!window._shareLinkActive && App && App.onServerOrGuestChange) App.onServerOrGuestChange(); } catch (e) {}
       }
+      // Guard the nick <input> against late browser autofill/restoration of a
+      // network pseudo while in training: re-assert the isolated offline nick if
+      // it drifts (never while the user is actively typing in the field).
+      if (window._offlineMode) {
+        var _nf = document.getElementById('nick');
+        var _want = ''; try { _want = localStorage.getItem('pth_offline_nick') || ''; } catch (e) {}
+        if (_nf && document.activeElement !== _nf && _nf.value !== _want) _nf.value = _want;
+      }
       if (++n >= 24) clearInterval(iv); // watch ~6s @ 250ms, then stop
     }, 250);
   })();
@@ -8959,4 +8967,4 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.2.139'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.2.140'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
