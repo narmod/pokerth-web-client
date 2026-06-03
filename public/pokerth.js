@@ -6946,6 +6946,13 @@ function dismissWinner() {
           _onk.value = (lsGet('pth_offline_nick') || '');   // pseudo entraînement INDÉPENDANT (aucun repli sur le pseudo LAN)
         }
         var _onl = $('nick-label'); if (_onl) _onl.textContent = t('enterNickFree');
+        // Bot difficulty selector is only meaningful offline — reveal & seed it.
+        var _skl = document.getElementById('f-bot-skill');
+        if (_skl) {
+          _skl.style.display = '';
+          var _sklSel = document.getElementById('bot-skill');
+          if (_sklSel) { try { _sklSel.value = localStorage.getItem('pth_offline_skill') || 'mixed'; } catch (e) {} }
+        }
         if (typeof _stopIpBlockCountdown === 'function') _stopIpBlockCountdown();
         setStatus(t('offlineHint'), '', 'offlineHint');
         import('/modules/offline/index.mjs').catch(function(){});
@@ -6954,6 +6961,7 @@ function dismissWinner() {
       // Leaving offline -> bring back the advanced gear + guest toggle; the
       // remaining fields (TLS / passwords / advanced block) are re-derived
       // from the mode + gear state by onLoginModeChange() just below.
+      var _sklOff = document.getElementById('f-bot-skill'); if (_sklOff) _sklOff.style.display = 'none';
       var _gearOn = $('conn-adv-btn'); if (_gearOn) _gearOn.style.display = '';
       var _guestRow = $('guest-mode-row'); if (_guestRow) _guestRow.style.display = '';
       if (srvEl && gcEl && lmEl) {
@@ -7213,7 +7221,8 @@ function dismissWinner() {
           return;
         }
         try {
-          ws = window.PokerOffline.createSocket({ nick: myName });
+          ws = window.PokerOffline.createSocket({ nick: myName,
+            botSkill: (function(){ try { return localStorage.getItem('pth_offline_skill') || 'mixed'; } catch (e) { return 'mixed'; } })() });
         } catch (e) {
           setStatus('Offline init failed: ' + e.message, 'err');
           return;
