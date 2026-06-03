@@ -10,7 +10,7 @@ export const meta = {
 };
 
 export const strings = {
-    srvOffline:'🤖 Ngoại tuyến (đấu với bot)', offlineHint:'🤖 Chơi với bot — không cần kết nối.',
+    srvOffline:'🏋️ Chế độ luyện tập', offlineHint:'🤖 Chơi với bot — không cần kết nối.',
     preActionTitle:'Xem trước hành động', preActionHint:'chạm vào lá bài để đóng',
     blindsNextTip:'sau {n} ván', blindsEveryMin:'mỗi {n} phút',
     connect: 'Kết nối',
@@ -372,7 +372,7 @@ export const strings = {
     modeUnauth: 'LAN / Máy chủ riêng ✓',
     modeGuest: 'pokerth.net — Khách',
     modeAuth: 'pokerth.net — Tài khoản đã đăng ký',
-    srvDedicated:'LAN / Máy chủ riêng', guestMode:'Chế độ khách',
+    srvDedicated:'🖥️ LAN / Máy chủ riêng', guestMode:'Chế độ khách',
     nickPlaceholder: 'TênCủaBạn',
     quitTooltip: 'Rời',
     reconnectInProgress: 'Đang kết nối lại…',
