@@ -9,7 +9,7 @@ export const meta = {
 };
 
 export const strings = {
-    srvOffline:'🤖 オフライン（対ボット）', offlineHint:'🤖 ボットと対戦 — 接続不要。',
+    srvOffline:'🏋️ 練習モード', offlineHint:'🤖 ボットと対戦 — 接続不要。',
     preActionTitle:'アクションのプレビュー', preActionHint:'カードをタップして閉じる',
     blindsNextTip:'あと{n}ハンド', blindsEveryMin:'{n}分ごと',
     connect: '接続',
@@ -371,7 +371,7 @@ export const strings = {
     modeUnauth: 'LAN / プライベートサーバー ✓',
     modeGuest: 'pokerth.net — ゲスト',
     modeAuth: 'pokerth.net — 登録アカウント',
-    srvDedicated:'LAN / 専用サーバー', guestMode:'ゲストモード',
+    srvDedicated:'🖥️ LAN / 専用サーバー', guestMode:'ゲストモード',
     nickPlaceholder: 'あなたの名前',
     quitTooltip: '退出',
     reconnectInProgress: '再接続中…',
