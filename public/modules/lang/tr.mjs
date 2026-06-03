@@ -12,6 +12,7 @@ export const meta = {
 };
 
 export const strings = {
+    srvOffline:'🤖 Çevrimdışı (botlara karşı)', offlineHint:'🤖 Botlara karşı oyna — bağlantı gerekmez.',
     preActionTitle:'Eylem önizlemesi', preActionHint:'kapatmak için kartlara dokun',
     blindsNextTip:'{n} el sonra', blindsEveryMin:'her {n} dk',
     connect: 'Bağlan',
