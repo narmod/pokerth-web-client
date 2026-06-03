@@ -12,7 +12,7 @@ export const meta = {
 };
 
 export const strings = {
-    srvOffline:'🤖 Çevrimdışı (botlara karşı)', offlineHint:'🤖 Botlara karşı oyna — bağlantı gerekmez.',
+    srvOffline:'🏋️ Antrenman modu', offlineHint:'🤖 Botlara karşı oyna — bağlantı gerekmez.',
     preActionTitle:'Eylem önizlemesi', preActionHint:'kapatmak için kartlara dokun',
     blindsNextTip:'{n} el sonra', blindsEveryMin:'her {n} dk',
     connect: 'Bağlan',
@@ -374,7 +374,7 @@ export const strings = {
     modeUnauth: 'LAN / Özel sunucu ✓',
     modeGuest: 'pokerth.net — Misafir',
     modeAuth: 'pokerth.net — Kayıtlı hesap',
-    srvDedicated:'LAN / Özel sunucu', guestMode:'Misafir modu',
+    srvDedicated:'🖥️ LAN / Özel sunucu', guestMode:'Misafir modu',
     nickPlaceholder: 'Adın',
     quitTooltip: 'Çık',
     reconnectInProgress: 'Yeniden bağlanılıyor…',
