@@ -9,6 +9,7 @@ export const meta = {
 };
 
 export const strings = {
+    srvOffline:'🤖 Offline (vs bots)', offlineHint:'🤖 Jogo a solo contra bots — sem ligação.',
     preActionTitle:'Pré-visualização de ações', preActionHint:'toca nas cartas para fechar',
     blindsNextTip:'em {n} mão(s)', blindsEveryMin:'a cada {n} min',
     connect: 'Ligar',
