@@ -1160,29 +1160,34 @@ document.addEventListener("DOMContentLoaded", function() {
   (function () {
     var sm = document.getElementById('server-mode');
     if (!sm) return;
-    var last = sm.value, n = 0;
-    var iv = setInterval(function () {
-      if (sm.value !== last) {
-        last = sm.value;
-        try { if (!window._shareLinkActive && App && App.onServerOrGuestChange) App.onServerOrGuestChange(); } catch (e) {}
+    // iOS Safari restores <select> values at unpredictable times — and keeps
+    // FLIP-FLOPPING them — WITHOUT firing onchange, so the visible dropdown can
+    // silently disagree with the user's real choice; re-deriving the UI off that
+    // wrong value is exactly what rewrote the training screen with the previous
+    // mode's pseudo / label / hint. So treat localStorage (pth_server_mode, written
+    // on every REAL onchange) as the SINGLE SOURCE OF TRUTH: whenever the <select>
+    // drifts from it, force it back and re-derive the whole connect UI. Permanent
+    // and cheap (one compare / 400 ms); never fights the native picker (focused).
+    setInterval(function () {
+      if (window._shareLinkActive) return;
+      var want = null; try { want = localStorage.getItem('pth_server_mode'); } catch (e) {}
+      if (want && sm.value !== want && document.activeElement !== sm) {
+        sm.value = want;
+        try { if (App && App.onServerOrGuestChange) App.onServerOrGuestChange(); } catch (e) {}
       }
-      // Guard the nick <input> against late browser autofill/restoration of a
-      // network pseudo while in training: re-assert the isolated offline nick if
-      // it drifts (never while the user is actively typing in the field).
+      // While in training, hold the isolated training UI against late restoration:
+      // login-mode on a no-account value (so setLang can't print the account label
+      // and connect() can't demand a password), re-assert the free-nick label, and
+      // restore the isolated pseudo (never while the user is actively typing).
       if (window._offlineMode || sm.value === 'offline') {
-        // Keep the hidden login-mode on a no-account value: iOS may restore it to
-        // 'auth' (from a previous pokerth.net selection), which would make setLang
-        // print the pokerth.net account label AND make connect() demand a password
-        // — neither applies in training. Also re-assert the free-nick label.
         var _lmf = document.getElementById('login-mode'); if (_lmf && _lmf.value !== 'unauth') _lmf.value = 'unauth';
         var _lblf = document.getElementById('nick-label');
         try { if (_lblf && window.I18N && window.I18N.t) _lblf.textContent = window.I18N.t('enterNickFree'); } catch (e) {}
         var _nf = document.getElementById('nick');
-        var _want = ''; try { _want = localStorage.getItem('pth_offline_nick') || ''; } catch (e) {}
-        if (_nf && document.activeElement !== _nf && _nf.value !== _want) _nf.value = _want;
+        var _w = ''; try { _w = localStorage.getItem('pth_offline_nick') || ''; } catch (e) {}
+        if (_nf && document.activeElement !== _nf && _nf.value !== _w) _nf.value = _w;
       }
-      if (++n >= 24) clearInterval(iv); // watch ~6s @ 250ms, then stop
-    }, 250);
+    }, 400);
   })();
 
   // Keep the training pseudo fully isolated from the LAN / pokerth.net nicknames:
@@ -6881,12 +6886,12 @@ function dismissWinner() {
     //   pokerth.net + invité → guest                    |  sans invité → auth
     onServerOrGuestChange() {
       var srvEl = $('server-mode'), gcEl = $('guest-mode-cb'), lmEl = $('login-mode');
-      // Round-trip the training pseudo: if we are LEAVING offline mode, snapshot
-      // the current nick into pth_offline_nick first. It's otherwise only saved on
-      // Connect, so switching modes would drop an unconnected training nickname.
-      if (window._offlineMode) {
-        try { var _pn = $('nick'); if (_pn && _pn.value.trim()) localStorage.setItem('pth_offline_nick', _pn.value.trim()); } catch (e) {}
-      }
+      // NB: the training pseudo is persisted LIVE by the #nick 'input' listener
+      // (every keystroke while offline) and on Connect — we deliberately do NOT
+      // snapshot the field here on mode change: iOS form-restoration can briefly
+      // drop a network pseudo into the field while still offline, and snapshotting
+      // that would corrupt pth_offline_nick (the bug where the LAN / pokerth.net
+      // name overwrote the training pseudo).
       // Offline (vs bots) mode: no network. Drive a local fake server.
       var off = !!(srvEl && srvEl.value === 'offline');
       window._offlineMode = off;
@@ -8974,4 +8979,4 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.2.141'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.2.142'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
