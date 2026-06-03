@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+    guestHint:'🌐 Joc ca invitat pe pokerth.net — fără cont.',
     srvOffline:'🏋️ Mod antrenament', offlineHint:'🤖 Joc împotriva boților — fără conexiune.',
     preActionTitle:'Previzualizare acțiuni', preActionHint:'atinge cărțile pentru a închide',
     blindsNextTip:'în {n} mâini', blindsEveryMin:'la fiecare {n} min',
