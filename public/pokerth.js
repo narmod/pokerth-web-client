@@ -6790,12 +6790,27 @@ function dismissWinner() {
       // Offline (vs bots) mode: no network. Drive a local fake server.
       var off = !!(srvEl && srvEl.value === 'offline');
       window._offlineMode = off;
+      // Connection-detail fields that only make sense for a real network
+      // connection. In offline mode none of them apply, so hide them all
+      // (and the advanced gear) — the screen keeps just nickname + Connect.
+      var _connDetailIds = ['conn-adv-btn','conn-advanced','tls-row','guest-mode-row','f-pass','f-server-pass','f-user-pass'];
       if (off) {
         // Keep #server-mode on 'offline'. Do NOT call onLoginModeChange():
         // its tail reverse-syncs the visible select back to 'lan-dedi'.
+        var _gear = $('conn-adv-btn');
+        if (_gear) { _gear.classList.remove('open'); _gear.setAttribute('aria-expanded', 'false'); }
+        for (var _i = 0; _i < _connDetailIds.length; _i++) {
+          var _el = document.getElementById(_connDetailIds[_i]);
+          if (_el) _el.style.display = 'none';
+        }
         import('/modules/offline/index.mjs').catch(function(){});
         return;
       }
+      // Leaving offline -> bring back the advanced gear + guest toggle; the
+      // remaining fields (TLS / passwords / advanced block) are re-derived
+      // from the mode + gear state by onLoginModeChange() just below.
+      var _gearOn = $('conn-adv-btn'); if (_gearOn) _gearOn.style.display = '';
+      var _guestRow = $('guest-mode-row'); if (_guestRow) _guestRow.style.display = '';
       if (srvEl && gcEl && lmEl) {
         var guest = gcEl.checked;
         lmEl.value = (srvEl.value === 'pokerthnet')
