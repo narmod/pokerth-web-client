@@ -16,6 +16,7 @@ export const meta = {
 };
 
 export const strings = {
+    srvOffline:'🤖 Sin conexión (vs bots)', offlineHint:'🤖 Juego en solitario contra bots: sin conexión.',
     preActionTitle:'Vista previa de acciones', preActionHint:'toca las cartas para cerrar',
     blindsNextTip:'en {n} manos', blindsEveryMin:'cada {n} min',
     connect: 'Conectar',
