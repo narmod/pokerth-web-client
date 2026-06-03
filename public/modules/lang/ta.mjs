@@ -11,6 +11,7 @@ export const meta = {
 };
 
 export const strings = {
+    guestHint:'🌐 pokerth.net இல் விருந்தினராக விளையாடுங்கள் — கணக்கு தேவையில்லை.',
     srvOffline:'🏋️ பயிற்சி பயன்முறை', offlineHint:'🤖 பாட்களுடன் விளையாடுங்கள் — இணைப்பு தேவையில்லை.',
     preActionTitle:'செயல் முன்னோட்டம்', preActionHint:'மூட அட்டைகளைத் தொடவும்',
     blindsNextTip:'{n} கைகளில்', blindsEveryMin:'ஒவ்வொரு {n} நிமிடம்',
