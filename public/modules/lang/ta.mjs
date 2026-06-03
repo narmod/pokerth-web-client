@@ -11,7 +11,7 @@ export const meta = {
 };
 
 export const strings = {
-    srvOffline:'🤖 ஆஃப்லைன் (பாட்களுக்கு எதிராக)', offlineHint:'🤖 பாட்களுடன் விளையாடுங்கள் — இணைப்பு தேவையில்லை.',
+    srvOffline:'🏋️ பயிற்சி பயன்முறை', offlineHint:'🤖 பாட்களுடன் விளையாடுங்கள் — இணைப்பு தேவையில்லை.',
     preActionTitle:'செயல் முன்னோட்டம்', preActionHint:'மூட அட்டைகளைத் தொடவும்',
     blindsNextTip:'{n} கைகளில்', blindsEveryMin:'ஒவ்வொரு {n} நிமிடம்',
     connect: 'இணை',
@@ -373,7 +373,7 @@ export const strings = {
     modeUnauth: 'LAN / தனிப்பட்ட சேவையகம் ✓',
     modeGuest: 'pokerth.net — விருந்தினர்',
     modeAuth: 'pokerth.net — பதிவுசெய்த கணக்கு',
-    srvDedicated:'LAN / பிரத்யேக சேவையகம்', guestMode:'விருந்தினர் முறை',
+    srvDedicated:'🖥️ LAN / பிரத்யேக சேவையகம்', guestMode:'விருந்தினர் முறை',
     nickPlaceholder: 'உங்கள்பெயர்',
     quitTooltip: 'வெளியேறு',
     reconnectInProgress: 'மீண்டும் இணைக்கிறது…',
