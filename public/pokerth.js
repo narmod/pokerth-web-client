@@ -1135,6 +1135,15 @@ document.addEventListener("DOMContentLoaded", function() {
     }
   });
 
+  // Some browsers (notably iOS Safari) restore the server-mode <select> value
+  // AFTER deferred scripts run — i.e. after our restore above — without firing
+  // onchange. Re-sync once more on window 'load', when the select holds its final
+  // restored value, so the hint / label / nick always match the visible dropdown
+  // (incl. training, which would otherwise keep the previous mode's UI).
+  window.addEventListener('load', function () {
+    try { if (!window._shareLinkActive && App && App.onServerOrGuestChange) App.onServerOrGuestChange(); } catch (e) {}
+  });
+
   // Auto-fill proxy URL from current page URL
   var proto = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
   var host  = window.location.hostname;
@@ -6819,6 +6828,12 @@ function dismissWinner() {
     //   pokerth.net + invité → guest                    |  sans invité → auth
     onServerOrGuestChange() {
       var srvEl = $('server-mode'), gcEl = $('guest-mode-cb'), lmEl = $('login-mode');
+      // Round-trip the training pseudo: if we are LEAVING offline mode, snapshot
+      // the current nick into pth_offline_nick first. It's otherwise only saved on
+      // Connect, so switching modes would drop an unconnected training nickname.
+      if (window._offlineMode) {
+        try { var _pn = $('nick'); if (_pn && _pn.value.trim()) localStorage.setItem('pth_offline_nick', _pn.value.trim()); } catch (e) {}
+      }
       // Offline (vs bots) mode: no network. Drive a local fake server.
       var off = !!(srvEl && srvEl.value === 'offline');
       window._offlineMode = off;
@@ -8904,4 +8919,4 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.2.135'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.2.136'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
