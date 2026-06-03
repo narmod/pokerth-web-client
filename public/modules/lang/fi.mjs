@@ -9,6 +9,8 @@ export const meta = {
 };
 
 export const strings = {
+    botDifficulty:'Bottien vaikeus', botEasy:'Helppo', botMixed:'Sekoitettu', botNormal:'Normaali', botHard:'Vaikea',
+
     guestHint:'🌐 Vieraspeli pokerth.net-palvelimella — ei tiliä.',
     srvOffline:'🏋️ Harjoittelutila', offlineHint:'🤖 Peli botteja vastaan — ei yhteyttä tarvita.',
     preActionTitle:'Toimintojen esikatselu', preActionHint:'sulje napauttamalla kortteja',
