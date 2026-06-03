@@ -9,6 +9,7 @@ export const meta = {
 };
 
 export const strings = {
+    srvOffline:'🤖 Offline (mod bots)', offlineHint:'🤖 Spil mod bots — ingen forbindelse nødvendig.',
     preActionTitle:'Forhåndsvisning af handlinger', preActionHint:'tryk på kortene for at lukke',
     blindsNextTip:'om {n} hænder', blindsEveryMin:'hver {n}. min',
     connect: 'Tilslut',
