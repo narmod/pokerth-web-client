@@ -9,6 +9,8 @@ export const meta = {
 };
 
 export const strings = {
+    botDifficulty:'Складність ботів', botEasy:'Легкий', botMixed:'Змішаний', botNormal:'Звичайний', botHard:'Складний',
+
     guestHint:'🌐 Гостьова гра на pokerth.net — без облікового запису.',
     srvOffline:'🏋️ Тренування', offlineHint:'🤖 Гра проти ботів — підключення не потрібне.',
     preActionTitle:'Попередній перегляд дій', preActionHint:'торкніться карт, щоб закрити',
