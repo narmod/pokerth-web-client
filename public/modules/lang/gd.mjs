@@ -15,6 +15,7 @@ export const strings = {
 
     guestHint:'🌐 Cluich mar aoigh air pokerth.net — gun chunntas.',
     srvOffline:'🏋️ Modh trèanaidh', offlineHint:'🤖 Cluich an aghaidh bhotaichean — gun cheangal.',
+    srvPokerthNet:'🌐 Eadar-lìon / PokerTH.net',
     preActionTitle:'Ro-shealladh gnìomh', preActionHint:'thoir gnogadh air na cairtean gus dùnadh',
     blindsNextTip:'an ceann {n} làmh', blindsEveryMin:'gach {n} mion',
     connect: 'Ceangail',
