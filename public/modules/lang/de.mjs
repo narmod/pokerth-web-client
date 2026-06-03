@@ -19,6 +19,7 @@ export const strings = {
 
     guestHint:'🌐 Gastzugang auf pokerth.net – kein Konto nötig.',
     srvOffline:'🏋️ Trainingsmodus', offlineHint:'🤖 Solo gegen Bots – keine Verbindung nötig.',
+    srvPokerthNet:'🌐 Internet / PokerTH.net',
     preActionTitle:'Aktionsvorschau', preActionHint:'Karten antippen zum Schließen',
     blindsNextTip:'in {n} Händen', blindsEveryMin:'alle {n} Min',
     connect: 'Verbinden',
