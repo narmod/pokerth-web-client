@@ -14,6 +14,7 @@ export const strings = {
 
     guestHint:'🌐 Xogo como convidado en pokerth.net — sen conta.',
     srvOffline:'🏋️ Modo de adestramento', offlineHint:'🤖 Xogo en solitario contra bots — sen conexión.',
+    srvPokerthNet:'🌐 Internet / PokerTH.net',
     preActionTitle:'Vista previa de accións', preActionHint:'toca as cartas para pechar',
     blindsNextTip:'en {n} mans', blindsEveryMin:'cada {n} min',
     connect: 'Conectar',
