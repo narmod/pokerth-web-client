@@ -10,6 +10,8 @@ export const meta = {
 };
 
 export const strings = {
+    botDifficulty:'Δυσκολία bot', botEasy:'Εύκολο', botMixed:'Μικτό', botNormal:'Κανονικό', botHard:'Δύσκολο',
+
     guestHint:'🌐 Παιχνίδι ως επισκέπτης στο pokerth.net — χωρίς λογαριασμό.',
     srvOffline:'🏋️ Λειτουργία εξάσκησης', offlineHint:'🤖 Παιχνίδι εναντίον bots — χωρίς σύνδεση.',
     preActionTitle:'Προεπισκόπηση ενεργειών', preActionHint:'πάτα τα φύλλα για κλείσιμο',
