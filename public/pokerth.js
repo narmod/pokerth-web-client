@@ -6655,6 +6655,15 @@ function dismissWinner() {
 
   return {
     onLoginModeChange() {
+      // Offline (training) mode has no network login. Keep the training hint
+      // and skip BOTH the network-mode field wiring and the server-mode
+      // reverse-sync at the tail (which would otherwise flip the dropdown back
+      // to LAN and overwrite the hint with the 'private server' message — the
+      // bug where offline showed 'Chat et réactions… serveur privé').
+      if (window._offlineMode || ($('server-mode') && $('server-mode').value === 'offline')) {
+        setStatus(t('offlineHint'), '', 'offlineHint');
+        return;
+      }
       const mode = $('login-mode').value;
       $('f-pass').style.display = mode === 'auth' ? '' : 'none';
       // TLS is only ever meaningful when connecting to pokerth.net
