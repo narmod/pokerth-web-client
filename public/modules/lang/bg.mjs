@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+    srvOffline:'🤖 Офлайн (срещу ботове)', offlineHint:'🤖 Игра срещу ботове — без връзка.',
     preActionTitle:'Преглед на действията', preActionHint:'докосни картите за затваряне',
     blindsNextTip:'след {n} ръце', blindsEveryMin:'на всеки {n} мин',
     connect: 'Свързване',
