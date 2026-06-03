@@ -1114,8 +1114,26 @@ document.addEventListener("DOMContentLoaded", function() {
       if (savedPort)  { var pi = document.getElementById('port');  if (pi) pi.value = savedPort; }
       if (savedProxy) { var xi = document.getElementById('proxy'); if (xi) xi.value = savedProxy; }
       if (savedMode)  { var mi = document.getElementById('login-mode'); if (mi) { mi.value = savedMode; App.onLoginModeChange && App.onLoginModeChange(); } }
+      // Restore the visible server-mode (incl. 'offline' = training) and re-derive
+      // the WHOLE connect UI from it, so the hint + shown/hidden fields always match
+      // the dropdown — even when the browser restored the <select> by itself without
+      // firing onchange (the bug where training showed the LAN/unauth hint).
+      var savedSrv = localStorage.getItem('pth_server_mode');
+      var smEl = document.getElementById('server-mode');
+      if (savedSrv && smEl) smEl.value = savedSrv;
+      if (App.onServerOrGuestChange && smEl && (savedSrv || savedMode || smEl.value === 'offline')) {
+        App.onServerOrGuestChange();
+      }
     }
   } catch(e) {}
+
+  // Back/forward cache (bfcache) restores form state (incl. the server-mode
+  // <select>) without firing onchange — re-sync the connect UI when shown.
+  window.addEventListener('pageshow', function (ev) {
+    if (ev.persisted) {
+      try { if (!window._shareLinkActive && App && App.onServerOrGuestChange) App.onServerOrGuestChange(); } catch (e) {}
+    }
+  });
 
   // Auto-fill proxy URL from current page URL
   var proto = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
@@ -6804,6 +6822,7 @@ function dismissWinner() {
       // Offline (vs bots) mode: no network. Drive a local fake server.
       var off = !!(srvEl && srvEl.value === 'offline');
       window._offlineMode = off;
+      try { if (srvEl) localStorage.setItem('pth_server_mode', srvEl.value); } catch (e) {}
       // Connection-detail fields that only make sense for a real network
       // connection. In offline mode none of them apply, so hide them all
       // (and the advanced gear) — the screen keeps just nickname + Connect.
@@ -8885,4 +8904,4 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.2.134'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.2.135'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
