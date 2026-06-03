@@ -14,6 +14,7 @@ export const meta = {
 };
 
 export const strings = {
+    srvOffline:'🤖 ऑफ़लाइन (बॉट्स के विरुद्ध)', offlineHint:'🤖 बॉट्स के विरुद्ध खेलें — किसी कनेक्शन की ज़रूरत नहीं।',
     blindsNextTip:'{n} हाथ में', blindsEveryMin:'हर {n} मिनट',
     connect:'कनेक्ट करें', disconnect:'✕ डिस्कनेक्ट', connecting:'कनेक्ट हो रहा है…',
     nickname:'उपनाम', password:'पासवर्ड', useTLS:'TLS उपयोग करें',
