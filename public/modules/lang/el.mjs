@@ -10,7 +10,7 @@ export const meta = {
 };
 
 export const strings = {
-    srvOffline:'🤖 Εκτός σύνδεσης (εναντίον bots)', offlineHint:'🤖 Παιχνίδι εναντίον bots — χωρίς σύνδεση.',
+    srvOffline:'🏋️ Λειτουργία εξάσκησης', offlineHint:'🤖 Παιχνίδι εναντίον bots — χωρίς σύνδεση.',
     preActionTitle:'Προεπισκόπηση ενεργειών', preActionHint:'πάτα τα φύλλα για κλείσιμο',
     blindsNextTip:'σε {n} χέρια', blindsEveryMin:'κάθε {n} λεπτά',
     connect: 'Σύνδεση',
@@ -372,7 +372,7 @@ export const strings = {
     modeUnauth: 'LAN / Ιδιωτικός διακομιστής ✓',
     modeGuest: 'pokerth.net — Επισκέπτης',
     modeAuth: 'pokerth.net — Εγγεγραμμένος λογαριασμός',
-    srvDedicated:'LAN / Αποκλειστικός διακομιστής', guestMode:'Λειτουργία επισκέπτη',
+    srvDedicated:'🖥️ LAN / Αποκλειστικός διακομιστής', guestMode:'Λειτουργία επισκέπτη',
     nickPlaceholder: 'ΤοΌνομαΣας',
     quitTooltip: 'Έξοδος',
     reconnectInProgress: 'Επανασύνδεση…',
