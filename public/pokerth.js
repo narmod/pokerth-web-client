@@ -1169,7 +1169,14 @@ document.addEventListener("DOMContentLoaded", function() {
       // Guard the nick <input> against late browser autofill/restoration of a
       // network pseudo while in training: re-assert the isolated offline nick if
       // it drifts (never while the user is actively typing in the field).
-      if (window._offlineMode) {
+      if (window._offlineMode || sm.value === 'offline') {
+        // Keep the hidden login-mode on a no-account value: iOS may restore it to
+        // 'auth' (from a previous pokerth.net selection), which would make setLang
+        // print the pokerth.net account label AND make connect() demand a password
+        // — neither applies in training. Also re-assert the free-nick label.
+        var _lmf = document.getElementById('login-mode'); if (_lmf && _lmf.value !== 'unauth') _lmf.value = 'unauth';
+        var _lblf = document.getElementById('nick-label');
+        try { if (_lblf && window.I18N && window.I18N.t) _lblf.textContent = window.I18N.t('enterNickFree'); } catch (e) {}
         var _nf = document.getElementById('nick');
         var _want = ''; try { _want = localStorage.getItem('pth_offline_nick') || ''; } catch (e) {}
         if (_nf && document.activeElement !== _nf && _nf.value !== _want) _nf.value = _want;
@@ -8967,4 +8974,4 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.2.140'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.2.141'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
