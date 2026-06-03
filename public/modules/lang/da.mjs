@@ -9,7 +9,7 @@ export const meta = {
 };
 
 export const strings = {
-    srvOffline:'🤖 Offline (mod bots)', offlineHint:'🤖 Spil mod bots — ingen forbindelse nødvendig.',
+    srvOffline:'🏋️ Træningstilstand', offlineHint:'🤖 Spil mod bots — ingen forbindelse nødvendig.',
     preActionTitle:'Forhåndsvisning af handlinger', preActionHint:'tryk på kortene for at lukke',
     blindsNextTip:'om {n} hænder', blindsEveryMin:'hver {n}. min',
     connect: 'Tilslut',
@@ -371,7 +371,7 @@ export const strings = {
     modeUnauth: 'LAN / Privat server ✓',
     modeGuest: 'pokerth.net — Gæst',
     modeAuth: 'pokerth.net — Registreret konto',
-    srvDedicated:'LAN / Dedikeret server', guestMode:'Gæstetilstand',
+    srvDedicated:'🖥️ LAN / Dedikeret server', guestMode:'Gæstetilstand',
     nickPlaceholder: 'DitNavn',
     quitTooltip: 'Afslut',
     reconnectInProgress: 'Genopretter forbindelse…',
