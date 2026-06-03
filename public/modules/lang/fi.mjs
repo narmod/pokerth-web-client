@@ -9,6 +9,7 @@ export const meta = {
 };
 
 export const strings = {
+    srvOffline:'🤖 Offline (botteja vastaan)', offlineHint:'🤖 Peli botteja vastaan — ei yhteyttä tarvita.',
     preActionTitle:'Toimintojen esikatselu', preActionHint:'sulje napauttamalla kortteja',
     blindsNextTip:'{n} käden päästä', blindsEveryMin:'joka {n} min',
     connect: 'Yhdistä',
