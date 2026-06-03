@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+    srvOffline:'🤖 Neprisijungus (prieš botus)', offlineHint:'🤖 Žaidimas prieš botus — ryšio nereikia.',
     preActionTitle:'Veiksmų peržiūra', preActionHint:'palieskite kortas, kad uždarytumėte',
     blindsNextTip:'po {n} rankų', blindsEveryMin:'kas {n} min',
     connect: 'Prisijungti',
