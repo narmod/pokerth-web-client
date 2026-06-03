@@ -117,7 +117,8 @@ export class OfflineTable {
     this.h = {
       board:[], deck:makeDeck(this.rng), hole:{}, street:'preflop',
       committed:{}, streetCommit:{}, folded:{}, allin:{}, inHand:{},
-      currentBet:0, minRaise:bb, sbP, bbP, results:null
+      currentBet:0, minRaise:bb, sbP, bbP, results:null,
+      aggressorId: bbP.id   // last player to bet/raise; BB is the preflop aggressor by default
     };
     order.forEach(p=>{ this.h.inHand[p.id]=true; this.h.committed[p.id]=0; this.h.streetCommit[p.id]=0; });
     // deal hole cards
@@ -175,8 +176,15 @@ export class OfflineTable {
       bb:this.bb, pot:this._pot(), street:this.h.street
     };
     this.h._pendingId = p.id;
+    const order = this.h._order;
+    const numActive = this._activeNotFolded().length;          // players still contesting the pot
+    const posFromButton = order.findIndex(x=>x.id===p.id);     // 0 = dealer/button (acts last postflop)
     this.onEvent({ type:'turn', playerId:p.id, isBot:p.isBot, gameState:this.h.street, legal,
-      board:this.h.board.slice(), hole:this.h.hole[p.id].slice(), stack:p.stack });
+      board:this.h.board.slice(), hole:this.h.hole[p.id].slice(), stack:p.stack,
+      numActive, numPlayers: order.length, posFromButton,
+      stackBB: this.bb>0 ? p.stack/this.bb : 0,
+      mRatio: (this.sb+this.bb)>0 ? p.stack/(this.sb+this.bb) : 0,
+      aggressorId: this.h.aggressorId!=null ? this.h.aggressorId : null });
   }
   _pot(){ let s=0; for(const id in this.h.committed) s+=this.h.committed[id]; return s; }
 
@@ -201,6 +209,7 @@ export class OfflineTable {
       if (raiseBy>0){
         if (raiseBy>=this.h.minRaise) this.h.minRaise = raiseBy;  // full raise resets minRaise
         this.h.currentBet = target;
+        this.h.aggressorId = p.id;                                // remember last aggressor
         // everyone else still in & able must respond
         this.h._order.forEach(q=>{ if(q.id!==p.id && this.h.inHand[q.id] && !this.h.folded[q.id] && !this.h.allin[q.id]) this.h.needsToAct.add(q.id); });
       }
