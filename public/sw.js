@@ -23,7 +23,7 @@
  *                 Cross-origin requests and WS upgrades are left untouched.
  *                 (Fonts are now self-hosted and handled by SWR above.)
  */
-const CACHE_VERSION = 'pokerth-v0.2.133';
+const CACHE_VERSION = 'pokerth-v0.2.134';
 
 // Where navigations fall back to when the network is unavailable.
 const NAV_FALLBACK = '/pokerth-client.html';
@@ -114,7 +114,7 @@ const ASSETS = [
 self.addEventListener('install', function(e) {
   e.waitUntil(
     caches.open(CACHE_VERSION)
-      .then(function(c) { return c.addAll(ASSETS); })
+      .then(function(c) { return c.addAll(ASSETS.map(function(u){ return new Request(u, { cache: 'reload' }); })); })
       .catch(function() { /* offline during install — skip */ })
   );
   // Take over immediately without waiting for all tabs to close.
@@ -209,6 +209,26 @@ function handleAsset(e) {
   });
 }
 
+// Network-first for app CODE (.js/.mjs/.css). `cache:'reload'` bypasses the
+// HTTP disk cache so a deployed change is always picked up when online; falls
+// back to the SW cache when offline (training mode keeps working on a plane).
+function handleCode(e) {
+  return (async function () {
+    try {
+      var fresh = await fetch(e.request, { cache: 'reload' });
+      if (fresh && fresh.status === 200) {
+        var clone = fresh.clone();
+        caches.open(CACHE_VERSION).then(function (c) { c.put(e.request, clone); });
+      }
+      return fresh;
+    } catch (err) {
+      var cached = await caches.match(e.request);
+      if (cached) return cached;
+      return new Response('Offline', { status: 503, headers: { 'Content-Type': 'text/plain; charset=utf-8' } });
+    }
+  })();
+}
+
 // ── Fetch : route by request type ──
 self.addEventListener('fetch', function(e) {
   if (e.request.method !== 'GET') return;
@@ -218,6 +238,8 @@ self.addEventListener('fetch', function(e) {
 
   if (e.request.mode === 'navigate') {
     e.respondWith(handleNavigation(e));
+  } else if (/\.(?:js|mjs|css)$/.test(url.pathname)) {
+    e.respondWith(handleCode(e));
   } else {
     e.respondWith(handleAsset(e));
   }
