@@ -18,6 +18,7 @@ export const meta = {
 export const strings = {
     guestHint:'🌐 Guest play on pokerth.net — no account needed.',
     srvOffline:'🏋️ Training mode', offlineHint:'🤖 Play against bots — no connection needed.',
+    srvPokerthNet:'🌐 Internet / PokerTH.net',
     botDifficulty:'Bot difficulty', botEasy:'Easy', botMixed:'Mixed', botNormal:'Normal', botHard:'Hard',
     blindsNextTip:'in {n} hand(s)', blindsEveryMin:'every {n} min',
     connect:'Connect', disconnect:'✕ Disconnect', connecting:'Connecting…',
