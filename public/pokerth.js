@@ -6946,13 +6946,6 @@ function dismissWinner() {
           _onk.value = (lsGet('pth_offline_nick') || '');   // pseudo entraînement INDÉPENDANT (aucun repli sur le pseudo LAN)
         }
         var _onl = $('nick-label'); if (_onl) _onl.textContent = t('enterNickFree');
-        // Bot difficulty selector is only meaningful offline — reveal & seed it.
-        var _skl = document.getElementById('f-bot-skill');
-        if (_skl) {
-          _skl.style.display = '';
-          var _sklSel = document.getElementById('bot-skill');
-          if (_sklSel) { try { _sklSel.value = localStorage.getItem('pth_offline_skill') || 'mixed'; } catch (e) {} }
-        }
         if (typeof _stopIpBlockCountdown === 'function') _stopIpBlockCountdown();
         setStatus(t('offlineHint'), '', 'offlineHint');
         import('/modules/offline/index.mjs').catch(function(){});
@@ -6961,7 +6954,6 @@ function dismissWinner() {
       // Leaving offline -> bring back the advanced gear + guest toggle; the
       // remaining fields (TLS / passwords / advanced block) are re-derived
       // from the mode + gear state by onLoginModeChange() just below.
-      var _sklOff = document.getElementById('f-bot-skill'); if (_sklOff) _sklOff.style.display = 'none';
       var _gearOn = $('conn-adv-btn'); if (_gearOn) _gearOn.style.display = '';
       var _guestRow = $('guest-mode-row'); if (_guestRow) _guestRow.style.display = '';
       if (srvEl && gcEl && lmEl) {
@@ -8134,6 +8126,14 @@ function dismissWinner() {
           qc.dataset.modeDefault = qc.value;
         }
       }
+      // Bot difficulty is only meaningful in Training (offline) mode — show the
+      // selector there and seed it from the saved choice.
+      var skRow = document.getElementById('cf-skill-row');
+      if (skRow) {
+        skRow.style.display = window._offlineMode ? '' : 'none';
+        var skSel = document.getElementById('cf-skill');
+        if (skSel) { try { skSel.value = localStorage.getItem('pth_offline_skill') || 'mixed'; } catch (e) {} }
+      }
     },
 
     toggleCreateForm() {
@@ -9011,4 +9011,4 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.2.143'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.2.145'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
