@@ -15,7 +15,7 @@ export const meta = {
 };
 
 export const strings = {
-    srvOffline:'🤖 Offline (tegen bots)', offlineHint:'🤖 Solo tegen bots — geen verbinding nodig.',
+    srvOffline:'🏋️ Oefenmodus', offlineHint:'🤖 Solo tegen bots — geen verbinding nodig.',
     preActionTitle:'Actievoorbeeld', preActionHint:'tik op kaarten om te sluiten',
     blindsNextTip:'over {n} hand(en)', blindsEveryMin:'elke {n} min',
     connect: 'Verbinden',
@@ -378,7 +378,7 @@ export const strings = {
     modeUnauth: 'LAN / Privéserver ✓',
     modeGuest: 'pokerth.net — Gast',
     modeAuth: 'pokerth.net — Geregistreerd account',
-    srvDedicated:'LAN / Toegewijde server', guestMode:'Gastmodus',
+    srvDedicated:'🖥️ LAN / Toegewijde server', guestMode:'Gastmodus',
     nickPlaceholder: 'JouwNaam',
     quitTooltip: 'Verlaten',
     reconnectInProgress: 'Opnieuw verbinden…',
