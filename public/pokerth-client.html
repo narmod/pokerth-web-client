@@ -271,6 +271,7 @@ function onAvatarImageChosen(input) {
           <select id="server-mode" onchange="App.onServerOrGuestChange()">
             <option value="lan-dedi" selected data-i18n="srvDedicated">LAN / Dedicated server</option>
             <option value="pokerthnet">pokerth.net</option>
+            <option value="offline">🤖 Hors-ligne (vs bots)</option>
           </select>
           <span class="sel-arr">▾</span>
         </div>
@@ -293,6 +294,13 @@ function onAvatarImageChosen(input) {
                 title="More options" data-i18n-title="moreOptions" aria-label="More options">
           <span class="conn-adv-gear-ico">&#9881;</span>
         </button>
+      </div>
+    </div>
+
+    <div id="offline-opts" style="display:none">
+      <div class="f f-sm">
+        <label>Nombre de bots</label>
+        <input id="offline-bots" type="number" min="1" max="9" value="5">
       </div>
     </div>
 
