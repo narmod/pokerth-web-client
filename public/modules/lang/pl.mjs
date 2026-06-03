@@ -16,6 +16,8 @@ export const meta = {
 };
 
 export const strings = {
+    botDifficulty:'Poziom botów', botEasy:'Łatwy', botMixed:'Mieszany', botNormal:'Normalny', botHard:'Trudny',
+
     guestHint:'🌐 Gra jako gość na pokerth.net — bez konta.',
     srvOffline:'🏋️ Tryb treningowy', offlineHint:'🤖 Gra solo z botami — bez połączenia.',
     preActionTitle:'Podgląd akcji', preActionHint:'dotknij kart, aby zamknąć',
