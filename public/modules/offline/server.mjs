@@ -21,6 +21,7 @@ export class FakeServer {
     this.pace    = opts.pace || ((fn)=>fn());
     this.rng     = opts.rng  || Math.random;
     this.botPool = opts.botPool || [];
+    this.botSkill = opts.botSkill || 'mixed';   // 'easy'|'normal'|'hard'|'mixed'
     this.cfg = Object.assign({ startMoney:3000, smallBlind:10, raiseEvery:8, maxPlayers:6, timeout:30, gameName:'Offline', raiseMode:1, endRaiseMode:1, endRaiseValue:0, guiSpeed:5, delayHands:2 }, opts.config||{});
     this.meId = 1; this.gameId = 1;
     this.players = [{ id:1, name:(opts.me&&opts.me.name)||'You', isBot:false }];
@@ -105,7 +106,12 @@ export class FakeServer {
       entry = pool[Math.floor(this.rng()*pool.length)];
       this._used.add(entry[0]);
     } else entry = ['Bot '+id, '🤖'];
-    return { id, name:entry[0], avatar:entry[1], isBot:true, aggr:0.3+this.rng()*0.5 };
+    let skill = this.botSkill;
+    if (skill === 'mixed' || (skill!=='easy' && skill!=='normal' && skill!=='hard')){
+      const r = this.rng();                          // varied table: ~30% easy, ~50% normal, ~20% hard
+      skill = r < 0.30 ? 'easy' : (r < 0.80 ? 'normal' : 'hard');
+    }
+    return { id, name:entry[0], avatar:entry[1], isBot:true, aggr:0.3+this.rng()*0.5, skill };
   }
 
   _onStartRequest(){
@@ -114,7 +120,7 @@ export class FakeServer {
     while(this.players.length < target){
       const b = this._pickBot();
       this.players.push(b);
-      this.botCfg[b.id] = { aggr:b.aggr, rng:this.rng };
+      this.botCfg[b.id] = { aggr:b.aggr, rng:this.rng, skill:b.skill };
       this._send('GamePlayerJoined',[[1,0,this.gameId],[2,0,b.id],[3,0,0]]);
       this._info(b.id);
     }
