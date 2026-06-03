@@ -1190,11 +1190,25 @@ body {
 }
 
 /* ── Urgence (≤5s) — pulsation rouge ── */
+/* Halo d'urgence (ton tour, <=8s) : ombre FIXE portee par un pseudo-element
+   promu en couche GPU ; seule l'opacity est animee (composite-only) -> fin du
+   repaint plein ecran a chaque frame (batterie/chaleur). Rendu visuel identique.
+   position:fixed -> se cale sur le viewport (= l'ecran de jeu plein ecran),
+   sans toucher au positionnement de #s-game ni de ses enfants. */
 @keyframes urgencyPulse {
-  0%,100% { box-shadow: inset 0 0 0 0 rgba(192,57,43,0); }
-  50%     { box-shadow: inset 0 0 60px 10px rgba(192,57,43,0.22); }
+  0%,100% { opacity: 0; }
+  50%     { opacity: 1; }
 }
-#s-game.urgent { animation: urgencyPulse 0.6s ease-in-out infinite; }
+#s-game.urgent::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 90;
+  box-shadow: inset 0 0 60px 10px rgba(192,57,43,0.22);
+  will-change: opacity;
+  animation: urgencyPulse 0.6s ease-in-out infinite;
+}
 
 /* ── Transition lobby → table ── */
 @keyframes tableEnter {
