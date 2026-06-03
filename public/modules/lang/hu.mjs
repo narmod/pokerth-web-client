@@ -10,7 +10,7 @@ export const meta = {
 };
 
 export const strings = {
-    srvOffline:'🤖 Offline (botok ellen)', offlineHint:'🤖 Játék botok ellen – nincs szükség kapcsolatra.',
+    srvOffline:'🏋️ Gyakorló mód', offlineHint:'🤖 Játék botok ellen – nincs szükség kapcsolatra.',
     preActionTitle:'Műveletek előnézete', preActionHint:'érintsd meg a lapokat a bezáráshoz',
     blindsNextTip:'{n} leosztás múlva', blindsEveryMin:'{n} percenként',
     connect: 'Csatlakozás',
@@ -372,7 +372,7 @@ export const strings = {
     modeUnauth: 'LAN / Privát szerver ✓',
     modeGuest: 'pokerth.net — Vendég',
     modeAuth: 'pokerth.net — Regisztrált fiók',
-    srvDedicated:'LAN / Dedikált szerver', guestMode:'Vendég mód',
+    srvDedicated:'🖥️ LAN / Dedikált szerver', guestMode:'Vendég mód',
     nickPlaceholder: 'ANeved',
     quitTooltip: 'Kilépés',
     reconnectInProgress: 'Újracsatlakozás…',
