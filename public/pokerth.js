@@ -1170,6 +1170,10 @@ document.addEventListener("DOMContentLoaded", function() {
     // and cheap (one compare / 400 ms); never fights the native picker (focused).
     setInterval(function () {
       if (window._shareLinkActive) return;
+      // Ce contournement ne concerne QUE l'écran de connexion : ne rien faire
+      // ailleurs (lobby/table) évite un réveil CPU ~2,5x/s inutile à vie (batterie).
+      var _sc = document.getElementById('s-connect');
+      if (!_sc || !_sc.classList.contains('active')) return;
       var want = null; try { want = localStorage.getItem('pth_server_mode'); } catch (e) {}
       if (want && sm.value !== want && document.activeElement !== sm) {
         sm.value = want;
@@ -1204,7 +1208,7 @@ document.addEventListener("DOMContentLoaded", function() {
           }
         } catch (e) {}
       }
-    }, 400);
+    }, 800);
   })();
 
   // Keep the training pseudo fully isolated from the LAN / pokerth.net nicknames:
@@ -9023,4 +9027,4 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.2.146'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.2.147'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
