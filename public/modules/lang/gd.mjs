@@ -11,6 +11,8 @@ export const meta = {
 };
 
 export const strings = {
+    botDifficulty:'Duilgheadas nam botaichean', botEasy:'Furasta', botMixed:'Measgaichte', botNormal:'Àbhaisteach', botHard:'Doirbh',
+
     guestHint:'🌐 Cluich mar aoigh air pokerth.net — gun chunntas.',
     srvOffline:'🏋️ Modh trèanaidh', offlineHint:'🤖 Cluich an aghaidh bhotaichean — gun cheangal.',
     preActionTitle:'Ro-shealladh gnìomh', preActionHint:'thoir gnogadh air na cairtean gus dùnadh',
