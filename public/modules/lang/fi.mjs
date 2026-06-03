@@ -9,7 +9,7 @@ export const meta = {
 };
 
 export const strings = {
-    srvOffline:'🤖 Offline (botteja vastaan)', offlineHint:'🤖 Peli botteja vastaan — ei yhteyttä tarvita.',
+    srvOffline:'🏋️ Harjoittelutila', offlineHint:'🤖 Peli botteja vastaan — ei yhteyttä tarvita.',
     preActionTitle:'Toimintojen esikatselu', preActionHint:'sulje napauttamalla kortteja',
     blindsNextTip:'{n} käden päästä', blindsEveryMin:'joka {n} min',
     connect: 'Yhdistä',
@@ -371,7 +371,7 @@ export const strings = {
     modeUnauth: 'LAN / Yksityinen palvelin ✓',
     modeGuest: 'pokerth.net — Vieras',
     modeAuth: 'pokerth.net — Rekisteröity tili',
-    srvDedicated:'LAN / Oma palvelin', guestMode:'Vierastila',
+    srvDedicated:'🖥️ LAN / Oma palvelin', guestMode:'Vierastila',
     nickPlaceholder: 'Nimesi',
     quitTooltip: 'Poistu',
     reconnectInProgress: 'Yhdistetään uudelleen…',
