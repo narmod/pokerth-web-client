@@ -9,7 +9,7 @@ export const meta = {
 };
 
 export const strings = {
-    srvOffline:'🤖 Offline (mot bottar)', offlineHint:'🤖 Spela mot bottar — ingen anslutning behövs.',
+    srvOffline:'🏋️ Träningsläge', offlineHint:'🤖 Spela mot bottar — ingen anslutning behövs.',
     preActionTitle:'Förhandsvisning av åtgärder', preActionHint:'tryck på korten för att stänga',
     blindsNextTip:'om {n} händer', blindsEveryMin:'var {n}:e min',
     connect: 'Anslut',
@@ -371,7 +371,7 @@ export const strings = {
     modeUnauth: 'LAN / Privat server ✓',
     modeGuest: 'pokerth.net — Gäst',
     modeAuth: 'pokerth.net — Registrerat konto',
-    srvDedicated:'LAN / Dedikerad server', guestMode:'Gästläge',
+    srvDedicated:'🖥️ LAN / Dedikerad server', guestMode:'Gästläge',
     nickPlaceholder: 'DittNamn',
     quitTooltip: 'Avsluta',
     reconnectInProgress: 'Återansluter…',
