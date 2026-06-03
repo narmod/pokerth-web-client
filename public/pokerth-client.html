@@ -1384,20 +1384,9 @@ if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('/sw.js', { updateViaCache: 'none' })
     .then(function (reg) { if (reg) reg.update().catch(function(){}); })
     .catch(function(){});
-  // Auto-reload once when a NEW service worker takes control (after a deploy),
-  // so standalone PWAs (esp. iOS) pick up fresh JS without a manual cold launch.
-  // Skips the very first claim (initial install) and only reloads while on the
-  // connect screen, to never interrupt a game in progress.
-  (function () {
-    var _swHadCtrl = !!navigator.serviceWorker.controller;
-    var _swReloading = false;
-    navigator.serviceWorker.addEventListener('controllerchange', function () {
-      if (!_swHadCtrl) { _swHadCtrl = true; return; }
-      if (_swReloading) return;
-      var sc = document.getElementById('s-connect');
-      if (sc && sc.classList.contains('active')) { _swReloading = true; location.reload(); }
-    });
-  })();
+  // (Auto-reload on controllerchange removed — the explicit /__ver update banner
+  // is shown instead so the user controls when to apply an update. App code is
+  // network-first, so tapping the banner or reloading always pulls fresh JS.)
   // Ask the SW to re-check itself whenever we come back to the app.
   document.addEventListener('visibilitychange', function () {
     if (!document.hidden) {
