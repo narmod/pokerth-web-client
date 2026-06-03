@@ -10,6 +10,8 @@ export const meta = {
 };
 
 export const strings = {
+    botDifficulty:'Botok nehézsége', botEasy:'Könnyű', botMixed:'Vegyes', botNormal:'Normál', botHard:'Nehéz',
+
     guestHint:'🌐 Vendégjáték a pokerth.net-en – nincs fiók.',
     srvOffline:'🏋️ Gyakorló mód', offlineHint:'🤖 Játék botok ellen – nincs szükség kapcsolatra.',
     preActionTitle:'Műveletek előnézete', preActionHint:'érintsd meg a lapokat a bezáráshoz',
