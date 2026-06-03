@@ -57,12 +57,8 @@ function makeDeck(rng){
   return d;
 }
 
-// Default SNG blind schedule: [smallBlind, afterHands]. Rises every `raiseEvery` hands.
-function blindForLevel(baseSB, level){ // level 0-based; doubles roughly each step
-  const mult = [1,1.5,2,3,4,6,8,12,16,24,32,48,64,96,128];
-  const m = mult[Math.min(level, mult.length-1)];
-  return Math.max(baseSB, Math.round(baseSB*m/baseSB)*baseSB*0 + Math.round(baseSB*m)); // = round(baseSB*m)
-}
+// Blind schedule is computed per-level by OfflineTable._sbForLevel(),
+// honouring the table's raise interval (hands/minutes) and end-raise mode.
 
 export class OfflineTable {
   constructor(opts){
@@ -70,7 +66,12 @@ export class OfflineTable {
     this.players = opts.players;
     this.players.forEach(p=>{ p.isBot=!!p.isBot; if(p.in===undefined) p.in=true; });
     this.baseSB = opts.smallBlind || 10;
-    this.raiseEvery = opts.raiseEvery || 7;       // raise blinds every N hands
+    this.raiseEvery = opts.raiseEvery || 7;       // every N hands (mode 1) or N minutes (mode 2)
+    this.raiseMode    = opts.raiseMode    || 1;   // 1 = every N hands, 2 = every N minutes
+    this.endRaiseMode = opts.endRaiseMode || 1;   // 1 = double, 2 = raise up to value, 3 = keep last (constant)
+    this.endRaiseValue= opts.endRaiseValue|| 0;   // target small blind for mode 2
+    this.now = opts.now || (()=>Date.now());      // injectable clock (minutes mode / tests)
+    this.t0 = 0;
     this.onEvent = opts.onEvent || (()=>{});
     this.rng = opts.rng || Math.random;
     this.gameId = opts.gameId || 1;
@@ -81,14 +82,29 @@ export class OfflineTable {
   alive(){ return this.players.filter(p=>p.in && p.stack>0 || (p.in && p.stack===0 && p._justBusted)); }
   livePlayers(){ return this.players.filter(p=>p.in); }
 
-  start(){ this.onEvent({type:'gameStart', players:this.players.map(p=>({id:p.id,name:p.name,stack:p.stack,isBot:p.isBot}))}); this.nextHand(); }
+  start(){ this.onEvent({type:'gameStart', players:this.players.map(p=>({id:p.id,name:p.name,stack:p.stack,isBot:p.isBot}))}); this.t0=this.now(); this.nextHand(); }
+
+  // Small blind for a given (0-based) level, honouring endRaiseMode:
+  //   1 = double each level · 2 = double but capped at endRaiseValue · 3 = constant.
+  _sbForLevel(level){
+    const base = this.baseSB;
+    if (this.endRaiseMode === 3) return base;                 // keep last -> never escalate
+    let sb = Math.round(base * Math.pow(2, Math.min(level, 30)));
+    if (this.endRaiseMode === 2 && this.endRaiseValue > 0) sb = Math.min(sb, this.endRaiseValue);
+    return Math.max(base, sb);
+  }
 
   nextHand(){
     const live = this.players.filter(p=>p.in);
     if (live.length<=1){ this.onEvent({type:'gameOver', winnerId: live[0] && live[0].id}); return; }
     this.handNum++;
-    this.level = Math.floor((this.handNum-1)/this.raiseEvery);
-    const sb = blindForLevel(this.baseSB, this.level); const bb = sb*2;
+    if (this.raiseMode === 2) {                       // rise every N minutes of wall-clock
+      const mins = Math.max(0, (this.now() - this.t0) / 60000);
+      this.level = this.raiseEvery > 0 ? Math.floor(mins / this.raiseEvery) : 0;
+    } else {                                          // rise every N hands
+      this.level = this.raiseEvery > 0 ? Math.floor((this.handNum-1) / this.raiseEvery) : 0;
+    }
+    const sb = this._sbForLevel(this.level); const bb = sb*2;
     this.sb=sb; this.bb=bb;
     // advance button to next live player
     do { this.button=(this.button+1)%this.players.length; } while(!this.players[this.button].in);
