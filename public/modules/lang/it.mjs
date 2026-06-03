@@ -15,6 +15,7 @@ export const meta = {
 };
 
 export const strings = {
+    guestHint:'🌐 Gioco come ospite su pokerth.net — senza account.',
     srvOffline:'🏋️ Modalità allenamento', offlineHint:'🤖 Gioco in solitaria contro bot — nessuna connessione.',
     preActionTitle:'Anteprima azioni', preActionHint:'tocca le carte per chiudere',
     blindsNextTip:'tra {n} mani', blindsEveryMin:'ogni {n} min',
