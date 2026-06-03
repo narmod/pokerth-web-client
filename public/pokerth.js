@@ -5926,23 +5926,20 @@ const App = (() => {
     // admin is already looking, especially on mobile where the
     // header buttons are tucked into the ••• overflow.
     let readyBlock = '';
-    if (amGameAdmin && current >= 2) {
-      var fr_wp = (typeof _lang === 'undefined' || _lang !== 'en');
+    // Show "+ Bots" whenever the admin has empty seats to fill (works even
+    // with a single human, e.g. offline mode). "Start" (humans only) still
+    // requires the server minimum of 2 humans.
+    if (amGameAdmin && (current >= 2 || current < maxP)) {
+      var startNoBotsBtn = (current >= 2)
+        ? '<button class="wp-ready-btn" onclick="App.startNoBots()" title="' + t('wpStartHumansTip') + '">▶ ' + t('wpStart') + '</button>'
+        : '';
+      var fillBotsBtn = (current < maxP)
+        ? '<button class="wp-ready-btn wp-ready-btn-bots" onclick="App.startWithBots()" title="' + t('wpFillBotsTip') + '">▶ + Bots</button>'
+        : '';
       readyBlock =
         '<div class="wp-ready-row">' +
-          '<div class="wp-ready-label">✓ ' +
-            t('wpReady') +
-          '</div>' +
-          '<div class="wp-ready-btn-row">' +
-            '<button class="wp-ready-btn" onclick="App.startNoBots()" ' +
-              'title="' + t('wpStartHumansTip') + '">' +
-              '▶ ' + t('wpStart') +
-            '</button>' +
-            '<button class="wp-ready-btn wp-ready-btn-bots" onclick="App.startWithBots()" ' +
-              'title="' + t('wpFillBotsTip') + '">' +
-              '▶ + Bots' +
-            '</button>' +
-          '</div>' +
+          '<div class="wp-ready-label">✓ ' + t('wpReady') + '</div>' +
+          '<div class="wp-ready-btn-row">' + startNoBotsBtn + fillBotsBtn + '</div>' +
         '</div>';
     }
 
