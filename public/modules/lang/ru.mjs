@@ -15,7 +15,7 @@ export const meta = {
 };
 
 export const strings = {
-    srvOffline:'🤖 Офлайн (против ботов)', offlineHint:'🤖 Игра против ботов — подключение не нужно.',
+    srvOffline:'🏋️ Тренировка', offlineHint:'🤖 Игра против ботов — подключение не нужно.',
     preActionTitle:'Предпросмотр действий', preActionHint:'коснитесь карт, чтобы закрыть',
     blindsNextTip:'через {n} раздач', blindsEveryMin:'каждые {n} мин',
     connect: 'Подключиться',
@@ -377,7 +377,7 @@ export const strings = {
     modeUnauth: 'LAN / Частный сервер ✓',
     modeGuest: 'pokerth.net — Гость',
     modeAuth: 'pokerth.net — Зарегистрированный аккаунт',
-    srvDedicated:'LAN / Выделенный сервер', guestMode:'Гостевой режим',
+    srvDedicated:'🖥️ LAN / Выделенный сервер', guestMode:'Гостевой режим',
     nickPlaceholder: 'ВашеИмя',
     quitTooltip: 'Покинуть',
     reconnectInProgress: 'Переподключение…',
