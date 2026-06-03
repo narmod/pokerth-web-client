@@ -62,6 +62,7 @@ function toggleConnAdvanced() {
   var wrap = document.getElementById("conn-advanced");
   var btn  = document.getElementById("conn-adv-btn");
   if (!wrap || !btn) return;
+  if (window._offlineMode) return;   // offline (vs bots): no network/advanced fields
   var open = !btn.classList.contains("open");
   btn.classList.toggle("open", open);
   btn.setAttribute("aria-expanded", open ? "true" : "false");
