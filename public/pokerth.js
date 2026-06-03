@@ -7560,10 +7560,9 @@ function dismissWinner() {
     },
 
     leaveGame() {
-      // Offline (vs bots): there is no real lobby — leaving the game means a
-      // full disconnect back to the connect screen (also stops the local engine
-      // via FakeSocket.close()). Avoids landing in a phantom 1-table lobby.
-      if ($('server-mode') && $('server-mode').value === 'offline') { this.disconnect(); return; }
+      // Offline (vs bots) returns to the lobby just like online: the fake
+      // server closes the current game (GameListUpdate=closed) on leave, so the
+      // lobby ends up clean and the user can create another table.
       // Send proper leave request then stay connected (return to lobby)
       if (ws && gId) { try { send(MSG.buildLeaveGame(gId)); } catch(e) {} }
       // Départ volontaire : oublier le marqueur de reprise (sinon on serait
