@@ -1144,6 +1144,25 @@ document.addEventListener("DOMContentLoaded", function() {
     try { if (!window._shareLinkActive && App && App.onServerOrGuestChange) App.onServerOrGuestChange(); } catch (e) {}
   });
 
+  // iOS Safari restores <select> values at an UNPREDICTABLE time — sometimes
+  // even after 'load' — and WITHOUT firing onchange, silently desyncing the
+  // connect UI from the visible dropdown (e.g. menu shows training but the hint
+  // /label/nick stay on the previous mode). autocomplete=off is ignored there,
+  // so we can't prevent it; instead we briefly watch the server-mode value after
+  // load and re-derive the UI whenever it changes — whenever iOS lands it.
+  (function () {
+    var sm = document.getElementById('server-mode');
+    if (!sm) return;
+    var last = sm.value, n = 0;
+    var iv = setInterval(function () {
+      if (sm.value !== last) {
+        last = sm.value;
+        try { if (!window._shareLinkActive && App && App.onServerOrGuestChange) App.onServerOrGuestChange(); } catch (e) {}
+      }
+      if (++n >= 24) clearInterval(iv); // watch ~6s @ 250ms, then stop
+    }, 250);
+  })();
+
   // Auto-fill proxy URL from current page URL
   var proto = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
   var host  = window.location.hostname;
@@ -8919,4 +8938,4 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.2.136'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.2.137'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
