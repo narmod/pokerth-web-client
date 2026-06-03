@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+    srvOffline:'🤖 Εκτός σύνδεσης (εναντίον bots)', offlineHint:'🤖 Παιχνίδι εναντίον bots — χωρίς σύνδεση.',
     preActionTitle:'Προεπισκόπηση ενεργειών', preActionHint:'πάτα τα φύλλα για κλείσιμο',
     blindsNextTip:'σε {n} χέρια', blindsEveryMin:'κάθε {n} λεπτά',
     connect: 'Σύνδεση',
