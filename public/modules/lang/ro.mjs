@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+    srvOffline:'🤖 Offline (împotriva boților)', offlineHint:'🤖 Joc împotriva boților — fără conexiune.',
     preActionTitle:'Previzualizare acțiuni', preActionHint:'atinge cărțile pentru a închide',
     blindsNextTip:'în {n} mâini', blindsEveryMin:'la fiecare {n} min',
     connect: 'Conectează',
