@@ -10,6 +10,8 @@ export const meta = {
 };
 
 export const strings = {
+    botDifficulty:'Botų sudėtingumas', botEasy:'Lengvas', botMixed:'Mišrus', botNormal:'Normalus', botHard:'Sunkus',
+
     guestHint:'🌐 Žaidimas kaip svečias pokerth.net — be paskyros.',
     srvOffline:'🏋️ Treniruočių režimas', offlineHint:'🤖 Žaidimas prieš botus — ryšio nereikia.',
     preActionTitle:'Veiksmų peržiūra', preActionHint:'palieskite kortas, kad uždarytumėte',
