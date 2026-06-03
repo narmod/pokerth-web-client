@@ -6795,9 +6795,9 @@ function dismissWinner() {
       window._offlineMode = off;
       var oo = $('offline-opts'); if (oo) oo.style.display = off ? 'block' : 'none';
       if (off) {
-        if (lmEl) lmEl.value = 'lan';
+        // Keep #server-mode on 'offline'. Do NOT call onLoginModeChange():
+        // its tail reverse-syncs the visible select back to 'lan-dedi'.
         import('/modules/offline/index.mjs').catch(function(){});
-        this.onLoginModeChange();
         return;
       }
       if (srvEl && gcEl && lmEl) {
@@ -7042,19 +7042,19 @@ function dismissWinner() {
       // The CreateGame form defaults depend on this mode. Refresh them
       // now so the values are correct the first time the user opens it.
       try { App._applyCreateFormDefaults(true); } catch (e) {}
-      if (window._offlineMode) {
+      if ($('server-mode') && $('server-mode').value === 'offline') {
         // ── OFFLINE vs BOTS ── swap the transport for a local fake server.
         directWS = false;
         window._pendingAutoJoin = 1; // our synthetic game id -> GameListNew auto-joins
         if (!(window.PokerOffline && window.PokerOffline.createSocket)) {
           setStatus('Chargement du mode hors-ligne…');
           import('/modules/offline/index.mjs')
-            .then(function(){ window.App.connect(); })
+            .then(function(){ App.connect(); })
             .catch(function(){ setStatus('Offline init failed', 'err'); });
           return;
         }
         try {
-          ws = window.PokerOffline.createSocket({ nick: myName, bots: window.App._offlineBots() });
+          ws = window.PokerOffline.createSocket({ nick: myName, bots: App._offlineBots() });
         } catch (e) {
           setStatus('Offline init failed: ' + e.message, 'err');
           return;
