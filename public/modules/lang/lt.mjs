@@ -10,7 +10,7 @@ export const meta = {
 };
 
 export const strings = {
-    srvOffline:'🤖 Neprisijungus (prieš botus)', offlineHint:'🤖 Žaidimas prieš botus — ryšio nereikia.',
+    srvOffline:'🏋️ Treniruočių režimas', offlineHint:'🤖 Žaidimas prieš botus — ryšio nereikia.',
     preActionTitle:'Veiksmų peržiūra', preActionHint:'palieskite kortas, kad uždarytumėte',
     blindsNextTip:'po {n} rankų', blindsEveryMin:'kas {n} min',
     connect: 'Prisijungti',
@@ -372,7 +372,7 @@ export const strings = {
     modeUnauth: 'LAN / Privatus serveris ✓',
     modeGuest: 'pokerth.net — svečias',
     modeAuth: 'pokerth.net — registruota paskyra',
-    srvDedicated:'LAN / Skirtasis serveris', guestMode:'Svečio režimas',
+    srvDedicated:'🖥️ LAN / Skirtasis serveris', guestMode:'Svečio režimas',
     nickPlaceholder: 'JūsųVardas',
     quitTooltip: 'Palikti',
     reconnectInProgress: 'Jungiamasi iš naujo…',
