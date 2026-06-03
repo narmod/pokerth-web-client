@@ -15,6 +15,7 @@ export const meta = {
 };
 
 export const strings = {
+    srvOffline:'🤖 Offline (tegen bots)', offlineHint:'🤖 Solo tegen bots — geen verbinding nodig.',
     preActionTitle:'Actievoorbeeld', preActionHint:'tik op kaarten om te sluiten',
     blindsNextTip:'over {n} hand(en)', blindsEveryMin:'elke {n} min',
     connect: 'Verbinden',
