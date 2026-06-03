@@ -6803,6 +6803,7 @@ function dismissWinner() {
           var _el = document.getElementById(_connDetailIds[_i]);
           if (_el) _el.style.display = 'none';
         }
+        setStatus(t('offlineHint'), '', 'offlineHint');
         import('/modules/offline/index.mjs').catch(function(){});
         return;
       }
