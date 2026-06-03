@@ -269,7 +269,7 @@ function onAvatarImageChosen(input) {
       <label data-i18n="loginMode">Login Mode</label>
       <div style="display:flex;gap:8px;align-items:stretch">
         <div class="sel-wrap" style="flex:1">
-          <select id="server-mode" onchange="App.onServerOrGuestChange()">
+          <select id="server-mode" autocomplete="off" onchange="App.onServerOrGuestChange()">
             <option value="lan-dedi" selected data-i18n="srvDedicated">🖥️ LAN / Dedicated server</option>
             <option value="pokerthnet">🌐 pokerth.net</option>
             <option value="offline" data-i18n="srvOffline">🏋️ Mode entraînement</option>
