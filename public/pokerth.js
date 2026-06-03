@@ -1186,6 +1186,23 @@ document.addEventListener("DOMContentLoaded", function() {
         var _nf = document.getElementById('nick');
         var _w = ''; try { _w = localStorage.getItem('pth_offline_nick') || ''; } catch (e) {}
         if (_nf && document.activeElement !== _nf && _nf.value !== _w) _nf.value = _w;
+        // The hint (#cstatus) isn't reasserted above, so a network-mode hint that
+        // leaked in from a previous mode ('Chat… serveur privé', 'Entrez vos
+        // identifiants pokerth.net', LAN note, guest hint) would persist in
+        // training. Repair it — but ONLY when it currently shows one of those
+        // KNOWN network hints, never a transient message (Initialisation…, errors),
+        // so legitimate status text is left untouched.
+        try {
+          var T = (window.I18N && window.I18N.t) ? window.I18N.t : null;
+          var _cs = document.getElementById('cstatus');
+          if (T && _cs && window._forceOfflineHint) {
+            var _t = _cs.textContent;
+            if (_t === T('chatAvailPrivate') || _t === T('enterCredentials') ||
+                _t === T('lanModeNote') || _t === T('guestHint')) {
+              window._forceOfflineHint();
+            }
+          }
+        } catch (e) {}
       }
     }, 400);
   })();
@@ -3097,6 +3114,12 @@ const App = (() => {
     el.textContent = txt;
     el.className = 'status ' + cls;
   }
+  // Re-pose le hint « 🤖 mode entraînement ». Exposé pour que la veille (portée
+  // globale) puisse RÉPARER un hint réseau qui aurait fui en entraînement, sans
+  // jamais toucher un message transitoire. setStatus + t sont en portée ici.
+  window._forceOfflineHint = function () {
+    try { setStatus(t('offlineHint'), '', 'offlineHint'); } catch (e) {}
+  };
   // Re-applique le statut de l'écran de connexion dans la langue courante.
   // Le hint dépend du mode (clé mémorisée par setStatus) ; posé impérativement
   // (sans data-i18n) il restait figé dans la langue précédente. Les messages
@@ -8979,4 +9002,4 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.2.142'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.2.143'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
