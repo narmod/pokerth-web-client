@@ -12,6 +12,8 @@ export const meta = {
 };
 
 export const strings = {
+    botDifficulty:'Bot zorluğu', botEasy:'Kolay', botMixed:'Karışık', botNormal:'Normal', botHard:'Zor',
+
     guestHint:'🌐 pokerth.net\'te misafir oyun — hesap gerekmez.',
     srvOffline:'🏋️ Antrenman modu', offlineHint:'🤖 Botlara karşı oyna — bağlantı gerekmez.',
     preActionTitle:'Eylem önizlemesi', preActionHint:'kapatmak için kartlara dokun',
