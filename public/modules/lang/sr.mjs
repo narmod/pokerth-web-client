@@ -14,6 +14,7 @@ export const strings = {
 
     guestHint:'🌐 Игра као гост на pokerth.net — без налога.',
     srvOffline:'🏋️ Режим вежбања', offlineHint:'🤖 Игра против ботова — без везе.',
+    srvPokerthNet:'🌐 Internet / PokerTH.net',
     preActionTitle:'Преглед потеза', preActionHint:'додирни карте да затвориш',
     blindsNextTip:'за {n} руку', blindsEveryMin:'сваких {n} мин',
     connect: 'Poveži se',
