@@ -11,6 +11,7 @@ export const meta = {
 };
 
 export const strings = {
+    srvOffline:'🤖 ஆஃப்லைன் (பாட்களுக்கு எதிராக)', offlineHint:'🤖 பாட்களுடன் விளையாடுங்கள் — இணைப்பு தேவையில்லை.',
     preActionTitle:'செயல் முன்னோட்டம்', preActionHint:'மூட அட்டைகளைத் தொடவும்',
     blindsNextTip:'{n} கைகளில்', blindsEveryMin:'ஒவ்வொரு {n} நிமிடம்',
     connect: 'இணை',
