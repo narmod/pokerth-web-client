@@ -31,6 +31,7 @@ export function createSocket(config){
   config = config || {};
   const rng = config.rng || Math.random;
   const server = new FakeServer({ me:{ name: config.nick || 'You' }, botPool: BOT_POOL, rng,
+    botSkill: config.botSkill || 'mixed',
     pace: (fn, ms)=> setTimeout(fn, ms||0) });
   return new FakeSocket(server);
 }
