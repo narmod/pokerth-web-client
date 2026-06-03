@@ -10,6 +10,8 @@ export const meta = {
 };
 
 export const strings = {
+    botDifficulty:'Bot-moeilikheid', botEasy:'Maklik', botMixed:'Gemeng', botNormal:'Normaal', botHard:'Moeilik',
+
     guestHint:'🌐 Speel as gas op pokerth.net — geen rekening nodig.',
     srvOffline:'🏋️ Oefenmodus', offlineHint:'🤖 Speel teen bots — geen verbinding nodig.',
     preActionTitle:'Aksievoorskou', preActionHint:'tik op kaarte om te sluit',
