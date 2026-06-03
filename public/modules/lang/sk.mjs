@@ -10,7 +10,7 @@ export const meta = {
 };
 
 export const strings = {
-    srvOffline:'🤖 Offline (proti botom)', offlineHint:'🤖 Hra proti botom — bez pripojenia.',
+    srvOffline:'🏋️ Tréningový režim', offlineHint:'🤖 Hra proti botom — bez pripojenia.',
     preActionTitle:'Náhľad akcií', preActionHint:'ťuknite na karty pre zatvorenie',
     blindsNextTip:'o {n} hier', blindsEveryMin:'každých {n} min',
     connect: 'Pripojiť',
@@ -372,7 +372,7 @@ export const strings = {
     modeUnauth: 'LAN / Súkromný server ✓',
     modeGuest: 'pokerth.net — Hosť',
     modeAuth: 'pokerth.net — Registrovaný účet',
-    srvDedicated:'LAN / Vyhradený server', guestMode:'Režim hosťa',
+    srvDedicated:'🖥️ LAN / Vyhradený server', guestMode:'Režim hosťa',
     nickPlaceholder: 'VašeMeno',
     quitTooltip: 'Odísť',
     reconnectInProgress: 'Opätovné pripájanie…',
