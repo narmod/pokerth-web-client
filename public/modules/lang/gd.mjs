@@ -11,7 +11,7 @@ export const meta = {
 };
 
 export const strings = {
-    srvOffline:'🤖 Far-loidhne (an aghaidh bhotaichean)', offlineHint:'🤖 Cluich an aghaidh bhotaichean — gun cheangal.',
+    srvOffline:'🏋️ Modh trèanaidh', offlineHint:'🤖 Cluich an aghaidh bhotaichean — gun cheangal.',
     preActionTitle:'Ro-shealladh gnìomh', preActionHint:'thoir gnogadh air na cairtean gus dùnadh',
     blindsNextTip:'an ceann {n} làmh', blindsEveryMin:'gach {n} mion',
     connect: 'Ceangail',
@@ -373,7 +373,7 @@ export const strings = {
     modeUnauth: 'LAN / Frithealaiche prìobhaideach ✓',
     modeGuest: 'pokerth.net — Aoigh',
     modeAuth: 'pokerth.net — Cunntas clàraichte',
-    srvDedicated:'LAN / Frithealadair sònraichte', guestMode:'Modh aoigh',
+    srvDedicated:'🖥️ LAN / Frithealadair sònraichte', guestMode:'Modh aoigh',
     nickPlaceholder: 'D\'AinmFhèin',
     quitTooltip: 'Fàg',
     reconnectInProgress: 'Ag ath-cheangal…',
