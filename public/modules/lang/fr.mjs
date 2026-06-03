@@ -18,6 +18,7 @@ export const meta = {
 export const strings = {
     guestHint:'🌐 Partie en invité sur pokerth.net — sans compte.',
     srvOffline:'🏋️ Mode entraînement', offlineHint:'🤖 Jeu solo contre des bots — aucune connexion requise.',
+    botDifficulty:'Niveau des bots', botEasy:'Facile', botMixed:'Mixte', botNormal:'Normal', botHard:'Difficile',
     blindsNextTip:'dans {n} main(s)', blindsEveryMin:'toutes les {n} min',
     connect:'Se connecter', disconnect:'✕ Déconnecter', connecting:'Connexion en cours…',
     nickname:'Pseudo', password:'Mot de passe', useTLS:'Utiliser TLS',
