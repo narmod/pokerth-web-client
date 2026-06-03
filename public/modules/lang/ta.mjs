@@ -11,6 +11,8 @@ export const meta = {
 };
 
 export const strings = {
+    botDifficulty:'பாட் சிரமம்', botEasy:'எளிது', botMixed:'கலப்பு', botNormal:'சாதாரண', botHard:'கடினம்',
+
     guestHint:'🌐 pokerth.net இல் விருந்தினராக விளையாடுங்கள் — கணக்கு தேவையில்லை.',
     srvOffline:'🏋️ பயிற்சி பயன்முறை', offlineHint:'🤖 பாட்களுடன் விளையாடுங்கள் — இணைப்பு தேவையில்லை.',
     preActionTitle:'செயல் முன்னோட்டம்', preActionHint:'மூட அட்டைகளைத் தொடவும்',
