@@ -13,6 +13,7 @@ export const strings = {
 
     guestHint:'🌐 Gästspel på pokerth.net — inget konto behövs.',
     srvOffline:'🏋️ Träningsläge', offlineHint:'🤖 Spela mot bottar — ingen anslutning behövs.',
+    srvPokerthNet:'🌐 Internet / PokerTH.net',
     preActionTitle:'Förhandsvisning av åtgärder', preActionHint:'tryck på korten för att stänga',
     blindsNextTip:'om {n} händer', blindsEveryMin:'var {n}:e min',
     connect: 'Anslut',
