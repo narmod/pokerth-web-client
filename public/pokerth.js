@@ -6803,6 +6803,16 @@ function dismissWinner() {
           var _el = document.getElementById(_connDetailIds[_i]);
           if (_el) _el.style.display = 'none';
         }
+        // Offline keeps its OWN nickname (pth_offline_nick), isolated from the
+        // network modes — editing a pokerth.net login / LAN pseudo never leaks
+        // into it, and vice-versa. Seed once from a network nick if unset.
+        var _onk = $('nick');
+        if (_onk) {
+          _onk.removeAttribute('readonly');
+          _onk.placeholder = t('nickPlaceholder');
+          _onk.value = (lsGet('pth_offline_nick') || lsGet('pth_lan_nick') || lsGet('pth_unauth_nick') || '');
+        }
+        var _onl = $('nick-label'); if (_onl) _onl.textContent = t('enterNickFree');
         setStatus(t('offlineHint'), '', 'offlineHint');
         import('/modules/offline/index.mjs').catch(function(){});
         return;
@@ -6958,11 +6968,18 @@ function dismissWinner() {
         // auth saves only the LOGIN (never the password — that's the
         // browser keychain's job via autocomplete='current-password').
         var nickVal = ($('nick') && $('nick').value || '').trim();
-        if (nickVal && lm2) {
-          var mv = lm2.value;
-          if      (mv === 'lan')    localStorage.setItem('pth_lan_nick',    nickVal);
-          else if (mv === 'unauth') localStorage.setItem('pth_unauth_nick', nickVal);
-          else if (mv === 'auth')   localStorage.setItem('pth_auth_login',  nickVal);
+        if (nickVal) {
+          var _smEl = $('server-mode');
+          if (_smEl && _smEl.value === 'offline') {
+            // Offline nickname lives under its own key — never touches the
+            // LAN / unauth / auth pseudos.
+            localStorage.setItem('pth_offline_nick', nickVal);
+          } else if (lm2) {
+            var mv = lm2.value;
+            if      (mv === 'lan')    localStorage.setItem('pth_lan_nick',    nickVal);
+            else if (mv === 'unauth') localStorage.setItem('pth_unauth_nick', nickVal);
+            else if (mv === 'auth')   localStorage.setItem('pth_auth_login',  nickVal);
+          }
         }
       } catch(e) {}
       const proxyUrl  = $('proxy').value.trim();
