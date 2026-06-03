@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+    srvOffline:'🤖 Offline (botok ellen)', offlineHint:'🤖 Játék botok ellen – nincs szükség kapcsolatra.',
     preActionTitle:'Műveletek előnézete', preActionHint:'érintsd meg a lapokat a bezáráshoz',
     blindsNextTip:'{n} leosztás múlva', blindsEveryMin:'{n} percenként',
     connect: 'Csatlakozás',
