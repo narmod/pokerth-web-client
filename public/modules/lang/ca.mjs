@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+    guestHint:'🌐 Joc com a convidat a pokerth.net — sense compte.',
     srvOffline:'🏋️ Mode d\'entrenament', offlineHint:'🤖 Joc en solitari contra bots — sense connexió.',
     preActionTitle:'Vista prèvia d\'accions', preActionHint:'toca les cartes per tancar',
     blindsNextTip:'en {n} mans', blindsEveryMin:'cada {n} min',
