@@ -7570,6 +7570,10 @@ function dismissWinner() {
     },
 
     leaveGame() {
+      // Offline (vs bots): there is no real lobby — leaving the game means a
+      // full disconnect back to the connect screen (also stops the local engine
+      // via FakeSocket.close()). Avoids landing in a phantom 1-table lobby.
+      if ($('server-mode') && $('server-mode').value === 'offline') { this.disconnect(); return; }
       // Send proper leave request then stay connected (return to lobby)
       if (ws && gId) { try { send(MSG.buildLeaveGame(gId)); } catch(e) {} }
       // Départ volontaire : oublier le marqueur de reprise (sinon on serait
