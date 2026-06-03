@@ -13,6 +13,7 @@ export const strings = {
 
     guestHint:'🌐 Гостьова гра на pokerth.net — без облікового запису.',
     srvOffline:'🏋️ Тренування', offlineHint:'🤖 Гра проти ботів — підключення не потрібне.',
+    srvPokerthNet:'🌐 Інтернет / PokerTH.net',
     preActionTitle:'Попередній перегляд дій', preActionHint:'торкніться карт, щоб закрити',
     blindsNextTip:'через {n} роздач', blindsEveryMin:'кожні {n} хв',
     connect: 'Підключитися',
