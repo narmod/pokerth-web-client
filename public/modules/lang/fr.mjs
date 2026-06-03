@@ -16,7 +16,7 @@ export const meta = {
 };
 
 export const strings = {
-    srvOffline:'🤖 Hors-ligne (vs bots)', offlineHint:'🤖 Jeu solo contre des bots — aucune connexion requise.',
+    srvOffline:'🏋️ Mode entraînement', offlineHint:'🤖 Jeu solo contre des bots — aucune connexion requise.',
     blindsNextTip:'dans {n} main(s)', blindsEveryMin:'toutes les {n} min',
     connect:'Se connecter', disconnect:'✕ Déconnecter', connecting:'Connexion en cours…',
     nickname:'Pseudo', password:'Mot de passe', useTLS:'Utiliser TLS',
@@ -218,7 +218,7 @@ export const strings = {
     modeUnauth:'LAN / Serveur privé ✓',
     modeGuest:'pokerth.net \u2014 Invit\u00e9',
     modeAuth:'pokerth.net \u2014 Compte enregistr\u00e9',
-    srvDedicated:'LAN / Serveur dédié', guestMode:'Mode invité',
+    srvDedicated:'🖥️ LAN / Serveur dédié', guestMode:'Mode invité',
     nickPlaceholder:'VotrePr\u00e9nom',
     quitTooltip:'Quitter',
     reconnectInProgress:'Reconnexion en cours\u2026',
