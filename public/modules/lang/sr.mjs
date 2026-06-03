@@ -10,6 +10,8 @@ export const meta = {
 };
 
 export const strings = {
+    botDifficulty:'Težina botova', botEasy:'Lako', botMixed:'Mešano', botNormal:'Normalno', botHard:'Teško',
+
     guestHint:'🌐 Игра као гост на pokerth.net — без налога.',
     srvOffline:'🏋️ Режим вежбања', offlineHint:'🤖 Игра против ботова — без везе.',
     preActionTitle:'Преглед потеза', preActionHint:'додирни карте да затвориш',
