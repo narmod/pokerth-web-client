@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+    guestHint:'🌐 Hra ako hosť na pokerth.net — bez účtu.',
     srvOffline:'🏋️ Tréningový režim', offlineHint:'🤖 Hra proti botom — bez pripojenia.',
     preActionTitle:'Náhľad akcií', preActionHint:'ťuknite na karty pre zatvorenie',
     blindsNextTip:'o {n} hier', blindsEveryMin:'každých {n} min',
