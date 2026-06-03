@@ -6661,6 +6661,11 @@ function dismissWinner() {
       // to LAN and overwrite the hint with the 'private server' message — the
       // bug where offline showed 'Chat et réactions… serveur privé').
       if (window._offlineMode || ($('server-mode') && $('server-mode').value === 'offline')) {
+        // Fully restore the training-mode UI here too, so this stays correct
+        // no matter which function ran last: free-nick label, placeholder, and
+        // the training hint (never the pokerth.net account label / auth hint).
+        var _oln = $('nick-label'); if (_oln) _oln.textContent = t('enterNickFree');
+        var _oni = $('nick'); if (_oni) { _oni.removeAttribute('readonly'); _oni.placeholder = t('nickPlaceholder'); }
         setStatus(t('offlineHint'), '', 'offlineHint');
         return;
       }
