@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+    guestHint:'🌐 Chơi với tư cách khách trên pokerth.net — không cần tài khoản.',
     srvOffline:'🏋️ Chế độ luyện tập', offlineHint:'🤖 Chơi với bot — không cần kết nối.',
     preActionTitle:'Xem trước hành động', preActionHint:'chạm vào lá bài để đóng',
     blindsNextTip:'sau {n} ván', blindsEveryMin:'mỗi {n} phút',
