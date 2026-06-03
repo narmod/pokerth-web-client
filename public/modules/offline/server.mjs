@@ -56,7 +56,7 @@ export class FakeServer {
       case TYPE.StartEventAck:    return this._onStartAck();
       case TYPE.MyActionRequest:  return this._onMyAction(m.fields);
       case TYPE.PlayerInfoRequest:return this._onInfoReq(m.fields);
-      case TYPE.LeaveGame:        this.stopped = true; return;
+      case TYPE.LeaveGame:        return this._onLeave();
       default: return;
     }
   }
@@ -67,14 +67,28 @@ export class FakeServer {
   }
 
   _onCreate(f){
+    this._closed = false;   // new game -> not closed
     const gi = (f[1] && f[1][0] instanceof Uint8Array) ? f[1][0] : null;
     if(gi){ this.rawGameInfo = gi; this._applyGameInfo(gi); }
     const info = this.rawGameInfo || this.gameInfo();
-    this._send('JoinGameAck',[[1,0,this.gameId],[2,0,1],[3,2,info]]);
+    // GameListNew first: the client's JoinGameAck handler reads games[gId]
+    // (timeout / startMoney / blind schedule) which GameListNew populates.
     this._send('GameListNew',[[1,0,this.gameId],[2,0,1],[3,0,0],[4,2,packed([this.meId])],[5,0,this.meId],[6,2,info]]);
+    this._send('JoinGameAck',[[1,0,this.gameId],[2,0,1],[3,2,info]]);
     this._send('GamePlayerJoined',[[1,0,this.gameId],[2,0,this.meId],[3,0,1]]);
     this._info(this.meId);
   }
+
+  // Close the current game and reset to a fresh state so the user can create
+  // another from the lobby. Removes the table from the lobby list.
+  _closeAndReset(){
+    if(this._closed) return; this._closed = true;
+    this._send('GameListUpdate',[[1,0,this.gameId],[2,0,3]]);  // netGameClosed -> client deletes it
+    const me = this.players[0];
+    this.players = [me]; this.botCfg = {}; this._used = new Set();
+    this.started = false; this.table = null; this.rawGameInfo = null;
+  }
+  _onLeave(){ this._closeAndReset(); }
 
   _pickBot(){
     const id = this.players.length + 1;
@@ -157,7 +171,7 @@ export class FakeServer {
       }
       case 'endOfHandHide': this._send('EndOfHandHide',[[1,0,G],[2,0,ev.playerId],[3,0,ev.moneyWon],[4,0,ev.playerMoney]]); break;
       case 'handComplete':  this.pace(()=>{ if(!this.stopped && this.table) this.table.nextHand(); }, 2500); break;
-      case 'gameOver':      this._send('EndOfGame',[[1,0,G],[2,0,ev.winnerId||this.meId]]); break;
+      case 'gameOver':      this._send('EndOfGame',[[1,0,G],[2,0,ev.winnerId||this.meId]]); break;  // close happens on return-to-lobby (leave)
       default: break;
     }
   }
