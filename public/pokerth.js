@@ -6795,6 +6795,10 @@ function dismissWinner() {
       // (and the advanced gear) — the screen keeps just nickname + Connect.
       var _connDetailIds = ['conn-adv-btn','conn-advanced','tls-row','guest-mode-row','f-pass','f-server-pass','f-user-pass'];
       if (off) {
+        // login-mode is irrelevant offline; force a no-password value so a
+        // stale 'auth' (left by a previous pokerth.net selection) can't make
+        // connect() demand a password.
+        if (lmEl) lmEl.value = 'unauth';
         // Keep #server-mode on 'offline'. Do NOT call onLoginModeChange():
         // its tail reverse-syncs the visible select back to 'lan-dedi'.
         var _gear = $('conn-adv-btn');
@@ -6986,6 +6990,7 @@ function dismissWinner() {
       const host      = $('host').value.trim();
       const port      = $('port').value.trim() || '7234';
       const loginMode = $('login-mode') ? $('login-mode').value : 'guest';
+      const _off = !!($('server-mode') && $('server-mode').value === 'offline');
       myName          = $('nick').value.trim();
 
       if (!myName && loginMode === 'guest') {
@@ -6998,9 +7003,9 @@ function dismissWinner() {
       }
       if (!myName) { setStatus(t('enterNick'), 'err'); return; }
       if (myName.length < 3) { setStatus(t('nickTooShort'), 'err'); return; }
-      if (!proxyUrl || !host) { setStatus(t('fillFields'), 'err'); return; }
+      if (!_off && (!proxyUrl || !host)) { setStatus(t('fillFields'), 'err'); return; }
 
-      if (loginMode === 'auth' && (!$('pass') || !$('pass').value.trim())) {
+      if (!_off && loginMode === 'auth' && (!$('pass') || !$('pass').value.trim())) {
         setStatus(t('enterPassword'), 'err');
         return;
       }
