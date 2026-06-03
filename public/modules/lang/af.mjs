@@ -14,6 +14,7 @@ export const strings = {
 
     guestHint:'🌐 Speel as gas op pokerth.net — geen rekening nodig.',
     srvOffline:'🏋️ Oefenmodus', offlineHint:'🤖 Speel teen bots — geen verbinding nodig.',
+    srvPokerthNet:'🌐 Internet / PokerTH.net',
     preActionTitle:'Aksievoorskou', preActionHint:'tik op kaarte om te sluit',
     blindsNextTip:'oor {n} hand(e)', blindsEveryMin:'elke {n} min',
     connect: 'Koppel',
