@@ -14,6 +14,7 @@ export const strings = {
 
     guestHint:'🌐 Vendégjáték a pokerth.net-en – nincs fiók.',
     srvOffline:'🏋️ Gyakorló mód', offlineHint:'🤖 Játék botok ellen – nincs szükség kapcsolatra.',
+    srvPokerthNet:'🌐 Internet / PokerTH.net',
     preActionTitle:'Műveletek előnézete', preActionHint:'érintsd meg a lapokat a bezáráshoz',
     blindsNextTip:'{n} leosztás múlva', blindsEveryMin:'{n} percenként',
     connect: 'Csatlakozás',
