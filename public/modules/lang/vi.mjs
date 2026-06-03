@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+    srvOffline:'🤖 Ngoại tuyến (đấu với bot)', offlineHint:'🤖 Chơi với bot — không cần kết nối.',
     preActionTitle:'Xem trước hành động', preActionHint:'chạm vào lá bài để đóng',
     blindsNextTip:'sau {n} ván', blindsEveryMin:'mỗi {n} phút',
     connect: 'Kết nối',
