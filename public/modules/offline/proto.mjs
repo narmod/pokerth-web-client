@@ -11,7 +11,7 @@
 // message-type id -> envelope (wrapper) field number  (from the client's map)
 export const WRAP = {
   Announce:2, Init:3, InitAck:7, PlayerList:13,
-  GameListNew:14, GamePlayerJoined:27, PlayerInfoReply:20,
+  GameListNew:14, GameListUpdate:15, GamePlayerJoined:27, PlayerInfoReply:20,
   JoinGameAck:25, JoinGameFailed:26,
   StartEvent:37, GameStartInitial:39,
   HandStart:41, PlayersTurn:42, MyActionRequest:43, PlayersActionDone:45,
@@ -26,7 +26,8 @@ export const TYPE = {
   HandStart:40, PlayersTurn:41, MyActionRequest:42, PlayersActionDone:44,
   DealFlop:45, DealTurn:46, DealRiver:47, AllInShowCards:48,
   EndOfHandShow:49, EndOfHandHide:50, EndOfGame:53,
-  JoinExisting:21, JoinNew:22, StartEventAck:37, PlayerInfoRequest:18, LeaveGame:35,
+  JoinExisting:21, JoinNew:22, StartEventAck:37, PlayerInfoRequest:18, LeaveGame:31,
+  GameListUpdate:14, RemovedFromGame:29,
 };
 
 function varintBytes(n){ const o=[]; n=n>>>0 ? n : Math.max(0,Math.floor(n)); let v=n; do{ let b=v&0x7f; v=Math.floor(v/128); if(v>0) b|=0x80; o.push(b);}while(v>0); return o; }
