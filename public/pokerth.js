@@ -8884,3 +8884,5 @@ function renderPlayersList() {
            '</div>';
   }).join('');
 }
+
+;(function(){ window.BUILD_VERSION='0.2.134'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
