@@ -2,9 +2,16 @@
 
 // ══ i18n ══
 // [Phase 2] i18n moved to public/modules/i18n.mjs (LANG, _lang, t)
+var _ipBlockInterval = null;
+function _stopIpBlockCountdown() {
+  if (_ipBlockInterval) { clearInterval(_ipBlockInterval); _ipBlockInterval = null; }
+}
 function _startIpBlockCountdown() {
+  _stopIpBlockCountdown(); // ne jamais empiler deux minuteurs
   // Met à jour le statut toutes les secondes avec le temps restant
-  var _blockInterval = setInterval(function() {
+  _ipBlockInterval = setInterval(function() {
+    // Le mode entraînement n'a pas de réseau → aucun blocage IP ne s'y applique.
+    if (window._offlineMode) { _stopIpBlockCountdown(); return; }
     var rem = Math.max(0, Math.ceil((_ipBlockUntil - Date.now()) / 1000));
     var mins = Math.floor(rem / 60), secs = rem % 60;
     var txt = t('ipBlockedPrefix') + (mins > 0 ? mins + 'min ' : '') + secs + 's';
@@ -12,7 +19,7 @@ function _startIpBlockCountdown() {
     var cs = document.getElementById('cstatus');
     if (cs) cs.textContent = rem > 0 ? txt : t('canReconnect');
     if (rem <= 0) {
-      clearInterval(_blockInterval);
+      _stopIpBlockCountdown();
       _ipBlockUntil = 0;
       var cs2 = document.getElementById('cstatus');
       if (cs2) { cs2.textContent = t('canReconnect'); cs2.className = 'status ok'; }
@@ -6712,6 +6719,7 @@ function dismissWinner() {
         // the training hint (never the pokerth.net account label / auth hint).
         var _oln = $('nick-label'); if (_oln) _oln.textContent = t('enterNickFree');
         var _oni = $('nick'); if (_oni) { _oni.removeAttribute('readonly'); _oni.placeholder = t('nickPlaceholder'); }
+        if (typeof _stopIpBlockCountdown === 'function') _stopIpBlockCountdown();
         setStatus(t('offlineHint'), '', 'offlineHint');
         return;
       }
@@ -6884,6 +6892,7 @@ function dismissWinner() {
           _onk.value = (lsGet('pth_offline_nick') || lsGet('pth_lan_nick') || lsGet('pth_unauth_nick') || '');
         }
         var _onl = $('nick-label'); if (_onl) _onl.textContent = t('enterNickFree');
+        if (typeof _stopIpBlockCountdown === 'function') _stopIpBlockCountdown();
         setStatus(t('offlineHint'), '', 'offlineHint');
         import('/modules/offline/index.mjs').catch(function(){});
         return;
@@ -7012,7 +7021,8 @@ function dismissWinner() {
 
       // ── Rate limiter : éviter le spam qui provoque le blocage IP ──
       const now = Date.now();
-      if (_ipBlockUntil > now) {
+      var _gateOffline = !!(window._offlineMode || ($('server-mode') && $('server-mode').value === 'offline'));
+      if (!_gateOffline && _ipBlockUntil > now) {
         const remaining = Math.ceil((_ipBlockUntil - now) / 1000);
         const mins = Math.floor(remaining / 60), secs = remaining % 60;
         setStatus(t('ipBlockedWaitPrefix') + (mins > 0 ? mins + 'min ' : '') + secs + 's', 'err');
@@ -8938,4 +8948,4 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.2.137'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.2.138'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
