@@ -23,7 +23,7 @@
  *                 Cross-origin requests and WS upgrades are left untouched.
  *                 (Fonts are now self-hosted and handled by SWR above.)
  */
-const CACHE_VERSION = 'pokerth-v0.2.117';
+const CACHE_VERSION = 'pokerth-v0.2.118';
 
 // Where navigations fall back to when the network is unavailable.
 const NAV_FALLBACK = '/pokerth-client.html';
@@ -52,6 +52,12 @@ const ASSETS = [
   '/fonts/inconsolata-latin-ext-500-normal.woff2',
   '/manifest.json',
   '/modules/i18n.mjs',
+  // Offline (vs bots) mode modules
+  '/modules/offline/engine.mjs',
+  '/modules/offline/bots.mjs',
+  '/modules/offline/proto.mjs',
+  '/modules/offline/server.mjs',
+  '/modules/offline/index.mjs',
   '/modules/lang/en.mjs',
   '/modules/lang/fr.mjs',
   '/modules/lang/de.mjs',
