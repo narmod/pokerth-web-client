@@ -14,6 +14,8 @@ export const meta = {
 };
 
 export const strings = {
+    botDifficulty:'बॉट कठिनाई', botEasy:'आसान', botMixed:'मिश्रित', botNormal:'सामान्य', botHard:'कठिन',
+
     guestHint:'🌐 pokerth.net पर अतिथि के रूप में खेलें — खाते की ज़रूरत नहीं।',
     srvOffline:'🏋️ अभ्यास मोड', offlineHint:'🤖 बॉट्स के विरुद्ध खेलें — किसी कनेक्शन की ज़रूरत नहीं।',
     blindsNextTip:'{n} हाथ में', blindsEveryMin:'हर {n} मिनट',
