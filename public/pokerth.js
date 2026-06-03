@@ -6767,7 +6767,7 @@ function dismissWinner() {
         if (proxyInput) proxyInput.value = proto + '//' + (autoHost||'localhost') + ':' + port;
         if (hostInput) hostInput.value = 'pokerth.net';
         if ($('port')) $('port').value = '7234';   // pokerth.net standard port
-        setStatus('');
+        setStatus(t('guestHint'), '', 'guestHint');
       } else {
         // mode === 'auth'  (pokerth.net registered account)
         $('nick-label').textContent = t('enterAccount');
