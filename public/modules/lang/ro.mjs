@@ -10,7 +10,7 @@ export const meta = {
 };
 
 export const strings = {
-    srvOffline:'🤖 Offline (împotriva boților)', offlineHint:'🤖 Joc împotriva boților — fără conexiune.',
+    srvOffline:'🏋️ Mod antrenament', offlineHint:'🤖 Joc împotriva boților — fără conexiune.',
     preActionTitle:'Previzualizare acțiuni', preActionHint:'atinge cărțile pentru a închide',
     blindsNextTip:'în {n} mâini', blindsEveryMin:'la fiecare {n} min',
     connect: 'Conectează',
@@ -372,7 +372,7 @@ export const strings = {
     modeUnauth: 'LAN / Server privat ✓',
     modeGuest: 'pokerth.net — Oaspete',
     modeAuth: 'pokerth.net — Cont înregistrat',
-    srvDedicated:'LAN / Server dedicat', guestMode:'Mod invitat',
+    srvDedicated:'🖥️ LAN / Server dedicat', guestMode:'Mod invitat',
     nickPlaceholder: 'NumeleTău',
     quitTooltip: 'Ieși',
     reconnectInProgress: 'Se reconectează…',
