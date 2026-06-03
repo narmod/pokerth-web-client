@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+    srvOffline:'🤖 Offline (protiv botova)', offlineHint:'🤖 Igra protiv botova — bez veze.',
     preActionTitle:'Pregled poteza', preActionHint:'dodirni karte za zatvaranje',
     blindsNextTip:'za {n} ruku', blindsEveryMin:'svakih {n} min',
     connect: 'Spoji se',
