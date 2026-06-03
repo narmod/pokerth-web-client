@@ -9,6 +9,8 @@ export const meta = {
 };
 
 export const strings = {
+    botDifficulty:'Bot-vanskelighet', botEasy:'Lett', botMixed:'Blandet', botNormal:'Normal', botHard:'Vanskelig',
+
     guestHint:'🌐 Gjestespill på pokerth.net – ingen konto nødvendig.',
     srvOffline:'🏋️ Treningsmodus', offlineHint:'🤖 Spill mot bots – ingen tilkobling nødvendig.',
     preActionTitle:'Forhåndsvisning av handlinger', preActionHint:'trykk på kortene for å lukke',
