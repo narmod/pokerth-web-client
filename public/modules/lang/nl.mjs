@@ -15,6 +15,8 @@ export const meta = {
 };
 
 export const strings = {
+    botDifficulty:'Botmoeilijkheid', botEasy:'Makkelijk', botMixed:'Gemengd', botNormal:'Normaal', botHard:'Moeilijk',
+
     guestHint:'🌐 Spelen als gast op pokerth.net — geen account nodig.',
     srvOffline:'🏋️ Oefenmodus', offlineHint:'🤖 Solo tegen bots — geen verbinding nodig.',
     preActionTitle:'Actievoorbeeld', preActionHint:'tik op kaarten om te sluiten',
