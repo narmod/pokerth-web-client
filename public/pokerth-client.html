@@ -1064,17 +1064,13 @@ function onAvatarImageChosen(input) {
       </div>
     </div>
     <!-- Bot difficulty — Training mode only; sets the AI level of bots that fill the table -->
-    <div id="cf-skill-row" class="create-fields" style="display:none">
-      <div class="cf"><label data-i18n="botDifficulty">Bot difficulty</label>
-        <div class="sel-wrap">
-          <select id="cf-skill" onchange="try{localStorage.setItem('pth_offline_skill',this.value)}catch(e){}" style="background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:2px;color:var(--cream);padding:4px 6px;font-size:0.78rem;outline:none">
-            <option value="easy" data-i18n-opt="botEasy">Easy</option>
-            <option value="mixed" selected data-i18n-opt="botMixed">Mixed</option>
-            <option value="normal" data-i18n-opt="botNormal">Normal</option>
-            <option value="hard" data-i18n-opt="botHard">Hard</option>
-          </select>
-          <span class="sel-arr">▾</span>
-        </div>
+    <div id="cf-skill-row" style="display:none;margin-top:4px">
+      <div class="cf-presets-label" data-i18n="botDifficulty">Bot difficulty</div>
+      <div class="cf-presets" id="cf-skill-pills">
+        <button type="button" class="cf-preset" data-skill="easy"   onclick="App.setBotSkill('easy',this)"><span class="cfp-ico">🌱</span><span class="cfp-n" data-i18n="botEasy">Easy</span></button>
+        <button type="button" class="cf-preset" data-skill="mixed"  onclick="App.setBotSkill('mixed',this)"><span class="cfp-ico">🎲</span><span class="cfp-n" data-i18n="botMixed">Mixed</span></button>
+        <button type="button" class="cf-preset" data-skill="normal" onclick="App.setBotSkill('normal',this)"><span class="cfp-ico">🎯</span><span class="cfp-n" data-i18n="botNormal">Normal</span></button>
+        <button type="button" class="cf-preset" data-skill="hard"   onclick="App.setBotSkill('hard',this)"><span class="cfp-ico">🦈</span><span class="cfp-n" data-i18n="botHard">Hard</span></button>
       </div>
     </div>
     <div style="margin:8px 0 2px">
