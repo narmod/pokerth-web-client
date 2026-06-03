@@ -16,6 +16,7 @@ export const meta = {
 };
 
 export const strings = {
+    srvOffline:'🤖 Hors-ligne (vs bots)', offlineHint:'🤖 Jeu solo contre des bots — aucune connexion requise.',
     blindsNextTip:'dans {n} main(s)', blindsEveryMin:'toutes les {n} min',
     connect:'Se connecter', disconnect:'✕ Déconnecter', connecting:'Connexion en cours…',
     nickname:'Pseudo', password:'Mot de passe', useTLS:'Utiliser TLS',
