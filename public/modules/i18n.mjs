@@ -316,7 +316,14 @@ function setLang(l) {
     var _ni = document.getElementById('nick');
     if (_lm && _nl) {
       var _m = _lm.value;
-      if (_m === 'lan' || _m === 'unauth') {
+      var _sm = document.getElementById('server-mode');
+      if (window._offlineMode || (_sm && _sm.value === 'offline')) {
+        // Mode entraînement : libellé « pseudo libre », JAMAIS le label de compte
+        // pokerth.net — même si login-mode est resté sur 'auth' (hérité d'une
+        // sélection pokerth.net précédente, ou restauré tardivement par iOS).
+        _nl.textContent = t('enterNickFree');
+        if (_ni && !_ni.hasAttribute('readonly')) _ni.placeholder = t('nickPlaceholder');
+      } else if (_m === 'lan' || _m === 'unauth') {
         _nl.textContent = t('enterNickFree');
         if (_ni && !_ni.hasAttribute('readonly')) _ni.placeholder = t('nickPlaceholder');
       } else if (_m === 'guest') {
