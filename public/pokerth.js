@@ -6790,6 +6790,16 @@ function dismissWinner() {
     //   pokerth.net + invité → guest                    |  sans invité → auth
     onServerOrGuestChange() {
       var srvEl = $('server-mode'), gcEl = $('guest-mode-cb'), lmEl = $('login-mode');
+      // Offline (vs bots) mode: no network. Drive a local fake server.
+      var off = !!(srvEl && srvEl.value === 'offline');
+      window._offlineMode = off;
+      var oo = $('offline-opts'); if (oo) oo.style.display = off ? 'block' : 'none';
+      if (off) {
+        if (lmEl) lmEl.value = 'lan';
+        import('/modules/offline/index.mjs').catch(function(){});
+        this.onLoginModeChange();
+        return;
+      }
       if (srvEl && gcEl && lmEl) {
         var guest = gcEl.checked;
         lmEl.value = (srvEl.value === 'pokerthnet')
@@ -6797,6 +6807,11 @@ function dismissWinner() {
           : (guest ? 'lan' : 'unauth');
       }
       this.onLoginModeChange();
+    },
+    _offlineBots() {
+      var el = $('offline-bots');
+      var n = el ? parseInt(el.value, 10) : 5;
+      return Math.max(1, Math.min(9, isNaN(n) ? 5 : n));
     },
 
     connect(opts) {
@@ -7027,11 +7042,30 @@ function dismissWinner() {
       // The CreateGame form defaults depend on this mode. Refresh them
       // now so the values are correct the first time the user opens it.
       try { App._applyCreateFormDefaults(true); } catch (e) {}
-      try {
-        ws = new WebSocket(finalUrl);
-      } catch (e) {
-        setStatus(t('invalidUrl', { msg: e.message }), 'err');
-        return;
+      if (window._offlineMode) {
+        // ── OFFLINE vs BOTS ── swap the transport for a local fake server.
+        directWS = false;
+        window._pendingAutoJoin = 1; // our synthetic game id -> GameListNew auto-joins
+        if (!(window.PokerOffline && window.PokerOffline.createSocket)) {
+          setStatus('Chargement du mode hors-ligne…');
+          import('/modules/offline/index.mjs')
+            .then(function(){ window.App.connect(); })
+            .catch(function(){ setStatus('Offline init failed', 'err'); });
+          return;
+        }
+        try {
+          ws = window.PokerOffline.createSocket({ nick: myName, bots: window.App._offlineBots() });
+        } catch (e) {
+          setStatus('Offline init failed: ' + e.message, 'err');
+          return;
+        }
+      } else {
+        try {
+          ws = new WebSocket(finalUrl);
+        } catch (e) {
+          setStatus(t('invalidUrl', { msg: e.message }), 'err');
+          return;
+        }
       }
 
       ws.binaryType = 'arraybuffer';
