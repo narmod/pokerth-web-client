@@ -9,6 +9,7 @@ export const meta = {
 };
 
 export const strings = {
+    srvOffline:'🤖 Offline (mot bottar)', offlineHint:'🤖 Spela mot bottar — ingen anslutning behövs.',
     preActionTitle:'Förhandsvisning av åtgärder', preActionHint:'tryck på korten för att stänga',
     blindsNextTip:'om {n} händer', blindsEveryMin:'var {n}:e min',
     connect: 'Anslut',
