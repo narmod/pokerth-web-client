@@ -8127,12 +8127,15 @@ function dismissWinner() {
         }
       }
       // Bot difficulty is only meaningful in Training (offline) mode — show the
-      // selector there and seed it from the saved choice.
+      // pills there and highlight the saved choice.
       var skRow = document.getElementById('cf-skill-row');
       if (skRow) {
         skRow.style.display = window._offlineMode ? '' : 'none';
-        var skSel = document.getElementById('cf-skill');
-        if (skSel) { try { skSel.value = localStorage.getItem('pth_offline_skill') || 'mixed'; } catch (e) {} }
+        if (window._offlineMode && this.setBotSkill) {
+          var _sk = 'mixed';
+          try { _sk = localStorage.getItem('pth_offline_skill') || 'mixed'; } catch (e) {}
+          this.setBotSkill(_sk);
+        }
       }
     },
 
@@ -8152,6 +8155,15 @@ function dismissWinner() {
     // Quick-style presets: fill the create-form numeric fields in one tap.
     // The full form stays fully editable afterwards — presets are just a
     // friendly starting point (kid-friendly: Relaxed / Normal / Fast).
+    // Difficulty pills (Training mode): persist the choice and highlight it.
+    setBotSkill(v, btn) {
+      try { localStorage.setItem('pth_offline_skill', v); } catch (e) {}
+      var all = document.querySelectorAll('#cf-skill-pills .cf-preset');
+      for (var i = 0; i < all.length; i++) all[i].classList.remove('active');
+      var sel = btn || document.querySelector('#cf-skill-pills .cf-preset[data-skill="' + v + '"]');
+      if (sel) sel.classList.add('active');
+    },
+
     applyPreset(name, btn) {
       var P = {
         tranquille: { players:8, stack:5000, blind:10, timeout:30 },
@@ -9011,4 +9023,4 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.2.145'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.2.146'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
