@@ -66,6 +66,7 @@ export const strings = {
     thinking: 'pensando…',
     myCards: 'As miñas cartas:',
     logEliminated:'{name} eliminado', logShowdown:'{name}: {cards} — {hand}',
+    logDealer:'Repartidor: {name}',
     gameStart: 'Inicio',
     bet: 'Apostar',
     wins: 'gaña',

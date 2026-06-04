@@ -67,6 +67,7 @@ export const strings = {
     thinking: 'a\' smaoineachadh…',
     myCards: 'Mo chairtean:',
     logEliminated:'{name} air a chur a-mach', logShowdown:'{name}: {cards} — {hand}',
+    logDealer:'Dèilear: {name}',
     gameStart: 'Toiseach',
     bet: 'Geall',
     wins: 'a\' buannachadh',

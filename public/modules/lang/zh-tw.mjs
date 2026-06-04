@@ -67,6 +67,7 @@ export const strings = {
     thinking: '思考中…',
     myCards: '我的手牌：',
     logEliminated:'{name} 出局', logShowdown:'{name}: {cards} — {hand}',
+    logDealer:'莊家: {name}',
     gameStart: '開始',
     bet: '下注',
     wins: '贏得',

@@ -36,6 +36,7 @@ export const strings = {
     pot:'पॉट:', journal:'📋', chat:'💬', sound:'🔊', mute:'🔇',
     thinking:'सोच रहा है…', myCards:'मेरे कार्ड:', gameStart:'शुरू',
     logEliminated:'{name} बाहर', logShowdown:'{name}: {cards} — {hand}',
+    logDealer:'डीलर: {name}',
     bet:'Bet', wins:'जीतता है', handOf:'हाथ #',
     handsTitle:'♠ पोकर हैंड रैंकिंग ♥',
     h1n:'Royal Flush', h1d:'A K Q J 10, सभी एक ही सूट||अजेय हाथ!',
