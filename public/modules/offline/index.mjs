@@ -7,9 +7,12 @@
 import { FakeServer } from './server.mjs';
 
 export const BOT_POOL = [
-  ['Botzilla','🦖'],['Bluff Bot','🤖'],['Sir Raise-a-lot','👑'],['All-in Annie','🎰'],
-  ['Nit Nelson','🧊'],['Calling Carl','📞'],['Shark','🦈'],['Lucky Luna','🍀'],
-  ['The Rock','🪨'],['Maniac Max','🔥'],['Fold Freddy','🍃'],['Donk Kong','🦍'],
+  // [name, avatar, archetype] — the name/flavour matches the hidden play-style
+  ['The Rock','🪨','rock'],    ['Nit Nelson','🧊','rock'],     ['Fold Freddy','🍃','rock'],
+  ['Shark','🦈','tag'],        ['Steady Eddie','🎯','tag'],    ['Ice Veins','❄️','tag'],
+  ['Sir Raise-a-lot','👑','lag'], ['Bluff Bot','🤖','lag'],    ['Pressure Pete','⚡','lag'],
+  ['Calling Carl','📞','station'], ['Lucky Luna','🍀','station'], ['Donk Kong','🦍','station'],
+  ['Maniac Max','🔥','maniac'], ['All-in Annie','🎰','maniac'], ['Botzilla','🦖','maniac'],
 ];
 
 class FakeSocket {
