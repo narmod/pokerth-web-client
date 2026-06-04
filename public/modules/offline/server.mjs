@@ -23,14 +23,16 @@ function _mulberry32(a){ return function(){ a=(a+0x6D2B79F5)|0; let t=Math.imul(
 // de probabilité) et des PALETTES contextuelles. kinds : happy (gain normal),
 // big (gros pot / monstre), sad (perte banale), bad (perte avec grosse main).
 const ARCH_REACT = {
-  rock:    { freq:0.35, happy:['👍','😎','🙂'],      sad:['😕','😴'],      big:['😏','💰','😎'],        bad:['😑','🫤','😮'] },
-  tag:     { freq:0.75, happy:['😎','🎯','👏','😏'], sad:['😤','😬'],      big:['🤑','💰','🥳'],        bad:['😱','😣','🤦'] },
-  lag:     { freq:1.20, happy:['🔥','😈','💪','😎'], sad:['😤','🤬'],      big:['🤑','🚀','🥳','🔥'],   bad:['😱','🤯','🤬'] },
-  station: { freq:0.55, happy:['🍀','🙂','👀'],      sad:['🤷','😅'],      big:['🤩','🍀','🥳'],        bad:['😮','😬','😅'] },
-  maniac:  { freq:1.50, happy:['🔥','😈','🤪','🚀'], sad:['🤬','💀','😤'], big:['🤑','🎰','🚀','🥳'],   bad:['🤯','💀','🤬'] },
+  rock:    { freq:0.35, happy:['👍','😎','🙂'],      sad:['😕','😴'],      big:['😏','💰','😎'],        bad:['😑','🫤','😮'],   shove:['💪','😤','😳'] },
+  tag:     { freq:0.75, happy:['😎','🎯','👏','😏'], sad:['😤','😬'],      big:['🤑','💰','🥳'],        bad:['😱','😣','🤦'],   shove:['😎','💪','🔥'] },
+  lag:     { freq:1.20, happy:['🔥','😈','💪','😎'], sad:['😤','🤬'],      big:['🤑','🚀','🥳','🔥'],   bad:['😱','🤯','🤬'],   shove:['🔥','😈','💪','🚀'] },
+  station: { freq:0.55, happy:['🍀','🙂','👀'],      sad:['🤷','😅'],      big:['🤩','🍀','🥳'],        bad:['😮','😬','😅'],   shove:['🤞','🍀','😅'] },
+  maniac:  { freq:1.50, happy:['🔥','😈','🤪','🚀'], sad:['🤬','💀','😤'], big:['🤑','🎰','🚀','🥳'],   bad:['🤯','💀','🤬'],   shove:['🔥','😈','🤪','🚀','🎰'] },
 };
-const RX_ENVY  = ['👀','😤','😒','🫡'];   // un gros coup du joueur humain
-const RX_STEAL = ['😎','😏','🫡','😈'];   // vol de pot sans abattage
+const RX_ENVY    = ['👀','😤','😒','🫡'];   // un gros coup du joueur humain
+const RX_STEAL   = ['😎','😏','🫡','😈'];   // vol de pot sans abattage
+const RX_THINK   = ['🤔','👀','😬','🫤'];   // gros call difficile / face à une grosse mise
+const RX_LAYDOWN = ['😒','😤','🫤','🙄','😑']; // fold face à une vraie mise
 
 export class FakeServer {
   constructor(opts){
@@ -204,27 +206,46 @@ export class FakeServer {
   // ── Réactions cosmétiques des bots (rng dédié, n'affecte pas le jeu) ──
   // Transport : message Chat « [R]<emoji> », que le client interprète déjà
   // comme une réaction (préfixe ASCII [R]) sans l'afficher dans le tchat.
-  _botReact(botId, emoji, base){
-    var off = (base||0) + 500 + Math.round(this._rrng()*600);
+  _botReact(botId, emoji, base, extra){
+    var off = (base||0) + (extra==null?500:extra) + Math.round(this._rrng()*600);
     this.pace(()=>{ if(!this.stopped) this._send('Chat',[[1,0,this.gameId],[2,0,botId],[3,0,1],[4,2,'[R]'+emoji]]); }, off);
   }
   // Dispatcher central des réactions : applique personnalité (archétype) +
   // anti-spam (1 par bot/main, plafond 2/main, pas de répétition d'emoji).
-  // kind ∈ {happy,big,sad,bad,envy,steal}. baseProb modulé par la fréquence
-  // de l'archétype. Utilise exclusivement le rng dédié (_rrng).
-  _react(botId, kind, baseProb, base){
+  // kind ∈ {happy,big,sad,bad,envy,steal,shove,think,laydown}. baseProb modulé
+  // par la fréquence de l'archétype. Utilise exclusivement le rng dédié (_rrng).
+  // extra = délai additif personnalisé (cours de main : ~0 pour coller à l'action).
+  _react(botId, kind, baseProb, base, extra){
     if(this.stopped || botId===this.meId || botId==null) return;
     if(this._reactedHand.has(botId)) return;
     if(this._reactN >= 2) return;
     const arch=(this.botCfg[botId] && this.botCfg[botId].arch) || 'tag';
     const cfg=ARCH_REACT[arch] || ARCH_REACT.tag;
     if(this._rrng() >= Math.min(0.95, baseProb*cfg.freq)) return;
-    const pool = kind==='envy' ? RX_ENVY : kind==='steal' ? RX_STEAL : (cfg[kind] || cfg.happy);
+    const pool = kind==='envy' ? RX_ENVY : kind==='steal' ? RX_STEAL
+               : kind==='think' ? RX_THINK : kind==='laydown' ? RX_LAYDOWN
+               : (cfg[kind] || cfg.happy);
     let emoji = pool[Math.floor(this._rrng()*pool.length)];
     if(emoji===this._lastEmoji && pool.length>1) emoji = pool[Math.floor(this._rrng()*pool.length)];
     this._lastEmoji = emoji;
     this._reactedHand.add(botId); this._reactN++;
-    this._botReact(botId, emoji, base||0);
+    this._botReact(botId, emoji, base||0, extra);
+  }
+  // Réaction d'un bot pendant son propre tour, d'après la décision calculée
+  // (n'utilise QUE le rng dédié — pas de consommation du rng de jeu).
+  _reactBotTurn(ev, d, think){
+    const L=ev.legal||{}; const pot=L.pot||0, toCall=L.callAmt||0, bb=L.bb||1, maxTo=L.maxRaiseTo||0;
+    if(d.action===ACT.RAISE){
+      const allIn = (maxTo>0 && d.amountTo>=maxTo);
+      const bigRaise = (d.amountTo >= pot && pot>0);
+      if(allIn)       this._react(ev.playerId,'shove',0.45, Math.round(think*0.75), 0);
+      else if(bigRaise) this._react(ev.playerId,'shove',0.20, Math.round(think*0.6), 0);
+    } else if(d.action===ACT.CALL && toCall >= 3*bb && toCall >= 0.55*pot){
+      this._react(ev.playerId,'think',0.22, Math.round(think*0.35), 0);   // gros call qui « fait réfléchir »
+    } else if(d.action===ACT.FOLD && toCall >= 2*bb){
+      const p = Math.min(0.22, 0.10 + (toCall/Math.max(1,pot))*0.10);
+      this._react(ev.playerId,'laydown',p, Math.round(think*0.45), 0);
+    }
   }
   _reactShowdown(results, board, base){
     const bb=(this.table && this.table.bb) || (this.cfg.smallBlind*2) || 20;
@@ -250,6 +271,18 @@ export class FakeServer {
     if(action===NPA.fold) a=ACT.FOLD;
     else if(action===NPA.check||action===NPA.call) a=ACT.CALL;
     else { a=ACT.RAISE; amt=relBet; }
+    // Ton agression notable -> un bot encore en jeu te jauge (👀😬).
+    if(a===ACT.RAISE && this.table.h){
+      var _bb=this.table.bb || (this.cfg.smallBlind*2) || 20;
+      if(relBet >= 6*_bb){
+        var H=this.table.h, ord=(H._order||this.table.players||[]);
+        for(const q of ord){
+          if(q.id!==this.meId && H.inHand && H.inHand[q.id] && !(H.folded&&H.folded[q.id]) && !(H.allin&&H.allin[q.id])){
+            this._react(q.id,'think',0.40,600,0); break;
+          }
+        }
+      }
+    }
     this.table.act(this.meId, a, amt);
   }
   _stackOf(id){ const p=this.table.players.find(x=>x.id===id); return p?p.stack:0; }
@@ -285,6 +318,7 @@ export class FakeServer {
                   : (d.action==='raise')                    ? 1.5
                   :                                           1.0;
           var _think=Math.min(3500, Math.round(_base*_mult + _r*_base*0.7));
+          this._reactBotTurn(ev, d, _think);   // réaction cosmétique en cours de main
           this.pace(()=>{ if(this.stopped||!this.table) return; this.table.act(ev.playerId,d.action,d.amountTo); }, _think);
         } else {
           // Tour du joueur humain : armer un délai d'expiration comme le ferait
