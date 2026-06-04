@@ -5654,6 +5654,17 @@ const App = (() => {
     var mz = document.querySelector('.my-zone');
     if (mz && turnPid === myId) mz.style.borderTopColor = urgent ? '#e74c3c' : '';
     setUrgentMode(urgent && turnPid === myId);
+    // Alerte sonore du décompte — uniquement MON tour, et seulement si le
+    // timeout de la table laisse de la marge (>= 10 s) pour ne pas harceler
+    // sur les parties très rapides. Le mute global est respecté par playTone().
+    // Tic léger à 5-4-3-2, bip marqué sur la dernière seconde.
+    if (turnPid === myId && gameTimeout >= 10) {
+      if (_timerSec >= 2 && _timerSec <= 5) {
+        if (typeof notifyTick === 'function') notifyTick();
+      } else if (_timerSec === 1) {
+        if (typeof notifyTickFinal === 'function') notifyTickFinal();
+      }
+    }
     if (_timerSec <= 0) { clearInterval(_timerID); setUrgentMode(false); }
   }
 
@@ -9188,4 +9199,4 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.2.167'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.2.168'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();

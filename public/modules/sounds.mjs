@@ -192,6 +192,14 @@ function notifyBlindsUp() {
   setTimeout(function(){ playTone(1175, 0.16, 0.18); }, 190);
   if (_soundEnabled && navigator.vibrate) navigator.vibrate([40, 50, 40]);
 }
+// Décompte des dernières secondes (mon tour) : tic discret sur 5-4-3-2…
+function notifyTick() {
+  playTone(900, 0.03, 0.06);
+}
+// …puis bip plus marqué sur la toute dernière seconde.
+function notifyTickFinal() {
+  playTone(1397, 0.14, 0.20);
+}
 // Mute state
 let _soundEnabled = (function() {
   try { return localStorage.getItem('pth_sound') !== '0'; } catch(e) { return true; }
@@ -249,6 +257,7 @@ export {
   getAudioCtx, playTone,
   notifyCard, notifyAction, notifyFold, notifyRaise, notifyAllIn,
   notifyMyTurn, notifyWinner, notifyBigWin, notifyChat, notifyBlindsUp,
+  notifyTick, notifyTickFinal,
   toggleSound, isSoundEnabled,
 };
 
@@ -265,6 +274,8 @@ window.notifyWinner  = notifyWinner;
 window.notifyBigWin  = notifyBigWin;
 window.notifyChat    = notifyChat;
 window.notifyBlindsUp = notifyBlindsUp;
+window.notifyTick      = notifyTick;
+window.notifyTickFinal = notifyTickFinal;
 window.toggleSound   = toggleSound;
 
 // _audioCtx and _soundEnabled were declared with `var` at the top of
@@ -287,5 +298,6 @@ window.SOUNDS = {
   getAudioCtx, playTone,
   notifyCard, notifyAction, notifyFold, notifyRaise, notifyAllIn,
   notifyMyTurn, notifyWinner, notifyBigWin, notifyChat, notifyBlindsUp,
+  notifyTick, notifyTickFinal,
   toggleSound, isSoundEnabled,
 };
