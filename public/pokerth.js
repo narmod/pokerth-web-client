@@ -9149,6 +9149,12 @@ function toggleLog() {
   if (btn) btn.style.background = isHidden ? 'rgba(200,168,74,0.2)' : '';
   if (btn) btn.style.borderColor = isHidden ? 'var(--gold-dim)' : '';
   if (btn) btn.style.color       = isHidden ? 'var(--gold)' : '';
+  if (isHidden) {
+    // Poignée de redimensionnement, identique au chat (glisser pour étendre).
+    makeChatResizable(panel, document.getElementById('g-log-body'));
+    var lb = document.getElementById('g-log-body');
+    if (lb) lb.scrollTop = 0; // le plus récent est en haut (liste inversée)
+  }
 }
 
 // ── Players online panel ──
@@ -9271,4 +9277,4 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.2.177'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.2.178'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();

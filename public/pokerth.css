@@ -2921,7 +2921,7 @@ body.hide-pct-btns .pct-row { display: none; }
   top: 36px;
   left: 0; right: 0;
   z-index: 99;
-  max-height: min(200px, 30dvh) !important;
+  max-height: min(140px, 22dvh) !important;
   background: rgba(4,10,6,0.97);
   border-bottom: 1px solid var(--border);
   box-shadow: 0 4px 20px rgba(0,0,0,0.6);
