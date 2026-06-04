@@ -603,20 +603,36 @@ function _evalFive(cards) {
   var top2 = byFreq[1];
   var rn = RANK_NAMES;
   if (isFlush && isStraight) {
-    if (straightHigh===12) return { r:9, label: t('hsRoyal') };
-    return { r:8, label: t('hsSF', { r: rn[straightHigh] }) };
+    if (straightHigh===12) return { r:9, label: t('hsRoyal'), tb:[] };
+    return { r:8, label: t('hsSF', { r: rn[straightHigh] }), tb:[straightHigh] };
   }
-  if (freq[0]===4) return { r:7, label: t('hsFour', { r: rn[top] }) };
-  if (freq[0]===3 && freq[1]===2) return { r:6, label: t('hsFull', { a: rn[top], b: rn[top2] }) };
-  if (isFlush) return { r:5, label: t('hsFlush') };
-  if (isStraight) return { r:4, label: t('hsStraight', { r: rn[straightHigh] }) };
-  if (freq[0]===3) return { r:3, label: t('hsThree', { r: rn[top] }) };
+  if (freq[0]===4) return { r:7, label: t('hsFour', { r: rn[top] }), tb: byFreq };
+  if (freq[0]===3 && freq[1]===2) return { r:6, label: t('hsFull', { a: rn[top], b: rn[top2] }), tb: byFreq };
+  if (isFlush) return { r:5, label: t('hsFlush'), tb: byFreq };
+  if (isStraight) return { r:4, label: t('hsStraight', { r: rn[straightHigh] }), tb:[straightHigh] };
+  if (freq[0]===3) return { r:3, label: t('hsThree', { r: rn[top] }), tb: byFreq };
   if (freq[0]===2 && freq[1]===2) {
     var p1=rn[top], p2=rn[top2];
-    return { r:2, label: t('hsTwoPair', { a: p1, b: p2 }) };
+    return { r:2, label: t('hsTwoPair', { a: p1, b: p2 }), tb: byFreq };
   }
-  if (freq[0]===2) return { r:1, label: t('hsPair', { r: rn[top] }) };
-  return { r:0, label: t('hsHigh', { r: rn[ranks[0]] }) };
+  if (freq[0]===2) return { r:1, label: t('hsPair', { r: rn[top] }), tb: byFreq };
+  return { r:0, label: t('hsHigh', { r: rn[ranks[0]] }), tb: byFreq };
+}
+
+// Comparaison de deux mains évaluées : >0 si a bat b, <0 si a perd, 0 si égalité
+// stricte (split). Compare d'abord la catégorie (r 0-9) puis le départage (tb,
+// rangs ordonnés par importance : paires/brelans d'abord, puis kickers).
+function _cmpHand(a, b) {
+  if (!a || !b) return 0;
+  if (a.r !== b.r) return a.r - b.r;
+  var ta = a.tb || [], tbb = b.tb || [];
+  var n = Math.max(ta.length, tbb.length);
+  for (var i = 0; i < n; i++) {
+    var x = (ta[i] == null ? -1 : ta[i]);
+    var y = (tbb[i] == null ? -1 : tbb[i]);
+    if (x !== y) return x - y;
+  }
+  return 0;
 }
 
 // Encodage PokerTH UNIQUE pour toutes les cartes (0-indexé, 0..51) :
@@ -801,17 +817,17 @@ function evaluatePreFlopHand(c1, c2) {
   var gap       = hi - lo; // 0=pair, 1=connected, 2=1-gap, etc.
 
   // ─ Premium ★★★
-  if (isPair && hi >= 10) // AA KK QQ JJ TT
+  if (isPair && hi >= 8) // TT JJ QQ KK AA
     return { stars: 3, label: t('pfPremium') };
   if (hi===12 && lo===11) // AK
     return { stars: 3, label: isSuited ? t('pfAKs') : t('pfAKo') };
 
   // ─ Très bonnes ★★☆
-  if (isPair && hi >= 7) // 77 88 99
+  if (isPair && hi >= 5) // 77 88 99
     return { stars: 2, label: t('pfMidPair') };
-  if (hi===12 && lo>=9 && isSuited) // AQs AJs ATs
+  if (hi===12 && lo>=8 && isSuited) // ATs AJs AQs
     return { stars: 2, label: t('pfStrongAceS') };
-  if (hi===12 && lo>=9) // AQ AJ AT
+  if (hi===12 && lo>=8) // AT AJ AQ
     return { stars: 2, label: t('pfStrongAce') };
   if (hi===11 && lo===10 && isSuited) // KQs
     return { stars: 2, label: t('pfKQs') };
@@ -819,13 +835,13 @@ function evaluatePreFlopHand(c1, c2) {
     return { stars: 2, label: t('pfKQo') };
 
   // ─ Bonnes ★☆☆
-  if (isPair && hi >= 4) // 44 55 66
+  if (isPair && hi >= 2) // 44 55 66
     return { stars: 1, label: t('pfSmallPair') };
   if (isSuited && gap === 1 && lo >= 7) // connecteurs couleur hauts
     return { stars: 1, label: t('pfSuitedConn') };
   if (isSuited && hi >= 10 && lo >= 8)
     return { stars: 1, label: t('pfSuitedBroad') };
-  if (hi===12 && lo >= 6) // As faible
+  if (hi===12 && lo >= 4) // As avec kicker moyen
     return { stars: 1, label: t('pfAceKicker') };
 
   // ─ Moyennes — connecteurs
@@ -858,7 +874,7 @@ function evaluateBestHand(holeCards, commCards) {
   var best = null;
   for (var i = 0; i < combos.length; i++) {
     var res = _evalFive(combos[i]);
-    if (!best || res.r > best.r) best = res;
+    if (!best || _cmpHand(res, best) > 0) best = res;
   }
   return best;
 }
@@ -5413,21 +5429,19 @@ const App = (() => {
       // Évaluer ma main (myNorm est déjà en comm encoding)
       var myScore = evaluateBestHand(myNorm, fullComm);
       // Évaluer les adversaires (cartes piochées dans le deck comm)
-      var iWin = true;
+      var myBest = true;   // je bats strictement tout le monde jusqu'ici
+      var tied   = false;  // au moins une égalité (split) avec le meilleur adversaire
       for (var o = 0; o < nOpp; o++) {
         var oc1 = d[pos++], oc2 = d[pos++];
-        if (oc1 === undefined || oc2 === undefined) { iWin = false; break; }
+        if (oc1 === undefined || oc2 === undefined) break;
         // Les cartes adverses simulées sont en comm encoding (piochées du deck comm)
         var oppScore = evaluateBestHand([oc1, oc2], fullComm);
-        if (oppScore && myScore && oppScore.r > myScore.r) { iWin = false; break; }
-        if (oppScore && myScore && oppScore.r === myScore.r) {
-          // Départager sur la carte haute
-          var myHigh  = Math.max.apply(null, myNorm.map(function(c){ return c%13; }));
-          var oppHigh = Math.max.apply(null, [oc1,oc2].map(function(c){ return c%13; }));
-          if (oppHigh > myHigh) { iWin = false; break; }
-        }
+        // Départage complet sur la meilleure main à 5 cartes (catégorie + kickers)
+        var cmp = _cmpHand(myScore, oppScore);
+        if (cmp < 0) { myBest = false; break; } // un adversaire me bat → perdu
+        if (cmp === 0) tied = true;             // égalité → split potentiel
       }
-      if (iWin) wins++;
+      if (myBest) wins += tied ? 0.5 : 1;       // split compté pour un demi-pot
     }
     return Math.round(wins / total * 100);
   }
@@ -5489,7 +5503,7 @@ const App = (() => {
         var elNow = document.getElementById('hand-strength');
         if (!elNow) return;
         // Indicateur couleur : vert brillant ≥71%, vert 51-70%, jaune 36-50%, orange 26-35%, rouge ≤25%
-        var pctEmoji = pct >= 71 ? '🟢' : pct >= 51 ? '🟡' : pct >= 36 ? '🟡' : pct >= 26 ? '🟠' : '🔴';
+        var pctEmoji = pct >= 60 ? '🟢' : pct >= 45 ? '🟡' : pct >= 30 ? '🟠' : '🔴';
         elNow.textContent = handLabel + ' — ' + pct + '% ' + pctEmoji;
       }, 0);
     }
@@ -9161,4 +9175,4 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.2.162'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.2.163'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
