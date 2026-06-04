@@ -3001,6 +3001,29 @@ body.hide-pct-btns .pct-row { display: none; }
 .pp-cancel { flex: 0 0 auto; background: transparent; border: 1px solid var(--border); color: var(--text); padding: 9px 16px; border-radius: 2px; cursor: pointer; font-family: 'Inconsolata', monospace; font-size: 0.76rem; }
 .pp-cancel:hover { border-color: var(--border-hi); color: var(--text-hi); }
 
+/* ══ INSTALL POPUP (PWA add-to-home-screen instructions) ══ */
+#install-popup {
+  position: fixed; inset: 0; z-index: 200;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(0,0,0,0.75);
+  padding: 12px;
+}
+.ip-card {
+  background: #060e08; border: 1px solid var(--gold-dim);
+  border-top: 3px solid var(--gold); border-radius: 8px;
+  padding: 20px 24px; width: min(360px, 92vw);
+  display: flex; flex-direction: column; gap: 14px;
+  box-shadow: 0 0 60px rgba(0,0,0,0.8);
+}
+.ip-title { font-family: 'Cinzel', serif; font-size: 0.95rem; color: var(--gold); letter-spacing: 0.08em; text-align: center; }
+.ip-body { font-size: 0.84rem; color: var(--cream); line-height: 1.55; }
+.ip-step { display: flex; align-items: flex-start; gap: 9px; margin-bottom: 10px; }
+.ip-step:last-child { margin-bottom: 0; }
+.ip-step .ip-ico { flex: 0 0 auto; min-width: 18px; color: var(--gold-dim); font-weight: 700; }
+.ip-step b { color: var(--gold); font-weight: 600; }
+.ip-btns { display: flex; justify-content: center; }
+.ip-btns .pp-cancel { padding: 9px 30px; }
+
 /* ══ WINNER OVERLAY ══ */
 .winner-overlay {
   position: fixed; inset: 0; z-index: 100;

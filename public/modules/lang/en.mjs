@@ -281,6 +281,13 @@ export const strings = {
     hintRaise:'R — Raise', hintRaiseAdjust:'R — Raise (adjust amount)', hintAllin:'A — All-In',
     // ── Create-form option labels (raise frequency) ──
     nHands:'N hands', nMinutes:'N minutes',
+    // ── PWA install (add to home screen) ──
+    installTooltip:'Install the app', installTitle:'📲 Install the app', installClose:'Close',
+    installIosStep1:'Tap the Share button <b>↑□</b> in Safari’s toolbar.',
+    installIosStep2:'Choose <b>“Add to Home Screen”</b>.',
+    installIosStep3:'Confirm with <b>Add</b> — the app lands on your home screen.',
+    installGenericStep1:'Open your browser menu (⋮ or ⋯).',
+    installGenericStep2:'Choose <b>“Install app”</b> or <b>“Add to Home Screen”</b>.',
 };
 
 export default { meta, strings };

@@ -281,6 +281,13 @@ export const strings = {
     hintRaise:'R — Relancer', hintRaiseAdjust:'R — Relancer (ajustez le montant)', hintAllin:'A — Tapis',
     // ── Libellés d'options du formulaire de création (fréquence des blindes) ──
     nHands:'N mains', nMinutes:'N minutes',
+    // ── Installation PWA (ajout à l'écran d'accueil) ──
+    installTooltip:'Installer l’application', installTitle:'📲 Installer l’application', installClose:'Fermer',
+    installIosStep1:'Touchez le bouton Partager <b>↑□</b> dans la barre de Safari.',
+    installIosStep2:'Choisissez <b>« Sur l’écran d’accueil »</b>.',
+    installIosStep3:'Confirmez avec <b>Ajouter</b> — l’app apparaît sur votre écran d’accueil.',
+    installGenericStep1:'Ouvrez le menu de votre navigateur (⋮ ou ⋯).',
+    installGenericStep2:'Choisissez <b>« Installer l’application »</b> ou <b>« Sur l’écran d’accueil »</b>.',
 };
 
 export default { meta, strings };

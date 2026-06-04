@@ -253,6 +253,7 @@ function onAvatarImageChosen(input) {
 <!-- ╚════════════════════╝ -->
 <div id="s-connect" class="screen active">
   <div style="position:absolute;top:12px;right:16px;display:flex;gap:6px;z-index:10">
+    <button class="btn-sm btn-icon" id="install-btn" onclick="pwaInstall()" title="Install app" data-i18n-title="installTooltip" aria-label="Install app" style="display:none">📲</button>
     <button class="btn-sm btn-icon" id="lang-toggle-connect" onclick="openLangMenu(event)" title="Switch language" data-i18n-title="langTooltip" aria-label="Switch language"></button>
     <button class="btn-sm btn-icon" onclick="location.reload()" title="Refresh / Rafraîchir" data-i18n-title="refreshTooltip" aria-label="Refresh">↺</button>
     <button class="btn-sm btn-icon" id="fs-btn-connect" onclick="toggleFullscreen()" title="Fullscreen" data-i18n-title="fullscreenTooltip" aria-label="Fullscreen">⛶</button>
@@ -1327,6 +1328,17 @@ function onAvatarImageChosen(input) {
     <div class="pp-btns">
       <button class="btn-primary" onclick="joinWithPassword()">▶ Join</button>
       <button class="pp-cancel" onclick="document.getElementById('password-prompt').style.display='none'">✕</button>
+    </div>
+  </div>
+</div>
+
+<!-- Install instructions popup (iOS manual path / browsers without native prompt) -->
+<div id="install-popup" style="display:none" onclick="if(event.target===this)pwaInstallClose()">
+  <div class="ip-card">
+    <div class="ip-title" data-i18n="installTitle">📲 Install the app</div>
+    <div class="ip-body" id="install-popup-body"></div>
+    <div class="ip-btns">
+      <button class="pp-cancel" onclick="pwaInstallClose()" data-i18n="installClose">Close</button>
     </div>
   </div>
 </div>

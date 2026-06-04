@@ -965,6 +965,105 @@ function _hideFullscreenIfUnsupported() {
 }
 _hideFullscreenIfUnsupported();
 
+/* ═══════════════════ PWA INSTALL ═══════════════════
+   Chromium (Android, desktop Chrome/Edge) fires `beforeinstallprompt`,
+   giving a native one-tap install flow. iOS Safari exposes NO such API,
+   so we show manual "Add to Home Screen" instructions in a popup. Other
+   browsers fall back to the same manual popup once they expose the event.
+   The control stays hidden whenever the app already runs standalone
+   (i.e. it's already installed). */
+(function () {
+  var _deferredPrompt = null;
+
+  function _isStandalone() {
+    return (window.navigator && window.navigator.standalone === true)
+      || (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches);
+  }
+  function _isIOS() {
+    var ua = navigator.userAgent || '';
+    // iPadOS 13+ masquerades as Macintosh → detect via touch points.
+    return /iP(hone|ad|od)/.test(ua)
+      || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1);
+  }
+  function _showBtn() { var b = document.getElementById('install-btn'); if (b) b.style.display = ''; }
+  function _hideBtn() { var b = document.getElementById('install-btn'); if (b) b.style.display = 'none'; }
+
+  function _tr(k, fallback) {
+    try { if (typeof window.t === 'function') { var v = window.t(k); if (v && v !== k) return v; } } catch (e) {}
+    return fallback;
+  }
+
+  // Capture Chromium's install event (suppress its own banner, defer to our button).
+  window.addEventListener('beforeinstallprompt', function (e) {
+    e.preventDefault();
+    _deferredPrompt = e;
+    if (!_isStandalone()) _showBtn();
+  });
+
+  // Once installed, retire the control.
+  window.addEventListener('appinstalled', function () {
+    _deferredPrompt = null;
+    _hideBtn();
+  });
+
+  function _initInstallUI() {
+    if (_isStandalone()) { _hideBtn(); return; }   // already installed → nothing to do
+    if (_deferredPrompt)  { _showBtn(); return; }   // native prompt ready
+    if (_isIOS())         { _showBtn(); return; }   // manual path (Safari has no event)
+    // Other browsers: button is revealed by beforeinstallprompt above when it fires.
+  }
+
+  function _openManualPopup() {
+    var body = document.getElementById('install-popup-body');
+    var pop  = document.getElementById('install-popup');
+    if (!body || !pop) return;
+    var html;
+    if (_isIOS()) {
+      html =
+        '<div class="ip-step"><span class="ip-ico">1.</span><span>' +
+          _tr('installIosStep1', 'Tap the Share button <b>\u2191\u25A1</b> in Safari\u2019s toolbar.') + '</span></div>' +
+        '<div class="ip-step"><span class="ip-ico">2.</span><span>' +
+          _tr('installIosStep2', 'Choose <b>\u201CAdd to Home Screen\u201D</b>.') + '</span></div>' +
+        '<div class="ip-step"><span class="ip-ico">3.</span><span>' +
+          _tr('installIosStep3', 'Confirm with <b>Add</b> \u2014 the app lands on your home screen.') + '</span></div>';
+    } else {
+      html =
+        '<div class="ip-step"><span class="ip-ico">\u22EE</span><span>' +
+          _tr('installGenericStep1', 'Open your browser menu (\u22EE or \u22EF).') + '</span></div>' +
+        '<div class="ip-step"><span class="ip-ico">\uFF0B</span><span>' +
+          _tr('installGenericStep2', 'Choose <b>\u201CInstall app\u201D</b> or <b>\u201CAdd to Home Screen\u201D</b>.') + '</span></div>';
+    }
+    body.innerHTML = html;
+    pop.style.display = 'flex';
+  }
+
+  // Wired to the install button in the connect icon bar.
+  window.pwaInstall = function () {
+    if (_deferredPrompt) {
+      var dp = _deferredPrompt;
+      _deferredPrompt = null;
+      try { dp.prompt(); } catch (e) {}
+      if (dp.userChoice && dp.userChoice.then) {
+        dp.userChoice.then(function (res) {
+          if (res && res.outcome === 'accepted') _hideBtn();
+        }).catch(function () {});
+      }
+      return;
+    }
+    _openManualPopup();   // no native prompt → manual instructions
+  };
+  window.pwaInstallClose = function () {
+    var pop = document.getElementById('install-popup');
+    if (pop) pop.style.display = 'none';
+  };
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', _initInstallUI);
+  } else {
+    _initInstallUI();
+  }
+})();
+
 // Unlock audio on first interaction
 // [Phase 2] AudioContext warm-up moved to public/modules/sounds.mjs
 
@@ -9039,4 +9138,4 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.2.159'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.2.160'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
