@@ -4656,7 +4656,7 @@ const App = (() => {
         renderComm(true); // flip animation
         renderSeats();
         setTimeout(renderHandStrength, 150); // force de la main au flop (was 500ms)
-        logAction('--- Flop [' + flopStr + '] ---');
+        logAction('--- ' + t('flop') + ' [' + flopStr + '] · ' + t('pot') + ' ' + _groupThousands(pot) + ' ---');
         notifyCard(); notifyCard(); notifyCard();
         break;
       }
@@ -4677,7 +4677,7 @@ const App = (() => {
         minRaise   = 0;
         setPot(pot);
         const tvCard = commCards[3]; const tvName = tvCard != null ? cardName(tvCard, true) : '?';
-        logAction('--- ' + t('turn') + ' [' + tvName + '] ---');
+        logAction('--- ' + t('turn') + ' [' + tvName + '] · ' + t('pot') + ' ' + _groupThousands(pot) + ' ---');
         renderComm(true); // flip animation
         setTimeout(renderHandStrength, 150); // force de la main au turn (was 500ms)
         notifyCard();
@@ -4701,7 +4701,7 @@ const App = (() => {
         minRaise   = 0;
         setPot(pot);
         const rvCard = commCards[4]; const rvName = rvCard != null ? cardName(rvCard, true) : '?';
-        logAction('--- ' + t('river') + ' [' + rvName + '] ---');
+        logAction('--- ' + t('river') + ' [' + rvName + '] · ' + t('pot') + ' ' + _groupThousands(pot) + ' ---');
         renderComm(true, true); // flip animation + dramatic river
         setTimeout(renderHandStrength, 200); // force de la main à la river (was 600ms)
         playTone(350, 0.08, 0.08); setTimeout(function(){ notifyCard(); }, 200);
@@ -9208,4 +9208,4 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.2.169'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.2.170'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
