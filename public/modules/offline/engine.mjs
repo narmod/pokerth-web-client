@@ -152,10 +152,12 @@ export class OfflineTable {
     const order=this.h._order, N=order.length;
     // hand ends if only one not folded
     if (this._activeNotFolded().length<=1){ return this._endHand(); }
+    // if <=1 player can still bet and all matched -> run out remaining streets
+    // (checked BEFORE the "street complete" test so the FIRST run-out street is
+    //  itself flagged as run-out and revealed with suspense, not instantly).
+    if (this._canStillBet().length<=1 && this._allMatched()){ return this._nextStreet(true); }
     // street ends if nobody needs to act
     if (this.h.needsToAct.size===0){ return this._nextStreet(); }
-    // if <=1 player can still bet and all matched -> run out remaining streets
-    if (this._canStillBet().length<=1 && this._allMatched()){ return this._nextStreet(true); }
     // find next player (from _actPos) who needs to act
     let pos = this.h._actPos; let guard=0;
     while(guard++<=N){ const p=order[pos % N]; if(this.h.needsToAct.has(p.id)){ this.h._actPos=pos; this._requestAction(p); return; } pos++; }
@@ -233,12 +235,12 @@ export class OfflineTable {
     const idx=seq.indexOf(this.h.street);
     if (idx>=3){ return this._showdown(); }
     const next=seq[idx+1];
-    if (next==='flop'){ const c=[this.h.deck.pop(),this.h.deck.pop(),this.h.deck.pop()]; this.h.board.push(...c); this.onEvent({type:'dealFlop',cards:c}); }
-    if (next==='turn'){ const c=this.h.deck.pop(); this.h.board.push(c); this.onEvent({type:'dealTurn',card:c}); }
-    if (next==='river'){ const c=this.h.deck.pop(); this.h.board.push(c); this.onEvent({type:'dealRiver',card:c}); }
+    if (next==='flop'){ const c=[this.h.deck.pop(),this.h.deck.pop(),this.h.deck.pop()]; this.h.board.push(...c); this.onEvent({type:'dealFlop',cards:c, runOut:!!runOut}); }
+    if (next==='turn'){ const c=this.h.deck.pop(); this.h.board.push(c); this.onEvent({type:'dealTurn',card:c, runOut:!!runOut}); }
+    if (next==='river'){ const c=this.h.deck.pop(); this.h.board.push(c); this.onEvent({type:'dealRiver',card:c, runOut:!!runOut}); }
     this.h.street = next;                                   // advance label BEFORE any recursion
     if (runOut || this._canStillBet().length<=1){
-      if (next==='river') return this._showdown();
+      if (next==='river') return this._showdown(true);
       return this._nextStreet(true);
     }
     // postflop: first to act = first live, not folded, not all-in, LEFT of button (index 1+)
@@ -256,7 +258,7 @@ export class OfflineTable {
     this._finishHand();
   }
 
-  _showdown(){
+  _showdown(runOut){
     const contenders=this._activeNotFolded();
     // side pots
     const commits = {}; this.h._order.forEach(p=>commits[p.id]=this.h.committed[p.id]);
@@ -283,7 +285,7 @@ export class OfflineTable {
     for(const id in won){ this.players.find(p=>p.id===+id).stack+=won[+id]; }
     const results=contenders.map(p=>({playerId:p.id, won:won[p.id]||0, cards:this.h.hole[p.id].slice()}));
     this.h.results=results;
-    this.onEvent({type:'showdown', board:this.h.board.slice(), results});
+    this.onEvent({type:'showdown', board:this.h.board.slice(), results, runOut:!!runOut});
     this._finishHand();
   }
 
