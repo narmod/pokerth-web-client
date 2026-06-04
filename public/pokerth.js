@@ -5876,13 +5876,22 @@ const App = (() => {
     const myBlindChip = myId === sbPid
       ? chipSvg('SB','#1565c0','#fff','#0a3d7a')
       : (myId === bbPid ? chipSvg('BB','#b71c1c','#fff','#6d0c0c') : '');
-    const myDealerBadge = myId === dealerPid ? dealerChipSvg().replace('class="dealer-chip"','style="filter:drop-shadow(0 1px 3px rgba(0,0,0,0.5));vertical-align:middle"') : '';
+    const myDealerBadge = myId === dealerPid
+      ? dealerChipSvg().replace('class="dealer-chip"','style="filter:drop-shadow(0 1px 3px rgba(0,0,0,0.5))"')
+      : '';
+    const myBlindBadge = myBlindChip
+      ? myBlindChip.replace('class="blind-chip"','style="filter:drop-shadow(0 1px 3px rgba(0,0,0,0.4))"')
+      : '';
     if (pbName) {
       pbName.textContent = myName;
-      // Ajouter les badges après le texte via innerHTML (chips SVG + D badge)
+      // D + blind regroupés dans un seul conteneur inline-flex centré, pour
+      // qu'ils soient parfaitement alignés entre eux (avant : deux <span> au
+      // calage vertical différent — le jeton de blind avait un top:-1px).
       pbName.innerHTML = myName
-        + (myDealerBadge ? '<span style="margin-left:4px;vertical-align:middle">' + myDealerBadge + '</span>' : '')
-        + (myBlindChip   ? '<span style="margin-left:4px;vertical-align:middle;display:inline-block;position:relative;top:-1px">' + myBlindChip.replace('class="blind-chip"','style="filter:drop-shadow(0 1px 3px rgba(0,0,0,0.4));vertical-align:middle"') + '</span>' : '');
+        + ((myDealerBadge || myBlindBadge)
+            ? '<span style="display:inline-flex;align-items:center;gap:4px;margin-left:6px;vertical-align:middle">'
+              + myDealerBadge + myBlindBadge + '</span>'
+            : '');
     }
     // Je suis "OUT" (éliminé) UNIQUEMENT si je n'ai plus de jetons ET que je
     // ne suis plus dans la donne (active === false, posé au début de la main
@@ -9199,4 +9208,4 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.2.168'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.2.169'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
