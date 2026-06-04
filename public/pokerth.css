@@ -2212,9 +2212,6 @@ body {
               top  0.42s cubic-bezier(.2,.8,.3,1),
               transform 0.42s ease, opacity 0.15s ease;
 }
-.fly-card.mine {
-  background: linear-gradient(135deg, #1a5c2a 0%, #27ae60 60%, #1a5c2a 100%);
-}
 
 /* Jeton volant vers le pot */
 .fly-chip {
