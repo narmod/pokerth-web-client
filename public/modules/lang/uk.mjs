@@ -220,7 +220,7 @@ export const strings = {
     statStreak: 'Найкраща серія',
     statReset: 'Скинути мою статистику',
     statResetConfirm: 'Скинути всю вашу статистику? Це не можна скасувати.',
-    statLifeOnlyPrivate: 'Відстежується лише на приватному сервері / LAN.',
+    statLifeOnlyPrivate: 'Відстежується лише на приватному сервері / LAN.', statLifeTraining:'Статистика тренування (проти ботів) — окремо.',
     boardEmpty: 'Поки немає результатів',
     boardPer100:'Нетто / 100 роздач', boardYourRank:'Ви: #{n} з {m}',
     rejoinInProgress: 'Повторне приєднання до вашого столу…',

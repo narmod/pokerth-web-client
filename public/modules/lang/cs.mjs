@@ -221,7 +221,7 @@ export const strings = {
     statStreak: 'Nejlepší série',
     statReset: 'Vynulovat moje statistiky',
     statResetConfirm: 'Vynulovat všechny vaše statistiky? Toto nelze vrátit zpět.',
-    statLifeOnlyPrivate: 'Sledováno jen na soukromém serveru / LAN.',
+    statLifeOnlyPrivate: 'Sledováno jen na soukromém serveru / LAN.', statLifeTraining:'Statistiky tréninku (proti botům) — vedené zvlášť.',
     boardEmpty: 'Zatím žádné skóre',
     boardPer100:'Čistý / 100 rozdání', boardYourRank:'Vy: #{n} z {m}',
     rejoinInProgress: 'Opětovné připojení k vašemu stolu…',

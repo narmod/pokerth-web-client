@@ -222,7 +222,7 @@ export const strings = {
     statStreak: '最佳连胜',
     statReset: '重置我的统计',
     statResetConfirm: '重置你的累计统计？此操作无法撤销。',
-    statLifeOnlyPrivate: '仅在私人服务器 / 局域网上记录。',
+    statLifeOnlyPrivate: '仅在私人服务器 / 局域网上记录。', statLifeTraining:'训练统计（对战机器人）— 单独计算。',
     boardEmpty: '暂无成绩',
     boardPer100:'净额 / 100 手', boardYourRank:'你：第{n}名（共{m}）',
     rejoinInProgress: '正在重新加入你的牌桌…',

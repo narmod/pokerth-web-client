@@ -103,7 +103,7 @@ export const strings = {
     statTabSession:'सत्र', statTabLife:'कुल', statTabBoard:'रैंकिंग',
     statGamesPlayed:'खेले गए खेल', statGamesWon:'जीते गए खेल', statStreak:'सर्वश्रेष्ठ लकीर',
     statReset:'मेरे आँकड़े रीसेट करें', statResetConfirm:'अपने आजीवन आँकड़े रीसेट करें? यह पूर्ववत नहीं हो सकता।',
-    statLifeOnlyPrivate:'केवल निजी सर्वर / LAN पर ट्रैक किया जाता है।', boardEmpty:'अभी कोई स्कोर नहीं',
+    statLifeOnlyPrivate:'केवल निजी सर्वर / LAN पर ट्रैक किया जाता है।', statLifeTraining:'अभ्यास आँकड़े (बॉट्स के विरुद्ध) — अलग रखे जाते हैं।', boardEmpty:'अभी कोई स्कोर नहीं',
     boardPer100:'शुद्ध / 100 हाथ', boardYourRank:'आप: #{n}/{m}',
     rejoinInProgress:'आपकी टेबल पर पुनः शामिल हो रहे हैं…', rejoinWaitNick:'आपका पिछला सत्र मुक्त हो रहा है…',
     rejoinFailed:'आपकी टेबल फिर से शुरू नहीं हो सकी — लॉबी पर वापस।', rejoinReconnectHint:'कनेक्शन टूटा — टेबल जारी रखने के लिए पुनः कनेक्ट करें।',

@@ -220,7 +220,7 @@ export const strings = {
     statStreak: 'Paras putki',
     statReset: 'Nollaa tilastoni',
     statResetConfirm: 'Nollataanko koko tilastosi? Tätä ei voi perua.',
-    statLifeOnlyPrivate: 'Seurataan vain yksityisellä palvelimella / LAN:ssa.',
+    statLifeOnlyPrivate: 'Seurataan vain yksityisellä palvelimella / LAN:ssa.', statLifeTraining:'Harjoitustilastot (botteja vastaan) — pidetään erillään.',
     boardEmpty: 'Ei vielä pisteitä',
     boardPer100:'Netto / 100 kättä', boardYourRank:'Sinä: #{n}/{m}',
     rejoinInProgress: 'Liitytään pöytääsi uudelleen…',

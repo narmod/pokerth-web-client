@@ -226,7 +226,7 @@ export const strings = {
     statStreak: 'Beste reeks',
     statReset: 'Mijn statistieken wissen',
     statResetConfirm: 'Je totale statistieken wissen? Dit kan niet ongedaan worden gemaakt.',
-    statLifeOnlyPrivate: 'Alleen bijgehouden op de privéserver / LAN.',
+    statLifeOnlyPrivate: 'Alleen bijgehouden op de privéserver / LAN.', statLifeTraining:'Oefenstatistieken (tegen bots) — apart bijgehouden.',
     boardEmpty: 'Nog geen scores',
     boardPer100:'Netto / 100 handen', boardYourRank:'Jij: #{n} van {m}',
     rejoinInProgress: 'Terug naar je tafel…',

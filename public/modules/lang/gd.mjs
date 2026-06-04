@@ -222,7 +222,7 @@ export const strings = {
     statStreak: 'Sreath as fheàrr',
     statReset: 'Ath-shuidhich na staitistig agam',
     statResetConfirm: 'Ath-shuidhich na staitistig agad gu lèir? Cha ghabh seo a thilleadh.',
-    statLifeOnlyPrivate: 'Air a chumail air an fhrithealaiche phrìobhaideach / LAN a-mhàin.',
+    statLifeOnlyPrivate: 'Air a chumail air an fhrithealaiche phrìobhaideach / LAN a-mhàin.', statLifeTraining:'Staitistig trèanaidh (an aghaidh bhotaichean) — air a chumail air leth.',
     boardEmpty: 'Gun sgòran fhathast',
     boardPer100:'Net / 100 làmhan', boardYourRank:'Thusa: #{n}/{m}',
     rejoinInProgress: 'Ag ath-cheangal ris a\' bhòrd agad…',

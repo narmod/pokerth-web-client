@@ -221,7 +221,7 @@ export const strings = {
     statStreak: 'Najbolji niz',
     statReset: 'Poništi moju statistiku',
     statResetConfirm: 'Poništiti svu vašu statistiku? Ovo se ne može poništiti.',
-    statLifeOnlyPrivate: 'Prati se samo na privatnom serveru / LAN-u.',
+    statLifeOnlyPrivate: 'Prati se samo na privatnom serveru / LAN-u.', statLifeTraining:'Статистика вежбања (против ботова) — води се одвојено.',
     boardEmpty: 'Još nema rezultata',
     boardPer100:'Neto / 100 ruku', boardYourRank:'Vi: #{n} od {m}',
     rejoinInProgress: 'Ponovno povezivanje na vaš sto…',

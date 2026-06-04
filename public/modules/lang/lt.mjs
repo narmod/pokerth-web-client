@@ -221,7 +221,7 @@ export const strings = {
     statStreak: 'Geriausia serija',
     statReset: 'Atstatyti mano statistiką',
     statResetConfirm: 'Atstatyti visą jūsų statistiką? To atšaukti negalima.',
-    statLifeOnlyPrivate: 'Sekama tik privačiame serveryje / LAN.',
+    statLifeOnlyPrivate: 'Sekama tik privačiame serveryje / LAN.', statLifeTraining:'Treniruočių statistika (prieš botus) — kaupiama atskirai.',
     boardEmpty: 'Dar nėra rezultatų',
     boardPer100:'Grynasis / 100 rankų', boardYourRank:'Jūs: #{n} iš {m}',
     rejoinInProgress: 'Jungiamasi prie jūsų stalo…',

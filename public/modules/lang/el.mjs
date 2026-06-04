@@ -221,7 +221,7 @@ export const strings = {
     statStreak: 'Καλύτερο σερί',
     statReset: 'Επαναφορά στατιστικών μου',
     statResetConfirm: 'Επαναφορά όλων των στατιστικών σας; Αυτό δεν αναιρείται.',
-    statLifeOnlyPrivate: 'Καταγράφεται μόνο στον ιδιωτικό διακομιστή / LAN.',
+    statLifeOnlyPrivate: 'Καταγράφεται μόνο στον ιδιωτικό διακομιστή / LAN.', statLifeTraining:'Στατιστικά εξάσκησης (εναντίον bots) — χωριστά.',
     boardEmpty: 'Δεν υπάρχουν ακόμα σκορ',
     boardPer100:'Καθαρό / 100 χέρια', boardYourRank:'Εσείς: #{n} από {m}',
     rejoinInProgress: 'Επανασύνδεση στο τραπέζι σας…',

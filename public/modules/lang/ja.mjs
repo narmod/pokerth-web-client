@@ -220,7 +220,7 @@ export const strings = {
     statStreak: '最高連勝',
     statReset: '統計をリセット',
     statResetConfirm: '累計統計をリセットしますか？元に戻せません。',
-    statLifeOnlyPrivate: 'プライベートサーバー / LANでのみ記録されます。',
+    statLifeOnlyPrivate: 'プライベートサーバー / LANでのみ記録されます。', statLifeTraining:'練習の統計（ボット対戦）— 別に集計。',
     boardEmpty: 'まだスコアがありません',
     boardPer100:'純収支 / 100ハンド', boardYourRank:'あなた：{m}人中{n}位',
     rejoinInProgress: 'テーブルに再参加中…',

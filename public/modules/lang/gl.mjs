@@ -221,7 +221,7 @@ export const strings = {
     statStreak: 'Mellor racha',
     statReset: 'Restablecer as miñas estatísticas',
     statResetConfirm: 'Restablecer todas as túas estatísticas? Isto non se pode desfacer.',
-    statLifeOnlyPrivate: 'Rexístrase só no servidor privado / LAN.',
+    statLifeOnlyPrivate: 'Rexístrase só no servidor privado / LAN.', statLifeTraining:'Estatísticas de adestramento (contra bots) — contadas á parte.',
     boardEmpty: 'Aínda non hai puntuacións',
     boardPer100:'Neto / 100 mans', boardYourRank:'Ti: #{n} de {m}',
     rejoinInProgress: 'Reconectando á túa mesa…',

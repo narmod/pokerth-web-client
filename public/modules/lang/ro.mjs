@@ -221,7 +221,7 @@ export const strings = {
     statStreak: 'Cea mai bună serie',
     statReset: 'Resetează statisticile mele',
     statResetConfirm: 'Resetezi toate statisticile tale? Acest lucru nu poate fi anulat.',
-    statLifeOnlyPrivate: 'Urmărit doar pe serverul privat / LAN.',
+    statLifeOnlyPrivate: 'Urmărit doar pe serverul privat / LAN.', statLifeTraining:'Statistici de antrenament (contra boților) — păstrate separat.',
     boardEmpty: 'Încă niciun scor',
     boardPer100:'Net / 100 mâini', boardYourRank:'Tu: #{n} din {m}',
     rejoinInProgress: 'Reconectare la masa ta…',

@@ -221,7 +221,7 @@ export const strings = {
     statStreak: 'Millor ratxa',
     statReset: 'Restableix les meves estadístiques',
     statResetConfirm: 'Restablir totes les teves estadístiques? Això no es pot desfer.',
-    statLifeOnlyPrivate: 'Es registra només al servidor privat / LAN.',
+    statLifeOnlyPrivate: 'Es registra només al servidor privat / LAN.', statLifeTraining:'Estadístiques d’entrenament (contra bots) — comptades a part.',
     boardEmpty: 'Encara no hi ha puntuacions',
     boardPer100:'Net / 100 mans', boardYourRank:'Tu: #{n} de {m}',
     rejoinInProgress: 'Reconnectant a la teva taula…',

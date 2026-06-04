@@ -220,7 +220,7 @@ export const strings = {
     statStreak: 'Bästa svit',
     statReset: 'Nollställ min statistik',
     statResetConfirm: 'Nollställa din totala statistik? Detta kan inte ångras.',
-    statLifeOnlyPrivate: 'Spåras endast på privat server / LAN.',
+    statLifeOnlyPrivate: 'Spåras endast på privat server / LAN.', statLifeTraining:'Träningsstatistik (mot bottar) — hålls separat.',
     boardEmpty: 'Inga poäng än',
     boardPer100:'Netto / 100 händer', boardYourRank:'Du: #{n} av {m}',
     rejoinInProgress: 'Återansluter till ditt bord…',

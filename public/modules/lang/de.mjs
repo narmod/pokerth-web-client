@@ -226,7 +226,7 @@ export const strings = {
     statStreak: 'Beste Serie',
     statReset: 'Meine Statistik zurücksetzen',
     statResetConfirm: 'Lebenslange Statistik zurücksetzen? Das kann nicht rückgängig gemacht werden.',
-    statLifeOnlyPrivate: 'Nur auf dem privaten Server / LAN erfasst.',
+    statLifeOnlyPrivate: 'Nur auf dem privaten Server / LAN erfasst.', statLifeTraining:'Trainingsstatistik (gegen Bots) — separat gezählt.',
     boardEmpty: 'Noch keine Ergebnisse',
     boardPer100:'Netto / 100 Hände', boardYourRank:'Du: #{n} von {m}',
     rejoinInProgress: 'Trete deinem Tisch wieder bei…',

@@ -223,7 +223,7 @@ export const strings = {
     statStreak: 'En iyi seri',
     statReset: 'İstatistiklerimi sıfırla',
     statResetConfirm: 'Tüm istatistiklerin sıfırlansın mı? Bu geri alınamaz.',
-    statLifeOnlyPrivate: 'Yalnızca özel sunucu / LAN’da kaydedilir.',
+    statLifeOnlyPrivate: 'Yalnızca özel sunucu / LAN’da kaydedilir.', statLifeTraining:'Antrenman istatistikleri (botlara karşı) — ayrı tutulur.',
     boardEmpty: 'Henüz skor yok',
     boardPer100:'Net / 100 el', boardYourRank:'Sen: #{n}/{m}',
     rejoinInProgress: 'Masana yeniden katılınıyor…',

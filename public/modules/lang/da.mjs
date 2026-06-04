@@ -220,7 +220,7 @@ export const strings = {
     statStreak: 'Bedste stime',
     statReset: 'Nulstil min statistik',
     statResetConfirm: 'Nulstille hele din statistik? Dette kan ikke fortrydes.',
-    statLifeOnlyPrivate: 'Spores kun på privat server / LAN.',
+    statLifeOnlyPrivate: 'Spores kun på privat server / LAN.', statLifeTraining:'Træningsstatistik (mod bots) — holdes adskilt.',
     boardEmpty: 'Ingen point endnu',
     boardPer100:'Netto / 100 hænder', boardYourRank:'Du: #{n} af {m}',
     rejoinInProgress: 'Tilslutter dit bord igen…',

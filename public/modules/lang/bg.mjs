@@ -221,7 +221,7 @@ export const strings = {
     statStreak: 'Най-добра серия',
     statReset: 'Нулирай моята статистика',
     statResetConfirm: 'Да нулирате цялата си статистика? Това не може да бъде отменено.',
-    statLifeOnlyPrivate: 'Проследява се само на частния сървър / LAN.',
+    statLifeOnlyPrivate: 'Проследява се само на частния сървър / LAN.', statLifeTraining:'Статистика от тренировка (срещу ботове) — пази се отделно.',
     boardEmpty: 'Все още няма резултати',
     boardPer100:'Нето / 100 ръце', boardYourRank:'Вие: #{n} от {m}',
     rejoinInProgress: 'Повторно свързване с вашата маса…',

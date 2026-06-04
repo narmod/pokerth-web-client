@@ -221,7 +221,7 @@ export const strings = {
     statStreak: 'Legjobb sorozat',
     statReset: 'Statisztikám visszaállítása',
     statResetConfirm: 'Visszaállítod az összes statisztikádat? Ez nem vonható vissza.',
-    statLifeOnlyPrivate: 'Csak a privát szerveren / LAN-on követjük.',
+    statLifeOnlyPrivate: 'Csak a privát szerveren / LAN-on követjük.', statLifeTraining:'Gyakorló statisztika (botok ellen) — külön kezelve.',
     boardEmpty: 'Még nincs pontszám',
     boardPer100:'Nettó / 100 leosztás', boardYourRank:'Te: #{n}/{m}',
     rejoinInProgress: 'Visszacsatlakozás az asztalodhoz…',

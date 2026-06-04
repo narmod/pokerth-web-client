@@ -221,7 +221,7 @@ export const strings = {
     statStreak: 'Beste reeks',
     statReset: 'Herstel my statistieke',
     statResetConfirm: 'Herstel al jou statistieke? Dit kan nie ongedaan gemaak word nie.',
-    statLifeOnlyPrivate: 'Word net op die privaat bediener / LAN bygehou.',
+    statLifeOnlyPrivate: 'Word net op die privaat bediener / LAN bygehou.', statLifeTraining:'Oefenstatistiek (teen bots) — apart gehou.',
     boardEmpty: 'Nog geen tellings nie',
     boardPer100:'Netto / 100 hande', boardYourRank:'Jy: #{n} van {m}',
     rejoinInProgress: 'Herkoppel aan jou tafel…',

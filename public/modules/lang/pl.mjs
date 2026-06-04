@@ -227,7 +227,7 @@ export const strings = {
     statStreak: 'Najlepsza seria',
     statReset: 'Wyzeruj moje statystyki',
     statResetConfirm: 'Wyzerować statystyki łączne? Nie można tego cofnąć.',
-    statLifeOnlyPrivate: 'Rejestrowane tylko na serwerze prywatnym / LAN.',
+    statLifeOnlyPrivate: 'Rejestrowane tylko na serwerze prywatnym / LAN.', statLifeTraining:'Statystyki treningu (z botami) — liczone osobno.',
     boardEmpty: 'Brak wyników',
     boardPer100:'Netto / 100 rozdań', boardYourRank:'Ty: #{n} z {m}',
     rejoinInProgress: 'Powrót do twojego stołu…',

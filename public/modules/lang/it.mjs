@@ -226,7 +226,7 @@ export const strings = {
     statStreak: 'Miglior serie',
     statReset: 'Azzera le mie statistiche',
     statResetConfirm: 'Azzerare le statistiche totali? Non può essere annullato.',
-    statLifeOnlyPrivate: 'Registrate solo sul server privato / LAN.',
+    statLifeOnlyPrivate: 'Registrate solo sul server privato / LAN.', statLifeTraining:'Statistiche di allenamento (contro i bot) — conteggiate a parte.',
     boardEmpty: 'Ancora nessun punteggio',
     boardPer100:'Netto / 100 mani', boardYourRank:'Tu: #{n} di {m}',
     rejoinInProgress: 'Rientro al tuo tavolo…',

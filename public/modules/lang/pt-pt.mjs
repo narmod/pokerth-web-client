@@ -220,7 +220,7 @@ export const strings = {
     statStreak: 'Melhor sequência',
     statReset: 'Repor as minhas estatísticas',
     statResetConfirm: 'Repor todas as suas estatísticas? Isto não pode ser anulado.',
-    statLifeOnlyPrivate: 'Registrado apenas no servidor privado / LAN.',
+    statLifeOnlyPrivate: 'Registrado apenas no servidor privado / LAN.', statLifeTraining:'Estatísticas de treino (contra bots) — contadas à parte.',
     boardEmpty: 'Ainda não há pontuações',
     boardPer100:'Líquido / 100 mãos', boardYourRank:'Você: #{n} de {m}',
     rejoinInProgress: 'A ligar novamente à sua mesa…',

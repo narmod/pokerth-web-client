@@ -221,7 +221,7 @@ export const strings = {
     statStreak: 'Chuỗi tốt nhất',
     statReset: 'Đặt lại thống kê của tôi',
     statResetConfirm: 'Đặt lại toàn bộ thống kê của bạn? Không thể hoàn tác.',
-    statLifeOnlyPrivate: 'Chỉ theo dõi trên máy chủ riêng / LAN.',
+    statLifeOnlyPrivate: 'Chỉ theo dõi trên máy chủ riêng / LAN.', statLifeTraining:'Thống kê luyện tập (đấu với bot) — tính riêng.',
     boardEmpty: 'Chưa có điểm',
     boardPer100:'Ròng / 100 ván', boardYourRank:'Bạn: #{n}/{m}',
     rejoinInProgress: 'Đang kết nối lại bàn của bạn…',
