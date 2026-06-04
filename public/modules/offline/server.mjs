@@ -176,8 +176,14 @@ export class FakeServer {
       case 'turn': {
         this._send('PlayersTurn',[[1,0,G],[2,0,ev.playerId],[3,0,GS[ev.gameState]]]);
         if(ev.playerId!==this.meId){
-          var _sp=this.cfg.guiSpeed||5; var _think=Math.max(180, 1000-_sp*80);
-          this.pace(()=>{ if(this.stopped||!this.table) return; const d=decide(ev,this.botCfg[ev.playerId]); this.table.act(ev.playerId,d.action,d.amountTo); }, _think+Math.floor(this.rng()*_think*0.6));
+          var _sp=this.cfg.guiSpeed||5;
+          // Temps de réflexion "humain" : base indexée sur la vitesse de table
+          // + part aléatoire par décision, plafonnée à 3,5 s pour rester fluide.
+          // Un SEUL tirage this.rng() (comme avant) → l'ordre du générateur seedé
+          // est préservé : décisions des bots et tests déterministes inchangés.
+          var _base=Math.max(400, 1700-_sp*130);
+          var _think=Math.min(3500, _base+Math.floor(this.rng()*_base));
+          this.pace(()=>{ if(this.stopped||!this.table) return; const d=decide(ev,this.botCfg[ev.playerId]); this.table.act(ev.playerId,d.action,d.amountTo); }, _think);
         } break;
       }
       case 'actionDone':
