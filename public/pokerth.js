@@ -4743,6 +4743,17 @@ const App = (() => {
             seatData[pid].card2  = c2;
             seatData[pid].action = won ? '🏆 +' + won : '';
           }
+          // Abattage : cartes révélées + nom de la combinaison. Le label vient
+          // de evaluateBestHand (clés hs* déjà traduites dans les 36 langues).
+          // Joueurs couchés avant l'abattage : c1/c2 == null → pas de ligne.
+          if (c1 != null && c2 != null) {
+            var _evSd = (typeof evaluateBestHand === 'function') ? evaluateBestHand([c1, c2], commCards) : null;
+            logAction(t('logShowdown', {
+              name:  getPlayerName(pid),
+              cards: cardName(c1, false) + ' ' + cardName(c2, false),
+              hand:  _evSd ? _evSd.label : ''
+            }));
+          }
           if (won > 0) {
             winners.push({ pid, won, cash, c1, c2 });
             // Stats si c'est moi
@@ -9225,4 +9236,4 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.2.171'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.2.172'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();

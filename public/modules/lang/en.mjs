@@ -35,7 +35,7 @@ export const strings = {
     handLabel:'H#', preflop:'Pre-flop', flop:'Flop', turn:'Turn', river:'River',
     fold:'Fold', check:'Check', call:'Call', raise:'Raise', allin:'All-In',
     pot:'Pot:', journal:'📋', chat:'💬', sound:'🔊', mute:'🔇',
-    thinking:'is thinking…', myCards:'My cards:', logEliminated:'{name} eliminated', gameStart:'Start',
+    thinking:'is thinking…', myCards:'My cards:', logEliminated:'{name} eliminated', logShowdown:'{name}: {cards} — {hand}', gameStart:'Start',
     bet:'Bet', wins:'wins', handOf:'Hand #',
     handsTitle:'♠ Poker Hand Rankings ♥',
     h1n:'Royal Flush', h1d:'A K Q J 10, all the same suit||the unbeatable hand!',
