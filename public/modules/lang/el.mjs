@@ -424,6 +424,7 @@ export const strings = {
     quickCreateLabel: 'Παίκτες:',
     quickCreateBtn: 'Δημιουργία',
     logPanelTitle: 'Αρχείο',
+    logCopied:'Το ιστορικό αντιγράφηκε', logEmpty:'Το ιστορικό είναι κενό', logExportTitle:'Εξαγωγή ιστορικού',
     disconnectDialogTitle: 'Αποσύνδεση;',
     disconnectDialogBody: 'Θα επιστρέψετε στην οθόνη σύνδεσης.',
     disconnectQuit: 'Αποσύνδεση',

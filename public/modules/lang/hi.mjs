@@ -248,6 +248,7 @@ export const strings = {
     quickCreateLabel:'खिलाड़ी:',
     quickCreateBtn:'बनाएं',
     logPanelTitle:'लॉग',
+    logCopied:'लॉग कॉपी किया गया', logEmpty:'लॉग खाली है', logExportTitle:'लॉग निर्यात करें',
     disconnectDialogTitle:'डिस्कनेक्ट करें?',
     disconnectDialogBody:'आपको लॉगिन स्क्रीन पर लौटाया जाएगा।',
     disconnectQuit:'डिस्कनेक्ट',

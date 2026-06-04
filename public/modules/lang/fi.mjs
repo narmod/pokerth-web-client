@@ -423,6 +423,7 @@ export const strings = {
     quickCreateLabel: 'Pelaajat:',
     quickCreateBtn: 'Luo',
     logPanelTitle: 'Loki',
+    logCopied:'Loki kopioitu', logEmpty:'Loki on tyhjä', logExportTitle:'Vie loki',
     disconnectDialogTitle: 'Katkaistaanko yhteys?',
     disconnectDialogBody: 'Palaat kirjautumisnäyttöön.',
     disconnectQuit: 'Katkaise yhteys',

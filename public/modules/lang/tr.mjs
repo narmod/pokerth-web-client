@@ -426,6 +426,7 @@ export const strings = {
     quickCreateLabel: 'Oyuncular:',
     quickCreateBtn: 'Oluştur',
     logPanelTitle: 'Günlük',
+    logCopied:'Günlük kopyalandı', logEmpty:'Günlük boş', logExportTitle:'Günlüğü dışa aktar',
     disconnectDialogTitle: 'Bağlantı kesilsin mi?',
     disconnectDialogBody: 'Giriş ekranına döneceksin.',
     disconnectQuit: 'Bağlantıyı kes',

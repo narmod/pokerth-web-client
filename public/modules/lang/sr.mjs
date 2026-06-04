@@ -424,6 +424,7 @@ export const strings = {
     quickCreateLabel: 'Igrači:',
     quickCreateBtn: 'Napravi',
     logPanelTitle: 'Dnevnik',
+    logCopied:'Дневник копиран', logEmpty:'Дневник је празан', logExportTitle:'Извези дневник',
     disconnectDialogTitle: 'Prekinuti vezu?',
     disconnectDialogBody: 'Vratićete se na ekran za prijavu.',
     disconnectQuit: 'Prekini vezu',

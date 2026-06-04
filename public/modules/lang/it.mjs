@@ -427,6 +427,7 @@ export const strings = {
     quickCreateLabel: 'Giocatori:',
     quickCreateBtn: 'Crea',
     logPanelTitle: 'Registro',
+    logCopied:'Registro copiato', logEmpty:'Il registro è vuoto', logExportTitle:'Esporta registro',
     disconnectDialogTitle: 'Disconnettere?',
     disconnectDialogBody: 'Tornerai alla schermata di accesso.',
     disconnectQuit: 'Disconnetti',

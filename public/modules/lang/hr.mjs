@@ -424,6 +424,7 @@ export const strings = {
     quickCreateLabel: 'Igrači:',
     quickCreateBtn: 'Stvori',
     logPanelTitle: 'Zapisnik',
+    logCopied:'Zapisnik kopiran', logEmpty:'Zapisnik je prazan', logExportTitle:'Izvezi zapisnik',
     disconnectDialogTitle: 'Odspojiti?',
     disconnectDialogBody: 'Vratit ćete se na zaslon za prijavu.',
     disconnectQuit: 'Odspoji',

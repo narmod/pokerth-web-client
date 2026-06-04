@@ -424,6 +424,7 @@ export const strings = {
     quickCreateLabel: 'Spelers:',
     quickCreateBtn: 'Skep',
     logPanelTitle: 'Logboek',
+    logCopied:'Logboek gekopieer', logEmpty:'Logboek is leeg', logExportTitle:'Voer logboek uit',
     disconnectDialogTitle: 'Ontkoppel?',
     disconnectDialogBody: 'Jy sal na die aanmeldskerm terugkeer.',
     disconnectQuit: 'Ontkoppel',

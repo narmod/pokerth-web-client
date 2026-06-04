@@ -423,6 +423,7 @@ export const strings = {
     quickCreateLabel: 'Spelare:',
     quickCreateBtn: 'Skapa',
     logPanelTitle: 'Logg',
+    logCopied:'Logg kopierad', logEmpty:'Loggen är tom', logExportTitle:'Exportera logg',
     disconnectDialogTitle: 'Koppla från?',
     disconnectDialogBody: 'Du återvänder till inloggningsskärmen.',
     disconnectQuit: 'Koppla från',

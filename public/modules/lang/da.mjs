@@ -423,6 +423,7 @@ export const strings = {
     quickCreateLabel: 'Spillere:',
     quickCreateBtn: 'Opret',
     logPanelTitle: 'Log',
+    logCopied:'Log kopieret', logEmpty:'Loggen er tom', logExportTitle:'Eksportér log',
     disconnectDialogTitle: 'Afbryd?',
     disconnectDialogBody: 'Du vender tilbage til loginskærmen.',
     disconnectQuit: 'Afbryd',

@@ -247,6 +247,7 @@ export const strings = {
     quickCreateLabel:'플레이어:',
     quickCreateBtn:'만들기',
     logPanelTitle:'로그',
+    logCopied:'로그가 복사되었습니다', logEmpty:'로그가 비어 있습니다', logExportTitle:'로그 내보내기',
     disconnectDialogTitle:'접속을 끊을까요?',
     disconnectDialogBody:'로그인 화면으로 돌아갑니다.',
     disconnectQuit:'접속 해제',

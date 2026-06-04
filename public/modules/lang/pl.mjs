@@ -427,6 +427,7 @@ export const strings = {
     quickCreateLabel: 'Gracze:',
     quickCreateBtn: 'Utwórz',
     logPanelTitle: 'Dziennik',
+    logCopied:'Dziennik skopiowany', logEmpty:'Dziennik jest pusty', logExportTitle:'Eksportuj dziennik',
     disconnectDialogTitle: 'Rozłączyć?',
     disconnectDialogBody: 'Wrócisz do ekranu logowania.',
     disconnectQuit: 'Rozłącz',

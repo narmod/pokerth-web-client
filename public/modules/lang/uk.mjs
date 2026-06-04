@@ -423,6 +423,7 @@ export const strings = {
     quickCreateLabel: 'Гравці:',
     quickCreateBtn: 'Створити',
     logPanelTitle: 'Журнал',
+    logCopied:'Журнал скопійовано', logEmpty:'Журнал порожній', logExportTitle:'Експортувати журнал',
     disconnectDialogTitle: 'Відключитися?',
     disconnectDialogBody: 'Ви повернетеся до екрана входу.',
     disconnectQuit: 'Відключитися',

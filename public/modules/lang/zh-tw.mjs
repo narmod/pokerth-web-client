@@ -425,6 +425,7 @@ export const strings = {
     quickCreateLabel: '玩家：',
     quickCreateBtn: '建立',
     logPanelTitle: '日誌',
+    logCopied:'已複製紀錄', logEmpty:'紀錄是空的', logExportTitle:'匯出紀錄',
     disconnectDialogTitle: '斷開連線？',
     disconnectDialogBody: '你將返回登入介面。',
     disconnectQuit: '斷開連線',

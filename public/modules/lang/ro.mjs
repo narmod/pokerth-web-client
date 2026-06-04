@@ -424,6 +424,7 @@ export const strings = {
     quickCreateLabel: 'Jucători:',
     quickCreateBtn: 'Creează',
     logPanelTitle: 'Jurnal',
+    logCopied:'Jurnal copiat', logEmpty:'Jurnalul este gol', logExportTitle:'Exportă jurnalul',
     disconnectDialogTitle: 'Deconectezi?',
     disconnectDialogBody: 'Te vei întoarce la ecranul de autentificare.',
     disconnectQuit: 'Deconectează',

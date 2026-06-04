@@ -424,6 +424,7 @@ export const strings = {
     quickCreateLabel: 'Xogadores:',
     quickCreateBtn: 'Crear',
     logPanelTitle: 'Rexistro',
+    logCopied:'Rexistro copiado', logEmpty:'O rexistro está baleiro', logExportTitle:'Exportar rexistro',
     disconnectDialogTitle: 'Queres desconectar?',
     disconnectDialogBody: 'Volverás á pantalla de inicio de sesión.',
     disconnectQuit: 'Desconectar',

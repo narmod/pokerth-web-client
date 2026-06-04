@@ -424,6 +424,7 @@ export const strings = {
     quickCreateLabel: 'Žaidėjai:',
     quickCreateBtn: 'Sukurti',
     logPanelTitle: 'Žurnalas',
+    logCopied:'Žurnalas nukopijuotas', logEmpty:'Žurnalas tuščias', logExportTitle:'Eksportuoti žurnalą',
     disconnectDialogTitle: 'Atsijungti?',
     disconnectDialogBody: 'Grįšite į prisijungimo ekraną.',
     disconnectQuit: 'Atsijungti',

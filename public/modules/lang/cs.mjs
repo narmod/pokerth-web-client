@@ -424,6 +424,7 @@ export const strings = {
     quickCreateLabel: 'Hráči:',
     quickCreateBtn: 'Vytvořit',
     logPanelTitle: 'Záznam',
+    logCopied:'Protokol zkopírován', logEmpty:'Protokol je prázdný', logExportTitle:'Exportovat protokol',
     disconnectDialogTitle: 'Odpojit?',
     disconnectDialogBody: 'Vrátíte se na přihlašovací obrazovku.',
     disconnectQuit: 'Odpojit',

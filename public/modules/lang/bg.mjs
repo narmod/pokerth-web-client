@@ -424,6 +424,7 @@ export const strings = {
     quickCreateLabel: 'Играчи:',
     quickCreateBtn: 'Създай',
     logPanelTitle: 'Дневник',
+    logCopied:'Дневникът е копиран', logEmpty:'Дневникът е празен', logExportTitle:'Експортиране на дневника',
     disconnectDialogTitle: 'Да прекъснете?',
     disconnectDialogBody: 'Ще се върнете към екрана за вход.',
     disconnectQuit: 'Прекъсни',
