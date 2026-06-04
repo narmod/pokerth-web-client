@@ -177,13 +177,20 @@ export class FakeServer {
         this._send('PlayersTurn',[[1,0,G],[2,0,ev.playerId],[3,0,GS[ev.gameState]]]);
         if(ev.playerId!==this.meId){
           var _sp=this.cfg.guiSpeed||5;
-          // Temps de réflexion "humain" : base indexée sur la vitesse de table
-          // + part aléatoire par décision, plafonnée à 3,5 s pour rester fluide.
-          // Un SEUL tirage this.rng() (comme avant) → l'ordre du générateur seedé
-          // est préservé : décisions des bots et tests déterministes inchangés.
+          // Temps de réflexion "humain", modulé par le TYPE de décision : un
+          // fold/check est vif, un call standard, une relance "fait réfléchir".
+          // Le jitter this.rng() est tiré AVANT decide() (1 appel, même ordre
+          // qu'avant) → décisions des bots et tests déterministes inchangés ;
+          // on ne fait que déplacer decide() (sans effet de bord) hors du pace
+          // pour connaître l'action avant de temporiser. Plafonné à 3,5 s.
+          var _r=this.rng();
+          var d=decide(ev,this.botCfg[ev.playerId]);
           var _base=Math.max(400, 1700-_sp*130);
-          var _think=Math.min(3500, _base+Math.floor(this.rng()*_base));
-          this.pace(()=>{ if(this.stopped||!this.table) return; const d=decide(ev,this.botCfg[ev.playerId]); this.table.act(ev.playerId,d.action,d.amountTo); }, _think);
+          var _mult=(d.action==='fold'||d.action==='check') ? 0.5
+                  : (d.action==='raise')                    ? 1.5
+                  :                                           1.0;
+          var _think=Math.min(3500, Math.round(_base*_mult + _r*_base*0.7));
+          this.pace(()=>{ if(this.stopped||!this.table) return; this.table.act(ev.playerId,d.action,d.amountTo); }, _think);
         } break;
       }
       case 'actionDone':
