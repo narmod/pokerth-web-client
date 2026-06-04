@@ -4489,6 +4489,10 @@ const App = (() => {
         if (hs) hs.style.display = 'none';
         renderGameWaiting(t('handOf') + ' ' + handNum + ' — Blinds: ' + sb + '/' + (sb*2));
         logAction('══ ' + t('handOf') + ' ' + handNum + ' — Blinds ' + sb + '/' + (sb*2) + ' ══');
+        // Donneur (bouton) de la main — dealerPid déjà résolu plus haut (champ 6).
+        if (dealerPid && getPlayerName(dealerPid)) {
+          logAction('\uD83D\uDD18 ' + t('logDealer', { name: getPlayerName(dealerPid) }));
+        }
         // Show my hole cards in log
         if (myCards[0] != null && myCards[1] != null) {
           logAction(t('myCards') + ' ' + cardName(myCards[0], false) + ' ' + cardName(myCards[1], false));
@@ -9236,4 +9240,4 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.2.173'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.2.174'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();

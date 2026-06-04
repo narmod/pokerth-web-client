@@ -35,7 +35,7 @@ export const strings = {
     handLabel:'M#', preflop:'Pré-flop', flop:'Flop', turn:'Tournant', river:'Rivière',
     fold:'Fold', check:'Check', call:'Call', raise:'Relance', allin:'All-In',
     pot:'Pot :', journal:'📋', chat:'💬', sound:'🔊', mute:'🔇',
-    thinking:'réfléchit…', myCards:'Mes cartes :', logEliminated:'{name} éliminé', logShowdown:'{name} : {cards} — {hand}', gameStart:'Début',
+    thinking:'réfléchit…', myCards:'Mes cartes :', logEliminated:'{name} éliminé', logShowdown:'{name} : {cards} — {hand}', logDealer:'Donneur : {name}', gameStart:'Début',
     bet:'Mise', wins:'gagne', handOf:'Main #',
     handsTitle:'♠ Combinaisons du Poker ♥',
     h1n:'Quinte Flush Royale', h1d:'A K Q J 10, tous de la même couleur||la main imbattable !',
