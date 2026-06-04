@@ -192,13 +192,46 @@ function notifyBlindsUp() {
   setTimeout(function(){ playTone(1175, 0.16, 0.18); }, 190);
   if (_soundEnabled && navigator.vibrate) navigator.vibrate([40, 50, 40]);
 }
+// — Retour haptique du décompte —
+// Android (et navigateurs exposant l'API) : navigator.vibrate.
+// iOS/Safari : pas d'API vibrate ; depuis iOS 18, un <input type="checkbox"
+// switch> émet un retour haptique natif quand on le bascule. WebKit exige que
+// le clic passe par le <label> (un input.click() direct ne déclenche rien),
+// d'où l'input enfant d'un label qu'on clique. Intensité/durée non réglables
+// (un "tac" fixe) ; peut ne se déclencher que lors d'un vrai geste utilisateur.
+let _hapticSwitch = null;
+function _iosHaptic() {
+  try {
+    if (!_hapticSwitch) {
+      const lab = document.createElement('label');
+      lab.setAttribute('aria-hidden', 'true');
+      lab.style.cssText = 'position:absolute;left:-9999px;top:0;width:1px;height:1px;overflow:hidden;pointer-events:none';
+      const inp = document.createElement('input');
+      inp.type = 'checkbox';
+      inp.setAttribute('switch', '');
+      inp.tabIndex = -1;
+      lab.appendChild(inp);
+      (document.body || document.documentElement).appendChild(lab);
+      _hapticSwitch = lab;
+    }
+    _hapticSwitch.click();   // bascule l'input → haptique iOS 18+ (no-op ailleurs)
+  } catch (e) {}
+}
+function _haptic(ms) {
+  try { if (navigator.vibrate) { navigator.vibrate(ms); return; } } catch (e) {}
+  _iosHaptic();              // repli iOS quand l'API vibrate est absente
+}
 // Décompte des dernières secondes (mon tour) : tic discret sur 5-4-3-2…
 function notifyTick() {
   playTone(900, 0.03, 0.06);
+  if (_soundEnabled) _haptic(20);
 }
 // …puis bip plus marqué sur la toute dernière seconde.
 function notifyTickFinal() {
   playTone(1397, 0.14, 0.20);
+  if (!_soundEnabled) return;
+  try { if (navigator.vibrate) { navigator.vibrate(60); return; } } catch (e) {}
+  _iosHaptic(); setTimeout(_iosHaptic, 90);   // iOS : double "tac" pour marquer la fin
 }
 // Mute state
 let _soundEnabled = (function() {
