@@ -78,11 +78,11 @@ export function skillOf(s){ return (s && SKILLS[s]) ? SKILLS[s] : SKILLS.normal;
 //   bluffMul      = style bluff-frequency multiplier (on top of skill.bluffMul);
 //   weight        = relative frequency at a freshly filled table.
 export const ARCHETYPES = {
-  rock:    { weight: 15, aggrLo: 0.15, aggrHi: 0.30, callMargin:  0.10, bluffMul: 0.2 },
-  tag:     { weight: 30, aggrLo: 0.55, aggrHi: 0.75, callMargin:  0.05, bluffMul: 1.0 },
-  lag:     { weight: 20, aggrLo: 0.70, aggrHi: 0.95, callMargin:  0.00, bluffMul: 1.6 },
-  station: { weight: 20, aggrLo: 0.10, aggrHi: 0.25, callMargin: -0.06, bluffMul: 0.3 },
-  maniac:  { weight: 15, aggrLo: 0.85, aggrHi: 1.00, callMargin: -0.02, bluffMul: 2.4 },
+  rock:    { weight: 15, aggrLo: 0.15, aggrHi: 0.30, callMargin:  0.10, bluffMul: 0.2, entryEq: 0.63, openMul: 1.30 },
+  tag:     { weight: 30, aggrLo: 0.55, aggrHi: 0.75, callMargin:  0.05, bluffMul: 1.0, entryEq: 0.55, openMul: 1.80 },
+  lag:     { weight: 20, aggrLo: 0.70, aggrHi: 0.95, callMargin:  0.00, bluffMul: 1.6, entryEq: 0.45, openMul: 0.65 },
+  station: { weight: 20, aggrLo: 0.10, aggrHi: 0.25, callMargin: -0.06, bluffMul: 0.3, entryEq: 0.00, openMul: 0.03 },
+  maniac:  { weight: 15, aggrLo: 0.85, aggrHi: 1.00, callMargin: -0.02, bluffMul: 2.4, entryEq: 0.08, openMul: 0.55 },
 };
 
 // Deterministic weighted archetype pick. Consumes exactly two rng() values
@@ -96,7 +96,7 @@ export function pickArchetype(rng){
   for (const n of names){ x -= ARCHETYPES[n].weight; if (x < 0){ name = n; break; } }
   const A = ARCHETYPES[name];
   const aggr = A.aggrLo + r() * (A.aggrHi - A.aggrLo);
-  return { arch: name, aggr, callMargin: A.callMargin, bluffMul: A.bluffMul };
+  return { arch: name, aggr, callMargin: A.callMargin, bluffMul: A.bluffMul, entryEq: A.entryEq, openMul: A.openMul };
 }
 
 // ctx = the engine 'turn' event payload.
@@ -139,19 +139,42 @@ export function decide(ctx, bot){
   // ── Normal play (equity vs the real field) ───────────────────────────────
   const opp = Math.max(1, (ctx.numActive || 2) - 1);
   const str = eq(opp);
+  const cm  = bot.callMargin != null ? bot.callMargin : 0.04;
+  const om  = bot.openMul    != null ? bot.openMul    : 1;
+  const bm  = bot.bluffMul   != null ? bot.bluffMul   : 1;
+  const preflop = ((L.street || ctx.gameState) === 'preflop');
+  const pRaise  = Math.min(0.92, a * om);             // PRE-FLOP raise propensity (PFR), openMul-tuned
+  const pPost   = Math.min(0.92, a * 0.9);            // POST-FLOP raise propensity, aggr-driven (decoupled)
+  const bluff   = ()=> (L.canRaise && rng() < 0.05*a*sk.bluffMul*bm && L.maxRaiseTo > toCall*3);
 
-  if (L.canCheck){
-    if (str>0.62 && L.canRaise && rng()<a*0.9) return { action:ACT.RAISE, amountTo:raiseTo() };
-    if (str>0.85 && L.canRaise) return { action:ACT.RAISE, amountTo:raiseTo() };
-    return { action:ACT.CHECK };
-  }
-  // facing a bet — call when equity beats the pot odds
-  if (str>0.82 && L.canRaise) return rng()<0.75 ? { action:ACT.RAISE, amountTo:raiseTo() } : { action:ACT.CALL };
-  if (str > potOdds + (bot.callMargin != null ? bot.callMargin : 0.04)){
-    if (str>0.6 && L.canRaise && rng()<a*0.55) return { action:ACT.RAISE, amountTo:raiseTo() };
+  // Pre-flop: entryEq gates how wide a profile enters (VPIP); pRaise drives PFR.
+  if (preflop){
+    const entry = bot.entryEq != null ? bot.entryEq : 0;
+    if (L.canCheck){                                  // free option (BB, unraised pot)
+      if (str >= entry && L.canRaise && rng() < pRaise) return { action:ACT.RAISE, amountTo:raiseTo() };
+      return { action:ACT.CHECK };
+    }
+    const floor = Math.max(entry, potOdds + cm);      // need the range OR the price to continue
+    if (str < floor){
+      if (bluff()) return { action:ACT.RAISE, amountTo:raiseTo() };   // rare light open
+      return { action:ACT.FOLD };
+    }
+    if (L.canRaise && rng() < pRaise) return { action:ACT.RAISE, amountTo:raiseTo() };
     return { action:ACT.CALL };
   }
-  // weak: occasional bluff-raise (scaled by difficulty), else fold
-  if (L.canRaise && rng()<0.05*a*sk.bluffMul*(bot.bluffMul != null ? bot.bluffMul : 1) && L.maxRaiseTo>toCall*3) return { action:ACT.RAISE, amountTo:raiseTo() };
+
+  // Post-flop: raise frequency scales with the same aggr×openMul lever.
+  if (L.canCheck){
+    if (str>0.85 && L.canRaise) return { action:ACT.RAISE, amountTo:raiseTo() };
+    if (str>0.58 && L.canRaise && rng() < pPost) return { action:ACT.RAISE, amountTo:raiseTo() };
+    return { action:ACT.CHECK };
+  }
+  // facing a bet — raise big hands, call when equity beats the price, else fold/bluff
+  if (str>0.82 && L.canRaise) return rng()<0.75 ? { action:ACT.RAISE, amountTo:raiseTo() } : { action:ACT.CALL };
+  if (str > potOdds + cm){
+    if (str>0.6 && L.canRaise && rng() < pPost*0.7) return { action:ACT.RAISE, amountTo:raiseTo() };
+    return { action:ACT.CALL };
+  }
+  if (bluff()) return { action:ACT.RAISE, amountTo:raiseTo() };
   return { action:ACT.FOLD };
 }
