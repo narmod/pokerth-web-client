@@ -8,7 +8,7 @@
  *   (StartEventAck, type37) -> GameStartInitial -> HandStart loop...
  * The user's create-form settings (NetGameInfo) drive the table.
  */
-import { OfflineTable, ACT } from './engine.mjs';
+import { OfflineTable, ACT, bestHand } from './engine.mjs';
 import { decide, pickArchetype } from './bots.mjs';
 import { buildMessage, parseClientFrame, encode, packed, readFields, TYPE } from './proto.mjs';
 
@@ -18,6 +18,19 @@ const NPA = { fold:1, check:2, call:3, bet:4, raise:5, allin:6 };
 // PRNG dédié aux réactions cosmétiques des bots — volontairement SÉPARÉ du
 // this.rng du jeu (deck + IA) pour ne jamais décaler le flux déterministe.
 function _mulberry32(a){ return function(){ a=(a+0x6D2B79F5)|0; let t=Math.imul(a^(a>>>15),1|a); t=(t+Math.imul(t^(t>>>7),61|t))^t; return ((t^(t>>>14))>>>0)/4294967296; }; }
+
+// Réactions « intelligentes » : chaque archétype a une FRÉQUENCE (multiplicateur
+// de probabilité) et des PALETTES contextuelles. kinds : happy (gain normal),
+// big (gros pot / monstre), sad (perte banale), bad (perte avec grosse main).
+const ARCH_REACT = {
+  rock:    { freq:0.35, happy:['👍','😎','🙂'],      sad:['😕','😴'],      big:['😏','💰','😎'],        bad:['😑','🫤','😮'] },
+  tag:     { freq:0.75, happy:['😎','🎯','👏','😏'], sad:['😤','😬'],      big:['🤑','💰','🥳'],        bad:['😱','😣','🤦'] },
+  lag:     { freq:1.20, happy:['🔥','😈','💪','😎'], sad:['😤','🤬'],      big:['🤑','🚀','🥳','🔥'],   bad:['😱','🤯','🤬'] },
+  station: { freq:0.55, happy:['🍀','🙂','👀'],      sad:['🤷','😅'],      big:['🤩','🍀','🥳'],        bad:['😮','😬','😅'] },
+  maniac:  { freq:1.50, happy:['🔥','😈','🤪','🚀'], sad:['🤬','💀','😤'], big:['🤑','🎰','🚀','🥳'],   bad:['🤯','💀','🤬'] },
+};
+const RX_ENVY  = ['👀','😤','😒','🫡'];   // un gros coup du joueur humain
+const RX_STEAL = ['😎','😏','🫡','😈'];   // vol de pot sans abattage
 
 export class FakeServer {
   constructor(opts){
@@ -35,6 +48,9 @@ export class FakeServer {
     this._roAcc = 0;   // run-out pacing accumulator (ms), reset between hands
     this._meBusted = false;   // joueur humain éliminé du tournoi (fin immédiate)
     this._rrng = _mulberry32(0x9e3779b1);   // réactions cosmétiques (rng dédié)
+    this._reactedHand = new Set();   // bots ayant déjà réagi dans la main courante
+    this._reactN = 0;                // nombre de réactions dans la main (plafond)
+    this._lastEmoji = '';            // éviter de répéter le même emoji
   }
 
   _send(name, spec){ if(!this.stopped) this.deliver(buildMessage(name, spec)); }
@@ -192,14 +208,38 @@ export class FakeServer {
     var off = (base||0) + 500 + Math.round(this._rrng()*600);
     this.pace(()=>{ if(!this.stopped) this._send('Chat',[[1,0,this.gameId],[2,0,botId],[3,0,1],[4,2,'[R]'+emoji]]); }, off);
   }
-  _reactShowdown(results, base){
-    const HAPPY=['😎','🤑','💰','🥳','🔥','🤩'], SAD=['😱','🤦','😡','💀','😬'];
-    let n=0;
+  // Dispatcher central des réactions : applique personnalité (archétype) +
+  // anti-spam (1 par bot/main, plafond 2/main, pas de répétition d'emoji).
+  // kind ∈ {happy,big,sad,bad,envy,steal}. baseProb modulé par la fréquence
+  // de l'archétype. Utilise exclusivement le rng dédié (_rrng).
+  _react(botId, kind, baseProb, base){
+    if(this.stopped || botId===this.meId || botId==null) return;
+    if(this._reactedHand.has(botId)) return;
+    if(this._reactN >= 2) return;
+    const arch=(this.botCfg[botId] && this.botCfg[botId].arch) || 'tag';
+    const cfg=ARCH_REACT[arch] || ARCH_REACT.tag;
+    if(this._rrng() >= Math.min(0.95, baseProb*cfg.freq)) return;
+    const pool = kind==='envy' ? RX_ENVY : kind==='steal' ? RX_STEAL : (cfg[kind] || cfg.happy);
+    let emoji = pool[Math.floor(this._rrng()*pool.length)];
+    if(emoji===this._lastEmoji && pool.length>1) emoji = pool[Math.floor(this._rrng()*pool.length)];
+    this._lastEmoji = emoji;
+    this._reactedHand.add(botId); this._reactN++;
+    this._botReact(botId, emoji, base||0);
+  }
+  _reactShowdown(results, board, base){
+    const bb=(this.table && this.table.bb) || (this.cfg.smallBlind*2) || 20;
+    let pot=0; (results||[]).forEach(r=>pot+=(r.won||0));
+    const big = pot >= 14*bb;
+    const catOf=(r)=> (r && r.cards && r.cards.length>=2) ? ((bestHand(r.cards.concat(board||[]))||[0])[0]) : 0;
     for(const r of (results||[])){
-      if(r.playerId===this.meId) continue;     // jamais le joueur humain
-      if(n>=2) break;                          // au plus 2 réactions par showdown
-      if(r.won>0){ if(this._rrng()<0.30){ this._botReact(r.playerId, HAPPY[Math.floor(this._rrng()*HAPPY.length)], base); n++; } }
-      else        { if(this._rrng()<0.15){ this._botReact(r.playerId, SAD[Math.floor(this._rrng()*SAD.length)],   base); n++; } }
+      if(r.playerId===this.meId){
+        // gros coup du joueur humain -> un bot perdant, jaloux
+        if(r.won>0 && big){ const loser=(results.find(x=>x.playerId!==this.meId && x.won===0)||{}).playerId; if(loser!=null) this._react(loser,'envy',0.6,base); }
+        continue;
+      }
+      if(r.won>0){ this._react(r.playerId, (big || catOf(r)>=6) ? 'big' : 'happy', 0.5, base); }
+      else if(catOf(r)>=4){ this._react(r.playerId, 'bad', 0.6, base); }  // bad beat : grosse main battue
+      else { this._react(r.playerId, 'sad', 0.18, base); }
     }
   }
   _onMyAction(f){
@@ -219,6 +259,7 @@ export class FakeServer {
     switch(ev.type){
       case 'handStart': {
         this._roAcc = 0;   // nouvelle main : repartir d'un accumulateur vierge
+        this._reactedHand = new Set(); this._reactN = 0;
         const hole = ev.holeByPlayer[this.meId] || [0,0];
         const spec=[[1,0,G],[2,2, encode([[1,0,hole[0]],[2,0,hole[1]]])],[4,0,ev.sb]];
         ev.seats.forEach(()=>spec.push([5,0,0]));
@@ -273,14 +314,21 @@ export class FakeServer {
         var _base=0;
         if(ev.runOut){ this._roAcc += this._roStep(); _base=this._roAcc; this.pace(()=>{ if(!this.stopped) this._send('EndOfHandShow', spec); }, _base); }
         else { this._send('EndOfHandShow', spec); }
-        this._reactShowdown(ev.results, _base);
+        this._reactShowdown(ev.results, ev.board, _base);
         break;
       }
       case 'eliminated':
         if(ev.playerId===this.meId) this._meBusted = true;
-        else if(this._rrng()<0.45) this._botReact(ev.playerId, ['💀','😡','😬','🤦'][Math.floor(this._rrng()*4)], this._roAcc);
+        else this._react(ev.playerId, 'bad', 0.55, this._roAcc);
         break;
-      case 'endOfHandHide': this._send('EndOfHandHide',[[1,0,G],[2,0,ev.playerId],[3,0,ev.moneyWon],[4,0,ev.playerMoney]]); break;
+      case 'endOfHandHide': {
+        this._send('EndOfHandHide',[[1,0,G],[2,0,ev.playerId],[3,0,ev.moneyWon],[4,0,ev.playerMoney]]);
+        // Vol de pot sans abattage : l'agresseur (bot) rafle une mise non triviale.
+        var _bb=(this.table && this.table.bb) || 20;
+        if(ev.playerId!==this.meId && this.table && this.table.h && this.table.h.aggressorId===ev.playerId && (ev.moneyWon||0) > 3*_bb)
+          this._react(ev.playerId, 'steal', 0.5, 0);
+        break;
+      }
       case 'handComplete': {
         if(this._meBusted){
           // Joueur humain éliminé : fin immédiate (on ne déroule pas les mains
