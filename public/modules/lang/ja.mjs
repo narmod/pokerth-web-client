@@ -64,6 +64,7 @@ export const strings = {
     mute: '🔇',
     thinking: '考え中…',
     myCards: '自分のカード：',
+    logEliminated:'{name} 脱落', logShowdown:'{name}: {cards} — {hand}',
     gameStart: '開始',
     bet: 'ベット',
     wins: '勝ち',

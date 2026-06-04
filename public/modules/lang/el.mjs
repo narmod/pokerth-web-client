@@ -65,6 +65,7 @@ export const strings = {
     mute: '🔇',
     thinking: 'σκέφτεται…',
     myCards: 'Τα φύλλα μου:',
+    logEliminated:'{name} αποκλείστηκε', logShowdown:'{name}: {cards} — {hand}',
     gameStart: 'Έναρξη',
     bet: 'Στοίχημα',
     wins: 'κερδίζει',

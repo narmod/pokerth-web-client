@@ -65,6 +65,7 @@ export const strings = {
     mute: '🔇',
     thinking: 'мисли…',
     myCards: 'Моите карти:',
+    logEliminated:'{name} отпадна', logShowdown:'{name}: {cards} — {hand}',
     gameStart: 'Старт',
     bet: 'Залог',
     wins: 'печели',

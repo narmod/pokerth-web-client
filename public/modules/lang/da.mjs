@@ -64,6 +64,7 @@ export const strings = {
     mute: '🔇',
     thinking: 'tænker…',
     myCards: 'Mine kort:',
+    logEliminated:'{name} elimineret', logShowdown:'{name}: {cards} — {hand}',
     gameStart: 'Start',
     bet: 'Sats',
     wins: 'vinder',

@@ -64,6 +64,7 @@ export const strings = {
     mute: '🔇',
     thinking: 'miettii…',
     myCards: 'Omat korttini:',
+    logEliminated:'{name} putosi', logShowdown:'{name}: {cards} — {hand}',
     gameStart: 'Aloita',
     bet: 'Panosta',
     wins: 'voittaa',

@@ -65,6 +65,7 @@ export const strings = {
     mute: '🔇',
     thinking: 'đang suy nghĩ…',
     myCards: 'Bài của tôi:',
+    logEliminated:'{name} bị loại', logShowdown:'{name}: {cards} — {hand}',
     gameStart: 'Bắt đầu',
     bet: 'Cược',
     wins: 'thắng',

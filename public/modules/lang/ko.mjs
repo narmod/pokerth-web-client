@@ -34,6 +34,7 @@ export const strings = {
     fold:'폴드', check:'체크', call:'콜', raise:'레이즈', allin:'올인',
     pot:'팟:', journal:'📋', chat:'💬', sound:'🔊', mute:'🔇',
     thinking:'생각 중…', myCards:'내 카드:', gameStart:'시작',
+    logEliminated:'{name} 탈락', logShowdown:'{name}: {cards} — {hand}',
     bet:'벳', wins:'승리', handOf:'핸드 #',
     handsTitle:'♠ 포커 핸드 순위 ♥',
     h1n:'로열 플러시', h1d:'A K Q J 10, 같은 무늬||무적의 핸드!',
