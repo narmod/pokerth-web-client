@@ -224,13 +224,13 @@ function isSoundEnabled() {
 //    (et non une seule fois) : un premier tap survenu sur un contexte pas
 //    encore prêt ne nous coince plus. Une fois 'running', on se désabonne.
 function _onUnlockGesture() {
-  _unlockAudio();
+  // Ne JAMAIS se desabonner : iOS re-interrompt le contexte quand la PWA
+  // repasse en arriere-plan, et seul un geste utilisateur peut le relancer.
+  // En restant abonnes, le prochain tap reveille le son -- au lieu de rester
+  // muet jusqu'a fermeture/reouverture de l'app.
   var ctx = getAudioCtx();
-  if (ctx && ctx.state === 'running') {
-    ['touchend', 'click', 'pointerdown', 'keydown'].forEach(function(ev) {
-      document.removeEventListener(ev, _onUnlockGesture, true);
-    });
-  }
+  if (ctx && ctx.state === 'running') return;
+  _unlockAudio();
 }
 ['touchend', 'click', 'pointerdown', 'keydown'].forEach(function(ev) {
   document.addEventListener(ev, _onUnlockGesture, true);
