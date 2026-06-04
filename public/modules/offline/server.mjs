@@ -28,6 +28,7 @@ export class FakeServer {
     this.botCfg = {}; this._used = new Set();
     this.started = false; this.stopped = false; this.rawGameInfo = null;
     this._humanTimer = null;
+    this._roAcc = 0;   // run-out pacing accumulator (ms), reset between hands
   }
 
   _send(name, spec){ if(!this.stopped) this.deliver(buildMessage(name, spec)); }
@@ -155,6 +156,17 @@ export class FakeServer {
     this.pace(()=>this.table.start(), 300);
   }
   _clearHumanTimer(){ if(this._humanTimer){ clearTimeout(this._humanTimer); this._humanTimer=null; } }
+  // Pas de temporisation entre cartes du run-out, modulé par la vitesse de jeu.
+  _roStep(){ return Math.max(450, 1100 - (this.cfg.guiSpeed||5)*70); }
+  // Envoi d'une distribution de board : immédiat en jeu normal ; en run-out
+  // (tous all-in, plus de décision), on révèle carte par carte avec un délai
+  // croissant pour le suspense, comme le vrai serveur.
+  _board(name, spec, runOut){
+    if(!runOut){ this._roAcc = 0; this._send(name, spec); return; }
+    this._roAcc += this._roStep();
+    var off = this._roAcc;
+    this.pace(()=>{ if(!this.stopped) this._send(name, spec); }, off);
+  }
   _onMyAction(f){
     if(!this.table || this.stopped) return;
     this._clearHumanTimer();
@@ -171,6 +183,7 @@ export class FakeServer {
     if(this.stopped) return; const G=this.gameId;
     switch(ev.type){
       case 'handStart': {
+        this._roAcc = 0;   // nouvelle main : repartir d'un accumulateur vierge
         const hole = ev.holeByPlayer[this.meId] || [0,0];
         const spec=[[1,0,G],[2,2, encode([[1,0,hole[0]],[2,0,hole[1]]])],[4,0,ev.sb]];
         ev.seats.forEach(()=>spec.push([5,0,0]));
@@ -178,6 +191,7 @@ export class FakeServer {
         this._send('HandStart', spec); break;
       }
       case 'turn': {
+        this._roAcc = 0;   // un tour signifie qu'on n'est pas en run-out
         this._clearHumanTimer();
         this._send('PlayersTurn',[[1,0,G],[2,0,ev.playerId],[3,0,GS[ev.gameState]]]);
         if(ev.playerId!==this.meId){
@@ -215,17 +229,19 @@ export class FakeServer {
       case 'actionDone':
         this._send('PlayersActionDone',[[1,0,G],[2,0,ev.playerId],[3,0,GS[ev.gameState]],[4,0,NPA[ev.action]||0],
           [5,0,ev.totalStreetBet],[6,0,ev.stack],[7,0,ev.currentBet],[8,0,ev.minRaise]]); break;
-      case 'dealFlop':  this._send('DealFlop',[[1,0,G],[2,0,ev.cards[0]],[3,0,ev.cards[1]],[4,0,ev.cards[2]]]); break;
-      case 'dealTurn':  this._send('DealTurn',[[1,0,G],[2,0,ev.card]]); break;
-      case 'dealRiver': this._send('DealRiver',[[1,0,G],[2,0,ev.card]]); break;
+      case 'dealFlop':  this._board('DealFlop',[[1,0,G],[2,0,ev.cards[0]],[3,0,ev.cards[1]],[4,0,ev.cards[2]]], ev.runOut); break;
+      case 'dealTurn':  this._board('DealTurn',[[1,0,G],[2,0,ev.card]], ev.runOut); break;
+      case 'dealRiver': this._board('DealRiver',[[1,0,G],[2,0,ev.card]], ev.runOut); break;
       case 'showdown': {
         const spec=[[1,0,G]];
         ev.results.forEach(r=>spec.push([2,2, encode([[1,0,r.playerId],[2,0,r.cards[0]],[3,0,r.cards[1]],[5,0,r.won],[6,0,this._stackOf(r.playerId)]])]));
-        this._send('EndOfHandShow', spec); break;
+        if(ev.runOut){ this._roAcc += this._roStep(); var _off=this._roAcc; this.pace(()=>{ if(!this.stopped) this._send('EndOfHandShow', spec); }, _off); }
+        else { this._send('EndOfHandShow', spec); }
+        break;
       }
       case 'endOfHandHide': this._send('EndOfHandHide',[[1,0,G],[2,0,ev.playerId],[3,0,ev.moneyWon],[4,0,ev.playerMoney]]); break;
-      case 'handComplete':  { var _dh=Math.max(600, Math.min(4000, (this.cfg.delayHands||2)*380)); this.pace(()=>{ if(!this.stopped && this.table) this.table.nextHand(); }, _dh); break; }
-      case 'gameOver':      this._send('EndOfGame',[[1,0,G],[2,0,ev.winnerId||this.meId]]); break;  // close happens on return-to-lobby (leave)
+      case 'handComplete':  { var _dh=Math.max(600, Math.min(4000, (this.cfg.delayHands||2)*380)); var _o=_dh + this._roAcc; this._roAcc = 0; this.pace(()=>{ if(!this.stopped && this.table) this.table.nextHand(); }, _o); break; }
+      case 'gameOver':      { var _go=this._roAcc; this._roAcc = 0; this.pace(()=>{ if(!this.stopped) this._send('EndOfGame',[[1,0,G],[2,0,ev.winnerId||this.meId]]); }, _go + 200); break; }  // close happens on return-to-lobby (leave)
       default: break;
     }
   }
