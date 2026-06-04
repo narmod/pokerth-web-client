@@ -99,13 +99,6 @@ export class FakeServer {
 
   _pickBot(){
     const id = this.players.length + 1;
-    let entry;
-    if(this.botPool.length){
-      const avail = this.botPool.filter(b=>!this._used.has(b[0]));
-      const pool = avail.length ? avail : this.botPool;
-      entry = pool[Math.floor(this.rng()*pool.length)];
-      this._used.add(entry[0]);
-    } else entry = ['Bot '+id, '🤖'];
     // Prefer the live create-form choice (persisted to localStorage) so the lobby
     // selector applies at bot-fill time; fall back to the connect-time value.
     let skill = this.botSkill;
@@ -115,6 +108,16 @@ export class FakeServer {
       skill = r < 0.30 ? 'easy' : (r < 0.80 ? 'normal' : 'hard');
     }
     const style = pickArchetype(this.rng);
+    // Pick a name that MATCHES the drawn archetype (entry[2]); fall back to any
+    // free name, then to the whole pool if everything's taken.
+    let entry;
+    if(this.botPool.length){
+      const match = this.botPool.filter(b=>!this._used.has(b[0]) && b[2]===style.arch);
+      const free  = this.botPool.filter(b=>!this._used.has(b[0]));
+      const pool  = match.length ? match : (free.length ? free : this.botPool);
+      entry = pool[Math.floor(this.rng()*pool.length)];
+      this._used.add(entry[0]);
+    } else entry = ['Bot '+id, '🤖'];
     return { id, name:entry[0], avatar:entry[1], isBot:true, skill,
              aggr:style.aggr, arch:style.arch, callMargin:style.callMargin, bluffMul:style.bluffMul, entryEq:style.entryEq, openMul:style.openMul };
   }
