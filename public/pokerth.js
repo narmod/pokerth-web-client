@@ -6403,7 +6403,7 @@ const App = (() => {
   function logAction(entry) {
     var fn = (typeof entry === 'function') ? entry : function(){ return entry; };
     actionLog.push(fn);
-    if (actionLog.length > 50) actionLog.shift();
+    if (actionLog.length > 500) actionLog.shift();
     renderLog();
   }
   function renderLog() {
@@ -6415,6 +6415,11 @@ const App = (() => {
     }).join('');
   }
   window._retranslateLog = renderLog;
+  // Texte brut du journal (ordre chronologique) pour l'export.
+  function _buildLogText() {
+    return actionLog.map(function(fn){ var s; try { s = fn(); } catch (_e) { s = ''; } return s; }).join('\n');
+  }
+  window._buildLogText = _buildLogText;
   // Joueurs déjà signalés comme éliminés (stack à 0) — évite de re-logguer à
   // chaque main suivante tant qu'ils n'ont pas quitté la table. Vidé au début
   // de chaque nouvelle partie (StartEvent).
@@ -9157,6 +9162,38 @@ function toggleLog() {
   }
 }
 
+// Exporte le journal : feuille de partage native si dispo (iOS/Android),
+// sinon copie dans le presse-papier (avec repli execCommand). Ordre
+// chronologique, dans la langue active, précédé d'un en-tête table + date.
+function exportLog() {
+  var body = (typeof window._buildLogText === 'function') ? window._buildLogText() : '';
+  if (!body || !body.trim()) {
+    if (typeof showToast === 'function') showToast(t('logEmpty'), { tone: 'error', icon: '' });
+    return;
+  }
+  var table = (((document.getElementById('g-name') || {}).textContent) || 'PokerTH').trim();
+  var title = (typeof t === 'function') ? t('logPanelTitle') : 'Log';
+  var full = title + ' — ' + table + ' — ' + new Date().toLocaleString() + '\n' +
+             '────────────────────\n' + body + '\n';
+  function copied() { if (typeof showToast === 'function') showToast(t('logCopied')); }
+  function fallback() {
+    try {
+      var ta = document.createElement('textarea');
+      ta.value = full; ta.style.position = 'fixed'; ta.style.opacity = '0';
+      document.body.appendChild(ta); ta.focus(); ta.select();
+      document.execCommand('copy'); ta.remove(); copied();
+    } catch (e) {}
+  }
+  if (navigator.share) {
+    navigator.share({ title: 'PokerTH — ' + title, text: full }).catch(function(){});
+  } else if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(full).then(copied).catch(fallback);
+  } else {
+    fallback();
+  }
+}
+window.exportLog = exportLog;
+
 // ── Players online panel ──
 // Wired to the #h-players pill in the lobby header. Toggles a
 // dropdown that lists every pid in _lobbyPids with its name (or
@@ -9277,4 +9314,4 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.2.178'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.2.179'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();

@@ -259,7 +259,7 @@ export const strings = {
     quickCreateBody:'Aucune table trouv\u00e9e. Combien de joueurs\u00a0?',
     quickCreateLabel:'Joueurs\u00a0:',
     quickCreateBtn:'Cr\u00e9er',
-    logPanelTitle:'Journal',
+    logPanelTitle:'Journal', logCopied:'Journal copié', logEmpty:'Journal vide', logExportTitle:'Exporter le journal',
     disconnectDialogTitle:'Se d\u00e9connecter\u00a0?',
     disconnectDialogBody:'Vous reviendrez \u00e0 l\u2019\u00e9cran de connexion.',
     disconnectQuit:'Se d\u00e9connecter',
