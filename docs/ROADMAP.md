@@ -28,6 +28,7 @@ use too. Items are grouped by status rather than fixed phases.
 
 **Experience**
 - Mobile-first design for phones and tablets.
+- Adaptive seat layout that scales from 2 to 10 players per screen size, with a phone-specific fix so 4-player side seats stay fully on-screen.
 - Emoji avatars (500+), broadcast live, with anti-flicker caching.
 - Session statistics panel (hands, wins, win rate, net result, best/worst hands).
 - In-game chat and 30 emoji reactions.
