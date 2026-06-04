@@ -17,6 +17,7 @@ export const WRAP = {
   HandStart:41, PlayersTurn:42, MyActionRequest:43, PlayersActionDone:45,
   DealFlop:46, DealTurn:47, DealRiver:48, AllInShowCards:49,
   EndOfHandShow:50, EndOfHandHide:51, EndOfGame:54,
+  Chat:65,
 };
 // type name -> type id
 export const TYPE = {
@@ -28,6 +29,7 @@ export const TYPE = {
   EndOfHandShow:49, EndOfHandHide:50, EndOfGame:53,
   JoinExisting:21, JoinNew:22, StartEventAck:37, PlayerInfoRequest:18, LeaveGame:31,
   GameListUpdate:14, RemovedFromGame:29,
+  Chat:64,
 };
 
 function varintBytes(n){ const o=[]; n=n>>>0 ? n : Math.max(0,Math.floor(n)); let v=n; do{ let b=v&0x7f; v=Math.floor(v/128); if(v>0) b|=0x80; o.push(b);}while(v>0); return o; }
