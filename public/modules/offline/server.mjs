@@ -15,6 +15,10 @@ import { buildMessage, parseClientFrame, encode, packed, readFields, TYPE } from
 const GS  = { preflop:0, flop:1, turn:2, river:3 };
 const NPA = { fold:1, check:2, call:3, bet:4, raise:5, allin:6 };
 
+// PRNG dédié aux réactions cosmétiques des bots — volontairement SÉPARÉ du
+// this.rng du jeu (deck + IA) pour ne jamais décaler le flux déterministe.
+function _mulberry32(a){ return function(){ a=(a+0x6D2B79F5)|0; let t=Math.imul(a^(a>>>15),1|a); t=(t+Math.imul(t^(t>>>7),61|t))^t; return ((t^(t>>>14))>>>0)/4294967296; }; }
+
 export class FakeServer {
   constructor(opts){
     this.deliver = opts.deliver;
@@ -30,6 +34,7 @@ export class FakeServer {
     this._humanTimer = null;
     this._roAcc = 0;   // run-out pacing accumulator (ms), reset between hands
     this._meBusted = false;   // joueur humain éliminé du tournoi (fin immédiate)
+    this._rrng = _mulberry32(0x9e3779b1);   // réactions cosmétiques (rng dédié)
   }
 
   _send(name, spec){ if(!this.stopped) this.deliver(buildMessage(name, spec)); }
@@ -180,6 +185,23 @@ export class FakeServer {
     var off = this._roAcc;
     this.pace(()=>{ if(!this.stopped) this._send(name, spec); }, off);
   }
+  // ── Réactions cosmétiques des bots (rng dédié, n'affecte pas le jeu) ──
+  // Transport : message Chat « [R]<emoji> », que le client interprète déjà
+  // comme une réaction (préfixe ASCII [R]) sans l'afficher dans le tchat.
+  _botReact(botId, emoji, base){
+    var off = (base||0) + 500 + Math.round(this._rrng()*600);
+    this.pace(()=>{ if(!this.stopped) this._send('Chat',[[1,0,this.gameId],[2,0,botId],[3,0,1],[4,2,'[R]'+emoji]]); }, off);
+  }
+  _reactShowdown(results, base){
+    const HAPPY=['😎','🤑','💰','🥳','🔥','🤩'], SAD=['😱','🤦','😡','💀','😬'];
+    let n=0;
+    for(const r of (results||[])){
+      if(r.playerId===this.meId) continue;     // jamais le joueur humain
+      if(n>=2) break;                          // au plus 2 réactions par showdown
+      if(r.won>0){ if(this._rrng()<0.30){ this._botReact(r.playerId, HAPPY[Math.floor(this._rrng()*HAPPY.length)], base); n++; } }
+      else        { if(this._rrng()<0.15){ this._botReact(r.playerId, SAD[Math.floor(this._rrng()*SAD.length)],   base); n++; } }
+    }
+  }
   _onMyAction(f){
     if(!this.table || this.stopped) return;
     this._clearHumanTimer();
@@ -248,11 +270,16 @@ export class FakeServer {
       case 'showdown': {
         const spec=[[1,0,G]];
         ev.results.forEach(r=>spec.push([2,2, encode([[1,0,r.playerId],[2,0,r.cards[0]],[3,0,r.cards[1]],[5,0,r.won],[6,0,this._stackOf(r.playerId)]])]));
-        if(ev.runOut){ this._roAcc += this._roStep(); var _off=this._roAcc; this.pace(()=>{ if(!this.stopped) this._send('EndOfHandShow', spec); }, _off); }
+        var _base=0;
+        if(ev.runOut){ this._roAcc += this._roStep(); _base=this._roAcc; this.pace(()=>{ if(!this.stopped) this._send('EndOfHandShow', spec); }, _base); }
         else { this._send('EndOfHandShow', spec); }
+        this._reactShowdown(ev.results, _base);
         break;
       }
-      case 'eliminated': if(ev.playerId===this.meId) this._meBusted = true; break;
+      case 'eliminated':
+        if(ev.playerId===this.meId) this._meBusted = true;
+        else if(this._rrng()<0.45) this._botReact(ev.playerId, ['💀','😡','😬','🤦'][Math.floor(this._rrng()*4)], this._roAcc);
+        break;
       case 'endOfHandHide': this._send('EndOfHandHide',[[1,0,G],[2,0,ev.playerId],[3,0,ev.moneyWon],[4,0,ev.playerMoney]]); break;
       case 'handComplete': {
         if(this._meBusted){
