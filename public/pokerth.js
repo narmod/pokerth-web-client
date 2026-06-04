@@ -3920,6 +3920,13 @@ const App = (() => {
         _endRaiseValue = (games[gId] && games[gId].endRaiseValue) || 0;
         _lastBlindsUpHand = 0;
         amGameAdmin = !!isAdmin;
+        // Replay hors-ligne en un tap : une fois recréée la table (on est admin),
+        // enchaîner automatiquement le démarrage avec bots. Différé en microtâche
+        // pour laisser ce handler finir son installation d'état.
+        if (window._offlineMode && window._offlineAutoReplay && amGameAdmin) {
+          window._offlineAutoReplay = false;
+          setTimeout(function(){ try { App.startWithBots(); } catch (e) {} }, 0);
+        }
         // Snapshot the lobby's view of this table for openGameInfoPopup.
         // Fields we care about: name, type, maxPlayers, priv, timeout,
         // startMoney. All of these come from NetGameInfo when the table
@@ -4911,13 +4918,15 @@ const App = (() => {
 
       case T.EndOfGame: {
         const winnerPid = Proto.u32(sub, 2);
+        const _egPlace = Proto.u32(sub, 3);    // offline: classement à l'élimination (0 si absent)
+        const _egElim  = !!Proto.u32(sub, 4);  // offline: joueur humain éliminé
         addChat(null, t('gameOverMsg'), 'sys', { key: 'gameOverMsg' });
         // Keep amInGame true until the user dismisses the overlay, so the
         // table screen stays visible behind it. Stop the turn timer and
         // suppress any further winner pop-ups.
         stopTurnTimer();
         dismissWinner();
-        showEndGameOverlay(winnerPid);
+        showEndGameOverlay(winnerPid, { eliminated: _egElim, place: _egPlace });
         break;
       }
     }
@@ -6290,21 +6299,27 @@ const App = (() => {
   // The user must click one of the two buttons — no auto-dismiss, no
   // background click escape.
   // ─────────────────────────────────────────────────────────────────
-  function showEndGameOverlay(winnerPid) {
+  function showEndGameOverlay(winnerPid, opts) {
     const el = document.getElementById('g-endgame-overlay');
     if (!el) return;
 
-    const isMyWin = winnerPid === myId;
+    opts = opts || {};
+    const eliminated = !!opts.eliminated;
+    const place = opts.place || 0;
+    const isMyWin = (winnerPid === myId) && !eliminated;
     if (!_gameCounted) { _gameCounted = true; _lifeRecordGame(isMyWin); }
     const winnerName = players[winnerPid] || (isMyWin
       ? (document.getElementById('nick') ? document.getElementById('nick').value : 'You')
       : ('#' + winnerPid));
     // Build winner avatar via the unified helper. Same priority order
     // everywhere: real PokerTH image > placeholder logo > emoji > 🤖 >
-    // initial letter.
-    const avChip = _avatarChipHtml(winnerPid, winnerName, 'eg-winner-av');
+    // initial letter. (Aucun avatar en mode éliminé : on affiche la place.)
+    const avChip = eliminated ? '' : _avatarChipHtml(winnerPid, winnerName, 'eg-winner-av');
     const winnerCls = 'eg-winner' + (isMyWin ? ' me' : '');
-    const winnerLabel = isMyWin ? t('endGameYouWon') : t('endGameWinner');
+    const winnerLabel = eliminated ? ''
+                      : (isMyWin ? t('endGameYouWon') : t('endGameWinner'));
+    const winnerNameDisp = eliminated ? (place ? t('endGamePlace', { n: place }) : '')
+                      : esc(winnerName);
 
     // Stats — reuse the _stats object that was already being maintained
     const s = _stats || { handsPlayed:0, handsWon:0, totalGain:0, bigWin:0, bigLoss:0, startMoney:0 };
@@ -6347,7 +6362,7 @@ const App = (() => {
         '</g>' +
       '</svg>';
     const trophy = isMyWin ? '🏆' : ACES_SVG;
-    const titleKey = isMyWin ? 'endGameTitleWin' : 'endGameTitleEnd';
+    const titleKey = eliminated ? 'endGameTitleEliminated' : (isMyWin ? 'endGameTitleWin' : 'endGameTitleEnd');
 
     el.innerHTML =
       '<div class="endgame-card" onclick="event.stopPropagation()">' +
@@ -6357,7 +6372,7 @@ const App = (() => {
           avChip +
           '<div>' +
             '<div class="eg-winner-label">' + winnerLabel + '</div>' +
-            '<div class="eg-winner-name">' + esc(winnerName) + '</div>' +
+            '<div class="eg-winner-name">' + winnerNameDisp + '</div>' +
           '</div>' +
         '</div>' +
         '<div class="eg-stats-section">' +
@@ -6371,8 +6386,9 @@ const App = (() => {
           '<div class="eg-stat-row"><span class="eg-stat-label">' + t('endGameWorstLoss') + '</span><span class="eg-stat-val neg">' + _groupThousands(s.bigLoss) + ' ¥</span></div>' +
         '</div>' +
         '<div class="eg-actions">' +
+          (window._offlineMode ? '<button class="eg-btn primary" onclick="App.offlineReplay()">' + t('endGameReplay') + '</button>' : '') +
           '<button class="eg-btn" onclick="App.endGameClose()">' + t('endGameClose') + '</button>' +
-          '<button class="eg-btn primary" onclick="App.endGameLeave()">' + t('endGameBackToLobby') + '</button>' +
+          '<button class="eg-btn' + (window._offlineMode ? '' : ' primary') + '" onclick="App.endGameLeave()">' + t('endGameBackToLobby') + '</button>' +
         '</div>' +
       '</div>';
     el.style.display = '';
@@ -7896,6 +7912,20 @@ function dismissWinner() {
       this.leaveGame();
     },
 
+    offlineReplay() {
+      // Mode entraînement uniquement : relancer une partie avec les mêmes
+      // réglages, en place. On revient au lobby (la socket hors-ligne reste
+      // ouverte), on recrée la table depuis le formulaire, puis startWithBots()
+      // est déclenché par le hook JoinGameAck dès que gId est connu (événementiel,
+      // pas de minuteur fragile).
+      if (!window._offlineMode) { this.endGameLeave(); return; }
+      var el = document.getElementById('g-endgame-overlay');
+      if (el) el.style.display = 'none';
+      window._offlineAutoReplay = true;
+      this.leaveGame();    // -> lobby, FakeServer remis à zéro, socket conservée
+      try { this.createGame(); } catch (e) { window._offlineAutoReplay = false; }
+    },
+
     toggleAutoCheckFold(on) {
       // Flips the per-hand auto check/fold state. Now driven by a compact
       // toggle button next to Call/Check (no arg = flip). The flag is
@@ -9314,4 +9344,4 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.2.185'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.2.186'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
