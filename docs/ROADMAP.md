@@ -19,6 +19,11 @@ use too. Items are grouped by status rather than fixed phases.
 - Bot AI using Monte-Carlo equity vs the real number of opponents.
 - Correct short-stack push/fold play.
 - Difficulty levels (Easy / Mixed / Normal / Hard), chosen per table.
+- Five bot archetypes (Rock, TAG, LAG, Calling-station, Maniac) — each with its own
+  pre-flop range, raising tendency, calling threshold and bluff rate, orthogonal to
+  difficulty, and with bot names that match their play-style.
+- Position-aware pre-flop play: steal wider from the button/cutoff, tighten under the gun.
+- Post-flop aggression: continuation bets by the pre-flop aggressor and semi-bluffs on strong draws.
 
 **Experience**
 - Mobile-first design for phones and tablets.
@@ -43,10 +48,6 @@ use too. Items are grouped by status rather than fixed phases.
   - Split the large `pokerth.js` into focused modules (network, protocol, state, UI).
   - Add linting, formatting, and a small automated test suite.
   - Move hand-written Protobuf handling toward generated classes + encode/decode tests.
-- **Smarter bots** (foundations already in place — aggressor and position are tracked)
-  - Continuation bets by the pre-flop aggressor.
-  - Position-aware opening ranges.
-  - Distinct bot personalities/archetypes mapped to the bot names.
 
 ## 🌅 Later / Ideas
 
