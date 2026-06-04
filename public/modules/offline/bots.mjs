@@ -176,9 +176,22 @@ export function decide(ctx, bot){
 
   // Pre-flop: entryEq gates how wide a profile enters (VPIP); pRaise drives PFR.
   if (preflop){
-    const entry = bot.entryEq != null ? bot.entryEq : 0;
+    let entry = bot.entryEq != null ? bot.entryEq : 0;
+    let pPre  = pRaise;
+    // ── Position: open wider & raise more from late seats (steal), tighten early ──
+    // order index 0 = button, 1 = SB, 2 = BB, n-1 = cutoff (acts just before button).
+    const n = ctx.numPlayers || 0, ipos = ctx.posFromButton;
+    if (n >= 4 && ipos != null){
+      const unopened = (toCall <= (L.bb || 0));        // folded to me: only the blinds are in
+      if (unopened && (ipos === 0 || ipos === n - 1)){ // button or cutoff → steal
+        entry = Math.max(0, entry - 0.12);
+        pPre  = Math.min(0.95, pPre + 0.25);
+      } else if (n >= 6 && (ipos === 3 || ipos === 4)){ // UTG / UTG+1 → play tighter
+        entry = entry + 0.06;
+      }
+    }
     if (L.canCheck){                                  // free option (BB, unraised pot)
-      if (str >= entry && L.canRaise && rng() < pRaise) return { action:ACT.RAISE, amountTo:raiseTo() };
+      if (str >= entry && L.canRaise && rng() < pPre) return { action:ACT.RAISE, amountTo:raiseTo() };
       return { action:ACT.CHECK };
     }
     const floor = Math.max(entry, potOdds + cm);      // need the range OR the price to continue
@@ -186,7 +199,7 @@ export function decide(ctx, bot){
       if (bluff()) return { action:ACT.RAISE, amountTo:raiseTo() };   // rare light open
       return { action:ACT.FOLD };
     }
-    if (L.canRaise && rng() < pRaise) return { action:ACT.RAISE, amountTo:raiseTo() };
+    if (L.canRaise && rng() < pPre) return { action:ACT.RAISE, amountTo:raiseTo() };
     return { action:ACT.CALL };
   }
 
