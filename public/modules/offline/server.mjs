@@ -27,6 +27,7 @@ export class FakeServer {
     this.players = [{ id:1, name:(opts.me&&opts.me.name)||'You', isBot:false }];
     this.botCfg = {}; this._used = new Set();
     this.started = false; this.stopped = false; this.rawGameInfo = null;
+    this._humanTimer = null;
   }
 
   _send(name, spec){ if(!this.stopped) this.deliver(buildMessage(name, spec)); }
@@ -89,6 +90,7 @@ export class FakeServer {
   // Close the current game and reset to a fresh state so the user can create
   // another from the lobby. Removes the table from the lobby list.
   _closeAndReset(){
+    this._clearHumanTimer();
     if(this._closed) return; this._closed = true;
     this._send('GameListUpdate',[[1,0,this.gameId],[2,0,3]]);  // netGameClosed -> client deletes it
     const me = this.players[0];
@@ -152,8 +154,10 @@ export class FakeServer {
       rng:this.rng, gameId:this.gameId, onEvent:(ev)=>this._onEngine(ev) });
     this.pace(()=>this.table.start(), 300);
   }
+  _clearHumanTimer(){ if(this._humanTimer){ clearTimeout(this._humanTimer); this._humanTimer=null; } }
   _onMyAction(f){
     if(!this.table || this.stopped) return;
+    this._clearHumanTimer();
     const action=f[4]?f[4][0]:0, relBet=f[5]?f[5][0]:0;
     let a, amt;
     if(action===NPA.fold) a=ACT.FOLD;
@@ -174,6 +178,7 @@ export class FakeServer {
         this._send('HandStart', spec); break;
       }
       case 'turn': {
+        this._clearHumanTimer();
         this._send('PlayersTurn',[[1,0,G],[2,0,ev.playerId],[3,0,GS[ev.gameState]]]);
         if(ev.playerId!==this.meId){
           var _sp=this.cfg.guiSpeed||5;
@@ -191,7 +196,21 @@ export class FakeServer {
                   :                                           1.0;
           var _think=Math.min(3500, Math.round(_base*_mult + _r*_base*0.7));
           this.pace(()=>{ if(this.stopped||!this.table) return; this.table.act(ev.playerId,d.action,d.amountTo); }, _think);
-        } break;
+        } else {
+          // Tour du joueur humain : armer un délai d'expiration comme le ferait
+          // un vrai serveur PokerTH. Sans action dans le temps imparti, on joue
+          // automatiquement : check si c'est gratuit (rien à suivre), sinon fold.
+          // setTimeout direct (pas this.pace) → délai mur réel, jamais ré-entrant,
+          // ne touche pas l'ordre des tirages rng (déterminisme des bots préservé).
+          var _to = (this.cfg.timeout > 0 ? this.cfg.timeout : 15);
+          var _canCheck = !!(ev.legal && ev.legal.canCheck);
+          this._humanTimer = setTimeout(()=>{
+            this._humanTimer = null;
+            if(this.stopped || !this.table) return;
+            this.table.act(this.meId, _canCheck ? ACT.CHECK : ACT.FOLD, 0);
+          }, _to * 1000);
+        }
+        break;
       }
       case 'actionDone':
         this._send('PlayersActionDone',[[1,0,G],[2,0,ev.playerId],[3,0,GS[ev.gameState]],[4,0,NPA[ev.action]||0],
