@@ -4209,6 +4209,18 @@ const App = (() => {
             .map(Number)
             .filter(function(pid) { return !seatData[pid].gone; });
         }
+        // Re-snapshot de chaque stack AU DÉBUT de cette main (avant blinds).
+        // GameStartInitial le fait déjà sur le vrai serveur (il précède CHAQUE
+        // main) ; mais le moteur offline n'envoie GameStartInitial qu'une fois
+        // par partie, puis un simple HandStart à chaque main. Sans ce re-snapshot,
+        // _myStackAtHandStart restait figé au buy-in initial → « solde net » de
+        // session gonflé et « pire perte » jamais enregistrée. En ligne : idempotent
+        // (seatData porte déjà la même valeur que celle figée par GameStartInitial).
+        _seatStackAtHandStart = {};
+        for (const _sp2 of seats) {
+          if (seatData[_sp2] && seatData[_sp2].money != null) _seatStackAtHandStart[_sp2] = seatData[_sp2].money;
+        }
+        _myStackAtHandStart = (_seatStackAtHandStart[myId] != null) ? _seatStackAtHandStart[myId] : null;
         $('g-hand').textContent = t('handOf') + handNum;
         $('g-round').textContent = t('preflop');
         gameState = 0; // preflop
@@ -9027,4 +9039,4 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.2.152'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.2.153'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
