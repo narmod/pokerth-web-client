@@ -9,6 +9,7 @@ use too. Items are grouped by status rather than fixed phases.
 **Core gameplay**
 - Full flow: lobby, table creation, joining, betting, showdown.
 - Three connection choices (LAN / Dedicated, pokerth.net, Training) + Guest-mode toggle.
+- Registered-account login on pokerth.net (account password sent over TLS), alongside guest and LAN.
 - TLS support (required for pokerth.net, optional for LAN) with smart auto-toggle.
 - Exponential-backoff auto-reconnect with live countdown.
 - Spectator mode.
@@ -39,8 +40,7 @@ use too. Items are grouped by status rather than fixed phases.
 
 ## 🔨 Now (in progress)
 
-- Finish registered-account authentication (the pokerth.net login flow) and make it
-  robust end to end.
+- Nothing in active development right now — the next focus is the **Code health** work below.
 
 ## ⏭️ Next
 
