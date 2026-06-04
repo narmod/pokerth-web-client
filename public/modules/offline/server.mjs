@@ -116,7 +116,7 @@ export class FakeServer {
     }
     const style = pickArchetype(this.rng);
     return { id, name:entry[0], avatar:entry[1], isBot:true, skill,
-             aggr:style.aggr, arch:style.arch, callMargin:style.callMargin, bluffMul:style.bluffMul };
+             aggr:style.aggr, arch:style.arch, callMargin:style.callMargin, bluffMul:style.bluffMul, entryEq:style.entryEq, openMul:style.openMul };
   }
 
   _onStartRequest(){
@@ -125,7 +125,7 @@ export class FakeServer {
     while(this.players.length < target){
       const b = this._pickBot();
       this.players.push(b);
-      this.botCfg[b.id] = { aggr:b.aggr, rng:this.rng, skill:b.skill, arch:b.arch, callMargin:b.callMargin, bluffMul:b.bluffMul };
+      this.botCfg[b.id] = { aggr:b.aggr, rng:this.rng, skill:b.skill, arch:b.arch, callMargin:b.callMargin, bluffMul:b.bluffMul, entryEq:b.entryEq, openMul:b.openMul };
       this._send('GamePlayerJoined',[[1,0,this.gameId],[2,0,b.id],[3,0,0]]);
       this._info(b.id);
     }
