@@ -99,6 +99,29 @@ export function pickArchetype(rng){
   return { arch: name, aggr, callMargin: A.callMargin, bluffMul: A.bluffMul, entryEq: A.entryEq, openMul: A.openMul };
 }
 
+// Strong drawing hands for semi-bluffing: a 4-card flush draw or an open-ended
+// straight draw. Uses the engine's card encoding (rank = c%13, suit = c/13) and
+// only applies on the flop or turn (3–4 board cards) — never the river.
+function hasStrongDraw(hole, board){
+  const b = board || [];
+  if (b.length < 3 || b.length >= 5) return false;
+  const cs = (hole || []).concat(b).filter(c=>c!=null && c>=0 && c<52);
+  if (cs.length < 4) return false;
+  const suit = [0,0,0,0]; cs.forEach(c=>suit[Math.floor(c/13)]++);
+  if (suit.some(n=>n===4)) return true;                 // flush draw (5+ = made flush, ignored)
+  const r = new Set(cs.map(c=>c%13));
+  if (r.has(12)) r.add(-1);                             // ace plays low (wheel A-2-3-4-5)
+  for (let lo=-1; lo<=9; lo++){                         // window of 4 consecutive ranks lo..lo+3
+    let run=0; for (let k=0;k<4;k++) if (r.has(lo+k)) run++;
+    if (run===4){
+      const canLow  = (lo-1)>=0 && !r.has(lo-1);
+      const canHigh = (lo+4)<=12 && !r.has(lo+4);
+      if (canLow || canHigh) return true;               // open-ended straight draw
+    }
+  }
+  return false;
+}
+
 // ctx = the engine 'turn' event payload.
 // bot = { aggr:0..1, rng, skill:'easy'|'normal'|'hard' }
 export function decide(ctx, bot){
@@ -145,6 +168,10 @@ export function decide(ctx, bot){
   const preflop = ((L.street || ctx.gameState) === 'preflop');
   const pRaise  = Math.min(0.92, a * om);             // PRE-FLOP raise propensity (PFR), openMul-tuned
   const pPost   = Math.min(0.92, a * 0.9);            // POST-FLOP raise propensity, aggr-driven (decoupled)
+  const cbetP      = Math.min(0.90, a*0.95);          // continuation-bet frequency, aggr-driven
+  const semiBluffP = Math.min(0.85, a*0.65);          // semi-bluff-a-draw frequency, aggr-driven
+  const draw    = !preflop && hasStrongDraw(ctx.hole, board);
+  const isAggr  = (ctx.aggressorId != null && ctx.playerId != null && ctx.aggressorId === ctx.playerId);
   const bluff   = ()=> (L.canRaise && rng() < 0.05*a*sk.bluffMul*bm && L.maxRaiseTo > toCall*3);
 
   // Pre-flop: entryEq gates how wide a profile enters (VPIP); pRaise drives PFR.
@@ -163,18 +190,22 @@ export function decide(ctx, bot){
     return { action:ACT.CALL };
   }
 
-  // Post-flop: raise frequency scales with the same aggr×openMul lever.
+  // Post-flop: continuation-bet as the pre-flop aggressor, value-bet made hands,
+  // and semi-bluff strong draws; raise frequency scales with aggr.
   if (L.canCheck){
+    if (isAggr && L.canRaise && rng() < cbetP) return { action:ACT.RAISE, amountTo:raiseTo() };   // c-bet
     if (str>0.85 && L.canRaise) return { action:ACT.RAISE, amountTo:raiseTo() };
     if (str>0.58 && L.canRaise && rng() < pPost) return { action:ACT.RAISE, amountTo:raiseTo() };
+    if (draw && L.canRaise && rng() < semiBluffP) return { action:ACT.RAISE, amountTo:raiseTo() }; // semi-bluff
     return { action:ACT.CHECK };
   }
-  // facing a bet — raise big hands, call when equity beats the price, else fold/bluff
+  // facing a bet — raise big hands, call when equity beats the price, else semi-bluff/bluff/fold
   if (str>0.82 && L.canRaise) return rng()<0.75 ? { action:ACT.RAISE, amountTo:raiseTo() } : { action:ACT.CALL };
   if (str > potOdds + cm){
     if (str>0.6 && L.canRaise && rng() < pPost*0.7) return { action:ACT.RAISE, amountTo:raiseTo() };
     return { action:ACT.CALL };
   }
+  if (draw && L.canRaise && rng() < semiBluffP*0.7) return { action:ACT.RAISE, amountTo:raiseTo() }; // semi-bluff raise
   if (bluff()) return { action:ACT.RAISE, amountTo:raiseTo() };
   return { action:ACT.FOLD };
 }
