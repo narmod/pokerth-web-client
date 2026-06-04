@@ -4169,6 +4169,7 @@ const App = (() => {
         const evGameId = Proto.u32(sub, 1);
         send(MSG.buildStartEventAck(evGameId));
         addChat(null, t('gameStarting'), 'sys', { key: 'gameStarting' });
+        _eliminatedLogged.clear();
         break;
       }
 
@@ -4794,6 +4795,7 @@ const App = (() => {
           if (p1) p1.classList.remove('pot-huge');
           if (p2) p2.classList.remove('pot-huge');
         }, 800);
+        logEliminations();
         _snapshotHandResults();
         showWinnerOverlay(winners);
         renderGameWaiting('Prochaine main...');
@@ -4831,6 +4833,7 @@ const App = (() => {
             setTimeout(function(p){ animatePlayerEliminated(p); }, 600, _ep);
           }
         }
+        logEliminations();
         if (won > 0) { _snapshotHandResults(); showWinnerOverlay([{pid, won, cash, c1:null, c2:null}]); }
         break;
       }
@@ -6368,6 +6371,20 @@ const App = (() => {
     if (actionLog.length > 50) actionLog.shift();
     const el = document.getElementById('g-log-body');
     if (el) el.innerHTML = actionLog.slice().reverse().map(function(l){ return '<div class="log-line">'+esc(l)+'</div>'; }).join('');
+  }
+  // Joueurs déjà signalés comme éliminés (stack à 0) — évite de re-logguer à
+  // chaque main suivante tant qu'ils n'ont pas quitté la table. Vidé au début
+  // de chaque nouvelle partie (StartEvent).
+  const _eliminatedLogged = new Set();
+  function logEliminations() {
+    for (var _i = 0; _i < seats.length; _i++) {
+      var _ep = seats[_i];
+      var _sd = seatData[_ep];
+      if (_sd && !_sd.gone && _sd.money === 0 && !_eliminatedLogged.has(_ep)) {
+        _eliminatedLogged.add(_ep);
+        logAction('\u2620 ' + t('logEliminated', { name: getPlayerName(_ep) }));
+      }
+    }
   }
   function setPct(v) {
     const el = document.getElementById('raise-amt');
@@ -9208,4 +9225,4 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.2.170'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.2.171'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
