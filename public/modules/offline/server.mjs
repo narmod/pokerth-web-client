@@ -29,6 +29,7 @@ export class FakeServer {
     this.started = false; this.stopped = false; this.rawGameInfo = null;
     this._humanTimer = null;
     this._roAcc = 0;   // run-out pacing accumulator (ms), reset between hands
+    this._meBusted = false;   // joueur humain éliminé du tournoi (fin immédiate)
   }
 
   _send(name, spec){ if(!this.stopped) this.deliver(buildMessage(name, spec)); }
@@ -76,6 +77,16 @@ export class FakeServer {
   }
 
   _onCreate(f){
+    // Replay / re-création alors qu'une partie tourne déjà : repartir propre
+    // (mêmes id de partie, stacks neufs). leaveGame précède normalement, mais
+    // on reste défensif pour un restart en place.
+    if(this.started || this.table){
+      this._clearHumanTimer();
+      const me0 = this.players[0];
+      this.players = [me0]; this.botCfg = {}; this._used = new Set();
+      this.started = false; this.table = null;
+      this._meBusted = false; this._roAcc = 0;
+    }
     this._closed = false;   // new game -> not closed
     const gi = (f[1] && f[1][0] instanceof Uint8Array) ? f[1][0] : null;
     if(gi){ this.rawGameInfo = gi; this._applyGameInfo(gi); }
@@ -92,6 +103,7 @@ export class FakeServer {
   // another from the lobby. Removes the table from the lobby list.
   _closeAndReset(){
     this._clearHumanTimer();
+    this._meBusted = false; this._roAcc = 0;
     if(this._closed) return; this._closed = true;
     this._send('GameListUpdate',[[1,0,this.gameId],[2,0,3]]);  // netGameClosed -> client deletes it
     const me = this.players[0];
@@ -147,6 +159,7 @@ export class FakeServer {
 
   _onStartAck(){
     if(this.started) return; this.started=true;
+    this._meBusted = false; this._roAcc = 0;
     this.seatIds = this.players.map(p=>p.id);
     this._send('GameStartInitial',[[1,0,this.gameId],[2,0,this.seatIds[0]],[3,2,packed(this.seatIds)]]);
     const ps = this.players.map(p=>({ id:p.id, name:p.name, isBot:p.isBot, stack:this.cfg.startMoney }));
@@ -239,9 +252,29 @@ export class FakeServer {
         else { this._send('EndOfHandShow', spec); }
         break;
       }
+      case 'eliminated': if(ev.playerId===this.meId) this._meBusted = true; break;
       case 'endOfHandHide': this._send('EndOfHandHide',[[1,0,G],[2,0,ev.playerId],[3,0,ev.moneyWon],[4,0,ev.playerMoney]]); break;
-      case 'handComplete':  { var _dh=Math.max(600, Math.min(4000, (this.cfg.delayHands||2)*380)); var _o=_dh + this._roAcc; this._roAcc = 0; this.pace(()=>{ if(!this.stopped && this.table) this.table.nextHand(); }, _o); break; }
-      case 'gameOver':      { var _go=this._roAcc; this._roAcc = 0; this.pace(()=>{ if(!this.stopped) this._send('EndOfGame',[[1,0,G],[2,0,ev.winnerId||this.meId]]); }, _go + 200); break; }  // close happens on return-to-lobby (leave)
+      case 'handComplete': {
+        if(this._meBusted){
+          // Joueur humain éliminé : fin immédiate (on ne déroule pas les mains
+          // restantes entre bots). Place = nombre de survivants + 1.
+          var _pl=(this.table?this.table.players.filter(p=>p.in).length:0)+1;
+          var _oe=this._roAcc + 600; this._roAcc=0;
+          this.pace(()=>{ if(!this.stopped) this._send('EndOfGame',[[1,0,G],[2,0,this.meId],[3,0,_pl],[4,0,1]]); }, _oe);
+          break;   // ne pas enchaîner nextHand
+        }
+        var _dh=Math.max(600, Math.min(4000, (this.cfg.delayHands||2)*380)); var _o=_dh + this._roAcc; this._roAcc = 0; this.pace(()=>{ if(!this.stopped && this.table) this.table.nextHand(); }, _o); break;
+      }
+      case 'gameOver': {
+        var _go=this._roAcc; this._roAcc = 0;
+        if(this._meBusted){
+          var _pl2=(this.table?this.table.players.filter(p=>p.in).length:0)+1;
+          this.pace(()=>{ if(!this.stopped) this._send('EndOfGame',[[1,0,G],[2,0,ev.winnerId||this.meId],[3,0,_pl2],[4,0,1]]); }, _go + 200);
+        } else {
+          this.pace(()=>{ if(!this.stopped) this._send('EndOfGame',[[1,0,G],[2,0,ev.winnerId||this.meId]]); }, _go + 200);  // close happens on return-to-lobby (leave)
+        }
+        break;
+      }
       default: break;
     }
   }
