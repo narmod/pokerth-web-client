@@ -71,6 +71,34 @@ const SKILLS = {
 };
 export function skillOf(s){ return (s && SKILLS[s]) ? SKILLS[s] : SKILLS.normal; }
 
+// Player archetypes — a *style* layer orthogonal to skill. Skill tunes how well
+// a bot reads equity; the archetype tunes how it plays:
+//   aggrLo/aggrHi = range the per-bot aggression is drawn from;
+//   callMargin    = equity cushion required to call a bet (default 0.04);
+//   bluffMul      = style bluff-frequency multiplier (on top of skill.bluffMul);
+//   weight        = relative frequency at a freshly filled table.
+export const ARCHETYPES = {
+  rock:    { weight: 15, aggrLo: 0.15, aggrHi: 0.30, callMargin:  0.10, bluffMul: 0.2 },
+  tag:     { weight: 30, aggrLo: 0.55, aggrHi: 0.75, callMargin:  0.05, bluffMul: 1.0 },
+  lag:     { weight: 20, aggrLo: 0.70, aggrHi: 0.95, callMargin:  0.00, bluffMul: 1.6 },
+  station: { weight: 20, aggrLo: 0.10, aggrHi: 0.25, callMargin: -0.06, bluffMul: 0.3 },
+  maniac:  { weight: 15, aggrLo: 0.85, aggrHi: 1.00, callMargin: -0.02, bluffMul: 2.4 },
+};
+
+// Deterministic weighted archetype pick. Consumes exactly two rng() values
+// (one for the profile, one for the aggression draw). Returns a ready-to-use
+// style bundle to merge into a bot config.
+export function pickArchetype(rng){
+  const r = rng || Math.random;
+  const names = Object.keys(ARCHETYPES);
+  let total = 0; for (const n of names) total += ARCHETYPES[n].weight;
+  let x = r() * total, name = names[names.length - 1];
+  for (const n of names){ x -= ARCHETYPES[n].weight; if (x < 0){ name = n; break; } }
+  const A = ARCHETYPES[name];
+  const aggr = A.aggrLo + r() * (A.aggrHi - A.aggrLo);
+  return { arch: name, aggr, callMargin: A.callMargin, bluffMul: A.bluffMul };
+}
+
 // ctx = the engine 'turn' event payload.
 // bot = { aggr:0..1, rng, skill:'easy'|'normal'|'hard' }
 export function decide(ctx, bot){
@@ -119,11 +147,11 @@ export function decide(ctx, bot){
   }
   // facing a bet — call when equity beats the pot odds
   if (str>0.82 && L.canRaise) return rng()<0.75 ? { action:ACT.RAISE, amountTo:raiseTo() } : { action:ACT.CALL };
-  if (str > potOdds+0.04){
+  if (str > potOdds + (bot.callMargin != null ? bot.callMargin : 0.04)){
     if (str>0.6 && L.canRaise && rng()<a*0.55) return { action:ACT.RAISE, amountTo:raiseTo() };
     return { action:ACT.CALL };
   }
   // weak: occasional bluff-raise (scaled by difficulty), else fold
-  if (L.canRaise && rng()<0.05*a*sk.bluffMul && L.maxRaiseTo>toCall*3) return { action:ACT.RAISE, amountTo:raiseTo() };
+  if (L.canRaise && rng()<0.05*a*sk.bluffMul*(bot.bluffMul != null ? bot.bluffMul : 1) && L.maxRaiseTo>toCall*3) return { action:ACT.RAISE, amountTo:raiseTo() };
   return { action:ACT.FOLD };
 }
