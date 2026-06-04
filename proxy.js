@@ -742,6 +742,25 @@ httpServer.on('error', (err) => {
   console.error('    → vérifie qu\'aucune autre instance ne tourne : ss -ltnp | grep ' + PROXY_PORT);
   process.exit(1);
 });
+// ── Arrêt propre (SIGTERM/SIGINT) ──────────────────────────────────────
+// PM2 envoie SIGINT au restart ; sans handler, l'OS libère le port d'écoute
+// seulement à la mort du process → court battement où le nouveau process voit
+// EADDRINUSE (rattrapé par le retry ci-dessus). En fermant httpServer nous-
+// mêmes, le socket d'écoute est rendu DÈS l'appel à close(), donc le rebind est
+// immédiat. Le setTimeout est un filet : si des connexions traînent au-delà
+// d'1 s, on sort quand même avant le SIGKILL de PM2 (kill_timeout ≈ 1,6 s).
+let _shuttingDown = false;
+function _shutdown(sig) {
+  if (_shuttingDown) return;
+  _shuttingDown = true;
+  console.log('[x] ' + sig + ' reçu — arrêt propre…');
+  try { clearInterval(_heartbeatTimer); } catch (_) {}
+  try { httpServer.close(() => process.exit(0)); } catch (_) { process.exit(0); }
+  setTimeout(() => process.exit(0), 1000).unref();
+}
+process.on('SIGTERM', () => _shutdown('SIGTERM'));
+process.on('SIGINT',  () => _shutdown('SIGINT'));
+
 httpServer.listen(PROXY_PORT, () => {
   _listenRetries = 0;
   console.log('Ready → http://localhost:' + PROXY_PORT + '/\n');
