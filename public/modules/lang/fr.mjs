@@ -117,7 +117,7 @@ export const strings = {
     statTabSession:'Session', statTabLife:'Total', statTabBoard:'Classement',
     statGamesPlayed:'Parties jouées', statGamesWon:'Parties gagnées', statStreak:'Meilleure série',
     statReset:'Réinitialiser mes stats', statResetConfirm:'Réinitialiser tes stats à vie ? Action irréversible.',
-    statLifeOnlyPrivate:'Suivi uniquement sur serveur privé / LAN.', boardEmpty:"Aucun score pour l'instant",
+    statLifeOnlyPrivate:'Suivi uniquement sur serveur privé / LAN.', statLifeTraining:'Stats d’entraînement (vs bots), comptées à part.', boardEmpty:"Aucun score pour l'instant",
     boardPer100:'Net / 100 mains', boardYourRank:'Vous : #{n} sur {m}',
     rejoinInProgress:'Reprise de ta partie…', rejoinWaitNick:'Libération de ta session précédente…',
     rejoinFailed:'Reprise impossible — retour au lobby.', rejoinReconnectHint:'Connexion perdue — reconnecte-toi pour reprendre ta partie.',

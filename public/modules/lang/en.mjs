@@ -117,7 +117,7 @@ export const strings = {
     statTabSession:'Session', statTabLife:'Total', statTabBoard:'Ranking',
     statGamesPlayed:'Games played', statGamesWon:'Games won', statStreak:'Best streak',
     statReset:'Reset my stats', statResetConfirm:'Reset your lifetime stats? This cannot be undone.',
-    statLifeOnlyPrivate:'Tracked only on the private server / LAN.', boardEmpty:'No scores yet',
+    statLifeOnlyPrivate:'Tracked only on the private server / LAN.', statLifeTraining:'Training stats (vs bots) — kept separately.', boardEmpty:'No scores yet',
     boardPer100:'Net / 100 hands', boardYourRank:'You: #{n} of {m}',
     rejoinInProgress:'Rejoining your table…', rejoinWaitNick:'Freeing your previous session…',
     rejoinFailed:'Could not resume your table — back to lobby.', rejoinReconnectHint:'Connection lost — reconnect to resume your table.',

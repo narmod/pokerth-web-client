@@ -2273,12 +2273,15 @@ const App = (() => {
     var box = document.getElementById('pim-stats');
     if (!box) return;
     var eligible = _statsEligible;
+    var board    = _boardEligible;
     if (!eligible && _pimTab !== 'session') _pimTab = 'session';
+    if (!board && _pimTab === 'board') _pimTab = 'session';
     function tb(id, label) {
       return '<button class="stats-tab'+(_pimTab===id?' active':'')+'" onclick="window._pimSetTab(\''+id+'\')">'+label+'</button>';
     }
     var tabs = eligible
-      ? '<div class="stats-tabs">'+tb('session',t('statTabSession'))+tb('life',t('statTabLife'))+tb('board',t('statTabBoard'))+'</div>'
+      ? '<div class="stats-tabs">'+tb('session',t('statTabSession'))+tb('life',t('statTabLife'))
+        + (board ? tb('board',t('statTabBoard')) : '') + '</div>'
       : '';
     var body;
     if (_pimTab === 'life')       body = _statsBodyLife();
@@ -2632,15 +2635,20 @@ const App = (() => {
   // Persisted per nickname in localStorage; pushed to the proxy (/stats) so
   // every device sees the same board. Recorded ONLY on private-server / LAN
   // connections (set true at connect) — pokerth.net modes are never tracked.
-  var _statsEligible = false;
+  var _statsEligible = false;        // record lifetime stats at all (training OR private/LAN)
+  var _boardEligible = false;        // shared family leaderboard + /stats push (private/LAN only)
+  var _statsOffline  = false;        // training (vs bots) → isolated lifetime store, no board
   var _gameCounted = false;          // guard: count each finished game once
-  function _lifeAll()       { try { return JSON.parse(localStorage.getItem('pth_life') || '{}') || {}; } catch(e) { return {}; } }
-  function _lifeSaveAll(o)  { try { localStorage.setItem('pth_life', JSON.stringify(o)); } catch(e) {} }
+  // Training (vs bots) keeps its OWN persistent lifetime store, isolated from the
+  // real private-server / LAN stats — they must never mix nor leak to the board.
+  function _lifeKey()       { return _statsOffline ? 'pth_life_offline' : 'pth_life'; }
+  function _lifeAll()       { try { return JSON.parse(localStorage.getItem(_lifeKey()) || '{}') || {}; } catch(e) { return {}; } }
+  function _lifeSaveAll(o)  { try { localStorage.setItem(_lifeKey(), JSON.stringify(o)); } catch(e) {} }
   function _lifeBlank()     { return { handsPlayed:0, handsWon:0, net:0, bigWin:0, bigLoss:0, gamesPlayed:0, gamesWon:0, bestStreak:0, streak:0 }; }
   function _lifeGet(name)   { var a=_lifeAll(); return a[name] || _lifeBlank(); }
   var _lifePushTimer = null;
   function _pushStats() {
-    if (!_statsEligible || !myName) return;
+    if (!_boardEligible || !myName) return;   // training never touches the family board
     if (_lifePushTimer) clearTimeout(_lifePushTimer);
     _lifePushTimer = setTimeout(function() {
       var s = _lifeGet(myName);
@@ -2673,8 +2681,10 @@ const App = (() => {
   function _lifeReset() {
     if (!myName) return;
     var a = _lifeAll(); delete a[myName]; _lifeSaveAll(a);
-    try { fetch('/stats', { method:'POST', headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({ name:myName, _delete:true }) }).catch(function(){}); } catch(e) {}
+    if (_boardEligible) {
+      try { fetch('/stats', { method:'POST', headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({ name:myName, _delete:true }) }).catch(function(){}); } catch(e) {}
+    }
   }
   // Merge two lifetime records keeping the better of each (mirrors the proxy's
   // monotonic merge): counters never regress, net follows the more complete
@@ -2699,7 +2709,7 @@ const App = (() => {
   // would reject the regression anyway, but reseeding also fixes the TOTAL tab
   // display on the new device. Runs once per connect when eligible.
   function _lifeSeedFromServer() {
-    if (!_statsEligible || !myName) return;
+    if (!_boardEligible || !myName) return;
     fetch('/stats', { cache:'no-store' })
       .then(function(r){ return r.ok ? r.json() : null; })
       .then(function(data){
@@ -3319,8 +3329,15 @@ const App = (() => {
         // Track lifetime stats / leaderboard only on the private server & LAN
         // (cookmed / LAN). pokerth.net modes (guest + registered) are never
         // recorded — strangers and throwaway guest names would pollute it.
-        _statsEligible = (loginMode === 'unauth' || loginMode === 'lan');
-        if (_statsEligible) _lifeSeedFromServer();
+        // Stats scope by mode:
+        //  • training (vs bots) → own persistent "à vie" store (pth_life_offline),
+        //    NEVER pushed to the shared family leaderboard;
+        //  • private server / LAN → shared leaderboard (push + seed) as before;
+        //  • pokerth.net direct → session only.
+        _statsOffline  = !!window._offlineMode;
+        _boardEligible = !_statsOffline && (loginMode === 'unauth' || loginMode === 'lan');
+        _statsEligible = _statsOffline || _boardEligible;
+        if (_boardEligible) _lifeSeedFromServer();
         const typeLabel = ['LAN','Internet (no-auth)','Internet (auth)'][stype] || 'Serveur';
         setStatus(t('connectingPlayers', { type: typeLabel, ver: pMaj + '.' + pMin, n: np }));
         lastMajor = pMaj; lastMinor = pMin; lastLoginType = loginType;
@@ -5177,15 +5194,19 @@ const App = (() => {
     // Onglets TOTAL (à vie) et CLASSEMENT (proxy) seulement dans les deux modes
     // réseau (LAN + serveur privé) : sur pokerth.net direct il n'y a ni stats
     // persistantes ni proxy de classement → seul SESSION a du sens.
-    var eligible = _statsEligible;
+    var eligible = _statsEligible;       // SESSION + TOTAL available
+    var board    = _boardEligible;       // CLASSEMENT (proxy) available — private/LAN only
     if (!eligible && _statsTab !== 'session') _statsTab = 'session';
+    if (!board && _statsTab === 'board') _statsTab = 'session';
     var titles = { session: t('statSession'), life: t('statTabLife'), board: t('statTabBoard') };
     function tb(id, label) {
       return '<button class="stats-tab'+(_statsTab===id?' active':'')+'" onclick="window._statsSetTab(\''+id+'\')">'+label+'</button>';
     }
-    // Une seule vue dispo (pokerth.net) → pas de barre d'onglets.
+    // pokerth.net direct (not eligible) → no tab bar (session only). Training shows
+    // SESSION + TOTAL but no CLASSEMENT. Private/LAN shows all three.
     var tabs = eligible
-      ? '<div class="stats-tabs">'+tb('session',t('statTabSession'))+tb('life',t('statTabLife'))+tb('board',t('statTabBoard'))+'</div>'
+      ? '<div class="stats-tabs">'+tb('session',t('statTabSession'))+tb('life',t('statTabLife'))
+        + (board ? tb('board',t('statTabBoard')) : '') + '</div>'
       : '';
     var body;
     if (_statsTab === 'life')       body = _statsBodyLife();
@@ -5234,7 +5255,9 @@ const App = (() => {
     var gain = s.net;
     var gainCls = gain > 0 ? 'pos' : gain < 0 ? 'neg' : '';
     var wr = s.handsPlayed > 0 ? Math.round(s.handsWon/s.handsPlayed*100) : 0;
-    var note = _statsEligible ? '' : '<div class="stat-note">'+t('statLifeOnlyPrivate')+'</div>';
+    var note = _statsOffline
+      ? '<div class="stat-note">'+t('statLifeTraining')+'</div>'
+      : (_statsEligible ? '' : '<div class="stat-note">'+t('statLifeOnlyPrivate')+'</div>');
     return '<div class="stats-body">'
       + note
       + _statsRow(t('statGamesPlayed'), s.gamesPlayed)
@@ -9138,4 +9161,4 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.2.160'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.2.161'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
