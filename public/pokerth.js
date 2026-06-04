@@ -4488,14 +4488,17 @@ const App = (() => {
         var hs = document.getElementById('hand-strength');
         if (hs) hs.style.display = 'none';
         renderGameWaiting(t('handOf') + ' ' + handNum + ' — Blinds: ' + sb + '/' + (sb*2));
-        logAction('══ ' + t('handOf') + ' ' + handNum + ' — Blinds ' + sb + '/' + (sb*2) + ' ══');
+        const _lhN = handNum, _lhSB = sb;
+        logAction(function(){ return '══ ' + t('handOf') + ' ' + _lhN + ' — ' + t('blinds') + ' ' + _lhSB + '/' + (_lhSB*2) + ' ══'; });
         // Donneur (bouton) de la main — dealerPid déjà résolu plus haut (champ 6).
         if (dealerPid && getPlayerName(dealerPid)) {
-          logAction('\uD83D\uDD18 ' + t('logDealer', { name: getPlayerName(dealerPid) }));
+          const _lhD = dealerPid;
+          logAction(function(){ return '\uD83D\uDD18 ' + t('logDealer', { name: getPlayerName(_lhD) }); });
         }
         // Show my hole cards in log
         if (myCards[0] != null && myCards[1] != null) {
-          logAction(t('myCards') + ' ' + cardName(myCards[0], false) + ' ' + cardName(myCards[1], false));
+          const _lhMy0 = myCards[0], _lhMy1 = myCards[1];
+          logAction(function(){ return t('myCards') + ' ' + cardName(_lhMy0, false) + ' ' + cardName(_lhMy1, false); });
         }
         break;
       }
@@ -4661,7 +4664,8 @@ const App = (() => {
         renderComm(true); // flip animation
         renderSeats();
         setTimeout(renderHandStrength, 150); // force de la main au flop (was 500ms)
-        logAction('--- ' + t('flop') + ' [' + flopStr + '] · ' + t('pot') + ' ' + _groupThousands(pot) + ' ---');
+        const _lhPotF = pot;
+        logAction(function(){ return '--- ' + t('flop') + ' [' + flopStr + '] · ' + t('pot') + ' ' + _groupThousands(_lhPotF) + ' ---'; });
         notifyCard(); notifyCard(); notifyCard();
         break;
       }
@@ -4682,7 +4686,8 @@ const App = (() => {
         minRaise   = 0;
         setPot(pot);
         const tvCard = commCards[3]; const tvName = tvCard != null ? cardName(tvCard, true) : '?';
-        logAction('--- ' + t('turn') + ' [' + tvName + '] · ' + t('pot') + ' ' + _groupThousands(pot) + ' ---');
+        const _lhPotT = pot;
+        logAction(function(){ return '--- ' + t('turn') + ' [' + tvName + '] · ' + t('pot') + ' ' + _groupThousands(_lhPotT) + ' ---'; });
         renderComm(true); // flip animation
         setTimeout(renderHandStrength, 150); // force de la main au turn (was 500ms)
         notifyCard();
@@ -4706,7 +4711,8 @@ const App = (() => {
         minRaise   = 0;
         setPot(pot);
         const rvCard = commCards[4]; const rvName = rvCard != null ? cardName(rvCard, true) : '?';
-        logAction('--- ' + t('river') + ' [' + rvName + '] · ' + t('pot') + ' ' + _groupThousands(pot) + ' ---');
+        const _lhPotR = pot;
+        logAction(function(){ return '--- ' + t('river') + ' [' + rvName + '] · ' + t('pot') + ' ' + _groupThousands(_lhPotR) + ' ---'; });
         renderComm(true, true); // flip animation + dramatic river
         setTimeout(renderHandStrength, 200); // force de la main à la river (was 600ms)
         playTone(350, 0.08, 0.08); setTimeout(function(){ notifyCard(); }, 200);
@@ -4751,12 +4757,15 @@ const App = (() => {
           // de evaluateBestHand (clés hs* déjà traduites dans les 36 langues).
           // Joueurs couchés avant l'abattage : c1/c2 == null → pas de ligne.
           if (c1 != null && c2 != null) {
-            var _evSd = (typeof evaluateBestHand === 'function') ? evaluateBestHand([c1, c2], commCards) : null;
-            logAction(t('logShowdown', {
-              name:  getPlayerName(pid),
-              cards: cardName(c1, false) + ' ' + cardName(c2, false),
-              hand:  _evSd ? _evSd.label : ''
-            }));
+            const _bd = commCards.slice(); // fige le board de CETTE main
+            logAction(function(){
+              var ev = (typeof evaluateBestHand === 'function') ? evaluateBestHand([c1, c2], _bd) : null;
+              return t('logShowdown', {
+                name:  getPlayerName(pid),
+                cards: cardName(c1, false) + ' ' + cardName(c2, false),
+                hand:  ev ? ev.label : ''
+              });
+            });
           }
           if (won > 0) {
             winners.push({ pid, won, cash, c1, c2 });
@@ -4881,7 +4890,11 @@ const App = (() => {
         };
         const reasonStr = reasonLabels[reason] || ('code ' + reason);
         const actStr    = actNames[rejAction] || ('?' + rejAction);
-        logAction('⚠ ' + actStr + (rejBet ? ' ' + rejBet : '') + ' — ' + reasonStr);
+        logAction(function(){
+          var rl = { 1: t('rejInvalidState'), 2: t('rejNotYourTurn'), 3: t('rejNotAllowed') };
+          var rs = rl[reason] || ('code ' + reason);
+          return '⚠ ' + actStr + (rejBet ? ' ' + rejBet : '') + ' — ' + rs;
+        });
         addGameChat(null, '⚠ ' + t('actionRejected') +
                           ' (' + actStr + ') — ' + reasonStr, 'sys', { prefix: '⚠ ', key: 'actionRejected', suffix: ' (' + actStr + ') — ' + reasonStr });
         // If we're still the active player according to the local state,
@@ -6380,13 +6393,28 @@ const App = (() => {
   }
 
   // Track action history
+  // Le journal stocke des FONCTIONS de rendu (thunks), pas des chaînes figées :
+  // chaque entrée est rejouée à chaque rendu, donc les appels à t() reflètent
+  // la langue active. renderLog() est exposé en window._retranslateLog et
+  // rappelé par _retranslateSysChat() (lui-même appelé par setLang) → le journal
+  // se re-traduit instantanément au changement de langue. Une chaîne passée
+  // directement (lignes sans terme traduisible) est simplement figée.
   const actionLog = [];
-  function logAction(txt) {
-    actionLog.push(txt);
+  function logAction(entry) {
+    var fn = (typeof entry === 'function') ? entry : function(){ return entry; };
+    actionLog.push(fn);
     if (actionLog.length > 50) actionLog.shift();
-    const el = document.getElementById('g-log-body');
-    if (el) el.innerHTML = actionLog.slice().reverse().map(function(l){ return '<div class="log-line">'+esc(l)+'</div>'; }).join('');
+    renderLog();
   }
+  function renderLog() {
+    const el = document.getElementById('g-log-body');
+    if (!el) return;
+    el.innerHTML = actionLog.slice().reverse().map(function(fn){
+      var s; try { s = fn(); } catch (_e) { s = ''; }
+      return '<div class="log-line">'+esc(s)+'</div>';
+    }).join('');
+  }
+  window._retranslateLog = renderLog;
   // Joueurs déjà signalés comme éliminés (stack à 0) — évite de re-logguer à
   // chaque main suivante tant qu'ils n'ont pas quitté la table. Vidé au début
   // de chaque nouvelle partie (StartEvent).
@@ -6397,7 +6425,8 @@ const App = (() => {
       var _sd = seatData[_ep];
       if (_sd && !_sd.gone && _sd.money === 0 && !_eliminatedLogged.has(_ep)) {
         _eliminatedLogged.add(_ep);
-        logAction('\u2620 ' + t('logEliminated', { name: getPlayerName(_ep) }));
+        const _ce = _ep;
+        logAction(function(){ return '\u2620 ' + t('logEliminated', { name: getPlayerName(_ce) }); });
       }
     }
   }
@@ -6721,7 +6750,7 @@ const App = (() => {
       $('g-actions').innerHTML = '<div class="waiting-msg" style="color:#e74c3c">⚠ '
         + t('wsLostAction')
         + '</div>';
-      logAction('⚠ ' + t('wsSendFailed'));
+      logAction(function(){ return '⚠ ' + t('wsSendFailed'); });
       return;
     }
     setMyTurnActive(false);
@@ -8673,6 +8702,8 @@ window._retranslateSysChat = function() {
       if (span) span.textContent = txt;
     });
   });
+  // Le journal se re-traduit aussi : ses lignes sont des thunks rejoués ici.
+  if (typeof window._retranslateLog === 'function') { try { window._retranslateLog(); } catch (_e) {} }
 };
 
 // click handled via inline onclick on game-row
@@ -9240,4 +9271,4 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.2.176'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.2.177'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
