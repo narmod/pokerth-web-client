@@ -5795,7 +5795,20 @@ const App = (() => {
       if (isMob && i !== 0 && sinAng > 0) {
         topPos = Math.min(oCY + ryBotRaw * sinAng, botFloor);
       }
-      return { top: topPos, left: oCX + rxPx*Math.cos(ang) };
+      var leftPos = oCX + rxPx*Math.cos(ang);
+      // MOBILE + n===4 ONLY: the two lateral seats (i=1 right, i=3 left) land
+      // exactly at cos=±1, i.e. the maximum horizontal amplitude, so their
+      // name label (max-width 84px, centre-anchored) spills past the screen
+      // edge on phones. Lift them just above the top rim (still BELOW the
+      // top-centre seat i=2) and pull them slightly toward the centre. The
+      // local player (i===0) and the top-centre seat (i===2) are untouched,
+      // as are all other player counts and tablet/desktop.
+      if (isMob && n === 4 && (i === 1 || i === 3)) {
+        var dir = (i === 1) ? 1 : -1;
+        topPos  = oCY - oRect.height / 2 - 26;   // remontée au-dessus du rebord
+        leftPos = oCX + dir * rxPx * 0.81;       // rentrée vers le centre
+      }
+      return { top: topPos, left: leftPos };
     });
     // ── Calcul SB / BB à partir du dealer ──
     // We must SKIP seats whose player has left (.gone) -- otherwise
@@ -9175,4 +9188,4 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.2.163'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.2.164'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
