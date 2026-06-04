@@ -79,7 +79,6 @@ export class OfflineTable {
     this.button = -1;
     this.level = 0;
   }
-  alive(){ return this.players.filter(p=>p.in && p.stack>0 || (p.in && p.stack===0 && p._justBusted)); }
   livePlayers(){ return this.players.filter(p=>p.in); }
 
   start(){ this.onEvent({type:'gameStart', players:this.players.map(p=>({id:p.id,name:p.name,stack:p.stack,isBot:p.isBot}))}); this.t0=this.now(); this.nextHand(); }
