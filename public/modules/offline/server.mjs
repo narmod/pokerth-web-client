@@ -9,7 +9,7 @@
  * The user's create-form settings (NetGameInfo) drive the table.
  */
 import { OfflineTable, ACT } from './engine.mjs';
-import { decide } from './bots.mjs';
+import { decide, pickArchetype } from './bots.mjs';
 import { buildMessage, parseClientFrame, encode, packed, readFields, TYPE } from './proto.mjs';
 
 const GS  = { preflop:0, flop:1, turn:2, river:3 };
@@ -114,7 +114,9 @@ export class FakeServer {
       const r = this.rng();                          // varied table: ~30% easy, ~50% normal, ~20% hard
       skill = r < 0.30 ? 'easy' : (r < 0.80 ? 'normal' : 'hard');
     }
-    return { id, name:entry[0], avatar:entry[1], isBot:true, aggr:0.3+this.rng()*0.5, skill };
+    const style = pickArchetype(this.rng);
+    return { id, name:entry[0], avatar:entry[1], isBot:true, skill,
+             aggr:style.aggr, arch:style.arch, callMargin:style.callMargin, bluffMul:style.bluffMul };
   }
 
   _onStartRequest(){
@@ -123,7 +125,7 @@ export class FakeServer {
     while(this.players.length < target){
       const b = this._pickBot();
       this.players.push(b);
-      this.botCfg[b.id] = { aggr:b.aggr, rng:this.rng, skill:b.skill };
+      this.botCfg[b.id] = { aggr:b.aggr, rng:this.rng, skill:b.skill, arch:b.arch, callMargin:b.callMargin, bluffMul:b.bluffMul };
       this._send('GamePlayerJoined',[[1,0,this.gameId],[2,0,b.id],[3,0,0]]);
       this._info(b.id);
     }
