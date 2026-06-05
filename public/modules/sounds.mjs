@@ -87,14 +87,17 @@ function notifyCard() {
   playTone(1200, 0.04, 0.12);
 }
 function notifyAction() {
-  // Action d'un joueur : thud sourd (utilisé pour Check, Call, Bet)
-  playTone(220, 0.1, 0.1);
+  // Action d'un joueur (Check, Call, Bet) : un « toc » bref et discret. Monté
+  // de 220 Hz à 520 Hz : les petits haut-parleurs de smartphone (Android) ne
+  // restituent quasiment pas le grave, l'ancien thud y était inaudible.
+  playTone(520, 0.08, 0.10);
 }
 function notifyFold() {
-  // Fold = "abandonner". Deux notes descendantes (effet défaitiste, qui
-  // tombe). Volume modéré pour rester discret comme un soupir.
-  playTone(330, 0.08, 0.10);
-  setTimeout(function(){ playTone(180, 0.12, 0.08); }, 90);
+  // Fold = "abandonner". Deux notes descendantes (effet défaitiste, qui tombe).
+  // Remontées (392→294 Hz au lieu de 330→180) pour rester audibles sur les
+  // haut-parleurs de smartphone tout en gardant le contour descendant.
+  playTone(392, 0.08, 0.10);
+  setTimeout(function(){ playTone(294, 0.12, 0.08); }, 90);
 }
 function notifyRaise() {
   // Raise/Bet = "monter la mise". Deux notes ascendantes, plus brillantes.
