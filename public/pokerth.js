@@ -1921,6 +1921,22 @@ const App = (() => {
     if (typeof _lang !== 'undefined' && _lang !== 'en') s = s.replace('.', ',');
     return s + ' BB';
   }
+  // Amount formatted for SPEECH. Mirrors fmtChips' BB mode (already TTS-clean,
+  // e.g. "12,5 BB"), but in chip mode returns the bare integer WITHOUT the
+  // thousands separator: the narrow no-break space in _groupThousands makes
+  // engines read "12 345" as two numbers. No ¥ glyph (its reading varies).
+  function fmtChipsVoice(amount) {
+    var v = (typeof amount === 'number') ? amount : parseInt(amount, 10) || 0;
+    var bb = (smallBlind || 0) * 2;
+    if (_displayBB && bb) {
+      var n = v / bb;
+      var r = Math.round(n * 10) / 10;
+      var s = (Math.abs(r % 1) < 1e-9) ? String(Math.round(r)) : r.toFixed(1);
+      if (typeof _lang !== 'undefined' && _lang !== 'en') s = s.replace('.', ',');
+      return s + ' BB';
+    }
+    return String(v);
+  }
 
   let gameState = 0;   // preflop/flop/turn/river
   let _playerAvatars = {}; // pid → emoji avatar (reçu des autres joueurs via proxy)
@@ -2911,18 +2927,40 @@ const App = (() => {
   let _voiceEnabled = (function() {
     try { return localStorage.getItem('pth_voice') === '1'; } catch(e) { return false; }
   })();
+  // Maps a UI language code (i18n catalogue key, e.g. 'fr', 'pt-BR',
+  // 'zh-TW') onto a BCP-47 tag for the speech engine, so each of the 36
+  // languages is voiced in its own tongue rather than always fr-FR/en-US.
+  // Unknown codes pass through; the picker then matches by primary subtag,
+  // falling back to the browser default voice.
+  function _voiceLangTag(code) {
+    var c = String(code || 'fr').toLowerCase();
+    var M = {
+      af:'af-ZA', bg:'bg-BG', ca:'ca-ES', cs:'cs-CZ', da:'da-DK', de:'de-DE',
+      el:'el-GR', en:'en-US', es:'es-ES', fi:'fi-FI', fr:'fr-FR', gd:'gd-GB',
+      gl:'gl-ES', hi:'hi-IN', hr:'hr-HR', hu:'hu-HU', it:'it-IT', ja:'ja-JP',
+      ko:'ko-KR', lt:'lt-LT', nb:'nb-NO', nl:'nl-NL', pl:'pl-PL',
+      'pt-br':'pt-BR', 'pt-pt':'pt-PT', ro:'ro-RO', ru:'ru-RU', sk:'sk-SK',
+      sr:'sr-RS', sv:'sv-SE', ta:'ta-IN', tr:'tr-TR', uk:'uk-UA', vi:'vi-VN',
+      'zh-tw':'zh-TW', zh:'zh-CN'
+    };
+    return M[c] || c;
+  }
   function speak(text) {
     if (!_voiceEnabled || !text) return;
     if (!('speechSynthesis' in window)) return;
     try {
       var lang = (typeof _lang !== 'undefined' && _lang) ? _lang : 'fr';
       var u = new SpeechSynthesisUtterance(String(text));
-      u.lang = (lang === 'en') ? 'en-US' : 'fr-FR';
+      u.lang = _voiceLangTag(lang);
       u.rate = 1.05;
       try {
         var vs = window.speechSynthesis.getVoices() || [];
-        var pref = vs.filter(function(v){ return v.lang && v.lang.toLowerCase().indexOf(u.lang.slice(0,2)) === 0; });
-        if (pref.length) u.voice = pref[0];
+        var lc = u.lang.toLowerCase(), prim = lc.split('-')[0];
+        // Prefer an exact region match, else any voice for the same language.
+        var exact = vs.filter(function(v){ return v.lang && v.lang.toLowerCase() === lc; });
+        var prims = vs.filter(function(v){ return v.lang && v.lang.toLowerCase().split('-')[0] === prim; });
+        var pick = exact[0] || prims[0];
+        if (pick) u.voice = pick;
       } catch(e) {}
       // Cancel any pending speech so announcements stay in step with play.
       window.speechSynthesis.cancel();
@@ -2934,7 +2972,7 @@ const App = (() => {
     var verbs = ['', t('vFold'), t('vCheck'), t('vCall'), t('vBet'), t('vRaise'), t('vAllin')];
     var verb = verbs[action] || '';
     if (!verb) return '';
-    var amt = (action >= 3 && bet) ? ' ' + bet : '';   // call/bet/raise/all-in carry the amount
+    var amt = (action >= 3 && bet) ? ' ' + fmtChipsVoice(bet) : '';   // call/bet/raise/all-in carry the amount
     return getPlayerName(pid) + ' ' + verb + amt;
   }
   function toggleVoice() {
@@ -4797,7 +4835,7 @@ const App = (() => {
             }
             // Gain affiché dans le Journal 📋 (pas dans le chat, pour ne pas le noyer)
             logAction('🏆 ' + getPlayerName(pid) + ' +' + _groupThousands(won));
-        speak(t('voiceWins', { name: getPlayerName(pid), n: won }));
+        speak(t('voiceWins', { name: getPlayerName(pid), n: fmtChipsVoice(won) }));
           }
         }
         // Enregistrer la perte si je ne suis pas dans les gagnants
@@ -9358,4 +9396,4 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.2.207'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.2.208'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
