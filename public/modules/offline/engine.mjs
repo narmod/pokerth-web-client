@@ -295,7 +295,13 @@ export class OfflineTable {
       let best=eligScores[0].s; eligScores.forEach(e=>{ if(cmpScore(e.s,best)>0) best=e.s; });
       const winners=eligScores.filter(e=>cmpScore(e.s,best)===0).map(e=>e.id);
       const share=Math.floor(pot.amt/winners.length); let rem=pot.amt-share*winners.length;
-      winners.forEach((id,i)=>{ won[id]+=share+(i<rem?1:0); });
+      // Odd chips go to the worst position first (closest left of the button =
+      // small blind), i.e. the player who acts first postflop. _order[0] is the
+      // button (rank last); _order[1] is the SB (rank first).
+      const N=this.h._order.length;
+      const posRank=(id)=>{ const idx=this.h._order.findIndex(p=>p.id===id); return idx===0 ? N : idx; };
+      const ordered=[...winners].sort((a,b)=>posRank(a)-posRank(b));
+      ordered.forEach((id,i)=>{ won[id]+=share+(i<rem?1:0); });
     }
     for(const id in won){ this.players.find(p=>p.id===+id).stack+=won[+id]; }
     const results=contenders.map(p=>({playerId:p.id, won:won[p.id]||0, cards:this.h.hole[p.id].slice()}));

@@ -153,8 +153,14 @@ export class FakeServer {
       const match = this.botPool.filter(b=>!this._used.has(b[0]) && b[2]===style.arch);
       const free  = this.botPool.filter(b=>!this._used.has(b[0]));
       const pool  = match.length ? match : (free.length ? free : this.botPool);
-      entry = pool[Math.floor(this.rng()*pool.length)];
-      this._used.add(entry[0]);
+      const picked = pool[Math.floor(this.rng()*pool.length)];
+      // When the table is larger than the unique-name pool we fall back to the
+      // whole pool, which can re-pick an already-used name. Suffix the seat id
+      // so two bots never share the exact same name at one table.
+      let name = picked[0];
+      if (this._used.has(name)) name = name + ' ' + id;
+      this._used.add(name);
+      entry = [name, picked[1], picked[2]];
     } else entry = ['Bot '+id, '🤖'];
     return { id, name:entry[0], avatar:entry[1], isBot:true, skill,
              aggr:style.aggr, arch:style.arch, callMargin:style.callMargin, bluffMul:style.bluffMul, entryEq:style.entryEq, openMul:style.openMul };
