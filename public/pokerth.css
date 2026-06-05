@@ -1824,6 +1824,10 @@ body {
   #s-lobby #fs-btn-lobby,
   #s-lobby #lang-toggle-lobby { display: none; }
   #s-lobby .header { gap: 6px; padding: 3px 8px; }
+  /* Header du lobby aligné sur le header du jeu (48px) sur mobile, pour
+     une hauteur uniforme entre les écrans (demande narmod). Même valeur
+     que #s-game .header plus haut. */
+  #s-lobby .header { padding-top: 8px; padding-bottom: 8px; min-height: 48px; }
   #s-lobby .header-pills { flex: 1; min-width: 0; }
 }
 
