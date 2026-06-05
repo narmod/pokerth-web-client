@@ -127,8 +127,9 @@ This project is a **web frontend** that connects to any PokerTH server directly 
 
 ### Lobby
 - Real-time table list with player counts and status badges
+- Table filters: **All / 🟢 Open / 🔓 No password / 👁 Watchable** (remembered across sessions)
 - **⚡ Join or Create** — one-tap auto-join or table creation
-- Advanced table creation: blinds, timeout (default 15 s), max players (default 5), bots fill, optional password
+- Advanced table creation: blinds, timeout (default 15 s), max players (default 5), **bot difficulty** (Easy / Mixed / Normal / Hard), **game-style presets** (🐢 Relaxed / ⚖️ Normal / ⚡ Fast), **blind-increase schedule** (every N hands or N minutes) with a raise mode (double / to a target / keep last), table speed (1–10), deal delay, **game type** (Normal / Registered-only / Invite-only), ranking on/off, spectators allowed/blocked, bots fill (with a min-humans-before-bots threshold), and an optional password
 - Spectator mode (👁 Watch)
 - Lobby chat
 
@@ -144,13 +145,24 @@ This project is a **web frontend** that connects to any PokerTH server directly 
 - **Spades vs clubs visual distinction**: spades get a subtle blue tint so ♠ and ♣ never get confused on small screens
 - Pot strip showing hand number, total pot, and current betting round
 
+### In-game settings (⚙ menu)
+Per-player toggles, remembered in `localStorage` and applied instantly:
+- **BB / ¥ display** — show amounts as big blinds or as chips
+- **Assistance** — show or hide the pre-flop hand-strength + post-flop win-probability help above the action bar
+- **Quick-bet buttons** — 33 % / 50 % / 100 %-pot one-tap bets
+- **Auto-action button** — pre-commit fold / check / call before it is your turn
+- **Voice announcements** — spoken turn and action callouts (Web Speech API)
+- **Vibration** — haptic feedback on your turn (where supported)
+- **Sound on/off** (🔊) — mute or unmute all sound effects
+
 ### Player experience
 - **Emoji avatar** selector: 🎭 button → 500+ icons organised by category (animals, fantasy, fun characters…)
 - Avatars visible by all players in real time (broadcast via proxy `AVATAR:pid:emoji`)
+- **Custom image avatar** — use your own photo instead of an emoji, shared live with the table (broadcast via `AVATARIMG:pid:dataURL`)
 - Anti-flicker cache so avatars survive seat re-renders
 - Bots always show 🤖
 - **Session statistics** panel (click your avatar): hands played, wins, win rate, net gain/loss, best/worst hand, last 5 hands with card history
-- **Family leaderboard** (LAN / private server): a shared per-nickname ranking persisted on the server, with a configurable automatic reset (off / daily / monthly / yearly) plus on-demand reset
+- **Family leaderboard** (LAN / private server): a shared per-nickname ranking persisted on the server, **sortable** (net winnings, ¥ per 100 hands, hands played…), with a configurable automatic reset (off / daily / monthly / yearly) plus on-demand reset
 - **Win streak badge** on seats for players on a hot run
 
 ### Chat & reactions
