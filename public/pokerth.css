@@ -1372,12 +1372,14 @@ body {
 
   /* ── Player bar — plus haute, infos plus lisibles ── */
   .pb-avatar {
-    width: 46px !important; height: 46px !important;
-    font-size: 1.15rem !important;
+    width: 52px !important; height: 52px !important;
+    font-size: 1.3rem !important;
   }
-  .pb-name  { font-size: 0.9rem !important; }
-  .pb-money { font-size: 0.8rem !important; }
-  .pb-info  { min-width: 110px !important; }
+  .pb-name  { font-size: 1.05rem !important; }
+  .pb-money { font-size: 0.92rem !important; }
+  .pb-info  { min-width: 120px !important; }
+  .pb-action { font-size: 0.9rem !important; min-width: 60px !important; }
+  #pb-timer  { font-size: 0.9rem !important; }
 
   /* ── Timer SVG autour de l'avatar ── */
   .seat-timer {
@@ -1402,6 +1404,21 @@ body {
 
   /* ── Vignette d'assistance (force de main) plus grande ── */
   #hand-strength { font-size: 0.82rem !important; padding: 3px 14px !important; top: -40px !important; }
+
+  /* ── Header plus lisible (desktop) ── */
+  .header { min-height: 44px !important; }
+  .header-brand { font-size: 1.25rem !important; }
+  .header .btn-sm { height: 36px !important; font-size: 0.92rem !important; padding: 0 16px !important; }
+  .header .btn-icon { width: 40px !important; }
+
+  /* ── Barre du pot plus lisible (desktop) ── */
+  #pot-strip { min-height: 32px !important; }
+  .pot-side   { font-size: 0.9rem !important; }
+  .pot-center { font-size: 1.05rem !important; }
+
+  /* ── Menu ••• plus lisible (desktop) ── */
+  #g-overflow-menu, #l-overflow-menu { width: 264px !important; }
+  #g-overflow-menu .btn-sm, #l-overflow-menu .btn-sm { font-size: 0.94rem !important; padding: 9px 32px 9px 14px !important; }
 }
 
 /* Tablet */
