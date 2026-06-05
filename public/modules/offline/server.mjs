@@ -138,36 +138,34 @@ export class FakeServer {
 
   // ── Kick a bot (admin action, type 30) ──────────────────────────────────
   // The client sends KickPlayerRequest { gameId, playerId }. We only ever kick
-  // BOTS (never the human). Approach A — deferred removal: if a hand is running
-  // the bot finishes it and is removed just before the next hand (reusing the
-  // engine's elimination flag p.in=false); between hands / before start it's
-  // removed immediately. Either way we broadcast GamePlayerLeft so the UI drops
-  // the seat, and nextHand() ends the game if only the human remains.
+  // BOTS (never the human). Hybrid removal: fold + remove the bot immediately,
+  // EXCEPT an all-in bot — its committed chips are owed a showdown, so that one
+  // is deferred to end-of-hand. Between hands / before start, removal is also
+  // immediate. We always broadcast GamePlayerLeft so the UI drops the seat, and
+  // the engine ends the game if only the human remains.
   _onKick(f){
     const pid = (f && f[2] && f[2][0]!=null) ? f[2][0] : null;
     if(pid==null || pid===this.meId) return;                  // never the human
     const p = this.players.find(x=>x.id===pid && x.isBot);
     if(!p) return;                                            // unknown / not a bot
-    if(!this.started || !this.table){                         // waiting room → immediate
-      this.players = this.players.filter(x=>x.id!==pid);
-      delete this.botCfg[pid]; this._used.delete(p.name);
-      this._send('GamePlayerLeft',[[1,0,this.gameId],[2,0,pid],[3,0,3]]);  // 3 = leftKicked
-      return;
-    }
-    (this._kickPending || (this._kickPending = new Set())).add(pid);  // hand in progress → defer
+    if(!this.started || !this.table){ this._finishKick(pid); return; }  // waiting room → now
+    const r = this.table.removePlayer(pid);                   // fold + flag out (engine)
+    if(r === 'allin'){ (this._kickPending || (this._kickPending=new Set())).add(pid); return; } // owed a showdown
+    this._finishKick(pid);                                    // idle / folded → drop now
   }
-  // Apply any deferred kicks between hands: flag them out of the engine so they
-  // are no longer dealt in, drop their lobby/config state, and tell the UI.
+  // Effective removal: flag out of the engine (idempotent), drop lobby/config
+  // state, and tell the UI. Used both for immediate kicks and deferred all-ins.
+  _finishKick(pid){
+    if(this.table){ const ep=this.table.players.find(x=>x.id===pid); if(ep) ep.in=false; }
+    const lp=this.players.find(x=>x.id===pid);
+    this.players=this.players.filter(x=>x.id!==pid);
+    delete this.botCfg[pid]; if(lp) this._used.delete(lp.name);
+    this._send('GamePlayerLeft',[[1,0,this.gameId],[2,0,pid],[3,0,3]]);   // 3 = leftKicked
+  }
+  // Apply deferred all-in kicks between hands (after the showdown has paid out).
   _applyKicks(){
-    if(!this._kickPending || !this._kickPending.size || !this.table) return;
-    for(const pid of this._kickPending){
-      const ep = this.table.players.find(x=>x.id===pid);
-      if(ep) ep.in = false;                                   // same path as an eliminated player
-      const lp = this.players.find(x=>x.id===pid);
-      this.players = this.players.filter(x=>x.id!==pid);
-      delete this.botCfg[pid]; if(lp) this._used.delete(lp.name);
-      this._send('GamePlayerLeft',[[1,0,this.gameId],[2,0,pid],[3,0,3]]);  // 3 = leftKicked
-    }
+    if(!this._kickPending || !this._kickPending.size) return;
+    for(const pid of this._kickPending) this._finishKick(pid);
     this._kickPending.clear();
   }
 
@@ -417,6 +415,7 @@ export class FakeServer {
         var _dh=Math.max(600, Math.min(4000, (this.cfg.delayHands||2)*380)); var _o=_dh + this._roAcc; this._roAcc = 0; this.pace(()=>{ if(!this.stopped && this.table){ this._applyKicks(); this.table.nextHand(); } }, _o); break;
       }
       case 'gameOver': {
+        this._clearHumanTimer();
         var _go=this._roAcc; this._roAcc = 0;
         if(this._meBusted){
           var _pl2=(this.table?this.table.players.filter(p=>p.in).length:0)+1;

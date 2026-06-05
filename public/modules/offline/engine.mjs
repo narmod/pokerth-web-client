@@ -242,6 +242,29 @@ export class OfflineTable {
   }
   _put(p,amt){ amt=Math.min(amt,p.stack); p.stack-=amt; this.h.committed[p.id]+=amt; this.h.streetCommit[p.id]+=amt; if(p.stack===0) this.h.allin[p.id]=true; }
 
+  // Remove a player mid-hand (e.g. kicked by the admin). Returns:
+  //   'absent' — no such player;
+  //   'idle'   — not contesting the current hand (no hand running, not dealt in,
+  //              or already folded): flagged out, nothing else to do;
+  //   'allin'  — has chips committed and is all-in: NOT removed (those chips are
+  //              owed a showdown); caller should defer removal to end-of-hand;
+  //   'folded' — was live in the hand: folded now (committed chips stay in the
+  //              pot) and the hand is advanced / ended as needed.
+  // For 'idle' and 'folded' we set p.in=false up-front so that if this triggers
+  // the end of the hand, nextHand() won't deal the leaver back in.
+  removePlayer(id){
+    const p = this.players.find(x=>x.id===id);
+    if(!p) return 'absent';
+    if(!this.h || !this.h.inHand[id] || this.h.folded[id]){ p.in=false; return 'idle'; }
+    if(this.h.allin[id]) return 'allin';               // owed a showdown — keep in the pot
+    p.in = false;                                       // out of future hands, before any _endHand
+    if(this.h._pendingId === id){ this.act(id, ACT.FOLD); return 'folded'; }  // their turn: clean fold
+    // Waiting (already acted this street): cold-fold, then end the hand if only one remains.
+    this.h.folded[id] = true; this.h.needsToAct.delete(id);
+    if(this._activeNotFolded().length <= 1) this._endHand();
+    return 'folded';
+  }
+
   _nextStreet(runOut){
     const order=this.h._order;
     order.forEach(p=>this.h.streetCommit[p.id]=0);
@@ -266,6 +289,7 @@ export class OfflineTable {
 
   _endHand(){ // everyone folded but one
     const winner=this._activeNotFolded()[0];
+    if(!winner){ this._finishHand(); return; }   // defensive: nobody left (shouldn't happen)
     const pot=this._pot();
     winner.stack+=pot;
     this.h.results=[{playerId:winner.id, won:pot, cards:null}];
@@ -311,6 +335,7 @@ export class OfflineTable {
   }
 
   _finishHand(){
+    if(this.h) this.h._pendingId = null;   // close the turn: late timeout acts become no-ops
     const busted=this.players.filter(p=>p.in && p.stack<=0);
     busted.forEach(p=>{ p.in=false; this.onEvent({type:'eliminated', playerId:p.id}); });
     const live=this.players.filter(p=>p.in);
