@@ -33,7 +33,6 @@ const INSECURE_TLS = args.includes('--insecure');
 const DEFAULT_ALLOWED_HOSTS = [
   'pokerth.net',
   'www.pokerth.net',
-  'cookmed.ddns.net',
   'pokerth.ddns.net',
   'localhost',
   '127.0.0.1',
@@ -358,7 +357,7 @@ function sendFile(req, res, filePath, type, cacheCtl) {
 const httpServer = http.createServer((req, res) => {
   // Serve the SPA shell for the root path. We strip the query string
   // before comparing so deep links like
-  //   /?host=cookmed.ddns.net&port=7234&tls=0&table=106
+  //   /?host=pokerth.ddns.net&port=7234&tls=0&table=106
   // (produced by the "copy table link" feature) still resolve to the
   // index HTML instead of falling through to the static-file branch
   // and 404'ing on a nonexistent file named "/?host=...".
@@ -494,8 +493,17 @@ console.log('  • LAN server without TLS → uncheck TLS in the browser');
 console.log('  • pokerth.net            → TLS checked, registered login needed');
 console.log('\nWaiting for connections...\n');
 
-// Set of all connected clients (used to relay reactions / avatars)
+// Set of all connected clients (used to relay reactions / avatars).
+// The relay is SCOPED per upstream server (ws._relayKey = host:port) so a
+// reaction/avatar sent at one table is never broadcast to clients connected
+// to a different PokerTH server. Within the same upstream, PokerTH player ids
+// are server-global, so cross-table delivery to the same server is harmless
+// (an absent id simply renders nothing).
 const _allClients = new Set();
+// Hard ceiling on a relayed text frame (REACT:/AVATAR:/AVATARIMG:). AVATARIMG
+// carries a base64 image; without a cap a client could push a multi-MB blob
+// that we'd fan out to every peer — a cheap amplification/DoS vector.
+const MAX_RELAY_BYTES = 32 * 1024;
 
 // ── Throttle outbound TCP connections to PokerTH servers ──
 // Avoids tripping per-IP anti-brute-force when many clients connect to the
@@ -620,13 +628,23 @@ function _openUpstream(S) {
 // relais des réactions, gestion de la fermeture avec délai de grâce).
 function _attachWs(S, ws) {
   S.ws = ws;
+  // Relay scope = the upstream this socket is bridged to. Reactions/avatars
+  // only fan out to peers sharing the same host:port.
+  ws._relayKey = S.host + ':' + S.port;
   _allClients.add(ws);
 
   ws.on('message', (data, isBinary) => {
     if (!isBinary) {
       const text = data.toString();
       if (text.startsWith('REACT:') || text.startsWith('AVATAR:') || text.startsWith('AVATARIMG:')) {
-        _allClients.forEach(client => { if (client !== ws && client.readyState === 1) client.send(text); });
+        // Drop oversized relays (mainly AVATARIMG base64) before fan-out.
+        if (Buffer.byteLength(text) > MAX_RELAY_BYTES) {
+          console.warn('[!] Dropped oversized relay frame (' + Buffer.byteLength(text) + 'b) from ' + (ws._relayKey || '?'));
+          return;
+        }
+        _allClients.forEach(client => {
+          if (client !== ws && client.readyState === 1 && client._relayKey === ws._relayKey) client.send(text);
+        });
         return;
       }
     }

@@ -2388,10 +2388,19 @@ const App = (() => {
     if (!picker) return;
     picker.classList.remove('avatar-popup-as-modal');
     picker.style.display = 'none';
-    // Detach our backdrop handler (the btn handler was once:true).
+    // Detach our backdrop handler. The btn handler is once:true, but it is
+    // only consumed when an avatar is actually clicked — closing via the
+    // backdrop (or the X) leaves it attached, so repeated open/close cycles
+    // would stack dangling capture handlers. Remove it here too (matching the
+    // capture flag it was added with). removeEventListener is a no-op if it
+    // already fired.
     if (_avatarPickerBackdropHandler) {
       picker.removeEventListener('click', _avatarPickerBackdropHandler);
       _avatarPickerBackdropHandler = null;
+    }
+    if (_avatarPickerBtnHandler) {
+      picker.removeEventListener('click', _avatarPickerBtnHandler, { capture: true });
+      _avatarPickerBtnHandler = null;
     }
     // Put the popup back into its original parent so the connect
     // screen's static layout keeps working.
@@ -5670,17 +5679,17 @@ const App = (() => {
     // Update SVG arcs in place — no full re-render
     var urgent = _timerSec <= 8;
     var col = urgent ? '#e74c3c' : '#f0c040';
-    var r = 22, circ = 2 * Math.PI * r;
+    // Radius MUST match _timerSvg() (r=20): dashoffset is computed against the
+    // same circumference as the stroke-dasharray drawn there, otherwise the
+    // ring depletes on a different circle and empties ~1s early.
+    var r = 20, circ = 2 * Math.PI * r;
     var offset = (circ * (1 - _timerSec / (_timerTot || 30))).toFixed(1);
     document.querySelectorAll('.seat-timer .arc').forEach(function(el) {
       el.setAttribute('stroke', col);
       el.setAttribute('stroke-dashoffset', offset);
     });
-    document.querySelectorAll('.seat-timer text').forEach(function(el) {
-      el.setAttribute('fill', col);
-      el.textContent = _timerSec > 0 ? _timerSec + 's' : '';
-      el.style.transform = 'rotate(90deg) translate(0,-50px)';
-    });
+    // No <text> inside .seat-timer — the countdown number is rendered in the
+    // seat badge (stb-*) and the player-bar below, not in the SVG.
     // Badge timer sous chaque siège
     var stb = document.getElementById('stb-' + turnPid);
     if (stb) { stb.textContent = _timerSec > 0 ? _timerSec + 's' : ''; stb.style.color = col; }
@@ -9344,4 +9353,4 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.2.189'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.2.190'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
