@@ -1789,6 +1789,13 @@ body {
      en gardant le padding horizontal des règles précédentes. */
   #s-game .header { padding-top: 8px; padding-bottom: 8px; min-height: 48px; }
   #pot-strip { padding-top: 8px; padding-bottom: 8px; min-height: 38px; }
+  /* Toutes les écritures de la barre du pot, plus grandes sur mobile
+     (demande narmod) : n° de main + tour (.pot-side), montant (.pot-center),
+     compteur de blinds (.blinds-next). #pot-strip en prefixe pour battre
+     les clamp de base sans !important. */
+  #pot-strip .pot-side    { font-size: 0.82rem; }
+  #pot-strip .pot-center  { font-size: 0.98rem; }
+  #pot-strip .blinds-next { font-size: 0.76rem; }
 
   /* ── Lobby header on narrow phones ──
      On small/large-font devices the "POKERTH" word + redundant buttons
