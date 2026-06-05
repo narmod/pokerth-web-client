@@ -2946,20 +2946,37 @@ const App = (() => {
     return M[c] || c;
   }
   // Build a configured utterance for `text` in the active UI language.
+  // Voice list is async on Chrome (getVoices() is empty until 'voiceschanged'),
+  // so cache it and refresh on that event — otherwise the first announcement
+  // gets no matching voice and the engine falls back to a default.
+  var _voices = [];
+  function _loadVoices() { try { _voices = window.speechSynthesis.getVoices() || []; } catch(e) {} }
+  if ('speechSynthesis' in window) {
+    _loadVoices();
+    try { window.speechSynthesis.addEventListener('voiceschanged', _loadVoices); }
+    catch(e) { try { window.speechSynthesis.onvoiceschanged = _loadVoices; } catch(e2) {} }
+  }
+  // Choose the best voice for a BCP-47 tag: prefer an offline (localService)
+  // voice for low latency and to keep the offline training mode working,
+  // matching the exact region first, then the primary subtag.
+  function _pickVoice(tag) {
+    var vs = _voices.length ? _voices : (function(){ try { return window.speechSynthesis.getVoices() || []; } catch(e) { return []; } })();
+    var lc = String(tag || '').toLowerCase(), prim = lc.split('-')[0];
+    var exact = vs.filter(function(v){ return v.lang && v.lang.toLowerCase() === lc; });
+    var prims = vs.filter(function(v){ return v.lang && v.lang.toLowerCase().split('-')[0] === prim; });
+    function best(list) {
+      if (!list.length) return null;
+      var local = list.filter(function(v){ return v.localService; });
+      return local[0] || list[0];
+    }
+    return best(exact) || best(prims) || null;
+  }
   function _voiceUtterance(text) {
     var lang = (typeof _lang !== 'undefined' && _lang) ? _lang : 'fr';
     var u = new SpeechSynthesisUtterance(String(text));
     u.lang = _voiceLangTag(lang);
     u.rate = 1.05;
-    try {
-      var vs = window.speechSynthesis.getVoices() || [];
-      var lc = u.lang.toLowerCase(), prim = lc.split('-')[0];
-      // Prefer an exact region match, else any voice for the same language.
-      var exact = vs.filter(function(v){ return v.lang && v.lang.toLowerCase() === lc; });
-      var prims = vs.filter(function(v){ return v.lang && v.lang.toLowerCase().split('-')[0] === prim; });
-      var pick = exact[0] || prims[0];
-      if (pick) u.voice = pick;
-    } catch(e) {}
+    try { var pick = _pickVoice(u.lang); if (pick) u.voice = pick; } catch(e) {}
     return u;
   }
   // Announcements play one after another instead of cutting each other off:
@@ -9428,4 +9445,4 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.2.209'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.2.210'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
