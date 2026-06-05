@@ -2845,6 +2845,7 @@ const App = (() => {
     try { localStorage.setItem('pth_haptic', _hapticEnabled ? '1' : '0'); } catch(e) {}
     // Give immediate tactile + textual confirmation.
     if (_hapticEnabled) hapticBuzz(40);
+    else { try { if (navigator && typeof navigator.vibrate === 'function') navigator.vibrate(0); } catch(e) {} } // cancel any queued buzz
     var fr = (typeof _lang === 'undefined' || _lang !== 'en');
     var label = _hapticEnabled
       ? t('hapticOn')
@@ -9357,4 +9358,4 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.2.195'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.2.196'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();

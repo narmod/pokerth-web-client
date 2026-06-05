@@ -59,6 +59,16 @@ function _unlockAudio() {
     src.buffer = buf; src.connect(ctx.destination); src.start(0);
   } catch(e) {}
 }
+// Vibration mobile (Android). Gated by the dedicated HAPTIC flag (pth_haptic),
+// read straight from localStorage so it stays in sync with the page's haptic
+// toggle. Muting SOUND no longer keeps the phone buzzing, and turning haptics
+// OFF now silences every buzz (the bug: these were gated by _soundEnabled).
+function _buzz(pattern) {
+  try {
+    if (typeof navigator !== 'undefined' && navigator.vibrate
+        && localStorage.getItem('pth_haptic') !== '0') navigator.vibrate(pattern);
+  } catch(e) {}
+}
 function playTone(freq, dur, vol) {
   if (!_soundEnabled) return;
   var ctx = getAudioCtx(); if (!ctx) return;
@@ -104,9 +114,7 @@ function notifyAllIn() {
   setTimeout(function() { playTone(1568, 0.5, 0.30); }, arp.length * 55 + 80);  // G6
   // Subtle bell harmonic right after for that casino chime feel.
   setTimeout(function() { playTone(2093, 0.4, 0.18); }, arp.length * 55 + 130); // C7
-  if (_soundEnabled && navigator.vibrate) {
-    navigator.vibrate([30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 100, 60, 200]);
-  }
+  _buzz([30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 100, 60, 200]); // casino rattle (haptic-gated)
 }
 function notifyMyTurn() {
   // Water-bubble "plop!" — a single short tone whose pitch sweeps upward
@@ -138,7 +146,7 @@ function notifyMyTurn() {
     o.stop(t0 + 0.20);
   } catch(e) {}
   // Keep the gentle vibration cue on mobile (single short pulse)
-  if (_soundEnabled && navigator.vibrate) navigator.vibrate(80);
+  _buzz(80);
   // Keep the golden glow on the player zone
   var mz = document.querySelector('.my-zone');
   if (mz) { mz.style.borderTopColor='gold'; setTimeout(function(){ mz.style.borderTopColor=''; }, 1200); }
@@ -146,10 +154,10 @@ function notifyMyTurn() {
 function notifyWinner(isMine) {
   if (isMine) {
     [523,659,784,1047].forEach(function(f,i){ setTimeout(function(){ playTone(f,0.15,0.28-i*0.03); }, i*110); });
-    if (_soundEnabled && navigator.vibrate) navigator.vibrate([100,50,100,50,200]);
+    _buzz([100,50,100,50,200]);
   } else {
     playTone(440,0.15,0.15); setTimeout(function(){ playTone(349,0.2,0.1); },150);
-    if (_soundEnabled && navigator.vibrate) navigator.vibrate([60]);
+    _buzz([60]);
   }
 }
 function notifyBigWin() {
@@ -176,13 +184,11 @@ function notifyBigWin() {
     playTone(1319, 0.45, 0.22);
     playTone(1568, 0.45, 0.20);
   }, 900);
-  if (_soundEnabled && navigator.vibrate) {
-    navigator.vibrate([120, 80, 120, 80, 200]);
-  }
+  _buzz([120, 80, 120, 80, 200]);
 }
 function notifyChat() {
   playTone(880, 0.07, 0.1);
-  if (_soundEnabled && navigator.vibrate) navigator.vibrate([25]);
+  _buzz([25]);
 }
 function notifyBlindsUp() {
   // Montée des blinds : trois notes ascendantes "level up", brèves et
@@ -190,7 +196,7 @@ function notifyBlindsUp() {
   playTone(660, 0.08, 0.16);
   setTimeout(function(){ playTone(880, 0.08, 0.17); }, 90);
   setTimeout(function(){ playTone(1175, 0.16, 0.18); }, 190);
-  if (_soundEnabled && navigator.vibrate) navigator.vibrate([40, 50, 40]);
+  _buzz([40, 50, 40]);
 }
 // Décompte des dernières secondes (mon tour) : tic discret sur 5-4-3-2…
 // Vibration via navigator.vibrate (Android). iOS/Safari n'expose pas d'API
@@ -199,12 +205,12 @@ function notifyBlindsUp() {
 // sur iPhone ici ; il reste le son et l'alerte visuelle (timer rouge).
 function notifyTick() {
   playTone(900, 0.03, 0.06);
-  if (_soundEnabled && navigator.vibrate) navigator.vibrate(20);
+  _buzz(20);
 }
 // …puis bip plus marqué sur la toute dernière seconde.
 function notifyTickFinal() {
   playTone(1397, 0.14, 0.20);
-  if (_soundEnabled && navigator.vibrate) navigator.vibrate(60);
+  _buzz(60);
 }
 // Mute state
 let _soundEnabled = (function() {
