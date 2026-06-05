@@ -1337,34 +1337,34 @@ body {
 
   /* ── Avatars des joueurs ── */
   .seat-avatar {
-    width: 38px !important;
-    height: 38px !important;
-    font-size: 0.95rem !important;
+    width: 44px !important;
+    height: 44px !important;
+    font-size: 1.1rem !important;
   }
   .seat-avatar.is-bot .seat-initial { font-size: 1.1em !important; }
-  .seat-name   { font-size: 0.72rem !important; max-width: 84px !important; }
-  .seat-money  { font-size: 0.7rem !important; }
-  .seat-bet    { font-size: 0.58rem !important; }
-  .seat-action-label { font-size: 0.56rem !important; }
-  .seat { min-width: 54px !important; max-width: 86px !important; }
+  .seat-name   { font-size: 0.84rem !important; max-width: 98px !important; }
+  .seat-money  { font-size: 0.82rem !important; }
+  .seat-bet    { font-size: 0.68rem !important; }
+  .seat-action-label { font-size: 0.66rem !important; }
+  .seat { min-width: 62px !important; max-width: 100px !important; }
 
   /* Dealer badge + blind badges un peu plus grands */
   .seat.dealer .seat-avatar::after {
-    width: 16px !important; height: 16px !important;
-    font-size: 0.56rem !important;
-    top: -5px !important; right: -5px !important;
+    width: 19px !important; height: 19px !important;
+    font-size: 0.66rem !important;
+    top: -6px !important; right: -6px !important;
   }
   .blind-badge {
-    width: 16px !important; height: 16px !important;
-    font-size: 0.5rem !important;
-    top: -5px !important; left: -5px !important;
+    width: 19px !important; height: 19px !important;
+    font-size: 0.6rem !important;
+    top: -6px !important; left: -6px !important;
   }
 
   /* Cartes adversaires (xsm → un peu plus grandes) */
   .seat .pk.xsm {
-    width: 24px !important;
-    height: 34px !important;
-    font-size: 0.6rem !important;
+    width: 28px !important;
+    height: 40px !important;
+    font-size: 0.7rem !important;
   }
 
   /* ── Scaler : plus de marge pour les sièges qui débordent ── */
@@ -1392,6 +1392,16 @@ body {
     padding: 2px 7px !important;
     min-width: 32px !important;
   }
+
+  /* ── Contrôles d'action plus lisibles (desktop) ── */
+  .btn-action { font-size: 0.9rem !important; padding: 11px 18px !important; }
+  .btn-pct { padding: 11px 6px !important; }
+  .btn-pct .pct-p   { font-size: 0.95rem !important; }
+  .btn-pct .pct-amt { font-size: 0.8rem !important; }
+  .raise-row .raise-input { font-size: 0.95rem !important; }
+
+  /* ── Vignette d'assistance (force de main) plus grande ── */
+  #hand-strength { font-size: 0.82rem !important; padding: 3px 14px !important; top: -40px !important; }
 }
 
 /* Tablet */
