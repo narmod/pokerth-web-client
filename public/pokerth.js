@@ -2945,27 +2945,59 @@ const App = (() => {
     };
     return M[c] || c;
   }
-  function speak(text) {
+  // Build a configured utterance for `text` in the active UI language.
+  function _voiceUtterance(text) {
+    var lang = (typeof _lang !== 'undefined' && _lang) ? _lang : 'fr';
+    var u = new SpeechSynthesisUtterance(String(text));
+    u.lang = _voiceLangTag(lang);
+    u.rate = 1.05;
+    try {
+      var vs = window.speechSynthesis.getVoices() || [];
+      var lc = u.lang.toLowerCase(), prim = lc.split('-')[0];
+      // Prefer an exact region match, else any voice for the same language.
+      var exact = vs.filter(function(v){ return v.lang && v.lang.toLowerCase() === lc; });
+      var prims = vs.filter(function(v){ return v.lang && v.lang.toLowerCase().split('-')[0] === prim; });
+      var pick = exact[0] || prims[0];
+      if (pick) u.voice = pick;
+    } catch(e) {}
+    return u;
+  }
+  // Announcements play one after another instead of cutting each other off:
+  // on a fast street (several quick folds) you now hear the sequence rather
+  // than only the last action. _curU tags the in-flight utterance so a stale
+  // onend from a cancelled one can't advance the queue (Web Speech race).
+  var _speakQ = [];      // pending texts
+  var _speaking = false; // an utterance is currently playing
+  var _curU = null;      // the live utterance (identity guard)
+  var _SPEAK_MAX = 4;    // cap the backlog so the voice can't lag far behind play
+  function _speakNext() {
+    if (!_voiceEnabled) { _speakQ = []; _curU = null; _speaking = false; return; }
+    if (_speaking || !_speakQ.length) return;
+    if (!('speechSynthesis' in window)) { _speakQ = []; return; }
+    var text = _speakQ.shift();
+    var u;
+    try { u = _voiceUtterance(text); } catch(e) { _speakNext(); return; }
+    _curU = u; _speaking = true;
+    u.onend = u.onerror = function() {
+      if (_curU !== u) return;            // stale handler (cancelled) — ignore
+      _curU = null; _speaking = false; _speakNext();
+    };
+    try { window.speechSynthesis.speak(u); }
+    catch(e) { if (_curU === u) { _curU = null; _speaking = false; } _speakNext(); }
+  }
+  // Queue an announcement. Pass { interrupt:true } for the urgent "your turn"
+  // cue: it drops any backlog and cuts off the current line so the player
+  // hears it promptly rather than after a queue of past actions.
+  function speak(text, opts) {
     if (!_voiceEnabled || !text) return;
     if (!('speechSynthesis' in window)) return;
-    try {
-      var lang = (typeof _lang !== 'undefined' && _lang) ? _lang : 'fr';
-      var u = new SpeechSynthesisUtterance(String(text));
-      u.lang = _voiceLangTag(lang);
-      u.rate = 1.05;
-      try {
-        var vs = window.speechSynthesis.getVoices() || [];
-        var lc = u.lang.toLowerCase(), prim = lc.split('-')[0];
-        // Prefer an exact region match, else any voice for the same language.
-        var exact = vs.filter(function(v){ return v.lang && v.lang.toLowerCase() === lc; });
-        var prims = vs.filter(function(v){ return v.lang && v.lang.toLowerCase().split('-')[0] === prim; });
-        var pick = exact[0] || prims[0];
-        if (pick) u.voice = pick;
-      } catch(e) {}
-      // Cancel any pending speech so announcements stay in step with play.
-      window.speechSynthesis.cancel();
-      window.speechSynthesis.speak(u);
-    } catch(e) {}
+    if (opts && opts.interrupt) {
+      _speakQ = []; _curU = null; _speaking = false;
+      try { window.speechSynthesis.cancel(); } catch(e) {}
+    }
+    _speakQ.push(String(text));
+    if (_speakQ.length > _SPEAK_MAX) _speakQ = _speakQ.slice(-_SPEAK_MAX);
+    _speakNext();
   }
   // Localized verb for a server action code (1=Fold … 6=All-in).
   function voiceActionPhrase(action, pid, bet) {
@@ -2987,7 +3019,7 @@ const App = (() => {
     if (vd) vd.textContent = (_voiceEnabled ? '🗣️' : '🤐');
     // Spoken confirmation (also primes the engine on first user gesture).
     if (_voiceEnabled) speak(t('voiceOn'));
-    else if ('speechSynthesis' in window) { try { window.speechSynthesis.cancel(); } catch(e) {} }
+    else if ('speechSynthesis' in window) { _speakQ = []; _curU = null; _speaking = false; try { window.speechSynthesis.cancel(); } catch(e) {} }
     return _voiceEnabled;
   }
   window.toggleVoice = toggleVoice;
@@ -6536,7 +6568,7 @@ const App = (() => {
   function notifyMyTurnVisuals() {
     var msg = t('notifTurnTitle');
     var sub = t('notifTurnBody');
-    speak(t('voiceYourTurn'));
+    speak(t('voiceYourTurn'), { interrupt: true });
     // App-icon badge (installed PWA) — feature-detected global helper.
     window._badgeTurn = true;
     if (window.refreshAppBadge) window.refreshAppBadge();
@@ -9396,4 +9428,4 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.2.208'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.2.209'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
