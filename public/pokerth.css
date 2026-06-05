@@ -1419,6 +1419,75 @@ body {
   /* ── Menu ••• plus lisible (desktop) ── */
   #g-overflow-menu, #l-overflow-menu { width: 264px !important; }
   #g-overflow-menu .btn-sm, #l-overflow-menu .btn-sm { font-size: 0.94rem !important; padding: 9px 32px 9px 14px !important; }
+
+  /* ══ Fenetres d'informations plus grandes (desktop) ══ */
+
+  /* Fin de main */
+  .winner-card { max-width: min(560px, 80vw) !important; padding: 24px 28px !important; }
+  .wc-trophy { font-size: 2.5rem !important; }
+  .wc-label { font-size: 0.72rem !important; }
+  .wc-name { font-size: 1.7rem !important; }
+  .wc-gain { font-size: 1.4rem !important; }
+  .wc-stat-label { font-size: 0.66rem !important; }
+  .wc-stat-value { font-size: 1.05rem !important; }
+  .wc-section { font-size: 0.7rem !important; }
+  .wc-player-row { grid-template-columns: 30px minmax(0,1fr) auto 110px !important; }
+  .wc-player-av { width: 30px !important; height: 30px !important; font-size: 0.8rem !important; }
+  .wc-player-name { font-size: 0.9rem !important; }
+  .wc-player-stack { font-size: 0.72rem !important; }
+  .wc-player-delta { font-size: 0.95rem !important; }
+  .winner-dismiss { font-size: 0.95rem !important; padding: 12px 24px !important; }
+
+  /* Fin de partie */
+  .endgame-card { max-width: 600px !important; padding: 26px 34px !important; }
+  .eg-trophy { font-size: 3.6rem !important; }
+  .eg-title { font-size: 1.55rem !important; }
+  .eg-winner-av { width: 46px !important; height: 46px !important; font-size: 1.9rem !important; }
+  .eg-winner-av.letter { font-size: 1.35rem !important; }
+  .eg-winner-label { font-size: 0.78rem !important; }
+  .eg-winner-name { font-size: 1.28rem !important; }
+  .eg-stats-title { font-size: 0.74rem !important; }
+  .eg-stat-row { font-size: 0.95rem !important; }
+  .eg-btn { font-size: 0.92rem !important; padding: 12px 14px !important; }
+
+  /* Info partie */
+  .gim-card { width: min(460px, 100%) !important; max-height: min(82vh, 680px) !important; }
+  .gim-title { font-size: 1.4rem !important; }
+  .gim-subtitle { font-size: 0.82rem !important; }
+  .gim-badge { font-size: 0.74rem !important; }
+  .gim-section-title { font-size: 0.72rem !important; }
+  .gim-row { font-size: 0.95rem !important; }
+
+  /* Stats joueur */
+  .pim-card { max-width: 400px !important; }
+  .pim-avatar { width: 112px !important; height: 112px !important; }
+  .pim-avatar.is-letter { font-size: 2.9rem !important; }
+  .pim-name { font-size: 1.28rem !important; }
+  .pim-flag { font-size: 0.95rem !important; }
+
+  /* Aide combinaisons */
+  .hands-card { max-width: min(580px, 90vw) !important; }
+  .hands-title { font-size: 0.95rem !important; }
+  .hand-rank { font-size: 0.8rem !important; }
+  .hand-name { font-size: 0.95rem !important; }
+  .hand-desc { font-size: 0.8rem !important; }
+  .hand-ico { font-size: 1.15rem !important; }
+  .hands-legend { font-size: 0.74rem !important; }
+
+  /* Kick (admin) */
+  .km-card { width: min(460px, 100%) !important; max-height: min(82vh, 680px) !important; }
+  .km-title { font-size: 1.35rem !important; }
+  .km-subtitle { font-size: 0.88rem !important; }
+  .km-row .km-av { width: 40px !important; height: 40px !important; font-size: 1.7rem !important; }
+  .km-row .km-av.letter { font-size: 1.1rem !important; }
+  .km-row .km-name { font-size: 1rem !important; }
+  .km-row .km-meta { font-size: 0.78rem !important; }
+
+  /* Quitter / Fermer la table */
+  .ld-card { max-width: 500px !important; padding: 26px 28px !important; }
+  .ld-title { font-size: 1.22rem !important; }
+  .ld-body { font-size: 1rem !important; }
+  .ld-btn { font-size: 0.95rem !important; }
 }
 
 /* Tablet */
