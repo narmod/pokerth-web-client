@@ -7848,6 +7848,10 @@ function dismissWinner() {
       // within 3s, the kick has almost certainly failed silently.
       // This happens on PokerTH servers older than v2.0.6 (March 2026,
       // changelog: "admin actions functional again"). Warn the admin.
+      // Skipped in training mode (offline): the FakeServer applies a kick
+      // as a deferred removal at end-of-hand, which can legitimately take
+      // longer than 3s — the bot WILL leave, so no warning is warranted.
+      if (!window._offlineMode)
       (function(targetPid, targetName, gameAtRequest) {
         setTimeout(function() {
           // Bail if we left the table / changed game in the meantime.
@@ -9353,4 +9357,4 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.2.193'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.2.194'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();

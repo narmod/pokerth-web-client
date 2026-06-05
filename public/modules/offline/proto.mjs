@@ -11,7 +11,7 @@
 // message-type id -> envelope (wrapper) field number  (from the client's map)
 export const WRAP = {
   Announce:2, Init:3, InitAck:7, PlayerList:13,
-  GameListNew:14, GameListUpdate:15, GamePlayerJoined:27, PlayerInfoReply:20,
+  GameListNew:14, GameListUpdate:15, GamePlayerJoined:27, GamePlayerLeft:28, PlayerInfoReply:20,
   JoinGameAck:25, JoinGameFailed:26,
   StartEvent:37, GameStartInitial:39,
   HandStart:41, PlayersTurn:42, MyActionRequest:43, PlayersActionDone:45,
@@ -22,7 +22,7 @@ export const WRAP = {
 // type name -> type id
 export const TYPE = {
   Announce:1, Init:2, InitAck:6, PlayerList:12, GameListNew:13,
-  GamePlayerJoined:26, PlayerInfoReply:19, JoinGameAck:24, JoinGameFailed:25,
+  GamePlayerJoined:26, GamePlayerLeft:27, PlayerInfoReply:19, JoinGameAck:24, JoinGameFailed:25,
   StartEvent:36, StartEventAck:37, GameStartInitial:38,
   HandStart:40, PlayersTurn:41, MyActionRequest:42, PlayersActionDone:44,
   DealFlop:45, DealTurn:46, DealRiver:47, AllInShowCards:48,

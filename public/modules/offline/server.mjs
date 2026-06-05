@@ -90,6 +90,7 @@ export class FakeServer {
       case TYPE.MyActionRequest:  return this._onMyAction(m.fields);
       case TYPE.PlayerInfoRequest:return this._onInfoReq(m.fields);
       case TYPE.LeaveGame:        return this._onLeave();
+      case 30 /*KickPlayer req*/: return this._onKick(m.fields);
       default: return;
     }
   }
@@ -134,6 +135,41 @@ export class FakeServer {
     this.started = false; this.table = null; this.rawGameInfo = null;
   }
   _onLeave(){ this._closeAndReset(); }
+
+  // ── Kick a bot (admin action, type 30) ──────────────────────────────────
+  // The client sends KickPlayerRequest { gameId, playerId }. We only ever kick
+  // BOTS (never the human). Approach A — deferred removal: if a hand is running
+  // the bot finishes it and is removed just before the next hand (reusing the
+  // engine's elimination flag p.in=false); between hands / before start it's
+  // removed immediately. Either way we broadcast GamePlayerLeft so the UI drops
+  // the seat, and nextHand() ends the game if only the human remains.
+  _onKick(f){
+    const pid = (f && f[2] && f[2][0]!=null) ? f[2][0] : null;
+    if(pid==null || pid===this.meId) return;                  // never the human
+    const p = this.players.find(x=>x.id===pid && x.isBot);
+    if(!p) return;                                            // unknown / not a bot
+    if(!this.started || !this.table){                         // waiting room → immediate
+      this.players = this.players.filter(x=>x.id!==pid);
+      delete this.botCfg[pid]; this._used.delete(p.name);
+      this._send('GamePlayerLeft',[[1,0,this.gameId],[2,0,pid],[3,0,3]]);  // 3 = leftKicked
+      return;
+    }
+    (this._kickPending || (this._kickPending = new Set())).add(pid);  // hand in progress → defer
+  }
+  // Apply any deferred kicks between hands: flag them out of the engine so they
+  // are no longer dealt in, drop their lobby/config state, and tell the UI.
+  _applyKicks(){
+    if(!this._kickPending || !this._kickPending.size || !this.table) return;
+    for(const pid of this._kickPending){
+      const ep = this.table.players.find(x=>x.id===pid);
+      if(ep) ep.in = false;                                   // same path as an eliminated player
+      const lp = this.players.find(x=>x.id===pid);
+      this.players = this.players.filter(x=>x.id!==pid);
+      delete this.botCfg[pid]; if(lp) this._used.delete(lp.name);
+      this._send('GamePlayerLeft',[[1,0,this.gameId],[2,0,pid],[3,0,3]]);  // 3 = leftKicked
+    }
+    this._kickPending.clear();
+  }
 
   _pickBot(){
     const id = this.players.length + 1;
@@ -378,7 +414,7 @@ export class FakeServer {
           this.pace(()=>{ if(!this.stopped) this._send('EndOfGame',[[1,0,G],[2,0,this.meId],[3,0,_pl],[4,0,1]]); }, _oe);
           break;   // ne pas enchaîner nextHand
         }
-        var _dh=Math.max(600, Math.min(4000, (this.cfg.delayHands||2)*380)); var _o=_dh + this._roAcc; this._roAcc = 0; this.pace(()=>{ if(!this.stopped && this.table) this.table.nextHand(); }, _o); break;
+        var _dh=Math.max(600, Math.min(4000, (this.cfg.delayHands||2)*380)); var _o=_dh + this._roAcc; this._roAcc = 0; this.pace(()=>{ if(!this.stopped && this.table){ this._applyKicks(); this.table.nextHand(); } }, _o); break;
       }
       case 'gameOver': {
         var _go=this._roAcc; this._roAcc = 0;
