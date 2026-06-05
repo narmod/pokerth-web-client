@@ -143,6 +143,22 @@ export function decide(ctx, bot){
   };
 
   const raiseTo = ()=>{ const t=Math.round(L.minRaiseTo + pot*(0.4+a*0.5)); return Math.max(L.minRaiseTo, Math.min(L.maxRaiseTo, t)); };
+  // Pre-flop sizing: realistic opens (~2.3–3.3 BB, +1 BB per limper) and 3-bet/4-bet
+  // sized off the current bet (~2.5–3.3×), instead of a fraction of a snowballing pot.
+  // This is what keeps the first betting round from escalating to all-in so fast.
+  const raiseToPre = ()=>{
+    const bb = L.bb || 0;
+    let t;
+    if (toCall <= bb){                                          // unopened pot → standard open
+      const limped = Math.max(0, pot - 1.5*bb);                 // chips limped beyond the blinds
+      t = bb*(2.3 + a*1.0) + limped;                            // ~2.3–3.3 BB +1 BB per limper
+    } else {                                                    // facing a raise → 3-bet / 4-bet
+      const curBet = (L.maxRaiseTo - (ctx.stack||0)) + toCall;  // highest total street commit
+      t = curBet*(2.5 + a*0.8);                                 // ~2.5–3.3× the current bet
+    }
+    t = Math.round(t);
+    return Math.max(L.minRaiseTo, Math.min(L.maxRaiseTo, t));
+  };
   const jam     = ()=> ({ action: ACT.RAISE, amountTo: L.maxRaiseTo });
 
   // ── Short-stack push/fold (skill-gated) ──────────────────────────────────
@@ -178,28 +194,35 @@ export function decide(ctx, bot){
   if (preflop){
     let entry = bot.entryEq != null ? bot.entryEq : 0;
     let pPre  = pRaise;
+    const opened = (toCall > (L.bb || 0));            // someone has already raised before me
     // ── Position: open wider & raise more from late seats (steal), tighten early ──
     // order index 0 = button, 1 = SB, 2 = BB, n-1 = cutoff (acts just before button).
     const n = ctx.numPlayers || 0, ipos = ctx.posFromButton;
     if (n >= 4 && ipos != null){
-      const unopened = (toCall <= (L.bb || 0));        // folded to me: only the blinds are in
-      if (unopened && (ipos === 0 || ipos === n - 1)){ // button or cutoff → steal
+      if (!opened && (ipos === 0 || ipos === n - 1)){  // button or cutoff → steal
         entry = Math.max(0, entry - 0.12);
         pPre  = Math.min(0.95, pPre + 0.25);
       } else if (n >= 6 && (ipos === 3 || ipos === 4)){ // UTG / UTG+1 → play tighter
         entry = entry + 0.06;
       }
     }
+    // Facing a raise: be far more selective about re-raising — prefer calling and
+    // reserve the 3-bet/4-bet for genuinely strong hands. This keeps play sharp
+    // (premiums still re-raise for value) while killing the early all-in escalation.
+    if (opened){
+      pPre = pPre * 0.35;
+      if (str > 0.80) pPre = Math.max(pPre, 0.85);
+    }
     if (L.canCheck){                                  // free option (BB, unraised pot)
-      if (str >= entry && L.canRaise && rng() < pPre) return { action:ACT.RAISE, amountTo:raiseTo() };
+      if (str >= entry && L.canRaise && rng() < pPre) return { action:ACT.RAISE, amountTo:raiseToPre() };
       return { action:ACT.CHECK };
     }
     const floor = Math.max(entry, potOdds + cm);      // need the range OR the price to continue
     if (str < floor){
-      if (bluff()) return { action:ACT.RAISE, amountTo:raiseTo() };   // rare light open
+      if (bluff()) return { action:ACT.RAISE, amountTo:raiseToPre() };   // rare light open
       return { action:ACT.FOLD };
     }
-    if (L.canRaise && rng() < pPre) return { action:ACT.RAISE, amountTo:raiseTo() };
+    if (L.canRaise && rng() < pPre) return { action:ACT.RAISE, amountTo:raiseToPre() };
     return { action:ACT.CALL };
   }
 
