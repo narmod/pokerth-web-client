@@ -1,6 +1,8 @@
 # PokerTH Web Client
 
 > A modern, mobile-friendly browser client for [PokerTH](https://github.com/pokerth/pokerth) — the legendary open-source Texas Hold'em poker game.
+>
+> **Load once, play anywhere:** cached as a PWA for instant launches, fully offline against bots, and ready to connect to any PokerTH server when you are.
 
 [![Publish Docker image](https://github.com/narmod/pokerth-web-client/actions/workflows/docker-publish.yml/badge.svg)](https://github.com/narmod/pokerth-web-client/actions/workflows/docker-publish.yml)
 [![Container image](https://img.shields.io/badge/ghcr.io-pokerth--web--client-2496ed?logo=docker&logoColor=white)](https://github.com/narmod/pokerth-web-client/pkgs/container/pokerth-web-client)
@@ -26,6 +28,7 @@
   - [Docker](#docker) &nbsp;📂
   - [Manual installation (Ubuntu / Debian)](#manual-installation) &nbsp;📂
   - [Self-hosting on a Raspberry Pi](#raspberry-pi)
+- [Install the app](#install-the-app)
 - [Managing &amp; resetting](#managing-resetting)
   - [Managing the service](#managing-the-service)
   - [Resetting the family leaderboard](#leaderboard-reset)
@@ -578,6 +581,23 @@ Both the PokerTH server **and** this web proxy are extremely light: PokerTH is a
 4. From any phone on the same Wi-Fi, open `http://<pi-ip>:8080`, leave the server on **LAN / Dedicated server**, and deal.
 
 > **PWA extras (install to home screen, offline, notifications) need HTTPS** — see [Known limitations](#known-limitations). The game itself works perfectly over plain `http://` / `ws://` on the LAN.
+
+---
+
+<a id="install-the-app"></a>
+## Install the app (as a PWA)
+
+Once your proxy is running, open the client and install it **from your own server's address** (the URL the proxy serves — e.g. `https://your-domain` or `http://192.168.x.x:8080`). The connect form auto-fills the WebSocket Proxy URL and the PokerTH host from the page it is served on, and a PWA is cached under that origin — so the installed app keeps **your** server pre-loaded and you never retype it. Installing from any other address would point it elsewhere and force you to re-enter the server every time.
+
+> A fully installable PWA (standalone window, offline cache, notifications) needs a **secure context** — HTTPS, or `localhost`. Set up [Nginx + HTTPS](#manual-installation) for the install option to appear; over plain LAN `http://` the game still works in the browser, but the install prompt won't show.
+
+Then pin it like a native app:
+
+- **Desktop — Chrome / Edge / Brave (Windows, macOS, Linux, ChromeOS):** click the **install icon** in the address bar (or the ⋮ menu → **Save and share → Install page as app**) → **Install**. It opens in its own window, without tabs or toolbar. ⚠️ If you use **Create shortcut** instead, tick **"Open as window"** — otherwise it just opens as an ordinary browser tab, not a standalone full-window app.
+- **Android (Chrome / Edge / Brave):** browser menu → **Install app** / **Add to Home screen**.
+- **iPhone / iPad:** in **Safari**, tap **Share → Add to Home Screen → Add**. (iOS installs PWAs from Safari only; since iOS 17, Chrome and Edge also offer it via their Share button.)
+
+The in-app **📲 Install** hint appears automatically when your browser supports installation. Once installed, **Training mode** runs with no internet at all; online play (LAN, your dedicated server, or pokerth.net) just needs to reach the chosen server.
 
 ---
 
