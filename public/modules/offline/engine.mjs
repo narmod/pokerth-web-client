@@ -117,6 +117,7 @@ export class OfflineTable {
       board:[], deck:makeDeck(this.rng), hole:{}, street:'preflop',
       committed:{}, streetCommit:{}, folded:{}, allin:{}, inHand:{},
       currentBet:0, minRaise:bb, sbP, bbP, results:null,
+      noReraise: new Set(),  // ids barred from re-raising (closed action faced an incomplete all-in)
       aggressorId: bbP.id   // last player to bet/raise; BB is the preflop aggressor by default
     };
     order.forEach(p=>{ this.h.inHand[p.id]=true; this.h.committed[p.id]=0; this.h.streetCommit[p.id]=0; });
@@ -171,7 +172,7 @@ export class OfflineTable {
       canCheck: toCall===0,
       canCall: toCall>0 && p.stack>0,
       callAmt: Math.min(toCall, p.stack),
-      canRaise: p.stack > toCall,
+      canRaise: p.stack > toCall && !this.h.noReraise.has(p.id),
       minRaiseTo: this.h.currentBet + this.h.minRaise,
       maxRaiseTo: this.h.streetCommit[p.id] + p.stack,
       bb:this.bb, pot:this._pot(), street:this.h.street
@@ -194,6 +195,11 @@ export class OfflineTable {
     if (!this.h || this.h._pendingId!==playerId) return false;
     const p = this.players.find(x=>x.id===playerId);
     const toCall = this.h.currentBet - this.h.streetCommit[p.id];
+    // A player whose re-raise was revoked by an earlier incomplete all-in may
+    // only call/fold. Demote any bet/raise/all-in to a plain call BEFORE the
+    // raise logic, otherwise the min-raise clamp below would bump the demoted
+    // amount back up into an (illegal) raise.
+    if ((action===ACT.BET || action===ACT.RAISE || action===ACT.ALLIN) && this.h.noReraise.has(p.id)) action = ACT.CALL;
     let kind=action, paid=0;
     if (action===ACT.FOLD){ this.h.folded[p.id]=true; this.h.needsToAct.delete(p.id); }
     else if (action===ACT.CHECK || (action===ACT.CALL && toCall===0)){ kind=ACT.CHECK; this.h.needsToAct.delete(p.id); }
@@ -208,11 +214,21 @@ export class OfflineTable {
       paid = inc; this._put(p, inc);
       const raiseBy = target - this.h.currentBet;
       if (raiseBy>0){
-        if (raiseBy>=this.h.minRaise) this.h.minRaise = raiseBy;  // full raise resets minRaise
+        const fullRaise = raiseBy >= this.h.minRaise;          // false = short all-in (incomplete raise)
+        if (fullRaise) this.h.minRaise = raiseBy;              // only a full raise resets minRaise
         this.h.currentBet = target;
-        this.h.aggressorId = p.id;                                // remember last aggressor
-        // everyone else still in & able must respond
-        this.h._order.forEach(q=>{ if(q.id!==p.id && this.h.inHand[q.id] && !this.h.folded[q.id] && !this.h.allin[q.id]) this.h.needsToAct.add(q.id); });
+        this.h.aggressorId = p.id;                             // remember last aggressor
+        // A FULL raise reopens the betting for everyone (clear all locks). An
+        // INCOMPLETE all-in does NOT reopen it: players who had already closed
+        // the action (not currently owing a response) must still call/fold the
+        // extra, but may not re-raise — lock them. Players still owing a
+        // response keep full rights.
+        if (fullRaise) this.h.noReraise.clear();
+        this.h._order.forEach(q=>{
+          if (q.id===p.id || !this.h.inHand[q.id] || this.h.folded[q.id] || this.h.allin[q.id]) return;
+          if (!fullRaise && !this.h.needsToAct.has(q.id)) this.h.noReraise.add(q.id);
+          this.h.needsToAct.add(q.id);
+        });
       }
       this.h.needsToAct.delete(p.id);
       kind = this.h.allin[p.id] ? ACT.ALLIN : (toCall>0?ACT.RAISE:ACT.BET);
@@ -229,7 +245,7 @@ export class OfflineTable {
   _nextStreet(runOut){
     const order=this.h._order;
     order.forEach(p=>this.h.streetCommit[p.id]=0);
-    this.h.currentBet=0; this.h.minRaise=this.bb;
+    this.h.currentBet=0; this.h.minRaise=this.bb; this.h.noReraise = new Set();
     const seq=['preflop','flop','turn','river'];
     const idx=seq.indexOf(this.h.street);
     if (idx>=3){ return this._showdown(); }
