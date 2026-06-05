@@ -1784,6 +1784,11 @@ body {
     min-width: 0;
   }
   #s-game .header { gap: 4px; padding: 3px 8px; }
+  /* Bandeaux du haut un peu plus épais sur mobile (demande narmod) :
+     header de table + barre du pot. Surcharge top/bottom uniquement,
+     en gardant le padding horizontal des règles précédentes. */
+  #s-game .header { padding-top: 8px; padding-bottom: 8px; min-height: 48px; }
+  #pot-strip { padding-top: 8px; padding-bottom: 8px; min-height: 38px; }
 
   /* ── Lobby header on narrow phones ──
      On small/large-font devices the "POKERTH" word + redundant buttons
