@@ -1337,34 +1337,34 @@ body {
 
   /* ── Avatars des joueurs ── */
   .seat-avatar {
-    width: 38px !important;
-    height: 38px !important;
-    font-size: 0.95rem !important;
+    width: 48px !important;
+    height: 48px !important;
+    font-size: 1.2rem !important;
   }
   .seat-avatar.is-bot .seat-initial { font-size: 1.1em !important; }
-  .seat-name   { font-size: 0.72rem !important; max-width: 84px !important; }
-  .seat-money  { font-size: 0.7rem !important; }
-  .seat-bet    { font-size: 0.58rem !important; }
-  .seat-action-label { font-size: 0.56rem !important; }
-  .seat { min-width: 54px !important; max-width: 86px !important; }
+  .seat-name   { font-size: 0.9rem !important; max-width: 104px !important; }
+  .seat-money  { font-size: 0.88rem !important; }
+  .seat-bet    { font-size: 0.72rem !important; }
+  .seat-action-label { font-size: 0.7rem !important; }
+  .seat { min-width: 68px !important; max-width: 108px !important; }
 
   /* Dealer badge + blind badges un peu plus grands */
   .seat.dealer .seat-avatar::after {
-    width: 16px !important; height: 16px !important;
-    font-size: 0.56rem !important;
-    top: -5px !important; right: -5px !important;
+    width: 20px !important; height: 20px !important;
+    font-size: 0.7rem !important;
+    top: -6px !important; right: -6px !important;
   }
   .blind-badge {
-    width: 16px !important; height: 16px !important;
-    font-size: 0.5rem !important;
-    top: -5px !important; left: -5px !important;
+    width: 20px !important; height: 20px !important;
+    font-size: 0.62rem !important;
+    top: -6px !important; left: -6px !important;
   }
 
   /* Cartes adversaires (xsm → un peu plus grandes) */
   .seat .pk.xsm {
-    width: 24px !important;
-    height: 34px !important;
-    font-size: 0.6rem !important;
+    width: 30px !important;
+    height: 42px !important;
+    font-size: 0.74rem !important;
   }
 
   /* ── Scaler : plus de marge pour les sièges qui débordent ── */
