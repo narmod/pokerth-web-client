@@ -83,8 +83,13 @@ ask_yn() {
 }
 
 # ── Privilege helpers ─────────────────────────────────────────────────────────
+# Commands run as RUN_USER go through 'sudo -u', which resets PATH to sudo's
+# secure_path. On some systems that omits /usr/local/bin — where 'npm i -g'
+# puts the pm2 binary — so pm2 (and its '#!/usr/bin/env node' shebang) cannot be
+# found. Forcing a known-good PATH makes pm2/node/git reachable regardless.
+SAFE_PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
 as_root() { if [ "$(id -u)" -eq 0 ]; then "$@"; else sudo "$@"; fi; }
-run_as()  { if [ "$RUN_USER" = "$(id -un)" ]; then "$@"; else sudo -u "$RUN_USER" -H "$@"; fi; }
+run_as()  { if [ "$RUN_USER" = "$(id -un)" ]; then "$@"; else sudo -u "$RUN_USER" -H env "PATH=$SAFE_PATH" "$@"; fi; }
 
 require_apt() {
   if ! command -v apt-get >/dev/null 2>&1; then
