@@ -214,12 +214,21 @@ Browser WebSocket  ⇄  proxy.js (Node.js)  ⇄  PokerTH TCP/TLS server
 
 When connecting to the public pokerth.net server, the browser connects directly over a TLS WebSocket and the proxy is bypassed.
 
-The proxy also serves the static files and relays two custom broadcast messages to all connected clients:
+Beyond bridging WebSocket frames to the server's raw TCP/TLS stream, `proxy.js` is a small application server. Its functions:
+
+- **Static file server** — serves the client (HTML/JS/CSS and PWA assets) over HTTP, with on-the-fly **brotli/gzip compression** cached by file mtime.
+- **Session persistence & seamless reconnect** — each browser session is keyed by a `sid`. If the WebSocket drops (e.g. a phone switching Wi-Fi ↔ cellular), the upstream PokerTH connection is **kept alive for a 2-minute grace period**, and the next connection presenting the same `sid` is rebound to it — no re-login, no lost seat. A **heartbeat (ping/pong) plus an RX watchdog** detect genuinely dead sockets.
+- **Clean intentional disconnect** — when the user actively leaves (the ✕ button), the client closes the WebSocket with code **4001**. The proxy treats this as a deliberate quit and tears down the upstream **immediately**, skipping the grace period, so the player/nick is freed on the server right away instead of lingering as a "ghost" for ~2 minutes.
+- **Custom broadcast relays** — three application messages are fanned out to the other connected clients. Relays are **scoped per upstream** (`host:port`) so they only reach players on the same server, and oversized frames are dropped:
 
 | Message | Purpose |
 |---|---|
 | `REACT:pid:emoji` | Emoji reaction from a player |
 | `AVATAR:pid:emoji` | Avatar emoji update |
+| `AVATARIMG:pid:dataURL` | Custom image-avatar update |
+
+- **Connection allowlist** — for anti-open-relay safety the proxy only dials servers on a configured allowlist (see the deployment section below).
+- **Helper endpoints** — `GET /__ver` reports the newest mtime of the static assets (this drives the client's "new version" banner), and `GET /stats` serves the shared lifetime leaderboard.
 
 ### Repository layout
 
