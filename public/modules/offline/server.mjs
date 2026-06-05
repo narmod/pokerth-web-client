@@ -342,37 +342,41 @@ export class FakeServer {
       case 'turn': {
         this._roAcc = 0;   // un tour signifie qu'on n'est pas en run-out
         this._clearHumanTimer();
-        this._send('PlayersTurn',[[1,0,G],[2,0,ev.playerId],[3,0,GS[ev.gameState]]]);
+        // ── Temps mort entre les tours ─────────────────────────────────────
+        // Avant de passer la main au joueur suivant, on laisse un vrai « blanc »
+        // (aucun siège allumé) pour bien VOIR l'action qui vient d'être jouée,
+        // puis on allume le joueur suivant. Fixe (pas de rng) → déterminisme
+        // intact : l'ordre des tirages this.rng (deck + decide) est inchangé.
+        var _sp=this.cfg.guiSpeed||5;
+        var _gap=Math.max(450, 900-_sp*45);   // ~0,45 s (rapide) … ~0,85 s (lent)
+        var _ptSpec=[[1,0,G],[2,0,ev.playerId],[3,0,GS[ev.gameState]]];
+        this.pace(()=>{ if(!this.stopped && this.table) this._send('PlayersTurn', _ptSpec); }, _gap);
         if(ev.playerId!==this.meId){
-          var _sp=this.cfg.guiSpeed||5;
-          // Temps de réflexion "humain", modulé par le TYPE de décision : un
-          // fold/check est vif, un call standard, une relance "fait réfléchir".
+          // Temps de réflexion "humain" APRÈS le temps mort, modulé par le TYPE
+          // de décision : fold/check vif, call standard, relance « fait réfléchir ».
           // Le jitter this.rng() est tiré AVANT decide() (1 appel, même ordre
-          // qu'avant) → décisions des bots et tests déterministes inchangés ;
-          // on ne fait que déplacer decide() (sans effet de bord) hors du pace
-          // pour connaître l'action avant de temporiser. Plafonné à 3,5 s.
+          // qu'avant) → décisions des bots et tests déterministes inchangés.
+          // Plancher 0,65 s, plafond 4 s ; pente guiSpeed adoucie.
           var _r=this.rng();
           var d=decide(ev,this.botCfg[ev.playerId]);
-          var _base=Math.max(400, 1700-_sp*130);
-          var _mult=(d.action==='fold'||d.action==='check') ? 0.5
+          var _base=Math.max(750, 1900-_sp*100);
+          var _mult=(d.action==='fold'||d.action==='check') ? 0.7
                   : (d.action==='raise')                    ? 1.5
-                  :                                           1.0;
-          var _think=Math.min(3500, Math.round(_base*_mult + _r*_base*0.7));
-          this._reactBotTurn(ev, d, _think);   // réaction cosmétique en cours de main
-          this.pace(()=>{ if(this.stopped||!this.table) return; this.table.act(ev.playerId,d.action,d.amountTo); }, _think);
+                  :                                           1.05;
+          var _think=Math.max(650, Math.min(4000, Math.round(_base*_mult + _r*_base*0.6)));
+          this._reactBotTurn(ev, d, _gap + _think);   // réaction calée sur le highlight différé
+          this.pace(()=>{ if(this.stopped||!this.table) return; this.table.act(ev.playerId,d.action,d.amountTo); }, _gap + _think);
         } else {
-          // Tour du joueur humain : armer un délai d'expiration comme le ferait
-          // un vrai serveur PokerTH. Sans action dans le temps imparti, on joue
-          // automatiquement : check si c'est gratuit (rien à suivre), sinon fold.
-          // setTimeout direct (pas this.pace) → délai mur réel, jamais ré-entrant,
-          // ne touche pas l'ordre des tirages rng (déterminisme des bots préservé).
+          // Tour du joueur humain : armer un délai d'expiration (comme un vrai
+          // serveur PokerTH), décompté APRÈS le temps mort. setTimeout direct →
+          // délai mur réel, ne touche pas l'ordre des tirages rng.
           var _to = (this.cfg.timeout > 0 ? this.cfg.timeout : 15);
           var _canCheck = !!(ev.legal && ev.legal.canCheck);
           this._humanTimer = setTimeout(()=>{
             this._humanTimer = null;
             if(this.stopped || !this.table) return;
             this.table.act(this.meId, _canCheck ? ACT.CHECK : ACT.FOLD, 0);
-          }, _to * 1000);
+          }, _gap + _to * 1000);
         }
         break;
       }
