@@ -36,7 +36,7 @@ function _t(key, fallback) {
 // titleKey, titleFallback }. id '' = the default (:root) → attribute removed.
 function makeAxis(cfg) {
   function get() {
-    try { return localStorage.getItem(cfg.storeKey) || ''; } catch (e) { return ''; }
+    try { return localStorage.getItem(cfg.storeKey) || cfg.def || ''; } catch (e) { return ''; }
   }
   function apply(id) {
     var el = document.documentElement;
@@ -66,14 +66,14 @@ const TABLES = [
   { id: 'photo',    key: 'tablePhoto',    fallback: 'Textured', swatch: '#1f6b2e' },
 ];
 const DECKS = [
-  { id: '',    key: 'deckClassic', fallback: 'Classic', swatch: '#e6e6e6' },
+  { id: 'casino-vert', key: 'deckCasinoVert', fallback: 'Casino vert', swatch: '#1e6b1e', ext: 'svg' },
   { id: 'pokerth', key: 'deckPokerth', fallback: 'PokerTH', swatch: '#1d6b30', ext: 'png' },
   { id: 'pokerth-new', key: 'deckPokerthNew', fallback: 'PokerTH new', preview: '/cards/pokerth-new/preview.png', swatch: '#a52a2a', ext: 'svg' },
 ];
 
 const palette = makeAxis({ storeKey: 'pth_theme', attr: 'data-theme', items: PALETTES, titleKey: 'sectionPalette', titleFallback: 'Palette' });
 const table   = makeAxis({ storeKey: 'pth_table', attr: 'data-table', items: TABLES,   titleKey: 'sectionTable',   titleFallback: 'Table' });
-const deck    = makeAxis({ storeKey: 'pth_deck',  attr: 'data-deck',  items: DECKS,    titleKey: 'sectionDeck',    titleFallback: 'Cards' });
+const deck    = makeAxis({ storeKey: 'pth_deck',  attr: 'data-deck',  def: 'casino-vert',  items: DECKS,    titleKey: 'sectionDeck',    titleFallback: 'Cards' });
 const AXES = [palette, table, deck];
 
 // ── Presets (main themes) ───────────────────────────────────────────────────
@@ -81,7 +81,7 @@ const AXES = [palette, table, deck];
 // (this project's look). "Official PokerTH" ≈ the official client (dark UI +
 // textured green felt + vector cards). Order = display order.
 const PRESETS = [
-  { id: 'casino',  key: 'presetCasino',   fallback: 'Casino vert',     swatch: '#1e6b1e', values: { theme: '',     table: '',      deck: ''    } },
+  { id: 'casino',  key: 'presetCasino',   fallback: 'Casino vert',     swatch: '#1e6b1e', values: { theme: '',     table: '',      deck: 'casino-vert' } },
   { id: 'pokerth', key: 'presetOfficial', fallback: 'Official PokerTH', swatch: '#232730', values: { theme: 'dark', table: 'photo', deck: 'pokerth' } },
   { id: 'pokerthnew', key: 'presetPokerthNew', fallback: 'PokerTH new', swatch: '#a52a2a', values: { theme: 'dark', table: 'photo', deck: 'pokerth-new' } },
 ];
