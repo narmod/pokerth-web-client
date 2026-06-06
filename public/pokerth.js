@@ -5240,7 +5240,7 @@ const App = (() => {
     // (narmod: confusion ♥/♦ à cause d'une couleur identique).
     const red   = (si === 0) ? ' red diamond' : (si === 1 ? ' red' : '');
     const spade = (si === 2) ? ' spade' : ''; // ♠ (2)
-    return '<div class="pk' + sz + red + spade + extraCls + '" data-c="' + n + '" style="--cf:url(' + _deckFace(n) + ')"><span class="c-ix"><span class="c-rank">' + rank + '</span><span class="c-suit">' + suit + '</span></span><span class="c-pip">' + suit + '</span><span class="c-ix c-br"><span class="c-rank">' + rank + '</span><span class="c-suit">' + suit + '</span></span></div>';
+    return '<div class="pk' + sz + red + spade + extraCls + '" data-c="' + n + '" style="--cf:url(' + _deckFace(n) + ')"><span class="c-rank">' + rank + '</span><span class="c-suit">' + suit + '</span></div>';
   }
 
 
@@ -5260,7 +5260,7 @@ const App = (() => {
     // une teinte vermillon différente du rouge profond du ♥.
     const red = (si === 0) ? ' red diamond' : (si === 1 ? ' red' : '');
     const spade2 = (si === 2) ? ' spade' : ''; // ♠ (2)
-    return '<div class="pk '+cls+red+spade2+'" data-c="'+n+'" style="--cf:url('+_deckFace(n)+')"><span class="c-ix"><span class="c-rank">'+rank+'</span><span class="c-suit">'+suit+'</span></span><span class="c-pip">'+suit+'</span><span class="c-ix c-br"><span class="c-rank">'+rank+'</span><span class="c-suit">'+suit+'</span></span></div>';
+    return '<div class="pk '+cls+red+spade2+'" data-c="'+n+'" style="--cf:url('+_deckFace(n)+')"><span class="c-rank">'+rank+'</span><span class="c-suit">'+suit+'</span></div>';
   }
 
   function renderMyCards() {
@@ -9477,4 +9477,4 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.2.222'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.2.223'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();

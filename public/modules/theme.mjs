@@ -67,7 +67,7 @@ const TABLES = [
 ];
 const DECKS = [
   { id: '',    key: 'deckClassic', fallback: 'Classic', swatch: '#e6e6e6' },
-  { id: 'svg', key: 'deckSvg',     fallback: 'PokerTH',     swatch: '#a52a2a' },
+  { id: 'pokerth', key: 'deckPokerth', fallback: 'PokerTH', swatch: '#1d6b30' },
 ];
 
 const palette = makeAxis({ storeKey: 'pth_theme', attr: 'data-theme', items: PALETTES, titleKey: 'sectionPalette', titleFallback: 'Palette' });
@@ -81,7 +81,7 @@ const AXES = [palette, table, deck];
 // textured green felt + vector cards). Order = display order.
 const PRESETS = [
   { id: 'casino',  key: 'presetCasino',   fallback: 'Casino vert',     swatch: '#1e6b1e', values: { theme: '',     table: '',      deck: ''    } },
-  { id: 'pokerth', key: 'presetOfficial', fallback: 'Official PokerTH', swatch: '#232730', values: { theme: 'dark', table: 'photo', deck: 'svg' } },
+  { id: 'pokerth', key: 'presetOfficial', fallback: 'Official PokerTH', swatch: '#232730', values: { theme: 'dark', table: 'photo', deck: 'pokerth' } },
 ];
 
 function applyPreset(id) {
@@ -103,6 +103,8 @@ function activePreset() {
   return null;
 }
 
+try { if (localStorage.getItem('pth_deck') === 'svg') localStorage.setItem('pth_deck', 'pokerth'); } catch (e) {}
+
 // Apply saved values on load (idempotent with the <head> boot snippet).
 AXES.forEach(function (ax) { try { ax.apply(ax.get()); } catch (e) {} });
 
@@ -117,7 +119,7 @@ function _loadGalleryDecks() {
         if (!Array.isArray(list)) return;
         _galleryDecks = list.filter(function (d) { return d && d.id; }).map(function (d) {
           return { id: String(d.id), name: d.name || String(d.id), preview: d.preview || null, swatch: '#1e6b1e' };
-        });
+        }).filter(function (d) { for (var i = 0; i < DECKS.length; i++) if (DECKS[i].id === d.id) return false; return true; });
         if (_body) _render();
       })
       .catch(function () {});
@@ -196,30 +198,30 @@ function _feltStyle(t) {
   var sw = (t && t.swatch) || '#1e6b1e';
   return 'background:radial-gradient(circle at 50% 36%, color-mix(in srgb,' + sw + ',#fff 12%), color-mix(in srgb,' + sw + ',#000 55%))';
 }
-function _svgFan(big) {
+function _pngFan(deckId, big) {
   function c(src, x, r) { return '<img src="' + src + '" alt="" style="position:absolute;top:50%;left:' + x + '%;height:' + (big ? 80 : 76) + '%;width:auto;border-radius:3px;transform:translateY(-50%) rotate(' + r + 'deg);box-shadow:0 1px 3px rgba(0,0,0,.5)">'; }
-  return c('/cards/svg/back.svg', big ? 8 : 6, -12) + c('/cards/svg/1h.svg', big ? 32 : 30, 0) + c('/cards/svg/1s.svg', big ? 54 : 52, 12);
+  return c('/cards/' + deckId + '/flipside.png', big ? 8 : 6, -12) + c('/cards/' + deckId + '/25.png', big ? 32 : 30, 0) + c('/cards/' + deckId + '/38.png', big ? 54 : 52, 12);
 }
 // Mini card faces for previews, matching the in-game Classic layout
 // (rank+suit index top-left, large suit pip centered).
 function _miniFront(rank, suit, red, big, pos) {
   var col = red ? '#c0392b' : '#15110c';
-  return '<span style="position:absolute;display:block;' + pos + 'background:#f7f4ec;border-radius:3px;height:' + (big ? 80 : 76) + '%;aspect-ratio:5/7;box-shadow:0 1px 3px rgba(0,0,0,.5);color:' + col + ';font-weight:800;line-height:1">'
-    + '<span style="position:absolute;top:7%;left:9%;display:flex;flex-direction:column;align-items:center;line-height:0.82;font-size:' + (big ? '0.5rem' : '0.34rem') + '"><span>' + rank + '</span><span style="font-size:0.8em">' + suit + '</span></span>'
-    + '<span style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:' + (big ? '1.15rem' : '0.66rem') + '">' + suit + '</span></span>';
+  return '<span style="position:absolute;display:flex;flex-direction:column;align-items:center;justify-content:center;' + pos + 'background:#f7f4ec;border-radius:3px;height:' + (big ? 80 : 76) + '%;aspect-ratio:5/7;box-shadow:0 1px 3px rgba(0,0,0,.5);color:' + col + ';font-weight:800;line-height:1.05">'
+    + '<span style="font-size:' + (big ? '0.95rem' : '0.56rem') + '">' + rank + '</span>'
+    + '<span style="font-size:' + (big ? '0.9rem' : '0.54rem') + '">' + suit + '</span></span>';
 }
 function _miniBack(big, pos) {
   return '<span style="position:absolute;display:flex;align-items:center;justify-content:center;' + pos + 'border-radius:3px;height:' + (big ? 80 : 76) + '%;aspect-ratio:5/7;background:radial-gradient(circle at 50% 44%,#234023,#0c1c0e);box-shadow:inset 0 0 0 1px #c8a84a,0 1px 3px rgba(0,0,0,.5)">'
     + '<span style="color:#e0c070;font-size:' + (big ? '1rem' : '0.6rem') + ';font-family:Georgia,serif">\u2660</span></span>';
 }
 function _classicFan(big) {
-  // back + two fronts, same fan positions as _svgFan
+  // back + two fronts, same fan positions as _pngFan
   return _miniBack(big, 'top:50%;left:' + (big ? 8 : 6) + '%;transform:translateY(-50%) rotate(-12deg);')
     + _miniFront('A', '\u2665', true, big, 'top:50%;left:' + (big ? 32 : 30) + '%;transform:translateY(-50%) rotate(0deg);')
     + _miniFront('A', '\u2660', false, big, 'top:50%;left:' + (big ? 54 : 52) + '%;transform:translateY(-50%) rotate(12deg);');
 }
 function _cardOnFelt(deckId, big) {
-  if (deckId === 'svg') return '<img src="/cards/svg/1s.svg" alt="" style="position:absolute;top:50%;left:50%;height:' + (big ? 78 : 74) + '%;width:auto;border-radius:3px;transform:translate(-50%,-50%) rotate(-6deg);box-shadow:0 2px 5px rgba(0,0,0,.5)">';
+  if (deckId) return '<img src="/cards/' + deckId + '/38.png" alt="" style="position:absolute;top:50%;left:50%;height:' + (big ? 78 : 74) + '%;width:auto;border-radius:3px;transform:translate(-50%,-50%) rotate(-6deg);box-shadow:0 2px 5px rgba(0,0,0,.5)">';
   return _miniFront('A', '\u2660', false, big, 'top:50%;left:50%;transform:translate(-50%,-50%) rotate(-6deg);');
 }
 function _previewHTML(kind, item, big) {
@@ -235,7 +237,7 @@ function _previewHTML(kind, item, big) {
   }
   if (kind === 'deck') {
     if (item && item.preview) return '<span style="' + box + '"><img src="' + item.preview + '" alt="" style="width:100%;height:100%;object-fit:cover;display:block"></span>';
-    var cards = (item && item.id === 'svg') ? _svgFan(big) : _classicFan(big);
+    var cards = (item && item.id) ? _pngFan(item.id, big) : _classicFan(big);
     return '<span style="' + box + ';background:linear-gradient(160deg,#1c5a28,#0c3214)">' + cards + '</span>';
   }
   if (kind === 'preset') {

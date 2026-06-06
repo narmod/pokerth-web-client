@@ -9,4 +9,5 @@ stats.meta.json
 # git pull preserves these untracked folders. svg/ is the built-in vector deck.
 /public/cards/*/
 !/public/cards/svg/
+!/public/cards/pokerth/
 /public/cards/decks.json
