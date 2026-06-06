@@ -5199,14 +5199,14 @@ const App = (() => {
   function _deckFace(n) {
     var d = document.documentElement.getAttribute('data-deck') || '';
     if (!d) return '';
-    if (d === 'svg') { var s = Math.floor(n / 13), r = n % 13; return '/cards/svg/' + ((r === 12 ? 1 : r + 2) + ['d','h','s','c'][s]) + '.svg'; }
-    return '/cards/' + d + '/' + n + '.png';
+    var ext = document.documentElement.getAttribute('data-deck-ext') || 'png';
+    return '/cards/' + d + '/' + n + '.' + ext;
   }
   function _deckBack() {
     var d = document.documentElement.getAttribute('data-deck') || '';
     if (!d) return '';
-    if (d === 'svg') return '/cards/svg/back.svg';
-    return '/cards/' + d + '/flipside.png';
+    var ext = document.documentElement.getAttribute('data-deck-ext') || 'png';
+    return '/cards/' + d + '/flipside.' + ext;
   }
   function _refreshDeck() {
     try {
@@ -9477,4 +9477,4 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.2.225'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.2.226'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();

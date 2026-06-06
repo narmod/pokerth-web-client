@@ -67,8 +67,8 @@ const TABLES = [
 ];
 const DECKS = [
   { id: '',    key: 'deckClassic', fallback: 'Classic', swatch: '#e6e6e6' },
-  { id: 'pokerth', key: 'deckPokerth', fallback: 'PokerTH', swatch: '#1d6b30' },
-  { id: 'pokerth-new', key: 'deckPokerthNew', fallback: 'PokerTH new', preview: '/cards/pokerth-new/preview.png', swatch: '#a52a2a' },
+  { id: 'pokerth', key: 'deckPokerth', fallback: 'PokerTH', swatch: '#1d6b30', ext: 'png' },
+  { id: 'pokerth-new', key: 'deckPokerthNew', fallback: 'PokerTH new', preview: '/cards/pokerth-new/preview.png', swatch: '#a52a2a', ext: 'svg' },
 ];
 
 const palette = makeAxis({ storeKey: 'pth_theme', attr: 'data-theme', items: PALETTES, titleKey: 'sectionPalette', titleFallback: 'Palette' });
@@ -105,10 +105,11 @@ function activePreset() {
   return null;
 }
 
-try { if (localStorage.getItem('pth_deck') === 'svg') localStorage.setItem('pth_deck', 'pokerth'); } catch (e) {}
+try { if (localStorage.getItem('pth_deck') === 'svg') { localStorage.setItem('pth_deck', 'pokerth-new'); localStorage.setItem('pth_deck_ext', 'svg'); } } catch (e) {}
 
 // Apply saved values on load (idempotent with the <head> boot snippet).
 AXES.forEach(function (ax) { try { ax.apply(ax.get()); } catch (e) {} });
+try { var _cd = deck.get(); if (_cd) document.documentElement.setAttribute('data-deck-ext', _deckExt(_cd)); else document.documentElement.removeAttribute('data-deck-ext'); } catch (e) {}
 
 // Gallery card decks discovered at runtime from /cards/decks.json (managed by
 // install.sh deck-add). Best-effort: offline/absent -> only the built-in decks.
@@ -120,7 +121,7 @@ function _loadGalleryDecks() {
       .then(function (list) {
         if (!Array.isArray(list)) return;
         _galleryDecks = list.filter(function (d) { return d && d.id; }).map(function (d) {
-          return { id: String(d.id), name: d.name || String(d.id), preview: d.preview || null, swatch: '#1e6b1e' };
+          return { id: String(d.id), name: d.name || String(d.id), preview: d.preview || null, ext: (d.ext === 'svg' ? 'svg' : 'png'), swatch: '#1e6b1e' };
         }).filter(function (d) { for (var i = 0; i < DECKS.length; i++) if (DECKS[i].id === d.id) return false; return true; });
         if (_body) _render();
       })
@@ -131,7 +132,15 @@ _loadGalleryDecks();
 
 // Deck changes need the monolith to re-point card faces + back (no re-render).
 var _deckApply = deck.apply;
-deck.apply = function (id) { _deckApply(id); try { if (window._refreshDeck) window._refreshDeck(); } catch (e) {} };
+function _deckExt(id) { var all = DECKS.concat(_galleryDecks); for (var i = 0; i < all.length; i++) if (all[i].id === id) return all[i].ext || 'png'; return 'png'; }
+deck.apply = function (id) {
+  _deckApply(id);
+  try {
+    if (id) { var e = _deckExt(id); document.documentElement.setAttribute('data-deck-ext', e); localStorage.setItem('pth_deck_ext', e); }
+    else { document.documentElement.removeAttribute('data-deck-ext'); localStorage.removeItem('pth_deck_ext'); }
+  } catch (e) {}
+  try { if (window._refreshDeck) window._refreshDeck(); } catch (e) {}
+};
 deck.set = deck.apply;
 
 // ── Single "Theme" panel ────────────────────────────────────────────────
@@ -202,7 +211,7 @@ function _feltStyle(t) {
 }
 function _pngFan(deckId, big) {
   function c(src, x, r) { return '<img src="' + src + '" alt="" style="position:absolute;top:50%;left:' + x + '%;height:' + (big ? 80 : 76) + '%;width:auto;border-radius:3px;transform:translateY(-50%) rotate(' + r + 'deg);box-shadow:0 1px 3px rgba(0,0,0,.5)">'; }
-  return c('/cards/' + deckId + '/flipside.png', big ? 8 : 6, -12) + c('/cards/' + deckId + '/25.png', big ? 32 : 30, 0) + c('/cards/' + deckId + '/38.png', big ? 54 : 52, 12);
+  var ext = _deckExt(deckId); return c('/cards/' + deckId + '/flipside.' + ext, big ? 8 : 6, -12) + c('/cards/' + deckId + '/25.' + ext, big ? 32 : 30, 0) + c('/cards/' + deckId + '/38.' + ext, big ? 54 : 52, 12);
 }
 // Mini card faces for previews, matching the in-game Classic layout
 // (rank+suit index top-left, large suit pip centered).
@@ -223,7 +232,7 @@ function _classicFan(big) {
     + _miniFront('A', '\u2660', false, big, 'top:50%;left:' + (big ? 54 : 52) + '%;transform:translateY(-50%) rotate(12deg);');
 }
 function _cardOnFelt(deckId, big) {
-  if (deckId) return '<img src="/cards/' + deckId + '/38.png" alt="" style="position:absolute;top:50%;left:50%;height:' + (big ? 78 : 74) + '%;width:auto;border-radius:3px;transform:translate(-50%,-50%) rotate(-6deg);box-shadow:0 2px 5px rgba(0,0,0,.5)">';
+  if (deckId) return '<img src="/cards/' + deckId + '/38.' + _deckExt(deckId) + '" alt="" style="position:absolute;top:50%;left:50%;height:' + (big ? 78 : 74) + '%;width:auto;border-radius:3px;transform:translate(-50%,-50%) rotate(-6deg);box-shadow:0 2px 5px rgba(0,0,0,.5)">';
   return _miniFront('A', '\u2660', false, big, 'top:50%;left:50%;transform:translate(-50%,-50%) rotate(-6deg);');
 }
 function _previewHTML(kind, item, big) {

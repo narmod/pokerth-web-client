@@ -26,9 +26,14 @@ if (!existsSync(dir)) {
   process.exit(1);
 }
 
-function isGalleryDeck(p) {
-  if (!existsSync(join(p, 'flipside.png'))) return false;
-  for (let i = 0; i < 52; i++) if (!existsSync(join(p, i + '.png'))) return false;
+function deckExt(p) {
+  if (existsSync(join(p, '0.png')) && existsSync(join(p, 'flipside.png'))) return 'png';
+  if (existsSync(join(p, '0.svg')) && existsSync(join(p, 'flipside.svg'))) return 'svg';
+  return null;
+}
+function isGalleryDeck(p, ext) {
+  if (!ext || !existsSync(join(p, 'flipside.' + ext))) return false;
+  for (let i = 0; i < 52; i++) if (!existsSync(join(p, i + '.' + ext))) return false;
   return true;
 }
 
@@ -56,11 +61,13 @@ for (const name of names) {
   let st;
   try { st = statSync(p); } catch { continue; }
   if (!st.isDirectory()) continue;
-  if (!isGalleryDeck(p)) continue;
+  const ext = deckExt(p);
+  if (!isGalleryDeck(p, ext)) continue;
   out.push({
     id: name,
     name: deckName(p, name),
-    preview: existsSync(join(p, 'preview.png')) ? ('/cards/' + name + '/preview.png') : null,
+    preview: existsSync(join(p, 'preview.png')) ? ('/cards/' + name + '/preview.png') : (existsSync(join(p, 'preview.svg')) ? ('/cards/' + name + '/preview.svg') : null),
+    ext: ext,
   });
 }
 
