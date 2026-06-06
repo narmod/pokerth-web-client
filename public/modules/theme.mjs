@@ -36,15 +36,12 @@ function _t(key, fallback) {
 // titleKey, titleFallback }. id '' = the default (:root) → attribute removed.
 function makeAxis(cfg) {
   function get() {
-    try { return localStorage.getItem(cfg.storeKey) || cfg.def || ''; } catch (e) { return ''; }
+    try { var v = localStorage.getItem(cfg.storeKey); return (v === null || v === undefined) ? (cfg.def || '') : v; } catch (e) { return cfg.def || ''; }
   }
   function apply(id) {
     var el = document.documentElement;
     if (id) el.setAttribute(cfg.attr, id); else el.removeAttribute(cfg.attr);
-    try {
-      if (id) localStorage.setItem(cfg.storeKey, id);
-      else localStorage.removeItem(cfg.storeKey);
-    } catch (e) {}
+    try { localStorage.setItem(cfg.storeKey, id || ''); } catch (e) {}
   }
   return {
     storeKey: cfg.storeKey, attr: cfg.attr, items: cfg.items,
@@ -89,8 +86,8 @@ var PUCKS_ITEMS   = [ {id:'',key:'pucksDefault',fallback:'Chips',swatch:'#c8a850
 const palette = makeAxis({ storeKey: 'pth_theme', attr: 'data-theme', items: PALETTES, titleKey: 'sectionPalette', titleFallback: 'Palette' });
 const table   = makeAxis({ storeKey: 'pth_table', attr: 'data-table', items: TABLES,   titleKey: 'sectionTable',   titleFallback: 'Table' });
 const deck    = makeAxis({ storeKey: 'pth_deck',  attr: 'data-deck',  def: 'casino-vert',  items: DECKS,    titleKey: 'sectionDeck',    titleFallback: 'Cards' });
-const buttons = makeAxis({ storeKey: 'pth_buttons', attr: 'data-buttons', def: '', items: BUTTONS_ITEMS, titleKey: 'sectionButtons', titleFallback: 'Buttons' });
-const pucks   = makeAxis({ storeKey: 'pth_pucks',   attr: 'data-pucks',   def: '', items: PUCKS_ITEMS,   titleKey: 'sectionPucks',   titleFallback: 'Pucks' });
+const buttons = makeAxis({ storeKey: 'pth_buttons', attr: 'data-buttons', def: 'casino-vert', items: BUTTONS_ITEMS, titleKey: 'sectionButtons', titleFallback: 'Buttons' });
+const pucks   = makeAxis({ storeKey: 'pth_pucks',   attr: 'data-pucks',   def: 'casino-vert', items: PUCKS_ITEMS,   titleKey: 'sectionPucks',   titleFallback: 'Pucks' });
 const AXES = [palette, table, buttons, pucks, deck];
 
 // ── Presets (main themes) ───────────────────────────────────────────────────
@@ -98,7 +95,7 @@ const AXES = [palette, table, buttons, pucks, deck];
 // (this project's look). "Official PokerTH" ≈ the official client (dark UI +
 // textured green felt + vector cards). Order = display order.
 const PRESETS = [
-  { id: 'casino',  key: 'presetCasino',   fallback: 'Casino vert',     swatch: '#1e6b1e', values: { theme: '',     table: '',      deck: 'casino-vert', buttons: '', pucks: '' } },
+  { id: 'casino',  key: 'presetCasino',   fallback: 'Casino vert',     swatch: '#1e6b1e', values: { theme: '',     table: '',      deck: 'casino-vert', buttons: 'casino-vert', pucks: 'casino-vert' } },
   { id: 'pokerth', key: 'presetOfficial', fallback: 'Official PokerTH', swatch: '#232730', values: { theme: 'dark', table: 'photo', deck: 'pokerth', buttons: '', pucks: '' } },
   { id: 'pokerthnew', key: 'presetPokerthNew', fallback: 'PokerTH new', swatch: '#a52a2a', values: { theme: 'dark', table: 'photo', deck: 'pokerth-new', buttons: '', pucks: '' } },
 ];
@@ -199,7 +196,8 @@ function _injectButtons(spec){
   el.removeAttribute('data-btn-img');
   if (spec && spec.colors){
     for (var k=0;k<BUTTON_TOKENS.length;k++){ var key=BUTTON_TOKENS[k], v=spec.colors[key]; if(v!=null){ el.style.setProperty('--'+key,v); css+='--'+key+':'+v+';'; } }
-  } else if (spec && spec.images){
+  }
+  if (spec && spec.images){
     var M=[['fold','--btn-fold-img'],['check','--btn-check-img'],['call','--btn-call-img'],['raise','--btn-raise-img'],['allin','--btn-allin-img']];
     for (var m2=0;m2<M.length;m2++){ var u=spec.images[M[m2][0]]; if(u){ el.style.setProperty(M[m2][1],u); css+=M[m2][1]+':'+u+';'; } }
     el.setAttribute('data-btn-img','1'); css+='data-btn-img:1;';
@@ -230,7 +228,7 @@ var _btnApply = buttons.apply;
 buttons.apply = function(id){ _btnApply(id); try{
   if (id==='glossy') _injectButtons({colors:BUTTON_GLOSSY});
   else if (!id) _injectButtons(null);
-  else { var pk=_buttonPkgById(id); _injectButtons(pk?(pk.images?{images:pk.images}:(pk.colors?{colors:pk.colors}:null)):null); }
+  else { var pk=_buttonPkgById(id); _injectButtons(pk?{images:pk.images,colors:pk.colors}:null); }
 }catch(e){} };
 buttons.set = buttons.apply;
 var _pkApply = pucks.apply;
@@ -252,7 +250,7 @@ function _loadThemes(){
         _tablePkgs=pkgs.filter(function(p){return p.table||p.felt;}).map(function(p){ return {id:String(p.id),name:p.name||String(p.id),swatch:p.swatch||'#444',tokens:p.table||{},felt:p.felt||null}; }).filter(function(p){ return !_isBuiltinTable(p.id); });
         _pkgPresets=pkgs.filter(function(p){return p.palette||p.table||p.felt;}).map(function(p){ return {id:'pkg-'+p.id,name:p.name||String(p.id),swatch:p.swatch||'#444',values:{theme:(p.palette?String(p.id):''),table:((p.table||p.felt)?String(p.id):''),buttons:'glossy',pucks:'pokerth'}}; });
         _puckPkgs=pkgs.filter(function(p){return p.pucks;}).map(function(p){ var set={},pv=p.pucks; ['dealer','sb','bb'].forEach(function(k){ if(pv[k]) set[k]='url(/themes/'+p.id+'/'+pv[k]+')'; }); return {id:String(p.id),name:p.name||String(p.id),swatch:p.swatch||'#444',set:set,preview:(pv.dealer?'/themes/'+p.id+'/'+pv.dealer:null)}; }).filter(function(p){ return p.id!=='pokerth'; });
-        _buttonPkgs=pkgs.filter(function(p){return p.buttonImages||p.buttons;}).map(function(p){ var e={id:String(p.id),name:p.name||String(p.id),swatch:p.swatch||'#444'}; if(p.buttonImages){ e.images={}; ['fold','check','call','raise','allin'].forEach(function(k){ if(p.buttonImages[k]) e.images[k]='url(/themes/'+p.id+'/'+p.buttonImages[k]+')'; }); } else if(p.buttons){ e.colors=p.buttons; } return e; }).filter(function(p){ return p.id!=='glossy'; });
+        _buttonPkgs=pkgs.filter(function(p){return p.buttonImages||p.buttons;}).map(function(p){ var e={id:String(p.id),name:p.name||String(p.id),swatch:p.swatch||'#444'}; if(p.buttonImages){ e.images={}; ['fold','check','call','raise','allin'].forEach(function(k){ if(p.buttonImages[k]) e.images[k]='url(/themes/'+p.id+'/'+p.buttonImages[k]+')'; }); } if(p.buttons){ e.colors=p.buttons; } return e; }).filter(function(p){ return p.id!=='glossy'; });
         try{ var pp=_palettePkgById(palette.get()); if(pp) _injectPalette(pp); var tp=_tablePkgById(table.get()); if(tp) _injectTable(tp); }catch(e){}
         try{ buttons.apply(buttons.get()); pucks.apply(pucks.get()); }catch(e){}
         if(_body) _render();

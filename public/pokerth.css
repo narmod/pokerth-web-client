@@ -3137,13 +3137,13 @@ body.hide-pct-btns .pct-row { display: none; }
 .btn-allin:hover { background: rgba(192,57,43,0.15); filter: none; }
 .btn-allin b { color: var(--btn-allin-fg-b, #f4b0b0); }
 /* Image-backed action buttons (9-slice SVG/PNG via the Buttons axis). */
-:root[data-btn-img] .btn-action { border: 9px solid transparent; background: transparent; padding: 1px 9px; color: #fff; }
-:root[data-btn-img] .btn-fold  { border-image: var(--btn-fold-img) 9 fill / 9px / 0 stretch; }
-:root[data-btn-img] .btn-check { border-image: var(--btn-check-img) 9 fill / 9px / 0 stretch; }
-:root[data-btn-img] .btn-call  { border-image: var(--btn-call-img) 9 fill / 9px / 0 stretch; }
-:root[data-btn-img] .btn-raise { border-image: var(--btn-raise-img) 9 fill / 9px / 0 stretch; }
-:root[data-btn-img] .btn-allin { border-image: var(--btn-allin-img) 9 fill / 9px / 0 stretch; }
-:root[data-btn-img] .btn-allin b { color: #fff; }
+:root[data-btn-img] .btn-action { border: 9px solid transparent; background: transparent; padding: 1px 9px; }
+:root[data-btn-img] .btn-fold  { border-image: var(--btn-fold-img) 9 fill / 9px / 0 stretch; color: var(--btn-fold-fg, #fff); }
+:root[data-btn-img] .btn-check { border-image: var(--btn-check-img) 9 fill / 9px / 0 stretch; color: var(--btn-check-fg, #fff); }
+:root[data-btn-img] .btn-call  { border-image: var(--btn-call-img) 9 fill / 9px / 0 stretch; color: var(--btn-call-fg, #fff); }
+:root[data-btn-img] .btn-raise { border-image: var(--btn-raise-img) 9 fill / 9px / 0 stretch; color: var(--btn-raise-fg, #fff); }
+:root[data-btn-img] .btn-allin { border-image: var(--btn-allin-img) 9 fill / 9px / 0 stretch; color: var(--btn-allin-fg, #fff); }
+:root[data-btn-img] .btn-allin b { color: var(--btn-allin-fg-b, #fff); }
 
 
 .raise-input {
