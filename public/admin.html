@@ -52,6 +52,9 @@
   .btnrow{display:flex;gap:8px;flex-wrap:wrap}
   .use.danger{background:rgba(184,52,52,.16);border-color:rgba(184,52,52,.5);color:#e98a8a}
   .use:disabled{opacity:.5;cursor:default}
+  .rank{flex:none;width:30px;text-align:center;font-weight:700;color:var(--gold);font-size:.82rem}
+  .net{flex:none;text-align:right;font-weight:700;font-size:.86rem;min-width:70px}
+  .net.pos{color:#7fd17f}.net.neg{color:#e98a8a}
 </style>
 </head>
 <body>
@@ -208,16 +211,24 @@
 
   // leaderboard
   function bmsg(t,cls){ $('boardmsg').textContent=t; $('boardmsg').className='msg '+(cls||''); }
+  function fmtSigned(n){ n=Math.round(Number(n)||0); return (n>0?'+':'')+n.toLocaleString(); }
   function loadBoard(){
     fetch('/stats').then(function(r){return r.json();}).then(function(s){
-      var names=Object.keys(s||{}); $('boardcount').textContent=names.length+' player'+(names.length===1?'':'s');
+      s=s||{}; var names=Object.keys(s); $('boardcount').textContent=names.length+' player'+(names.length===1?'':'s')+(names.length?' \u00b7 by net':'');
       var el=$('players'); if(!names.length){ el.innerHTML='<div class="empty">(empty)</div>'; return; } el.innerHTML='';
-      names.sort(function(a,b){return a.localeCompare(b);}).forEach(function(n){
-        var row=document.createElement('div');row.className='row';
-        var nm=document.createElement('div');nm.className='nm';var b=document.createElement('b');b.textContent=n;nm.appendChild(b);row.appendChild(nm);
-        var del=document.createElement('button');del.className='del';del.textContent='Remove';del.addEventListener('click',function(){removePlayer(n);});
-        row.appendChild(del);el.appendChild(row);
-      });
+      names.map(function(n){ var v=s[n]||{}; return { name:n, net:Number(v.net)||0, gw:Number(v.gamesWon)||0, gp:Number(v.gamesPlayed)||0, hw:Number(v.handsWon)||0, hp:Number(v.handsPlayed)||0, streak:Number(v.bestStreak)||0 }; })
+        .sort(function(a,b){ return (b.net-a.net) || (b.gw-a.gw) || (b.hw-a.hw) || a.name.localeCompare(b.name); })
+        .forEach(function(p,i){
+          var row=document.createElement('div');row.className='row';
+          var rk=document.createElement('div');rk.className='rank';rk.textContent='#'+(i+1);row.appendChild(rk);
+          var nm=document.createElement('div');nm.className='nm';
+          var b=document.createElement('b');b.textContent=p.name;nm.appendChild(b);
+          var span=document.createElement('span');span.textContent=p.gw+'/'+p.gp+' games \u00b7 '+p.hw+'/'+p.hp+' hands'+(p.streak?' \u00b7 streak '+p.streak:'');nm.appendChild(span);
+          row.appendChild(nm);
+          var net=document.createElement('div');net.className='net '+(p.net>0?'pos':(p.net<0?'neg':''));net.textContent=fmtSigned(p.net);row.appendChild(net);
+          var del=document.createElement('button');del.className='del';del.textContent='Remove';del.addEventListener('click',function(){removePlayer(p.name);});
+          row.appendChild(del);el.appendChild(row);
+        });
     }).catch(function(){ $('players').innerHTML='<div class="empty err">Could not load.</div>'; });
   }
   function removePlayer(n){ if(!confirm('Remove player \u201c'+n+'\u201d from the leaderboard?'))return;
