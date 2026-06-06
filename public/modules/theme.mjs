@@ -258,7 +258,12 @@ pucks.apply = function(id){ _pkApply(id); try{
   if (id==='pokerth') _injectPucks(PUCK_SET);
   else if (!id) _injectPucks(null);
   else { var pk=_puckPkgById(id); if(pk) _injectPucks(pk.set); else { var gt=_galleryTableById(id); if(gt) _injectPucks(gt.pucks||null); } }
-}catch(e){} };
+}catch(e){}
+  // Les pucks sont des <img> figes au rendu (le feutre, lui, est une variable CSS live) :
+  // apres avoir change --puck-*, on redemande un rendu des sieges + barre heros pour que
+  // les jetons affiches prennent le nouveau motif. No-op hors partie (garde seats.length).
+  try { if (window._renderSeats) window._renderSeats(); } catch (e) {}
+};
 pucks.set = pucks.apply;
 try{ _injectButtons(buttons.get()==='glossy'?{colors:BUTTON_GLOSSY}:null); _injectPucks(pucks.get()==='pokerth'?PUCK_SET:null); }catch(e){}
 function _loadThemes(){
