@@ -7672,6 +7672,13 @@ function dismissWinner() {
         _playerAvatars = {}; _playerImgAvatars = {};
         _pthAvatarHashes = {}; _pthAvatarsByHash = {}; _pthAvatarReqIdToHash = {}; _pthDataUrls = {};
         loaded  = false;
+        // Repeindre tout de suite la liste (désormais vide) : sinon, dans un
+        // lobby calme/vide (ex. retour de l'entraînement vers un serveur en
+        // ligne sans table), aucun GameListNew n'arrive pour déclencher un
+        // redraw et les tables de l'ancien mode RESTENT affichées jusqu'à un
+        // clic sur une pastille filtre. renderGames() rétablit l'état « en
+        // chargement » jusqu'au premier GameListNew qui repeuplera la liste.
+        renderGames();
       }
 
       // Direct WSS for any pokerth.net mode (guest or authenticated). The
@@ -9598,4 +9605,4 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.2.251'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.2.252'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
