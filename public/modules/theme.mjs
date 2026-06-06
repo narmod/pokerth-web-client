@@ -348,10 +348,10 @@ function _feltStyle(t) {
   if (t && t.feltUrl) return 'background:url(' + t.feltUrl + ') center/cover';
   if (t && t.felt) return 'background:url(/themes/' + t.id + '/' + t.felt + ') center/cover';
   var sw = (t && t.swatch) || '#1e6b1e';
-  return 'background:radial-gradient(circle at 50% 36%, color-mix(in srgb,' + sw + ',#fff 12%), color-mix(in srgb,' + sw + ',#000 55%))';
+  return 'background:' + sw + ';background:radial-gradient(circle at 50% 36%, color-mix(in srgb,' + sw + ',#fff 12%), color-mix(in srgb,' + sw + ',#000 55%))';
 }
 function _pngFan(deckId, big) {
-  function c(src, x, r) { return '<img src="' + src + '" alt="" style="position:absolute;top:50%;left:' + x + '%;height:' + (big ? 80 : 76) + '%;width:auto;border-radius:3px;transform:translateY(-50%) rotate(' + r + 'deg);box-shadow:0 1px 3px rgba(0,0,0,.5)">'; }
+  function c(src, x, r) { return '<img src="' + src + '" alt="" style="position:absolute;top:50%;left:' + x + '%;height:' + (big ? 80 : 76) + '%;width:auto;aspect-ratio:5/7;border-radius:3px;transform:translateY(-50%) rotate(' + r + 'deg);box-shadow:0 1px 3px rgba(0,0,0,.5)">'; }
   var ext = _deckExt(deckId); return c('/cards/' + deckId + '/flipside.' + ext, big ? 8 : 6, -12) + c('/cards/' + deckId + '/25.' + ext, big ? 32 : 30, 0) + c('/cards/' + deckId + '/38.' + ext, big ? 54 : 52, 12);
 }
 // Mini card faces for previews, matching the in-game Classic layout
@@ -373,7 +373,7 @@ function _classicFan(big) {
     + _miniFront('A', '\u2660', false, big, 'top:50%;left:' + (big ? 54 : 52) + '%;transform:translateY(-50%) rotate(12deg);');
 }
 function _cardOnFelt(deckId, big) {
-  if (deckId) return '<img src="/cards/' + deckId + '/38.' + _deckExt(deckId) + '" alt="" style="position:absolute;top:50%;left:50%;height:' + (big ? 78 : 74) + '%;width:auto;border-radius:3px;transform:translate(-50%,-50%) rotate(-6deg);box-shadow:0 2px 5px rgba(0,0,0,.5)">';
+  if (deckId) return '<img src="/cards/' + deckId + '/38.' + _deckExt(deckId) + '" alt="" style="position:absolute;top:50%;left:50%;height:' + (big ? 78 : 74) + '%;width:auto;aspect-ratio:5/7;border-radius:3px;transform:translate(-50%,-50%) rotate(-6deg);box-shadow:0 2px 5px rgba(0,0,0,.5)">';
   return _miniFront('A', '\u2660', false, big, 'top:50%;left:50%;transform:translate(-50%,-50%) rotate(-6deg);');
 }
 function _previewHTML(kind, item, big) {
