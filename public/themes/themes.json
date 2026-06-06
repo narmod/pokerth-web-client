@@ -3,16 +3,11 @@
     "id": "pokerth-red",
     "name": "Red Felt (PokerTH)",
     "swatch": "#7a1518",
-    "tokens": {
+    "felt": "felt.jpg",
+    "palette": {
       "felt": "#2c1012",
       "felt-mid": "#3a1418",
       "felt-hi": "#4c1c20",
-      "felt-base-hi": "#7a1518",
-      "felt-base-mid": "#4a0e0e",
-      "felt-base-lo": "#280606",
-      "rail": "#6b3e18",
-      "rail-dark": "#3a2208",
-      "rail-glow": "rgba(150,60,40,0.30)",
       "panel": "rgba(26,8,10,0.93)",
       "panel-hi": "rgba(38,12,14,0.94)",
       "gold": "#c8a84a",
@@ -26,6 +21,13 @@
       "modal-bg": "linear-gradient(160deg, #2c0e10 0%, #3c1519 50%, #1f0709 100%)",
       "body-glow": "rgba(140,40,40,0.16)"
     },
-    "felt": "felt.jpg"
+    "table": {
+      "felt-base-hi": "#7a1518",
+      "felt-base-mid": "#4a0e0e",
+      "felt-base-lo": "#280606",
+      "rail": "#6b3e18",
+      "rail-dark": "#3a2208",
+      "rail-glow": "rgba(150,60,40,0.30)"
+    }
   }
 ]

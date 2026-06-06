@@ -88,20 +88,22 @@ const PRESETS = [
 ];
 
 function applyPreset(id) {
-  var p = null;
-  for (var i = 0; i < PRESETS.length; i++) if (PRESETS[i].id === id) p = PRESETS[i];
+  var all = PRESETS.concat(_pkgPresets), p = null;
+  for (var i = 0; i < all.length; i++) if (all[i].id === id) p = all[i];
   if (!p) return;
-  palette.apply(p.values.theme);
-  table.apply(p.values.table);
-  deck.apply(p.values.deck);
+  if (p.values.theme !== undefined) palette.apply(p.values.theme);
+  if (p.values.table !== undefined) table.apply(p.values.table);
+  if (p.values.deck !== undefined) deck.apply(p.values.deck);
 }
 
 // Which preset matches the current axis values? null = custom mix.
 function activePreset() {
   var cur = { theme: palette.get(), table: table.get(), deck: deck.get() };
-  for (var i = 0; i < PRESETS.length; i++) {
-    var v = PRESETS[i].values;
-    if (v.theme === cur.theme && v.table === cur.table && v.deck === cur.deck) return PRESETS[i].id;
+  var all = PRESETS.concat(_pkgPresets);
+  for (var i = 0; i < all.length; i++) {
+    var v = all[i].values;
+    var deckOk = (v.deck === undefined) || (v.deck === cur.deck);
+    if (v.theme === cur.theme && v.table === cur.table && deckOk) return all[i].id;
   }
   return null;
 }
@@ -144,40 +146,52 @@ deck.apply = function (id) {
 };
 deck.set = deck.apply;
 
-// ── Theme packages (Palette axis) : injection dynamique de tokens + feutre optionnel ──
-var _themes = [];
-var THEME_TOKENS = ['felt','felt-mid','felt-hi','felt-base-hi','felt-base-mid','felt-base-lo','rail','rail-dark','rail-glow','panel','panel-hi','gold','gold-hi','gold-dim','cream','text','text-hi','border','border-hi','modal-bg','body-glow'];
-function _themeById(id){ for (var i=0;i<_themes.length;i++) if (_themes[i].id===id) return _themes[i]; return null; }
+// ── Theme packages : un "table style" importe se decompose en une palette (couleurs UI/popups)
+//    + un tapis (feutre, liseré, image) + un preset combinant les deux. ──
+var _palettePkgs = [], _tablePkgs = [], _pkgPresets = [];
+var PALETTE_TOKENS = ['felt','felt-mid','felt-hi','panel','panel-hi','gold','gold-hi','gold-dim','cream','text','text-hi','border','border-hi','modal-bg','body-glow'];
+var TABLE_TOKENS = ['felt-base-hi','felt-base-mid','felt-base-lo','rail','rail-dark','rail-glow'];
+function _palettePkgById(id){ for (var i=0;i<_palettePkgs.length;i++) if (_palettePkgs[i].id===id) return _palettePkgs[i]; return null; }
+function _tablePkgById(id){ for (var i=0;i<_tablePkgs.length;i++) if (_tablePkgs[i].id===id) return _tablePkgs[i]; return null; }
 function _isBuiltinPalette(id){ for (var i=0;i<PALETTES.length;i++) if (PALETTES[i].id===id) return true; return false; }
-function _injectTheme(pkg){
+function _isBuiltinTable(id){ for (var i=0;i<TABLES.length;i++) if (TABLES[i].id===id) return true; return false; }
+function _injectAxis(keys, pkg, storeKey, withFelt){
   var el=document.documentElement, css='';
-  for (var i=0;i<THEME_TOKENS.length;i++){
-    var k=THEME_TOKENS[i], v=(pkg&&pkg.tokens)?pkg.tokens[k]:null;
+  for (var i=0;i<keys.length;i++){
+    var k=keys[i], v=(pkg&&pkg.tokens)?pkg.tokens[k]:null;
     if (v!=null){ el.style.setProperty('--'+k,v); css+='--'+k+':'+v+';'; } else el.style.removeProperty('--'+k);
   }
-  if (pkg&&pkg.felt){ var fi='url(/themes/'+pkg.id+'/'+pkg.felt+') center / cover no-repeat'; el.style.setProperty('--felt-img',fi); css+='--felt-img:'+fi+';'; }
-  else el.style.removeProperty('--felt-img');
-  try{ if(css) localStorage.setItem('pth_theme_css',css); else localStorage.removeItem('pth_theme_css'); }catch(e){}
+  if (withFelt){
+    if (pkg&&pkg.felt){ var fi='url(/themes/'+pkg.id+'/'+pkg.felt+') center / cover no-repeat'; el.style.setProperty('--felt-img',fi); css+='--felt-img:'+fi+';'; }
+    else el.style.removeProperty('--felt-img');
+  }
+  try{ if(css) localStorage.setItem(storeKey,css); else localStorage.removeItem(storeKey); }catch(e){}
 }
+function _injectPalette(pkg){ _injectAxis(PALETTE_TOKENS, pkg, 'pth_theme_css', false); }
+function _injectTable(pkg){ _injectAxis(TABLE_TOKENS, pkg, 'pth_table_css', true); }
 var _palApply = palette.apply;
 palette.apply = function(id){
   _palApply(id);
-  try{
-    if (_isBuiltinPalette(id)) _injectTheme(null);
-    else { var pk=_themeById(id); if(pk) _injectTheme(pk); }
-  }catch(e){}
+  try{ if (_isBuiltinPalette(id)) _injectPalette(null); else { var pk=_palettePkgById(id); if(pk) _injectPalette(pk); } }catch(e){}
 };
 palette.set = palette.apply;
+var _tblApply = table.apply;
+table.apply = function(id){
+  _tblApply(id);
+  try{ if (_isBuiltinTable(id)) _injectTable(null); else { var pk=_tablePkgById(id); if(pk) _injectTable(pk); } }catch(e){}
+};
+table.set = table.apply;
 function _loadThemes(){
   try{
     fetch('/themes/themes.json',{cache:'no-store'})
       .then(function(r){return r.ok?r.json():[];})
       .then(function(list){
         if(!Array.isArray(list)) return;
-        _themes=list.filter(function(t){return t&&t.id&&t.tokens;}).map(function(t){
-          return {id:String(t.id),name:t.name||String(t.id),swatch:t.swatch||'#444',tokens:t.tokens,felt:t.felt||null};
-        }).filter(function(t){ return !_isBuiltinPalette(t.id); });
-        try{ var pk=_themeById(palette.get()); if(pk) _injectTheme(pk); }catch(e){}
+        var pkgs=list.filter(function(p){return p&&p.id&&(p.palette||p.table||p.felt);});
+        _palettePkgs=pkgs.filter(function(p){return p.palette;}).map(function(p){ return {id:String(p.id),name:p.name||String(p.id),swatch:p.swatch||'#444',tokens:p.palette}; }).filter(function(p){ return !_isBuiltinPalette(p.id); });
+        _tablePkgs=pkgs.filter(function(p){return p.table||p.felt;}).map(function(p){ return {id:String(p.id),name:p.name||String(p.id),swatch:p.swatch||'#444',tokens:p.table||{},felt:p.felt||null}; }).filter(function(p){ return !_isBuiltinTable(p.id); });
+        _pkgPresets=pkgs.map(function(p){ return {id:'pkg-'+p.id,name:p.name||String(p.id),swatch:p.swatch||'#444',values:{theme:(p.palette?String(p.id):''),table:((p.table||p.felt)?String(p.id):'')}}; });
+        try{ var pp=_palettePkgById(palette.get()); if(pp) _injectPalette(pp); var tp=_tablePkgById(table.get()); if(tp) _injectTable(tp); }catch(e){}
         if(_body) _render();
       }).catch(function(){});
   }catch(e){}
@@ -243,10 +257,11 @@ function _row() {
 
 // -- Preview thumbnails (small inside the control, large beside it) -----------
 function _tableById(id) { for (var i = 0; i < TABLES.length; i++) if (TABLES[i].id === id) return TABLES[i]; return TABLES[0]; }
-function _presetById(id) { for (var i = 0; i < PRESETS.length; i++) if (PRESETS[i].id === id) return PRESETS[i]; return PRESETS[0]; }
+function _presetById(id) { var all = PRESETS.concat(_pkgPresets); for (var i = 0; i < all.length; i++) if (all[i].id === id) return all[i]; return PRESETS[0]; }
 
 function _feltStyle(t) {
   if (t && t.id === 'photo') return 'background:url(/table/felt-green.jpg) center/cover';
+  if (t && t.felt) return 'background:url(/themes/' + t.id + '/' + t.felt + ') center/cover';
   var sw = (t && t.swatch) || '#1e6b1e';
   return 'background:radial-gradient(circle at 50% 36%, color-mix(in srgb,' + sw + ',#fff 12%), color-mix(in srgb,' + sw + ',#000 55%))';
 }
@@ -349,11 +364,11 @@ function _render() {
 
   // 1) Presets ("main themes") as a dropdown
   var act = activePreset();
-  var presetOptions = PRESETS.map(function (p) {
-    return { item: p, name: _t(p.key, p.fallback), active: p.id === act, onClick: function () { applyPreset(p.id); _openSec = null; _render(); } };
+  var presetOptions = PRESETS.concat(_pkgPresets).map(function (p) {
+    return { item: p, name: (p.name || _t(p.key, p.fallback)), active: p.id === act, onClick: function () { applyPreset(p.id); _openSec = null; _render(); } };
   });
   var curPreset, curPresetName;
-  if (act) { curPreset = _presetById(act); curPresetName = _t(curPreset.key, curPreset.fallback); }
+  if (act) { curPreset = _presetById(act); curPresetName = (curPreset.name || _t(curPreset.key, curPreset.fallback)); }
   else { curPreset = { values: { theme: palette.get(), table: table.get(), deck: deck.get() } }; curPresetName = _t('presetCustom', 'Custom'); }
   _body.appendChild(_sectionHeader(_t('sectionPresets', 'Themes'), ''));
   _body.appendChild(_dropdownBlock('preset', '', 'preset', curPreset, curPresetName, presetOptions));
@@ -368,7 +383,7 @@ function _render() {
   AXES.forEach(function (ax) {
     var cur = ax.get();
     var kind = (ax === palette) ? 'palette' : (ax === table) ? 'table' : 'deck';
-    var opts = (ax === deck) ? DECKS.concat(_galleryDecks) : (ax === palette ? PALETTES.concat(_themes) : ax.items);
+    var opts = (ax === deck) ? DECKS.concat(_galleryDecks) : (ax === palette ? PALETTES.concat(_palettePkgs) : (ax === table ? TABLES.concat(_tablePkgs) : ax.items));
     var curItem = opts[0];
     for (var i = 0; i < opts.length; i++) if (opts[i].id === cur) curItem = opts[i];
     var curName = curItem.name || _t(curItem.key, curItem.fallback);

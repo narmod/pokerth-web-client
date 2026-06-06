@@ -1,5 +1,7 @@
 // Scans public/themes/<id>/theme.json -> public/themes/themes.json
-// A theme package = { name, swatch, felt?, tokens:{...} } + optional felt image.
+// A theme package may declare a `palette` (UI colours -> Palette axis) and/or a
+// `table` (felt + rail -> Table axis) and an optional felt image; the web client
+// derives a Palette option, a Table option, and a combined preset from each.
 import { readdirSync, existsSync, readFileSync, writeFileSync, statSync } from 'fs';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
@@ -16,10 +18,12 @@ function main() {
       const cfgPath = join(dir, 'theme.json');
       if (!existsSync(cfgPath)) continue;
       let cfg; try { cfg = JSON.parse(readFileSync(cfgPath, 'utf8')); } catch { continue; }
-      if (!cfg || !cfg.tokens || typeof cfg.tokens !== 'object') continue;
-      const entry = { id: name, name: cfg.name || name, swatch: cfg.swatch || '#444444', tokens: cfg.tokens };
+      if (!cfg) continue;
+      const entry = { id: name, name: cfg.name || name, swatch: cfg.swatch || '#444444' };
       if (cfg.felt && existsSync(join(dir, cfg.felt))) entry.felt = cfg.felt;
-      out.push(entry);
+      if (cfg.palette && typeof cfg.palette === 'object') entry.palette = cfg.palette;
+      if (cfg.table && typeof cfg.table === 'object') entry.table = cfg.table;
+      if (entry.palette || entry.table || entry.felt) out.push(entry);
     }
   }
   writeFileSync(OUT, JSON.stringify(out, null, 2) + '\n');

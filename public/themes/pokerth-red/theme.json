@@ -2,16 +2,18 @@
   "name": "Red Felt (PokerTH)",
   "swatch": "#7a1518",
   "felt": "felt.jpg",
-  "tokens": {
-    "felt": "#2c1012",
-    "felt-mid": "#3a1418",
-    "felt-hi": "#4c1c20",
+  "table": {
     "felt-base-hi": "#7a1518",
     "felt-base-mid": "#4a0e0e",
     "felt-base-lo": "#280606",
     "rail": "#6b3e18",
     "rail-dark": "#3a2208",
-    "rail-glow": "rgba(150,60,40,0.30)",
+    "rail-glow": "rgba(150,60,40,0.30)"
+  },
+  "palette": {
+    "felt": "#2c1012",
+    "felt-mid": "#3a1418",
+    "felt-hi": "#4c1c20",
     "panel": "rgba(26,8,10,0.93)",
     "panel-hi": "rgba(38,12,14,0.94)",
     "gold": "#c8a84a",
