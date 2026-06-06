@@ -398,7 +398,8 @@ function _previewHTML(kind, item, big) {
     return '<span style="' + box + ';background:#14331a;display:flex;align-items:center;justify-content:center"><i style="width:' + ds + 'px;height:' + ds + 'px;border-radius:50%;background:#c8a850;border:2px solid #fff;box-shadow:0 0 0 1px #0006"></i></span>';
   }
   if (kind === 'preset') {
-    var t = _tableById(item && item.values ? item.values.table : '');
+    var _tv = (item && item.values) ? item.values.table : '';
+    var t = _isBuiltinTable(_tv) ? _tableById(_tv) : (_tablePkgById(_tv) || (item && item.swatch ? { id: _tv, swatch: item.swatch } : _tableById(_tv)));
     return '<span style="' + box + ';' + _feltStyle(t) + '">' + _cardOnFelt(item && item.values ? item.values.deck : '', big) + '</span>';
   }
   return '<span style="' + box + '"></span>';
