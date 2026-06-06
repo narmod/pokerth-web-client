@@ -228,10 +228,18 @@ function _injectButtons(spec){
 }
 function _injectPucks(set){
   var el=document.documentElement, css='', M=[['dealer','--puck-dealer'],['sb','--puck-sb'],['bb','--puck-bb']];
+  var urls={dealer:null,sb:null,bb:null};
   for (var j=0;j<M.length;j++){
     var u=set?set[M[j][0]]:null;
-    if (u){ el.style.setProperty(M[j][1],u); css+=M[j][1]+':'+u+';'; } else el.style.removeProperty(M[j][1]);
+    if (u){ el.style.setProperty(M[j][1],u); css+=M[j][1]+':'+u+';';
+      var s=String(u), p=s.indexOf('url('); if(p>=0){ s=s.slice(p+4); var q=s.indexOf(')'); if(q>=0) s=s.slice(0,q); s=s.replace(/^\s*["']|["']\s*$/g,'').trim(); }
+      urls[M[j][0]]=s||null;
+    } else el.style.removeProperty(M[j][1]);
   }
+  // iOS WebKit renvoie parfois une valeur PERIMEE de getComputedStyle pour une custom
+  // property modifiee en JS -> le puck restait fige sur l'ancien theme. On publie les
+  // URLs directement pour que le rendu (chipSvg/_pthPuck) les lise sans getComputedStyle.
+  try { window._pthPuckUrls = urls; } catch(e){}
   try{ if(css) localStorage.setItem('pth_pucks_css',css); else localStorage.removeItem('pth_pucks_css'); }catch(e){}
 }
 var _palApply = palette.apply;

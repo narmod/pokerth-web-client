@@ -5773,6 +5773,15 @@ const App = (() => {
   // ─── Jeton de blind SVG (casino chip style) ───
   function _pthPuck(varName){
     if (!varName) return null;
+    // iOS WebKit can return a STALE getComputedStyle value for a custom property after
+    // a JS setProperty, which froze the puck on the previous theme. theme.mjs publishes
+    // the current puck URLs directly (always fresh) -> read those first.
+    try {
+      var _k = varName === '--puck-sb' ? 'sb' : (varName === '--puck-bb' ? 'bb' : (varName === '--puck-dealer' ? 'dealer' : null));
+      if (_k && window._pthPuckUrls && Object.prototype.hasOwnProperty.call(window._pthPuckUrls, _k)) {
+        return window._pthPuckUrls[_k] || null;
+      }
+    } catch (e) {}
     try{
       var v = getComputedStyle(document.documentElement).getPropertyValue(varName);
       if (!v) return null; v = v.trim();
@@ -9589,4 +9598,4 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.2.250'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.2.251'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
