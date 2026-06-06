@@ -87,7 +87,7 @@ const table   = makeAxis({ storeKey: 'pth_table', attr: 'data-table', items: TAB
 const deck    = makeAxis({ storeKey: 'pth_deck',  attr: 'data-deck',  def: 'casino-vert',  items: DECKS,    titleKey: 'sectionDeck',    titleFallback: 'Cards' });
 const buttons = makeAxis({ storeKey: 'pth_buttons', attr: 'data-buttons', def: 'casino-vert', items: BUTTONS_ITEMS, titleKey: 'sectionButtons', titleFallback: 'Buttons' });
 const pucks   = makeAxis({ storeKey: 'pth_pucks',   attr: 'data-pucks',   def: 'casino-vert', items: PUCKS_ITEMS,   titleKey: 'sectionPucks',   titleFallback: 'Pucks' });
-const AXES = [palette, table, buttons, pucks, deck];
+const AXES = [deck, palette, table, buttons, pucks];
 
 // ── Presets (main themes) ───────────────────────────────────────────────────
 // A preset is just a named combo of axis ids. "Casino vert" = all defaults
