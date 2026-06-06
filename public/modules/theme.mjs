@@ -133,12 +133,14 @@ deck.set = deck.apply;
 // ── Single "Theme" panel ────────────────────────────────────────────────
 const PANEL_ID = 'theme-panel', OVERLAY_ID = 'theme-panel-overlay';
 var _body = null; // re-rendered on each change so highlights stay in sync
+var _openSec = null; // which dropdown is expanded (accordion; one open at a time)
 
 function _panelEsc(e) { if (e.key === 'Escape') closeThemePanel(); }
 
 function closeThemePanel() {
   try { document.removeEventListener('keydown', _panelEsc); } catch (e) {}
   _body = null;
+  _openSec = null;
   [PANEL_ID, OVERLAY_ID].forEach(function (id) {
     var el = document.getElementById(id);
     if (el && el.parentNode) el.parentNode.removeChild(el);
@@ -185,47 +187,130 @@ function _row() {
   return r;
 }
 
+// -- Preview thumbnails (small inside the control, large beside it) -----------
+function _tableById(id) { for (var i = 0; i < TABLES.length; i++) if (TABLES[i].id === id) return TABLES[i]; return TABLES[0]; }
+function _presetById(id) { for (var i = 0; i < PRESETS.length; i++) if (PRESETS[i].id === id) return PRESETS[i]; return PRESETS[0]; }
+
+function _feltStyle(t) {
+  if (t && t.id === 'photo') return 'background:url(/table/felt-green.jpg) center/cover';
+  var sw = (t && t.swatch) || '#1e6b1e';
+  return 'background:radial-gradient(circle at 50% 36%, color-mix(in srgb,' + sw + ',#fff 12%), color-mix(in srgb,' + sw + ',#000 55%))';
+}
+function _svgFan(big) {
+  function c(src, x, r) { return '<img src="' + src + '" alt="" style="position:absolute;top:50%;left:' + x + '%;height:' + (big ? 80 : 76) + '%;width:auto;border-radius:3px;transform:translateY(-50%) rotate(' + r + 'deg);box-shadow:0 1px 3px rgba(0,0,0,.5)">'; }
+  return c('/cards/svg/back.svg', big ? 8 : 6, -12) + c('/cards/svg/1h.svg', big ? 32 : 30, 0) + c('/cards/svg/1s.svg', big ? 54 : 52, 12);
+}
+function _glyphCards(big) {
+  function g(rank, suit, col, x, r) { return '<i style="position:absolute;top:50%;left:' + x + '%;transform:translateY(-50%) rotate(' + r + 'deg);background:#f7f4ec;border-radius:3px;width:30%;height:74%;display:flex;flex-direction:column;align-items:center;justify-content:center;font-weight:800;line-height:1;box-shadow:0 1px 2px rgba(0,0,0,.45);font-size:' + (big ? '0.62rem' : '0.5rem') + ';color:' + col + '"><span>' + rank + '</span><span style="font-size:1.3em">' + suit + '</span></i>'; }
+  return g('A', '\u2660', '#15110c', big ? 18 : 16, -10) + g('K', '\u2665', '#c01f2e', big ? 48 : 46, 10);
+}
+function _cardOnFelt(deckId, big) {
+  if (deckId === 'svg') return '<img src="/cards/svg/1s.svg" alt="" style="position:absolute;top:50%;left:50%;height:' + (big ? 78 : 74) + '%;width:auto;border-radius:3px;transform:translate(-50%,-50%) rotate(-6deg);box-shadow:0 2px 5px rgba(0,0,0,.5)">';
+  return '<i style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) rotate(-6deg);background:#f7f4ec;border-radius:3px;width:30%;height:74%;display:flex;flex-direction:column;align-items:center;justify-content:center;font-weight:800;line-height:1;box-shadow:0 2px 5px rgba(0,0,0,.5);font-size:' + (big ? '0.66rem' : '0.5rem') + ';color:#15110c"><span>A</span><span style="font-size:1.3em">\u2660</span></i>';
+}
+function _previewHTML(kind, item, big) {
+  var box = 'display:block;position:relative;flex:none;border-radius:6px;overflow:hidden;border:1px solid rgba(255,255,255,0.18);background:#0b1a0d;' + (big ? 'width:92px;height:66px' : 'width:30px;height:22px');
+  if (kind === 'palette') {
+    var bg = (item && item.swatch) || '#14331a';
+    return '<span style="' + box + ';background:' + bg + '">'
+      + '<i style="position:absolute;right:' + (big ? 4 : 3) + 'px;top:' + (big ? 4 : 3) + 'px;width:' + (big ? 9 : 6) + 'px;height:' + (big ? 9 : 6) + 'px;border-radius:50%;background:#c8a84a"></i>'
+      + '<i style="position:absolute;right:' + (big ? 4 : 3) + 'px;bottom:' + (big ? 4 : 3) + 'px;width:' + (big ? 13 : 8) + 'px;height:' + (big ? 4 : 3) + 'px;border-radius:2px;background:#f0e6d2"></i></span>';
+  }
+  if (kind === 'table') {
+    return '<span style="' + box + ';' + _feltStyle(item) + ';box-shadow:inset 0 0 0 ' + (big ? 3 : 2) + 'px #5b4420, inset 0 0 0 ' + (big ? 4 : 3) + 'px rgba(0,0,0,.45)"></span>';
+  }
+  if (kind === 'deck') {
+    if (item && item.preview) return '<span style="' + box + '"><img src="' + item.preview + '" alt="" style="width:100%;height:100%;object-fit:cover;display:block"></span>';
+    var cards = (item && item.id === 'svg') ? _svgFan(big) : _glyphCards(big);
+    return '<span style="' + box + ';background:linear-gradient(160deg,#1c5a28,#0c3214)">' + cards + '</span>';
+  }
+  if (kind === 'preset') {
+    var t = _tableById(item && item.values ? item.values.table : '');
+    return '<span style="' + box + ';' + _feltStyle(t) + '">' + _cardOnFelt(item && item.values ? item.values.deck : '', big) + '</span>';
+  }
+  return '<span style="' + box + '"></span>';
+}
+
+// A dropdown control: button (thumb + name + chevron) with a large preview
+// beside it; expands in place (accordion) to a list of options with thumbnails.
+function _dropdownBlock(secId, labelText, kind, curItem, curName, options) {
+  var sec = document.createElement('div'); sec.style.cssText = 'margin:0 0 11px';
+  if (labelText) {
+    var lab = document.createElement('div'); lab.textContent = labelText;
+    lab.style.cssText = 'font-size:0.72rem;color:var(--text,#9aaa92);margin:0 2px 5px';
+    sec.appendChild(lab);
+  }
+  var row = document.createElement('div'); row.style.cssText = 'display:flex;gap:9px;align-items:flex-start';
+  var dd = document.createElement('div'); dd.style.cssText = 'flex:1;min-width:0';
+  var open = _openSec === secId;
+  var btn = document.createElement('button'); btn.type = 'button';
+  btn.style.cssText = 'display:flex;align-items:center;gap:8px;width:100%;box-sizing:border-box;padding:7px 9px;border-radius:8px;cursor:pointer;text-align:left;color:var(--cream,#f0e6d2);font-size:0.84rem;background:rgba(255,255,255,0.03);border:1px solid ' + (open ? 'var(--gold,#c8a84a)' : 'var(--border,rgba(200,168,74,0.25))');
+  btn.innerHTML = _previewHTML(kind, curItem, false)
+    + '<span style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' + curName + '</span>'
+    + '<span style="color:var(--text,#9aaa92);font-size:0.72rem;display:inline-block;transition:transform .15s;transform:rotate(' + (open ? '180' : '0') + 'deg)">\u25be</span>';
+  btn.addEventListener('click', function (e) { e.stopPropagation(); _openSec = open ? null : secId; _render(); });
+  dd.appendChild(btn);
+  if (open) {
+    var list = document.createElement('div');
+    list.style.cssText = 'margin-top:5px;border:1px solid var(--border,rgba(200,168,74,0.25));border-radius:8px;overflow:hidden;background:#0b1a0d';
+    options.forEach(function (o, idx) {
+      var it = document.createElement('div');
+      it.style.cssText = 'display:flex;align-items:center;gap:9px;padding:7px 9px;cursor:pointer;' + (idx ? 'border-top:1px solid rgba(255,255,255,0.05);' : '') + (o.active ? 'background:var(--gold-dim,rgba(200,168,74,0.18))' : '');
+      it.innerHTML = _previewHTML(kind, o.item, false)
+        + '<span style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:0.84rem">' + o.name + '</span>'
+        + (o.active ? '<span style="color:var(--gold,#c8a84a)">\u2713</span>' : '');
+      if (!o.active) {
+        it.addEventListener('mouseenter', function () { it.style.background = 'rgba(255,255,255,0.07)'; });
+        it.addEventListener('mouseleave', function () { it.style.background = ''; });
+      }
+      it.addEventListener('click', function (e) { e.stopPropagation(); o.onClick(); });
+      list.appendChild(it);
+    });
+    dd.appendChild(list);
+  }
+  row.appendChild(dd);
+  var prev = document.createElement('div'); prev.style.cssText = 'flex:none'; prev.innerHTML = _previewHTML(kind, curItem, true);
+  row.appendChild(prev);
+  sec.appendChild(row);
+  return sec;
+}
+
 function _render() {
   if (!_body) return;
   _body.innerHTML = '';
 
-  // 1) Presets ("main themes")
+  // 1) Presets ("main themes") as a dropdown
   var act = activePreset();
-  var pSec = document.createElement('div');
-  pSec.style.cssText = 'margin:0 0 12px';
-  pSec.appendChild(_sectionHeader(_t('sectionPresets', 'Themes'), act ? '' : _t('presetCustom', 'Custom')));
-  var pRow = _row();
-  PRESETS.forEach(function (p) {
-    pRow.appendChild(_pill(_t(p.key, p.fallback), p.swatch, p.id === act, true, function () { applyPreset(p.id); _render(); }));
+  var presetOptions = PRESETS.map(function (p) {
+    return { item: p, name: _t(p.key, p.fallback), active: p.id === act, onClick: function () { applyPreset(p.id); _openSec = null; _render(); } };
   });
-  pSec.appendChild(pRow);
-  _body.appendChild(pSec);
+  var curPreset, curPresetName;
+  if (act) { curPreset = _presetById(act); curPresetName = _t(curPreset.key, curPreset.fallback); }
+  else { curPreset = { values: { theme: palette.get(), table: table.get(), deck: deck.get() } }; curPresetName = _t('presetCustom', 'Custom'); }
+  _body.appendChild(_sectionHeader(_t('sectionPresets', 'Themes'), ''));
+  _body.appendChild(_dropdownBlock('preset', '', 'preset', curPreset, curPresetName, presetOptions));
 
   // separator
   var sep = document.createElement('div');
-  sep.style.cssText = 'height:1px;background:var(--border,rgba(200,168,74,0.18));margin:0 0 11px';
+  sep.style.cssText = 'height:1px;background:var(--border,rgba(200,168,74,0.18));margin:3px 0 11px';
   _body.appendChild(sep);
 
-  // 2) Customize (per-axis)
+  // 2) Customize (per-axis dropdowns)
   _body.appendChild(_sectionHeader(_t('sectionCustomize', 'Customize'), ''));
   AXES.forEach(function (ax) {
     var cur = ax.get();
-    var sec = document.createElement('div');
-    sec.style.cssText = 'margin:0 0 10px';
-    var lab = document.createElement('div');
-    lab.textContent = _t(ax.titleKey, ax.titleFallback);
-    lab.style.cssText = 'font-size:0.72rem;color:var(--text,#9aaa92);margin:0 2px 5px';
-    sec.appendChild(lab);
-    var row = _row();
+    var kind = (ax === palette) ? 'palette' : (ax === table) ? 'table' : 'deck';
     var opts = (ax === deck) ? DECKS.concat(_galleryDecks) : ax.items;
-    opts.forEach(function (it) {
-      var label = it.name || _t(it.key, it.fallback);
-      row.appendChild(_pill(label, it.swatch, it.id === cur, false, (function (id) {
-        return function () { ax.apply(id); _render(); };
-      })(it.id), it.preview));
+    var curItem = opts[0];
+    for (var i = 0; i < opts.length; i++) if (opts[i].id === cur) curItem = opts[i];
+    var curName = curItem.name || _t(curItem.key, curItem.fallback);
+    var options = opts.map(function (it) {
+      return {
+        item: it, name: (it.name || _t(it.key, it.fallback)), active: it.id === cur,
+        onClick: (function (id) { return function () { ax.apply(id); _openSec = null; _render(); }; })(it.id),
+      };
     });
-    sec.appendChild(row);
-    _body.appendChild(sec);
+    _body.appendChild(_dropdownBlock(kind, _t(ax.titleKey, ax.titleFallback), kind, curItem, curName, options));
   });
 }
 
