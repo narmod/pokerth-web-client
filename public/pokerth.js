@@ -1266,6 +1266,42 @@ document.addEventListener("DOMContentLoaded", function() {
     try { if (!window._shareLinkActive && App && App.onServerOrGuestChange) App.onServerOrGuestChange(); } catch (e) {}
   });
 
+  // ── App-mode gating (admin → /app-config). The connect screen offers three
+  //    entry modes via #server-mode: lan-dedi (LAN), pokerthnet, offline (bots).
+  //    The admin can disable any; we hide the matching <option> here. fetch() is
+  //    async so this lands AFTER the synchronous restore above. The 400 ms watcher
+  //    treats localStorage('pth_server_mode') as the single source of truth, so if
+  //    the mode we'd land on is disabled we rewrite that key to the first enabled
+  //    mode — otherwise the watcher would keep forcing the disabled choice back.
+  (function () {
+    var MAP = { 'lan-dedi': 'lan', 'pokerthnet': 'pokerthnet', 'offline': 'offline' };
+    function applyModes(modes) {
+      var sm = document.getElementById('server-mode');
+      if (!sm || !sm.options || !sm.options.length) return;
+      var firstEnabled = null;
+      for (var i = 0; i < sm.options.length; i++) {
+        var opt = sm.options[i], key = MAP[opt.value], off = key && modes[key] === false;
+        if (off) { opt.hidden = true; opt.disabled = true; opt.style.display = 'none'; }
+        else if (firstEnabled === null) firstEnabled = opt.value;
+      }
+      if (firstEnabled === null) return;
+      var want = null; try { want = localStorage.getItem('pth_server_mode'); } catch (e) {}
+      var effective = want || sm.value;
+      if (MAP[effective] && modes[MAP[effective]] === false) {
+        try { localStorage.setItem('pth_server_mode', firstEnabled); } catch (e) {}
+        sm.value = firstEnabled;
+        try { if (window.App && App.onServerOrGuestChange) App.onServerOrGuestChange(); } catch (e) {}
+      }
+    }
+    function go() {
+      fetch('/app-config', { cache: 'no-store' })
+        .then(function (r) { return r.json(); })
+        .then(function (c) { if (c && c.modes) applyModes(c.modes); })
+        .catch(function () {});
+    }
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', go); else go();
+  })();
+
   // iOS Safari restores <select> values at an UNPREDICTABLE time — sometimes
   // even after 'load' — and WITHOUT firing onchange, silently desyncing the
   // connect UI from the visible dropdown (e.g. menu shows training but the hint
@@ -9509,4 +9545,4 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.2.238'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.2.239'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
