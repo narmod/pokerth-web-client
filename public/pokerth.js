@@ -7599,6 +7599,16 @@ function dismissWinner() {
 
       setStatus(directWS ? t('connDirect') : t('connProxy'));
 
+      // Réactions emoji : aucun canal dédié sur pokerth.net (protocole officiel).
+      // On les désactive en mode direct pour ne pas détourner le chat ; elles
+      // restent disponibles en LAN / serveur dédié (relayées par le proxy).
+      window._directWS = directWS;
+      try {
+        var _rtb = document.getElementById('react-toggle-btn');
+        if (_rtb) _rtb.style.display = directWS ? 'none' : '';
+        if (directWS) { var _rp = document.getElementById('g-reaction-panel'); if (_rp) _rp.style.display = 'none'; }
+      } catch (e) {}
+
       // Sauvegarder les paramètres pour la reconnexion auto
       // Record this Init's identity so the NEXT connect() can compare
       // and apply the mode-swap delay if needed.
@@ -8189,6 +8199,7 @@ function dismissWinner() {
 
     sendReaction(emoji) {
       if (!ws || !gId) return;
+      if (directWS) return; // pokerth.net : pas de canal de réaction dédié → désactivé
       // Envoyer via le proxy en message TEXTE WebSocket (pas PokerTH protocol)
       // → contourne les restrictions chat du serveur PokerTH
       if (ws && !directWS && ws.readyState === WebSocket.OPEN) {
@@ -9307,6 +9318,11 @@ function joinWithPassword() {
 }
 
 function toggleReactionPanel() {
+  if (window._directWS) { // pokerth.net : réactions désactivées
+    var _p = document.getElementById('g-reaction-panel'); if (_p) _p.style.display = 'none';
+    var _b = document.getElementById('react-toggle-btn'); if (_b) _b.style.display = 'none';
+    return;
+  }
   var panel = document.getElementById('g-reaction-panel');
   var btn   = document.getElementById('react-toggle-btn');
   if (!panel) return;
@@ -9493,4 +9509,4 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.2.237'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.2.238'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
