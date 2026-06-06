@@ -1,0 +1,30 @@
+{
+  "name": "Graphite (PokerTH)",
+  "swatch": "#3a4048",
+  "felt": "felt.jpg",
+  "table": {
+    "felt-base-hi": "#3a4048",
+    "felt-base-mid": "#232830",
+    "felt-base-lo": "#12161c",
+    "rail": "#6b3e18",
+    "rail-dark": "#3a2208",
+    "rail-glow": "rgba(90,100,120,0.25)"
+  },
+  "palette": {
+    "felt": "#0d0f12",
+    "felt-mid": "#15181d",
+    "felt-hi": "#1e232a",
+    "panel": "rgba(16,18,22,0.93)",
+    "panel-hi": "rgba(24,28,34,0.94)",
+    "cream": "#e8ebef",
+    "text": "#a6aeba",
+    "text-hi": "#d8dee6",
+    "modal-bg": "linear-gradient(160deg, #101216 0%, #1a1e24 50%, #0c0e12 100%)",
+    "body-glow": "rgba(90,100,120,0.12)",
+    "gold": "#c8a84a",
+    "gold-hi": "#e0c070",
+    "gold-dim": "#7a6428",
+    "border": "rgba(200,168,74,0.25)",
+    "border-hi": "rgba(200,168,74,0.65)"
+  }
+}
