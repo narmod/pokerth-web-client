@@ -10,4 +10,5 @@ stats.meta.json
 /public/cards/*/
 !/public/cards/svg/
 !/public/cards/pokerth/
+!/public/cards/pokerth-new/
 /public/cards/decks.json

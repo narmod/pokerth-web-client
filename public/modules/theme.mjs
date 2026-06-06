@@ -68,6 +68,7 @@ const TABLES = [
 const DECKS = [
   { id: '',    key: 'deckClassic', fallback: 'Classic', swatch: '#e6e6e6' },
   { id: 'pokerth', key: 'deckPokerth', fallback: 'PokerTH', swatch: '#1d6b30' },
+  { id: 'pokerth-new', key: 'deckPokerthNew', fallback: 'PokerTH new', preview: '/cards/pokerth-new/preview.png', swatch: '#a52a2a' },
 ];
 
 const palette = makeAxis({ storeKey: 'pth_theme', attr: 'data-theme', items: PALETTES, titleKey: 'sectionPalette', titleFallback: 'Palette' });
@@ -82,6 +83,7 @@ const AXES = [palette, table, deck];
 const PRESETS = [
   { id: 'casino',  key: 'presetCasino',   fallback: 'Casino vert',     swatch: '#1e6b1e', values: { theme: '',     table: '',      deck: ''    } },
   { id: 'pokerth', key: 'presetOfficial', fallback: 'Official PokerTH', swatch: '#232730', values: { theme: 'dark', table: 'photo', deck: 'pokerth' } },
+  { id: 'pokerthnew', key: 'presetPokerthNew', fallback: 'PokerTH new', swatch: '#a52a2a', values: { theme: 'dark', table: 'photo', deck: 'pokerth-new' } },
 ];
 
 function applyPreset(id) {
