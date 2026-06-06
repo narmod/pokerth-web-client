@@ -520,6 +520,11 @@ function _render() {
   AXES.forEach(function (ax) {
     var cur = ax.get();
     var kind = (ax === palette) ? 'palette' : (ax === table) ? 'table' : (ax === deck) ? 'deck' : (ax === pucks) ? 'pucks' : 'palette';
+    // Accordion key MUST be unique per axis, and distinct from `kind` (the
+    // preview type). `kind` falls back to 'palette' for buttons (and any future
+    // axis), so reusing it as the open-section id made the buttons and palette
+    // dropdowns share a key → both opened/closed together. storeKey is unique.
+    var secId = ax.storeKey;
     var opts = (ax === deck) ? DECKS.concat(_galleryDecks) : (ax === palette ? PALETTES.concat(_palettePkgs) : (ax === table ? TABLES.concat(_tablePkgs).concat(_galleryTables) : (ax === buttons ? BUTTONS_ITEMS.concat(_buttonPkgs) : (ax === pucks ? PUCKS_ITEMS.concat(_puckPkgs).concat(_galleryTables) : ax.items))));
     var curItem = opts[0];
     for (var i = 0; i < opts.length; i++) if (opts[i].id === cur) curItem = opts[i];
@@ -530,7 +535,7 @@ function _render() {
         onClick: (function (id) { if (ax === table && _galleryTableById(id)) return function () { table.apply(id); pucks.apply(id); _openSec = null; _render(); }; return function () { ax.apply(id); _openSec = null; _render(); }; })(it.id),
       };
     });
-    _body.appendChild(_dropdownBlock(kind, _t(ax.titleKey, ax.titleFallback), kind, curItem, curName, options));
+    _body.appendChild(_dropdownBlock(secId, _t(ax.titleKey, ax.titleFallback), kind, curItem, curName, options));
   });
 
   // After (re)building the body, keep an expanded section in view.
