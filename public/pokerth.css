@@ -1397,20 +1397,78 @@ body {
   }
   .pb-cards { gap: 8px !important; }
 
-  /* ── Avatars des joueurs ── */
+  /* ── Joueurs (rendu standard : tablette paysage + base desktop) ── */
+  .seat-avatar {
+    width: 38px !important;
+    height: 38px !important;
+    font-size: 0.95rem !important;
+  }
+  .seat-avatar.is-bot .seat-initial { font-size: 1.1em !important; }
+  .seat-name   { font-size: 0.72rem !important; max-width: 84px !important; }
+  .seat-money  { font-size: 0.7rem !important; }
+  .seat-bet    { font-size: 0.58rem !important; }
+  .seat-action-label { font-size: 0.56rem !important; }
+  .seat { min-width: 54px !important; max-width: 86px !important; }
+
+  .seat.dealer .seat-avatar::after {
+    width: 16px !important; height: 16px !important;
+    font-size: 0.56rem !important;
+    top: -5px !important; right: -5px !important;
+  }
+  .blind-badge {
+    width: 16px !important; height: 16px !important;
+    font-size: 0.5rem !important;
+    top: -5px !important; left: -5px !important;
+  }
+  .seat .pk.xsm {
+    width: 24px !important;
+    height: 34px !important;
+    font-size: 0.6rem !important;
+  }
+
+  /* ── Scaler : marge pour les sièges qui débordent ── */
+  .table-scaler { padding: 80px 110px !important; }
+
+  /* ── Player bar ── */
+  .pb-avatar {
+    width: 46px !important; height: 46px !important;
+    font-size: 1.15rem !important;
+  }
+  .pb-name  { font-size: 0.9rem !important; }
+  .pb-money { font-size: 0.8rem !important; }
+  .pb-info  { min-width: 110px !important; }
+
+  /* ── Timer SVG autour de l'avatar ── */
+  .seat-timer {
+    width: 170% !important; height: 170% !important;
+    top: -35% !important; left: -35% !important;
+  }
+  .seat-timer-badge {
+    font-size: 0.88rem !important;
+    margin-top: 16px !important;
+    padding: 2px 7px !important;
+    min-width: 32px !important;
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   MODE DESKTOP (souris) — agrandissements appliqués UNIQUEMENT aux
+   écrans pointés à la souris. Une tablette tactile (même en paysage
+   ≥ 900px) garde le rendu standard ci-dessus.
+   ══════════════════════════════════════════════════════════════ */
+@media (min-width: 900px) and (hover: hover) and (pointer: fine) {
+
+  /* ── Joueurs ── */
   .seat-avatar {
     width: 52px !important;
     height: 52px !important;
     font-size: 1.3rem !important;
   }
-  .seat-avatar.is-bot .seat-initial { font-size: 1.1em !important; }
   .seat-name   { font-size: 0.98rem !important; max-width: 112px !important; }
   .seat-money  { font-size: 0.96rem !important; }
   .seat-bet    { font-size: 0.8rem !important; }
   .seat-action-label { font-size: 0.78rem !important; }
   .seat { min-width: 72px !important; max-width: 116px !important; }
-
-  /* Dealer badge + blind badges un peu plus grands */
   .seat.dealer .seat-avatar::after {
     width: 22px !important; height: 22px !important;
     font-size: 0.78rem !important;
@@ -1421,18 +1479,13 @@ body {
     font-size: 0.72rem !important;
     top: -7px !important; left: -7px !important;
   }
-
-  /* Cartes adversaires (xsm → un peu plus grandes) */
   .seat .pk.xsm {
     width: 32px !important;
     height: 46px !important;
     font-size: 0.8rem !important;
   }
 
-  /* ── Scaler : plus de marge pour les sièges qui débordent ── */
-  .table-scaler { padding: 80px 110px !important; }
-
-  /* ── Player bar — plus haute, infos plus lisibles ── */
+  /* ── Player bar ── */
   .pb-avatar {
     width: 52px !important; height: 52px !important;
     font-size: 1.3rem !important;
@@ -1443,48 +1496,32 @@ body {
   .pb-action { font-size: 0.9rem !important; min-width: 60px !important; }
   #pb-timer  { font-size: 0.9rem !important; }
 
-  /* ── Timer SVG autour de l'avatar ── */
-  .seat-timer {
-    width: 170% !important; height: 170% !important;
-    top: -35% !important; left: -35% !important;
-  }
-
-  /* ── Badge décompte : plus grand et écarté de l'arc sur grand écran ── */
-  .seat-timer-badge {
-    font-size: 0.88rem !important;
-    margin-top: 16px !important;
-    padding: 2px 7px !important;
-    min-width: 32px !important;
-  }
-
-  /* ── Contrôles d'action plus lisibles (desktop) ── */
+  /* ── Contrôles d'action ── */
   .btn-action { font-size: 0.9rem !important; padding: 11px 18px !important; }
   .btn-pct { padding: 11px 6px !important; }
   .btn-pct .pct-p   { font-size: 0.95rem !important; }
   .btn-pct .pct-amt { font-size: 0.8rem !important; }
   .raise-row .raise-input { font-size: 0.95rem !important; }
 
-  /* ── Vignette d'assistance (force de main) plus grande ── */
+  /* ── Vignette d'assistance ── */
   #hand-strength { font-size: 0.82rem !important; padding: 3px 14px !important; top: -40px !important; }
 
-  /* ── Header plus lisible (desktop) ── */
+  /* ── Header ── */
   .header { min-height: 44px !important; }
   .header-brand { font-size: 1.25rem !important; }
   .header .btn-sm { height: 36px !important; font-size: 0.92rem !important; padding: 0 16px !important; }
   .header .btn-icon { width: 40px !important; }
 
-  /* ── Barre du pot plus lisible (desktop) ── */
+  /* ── Barre du pot ── */
   #pot-strip { min-height: 32px !important; }
   .pot-side   { font-size: 0.9rem !important; }
   .pot-center { font-size: 1.05rem !important; }
 
-  /* ── Menu ••• plus lisible (desktop) ── */
+  /* ── Menu ••• ── */
   #g-overflow-menu, #l-overflow-menu { width: 264px !important; }
   #g-overflow-menu .btn-sm, #l-overflow-menu .btn-sm { font-size: 0.94rem !important; padding: 9px 32px 9px 14px !important; }
 
-  /* ══ Fenetres d'informations plus grandes (desktop) ══ */
-
-  /* Fin de main */
+  /* ══ Fenetres d'informations ══ */
   .winner-card { max-width: min(560px, 80vw) !important; padding: 24px 28px !important; }
   .wc-trophy { font-size: 2.5rem !important; }
   .wc-label { font-size: 0.72rem !important; }
@@ -1500,7 +1537,6 @@ body {
   .wc-player-delta { font-size: 0.95rem !important; }
   .winner-dismiss { font-size: 0.95rem !important; padding: 12px 24px !important; }
 
-  /* Fin de partie */
   .endgame-card { max-width: 600px !important; padding: 26px 34px !important; }
   .eg-trophy { font-size: 3.6rem !important; }
   .eg-title { font-size: 1.55rem !important; }
@@ -1512,7 +1548,6 @@ body {
   .eg-stat-row { font-size: 0.95rem !important; }
   .eg-btn { font-size: 0.92rem !important; padding: 12px 14px !important; }
 
-  /* Info partie */
   .gim-card { width: min(460px, 100%) !important; max-height: min(82vh, 680px) !important; }
   .gim-title { font-size: 1.4rem !important; }
   .gim-subtitle { font-size: 0.82rem !important; }
@@ -1520,14 +1555,12 @@ body {
   .gim-section-title { font-size: 0.72rem !important; }
   .gim-row { font-size: 0.95rem !important; }
 
-  /* Stats joueur */
   .pim-card { max-width: 400px !important; }
   .pim-avatar { width: 112px !important; height: 112px !important; }
   .pim-avatar.is-letter { font-size: 2.9rem !important; }
   .pim-name { font-size: 1.28rem !important; }
   .pim-flag { font-size: 0.95rem !important; }
 
-  /* Aide combinaisons */
   .hands-card { max-width: min(580px, 90vw) !important; }
   .hands-title { font-size: 0.95rem !important; }
   .hand-rank { font-size: 0.8rem !important; }
@@ -1536,7 +1569,6 @@ body {
   .hand-ico { font-size: 1.15rem !important; }
   .hands-legend { font-size: 0.74rem !important; }
 
-  /* Kick (admin) */
   .km-card { width: min(460px, 100%) !important; max-height: min(82vh, 680px) !important; }
   .km-title { font-size: 1.35rem !important; }
   .km-subtitle { font-size: 0.88rem !important; }
@@ -1545,7 +1577,6 @@ body {
   .km-row .km-name { font-size: 1rem !important; }
   .km-row .km-meta { font-size: 0.78rem !important; }
 
-  /* Quitter / Fermer la table */
   .ld-card { max-width: 500px !important; padding: 26px 28px !important; }
   .ld-title { font-size: 1.22rem !important; }
   .ld-body { font-size: 1rem !important; }

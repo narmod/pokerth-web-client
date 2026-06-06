@@ -8903,8 +8903,8 @@ function autoScaleTable() {
   // Scale to 68% of max: leaves 32% room for seat overflow around the oval
   // Sur desktop, on autorise jusqu'à 1.4 max
   // Sur mobile, on peut réduire en dessous de 1 pour tout faire tenir
-  var isMobScale = window.innerWidth < 900;
-  var scaleMax = isMobScale ? 1 : 1.4;
+  var isDeskScale = window.innerWidth >= 900 && window.matchMedia && window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+  var scaleMax = isDeskScale ? 1.4 : 1;
   var scale = Math.min(scaleMax, tzW / scW, tzH / scH);
   if (scale < 0.05) scale = 0.5; // fallback visible
   sc.style.transform = 'scale(' + scale.toFixed(3) + ')';
