@@ -5785,7 +5785,7 @@ const App = (() => {
   }
   function chipSvg(label, bg, fg, edge) {
     var _pk = _pthPuck(label === 'SB' ? '--puck-sb' : (label === 'BB' ? '--puck-bb' : ''));
-    if (_pk) return '<img class="blind-chip" src="' + _pk + '" alt="' + label + '" width="20" height="20">';
+    if (_pk) return '<img class="blind-chip" src="' + _pk + '" alt="' + label + '" width="20" height="20" onerror="this.outerHTML=window._pthChip(\'' + label + '\')">';
     var notches = '';
     for (var i = 0; i < 8; i++) {
       var rot = i * 45;
@@ -5805,7 +5805,7 @@ const App = (() => {
 
   function dealerChipSvg() {
     var _pk = _pthPuck('--puck-dealer');
-    if (_pk) return '<img class="dealer-chip" src="' + _pk + '" alt="D" width="20" height="20">';
+    if (_pk) return '<img class="dealer-chip" src="' + _pk + '" alt="D" width="20" height="20" onerror="this.outerHTML=window._pthChip(\'D\')">';
     var notches = '';
     for (var i = 0; i < 8; i++) {
       notches += '<rect x="13" y="0.5" width="6" height="7" rx="2" fill="#c8a850"'
@@ -5821,6 +5821,35 @@ const App = (() => {
       + ' font-family="Arial Black,Arial,sans-serif">D</text>'
       + '</svg>';
   }
+  // Fallback used by the puck <img onerror>: rebuild the built-in SVG chip so a
+  // missing/removed puck image (e.g. a stale --puck-* left in localStorage by a
+  // gallery theme that was later deleted) shows a proper D/SB/BB chip instead of
+  // a broken-image square.
+  window._pthChip = function (label) {
+    var d = (label === 'D');
+    var bg = d ? '#1a1a1a' : (label === 'SB' ? '#1565c0' : '#b71c1c');
+    var fg = d ? '#ffd700' : '#fff';
+    var edge = d ? '#3d2b00' : (label === 'SB' ? '#0a3d7a' : '#6d0c0c');
+    var nf = d ? '#c8a850' : 'white';
+    var ringStroke = d ? '#c8a850' : 'rgba(255,255,255,0.7)';
+    var cls = d ? 'dealer-chip' : 'blind-chip';
+    var txt = d ? 'D' : label;
+    var fs = d ? 9 : 7;
+    var notches = '';
+    for (var i = 0; i < 8; i++) {
+      notches += '<rect x="13" y="0.5" width="6" height="7" rx="2" fill="' + nf + '"'
+               + ' transform="rotate(' + (i * 45) + ' 16 16)" opacity="0.9"/>';
+    }
+    return '<svg class="' + cls + '" viewBox="0 0 32 32" width="20" height="20" xmlns="http://www.w3.org/2000/svg">'
+      + '<circle cx="16" cy="16" r="15.5" fill="' + edge + '"/>'
+      + '<circle cx="16" cy="16" r="13" fill="' + bg + '"/>'
+      + notches
+      + '<circle cx="16" cy="16" r="9" fill="' + bg + '" stroke="' + ringStroke + '" stroke-width="1.5"/>'
+      + '<text x="16" y="16.5" text-anchor="middle" dominant-baseline="central"'
+      + ' fill="' + fg + '" font-size="' + fs + '" font-weight="900"'
+      + ' font-family="Arial Black,Arial,sans-serif">' + txt + '</text>'
+      + '</svg>';
+  };
 
   function getPlayerName(pid) { return players[pid] || (pid === myId ? myName : '#'+pid); }
 
@@ -9545,4 +9574,4 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.2.239'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.2.240'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
