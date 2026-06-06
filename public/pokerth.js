@@ -3440,7 +3440,7 @@ const App = (() => {
         else loginType = 0; // lan
         if (useAcctAuth) loginType = 1; // mot de passe utilisateur saisi ⇒ authenticatedLogin
         // Track lifetime stats / leaderboard only on the private server & LAN
-        // (cookmed / LAN). pokerth.net modes (guest + registered) are never
+        // (private server / LAN). pokerth.net modes (guest + registered) are never
         // recorded — strangers and throwaway guest names would pollute it.
         // Stats scope by mode:
         //  • training (vs bots) → own persistent "à vie" store (pth_life_offline),
@@ -8225,7 +8225,7 @@ function dismissWinner() {
     },
     // ── Copy a shareable link to the current table ──────────────
     // Produces a URL like:
-    //   https://<thispage>/?host=cookmed.ddns.net&port=7234&tls=0&table=72
+    //   https://<thispage>/?host=your-server.example&port=7234&tls=0&table=72
     // When a guest opens it, parseShareLink() (run at load) prefills
     // the connect form with host/port/tls and stashes the table id;
     // after the lobby loads we auto-join that table (see the
