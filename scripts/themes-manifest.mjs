@@ -1,7 +1,8 @@
 // Scans public/themes/<id>/theme.json -> public/themes/themes.json
-// A theme package may declare a `palette` (UI colours -> Palette axis) and/or a
-// `table` (felt + rail -> Table axis) and an optional felt image; the web client
-// derives a Palette option, a Table option, and a combined preset from each.
+// A theme package may declare: palette (UI colours -> Palette axis), table
+// (felt + rail -> Table axis), buttons (action-button colours, applied with the
+// palette), pucks (dealer/SB/BB marker images, applied with the table), and an
+// optional felt image. The web client derives Palette + Table options + a preset.
 import { readdirSync, existsSync, readFileSync, writeFileSync, statSync } from 'fs';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
@@ -23,6 +24,14 @@ function main() {
       if (cfg.felt && existsSync(join(dir, cfg.felt))) entry.felt = cfg.felt;
       if (cfg.palette && typeof cfg.palette === 'object') entry.palette = cfg.palette;
       if (cfg.table && typeof cfg.table === 'object') entry.table = cfg.table;
+      if (cfg.buttons && typeof cfg.buttons === 'object') entry.buttons = cfg.buttons;
+      if (cfg.pucks && typeof cfg.pucks === 'object') {
+        const p = {};
+        for (const k of ['dealer', 'sb', 'bb']) {
+          if (cfg.pucks[k] && existsSync(join(dir, cfg.pucks[k]))) p[k] = cfg.pucks[k];
+        }
+        if (Object.keys(p).length) entry.pucks = p;
+      }
       if (entry.palette || entry.table || entry.felt) out.push(entry);
     }
   }

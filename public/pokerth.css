@@ -3067,10 +3067,10 @@ body {
 .btn-action:active { transform: scale(0.96); }
 .btn-action:hover  { filter: brightness(1.15); }
 
-.btn-fold  { background: #6b2020; color: #ffd0d0; }
-.btn-check { background: #1a5c1a; color: #c0ffc0; }
-.btn-call  { background: #1a4a8a; color: #c0d8ff; }
-.btn-raise { background: var(--gold); color: #110900; }
+.btn-fold  { background: var(--btn-fold-bg, #6b2020); color: var(--btn-fold-fg, #ffd0d0); }
+.btn-check { background: var(--btn-check-bg, #1a5c1a); color: var(--btn-check-fg, #c0ffc0); }
+.btn-call  { background: var(--btn-call-bg, #1a4a8a); color: var(--btn-call-fg, #c0d8ff); }
+.btn-raise { background: var(--btn-raise-bg, var(--gold)); color: var(--btn-raise-fg, #110900); }
 /* Compact auto check/fold toggle, sits next to Call/Check. Discreet at
    rest; turns green when armed for the next turn. Icon-only on narrow. */
 .btn-auto {
@@ -3130,12 +3130,12 @@ body.hide-pct-btns .pct-row { display: none; }
 /* All-In as a SECONDARY action: outlined, not a big red bar — avoids the
    red-on-red clash with Fold and discourages accidental taps. */
 .btn-allin {
-  background: transparent; color: #e88a8a;
-  border: 1.5px solid #c0392b; outline: none;
+  background: transparent; color: var(--btn-allin-fg, #e88a8a);
+  border: 1.5px solid var(--btn-allin-bd, #c0392b); outline: none;
   padding: 8px 12px; font-size: 0.7rem; letter-spacing: 0.1em;
 }
 .btn-allin:hover { background: rgba(192,57,43,0.15); filter: none; }
-.btn-allin b { color: #f4b0b0; }
+.btn-allin b { color: var(--btn-allin-fg-b, #f4b0b0); }
 
 .raise-input {
   background: rgba(255,255,255,0.06);

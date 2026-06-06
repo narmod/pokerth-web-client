@@ -5735,7 +5735,21 @@ const App = (() => {
   }
 
   // ─── Jeton de blind SVG (casino chip style) ───
+  function _pthPuck(varName){
+    if (!varName) return null;
+    try{
+      var v = getComputedStyle(document.documentElement).getPropertyValue(varName);
+      if (!v) return null; v = v.trim();
+      if (!v || v === 'none') return null;
+      var i = v.indexOf('url('); if (i < 0) return null;
+      var s = v.slice(i + 4); var j = s.indexOf(')'); if (j < 0) return null;
+      s = s.slice(0, j).trim().replace(/^["']|["']$/g, '');
+      return s || null;
+    }catch(e){ return null; }
+  }
   function chipSvg(label, bg, fg, edge) {
+    var _pk = _pthPuck(label === 'SB' ? '--puck-sb' : (label === 'BB' ? '--puck-bb' : ''));
+    if (_pk) return '<img class="blind-chip" src="' + _pk + '" alt="' + label + '" width="20" height="20">';
     var notches = '';
     for (var i = 0; i < 8; i++) {
       var rot = i * 45;
@@ -5754,6 +5768,8 @@ const App = (() => {
   }
 
   function dealerChipSvg() {
+    var _pk = _pthPuck('--puck-dealer');
+    if (_pk) return '<img class="dealer-chip" src="' + _pk + '" alt="D" width="20" height="20">';
     var notches = '';
     for (var i = 0; i < 8; i++) {
       notches += '<rect x="13" y="0.5" width="6" height="7" rx="2" fill="#c8a850"'
@@ -9477,4 +9493,4 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.2.231'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.2.232'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();

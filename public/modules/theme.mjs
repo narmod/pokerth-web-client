@@ -149,7 +149,7 @@ deck.set = deck.apply;
 // ── Theme packages : un "table style" importe se decompose en une palette (couleurs UI/popups)
 //    + un tapis (feutre, liseré, image) + un preset combinant les deux. ──
 var _palettePkgs = [], _tablePkgs = [], _pkgPresets = [];
-var PALETTE_TOKENS = ['felt','felt-mid','felt-hi','panel','panel-hi','gold','gold-hi','gold-dim','cream','text','text-hi','border','border-hi','modal-bg','body-glow'];
+var PALETTE_TOKENS = ['felt','felt-mid','felt-hi','panel','panel-hi','gold','gold-hi','gold-dim','cream','text','text-hi','border','border-hi','modal-bg','body-glow','btn-fold-bg','btn-fold-fg','btn-check-bg','btn-check-fg','btn-call-bg','btn-call-fg','btn-raise-bg','btn-raise-fg','btn-allin-bd','btn-allin-fg','btn-allin-fg-b'];
 var TABLE_TOKENS = ['felt-base-hi','felt-base-mid','felt-base-lo','rail','rail-dark','rail-glow'];
 function _palettePkgById(id){ for (var i=0;i<_palettePkgs.length;i++) if (_palettePkgs[i].id===id) return _palettePkgs[i]; return null; }
 function _tablePkgById(id){ for (var i=0;i<_tablePkgs.length;i++) if (_tablePkgs[i].id===id) return _tablePkgs[i]; return null; }
@@ -168,7 +168,21 @@ function _injectAxis(keys, pkg, storeKey, withFelt){
   try{ if(css) localStorage.setItem(storeKey,css); else localStorage.removeItem(storeKey); }catch(e){}
 }
 function _injectPalette(pkg){ _injectAxis(PALETTE_TOKENS, pkg, 'pth_theme_css', false); }
-function _injectTable(pkg){ _injectAxis(TABLE_TOKENS, pkg, 'pth_table_css', true); }
+function _injectTable(pkg){
+  var el=document.documentElement, css='';
+  for (var i=0;i<TABLE_TOKENS.length;i++){
+    var k=TABLE_TOKENS[i], v=(pkg&&pkg.tokens)?pkg.tokens[k]:null;
+    if (v!=null){ el.style.setProperty('--'+k,v); css+='--'+k+':'+v+';'; } else el.style.removeProperty('--'+k);
+  }
+  if (pkg&&pkg.felt){ var fi='url(/themes/'+pkg.id+'/'+pkg.felt+') center / cover no-repeat'; el.style.setProperty('--felt-img',fi); css+='--felt-img:'+fi+';'; }
+  else el.style.removeProperty('--felt-img');
+  var pk=pkg&&pkg.pucks, M=[['dealer','--puck-dealer'],['sb','--puck-sb'],['bb','--puck-bb']];
+  for (var j=0;j<M.length;j++){
+    if (pk && pk[M[j][0]]){ var pu='url(/themes/'+pkg.id+'/'+pk[M[j][0]]+')'; el.style.setProperty(M[j][1],pu); css+=M[j][1]+':'+pu+';'; }
+    else el.style.removeProperty(M[j][1]);
+  }
+  try{ if(css) localStorage.setItem('pth_table_css',css); else localStorage.removeItem('pth_table_css'); }catch(e){}
+}
 var _palApply = palette.apply;
 palette.apply = function(id){
   _palApply(id);
@@ -188,8 +202,8 @@ function _loadThemes(){
       .then(function(list){
         if(!Array.isArray(list)) return;
         var pkgs=list.filter(function(p){return p&&p.id&&(p.palette||p.table||p.felt);});
-        _palettePkgs=pkgs.filter(function(p){return p.palette;}).map(function(p){ return {id:String(p.id),name:p.name||String(p.id),swatch:p.swatch||'#444',tokens:p.palette}; }).filter(function(p){ return !_isBuiltinPalette(p.id); });
-        _tablePkgs=pkgs.filter(function(p){return p.table||p.felt;}).map(function(p){ return {id:String(p.id),name:p.name||String(p.id),swatch:p.swatch||'#444',tokens:p.table||{},felt:p.felt||null}; }).filter(function(p){ return !_isBuiltinTable(p.id); });
+        _palettePkgs=pkgs.filter(function(p){return p.palette;}).map(function(p){ return {id:String(p.id),name:p.name||String(p.id),swatch:p.swatch||'#444',tokens:Object.assign({},p.palette,p.buttons||{})}; }).filter(function(p){ return !_isBuiltinPalette(p.id); });
+        _tablePkgs=pkgs.filter(function(p){return p.table||p.felt||p.pucks;}).map(function(p){ return {id:String(p.id),name:p.name||String(p.id),swatch:p.swatch||'#444',tokens:p.table||{},felt:p.felt||null,pucks:p.pucks||null}; }).filter(function(p){ return !_isBuiltinTable(p.id); });
         _pkgPresets=pkgs.map(function(p){ return {id:'pkg-'+p.id,name:p.name||String(p.id),swatch:p.swatch||'#444',values:{theme:(p.palette?String(p.id):''),table:((p.table||p.felt)?String(p.id):'')}}; });
         try{ var pp=_palettePkgById(palette.get()); if(pp) _injectPalette(pp); var tp=_tablePkgById(table.get()); if(tp) _injectTable(tp); }catch(e){}
         if(_body) _render();
