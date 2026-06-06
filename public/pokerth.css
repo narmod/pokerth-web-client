@@ -2878,6 +2878,7 @@ body {
 .pk {
   width: 42px; height: 60px;
   border-radius: 4px;
+  position: relative;
   background: #fff; color: #111;
   display: flex; flex-direction: column;
   align-items: center; justify-content: center;
@@ -2919,8 +2920,8 @@ body {
   background-position: center;
   background-color: transparent;
 }
-:root[data-deck] .pk:not(.back) .c-rank,
-:root[data-deck] .pk:not(.back) .c-suit { display: none; }
+:root[data-deck] .pk:not(.back) .c-ix,
+:root[data-deck] .pk:not(.back) .c-pip { display: none; }
 /* Dos : --card-back est pose en inline sur <html> par le boot + _refreshDeck
    (deck-aware), pour .pk.back ET .fly-card, quel que soit le deck. */
 .pk.sm { width: 32px; height: 46px; font-size: 0.76rem; font-weight: 700; }
@@ -2931,8 +2932,15 @@ body {
    La 'couleur' (suit) prend ~1.3em au lieu de 0.9em, le rang ~1.35em au lieu de 1em.
    Avec `line-height:1` et flex-column, deux lignes de ~2.6em tiennent
    dans toutes les tailles de carte (xsm/sm/md/lg) sans débordement. */
-.pk .c-rank { font-size: 1.35em; line-height: 1; }
-.pk .c-suit { font-size: 1.3em; line-height: 1; margin-top: 1px; }
+/* Carte Classique : agencement standard facon PokerTH — index (rang+symbole)
+   en haut-gauche et bas-droite (pivote), grand symbole au centre. */
+.pk .c-ix { position: absolute; top: 7%; left: 9%; display: flex; flex-direction: column; align-items: center; line-height: 0.82; font-weight: 800; }
+.pk .c-ix.c-br { top: auto; left: auto; bottom: 7%; right: 9%; transform: rotate(180deg); }
+.pk .c-ix .c-rank { font-size: 0.92em; }
+.pk .c-ix .c-suit { font-size: 0.74em; margin-top: 0.05em; }
+.pk .c-pip { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 2em; line-height: 1; }
+/* Petites cartes : on garde un seul index (coin haut-gauche) + le centre, pour rester lisible. */
+.pk.sm .c-ix.c-br, .pk.xsm .c-ix.c-br { display: none; }
 /* ♠ pique : fond légèrement bleuté pour distinguer de ♣ trèfle (tous deux noirs) */
 .pk.spade { background: linear-gradient(160deg, #f4f7ff 0%, #edf1fc 100%); }
 

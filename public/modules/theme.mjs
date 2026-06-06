@@ -200,13 +200,27 @@ function _svgFan(big) {
   function c(src, x, r) { return '<img src="' + src + '" alt="" style="position:absolute;top:50%;left:' + x + '%;height:' + (big ? 80 : 76) + '%;width:auto;border-radius:3px;transform:translateY(-50%) rotate(' + r + 'deg);box-shadow:0 1px 3px rgba(0,0,0,.5)">'; }
   return c('/cards/svg/back.svg', big ? 8 : 6, -12) + c('/cards/svg/1h.svg', big ? 32 : 30, 0) + c('/cards/svg/1s.svg', big ? 54 : 52, 12);
 }
-function _glyphCards(big) {
-  function g(rank, suit, col, x, r) { return '<i style="position:absolute;top:50%;left:' + x + '%;transform:translateY(-50%) rotate(' + r + 'deg);background:#f7f4ec;border-radius:3px;width:30%;height:74%;display:flex;flex-direction:column;align-items:center;justify-content:center;font-weight:800;line-height:1;box-shadow:0 1px 2px rgba(0,0,0,.45);font-size:' + (big ? '0.62rem' : '0.5rem') + ';color:' + col + '"><span>' + rank + '</span><span style="font-size:1.3em">' + suit + '</span></i>'; }
-  return g('A', '\u2660', '#15110c', big ? 18 : 16, -10) + g('K', '\u2665', '#c01f2e', big ? 48 : 46, 10);
+// Mini card faces for previews, matching the in-game Classic layout
+// (rank+suit index top-left, large suit pip centered).
+function _miniFront(rank, suit, red, big, pos) {
+  var col = red ? '#c0392b' : '#15110c';
+  return '<span style="position:absolute;display:block;' + pos + 'background:#f7f4ec;border-radius:3px;height:' + (big ? 80 : 76) + '%;aspect-ratio:5/7;box-shadow:0 1px 3px rgba(0,0,0,.5);color:' + col + ';font-weight:800;line-height:1">'
+    + '<span style="position:absolute;top:7%;left:9%;display:flex;flex-direction:column;align-items:center;line-height:0.82;font-size:' + (big ? '0.5rem' : '0.34rem') + '"><span>' + rank + '</span><span style="font-size:0.8em">' + suit + '</span></span>'
+    + '<span style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:' + (big ? '1.15rem' : '0.66rem') + '">' + suit + '</span></span>';
+}
+function _miniBack(big, pos) {
+  return '<span style="position:absolute;display:flex;align-items:center;justify-content:center;' + pos + 'border-radius:3px;height:' + (big ? 80 : 76) + '%;aspect-ratio:5/7;background:radial-gradient(circle at 50% 44%,#234023,#0c1c0e);box-shadow:inset 0 0 0 1px #c8a84a,0 1px 3px rgba(0,0,0,.5)">'
+    + '<span style="color:#e0c070;font-size:' + (big ? '1rem' : '0.6rem') + ';font-family:Georgia,serif">\u2660</span></span>';
+}
+function _classicFan(big) {
+  // back + two fronts, same fan positions as _svgFan
+  return _miniBack(big, 'top:50%;left:' + (big ? 8 : 6) + '%;transform:translateY(-50%) rotate(-12deg);')
+    + _miniFront('A', '\u2665', true, big, 'top:50%;left:' + (big ? 32 : 30) + '%;transform:translateY(-50%) rotate(0deg);')
+    + _miniFront('A', '\u2660', false, big, 'top:50%;left:' + (big ? 54 : 52) + '%;transform:translateY(-50%) rotate(12deg);');
 }
 function _cardOnFelt(deckId, big) {
   if (deckId === 'svg') return '<img src="/cards/svg/1s.svg" alt="" style="position:absolute;top:50%;left:50%;height:' + (big ? 78 : 74) + '%;width:auto;border-radius:3px;transform:translate(-50%,-50%) rotate(-6deg);box-shadow:0 2px 5px rgba(0,0,0,.5)">';
-  return '<i style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) rotate(-6deg);background:#f7f4ec;border-radius:3px;width:30%;height:74%;display:flex;flex-direction:column;align-items:center;justify-content:center;font-weight:800;line-height:1;box-shadow:0 2px 5px rgba(0,0,0,.5);font-size:' + (big ? '0.66rem' : '0.5rem') + ';color:#15110c"><span>A</span><span style="font-size:1.3em">\u2660</span></i>';
+  return _miniFront('A', '\u2660', false, big, 'top:50%;left:50%;transform:translate(-50%,-50%) rotate(-6deg);');
 }
 function _previewHTML(kind, item, big) {
   var box = 'display:block;position:relative;flex:none;border-radius:6px;overflow:hidden;border:1px solid rgba(255,255,255,0.18);background:#0b1a0d;' + (big ? 'width:92px;height:66px' : 'width:30px;height:22px');
@@ -221,7 +235,7 @@ function _previewHTML(kind, item, big) {
   }
   if (kind === 'deck') {
     if (item && item.preview) return '<span style="' + box + '"><img src="' + item.preview + '" alt="" style="width:100%;height:100%;object-fit:cover;display:block"></span>';
-    var cards = (item && item.id === 'svg') ? _svgFan(big) : _glyphCards(big);
+    var cards = (item && item.id === 'svg') ? _svgFan(big) : _classicFan(big);
     return '<span style="' + box + ';background:linear-gradient(160deg,#1c5a28,#0c3214)">' + cards + '</span>';
   }
   if (kind === 'preset') {
