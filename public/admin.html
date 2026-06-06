@@ -11,18 +11,20 @@
   body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:radial-gradient(circle at 50% 0%,#16261a,#0a110c);color:var(--cream);min-height:100vh;padding:18px}
   .wrap{max-width:640px;margin:0 auto}
   h1{font-size:1.15rem;margin:.2rem 0 .1rem;color:var(--gold)}
+  h2{font-size:.95rem;color:var(--gold);margin:2px 0 8px}
   .sub{color:var(--text);font-size:.8rem;margin:0 0 16px}
   .top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
   .topbtns{display:flex;gap:8px;margin-top:4px;flex:none}
   .card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px;margin:0 0 14px}
   label{font-size:.78rem;color:var(--text);display:block;margin:0 0 5px}
   input[type=password]{width:100%;padding:9px 11px;border-radius:8px;border:1px solid var(--line);background:rgba(0,0,0,.25);color:var(--cream);font-size:.9rem}
+  select{flex:1;padding:9px 11px;border-radius:8px;border:1px solid var(--line);background:rgba(0,0,0,.25);color:var(--cream);font-size:.9rem}
   button{font-family:inherit}
   .primary{margin-top:10px;width:100%;padding:10px;border-radius:8px;border:1px solid var(--gold);background:var(--gold);color:#1a1206;font-weight:700;cursor:pointer;font-size:.9rem}
   .ghost,.appbtn{padding:7px 11px;border-radius:8px;border:1px solid var(--line);background:rgba(255,255,255,.04);color:var(--cream);text-decoration:none;font-size:.8rem;white-space:nowrap;cursor:pointer}
   .appbtn{border-color:var(--gold);background:rgba(200,168,74,.12);color:var(--gold)}
   .tabs{display:flex;gap:6px;margin:0 0 14px}
-  .tab{flex:1;padding:9px;border-radius:8px 8px 0 0;border:1px solid var(--line);border-bottom:none;background:rgba(255,255,255,.03);color:var(--text);cursor:pointer;font-size:.86rem}
+  .tab{flex:1;padding:9px;border-radius:8px 8px 0 0;border:1px solid var(--line);border-bottom:none;background:rgba(255,255,255,.03);color:var(--text);cursor:pointer;font-size:.84rem}
   .tab.on{background:var(--panel);color:var(--gold);font-weight:700;border-color:var(--gold)}
   .seg{display:flex;gap:8px;margin:10px 0}
   .seg button{flex:1;padding:9px;border-radius:8px;border:1px solid var(--line);background:rgba(255,255,255,.03);color:var(--cream);cursor:pointer;font-size:.86rem}
@@ -31,7 +33,6 @@
   .drop.hot{border-color:var(--gold);background:rgba(200,168,74,.08);color:var(--cream)}
   .msg{margin-top:10px;font-size:.85rem;min-height:1.2em}
   .ok{color:#7fd17f}.err{color:#e98a8a}
-  .list h2{font-size:.95rem;color:var(--gold);margin:2px 0 8px}
   .boardhead{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
   .row{display:flex;align-items:center;gap:10px;padding:8px 4px;border-top:1px solid rgba(255,255,255,.06)}
   .row:first-of-type{border-top:0}
@@ -41,11 +42,14 @@
   .del{padding:6px 10px;border-radius:7px;border:1px solid rgba(184,52,52,.5);background:rgba(184,52,52,.12);color:#e98a8a;cursor:pointer;font-size:.78rem}
   .empty{color:var(--text);font-size:.8rem;padding:6px 4px}
   .muted{color:var(--text);font-size:.72rem;margin-top:6px}
+  .srow{display:flex;justify-content:space-between;gap:10px;padding:6px 2px;border-top:1px solid rgba(255,255,255,.06);font-size:.85rem}
+  .srow:first-child{border-top:0}.srow span{color:var(--text)}.srow b{color:var(--cream);text-align:right}
+  .periodrow{display:flex;gap:8px;align-items:center;margin-top:4px}
+  .logs{margin:8px 0 0;max-height:320px;overflow:auto;background:#0a120c;border:1px solid var(--line);border-radius:8px;padding:10px;font-size:.72rem;line-height:1.45;white-space:pre-wrap;word-break:break-word;color:#bcd6c2}
 </style>
 </head>
 <body>
 <div class="wrap">
-  <!-- LOGIN -->
   <div id="login" style="display:none">
     <h1>PokerTH — Admin</h1>
     <p class="sub">Enter your admin token to continue.</p>
@@ -58,7 +62,6 @@
     </div>
   </div>
 
-  <!-- DASHBOARD -->
   <div id="dash" style="display:none">
     <div class="top">
       <div><h1>PokerTH — Admin</h1><p class="sub">Dashboard</p></div>
@@ -70,6 +73,7 @@
     <div class="tabs">
       <button class="tab on" data-t="packages">Packages</button>
       <button class="tab" data-t="board">Leaderboard</button>
+      <button class="tab" data-t="server">Server</button>
     </div>
 
     <div id="panel-packages">
@@ -80,7 +84,7 @@
         <input id="file" type="file" accept=".zip,application/zip" style="display:none">
         <div id="msg" class="msg"></div>
       </div>
-      <div class="card list">
+      <div class="card">
         <h2>Table styles</h2><div id="tables"></div>
         <h2 style="margin-top:14px">Card decks</h2><div id="decks"></div>
       </div>
@@ -93,6 +97,23 @@
         <div id="boardmsg" class="msg"></div>
       </div>
     </div>
+
+    <div id="panel-server" style="display:none">
+      <div class="card"><h2>Status</h2><div id="status"><div class="empty">Loading\u2026</div></div></div>
+      <div class="card">
+        <h2>Leaderboard reset</h2>
+        <label for="period">Automatic reset period</label>
+        <div class="periodrow">
+          <select id="period"><option value="off">Off</option><option value="daily">Daily</option><option value="monthly">Monthly</option><option value="yearly">Yearly</option></select>
+          <button id="savePeriod" class="use">Save</button>
+        </div>
+        <div id="periodmsg" class="msg"></div>
+      </div>
+      <div class="card">
+        <div class="boardhead"><h2 style="margin:0">Recent logs</h2><button id="refreshLogs" class="use">Refresh</button></div>
+        <pre id="logs" class="logs"></pre>
+      </div>
+    </div>
   </div>
 </div>
 <script>
@@ -102,7 +123,6 @@
   function tok(){ return (localStorage.getItem(TOKK)||'').trim(); }
   function show(v){ login.style.display=v==='login'?'block':'none'; dash.style.display=v==='dash'?'block':'none'; }
 
-  // login / logout
   $('loginBtn').addEventListener('click', doLogin);
   $('ltok').addEventListener('keydown', function(e){ if(e.key==='Enter') doLogin(); });
   function doLogin(){ localStorage.setItem(TOKK, $('ltok').value.trim()); enter(); }
@@ -115,15 +135,17 @@
     }).catch(function(){ $('loginErr').textContent='Network error'; show('login'); });
   }
 
-  // tabs
   document.querySelectorAll('.tab').forEach(function(b){ b.addEventListener('click', function(){
     document.querySelectorAll('.tab').forEach(function(x){x.classList.toggle('on',x===b);});
-    $('panel-packages').style.display=b.dataset.t==='packages'?'block':'none';
-    $('panel-board').style.display=b.dataset.t==='board'?'block':'none';
-    if(b.dataset.t==='board') loadBoard();
+    var t=b.dataset.t;
+    $('panel-packages').style.display=t==='packages'?'block':'none';
+    $('panel-board').style.display=t==='board'?'block':'none';
+    $('panel-server').style.display=t==='server'?'block':'none';
+    if(t==='board') loadBoard();
+    if(t==='server') loadServer();
   }); });
 
-  // packages — import
+  // packages
   var kind='table';
   document.querySelectorAll('.seg button').forEach(function(b){ b.addEventListener('click',function(){ kind=b.dataset.k; document.querySelectorAll('.seg button').forEach(function(x){x.classList.toggle('on',x===b);}); }); });
   var drop=$('drop'), file=$('file'), msg=$('msg');
@@ -181,6 +203,28 @@
     fetch('/stats',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({_resetAll:true,token:tok()})})
       .then(function(r){return r.json();}).then(function(d){ if(d.ok){ bmsg('Leaderboard reset.','ok'); loadBoard(); } else bmsg('Reset failed: '+(d.error||'forbidden'),'err'); })
       .catch(function(){ bmsg('Network error.','err'); }); });
+
+  // server
+  function fmtUptime(s){ s=s||0; var d=Math.floor(s/86400),h=Math.floor((s%86400)/3600),m=Math.floor((s%3600)/60); return (d?d+'d ':'')+(h?h+'h ':'')+m+'m'; }
+  function loadServer(){
+    fetch('/admin/status?token='+encodeURIComponent(tok())).then(function(r){return r.json();}).then(function(d){
+      var el=$('status');
+      if(!d.ok){ el.innerHTML='<div class="empty err">'+(d.error||'error')+'</div>'; return; }
+      el.innerHTML='';
+      var items=[['Build version',d.version||'\u2014'],['Node',d.node||'\u2014'],['Uptime',fmtUptime(d.uptimeSec)],['Connected sockets',d.sockets==null?'\u2014':String(d.sockets)],['Players on board',String(d.players)],['Reset period',d.resetPeriod||'\u2014']];
+      items.forEach(function(it){ var r=document.createElement('div');r.className='srow';var s=document.createElement('span');s.textContent=it[0];var b=document.createElement('b');b.textContent=it[1];r.appendChild(s);r.appendChild(b);el.appendChild(r); });
+      if(d.resetPeriod) $('period').value=d.resetPeriod;
+    }).catch(function(){ $('status').innerHTML='<div class="empty err">Could not load.</div>'; });
+    loadLogs();
+  }
+  function loadLogs(){ fetch('/admin/logs?token='+encodeURIComponent(tok())).then(function(r){return r.json();}).then(function(d){ var p=$('logs'); p.textContent=(d.lines||[]).join('\n'); p.scrollTop=p.scrollHeight; }).catch(function(){}); }
+  $('refreshLogs').addEventListener('click', loadLogs);
+  $('savePeriod').addEventListener('click', function(){
+    var per=$('period').value, m=$('periodmsg');
+    fetch('/admin/config?token='+encodeURIComponent(tok()),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({resetPeriod:per,token:tok()})})
+      .then(function(r){return r.json();}).then(function(d){ if(d.ok){ m.textContent='Saved: '+d.resetPeriod; m.className='msg ok'; } else { m.textContent='Failed: '+(d.error||'error'); m.className='msg err'; } })
+      .catch(function(){ m.textContent='Network error.'; m.className='msg err'; });
+  });
 
   enter();
 })();

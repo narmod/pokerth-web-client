@@ -20,6 +20,23 @@ const fs   = require('fs');
 const path = require('path');
 const zlib = require('zlib');
 
+// In-memory ring buffer of recent log lines, exposed (token-gated) at /admin/logs.
+const LOG_RING = []; const LOG_MAX = 400;
+['log', 'warn', 'error'].forEach(function (m) {
+  const orig = console[m].bind(console);
+  console[m] = function () {
+    try {
+      const parts = Array.prototype.map.call(arguments, function (a) {
+        if (typeof a === 'string') return a;
+        try { return JSON.stringify(a); } catch (e) { return String(a); }
+      });
+      LOG_RING.push(new Date().toISOString() + ' [' + m + '] ' + parts.join(' '));
+      if (LOG_RING.length > LOG_MAX) LOG_RING.shift();
+    } catch (e) {}
+    orig.apply(console, arguments);
+  };
+});
+
 const args        = process.argv.slice(2);
 const PROXY_PORT  = parseInt(args.find(a => /^\d+$/.test(a)) || process.env.PORT || '8080', 10);
 const FORCE_NOTLS = args.includes('--notls');
@@ -196,7 +213,12 @@ function saveStatsSoon() {
 // leaderboard is wiped. Per-device session stats (browser localStorage) are
 // never touched. STATS_ADMIN_TOKEN (optional) enables an on-demand reset via
 // POST /stats {"_resetAll":true,"token":"…"}.
-const STATS_RESET_PERIOD = (process.env.STATS_RESET_PERIOD || 'monthly').toLowerCase();
+// Runtime admin config (reset period, ...) persisted next to stats; env is the fallback.
+const ADMIN_CONFIG_FILE = process.env.ADMIN_CONFIG_FILE || path.join(__dirname, 'admin-config.json');
+let _adminConfig = {};
+try { _adminConfig = JSON.parse(fs.readFileSync(ADMIN_CONFIG_FILE, 'utf8')) || {}; } catch (e) { _adminConfig = {}; }
+function saveAdminConfig() { try { fs.writeFileSync(ADMIN_CONFIG_FILE, JSON.stringify(_adminConfig)); } catch (e) { console.error('[admin] config write failed:', e.message); } }
+let STATS_RESET_PERIOD = ((_adminConfig.resetPeriod || process.env.STATS_RESET_PERIOD || 'monthly') + '').toLowerCase();
 const STATS_META_FILE = process.env.STATS_META_FILE || path.join(__dirname, 'stats.meta.json');
 const STATS_ADMIN_TOKEN = process.env.STATS_ADMIN_TOKEN || '';
 let statsMeta = {};
@@ -453,6 +475,34 @@ function handleAdmin(req, res, reqPathOnly, query) {
   if (reqPathOnly === '/admin/pkg-list') {
     if (!adminAuthed(query)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
     return adminJson(res, 200, Object.assign({ ok: true }, pkgList()));
+  }
+  if (reqPathOnly === '/admin/status') {
+    if (!adminAuthed(query)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
+    let version = '';
+    try { version = (JSON.parse(fs.readFileSync(path.join(__dirname, 'package.json'), 'utf8')).version) || ''; } catch (e) {}
+    let sockets = null; try { sockets = wss.clients.size; } catch (e) {}
+    return adminJson(res, 200, { ok: true, version: version, node: process.version, uptimeSec: Math.floor(process.uptime()), sockets: sockets, players: Object.keys(statsStore).length, resetPeriod: STATS_RESET_PERIOD });
+  }
+  if (reqPathOnly === '/admin/logs') {
+    if (!adminAuthed(query)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
+    return adminJson(res, 200, { ok: true, lines: LOG_RING.slice(-300) });
+  }
+  if (reqPathOnly === '/admin/config') {
+    if (req.method === 'GET') {
+      if (!adminAuthed(query)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
+      return adminJson(res, 200, { ok: true, resetPeriod: STATS_RESET_PERIOD });
+    }
+    if (req.method === 'POST') {
+      return readJsonBody(req, function (d) {
+        if (!adminAuthed(query, d && d.token)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
+        const per = String((d && d.resetPeriod) || '').toLowerCase();
+        if (['off', 'daily', 'monthly', 'yearly'].indexOf(per) < 0) return adminJson(res, 400, { ok: false, error: 'invalid period (off|daily|monthly|yearly)' });
+        STATS_RESET_PERIOD = per; _adminConfig.resetPeriod = per; saveAdminConfig();
+        try { statsMeta.period = statsPeriodKey(); saveStatsMeta(); } catch (e) {}
+        return adminJson(res, 200, { ok: true, resetPeriod: per });
+      });
+    }
+    res.writeHead(405); res.end('Method not allowed'); return;
   }
   if (reqPathOnly === '/admin/pkg-upload' && req.method === 'POST') {
     if (!adminAuthed(query)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
