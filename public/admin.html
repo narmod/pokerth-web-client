@@ -10,13 +10,20 @@
   *{box-sizing:border-box}
   body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:radial-gradient(circle at 50% 0%,#16261a,#0a110c);color:var(--cream);min-height:100vh;padding:18px}
   .wrap{max-width:640px;margin:0 auto}
-  .top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
   h1{font-size:1.15rem;margin:.2rem 0 .1rem;color:var(--gold)}
   .sub{color:var(--text);font-size:.8rem;margin:0 0 16px}
-  .appbtn{flex:none;margin-top:4px;padding:7px 11px;border-radius:8px;border:1px solid var(--gold);background:rgba(200,168,74,.12);color:var(--gold);text-decoration:none;font-size:.8rem;white-space:nowrap}
+  .top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+  .topbtns{display:flex;gap:8px;margin-top:4px;flex:none}
   .card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px;margin:0 0 14px}
   label{font-size:.78rem;color:var(--text);display:block;margin:0 0 5px}
   input[type=password]{width:100%;padding:9px 11px;border-radius:8px;border:1px solid var(--line);background:rgba(0,0,0,.25);color:var(--cream);font-size:.9rem}
+  button{font-family:inherit}
+  .primary{margin-top:10px;width:100%;padding:10px;border-radius:8px;border:1px solid var(--gold);background:var(--gold);color:#1a1206;font-weight:700;cursor:pointer;font-size:.9rem}
+  .ghost,.appbtn{padding:7px 11px;border-radius:8px;border:1px solid var(--line);background:rgba(255,255,255,.04);color:var(--cream);text-decoration:none;font-size:.8rem;white-space:nowrap;cursor:pointer}
+  .appbtn{border-color:var(--gold);background:rgba(200,168,74,.12);color:var(--gold)}
+  .tabs{display:flex;gap:6px;margin:0 0 14px}
+  .tab{flex:1;padding:9px;border-radius:8px 8px 0 0;border:1px solid var(--line);border-bottom:none;background:rgba(255,255,255,.03);color:var(--text);cursor:pointer;font-size:.86rem}
+  .tab.on{background:var(--panel);color:var(--gold);font-weight:700;border-color:var(--gold)}
   .seg{display:flex;gap:8px;margin:10px 0}
   .seg button{flex:1;padding:9px;border-radius:8px;border:1px solid var(--line);background:rgba(255,255,255,.03);color:var(--cream);cursor:pointer;font-size:.86rem}
   .seg button.on{background:var(--gold);color:#1a1206;border-color:var(--gold);font-weight:700}
@@ -25,124 +32,157 @@
   .msg{margin-top:10px;font-size:.85rem;min-height:1.2em}
   .ok{color:#7fd17f}.err{color:#e98a8a}
   .list h2{font-size:.95rem;color:var(--gold);margin:2px 0 8px}
+  .boardhead{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
   .row{display:flex;align-items:center;gap:10px;padding:8px 4px;border-top:1px solid rgba(255,255,255,.06)}
   .row:first-of-type{border-top:0}
   .row .nm{flex:1;min-width:0}.row .nm b{display:block;font-size:.88rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
   .row .nm span{font-size:.72rem;color:var(--text)}
-  .row .use{border:1px solid var(--line);background:rgba(255,255,255,.04);color:var(--cream);padding:6px 10px;border-radius:7px;cursor:pointer;font-size:.78rem}
-  .row .del{padding:6px 10px;border-radius:7px;border:1px solid rgba(184,52,52,.5);background:rgba(184,52,52,.12);color:#e98a8a;cursor:pointer;font-size:.78rem}
+  .use{border:1px solid var(--line);background:rgba(255,255,255,.04);color:var(--cream);padding:6px 10px;border-radius:7px;cursor:pointer;font-size:.78rem}
+  .del{padding:6px 10px;border-radius:7px;border:1px solid rgba(184,52,52,.5);background:rgba(184,52,52,.12);color:#e98a8a;cursor:pointer;font-size:.78rem}
   .empty{color:var(--text);font-size:.8rem;padding:6px 4px}
   .muted{color:var(--text);font-size:.72rem;margin-top:6px}
 </style>
 </head>
 <body>
 <div class="wrap">
-  <div class="top">
-    <div>
-      <h1>PokerTH — Admin</h1>
-      <p class="sub">Import / remove table styles and card decks.</p>
+  <!-- LOGIN -->
+  <div id="login" style="display:none">
+    <h1>PokerTH — Admin</h1>
+    <p class="sub">Enter your admin token to continue.</p>
+    <div class="card">
+      <label for="ltok">Admin token</label>
+      <input id="ltok" type="password" placeholder="your token (set-token)" autocomplete="off">
+      <button id="loginBtn" class="primary">Log in</button>
+      <div id="loginErr" class="msg err"></div>
+      <div class="muted">Set one on the server: <code>pokerth-web set-token &lt;token&gt;</code></div>
     </div>
-    <a class="appbtn" href="/" target="_blank" rel="noopener">Open the app &#8599;</a>
   </div>
 
-  <div class="card">
-    <label for="tok">Admin token</label>
-    <input id="tok" type="password" placeholder="your token (set-token)" autocomplete="off">
-    <div class="muted">Stored in this browser only.</div>
-  </div>
-
-  <div class="card">
-    <label>Import a package (.zip)</label>
-    <div class="seg">
-      <button class="on" data-k="table">Table style</button>
-      <button data-k="deck">Card deck</button>
+  <!-- DASHBOARD -->
+  <div id="dash" style="display:none">
+    <div class="top">
+      <div><h1>PokerTH — Admin</h1><p class="sub">Dashboard</p></div>
+      <div class="topbtns">
+        <a class="appbtn" href="/" target="_blank" rel="noopener">Open the app &#8599;</a>
+        <button id="logoutBtn" class="ghost">Log out</button>
+      </div>
     </div>
-    <div id="drop" class="drop">Drop a <b>.zip</b> here, or click to choose</div>
-    <input id="file" type="file" accept=".zip,application/zip" style="display:none">
-    <div id="msg" class="msg"></div>
-  </div>
+    <div class="tabs">
+      <button class="tab on" data-t="packages">Packages</button>
+      <button class="tab" data-t="board">Leaderboard</button>
+    </div>
 
-  <div class="card list">
-    <h2>Table styles</h2><div id="tables"></div>
-    <h2 style="margin-top:14px">Card decks</h2><div id="decks"></div>
+    <div id="panel-packages">
+      <div class="card">
+        <label>Import a package (.zip)</label>
+        <div class="seg"><button class="on" data-k="table">Table style</button><button data-k="deck">Card deck</button></div>
+        <div id="drop" class="drop">Drop a <b>.zip</b> here, or click to choose</div>
+        <input id="file" type="file" accept=".zip,application/zip" style="display:none">
+        <div id="msg" class="msg"></div>
+      </div>
+      <div class="card list">
+        <h2>Table styles</h2><div id="tables"></div>
+        <h2 style="margin-top:14px">Card decks</h2><div id="decks"></div>
+      </div>
+    </div>
+
+    <div id="panel-board" style="display:none">
+      <div class="card">
+        <div class="boardhead"><span id="boardcount" class="muted"></span><button id="resetBtn" class="del">Reset leaderboard</button></div>
+        <div id="players"></div>
+        <div id="boardmsg" class="msg"></div>
+      </div>
+    </div>
   </div>
 </div>
 <script>
 (function(){
-  var TOKK='pth_admin_tok', tokEl=document.getElementById('tok');
-  tokEl.value=localStorage.getItem(TOKK)||'';
-  tokEl.addEventListener('input',function(){ localStorage.setItem(TOKK,tokEl.value.trim()); load(); });
-  var kind='table';
-  document.querySelectorAll('.seg button').forEach(function(b){
-    b.addEventListener('click',function(){ kind=b.dataset.k; document.querySelectorAll('.seg button').forEach(function(x){x.classList.toggle('on',x===b);}); });
-  });
-  var drop=document.getElementById('drop'), file=document.getElementById('file'), msg=document.getElementById('msg');
-  drop.addEventListener('click',function(){ file.click(); });
-  drop.addEventListener('dragover',function(e){ e.preventDefault(); drop.classList.add('hot'); });
-  drop.addEventListener('dragleave',function(){ drop.classList.remove('hot'); });
-  drop.addEventListener('drop',function(e){ e.preventDefault(); drop.classList.remove('hot'); if(e.dataTransfer.files[0]) upload(e.dataTransfer.files[0]); });
-  file.addEventListener('change',function(){ if(file.files[0]) upload(file.files[0]); });
+  var TOKK='pth_admin_tok', $=function(id){return document.getElementById(id);};
+  var login=$('login'), dash=$('dash');
+  function tok(){ return (localStorage.getItem(TOKK)||'').trim(); }
+  function show(v){ login.style.display=v==='login'?'block':'none'; dash.style.display=v==='dash'?'block':'none'; }
 
-  function tok(){ return tokEl.value.trim(); }
-  function say(t,cls){ msg.textContent=t; msg.className='msg '+(cls||''); }
-
-  // Same-origin: write the app's theme selection so the next time the app is
-  // opened/refreshed in this browser, the package is already active.
-  function applyTable(id){ try{ localStorage.setItem('pth_table',id); localStorage.setItem('pth_pucks',id); }catch(e){} }
-  function applyDeck(id){
-    try{ localStorage.setItem('pth_deck',id); }catch(e){}
+  // login / logout
+  $('loginBtn').addEventListener('click', doLogin);
+  $('ltok').addEventListener('keydown', function(e){ if(e.key==='Enter') doLogin(); });
+  function doLogin(){ localStorage.setItem(TOKK, $('ltok').value.trim()); enter(); }
+  $('logoutBtn').addEventListener('click', function(){ localStorage.removeItem(TOKK); $('ltok').value=''; show('login'); });
+  function enter(){
+    if(!tok()){ show('login'); return; }
     fetch('/admin/pkg-list?token='+encodeURIComponent(tok())).then(function(r){return r.json();}).then(function(d){
-      var e=(d.decks||[]).find(function(x){return x.id===id;}); try{ localStorage.setItem('pth_deck_ext',(e&&e.ext)||'png'); }catch(err){}
-    }).catch(function(){});
+      if(d.ok){ $('loginErr').textContent=''; show('dash'); renderPkgs(d); loadBoard(); }
+      else { $('loginErr').textContent=d.error||'Invalid token'; show('login'); }
+    }).catch(function(){ $('loginErr').textContent='Network error'; show('login'); });
   }
 
+  // tabs
+  document.querySelectorAll('.tab').forEach(function(b){ b.addEventListener('click', function(){
+    document.querySelectorAll('.tab').forEach(function(x){x.classList.toggle('on',x===b);});
+    $('panel-packages').style.display=b.dataset.t==='packages'?'block':'none';
+    $('panel-board').style.display=b.dataset.t==='board'?'block':'none';
+    if(b.dataset.t==='board') loadBoard();
+  }); });
+
+  // packages — import
+  var kind='table';
+  document.querySelectorAll('.seg button').forEach(function(b){ b.addEventListener('click',function(){ kind=b.dataset.k; document.querySelectorAll('.seg button').forEach(function(x){x.classList.toggle('on',x===b);}); }); });
+  var drop=$('drop'), file=$('file'), msg=$('msg');
+  drop.addEventListener('click',function(){file.click();});
+  drop.addEventListener('dragover',function(e){e.preventDefault();drop.classList.add('hot');});
+  drop.addEventListener('dragleave',function(){drop.classList.remove('hot');});
+  drop.addEventListener('drop',function(e){e.preventDefault();drop.classList.remove('hot');if(e.dataTransfer.files[0])upload(e.dataTransfer.files[0]);});
+  file.addEventListener('change',function(){if(file.files[0])upload(file.files[0]);});
+  function say(t,cls){ msg.textContent=t; msg.className='msg '+(cls||''); }
+  function applyTable(id){ try{localStorage.setItem('pth_table',id);localStorage.setItem('pth_pucks',id);}catch(e){} }
+  function applyDeck(id){ try{localStorage.setItem('pth_deck',id);}catch(e){}
+    fetch('/admin/pkg-list?token='+encodeURIComponent(tok())).then(function(r){return r.json();}).then(function(d){ var e=(d.decks||[]).find(function(x){return x.id===id;}); try{localStorage.setItem('pth_deck_ext',(e&&e.ext)||'png');}catch(err){} }).catch(function(){}); }
   function upload(f){
-    if(!tok()){ say('Enter your admin token.','err'); return; }
     if(!/\.zip$/i.test(f.name)){ say('Choose a .zip file.','err'); return; }
     say('Importing \u201c'+f.name+'\u201d\u2026');
     fetch('/admin/pkg-upload?token='+encodeURIComponent(tok())+'&kind='+kind+'&name='+encodeURIComponent(f.name),{method:'POST',body:f})
-      .then(function(r){return r.json();})
-      .then(function(d){
-        if(d.ok){
-          if(d.kind==='table') applyTable(d.id); else applyDeck(d.id);
-          say('Imported & applied: '+d.name+' \u2014 open the app to see it.','ok');
-          load();
-        } else say('Failed: '+(d.error||'error'),'err');
-      })
-      .catch(function(){ say('Network error.','err'); });
+      .then(function(r){return r.json();}).then(function(d){
+        if(d.ok){ if(d.kind==='table')applyTable(d.id);else applyDeck(d.id); say('Imported & applied: '+d.name+' \u2014 open the app to see it.','ok'); refresh(); }
+        else say('Failed: '+(d.error||'error'),'err');
+      }).catch(function(){ say('Network error.','err'); });
     file.value='';
   }
-  function useNow(k,id){ if(k==='table') applyTable(id); else applyDeck(id); say('Set as active \u2014 open the app to see it.','ok'); }
-  function remove(k,id,nm){
-    if(!confirm('Remove \u201c'+nm+'\u201d?')) return;
+  function useNow(k,id){ if(k==='table')applyTable(id);else applyDeck(id); say('Set as active \u2014 open the app to see it.','ok'); }
+  function removePkg(k,id,nm){ if(!confirm('Remove \u201c'+nm+'\u201d?'))return;
     fetch('/admin/pkg-remove?token='+encodeURIComponent(tok()),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({kind:k,id:id,token:tok()})})
-      .then(function(r){return r.json();})
-      .then(function(d){ if(d.ok){ load(); } else say('Remove: '+(d.error||'error'),'err'); });
-  }
-  function render(el,arr,k){
-    if(!arr||!arr.length){ el.innerHTML='<div class="empty">(none)</div>'; return; }
-    el.innerHTML='';
-    arr.forEach(function(p){
-      var row=document.createElement('div'); row.className='row';
+      .then(function(r){return r.json();}).then(function(d){ if(d.ok)refresh(); else say('Remove: '+(d.error||'error'),'err'); }); }
+  function renderList(el,arr,k){ if(!arr||!arr.length){el.innerHTML='<div class="empty">(none)</div>';return;} el.innerHTML='';
+    arr.forEach(function(p){ var row=document.createElement('div');row.className='row';
       row.innerHTML='<div class="nm"><b></b><span></span></div>';
-      row.querySelector('b').textContent=p.name||p.id;
-      row.querySelector('span').textContent=p.id;
-      var use=document.createElement('button'); use.className='use'; use.textContent='Use';
-      use.addEventListener('click',function(){ useNow(k,p.id); });
-      var del=document.createElement('button'); del.className='del'; del.textContent='Remove';
-      del.addEventListener('click',function(){ remove(k,p.id,p.name||p.id); });
-      row.appendChild(use); row.appendChild(del); el.appendChild(row);
-    });
+      row.querySelector('b').textContent=p.name||p.id; row.querySelector('span').textContent=p.id;
+      var use=document.createElement('button');use.className='use';use.textContent='Use';use.addEventListener('click',function(){useNow(k,p.id);});
+      var del=document.createElement('button');del.className='del';del.textContent='Remove';del.addEventListener('click',function(){removePkg(k,p.id,p.name||p.id);});
+      row.appendChild(use);row.appendChild(del);el.appendChild(row); }); }
+  function renderPkgs(d){ renderList($('tables'),d.tables,'table'); renderList($('decks'),d.decks,'deck'); }
+  function refresh(){ fetch('/admin/pkg-list?token='+encodeURIComponent(tok())).then(function(r){return r.json();}).then(function(d){ if(d.ok)renderPkgs(d); }).catch(function(){}); }
+
+  // leaderboard
+  function bmsg(t,cls){ $('boardmsg').textContent=t; $('boardmsg').className='msg '+(cls||''); }
+  function loadBoard(){
+    fetch('/stats').then(function(r){return r.json();}).then(function(s){
+      var names=Object.keys(s||{}); $('boardcount').textContent=names.length+' player'+(names.length===1?'':'s');
+      var el=$('players'); if(!names.length){ el.innerHTML='<div class="empty">(empty)</div>'; return; } el.innerHTML='';
+      names.sort(function(a,b){return a.localeCompare(b);}).forEach(function(n){
+        var row=document.createElement('div');row.className='row';
+        var nm=document.createElement('div');nm.className='nm';var b=document.createElement('b');b.textContent=n;nm.appendChild(b);row.appendChild(nm);
+        var del=document.createElement('button');del.className='del';del.textContent='Remove';del.addEventListener('click',function(){removePlayer(n);});
+        row.appendChild(del);el.appendChild(row);
+      });
+    }).catch(function(){ $('players').innerHTML='<div class="empty err">Could not load.</div>'; });
   }
-  function load(){
-    var T=document.getElementById('tables'), D=document.getElementById('decks');
-    if(!tok()){ T.innerHTML='<div class="empty">Enter your token to see the list.</div>'; D.innerHTML=''; return; }
-    fetch('/admin/pkg-list?token='+encodeURIComponent(tok()))
-      .then(function(r){return r.json();})
-      .then(function(d){ if(d.ok){ render(T,d.tables,'table'); render(D,d.decks,'deck'); } else { T.innerHTML='<div class="empty err">'+(d.error||'access denied')+'</div>'; D.innerHTML=''; } })
-      .catch(function(){});
-  }
-  load();
+  function removePlayer(n){ if(!confirm('Remove player \u201c'+n+'\u201d from the leaderboard?'))return;
+    fetch('/stats',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:n,_delete:true})})
+      .then(function(r){return r.json();}).then(function(){ loadBoard(); }).catch(function(){}); }
+  $('resetBtn').addEventListener('click',function(){ if(!confirm('Reset the WHOLE leaderboard? This cannot be undone.'))return;
+    fetch('/stats',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({_resetAll:true,token:tok()})})
+      .then(function(r){return r.json();}).then(function(d){ if(d.ok){ bmsg('Leaderboard reset.','ok'); loadBoard(); } else bmsg('Reset failed: '+(d.error||'forbidden'),'err'); })
+      .catch(function(){ bmsg('Network error.','err'); }); });
+
+  enter();
 })();
 </script>
 </body>
