@@ -5208,7 +5208,8 @@ const App = (() => {
     // (narmod: confusion ♥/♦ à cause d'une couleur identique).
     const red   = (si === 0) ? ' red diamond' : (si === 1 ? ' red' : '');
     const spade = (si === 2) ? ' spade' : ''; // ♠ (2)
-    return '<div class="pk' + sz + red + spade + extraCls + '"><span class="c-rank">' + rank + '</span><span class="c-suit">' + suit + '</span></div>';
+    var _df = (ri === 12 ? 1 : ri + 2) + ['d','h','s','c'][si]; // SVG deck filename (upstream)
+    return '<div class="pk' + sz + red + spade + extraCls + '" style="--cf:url(/cards/svg/' + _df + '.svg)"><span class="c-rank">' + rank + '</span><span class="c-suit">' + suit + '</span></div>';
   }
 
 
@@ -5228,7 +5229,8 @@ const App = (() => {
     // une teinte vermillon différente du rouge profond du ♥.
     const red = (si === 0) ? ' red diamond' : (si === 1 ? ' red' : '');
     const spade2 = (si === 2) ? ' spade' : ''; // ♠ (2)
-    return '<div class="pk '+cls+red+spade2+'"><span class="c-rank">'+rank+'</span><span class="c-suit">'+suit+'</span></div>';
+    var _df = (ri === 12 ? 1 : ri + 2) + ['d','h','s','c'][si]; // SVG deck filename (upstream)
+    return '<div class="pk '+cls+red+spade2+'" style="--cf:url(/cards/svg/'+_df+'.svg)"><span class="c-rank">'+rank+'</span><span class="c-suit">'+suit+'</span></div>';
   }
 
   function renderMyCards() {
@@ -9445,4 +9447,4 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.2.214'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.2.215'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();

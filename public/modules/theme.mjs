@@ -61,10 +61,16 @@ const TABLES = [
   { id: 'bordeaux', key: 'tableBordeaux', fallback: 'Burgundy', swatch: '#8a1e2e' },
   { id: 'slate',    key: 'tableSlate',    fallback: 'Slate',    swatch: '#3a4150' },
 ];
+// Card deck (data-deck). id '' = "Classique" (glyphs, :root default).
+const DECKS = [
+  { id: '',    key: 'deckClassic', fallback: 'Classic', swatch: '#e6e6e6' },
+  { id: 'svg', key: 'deckSvg',     fallback: 'SVG',     swatch: '#a52a2a' },
+];
 
 const palette = makeAxis({ storeKey: 'pth_theme', attr: 'data-theme', items: PALETTES, titleKey: 'sectionPalette', titleFallback: 'Palette' });
 const table   = makeAxis({ storeKey: 'pth_table', attr: 'data-table', items: TABLES,   titleKey: 'sectionTable',   titleFallback: 'Table' });
-const AXES = [palette, table];
+const deck    = makeAxis({ storeKey: 'pth_deck',  attr: 'data-deck',  items: DECKS,    titleKey: 'sectionDeck',    titleFallback: 'Cards' });
+const AXES = [palette, table, deck];
 
 // Apply saved values on load (idempotent with the <head> boot snippet).
 AXES.forEach(function (ax) { try { ax.apply(ax.get()); } catch (e) {} });
@@ -186,7 +192,7 @@ function openThemePanel(ev) {
 }
 
 // ── Exports + legacy global compatibility ──
-export { PALETTES, TABLES, AXES, makeAxis, openThemePanel, closeThemePanel };
+export { PALETTES, TABLES, DECKS, AXES, makeAxis, openThemePanel, closeThemePanel };
 
 // The single panel is the entry point everywhere.
 window.openThemePanel = openThemePanel;
