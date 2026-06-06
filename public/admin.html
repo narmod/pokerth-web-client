@@ -156,7 +156,7 @@
   $('loginBtn').addEventListener('click', doLogin);
   $('ltok').addEventListener('keydown', function(e){ if(e.key==='Enter') doLogin(); });
   function doLogin(){ localStorage.setItem(TOKK, $('ltok').value.trim()); enter(); }
-  $('logoutBtn').addEventListener('click', function(){ localStorage.removeItem(TOKK); $('ltok').value=''; show('login'); });
+  $('logoutBtn').addEventListener('click', function(){ srvStop(); localStorage.removeItem(TOKK); $('ltok').value=''; show('login'); });
   function enter(){
     if(!tok()){ show('login'); return; }
     api('/admin/pkg-list').then(function(r){return r.json();}).then(function(d){
@@ -172,7 +172,7 @@
     $('panel-board').style.display=t==='board'?'block':'none';
     $('panel-server').style.display=t==='server'?'block':'none';
     if(t==='board') loadBoard();
-    if(t==='server') loadServer();
+    if(t==='server'){ loadServer(); srvStart(); } else { srvStop(); }
   }); });
 
   // packages
@@ -244,18 +244,30 @@
 
   // server
   function fmtUptime(s){ s=s||0; var d=Math.floor(s/86400),h=Math.floor((s%86400)/3600),m=Math.floor((s%3600)/60); return (d?d+'d ':'')+(h?h+'h ':'')+m+'m'; }
-  function loadServer(){
+  function loadStatus(syncCfg){
     api('/admin/status').then(function(r){return r.json();}).then(function(d){
       var el=$('status');
       if(!d.ok){ el.innerHTML='<div class="empty err">'+(d.error||'error')+'</div>'; return; }
       el.innerHTML='';
       var items=[['Build version',d.version||'\u2014'],['Node',d.node||'\u2014'],['Uptime',fmtUptime(d.uptimeSec)],['Connected sockets',d.sockets==null?'\u2014':String(d.sockets)],['Players on board',String(d.players)],['Reset period',d.resetPeriod||'\u2014']];
       items.forEach(function(it){ var r=document.createElement('div');r.className='srow';var s=document.createElement('span');s.textContent=it[0];var b=document.createElement('b');b.textContent=it[1];r.appendChild(s);r.appendChild(b);el.appendChild(r); });
-      if(d.resetPeriod) $('period').value=d.resetPeriod;
-      if(d.modes){ modesState=Object.assign({offline:true,lan:true,pokerthnet:true},d.modes); renderModes(); }
+      // Only explicit (re)loads sync the editable controls, so auto-refresh never
+      // resets the period dropdown or modes toggles while you're using them.
+      if(syncCfg){
+        if(d.resetPeriod) $('period').value=d.resetPeriod;
+        if(d.modes){ modesState=Object.assign({offline:true,lan:true,pokerthnet:true},d.modes); renderModes(); }
+      }
     }).catch(function(){ $('status').innerHTML='<div class="empty err">Could not load.</div>'; });
-    loadLogs(); loadUpdateLog();
   }
+  function loadServer(){ loadStatus(true); loadLogs(); loadUpdateLog(); }
+  // Live auto-refresh of the Server tab (status + logs) every 5s while it's the
+  // active panel and the page is visible; suspended during maintenance restarts.
+  var srvTimer=null, srvBusy=false;
+  function srvOn(){ return !!($('panel-server') && $('panel-server').style.display!=='none'); }
+  function srvStop(){ if(srvTimer){ clearInterval(srvTimer); srvTimer=null; } }
+  function srvTick(){ if(document.hidden||!srvOn()) return; loadStatus(false); loadLogs(); }
+  function srvStart(){ srvStop(); if(srvBusy||!srvOn()) return; srvTimer=setInterval(srvTick,5000); }
+  document.addEventListener('visibilitychange',function(){ if(document.hidden) srvStop(); else srvStart(); });
   function loadLogs(){ api('/admin/logs').then(function(r){return r.json();}).then(function(d){ var p=$('logs'); p.textContent=(d.lines||[]).join('\n'); p.scrollTop=p.scrollHeight; }).catch(function(){}); }
   $('refreshLogs').addEventListener('click', loadLogs);
   $('savePeriod').addEventListener('click', function(){
@@ -288,7 +300,7 @@
   }
 
   // ── Maintenance: update / restart / clear logs (server restarts briefly) ──
-  function maintBusy(b){ ['btnUpdate','btnRestart','btnClearLogs'].forEach(function(id){ var e=$(id); if(e) e.disabled=b; }); }
+  function maintBusy(b){ srvBusy=b; if(b) srvStop(); else srvStart(); ['btnUpdate','btnRestart','btnClearLogs'].forEach(function(id){ var e=$(id); if(e) e.disabled=b; }); }
   function pollBack(label){
     var msg=$('maintmsg'), tries=0; msg.textContent=label+' \u2014 server restarting, reconnecting\u2026'; msg.className='msg';
     var iv=setInterval(function(){
