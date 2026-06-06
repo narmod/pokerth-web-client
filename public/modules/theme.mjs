@@ -72,19 +72,35 @@ const DECKS = [
   { id: 'pokerth-new', key: 'deckPokerthNew', fallback: 'PokerTH new', preview: '/cards/pokerth-new/preview.png', swatch: '#a52a2a', ext: 'svg' },
 ];
 
+// Buttons axis: a built-in "Glossy" scheme (PokerTH colour-coding, kept so
+// actions stay readable). Tokens map to var(--btn-*) in pokerth.css.
+var BUTTON_TOKENS = ['btn-fold-bg','btn-fold-fg','btn-check-bg','btn-check-fg','btn-call-bg','btn-call-fg','btn-raise-bg','btn-raise-fg','btn-allin-bd','btn-allin-fg','btn-allin-fg-b'];
+var BUTTON_GLOSSY = {
+  'btn-fold-bg':'linear-gradient(180deg, #d23030 0%, #a81818 48%, #800f0f 100%)','btn-fold-fg':'#ffe6e6',
+  'btn-check-bg':'linear-gradient(180deg, #2f7ad0 0%, #1f5aa8 48%, #143f7a 100%)','btn-check-fg':'#e6f0ff',
+  'btn-call-bg':'linear-gradient(180deg, #2f7ad0 0%, #1f5aa8 48%, #143f7a 100%)','btn-call-fg':'#e6f0ff',
+  'btn-raise-bg':'linear-gradient(180deg, #2fa83a 0%, #1f8a2a 48%, #14661e 100%)','btn-raise-fg':'#eaffea',
+  'btn-allin-bd':'#d8701f','btn-allin-fg':'#e8a85a','btn-allin-fg-b':'#f0c080'
+};
+// Pucks axis: a built-in "PokerTH" set (dealer/SB/BB marker images, shared).
+var PUCK_SET = { dealer:'url(/pucks/dealer.png)', sb:'url(/pucks/sb.png)', bb:'url(/pucks/bb.png)' };
+var BUTTONS_ITEMS = [ {id:'',key:'buttonsDefault',fallback:'Flat',swatch:'#6b2020'}, {id:'glossy',key:'buttonsGlossy',fallback:'Glossy',swatch:'#c81818'} ];
+var PUCKS_ITEMS   = [ {id:'',key:'pucksDefault',fallback:'Chips',swatch:'#c8a850'}, {id:'pokerth',key:'pucksPokerth',fallback:'PokerTH',swatch:'#3a78d8'} ];
 const palette = makeAxis({ storeKey: 'pth_theme', attr: 'data-theme', items: PALETTES, titleKey: 'sectionPalette', titleFallback: 'Palette' });
 const table   = makeAxis({ storeKey: 'pth_table', attr: 'data-table', items: TABLES,   titleKey: 'sectionTable',   titleFallback: 'Table' });
 const deck    = makeAxis({ storeKey: 'pth_deck',  attr: 'data-deck',  def: 'casino-vert',  items: DECKS,    titleKey: 'sectionDeck',    titleFallback: 'Cards' });
-const AXES = [palette, table, deck];
+const buttons = makeAxis({ storeKey: 'pth_buttons', attr: 'data-buttons', def: '', items: BUTTONS_ITEMS, titleKey: 'sectionButtons', titleFallback: 'Buttons' });
+const pucks   = makeAxis({ storeKey: 'pth_pucks',   attr: 'data-pucks',   def: '', items: PUCKS_ITEMS,   titleKey: 'sectionPucks',   titleFallback: 'Pucks' });
+const AXES = [palette, table, buttons, pucks, deck];
 
 // ── Presets (main themes) ───────────────────────────────────────────────────
 // A preset is just a named combo of axis ids. "Casino vert" = all defaults
 // (this project's look). "Official PokerTH" ≈ the official client (dark UI +
 // textured green felt + vector cards). Order = display order.
 const PRESETS = [
-  { id: 'casino',  key: 'presetCasino',   fallback: 'Casino vert',     swatch: '#1e6b1e', values: { theme: '',     table: '',      deck: 'casino-vert' } },
-  { id: 'pokerth', key: 'presetOfficial', fallback: 'Official PokerTH', swatch: '#232730', values: { theme: 'dark', table: 'photo', deck: 'pokerth' } },
-  { id: 'pokerthnew', key: 'presetPokerthNew', fallback: 'PokerTH new', swatch: '#a52a2a', values: { theme: 'dark', table: 'photo', deck: 'pokerth-new' } },
+  { id: 'casino',  key: 'presetCasino',   fallback: 'Casino vert',     swatch: '#1e6b1e', values: { theme: '',     table: '',      deck: 'casino-vert', buttons: '', pucks: '' } },
+  { id: 'pokerth', key: 'presetOfficial', fallback: 'Official PokerTH', swatch: '#232730', values: { theme: 'dark', table: 'photo', deck: 'pokerth', buttons: '', pucks: '' } },
+  { id: 'pokerthnew', key: 'presetPokerthNew', fallback: 'PokerTH new', swatch: '#a52a2a', values: { theme: 'dark', table: 'photo', deck: 'pokerth-new', buttons: '', pucks: '' } },
 ];
 
 function applyPreset(id) {
@@ -94,16 +110,20 @@ function applyPreset(id) {
   if (p.values.theme !== undefined) palette.apply(p.values.theme);
   if (p.values.table !== undefined) table.apply(p.values.table);
   if (p.values.deck !== undefined) deck.apply(p.values.deck);
+  if (p.values.buttons !== undefined) buttons.apply(p.values.buttons);
+  if (p.values.pucks !== undefined) pucks.apply(p.values.pucks);
 }
 
 // Which preset matches the current axis values? null = custom mix.
 function activePreset() {
-  var cur = { theme: palette.get(), table: table.get(), deck: deck.get() };
+  var cur = { theme: palette.get(), table: table.get(), deck: deck.get(), buttons: buttons.get(), pucks: pucks.get() };
   var all = PRESETS.concat(_pkgPresets);
   for (var i = 0; i < all.length; i++) {
     var v = all[i].values;
     var deckOk = (v.deck === undefined) || (v.deck === cur.deck);
-    if (v.theme === cur.theme && v.table === cur.table && deckOk) return all[i].id;
+    var btnOk = (v.buttons === undefined) || (v.buttons === cur.buttons);
+    var pkOk = (v.pucks === undefined) || (v.pucks === cur.pucks);
+    if (v.theme === cur.theme && v.table === cur.table && deckOk && btnOk && pkOk) return all[i].id;
   }
   return null;
 }
@@ -149,7 +169,7 @@ deck.set = deck.apply;
 // ── Theme packages : un "table style" importe se decompose en une palette (couleurs UI/popups)
 //    + un tapis (feutre, liseré, image) + un preset combinant les deux. ──
 var _palettePkgs = [], _tablePkgs = [], _pkgPresets = [];
-var PALETTE_TOKENS = ['felt','felt-mid','felt-hi','panel','panel-hi','gold','gold-hi','gold-dim','cream','text','text-hi','border','border-hi','modal-bg','body-glow','btn-fold-bg','btn-fold-fg','btn-check-bg','btn-check-fg','btn-call-bg','btn-call-fg','btn-raise-bg','btn-raise-fg','btn-allin-bd','btn-allin-fg','btn-allin-fg-b'];
+var PALETTE_TOKENS = ['felt','felt-mid','felt-hi','panel','panel-hi','gold','gold-hi','gold-dim','cream','text','text-hi','border','border-hi','modal-bg','body-glow'];
 var TABLE_TOKENS = ['felt-base-hi','felt-base-mid','felt-base-lo','rail','rail-dark','rail-glow'];
 function _palettePkgById(id){ for (var i=0;i<_palettePkgs.length;i++) if (_palettePkgs[i].id===id) return _palettePkgs[i]; return null; }
 function _tablePkgById(id){ for (var i=0;i<_tablePkgs.length;i++) if (_tablePkgs[i].id===id) return _tablePkgs[i]; return null; }
@@ -168,20 +188,22 @@ function _injectAxis(keys, pkg, storeKey, withFelt){
   try{ if(css) localStorage.setItem(storeKey,css); else localStorage.removeItem(storeKey); }catch(e){}
 }
 function _injectPalette(pkg){ _injectAxis(PALETTE_TOKENS, pkg, 'pth_theme_css', false); }
-function _injectTable(pkg){
+function _injectTable(pkg){ _injectAxis(TABLE_TOKENS, pkg, 'pth_table_css', true); }
+function _injectButtons(tok){
   var el=document.documentElement, css='';
-  for (var i=0;i<TABLE_TOKENS.length;i++){
-    var k=TABLE_TOKENS[i], v=(pkg&&pkg.tokens)?pkg.tokens[k]:null;
+  for (var i=0;i<BUTTON_TOKENS.length;i++){
+    var k=BUTTON_TOKENS[i], v=tok?tok[k]:null;
     if (v!=null){ el.style.setProperty('--'+k,v); css+='--'+k+':'+v+';'; } else el.style.removeProperty('--'+k);
   }
-  if (pkg&&pkg.felt){ var fi='url(/themes/'+pkg.id+'/'+pkg.felt+') center / cover no-repeat'; el.style.setProperty('--felt-img',fi); css+='--felt-img:'+fi+';'; }
-  else el.style.removeProperty('--felt-img');
-  var pk=pkg&&pkg.pucks, M=[['dealer','--puck-dealer'],['sb','--puck-sb'],['bb','--puck-bb']];
+  try{ if(css) localStorage.setItem('pth_buttons_css',css); else localStorage.removeItem('pth_buttons_css'); }catch(e){}
+}
+function _injectPucks(set){
+  var el=document.documentElement, css='', M=[['dealer','--puck-dealer'],['sb','--puck-sb'],['bb','--puck-bb']];
   for (var j=0;j<M.length;j++){
-    if (pk && pk[M[j][0]]){ var pu='url(/themes/'+pkg.id+'/'+pk[M[j][0]]+')'; el.style.setProperty(M[j][1],pu); css+=M[j][1]+':'+pu+';'; }
-    else el.style.removeProperty(M[j][1]);
+    var u=set?set[M[j][0]]:null;
+    if (u){ el.style.setProperty(M[j][1],u); css+=M[j][1]+':'+u+';'; } else el.style.removeProperty(M[j][1]);
   }
-  try{ if(css) localStorage.setItem('pth_table_css',css); else localStorage.removeItem('pth_table_css'); }catch(e){}
+  try{ if(css) localStorage.setItem('pth_pucks_css',css); else localStorage.removeItem('pth_pucks_css'); }catch(e){}
 }
 var _palApply = palette.apply;
 palette.apply = function(id){
@@ -195,6 +217,13 @@ table.apply = function(id){
   try{ if (_isBuiltinTable(id)) _injectTable(null); else { var pk=_tablePkgById(id); if(pk) _injectTable(pk); } }catch(e){}
 };
 table.set = table.apply;
+var _btnApply = buttons.apply;
+buttons.apply = function(id){ _btnApply(id); try{ _injectButtons(id==='glossy'?BUTTON_GLOSSY:null); }catch(e){} };
+buttons.set = buttons.apply;
+var _pkApply = pucks.apply;
+pucks.apply = function(id){ _pkApply(id); try{ _injectPucks(id==='pokerth'?PUCK_SET:null); }catch(e){} };
+pucks.set = pucks.apply;
+try{ _injectButtons(buttons.get()==='glossy'?BUTTON_GLOSSY:null); _injectPucks(pucks.get()==='pokerth'?PUCK_SET:null); }catch(e){}
 function _loadThemes(){
   try{
     fetch('/themes/themes.json',{cache:'no-store'})
@@ -202,9 +231,9 @@ function _loadThemes(){
       .then(function(list){
         if(!Array.isArray(list)) return;
         var pkgs=list.filter(function(p){return p&&p.id&&(p.palette||p.table||p.felt);});
-        _palettePkgs=pkgs.filter(function(p){return p.palette;}).map(function(p){ return {id:String(p.id),name:p.name||String(p.id),swatch:p.swatch||'#444',tokens:Object.assign({},p.palette,p.buttons||{})}; }).filter(function(p){ return !_isBuiltinPalette(p.id); });
-        _tablePkgs=pkgs.filter(function(p){return p.table||p.felt||p.pucks;}).map(function(p){ return {id:String(p.id),name:p.name||String(p.id),swatch:p.swatch||'#444',tokens:p.table||{},felt:p.felt||null,pucks:p.pucks||null}; }).filter(function(p){ return !_isBuiltinTable(p.id); });
-        _pkgPresets=pkgs.map(function(p){ return {id:'pkg-'+p.id,name:p.name||String(p.id),swatch:p.swatch||'#444',values:{theme:(p.palette?String(p.id):''),table:((p.table||p.felt)?String(p.id):'')}}; });
+        _palettePkgs=pkgs.filter(function(p){return p.palette;}).map(function(p){ return {id:String(p.id),name:p.name||String(p.id),swatch:p.swatch||'#444',tokens:p.palette}; }).filter(function(p){ return !_isBuiltinPalette(p.id); });
+        _tablePkgs=pkgs.filter(function(p){return p.table||p.felt;}).map(function(p){ return {id:String(p.id),name:p.name||String(p.id),swatch:p.swatch||'#444',tokens:p.table||{},felt:p.felt||null}; }).filter(function(p){ return !_isBuiltinTable(p.id); });
+        _pkgPresets=pkgs.map(function(p){ return {id:'pkg-'+p.id,name:p.name||String(p.id),swatch:p.swatch||'#444',values:{theme:(p.palette?String(p.id):''),table:((p.table||p.felt)?String(p.id):''),buttons:'glossy',pucks:'pokerth'}}; });
         try{ var pp=_palettePkgById(palette.get()); if(pp) _injectPalette(pp); var tp=_tablePkgById(table.get()); if(tp) _injectTable(tp); }catch(e){}
         if(_body) _render();
       }).catch(function(){});
@@ -396,7 +425,7 @@ function _render() {
   _body.appendChild(_sectionHeader(_t('sectionCustomize', 'Customize'), ''));
   AXES.forEach(function (ax) {
     var cur = ax.get();
-    var kind = (ax === palette) ? 'palette' : (ax === table) ? 'table' : 'deck';
+    var kind = (ax === palette) ? 'palette' : (ax === table) ? 'table' : (ax === deck) ? 'deck' : 'palette';
     var opts = (ax === deck) ? DECKS.concat(_galleryDecks) : (ax === palette ? PALETTES.concat(_palettePkgs) : (ax === table ? TABLES.concat(_tablePkgs) : ax.items));
     var curItem = opts[0];
     for (var i = 0; i < opts.length; i++) if (opts[i].id === cur) curItem = opts[i];
