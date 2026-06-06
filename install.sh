@@ -544,10 +544,16 @@ do_deck_add() {
   command -v node >/dev/null 2>&1 || { errln "node is required"; exit 1; }
   command -v unzip >/dev/null 2>&1 || { info "Installing unzip"; as_root apt-get install -y -q unzip >/dev/null; }
 
-  local tmp; tmp="$(mktemp -d)"
+  local tmp ref; tmp="$(mktemp -d)"
   local zip="$tmp/deck.zip"
   case "$src" in
-    http://*|https://*) info "Downloading deck"; curl -fsSL "$src" -o "$zip" || { errln "Download failed"; rm -rf "$tmp"; exit 1; } ;;
+    http://*|https://*)
+      info "Downloading deck"
+      ref="$(printf '%s' "$src" | sed -E 's#(https?://[^/]+).*#\1/#')"
+      curl -fSL --retry 2 \
+        -A 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36' \
+        -e "$ref" "$src" -o "$zip" \
+        || { errln "Download failed. The site may block direct downloads (403). Download the .zip in your browser, copy it to the server, then run: pokerth-web deck-add /path/to/file.zip"; rm -rf "$tmp"; exit 1; } ;;
     *) [ -f "$src" ] || { errln "File not found: $src"; rm -rf "$tmp"; exit 1; }; cp "$src" "$zip" ;;
   esac
 
