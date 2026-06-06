@@ -299,6 +299,7 @@ _loadGalleryTables();
 const PANEL_ID = 'theme-panel', OVERLAY_ID = 'theme-panel-overlay';
 var _body = null; // re-rendered on each change so highlights stay in sync
 var _openSec = null; // which dropdown is expanded (accordion; one open at a time)
+var _openBlockEl = null; // DOM node of the expanded section (set during render, used for auto-scroll)
 
 function _panelEsc(e) { if (e.key === 'Escape') closeThemePanel(); }
 
@@ -438,6 +439,7 @@ function _dropdownBlock(secId, labelText, kind, curItem, curName, options) {
   btn.addEventListener('click', function (e) { e.stopPropagation(); _openSec = open ? null : secId; _render(); });
   dd.appendChild(btn);
   if (open) {
+    _openBlockEl = sec; // remember the expanded block so _render() can scroll it into view
     var list = document.createElement('div');
     list.style.cssText = 'margin-top:5px;border:1px solid var(--border,rgba(200,168,74,0.25));border-radius:8px;overflow:hidden;background:#0b1a0d';
     options.forEach(function (o, idx) {
@@ -462,9 +464,40 @@ function _dropdownBlock(secId, labelText, kind, curItem, curName, options) {
   return sec;
 }
 
+// Scroll the theme panel so the currently-open accordion section is visible.
+// On open, an option list expands in place; without this the panel never
+// scrolls, so sections near the bottom (pucks, chips…) reveal their options
+// off-screen. We reveal the bottom of the expanded list (with a little
+// breathing room); if the section is taller than the panel we align its top
+// instead, so the list stays scrollable. Panel-only — no page-scroll effects.
+function _scrollOpenIntoView() {
+  if (!_openSec || !_openBlockEl) return;
+  var panel = document.getElementById(PANEL_ID);
+  if (!panel || panel.isConnected === false || _openBlockEl.isConnected === false) return;
+  var cs = getComputedStyle(panel);
+  var pr = panel.getBoundingClientRect();
+  var br = _openBlockEl.getBoundingClientRect();
+  var viewTop    = pr.top    + (parseFloat(cs.borderTopWidth)    || 0) + (parseFloat(cs.paddingTop)    || 0);
+  var viewBottom = pr.bottom - (parseFloat(cs.borderBottomWidth) || 0) - (parseFloat(cs.paddingBottom) || 0);
+  var EXTRA = 10; // small gap so the last option isn't glued to the edge
+  var delta = 0;
+  if (br.bottom > viewBottom) {
+    // Scroll down to reveal the bottom, but never push the block's top above
+    // the viewport top (handles lists taller than the panel → align top).
+    delta = Math.min(br.bottom - viewBottom + EXTRA, Math.max(0, br.top - viewTop));
+  } else if (br.top < viewTop) {
+    delta = br.top - viewTop; // section starts above the fold → scroll up
+  }
+  if (Math.abs(delta) > 1) {
+    try { panel.scrollBy({ top: delta, behavior: 'smooth' }); }
+    catch (e) { panel.scrollTop += delta; }
+  }
+}
+
 function _render() {
   if (!_body) return;
   _body.innerHTML = '';
+  _openBlockEl = null;
 
   // 1) Presets ("main themes") as a dropdown
   var act = activePreset();
@@ -499,6 +532,11 @@ function _render() {
     });
     _body.appendChild(_dropdownBlock(kind, _t(ax.titleKey, ax.titleFallback), kind, curItem, curName, options));
   });
+
+  // After (re)building the body, keep an expanded section in view.
+  if (_openSec && _openBlockEl && typeof requestAnimationFrame === 'function') {
+    requestAnimationFrame(_scrollOpenIntoView);
+  }
 }
 
 function openThemePanel(ev) {
