@@ -544,6 +544,7 @@ function openThemePanel(ev) {
 export { PALETTES, TABLES, DECKS, PRESETS, AXES, makeAxis, applyPreset, activePreset, openThemePanel, closeThemePanel };
 
 window.openThemePanel = openThemePanel;
+window._refreshThemePanel = function () { try { _render(); } catch (e) {} };
 window.closeThemePanel = closeThemePanel;
 window.openThemeMenu = openThemePanel;   // back-compat
 window.openTableMenu = openThemePanel;   // back-compat
