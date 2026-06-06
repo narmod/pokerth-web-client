@@ -46,6 +46,9 @@
   .srow:first-child{border-top:0}.srow span{color:var(--text)}.srow b{color:var(--cream);text-align:right}
   .periodrow{display:flex;gap:8px;align-items:center;margin-top:4px}
   .logs{margin:8px 0 0;max-height:320px;overflow:auto;background:#0a120c;border:1px solid var(--line);border-radius:8px;padding:10px;font-size:.72rem;line-height:1.45;white-space:pre-wrap;word-break:break-word;color:#bcd6c2}
+  .toggle{padding:6px 16px;border-radius:14px;border:1px solid var(--line);cursor:pointer;font-size:.78rem;min-width:56px}
+  .toggle.on{background:rgba(127,209,127,.16);border-color:rgba(127,209,127,.5);color:#7fd17f;font-weight:700}
+  .toggle.off{background:rgba(184,52,52,.12);border-color:rgba(184,52,52,.5);color:#e98a8a}
 </style>
 </head>
 <body>
@@ -108,6 +111,12 @@
           <button id="savePeriod" class="use">Save</button>
         </div>
         <div id="periodmsg" class="msg"></div>
+      </div>
+      <div class="card">
+        <h2>App modes (login screen)</h2>
+        <p class="muted" style="margin:0 0 4px">Show or hide entry modes offered to players.</p>
+        <div id="modes"></div>
+        <div id="modesmsg" class="msg"></div>
       </div>
       <div class="card">
         <div class="boardhead"><h2 style="margin:0">Recent logs</h2><button id="refreshLogs" class="use">Refresh</button></div>
@@ -214,6 +223,7 @@
       var items=[['Build version',d.version||'\u2014'],['Node',d.node||'\u2014'],['Uptime',fmtUptime(d.uptimeSec)],['Connected sockets',d.sockets==null?'\u2014':String(d.sockets)],['Players on board',String(d.players)],['Reset period',d.resetPeriod||'\u2014']];
       items.forEach(function(it){ var r=document.createElement('div');r.className='srow';var s=document.createElement('span');s.textContent=it[0];var b=document.createElement('b');b.textContent=it[1];r.appendChild(s);r.appendChild(b);el.appendChild(r); });
       if(d.resetPeriod) $('period').value=d.resetPeriod;
+      if(d.modes){ modesState=Object.assign({offline:true,lan:true,pokerthnet:true},d.modes); renderModes(); }
     }).catch(function(){ $('status').innerHTML='<div class="empty err">Could not load.</div>'; });
     loadLogs();
   }
@@ -225,6 +235,28 @@
       .then(function(r){return r.json();}).then(function(d){ if(d.ok){ m.textContent='Saved: '+d.resetPeriod; m.className='msg ok'; } else { m.textContent='Failed: '+(d.error||'error'); m.className='msg err'; } })
       .catch(function(){ m.textContent='Network error.'; m.className='msg err'; });
   });
+
+  // app modes (login-screen entry modes)
+  var modesState={offline:true,lan:true,pokerthnet:true};
+  var MODE_LABELS=[['offline','Offline practice (bots)'],['lan','LAN / private server'],['pokerthnet','pokerth.net']];
+  function renderModes(){
+    var el=$('modes'); el.innerHTML='';
+    MODE_LABELS.forEach(function(it){
+      var k=it[0], on=modesState[k]!==false;
+      var row=document.createElement('div');row.className='row';
+      var nm=document.createElement('div');nm.className='nm';var b=document.createElement('b');b.textContent=it[1];nm.appendChild(b);row.appendChild(nm);
+      var t=document.createElement('button');t.className='toggle '+(on?'on':'off');t.textContent=on?'On':'Off';
+      t.addEventListener('click',function(){ toggleMode(k); });
+      row.appendChild(t);el.appendChild(row);
+    });
+  }
+  function toggleMode(k){
+    modesState[k]=!modesState[k]; renderModes();
+    var m=$('modesmsg');
+    fetch('/admin/config?token='+encodeURIComponent(tok()),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({token:tok(),modes:modesState})})
+      .then(function(r){return r.json();}).then(function(d){ if(d.ok){ if(d.modes){ modesState=Object.assign(modesState,d.modes); renderModes(); } m.textContent='Saved.'; m.className='msg ok'; } else { m.textContent='Failed: '+(d.error||'error'); m.className='msg err'; } })
+      .catch(function(){ m.textContent='Network error.'; m.className='msg err'; });
+  }
 
   enter();
 })();
