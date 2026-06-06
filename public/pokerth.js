@@ -7278,6 +7278,12 @@ function dismissWinner() {
       // doublement masqué tant que la roue n'est pas ouverte.
       var advWrap = document.getElementById('f-server-pass');
       if (advWrap) advWrap.style.display = (mode === 'lan' || mode === 'unauth') ? '' : 'none';
+      // URL du proxy WebSocket : en mode pokerth.net (guest/auth) le pont est
+      // toujours le meme (celui qui sert l'app), donc l'exposer prete a confusion.
+      // Masque dans ces modes ; visible en LAN / dedie (ou l'on peut pointer vers
+      // un autre pont). La valeur reste fixee par mode plus bas, connexion inchangee.
+      var proxyWrap = document.getElementById('f-proxy');
+      if (proxyWrap) proxyWrap.style.display = (mode === 'lan' || mode === 'unauth') ? '' : 'none';
       // Mot de passe UTILISATEUR (compte) : option avancée placée sous le login.
       // En mode LAN / dédié il suit l'état de la roue crantée (comme le TLS) ;
       // sinon caché. Seul le login (pseudo) reste toujours visible.
@@ -9574,4 +9580,4 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.2.247'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.2.248'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
