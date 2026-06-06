@@ -57,6 +57,7 @@ function makeAxis(cfg) {
 const PALETTES = [
   { id: '',     key: 'themeGreen', fallback: 'Green', swatch: '#1e3820' },
   { id: 'dark', key: 'themeDark',  fallback: 'Dark',  swatch: '#232730' },
+  { id: 'redfelt', key: 'themeRed', fallback: 'Red felt', swatch: '#841c1c' },
 ];
 const TABLES = [
   { id: '',         key: 'tableGreen',    fallback: 'Green',    swatch: '#1e6b1e' },

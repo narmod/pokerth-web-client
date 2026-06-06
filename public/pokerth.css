@@ -18,6 +18,8 @@ html { touch-action: manipulation; -webkit-text-size-adjust: 100%; text-size-adj
   --felt-base-hi:  #1e6b1e;
   --felt-base-mid: #0f3d0f;
   --felt-base-lo:  #091f09;
+  --modal-bg:   linear-gradient(160deg, #0a1f0a 0%, #142a18 50%, #08160a 100%);
+  --body-glow:  rgba(50,100,50,0.18);
   --rail:          #6b3e18;
   --rail-dark:     #3a2208;
   --rail-glow:     rgba(107,62,24,0.3);
@@ -45,6 +47,7 @@ html { touch-action: manipulation; -webkit-text-size-adjust: 100%; text-size-adj
   --felt:       #1b1e24;
   --felt-mid:   #232730;
   --felt-hi:    #2c313c;
+  --modal-bg:   linear-gradient(160deg, #0e1014 0%, #161a20 50%, #0c0e12 100%);
   --panel:      rgba(12,14,18,0.90);
   --panel-hi:   rgba(20,23,29,0.92);
   --gold:       #c8a84a;
@@ -59,6 +62,35 @@ html { touch-action: manipulation; -webkit-text-size-adjust: 100%; text-size-adj
   --border:     rgba(200,168,74,0.22);
   --border-hi:  rgba(200,168,74,0.60);
   --card-back:  url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%20100%20140%27%20preserveAspectRatio%3D%27none%27%3E%3Cdefs%3E%3CradialGradient%20id%3D%27h%27%20cx%3D%2750%25%27%20cy%3D%2744%25%27%20r%3D%2780%25%27%3E%3Cstop%20offset%3D%270%27%20stop-color%3D%27%232c313c%27%2F%3E%3Cstop%20offset%3D%27100%25%27%20stop-color%3D%27%230c0e12%27%2F%3E%3C%2FradialGradient%3E%3Cpattern%20id%3D%27l%27%20width%3D%2714%27%20height%3D%2714%27%20patternUnits%3D%27userSpaceOnUse%27%3E%3Cpath%20d%3D%27M7%200L14%207L7%2014L0%207Z%27%20fill%3D%27none%27%20stroke%3D%27%23c8a84a%27%20stroke-width%3D%270.6%27%20opacity%3D%270.4%27%2F%3E%3Ccircle%20cx%3D%277%27%20cy%3D%277%27%20r%3D%270.8%27%20fill%3D%27%23c8a84a%27%20opacity%3D%270.45%27%2F%3E%3C%2Fpattern%3E%3C%2Fdefs%3E%3Crect%20width%3D%27100%27%20height%3D%27140%27%20fill%3D%27url%28%23h%29%27%2F%3E%3Crect%20x%3D%276%27%20y%3D%276%27%20width%3D%2788%27%20height%3D%27128%27%20rx%3D%275%27%20fill%3D%27url%28%23l%29%27%2F%3E%3Crect%20x%3D%275%27%20y%3D%275%27%20width%3D%2790%27%20height%3D%27130%27%20rx%3D%277%27%20fill%3D%27none%27%20stroke%3D%27%23c8a84a%27%20stroke-width%3D%271.4%27%2F%3E%3Crect%20x%3D%278.5%27%20y%3D%278.5%27%20width%3D%2783%27%20height%3D%27123%27%20rx%3D%275%27%20fill%3D%27none%27%20stroke%3D%27%237a6428%27%20stroke-width%3D%270.6%27%2F%3E%3Cellipse%20cx%3D%2750%27%20cy%3D%2770%27%20rx%3D%2725%27%20ry%3D%2737%27%20fill%3D%27%231b1e24%27%20stroke%3D%27%23c8a84a%27%20stroke-width%3D%270.9%27%2F%3E%3Cellipse%20cx%3D%2750%27%20cy%3D%2770%27%20rx%3D%2721%27%20ry%3D%2732.5%27%20fill%3D%27none%27%20stroke%3D%27%237a6428%27%20stroke-width%3D%270.5%27%2F%3E%3Ctext%20x%3D%2750%27%20y%3D%2784%27%20font-size%3D%2738%27%20text-anchor%3D%27middle%27%20fill%3D%27%23e0c070%27%20font-family%3D%27Georgia%2Cserif%27%3E%E2%99%A0%3C%2Ftext%3E%3C%2Fsvg%3E");
+}
+
+/* ── Palette : Feutre rouge (axe "Palette") ── feutre + UI + popups en rouge.
+   Comme :root/dark, ne fait qu'ecraser les variables. Voir theme.mjs. */
+:root[data-theme="redfelt"] {
+  --felt:       #2c1012;
+  --felt-mid:   #3a1418;
+  --felt-hi:    #4c1c20;
+  --felt-base-hi:  #8e1e1e;
+  --felt-base-mid: #4a0e0e;
+  --felt-base-lo:  #280606;
+  --rail:          #5a2410;
+  --rail-dark:     #2e1206;
+  --rail-glow:     rgba(150,40,40,0.30);
+  --panel:      rgba(26,8,10,0.93);
+  --panel-hi:   rgba(38,12,14,0.94);
+  --gold:       #c8a84a;
+  --gold-hi:    #e0c070;
+  --gold-dim:   #7a6428;
+  --cream:      #f2e6e2;
+  --text:       #bd9d9a;
+  --text-hi:    #ecd6d2;
+  --red:        #c0392b;
+  --green:      #27ae60;
+  --orange:     #e67e22;
+  --border:     rgba(200,168,74,0.25);
+  --border-hi:  rgba(200,168,74,0.65);
+  --modal-bg:   linear-gradient(160deg, #2c0e10 0%, #3c1519 50%, #1f0709 100%);
+  --body-glow:  rgba(140,40,40,0.16);
 }
 
 /* ── Tapis (axe "Tapis", choisi via le menu dedie) ─ surcharge la SURFACE
@@ -105,7 +137,7 @@ html, body {
 
 body {
   background-image:
-    radial-gradient(ellipse 140% 70% at 50% 0%, rgba(50,100,50,0.18) 0%, transparent 65%),
+    radial-gradient(ellipse 140% 70% at 50% 0%, var(--body-glow) 0%, transparent 65%),
     repeating-linear-gradient(45deg, transparent, transparent 3px,
       rgba(0,0,0,0.04) 3px, rgba(0,0,0,0.04) 6px);
 }
@@ -2332,7 +2364,7 @@ body {
   animation: fadeIn 0.2s ease;
 }
 .hands-card {
-  background: linear-gradient(160deg,#071206 0%,#0e2010 60%,#071206 100%);
+  background: var(--modal-bg);
   border: 1px solid var(--gold-dim); border-top: 3px solid var(--gold);
   border-radius: 10px; padding: 16px 18px;
   max-width: min(460px, 96vw); max-height: 90dvh;
@@ -3276,7 +3308,7 @@ body.hide-pct-btns .pct-row { display: none; }
 }
 @keyframes fadeIn { from { opacity:0 } to { opacity:1 } }
 .winner-card {
-  background: linear-gradient(160deg, #091808 0%, #0f2410 60%, #081508 100%);
+  background: var(--modal-bg);
   border: 1px solid var(--gold-dim); border-top: 3px solid var(--gold);
   border-radius: 10px; padding: 18px 22px;
   max-width: min(440px, 94vw); width: 100%;
@@ -3708,7 +3740,7 @@ body:not(.in-game) .my-zone {
   to   { opacity: 1; }
 }
 .endgame-card {
-  background: linear-gradient(160deg, #0a1f0a 0%, #142a18 50%, #08160a 100%);
+  background: var(--modal-bg);
   border: 1px solid var(--gold);
   border-top: 4px solid var(--gold);
   border-radius: 12px;
@@ -3932,7 +3964,7 @@ body:not(.in-game) .my-zone {
 }
 @keyframes ldFade { from { opacity: 0; } to { opacity: 1; } }
 .ld-card {
-  background: linear-gradient(160deg, #0c1a0e 0%, #142a18 60%, #08160a 100%);
+  background: var(--modal-bg);
   border: 1px solid var(--gold-dim);
   border-top: 3px solid var(--gold);
   border-radius: 8px;
