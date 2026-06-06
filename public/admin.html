@@ -49,6 +49,9 @@
   .toggle{padding:6px 16px;border-radius:14px;border:1px solid var(--line);cursor:pointer;font-size:.78rem;min-width:56px}
   .toggle.on{background:rgba(127,209,127,.16);border-color:rgba(127,209,127,.5);color:#7fd17f;font-weight:700}
   .toggle.off{background:rgba(184,52,52,.12);border-color:rgba(184,52,52,.5);color:#e98a8a}
+  .btnrow{display:flex;gap:8px;flex-wrap:wrap}
+  .use.danger{background:rgba(184,52,52,.16);border-color:rgba(184,52,52,.5);color:#e98a8a}
+  .use:disabled{opacity:.5;cursor:default}
 </style>
 </head>
 <body>
@@ -117,6 +120,18 @@
         <p class="muted" style="margin:0 0 4px">Show or hide entry modes offered to players.</p>
         <div id="modes"></div>
         <div id="modesmsg" class="msg"></div>
+      </div>
+      <div class="card">
+        <h2>Maintenance</h2>
+        <p class="muted" style="margin:0 0 8px">These actions restart the server briefly — this page reconnects on its own.</p>
+        <div class="btnrow">
+          <button id="btnUpdate" class="use danger">Update &amp; restart</button>
+          <button id="btnRestart" class="use">Restart</button>
+          <button id="btnClearLogs" class="use">Clear logs</button>
+        </div>
+        <div id="maintmsg" class="msg"></div>
+        <div class="boardhead" style="margin-top:10px"><h2 style="margin:0;font-size:.92rem">Last action log</h2><button id="btnUpdLog" class="use">Refresh</button></div>
+        <pre id="updlog" class="logs" style="max-height:200px"></pre>
       </div>
       <div class="card">
         <div class="boardhead"><h2 style="margin:0">Recent logs</h2><button id="refreshLogs" class="use">Refresh</button></div>
@@ -225,7 +240,7 @@
       if(d.resetPeriod) $('period').value=d.resetPeriod;
       if(d.modes){ modesState=Object.assign({offline:true,lan:true,pokerthnet:true},d.modes); renderModes(); }
     }).catch(function(){ $('status').innerHTML='<div class="empty err">Could not load.</div>'; });
-    loadLogs();
+    loadLogs(); loadUpdateLog();
   }
   function loadLogs(){ fetch('/admin/logs?token='+encodeURIComponent(tok())).then(function(r){return r.json();}).then(function(d){ var p=$('logs'); p.textContent=(d.lines||[]).join('\n'); p.scrollTop=p.scrollHeight; }).catch(function(){}); }
   $('refreshLogs').addEventListener('click', loadLogs);
@@ -257,6 +272,36 @@
       .then(function(r){return r.json();}).then(function(d){ if(d.ok){ if(d.modes){ modesState=Object.assign(modesState,d.modes); renderModes(); } m.textContent='Saved.'; m.className='msg ok'; } else { m.textContent='Failed: '+(d.error||'error'); m.className='msg err'; } })
       .catch(function(){ m.textContent='Network error.'; m.className='msg err'; });
   }
+
+  // ── Maintenance: update / restart / clear logs (server restarts briefly) ──
+  function maintBusy(b){ ['btnUpdate','btnRestart','btnClearLogs'].forEach(function(id){ var e=$(id); if(e) e.disabled=b; }); }
+  function pollBack(label){
+    var msg=$('maintmsg'), tries=0; msg.textContent=label+' \u2014 server restarting, reconnecting\u2026'; msg.className='msg';
+    var iv=setInterval(function(){
+      tries++;
+      fetch('/admin/status?token='+encodeURIComponent(tok()),{cache:'no-store'}).then(function(r){return r.json();}).then(function(d){
+        if(d&&d.ok){ clearInterval(iv); maintBusy(false); msg.textContent='Back online \u2014 v'+(d.version||'?')+'.'; msg.className='msg ok'; loadServer(); }
+      }).catch(function(){});
+      if(tries>24){ clearInterval(iv); maintBusy(false); msg.textContent='Still reconnecting\u2026 use Refresh in a moment.'; msg.className='msg err'; }
+    },2500);
+  }
+  function fireAction(path,label){
+    maintBusy(true);
+    fetch(path+'?token='+encodeURIComponent(tok()),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({token:tok()})})
+      .then(function(r){return r.json();}).then(function(d){ if(d&&d.started){ pollBack(label); } else { maintBusy(false); var m=$('maintmsg'); m.textContent='Failed: '+((d&&d.error)||'error'); m.className='msg err'; } })
+      .catch(function(){ pollBack(label); });
+  }
+  function doUpdate(){ if(confirm('Pull the latest code and restart the server now?')) fireAction('/admin/update','Update started'); }
+  function doRestart(){ if(confirm('Restart the server now?')) fireAction('/admin/restart','Restart started'); }
+  function clearLogs(){
+    fetch('/admin/clear-logs?token='+encodeURIComponent(tok()),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({token:tok()})})
+      .then(function(r){return r.json();}).then(function(d){ var m=$('maintmsg'); if(d&&d.ok){ m.textContent='Logs cleared.'; m.className='msg ok'; loadLogs(); } else { m.textContent='Failed.'; m.className='msg err'; } }).catch(function(){});
+  }
+  function loadUpdateLog(){ fetch('/admin/update-log?token='+encodeURIComponent(tok()),{cache:'no-store'}).then(function(r){return r.json();}).then(function(d){ if(d&&d.ok) $('updlog').textContent=d.log||'(empty)'; }).catch(function(){}); }
+  if($('btnUpdate')) $('btnUpdate').addEventListener('click', doUpdate);
+  if($('btnRestart')) $('btnRestart').addEventListener('click', doRestart);
+  if($('btnClearLogs')) $('btnClearLogs').addEventListener('click', clearLogs);
+  if($('btnUpdLog')) $('btnUpdLog').addEventListener('click', loadUpdateLog);
 
   enter();
 })();

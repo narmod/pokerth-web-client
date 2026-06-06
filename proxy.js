@@ -382,10 +382,37 @@ function sendFile(req, res, filePath, type, cacheCtl) {
 // install-dir owner, so it writes straight into public/{table,cards}/ and then
 // regenerates the manifests. Auth reuses STATS_ADMIN_TOKEN (set via set-token);
 // if no token is configured, every admin action is refused.
-const { spawnSync } = require('child_process');
+const { spawnSync, spawn } = require('child_process');
 const os = require('os');
 const PUBLIC_DIR = path.join(__dirname, 'public');
 const MAX_UPLOAD = 25 * 1024 * 1024; // 25 MB
+const SAFE_PATH = '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin';
+const PM2_NAME = process.env.PM2_NAME || 'pokerth-web';
+const UPDATE_LOG = path.join(os.tmpdir(), 'pokerth-web-update.log');
+// Run a fixed shell command detached from this process, logging to `logPath`.
+// Used for self-update / restart: the spawned shell outlives the proxy when PM2
+// cycles it, so it can issue `pm2 restart` against ourselves. PATH is forced so
+// git/npm/node/pm2 resolve regardless of PM2's stripped environment.
+function runDetached(cmd, logPath) {
+  try {
+    let out = 'ignore';
+    if (logPath) {
+      try { fs.writeFileSync(logPath, '[' + new Date().toISOString() + '] $ ' + cmd + '\n'); out = fs.openSync(logPath, 'a'); }
+      catch (e) { out = 'ignore'; }
+    }
+    const child = spawn('sh', ['-c', cmd], { detached: true, stdio: (out === 'ignore' ? 'ignore' : ['ignore', out, out]), env: Object.assign({}, process.env, { PATH: SAFE_PATH }) });
+    child.unref();
+    return true;
+  } catch (e) { console.error('[admin] runDetached failed:', e.message); return false; }
+}
+// "Lite" self-update (runs as the service user, no sudo): pull + runtime deps +
+// restart. Built-in/gallery manifests are NOT regenerated here (git never adds
+// gallery items, built-ins live in code); the full `sudo pokerth-web update`
+// covers Node/wrapper refreshes.
+function updateCmd() {
+  const dir = __dirname.replace(/'/g, "'\\''");
+  return "sleep 1; cd '" + dir + "' && git pull --ff-only && npm install --omit=dev --no-audit --no-fund && pm2 restart " + PM2_NAME + " --update-env";
+}
 
 function adminAuthed(query, bodyToken) {
   return !!STATS_ADMIN_TOKEN && (query.token === STATS_ADMIN_TOKEN || bodyToken === STATS_ADMIN_TOKEN);
@@ -539,6 +566,36 @@ function handleAdmin(req, res, reqPathOnly, query) {
       regenManifest(kind);
       adminJson(res, 200, { ok: true });
     });
+  }
+  if (reqPathOnly === '/admin/update' && req.method === 'POST') {
+    return readJsonBody(req, function (d) {
+      if (!adminAuthed(query, d && d.token)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
+      const started = runDetached(updateCmd(), UPDATE_LOG);
+      console.log('[admin] self-update requested (git pull + npm + restart)');
+      return adminJson(res, started ? 200 : 500, { ok: started, started: started });
+    });
+  }
+  if (reqPathOnly === '/admin/restart' && req.method === 'POST') {
+    return readJsonBody(req, function (d) {
+      if (!adminAuthed(query, d && d.token)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
+      const started = runDetached("sleep 1; pm2 restart " + PM2_NAME + " --update-env", UPDATE_LOG);
+      console.log('[admin] restart requested');
+      return adminJson(res, started ? 200 : 500, { ok: started, started: started });
+    });
+  }
+  if (reqPathOnly === '/admin/clear-logs' && req.method === 'POST') {
+    return readJsonBody(req, function (d) {
+      if (!adminAuthed(query, d && d.token)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
+      LOG_RING.length = 0;
+      console.log('[admin] in-memory logs cleared');
+      return adminJson(res, 200, { ok: true });
+    });
+  }
+  if (reqPathOnly === '/admin/update-log') {
+    if (!adminAuthed(query)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
+    let log = '';
+    try { log = fs.readFileSync(UPDATE_LOG, 'utf8'); } catch (e) {}
+    return adminJson(res, 200, { ok: true, log: log.slice(-12000) });
   }
   res.writeHead(404); res.end('Not found');
 }
