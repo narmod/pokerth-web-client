@@ -1529,11 +1529,13 @@ body {
   #pb-timer  { font-size: 0.9rem !important; }
 
   /* ── Contrôles d'action ── */
-  .btn-action { font-size: 0.9rem !important; padding: 11px 18px !important; }
-  .btn-pct { padding: 11px 6px !important; }
-  .btn-pct .pct-p   { font-size: 0.95rem !important; }
-  .btn-pct .pct-amt { font-size: 0.8rem !important; }
-  .raise-row .raise-input { font-size: 0.95rem !important; }
+  /* Desktop souris uniquement : barre d'action plus compacte pour libérer
+     de la hauteur et mieux voir la table / les cartes. */
+  .btn-action { font-size: 0.8rem !important; padding: 8px 18px !important; }
+  .btn-pct { padding: 7px 6px !important; }
+  .btn-pct .pct-p   { font-size: 0.85rem !important; }
+  .btn-pct .pct-amt { font-size: 0.72rem !important; }
+  .raise-row .raise-input { font-size: 0.85rem !important; }
 
   /* ── Vignette d'assistance ── */
   #hand-strength { font-size: 0.82rem !important; padding: 3px 14px !important; top: -40px !important; }
