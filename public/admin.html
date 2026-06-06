@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>PokerTH — Administration</title>
+<style>
+  :root{--panel:#13201a;--line:rgba(200,168,74,.25);--gold:#c8a84a;--cream:#f0e6d2;--text:#9aaa92}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:radial-gradient(circle at 50% 0%,#16261a,#0a110c);color:var(--cream);min-height:100vh;padding:18px}
+  .wrap{max-width:640px;margin:0 auto}
+  h1{font-size:1.15rem;margin:.2rem 0 .1rem;color:var(--gold)}
+  .sub{color:var(--text);font-size:.8rem;margin:0 0 16px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px;margin:0 0 14px}
+  label{font-size:.78rem;color:var(--text);display:block;margin:0 0 5px}
+  input[type=password]{width:100%;padding:9px 11px;border-radius:8px;border:1px solid var(--line);background:rgba(0,0,0,.25);color:var(--cream);font-size:.9rem}
+  .seg{display:flex;gap:8px;margin:10px 0}
+  .seg button{flex:1;padding:9px;border-radius:8px;border:1px solid var(--line);background:rgba(255,255,255,.03);color:var(--cream);cursor:pointer;font-size:.86rem}
+  .seg button.on{background:var(--gold);color:#1a1206;border-color:var(--gold);font-weight:700}
+  .drop{margin-top:10px;border:2px dashed var(--line);border-radius:12px;padding:26px 14px;text-align:center;color:var(--text);cursor:pointer;transition:.15s}
+  .drop.hot{border-color:var(--gold);background:rgba(200,168,74,.08);color:var(--cream)}
+  .msg{margin-top:10px;font-size:.85rem;min-height:1.2em}
+  .ok{color:#7fd17f}.err{color:#e98a8a}
+  .list h2{font-size:.95rem;color:var(--gold);margin:2px 0 8px}
+  .row{display:flex;align-items:center;gap:10px;padding:8px 4px;border-top:1px solid rgba(255,255,255,.06)}
+  .row:first-of-type{border-top:0}
+  .row .nm{flex:1;min-width:0}.row .nm b{display:block;font-size:.88rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .row .nm span{font-size:.72rem;color:var(--text)}
+  .row button{padding:6px 10px;border-radius:7px;border:1px solid rgba(184,52,52,.5);background:rgba(184,52,52,.12);color:#e98a8a;cursor:pointer;font-size:.78rem}
+  .empty{color:var(--text);font-size:.8rem;padding:6px 4px}
+  .muted{color:var(--text);font-size:.72rem;margin-top:6px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>PokerTH — Administration</h1>
+  <p class="sub">Importer / retirer des styles de table et des jeux de cartes.</p>
+  <div class="card">
+    <label for="tok">Token admin</label>
+    <input id="tok" type="password" placeholder="ton token (set-token)" autocomplete="off">
+    <div class="muted">Conservé dans ce navigateur uniquement.</div>
+  </div>
+  <div class="card">
+    <label>Importer un package (.zip)</label>
+    <div class="seg">
+      <button class="on" data-k="table">Style de table</button>
+      <button data-k="deck">Jeu de cartes</button>
+    </div>
+    <div id="drop" class="drop">Glisse un <b>.zip</b> ici, ou clique pour choisir</div>
+    <input id="file" type="file" accept=".zip,application/zip" style="display:none">
+    <div id="msg" class="msg"></div>
+  </div>
+  <div class="card list">
+    <h2>Styles de table</h2><div id="tables"></div>
+    <h2 style="margin-top:14px">Jeux de cartes</h2><div id="decks"></div>
+  </div>
+</div>
+<script>
+(function(){
+  var TOKK='pth_admin_tok', tokEl=document.getElementById('tok');
+  tokEl.value=localStorage.getItem(TOKK)||'';
+  tokEl.addEventListener('input',function(){ localStorage.setItem(TOKK,tokEl.value.trim()); load(); });
+  var kind='table';
+  document.querySelectorAll('.seg button').forEach(function(b){
+    b.addEventListener('click',function(){ kind=b.dataset.k; document.querySelectorAll('.seg button').forEach(function(x){x.classList.toggle('on',x===b);}); });
+  });
+  var drop=document.getElementById('drop'), file=document.getElementById('file'), msg=document.getElementById('msg');
+  drop.addEventListener('click',function(){ file.click(); });
+  drop.addEventListener('dragover',function(e){ e.preventDefault(); drop.classList.add('hot'); });
+  drop.addEventListener('dragleave',function(){ drop.classList.remove('hot'); });
+  drop.addEventListener('drop',function(e){ e.preventDefault(); drop.classList.remove('hot'); if(e.dataTransfer.files[0]) upload(e.dataTransfer.files[0]); });
+  file.addEventListener('change',function(){ if(file.files[0]) upload(file.files[0]); });
+  function tok(){ return tokEl.value.trim(); }
+  function say(t,cls){ msg.textContent=t; msg.className='msg '+(cls||''); }
+  function upload(f){
+    if(!tok()){ say('Renseigne ton token admin.','err'); return; }
+    if(!/\.zip$/i.test(f.name)){ say('Choisis un fichier .zip.','err'); return; }
+    say('Import de \u00ab '+f.name+' \u00bb\u2026');
+    fetch('/admin/pkg-upload?token='+encodeURIComponent(tok())+'&kind='+kind+'&name='+encodeURIComponent(f.name),{method:'POST',body:f})
+      .then(function(r){return r.json();})
+      .then(function(d){ if(d.ok){ say('Import\u00e9 : '+d.name+' (id: '+d.id+')','ok'); load(); } else say('\u00c9chec : '+(d.error||'erreur'),'err'); })
+      .catch(function(){ say('Erreur r\u00e9seau.','err'); });
+    file.value='';
+  }
+  function remove(k,id,nm){
+    if(!confirm('Supprimer \u00ab '+nm+' \u00bb ?')) return;
+    fetch('/admin/pkg-remove?token='+encodeURIComponent(tok()),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({kind:k,id:id,token:tok()})})
+      .then(function(r){return r.json();})
+      .then(function(d){ if(d.ok){ load(); } else say('Suppression : '+(d.error||'erreur'),'err'); });
+  }
+  function render(el,arr,k){
+    if(!arr||!arr.length){ el.innerHTML='<div class="empty">(aucun)</div>'; return; }
+    el.innerHTML='';
+    arr.forEach(function(p){
+      var row=document.createElement('div'); row.className='row';
+      row.innerHTML='<div class="nm"><b></b><span></span></div>';
+      row.querySelector('b').textContent=p.name||p.id;
+      row.querySelector('span').textContent=p.id;
+      var btn=document.createElement('button'); btn.textContent='Supprimer';
+      btn.addEventListener('click',function(){ remove(k,p.id,p.name||p.id); });
+      row.appendChild(btn); el.appendChild(row);
+    });
+  }
+  function load(){
+    var T=document.getElementById('tables'), D=document.getElementById('decks');
+    if(!tok()){ T.innerHTML='<div class="empty">Renseigne ton token pour voir la liste.</div>'; D.innerHTML=''; return; }
+    fetch('/admin/pkg-list?token='+encodeURIComponent(tok()))
+      .then(function(r){return r.json();})
+      .then(function(d){ if(d.ok){ render(T,d.tables,'table'); render(D,d.decks,'deck'); } else { T.innerHTML='<div class="empty err">'+(d.error||'acc\u00e8s refus\u00e9')+'</div>'; D.innerHTML=''; } })
+      .catch(function(){});
+  }
+  load();
+})();
+</script>
+</body>
+</html>

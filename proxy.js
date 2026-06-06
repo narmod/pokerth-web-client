@@ -353,6 +353,137 @@ function sendFile(req, res, filePath, type, cacheCtl) {
   });
 }
 
+// ── Admin tool: import / remove gallery packages (table styles & card decks) ──
+// A small token-gated page served at /admin lets the maintainer add or remove
+// gallery packages from the browser — no SSH, no sudo. proxy.js runs as the
+// install-dir owner, so it writes straight into public/{table,cards}/ and then
+// regenerates the manifests. Auth reuses STATS_ADMIN_TOKEN (set via set-token);
+// if no token is configured, every admin action is refused.
+const { spawnSync } = require('child_process');
+const os = require('os');
+const PUBLIC_DIR = path.join(__dirname, 'public');
+const MAX_UPLOAD = 25 * 1024 * 1024; // 25 MB
+
+function adminAuthed(query, bodyToken) {
+  return !!STATS_ADMIN_TOKEN && (query.token === STATS_ADMIN_TOKEN || bodyToken === STATS_ADMIN_TOKEN);
+}
+function adminJson(res, code, obj) {
+  res.writeHead(code, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' });
+  res.end(JSON.stringify(obj));
+}
+function slugId(s) {
+  return String(s || '').toLowerCase().replace(/\.zip$/, '')
+    .replace(/[^a-z0-9_-]+/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '');
+}
+function regenManifest(kind) {
+  const rel = kind === 'table' ? 'scripts/tables-manifest.mjs' : 'scripts/decks-manifest.mjs';
+  const dir = path.join(PUBLIC_DIR, kind === 'table' ? 'table' : 'cards');
+  try { spawnSync(process.execPath, [path.join(__dirname, rel), dir], { stdio: 'ignore' }); }
+  catch (e) { console.error('[admin] manifest failed:', e.message); }
+}
+function pkgList() {
+  const read = function (p) { try { return JSON.parse(fs.readFileSync(p, 'utf8')) || []; } catch (e) { return []; } };
+  return { tables: read(path.join(PUBLIC_DIR, 'table', 'tables.json')),
+           decks:  read(path.join(PUBLIC_DIR, 'cards', 'decks.json')) };
+}
+function readRawBody(req, max, cb) {
+  let chunks = [], len = 0, tooBig = false;
+  req.on('data', function (c) { len += c.length; if (len > max) { tooBig = true; req.destroy(); return; } chunks.push(c); });
+  req.on('end', function () { cb(tooBig ? null : Buffer.concat(chunks)); });
+  req.on('error', function () { cb(null); });
+}
+function importPackage(kind, idHint, zipBuf, cb) {
+  let tmp;
+  try { tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'pkg-')); } catch (e) { return cb('temp dir failed'); }
+  const done = function (err, info) { try { fs.rmSync(tmp, { recursive: true, force: true }); } catch (e) {} cb(err, info); };
+  const exDir = path.join(tmp, 'x'); const zipPath = path.join(tmp, 'in.zip');
+  try { fs.writeFileSync(zipPath, zipBuf); fs.mkdirSync(exDir); } catch (e) { return done('write failed'); }
+  // -j flattens (junks paths) → neutralises zip-slip; we then pick files by basename
+  const un = spawnSync('unzip', ['-j', '-o', '-qq', zipPath, '-d', exDir], { stdio: 'ignore' });
+  if (un.status !== 0) return done('not a valid .zip archive');
+  const has = function (n) { return fs.existsSync(path.join(exDir, n)); };
+  const cp = function (src, dst) { try { fs.copyFileSync(path.join(exDir, src), dst); return true; } catch (e) { return false; } };
+  let id = slugId(idHint);
+
+  if (kind === 'table') {
+    if (!has('table.png')) return done('not a PokerTH table style (table.png missing)');
+    if (!id) id = 'table-' + Date.now();
+    if (['green', 'blue', 'bordeaux', 'slate', 'photo', 'table'].indexOf(id) >= 0) id = 'table-' + id;
+    const dest = path.join(PUBLIC_DIR, 'table', id);
+    try { fs.rmSync(dest, { recursive: true, force: true }); fs.mkdirSync(dest, { recursive: true }); } catch (e) { return done('dest failed'); }
+    let okFelt = false;
+    if (spawnSync('convert', ['-version'], { stdio: 'ignore' }).status === 0) {
+      okFelt = spawnSync('convert', [path.join(exDir, 'table.png'), '-resize', '1280x720>', '-strip', '-quality', '82', path.join(dest, 'felt.jpg')], { stdio: 'ignore' }).status === 0;
+    }
+    if (!okFelt) cp('table.png', path.join(dest, 'felt.png'));
+    if (has('dealerPuck.png'))     cp('dealerPuck.png',     path.join(dest, 'dealer.png'));
+    if (has('smallblindPuck.png')) cp('smallblindPuck.png', path.join(dest, 'sb.png'));
+    if (has('bigblindPuck.png'))   cp('bigblindPuck.png',   path.join(dest, 'bb.png'));
+    if (has('preview.png'))        cp('preview.png',        path.join(dest, 'preview.png'));
+    try { const xml = fs.readdirSync(exDir).find(function (f) { return /\.xml$/i.test(f); }); if (xml) cp(xml, path.join(dest, 'style.xml')); } catch (e) {}
+    regenManifest('table');
+  } else if (kind === 'deck') {
+    const ext = (has('0.png') && has('flipside.png')) ? 'png' : ((has('0.svg') && has('flipside.svg')) ? 'svg' : null);
+    if (!ext) return done('not a PokerTH card deck (need 0..51 + flipside)');
+    let missing = 0; for (let i = 0; i < 52; i++) if (!has(i + '.' + ext)) missing++;
+    if (missing) return done('incomplete deck (' + missing + ' of 52 images missing)');
+    if (!id) id = 'deck-' + Date.now();
+    if (id === 'svg') id = 'svg-deck';
+    const dest = path.join(PUBLIC_DIR, 'cards', id);
+    try { fs.rmSync(dest, { recursive: true, force: true }); fs.mkdirSync(dest, { recursive: true }); } catch (e) { return done('dest failed'); }
+    try { fs.readdirSync(exDir).forEach(function (f) { if (/\.(png|svg|xml)$/i.test(f)) cp(f, path.join(dest, f)); }); } catch (e) {}
+    regenManifest('deck');
+  } else return done('unknown kind');
+
+  let nm = id;
+  try {
+    const mf = path.join(PUBLIC_DIR, kind === 'table' ? 'table' : 'cards', kind === 'table' ? 'tables.json' : 'decks.json');
+    const e = JSON.parse(fs.readFileSync(mf, 'utf8')).find(function (x) { return x.id === id; });
+    if (e && e.name) nm = e.name;
+  } catch (e) {}
+  done(null, { id: id, name: nm });
+}
+
+function handleAdmin(req, res, reqPathOnly, query) {
+  if (reqPathOnly === '/admin') {
+    const p = path.join(PUBLIC_DIR, 'admin.html');
+    if (fs.existsSync(p)) return sendFile(req, res, p, 'text/html; charset=utf-8', 'no-store');
+    res.writeHead(404); res.end('admin.html missing'); return;
+  }
+  if (reqPathOnly === '/admin/pkg-list') {
+    if (!adminAuthed(query)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
+    return adminJson(res, 200, Object.assign({ ok: true }, pkgList()));
+  }
+  if (reqPathOnly === '/admin/pkg-upload' && req.method === 'POST') {
+    if (!adminAuthed(query)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
+    const kind = query.kind === 'deck' ? 'deck' : (query.kind === 'table' ? 'table' : null);
+    if (!kind) return adminJson(res, 400, { ok: false, error: 'kind must be table or deck' });
+    return readRawBody(req, MAX_UPLOAD, function (buf) {
+      if (!buf || !buf.length) return adminJson(res, 413, { ok: false, error: 'empty upload or larger than 25 MB' });
+      importPackage(kind, query.name || '', buf, function (err, info) {
+        if (err) return adminJson(res, 400, { ok: false, error: err });
+        adminJson(res, 200, { ok: true, kind: kind, id: info.id, name: info.name });
+      });
+    });
+  }
+  if (reqPathOnly === '/admin/pkg-remove' && req.method === 'POST') {
+    return readJsonBody(req, function (d) {
+      if (!adminAuthed(query, d && d.token)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
+      const kind = (d && d.kind === 'deck') ? 'deck' : ((d && d.kind === 'table') ? 'table' : null);
+      const id = slugId(d && d.id);
+      if (!kind || !id) return adminJson(res, 400, { ok: false, error: 'kind + id required' });
+      if (kind === 'table' && ['green', 'blue', 'bordeaux', 'slate', 'photo'].indexOf(id) >= 0) return adminJson(res, 400, { ok: false, error: 'built-in table cannot be removed' });
+      if (kind === 'deck' && ['svg', 'classic'].indexOf(id) >= 0) return adminJson(res, 400, { ok: false, error: 'built-in deck cannot be removed' });
+      const dir = path.join(PUBLIC_DIR, kind === 'table' ? 'table' : 'cards', id);
+      if (!fs.existsSync(dir)) return adminJson(res, 404, { ok: false, error: 'not found' });
+      try { fs.rmSync(dir, { recursive: true, force: true }); } catch (e) { return adminJson(res, 500, { ok: false, error: 'remove failed' }); }
+      regenManifest(kind);
+      adminJson(res, 200, { ok: true });
+    });
+  }
+  res.writeHead(404); res.end('Not found');
+}
+
 // ── HTTP server ──
 const httpServer = http.createServer((req, res) => {
   // Serve the SPA shell for the root path. We strip the query string
@@ -362,6 +493,10 @@ const httpServer = http.createServer((req, res) => {
   // index HTML instead of falling through to the static-file branch
   // and 404'ing on a nonexistent file named "/?host=...".
   const reqPathOnly = req.url.split('?')[0];
+  if (reqPathOnly === '/admin' || reqPathOnly.indexOf('/admin/') === 0) {
+    handleAdmin(req, res, reqPathOnly, url.parse(req.url, true).query);
+    return;
+  }
   if (reqPathOnly === '/' || reqPathOnly === '/index.html') {
     const p = path.join(__dirname, 'public', 'pokerth-client.html');
     if (fs.existsSync(p)) {
