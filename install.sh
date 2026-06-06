@@ -337,6 +337,7 @@ SUMMARY
   write_state
   install_wrapper
   regen_decks_manifest 2>/dev/null || true
+  regen_themes_manifest 2>/dev/null || true
   ok "Saved state to ${CONF} and installed the 'pokerth-web' command."
 
   local ip_guess; ip_guess="$(hostname -I 2>/dev/null | awk '{print $1}')"; [ -z "$ip_guess" ] && ip_guess="<server-ip>"
@@ -381,6 +382,7 @@ do_update() {
   install_wrapper 2>/dev/null || true
   write_state 2>/dev/null || true
   regen_decks_manifest 2>/dev/null || true
+  regen_themes_manifest 2>/dev/null || true
   ok "Update complete. Current commit:"
   run_as git -C "$INSTALL_DIR" --no-pager log -1 --oneline || true
 }
@@ -532,6 +534,16 @@ regen_decks_manifest() {
   command -v node >/dev/null 2>&1 || { warn "node not found; skipping decks.json"; return 0; }
   [ -f "$INSTALL_DIR/scripts/decks-manifest.mjs" ] || return 0
   run_as node "$INSTALL_DIR/scripts/decks-manifest.mjs" "$cards" || warn "decks.json generation failed"
+}
+
+# Theme packages live under public/themes/<id>/ (theme.json + optional felt image)
+# and are advertised to the web client via a generated public/themes/themes.json.
+regen_themes_manifest() {
+  local themes="$INSTALL_DIR/public/themes"
+  [ -d "$themes" ] || return 0
+  command -v node >/dev/null 2>&1 || { warn "node not found; skipping themes.json"; return 0; }
+  [ -f "$INSTALL_DIR/scripts/themes-manifest.mjs" ] || return 0
+  run_as node "$INSTALL_DIR/scripts/themes-manifest.mjs" || warn "themes.json generation failed"
 }
 
 do_deck_add() {
