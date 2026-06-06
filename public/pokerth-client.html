@@ -23,7 +23,7 @@
   <meta name="mobile-web-app-capable"     content="yes">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <script>/* Palette : appliquer le thème choisi AVANT le 1er rendu (zéro flash). Voir modules/theme.mjs. */
-try{var _d=document.documentElement,_p=localStorage.getItem('pth_theme'),_tb=localStorage.getItem('pth_table'),_dk=localStorage.getItem('pth_deck');if(_p)_d.setAttribute('data-theme',_p);if(_tb)_d.setAttribute('data-table',_tb);if(_dk)_d.setAttribute('data-deck',_dk);}catch(e){}</script>
+try{var _d=document.documentElement,_p=localStorage.getItem('pth_theme'),_tb=localStorage.getItem('pth_table'),_dk=localStorage.getItem('pth_deck');if(_p)_d.setAttribute('data-theme',_p);if(_tb)_d.setAttribute('data-table',_tb);if(_dk){_d.setAttribute('data-deck',_dk);try{_d.style.setProperty('--card-back','url('+(_dk==='svg'?'/cards/svg/back.svg':'/cards/'+_dk+'/flipside.png')+')');}catch(e){}}}catch(e){}</script>
 <script>
 /* Normalise la largeur de mise en page sur les téléphones dont la largeur
    CSS est plus grande que l'iPhone (DPR plus bas, ex. nombreux Android).

@@ -13,6 +13,9 @@
 #   pokerth-web status
 #   sudo pokerth-web reset-stats
 #   sudo pokerth-web set-period yearly
+#   sudo pokerth-web deck-add ./mydeck.zip   # add a gallery card deck
+#   sudo pokerth-web deck-list
+#   sudo pokerth-web deck-remove <id>
 #
 # Prefer to read before you run? (recommended for any curl|bash installer):
 #   curl -sSL .../install.sh -o install.sh ; less install.sh ; bash install.sh
@@ -333,6 +336,7 @@ SUMMARY
   step "Finishing up"
   write_state
   install_wrapper
+  regen_decks_manifest 2>/dev/null || true
   ok "Saved state to ${CONF} and installed the 'pokerth-web' command."
 
   local ip_guess; ip_guess="$(hostname -I 2>/dev/null | awk '{print $1}')"; [ -z "$ip_guess" ] && ip_guess="<server-ip>"
@@ -376,6 +380,7 @@ do_update() {
   # refresh the wrapper + state in case paths changed
   install_wrapper 2>/dev/null || true
   write_state 2>/dev/null || true
+  regen_decks_manifest 2>/dev/null || true
   ok "Update complete. Current commit:"
   run_as git -C "$INSTALL_DIR" --no-pager log -1 --oneline || true
 }
@@ -517,6 +522,101 @@ do_set_token() {
   else ok "Admin token cleared — remote reset endpoint disabled."; fi
 }
 
+# ── Card decks (gallery) management ──────────────────────────────────────────
+# Gallery decks live as UNTRACKED folders in public/cards/<id>/ (so 'git pull'
+# preserves them) and are advertised to the web client via a generated
+# public/cards/decks.json. Built-in decks (classic, svg) are part of the app.
+regen_decks_manifest() {
+  local cards="$INSTALL_DIR/public/cards"
+  [ -d "$cards" ] || return 0
+  command -v node >/dev/null 2>&1 || { warn "node not found; skipping decks.json"; return 0; }
+  [ -f "$INSTALL_DIR/scripts/decks-manifest.mjs" ] || return 0
+  run_as node "$INSTALL_DIR/scripts/decks-manifest.mjs" "$cards" || warn "decks.json generation failed"
+}
+
+do_deck_add() {
+  local src="${1:-}"
+  [ -n "$src" ] || { errln "Usage: pokerth-web deck-add <zip-file-or-URL>"; exit 1; }
+  load_state
+  [ -n "$INSTALL_DIR" ] || INSTALL_DIR="$(ask 'Install directory' "${INSTALL_DIR:-$HOME/pokerth-web-client}")"
+  [ -d "$INSTALL_DIR/public/cards" ] || { errln "No public/cards under $INSTALL_DIR. Is that the install dir?"; exit 1; }
+  [ -n "$RUN_USER" ] || RUN_USER="$(id -un)"
+  command -v node >/dev/null 2>&1 || { errln "node is required"; exit 1; }
+  command -v unzip >/dev/null 2>&1 || { info "Installing unzip"; as_root apt-get install -y -q unzip >/dev/null; }
+
+  local tmp; tmp="$(mktemp -d)"
+  local zip="$tmp/deck.zip"
+  case "$src" in
+    http://*|https://*) info "Downloading deck"; curl -fsSL "$src" -o "$zip" || { errln "Download failed"; rm -rf "$tmp"; exit 1; } ;;
+    *) [ -f "$src" ] || { errln "File not found: $src"; rm -rf "$tmp"; exit 1; }; cp "$src" "$zip" ;;
+  esac
+
+  info "Extracting"
+  unzip -q -o "$zip" -d "$tmp/x" || { errln "Not a valid zip archive"; rm -rf "$tmp"; exit 1; }
+
+  local root=""
+  if [ -f "$tmp/x/0.png" ] && [ -f "$tmp/x/flipside.png" ]; then
+    root="$tmp/x"
+  else
+    root="$(find "$tmp/x" -type f -name '0.png' -printf '%h\n' 2>/dev/null | head -n1)"
+  fi
+  if [ -z "$root" ] || [ ! -f "$root/flipside.png" ]; then
+    errln "This is not a PokerTH card deck (need 0.png..51.png + flipside.png)."; rm -rf "$tmp"; exit 1
+  fi
+  local missing=0 i
+  for i in $(seq 0 51); do [ -f "$root/$i.png" ] || missing=$((missing+1)); done
+  [ "$missing" -eq 0 ] || { errln "Incomplete deck: $missing of 52 card images missing."; rm -rf "$tmp"; exit 1; }
+
+  local base; base="$(basename "$root")"
+  if [ "$base" = "x" ]; then base="$(basename "$src")"; base="${base%.zip}"; fi
+  local id; id="$(printf '%s' "$base" | tr '[:upper:]' '[:lower:]' | tr -c 'a-z0-9_-' '-' | sed 's/--*/-/g; s/^-//; s/-$//')"
+  [ -n "$id" ] || id="deck-$(date +%s)"
+  case "$id" in svg) id="svg-deck" ;; esac
+
+  local dest="$INSTALL_DIR/public/cards/$id"
+  info "Installing as '$id'"
+  as_root rm -rf "$dest"
+  as_root mkdir -p "$dest"
+  as_root cp "$root"/*.png "$dest"/ 2>/dev/null || true
+  local f; for f in "$root"/*.xml; do [ -f "$f" ] && as_root cp "$f" "$dest"/; done
+  as_root chown -R "$RUN_USER":"$RUN_USER" "$dest"
+  rm -rf "$tmp"
+
+  regen_decks_manifest
+  local nm; nm="$(node -e 'try{const a=JSON.parse(require("fs").readFileSync(process.argv[1]+"/public/cards/decks.json","utf8"));const d=a.find(x=>x.id===process.argv[2]);process.stdout.write(d?d.name:process.argv[2]);}catch(e){process.stdout.write(process.argv[2]);}' "$INSTALL_DIR" "$id" 2>/dev/null || printf '%s' "$id")"
+  ok "Installed deck: ${nm}  (id: ${id})"
+  ok "It now appears in Theme -> Cards. No restart needed (static assets)."
+}
+
+do_deck_list() {
+  load_state
+  [ -n "$INSTALL_DIR" ] || INSTALL_DIR="$(ask 'Install directory' "${INSTALL_DIR:-$HOME/pokerth-web-client}")"
+  local mf="$INSTALL_DIR/public/cards/decks.json"
+  step "Installed card decks"
+  echo "  Built-in: classic, svg"
+  if [ -f "$mf" ] && command -v node >/dev/null 2>&1; then
+    node -e 'try{const a=JSON.parse(require("fs").readFileSync(process.argv[1],"utf8"));if(!a.length){console.log("  (no gallery decks installed)");}else{for(const d of a)console.log("  "+d.id+"  --  "+d.name);}}catch(e){console.log("  (no gallery decks installed)");}' "$mf"
+  else
+    echo "  (no gallery decks installed)"
+  fi
+}
+
+do_deck_remove() {
+  local id="${1:-}"
+  [ -n "$id" ] || { errln "Usage: pokerth-web deck-remove <id>"; exit 1; }
+  case "$id" in
+    svg|classic) errln "'$id' is a built-in deck and cannot be removed."; exit 1 ;;
+    *[!a-z0-9_-]*) errln "Invalid deck id: $id"; exit 1 ;;
+  esac
+  load_state
+  [ -n "$INSTALL_DIR" ] || INSTALL_DIR="$(ask 'Install directory' "${INSTALL_DIR:-$HOME/pokerth-web-client}")"
+  local dest="$INSTALL_DIR/public/cards/$id"
+  [ -d "$dest" ] || { errln "No such deck installed: $id"; exit 1; }
+  as_root rm -rf "$dest"
+  regen_decks_manifest
+  ok "Removed deck '$id'."
+}
+
 usage() {
   cat <<USAGE
 PokerTH Web Client installer
@@ -531,6 +631,9 @@ Commands:
   reset-stats Reset the shared family leaderboard (stats.json)
   set-period  Set auto-reset period: off | daily | monthly | yearly
   set-token   Set (or clear) the admin token for the remote reset endpoint
+  deck-add    Install a gallery card deck from a .zip file or URL
+  deck-list   List installed card decks
+  deck-remove Remove an installed gallery deck by id
   help        Show this help
 
 Via the one-liner, pass a command after '-- ':
@@ -551,6 +654,9 @@ case "$CMD" in
   reset-stats|stats-reset) do_reset_stats ;;
   set-period)     do_set_period "$2" ;;
   set-token)      do_set_token "$2" ;;
+  deck-add|deck-install)  do_deck_add "${2:-}" ;;
+  deck-list|deck-ls)      do_deck_list ;;
+  deck-remove|deck-rm)    do_deck_remove "${2:-}" ;;
   help|-h|--help) usage ;;
   *) errln "Unknown command: $CMD"; echo; usage; exit 1 ;;
 esac

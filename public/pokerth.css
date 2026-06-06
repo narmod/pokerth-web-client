@@ -2912,17 +2912,17 @@ body {
    et les glyphes sont masques ; le dos (et les fly-cards de distribution)
    passent par --card-back surcharge ci-dessous. Switch 100% CSS, instantane,
    sans re-render. Assets : /cards/svg/*.svg (PokerTH, AGPL-3.0). */
-:root[data-deck="svg"] .pk:not(.back) {
+:root[data-deck] .pk:not(.back) {
   background-image: var(--cf, none);
   background-size: 100% 100%;
   background-repeat: no-repeat;
   background-position: center;
   background-color: transparent;
 }
-:root[data-deck="svg"] .pk:not(.back) .c-rank,
-:root[data-deck="svg"] .pk:not(.back) .c-suit { display: none; }
-/* Dos officiel — surcharge --card-back (utilise par .pk.back ET .fly-card). */
-:root[data-deck="svg"] { --card-back: url("/cards/svg/back.svg"); }
+:root[data-deck] .pk:not(.back) .c-rank,
+:root[data-deck] .pk:not(.back) .c-suit { display: none; }
+/* Dos : --card-back est pose en inline sur <html> par le boot + _refreshDeck
+   (deck-aware), pour .pk.back ET .fly-card, quel que soit le deck. */
 .pk.sm { width: 32px; height: 46px; font-size: 0.76rem; font-weight: 700; }
 .pk.md { width: 46px; height: 66px; font-size: 1.05rem; font-weight: 800; }
 .pk.xsm { width: 20px; height: 29px; font-size: 0.5rem; font-weight: 700; border-radius: 3px; }

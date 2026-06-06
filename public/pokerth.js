@@ -5190,6 +5190,38 @@ const App = (() => {
   //   0..12  = ♦ 2..A      13..25 = ♥ 2..A
   //   26..38 = ♠ 2..A      39..51 = ♣ 2..A
   // Le paramètre isComm est conservé pour compat binaire mais ignoré pour le mapping.
+  // ── Card deck resolution (deck-aware) ──
+  // data-deck '' = classic glyphs; 'svg' = official vector deck (rank+suit
+  // filenames); anything else = a gallery deck at /cards/<id>/<n>.png (listed in
+  // /cards/decks.json, managed by install.sh deck-add). The face path is posed as
+  // the inline --cf var on each .pk; the back via --card-back on <html>.
+  // _refreshDeck re-applies both when the deck changes (no re-render needed).
+  function _deckFace(n) {
+    var d = document.documentElement.getAttribute('data-deck') || '';
+    if (!d) return '';
+    if (d === 'svg') { var s = Math.floor(n / 13), r = n % 13; return '/cards/svg/' + ((r === 12 ? 1 : r + 2) + ['d','h','s','c'][s]) + '.svg'; }
+    return '/cards/' + d + '/' + n + '.png';
+  }
+  function _deckBack() {
+    var d = document.documentElement.getAttribute('data-deck') || '';
+    if (!d) return '';
+    if (d === 'svg') return '/cards/svg/back.svg';
+    return '/cards/' + d + '/flipside.png';
+  }
+  function _refreshDeck() {
+    try {
+      var els = document.querySelectorAll('.pk[data-c]');
+      for (var i = 0; i < els.length; i++) {
+        var n = parseInt(els[i].getAttribute('data-c'), 10);
+        els[i].style.setProperty('--cf', 'url(' + _deckFace(n) + ')');
+      }
+      var bk = _deckBack();
+      if (bk) document.documentElement.style.setProperty('--card-back', 'url(' + bk + ')');
+      else document.documentElement.style.removeProperty('--card-back');
+    } catch (e) {}
+  }
+  try { window._refreshDeck = _refreshDeck; } catch (e) {}
+
   function cardToHtml(n, sm, isComm, extraCls) {
     extraCls = extraCls || '';
     const sz = sm ? ' sm' : '';
@@ -5208,8 +5240,7 @@ const App = (() => {
     // (narmod: confusion ♥/♦ à cause d'une couleur identique).
     const red   = (si === 0) ? ' red diamond' : (si === 1 ? ' red' : '');
     const spade = (si === 2) ? ' spade' : ''; // ♠ (2)
-    var _df = (ri === 12 ? 1 : ri + 2) + ['d','h','s','c'][si]; // SVG deck filename (upstream)
-    return '<div class="pk' + sz + red + spade + extraCls + '" style="--cf:url(/cards/svg/' + _df + '.svg)"><span class="c-rank">' + rank + '</span><span class="c-suit">' + suit + '</span></div>';
+    return '<div class="pk' + sz + red + spade + extraCls + '" data-c="' + n + '" style="--cf:url(' + _deckFace(n) + ')"><span class="c-rank">' + rank + '</span><span class="c-suit">' + suit + '</span></div>';
   }
 
 
@@ -5229,8 +5260,7 @@ const App = (() => {
     // une teinte vermillon différente du rouge profond du ♥.
     const red = (si === 0) ? ' red diamond' : (si === 1 ? ' red' : '');
     const spade2 = (si === 2) ? ' spade' : ''; // ♠ (2)
-    var _df = (ri === 12 ? 1 : ri + 2) + ['d','h','s','c'][si]; // SVG deck filename (upstream)
-    return '<div class="pk '+cls+red+spade2+'" style="--cf:url(/cards/svg/'+_df+'.svg)"><span class="c-rank">'+rank+'</span><span class="c-suit">'+suit+'</span></div>';
+    return '<div class="pk '+cls+red+spade2+'" data-c="'+n+'" style="--cf:url('+_deckFace(n)+')"><span class="c-rank">'+rank+'</span><span class="c-suit">'+suit+'</span></div>';
   }
 
   function renderMyCards() {
@@ -9447,4 +9477,4 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.2.217'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.2.218'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();

@@ -106,6 +106,30 @@ function activePreset() {
 // Apply saved values on load (idempotent with the <head> boot snippet).
 AXES.forEach(function (ax) { try { ax.apply(ax.get()); } catch (e) {} });
 
+// Gallery card decks discovered at runtime from /cards/decks.json (managed by
+// install.sh deck-add). Best-effort: offline/absent -> only the built-in decks.
+var _galleryDecks = [];
+function _loadGalleryDecks() {
+  try {
+    fetch('/cards/decks.json', { cache: 'no-store' })
+      .then(function (r) { return r.ok ? r.json() : []; })
+      .then(function (list) {
+        if (!Array.isArray(list)) return;
+        _galleryDecks = list.filter(function (d) { return d && d.id; }).map(function (d) {
+          return { id: String(d.id), name: d.name || String(d.id), preview: d.preview || null, swatch: '#1e6b1e' };
+        });
+        if (_body) _render();
+      })
+      .catch(function () {});
+  } catch (e) {}
+}
+_loadGalleryDecks();
+
+// Deck changes need the monolith to re-point card faces + back (no re-render).
+var _deckApply = deck.apply;
+deck.apply = function (id) { _deckApply(id); try { if (window._refreshDeck) window._refreshDeck(); } catch (e) {} };
+deck.set = deck.apply;
+
 // ── Single "Theme" panel ────────────────────────────────────────────────
 const PANEL_ID = 'theme-panel', OVERLAY_ID = 'theme-panel-overlay';
 var _body = null; // re-rendered on each change so highlights stay in sync
@@ -122,7 +146,7 @@ function closeThemePanel() {
 }
 
 // A single selectable pill (swatch + label, optional check). onClick is a fn.
-function _pill(label, swatch, active, big, onClick) {
+function _pill(label, swatch, active, big, onClick, preview) {
   var b = document.createElement('button');
   b.type = 'button';
   b.setAttribute('role', 'menuitemradio');
@@ -133,8 +157,10 @@ function _pill(label, swatch, active, big, onClick) {
     + 'border:1px solid ' + (active ? 'var(--gold,#c8a84a)' : 'var(--border,rgba(200,168,74,0.25))') + ';'
     + 'background:' + (active ? 'var(--gold-dim,rgba(200,168,74,0.18))' : 'transparent');
   var dot = big ? 16 : 14;
-  b.innerHTML = '<span style="width:' + dot + 'px;height:' + dot + 'px;flex:none;border-radius:50%;'
-    + 'border:1px solid rgba(255,255,255,0.35);background:' + swatch + '"></span>'
+  var chip = preview
+    ? '<span style="width:' + (dot + 4) + 'px;height:' + (dot + 4) + 'px;flex:none;border-radius:5px;overflow:hidden;border:1px solid rgba(255,255,255,0.3);background:#0b1a0d"><img src="' + preview + '" alt="" style="width:100%;height:100%;object-fit:cover;display:block" loading="lazy"></span>'
+    : '<span style="width:' + dot + 'px;height:' + dot + 'px;flex:none;border-radius:50%;border:1px solid rgba(255,255,255,0.35);background:' + swatch + '"></span>';
+  b.innerHTML = chip
     + '<span>' + label + '</span>'
     + (active ? '<span style="color:var(--gold,#c8a84a);font-size:0.9em">\u2713</span>' : '');
   if (!active) {
@@ -191,10 +217,12 @@ function _render() {
     lab.style.cssText = 'font-size:0.72rem;color:var(--text,#9aaa92);margin:0 2px 5px';
     sec.appendChild(lab);
     var row = _row();
-    ax.items.forEach(function (it) {
-      row.appendChild(_pill(_t(it.key, it.fallback), it.swatch, it.id === cur, false, (function (id) {
+    var opts = (ax === deck) ? DECKS.concat(_galleryDecks) : ax.items;
+    opts.forEach(function (it) {
+      var label = it.name || _t(it.key, it.fallback);
+      row.appendChild(_pill(label, it.swatch, it.id === cur, false, (function (id) {
         return function () { ax.apply(id); _render(); };
-      })(it.id)));
+      })(it.id), it.preview));
     });
     sec.appendChild(row);
     _body.appendChild(sec);
