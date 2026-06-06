@@ -16,6 +16,9 @@
 #   sudo pokerth-web deck-add ./mydeck.zip   # add a gallery card deck
 #   sudo pokerth-web deck-list
 #   sudo pokerth-web deck-remove <id>
+#   sudo pokerth-web table-add ./mytable.zip # add a table style (felt + pucks)
+#   sudo pokerth-web table-list
+#   sudo pokerth-web table-remove <id>
 #
 # Prefer to read before you run? (recommended for any curl|bash installer):
 #   curl -sSL .../install.sh -o install.sh ; less install.sh ; bash install.sh
@@ -338,6 +341,7 @@ SUMMARY
   install_wrapper
   regen_decks_manifest 2>/dev/null || true
   regen_themes_manifest 2>/dev/null || true
+  regen_tables_manifest 2>/dev/null || true
   ok "Saved state to ${CONF} and installed the 'pokerth-web' command."
 
   local ip_guess; ip_guess="$(hostname -I 2>/dev/null | awk '{print $1}')"; [ -z "$ip_guess" ] && ip_guess="<server-ip>"
@@ -383,6 +387,7 @@ do_update() {
   write_state 2>/dev/null || true
   regen_decks_manifest 2>/dev/null || true
   regen_themes_manifest 2>/dev/null || true
+  regen_tables_manifest 2>/dev/null || true
   ok "Update complete. Current commit:"
   run_as git -C "$INSTALL_DIR" --no-pager log -1 --oneline || true
 }
@@ -635,6 +640,104 @@ do_deck_remove() {
   ok "Removed deck '$id'."
 }
 
+regen_tables_manifest() {
+  local tbl="$INSTALL_DIR/public/table"
+  [ -d "$tbl" ] || return 0
+  command -v node >/dev/null 2>&1 || { warn "node not found; skipping tables.json"; return 0; }
+  [ -f "$INSTALL_DIR/scripts/tables-manifest.mjs" ] || return 0
+  run_as node "$INSTALL_DIR/scripts/tables-manifest.mjs" "$tbl" || warn "tables.json generation failed"
+}
+
+do_table_add() {
+  local src="${1:-}"
+  [ -n "$src" ] || { errln "Usage: pokerth-web table-add <zip-file-or-URL>"; exit 1; }
+  load_state
+  [ -n "$INSTALL_DIR" ] || INSTALL_DIR="$(ask 'Install directory' "${INSTALL_DIR:-$HOME/pokerth-web-client}")"
+  [ -d "$INSTALL_DIR/public/table" ] || { errln "No public/table under $INSTALL_DIR. Is that the install dir?"; exit 1; }
+  [ -n "$RUN_USER" ] || RUN_USER="$(id -un)"
+  command -v node >/dev/null 2>&1 || { errln "node is required"; exit 1; }
+  command -v unzip >/dev/null 2>&1 || { info "Installing unzip"; as_root apt-get install -y -q unzip >/dev/null; }
+
+  local tmp ref; tmp="$(mktemp -d)"
+  local zip="$tmp/table.zip"
+  case "$src" in
+    http://*|https://*)
+      info "Downloading table style"
+      ref="$(printf '%s' "$src" | sed -E 's#(https?://[^/]+).*#\1/#')"
+      curl -fSL --retry 2 \
+        -A 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36' \
+        -e "$ref" "$src" -o "$zip" \
+        || { errln "Download failed. The site may block direct downloads (403). Download the .zip in your browser, copy it to the server, then run: pokerth-web table-add /path/to/file.zip"; rm -rf "$tmp"; exit 1; } ;;
+    *) [ -f "$src" ] || { errln "File not found: $src"; rm -rf "$tmp"; exit 1; }; cp "$src" "$zip" ;;
+  esac
+
+  info "Extracting"
+  unzip -q -o "$zip" -d "$tmp/x" || { errln "Not a valid zip archive"; rm -rf "$tmp"; exit 1; }
+
+  local root=""
+  if [ -f "$tmp/x/table.png" ]; then root="$tmp/x"; else
+    root="$(find "$tmp/x" -type f -name 'table.png' -printf '%h\n' 2>/dev/null | head -n1)"; fi
+  if [ -z "$root" ] || [ ! -f "$root/table.png" ]; then
+    errln "This is not a PokerTH table style (need table.png, usually with *tablestyle.xml + puck images)."; rm -rf "$tmp"; exit 1; fi
+
+  local base; base="$(basename "$root")"
+  if [ "$base" = "x" ]; then base="$(basename "$src")"; base="${base%.zip}"; fi
+  local id; id="$(printf '%s' "$base" | tr '[:upper:]' '[:lower:]' | tr -c 'a-z0-9_-' '-' | sed 's/--*/-/g; s/^-//; s/-$//')"
+  [ -n "$id" ] || id="table-$(date +%s)"
+  case "$id" in green|blue|bordeaux|slate|photo|table) id="table-$id" ;; esac
+
+  local dest="$INSTALL_DIR/public/table/$id"
+  info "Installing as '$id'"
+  as_root rm -rf "$dest"; as_root mkdir -p "$dest"
+  if command -v convert >/dev/null 2>&1; then
+    as_root convert "$root/table.png" -resize '1280x720>' -strip -quality 82 "$dest/felt.jpg" 2>/dev/null \
+      || as_root cp "$root/table.png" "$dest/felt.png"
+  else
+    as_root cp "$root/table.png" "$dest/felt.png"
+  fi
+  [ -f "$root/dealerPuck.png" ]     && as_root cp "$root/dealerPuck.png"     "$dest/dealer.png"
+  [ -f "$root/smallblindPuck.png" ] && as_root cp "$root/smallblindPuck.png" "$dest/sb.png"
+  [ -f "$root/bigblindPuck.png" ]   && as_root cp "$root/bigblindPuck.png"   "$dest/bb.png"
+  [ -f "$root/preview.png" ]        && as_root cp "$root/preview.png"        "$dest/preview.png"
+  local f; for f in "$root"/*tablestyle.xml "$root"/*.xml; do [ -f "$f" ] && { as_root cp "$f" "$dest/style.xml"; break; }; done
+  as_root chown -R "$RUN_USER":"$RUN_USER" "$dest"
+  rm -rf "$tmp"
+
+  regen_tables_manifest
+  local nm; nm="$(node -e 'try{const a=JSON.parse(require("fs").readFileSync(process.argv[1]+"/public/table/tables.json","utf8"));const d=a.find(x=>x.id===process.argv[2]);process.stdout.write(d?d.name:process.argv[2]);}catch(e){process.stdout.write(process.argv[2]);}' "$INSTALL_DIR" "$id" 2>/dev/null || printf '%s' "$id")"
+  ok "Installed table style: ${nm}  (id: ${id})"
+  ok "It now appears in Theme -> Table (felt + matching pucks). No restart needed (static assets)."
+}
+
+do_table_list() {
+  load_state
+  [ -n "$INSTALL_DIR" ] || INSTALL_DIR="$(ask 'Install directory' "${INSTALL_DIR:-$HOME/pokerth-web-client}")"
+  local mf="$INSTALL_DIR/public/table/tables.json"
+  step "Installed table styles"
+  echo "  Built-in: green (default), blue, bordeaux, slate, photo"
+  if [ -f "$mf" ] && command -v node >/dev/null 2>&1; then
+    node -e 'try{const a=JSON.parse(require("fs").readFileSync(process.argv[1],"utf8"));if(!a.length){console.log("  (no imported table styles)");}else{for(const d of a)console.log("  "+d.id+"  --  "+d.name);}}catch(e){console.log("  (no imported table styles)");}' "$mf"
+  else
+    echo "  (no imported table styles)"
+  fi
+}
+
+do_table_remove() {
+  local id="${1:-}"
+  [ -n "$id" ] || { errln "Usage: pokerth-web table-remove <id>"; exit 1; }
+  case "$id" in
+    green|blue|bordeaux|slate|photo) errln "'$id' is a built-in table and cannot be removed."; exit 1 ;;
+    *[!a-z0-9_-]*) errln "Invalid table id: $id"; exit 1 ;;
+  esac
+  load_state
+  [ -n "$INSTALL_DIR" ] || INSTALL_DIR="$(ask 'Install directory' "${INSTALL_DIR:-$HOME/pokerth-web-client}")"
+  local dest="$INSTALL_DIR/public/table/$id"
+  [ -d "$dest" ] || { errln "No such table style installed: $id"; exit 1; }
+  as_root rm -rf "$dest"
+  regen_tables_manifest
+  ok "Removed table style '$id'."
+}
+
 usage() {
   cat <<USAGE
 PokerTH Web Client installer
@@ -652,6 +755,9 @@ Commands:
   deck-add    Install a gallery card deck from a .zip file or URL
   deck-list   List installed card decks
   deck-remove Remove an installed gallery deck by id
+  table-add   Install a table style (felt + pucks) from a .zip file or URL
+  table-list  List installed table styles
+  table-remove Remove an installed table style by id
   help        Show this help
 
 Via the one-liner, pass a command after '-- ':
@@ -675,6 +781,9 @@ case "$CMD" in
   deck-add|deck-install)  do_deck_add "${2:-}" ;;
   deck-list|deck-ls)      do_deck_list ;;
   deck-remove|deck-rm)    do_deck_remove "${2:-}" ;;
+  table-add|table-install) do_table_add "${2:-}" ;;
+  table-list|table-ls)     do_table_list ;;
+  table-remove|table-rm)   do_table_remove "${2:-}" ;;
   help|-h|--help) usage ;;
   *) errln "Unknown command: $CMD"; echo; usage; exit 1 ;;
 esac

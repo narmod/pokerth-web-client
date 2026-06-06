@@ -163,6 +163,29 @@ deck.apply = function (id) {
 };
 deck.set = deck.apply;
 
+// Gallery table styles imported at runtime from /table/tables.json (managed by
+// install.sh table-add). Each carries a felt image + matching dealer/SB/BB pucks,
+// and is offered in BOTH the Table panel (felt + pucks) and the Pucks panel.
+var _galleryTables = [];
+function _galleryTableById(id){ for (var i=0;i<_galleryTables.length;i++) if (_galleryTables[i].id===id) return _galleryTables[i]; return null; }
+function _loadGalleryTables() {
+  try {
+    fetch('/table/tables.json', { cache: 'no-store' })
+      .then(function (r) { return r.ok ? r.json() : []; })
+      .then(function (list) {
+        if (!Array.isArray(list)) return;
+        _galleryTables = list.filter(function (t) { return t && t.id && t.feltUrl; }).map(function (t) {
+          var pk = null, pv = t.pucks;
+          if (pv) { pk = {}; ['dealer','sb','bb'].forEach(function (k) { if (pv[k]) pk[k] = 'url(' + pv[k] + ')'; }); }
+          return { id: String(t.id), name: t.name || String(t.id), feltUrl: t.feltUrl, pucks: pk, preview: t.preview || (pv && pv.dealer) || null, swatch: '#1e6b1e' };
+        }).filter(function (t) { if (_isBuiltinTable(t.id)) return false; for (var i=0;i<_tablePkgs.length;i++) if (_tablePkgs[i].id===t.id) return false; return true; });
+        try { table.apply(table.get()); pucks.apply(pucks.get()); } catch (e) {}
+        if (_body) _render();
+      })
+      .catch(function () {});
+  } catch (e) {}
+}
+
 // ── Theme packages : un "table style" importe se decompose en une palette (couleurs UI/popups)
 //    + un tapis (feutre, liseré, image) + un preset combinant les deux. ──
 var _palettePkgs = [], _tablePkgs = [], _pkgPresets = [], _puckPkgs = [], _buttonPkgs = [];
@@ -181,7 +204,7 @@ function _injectAxis(keys, pkg, storeKey, withFelt){
     if (v!=null){ el.style.setProperty('--'+k,v); css+='--'+k+':'+v+';'; } else el.style.removeProperty('--'+k);
   }
   if (withFelt){
-    if (pkg&&pkg.felt){ var fi='url(/themes/'+pkg.id+'/'+pkg.felt+') center / cover no-repeat'; el.style.setProperty('--felt-img',fi); css+='--felt-img:'+fi+';'; }
+    if (pkg&&(pkg.feltUrl||pkg.felt)){ var fi='url('+(pkg.feltUrl||('/themes/'+pkg.id+'/'+pkg.felt))+') center / cover no-repeat'; el.style.setProperty('--felt-img',fi); css+='--felt-img:'+fi+';'; }
     else el.style.removeProperty('--felt-img');
   }
   try{ if(css) localStorage.setItem(storeKey,css); else localStorage.removeItem(storeKey); }catch(e){}
@@ -221,7 +244,7 @@ palette.set = palette.apply;
 var _tblApply = table.apply;
 table.apply = function(id){
   _tblApply(id);
-  try{ if (_isBuiltinTable(id)) _injectTable(null); else { var pk=_tablePkgById(id); if(pk) _injectTable(pk); } }catch(e){}
+  try{ if (_isBuiltinTable(id)) _injectTable(null); else { var pk=_tablePkgById(id); if(pk) _injectTable(pk); else { var gt=_galleryTableById(id); if(gt) _injectAxis(TABLE_TOKENS,{id:gt.id,tokens:{},feltUrl:gt.feltUrl},'pth_table_css',true); } } }catch(e){}
 };
 table.set = table.apply;
 var _btnApply = buttons.apply;
@@ -235,7 +258,7 @@ var _pkApply = pucks.apply;
 pucks.apply = function(id){ _pkApply(id); try{
   if (id==='pokerth') _injectPucks(PUCK_SET);
   else if (!id) _injectPucks(null);
-  else { var pk=_puckPkgById(id); _injectPucks(pk?pk.set:null); }
+  else { var pk=_puckPkgById(id); if(pk) _injectPucks(pk.set); else { var gt=_galleryTableById(id); if(gt) _injectPucks(gt.pucks||null); } }
 }catch(e){} };
 pucks.set = pucks.apply;
 try{ _injectButtons(buttons.get()==='glossy'?{colors:BUTTON_GLOSSY}:null); _injectPucks(pucks.get()==='pokerth'?PUCK_SET:null); }catch(e){}
@@ -258,6 +281,7 @@ function _loadThemes(){
   }catch(e){}
 }
 _loadThemes();
+_loadGalleryTables();
 
 // ── Single "Theme" panel ────────────────────────────────────────────────
 const PANEL_ID = 'theme-panel', OVERLAY_ID = 'theme-panel-overlay';
@@ -322,6 +346,7 @@ function _presetById(id) { var all = PRESETS.concat(_pkgPresets); for (var i = 0
 
 function _feltStyle(t) {
   if (t && t.id === 'photo') return 'background:url(/table/felt-green.jpg) center/cover';
+  if (t && t.feltUrl) return 'background:url(' + t.feltUrl + ') center/cover';
   if (t && t.felt) return 'background:url(/themes/' + t.id + '/' + t.felt + ') center/cover';
   var sw = (t && t.swatch) || '#1e6b1e';
   return 'background:radial-gradient(circle at 50% 36%, color-mix(in srgb,' + sw + ',#fff 12%), color-mix(in srgb,' + sw + ',#000 55%))';
@@ -449,14 +474,14 @@ function _render() {
   AXES.forEach(function (ax) {
     var cur = ax.get();
     var kind = (ax === palette) ? 'palette' : (ax === table) ? 'table' : (ax === deck) ? 'deck' : (ax === pucks) ? 'pucks' : 'palette';
-    var opts = (ax === deck) ? DECKS.concat(_galleryDecks) : (ax === palette ? PALETTES.concat(_palettePkgs) : (ax === table ? TABLES.concat(_tablePkgs) : (ax === buttons ? BUTTONS_ITEMS.concat(_buttonPkgs) : (ax === pucks ? PUCKS_ITEMS.concat(_puckPkgs) : ax.items))));
+    var opts = (ax === deck) ? DECKS.concat(_galleryDecks) : (ax === palette ? PALETTES.concat(_palettePkgs) : (ax === table ? TABLES.concat(_tablePkgs).concat(_galleryTables) : (ax === buttons ? BUTTONS_ITEMS.concat(_buttonPkgs) : (ax === pucks ? PUCKS_ITEMS.concat(_puckPkgs).concat(_galleryTables) : ax.items))));
     var curItem = opts[0];
     for (var i = 0; i < opts.length; i++) if (opts[i].id === cur) curItem = opts[i];
     var curName = curItem.name || _t(curItem.key, curItem.fallback);
     var options = opts.map(function (it) {
       return {
         item: it, name: (it.name || _t(it.key, it.fallback)), active: it.id === cur,
-        onClick: (function (id) { return function () { ax.apply(id); _openSec = null; _render(); }; })(it.id),
+        onClick: (function (id) { if (ax === table && _galleryTableById(id)) return function () { table.apply(id); pucks.apply(id); _openSec = null; _render(); }; return function () { ax.apply(id); _openSec = null; _render(); }; })(it.id),
       };
     });
     _body.appendChild(_dropdownBlock(kind, _t(ax.titleKey, ax.titleFallback), kind, curItem, curName, options));
