@@ -276,7 +276,7 @@ export const strings = {
     chatTooltip:'Chat', moreTooltip:'Plus', closeTooltip:'Fermer', refreshTooltip:'Rafraîchir',
     avatarTooltip:'Mon avatar PokerTH', profileTooltip:'Mon profil', gameDetailsTooltip:'Détails de la partie',
     adminBadgeTooltip:'Vous êtes créateur de cette table', statsTooltip:'Statistiques de session',
-    kickTooltip:'Expulser le joueur', kickSubtitle:'Sélectionnez un joueur à expulser de la table', closeTableTooltip:'Fermer la table', langTooltip:'Changer de langue', themeTooltip:'Thème', themeGreen:'Casino vert', themeDark:'Sombre', tableTooltip:'Tapis', tableGreen:'Vert', tableBlue:'Bleu', tableBordeaux:'Bordeaux', tableSlate:'Ardoise', sectionPalette:'Palette', sectionTable:'Tapis', sectionPalette:'Palette', sectionTable:'Tapis', sectionDeck:'Cartes', deckClassic:'Classique', deckSvg:'SVG',
+    kickTooltip:'Expulser le joueur', kickSubtitle:'Sélectionnez un joueur à expulser de la table', closeTableTooltip:'Fermer la table', langTooltip:'Changer de langue', themeTooltip:'Thème', themeGreen:'Casino vert', themeDark:'Sombre', tableTooltip:'Tapis', tableGreen:'Vert', tableBlue:'Bleu', tableBordeaux:'Bordeaux', tableSlate:'Ardoise',tableSlate:'Ardoise', tablePhoto:'Texturé', sectionPalette:'Palette', sectionTable:'Tapis', sectionPalette:'Palette', sectionTable:'Tapis', sectionDeck:'Cartes', deckClassic:'Classique', deckSvg:'SVG',
     fullscreenTooltip:'Plein écran', menuAdmin:'Admin',
     chatPlaceholder:'Message…',
     // ── Aides raccourcis clavier (le préfixe lettre reste, le verbe se traduit) ──

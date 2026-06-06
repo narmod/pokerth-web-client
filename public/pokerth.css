@@ -82,6 +82,15 @@ html { touch-action: manipulation; -webkit-text-size-adjust: 100%; text-size-adj
   --rail-dark:     #15171c;
   --rail-glow:     rgba(120,130,150,0.18);
 }
+/* Feutre texture (photo) — garde l'oval + le lisere CSS, remplace seulement
+   le remplissage par un vrai feutre extrait de l'image PokerTH (sans lisere,
+   donc pas de double lisere ni de distorsion). Asset : /table/felt-green.jpg
+   (PokerTH, AGPL-3.0). */
+:root[data-table="photo"] .felt-oval {
+  background:
+    radial-gradient(ellipse 90% 80% at 50% 50%, transparent 55%, rgba(0,0,0,0.40) 100%),
+    url("/table/felt-green.jpg") center / cover no-repeat;
+}
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
 

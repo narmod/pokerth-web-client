@@ -60,6 +60,7 @@ const TABLES = [
   { id: 'blue',     key: 'tableBlue',     fallback: 'Blue',     swatch: '#1f6aa8' },
   { id: 'bordeaux', key: 'tableBordeaux', fallback: 'Burgundy', swatch: '#8a1e2e' },
   { id: 'slate',    key: 'tableSlate',    fallback: 'Slate',    swatch: '#3a4150' },
+  { id: 'photo',    key: 'tablePhoto',    fallback: 'Textured', swatch: '#1f6b2e' },
 ];
 // Card deck (data-deck). id '' = "Classique" (glyphs, :root default).
 const DECKS = [

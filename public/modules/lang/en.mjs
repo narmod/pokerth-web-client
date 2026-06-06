@@ -276,7 +276,7 @@ export const strings = {
     chatTooltip:'Chat', moreTooltip:'More', closeTooltip:'Close', refreshTooltip:'Refresh',
     avatarTooltip:'My PokerTH avatar', profileTooltip:'My profile', gameDetailsTooltip:'Game details',
     adminBadgeTooltip:'You created this table', statsTooltip:'Session statistics',
-    kickTooltip:'Kick player', kickSubtitle:'Select a player to remove from the table', closeTableTooltip:'Close table', langTooltip:'Switch language', themeTooltip:'Theme', themeGreen:'Green casino', themeDark:'Dark', tableTooltip:'Table', tableGreen:'Green', tableBlue:'Blue', tableBordeaux:'Burgundy', tableSlate:'Slate', sectionPalette:'Palette', sectionTable:'Table', sectionPalette:'Palette', sectionTable:'Table', sectionDeck:'Cards', deckClassic:'Classic', deckSvg:'SVG',
+    kickTooltip:'Kick player', kickSubtitle:'Select a player to remove from the table', closeTableTooltip:'Close table', langTooltip:'Switch language', themeTooltip:'Theme', themeGreen:'Green casino', themeDark:'Dark', tableTooltip:'Table', tableGreen:'Green', tableBlue:'Blue', tableBordeaux:'Burgundy', tableSlate:'Slate',tableSlate:'Slate', tablePhoto:'Textured', sectionPalette:'Palette', sectionTable:'Table', sectionPalette:'Palette', sectionTable:'Table', sectionDeck:'Cards', deckClassic:'Classic', deckSvg:'SVG',
     fullscreenTooltip:'Fullscreen', menuAdmin:'Admin',
     chatPlaceholder:'Message\u2026',
     // ── Keyboard-shortcut hints (letter prefix stays, verb translates) ──
