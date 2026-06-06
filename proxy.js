@@ -495,6 +495,15 @@ function importPackage(kind, idHint, zipBuf, cb) {
 }
 
 function handleAdmin(req, res, reqPathOnly, query) {
+  query = query || {};
+  // Admin token transport: prefer the "Authorization: Bearer <token>" header so
+  // the token never lands in URLs / access logs / browser history. Older cached
+  // clients still send it as ?token= — both keep working because the header
+  // value is simply folded into query.token, which every adminAuthed() consults.
+  if (!query.token) {
+    var _m = /^\s*Bearer\s+(.+?)\s*$/i.exec(req.headers['authorization'] || '');
+    if (_m) query.token = _m[1];
+  }
   if (reqPathOnly === '/admin') {
     const p = path.join(PUBLIC_DIR, 'admin.html');
     if (fs.existsSync(p)) return sendFile(req, res, p, 'text/html; charset=utf-8', 'no-store');

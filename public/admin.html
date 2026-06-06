@@ -148,6 +148,9 @@
   var TOKK='pth_admin_tok', $=function(id){return document.getElementById(id);};
   var login=$('login'), dash=$('dash');
   function tok(){ return (localStorage.getItem(TOKK)||'').trim(); }
+  // Every admin call carries the token in the Authorization header (never the
+  // URL), so it stays out of server access logs and browser history.
+  function api(path,opts){ opts=opts||{}; var h=Object.assign({},opts.headers||{}); var t=tok(); if(t) h.Authorization='Bearer '+t; opts.headers=h; return fetch(path,opts); }
   function show(v){ login.style.display=v==='login'?'block':'none'; dash.style.display=v==='dash'?'block':'none'; }
 
   $('loginBtn').addEventListener('click', doLogin);
@@ -156,7 +159,7 @@
   $('logoutBtn').addEventListener('click', function(){ localStorage.removeItem(TOKK); $('ltok').value=''; show('login'); });
   function enter(){
     if(!tok()){ show('login'); return; }
-    fetch('/admin/pkg-list?token='+encodeURIComponent(tok())).then(function(r){return r.json();}).then(function(d){
+    api('/admin/pkg-list').then(function(r){return r.json();}).then(function(d){
       if(d.ok){ $('loginErr').textContent=''; show('dash'); renderPkgs(d); loadBoard(); }
       else { $('loginErr').textContent=d.error||'Invalid token'; show('login'); }
     }).catch(function(){ $('loginErr').textContent='Network error'; show('login'); });
@@ -184,11 +187,11 @@
   function say(t,cls){ msg.textContent=t; msg.className='msg '+(cls||''); }
   function applyTable(id){ try{localStorage.setItem('pth_table',id);localStorage.setItem('pth_pucks',id);}catch(e){} }
   function applyDeck(id){ try{localStorage.setItem('pth_deck',id);}catch(e){}
-    fetch('/admin/pkg-list?token='+encodeURIComponent(tok())).then(function(r){return r.json();}).then(function(d){ var e=(d.decks||[]).find(function(x){return x.id===id;}); try{localStorage.setItem('pth_deck_ext',(e&&e.ext)||'png');}catch(err){} }).catch(function(){}); }
+    api('/admin/pkg-list').then(function(r){return r.json();}).then(function(d){ var e=(d.decks||[]).find(function(x){return x.id===id;}); try{localStorage.setItem('pth_deck_ext',(e&&e.ext)||'png');}catch(err){} }).catch(function(){}); }
   function upload(f){
     if(!/\.zip$/i.test(f.name)){ say('Choose a .zip file.','err'); return; }
     say('Importing \u201c'+f.name+'\u201d\u2026');
-    fetch('/admin/pkg-upload?token='+encodeURIComponent(tok())+'&kind='+kind+'&name='+encodeURIComponent(f.name),{method:'POST',body:f})
+    api('/admin/pkg-upload?kind='+kind+'&name='+encodeURIComponent(f.name),{method:'POST',body:f})
       .then(function(r){return r.json();}).then(function(d){
         if(d.ok){ if(d.kind==='table')applyTable(d.id);else applyDeck(d.id); say('Imported & applied: '+d.name+' \u2014 open the app to see it.','ok'); refresh(); }
         else say('Failed: '+(d.error||'error'),'err');
@@ -197,7 +200,7 @@
   }
   function useNow(k,id){ if(k==='table')applyTable(id);else applyDeck(id); say('Set as active \u2014 open the app to see it.','ok'); }
   function removePkg(k,id,nm){ if(!confirm('Remove \u201c'+nm+'\u201d?'))return;
-    fetch('/admin/pkg-remove?token='+encodeURIComponent(tok()),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({kind:k,id:id,token:tok()})})
+    api('/admin/pkg-remove',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({kind:k,id:id,token:tok()})})
       .then(function(r){return r.json();}).then(function(d){ if(d.ok)refresh(); else say('Remove: '+(d.error||'error'),'err'); }); }
   function renderList(el,arr,k){ if(!arr||!arr.length){el.innerHTML='<div class="empty">(none)</div>';return;} el.innerHTML='';
     arr.forEach(function(p){ var row=document.createElement('div');row.className='row';
@@ -207,7 +210,7 @@
       var del=document.createElement('button');del.className='del';del.textContent='Remove';del.addEventListener('click',function(){removePkg(k,p.id,p.name||p.id);});
       row.appendChild(use);row.appendChild(del);el.appendChild(row); }); }
   function renderPkgs(d){ renderList($('tables'),d.tables,'table'); renderList($('decks'),d.decks,'deck'); }
-  function refresh(){ fetch('/admin/pkg-list?token='+encodeURIComponent(tok())).then(function(r){return r.json();}).then(function(d){ if(d.ok)renderPkgs(d); }).catch(function(){}); }
+  function refresh(){ api('/admin/pkg-list').then(function(r){return r.json();}).then(function(d){ if(d.ok)renderPkgs(d); }).catch(function(){}); }
 
   // leaderboard
   function bmsg(t,cls){ $('boardmsg').textContent=t; $('boardmsg').className='msg '+(cls||''); }
@@ -242,7 +245,7 @@
   // server
   function fmtUptime(s){ s=s||0; var d=Math.floor(s/86400),h=Math.floor((s%86400)/3600),m=Math.floor((s%3600)/60); return (d?d+'d ':'')+(h?h+'h ':'')+m+'m'; }
   function loadServer(){
-    fetch('/admin/status?token='+encodeURIComponent(tok())).then(function(r){return r.json();}).then(function(d){
+    api('/admin/status').then(function(r){return r.json();}).then(function(d){
       var el=$('status');
       if(!d.ok){ el.innerHTML='<div class="empty err">'+(d.error||'error')+'</div>'; return; }
       el.innerHTML='';
@@ -253,11 +256,11 @@
     }).catch(function(){ $('status').innerHTML='<div class="empty err">Could not load.</div>'; });
     loadLogs(); loadUpdateLog();
   }
-  function loadLogs(){ fetch('/admin/logs?token='+encodeURIComponent(tok())).then(function(r){return r.json();}).then(function(d){ var p=$('logs'); p.textContent=(d.lines||[]).join('\n'); p.scrollTop=p.scrollHeight; }).catch(function(){}); }
+  function loadLogs(){ api('/admin/logs').then(function(r){return r.json();}).then(function(d){ var p=$('logs'); p.textContent=(d.lines||[]).join('\n'); p.scrollTop=p.scrollHeight; }).catch(function(){}); }
   $('refreshLogs').addEventListener('click', loadLogs);
   $('savePeriod').addEventListener('click', function(){
     var per=$('period').value, m=$('periodmsg');
-    fetch('/admin/config?token='+encodeURIComponent(tok()),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({resetPeriod:per,token:tok()})})
+    api('/admin/config',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({resetPeriod:per,token:tok()})})
       .then(function(r){return r.json();}).then(function(d){ if(d.ok){ m.textContent='Saved: '+d.resetPeriod; m.className='msg ok'; } else { m.textContent='Failed: '+(d.error||'error'); m.className='msg err'; } })
       .catch(function(){ m.textContent='Network error.'; m.className='msg err'; });
   });
@@ -279,7 +282,7 @@
   function toggleMode(k){
     modesState[k]=!modesState[k]; renderModes();
     var m=$('modesmsg');
-    fetch('/admin/config?token='+encodeURIComponent(tok()),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({token:tok(),modes:modesState})})
+    api('/admin/config',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({token:tok(),modes:modesState})})
       .then(function(r){return r.json();}).then(function(d){ if(d.ok){ if(d.modes){ modesState=Object.assign(modesState,d.modes); renderModes(); } m.textContent='Saved.'; m.className='msg ok'; } else { m.textContent='Failed: '+(d.error||'error'); m.className='msg err'; } })
       .catch(function(){ m.textContent='Network error.'; m.className='msg err'; });
   }
@@ -290,7 +293,7 @@
     var msg=$('maintmsg'), tries=0; msg.textContent=label+' \u2014 server restarting, reconnecting\u2026'; msg.className='msg';
     var iv=setInterval(function(){
       tries++;
-      fetch('/admin/status?token='+encodeURIComponent(tok()),{cache:'no-store'}).then(function(r){return r.json();}).then(function(d){
+      api('/admin/status',{cache:'no-store'}).then(function(r){return r.json();}).then(function(d){
         if(d&&d.ok){ clearInterval(iv); maintBusy(false); msg.textContent='Back online \u2014 v'+(d.version||'?')+'.'; msg.className='msg ok'; loadServer(); }
       }).catch(function(){});
       if(tries>24){ clearInterval(iv); maintBusy(false); msg.textContent='Still reconnecting\u2026 use Refresh in a moment.'; msg.className='msg err'; }
@@ -298,17 +301,17 @@
   }
   function fireAction(path,label){
     maintBusy(true);
-    fetch(path+'?token='+encodeURIComponent(tok()),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({token:tok()})})
+    api(path,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({token:tok()})})
       .then(function(r){return r.json();}).then(function(d){ if(d&&d.started){ pollBack(label); } else { maintBusy(false); var m=$('maintmsg'); m.textContent='Failed: '+((d&&d.error)||'error'); m.className='msg err'; } })
       .catch(function(){ pollBack(label); });
   }
   function doUpdate(){ if(confirm('Pull the latest code and restart the server now?')) fireAction('/admin/update','Update started'); }
   function doRestart(){ if(confirm('Restart the server now?')) fireAction('/admin/restart','Restart started'); }
   function clearLogs(){
-    fetch('/admin/clear-logs?token='+encodeURIComponent(tok()),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({token:tok()})})
+    api('/admin/clear-logs',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({token:tok()})})
       .then(function(r){return r.json();}).then(function(d){ var m=$('maintmsg'); if(d&&d.ok){ m.textContent='Logs cleared.'; m.className='msg ok'; loadLogs(); } else { m.textContent='Failed.'; m.className='msg err'; } }).catch(function(){});
   }
-  function loadUpdateLog(){ fetch('/admin/update-log?token='+encodeURIComponent(tok()),{cache:'no-store'}).then(function(r){return r.json();}).then(function(d){ if(d&&d.ok) $('updlog').textContent=d.log||'(empty)'; }).catch(function(){}); }
+  function loadUpdateLog(){ api('/admin/update-log',{cache:'no-store'}).then(function(r){return r.json();}).then(function(d){ if(d&&d.ok) $('updlog').textContent=d.log||'(empty)'; }).catch(function(){}); }
   if($('btnUpdate')) $('btnUpdate').addEventListener('click', doUpdate);
   if($('btnRestart')) $('btnRestart').addEventListener('click', doRestart);
   if($('btnClearLogs')) $('btnClearLogs').addEventListener('click', clearLogs);
