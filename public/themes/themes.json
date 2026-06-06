@@ -93,6 +93,23 @@
     }
   },
   {
+    "id": "vecteur",
+    "name": "Vecteur (SVG)",
+    "swatch": "#4f93e0",
+    "buttonImages": {
+      "fold": "btn-fold.svg",
+      "check": "btn-check.svg",
+      "call": "btn-call.svg",
+      "raise": "btn-raise.svg",
+      "allin": "btn-allin.svg"
+    },
+    "pucks": {
+      "dealer": "dealer.svg",
+      "sb": "sb.svg",
+      "bb": "bb.svg"
+    }
+  },
+  {
     "id": "violet",
     "name": "Violet royal (PokerTH)",
     "swatch": "#5a2a7a",

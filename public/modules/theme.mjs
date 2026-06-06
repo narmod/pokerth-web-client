@@ -85,7 +85,7 @@ var BUTTON_GLOSSY = {
 // Pucks axis: a built-in "PokerTH" set (dealer/SB/BB marker images, shared).
 var PUCK_SET = { dealer:'url(/pucks/dealer.png)', sb:'url(/pucks/sb.png)', bb:'url(/pucks/bb.png)' };
 var BUTTONS_ITEMS = [ {id:'',key:'buttonsDefault',fallback:'Flat',swatch:'#6b2020'}, {id:'glossy',key:'buttonsGlossy',fallback:'Glossy',swatch:'#c81818'} ];
-var PUCKS_ITEMS   = [ {id:'',key:'pucksDefault',fallback:'Chips',swatch:'#c8a850'}, {id:'pokerth',key:'pucksPokerth',fallback:'PokerTH',swatch:'#3a78d8'} ];
+var PUCKS_ITEMS   = [ {id:'',key:'pucksDefault',fallback:'Chips',swatch:'#c8a850'}, {id:'pokerth',key:'pucksPokerth',fallback:'PokerTH',swatch:'#3a78d8',preview:'/pucks/dealer.png'} ];
 const palette = makeAxis({ storeKey: 'pth_theme', attr: 'data-theme', items: PALETTES, titleKey: 'sectionPalette', titleFallback: 'Palette' });
 const table   = makeAxis({ storeKey: 'pth_table', attr: 'data-table', items: TABLES,   titleKey: 'sectionTable',   titleFallback: 'Table' });
 const deck    = makeAxis({ storeKey: 'pth_deck',  attr: 'data-deck',  def: 'casino-vert',  items: DECKS,    titleKey: 'sectionDeck',    titleFallback: 'Cards' });
@@ -168,11 +168,13 @@ deck.set = deck.apply;
 
 // ── Theme packages : un "table style" importe se decompose en une palette (couleurs UI/popups)
 //    + un tapis (feutre, liseré, image) + un preset combinant les deux. ──
-var _palettePkgs = [], _tablePkgs = [], _pkgPresets = [];
+var _palettePkgs = [], _tablePkgs = [], _pkgPresets = [], _puckPkgs = [], _buttonPkgs = [];
 var PALETTE_TOKENS = ['felt','felt-mid','felt-hi','panel','panel-hi','gold','gold-hi','gold-dim','cream','text','text-hi','border','border-hi','modal-bg','body-glow'];
 var TABLE_TOKENS = ['felt-base-hi','felt-base-mid','felt-base-lo','rail','rail-dark','rail-glow'];
 function _palettePkgById(id){ for (var i=0;i<_palettePkgs.length;i++) if (_palettePkgs[i].id===id) return _palettePkgs[i]; return null; }
 function _tablePkgById(id){ for (var i=0;i<_tablePkgs.length;i++) if (_tablePkgs[i].id===id) return _tablePkgs[i]; return null; }
+function _puckPkgById(id){ for (var i=0;i<_puckPkgs.length;i++) if (_puckPkgs[i].id===id) return _puckPkgs[i]; return null; }
+function _buttonPkgById(id){ for (var i=0;i<_buttonPkgs.length;i++) if (_buttonPkgs[i].id===id) return _buttonPkgs[i]; return null; }
 function _isBuiltinPalette(id){ for (var i=0;i<PALETTES.length;i++) if (PALETTES[i].id===id) return true; return false; }
 function _isBuiltinTable(id){ for (var i=0;i<TABLES.length;i++) if (TABLES[i].id===id) return true; return false; }
 function _injectAxis(keys, pkg, storeKey, withFelt){
@@ -189,11 +191,18 @@ function _injectAxis(keys, pkg, storeKey, withFelt){
 }
 function _injectPalette(pkg){ _injectAxis(PALETTE_TOKENS, pkg, 'pth_theme_css', false); }
 function _injectTable(pkg){ _injectAxis(TABLE_TOKENS, pkg, 'pth_table_css', true); }
-function _injectButtons(tok){
+function _injectButtons(spec){
   var el=document.documentElement, css='';
-  for (var i=0;i<BUTTON_TOKENS.length;i++){
-    var k=BUTTON_TOKENS[i], v=tok?tok[k]:null;
-    if (v!=null){ el.style.setProperty('--'+k,v); css+='--'+k+':'+v+';'; } else el.style.removeProperty('--'+k);
+  for (var i=0;i<BUTTON_TOKENS.length;i++) el.style.removeProperty('--'+BUTTON_TOKENS[i]);
+  var IMG=['--btn-fold-img','--btn-check-img','--btn-call-img','--btn-raise-img','--btn-allin-img'];
+  for (var j=0;j<IMG.length;j++) el.style.removeProperty(IMG[j]);
+  el.removeAttribute('data-btn-img');
+  if (spec && spec.colors){
+    for (var k=0;k<BUTTON_TOKENS.length;k++){ var key=BUTTON_TOKENS[k], v=spec.colors[key]; if(v!=null){ el.style.setProperty('--'+key,v); css+='--'+key+':'+v+';'; } }
+  } else if (spec && spec.images){
+    var M=[['fold','--btn-fold-img'],['check','--btn-check-img'],['call','--btn-call-img'],['raise','--btn-raise-img'],['allin','--btn-allin-img']];
+    for (var m2=0;m2<M.length;m2++){ var u=spec.images[M[m2][0]]; if(u){ el.style.setProperty(M[m2][1],u); css+=M[m2][1]+':'+u+';'; } }
+    el.setAttribute('data-btn-img','1'); css+='data-btn-img:1;';
   }
   try{ if(css) localStorage.setItem('pth_buttons_css',css); else localStorage.removeItem('pth_buttons_css'); }catch(e){}
 }
@@ -218,23 +227,34 @@ table.apply = function(id){
 };
 table.set = table.apply;
 var _btnApply = buttons.apply;
-buttons.apply = function(id){ _btnApply(id); try{ _injectButtons(id==='glossy'?BUTTON_GLOSSY:null); }catch(e){} };
+buttons.apply = function(id){ _btnApply(id); try{
+  if (id==='glossy') _injectButtons({colors:BUTTON_GLOSSY});
+  else if (!id) _injectButtons(null);
+  else { var pk=_buttonPkgById(id); _injectButtons(pk?(pk.images?{images:pk.images}:(pk.colors?{colors:pk.colors}:null)):null); }
+}catch(e){} };
 buttons.set = buttons.apply;
 var _pkApply = pucks.apply;
-pucks.apply = function(id){ _pkApply(id); try{ _injectPucks(id==='pokerth'?PUCK_SET:null); }catch(e){} };
+pucks.apply = function(id){ _pkApply(id); try{
+  if (id==='pokerth') _injectPucks(PUCK_SET);
+  else if (!id) _injectPucks(null);
+  else { var pk=_puckPkgById(id); _injectPucks(pk?pk.set:null); }
+}catch(e){} };
 pucks.set = pucks.apply;
-try{ _injectButtons(buttons.get()==='glossy'?BUTTON_GLOSSY:null); _injectPucks(pucks.get()==='pokerth'?PUCK_SET:null); }catch(e){}
+try{ _injectButtons(buttons.get()==='glossy'?{colors:BUTTON_GLOSSY}:null); _injectPucks(pucks.get()==='pokerth'?PUCK_SET:null); }catch(e){}
 function _loadThemes(){
   try{
     fetch('/themes/themes.json',{cache:'no-store'})
       .then(function(r){return r.ok?r.json():[];})
       .then(function(list){
         if(!Array.isArray(list)) return;
-        var pkgs=list.filter(function(p){return p&&p.id&&(p.palette||p.table||p.felt);});
+        var pkgs=list.filter(function(p){return p&&p.id&&(p.palette||p.table||p.felt||p.pucks||p.buttonImages||p.buttons);});
         _palettePkgs=pkgs.filter(function(p){return p.palette;}).map(function(p){ return {id:String(p.id),name:p.name||String(p.id),swatch:p.swatch||'#444',tokens:p.palette}; }).filter(function(p){ return !_isBuiltinPalette(p.id); });
         _tablePkgs=pkgs.filter(function(p){return p.table||p.felt;}).map(function(p){ return {id:String(p.id),name:p.name||String(p.id),swatch:p.swatch||'#444',tokens:p.table||{},felt:p.felt||null}; }).filter(function(p){ return !_isBuiltinTable(p.id); });
-        _pkgPresets=pkgs.map(function(p){ return {id:'pkg-'+p.id,name:p.name||String(p.id),swatch:p.swatch||'#444',values:{theme:(p.palette?String(p.id):''),table:((p.table||p.felt)?String(p.id):''),buttons:'glossy',pucks:'pokerth'}}; });
+        _pkgPresets=pkgs.filter(function(p){return p.palette||p.table||p.felt;}).map(function(p){ return {id:'pkg-'+p.id,name:p.name||String(p.id),swatch:p.swatch||'#444',values:{theme:(p.palette?String(p.id):''),table:((p.table||p.felt)?String(p.id):''),buttons:'glossy',pucks:'pokerth'}}; });
+        _puckPkgs=pkgs.filter(function(p){return p.pucks;}).map(function(p){ var set={},pv=p.pucks; ['dealer','sb','bb'].forEach(function(k){ if(pv[k]) set[k]='url(/themes/'+p.id+'/'+pv[k]+')'; }); return {id:String(p.id),name:p.name||String(p.id),swatch:p.swatch||'#444',set:set,preview:(pv.dealer?'/themes/'+p.id+'/'+pv.dealer:null)}; }).filter(function(p){ return p.id!=='pokerth'; });
+        _buttonPkgs=pkgs.filter(function(p){return p.buttonImages||p.buttons;}).map(function(p){ var e={id:String(p.id),name:p.name||String(p.id),swatch:p.swatch||'#444'}; if(p.buttonImages){ e.images={}; ['fold','check','call','raise','allin'].forEach(function(k){ if(p.buttonImages[k]) e.images[k]='url(/themes/'+p.id+'/'+p.buttonImages[k]+')'; }); } else if(p.buttons){ e.colors=p.buttons; } return e; }).filter(function(p){ return p.id!=='glossy'; });
         try{ var pp=_palettePkgById(palette.get()); if(pp) _injectPalette(pp); var tp=_tablePkgById(table.get()); if(tp) _injectTable(tp); }catch(e){}
+        try{ buttons.apply(buttons.get()); pucks.apply(pucks.get()); }catch(e){}
         if(_body) _render();
       }).catch(function(){});
   }catch(e){}
@@ -350,6 +370,11 @@ function _previewHTML(kind, item, big) {
     var cards = (item && item.id) ? _pngFan(item.id, big) : _classicFan(big);
     return '<span style="' + box + ';background:linear-gradient(160deg,#1c5a28,#0c3214)">' + cards + '</span>';
   }
+  if (kind === 'pucks') {
+    if (item && item.preview) return '<span style="' + box + ';background:#0b1a0d;display:flex;align-items:center;justify-content:center"><img src="' + item.preview + '" alt="" style="width:90%;height:90%;object-fit:contain;display:block"></span>';
+    var ds = big ? 22 : 13;
+    return '<span style="' + box + ';background:#14331a;display:flex;align-items:center;justify-content:center"><i style="width:' + ds + 'px;height:' + ds + 'px;border-radius:50%;background:#c8a850;border:2px solid #fff;box-shadow:0 0 0 1px #0006"></i></span>';
+  }
   if (kind === 'preset') {
     var t = _tableById(item && item.values ? item.values.table : '');
     return '<span style="' + box + ';' + _feltStyle(t) + '">' + _cardOnFelt(item && item.values ? item.values.deck : '', big) + '</span>';
@@ -425,8 +450,8 @@ function _render() {
   _body.appendChild(_sectionHeader(_t('sectionCustomize', 'Customize'), ''));
   AXES.forEach(function (ax) {
     var cur = ax.get();
-    var kind = (ax === palette) ? 'palette' : (ax === table) ? 'table' : (ax === deck) ? 'deck' : 'palette';
-    var opts = (ax === deck) ? DECKS.concat(_galleryDecks) : (ax === palette ? PALETTES.concat(_palettePkgs) : (ax === table ? TABLES.concat(_tablePkgs) : ax.items));
+    var kind = (ax === palette) ? 'palette' : (ax === table) ? 'table' : (ax === deck) ? 'deck' : (ax === pucks) ? 'pucks' : 'palette';
+    var opts = (ax === deck) ? DECKS.concat(_galleryDecks) : (ax === palette ? PALETTES.concat(_palettePkgs) : (ax === table ? TABLES.concat(_tablePkgs) : (ax === buttons ? BUTTONS_ITEMS.concat(_buttonPkgs) : (ax === pucks ? PUCKS_ITEMS.concat(_puckPkgs) : ax.items))));
     var curItem = opts[0];
     for (var i = 0; i < opts.length; i++) if (opts[i].id === cur) curItem = opts[i];
     var curName = curItem.name || _t(curItem.key, curItem.fallback);
