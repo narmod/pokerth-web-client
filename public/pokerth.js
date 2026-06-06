@@ -5850,6 +5850,14 @@ const App = (() => {
       + ' font-family="Arial Black,Arial,sans-serif">' + txt + '</text>'
       + '</svg>';
   };
+  // Variante inline du jeton integre pour la barre heros (.player-bar) : pas de
+  // classe blind-chip/dealer-chip (position:absolute -> se calerait sur le coin
+  // de la barre fixe et partirait hors ecran), mais un rendu inline-block.
+  window._pthBarChip = function (label) {
+    return String(window._pthChip(label) || '')
+      .replace(/class="(?:blind|dealer)-chip"/,
+        'style="display:inline-block;width:18px;height:18px;vertical-align:middle;flex:none;filter:drop-shadow(0 1px 3px rgba(0,0,0,.4))"');
+  };
 
   function getPlayerName(pid) { return players[pid] || (pid === myId ? myName : '#'+pid); }
 
@@ -6126,11 +6134,12 @@ const App = (() => {
     const myBlindChip = myId === sbPid
       ? chipSvg('SB','#1565c0','#fff','#0a3d7a')
       : (myId === bbPid ? chipSvg('BB','#b71c1c','#fff','#6d0c0c') : '');
+    var _barPuckStyle = 'style="display:inline-block;width:18px;height:18px;vertical-align:middle;flex:none;filter:drop-shadow(0 1px 3px rgba(0,0,0,0.45))"';
     const myDealerBadge = myId === dealerPid
-      ? dealerChipSvg().replace('class="dealer-chip"','style="filter:drop-shadow(0 1px 3px rgba(0,0,0,0.5))"')
+      ? dealerChipSvg().replace('class="dealer-chip"', _barPuckStyle).replace("window._pthChip('", "window._pthBarChip('")
       : '';
     const myBlindBadge = myBlindChip
-      ? myBlindChip.replace('class="blind-chip"','style="filter:drop-shadow(0 1px 3px rgba(0,0,0,0.4))"')
+      ? myBlindChip.replace('class="blind-chip"', _barPuckStyle).replace("window._pthChip('", "window._pthBarChip('")
       : '';
     if (pbName) {
       pbName.textContent = myName;
@@ -9580,4 +9589,4 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.2.248'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.2.249'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
