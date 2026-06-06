@@ -54,7 +54,6 @@ function makeAxis(cfg) {
 const PALETTES = [
   { id: '',     key: 'themeGreen', fallback: 'Green', swatch: '#1e3820' },
   { id: 'dark', key: 'themeDark',  fallback: 'Dark',  swatch: '#232730' },
-  { id: 'redfelt', key: 'themeRed', fallback: 'Red felt', swatch: '#841c1c' },
 ];
 const TABLES = [
   { id: '',         key: 'tableGreen',    fallback: 'Green',    swatch: '#1e6b1e' },
@@ -96,7 +95,7 @@ const AXES = [palette, table, buttons, pucks, deck];
 // textured green felt + vector cards). Order = display order.
 const PRESETS = [
   { id: 'casino',  key: 'presetCasino',   fallback: 'Casino vert',     swatch: '#1e6b1e', values: { theme: '',     table: '',      deck: 'casino-vert', buttons: 'casino-vert', pucks: 'casino-vert' } },
-  { id: 'pokerth', key: 'presetOfficial', fallback: 'Official PokerTH', swatch: '#232730', values: { theme: 'dark', table: 'photo', deck: 'pokerth', buttons: 'glossy', pucks: 'pokerth' } },
+  { id: 'pokerth', key: 'presetOfficial', fallback: 'PokerTH ver1.1.2', swatch: '#232730', values: { theme: 'dark', table: 'photo', deck: 'pokerth', buttons: 'glossy', pucks: 'pokerth' } },
   { id: 'pokerthnew', key: 'presetPokerthNew', fallback: 'PokerTH new', swatch: '#a52a2a', values: { theme: 'dark', table: 'photo', deck: 'pokerth-new', buttons: 'pokerth-new', pucks: 'pokerth-new' } },
 ];
 
