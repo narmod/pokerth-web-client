@@ -340,7 +340,7 @@ function openThemePanel(ev) {
   var panel = document.createElement('div');
   panel.id = PANEL_ID;
   panel.setAttribute('role', 'menu');
-  panel.style.cssText = 'position:fixed;z-index:9999;min-width:248px;max-width:340px;max-height:74vh;overflow:auto;'
+  panel.style.cssText = 'position:fixed;z-index:9999;box-sizing:border-box;width:min(340px, calc(100vw - 16px));max-height:74vh;overflow:auto;'
     + 'background:var(--panel,#0d1f10);border:1px solid var(--gold-dim,rgba(200,168,74,0.45));'
     + 'border-radius:10px;padding:11px 13px 13px;box-shadow:0 12px 32px rgba(0,0,0,0.6)';
 
