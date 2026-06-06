@@ -1,7 +1,7 @@
 [
   {
     "id": "bleu-nuit",
-    "name": "Bleu nuit",
+    "name": "Midnight Blue",
     "swatch": "#1e3a6b",
     "felt": "felt.jpg",
     "palette": {
@@ -32,7 +32,7 @@
   },
   {
     "id": "casino-vert",
-    "name": "Casino vert",
+    "name": "Green Casino",
     "swatch": "#1e6b1e",
     "buttons": {
       "btn-fold-fg": "#ffd0d0",
@@ -111,7 +111,7 @@
   },
   {
     "id": "vecteur",
-    "name": "Épuré",
+    "name": "Sleek",
     "swatch": "#4f93e0",
     "buttonImages": {
       "fold": "btn-fold.svg",
@@ -128,7 +128,7 @@
   },
   {
     "id": "violet",
-    "name": "Violet royal",
+    "name": "Royal Purple",
     "swatch": "#5a2a7a",
     "felt": "felt.jpg",
     "palette": {
