@@ -2684,7 +2684,7 @@ body {
       rgba(0,0,0,0.04) 4px
     ),
     /* Couleur de base dégradée */
-    radial-gradient(ellipse 80% 60% at 50% 50%, var(--felt-base-hi) 0%, var(--felt-base-mid) 55%, var(--felt-base-lo) 100%);
+    var(--felt-img, radial-gradient(ellipse 80% 60% at 50% 50%, var(--felt-base-hi) 0%, var(--felt-base-mid) 55%, var(--felt-base-lo) 100%));
   border-radius: 50% / 45%;
   border: 8px solid var(--rail);
   box-shadow:

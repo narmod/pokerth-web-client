@@ -144,6 +144,46 @@ deck.apply = function (id) {
 };
 deck.set = deck.apply;
 
+// ── Theme packages (Palette axis) : injection dynamique de tokens + feutre optionnel ──
+var _themes = [];
+var THEME_TOKENS = ['felt','felt-mid','felt-hi','felt-base-hi','felt-base-mid','felt-base-lo','rail','rail-dark','rail-glow','panel','panel-hi','gold','gold-hi','gold-dim','cream','text','text-hi','border','border-hi','modal-bg','body-glow'];
+function _themeById(id){ for (var i=0;i<_themes.length;i++) if (_themes[i].id===id) return _themes[i]; return null; }
+function _isBuiltinPalette(id){ for (var i=0;i<PALETTES.length;i++) if (PALETTES[i].id===id) return true; return false; }
+function _injectTheme(pkg){
+  var el=document.documentElement, css='';
+  for (var i=0;i<THEME_TOKENS.length;i++){
+    var k=THEME_TOKENS[i], v=(pkg&&pkg.tokens)?pkg.tokens[k]:null;
+    if (v!=null){ el.style.setProperty('--'+k,v); css+='--'+k+':'+v+';'; } else el.style.removeProperty('--'+k);
+  }
+  if (pkg&&pkg.felt){ var fi='url(/themes/'+pkg.id+'/'+pkg.felt+') center / cover no-repeat'; el.style.setProperty('--felt-img',fi); css+='--felt-img:'+fi+';'; }
+  else el.style.removeProperty('--felt-img');
+  try{ if(css) localStorage.setItem('pth_theme_css',css); else localStorage.removeItem('pth_theme_css'); }catch(e){}
+}
+var _palApply = palette.apply;
+palette.apply = function(id){
+  _palApply(id);
+  try{
+    if (_isBuiltinPalette(id)) _injectTheme(null);
+    else { var pk=_themeById(id); if(pk) _injectTheme(pk); }
+  }catch(e){}
+};
+palette.set = palette.apply;
+function _loadThemes(){
+  try{
+    fetch('/themes/themes.json',{cache:'no-store'})
+      .then(function(r){return r.ok?r.json():[];})
+      .then(function(list){
+        if(!Array.isArray(list)) return;
+        _themes=list.filter(function(t){return t&&t.id&&t.tokens;}).map(function(t){
+          return {id:String(t.id),name:t.name||String(t.id),swatch:t.swatch||'#444',tokens:t.tokens,felt:t.felt||null};
+        }).filter(function(t){ return !_isBuiltinPalette(t.id); });
+        try{ var pk=_themeById(palette.get()); if(pk) _injectTheme(pk); }catch(e){}
+        if(_body) _render();
+      }).catch(function(){});
+  }catch(e){}
+}
+_loadThemes();
+
 // ── Single "Theme" panel ────────────────────────────────────────────────
 const PANEL_ID = 'theme-panel', OVERLAY_ID = 'theme-panel-overlay';
 var _body = null; // re-rendered on each change so highlights stay in sync
@@ -328,7 +368,7 @@ function _render() {
   AXES.forEach(function (ax) {
     var cur = ax.get();
     var kind = (ax === palette) ? 'palette' : (ax === table) ? 'table' : 'deck';
-    var opts = (ax === deck) ? DECKS.concat(_galleryDecks) : ax.items;
+    var opts = (ax === deck) ? DECKS.concat(_galleryDecks) : (ax === palette ? PALETTES.concat(_themes) : ax.items);
     var curItem = opts[0];
     for (var i = 0; i < opts.length; i++) if (opts[i].id === cur) curItem = opts[i];
     var curName = curItem.name || _t(curItem.key, curItem.fallback);
