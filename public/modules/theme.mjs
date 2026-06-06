@@ -80,9 +80,9 @@ var BUTTON_GLOSSY = {
   'btn-allin-bd':'#d8701f','btn-allin-fg':'#e8a85a','btn-allin-fg-b':'#f0c080'
 };
 // Pucks axis: a built-in "PokerTH" set (dealer/SB/BB marker images, shared).
-var PUCK_SET = { dealer:'url(/pucks/dealer.png)', sb:'url(/pucks/sb.png)', bb:'url(/pucks/bb.png)' };
+var PUCK_SET = { dealer:'url(/pucks/dealer.svg)', sb:'url(/pucks/sb.svg)', bb:'url(/pucks/bb.svg)' };
 var BUTTONS_ITEMS = [ {id:'',key:'buttonsDefault',fallback:'Flat',swatch:'#6b2020'}, {id:'glossy',key:'buttonsGlossy',fallback:'Glossy',swatch:'#c81818'} ];
-var PUCKS_ITEMS   = [ {id:'',key:'pucksDefault',fallback:'Chips',swatch:'#c8a850'}, {id:'pokerth',key:'pucksPokerth',fallback:'PokerTH',swatch:'#3a78d8',preview:'/pucks/dealer.png'} ];
+var PUCKS_ITEMS   = [ {id:'',key:'pucksDefault',fallback:'Chips',swatch:'#c8a850'}, {id:'pokerth',key:'pucksPokerth',fallback:'PokerTH',swatch:'#3a78d8',preview:'/pucks/dealer.svg'} ];
 const palette = makeAxis({ storeKey: 'pth_theme', attr: 'data-theme', items: PALETTES, titleKey: 'sectionPalette', titleFallback: 'Palette' });
 const table   = makeAxis({ storeKey: 'pth_table', attr: 'data-table', items: TABLES,   titleKey: 'sectionTable',   titleFallback: 'Table' });
 const deck    = makeAxis({ storeKey: 'pth_deck',  attr: 'data-deck',  def: 'casino-vert',  items: DECKS,    titleKey: 'sectionDeck',    titleFallback: 'Cards' });
@@ -96,8 +96,8 @@ const AXES = [palette, table, buttons, pucks, deck];
 // textured green felt + vector cards). Order = display order.
 const PRESETS = [
   { id: 'casino',  key: 'presetCasino',   fallback: 'Casino vert',     swatch: '#1e6b1e', values: { theme: '',     table: '',      deck: 'casino-vert', buttons: 'casino-vert', pucks: 'casino-vert' } },
-  { id: 'pokerth', key: 'presetOfficial', fallback: 'Official PokerTH', swatch: '#232730', values: { theme: 'dark', table: 'photo', deck: 'pokerth', buttons: '', pucks: '' } },
-  { id: 'pokerthnew', key: 'presetPokerthNew', fallback: 'PokerTH new', swatch: '#a52a2a', values: { theme: 'dark', table: 'photo', deck: 'pokerth-new', buttons: '', pucks: '' } },
+  { id: 'pokerth', key: 'presetOfficial', fallback: 'Official PokerTH', swatch: '#232730', values: { theme: 'dark', table: 'photo', deck: 'pokerth', buttons: 'glossy', pucks: 'pokerth' } },
+  { id: 'pokerthnew', key: 'presetPokerthNew', fallback: 'PokerTH new', swatch: '#a52a2a', values: { theme: 'dark', table: 'photo', deck: 'pokerth-new', buttons: 'pokerth-new', pucks: 'pokerth-new' } },
 ];
 
 function applyPreset(id) {

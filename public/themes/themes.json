@@ -87,6 +87,29 @@
     }
   },
   {
+    "id": "pokerth-new",
+    "name": "PokerTH new",
+    "swatch": "#3a6fc8",
+    "buttons": {
+      "btn-fold-bg": "#33373f",
+      "btn-fold-fg": "#e9e9ee",
+      "btn-check-bg": "#33373f",
+      "btn-check-fg": "#e9e9ee",
+      "btn-call-bg": "#33373f",
+      "btn-call-fg": "#e9e9ee",
+      "btn-raise-bg": "#33373f",
+      "btn-raise-fg": "#e9e9ee",
+      "btn-allin-bd": "#b83434",
+      "btn-allin-fg": "#e98a8a",
+      "btn-allin-fg-b": "#f0b0b0"
+    },
+    "pucks": {
+      "dealer": "dealer.svg",
+      "sb": "sb.svg",
+      "bb": "bb.svg"
+    }
+  },
+  {
     "id": "red_felt_v0_2",
     "name": "Red Felt v0.2",
     "swatch": "#7a1518",
