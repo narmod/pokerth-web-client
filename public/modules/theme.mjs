@@ -67,7 +67,7 @@ const TABLES = [
 ];
 const DECKS = [
   { id: '',    key: 'deckClassic', fallback: 'Classic', swatch: '#e6e6e6' },
-  { id: 'svg', key: 'deckSvg',     fallback: 'SVG',     swatch: '#a52a2a' },
+  { id: 'svg', key: 'deckSvg',     fallback: 'PokerTH',     swatch: '#a52a2a' },
 ];
 
 const palette = makeAxis({ storeKey: 'pth_theme', attr: 'data-theme', items: PALETTES, titleKey: 'sectionPalette', titleFallback: 'Palette' });
