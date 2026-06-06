@@ -257,8 +257,7 @@ function onAvatarImageChosen(input) {
   <div style="position:absolute;top:12px;right:16px;display:flex;gap:6px;z-index:10">
     <button class="btn-sm btn-icon" id="install-btn" onclick="pwaInstall()" title="Install app" data-i18n-title="installTooltip" aria-label="Install app" style="display:none">📲</button>
     <button class="btn-sm btn-icon" id="lang-toggle-connect" onclick="openLangMenu(event)" title="Switch language" data-i18n-title="langTooltip" aria-label="Switch language"></button>
-    <button class="btn-sm btn-icon" id="theme-toggle-connect" onclick="openThemeMenu(event)" title="Theme" data-i18n-title="themeTooltip" aria-label="Theme">🎨</button>
-    <button class="btn-sm btn-icon" id="table-toggle-connect" onclick="openTableMenu(event)" title="Table" data-i18n-title="tableTooltip" aria-label="Table">🟩</button>
+    <button class="btn-sm btn-icon" id="theme-toggle-connect" onclick="openThemePanel(event)" title="Theme" data-i18n-title="themeTooltip" aria-label="Theme">🎨</button>
     <button class="btn-sm btn-icon" onclick="location.reload()" title="Refresh / Rafraîchir" data-i18n-title="refreshTooltip" aria-label="Refresh">↺</button>
     <button class="btn-sm btn-icon" id="fs-btn-connect" onclick="toggleFullscreen()" title="Fullscreen" data-i18n-title="fullscreenTooltip" aria-label="Fullscreen">⛶</button>
   </div>
@@ -963,16 +962,14 @@ function onAvatarImageChosen(input) {
     </div>
     <button class="btn-sm btn-icon" id="fs-btn-lobby" onclick="toggleFullscreen()" title="Fullscreen" data-i18n-title="fullscreenTooltip">⛶</button>
     <button class="btn-sm btn-icon" id="lang-toggle-lobby" onclick="openLangMenu(event)" title="Switch language" data-i18n-title="langTooltip" aria-label="Switch language"></button>
-    <button class="btn-sm btn-icon" id="theme-toggle-lobby" onclick="openThemeMenu(event)" title="Theme" data-i18n-title="themeTooltip" aria-label="Theme">🎨</button>
-    <button class="btn-sm btn-icon" id="table-toggle-lobby" onclick="openTableMenu(event)" title="Table" data-i18n-title="tableTooltip" aria-label="Table">🟩</button>
+    <button class="btn-sm btn-icon" id="theme-toggle-lobby" onclick="openThemePanel(event)" title="Theme" data-i18n-title="themeTooltip" aria-label="Theme">🎨</button>
     <button class="btn-sm btn-icon" id="lobby-chat-btn" onclick="toggleLobbyChat()" title="Chat" data-i18n-title="chatTooltip">💬</button>
     <button class="btn-sm btn-icon" id="l-overflow-btn" onclick="toggleLobbyOverflow(event)" title="Plus" data-i18n-title="moreTooltip">•••</button>
     <button class="btn-sm btn-icon" onclick="App.confirmDisconnect()" title="Disconnect" data-i18n-title="disconnectTooltip" style="color:var(--red);border-color:rgba(192,57,43,0.3)">✕</button>
     <div id="l-overflow-menu">
       <button class="btn-sm" onclick="toggleFullscreen();closeLobbyOverflow()"><span style="margin-right:5px">⛶</span><span data-i18n="fullscreenTooltip">Fullscreen</span></button>
       <button class="btn-sm" id="lang-toggle-lobby-mob" onclick="closeLobbyOverflow();openLangMenu(event)" style="font-size:0.85rem"></button>
-      <button class="btn-sm" id="theme-toggle-lobby-mob" onclick="closeLobbyOverflow();openThemeMenu(event)" style="font-size:0.85rem">🎨 <span data-i18n="themeTooltip">Theme</span></button>
-      <button class="btn-sm" id="table-toggle-lobby-mob" onclick="closeLobbyOverflow();openTableMenu(event)" style="font-size:0.85rem">🟩 <span data-i18n="tableTooltip">Table</span></button>
+      <button class="btn-sm" id="theme-toggle-lobby-mob" onclick="closeLobbyOverflow();openThemePanel(event)" style="font-size:0.85rem">🎨 <span data-i18n="themeTooltip">Theme</span></button>
     </div>
   </div>
 
@@ -1164,8 +1161,7 @@ function onAvatarImageChosen(input) {
       </svg>
     </button>
     <button class="btn-sm btn-icon" id="lang-toggle-game" onclick="openLangMenu(event)" title="Switch language" data-i18n-title="langTooltip" aria-label="Switch language"></button>
-    <button class="btn-sm btn-icon" id="theme-toggle-game" onclick="openThemeMenu(event)" title="Theme" data-i18n-title="themeTooltip" aria-label="Theme">🎨</button>
-    <button class="btn-sm btn-icon" id="table-toggle-game" onclick="openTableMenu(event)" title="Table" data-i18n-title="tableTooltip" aria-label="Table">🟩</button>
+    <button class="btn-sm btn-icon" id="theme-toggle-game" onclick="openThemePanel(event)" title="Theme" data-i18n-title="themeTooltip" aria-label="Theme">🎨</button>
     <button class="btn-sm btn-icon" id="log-toggle-btn" onclick="toggleLog()" title="Journal" data-i18n-title="logTooltip">📋</button>
     <button class="btn-sm btn-icon" id="react-toggle-btn" onclick="toggleReactionPanel()" title="Réactions" data-i18n-title="reactionsLabel">😊</button>
     <button class="btn-sm btn-icon" id="chat-toggle-btn" onclick="toggleGameChat()" title="Chat" data-i18n-title="chatTooltip">💬</button>
@@ -1184,8 +1180,7 @@ function onAvatarImageChosen(input) {
       <div class="menu-sep"></div>
       <!-- Réglages -->
       <button class="btn-sm" id="lang-toggle-game-mob" onclick="closeHeaderOverflow();openLangMenu(event)" style="font-size:0.85rem"></button>
-      <button class="btn-sm" id="theme-toggle-game-mob" onclick="closeHeaderOverflow();openThemeMenu(event)" style="font-size:0.85rem">🎨 <span data-i18n="themeTooltip">Theme</span></button>
-      <button class="btn-sm" id="table-toggle-game-mob" onclick="closeHeaderOverflow();openTableMenu(event)" style="font-size:0.85rem">🟩 <span data-i18n="tableTooltip">Table</span></button>
+      <button class="btn-sm" id="theme-toggle-game-mob" onclick="closeHeaderOverflow();openThemePanel(event)" style="font-size:0.85rem">🎨 <span data-i18n="themeTooltip">Theme</span></button>
       <button class="btn-sm" id="displaybb-toggle-mob" onclick="toggleDisplayBB()">🎚️ BB / <b style="color:var(--gold)">¥</b></button>
       <button class="btn-sm" id="haptic-toggle-mob" onclick="toggleHaptic()">📳 Vibration</button>
       <button class="btn-sm" id="voice-toggle-mob" onclick="toggleVoice()">🤐 Voice</button>
