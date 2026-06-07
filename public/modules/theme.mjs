@@ -81,7 +81,7 @@ var BUTTON_GLOSSY = {
 // Pucks axis: a built-in "PokerTH" set (dealer/SB/BB marker images, shared).
 var PUCK_SET = { dealer:'url(/pucks/dealer.svg)', sb:'url(/pucks/sb.svg)', bb:'url(/pucks/bb.svg)' };
 var BUTTONS_ITEMS = [ {id:'',key:'buttonsDefault',fallback:'Flat',swatch:'#6b2020'}, {id:'glossy',key:'buttonsGlossy',fallback:'Glossy',swatch:'#c81818'} ];
-var PUCKS_ITEMS   = [ {id:'',key:'pucksDefault',fallback:'Chips',swatch:'#c8a850'}, {id:'pokerth',key:'pucksPokerth',fallback:'PokerTH',swatch:'#3a78d8',preview:'/pucks/dealer.svg'} ];
+var PUCKS_ITEMS   = [ {id:'pokerth',key:'pucksPokerth',fallback:'PokerTH',swatch:'#3a78d8',preview:'/pucks/dealer.svg'} ];
 const palette = makeAxis({ storeKey: 'pth_theme', attr: 'data-theme', items: PALETTES, titleKey: 'sectionPalette', titleFallback: 'Palette' });
 const table   = makeAxis({ storeKey: 'pth_table', attr: 'data-table', items: TABLES,   titleKey: 'sectionTable',   titleFallback: 'Table' });
 const deck    = makeAxis({ storeKey: 'pth_deck',  attr: 'data-deck',  def: 'casino-vert',  items: DECKS,    titleKey: 'sectionDeck',    titleFallback: 'Cards' });

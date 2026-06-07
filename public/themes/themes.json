@@ -119,11 +119,6 @@
       "call": "btn-call.svg",
       "raise": "btn-raise.svg",
       "allin": "btn-allin.svg"
-    },
-    "pucks": {
-      "dealer": "dealer.svg",
-      "sb": "sb.svg",
-      "bb": "bb.svg"
     }
   },
   {
