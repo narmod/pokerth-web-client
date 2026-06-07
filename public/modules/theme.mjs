@@ -55,6 +55,7 @@ const PALETTES = [
   { id: '',     key: 'themeGreen', fallback: 'Green', swatch: '#1e3820' },
   { id: 'dark', key: 'themeDark',  fallback: 'Dark',  swatch: '#232730' },
   { id: 'pokerth', key: 'themePokerthOfficial', fallback: 'PokerTH official', swatch: '#1d222b' },
+  { id: 'pokerth-light', key: 'themePokerthOfficialLight', fallback: 'PokerTH official (light)', swatch: '#dce2ec' },
 ];
 const TABLES = [
   { id: '',         key: 'tableGreen',    fallback: 'Green',    swatch: '#1e6b1e' },
