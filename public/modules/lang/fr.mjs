@@ -294,6 +294,7 @@ export const strings = {
     srvRestartUpdate:'⚠ Le serveur va se mettre à jour et redémarrer à {t}. Terminez votre main en cours pour éviter toute interruption.',
     srvRestartOnly:'⚠ Le serveur va redémarrer à {t}. Terminez votre main en cours pour éviter toute interruption.',
     srvRestartCancelled:'Le redémarrage programmé du serveur a été annulé.',
+    welcomeAck:'J\u2019ai compris',
 };
 
 export default { meta, strings };

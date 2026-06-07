@@ -222,6 +222,20 @@
         <div class="boardhead"><h2 style="margin:0">Scheduled messages</h2><button id="bcRefresh" class="use">Refresh</button></div>
         <div id="bcList"></div>
       </div>
+      <div class="card">
+        <h2>Welcome / rules message (first visit)</h2>
+        <p class="muted" style="margin:0 0 8px">Shown once in a centered popup the first time someone opens the app, and again whenever you edit it. Each visitor sees the version matching their language (fallback below). Players dismiss it with “I understand”.</p>
+        <label class="muted" style="display:flex;align-items:center;gap:8px;margin:0 0 8px"><input type="checkbox" id="wcEnabled" style="width:auto"> Enabled</label>
+        <div class="periodrow" style="margin-bottom:8px">
+          <label class="muted">Edit language <select id="wcLang" class="filter" style="margin:0;flex:none;width:auto"></select></label>
+          <label class="muted">Fallback <select id="wcDefault" class="filter" style="margin:0;flex:none;width:auto"></select></label>
+        </div>
+        <input id="wcTitle" class="filter" maxlength="200" placeholder="Title (optional)" style="width:100%;margin-bottom:8px">
+        <textarea id="wcBody" class="filter" rows="5" maxlength="4000" placeholder="Message / rules for this language…" style="width:100%;resize:vertical"></textarea>
+        <div id="wcPrev"></div>
+        <div class="periodrow" style="margin-top:8px"><button id="wcSave" class="use">Save welcome message</button></div>
+        <div id="wcState" class="msg"></div>
+      </div>
     </div>
   </div>
 </div>
@@ -264,7 +278,7 @@
     $('panel-server').style.display=t==='server'?'block':'none';
     $('panel-broadcast').style.display=t==='broadcast'?'block':'none';
     if(t==='board') loadBoard();
-    if(t==='broadcast') loadBroadcasts();
+    if(t==='broadcast'){ loadBroadcasts(); loadWelcome(); }
     if(t==='server'){ loadServer(); srvStart(); } else { srvStop(); }
   }); });
 
@@ -552,6 +566,29 @@
   ['bcMsg','bcIcon'].forEach(function(id){ if($(id)){ $(id).addEventListener('input',bcPrevSched); $(id).addEventListener('change',bcPrevSched); } });
   ['bcNowMsg','bcNowIcon'].forEach(function(id){ if($(id)){ $(id).addEventListener('input',bcPrevNow); $(id).addEventListener('change',bcPrevNow); } });
   setInterval(function(){ if(document.visibilityState==='visible' && tok() && $('panel-broadcast') && $('panel-broadcast').style.display!=='none') loadBroadcasts(); }, 30000);
+
+  // ── Welcome / first-visit message (per language) ────────────────────────
+  var WC_LANGS=['af','bg','ca','cs','da','de','el','en','es','fi','fr','gd','gl','hi','hr','hu','it','ja','ko','lt','nb','nl','pl','pt-br','pt-pt','ro','ru','sk','sr','sv','ta','tr','uk','vi','zh','zh-tw'];
+  var welcomeState={ enabled:false, 'default':'fr', langs:{} };
+  (function(){ var a=$('wcLang'), b=$('wcDefault'); if(a&&b){ WC_LANGS.forEach(function(c){ var o1=document.createElement('option'); o1.value=c; o1.textContent=c; a.appendChild(o1); var o2=document.createElement('option'); o2.value=c; o2.textContent=c; b.appendChild(o2); }); a.value='fr'; b.value='fr'; } })();
+  function wcCurrent(){ return $('wcLang') ? $('wcLang').value : 'fr'; }
+  function wcCapture(){ var code=wcCurrent(), t=($('wcTitle').value||''), b=($('wcBody').value||''); if(t.trim()||b.trim()) welcomeState.langs[code]={title:t,body:b}; else delete welcomeState.langs[code]; }
+  function wcRenderLang(){ var v=welcomeState.langs[wcCurrent()]||{}; $('wcTitle').value=v.title||''; $('wcBody').value=v.body||''; wcPreview(); }
+  function wcPreview(){ var el=$('wcPrev'); if(!el) return; var t=($('wcTitle').value||'').trim(), b=($('wcBody').value||'').trim();
+    if(!t&&!b){ el.style.cssText='display:none'; el.textContent=''; return; }
+    el.textContent=''; el.style.cssText='display:block;margin-top:8px;max-width:440px;background:#1c1812;border:1px solid rgba(200,168,74,.5);border-radius:14px;overflow:hidden';
+    if(t){ var h=document.createElement('div'); h.textContent=t; h.style.cssText='padding:12px 16px;font-weight:700;color:#e0c070;border-bottom:1px solid rgba(200,168,74,.25)'; el.appendChild(h); }
+    var p=document.createElement('div'); p.textContent=b; p.style.cssText='padding:12px 16px;white-space:pre-line;line-height:1.5;color:#efe6d2;font-size:.9rem'; el.appendChild(p);
+  }
+  function loadWelcome(){ api('/admin/config').then(function(r){return r.json();}).then(function(d){ if(!d||!d.ok||!d.welcome) return; welcomeState={ enabled:!!d.welcome.enabled, 'default':d.welcome['default']||'fr', langs:d.welcome.langs||{} }; if($('wcEnabled')) $('wcEnabled').checked=welcomeState.enabled; if($('wcDefault')) $('wcDefault').value=welcomeState['default']; wcRenderLang(); }).catch(function(){}); }
+  function saveWelcome(){ wcCapture(); var body={ welcome:{ enabled:$('wcEnabled').checked, 'default':$('wcDefault').value, langs:welcomeState.langs }, token:tok() };
+    bcSay('wcState','Saving\u2026');
+    api('/admin/config',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)})
+      .then(function(r){return r.json();}).then(function(d){ if(d&&d.ok){ bcSay('wcState','Saved \u2014 returning visitors will see it once more.','ok'); if(d.welcome){ welcomeState={ enabled:!!d.welcome.enabled, 'default':d.welcome['default']||'fr', langs:d.welcome.langs||{} }; } } else bcSay('wcState','Failed: '+((d&&d.error)||'error'),'err'); })
+      .catch(function(){ bcSay('wcState','Network error.','err'); }); }
+  if($('wcLang')) $('wcLang').addEventListener('change', wcRenderLang);
+  ['wcTitle','wcBody'].forEach(function(id){ if($(id)) $(id).addEventListener('input',function(){ wcCapture(); wcPreview(); }); });
+  if($('wcSave')) $('wcSave').addEventListener('click',saveWelcome);
 
   enter();
 })();

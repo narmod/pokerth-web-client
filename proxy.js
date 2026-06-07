@@ -228,6 +228,9 @@ const _bcTimers = {}; // job id -> setTimeout handle
 function saveBroadcasts() { try { fs.writeFileSync(BROADCASTS_FILE, JSON.stringify(_broadcasts)); } catch (e) { console.error('[broadcast] write failed:', e.message); } }
 let STATS_RESET_PERIOD = ((_adminConfig.resetPeriod || process.env.STATS_RESET_PERIOD || 'monthly') + '').toLowerCase();
 function appModes() { var m = (_adminConfig && _adminConfig.modes) || {}; return { offline: m.offline !== false, lan: m.lan !== false, pokerthnet: m.pokerthnet !== false }; }
+// First-visit welcome / rules message (operator-authored, per language).
+function _welcomeAdmin() { var w = _adminConfig.welcome || {}; return { enabled: !!w.enabled, updatedAt: w.updatedAt || 0, 'default': w['default'] || 'fr', langs: w.langs || {} }; }
+function _welcomePublic() { var w = _adminConfig.welcome; if (!w || !w.enabled) return null; return { enabled: true, updatedAt: w.updatedAt || 0, 'default': w['default'] || 'fr', langs: w.langs || {} }; }
 const STATS_META_FILE = process.env.STATS_META_FILE || path.join(__dirname, 'stats.meta.json');
 const STATS_ADMIN_TOKEN = process.env.STATS_ADMIN_TOKEN || '';
 let statsMeta = {};
@@ -643,7 +646,7 @@ function handleAdmin(req, res, reqPathOnly, query) {
   if (reqPathOnly === '/admin/config') {
     if (req.method === 'GET') {
       if (!adminAuthed(query)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
-      return adminJson(res, 200, { ok: true, resetPeriod: STATS_RESET_PERIOD, modes: appModes() });
+      return adminJson(res, 200, { ok: true, resetPeriod: STATS_RESET_PERIOD, modes: appModes(), welcome: _welcomeAdmin() });
     }
     if (req.method === 'POST') {
       return readJsonBody(req, function (d) {
@@ -659,8 +662,26 @@ function handleAdmin(req, res, reqPathOnly, query) {
           _adminConfig.modes = _adminConfig.modes || {};
           ['offline', 'lan', 'pokerthnet'].forEach(function (k) { if (d.modes[k] !== undefined) _adminConfig.modes[k] = !!d.modes[k]; });
         }
+        if (d.welcome && typeof d.welcome === 'object') {
+          var w = _adminConfig.welcome || {};
+          if (typeof d.welcome.enabled === 'boolean') w.enabled = d.welcome.enabled;
+          if (typeof d.welcome['default'] === 'string') w['default'] = d.welcome['default'].slice(0, 10);
+          if (d.welcome.langs && typeof d.welcome.langs === 'object') {
+            var out = {};
+            Object.keys(d.welcome.langs).slice(0, 60).forEach(function (k) {
+              var v = d.welcome.langs[k] || {};
+              var title = (typeof v.title === 'string' ? v.title : '').slice(0, 200);
+              var body = (typeof v.body === 'string' ? v.body : '').slice(0, 4000);
+              if (title || body) out[String(k).slice(0, 10)] = { title: title, body: body };
+            });
+            w.langs = out;
+          }
+          if (!w['default']) w['default'] = 'fr';
+          w.updatedAt = Date.now();
+          _adminConfig.welcome = w;
+        }
         saveAdminConfig();
-        return adminJson(res, 200, { ok: true, resetPeriod: STATS_RESET_PERIOD, modes: appModes() });
+        return adminJson(res, 200, { ok: true, resetPeriod: STATS_RESET_PERIOD, modes: appModes(), welcome: _welcomeAdmin() });
       });
     }
     res.writeHead(405); res.end('Method not allowed'); return;
@@ -884,7 +905,7 @@ const httpServer = http.createServer((req, res) => {
   // Public app config the client reads on load: which entry "modes" are enabled.
   if (reqPathOnly === '/app-config') {
     res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' });
-    res.end(JSON.stringify({ ok: true, modes: appModes() }));
+    res.end(JSON.stringify({ ok: true, modes: appModes(), welcome: _welcomePublic() }));
     return;
   }
 

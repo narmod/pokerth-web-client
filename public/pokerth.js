@@ -489,6 +489,63 @@ function showInfoToast(message, icon) {
 window.showInfoToast = showInfoToast;
 window.hideInfoToast = hideInfoToast;
 
+// ── First-visit welcome / rules modal (admin-authored, per language) ────────
+// Picks the operator's text for the client's active UI language (_lang), with
+// fallback: exact code → primary subtag (pt-br → pt) → configured default → any.
+function _welcomePick(w) {
+  var langs = (w && w.langs) || {};
+  var keys = Object.keys(langs);
+  if (!keys.length) return null;
+  var code = (typeof _lang !== 'undefined' && _lang) ? String(_lang).toLowerCase() : '';
+  var def = (w && w['default']) ? String(w['default']).toLowerCase() : 'fr';
+  var prim = code.split('-')[0];
+  function findBy(pred) { for (var i = 0; i < keys.length; i++) { if (pred(keys[i].toLowerCase())) return keys[i]; } return null; }
+  var hit = (code && findBy(function (x) { return x === code; }))
+         || (prim && findBy(function (x) { return x.split('-')[0] === prim; }))
+         || findBy(function (x) { return x === def; })
+         || keys[0];
+  return hit ? langs[hit] : null;
+}
+function hideWelcomeModal() { var el = document.getElementById('welcome-modal'); if (el) el.remove(); }
+function showWelcomeModal(title, body, version) {
+  hideWelcomeModal();
+  var back = document.createElement('div');
+  back.id = 'welcome-modal';
+  back.style.cssText = 'position:fixed;inset:0;z-index:10001;display:flex;align-items:center;justify-content:center;padding:18px;background:rgba(0,0,0,.62);backdrop-filter:blur(2px);';
+  var card = document.createElement('div');
+  card.style.cssText = 'max-width:480px;width:100%;max-height:84vh;display:flex;flex-direction:column;background:#1c1812;color:#efe6d2;border:1px solid rgba(200,168,74,.5);border-radius:16px;box-shadow:0 18px 50px rgba(0,0,0,.6);overflow:hidden;';
+  if (title) {
+    var h = document.createElement('div');
+    h.textContent = title;
+    h.style.cssText = "padding:16px 20px;font-family:'Cinzel',serif;font-weight:700;font-size:1.15rem;color:#e0c070;border-bottom:1px solid rgba(200,168,74,.25);";
+    card.appendChild(h);
+  }
+  var p = document.createElement('div');
+  p.textContent = body || '';
+  p.style.cssText = 'padding:16px 20px;overflow:auto;white-space:pre-line;line-height:1.55;font-size:.95rem;';
+  card.appendChild(p);
+  var foot = document.createElement('div');
+  foot.style.cssText = 'padding:12px 20px 16px;display:flex;justify-content:flex-end;border-top:1px solid rgba(200,168,74,.18);';
+  var btn = document.createElement('button');
+  btn.textContent = (typeof window.t === 'function' ? window.t('welcomeAck') : '') || 'I understand';
+  btn.style.cssText = 'padding:9px 18px;border-radius:10px;border:0;cursor:pointer;font-weight:700;background:linear-gradient(135deg,#c8a84a,#a8862a);color:#1a0a00;';
+  btn.addEventListener('click', function () { try { localStorage.setItem('pth_welcome_seen', String(version)); } catch (e) {} hideWelcomeModal(); });
+  foot.appendChild(btn);
+  card.appendChild(foot);
+  back.appendChild(card);
+  document.body.appendChild(back);
+}
+function maybeShowWelcome(w) {
+  if (!w || !w.enabled) return;
+  try { if (String(localStorage.getItem('pth_welcome_seen')) === String(w.updatedAt)) return; } catch (e) {}
+  var pick = _welcomePick(w);
+  if (!pick || (!pick.title && !pick.body)) return;
+  showWelcomeModal(pick.title || '', pick.body || '', w.updatedAt);
+}
+window.maybeShowWelcome = maybeShowWelcome;
+window.showWelcomeModal = showWelcomeModal;
+window.hideWelcomeModal = hideWelcomeModal;
+
 
 // Rafraîchit immédiatement l'avatar du joueur local dans l'UI
 window.refreshMyAvatar = function() {
@@ -1354,7 +1411,7 @@ document.addEventListener("DOMContentLoaded", function() {
     function go() {
       fetch('/app-config', { cache: 'no-store' })
         .then(function (r) { return r.json(); })
-        .then(function (c) { if (c && c.modes) applyModes(c.modes); })
+        .then(function (c) { if (c && c.modes) applyModes(c.modes); if (c && c.welcome && c.welcome.enabled && typeof window.maybeShowWelcome === 'function') window.maybeShowWelcome(c.welcome); })
         .catch(function () {});
     }
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', go); else go();
@@ -9683,4 +9740,4 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.2.264'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.2.265'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();

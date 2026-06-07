@@ -294,6 +294,7 @@ export const strings = {
     srvRestartUpdate:'⚠ The server will update and restart at {t}. Finish your current hand to avoid interruptions.',
     srvRestartOnly:'⚠ The server will restart at {t}. Finish your current hand to avoid interruptions.',
     srvRestartCancelled:'The scheduled server restart was cancelled.',
+    welcomeAck:'I understand',
 };
 
 export default { meta, strings };
