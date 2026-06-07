@@ -32,6 +32,8 @@ html { touch-action: manipulation; -webkit-text-size-adjust: 100%; text-size-adj
   --gold-dim:   #7a6428;
   --cream:      #ede8dc;
   --field-bg:   #0c1e0e;
+  --inset: rgba(255,255,255,0.05);
+  --inset-hi: rgba(255,255,255,0.08);
   --on-gold:    #110900;
   --text:       #9aaa92;
   --text-hi:    #c8d8c0;
@@ -59,6 +61,8 @@ html { touch-action: manipulation; -webkit-text-size-adjust: 100%; text-size-adj
   --gold-dim:   #7a6428;
   --cream:      #ece9e2;
   --field-bg:   #12151b;
+  --inset: rgba(255,255,255,0.05);
+  --inset-hi: rgba(255,255,255,0.08);
   --on-gold:    #110900;
   --text:       #97a0ad;
   --text-hi:    #d4dae3;
@@ -87,6 +91,8 @@ html { touch-action: manipulation; -webkit-text-size-adjust: 100%; text-size-adj
   --gold-dim:   #a98f2f;
   --cream:      #eff1f5;
   --field-bg:   #161c25;
+  --inset: rgba(255,255,255,0.05);
+  --inset-hi: rgba(255,255,255,0.08);
   --on-gold:    #110900;
   --text:       #a0acc4;
   --text-hi:    #eff1f5;
@@ -115,6 +121,8 @@ html { touch-action: manipulation; -webkit-text-size-adjust: 100%; text-size-adj
   --gold-dim:   #6e560f;
   --cream:      #1d222b;
   --field-bg:   #ffffff;
+  --inset: rgba(0,0,0,0.06);
+  --inset-hi: rgba(0,0,0,0.08);
   --on-gold:    #fdf6e6;
   --text:       #576378;
   --text-hi:    #1d222b;
@@ -148,6 +156,8 @@ html { touch-action: manipulation; -webkit-text-size-adjust: 100%; text-size-adj
   --gold-dim:   #7a6428;
   --cream:      #f2e6e2;
   --field-bg:   #1e0a0c;
+  --inset: rgba(255,255,255,0.05);
+  --inset-hi: rgba(255,255,255,0.08);
   --on-gold:    #110900;
   --text:       #bd9d9a;
   --text-hi:    #ecd6d2;
@@ -329,7 +339,7 @@ body {
   gap: 5px;
 }
 .av-btn {
-  background: rgba(255,255,255,0.04);
+  background: var(--inset);
   border: 2px solid var(--border);
   border-radius: 6px;
   font-size: 1.25rem;
@@ -418,7 +428,7 @@ body {
 }
 .gim-card {
   position: relative;
-  background: rgba(8, 18, 10, 0.98);
+  background: var(--modal-bg);
   border: 1px solid var(--gold-dim);
   border-radius: 8px;
   padding: 18px 18px 16px;
@@ -538,7 +548,7 @@ body {
 }
 .pim-card {
   position: relative;
-  background: rgba(8, 18, 10, 0.98);
+  background: var(--modal-bg);
   border: 1px solid var(--gold-dim);
   border-radius: 8px;
   padding: 24px 20px 18px;
@@ -673,7 +683,7 @@ body {
   /* These children become the visible "card". All stretched to the
      same fixed width so they look like one panel (header on top, the
      category tabs in the middle, the emoji grid below). */
-  background: rgba(8, 18, 10, 0.98);
+  background: var(--modal-bg);
   width: min(360px, 100%);
   max-width: 360px;
   border-left: 1px solid var(--gold-dim);
@@ -697,7 +707,7 @@ body {
 
 /* ══ POPUP AVATAR ══ */
 #avatar-popup {
-  background: rgba(4,10,6,0.98);
+  background: var(--panel);
   border: 1px solid var(--border);
   border-radius: 6px;
   padding: 0;
@@ -740,7 +750,7 @@ body {
   flex: 0 0 auto;
   width: 34px; height: 34px;
   display: flex; align-items: center; justify-content: center;
-  background: rgba(255,255,255,0.03);
+  background: var(--inset);
   border: 1px solid transparent;
   border-radius: 6px;
   font-size: 1.15rem;
@@ -755,7 +765,7 @@ body {
 }
 .avp-btn {
   aspect-ratio: 1;
-  background: rgba(255,255,255,0.04);
+  background: var(--inset);
   border: 2px solid transparent;
   border-radius: 6px;
   font-size: 1.3rem;
@@ -802,7 +812,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(255,255,255,0.05);
+  background: var(--inset);
   border: 1px solid var(--border);
   border-radius: 4px;
   color: var(--gold-dim);
@@ -1078,12 +1088,12 @@ body {
 .btn-create:hover { background: rgba(39,174,96,0.28); }
 .btn-create:disabled { opacity: 0.5; cursor: default; }
 .btn-create-manual {
-  background: rgba(255,255,255,0.05); border: 1px solid var(--border);
+  background: var(--inset); border: 1px solid var(--border);
   color: var(--text); padding: 9px 12px; font-size: 0.78rem;
   cursor: pointer; border-radius: 4px; white-space: nowrap;
 }
 .btn-create-manual:hover { background: rgba(255,255,255,0.1); }
-.create-form { padding: 12px 14px; background: rgba(8,18,10,0.98); border-bottom: 1px solid var(--border); }
+.create-form { padding: 12px 14px; background: var(--modal-bg); border-bottom: 1px solid var(--border); }
 .create-fields { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 8px 12px; margin-bottom: 0; }
 /* Le nom de la table occupe toute la largeur du cadre : on sort ce champ de la
    grille auto-fill (sinon il reste cantonné à une colonne de ~130px) et on force
@@ -1124,7 +1134,7 @@ body {
   cursor: pointer;
   transition: background 0.12s;
 }
-.game-row:hover { background: rgba(255,255,255,0.03); }
+.game-row:hover { background: var(--inset-hi); }
 
 .dot {
   width: 7px; height: 7px;
@@ -1192,7 +1202,7 @@ body {
 }
 .chat-input input {
   flex: 1;
-  background: rgba(255,255,255,0.04);
+  background: var(--field-bg);
   border: 1px solid var(--border);
   color: var(--cream);
   padding: 7px 10px;
@@ -1218,7 +1228,7 @@ body {
 /* Lobby chat panel — fond unifié + bordure basse nette + ombre, pour que le
    bas de la zone message soit clairement délimité du reste du lobby. */
 #lobby-chat-panel {
-  background: rgba(4,10,5,0.97);
+  background: var(--panel);
   border-bottom: 2px solid var(--border-hi);
   box-shadow: 0 8px 16px rgba(0,0,0,0.5);
   position: fixed;       /* overlay : ne pousse plus les tables, les recouvre */
@@ -2181,7 +2191,7 @@ body {
   letter-spacing: 0.04em;
   text-align: center;
   padding: 2px 10px;
-  background: rgba(4,10,6,0.92);
+  background: var(--panel);
   border-radius: 20px;
   border: 1px solid rgba(200,168,74,0.3);
   white-space: nowrap;
@@ -2197,7 +2207,7 @@ body {
 /* ══ PANNEAU RÉACTIONS FLOTTANT (header) ══ */
 #g-reaction-panel {
   flex-direction: column;
-  background: rgba(4,10,6,0.98);
+  background: var(--panel);
   border-bottom: 1px solid var(--border);
   padding: 10px 14px 12px;
   flex-shrink: 0;
@@ -2250,7 +2260,7 @@ body {
 .react-btn {
   aspect-ratio: 1;       /* square, height follows the column width */
   width: 100%;           /* fill the grid track (size set by .react-grid) */
-  background: rgba(255,255,255,0.04);
+  background: var(--inset);
   border: 1px solid var(--border);
   border-radius: 5px;
   font-size: 1.3rem;     /* desktop emoji size (cells ~34px) */
@@ -2291,7 +2301,7 @@ body {
   align-items: center;
   gap: 6px;
   padding: 5px 10px;
-  background: rgba(4,10,6,0.95);
+  background: var(--panel);
   border-top: 1px solid var(--border);
   flex-shrink: 0;
   justify-content: center;
@@ -2308,7 +2318,7 @@ body {
   opacity: 0.6;
 }
 .reaction-btn {
-  background: rgba(255,255,255,0.05);
+  background: var(--inset);
   border: 1px solid var(--border);
   border-radius: 20px;
   padding: 4px 10px;
@@ -2398,7 +2408,7 @@ body {
   position: fixed; left: 50%; bottom: 16px; transform: translateX(-50%);
   z-index: 1000;
   display: flex; align-items: center; gap: 12px;
-  background: rgba(8,18,10,0.97);
+  background: var(--modal-bg);
   border: 1px solid var(--gold);
   border-radius: 8px;
   padding: 9px 12px 9px 16px;
@@ -2460,7 +2470,7 @@ body {
   padding: 7px 6px; border-bottom: 1px solid rgba(200,168,74,0.07);
   border-radius: 4px; transition: background 0.12s;
 }
-.hand-row:hover { background: rgba(255,255,255,0.03); }
+.hand-row:hover { background: var(--inset-hi); }
 .hand-rank {
   width: 20px; text-align: center; flex-shrink: 0;
   font-size: 0.65rem; color: var(--gold-dim); font-family: var(--ff-display);
@@ -2556,7 +2566,7 @@ body {
 #stats-overlay {
   position: fixed; top: 36px; right: 0;
   width: 240px; max-height: calc(100vh - 36px);
-  background: rgba(4,10,6,0.97);
+  background: var(--panel);
   border-left: 1px solid var(--border);
   border-bottom: 1px solid var(--border);
   z-index: 200; overflow-y: auto;
@@ -2613,7 +2623,7 @@ body {
 .board-sort { display: flex; align-items: center; gap: 6px; margin-bottom: 6px; }
 .board-sort > span { color: var(--gold-dim); font-size: 0.7rem; }
 .board-sort select {
-  flex: 1; background: rgba(255,255,255,0.05); border: 1px solid var(--border);
+  flex: 1; background: var(--field-bg); border: 1px solid var(--border);
   border-radius: 3px; color: var(--cream); padding: 3px 6px;
   font-family: var(--ff-mono); font-size: 0.66rem; outline: none; cursor: pointer;
 }
@@ -2622,7 +2632,7 @@ body {
   text-align: center; padding: 2px 0 6px; letter-spacing: 0.04em;
 }
 .hand-hist-item {
-  background: rgba(255,255,255,0.03); border: 1px solid var(--border);
+  background: var(--inset); border: 1px solid var(--border);
   border-radius: 4px; padding: 6px 8px; font-size: 0.58rem;
 }
 .hand-hist-cards { display: flex; gap: 3px; margin-top: 3px; }
@@ -3090,7 +3100,7 @@ body {
   align-items: center;
   justify-content: center;
   padding: 8px 12px;
-  background: rgba(4,10,6,0.95);
+  background: var(--panel);
   border-top: 1px solid var(--border);
   gap: 8px;
   /* Nécessaire pour que #hand-strength se positionne par rapport à this */
@@ -3195,7 +3205,7 @@ body {
   font-size: 0.6rem;
   line-height: 1;
   color: var(--gold);
-  background: rgba(4,10,6,0.95);
+  background: var(--panel);
   border: 1px solid rgba(212,175,55,0.45);
   border-radius: 999px;
   padding: 2px 6px;
@@ -3224,7 +3234,7 @@ body.hide-pct-btns .pct-row { display: none; }
 
 
 .raise-input {
-  background: rgba(255,255,255,0.06);
+  background: var(--field-bg);
   border: 1px solid var(--border-hi);
   border-radius: 2px;
   color: var(--cream);
@@ -3244,7 +3254,7 @@ body.hide-pct-btns .pct-row { display: none; }
   left: 0; right: 0;
   z-index: 100;
   max-height: min(280px, 38dvh) !important;
-  background: rgba(4,10,6,0.97);
+  background: var(--panel);
   border-bottom: 1px solid var(--border);
   box-shadow: 0 4px 20px rgba(0,0,0,0.6);
 }
@@ -3253,7 +3263,7 @@ body.hide-pct-btns .pct-row { display: none; }
   top: 36px;
   left: 0; right: 0;
   z-index: 101;
-  background: rgba(4,10,6,0.98);
+  background: var(--panel);
   border-bottom: 1px solid var(--border);
   box-shadow: 0 4px 20px rgba(0,0,0,0.6);
 }
@@ -3267,7 +3277,7 @@ body.hide-pct-btns .pct-row { display: none; }
   left: 0; right: 0;
   z-index: 99;
   max-height: min(140px, 22dvh) !important;
-  background: rgba(4,10,6,0.97);
+  background: var(--panel);
   border-bottom: 1px solid var(--border);
   box-shadow: 0 4px 20px rgba(0,0,0,0.6);
   display: flex; /* makes flex-direction:column from inline style effective */
@@ -3302,7 +3312,7 @@ body.hide-pct-btns .pct-row { display: none; }
 }
 .log-msgs > div {
   padding: 1px 0;
-  border-bottom: 1px solid rgba(255,255,255,0.03);
+  border-bottom: 1px solid var(--inset);
 }
 .log-msgs > div:last-child { border-bottom: none; }
 /* Custom scrollbar matching the chat panel */
@@ -3329,8 +3339,8 @@ body.hide-pct-btns .pct-row { display: none; }
 }
 .chat-resize-handle:hover .crh-grip,
 .chat-resize-handle.dragging .crh-grip { background: var(--gold-hi); width: 54px; }
-.gchat-input { display:flex; gap:5px; padding:5px 10px; background:rgba(4,10,6,0.97); border-bottom:1px solid var(--border); flex-shrink:0; }
-.gchat-input input { flex:1; background:rgba(255,255,255,0.05); border:1px solid var(--border); border-radius:2px; color:var(--cream); padding:5px 8px; font-family: var(--ff-mono); font-size:0.76rem; outline:none; }
+.gchat-input { display:flex; gap:5px; padding:5px 10px; background:var(--panel); border-bottom:1px solid var(--border); flex-shrink:0; }
+.gchat-input input { flex:1; background:var(--field-bg); border:1px solid var(--border); border-radius:2px; color:var(--cream); padding:5px 8px; font-family: var(--ff-mono); font-size:0.76rem; outline:none; }
 .gchat-input input:focus { border-color:var(--gold); }
 .gchat-input button { background:rgba(200,168,74,0.12); border:1px solid var(--gold-dim); color:var(--gold); padding:5px 10px; border-radius:2px; cursor:pointer; font-size:0.8rem; }
 
@@ -3354,7 +3364,7 @@ body.hide-pct-btns .pct-row { display: none; }
 }
 .pp-title { font-family: var(--ff-display); font-size: 0.9rem; color: var(--gold); letter-spacing: 0.1em; }
 .pp-label { font-size: 0.65rem; color: var(--gold-dim); letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 4px; }
-.pp-input { background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 2px; color: var(--cream); padding: 9px 11px; font-family: var(--ff-mono); font-size: 0.9rem; outline: none; width: 100%; }
+.pp-input { background: var(--field-bg); border: 1px solid var(--border); border-radius: 2px; color: var(--cream); padding: 9px 11px; font-family: var(--ff-mono); font-size: 0.9rem; outline: none; width: 100%; }
 .pp-input:focus { border-color: var(--gold); }
 .pp-btns { display: flex; gap: 8px; }
 .pp-btns .btn-primary { flex: 1; padding: 9px; font-size: 0.76rem; }
@@ -3416,7 +3426,7 @@ body.hide-pct-btns .pct-row { display: none; }
 .wc-name { font-family: var(--ff-display); font-size:clamp(1rem,4vw,1.4rem); font-weight:700; color:var(--gold); }
 .wc-gain { font-size:clamp(0.9rem,3.5vw,1.15rem); color:#4cff88; font-weight:700; text-align:right; }
 .wc-stats { display:flex; gap:6px; margin-bottom:12px; flex-wrap:wrap; }
-.wc-stat { flex:1; min-width:65px; background:rgba(255,255,255,0.04); border:1px solid var(--border); border-radius:4px; padding:6px 8px; text-align:center; }
+.wc-stat { flex:1; min-width:65px; background:var(--inset); border:1px solid var(--border); border-radius:4px; padding:6px 8px; text-align:center; }
 .wc-stat-label { font-size:0.56rem; color:var(--gold-dim); letter-spacing:0.1em; text-transform:uppercase; margin-bottom:2px; }
 .wc-stat-value { font-size:0.85rem; color:var(--cream); font-weight:700; }
 .wc-section { font-size:0.58rem; letter-spacing:0.18em; text-transform:uppercase; color:var(--gold-dim); margin-bottom:5px; }
@@ -3434,7 +3444,7 @@ body.hide-pct-btns .pct-row { display: none; }
    restent alignées verticalement quel que soit le montant du delta.
    Col1 avatar | Col2 info (élastique) | Col3 cartes (largeur constante)
    | Col4 delta (largeur FIXE, ne pousse plus les cartes). */
-.wc-player-row { display:grid; grid-template-columns:24px minmax(0,1fr) auto 90px; align-items:center; gap:7px; padding:5px 7px; border-radius:4px; margin-bottom:3px; background:rgba(255,255,255,0.02); }
+.wc-player-row { display:grid; grid-template-columns:24px minmax(0,1fr) auto 90px; align-items:center; gap:7px; padding:5px 7px; border-radius:4px; margin-bottom:3px; background:var(--inset); }
 .wc-player-row.wc-winner { background:rgba(200,168,74,0.08); border:1px solid rgba(200,168,74,0.2); }
 .wc-player-row.wc-me-row { border-left:3px solid var(--green); }
 .wc-player-av { width:24px; height:24px; border-radius:50%; background:rgba(0,0,0,0.5); border:1px solid var(--border); display:flex; align-items:center; justify-content:center; font-size:0.65rem; color:var(--text-hi); flex-shrink:0; }
@@ -3465,7 +3475,7 @@ body:not(.in-game) .my-zone {
   justify-content: center;
   padding: 3px 6px;
   padding-bottom: max(3px, env(safe-area-inset-bottom));
-  background: rgba(4,10,6,0.97);
+  background: var(--panel);
   border-top: 1px solid rgba(39,174,96,0.3);
 }
 .player-bar-left {
@@ -3554,7 +3564,7 @@ body:not(.in-game) .my-zone {
 .raise-input:disabled {
   opacity: 0.3;
   cursor: not-allowed;
-  background: rgba(255,255,255,0.02) !important;
+  background: var(--field-bg) !important;
 }
 .raise-row { display: flex; gap: 5px; align-items: stretch; }
 .raise-row .raise-input { flex: 1; }
@@ -3571,11 +3581,11 @@ body:not(.in-game) .my-zone {
   font-size: 0.62rem; color: var(--text);
   pointer-events: none;
   z-index: 5;
-  border: 1px solid rgba(255,255,255,0.05);
+  border: 1px solid var(--inset);
 }
-.log-line { padding: 1px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
-.g-chat-input { display:flex; gap:6px; padding:5px 10px; background:rgba(4,10,6,0.97); border-bottom:1px solid var(--border); }
-.g-chat-input input { flex:1; background:rgba(255,255,255,0.05); border:1px solid var(--border); border-radius:2px; color:var(--cream); padding:4px 7px; font-family: var(--ff-mono); font-size:0.76rem; outline:none; }
+.log-line { padding: 1px 0; border-bottom: 1px solid var(--inset); }
+.g-chat-input { display:flex; gap:6px; padding:5px 10px; background:var(--panel); border-bottom:1px solid var(--border); }
+.g-chat-input input { flex:1; background:var(--field-bg); border:1px solid var(--border); border-radius:2px; color:var(--cream); padding:4px 7px; font-family: var(--ff-mono); font-size:0.76rem; outline:none; }
 .g-chat-input input:focus { border-color:var(--gold); }
 
 /* Badge timer sous le cercle avatar */
@@ -3682,7 +3692,7 @@ body:not(.in-game) .my-zone {
 }
 .wp-player {
   display: inline-flex; align-items: center; gap: 6px;
-  background: rgba(255,255,255,0.04);
+  background: var(--inset);
   border: 1px solid var(--border);
   border-radius: 999px;
   padding: 3px 10px 3px 4px;
@@ -3691,7 +3701,7 @@ body:not(.in-game) .my-zone {
 .wp-av {
   display: inline-flex; align-items: center; justify-content: center;
   width: 22px; height: 22px; border-radius: 50%;
-  background: rgba(255,255,255,0.05);
+  background: var(--inset);
 }
 .wp-av.emoji-av { font-size: 1.05rem; line-height: 1; }
 .wp-av-letter   { font-size: 0.7rem; font-weight: 700; color: var(--gold); }
@@ -3867,7 +3877,7 @@ body:not(.in-game) .my-zone {
 .eg-winner-av {
   display: inline-flex; align-items: center; justify-content: center;
   width: 38px; height: 38px; border-radius: 50%;
-  background: rgba(255,255,255,0.05);
+  background: var(--inset);
   font-size: 1.6rem; line-height: 1;
   border: 2px solid var(--gold);
 }
@@ -3907,7 +3917,7 @@ body:not(.in-game) .my-zone {
 }
 .eg-btn {
   flex: 1; padding: 10px 14px;
-  background: rgba(255,255,255,0.04);
+  background: var(--inset);
   border: 1px solid var(--border);
   border-radius: 4px;
   color: var(--cream);
@@ -3918,7 +3928,7 @@ body:not(.in-game) .my-zone {
   cursor: pointer;
   transition: background 0.15s, border-color 0.15s;
 }
-.eg-btn:hover { background: rgba(255,255,255,0.08); border-color: var(--gold-dim); }
+.eg-btn:hover { background: var(--inset-hi); border-color: var(--gold-dim); }
 .eg-btn.primary {
   background: linear-gradient(180deg, rgba(200,168,74,0.25), rgba(200,168,74,0.12));
   border-color: var(--gold);
@@ -4077,7 +4087,7 @@ body:not(.in-game) .my-zone {
 }
 .ld-btn {
   padding: 10px 16px;
-  background: rgba(255,255,255,0.04);
+  background: var(--inset);
   border: 1px solid var(--border);
   border-radius: 4px;
   color: var(--cream);
@@ -4087,7 +4097,7 @@ body:not(.in-game) .my-zone {
   cursor: pointer;
   transition: background 0.15s, border-color 0.15s, transform 0.1s;
 }
-.ld-btn:hover  { background: rgba(255,255,255,0.08); }
+.ld-btn:hover  { background: var(--inset-hi); }
 .ld-btn:active { transform: scale(0.98); }
 .ld-btn.ld-quit {
   background: linear-gradient(180deg, rgba(192,57,43,0.22), rgba(192,57,43,0.1));
@@ -4161,7 +4171,7 @@ body:not(.in-game) .my-zone {
   left: 0; right: 0;
   z-index: 99;
   max-height: min(360px, 50dvh) !important;
-  background: rgba(4,10,6,0.97);
+  background: var(--panel);
   border-bottom: 1px solid var(--border);
   box-shadow: 0 4px 20px rgba(0,0,0,0.6);
   display: flex;
@@ -4175,7 +4185,7 @@ body:not(.in-game) .my-zone {
 }
 .players-search input {
   width: 100%;
-  background: rgba(255,255,255,0.05);
+  background: var(--field-bg);
   border: 1px solid var(--border);
   border-radius: 3px;
   color: var(--cream);
@@ -4201,7 +4211,7 @@ body:not(.in-game) .my-zone {
   font-family: var(--ff-mono);
   font-size: 0.78rem;
   color: var(--cream);
-  border-bottom: 1px solid rgba(255,255,255,0.03);
+  border-bottom: 1px solid var(--inset);
 }
 .players-list .pl-row:last-child { border-bottom: none; }
 .players-list .pl-row:hover { background: rgba(200,168,74,0.08); }
@@ -4226,7 +4236,7 @@ body:not(.in-game) .my-zone {
   width: 22px;
   height: 22px;
   border-radius: 50%;
-  background: rgba(255,255,255,0.05);
+  background: var(--inset);
   font-size: 1.05rem;
   line-height: 1;
 }
@@ -4366,7 +4376,7 @@ body:not(.in-game) .my-zone {
 }
 .km-card {
   position: relative;
-  background: rgba(8, 18, 10, 0.98);
+  background: var(--modal-bg);
   border: 1px solid var(--gold-dim);
   border-radius: 8px;
   padding: 18px 18px 16px;
@@ -4421,8 +4431,8 @@ body:not(.in-game) .my-zone {
   align-items: center;
   gap: 10px;
   padding: 8px 10px;
-  background: rgba(255,255,255,0.03);
-  border: 1px solid rgba(255,255,255,0.05);
+  background: var(--inset);
+  border: 1px solid var(--inset);
   border-radius: 4px;
 }
 .km-row .km-av {
@@ -4433,7 +4443,7 @@ body:not(.in-game) .my-zone {
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  background: rgba(255,255,255,0.05);
+  background: var(--inset);
   font-size: 1.4rem;
   line-height: 1;
 }
@@ -4495,7 +4505,7 @@ body:not(.in-game) .my-zone {
 /* ── Kick-confirm modal ── small nested alert dialog */
 .kcm-card {
   position: relative;
-  background: rgba(8, 18, 10, 0.98);
+  background: var(--modal-bg);
   border: 1px solid var(--red);
   border-radius: 8px;
   padding: 24px 20px 18px;
@@ -4540,7 +4550,7 @@ body:not(.in-game) .my-zone {
   transition: background 0.15s, border-color 0.15s;
 }
 .kcm-cancel {
-  background: rgba(255,255,255,0.05);
+  background: var(--inset);
   border: 1px solid var(--border);
   color: var(--text);
 }
@@ -4615,8 +4625,8 @@ body:not(.in-game) .my-zone {
   align-items: center;
   gap: 8px;
   padding: 5px 8px;
-  background: rgba(255,255,255,0.03);
-  border: 1px solid rgba(255,255,255,0.04);
+  background: var(--inset);
+  border: 1px solid var(--inset);
   border-radius: 3px;
 }
 .gim-spec-row .gim-spec-av {
@@ -4627,7 +4637,7 @@ body:not(.in-game) .my-zone {
   width: 28px;
   height: 28px;
   border-radius: 50%;
-  background: rgba(255,255,255,0.05);
+  background: var(--inset);
   font-size: 1.2rem;
   line-height: 1;
 }
@@ -4782,7 +4792,7 @@ body:not(.in-game) .my-zone {
 .cf-presets-label { font-size: 0.6rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--gold-dim); font-weight: 600; margin: 0 2px 8px; }
 .cf-presets { display: flex; gap: 8px; margin-bottom: 16px; }
 .cf-preset {
-  flex: 1; border: 1.5px solid var(--border); border-radius: 9px; background: rgba(255,255,255,0.03);
+  flex: 1; border: 1.5px solid var(--border); border-radius: 9px; background: var(--inset);
   color: var(--text); cursor: pointer; padding: 11px 6px; text-align: center;
   transition: border-color 0.2s, background 0.2s; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; gap: 3px;
 }
@@ -4798,7 +4808,7 @@ body:not(.in-game) .my-zone {
 .cf-range-val { font-family: var(--ff-mono); font-size: 1rem; font-weight: 700; color: var(--cream); letter-spacing: 0; }
 .cf-num-wrap { display: inline-flex; align-items: center; gap: 5px; }
 .cf-range-num {
-  width: 6.5em; background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 4px;
+  width: 6.5em; background: var(--field-bg); border: 1px solid var(--border); border-radius: 4px;
   color: var(--cream); font-family: var(--ff-mono); font-size: 1rem; font-weight: 700;
   padding: 3px 7px; text-align: right; outline: none; letter-spacing: 0; text-transform: none;
   -moz-appearance: textfield;
@@ -4811,11 +4821,11 @@ body:not(.in-game) .my-zone {
 .cf-unit { color: var(--gold-dim); font-size: 0.9rem; font-weight: 600; }
 .cf-unit-ico { font-size: 1.05rem; }
 #cf-players.cf-range-num { width: 4.2em; }
-.cf-range { -webkit-appearance: none; appearance: none; width: 100%; height: 6px; border-radius: 3px; background: rgba(255,255,255,0.09); outline: none; cursor: pointer; }
+.cf-range { -webkit-appearance: none; appearance: none; width: 100%; height: 6px; border-radius: 3px; background: var(--inset); outline: none; cursor: pointer; }
 .cf-range::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 20px; height: 20px; border-radius: 50%; background: var(--gold); border: 2px solid #1a1408; cursor: pointer; box-shadow: 0 0 7px rgba(200,168,74,0.5); transition: transform 0.1s; }
 .cf-range::-webkit-slider-thumb:active { transform: scale(1.12); }
 .cf-range::-moz-range-thumb { width: 20px; height: 20px; border-radius: 50%; background: var(--gold); border: 2px solid #1a1408; cursor: pointer; box-shadow: 0 0 7px rgba(200,168,74,0.5); }
-.cf-range::-moz-range-track { height: 6px; border-radius: 3px; background: rgba(255,255,255,0.09); }
+.cf-range::-moz-range-track { height: 6px; border-radius: 3px; background: var(--inset); }
 .cf-range:hover::-webkit-slider-thumb { background: var(--gold-hi); }
 .cf-range:hover::-moz-range-thumb { background: var(--gold-hi); }
 
@@ -4826,7 +4836,7 @@ body:not(.in-game) .my-zone {
 .filter-bar { display: flex; gap: 6px; flex-wrap: wrap; padding: 0 2px 12px; }
 .filter-chip {
   font-family: var(--ff-mono); font-size: 0.7rem; font-weight: 500; letter-spacing: 0.02em;
-  background: rgba(255,255,255,0.04); border: 1px solid var(--border); border-radius: 20px;
+  background: var(--inset); border: 1px solid var(--border); border-radius: 20px;
   color: var(--text); padding: 6px 13px; cursor: pointer; transition: all 0.15s; white-space: nowrap;
   display: inline-flex; align-items: center; gap: 5px;
 }
@@ -4844,19 +4854,19 @@ body:not(.in-game) .my-zone {
 }
 .games-scroll .empty { grid-column: 1 / -1; padding: 32px 10px; }
 .game-row.gcard {
-  border: 1px solid var(--border); border-radius: 11px; background: rgba(255,255,255,0.025);
+  border: 1px solid var(--border); border-radius: 11px; background: var(--inset);
   align-items: stretch; flex-direction: column; gap: 9px; padding: 13px 14px;
 }
-.game-row.gcard:hover { border-color: var(--gold-dim); background: rgba(255,255,255,0.045); }
+.game-row.gcard:hover { border-color: var(--gold-dim); background: var(--inset-hi); }
 .gcard-main { min-width: 0; }
 .game-row.gcard .game-name { white-space: normal; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; font-size: 0.95rem; }
 .game-row.gcard .game-meta { flex-wrap: wrap; gap: 4px 10px; font-size: 0.74rem; }
 .game-badge { font-size: 0.6rem; font-weight: 700; letter-spacing: 0.05em; padding: 2px 7px; border-radius: 20px; text-transform: uppercase; white-space: nowrap; }
 .game-badge.live   { color: #7be0a0; background: rgba(39,174,96,0.15); border: 1px solid rgba(39,174,96,0.4); }
 .game-badge.wait   { color: var(--gold); background: rgba(200,168,74,0.12); border: 1px solid rgba(200,168,74,0.4); }
-.game-badge.closed { color: #999; background: rgba(255,255,255,0.04); border: 1px solid var(--border); }
+.game-badge.closed { color: #999; background: var(--inset); border: 1px solid var(--border); }
 .game-seats { display: flex; gap: 3px; margin-top: 8px; flex-wrap: wrap; }
-.seat-dot { width: 9px; height: 9px; border-radius: 50%; background: rgba(255,255,255,0.06); border: 1px solid var(--border); }
+.seat-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--inset); border: 1px solid var(--border); }
 .seat-dot.on { background: var(--gold); border-color: var(--gold); box-shadow: 0 0 5px rgba(200,168,74,0.5); }
 .gcard-btns { display: flex; gap: 8px; }
 /* Boutons façon maquette v3 : Rejoindre en vert (extensible) + œil compact */
@@ -4875,7 +4885,7 @@ body:not(.in-game) .my-zone {
 .game-row.gcard .btn-watch {
   flex: 0 0 auto;
   border: 1px solid var(--border);
-  background: rgba(255,255,255,0.04);
+  background: var(--inset);
   color: var(--text);
   border-radius: 8px;
   padding: 10px 14px;
@@ -4883,7 +4893,7 @@ body:not(.in-game) .my-zone {
   line-height: 1;
   cursor: pointer;
 }
-.game-row.gcard .btn-watch:hover { border-color: var(--gold-dim); color: var(--gold); background: rgba(255,255,255,0.06); }
+.game-row.gcard .btn-watch:hover { border-color: var(--gold-dim); color: var(--gold); background: var(--inset-hi); }
 
 /* Mobile (cards stacked): make the Rejoindre / Regarder buttons shorter. */
 @media (max-width: 639px) {
@@ -4965,7 +4975,7 @@ body:not(.in-game) .my-zone {
   gap: 8px;
   max-width: min(90vw, 360px);
   padding: 8px 16px;
-  background: rgba(8,18,10,0.98);
+  background: var(--modal-bg);
   border: 1px solid var(--border-hi);
   border-radius: 6px;
   box-shadow: 0 12px 32px rgba(0,0,0,0.7);
