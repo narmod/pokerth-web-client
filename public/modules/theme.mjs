@@ -74,7 +74,7 @@ const DECKS = [
 
 // Buttons axis: a built-in "Glossy" scheme (PokerTH colour-coding, kept so
 // actions stay readable). Tokens map to var(--btn-*) in pokerth.css.
-var BUTTON_TOKENS = ['btn-fold-bg','btn-fold-fg','btn-check-bg','btn-check-fg','btn-call-bg','btn-call-fg','btn-raise-bg','btn-raise-fg','btn-allin-bd','btn-allin-fg','btn-allin-fg-b'];
+var BUTTON_TOKENS = ['btn-fold-bg','btn-fold-fg','btn-check-bg','btn-check-fg','btn-call-bg','btn-call-fg','btn-raise-bg','btn-raise-fg','btn-allin-bg','btn-allin-bd','btn-allin-fg','btn-allin-fg-b'];
 var BUTTON_GLOSSY = {
   'btn-fold-bg':'linear-gradient(180deg, #d23030 0%, #a81818 48%, #800f0f 100%)','btn-fold-fg':'#ffe6e6',
   'btn-check-bg':'linear-gradient(180deg, #2f7ad0 0%, #1f5aa8 48%, #143f7a 100%)','btn-check-fg':'#e6f0ff',

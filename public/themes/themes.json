@@ -90,19 +90,7 @@
     "id": "pokerth-new",
     "name": "PokerTH new",
     "swatch": "#3a6fc8",
-    "buttons": {
-      "btn-fold-bg": "#33373f",
-      "btn-fold-fg": "#e9e9ee",
-      "btn-check-bg": "#33373f",
-      "btn-check-fg": "#e9e9ee",
-      "btn-call-bg": "#33373f",
-      "btn-call-fg": "#e9e9ee",
-      "btn-raise-bg": "#33373f",
-      "btn-raise-fg": "#e9e9ee",
-      "btn-allin-bd": "#b83434",
-      "btn-allin-fg": "#e98a8a",
-      "btn-allin-fg-b": "#f0b0b0"
-    },
+    "buttons": {"btn-fold-bg": "linear-gradient(180deg,rgba(255,255,255,0.18),rgba(255,255,255,0) 46%),linear-gradient(180deg,#d94040,#8b1a1a)", "btn-fold-fg": "#ffecec", "btn-check-bg": "linear-gradient(180deg,rgba(255,255,255,0.18),rgba(255,255,255,0) 46%),linear-gradient(180deg,#4080d8,#1a3d8b)", "btn-check-fg": "#e8f0ff", "btn-call-bg": "linear-gradient(180deg,rgba(255,255,255,0.18),rgba(255,255,255,0) 46%),linear-gradient(180deg,#4080d8,#1a3d8b)", "btn-call-fg": "#e8f0ff", "btn-raise-bg": "linear-gradient(180deg,rgba(255,255,255,0.18),rgba(255,255,255,0) 46%),linear-gradient(180deg,#50b840,#1e6614)", "btn-raise-fg": "#ecffec", "btn-allin-bg": "linear-gradient(180deg,rgba(255,255,255,0.18),rgba(255,255,255,0) 46%),linear-gradient(180deg,#e88040,#8b4010)", "btn-allin-bd": "#b05010", "btn-allin-fg": "#fff2e6", "btn-allin-fg-b": "#ffe0c0"},
     "pucks": {
       "dealer": "dealer.svg",
       "sb": "sb.svg",

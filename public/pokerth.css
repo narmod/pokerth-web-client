@@ -1855,7 +1855,7 @@ body {
   top: 100%;
   right: 0;
   z-index: 200;
-  background: rgba(8,18,10,0.98);
+  background: var(--modal-bg);
   border: 1px solid var(--border-hi);
   border-top: none;
   border-radius: 0 0 6px 6px;
@@ -1894,12 +1894,12 @@ body {
   top: 50%;
   transform: translateY(-50%);
   font-weight: 700;
-  color: #3fb950;
+  color: var(--green);
   pointer-events: none;
 }
 #g-overflow-menu .btn-sm:hover,
 #l-overflow-menu .btn-sm:hover {
-  background: rgba(255,255,255,0.06);
+  background: var(--border);
 }
 /* Group separators inside the ••• menu. Plain hairline between groups,
    and a centred labelled divider for the (admin-only) action block. */
@@ -3197,11 +3197,11 @@ body.hide-pct-btns .pct-row { display: none; }
 /* All-In as a SECONDARY action: outlined, not a big red bar — avoids the
    red-on-red clash with Fold and discourages accidental taps. */
 .btn-allin {
-  background: transparent; color: var(--btn-allin-fg, #e88a8a);
+  background: var(--btn-allin-bg, transparent); color: var(--btn-allin-fg, #e88a8a);
   border: 1.5px solid var(--btn-allin-bd, #c0392b); outline: none;
   padding: 8px 12px; font-size: 0.7rem; letter-spacing: 0.1em;
 }
-.btn-allin:hover { background: rgba(192,57,43,0.15); filter: none; }
+.btn-allin:hover { background: var(--btn-allin-bg, rgba(192,57,43,0.15)); filter: brightness(1.06); }
 .btn-allin b { color: var(--btn-allin-fg-b, #f4b0b0); }
 /* Image-backed action buttons (9-slice SVG/PNG via the Buttons axis). */
 :root[data-btn-img] .btn-action { border: 9px solid transparent; background: transparent; padding: 1px 9px; }
