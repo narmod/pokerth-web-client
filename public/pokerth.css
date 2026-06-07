@@ -11,6 +11,8 @@
 html { touch-action: manipulation; -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
 
 :root {
+  --ff-display: 'Cinzel', serif;
+  --ff-mono:    'Inconsolata', monospace;
   --felt:       #182e1a;
   --felt-mid:   #1e3820;
   --felt-hi:    #254526;
@@ -68,6 +70,8 @@ html { touch-action: manipulation; -webkit-text-size-adjust: 100%; text-size-adj
    couleurs reprises du client QML 2.x. Comme :root/dark, ne fait qu'ecraser les
    variables. Voir theme.mjs. */
 :root[data-theme="pokerth"] {
+  --ff-display: 'Inter', system-ui, sans-serif;
+  --ff-mono:    'Inter', system-ui, sans-serif;
   --felt:       #161b23;
   --felt-mid:   #1d222b;
   --felt-hi:    #252c38;
@@ -92,6 +96,8 @@ html { touch-action: manipulation; -webkit-text-size-adjust: 100%; text-size-adj
    la palette PokerTH officielle (valeurs _light du client QML). Ne fait qu'ecraser
    les variables. Voir theme.mjs. */
 :root[data-theme="pokerth-light"] {
+  --ff-display: 'Inter', system-ui, sans-serif;
+  --ff-mono:    'Inter', system-ui, sans-serif;
   --felt:       #eef1f6;
   --felt-mid:   #e4e9f1;
   --felt-hi:    #d9e0ea;
@@ -111,6 +117,9 @@ html { touch-action: manipulation; -webkit-text-size-adjust: 100%; text-size-adj
   --border-hi:  rgba(138,108,18,0.45);
   --card-back:  url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%20100%20140%27%20preserveAspectRatio%3D%27none%27%3E%3Cdefs%3E%3CradialGradient%20id%3D%27h%27%20cx%3D%2750%25%27%20cy%3D%2744%25%27%20r%3D%2780%25%27%3E%3Cstop%20offset%3D%270%27%20stop-color%3D%27%232c313c%27%2F%3E%3Cstop%20offset%3D%27100%25%27%20stop-color%3D%27%230c0e12%27%2F%3E%3C%2FradialGradient%3E%3Cpattern%20id%3D%27l%27%20width%3D%2714%27%20height%3D%2714%27%20patternUnits%3D%27userSpaceOnUse%27%3E%3Cpath%20d%3D%27M7%200L14%207L7%2014L0%207Z%27%20fill%3D%27none%27%20stroke%3D%27%23c8a84a%27%20stroke-width%3D%270.6%27%20opacity%3D%270.4%27%2F%3E%3Ccircle%20cx%3D%277%27%20cy%3D%277%27%20r%3D%270.8%27%20fill%3D%27%23c8a84a%27%20opacity%3D%270.45%27%2F%3E%3C%2Fpattern%3E%3C%2Fdefs%3E%3Crect%20width%3D%27100%27%20height%3D%27140%27%20fill%3D%27url%28%23h%29%27%2F%3E%3Crect%20x%3D%276%27%20y%3D%276%27%20width%3D%2788%27%20height%3D%27128%27%20rx%3D%275%27%20fill%3D%27url%28%23l%29%27%2F%3E%3Crect%20x%3D%275%27%20y%3D%275%27%20width%3D%2790%27%20height%3D%27130%27%20rx%3D%277%27%20fill%3D%27none%27%20stroke%3D%27%23c8a84a%27%20stroke-width%3D%271.4%27%2F%3E%3Crect%20x%3D%278.5%27%20y%3D%278.5%27%20width%3D%2783%27%20height%3D%27123%27%20rx%3D%275%27%20fill%3D%27none%27%20stroke%3D%27%237a6428%27%20stroke-width%3D%270.6%27%2F%3E%3Cellipse%20cx%3D%2750%27%20cy%3D%2770%27%20rx%3D%2725%27%20ry%3D%2737%27%20fill%3D%27%231b1e24%27%20stroke%3D%27%23c8a84a%27%20stroke-width%3D%270.9%27%2F%3E%3Cellipse%20cx%3D%2750%27%20cy%3D%2770%27%20rx%3D%2721%27%20ry%3D%2732.5%27%20fill%3D%27none%27%20stroke%3D%27%237a6428%27%20stroke-width%3D%270.5%27%2F%3E%3Ctext%20x%3D%2750%27%20y%3D%2784%27%20font-size%3D%2738%27%20text-anchor%3D%27middle%27%20fill%3D%27%23e0c070%27%20font-family%3D%27Georgia%2Cserif%27%3E%E2%99%A0%3C%2Ftext%3E%3C%2Fsvg%3E");
 }
+
+/* Inter : chiffres tabulaires pour aligner stacks/mises sur les thèmes officiels. */
+:root[data-theme="pokerth"], :root[data-theme="pokerth-light"] { font-variant-numeric: tabular-nums; }
 
 /* ── Palette : Feutre rouge (axe "Palette") ── feutre + UI + popups en rouge.
    Comme :root/dark, ne fait qu'ecraser les variables. Voir theme.mjs. */
@@ -178,7 +187,7 @@ html, body {
   height: 100%;
   height: 100dvh;
   overflow: hidden;
-  font-family: 'Inconsolata', monospace;
+  font-family: var(--ff-mono);
   background: var(--felt);
   color: var(--text);
 }
@@ -221,7 +230,7 @@ body {
 }
 
 .card-title {
-  font-family: 'Cinzel', serif;
+  font-family: var(--ff-display);
   font-size: 0.7rem;
   letter-spacing: 0.3em;
   color: var(--gold-dim);
@@ -238,7 +247,7 @@ body {
 .card-suits-row { font-size: 1.1rem; letter-spacing: 0.2em; opacity: 0.7; margin-bottom: 4px; }
 .card-suits-row .r { color: var(--red); }
 .card-title-big {
-  font-family: 'Cinzel', serif;
+  font-family: var(--ff-display);
   font-size: 1.5rem;
   font-weight: 700;
   color: var(--gold);
@@ -288,7 +297,7 @@ body {
   border-radius: 2px;
   color: var(--cream);
   padding: 9px 32px 9px 11px;
-  font-family: 'Inconsolata', monospace;
+  font-family: var(--ff-mono);
   font-size: 0.88rem;
   outline: none; cursor: pointer;
 }
@@ -315,7 +324,7 @@ body {
 }
 .av-btn:hover { border-color: var(--gold-dim); transform: scale(1.1); background: rgba(200,168,74,0.08); }
 .av-btn.selected { border-color: var(--gold); background: rgba(200,168,74,0.18); box-shadow: 0 0 6px rgba(200,168,74,0.3); }
-.av-btn.av-none { font-size: 0.72rem; font-family: 'Cinzel', serif; color: var(--text); letter-spacing: 0.05em; }
+.av-btn.av-none { font-size: 0.72rem; font-family: var(--ff-display); color: var(--text); letter-spacing: 0.05em; }
 
 /* Emoji avatar dans le siège */
 .seat-avatar.emoji-av .seat-initial { font-size: 1.05em; line-height: 1; }
@@ -428,7 +437,7 @@ body {
 .gim-title {
   font-size: 1.15rem;
   color: var(--cream);
-  font-family: 'Cinzel', serif;
+  font-family: var(--ff-display);
   font-weight: 600;
   letter-spacing: 0.04em;
   word-break: break-word;
@@ -481,11 +490,11 @@ body {
 }
 .gim-row-label {
   color: var(--text);
-  font-family: 'Inconsolata', monospace;
+  font-family: var(--ff-mono);
 }
 .gim-row-value {
   color: var(--cream);
-  font-family: 'Inconsolata', monospace;
+  font-family: var(--ff-mono);
   font-weight: 500;
   text-align: right;
 }
@@ -561,7 +570,7 @@ body {
 }
 .pim-avatar.is-letter {
   font-size: 2.4rem;
-  font-family: 'Cinzel', serif;
+  font-family: var(--ff-display);
   font-weight: 700;
   color: var(--gold);
 }
@@ -591,7 +600,7 @@ body {
   color: var(--gold-dim);
   margin-top: -2px;
 }
-.pim-flag-code { font-family: 'Inconsolata', monospace; }
+.pim-flag-code { font-family: var(--ff-mono); }
 /* Image drapeau auto-hébergée (rendu identique sur tous les OS). */
 .cc-flag {
   display: inline-block;
@@ -739,7 +748,7 @@ body {
 }
 .avp-btn:hover { border-color: var(--gold-dim); transform: scale(1.15); background: rgba(200,168,74,0.1); }
 .avp-btn.selected { border-color: var(--gold); background: rgba(200,168,74,0.2); }
-.avp-none { font-size: 0.7rem !important; font-family: 'Cinzel',serif; color: var(--text); }
+.avp-none { font-size: 0.7rem !important; font-family: var(--ff-display); color: var(--text); }
 /* PokerTH official avatar entry -- accent color to distinguish it
    from the emoji costumes (this is a real identity, not a mask).
    Hosts an <img> of the PokerTH chip logo; tighten padding so the
@@ -826,7 +835,7 @@ body {
   border-radius: 2px;
   padding: 9px 11px;
   color: var(--cream);
-  font-family: 'Inconsolata', monospace;
+  font-family: var(--ff-mono);
   font-size: 0.9rem;
   outline: none;
   transition: border-color 0.2s, background 0.2s;
@@ -842,7 +851,7 @@ body {
   color: #110900;
   border: none;
   padding: 12px;
-  font-family: 'Cinzel', serif;
+  font-family: var(--ff-display);
   font-size: 0.82rem;
   font-weight: 700;
   letter-spacing: 0.15em;
@@ -886,7 +895,7 @@ body {
 }
 
 .header-brand {
-  font-family: 'Cinzel', serif;
+  font-family: var(--ff-display);
   font-size: clamp(0.7rem, 2vw, 1.05rem);
   color: var(--gold);
   letter-spacing: 0.08em;
@@ -946,7 +955,7 @@ body {
   border: 1px solid rgba(52,152,219,0.35);
   color: #7ec8e3;
   padding: 4px 10px;
-  font-family: 'Cinzel', serif;
+  font-family: var(--ff-display);
   font-size: 0.68rem;
   font-weight: 700;
   border-radius: 2px;
@@ -961,7 +970,7 @@ body {
   border: 1px solid var(--border);
   color: var(--text);
   padding: clamp(3px,0.6vh,5px) clamp(6px,1.2vw,14px);
-  font-family: 'Inconsolata', monospace;
+  font-family: var(--ff-mono);
   font-size: clamp(0.62rem, 1.4vw, 0.78rem);
   cursor: pointer;
   border-radius: 2px;
@@ -1003,7 +1012,7 @@ body {
   border-radius: 8px;
   background: var(--red);
   color: #fff;
-  font-family: 'Inconsolata', monospace;
+  font-family: var(--ff-mono);
   font-size: 0.62rem;
   font-weight: 700;
   line-height: 16px;
@@ -1045,7 +1054,7 @@ body {
 .btn-create {
   flex: 1; background: rgba(39,174,96,0.15);
   border: 1px solid var(--green); color: var(--green);
-  padding: 9px 14px; font-family: 'Cinzel', serif;
+  padding: 9px 14px; font-family: var(--ff-display);
   font-size: 0.8rem; font-weight: 700; cursor: pointer; border-radius: 4px;
 }
 .btn-create:hover { background: rgba(39,174,96,0.28); }
@@ -1067,7 +1076,7 @@ body {
 .cf { display: flex; flex-direction: column; gap: 3px; }
 .cf-sm { min-width: 80px; }
 .cf label { font-size: 0.55rem; color: var(--gold-dim); letter-spacing: 0.1em; text-transform: uppercase; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.cf input, .cf select { background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 2px; color: var(--cream); padding: 5px 7px; font-family: 'Inconsolata', monospace; font-size: 0.82rem; outline: none; width: 100%; }
+.cf input, .cf select { background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 2px; color: var(--cream); padding: 5px 7px; font-family: var(--ff-mono); font-size: 0.82rem; outline: none; width: 100%; }
 .cf input:focus, .cf select:focus { border-color: var(--gold); }
 
 .pane-header {
@@ -1169,7 +1178,7 @@ body {
   border: 1px solid var(--border);
   color: var(--cream);
   padding: 7px 10px;
-  font-family: 'Inconsolata', monospace;
+  font-family: var(--ff-mono);
   font-size: 0.82rem;
   outline: none;
   border-radius: 2px;
@@ -1180,7 +1189,7 @@ body {
   color: #110900;
   border: none;
   padding: 0 14px;
-  font-family: 'Cinzel', serif;
+  font-family: var(--ff-display);
   font-size: 0.78rem;
   cursor: pointer;
   border-radius: 2px;
@@ -1219,7 +1228,7 @@ body {
   border-bottom: 1px solid var(--border);
   flex-shrink: 0;
   min-height: 24px;
-  font-family: 'Cinzel', serif;
+  font-family: var(--ff-display);
   letter-spacing: 0.08em;
 }
 .pot-side {
@@ -1245,7 +1254,7 @@ body {
   background: rgba(200,168,74,0.16);
   border: 1px solid var(--gold-dim);
   color: var(--gold);
-  font-family: 'Inconsolata', monospace;
+  font-family: var(--ff-mono);
   font-weight: 700;
   font-size: 0.62rem;
   letter-spacing: 0.04em;
@@ -1272,7 +1281,7 @@ body {
   border-radius: 22px;
   background: linear-gradient(135deg, rgba(200,168,74,0.96), rgba(168,134,40,0.96));
   color: #1a0a00;
-  font-family: 'Cinzel', serif;
+  font-family: var(--ff-display);
   font-weight: 700;
   letter-spacing: 0.04em;
   text-align: center;
@@ -1285,7 +1294,7 @@ body {
 .blinds-up-toast .bu-icon { font-size: 1.05rem; line-height: 1; }
 .blinds-up-toast .bu-text { font-size: 0.8rem; text-transform: uppercase; }
 .blinds-up-toast .bu-val {
-  font-family: 'Inconsolata', monospace;
+  font-family: var(--ff-mono);
   font-size: 0.9rem;
   font-weight: 700;
   background: rgba(0,0,0,0.16);
@@ -1297,7 +1306,7 @@ body {
 }
 .blinds-up-toast .bu-arrow { opacity: 0.7; }
 .blinds-up-toast .bu-when {
-  font-family: 'Inconsolata', monospace;
+  font-family: var(--ff-mono);
   font-size: 0.72rem;
   font-weight: 500;
   opacity: 0.85;
@@ -2150,7 +2159,7 @@ body {
   transform: translateX(-50%);
   font-size: 0.6rem;
   color: var(--gold);
-  font-family: 'Cinzel', serif;
+  font-family: var(--ff-display);
   letter-spacing: 0.04em;
   text-align: center;
   padding: 2px 10px;
@@ -2376,7 +2385,7 @@ body {
   border-radius: 8px;
   padding: 9px 12px 9px 16px;
   box-shadow: 0 6px 22px rgba(0,0,0,0.55);
-  font-family: 'Cinzel', serif; font-size: 0.82rem;
+  font-family: var(--ff-display); font-size: 0.82rem;
   color: var(--cream); letter-spacing: 0.04em;
   max-width: calc(100% - 24px);
   animation: fadeIn 0.3s ease;
@@ -2384,7 +2393,7 @@ body {
 #update-banner button {
   background: var(--gold); color: #1a1207; border: none;
   border-radius: 5px; padding: 6px 14px; cursor: pointer;
-  font-family: 'Cinzel', serif; font-weight: 700; font-size: 0.78rem;
+  font-family: var(--ff-display); font-weight: 700; font-size: 0.78rem;
   letter-spacing: 0.06em; white-space: nowrap;
   transition: filter 0.12s;
 }
@@ -2395,7 +2404,7 @@ body {
   background: rgba(192,57,43,0.95);
   color: #fff; text-align: center;
   padding: 6px 12px; font-size: 0.8rem;
-  font-family: 'Cinzel', serif; letter-spacing: 0.08em;
+  font-family: var(--ff-display); letter-spacing: 0.08em;
   display: none; align-items: center; justify-content: center; gap: 10px;
   animation: fadeIn 0.3s ease;
 }
@@ -2422,7 +2431,7 @@ body {
   box-shadow: 0 0 60px rgba(200,168,74,0.18), 0 20px 50px rgba(0,0,0,0.8);
 }
 .hands-title {
-  font-family: 'Cinzel', serif; font-size: 0.75rem;
+  font-family: var(--ff-display); font-size: 0.75rem;
   letter-spacing: 0.25em; text-transform: uppercase;
   color: var(--gold); text-align: center;
   padding-bottom: 12px; border-bottom: 1px solid var(--border);
@@ -2436,7 +2445,7 @@ body {
 .hand-row:hover { background: rgba(255,255,255,0.03); }
 .hand-rank {
   width: 20px; text-align: center; flex-shrink: 0;
-  font-size: 0.65rem; color: var(--gold-dim); font-family: 'Cinzel', serif;
+  font-size: 0.65rem; color: var(--gold-dim); font-family: var(--ff-display);
 }
 .hand-cards { display: flex; gap: 2px; flex-shrink: 0; }
 .hc {
@@ -2452,7 +2461,7 @@ body {
 .hand-info { flex: 1; min-width: 0; }
 .hand-name {
   font-size: 0.78rem; color: var(--text-hi); font-weight: 600;
-  font-family: 'Cinzel', serif; letter-spacing: 0.04em;
+  font-family: var(--ff-display); letter-spacing: 0.04em;
   display: flex; align-items: center; gap: 6px;
 }
 .hand-ico { font-size: 0.95rem; line-height: 1; flex-shrink: 0; }
@@ -2480,7 +2489,7 @@ body {
   display: block; width: 100%; margin-top: 14px;
   background: rgba(200,168,74,0.12); border: 1px solid var(--gold-dim);
   color: var(--gold); padding: 9px; border-radius: 4px;
-  font-family: 'Cinzel', serif; font-size: 0.75rem;
+  font-family: var(--ff-display); font-size: 0.75rem;
   letter-spacing: 0.1em; cursor: pointer; text-align: center;
   transition: background 0.15s;
 }
@@ -2544,7 +2553,7 @@ body {
 .stats-body { padding: 10px 12px; display: flex; flex-direction: column; gap: 8px; }
 .stat-row { display: flex; justify-content: space-between; align-items: center; }
 .stat-label { font-size: 0.62rem; color: var(--text); }
-.stat-val { font-size: 0.72rem; font-weight: 700; font-family: 'Inconsolata', monospace; }
+.stat-val { font-size: 0.72rem; font-weight: 700; font-family: var(--ff-mono); }
 .stat-val.pos { color: #4cff88; }
 .stat-val.neg { color: #ff6b6b; }
 .stat-divider { border: none; border-top: 1px solid var(--border); margin: 4px 0; }
@@ -2553,7 +2562,7 @@ body {
 .stats-tab {
   flex: 1; background: none; border: none; cursor: pointer;
   padding: 7px 4px; font-size: 0.6rem; letter-spacing: 0.08em; text-transform: uppercase;
-  color: var(--text); font-family: 'Cinzel', serif;
+  color: var(--text); font-family: var(--ff-display);
   border-bottom: 2px solid transparent; transition: color 0.12s, border-color 0.12s;
 }
 .stats-tab.active { color: var(--gold); border-bottom-color: var(--gold); }
@@ -2562,7 +2571,7 @@ body {
 .stats-reset {
   margin-top: 2px; background: rgba(192,57,43,0.12); color: #ff8a7a;
   border: 1px solid rgba(192,57,43,0.4); border-radius: 5px; cursor: pointer;
-  padding: 7px; font-size: 0.62rem; font-family: 'Cinzel', serif; letter-spacing: 0.06em;
+  padding: 7px; font-size: 0.62rem; font-family: var(--ff-display); letter-spacing: 0.06em;
   transition: background 0.12s;
 }
 .stats-reset:hover { background: rgba(192,57,43,0.22); }
@@ -2579,19 +2588,19 @@ body {
 .board-rank { grid-area: rank; font-size: 0.8rem; text-align: center; }
 .board-av   { grid-area: av; font-size: 1rem; text-align: center; line-height: 1; }
 .board-name { grid-area: name; font-size: 0.66rem; color: var(--cream); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.board-net  { grid-area: net; font-size: 0.72rem; font-weight: 700; font-family: 'Inconsolata', monospace; }
+.board-net  { grid-area: net; font-size: 0.72rem; font-weight: 700; font-family: var(--ff-mono); }
 .board-net.pos { color: #4cff88; }
 .board-net.neg { color: #ff6b6b; }
-.board-sub  { grid-area: sub; font-size: 0.55rem; color: var(--gold-dim); font-family: 'Inconsolata', monospace; }
+.board-sub  { grid-area: sub; font-size: 0.55rem; color: var(--gold-dim); font-family: var(--ff-mono); }
 .board-sort { display: flex; align-items: center; gap: 6px; margin-bottom: 6px; }
 .board-sort > span { color: var(--gold-dim); font-size: 0.7rem; }
 .board-sort select {
   flex: 1; background: rgba(255,255,255,0.05); border: 1px solid var(--border);
   border-radius: 3px; color: var(--cream); padding: 3px 6px;
-  font-family: 'Inconsolata', monospace; font-size: 0.66rem; outline: none; cursor: pointer;
+  font-family: var(--ff-mono); font-size: 0.66rem; outline: none; cursor: pointer;
 }
 .board-myrank {
-  font-size: 0.62rem; color: var(--gold); font-family: 'Inconsolata', monospace;
+  font-size: 0.62rem; color: var(--gold); font-family: var(--ff-mono);
   text-align: center; padding: 2px 0 6px; letter-spacing: 0.04em;
 }
 .hand-hist-item {
@@ -2617,7 +2626,7 @@ body {
   color: #110900;
   border: none;
   padding: 4px 12px;
-  font-family: 'Cinzel', serif;
+  font-family: var(--ff-display);
   font-size: 0.72rem;
   font-weight: 700;
   border-radius: 2px;
@@ -2769,7 +2778,7 @@ body {
 .pot-bar {
   text-align: center;
   padding: 3px 0;
-  font-family: 'Cinzel', serif;
+  font-family: var(--ff-display);
   font-size: 0.85rem;
   font-weight: 600;
   color: var(--gold);
@@ -2804,7 +2813,7 @@ body {
   border: 2px solid rgba(200,168,74,0.3);
   display: flex; align-items: center; justify-content: center;
   font-size: 0.68rem; color: var(--text-hi);
-  font-family: 'Cinzel', serif;
+  font-family: var(--ff-display);
   position: relative;
   transition: border-color 0.3s, box-shadow 0.3s;
 }
@@ -2949,7 +2958,7 @@ body {
   position: absolute;
   top: 50%; left: 50%;
   transform: translate(-50%, -50%) rotate(-12deg);
-  font-family: 'Cinzel', serif;
+  font-family: var(--ff-display);
   font-size: 0.65rem;
   font-weight: 700;
   letter-spacing: 0.15em;
@@ -2969,7 +2978,7 @@ body {
 }
 .seat-money {
   font-size: 0.7rem; color: var(--gold);
-  font-family: 'Inconsolata', monospace;
+  font-family: var(--ff-mono);
 }
 .seat-bet {
   font-size: 0.52rem;
@@ -3105,7 +3114,7 @@ body {
 .btn-action {
   padding: 8px 14px;
   border-radius: 8px;
-  font-family: 'Cinzel', serif;
+  font-family: var(--ff-display);
   font-size: 0.72rem;
   font-weight: 700;
   letter-spacing: 0.08em;
@@ -3202,7 +3211,7 @@ body.hide-pct-btns .pct-row { display: none; }
   border-radius: 2px;
   color: var(--cream);
   padding: 7px 8px;
-  font-family: 'Inconsolata', monospace;
+  font-family: var(--ff-mono);
   font-size: 0.85rem;
   width: 72px;
   outline: none;
@@ -3255,7 +3264,7 @@ body.hide-pct-btns .pct-row { display: none; }
   min-height: 0;
   overflow-y: auto;
   padding: 6px 12px;
-  font-family: 'Inconsolata', monospace;
+  font-family: var(--ff-mono);
   font-size: 0.74rem;
   line-height: 1.45;
   color: var(--cream);
@@ -3268,7 +3277,7 @@ body.hide-pct-btns .pct-row { display: none; }
    bubble-style backgrounds (log lines are denser, more like a
    monospace journal). */
 .log-msgs {
-  font-family: 'Inconsolata', monospace;
+  font-family: var(--ff-mono);
   font-size: 0.74rem;
   line-height: 1.45;
   color: var(--cream);
@@ -3303,7 +3312,7 @@ body.hide-pct-btns .pct-row { display: none; }
 .chat-resize-handle:hover .crh-grip,
 .chat-resize-handle.dragging .crh-grip { background: var(--gold-hi); width: 54px; }
 .gchat-input { display:flex; gap:5px; padding:5px 10px; background:rgba(4,10,6,0.97); border-bottom:1px solid var(--border); flex-shrink:0; }
-.gchat-input input { flex:1; background:rgba(255,255,255,0.05); border:1px solid var(--border); border-radius:2px; color:var(--cream); padding:5px 8px; font-family:'Inconsolata',monospace; font-size:0.76rem; outline:none; }
+.gchat-input input { flex:1; background:rgba(255,255,255,0.05); border:1px solid var(--border); border-radius:2px; color:var(--cream); padding:5px 8px; font-family: var(--ff-mono); font-size:0.76rem; outline:none; }
 .gchat-input input:focus { border-color:var(--gold); }
 .gchat-input button { background:rgba(200,168,74,0.12); border:1px solid var(--gold-dim); color:var(--gold); padding:5px 10px; border-radius:2px; cursor:pointer; font-size:0.8rem; }
 
@@ -3325,13 +3334,13 @@ body.hide-pct-btns .pct-row { display: none; }
   display: flex; flex-direction: column; gap: 12px;
   box-shadow: 0 0 60px rgba(0,0,0,0.8);
 }
-.pp-title { font-family: 'Cinzel', serif; font-size: 0.9rem; color: var(--gold); letter-spacing: 0.1em; }
+.pp-title { font-family: var(--ff-display); font-size: 0.9rem; color: var(--gold); letter-spacing: 0.1em; }
 .pp-label { font-size: 0.65rem; color: var(--gold-dim); letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 4px; }
-.pp-input { background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 2px; color: var(--cream); padding: 9px 11px; font-family: 'Inconsolata', monospace; font-size: 0.9rem; outline: none; width: 100%; }
+.pp-input { background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 2px; color: var(--cream); padding: 9px 11px; font-family: var(--ff-mono); font-size: 0.9rem; outline: none; width: 100%; }
 .pp-input:focus { border-color: var(--gold); }
 .pp-btns { display: flex; gap: 8px; }
 .pp-btns .btn-primary { flex: 1; padding: 9px; font-size: 0.76rem; }
-.pp-cancel { flex: 0 0 auto; background: transparent; border: 1px solid var(--border); color: var(--text); padding: 9px 16px; border-radius: 2px; cursor: pointer; font-family: 'Inconsolata', monospace; font-size: 0.76rem; }
+.pp-cancel { flex: 0 0 auto; background: transparent; border: 1px solid var(--border); color: var(--text); padding: 9px 16px; border-radius: 2px; cursor: pointer; font-family: var(--ff-mono); font-size: 0.76rem; }
 .pp-cancel:hover { border-color: var(--border-hi); color: var(--text-hi); }
 
 /* ══ INSTALL POPUP (PWA add-to-home-screen instructions) ══ */
@@ -3348,7 +3357,7 @@ body.hide-pct-btns .pct-row { display: none; }
   display: flex; flex-direction: column; gap: 14px;
   box-shadow: 0 0 60px rgba(0,0,0,0.8);
 }
-.ip-title { font-family: 'Cinzel', serif; font-size: 0.95rem; color: var(--gold); letter-spacing: 0.08em; text-align: center; }
+.ip-title { font-family: var(--ff-display); font-size: 0.95rem; color: var(--gold); letter-spacing: 0.08em; text-align: center; }
 .ip-body { font-size: 0.84rem; color: var(--cream); line-height: 1.55; }
 .ip-step { display: flex; align-items: flex-start; gap: 9px; margin-bottom: 10px; }
 .ip-step:last-child { margin-bottom: 0; }
@@ -3385,8 +3394,8 @@ body.hide-pct-btns .pct-row { display: none; }
 .wc-header { display:flex; align-items:center; gap:10px; padding-bottom:12px; border-bottom:1px solid var(--border); margin-bottom:12px; }
 .wc-trophy { font-size:2rem; line-height:1; }
 .wc-titles { flex:1; }
-.wc-label { font-family:'Cinzel',serif; font-size:0.6rem; letter-spacing:0.22em; text-transform:uppercase; color:var(--gold-dim); }
-.wc-name { font-family:'Cinzel',serif; font-size:clamp(1rem,4vw,1.4rem); font-weight:700; color:var(--gold); }
+.wc-label { font-family: var(--ff-display); font-size:0.6rem; letter-spacing:0.22em; text-transform:uppercase; color:var(--gold-dim); }
+.wc-name { font-family: var(--ff-display); font-size:clamp(1rem,4vw,1.4rem); font-weight:700; color:var(--gold); }
 .wc-gain { font-size:clamp(0.9rem,3.5vw,1.15rem); color:#4cff88; font-weight:700; text-align:right; }
 .wc-stats { display:flex; gap:6px; margin-bottom:12px; flex-wrap:wrap; }
 .wc-stat { flex:1; min-width:65px; background:rgba(255,255,255,0.04); border:1px solid var(--border); border-radius:4px; padding:6px 8px; text-align:center; }
@@ -3419,7 +3428,7 @@ body.hide-pct-btns .pct-row { display: none; }
 .wc-player-delta { font-size:0.76rem; font-weight:700; text-align:right; white-space:nowrap; }
 .wc-player-delta.pos { color:#4cff88; }
 .wc-player-delta.neg { color:rgba(255,100,100,0.75); }
-.winner-dismiss { background:var(--gold); color:#110900; border:none; padding:9px 24px; font-family:'Cinzel',serif; font-size:0.76rem; font-weight:700; border-radius:4px; cursor:pointer; letter-spacing:0.08em; transition:background 0.15s; display:block; width:100%; margin-top:4px; flex:0 0 auto; }
+.winner-dismiss { background:var(--gold); color:#110900; border:none; padding:9px 24px; font-family: var(--ff-display); font-size:0.76rem; font-weight:700; border-radius:4px; cursor:pointer; letter-spacing:0.08em; transition:background 0.15s; display:block; width:100%; margin-top:4px; flex:0 0 auto; }
 .winner-dismiss:hover { background:var(--gold-hi); }
 
 
@@ -3457,7 +3466,7 @@ body:not(.in-game) .my-zone {
   border: 2px solid var(--green);
   box-shadow: 0 0 8px rgba(39,174,96,0.5);
   display: flex; align-items: center; justify-content: center;
-  font-family: 'Cinzel', serif;
+  font-family: var(--ff-display);
   font-size: 1rem; color: var(--text-hi);
   flex-shrink: 0;
 }
@@ -3512,7 +3521,7 @@ body:not(.in-game) .my-zone {
   display: flex; flex-direction: column; align-items: center; gap: 1px;
   background: rgba(200,168,74,0.1); border: 1px solid var(--gold-dim);
   color: var(--gold); padding: 7px 4px; border-radius: 7px; cursor: pointer;
-  font-family: 'Inconsolata',monospace; text-align: center;
+  font-family: var(--ff-mono); text-align: center;
 }
 .btn-pct .pct-p { font-size: 0.74rem; font-weight: 700; color: var(--gold); }
 .btn-pct .pct-amt { font-size: 0.6rem; font-weight: 400; color: var(--text); }
@@ -3548,13 +3557,13 @@ body:not(.in-game) .my-zone {
 }
 .log-line { padding: 1px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
 .g-chat-input { display:flex; gap:6px; padding:5px 10px; background:rgba(4,10,6,0.97); border-bottom:1px solid var(--border); }
-.g-chat-input input { flex:1; background:rgba(255,255,255,0.05); border:1px solid var(--border); border-radius:2px; color:var(--cream); padding:4px 7px; font-family:'Inconsolata',monospace; font-size:0.76rem; outline:none; }
+.g-chat-input input { flex:1; background:rgba(255,255,255,0.05); border:1px solid var(--border); border-radius:2px; color:var(--cream); padding:4px 7px; font-family: var(--ff-mono); font-size:0.76rem; outline:none; }
 .g-chat-input input:focus { border-color:var(--gold); }
 
 /* Badge timer sous le cercle avatar */
 .seat-timer-badge {
   font-size: 0.72rem;
-  font-family: 'Inconsolata', monospace;
+  font-family: var(--ff-mono);
   font-weight: 900;
   color: #ffe234;
   letter-spacing: 0.05em;
@@ -3588,7 +3597,7 @@ body:not(.in-game) .my-zone {
   min-width: 0;
 }
 .raise-display {
-  font-family: 'Inconsolata', monospace;
+  font-family: var(--ff-mono);
   font-size: 0.8rem;
   color: #110900;
   font-weight: 700;
@@ -3626,7 +3635,7 @@ body:not(.in-game) .my-zone {
   gap: 7px; padding: 10px 14px; max-width: 480px; margin: 0 auto;
 }
 .wp-title {
-  font-family: 'Cinzel', serif; font-size: 0.9rem; letter-spacing: 0.1em;
+  font-family: var(--ff-display); font-size: 0.9rem; letter-spacing: 0.1em;
   color: var(--gold); text-transform: uppercase;
 }
 .wp-count {
@@ -3746,7 +3755,7 @@ body:not(.in-game) .my-zone {
   border: 1px solid #58c97a;
   border-radius: 4px;
   color: #d0ffd8;
-  font-family: 'Cinzel', serif;
+  font-family: var(--ff-display);
   font-size: 0.82rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -3824,7 +3833,7 @@ body:not(.in-game) .my-zone {
 }
 .eg-title {
   text-align: center;
-  font-family: 'Cinzel', serif;
+  font-family: var(--ff-display);
   font-size: 1.25rem; letter-spacing: 0.18em;
   text-transform: uppercase;
   color: var(--gold);
@@ -3868,7 +3877,7 @@ body:not(.in-game) .my-zone {
   font-size: 0.78rem; padding: 3px 0;
 }
 .eg-stat-label { color: var(--text); }
-.eg-stat-val   { color: var(--cream); font-weight: 600; font-family: 'Inconsolata',monospace; }
+.eg-stat-val   { color: var(--cream); font-weight: 600; font-family: var(--ff-mono); }
 .eg-stat-val.pos { color: #58c97a; }
 .eg-stat-val.neg { color: #e07070; }
 .eg-stat-divider {
@@ -3884,7 +3893,7 @@ body:not(.in-game) .my-zone {
   border: 1px solid var(--border);
   border-radius: 4px;
   color: var(--cream);
-  font-family: 'Cinzel', serif;
+  font-family: var(--ff-display);
   font-size: 0.75rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -3926,7 +3935,7 @@ body:not(.in-game) .my-zone {
   transition: background 0.15s, border-color 0.15s;
 }
 .auto-cf-row:hover { background: rgba(200,168,74,0.1); border-color: var(--gold-dim); }
-.auto-cf-label { font-size: 0.72rem; color: var(--gold-dim); font-weight: 500; font-family: 'Inconsolata', monospace; }
+.auto-cf-label { font-size: 0.72rem; color: var(--gold-dim); font-weight: 500; font-family: var(--ff-mono); }
 .auto-cf-row:has(input:checked) .auto-cf-label { color: var(--cream); font-weight: 700; }
 .auto-cf-hint { margin-left: auto; font-size: 0.58rem; color: var(--gold-dim); font-style: italic; }
 /* iOS-style toggle switch */
@@ -3961,7 +3970,7 @@ body:not(.in-game) .my-zone {
   border-bottom: 1px solid rgba(80,140,200,0.35);
   font-size: 0.75rem;
   color: #a8d0f0;
-  font-family: 'Cinzel', serif;
+  font-family: var(--ff-display);
   letter-spacing: 0.1em;
   text-transform: uppercase;
 }
@@ -4037,7 +4046,7 @@ body:not(.in-game) .my-zone {
   to   { transform: scale(1)   translateY(0);   opacity: 1; }
 }
 .ld-title {
-  font-family: 'Cinzel', serif;
+  font-family: var(--ff-display);
   font-size: 1rem; letter-spacing: 0.14em; text-transform: uppercase;
   color: var(--gold); text-align: center; margin-bottom: 12px;
 }
@@ -4054,7 +4063,7 @@ body:not(.in-game) .my-zone {
   border: 1px solid var(--border);
   border-radius: 4px;
   color: var(--cream);
-  font-family: 'Cinzel', serif;
+  font-family: var(--ff-display);
   font-size: 0.78rem;
   letter-spacing: 0.1em; text-transform: uppercase;
   cursor: pointer;
@@ -4093,7 +4102,7 @@ body:not(.in-game) .my-zone {
   gap: 12px; margin: 0 0 18px;
 }
 .qc-control label {
-  font-family: 'Cinzel', serif;
+  font-family: var(--ff-display);
   font-size: 0.78rem; letter-spacing: 0.1em; text-transform: uppercase;
   color: var(--gold-dim);
 }
@@ -4104,7 +4113,7 @@ body:not(.in-game) .my-zone {
   border: 1px solid var(--gold-dim);
   border-radius: 4px;
   color: var(--cream);
-  font-family: 'Inconsolata', monospace;
+  font-family: var(--ff-mono);
   font-size: 1.1rem;
   text-align: center;
   outline: none;
@@ -4153,7 +4162,7 @@ body:not(.in-game) .my-zone {
   border-radius: 3px;
   color: var(--cream);
   padding: 5px 10px;
-  font-family: 'Inconsolata', monospace;
+  font-family: var(--ff-mono);
   font-size: 0.78rem;
   outline: none;
   box-sizing: border-box;
@@ -4163,7 +4172,7 @@ body:not(.in-game) .my-zone {
    overflow/padding/background to match the chat panel pattern exactly.
    This rule keeps only the bits inline styles don't cover. */
 .players-list {
-  font-family: 'Inconsolata', monospace;
+  font-family: var(--ff-mono);
   font-size: 0.78rem;
 }
 .players-list .pl-row {
@@ -4171,7 +4180,7 @@ body:not(.in-game) .my-zone {
   align-items: center;
   gap: 10px;
   padding: 4px 0;          /* container provides the 12px lateral padding now */
-  font-family: 'Inconsolata', monospace;
+  font-family: var(--ff-mono);
   font-size: 0.78rem;
   color: var(--cream);
   border-bottom: 1px solid rgba(255,255,255,0.03);
@@ -4182,7 +4191,7 @@ body:not(.in-game) .my-zone {
 .players-list .pl-name-link { color: inherit; text-decoration: underline; text-decoration-color: var(--gold-dim); text-decoration-thickness: 1px; text-underline-offset: 2px; }
 .players-list .pl-name-link:hover, .players-list .pl-name-link:active { color: var(--gold-hi); text-decoration-color: var(--gold-hi); }
 .players-list .pl-flag { flex: none; display: inline-flex; align-items: center; justify-content: flex-end; gap: 4px; font-size: 0.95rem; line-height: 1; }
-.players-list .pl-cc { font-size: 0.6rem; color: var(--gold-dim); font-family: 'Inconsolata', monospace; letter-spacing: 0.04em; white-space: nowrap; }
+.players-list .pl-cc { font-size: 0.6rem; color: var(--gold-dim); font-family: var(--ff-mono); letter-spacing: 0.04em; white-space: nowrap; }
 .players-list .pl-flag .cc-flag { width: 20px; height: 15px; }
 .players-list .pl-star { flex: none; width: 1.4em; text-align: center; font-size: 0.8rem; line-height: 1; }
 .players-list .pl-id   { flex: none; min-width: 4.2em; text-align: right; color: var(--gold-dim); font-size: 0.66rem; }
@@ -4288,7 +4297,7 @@ body:not(.in-game) .my-zone {
   right: 0;
   text-align: center;
   color: var(--gold-dim);
-  font-family: 'Inconsolata', monospace;
+  font-family: var(--ff-mono);
   font-size: 0.62rem;
   letter-spacing: 0.04em;
   line-height: 1.5;
@@ -4369,7 +4378,7 @@ body:not(.in-game) .my-zone {
 .km-title {
   font-size: 1.1rem;
   color: var(--cream);
-  font-family: 'Cinzel', serif;
+  font-family: var(--ff-display);
   font-weight: 600;
   text-align: center;
   padding-right: 24px;
@@ -4421,7 +4430,7 @@ body:not(.in-game) .my-zone {
 }
 .km-row .km-name {
   color: var(--cream);
-  font-family: 'Inconsolata', monospace;
+  font-family: var(--ff-mono);
   font-size: 0.85rem;
   white-space: nowrap;
   overflow: hidden;
@@ -4429,7 +4438,7 @@ body:not(.in-game) .my-zone {
 }
 .km-row .km-meta {
   color: var(--gold-dim);
-  font-family: 'Inconsolata', monospace;
+  font-family: var(--ff-mono);
   font-size: 0.66rem;
   letter-spacing: 0.05em;
 }
@@ -4484,7 +4493,7 @@ body:not(.in-game) .my-zone {
 .kcm-title {
   font-size: 1.05rem;
   color: var(--cream);
-  font-family: 'Cinzel', serif;
+  font-family: var(--ff-display);
   font-weight: 600;
   text-align: center;
 }
@@ -4492,7 +4501,7 @@ body:not(.in-game) .my-zone {
   font-size: 0.85rem;
   color: var(--text);
   text-align: center;
-  font-family: 'Inconsolata', monospace;
+  font-family: var(--ff-mono);
   word-break: break-word;
 }
 .kcm-btns {
@@ -4506,7 +4515,7 @@ body:not(.in-game) .my-zone {
   flex: 1;
   padding: 9px 12px;
   border-radius: 4px;
-  font-family: 'Cinzel', serif;
+  font-family: var(--ff-display);
   font-size: 0.82rem;
   letter-spacing: 0.04em;
   cursor: pointer;
@@ -4617,7 +4626,7 @@ body:not(.in-game) .my-zone {
 .gim-spec-row .gim-spec-name {
   flex: 1;
   color: var(--cream);
-  font-family: 'Inconsolata', monospace;
+  font-family: var(--ff-mono);
   font-size: 0.82rem;
   white-space: nowrap;
   overflow: hidden;
@@ -4681,7 +4690,7 @@ body:not(.in-game) .my-zone {
   border: 1px solid var(--border-hi);
   border-radius: 5px;
   color: var(--gold-hi);
-  font-family: 'Cinzel', serif;
+  font-family: var(--ff-display);
   font-size: 0.85rem;
   letter-spacing: 0.04em;
   cursor: pointer;
@@ -4741,7 +4750,7 @@ body:not(.in-game) .my-zone {
   width: 100%; display: flex; align-items: center; gap: 12px;
   background: rgba(200,168,74,0.07); border: 1px solid var(--border); border-radius: 10px;
   color: var(--gold); cursor: pointer; padding: 13px 16px;
-  font-family: 'Cinzel', serif; font-size: 1.05rem; font-weight: 600; transition: background 0.2s;
+  font-family: var(--ff-display); font-size: 1.05rem; font-weight: 600; transition: background 0.2s;
 }
 .create-toggle:hover { background: rgba(200,168,74,0.13); }
 .create-toggle .ct-ico { font-size: 1.25rem; }
@@ -4762,17 +4771,17 @@ body:not(.in-game) .my-zone {
 .cf-preset:hover { border-color: var(--gold-dim); }
 .cf-preset.active { border-color: var(--gold); background: rgba(200,168,74,0.14); color: var(--cream); box-shadow: 0 0 12px rgba(200,168,74,0.18); }
 .cf-preset .cfp-ico { font-size: 1.5rem; line-height: 1.1; }
-.cf-preset .cfp-n { font-family: 'Cinzel', serif; font-size: 0.86rem; font-weight: 600; }
+.cf-preset .cfp-n { font-family: var(--ff-display); font-size: 0.86rem; font-weight: 600; }
 .cf-preset .cfp-d { font-size: 0.56rem; color: var(--gold-dim); }
 
 /* Curseurs (sliders) Joueurs max / Stack */
 .cf-sliders { display: grid; gap: 14px; margin-top: 14px; }
 .cf-slider label { display: flex; justify-content: space-between; align-items: baseline; font-size: 0.6rem; color: var(--gold-dim); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 8px; }
-.cf-range-val { font-family: 'Inconsolata', monospace; font-size: 1rem; font-weight: 700; color: var(--cream); letter-spacing: 0; }
+.cf-range-val { font-family: var(--ff-mono); font-size: 1rem; font-weight: 700; color: var(--cream); letter-spacing: 0; }
 .cf-num-wrap { display: inline-flex; align-items: center; gap: 5px; }
 .cf-range-num {
   width: 6.5em; background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 4px;
-  color: var(--cream); font-family: 'Inconsolata', monospace; font-size: 1rem; font-weight: 700;
+  color: var(--cream); font-family: var(--ff-mono); font-size: 1rem; font-weight: 700;
   padding: 3px 7px; text-align: right; outline: none; letter-spacing: 0; text-transform: none;
   -moz-appearance: textfield;
 }
@@ -4798,7 +4807,7 @@ body:not(.in-game) .my-zone {
 /* Barre de filtre des tables (design A : puces arrondies) */
 .filter-bar { display: flex; gap: 6px; flex-wrap: wrap; padding: 0 2px 12px; }
 .filter-chip {
-  font-family: 'Inconsolata', monospace; font-size: 0.7rem; font-weight: 500; letter-spacing: 0.02em;
+  font-family: var(--ff-mono); font-size: 0.7rem; font-weight: 500; letter-spacing: 0.02em;
   background: rgba(255,255,255,0.04); border: 1px solid var(--border); border-radius: 20px;
   color: var(--text); padding: 6px 13px; cursor: pointer; transition: all 0.15s; white-space: nowrap;
   display: inline-flex; align-items: center; gap: 5px;
@@ -4840,7 +4849,7 @@ body:not(.in-game) .my-zone {
   color: #7be0a0;
   border-radius: 8px;
   padding: 10px;
-  font-family: 'Cinzel', serif;
+  font-family: var(--ff-display);
   font-weight: 600;
   font-size: 0.88rem;
 }
@@ -4911,7 +4920,7 @@ body:not(.in-game) .my-zone {
   color: var(--text-hi);
   border: 1px solid var(--gold-dim);
   border-radius: 2px;
-  font-family: 'Cinzel', serif;
+  font-family: var(--ff-display);
   font-size: 0.74rem;
   font-weight: 600;
   letter-spacing: 0.1em;
@@ -4943,7 +4952,7 @@ body:not(.in-game) .my-zone {
   border-radius: 6px;
   box-shadow: 0 12px 32px rgba(0,0,0,0.7);
   color: var(--text-hi);
-  font-family: 'Inconsolata', monospace;
+  font-family: var(--ff-mono);
   font-size: 0.8rem;
   letter-spacing: 0.02em;
   opacity: 0;
