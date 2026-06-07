@@ -56,7 +56,7 @@ const out = [];
 let names = [];
 try { names = readdirSync(dir); } catch { names = []; }
 for (const name of names) {
-  if (name === 'svg' || name === 'pokerth' || name === 'pokerth-new' || name === 'casino-vert') continue;            // built-in vector deck (different format)
+  if (name === 'svg' || name === 'pokerth' || name === 'pokerth-new' || name === 'casino-vert' || name === 'pokerth-1-0') continue;            // built-in vector deck (different format)
   const p = join(dir, name);
   let st;
   try { st = statSync(p); } catch { continue; }
