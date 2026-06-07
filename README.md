@@ -31,6 +31,7 @@
 - [Install the app](#install-the-app)
 - [Managing &amp; resetting](#managing-resetting)
   - [Managing the service](#managing-the-service)
+  - [The admin panel](#admin-panel)
   - [Resetting the family leaderboard](#leaderboard-reset)
 - [Development (running from source)](#development) &nbsp;📂
 - [Protocol notes](#protocol-notes)
@@ -626,12 +627,13 @@ sudo pokerth-web update              # pull the latest version, reinstall deps, 
 pokerth-web status                   # show the PM2 status
 sudo pokerth-web set-period yearly   # leaderboard auto-reset: off | daily | monthly | yearly
 sudo pokerth-web reset-stats         # wipe the family leaderboard now
-sudo pokerth-web set-token SECRET    # enable the remote reset endpoint (run with no token to disable)
+sudo pokerth-web set-token SECRET    # admin token: unlocks the admin panel + remote reset (no token = both off)
+sudo pokerth-web admin off           # hide the admin panel (/admin returns 404); 'on' to show it again
 sudo pokerth-web uninstall           # stop and remove the service
 pokerth-web help                     # list every command
 ```
 
-`set-period` and `set-token` are saved to `/etc/pokerth-web.conf` and **re-applied automatically on every update and reboot**, so you set them once.
+`set-period`, `set-token` and `admin on|off` are saved to `/etc/pokerth-web.conf` and **re-applied automatically on every update and reboot**, so you set them once.
 
 The same actions work through the one-liner if you prefer not to use the command:
 
@@ -640,6 +642,23 @@ curl -sSL https://raw.githubusercontent.com/narmod/pokerth-web-client/HEAD/insta
 ```
 
 `uninstall` removes the PM2 service, its boot entry, the state file and the `pokerth-web` command, then asks separately before deleting the install directory or the dedicated service user. It never touches Node.js, PM2 or apt packages.
+
+<a id="admin-panel"></a>
+### The admin panel
+
+A self-hosted maintainer console lives at **`/admin`** (e.g. `https://your-host/admin`). It is governed by two independent switches:
+
+- **Visibility — `pokerth-web admin on|off`.** When **off**, `/admin` and every `/admin/*` route return a plain `404`, so the panel is fully hidden — not merely inert. **On** is the default and serves the panel. The setting is saved to `/etc/pokerth-web.conf` and re-applied on every update and reboot.
+- **Authentication — `pokerth-web set-token <token>`.** Every action in the panel requires this token; with no token set, the page still loads but all actions are refused. The same token also guards the remote `/stats` reset endpoint.
+
+A good rule of thumb: set a token before relying on the panel, and run `pokerth-web admin off` whenever you don't need it exposed. Always serve it over **HTTPS** — the panel sends the token in an `Authorization: Bearer` header, so it never lands in URLs, logs or browser history.
+
+To use it, open `/admin`, paste your token and **Log in**. The console is organised into four tabs:
+
+- **Server** — live status (version, uptime, connected players, open sockets); one-click self-update with or without restart; schedule a restart or update with a countdown banner shown to players; view the recent and last-action logs, clear them, or restart now.
+- **Leaderboard** — reset the shared leaderboard immediately, set the auto-reset period, and choose which login modes (Offline / LAN / PokerTH.net) appear on the login screen.
+- **Packages** — install or remove gallery **card decks** and **table styles** from a `.zip` file or URL.
+- **Broadcasts** — send a message to all connected players right now, schedule recurring messages, and edit the multilingual **welcome / rules message** shown on a player's first visit.
 
 <a id="leaderboard-reset"></a>
 ### Resetting the family leaderboard
