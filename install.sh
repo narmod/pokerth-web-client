@@ -47,6 +47,7 @@ SETUP_FIREWALL="${SETUP_FIREWALL:-}"
 ASSUME_YES="${ASSUME_YES:-}"
 STATS_RESET_PERIOD="${STATS_RESET_PERIOD:-}"
 STATS_ADMIN_TOKEN="${STATS_ADMIN_TOKEN:-}"
+ADMIN_ENABLED="${ADMIN_ENABLED:-}"
 DEFAULT_APP_NAME="pokerth-web"
 CONF="/etc/pokerth-web.conf"
 CREATED_USER=""
@@ -123,6 +124,7 @@ load_state() {
     [ -n "$CREATED_USER" ] || CREATED_USER="$(conf_get CREATED_USER)"
     [ -n "$STATS_RESET_PERIOD" ] || STATS_RESET_PERIOD="$(conf_get STATS_RESET_PERIOD)"
     [ -n "$STATS_ADMIN_TOKEN" ]  || STATS_ADMIN_TOKEN="$(conf_get STATS_ADMIN_TOKEN)"
+    [ -n "$ADMIN_ENABLED" ]      || ADMIN_ENABLED="$(conf_get ADMIN_ENABLED)"
   fi
   APP_NAME="${APP_NAME:-$DEFAULT_APP_NAME}"
 }
@@ -137,6 +139,7 @@ NO_TLS=$NO_TLS
 CREATED_USER=$CREATED_USER
 STATS_RESET_PERIOD=$STATS_RESET_PERIOD
 STATS_ADMIN_TOKEN=$STATS_ADMIN_TOKEN
+ADMIN_ENABLED=$ADMIN_ENABLED
 EOF
 }
 
@@ -164,6 +167,7 @@ app_restart() {
   local envv=()
   [ -n "$STATS_RESET_PERIOD" ] && envv+=("STATS_RESET_PERIOD=$STATS_RESET_PERIOD")
   [ -n "$STATS_ADMIN_TOKEN" ]  && envv+=("STATS_ADMIN_TOKEN=$STATS_ADMIN_TOKEN")
+  [ -n "$ADMIN_ENABLED" ]      && envv+=("ADMIN_ENABLED=$ADMIN_ENABLED")
   if run_as pm2 describe "$APP_NAME" >/dev/null 2>&1; then
     run_as env "${envv[@]}" pm2 restart "$APP_NAME" --update-env
   else
@@ -311,6 +315,7 @@ SUMMARY
   local envv=()
   [ -n "$STATS_RESET_PERIOD" ] && envv+=("STATS_RESET_PERIOD=$STATS_RESET_PERIOD")
   [ -n "$STATS_ADMIN_TOKEN" ]  && envv+=("STATS_ADMIN_TOKEN=$STATS_ADMIN_TOKEN")
+  [ -n "$ADMIN_ENABLED" ]      && envv+=("ADMIN_ENABLED=$ADMIN_ENABLED")
   local pm2_args=("proxy.js" --name "$APP_NAME" -- "$PORT")
   [ -n "$NO_TLS" ] && pm2_args+=("--notls")
   ( cd "$INSTALL_DIR" && run_as env "${envv[@]}" pm2 start "${pm2_args[@]}" )
@@ -527,6 +532,33 @@ do_set_token() {
   app_restart
   if [ -n "$STATS_ADMIN_TOKEN" ]; then ok "Admin token set — remote reset endpoint enabled."
   else ok "Admin token cleared — remote reset endpoint disabled."; fi
+}
+
+# ── ENABLE / DISABLE ADMIN PANEL ──────────────────────────────────────────────
+# Visibility switch, independent from the admin token. `off` makes /admin (and
+# every /admin/* route) answer 404 — the panel is fully hidden, not just inert.
+# `on` serves it again; actions still require a token set via set-token.
+do_admin() {
+  local val="${1:-}"
+  case "$val" in
+    on|enable|enabled)    val="1" ;;
+    off|disable|disabled) val="0" ;;
+    *) errln "Usage: pokerth-web admin <on|off>"; exit 1 ;;
+  esac
+  load_state
+  [ -n "$RUN_USER" ] || RUN_USER="$(id -un)"
+  [ -n "$INSTALL_DIR" ] || { errln "No install found (missing $CONF). Install first."; exit 1; }
+  ADMIN_ENABLED="$val"
+  step "PokerTH Web Client — admin panel: $([ "$val" = 1 ] && echo on || echo off)"
+  write_state
+  info "Applying and restarting"
+  app_restart
+  if [ "$val" = "1" ]; then
+    ok "Admin panel enabled — reachable at /admin."
+    [ -n "$STATS_ADMIN_TOKEN" ] || warn "No admin token set; actions stay locked. Run: pokerth-web set-token <token>"
+  else
+    ok "Admin panel disabled — /admin now returns 404."
+  fi
 }
 
 # ── Card decks (gallery) management ──────────────────────────────────────────
@@ -752,6 +784,7 @@ Commands:
   reset-stats Reset the shared family leaderboard (stats.json)
   set-period  Set auto-reset period: off | daily | monthly | yearly
   set-token   Set (or clear) the admin token for the remote reset endpoint
+  admin       Show or hide the admin panel: on | off
   deck-add    Install a gallery card deck from a .zip file or URL
   deck-list   List installed card decks
   deck-remove Remove an installed gallery deck by id
@@ -778,6 +811,7 @@ case "$CMD" in
   reset-stats|stats-reset) do_reset_stats ;;
   set-period)     do_set_period "$2" ;;
   set-token)      do_set_token "$2" ;;
+  admin)          do_admin "$2" ;;
   deck-add|deck-install)  do_deck_add "${2:-}" ;;
   deck-list|deck-ls)      do_deck_list ;;
   deck-remove|deck-rm)    do_deck_remove "${2:-}" ;;
