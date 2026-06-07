@@ -7915,14 +7915,13 @@ function dismissWinner() {
 
       setStatus(directWS ? t('connDirect') : t('connProxy'));
 
-      // Réactions emoji : aucun canal dédié sur pokerth.net (protocole officiel).
-      // On les désactive en mode direct pour ne pas détourner le chat ; elles
-      // restent disponibles en LAN / serveur dédié (relayées par le proxy).
+      // Réactions emoji : relayées partout via la convention /emoji dans le chat
+      // de partie (interop web <-> Qt/QML, y compris pokerth.net). Le bouton
+      // reste donc toujours visible quel que soit le mode de connexion.
       window._directWS = directWS;
       try {
         var _rtb = document.getElementById('react-toggle-btn');
-        if (_rtb) _rtb.style.display = directWS ? 'none' : '';
-        if (directWS) { var _rp = document.getElementById('g-reaction-panel'); if (_rp) _rp.style.display = 'none'; }
+        if (_rtb) _rtb.style.display = '';
       } catch (e) {}
 
       // Sauvegarder les paramètres pour la reconnexion auto
@@ -9841,4 +9840,4 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.2.288'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.2.289'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();

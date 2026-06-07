@@ -1019,11 +1019,13 @@ body {
   box-sizing: border-box;
   font-size: 0.75rem;
   line-height: 1;
+  color: var(--text-hi);
 }
 /* Bouton carré (icône seule) — un peu plus large pour respirer */
 .header .btn-icon {
   width: 34px;
   padding: 0;
+  background: var(--inset);
 }
 
 /* ── Unread-chat badge ── */
@@ -4305,10 +4307,12 @@ body:not(.in-game) .my-zone {
   box-sizing: border-box;
   font-size: 0.75rem;
   line-height: 1;
+  color: var(--text-hi);
 }
 #s-connect > div:first-child .btn-icon {
   width: 30px;
   padding: 0;
+  background: var(--inset);
 }
 
 /* ═══════════════════════════════════════════════════════════════════
