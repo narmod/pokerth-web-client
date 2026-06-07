@@ -164,6 +164,17 @@
         <div id="defaultsMsg" class="msg"></div>
       </div>
       <div class="card">
+        <h2>Default login form (new visitors)</h2>
+        <p class="muted" style="margin:0 0 8px">Pre-fills the connect form on a player's first visit only. Leave a field blank to keep the app default; passwords are never pre-filled. Players who already connected keep their own values.</p>
+        <div class="defrow" style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin:5px 0"><span>Default mode</span><select id="defMode"><option value="">App default</option><option value="offline">Training (bots)</option><option value="lan-dedi">LAN / private server</option><option value="pokerthnet">pokerth.net</option></select></div>
+        <div class="defrow" style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin:5px 0"><span>Server host</span><input id="defHost" placeholder="(app default)" maxlength="120" autocomplete="off" style="flex:1;min-width:0"></div>
+        <div class="defrow" style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin:5px 0"><span>Server port</span><input id="defPort" type="number" min="1" max="65535" placeholder="7234" style="width:110px"></div>
+        <div class="defrow" style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin:5px 0"><span>Proxy URL</span><input id="defProxy" placeholder="(auto)" maxlength="200" autocomplete="off" style="flex:1;min-width:0"></div>
+        <div class="defrow" style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin:5px 0"><span>TLS (LAN / dedicated)</span><select id="defTls"><option value="">App default (off)</option><option value="1">On</option><option value="0">Off</option></select></div>
+        <div style="margin-top:8px"><button id="saveLogin" class="use">Save</button></div>
+        <div id="loginMsg" class="msg"></div>
+      </div>
+      <div class="card">
         <h2>Maintenance</h2>
         <p class="muted" style="margin:0 0 8px">“Update (no restart)” pushes new client files live instantly without dropping connections; the other actions restart the server briefly — this page reconnects on its own.</p>
         <div class="btnrow">
@@ -424,6 +435,7 @@
         if(d.modes){ modesState=Object.assign({offline:true,lan:true,pokerthnet:true},d.modes); renderModes(); }
         if($('defTheme') && typeof d.defaultTheme==='string') $('defTheme').value=d.defaultTheme;
         if(d.defaults && typeof d.defaults==='object'){ var _DM={defHaptic:'haptic',defVoice:'voice',defAssist:'assist',defAuto:'autobtn',defQuick:'quickbet',defBB:'displaybb'}; Object.keys(_DM).forEach(function(id){ var el=$(id); if(el){ var dv=d.defaults[_DM[id]]; el.value=(dv==='0'||dv==='1')?dv:''; } }); }
+        if(d.loginDefaults && typeof d.loginDefaults==='object'){ var L=d.loginDefaults; if($('defMode'))$('defMode').value=(['offline','lan-dedi','pokerthnet'].indexOf(L.mode)>=0)?L.mode:''; if($('defHost'))$('defHost').value=L.host||''; if($('defPort'))$('defPort').value=L.port||''; if($('defProxy'))$('defProxy').value=L.proxy||''; if($('defTls'))$('defTls').value=(L.tls==='0'||L.tls==='1')?L.tls:''; }
       }
       var sn=$('schedNow'), sc=$('schedCancel');
       if(sn){ if(d.restartAt){ sn.textContent='Scheduled: '+(d.restartKind==='restart'?'restart only':'update + restart')+' at '+new Date(d.restartAt).toLocaleString(); if(sc) sc.style.display=''; } else { sn.textContent='Nothing scheduled.'; if(sc) sc.style.display='none'; } }
@@ -457,6 +469,13 @@
     var defs={}; Object.keys(DM).forEach(function(id){ var el=$(id); if(el && (el.value==='0'||el.value==='1')) defs[DM[id]]=el.value; });
     var m=$('defaultsMsg');
     api('/admin/config',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({defaults:defs,token:tok()})})
+      .then(function(r){return r.json();}).then(function(d){ if(d&&d.ok){ m.textContent='Saved.'; m.className='msg ok'; } else { m.textContent='Failed: '+((d&&d.error)||'error'); m.className='msg err'; } })
+      .catch(function(){ m.textContent='Network error.'; m.className='msg err'; });
+  }); })();
+  (function(){ var sl=$('saveLogin'); if(!sl) return; sl.addEventListener('click', function(){
+    var L={ mode:($('defMode')?$('defMode').value:''), host:($('defHost')?$('defHost').value.trim():''), port:($('defPort')?$('defPort').value.trim():''), proxy:($('defProxy')?$('defProxy').value.trim():''), tls:($('defTls')?$('defTls').value:'') };
+    var m=$('loginMsg');
+    api('/admin/config',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({loginDefaults:L,token:tok()})})
       .then(function(r){return r.json();}).then(function(d){ if(d&&d.ok){ m.textContent='Saved.'; m.className='msg ok'; } else { m.textContent='Failed: '+((d&&d.error)||'error'); m.className='msg err'; } })
       .catch(function(){ m.textContent='Network error.'; m.className='msg err'; });
   }); })();
