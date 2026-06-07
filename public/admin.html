@@ -360,7 +360,7 @@
     renderList($('decks'),  lastPkgs.decks.filter(function(p){return pkgMatch(p,q);}),  'deck'); }
   function renderPkgs(d){ lastPkgs={tables:d.tables||[],decks:d.decks||[]}; drawPkgs(); }
   if($('pkgFilter')) $('pkgFilter').addEventListener('input', drawPkgs);
-  function refresh(){ api('/admin/pkg-list').then(function(r){return r.json();}).then(function(d){ if(d.ok)renderPkgs(d); }).catch(function(){ say('Could not refresh the package list \u2014 network error.','err'); }); }
+  function refresh(){ api('/admin/pkg-list?t='+Date.now()).then(function(r){return r.json();}).then(function(d){ if(d.ok)renderPkgs(d); }).catch(function(){ say('Could not refresh the package list \u2014 network error.','err'); }); }
 
   // leaderboard
   function bmsg(t,cls){ $('boardmsg').textContent=t; $('boardmsg').className='msg '+(cls||''); }

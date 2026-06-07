@@ -23,7 +23,7 @@
  *                 Cross-origin requests and WS upgrades are left untouched.
  *                 (Fonts are now self-hosted and handled by SWR above.)
  */
-const CACHE_VERSION = 'pokerth-v0.2.273';
+const CACHE_VERSION = 'pokerth-v0.2.274';
 
 // Where navigations fall back to when the network is unavailable.
 const NAV_FALLBACK = '/pokerth-client.html';
@@ -236,13 +236,17 @@ self.addEventListener('fetch', function(e) {
   var url = new URL(e.request.url);
   // Don't intercept WebSocket upgrades or cross-origin requests (fonts etc.)
   if (url.origin !== self.location.origin) return;
+  // The admin dashboard + its API are authenticated and no-store: never let the
+  // SW cache or serve them (otherwise the package list, status, logs… show stale
+  // after a change). Network only — admin is an online-only tool.
+  if (/^\/admin(?:\/|$)/.test(url.pathname)) return;
 
   if (e.request.mode === 'navigate') {
     e.respondWith(handleNavigation(e));
-  } else if (/\.(?:js|mjs|css)$/.test(url.pathname) || /^\/(?:table\/tables|cards\/decks|themes\/themes)\.json$/.test(url.pathname)) {
-    // Code AND the runtime gallery manifests are network-first: a freshly
-    // imported package (admin → Packages) must be visible on the next load,
-    // never served stale from the SW cache.
+  } else if (/\.(?:js|mjs|css)$/.test(url.pathname) || /^\/(?:table\/tables|cards\/decks|themes\/themes)\.json$/.test(url.pathname) || url.pathname === '/app-config') {
+    // Code, the runtime gallery manifests, AND the live /app-config are
+    // network-first: a freshly imported package or a changed admin default must
+    // be visible on the next load, never served stale from the SW cache.
     e.respondWith(handleCode(e));
   } else {
     e.respondWith(handleAsset(e));
