@@ -69,7 +69,7 @@ const DECKS = [
   { id: 'casino-vert', key: 'deckCasinoVert', fallback: 'Green Casino', swatch: '#1e6b1e', ext: 'svg' },
   { id: 'pokerth', key: 'deckPokerth', fallback: 'PokerTH', swatch: '#1d6b30', ext: 'png' },
   { id: 'pokerth-1-0', key: 'deckPokerth10', fallback: 'PokerTH 1.0', swatch: '#1d6b30', ext: 'png' },
-  { id: 'pokerth-new', key: 'deckPokerthNew', fallback: 'PokerTH new', preview: '/cards/pokerth-new/preview.png', swatch: '#a52a2a', ext: 'svg' },
+  { id: 'pokerth-new', key: 'deckPokerthNew', fallback: 'PokerTH new', swatch: '#a52a2a', ext: 'svg' },
 ];
 
 // Buttons axis: a built-in "Glossy" scheme (PokerTH colour-coding, kept so
@@ -372,7 +372,7 @@ function _feltStyle(t) {
 }
 function _pngFan(deckId, big) {
   function c(src, x, r) { return '<img src="' + src + '" alt="" style="position:absolute;top:50%;left:' + x + '%;height:' + (big ? 80 : 76) + '%;width:auto;aspect-ratio:5/7;border-radius:3px;transform:translateY(-50%) rotate(' + r + 'deg);box-shadow:0 1px 3px rgba(0,0,0,.5)">'; }
-  var ext = _deckExt(deckId); return c('/cards/' + deckId + '/flipside.' + ext, big ? 8 : 6, -12) + c('/cards/' + deckId + '/25.' + ext, big ? 32 : 30, 0) + c('/cards/' + deckId + '/38.' + ext, big ? 54 : 52, 12);
+  var ext = _deckExt(deckId); var bust = '?v=' + (window.BUILD_VERSION || '0'); return c('/cards/' + deckId + '/flipside.' + ext + bust, big ? 8 : 6, -12) + c('/cards/' + deckId + '/25.' + ext, big ? 32 : 30, 0) + c('/cards/' + deckId + '/38.' + ext, big ? 54 : 52, 12);
 }
 // Mini card faces for previews, matching the in-game Classic layout
 // (rank+suit index top-left, large suit pip centered).
