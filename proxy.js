@@ -706,12 +706,8 @@ function handleAdmin(req, res, reqPathOnly, query) {
         }
         if (d.loginDefaults && typeof d.loginDefaults === 'object') {
           var ld = d.loginDefaults, lout = {};
-          lout.mode  = (['offline', 'lan-dedi', 'pokerthnet'].indexOf(ld.mode) >= 0) ? ld.mode : '';
-          lout.host  = (typeof ld.host === 'string') ? ld.host.trim().slice(0, 120) : '';
-          var _p = (ld.port == null) ? '' : String(ld.port).trim();
-          lout.port  = /^\d{1,5}$/.test(_p) ? _p : '';
-          lout.proxy = (typeof ld.proxy === 'string') ? ld.proxy.trim().slice(0, 200) : '';
-          lout.tls   = (ld.tls === '0' || ld.tls === '1') ? ld.tls : '';
+          lout.mode = (['offline', 'lan-dedi', 'pokerthnet'].indexOf(ld.mode) >= 0) ? ld.mode : '';
+          lout.host = (typeof ld.host === 'string') ? ld.host.trim().slice(0, 120) : '';
           _adminConfig.loginDefaults = lout;
         }
         saveAdminConfig();

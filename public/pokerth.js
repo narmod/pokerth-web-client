@@ -1511,22 +1511,18 @@ document.addEventListener("DOMContentLoaded", function() {
         try { if (localStorage.getItem(MAP[k]) === null) localStorage.setItem(MAP[k], v); } catch (e) {}
       });
     }
-    // First-visit default login form (admin → /app-config.loginDefaults). Pre-fills
-    // the connect form for brand-new visitors only: each value is seeded into its
-    // localStorage key ONLY when this browser never set it, so returning players keep
-    // their own. A share link still wins. After seeding we re-derive the whole connect
-    // UI once (App.onServerOrGuestChange) so mode + host/port/proxy/TLS stay coherent.
+    // Default login form (admin → /app-config.loginDefaults). Two knobs:
+    //  • mode — pre-selects the entry screen on a FIRST visit only (a returning player
+    //           keeps whatever they last chose);
+    //  • host — points LAN / dedicated at a specific server. The LAN/unauth branches
+    //           derive BOTH host and proxy from hostInput.dataset.autoHost and rebuild
+    //           them on every (re)connect, so the proxy auto-follows the host and can
+    //           never go stale — the client always reconnects to this server.
+    // A share link still wins; we re-derive the connect UI once at the end.
     function _applyLoginDefaults(login) {
       if (!login || typeof login !== 'object' || window._shareLinkActive) return;
-      var seed = function (k, v) { try { if (v && localStorage.getItem(k) === null) localStorage.setItem(k, v); } catch (e) {} };
-      seed('pth_host', login.host);
-      seed('pth_port', login.port);
-      seed('pth_proxy', login.proxy);
-      if (login.tls === '0' || login.tls === '1') seed('pth_tls', login.tls);
-      // The LAN / unauth branches reset host to hostInput.dataset.autoHost — point it
-      // at the admin host so a first-visit auto-fill uses it instead of the origin.
-      if (login.host) { try { var _hi = document.getElementById('host'); if (_hi && localStorage.getItem('pth_host') === login.host) _hi.dataset.autoHost = login.host; } catch (e) {} }
-      // Default entry mode: pre-select it (first visit only) if it's an enabled option.
+      if (login.host) { try { var _hi = document.getElementById('host'); if (_hi) _hi.dataset.autoHost = login.host; } catch (e) {} }
+      // Default entry mode: pre-select it on a first visit only if it's an enabled option.
       if (login.mode) {
         var hadMode = true; try { hadMode = localStorage.getItem('pth_server_mode') !== null; } catch (e) {}
         if (!hadMode) {
@@ -7603,16 +7599,16 @@ function dismissWinner() {
         // Restore the per-mode saved pseudo (overrides whatever was
         // typed under another mode — same UX as switching profiles).
         if (nickEl) nickEl.value = lsGet('pth_lan_nick') || '';
-        $('use-tls').checked = (lsGet('pth_tls') === '1');
-        if (proxyInput) proxyInput.value = lsGet('pth_proxy') || (proto + '//' + (autoHost||'localhost') + ':' + port);
+        $('use-tls').checked = false;
+        if (proxyInput) proxyInput.value = proto + '//' + (autoHost||'localhost') + ':' + port;
         if (hostInput && autoHost) hostInput.value = autoHost;
         setStatus(t('lanModeNote'), '', 'lanModeNote');
       } else if (mode === 'unauth') {
         $('nick-label').textContent = t('enterNickFree');
         $('nick').placeholder = t('nickPlaceholder');
         if (nickEl) nickEl.value = lsGet('pth_unauth_nick') || '';
-        $('use-tls').checked = (lsGet('pth_tls') === '1');
-        if (proxyInput) proxyInput.value = lsGet('pth_proxy') || (proto + '//' + (autoHost||'localhost') + ':' + port);
+        $('use-tls').checked = false;
+        if (proxyInput) proxyInput.value = proto + '//' + (autoHost||'localhost') + ':' + port;
         if (hostInput && autoHost) hostInput.value = autoHost;
         setStatus(t('chatAvailPrivate'), '', 'chatAvailPrivate');
       } else if (mode === 'guest') {
@@ -7853,7 +7849,6 @@ function dismissWinner() {
         if (hv)  localStorage.setItem('pth_host',  hv.value.trim());
         if (pv)  localStorage.setItem('pth_port',  pv.value.trim());
         if (xv)  localStorage.setItem('pth_proxy', xv.value.trim());
-        var tv = $('use-tls'); if (tv) localStorage.setItem('pth_tls', tv.checked ? '1' : '0');
         // Auto-save the nickname per-mode (no Remember-me checkbox
         // needed — silent persistence is the new default). Guest is
         // skipped because it manages its own pth_guest_name key, and
@@ -9876,4 +9871,4 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.2.299'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.2.300'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
