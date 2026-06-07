@@ -31,6 +31,8 @@ html { touch-action: manipulation; -webkit-text-size-adjust: 100%; text-size-adj
   --gold-hi:    #e0c070;
   --gold-dim:   #7a6428;
   --cream:      #ede8dc;
+  --field-bg:   #0c1e0e;
+  --on-gold:    #110900;
   --text:       #9aaa92;
   --text-hi:    #c8d8c0;
   --red:        #c0392b;
@@ -56,6 +58,8 @@ html { touch-action: manipulation; -webkit-text-size-adjust: 100%; text-size-adj
   --gold-hi:    #e0c070;
   --gold-dim:   #7a6428;
   --cream:      #ece9e2;
+  --field-bg:   #12151b;
+  --on-gold:    #110900;
   --text:       #97a0ad;
   --text-hi:    #d4dae3;
   --red:        #c0392b;
@@ -82,6 +86,8 @@ html { touch-action: manipulation; -webkit-text-size-adjust: 100%; text-size-adj
   --gold-hi:    #f3d75e;
   --gold-dim:   #a98f2f;
   --cream:      #eff1f5;
+  --field-bg:   #161c25;
+  --on-gold:    #110900;
   --text:       #a0acc4;
   --text-hi:    #eff1f5;
   --red:        #c0392b;
@@ -108,6 +114,8 @@ html { touch-action: manipulation; -webkit-text-size-adjust: 100%; text-size-adj
   --gold-hi:    #b8941f;
   --gold-dim:   #6e560f;
   --cream:      #1d222b;
+  --field-bg:   #ffffff;
+  --on-gold:    #fdf6e6;
   --text:       #576378;
   --text-hi:    #1d222b;
   --red:        #a62f22;
@@ -139,6 +147,8 @@ html { touch-action: manipulation; -webkit-text-size-adjust: 100%; text-size-adj
   --gold-hi:    #e0c070;
   --gold-dim:   #7a6428;
   --cream:      #f2e6e2;
+  --field-bg:   #1e0a0c;
+  --on-gold:    #110900;
   --text:       #bd9d9a;
   --text-hi:    #ecd6d2;
   --red:        #c0392b;
@@ -300,7 +310,7 @@ body {
 .sel-wrap select {
   -webkit-appearance: none; appearance: none;
   width: 100%;
-  background: #0c1e0e;
+  background: var(--field-bg);
   border: 1px solid var(--border);
   border-radius: 2px;
   color: var(--cream);
@@ -310,7 +320,7 @@ body {
   outline: none; cursor: pointer;
 }
 .sel-wrap select:focus { border-color: var(--gold); }
-.sel-wrap select option { background: #0c1e0e; color: var(--cream); }
+.sel-wrap select option { background: var(--field-bg); color: var(--cream); }
 .sel-arr { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); color: var(--gold); pointer-events: none; font-size: 0.8rem; }
 
 .avatar-picker {
@@ -838,7 +848,7 @@ body {
 }
 
 .f input {
-  background: rgba(255,255,255,0.04);
+  background: var(--field-bg);
   border: 1px solid var(--border);
   border-radius: 2px;
   padding: 9px 11px;
@@ -856,7 +866,7 @@ body {
 
 .btn-primary {
   background: var(--gold);
-  color: #110900;
+  color: var(--on-gold);
   border: none;
   padding: 12px;
   font-family: var(--ff-display);
@@ -1084,7 +1094,7 @@ body {
 .cf { display: flex; flex-direction: column; gap: 3px; }
 .cf-sm { min-width: 80px; }
 .cf label { font-size: 0.55rem; color: var(--gold-dim); letter-spacing: 0.1em; text-transform: uppercase; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.cf input, .cf select { background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 2px; color: var(--cream); padding: 5px 7px; font-family: var(--ff-mono); font-size: 0.82rem; outline: none; width: 100%; }
+.cf input, .cf select { background: var(--field-bg); border: 1px solid var(--border); border-radius: 2px; color: var(--cream); padding: 5px 7px; font-family: var(--ff-mono); font-size: 0.82rem; outline: none; width: 100%; }
 .cf input:focus, .cf select:focus { border-color: var(--gold); }
 
 .pane-header {
@@ -1194,7 +1204,7 @@ body {
 .chat-input input:focus { border-color: var(--gold); }
 .chat-send {
   background: var(--gold);
-  color: #110900;
+  color: var(--on-gold);
   border: none;
   padding: 0 14px;
   font-family: var(--ff-display);
@@ -2631,7 +2641,7 @@ body {
 
 .btn-join {
   background: var(--gold);
-  color: #110900;
+  color: var(--on-gold);
   border: none;
   padding: 4px 12px;
   font-family: var(--ff-display);
