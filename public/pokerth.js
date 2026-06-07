@@ -7950,6 +7950,8 @@ function dismissWinner() {
       // de partie (interop web <-> Qt/QML, y compris pokerth.net). Le bouton
       // reste donc toujours visible quel que soit le mode de connexion.
       window._directWS = directWS;
+      // Marqueur de mode pour le CSS : drapeaux agrandis uniquement sur pokerth.net.
+      try { document.body.classList.toggle('pth-net', !!directWS); } catch (e) {}
       try {
         var _rtb = document.getElementById('react-toggle-btn');
         if (_rtb) _rtb.style.display = '';
@@ -9871,4 +9873,4 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.2.300'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.2.301'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();

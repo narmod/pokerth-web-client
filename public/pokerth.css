@@ -1706,10 +1706,13 @@ body {
 
 /* Tablet */
 @media (max-width: 768px) {
-  .blind-chip  { width: 16px !important; height: 16px !important; top: -9px !important; left: -9px !important; }
-  .dealer-chip { width: 16px !important; height: 16px !important; top: -9px !important; right: -9px !important; }
+  .blind-chip  { width: 19px !important; height: 19px !important; top: -11px !important; left: -11px !important; }
+  .dealer-chip { width: 19px !important; height: 19px !important; top: -11px !important; right: -11px !important; }
   .seat-flag   { bottom: -6px !important; right: -6px !important; }
   .seat-flag .cc-flag { width: 16px !important; height: 12px !important; }
+  /* Drapeaux agrandis UNIQUEMENT en mode pokerth.net (body.pth-net) */
+  body.pth-net .seat-flag   { bottom: -8px !important; right: -8px !important; }
+  body.pth-net .seat-flag .cc-flag { width: 20px !important; height: 15px !important; }
   .seat-avatar { width: 28px; height: 28px; font-size: 0.7rem; }
   .seat-name,.seat-money,.seat-action-label,.seat-bet { font-size: 0.48rem; }
 .pill { font-size: 0.6rem; padding: 2px 5px; }
@@ -1736,10 +1739,13 @@ body {
   .pk.sm { width: 22px; height: 32px; font-size: 0.54rem; }
 
   /* Chips : très excentrés pour éviter le chevauchement avec le timer */
-  .blind-chip  { width: 13px !important; height: 13px !important; top: -11px !important; left: -11px !important; }
-  .dealer-chip { width: 13px !important; height: 13px !important; top: -11px !important; right: -11px !important; }
+  .blind-chip  { width: 17px !important; height: 17px !important; top: -13px !important; left: -13px !important; }
+  .dealer-chip { width: 17px !important; height: 17px !important; top: -13px !important; right: -13px !important; }
   .seat-flag   { bottom: -5px !important; right: -5px !important; }
   .seat-flag .cc-flag { width: 12px !important; height: 9px !important; }
+  /* Drapeaux agrandis UNIQUEMENT en mode pokerth.net (body.pth-net) */
+  body.pth-net .seat-flag   { bottom: -7px !important; right: -7px !important; }
+  body.pth-net .seat-flag .cc-flag { width: 16px !important; height: 12px !important; }
   /* Seats: tiny for 10-player tables */
   .seat-avatar { width: 18px; height: 18px; font-size: 0.46rem; }
   .seat-name { font-size: 0.36rem; }
@@ -1779,10 +1785,13 @@ body {
 
 /* ── Phone LANDSCAPE (wide, short) ── */
 @media (max-height: 500px) and (orientation: landscape) {
-  .blind-chip  { width: 14px !important; height: 14px !important; top: -10px !important; left: -10px !important; }
-  .dealer-chip { width: 14px !important; height: 14px !important; top: -10px !important; right: -10px !important; }
+  .blind-chip  { width: 18px !important; height: 18px !important; top: -12px !important; left: -12px !important; }
+  .dealer-chip { width: 18px !important; height: 18px !important; top: -12px !important; right: -12px !important; }
   .seat-flag   { bottom: -5px !important; right: -5px !important; }
   .seat-flag .cc-flag { width: 14px !important; height: 10px !important; }
+  /* Drapeaux agrandis UNIQUEMENT en mode pokerth.net (body.pth-net) */
+  body.pth-net .seat-flag   { bottom: -7px !important; right: -7px !important; }
+  body.pth-net .seat-flag .cc-flag { width: 17px !important; height: 13px !important; }
   /* Oval: small, left side */
   .felt-oval::before {
   content: '';
