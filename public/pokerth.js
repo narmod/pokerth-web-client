@@ -466,6 +466,29 @@ function showRestartNotice(deadlineMs, kind, note) {
 window.showRestartNotice = showRestartNotice;
 window.hideRestartNotice = hideRestartNotice;
 
+// ── Information broadcast (admin → all clients) ────────────────────────────
+// Gold toast matching the blinds announcement palette; dismissible (×); stays
+// until closed; a newer message replaces the previous one. Sits just below the
+// restart notice when both are showing. Message/icon set via textContent.
+function hideInfoToast() { var el = document.getElementById('srv-info-toast'); if (el) el.remove(); }
+function showInfoToast(message, icon) {
+  hideInfoToast();
+  var top = document.getElementById('srv-restart-notice') ? 76 : 16;
+  var el = document.createElement('div');
+  el.id = 'srv-info-toast';
+  el.style.cssText = 'position:fixed;top:' + top + 'px;left:50%;transform:translateX(-50%);max-width:min(92vw,420px);z-index:9999;display:flex;align-items:flex-start;gap:10px;background:linear-gradient(135deg,rgba(200,168,74,.97),rgba(168,134,40,.97));color:#1a0a00;padding:11px 15px;border-radius:14px;box-shadow:0 8px 28px rgba(0,0,0,.55),0 0 0 1px rgba(255,255,255,.25) inset;font-weight:600;font-size:.9rem;line-height:1.4;white-space:pre-line;';
+  if (icon) { var ic = document.createElement('span'); ic.textContent = icon; ic.style.cssText = 'flex:none;font-size:1.1rem;line-height:1.3;'; el.appendChild(ic); }
+  var span = document.createElement('span'); span.textContent = message; el.appendChild(span);
+  var x = document.createElement('button');
+  x.setAttribute('aria-label', 'Close'); x.textContent = '\u00d7';
+  x.style.cssText = 'flex:none;background:transparent;border:0;color:#1a0a00;font-size:1.25rem;line-height:1;cursor:pointer;padding:0 2px;opacity:.7;';
+  x.addEventListener('click', hideInfoToast);
+  el.appendChild(x);
+  document.body.appendChild(el);
+}
+window.showInfoToast = showInfoToast;
+window.hideInfoToast = hideInfoToast;
+
 
 // Rafraîchit immédiatement l'avatar du joueur local dans l'UI
 window.refreshMyAvatar = function() {
@@ -7800,6 +7823,13 @@ function dismissWinner() {
             }
             return;
           }
+          if (e.data.startsWith('INFO:')) {
+            var ib = e.data.slice(5), is1 = ib.indexOf(':');
+            var iicon = is1 >= 0 ? ib.slice(0, is1) : '';
+            var imsg = is1 >= 0 ? ib.slice(is1 + 1) : ib;
+            if (imsg && typeof showInfoToast === 'function') showInfoToast(imsg, iicon);
+            return;
+          }
           // Avatar IMAGE perso diffusé via le proxy. Le data URL contient
           // des ':' -> on découpe uniquement sur le 1er séparateur après le pid.
           if (e.data.startsWith('AVATARIMG:')) {
@@ -9653,4 +9683,4 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.2.262'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.2.263'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();

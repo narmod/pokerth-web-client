@@ -218,6 +218,14 @@ const ADMIN_CONFIG_FILE = process.env.ADMIN_CONFIG_FILE || path.join(__dirname, 
 let _adminConfig = {};
 try { _adminConfig = JSON.parse(fs.readFileSync(ADMIN_CONFIG_FILE, 'utf8')) || {}; } catch (e) { _adminConfig = {}; }
 function saveAdminConfig() { try { fs.writeFileSync(ADMIN_CONFIG_FILE, JSON.stringify(_adminConfig)); } catch (e) { console.error('[admin] config write failed:', e.message); } }
+
+// Scheduled information broadcasts, persisted to broadcasts.json so recurring
+// messages (daily/weekly/monthly) survive a proxy restart.
+const BROADCASTS_FILE = process.env.BROADCASTS_FILE || path.join(__dirname, 'broadcasts.json');
+let _broadcasts = [];
+try { _broadcasts = JSON.parse(fs.readFileSync(BROADCASTS_FILE, 'utf8')); if (!Array.isArray(_broadcasts)) _broadcasts = []; } catch (e) { _broadcasts = []; }
+const _bcTimers = {}; // job id -> setTimeout handle
+function saveBroadcasts() { try { fs.writeFileSync(BROADCASTS_FILE, JSON.stringify(_broadcasts)); } catch (e) { console.error('[broadcast] write failed:', e.message); } }
 let STATS_RESET_PERIOD = ((_adminConfig.resetPeriod || process.env.STATS_RESET_PERIOD || 'monthly') + '').toLowerCase();
 function appModes() { var m = (_adminConfig && _adminConfig.modes) || {}; return { offline: m.offline !== false, lan: m.lan !== false, pokerthnet: m.pokerthnet !== false }; }
 const STATS_META_FILE = process.env.STATS_META_FILE || path.join(__dirname, 'stats.meta.json');
@@ -442,6 +450,86 @@ function clearScheduledRestart() {
   _restartAt = 0; _restartKind = ''; _restartNotice = '';
 }
 
+// ── Information broadcast scheduler ─────────────────────────────────────────
+const _BC_ICONS = ['', '\u2139\ufe0f', '\ud83d\udce2', '\u26a0\ufe0f', '\ud83c\udf89']; // '' ℹ️ 📢 ⚠️ 🎉
+const _BC_MAXT = 2000000000; // ~23 days, under setTimeout's 32-bit ceiling → re-arm beyond
+function _bcIcon(x) { return _BC_ICONS.indexOf(x) >= 0 ? x : ''; }
+function _parseHM(t) { const m = /^(\d{1,2}):(\d{2})$/.exec(t || ''); if (!m) return null; const h = +m[1], mi = +m[2]; if (h > 23 || mi > 59) return null; return [h, mi]; }
+function _atTime(baseMs, h, mi) { const d = new Date(baseMs); d.setHours(h, mi, 0, 0); return d.getTime(); }
+function _bcValidateSchedule(s) {
+  if (!s || typeof s !== 'object') return null;
+  const t = s.type;
+  if (t === 'once')      { const at = Number(s.at); return at > Date.now() ? { type: 'once', at: at } : null; }
+  if (t === 'interval')  { const m = Math.floor(Number(s.minutes) || 0); return (m >= 1 && m <= 10080) ? { type: 'interval', minutes: m } : null; }
+  if (t === 'daily')     { return _parseHM(s.time) ? { type: 'daily', time: s.time } : null; }
+  if (t === 'everyDays') { const dd = Math.floor(Number(s.days) || 0); return (_parseHM(s.time) && dd >= 1 && dd <= 365) ? { type: 'everyDays', time: s.time, days: dd } : null; }
+  if (t === 'monthly')   { const dm = Math.floor(Number(s.dom) || 0); return (_parseHM(s.time) && dm >= 1 && dm <= 31) ? { type: 'monthly', time: s.time, dom: dm } : null; }
+  if (t === 'weekly')    { const wd = Array.isArray(s.weekdays) ? s.weekdays.map(Number).filter(function (n) { return n >= 0 && n <= 6; }) : []; return (_parseHM(s.time) && wd.length) ? { type: 'weekly', time: s.time, weekdays: wd } : null; }
+  return null;
+}
+// Pure: next fire time (epoch ms) strictly after `from`, or null if none remain.
+function computeNextRun(job, from) {
+  const s = job.schedule || {};
+  let next = null;
+  if (s.type === 'once') {
+    next = (s.at && s.at > from) ? s.at : null;
+  } else if (s.type === 'interval') {
+    const ms = (s.minutes || 0) * 60000; if (ms <= 0) return null;
+    next = (job.lastRun ? job.lastRun : from) + ms;
+    if (next <= from) next = from + ms;
+  } else {
+    const hm = _parseHM(s.time); if (!hm) return null;
+    const h = hm[0], mi = hm[1];
+    if (s.type === 'daily') {
+      next = _atTime(from, h, mi); if (next <= from) next += 86400000;
+    } else if (s.type === 'everyDays') {
+      const step = Math.max(1, s.days || 1) * 86400000;
+      if (job.lastRun) { next = job.lastRun + step; while (next <= from) next += step; }
+      else { next = _atTime(from, h, mi); if (next <= from) next += 86400000; }
+    } else if (s.type === 'weekly') {
+      const wd = Array.isArray(s.weekdays) ? s.weekdays : []; if (!wd.length) return null;
+      for (let i = 0; i < 8; i++) { const cand = _atTime(from + i * 86400000, h, mi); if (cand > from && wd.indexOf(new Date(cand).getDay()) >= 0) { next = cand; break; } }
+    } else if (s.type === 'monthly') {
+      const dom = Math.min(31, Math.max(1, s.dom || 1)); const base = new Date(from);
+      for (let i = 0; i < 13; i++) {
+        const y = base.getFullYear(), mo = base.getMonth() + i;
+        const dim = new Date(y, mo + 1, 0).getDate();
+        const cand = new Date(y, mo, Math.min(dom, dim), h, mi, 0, 0).getTime();
+        if (cand > from) { next = cand; break; }
+      }
+    }
+  }
+  if (next == null) return null;
+  if (job.endAt && next > job.endAt) return null;
+  if (job.maxRuns && (job.runCount || 0) >= job.maxRuns) return null;
+  return next;
+}
+function fireBroadcast(job) {
+  const n = broadcastNotice('INFO:' + (job.icon || '') + ':' + (job.message || ''));
+  job.lastRun = Date.now();
+  job.runCount = (job.runCount || 0) + 1;
+  console.log('[broadcast] job ' + job.id + ' fired -> ' + n + ' client(s)');
+  return n;
+}
+function clearBroadcastTimer(id) { if (_bcTimers[id]) { clearTimeout(_bcTimers[id]); delete _bcTimers[id]; } }
+function armBroadcast(job) {
+  clearBroadcastTimer(job.id);
+  if (!job.enabled) { job._nextRun = null; return; }
+  const next = computeNextRun(job, Date.now());
+  job._nextRun = next;
+  if (next == null) return;
+  const delay = next - Date.now();
+  if (delay > _BC_MAXT) { _bcTimers[job.id] = setTimeout(function () { armBroadcast(job); }, _BC_MAXT); return; }
+  _bcTimers[job.id] = setTimeout(function () {
+    fireBroadcast(job);
+    if ((job.schedule || {}).type === 'once') { job.enabled = false; job._nextRun = null; }
+    saveBroadcasts();
+    armBroadcast(job);
+  }, Math.max(0, delay));
+}
+_broadcasts.forEach(function (j) { armBroadcast(j); });
+if (_broadcasts.length) console.log('[broadcast] armed ' + _broadcasts.length + ' scheduled message(s)');
+
 function adminAuthed(query, bodyToken) {
   return !!STATS_ADMIN_TOKEN && (query.token === STATS_ADMIN_TOKEN || bodyToken === STATS_ADMIN_TOKEN);
 }
@@ -650,6 +738,73 @@ function handleAdmin(req, res, reqPathOnly, query) {
       if (had) broadcastNotice('NOTICE:CANCEL');
       console.log('[admin] scheduled action cancelled' + (had ? '' : ' (none pending)'));
       return adminJson(res, 200, { ok: true, cancelled: had });
+    });
+  }
+  if (reqPathOnly === '/admin/broadcasts' && req.method === 'GET') {
+    if (!adminAuthed(query, null)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
+    const now = Date.now();
+    const jobs = _broadcasts.map(function (j) {
+      return { id: j.id, message: j.message, icon: j.icon || '', schedule: j.schedule, enabled: !!j.enabled, lastRun: j.lastRun || null, runCount: j.runCount || 0, endAt: j.endAt || null, maxRuns: j.maxRuns || null, createdAt: j.createdAt || null, nextRun: (j.enabled ? computeNextRun(j, now) : null) };
+    });
+    let tz = ''; try { tz = Intl.DateTimeFormat().resolvedOptions().timeZone || ''; } catch (e) {}
+    return adminJson(res, 200, { ok: true, jobs: jobs, serverNow: now, tz: tz });
+  }
+  if (reqPathOnly === '/admin/broadcast-now' && req.method === 'POST') {
+    return readJsonBody(req, function (d) {
+      if (!adminAuthed(query, d && d.token)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
+      const message = (d && typeof d.message === 'string') ? d.message.slice(0, 500) : '';
+      if (!message.trim()) return adminJson(res, 400, { ok: false, error: 'message required' });
+      const n = broadcastNotice('INFO:' + _bcIcon(d && d.icon) + ':' + message);
+      console.log('[broadcast] one-off -> ' + n + ' client(s)');
+      return adminJson(res, 200, { ok: true, notified: n });
+    });
+  }
+  if (reqPathOnly === '/admin/broadcasts' && req.method === 'POST') {
+    return readJsonBody(req, function (d) {
+      if (!adminAuthed(query, d && d.token)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
+      if (!d || typeof d.message !== 'string' || !d.message.trim()) return adminJson(res, 400, { ok: false, error: 'message required' });
+      const sched = _bcValidateSchedule(d.schedule);
+      if (!sched) return adminJson(res, 400, { ok: false, error: 'invalid schedule' });
+      const job = {
+        id: 'bc_' + Date.now().toString(36) + Math.random().toString(36).slice(2, 7),
+        message: d.message.slice(0, 500),
+        icon: _bcIcon(d.icon),
+        schedule: sched,
+        enabled: d.enabled === false ? false : true,
+        endAt: (d.endAt && Number(d.endAt) > Date.now()) ? Number(d.endAt) : null,
+        maxRuns: (d.maxRuns && Number(d.maxRuns) > 0) ? Math.floor(Number(d.maxRuns)) : null,
+        createdAt: Date.now(), lastRun: null, runCount: 0
+      };
+      _broadcasts.push(job); saveBroadcasts(); armBroadcast(job);
+      console.log('[broadcast] created ' + job.id + ' (' + sched.type + ')');
+      return adminJson(res, 200, { ok: true, id: job.id, nextRun: computeNextRun(job, Date.now()) });
+    });
+  }
+  if (reqPathOnly === '/admin/broadcasts/delete' && req.method === 'POST') {
+    return readJsonBody(req, function (d) {
+      if (!adminAuthed(query, d && d.token)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
+      const id = d && d.id, i = _broadcasts.findIndex(function (j) { return j.id === id; });
+      if (i < 0) return adminJson(res, 404, { ok: false, error: 'not found' });
+      clearBroadcastTimer(id); _broadcasts.splice(i, 1); saveBroadcasts();
+      return adminJson(res, 200, { ok: true });
+    });
+  }
+  if (reqPathOnly === '/admin/broadcasts/toggle' && req.method === 'POST') {
+    return readJsonBody(req, function (d) {
+      if (!adminAuthed(query, d && d.token)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
+      const job = _broadcasts.find(function (j) { return j.id === (d && d.id); });
+      if (!job) return adminJson(res, 404, { ok: false, error: 'not found' });
+      job.enabled = !!(d && d.enabled); saveBroadcasts(); armBroadcast(job);
+      return adminJson(res, 200, { ok: true, enabled: job.enabled, nextRun: (job.enabled ? computeNextRun(job, Date.now()) : null) });
+    });
+  }
+  if (reqPathOnly === '/admin/broadcasts/fire' && req.method === 'POST') {
+    return readJsonBody(req, function (d) {
+      if (!adminAuthed(query, d && d.token)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
+      const job = _broadcasts.find(function (j) { return j.id === (d && d.id); });
+      if (!job) return adminJson(res, 404, { ok: false, error: 'not found' });
+      const n = fireBroadcast(job); saveBroadcasts();
+      return adminJson(res, 200, { ok: true, notified: n });
     });
   }
   if (reqPathOnly === '/admin/restart' && req.method === 'POST') {

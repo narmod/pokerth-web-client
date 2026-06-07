@@ -87,6 +87,7 @@
       <button class="tab on" data-t="packages">Packages</button>
       <button class="tab" data-t="board">Leaderboard</button>
       <button class="tab" data-t="server">Server</button>
+      <button class="tab" data-t="broadcast">Broadcasts</button>
     </div>
 
     <div id="panel-packages">
@@ -171,6 +172,57 @@
         <pre id="logs" class="logs"></pre>
       </div>
     </div>
+    <div id="panel-broadcast" style="display:none">
+      <div class="card">
+        <h2>Send a message now</h2>
+        <p class="muted" style="margin:0 0 8px">Broadcast an information message to everyone currently connected. Shown as a gold dismissible banner.</p>
+        <textarea id="bcNowMsg" class="filter" rows="2" maxlength="500" placeholder="Your message…" style="width:100%;resize:vertical"></textarea>
+        <div class="periodrow" style="margin-top:8px">
+          <select id="bcNowIcon" class="filter" style="margin:0;flex:none;width:auto">
+            <option value="">No icon</option><option value="ℹ️">ℹ️ Info</option><option value="📢">📢 Announce</option><option value="⚠️">⚠️ Warning</option><option value="🎉">🎉 Celebrate</option>
+          </select>
+          <button id="bcNowSend" class="use">Send now</button>
+        </div>
+        <div id="bcNowPrev"></div>
+        <div id="bcNowState" class="msg"></div>
+      </div>
+      <div class="card">
+        <h2>Schedule a recurring message</h2>
+        <div id="bcServerNow" class="muted" style="margin:0 0 8px"></div>
+        <textarea id="bcMsg" class="filter" rows="2" maxlength="500" placeholder="Message to broadcast…" style="width:100%;resize:vertical"></textarea>
+        <div class="periodrow" style="margin-top:8px">
+          <select id="bcIcon" class="filter" style="margin:0;flex:none;width:auto">
+            <option value="">No icon</option><option value="ℹ️">ℹ️ Info</option><option value="📢">📢 Announce</option><option value="⚠️">⚠️ Warning</option><option value="🎉">🎉 Celebrate</option>
+          </select>
+          <select id="bcType" class="filter" style="margin:0;flex:1">
+            <option value="interval">Every…</option><option value="daily">Daily at…</option><option value="everyDays">Every X days at…</option><option value="weekly">Weekly on… at…</option><option value="monthly">Day X each month at…</option><option value="once">Once at…</option>
+          </select>
+        </div>
+        <div id="bcParams" style="margin-top:8px">
+          <div class="bc-when" data-for="interval">
+            <select id="bcMinutes" class="filter" style="margin:0">
+              <option value="5">Every 5 minutes</option><option value="10">Every 10 minutes</option><option value="30">Every 30 minutes</option><option value="60">Every hour</option><option value="360">Every 6 hours</option><option value="720">Every 12 hours</option>
+            </select>
+          </div>
+          <div class="bc-when" data-for="daily" style="display:none"><label class="muted">At <input id="bcTimeDaily" class="filter" type="time" value="12:00" style="margin:0;width:auto"></label></div>
+          <div class="bc-when" data-for="everyDays" style="display:none"><label class="muted">Every <input id="bcDays" class="filter" type="number" min="1" max="365" value="2" style="margin:0;width:70px"> day(s) at <input id="bcTimeEvery" class="filter" type="time" value="12:00" style="margin:0;width:auto"></label></div>
+          <div class="bc-when" data-for="weekly" style="display:none"><div id="bcWeekdays" class="btnrow" style="flex-wrap:wrap;margin-bottom:6px"></div><label class="muted">At <input id="bcTimeWeekly" class="filter" type="time" value="12:00" style="margin:0;width:auto"></label></div>
+          <div class="bc-when" data-for="monthly" style="display:none"><label class="muted">Day <input id="bcDom" class="filter" type="number" min="1" max="31" value="1" style="margin:0;width:70px"> at <input id="bcTimeMonthly" class="filter" type="time" value="12:00" style="margin:0;width:auto"></label></div>
+          <div class="bc-when" data-for="once" style="display:none"><label class="muted">On <input id="bcOnceAt" class="filter" type="datetime-local" style="margin:0;width:auto"></label></div>
+        </div>
+        <div class="periodrow" style="margin-top:8px">
+          <label class="muted">End (optional) <input id="bcEndAt" class="filter" type="datetime-local" style="margin:0;width:auto"></label>
+          <label class="muted">Max sends <input id="bcMaxRuns" class="filter" type="number" min="1" placeholder="∞" style="margin:0;width:80px"></label>
+        </div>
+        <div id="bcPrev"></div>
+        <div class="periodrow" style="margin-top:8px"><button id="bcAdd" class="use">Add scheduled message</button></div>
+        <div id="bcAddState" class="msg"></div>
+      </div>
+      <div class="card">
+        <div class="boardhead"><h2 style="margin:0">Scheduled messages</h2><button id="bcRefresh" class="use">Refresh</button></div>
+        <div id="bcList"></div>
+      </div>
+    </div>
   </div>
 </div>
 <script>
@@ -201,7 +253,9 @@
     $('panel-packages').style.display=t==='packages'?'block':'none';
     $('panel-board').style.display=t==='board'?'block':'none';
     $('panel-server').style.display=t==='server'?'block':'none';
+    $('panel-broadcast').style.display=t==='broadcast'?'block':'none';
     if(t==='board') loadBoard();
+    if(t==='broadcast') loadBroadcasts();
     if(t==='server'){ loadServer(); srvStart(); } else { srvStop(); }
   }); });
 
@@ -413,6 +467,82 @@
     api('/admin/cancel-restart',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({token:tok()})})
       .then(function(r){return r.json();}).then(function(d){ if(d&&d.ok){ schedSay(d.cancelled?'Cancelled.':'Nothing was scheduled.','ok'); loadServer(); } else schedSay('Cancel failed.','err'); })
       .catch(function(){ schedSay('Cancel failed \u2014 network error.','err'); }); });
+
+  // ── Broadcasts tab ──────────────────────────────────────────────────────
+  function bcSay(id,txt,c){ var m=$(id); if(m){ m.textContent=txt; m.className='msg '+(c||''); } }
+  function bcGoldPreview(elId,msg,icon){ var el=$(elId); if(!el) return;
+    if(!msg){ el.style.cssText='display:none'; el.textContent=''; return; }
+    el.textContent=(icon?icon+'  ':'')+msg;
+    el.style.cssText='display:block;margin-top:8px;max-width:420px;background:linear-gradient(135deg,rgba(200,168,74,.97),rgba(168,134,40,.97));color:#1a0a00;padding:10px 14px;border-radius:14px;font-weight:600;font-size:.88rem;white-space:pre-line;box-shadow:0 4px 14px rgba(0,0,0,.4)';
+  }
+  function bcDescribe(j){ var s=j.schedule||{},t=s.type,nm=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+    if(t==='interval') return 'Every '+(s.minutes%60===0?(s.minutes/60)+' h':s.minutes+' min');
+    if(t==='daily') return 'Daily at '+s.time;
+    if(t==='everyDays') return 'Every '+s.days+' day(s) at '+s.time;
+    if(t==='weekly') return (s.weekdays||[]).map(function(d){return nm[d];}).join(', ')+' at '+s.time;
+    if(t==='monthly') return 'Day '+s.dom+' each month at '+s.time;
+    if(t==='once') return 'Once at '+new Date(s.at).toLocaleString();
+    return t; }
+  function bcBuildSchedule(){ var t=$('bcType').value;
+    if(t==='interval') return {type:'interval',minutes:Number($('bcMinutes').value)};
+    if(t==='daily') return {type:'daily',time:$('bcTimeDaily').value};
+    if(t==='everyDays') return {type:'everyDays',days:Number($('bcDays').value),time:$('bcTimeEvery').value};
+    if(t==='weekly'){ var wd=[]; document.querySelectorAll('#bcWeekdays button.on').forEach(function(b){wd.push(Number(b.dataset.d));}); return {type:'weekly',weekdays:wd,time:$('bcTimeWeekly').value}; }
+    if(t==='monthly') return {type:'monthly',dom:Number($('bcDom').value),time:$('bcTimeMonthly').value};
+    if(t==='once'){ var v=$('bcOnceAt').value; return {type:'once',at:v?new Date(v).getTime():0}; }
+    return null; }
+  function bcSendNow(){ var msg=($('bcNowMsg').value||'').trim(); if(!msg){ bcSay('bcNowState','Message required.','err'); return; }
+    bcSay('bcNowState','Sending\u2026');
+    api('/admin/broadcast-now',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:msg,icon:$('bcNowIcon').value,token:tok()})})
+      .then(function(r){return r.json();}).then(function(d){ if(d&&d.ok) bcSay('bcNowState','Sent to '+(d.notified||0)+' player(s).','ok'); else bcSay('bcNowState','Failed: '+((d&&d.error)||'error'),'err'); })
+      .catch(function(){ bcSay('bcNowState','Network error.','err'); }); }
+  function addBroadcast(){ var msg=($('bcMsg').value||'').trim(); if(!msg){ bcSay('bcAddState','Message required.','err'); return; }
+    var s=bcBuildSchedule();
+    if(s&&s.type==='weekly'&&!s.weekdays.length){ bcSay('bcAddState','Pick at least one weekday.','err'); return; }
+    if(s&&s.type==='once'&&!(s.at>Date.now())){ bcSay('bcAddState','Pick a future date/time.','err'); return; }
+    var body={message:msg,icon:$('bcIcon').value,schedule:s,token:tok()};
+    var ea=$('bcEndAt').value; if(ea) body.endAt=new Date(ea).getTime();
+    var mr=Number($('bcMaxRuns').value||0); if(mr>0) body.maxRuns=mr;
+    bcSay('bcAddState','Adding\u2026');
+    api('/admin/broadcasts',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)})
+      .then(function(r){return r.json();}).then(function(d){ if(d&&d.ok){ bcSay('bcAddState','Scheduled.','ok'); $('bcMsg').value=''; bcGoldPreview('bcPrev','',''); loadBroadcasts(); } else bcSay('bcAddState','Failed: '+((d&&d.error)||'error'),'err'); })
+      .catch(function(){ bcSay('bcAddState','Network error.','err'); }); }
+  function bcToggle(id,en){ api('/admin/broadcasts/toggle',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id:id,enabled:en,token:tok()})}).then(function(r){return r.json();}).then(function(){loadBroadcasts();}).catch(function(){}); }
+  function bcFire(id){ api('/admin/broadcasts/fire',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id:id,token:tok()})}).then(function(r){return r.json();}).then(function(d){ if(d&&d.ok) bcSay('bcAddState','Sent to '+(d.notified||0)+' player(s).','ok'); loadBroadcasts(); }).catch(function(){}); }
+  function bcDelete(id){ if(!confirm('Delete this scheduled message?'))return; api('/admin/broadcasts/delete',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id:id,token:tok()})}).then(function(r){return r.json();}).then(function(){loadBroadcasts();}).catch(function(){}); }
+  function loadBroadcasts(){ api('/admin/broadcasts').then(function(r){return r.json();}).then(function(d){
+      var sn=$('bcServerNow'); if(sn&&d.serverNow) sn.textContent='Server time: '+new Date(d.serverNow).toLocaleString()+(d.tz?' ('+d.tz+')':'');
+      var el=$('bcList'); if(!el) return; el.innerHTML='';
+      if(!d.ok){ el.innerHTML='<div class="empty err">'+((d&&d.error)||'error')+'</div>'; return; }
+      if(!d.jobs||!d.jobs.length){ el.innerHTML='<div class="empty">No scheduled messages.</div>'; return; }
+      d.jobs.forEach(function(j){
+        var row=document.createElement('div'); row.className='srow'; row.style.cssText='flex-direction:column;align-items:stretch;gap:6px;padding:10px 0';
+        var msg=document.createElement('div'); msg.style.cssText='font-weight:600'; msg.textContent=(j.icon?j.icon+' ':'')+j.message; row.appendChild(msg);
+        var meta=document.createElement('div'); meta.className='muted'; meta.style.fontSize='.8rem';
+        var bits=[bcDescribe(j)];
+        if(j.enabled&&j.nextRun) bits.push('next '+new Date(j.nextRun).toLocaleString()); else if(!j.enabled) bits.push('disabled');
+        if(j.lastRun) bits.push('last '+new Date(j.lastRun).toLocaleString());
+        if(j.maxRuns) bits.push(j.runCount+'/'+j.maxRuns+' sent');
+        if(j.endAt) bits.push('until '+new Date(j.endAt).toLocaleString());
+        meta.textContent=bits.join(' \u00b7 '); row.appendChild(meta);
+        var btns=document.createElement('div'); btns.className='btnrow';
+        var bt=document.createElement('button'); bt.className='use'; bt.textContent=j.enabled?'Disable':'Enable'; bt.addEventListener('click',function(){bcToggle(j.id,!j.enabled);}); btns.appendChild(bt);
+        var bf=document.createElement('button'); bf.className='use'; bf.textContent='Send now'; bf.addEventListener('click',function(){bcFire(j.id);}); btns.appendChild(bf);
+        var bd=document.createElement('button'); bd.className='use danger'; bd.textContent='Delete'; bd.addEventListener('click',function(){bcDelete(j.id);}); btns.appendChild(bd);
+        row.appendChild(btns); el.appendChild(row);
+      });
+    }).catch(function(){ var el=$('bcList'); if(el) el.innerHTML='<div class="empty err">Could not load.</div>'; }); }
+  (function(){ var wk=$('bcWeekdays'); if(wk){ ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].forEach(function(n,i){ var b=document.createElement('button'); b.className='use'; b.dataset.d=i; b.textContent=n; b.addEventListener('click',function(){ b.classList.toggle('on'); }); wk.appendChild(b); }); } })();
+  function bcTypeShow(){ var t=$('bcType')?$('bcType').value:''; document.querySelectorAll('#bcParams .bc-when').forEach(function(d){ d.style.display=d.dataset.for===t?'':'none'; }); }
+  if($('bcType')){ $('bcType').addEventListener('change',bcTypeShow); bcTypeShow(); }
+  if($('bcAdd')) $('bcAdd').addEventListener('click',addBroadcast);
+  if($('bcNowSend')) $('bcNowSend').addEventListener('click',bcSendNow);
+  if($('bcRefresh')) $('bcRefresh').addEventListener('click',loadBroadcasts);
+  function bcPrevSched(){ bcGoldPreview('bcPrev',($('bcMsg').value||'').trim(),$('bcIcon').value); }
+  function bcPrevNow(){ bcGoldPreview('bcNowPrev',($('bcNowMsg').value||'').trim(),$('bcNowIcon').value); }
+  ['bcMsg','bcIcon'].forEach(function(id){ if($(id)){ $(id).addEventListener('input',bcPrevSched); $(id).addEventListener('change',bcPrevSched); } });
+  ['bcNowMsg','bcNowIcon'].forEach(function(id){ if($(id)){ $(id).addEventListener('input',bcPrevNow); $(id).addEventListener('change',bcPrevNow); } });
+  setInterval(function(){ if(document.visibilityState==='visible' && $('panel-broadcast') && $('panel-broadcast').style.display!=='none') loadBroadcasts(); }, 30000);
 
   enter();
 })();
