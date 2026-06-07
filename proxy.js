@@ -563,6 +563,10 @@ function pkgList() {
   return { tables: read(path.join(PUBLIC_DIR, 'table', 'tables.json')),
            decks:  read(path.join(PUBLIC_DIR, 'cards', 'decks.json')) };
 }
+// Admin can hide an installed package from players without deleting it. The
+// disabled ids live in _adminConfig.pkgDisabled = { table:[...], deck:[...] };
+// they are filtered out of the client-facing manifests but kept in pkg-list.
+function pkgDisabledSet(kind) { var d = (_adminConfig && _adminConfig.pkgDisabled) || {}; var a = d[kind]; return Array.isArray(a) ? a : []; }
 function readRawBody(req, max, cb) {
   let chunks = [], len = 0, tooBig = false;
   req.on('data', function (c) { len += c.length; if (len > max) { tooBig = true; req.destroy(); return; } chunks.push(c); });
@@ -640,7 +644,10 @@ function handleAdmin(req, res, reqPathOnly, query) {
   }
   if (reqPathOnly === '/admin/pkg-list') {
     if (!adminAuthed(query)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
-    return adminJson(res, 200, Object.assign({ ok: true }, pkgList()));
+    var _pl = pkgList(), _td = pkgDisabledSet('table'), _dd = pkgDisabledSet('deck');
+    return adminJson(res, 200, { ok: true,
+      tables: (_pl.tables || []).map(function (t) { return Object.assign({}, t, { disabled: _td.indexOf(t.id) >= 0 }); }),
+      decks:  (_pl.decks  || []).map(function (d) { return Object.assign({}, d, { disabled: _dd.indexOf(d.id) >= 0 }); }) });
   }
   if (reqPathOnly === '/admin/status') {
     if (!adminAuthed(query)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
@@ -726,8 +733,26 @@ function handleAdmin(req, res, reqPathOnly, query) {
       const dir = path.join(PUBLIC_DIR, kind === 'table' ? 'table' : 'cards', id);
       if (!fs.existsSync(dir)) return adminJson(res, 404, { ok: false, error: 'not found' });
       try { fs.rmSync(dir, { recursive: true, force: true }); } catch (e) { return adminJson(res, 500, { ok: false, error: 'remove failed' }); }
+      try { var _da = pkgDisabledSet(kind); var _i = _da.indexOf(id); if (_i >= 0) { _da.splice(_i, 1); _adminConfig.pkgDisabled[kind] = _da; saveAdminConfig(); } } catch (e) {}
       regenManifest(kind);
       adminJson(res, 200, { ok: true });
+    });
+  }
+  // Enable/disable an installed package for players (kept installed either way).
+  if (reqPathOnly === '/admin/pkg-toggle' && req.method === 'POST') {
+    return readJsonBody(req, function (d) {
+      if (!adminAuthed(query, d && d.token)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
+      const kind = (d && d.kind === 'deck') ? 'deck' : ((d && d.kind === 'table') ? 'table' : null);
+      const id = slugId(d && d.id);
+      if (!kind || !id) return adminJson(res, 400, { ok: false, error: 'kind + id required' });
+      const enabled = !(d && d.enabled === false);   // desired state; false = hide from players
+      _adminConfig.pkgDisabled = _adminConfig.pkgDisabled || {};
+      var arr = Array.isArray(_adminConfig.pkgDisabled[kind]) ? _adminConfig.pkgDisabled[kind] : [];
+      var i = arr.indexOf(id);
+      if (enabled) { if (i >= 0) arr.splice(i, 1); } else { if (i < 0) arr.push(id); }
+      _adminConfig.pkgDisabled[kind] = arr;
+      saveAdminConfig();
+      return adminJson(res, 200, { ok: true, kind: kind, id: id, disabled: !enabled });
     });
   }
   if (reqPathOnly === '/admin/update' && req.method === 'POST') {
@@ -923,6 +948,20 @@ const httpServer = http.createServer((req, res) => {
   if (reqPathOnly === '/app-config') {
     res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' });
     res.end(JSON.stringify({ ok: true, modes: appModes(), welcome: _welcomePublic(), defaultTheme: _adminConfig.defaultTheme || '', defaults: _adminConfig.defaults || {} }));
+    return;
+  }
+
+  // Client-facing gallery manifests, with admin-disabled packages filtered out
+  // (disabling hides a package from the theme picker without removing its files).
+  if (reqPathOnly === '/table/tables.json' || reqPathOnly === '/cards/decks.json') {
+    var _isTbl = reqPathOnly === '/table/tables.json';
+    var _mf = path.join(PUBLIC_DIR, _isTbl ? 'table' : 'cards', _isTbl ? 'tables.json' : 'decks.json');
+    var _list = []; try { _list = JSON.parse(fs.readFileSync(_mf, 'utf8')); } catch (e) {}
+    if (!Array.isArray(_list)) _list = [];
+    var _dis = pkgDisabledSet(_isTbl ? 'table' : 'deck');
+    if (_dis.length) _list = _list.filter(function (x) { return x && _dis.indexOf(x.id) < 0; });
+    res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' });
+    res.end(JSON.stringify(_list));
     return;
   }
 
