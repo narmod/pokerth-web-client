@@ -826,6 +826,7 @@ function _cmpHand(a, b) {
 // ═══════════════════════════════════════════════════════════
 var _reactionCounts = {}; // { emoji: count }
 var _reactionTimers = {}; // timers de reset des compteurs
+var _reactSeen = {};      // { 'pid|emoji': {t, via} } -- de-dup d'une reaction recue par 2 canaux (REACT: + /emoji)
 
 // ── Catalogue des effets animés par réaction ──
 // a = animation de l'emoji ; p = particules (objet, ou preset 'sparkle'/'shock'/'confetti')
@@ -971,8 +972,12 @@ function updateReactionCount(emoji) {
 // no seat badge, no sound. Without this filter, reactions from another
 // table would silently bump our counters and play the `playTone` chime,
 // which is what the user reported hearing.
-function handleIncomingReaction(pid, emoji) {
+function handleIncomingReaction(pid, emoji, via) {
   if (!window.seats || seats.indexOf(pid) < 0) return;
+  via = via || 'react';
+  var _k = pid + '|' + emoji, _now = Date.now(), _p = _reactSeen[_k];
+  if (_p && _p.via !== via && _now - _p.t < 1500) { _reactSeen[_k] = { t: _now, via: via }; return; }
+  _reactSeen[_k] = { t: _now, via: via };
   _reactionCounts[emoji] = (_reactionCounts[emoji] || 0) + 1;
   updateReactionCount(emoji);
   showSeatReaction(pid, emoji);
@@ -4178,10 +4183,12 @@ const App = (() => {
         const cls  = ctype === 3 ? 'bc' : pid === myId ? 'mine' : '';
         // Logging de tous les messages chat (debug réactions)
         // Intercepter les réactions (préfixe ASCII [R])
-        if (text && text.startsWith('[R]') && text.length < 12) {
-          var reactEmoji = text.slice(3);
+        var _reEmoji = null;
+        if (text && text.startsWith('[R]') && text.length < 12) _reEmoji = text.slice(3);
+        else if (text && text.startsWith('/emoji ') && text.length < 18) _reEmoji = text.slice(7).trim();
+        if (_reEmoji) {
           if (pid !== myId) {
-            handleIncomingReaction(pid, reactEmoji);
+            handleIncomingReaction(pid, _reEmoji, 'chat');
             // Pas d'affichage dans le chat — animation seule
           }
         } else {
@@ -8016,7 +8023,7 @@ function dismissWinner() {
             var fromPid = parseInt(parts[1]);
             var reactEmoji = parts[2];
             if (fromPid !== myId) {
-              handleIncomingReaction(fromPid, reactEmoji);
+              handleIncomingReaction(fromPid, reactEmoji, 'react');
               // Pas d'affichage dans le chat — uniquement animation flottante
             }
           }
@@ -8528,20 +8535,16 @@ function dismissWinner() {
 
     sendReaction(emoji) {
       if (!ws || !gId) return;
-      if (directWS) return; // pokerth.net : pas de canal de réaction dédié → désactivé
-      // Envoyer via le proxy en message TEXTE WebSocket (pas PokerTH protocol)
-      // → contourne les restrictions chat du serveur PokerTH
-      if (ws && !directWS && ws.readyState === WebSocket.OPEN) {
-        var reactMsg = 'REACT:' + myId + ':' + emoji;
-        ws.send(reactMsg); // text frame, pas binaire
-      } else {
-        // Fallback directWS : tenter via PokerTH chat
-        _lastMsgWasReaction = true;
-        send(gId ? MSG.buildGameChat(gId, '[R]' + emoji) : MSG.buildChat('[R]' + emoji));
+      // Affichage immediat pour moi.
+      handleIncomingReaction(myId, emoji, 'self');
+      // Canal rapide web<->web via le proxy (trame texte, contourne le throttle chat serveur).
+      if (!directWS && ws.readyState === WebSocket.OPEN) {
+        try { ws.send('REACT:' + myId + ':' + emoji); } catch (e) {}
       }
-      // Afficher immédiatement pour moi
-      handleIncomingReaction(myId, emoji);
-      _reactionCounts[emoji] = (_reactionCounts[emoji] || 0); // déjà incrémenté dans handleIncomingReaction
+      // Canal partage cross-client : commande /emoji interpretee comme une reaction par
+      // tous les clients (convention sp0ck, facon /me) -> interop web <-> Qt/QML (dont pokerth.net).
+      _lastMsgWasReaction = true;
+      try { send(MSG.buildGameChat(gId, '/emoji ' + emoji)); } catch (e) {}
     },
 
     sendGameChat() {
@@ -9838,4 +9841,4 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.2.284'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.2.285'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
