@@ -4796,6 +4796,23 @@ body:not(.in-game) .my-zone {
    var(--text) (noms de presets non actifs, libelle mot de passe). Fond clair force. */
 :root[data-theme="pokerth-light"] #create-form { background: rgba(255,255,255,0.62); }
 
+/* ── PokerTH clair : corrections de contraste (clair uniquement) ──
+   Plusieurs elements gardent des couleurs CLAIRES codees en dur (pensees pour le
+   fond sombre) -> illisibles sur fond clair. On corrige ici, sans toucher au JS. */
+/* Assistance (force de la main) : le texte est colore inline par le JS selon la force
+   (teintes claires). On garde un fond SOMBRE pour cette pastille en clair -> le code
+   couleur (gris faible -> vert/rouge fort) reste lisible tel quel. */
+:root[data-theme="pokerth-light"] #hand-strength { background: rgba(20,25,33,0.94); }
+/* Popups quitter la table / deconnexion (et creation rapide) : texte d'action clair. */
+:root[data-theme="pokerth-light"] .ld-btn.ld-quit   { color: var(--red); }
+:root[data-theme="pokerth-light"] .ld-btn.ld-create { color: var(--green); }
+/* Ecran d'attente : libelles + boutons verts/orange a texte clair. */
+:root[data-theme="pokerth-light"] .wp-ready-label,
+:root[data-theme="pokerth-light"] .wp-ready-btn,
+:root[data-theme="pokerth-light"] .wp-ok,
+:root[data-theme="pokerth-light"] .wp-hint-admin { color: var(--green); }
+:root[data-theme="pokerth-light"] .wp-need { color: var(--orange); }
+
 /* Préréglages */
 .cf-presets-label { font-size: 0.6rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--gold-dim); font-weight: 600; margin: 0 2px 8px; }
 .cf-presets { display: flex; gap: 8px; margin-bottom: 16px; }
