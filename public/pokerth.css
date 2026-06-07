@@ -153,6 +153,14 @@ html { touch-action: manipulation; -webkit-text-size-adjust: 100%; text-size-adj
 /* ── Tapis (axe "Tapis", choisi via le menu dedie) ─ surcharge la SURFACE
    de la table (feutre + lisere) independamment de la Palette.
    Defaut (vert) = :root ci-dessus. Voir public/modules/theme.mjs. */
+:root[data-table="pokerth"] {
+  --felt-base-hi:  #008c58;
+  --felt-base-mid: #006a44;
+  --felt-base-lo:  #073120;
+  --rail:          #1d222b;
+  --rail-dark:     #12161d;
+  --rail-glow:     rgba(0,140,88,0.20);
+}
 :root[data-table="blue"] {
   --felt-base-hi:  #1f6aa8;
   --felt-base-mid: #124b78;

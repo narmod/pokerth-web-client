@@ -62,6 +62,7 @@ const TABLES = [
   { id: 'blue',     key: 'tableBlue',     fallback: 'Blue',     swatch: '#1f6aa8' },
   { id: 'bordeaux', key: 'tableBordeaux', fallback: 'Burgundy', swatch: '#8a1e2e' },
   { id: 'slate',    key: 'tableSlate',    fallback: 'Slate',    swatch: '#3a4150' },
+  { id: 'pokerth', key: 'tablePokerthOfficial', fallback: 'PokerTH', swatch: '#008c58' },
   { id: 'photo',    key: 'tablePhoto',    fallback: 'Textured', swatch: '#1f6b2e' },
 ];
 const DECKS = [
@@ -85,11 +86,11 @@ var BUTTON_GLOSSY = {
 var PUCK_SET = { dealer:'url(/pucks/dealer.svg)', sb:'url(/pucks/sb.svg)', bb:'url(/pucks/bb.svg)' };
 var BUTTONS_ITEMS = [ {id:'',key:'buttonsDefault',fallback:'Flat',swatch:'#6b2020'}, {id:'glossy',key:'buttonsGlossy',fallback:'Glossy',swatch:'#c81818'} ];
 var PUCKS_ITEMS   = [ {id:'pokerth',key:'pucksPokerth',fallback:'PokerTH',swatch:'#3a78d8',preview:'/pucks/dealer.svg'} ];
-const palette = makeAxis({ storeKey: 'pth_theme', attr: 'data-theme', items: PALETTES, titleKey: 'sectionPalette', titleFallback: 'Palette' });
-const table   = makeAxis({ storeKey: 'pth_table', attr: 'data-table', items: TABLES,   titleKey: 'sectionTable',   titleFallback: 'Table' });
-const deck    = makeAxis({ storeKey: 'pth_deck',  attr: 'data-deck',  def: 'casino-vert',  items: DECKS,    titleKey: 'sectionDeck',    titleFallback: 'Cards' });
-const buttons = makeAxis({ storeKey: 'pth_buttons', attr: 'data-buttons', def: 'casino-vert', items: BUTTONS_ITEMS, titleKey: 'sectionButtons', titleFallback: 'Buttons' });
-const pucks   = makeAxis({ storeKey: 'pth_pucks',   attr: 'data-pucks',   def: 'casino-vert', items: PUCKS_ITEMS,   titleKey: 'sectionPucks',   titleFallback: 'Pucks' });
+const palette = makeAxis({ storeKey: 'pth_theme', attr: 'data-theme', items: PALETTES, def: 'pokerth', titleKey: 'sectionPalette', titleFallback: 'Palette' });
+const table   = makeAxis({ storeKey: 'pth_table', attr: 'data-table', items: TABLES, def: 'pokerth', titleKey: 'sectionTable',   titleFallback: 'Table' });
+const deck    = makeAxis({ storeKey: 'pth_deck',  attr: 'data-deck',  def: 'pokerth-new',  items: DECKS,    titleKey: 'sectionDeck',    titleFallback: 'Cards' });
+const buttons = makeAxis({ storeKey: 'pth_buttons', attr: 'data-buttons', def: 'pokerth-new', items: BUTTONS_ITEMS, titleKey: 'sectionButtons', titleFallback: 'Buttons' });
+const pucks   = makeAxis({ storeKey: 'pth_pucks',   attr: 'data-pucks',   def: 'pokerth-new', items: PUCKS_ITEMS,   titleKey: 'sectionPucks',   titleFallback: 'Pucks' });
 const AXES = [deck, palette, table, buttons, pucks];
 
 // ── Presets (main themes) ───────────────────────────────────────────────────
@@ -97,6 +98,7 @@ const AXES = [deck, palette, table, buttons, pucks];
 // (this project's look). "Official PokerTH" ≈ the official client (dark UI +
 // textured green felt + vector cards). Order = display order.
 const PRESETS = [
+  { id: 'official', key: 'presetPokerthOfficial', fallback: 'PokerTH official', swatch: '#1d222b', values: { theme: 'pokerth', table: 'pokerth', deck: 'pokerth-new', buttons: 'pokerth-new', pucks: 'pokerth-new' } },
   { id: 'casino',  key: 'presetCasino',   fallback: 'Green Casino',     swatch: '#1e6b1e', values: { theme: '',     table: '',      deck: 'casino-vert', buttons: 'casino-vert', pucks: 'casino-vert' } },
   { id: 'pokerth', key: 'presetOfficial', fallback: 'PokerTH ver1.1.2', swatch: '#232730', values: { theme: 'dark', table: 'photo', deck: 'pokerth', buttons: 'glossy', pucks: 'pokerth' } },
   { id: 'pokerth10', key: 'presetPokerth10', fallback: 'PokerTH ver1.0', swatch: '#232730', values: { theme: 'dark', table: 'photo', deck: 'pokerth-1-0', buttons: 'glossy', pucks: 'pokerth' } },
