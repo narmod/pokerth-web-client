@@ -4791,6 +4791,10 @@ body:not(.in-game) .my-zone {
 .create-toggle.open .ct-arrow { transform: rotate(90deg); }
 
 #create-form { padding: 14px; background: rgba(8,18,10,0.6); border: 1px solid var(--border); border-top: none; border-radius: 0 0 10px 10px; }
+/* PokerTH clair : le fond du formulaire est code en dur (vert sombre translucide)
+   et ne suit pas la palette -> en clair il vire au gris et masque le texte
+   var(--text) (noms de presets non actifs, libelle mot de passe). Fond clair force. */
+:root[data-theme="pokerth-light"] #create-form { background: rgba(255,255,255,0.62); }
 
 /* Préréglages */
 .cf-presets-label { font-size: 0.6rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--gold-dim); font-weight: 600; margin: 0 2px 8px; }
