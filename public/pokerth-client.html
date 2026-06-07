@@ -157,7 +157,7 @@ function selectAvatarPopup(emoji) {
       // Render the trigger as the PokerTH chip logo so the user knows
       // the PokerTH avatar is the active choice. We use innerHTML
       // because we swap between text (emoji) and <img>.
-      trigger.innerHTML = "<img src=\"/img/pokerth-logo.png\" alt=\"PokerTH\" draggable=\"false\" style=\"width:26px;height:26px;object-fit:contain;pointer-events:none\">";
+      trigger.innerHTML = "<img src=\"/favicon.svg\" alt=\"PokerTH\" draggable=\"false\" style=\"width:26px;height:26px;object-fit:contain;pointer-events:none\">";
       trigger.classList.add("has-avatar");
     } else if (emoji === "__img__") {
       // Image perso choisie par l'utilisateur : afficher la vignette.
@@ -263,7 +263,7 @@ function onAvatarImageChosen(input) {
   </div>
   <div class="card">
     <div class="card-logo" style="padding:18px 0 18px">
-      <img class="card-chip" src="/logo-chip.png" alt="PokerTH" width="86" height="86">
+      <img class="card-chip" src="/favicon.svg" alt="PokerTH" width="86" height="86">
       <div class="card-title-big" style="font-size:2rem;letter-spacing:0.18em;margin-top:10px">PokerTH</div>
       <div class="card-suits-row" style="font-size:1.05rem;letter-spacing:0.32em;margin-top:9px;opacity:0.85"><span>♠</span><span class="r">♥</span><span class="r">♦</span><span>♣</span></div>
       <div class="card-subtitle" style="font-size:0.65rem;margin-top:8px">Web Client</div>
@@ -371,7 +371,7 @@ function onAvatarImageChosen(input) {
      an avatar (the JS toggles inline display below). The 🪪 (id card)
      glyph indicates "this is my official identity". data-av is the
      sentinel "__pth__" the JS branches on. -->
-<button type="button" class="avp-btn avp-pth avp-pin" data-av="__pth__" id="avp-btn-pth" onclick="selectAvatarPopup('__pth__')" title="Mon avatar PokerTH" data-i18n-title="avatarTooltip"><img src="/img/pokerth-logo.png" alt="PokerTH" draggable="false" style="width:26px;height:26px;object-fit:contain;pointer-events:none"></button>
+<button type="button" class="avp-btn avp-pth avp-pin" data-av="__pth__" id="avp-btn-pth" onclick="selectAvatarPopup('__pth__')" title="Mon avatar PokerTH" data-i18n-title="avatarTooltip"><img src="/favicon.svg" alt="PokerTH" draggable="false" style="width:26px;height:26px;object-fit:contain;pointer-events:none"></button>
 <button type="button" class="avp-btn avp-img avp-pin" data-av="__img__" id="avp-btn-img" onclick="pickAvatarImage()" title="Choisir une image perso / Custom image" data-i18n-title="avatarImageTooltip">📷</button>
 <button type="button" class="avp-btn avp-none avp-pin" data-av="" onclick="selectAvatarPopup('')">Aa</button>
 <button type="button" class="avp-btn" data-av="🌸" data-cat="plants" style="display:none" onclick="selectAvatarPopup('🌸')">🌸</button>
@@ -955,7 +955,7 @@ function onAvatarImageChosen(input) {
 <!-- ╚════════════════════╝ -->
 <div id="s-lobby" class="screen">
   <div class="header">
-    <div class="header-brand" id="lobby-brand"><span class="brand-suit" onclick="toggleBrandName()" role="button" tabindex="0" title="Afficher / masquer le nom" data-i18n-title="brandToggleTooltip"><img class="header-chip" src="/logo-chip.png" alt=""></span> <span class="brand-text">POKERTH</span></div>
+    <div class="header-brand" id="lobby-brand"><span class="brand-suit" onclick="toggleBrandName()" role="button" tabindex="0" title="Afficher / masquer le nom" data-i18n-title="brandToggleTooltip"><img class="header-chip" src="/favicon.svg" alt=""></span> <span class="brand-text">POKERTH</span></div>
     <div class="header-pills">
       <span class="pill pill-clickable" id="h-nick" onclick="openPlayerInfoPopup()" title="Mon profil" data-i18n-title="profileTooltip">—</span>
       <span class="pill" id="h-players" onclick="togglePlayersPanel()" style="cursor:pointer">—</span>
@@ -1139,7 +1139,7 @@ function onAvatarImageChosen(input) {
 
 <div id="s-game" class="screen">
   <div class="header">
-    <div class="header-brand"><img class="header-chip" src="/logo-chip.png" alt="">&nbsp;<span id="g-name" class="g-name-clickable" onclick="openGameInfoPopup()" title="Détails de la partie" data-i18n-title="gameDetailsTooltip">TABLE</span><span id="g-admin-badge" style="display:none;font-size:0.7rem;color:var(--green);margin-left:6px" title="Vous êtes créateur de cette table" data-i18n-title="adminBadgeTooltip">👑</span></div>
+    <div class="header-brand"><img class="header-chip" src="/favicon.svg" alt="">&nbsp;<span id="g-name" class="g-name-clickable" onclick="openGameInfoPopup()" title="Détails de la partie" data-i18n-title="gameDetailsTooltip">TABLE</span><span id="g-admin-badge" style="display:none;font-size:0.7rem;color:var(--green);margin-left:6px" title="Vous êtes créateur de cette table" data-i18n-title="adminBadgeTooltip">👑</span></div>
     <div class="header-pills"></div>
     <button class="btn-sm btn-icon" id="fs-btn-game" onclick="toggleFullscreen()" title="Fullscreen" data-i18n-title="fullscreenTooltip">⛶</button>
     <button class="btn-sm btn-icon" id="sound-toggle-btn" onclick="toggleSound()" title="Couper/Unmute" data-i18n-title="soundTooltip">🔊</button>

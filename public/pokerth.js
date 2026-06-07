@@ -644,7 +644,7 @@ window.refreshMyAvatar = function() {
     if (trig) {
       // Match the head selectAvatarPopup behaviour: trigger shows the
       // PokerTH chip logo, not the id-card emoji.
-      trig.innerHTML = '<img src="/img/pokerth-logo.png" alt="PokerTH" draggable="false" style="width:26px;height:26px;object-fit:contain;pointer-events:none">';
+      trig.innerHTML = '<img src="/favicon.svg" alt="PokerTH" draggable="false" style="width:26px;height:26px;object-fit:contain;pointer-events:none">';
       trig.classList.add('has-avatar');
     }
   }
@@ -675,7 +675,7 @@ window.refreshMyAvatar = function() {
       // (e.g. they're a LAN player, or a pokerth.net guest, or the
       // avatar hasn't been downloaded yet). Show the official PokerTH
       // chip logo as a graceful placeholder instead of an initial.
-      pbAv.innerHTML = '<img class="pb-pth-img" src="/img/pokerth-logo.png" alt="" draggable="false">';
+      pbAv.innerHTML = '<img class="pb-pth-img" src="/favicon.svg" alt="" draggable="false">';
       pbAv.classList.add('has-pth-avatar');
     } else {
       pbAv.textContent = display;
@@ -696,7 +696,7 @@ window.refreshMyAvatar = function() {
       //   3) nothing (fall back to emoji or initial)
       var effectiveUrl = usePth ? pthUrl
                        : (customImg ? customImg
-                       : (stored === '__pth__' ? '/img/pokerth-logo.png' : null));
+                       : (stored === '__pth__' ? '/favicon.svg' : null));
       if (effectiveUrl) {
         if (!img) {
           img = document.createElement('img');
@@ -2359,7 +2359,7 @@ const App = (() => {
   // Decision tree per player (same priority order as the table seats):
   //   1. Real PokerTH avatar image downloaded for this pid -> <img>
   //   2. For me + I chose '__pth__' but image not downloaded ->
-  //      placeholder /img/pokerth-logo.png
+  //      placeholder /favicon.svg
   //   3. Emoji (mine from localStorage, others' from _playerAvatars)
   //   4. Bot fallback -> 🤖
   //   5. Final fallback -> first letter of the pseudo
@@ -2389,7 +2389,7 @@ const App = (() => {
       if (myChoice2 === '__img__') {
         try { pthUrl = localStorage.getItem('pth_avatar_img') || null; } catch(e) { pthUrl = null; }
       }
-      if (!pthUrl && myChoice2 === '__pth__') pthUrl = '/img/pokerth-logo.png';
+      if (!pthUrl && myChoice2 === '__pth__') pthUrl = '/favicon.svg';
     }
     // Autres joueurs : image perso reçue via le proxy (prioritaire sur l'emoji).
     if (!isMe && _playerImgAvatars[pid]) pthUrl = _playerImgAvatars[pid];
@@ -2505,7 +2505,7 @@ const App = (() => {
       try { stored = localStorage.getItem('pth_avatar'); } catch(e) {}
       var url = null;
       if (stored === '__pth__') {
-        url = realPth || '/img/pokerth-logo.png';   // vrai avatar sinon logo
+        url = realPth || '/favicon.svg';   // vrai avatar sinon logo
       } else if (stored === '__img__') {
         try { url = localStorage.getItem('pth_avatar_img') || null; } catch(e) { url = null; }
       }
@@ -6464,7 +6464,7 @@ const App = (() => {
         // seat reflects their stated preference instead of falling
         // back to a bare initial letter.
         if (!pthAvUrl && myChoice === '__pth__') {
-          pthAvUrl = '/img/pokerth-logo.png';
+          pthAvUrl = '/favicon.svg';
         }
         // Image perso choisie localement : l'afficher sur mon siège.
         if (myChoice === '__img__') {
@@ -9838,4 +9838,4 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.2.283'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.2.284'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
