@@ -1472,10 +1472,28 @@ document.addEventListener("DOMContentLoaded", function() {
         try { if (window.App && App.onServerOrGuestChange) App.onServerOrGuestChange(); } catch (e) {}
       }
     }
+    // First-visit default theme (admin → /app-config.defaultTheme). Applied ONCE,
+    // and only when this browser has no theme picked yet — existing users keep
+    // theirs. window.applyThemePreset comes from modules/theme.mjs (a module loaded
+    // async), so we poll briefly for it. The preset writes the axis localStorage
+    // keys, so on the next visit the early <head> applier restores it (zero flash)
+    // and this guard short-circuits — it never re-applies.
+    function _applyDefaultTheme(presetId) {
+      if (!presetId) return;
+      try {
+        var keys = ['pth_theme', 'pth_table', 'pth_deck', 'pth_buttons', 'pth_pucks'];
+        for (var i = 0; i < keys.length; i++) { if (localStorage.getItem(keys[i]) !== null) return; }
+      } catch (e) { return; }
+      var tries = 0;
+      (function waitApply() {
+        if (typeof window.applyThemePreset === 'function') { try { window.applyThemePreset(presetId); } catch (e) {} return; }
+        if (tries++ < 60) setTimeout(waitApply, 50);
+      })();
+    }
     function go() {
       fetch('/app-config', { cache: 'no-store' })
         .then(function (r) { return r.json(); })
-        .then(function (c) { if (c && c.modes) applyModes(c.modes); if (c && c.welcome && c.welcome.enabled && typeof window.maybeShowWelcome === 'function') window.maybeShowWelcome(c.welcome); })
+        .then(function (c) { if (c && c.modes) applyModes(c.modes); if (c && c.welcome && c.welcome.enabled && typeof window.maybeShowWelcome === 'function') window.maybeShowWelcome(c.welcome); if (c && typeof c.defaultTheme === 'string') _applyDefaultTheme(c.defaultTheme); })
         .catch(function () {});
     }
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', go); else go();
@@ -9804,4 +9822,4 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.2.268'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.2.269'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();

@@ -133,6 +133,20 @@
         <div id="modesmsg" class="msg"></div>
       </div>
       <div class="card">
+        <h2>Default theme (new visitors)</h2>
+        <p class="muted" style="margin:0 0 6px">Applied on a player's first visit only. Players who already picked a theme keep theirs.</p>
+        <div class="periodrow">
+          <select id="defTheme">
+            <option value="">No default (Green Casino)</option>
+            <option value="casino">Green Casino</option>
+            <option value="pokerth">PokerTH ver1.1.2</option>
+            <option value="pokerthnew">PokerTH new</option>
+          </select>
+          <button id="saveTheme" class="use">Save</button>
+        </div>
+        <div id="themeMsg" class="msg"></div>
+      </div>
+      <div class="card">
         <h2>Maintenance</h2>
         <p class="muted" style="margin:0 0 8px">“Update (no restart)” pushes new client files live instantly without dropping connections; the other actions restart the server briefly — this page reconnects on its own.</p>
         <div class="btnrow">
@@ -387,6 +401,7 @@
       if(syncCfg){
         if(d.resetPeriod) $('period').value=d.resetPeriod;
         if(d.modes){ modesState=Object.assign({offline:true,lan:true,pokerthnet:true},d.modes); renderModes(); }
+        if($('defTheme') && typeof d.defaultTheme==='string') $('defTheme').value=d.defaultTheme;
       }
       var sn=$('schedNow'), sc=$('schedCancel');
       if(sn){ if(d.restartAt){ sn.textContent='Scheduled: '+(d.restartKind==='restart'?'restart only':'update + restart')+' at '+new Date(d.restartAt).toLocaleString(); if(sc) sc.style.display=''; } else { sn.textContent='Nothing scheduled.'; if(sc) sc.style.display='none'; } }
@@ -409,6 +424,12 @@
       .then(function(r){return r.json();}).then(function(d){ if(d.ok){ m.textContent='Saved: '+d.resetPeriod; m.className='msg ok'; } else { m.textContent='Failed: '+(d.error||'error'); m.className='msg err'; } })
       .catch(function(){ m.textContent='Network error.'; m.className='msg err'; });
   });
+  (function(){ var st=$('saveTheme'); if(!st) return; st.addEventListener('click', function(){
+    var v=$('defTheme')?$('defTheme').value:'', m=$('themeMsg');
+    api('/admin/config',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({defaultTheme:v,token:tok()})})
+      .then(function(r){return r.json();}).then(function(d){ if(d&&d.ok){ if($('defTheme')&&typeof d.defaultTheme==='string') $('defTheme').value=d.defaultTheme; m.textContent='Saved.'; m.className='msg ok'; } else { m.textContent='Failed: '+((d&&d.error)||'error'); m.className='msg err'; } })
+      .catch(function(){ m.textContent='Network error.'; m.className='msg err'; });
+  }); })();
 
   // app modes (login-screen entry modes)
   var modesState={offline:true,lan:true,pokerthnet:true};
