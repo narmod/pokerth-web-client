@@ -489,10 +489,54 @@ function showInfoToast(message, icon) {
 window.showInfoToast = showInfoToast;
 window.hideInfoToast = hideInfoToast;
 
+// ── On-device translation (browser Translator API, progressive enhancement) ──
+// Free, on-device, no server/key. Chromium-only; everywhere else these helpers
+// resolve null and callers fall back to the operator's original text.
+function _apiLang(code) {
+  if (!code) return '';
+  var c = String(code).toLowerCase();
+  if (c === 'zh-tw') return 'zh-Hant';
+  if (c === 'zh-cn') return 'zh';
+  if (c === 'pt-br' || c === 'pt-pt') return 'pt';
+  return c.split('-')[0];
+}
+function _makeTranslator(fromCode, toCode) {
+  if (typeof Translator === 'undefined') return Promise.resolve(null);
+  var from = _apiLang(fromCode), to = _apiLang(toCode);
+  if (!from || !to || from === to) return Promise.resolve(null);
+  return Promise.resolve(Translator.availability({ sourceLanguage: from, targetLanguage: to }))
+    .then(function (av) { if (!av || av === 'unavailable') return null; return Translator.create({ sourceLanguage: from, targetLanguage: to }); })
+    .catch(function () { return null; });
+}
+function _translateEntry(title, body, fromCode, toCode) {
+  return _makeTranslator(fromCode, toCode).then(function (tr) {
+    if (!tr) return null;
+    function one(s) { return s ? tr.translate(s) : Promise.resolve(''); }
+    return one(title).then(function (t) { return one(body).then(function (b) { return { title: t, body: b }; }); });
+  }).catch(function () { return null; });
+}
+function _detectLang(text) {
+  if (!text || typeof LanguageDetector === 'undefined') return Promise.resolve(null);
+  return Promise.resolve(LanguageDetector.availability())
+    .then(function (av) { if (!av || av === 'unavailable') return null; return LanguageDetector.create(); })
+    .then(function (det) { return det ? det.detect(text) : null; })
+    .then(function (res) { return (res && res.length && res[0].confidence > 0.5) ? res[0].detectedLanguage : null; })
+    .catch(function () { return null; });
+}
+function _detectTranslate(text) {
+  var target = (typeof _lang !== 'undefined' && _lang) ? _lang : '';
+  if (!text || !target || typeof Translator === 'undefined') return Promise.resolve(null);
+  return _detectLang(text).then(function (src) {
+    if (!src || _apiLang(src) === _apiLang(target)) return null;
+    return _makeTranslator(src, target).then(function (tr) { return tr ? tr.translate(text) : null; });
+  }).catch(function () { return null; });
+}
+
 // ── First-visit welcome / rules modal (admin-authored, per language) ────────
 // Picks the operator's text for the client's active UI language (_lang), with
 // fallback: exact code → primary subtag (pt-br → pt) → configured default → any.
-function _welcomePick(w) {
+// `exact` is true when the operator actually provided the client's language.
+function _welcomeChoose(w) {
   var langs = (w && w.langs) || {};
   var keys = Object.keys(langs);
   if (!keys.length) return null;
@@ -500,12 +544,13 @@ function _welcomePick(w) {
   var def = (w && w['default']) ? String(w['default']).toLowerCase() : 'fr';
   var prim = code.split('-')[0];
   function findBy(pred) { for (var i = 0; i < keys.length; i++) { if (pred(keys[i].toLowerCase())) return keys[i]; } return null; }
-  var hit = (code && findBy(function (x) { return x === code; }))
-         || (prim && findBy(function (x) { return x.split('-')[0] === prim; }))
-         || findBy(function (x) { return x === def; })
-         || keys[0];
-  return hit ? langs[hit] : null;
+  var exact = code && findBy(function (x) { return x === code; });
+  var sub = !exact && prim ? findBy(function (x) { return x.split('-')[0] === prim; }) : null;
+  var chosen = exact || sub || findBy(function (x) { return x === def; }) || keys[0];
+  var v = langs[chosen] || {};
+  return { lang: chosen, title: v.title || '', body: v.body || '', exact: !!(exact || sub) };
 }
+function _welcomePick(w) { var c = _welcomeChoose(w); return c ? { title: c.title, body: c.body } : null; }
 function hideWelcomeModal() { var el = document.getElementById('welcome-modal'); if (el) el.remove(); }
 function showWelcomeModal(title, body, version) {
   hideWelcomeModal();
@@ -538,13 +583,32 @@ function showWelcomeModal(title, body, version) {
 function maybeShowWelcome(w) {
   if (!w || !w.enabled) return;
   try { if (String(localStorage.getItem('pth_welcome_seen')) === String(w.updatedAt)) return; } catch (e) {}
-  var pick = _welcomePick(w);
-  if (!pick || (!pick.title && !pick.body)) return;
-  showWelcomeModal(pick.title || '', pick.body || '', w.updatedAt);
+  var c = _welcomeChoose(w);
+  if (!c || (!c.title && !c.body)) return;
+  showWelcomeModal(c.title, c.body, w.updatedAt); // operator text shows immediately
+  if (!c.exact) {
+    // No operator version for the client's language → try on-device translation
+    // and swap it in if the modal is still open.
+    var target = (typeof _lang !== 'undefined' && _lang) ? _lang : c.lang;
+    _translateEntry(c.title, c.body, c.lang, target).then(function (tr) {
+      if (tr && (tr.title || tr.body) && document.getElementById('welcome-modal')) showWelcomeModal(tr.title || c.title, tr.body || c.body, w.updatedAt);
+    }).catch(function () {});
+  }
+}
+// Broadcast info toast: show immediately, then (on supported browsers) detect
+// the message language and replace it with an on-device translation if needed.
+var _bcSeq = 0;
+function _showBroadcast(message, icon) {
+  _bcSeq++; var seq = _bcSeq;
+  showInfoToast(message, icon);
+  _detectTranslate(message).then(function (tr) {
+    if (tr && tr !== message && seq === _bcSeq && document.getElementById('srv-info-toast')) showInfoToast(tr, icon);
+  }).catch(function () {});
 }
 window.maybeShowWelcome = maybeShowWelcome;
 window.showWelcomeModal = showWelcomeModal;
 window.hideWelcomeModal = hideWelcomeModal;
+window._showBroadcast = _showBroadcast;
 
 
 // Rafraîchit immédiatement l'avatar du joueur local dans l'UI
@@ -7884,7 +7948,7 @@ function dismissWinner() {
             var ib = e.data.slice(5), is1 = ib.indexOf(':');
             var iicon = is1 >= 0 ? ib.slice(0, is1) : '';
             var imsg = is1 >= 0 ? ib.slice(is1 + 1) : ib;
-            if (imsg && typeof showInfoToast === 'function') showInfoToast(imsg, iicon);
+            if (imsg && typeof _showBroadcast === 'function') _showBroadcast(imsg, iicon);
             return;
           }
           // Avatar IMAGE perso diffusé via le proxy. Le data URL contient
@@ -9740,4 +9804,4 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.2.266'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.2.267'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
