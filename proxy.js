@@ -413,6 +413,14 @@ function updateCmd() {
   const dir = __dirname.replace(/'/g, "'\\''");
   return "sleep 1; cd '" + dir + "' && git pull --ff-only && npm install --omit=dev --no-audit --no-fund && pm2 restart " + PM2_NAME + " --update-env";
 }
+// Static-only self-update: just `git pull` so the served public/ files (client
+// build) go live immediately. No npm, no pm2 restart, so open connections are
+// never dropped. proxy.js / dependency changes will NOT take effect until a real
+// restart — this is meant for static (public/) deploys.
+function updateCmdStatic() {
+  const dir = __dirname.replace(/'/g, "'\\''");
+  return "cd '" + dir + "' && git pull --ff-only";
+}
 
 function adminAuthed(query, bodyToken) {
   return !!STATS_ADMIN_TOKEN && (query.token === STATS_ADMIN_TOKEN || bodyToken === STATS_ADMIN_TOKEN);
@@ -581,6 +589,14 @@ function handleAdmin(req, res, reqPathOnly, query) {
       if (!adminAuthed(query, d && d.token)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
       const started = runDetached(updateCmd(), UPDATE_LOG);
       console.log('[admin] self-update requested (git pull + npm + restart)');
+      return adminJson(res, started ? 200 : 500, { ok: started, started: started });
+    });
+  }
+  if (reqPathOnly === '/admin/update-nr' && req.method === 'POST') {
+    return readJsonBody(req, function (d) {
+      if (!adminAuthed(query, d && d.token)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
+      const started = runDetached(updateCmdStatic(), UPDATE_LOG);
+      console.log('[admin] static self-update requested (git pull, no restart)');
       return adminJson(res, started ? 200 : 500, { ok: started, started: started });
     });
   }
