@@ -474,6 +474,9 @@ export const strings = {
     buttonsDefault: 'Plat',
     pucksDefault: 'Fiches',
     sectionPucks: 'Pucks',
+    srvRestartUpdate:'⚠ Die bediener word om {t} bygewerk en herbegin. Maak jou huidige hand klaar om onderbrekings te vermy.',
+    srvRestartOnly:'⚠ Die bediener word om {t} herbegin. Maak jou huidige hand klaar om onderbrekings te vermy.',
+    srvRestartCancelled:'Die geskeduleerde herbegin van die bediener is gekanselleer.',
 };
 
 export default { meta, strings };

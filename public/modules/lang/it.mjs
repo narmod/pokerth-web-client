@@ -477,6 +477,9 @@ export const strings = {
     buttonsDefault: 'Piatto',
     pucksDefault: 'Fiche',
     sectionPucks: 'Pucks',
+    srvRestartUpdate:'⚠ Il server verrà aggiornato e riavviato alle {t}. Termina la mano in corso per evitare interruzioni.',
+    srvRestartOnly:'⚠ Il server verrà riavviato alle {t}. Termina la mano in corso per evitare interruzioni.',
+    srvRestartCancelled:'Il riavvio programmato del server è stato annullato.',
 };
 
 export default { meta, strings };

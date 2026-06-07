@@ -291,6 +291,9 @@ export const strings = {
     installIosStep3:'Confirmez avec <b>Ajouter</b> — l’app apparaît sur votre écran d’accueil.',
     installGenericStep1:'Ouvrez le menu de votre navigateur (⋮ ou ⋯).',
     installGenericStep2:'Choisissez <b>« Installer l’application »</b> ou <b>« Sur l’écran d’accueil »</b>.',
+    srvRestartUpdate:'⚠ Le serveur va se mettre à jour et redémarrer à {t}. Terminez votre main en cours pour éviter toute interruption.',
+    srvRestartOnly:'⚠ Le serveur va redémarrer à {t}. Terminez votre main en cours pour éviter toute interruption.',
+    srvRestartCancelled:'Le redémarrage programmé du serveur a été annulé.',
 };
 
 export default { meta, strings };

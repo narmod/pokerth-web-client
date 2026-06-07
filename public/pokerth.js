@@ -431,6 +431,41 @@ function showToast(msg, opts) {
 }
 window.showToast = showToast;
 
+// ── Scheduled server restart/update notice (dismissible toast) ─────────────
+// Driven by a single "NOTICE:RESTART:<deadlineMs>:<kind>:<note>" proxy frame.
+// No live countdown (by design): shows the restart clock time, which stays
+// accurate, plus an optional admin note. Localised via t(); note is shown with
+// textContent so it can never inject markup.
+function _fmtRestartTime(ms) {
+  var d = new Date(ms);
+  var sameDay = d.toDateString() === new Date().toDateString();
+  try {
+    return sameDay ? d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                   : d.toLocaleString([], { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+  } catch (e) { return d.toLocaleTimeString(); }
+}
+function hideRestartNotice() { var el = document.getElementById('srv-restart-notice'); if (el) el.remove(); }
+function showRestartNotice(deadlineMs, kind, note) {
+  hideRestartNotice();
+  var msg = (kind === 'restart' ? t('srvRestartOnly') : t('srvRestartUpdate')).replace('{t}', _fmtRestartTime(deadlineMs));
+  if (note) msg += '\n' + note;
+  var el = document.createElement('div');
+  el.id = 'srv-restart-notice';
+  el.style.cssText = 'position:fixed;top:10px;left:50%;transform:translateX(-50%);max-width:92%;z-index:10000;display:flex;align-items:flex-start;gap:10px;background:rgba(184,52,52,.96);color:#fff;padding:10px 13px;border-radius:10px;box-shadow:0 6px 22px rgba(0,0,0,.45);font-size:.85rem;line-height:1.4;white-space:pre-line;';
+  var span = document.createElement('span');
+  span.textContent = msg;
+  el.appendChild(span);
+  var x = document.createElement('button');
+  x.setAttribute('aria-label', 'Close');
+  x.textContent = '\u00d7';
+  x.style.cssText = 'flex:none;background:transparent;border:0;color:#fff;font-size:1.25rem;line-height:1;cursor:pointer;padding:0 2px;opacity:.85;';
+  x.addEventListener('click', hideRestartNotice);
+  el.appendChild(x);
+  document.body.appendChild(el);
+}
+window.showRestartNotice = showRestartNotice;
+window.hideRestartNotice = hideRestartNotice;
+
 
 // Rafraîchit immédiatement l'avatar du joueur local dans l'UI
 window.refreshMyAvatar = function() {
@@ -7752,6 +7787,19 @@ function dismissWinner() {
       ws.onmessage = function(e) {
         if (typeof e.data === 'string') {
           // Message texte = protocole proxy (réactions)
+          if (e.data.startsWith('NOTICE:')) {
+            var nbody = e.data.slice(7);
+            if (nbody === 'CANCEL') { if (typeof hideRestartNotice === 'function') hideRestartNotice(); if (typeof showToast === 'function') showToast(t('srvRestartCancelled'), { icon: '', duration: 4000 }); return; }
+            if (nbody.startsWith('RESTART:')) {
+              var nr = nbody.slice(8), ns1 = nr.indexOf(':');
+              if (ns1 > 0) {
+                var ndead = parseInt(nr.slice(0, ns1), 10), nrest = nr.slice(ns1 + 1), ns2 = nrest.indexOf(':');
+                var nkind = ns2 >= 0 ? nrest.slice(0, ns2) : nrest, nnote = ns2 >= 0 ? nrest.slice(ns2 + 1) : '';
+                if (ndead && typeof showRestartNotice === 'function') showRestartNotice(ndead, nkind, nnote);
+              }
+            }
+            return;
+          }
           // Avatar IMAGE perso diffusé via le proxy. Le data URL contient
           // des ':' -> on découpe uniquement sur le 1er séparateur après le pid.
           if (e.data.startsWith('AVATARIMG:')) {
@@ -9605,4 +9653,4 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.2.261'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.2.262'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();

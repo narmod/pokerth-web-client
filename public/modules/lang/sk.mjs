@@ -474,6 +474,9 @@ export const strings = {
     buttonsDefault: 'Plochý',
     pucksDefault: 'Žetóny',
     sectionPucks: 'Pucks',
+    srvRestartUpdate:'⚠ Server sa o {t} aktualizuje a reštartuje. Dohrajte aktuálne rozdanie, aby ste predíli prerušeniu.',
+    srvRestartOnly:'⚠ Server sa o {t} reštartuje. Dohrajte aktuálne rozdanie, aby ste predíli prerušeniu.',
+    srvRestartCancelled:'Naplánovaný reštart servera bol zrušený.',
 };
 
 export default { meta, strings };

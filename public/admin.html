@@ -145,6 +145,28 @@
         <pre id="updlog" class="logs" style="max-height:200px"></pre>
       </div>
       <div class="card">
+        <h2>Schedule a restart</h2>
+        <p class="muted" style="margin:0 0 8px">Warn connected players, then act automatically after the delay. Players see a dismissible notice with the restart time, in their own language.</p>
+        <div class="seg" id="schedKind"><button class="on" data-k="update">Update + restart</button><button data-k="restart">Restart only</button></div>
+        <div class="btnrow" id="schedDelays">
+          <button class="use" data-secs="120">2 min</button>
+          <button class="use" data-secs="300">5 min</button>
+          <button class="use" data-secs="600">10 min</button>
+          <button class="use" data-secs="900">15 min</button>
+          <button class="use" data-secs="3600">1 h</button>
+          <button class="use" data-secs="21600">6 h</button>
+          <button class="use" data-secs="43200">12 h</button>
+        </div>
+        <div class="periodrow" style="margin-top:8px">
+          <input id="schedCustom" class="filter" type="number" min="1" max="1440" placeholder="Custom minutes" style="margin:0">
+          <button id="schedCustomBtn" class="use">Schedule</button>
+        </div>
+        <input id="schedMsg" class="filter" type="text" maxlength="200" placeholder="Optional note shown to players (as-is)" autocomplete="off" style="margin-top:8px">
+        <div id="schedNow" class="muted" style="margin-top:8px"></div>
+        <div id="schedState" class="msg"></div>
+        <button id="schedCancel" class="use danger" style="display:none">Cancel scheduled restart</button>
+      </div>
+      <div class="card">
         <div class="boardhead"><h2 style="margin:0">Recent logs</h2><button id="refreshLogs" class="use">Refresh</button></div>
         <pre id="logs" class="logs"></pre>
       </div>
@@ -288,6 +310,8 @@
         if(d.resetPeriod) $('period').value=d.resetPeriod;
         if(d.modes){ modesState=Object.assign({offline:true,lan:true,pokerthnet:true},d.modes); renderModes(); }
       }
+      var sn=$('schedNow'), sc=$('schedCancel');
+      if(sn){ if(d.restartAt){ sn.textContent='Scheduled: '+(d.restartKind==='restart'?'restart only':'update + restart')+' at '+new Date(d.restartAt).toLocaleString(); if(sc) sc.style.display=''; } else { sn.textContent='Nothing scheduled.'; if(sc) sc.style.display='none'; } }
     }).catch(function(){ $('status').innerHTML='<div class="empty err">Could not load.</div>'; });
   }
   function loadServer(){ loadStatus(true); loadLogs(); loadUpdateLog(); }
@@ -369,6 +393,26 @@
   if($('btnRestart')) $('btnRestart').addEventListener('click', doRestart);
   if($('btnClearLogs')) $('btnClearLogs').addEventListener('click', clearLogs);
   if($('btnUpdLog')) $('btnUpdLog').addEventListener('click', loadUpdateLog);
+  // ── Schedule a restart (warns connected players, then acts after the delay) ──
+  var schedKind='update';
+  document.querySelectorAll('#schedKind button').forEach(function(b){ b.addEventListener('click',function(){ schedKind=b.dataset.k; document.querySelectorAll('#schedKind button').forEach(function(x){x.classList.toggle('on',x===b);}); }); });
+  function schedSay(txt,c){ var m=$('schedState'); m.textContent=txt; m.className='msg '+(c||''); }
+  function scheduleRestart(secs){
+    secs=Math.floor(secs);
+    if(!(secs>=10 && secs<=86400)){ schedSay('Delay must be between 1 and 1440 minutes.','err'); return; }
+    var human=secs>=3600?(secs%3600?Math.round(secs/60)+' min':(secs/3600)+' h'):Math.round(secs/60)+' min';
+    if(!confirm('Schedule \u201c'+(schedKind==='update'?'Update + restart':'Restart only')+'\u201d in '+human+'?\n\nConnected players will be notified now.')) return;
+    schedSay('Scheduling\u2026');
+    api('/admin/schedule-restart',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({seconds:secs,kind:schedKind,message:($('schedMsg').value||'').trim(),token:tok()})})
+      .then(function(r){return r.json();}).then(function(d){ if(d&&d.ok){ schedSay('Scheduled \u2014 '+(d.notified||0)+' player(s) notified.','ok'); loadServer(); } else schedSay('Failed: '+((d&&d.error)||'error'),'err'); })
+      .catch(function(){ schedSay('Schedule failed \u2014 network error.','err'); });
+  }
+  document.querySelectorAll('#schedDelays button').forEach(function(b){ b.addEventListener('click',function(){ scheduleRestart(Number(b.dataset.secs)); }); });
+  if($('schedCustomBtn')) $('schedCustomBtn').addEventListener('click',function(){ scheduleRestart(Number($('schedCustom').value||0)*60); });
+  if($('schedCancel')) $('schedCancel').addEventListener('click',function(){ if(!confirm('Cancel the scheduled restart?'))return;
+    api('/admin/cancel-restart',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({token:tok()})})
+      .then(function(r){return r.json();}).then(function(d){ if(d&&d.ok){ schedSay(d.cancelled?'Cancelled.':'Nothing was scheduled.','ok'); loadServer(); } else schedSay('Cancel failed.','err'); })
+      .catch(function(){ schedSay('Cancel failed \u2014 network error.','err'); }); });
 
   enter();
 })();

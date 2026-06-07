@@ -477,6 +477,9 @@ export const strings = {
     buttonsDefault: 'Flach',
     pucksDefault: 'Chips',
     sectionPucks: 'Pucks',
+    srvRestartUpdate:'⚠ Der Server wird um {t} aktualisiert und neu gestartet. Beende deine laufende Hand, um Unterbrechungen zu vermeiden.',
+    srvRestartOnly:'⚠ Der Server wird um {t} neu gestartet. Beende deine laufende Hand, um Unterbrechungen zu vermeiden.',
+    srvRestartCancelled:'Der geplante Server-Neustart wurde abgebrochen.',
 };
 
 export default { meta, strings };

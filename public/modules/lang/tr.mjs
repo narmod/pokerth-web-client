@@ -476,6 +476,9 @@ export const strings = {
     buttonsDefault: 'Düz',
     pucksDefault: 'Fişler',
     sectionPucks: 'Pucks',
+    srvRestartUpdate:'⚠ Sunucu {t} itibarıyla güncellenip yeniden başlatılacak. Kesintileri önlemek için mevcut elinizi tamamlayın.',
+    srvRestartOnly:'⚠ Sunucu {t} itibarıyla yeniden başlatılacak. Kesintileri önlemek için mevcut elinizi tamamlayın.',
+    srvRestartCancelled:'Planlanan sunucu yeniden başlatması iptal edildi.',
 };
 
 export default { meta, strings };

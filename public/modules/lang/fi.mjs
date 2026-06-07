@@ -473,6 +473,9 @@ export const strings = {
     buttonsDefault: 'Tasainen',
     pucksDefault: 'Pelimerkit',
     sectionPucks: 'Pucks',
+    srvRestartUpdate:'⚠ Palvelin päivitetään ja käynnistetään uudelleen klo {t}. Pelaa nykyinen kätesi loppuun välttääksesi keskeytykset.',
+    srvRestartOnly:'⚠ Palvelin käynnistetään uudelleen klo {t}. Pelaa nykyinen kätesi loppuun välttääksesi keskeytykset.',
+    srvRestartCancelled:'Palvelimen ajastettu uudelleenkäynnistys peruutettiin.',
 };
 
 export default { meta, strings };

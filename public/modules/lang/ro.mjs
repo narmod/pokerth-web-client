@@ -474,6 +474,9 @@ export const strings = {
     buttonsDefault: 'Plat',
     pucksDefault: 'Jetoane',
     sectionPucks: 'Pucks',
+    srvRestartUpdate:'⚠ Serverul va fi actualizat şi repornit la {t}. Termină mâna curentă pentru a evita Întreruperile.',
+    srvRestartOnly:'⚠ Serverul va fi repornit la {t}. Termină mâna curentă pentru a evita Întreruperile.',
+    srvRestartCancelled:'Repornirea programată a serverului a fost anulată.',
 };
 
 export default { meta, strings };

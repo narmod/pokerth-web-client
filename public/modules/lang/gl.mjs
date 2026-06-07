@@ -474,6 +474,9 @@ export const strings = {
     buttonsDefault: 'Plano',
     pucksDefault: 'Fichas',
     sectionPucks: 'Pucks',
+    srvRestartUpdate:'⚠ O servidor actualizarase e reiniciarase ás {t}. Remata a túa man actual para evitar interrupcións.',
+    srvRestartOnly:'⚠ O servidor reiniciarase ás {t}. Remata a túa man actual para evitar interrupcións.',
+    srvRestartCancelled:'O reinicio programado do servidor cancelouse.',
 };
 
 export default { meta, strings };

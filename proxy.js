@@ -422,6 +422,26 @@ function updateCmdStatic() {
   return "cd '" + dir + "' && git pull --ff-only";
 }
 
+// ── Scheduled restart/update with advance notice to connected clients ──
+let _restartTimer = null;   // pending setTimeout handle (null = nothing scheduled)
+let _restartAt = 0;         // epoch ms when the action fires (0 = none)
+let _restartKind = '';      // 'update' | 'restart'
+let _restartNotice = '';    // the NOTICE:… frame, replayed to clients that join the window
+function restartOnlyCmd() {
+  return "sleep 1; pm2 restart " + PM2_NAME + " --update-env";
+}
+// Broadcast a text control frame to every connected client — out-of-band, on the
+// same channel the reaction/avatar relay already uses. Returns how many got it.
+function broadcastNotice(text) {
+  let n = 0;
+  try { wss.clients.forEach(function (c) { if (c.readyState === 1) { try { c.send(text); n++; } catch (e) {} } }); } catch (e) {}
+  return n;
+}
+function clearScheduledRestart() {
+  if (_restartTimer) { clearTimeout(_restartTimer); _restartTimer = null; }
+  _restartAt = 0; _restartKind = ''; _restartNotice = '';
+}
+
 function adminAuthed(query, bodyToken) {
   return !!STATS_ADMIN_TOKEN && (query.token === STATS_ADMIN_TOKEN || bodyToken === STATS_ADMIN_TOKEN);
 }
@@ -526,7 +546,7 @@ function handleAdmin(req, res, reqPathOnly, query) {
     let version = '';
     try { version = (JSON.parse(fs.readFileSync(path.join(__dirname, 'package.json'), 'utf8')).version) || ''; } catch (e) {}
     let sockets = null; try { sockets = wss.clients.size; } catch (e) {}
-    return adminJson(res, 200, { ok: true, version: version, node: process.version, uptimeSec: Math.floor(process.uptime()), sockets: sockets, players: Object.keys(statsStore).length, resetPeriod: STATS_RESET_PERIOD, modes: appModes() });
+    return adminJson(res, 200, { ok: true, version: version, node: process.version, uptimeSec: Math.floor(process.uptime()), sockets: sockets, players: Object.keys(statsStore).length, resetPeriod: STATS_RESET_PERIOD, modes: appModes(), restartAt: (_restartAt > Date.now() ? _restartAt : null), restartKind: (_restartAt > Date.now() ? _restartKind : null) });
   }
   if (reqPathOnly === '/admin/logs') {
     if (!adminAuthed(query)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
@@ -598,6 +618,38 @@ function handleAdmin(req, res, reqPathOnly, query) {
       const started = runDetached(updateCmdStatic(), UPDATE_LOG);
       console.log('[admin] static self-update requested (git pull, no restart)');
       return adminJson(res, started ? 200 : 500, { ok: started, started: started });
+    });
+  }
+  if (reqPathOnly === '/admin/schedule-restart' && req.method === 'POST') {
+    return readJsonBody(req, function (d) {
+      if (!adminAuthed(query, d && d.token)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
+      const secs = Math.floor(Number(d && d.seconds) || 0);
+      if (!(secs >= 10 && secs <= 86400)) return adminJson(res, 400, { ok: false, error: 'seconds must be between 10 and 86400' });
+      const kind = (d && d.kind === 'restart') ? 'restart' : 'update';
+      const note = (d && typeof d.message === 'string') ? d.message.replace(/[\r\n]+/g, ' ').slice(0, 200) : '';
+      clearScheduledRestart();
+      _restartAt = Date.now() + secs * 1000;
+      _restartKind = kind;
+      _restartNotice = 'NOTICE:RESTART:' + _restartAt + ':' + kind + ':' + note;
+      const reached = broadcastNotice(_restartNotice);
+      _restartTimer = setTimeout(function () {
+        const cmd = (_restartKind === 'restart') ? restartOnlyCmd() : updateCmd();
+        console.log('[admin] scheduled ' + _restartKind + ' firing now');
+        _restartTimer = null; _restartAt = 0; _restartNotice = '';
+        runDetached(cmd, UPDATE_LOG);
+      }, secs * 1000);
+      console.log('[admin] scheduled ' + kind + ' in ' + secs + 's (notified ' + reached + ' client(s))');
+      return adminJson(res, 200, { ok: true, scheduledAt: _restartAt, kind: kind, notified: reached });
+    });
+  }
+  if (reqPathOnly === '/admin/cancel-restart' && req.method === 'POST') {
+    return readJsonBody(req, function (d) {
+      if (!adminAuthed(query, d && d.token)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
+      const had = _restartAt > 0;
+      clearScheduledRestart();
+      if (had) broadcastNotice('NOTICE:CANCEL');
+      console.log('[admin] scheduled action cancelled' + (had ? '' : ' (none pending)'));
+      return adminJson(res, 200, { ok: true, cancelled: had });
     });
   }
   if (reqPathOnly === '/admin/restart' && req.method === 'POST') {
@@ -915,6 +967,8 @@ function _attachWs(S, ws) {
   // only fan out to peers sharing the same host:port.
   ws._relayKey = S.host + ':' + S.port;
   _allClients.add(ws);
+  // If a restart is currently scheduled, tell this freshly-attached client too.
+  if (_restartAt > Date.now() && _restartNotice) { try { ws.send(_restartNotice); } catch (e) {} }
 
   ws.on('message', (data, isBinary) => {
     if (!isBinary) {

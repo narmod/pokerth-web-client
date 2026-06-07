@@ -473,6 +473,9 @@ export const strings = {
     buttonsDefault: 'フラット',
     pucksDefault: 'チップ',
     sectionPucks: 'Pucks',
+    srvRestartUpdate:'⚠ サーバーは {t} に更新されて再起動します。中断を避けるため、現在のハンドを終わらせてください。',
+    srvRestartOnly:'⚠ サーバーは {t} に再起動します。中断を避けるため、現在のハンドを終わらせてください。',
+    srvRestartCancelled:'予定されていたサーバーの再起動はキャンセルされました。',
 };
 
 export default { meta, strings };

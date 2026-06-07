@@ -284,6 +284,9 @@ export const strings = {
     buttonsDefault: '플랫',
     pucksDefault: '칩',
     sectionPucks: 'Pucks',
+    srvRestartUpdate:'⚠ 서버가 {t}에 업데이트 후 재시작됩니다. 중단을 피하려면 현재 핸드를 마무리하세요.',
+    srvRestartOnly:'⚠ 서버가 {t}에 재시작됩니다. 중단을 피하려면 현재 핸드를 마무리하세요.',
+    srvRestartCancelled:'예약된 서버 재시작이 취소되었습니다.',
 };
 
 export default { meta, strings };

@@ -474,6 +474,9 @@ export const strings = {
     buttonsDefault: 'Lapos',
     pucksDefault: 'Zsetonok',
     sectionPucks: 'Pucks',
+    srvRestartUpdate:'⚠ A szerver {t}-kor frissül és újraindul. Fejezd be az aktuális leosztást a megszakítások elkerülése érdekében.',
+    srvRestartOnly:'⚠ A szerver {t}-kor újraindul. Fejezd be az aktuális leosztást a megszakítások elkerülése érdekében.',
+    srvRestartCancelled:'A szerver ütemezett újraindítását törölték.',
 };
 
 export default { meta, strings };

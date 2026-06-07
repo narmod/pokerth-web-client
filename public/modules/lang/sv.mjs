@@ -473,6 +473,9 @@ export const strings = {
     buttonsDefault: 'Platt',
     pucksDefault: 'Marker',
     sectionPucks: 'Pucks',
+    srvRestartUpdate:'⚠ Servern uppdateras och startas om kl. {t}. Avsluta din nuvarande hand för att undvika avbrott.',
+    srvRestartOnly:'⚠ Servern startas om kl. {t}. Avsluta din nuvarande hand för att undvika avbrott.',
+    srvRestartCancelled:'Den schemalagda omstarten av servern har avbrutits.',
 };
 
 export default { meta, strings };

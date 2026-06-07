@@ -474,6 +474,9 @@ export const strings = {
     buttonsDefault: 'Plokščia',
     pucksDefault: 'Žetonai',
     sectionPucks: 'Pucks',
+    srvRestartUpdate:'⚠ Serveris bus atnaujintas ir paleistas iš naujo {t}. Užbaikite dabartinę ranką, kad išvengtumėte pertrūkių.',
+    srvRestartOnly:'⚠ Serveris bus paleistas iš naujo {t}. Užbaikite dabartinę ranką, kad išvengtumėte pertrūkių.',
+    srvRestartCancelled:'Suplanuotas serverio paleidimas iš naujo atšauktas.',
 };
 
 export default { meta, strings };

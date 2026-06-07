@@ -474,6 +474,9 @@ export const strings = {
     buttonsDefault: 'Ravno',
     pucksDefault: 'Žetoni',
     sectionPucks: 'Pucks',
+    srvRestartUpdate:'⚠ Server će biti ažuriran i ponovo pokrenut u {t}. Završite trenutnu ruku da biste izbegli prekide.',
+    srvRestartOnly:'⚠ Server će biti ponovo pokrenut u {t}. Završite trenutnu ruku da biste izbegli prekide.',
+    srvRestartCancelled:'Zakazano ponovno pokretanje servera je otkazano.',
 };
 
 export default { meta, strings };

@@ -476,6 +476,9 @@ export const strings = {
     buttonsDefault: 'Плоский',
     pucksDefault: 'Фишки',
     sectionPucks: 'Pucks',
+    srvRestartUpdate:'⚠ Сервер будет обновлён и перезапущен в {t}. Доиграйте текущую раздачу, чтобы избежать прерываний.',
+    srvRestartOnly:'⚠ Сервер будет перезапущен в {t}. Доиграйте текущую раздачу, чтобы избежать прерываний.',
+    srvRestartCancelled:'Запланированный перезапуск сервера отменён.',
 };
 
 export default { meta, strings };

@@ -477,6 +477,9 @@ export const strings = {
     buttonsDefault: 'Płaski',
     pucksDefault: 'Żetony',
     sectionPucks: 'Pucks',
+    srvRestartUpdate:'⚠ Serwer zostanie zaktualizowany i uruchomiony ponownie o {t}. Dokończ bieżące rozdanie, aby uniknąć przerwania.',
+    srvRestartOnly:'⚠ Serwer zostanie uruchomiony ponownie o {t}. Dokończ bieżące rozdanie, aby uniknąć przerwania.',
+    srvRestartCancelled:'Zaplanowany restart serwera został anulowany.',
 };
 
 export default { meta, strings };

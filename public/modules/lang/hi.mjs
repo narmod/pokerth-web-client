@@ -285,6 +285,9 @@ export const strings = {
     buttonsDefault: 'सपाट',
     pucksDefault: 'चिप्स',
     sectionPucks: 'Pucks',
+    srvRestartUpdate:'⚠ सर्वर {t} बजे अपडेट होकर पुनः आरंभ होगा। रुकावट से बचने के लिए अपना मौजूदा हाथ पूरा करें।',
+    srvRestartOnly:'⚠ सर्वर {t} बजे पुनः आरंभ होगा। रुकावट से बचने के लिए अपना मौजूदा हाथ पूरा करें।',
+    srvRestartCancelled:'सर्वर का निर्धारित पुनःआरंभ रद्द कर दिया गया।',
 };
 
 export default { meta, strings };

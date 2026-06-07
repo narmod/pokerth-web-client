@@ -474,6 +474,9 @@ export const strings = {
     buttonsDefault: 'Επίπεδο',
     pucksDefault: 'Μάρκες',
     sectionPucks: 'Pucks',
+    srvRestartUpdate:'⚠ Ο διακομιστής θα ενημερωθεί και θα επανεκκινήσει στις {t}. Ολοκληρώστε το τρέχον χέρι σας για να αποφύγετε διακοπές.',
+    srvRestartOnly:'⚠ Ο διακομιστής θα επανεκκινήσει στις {t}. Ολοκληρώστε το τρέχον χέρι σας για να αποφύγετε διακοπές.',
+    srvRestartCancelled:'Η προγραμματισμένη επανεκκίνηση του διακομιστή ακυρώθηκε.',
 };
 
 export default { meta, strings };

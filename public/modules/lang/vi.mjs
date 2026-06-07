@@ -474,6 +474,9 @@ export const strings = {
     buttonsDefault: 'Phẳng',
     pucksDefault: 'Phỉnh',
     sectionPucks: 'Pucks',
+    srvRestartUpdate:'⚠ Máy chủ sẽ được cập nhật và khởi động lại vào lúc {t}. Hãy hoàn thành ván bài hiện tại để tránh bị gián đoạn.',
+    srvRestartOnly:'⚠ Máy chủ sẽ khởi động lại vào lúc {t}. Hãy hoàn thành ván bài hiện tại để tránh bị gián đoạn.',
+    srvRestartCancelled:'Việc khởi động lại máy chủ theo lịch đã bị hủy.',
 };
 
 export default { meta, strings };

@@ -291,6 +291,9 @@ export const strings = {
     installIosStep3:'Confirm with <b>Add</b> — the app lands on your home screen.',
     installGenericStep1:'Open your browser menu (⋮ or ⋯).',
     installGenericStep2:'Choose <b>“Install app”</b> or <b>“Add to Home Screen”</b>.',
+    srvRestartUpdate:'⚠ The server will update and restart at {t}. Finish your current hand to avoid interruptions.',
+    srvRestartOnly:'⚠ The server will restart at {t}. Finish your current hand to avoid interruptions.',
+    srvRestartCancelled:'The scheduled server restart was cancelled.',
 };
 
 export default { meta, strings };

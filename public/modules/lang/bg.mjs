@@ -474,6 +474,9 @@ export const strings = {
     buttonsDefault: 'Плосък',
     pucksDefault: 'Чипове',
     sectionPucks: 'Pucks',
+    srvRestartUpdate:'⚠ Сървърът ще бъде актуализиран и рестартиран в {t}. Завършете текущата си ръка, за да избегнете прекъсвания.',
+    srvRestartOnly:'⚠ Сървърът ще бъде рестартиран в {t}. Завършете текущата си ръка, за да избегнете прекъсвания.',
+    srvRestartCancelled:'Планираното рестартиране на сървъра беше отменено.',
 };
 
 export default { meta, strings };

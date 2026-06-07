@@ -475,6 +475,9 @@ export const strings = {
     buttonsDefault: '扁平',
     pucksDefault: '筹码',
     sectionPucks: 'Pucks',
+    srvRestartUpdate:'⚠ 服务器将于 {t} 更新并重启。请打完当前这手牌以避免中断。',
+    srvRestartOnly:'⚠ 服务器将于 {t} 重启。请打完当前这手牌以避免中断。',
+    srvRestartCancelled:'已取消计划中的服务器重启。',
 };
 
 export default { meta, strings };

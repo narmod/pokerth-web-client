@@ -477,6 +477,9 @@ export const strings = {
     buttonsDefault: 'Plat',
     pucksDefault: 'Fiches',
     sectionPucks: 'Pucks',
+    srvRestartUpdate:'⚠ De server wordt om {t} bijgewerkt en herstart. Maak je huidige hand af om onderbrekingen te voorkomen.',
+    srvRestartOnly:'⚠ De server wordt om {t} herstart. Maak je huidige hand af om onderbrekingen te voorkomen.',
+    srvRestartCancelled:'De geplande herstart van de server is geannuleerd.',
 };
 
 export default { meta, strings };

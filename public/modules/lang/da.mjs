@@ -473,6 +473,9 @@ export const strings = {
     buttonsDefault: 'Flad',
     pucksDefault: 'Jetoner',
     sectionPucks: 'Pucks',
+    srvRestartUpdate:'⚠ Serveren opdateres og genstartes kl. {t}. Afslut din nuværende hånd for at undgå afbrydelser.',
+    srvRestartOnly:'⚠ Serveren genstartes kl. {t}. Afslut din nuværende hånd for at undgå afbrydelser.',
+    srvRestartCancelled:'Den planlagte genstart af serveren er annulleret.',
 };
 
 export default { meta, strings };

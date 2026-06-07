@@ -475,6 +475,9 @@ export const strings = {
     buttonsDefault: 'Còmhnard',
     pucksDefault: 'Tòcanan',
     sectionPucks: 'Pucks',
+    srvRestartUpdate:'⚠ Thèid am frithealaiche ùrachadh is ath-thòiseachadh aig {t}. Crìochnaich an làmh làthaireach agad gus stadan a sheachnadh.',
+    srvRestartOnly:'⚠ Thèid am frithealaiche ath-thòiseachadh aig {t}. Crìochnaich an làmh làthaireach agad gus stadan a sheachnadh.',
+    srvRestartCancelled:'Chaidh ath-thòiseachadh clàraichte an fhrithealaiche a chur dheth.',
 };
 
 export default { meta, strings };
