@@ -6,6 +6,8 @@ SVGs `0.svg`–`51.svg` and the back `flipside.svg`) is taken from the
 
 - Source: https://github.com/pokerth/pokerth (branch `qt6-qml`,
   `src/gui/qt6-qml/resources/responsive-cards/` and `cardBackground.svg`)
+- Origin: https://github.com/digitaldesignlabs/responsive-playing-cards
+  (original responsive playing-card design; imported upstream into PokerTH)
 - Copyright: © the PokerTH development team
 - License: GNU Affero General Public License v3.0 (AGPL-3.0)
 
