@@ -1428,7 +1428,7 @@ if ('serviceWorker' in navigator) {
 // Polls /__ver (newest asset mtime). When it changes after a deploy we show a
 // one-tap "update" banner instead of forcing the user to hard-refresh.
 (function () {
-  var knownVer = null, shown = false;
+  var knownVer = null, shown = false, latestVer = null;
 
   function showBanner() {
     if (shown || document.getElementById('update-banner')) return;
@@ -1456,7 +1456,16 @@ if ('serviceWorker' in navigator) {
         }).catch(function () {});
       setTimeout(function () { location.reload(); }, 180);
     };
-    bar.appendChild(span); bar.appendChild(btn);
+    var x = document.createElement('button');
+    x.textContent = '\u00d7';
+    x.setAttribute('aria-label', 'Dismiss'); x.title = 'Dismiss / Ignorer';
+    x.style.cssText = 'background:transparent;border:0;color:var(--cream);font-weight:400;font-size:1.15rem;line-height:1;padding:0 2px;opacity:.7;cursor:pointer;';
+    x.onclick = function () {
+      // Dismiss without applying: stop nagging until an even newer version ships.
+      knownVer = latestVer; shown = false;
+      var b = document.getElementById('update-banner'); if (b) b.remove();
+    };
+    bar.appendChild(span); bar.appendChild(btn); bar.appendChild(x);
     document.body.appendChild(bar);
   }
 
@@ -1466,7 +1475,7 @@ if ('serviceWorker' in navigator) {
       .then(function (d) {
         if (!d || typeof d.v === 'undefined') return;
         if (knownVer === null) { knownVer = d.v; return; }
-        if (d.v !== knownVer) showBanner();
+        if (d.v !== knownVer) { latestVer = d.v; showBanner(); }
       })
       .catch(function () { /* offline / proxy busy — retry later */ });
   }
