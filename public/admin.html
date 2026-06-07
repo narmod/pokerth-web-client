@@ -55,6 +55,10 @@
   .rank{flex:none;width:30px;text-align:center;font-weight:700;color:var(--gold);font-size:.82rem}
   .net{flex:none;text-align:right;font-weight:700;font-size:.86rem;min-width:70px}
   .net.pos{color:#7fd17f}.net.neg{color:#e98a8a}
+  .filter{width:100%;padding:8px 11px;border-radius:8px;border:1px solid var(--line);background:rgba(0,0,0,.25);color:var(--cream);font-size:.85rem;margin:0 0 10px}
+  .prog{height:6px;border-radius:6px;background:rgba(255,255,255,.08);overflow:hidden;margin-top:10px;display:none}
+  .prog.on{display:block}
+  .prog>i{display:block;height:100%;width:0;background:var(--gold);transition:width .15s}
 </style>
 </head>
 <body>
@@ -91,9 +95,11 @@
         <div class="seg"><button class="on" data-k="table">Table style</button><button data-k="deck">Card deck</button></div>
         <div id="drop" class="drop">Drop a <b>.zip</b> here, or click to choose</div>
         <input id="file" type="file" accept=".zip,application/zip" style="display:none">
+        <div id="prog" class="prog"><i></i></div>
         <div id="msg" class="msg"></div>
       </div>
       <div class="card">
+        <input id="pkgFilter" class="filter" type="search" placeholder="Filter styles &amp; decks…" autocomplete="off">
         <h2>Table styles</h2><div id="tables"></div>
         <h2 style="margin-top:14px">Card decks</h2><div id="decks"></div>
       </div>
@@ -102,6 +108,7 @@
     <div id="panel-board" style="display:none">
       <div class="card">
         <div class="boardhead"><span id="boardcount" class="muted"></span><button id="resetBtn" class="del">Reset leaderboard</button></div>
+        <input id="boardFilter" class="filter" type="search" placeholder="Filter players…" autocomplete="off">
         <div id="players"></div>
         <div id="boardmsg" class="msg"></div>
       </div>
@@ -188,14 +195,20 @@
   function applyTable(id){ try{localStorage.setItem('pth_table',id);localStorage.setItem('pth_pucks',id);}catch(e){} }
   function applyDeck(id){ try{localStorage.setItem('pth_deck',id);}catch(e){}
     api('/admin/pkg-list').then(function(r){return r.json();}).then(function(d){ var e=(d.decks||[]).find(function(x){return x.id===id;}); try{localStorage.setItem('pth_deck_ext',(e&&e.ext)||'png');}catch(err){} }).catch(function(){}); }
+  function showProg(f){ var p=$('prog'); p.classList.add('on'); p.firstElementChild.style.width=Math.round((f||0)*100)+'%'; }
+  function hideProg(){ var p=$('prog'); p.classList.remove('on'); p.firstElementChild.style.width='0'; }
   function upload(f){
     if(!/\.zip$/i.test(f.name)){ say('Choose a .zip file.','err'); return; }
-    say('Importing \u201c'+f.name+'\u201d\u2026');
-    api('/admin/pkg-upload?kind='+kind+'&name='+encodeURIComponent(f.name),{method:'POST',body:f})
-      .then(function(r){return r.json();}).then(function(d){
-        if(d.ok){ if(d.kind==='table')applyTable(d.id);else applyDeck(d.id); say('Imported & applied: '+d.name+' \u2014 open the app to see it.','ok'); refresh(); }
-        else say('Failed: '+(d.error||'error'),'err');
-      }).catch(function(){ say('Network error.','err'); });
+    say('Importing \u201c'+f.name+'\u201d\u2026'); showProg(0);
+    var xhr=new XMLHttpRequest();
+    xhr.open('POST','/admin/pkg-upload?kind='+kind+'&name='+encodeURIComponent(f.name));
+    var t=tok(); if(t) xhr.setRequestHeader('Authorization','Bearer '+t);
+    xhr.upload.addEventListener('progress',function(e){ if(e.lengthComputable) showProg(e.loaded/e.total); });
+    xhr.addEventListener('load',function(){ hideProg(); var d=null; try{ d=JSON.parse(xhr.responseText); }catch(e){}
+      if(d&&d.ok){ if(d.kind==='table')applyTable(d.id);else applyDeck(d.id); say('Imported & applied: '+d.name+' \u2014 open the app to see it.','ok'); refresh(); }
+      else say('Failed: '+((d&&d.error)||('HTTP '+xhr.status)),'err'); });
+    xhr.addEventListener('error',function(){ hideProg(); say('Import failed \u2014 network error.','err'); });
+    xhr.send(f);
     file.value='';
   }
   function useNow(k,id){ if(k==='table')applyTable(id);else applyDeck(id); say('Set as active \u2014 open the app to see it.','ok'); }
@@ -209,31 +222,48 @@
       var use=document.createElement('button');use.className='use';use.textContent='Use';use.addEventListener('click',function(){useNow(k,p.id);});
       var del=document.createElement('button');del.className='del';del.textContent='Remove';del.addEventListener('click',function(){removePkg(k,p.id,p.name||p.id);});
       row.appendChild(use);row.appendChild(del);el.appendChild(row); }); }
-  function renderPkgs(d){ renderList($('tables'),d.tables,'table'); renderList($('decks'),d.decks,'deck'); }
+  var lastPkgs={tables:[],decks:[]};
+  function pkgMatch(p,q){ return !q || (((p.name||'')+' '+(p.id||'')).toLowerCase().indexOf(q)>=0); }
+  function drawPkgs(){ var q=(($('pkgFilter')&&$('pkgFilter').value)||'').trim().toLowerCase();
+    renderList($('tables'), lastPkgs.tables.filter(function(p){return pkgMatch(p,q);}), 'table');
+    renderList($('decks'),  lastPkgs.decks.filter(function(p){return pkgMatch(p,q);}),  'deck'); }
+  function renderPkgs(d){ lastPkgs={tables:d.tables||[],decks:d.decks||[]}; drawPkgs(); }
+  if($('pkgFilter')) $('pkgFilter').addEventListener('input', drawPkgs);
   function refresh(){ api('/admin/pkg-list').then(function(r){return r.json();}).then(function(d){ if(d.ok)renderPkgs(d); }).catch(function(){ say('Could not refresh the package list \u2014 network error.','err'); }); }
 
   // leaderboard
   function bmsg(t,cls){ $('boardmsg').textContent=t; $('boardmsg').className='msg '+(cls||''); }
   function fmtSigned(n){ n=Math.round(Number(n)||0); return (n>0?'+':'')+n.toLocaleString(); }
+  var lastBoard=[];
   function loadBoard(){
     fetch('/stats').then(function(r){return r.json();}).then(function(s){
-      s=s||{}; var names=Object.keys(s); $('boardcount').textContent=names.length+' player'+(names.length===1?'':'s')+(names.length?' \u00b7 by net':'');
-      var el=$('players'); if(!names.length){ el.innerHTML='<div class="empty">(empty)</div>'; return; } el.innerHTML='';
-      names.map(function(n){ var v=s[n]||{}; return { name:n, net:Number(v.net)||0, gw:Number(v.gamesWon)||0, gp:Number(v.gamesPlayed)||0, hw:Number(v.handsWon)||0, hp:Number(v.handsPlayed)||0, streak:Number(v.bestStreak)||0 }; })
-        .sort(function(a,b){ return (b.net-a.net) || (b.gw-a.gw) || (b.hw-a.hw) || a.name.localeCompare(b.name); })
-        .forEach(function(p,i){
-          var row=document.createElement('div');row.className='row';
-          var rk=document.createElement('div');rk.className='rank';rk.textContent='#'+(i+1);row.appendChild(rk);
-          var nm=document.createElement('div');nm.className='nm';
-          var b=document.createElement('b');b.textContent=p.name;nm.appendChild(b);
-          var span=document.createElement('span');span.textContent=p.gw+'/'+p.gp+' games \u00b7 '+p.hw+'/'+p.hp+' hands'+(p.streak?' \u00b7 streak '+p.streak:'');nm.appendChild(span);
-          row.appendChild(nm);
-          var net=document.createElement('div');net.className='net '+(p.net>0?'pos':(p.net<0?'neg':''));net.textContent=fmtSigned(p.net);row.appendChild(net);
-          var del=document.createElement('button');del.className='del';del.textContent='Remove';del.addEventListener('click',function(){removePlayer(p.name);});
-          row.appendChild(del);el.appendChild(row);
-        });
+      s=s||{};
+      lastBoard=Object.keys(s).map(function(n){ var v=s[n]||{}; return { name:n, net:Number(v.net)||0, gw:Number(v.gamesWon)||0, gp:Number(v.gamesPlayed)||0, hw:Number(v.handsWon)||0, hp:Number(v.handsPlayed)||0, streak:Number(v.bestStreak)||0 }; })
+        .sort(function(a,b){ return (b.net-a.net) || (b.gw-a.gw) || (b.hw-a.hw) || a.name.localeCompare(b.name); });
+      drawBoard();
     }).catch(function(){ $('players').innerHTML='<div class="empty err">Could not load.</div>'; });
   }
+  function drawBoard(){
+    var total=lastBoard.length, q=(($('boardFilter')&&$('boardFilter').value)||'').trim().toLowerCase();
+    var list=q?lastBoard.filter(function(p){return p.name.toLowerCase().indexOf(q)>=0;}):lastBoard;
+    $('boardcount').textContent = total ? ((q? list.length+' of '+total+' players' : total+' player'+(total===1?'':'s'))+' \u00b7 by net') : '';
+    var el=$('players');
+    if(!total){ el.innerHTML='<div class="empty">(empty)</div>'; return; }
+    if(!list.length){ el.innerHTML='<div class="empty">(no match)</div>'; return; }
+    el.innerHTML='';
+    list.forEach(function(p){
+      var row=document.createElement('div');row.className='row';
+      var rk=document.createElement('div');rk.className='rank';rk.textContent='#'+(lastBoard.indexOf(p)+1);row.appendChild(rk);
+      var nm=document.createElement('div');nm.className='nm';
+      var b=document.createElement('b');b.textContent=p.name;nm.appendChild(b);
+      var span=document.createElement('span');span.textContent=p.gw+'/'+p.gp+' games \u00b7 '+p.hw+'/'+p.hp+' hands'+(p.streak?' \u00b7 streak '+p.streak:'');nm.appendChild(span);
+      row.appendChild(nm);
+      var net=document.createElement('div');net.className='net '+(p.net>0?'pos':(p.net<0?'neg':''));net.textContent=fmtSigned(p.net);row.appendChild(net);
+      var del=document.createElement('button');del.className='del';del.textContent='Remove';del.addEventListener('click',function(){removePlayer(p.name);});
+      row.appendChild(del);el.appendChild(row);
+    });
+  }
+  if($('boardFilter')) $('boardFilter').addEventListener('input', drawBoard);
   function removePlayer(n){ if(!confirm('Remove player \u201c'+n+'\u201d from the leaderboard?'))return;
     fetch('/stats',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:n,_delete:true})})
       .then(function(r){return r.json();}).then(function(){ loadBoard(); }).catch(function(){ bmsg('Could not remove player \u2014 network error.','err'); }); }
