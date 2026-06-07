@@ -233,6 +233,14 @@ function _welcomeAdmin() { var w = _adminConfig.welcome || {}; return { enabled:
 function _welcomePublic() { var w = _adminConfig.welcome; if (!w || !w.enabled) return null; return { enabled: true, updatedAt: w.updatedAt || 0, 'default': w['default'] || 'fr', langs: w.langs || {} }; }
 const STATS_META_FILE = process.env.STATS_META_FILE || path.join(__dirname, 'stats.meta.json');
 const STATS_ADMIN_TOKEN = process.env.STATS_ADMIN_TOKEN || '';
+// Master visibility switch for the admin panel, toggled via `pokerth-web admin on|off`.
+// When disabled, /admin and every /admin/* route answer a plain 404 — the panel is not
+// merely inert (the "no token set" state) but fully hidden, indistinguishable from a
+// missing path. Unset defaults to enabled, preserving behaviour on existing installs.
+const ADMIN_ENABLED = (function () {
+  var v = String(process.env.ADMIN_ENABLED == null ? '' : process.env.ADMIN_ENABLED).trim().toLowerCase();
+  return !(v === '0' || v === 'false' || v === 'off' || v === 'no');
+})();
 let statsMeta = {};
 try { statsMeta = JSON.parse(fs.readFileSync(STATS_META_FILE, 'utf8')) || {}; } catch (e) { statsMeta = {}; }
 function saveStatsMeta() {
@@ -614,6 +622,8 @@ function importPackage(kind, idHint, zipBuf, cb) {
 }
 
 function handleAdmin(req, res, reqPathOnly, query) {
+  // Panel hidden? Answer like any nonexistent path so /admin can't be probed.
+  if (!ADMIN_ENABLED) { res.writeHead(404); res.end('Not found'); return; }
   query = query || {};
   // Admin token transport: prefer the "Authorization: Bearer <token>" header so
   // the token never lands in URLs / access logs / browser history. Older cached
@@ -623,7 +633,7 @@ function handleAdmin(req, res, reqPathOnly, query) {
     var _m = /^\s*Bearer\s+(.+?)\s*$/i.exec(req.headers['authorization'] || '');
     if (_m) query.token = _m[1];
   }
-  if (reqPathOnly === '/admin') {
+  if (reqPathOnly === '/admin' || reqPathOnly === '/admin.html') {
     const p = path.join(PUBLIC_DIR, 'admin.html');
     if (fs.existsSync(p)) return sendFile(req, res, p, 'text/html; charset=utf-8', 'no-store');
     res.writeHead(404); res.end('admin.html missing'); return;
@@ -862,7 +872,7 @@ const httpServer = http.createServer((req, res) => {
   // index HTML instead of falling through to the static-file branch
   // and 404'ing on a nonexistent file named "/?host=...".
   const reqPathOnly = req.url.split('?')[0];
-  if (reqPathOnly === '/admin' || reqPathOnly.indexOf('/admin/') === 0) {
+  if (reqPathOnly === '/admin' || reqPathOnly === '/admin.html' || reqPathOnly.indexOf('/admin/') === 0) {
     handleAdmin(req, res, reqPathOnly, url.parse(req.url, true).query);
     return;
   }
