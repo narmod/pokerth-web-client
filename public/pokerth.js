@@ -1490,10 +1490,26 @@ document.addEventListener("DOMContentLoaded", function() {
         if (tries++ < 60) setTimeout(waitApply, 50);
       })();
     }
+    // First-visit default in-game settings (admin → /app-config.defaults). Same
+    // first-visit-only rule as the theme, applied per toggle: we write each flag
+    // ONLY when this browser has never set it, so a player's own choice is never
+    // overridden, and once written it is never re-applied. Values are '0'/'1'
+    // ('1' = on/active), matching the in-game toggles. Note: the menu reflects
+    // these the moment it is opened; "Vibration"/"Assistance" read their flag once
+    // at load, so on a brand-new browser those two settle on the next reload.
+    function _applyDefaultSettings(defaults) {
+      if (!defaults || typeof defaults !== 'object') return;
+      var MAP = { haptic: 'pth_haptic', voice: 'pth_voice', assist: 'pth_assist', autobtn: 'pth_show_auto', quickbet: 'pth_show_pct', displaybb: 'pth_display_bb' };
+      Object.keys(MAP).forEach(function (k) {
+        var v = defaults[k];
+        if (v !== '0' && v !== '1') return;
+        try { if (localStorage.getItem(MAP[k]) === null) localStorage.setItem(MAP[k], v); } catch (e) {}
+      });
+    }
     function go() {
       fetch('/app-config', { cache: 'no-store' })
         .then(function (r) { return r.json(); })
-        .then(function (c) { if (c && c.modes) applyModes(c.modes); if (c && c.welcome && c.welcome.enabled && typeof window.maybeShowWelcome === 'function') window.maybeShowWelcome(c.welcome); if (c && typeof c.defaultTheme === 'string') _applyDefaultTheme(c.defaultTheme); })
+        .then(function (c) { if (c && c.modes) applyModes(c.modes); if (c && c.welcome && c.welcome.enabled && typeof window.maybeShowWelcome === 'function') window.maybeShowWelcome(c.welcome); if (c && typeof c.defaultTheme === 'string') _applyDefaultTheme(c.defaultTheme); if (c && c.defaults) _applyDefaultSettings(c.defaults); })
         .catch(function () {});
     }
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', go); else go();
@@ -9822,4 +9838,4 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.2.269'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.2.270'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();

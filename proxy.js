@@ -647,7 +647,7 @@ function handleAdmin(req, res, reqPathOnly, query) {
     let version = '';
     try { version = (JSON.parse(fs.readFileSync(path.join(__dirname, 'package.json'), 'utf8')).version) || ''; } catch (e) {}
     let sockets = null; try { sockets = wss.clients.size; } catch (e) {}
-    return adminJson(res, 200, { ok: true, version: version, node: process.version, uptimeSec: Math.floor(process.uptime()), sockets: sockets, players: Object.keys(statsStore).length, resetPeriod: STATS_RESET_PERIOD, modes: appModes(), defaultTheme: _adminConfig.defaultTheme || '', restartAt: (_restartAt > Date.now() ? _restartAt : null), restartKind: (_restartAt > Date.now() ? _restartKind : null) });
+    return adminJson(res, 200, { ok: true, version: version, node: process.version, uptimeSec: Math.floor(process.uptime()), sockets: sockets, players: Object.keys(statsStore).length, resetPeriod: STATS_RESET_PERIOD, modes: appModes(), defaultTheme: _adminConfig.defaultTheme || '', defaults: _adminConfig.defaults || {}, restartAt: (_restartAt > Date.now() ? _restartAt : null), restartKind: (_restartAt > Date.now() ? _restartKind : null) });
   }
   if (reqPathOnly === '/admin/logs') {
     if (!adminAuthed(query)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
@@ -656,7 +656,7 @@ function handleAdmin(req, res, reqPathOnly, query) {
   if (reqPathOnly === '/admin/config') {
     if (req.method === 'GET') {
       if (!adminAuthed(query)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
-      return adminJson(res, 200, { ok: true, resetPeriod: STATS_RESET_PERIOD, modes: appModes(), welcome: _welcomeAdmin(), defaultTheme: _adminConfig.defaultTheme || '' });
+      return adminJson(res, 200, { ok: true, resetPeriod: STATS_RESET_PERIOD, modes: appModes(), welcome: _welcomeAdmin(), defaultTheme: _adminConfig.defaultTheme || '', defaults: _adminConfig.defaults || {} });
     }
     if (req.method === 'POST') {
       return readJsonBody(req, function (d) {
@@ -691,8 +691,14 @@ function handleAdmin(req, res, reqPathOnly, query) {
           _adminConfig.welcome = w;
         }
         if (typeof d.defaultTheme === 'string') _adminConfig.defaultTheme = d.defaultTheme.slice(0, 40);
+        if (d.defaults && typeof d.defaults === 'object') {
+          var DEF_KEYS = ['haptic', 'voice', 'assist', 'autobtn', 'quickbet', 'displaybb'];
+          var dout = {};
+          DEF_KEYS.forEach(function (k) { var v = d.defaults[k]; if (v === '0' || v === '1') dout[k] = v; });
+          _adminConfig.defaults = dout;
+        }
         saveAdminConfig();
-        return adminJson(res, 200, { ok: true, resetPeriod: STATS_RESET_PERIOD, modes: appModes(), welcome: _welcomeAdmin(), defaultTheme: _adminConfig.defaultTheme || '' });
+        return adminJson(res, 200, { ok: true, resetPeriod: STATS_RESET_PERIOD, modes: appModes(), welcome: _welcomeAdmin(), defaultTheme: _adminConfig.defaultTheme || '', defaults: _adminConfig.defaults || {} });
       });
     }
     res.writeHead(405); res.end('Method not allowed'); return;
@@ -916,7 +922,7 @@ const httpServer = http.createServer((req, res) => {
   // Public app config the client reads on load: which entry "modes" are enabled.
   if (reqPathOnly === '/app-config') {
     res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' });
-    res.end(JSON.stringify({ ok: true, modes: appModes(), welcome: _welcomePublic(), defaultTheme: _adminConfig.defaultTheme || '' }));
+    res.end(JSON.stringify({ ok: true, modes: appModes(), welcome: _welcomePublic(), defaultTheme: _adminConfig.defaultTheme || '', defaults: _adminConfig.defaults || {} }));
     return;
   }
 
