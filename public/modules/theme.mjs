@@ -575,6 +575,11 @@ function openThemePanel(ev) {
   _body = document.createElement('div');
   panel.appendChild(_body);
   _render();
+  // Re-pull the runtime galleries each time the panel opens, so packages just
+  // imported in the admin show up without reloading the app. Each loader calls
+  // _render() again when its fetch resolves (network-first via the service
+  // worker), refreshing the open panel in place.
+  try { _loadGalleryDecks(); _loadGalleryTables(); _loadThemes(); } catch (e) {}
 
   document.body.appendChild(overlay);
   document.body.appendChild(panel);

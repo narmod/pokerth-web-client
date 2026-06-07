@@ -239,7 +239,10 @@ self.addEventListener('fetch', function(e) {
 
   if (e.request.mode === 'navigate') {
     e.respondWith(handleNavigation(e));
-  } else if (/\.(?:js|mjs|css)$/.test(url.pathname)) {
+  } else if (/\.(?:js|mjs|css)$/.test(url.pathname) || /^\/(?:table\/tables|cards\/decks|themes\/themes)\.json$/.test(url.pathname)) {
+    // Code AND the runtime gallery manifests are network-first: a freshly
+    // imported package (admin → Packages) must be visible on the next load,
+    // never served stale from the SW cache.
     e.respondWith(handleCode(e));
   } else {
     e.respondWith(handleAsset(e));
