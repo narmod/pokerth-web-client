@@ -226,7 +226,7 @@ body {
 }
 
 .form-card, .card {
-  background: #060e08;
+  background: var(--modal-bg);
   border: 1px solid var(--border-hi);
   border-radius: 4px;
   padding: 20px 22px;
@@ -3336,7 +3336,7 @@ body.hide-pct-btns .pct-row { display: none; }
   background: rgba(0,0,0,0.75);
 }
 .pp-card {
-  background: #060e08; border: 1px solid var(--gold-dim);
+  background: var(--modal-bg); border: 1px solid var(--gold-dim);
   border-top: 3px solid var(--gold); border-radius: 8px;
   padding: 20px 24px; width: min(340px, 92vw);
   display: flex; flex-direction: column; gap: 12px;
@@ -3359,7 +3359,7 @@ body.hide-pct-btns .pct-row { display: none; }
   padding: 12px;
 }
 .ip-card {
-  background: #060e08; border: 1px solid var(--gold-dim);
+  background: var(--modal-bg); border: 1px solid var(--gold-dim);
   border-top: 3px solid var(--gold); border-radius: 8px;
   padding: 20px 24px; width: min(360px, 92vw);
   display: flex; flex-direction: column; gap: 14px;
