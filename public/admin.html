@@ -16,6 +16,10 @@
   .top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
   .topbtns{display:flex;gap:8px;margin-top:4px;flex:none}
   .card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px;margin:0 0 14px}
+  .card h2.collap-h{cursor:pointer;user-select:none;position:relative;padding-right:22px}
+  .card h2.collap-h::after{content:'\25BE';position:absolute;right:2px;top:.15em;font-size:.7em;opacity:.55;transition:opacity .15s}
+  .card h2.collap-h.collapsed::after{content:'\25B8'}
+  .card h2.collap-h:hover::after{opacity:.95}
   label{font-size:.78rem;color:var(--text);display:block;margin:0 0 5px}
   input[type=password]{width:100%;padding:9px 11px;border-radius:8px;border:1px solid var(--line);background:rgba(0,0,0,.25);color:var(--cream);font-size:.9rem}
   select{flex:1;padding:9px 11px;border-radius:8px;border:1px solid var(--line);background:rgba(0,0,0,.25);color:var(--cream);font-size:.9rem}
@@ -84,13 +88,13 @@
       </div>
     </div>
     <div class="tabs">
-      <button class="tab on" data-t="packages">Packages</button>
-      <button class="tab" data-t="board">Leaderboard</button>
-      <button class="tab" data-t="server">Server</button>
+      <button class="tab on" data-t="server">Server</button>
       <button class="tab" data-t="broadcast">Broadcasts</button>
+      <button class="tab" data-t="board">Leaderboard</button>
+      <button class="tab" data-t="packages">Packages</button>
     </div>
 
-    <div id="panel-packages">
+    <div id="panel-packages" style="display:none">
       <div class="card">
         <label>Import a package (.zip)</label>
         <div class="seg"><button class="on" data-k="table">Table style</button><button data-k="deck">Card deck</button></div>
@@ -115,7 +119,7 @@
       </div>
     </div>
 
-    <div id="panel-server" style="display:none">
+    <div id="panel-server">
       <div class="card"><h2>Status</h2><div id="status"><div class="empty">Loading\u2026</div></div></div>
       <div class="card">
         <h2>Leaderboard reset</h2>
@@ -292,7 +296,7 @@
   function enter(){
     if(!tok()){ show('login'); return; }
     api('/admin/pkg-list').then(function(r){return r.json();}).then(function(d){
-      if(d.ok){ $('loginErr').textContent=''; _idleLast=Date.now(); show('dash'); renderPkgs(d); loadBoard(); }
+      if(d.ok){ $('loginErr').textContent=''; _idleLast=Date.now(); show('dash'); renderPkgs(d); loadServer(); srvStart(); }
       else { $('loginErr').textContent=d.error||'Invalid token'; show('login'); }
     }).catch(function(){ $('loginErr').textContent='Network error'; show('login'); });
   }
@@ -641,6 +645,37 @@
   if($('wcLang')) $('wcLang').addEventListener('change', function(){ wcCommit(); wcShow($('wcLang').value); });
   ['wcTitle','wcBody'].forEach(function(id){ if($(id)) $(id).addEventListener('input',function(){ wcCommit(); wcPreview(); wcUpdateFilled(); }); });
   if($('wcSave')) $('wcSave').addEventListener('click',saveWelcome);
+
+  // Collapsible cards: any card whose first child is its <h2> becomes foldable —
+  // click (or Enter/Space) the title to fold/unfold. We wrap the body once so the
+  // inner controls' own display logic (e.g. the Cancel button) is never touched.
+  // State is remembered per browser; the longest cards start folded on first run.
+  (function(){
+    var STORE='pth_admin_collapsed', saved=null;
+    try{ saved=JSON.parse(localStorage.getItem(STORE)||'null'); }catch(e){}
+    var state = saved || {}, firstRun = !saved;
+    var DEFAULT_FOLDED = ['Default in-game settings','Schedule a restart','Schedule a recurring message','Welcome / rules message'];
+    function slug(s){ return (s||'').trim().replace(/[^a-z0-9]+/gi,'_').replace(/^_+|_+$/g,'').toLowerCase().slice(0,48); }
+    document.querySelectorAll('.card').forEach(function(card){
+      var h2s = card.querySelectorAll('h2');
+      if(h2s.length!==1) return;
+      var h2 = h2s[0];
+      if(card.firstElementChild!==h2) return;          // only header-first cards
+      var body = document.createElement('div'); body.className='card-body';
+      while(h2.nextSibling) body.appendChild(h2.nextSibling);
+      card.appendChild(body);
+      h2.classList.add('collap-h'); h2.setAttribute('role','button'); h2.tabIndex=0;
+      var k = slug(h2.textContent);
+      var txt = (h2.textContent||'').trim();
+      var folded = firstRun ? DEFAULT_FOLDED.some(function(t){ return txt.indexOf(t)===0; }) : !!state[k];
+      function apply(f){ h2.classList.toggle('collapsed', f); body.style.display = f ? 'none' : ''; }
+      apply(folded); state[k]=folded;
+      function toggle(){ var f = !h2.classList.contains('collapsed'); apply(f); state[k]=f; try{ localStorage.setItem(STORE, JSON.stringify(state)); }catch(e){} }
+      h2.addEventListener('click', toggle);
+      h2.addEventListener('keydown', function(e){ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); toggle(); } });
+    });
+    if(firstRun){ try{ localStorage.setItem(STORE, JSON.stringify(state)); }catch(e){} }
+  })();
 
   enter();
 })();
