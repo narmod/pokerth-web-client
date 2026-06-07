@@ -5462,7 +5462,10 @@ const App = (() => {
     var d = document.documentElement.getAttribute('data-deck') || '';
     if (!d) return '';
     var ext = document.documentElement.getAttribute('data-deck-ext') || 'png';
-    return '/cards/' + d + '/flipside.' + ext;
+    // Le dos est servi en stale-while-revalidate par le SW (sans cache:'reload'),
+    // donc sans suffixe un flipside.svg modifie ne s'affiche qu'au chargement
+    // suivant. Le ?v=<build> force une URL neuve a chaque deploiement.
+    return '/cards/' + d + '/flipside.' + ext + '?v=' + (window.BUILD_VERSION || '0');
   }
   function _refreshDeck() {
     try {
@@ -9840,4 +9843,4 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.2.292'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.2.293'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
