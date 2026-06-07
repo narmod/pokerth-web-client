@@ -201,7 +201,7 @@
   function useNow(k,id){ if(k==='table')applyTable(id);else applyDeck(id); say('Set as active \u2014 open the app to see it.','ok'); }
   function removePkg(k,id,nm){ if(!confirm('Remove \u201c'+nm+'\u201d?'))return;
     api('/admin/pkg-remove',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({kind:k,id:id,token:tok()})})
-      .then(function(r){return r.json();}).then(function(d){ if(d.ok)refresh(); else say('Remove: '+(d.error||'error'),'err'); }); }
+      .then(function(r){return r.json();}).then(function(d){ if(d.ok)refresh(); else say('Remove: '+(d.error||'error'),'err'); }).catch(function(){ say('Remove failed \u2014 network error.','err'); }); }
   function renderList(el,arr,k){ if(!arr||!arr.length){el.innerHTML='<div class="empty">(none)</div>';return;} el.innerHTML='';
     arr.forEach(function(p){ var row=document.createElement('div');row.className='row';
       row.innerHTML='<div class="nm"><b></b><span></span></div>';
@@ -210,7 +210,7 @@
       var del=document.createElement('button');del.className='del';del.textContent='Remove';del.addEventListener('click',function(){removePkg(k,p.id,p.name||p.id);});
       row.appendChild(use);row.appendChild(del);el.appendChild(row); }); }
   function renderPkgs(d){ renderList($('tables'),d.tables,'table'); renderList($('decks'),d.decks,'deck'); }
-  function refresh(){ api('/admin/pkg-list').then(function(r){return r.json();}).then(function(d){ if(d.ok)renderPkgs(d); }).catch(function(){}); }
+  function refresh(){ api('/admin/pkg-list').then(function(r){return r.json();}).then(function(d){ if(d.ok)renderPkgs(d); }).catch(function(){ say('Could not refresh the package list \u2014 network error.','err'); }); }
 
   // leaderboard
   function bmsg(t,cls){ $('boardmsg').textContent=t; $('boardmsg').className='msg '+(cls||''); }
@@ -236,7 +236,7 @@
   }
   function removePlayer(n){ if(!confirm('Remove player \u201c'+n+'\u201d from the leaderboard?'))return;
     fetch('/stats',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:n,_delete:true})})
-      .then(function(r){return r.json();}).then(function(){ loadBoard(); }).catch(function(){}); }
+      .then(function(r){return r.json();}).then(function(){ loadBoard(); }).catch(function(){ bmsg('Could not remove player \u2014 network error.','err'); }); }
   $('resetBtn').addEventListener('click',function(){ if(!confirm('Reset the WHOLE leaderboard? This cannot be undone.'))return;
     fetch('/stats',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({_resetAll:true,token:tok()})})
       .then(function(r){return r.json();}).then(function(d){ if(d.ok){ bmsg('Leaderboard reset.','ok'); loadBoard(); } else bmsg('Reset failed: '+(d.error||'forbidden'),'err'); })
@@ -321,7 +321,7 @@
   function doRestart(){ if(confirm('Restart the server now?')) fireAction('/admin/restart','Restart started'); }
   function clearLogs(){
     api('/admin/clear-logs',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({token:tok()})})
-      .then(function(r){return r.json();}).then(function(d){ var m=$('maintmsg'); if(d&&d.ok){ m.textContent='Logs cleared.'; m.className='msg ok'; loadLogs(); } else { m.textContent='Failed.'; m.className='msg err'; } }).catch(function(){});
+      .then(function(r){return r.json();}).then(function(d){ var m=$('maintmsg'); if(d&&d.ok){ m.textContent='Logs cleared.'; m.className='msg ok'; loadLogs(); } else { m.textContent='Failed.'; m.className='msg err'; } }).catch(function(){ var m=$('maintmsg'); m.textContent='Clear logs failed \u2014 network error.'; m.className='msg err'; });
   }
   function loadUpdateLog(){ api('/admin/update-log',{cache:'no-store'}).then(function(r){return r.json();}).then(function(d){ if(d&&d.ok) $('updlog').textContent=d.log||'(empty)'; }).catch(function(){}); }
   if($('btnUpdate')) $('btnUpdate').addEventListener('click', doUpdate);
