@@ -238,11 +238,20 @@
   $('loginBtn').addEventListener('click', doLogin);
   $('ltok').addEventListener('keydown', function(e){ if(e.key==='Enter') doLogin(); });
   function doLogin(){ localStorage.setItem(TOKK, $('ltok').value.trim()); enter(); }
-  $('logoutBtn').addEventListener('click', function(){ srvStop(); localStorage.removeItem(TOKK); $('ltok').value=''; show('login'); });
+  $('logoutBtn').addEventListener('click', function(){ doLogout(); });
+  // Auto-logout: after IDLE_MS without any pointer/key/scroll activity, clear
+  // the stored token and return to the login screen. A 30 s checker compares
+  // the last-activity stamp; activity listeners (capture+passive) just stamp.
+  var IDLE_MS=10*60*1000, _idleLast=Date.now();
+  function _idleReset(){ _idleLast=Date.now(); }
+  function doLogout(reason){ srvStop(); localStorage.removeItem(TOKK); $('ltok').value=''; if($('loginErr')) $('loginErr').textContent=reason||''; show('login'); }
+  function _idleCheck(){ if(tok() && dash.style.display!=='none' && Date.now()-_idleLast>IDLE_MS) doLogout('Logged out after 10 minutes of inactivity.'); }
+  ['mousemove','mousedown','keydown','touchstart','scroll','click'].forEach(function(ev){ document.addEventListener(ev,_idleReset,{passive:true,capture:true}); });
+  setInterval(_idleCheck, 30000);
   function enter(){
     if(!tok()){ show('login'); return; }
     api('/admin/pkg-list').then(function(r){return r.json();}).then(function(d){
-      if(d.ok){ $('loginErr').textContent=''; show('dash'); renderPkgs(d); loadBoard(); }
+      if(d.ok){ $('loginErr').textContent=''; _idleLast=Date.now(); show('dash'); renderPkgs(d); loadBoard(); }
       else { $('loginErr').textContent=d.error||'Invalid token'; show('login'); }
     }).catch(function(){ $('loginErr').textContent='Network error'; show('login'); });
   }
@@ -261,7 +270,7 @@
 
   // packages
   var kind='table';
-  document.querySelectorAll('.seg button').forEach(function(b){ b.addEventListener('click',function(){ kind=b.dataset.k; document.querySelectorAll('.seg button').forEach(function(x){x.classList.toggle('on',x===b);}); }); });
+  document.querySelectorAll('#panel-packages .seg button').forEach(function(b){ b.addEventListener('click',function(){ kind=b.dataset.k; document.querySelectorAll('#panel-packages .seg button').forEach(function(x){x.classList.toggle('on',x===b);}); }); });
   var drop=$('drop'), file=$('file'), msg=$('msg');
   drop.addEventListener('click',function(){file.click();});
   drop.addEventListener('dragover',function(e){e.preventDefault();drop.classList.add('hot');});
@@ -542,7 +551,7 @@
   function bcPrevNow(){ bcGoldPreview('bcNowPrev',($('bcNowMsg').value||'').trim(),$('bcNowIcon').value); }
   ['bcMsg','bcIcon'].forEach(function(id){ if($(id)){ $(id).addEventListener('input',bcPrevSched); $(id).addEventListener('change',bcPrevSched); } });
   ['bcNowMsg','bcNowIcon'].forEach(function(id){ if($(id)){ $(id).addEventListener('input',bcPrevNow); $(id).addEventListener('change',bcPrevNow); } });
-  setInterval(function(){ if(document.visibilityState==='visible' && $('panel-broadcast') && $('panel-broadcast').style.display!=='none') loadBroadcasts(); }, 30000);
+  setInterval(function(){ if(document.visibilityState==='visible' && tok() && $('panel-broadcast') && $('panel-broadcast').style.display!=='none') loadBroadcasts(); }, 30000);
 
   enter();
 })();
