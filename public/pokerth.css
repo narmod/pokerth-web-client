@@ -1711,7 +1711,7 @@ body {
   .seat-flag   { bottom: -6px !important; right: -6px !important; }
   .seat-flag .cc-flag { width: 16px !important; height: 12px !important; }
   /* Drapeaux agrandis UNIQUEMENT en mode pokerth.net (body.pth-net) */
-  body.pth-net .seat-flag   { bottom: -8px !important; right: -8px !important; }
+  body.pth-net .seat-flag   { bottom: -3px !important; right: -12px !important; }
   body.pth-net .seat-flag .cc-flag { width: 20px !important; height: 15px !important; }
   .seat-avatar { width: 28px; height: 28px; font-size: 0.7rem; }
   .seat-name,.seat-money,.seat-action-label,.seat-bet { font-size: 0.48rem; }
@@ -1744,7 +1744,7 @@ body {
   .seat-flag   { bottom: -5px !important; right: -5px !important; }
   .seat-flag .cc-flag { width: 12px !important; height: 9px !important; }
   /* Drapeaux agrandis UNIQUEMENT en mode pokerth.net (body.pth-net) */
-  body.pth-net .seat-flag   { bottom: -7px !important; right: -7px !important; }
+  body.pth-net .seat-flag   { bottom: -2px !important; right: -11px !important; }
   body.pth-net .seat-flag .cc-flag { width: 16px !important; height: 12px !important; }
   /* Seats: tiny for 10-player tables */
   .seat-avatar { width: 18px; height: 18px; font-size: 0.46rem; }
@@ -1790,7 +1790,7 @@ body {
   .seat-flag   { bottom: -5px !important; right: -5px !important; }
   .seat-flag .cc-flag { width: 14px !important; height: 10px !important; }
   /* Drapeaux agrandis UNIQUEMENT en mode pokerth.net (body.pth-net) */
-  body.pth-net .seat-flag   { bottom: -7px !important; right: -7px !important; }
+  body.pth-net .seat-flag   { bottom: -2px !important; right: -11px !important; }
   body.pth-net .seat-flag .cc-flag { width: 17px !important; height: 13px !important; }
   /* Oval: small, left side */
   .felt-oval::before {
