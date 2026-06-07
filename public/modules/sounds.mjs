@@ -31,6 +31,10 @@
 
 let _audioCtx = null;
 function getAudioCtx() {
+  // iOS peut FERMER le contexte (state 'closed') apres une interruption longue
+  // (PWA restee en arriere-plan, appel telephonique). Un contexte 'closed' ne
+  // redemarre JAMAIS via resume() : on le jette et on en recree un neuf.
+  if (_audioCtx && _audioCtx.state === 'closed') _audioCtx = null;
   if (!_audioCtx) try { _audioCtx = new (window.AudioContext||window.webkitAudioContext)(); } catch(e) {}
   return _audioCtx;
 }
@@ -53,6 +57,16 @@ function _ensureRunning() {
 function _unlockAudio() {
   var ctx = getAudioCtx(); if (!ctx) return;
   try {
+    // iOS : un contexte 'interrupted' (PWA passee en arriere-plan puis notif
+    // tapee) ne repart PARFOIS JAMAIS via resume(), meme appele dans un geste.
+    // On le ferme et on en recree un neuf : comme on est dans un geste
+    // utilisateur, le nouveau contexte demarre immediatement. ('closed' est
+    // gere en amont par getAudioCtx.)
+    if (ctx.state === 'interrupted') {
+      try { ctx.close(); } catch(e) {}
+      _audioCtx = null;
+      ctx = getAudioCtx(); if (!ctx) return;
+    }
     if (ctx.state !== 'running' && ctx.resume) ctx.resume();
     var buf = ctx.createBuffer(1, 1, 22050);
     var src = ctx.createBufferSource();
