@@ -4812,6 +4812,11 @@ body:not(.in-game) .my-zone {
 :root[data-theme="pokerth-light"] .wp-ok,
 :root[data-theme="pokerth-light"] .wp-hint-admin { color: var(--green); }
 :root[data-theme="pokerth-light"] .wp-need { color: var(--orange); }
+/* Siege actif (a parler) : nom/stack attenues a 0.35 (concu pour texte clair sur fond
+   sombre). En clair le texte est SOMBRE -> 0.35 = invisible. On remonte l'opacite en
+   clair uniquement : leger estompage conserve, mais lisible. */
+:root[data-theme="pokerth-light"] .seat.active .seat-name,
+:root[data-theme="pokerth-light"] .seat.active .seat-money { opacity: 0.7; }
 
 /* Préréglages */
 .cf-presets-label { font-size: 0.6rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--gold-dim); font-weight: 600; margin: 0 2px 8px; }
