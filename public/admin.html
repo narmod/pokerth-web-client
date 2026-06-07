@@ -230,6 +230,7 @@
           <label class="muted">Edit language <select id="wcLang" class="filter" style="margin:0;flex:none;width:auto"></select></label>
           <label class="muted">Fallback <select id="wcDefault" class="filter" style="margin:0;flex:none;width:auto"></select></label>
         </div>
+        <div id="wcFilled" class="muted" style="margin:0 0 8px;font-size:.8rem"></div>
         <input id="wcTitle" class="filter" maxlength="200" placeholder="Title (optional)" style="width:100%;margin-bottom:8px">
         <textarea id="wcBody" class="filter" rows="5" maxlength="4000" placeholder="Message / rules for this language…" style="width:100%;resize:vertical"></textarea>
         <div id="wcPrev"></div>
@@ -570,24 +571,33 @@
   // ── Welcome / first-visit message (per language) ────────────────────────
   var WC_LANGS=['af','bg','ca','cs','da','de','el','en','es','fi','fr','gd','gl','hi','hr','hu','it','ja','ko','lt','nb','nl','pl','pt-br','pt-pt','ro','ru','sk','sr','sv','ta','tr','uk','vi','zh','zh-tw'];
   var welcomeState={ enabled:false, 'default':'fr', langs:{} };
+  var wcEdit='fr'; // language currently shown in the editor
   (function(){ var a=$('wcLang'), b=$('wcDefault'); if(a&&b){ WC_LANGS.forEach(function(c){ var o1=document.createElement('option'); o1.value=c; o1.textContent=c; a.appendChild(o1); var o2=document.createElement('option'); o2.value=c; o2.textContent=c; b.appendChild(o2); }); a.value='fr'; b.value='fr'; } })();
-  function wcCurrent(){ return $('wcLang') ? $('wcLang').value : 'fr'; }
-  function wcCapture(){ var code=wcCurrent(), t=($('wcTitle').value||''), b=($('wcBody').value||''); if(t.trim()||b.trim()) welcomeState.langs[code]={title:t,body:b}; else delete welcomeState.langs[code]; }
-  function wcRenderLang(){ var v=welcomeState.langs[wcCurrent()]||{}; $('wcTitle').value=v.title||''; $('wcBody').value=v.body||''; wcPreview(); }
+  function wcFilledList(){ return Object.keys(welcomeState.langs); }
+  function wcUpdateFilled(){ var el=$('wcFilled'); if(!el) return; var f=wcFilledList(); el.textContent = f.length ? ('Filled languages: '+f.join(', ')) : 'No language filled yet.'; }
+  // Read the editor fields into the language being edited (wcEdit) so switching
+  // languages or saving never loses what was typed/pasted — independent of any
+  // input-event quirk on some mobile browsers.
+  function wcCommit(){ var t=($('wcTitle').value||''), b=($('wcBody').value||''); if(t.trim()||b.trim()) welcomeState.langs[wcEdit]={title:t,body:b}; else delete welcomeState.langs[wcEdit]; }
+  function wcShow(code){ wcEdit=code; if($('wcLang')) $('wcLang').value=code; var v=welcomeState.langs[code]||{}; $('wcTitle').value=v.title||''; $('wcBody').value=v.body||''; wcPreview(); wcUpdateFilled(); }
   function wcPreview(){ var el=$('wcPrev'); if(!el) return; var t=($('wcTitle').value||'').trim(), b=($('wcBody').value||'').trim();
     if(!t&&!b){ el.style.cssText='display:none'; el.textContent=''; return; }
     el.textContent=''; el.style.cssText='display:block;margin-top:8px;max-width:440px;background:#1c1812;border:1px solid rgba(200,168,74,.5);border-radius:14px;overflow:hidden';
     if(t){ var h=document.createElement('div'); h.textContent=t; h.style.cssText='padding:12px 16px;font-weight:700;color:#e0c070;border-bottom:1px solid rgba(200,168,74,.25)'; el.appendChild(h); }
     var p=document.createElement('div'); p.textContent=b; p.style.cssText='padding:12px 16px;white-space:pre-line;line-height:1.5;color:#efe6d2;font-size:.9rem'; el.appendChild(p);
   }
-  function loadWelcome(){ api('/admin/config').then(function(r){return r.json();}).then(function(d){ if(!d||!d.ok||!d.welcome) return; welcomeState={ enabled:!!d.welcome.enabled, 'default':d.welcome['default']||'fr', langs:d.welcome.langs||{} }; if($('wcEnabled')) $('wcEnabled').checked=welcomeState.enabled; if($('wcDefault')) $('wcDefault').value=welcomeState['default']; wcRenderLang(); }).catch(function(){}); }
-  function saveWelcome(){ wcCapture(); var body={ welcome:{ enabled:$('wcEnabled').checked, 'default':$('wcDefault').value, langs:welcomeState.langs }, token:tok() };
+  // First language to show: the configured fallback if it has content, else the
+  // first filled language, else the fallback (empty) — so the live message is
+  // visible immediately from any machine.
+  function wcInitialLang(){ var d=welcomeState['default']||'fr'; if(welcomeState.langs[d]) return d; var f=wcFilledList(); return f.length ? f[0] : d; }
+  function loadWelcome(){ api('/admin/config').then(function(r){return r.json();}).then(function(d){ if(!d||!d.ok||!d.welcome) return; welcomeState={ enabled:!!d.welcome.enabled, 'default':d.welcome['default']||'fr', langs:d.welcome.langs||{} }; if($('wcEnabled')) $('wcEnabled').checked=welcomeState.enabled; if($('wcDefault')) $('wcDefault').value=welcomeState['default']; wcShow(wcInitialLang()); }).catch(function(){}); }
+  function saveWelcome(){ wcCommit(); var body={ welcome:{ enabled:$('wcEnabled').checked, 'default':$('wcDefault').value, langs:welcomeState.langs }, token:tok() };
     bcSay('wcState','Saving\u2026');
     api('/admin/config',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)})
-      .then(function(r){return r.json();}).then(function(d){ if(d&&d.ok){ bcSay('wcState','Saved \u2014 returning visitors will see it once more.','ok'); if(d.welcome){ welcomeState={ enabled:!!d.welcome.enabled, 'default':d.welcome['default']||'fr', langs:d.welcome.langs||{} }; } } else bcSay('wcState','Failed: '+((d&&d.error)||'error'),'err'); })
+      .then(function(r){return r.json();}).then(function(d){ if(d&&d.ok){ bcSay('wcState','Saved \u2014 returning visitors will see it once more.','ok'); if(d.welcome){ welcomeState={ enabled:!!d.welcome.enabled, 'default':d.welcome['default']||'fr', langs:d.welcome.langs||{} }; wcUpdateFilled(); } } else bcSay('wcState','Failed: '+((d&&d.error)||'error'),'err'); })
       .catch(function(){ bcSay('wcState','Network error.','err'); }); }
-  if($('wcLang')) $('wcLang').addEventListener('change', wcRenderLang);
-  ['wcTitle','wcBody'].forEach(function(id){ if($(id)) $(id).addEventListener('input',function(){ wcCapture(); wcPreview(); }); });
+  if($('wcLang')) $('wcLang').addEventListener('change', function(){ wcCommit(); wcShow($('wcLang').value); });
+  ['wcTitle','wcBody'].forEach(function(id){ if($(id)) $(id).addEventListener('input',function(){ wcCommit(); wcPreview(); wcUpdateFilled(); }); });
   if($('wcSave')) $('wcSave').addEventListener('click',saveWelcome);
 
   enter();
