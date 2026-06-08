@@ -1312,8 +1312,8 @@ body {
   max-width: min(90vw, 360px);
   padding: 9px 18px;
   border-radius: 22px;
-  background: linear-gradient(135deg, rgba(var(--gold-rgb), 0.96), rgba(168,134,40,0.96));
-  color: #1a0a00;
+  background: linear-gradient(135deg, rgba(var(--gold-rgb), 0.96), rgba(var(--gold-rgb), 0.72));
+  color: var(--on-gold);
   font-family: var(--ff-display);
   font-weight: 700;
   letter-spacing: 0.04em;
@@ -1467,7 +1467,7 @@ body {
 /* ── Dealer badge volant ── */
 .dealer-badge-fly {
   position: fixed;
-  background: var(--gold); color: #110900;
+  background: var(--gold); color: var(--on-gold);
   border-radius: 50%; width: 18px; height: 18px;
   font-size: 0.55rem; font-weight: 900;
   display: flex; align-items: center; justify-content: center;
@@ -2433,7 +2433,7 @@ body {
   animation: fadeIn 0.3s ease;
 }
 #update-banner button {
-  background: var(--gold); color: #1a1207; border: none;
+  background: var(--gold); color: var(--on-gold); border: none;
   border-radius: 5px; padding: 6px 14px; cursor: pointer;
   font-family: var(--ff-display); font-weight: 700; font-size: 0.78rem;
   letter-spacing: 0.06em; white-space: nowrap;
@@ -3171,7 +3171,7 @@ body {
 .btn-fold  { background: var(--btn-fold-bg, #6b2020); color: var(--btn-fold-fg, #ffd0d0); }
 .btn-check { background: var(--btn-check-bg, #1a5c1a); color: var(--btn-check-fg, #c0ffc0); }
 .btn-call  { background: var(--btn-call-bg, #1a4a8a); color: var(--btn-call-fg, #c0d8ff); }
-.btn-raise { background: var(--btn-raise-bg, var(--gold)); color: var(--btn-raise-fg, #110900); }
+.btn-raise { background: var(--btn-raise-bg, var(--gold)); color: var(--btn-raise-fg, var(--on-gold)); }
 /* Compact auto check/fold toggle, sits next to Call/Check. Discreet at
    rest; turns green when armed for the next turn. Icon-only on narrow. */
 .btn-auto {
@@ -3470,7 +3470,7 @@ body.hide-pct-btns .pct-row { display: none; }
 .wc-player-delta { font-size:0.76rem; font-weight:700; text-align:right; white-space:nowrap; }
 .wc-player-delta.pos { color:#4cff88; }
 .wc-player-delta.neg { color:rgba(255,100,100,0.75); }
-.winner-dismiss { background:var(--gold); color:#110900; border:none; padding:9px 24px; font-family: var(--ff-display); font-size:0.76rem; font-weight:700; border-radius:4px; cursor:pointer; letter-spacing:0.08em; transition:background 0.15s; display:block; width:100%; margin-top:4px; flex:0 0 auto; }
+.winner-dismiss { background:var(--gold); color:var(--on-gold); border:none; padding:9px 24px; font-family: var(--ff-display); font-size:0.76rem; font-weight:700; border-radius:4px; cursor:pointer; letter-spacing:0.08em; transition:background 0.15s; display:block; width:100%; margin-top:4px; flex:0 0 auto; }
 .winner-dismiss:hover { background:var(--gold-hi); }
 
 
@@ -3641,7 +3641,7 @@ body:not(.in-game) .my-zone {
 .raise-display {
   font-family: var(--ff-mono);
   font-size: 0.8rem;
-  color: #110900;
+  color: var(--on-gold);
   font-weight: 700;
   min-width: 52px;
   text-align: center;
