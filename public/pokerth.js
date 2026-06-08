@@ -1539,10 +1539,24 @@ document.addEventListener("DOMContentLoaded", function() {
       }
       try { if (window.App && App.onServerOrGuestChange) App.onServerOrGuestChange(); } catch (e) {}
     }
+    // Server identity + admin table defaults pushed from /app-config.
+    function _applyBranding(c) {
+      if (!c) return;
+      if (c.tableDefaults && typeof c.tableDefaults === 'object') window._adminTableDefaults = c.tableDefaults;
+      if (c.serverName) {
+        var tn = document.querySelector('#s-connect .card-title-big');
+        if (tn) tn.textContent = c.serverName;
+        try { document.title = c.serverName; } catch (e) {}
+      }
+      if (c.serverTagline) {
+        var ts = document.querySelector('#s-connect .card-subtitle');
+        if (ts) ts.textContent = c.serverTagline;
+      }
+    }
     function go() {
       fetch('/app-config', { cache: 'no-store' })
         .then(function (r) { return r.json(); })
-        .then(function (c) { if (c && c.modes) applyModes(c.modes); if (c && c.loginDefaults) _applyLoginDefaults(c.loginDefaults); if (c && c.welcome && c.welcome.enabled && typeof window.maybeShowWelcome === 'function') window.maybeShowWelcome(c.welcome); if (c && typeof c.defaultTheme === 'string') _applyDefaultTheme(c.defaultTheme); if (c && c.defaults) _applyDefaultSettings(c.defaults); })
+        .then(function (c) { if (c && c.modes) applyModes(c.modes); if (c && c.loginDefaults) _applyLoginDefaults(c.loginDefaults); if (c && c.welcome && c.welcome.enabled && typeof window.maybeShowWelcome === 'function') window.maybeShowWelcome(c.welcome); if (c && typeof c.defaultTheme === 'string') _applyDefaultTheme(c.defaultTheme); if (c && c.defaults) _applyDefaultSettings(c.defaults); _applyBranding(c); })
         .catch(function () {});
     }
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', go); else go();
@@ -8829,6 +8843,13 @@ function dismissWinner() {
         }
         return base;
       };
+      // Admin-set table defaults (from /app-config) override the per-mode baseline,
+      // but a player's own last-used settings still win (withSaved runs after this).
+      var withAdmin = function (base) {
+        var a = window._adminTableDefaults;
+        if (a && typeof a === 'object') ['players', 'blind', 'stack', 'timeout'].forEach(function (k) { if (a[k] != null && a[k] !== '') base[k] = a[k]; });
+        return base;
+      };
       if (isPublic) {
         // Defaults for pokerth.net (guest + registered). 10 max players
         // and 3000-stack/blind-10/raise-every-7 follow the desktop
@@ -8848,7 +8869,7 @@ function dismissWinner() {
           minHumans: 5,
           tag: 'public', // for the QuickGame dialog
         };
-        return skipSaved ? basePublic : withSaved(basePublic);
+        return skipSaved ? withAdmin(basePublic) : withSaved(withAdmin(basePublic));
       }
       // LAN / private-server profile (covers both the 'lan' login mode
       // and the 'unauth' private-server-guest mode). 10 max players
@@ -8869,7 +8890,7 @@ function dismissWinner() {
         minHumans: 2,
         tag: 'lan',
       };
-      return skipSaved ? baseLan : withSaved(baseLan);
+      return skipSaved ? withAdmin(baseLan) : withSaved(withAdmin(baseLan));
     },
 
     // Apply the per-mode defaults to the create-form inputs. We only
@@ -9873,4 +9894,4 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.2.325'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.2.326'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();

@@ -172,6 +172,24 @@
         <div id="loginMsg" class="msg"></div>
       </div>
       <div class="card">
+        <h2>Default table settings (new visitors)</h2>
+        <p class="muted" style="margin:0 0 8px">Starting values when a player opens the “create a table” form. A returning player keeps their last-used settings; leave a field blank to keep the app default. Players can change them per table.</p>
+        <div class="defrow" style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin:5px 0"><span>Max players <span class="muted">(2–10)</span></span><input id="tdPlayers" type="number" min="2" max="10" placeholder="10" style="width:110px"></div>
+        <div class="defrow" style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin:5px 0"><span>Small blind <span class="muted">(1–1000000)</span></span><input id="tdBlind" type="number" min="1" max="1000000" placeholder="10" style="width:110px"></div>
+        <div class="defrow" style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin:5px 0"><span>Starting stack <span class="muted">(500–1000000)</span></span><input id="tdStack" type="number" min="500" max="1000000" placeholder="3000" style="width:110px"></div>
+        <div class="defrow" style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin:5px 0"><span>Action timer <span class="muted">(seconds, 5–120)</span></span><input id="tdTimeout" type="number" min="5" max="120" placeholder="15" style="width:110px"></div>
+        <div style="margin-top:8px"><button id="saveTable" class="use">Save</button></div>
+        <div id="tableMsg" class="msg"></div>
+      </div>
+      <div class="card">
+        <h2>Server identity (login screen)</h2>
+        <p class="muted" style="margin:0 0 8px">Shown to everyone on the login screen, regardless of theme. Leave blank for the defaults (“PokerTH” / “Web Client”).</p>
+        <div class="defrow" style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin:5px 0"><span>Server name</span><input id="srvName" maxlength="40" placeholder="PokerTH" autocomplete="off" style="flex:1;min-width:0"></div>
+        <div class="defrow" style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin:5px 0"><span>Banner / tagline</span><input id="srvTagline" maxlength="60" placeholder="Web Client" autocomplete="off" style="flex:1;min-width:0"></div>
+        <div style="margin-top:8px"><button id="saveIdent" class="use">Save</button></div>
+        <div id="identMsg" class="msg"></div>
+      </div>
+      <div class="card">
         <h2>Proxy</h2>
         <p class="muted" style="margin:0 0 8px">Server-side bridge settings. Always-allowed hosts: pokerth.net, www.pokerth.net, pokerth.ddns.net, localhost, 127.0.0.1, ::1. Changes apply live (no restart).</p>
         <div style="margin:5px 0"><div style="margin-bottom:3px">Extra allowed hosts <span class="muted">(one per line — required before a default-login host can connect)</span></div><textarea id="pxHosts" rows="3" placeholder="game.example.com&#10;192.168.1.50" autocomplete="off" style="width:100%;box-sizing:border-box;resize:vertical"></textarea></div>
@@ -442,6 +460,9 @@
         if($('defTheme') && typeof d.defaultTheme==='string') $('defTheme').value=d.defaultTheme;
         if(d.defaults && typeof d.defaults==='object'){ var _DM={defHaptic:'haptic',defVoice:'voice',defAssist:'assist',defAuto:'autobtn',defQuick:'quickbet',defBB:'displaybb'}; Object.keys(_DM).forEach(function(id){ var el=$(id); if(el){ var dv=d.defaults[_DM[id]]; el.value=(dv==='0'||dv==='1')?dv:''; } }); }
         if(d.loginDefaults && typeof d.loginDefaults==='object'){ var L=d.loginDefaults; if($('defMode'))$('defMode').value=(['offline','lan-dedi','pokerthnet'].indexOf(L.mode)>=0)?L.mode:''; if($('defHost'))$('defHost').value=L.host||''; }
+        if(d.tableDefaults && typeof d.tableDefaults==='object'){ var T=d.tableDefaults; var _tm={tdPlayers:'players',tdBlind:'blind',tdStack:'stack',tdTimeout:'timeout'}; Object.keys(_tm).forEach(function(id){ var el=$(id); if(el){ var v=T[_tm[id]]; el.value=(v==null)?'':v; } }); }
+        if($('srvName') && typeof d.serverName==='string') $('srvName').value=d.serverName;
+        if($('srvTagline') && typeof d.serverTagline==='string') $('srvTagline').value=d.serverTagline;
         if(d.proxyCfg && typeof d.proxyCfg==='object'){ var P=d.proxyCfg; if($('pxHosts'))$('pxHosts').value=(Array.isArray(P.allowedHosts)?P.allowedHosts.join('\n'):''); if($('pxGrace'))$('pxGrace').value=(typeof P.graceSec==='number'?P.graceSec:''); if($('pxGap'))$('pxGap').value=(typeof P.connGapMs==='number'?P.connGapMs:''); }
       }
       var sn=$('schedNow'), sc=$('schedCancel');
@@ -491,6 +512,19 @@
     var P={ allowedHosts:hosts, graceSec:($('pxGrace')?$('pxGrace').value.trim():''), connGapMs:($('pxGap')?$('pxGap').value.trim():'') };
     var m=$('pxMsg');
     api('/admin/config',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({proxyCfg:P,token:tok()})})
+      .then(function(r){return r.json();}).then(function(d){ if(d&&d.ok){ m.textContent='Saved.'; m.className='msg ok'; } else { m.textContent='Failed: '+((d&&d.error)||'error'); m.className='msg err'; } })
+      .catch(function(){ m.textContent='Network error.'; m.className='msg err'; });
+  }); })();
+  (function(){ var st=$('saveTable'); if(!st) return; st.addEventListener('click', function(){
+    var T={ players:($('tdPlayers')?$('tdPlayers').value.trim():''), blind:($('tdBlind')?$('tdBlind').value.trim():''), stack:($('tdStack')?$('tdStack').value.trim():''), timeout:($('tdTimeout')?$('tdTimeout').value.trim():'') };
+    var m=$('tableMsg');
+    api('/admin/config',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({tableDefaults:T,token:tok()})})
+      .then(function(r){return r.json();}).then(function(d){ if(d&&d.ok){ m.textContent='Saved.'; m.className='msg ok'; } else { m.textContent='Failed: '+((d&&d.error)||'error'); m.className='msg err'; } })
+      .catch(function(){ m.textContent='Network error.'; m.className='msg err'; });
+  }); })();
+  (function(){ var si=$('saveIdent'); if(!si) return; si.addEventListener('click', function(){
+    var m=$('identMsg');
+    api('/admin/config',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({serverName:($('srvName')?$('srvName').value:''),serverTagline:($('srvTagline')?$('srvTagline').value:''),token:tok()})})
       .then(function(r){return r.json();}).then(function(d){ if(d&&d.ok){ m.textContent='Saved.'; m.className='msg ok'; } else { m.textContent='Failed: '+((d&&d.error)||'error'); m.className='msg err'; } })
       .catch(function(){ m.textContent='Network error.'; m.className='msg err'; });
   }); })();
