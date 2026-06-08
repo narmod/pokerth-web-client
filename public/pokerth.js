@@ -4119,9 +4119,10 @@ const App = (() => {
         var _grmins  = Proto.u32(gi, 6) || 0;
         var _germode = Proto.u32(gi, 7) || 1;  // endRaiseMode (1=double,2=+val,3=keep)
         var _gerval  = Proto.u32(gi, 8) || 0;  // endRaiseSmallBlindValue
+        var _gsb     = Proto.u32(gi, 12) || 0; // NetGameInfo.firstSmallBlind (field 12)
         games[id] = { name, mode, players:pc, maxPlayers:maxp, type:gtype, priv:!!priv,
                       timeout: _gto || 15, startMoney: _gsm || 3000,
-                      raiseMode: _grmode, raiseHands: _grhands, raiseMins: _grmins,
+                      raiseMode: _grmode, raiseHands: _grhands, raiseMins: _grmins, smallBlind: _gsb,
                       endRaiseMode: _germode, endRaiseValue: _gerval };
         if (!loaded) { loaded = true; }
         renderGames();
@@ -5419,6 +5420,9 @@ const App = (() => {
       if (type) metaBits.push('<span class="game-type">' + type + '</span>');
       metaBits.push('<span>👥 ' + g.players + (g.maxPlayers ? '/' + g.maxPlayers : '') + '</span>');
       if (g.startMoney) metaBits.push('<span>🪙 ' + _groupThousands(g.startMoney) + '</span>');
+      if (g.smallBlind) metaBits.push('<span>🃏 ' + _groupThousands(g.smallBlind) + '/' + _groupThousands(g.smallBlind * 2) + '</span>');
+      var _blUp = (g.raiseMode === 2) ? (g.raiseMins > 0 ? t('blindsUpMins', { n: g.raiseMins }) : '') : (g.raiseHands > 0 ? t('blindsUpHands', { n: g.raiseHands }) : '');
+      if (_blUp) metaBits.push('<span>\u2B06 ' + _blUp + '</span>');
       if (g.timeout)    metaBits.push('<span>\u23F1 ' + g.timeout + 's</span>');
       return '<div class="game-row gcard" onclick="App.joinGame(' + parseInt(gid) + ')">'
         + '<div class="gcard-main">'
@@ -9894,4 +9898,4 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.2.326'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.2.327'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();

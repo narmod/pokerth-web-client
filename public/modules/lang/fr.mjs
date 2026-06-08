@@ -20,7 +20,7 @@ export const strings = {
     srvOffline:'🏋️ Mode entraînement', offlineHint:'🤖 Jeu solo contre des bots — aucune connexion requise.',
     srvPokerthNet:'🌐 Internet / PokerTH.net',
     botDifficulty:'Niveau des bots', botEasy:'Facile', botMixed:'Mixte', botNormal:'Normal', botHard:'Difficile',
-    blindsNextTip:'dans {n} main(s)', blindsEveryMin:'toutes les {n} min',
+    blindsNextTip:'dans {n} main(s)', blindsEveryMin:'toutes les {n} min', blindsUpHands:'{n} mains', blindsUpMins:'{n} min',
     connect:'Se connecter', disconnect:'✕ Déconnecter', connecting:'Connexion en cours…',
     nickname:'Pseudo', password:'Mot de passe', useTLS:'Utiliser TLS',
     lan:'LAN / Serveur privé (invité)', privateGuest:'Serveur privé — Invité Internet ✓',
