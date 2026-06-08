@@ -9898,4 +9898,23 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.2.329'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.2.330'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+
+/* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
+   standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
+   à jour le meta au chargement + à chaque changement de data-theme. rAF pour
+   lire après recalcul de style (fiabilité iOS). */
+;(function(){
+  var meta = document.querySelector('meta[name="theme-color"]');
+  if (!meta) return;
+  function upd(){
+    requestAnimationFrame(function(){
+      try{
+        var c = getComputedStyle(document.documentElement).getPropertyValue('--theme-color').trim();
+        if (c) meta.setAttribute('content', c);
+      }catch(e){}
+    });
+  }
+  upd();
+  try{ new MutationObserver(upd).observe(document.documentElement, { attributes:true, attributeFilter:['data-theme'] }); }catch(e){}
+})();

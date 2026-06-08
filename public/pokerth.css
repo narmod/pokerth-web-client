@@ -5098,3 +5098,7 @@ body:not(.in-game) .my-zone {
     scroll-behavior: auto !important;
   }
 }
+
+/* ─── theme-color du navigateur, suivant le thème actif (lue par JS) ─── */
+:root { --theme-color: #1d222b; }                             /* thèmes sombres */
+:root[data-theme="pokerth-light"] { --theme-color: #eef1f6; } /* thème clair    */
