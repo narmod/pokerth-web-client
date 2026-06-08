@@ -839,14 +839,14 @@ var REACTION_FX = {
   '🤩':{a:'shine',p:{chars:['✨'],count:8,size:13,a0:0,a1:360,dist:60,life:800,rot:1}},
   '😂':{a:'shake',p:{chars:['💧'],count:7,size:13,a0:-30,a1:210,dist:55,g:36,life:850}},
   '🤣':{a:'shake',p:{chars:['💧'],count:7,size:13,a0:-30,a1:210,dist:55,g:36,life:850}},
-  '👏':{a:'beat',p:{chars:['✦','✧'],count:9,color:'#e0c070',size:13,a0:0,a1:360,dist:60,life:750}},
-  '🙌':{a:'beat',p:{chars:['✦','✧'],count:9,color:'#e0c070',size:13,a0:0,a1:360,dist:62,life:780}},
-  '💪':{a:'flex',p:{chars:['✦'],count:6,color:'#e0c070',size:13,a0:0,a1:360,dist:50,life:700}},
+  '👏':{a:'beat',p:{chars:['✦','✧'],count:9,color:'var(--gold)',size:13,a0:0,a1:360,dist:60,life:750}},
+  '🙌':{a:'beat',p:{chars:['✦','✧'],count:9,color:'var(--gold)',size:13,a0:0,a1:360,dist:62,life:780}},
+  '💪':{a:'flex',p:{chars:['✦'],count:6,color:'var(--gold)',size:13,a0:0,a1:360,dist:50,life:700}},
   '😱':{a:'shake',p:{chars:['💦'],count:6,size:12,a0:-120,a1:-60,dist:48,g:50,life:780}},
   '🤯':{a:'pop',p:'shock'},
   '🍀':{a:'spin',p:{chars:['✨','🍀'],count:8,color:'#7ee37e',size:13,a0:0,a1:360,dist:62,life:950,rot:1}},
   '🎰':{a:'spin',p:{chars:['✨','🪙'],count:9,size:14,a0:0,a1:360,dist:66,life:950,rot:1}},
-  '👑':{a:'shine',p:{chars:['✨','⭐'],count:10,color:'#e0c070',size:14,a0:0,a1:360,dist:70,life:1000,rot:1}},
+  '👑':{a:'shine',p:{chars:['✨','⭐'],count:10,color:'var(--gold)',size:14,a0:0,a1:360,dist:70,life:1000,rot:1}},
   '😎':{a:'pop',p:'sparkle'}, '👍':{a:'beat',p:'sparkle'}, '🫡':{a:'pop',p:'sparkle'},
   '😍':{a:'beat',p:{chars:['❤️','💖'],count:8,size:16,a0:-160,a1:-20,dist:64,g:-30,life:1100}}
 };
@@ -854,7 +854,7 @@ function _rfxDefault(){ return { a:'pop', p:'sparkle' }; }
 
 // Génère les particules d'un effet dans le conteneur c (centré sur 0,0 du conteneur)
 function _rfxSpawn(c, spec){
-  if (spec === 'sparkle') spec = {chars:['✦','✧'],count:7,color:'#e0c070',size:12,a0:0,a1:360,dist:54,life:700};
+  if (spec === 'sparkle') spec = {chars:['✦','✧'],count:7,color:'var(--gold)',size:12,a0:0,a1:360,dist:54,life:700};
   if (spec === 'confetti'){ _rfxConfetti(c); return; }
   if (spec === 'shock'){
     var r = document.createElement('div'); r.className = 'rfx-ring';
@@ -865,7 +865,7 @@ function _rfxSpawn(c, spec){
   for (var i = 0; i < spec.count; i++){
     var p = document.createElement('span'); p.className = 'rfx-pt';
     if (spec.chars){ p.textContent = spec.chars[(Math.random()*spec.chars.length)|0]; p.style.fontSize = (spec.size||14)+'px'; }
-    else { p.style.width = p.style.height = (spec.size||7)+'px'; p.style.background = spec.color||'#c8a84a'; p.style.borderRadius = spec.square?'1px':'50%'; }
+    else { p.style.width = p.style.height = (spec.size||7)+'px'; p.style.background = spec.color||'var(--gold)'; p.style.borderRadius = spec.square?'1px':'50%'; }
     c.appendChild(p);
     var ang = (spec.a0 + Math.random()*(spec.a1 - spec.a0)) * Math.PI/180;
     var d = spec.dist * (0.55 + Math.random()*0.6);
@@ -880,7 +880,7 @@ function _rfxSpawn(c, spec){
   }
 }
 function _rfxConfetti(c){
-  var cols = ['#c8a84a','#e0c070','#27ae60','#c0392b','#7ec8e3','#e67e22','#ffffff'];
+  var cols = ['#9b59b6','#e84393','#27ae60','#c0392b','#7ec8e3','#e67e22','#ffffff'];
   for (var i = 0; i < 24; i++){
     var p = document.createElement('span'); p.className = 'rfx-pt';
     p.style.width = (5 + Math.random()*4)+'px'; p.style.height = (7 + Math.random()*4)+'px';
@@ -9873,4 +9873,4 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.2.322'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.2.323'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
