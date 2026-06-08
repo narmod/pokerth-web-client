@@ -367,7 +367,7 @@ function showKeyHint(text) {
   el.id = 'key-hint';
   el.textContent = '⌨ ' + text;
   el.style.cssText = 'position:fixed;bottom:80px;left:50%;transform:translateX(-50%);' +
-    'background:rgba(200,168,74,0.9);color:#1a0a00;padding:5px 14px;border-radius:20px;' +
+    'background:var(--gold);color:var(--on-gold);padding:5px 14px;border-radius:20px;' +
     'font-family:monospace;font-size:0.75rem;font-weight:700;z-index:999;' +
     'animation:fadeIn 0.15s ease;pointer-events:none;';
   document.body.appendChild(el);
@@ -451,7 +451,7 @@ function showRestartNotice(deadlineMs, kind, note) {
   if (note) msg += '\n' + note;
   var el = document.createElement('div');
   el.id = 'srv-restart-notice';
-  el.style.cssText = 'position:fixed;top:10px;left:50%;transform:translateX(-50%);max-width:92%;z-index:10000;display:flex;align-items:flex-start;gap:10px;background:rgba(184,52,52,.96);color:#fff;padding:10px 13px;border-radius:10px;box-shadow:0 6px 22px rgba(0,0,0,.45);font-size:.85rem;line-height:1.4;white-space:pre-line;';
+  el.style.cssText = 'position:fixed;top:10px;left:50%;transform:translateX(-50%);max-width:92%;z-index:10000;display:flex;align-items:flex-start;gap:10px;background:rgba(var(--red-rgb),.96);color:#fff;padding:10px 13px;border-radius:10px;box-shadow:0 6px 22px rgba(0,0,0,.45);font-size:.85rem;line-height:1.4;white-space:pre-line;';
   var span = document.createElement('span');
   span.textContent = msg;
   el.appendChild(span);
@@ -476,12 +476,12 @@ function showInfoToast(message, icon) {
   var top = document.getElementById('srv-restart-notice') ? 76 : 16;
   var el = document.createElement('div');
   el.id = 'srv-info-toast';
-  el.style.cssText = 'position:fixed;top:' + top + 'px;left:50%;transform:translateX(-50%);max-width:min(92vw,420px);z-index:9999;display:flex;align-items:flex-start;gap:10px;background:linear-gradient(135deg,rgba(200,168,74,.97),rgba(168,134,40,.97));color:#1a0a00;padding:11px 15px;border-radius:14px;box-shadow:0 8px 28px rgba(0,0,0,.55),0 0 0 1px rgba(255,255,255,.25) inset;font-weight:600;font-size:.9rem;line-height:1.4;white-space:pre-line;';
+  el.style.cssText = 'position:fixed;top:' + top + 'px;left:50%;transform:translateX(-50%);max-width:min(92vw,420px);z-index:9999;display:flex;align-items:flex-start;gap:10px;background:var(--gold);color:var(--on-gold);padding:11px 15px;border-radius:14px;box-shadow:0 8px 28px rgba(0,0,0,.55),0 0 0 1px rgba(255,255,255,.25) inset;font-weight:600;font-size:.9rem;line-height:1.4;white-space:pre-line;';
   if (icon) { var ic = document.createElement('span'); ic.textContent = icon; ic.style.cssText = 'flex:none;font-size:1.1rem;line-height:1.3;'; el.appendChild(ic); }
   var span = document.createElement('span'); span.textContent = message; el.appendChild(span);
   var x = document.createElement('button');
   x.setAttribute('aria-label', 'Close'); x.textContent = '\u00d7';
-  x.style.cssText = 'flex:none;background:transparent;border:0;color:#1a0a00;font-size:1.25rem;line-height:1;cursor:pointer;padding:0 2px;opacity:.7;';
+  x.style.cssText = 'flex:none;background:transparent;border:0;color:var(--on-gold);font-size:1.25rem;line-height:1;cursor:pointer;padding:0 2px;opacity:.7;';
   x.addEventListener('click', hideInfoToast);
   el.appendChild(x);
   document.body.appendChild(el);
@@ -558,11 +558,11 @@ function showWelcomeModal(title, body, version) {
   back.id = 'welcome-modal';
   back.style.cssText = 'position:fixed;inset:0;z-index:10001;display:flex;align-items:center;justify-content:center;padding:18px;background:rgba(0,0,0,.62);backdrop-filter:blur(2px);';
   var card = document.createElement('div');
-  card.style.cssText = 'max-width:480px;width:100%;max-height:84vh;display:flex;flex-direction:column;background:#1c1812;color:#efe6d2;border:1px solid rgba(200,168,74,.5);border-radius:16px;box-shadow:0 18px 50px rgba(0,0,0,.6);overflow:hidden;';
+  card.style.cssText = 'max-width:480px;width:100%;max-height:84vh;display:flex;flex-direction:column;background:var(--modal-bg);color:var(--text);border:1px solid var(--border);border-radius:16px;box-shadow:0 18px 50px rgba(0,0,0,.6);overflow:hidden;';
   if (title) {
     var h = document.createElement('div');
     h.textContent = title;
-    h.style.cssText = "padding:16px 20px;font-family:'Cinzel',serif;font-weight:700;font-size:1.15rem;color:#e0c070;border-bottom:1px solid rgba(200,168,74,.25);";
+    h.style.cssText = "padding:16px 20px;font-family:var(--ff-display);font-weight:700;font-size:1.15rem;color:var(--text-hi);border-bottom:1px solid var(--border);";
     card.appendChild(h);
   }
   var p = document.createElement('div');
@@ -570,10 +570,10 @@ function showWelcomeModal(title, body, version) {
   p.style.cssText = 'padding:16px 20px;overflow:auto;white-space:pre-line;line-height:1.55;font-size:.95rem;';
   card.appendChild(p);
   var foot = document.createElement('div');
-  foot.style.cssText = 'padding:12px 20px 16px;display:flex;justify-content:flex-end;border-top:1px solid rgba(200,168,74,.18);';
+  foot.style.cssText = 'padding:12px 20px 16px;display:flex;justify-content:flex-end;border-top:1px solid var(--border);';
   var btn = document.createElement('button');
   btn.textContent = (typeof window.t === 'function' ? window.t('welcomeAck') : '') || 'I understand';
-  btn.style.cssText = 'padding:9px 18px;border-radius:10px;border:0;cursor:pointer;font-weight:700;background:linear-gradient(135deg,#c8a84a,#a8862a);color:#1a0a00;';
+  btn.style.cssText = 'padding:9px 18px;border-radius:10px;border:0;cursor:pointer;font-weight:700;background:var(--gold);color:var(--on-gold);';
   btn.addEventListener('click', function () { try { localStorage.setItem('pth_welcome_seen', String(version)); } catch (e) {} hideWelcomeModal(); });
   foot.appendChild(btn);
   card.appendChild(foot);
@@ -1292,7 +1292,7 @@ document.addEventListener("DOMContentLoaded", function() {
   var sbtn = document.getElementById('sound-toggle-btn');
   if (sbtn && !_soundEnabled) {
     sbtn.textContent = '🔇';
-    sbtn.style.color = 'rgba(255,255,255,0.35)';
+    sbtn.style.color = 'var(--gold-dim)';
     sbtn.title = 'Unmute';
   }
   /**
@@ -4247,7 +4247,7 @@ const App = (() => {
             var rb = document.getElementById('reaction-bar');
             if (rb) {
               var note = document.createElement('div');
-              note.style.cssText = 'font-size:0.52rem;color:rgba(255,180,50,0.7);text-align:center;width:100%;margin-top:2px;font-style:italic';
+              note.style.cssText = 'font-size:0.52rem;color:var(--orange);text-align:center;width:100%;margin-top:2px;font-style:italic';
               note.textContent = _currentLoginMode === 'lan'
                 ? t('reactLanLocalNote')
                 : t('reactLocalOnlyNote');
@@ -4400,7 +4400,7 @@ const App = (() => {
         if (rbl) {
           if (_currentLoginMode === 'lan') {
             rbl.textContent = t('reactionsLanLocal');
-            rbl.style.color = 'rgba(255,180,50,0.6)';
+            rbl.style.color = 'var(--orange)';
           } else {
             rbl.textContent = t('reactionsLabel');
             rbl.style.color = '';
@@ -7084,7 +7084,7 @@ const App = (() => {
     var st = document.getElementById('assist-state-mob');
     if (st) {
       st.textContent = _assistOn ? '\u2713' : '';
-      st.style.color = '#3fb950';
+      st.style.color = 'var(--green)';
     }
     var hs = document.getElementById('hand-strength');
     if (!_assistOn) {
@@ -9389,7 +9389,7 @@ function toggleLobbyChat() {
   var open = panel.style.display === 'none';
   panel.style.display = open ? 'flex' : 'none';
   if (btn) {
-    btn.style.background  = open ? 'rgba(200,168,74,0.2)' : '';
+    btn.style.background  = open ? 'rgba(var(--gold-rgb),0.2)' : '';
     btn.style.borderColor = open ? 'var(--gold-dim)' : '';
     btn.style.color       = open ? 'var(--gold)' : '';
   }
@@ -9657,7 +9657,7 @@ function toggleGameChat() {
   panel.style.display = open ? 'flex' : 'none';
   setTimeout(function(){ autoScaleTable(); if(typeof renderSeats==='function' && typeof seats!=='undefined' && seats.length) renderSeats(); }, 50);
   if (btn) {
-    btn.style.background  = open ? 'rgba(200,168,74,0.2)' : '';
+    btn.style.background  = open ? 'rgba(var(--gold-rgb),0.2)' : '';
     btn.style.borderColor = open ? 'var(--gold-dim)' : '';
     btn.style.color       = open ? 'var(--gold)' : '';
   }
@@ -9693,7 +9693,7 @@ function toggleReactionPanel() {
   var open = panel.style.display === 'none' || panel.style.display === '';
   panel.style.display = open ? 'flex' : 'none';
   if (btn) {
-    btn.style.background  = open ? 'rgba(200,168,74,0.2)' : '';
+    btn.style.background  = open ? 'rgba(var(--gold-rgb),0.2)' : '';
     btn.style.borderColor = open ? 'var(--gold-dim)' : '';
     btn.style.color       = open ? 'var(--gold)' : '';
   }
@@ -9710,7 +9710,7 @@ function toggleLog() {
   if (!panel) return;
   var isHidden = panel.style.display === 'none';
   panel.style.display = isHidden ? '' : 'none';
-  if (btn) btn.style.background = isHidden ? 'rgba(200,168,74,0.2)' : '';
+  if (btn) btn.style.background = isHidden ? 'rgba(var(--gold-rgb),0.2)' : '';
   if (btn) btn.style.borderColor = isHidden ? 'var(--gold-dim)' : '';
   if (btn) btn.style.color       = isHidden ? 'var(--gold)' : '';
   if (isHidden) {
@@ -9873,4 +9873,4 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.2.319'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.2.320'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
