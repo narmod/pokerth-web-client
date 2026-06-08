@@ -982,13 +982,13 @@ function onAvatarImageChosen(input) {
       <input id="players-search-in" placeholder="Search…" data-i18n-placeholder="playersSearchPlaceholder"
              oninput="renderPlayersList()" />
     </div>
-    <div class="players-list" id="players-list-body" style="flex:1;min-height:60px;overflow-y:auto;padding:6px 12px;background:rgba(4,10,5,0.97)"></div>
+    <div class="players-list" id="players-list-body" style="flex:1;min-height:60px;overflow-y:auto;padding:6px 12px;background:var(--field-bg)"></div>
   </div>
 
   <!-- Lobby chat -->
   <div id="lobby-chat-panel" style="display:none;flex-direction:column;max-height:min(200px,28dvh)">
     <div class="g-chat-panel-header"><span style="font-size:0.65rem;color:var(--gold-dim);letter-spacing:0.15em;text-transform:uppercase">Chat</span><button onclick="toggleLobbyChat()" style="background:none;border:none;color:var(--text);cursor:pointer;font-size:0.85rem;padding:0 4px">X</button></div>
-    <div class="chat-msgs" id="chat" style="flex:1;min-height:50px;max-height:120px;overflow-y:auto;padding:5px 10px;background:rgba(4,10,5,0.97)"></div>
+    <div class="chat-msgs" id="chat" style="flex:1;min-height:50px;max-height:120px;overflow-y:auto;padding:5px 10px;background:var(--field-bg)"></div>
     <div class="chat-input" style="border-top:1px solid var(--border);flex-shrink:0">
       <input id="chat-in" placeholder="Message…" data-i18n-placeholder="chatPlaceholder" onkeydown="if(event.key==='Enter') App.sendChat()">
       <button class="chat-send" onclick="App.sendChat()">▶</button>
@@ -1196,12 +1196,12 @@ function onAvatarImageChosen(input) {
        scrollable body inside a fixed-height container. -->
   <div id="g-log-panel" style="display:none;flex-direction:column">
     <div class="g-chat-panel-header"><span style="font-size:0.65rem;color:var(--gold-dim);letter-spacing:0.15em;text-transform:uppercase">📋 <span data-i18n="logPanelTitle">Journal</span></span><span style="display:flex;gap:2px;align-items:center"><button onclick="exportLog()" data-i18n-title="logExportTitle" title="Exporter le journal" style="background:none;border:none;color:var(--gold-dim);cursor:pointer;font-size:0.9rem;padding:0 4px">📤</button><button onclick="toggleLog()" style="background:none;border:none;color:var(--text);cursor:pointer;font-size:0.85rem;padding:0 4px">✕</button></span></div>
-    <div class="log-msgs" id="g-log-body" style="flex:1;min-height:60px;overflow-y:auto;padding:6px 12px;background:rgba(4,10,5,0.97)"></div>
+    <div class="log-msgs" id="g-log-body" style="flex:1;min-height:60px;overflow-y:auto;padding:6px 12px;background:var(--field-bg)"></div>
   </div>
   <!-- Chat dropdown (below header) -->
   <div id="g-chat-panel" style="display:none;flex-direction:column">
     <div class="g-chat-panel-header"><span style="font-size:0.65rem;color:var(--gold-dim);letter-spacing:0.15em;text-transform:uppercase">💬 Chat</span><button onclick="toggleGameChat()" style="background:none;border:none;color:var(--text);cursor:pointer;font-size:0.85rem;padding:0 4px">✕</button></div>
-    <div class="chat-msgs" id="g-chat-msgs" style="flex:1;min-height:60px;overflow-y:auto;padding:6px 12px;background:rgba(4,10,5,0.97)"></div>
+    <div class="chat-msgs" id="g-chat-msgs" style="flex:1;min-height:60px;overflow-y:auto;padding:6px 12px;background:var(--field-bg)"></div>
     <div class="chat-input" style="border-top:1px solid var(--border);flex-shrink:0">
       <input id="g-chat-in" placeholder="Message…" data-i18n-placeholder="chatPlaceholder" onkeydown="if(event.key==='Enter')App.sendGameChat()">
       <button class="chat-send" onclick="App.sendGameChat()">▶</button>

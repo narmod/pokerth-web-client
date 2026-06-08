@@ -6128,7 +6128,7 @@ const App = (() => {
     var frac = Math.max(0, secs / (total || 30));
     var offset = (circ * (1 - frac)).toFixed(1);
     var urgent = secs <= 8;
-    var col = urgent ? '#e74c3c' : '#f0c040';
+    var col = urgent ? 'var(--timer-urgent, #e74c3c)' : 'var(--timer-normal, #f0c040)';
     // Arc dessiné dans le sens des aiguilles d'une montre (rotation -90°)
     return '<svg class="seat-timer" viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg"'
       + ' style="transform:rotate(-90deg);overflow:visible">'
@@ -6136,7 +6136,7 @@ const App = (() => {
       + '<circle class="bg" cx="'+cx+'" cy="'+cy+'" r="'+r+'"/>'
       // Arc de progression
       + '<circle class="arc" cx="'+cx+'" cy="'+cy+'" r="'+r+'"'
-      + ' stroke="'+col+'"'
+      + ' style="stroke:'+col+'"'
       + ' stroke-dasharray="'+circ.toFixed(1)+'"'
       + ' stroke-dashoffset="'+offset+'"/>'
       // Pas de disque central ni de texte : le chiffre est affiché hors du cercle
@@ -6147,14 +6147,14 @@ const App = (() => {
     _timerSec = Math.max(0, _timerSec - 1);
     // Update SVG arcs in place — no full re-render
     var urgent = _timerSec <= 8;
-    var col = urgent ? '#e74c3c' : '#f0c040';
+    var col = urgent ? 'var(--timer-urgent, #e74c3c)' : 'var(--timer-normal, #f0c040)';
     // Radius MUST match _timerSvg() (r=20): dashoffset is computed against the
     // same circumference as the stroke-dasharray drawn there, otherwise the
     // ring depletes on a different circle and empties ~1s early.
     var r = 20, circ = 2 * Math.PI * r;
     var offset = (circ * (1 - _timerSec / (_timerTot || 30))).toFixed(1);
     document.querySelectorAll('.seat-timer .arc').forEach(function(el) {
-      el.setAttribute('stroke', col);
+      el.style.stroke = col;
       el.setAttribute('stroke-dashoffset', offset);
     });
     // No <text> inside .seat-timer — the countdown number is rendered in the
@@ -9873,4 +9873,4 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.2.310'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.2.311'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
