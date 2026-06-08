@@ -37,6 +37,7 @@ html { touch-action: manipulation; -webkit-text-size-adjust: 100%; text-size-adj
   --red-rgb:    192,57,43;
   --blue-rgb:   52,152,219;
   --green2-rgb: 88,201,122;
+  --on-green:   #d7ffe0;
   --gold-hi:    #e0c070;
   --gold-dim:   #7a6428;
   --cream:      #ede8dc;
@@ -141,6 +142,7 @@ html { touch-action: manipulation; -webkit-text-size-adjust: 100%; text-size-adj
   --red-rgb:    166,47,34;
   --blue-rgb:   42,111,176;
   --green2-rgb: 30,126,67;
+  --on-green:   #11532b;
   --cream:      #1d222b;
   --field-bg:   #ffffff;
   --inset: rgba(0,0,0,0.06);
@@ -2997,7 +2999,7 @@ body {
   content: '✕';
   position: absolute;
   font-size: 0.7rem;
-  color: rgba(255,80,80,0.9);
+  color: var(--neg);
   font-weight: 900;
   z-index: 3;
   text-shadow: 0 1px 3px rgba(0,0,0,0.8);
@@ -3023,10 +3025,10 @@ body {
   font-size: 0.65rem;
   font-weight: 700;
   letter-spacing: 0.15em;
-  color: rgba(220, 80, 80, 0.85);
+  color: var(--neg);
   background: rgba(0,0,0,0.55);
   padding: 1px 5px;
-  border: 1px solid rgba(220, 80, 80, 0.5);
+  border: 1px solid rgba(var(--red-rgb), 0.5);
   border-radius: 2px;
   z-index: 4;
   pointer-events: none;
@@ -3209,10 +3211,10 @@ body {
 .btn-auto.armed {
   background: rgba(var(--green-rgb), 0.22);
   border-color: var(--green);
-  color: #d7ffe0;
+  color: var(--on-green);
   box-shadow: 0 0 0 1px rgba(var(--green-rgb), 0.35), 0 0 12px rgba(var(--green-rgb), 0.25);
 }
-.btn-auto.armed .auto-ic { color: #eafff0; } /* light glyph for contrast on green */
+.btn-auto.armed .auto-ic { color: var(--on-green); } /* light glyph for contrast on green */
 .action-top-row .btn-auto { flex: 0 0 auto; min-width: 46px; }
 @media (max-width: 480px) { .btn-auto { min-width: 48px; } }
 
@@ -4007,7 +4009,7 @@ body:not(.in-game) .my-zone {
 .auto-switch-track::before { content: ""; position: absolute; height: 15px; width: 15px; left: 2px; top: 2px;
   background: var(--cream); border-radius: 50%; transition: 0.2s; }
 .auto-switch input:checked + .auto-switch-track { background: rgba(var(--green-rgb), 0.5); border-color: var(--green); }
-.auto-switch input:checked + .auto-switch-track::before { transform: translateX(17px); background: #d7ffe0; }
+.auto-switch input:checked + .auto-switch-track::before { transform: translateX(17px); background: var(--on-green); }
 @media (max-width: 640px) {
   .auto-cf-row { padding: 6px 9px; margin-bottom: 5px; gap: 8px; }
   .auto-cf-label { font-size: 0.68rem; }
