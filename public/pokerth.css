@@ -38,6 +38,9 @@ html { touch-action: manipulation; -webkit-text-size-adjust: 100%; text-size-adj
   --blue-rgb:   52,152,219;
   --green2-rgb: 88,201,122;
   --on-green:   #d7ffe0;
+  --ld-quit-fg: #fad6d0;
+  --ld-create-fg: #d6f5dc;
+  --wp-need-fg: #e0a040;
   --gold-hi:    #e0c070;
   --gold-dim:   #7a6428;
   --cream:      #ede8dc;
@@ -143,6 +146,9 @@ html { touch-action: manipulation; -webkit-text-size-adjust: 100%; text-size-adj
   --blue-rgb:   42,111,176;
   --green2-rgb: 30,126,67;
   --on-green:   #11532b;
+  --ld-quit-fg: #a62f22;
+  --ld-create-fg: #1e7e43;
+  --wp-need-fg: #b35e10;
   --cream:      #1d222b;
   --field-bg:   #ffffff;
   --inset: rgba(0,0,0,0.06);
@@ -3718,8 +3724,8 @@ body:not(.in-game) .my-zone {
   font-size: 0.78rem; font-weight: 600; letter-spacing: 0.04em;
   padding: 2px 0;
 }
-.wp-ok   { color: #58c97a; }
-.wp-need { color: #e0a040; }
+.wp-ok   { color: rgb(var(--green2-rgb)); }
+.wp-need { color: var(--wp-need-fg); }
 .wp-list {
   list-style: none; margin: 4px 0 0; padding: 0;
   display: flex; flex-wrap: wrap; justify-content: center; gap: 6px 10px;
@@ -3779,7 +3785,7 @@ body:not(.in-game) .my-zone {
   font-size: 0.74rem; color: var(--gold-dim);
   font-style: italic; margin-top: 4px; text-align: center;
 }
-.wp-hint-admin { color: #58c97a; font-style: normal; font-weight: 600; }
+.wp-hint-admin { color: rgb(var(--green2-rgb)); font-style: normal; font-weight: 600; }
 /* When the action-bar hosts the waiting panel (no real action buttons
    yet), override its default right-alignment so the panel sits in the
    middle of the bottom strip. Once the game starts, .waiting-panel is
@@ -4137,7 +4143,7 @@ body:not(.in-game) .my-zone {
 .ld-btn.ld-quit {
   background: linear-gradient(180deg, rgba(var(--red-rgb), 0.22), rgba(var(--red-rgb), 0.1));
   border-color: rgba(var(--red-rgb), 0.5);
-  color: #fad6d0;
+  color: var(--ld-quit-fg);
 }
 .ld-btn.ld-quit:hover { background: linear-gradient(180deg, rgba(var(--red-rgb), 0.35), rgba(var(--red-rgb), 0.18)); }
 .ld-btn.ld-cancel { color: var(--gold-dim); }
@@ -4186,7 +4192,7 @@ body:not(.in-game) .my-zone {
 .ld-btn.ld-create {
   background: linear-gradient(180deg, rgba(var(--green2-rgb), 0.22), rgba(var(--green2-rgb), 0.1));
   border-color: rgba(var(--green2-rgb), 0.5);
-  color: #d6f5dc;
+  color: var(--ld-create-fg);
 }
 .ld-btn.ld-create:hover { background: linear-gradient(180deg, rgba(var(--green2-rgb), 0.35), rgba(var(--green2-rgb), 0.18)); }
 @media (max-width: 640px) {
@@ -4836,15 +4842,10 @@ body:not(.in-game) .my-zone {
    (teintes claires). On garde un fond SOMBRE pour cette pastille en clair -> le code
    couleur (gris faible -> vert/rouge fort) reste lisible tel quel. */
 :root[data-theme="pokerth-light"] #hand-strength { background: rgba(20,25,33,0.94); }
-/* Popups quitter la table / deconnexion (et creation rapide) : texte d'action clair. */
-:root[data-theme="pokerth-light"] .ld-btn.ld-quit   { color: var(--red); }
-:root[data-theme="pokerth-light"] .ld-btn.ld-create { color: var(--green); }
-/* Ecran d'attente : libelles + boutons verts/orange a texte clair. */
+/* Ecran d'attente : wp-ready-label/btn (pas de couleur de base) corriges ici ;
+   ld-quit/ld-create/wp-ok/wp-hint-admin/wp-need pilotes par variables de theme. */
 :root[data-theme="pokerth-light"] .wp-ready-label,
-:root[data-theme="pokerth-light"] .wp-ready-btn,
-:root[data-theme="pokerth-light"] .wp-ok,
-:root[data-theme="pokerth-light"] .wp-hint-admin { color: var(--green); }
-:root[data-theme="pokerth-light"] .wp-need { color: var(--orange); }
+:root[data-theme="pokerth-light"] .wp-ready-btn { color: var(--green); }
 /* Siege actif (a parler) : nom/stack attenues a 0.35 (concu pour texte clair sur fond
    sombre). En clair le texte est SOMBRE -> 0.35 = invisible. On remonte l'opacite en
    clair uniquement : leger estompage conserve, mais lisible. */
