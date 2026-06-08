@@ -29,6 +29,7 @@ html { touch-action: manipulation; -webkit-text-size-adjust: 100%; text-size-adj
   --panel-hi:   rgba(14,28,16,0.9);
   --gold:       #c8a84a;
   --gold-rgb:   200,168,74;
+  --chrome-tint: rgba(0,0,0,0.35);
   --gold-hi:    #e0c070;
   --gold-dim:   #7a6428;
   --cream:      #ede8dc;
@@ -125,6 +126,7 @@ html { touch-action: manipulation; -webkit-text-size-adjust: 100%; text-size-adj
   --gold-dim:   #576378;
   --timer-normal: #394150;
   --timer-bg:   rgba(255,255,255,0.92);
+  --chrome-tint: rgba(0,0,0,0.06);
   --cream:      #1d222b;
   --field-bg:   #ffffff;
   --inset: rgba(0,0,0,0.06);
@@ -726,7 +728,7 @@ body {
   font-size: 0.65rem; letter-spacing: 0.12em; text-transform: uppercase;
   color: var(--gold-dim);
   border-bottom: 1px solid var(--border);
-  background: rgba(0,0,0,0.3);
+  background: var(--chrome-tint);
 }
 .avp-grid {
   display: grid;
@@ -1260,7 +1262,7 @@ body {
   align-items: center;
   justify-content: space-between;
   padding: 3px 14px;
-  background: rgba(0,0,0,0.35);
+  background: var(--chrome-tint);
   border-bottom: 1px solid var(--border);
   flex-shrink: 0;
   min-height: 24px;
@@ -3341,14 +3343,14 @@ body.hide-pct-btns .pct-row { display: none; }
 }
 .log-msgs::-webkit-scrollbar-thumb:hover { background: rgba(var(--gold-rgb), 0.32); }
 
-.g-chat-panel-header { display:flex; align-items:center; justify-content:space-between; padding:4px 10px; background:rgba(0,0,0,0.4); border-bottom:1px solid var(--border); flex-shrink:0; }
+.g-chat-panel-header { display:flex; align-items:center; justify-content:space-between; padding:4px 10px; background:var(--chrome-tint); border-bottom:1px solid var(--border); flex-shrink:0; }
 /* Poignée de redimensionnement du chat (bord bas) — glissable au doigt */
 .chat-resize-handle {
   flex-shrink: 0; height: 18px;
   display: flex; align-items: center; justify-content: center;
   cursor: ns-resize; touch-action: none;
   -webkit-user-select: none; user-select: none;
-  background: rgba(0,0,0,0.35); border-top: 1px solid var(--border);
+  background: var(--chrome-tint); border-top: 1px solid var(--border);
 }
 .chat-resize-handle .crh-grip {
   width: 42px; height: 4px; border-radius: 3px;
@@ -4196,7 +4198,7 @@ body:not(.in-game) .my-zone {
 }
 .players-search {
   padding: 6px 10px;
-  background: rgba(0,0,0,0.4);
+  background: var(--chrome-tint);
   border-bottom: 1px solid var(--border);
   flex-shrink: 0;
 }
