@@ -80,7 +80,7 @@ var BUTTON_GLOSSY = {
   'btn-check-bg':'linear-gradient(180deg, #2f7ad0 0%, #1f5aa8 48%, #143f7a 100%)','btn-check-fg':'#e6f0ff',
   'btn-call-bg':'linear-gradient(180deg, #2f7ad0 0%, #1f5aa8 48%, #143f7a 100%)','btn-call-fg':'#e6f0ff',
   'btn-raise-bg':'linear-gradient(180deg, #2fa83a 0%, #1f8a2a 48%, #14661e 100%)','btn-raise-fg':'#eaffea',
-  'btn-allin-bd':'#d8701f','btn-allin-fg':'#e8a85a','btn-allin-fg-b':'#f0c080'
+  'btn-allin-bg':'linear-gradient(180deg, #d9740f 0%, #bd610b 48%, #934a08 100%)','btn-allin-bd':'#934a08','btn-allin-fg':'#fff4ec','btn-allin-fg-b':'#ffffff'
 };
 // Pucks axis: a built-in "PokerTH" set (dealer/SB/BB marker images, shared).
 var PUCK_SET = { dealer:'url(/pucks/dealer.svg)', sb:'url(/pucks/sb.svg)', bb:'url(/pucks/bb.svg)' };

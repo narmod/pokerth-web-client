@@ -4826,10 +4826,6 @@ body:not(.in-game) .my-zone {
    clair uniquement : leger estompage conserve, mais lisible. */
 :root[data-theme="pokerth-light"] .seat.active .seat-name,
 :root[data-theme="pokerth-light"] .seat.active .seat-money { opacity: 0.7; }
-/* Bouton All-In en clair : fond transparent + texte orange clair (glossy) -> pale.
-   On fonce le texte/bordure en clair pour rester lisible. */
-:root[data-theme="pokerth-light"] .btn-allin   { color: var(--orange); border-color: var(--orange); }
-:root[data-theme="pokerth-light"] .btn-allin b { color: var(--orange); }
 
 /* Préréglages */
 .cf-presets-label { font-size: 0.6rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--gold-dim); font-weight: 600; margin: 0 2px 8px; }
