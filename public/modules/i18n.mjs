@@ -157,6 +157,28 @@ const _USERPASS_I18N = {
   'zh-TW': '使用者密碼（選填）', hi: 'उपयोगकर्ता पासवर्ड (वैकल्पिक)'
 };
 for (const _c in _USERPASS_I18N) { if (LANG[_c]) LANG[_c].userPassword = _USERPASS_I18N[_c]; }
+// ── Lobby : rythme de montée des blindes (« {n} mains » / « {n} min ») ──
+// EN/FR vivent dans en.mjs/fr.mjs ; ici les 34 autres langues. « min »
+// convient à toutes les écritures latines (repli EN automatique), donc
+// seules les écritures non-latines sont surchargées côté minutes.
+const _BLINDSUPHANDS_I18N = {
+  de: '{n} Hände', es: '{n} manos', it: '{n} mani', 'pt-BR': '{n} mãos',
+  'pt-PT': '{n} mãos', nl: '{n} handen', pl: '{n} rozdań', ru: '{n} раздач',
+  zh: '{n} 手', tr: '{n} el', uk: '{n} роздач', ja: '{n} ハンド',
+  sv: '{n} händer', nb: '{n} hender', da: '{n} hænder', fi: '{n} kättä',
+  cs: '{n} rozdání', sk: '{n} rozdaní', ro: '{n} mâini', hu: '{n} leosztás',
+  el: '{n} χέρια', bg: '{n} ръце', hr: '{n} ruku', sr: '{n} руку',
+  af: '{n} hande', ca: '{n} mans', gl: '{n} mans', gd: '{n} làmhan',
+  lt: '{n} rankų', ta: '{n} கைகள்', vi: '{n} ván', ko: '{n} 핸드',
+  'zh-TW': '{n} 手', hi: '{n} हाथ'
+};
+const _BLINDSUPMINS_I18N = {
+  ru: '{n} мин', uk: '{n} хв', bg: '{n} мин', sr: '{n} мин',
+  el: '{n} λεπτά', zh: '{n} 分钟', 'zh-TW': '{n} 分鐘', ja: '{n} 分',
+  ko: '{n} 분', hi: '{n} मिनट', ta: '{n} நிமிடம்'
+};
+for (const _c in _BLINDSUPHANDS_I18N) { if (LANG[_c]) LANG[_c].blindsUpHands = _BLINDSUPHANDS_I18N[_c]; }
+for (const _c in _BLINDSUPMINS_I18N)  { if (LANG[_c]) LANG[_c].blindsUpMins  = _BLINDSUPMINS_I18N[_c]; }
 function _flagFor(code) {
   return (LANG_META[code] && LANG_META[code].flag)
     || ('<span class="lang-flag lang-flag-code" style="font:700 0.72rem/1 monospace;letter-spacing:.05em">' + String(code).toUpperCase() + '</span>');
