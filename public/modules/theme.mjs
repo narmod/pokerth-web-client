@@ -98,8 +98,8 @@ const AXES = [deck, palette, table, buttons, pucks];
 // (this project's look). "Official PokerTH" ≈ the official client (dark UI +
 // textured green felt + vector cards). Order = display order.
 const PRESETS = [
-  { id: 'official', key: 'presetPokerthOfficial', fallback: 'PokerTH official', swatch: '#1d222b', values: { theme: 'pokerth', table: 'pokerth', deck: 'pokerth-new', buttons: 'pokerth-new', pucks: 'pokerth-new' } },
-  { id: 'officiallight', key: 'presetPokerthOfficialLight', fallback: 'PokerTH official (light)', swatch: '#dce2ec', values: { theme: 'pokerth-light', table: 'pokerth', deck: 'pokerth-new', buttons: 'pokerth-new', pucks: 'pokerth-new' } },
+  { id: 'official', key: 'presetPokerthOfficial', fallback: 'PokerTH official', swatch: '#1d222b', values: { theme: 'pokerth', table: 'pokerth', deck: 'pokerth-new', buttons: 'glossy', pucks: 'pokerth-new' } },
+  { id: 'officiallight', key: 'presetPokerthOfficialLight', fallback: 'PokerTH official (light)', swatch: '#dce2ec', values: { theme: 'pokerth-light', table: 'pokerth', deck: 'pokerth-new', buttons: 'glossy', pucks: 'pokerth-new' } },
   { id: 'casino',  key: 'presetCasino',   fallback: 'Green Casino',     swatch: '#1e6b1e', values: { theme: '',     table: '',      deck: 'casino-vert', buttons: 'casino-vert', pucks: 'casino-vert' } },
   { id: 'pokerth', key: 'presetOfficial', fallback: 'PokerTH ver1.1.2', swatch: '#232730', values: { theme: 'dark', table: 'photo', deck: 'pokerth', buttons: 'glossy', pucks: 'pokerth' } },
   { id: 'pokerth10', key: 'presetPokerth10', fallback: 'PokerTH ver1.0', swatch: '#232730', values: { theme: 'dark', table: 'photo', deck: 'pokerth-1-0', buttons: 'glossy', pucks: 'pokerth' } },
