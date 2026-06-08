@@ -247,6 +247,7 @@ html, body {
   height: 100%;
   height: 100dvh;
   overflow: hidden;
+  overscroll-behavior: none;
   font-family: var(--ff-mono);
   background: var(--felt);
   color: var(--text);
@@ -5075,3 +5076,25 @@ body:not(.in-game) .my-zone {
    orange hairline + icon, e.g. the "game name too long" guard. */
 .app-toast--error { border-color: var(--orange); }
 .app-toast--error .app-toast-tick { color: var(--orange); }
+
+/* ─── Mobile : confort tactile (v0.2.329) ─── */
+
+/* iOS : pas de menu long-press (save image / loupe / sélection) sur les cartes
+   de jeu et les boutons. Le chat et les champs restent sélectionnables. */
+.pk-flip, .pk-fold, button, .cf-preset {
+  -webkit-touch-callout: none;
+}
+
+/* Respecte « réduire les animations » du système (accessibilité + téléphones
+   faibles). Les anims en forwards/both atteignent leur état final instantanément
+   (cartes distribuées/retournées, jetons posés) ; le timer SVG, piloté en JS,
+   n'est pas affecté. Durée ~0 (pas 0) pour que animationend/transitionend
+   continuent de se déclencher. */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
