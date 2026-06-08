@@ -9867,10 +9867,10 @@ function renderPlayersList() {
              avChip +
              '<span class="pl-name">' + nameHtml + '</span>' +
              '<span class="pl-flag">' + flag + (cc ? '<span class="pl-cc">' + cc + '</span>' : '') + '</span>' +
-             '<span class="pl-star">' + (r.isMe ? '⭐' : '') + '</span>' +
+             '<span class="pl-star">' + (r.isMe ? '★' : '') + '</span>' +
              '<span class="pl-id">#' + r.pid + '</span>' +
            '</div>';
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.2.308'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.2.309'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
