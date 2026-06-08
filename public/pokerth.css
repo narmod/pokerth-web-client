@@ -35,6 +35,8 @@ html { touch-action: manipulation; -webkit-text-size-adjust: 100%; text-size-adj
   --info:       #7ec8e3;
   --green-rgb:  39,174,96;
   --red-rgb:    192,57,43;
+  --blue-rgb:   52,152,219;
+  --green2-rgb: 88,201,122;
   --gold-hi:    #e0c070;
   --gold-dim:   #7a6428;
   --cream:      #ede8dc;
@@ -137,6 +139,8 @@ html { touch-action: manipulation; -webkit-text-size-adjust: 100%; text-size-adj
   --info:       #2a6fb0;
   --green-rgb:  30,126,67;
   --red-rgb:    166,47,34;
+  --blue-rgb:   42,111,176;
+  --green2-rgb: 30,126,67;
   --cream:      #1d222b;
   --field-bg:   #ffffff;
   --inset: rgba(0,0,0,0.06);
@@ -997,8 +1001,8 @@ body {
 
 .lang-btn.active { background: rgba(var(--gold-rgb), 0.2) !important; border-color: var(--gold-dim) !important; color: var(--gold) !important; }
 .btn-watch {
-  background: rgba(52,152,219,0.12);
-  border: 1px solid rgba(52,152,219,0.35);
+  background: rgba(var(--blue-rgb), 0.12);
+  border: 1px solid rgba(var(--blue-rgb), 0.35);
   color: var(--info);
   padding: 4px 10px;
   font-family: var(--ff-display);
@@ -1010,7 +1014,7 @@ body {
   transition: background 0.15s;
   flex-shrink: 0;
 }
-.btn-watch:hover { background: rgba(52,152,219,0.25); }
+.btn-watch:hover { background: rgba(var(--blue-rgb), 0.25); }
 .btn-sm {
   background: transparent;
   border: 1px solid var(--border);
@@ -3793,8 +3797,8 @@ body:not(.in-game) .my-zone {
 .wp-ready-row {
   display: flex; flex-direction: column; align-items: center; gap: 6px;
   margin-top: 8px; padding: 10px 14px;
-  background: linear-gradient(180deg, rgba(88,201,122,0.10), rgba(88,201,122,0.04));
-  border: 1px solid rgba(88,201,122,0.4);
+  background: linear-gradient(180deg, rgba(var(--green2-rgb), 0.10), rgba(var(--green2-rgb), 0.04));
+  border: 1px solid rgba(var(--green2-rgb), 0.4);
   border-radius: 6px;
   animation: wpReadyAppear 0.4s ease-out;
 }
@@ -3808,7 +3812,7 @@ body:not(.in-game) .my-zone {
 }
 .wp-ready-btn {
   padding: 9px 18px;
-  background: linear-gradient(180deg, rgba(88,201,122,0.35), rgba(88,201,122,0.18));
+  background: linear-gradient(180deg, rgba(var(--green2-rgb), 0.35), rgba(var(--green2-rgb), 0.18));
   border: 1px solid #58c97a;
   border-radius: 4px;
   color: #d0ffd8;
@@ -3821,17 +3825,17 @@ body:not(.in-game) .my-zone {
   transition: transform 0.12s;
 }
 .wp-ready-btn:hover {
-  background: linear-gradient(180deg, rgba(88,201,122,0.55), rgba(88,201,122,0.3));
+  background: linear-gradient(180deg, rgba(var(--green2-rgb), 0.55), rgba(var(--green2-rgb), 0.3));
   transform: scale(1.04);
 }
 .wp-ready-btn:active { transform: scale(0.97); }
 @keyframes wpReadyPulse {
   0%, 100% {
-    box-shadow: 0 0 0 0 rgba(88,201,122,0.5),
+    box-shadow: 0 0 0 0 rgba(var(--green2-rgb), 0.5),
                 0 1px 4px rgba(0,0,0,0.4) inset;
   }
   50% {
-    box-shadow: 0 0 0 8px rgba(88,201,122,0),
+    box-shadow: 0 0 0 8px rgba(var(--green2-rgb), 0),
                 0 1px 4px rgba(0,0,0,0.4) inset;
   }
 }
@@ -3915,8 +3919,8 @@ body:not(.in-game) .my-zone {
   text-transform: uppercase; letter-spacing: 0.12em; }
 .eg-winner-name  { font-size: 1.05rem; color: var(--cream); font-weight: 600; }
 .eg-winner.me {
-  background: rgba(88,201,122,0.12);
-  border-color: rgba(88,201,122,0.5);
+  background: rgba(var(--green2-rgb), 0.12);
+  border-color: rgba(var(--green2-rgb), 0.5);
 }
 .eg-winner.me .eg-winner-av { border-color: #58c97a; }
 .eg-stats-section {
@@ -4023,8 +4027,8 @@ body:not(.in-game) .my-zone {
   justify-content: center;
   gap: 8px;
   padding: 6px 12px;
-  background: linear-gradient(180deg, rgba(80,140,200,0.15), rgba(80,140,200,0.05));
-  border-bottom: 1px solid rgba(80,140,200,0.35);
+  background: linear-gradient(180deg, rgba(var(--blue-rgb), 0.15), rgba(var(--blue-rgb), 0.05));
+  border-bottom: 1px solid rgba(var(--blue-rgb), 0.35);
   font-size: 0.75rem;
   color: var(--info);
   font-family: var(--ff-display);
@@ -4053,8 +4057,8 @@ body:not(.in-game) .my-zone {
   text-align: center;
   font-size: 0.78rem;
   color: var(--gold-dim);
-  background: rgba(80,140,200,0.06);
-  border: 1px solid rgba(80,140,200,0.25);
+  background: rgba(var(--blue-rgb), 0.06);
+  border: 1px solid rgba(var(--blue-rgb), 0.25);
   border-radius: 4px;
   font-style: italic;
 }
@@ -4178,11 +4182,11 @@ body:not(.in-game) .my-zone {
 }
 .qc-control input[type="number"]:focus { border-color: var(--gold); }
 .ld-btn.ld-create {
-  background: linear-gradient(180deg, rgba(88,201,122,0.22), rgba(88,201,122,0.1));
-  border-color: rgba(88,201,122,0.5);
+  background: linear-gradient(180deg, rgba(var(--green2-rgb), 0.22), rgba(var(--green2-rgb), 0.1));
+  border-color: rgba(var(--green2-rgb), 0.5);
   color: #d6f5dc;
 }
-.ld-btn.ld-create:hover { background: linear-gradient(180deg, rgba(88,201,122,0.35), rgba(88,201,122,0.18)); }
+.ld-btn.ld-create:hover { background: linear-gradient(180deg, rgba(var(--green2-rgb), 0.35), rgba(var(--green2-rgb), 0.18)); }
 @media (max-width: 640px) {
   .qc-control { gap: 8px; }
   .qc-control input[type="number"] { font-size: 1rem; width: 60px; padding: 6px 8px; }
@@ -4615,13 +4619,13 @@ body:not(.in-game) .my-zone {
 /* "+ Bots" variant: same green family but slightly darker tint so
    the user can tell the two apart without having to read the labels. */
 .wp-ready-btn.wp-ready-btn-bots {
-  background: linear-gradient(180deg, rgba(88,201,122,0.22), rgba(88,201,122,0.10));
-  border-color: rgba(88,201,122,0.65);
+  background: linear-gradient(180deg, rgba(var(--green2-rgb), 0.22), rgba(var(--green2-rgb), 0.10));
+  border-color: rgba(var(--green2-rgb), 0.65);
   /* Slightly faded — "start" is the primary action, "+ bots" the secondary. */
   opacity: 0.94;
 }
 .wp-ready-btn.wp-ready-btn-bots:hover {
-  background: linear-gradient(180deg, rgba(88,201,122,0.4), rgba(88,201,122,0.2));
+  background: linear-gradient(180deg, rgba(var(--green2-rgb), 0.4), rgba(var(--green2-rgb), 0.2));
   opacity: 1;
 }
 /* On very small phones, give the buttons a touch more vertical room
@@ -4698,8 +4702,8 @@ body:not(.in-game) .my-zone {
   margin-left: 4px;
 }
 .gim-badge.gim-badge-spec {
-  background: rgba(120,160,200,0.15);
-  border-color: rgba(120,160,200,0.4);
+  background: rgba(var(--blue-rgb), 0.15);
+  border-color: rgba(var(--blue-rgb), 0.4);
   color: var(--info);
 }
 
