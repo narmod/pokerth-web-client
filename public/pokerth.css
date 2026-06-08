@@ -86,9 +86,9 @@ html { touch-action: manipulation; -webkit-text-size-adjust: 100%; text-size-adj
   --modal-bg:   linear-gradient(160deg, #12161d 0%, #1d222b 50%, #0e1218 100%);
   --panel:      rgba(20,25,33,0.92);
   --panel-hi:   rgba(29,34,43,0.94);
-  --gold:       #e2bf35;
-  --gold-hi:    #f3d75e;
-  --gold-dim:   #a98f2f;
+  --gold:       #eff1f5;
+  --gold-hi:    #ffffff;
+  --gold-dim:   #a0acc4;
   --cream:      #eff1f5;
   --field-bg:   #161c25;
   --inset: rgba(255,255,255,0.05);
@@ -116,9 +116,9 @@ html { touch-action: manipulation; -webkit-text-size-adjust: 100%; text-size-adj
   --modal-bg:   linear-gradient(160deg, #f6f8fb 0%, #e9edf4 50%, #f2f5f9 100%);
   --panel:      rgba(248,250,253,0.94);
   --panel-hi:   rgba(255,255,255,0.96);
-  --gold:       #8a6c12;
-  --gold-hi:    #b8941f;
-  --gold-dim:   #6e560f;
+  --gold:       #1d222b;
+  --gold-hi:    #0d1117;
+  --gold-dim:   #576378;
   --cream:      #1d222b;
   --field-bg:   #ffffff;
   --inset: rgba(0,0,0,0.06);
