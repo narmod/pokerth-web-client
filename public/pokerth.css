@@ -5102,3 +5102,16 @@ body:not(.in-game) .my-zone {
 /* ─── theme-color du navigateur, suivant le thème actif (lue par JS) ─── */
 :root { --theme-color: #1d222b; color-scheme: dark; }                             /* thèmes sombres */
 :root[data-theme="pokerth-light"] { --theme-color: #eef1f6; color-scheme: light; } /* thème clair    */
+
+/* ─── Téléphones faibles / Linux + accessibilité : couper le backdrop-filter ───
+   Le flou de fond (backdrop-filter) est coûteux en GPU. Ici ses seuls usages
+   sont des voiles sombres de modale (rgba noir 0.65–0.85), purement décoratifs :
+   aucun texte n'en dépend, donc les retirer ne nuit pas à la lisibilité. On les
+   coupe quand l'utilisateur demande moins de transparence OU moins d'animations
+   (signaux fiables, supportés y compris Firefox/WebKit des téléphones Linux). */
+@media (prefers-reduced-transparency: reduce), (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+}
