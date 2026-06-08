@@ -62,7 +62,12 @@ const ALLOWED_HOSTS = (process.env.ALLOWED_HOSTS
 
 function isHostAllowed(h) {
   if (!h) return false;
-  return ALLOWED_HOSTS.includes(String(h).toLowerCase());
+  h = String(h).toLowerCase();
+  if (ALLOWED_HOSTS.includes(h)) return true;
+  var px = _adminConfig && _adminConfig.proxyCfg;
+  var extra = (px && Array.isArray(px.allowedHosts)) ? px.allowedHosts : [];
+  for (var i = 0; i < extra.length; i++) { if (String(extra[i]).toLowerCase() === h) return true; }
+  return false;
 }
 
 dns.setDefaultResultOrder('ipv4first');
@@ -654,7 +659,7 @@ function handleAdmin(req, res, reqPathOnly, query) {
     let version = '';
     try { version = (JSON.parse(fs.readFileSync(path.join(__dirname, 'package.json'), 'utf8')).version) || ''; } catch (e) {}
     let sockets = null; try { sockets = wss.clients.size; } catch (e) {}
-    return adminJson(res, 200, { ok: true, version: version, node: process.version, uptimeSec: Math.floor(process.uptime()), sockets: sockets, players: Object.keys(statsStore).length, resetPeriod: STATS_RESET_PERIOD, modes: appModes(), defaultTheme: _adminConfig.defaultTheme || '', defaults: _adminConfig.defaults || {}, loginDefaults: _adminConfig.loginDefaults || {}, restartAt: (_restartAt > Date.now() ? _restartAt : null), restartKind: (_restartAt > Date.now() ? _restartKind : null) });
+    return adminJson(res, 200, { ok: true, version: version, node: process.version, uptimeSec: Math.floor(process.uptime()), sockets: sockets, players: Object.keys(statsStore).length, resetPeriod: STATS_RESET_PERIOD, modes: appModes(), defaultTheme: _adminConfig.defaultTheme || '', defaults: _adminConfig.defaults || {}, loginDefaults: _adminConfig.loginDefaults || {}, proxyCfg: _adminConfig.proxyCfg || {}, restartAt: (_restartAt > Date.now() ? _restartAt : null), restartKind: (_restartAt > Date.now() ? _restartKind : null) });
   }
   if (reqPathOnly === '/admin/logs') {
     if (!adminAuthed(query)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
@@ -663,7 +668,7 @@ function handleAdmin(req, res, reqPathOnly, query) {
   if (reqPathOnly === '/admin/config') {
     if (req.method === 'GET') {
       if (!adminAuthed(query)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
-      return adminJson(res, 200, { ok: true, resetPeriod: STATS_RESET_PERIOD, modes: appModes(), welcome: _welcomeAdmin(), defaultTheme: _adminConfig.defaultTheme || '', defaults: _adminConfig.defaults || {}, loginDefaults: _adminConfig.loginDefaults || {} });
+      return adminJson(res, 200, { ok: true, resetPeriod: STATS_RESET_PERIOD, modes: appModes(), welcome: _welcomeAdmin(), defaultTheme: _adminConfig.defaultTheme || '', defaults: _adminConfig.defaults || {}, loginDefaults: _adminConfig.loginDefaults || {}, proxyCfg: _adminConfig.proxyCfg || {} });
     }
     if (req.method === 'POST') {
       return readJsonBody(req, function (d) {
@@ -710,8 +715,22 @@ function handleAdmin(req, res, reqPathOnly, query) {
           lout.host = (typeof ld.host === 'string') ? ld.host.trim().slice(0, 120) : '';
           _adminConfig.loginDefaults = lout;
         }
+        if (d.proxyCfg && typeof d.proxyCfg === 'object') {
+          var pc = d.proxyCfg, pout = {};
+          if (Array.isArray(pc.allowedHosts)) {
+            pout.allowedHosts = pc.allowedHosts
+              .map(function (s) { return String(s == null ? '' : s).trim().toLowerCase(); })
+              .filter(function (s) { return s && /^[a-z0-9.\-:]+$/.test(s); })
+              .slice(0, 50);
+          }
+          var _gs = (pc.graceSec == null || pc.graceSec === '') ? null : parseInt(pc.graceSec, 10);
+          if (_gs != null && _gs >= 10 && _gs <= 900) pout.graceSec = _gs;
+          var _cg = (pc.connGapMs == null || pc.connGapMs === '') ? null : parseInt(pc.connGapMs, 10);
+          if (_cg != null && _cg >= 0 && _cg <= 30000) pout.connGapMs = _cg;
+          _adminConfig.proxyCfg = pout;
+        }
         saveAdminConfig();
-        return adminJson(res, 200, { ok: true, resetPeriod: STATS_RESET_PERIOD, modes: appModes(), welcome: _welcomeAdmin(), defaultTheme: _adminConfig.defaultTheme || '', defaults: _adminConfig.defaults || {}, loginDefaults: _adminConfig.loginDefaults || {} });
+        return adminJson(res, 200, { ok: true, resetPeriod: STATS_RESET_PERIOD, modes: appModes(), welcome: _welcomeAdmin(), defaultTheme: _adminConfig.defaultTheme || '', defaults: _adminConfig.defaults || {}, loginDefaults: _adminConfig.loginDefaults || {}, proxyCfg: _adminConfig.proxyCfg || {} });
       });
     }
     res.writeHead(405); res.end('Method not allowed'); return;
@@ -1095,7 +1114,9 @@ const MIN_CONN_GAP = 5000;    // ms minimum between two connections to the same 
 
 function _scheduleConn(fn) {
   const now  = Date.now();
-  const wait = Math.max(0, (_lastConnAt + MIN_CONN_GAP) - now);
+  const _pc  = _adminConfig.proxyCfg;
+  const gap  = (_pc && typeof _pc.connGapMs === 'number' && _pc.connGapMs >= 0 && _pc.connGapMs <= 30000) ? _pc.connGapMs : MIN_CONN_GAP;
+  const wait = Math.max(0, (_lastConnAt + gap) - now);
   if (wait === 0) {
     _lastConnAt = now;
     fn();
@@ -1242,12 +1263,14 @@ function _attachWs(S, ws) {
     // sur PokerTH, sans grâce (sinon le joueur reste un « fantôme » ~2 min).
     var intentional = (code === 4001);
     if (!intentional && S.sid && S.sock && !S.sock.destroyed) {
-      console.log('[~] Browser off (code ' + code + ') — session ' + S.sid.slice(0, 8) + ' gardée ' + (SESSION_GRACE_MS / 1000) + 's en attente de rebranchement');
+      var _pcg = _adminConfig.proxyCfg;
+      var graceMs = (_pcg && typeof _pcg.graceSec === 'number' && _pcg.graceSec >= 10 && _pcg.graceSec <= 900) ? _pcg.graceSec * 1000 : SESSION_GRACE_MS;
+      console.log('[~] Browser off (code ' + code + ') — session ' + S.sid.slice(0, 8) + ' gardée ' + (graceMs / 1000) + 's en attente de rebranchement');
       clearTimeout(S.grace);
       S.grace = setTimeout(() => {
         console.log('[-] Grace expirée → fermeture session ' + S.sid.slice(0, 8) + '\n');
         _destroySession(S);
-      }, SESSION_GRACE_MS);
+      }, graceMs);
     } else {
       console.log((intentional ? '[x] Déconnexion volontaire (code 4001) — fermeture immédiate' : '[-] Browser off (code ' + code + ')') + (S.sid ? ' — session ' + S.sid.slice(0, 8) : '') + '\n');
       _destroySession(S);
