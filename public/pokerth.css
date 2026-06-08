@@ -37,6 +37,7 @@ html { touch-action: manipulation; -webkit-text-size-adjust: 100%; text-size-adj
   --red-rgb:    192,57,43;
   --blue-rgb:   52,152,219;
   --green2-rgb: 88,201,122;
+  --orange-rgb: 230,126,34;
   --on-green:   #d7ffe0;
   --ld-quit-fg: #fad6d0;
   --ld-create-fg: #d6f5dc;
@@ -145,6 +146,7 @@ html { touch-action: manipulation; -webkit-text-size-adjust: 100%; text-size-adj
   --red-rgb:    166,47,34;
   --blue-rgb:   42,111,176;
   --green2-rgb: 30,126,67;
+  --orange-rgb: 179,94,16;
   --on-green:   #11532b;
   --ld-quit-fg: #a62f22;
   --ld-create-fg: #1e7e43;

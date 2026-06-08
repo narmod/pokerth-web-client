@@ -345,7 +345,7 @@ function onAvatarImageChosen(input) {
                autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"
                onkeydown="if(event.key==='Enter') App.connect()" style="flex:1">
         <button type="button" id="av-trigger" onclick="toggleAvatarPopup()" title="Choose an avatar" data-i18n-title="chooseAvatar"
-                style="width:42px;height:42px;font-size:1.5rem;background:rgba(255,255,255,0.06);border:1px solid var(--border);border-radius:4px;cursor:pointer;flex-shrink:0;transition:border-color 0.2s">🎭</button>
+                style="width:42px;height:42px;font-size:1.5rem;background:var(--inset);border:1px solid var(--border);border-radius:4px;cursor:pointer;flex-shrink:0;transition:border-color 0.2s">🎭</button>
         <input type="file" id="avatar-file-input" accept="image/*" style="display:none" onchange="onAvatarImageChosen(this)">
       </div>
     </div>
@@ -964,7 +964,7 @@ function onAvatarImageChosen(input) {
     <button class="btn-sm btn-icon" id="lang-toggle-lobby" onclick="openLangMenu(event)" title="Switch language" data-i18n-title="langTooltip" aria-label="Switch language"></button>
     <button class="btn-sm btn-icon" id="lobby-chat-btn" onclick="toggleLobbyChat()" title="Chat" data-i18n-title="chatTooltip">💬</button>
     <button class="btn-sm btn-icon" id="l-overflow-btn" onclick="toggleLobbyOverflow(event)" title="Plus" data-i18n-title="moreTooltip">•••</button>
-    <button class="btn-sm btn-icon" onclick="App.confirmDisconnect()" title="Disconnect" data-i18n-title="disconnectTooltip" style="color:var(--red);border-color:rgba(192,57,43,0.3)">✕</button>
+    <button class="btn-sm btn-icon" onclick="App.confirmDisconnect()" title="Disconnect" data-i18n-title="disconnectTooltip" style="color:var(--red);border-color:rgba(var(--red-rgb),0.3)">✕</button>
     <div id="l-overflow-menu">
       <button class="btn-sm" onclick="toggleFullscreen();closeLobbyOverflow()"><span style="margin-right:5px">⛶</span><span data-i18n="fullscreenTooltip">Fullscreen</span></button>
       <button class="btn-sm" id="lang-toggle-lobby-mob" onclick="closeLobbyOverflow();openLangMenu(event)" style="font-size:0.85rem"></button>
@@ -1085,14 +1085,14 @@ function onAvatarImageChosen(input) {
     </div>
     <div id="cf-more-opts" style="display:none">
       <div class="create-fields">
-        <div class="cf cf-sm"><label data-i18n="raiseEvery">Raise every</label><select id="cf-raise-mode" style="background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:2px;color:var(--cream);padding:4px 6px;font-size:0.78rem;outline:none"><option value="1" data-i18n-opt="nHands">N hands</option><option value="2" data-i18n-opt="nMinutes">N minutes</option></select></div>
+        <div class="cf cf-sm"><label data-i18n="raiseEvery">Raise every</label><select id="cf-raise-mode" style="background:var(--inset);border:1px solid var(--border);border-radius:2px;color:var(--cream);padding:4px 6px;font-size:0.78rem;outline:none"><option value="1" data-i18n-opt="nHands">N hands</option><option value="2" data-i18n-opt="nMinutes">N minutes</option></select></div>
         <div class="cf cf-sm"><label data-i18n="raiseN">N</label><input id="cf-raise-every" type="number" min="1" max="100" value="7"></div>
-        <div class="cf cf-sm"><label data-i18n="blindRaise">Blind raise</label><select id="cf-end-raise" onchange="var r=document.getElementById('cf-end-raise-val-row');if(r)r.style.display=this.value=='2'?'':' none'" style="background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:2px;color:var(--cream);padding:4px 6px;font-size:0.78rem;outline:none"><option value="1" data-i18n-opt="blindDouble">Double</option><option value="2" data-i18n-opt="blindToValue">To value</option><option value="3" data-i18n-opt="blindKeepLast">Keep last</option></select></div>
+        <div class="cf cf-sm"><label data-i18n="blindRaise">Blind raise</label><select id="cf-end-raise" onchange="var r=document.getElementById('cf-end-raise-val-row');if(r)r.style.display=this.value=='2'?'':' none'" style="background:var(--inset);border:1px solid var(--border);border-radius:2px;color:var(--cream);padding:4px 6px;font-size:0.78rem;outline:none"><option value="1" data-i18n-opt="blindDouble">Double</option><option value="2" data-i18n-opt="blindToValue">To value</option><option value="3" data-i18n-opt="blindKeepLast">Keep last</option></select></div>
         <div class="cf cf-sm" id="cf-end-raise-val-row" style="display:none"><label data-i18n="targetBlind">Target blind</label><input id="cf-end-raise-val" type="number" min="1" value="200"></div>
         <div class="cf cf-sm"><label data-i18n="speed">Speed (1-10)</label><input id="cf-gui-speed" type="number" min="1" max="10" value="5"></div>
         <div class="cf cf-sm"><label data-i18n="delayHands">Delay (hands)</label><input id="cf-delay" type="number" min="0" max="20" value="7"></div>
-        <div class="cf cf-sm"><label data-i18n="gameType">Game type</label><select id="cf-game-type" style="background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:2px;color:var(--cream);padding:4px 6px;font-size:0.78rem;outline:none"><option value="1" data-i18n-opt="gameNormal">Normal</option><option value="2" data-i18n-opt="gameRegistered">Registered only</option><option value="3" data-i18n-opt="gameInvite">Invite only</option><option value="4" data-i18n-opt="gameRanking">Ranking</option></select></div>
-        <div class="cf cf-sm"><label data-i18n="allowSpectators">Spectators</label><select id="cf-allow-spectators" style="background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:2px;color:var(--cream);padding:4px 6px;font-size:0.78rem;outline:none"><option value="1" data-i18n-opt="allowOn">Allowed</option><option value="0" data-i18n-opt="allowOff">Blocked</option></select></div>
+        <div class="cf cf-sm"><label data-i18n="gameType">Game type</label><select id="cf-game-type" style="background:var(--inset);border:1px solid var(--border);border-radius:2px;color:var(--cream);padding:4px 6px;font-size:0.78rem;outline:none"><option value="1" data-i18n-opt="gameNormal">Normal</option><option value="2" data-i18n-opt="gameRegistered">Registered only</option><option value="3" data-i18n-opt="gameInvite">Invite only</option><option value="4" data-i18n-opt="gameRanking">Ranking</option></select></div>
+        <div class="cf cf-sm"><label data-i18n="allowSpectators">Spectators</label><select id="cf-allow-spectators" style="background:var(--inset);border:1px solid var(--border);border-radius:2px;color:var(--cream);padding:4px 6px;font-size:0.78rem;outline:none"><option value="1" data-i18n-opt="allowOn">Allowed</option><option value="0" data-i18n-opt="allowOff">Blocked</option></select></div>
       </div>
     </div>
     <!-- Password -->
@@ -1103,7 +1103,7 @@ function onAvatarImageChosen(input) {
       </label>
       <div id="cf-password-row" style="display:none;margin-top:6px;align-items:center;gap:8px">
         <label data-i18n="tablePassword" style="font-size:0.66rem;color:var(--gold-dim);text-transform:uppercase;letter-spacing:0.1em;white-space:nowrap">Password:</label>
-        <input id="cf-password" type="password" maxlength="64" style="flex:1;background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:2px;color:var(--cream);padding:4px 8px;font-family:var(--ff-mono);font-size:0.82rem;outline:none" placeholder="••••••">
+        <input id="cf-password" type="password" maxlength="64" style="flex:1;background:var(--inset);border:1px solid var(--border);border-radius:2px;color:var(--cream);padding:4px 8px;font-family:var(--ff-mono);font-size:0.82rem;outline:none" placeholder="••••••">
       </div>
     </div>
     <div class="cf-actions" style="display:flex;gap:10px;margin-top:14px">
@@ -1150,12 +1150,12 @@ function onAvatarImageChosen(input) {
     <button class="btn-sm btn-icon" id="chat-toggle-btn" onclick="toggleGameChat()" title="Chat" data-i18n-title="chatTooltip">💬</button>
     <button class="btn-sm btn-icon" id="haptic-toggle-btn" onclick="toggleHaptic()" title="Vibration" data-i18n-title="hapticLabel" aria-label="Vibration">📳</button>
     <button class="btn-sm btn-icon" id="voice-toggle-btn" onclick="toggleVoice()" title="Annonce vocale" data-i18n-title="voiceLabel" aria-label="Annonce vocale">🤐</button>
-    <button class="btn-sm" id="admin-startnobots-btn" onclick="App.startNoBots()" style="display:none;color:var(--green);border-color:rgba(39,174,96,0.4)" title="Start without bots (humans only)" data-i18n-title="wpStartHumansTip"><span data-i18n="startNoBots">▶ Start (no bots)</span></button>
-    <button class="btn-sm" id="admin-start-btn" onclick="App.startWithBots()" style="display:none;color:var(--green);border-color:rgba(39,174,96,0.4)" title="Start with bots" data-i18n-title="wpFillBotsTip"><span data-i18n="startWithBots">▶ Start with bots</span></button>
-    <button class="btn-sm" id="admin-close-btn" onclick="App.closeTable()" style="display:none;color:#e67e22;border-color:rgba(230,126,34,0.4)" title="Close table" data-i18n-title="closeTableTooltip" data-i18n="closeTable">🔒 Close table</button>
-    <button class="btn-sm" id="admin-kick-btn" onclick="App.openKickModal()" style="display:none;color:#e67e22;border-color:rgba(230,126,34,0.4)" title="Kick player" data-i18n-title="kickTooltip">👥 <span data-i18n="kickTooltip">Kick player</span></button>
+    <button class="btn-sm" id="admin-startnobots-btn" onclick="App.startNoBots()" style="display:none;color:var(--green);border-color:rgba(var(--green-rgb),0.4)" title="Start without bots (humans only)" data-i18n-title="wpStartHumansTip"><span data-i18n="startNoBots">▶ Start (no bots)</span></button>
+    <button class="btn-sm" id="admin-start-btn" onclick="App.startWithBots()" style="display:none;color:var(--green);border-color:rgba(var(--green-rgb),0.4)" title="Start with bots" data-i18n-title="wpFillBotsTip"><span data-i18n="startWithBots">▶ Start with bots</span></button>
+    <button class="btn-sm" id="admin-close-btn" onclick="App.closeTable()" style="display:none;color:var(--orange);border-color:rgba(var(--orange-rgb),0.4)" title="Close table" data-i18n-title="closeTableTooltip" data-i18n="closeTable">🔒 Close table</button>
+    <button class="btn-sm" id="admin-kick-btn" onclick="App.openKickModal()" style="display:none;color:var(--orange);border-color:rgba(var(--orange-rgb),0.4)" title="Kick player" data-i18n-title="kickTooltip">👥 <span data-i18n="kickTooltip">Kick player</span></button>
     <button class="btn-sm btn-icon" id="g-overflow-btn" onclick="toggleHeaderOverflow(event)" title="Plus" data-i18n-title="moreTooltip">•••</button>
-    <button class="btn-sm btn-icon" onclick="App.confirmLeaveGame()" title="Quit" data-i18n-title="quitTooltip" style="color:var(--red);border-color:rgba(192,57,43,0.3)">✕</button>
+    <button class="btn-sm btn-icon" onclick="App.confirmLeaveGame()" title="Quit" data-i18n-title="quitTooltip" style="color:var(--red);border-color:rgba(var(--red-rgb),0.3)">✕</button>
     <div id="g-overflow-menu">
       <!-- Vue -->
       <button class="btn-sm" onclick="toggleFullscreen();closeHeaderOverflow()"><span style="margin-right:5px">⛶</span><span data-i18n="fullscreenTooltip">Fullscreen</span></button>
@@ -1172,10 +1172,10 @@ function onAvatarImageChosen(input) {
       <button class="btn-sm" id="assist-toggle-mob" onclick="toggleAssist()">💡 <span data-i18n="assist">Assistance</span><span id="assist-state-mob" class="menu-tick"></span></button>
       <!-- Admin (séparateur + boutons révélés ensemble) -->
       <div class="menu-sep menu-sep-admin" id="admin-sep-mob" style="display:none"><span data-i18n="menuAdmin">Admin</span></div>
-      <button class="btn-sm" id="admin-startnobots-mob" onclick="App.startNoBots();closeHeaderOverflow()" style="display:none;color:var(--green);border-color:rgba(39,174,96,0.4)"><span data-i18n="startNoBots">▶ Start (no bots)</span></button>
-      <button class="btn-sm" id="admin-start-mob" onclick="App.startWithBots();closeHeaderOverflow()" style="display:none;color:var(--green);border-color:rgba(39,174,96,0.4)"><span data-i18n="startWithBots">▶ Start with bots</span></button>
-      <button class="btn-sm" id="admin-close-mob" onclick="App.closeTable();closeHeaderOverflow()" style="display:none;color:#e67e22;border-color:rgba(230,126,34,0.4)" data-i18n="closeTable">🔒 Close table</button>
-      <button class="btn-sm" id="admin-kick-mob" onclick="App.openKickModal();closeHeaderOverflow()" style="display:none;color:#e67e22;border-color:rgba(230,126,34,0.4)">👥 <span data-i18n="kickTooltip">Kick player</span></button>
+      <button class="btn-sm" id="admin-startnobots-mob" onclick="App.startNoBots();closeHeaderOverflow()" style="display:none;color:var(--green);border-color:rgba(var(--green-rgb),0.4)"><span data-i18n="startNoBots">▶ Start (no bots)</span></button>
+      <button class="btn-sm" id="admin-start-mob" onclick="App.startWithBots();closeHeaderOverflow()" style="display:none;color:var(--green);border-color:rgba(var(--green-rgb),0.4)"><span data-i18n="startWithBots">▶ Start with bots</span></button>
+      <button class="btn-sm" id="admin-close-mob" onclick="App.closeTable();closeHeaderOverflow()" style="display:none;color:var(--orange);border-color:rgba(var(--orange-rgb),0.4)" data-i18n="closeTable">🔒 Close table</button>
+      <button class="btn-sm" id="admin-kick-mob" onclick="App.openKickModal();closeHeaderOverflow()" style="display:none;color:var(--orange);border-color:rgba(var(--orange-rgb),0.4)">👥 <span data-i18n="kickTooltip">Kick player</span></button>
     </div>
   </div>
   <!-- Spectator banner: shown only when the user joined the table via
