@@ -3821,7 +3821,7 @@ body:not(.in-game) .my-zone {
 .wp-ready-btn {
   padding: 9px 18px;
   background: linear-gradient(180deg, rgba(var(--green2-rgb), 0.35), rgba(var(--green2-rgb), 0.18));
-  border: 1px solid #58c97a;
+  border: 1px solid rgb(var(--green2-rgb));
   border-radius: 4px;
   color: #d0ffd8;
   font-family: var(--ff-display);
@@ -3930,7 +3930,7 @@ body:not(.in-game) .my-zone {
   background: rgba(var(--green2-rgb), 0.12);
   border-color: rgba(var(--green2-rgb), 0.5);
 }
-.eg-winner.me .eg-winner-av { border-color: #58c97a; }
+.eg-winner.me .eg-winner-av { border-color: rgb(var(--green2-rgb)); }
 .eg-stats-section {
   background: rgba(0,0,0,0.35);
   border: 1px solid var(--border);
