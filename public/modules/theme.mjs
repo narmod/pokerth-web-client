@@ -451,10 +451,10 @@ function _dropdownBlock(secId, labelText, kind, curItem, curName, options) {
     list.style.cssText = 'margin-top:5px;border:1px solid var(--border,rgba(200,168,74,0.25));border-radius:8px;overflow:hidden;background:var(--field-bg,#0b1a0d)';
     options.forEach(function (o, idx) {
       var it = document.createElement('div');
-      it.style.cssText = 'display:flex;align-items:center;gap:9px;padding:7px 9px;cursor:pointer;' + (idx ? 'border-top:1px solid var(--inset,rgba(255,255,255,0.05));' : '') + (o.active ? 'background:var(--gold-dim,rgba(200,168,74,0.18))' : '');
+      it.style.cssText = 'display:flex;align-items:center;gap:9px;padding:7px 9px;cursor:pointer;' + (idx ? 'border-top:1px solid var(--inset,rgba(255,255,255,0.05));' : '') + (o.active ? 'background:var(--gold,#c8a84a);color:var(--on-gold,#110900)' : '');
       it.innerHTML = _previewHTML(kind, o.item, false)
         + '<span style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:0.84rem">' + o.name + '</span>'
-        + (o.active ? '<span style="color:var(--gold,#c8a84a)">\u2713</span>' : '');
+        + (o.active ? '<span style="color:var(--on-gold,#110900)">\u2713</span>' : '');
       if (!o.active) {
         it.addEventListener('mouseenter', function () { it.style.background = 'var(--inset-hi,rgba(255,255,255,0.07))'; });
         it.addEventListener('mouseleave', function () { it.style.background = ''; });
