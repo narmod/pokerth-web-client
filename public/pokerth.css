@@ -30,6 +30,8 @@ html { touch-action: manipulation; -webkit-text-size-adjust: 100%; text-size-adj
   --gold:       #c8a84a;
   --gold-rgb:   200,168,74;
   --chrome-tint: rgba(0,0,0,0.35);
+  --pos:        #4cff88;
+  --neg:        #ff6b6b;
   --gold-hi:    #e0c070;
   --gold-dim:   #7a6428;
   --cream:      #ede8dc;
@@ -127,6 +129,8 @@ html { touch-action: manipulation; -webkit-text-size-adjust: 100%; text-size-adj
   --timer-normal: #394150;
   --timer-bg:   rgba(255,255,255,0.92);
   --chrome-tint: rgba(0,0,0,0.06);
+  --pos:        #1e7e43;
+  --neg:        #c0392b;
   --cream:      #1d222b;
   --field-bg:   #ffffff;
   --inset: rgba(0,0,0,0.06);
@@ -2601,8 +2605,8 @@ body {
 .stat-row { display: flex; justify-content: space-between; align-items: center; }
 .stat-label { font-size: 0.62rem; color: var(--text); }
 .stat-val { font-size: 0.72rem; font-weight: 700; font-family: var(--ff-mono); }
-.stat-val.pos { color: #4cff88; }
-.stat-val.neg { color: #ff6b6b; }
+.stat-val.pos { color: var(--pos); }
+.stat-val.neg { color: var(--neg); }
 .stat-divider { border: none; border-top: 1px solid var(--border); margin: 4px 0; }
 /* Stats panel tabs (Session / Total / Ranking) */
 .stats-tabs { display: flex; border-bottom: 1px solid var(--border); }
@@ -2636,8 +2640,8 @@ body {
 .board-av   { grid-area: av; font-size: 1rem; text-align: center; line-height: 1; }
 .board-name { grid-area: name; font-size: 0.66rem; color: var(--cream); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .board-net  { grid-area: net; font-size: 0.72rem; font-weight: 700; font-family: var(--ff-mono); }
-.board-net.pos { color: #4cff88; }
-.board-net.neg { color: #ff6b6b; }
+.board-net.pos { color: var(--pos); }
+.board-net.neg { color: var(--neg); }
 .board-sub  { grid-area: sub; font-size: 0.55rem; color: var(--gold-dim); font-family: var(--ff-mono); }
 .board-sort { display: flex; align-items: center; gap: 6px; margin-bottom: 6px; }
 .board-sort > span { color: var(--gold-dim); font-size: 0.7rem; }
@@ -3443,7 +3447,7 @@ body.hide-pct-btns .pct-row { display: none; }
 .wc-titles { flex:1; }
 .wc-label { font-family: var(--ff-display); font-size:0.6rem; letter-spacing:0.22em; text-transform:uppercase; color:var(--gold-dim); }
 .wc-name { font-family: var(--ff-display); font-size:clamp(1rem,4vw,1.4rem); font-weight:700; color:var(--gold); }
-.wc-gain { font-size:clamp(0.9rem,3.5vw,1.15rem); color:#4cff88; font-weight:700; text-align:right; }
+.wc-gain { font-size:clamp(0.9rem,3.5vw,1.15rem); color:var(--pos); font-weight:700; text-align:right; }
 .wc-stats { display:flex; gap:6px; margin-bottom:12px; flex-wrap:wrap; }
 .wc-stat { flex:1; min-width:65px; background:var(--inset); border:1px solid var(--border); border-radius:4px; padding:6px 8px; text-align:center; }
 .wc-stat-label { font-size:0.56rem; color:var(--gold-dim); letter-spacing:0.1em; text-transform:uppercase; margin-bottom:2px; }
@@ -3473,8 +3477,8 @@ body.hide-pct-btns .pct-row { display: none; }
 .wc-player-cards { display:flex; gap:2px; justify-content:flex-end; }
 .wc-player-cards .pk.placeholder { opacity:0.22; }
 .wc-player-delta { font-size:0.76rem; font-weight:700; text-align:right; white-space:nowrap; }
-.wc-player-delta.pos { color:#4cff88; }
-.wc-player-delta.neg { color:rgba(255,100,100,0.75); }
+.wc-player-delta.pos { color:var(--pos); }
+.wc-player-delta.neg { color:var(--neg); }
 .winner-dismiss { background:var(--gold); color:var(--on-gold); border:none; padding:9px 24px; font-family: var(--ff-display); font-size:0.76rem; font-weight:700; border-radius:4px; cursor:pointer; letter-spacing:0.08em; transition:background 0.15s; display:block; width:100%; margin-top:4px; flex:0 0 auto; }
 .winner-dismiss:hover { background:var(--gold-hi); }
 
@@ -3925,8 +3929,8 @@ body:not(.in-game) .my-zone {
 }
 .eg-stat-label { color: var(--text); }
 .eg-stat-val   { color: var(--cream); font-weight: 600; font-family: var(--ff-mono); }
-.eg-stat-val.pos { color: #58c97a; }
-.eg-stat-val.neg { color: #e07070; }
+.eg-stat-val.pos { color: var(--pos); }
+.eg-stat-val.neg { color: var(--neg); }
 .eg-stat-divider {
   border: none; border-top: 1px solid var(--border);
   margin: 6px 0;
