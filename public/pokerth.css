@@ -1954,7 +1954,7 @@ body {
   .pb-cards .pk { width: 22px; height: 32px; font-size: 0.56rem; }
 
   /* Actions: horizontal, compact */
-  .action-grid { flex-direction: column; gap: 3px; max-width: 100%; }
+  .action-grid { flex-direction: row !important; flex-wrap: wrap; gap: 3px; max-width: 100%; }
   .action-top-row { flex: none; display: flex; gap: 3px; }
   .action-top-row .btn-action { padding: 6px 10px; font-size: 0.68rem; }
   .pct-row { flex: none; gap: 4px; }
@@ -3720,12 +3720,9 @@ body:not(.in-game) .my-zone {
   background: var(--field-bg) !important;
 }
 .raise-row { display: flex; gap: 5px; align-items: stretch; }
-.raise-row .raise-input { flex: 0 0 76px; }
-.raise-row .raise-slider { flex: 1 1 auto; min-width: 70px; }
+.raise-row .raise-input { flex: 1; }
 .raise-row .btn-raise { flex: 2; }
-/* Rangée mise rapide + All-In + sélecteur de mode (agencement officiel) */
-.bet-row { display: flex; gap: 5px; width: 100%; align-items: stretch; }
-.bet-row .btn-pct { flex: 1; }
+/* Sélecteur de mode (remplace l'ancien bouton AUTO dans la rangée d'action) */
 .mode-sel-wrap select { font-size: 0.76rem; padding: 6px 22px 6px 8px; height: 100%; }
 .mode-sel-wrap .sel-arr { right: 7px; font-size: 0.7rem; }
 
