@@ -3365,7 +3365,8 @@ body {
   pointer-events: none;
 }
 /* Hidden by default; shown only when the user enables it from the ••• menu. */
-body.hide-auto-btn .btn-auto { display: none; }
+body.hide-auto-btn .btn-auto,
+body.hide-auto-btn .mode-sel-wrap { display: none; }
 body.hide-pct-btns .pct-row { display: none; }
 /* All-In as a SECONDARY action: outlined, not a big red bar — avoids the
    red-on-red clash with Fold and discourages accidental taps. */

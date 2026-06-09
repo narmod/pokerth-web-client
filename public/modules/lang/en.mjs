@@ -206,7 +206,7 @@ export const strings = {
     waitingStartNow:'Start now',
     autoCheckLabel:'Auto-check next turn',
     autoFoldLabel:'Auto-fold next turn',
-    autoBtnLabel:'Auto-fold button', quickBetLabel:'Quick-bet buttons',
+    autoBtnLabel:'Auto-mode selector', quickBetLabel:'Quick-bet buttons',
     autoRearmHint:'re-arms each turn',
     autoChecked:'Auto-checked',
     autoCalled:'Auto-called',

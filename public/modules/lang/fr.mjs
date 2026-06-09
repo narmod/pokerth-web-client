@@ -206,7 +206,7 @@ export const strings = {
     waitingStartNow:'Lancer maintenant',
     autoCheckLabel:'Auto-check au prochain tour',
     autoFoldLabel:'Auto-fold au prochain tour',
-    autoBtnLabel:'Bouton Auto-fold', quickBetLabel:'Boutons de mise rapide',
+    autoBtnLabel:'Sélecteur de mode auto', quickBetLabel:'Boutons de mise rapide',
     autoRearmHint:'se r\u00e9arme chaque tour',
     autoChecked:'Auto-check effectué',
     autoCalled:'Auto-call effectué',
