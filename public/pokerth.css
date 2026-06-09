@@ -325,33 +325,38 @@ body {
   filter: drop-shadow(0 4px 12px rgba(0,0,0,0.55));
 }
 
-/* Jeton de connexion en flammes : langues animees derriere .card-chip.
-   transform/opacity (fiable Safari), taille en % du jeton (suit le responsive),
-   figees si prefers-reduced-motion. */
-.chip-fire { position: relative; display: inline-block; line-height: 0; }
+/* Jeton de connexion : medaillon sombre + flammes nettes (le fond sombre donne
+   le contraste qui manquait au feu sur theme clair). transform/opacity (fiable
+   Safari), taille suit le jeton via padding, figees si prefers-reduced-motion. */
+.chip-fire {
+  position: relative; display: inline-block; padding: 22px; line-height: 0;
+  border-radius: 50%; overflow: hidden;
+  background: radial-gradient(circle at 50% 60%, #34190a 0%, #1d0e06 60%, #140a05 100%);
+  box-shadow: 0 0 0 1.5px rgba(255,150,60,0.30), 0 0 18px 2px rgba(255,90,20,0.38), inset 0 -6px 14px rgba(0,0,0,0.50);
+}
 .chip-fire .card-chip { position: relative; z-index: 3; }
-.chip-fire .cf-glow {
-  position: absolute; left: 50%; bottom: 2%; width: 98%; height: 60%;
+.chip-fire .emb-base {
+  position: absolute; left: 50%; bottom: -4%; width: 88%; height: 40%;
   transform: translateX(-50%);
-  background: radial-gradient(ellipse at center bottom, rgba(255,120,25,0.50), rgba(255,70,10,0.18) 55%, rgba(0,0,0,0) 75%);
-  filter: blur(6px); z-index: 1; pointer-events: none;
+  background: radial-gradient(ellipse at center bottom, rgba(255,170,40,0.90), rgba(255,90,15,0.50) 50%, rgba(255,90,15,0) 78%);
+  filter: blur(2px); z-index: 1; pointer-events: none;
 }
-.chip-fire .cf-tongue {
-  position: absolute; bottom: 14%; transform-origin: bottom center;
-  border-radius: 50% 50% 46% 46% / 62% 62% 40% 40%;
-  background: radial-gradient(ellipse at 50% 100%, rgba(255,192,54,0.97), rgba(255,120,22,0.85) 38%, rgba(216,58,10,0.45) 64%, rgba(0,0,0,0) 80%);
-  filter: blur(3px); opacity: 0; z-index: 2; pointer-events: none;
-  animation: cfLick 1.9s ease-in-out infinite;
+.chip-fire .et {
+  position: absolute; bottom: 5%; transform-origin: bottom center;
+  border-radius: 50% 50% 46% 46% / 66% 66% 38% 38%;
+  filter: blur(1.4px); opacity: 0; z-index: 2; pointer-events: none;
+  animation: embLick 1.8s ease-in-out infinite;
+  background: radial-gradient(ellipse at 50% 100%, #fff1b0 0%, #ffc23e 22%, #ff7a17 52%, #e0400c 74%, rgba(180,20,0,0) 86%);
 }
-@keyframes cfLick {
-  0% { transform: translateY(8%) scaleY(0.82) scaleX(1); opacity: 0; }
-  18% { opacity: 0.95; }
-  54% { transform: translateY(-54%) scaleY(1.42) scaleX(0.84); opacity: 0.7; }
-  82% { opacity: 0.15; }
-  100% { transform: translateY(-88%) scaleY(1.05) scaleX(1); opacity: 0; }
+@keyframes embLick {
+  0% { transform: translateY(10%) scaleY(0.8) scaleX(1); opacity: 0; }
+  16% { opacity: 1; }
+  55% { transform: translateY(-48%) scaleY(1.5) scaleX(0.8); opacity: 0.85; }
+  82% { opacity: 0.2; }
+  100% { transform: translateY(-86%) scaleY(1.05) scaleX(1); opacity: 0; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .chip-fire .cf-tongue { animation: none; opacity: 0.5; transform: translateY(-30%) scaleY(1.15); }
+  .chip-fire .et { animation: none; opacity: 0.7; transform: translateY(-30%) scaleY(1.2); }
 }
 
 /* Small / short screens (e.g. iPhone SE, landscape): compact the login
