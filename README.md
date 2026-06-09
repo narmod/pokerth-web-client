@@ -127,7 +127,7 @@ This project is a **web frontend** that connects to any PokerTH server directly 
 - Refresh button and fullscreen toggle on every screen
 
 ### Lobby
-- Real-time table list with player counts and status badges
+- Real-time table list with player counts, status badges, and each table's blind level and raise schedule
 - Table filters: **All / 🟢 Open / 🔓 No password / 👁 Watchable** (remembered across sessions)
 - **⚡ Join or Create** — one-tap auto-join or table creation
 - Advanced table creation: blinds, timeout (default 15 s), max players (default 5), **bot difficulty** (Easy / Mixed / Normal / Hard), **game-style presets** (🐢 Relaxed / ⚖️ Normal / ⚡ Fast), **blind-increase schedule** (every N hands or N minutes) with a raise mode (double / to a target / keep last), table speed (1–10), deal delay, **game type** (Normal / Registered-only / Invite-only), ranking on/off, spectators allowed/blocked, bots fill (with a min-humans-before-bots threshold), and an optional password
@@ -156,6 +156,15 @@ Per-player toggles, remembered in `localStorage` and applied instantly:
 - **Vibration** — haptic feedback on your turn (where supported)
 - **Sound on/off** (🔊) — mute or unmute all sound effects
 
+### Themes & customization
+A full appearance system, reached from the **Theme** button — pick a one-tap preset or fine-tune every axis yourself:
+- **Presets** (one tap): **PokerTH Dark** (the default, reproducing the official client's look), **PokerTH Light**, and **Green Casino** — plus gallery themes (Midnight Blue, Graphite, Royal Purple, Sleek)
+- **Customize** — five independent axes, each remembered in `localStorage`: UI **palette**, **table felt** (Green / Blue / Burgundy / Slate / PokerTH / Textured), **card deck** (PokerTH, PokerTH 1.0, PokerTH new, Green Casino), **action buttons** (Flat / Glossy), and **chip pucks**
+- **Light & dark aware**: every theme carries its own `color-scheme`, and the browser status-bar `theme-color` follows the active theme
+- **Glossy coloured action buttons** (Fold red / Check-Call blue / Raise green / All-In orange) and a live preview of each card deck right in the panel
+- Fully **localized in all 36 languages** and switchable instantly, with no reload
+- Operators can set a **default theme** for first-time visitors (see [the admin panel](#admin-panel))
+
 ### Player experience
 - **Emoji avatar** selector: 🎭 button → 500+ icons organised by category (animals, fantasy, fun characters…)
 - Avatars visible by all players in real time (broadcast via proxy `AVATAR:pid:emoji`)
@@ -168,7 +177,8 @@ Per-player toggles, remembered in `localStorage` and applied instantly:
 
 ### Chat & reactions
 - In-lobby chat and in-game chat (dropdown panels)
-- 30 emoji reactions with 6-second counter, broadcast to all players
+- 30 emoji reactions with a 6-second counter, broadcast to all players
+- **Cross-client reactions**: reactions also travel through a shared `/emoji` chat command (handled like `/me`), so they reach other clients and work on pokerth.net too — while a fast `REACT:` relay stays the web↔web path
 
 ### Comfort features
 - Browser notifications when it is your turn (background tab)
@@ -244,7 +254,7 @@ Beyond bridging WebSocket frames to the server's raw TCP/TLS stream, `proxy.js` 
 | `AVATARIMG:pid:dataURL` | Custom image-avatar update |
 
 - **Connection allowlist** — for anti-open-relay safety the proxy only dials servers on a configured allowlist (see the deployment section below).
-- **Helper endpoints** — `GET /__ver` reports the newest mtime of the static assets (this drives the client's "new version" banner), and `GET /stats` serves the shared lifetime leaderboard.
+- **Helper endpoints** — `GET /__ver` reports the newest mtime of the static assets (this drives the client's "new version" banner), `GET /app-config` exposes the operator's client settings (enabled login modes, default theme & in-game settings, server identity, welcome message), and `GET /stats` serves the shared lifetime leaderboard.
 
 ### Repository layout
 
@@ -253,6 +263,7 @@ pokerth-web-client/
 ├── proxy.js                 # WS→TCP/TLS proxy + static HTTP server
 ├── public/
 │   ├── pokerth-client.html  # HTML shell + inline head scripts
+│   ├── admin.html           # Maintainer console (served at /admin)
 │   ├── pokerth.js           # Full application logic
 │   ├── pokerth.css          # Styles
 │   ├── manifest.json        # PWA manifest
@@ -260,6 +271,7 @@ pokerth-web-client/
 │   ├── modules/             # ES modules
 │   │   ├── i18n.mjs         #   internationalisation (36 languages)
 │   │   ├── sounds.mjs       #   sound effects
+│   │   ├── theme.mjs        #   theming engine (palettes, decks, presets)
 │   │   ├── lang/            #   36 language catalogues
 │   │   └── offline/         #   local game engine + bots (Training mode)
 │   ├── proto/               # Protobuf bundle & helpers
@@ -653,12 +665,13 @@ A self-hosted maintainer console lives at **`/admin`** (e.g. `https://your-host/
 
 A good rule of thumb: set a token before relying on the panel, and run `pokerth-web admin off` whenever you don't need it exposed. Always serve it over **HTTPS** — the panel sends the token in an `Authorization: Bearer` header, so it never lands in URLs, logs or browser history.
 
-To use it, open `/admin`, paste your token and **Log in**. The console is organised into four tabs:
+To use it, open `/admin`, paste your token and **Log in**. The console is organised into five tabs:
 
-- **Server** — live status (version, uptime, connected players, open sockets); one-click self-update with or without restart; schedule a restart or update with a countdown banner shown to players; view the recent and last-action logs, clear them, or restart now.
-- **Leaderboard** — reset the shared leaderboard immediately, set the auto-reset period, and choose which login modes (Offline / LAN / PokerTH.net) appear on the login screen.
-- **Packages** — install or remove gallery **card decks** and **table styles** from a `.zip` file or URL.
-- **Broadcasts** — send a message to all connected players right now, schedule recurring messages, and edit the multilingual **welcome / rules message** shown on a player's first visit.
+- **Server** — live status (version, uptime, connected players, open sockets); one-click self-update **with or without a restart**; schedule a restart or update with a countdown banner shown to players; tune **proxy settings** (extra allowed hosts, session-grace window, connection gap); and view, clear or act on the logs.
+- **Clients** — what new visitors get by default: which **login modes** (Offline / LAN / pokerth.net) appear on the connect screen, the **default login form** (mode + host), a **default theme**, **default in-game settings** (BB display, assistance, quick-bet, auto-action, voice, vibration), **default table-creation settings** (max players, small blind, starting stack, action timer), and a **server identity** (name + tagline) that replaces "PokerTH" / "Web Client" on the login screen.
+- **Broadcasts** — send a message to all connected players right now, or on a **recurring schedule** (interval / daily / every-N-days / weekly / monthly / once, with an icon, end date and max sends); plus an editor for the multilingual **welcome / rules message** shown on a player's first visit — with **on-device auto-translation** (where the browser supports it) to fill languages you haven't written yourself.
+- **Leaderboard** — reset the shared leaderboard immediately and set its auto-reset period.
+- **Packages** — install or remove gallery **card decks** and **table styles** from a `.zip` file or URL, and **enable/disable** each one without deleting its files.
 
 <a id="leaderboard-reset"></a>
 ### Resetting the family leaderboard
