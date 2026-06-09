@@ -317,34 +317,41 @@ body {
   letter-spacing: 0.12em;
   line-height: 1;
 }
-
-/* Titre de connexion : degrade de feu anime (sobre). 100% CSS sur
-   #s-connect .card-title-big ; respecte prefers-reduced-motion. */
-#s-connect .card-title-big {
-  background: linear-gradient(0deg, #ffb13a 0%, #ff8a1e 30%, #f4600f 58%, #d83a0a 80%, #b21d05 100%);
-  background-size: 100% 220%;
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  color: transparent;
-  filter: drop-shadow(0 1px 7px rgba(255,110,25,0.30));
-  animation: pthTitleFire 5s ease-in-out infinite;
-}
-:root[data-theme="pokerth-light"] #s-connect .card-title-big { filter: drop-shadow(0 1px 1px rgba(150,40,0,0.32)); }
-@keyframes pthTitleFire {
-  0%, 100% { background-position: 50% 100%; }
-  50% { background-position: 50% 28%; }
-}
-@media (prefers-reduced-motion: reduce) {
-  #s-connect .card-title-big { animation: none; background-position: 50% 68%; }
-}
-
 .card-subtitle { font-size: 0.6rem; letter-spacing: 0.4em; text-transform: uppercase; color: var(--text); }
 .card-chip {
   display: block;
   margin: 0 auto;
   width: 86px; height: 86px;
   filter: drop-shadow(0 4px 12px rgba(0,0,0,0.55));
+}
+
+/* Jeton de connexion en flammes : langues animees derriere .card-chip.
+   transform/opacity (fiable Safari), taille en % du jeton (suit le responsive),
+   figees si prefers-reduced-motion. */
+.chip-fire { position: relative; display: inline-block; line-height: 0; }
+.chip-fire .card-chip { position: relative; z-index: 3; }
+.chip-fire .cf-glow {
+  position: absolute; left: 50%; bottom: 2%; width: 98%; height: 60%;
+  transform: translateX(-50%);
+  background: radial-gradient(ellipse at center bottom, rgba(255,120,25,0.50), rgba(255,70,10,0.18) 55%, rgba(0,0,0,0) 75%);
+  filter: blur(6px); z-index: 1; pointer-events: none;
+}
+.chip-fire .cf-tongue {
+  position: absolute; bottom: 14%; transform-origin: bottom center;
+  border-radius: 50% 50% 46% 46% / 62% 62% 40% 40%;
+  background: radial-gradient(ellipse at 50% 100%, rgba(255,192,54,0.97), rgba(255,120,22,0.85) 38%, rgba(216,58,10,0.45) 64%, rgba(0,0,0,0) 80%);
+  filter: blur(3px); opacity: 0; z-index: 2; pointer-events: none;
+  animation: cfLick 1.9s ease-in-out infinite;
+}
+@keyframes cfLick {
+  0% { transform: translateY(8%) scaleY(0.82) scaleX(1); opacity: 0; }
+  18% { opacity: 0.95; }
+  54% { transform: translateY(-54%) scaleY(1.42) scaleX(0.84); opacity: 0.7; }
+  82% { opacity: 0.15; }
+  100% { transform: translateY(-88%) scaleY(1.05) scaleX(1); opacity: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .chip-fire .cf-tongue { animation: none; opacity: 0.5; transform: translateY(-30%) scaleY(1.15); }
 }
 
 /* Small / short screens (e.g. iPhone SE, landscape): compact the login
