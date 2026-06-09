@@ -325,23 +325,6 @@ body {
   filter: drop-shadow(0 4px 12px rgba(0,0,0,0.55));
 }
 
-/* Jeton de connexion : flammes stylisees (SVG vectoriel) derriere le logo,
-   sans cercle ni fond sombre. transform/opacity (fiable Safari), figees si
-   prefers-reduced-motion. La boite reserve la hauteur des flammes. */
-.chip-fire { position: relative; display: inline-block; width: 132px; height: 148px; }
-.chip-fire .flames-svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; z-index: 1; pointer-events: none; }
-.chip-fire .flame-path { transform-box: fill-box; transform-origin: 50% 100%; animation: chipFlame 1.6s ease-in-out infinite; }
-.chip-fire .card-chip { position: absolute; left: 50%; bottom: 6px; transform: translateX(-50%); margin: 0; z-index: 3; }
-@keyframes chipFlame {
-  0%, 100% { transform: scaleY(1) scaleX(1) skewX(0); }
-  25% { transform: scaleY(1.13) scaleX(0.93) skewX(-2.5deg); }
-  55% { transform: scaleY(0.9) scaleX(1.05) skewX(2.5deg); }
-  80% { transform: scaleY(1.06) scaleX(0.97) skewX(-1deg); }
-}
-@media (prefers-reduced-motion: reduce) { .chip-fire .flame-path { animation: none; } }
-@media (max-height: 760px) { .chip-fire { width: 100px; height: 112px; } }
-@media (max-height: 640px) { .chip-fire { width: 84px; height: 96px; } }
-
 /* Small / short screens (e.g. iPhone SE, landscape): compact the login
    card so it fits without scrolling. The header block (chip, title, suits,
    subtitle) is the biggest space user, so it shrinks the most. !important
