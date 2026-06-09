@@ -5,7 +5,9 @@ import { readdirSync, existsSync, readFileSync, writeFileSync, statSync } from '
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const DIR = join(__dirname, '..', 'public', 'themes');
+// Optional CLI arg: scan that themes directory (used by proxy.js / install.sh so
+// the script can target the live install dir). No arg → the repo's public/themes.
+const DIR = process.argv[2] ? process.argv[2] : join(__dirname, '..', 'public', 'themes');
 const OUT = join(DIR, 'themes.json');
 function imgSet(dir, obj, keys) {
   const o = {};

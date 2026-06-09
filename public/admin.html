@@ -128,16 +128,17 @@
     <div id="panel-packages" style="display:none">
       <div class="card">
         <label>Import a package (.zip)</label>
-        <div class="seg"><button class="on" data-k="table">Table style</button><button data-k="deck">Card deck</button></div>
+        <div class="seg"><button class="on" data-k="table">Table style</button><button data-k="deck">Card deck</button><button data-k="theme">Theme</button></div>
         <div id="drop" class="drop">Drop a <b>.zip</b> here, or click to choose</div>
         <input id="file" type="file" accept=".zip,application/zip" style="display:none">
         <div id="prog" class="prog"><i></i></div>
         <div id="msg" class="msg"></div>
       </div>
       <div class="card">
-        <input id="pkgFilter" class="filter" type="search" placeholder="Filter styles &amp; decks…" autocomplete="off">
+        <input id="pkgFilter" class="filter" type="search" placeholder="Filter styles, decks &amp; themes…" autocomplete="off">
         <h2>Table styles</h2><div id="tables"></div>
         <h2 style="margin-top:14px">Card decks</h2><div id="decks"></div>
+        <h2 style="margin-top:14px">Themes</h2><div id="themes"></div>
       </div>
     </div>
 
@@ -415,7 +416,7 @@
     var t=tok(); if(t) xhr.setRequestHeader('Authorization','Bearer '+t);
     xhr.upload.addEventListener('progress',function(e){ if(e.lengthComputable) showProg(e.loaded/e.total); });
     xhr.addEventListener('load',function(){ hideProg(); var d=null; try{ d=JSON.parse(xhr.responseText); }catch(e){}
-      if(d&&d.ok){ if(d.kind==='table')applyTable(d.id);else applyDeck(d.id); say('Imported & applied: '+d.name+' \u2014 open the app to see it.','ok'); refresh(); }
+      if(d&&d.ok){ if(d.kind==='theme'){ say('Installed theme: '+d.name+' \u2014 it now appears in Theme \u2192 Themes.','ok'); loadThemes(); } else { if(d.kind==='table')applyTable(d.id);else applyDeck(d.id); say('Imported & applied: '+d.name+' \u2014 open the app to see it.','ok'); } refresh(); }
       else say('Failed: '+((d&&d.error)||('HTTP '+xhr.status)),'err'); });
     xhr.addEventListener('error',function(){ hideProg(); say('Import failed \u2014 network error.','err'); });
     xhr.send(f);
@@ -435,13 +436,14 @@
       var tg=document.createElement('button');tg.className='toggle '+(on?'on':'off');tg.textContent=on?'On':'Off';tg.title=on?'Visible to players \u2014 tap to hide':'Hidden from players \u2014 tap to show';tg.addEventListener('click',function(){togglePkg(k,p.id,on);});
       var use=document.createElement('button');use.className='use';use.textContent='Use';use.addEventListener('click',function(){useNow(k,p.id);});
       var del=document.createElement('button');del.className='del';del.textContent='Remove';del.addEventListener('click',function(){removePkg(k,p.id,p.name||p.id);});
-      row.appendChild(tg);row.appendChild(use);row.appendChild(del);el.appendChild(row); }); }
-  var lastPkgs={tables:[],decks:[]};
+      row.appendChild(tg); if(k!=='theme') row.appendChild(use); if(!p.builtin) row.appendChild(del); el.appendChild(row); }); }
+  var lastPkgs={tables:[],decks:[],themes:[]};
   function pkgMatch(p,q){ return !q || (((p.name||'')+' '+(p.id||'')).toLowerCase().indexOf(q)>=0); }
   function drawPkgs(){ var q=(($('pkgFilter')&&$('pkgFilter').value)||'').trim().toLowerCase();
     renderList($('tables'), lastPkgs.tables.filter(function(p){return pkgMatch(p,q);}), 'table');
-    renderList($('decks'),  lastPkgs.decks.filter(function(p){return pkgMatch(p,q);}),  'deck'); }
-  function renderPkgs(d){ lastPkgs={tables:d.tables||[],decks:d.decks||[]}; drawPkgs(); }
+    renderList($('decks'),  lastPkgs.decks.filter(function(p){return pkgMatch(p,q);}),  'deck');
+    renderList($('themes'), lastPkgs.themes.filter(function(p){return pkgMatch(p,q);}), 'theme'); }
+  function renderPkgs(d){ lastPkgs={tables:d.tables||[],decks:d.decks||[],themes:d.themes||[]}; drawPkgs(); }
   if($('pkgFilter')) $('pkgFilter').addEventListener('input', drawPkgs);
   function refresh(){ api('/admin/pkg-list?t='+Date.now()).then(function(r){return r.json();}).then(function(d){ if(d.ok)renderPkgs(d); }).catch(function(){ say('Could not refresh the package list \u2014 network error.','err'); }); }
 

@@ -557,16 +557,26 @@ function slugId(s) {
   return String(s || '').toLowerCase().replace(/\.zip$/, '')
     .replace(/[^a-z0-9_-]+/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '');
 }
+// Built-in (git-tracked) theme packages live in public/themes/ and are scanned
+// into themes.json on every full update. They can be hidden (toggle) but never
+// removed via admin — git would restore them, and a player could be mid-theme.
+const BUILTIN_THEMES = ['bleu-nuit', 'casino-vert', 'graphite', 'pokerth-new', 'vecteur', 'violet'];
 function regenManifest(kind) {
-  const rel = kind === 'table' ? 'scripts/tables-manifest.mjs' : 'scripts/decks-manifest.mjs';
-  const dir = path.join(PUBLIC_DIR, kind === 'table' ? 'table' : 'cards');
+  const rel = kind === 'table' ? 'scripts/tables-manifest.mjs'
+    : kind === 'theme' ? 'scripts/themes-manifest.mjs'
+    : 'scripts/decks-manifest.mjs';
+  const dir = path.join(PUBLIC_DIR, kind === 'table' ? 'table' : kind === 'theme' ? 'themes' : 'cards');
   try { spawnSync(process.execPath, [path.join(__dirname, rel), dir], { stdio: 'ignore' }); }
   catch (e) { console.error('[admin] manifest failed:', e.message); }
 }
 function pkgList() {
   const read = function (p) { try { return JSON.parse(fs.readFileSync(p, 'utf8')) || []; } catch (e) { return []; } };
+  const themes = read(path.join(PUBLIC_DIR, 'themes', 'themes.json')).map(function (t) {
+    return { id: t.id, name: t.name || t.id, swatch: t.swatch || '#444', builtin: BUILTIN_THEMES.indexOf(t.id) >= 0 };
+  });
   return { tables: read(path.join(PUBLIC_DIR, 'table', 'tables.json')),
-           decks:  read(path.join(PUBLIC_DIR, 'cards', 'decks.json')) };
+           decks:  read(path.join(PUBLIC_DIR, 'cards', 'decks.json')),
+           themes: themes };
 }
 // Admin can hide an installed package from players without deleting it. The
 // disabled ids live in _adminConfig.pkgDisabled = { table:[...], deck:[...] };
@@ -619,11 +629,32 @@ function importPackage(kind, idHint, zipBuf, cb) {
     try { fs.rmSync(dest, { recursive: true, force: true }); fs.mkdirSync(dest, { recursive: true }); } catch (e) { return done('dest failed'); }
     try { fs.readdirSync(exDir).forEach(function (f) { if (/\.(png|svg|xml)$/i.test(f)) cp(f, path.join(dest, f)); }); } catch (e) {}
     regenManifest('deck');
+  } else if (kind === 'theme') {
+    // Web theme package = theme.json (palette / table / felt / buttons /
+    // buttonImages / pucks) + any image files it references, flattened.
+    if (!has('theme.json')) return done('not a PokerTH web theme (theme.json missing)');
+    let cfg = null;
+    try { cfg = JSON.parse(fs.readFileSync(path.join(exDir, 'theme.json'), 'utf8')); } catch (e) { return done('theme.json is not valid JSON'); }
+    if (!cfg || typeof cfg !== 'object') return done('theme.json is empty or invalid');
+    if (!id) id = (cfg.name ? slugId(cfg.name) : '') || ('theme-' + Date.now());
+    if (BUILTIN_THEMES.indexOf(id) >= 0) id = 'theme-' + id;   // never clobber a git-tracked theme
+    const dest = path.join(PUBLIC_DIR, 'themes', id);
+    try { fs.rmSync(dest, { recursive: true, force: true }); fs.mkdirSync(dest, { recursive: true }); } catch (e) { return done('dest failed'); }
+    try { fs.readdirSync(exDir).forEach(function (f) { if (f === 'theme.json' || /\.(png|svg|jpg|jpeg|webp)$/i.test(f)) cp(f, path.join(dest, f)); }); } catch (e) {}
+    regenManifest('theme');
+    // themes-manifest drops a theme that ends up with no usable styling (no
+    // palette/table/felt/buttons/buttonImages/pucks, or referenced images
+    // missing). Detect that and fail loudly instead of leaving it invisible.
+    let listed = false;
+    try { listed = JSON.parse(fs.readFileSync(path.join(PUBLIC_DIR, 'themes', 'themes.json'), 'utf8')).some(function (x) { return x && x.id === id; }); } catch (e) {}
+    if (!listed) { try { fs.rmSync(dest, { recursive: true, force: true }); } catch (e) {} return done('theme has no usable content (need palette, table, felt, buttons, buttonImages or pucks — and any referenced image file must be in the zip)'); }
   } else return done('unknown kind');
 
   let nm = id;
   try {
-    const mf = path.join(PUBLIC_DIR, kind === 'table' ? 'table' : 'cards', kind === 'table' ? 'tables.json' : 'decks.json');
+    const sub = kind === 'table' ? 'table' : kind === 'theme' ? 'themes' : 'cards';
+    const mfn = kind === 'table' ? 'tables.json' : kind === 'theme' ? 'themes.json' : 'decks.json';
+    const mf = path.join(PUBLIC_DIR, sub, mfn);
     const e = JSON.parse(fs.readFileSync(mf, 'utf8')).find(function (x) { return x.id === id; });
     if (e && e.name) nm = e.name;
   } catch (e) {}
@@ -649,10 +680,11 @@ function handleAdmin(req, res, reqPathOnly, query) {
   }
   if (reqPathOnly === '/admin/pkg-list') {
     if (!adminAuthed(query)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
-    var _pl = pkgList(), _td = pkgDisabledSet('table'), _dd = pkgDisabledSet('deck');
+    var _pl = pkgList(), _td = pkgDisabledSet('table'), _dd = pkgDisabledSet('deck'), _hd = pkgDisabledSet('theme');
     return adminJson(res, 200, { ok: true,
       tables: (_pl.tables || []).map(function (t) { return Object.assign({}, t, { disabled: _td.indexOf(t.id) >= 0 }); }),
-      decks:  (_pl.decks  || []).map(function (d) { return Object.assign({}, d, { disabled: _dd.indexOf(d.id) >= 0 }); }) });
+      decks:  (_pl.decks  || []).map(function (d) { return Object.assign({}, d, { disabled: _dd.indexOf(d.id) >= 0 }); }),
+      themes: (_pl.themes || []).map(function (t) { return Object.assign({}, t, { disabled: _hd.indexOf(t.id) >= 0 }); }) });
   }
   if (reqPathOnly === '/admin/status') {
     if (!adminAuthed(query)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
@@ -748,8 +780,8 @@ function handleAdmin(req, res, reqPathOnly, query) {
   }
   if (reqPathOnly === '/admin/pkg-upload' && req.method === 'POST') {
     if (!adminAuthed(query)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
-    const kind = query.kind === 'deck' ? 'deck' : (query.kind === 'table' ? 'table' : null);
-    if (!kind) return adminJson(res, 400, { ok: false, error: 'kind must be table or deck' });
+    const kind = query.kind === 'deck' ? 'deck' : (query.kind === 'table' ? 'table' : (query.kind === 'theme' ? 'theme' : null));
+    if (!kind) return adminJson(res, 400, { ok: false, error: 'kind must be table, deck or theme' });
     return readRawBody(req, MAX_UPLOAD, function (buf) {
       if (!buf || !buf.length) return adminJson(res, 413, { ok: false, error: 'empty upload or larger than 25 MB' });
       importPackage(kind, query.name || '', buf, function (err, info) {
@@ -761,12 +793,13 @@ function handleAdmin(req, res, reqPathOnly, query) {
   if (reqPathOnly === '/admin/pkg-remove' && req.method === 'POST') {
     return readJsonBody(req, function (d) {
       if (!adminAuthed(query, d && d.token)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
-      const kind = (d && d.kind === 'deck') ? 'deck' : ((d && d.kind === 'table') ? 'table' : null);
+      const kind = (d && d.kind === 'deck') ? 'deck' : ((d && d.kind === 'table') ? 'table' : ((d && d.kind === 'theme') ? 'theme' : null));
       const id = slugId(d && d.id);
       if (!kind || !id) return adminJson(res, 400, { ok: false, error: 'kind + id required' });
       if (kind === 'table' && ['green', 'blue', 'bordeaux', 'slate', 'photo'].indexOf(id) >= 0) return adminJson(res, 400, { ok: false, error: 'built-in table cannot be removed' });
       if (kind === 'deck' && ['svg', 'classic'].indexOf(id) >= 0) return adminJson(res, 400, { ok: false, error: 'built-in deck cannot be removed' });
-      const dir = path.join(PUBLIC_DIR, kind === 'table' ? 'table' : 'cards', id);
+      if (kind === 'theme' && BUILTIN_THEMES.indexOf(id) >= 0) return adminJson(res, 400, { ok: false, error: 'built-in theme cannot be removed (you can hide it instead)' });
+      const dir = path.join(PUBLIC_DIR, kind === 'table' ? 'table' : kind === 'theme' ? 'themes' : 'cards', id);
       if (!fs.existsSync(dir)) return adminJson(res, 404, { ok: false, error: 'not found' });
       try { fs.rmSync(dir, { recursive: true, force: true }); } catch (e) { return adminJson(res, 500, { ok: false, error: 'remove failed' }); }
       try { var _da = pkgDisabledSet(kind); var _i = _da.indexOf(id); if (_i >= 0) { _da.splice(_i, 1); _adminConfig.pkgDisabled[kind] = _da; saveAdminConfig(); } } catch (e) {}
@@ -778,7 +811,7 @@ function handleAdmin(req, res, reqPathOnly, query) {
   if (reqPathOnly === '/admin/pkg-toggle' && req.method === 'POST') {
     return readJsonBody(req, function (d) {
       if (!adminAuthed(query, d && d.token)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
-      const kind = (d && d.kind === 'deck') ? 'deck' : ((d && d.kind === 'table') ? 'table' : null);
+      const kind = (d && d.kind === 'deck') ? 'deck' : ((d && d.kind === 'table') ? 'table' : ((d && d.kind === 'theme') ? 'theme' : null));
       const id = slugId(d && d.id);
       if (!kind || !id) return adminJson(res, 400, { ok: false, error: 'kind + id required' });
       const enabled = !(d && d.enabled === false);   // desired state; false = hide from players
@@ -989,12 +1022,14 @@ const httpServer = http.createServer((req, res) => {
 
   // Client-facing gallery manifests, with admin-disabled packages filtered out
   // (disabling hides a package from the theme picker without removing its files).
-  if (reqPathOnly === '/table/tables.json' || reqPathOnly === '/cards/decks.json') {
-    var _isTbl = reqPathOnly === '/table/tables.json';
-    var _mf = path.join(PUBLIC_DIR, _isTbl ? 'table' : 'cards', _isTbl ? 'tables.json' : 'decks.json');
+  if (reqPathOnly === '/table/tables.json' || reqPathOnly === '/cards/decks.json' || reqPathOnly === '/themes/themes.json') {
+    var _pkgKind = reqPathOnly === '/table/tables.json' ? 'table' : (reqPathOnly === '/themes/themes.json' ? 'theme' : 'deck');
+    var _mfSub = _pkgKind === 'table' ? 'table' : (_pkgKind === 'theme' ? 'themes' : 'cards');
+    var _mfName = _pkgKind === 'table' ? 'tables.json' : (_pkgKind === 'theme' ? 'themes.json' : 'decks.json');
+    var _mf = path.join(PUBLIC_DIR, _mfSub, _mfName);
     var _list = []; try { _list = JSON.parse(fs.readFileSync(_mf, 'utf8')); } catch (e) {}
     if (!Array.isArray(_list)) _list = [];
-    var _dis = pkgDisabledSet(_isTbl ? 'table' : 'deck');
+    var _dis = pkgDisabledSet(_pkgKind);
     if (_dis.length) _list = _list.filter(function (x) { return x && _dis.indexOf(x.id) < 0; });
     res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' });
     res.end(JSON.stringify(_list));
