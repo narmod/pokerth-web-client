@@ -5267,11 +5267,17 @@ body.seatfmt-plate .seat.active .seat-plate {
 }
 body.seatfmt-plate .seat-timer-badge { display: none; }
 
-/* ── Petit écran : plaque compacte sur une ligne (avatar + nom + tapis) ── */
+/* ── Petit écran (portrait téléphone) : la plaque horizontale est trop large
+   et fait se chevaucher les sièges. On revient au siège VERTICAL classique
+   (avatar rond bien visible + nom/tapis dessous), qui tient autour de
+   l'ellipse et met le personnage en avant. La plaque ne s'applique donc
+   qu'à partir de 600px (tablette / paysage / desktop). display:contents
+   neutralise la boîte (fond/bordure/padding non peints) → rendu classique. */
 @media (max-width: 600px) {
-  body.seatfmt-plate .seat-plate { gap: 5px; padding: 2px 8px 2px 2px; border-radius: 999px; }
-  body.seatfmt-plate .seat-info { flex-direction: row; align-items: baseline; gap: 6px; }
-  body.seatfmt-plate .seat-name { max-width: 64px; font-size: 0.6rem; }
-  body.seatfmt-plate .seat-money { font-size: 0.6rem; }
-  body.seatfmt-plate .seat-foot { gap: 4px; margin-top: 2px; }
+  body.seatfmt-plate .seat-plate,
+  body.seatfmt-plate .seat-info,
+  body.seatfmt-plate .seat-foot { display: contents; }
+  body.seatfmt-plate .seat { max-width: 68px; }
+  body.seatfmt-plate .seat-name { text-align: center; max-width: 68px; }
+  body.seatfmt-plate .seat-timer-badge { display: block; }
 }
