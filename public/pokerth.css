@@ -5233,3 +5233,45 @@ body:not(.in-game) .my-zone {
     -webkit-backdrop-filter: none !important;
   }
 }
+
+/* ===== Sièges « Plaque PokerTH » (mode body.seatfmt-plate) =================
+   Restyle du CONTENANT du siège en plaque horizontale : avatar rond à gauche,
+   nom + tapis à droite. Rien n'est retiré — avatar/drapeau/anneau/jetons D-SB-BB/
+   ring de temps/mise/action/cartes/clic→popup sont conservés. En mode CLASSIQUE
+   (pas de classe), .seat-plate/.seat-info/.seat-foot sont en display:contents →
+   DOM transparent, rendu identique à l'historique. La plaque suit le thème via
+   --field-bg / --border / --text-hi / --gold. Petit écran → pastille compacte. */
+.seat-plate, .seat-info, .seat-foot { display: contents; }
+
+body.seatfmt-plate .seat { max-width: none; }
+body.seatfmt-plate .seat-plate {
+  display: flex; align-items: center; gap: 8px; position: relative;
+  background: var(--field-bg, rgba(0,0,0,0.55));
+  border: 1px solid var(--border);
+  border-radius: 11px; padding: 5px 10px 6px 5px;
+  box-shadow: 0 3px 12px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.05);
+}
+body.seatfmt-plate .seat-info {
+  display: flex; flex-direction: column; align-items: flex-start; gap: 1px; min-width: 0;
+}
+body.seatfmt-plate .seat-name { text-align: left; max-width: 88px; }
+body.seatfmt-plate .seat-foot {
+  display: flex; align-items: center; justify-content: center; gap: 6px;
+  flex-wrap: wrap; margin-top: 3px;
+}
+/* Au tour de jouer : le ring du timer (dans l'avatar rond) reste l'indicateur de
+   temps ; la plaque reçoit un liseré + halo doré. Badge « Ns » redondant masqué. */
+body.seatfmt-plate .seat.active .seat-plate {
+  border-color: var(--gold);
+  box-shadow: 0 0 0 1px var(--gold), 0 0 16px rgba(var(--gold-rgb), 0.45);
+}
+body.seatfmt-plate .seat-timer-badge { display: none; }
+
+/* ── Petit écran : plaque compacte sur une ligne (avatar + nom + tapis) ── */
+@media (max-width: 600px) {
+  body.seatfmt-plate .seat-plate { gap: 5px; padding: 2px 8px 2px 2px; border-radius: 999px; }
+  body.seatfmt-plate .seat-info { flex-direction: row; align-items: baseline; gap: 6px; }
+  body.seatfmt-plate .seat-name { max-width: 64px; font-size: 0.6rem; }
+  body.seatfmt-plate .seat-money { font-size: 0.6rem; }
+  body.seatfmt-plate .seat-foot { gap: 4px; margin-top: 2px; }
+}

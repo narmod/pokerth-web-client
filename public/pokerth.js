@@ -1504,7 +1504,7 @@ document.addEventListener("DOMContentLoaded", function() {
     // at load, so on a brand-new browser those two settle on the next reload.
     function _applyDefaultSettings(defaults) {
       if (!defaults || typeof defaults !== 'object') return;
-      var MAP = { haptic: 'pth_haptic', voice: 'pth_voice', assist: 'pth_assist', autobtn: 'pth_show_auto', quickbet: 'pth_show_pct', displaybb: 'pth_display_bb' };
+      var MAP = { haptic: 'pth_haptic', voice: 'pth_voice', assist: 'pth_assist', autobtn: 'pth_show_auto', quickbet: 'pth_show_pct', displaybb: 'pth_display_bb', seatplate: 'pth_seat_plate' };
       Object.keys(MAP).forEach(function (k) {
         var v = defaults[k];
         if (v !== '0' && v !== '1') return;
@@ -3299,6 +3299,22 @@ const App = (() => {
     var bd = document.getElementById('displaybb-toggle-btn');
     if (bd) bd.textContent = _displayBB ? 'BB' : '¥';
   }
+  // ── Format des sièges : « Plaque » (défaut) ou « Classique » ───────────────
+  // Bascule purement CSS via la classe body.seatfmt-plate (cf. pokerth.css).
+  // Défaut = plaque (sauf pth_seat_plate === '0'). Réversible, persistant.
+  function _applySeatFmt() {
+    var on = true; try { on = (localStorage.getItem('pth_seat_plate') !== '0'); } catch (e) {}
+    try { document.body.classList.toggle('seatfmt-plate', on); } catch (e) {}
+    var b = document.getElementById('seatfmt-toggle-mob');
+    if (b) b.innerHTML = on ? '🪧 Plaque' : '⭕ Classique';
+  }
+  function toggleSeatFmt() {
+    var on = true; try { on = (localStorage.getItem('pth_seat_plate') !== '0'); } catch (e) {}
+    on = !on;
+    try { localStorage.setItem('pth_seat_plate', on ? '1' : '0'); } catch (e) {}
+    _applySeatFmt();
+    return on;
+  }
   // Re-render the pot label from the last known pot value, in the current
   // mode. We keep the last numeric pot in _lastPotValue (set by setPot) so a
   // mode switch can repaint without a server message.
@@ -3315,6 +3331,7 @@ const App = (() => {
     setPot(_lastPotValue);
   }
   window.toggleDisplayBB = toggleDisplayBB;
+  window.toggleSeatFmt = toggleSeatFmt;
 
   // Speaks game events (player actions, your turn, winner) in the active
   // language. Opt-in (default OFF), persisted, toggled from the ••• menu.
@@ -6353,6 +6370,7 @@ const App = (() => {
 
   function renderSeatsImmediate() {
     const el = $('g-seats');
+    _applySeatFmt(); // format de siège (plaque/classique) appliqué sur <body>
     // Clic/tap sur un siège → popup d'info du joueur. Délégation posée une
     // seule fois : #g-seats persiste, seul son contenu est recréé à chaque
     // rendu. Les sièges deviennent cliquables via CSS (.seat { pointer-events }).
@@ -6643,6 +6661,7 @@ const App = (() => {
         ? '<img class="seat-pth-img" src="' + pthAvUrl + '" alt="" draggable="false">'
         : '';
       const avCls2 = avatarCls + (pthAvUrl ? ' has-pth-avatar' : '');
+      h += '<div class="seat-plate">'; // plaque : avatar + nom/tapis (display:contents en classique)
       h += '<div class="' + avCls2 + '" style="' + avatarStyle + '">'
         + pthImg
         + '<span class="seat-initial">' + initial + '</span>'
@@ -6655,12 +6674,17 @@ const App = (() => {
       // Badge timer sous l'avatar (visible et non confondu avec l'emoji)
       if (isActive) h += '<div class="seat-timer-badge" id="stb-'+pid+'">'
         + ((_timerSec > 0) ? _timerSec + 's' : '') + '</div>';
+      h += '<div class="seat-info">';
       h += '<div class="seat-name">' + esc(isMe ? myName : getPlayerName(pid)) + '</div>';
       h += '<div class="seat-money">' + moneyStr + '</div>';
+      h += '</div>';   // ferme .seat-info
+      h += '</div>';   // ferme .seat-plate
+      h += '<div class="seat-foot">'; // pied : mise / action / cartes (sous la plaque)
       if (sd.bet) h += '<div class="seat-bet">' + fmtChips(sd.bet) + '</div>';
       if (sd.action) h += '<div class="seat-action-label">' + esc(sd.action) + '</div>';
       h += cardStr;
-      h += '</div>';
+      h += '</div>'; // ferme .seat-foot
+      h += '</div>'; // ferme .seat
     });
     el.innerHTML = h;
     _lastPixPos = pixPos;
@@ -9982,7 +10006,7 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.2.347'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.2.348'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
