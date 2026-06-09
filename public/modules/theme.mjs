@@ -54,8 +54,8 @@ function makeAxis(cfg) {
 const PALETTES = [
   { id: '',     key: 'themeGreen', fallback: 'Green', swatch: '#1e3820' },
   { id: 'dark', key: 'themeDark',  fallback: 'Dark',  swatch: '#232730' },
-  { id: 'pokerth', key: 'themePokerthOfficial', fallback: 'PokerTH official', swatch: '#1d222b' },
-  { id: 'pokerth-light', key: 'themePokerthOfficialLight', fallback: 'PokerTH official (light)', swatch: '#dce2ec' },
+  { id: 'pokerth', key: 'themePokerthOfficial', fallback: 'PokerTH Dark', swatch: '#1d222b' },
+  { id: 'pokerth-light', key: 'themePokerthOfficialLight', fallback: 'PokerTH Light', swatch: '#dce2ec' },
 ];
 const TABLES = [
   { id: '',         key: 'tableGreen',    fallback: 'Green',    swatch: '#1e6b1e' },
@@ -98,12 +98,9 @@ const AXES = [deck, palette, table, buttons, pucks];
 // (this project's look). "Official PokerTH" ≈ the official client (dark UI +
 // textured green felt + vector cards). Order = display order.
 const PRESETS = [
-  { id: 'official', key: 'presetPokerthOfficial', fallback: 'PokerTH official', swatch: '#1d222b', values: { theme: 'pokerth', table: 'pokerth', deck: 'pokerth-new', buttons: 'glossy', pucks: 'pokerth-new' } },
-  { id: 'officiallight', key: 'presetPokerthOfficialLight', fallback: 'PokerTH official (light)', swatch: '#dce2ec', values: { theme: 'pokerth-light', table: 'pokerth', deck: 'pokerth-new', buttons: 'glossy', pucks: 'pokerth-new' } },
+  { id: 'official', key: 'presetPokerthOfficial', fallback: 'PokerTH Dark', swatch: '#1d222b', values: { theme: 'pokerth', table: 'pokerth', deck: 'pokerth-new', buttons: 'glossy', pucks: 'pokerth-new' } },
+  { id: 'officiallight', key: 'presetPokerthOfficialLight', fallback: 'PokerTH Light', swatch: '#dce2ec', values: { theme: 'pokerth-light', table: 'pokerth', deck: 'pokerth-new', buttons: 'glossy', pucks: 'pokerth-new' } },
   { id: 'casino',  key: 'presetCasino',   fallback: 'Green Casino',     swatch: '#1e6b1e', values: { theme: '',     table: '',      deck: 'casino-vert', buttons: 'casino-vert', pucks: 'casino-vert' } },
-  { id: 'pokerth', key: 'presetOfficial', fallback: 'PokerTH ver1.1.2', swatch: '#232730', values: { theme: 'dark', table: 'photo', deck: 'pokerth', buttons: 'glossy', pucks: 'pokerth' } },
-  { id: 'pokerth10', key: 'presetPokerth10', fallback: 'PokerTH ver1.0', swatch: '#232730', values: { theme: 'dark', table: 'photo', deck: 'pokerth-1-0', buttons: 'glossy', pucks: 'pokerth' } },
-  { id: 'pokerthnew', key: 'presetPokerthNew', fallback: 'PokerTH new', swatch: '#a52a2a', values: { theme: 'dark', table: 'photo', deck: 'pokerth-new', buttons: 'pokerth-new', pucks: 'pokerth-new' } },
 ];
 
 function applyPreset(id) {
@@ -290,7 +287,7 @@ function _loadThemes(){
         var pkgs=list.filter(function(p){return p&&p.id&&(p.palette||p.table||p.felt||p.pucks||p.buttonImages||p.buttons);});
         _palettePkgs=pkgs.filter(function(p){return p.palette;}).map(function(p){ return {id:String(p.id),name:p.name||String(p.id),swatch:p.swatch||'#444',tokens:p.palette}; }).filter(function(p){ return !_isBuiltinPalette(p.id); });
         _tablePkgs=pkgs.filter(function(p){return p.table||p.felt;}).map(function(p){ return {id:String(p.id),name:p.name||String(p.id),swatch:p.swatch||'#444',tokens:p.table||{},felt:p.felt||null}; }).filter(function(p){ return !_isBuiltinTable(p.id); });
-        _pkgPresets=pkgs.filter(function(p){return p.palette||p.table||p.felt;}).map(function(p){ var vals={theme:(p.palette?String(p.id):''),table:((p.table||p.felt)?String(p.id):''),buttons:'glossy',pucks:'pokerth'}; if(p.deck) vals.deck=String(p.deck); return {id:'pkg-'+p.id,name:p.name||String(p.id),swatch:p.swatch||'#444',values:vals}; });
+        _pkgPresets=pkgs.filter(function(p){return p.palette||p.table||p.felt;}).map(function(p){ var vals={theme:(p.palette?String(p.id):''),table:((p.table||p.felt)?String(p.id):''),buttons:'glossy',pucks:'pokerth-new'}; if(p.deck) vals.deck=String(p.deck); return {id:'pkg-'+p.id,name:p.name||String(p.id),swatch:p.swatch||'#444',values:vals}; });
         _puckPkgs=pkgs.filter(function(p){return p.pucks;}).map(function(p){ var set={},pv=p.pucks; ['dealer','sb','bb'].forEach(function(k){ if(pv[k]) set[k]='url(/themes/'+p.id+'/'+pv[k]+')'; }); return {id:String(p.id),name:p.name||String(p.id),swatch:p.swatch||'#444',set:set,preview:(pv.dealer?'/themes/'+p.id+'/'+pv.dealer:null)}; }).filter(function(p){ return p.id!=='pokerth'; });
         _buttonPkgs=pkgs.filter(function(p){return p.buttonImages||p.buttons;}).map(function(p){ var e={id:String(p.id),name:p.name||String(p.id),swatch:p.swatch||'#444'}; if(p.buttonImages){ e.images={}; ['fold','check','call','raise','allin'].forEach(function(k){ if(p.buttonImages[k]) e.images[k]='url(/themes/'+p.id+'/'+p.buttonImages[k]+')'; }); } if(p.buttons){ e.colors=p.buttons; } return e; }).filter(function(p){ return p.id!=='glossy'; });
         try{ var pp=_palettePkgById(palette.get()); if(pp) _injectPalette(pp); var tp=_tablePkgById(table.get()); if(tp) _injectTable(tp); }catch(e){}

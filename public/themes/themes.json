@@ -3,31 +3,31 @@
     "id": "bleu-nuit",
     "name": "Midnight Blue",
     "swatch": "#1e3a6b",
-    "felt": "felt.jpg",
+    "deck": "pokerth-new",
     "palette": {
       "felt": "#0d1626",
       "felt-mid": "#122036",
       "felt-hi": "#182c48",
-      "panel": "rgba(10,18,32,0.93)",
-      "panel-hi": "rgba(16,26,44,0.94)",
-      "cream": "#e6ecf5",
-      "text": "#98a8c2",
-      "text-hi": "#d6e0f0",
-      "modal-bg": "linear-gradient(160deg, #0c1626 0%, #152740 50%, #08111f 100%)",
-      "body-glow": "rgba(50,90,170,0.16)",
-      "gold": "#c8a84a",
-      "gold-hi": "#e0c070",
-      "gold-dim": "#7a6428",
-      "border": "rgba(200,168,74,0.25)",
-      "border-hi": "rgba(200,168,74,0.65)"
+      "panel": "rgba(14,22,38,0.92)",
+      "panel-hi": "rgba(22,32,52,0.94)",
+      "cream": "#dbe6f5",
+      "text": "#93a4c2",
+      "text-hi": "#e6edf8",
+      "modal-bg": "linear-gradient(160deg, #0c1424 0%, #16223c 50%, #0a1120 100%)",
+      "body-glow": "rgba(60,110,200,0.14)",
+      "gold": "#dbe6f5",
+      "gold-hi": "#ffffff",
+      "gold-dim": "#8fa2c4",
+      "border": "rgba(150,172,214,0.16)",
+      "border-hi": "rgba(180,200,236,0.50)"
     },
     "table": {
       "felt-base-hi": "#21407a",
       "felt-base-mid": "#122a52",
       "felt-base-lo": "#08152e",
-      "rail": "#6b3e18",
-      "rail-dark": "#3a2208",
-      "rail-glow": "rgba(50,90,170,0.30)"
+      "rail": "#1d222b",
+      "rail-dark": "#12161d",
+      "rail-glow": "rgba(60,110,200,0.22)"
     }
   },
   {
@@ -59,31 +59,31 @@
     "id": "graphite",
     "name": "Graphite",
     "swatch": "#3a4048",
-    "felt": "felt.jpg",
+    "deck": "pokerth-new",
     "palette": {
       "felt": "#0d0f12",
       "felt-mid": "#15181d",
       "felt-hi": "#1e232a",
-      "panel": "rgba(16,18,22,0.93)",
+      "panel": "rgba(16,18,22,0.92)",
       "panel-hi": "rgba(24,28,34,0.94)",
-      "cream": "#e8ebef",
-      "text": "#a6aeba",
-      "text-hi": "#d8dee6",
-      "modal-bg": "linear-gradient(160deg, #101216 0%, #1a1e24 50%, #0c0e12 100%)",
-      "body-glow": "rgba(90,100,120,0.12)",
-      "gold": "#c8a84a",
-      "gold-hi": "#e0c070",
-      "gold-dim": "#7a6428",
-      "border": "rgba(200,168,74,0.25)",
-      "border-hi": "rgba(200,168,74,0.65)"
+      "cream": "#e6e9ef",
+      "text": "#a2aab6",
+      "text-hi": "#e6e9ef",
+      "modal-bg": "linear-gradient(160deg, #0f1115 0%, #191c22 50%, #0c0e12 100%)",
+      "body-glow": "rgba(120,130,150,0.10)",
+      "gold": "#e6e9ef",
+      "gold-hi": "#fafbfd",
+      "gold-dim": "#99a1ad",
+      "border": "rgba(170,178,192,0.15)",
+      "border-hi": "rgba(200,206,216,0.48)"
     },
     "table": {
       "felt-base-hi": "#3a4048",
       "felt-base-mid": "#232830",
       "felt-base-lo": "#12161c",
-      "rail": "#6b3e18",
-      "rail-dark": "#3a2208",
-      "rail-glow": "rgba(90,100,120,0.25)"
+      "rail": "#1d222b",
+      "rail-dark": "#12161d",
+      "rail-glow": "rgba(110,120,140,0.20)"
     }
   },
   {
@@ -113,31 +113,31 @@
     "id": "violet",
     "name": "Royal Purple",
     "swatch": "#5a2a7a",
-    "felt": "felt.jpg",
+    "deck": "pokerth-new",
     "palette": {
       "felt": "#160a26",
       "felt-mid": "#20103a",
       "felt-hi": "#2c1850",
-      "panel": "rgba(22,10,34,0.93)",
+      "panel": "rgba(22,10,34,0.92)",
       "panel-hi": "rgba(32,16,48,0.94)",
-      "cream": "#efe6f5",
-      "text": "#b8a0c8",
-      "text-hi": "#e2d2f0",
-      "modal-bg": "linear-gradient(160deg, #1a0a2c 0%, #281244 50%, #120720 100%)",
-      "body-glow": "rgba(120,60,170,0.16)",
-      "gold": "#c8a84a",
-      "gold-hi": "#e0c070",
-      "gold-dim": "#7a6428",
-      "border": "rgba(200,168,74,0.25)",
-      "border-hi": "rgba(200,168,74,0.65)"
+      "cream": "#e7ddf2",
+      "text": "#b09fc6",
+      "text-hi": "#ece2f5",
+      "modal-bg": "linear-gradient(160deg, #160a28 0%, #261240 50%, #100620 100%)",
+      "body-glow": "rgba(140,80,200,0.14)",
+      "gold": "#e7ddf2",
+      "gold-hi": "#fbf8ff",
+      "gold-dim": "#a896c0",
+      "border": "rgba(180,160,210,0.16)",
+      "border-hi": "rgba(205,185,230,0.48)"
     },
     "table": {
       "felt-base-hi": "#5e2c80",
       "felt-base-mid": "#3c1858",
       "felt-base-lo": "#200a32",
-      "rail": "#6b3e18",
-      "rail-dark": "#3a2208",
-      "rail-glow": "rgba(120,60,170,0.30)"
+      "rail": "#1d222b",
+      "rail-dark": "#12161d",
+      "rail-glow": "rgba(140,80,200,0.22)"
     }
   }
 ]
