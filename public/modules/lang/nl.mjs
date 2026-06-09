@@ -480,6 +480,19 @@ export const strings = {
     srvRestartUpdate:'⚠ De server wordt om {t} bijgewerkt en herstart. Maak je huidige hand af om onderbrekingen te voorkomen.',
     srvRestartOnly:'⚠ De server wordt om {t} herstart. Maak je huidige hand af om onderbrekingen te voorkomen.',
     srvRestartCancelled:'De geplande herstart van de server is geannuleerd.',
+
+    // Popup d'info joueur (rôle / statut / lien profil)
+    piRoleBot:'Bot',
+    piRoleGuest:'Gast',
+    piRoleRegistered:'Geregistreerd',
+    piRoleAdmin:'Admin',
+    piBet:'Inzet',
+    piStatusToAct:'Aan zet',
+    piStatusFolded:'Gefold',
+    piStatusAllIn:'All-in',
+    piStatusSittingOut:'Zit uit',
+    piStatusEliminated:'Uitgeschakeld',
+    piViewProfile:'pokerth.net-profiel bekijken',
 };
 
 export default { meta, strings };

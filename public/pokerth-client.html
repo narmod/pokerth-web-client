@@ -1481,13 +1481,16 @@ if ('serviceWorker' in navigator) {
   <div class="pim-backdrop" onclick="closePlayerInfoPopup()"></div>
   <div class="pim-card" role="dialog" aria-labelledby="pim-name">
     <button class="pim-close" type="button" onclick="closePlayerInfoPopup()" title="Fermer" data-i18n-title="closeTooltip" aria-label="Fermer">✕</button>
-    <div class="pim-avatar pim-avatar-clickable" id="pim-avatar" role="button" tabindex="0"
-         onclick="openAvatarPickerFromLobby()"
-         onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openAvatarPickerFromLobby();}"
-         data-i18n-title="changeAvatar" title="Changer d'avatar" aria-label="Changer d'avatar"></div>
+    <!-- Avatar : cliquable seulement pour MON profil (rôle/onclick câblés en
+         JS selon le mode). Pour un adversaire il reste neutre, non cliquable. -->
+    <div class="pim-avatar" id="pim-avatar"></div>
     <div class="pim-flag" id="pim-flag" style="display:none"></div>
     <div class="pim-name" id="pim-name">—</div>
     <div class="pim-stats" id="pim-stats"></div>
+    <!-- Bloc infos d'un AUTRE joueur (rôle, jetons, mise, statut, position,
+         lien profil), rempli et affiché par openPlayerInfoPopup(pid) ;
+         masqué pour mon propre profil. -->
+    <div class="pim-info" id="pim-info" style="display:none"></div>
     <button class="btn-primary pim-change" type="button" onclick="openAvatarPickerFromLobby()" data-i18n="changeAvatar">Changer d'avatar</button>
   </div>
 </div>

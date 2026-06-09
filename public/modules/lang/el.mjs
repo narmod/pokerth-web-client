@@ -477,6 +477,19 @@ export const strings = {
     srvRestartUpdate:'⚠ Ο διακομιστής θα ενημερωθεί και θα επανεκκινήσει στις {t}. Ολοκληρώστε το τρέχον χέρι σας για να αποφύγετε διακοπές.',
     srvRestartOnly:'⚠ Ο διακομιστής θα επανεκκινήσει στις {t}. Ολοκληρώστε το τρέχον χέρι σας για να αποφύγετε διακοπές.',
     srvRestartCancelled:'Η προγραμματισμένη επανεκκίνηση του διακομιστή ακυρώθηκε.',
+
+    // Popup d'info joueur (rôle / statut / lien profil)
+    piRoleBot:'Bot',
+    piRoleGuest:'Επισκέπτης',
+    piRoleRegistered:'Εγγεγραμμένος',
+    piRoleAdmin:'Διαχειριστής',
+    piBet:'Στοίχημα',
+    piStatusToAct:'Σειρά του',
+    piStatusFolded:'Πάσαρε',
+    piStatusAllIn:'All-in',
+    piStatusSittingOut:'Εκτός',
+    piStatusEliminated:'Αποκλείστηκε',
+    piViewProfile:'Προβολή προφίλ pokerth.net',
 };
 
 export default { meta, strings };

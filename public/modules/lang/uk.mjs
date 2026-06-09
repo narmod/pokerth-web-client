@@ -476,6 +476,19 @@ export const strings = {
     srvRestartUpdate:'⚠ Сервер буде оновлено та перезапущено о {t}. Догравайте поточну роздачу, щоб уникнути переривань.',
     srvRestartOnly:'⚠ Сервер буде перезапущено о {t}. Догравайте поточну роздачу, щоб уникнути переривань.',
     srvRestartCancelled:'Заплановане перезавантаження сервера скасовано.',
+
+    // Popup d'info joueur (rôle / statut / lien profil)
+    piRoleBot:'Бот',
+    piRoleGuest:'Гість',
+    piRoleRegistered:'Зареєстрований',
+    piRoleAdmin:'Адмін',
+    piBet:'Ставка',
+    piStatusToAct:'Хід гравця',
+    piStatusFolded:'Скинув',
+    piStatusAllIn:'All-in',
+    piStatusSittingOut:'Поза грою',
+    piStatusEliminated:'Вибув',
+    piViewProfile:'Профіль на pokerth.net',
 };
 
 export default { meta, strings };

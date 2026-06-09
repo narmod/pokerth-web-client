@@ -477,6 +477,19 @@ export const strings = {
     srvRestartUpdate:'⚠ Serverul va fi actualizat şi repornit la {t}. Termină mâna curentă pentru a evita Întreruperile.',
     srvRestartOnly:'⚠ Serverul va fi repornit la {t}. Termină mâna curentă pentru a evita Întreruperile.',
     srvRestartCancelled:'Repornirea programată a serverului a fost anulată.',
+
+    // Popup d'info joueur (rôle / statut / lien profil)
+    piRoleBot:'Bot',
+    piRoleGuest:'Invitat',
+    piRoleRegistered:'Înregistrat',
+    piRoleAdmin:'Admin',
+    piBet:'Pariu',
+    piStatusToAct:'La rând',
+    piStatusFolded:'S-a retras',
+    piStatusAllIn:'All-in',
+    piStatusSittingOut:'Stă pe tușă',
+    piStatusEliminated:'Eliminat',
+    piViewProfile:'Vezi profilul pokerth.net',
 };
 
 export default { meta, strings };

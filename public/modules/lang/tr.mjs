@@ -479,6 +479,19 @@ export const strings = {
     srvRestartUpdate:'⚠ Sunucu {t} itibarıyla güncellenip yeniden başlatılacak. Kesintileri önlemek için mevcut elinizi tamamlayın.',
     srvRestartOnly:'⚠ Sunucu {t} itibarıyla yeniden başlatılacak. Kesintileri önlemek için mevcut elinizi tamamlayın.',
     srvRestartCancelled:'Planlanan sunucu yeniden başlatması iptal edildi.',
+
+    // Popup d'info joueur (rôle / statut / lien profil)
+    piRoleBot:'Bot',
+    piRoleGuest:'Misafir',
+    piRoleRegistered:'Kayıtlı',
+    piRoleAdmin:'Yönetici',
+    piBet:'Bahis',
+    piStatusToAct:'Sırası',
+    piStatusFolded:'Çekildi',
+    piStatusAllIn:'All-in',
+    piStatusSittingOut:'Beklemede',
+    piStatusEliminated:'Elendi',
+    piViewProfile:'pokerth.net profilini gör',
 };
 
 export default { meta, strings };

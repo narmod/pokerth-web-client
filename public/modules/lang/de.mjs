@@ -480,6 +480,19 @@ export const strings = {
     srvRestartUpdate:'⚠ Der Server wird um {t} aktualisiert und neu gestartet. Beende deine laufende Hand, um Unterbrechungen zu vermeiden.',
     srvRestartOnly:'⚠ Der Server wird um {t} neu gestartet. Beende deine laufende Hand, um Unterbrechungen zu vermeiden.',
     srvRestartCancelled:'Der geplante Server-Neustart wurde abgebrochen.',
+
+    // Popup d'info joueur (rôle / statut / lien profil)
+    piRoleBot:'Bot',
+    piRoleGuest:'Gast',
+    piRoleRegistered:'Registriert',
+    piRoleAdmin:'Admin',
+    piBet:'Einsatz',
+    piStatusToAct:'Am Zug',
+    piStatusFolded:'Gefoldet',
+    piStatusAllIn:'All-in',
+    piStatusSittingOut:'Sitzt aus',
+    piStatusEliminated:'Ausgeschieden',
+    piViewProfile:'pokerth.net-Profil ansehen',
 };
 
 export default { meta, strings };

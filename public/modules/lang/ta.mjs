@@ -478,6 +478,19 @@ export const strings = {
     srvRestartUpdate:'⚠ சேவையகம் {t} மணிக்கு புதுப்பிக்கப்பட்டு மறுதொடக்கம் செய்யப்படும். இடையூறுகளைத் தவிர்க்க உங்கள் தற்போதைய கையை முடிக்கவும்.',
     srvRestartOnly:'⚠ சேவையகம் {t} மணிக்கு மறுதொடக்கம் செய்யப்படும். இடையூறுகளைத் தவிர்க்க உங்கள் தற்போதைய கையை முடிக்கவும்.',
     srvRestartCancelled:'திட்டமிடப்பட்ட சேவையக மறுதொடக்கம் ரத்து செய்யப்பட்டது.',
+
+    // Popup d'info joueur (rôle / statut / lien profil)
+    piRoleBot:'பாட்',
+    piRoleGuest:'விருந்தினர்',
+    piRoleRegistered:'பதிவு செய்தவர்',
+    piRoleAdmin:'நிர்வாகி',
+    piBet:'பந்தயம்',
+    piStatusToAct:'இவர் முறை',
+    piStatusFolded:'விலகினார்',
+    piStatusAllIn:'All-in',
+    piStatusSittingOut:'விலகி உள்ளார்',
+    piStatusEliminated:'வெளியேற்றப்பட்டார்',
+    piViewProfile:'pokerth.net சுயவிவரத்தைப் பார்க்க',
 };
 
 export default { meta, strings };

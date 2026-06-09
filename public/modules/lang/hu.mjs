@@ -477,6 +477,19 @@ export const strings = {
     srvRestartUpdate:'⚠ A szerver {t}-kor frissül és újraindul. Fejezd be az aktuális leosztást a megszakítások elkerülése érdekében.',
     srvRestartOnly:'⚠ A szerver {t}-kor újraindul. Fejezd be az aktuális leosztást a megszakítások elkerülése érdekében.',
     srvRestartCancelled:'A szerver ütemezett újraindítását törölték.',
+
+    // Popup d'info joueur (rôle / statut / lien profil)
+    piRoleBot:'Bot',
+    piRoleGuest:'Vendég',
+    piRoleRegistered:'Regisztrált',
+    piRoleAdmin:'Admin',
+    piBet:'Tét',
+    piStatusToAct:'Ő következik',
+    piStatusFolded:'Passzolt',
+    piStatusAllIn:'All-in',
+    piStatusSittingOut:'Kihagyja',
+    piStatusEliminated:'Kiesett',
+    piViewProfile:'pokerth.net-profil megtekintése',
 };
 
 export default { meta, strings };

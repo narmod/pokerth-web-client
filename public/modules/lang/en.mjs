@@ -295,6 +295,19 @@ export const strings = {
     srvRestartOnly:'⚠ The server will restart at {t}. Finish your current hand to avoid interruptions.',
     srvRestartCancelled:'The scheduled server restart was cancelled.',
     welcomeAck:'I understand',
+
+    // Popup d'info joueur (rôle / statut / lien profil)
+    piRoleBot:'Bot',
+    piRoleGuest:'Guest',
+    piRoleRegistered:'Registered',
+    piRoleAdmin:'Admin',
+    piBet:'Bet',
+    piStatusToAct:'To act',
+    piStatusFolded:'Folded',
+    piStatusAllIn:'All-in',
+    piStatusSittingOut:'Sitting out',
+    piStatusEliminated:'Eliminated',
+    piViewProfile:'View pokerth.net profile',
 };
 
 export default { meta, strings };

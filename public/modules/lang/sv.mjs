@@ -476,6 +476,19 @@ export const strings = {
     srvRestartUpdate:'⚠ Servern uppdateras och startas om kl. {t}. Avsluta din nuvarande hand för att undvika avbrott.',
     srvRestartOnly:'⚠ Servern startas om kl. {t}. Avsluta din nuvarande hand för att undvika avbrott.',
     srvRestartCancelled:'Den schemalagda omstarten av servern har avbrutits.',
+
+    // Popup d'info joueur (rôle / statut / lien profil)
+    piRoleBot:'Bot',
+    piRoleGuest:'Gäst',
+    piRoleRegistered:'Registrerad',
+    piRoleAdmin:'Admin',
+    piBet:'Insats',
+    piStatusToAct:'Ska agera',
+    piStatusFolded:'Lagt sig',
+    piStatusAllIn:'All-in',
+    piStatusSittingOut:'Sitter över',
+    piStatusEliminated:'Utslagen',
+    piViewProfile:'Visa pokerth.net-profil',
 };
 
 export default { meta, strings };

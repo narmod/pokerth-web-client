@@ -478,6 +478,19 @@ export const strings = {
     srvRestartUpdate:'⚠ Thèid am frithealaiche ùrachadh is ath-thòiseachadh aig {t}. Crìochnaich an làmh làthaireach agad gus stadan a sheachnadh.',
     srvRestartOnly:'⚠ Thèid am frithealaiche ath-thòiseachadh aig {t}. Crìochnaich an làmh làthaireach agad gus stadan a sheachnadh.',
     srvRestartCancelled:'Chaidh ath-thòiseachadh clàraichte an fhrithealaiche a chur dheth.',
+
+    // Popup d'info joueur (rôle / statut / lien profil)
+    piRoleBot:'Bot',
+    piRoleGuest:'Aoigh',
+    piRoleRegistered:'Clàraichte',
+    piRoleAdmin:'Rianaire',
+    piBet:'Geall',
+    piStatusToAct:'A chuairt',
+    piStatusFolded:'Phaisg',
+    piStatusAllIn:'All-in',
+    piStatusSittingOut:'Na shuidhe a-mach',
+    piStatusEliminated:'Air a chur às',
+    piViewProfile:'Seall pròifil pokerth.net',
 };
 
 export default { meta, strings };

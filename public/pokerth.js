@@ -2531,47 +2531,72 @@ const App = (() => {
   // Player-info modal -- shows the local player's avatar + name,
   // plus a 'Change avatar' button that opens the avatar picker.
   // ──────────────────────────────────────────────────────────────
-  function openPlayerInfoPopup() {
+  function openPlayerInfoPopup(pid) {
     var modal = document.getElementById('player-info-modal');
     if (!modal) return;
-    // Fill the big avatar (96px circle). Reuse _avatarChipHtml but
-    // bypass the chip class -- we just want the inner image/emoji
-    // so the existing .pim-avatar can keep its own circle border.
-    var avEl = document.getElementById('pim-avatar');
-    var nameEl = document.getElementById('pim-name');
+    // pid omis (ou === moi) → MON profil (comportement historique : stats +
+    // changer d'avatar). Sinon → profil en LECTURE d'un adversaire.
+    var targetPid = (pid == null) ? myId : pid;
+    var isSelf = (targetPid === myId);
+    _pimPid = targetPid;
+    var avEl    = document.getElementById('pim-avatar');
+    var nameEl  = document.getElementById('pim-name');
+    var statsEl = document.getElementById('pim-stats');
+    var infoEl  = document.getElementById('pim-info');
+    var changeBtn = modal.querySelector('.pim-change');
+    // ── Grand avatar (cercle 96px). Pour MOI : on respecte le choix local
+    //    (même ordre que la barre joueur). Pour un autre : même priorité que
+    //    les sièges (image réelle > emoji reçu > 🤖 si bot > initiale). ──
     if (avEl) {
       avEl.classList.remove('is-letter');
-      // Ordre de priorité (identique à la barre joueur) :
-      //   1) avatar pokerth.net réel téléchargé   (si choix '__pth__')
-      //   2) logo PokerTH (repli quand '__pth__' choisi mais image absente)
-      //   3) image perso (data URL, si choix '__img__')
-      //   4) emoji
-      //   5) initiale
-      var realPth = (typeof _pthAvatarFor === 'function') ? _pthAvatarFor(myId) : null;
-      var stored = null;
-      try { stored = localStorage.getItem('pth_avatar'); } catch(e) {}
-      var url = null;
-      if (stored === '__pth__') {
-        url = realPth || '/favicon.svg';   // vrai avatar sinon logo
-      } else if (stored === '__img__') {
-        try { url = localStorage.getItem('pth_avatar_img') || null; } catch(e) { url = null; }
+      var url = null, emoji = null;
+      if (isSelf) {
+        var realPth = (typeof _pthAvatarFor === 'function') ? _pthAvatarFor(myId) : null;
+        var stored = null;
+        try { stored = localStorage.getItem('pth_avatar'); } catch(e) {}
+        if (stored === '__pth__') {
+          url = realPth || '/favicon.svg';   // vrai avatar sinon logo
+        } else if (stored === '__img__') {
+          try { url = localStorage.getItem('pth_avatar_img') || null; } catch(e) { url = null; }
+        } else if (stored && stored !== '__pth__' && stored !== '__img__') {
+          emoji = stored;
+        }
+      } else {
+        url = (typeof _pthAvatarFor === 'function') ? _pthAvatarFor(targetPid) : null;
+        if (_playerImgAvatars[targetPid]) url = _playerImgAvatars[targetPid];
+        if (!url) emoji = _playerAvatars[targetPid] || (isBot(targetPid) ? '🤖' : '');
       }
       if (url) {
         avEl.innerHTML = '<img src="' + url + '" alt="" draggable="false">';
-      } else if (stored && stored !== '__pth__' && stored !== '__img__') {
-        avEl.textContent = stored;
+      } else if (emoji) {
+        avEl.textContent = emoji;
       } else {
-        // initiale
         avEl.classList.add('is-letter');
-        avEl.textContent = (myName && myName[0] ? myName[0] : '?').toUpperCase();
+        var nm0 = isSelf ? myName : getPlayerName(targetPid);
+        avEl.textContent = (nm0 && nm0[0] ? nm0[0] : '?').toUpperCase();
+      }
+      // Cliquable (→ sélecteur d'avatar) UNIQUEMENT pour mon propre profil.
+      if (isSelf) {
+        avEl.classList.add('pim-avatar-clickable');
+        avEl.setAttribute('role', 'button');
+        avEl.setAttribute('tabindex', '0');
+        var _chTip = (typeof t === 'function') ? t('changeAvatar') : 'Change avatar';
+        avEl.title = _chTip; avEl.setAttribute('aria-label', _chTip);
+        avEl.onclick = function() { openAvatarPickerFromLobby(); };
+        avEl.onkeydown = function(e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openAvatarPickerFromLobby(); } };
+      } else {
+        avEl.classList.remove('pim-avatar-clickable');
+        avEl.removeAttribute('role'); avEl.removeAttribute('tabindex');
+        avEl.removeAttribute('title'); avEl.removeAttribute('aria-label');
+        avEl.onclick = null; avEl.onkeydown = null;
       }
     }
-    if (nameEl) nameEl.textContent = myName || '';
+    if (nameEl) nameEl.textContent = (isSelf ? myName : getPlayerName(targetPid)) || '';
     // Drapeau du pays (sous l'avatar) — code reçu via PlayerInfoReply.
     // Surtout présent sur pokerth.net ; masqué si inconnu.
     var flagEl = document.getElementById('pim-flag');
     if (flagEl) {
-      var cc = _playerCountries[myId];
+      var cc = _playerCountries[targetPid];
       var flagImg = _ccToFlag(cc, 'cc-flag-lg');
       if (flagImg) {
         flagEl.innerHTML = flagImg + '<span class="pim-flag-code">' + String(cc).toUpperCase() + '</span>';
@@ -2581,11 +2606,82 @@ const App = (() => {
         flagEl.style.display = 'none';
       }
     }
-    _pimTab = 'session';
-    _renderProfileStats();
+    if (isSelf) {
+      // Mon profil : onglets stats + bouton « changer d'avatar » (inchangé).
+      if (infoEl)    { infoEl.style.display = 'none'; infoEl.innerHTML = ''; }
+      if (statsEl)   statsEl.style.display = '';
+      if (changeBtn) changeBtn.style.display = '';
+      _pimTab = 'session';
+      _renderProfileStats();
+    } else {
+      // Adversaire : rôle + infos en jeu, pas de stats ni de bouton avatar.
+      if (statsEl)   { statsEl.style.display = 'none'; statsEl.innerHTML = ''; }
+      if (changeBtn) changeBtn.style.display = 'none';
+      if (infoEl) {
+        infoEl.innerHTML = _otherPlayerInfoHtml(targetPid);
+        infoEl.style.display = '';
+      }
+    }
     modal.style.display = 'flex';
   }
   window.openPlayerInfoPopup = openPlayerInfoPopup;
+
+  // Contenu du popup pour un AUTRE joueur : rôle (🤖 Bot / Invité / Enregistré
+  // / Admin), puis — s'il est attablé — ses jetons / mise / statut / position
+  // (pastilles D-SB-BB), et un lien vers son profil pokerth.net s'il est
+  // enregistré et qu'on est bien sur pokerth.net. Tout passe par t() → traduit.
+  function _otherPlayerInfoHtml(pid) {
+    function tt(k, fb) { var v = (typeof t === 'function') ? t(k) : null; return (v && v !== k) ? v : fb; }
+    var html = '';
+    // Rôle
+    var roleTxt;
+    if (isBot(pid)) {
+      roleTxt = '🤖 ' + tt('piRoleBot', 'Bot');
+    } else {
+      var rg = _playerRights[pid] || 0;
+      roleTxt = (rg === 3) ? tt('piRoleAdmin', 'Admin')
+              : (rg === 2) ? tt('piRoleRegistered', 'Registered')
+              : tt('piRoleGuest', 'Guest');
+    }
+    html += '<div class="pim-role">' + esc(roleTxt) + '</div>';
+    // Infos en jeu (uniquement si le joueur est attablé / a des données siège).
+    var sd = seatData[pid];
+    if (sd) {
+      var rows = '';
+      function row(k, v) {
+        return '<div class="pim-ig-row"><span class="pim-ig-k">' + esc(k) + '</span>'
+             + '<span class="pim-ig-v">' + esc(v) + '</span></div>';
+      }
+      if (sd.money != null && sd.money >= 0) rows += row(tt('stack', 'Stack'), fmtChips(sd.money));
+      if (sd.bet) rows += row(tt('piBet', 'Bet'), fmtChips(sd.bet));
+      // Statut (un seul, par ordre de priorité).
+      var st = '';
+      if (sd.folded) st = tt('piStatusFolded', 'Folded');
+      else if (sd.active === false) st = (sd.money != null && sd.money <= 0) ? tt('piStatusEliminated', 'Eliminated') : tt('piStatusSittingOut', 'Sitting out');
+      else if (sd.money === 0) st = tt('piStatusAllIn', 'All-in');
+      else if (pid === turnPid) st = tt('piStatusToAct', 'To act');
+      // Position : pastilles universelles D / SB / BB (pas de traduction).
+      var pos = '';
+      if (pid === dealerPid)  pos += '<span class="pim-pos pim-pos-d">D</span>';
+      if (pid === _lastSbPid) pos += '<span class="pim-pos pim-pos-sb">SB</span>';
+      if (pid === _lastBbPid) pos += '<span class="pim-pos pim-pos-bb">BB</span>';
+      var foot = '';
+      if (st)  foot += '<span class="pim-status">' + esc(st) + '</span>';
+      if (pos) foot += '<span class="pim-pos-wrap">' + pos + '</span>';
+      html += '<div class="pim-ig">' + rows + (foot ? ('<div class="pim-ig-foot">' + foot + '</div>') : '') + '</div>';
+    }
+    // Lien vers le profil pokerth.net (joueurs enregistrés, mode guest/auth).
+    var rg2 = _playerRights[pid] || 0;
+    var modeEl = document.getElementById('login-mode');
+    var onNet = !!(modeEl && (modeEl.value === 'guest' || modeEl.value === 'auth'));
+    if (!isBot(pid) && onNet && (rg2 === 2 || rg2 === 3)) {
+      var nm = getPlayerName(pid);
+      html += '<a class="pim-profile-link" href="https://www.pokerth.net/app.php/player?u='
+            + encodeURIComponent(nm) + '" target="_blank" rel="noopener noreferrer">'
+            + esc(tt('piViewProfile', 'View pokerth.net profile')) + '</a>';
+    }
+    return html;
+  }
 
   // Bloc stats du popup de profil — mêmes onglets que le panneau en jeu :
   // SESSION (toujours) / TOTAL (à vie, + bouton reset) / CLASSEMENT (proxy).
@@ -2594,6 +2690,7 @@ const App = (() => {
   // Réutilise _statsBodySession / _statsBodyLife / renderBoard pour rester
   // strictement identique au jeu (y compris le reset).
   var _pimTab = 'session';
+  var _pimPid = 0; // pid actuellement affiché dans le popup (0 / myId = mon profil)
   function _pimSetTab(tab) { _pimTab = tab; _renderProfileStats(); }
   window._pimSetTab = _pimSetTab;
 
@@ -2952,6 +3049,8 @@ const App = (() => {
   let collectedPot = 0;  // bets accumulated from previous rounds
   let dealerPid = 0;
   let turnPid   = 0;
+  let _lastSbPid = 0;   // SB/BB du dernier rendu, lus par le popup d'info joueur
+  let _lastBbPid = 0;
   let _timerID  = null;   // setInterval handle
   let _timerSec = 0;      // seconds remaining
   let _timerTot = 30;     // total seconds
@@ -6257,6 +6356,18 @@ const App = (() => {
 
   function renderSeatsImmediate() {
     const el = $('g-seats');
+    // Clic/tap sur un siège → popup d'info du joueur. Délégation posée une
+    // seule fois : #g-seats persiste, seul son contenu est recréé à chaque
+    // rendu. Les sièges deviennent cliquables via CSS (.seat { pointer-events }).
+    if (el && !el._seatClickBound) {
+      el._seatClickBound = true;
+      el.addEventListener('click', function(ev) {
+        var seat = (ev.target && ev.target.closest) ? ev.target.closest('.seat[data-pid]') : null;
+        if (!seat || seat.classList.contains('seat-ghost')) return; // siège vide / joueur parti
+        var sp = parseInt(seat.getAttribute('data-pid'), 10);
+        if (!isNaN(sp)) openPlayerInfoPopup(sp);
+      });
+    }
     if (!seats.length) { el.innerHTML = ''; return; }
     // Keep ALL original seats when computing pixel positions. Previously
     // we filtered to active-only seats here, which caused the remaining
@@ -6391,6 +6502,8 @@ const App = (() => {
     const bbPid = dealerIdx >= 0 && seats.length > 2
       ? nextActiveSeat(dealerIdx, 2)
       : (seats.length === 2 ? seats[dealerIdx] : -1); // heads-up: dealer = SB
+    // Mémorise SB/BB pour le popup d'info joueur (lu hors de renderSeats).
+    _lastSbPid = sbPid; _lastBbPid = bbPid;
 
     // Update player-bar
     const mySd = seatData[myId] || {};
@@ -7053,7 +7166,7 @@ const App = (() => {
     // Profil / avatar
     try {
       var pim = document.getElementById('player-info-modal');
-      if (pim && pim.style.display !== 'none' && typeof openPlayerInfoPopup === 'function') openPlayerInfoPopup();
+      if (pim && pim.style.display !== 'none' && typeof openPlayerInfoPopup === 'function') openPlayerInfoPopup(_pimPid);
     } catch (e) {}
   };
   window.renderGames = renderGames;
@@ -9898,7 +10011,7 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.2.340'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.2.341'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

@@ -476,6 +476,19 @@ export const strings = {
     srvRestartUpdate:'⚠ Palvelin päivitetään ja käynnistetään uudelleen klo {t}. Pelaa nykyinen kätesi loppuun välttääksesi keskeytykset.',
     srvRestartOnly:'⚠ Palvelin käynnistetään uudelleen klo {t}. Pelaa nykyinen kätesi loppuun välttääksesi keskeytykset.',
     srvRestartCancelled:'Palvelimen ajastettu uudelleenkäynnistys peruutettiin.',
+
+    // Popup d'info joueur (rôle / statut / lien profil)
+    piRoleBot:'Bot',
+    piRoleGuest:'Vieras',
+    piRoleRegistered:'Rekisteröity',
+    piRoleAdmin:'Admin',
+    piBet:'Panos',
+    piStatusToAct:'Vuorossa',
+    piStatusFolded:'Luovuttanut',
+    piStatusAllIn:'All-in',
+    piStatusSittingOut:'Tauolla',
+    piStatusEliminated:'Pudonnut',
+    piViewProfile:'Näytä pokerth.net-profiili',
 };
 
 export default { meta, strings };

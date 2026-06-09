@@ -288,6 +288,19 @@ export const strings = {
     srvRestartUpdate:'⚠ सर्वर {t} बजे अपडेट होकर पुनः आरंभ होगा। रुकावट से बचने के लिए अपना मौजूदा हाथ पूरा करें।',
     srvRestartOnly:'⚠ सर्वर {t} बजे पुनः आरंभ होगा। रुकावट से बचने के लिए अपना मौजूदा हाथ पूरा करें।',
     srvRestartCancelled:'सर्वर का निर्धारित पुनःआरंभ रद्द कर दिया गया।',
+
+    // Popup d'info joueur (rôle / statut / lien profil)
+    piRoleBot:'बॉट',
+    piRoleGuest:'अतिथि',
+    piRoleRegistered:'पंजीकृत',
+    piRoleAdmin:'एडमिन',
+    piBet:'दांव',
+    piStatusToAct:'इनकी बारी',
+    piStatusFolded:'फोल्ड किया',
+    piStatusAllIn:'All-in',
+    piStatusSittingOut:'बाहर बैठे',
+    piStatusEliminated:'बाहर हो गए',
+    piViewProfile:'pokerth.net प्रोफ़ाइल देखें',
 };
 
 export default { meta, strings };

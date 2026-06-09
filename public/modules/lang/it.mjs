@@ -480,6 +480,19 @@ export const strings = {
     srvRestartUpdate:'⚠ Il server verrà aggiornato e riavviato alle {t}. Termina la mano in corso per evitare interruzioni.',
     srvRestartOnly:'⚠ Il server verrà riavviato alle {t}. Termina la mano in corso per evitare interruzioni.',
     srvRestartCancelled:'Il riavvio programmato del server è stato annullato.',
+
+    // Popup d'info joueur (rôle / statut / lien profil)
+    piRoleBot:'Bot',
+    piRoleGuest:'Ospite',
+    piRoleRegistered:'Registrato',
+    piRoleAdmin:'Admin',
+    piBet:'Puntata',
+    piStatusToAct:'Deve agire',
+    piStatusFolded:'Foldato',
+    piStatusAllIn:'All-in',
+    piStatusSittingOut:'In pausa',
+    piStatusEliminated:'Eliminato',
+    piViewProfile:'Vedi profilo pokerth.net',
 };
 
 export default { meta, strings };

@@ -702,6 +702,85 @@ body {
 }
 .pim-stats .stats-tabs { margin-bottom: 4px; }
 .pim-stats .stats-body { padding: 8px 2px 2px; }
+/* ── Popup d'info joueur : bloc « adversaire » (rôle, infos en jeu, lien
+   profil). Entièrement piloté par les variables de thème → suit la palette
+   active. Seules les pastilles SB/BB gardent le bleu/rouge des jetons de
+   blinds posés sur le tapis (jetons de jeu, identiques sur tous les thèmes). ── */
+.pim-info {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+.pim-role {
+  font-size: 0.82rem;
+  letter-spacing: 0.04em;
+  color: var(--gold-dim);
+  text-transform: uppercase;
+  font-family: var(--ff-mono);
+}
+.pim-ig {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 10px 12px;
+  background: var(--field-bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+}
+.pim-ig-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 0.85rem;
+}
+.pim-ig-k { color: var(--gold-dim); }
+.pim-ig-v { color: var(--cream); font-family: var(--ff-mono); font-weight: 700; }
+.pim-ig-foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 2px;
+}
+.pim-status {
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--gold);
+  border: 1px solid var(--gold-dim);
+  border-radius: 999px;
+  padding: 2px 9px;
+}
+.pim-pos-wrap { display: inline-flex; gap: 4px; }
+.pim-pos {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 22px;
+  height: 18px;
+  padding: 0 5px;
+  font-size: 0.62rem;
+  font-weight: 700;
+  font-family: var(--ff-mono);
+  border-radius: 999px;
+  color: #fff;
+}
+.pim-pos-d  { background: var(--gold); color: #1a1a1a; }
+.pim-pos-sb { background: #1565c0; }
+.pim-pos-bb { background: #b71c1c; }
+.pim-profile-link {
+  font-size: 0.8rem;
+  color: var(--gold);
+  text-decoration: none;
+  border-bottom: 1px dotted var(--gold-dim);
+  padding-bottom: 1px;
+}
+.pim-profile-link:hover { color: var(--cream); border-bottom-color: var(--gold); }
 
 /* ── Avatar picker shown as a floating modal (from the lobby) ──
    The existing #avatar-popup lives statically inside the connect
@@ -2895,6 +2974,16 @@ body {
   gap: 2px;
   min-width: 44px;
   max-width: 68px;
+}
+/* Sièges cliquables : tap/clic → popup d'info joueur. #g-seats reste en
+   pointer-events:none ; on réactive l'interaction au niveau du siège. Les
+   sièges « fantômes » (joueur parti) restent non cliquables. Le halo de survol
+   (drop-shadow, suit la forme ronde + la palette) est limité aux pointeurs
+   précis pour éviter un survol « collé » au tap. */
+.seat { pointer-events: auto; cursor: pointer; }
+.seat-ghost { pointer-events: none; cursor: default; }
+@media (hover: hover) {
+  .seat:hover .seat-avatar { filter: drop-shadow(0 0 6px rgba(var(--gold-rgb), 0.85)); }
 }
 
 .seat-avatar {

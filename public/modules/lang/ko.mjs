@@ -287,6 +287,19 @@ export const strings = {
     srvRestartUpdate:'⚠ 서버가 {t}에 업데이트 후 재시작됩니다. 중단을 피하려면 현재 핸드를 마무리하세요.',
     srvRestartOnly:'⚠ 서버가 {t}에 재시작됩니다. 중단을 피하려면 현재 핸드를 마무리하세요.',
     srvRestartCancelled:'예약된 서버 재시작이 취소되었습니다.',
+
+    // Popup d'info joueur (rôle / statut / lien profil)
+    piRoleBot:'봇',
+    piRoleGuest:'게스트',
+    piRoleRegistered:'등록됨',
+    piRoleAdmin:'관리자',
+    piBet:'베팅',
+    piStatusToAct:'차례',
+    piStatusFolded:'폴드',
+    piStatusAllIn:'올인',
+    piStatusSittingOut:'대기 중',
+    piStatusEliminated:'탈락',
+    piViewProfile:'pokerth.net 프로필 보기',
 };
 
 export default { meta, strings };

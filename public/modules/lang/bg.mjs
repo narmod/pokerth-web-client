@@ -477,6 +477,19 @@ export const strings = {
     srvRestartUpdate:'⚠ Сървърът ще бъде актуализиран и рестартиран в {t}. Завършете текущата си ръка, за да избегнете прекъсвания.',
     srvRestartOnly:'⚠ Сървърът ще бъде рестартиран в {t}. Завършете текущата си ръка, за да избегнете прекъсвания.',
     srvRestartCancelled:'Планираното рестартиране на сървъра беше отменено.',
+
+    // Popup d'info joueur (rôle / statut / lien profil)
+    piRoleBot:'Бот',
+    piRoleGuest:'Гост',
+    piRoleRegistered:'Регистриран',
+    piRoleAdmin:'Админ',
+    piBet:'Залог',
+    piStatusToAct:'На ход',
+    piStatusFolded:'Пасува',
+    piStatusAllIn:'All-in',
+    piStatusSittingOut:'Извън играта',
+    piStatusEliminated:'Елиминиран',
+    piViewProfile:'Виж профила в pokerth.net',
 };
 
 export default { meta, strings };

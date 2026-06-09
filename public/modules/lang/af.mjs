@@ -477,6 +477,19 @@ export const strings = {
     srvRestartUpdate:'⚠ Die bediener word om {t} bygewerk en herbegin. Maak jou huidige hand klaar om onderbrekings te vermy.',
     srvRestartOnly:'⚠ Die bediener word om {t} herbegin. Maak jou huidige hand klaar om onderbrekings te vermy.',
     srvRestartCancelled:'Die geskeduleerde herbegin van die bediener is gekanselleer.',
+
+    // Popup d'info joueur (rôle / statut / lien profil)
+    piRoleBot:'Bot',
+    piRoleGuest:'Gas',
+    piRoleRegistered:'Geregistreer',
+    piRoleAdmin:'Admin',
+    piBet:'Inset',
+    piStatusToAct:'Aan die beurt',
+    piStatusFolded:'Gevou',
+    piStatusAllIn:'All-in',
+    piStatusSittingOut:'Sit uit',
+    piStatusEliminated:'Uitgeskakel',
+    piViewProfile:'Bekyk pokerth.net-profiel',
 };
 
 export default { meta, strings };

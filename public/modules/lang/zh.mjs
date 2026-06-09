@@ -478,6 +478,19 @@ export const strings = {
     srvRestartUpdate:'⚠ 服务器将于 {t} 更新并重启。请打完当前这手牌以避免中断。',
     srvRestartOnly:'⚠ 服务器将于 {t} 重启。请打完当前这手牌以避免中断。',
     srvRestartCancelled:'已取消计划中的服务器重启。',
+
+    // Popup d'info joueur (rôle / statut / lien profil)
+    piRoleBot:'机器人',
+    piRoleGuest:'访客',
+    piRoleRegistered:'已注册',
+    piRoleAdmin:'管理员',
+    piBet:'下注',
+    piStatusToAct:'轮到行动',
+    piStatusFolded:'已弃牌',
+    piStatusAllIn:'全下',
+    piStatusSittingOut:'暂离',
+    piStatusEliminated:'已淘汰',
+    piViewProfile:'查看 pokerth.net 资料',
 };
 
 export default { meta, strings };

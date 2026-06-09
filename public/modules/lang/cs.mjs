@@ -477,6 +477,19 @@ export const strings = {
     srvRestartUpdate:'⚠ Server bude v {t} aktualizován a restartován. Dohrajte aktuální rozdání, abyste předešli přerušení.',
     srvRestartOnly:'⚠ Server bude v {t} restartován. Dohrajte aktuální rozdání, abyste předešli přerušení.',
     srvRestartCancelled:'Naplánovaný restart serveru byl zrušen.',
+
+    // Popup d'info joueur (rôle / statut / lien profil)
+    piRoleBot:'Bot',
+    piRoleGuest:'Host',
+    piRoleRegistered:'Registrovaný',
+    piRoleAdmin:'Admin',
+    piBet:'Sázka',
+    piStatusToAct:'Na tahu',
+    piStatusFolded:'Složil',
+    piStatusAllIn:'All-in',
+    piStatusSittingOut:'Sedí mimo',
+    piStatusEliminated:'Vyřazen',
+    piViewProfile:'Zobrazit profil pokerth.net',
 };
 
 export default { meta, strings };

@@ -295,6 +295,19 @@ export const strings = {
     srvRestartOnly:'⚠ Le serveur va redémarrer à {t}. Terminez votre main en cours pour éviter toute interruption.',
     srvRestartCancelled:'Le redémarrage programmé du serveur a été annulé.',
     welcomeAck:'J\u2019ai compris',
+
+    // Popup d'info joueur (rôle / statut / lien profil)
+    piRoleBot:'Bot',
+    piRoleGuest:'Invité',
+    piRoleRegistered:'Enregistré',
+    piRoleAdmin:'Admin',
+    piBet:'Mise',
+    piStatusToAct:'À lui de jouer',
+    piStatusFolded:'Couché',
+    piStatusAllIn:'All-in',
+    piStatusSittingOut:'Absent',
+    piStatusEliminated:'Éliminé',
+    piViewProfile:'Voir le profil pokerth.net',
 };
 
 export default { meta, strings };

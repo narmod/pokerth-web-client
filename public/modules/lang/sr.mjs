@@ -477,6 +477,19 @@ export const strings = {
     srvRestartUpdate:'⚠ Server će biti ažuriran i ponovo pokrenut u {t}. Završite trenutnu ruku da biste izbegli prekide.',
     srvRestartOnly:'⚠ Server će biti ponovo pokrenut u {t}. Završite trenutnu ruku da biste izbegli prekide.',
     srvRestartCancelled:'Zakazano ponovno pokretanje servera je otkazano.',
+
+    // Popup d'info joueur (rôle / statut / lien profil)
+    piRoleBot:'Bot',
+    piRoleGuest:'Gost',
+    piRoleRegistered:'Registrovan',
+    piRoleAdmin:'Admin',
+    piBet:'Ulog',
+    piStatusToAct:'Na potezu',
+    piStatusFolded:'Bacio',
+    piStatusAllIn:'All-in',
+    piStatusSittingOut:'Pauzira',
+    piStatusEliminated:'Ispao',
+    piViewProfile:'Prikaži pokerth.net profil',
 };
 
 export default { meta, strings };

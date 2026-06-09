@@ -477,6 +477,19 @@ export const strings = {
     srvRestartUpdate:'⚠ Máy chủ sẽ được cập nhật và khởi động lại vào lúc {t}. Hãy hoàn thành ván bài hiện tại để tránh bị gián đoạn.',
     srvRestartOnly:'⚠ Máy chủ sẽ khởi động lại vào lúc {t}. Hãy hoàn thành ván bài hiện tại để tránh bị gián đoạn.',
     srvRestartCancelled:'Việc khởi động lại máy chủ theo lịch đã bị hủy.',
+
+    // Popup d'info joueur (rôle / statut / lien profil)
+    piRoleBot:'Bot',
+    piRoleGuest:'Khách',
+    piRoleRegistered:'Đã đăng ký',
+    piRoleAdmin:'Quản trị',
+    piBet:'Đặt cược',
+    piStatusToAct:'Đến lượt',
+    piStatusFolded:'Đã bỏ bài',
+    piStatusAllIn:'All-in',
+    piStatusSittingOut:'Tạm nghỉ',
+    piStatusEliminated:'Bị loại',
+    piViewProfile:'Xem hồ sơ pokerth.net',
 };
 
 export default { meta, strings };

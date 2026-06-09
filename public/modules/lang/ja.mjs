@@ -476,6 +476,19 @@ export const strings = {
     srvRestartUpdate:'⚠ サーバーは {t} に更新されて再起動します。中断を避けるため、現在のハンドを終わらせてください。',
     srvRestartOnly:'⚠ サーバーは {t} に再起動します。中断を避けるため、現在のハンドを終わらせてください。',
     srvRestartCancelled:'予定されていたサーバーの再起動はキャンセルされました。',
+
+    // Popup d'info joueur (rôle / statut / lien profil)
+    piRoleBot:'ボット',
+    piRoleGuest:'ゲスト',
+    piRoleRegistered:'登録済み',
+    piRoleAdmin:'管理者',
+    piBet:'ベット',
+    piStatusToAct:'手番',
+    piStatusFolded:'フォールド',
+    piStatusAllIn:'オールイン',
+    piStatusSittingOut:'休憩中',
+    piStatusEliminated:'敗退',
+    piViewProfile:'pokerth.net プロフィールを見る',
 };
 
 export default { meta, strings };

@@ -476,6 +476,19 @@ export const strings = {
     srvRestartUpdate:'⚠ Serveren opdateres og genstartes kl. {t}. Afslut din nuværende hånd for at undgå afbrydelser.',
     srvRestartOnly:'⚠ Serveren genstartes kl. {t}. Afslut din nuværende hånd for at undgå afbrydelser.',
     srvRestartCancelled:'Den planlagte genstart af serveren er annulleret.',
+
+    // Popup d'info joueur (rôle / statut / lien profil)
+    piRoleBot:'Bot',
+    piRoleGuest:'Gæst',
+    piRoleRegistered:'Registreret',
+    piRoleAdmin:'Admin',
+    piBet:'Indsats',
+    piStatusToAct:'Hans tur',
+    piStatusFolded:'Foldet',
+    piStatusAllIn:'All-in',
+    piStatusSittingOut:'Sidder over',
+    piStatusEliminated:'Slået ud',
+    piViewProfile:'Se pokerth.net-profil',
 };
 
 export default { meta, strings };

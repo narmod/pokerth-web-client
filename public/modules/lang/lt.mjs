@@ -477,6 +477,19 @@ export const strings = {
     srvRestartUpdate:'⚠ Serveris bus atnaujintas ir paleistas iš naujo {t}. Užbaikite dabartinę ranką, kad išvengtumėte pertrūkių.',
     srvRestartOnly:'⚠ Serveris bus paleistas iš naujo {t}. Užbaikite dabartinę ranką, kad išvengtumėte pertrūkių.',
     srvRestartCancelled:'Suplanuotas serverio paleidimas iš naujo atšauktas.',
+
+    // Popup d'info joueur (rôle / statut / lien profil)
+    piRoleBot:'Botas',
+    piRoleGuest:'Svečias',
+    piRoleRegistered:'Registruotas',
+    piRoleAdmin:'Administratorius',
+    piBet:'Statymas',
+    piStatusToAct:'Jo eilė',
+    piStatusFolded:'Pasitraukė',
+    piStatusAllIn:'All-in',
+    piStatusSittingOut:'Praleidžia',
+    piStatusEliminated:'Iškrito',
+    piViewProfile:'Žiūrėti pokerth.net profilį',
 };
 
 export default { meta, strings };
