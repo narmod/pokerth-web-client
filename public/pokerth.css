@@ -4472,10 +4472,11 @@ body:not(.in-game) .my-zone {
 
 #s-connect .corner-links .btn-icon{
   width:30px; padding:0;
-  display:inline-flex; align-items:center; justify-content:center;
+  display:inline-block; text-align:center;
   background:var(--inset); text-decoration:none;
+  font-size:clamp(0.62rem, 1.4vw, 0.78rem);
 }
-#s-connect .corner-links .btn-icon img{ display:block; width:18px; height:18px; }
+#s-connect .corner-links .btn-icon img{ height:1.15em; width:1.15em; vertical-align:middle; }
 
 /* ═══════════════════════════════════════════════════════════════════
    Credits footer (connect screen only).
