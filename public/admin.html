@@ -16,6 +16,10 @@
   .top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
   .topbtns{display:flex;gap:8px;margin-top:4px;flex:none}
   .card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px;margin:0 0 14px}
+  .card.collap>h2,.card.collap>.boardhead{cursor:pointer;user-select:none}
+  .card.collap>h2:first-of-type::before,.card.collap .boardhead>h2::before{content:'\25B8';display:inline-block;margin-right:.45em;color:var(--text);font-weight:400;font-size:.8em}
+  .card.collap.open>h2:first-of-type::before,.card.collap.open .boardhead>h2::before{content:'\25BE'}
+  .card.collap:not(.open)>*:not(:first-child){display:none}
   .card h2.collap-h{cursor:pointer;user-select:none;position:relative;padding-right:22px}
   .card h2.collap-h::after{content:'\25BE';position:absolute;right:2px;top:.15em;font-size:.7em;opacity:.55;transition:opacity .15s}
   .card h2.collap-h.collapsed::after{content:'\25B8'}
@@ -118,6 +122,7 @@
     </div>
     <div class="tabs">
       <button class="tab on" data-t="server">Server</button>
+      <button class="tab" data-t="clients">Clients</button>
       <button class="tab" data-t="broadcast">Broadcasts</button>
       <button class="tab" data-t="board">Leaderboard</button>
       <button class="tab" data-t="packages">Packages</button>
@@ -157,8 +162,7 @@
       </div>
     </div>
 
-    <div id="panel-server">
-      <div class="card"><h2>Status</h2><div id="status"><div class="empty">Loading\u2026</div></div></div>
+    <div id="panel-clients" style="display:none">
       <div class="card">
         <h2>App modes (login screen)</h2>
         <p class="muted" style="margin:0 0 4px">Show or hide entry modes offered to players.</p>
@@ -218,6 +222,9 @@
         <div style="margin-top:8px"><button id="saveIdent" class="use">Save</button></div>
         <div id="identMsg" class="msg"></div>
       </div>
+    </div>
+    <div id="panel-server">
+      <div class="card"><h2>Status</h2><div id="status"><div class="empty">Loading\u2026</div></div></div>
       <div class="card">
         <h2>Proxy</h2>
         <p class="muted" style="margin:0 0 8px">Server-side bridge settings. Always-allowed hosts: pokerth.net, www.pokerth.net, pokerth.ddns.net, localhost, 127.0.0.1, ::1. Changes apply live (no restart).</p>
@@ -380,11 +387,27 @@
     $('panel-packages').style.display=t==='packages'?'block':'none';
     $('panel-board').style.display=t==='board'?'block':'none';
     $('panel-server').style.display=t==='server'?'block':'none';
+    $('panel-clients').style.display=t==='clients'?'block':'none';
     $('panel-broadcast').style.display=t==='broadcast'?'block':'none';
     if(t==='board') loadBoard();
     if(t==='broadcast'){ loadBroadcasts(); loadWelcome(); }
+    if(t==='clients') loadStatus(true);
     if(t==='server'){ loadServer(); srvStart(); } else { srvStop(); }
   }); });
+
+  // Collapsible cards — collapsed by default, except Status.
+  document.querySelectorAll('.card').forEach(function(card){
+    var head = card.firstElementChild;
+    if(!head) return;
+    var hasH2 = head.tagName==='H2' || (head.querySelector && head.querySelector('h2'));
+    if(!hasH2) return;
+    card.classList.add('collap');
+    head.addEventListener('click', function(e){
+      if(e.target.closest('button,a,input,select,textarea,label')) return;
+      card.classList.toggle('open');
+    });
+  });
+  (function(){ var s=document.getElementById('status'); if(s){ var c=s.closest('.card'); if(c) c.classList.add('open'); } })();
 
   // packages
   var kind='table';
