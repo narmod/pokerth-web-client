@@ -317,6 +317,28 @@ body {
   letter-spacing: 0.12em;
   line-height: 1;
 }
+
+/* Titre de connexion : degrade de feu anime (sobre). 100% CSS sur
+   #s-connect .card-title-big ; respecte prefers-reduced-motion. */
+#s-connect .card-title-big {
+  background: linear-gradient(0deg, #ffb13a 0%, #ff8a1e 30%, #f4600f 58%, #d83a0a 80%, #b21d05 100%);
+  background-size: 100% 220%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  filter: drop-shadow(0 1px 7px rgba(255,110,25,0.30));
+  animation: pthTitleFire 5s ease-in-out infinite;
+}
+:root[data-theme="pokerth-light"] #s-connect .card-title-big { filter: drop-shadow(0 1px 1px rgba(150,40,0,0.32)); }
+@keyframes pthTitleFire {
+  0%, 100% { background-position: 50% 100%; }
+  50% { background-position: 50% 28%; }
+}
+@media (prefers-reduced-motion: reduce) {
+  #s-connect .card-title-big { animation: none; background-position: 50% 68%; }
+}
+
 .card-subtitle { font-size: 0.6rem; letter-spacing: 0.4em; text-transform: uppercase; color: var(--text); }
 .card-chip {
   display: block;
