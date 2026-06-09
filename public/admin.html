@@ -63,7 +63,35 @@
   .prog{height:6px;border-radius:6px;background:rgba(255,255,255,.08);overflow:hidden;margin-top:10px;display:none}
   .prog.on{display:block}
   .prog>i{display:block;height:100%;width:0;background:var(--gold);transition:width .15s}
+  /* ── Light admin theme (data-admin-theme="light") ───────────── */
+  :root[data-admin-theme="light"]{--panel:#ffffff;--line:rgba(28,38,58,.16);--gold:#1d222b;--cream:#1b2230;--text:#566071}
+  :root[data-admin-theme="light"] body{background:radial-gradient(circle at 50% 0%,#eef1f6,#d7dde7)}
+  :root[data-admin-theme="light"] input[type=password],
+  :root[data-admin-theme="light"] select,
+  :root[data-admin-theme="light"] .filter{background:rgba(255,255,255,.75)}
+  :root[data-admin-theme="light"] .primary,
+  :root[data-admin-theme="light"] .seg button.on{color:#f4f6fb}
+  :root[data-admin-theme="light"] .appbtn{background:rgba(29,34,43,.08)}
+  :root[data-admin-theme="light"] .tab,
+  :root[data-admin-theme="light"] .seg button,
+  :root[data-admin-theme="light"] .use,
+  :root[data-admin-theme="light"] .ghost{background:rgba(29,34,43,.05)}
+  :root[data-admin-theme="light"] .tab.on{background:var(--panel)}
+  :root[data-admin-theme="light"] .drop.hot{background:rgba(29,34,43,.06)}
+  :root[data-admin-theme="light"] .logs{background:#f3f5f9;color:#2b3340}
+  :root[data-admin-theme="light"] .prog{background:rgba(29,34,43,.1)}
+  :root[data-admin-theme="light"] .row,
+  :root[data-admin-theme="light"] .srow{border-top-color:rgba(29,34,43,.1)}
+  :root[data-admin-theme="light"] .ok,
+  :root[data-admin-theme="light"] .net.pos,
+  :root[data-admin-theme="light"] .toggle.on{color:#2e7d32}
+  :root[data-admin-theme="light"] .err,
+  :root[data-admin-theme="light"] .net.neg,
+  :root[data-admin-theme="light"] .del,
+  :root[data-admin-theme="light"] .toggle.off,
+  :root[data-admin-theme="light"] .use.danger{color:#c62828}
 </style>
+<script>(function(){try{var t=localStorage.getItem('pth_admin_theme');if(t!=='light'&&t!=='dark')t='dark';document.documentElement.setAttribute('data-admin-theme',t);}catch(e){}})();</script>
 </head>
 <body>
 <div class="wrap">
@@ -83,6 +111,7 @@
     <div class="top">
       <div><h1>PokerTH — Admin</h1><p class="sub">Dashboard</p></div>
       <div class="topbtns">
+        <button id="themeBtn" class="ghost" title="Toggle dark / light"></button>
         <a class="appbtn" href="/" target="_blank" rel="noopener">Open the app &#8599;</a>
         <button id="logoutBtn" class="ghost">Log out</button>
       </div>
@@ -320,6 +349,14 @@
   $('ltok').addEventListener('keydown', function(e){ if(e.key==='Enter') doLogin(); });
   function doLogin(){ localStorage.setItem(TOKK, $('ltok').value.trim()); enter(); }
   $('logoutBtn').addEventListener('click', function(){ doLogout(); });
+  (function(){
+    var btn=$('themeBtn'); if(!btn) return;
+    function cur(){ return document.documentElement.getAttribute('data-admin-theme')==='light' ? 'light' : 'dark'; }
+    function paint(){ btn.textContent = cur()==='light' ? '☀️ Light' : '🌙 Dark'; }
+    function set(t){ document.documentElement.setAttribute('data-admin-theme', t); try{ localStorage.setItem('pth_admin_theme', t); }catch(e){} paint(); }
+    paint();
+    btn.addEventListener('click', function(){ set(cur()==='light' ? 'dark' : 'light'); });
+  })();
   // Auto-logout: after IDLE_MS without any pointer/key/scroll activity, clear
   // the stored token and return to the login screen. A 30 s checker compares
   // the last-activity stamp; activity listeners (capture+passive) just stamp.
