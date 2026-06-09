@@ -11,9 +11,11 @@ use too. Items are grouped by status rather than fixed phases.
 - Three connection choices (LAN / Dedicated, pokerth.net, Training) + Guest-mode toggle.
 - Registered-account login on pokerth.net (account password sent over TLS), alongside guest and LAN.
 - TLS support (required for pokerth.net, optional for LAN) with smart auto-toggle.
-- Exponential-backoff auto-reconnect with live countdown.
+- Exponential-backoff auto-reconnect with live countdown, plus seamless reconnect across
+  Wi-Fi ↔ cellular switches (the proxy keeps the upstream alive for a 2-minute grace period).
 - Spectator mode.
-- Advanced table setup: blinds, timeout, max players, password, fill-with-bots.
+- Advanced table setup: blinds, timeout, max players, password, blind-increase schedule,
+  game-style presets, and fill-with-bots.
 
 **Training mode (offline)**
 - 100% offline solo play in the browser — local engine, no server or connection.
@@ -26,38 +28,84 @@ use too. Items are grouped by status rather than fixed phases.
 - Position-aware pre-flop play: steal wider from the button/cutoff, tighten under the gun.
 - Post-flop aggression: continuation bets by the pre-flop aggressor and semi-bluffs on strong draws.
 
+**Appearance & theming**
+- Multi-axis customisation, each axis independently selectable: UI palette, table felt,
+  card deck, action-button style, and chip pucks.
+- One-click presets — PokerTH Dark (the default, reproducing the official client's look),
+  PokerTH Light, and Green Casino — plus gallery themes (Midnight Blue, Graphite,
+  Royal Purple, Sleek).
+- Light/dark aware: per-theme `color-scheme` and a dynamic browser `theme-color` that
+  follows the active theme.
+- Theme panel fully localised in all 36 languages, with live switching and a live preview
+  of each deck.
+- Semantic-colour system so the whole UI recolours consistently per theme — gold is kept
+  only for deliberate game assets (dealer button, chip denominations, win bursts).
+- Coloured glossy action buttons (Fold red / Check-Call blue / Raise green / All-In orange)
+  and an animated flaming-chip emblem on the login screen (respects reduced-motion).
+
+**Server administration**
+- Token-protected web admin panel at `/admin`, which can be completely hidden
+  (`/admin*` returns a plain 404 when disabled).
+- Server tab: live status (version, uptime, players, sockets); one-click self-update with
+  or without a restart; scheduled restart/update with an advance countdown shown to players;
+  app-mode toggles to show/hide Offline, LAN and pokerth.net on the connect screen; proxy
+  settings (extra allowed hosts, session-grace window, connection gap).
+- Client defaults pushed to new visitors: default login form, default theme, default
+  in-game settings, default table-creation settings, and a server identity (name + tagline)
+  shown on the login screen.
+- Broadcasts: send a message now or on a recurring schedule (interval / daily / every-N-days /
+  weekly / monthly / once), plus a multilingual first-visit welcome/rules modal with on-device
+  auto-translation (Chromium Translator / LanguageDetector APIs, graceful fallback to the
+  operator's text).
+- Packages: install or remove card decks and table styles from a `.zip` or URL, and
+  enable/disable each one without deleting its files.
+- Shared family leaderboard persisted on the server, sortable, with a configurable auto-reset
+  (off / daily / monthly / yearly) and on-demand reset.
+
 **Experience**
 - Mobile-first design for phones and tablets.
-- Adaptive seat layout that scales from 2 to 10 players per screen size, with a phone-specific fix so 4-player side seats stay fully on-screen.
-- Emoji avatars (500+), broadcast live, with anti-flicker caching.
+- Adaptive seat layout that scales from 2 to 10 players per screen size, with a phone-specific
+  fix so 4-player side seats stay fully on-screen.
+- Accessibility & mobile polish: honours `prefers-reduced-motion` and reduced-transparency,
+  with touch-comfort tweaks (overscroll containment, touch-callout suppression on cards/buttons).
+- Emoji avatars (500+) and custom image avatars, broadcast live, with anti-flicker caching.
 - Session statistics panel (hands, wins, win rate, net result, best/worst hands).
-- In-game chat and 30 emoji reactions.
+- In-game and lobby chat, plus 30 emoji reactions that now interoperate cross-client through a
+  shared `/emoji` chat channel (and work on pokerth.net too).
+- Lobby game cards show player counts, status, and each table's blind level and raise schedule.
 - Sound effects for every action.
 - Internationalisation in 36 languages, auto-detected and switchable on the fly.
 
 **Platform**
 - Installable PWA (mobile and desktop; works offline in Training mode).
+- Versioned, network-first Service Worker with a "new version" banner.
 - Docker image (multi-arch) + one-liner installer / updater / uninstaller.
 
 ## 🔨 Now (in progress)
 
-- Nothing in active development right now — the next focus is the **Code health** work below.
+- **Registered-account authentication** — refining the pokerth.net login flow; this is the
+  current focus, with the Code-health work below up next.
 
 ## ⏭️ Next
 
 - **Code health**
-  - Split the large `pokerth.js` into focused modules (network, protocol, state, UI).
+  - Split the large `pokerth.js` into focused modules (network, protocol, state, UI). The
+    modularisation is mapped out; the main blocker is the many inline `onclick=` handlers in
+    the HTML.
   - Add linting, formatting, and a small automated test suite.
   - Move hand-written Protobuf handling toward generated classes + encode/decode tests.
 
 ## 🌅 Later / Ideas
 
-- Mobile polish and visual themes (felts, light/dark), plus accessibility passes.
+- **Local multiplayer over WebRTC** — peer-to-peer play over a local Wi-Fi hotspot with
+  QR-code signalling, no server needed.
+- **Voice chat** at the table (WebRTC).
+- Alternative table shapes (e.g. a D-shaped / trapezoidal table).
 - Persistent hand history and export (beyond the current last-5-hands view).
 - In-game invitations.
 - Tournaments / multi-table.
 - Native translation passes for languages currently falling back to English.
-- Toward a community release: stable tagged releases, docs/screenshots, public demo.
+- Continued polish toward a wider community release (regular tagged releases).
 
 ---
 Have an idea or hit a bug? Open an issue — feedback from real games is what shaped
