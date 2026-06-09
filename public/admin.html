@@ -16,13 +16,7 @@
   .top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
   .topbtns{display:flex;gap:8px;margin-top:4px;flex:none}
   .card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px;margin:0 0 14px}
-  .card.collap:not(.open){cursor:pointer}
-  .card.collap>h2,.card.collap>.boardhead{cursor:pointer;user-select:none}
-  .card.collap>h2:first-of-type::before,.card.collap .boardhead>h2::before{content:'\25B8';display:inline-block;margin-right:.45em;color:var(--text);font-weight:400;font-size:.8em;transition:transform .22s ease}
-  .card.collap.open>h2:first-of-type::before,.card.collap.open .boardhead>h2::before{transform:rotate(90deg)}
-  .cbody{display:grid;grid-template-rows:0fr;transition:grid-template-rows .24s ease}
-  .card.collap.open>.cbody{grid-template-rows:1fr}
-  .cbody>.cin{overflow:hidden;min-height:0}
+  .card-body{overflow:hidden;transition:height .24s ease}
   .card h2.collap-h{cursor:pointer;user-select:none;position:relative;padding-right:22px}
   .card h2.collap-h::after{content:'\25BE';position:absolute;right:2px;top:.15em;font-size:.7em;opacity:.55;transition:opacity .15s}
   .card h2.collap-h.collapsed::after{content:'\25B8'}
@@ -397,24 +391,6 @@
     if(t==='server'){ loadServer(); srvStart(); } else { srvStop(); }
   }); });
 
-  // Collapsible cards — collapsed by default, except Status.
-  document.querySelectorAll('.card').forEach(function(card){
-    var head = card.firstElementChild;
-    if(!head) return;
-    var hasH2 = head.tagName==='H2' || (head.querySelector && head.querySelector('h2'));
-    if(!hasH2) return;
-    card.classList.add('collap');
-    var cin=document.createElement('div'); cin.className='cin';
-    while(head.nextSibling) cin.appendChild(head.nextSibling);
-    var cbody=document.createElement('div'); cbody.className='cbody';
-    cbody.appendChild(cin); card.appendChild(cbody);
-    card.addEventListener('click', function(e){
-      if(e.target.closest('button,a,input,select,textarea,label')) return;
-      if(card.classList.contains('open') && cbody.contains(e.target)) return;
-      card.classList.toggle('open');
-    });
-  });
-  (function(){ var s=document.getElementById('status'); if(s){ var c=s.closest('.card'); if(c) c.classList.add('open'); } })();
 
   // packages
   var kind='table';
@@ -820,9 +796,14 @@
       var k = slug(h2.textContent);
       var txt = (h2.textContent||'').trim();
       var folded = firstRun ? DEFAULT_FOLDED.some(function(t){ return txt.indexOf(t)===0; }) : !!state[k];
-      function apply(f){ h2.classList.toggle('collapsed', f); body.style.display = f ? 'none' : ''; }
-      apply(folded); state[k]=folded;
-      function toggle(){ var f = !h2.classList.contains('collapsed'); apply(f); state[k]=f; try{ localStorage.setItem(STORE, JSON.stringify(state)); }catch(e){} }
+      function setFold(f, anim){
+        h2.classList.toggle('collapsed', f);
+        if(!anim){ body.style.height = f ? '0px' : 'auto'; return; }
+        if(f){ body.style.height = body.scrollHeight + 'px'; void body.offsetHeight; body.style.height = '0px'; }
+        else { body.style.height = body.scrollHeight + 'px'; setTimeout(function(){ if(!h2.classList.contains('collapsed')) body.style.height = 'auto'; }, 280); }
+      }
+      setFold(folded, false); state[k]=folded;
+      function toggle(){ var f = !h2.classList.contains('collapsed'); setFold(f, true); state[k]=f; try{ localStorage.setItem(STORE, JSON.stringify(state)); }catch(e){} }
       h2.addEventListener('click', toggle);
       h2.addEventListener('keydown', function(e){ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); toggle(); } });
     });
