@@ -4452,7 +4452,8 @@ body:not(.in-game) .my-zone {
    them. Apply the same dimensions here so the three (or four) buttons
    line up neatly.
    ═══════════════════════════════════════════════════════════════════ */
-#s-connect > div:first-child .btn-sm {
+#s-connect > div:first-child .btn-sm,
+#s-connect .corner-links .btn-sm {
   height: 30px;
   min-width: 30px;
   padding: 0 10px;
@@ -4464,19 +4465,15 @@ body:not(.in-game) .my-zone {
   line-height: 1;
   color: var(--text-hi);
 }
-#s-connect > div:first-child .btn-icon {
+#s-connect > div:first-child .btn-icon,
+#s-connect .corner-links .btn-icon {
   width: 30px;
   padding: 0;
   background: var(--inset);
 }
 
-#s-connect .corner-links .btn-icon{
-  width:30px; padding:0;
-  display:inline-block; text-align:center;
-  background:var(--inset); text-decoration:none;
-  font-size:clamp(0.62rem, 1.4vw, 0.78rem);
-}
-#s-connect .corner-links .btn-icon img{ height:1.15em; width:1.15em; vertical-align:middle; }
+#s-connect .corner-links .btn-icon{ text-decoration:none; }
+#s-connect .corner-links .btn-icon img{ display:block; width:18px; height:18px; }
 
 /* ═══════════════════════════════════════════════════════════════════
    Credits footer (connect screen only).
