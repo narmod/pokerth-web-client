@@ -3463,10 +3463,28 @@ const App = (() => {
   // at all but the underlying logic stays intact — flipping this back to
   // `true` reinstates the feature without touching anything else.
   const FEATURE_AUTO_CHECK_FOLD = true;
-  let _autoCheckFold = false; // armed by the per-turn checkbox; auto-resets every HandStart
+  // Mode de jeu PERSISTANT (comme le client officiel) : 0 = Manuel,
+  // 1 = Auto Check/Call, 2 = Auto Check/Fold. Reste actif jusqu'a un clic
+  // manuel sur une action ou un changement de dropdown (pas de reset par main).
+  let _playingMode = 0;
+  // Joue l'action du mode auto courant a NOTRE tour (sans afficher les boutons).
+  // Retourne true si une action auto a ete declenchee.
+  function _playAutoMode() {
+    if (_playingMode === 0 || turnPid !== myId) return false;
+    if (!ws || ws.readyState !== WebSocket.OPEN) return false;
+    var myBet0    = (seatData[myId] || {}).bet || 0;
+    var toCall0   = Math.max(0, highestBet - myBet0);
+    var canCheck0 = toCall0 === 0;
+    var act = canCheck0 ? 2 : (_playingMode === 1 ? 3 : 1); // 2=check, 3=call, 1=fold
+    var amt = (act === 3) ? toCall0 : 0;
+    renderGameWaiting('\u23e9 ' + t(act === 2 ? 'autoChecked' : act === 3 ? 'autoCalled' : 'autoFolded'));
+    setMyTurnActive(true);
+    setTimeout(function () { doAction(act, amt); }, 60);
+    return true;
+  }
   // Panneau "aperçu des actions" ouvert en tapant ses cartes hors de son tour.
-  // N'expose qu'un seul réglage activable : l'auto-check/fold (réutilise
-  // _autoCheckFold). Les boutons d'action y sont affichés en APERÇU seulement
+  // Le sélecteur de mode (Manuel/Auto Check-Call/Auto Check-Fold) y reste
+  // activable. Les boutons d'action y sont affichés en APERÇU seulement
   // (non cliquables). Se ferme automatiquement quand c'est notre tour.
   let _preActionOpen = false;
   // User preference: show the compact auto check/fold button in the action
@@ -3480,7 +3498,7 @@ const App = (() => {
   function toggleAutoBtnPref() {
     _showAutoBtn = !_showAutoBtn;
     try { localStorage.setItem('pth_show_auto', _showAutoBtn ? '1' : '0'); } catch (e) {}
-    if (!_showAutoBtn) _autoCheckFold = false; // disarm when hiding
+    if (!_showAutoBtn) _playingMode = 0; // repasse en Manuel si l'UI auto est masquée
     try { document.body.classList.toggle('hide-auto-btn', !_showAutoBtn); } catch (e) {}
     var b = document.getElementById('auto-pref-mob');
     if (b) b.innerHTML = '🔁 ' + t('autoBtnLabel') + _menuTick(_showAutoBtn);
@@ -4808,10 +4826,9 @@ const App = (() => {
       case T.HandStart: {
         // HandStartMessage: gameId=1, plainCards=2 {card1:1, card2:2}, smallBlind=4, seatStates=5, dealerPlayerId=6
         handNum++;
-        // Reset auto-check/fold on every new hand. Standard poker-client
-        // safety: the user must see each hand's hole cards before deciding
-        // anything automatic.
-        _autoCheckFold = false;
+        // Mode de jeu PERSISTANT entre les mains (comme le client officiel) :
+        // pas de reset par main. Le joueur le change via le dropdown ou un
+        // clic manuel sur une action.
         _preActionOpen = false; // referme tout panneau "aperçu" à chaque main
 
         // ── SPECTATOR BOOTSTRAP ──
@@ -5032,30 +5049,10 @@ const App = (() => {
           // C'est notre tour : on referme tout panneau "aperçu" pour ne pas
           // interférer avec la barre d'actions normale (et tous ses effets).
           _preActionOpen = false;
-          // Auto check/fold path: if the user armed the option on a
-          // previous turn (this same hand), play the auto action without
-          // showing the action buttons. canCheck (no money to put in)
-          // → check. Otherwise → fold.
-          if (_autoCheckFold) {
-            const myBet0   = (seatData[myId] || {}).bet || 0;
-            const toCall0  = Math.max(0, highestBet - myBet0);
-            const canCheck0 = toCall0 === 0;
-            // Disarm immediately so the option is one-shot per hand even if
-            // we get multiple turns within the same hand (re-arming is up
-            // to the user every turn).
-            _autoCheckFold = false;
-            // Brief delay so the user sees a visual cue rather than an
-            // instant invisible action.
-            renderGameWaiting(canCheck0 ? '⏩ ' + t('autoChecked') : '⏩ ' + t('autoFolded'));
-            setMyTurnActive(true);
-            // Fix #6: 60ms instead of 180ms. Plenty of time for the
-            // 'Auto-folded' badge to flash, no perceived lag.
-            setTimeout(function() {
-              if (canCheck0) doAction(2, 0);
-              else           doAction(1, 0);
-            }, 60);
-            break;
-          }
+          // Mode auto PERSISTANT (Manuel/Auto Check-Call/Auto Check-Fold) :
+          // si un mode auto est actif, jouer l'action sans afficher les boutons.
+          // Le mode reste actif (pas de désarmement), comme le client officiel.
+          if (_playAutoMode()) break;
           renderMyTurnActions();
           setMyTurnActive(true);
           // Play the audio ding-dong (from sounds.mjs, attached to window)
@@ -7289,63 +7286,39 @@ const App = (() => {
     const allInOnly = myMoney <= toCall;    // ne peut que call ou all-in
 
     const isMobile = window.innerWidth < 640;
-    const raiseRowHtml = isMobile
-      ? '<div class="raise-row raise-row-mobile">'
-        + '<input class="raise-slider" id="raise-slider" type="range" min="' + minBet + '" max="' + myMoney + '" value="' + minBet + '" step="1"' + da
-        + ' oninput="document.getElementById(\'raise-amt\').value=this.value;document.getElementById(\'raise-display\').textContent=this.value">'
-        + '<span class="raise-display" id="raise-display">' + minBet + '</span>'
-        + '<input id="raise-amt" type="hidden" value="' + minBet + '"' + da + '>'
-        + '<button class="btn-action btn-raise raise-btn"' + da + ' onclick="App.doRaise()" title="Raise (R)">' + raiseLabel + '</button>'
-        + '</div>'
-      : '<div class="raise-row">'
-        + '<input class="raise-input" id="raise-amt" type="number" min="' + minBet + '" max="' + myMoney + '" value="' + minBet + '"' + da + '>'
-        + '<button class="btn-action btn-raise raise-btn"' + da + ' onclick="App.doRaise()" title="Raise (R)">' + raiseLabel + '</button>'
-        + '</div>';
+    const raiseRowHtml = '<div class="raise-row">'
+      + '<input class="raise-input" id="raise-amt" type="number" min="' + minBet + '" max="' + myMoney + '" value="' + minBet + '" style="flex:0 0 76px"' + da
+      +   ' oninput="var s=document.getElementById(\'raise-slider\'); if(s) s.value=this.value">'
+      + '<input class="raise-slider" id="raise-slider" type="range" min="' + minBet + '" max="' + myMoney + '" value="' + minBet + '" step="1" style="flex:1 1 auto"' + da
+      +   ' oninput="document.getElementById(\'raise-amt\').value=this.value">'
+      + '</div>';
 
-    // Auto check/fold toggle: shown above the action buttons, lets the user
-    // arm the option NOW so it takes effect on the NEXT turn this hand.
-    // The label text adapts to what the auto action will be next time —
-    // 'Auto-check' when we currently have nothing to call, 'Auto-fold'
-    // otherwise. The checkbox state is bound to window._autoCheckFold via
-    // App.toggleAutoCheckFold.
-    //
-    // The whole row is hidden behind FEATURE_AUTO_CHECK_FOLD so the
-    // checkbox can be enabled or disabled in one place without removing
-    // the underlying logic. When the flag is false, `autoRow` is empty
-    // and the action bar starts directly with the fold/call/raise grid.
-    let autoBtn = '';
-    if (FEATURE_AUTO_CHECK_FOLD) {
-      const autoLabel = canCheck
-        ? t('autoCheckLabel')
-        : t('autoFoldLabel');
-      // Compact toggle next to Call/Check. Shows AUTO + the action it will
-      // take next turn: a check tick (will auto-check, nothing to call) or a
-      // cross (will auto-fold). 'armed' reflects window._autoCheckFold.
-      const glyph = canCheck
-        ? '<svg class="auto-ic ic-check" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 13 L10 18 L19 6" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>'
-        : '<svg class="auto-ic ic-fold" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6 L18 18 M18 6 L6 18" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg>';
-      autoBtn = '<button class="btn-action btn-auto' + (_autoCheckFold ? ' armed' : '') + '"' +
-        ' id="auto-cf-btn" onclick="App.toggleAutoCheckFold()"' +
-        ' aria-pressed="' + (_autoCheckFold ? 'true' : 'false') + '"' +
-        ' title="' + autoLabel + ' \u2014 ' + t('autoRearmHint') + '">' +
-        '<span class="auto-tx">AUTO</span>' +
-        glyph +
-        '</button>';
-    }
+    // Fold -> "Check / Fold" en aperçu (pré-sélection) quand le check est gratuit, comme l'officiel.
+    const foldLabel = (preview && canCheck) ? (t('check') + ' / ' + t('fold')) : t('fold');
 
+    // Sélecteur de mode PERSISTANT (officiel) : Manuel / Auto Check-Call / Auto Check-Fold.
+    const modeSel = '<div class="sel-wrap mode-sel-wrap" style="flex:0 0 124px">'
+      + '<select id="mode-sel" autocomplete="off" onchange="App.setPlayingMode(this.selectedIndex)">'
+      +   '<option' + (_playingMode === 0 ? ' selected' : '') + '>' + t('modeManual') + '</option>'
+      +   '<option' + (_playingMode === 1 ? ' selected' : '') + '>' + t('modeAutoCheckCall') + '</option>'
+      +   '<option' + (_playingMode === 2 ? ' selected' : '') + '>' + t('modeAutoCheckFold') + '</option>'
+      + '</select><span class="sel-arr">\u25be</span></div>';
+
+    // Agencement officiel : rangée montant+slider / rangée 1-3·1-2·Pot + All-In + Mode / rangée Fold·Check-Call·Bet-Raise.
     const h = '<div class="action-grid">'
-      + '<div class="action-top-row">'
-      +   '<button class="btn-action btn-fold" onclick="App.doAction(1,0)" title="Fold (F)">' + t('fold') + '</button>'
-      +   '<button class="btn-action ' + callClass + '" onclick="' + callAction + '" title="Call/Check (C)">' + callLabel + '</button>'
-      +   autoBtn
-      + '</div>'
-      + '<div class="pct-row">'
-      +   '<button class="btn-pct"' + da + ' onclick="setPct(' + p33  + ')"><span class="pct-p">33%</span><span class="pct-amt">' + fmtChips(p33) + '</span></button>'
-      +   '<button class="btn-pct"' + da + ' onclick="setPct(' + p50  + ')"><span class="pct-p">50%</span><span class="pct-amt">' + fmtChips(p50) + '</span></button>'
-      +   '<button class="btn-pct"' + da + ' onclick="setPct(' + p100 + ')"><span class="pct-p">100%</span><span class="pct-amt">' + fmtChips(p100) + '</span></button>'
-      + '</div>'
       + raiseRowHtml
-      + '<button class="btn-action btn-allin" onclick="App.doAction(6,' + myMoney + ')" title="All-In (A)">' + t('allin') + ' <b>' + fmtChips(myMoney) + '</b></button>'
+      + '<div class="bet-row">'
+      +   '<button class="btn-pct"' + da + ' onclick="setPct(' + p33  + ')"><span class="pct-p">1/3</span><span class="pct-amt">' + fmtChips(p33) + '</span></button>'
+      +   '<button class="btn-pct"' + da + ' onclick="setPct(' + p50  + ')"><span class="pct-p">1/2</span><span class="pct-amt">' + fmtChips(p50) + '</span></button>'
+      +   '<button class="btn-pct"' + da + ' onclick="setPct(' + p100 + ')"><span class="pct-p">Pot</span><span class="pct-amt">' + fmtChips(p100) + '</span></button>'
+      +   '<button class="btn-action btn-allin" style="flex:1.3" onclick="App.doAction(6,' + myMoney + ')" title="All-In (A)">' + t('allin') + ' <b>' + fmtChips(myMoney) + '</b></button>'
+      +   modeSel
+      + '</div>'
+      + '<div class="action-top-row">'
+      +   '<button class="btn-action btn-fold" onclick="App.doAction(1,0)" title="Fold (F)">' + foldLabel + '</button>'
+      +   '<button class="btn-action ' + callClass + '" onclick="' + callAction + '" title="Call/Check (C)">' + callLabel + '</button>'
+      +   '<button class="btn-action btn-raise"' + da + ' onclick="App.doRaise()" title="Raise (R)">' + raiseLabel + '</button>'
+      + '</div>'
       + '</div>';
 
     if (preview) {
@@ -8584,18 +8557,16 @@ function dismissWinner() {
       try { this.createGame(); } catch (e) { window._offlineAutoReplay = false; }
     },
 
-    toggleAutoCheckFold(on) {
-      // Flips the per-hand auto check/fold state. Now driven by a compact
-      // toggle button next to Call/Check (no arg = flip). The flag is
-      // consumed on the NEXT PlayersTurn for our pid within the same hand,
-      // and force-reset on every HandStart so the user never starts a fresh
-      // hand on autopilot.
-      _autoCheckFold = (on === undefined) ? !_autoCheckFold : !!on;
-      var b = document.getElementById('auto-cf-btn');
-      if (b) {
-        b.classList.toggle('armed', _autoCheckFold);
-        b.setAttribute('aria-pressed', _autoCheckFold ? 'true' : 'false');
-      }
+    // Sélecteur de mode de jeu PERSISTANT (officiel) : 0=Manuel,
+    // 1=Auto Check/Call, 2=Auto Check/Fold. Si on choisit un mode auto alors
+    // que c'est déjà notre tour, l'action est jouée immédiatement.
+    setPlayingMode(idx) {
+      var n = parseInt(idx, 10);
+      if (!(n === 1 || n === 2)) n = 0;
+      _playingMode = n;
+      var sel = document.getElementById('mode-sel');
+      if (sel && sel.selectedIndex !== n) sel.selectedIndex = n;
+      if (n !== 0 && turnPid === myId) _playAutoMode();
     },
 
     // Ouvre/ferme le panneau "aperçu" en tapant ses cartes. Volontairement
@@ -8610,12 +8581,10 @@ function dismissWinner() {
       else _closePreActionPanel();
     },
 
-    // Active/désactive l'auto-check/fold depuis le panneau, puis rafraîchit
-    // l'état affiché. Réutilise exactement le flag _autoCheckFold.
+    // Bascule rapide du mode depuis le panneau aperçu : Manuel <-> Auto Check/Fold.
+    // (Conservé pour compat ; le dropdown du panneau pilote App.setPlayingMode.)
     togglePreAuto() {
-      _autoCheckFold = !_autoCheckFold;
-      var b = document.getElementById('auto-cf-btn');
-      if (b) { b.classList.toggle('armed', _autoCheckFold); b.setAttribute('aria-pressed', _autoCheckFold ? 'true' : 'false'); }
+      _playingMode = (_playingMode === 0) ? 2 : 0;
       if (_preActionOpen) _renderPreActionPanel();
     },
 
@@ -10011,7 +9980,7 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.2.341'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.2.342'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

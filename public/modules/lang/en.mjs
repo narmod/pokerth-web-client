@@ -209,6 +209,8 @@ export const strings = {
     autoBtnLabel:'Auto-fold button', quickBetLabel:'Quick-bet buttons',
     autoRearmHint:'re-arms each turn',
     autoChecked:'Auto-checked',
+    autoCalled:'Auto-called',
+    modeManual:'Manual', modeAutoCheckCall:'Auto Check/Call', modeAutoCheckFold:'Auto Check/Fold',
     preActionTitle:'Action preview', preActionHint:'tap cards to close',
     autoFolded:'Auto-folded',
     initializing:'Initialising…',
