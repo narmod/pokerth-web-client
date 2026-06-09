@@ -4470,6 +4470,13 @@ body:not(.in-game) .my-zone {
   background: var(--inset);
 }
 
+#s-connect .corner-links .btn-icon{
+  width:30px; padding:0;
+  display:inline-flex; align-items:center; justify-content:center;
+  background:var(--inset); text-decoration:none;
+}
+#s-connect .corner-links .btn-icon img{ display:block; width:18px; height:18px; }
+
 /* ═══════════════════════════════════════════════════════════════════
    Credits footer (connect screen only).
    Sits at the bottom of #s-connect without disturbing the centered
