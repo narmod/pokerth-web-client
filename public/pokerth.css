@@ -325,39 +325,22 @@ body {
   filter: drop-shadow(0 4px 12px rgba(0,0,0,0.55));
 }
 
-/* Jeton de connexion : medaillon sombre + flammes nettes (le fond sombre donne
-   le contraste qui manquait au feu sur theme clair). transform/opacity (fiable
-   Safari), taille suit le jeton via padding, figees si prefers-reduced-motion. */
-.chip-fire {
-  position: relative; display: inline-block; padding: 22px; line-height: 0;
-  border-radius: 50%; overflow: hidden;
-  background: radial-gradient(circle at 50% 60%, #34190a 0%, #1d0e06 60%, #140a05 100%);
-  box-shadow: 0 0 0 1.5px rgba(255,150,60,0.30), 0 0 18px 2px rgba(255,90,20,0.38), inset 0 -6px 14px rgba(0,0,0,0.50);
+/* Jeton de connexion : flammes stylisees (SVG vectoriel) derriere le logo,
+   sans cercle ni fond sombre. transform/opacity (fiable Safari), figees si
+   prefers-reduced-motion. La boite reserve la hauteur des flammes. */
+.chip-fire { position: relative; display: inline-block; width: 132px; height: 148px; }
+.chip-fire .flames-svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; z-index: 1; pointer-events: none; }
+.chip-fire .flame-path { transform-box: fill-box; transform-origin: 50% 100%; animation: chipFlame 1.6s ease-in-out infinite; }
+.chip-fire .card-chip { position: absolute; left: 50%; bottom: 6px; transform: translateX(-50%); margin: 0; z-index: 3; }
+@keyframes chipFlame {
+  0%, 100% { transform: scaleY(1) scaleX(1) skewX(0); }
+  25% { transform: scaleY(1.13) scaleX(0.93) skewX(-2.5deg); }
+  55% { transform: scaleY(0.9) scaleX(1.05) skewX(2.5deg); }
+  80% { transform: scaleY(1.06) scaleX(0.97) skewX(-1deg); }
 }
-.chip-fire .card-chip { position: relative; z-index: 3; }
-.chip-fire .emb-base {
-  position: absolute; left: 50%; bottom: -4%; width: 88%; height: 40%;
-  transform: translateX(-50%);
-  background: radial-gradient(ellipse at center bottom, rgba(255,170,40,0.90), rgba(255,90,15,0.50) 50%, rgba(255,90,15,0) 78%);
-  filter: blur(2px); z-index: 1; pointer-events: none;
-}
-.chip-fire .et {
-  position: absolute; bottom: 5%; transform-origin: bottom center;
-  border-radius: 50% 50% 46% 46% / 66% 66% 38% 38%;
-  filter: blur(1.4px); opacity: 0; z-index: 2; pointer-events: none;
-  animation: embLick 1.8s ease-in-out infinite;
-  background: radial-gradient(ellipse at 50% 100%, #fff1b0 0%, #ffc23e 22%, #ff7a17 52%, #e0400c 74%, rgba(180,20,0,0) 86%);
-}
-@keyframes embLick {
-  0% { transform: translateY(10%) scaleY(0.8) scaleX(1); opacity: 0; }
-  16% { opacity: 1; }
-  55% { transform: translateY(-48%) scaleY(1.5) scaleX(0.8); opacity: 0.85; }
-  82% { opacity: 0.2; }
-  100% { transform: translateY(-86%) scaleY(1.05) scaleX(1); opacity: 0; }
-}
-@media (prefers-reduced-motion: reduce) {
-  .chip-fire .et { animation: none; opacity: 0.7; transform: translateY(-30%) scaleY(1.2); }
-}
+@media (prefers-reduced-motion: reduce) { .chip-fire .flame-path { animation: none; } }
+@media (max-height: 760px) { .chip-fire { width: 100px; height: 112px; } }
+@media (max-height: 640px) { .chip-fire { width: 84px; height: 96px; } }
 
 /* Small / short screens (e.g. iPhone SE, landscape): compact the login
    card so it fits without scrolling. The header block (chip, title, suits,
