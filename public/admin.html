@@ -16,6 +16,7 @@
   .top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
   .topbtns{display:flex;gap:8px;margin-top:4px;flex:none}
   .card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px;margin:0 0 14px}
+  .card.collap:not(.open){cursor:pointer}
   .card.collap>h2,.card.collap>.boardhead{cursor:pointer;user-select:none}
   .card.collap>h2:first-of-type::before,.card.collap .boardhead>h2::before{content:'\25B8';display:inline-block;margin-right:.45em;color:var(--text);font-weight:400;font-size:.8em}
   .card.collap.open>h2:first-of-type::before,.card.collap.open .boardhead>h2::before{content:'\25BE'}
@@ -174,11 +175,10 @@
         <p class="muted" style="margin:0 0 6px">Applied on a player's first visit only. Players who already picked a theme keep theirs.</p>
         <div class="periodrow">
           <select id="defTheme">
-            <option value="">No default (Green Casino)</option>
+            <option value="">No default (app default)</option>
+            <option value="official">PokerTH Dark</option>
+            <option value="officiallight">PokerTH Light</option>
             <option value="casino">Green Casino</option>
-            <option value="pokerth">PokerTH ver1.1.2</option>
-            <option value="pokerth10">PokerTH ver1.0</option>
-            <option value="pokerthnew">PokerTH new</option>
           </select>
           <button id="saveTheme" class="use">Save</button>
         </div>
@@ -402,9 +402,12 @@
     var hasH2 = head.tagName==='H2' || (head.querySelector && head.querySelector('h2'));
     if(!hasH2) return;
     card.classList.add('collap');
-    head.addEventListener('click', function(e){
+    card.addEventListener('click', function(e){
       if(e.target.closest('button,a,input,select,textarea,label')) return;
-      card.classList.toggle('open');
+      if(!card.classList.contains('open')){ card.classList.add('open'); return; }
+      var inBody=false, n=head.nextElementSibling;
+      while(n){ if(n===e.target || n.contains(e.target)){ inBody=true; break; } n=n.nextElementSibling; }
+      if(!inBody) card.classList.remove('open');
     });
   });
   (function(){ var s=document.getElementById('status'); if(s){ var c=s.closest('.card'); if(c) c.classList.add('open'); } })();
