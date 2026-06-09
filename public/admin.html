@@ -18,9 +18,11 @@
   .card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px;margin:0 0 14px}
   .card.collap:not(.open){cursor:pointer}
   .card.collap>h2,.card.collap>.boardhead{cursor:pointer;user-select:none}
-  .card.collap>h2:first-of-type::before,.card.collap .boardhead>h2::before{content:'\25B8';display:inline-block;margin-right:.45em;color:var(--text);font-weight:400;font-size:.8em}
-  .card.collap.open>h2:first-of-type::before,.card.collap.open .boardhead>h2::before{content:'\25BE'}
-  .card.collap:not(.open)>*:not(:first-child){display:none}
+  .card.collap>h2:first-of-type::before,.card.collap .boardhead>h2::before{content:'\25B8';display:inline-block;margin-right:.45em;color:var(--text);font-weight:400;font-size:.8em;transition:transform .22s ease}
+  .card.collap.open>h2:first-of-type::before,.card.collap.open .boardhead>h2::before{transform:rotate(90deg)}
+  .cbody{display:grid;grid-template-rows:0fr;transition:grid-template-rows .24s ease}
+  .card.collap.open>.cbody{grid-template-rows:1fr}
+  .cbody>.cin{overflow:hidden;min-height:0}
   .card h2.collap-h{cursor:pointer;user-select:none;position:relative;padding-right:22px}
   .card h2.collap-h::after{content:'\25BE';position:absolute;right:2px;top:.15em;font-size:.7em;opacity:.55;transition:opacity .15s}
   .card h2.collap-h.collapsed::after{content:'\25B8'}
@@ -376,7 +378,7 @@
   function enter(){
     if(!tok()){ show('login'); return; }
     api('/admin/pkg-list').then(function(r){return r.json();}).then(function(d){
-      if(d.ok){ $('loginErr').textContent=''; _idleLast=Date.now(); show('dash'); renderPkgs(d); loadServer(); srvStart(); }
+      if(d.ok){ $('loginErr').textContent=''; _idleLast=Date.now(); show('dash'); renderPkgs(d); loadServer(); loadThemes(); srvStart(); }
       else { $('loginErr').textContent=d.error||'Invalid token'; show('login'); }
     }).catch(function(){ $('loginErr').textContent='Network error'; show('login'); });
   }
@@ -391,7 +393,7 @@
     $('panel-broadcast').style.display=t==='broadcast'?'block':'none';
     if(t==='board') loadBoard();
     if(t==='broadcast'){ loadBroadcasts(); loadWelcome(); }
-    if(t==='clients') loadStatus(true);
+    if(t==='clients'){ loadStatus(true); loadThemes(); }
     if(t==='server'){ loadServer(); srvStart(); } else { srvStop(); }
   }); });
 
@@ -402,12 +404,14 @@
     var hasH2 = head.tagName==='H2' || (head.querySelector && head.querySelector('h2'));
     if(!hasH2) return;
     card.classList.add('collap');
+    var cin=document.createElement('div'); cin.className='cin';
+    while(head.nextSibling) cin.appendChild(head.nextSibling);
+    var cbody=document.createElement('div'); cbody.className='cbody';
+    cbody.appendChild(cin); card.appendChild(cbody);
     card.addEventListener('click', function(e){
       if(e.target.closest('button,a,input,select,textarea,label')) return;
-      if(!card.classList.contains('open')){ card.classList.add('open'); return; }
-      var inBody=false, n=head.nextElementSibling;
-      while(n){ if(n===e.target || n.contains(e.target)){ inBody=true; break; } n=n.nextElementSibling; }
-      if(!inBody) card.classList.remove('open');
+      if(card.classList.contains('open') && cbody.contains(e.target)) return;
+      card.classList.toggle('open');
     });
   });
   (function(){ var s=document.getElementById('status'); if(s){ var c=s.closest('.card'); if(c) c.classList.add('open'); } })();
@@ -520,7 +524,7 @@
       if(syncCfg){
         if(d.resetPeriod) $('period').value=d.resetPeriod;
         if(d.modes){ modesState=Object.assign({offline:true,lan:true,pokerthnet:true},d.modes); renderModes(); }
-        if($('defTheme') && typeof d.defaultTheme==='string') $('defTheme').value=d.defaultTheme;
+        if($('defTheme') && typeof d.defaultTheme==='string'){ window._defThemeVal=d.defaultTheme; $('defTheme').value=d.defaultTheme; }
         if(d.defaults && typeof d.defaults==='object'){ var _DM={defHaptic:'haptic',defVoice:'voice',defAssist:'assist',defAuto:'autobtn',defQuick:'quickbet',defBB:'displaybb'}; Object.keys(_DM).forEach(function(id){ var el=$(id); if(el){ var dv=d.defaults[_DM[id]]; el.value=(dv==='0'||dv==='1')?dv:''; } }); }
         if(d.loginDefaults && typeof d.loginDefaults==='object'){ var L=d.loginDefaults; if($('defMode'))$('defMode').value=(['offline','lan-dedi','pokerthnet'].indexOf(L.mode)>=0)?L.mode:''; if($('defHost'))$('defHost').value=L.host||''; }
         if(d.tableDefaults && typeof d.tableDefaults==='object'){ var T=d.tableDefaults; var _tm={tdPlayers:'players',tdBlind:'blind',tdStack:'stack',tdTimeout:'timeout'}; Object.keys(_tm).forEach(function(id){ var el=$(id); if(el){ var v=T[_tm[id]]; el.value=(v==null)?'':v; } }); }
@@ -533,6 +537,18 @@
     }).catch(function(){ $('status').innerHTML='<div class="empty err">Could not load.</div>'; });
   }
   function loadServer(){ loadStatus(true); loadLogs(); loadUpdateLog(); }
+  // Theme presets shown in the default-theme dropdown = built-in presets (static
+  // options) + installed theme packages (palette/table/felt) fetched live.
+  function loadThemes(){
+    fetch('/themes/themes.json',{cache:'no-store'}).then(function(r){return r.ok?r.json():[];}).then(function(list){
+      var sel=$('defTheme'); if(!sel||!Array.isArray(list)) return;
+      Array.prototype.slice.call(sel.querySelectorAll('option[data-pkg]')).forEach(function(o){o.remove();});
+      list.filter(function(p){return p&&p.id&&(p.palette||p.table||p.felt);}).forEach(function(p){
+        var o=document.createElement('option'); o.value='pkg-'+p.id; o.textContent=(p.name||p.id); o.setAttribute('data-pkg','1'); sel.appendChild(o);
+      });
+      if(window._defThemeVal!=null) sel.value=window._defThemeVal;
+    }).catch(function(){});
+  }
   // Live auto-refresh of the Server tab (status + logs) every 5s while it's the
   // active panel and the page is visible; suspended during maintenance restarts.
   var srvTimer=null, srvBusy=false;
