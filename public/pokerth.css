@@ -1739,7 +1739,7 @@ body {
   .raise-row .raise-input { font-size: 0.85rem !important; }
 
   /* ── Vignette d'assistance ── */
-  .hs-txt { font-size: 0.62rem !important; }
+  .hs-txt { font-size: 0.7rem !important; }
 
   /* ── Header ── */
   .header { min-height: 44px !important; }
@@ -2363,7 +2363,7 @@ body {
 }
 .hs-txt {
   font-family: var(--ff-display);
-  font-size: 0.64rem;
+  font-size: 0.72rem;
   line-height: 1.15;
   letter-spacing: 0.01em;
   color: var(--gold);
