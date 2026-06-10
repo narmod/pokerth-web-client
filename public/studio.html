@@ -95,17 +95,19 @@
     <div class="card">
       <h2>Card style</h2>
       <label>Preset</label>
-      <div class="swatches" id="cardPresets">
-        <span class="chip on" data-p="classic">Classic</span>
-        <span class="chip" data-p="vintage">Vintage</span>
-        <span class="chip" data-p="neon">Neon</span>
-        <span class="chip" data-p="minimal">Minimal</span>
-        <span class="chip" data-p="artdeco">Art déco</span>
-        <span class="chip" data-p="casino">Casino</span>
-        <span class="chip" data-p="cyberpunk">Cyberpunk</span>
-        <span class="chip" data-p="watercolor">Watercolour</span>
-        <span class="chip" data-p="bauhaus">Bauhaus</span>
-      </div>
+      <select id="cPreset">
+        <option value="classic">Classic</option>
+        <option value="vintage">Vintage</option>
+        <option value="neon">Neon</option>
+        <option value="minimal">Minimal</option>
+        <option value="artdeco">Art déco</option>
+        <option value="casino">Casino</option>
+        <option value="cyberpunk">Cyberpunk</option>
+        <option value="watercolor">Watercolour</option>
+        <option value="bauhaus">Bauhaus</option>
+        <option value="figures">Figures (real J/Q/K)</option>
+        <option value="largeprint">Large print (small screens)</option>
+      </select>
 
       <label>Deck name (shown in Theme → Cards)</label>
       <input type="text" id="cName" value="My deck" maxlength="40">
@@ -137,7 +139,7 @@
       </div>
       <div class="row">
         <div class="col"><label>Court cards (J/Q/K)</label>
-          <select id="cCourt"><option value="ornate">Ornament + crown</option><option value="hud">Hexagon HUD</option><option value="plain">Large letter</option><option value="silhouette">Silhouette</option><option value="monogram">Framed monogram</option></select>
+          <select id="cCourt"><option value="ornate">Ornament + crown</option><option value="hud">Hexagon HUD</option><option value="plain">Large letter</option><option value="silhouette">Silhouette</option><option value="monogram">Framed monogram</option><option value="figure">Figure (king/queen/jack)</option><option value="jumbo">Jumbo rank + suit</option></select>
         </div>
         <div class="col"><label>Court / ace accent</label><input type="color" id="cCourtAccent"></div>
       </div>
@@ -318,7 +320,9 @@ const PRESETS={
  casino:{bg1:'#ffffff',bg2:'#f3f3f3',bgType:'solid',red:'#c8102e',black:'#111111',accent:'#c8102e',border:'simple',court:'ornate',back:'#b21e35',backPat:'rosace',glow:false,fourColor:false,diamond:'#2b6cb0',club:'#2f855a',indexFont:'serif',indexSize:'l',indexSuit:true,fourCorners:true,pipStyle:'fill',numLayout:'pips',watermark:false,courtAccent:'#c8102e',radius:0.05,borderWidth:3,texture:'none',finish:'flat',fancyAce:true},
  cyberpunk:{bg1:'#0b0f1a',bg2:'#05070d',bgType:'radial',red:'#ff2e88',black:'#28e0ff',accent:'#28e0ff',border:'hud',court:'hud',back:'#0a0f1c',backPat:'hexes',glow:true,fourColor:false,diamond:'#39a0ff',club:'#33e0a0',indexFont:'sans',indexSize:'m',indexSuit:true,fourCorners:false,pipStyle:'twotone',numLayout:'pips',watermark:false,courtAccent:'#ff2e88',radius:0.06,borderWidth:3,texture:'carbon',finish:'flat',fancyAce:false},
  watercolor:{bg1:'#fbf7f2',bg2:'#eef3f0',bgType:'radial',red:'#c75d6a',black:'#41525e',accent:'#9bb3a5',border:'simple',court:'silhouette',back:'#6e8f86',backPat:'rosace',glow:false,fourColor:false,diamond:'#5b86b0',club:'#6a9b73',indexFont:'serif',indexSize:'m',indexSuit:true,fourCorners:false,pipStyle:'fill',numLayout:'pips',watermark:true,courtAccent:'#9bb3a5',radius:0.09,borderWidth:2,texture:'none',finish:'grain',fancyAce:false},
- bauhaus:{bg1:'#f4f1ea',bg2:'#e9e4d6',bgType:'solid',red:'#d1322c',black:'#1a1a1a',accent:'#1a1a1a',border:'none',court:'plain',back:'#1a1a1a',backPat:'solid',glow:false,fourColor:false,diamond:'#2151a3',club:'#2f855a',indexFont:'sans',indexSize:'l',indexSuit:false,fourCorners:false,pipStyle:'fill',numLayout:'bigindex',watermark:false,courtAccent:'#2151a3',radius:0.02,borderWidth:3,texture:'none',finish:'flat',fancyAce:false}
+ bauhaus:{bg1:'#f4f1ea',bg2:'#e9e4d6',bgType:'solid',red:'#d1322c',black:'#1a1a1a',accent:'#1a1a1a',border:'none',court:'plain',back:'#1a1a1a',backPat:'solid',glow:false,fourColor:false,diamond:'#2151a3',club:'#2f855a',indexFont:'sans',indexSize:'l',indexSuit:false,fourCorners:false,pipStyle:'fill',numLayout:'bigindex',watermark:false,courtAccent:'#2151a3',radius:0.02,borderWidth:3,texture:'none',finish:'flat',fancyAce:false},
+ figures:{bg1:'#fdfaf3',bg2:'#f0ead9',bgType:'vgrad',red:'#b3242a',black:'#222018',accent:'#9a7b3f',border:'double',court:'figure',back:'#5a2730',backPat:'rosace',glow:false,fourColor:false,diamond:'#2b6cb0',club:'#2f855a',indexFont:'serif',indexSize:'m',indexSuit:true,fourCorners:false,pipStyle:'fill',numLayout:'pips',watermark:false,courtAccent:'#9a7b3f',radius:0.05,borderWidth:3,texture:'none',finish:'flat',fancyAce:true},
+ largeprint:{bg1:'#ffffff',bg2:'#f4f4f4',bgType:'solid',red:'#d40000',black:'#000000',accent:'#222222',border:'simple',court:'jumbo',back:'#16407a',backPat:'solid',glow:false,fourColor:false,diamond:'#0a55c8',club:'#0a8a3a',indexFont:'sans',indexSize:'l',indexSuit:true,fourCorners:true,pipStyle:'fill',numLayout:'bigindex',watermark:false,courtAccent:'#d40000',radius:0.05,borderWidth:3,texture:'none',finish:'flat',fancyAce:false}
 };
 let CST=Object.assign({name:'My deck'},PRESETS.classic);
 function readCardStyle(){
@@ -393,6 +397,8 @@ function drawCourt(ctx,W,H,rank,suit,col,s){
     ctx.strokeStyle=ac;ctx.globalAlpha=.6;ctx.beginPath();ctx.moveTo(px+W*0.02,cy);ctx.lineTo(px+pw-W*0.02,cy);ctx.stroke();ctx.globalAlpha=1;
   }else if(s.court==='silhouette'){drawSilhouette(ctx,W,H,rank,suit,col,ac,s);}
   else if(s.court==='monogram'){drawMonogram(ctx,W,H,rank,suit,col,ac,s);}
+  else if(s.court==='figure'){drawFigure(ctx,W,H,rank,suit,col,ac,s);}
+  else if(s.court==='jumbo'){ctx.fillStyle=col;ctx.textAlign='center';ctx.textBaseline='middle';ctx.font=idxFont(H*0.42,s);ctx.fillText(rank,cx,H*0.39);ctx.textBaseline='alphabetic';fillSuit(ctx,cx,H*0.73,W*0.30,suit,col,false);}
   else{
     ctx.fillStyle=col;ctx.textAlign='center';ctx.font=idxFont(H*0.30,s);ctx.fillText(rank,cx,cy+H*0.02);fillSuit(ctx,cx,cy+H*0.20,W*0.16,suit,col,false);
   }
@@ -419,6 +425,60 @@ function drawMonogram(ctx,W,H,rank,suit,col,ac,s){
   const fs=W*0.052;drawCornerFleur(ctx,px+W*0.03,py+W*0.03,fs,ac,1,1);drawCornerFleur(ctx,px+pw-W*0.03,py+W*0.03,fs,ac,-1,1);drawCornerFleur(ctx,px+W*0.03,py+ph-W*0.03,fs,ac,1,-1);drawCornerFleur(ctx,px+pw-W*0.03,py+ph-W*0.03,fs,ac,-1,-1);
   ctx.fillStyle=col;ctx.textAlign='center';ctx.textBaseline='middle';ctx.font=idxFont(ph*0.48,s);ctx.fillText(rank,cx,cy-ph*0.05);ctx.textBaseline='alphabetic';
   fillSuit(ctx,cx,cy+ph*0.29,W*0.13,suit,col,false);
+}
+function drawFigure(ctx,W,H,rank,suit,col,ac,s){
+  const cx=W/2,cy=H/2,pw=W*0.66,ph=H*0.82,px=cx-pw/2,py=cy-ph/2;
+  const skin='#ecc7a1',hair=(rank==='J'?'#7a4a22':'#553418'),robe=ac;
+  ctx.save();
+  ctx.fillStyle='rgba(255,255,255,.05)';roundRectPath(ctx,px,py,pw,ph,W*0.03);ctx.fill();
+  ctx.strokeStyle=ac;ctx.lineWidth=Math.max(1.4,W*0.006);roundRectPath(ctx,px,py,pw,ph,W*0.03);ctx.stroke();
+  roundRectPath(ctx,px,py,pw,ph,W*0.03);ctx.clip();
+  function fig(){
+    const headR=pw*0.155,hCy=py+ph*0.25,crownY=hCy-headR;
+    ctx.fillStyle=robe;ctx.beginPath();
+    ctx.moveTo(cx-pw*0.36,cy+ph*0.03);ctx.lineTo(cx-pw*0.18,hCy+headR*0.5);
+    ctx.quadraticCurveTo(cx,hCy+headR*1.1,cx+pw*0.18,hCy+headR*0.5);
+    ctx.lineTo(cx+pw*0.36,cy+ph*0.03);ctx.closePath();ctx.fill();
+    ctx.fillStyle=darken(robe,0.18);ctx.beginPath();
+    ctx.moveTo(cx-pw*0.055,hCy+headR*0.8);ctx.lineTo(cx+pw*0.055,hCy+headR*0.8);
+    ctx.lineTo(cx+pw*0.075,cy+ph*0.03);ctx.lineTo(cx-pw*0.075,cy+ph*0.03);ctx.closePath();ctx.fill();
+    ctx.fillStyle=col;ctx.beginPath();
+    ctx.moveTo(cx-pw*0.18,hCy+headR*0.45);ctx.quadraticCurveTo(cx,hCy+headR*1.2,cx+pw*0.18,hCy+headR*0.45);
+    ctx.quadraticCurveTo(cx,hCy+headR*0.8,cx-pw*0.18,hCy+headR*0.45);ctx.closePath();ctx.fill();
+    fillSuit(ctx,cx,cy-ph*0.05,pw*0.15,suit,col,false);
+    if(rank!=='J'){ctx.fillStyle=hair;ctx.beginPath();ctx.arc(cx,hCy,headR*1.16,Math.PI*0.05,Math.PI*0.95);ctx.fill();}
+    ctx.fillStyle=skin;ctx.beginPath();ctx.arc(cx,hCy,headR,0,7);ctx.fill();
+    if(rank==='K'){ctx.fillStyle=hair;ctx.beginPath();ctx.moveTo(cx-headR*0.82,hCy+headR*0.05);ctx.quadraticCurveTo(cx,hCy+headR*1.75,cx+headR*0.82,hCy+headR*0.05);ctx.quadraticCurveTo(cx,hCy+headR*0.55,cx-headR*0.82,hCy+headR*0.05);ctx.closePath();ctx.fill();}
+    ctx.fillStyle='rgba(45,32,20,.85)';
+    ctx.beginPath();ctx.arc(cx-headR*0.34,hCy-headR*0.08,headR*0.085,0,7);ctx.fill();
+    ctx.beginPath();ctx.arc(cx+headR*0.34,hCy-headR*0.08,headR*0.085,0,7);ctx.fill();
+    ctx.strokeStyle='rgba(45,32,20,.6)';ctx.lineWidth=Math.max(1,W*0.0035);
+    ctx.beginPath();ctx.moveTo(cx,hCy);ctx.lineTo(cx,hCy+headR*0.32);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(cx-headR*0.26,hCy+headR*0.52);ctx.quadraticCurveTo(cx,hCy+headR*0.64,cx+headR*0.26,hCy+headR*0.52);ctx.stroke();
+    if(rank==='J'){
+      ctx.fillStyle=ac;ctx.beginPath();
+      ctx.moveTo(cx-headR*1.05,crownY+headR*0.35);ctx.quadraticCurveTo(cx,crownY-headR*0.35,cx+headR*1.05,crownY+headR*0.35);
+      ctx.lineTo(cx+headR*0.72,crownY+headR*0.62);ctx.lineTo(cx-headR*0.72,crownY+headR*0.62);ctx.closePath();ctx.fill();
+      ctx.strokeStyle=col;ctx.lineWidth=Math.max(1,W*0.004);ctx.beginPath();
+      ctx.moveTo(cx+headR*0.3,crownY+headR*0.1);ctx.quadraticCurveTo(cx+headR*1.4,crownY-headR*0.7,cx+headR*1.7,crownY);ctx.stroke();
+    }else{
+      const bw=headR*1.55,bx=cx-bw/2,by=crownY,bh=headR*0.34;
+      ctx.fillStyle=ac;ctx.fillRect(bx,by,bw,bh);
+      ctx.beginPath();ctx.moveTo(bx,by);
+      ctx.lineTo(bx+bw*0.14,by-bh*1.5);ctx.lineTo(bx+bw*0.32,by-bh*0.15);
+      ctx.lineTo(bx+bw*0.5,by-bh*2.0);ctx.lineTo(bx+bw*0.68,by-bh*0.15);
+      ctx.lineTo(bx+bw*0.86,by-bh*1.5);ctx.lineTo(bx+bw,by);ctx.closePath();ctx.fill();
+      ctx.fillStyle=col;
+      ctx.beginPath();ctx.arc(bx+bw*0.14,by-bh*0.9,headR*0.08,0,7);ctx.fill();
+      ctx.beginPath();ctx.arc(bx+bw*0.86,by-bh*0.9,headR*0.08,0,7);ctx.fill();
+      ctx.beginPath();ctx.arc(cx,by-bh*1.35,headR*0.1,0,7);ctx.fill();
+      ctx.fillStyle=lighten(col,0.4);ctx.beginPath();ctx.arc(cx,by+bh*0.5,headR*0.09,0,7);ctx.fill();
+    }
+  }
+  fig();
+  ctx.translate(cx,cy);ctx.rotate(Math.PI);ctx.translate(-cx,-cy);fig();
+  ctx.restore();
+  ctx.save();roundRectPath(ctx,px,py,pw,ph,W*0.03);ctx.clip();ctx.strokeStyle=ac;ctx.globalAlpha=.45;ctx.lineWidth=Math.max(1,W*0.004);ctx.beginPath();ctx.moveTo(px+pw*0.05,cy);ctx.lineTo(px+pw*0.95,cy);ctx.stroke();ctx.restore();
 }
 function drawAce(ctx,W,H,suit,col,s){
   const cx=W/2,cy=H/2,ac=s.courtAccent||s.accent;
@@ -615,9 +675,7 @@ document.querySelectorAll('.tab').forEach(t=>t.addEventListener('click',()=>{
  ['cards','table','theme'].forEach(n=>document.getElementById('tab-'+n).classList.toggle('hide',n!==t.dataset.tab));
  if(t.dataset.tab==='table')renderTablePreview();if(t.dataset.tab==='theme')renderThemePreview();
 }));
-document.querySelectorAll('#cardPresets .chip').forEach(c=>c.addEventListener('click',()=>{
- document.querySelectorAll('#cardPresets .chip').forEach(x=>x.classList.remove('on'));c.classList.add('on');applyCardPreset(c.dataset.p);
-}));
+document.getElementById('cPreset').addEventListener('change',e=>applyCardPreset(e.target.value));
 ['cName','cBg1','cBg2','cBgType','cRed','cBlack','cAccent','cBorder','cCourt','cBack','cBackPat','cGlow','cFourColor','cDiamond','cClub','cIndexFont','cIndexSize','cIndexSuit','cFourCorners','cPipStyle','cNumLayout','cWatermark','cCourtAccent','cRadius','cBorderWidth','cTexture','cFinish','cFancyAce'].forEach(id=>document.getElementById(id).addEventListener('input',renderCardPreview));
 ['tName','tF1','tF2','tFType','tVig','tPucks','tPd','tPsb','tPbb'].forEach(id=>document.getElementById(id).addEventListener('input',renderTablePreview));
 ['hName','hSwatch','hFelt','hPanel','hGold','hText','hFeltImg','hPucksOn'].forEach(id=>document.getElementById(id).addEventListener('input',renderThemePreview));
