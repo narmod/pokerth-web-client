@@ -984,6 +984,13 @@ const httpServer = http.createServer((req, res) => {
     }
   }
 
+  // Friendly path for the pack-creator Studio, mirroring /admin -> admin.html.
+  if (reqPathOnly === '/studio' || reqPathOnly === '/studio.html') {
+    const p = path.join(PUBLIC_DIR, 'studio.html');
+    if (fs.existsSync(p)) return sendFile(req, res, p, 'text/html; charset=utf-8', 'no-store');
+    res.writeHead(404); res.end('studio.html missing'); return;
+  }
+
   // ── Version marker for the in-app update banner ──
   // Returns the newest mtime across the core assets. A deploy (git pull)
   // bumps these file mtimes, so the page can poll this cheaply and offer a
