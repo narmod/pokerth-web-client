@@ -1739,7 +1739,7 @@ body {
   .raise-row .raise-input { font-size: 0.85rem !important; }
 
   /* ── Vignette d'assistance ── */
-  .hs-lbl { font-size: 0.5rem !important; }
+  .hs-txt { font-size: 0.5rem !important; }
 
   /* ── Header ── */
   .header { min-height: 44px !important; }
@@ -2334,22 +2334,35 @@ body {
 .pb-right-zone {
   flex: 1 1 auto;
   min-width: 0;
+  align-self: stretch;
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  justify-content: center;
-  gap: 2px;
+  gap: 3px;
 }
 .pb-act-row {
   display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content: space-between;
-  gap: 6px;
+  justify-content: center;
+  gap: 10px;
 }
 .hs-lbl {
+  flex: 1 1 auto;
   width: 100%;
   box-sizing: border-box;
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px 6px;
+  background: rgba(8,12,18,0.85);
+  border: 1px solid rgba(255,255,255,0.14);
+  border-radius: 6px;
+  text-shadow: 0 1px 1px rgba(0,0,0,0.5);
+  pointer-events: none;
+}
+.hs-txt {
   font-family: var(--ff-display);
   font-size: 0.52rem;
   line-height: 1.15;
@@ -2361,12 +2374,6 @@ body {
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
-  padding: 2px 6px;
-  background: rgba(8,12,18,0.85);
-  border: 1px solid rgba(255,255,255,0.14);
-  border-radius: 6px;
-  text-shadow: 0 1px 1px rgba(0,0,0,0.5);
-  pointer-events: none;
 }
 
 /* ══ PANNEAU RÉACTIONS FLOTTANT (header) ══ */
@@ -3661,7 +3668,7 @@ body:not(.in-game) .my-zone {
   align-items: center;
   gap: 10px;
   width: 100%;
-  max-width: 680px;
+  max-width: 760px;
   background: rgba(0,0,0,0.35);
   border: 1px solid rgba(var(--green-rgb), 0.4);
   border-radius: 8px;

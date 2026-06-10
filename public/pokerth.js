@@ -6024,12 +6024,12 @@ const App = (() => {
     var fill = el.querySelector('.hs-fill');
     if (fill) { fill.style.width = p + '%'; if (col) fill.style.background = col; }
     var lbl = document.getElementById('hs-lbl');
-    if (lbl) { lbl.textContent = text; if (col) lbl.style.color = col; lbl.style.display = ''; }
+    if (lbl) { var txt = lbl.querySelector('.hs-txt') || lbl; txt.textContent = text; if (col) txt.style.color = col; lbl.style.display = ''; }
   }
   function _hsHide(el) {
     if (el) el.style.display = 'none';
     var lbl = document.getElementById('hs-lbl');
-    if (lbl) { lbl.style.display = 'none'; lbl.textContent = ''; }
+    if (lbl) { lbl.style.display = 'none'; var txt = lbl.querySelector('.hs-txt'); if (txt) txt.textContent = ''; }
   }
   function renderPreFlopStrength() {
     var el = document.getElementById('hand-strength');
@@ -9998,7 +9998,7 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.2.369'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.2.370'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
