@@ -1739,7 +1739,7 @@ body {
   .raise-row .raise-input { font-size: 0.85rem !important; }
 
   /* ── Vignette d'assistance ── */
-  #hand-strength { font-size: 0.82rem !important; padding: 3px 14px !important; top: -40px !important; }
+  #hand-strength .hs-lbl { font-size: 0.62rem !important; padding: 1px 9px 2px !important; }
 
   /* ── Header ── */
   .header { min-height: 44px !important; }
@@ -2305,28 +2305,51 @@ body {
 
 /* ══ HAND STRENGTH DISPLAY ══ */
 #hand-strength {
-  /* Pastille centrée au-dessus des boutons dans my-zone */
+  /* Couche pleine largeur posee sur le bord haut de .player-bar.
+     height:0 -> n'ajoute aucune hauteur : la barre garde sa taille. */
   position: absolute;
-  top: -36px;
-  left: 50%;
-  transform: translateX(-50%);
-  font-size: 0.6rem;
-  color: var(--gold);
+  left: 0; right: 0; top: 0;
+  height: 0;
+  pointer-events: none;
+  z-index: 3;
+  --hs-col: var(--gold);
+}
+#hand-strength .hs-track {
+  position: absolute;
+  left: 10px; right: 10px; top: 0;
+  height: 3px;
+  border-radius: 0 0 3px 3px;
+  background: rgba(255,255,255,0.12);
+  overflow: hidden;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.25);
+}
+#hand-strength .hs-fill {
+  display: block;
+  height: 100%;
+  width: 0;
+  background: var(--hs-col);
+  border-radius: 0 0 3px 3px;
+  transition: width 0.35s cubic-bezier(.4,0,.2,1), background 0.3s ease;
+}
+#hand-strength .hs-lbl {
+  position: absolute;
+  top: 0; right: 14px;
+  transform: translateY(-100%);
+  max-width: calc(100vw - 40px);
+  padding: 1px 8px 2px;
   font-family: var(--ff-display);
+  font-size: 0.56rem;
   letter-spacing: 0.04em;
-  text-align: center;
-  padding: 2px 10px;
+  line-height: 1.3;
+  color: var(--hs-col);
   background: var(--panel);
-  border-radius: 20px;
-  border: 1px solid rgba(var(--gold-rgb), 0.3);
+  border: 1px solid var(--border);
+  border-bottom: none;
+  border-radius: 7px 7px 0 0;
   white-space: nowrap;
-  max-width: calc(100vw - 24px);
   overflow: hidden;
   text-overflow: ellipsis;
-  pointer-events: none;
-  transition: color 0.3s ease, border-color 0.3s ease;
-  z-index: 28;
-  box-shadow: 0 -2px 8px rgba(0,0,0,0.4);
+  box-shadow: 0 -2px 6px rgba(0,0,0,0.30);
 }
 
 /* ══ PANNEAU RÉACTIONS FLOTTANT (header) ══ */
@@ -3234,7 +3257,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 8px 12px;
+  padding: 8px 12px 16px;
   background: var(--panel);
   border-top: 1px solid var(--border);
   gap: 8px;
@@ -4949,7 +4972,7 @@ body:not(.in-game) .my-zone {
 /* Assistance (force de la main) : le texte est colore inline par le JS selon la force
    (teintes claires). On garde un fond SOMBRE pour cette pastille en clair -> le code
    couleur (gris faible -> vert/rouge fort) reste lisible tel quel. */
-:root[data-theme="pokerth-light"] #hand-strength { background: rgba(20,25,33,0.94); }
+:root[data-theme="pokerth-light"] #hand-strength .hs-lbl { background: rgba(20,25,33,0.94); border-color: rgba(255,255,255,0.18); }
 /* Ecran d'attente : wp-ready-label/btn (pas de couleur de base) corriges ici ;
    ld-quit/ld-create/wp-ok/wp-hint-admin/wp-need pilotes par variables de theme. */
 :root[data-theme="pokerth-light"] .wp-ready-label,

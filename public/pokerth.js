@@ -6018,6 +6018,15 @@ const App = (() => {
   }
 
   // ─── Force de la main ───
+  function _hsSet(el, text, pct, col) {
+    if (!el) return;
+    var p = (pct == null || isNaN(pct)) ? 0 : Math.max(0, Math.min(100, pct));
+    var fill = el.querySelector('.hs-fill');
+    if (fill) { fill.style.width = p + '%'; if (col) fill.style.background = col; }
+    var lbl = el.querySelector('.hs-lbl');
+    if (lbl) lbl.textContent = text;
+    if (col) el.style.setProperty('--hs-col', col);
+  }
   function renderPreFlopStrength() {
     var el = document.getElementById('hand-strength');
     if (!el) return;
@@ -6030,9 +6039,9 @@ const App = (() => {
     var stars = res.stars >= 0
       ? ' ' + ('★'.repeat(res.stars+1) + '☆☆').slice(0,3)
       : '';
-    el.textContent = label + stars;
-    var cols = ['#aaa','#7ec8e3','#a8d8a8','#f0c040','#e74c3c'];
-    el.style.color = cols[Math.max(0, res.stars+1)] || '#aaa';
+    var pfIdx = Math.max(0, Math.min(4, res.stars + 1));
+    var pfCols = ['#aaa','#7ec8e3','#a8d8a8','#f0c040','#e74c3c'];
+    _hsSet(el, label + stars, Math.round(pfIdx / 4 * 100), pfCols[pfIdx]);
     el.style.display = 'block';
   }
 
@@ -6057,9 +6066,7 @@ const App = (() => {
     var colors = ['#aaa','#aaa','#7ec8e3','#7ec8e3','#a8d8a8','#6dbe6d','#f0c040','#f09030','#e07020','#e74c3c'];
     var handColor = colors[result.r] || 'var(--gold)';
     // Afficher le nom immédiatement, calcul win% en async
-    el.textContent = handLabel + (validComm.length >= 3 ? ' …' : '');
-    el.style.color = handColor;
-    el.style.borderColor = handColor.replace(')',',0.25)').replace('rgb','rgba');
+    _hsSet(el, handLabel + (validComm.length >= 3 ? ' …' : ''), Math.round(result.r / 9 * 100), handColor);
     el.style.display = 'block';
     // Monte Carlo win% seulement si >= 3 cartes communes
     if (validComm.length >= 3) {
@@ -6074,8 +6081,8 @@ const App = (() => {
         var elNow = document.getElementById('hand-strength');
         if (!elNow) return;
         // Indicateur couleur : vert brillant ≥71%, vert 51-70%, jaune 36-50%, orange 26-35%, rouge ≤25%
-        var pctEmoji = pct >= 60 ? '🟢' : pct >= 45 ? '🟡' : pct >= 30 ? '🟠' : '🔴';
-        elNow.textContent = handLabel + ' — ' + pct + '% ' + pctEmoji;
+        var pctCol = pct >= 60 ? '#2ecc71' : pct >= 45 ? '#f0c040' : pct >= 30 ? '#e08a2e' : '#e74c3c';
+        _hsSet(elNow, handLabel + ' — ' + pct + '%', pct, pctCol);
       }, 0);
     }
   }
@@ -9990,7 +9997,7 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.2.364'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.2.365'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
