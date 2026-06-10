@@ -1739,7 +1739,7 @@ body {
   .raise-row .raise-input { font-size: 0.85rem !important; }
 
   /* ── Vignette d'assistance ── */
-  .hs-lbl { font-size: 0.62rem !important; padding: 1px 10px 2px !important; }
+  .hs-lbl { font-size: 0.6rem !important; max-width: 86px !important; }
 
   /* ── Header ── */
   .header { min-height: 44px !important; }
@@ -2331,30 +2331,22 @@ body {
   border-radius: 0 0 3px 3px;
   transition: width 0.35s cubic-bezier(.4,0,.2,1), background 0.3s ease;
 }
-.pb-cards-wrap { position: relative; display: flex; align-items: center; }
 .hs-lbl {
-  display: inline-block;
-  position: absolute;
-  bottom: 100%;
-  left: 50%;
-  transform: translateX(-50%);
-  margin-bottom: 5px;
-  max-width: 72vw;
-  padding: 1px 9px 2px;
+  flex: 0 0 auto;
+  max-width: 100px;
   font-family: var(--ff-display);
   font-size: 0.56rem;
-  letter-spacing: 0.04em;
-  line-height: 1.3;
+  line-height: 1.15;
+  letter-spacing: 0.01em;
   color: var(--gold);
-  background: var(--panel);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  white-space: nowrap;
+  text-align: center;
+  white-space: normal;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
   overflow: hidden;
-  text-overflow: ellipsis;
-  box-shadow: 0 1px 6px rgba(0,0,0,0.30);
+  text-shadow: 0 1px 2px rgba(0,0,0,0.55);
   pointer-events: none;
-  z-index: 4;
 }
 
 /* ══ PANNEAU RÉACTIONS FLOTTANT (header) ══ */
@@ -3262,7 +3254,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 8px 12px 20px;
+  padding: 8px 12px;
   background: var(--panel);
   border-top: 1px solid var(--border);
   gap: 8px;
@@ -4977,7 +4969,7 @@ body:not(.in-game) .my-zone {
 /* Assistance (force de la main) : le texte est colore inline par le JS selon la force
    (teintes claires). On garde un fond SOMBRE pour cette pastille en clair -> le code
    couleur (gris faible -> vert/rouge fort) reste lisible tel quel. */
-:root[data-theme="pokerth-light"] .hs-lbl { background: rgba(20,25,33,0.94); border-color: rgba(255,255,255,0.18); }
+:root[data-theme="pokerth-light"] .hs-lbl { text-shadow: 0 1px 2px rgba(255,255,255,0.15); }
 /* Ecran d'attente : wp-ready-label/btn (pas de couleur de base) corriges ici ;
    ld-quit/ld-create/wp-ok/wp-hint-admin/wp-need pilotes par variables de theme. */
 :root[data-theme="pokerth-light"] .wp-ready-label,
