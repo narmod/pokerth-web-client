@@ -5480,4 +5480,4 @@ html[data-seat="bar"] .seat-timer-badge { display: none; }
 
 /* Bouton "reset des fenetres" du header : visible seulement tablette + desktop. */
 .win-reset-only { display: none; }
-@media (min-width: 900px) { .win-reset-only { display: inline-flex; } }
+@media (min-width: 900px) and (min-height: 600px) { .win-reset-only { display: inline-flex; } }

@@ -9448,7 +9448,7 @@ var LOBBY_PANEL_GAP = 14;
    chat/journal y gardent leur resize vertical historique (makeChatResizable).
    Patron pointeur calque sur makeChatResizable (setPointerCapture).
    ════════════════════════════════════════════════════════════════════════ */
-function _winGate(){ try{ return window.matchMedia('(min-width:900px)').matches; }catch(e){ return false; } }
+function _winGate(){ try{ return window.matchMedia('(min-width:900px) and (min-height:600px)').matches; }catch(e){ return false; } }
 function _chatGate(){ try{ return window.matchMedia('(min-width:900px) and (hover:hover) and (pointer:fine)').matches; }catch(e){ return false; } }
 function _placeWin(panel, left, top){
   var w=panel.offsetWidth, h=panel.offsetHeight, vw=window.innerWidth, vh=window.innerHeight;
@@ -9941,7 +9941,7 @@ function toggleHandsHelp() {
   if (opening) {
     renderHandsHelp();
     ov.style.display = 'flex';
-    if (card && window.matchMedia && window.matchMedia('(min-width:900px)').matches) {
+    if (card && window.matchMedia && window.matchMedia('(min-width:900px) and (min-height:600px)').matches) {
       card.classList.add('hands-floatable');
       card._winResizable = true;
       var _r = _restoreWin(card, 'pth_winpos_hands');
@@ -10235,7 +10235,7 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.2.387'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.2.388'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

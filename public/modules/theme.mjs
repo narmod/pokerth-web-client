@@ -664,7 +664,7 @@ function openThemePanel(ev) {
   // d'action reste cliquable meme quand une action joueur est requise (fermeture
   // via la croix ou Echap). Mobile : comportement inchange (clic exterieur ferme).
   var overlay = null;
-  if (!(window.matchMedia && window.matchMedia('(min-width:900px)').matches)) {
+  if (!(window.matchMedia && window.matchMedia('(min-width:900px) and (min-height:600px)').matches)) {
     overlay = document.createElement('div');
     overlay.id = OVERLAY_ID;
     overlay.style.cssText = 'position:fixed;inset:0;z-index:9998;background:transparent';
@@ -717,7 +717,7 @@ function openThemePanel(ev) {
   panel.style.left = Math.max(8, Math.min(left, vw - mw - 8)) + 'px';
   panel.style.top = Math.max(8, Math.min(top, vh - mh - 8)) + 'px';
 
-  if (window.matchMedia && window.matchMedia('(min-width:900px)').matches) {
+  if (window.matchMedia && window.matchMedia('(min-width:900px) and (min-height:600px)').matches) {
     try {
       var _saved = localStorage.getItem('pth_winpos_theme');
       if (_saved) { var _d = JSON.parse(_saved);
