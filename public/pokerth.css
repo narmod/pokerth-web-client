@@ -5264,20 +5264,21 @@ html[data-seat="plate"] .seat-timer-badge { display: none; }
 /* Pack « Jeton » (data-seat="chip") : avatar stylise en jeton de poker
    (double lisere creme + anneau dore). Layout classique vertical -> tient en
    portrait. Contenu / anneau de temps / drapeau / jetons inchanges. */
-html[data-seat="chip"] .seat-avatar,
-html[data-seat="chip"] .seat.active .seat-avatar {
-  border: none;
-  background:
-    radial-gradient(circle at 50% 50%, #15110c 0 58%, transparent 59%),
-    repeating-conic-gradient(from 0deg, #f4f1e8 0 14deg, #b02a2a 14deg 45deg);
-}
-html[data-seat="chip"] .seat-avatar {
-  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.32), 0 1px 4px rgba(0,0,0,0.55);
-  font-weight: 800;
-}
-/* photo : enfoncee pour laisser voir l'anneau crante du jeton */
-html[data-seat="chip"] .seat-avatar > .seat-pth-img {
-  inset: 4px; width: auto; height: auto; border-radius: 50%;
+/* Bord de jeton (encoches creme) en SURCOUCHE par-dessus la couleur d'avatar
+   du joueur (posee en inline) -> visible pour tous, en dark comme en light.
+   Le corps garde la couleur du joueur (comme le classique). Les encoches sont
+   a l'extreme bord (au-dela du rayon de l'anneau de temps) pour ne pas le gener. */
+html[data-seat="chip"] .seat-avatar { font-weight: 800; }
+html[data-seat="chip"] .seat-avatar::after {
+  content: "";
+  position: absolute;
+  inset: -3px;
+  border-radius: 50%;
+  background: repeating-conic-gradient(from 9deg, #f7f3ea 0 11deg, transparent 11deg 45deg);
+  -webkit-mask: radial-gradient(circle, transparent calc(50% - 3.5px), #000 calc(50% - 3.5px));
+          mask: radial-gradient(circle, transparent calc(50% - 3.5px), #000 calc(50% - 3.5px));
+  pointer-events: none;
+  z-index: 1;
 }
 
 
