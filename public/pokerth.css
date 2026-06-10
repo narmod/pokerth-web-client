@@ -1739,7 +1739,7 @@ body {
   .raise-row .raise-input { font-size: 0.85rem !important; }
 
   /* ── Vignette d'assistance ── */
-  .hs-lbl { font-size: 0.6rem !important; max-width: 86px !important; }
+  .hs-lbl { font-size: 0.48rem !important; max-width: 80px !important; }
 
   /* ── Header ── */
   .header { min-height: 44px !important; }
@@ -2331,12 +2331,19 @@ body {
   border-radius: 0 0 3px 3px;
   transition: width 0.35s cubic-bezier(.4,0,.2,1), background 0.3s ease;
 }
+.pb-right-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1px;
+}
 .hs-lbl {
   flex: 0 0 auto;
-  max-width: 100px;
+  max-width: 92px;
   font-family: var(--ff-display);
-  font-size: 0.56rem;
-  line-height: 1.15;
+  font-size: 0.5rem;
+  line-height: 1.12;
   letter-spacing: 0.01em;
   color: var(--gold);
   text-align: center;
@@ -2345,7 +2352,11 @@ body {
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
-  text-shadow: 0 1px 2px rgba(0,0,0,0.55);
+  padding: 1px 6px;
+  background: rgba(8,12,18,0.85);
+  border: 1px solid rgba(255,255,255,0.14);
+  border-radius: 6px;
+  text-shadow: 0 1px 1px rgba(0,0,0,0.5);
   pointer-events: none;
 }
 
@@ -4969,7 +4980,6 @@ body:not(.in-game) .my-zone {
 /* Assistance (force de la main) : le texte est colore inline par le JS selon la force
    (teintes claires). On garde un fond SOMBRE pour cette pastille en clair -> le code
    couleur (gris faible -> vert/rouge fort) reste lisible tel quel. */
-:root[data-theme="pokerth-light"] .hs-lbl { text-shadow: 0 1px 2px rgba(255,255,255,0.15); }
 /* Ecran d'attente : wp-ready-label/btn (pas de couleur de base) corriges ici ;
    ld-quit/ld-create/wp-ok/wp-hint-admin/wp-need pilotes par variables de theme. */
 :root[data-theme="pokerth-light"] .wp-ready-label,
