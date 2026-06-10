@@ -2361,6 +2361,10 @@ body {
   border-radius: 5px;
   pointer-events: none;
 }
+:root:not([data-theme="pokerth-light"]) .hs-lbl {
+  background: rgba(0,0,0,0.55);
+  border: 1px solid rgba(255,255,255,0.18);
+}
 :root[data-theme="pokerth"] .hs-lbl,
 :root[data-theme="dark"] .hs-lbl,
 :root[data-theme="redfelt"] .hs-lbl {
@@ -2372,6 +2376,7 @@ body {
   font-size: 0.72rem;
   line-height: 1.15;
   letter-spacing: 0.01em;
+  font-weight: 700;
   color: var(--gold);
   text-align: center;
   white-space: normal;

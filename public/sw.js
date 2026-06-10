@@ -3,7 +3,7 @@
  * ⚠ Bump CACHE_VERSION on every static deploy to force clients to update.
  *    Format: 'pokerth-v{MAJOR}.{MINOR}.{N}' where {N} is a monotonic deploy
  *    counter that doubles as the release patch number. A release tag equals
- *    this string without the 'pokerth-' prefix (cache pokerth-v0.2.377 ↔ v0.2.91).
+ *    this string without the 'pokerth-' prefix (cache pokerth-v0.2.378 ↔ v0.2.91).
  *
  * Strategy (v4):
  *   • install   — precache the critical app shell (HTML, JS, CSS, modules,
@@ -23,7 +23,7 @@
  *                 Cross-origin requests and WS upgrades are left untouched.
  *                 (Fonts are now self-hosted and handled by SWR above.)
  */
-const CACHE_VERSION = 'pokerth-v0.2.377';
+const CACHE_VERSION = 'pokerth-v0.2.378';
 
 // Where navigations fall back to when the network is unavailable.
 const NAV_FALLBACK = '/pokerth-client.html';
