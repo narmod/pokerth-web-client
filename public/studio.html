@@ -1,0 +1,485 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>PokerTH — Studio</title>
+<script>(function(){try{var t=localStorage.getItem('pth_admin_theme');if(t!=='light'&&t!=='dark')t='dark';document.documentElement.setAttribute('data-admin-theme',t);}catch(e){}})();</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pako/2.1.0/pako.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/UPNG.js/2.1.0/UPNG.min.js"></script>
+<style>
+  :root{--panel:rgba(20,25,33,.92);--line:rgba(160,172,196,.18);--gold:#eff1f5;--cream:#eff1f5;--text:#a0acc4}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:radial-gradient(circle at 50% 0%,#1d222b,#0e1218);color:var(--cream);min-height:100vh;padding:18px}
+  .wrap{max-width:1060px;margin:0 auto}
+  h1{font-size:1.2rem;margin:.2rem 0 .1rem;color:var(--gold)}
+  h2{font-size:.78rem;letter-spacing:.06em;text-transform:uppercase;color:var(--gold);margin:0 0 10px}
+  .sub{color:var(--text);font-size:.8rem;margin:0}
+  .top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:16px}
+  .topbtns{display:flex;gap:8px;flex:none;margin-top:4px}
+  .ghost,.appbtn{padding:7px 11px;border-radius:8px;border:1px solid var(--line);background:rgba(255,255,255,.04);color:var(--cream);text-decoration:none;font-size:.8rem;white-space:nowrap;cursor:pointer}
+  .appbtn{border-color:var(--gold);background:rgba(239,241,245,.12);color:var(--gold)}
+  .tabs{display:flex;gap:6px;margin:0 0 16px}
+  .tab{flex:1;padding:11px;border-radius:10px;border:1px solid var(--line);background:rgba(255,255,255,.03);color:var(--text);cursor:pointer;font-size:.9rem;font-weight:600}
+  .tab.on{background:var(--panel);color:var(--gold);font-weight:700;border-color:var(--gold)}
+  .grid{display:grid;grid-template-columns:1fr;gap:16px}
+  @media(min-width:760px){.grid{grid-template-columns:340px 1fr}}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px}
+  label{font-size:.78rem;color:var(--text);display:block;margin:10px 0 5px}
+  input[type=text],select{width:100%;padding:9px 11px;border-radius:8px;border:1px solid var(--line);background:rgba(0,0,0,.25);color:var(--cream);font-size:.88rem}
+  input[type=color]{width:46px;height:32px;padding:2px;border-radius:8px;border:1px solid var(--line);background:rgba(0,0,0,.25);vertical-align:middle}
+  input[type=file]{width:100%;font-size:.76rem;color:var(--text)}
+  button{font-family:inherit}
+  .row{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .row .col{flex:1;min-width:118px}
+  .swatches{display:flex;gap:6px;flex-wrap:wrap;margin-top:4px}
+  .chip{padding:7px 12px;border:1px solid var(--line);background:rgba(255,255,255,.03);color:var(--text);border-radius:999px;font-size:.8rem;cursor:pointer}
+  .chip.on{color:#10151c;background:var(--gold);border-color:var(--gold);font-weight:700}
+  .btn{display:block;width:100%;margin-top:14px;padding:11px;border-radius:8px;border:1px solid var(--gold);background:var(--gold);color:#10151c;font-weight:700;cursor:pointer;font-size:.92rem}
+  .btn:disabled{opacity:.6;cursor:default}
+  .preview{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;align-items:flex-start;background:rgba(0,0,0,.2);border:1px solid var(--line);border-radius:12px;padding:18px;min-height:260px}
+  .preview canvas{border-radius:8px;box-shadow:0 6px 16px rgba(0,0,0,.45);max-width:118px;height:auto}
+  .feltprev{display:flex;flex-direction:column;gap:14px;align-items:center;width:100%}
+  .feltprev canvas.felt{width:100%;max-width:460px;border-radius:12px}
+  .pucks{display:flex;gap:18px}
+  .pucks canvas{width:70px;height:70px;box-shadow:none;background:transparent}
+  .note{color:var(--text);font-size:.74rem;margin-top:10px;line-height:1.5}
+  .note code{background:rgba(255,255,255,.06);padding:1px 4px;border-radius:4px}
+  .size{font-size:.8rem;margin-top:8px;text-align:center;color:var(--text)}
+  .size b{color:var(--cream)}
+  .warn{color:#e98a8a}.good{color:#7fd17f}
+  .help{font-size:.72rem;color:var(--text);margin:-2px 0 6px}
+  details{margin-top:10px;border-top:1px solid var(--line);padding-top:8px}
+  summary{cursor:pointer;color:var(--gold);font-size:.78rem}
+  hr{border:0;border-top:1px solid var(--line);margin:14px 0}
+  .hide{display:none}
+  /* ── Light theme (matches Admin) ── */
+  :root[data-admin-theme="light"]{--panel:#ffffff;--line:rgba(28,38,58,.16);--gold:#1d222b;--cream:#1b2230;--text:#566071}
+  :root[data-admin-theme="light"] body{background:radial-gradient(circle at 50% 0%,#eef1f6,#d7dde7)}
+  :root[data-admin-theme="light"] input[type=text],
+  :root[data-admin-theme="light"] select,
+  :root[data-admin-theme="light"] input[type=color]{background:rgba(255,255,255,.8)}
+  :root[data-admin-theme="light"] .tab,
+  :root[data-admin-theme="light"] .chip,
+  :root[data-admin-theme="light"] .ghost{background:rgba(29,34,43,.05)}
+  :root[data-admin-theme="light"] .tab.on{background:var(--panel)}
+  :root[data-admin-theme="light"] .appbtn{background:rgba(29,34,43,.08)}
+  :root[data-admin-theme="light"] .btn,
+  :root[data-admin-theme="light"] .chip.on{color:#f4f6fb}
+  :root[data-admin-theme="light"] .preview{background:rgba(29,34,43,.06)}
+  :root[data-admin-theme="light"] .note code{background:rgba(29,34,43,.07)}
+  :root[data-admin-theme="light"] .warn{color:#c62828}
+  :root[data-admin-theme="light"] .good{color:#2e7d32}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <div><h1>PokerTH — Studio</h1><p class="sub" id="sub">Create card decks, table felts &amp; themes</p></div>
+    <div class="topbtns">
+      <button id="themeBtn" class="ghost" title="Toggle dark / light">Light</button>
+      <a class="appbtn" href="/" target="_blank" rel="noopener">Open the app &#8599;</a>
+    </div>
+  </div>
+
+  <div class="tabs">
+    <button class="tab on" data-tab="cards">Cards</button>
+    <button class="tab" data-tab="table">Table</button>
+    <button class="tab" data-tab="theme">Themes</button>
+  </div>
+
+  <!-- ===== CARDS ===== -->
+  <section id="tab-cards" class="grid">
+    <div class="card">
+      <h2>Card style</h2>
+      <label>Preset</label>
+      <div class="swatches" id="cardPresets">
+        <span class="chip on" data-p="classic">Classic</span>
+        <span class="chip" data-p="vintage">Vintage</span>
+        <span class="chip" data-p="neon">Neon</span>
+        <span class="chip" data-p="minimal">Minimal</span>
+      </div>
+
+      <label>Deck name (shown in Theme → Cards)</label>
+      <input type="text" id="cName" value="My deck" maxlength="40">
+
+      <div class="row">
+        <div class="col"><label>Background</label><input type="color" id="cBg1"> <input type="color" id="cBg2"></div>
+        <div class="col"><label>Background style</label>
+          <select id="cBgType"><option value="solid">Solid</option><option value="vgrad">Vertical gradient</option><option value="radial">Radial (light centre)</option></select>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col"><label>♥ ♦ colour</label><input type="color" id="cRed"></div>
+        <div class="col"><label>♠ ♣ colour</label><input type="color" id="cBlack"></div>
+        <div class="col"><label>Accent / border</label><input type="color" id="cAccent"></div>
+      </div>
+      <div class="row">
+        <div class="col"><label>Border</label>
+          <select id="cBorder"><option value="none">None</option><option value="simple">Simple</option><option value="double">Double + flourishes</option><option value="hud">HUD (brackets)</option></select>
+        </div>
+        <div class="col"><label>Court cards (J/Q/K)</label>
+          <select id="cCourt"><option value="ornate">Ornament + crown</option><option value="hud">Hexagon HUD</option><option value="plain">Large letter</option></select>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col"><label>Back — colour</label><input type="color" id="cBack"></div>
+        <div class="col"><label>Back — pattern</label>
+          <select id="cBackPat"><option value="diamonds">Diamonds</option><option value="hexes">Hexagons</option><option value="rosace">Rosette</option><option value="solid">Solid</option></select>
+        </div>
+      </div>
+      <label class="row" style="margin-top:12px"><input type="checkbox" id="cGlow"> <span style="margin-left:6px">Glow (neon) — increases file size</span></label>
+
+      <details>
+        <summary>Export &amp; quality</summary>
+        <label>Resolution</label>
+        <select id="cRes"><option value="300x420">300 × 420 (recommended)</option><option value="240x336">240 × 336 (light)</option><option value="360x504">360 × 504 (sharp)</option></select>
+        <label>Palette (compression)</label>
+        <select id="cQ"><option value="128">Standard — 128 colours</option><option value="64">Compact — 64 colours</option><option value="256">High — 256 colours</option><option value="0">No reduction</option></select>
+      </details>
+
+      <button class="btn" id="cDl">Download deck (.zip)</button>
+      <div class="size" id="cSize"></div>
+      <div class="note">52 faces <code>0.png</code>…<code>51.png</code> + <code>flipside.png</code> + <code>deckstyle.xml</code>, correct index mapping. No <code>preview.png</code> → auto "fan" thumbnail. Import via Admin → Packages → <b>Card deck</b>.</div>
+    </div>
+    <div><div class="preview" id="cPrev"></div></div>
+  </section>
+
+  <!-- ===== TABLE ===== -->
+  <section id="tab-table" class="grid hide">
+    <div class="card">
+      <h2>Table style (felt + pucks)</h2>
+      <label>Table name</label>
+      <input type="text" id="tName" value="My table" maxlength="40">
+
+      <label>Felt</label>
+      <div class="row">
+        <div class="col"><label class="help">Centre → edge colour</label><input type="color" id="tF1"> <input type="color" id="tF2"></div>
+        <div class="col"><label class="help">Style</label>
+          <select id="tFType"><option value="radial">Radial (table)</option><option value="vgrad">Vertical gradient</option><option value="solid">Solid</option></select>
+        </div>
+      </div>
+      <label>…or felt image (replaces colour)</label>
+      <input type="file" id="tFImg" accept="image/*">
+      <label class="row" style="margin-top:8px"><input type="checkbox" id="tVig" checked> <span style="margin-left:6px">Vignette (darken edges)</span></label>
+
+      <hr>
+      <label class="row"><input type="checkbox" id="tPucks" checked> <span style="margin-left:6px">Generate D / SB / BB pucks</span></label>
+      <div id="tPuckOpts">
+        <div class="row">
+          <div class="col"><label>Dealer (D)</label><input type="color" id="tPd"></div>
+          <div class="col"><label>Small blind</label><input type="color" id="tPsb"></div>
+          <div class="col"><label>Big blind</label><input type="color" id="tPbb"></div>
+        </div>
+      </div>
+
+      <button class="btn" id="tDl">Download table (.zip)</button>
+      <div class="size" id="tSize"></div>
+      <div class="note"><code>table.png</code> (felt, 1280×720) + <code>dealerPuck.png</code> / <code>smallblindPuck.png</code> / <code>bigblindPuck.png</code> + <code>tablestyle.xml</code>. Import via Admin → Packages → <b>Table style</b>.</div>
+    </div>
+    <div><div class="preview"><div class="feltprev">
+      <canvas class="felt" id="tPrev" width="640" height="360"></canvas>
+      <div class="pucks"><canvas id="tPd0" width="140" height="140"></canvas><canvas id="tPsb0" width="140" height="140"></canvas><canvas id="tPbb0" width="140" height="140"></canvas></div>
+    </div></div></div>
+  </section>
+
+  <!-- ===== THEMES ===== -->
+  <section id="tab-theme" class="grid hide">
+    <div class="card">
+      <h2>Theme (UI palette + felt + pucks)</h2>
+      <label>Theme name</label>
+      <input type="text" id="hName" value="My theme" maxlength="40">
+      <label>Swatch colour</label><input type="color" id="hSwatch">
+
+      <label>Palette — base colours (variants are derived)</label>
+      <div class="row">
+        <div class="col"><label class="help">Felt</label><input type="color" id="hFelt"></div>
+        <div class="col"><label class="help">Panel</label><input type="color" id="hPanel"></div>
+      </div>
+      <div class="row">
+        <div class="col"><label class="help">Gold / accent</label><input type="color" id="hGold"></div>
+        <div class="col"><label class="help">Light text</label><input type="color" id="hText"></div>
+      </div>
+
+      <label class="row" style="margin-top:12px"><input type="checkbox" id="hFeltImg" checked> <span style="margin-left:6px">Include a felt image (felt.jpg)</span></label>
+      <label class="row"><input type="checkbox" id="hPucksOn"> <span style="margin-left:6px">Include D/SB/BB pucks (based on Gold)</span></label>
+
+      <button class="btn" id="hDl">Download theme (.zip)</button>
+      <div class="size" id="hSize"></div>
+      <div class="note"><code>theme.json</code> (15 palette tokens + felt + pucks) inside a <code>&lt;name&gt;/</code> folder. Put the folder in <code>public/themes/</code> then run <code>node scripts/themes-manifest.mjs</code>. It then appears under Theme (palette + felt + pucks).</div>
+    </div>
+    <div><div class="preview"><div class="feltprev">
+      <canvas class="felt" id="hPrev" width="640" height="360"></canvas>
+      <div class="pucks" style="gap:12px">
+        <canvas id="hsw0" width="120" height="120"></canvas>
+        <canvas id="hsw1" width="120" height="120"></canvas>
+        <canvas id="hsw2" width="120" height="120"></canvas>
+      </div>
+    </div></div></div>
+  </section>
+</div>
+
+<script>
+"use strict";
+const RANKS=['2','3','4','5','6','7','8','9','10','J','Q','K','A'];
+const SUITS=['diamond','heart','spade','club'];
+function cardOf(i){const s=SUITS[(i/13)|0],r=RANKS[i%13];return{suit:s,rank:r,red:(s==='diamond'||s==='heart')};}
+
+/* ---- suit shapes (param polygon) ---- */
+function heartPoly(n){const p=[];for(let i=0;i<=n;i++){const t=2*Math.PI*i/n;const x=16*Math.pow(Math.sin(t),3);const y=13*Math.cos(t)-5*Math.cos(2*t)-2*Math.cos(3*t)-Math.cos(4*t);p.push([x,-y]);}return p;}
+function fit(poly,w,h,pad){const xs=poly.map(p=>p[0]),ys=poly.map(p=>p[1]);const x0=Math.min(...xs),x1=Math.max(...xs),y0=Math.min(...ys),y1=Math.max(...ys);const s=Math.min(w*(1-2*pad)/(x1-x0),h*(1-2*pad)/(y1-y0));const ox=(w-(x1-x0)*s)/2-x0*s,oy=(h-(y1-y0)*s)/2-y0*s;return poly.map(p=>[p[0]*s+ox,p[1]*s+oy]);}
+function poly(ctx,pts){ctx.beginPath();ctx.moveTo(pts[0][0],pts[0][1]);for(let i=1;i<pts.length;i++)ctx.lineTo(pts[i][0],pts[i][1]);ctx.closePath();}
+const HEART=heartPoly(96);
+function drawSuit(ctx,cx,cy,size,suit,fill,flip){
+  ctx.save();ctx.translate(cx,cy);if(flip)ctx.rotate(Math.PI);ctx.translate(-size/2,-size/2);
+  ctx.fillStyle=fill;const s=size;
+  if(suit==='diamond'){const w=s*0.62,h=s*0.94;ctx.beginPath();ctx.moveTo(s/2,(s-h)/2);ctx.lineTo(s/2+w/2,s/2);ctx.lineTo(s/2,(s+h)/2);ctx.lineTo(s/2-w/2,s/2);ctx.closePath();ctx.fill();}
+  else if(suit==='heart'){poly(ctx,fit(HEART,s,s,0.08));ctx.fill();}
+  else if(suit==='spade'){let hp=fit(HEART,s,s*0.84,0.08).map(p=>[p[0],s*0.82-p[1]]);poly(ctx,hp);ctx.fill();const sw=s*0.07,sb=s*0.30;ctx.beginPath();ctx.moveTo(s/2-sw,s*0.54);ctx.lineTo(s/2+sw,s*0.54);ctx.lineTo(s/2+sb/2,s*0.92);ctx.lineTo(s/2-sb/2,s*0.92);ctx.closePath();ctx.fill();}
+  else if(suit==='club'){const r=s*0.22;function circ(x,y){ctx.beginPath();ctx.arc(x,y,r,0,7);ctx.fill();}circ(s/2,s*0.10+r);circ(s/2-r,s*0.40+r);circ(s/2+r,s*0.40+r);const sw=s*0.07,sb=s*0.30;ctx.beginPath();ctx.moveTo(s/2-sw,s*0.58);ctx.lineTo(s/2+sw,s*0.58);ctx.lineTo(s/2+sb/2,s*0.92);ctx.lineTo(s/2-sb/2,s*0.92);ctx.closePath();ctx.fill();}
+  ctx.restore();
+}
+function hexPts(cx,cy,r){const p=[];for(let k=0;k<6;k++){const a=Math.PI/180*(60*k+30);p.push([cx+r*Math.cos(a),cy+r*Math.sin(a)]);}return p;}
+
+const LAY={2:[[.5,.20,0],[.5,.80,1]],3:[[.5,.18,0],[.5,.5,0],[.5,.82,1]],
+4:[[.32,.20,0],[.68,.20,0],[.32,.80,1],[.68,.80,1]],5:[[.32,.20,0],[.68,.20,0],[.5,.5,0],[.32,.80,1],[.68,.80,1]],
+6:[[.32,.20,0],[.68,.20,0],[.32,.5,0],[.68,.5,0],[.32,.80,1],[.68,.80,1]],
+7:[[.32,.18,0],[.68,.18,0],[.5,.34,0],[.32,.5,0],[.68,.5,0],[.32,.82,1],[.68,.82,1]],
+8:[[.32,.18,0],[.68,.18,0],[.5,.34,0],[.32,.5,0],[.68,.5,0],[.5,.66,1],[.32,.82,1],[.68,.82,1]],
+9:[[.32,.17,0],[.68,.17,0],[.32,.39,0],[.68,.39,0],[.5,.5,0],[.32,.61,1],[.68,.61,1],[.32,.83,1],[.68,.83,1]],
+10:[[.32,.16,0],[.68,.16,0],[.5,.27,0],[.32,.38,0],[.68,.38,0],[.32,.62,1],[.68,.62,1],[.5,.73,1],[.32,.84,1],[.68,.84,1]]};
+
+const PRESETS={
+ classic:{bg1:'#ffffff',bg2:'#eef1f4',bgType:'solid',red:'#c0392b',black:'#1c1c1c',accent:'#8a8a8a',border:'simple',court:'plain',back:'#1f3a8a',backPat:'diamonds',glow:false},
+ vintage:{bg1:'#f3e9d1',bg2:'#e7d8b8',bgType:'vgrad',red:'#9e2a31',black:'#2c2219',accent:'#967440',border:'double',court:'ornate',back:'#7a3a32',backPat:'diamonds',glow:false},
+ neon:{bg1:'#0e1626',bg2:'#060a12',bgType:'radial',red:'#ff3c95',black:'#30e1ff',accent:'#30e1ff',border:'hud',court:'hud',back:'#0b1322',backPat:'hexes',glow:true},
+ minimal:{bg1:'#fbfbfb',bg2:'#f2f2f2',bgType:'solid',red:'#d23b3b',black:'#222222',accent:'#dddddd',border:'none',court:'plain',back:'#222831',backPat:'solid',glow:false}
+};
+let CST=Object.assign({name:'My deck'},PRESETS.classic);
+function readCardStyle(){
+ CST.name=v('cName');CST.bg1=v('cBg1');CST.bg2=v('cBg2');CST.bgType=v('cBgType');CST.red=v('cRed');CST.black=v('cBlack');
+ CST.accent=v('cAccent');CST.border=v('cBorder');CST.court=v('cCourt');CST.back=v('cBack');CST.backPat=v('cBackPat');CST.glow=document.getElementById('cGlow').checked;return CST;
+}
+function applyCardPreset(p){const s=PRESETS[p];set('cBg1',s.bg1);set('cBg2',s.bg2);set('cBgType',s.bgType);set('cRed',s.red);set('cBlack',s.black);set('cAccent',s.accent);set('cBorder',s.border);set('cCourt',s.court);set('cBack',s.back);set('cBackPat',s.backPat);document.getElementById('cGlow').checked=s.glow;readCardStyle();renderCardPreview();}
+
+function roundRectPath(ctx,x,y,w,h,r){ctx.beginPath();ctx.moveTo(x+r,y);ctx.arcTo(x+w,y,x+w,y+h,r);ctx.arcTo(x+w,y+h,x,y+h,r);ctx.arcTo(x,y+h,x,y,r);ctx.arcTo(x,y,x+w,y,r);ctx.closePath();}
+function paintBg(ctx,W,H,s){let g;if(s.bgType==='vgrad'){g=ctx.createLinearGradient(0,0,0,H);g.addColorStop(0,s.bg1);g.addColorStop(1,s.bg2);}else if(s.bgType==='radial'){g=ctx.createRadialGradient(W/2,H*0.42,H*0.1,W/2,H*0.5,H*0.8);g.addColorStop(0,s.bg1);g.addColorStop(1,s.bg2);}else g=s.bg1;ctx.fillStyle=g;ctx.fill();}
+function drawCornerFleur(ctx,x,y,sz,col,fx,fy){ctx.save();ctx.translate(x,y);ctx.scale(fx,fy);ctx.strokeStyle=col;ctx.lineWidth=Math.max(1,sz*0.06);ctx.beginPath();ctx.moveTo(sz*0.1,sz*0.5);ctx.lineTo(sz*0.5,sz*0.1);ctx.stroke();ctx.beginPath();ctx.arc(sz*0.4,sz*0.4,sz*0.34,Math.PI*1.1,Math.PI*1.8);ctx.stroke();ctx.fillStyle=col;ctx.beginPath();ctx.arc(sz*0.5,sz*0.5,sz*0.08,0,7);ctx.fill();ctx.restore();}
+function drawFrame(ctx,W,H,s){
+  if(s.border==='none')return;const i1=W*0.05;
+  ctx.strokeStyle=s.accent;ctx.lineWidth=Math.max(1.2,W*0.008);
+  if(s.border==='hud'){
+    roundRectPath(ctx,i1,i1,W-2*i1,H-2*i1,W*0.04);ctx.globalAlpha=.7;ctx.stroke();ctx.globalAlpha=1;
+    const b=W*0.11,o=W*0.035;ctx.lineWidth=Math.max(2,W*0.013);
+    [[o,o,1,1],[W-o,o,-1,1],[o,H-o,1,-1],[W-o,H-o,-1,-1]].forEach(c=>{ctx.beginPath();ctx.moveTo(c[0],c[1]);ctx.lineTo(c[0]+c[2]*b,c[1]);ctx.moveTo(c[0],c[1]);ctx.lineTo(c[0],c[1]+c[3]*b);ctx.stroke();});
+  }else{
+    roundRectPath(ctx,i1,i1,W-2*i1,H-2*i1,W*0.045);ctx.stroke();
+    if(s.border==='double'){const i2=W*0.072;ctx.lineWidth=Math.max(1,W*0.004);roundRectPath(ctx,i2,i2,W-2*i2,H-2*i2,W*0.04);ctx.stroke();
+      const fs=W*0.11;drawCornerFleur(ctx,i2,i2,fs,s.accent,1,1);drawCornerFleur(ctx,W-i2,i2,fs,s.accent,-1,1);drawCornerFleur(ctx,i2,H-i2,fs,s.accent,1,-1);drawCornerFleur(ctx,W-i2,H-i2,fs,s.accent,-1,-1);}
+  }
+}
+function drawIndex(ctx,W,H,rank,suit,col){
+  ctx.fillStyle=col;ctx.textAlign='center';ctx.textBaseline='alphabetic';
+  const fs=W*0.155;ctx.font='bold '+fs+'px ui-serif,Georgia,"Times New Roman",serif';
+  ctx.fillText(rank,W*0.135,H*0.135);drawSuit(ctx,W*0.135,H*0.20,W*0.10,suit,col,false);
+  ctx.save();ctx.translate(W*0.865,H*0.865);ctx.rotate(Math.PI);ctx.fillStyle=col;ctx.font='bold '+fs+'px ui-serif,Georgia,serif';ctx.fillText(rank,0,-H*0.005);ctx.restore();
+  drawSuit(ctx,W*0.865,H*0.80,W*0.10,suit,col,true);
+}
+function drawCourt(ctx,W,H,rank,suit,col,s){
+  const cx=W/2,cy=H/2;
+  if(s.court==='hud'){
+    ctx.strokeStyle=s.accent;ctx.lineWidth=Math.max(1.6,W*0.008);const hp=hexPts(cx,cy,W*0.30);poly(ctx,hp);ctx.stroke();
+    ctx.globalAlpha=.5;poly(ctx,hexPts(cx,cy,W*0.30-W*0.025));ctx.stroke();ctx.globalAlpha=1;
+    ctx.fillStyle=col;ctx.textAlign='center';ctx.font='bold '+(H*0.19)+'px ui-sans-serif,system-ui,sans-serif';ctx.fillText(rank,cx,cy);drawSuit(ctx,cx,cy+H*0.13,W*0.12,suit,col,false);
+  }else if(s.court==='ornate'){
+    const pw=W*0.5,ph=H*0.74,px=cx-pw/2,py=cy-ph/2;
+    ctx.fillStyle='rgba(255,255,255,.04)';roundRectPath(ctx,px,py,pw,ph,W*0.03);ctx.fill();
+    ctx.strokeStyle=s.accent;ctx.lineWidth=Math.max(1.5,W*0.006);roundRectPath(ctx,px,py,pw,ph,W*0.03);ctx.stroke();
+    function half(yc,flip){ctx.save();ctx.translate(cx,yc);if(flip)ctx.rotate(Math.PI);
+      ctx.strokeStyle=s.accent;ctx.fillStyle=s.accent;ctx.lineWidth=Math.max(1,W*0.005);
+      const cw=pw*0.5,ch=ph*0.12,ty=-ph*0.16;
+      if(rank==='J'){ctx.beginPath();ctx.arc(0,ty+ch*0.4,cw*0.18,0,7);ctx.stroke();}
+      else{ctx.beginPath();ctx.moveTo(-cw/2,ty+ch);ctx.lineTo(-cw/2,ty+ch*0.4);ctx.lineTo(-cw*0.18,ty+ch*0.8);ctx.lineTo(0,ty);ctx.lineTo(cw*0.18,ty+ch*0.8);ctx.lineTo(cw/2,ty+ch*0.4);ctx.lineTo(cw/2,ty+ch);ctx.closePath();ctx.fill();}
+      ctx.fillStyle=col;ctx.textAlign='center';ctx.font='bold '+(ph*0.34)+'px ui-serif,Georgia,serif';ctx.fillText(rank,0,ph*0.05);
+      drawSuit(ctx,0,ph*0.18,pw*0.18,suit,col,false);ctx.restore();}
+    half(cy-ph/4,false);half(cy+ph/4,true);
+    ctx.strokeStyle=s.accent;ctx.globalAlpha=.6;ctx.beginPath();ctx.moveTo(px+W*0.02,cy);ctx.lineTo(px+pw-W*0.02,cy);ctx.stroke();ctx.globalAlpha=1;
+  }else{
+    ctx.fillStyle=col;ctx.textAlign='center';ctx.font='bold '+(H*0.30)+'px ui-serif,Georgia,serif';ctx.fillText(rank,cx,cy+H*0.02);drawSuit(ctx,cx,cy+H*0.20,W*0.16,suit,col,false);
+  }
+}
+function drawAce(ctx,W,H,suit,col,s){
+  const cx=W/2,cy=H/2;
+  if(s.court==='hud'){ctx.strokeStyle=s.accent;ctx.lineWidth=Math.max(1.5,W*0.007);poly(ctx,hexPts(cx,cy,W*0.30));ctx.stroke();}
+  else{ctx.strokeStyle=s.accent;ctx.lineWidth=Math.max(1,W*0.005);ctx.beginPath();ctx.ellipse(cx,cy,W*0.30,H*0.26,0,0,7);ctx.stroke();}
+  drawSuit(ctx,cx,cy,W*0.48,suit,col,false);
+}
+function renderCard(canvas,index,s){
+  const W=canvas.width,H=canvas.height,ctx=canvas.getContext('2d');ctx.clearRect(0,0,W,H);
+  const c=cardOf(index),col=c.red?s.red:s.black;
+  ctx.save();roundRectPath(ctx,0,0,W,H,W*0.06);ctx.clip();
+  paintBg(ctx,W,H,s);
+  if(s.glow){ctx.shadowColor=col;ctx.shadowBlur=W*0.05;}
+  drawFrame(ctx,W,H,s);
+  if(c.rank==='A')drawAce(ctx,W,H,c.suit,col,s);
+  else if(c.rank==='J'||c.rank==='Q'||c.rank==='K')drawCourt(ctx,W,H,c.rank,c.suit,col,s);
+  else{const n=parseInt(c.rank,10);LAY[n].forEach(p=>drawSuit(ctx,W*(0.18+0.64*p[0]),H*(0.16+0.68*p[1]),W*0.13,c.suit,col,!!p[2]));}
+  drawIndex(ctx,W,H,c.rank,c.suit,col);
+  ctx.restore();
+  ctx.shadowBlur=0;ctx.lineWidth=1;ctx.strokeStyle='rgba(0,0,0,.18)';roundRectPath(ctx,.5,.5,W-1,H-1,W*0.06);ctx.stroke();
+}
+function renderBack(canvas,s){
+  const W=canvas.width,H=canvas.height,ctx=canvas.getContext('2d');ctx.clearRect(0,0,W,H);
+  ctx.save();roundRectPath(ctx,0,0,W,H,W*0.06);ctx.clip();
+  ctx.fillStyle=s.back;ctx.fill();
+  const fg=s.accent;ctx.strokeStyle=fg;ctx.fillStyle=fg;
+  if(s.backPat==='diamonds'){const st=W*0.085,r=W*0.018;let row=0;for(let y=W*0.06;y<H-W*0.04;y+=st*0.6){let x=W*0.06+(row%2?st/2:0);for(;x<W-W*0.04;x+=st){ctx.beginPath();ctx.moveTo(x,y-r);ctx.lineTo(x+r,y);ctx.lineTo(x,y+r);ctx.lineTo(x-r,y);ctx.closePath();ctx.fill();}row++;}}
+  else if(s.backPat==='hexes'){const r=W*0.07,dx=r*Math.sqrt(3),dy=r*1.5;let col=0;ctx.lineWidth=1;ctx.globalAlpha=.5;for(let y=W*0.04;y<H+r;y+=dy){for(let x=W*0.04+(col%2?dx/2:0);x<W+r;x+=dx){poly(ctx,hexPts(x,y,r*0.92));ctx.stroke();}col++;}ctx.globalAlpha=1;}
+  else if(s.backPat==='rosace'){ctx.lineWidth=1;ctx.globalAlpha=.6;for(let a=0;a<360;a+=12){const rad=a*Math.PI/180;ctx.beginPath();ctx.moveTo(W/2,H/2);ctx.lineTo(W/2+Math.cos(rad)*W*0.42,H/2+Math.sin(rad)*H*0.42);ctx.stroke();}ctx.globalAlpha=1;}
+  ctx.globalAlpha=.9;ctx.lineWidth=Math.max(1.5,W*0.007);roundRectPath(ctx,W*0.05,W*0.05,W-W*0.1,H-W*0.1,W*0.04);ctx.stroke();
+  ctx.globalAlpha=1;ctx.fillStyle=s.back;ctx.beginPath();ctx.ellipse(W/2,H/2,W*0.26,H*0.2,0,0,7);ctx.fill();ctx.strokeStyle=fg;ctx.lineWidth=Math.max(2,W*0.008);ctx.beginPath();ctx.ellipse(W/2,H/2,W*0.26,H*0.2,0,0,7);ctx.stroke();
+  ctx.fillStyle=fg;ctx.beginPath();ctx.arc(W/2,H/2,W*0.025,0,7);ctx.fill();
+  ctx.restore();
+}
+function renderCardPreview(){
+ const s=readCardStyle();const host=document.getElementById('cPrev');host.innerHTML='';
+ [38,24,9,46,'back'].forEach(i=>{const cv=document.createElement('canvas');cv.width=200;cv.height=280;if(i==='back')renderBack(cv,s);else renderCard(cv,i,s);host.appendChild(cv);});
+}
+
+/* ---- felt + pucks ---- */
+function paintFelt(ctx,W,H,f1,f2,type,vig,img){
+ if(img){const ir=img.width/img.height,cr=W/H;let dw,dh;if(ir>cr){dh=H;dw=H*ir;}else{dw=W;dh=W/ir;}ctx.drawImage(img,(W-dw)/2,(H-dh)/2,dw,dh);}
+ else{let g;if(type==='radial'){g=ctx.createRadialGradient(W/2,H*0.45,H*0.1,W/2,H/2,W*0.7);g.addColorStop(0,f1);g.addColorStop(1,f2);}else if(type==='vgrad'){g=ctx.createLinearGradient(0,0,0,H);g.addColorStop(0,f1);g.addColorStop(1,f2);}else g=f1;ctx.fillStyle=g;ctx.fillRect(0,0,W,H);}
+ if(vig){const g=ctx.createRadialGradient(W/2,H/2,H*0.3,W/2,H/2,W*0.75);g.addColorStop(0,'rgba(0,0,0,0)');g.addColorStop(1,'rgba(0,0,0,.45)');ctx.fillStyle=g;ctx.fillRect(0,0,W,H);}
+}
+function drawPuck(canvas,label,color){
+ const W=canvas.width,H=canvas.height,ctx=canvas.getContext('2d');ctx.clearRect(0,0,W,H);const cx=W/2,cy=H/2,r=Math.min(W,H)*0.44;
+ ctx.fillStyle=color;ctx.beginPath();ctx.arc(cx,cy,r,0,7);ctx.fill();
+ ctx.lineWidth=r*0.10;ctx.strokeStyle='rgba(255,255,255,.85)';ctx.beginPath();ctx.arc(cx,cy,r*0.82,0,7);ctx.stroke();
+ ctx.strokeStyle='rgba(0,0,0,.25)';ctx.lineWidth=r*0.06;ctx.beginPath();ctx.arc(cx,cy,r,0,7);ctx.stroke();
+ ctx.fillStyle='#fff';ctx.textAlign='center';ctx.textBaseline='middle';ctx.font='bold '+(r*0.7)+'px ui-sans-serif,system-ui,sans-serif';ctx.fillText(label,cx,cy+r*0.04);
+}
+let FELTIMG=null;
+function renderTablePreview(){
+ const f1=v('tF1'),f2=v('tF2'),ty=v('tFType'),vig=document.getElementById('tVig').checked;
+ const cv=document.getElementById('tPrev');paintFelt(cv.getContext('2d'),cv.width,cv.height,f1,f2,ty,vig,FELTIMG);
+ document.getElementById('tPuckOpts').style.opacity=document.getElementById('tPucks').checked?1:.4;
+ drawPuck(document.getElementById('tPd0'),'D',v('tPd'));drawPuck(document.getElementById('tPsb0'),'SB',v('tPsb'));drawPuck(document.getElementById('tPbb0'),'BB',v('tPbb'));
+}
+function swatch(id,col,label){const c=document.getElementById(id),x=c.getContext('2d'),W=c.width,H=c.height;x.clearRect(0,0,W,H);x.fillStyle=col;roundRectPath(x,4,4,W-8,H-8,12);x.fill();const rgb=hx(col),lum=rgb[0]*0.299+rgb[1]*0.587+rgb[2]*0.114;x.fillStyle=lum>140?'rgba(0,0,0,.62)':'rgba(255,255,255,.88)';x.font='bold 15px ui-sans-serif,system-ui';x.textAlign='center';x.fillText(label,W/2,H-12);}
+function renderThemePreview(){
+ const felt=v('hFelt');const cv=document.getElementById('hPrev');
+ paintFelt(cv.getContext('2d'),cv.width,cv.height,lighten(felt,0.08),darken(felt,0.25),'radial',true,null);
+ swatch('hsw0',v('hPanel'),'Panel');swatch('hsw1',v('hGold'),'Gold');swatch('hsw2',v('hText'),'Text');
+}
+
+/* ---- export helpers ---- */
+function canvasPNG(canvas,cnum){
+ if(window.UPNG){try{const ctx=canvas.getContext('2d');const id=ctx.getImageData(0,0,canvas.width,canvas.height);const buf=UPNG.encode([id.data.buffer],canvas.width,canvas.height,cnum||0);return Promise.resolve(new Uint8Array(buf));}catch(e){}}
+ return new Promise(res=>canvas.toBlob(b=>{const fr=new FileReader();fr.onload=()=>res(new Uint8Array(fr.result));fr.readAsArrayBuffer(b);},'image/png'));
+}
+function deckXML(name){return '<?xml version="1.0" encoding="UTF-8" ?>\n<PokerTH>\n  <CardDeck>\n    <StyleDescription value="'+esc(name)+'" />\n  </CardDeck>\n</PokerTH>\n';}
+function slug(n){return (n||'pack').toLowerCase().replace(/[^a-z0-9_-]+/g,'-').replace(/^-+|-+$/g,'')||'pack';}
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function dl(blob,name){const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove();},1500);}
+function fmt(b){return b<1024?b+' B':b<1048576?(b/1024).toFixed(0)+' KB':(b/1048576).toFixed(2)+' MB';}
+function sizeMsg(el,bytes){const lim=1048576;el.innerHTML='Zip size: <b>'+fmt(bytes)+'</b> '+(bytes<lim?'<span class="good">✓ &lt; 1 MB</span>':'<span class="warn">⚠ &gt; 1 MB (lower the resolution/quality, or raise Nginx)</span>');}
+function v(id){return document.getElementById(id).value;}
+function set(id,val){document.getElementById(id).value=val;}
+function hx(h){h=h.replace('#','');return [parseInt(h.slice(0,2),16),parseInt(h.slice(2,4),16),parseInt(h.slice(4,6),16)];}
+function xh(a){return '#'+a.map(x=>Math.max(0,Math.min(255,Math.round(x))).toString(16).padStart(2,'0')).join('');}
+function lighten(h,a){return xh(hx(h).map(x=>x+(255-x)*a));}
+function darken(h,a){return xh(hx(h).map(x=>x*(1-a)));}
+function mix(a,b,t){const A=hx(a),B=hx(b);return xh(A.map((x,i)=>x+(B[i]-x)*t));}
+function jpegBytes(cv){return new Promise(r=>cv.toBlob(b=>{const fr=new FileReader();fr.onload=()=>r(new Uint8Array(fr.result));fr.readAsArrayBuffer(b);},'image/jpeg',0.82));}
+function derivePalette(felt,panel,gold,text){return {'felt':felt,'felt-mid':lighten(felt,0.12),'felt-hi':lighten(felt,0.24),'panel':panel,'panel-hi':lighten(panel,0.16),'gold':gold,'gold-hi':lighten(gold,0.22),'gold-dim':darken(gold,0.28),'cream':lighten(text,0.06),'text':text,'text-hi':lighten(text,0.22),'border':mix(panel,text,0.28),'border-hi':mix(panel,text,0.45),'modal-bg':darken(panel,0.32),'body-glow':lighten(felt,0.16)};}
+
+async function exportDeck(){
+ const btn=document.getElementById('cDl');btn.disabled=true;const old=btn.textContent;
+ try{
+  const s=readCardStyle();const dim=v('cRes').split('x'),W=+dim[0],H=+dim[1];const cnum=+v('cQ');
+  const zip=new JSZip();const folder=slug(s.name);const f=zip.folder(folder);
+  const cv=document.createElement('canvas');cv.width=W;cv.height=H;
+  for(let i=0;i<52;i++){btn.textContent='Rendering '+(i+1)+'/52…';renderCard(cv,i,s);f.file(i+'.png',await canvasPNG(cv,cnum));if(i%6===0)await new Promise(r=>setTimeout(r));}
+  renderBack(cv,s);f.file('flipside.png',await canvasPNG(cv,cnum));
+  f.file(slug(s.name)+'deckstyle.xml',deckXML(s.name));
+  btn.textContent='Compressing…';const blob=await zip.generateAsync({type:'blob'});
+  sizeMsg(document.getElementById('cSize'),blob.size);dl(blob,folder+'.zip');
+ }catch(e){document.getElementById('cSize').innerHTML='<span class="warn">Error: '+e.message+'</span>';}
+ btn.disabled=false;btn.textContent=old;
+}
+async function exportTable(){
+ const btn=document.getElementById('tDl');btn.disabled=true;const old=btn.textContent;
+ try{
+  const name=v('tName'),folder=slug(name);const zip=new JSZip(),f=zip.folder(folder);
+  const cv=document.createElement('canvas');cv.width=1280;cv.height=720;
+  paintFelt(cv.getContext('2d'),1280,720,v('tF1'),v('tF2'),v('tFType'),document.getElementById('tVig').checked,FELTIMG);
+  f.file('table.png',await canvasPNG(cv,0));
+  if(document.getElementById('tPucks').checked){
+   const p=document.createElement('canvas');p.width=240;p.height=240;
+   drawPuck(p,'D',v('tPd'));f.file('dealerPuck.png',await canvasPNG(p,0));
+   drawPuck(p,'SB',v('tPsb'));f.file('smallblindPuck.png',await canvasPNG(p,0));
+   drawPuck(p,'BB',v('tPbb'));f.file('bigblindPuck.png',await canvasPNG(p,0));
+  }
+  f.file(folder+'tablestyle.xml',deckXML(name));
+  const blob=await zip.generateAsync({type:'blob'});sizeMsg(document.getElementById('tSize'),blob.size);dl(blob,folder+'.zip');
+ }catch(e){document.getElementById('tSize').innerHTML='<span class="warn">Error: '+e.message+'</span>';}
+ btn.disabled=false;btn.textContent=old;
+}
+async function exportTheme(){
+ const btn=document.getElementById('hDl');btn.disabled=true;const old=btn.textContent;
+ try{
+  const name=v('hName'),folder=slug(name);const zip=new JSZip(),f=zip.folder(folder);
+  const theme={name:name,swatch:v('hSwatch'),palette:derivePalette(v('hFelt'),v('hPanel'),v('hGold'),v('hText'))};
+  if(document.getElementById('hFeltImg').checked){
+   const cv=document.createElement('canvas');cv.width=1280;cv.height=720;
+   paintFelt(cv.getContext('2d'),1280,720,lighten(v('hFelt'),0.08),darken(v('hFelt'),0.25),'radial',true,null);
+   f.file('felt.jpg',await jpegBytes(cv));theme.felt='felt.jpg';
+  }
+  if(document.getElementById('hPucksOn').checked){
+   const p=document.createElement('canvas');p.width=240;p.height=240;
+   drawPuck(p,'D',v('hGold'));f.file('dealer.png',await canvasPNG(p,0));
+   drawPuck(p,'SB',mix(v('hGold'),v('hText'),0.18));f.file('sb.png',await canvasPNG(p,0));
+   drawPuck(p,'BB',darken(v('hGold'),0.14));f.file('bb.png',await canvasPNG(p,0));
+   theme.pucks={dealer:'dealer.png',sb:'sb.png',bb:'bb.png'};
+  }
+  f.file('theme.json',JSON.stringify(theme,null,2)+'\n');
+  const blob=await zip.generateAsync({type:'blob'});sizeMsg(document.getElementById('hSize'),blob.size);dl(blob,folder+'.zip');
+ }catch(e){document.getElementById('hSize').innerHTML='<span class="warn">Error: '+e.message+'</span>';}
+ btn.disabled=false;btn.textContent=old;
+}
+
+/* ---- theme toggle (shared key with Admin) ---- */
+function setTheme(t){document.documentElement.setAttribute('data-admin-theme',t);try{localStorage.setItem('pth_admin_theme',t);}catch(e){}document.getElementById('themeBtn').textContent=(t==='light'?'Dark':'Light');}
+document.getElementById('themeBtn').addEventListener('click',()=>setTheme(document.documentElement.getAttribute('data-admin-theme')==='light'?'dark':'light'));
+
+/* ---- wiring ---- */
+document.querySelectorAll('.tab').forEach(t=>t.addEventListener('click',()=>{
+ document.querySelectorAll('.tab').forEach(x=>x.classList.remove('on'));t.classList.add('on');
+ ['cards','table','theme'].forEach(n=>document.getElementById('tab-'+n).classList.toggle('hide',n!==t.dataset.tab));
+ if(t.dataset.tab==='table')renderTablePreview();if(t.dataset.tab==='theme')renderThemePreview();
+}));
+document.querySelectorAll('#cardPresets .chip').forEach(c=>c.addEventListener('click',()=>{
+ document.querySelectorAll('#cardPresets .chip').forEach(x=>x.classList.remove('on'));c.classList.add('on');applyCardPreset(c.dataset.p);
+}));
+['cName','cBg1','cBg2','cBgType','cRed','cBlack','cAccent','cBorder','cCourt','cBack','cBackPat','cGlow'].forEach(id=>document.getElementById(id).addEventListener('input',renderCardPreview));
+['tName','tF1','tF2','tFType','tVig','tPucks','tPd','tPsb','tPbb'].forEach(id=>document.getElementById(id).addEventListener('input',renderTablePreview));
+['hName','hSwatch','hFelt','hPanel','hGold','hText','hFeltImg','hPucksOn'].forEach(id=>document.getElementById(id).addEventListener('input',renderThemePreview));
+document.getElementById('tFImg').addEventListener('change',e=>{const file=e.target.files[0];if(!file){FELTIMG=null;renderTablePreview();return;}const img=new Image();img.onload=()=>{FELTIMG=img;renderTablePreview();};img.src=URL.createObjectURL(file);});
+document.getElementById('cDl').addEventListener('click',exportDeck);
+document.getElementById('tDl').addEventListener('click',exportTable);
+document.getElementById('hDl').addEventListener('click',exportTheme);
+
+/* defaults */
+set('tF1','#1f6b3a');set('tF2','#0c3a1d');set('tPd','#e8c14a');set('tPsb','#3f7fd0');set('tPbb','#d9892f');
+set('hSwatch','#1f6b3a');set('hFelt','#1f6b3a');set('hPanel','#15281c');set('hGold','#d8b24a');set('hText','#e7efe6');
+
+/* init */
+setTheme(document.documentElement.getAttribute('data-admin-theme')||'dark');
+applyCardPreset('classic');renderCardPreview();
+document.getElementById('sub').textContent=window.UPNG?'Create card decks, table felts & themes':'Create card decks, table felts & themes (standard compression)';
+</script>
+</body>
+</html>
