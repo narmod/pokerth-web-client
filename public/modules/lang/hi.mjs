@@ -14,9 +14,9 @@ export const meta = {
 };
 
 export const strings = {
-  seatCard: 'कार्ड', seatCompact: 'कॉम्पैक्ट', seatBar: 'बार',
-  seatChip: 'चिप',
-  sectionSeat: 'सीटें', seatClassic: 'क्लासिक', seatPlate: 'नेमप्लेट',
+  seatCard: 'Card', seatCompact: 'Compact', seatBar: 'Bar',
+  seatChip: 'Chip',
+  sectionSeat: 'सीटें', seatClassic: 'Classic', seatPlate: 'Plate',
     botDifficulty:'बॉट कठिनाई', botEasy:'आसान', botMixed:'मिश्रित', botNormal:'सामान्य', botHard:'कठिन',
 
     guestHint:'🌐 pokerth.net पर अतिथि के रूप में खेलें — खाते की ज़रूरत नहीं।',

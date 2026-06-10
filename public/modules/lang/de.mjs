@@ -15,9 +15,9 @@ export const meta = {
 };
 
 export const strings = {
-  seatCard: 'Karte', seatCompact: 'Kompakt', seatBar: 'Leiste',
+  seatCard: 'Card', seatCompact: 'Compact', seatBar: 'Bar',
   seatChip: 'Chip',
-  sectionSeat: 'Sitze', seatClassic: 'Klassisch', seatPlate: 'Namensschild',
+  sectionSeat: 'Sitze', seatClassic: 'Classic', seatPlate: 'Plate',
     botDifficulty:'Bot-Schwierigkeit', botEasy:'Einfach', botMixed:'Gemischt', botNormal:'Normal', botHard:'Schwer',
 
     guestHint:'🌐 Gastzugang auf pokerth.net – kein Konto nötig.',

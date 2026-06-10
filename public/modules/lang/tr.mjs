@@ -12,9 +12,9 @@ export const meta = {
 };
 
 export const strings = {
-  seatCard: 'Kart', seatCompact: 'Kompakt', seatBar: 'Çubuk',
-  seatChip: 'Fiş',
-  sectionSeat: 'Koltuklar', seatClassic: 'Klasik', seatPlate: 'İsimlik',
+  seatCard: 'Card', seatCompact: 'Compact', seatBar: 'Bar',
+  seatChip: 'Chip',
+  sectionSeat: 'Koltuklar', seatClassic: 'Classic', seatPlate: 'Plate',
     botDifficulty:'Bot zorluğu', botEasy:'Kolay', botMixed:'Karışık', botNormal:'Normal', botHard:'Zor',
 
     guestHint:'🌐 pokerth.net\'te misafir oyun — hesap gerekmez.',

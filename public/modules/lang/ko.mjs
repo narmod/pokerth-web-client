@@ -13,9 +13,9 @@ export const meta = {
 };
 
 export const strings = {
-  seatCard: '카드', seatCompact: '컴팩트', seatBar: '바',
-  seatChip: '칩',
-  sectionSeat: '좌석', seatClassic: '클래식', seatPlate: '명패',
+  seatCard: 'Card', seatCompact: 'Compact', seatBar: 'Bar',
+  seatChip: 'Chip',
+  sectionSeat: '좌석', seatClassic: 'Classic', seatPlate: 'Plate',
     botDifficulty:'봇 난이도', botEasy:'쉬움', botMixed:'혼합', botNormal:'보통', botHard:'어려움',
 
     guestHint:'🌐 pokerth.net 게스트 플레이 — 계정 불필요.',

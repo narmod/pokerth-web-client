@@ -9,9 +9,9 @@ export const meta = {
 };
 
 export const strings = {
-  seatCard: 'カード', seatCompact: 'コンパクト', seatBar: 'バー',
-  seatChip: 'チップ',
-  sectionSeat: '座席', seatClassic: 'クラシック', seatPlate: 'プレート',
+  seatCard: 'Card', seatCompact: 'Compact', seatBar: 'Bar',
+  seatChip: 'Chip',
+  sectionSeat: '座席', seatClassic: 'Classic', seatPlate: 'Plate',
     botDifficulty:'ボットの難易度', botEasy:'やさしい', botMixed:'ミックス', botNormal:'ふつう', botHard:'むずかしい',
 
     guestHint:'🌐 pokerth.net にゲストで参加 — アカウント不要。',

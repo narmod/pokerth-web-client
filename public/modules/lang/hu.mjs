@@ -10,9 +10,9 @@ export const meta = {
 };
 
 export const strings = {
-  seatCard: 'Kártya', seatCompact: 'Kompakt', seatBar: 'Sáv',
-  seatChip: 'Zseton',
-  sectionSeat: 'Helyek', seatClassic: 'Klasszikus', seatPlate: 'Névtábla',
+  seatCard: 'Card', seatCompact: 'Compact', seatBar: 'Bar',
+  seatChip: 'Chip',
+  sectionSeat: 'Helyek', seatClassic: 'Classic', seatPlate: 'Plate',
     botDifficulty:'Botok nehézsége', botEasy:'Könnyű', botMixed:'Vegyes', botNormal:'Normál', botHard:'Nehéz',
 
     guestHint:'🌐 Vendégjáték a pokerth.net-en – nincs fiók.',

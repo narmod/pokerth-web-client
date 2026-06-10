@@ -10,9 +10,9 @@ export const meta = {
 };
 
 export const strings = {
-  seatCard: 'Κάρτα', seatCompact: 'Συμπαγές', seatBar: 'Μπάρα',
-  seatChip: 'Μάρκα',
-  sectionSeat: 'Θέσεις', seatClassic: 'Κλασικό', seatPlate: 'Πινακίδα',
+  seatCard: 'Card', seatCompact: 'Compact', seatBar: 'Bar',
+  seatChip: 'Chip',
+  sectionSeat: 'Θέσεις', seatClassic: 'Classic', seatPlate: 'Plate',
     botDifficulty:'Δυσκολία bot', botEasy:'Εύκολο', botMixed:'Μικτό', botNormal:'Κανονικό', botHard:'Δύσκολο',
 
     guestHint:'🌐 Παιχνίδι ως επισκέπτης στο pokerth.net — χωρίς λογαριασμό.',

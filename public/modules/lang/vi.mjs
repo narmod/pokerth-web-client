@@ -10,9 +10,9 @@ export const meta = {
 };
 
 export const strings = {
-  seatCard: 'Thẻ', seatCompact: 'Gọn', seatBar: 'Thanh',
-  seatChip: 'Phỉnh',
-  sectionSeat: 'Chỗ ngồi', seatClassic: 'Cổ điển', seatPlate: 'Bảng tên',
+  seatCard: 'Card', seatCompact: 'Compact', seatBar: 'Bar',
+  seatChip: 'Chip',
+  sectionSeat: 'Chỗ ngồi', seatClassic: 'Classic', seatPlate: 'Plate',
     botDifficulty:'Độ khó của bot', botEasy:'Dễ', botMixed:'Hỗn hợp', botNormal:'Bình thường', botHard:'Khó',
 
     guestHint:'🌐 Chơi với tư cách khách trên pokerth.net — không cần tài khoản.',

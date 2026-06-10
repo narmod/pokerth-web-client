@@ -9,9 +9,9 @@ export const meta = {
 };
 
 export const strings = {
-  seatCard: 'Kortti', seatCompact: 'Tiivis', seatBar: 'Palkki',
-  seatChip: 'Pelimerkki',
-  sectionSeat: 'Paikat', seatClassic: 'Klassinen', seatPlate: 'Nimikyltti',
+  seatCard: 'Card', seatCompact: 'Compact', seatBar: 'Bar',
+  seatChip: 'Chip',
+  sectionSeat: 'Paikat', seatClassic: 'Classic', seatPlate: 'Plate',
     botDifficulty:'Bottien vaikeus', botEasy:'Helppo', botMixed:'Sekoitettu', botNormal:'Normaali', botHard:'Vaikea',
 
     guestHint:'🌐 Vieraspeli pokerth.net-palvelimella — ei tiliä.',

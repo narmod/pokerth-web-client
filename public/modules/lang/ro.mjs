@@ -10,9 +10,9 @@ export const meta = {
 };
 
 export const strings = {
-  seatCard: 'Card', seatCompact: 'Compact', seatBar: 'Bară',
-  seatChip: 'Jeton',
-  sectionSeat: 'Locuri', seatClassic: 'Clasic', seatPlate: 'Plăcuță',
+  seatCard: 'Card', seatCompact: 'Compact', seatBar: 'Bar',
+  seatChip: 'Chip',
+  sectionSeat: 'Locuri', seatClassic: 'Classic', seatPlate: 'Plate',
     botDifficulty:'Dificultatea boților', botEasy:'Ușor', botMixed:'Mixt', botNormal:'Normal', botHard:'Greu',
 
     guestHint:'🌐 Joc ca invitat pe pokerth.net — fără cont.',

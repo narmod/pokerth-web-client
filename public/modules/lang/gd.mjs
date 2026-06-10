@@ -11,9 +11,9 @@ export const meta = {
 };
 
 export const strings = {
-  seatCard: 'Cairt', seatCompact: 'Dlùth', seatBar: 'Bàr',
-  seatChip: 'Tòcan',
-  sectionSeat: 'Suidheachain', seatClassic: 'Clasaigeach', seatPlate: 'Clàr-ainm',
+  seatCard: 'Card', seatCompact: 'Compact', seatBar: 'Bar',
+  seatChip: 'Chip',
+  sectionSeat: 'Suidheachain', seatClassic: 'Classic', seatPlate: 'Plate',
     botDifficulty:'Duilgheadas nam botaichean', botEasy:'Furasta', botMixed:'Measgaichte', botNormal:'Àbhaisteach', botHard:'Doirbh',
 
     guestHint:'🌐 Cluich mar aoigh air pokerth.net — gun chunntas.',

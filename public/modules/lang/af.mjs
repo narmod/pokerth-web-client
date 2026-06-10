@@ -10,9 +10,9 @@ export const meta = {
 };
 
 export const strings = {
-  seatCard: 'Kaart', seatCompact: 'Kompak', seatBar: 'Balk',
-  seatChip: 'Fiche',
-  sectionSeat: 'Sitplekke', seatClassic: 'Klassiek', seatPlate: 'Naamplaatjie',
+  seatCard: 'Card', seatCompact: 'Compact', seatBar: 'Bar',
+  seatChip: 'Chip',
+  sectionSeat: 'Sitplekke', seatClassic: 'Classic', seatPlate: 'Plate',
     botDifficulty:'Bot-moeilikheid', botEasy:'Maklik', botMixed:'Gemeng', botNormal:'Normaal', botHard:'Moeilik',
 
     guestHint:'🌐 Speel as gas op pokerth.net — geen rekening nodig.',

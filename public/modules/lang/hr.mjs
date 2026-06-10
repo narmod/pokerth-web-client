@@ -10,9 +10,9 @@ export const meta = {
 };
 
 export const strings = {
-  seatCard: 'Kartica', seatCompact: 'Kompaktno', seatBar: 'Traka',
-  seatChip: 'Žeton',
-  sectionSeat: 'Mjesta', seatClassic: 'Klasično', seatPlate: 'Pločica',
+  seatCard: 'Card', seatCompact: 'Compact', seatBar: 'Bar',
+  seatChip: 'Chip',
+  sectionSeat: 'Mjesta', seatClassic: 'Classic', seatPlate: 'Plate',
     botDifficulty:'Težina botova', botEasy:'Lako', botMixed:'Mješovito', botNormal:'Normalno', botHard:'Teško',
 
     guestHint:'🌐 Igra kao gost na pokerth.net — bez računa.',

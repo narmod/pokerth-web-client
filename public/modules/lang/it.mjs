@@ -15,9 +15,9 @@ export const meta = {
 };
 
 export const strings = {
-  seatCard: 'Scheda', seatCompact: 'Compatto', seatBar: 'Barra',
-  seatChip: 'Fiche',
-  sectionSeat: 'Posti', seatClassic: 'Classico', seatPlate: 'Targhetta',
+  seatCard: 'Card', seatCompact: 'Compact', seatBar: 'Bar',
+  seatChip: 'Chip',
+  sectionSeat: 'Posti', seatClassic: 'Classic', seatPlate: 'Plate',
     botDifficulty:'Difficoltà dei bot', botEasy:'Facile', botMixed:'Mista', botNormal:'Normale', botHard:'Difficile',
 
     guestHint:'🌐 Gioco come ospite su pokerth.net — senza account.',

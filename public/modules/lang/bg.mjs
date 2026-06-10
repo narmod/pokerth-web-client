@@ -10,9 +10,9 @@ export const meta = {
 };
 
 export const strings = {
-  seatCard: 'Карта', seatCompact: 'Компактен', seatBar: 'Лента',
-  seatChip: 'Чип',
-  sectionSeat: 'Места', seatClassic: 'Класически', seatPlate: 'Табелка',
+  seatCard: 'Card', seatCompact: 'Compact', seatBar: 'Bar',
+  seatChip: 'Chip',
+  sectionSeat: 'Места', seatClassic: 'Classic', seatPlate: 'Plate',
     botDifficulty:'Трудност на ботовете', botEasy:'Лесно', botMixed:'Смесено', botNormal:'Нормално', botHard:'Трудно',
 
     guestHint:'🌐 Гост на pokerth.net — без акаунт.',

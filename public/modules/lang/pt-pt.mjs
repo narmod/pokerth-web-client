@@ -9,9 +9,9 @@ export const meta = {
 };
 
 export const strings = {
-  seatCard: 'Cartão', seatCompact: 'Compacto', seatBar: 'Barra',
-  seatChip: 'Ficha',
-  sectionSeat: 'Lugares', seatClassic: 'Clássico', seatPlate: 'Placa',
+  seatCard: 'Card', seatCompact: 'Compact', seatBar: 'Bar',
+  seatChip: 'Chip',
+  sectionSeat: 'Lugares', seatClassic: 'Classic', seatPlate: 'Plate',
     botDifficulty:'Dificuldade dos bots', botEasy:'Fácil', botMixed:'Misto', botNormal:'Normal', botHard:'Difícil',
 
     guestHint:'🌐 Jogo como convidado no pokerth.net — sem conta.',

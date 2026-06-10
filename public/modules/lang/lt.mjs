@@ -10,9 +10,9 @@ export const meta = {
 };
 
 export const strings = {
-  seatCard: 'Kortelė', seatCompact: 'Kompaktiškas', seatBar: 'Juosta',
-  seatChip: 'Žetonas',
-  sectionSeat: 'Vietos', seatClassic: 'Klasikinis', seatPlate: 'Lentelė',
+  seatCard: 'Card', seatCompact: 'Compact', seatBar: 'Bar',
+  seatChip: 'Chip',
+  sectionSeat: 'Vietos', seatClassic: 'Classic', seatPlate: 'Plate',
     botDifficulty:'Botų sudėtingumas', botEasy:'Lengvas', botMixed:'Mišrus', botNormal:'Normalus', botHard:'Sunkus',
 
     guestHint:'🌐 Žaidimas kaip svečias pokerth.net — be paskyros.',

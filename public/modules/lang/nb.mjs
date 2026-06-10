@@ -9,9 +9,9 @@ export const meta = {
 };
 
 export const strings = {
-  seatCard: 'Kort', seatCompact: 'Kompakt', seatBar: 'Linje',
-  seatChip: 'Sjetong',
-  sectionSeat: 'Plasser', seatClassic: 'Klassisk', seatPlate: 'Navneskilt',
+  seatCard: 'Card', seatCompact: 'Compact', seatBar: 'Bar',
+  seatChip: 'Chip',
+  sectionSeat: 'Plasser', seatClassic: 'Classic', seatPlate: 'Plate',
     botDifficulty:'Bot-vanskelighet', botEasy:'Lett', botMixed:'Blandet', botNormal:'Normal', botHard:'Vanskelig',
 
     guestHint:'🌐 Gjestespill på pokerth.net – ingen konto nødvendig.',

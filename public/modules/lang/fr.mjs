@@ -16,9 +16,9 @@ export const meta = {
 };
 
 export const strings = {
-  seatCard: 'Carte', seatCompact: 'Compact', seatBar: 'Barre',
-  seatChip: 'Jeton',
-  sectionSeat: 'Sièges', seatClassic: 'Classique', seatPlate: 'Plaque',
+  seatCard: 'Card', seatCompact: 'Compact', seatBar: 'Bar',
+  seatChip: 'Chip',
+  sectionSeat: 'Sièges', seatClassic: 'Classic', seatPlate: 'Plate',
     guestHint:'🌐 Partie en invité sur pokerth.net — sans compte.',
     srvOffline:'🏋️ Mode entraînement', offlineHint:'🤖 Jeu solo contre des bots — aucune connexion requise.',
     srvPokerthNet:'🌐 Internet / PokerTH.net',

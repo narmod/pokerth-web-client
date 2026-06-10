@@ -10,9 +10,9 @@ export const meta = {
 };
 
 export const strings = {
-  seatCard: 'Karta', seatCompact: 'Kompaktní', seatBar: 'Lišta',
-  seatChip: 'Žeton',
-  sectionSeat: 'Místa', seatClassic: 'Klasický', seatPlate: 'Štítek',
+  seatCard: 'Card', seatCompact: 'Compact', seatBar: 'Bar',
+  seatChip: 'Chip',
+  sectionSeat: 'Místa', seatClassic: 'Classic', seatPlate: 'Plate',
     botDifficulty:'Obtížnost botů', botEasy:'Snadná', botMixed:'Smíšená', botNormal:'Normální', botHard:'Těžká',
 
     guestHint:'🌐 Hra jako host na pokerth.net — bez účtu.',
