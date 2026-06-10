@@ -5006,7 +5006,7 @@ const App = (() => {
           animateDealMyCards();
         }, 250);
         var hs = document.getElementById('hand-strength');
-        if (hs) hs.style.display = 'none';
+        if (hs) _hsHide(hs);
         renderGameWaiting(t('handOf') + ' ' + handNum + ' — Blinds: ' + sb + '/' + (sb*2));
         const _lhN = handNum, _lhSB = sb;
         logAction(function(){ return '══ ' + t('handOf') + ' ' + _lhN + ' — ' + t('blinds') + ' ' + _lhSB + '/' + (_lhSB*2) + ' ══'; });
@@ -6023,18 +6023,22 @@ const App = (() => {
     var p = (pct == null || isNaN(pct)) ? 0 : Math.max(0, Math.min(100, pct));
     var fill = el.querySelector('.hs-fill');
     if (fill) { fill.style.width = p + '%'; if (col) fill.style.background = col; }
-    var lbl = el.querySelector('.hs-lbl');
-    if (lbl) lbl.textContent = text;
-    if (col) el.style.setProperty('--hs-col', col);
+    var lbl = document.getElementById('hs-lbl');
+    if (lbl) { lbl.textContent = text; if (col) lbl.style.color = col; lbl.style.display = ''; }
+  }
+  function _hsHide(el) {
+    if (el) el.style.display = 'none';
+    var lbl = document.getElementById('hs-lbl');
+    if (lbl) { lbl.style.display = 'none'; lbl.textContent = ''; }
   }
   function renderPreFlopStrength() {
     var el = document.getElementById('hand-strength');
     if (!el) return;
-    if (!_assistOn) { el.style.display = 'none'; return; } // assistance désactivée
+    if (!_assistOn) { _hsHide(el); return; } // assistance désactivée
     if (commCards.filter(function(c){ return c!=null; }).length > 0) return;
-    if (myCards[0] == null || myCards[1] == null) { el.style.display='none'; return; }
+    if (myCards[0] == null || myCards[1] == null) { _hsHide(el); return; }
     var res = evaluatePreFlopHand(myCards[0], myCards[1]);
-    if (!res) { el.style.display='none'; return; }
+    if (!res) { _hsHide(el); return; }
     var label = res.label;
     var stars = res.stars >= 0
       ? ' ' + ('★'.repeat(res.stars+1) + '☆☆').slice(0,3)
@@ -6049,19 +6053,16 @@ const App = (() => {
   function renderHandStrength() {
     var el = document.getElementById('hand-strength');
     if (!el) return;
-    if (!_assistOn) { el.style.display = 'none'; return; } // assistance désactivée
+    if (!_assistOn) { _hsHide(el); return; } // assistance désactivée
     var validComm = commCards.filter(function(c){ return c != null; });
-    if (myCards[0] == null || myCards[1] == null || validComm.length === 0) {
-      el.style.display = 'none';
-      return;
-    }
+    if (myCards[0] == null || myCards[1] == null || validComm.length === 0) { _hsHide(el); return; }
     // Normaliser les hole cards (1-indexed) vers l'encodage canonique (0-indexed)
     var holeNorm = [myCards[0], myCards[1]]
       .filter(function(c){ return c != null; })
       .map(normalizeHoleCard)
       .filter(function(c){ return c != null; });
     var result = evaluateBestHand(holeNorm, validComm);
-    if (!result) { el.style.display = 'none'; return; }
+    if (!result) { _hsHide(el); return; }
     var handLabel = result.label;
     var colors = ['#aaa','#aaa','#7ec8e3','#7ec8e3','#a8d8a8','#6dbe6d','#f0c040','#f09030','#e07020','#e74c3c'];
     var handColor = colors[result.r] || 'var(--gold)';
@@ -7231,7 +7232,7 @@ const App = (() => {
     }
     var hs = document.getElementById('hand-strength');
     if (!_assistOn) {
-      if (hs) hs.style.display = 'none';
+      if (hs) _hsHide(hs);
     } else {
       // Réafficher l'aide adaptée à la phase courante.
       var nComm = (commCards || []).filter(function(c){ return c != null; }).length;
@@ -9997,7 +9998,7 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.2.365'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.2.366'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
