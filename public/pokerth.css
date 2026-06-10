@@ -2361,6 +2361,12 @@ body {
   border-radius: 5px;
   pointer-events: none;
 }
+:root[data-theme="pokerth"] .hs-lbl,
+:root[data-theme="dark"] .hs-lbl,
+:root[data-theme="redfelt"] .hs-lbl {
+  background: rgba(96,110,135,0.40);
+  border: 1px solid rgba(255,255,255,0.13);
+}
 .hs-txt {
   font-family: var(--ff-display);
   font-size: 0.72rem;
