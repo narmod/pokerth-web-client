@@ -5264,9 +5264,18 @@ html[data-seat="plate"] .seat-timer-badge { display: none; }
 /* Pack « Jeton » (data-seat="chip") : avatar stylise en jeton de poker
    (double lisere creme + anneau dore). Layout classique vertical -> tient en
    portrait. Contenu / anneau de temps / drapeau / jetons inchanges. */
+html[data-seat="chip"] .seat-avatar,
+html[data-seat="chip"] .seat.active .seat-avatar {
+  border: none;
+  background:
+    radial-gradient(circle at 50% 50%, #15110c 0 58%, transparent 59%),
+    repeating-conic-gradient(from 0deg, #f4f1e8 0 14deg, #b02a2a 14deg 45deg);
+}
 html[data-seat="chip"] .seat-avatar {
-  border: 3px double rgba(243,239,226,0.95);
-  background: rgba(0,0,0,0.58);
-  box-shadow: 0 0 0 2px var(--gold, #c8a84a), 0 1px 5px rgba(0,0,0,0.55);
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.32), 0 1px 4px rgba(0,0,0,0.55);
   font-weight: 800;
+}
+/* photo : enfoncee pour laisser voir l'anneau crante du jeton */
+html[data-seat="chip"] .seat-avatar > .seat-pth-img {
+  inset: 4px; width: auto; height: auto; border-radius: 50%;
 }

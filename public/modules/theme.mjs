@@ -433,7 +433,7 @@ function _previewHTML(kind, item, big) {
   if (kind === 'seat') {
     var av = big ? 24 : 9, bw = big ? 2 : 1, bh = big ? 5 : 2, g = big ? 3 : 1;
     var _sid = item ? item.id : '';
-    var _avSt = (_sid === 'chip') ? 'background:#15110c;border:'+(big?3:1)+'px double #f3efe2;box-shadow:0 0 0 '+(big?2:1)+'px #c8a84a,0 1px 2px rgba(0,0,0,0.5)' : 'background:#1b2a16;border:'+bw+'px solid #c8a84a;box-shadow:0 1px 2px rgba(0,0,0,0.5)';
+    var _avSt = (_sid === 'chip') ? 'border:none;background:radial-gradient(circle at 50% 50%,#15110c 0 56%,transparent 57%),repeating-conic-gradient(from 0deg,#f4f1e8 0 14deg,#b02a2a 14deg 45deg);box-shadow:inset 0 0 0 1px rgba(255,255,255,0.3),0 1px 2px rgba(0,0,0,0.5)' : 'background:#1b2a16;border:'+bw+'px solid #c8a84a;box-shadow:0 1px 2px rgba(0,0,0,0.5)';
     var avEl = '<i style="width:'+av+'px;height:'+av+'px;border-radius:50%;flex:none;'+_avSt+'"></i>';
     var felt = ';display:flex;align-items:center;justify-content:center;background:radial-gradient(circle at 50% 40%,#1c5a28,#0c3214)';
     var b1 = '<i style="display:block;width:'+(big?34:12)+'px;height:'+bh+'px;border-radius:'+bh+'px;background:#e7eaf0"></i>';
