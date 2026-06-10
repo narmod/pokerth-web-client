@@ -16,6 +16,7 @@ export const meta = {
 };
 
 export const strings = {
+  seatChip: 'Jeton',
   sectionSeat: 'Sièges', seatClassic: 'Classique', seatPlate: 'Plaque',
     guestHint:'🌐 Partie en invité sur pokerth.net — sans compte.',
     srvOffline:'🏋️ Mode entraînement', offlineHint:'🤖 Jeu solo contre des bots — aucune connexion requise.',

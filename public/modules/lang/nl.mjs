@@ -15,6 +15,7 @@ export const meta = {
 };
 
 export const strings = {
+  seatChip: 'Fiche',
   sectionSeat: 'Plaatsen', seatClassic: 'Klassiek', seatPlate: 'Naamplaatje',
     botDifficulty:'Botmoeilijkheid', botEasy:'Makkelijk', botMixed:'Gemengd', botNormal:'Normaal', botHard:'Moeilijk',
 

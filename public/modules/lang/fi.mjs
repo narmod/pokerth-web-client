@@ -9,6 +9,7 @@ export const meta = {
 };
 
 export const strings = {
+  seatChip: 'Pelimerkki',
   sectionSeat: 'Paikat', seatClassic: 'Klassinen', seatPlate: 'Nimikyltti',
     botDifficulty:'Bottien vaikeus', botEasy:'Helppo', botMixed:'Sekoitettu', botNormal:'Normaali', botHard:'Vaikea',
 

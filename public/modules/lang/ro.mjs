@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+  seatChip: 'Jeton',
   sectionSeat: 'Locuri', seatClassic: 'Clasic', seatPlate: 'Plăcuță',
     botDifficulty:'Dificultatea boților', botEasy:'Ușor', botMixed:'Mixt', botNormal:'Normal', botHard:'Greu',
 

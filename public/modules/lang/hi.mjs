@@ -14,6 +14,7 @@ export const meta = {
 };
 
 export const strings = {
+  seatChip: 'चिप',
   sectionSeat: 'सीटें', seatClassic: 'क्लासिक', seatPlate: 'नेमप्लेट',
     botDifficulty:'बॉट कठिनाई', botEasy:'आसान', botMixed:'मिश्रित', botNormal:'सामान्य', botHard:'कठिन',
 

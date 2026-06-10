@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+  seatChip: 'Fitxa',
   sectionSeat: 'Seients', seatClassic: 'Clàssic', seatPlate: 'Placa',
     botDifficulty:'Dificultat dels bots', botEasy:'Fàcil', botMixed:'Mixt', botNormal:'Normal', botHard:'Difícil',
 

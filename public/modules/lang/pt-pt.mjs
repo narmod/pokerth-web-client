@@ -9,6 +9,7 @@ export const meta = {
 };
 
 export const strings = {
+  seatChip: 'Ficha',
   sectionSeat: 'Lugares', seatClassic: 'Clássico', seatPlate: 'Placa',
     botDifficulty:'Dificuldade dos bots', botEasy:'Fácil', botMixed:'Misto', botNormal:'Normal', botHard:'Difícil',
 

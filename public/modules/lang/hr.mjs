@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+  seatChip: 'Žeton',
   sectionSeat: 'Mjesta', seatClassic: 'Klasično', seatPlate: 'Pločica',
     botDifficulty:'Težina botova', botEasy:'Lako', botMixed:'Mješovito', botNormal:'Normalno', botHard:'Teško',
 

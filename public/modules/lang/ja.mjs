@@ -9,6 +9,7 @@ export const meta = {
 };
 
 export const strings = {
+  seatChip: 'チップ',
   sectionSeat: '座席', seatClassic: 'クラシック', seatPlate: 'プレート',
     botDifficulty:'ボットの難易度', botEasy:'やさしい', botMixed:'ミックス', botNormal:'ふつう', botHard:'むずかしい',
 

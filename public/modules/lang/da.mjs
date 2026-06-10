@@ -9,6 +9,7 @@ export const meta = {
 };
 
 export const strings = {
+  seatChip: 'Jeton',
   sectionSeat: 'Pladser', seatClassic: 'Klassisk', seatPlate: 'Navneskilt',
     botDifficulty:'Bot-sværhedsgrad', botEasy:'Let', botMixed:'Blandet', botNormal:'Normal', botHard:'Svær',
 

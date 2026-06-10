@@ -5259,3 +5259,14 @@ html[data-seat="plate"] .seat-timer-badge { display: none; }
   html[data-seat="plate"] .seat-money { font-size: 0.62rem; }
   html[data-seat="plate"] .seat-foot { gap: 4px; margin-top: 2px; }
 }
+
+
+/* Pack « Jeton » (data-seat="chip") : avatar stylise en jeton de poker
+   (double lisere creme + anneau dore). Layout classique vertical -> tient en
+   portrait. Contenu / anneau de temps / drapeau / jetons inchanges. */
+html[data-seat="chip"] .seat-avatar {
+  border: 3px double rgba(243,239,226,0.95);
+  background: rgba(0,0,0,0.58);
+  box-shadow: 0 0 0 2px var(--gold, #c8a84a), 0 1px 5px rgba(0,0,0,0.55);
+  font-weight: 800;
+}

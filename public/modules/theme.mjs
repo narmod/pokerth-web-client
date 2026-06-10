@@ -92,6 +92,7 @@ var PUCKS_ITEMS   = [ {id:'pokerth',key:'pucksPokerth',fallback:'PokerTH',swatch
 // Classic (historical render). Add a pack = one item here; panel lists it auto.
 const SEATS = [
   { id: '',      key: 'seatClassic', fallback: 'Classic', swatch: '#1e3820' },
+  { id: 'chip',  key: 'seatChip',    fallback: 'Chip',    swatch: '#caa64a' },
   { id: 'plate', key: 'seatPlate',   fallback: 'Plate',   swatch: '#1d222b' },
 ];
 const palette = makeAxis({ storeKey: 'pth_theme', attr: 'data-theme', items: PALETTES, def: 'pokerth-light', titleKey: 'sectionPalette', titleFallback: 'Palette' });
@@ -431,7 +432,9 @@ function _previewHTML(kind, item, big) {
   }
   if (kind === 'seat') {
     var av = big ? 24 : 9, bw = big ? 2 : 1, bh = big ? 5 : 2, g = big ? 3 : 1;
-    var avEl = '<i style="width:'+av+'px;height:'+av+'px;border-radius:50%;flex:none;background:#1b2a16;border:'+bw+'px solid #c8a84a;box-shadow:0 1px 2px rgba(0,0,0,0.5)"></i>';
+    var _sid = item ? item.id : '';
+    var _avSt = (_sid === 'chip') ? 'background:#15110c;border:'+(big?3:1)+'px double #f3efe2;box-shadow:0 0 0 '+(big?2:1)+'px #c8a84a,0 1px 2px rgba(0,0,0,0.5)' : 'background:#1b2a16;border:'+bw+'px solid #c8a84a;box-shadow:0 1px 2px rgba(0,0,0,0.5)';
+    var avEl = '<i style="width:'+av+'px;height:'+av+'px;border-radius:50%;flex:none;'+_avSt+'"></i>';
     var felt = ';display:flex;align-items:center;justify-content:center;background:radial-gradient(circle at 50% 40%,#1c5a28,#0c3214)';
     var b1 = '<i style="display:block;width:'+(big?34:12)+'px;height:'+bh+'px;border-radius:'+bh+'px;background:#e7eaf0"></i>';
     var b2 = '<i style="display:block;width:'+(big?22:8)+'px;height:'+bh+'px;border-radius:'+bh+'px;background:#c8a84a"></i>';

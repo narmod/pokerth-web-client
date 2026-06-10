@@ -15,6 +15,7 @@ export const meta = {
 };
 
 export const strings = {
+  seatChip: 'Chip',
   sectionSeat: 'Sitze', seatClassic: 'Klassisch', seatPlate: 'Namensschild',
     botDifficulty:'Bot-Schwierigkeit', botEasy:'Einfach', botMixed:'Gemischt', botNormal:'Normal', botHard:'Schwer',
 

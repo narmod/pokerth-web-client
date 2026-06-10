@@ -12,6 +12,7 @@ export const meta = {
 };
 
 export const strings = {
+  seatChip: 'Fiş',
   sectionSeat: 'Koltuklar', seatClassic: 'Klasik', seatPlate: 'İsimlik',
     botDifficulty:'Bot zorluğu', botEasy:'Kolay', botMixed:'Karışık', botNormal:'Normal', botHard:'Zor',
 

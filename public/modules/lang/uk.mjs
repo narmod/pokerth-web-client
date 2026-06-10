@@ -9,6 +9,7 @@ export const meta = {
 };
 
 export const strings = {
+  seatChip: 'Фішка',
   sectionSeat: 'Місця', seatClassic: 'Класичний', seatPlate: 'Табличка',
     botDifficulty:'Складність ботів', botEasy:'Легкий', botMixed:'Змішаний', botNormal:'Звичайний', botHard:'Складний',
 

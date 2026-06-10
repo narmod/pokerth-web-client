@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+  seatChip: 'Žetonas',
   sectionSeat: 'Vietos', seatClassic: 'Klasikinis', seatPlate: 'Lentelė',
     botDifficulty:'Botų sudėtingumas', botEasy:'Lengvas', botMixed:'Mišrus', botNormal:'Normalus', botHard:'Sunkus',
 
