@@ -1739,7 +1739,7 @@ body {
   .raise-row .raise-input { font-size: 0.85rem !important; }
 
   /* ── Vignette d'assistance ── */
-  .hs-txt { font-size: 0.5rem !important; }
+  .hs-txt { font-size: 0.62rem !important; }
 
   /* ── Header ── */
   .header { min-height: 44px !important; }
@@ -2356,14 +2356,14 @@ body {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 1px 7px;
+  padding: 2px 8px;
   background: rgba(0,0,0,0.28);
   border-radius: 5px;
   pointer-events: none;
 }
 .hs-txt {
   font-family: var(--ff-display);
-  font-size: 0.52rem;
+  font-size: 0.64rem;
   line-height: 1.15;
   letter-spacing: 0.01em;
   color: var(--gold);
