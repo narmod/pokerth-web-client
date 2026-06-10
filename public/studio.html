@@ -100,6 +100,11 @@
         <span class="chip" data-p="vintage">Vintage</span>
         <span class="chip" data-p="neon">Neon</span>
         <span class="chip" data-p="minimal">Minimal</span>
+        <span class="chip" data-p="artdeco">Art déco</span>
+        <span class="chip" data-p="casino">Casino</span>
+        <span class="chip" data-p="cyberpunk">Cyberpunk</span>
+        <span class="chip" data-p="watercolor">Watercolour</span>
+        <span class="chip" data-p="bauhaus">Bauhaus</span>
       </div>
 
       <label>Deck name (shown in Theme → Cards)</label>
@@ -111,26 +116,72 @@
           <select id="cBgType"><option value="solid">Solid</option><option value="vgrad">Vertical gradient</option><option value="radial">Radial (light centre)</option></select>
         </div>
       </div>
+
+      <label>Suit colours</label>
       <div class="row">
-        <div class="col"><label>♥ ♦ colour</label><input type="color" id="cRed"></div>
-        <div class="col"><label>♠ ♣ colour</label><input type="color" id="cBlack"></div>
-        <div class="col"><label>Accent / border</label><input type="color" id="cAccent"></div>
+        <div class="col"><label class="help">♥ ♦ (red)</label><input type="color" id="cRed"></div>
+        <div class="col"><label class="help">♠ ♣ (black)</label><input type="color" id="cBlack"></div>
+        <div class="col"><label class="help">Accent / border</label><input type="color" id="cAccent"></div>
       </div>
+      <label class="row" style="margin-top:8px"><input type="checkbox" id="cFourColor"> <span style="margin-left:6px">Four-colour deck (♦ blue · ♣ green)</span></label>
+      <div class="row" id="fourColorRow" style="display:none">
+        <div class="col"><label class="help">♦ diamond</label><input type="color" id="cDiamond"></div>
+        <div class="col"><label class="help">♣ club</label><input type="color" id="cClub"></div>
+      </div>
+
       <div class="row">
         <div class="col"><label>Border</label>
           <select id="cBorder"><option value="none">None</option><option value="simple">Simple</option><option value="double">Double + flourishes</option><option value="hud">HUD (brackets)</option></select>
         </div>
+        <div class="col"><label>Border width</label><input type="range" id="cBorderWidth" min="1" max="6" value="3"></div>
+      </div>
+      <div class="row">
         <div class="col"><label>Court cards (J/Q/K)</label>
-          <select id="cCourt"><option value="ornate">Ornament + crown</option><option value="hud">Hexagon HUD</option><option value="plain">Large letter</option></select>
+          <select id="cCourt"><option value="ornate">Ornament + crown</option><option value="hud">Hexagon HUD</option><option value="plain">Large letter</option><option value="silhouette">Silhouette</option><option value="monogram">Framed monogram</option></select>
+        </div>
+        <div class="col"><label>Court / ace accent</label><input type="color" id="cCourtAccent"></div>
+      </div>
+      <div class="row">
+        <div class="col"><label>Corner radius</label><input type="range" id="cRadius" min="0" max="14" value="6"></div>
+        <div class="col"><label>Texture</label>
+          <select id="cTexture"><option value="none">None</option><option value="linen">Linen</option><option value="dots">Dots</option><option value="carbon">Carbon</option></select>
+        </div>
+        <div class="col"><label>Finish</label>
+          <select id="cFinish"><option value="flat">Flat</option><option value="grain">Grain</option></select>
         </div>
       </div>
+
       <div class="row">
         <div class="col"><label>Back — colour</label><input type="color" id="cBack"></div>
         <div class="col"><label>Back — pattern</label>
           <select id="cBackPat"><option value="diamonds">Diamonds</option><option value="hexes">Hexagons</option><option value="rosace">Rosette</option><option value="solid">Solid</option></select>
         </div>
       </div>
-      <label class="row" style="margin-top:12px"><input type="checkbox" id="cGlow"> <span style="margin-left:6px">Glow (neon) — increases file size</span></label>
+      <label class="row" style="margin-top:10px"><input type="checkbox" id="cGlow"> <span style="margin-left:6px">Glow (neon)</span></label>
+      <label class="row"><input type="checkbox" id="cFancyAce"> <span style="margin-left:6px">Ornate Ace of Spades</span></label>
+      <label class="row"><input type="checkbox" id="cWatermark"> <span style="margin-left:6px">Centre watermark behind pips</span></label>
+
+      <details>
+        <summary>Index &amp; pips</summary>
+        <div class="row">
+          <div class="col"><label>Index font</label>
+            <select id="cIndexFont"><option value="serif">Serif</option><option value="sans">Sans</option><option value="slab">Slab</option><option value="condensed">Condensed</option></select>
+          </div>
+          <div class="col"><label>Index size</label>
+            <select id="cIndexSize"><option value="s">Small</option><option value="m">Medium</option><option value="l">Large</option></select>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col"><label>Pip style</label>
+            <select id="cPipStyle"><option value="fill">Filled</option><option value="twotone">Two-tone</option><option value="outline">Outline</option></select>
+          </div>
+          <div class="col"><label>Number cards</label>
+            <select id="cNumLayout"><option value="pips">Classic pips</option><option value="bigindex">Big central index</option></select>
+          </div>
+        </div>
+        <label class="row" style="margin-top:8px"><input type="checkbox" id="cIndexSuit" checked> <span style="margin-left:6px">Suit symbol under corner rank</span></label>
+        <label class="row"><input type="checkbox" id="cFourCorners"> <span style="margin-left:6px">Index in all four corners</span></label>
+      </details>
 
       <details>
         <summary>Export &amp; quality</summary>
@@ -138,11 +189,13 @@
         <select id="cRes"><option value="300x420">300 × 420 (recommended)</option><option value="240x336">240 × 336 (light)</option><option value="360x504">360 × 504 (sharp)</option></select>
         <label>Palette (compression)</label>
         <select id="cQ"><option value="128">Standard — 128 colours</option><option value="64">Compact — 64 colours</option><option value="256">High — 256 colours</option><option value="0">No reduction</option></select>
+        <label class="row" style="margin-top:8px"><input type="checkbox" id="cPreview"> <span style="margin-left:6px">Include preview.png (fanned thumbnail)</span></label>
+        <label class="row"><input type="checkbox" id="cSvgFlip"> <span style="margin-left:6px">Flipside as SVG (vector)</span></label>
       </details>
 
       <button class="btn" id="cDl">Download deck (.zip)</button>
       <div class="size" id="cSize"></div>
-      <div class="note">52 faces <code>0.png</code>…<code>51.png</code> + <code>flipside.png</code> + <code>deckstyle.xml</code>, correct index mapping. No <code>preview.png</code> → auto "fan" thumbnail. Import via Admin → Packages → <b>Card deck</b>.</div>
+      <div class="note">52 faces <code>0.png</code>…<code>51.png</code> + <code>flipside.png</code> + <code>deckstyle.xml</code>. Glow / textures increase file size. Import via Admin → Packages → <b>Card deck</b>.</div>
     </div>
     <div><div class="preview" id="cPrev"></div></div>
   </section>
@@ -232,7 +285,7 @@ function heartPoly(n){const p=[];for(let i=0;i<=n;i++){const t=2*Math.PI*i/n;con
 function fit(poly,w,h,pad){const xs=poly.map(p=>p[0]),ys=poly.map(p=>p[1]);const x0=Math.min(...xs),x1=Math.max(...xs),y0=Math.min(...ys),y1=Math.max(...ys);const s=Math.min(w*(1-2*pad)/(x1-x0),h*(1-2*pad)/(y1-y0));const ox=(w-(x1-x0)*s)/2-x0*s,oy=(h-(y1-y0)*s)/2-y0*s;return poly.map(p=>[p[0]*s+ox,p[1]*s+oy]);}
 function poly(ctx,pts){ctx.beginPath();ctx.moveTo(pts[0][0],pts[0][1]);for(let i=1;i<pts.length;i++)ctx.lineTo(pts[i][0],pts[i][1]);ctx.closePath();}
 const HEART=heartPoly(96);
-function drawSuit(ctx,cx,cy,size,suit,fill,flip){
+function fillSuit(ctx,cx,cy,size,suit,fill,flip){
   ctx.save();ctx.translate(cx,cy);if(flip)ctx.rotate(Math.PI);ctx.translate(-size/2,-size/2);
   ctx.fillStyle=fill;const s=size;
   if(suit==='diamond'){const w=s*0.62,h=s*0.94;ctx.beginPath();ctx.moveTo(s/2,(s-h)/2);ctx.lineTo(s/2+w/2,s/2);ctx.lineTo(s/2,(s+h)/2);ctx.lineTo(s/2-w/2,s/2);ctx.closePath();ctx.fill();}
@@ -240,6 +293,11 @@ function drawSuit(ctx,cx,cy,size,suit,fill,flip){
   else if(suit==='spade'){let hp=fit(HEART,s,s*0.84,0.08).map(p=>[p[0],s*0.82-p[1]]);poly(ctx,hp);ctx.fill();const sw=s*0.07,sb=s*0.30;ctx.beginPath();ctx.moveTo(s/2-sw,s*0.54);ctx.lineTo(s/2+sw,s*0.54);ctx.lineTo(s/2+sb/2,s*0.92);ctx.lineTo(s/2-sb/2,s*0.92);ctx.closePath();ctx.fill();}
   else if(suit==='club'){const r=s*0.22;function circ(x,y){ctx.beginPath();ctx.arc(x,y,r,0,7);ctx.fill();}circ(s/2,s*0.10+r);circ(s/2-r,s*0.40+r);circ(s/2+r,s*0.40+r);const sw=s*0.07,sb=s*0.30;ctx.beginPath();ctx.moveTo(s/2-sw,s*0.58);ctx.lineTo(s/2+sw,s*0.58);ctx.lineTo(s/2+sb/2,s*0.92);ctx.lineTo(s/2-sb/2,s*0.92);ctx.closePath();ctx.fill();}
   ctx.restore();
+}
+function drawSuit(ctx,cx,cy,size,suit,fill,flip,mode,bg){
+  if(mode==='outline'){fillSuit(ctx,cx,cy,size,suit,fill,flip);fillSuit(ctx,cx,cy,size*0.72,suit,bg||'#ffffff',flip);}
+  else if(mode==='twotone'){fillSuit(ctx,cx,cy,size,suit,fill,flip);fillSuit(ctx,cx,cy-size*0.05,size*0.60,suit,lighten(fill,0.42),flip);}
+  else fillSuit(ctx,cx,cy,size,suit,fill,flip);
 }
 function hexPts(cx,cy,r){const p=[];for(let k=0;k<6;k++){const a=Math.PI/180*(60*k+30);p.push([cx+r*Math.cos(a),cy+r*Math.sin(a)]);}return p;}
 
@@ -252,87 +310,159 @@ const LAY={2:[[.5,.20,0],[.5,.80,1]],3:[[.5,.18,0],[.5,.5,0],[.5,.82,1]],
 10:[[.32,.16,0],[.68,.16,0],[.5,.27,0],[.32,.38,0],[.68,.38,0],[.32,.62,1],[.68,.62,1],[.5,.73,1],[.32,.84,1],[.68,.84,1]]};
 
 const PRESETS={
- classic:{bg1:'#ffffff',bg2:'#eef1f4',bgType:'solid',red:'#c0392b',black:'#1c1c1c',accent:'#8a8a8a',border:'simple',court:'plain',back:'#1f3a8a',backPat:'diamonds',glow:false},
- vintage:{bg1:'#f3e9d1',bg2:'#e7d8b8',bgType:'vgrad',red:'#9e2a31',black:'#2c2219',accent:'#967440',border:'double',court:'ornate',back:'#7a3a32',backPat:'diamonds',glow:false},
- neon:{bg1:'#0e1626',bg2:'#060a12',bgType:'radial',red:'#ff3c95',black:'#30e1ff',accent:'#30e1ff',border:'hud',court:'hud',back:'#0b1322',backPat:'hexes',glow:true},
- minimal:{bg1:'#fbfbfb',bg2:'#f2f2f2',bgType:'solid',red:'#d23b3b',black:'#222222',accent:'#dddddd',border:'none',court:'plain',back:'#222831',backPat:'solid',glow:false}
+ classic:{bg1:'#ffffff',bg2:'#eef1f4',bgType:'solid',red:'#c0392b',black:'#1c1c1c',accent:'#8a8a8a',border:'simple',court:'plain',back:'#1f3a8a',backPat:'diamonds',glow:false,fourColor:false,diamond:'#2b6cb0',club:'#2f855a',indexFont:'serif',indexSize:'m',indexSuit:true,fourCorners:false,pipStyle:'fill',numLayout:'pips',watermark:false,courtAccent:'#8a8a8a',radius:0.06,borderWidth:3,texture:'none',finish:'flat',fancyAce:false},
+ vintage:{bg1:'#f3e9d1',bg2:'#e7d8b8',bgType:'vgrad',red:'#9e2a31',black:'#2c2219',accent:'#967440',border:'double',court:'ornate',back:'#7a3a32',backPat:'diamonds',glow:false,fourColor:false,diamond:'#2b6cb0',club:'#2f855a',indexFont:'serif',indexSize:'m',indexSuit:true,fourCorners:false,pipStyle:'fill',numLayout:'pips',watermark:false,courtAccent:'#967440',radius:0.05,borderWidth:3,texture:'linen',finish:'flat',fancyAce:false},
+ neon:{bg1:'#0e1626',bg2:'#060a12',bgType:'radial',red:'#ff3c95',black:'#30e1ff',accent:'#30e1ff',border:'hud',court:'hud',back:'#0b1322',backPat:'hexes',glow:true,fourColor:false,diamond:'#39a0ff',club:'#33e0a0',indexFont:'sans',indexSize:'m',indexSuit:true,fourCorners:false,pipStyle:'fill',numLayout:'pips',watermark:false,courtAccent:'#30e1ff',radius:0.06,borderWidth:3,texture:'none',finish:'flat',fancyAce:false},
+ minimal:{bg1:'#fbfbfb',bg2:'#f2f2f2',bgType:'solid',red:'#d23b3b',black:'#222222',accent:'#dddddd',border:'none',court:'plain',back:'#222831',backPat:'solid',glow:false,fourColor:false,diamond:'#2b6cb0',club:'#2f855a',indexFont:'sans',indexSize:'m',indexSuit:true,fourCorners:false,pipStyle:'fill',numLayout:'pips',watermark:false,courtAccent:'#bbbbbb',radius:0.04,borderWidth:2,texture:'none',finish:'flat',fancyAce:false},
+ artdeco:{bg1:'#f6efe0',bg2:'#ece0c4',bgType:'vgrad',red:'#9c3b2e',black:'#1c1c1c',accent:'#b8923f',border:'double',court:'monogram',back:'#14324a',backPat:'hexes',glow:false,fourColor:false,diamond:'#2b6cb0',club:'#2f855a',indexFont:'slab',indexSize:'m',indexSuit:true,fourCorners:false,pipStyle:'fill',numLayout:'pips',watermark:true,courtAccent:'#b8923f',radius:0.02,borderWidth:4,texture:'none',finish:'flat',fancyAce:true},
+ casino:{bg1:'#ffffff',bg2:'#f3f3f3',bgType:'solid',red:'#c8102e',black:'#111111',accent:'#c8102e',border:'simple',court:'ornate',back:'#b21e35',backPat:'rosace',glow:false,fourColor:false,diamond:'#2b6cb0',club:'#2f855a',indexFont:'serif',indexSize:'l',indexSuit:true,fourCorners:true,pipStyle:'fill',numLayout:'pips',watermark:false,courtAccent:'#c8102e',radius:0.05,borderWidth:3,texture:'none',finish:'flat',fancyAce:true},
+ cyberpunk:{bg1:'#0b0f1a',bg2:'#05070d',bgType:'radial',red:'#ff2e88',black:'#28e0ff',accent:'#28e0ff',border:'hud',court:'hud',back:'#0a0f1c',backPat:'hexes',glow:true,fourColor:false,diamond:'#39a0ff',club:'#33e0a0',indexFont:'sans',indexSize:'m',indexSuit:true,fourCorners:false,pipStyle:'twotone',numLayout:'pips',watermark:false,courtAccent:'#ff2e88',radius:0.06,borderWidth:3,texture:'carbon',finish:'flat',fancyAce:false},
+ watercolor:{bg1:'#fbf7f2',bg2:'#eef3f0',bgType:'radial',red:'#c75d6a',black:'#41525e',accent:'#9bb3a5',border:'simple',court:'silhouette',back:'#6e8f86',backPat:'rosace',glow:false,fourColor:false,diamond:'#5b86b0',club:'#6a9b73',indexFont:'serif',indexSize:'m',indexSuit:true,fourCorners:false,pipStyle:'fill',numLayout:'pips',watermark:true,courtAccent:'#9bb3a5',radius:0.09,borderWidth:2,texture:'none',finish:'grain',fancyAce:false},
+ bauhaus:{bg1:'#f4f1ea',bg2:'#e9e4d6',bgType:'solid',red:'#d1322c',black:'#1a1a1a',accent:'#1a1a1a',border:'none',court:'plain',back:'#1a1a1a',backPat:'solid',glow:false,fourColor:false,diamond:'#2151a3',club:'#2f855a',indexFont:'sans',indexSize:'l',indexSuit:false,fourCorners:false,pipStyle:'fill',numLayout:'bigindex',watermark:false,courtAccent:'#2151a3',radius:0.02,borderWidth:3,texture:'none',finish:'flat',fancyAce:false}
 };
 let CST=Object.assign({name:'My deck'},PRESETS.classic);
 function readCardStyle(){
- CST.name=v('cName');CST.bg1=v('cBg1');CST.bg2=v('cBg2');CST.bgType=v('cBgType');CST.red=v('cRed');CST.black=v('cBlack');
- CST.accent=v('cAccent');CST.border=v('cBorder');CST.court=v('cCourt');CST.back=v('cBack');CST.backPat=v('cBackPat');CST.glow=document.getElementById('cGlow').checked;return CST;
+ CST.name=v('cName');CST.bg1=v('cBg1');CST.bg2=v('cBg2');CST.bgType=v('cBgType');CST.red=v('cRed');CST.black=v('cBlack');CST.accent=v('cAccent');
+ CST.border=v('cBorder');CST.court=v('cCourt');CST.back=v('cBack');CST.backPat=v('cBackPat');CST.glow=document.getElementById('cGlow').checked;
+ CST.fourColor=document.getElementById('cFourColor').checked;CST.diamond=v('cDiamond');CST.club=v('cClub');
+ CST.indexFont=v('cIndexFont');CST.indexSize=v('cIndexSize');CST.indexSuit=document.getElementById('cIndexSuit').checked;CST.fourCorners=document.getElementById('cFourCorners').checked;
+ CST.pipStyle=v('cPipStyle');CST.numLayout=v('cNumLayout');CST.watermark=document.getElementById('cWatermark').checked;
+ CST.courtAccent=v('cCourtAccent');CST.radius=(+v('cRadius'))/100;CST.borderWidth=+v('cBorderWidth');CST.texture=v('cTexture');CST.finish=v('cFinish');
+ CST.fancyAce=document.getElementById('cFancyAce').checked;return CST;
 }
-function applyCardPreset(p){const s=PRESETS[p];set('cBg1',s.bg1);set('cBg2',s.bg2);set('cBgType',s.bgType);set('cRed',s.red);set('cBlack',s.black);set('cAccent',s.accent);set('cBorder',s.border);set('cCourt',s.court);set('cBack',s.back);set('cBackPat',s.backPat);document.getElementById('cGlow').checked=s.glow;readCardStyle();renderCardPreview();}
+function applyCardPreset(p){const s=PRESETS[p];
+ set('cBg1',s.bg1);set('cBg2',s.bg2);set('cBgType',s.bgType);set('cRed',s.red);set('cBlack',s.black);set('cAccent',s.accent);
+ set('cBorder',s.border);set('cCourt',s.court);set('cBack',s.back);set('cBackPat',s.backPat);document.getElementById('cGlow').checked=s.glow;
+ document.getElementById('cFourColor').checked=s.fourColor;set('cDiamond',s.diamond);set('cClub',s.club);
+ set('cIndexFont',s.indexFont);set('cIndexSize',s.indexSize);document.getElementById('cIndexSuit').checked=s.indexSuit;document.getElementById('cFourCorners').checked=s.fourCorners;
+ set('cPipStyle',s.pipStyle);set('cNumLayout',s.numLayout);document.getElementById('cWatermark').checked=s.watermark;
+ set('cCourtAccent',s.courtAccent);set('cRadius',Math.round(s.radius*100));set('cBorderWidth',s.borderWidth);set('cTexture',s.texture);set('cFinish',s.finish);
+ document.getElementById('cFancyAce').checked=s.fancyAce;
+ updateVis();readCardStyle();renderCardPreview();}
 
 function roundRectPath(ctx,x,y,w,h,r){ctx.beginPath();ctx.moveTo(x+r,y);ctx.arcTo(x+w,y,x+w,y+h,r);ctx.arcTo(x+w,y+h,x,y+h,r);ctx.arcTo(x,y+h,x,y,r);ctx.arcTo(x,y,x+w,y,r);ctx.closePath();}
 function paintBg(ctx,W,H,s){let g;if(s.bgType==='vgrad'){g=ctx.createLinearGradient(0,0,0,H);g.addColorStop(0,s.bg1);g.addColorStop(1,s.bg2);}else if(s.bgType==='radial'){g=ctx.createRadialGradient(W/2,H*0.42,H*0.1,W/2,H*0.5,H*0.8);g.addColorStop(0,s.bg1);g.addColorStop(1,s.bg2);}else g=s.bg1;ctx.fillStyle=g;ctx.fill();}
 function drawCornerFleur(ctx,x,y,sz,col,fx,fy){ctx.save();ctx.translate(x,y);ctx.scale(fx,fy);ctx.strokeStyle=col;ctx.lineWidth=Math.max(1,sz*0.06);ctx.beginPath();ctx.moveTo(sz*0.1,sz*0.5);ctx.lineTo(sz*0.5,sz*0.1);ctx.stroke();ctx.beginPath();ctx.arc(sz*0.4,sz*0.4,sz*0.34,Math.PI*1.1,Math.PI*1.8);ctx.stroke();ctx.fillStyle=col;ctx.beginPath();ctx.arc(sz*0.5,sz*0.5,sz*0.08,0,7);ctx.fill();ctx.restore();}
+const IDXFONT={serif:'ui-serif,Georgia,"Times New Roman",serif',sans:'ui-sans-serif,system-ui,Arial,sans-serif',slab:'"Roboto Slab","Rockwell",ui-serif,Georgia,serif',condensed:'"Arial Narrow","Oswald",ui-sans-serif,system-ui,sans-serif'};
+function idxFont(px,s){return 'bold '+px+'px '+(IDXFONT[s.indexFont]||IDXFONT.serif);}
+function colForSuit(c,s){if(s.fourColor){if(c.suit==='diamond')return s.diamond;if(c.suit==='club')return s.club;if(c.suit==='heart')return s.red;return s.black;}return c.red?s.red:s.black;}
+function radiusOf(W,s){var r=(s.radius!=null?s.radius:0.06);return W*r;}
+function lineMul(s){return (s.borderWidth||3)/3;}
 function drawFrame(ctx,W,H,s){
-  if(s.border==='none')return;const i1=W*0.05;
-  ctx.strokeStyle=s.accent;ctx.lineWidth=Math.max(1.2,W*0.008);
+  if(s.border==='none')return;const i1=W*0.05,m=lineMul(s);
+  ctx.strokeStyle=s.accent;ctx.lineWidth=Math.max(1.2,W*0.008)*m;
   if(s.border==='hud'){
     roundRectPath(ctx,i1,i1,W-2*i1,H-2*i1,W*0.04);ctx.globalAlpha=.7;ctx.stroke();ctx.globalAlpha=1;
-    const b=W*0.11,o=W*0.035;ctx.lineWidth=Math.max(2,W*0.013);
+    const b=W*0.11,o=W*0.035;ctx.lineWidth=Math.max(2,W*0.013)*m;
     [[o,o,1,1],[W-o,o,-1,1],[o,H-o,1,-1],[W-o,H-o,-1,-1]].forEach(c=>{ctx.beginPath();ctx.moveTo(c[0],c[1]);ctx.lineTo(c[0]+c[2]*b,c[1]);ctx.moveTo(c[0],c[1]);ctx.lineTo(c[0],c[1]+c[3]*b);ctx.stroke();});
   }else{
     roundRectPath(ctx,i1,i1,W-2*i1,H-2*i1,W*0.045);ctx.stroke();
-    if(s.border==='double'){const i2=W*0.072;ctx.lineWidth=Math.max(1,W*0.004);roundRectPath(ctx,i2,i2,W-2*i2,H-2*i2,W*0.04);ctx.stroke();
+    if(s.border==='double'){const i2=W*0.072;ctx.lineWidth=Math.max(1,W*0.004)*m;roundRectPath(ctx,i2,i2,W-2*i2,H-2*i2,W*0.04);ctx.stroke();
       const fs=W*0.11;drawCornerFleur(ctx,i2,i2,fs,s.accent,1,1);drawCornerFleur(ctx,W-i2,i2,fs,s.accent,-1,1);drawCornerFleur(ctx,i2,H-i2,fs,s.accent,1,-1);drawCornerFleur(ctx,W-i2,H-i2,fs,s.accent,-1,-1);}
   }
 }
-function drawIndex(ctx,W,H,rank,suit,col){
-  ctx.fillStyle=col;ctx.textAlign='center';ctx.textBaseline='alphabetic';
-  const fs=W*0.155;ctx.font='bold '+fs+'px ui-serif,Georgia,"Times New Roman",serif';
-  ctx.fillText(rank,W*0.135,H*0.135);drawSuit(ctx,W*0.135,H*0.20,W*0.10,suit,col,false);
-  ctx.save();ctx.translate(W*0.865,H*0.865);ctx.rotate(Math.PI);ctx.fillStyle=col;ctx.font='bold '+fs+'px ui-serif,Georgia,serif';ctx.fillText(rank,0,-H*0.005);ctx.restore();
-  drawSuit(ctx,W*0.865,H*0.80,W*0.10,suit,col,true);
+function drawIndex(ctx,W,H,c,s,col){
+  var f={s:0.86,m:1,l:1.2}[s.indexSize||'m'],fs=W*0.150*f;
+  function corner(x,y,rot){ctx.save();ctx.translate(x,y);if(rot)ctx.rotate(Math.PI);
+    ctx.fillStyle=col;ctx.textAlign='center';ctx.textBaseline='alphabetic';ctx.font=idxFont(fs,s);
+    ctx.fillText(c.rank,0,0);
+    if(s.indexSuit)fillSuit(ctx,0,fs*0.46,fs*0.62,c.suit,col,false);
+    ctx.restore();}
+  corner(W*0.135,H*0.150,false);
+  corner(W*0.865,H*0.850,true);
+  if(s.fourCorners){corner(W*0.865,H*0.150,false);corner(W*0.135,H*0.850,true);}
 }
 function drawCourt(ctx,W,H,rank,suit,col,s){
-  const cx=W/2,cy=H/2;
+  const cx=W/2,cy=H/2,ac=s.courtAccent||s.accent;
   if(s.court==='hud'){
-    ctx.strokeStyle=s.accent;ctx.lineWidth=Math.max(1.6,W*0.008);const hp=hexPts(cx,cy,W*0.30);poly(ctx,hp);ctx.stroke();
+    ctx.strokeStyle=ac;ctx.lineWidth=Math.max(1.6,W*0.008);const hp=hexPts(cx,cy,W*0.30);poly(ctx,hp);ctx.stroke();
     ctx.globalAlpha=.5;poly(ctx,hexPts(cx,cy,W*0.30-W*0.025));ctx.stroke();ctx.globalAlpha=1;
-    ctx.fillStyle=col;ctx.textAlign='center';ctx.font='bold '+(H*0.19)+'px ui-sans-serif,system-ui,sans-serif';ctx.fillText(rank,cx,cy);drawSuit(ctx,cx,cy+H*0.13,W*0.12,suit,col,false);
+    ctx.fillStyle=col;ctx.textAlign='center';ctx.font=idxFont(H*0.19,s);ctx.fillText(rank,cx,cy);fillSuit(ctx,cx,cy+H*0.13,W*0.12,suit,col,false);
   }else if(s.court==='ornate'){
     const pw=W*0.5,ph=H*0.74,px=cx-pw/2,py=cy-ph/2;
     ctx.fillStyle='rgba(255,255,255,.04)';roundRectPath(ctx,px,py,pw,ph,W*0.03);ctx.fill();
-    ctx.strokeStyle=s.accent;ctx.lineWidth=Math.max(1.5,W*0.006);roundRectPath(ctx,px,py,pw,ph,W*0.03);ctx.stroke();
+    ctx.strokeStyle=ac;ctx.lineWidth=Math.max(1.5,W*0.006);roundRectPath(ctx,px,py,pw,ph,W*0.03);ctx.stroke();
     function half(yc,flip){ctx.save();ctx.translate(cx,yc);if(flip)ctx.rotate(Math.PI);
-      ctx.strokeStyle=s.accent;ctx.fillStyle=s.accent;ctx.lineWidth=Math.max(1,W*0.005);
+      ctx.strokeStyle=ac;ctx.fillStyle=ac;ctx.lineWidth=Math.max(1,W*0.005);
       const cw=pw*0.5,ch=ph*0.12,ty=-ph*0.16;
       if(rank==='J'){ctx.beginPath();ctx.arc(0,ty+ch*0.4,cw*0.18,0,7);ctx.stroke();}
       else{ctx.beginPath();ctx.moveTo(-cw/2,ty+ch);ctx.lineTo(-cw/2,ty+ch*0.4);ctx.lineTo(-cw*0.18,ty+ch*0.8);ctx.lineTo(0,ty);ctx.lineTo(cw*0.18,ty+ch*0.8);ctx.lineTo(cw/2,ty+ch*0.4);ctx.lineTo(cw/2,ty+ch);ctx.closePath();ctx.fill();}
-      ctx.fillStyle=col;ctx.textAlign='center';ctx.font='bold '+(ph*0.34)+'px ui-serif,Georgia,serif';ctx.fillText(rank,0,ph*0.05);
-      drawSuit(ctx,0,ph*0.18,pw*0.18,suit,col,false);ctx.restore();}
+      ctx.fillStyle=col;ctx.textAlign='center';ctx.font=idxFont(ph*0.34,s);ctx.fillText(rank,0,ph*0.05);
+      fillSuit(ctx,0,ph*0.18,pw*0.18,suit,col,false);ctx.restore();}
     half(cy-ph/4,false);half(cy+ph/4,true);
-    ctx.strokeStyle=s.accent;ctx.globalAlpha=.6;ctx.beginPath();ctx.moveTo(px+W*0.02,cy);ctx.lineTo(px+pw-W*0.02,cy);ctx.stroke();ctx.globalAlpha=1;
-  }else{
-    ctx.fillStyle=col;ctx.textAlign='center';ctx.font='bold '+(H*0.30)+'px ui-serif,Georgia,serif';ctx.fillText(rank,cx,cy+H*0.02);drawSuit(ctx,cx,cy+H*0.20,W*0.16,suit,col,false);
+    ctx.strokeStyle=ac;ctx.globalAlpha=.6;ctx.beginPath();ctx.moveTo(px+W*0.02,cy);ctx.lineTo(px+pw-W*0.02,cy);ctx.stroke();ctx.globalAlpha=1;
+  }else if(s.court==='silhouette'){drawSilhouette(ctx,W,H,rank,suit,col,ac,s);}
+  else if(s.court==='monogram'){drawMonogram(ctx,W,H,rank,suit,col,ac,s);}
+  else{
+    ctx.fillStyle=col;ctx.textAlign='center';ctx.font=idxFont(H*0.30,s);ctx.fillText(rank,cx,cy+H*0.02);fillSuit(ctx,cx,cy+H*0.20,W*0.16,suit,col,false);
   }
 }
+function drawSilhouette(ctx,W,H,rank,suit,col,ac,s){
+  const cx=W/2,cy=H/2;ctx.save();
+  ctx.fillStyle=ac;ctx.globalAlpha=0.9;
+  ctx.beginPath();const sy=cy+H*0.12;
+  ctx.moveTo(cx-W*0.26,cy+H*0.30);ctx.quadraticCurveTo(cx-W*0.24,sy,cx-W*0.12,sy-H*0.03);ctx.lineTo(cx+W*0.12,sy-H*0.03);ctx.quadraticCurveTo(cx+W*0.24,sy,cx+W*0.26,cy+H*0.30);ctx.closePath();ctx.fill();
+  ctx.beginPath();ctx.arc(cx,cy-H*0.03,W*0.135,0,7);ctx.fill();
+  ctx.globalAlpha=1;const hy=cy-H*0.17;
+  if(rank==='K'){ctx.beginPath();ctx.moveTo(cx-W*0.15,hy+H*0.05);ctx.lineTo(cx-W*0.15,hy);ctx.lineTo(cx-W*0.07,hy+H*0.028);ctx.lineTo(cx,hy-H*0.02);ctx.lineTo(cx+W*0.07,hy+H*0.028);ctx.lineTo(cx+W*0.15,hy);ctx.lineTo(cx+W*0.15,hy+H*0.05);ctx.closePath();ctx.fill();}
+  else if(rank==='Q'){ctx.beginPath();ctx.moveTo(cx-W*0.12,hy+H*0.05);ctx.quadraticCurveTo(cx,hy-H*0.04,cx+W*0.12,hy+H*0.05);ctx.lineTo(cx+W*0.12,hy+H*0.07);ctx.lineTo(cx-W*0.12,hy+H*0.07);ctx.closePath();ctx.fill();ctx.beginPath();ctx.arc(cx,hy-H*0.012,W*0.022,0,7);ctx.fill();}
+  else{ctx.fillRect(cx-W*0.15,hy+H*0.03,W*0.30,H*0.03);ctx.beginPath();ctx.arc(cx,hy+H*0.045,W*0.02,0,7);ctx.fill();}
+  ctx.restore();
+  ctx.fillStyle=col;ctx.textAlign='center';ctx.font=idxFont(H*0.12,s);ctx.fillText(rank,cx,cy+H*0.40);
+  fillSuit(ctx,cx+W*0.10,cy+H*0.375,W*0.085,suit,col,false);
+}
+function drawMonogram(ctx,W,H,rank,suit,col,ac,s){
+  const cx=W/2,cy=H/2,pw=W*0.58,ph=H*0.64,px=cx-pw/2,py=cy-ph/2;
+  ctx.fillStyle='rgba(255,255,255,.05)';roundRectPath(ctx,px,py,pw,ph,W*0.04);ctx.fill();
+  ctx.strokeStyle=ac;ctx.lineWidth=Math.max(1.5,W*0.006);roundRectPath(ctx,px,py,pw,ph,W*0.04);ctx.stroke();
+  ctx.lineWidth=Math.max(1,W*0.0028);roundRectPath(ctx,px+W*0.022,py+W*0.022,pw-W*0.044,ph-W*0.044,W*0.03);ctx.stroke();
+  const fs=W*0.052;drawCornerFleur(ctx,px+W*0.03,py+W*0.03,fs,ac,1,1);drawCornerFleur(ctx,px+pw-W*0.03,py+W*0.03,fs,ac,-1,1);drawCornerFleur(ctx,px+W*0.03,py+ph-W*0.03,fs,ac,1,-1);drawCornerFleur(ctx,px+pw-W*0.03,py+ph-W*0.03,fs,ac,-1,-1);
+  ctx.fillStyle=col;ctx.textAlign='center';ctx.textBaseline='middle';ctx.font=idxFont(ph*0.48,s);ctx.fillText(rank,cx,cy-ph*0.05);ctx.textBaseline='alphabetic';
+  fillSuit(ctx,cx,cy+ph*0.29,W*0.13,suit,col,false);
+}
 function drawAce(ctx,W,H,suit,col,s){
-  const cx=W/2,cy=H/2;
-  if(s.court==='hud'){ctx.strokeStyle=s.accent;ctx.lineWidth=Math.max(1.5,W*0.007);poly(ctx,hexPts(cx,cy,W*0.30));ctx.stroke();}
-  else{ctx.strokeStyle=s.accent;ctx.lineWidth=Math.max(1,W*0.005);ctx.beginPath();ctx.ellipse(cx,cy,W*0.30,H*0.26,0,0,7);ctx.stroke();}
-  drawSuit(ctx,cx,cy,W*0.48,suit,col,false);
+  const cx=W/2,cy=H/2,ac=s.courtAccent||s.accent;
+  if(s.fancyAce){
+    ctx.strokeStyle=ac;ctx.lineWidth=Math.max(1.4,W*0.006);
+    ctx.beginPath();ctx.ellipse(cx,cy,W*0.34,H*0.30,0,0,7);ctx.stroke();
+    ctx.globalAlpha=.6;ctx.beginPath();ctx.ellipse(cx,cy,W*0.30,H*0.265,0,0,7);ctx.stroke();ctx.globalAlpha=1;
+    const fs=W*0.10;drawCornerFleur(ctx,cx-W*0.30,cy-H*0.24,fs,ac,1,1);drawCornerFleur(ctx,cx+W*0.30,cy-H*0.24,fs,ac,-1,1);drawCornerFleur(ctx,cx-W*0.30,cy+H*0.24,fs,ac,1,-1);drawCornerFleur(ctx,cx+W*0.30,cy+H*0.24,fs,ac,-1,-1);
+    fillSuit(ctx,cx,cy,suit==='spade'?W*0.56:W*0.46,suit,col,false);
+    if(suit==='spade'){ctx.strokeStyle=ac;ctx.globalAlpha=.8;ctx.lineWidth=Math.max(1,W*0.004);ctx.beginPath();ctx.moveTo(cx-W*0.16,cy+H*0.205);ctx.quadraticCurveTo(cx,cy+H*0.255,cx+W*0.16,cy+H*0.205);ctx.stroke();ctx.globalAlpha=1;}
+  }else{
+    if(s.court==='hud'){ctx.strokeStyle=ac;ctx.lineWidth=Math.max(1.5,W*0.007);poly(ctx,hexPts(cx,cy,W*0.30));ctx.stroke();}
+    else{ctx.strokeStyle=ac;ctx.lineWidth=Math.max(1,W*0.005);ctx.beginPath();ctx.ellipse(cx,cy,W*0.30,H*0.26,0,0,7);ctx.stroke();}
+    fillSuit(ctx,cx,cy,W*0.48,suit,col,false);
+  }
+}
+function grain(ctx,W,H){ctx.save();ctx.globalAlpha=0.05;var n=W*H/110|0;for(var i=0;i<n;i++){ctx.fillStyle=Math.random()<0.5?'#000':'#fff';ctx.fillRect(Math.random()*W,Math.random()*H,1,1);}ctx.restore();}
+function paintTexture(ctx,W,H,s){
+  const t=s.texture;
+  if(t==='linen'){ctx.save();ctx.globalAlpha=0.06;ctx.strokeStyle='#000';ctx.lineWidth=1;for(var x=0;x<W;x+=5){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke();}for(var y=0;y<H;y+=5){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke();}ctx.restore();}
+  else if(t==='dots'){ctx.save();ctx.globalAlpha=0.08;ctx.fillStyle='#000';for(var yy=7;yy<H;yy+=11)for(var xx=7;xx<W;xx+=11){ctx.beginPath();ctx.arc(xx,yy,1.1,0,7);ctx.fill();}ctx.restore();}
+  else if(t==='carbon'){ctx.save();ctx.lineWidth=2;ctx.globalAlpha=0.07;ctx.strokeStyle='#000';for(var i=-H;i<W;i+=9){ctx.beginPath();ctx.moveTo(i,0);ctx.lineTo(i+H,H);ctx.stroke();}ctx.globalAlpha=0.04;ctx.strokeStyle='#fff';for(var j=-H;j<W;j+=9){ctx.beginPath();ctx.moveTo(j+4,0);ctx.lineTo(j+4+H,H);ctx.stroke();}ctx.restore();}
+  if(s.finish==='grain')grain(ctx,W,H);
 }
 function renderCard(canvas,index,s){
   const W=canvas.width,H=canvas.height,ctx=canvas.getContext('2d');ctx.clearRect(0,0,W,H);
-  const c=cardOf(index),col=c.red?s.red:s.black;
-  ctx.save();roundRectPath(ctx,0,0,W,H,W*0.06);ctx.clip();
+  const c=cardOf(index),col=colForSuit(c,s),R=radiusOf(W,s);
+  ctx.save();roundRectPath(ctx,0,0,W,H,R);ctx.clip();
   paintBg(ctx,W,H,s);
+  paintTexture(ctx,W,H,s);
   if(s.glow){ctx.shadowColor=col;ctx.shadowBlur=W*0.05;}
   drawFrame(ctx,W,H,s);
+  if(s.watermark){ctx.save();ctx.globalAlpha=0.07;ctx.shadowBlur=0;fillSuit(ctx,W/2,H*0.52,W*0.62,c.suit,col,false);ctx.restore();}
   if(c.rank==='A')drawAce(ctx,W,H,c.suit,col,s);
   else if(c.rank==='J'||c.rank==='Q'||c.rank==='K')drawCourt(ctx,W,H,c.rank,c.suit,col,s);
-  else{const n=parseInt(c.rank,10);LAY[n].forEach(p=>drawSuit(ctx,W*(0.18+0.64*p[0]),H*(0.16+0.68*p[1]),W*0.13,c.suit,col,!!p[2]));}
-  drawIndex(ctx,W,H,c.rank,c.suit,col);
+  else if(s.numLayout==='bigindex'){ctx.fillStyle=col;ctx.textAlign='center';ctx.textBaseline='middle';ctx.font=idxFont(H*0.40,s);ctx.fillText(c.rank,W/2,H*0.45);ctx.textBaseline='alphabetic';fillSuit(ctx,W/2,H*0.72,W*0.20,c.suit,col,false);}
+  else{const n=parseInt(c.rank,10);LAY[n].forEach(p=>drawSuit(ctx,W*(0.18+0.64*p[0]),H*(0.16+0.68*p[1]),W*0.13,c.suit,col,!!p[2],s.pipStyle,s.bg1));}
+  drawIndex(ctx,W,H,c,s,col);
   ctx.restore();
-  ctx.shadowBlur=0;ctx.lineWidth=1;ctx.strokeStyle='rgba(0,0,0,.18)';roundRectPath(ctx,.5,.5,W-1,H-1,W*0.06);ctx.stroke();
+  ctx.shadowBlur=0;ctx.lineWidth=1;ctx.strokeStyle='rgba(0,0,0,.18)';roundRectPath(ctx,.5,.5,W-1,H-1,R);ctx.stroke();
 }
 function renderBack(canvas,s){
-  const W=canvas.width,H=canvas.height,ctx=canvas.getContext('2d');ctx.clearRect(0,0,W,H);
-  ctx.save();roundRectPath(ctx,0,0,W,H,W*0.06);ctx.clip();
+  const W=canvas.width,H=canvas.height,ctx=canvas.getContext('2d');ctx.clearRect(0,0,W,H);const R=radiusOf(W,s);
+  ctx.save();roundRectPath(ctx,0,0,W,H,R);ctx.clip();
   ctx.fillStyle=s.back;ctx.fill();
   const fg=s.accent;ctx.strokeStyle=fg;ctx.fillStyle=fg;
   if(s.backPat==='diamonds'){const st=W*0.085,r=W*0.018;let row=0;for(let y=W*0.06;y<H-W*0.04;y+=st*0.6){let x=W*0.06+(row%2?st/2:0);for(;x<W-W*0.04;x+=st){ctx.beginPath();ctx.moveTo(x,y-r);ctx.lineTo(x+r,y);ctx.lineTo(x,y+r);ctx.lineTo(x-r,y);ctx.closePath();ctx.fill();}row++;}}
@@ -342,6 +472,28 @@ function renderBack(canvas,s){
   ctx.globalAlpha=1;ctx.fillStyle=s.back;ctx.beginPath();ctx.ellipse(W/2,H/2,W*0.26,H*0.2,0,0,7);ctx.fill();ctx.strokeStyle=fg;ctx.lineWidth=Math.max(2,W*0.008);ctx.beginPath();ctx.ellipse(W/2,H/2,W*0.26,H*0.2,0,0,7);ctx.stroke();
   ctx.fillStyle=fg;ctx.beginPath();ctx.arc(W/2,H/2,W*0.025,0,7);ctx.fill();
   ctx.restore();
+}
+function buildPreview(canvas,s){
+  const ctx=canvas.getContext('2d');ctx.clearRect(0,0,canvas.width,canvas.height);
+  const cw=150,ch=210,tmp=document.createElement('canvas');tmp.width=cw;tmp.height=ch;
+  const idx=[12,25,38,51],ang=[-0.30,-0.10,0.10,0.30];
+  for(let k=0;k<4;k++){renderCard(tmp,idx[k],s);ctx.save();ctx.translate(canvas.width/2+(k-1.5)*40,canvas.height*0.60);ctx.rotate(ang[k]);ctx.drawImage(tmp,-cw/2,-ch/2,cw,ch);ctx.restore();}
+}
+function buildBackSVG(s){
+  const W=300,H=420,fg=s.accent,bg=s.back;var defs='',fill='';
+  if(s.backPat==='diamonds'){defs='<pattern id="p" width="20" height="13" patternUnits="userSpaceOnUse"><path d="M10 2.5 L13.6 6.5 L10 10.5 L6.4 6.5 Z" fill="'+fg+'"/></pattern>';fill='<rect x="15" y="15" width="270" height="390" fill="url(#p)"/>';}
+  else if(s.backPat==='hexes'){defs='<pattern id="p" width="24" height="28" patternUnits="userSpaceOnUse"><path d="M12 1 L22 7 L22 19 L12 25 L2 19 L2 7 Z" fill="none" stroke="'+fg+'" stroke-opacity="0.5"/></pattern>';fill='<rect x="15" y="15" width="270" height="390" fill="url(#p)"/>';}
+  else if(s.backPat==='rosace'){var lines='';for(var a=0;a<360;a+=12){var r=a*Math.PI/180;lines+='<line x1="150" y1="210" x2="'+(150+Math.cos(r)*126).toFixed(1)+'" y2="'+(210+Math.sin(r)*176).toFixed(1)+'" stroke="'+fg+'" stroke-opacity="0.6"/>';}fill=lines;}
+  return '<?xml version="1.0" encoding="UTF-8"?>\n'+
+  '<svg xmlns="http://www.w3.org/2000/svg" width="300" height="420" viewBox="0 0 300 420">\n'+
+  '<defs>'+defs+'</defs>\n'+
+  '<rect width="300" height="420" rx="'+(W*(s.radius||0.06)).toFixed(1)+'" fill="'+bg+'"/>\n'+
+  fill+'\n'+
+  '<rect x="15" y="15" width="270" height="390" rx="12" fill="none" stroke="'+fg+'" stroke-width="2" stroke-opacity="0.9"/>\n'+
+  '<ellipse cx="150" cy="210" rx="78" ry="84" fill="'+bg+'"/>\n'+
+  '<ellipse cx="150" cy="210" rx="78" ry="84" fill="none" stroke="'+fg+'" stroke-width="2.4"/>\n'+
+  '<circle cx="150" cy="210" r="7.5" fill="'+fg+'"/>\n'+
+  '</svg>\n';
 }
 function renderCardPreview(){
  const s=readCardStyle();const host=document.getElementById('cPrev');host.innerHTML='';
@@ -403,7 +555,9 @@ async function exportDeck(){
   const zip=new JSZip();const folder=slug(s.name);const f=zip.folder(folder);
   const cv=document.createElement('canvas');cv.width=W;cv.height=H;
   for(let i=0;i<52;i++){btn.textContent='Rendering '+(i+1)+'/52…';renderCard(cv,i,s);f.file(i+'.png',await canvasPNG(cv,cnum));if(i%6===0)await new Promise(r=>setTimeout(r));}
-  renderBack(cv,s);f.file('flipside.png',await canvasPNG(cv,cnum));
+  if(document.getElementById('cSvgFlip').checked){f.file('flipside.svg',buildBackSVG(s));}
+  else{renderBack(cv,s);f.file('flipside.png',await canvasPNG(cv,cnum));}
+  if(document.getElementById('cPreview').checked){const pv=document.createElement('canvas');pv.width=420;pv.height=300;buildPreview(pv,s);f.file('preview.png',await canvasPNG(pv,cnum));}
   f.file(slug(s.name)+'deckstyle.xml',deckXML(s.name));
   btn.textContent='Compressing…';const blob=await zip.generateAsync({type:'blob'});
   sizeMsg(document.getElementById('cSize'),blob.size);dl(blob,folder+'.zip');
@@ -464,10 +618,12 @@ document.querySelectorAll('.tab').forEach(t=>t.addEventListener('click',()=>{
 document.querySelectorAll('#cardPresets .chip').forEach(c=>c.addEventListener('click',()=>{
  document.querySelectorAll('#cardPresets .chip').forEach(x=>x.classList.remove('on'));c.classList.add('on');applyCardPreset(c.dataset.p);
 }));
-['cName','cBg1','cBg2','cBgType','cRed','cBlack','cAccent','cBorder','cCourt','cBack','cBackPat','cGlow'].forEach(id=>document.getElementById(id).addEventListener('input',renderCardPreview));
+['cName','cBg1','cBg2','cBgType','cRed','cBlack','cAccent','cBorder','cCourt','cBack','cBackPat','cGlow','cFourColor','cDiamond','cClub','cIndexFont','cIndexSize','cIndexSuit','cFourCorners','cPipStyle','cNumLayout','cWatermark','cCourtAccent','cRadius','cBorderWidth','cTexture','cFinish','cFancyAce'].forEach(id=>document.getElementById(id).addEventListener('input',renderCardPreview));
 ['tName','tF1','tF2','tFType','tVig','tPucks','tPd','tPsb','tPbb'].forEach(id=>document.getElementById(id).addEventListener('input',renderTablePreview));
 ['hName','hSwatch','hFelt','hPanel','hGold','hText','hFeltImg','hPucksOn'].forEach(id=>document.getElementById(id).addEventListener('input',renderThemePreview));
 document.getElementById('tFImg').addEventListener('change',e=>{const file=e.target.files[0];if(!file){FELTIMG=null;renderTablePreview();return;}const img=new Image();img.onload=()=>{FELTIMG=img;renderTablePreview();};img.src=URL.createObjectURL(file);});
+function updateVis(){var on=document.getElementById('cFourColor').checked;document.getElementById('fourColorRow').style.display=on?'':'none';}
+document.getElementById('cFourColor').addEventListener('change',updateVis);
 document.getElementById('cDl').addEventListener('click',exportDeck);
 document.getElementById('tDl').addEventListener('click',exportTable);
 document.getElementById('hDl').addEventListener('click',exportTheme);
