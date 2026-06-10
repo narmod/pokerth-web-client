@@ -30,7 +30,7 @@ use too. Items are grouped by status rather than fixed phases.
 
 **Appearance & theming**
 - Multi-axis customisation, each axis independently selectable: UI palette, table felt,
-  card deck, action-button style, and chip pucks.
+  card deck, action-button style, chip pucks, and seat style.
 - One-click presets — PokerTH Dark (the default, reproducing the official client's look),
   PokerTH Light, and Green Casino — plus gallery themes (Midnight Blue, Graphite,
   Royal Purple, Sleek).
@@ -42,6 +42,12 @@ use too. Items are grouped by status rather than fixed phases.
   only for deliberate game assets (dealer button, chip denominations, win bursts).
 - Coloured glossy action buttons (Fold red / Check-Call blue / Raise green / All-In orange)
   and an animated flaming-chip emblem on the login screen (respects reduced-motion).
+- Six theme-aware seat "packs" (Classic, Chip, Plate, Card, Compact, Bar), switchable like
+  decks and adapting to dark/light; pack names kept in English across all languages. The
+  default adapts to the device (Compact on phones, Plate on tablet/desktop); an explicit
+  choice is saved and always wins.
+- Responsive seat layout: on phones and tablets the seats tighten around the felt so players
+  stay close to the table; desktop keeps the wider layout.
 
 **Server administration**
 - Token-protected web admin panel at `/admin`, which can be completely hidden

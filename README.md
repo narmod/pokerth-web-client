@@ -136,6 +136,7 @@ This project is a **web frontend** that connects to any PokerTH server directly 
 
 ### Poker table
 - Seats positioned according to server order, **locked after the first deal** (no mid-game layout jumps)
+- **Responsive seat layout** — on phones and tablets the seats tighten around the felt so players stay close to the table; desktop keeps the wider layout
 - Casino-style chip tokens: SB 🔵, BB 🔴, Dealer ⚫ gold — with `chipPop` animation
 - SVG arc timer around the active player's avatar + seconds badge below
 - **Card deal animation**: cards fly from the centre to each seat at the start of every hand
@@ -159,7 +160,8 @@ Per-player toggles, remembered in `localStorage` and applied instantly:
 ### Themes & customization
 A full appearance system, reached from the **Theme** button — pick a one-tap preset or fine-tune every axis yourself:
 - **Presets** (one tap): **PokerTH Dark** (the default, reproducing the official client's look), **PokerTH Light**, and **Green Casino** — plus gallery themes (Midnight Blue, Graphite, Royal Purple, Sleek)
-- **Customize** — five independent axes, each remembered in `localStorage`: UI **palette**, **table felt** (Green / Blue / Burgundy / Slate / PokerTH / Textured), **card deck** (PokerTH, PokerTH 1.0, PokerTH new, Green Casino), **action buttons** (Flat / Glossy), and **chip pucks**
+- **Customize** — six independent axes, each remembered in `localStorage`: UI **palette**, **table felt** (Green / Blue / Burgundy / Slate / PokerTH / Textured), **card deck** (PokerTH, PokerTH 1.0, PokerTH new, Green Casino), **action buttons** (Flat / Glossy), **chip pucks**, and **seat style**
+- **Seat styles** — six theme-aware seat "packs", switchable like decks: **Classic** (the historical render), **Chip**, **Plate**, **Card**, **Compact**, and **Bar**. Pack names stay in English across all languages (like the poker terms). The default adapts to the device — **Compact on phones**, **Plate on tablet & desktop** — and any explicit choice is saved in `localStorage` and always wins
 - **Light & dark aware**: every theme carries its own `color-scheme`, and the browser status-bar `theme-color` follows the active theme
 - **Glossy coloured action buttons** (Fold red / Check-Call blue / Raise green / All-In orange) and a live preview of each card deck right in the panel
 - Fully **localized in all 36 languages** and switchable instantly, with no reload
@@ -271,7 +273,7 @@ pokerth-web-client/
 │   ├── modules/             # ES modules
 │   │   ├── i18n.mjs         #   internationalisation (36 languages)
 │   │   ├── sounds.mjs       #   sound effects
-│   │   ├── theme.mjs        #   theming engine (palettes, decks, presets)
+│   │   ├── theme.mjs        #   theming engine (palettes, decks, seats, presets)
 │   │   ├── lang/            #   36 language catalogues
 │   │   └── offline/         #   local game engine + bots (Training mode)
 │   ├── proto/               # Protobuf bundle & helpers
