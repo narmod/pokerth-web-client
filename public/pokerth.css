@@ -3687,7 +3687,7 @@ body:not(.in-game) .my-zone {
   align-items: center;
   gap: 10px;
   width: 100%;
-  max-width: 500px;
+  max-width: var(--bottom-w);
   background: rgba(0,0,0,0.35);
   border: 1px solid rgba(var(--green-rgb), 0.4);
   border-radius: 8px;
@@ -3726,12 +3726,16 @@ body:not(.in-game) .my-zone {
 }
 
 /* Action grid */
+/* Largeur partagee du bas d'ecran : le dock (.player-bar-left) et les
+   boutons d'action (.action-grid) gardent exactement la meme largeur.
+   Un seul chiffre a changer pour bouger les deux. */
+:root { --bottom-w: 560px; }
 .action-grid {
   display: flex;
   flex-direction: column;
   gap: 6px;
   width: 100%;
-  max-width: 560px;
+  max-width: var(--bottom-w);
   margin: 0 auto;
 }
 /* Row 1: Fold + Check/Call */
