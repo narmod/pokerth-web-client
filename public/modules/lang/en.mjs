@@ -16,6 +16,7 @@ export const meta = {
 };
 
 export const strings = {
+  seatCard: 'Card', seatCompact: 'Compact', seatBar: 'Bar',
   seatChip: 'Chip',
   sectionSeat: 'Seats', seatClassic: 'Classic', seatPlate: 'Plate',
     guestHint:'🌐 Guest play on pokerth.net — no account needed.',

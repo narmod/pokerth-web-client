@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+  seatCard: 'Карта', seatCompact: 'Компактен', seatBar: 'Лента',
   seatChip: 'Чип',
   sectionSeat: 'Места', seatClassic: 'Класически', seatPlate: 'Табелка',
     botDifficulty:'Трудност на ботовете', botEasy:'Лесно', botMixed:'Смесено', botNormal:'Нормално', botHard:'Трудно',

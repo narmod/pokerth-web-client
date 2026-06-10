@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+  seatCard: 'Kártya', seatCompact: 'Kompakt', seatBar: 'Sáv',
   seatChip: 'Zseton',
   sectionSeat: 'Helyek', seatClassic: 'Klasszikus', seatPlate: 'Névtábla',
     botDifficulty:'Botok nehézsége', botEasy:'Könnyű', botMixed:'Vegyes', botNormal:'Normál', botHard:'Nehéz',

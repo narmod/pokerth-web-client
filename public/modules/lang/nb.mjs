@@ -9,6 +9,7 @@ export const meta = {
 };
 
 export const strings = {
+  seatCard: 'Kort', seatCompact: 'Kompakt', seatBar: 'Linje',
   seatChip: 'Sjetong',
   sectionSeat: 'Plasser', seatClassic: 'Klassisk', seatPlate: 'Navneskilt',
     botDifficulty:'Bot-vanskelighet', botEasy:'Lett', botMixed:'Blandet', botNormal:'Normal', botHard:'Vanskelig',

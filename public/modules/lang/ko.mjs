@@ -13,6 +13,7 @@ export const meta = {
 };
 
 export const strings = {
+  seatCard: '카드', seatCompact: '컴팩트', seatBar: '바',
   seatChip: '칩',
   sectionSeat: '좌석', seatClassic: '클래식', seatPlate: '명패',
     botDifficulty:'봇 난이도', botEasy:'쉬움', botMixed:'혼합', botNormal:'보통', botHard:'어려움',

@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+  seatCard: 'Tarxeta', seatCompact: 'Compacto', seatBar: 'Barra',
   seatChip: 'Ficha',
   sectionSeat: 'Asentos', seatClassic: 'Clásico', seatPlate: 'Placa',
     botDifficulty:'Dificultade dos bots', botEasy:'Doado', botMixed:'Mixta', botNormal:'Normal', botHard:'Difícil',

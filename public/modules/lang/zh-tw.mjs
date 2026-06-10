@@ -11,6 +11,7 @@ export const meta = {
 };
 
 export const strings = {
+  seatCard: '卡片', seatCompact: '緊湊', seatBar: '橫條',
   seatChip: '籌碼',
   sectionSeat: '座位', seatClassic: '經典', seatPlate: '銘牌',
     botDifficulty:'機器人難度', botEasy:'簡單', botMixed:'混合', botNormal:'普通', botHard:'困難',

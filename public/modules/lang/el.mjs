@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+  seatCard: 'Κάρτα', seatCompact: 'Συμπαγές', seatBar: 'Μπάρα',
   seatChip: 'Μάρκα',
   sectionSeat: 'Θέσεις', seatClassic: 'Κλασικό', seatPlate: 'Πινακίδα',
     botDifficulty:'Δυσκολία bot', botEasy:'Εύκολο', botMixed:'Μικτό', botNormal:'Κανονικό', botHard:'Δύσκολο',

@@ -12,6 +12,7 @@ export const meta = {
 };
 
 export const strings = {
+  seatCard: 'Kart', seatCompact: 'Kompakt', seatBar: 'Çubuk',
   seatChip: 'Fiş',
   sectionSeat: 'Koltuklar', seatClassic: 'Klasik', seatPlate: 'İsimlik',
     botDifficulty:'Bot zorluğu', botEasy:'Kolay', botMixed:'Karışık', botNormal:'Normal', botHard:'Zor',

@@ -11,6 +11,7 @@ export const meta = {
 };
 
 export const strings = {
+  seatCard: 'Cairt', seatCompact: 'Dlùth', seatBar: 'Bàr',
   seatChip: 'Tòcan',
   sectionSeat: 'Suidheachain', seatClassic: 'Clasaigeach', seatPlate: 'Clàr-ainm',
     botDifficulty:'Duilgheadas nam botaichean', botEasy:'Furasta', botMixed:'Measgaichte', botNormal:'Àbhaisteach', botHard:'Doirbh',

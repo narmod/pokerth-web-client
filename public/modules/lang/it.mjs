@@ -15,6 +15,7 @@ export const meta = {
 };
 
 export const strings = {
+  seatCard: 'Scheda', seatCompact: 'Compatto', seatBar: 'Barra',
   seatChip: 'Fiche',
   sectionSeat: 'Posti', seatClassic: 'Classico', seatPlate: 'Targhetta',
     botDifficulty:'Difficoltà dei bot', botEasy:'Facile', botMixed:'Mista', botNormal:'Normale', botHard:'Difficile',

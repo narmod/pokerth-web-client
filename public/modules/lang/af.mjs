@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+  seatCard: 'Kaart', seatCompact: 'Kompak', seatBar: 'Balk',
   seatChip: 'Fiche',
   sectionSeat: 'Sitplekke', seatClassic: 'Klassiek', seatPlate: 'Naamplaatjie',
     botDifficulty:'Bot-moeilikheid', botEasy:'Maklik', botMixed:'Gemeng', botNormal:'Normaal', botHard:'Moeilik',

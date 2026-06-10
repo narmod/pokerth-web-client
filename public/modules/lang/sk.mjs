@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+  seatCard: 'Karta', seatCompact: 'Kompaktné', seatBar: 'Lišta',
   seatChip: 'Žetón',
   sectionSeat: 'Miesta', seatClassic: 'Klasický', seatPlate: 'Štítok',
     botDifficulty:'Obtiažnosť botov', botEasy:'Ľahká', botMixed:'Zmiešaná', botNormal:'Normálna', botHard:'Ťažká',
