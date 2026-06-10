@@ -6402,15 +6402,15 @@ const App = (() => {
     // were overlapping the felt rim on phones, so on MOBILE ONLY we push
     // them a little lower by raising yMulBot. The local player uses yMulMe
     // and is unaffected; tablet (isSmall) and desktop keep their values.
-    const yMulBot   = isMob ? 0.44 : (isSmall ? 0.40 : 0.18);
-    const yMulTop   = isMob ? 0.28 : (isSmall ? 0.34 : 0.18);
+    const yMulBot   = isMob ? 0.20 : (isSmall ? 0.40 : 0.18);
+    const yMulTop   = isMob ? 0.20 : (isSmall ? 0.34 : 0.18);
     // The seat sitting EXACTLY at the top-centre (sinAng ≈ -1, exists only
     // when n is even: 4, 6, 8, 10…) is lowered slightly toward the table
     // because the latitude angle gives it the maximum vertical projection.
     // For all other top-half seats (sinAng > -0.95), we keep yMulTop so the
     // lateral pairs don't drift horizontally toward each other.
-    const yMulTopC  = isMob ? 0.22 : (isSmall ? 0.34 : 0.18);
-    const yMulMe    = isMob ? 0.32 : (isSmall ? 0.46 : 0.22);
+    const yMulTopC  = isMob ? 0.14 : (isSmall ? 0.34 : 0.18);
+    const yMulMe    = isMob ? 0.16 : (isSmall ? 0.46 : 0.22);
     const ryBotRaw  = oRect.height / 2 + borderClear + oRect.height * yMulBot;
     const ryTopRaw  = oRect.height / 2 + borderClear + oRect.height * yMulTop;
     const ryTopCRaw = oRect.height / 2 + borderClear + oRect.height * yMulTopC;
@@ -9988,7 +9988,7 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.2.359'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.2.360'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
