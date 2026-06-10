@@ -3687,7 +3687,7 @@ body:not(.in-game) .my-zone {
   align-items: center;
   gap: 10px;
   width: 100%;
-  max-width: 760px;
+  max-width: 500px;
   background: rgba(0,0,0,0.35);
   border: 1px solid rgba(var(--green-rgb), 0.4);
   border-radius: 8px;
