@@ -1348,7 +1348,7 @@ body {
   border-bottom: 2px solid var(--border-hi);
   box-shadow: 0 8px 16px rgba(0,0,0,0.5);
   position: fixed;       /* overlay : ne pousse plus les tables, les recouvre */
-  top: 36px;             /* juste sous le header (comme #players-panel) */
+  top: var(--ovl-top, 48px);             /* juste sous le header (comme #players-panel) */
   left: 0; right: 0;
   z-index: 100;
   display: flex;
@@ -3387,7 +3387,7 @@ body.hide-pct-btns .pct-row { display: none; }
    position:fixed → la zone de table garde toujours toute sa hauteur */
 #g-chat-panel {
   position: fixed !important;
-  top: 36px;           /* juste sous le header */
+  top: var(--ovl-top, 48px);           /* juste sous le header */
   left: 0; right: 0;
   z-index: 100;
   max-height: min(280px, 38dvh) !important;
@@ -3397,7 +3397,7 @@ body.hide-pct-btns .pct-row { display: none; }
 }
 #g-reaction-panel {
   position: fixed !important;
-  top: 36px;
+  top: var(--ovl-top, 48px);
   left: 0; right: 0;
   z-index: 101;
   background: var(--panel);
@@ -3410,7 +3410,7 @@ body.hide-pct-btns .pct-row { display: none; }
    one tick above when both are open. */
 #g-log-panel {
   position: fixed !important;
-  top: 36px;
+  top: var(--ovl-top, 48px);
   left: 0; right: 0;
   z-index: 99;
   max-height: min(140px, 22dvh) !important;
@@ -4311,7 +4311,7 @@ body:not(.in-game) .my-zone {
    scrollable list for quick filtering when many players are online. */
 #players-panel {
   position: fixed !important;
-  top: 36px;
+  top: var(--ovl-top, 48px);
   left: 0; right: 0;
   z-index: 99;
   max-height: min(360px, 50dvh) !important;

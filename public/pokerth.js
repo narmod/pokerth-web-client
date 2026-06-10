@@ -3556,6 +3556,7 @@ const App = (() => {
   function show(id) {
     document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
     $(id).classList.add('active');
+    if (window._syncOverlayTop) window._syncOverlayTop();
     // Keep the screen awake only while at the table.
     if (id === 's-game') acquireWakeLock(); else releaseWakeLock();
     // PWA shortcut intent (?go=play|create): fire ONCE when the lobby first
@@ -9989,7 +9990,7 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.2.362'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.2.363'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
@@ -10008,4 +10009,36 @@ function renderPlayersList() {
   }
   upd();
   try{ new MutationObserver(upd).observe(document.documentElement, { attributes:true, attributeFilter:['data-theme'] }); }catch(e){}
+})();
+
+/* ── Overlay dropdowns (chat / réactions / journal + lobby) ────────────────
+   Les panneaux déroulants sont position:fixed et doivent s'ouvrir JUSTE sous
+   le header. Le header n'a pas de hauteur fixe (clamp + paddings + variations
+   portrait/paysage + breakpoints) : on mesure sa hauteur réelle et on la
+   publie dans --ovl-top, consommée par le CSS (top:var(--ovl-top)). On lit le
+   header de l'écran ACTIF (lobby ou jeu). Mesure via getBoundingClientRect
+   (fiable iOS, contrairement à getComputedStyle sur les custom properties).
+   Mis à jour : resize, orientationchange, changement d'écran (show()), et
+   ResizeObserver pour tout changement de contenu du header. */
+;(function(){
+  function syncOverlayTop(){
+    try{
+      var scr = document.querySelector('.screen.active');
+      var h = scr && scr.querySelector('.header');
+      if(!h) return;
+      var px = Math.round(h.getBoundingClientRect().height);
+      if(px > 0) document.documentElement.style.setProperty('--ovl-top', px + 'px');
+    }catch(e){}
+  }
+  window._syncOverlayTop = syncOverlayTop;
+  try{
+    if(typeof ResizeObserver !== 'undefined'){
+      var ro = new ResizeObserver(function(){ syncOverlayTop(); });
+      var hs = document.querySelectorAll('.screen > .header');
+      for(var i=0;i<hs.length;i++) ro.observe(hs[i]);
+    }
+  }catch(e){}
+  window.addEventListener('resize', syncOverlayTop, { passive:true });
+  window.addEventListener('orientationchange', function(){ setTimeout(syncOverlayTop, 80); });
+  requestAnimationFrame(syncOverlayTop);
 })();
