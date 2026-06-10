@@ -243,6 +243,20 @@ html { touch-action: manipulation; -webkit-text-size-adjust: 100%; text-size-adj
     url("/table/felt-green.jpg") center / cover no-repeat;
 }
 
+/* Table « image complète » — une table importée marquée full:true (tables.json /
+   themes.json) remplace TOUT le rendu CSS du tapis (bordure, liserés box-shadow,
+   liseré ::before, dégradés texture/halo, forme ovale) pour n'afficher QUE l'image,
+   centrée et entière (contain). Les feutres-texture (photo, gallery sans full) ne
+   sont pas affectés : eux gardent l'ovale + le liseré. L'image vit dans --table-img
+   (URL nue, sans cover) ; data-table-full="1" est posé par theme.mjs et l'applier <head>. */
+:root[data-table-full="1"] .felt-oval {
+  background: var(--table-img, none) center / contain no-repeat;
+  border: 0;
+  border-radius: 0;
+  box-shadow: 0 18px 50px rgba(0,0,0,0.55);
+}
+:root[data-table-full="1"] .felt-oval::before { display: none; }
+
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
 html, body {

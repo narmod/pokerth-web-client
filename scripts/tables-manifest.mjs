@@ -49,13 +49,17 @@ for (const name of names) {
   const base = '/table/' + name + '/';
   const d = puckFile(p, 'dealer'), s = puckFile(p, 'sb'), b = puckFile(p, 'bb');
   const pucks = (d || s || b) ? { dealer: d ? base + d : null, sb: s ? base + s : null, bb: b ? base + b : null } : null;
-  out.push({
+  const entry = {
     id: name,
     name: tableName(p, name),
     feltUrl: base + felt,
     pucks: pucks,
     preview: d ? base + d : (existsSync(join(p, 'preview.png')) ? base + 'preview.png' : null),
-  });
+  };
+  // Marqueur « image complète » : un fichier `full` (ou `.full`) dans le dossier de la
+  // table => full:true => le client remplace tout le tapis CSS par cette image (contain).
+  if (existsSync(join(p, 'full')) || existsSync(join(p, '.full'))) entry.full = true;
+  out.push(entry);
 }
 out.sort((a, b) => a.name.localeCompare(b.name));
 writeFileSync(join(dir, 'tables.json'), JSON.stringify(out, null, 2) + '\n');
