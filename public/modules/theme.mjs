@@ -429,6 +429,21 @@ function _previewHTML(kind, item, big) {
     var t = _isBuiltinTable(_tv) ? _tableById(_tv) : (_tablePkgById(_tv) || (item && item.swatch ? { id: _tv, swatch: item.swatch } : _tableById(_tv)));
     return '<span style="' + box + ';' + _feltStyle(t) + '">' + _cardOnFelt(item && item.values ? item.values.deck : '', big) + '</span>';
   }
+  if (kind === 'seat') {
+    var av = big ? 24 : 9, bw = big ? 2 : 1, bh = big ? 5 : 2, g = big ? 3 : 1;
+    var avEl = '<i style="width:'+av+'px;height:'+av+'px;border-radius:50%;flex:none;background:#1b2a16;border:'+bw+'px solid #c8a84a;box-shadow:0 1px 2px rgba(0,0,0,0.5)"></i>';
+    var felt = ';display:flex;align-items:center;justify-content:center;background:radial-gradient(circle at 50% 40%,#1c5a28,#0c3214)';
+    var b1 = '<i style="display:block;width:'+(big?34:12)+'px;height:'+bh+'px;border-radius:'+bh+'px;background:#e7eaf0"></i>';
+    var b2 = '<i style="display:block;width:'+(big?22:8)+'px;height:'+bh+'px;border-radius:'+bh+'px;background:#c8a84a"></i>';
+    if (item && item.id === 'plate') {
+      var pl = '<span style="display:flex;align-items:center;gap:'+(big?6:2)+'px;padding:'+(big?'6px 9px':'2px 3px')+';border-radius:'+(big?9:4)+'px;background:#2a2f38;border:1px solid rgba(255,255,255,0.18);box-shadow:0 2px 6px rgba(0,0,0,0.45)">' + avEl + '<span style="display:flex;flex-direction:column;gap:'+g+'px">' + b1 + b2 + '</span></span>';
+      return '<span style="' + box + felt + '">' + pl + '</span>';
+    }
+    var clb1 = '<i style="display:block;width:'+(big?30:11)+'px;height:'+bh+'px;border-radius:'+bh+'px;background:#e7eaf0"></i>';
+    var clb2 = '<i style="display:block;width:'+(big?20:7)+'px;height:'+bh+'px;border-radius:'+bh+'px;background:#c8a84a"></i>';
+    var cl = '<span style="display:flex;flex-direction:column;align-items:center;gap:'+g+'px">' + avEl + clb1 + clb2 + '</span>';
+    return '<span style="' + box + felt + '">' + cl + '</span>';
+  }
   return '<span style="' + box + '"></span>';
 }
 
@@ -532,7 +547,7 @@ function _render() {
   _body.appendChild(_sectionHeader(_t('sectionCustomize', 'Customize'), ''));
   AXES.forEach(function (ax) {
     var cur = ax.get();
-    var kind = (ax === palette) ? 'palette' : (ax === table) ? 'table' : (ax === deck) ? 'deck' : (ax === pucks) ? 'pucks' : 'palette';
+    var kind = (ax === palette) ? 'palette' : (ax === table) ? 'table' : (ax === deck) ? 'deck' : (ax === pucks) ? 'pucks' : (ax === seat) ? 'seat' : 'palette';
     // Accordion key MUST be unique per axis, and distinct from `kind` (the
     // preview type). `kind` falls back to 'palette' for buttons (and any future
     // axis), so reusing it as the open-section id made the buttons and palette
