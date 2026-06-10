@@ -5461,3 +5461,23 @@ html[data-seat="bar"] .seat-timer-badge { display: none; }
 .win-rsz-se { bottom: 0; right: 0; width: 13px; height: 13px; cursor: nwse-resize; }
 .win-rsz-sw { bottom: 0; left: 0; width: 13px; height: 13px; cursor: nwse-resize; }
 .win-resizing, .win-resizing * { -webkit-user-select: none; user-select: none; }
+
+
+/* ════════════════════════════════════════════════════════════════════════
+   Ouverture EN BANDEAU + detachement au 1er drag/resize : geree cote JS
+   (_attachFloatControls / _ensureFloating). Les styles .floating-win et
+   .win-rsz sont definis plus haut (v0.2.385) et s'appliquent au detachement.
+
+   Carte des COMBINAISONS (memo des mains) : deplacable + redimensionnable sur
+   tablette/desktop (>=900px). En dessous : modale centree classique (inchange).
+   ════════════════════════════════════════════════════════════════════════ */
+.hands-floatable {
+  position: fixed;
+  width: min(460px, 96vw);
+  overflow: hidden;            /* les poignees de resize ne defilent pas */
+}
+.hands-floatable .hands-title { cursor: move; touch-action: none; -webkit-user-select: none; user-select: none; }
+
+/* Bouton "reset des fenetres" du header : visible seulement tablette + desktop. */
+.win-reset-only { display: none; }
+@media (min-width: 900px) { .win-reset-only { display: inline-flex; } }

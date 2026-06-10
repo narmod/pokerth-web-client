@@ -9485,6 +9485,7 @@ function makeWinDraggable(panel, handle, key){
   handle.addEventListener('pointerdown', function(e){
     if(panel._winDrag===false) return;       // inerte hors mode flottant
     if(e.target.closest && e.target.closest('button')) return; // boutons d'en-tete
+    _ensureFloating(panel);
     drag=true;
     var r=panel.getBoundingClientRect();
     sx=e.clientX; sy=e.clientY; sl=r.left; st=r.top;
@@ -9515,6 +9516,7 @@ function makeWinResizable(panel, key, minW, minH){
     panel.appendChild(h);
     var sx=0, sy=0, sw=0, sh=0, sl=0, st=0, on=false;
     h.addEventListener('pointerdown', function(e){
+      _ensureFloating(panel);
       on=true;
       var r=panel.getBoundingClientRect();
       sx=e.clientX; sy=e.clientY; sw=r.width; sh=r.height; sl=r.left; st=r.top;
@@ -9581,6 +9583,76 @@ window.addEventListener('resize', function(){
   });
 });
 
+function _ensureFloating(panel){
+  // Promotion bandeau -> fenetre flottante au 1er drag/resize. No-op si deja
+  // flottant ou si l'element n'a pas opte (panel._winOpt absent, ex. carte mains).
+  if (!panel || panel.classList.contains('floating-win') || !panel._winOpt) return;
+  var opt=panel._winOpt, r=panel.getBoundingClientRect();
+  panel.classList.add('floating-win');
+  panel._winDrag=true; panel._winResizable=!!opt.resizable;
+  panel.style.setProperty('max-height','none','important');
+  panel.style.width=Math.round(r.width)+'px';
+  panel.style.height=Math.round(r.height)+'px';
+  _placeWin(panel, r.left, r.top);
+  if (opt.resizable) makeWinResizable(panel, opt.key, opt.minW, opt.minH);
+  _saveWin(panel, opt.key);
+}
+function _attachFloatControls(panel, opt){
+  // Ouvre "comme avant" (le bandeau garde sa position CSS) mais cable le drag +
+  // les poignees de resize ; le panneau se detache en flottant au 1er geste.
+  // Si une position a deja ete memorisee, rouvre directement en flottant.
+  if (!panel) return;
+  opt=opt||{}; panel._winOpt=opt;
+  var hasSaved=false;
+  try{ hasSaved=!!(opt.key && localStorage.getItem(opt.key)); }catch(e){}
+  if (hasSaved){ _enableFloating(panel, opt); return; }
+  panel._winDrag=true;
+  if (opt.handle) makeWinDraggable(panel, opt.handle, opt.key);
+  if (opt.resizable) makeWinResizable(panel, opt.key, opt.minW, opt.minH);
+}
+function _makeHandsDraggable(card){
+  // Carte des combinaisons (memo des mains) : deplacable via son titre. Le
+  // listener est pose sur la carte (persistante) car renderHandsHelp reconstruit
+  // son innerHTML a chaque ouverture.
+  if (!card || card._handsDragWired) return;
+  card._handsDragWired=true;
+  var sx=0, sy=0, sl=0, st=0, drag=false;
+  card.addEventListener('pointerdown', function(e){
+    if (!card.classList.contains('hands-floatable')) return;
+    if (!(e.target.closest && e.target.closest('.hands-title'))) return;
+    drag=true;
+    var r=card.getBoundingClientRect();
+    sx=e.clientX; sy=e.clientY; sl=r.left; st=r.top;
+    try{ card.setPointerCapture(e.pointerId); }catch(_){}
+    e.preventDefault();
+  });
+  card.addEventListener('pointermove', function(e){
+    if(!drag) return;
+    _placeWin(card, sl+(e.clientX-sx), st+(e.clientY-sy));
+  });
+  function end(e){
+    if(!drag) return; drag=false;
+    try{ card.releasePointerCapture(e.pointerId); }catch(_){}
+    _saveWin(card, 'pth_winpos_hands');
+  }
+  card.addEventListener('pointerup', end);
+  card.addEventListener('pointercancel', end);
+}
+function resetWindows(){
+  // Bouton reset du header (≥900px) : efface les positions memorisees et remet
+  // chat/journal/reactions en bandeau + recentre la carte des combinaisons.
+  ['pth_winpos_chat','pth_winpos_log','pth_winpos_react','pth_winpos_theme','pth_winpos_hands'].forEach(function(k){ try{ localStorage.removeItem(k); }catch(e){} });
+  ['g-chat-panel','g-log-panel','g-reaction-panel'].forEach(function(id){ var p=document.getElementById(id); if(p) _disableFloating(p); });
+  var card=document.getElementById('hands-card-inner');
+  if(card){
+    card.classList.remove('hands-floatable');
+    card._winResizable=false;
+    var hs=card.querySelectorAll('.win-rsz'); for(var i=0;i<hs.length;i++) hs[i].remove();
+    card._winRszWired=false;
+    ['position','left','top','right','bottom','width','height'].forEach(function(p){ card.style[p]=''; });
+  }
+  try{ if (typeof window.closeThemePanel==='function') window.closeThemePanel(); }catch(e){}
+}
 function makeChatResizable(panel, msgs, onResize) {
   if (!panel || !msgs) return;
   panel._onResize = onResize || null;   // callback de suivi (mis à jour à chaque appel)
@@ -9865,8 +9937,28 @@ function toggleHandsHelp() {
   var ov = document.getElementById('hands-overlay');
   if (!ov) return;
   var opening = ov.style.display === 'none';
-  if (opening) renderHandsHelp();
-  ov.style.display = opening ? 'flex' : 'none';
+  var card = document.getElementById('hands-card-inner');
+  if (opening) {
+    renderHandsHelp();
+    ov.style.display = 'flex';
+    if (card && window.matchMedia && window.matchMedia('(min-width:900px)').matches) {
+      card.classList.add('hands-floatable');
+      card._winResizable = true;
+      var _r = _restoreWin(card, 'pth_winpos_hands');
+      if (!_r) _placeWin(card, (window.innerWidth - card.offsetWidth) / 2, (window.innerHeight - card.offsetHeight) / 2);
+      card._winRszWired = false;                       // innerHTML reconstruit -> re-injecter les poignees
+      makeWinResizable(card, 'pth_winpos_hands', 300, 220);
+      _makeHandsDraggable(card);
+    } else if (card) {
+      card.classList.remove('hands-floatable');
+      card._winResizable = false;
+      var _hs = card.querySelectorAll('.win-rsz'); for (var _i = 0; _i < _hs.length; _i++) _hs[_i].remove();
+      ['position','left','top','right','bottom','width','height'].forEach(function (p) { card.style[p] = ''; });
+    }
+  } else {
+    if (card && card.classList.contains('hands-floatable')) _saveWin(card, 'pth_winpos_hands');
+    ov.style.display = 'none';
+  }
 }
 
 // ── Unread-chat badge ──────────────────────────────────────────────
@@ -9929,7 +10021,7 @@ function toggleGameChat() {
     btn.style.color       = open ? 'var(--gold)' : '';
   }
   if (open) {
-    if (_chatGate()) { _enableFloating(panel, { key:'pth_winpos_chat', handle: panel.querySelector('.g-chat-panel-header'), resizable:true, defW:340, defH:300, defLeft:16, defTop:56, minW:240, minH:160 }); }
+    if (_chatGate()) { _attachFloatControls(panel, { key:'pth_winpos_chat', handle: panel.querySelector('.g-chat-panel-header'), resizable:true, minW:240, minH:160 }); }
     else { _disableFloating(panel); makeChatResizable(panel, document.getElementById('g-chat-msgs')); }
     if (typeof clearUnreadChat === 'function') clearUnreadChat();
     var m = document.getElementById('g-chat-msgs');
@@ -9960,7 +10052,7 @@ function toggleReactionPanel() {
   if (!panel) return;
   var open = panel.style.display === 'none' || panel.style.display === '';
   panel.style.display = open ? 'flex' : 'none';
-  if (open) { if (_winGate()) { _enableFloating(panel, { key:'pth_winpos_react', handle: panel.querySelector('.react-panel-title'), resizable:true, defW:320, defH:300, defLeft:96, defTop:136, minW:240, minH:160 }); } else { _disableFloating(panel); } }
+  if (open) { if (_winGate()) { _attachFloatControls(panel, { key:'pth_winpos_react', handle: panel.querySelector('.react-panel-title'), resizable:true, minW:240, minH:160 }); } else { _disableFloating(panel); } }
   if (btn) {
     btn.style.background  = open ? 'rgba(var(--gold-rgb),0.2)' : '';
     btn.style.borderColor = open ? 'var(--gold-dim)' : '';
@@ -9984,7 +10076,7 @@ function toggleLog() {
   if (btn) btn.style.color       = isHidden ? 'var(--gold)' : '';
   if (isHidden) {
     // Poignée de redimensionnement, identique au chat (glisser pour étendre).
-    if (_winGate()) { _enableFloating(panel, { key:'pth_winpos_log', handle: panel.querySelector('.g-chat-panel-header'), resizable:true, defW:340, defH:240, defLeft:56, defTop:96, minW:240, minH:140 }); }
+    if (_winGate()) { _attachFloatControls(panel, { key:'pth_winpos_log', handle: panel.querySelector('.g-chat-panel-header'), resizable:true, minW:240, minH:140 }); }
     else { _disableFloating(panel); makeChatResizable(panel, document.getElementById('g-log-body')); }
     var lb = document.getElementById('g-log-body');
     if (lb) lb.scrollTop = 0; // le plus récent est en haut (liste inversée)
@@ -10143,7 +10235,7 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.2.385'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.2.386'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
