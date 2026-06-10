@@ -6560,7 +6560,7 @@ const App = (() => {
     if (pbMon) {
       pbMon.textContent = mySd.money != null ? fmtChips(mySd.money) : '—';
       if (__amOut) {
-        pbMon.innerHTML = '<span style="color:var(--red);font-weight:700;letter-spacing:0.1em">OUT</span> · ' + pbMon.innerHTML;
+        pbMon.innerHTML = '<span class="pb-out-tag">OUT</span> · ' + pbMon.innerHTML;
       }
     }
     if (pbAct)  pbAct.textContent  = mySd.action || '';
@@ -9998,7 +9998,7 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.2.378'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.2.379'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

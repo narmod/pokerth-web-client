@@ -3170,24 +3170,32 @@ body {
    defuses any colour cue (turn highlight, dealer chip) that may linger
    from a previous hand. */
 .seat.seat-out {
-  opacity: 0.35;
-  filter: grayscale(0.6);
   pointer-events: none;
+}
+/* Estomper le contenu, pas la pastille : l'opacite d'un parent plafonne
+   celle de ses enfants (::after compris) -> le badge resterait invisible.
+   On grise avatar/nom/tapis/mise separement et on garde la pastille a
+   pleine opacite, par-dessus, dans une couleur qui suit le theme. */
+.seat.seat-out .seat-plate,
+.seat.seat-out .seat-foot {
+  opacity: 0.4;
+  filter: grayscale(0.6);
 }
 .seat.seat-out::after {
   content: 'OUT';
   position: absolute;
   top: 50%; left: 50%;
-  transform: translate(-50%, -50%) rotate(-12deg);
+  transform: translate(-50%, -50%) rotate(-10deg);
   font-family: var(--ff-display);
-  font-size: 0.65rem;
-  font-weight: 700;
-  letter-spacing: 0.15em;
-  color: var(--neg);
-  background: rgba(0,0,0,0.55);
-  padding: 1px 5px;
-  border: 1px solid rgba(var(--red-rgb), 0.5);
-  border-radius: 2px;
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  color: #fff;
+  background: var(--red);
+  padding: 2px 7px;
+  border: 1px solid rgba(255,255,255,0.25);
+  border-radius: 4px;
+  box-shadow: 0 1px 5px rgba(0,0,0,0.45);
   z-index: 4;
   pointer-events: none;
 }
@@ -4969,11 +4977,25 @@ body:not(.in-game) .my-zone {
    Mirror the .seat-out look on the seats: grey out the avatar/name/stack,
    show clearly that the player has busted out of the tournament. The
    "OUT" prefix is added inline by JS in the money line. */
-.player-bar.pb-out {
+.player-bar.pb-out .pb-avatar,
+.player-bar.pb-out .pb-name,
+.player-bar.pb-out .pb-action {
   opacity: 0.45;
-  filter: grayscale(0.6);
+  filter: grayscale(0.55);
 }
 .player-bar.pb-out .pb-cards .pk { opacity: 0.5; }
+/* Tag OUT net + suit le theme (meme logique que .seat-out::after). */
+.pb-out-tag {
+  display: inline-block;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  color: #fff;
+  background: var(--red);
+  padding: 0 6px;
+  border-radius: 4px;
+  border: 1px solid rgba(255,255,255,0.22);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.4);
+}
 
 /* ═══════════════════════════════════════════════════════════════════
    LOBBY REDESIGN — création (repliable) au-dessus des tables,
