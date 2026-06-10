@@ -2335,6 +2335,7 @@ body {
   flex: 1 1 auto;
   min-width: 0;
   align-self: stretch;
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -2349,8 +2350,10 @@ body {
   gap: 10px;
 }
 .hs-lbl {
-  flex: 0 0 auto;
-  align-self: center;
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
   max-width: 100%;
   box-sizing: border-box;
   display: inline-flex;
