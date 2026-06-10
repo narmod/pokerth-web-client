@@ -659,10 +659,17 @@ function openThemePanel(ev) {
   try { if (ev && ev.stopPropagation) ev.stopPropagation(); } catch (e) {}
   closeThemePanel();
 
-  var overlay = document.createElement('div');
-  overlay.id = OVERLAY_ID;
-  overlay.style.cssText = 'position:fixed;inset:0;z-index:9998;background:transparent';
-  overlay.addEventListener('click', closeThemePanel);
+  // Voile plein ecran capteur de clic exterieur : seulement sur mobile (<900px).
+  // Sur tablette/desktop on ne le cree pas -> le panneau reste ouvert et la barre
+  // d'action reste cliquable meme quand une action joueur est requise (fermeture
+  // via la croix ou Echap). Mobile : comportement inchange (clic exterieur ferme).
+  var overlay = null;
+  if (!(window.matchMedia && window.matchMedia('(min-width:900px)').matches)) {
+    overlay = document.createElement('div');
+    overlay.id = OVERLAY_ID;
+    overlay.style.cssText = 'position:fixed;inset:0;z-index:9998;background:transparent';
+    overlay.addEventListener('click', closeThemePanel);
+  }
 
   var panel = document.createElement('div');
   panel.id = PANEL_ID;
@@ -692,7 +699,7 @@ function openThemePanel(ev) {
   // worker), refreshing the open panel in place.
   try { _loadGalleryDecks(); _loadGalleryTables(); _loadThemes(); } catch (e) {}
 
-  document.body.appendChild(overlay);
+  if (overlay) document.body.appendChild(overlay);
   document.body.appendChild(panel);
 
   var vw = window.innerWidth || 360, vh = window.innerHeight || 640;
