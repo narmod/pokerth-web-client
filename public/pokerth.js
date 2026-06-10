@@ -6384,16 +6384,17 @@ const App = (() => {
     const zRect = zone.getBoundingClientRect();
     const oCX  = oRect.left - zRect.left + oRect.width  / 2;
     const oCY  = oRect.top  - zRect.top  + oRect.height / 2;
-    const isMob = window.innerWidth < 640;
-    // On mobile: use larger vertical spread to prevent lateral player overlap
+    const isMob = window.innerWidth < 640;       // phone (kept for reference)
+    const isSmall = window.innerWidth < 900;     // phone + tablet : same tight layout
+    // Small screens (phone + tablet) tighten the spread so players sit close to
+    // the felt; desktop (>=900) keeps the wider, original layout.
     // rx must clear oval half-width + 8px border + ~10px seat radius
-    const borderClear = isMob ? 20 : 24; // px to add beyond oval half-size
-    const isSmall = window.innerWidth < 900; // mobile + tablet
-    const rxRaw = oRect.width  / 2 + borderClear + (isMob ? oRect.width*0.06 : oRect.width*0.16);
+    const borderClear = isSmall ? 20 : 24; // px to add beyond oval half-size
+    const rxRaw = oRect.width  / 2 + borderClear + (isSmall ? oRect.width*0.06 : oRect.width*0.16);
     // Vertical-spread multipliers. On mobile we tighten BOTTOM seats a lot
     // and TOP seats moderately, to bring the players visually closer to the
-    // table on small screens. Desktop and tablet stay at the original
-    // (symmetric) multipliers, so behaviour there is unchanged.
+    // table on small screens. Desktop (>=900) keeps the original (symmetric)
+    // multipliers; tablet now shares the small-screen (mobile) values below.
     //   yMulBot : seats whose angle places them in the lower half (sin>0)
     //   yMulTop : seats in the upper half (sin<=0)
     //   yMulMe  : the local player (i=0), kept slightly lower than the other
@@ -6401,23 +6402,23 @@ const App = (() => {
     // The two bottom side-seats (the opponents flanking the local player)
     // were overlapping the felt rim on phones, so on MOBILE ONLY we push
     // them a little lower by raising yMulBot. The local player uses yMulMe
-    // and is unaffected; tablet (isSmall) and desktop keep their values.
-    const yMulBot   = isMob ? 0.20 : (isSmall ? 0.40 : 0.18);
-    const yMulTop   = isMob ? 0.20 : (isSmall ? 0.34 : 0.18);
+    // and is unaffected. Desktop keeps its values; tablet uses the small-screen ones.
+    const yMulBot   = isSmall ? 0.20 : 0.18;
+    const yMulTop   = isSmall ? 0.20 : 0.18;
     // The seat sitting EXACTLY at the top-centre (sinAng ≈ -1, exists only
     // when n is even: 4, 6, 8, 10…) is lowered slightly toward the table
     // because the latitude angle gives it the maximum vertical projection.
     // For all other top-half seats (sinAng > -0.95), we keep yMulTop so the
     // lateral pairs don't drift horizontally toward each other.
-    const yMulTopC  = isMob ? 0.14 : (isSmall ? 0.34 : 0.18);
-    const yMulMe    = isMob ? 0.16 : (isSmall ? 0.46 : 0.22);
+    const yMulTopC  = isSmall ? 0.14 : 0.18;
+    const yMulMe    = isSmall ? 0.16 : 0.22;
     const ryBotRaw  = oRect.height / 2 + borderClear + oRect.height * yMulBot;
     const ryTopRaw  = oRect.height / 2 + borderClear + oRect.height * yMulTop;
     const ryTopCRaw = oRect.height / 2 + borderClear + oRect.height * yMulTopC;
     const ryMeRaw   = oRect.height / 2 + borderClear + oRect.height * yMulMe;
     // Clamp to zone boundaries (top seats clamped against space ABOVE the
     // oval, bottom seats clamped against space BELOW)
-    const margin = isMob ? 24 : 36;
+    const margin = isSmall ? 24 : 36;
     const rxPx  = Math.min(rxRaw,    Math.min(oCX, zRect.width - oCX) - margin);
     const ryTop = Math.min(ryTopRaw,  oCY - margin);
     const ryTopC= Math.min(ryTopCRaw, oCY - margin);
@@ -6447,7 +6448,7 @@ const App = (() => {
       // final position instead, so they drop just outside the rim. The local
       // player (i===0) and the top seats are left exactly as before, and so
       // are tablet/desktop.
-      if (isMob && i !== 0 && sinAng > 0) {
+      if (isSmall && i !== 0 && sinAng > 0) {
         topPos = Math.min(oCY + ryBotRaw * sinAng, botFloor);
       }
       var leftPos = oCX + rxPx*Math.cos(ang);
@@ -6458,7 +6459,7 @@ const App = (() => {
       // top-centre seat i=2) and pull them slightly toward the centre. The
       // local player (i===0) and the top-centre seat (i===2) are untouched,
       // as are all other player counts and tablet/desktop.
-      if (isMob && n === 4 && (i === 1 || i === 3)) {
+      if (isSmall && n === 4 && (i === 1 || i === 3)) {
         var dir = (i === 1) ? 1 : -1;
         topPos  = oCY - oRect.height / 2 - 26;   // remontée au-dessus du rebord
         leftPos = oCX + dir * rxPx * 0.81;       // rentrée vers le centre
@@ -9988,7 +9989,7 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.2.361'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.2.362'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

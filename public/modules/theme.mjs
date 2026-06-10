@@ -103,9 +103,9 @@ const table   = makeAxis({ storeKey: 'pth_table', attr: 'data-table', items: TAB
 const deck    = makeAxis({ storeKey: 'pth_deck',  attr: 'data-deck',  def: 'pokerth-new',  items: DECKS,    titleKey: 'sectionDeck',    titleFallback: 'Cards' });
 const buttons = makeAxis({ storeKey: 'pth_buttons', attr: 'data-buttons', def: 'glossy', items: BUTTONS_ITEMS, titleKey: 'sectionButtons', titleFallback: 'Buttons' });
 const pucks   = makeAxis({ storeKey: 'pth_pucks',   attr: 'data-pucks',   def: 'pokerth-new', items: PUCKS_ITEMS,   titleKey: 'sectionPucks',   titleFallback: 'Pucks' });
-// Defaut dependant du viewport : Compact sur mobile, Classic ailleurs. Evalue
+// Defaut dependant du viewport : Compact sur mobile, Plate sur tablette/desktop. Evalue
 // une fois au chargement ; un choix enregistre (Classic inclus = '') prime toujours.
-var _seatDef = '';
+var _seatDef = 'plate';
 try { if (typeof window !== 'undefined' && window.innerWidth < 640) _seatDef = 'compact'; } catch (e) {}
 const seat    = makeAxis({ storeKey: 'pth_seat',    attr: 'data-seat',    def: _seatDef,      items: SEATS,         titleKey: 'sectionSeat',    titleFallback: 'Seats' });
 const AXES = [deck, palette, table, buttons, pucks, seat];
