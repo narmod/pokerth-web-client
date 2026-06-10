@@ -11,6 +11,7 @@ export const meta = {
 };
 
 export const strings = {
+  sectionSeat: '座位', seatClassic: '经典', seatPlate: '铭牌',
     botDifficulty:'机器人难度', botEasy:'简单', botMixed:'混合', botNormal:'普通', botHard:'困难',
 
     guestHint:'🌐 在 pokerth.net 以访客身份游戏 — 无需账号。',

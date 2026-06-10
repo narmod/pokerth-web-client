@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+  sectionSeat: 'Θέσεις', seatClassic: 'Κλασικό', seatPlate: 'Πινακίδα',
     botDifficulty:'Δυσκολία bot', botEasy:'Εύκολο', botMixed:'Μικτό', botNormal:'Κανονικό', botHard:'Δύσκολο',
 
     guestHint:'🌐 Παιχνίδι ως επισκέπτης στο pokerth.net — χωρίς λογαριασμό.',

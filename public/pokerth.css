@@ -5220,3 +5220,40 @@ body:not(.in-game) .my-zone {
     -webkit-backdrop-filter: none !important;
   }
 }
+
+
+/* ===== Sieges : pack Plaque (axe data-seat="plate") ======================
+   DOM neutre + display:contents -> ce pack n'est QUE du CSS. data-seat absent
+   = Classique (rendu historique inchange). >=600px : plaque ; <600px : repli
+   siege classique. Futur pack = un bloc html[data-seat="<id>"] comme celui-ci. */
+.seat-plate, .seat-info, .seat-foot { display: contents; }
+
+html[data-seat="plate"] .seat { max-width: none; }
+html[data-seat="plate"] .seat-plate {
+  display: flex; align-items: center; gap: 8px; position: relative;
+  background: var(--field-bg, rgba(0,0,0,0.55));
+  border: 1px solid var(--border);
+  border-radius: 11px; padding: 5px 10px 6px 5px;
+  box-shadow: 0 3px 12px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.05);
+}
+html[data-seat="plate"] .seat-info {
+  display: flex; flex-direction: column; align-items: flex-start; gap: 1px; min-width: 0;
+}
+html[data-seat="plate"] .seat-name { text-align: left; max-width: 88px; }
+html[data-seat="plate"] .seat-foot {
+  display: flex; align-items: center; justify-content: center; gap: 6px; flex-wrap: wrap; margin-top: 3px;
+}
+html[data-seat="plate"] .seat.active .seat-plate {
+  border-color: var(--gold);
+  box-shadow: 0 0 0 1px var(--gold), 0 0 16px rgba(var(--gold-rgb), 0.45);
+}
+html[data-seat="plate"] .seat-timer-badge { display: none; }
+
+@media (max-width: 600px) {
+  html[data-seat="plate"] .seat-plate,
+  html[data-seat="plate"] .seat-info,
+  html[data-seat="plate"] .seat-foot { display: contents; }
+  html[data-seat="plate"] .seat { max-width: 68px; }
+  html[data-seat="plate"] .seat-name { text-align: center; max-width: 68px; }
+  html[data-seat="plate"] .seat-timer-badge { display: block; }
+}

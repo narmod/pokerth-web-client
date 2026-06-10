@@ -1486,7 +1486,7 @@ document.addEventListener("DOMContentLoaded", function() {
     function _applyDefaultTheme(presetId) {
       if (!presetId) return;
       try {
-        var keys = ['pth_theme', 'pth_table', 'pth_deck', 'pth_buttons', 'pth_pucks'];
+        var keys = ['pth_theme', 'pth_table', 'pth_deck', 'pth_buttons', 'pth_pucks', 'pth_seat'];
         for (var i = 0; i < keys.length; i++) { if (localStorage.getItem(keys[i]) !== null) return; }
       } catch (e) { return; }
       var tries = 0;
@@ -6643,6 +6643,7 @@ const App = (() => {
         ? '<img class="seat-pth-img" src="' + pthAvUrl + '" alt="" draggable="false">'
         : '';
       const avCls2 = avatarCls + (pthAvUrl ? ' has-pth-avatar' : '');
+      h += '<div class="seat-plate">'; // pack siege : avatar + (nom/tapis) -- display:contents en classique
       h += '<div class="' + avCls2 + '" style="' + avatarStyle + '">'
         + pthImg
         + '<span class="seat-initial">' + initial + '</span>'
@@ -6655,12 +6656,17 @@ const App = (() => {
       // Badge timer sous l'avatar (visible et non confondu avec l'emoji)
       if (isActive) h += '<div class="seat-timer-badge" id="stb-'+pid+'">'
         + ((_timerSec > 0) ? _timerSec + 's' : '') + '</div>';
+      h += '<div class="seat-info">';
       h += '<div class="seat-name">' + esc(isMe ? myName : getPlayerName(pid)) + '</div>';
       h += '<div class="seat-money">' + moneyStr + '</div>';
+      h += '</div>';   // ferme .seat-info
+      h += '</div>';   // ferme .seat-plate
+      h += '<div class="seat-foot">'; // pied : mise / action / cartes
       if (sd.bet) h += '<div class="seat-bet">' + fmtChips(sd.bet) + '</div>';
       if (sd.action) h += '<div class="seat-action-label">' + esc(sd.action) + '</div>';
       h += cardStr;
-      h += '</div>';
+      h += '</div>'; // ferme .seat-foot
+      h += '</div>'; // ferme .seat
     });
     el.innerHTML = h;
     _lastPixPos = pixPos;
@@ -9982,7 +9988,7 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.2.351'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.2.352'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

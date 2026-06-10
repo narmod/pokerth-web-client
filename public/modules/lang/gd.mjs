@@ -11,6 +11,7 @@ export const meta = {
 };
 
 export const strings = {
+  sectionSeat: 'Suidheachain', seatClassic: 'Clasaigeach', seatPlate: 'Clàr-ainm',
     botDifficulty:'Duilgheadas nam botaichean', botEasy:'Furasta', botMixed:'Measgaichte', botNormal:'Àbhaisteach', botHard:'Doirbh',
 
     guestHint:'🌐 Cluich mar aoigh air pokerth.net — gun chunntas.',

@@ -11,6 +11,7 @@ export const meta = {
 };
 
 export const strings = {
+  sectionSeat: 'இருக்கைகள்', seatClassic: 'கிளாசிக்', seatPlate: 'பெயர் பலகை',
     botDifficulty:'பாட் சிரமம்', botEasy:'எளிது', botMixed:'கலப்பு', botNormal:'சாதாரண', botHard:'கடினம்',
 
     guestHint:'🌐 pokerth.net இல் விருந்தினராக விளையாடுங்கள் — கணக்கு தேவையில்லை.',

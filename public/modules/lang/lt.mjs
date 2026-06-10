@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+  sectionSeat: 'Vietos', seatClassic: 'Klasikinis', seatPlate: 'Lentelė',
     botDifficulty:'Botų sudėtingumas', botEasy:'Lengvas', botMixed:'Mišrus', botNormal:'Normalus', botHard:'Sunkus',
 
     guestHint:'🌐 Žaidimas kaip svečias pokerth.net — be paskyros.',

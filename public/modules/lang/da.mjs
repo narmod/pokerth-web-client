@@ -9,6 +9,7 @@ export const meta = {
 };
 
 export const strings = {
+  sectionSeat: 'Pladser', seatClassic: 'Klassisk', seatPlate: 'Navneskilt',
     botDifficulty:'Bot-sværhedsgrad', botEasy:'Let', botMixed:'Blandet', botNormal:'Normal', botHard:'Svær',
 
     guestHint:'🌐 Gæstespil på pokerth.net — ingen konto nødvendig.',

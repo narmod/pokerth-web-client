@@ -16,6 +16,7 @@ export const meta = {
 };
 
 export const strings = {
+  sectionSeat: 'Miejsca', seatClassic: 'Klasyczny', seatPlate: 'Tabliczka',
     botDifficulty:'Poziom botów', botEasy:'Łatwy', botMixed:'Mieszany', botNormal:'Normalny', botHard:'Trudny',
 
     guestHint:'🌐 Gra jako gość na pokerth.net — bez konta.',

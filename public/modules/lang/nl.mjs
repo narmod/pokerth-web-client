@@ -15,6 +15,7 @@ export const meta = {
 };
 
 export const strings = {
+  sectionSeat: 'Plaatsen', seatClassic: 'Klassiek', seatPlate: 'Naamplaatje',
     botDifficulty:'Botmoeilijkheid', botEasy:'Makkelijk', botMixed:'Gemengd', botNormal:'Normaal', botHard:'Moeilijk',
 
     guestHint:'🌐 Spelen als gast op pokerth.net — geen account nodig.',

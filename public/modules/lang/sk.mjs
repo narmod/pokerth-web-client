@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+  sectionSeat: 'Miesta', seatClassic: 'Klasický', seatPlate: 'Štítok',
     botDifficulty:'Obtiažnosť botov', botEasy:'Ľahká', botMixed:'Zmiešaná', botNormal:'Normálna', botHard:'Ťažká',
 
     guestHint:'🌐 Hra ako hosť na pokerth.net — bez účtu.',

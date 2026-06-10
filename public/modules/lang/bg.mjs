@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+  sectionSeat: 'Места', seatClassic: 'Класически', seatPlate: 'Табелка',
     botDifficulty:'Трудност на ботовете', botEasy:'Лесно', botMixed:'Смесено', botNormal:'Нормално', botHard:'Трудно',
 
     guestHint:'🌐 Гост на pokerth.net — без акаунт.',

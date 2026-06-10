@@ -12,6 +12,7 @@ export const meta = {
 };
 
 export const strings = {
+  sectionSeat: 'Koltuklar', seatClassic: 'Klasik', seatPlate: 'İsimlik',
     botDifficulty:'Bot zorluğu', botEasy:'Kolay', botMixed:'Karışık', botNormal:'Normal', botHard:'Zor',
 
     guestHint:'🌐 pokerth.net\'te misafir oyun — hesap gerekmez.',

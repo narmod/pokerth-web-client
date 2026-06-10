@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+  sectionSeat: 'Helyek', seatClassic: 'Klasszikus', seatPlate: 'Névtábla',
     botDifficulty:'Botok nehézsége', botEasy:'Könnyű', botMixed:'Vegyes', botNormal:'Normál', botHard:'Nehéz',
 
     guestHint:'🌐 Vendégjáték a pokerth.net-en – nincs fiók.',

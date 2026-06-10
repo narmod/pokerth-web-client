@@ -15,6 +15,7 @@ export const meta = {
 };
 
 export const strings = {
+  sectionSeat: 'Места', seatClassic: 'Классический', seatPlate: 'Табличка',
     botDifficulty:'Сложность ботов', botEasy:'Лёгкий', botMixed:'Смешанный', botNormal:'Обычный', botHard:'Сложный',
 
     guestHint:'🌐 Гостевая игра на pokerth.net — без аккаунта.',

@@ -86,12 +86,21 @@ var BUTTON_GLOSSY = {
 var PUCK_SET = { dealer:'url(/pucks/dealer.svg)', sb:'url(/pucks/sb.svg)', bb:'url(/pucks/bb.svg)' };
 var BUTTONS_ITEMS = [ {id:'',key:'buttonsDefault',fallback:'Flat',swatch:'#6b2020'}, {id:'glossy',key:'buttonsGlossy',fallback:'Glossy',swatch:'#c81818'} ];
 var PUCKS_ITEMS   = [ {id:'pokerth',key:'pucksPokerth',fallback:'PokerTH',swatch:'#3a78d8',preview:'/pucks/dealer.svg'} ];
+// Seats axis: seat "packs" (layout + graphics), like decks/tables. A pack is a
+// CSS block keyed on html[data-seat="<id>"] (seat DOM stays neutral via
+// display:contents -> CSS-only) + optional assets under /seats/<id>/. id '' =
+// Classic (historical render). Add a pack = one item here; panel lists it auto.
+const SEATS = [
+  { id: '',      key: 'seatClassic', fallback: 'Classic', swatch: '#1e3820' },
+  { id: 'plate', key: 'seatPlate',   fallback: 'Plate',   swatch: '#1d222b' },
+];
 const palette = makeAxis({ storeKey: 'pth_theme', attr: 'data-theme', items: PALETTES, def: 'pokerth-light', titleKey: 'sectionPalette', titleFallback: 'Palette' });
 const table   = makeAxis({ storeKey: 'pth_table', attr: 'data-table', items: TABLES, def: 'pokerth', titleKey: 'sectionTable',   titleFallback: 'Table' });
 const deck    = makeAxis({ storeKey: 'pth_deck',  attr: 'data-deck',  def: 'pokerth-new',  items: DECKS,    titleKey: 'sectionDeck',    titleFallback: 'Cards' });
 const buttons = makeAxis({ storeKey: 'pth_buttons', attr: 'data-buttons', def: 'glossy', items: BUTTONS_ITEMS, titleKey: 'sectionButtons', titleFallback: 'Buttons' });
 const pucks   = makeAxis({ storeKey: 'pth_pucks',   attr: 'data-pucks',   def: 'pokerth-new', items: PUCKS_ITEMS,   titleKey: 'sectionPucks',   titleFallback: 'Pucks' });
-const AXES = [deck, palette, table, buttons, pucks];
+const seat    = makeAxis({ storeKey: 'pth_seat',    attr: 'data-seat',    def: '',            items: SEATS,         titleKey: 'sectionSeat',    titleFallback: 'Seats' });
+const AXES = [deck, palette, table, buttons, pucks, seat];
 
 // ── Presets (main themes) ───────────────────────────────────────────────────
 // A preset is just a named combo of axis ids. "Casino vert" = all defaults

@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+  sectionSeat: 'Mjesta', seatClassic: 'Klasično', seatPlate: 'Pločica',
     botDifficulty:'Težina botova', botEasy:'Lako', botMixed:'Mješovito', botNormal:'Normalno', botHard:'Teško',
 
     guestHint:'🌐 Igra kao gost na pokerth.net — bez računa.',

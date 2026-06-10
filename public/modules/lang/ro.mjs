@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+  sectionSeat: 'Locuri', seatClassic: 'Clasic', seatPlate: 'Plăcuță',
     botDifficulty:'Dificultatea boților', botEasy:'Ușor', botMixed:'Mixt', botNormal:'Normal', botHard:'Greu',
 
     guestHint:'🌐 Joc ca invitat pe pokerth.net — fără cont.',

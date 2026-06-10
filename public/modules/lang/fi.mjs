@@ -9,6 +9,7 @@ export const meta = {
 };
 
 export const strings = {
+  sectionSeat: 'Paikat', seatClassic: 'Klassinen', seatPlate: 'Nimikyltti',
     botDifficulty:'Bottien vaikeus', botEasy:'Helppo', botMixed:'Sekoitettu', botNormal:'Normaali', botHard:'Vaikea',
 
     guestHint:'🌐 Vieraspeli pokerth.net-palvelimella — ei tiliä.',
