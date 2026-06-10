@@ -5249,11 +5249,13 @@ html[data-seat="plate"] .seat.active .seat-plate {
 }
 html[data-seat="plate"] .seat-timer-badge { display: none; }
 
+/* Portrait : la plaque RESTE une plaque (meme design horizontal), juste plus
+   compacte pour tenir autour de la table sans chevauchement. Avatar + anneau
+   de temps inchanges (28px) ; on reduit surtout la largeur du nom -- .seat-info
+   reste en COLONNE (nom au-dessus du tapis), ce qui garde la plaque etroite. */
 @media (max-width: 600px) {
-  html[data-seat="plate"] .seat-plate,
-  html[data-seat="plate"] .seat-info,
-  html[data-seat="plate"] .seat-foot { display: contents; }
-  html[data-seat="plate"] .seat { max-width: 68px; }
-  html[data-seat="plate"] .seat-name { text-align: center; max-width: 68px; }
-  html[data-seat="plate"] .seat-timer-badge { display: block; }
+  html[data-seat="plate"] .seat-plate { gap: 5px; padding: 3px 7px 4px 3px; border-radius: 10px; }
+  html[data-seat="plate"] .seat-name { max-width: 46px; font-size: 0.6rem; }
+  html[data-seat="plate"] .seat-money { font-size: 0.62rem; }
+  html[data-seat="plate"] .seat-foot { gap: 4px; margin-top: 2px; }
 }
