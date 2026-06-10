@@ -3169,10 +3169,10 @@ body {
    with a dim border and a small "OUT" badge. The slight grayscale also
    defuses any colour cue (turn highlight, dealer chip) that may linger
    from a previous hand. */
-.seat.seat-out {
-  pointer-events: none;
-}
-/* Estomper le contenu, pas la pastille : l'opacite d'un parent plafonne
+/* .seat-out reste cliquable : pointer-events:auto + cursor:pointer herites
+   de .seat -> un tap ouvre la popup d'info du joueur elimine/absent, comme
+   en jeu (le handler de clic ne saute que .seat-ghost).
+   Estomper le contenu, pas la pastille : l'opacite d'un parent plafonne
    celle de ses enfants (::after compris) -> le badge resterait invisible.
    On grise avatar/nom/tapis/mise separement et on garde la pastille a
    pleine opacite, par-dessus, dans une couleur qui suit le theme. */
