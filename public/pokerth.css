@@ -5416,3 +5416,48 @@ html[data-seat="bar"] .seat.active .seat-info {
   border-color: var(--gold); box-shadow: 0 0 10px rgba(var(--gold-rgb), 0.45);
 }
 html[data-seat="bar"] .seat-timer-badge { display: none; }
+
+
+/* ════════════════════════════════════════════════════════════════════════
+   FENETRES FLOTTANTES — chat / journal / reactions deplacables & redimension-
+   nables. La classe .floating-win est posee par le JS UNIQUEMENT au-dessus du
+   seuil (>= 900 px ; chat = souris/pointer:fine en plus). En dessous, aucun de
+   ces styles ne s'applique : les panneaux restent en bandeau pleine largeur.
+   Position/taille pilotees en inline par le JS (left/top/width/height).
+   ════════════════════════════════════════════════════════════════════════ */
+#g-chat-panel.floating-win,
+#g-log-panel.floating-win,
+#g-reaction-panel.floating-win {
+  border: 1px solid var(--gold-dim);
+  border-radius: 10px;
+  box-shadow: 0 14px 36px rgba(0,0,0,0.62);
+  overflow: hidden;            /* coins arrondis nets + borne les poignees */
+}
+/* La barre de titre devient la poignee de deplacement. */
+.floating-win .g-chat-panel-header,
+.floating-win .react-panel-title { cursor: move; touch-action: none; -webkit-user-select: none; user-select: none; }
+.floating-win .g-chat-panel-header.win-dragging,
+.floating-win .react-panel-title.win-dragging { cursor: grabbing; }
+/* Le resize vertical historique (bandeau) ne sert plus en mode flottant. */
+.floating-win .chat-resize-handle { display: none !important; }
+/* Reactions : la grille remplit la fenetre, defile, et s'adapte a SA largeur
+   (et non plus a celle de l'ecran) via auto-fit. */
+#g-reaction-panel.floating-win { display: flex; flex-direction: column; }
+#g-reaction-panel.floating-win .react-grid {
+  grid-template-columns: repeat(auto-fit, minmax(44px, 1fr));
+  max-width: none; margin: 0;
+  flex: 1 1 auto; min-height: 0; overflow: auto;
+}
+/* 8 poignees de redimensionnement (bords + coins), injectees en JS.
+   Transparentes : seul le curseur signale la zone. Placees sur les bords
+   interieurs car le panneau est en overflow:hidden. */
+.win-rsz { position: absolute; z-index: 6; touch-action: none; }
+.win-rsz-n  { top: 0; left: 12px; right: 12px; height: 6px;  cursor: ns-resize; }
+.win-rsz-s  { bottom: 0; left: 12px; right: 12px; height: 6px;  cursor: ns-resize; }
+.win-rsz-e  { right: 0; top: 12px; bottom: 12px; width: 6px;  cursor: ew-resize; }
+.win-rsz-w  { left: 0; top: 12px; bottom: 12px; width: 6px;  cursor: ew-resize; }
+.win-rsz-ne { top: 0; right: 0; width: 13px; height: 13px; cursor: nesw-resize; }
+.win-rsz-nw { top: 0; left: 0; width: 13px; height: 13px; cursor: nwse-resize; }
+.win-rsz-se { bottom: 0; right: 0; width: 13px; height: 13px; cursor: nwse-resize; }
+.win-rsz-sw { bottom: 0; left: 0; width: 13px; height: 13px; cursor: nwse-resize; }
+.win-resizing, .win-resizing * { -webkit-user-select: none; user-select: none; }

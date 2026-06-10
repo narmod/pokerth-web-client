@@ -9439,6 +9439,148 @@ document.addEventListener('DOMContentLoaded', function() { setTimeout(autoScaleT
 // début de la carte « Créer une table ».
 var LOBBY_PANEL_GAP = 14;
 
+/* ════════════════════════════════════════════════════════════════════════
+   FENETRES FLOTTANTES (deplacables / redimensionnables) — chat, journal,
+   reactions. Active UNIQUEMENT par les gates :
+     _winGate()  : largeur >= 900 px (tablette + desktop)  -> journal/reactions
+     _chatGate() : >= 900 px ET souris (pointer:fine)       -> chat (desktop only)
+   Sous le seuil, les panneaux restent en bandeau pleine largeur (inchange) et
+   chat/journal y gardent leur resize vertical historique (makeChatResizable).
+   Patron pointeur calque sur makeChatResizable (setPointerCapture).
+   ════════════════════════════════════════════════════════════════════════ */
+function _winGate(){ try{ return window.matchMedia('(min-width:900px)').matches; }catch(e){ return false; } }
+function _chatGate(){ try{ return window.matchMedia('(min-width:900px) and (hover:hover) and (pointer:fine)').matches; }catch(e){ return false; } }
+function _placeWin(panel, left, top){
+  var w=panel.offsetWidth, h=panel.offsetHeight, vw=window.innerWidth, vh=window.innerHeight;
+  left=Math.max(4, Math.min(left, vw-w-4));
+  top =Math.max(4, Math.min(top,  vh-h-4));
+  panel.style.left=left+'px'; panel.style.top=top+'px';
+  panel.style.right='auto';   panel.style.bottom='auto';
+}
+function _saveWin(panel, key){
+  if(!key) return;
+  try{
+    var r=panel.getBoundingClientRect(), d={left:Math.round(r.left), top:Math.round(r.top)};
+    if(panel._winResizable){ d.width=Math.round(r.width); d.height=Math.round(r.height); }
+    localStorage.setItem(key, JSON.stringify(d));
+  }catch(e){}
+}
+function _restoreWin(panel, key){
+  if(!key) return false;
+  try{
+    var raw=localStorage.getItem(key); if(!raw) return false;
+    var d=JSON.parse(raw); if(!d || typeof d.left!=='number') return false;
+    if(d.width)  panel.style.width =d.width +'px';
+    if(d.height) panel.style.height=d.height+'px';
+    _placeWin(panel, d.left, d.top);
+    return true;
+  }catch(e){ return false; }
+}
+function makeWinDraggable(panel, handle, key){
+  if(!panel || !handle) return;
+  handle.style.cursor='move'; handle.style.touchAction='none';
+  if(panel._winDragWired) return;            // une seule fois par element
+  panel._winDragWired=true;
+  var sx=0, sy=0, sl=0, st=0, drag=false;
+  handle.addEventListener('pointerdown', function(e){
+    if(panel._winDrag===false) return;       // inerte hors mode flottant
+    if(e.target.closest && e.target.closest('button')) return; // boutons d'en-tete
+    drag=true;
+    var r=panel.getBoundingClientRect();
+    sx=e.clientX; sy=e.clientY; sl=r.left; st=r.top;
+    handle.classList.add('win-dragging');
+    try{ handle.setPointerCapture(e.pointerId); }catch(_){}
+    e.preventDefault();
+  });
+  handle.addEventListener('pointermove', function(e){
+    if(!drag) return;
+    _placeWin(panel, sl+(e.clientX-sx), st+(e.clientY-sy));
+  });
+  function end(e){
+    if(!drag) return; drag=false;
+    handle.classList.remove('win-dragging');
+    try{ handle.releasePointerCapture(e.pointerId); }catch(_){}
+    _saveWin(panel, key);
+  }
+  handle.addEventListener('pointerup', end);
+  handle.addEventListener('pointercancel', end);
+}
+function makeWinResizable(panel, key, minW, minH){
+  if(!panel || panel._winRszWired) return;
+  panel._winRszWired=true;
+  minW=minW||240; minH=minH||140;
+  ['n','s','e','w','ne','nw','se','sw'].forEach(function(dir){
+    var h=document.createElement('div');
+    h.className='win-rsz win-rsz-'+dir;
+    panel.appendChild(h);
+    var sx=0, sy=0, sw=0, sh=0, sl=0, st=0, on=false;
+    h.addEventListener('pointerdown', function(e){
+      on=true;
+      var r=panel.getBoundingClientRect();
+      sx=e.clientX; sy=e.clientY; sw=r.width; sh=r.height; sl=r.left; st=r.top;
+      panel.classList.add('win-resizing');
+      try{ h.setPointerCapture(e.pointerId); }catch(_){}
+      e.preventDefault(); e.stopPropagation();
+    });
+    h.addEventListener('pointermove', function(e){
+      if(!on) return;
+      var dx=e.clientX-sx, dy=e.clientY-sy, nl=sl, nt=st, nw=sw, nh=sh;
+      if(dir.indexOf('e')>=0) nw=sw+dx;
+      if(dir.indexOf('s')>=0) nh=sh+dy;
+      if(dir.indexOf('w')>=0){ nw=sw-dx; nl=sl+dx; }
+      if(dir.indexOf('n')>=0){ nh=sh-dy; nt=st+dy; }
+      if(nw<minW){ if(dir.indexOf('w')>=0) nl-=(minW-nw); nw=minW; }
+      if(nh<minH){ if(dir.indexOf('n')>=0) nt-=(minH-nh); nh=minH; }
+      var vw=window.innerWidth, vh=window.innerHeight;
+      nw=Math.min(nw, vw-8); nh=Math.min(nh, vh-8);
+      panel.style.width=nw+'px'; panel.style.height=nh+'px';
+      _placeWin(panel, nl, nt);
+    });
+    function end(e){
+      if(!on) return; on=false;
+      panel.classList.remove('win-resizing');
+      try{ h.releasePointerCapture(e.pointerId); }catch(_){}
+      _saveWin(panel, key);
+    }
+    h.addEventListener('pointerup', end);
+    h.addEventListener('pointercancel', end);
+  });
+}
+function _enableFloating(panel, opt){
+  if(!panel) return; opt=opt||{};
+  panel.classList.add('floating-win');
+  panel._winDrag=true; panel._winResizable=!!opt.resizable;
+  panel.style.setProperty('max-height','none','important');
+  var restored=_restoreWin(panel, opt.key);
+  if(!restored){
+    if(opt.resizable){
+      if(!panel.style.width) panel.style.width=(opt.defW||340)+'px';
+      panel.style.height=(opt.defH||300)+'px';
+    }
+    _placeWin(panel, (opt.defLeft!=null?opt.defLeft:16), (opt.defTop!=null?opt.defTop:56));
+  }
+  if(opt.handle) makeWinDraggable(panel, opt.handle, opt.key);
+  if(opt.resizable) makeWinResizable(panel, opt.key, opt.minW, opt.minH);
+}
+function _disableFloating(panel){
+  if(!panel || !panel.classList.contains('floating-win')) return;
+  panel.classList.remove('floating-win');
+  panel._winDrag=false; panel._winResizable=false;
+  panel.style.removeProperty('max-height');
+  ['left','top','right','bottom','width','height'].forEach(function(p){ panel.style[p]=''; });
+  var hs=panel.querySelectorAll('.win-rsz');
+  for(var i=0;i<hs.length;i++) hs[i].remove();
+  panel._winRszWired=false;   // re-injectable si on repasse en flottant
+}
+window.addEventListener('resize', function(){
+  ['g-chat-panel','g-log-panel','g-reaction-panel'].forEach(function(id){
+    var p=document.getElementById(id);
+    if(p && p.classList.contains('floating-win') && p.style.display!=='none'){
+      var r=p.getBoundingClientRect(); _placeWin(p, r.left, r.top);
+    }
+  });
+});
+
 function makeChatResizable(panel, msgs, onResize) {
   if (!panel || !msgs) return;
   panel._onResize = onResize || null;   // callback de suivi (mis à jour à chaque appel)
@@ -9787,7 +9929,8 @@ function toggleGameChat() {
     btn.style.color       = open ? 'var(--gold)' : '';
   }
   if (open) {
-    makeChatResizable(panel, document.getElementById('g-chat-msgs'));
+    if (_chatGate()) { _enableFloating(panel, { key:'pth_winpos_chat', handle: panel.querySelector('.g-chat-panel-header'), resizable:true, defW:340, defH:300, defLeft:16, defTop:56, minW:240, minH:160 }); }
+    else { _disableFloating(panel); makeChatResizable(panel, document.getElementById('g-chat-msgs')); }
     if (typeof clearUnreadChat === 'function') clearUnreadChat();
     var m = document.getElementById('g-chat-msgs');
     if (m) m.scrollTop = m.scrollHeight;
@@ -9817,6 +9960,7 @@ function toggleReactionPanel() {
   if (!panel) return;
   var open = panel.style.display === 'none' || panel.style.display === '';
   panel.style.display = open ? 'flex' : 'none';
+  if (open) { if (_winGate()) { _enableFloating(panel, { key:'pth_winpos_react', handle: panel.querySelector('.react-panel-title'), resizable:true, defW:320, defH:300, defLeft:96, defTop:136, minW:240, minH:160 }); } else { _disableFloating(panel); } }
   if (btn) {
     btn.style.background  = open ? 'rgba(var(--gold-rgb),0.2)' : '';
     btn.style.borderColor = open ? 'var(--gold-dim)' : '';
@@ -9840,7 +9984,8 @@ function toggleLog() {
   if (btn) btn.style.color       = isHidden ? 'var(--gold)' : '';
   if (isHidden) {
     // Poignée de redimensionnement, identique au chat (glisser pour étendre).
-    makeChatResizable(panel, document.getElementById('g-log-body'));
+    if (_winGate()) { _enableFloating(panel, { key:'pth_winpos_log', handle: panel.querySelector('.g-chat-panel-header'), resizable:true, defW:340, defH:240, defLeft:56, defTop:96, minW:240, minH:140 }); }
+    else { _disableFloating(panel); makeChatResizable(panel, document.getElementById('g-log-body')); }
     var lb = document.getElementById('g-log-body');
     if (lb) lb.scrollTop = 0; // le plus récent est en haut (liste inversée)
   }
@@ -9998,7 +10143,7 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.2.384'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.2.385'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

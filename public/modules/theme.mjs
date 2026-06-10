@@ -628,6 +628,33 @@ function _render() {
   }
 }
 
+function _makeThemeDraggable(panel, handle){
+  if(!panel || !handle) return;
+  handle.style.cursor='move'; handle.style.touchAction='none';
+  var sx=0, sy=0, sl=0, st=0, drag=false;
+  handle.addEventListener('pointerdown', function(e){
+    if(e.target.closest && e.target.closest('button')) return;
+    drag=true;
+    var r=panel.getBoundingClientRect();
+    sx=e.clientX; sy=e.clientY; sl=r.left; st=r.top;
+    try{ handle.setPointerCapture(e.pointerId); }catch(_){}
+    e.preventDefault();
+  });
+  handle.addEventListener('pointermove', function(e){
+    if(!drag) return;
+    var w=panel.offsetWidth, h=panel.offsetHeight, vw=window.innerWidth, vh=window.innerHeight;
+    panel.style.left=Math.max(4, Math.min(sl+(e.clientX-sx), vw-w-4))+'px';
+    panel.style.top =Math.max(4, Math.min(st+(e.clientY-sy), vh-h-4))+'px';
+  });
+  function end(e){
+    if(!drag) return; drag=false;
+    try{ handle.releasePointerCapture(e.pointerId); }catch(_){}
+    try{ var r=panel.getBoundingClientRect(); localStorage.setItem('pth_winpos_theme', JSON.stringify({left:Math.round(r.left), top:Math.round(r.top)})); }catch(_){}
+  }
+  handle.addEventListener('pointerup', end);
+  handle.addEventListener('pointercancel', end);
+}
+
 function openThemePanel(ev) {
   try { if (ev && ev.stopPropagation) ev.stopPropagation(); } catch (e) {}
   closeThemePanel();
@@ -682,6 +709,19 @@ function openThemePanel(ev) {
   }
   panel.style.left = Math.max(8, Math.min(left, vw - mw - 8)) + 'px';
   panel.style.top = Math.max(8, Math.min(top, vh - mh - 8)) + 'px';
+
+  if (window.matchMedia && window.matchMedia('(min-width:900px)').matches) {
+    try {
+      var _saved = localStorage.getItem('pth_winpos_theme');
+      if (_saved) { var _d = JSON.parse(_saved);
+        if (_d && typeof _d.left === 'number') {
+          var _mw = panel.offsetWidth, _mh = panel.offsetHeight;
+          panel.style.left = Math.max(8, Math.min(_d.left, vw - _mw - 8)) + 'px';
+          panel.style.top  = Math.max(8, Math.min(_d.top,  vh - _mh - 8)) + 'px';
+        } }
+    } catch (e) {}
+    _makeThemeDraggable(panel, header);
+  }
 
   document.addEventListener('keydown', _panelEsc);
 }
