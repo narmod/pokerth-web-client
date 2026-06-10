@@ -72,43 +72,37 @@ This project is a **web frontend** that connects to any PokerTH server directly 
 ## Screenshots
 
 <p align="center">
-  <img src="docs/screenshots/01-connect.png" alt="Connect screen" width="260"/>
+  <img src="docs/screenshots/01-connect-dark.png" alt="Connect screen (dark theme)" width="260"/>
   <br/>
-  <em>Connect screen — pick a login mode and join in seconds</em>
+  <em>Connect screen — pick a login mode and join in seconds (light &amp; dark themes included)</em>
 </p>
 
 <div align="center">
 
 <table>
   <tr>
-    <td align="center"><strong>Lobby &amp; chat</strong></td>
-    <td align="center"><strong>Profile &amp; avatar</strong></td>
+    <td align="center"><strong>Create a table — light</strong></td>
+    <td align="center"><strong>Create a table — dark</strong></td>
   </tr>
   <tr>
-    <td align="center"><img src="docs/screenshots/02-lobby.png" alt="Lobby and chat" width="240"/></td>
-    <td align="center"><img src="docs/screenshots/07-avatar.png" alt="Profile and avatar" width="240"/></td>
+    <td align="center"><img src="docs/screenshots/04-create-light.png" alt="Create a table (light theme)" width="240"/></td>
+    <td align="center"><img src="docs/screenshots/05-create-dark.png" alt="Create a table (dark theme)" width="240"/></td>
   </tr>
   <tr>
-    <td align="center"><strong>Game table</strong></td>
-    <td align="center"><strong>Action bar &amp; hand strength</strong></td>
-  </tr>
-  <tr>
-    <td align="center"><img src="docs/screenshots/03-game.png" alt="Game table" width="240"/></td>
-    <td align="center"><img src="docs/screenshots/04-actions.png" alt="Action bar and hand strength" width="240"/></td>
-  </tr>
-  <tr>
-    <td align="center"><strong>Showdown &amp; results</strong></td>
+    <td align="center"><strong>Connect — light theme</strong></td>
     <td align="center"><strong>Table menu &amp; options</strong></td>
   </tr>
   <tr>
-    <td align="center"><img src="docs/screenshots/05-win.png" alt="Showdown and results" width="240"/></td>
+    <td align="center"><img src="docs/screenshots/02-connect-light.png" alt="Connect screen (light theme)" width="240"/></td>
     <td align="center"><img src="docs/screenshots/06-menu.png" alt="Table menu and options" width="240"/></td>
   </tr>
   <tr>
-    <td align="center" colspan="2"><strong>Avatar picker</strong></td>
+    <td align="center"><strong>Lobby &amp; chat</strong></td>
+    <td align="center"><strong>Avatar picker</strong></td>
   </tr>
   <tr>
-    <td align="center" colspan="2"><img src="docs/screenshots/08-avatar-picker.png" alt="Avatar picker" width="240"/></td>
+    <td align="center"><img src="docs/screenshots/03-lobby-chat.png" alt="Lobby and chat" width="240"/></td>
+    <td align="center"><img src="docs/screenshots/07-avatar-picker.png" alt="Avatar picker" width="240"/></td>
   </tr>
 </table>
 
