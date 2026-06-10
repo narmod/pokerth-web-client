@@ -429,6 +429,8 @@
       .then(function(r){return r.json();}).then(function(d){ if(d.ok)refresh(); else say('Remove: '+(d.error||'error'),'err'); }).catch(function(){ say('Remove failed \u2014 network error.','err'); }); }
   function togglePkg(k,id,wasOn){ api('/admin/pkg-toggle',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({kind:k,id:id,enabled:!wasOn,token:tok()})})
     .then(function(r){return r.json();}).then(function(d){ if(d&&d.ok){ say((d.disabled?'Hidden from players':'Visible to players')+' \u2014 they\u2019ll see it on reload.','ok'); refresh(); } else say('Toggle: '+((d&&d.error)||'error'),'err'); }).catch(function(){ say('Toggle failed \u2014 network error.','err'); }); }
+  function togglePkgFull(id,wasFull){ api('/admin/pkg-full',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id:id,full:!wasFull,token:tok()})})
+    .then(function(r){return r.json();}).then(function(d){ if(d&&d.ok){ say(d.full?'Full image set (no frame).':'Classic oval table set.','ok'); refresh(); } else say('Full image: '+((d&&d.error)||'error'),'err'); }).catch(function(){ say('Full image failed - network error.','err'); }); }
   function renderList(el,arr,k){ if(!arr||!arr.length){el.innerHTML='<div class="empty">(none)</div>';return;} el.innerHTML='';
     arr.forEach(function(p){ var row=document.createElement('div');row.className='row'; if(p.disabled) row.style.opacity='0.55';
       row.innerHTML='<div class="nm"><b></b><span></span></div>';
@@ -437,7 +439,8 @@
       var tg=document.createElement('button');tg.className='toggle '+(on?'on':'off');tg.textContent=on?'On':'Off';tg.title=on?'Visible to players \u2014 tap to hide':'Hidden from players \u2014 tap to show';tg.addEventListener('click',function(){togglePkg(k,p.id,on);});
       var use=document.createElement('button');use.className='use';use.textContent='Use';use.addEventListener('click',function(){useNow(k,p.id);});
       var del=document.createElement('button');del.className='del';del.textContent='Remove';del.addEventListener('click',function(){removePkg(k,p.id,p.name||p.id);});
-      row.appendChild(tg); if(k!=='theme') row.appendChild(use); if(!p.builtin) row.appendChild(del); el.appendChild(row); }); }
+      var fl=null; if(k==='table'){ var isF=!!p.full; fl=document.createElement('button'); fl.className='toggle '+(isF?'on':'off'); fl.textContent=isF?'Full':'Frame'; fl.title=isF?'Full-bleed image, no oval frame - tap to restore the frame':'Classic oval table - tap to show the full image'; fl.addEventListener('click',function(){togglePkgFull(p.id,isF);}); }
+      row.appendChild(tg); if(fl) row.appendChild(fl); if(k!=='theme') row.appendChild(use); if(!p.builtin) row.appendChild(del); el.appendChild(row); }); }
   var lastPkgs={tables:[],decks:[],themes:[]};
   function pkgMatch(p,q){ return !q || (((p.name||'')+' '+(p.id||'')).toLowerCase().indexOf(q)>=0); }
   function drawPkgs(){ var q=(($('pkgFilter')&&$('pkgFilter').value)||'').trim().toLowerCase();
