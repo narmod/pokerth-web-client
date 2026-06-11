@@ -5506,3 +5506,24 @@ html[data-seat="bar"] .seat-timer-badge { display: none; }
 .hands-floatable { display: flex; flex-direction: column; }
 .hands-floatable .hands-title { flex: 0 0 auto; }
 .hands-floatable .hands-scroll { flex: 1 1 auto; min-height: 0; overflow-y: auto; overflow-x: hidden; -webkit-overflow-scrolling: touch; }
+
+
+/* ════════════════════════════════════════════════════════════════════════
+   Raccourcis clavier discrets dans les boutons d'action — DESKTOP UNIQUEMENT
+   (souris : hover + pointeur fin) ; masques sur tablette/telephone tactiles.
+   Les touches F / C / R / A (+ Espace pour Call/Check) sont DEJA actives ;
+   ceci ne fait que les afficher. Pave encadre en haut a droite, dessine en
+   currentColor (s'adapte a la couleur de chaque bouton) et attenue.
+   ════════════════════════════════════════════════════════════════════════ */
+.act-key { display: none; }
+@media (hover: hover) and (pointer: fine) {
+  .btn-action { position: relative; }
+  .act-key {
+    display: inline-block;
+    position: absolute; top: 3px; right: 4px;
+    font-family: var(--ff-mono); font-size: 0.6rem; line-height: 1;
+    font-weight: 600; letter-spacing: 0;
+    padding: 1px 4px; border: 1px solid currentColor; border-radius: 3px;
+    opacity: 0.4; pointer-events: none;
+  }
+}
