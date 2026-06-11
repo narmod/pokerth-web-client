@@ -975,6 +975,24 @@ function handleAdmin(req, res, reqPathOnly, query) {
       return adminJson(res, 200, { ok: true, id: id, active: enabled });
     });
   }
+  if (reqPathOnly === '/admin/music-edit' && req.method === 'POST') {
+    return readJsonBody(req, function (d) {
+      if (!adminAuthed(query, d && d.token)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
+      var id = slugId(d && d.id);
+      if (!id) return adminJson(res, 400, { ok: false, error: 'id required' });
+      if (musicBuiltins().some(function (t) { return t && t.id === id; })) return adminJson(res, 400, { ok: false, error: 'built-in track cannot be edited' });
+      var arr = musicAdminTracks(), t = arr.find(function (x) { return x && x.id === id; });
+      if (!t) return adminJson(res, 404, { ok: false, error: 'not found' });
+      var title = musicStr(d && d.title, 120);
+      if (!title) return adminJson(res, 400, { ok: false, error: 'title required' });
+      t.title = title;
+      t.artist = musicStr(d && d.artist, 120);
+      t.licenseUrl = musicStr(d && d.licenseUrl, 300);
+      t.credit = musicStr(d && d.credit, 300) || (title + (t.artist ? ' by ' + t.artist : ''));
+      _adminConfig.musicTracks = arr; saveAdminConfig();
+      return adminJson(res, 200, { ok: true, id: id });
+    });
+  }
   if (reqPathOnly === '/admin/update' && req.method === 'POST') {
     return readJsonBody(req, function (d) {
       if (!adminAuthed(query, d && d.token)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });

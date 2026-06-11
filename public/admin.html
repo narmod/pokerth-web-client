@@ -503,13 +503,35 @@
       .then(function(r){return r.json();}).then(function(d){ if(d.ok)mzRefresh(); else mzSay('Remove: '+(d.error||'error'),'err'); }).catch(function(){ mzSay('Remove failed \u2014 network error.','err'); }); }
   function mzToggle(id,wasOn){ api('/admin/music-toggle',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id:id,enabled:!wasOn,token:tok()})})
     .then(function(r){return r.json();}).then(function(d){ if(d&&d.ok)mzRefresh(); else mzSay('Toggle: '+((d&&d.error)||'error'),'err'); }).catch(function(){ mzSay('Toggle failed \u2014 network error.','err'); }); }
+  var mzEditId=null;
+  function mzRenderEditor(row,p){
+    row.style.display='block';
+    var inputs={};
+    [['Title','title',p.title,'Track title (required)'],['Artist','artist',p.artist,'Artist / composer'],['Credit','credit',p.credit,'Credit line (auto-filled if blank)'],['License URL','licenseUrl',p.licenseUrl,'https://... (optional)']].forEach(function(f){
+      var r=document.createElement('div'); r.style.cssText='display:flex;align-items:center;gap:10px;margin:4px 0';
+      var s=document.createElement('span'); s.textContent=f[0]; s.style.cssText='min-width:86px;font-size:.78rem';
+      var inp=document.createElement('input'); inp.maxLength=300; inp.value=f[2]||''; inp.placeholder=f[3]; inp.autocomplete='off'; inp.style.cssText='flex:1;min-width:0';
+      inputs[f[1]]=inp; r.appendChild(s); r.appendChild(inp); row.appendChild(r); });
+    var bar=document.createElement('div'); bar.style.cssText='margin-top:6px;display:flex;gap:8px';
+    var sv=document.createElement('button'); sv.className='use'; sv.textContent='Save'; sv.addEventListener('click',function(){ mzEditSave(p.id,inputs); });
+    var cn=document.createElement('button'); cn.className='use'; cn.textContent='Cancel'; cn.addEventListener('click',function(){ mzEditId=null; mzRefresh(); });
+    bar.appendChild(sv); bar.appendChild(cn); row.appendChild(bar);
+  }
+  function mzEditSave(id,inputs){
+    var title=(inputs.title.value||'').trim();
+    if(!title){ mzSay('Title is required.','err'); inputs.title.focus(); return; }
+    api('/admin/music-edit',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id:id,token:tok(),title:title,artist:(inputs.artist.value||'').trim(),credit:(inputs.credit.value||'').trim(),licenseUrl:(inputs.licenseUrl.value||'').trim()})})
+      .then(function(r){return r.json();}).then(function(d){ if(d.ok){ mzEditId=null; mzSay('Saved.','ok'); mzRefresh(); } else mzSay('Save: '+(d.error||'error'),'err'); }).catch(function(){ mzSay('Save failed - network error.','err'); });
+  }
   function mzRenderList(arr){ var el=$('mzList'); if(!el)return; if(!arr||!arr.length){ el.innerHTML='<div class="empty">(no tracks)</div>'; return; } el.innerHTML='';
-    arr.forEach(function(p){ var on=p.active!==false; var row=document.createElement('div'); row.className='row'; if(!on)row.style.opacity='0.55';
+    arr.forEach(function(p){ var on=p.active!==false; var row=document.createElement('div'); row.className='row';
+      if(p.id===mzEditId && !p.builtin){ mzRenderEditor(row,p); el.appendChild(row); return; }
+      if(!on)row.style.opacity='0.55';
       row.innerHTML='<div class="nm"><b></b><span></span></div>';
       row.querySelector('b').textContent=p.title||p.id; row.querySelector('span').textContent=(p.artist||'')+(p.artist?' \u00b7 ':'')+p.id+(p.builtin?' \u00b7 built-in':'');
       var tg=document.createElement('button'); tg.className='toggle '+(on?'on':'off'); tg.textContent=on?'On':'Off'; tg.title=on?'Audible to players \u2014 tap to hide':'Hidden \u2014 tap to show'; tg.addEventListener('click',function(){mzToggle(p.id,on);});
       row.appendChild(tg);
-      if(!p.builtin){ var del=document.createElement('button'); del.className='del'; del.textContent='Remove'; del.addEventListener('click',function(){mzRemove(p.id,p.title||p.id);}); row.appendChild(del); }
+      if(!p.builtin){ var ed=document.createElement('button'); ed.className='use'; ed.textContent='Edit'; ed.addEventListener('click',function(){ mzEditId=p.id; mzRenderList(arr); }); row.appendChild(ed); var del=document.createElement('button'); del.className='del'; del.textContent='Remove'; del.addEventListener('click',function(){mzRemove(p.id,p.title||p.id);}); row.appendChild(del); }
       el.appendChild(row); }); }
   function mzRefresh(){ api('/admin/music-list?t='+Date.now()).then(function(r){return r.json();}).then(function(d){ if(d.ok)mzRenderList(d.tracks); else mzRenderList([]); }).catch(function(){ var el=$('mzList'); if(el)el.innerHTML='<div class="empty">Could not load tracks.</div>'; }); }
   (function(){ var d=$('mzDrop'), f=$('mzFile'); if(d&&f){ d.addEventListener('click',function(){f.click();}); d.addEventListener('dragover',function(e){e.preventDefault();d.classList.add('hot');}); d.addEventListener('dragleave',function(){d.classList.remove('hot');}); d.addEventListener('drop',function(e){e.preventDefault();d.classList.remove('hot');if(e.dataTransfer.files[0])mzUpload(e.dataTransfer.files[0]);}); f.addEventListener('change',function(){if(f.files[0])mzUpload(f.files[0]);}); } })();
