@@ -1,6 +1,0 @@
-{
-  "name": "Sleek",
-  "swatch": "#4f93e0",
-  "pucks": { "dealer": "dealer.svg", "sb": "sb.svg", "bb": "bb.svg" },
-  "buttonImages": { "fold": "btn-fold.svg", "check": "btn-check.svg", "call": "btn-call.svg", "raise": "btn-raise.svg", "allin": "btn-allin.svg" }
-}
