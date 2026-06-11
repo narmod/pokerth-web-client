@@ -42,6 +42,15 @@ let _loaded = false;
 let _bodyEl = null;
 let _repeat = 'one';   // 'one' = loop track | 'all' = loop playlist | 'off' = play once
 
+// Web Audio routing. On iOS/WebKit, HTMLMediaElement.volume is read-only, so
+// `audio.volume = x` is silently ignored (volume is hardware-only there). Routing
+// playback through a GainNode lets us control the level on EVERY platform. The
+// graph is built lazily on the first user gesture: createMediaElementSource can
+// run only once per element, and on iOS the AudioContext must be created/resumed
+// from inside a real interaction. If Web Audio is unavailable we fall back to the
+// element's own volume (the pre-existing behaviour, fine off iOS).
+let _ctx = null, _srcNode = null, _gain = null, _waReady = false, _waFailed = false;
+
 function _t(key, fallback) {
   try { if (typeof window.t === 'function') { var s = window.t(key); if (s && s !== key) return s; } } catch (e) {}
   return fallback;
@@ -57,7 +66,7 @@ function getVolume() { try { var v = localStorage.getItem(LS_VOL); return v == n
 function setVolume(v) {
   v = _clampVol(v);
   try { localStorage.setItem(LS_VOL, String(v)); } catch (e) {}
-  if (_audio) try { _audio.volume = v; } catch (e) {}
+  _applyVol(v);
   _render();
 }
 
@@ -87,6 +96,37 @@ function _onEnded() {
   if (_audio) { try { _audio.currentTime = 0; } catch (e) {} }
   _render();
 }
+
+// Route the desired volume to the gain node once the graph exists, otherwise to
+// the element directly (no-op on iOS, but the gain node takes over on first play).
+function _applyVol(v) {
+  if (_waReady && _gain) { try { _gain.gain.value = v; } catch (e) {} }
+  else if (_audio)       { try { _audio.volume = v; } catch (e) {} }
+}
+// Build the AudioContext → MediaElementSource → GainNode → destination graph once.
+function _ensureWebAudio() {
+  if (_waReady || _waFailed) return _waReady;
+  try {
+    var AC = window.AudioContext || window.webkitAudioContext;
+    if (!AC || !_audio) { _waFailed = true; return false; }
+    _ctx = new AC();
+    _srcNode = _ctx.createMediaElementSource(_audio);   // once per element only
+    _gain = _ctx.createGain();
+    _gain.gain.value = getVolume();
+    _srcNode.connect(_gain); _gain.connect(_ctx.destination);
+    try { _audio.volume = 1; } catch (e) {}   // element at unity; the gain attenuates (works on iOS)
+    _waReady = true;
+    return true;
+  } catch (e) { _waFailed = true; return false; }
+}
+function _resumeCtx() {
+  if (_ctx && (_ctx.state === 'suspended' || _ctx.state === 'interrupted')) {
+    try { var p = _ctx.resume(); if (p && p.catch) p.catch(function () {}); } catch (e) {}
+  }
+}
+// Create + unlock the audio graph synchronously inside a user gesture (iOS needs
+// the context created/resumed from a real interaction, before any await).
+function _unlockAudio() { _el(); _ensureWebAudio(); _resumeCtx(); }
 
 async function loadManifest(force) {
   if (_loaded && !force) return _tracks;
@@ -118,7 +158,8 @@ async function play(id) {
     a.src = t.file;
     try { localStorage.setItem(LS_TRACK, t.id); } catch (e) {}
   }
-  try { a.volume = getVolume(); } catch (e) {}
+  _ensureWebAudio(); _resumeCtx();        // build/unlock the audio graph (covers programmatic play too)
+  _applyVol(getVolume());
   try { await a.play(); } catch (e) { /* gesture/load issue — UI reflects paused */ }
   _render();
 }
@@ -201,6 +242,7 @@ function _wire() {
   var sel = _bodyEl.querySelector('#music-sel');
   if (sel) {
     sel.addEventListener('change', function () {
+      _unlockAudio();
       var id = sel.value;
       if (isPlaying()) { play(id); }     // switch track, keep playing (change = user gesture)
       else { _curId = id; _render(); }   // just arm the selection
@@ -208,6 +250,7 @@ function _wire() {
   }
   _bodyEl.querySelectorAll('[data-mact]').forEach(function (btn) {
     btn.addEventListener('click', function () {
+      _unlockAudio();                      // iOS: create/resume the AudioContext inside the gesture
       var a = btn.getAttribute('data-mact');
       if (a === 'toggle') toggleTrack();
       else if (a === 'next') next();
@@ -222,7 +265,7 @@ function _wire() {
     rng.addEventListener('input', function () {
       var v = _clampVol((parseInt(rng.value, 10) || 0) / 100);
       var val = _bodyEl.querySelector('.music-vol-val'); if (val) val.textContent = Math.round(v * 100) + '%';
-      if (_audio) try { _audio.volume = v; } catch (e) {}
+      _applyVol(v);
       try { localStorage.setItem(LS_VOL, String(v)); } catch (e) {}
     });
   }
