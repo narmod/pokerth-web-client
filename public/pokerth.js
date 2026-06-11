@@ -312,6 +312,28 @@ function getAvatarColor(pid) {
 // RACCOURCIS CLAVIER
 // F=Fold  C/Space=Call/Check  R=Raise  A=All-in  Esc=annule
 // ═══════════════════════════════════════════════════════════
+// Detection d'un clavier physique (pour afficher les paves de raccourci).
+// Aucune API ne dit "un clavier est branche". Heuristique fiable : un keydown
+// alors qu'AUCUN champ texte n'est focalise ne peut pas venir d'un clavier a
+// l'ecran (ceux-ci n'apparaissent que pour un input focalise). Des qu'on en voit
+// un, on revele les paves (classe sur <body>) et on memorise. Desktop : deja
+// affiche via le gate hover/pointer. Tablette/tel. AVEC clavier : apparait des la
+// 1re frappe, puis memorise.
+(function(){
+  function _markKb(){
+    try{ if(document.body) document.body.classList.add('has-keyboard'); }catch(e){}
+    try{ localStorage.setItem('pth_has_keyboard','1'); }catch(e){}
+  }
+  function _applyKb(){ try{ if(localStorage.getItem('pth_has_keyboard')==='1') _markKb(); }catch(e){} }
+  if(document.body) _applyKb(); else document.addEventListener('DOMContentLoaded', _applyKb);
+  document.addEventListener('keydown', function(e){
+    try{ if(document.body && document.body.classList.contains('has-keyboard')) return; }catch(_){}
+    var tg=e.target||{}, tag=(tg.tagName||'').toLowerCase();
+    if(tag==='input'||tag==='textarea'||tg.isContentEditable) return;
+    _markKb();
+  }, true);
+})();
+
 document.addEventListener('keydown', function(e) {
   // Ne pas intercepter si on tape dans un input/textarea
   var tag = (e.target.tagName || '').toLowerCase();
@@ -10237,7 +10259,7 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.2.391'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.2.392'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

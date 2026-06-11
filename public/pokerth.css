@@ -5515,15 +5515,19 @@ html[data-seat="bar"] .seat-timer-badge { display: none; }
    ceci ne fait que les afficher. Pave encadre en haut a droite, dessine en
    currentColor (s'adapte a la couleur de chaque bouton) et attenue.
    ════════════════════════════════════════════════════════════════════════ */
-.act-key { display: none; }
+.act-key {
+  display: none;
+  position: absolute; top: 3px; right: 4px;
+  font-family: var(--ff-mono); font-size: 0.6rem; line-height: 1;
+  font-weight: 600; letter-spacing: 0;
+  padding: 1px 4px; border: 1px solid currentColor; border-radius: 3px;
+  opacity: 0.4; pointer-events: none;
+}
+/* Revele : (a) desktop a la souris (hover + pointeur fin), tout de suite */
 @media (hover: hover) and (pointer: fine) {
   .btn-action { position: relative; }
-  .act-key {
-    display: inline-block;
-    position: absolute; top: 3px; right: 4px;
-    font-family: var(--ff-mono); font-size: 0.6rem; line-height: 1;
-    font-weight: 600; letter-spacing: 0;
-    padding: 1px 4px; border: 1px solid currentColor; border-radius: 3px;
-    opacity: 0.4; pointer-events: none;
-  }
+  .act-key { display: inline-block; }
 }
+/* (b) ou des qu'un clavier physique est detecte (classe posee par le JS) */
+body.has-keyboard .btn-action { position: relative; }
+body.has-keyboard .act-key { display: inline-block; }
