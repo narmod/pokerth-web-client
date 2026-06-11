@@ -717,18 +717,29 @@ function uniqueMusicId(base) {
   return id;
 }
 // Composed list for the admin UI: built-ins (flagged, with hidden→inactive) then admin tracks.
+function musicOrderList() { var a = _adminConfig && _adminConfig.musicOrder; return Array.isArray(a) ? a : []; }
+// Apply the admin-defined playlist order: ids listed in musicOrder come first in
+// that order; anything not listed keeps its natural position, appended at the end.
+function musicSort(list) {
+  var ord = musicOrderList();
+  return list.map(function (t, i) { return { t: t, i: i }; }).sort(function (a, b) {
+    var ia = ord.indexOf(a.t.id); if (ia < 0) ia = 1e9 + a.i;
+    var ib = ord.indexOf(b.t.id); if (ib < 0) ib = 1e9 + b.i;
+    return ia - ib;
+  }).map(function (x) { return x.t; });
+}
 function musicListForAdmin() {
   var hidden = musicHiddenSet();
   var bi = musicBuiltins().map(function (t) { return Object.assign({}, t, { builtin: true, active: hidden.indexOf(t.id) < 0 }); });
   var ad = musicAdminTracks().map(function (t) { return Object.assign({}, t, { builtin: false, active: t.active !== false }); });
-  return bi.concat(ad);
+  return musicSort(bi.concat(ad));
 }
 // Composed list served to players: active built-ins + active admin tracks, re-ordered.
 function musicListForClient() {
   var hidden = musicHiddenSet();
   var bi = musicBuiltins().filter(function (t) { return t && t.id && hidden.indexOf(t.id) < 0; });
   var ad = musicAdminTracks().filter(function (t) { return t && t.active !== false; });
-  return bi.concat(ad).map(function (t, i) { return Object.assign({}, t, { order: i + 1 }); });
+  var _c = musicSort(bi.concat(ad)); return _c.map(function (t, i) { return Object.assign({}, t, { order: i + 1 }); });
 }
 
 function handleAdmin(req, res, reqPathOnly, query) {
@@ -991,6 +1002,16 @@ function handleAdmin(req, res, reqPathOnly, query) {
       t.credit = musicStr(d && d.credit, 300) || (title + (t.artist ? ' by ' + t.artist : ''));
       _adminConfig.musicTracks = arr; saveAdminConfig();
       return adminJson(res, 200, { ok: true, id: id });
+    });
+  }
+  if (reqPathOnly === '/admin/music-order' && req.method === 'POST') {
+    return readJsonBody(req, function (d) {
+      if (!adminAuthed(query, d && d.token)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
+      if (!d || !Array.isArray(d.order)) return adminJson(res, 400, { ok: false, error: 'order array required' });
+      var known = musicAllIds(), clean = [];
+      d.order.forEach(function (x) { var id = slugId(x); if (known[id] && clean.indexOf(id) < 0) clean.push(id); });
+      _adminConfig.musicOrder = clean; saveAdminConfig();
+      return adminJson(res, 200, { ok: true, order: clean });
     });
   }
   if (reqPathOnly === '/admin/update' && req.method === 'POST') {
