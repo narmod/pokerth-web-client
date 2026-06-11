@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+    musicTooltip:'Muzika', musicPanelTitle:'Muzika', musicNowPlaying:'Dabar groja', musicNoTracks:'Nėra takelių', musicVolume:'Garsumas', musicPlay:'Groti', musicPause:'Pristabdyti', musicStop:'Stabdyti', musicNext:'Kitas', musicPrev:'Ankstesnis', musicTrack:'Takelis', musicRepeat:'Kartoti', musicRepeatOne:'Kartoti takelį', musicRepeatAll:'Kartoti grojaraštį', musicRepeatOff:'Groti vieną kartą',
   seatCard: 'Card', seatCompact: 'Compact', seatBar: 'Bar',
   seatChip: 'Chip',
   sectionSeat: 'Vietos', seatClassic: 'Classic', seatPlate: 'Plate',

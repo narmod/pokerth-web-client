@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+    musicTooltip:'Musiek', musicPanelTitle:'Musiek', musicNowPlaying:'Speel nou', musicNoTracks:'Geen snitte beskikbaar nie', musicVolume:'Volume', musicPlay:'Speel', musicPause:'Onderbreek', musicStop:'Stop', musicNext:'Volgende', musicPrev:'Vorige', musicTrack:'Snit', musicRepeat:'Herhaal', musicRepeatOne:'Herhaal snit', musicRepeatAll:'Herhaal speellys', musicRepeatOff:'Speel een keer',
   seatCard: 'Card', seatCompact: 'Compact', seatBar: 'Bar',
   seatChip: 'Chip',
   sectionSeat: 'Sitplekke', seatClassic: 'Classic', seatPlate: 'Plate',

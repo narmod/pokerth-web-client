@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+    musicTooltip:'Музика', musicPanelTitle:'Музика', musicNowPlaying:'Сада свира', musicNoTracks:'Нема доступних песама', musicVolume:'Јачина звука', musicPlay:'Пусти', musicPause:'Пауза', musicStop:'Заустави', musicNext:'Следећа', musicPrev:'Претходна', musicTrack:'Песма', musicRepeat:'Понављање', musicRepeatOne:'Понови песму', musicRepeatAll:'Понови листу', musicRepeatOff:'Пусти једном',
   seatCard: 'Card', seatCompact: 'Compact', seatBar: 'Bar',
   seatChip: 'Chip',
   sectionSeat: 'Места', seatClassic: 'Classic', seatPlate: 'Plate',

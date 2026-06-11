@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+    musicTooltip:'Hudba', musicPanelTitle:'Hudba', musicNowPlaying:'Práve hrá', musicNoTracks:'Žiadne skladby k dispozícii', musicVolume:'Hlasitosť', musicPlay:'Prehrať', musicPause:'Pozastaviť', musicStop:'Zastaviť', musicNext:'Ďalšia', musicPrev:'Predchádzajúca', musicTrack:'Skladba', musicRepeat:'Opakovať', musicRepeatOne:'Opakovať skladbu', musicRepeatAll:'Opakovať playlist', musicRepeatOff:'Prehrať raz',
   seatCard: 'Card', seatCompact: 'Compact', seatBar: 'Bar',
   seatChip: 'Chip',
   sectionSeat: 'Miesta', seatClassic: 'Classic', seatPlate: 'Plate',

@@ -9,6 +9,7 @@ export const meta = {
 };
 
 export const strings = {
+    musicTooltip:'Musikk', musicPanelTitle:'Musikk', musicNowPlaying:'Spilles nå', musicNoTracks:'Ingen spor tilgjengelig', musicVolume:'Volum', musicPlay:'Spill', musicPause:'Pause', musicStop:'Stopp', musicNext:'Neste', musicPrev:'Forrige', musicTrack:'Spor', musicRepeat:'Gjenta', musicRepeatOne:'Gjenta spor', musicRepeatAll:'Gjenta spilleliste', musicRepeatOff:'Spill én gang',
   seatCard: 'Card', seatCompact: 'Compact', seatBar: 'Bar',
   seatChip: 'Chip',
   sectionSeat: 'Plasser', seatClassic: 'Classic', seatPlate: 'Plate',

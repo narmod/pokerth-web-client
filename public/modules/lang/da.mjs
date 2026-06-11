@@ -9,6 +9,7 @@ export const meta = {
 };
 
 export const strings = {
+    musicTooltip:'Musik', musicPanelTitle:'Musik', musicNowPlaying:'Afspiller nu', musicNoTracks:'Ingen numre tilgængelige', musicVolume:'Lydstyrke', musicPlay:'Afspil', musicPause:'Pause', musicStop:'Stop', musicNext:'Næste', musicPrev:'Forrige', musicTrack:'Nummer', musicRepeat:'Gentag', musicRepeatOne:'Gentag nummer', musicRepeatAll:'Gentag afspilningsliste', musicRepeatOff:'Afspil én gang',
   seatCard: 'Card', seatCompact: 'Compact', seatBar: 'Bar',
   seatChip: 'Chip',
   sectionSeat: 'Pladser', seatClassic: 'Classic', seatPlate: 'Plate',

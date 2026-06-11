@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+    musicTooltip:'Música', musicPanelTitle:'Música', musicNowPlaying:'S\'està reproduint', musicNoTracks:'No hi ha cap pista disponible', musicVolume:'Volum', musicPlay:'Reprodueix', musicPause:'Pausa', musicStop:'Atura', musicNext:'Següent', musicPrev:'Anterior', musicTrack:'Pista', musicRepeat:'Repeteix', musicRepeatOne:'Repeteix la pista', musicRepeatAll:'Repeteix la llista', musicRepeatOff:'Reprodueix una vegada',
   seatCard: 'Card', seatCompact: 'Compact', seatBar: 'Bar',
   seatChip: 'Chip',
   sectionSeat: 'Seients', seatClassic: 'Classic', seatPlate: 'Plate',
