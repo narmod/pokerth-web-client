@@ -9802,9 +9802,11 @@ function renderHandsHelp() {
     + '<span class="hl"><span class="hl-grad"></span>' + t('handsLegForce') + '</span>'
     + '</div>';
   inner.innerHTML = '<div class="hands-title">' + t('handsTitle') + '</div>'
+    + '<div class="hands-scroll">'
     + legend
     + rows
-    + '<button class="hands-close" onclick="toggleHandsHelp()">' + t('handsClose') + '</button>';
+    + '<button class="hands-close" onclick="toggleHandsHelp()">' + t('handsClose') + '</button>'
+    + '</div>';
 }
 
 // Indicateur d'état uniforme pour les bascules du menu •••  : ✓ vert quand
@@ -10235,7 +10237,7 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.2.389'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.2.390'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

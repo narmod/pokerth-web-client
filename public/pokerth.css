@@ -5495,3 +5495,14 @@ html[data-seat="bar"] .seat-timer-badge { display: none; }
   #hands-overlay { background: transparent; pointer-events: none; }
   #hands-overlay .hands-card { pointer-events: auto; }
 }
+
+
+/* Combinaisons en mode flottant (tablette/desktop) : titre epingle en haut, et
+   le reste (legende + lignes + bouton fermer) dans une zone scrollable interne,
+   pour que TOUT le contenu defile quand la carte est plus petite que son contenu.
+   Les poignees de resize restent enfants directs de la carte (hors .hands-scroll),
+   donc fixees aux bords sans defiler. Mobile : la carte scrolle nativement (la
+   classe .hands-floatable est absente, ces regles ne s'appliquent pas). */
+.hands-floatable { display: flex; flex-direction: column; }
+.hands-floatable .hands-title { flex: 0 0 auto; }
+.hands-floatable .hands-scroll { flex: 1 1 auto; min-height: 0; overflow-y: auto; overflow-x: hidden; -webkit-overflow-scrolling: touch; }
