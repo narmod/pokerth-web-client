@@ -9,15 +9,6 @@
    buttons during a hand, etc.).
    ───────────────────────────────────────────────────────────────────── */
 html { touch-action: manipulation; -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
-/* iOS Safari : empêche le zoom auto au focus d'un champ (déclenché quand
-   font-size < 16px). Forcé à 16px sur tactile uniquement ; le pinch-zoom
-   reste actif (viewport intact). .raise-input exclu pour préserver la
-   table compacte (slider + boutons 1/3·1/2·Pot disponibles). */
-@media (pointer: coarse) {
-  input:not([type="checkbox"]):not([type="radio"]):not([type="file"]):not([type="range"]):not([type="color"]):not(.raise-input),
-  textarea,
-  select { font-size: 16px !important; }
-}
 
 :root {
   --ff-display: 'Cinzel', serif;

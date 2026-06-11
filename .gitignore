@@ -1,0 +1,15 @@
+node_modules/
+stats.json
+stats.meta.json
+
+# Local environment config (use .env.example as a template)
+.env
+
+# User-installed gallery card decks (managed by install.sh deck-add; NOT tracked).
+# git pull preserves these untracked folders. svg/ is the built-in vector deck.
+/public/cards/*/
+!/public/cards/svg/
+!/public/cards/pokerth/
+!/public/cards/pokerth-new/
+!/public/cards/pokerth-1-0/
+/public/cards/decks.json

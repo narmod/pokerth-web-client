@@ -1,0 +1,823 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>PokerTH — Admin</title>
+<style>
+  :root{--panel:rgba(20,25,33,.92);--line:rgba(160,172,196,.18);--gold:#eff1f5;--cream:#eff1f5;--text:#a0acc4}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:radial-gradient(circle at 50% 0%,#1d222b,#0e1218);color:var(--cream);min-height:100vh;padding:18px}
+  .wrap{max-width:640px;margin:0 auto}
+  h1{font-size:1.15rem;margin:.2rem 0 .1rem;color:var(--gold)}
+  h2{font-size:.95rem;color:var(--gold);margin:2px 0 8px}
+  .sub{color:var(--text);font-size:.8rem;margin:0 0 16px}
+  .top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+  .topbtns{display:flex;gap:8px;margin-top:4px;flex:none}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px;margin:0 0 14px}
+  .card-body{overflow:hidden;transition:height .24s ease}
+  .card h2.collap-h{cursor:pointer;user-select:none;position:relative;padding-right:22px}
+  .card h2.collap-h::after{content:'\25BE';position:absolute;right:2px;top:.15em;font-size:.7em;opacity:.55;transition:opacity .15s}
+  .card h2.collap-h.collapsed::after{content:'\25B8'}
+  .card h2.collap-h:hover::after{opacity:.95}
+  label{font-size:.78rem;color:var(--text);display:block;margin:0 0 5px}
+  input[type=password]{width:100%;padding:9px 11px;border-radius:8px;border:1px solid var(--line);background:rgba(0,0,0,.25);color:var(--cream);font-size:.9rem}
+  select{flex:1;padding:9px 11px;border-radius:8px;border:1px solid var(--line);background:rgba(0,0,0,.25);color:var(--cream);font-size:.9rem}
+  button{font-family:inherit}
+  .primary{margin-top:10px;width:100%;padding:10px;border-radius:8px;border:1px solid var(--gold);background:var(--gold);color:#10151c;font-weight:700;cursor:pointer;font-size:.9rem}
+  .ghost,.appbtn{padding:7px 11px;border-radius:8px;border:1px solid var(--line);background:rgba(255,255,255,.04);color:var(--cream);text-decoration:none;font-size:.8rem;white-space:nowrap;cursor:pointer}
+  .appbtn{border-color:var(--gold);background:rgba(239,241,245,.12);color:var(--gold)}
+  .tabs{display:flex;gap:6px;margin:0 0 14px}
+  .tab{flex:1;padding:9px;border-radius:8px 8px 0 0;border:1px solid var(--line);border-bottom:none;background:rgba(255,255,255,.03);color:var(--text);cursor:pointer;font-size:.84rem}
+  .tab.on{background:var(--panel);color:var(--gold);font-weight:700;border-color:var(--gold)}
+  .seg{display:flex;gap:8px;margin:10px 0}
+  .seg button{flex:1;padding:9px;border-radius:8px;border:1px solid var(--line);background:rgba(255,255,255,.03);color:var(--cream);cursor:pointer;font-size:.86rem}
+  .seg button.on{background:var(--gold);color:#10151c;border-color:var(--gold);font-weight:700}
+  .drop{margin-top:10px;border:2px dashed var(--line);border-radius:12px;padding:26px 14px;text-align:center;color:var(--text);cursor:pointer;transition:.15s}
+  .drop.hot{border-color:var(--gold);background:rgba(239,241,245,.08);color:var(--cream)}
+  .msg{margin-top:10px;font-size:.85rem;min-height:1.2em}
+  .ok{color:#7fd17f}.err{color:#e98a8a}
+  .boardhead{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+  .row{display:flex;align-items:center;gap:10px;padding:8px 4px;border-top:1px solid rgba(255,255,255,.06)}
+  .row:first-of-type{border-top:0}
+  .row .nm{flex:1;min-width:0}.row .nm b{display:block;font-size:.88rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .row .nm span{font-size:.72rem;color:var(--text)}
+  .use{border:1px solid var(--line);background:rgba(255,255,255,.04);color:var(--cream);padding:6px 10px;border-radius:7px;cursor:pointer;font-size:.78rem}
+  .del{padding:6px 10px;border-radius:7px;border:1px solid rgba(184,52,52,.5);background:rgba(184,52,52,.12);color:#e98a8a;cursor:pointer;font-size:.78rem}
+  .empty{color:var(--text);font-size:.8rem;padding:6px 4px}
+  .muted{color:var(--text);font-size:.72rem;margin-top:6px}
+  .srow{display:flex;justify-content:space-between;gap:10px;padding:6px 2px;border-top:1px solid rgba(255,255,255,.06);font-size:.85rem}
+  .srow:first-child{border-top:0}.srow span{color:var(--text)}.srow b{color:var(--cream);text-align:right}
+  .periodrow{display:flex;gap:8px;align-items:center;margin-top:4px}
+  .logs{margin:8px 0 0;max-height:320px;overflow:auto;background:#10151c;border:1px solid var(--line);border-radius:8px;padding:10px;font-size:.72rem;line-height:1.45;white-space:pre-wrap;word-break:break-word;color:#c2cad6}
+  .toggle{padding:6px 16px;border-radius:14px;border:1px solid var(--line);cursor:pointer;font-size:.78rem;min-width:56px}
+  .toggle.on{background:rgba(127,209,127,.16);border-color:rgba(127,209,127,.5);color:#7fd17f;font-weight:700}
+  .toggle.off{background:rgba(184,52,52,.12);border-color:rgba(184,52,52,.5);color:#e98a8a}
+  .btnrow{display:flex;gap:8px;flex-wrap:wrap}
+  .use.danger{background:rgba(184,52,52,.16);border-color:rgba(184,52,52,.5);color:#e98a8a}
+  .use:disabled{opacity:.5;cursor:default}
+  .rank{flex:none;width:30px;text-align:center;font-weight:700;color:var(--gold);font-size:.82rem}
+  .net{flex:none;text-align:right;font-weight:700;font-size:.86rem;min-width:70px}
+  .net.pos{color:#7fd17f}.net.neg{color:#e98a8a}
+  .filter{width:100%;padding:8px 11px;border-radius:8px;border:1px solid var(--line);background:rgba(0,0,0,.25);color:var(--cream);font-size:.85rem;margin:0 0 10px}
+  .prog{height:6px;border-radius:6px;background:rgba(255,255,255,.08);overflow:hidden;margin-top:10px;display:none}
+  .prog.on{display:block}
+  .prog>i{display:block;height:100%;width:0;background:var(--gold);transition:width .15s}
+  /* ── Light admin theme (data-admin-theme="light") ───────────── */
+  :root[data-admin-theme="light"]{--panel:#ffffff;--line:rgba(28,38,58,.16);--gold:#1d222b;--cream:#1b2230;--text:#566071}
+  :root[data-admin-theme="light"] body{background:radial-gradient(circle at 50% 0%,#eef1f6,#d7dde7)}
+  :root[data-admin-theme="light"] input[type=password],
+  :root[data-admin-theme="light"] select,
+  :root[data-admin-theme="light"] .filter{background:rgba(255,255,255,.75)}
+  :root[data-admin-theme="light"] .primary,
+  :root[data-admin-theme="light"] .seg button.on{color:#f4f6fb}
+  :root[data-admin-theme="light"] .appbtn{background:rgba(29,34,43,.08)}
+  :root[data-admin-theme="light"] .tab,
+  :root[data-admin-theme="light"] .seg button,
+  :root[data-admin-theme="light"] .use,
+  :root[data-admin-theme="light"] .ghost{background:rgba(29,34,43,.05)}
+  :root[data-admin-theme="light"] .tab.on{background:var(--panel)}
+  :root[data-admin-theme="light"] .drop.hot{background:rgba(29,34,43,.06)}
+  :root[data-admin-theme="light"] .logs{background:#f3f5f9;color:#2b3340}
+  :root[data-admin-theme="light"] .prog{background:rgba(29,34,43,.1)}
+  :root[data-admin-theme="light"] .row,
+  :root[data-admin-theme="light"] .srow{border-top-color:rgba(29,34,43,.1)}
+  :root[data-admin-theme="light"] .ok,
+  :root[data-admin-theme="light"] .net.pos,
+  :root[data-admin-theme="light"] .toggle.on{color:#2e7d32}
+  :root[data-admin-theme="light"] .err,
+  :root[data-admin-theme="light"] .net.neg,
+  :root[data-admin-theme="light"] .del,
+  :root[data-admin-theme="light"] .toggle.off,
+  :root[data-admin-theme="light"] .use.danger{color:#c62828}
+</style>
+<script>(function(){try{var t=localStorage.getItem('pth_admin_theme');if(t!=='light'&&t!=='dark')t='dark';document.documentElement.setAttribute('data-admin-theme',t);}catch(e){}})();</script>
+</head>
+<body>
+<div class="wrap">
+  <div id="login" style="display:none">
+    <h1>PokerTH — Admin</h1>
+    <p class="sub">Enter your admin token to continue.</p>
+    <div class="card">
+      <label for="ltok">Admin token</label>
+      <input id="ltok" type="password" placeholder="your token (set-token)" autocomplete="off">
+      <button id="loginBtn" class="primary">Log in</button>
+      <div id="loginErr" class="msg err"></div>
+      <div class="muted">Set one on the server: <code>pokerth-web set-token &lt;token&gt;</code></div>
+    </div>
+  </div>
+
+  <div id="dash" style="display:none">
+    <div class="top">
+      <div><h1>PokerTH — Admin</h1><p class="sub">Dashboard</p></div>
+      <div class="topbtns">
+        <button id="themeBtn" class="ghost" title="Toggle dark / light"></button>
+        <a class="appbtn" href="/" target="_blank" rel="noopener">Open the app &#8599;</a>
+        <a class="appbtn" href="/studio" target="_blank" rel="noopener">Studio &#8599;</a>
+        <button id="logoutBtn" class="ghost">Log out</button>
+      </div>
+    </div>
+    <div class="tabs">
+      <button class="tab on" data-t="server">Server</button>
+      <button class="tab" data-t="clients">Clients</button>
+      <button class="tab" data-t="broadcast">Broadcasts</button>
+      <button class="tab" data-t="board">Leaderboard</button>
+      <button class="tab" data-t="packages">Packages</button>
+    </div>
+
+    <div id="panel-packages" style="display:none">
+      <div class="card">
+        <label>Import a package (.zip)</label>
+        <div class="seg"><button class="on" data-k="table">Table style</button><button data-k="deck">Card deck</button><button data-k="theme">Theme</button></div>
+        <div id="drop" class="drop">Drop a <b>.zip</b> here, or click to choose</div>
+        <input id="file" type="file" accept=".zip,application/zip" style="display:none">
+        <div id="prog" class="prog"><i></i></div>
+        <div id="msg" class="msg"></div>
+      </div>
+      <div class="card">
+        <input id="pkgFilter" class="filter" type="search" placeholder="Filter styles, decks &amp; themes…" autocomplete="off">
+        <h2>Table styles</h2><div id="tables"></div>
+        <h2 style="margin-top:14px">Card decks</h2><div id="decks"></div>
+        <h2 style="margin-top:14px">Themes</h2><div id="themes"></div>
+      </div>
+    </div>
+
+    <div id="panel-board" style="display:none">
+      <div class="card">
+        <div class="boardhead"><span id="boardcount" class="muted"></span><button id="resetBtn" class="del">Reset leaderboard</button></div>
+        <input id="boardFilter" class="filter" type="search" placeholder="Filter players…" autocomplete="off">
+        <div id="players"></div>
+        <div id="boardmsg" class="msg"></div>
+      </div>
+      <div class="card">
+        <h2>Leaderboard reset</h2>
+        <label for="period">Automatic reset period</label>
+        <div class="periodrow">
+          <select id="period"><option value="off">Off</option><option value="daily">Daily</option><option value="monthly">Monthly</option><option value="yearly">Yearly</option></select>
+          <button id="savePeriod" class="use">Save</button>
+        </div>
+        <div id="periodmsg" class="msg"></div>
+      </div>
+    </div>
+
+    <div id="panel-clients" style="display:none">
+      <div class="card">
+        <h2>App modes (login screen)</h2>
+        <p class="muted" style="margin:0 0 4px">Show or hide entry modes offered to players.</p>
+        <div id="modes"></div>
+        <div id="modesmsg" class="msg"></div>
+      </div>
+      <div class="card">
+        <h2>Default theme (new visitors)</h2>
+        <p class="muted" style="margin:0 0 6px">Applied on a player's first visit only. Players who already picked a theme keep theirs.</p>
+        <div class="periodrow">
+          <select id="defTheme">
+            <option value="">No default (app default)</option>
+            <option value="official">PokerTH Dark</option>
+            <option value="officiallight">PokerTH Light</option>
+            <option value="casino">Green Casino</option>
+          </select>
+          <button id="saveTheme" class="use">Save</button>
+        </div>
+        <div id="themeMsg" class="msg"></div>
+      </div>
+      <div class="card">
+        <h2>Default in-game settings (new visitors)</h2>
+        <p class="muted" style="margin:0 0 8px">Applied on a player's first visit only; a setting a player has already changed is never touched.</p>
+        <div class="defrow" style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin:5px 0"><span>Vibration</span><select id="defHaptic"><option value="">App default (on)</option><option value="1">On</option><option value="0">Off</option></select></div>
+        <div class="defrow" style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin:5px 0"><span>Voice announce</span><select id="defVoice"><option value="">App default (off)</option><option value="1">On</option><option value="0">Off</option></select></div>
+        <div class="defrow" style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin:5px 0"><span>Assistance (hand strength)</span><select id="defAssist"><option value="">App default (on)</option><option value="1">On</option><option value="0">Off</option></select></div>
+        <div class="defrow" style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin:5px 0"><span>Auto-fold button</span><select id="defAuto"><option value="">App default (hidden)</option><option value="1">Shown</option><option value="0">Hidden</option></select></div>
+        <div class="defrow" style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin:5px 0"><span>Quick-bet buttons</span><select id="defQuick"><option value="">App default (hidden)</option><option value="1">Shown</option><option value="0">Hidden</option></select></div>
+        <div class="defrow" style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin:5px 0"><span>Chip display</span><select id="defBB"><option value="">App default (¥)</option><option value="1">BB</option><option value="0">¥</option></select></div>
+        <div style="margin-top:8px"><button id="saveDefaults" class="use">Save</button></div>
+        <div id="defaultsMsg" class="msg"></div>
+      </div>
+      <div class="card">
+        <h2>Default login form (new visitors)</h2>
+        <p class="muted" style="margin:0 0 8px">Default entry screen for new visitors, plus (for LAN / dedicated) which server to connect to. The proxy auto-follows the host and is rebuilt on every reconnect, so the client always reconnects. Leave host blank to keep the page's own address. The mode applies on a first visit only.</p>
+        <div class="defrow" style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin:5px 0"><span>Default mode</span><select id="defMode"><option value="">App default</option><option value="offline">Training (bots)</option><option value="lan-dedi">LAN / private server</option><option value="pokerthnet">pokerth.net</option></select></div>
+        <div class="defrow" style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin:5px 0"><span>Server host (LAN / dedicated)</span><input id="defHost" placeholder="(page address)" maxlength="120" autocomplete="off" style="flex:1;min-width:0"></div>
+        <div style="margin-top:8px"><button id="saveLogin" class="use">Save</button></div>
+        <div id="loginMsg" class="msg"></div>
+      </div>
+      <div class="card">
+        <h2>Default table settings (new visitors)</h2>
+        <p class="muted" style="margin:0 0 8px">Starting values when a player opens the “create a table” form. A returning player keeps their last-used settings; leave a field blank to keep the app default. Players can change them per table.</p>
+        <div class="defrow" style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin:5px 0"><span>Max players <span class="muted">(2–10)</span></span><input id="tdPlayers" type="number" min="2" max="10" placeholder="10" style="width:110px"></div>
+        <div class="defrow" style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin:5px 0"><span>Small blind <span class="muted">(1–1000000)</span></span><input id="tdBlind" type="number" min="1" max="1000000" placeholder="10" style="width:110px"></div>
+        <div class="defrow" style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin:5px 0"><span>Starting stack <span class="muted">(500–1000000)</span></span><input id="tdStack" type="number" min="500" max="1000000" placeholder="3000" style="width:110px"></div>
+        <div class="defrow" style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin:5px 0"><span>Action timer <span class="muted">(seconds, 5–120)</span></span><input id="tdTimeout" type="number" min="5" max="120" placeholder="15" style="width:110px"></div>
+        <div style="margin-top:8px"><button id="saveTable" class="use">Save</button></div>
+        <div id="tableMsg" class="msg"></div>
+      </div>
+      <div class="card">
+        <h2>Server identity (login screen)</h2>
+        <p class="muted" style="margin:0 0 8px">Shown to everyone on the login screen, regardless of theme. Leave blank for the defaults (“PokerTH” / “Web Client”).</p>
+        <div class="defrow" style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin:5px 0"><span>Server name</span><input id="srvName" maxlength="40" placeholder="PokerTH" autocomplete="off" style="flex:1;min-width:0"></div>
+        <div class="defrow" style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin:5px 0"><span>Banner / tagline</span><input id="srvTagline" maxlength="60" placeholder="Web Client" autocomplete="off" style="flex:1;min-width:0"></div>
+        <div style="margin-top:8px"><button id="saveIdent" class="use">Save</button></div>
+        <div id="identMsg" class="msg"></div>
+      </div>
+    </div>
+    <div id="panel-server">
+      <div class="card"><h2>Status</h2><div id="status"><div class="empty">Loading\u2026</div></div></div>
+      <div class="card">
+        <h2>Proxy</h2>
+        <p class="muted" style="margin:0 0 8px">Server-side bridge settings. Always-allowed hosts: pokerth.net, www.pokerth.net, pokerth.ddns.net, localhost, 127.0.0.1, ::1. Changes apply live (no restart).</p>
+        <div style="margin:5px 0"><div style="margin-bottom:3px">Extra allowed hosts <span class="muted">(one per line — required before a default-login host can connect)</span></div><textarea id="pxHosts" rows="3" placeholder="game.example.com&#10;192.168.1.50" autocomplete="off" style="width:100%;box-sizing:border-box;resize:vertical"></textarea></div>
+        <div class="defrow" style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin:5px 0"><span>Session grace <span class="muted">(seconds, 10–900)</span></span><input id="pxGrace" type="number" min="10" max="900" placeholder="120" style="width:110px"></div>
+        <div class="defrow" style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin:5px 0"><span>Connection gap <span class="muted">(ms, 0–30000)</span></span><input id="pxGap" type="number" min="0" max="30000" placeholder="5000" style="width:110px"></div>
+        <div style="margin-top:8px"><button id="savePx" class="use">Save</button></div>
+        <div id="pxMsg" class="msg"></div>
+      </div>
+      <div class="card">
+        <h2>Maintenance</h2>
+        <p class="muted" style="margin:0 0 8px">“Update (no restart)” pushes new client files live instantly without dropping connections; the other actions restart the server briefly — this page reconnects on its own.</p>
+        <div class="btnrow">
+          <button id="btnUpdateNr" class="use">Update (no restart)</button>
+          <button id="btnUpdate" class="use danger">Update &amp; restart</button>
+          <button id="btnRestart" class="use">Restart</button>
+          <button id="btnClearLogs" class="use">Clear logs</button>
+        </div>
+        <div id="maintmsg" class="msg"></div>
+        <div class="boardhead" style="margin-top:10px"><h2 style="margin:0;font-size:.92rem">Last action log</h2><button id="btnUpdLog" class="use">Refresh</button></div>
+        <pre id="updlog" class="logs" style="max-height:200px"></pre>
+      </div>
+      <div class="card">
+        <h2>Schedule a restart</h2>
+        <p class="muted" style="margin:0 0 8px">Warn connected players, then act automatically after the delay. Players see a dismissible notice with the restart time, in their own language.</p>
+        <div class="seg" id="schedKind"><button class="on" data-k="update">Update + restart</button><button data-k="restart">Restart only</button></div>
+        <div class="btnrow" id="schedDelays">
+          <button class="use" data-secs="120">2 min</button>
+          <button class="use" data-secs="300">5 min</button>
+          <button class="use" data-secs="600">10 min</button>
+          <button class="use" data-secs="900">15 min</button>
+          <button class="use" data-secs="3600">1 h</button>
+          <button class="use" data-secs="21600">6 h</button>
+          <button class="use" data-secs="43200">12 h</button>
+        </div>
+        <div class="periodrow" style="margin-top:8px">
+          <input id="schedCustom" class="filter" type="number" min="1" max="1440" placeholder="Custom minutes" style="margin:0">
+          <button id="schedCustomBtn" class="use">Schedule</button>
+        </div>
+        <input id="schedMsg" class="filter" type="text" maxlength="200" placeholder="Optional note shown to players (as-is)" autocomplete="off" style="margin-top:8px">
+        <div id="schedNow" class="muted" style="margin-top:8px"></div>
+        <div id="schedState" class="msg"></div>
+        <button id="schedCancel" class="use danger" style="display:none">Cancel scheduled restart</button>
+      </div>
+      <div class="card">
+        <div class="boardhead"><h2 style="margin:0">Recent logs</h2><button id="refreshLogs" class="use">Refresh</button></div>
+        <pre id="logs" class="logs"></pre>
+      </div>
+    </div>
+    <div id="panel-broadcast" style="display:none">
+      <div class="card">
+        <h2>Send a message now</h2>
+        <p class="muted" style="margin:0 0 8px">Broadcast an information message to everyone currently connected. Shown as a gold dismissible banner.</p>
+        <textarea id="bcNowMsg" class="filter" rows="2" maxlength="500" placeholder="Your message…" style="width:100%;resize:vertical"></textarea>
+        <div class="periodrow" style="margin-top:8px">
+          <select id="bcNowIcon" class="filter" style="margin:0;flex:none;width:auto">
+            <option value="">No icon</option><option value="ℹ️">ℹ️ Info</option><option value="📢">📢 Announce</option><option value="⚠️">⚠️ Warning</option><option value="🎉">🎉 Celebrate</option>
+          </select>
+          <button id="bcNowSend" class="use">Send now</button>
+        </div>
+        <div id="bcNowPrev"></div>
+        <div id="bcNowState" class="msg"></div>
+      </div>
+      <div class="card">
+        <h2>Schedule a recurring message</h2>
+        <div id="bcServerNow" class="muted" style="margin:0 0 8px"></div>
+        <textarea id="bcMsg" class="filter" rows="2" maxlength="500" placeholder="Message to broadcast…" style="width:100%;resize:vertical"></textarea>
+        <div class="periodrow" style="margin-top:8px">
+          <select id="bcIcon" class="filter" style="margin:0;flex:none;width:auto">
+            <option value="">No icon</option><option value="ℹ️">ℹ️ Info</option><option value="📢">📢 Announce</option><option value="⚠️">⚠️ Warning</option><option value="🎉">🎉 Celebrate</option>
+          </select>
+          <select id="bcType" class="filter" style="margin:0;flex:1">
+            <option value="interval">Every…</option><option value="daily">Daily at…</option><option value="everyDays">Every X days at…</option><option value="weekly">Weekly on… at…</option><option value="monthly">Day X each month at…</option><option value="once">Once at…</option>
+          </select>
+        </div>
+        <div id="bcParams" style="margin-top:8px">
+          <div class="bc-when" data-for="interval">
+            <select id="bcMinutes" class="filter" style="margin:0">
+              <option value="5">Every 5 minutes</option><option value="10">Every 10 minutes</option><option value="30">Every 30 minutes</option><option value="60">Every hour</option><option value="360">Every 6 hours</option><option value="720">Every 12 hours</option>
+            </select>
+          </div>
+          <div class="bc-when" data-for="daily" style="display:none"><label class="muted">At <input id="bcTimeDaily" class="filter" type="time" value="12:00" style="margin:0;width:auto"></label></div>
+          <div class="bc-when" data-for="everyDays" style="display:none"><label class="muted">Every <input id="bcDays" class="filter" type="number" min="1" max="365" value="2" style="margin:0;width:70px"> day(s) at <input id="bcTimeEvery" class="filter" type="time" value="12:00" style="margin:0;width:auto"></label></div>
+          <div class="bc-when" data-for="weekly" style="display:none"><div id="bcWeekdays" class="btnrow" style="flex-wrap:wrap;margin-bottom:6px"></div><label class="muted">At <input id="bcTimeWeekly" class="filter" type="time" value="12:00" style="margin:0;width:auto"></label></div>
+          <div class="bc-when" data-for="monthly" style="display:none"><label class="muted">Day <input id="bcDom" class="filter" type="number" min="1" max="31" value="1" style="margin:0;width:70px"> at <input id="bcTimeMonthly" class="filter" type="time" value="12:00" style="margin:0;width:auto"></label></div>
+          <div class="bc-when" data-for="once" style="display:none"><label class="muted">On <input id="bcOnceAt" class="filter" type="datetime-local" style="margin:0;width:auto"></label></div>
+        </div>
+        <div class="periodrow" style="margin-top:8px">
+          <label class="muted">End (optional) <input id="bcEndAt" class="filter" type="datetime-local" style="margin:0;width:auto"></label>
+          <label class="muted">Max sends <input id="bcMaxRuns" class="filter" type="number" min="1" placeholder="∞" style="margin:0;width:80px"></label>
+        </div>
+        <div id="bcPrev"></div>
+        <div class="periodrow" style="margin-top:8px"><button id="bcAdd" class="use">Add scheduled message</button></div>
+        <div id="bcAddState" class="msg"></div>
+      </div>
+      <div class="card">
+        <div class="boardhead"><h2 style="margin:0">Scheduled messages</h2><button id="bcRefresh" class="use">Refresh</button></div>
+        <div id="bcList"></div>
+      </div>
+      <div class="card">
+        <h2>Welcome / rules message (first visit)</h2>
+        <p class="muted" style="margin:0 0 8px">Shown once in a centered popup the first time someone opens the app, and again whenever you edit it. Each visitor sees the version matching their language (fallback below). Players dismiss it with “I understand”.</p>
+        <label class="muted" style="display:flex;align-items:center;gap:8px;margin:0 0 8px"><input type="checkbox" id="wcEnabled" style="width:auto"> Enabled</label>
+        <div class="periodrow" style="margin-bottom:8px">
+          <label class="muted">Edit language <select id="wcLang" class="filter" style="margin:0;flex:none;width:auto"></select></label>
+          <label class="muted">Fallback <select id="wcDefault" class="filter" style="margin:0;flex:none;width:auto"></select></label>
+        </div>
+        <div id="wcFilled" class="muted" style="margin:0 0 8px;font-size:.8rem"></div>
+        <input id="wcTitle" class="filter" maxlength="200" placeholder="Title (optional)" style="width:100%;margin-bottom:8px">
+        <textarea id="wcBody" class="filter" rows="5" maxlength="4000" placeholder="Message / rules for this language…" style="width:100%;resize:vertical"></textarea>
+        <div id="wcPrev"></div>
+        <div class="periodrow" style="margin-top:8px"><button id="wcSave" class="use">Save welcome message</button></div>
+        <div id="wcState" class="msg"></div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+(function(){
+  var TOKK='pth_admin_tok', $=function(id){return document.getElementById(id);};
+  var login=$('login'), dash=$('dash');
+  function tok(){ return (localStorage.getItem(TOKK)||'').trim(); }
+  // Every admin call carries the token in the Authorization header (never the
+  // URL), so it stays out of server access logs and browser history.
+  function api(path,opts){ opts=opts||{}; var h=Object.assign({},opts.headers||{}); var t=tok(); if(t) h.Authorization='Bearer '+t; opts.headers=h; return fetch(path,opts); }
+  function show(v){ login.style.display=v==='login'?'block':'none'; dash.style.display=v==='dash'?'block':'none'; }
+
+  $('loginBtn').addEventListener('click', doLogin);
+  $('ltok').addEventListener('keydown', function(e){ if(e.key==='Enter') doLogin(); });
+  function doLogin(){ localStorage.setItem(TOKK, $('ltok').value.trim()); enter(); }
+  $('logoutBtn').addEventListener('click', function(){ doLogout(); });
+  (function(){
+    var btn=$('themeBtn'); if(!btn) return;
+    function cur(){ return document.documentElement.getAttribute('data-admin-theme')==='light' ? 'light' : 'dark'; }
+    function paint(){ btn.textContent = cur()==='light' ? '☀️ Light' : '🌙 Dark'; }
+    function set(t){ document.documentElement.setAttribute('data-admin-theme', t); try{ localStorage.setItem('pth_admin_theme', t); }catch(e){} paint(); }
+    paint();
+    btn.addEventListener('click', function(){ set(cur()==='light' ? 'dark' : 'light'); });
+  })();
+  // Auto-logout: after IDLE_MS without any pointer/key/scroll activity, clear
+  // the stored token and return to the login screen. A 30 s checker compares
+  // the last-activity stamp; activity listeners (capture+passive) just stamp.
+  var IDLE_MS=10*60*1000, _idleLast=Date.now();
+  function _idleReset(){ _idleLast=Date.now(); }
+  function doLogout(reason){ srvStop(); localStorage.removeItem(TOKK); $('ltok').value=''; if($('loginErr')) $('loginErr').textContent=reason||''; show('login'); }
+  function _idleCheck(){ if(tok() && dash.style.display!=='none' && Date.now()-_idleLast>IDLE_MS) doLogout('Logged out after 10 minutes of inactivity.'); }
+  ['mousemove','mousedown','keydown','touchstart','scroll','click'].forEach(function(ev){ document.addEventListener(ev,_idleReset,{passive:true,capture:true}); });
+  setInterval(_idleCheck, 30000);
+  function enter(){
+    if(!tok()){ show('login'); return; }
+    api('/admin/pkg-list').then(function(r){return r.json();}).then(function(d){
+      if(d.ok){ $('loginErr').textContent=''; _idleLast=Date.now(); show('dash'); renderPkgs(d); loadServer(); loadThemes(); srvStart(); }
+      else { $('loginErr').textContent=d.error||'Invalid token'; show('login'); }
+    }).catch(function(){ $('loginErr').textContent='Network error'; show('login'); });
+  }
+
+  document.querySelectorAll('.tab').forEach(function(b){ b.addEventListener('click', function(){
+    document.querySelectorAll('.tab').forEach(function(x){x.classList.toggle('on',x===b);});
+    var t=b.dataset.t;
+    $('panel-packages').style.display=t==='packages'?'block':'none';
+    $('panel-board').style.display=t==='board'?'block':'none';
+    $('panel-server').style.display=t==='server'?'block':'none';
+    $('panel-clients').style.display=t==='clients'?'block':'none';
+    $('panel-broadcast').style.display=t==='broadcast'?'block':'none';
+    if(t==='board') loadBoard();
+    if(t==='broadcast'){ loadBroadcasts(); loadWelcome(); }
+    if(t==='clients'){ loadStatus(true); loadThemes(); }
+    if(t==='server'){ loadServer(); srvStart(); } else { srvStop(); }
+  }); });
+
+
+  // packages
+  var kind='table';
+  document.querySelectorAll('#panel-packages .seg button').forEach(function(b){ b.addEventListener('click',function(){ kind=b.dataset.k; document.querySelectorAll('#panel-packages .seg button').forEach(function(x){x.classList.toggle('on',x===b);}); }); });
+  var drop=$('drop'), file=$('file'), msg=$('msg');
+  drop.addEventListener('click',function(){file.click();});
+  drop.addEventListener('dragover',function(e){e.preventDefault();drop.classList.add('hot');});
+  drop.addEventListener('dragleave',function(){drop.classList.remove('hot');});
+  drop.addEventListener('drop',function(e){e.preventDefault();drop.classList.remove('hot');if(e.dataTransfer.files[0])upload(e.dataTransfer.files[0]);});
+  file.addEventListener('change',function(){if(file.files[0])upload(file.files[0]);});
+  function say(t,cls){ msg.textContent=t; msg.className='msg '+(cls||''); }
+  function applyTable(id){ try{localStorage.setItem('pth_table',id);localStorage.setItem('pth_pucks',id);}catch(e){} }
+  function applyDeck(id){ try{localStorage.setItem('pth_deck',id);}catch(e){}
+    api('/admin/pkg-list').then(function(r){return r.json();}).then(function(d){ var e=(d.decks||[]).find(function(x){return x.id===id;}); try{localStorage.setItem('pth_deck_ext',(e&&e.ext)||'png');}catch(err){} }).catch(function(){}); }
+  function showProg(f){ var p=$('prog'); p.classList.add('on'); p.firstElementChild.style.width=Math.round((f||0)*100)+'%'; }
+  function hideProg(){ var p=$('prog'); p.classList.remove('on'); p.firstElementChild.style.width='0'; }
+  function upload(f){
+    if(!/\.zip$/i.test(f.name)){ say('Choose a .zip file.','err'); return; }
+    say('Importing \u201c'+f.name+'\u201d\u2026'); showProg(0);
+    var xhr=new XMLHttpRequest();
+    xhr.open('POST','/admin/pkg-upload?kind='+kind+'&name='+encodeURIComponent(f.name));
+    var t=tok(); if(t) xhr.setRequestHeader('Authorization','Bearer '+t);
+    xhr.upload.addEventListener('progress',function(e){ if(e.lengthComputable) showProg(e.loaded/e.total); });
+    xhr.addEventListener('load',function(){ hideProg(); var d=null; try{ d=JSON.parse(xhr.responseText); }catch(e){}
+      if(d&&d.ok){ if(d.kind==='theme'){ say('Installed theme: '+d.name+' \u2014 it now appears in Theme \u2192 Themes.','ok'); loadThemes(); } else { if(d.kind==='table')applyTable(d.id);else applyDeck(d.id); say('Imported & applied: '+d.name+' \u2014 open the app to see it.','ok'); } refresh(); }
+      else say('Failed: '+((d&&d.error)||('HTTP '+xhr.status)),'err'); });
+    xhr.addEventListener('error',function(){ hideProg(); say('Import failed \u2014 network error.','err'); });
+    xhr.send(f);
+    file.value='';
+  }
+  function useNow(k,id){ if(k==='table')applyTable(id);else applyDeck(id); say('Set as active \u2014 open the app to see it.','ok'); }
+  function removePkg(k,id,nm){ if(!confirm('Remove \u201c'+nm+'\u201d?'))return;
+    api('/admin/pkg-remove',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({kind:k,id:id,token:tok()})})
+      .then(function(r){return r.json();}).then(function(d){ if(d.ok)refresh(); else say('Remove: '+(d.error||'error'),'err'); }).catch(function(){ say('Remove failed \u2014 network error.','err'); }); }
+  function togglePkg(k,id,wasOn){ api('/admin/pkg-toggle',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({kind:k,id:id,enabled:!wasOn,token:tok()})})
+    .then(function(r){return r.json();}).then(function(d){ if(d&&d.ok){ say((d.disabled?'Hidden from players':'Visible to players')+' \u2014 they\u2019ll see it on reload.','ok'); refresh(); } else say('Toggle: '+((d&&d.error)||'error'),'err'); }).catch(function(){ say('Toggle failed \u2014 network error.','err'); }); }
+  function togglePkgFull(id,wasFull){ api('/admin/pkg-full',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id:id,full:!wasFull,token:tok()})})
+    .then(function(r){return r.json();}).then(function(d){ if(d&&d.ok){ say(d.full?'Full image set (no frame).':'Classic oval table set.','ok'); refresh(); } else say('Full image: '+((d&&d.error)||'error'),'err'); }).catch(function(){ say('Full image failed - network error.','err'); }); }
+  function renderList(el,arr,k){ if(!arr||!arr.length){el.innerHTML='<div class="empty">(none)</div>';return;} el.innerHTML='';
+    arr.forEach(function(p){ var row=document.createElement('div');row.className='row'; if(p.disabled) row.style.opacity='0.55';
+      row.innerHTML='<div class="nm"><b></b><span></span></div>';
+      row.querySelector('b').textContent=p.name||p.id; row.querySelector('span').textContent=p.id;
+      var on=!p.disabled;
+      var tg=document.createElement('button');tg.className='toggle '+(on?'on':'off');tg.textContent=on?'On':'Off';tg.title=on?'Visible to players \u2014 tap to hide':'Hidden from players \u2014 tap to show';tg.addEventListener('click',function(){togglePkg(k,p.id,on);});
+      var use=document.createElement('button');use.className='use';use.textContent='Use';use.addEventListener('click',function(){useNow(k,p.id);});
+      var del=document.createElement('button');del.className='del';del.textContent='Remove';del.addEventListener('click',function(){removePkg(k,p.id,p.name||p.id);});
+      var fl=null; if(k==='table'){ var isF=!!p.full; fl=document.createElement('button'); fl.className='toggle '+(isF?'on':'off'); fl.textContent=isF?'Full':'Frame'; fl.title=isF?'Full-bleed image, no oval frame - tap to restore the frame':'Classic oval table - tap to show the full image'; fl.addEventListener('click',function(){togglePkgFull(p.id,isF);}); }
+      row.appendChild(tg); if(fl) row.appendChild(fl); if(k!=='theme') row.appendChild(use); if(!p.builtin) row.appendChild(del); el.appendChild(row); }); }
+  var lastPkgs={tables:[],decks:[],themes:[]};
+  function pkgMatch(p,q){ return !q || (((p.name||'')+' '+(p.id||'')).toLowerCase().indexOf(q)>=0); }
+  function drawPkgs(){ var q=(($('pkgFilter')&&$('pkgFilter').value)||'').trim().toLowerCase();
+    renderList($('tables'), lastPkgs.tables.filter(function(p){return pkgMatch(p,q);}), 'table');
+    renderList($('decks'),  lastPkgs.decks.filter(function(p){return pkgMatch(p,q);}),  'deck');
+    renderList($('themes'), lastPkgs.themes.filter(function(p){return pkgMatch(p,q);}), 'theme'); }
+  function renderPkgs(d){ lastPkgs={tables:d.tables||[],decks:d.decks||[],themes:d.themes||[]}; drawPkgs(); }
+  if($('pkgFilter')) $('pkgFilter').addEventListener('input', drawPkgs);
+  function refresh(){ api('/admin/pkg-list?t='+Date.now()).then(function(r){return r.json();}).then(function(d){ if(d.ok)renderPkgs(d); }).catch(function(){ say('Could not refresh the package list \u2014 network error.','err'); }); }
+
+  // leaderboard
+  function bmsg(t,cls){ $('boardmsg').textContent=t; $('boardmsg').className='msg '+(cls||''); }
+  function fmtSigned(n){ n=Math.round(Number(n)||0); return (n>0?'+':'')+n.toLocaleString(); }
+  var lastBoard=[];
+  function loadBoard(){
+    fetch('/stats').then(function(r){return r.json();}).then(function(s){
+      s=s||{};
+      lastBoard=Object.keys(s).map(function(n){ var v=s[n]||{}; return { name:n, net:Number(v.net)||0, gw:Number(v.gamesWon)||0, gp:Number(v.gamesPlayed)||0, hw:Number(v.handsWon)||0, hp:Number(v.handsPlayed)||0, streak:Number(v.bestStreak)||0 }; })
+        .sort(function(a,b){ return (b.net-a.net) || (b.gw-a.gw) || (b.hw-a.hw) || a.name.localeCompare(b.name); });
+      drawBoard();
+    }).catch(function(){ $('players').innerHTML='<div class="empty err">Could not load.</div>'; });
+  }
+  function drawBoard(){
+    var total=lastBoard.length, q=(($('boardFilter')&&$('boardFilter').value)||'').trim().toLowerCase();
+    var list=q?lastBoard.filter(function(p){return p.name.toLowerCase().indexOf(q)>=0;}):lastBoard;
+    $('boardcount').textContent = total ? ((q? list.length+' of '+total+' players' : total+' player'+(total===1?'':'s'))+' \u00b7 by net') : '';
+    var el=$('players');
+    if(!total){ el.innerHTML='<div class="empty">(empty)</div>'; return; }
+    if(!list.length){ el.innerHTML='<div class="empty">(no match)</div>'; return; }
+    el.innerHTML='';
+    list.forEach(function(p){
+      var row=document.createElement('div');row.className='row';
+      var rk=document.createElement('div');rk.className='rank';rk.textContent='#'+(lastBoard.indexOf(p)+1);row.appendChild(rk);
+      var nm=document.createElement('div');nm.className='nm';
+      var b=document.createElement('b');b.textContent=p.name;nm.appendChild(b);
+      var span=document.createElement('span');span.textContent=p.gw+'/'+p.gp+' games \u00b7 '+p.hw+'/'+p.hp+' hands'+(p.streak?' \u00b7 streak '+p.streak:'');nm.appendChild(span);
+      row.appendChild(nm);
+      var net=document.createElement('div');net.className='net '+(p.net>0?'pos':(p.net<0?'neg':''));net.textContent=fmtSigned(p.net);row.appendChild(net);
+      var del=document.createElement('button');del.className='del';del.textContent='Remove';del.addEventListener('click',function(){removePlayer(p.name);});
+      row.appendChild(del);el.appendChild(row);
+    });
+  }
+  if($('boardFilter')) $('boardFilter').addEventListener('input', drawBoard);
+  function removePlayer(n){ if(!confirm('Remove player \u201c'+n+'\u201d from the leaderboard?'))return;
+    fetch('/stats',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:n,_delete:true})})
+      .then(function(r){return r.json();}).then(function(){ loadBoard(); }).catch(function(){ bmsg('Could not remove player \u2014 network error.','err'); }); }
+  $('resetBtn').addEventListener('click',function(){ if(!confirm('Reset the WHOLE leaderboard? This cannot be undone.'))return;
+    fetch('/stats',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({_resetAll:true,token:tok()})})
+      .then(function(r){return r.json();}).then(function(d){ if(d.ok){ bmsg('Leaderboard reset.','ok'); loadBoard(); } else bmsg('Reset failed: '+(d.error||'forbidden'),'err'); })
+      .catch(function(){ bmsg('Network error.','err'); }); });
+
+  // server
+  function fmtUptime(s){ s=s||0; var d=Math.floor(s/86400),h=Math.floor((s%86400)/3600),m=Math.floor((s%3600)/60); return (d?d+'d ':'')+(h?h+'h ':'')+m+'m'; }
+  function loadStatus(syncCfg){
+    api('/admin/status').then(function(r){return r.json();}).then(function(d){
+      var el=$('status');
+      if(!d.ok){ el.innerHTML='<div class="empty err">'+(d.error||'error')+'</div>'; return; }
+      el.innerHTML='';
+      var items=[['Build version',d.version||'\u2014'],['Node',d.node||'\u2014'],['Uptime',fmtUptime(d.uptimeSec)],['Connected sockets',d.sockets==null?'\u2014':String(d.sockets)],['Players on board',String(d.players)],['Reset period',d.resetPeriod||'\u2014']];
+      items.forEach(function(it){ var r=document.createElement('div');r.className='srow';var s=document.createElement('span');s.textContent=it[0];var b=document.createElement('b');b.textContent=it[1];r.appendChild(s);r.appendChild(b);el.appendChild(r); });
+      // Only explicit (re)loads sync the editable controls, so auto-refresh never
+      // resets the period dropdown or modes toggles while you're using them.
+      if(syncCfg){
+        if(d.resetPeriod) $('period').value=d.resetPeriod;
+        if(d.modes){ modesState=Object.assign({offline:true,lan:true,pokerthnet:true},d.modes); renderModes(); }
+        if($('defTheme') && typeof d.defaultTheme==='string'){ window._defThemeVal=d.defaultTheme; $('defTheme').value=d.defaultTheme; }
+        if(d.defaults && typeof d.defaults==='object'){ var _DM={defHaptic:'haptic',defVoice:'voice',defAssist:'assist',defAuto:'autobtn',defQuick:'quickbet',defBB:'displaybb'}; Object.keys(_DM).forEach(function(id){ var el=$(id); if(el){ var dv=d.defaults[_DM[id]]; el.value=(dv==='0'||dv==='1')?dv:''; } }); }
+        if(d.loginDefaults && typeof d.loginDefaults==='object'){ var L=d.loginDefaults; if($('defMode'))$('defMode').value=(['offline','lan-dedi','pokerthnet'].indexOf(L.mode)>=0)?L.mode:''; if($('defHost'))$('defHost').value=L.host||''; }
+        if(d.tableDefaults && typeof d.tableDefaults==='object'){ var T=d.tableDefaults; var _tm={tdPlayers:'players',tdBlind:'blind',tdStack:'stack',tdTimeout:'timeout'}; Object.keys(_tm).forEach(function(id){ var el=$(id); if(el){ var v=T[_tm[id]]; el.value=(v==null)?'':v; } }); }
+        if($('srvName') && typeof d.serverName==='string') $('srvName').value=d.serverName;
+        if($('srvTagline') && typeof d.serverTagline==='string') $('srvTagline').value=d.serverTagline;
+        if(d.proxyCfg && typeof d.proxyCfg==='object'){ var P=d.proxyCfg; if($('pxHosts'))$('pxHosts').value=(Array.isArray(P.allowedHosts)?P.allowedHosts.join('\n'):''); if($('pxGrace'))$('pxGrace').value=(typeof P.graceSec==='number'?P.graceSec:''); if($('pxGap'))$('pxGap').value=(typeof P.connGapMs==='number'?P.connGapMs:''); }
+      }
+      var sn=$('schedNow'), sc=$('schedCancel');
+      if(sn){ if(d.restartAt){ sn.textContent='Scheduled: '+(d.restartKind==='restart'?'restart only':'update + restart')+' at '+new Date(d.restartAt).toLocaleString(); if(sc) sc.style.display=''; } else { sn.textContent='Nothing scheduled.'; if(sc) sc.style.display='none'; } }
+    }).catch(function(){ $('status').innerHTML='<div class="empty err">Could not load.</div>'; });
+  }
+  function loadServer(){ loadStatus(true); loadLogs(); loadUpdateLog(); }
+  // Theme presets shown in the default-theme dropdown = built-in presets (static
+  // options) + installed theme packages (palette/table/felt) fetched live.
+  function loadThemes(){
+    fetch('/themes/themes.json',{cache:'no-store'}).then(function(r){return r.ok?r.json():[];}).then(function(list){
+      var sel=$('defTheme'); if(!sel||!Array.isArray(list)) return;
+      Array.prototype.slice.call(sel.querySelectorAll('option[data-pkg]')).forEach(function(o){o.remove();});
+      list.filter(function(p){return p&&p.id&&(p.palette||p.table||p.felt);}).forEach(function(p){
+        var o=document.createElement('option'); o.value='pkg-'+p.id; o.textContent=(p.name||p.id); o.setAttribute('data-pkg','1'); sel.appendChild(o);
+      });
+      if(window._defThemeVal!=null) sel.value=window._defThemeVal;
+    }).catch(function(){});
+  }
+  // Live auto-refresh of the Server tab (status + logs) every 5s while it's the
+  // active panel and the page is visible; suspended during maintenance restarts.
+  var srvTimer=null, srvBusy=false;
+  function srvOn(){ return !!($('panel-server') && $('panel-server').style.display!=='none'); }
+  function srvStop(){ if(srvTimer){ clearInterval(srvTimer); srvTimer=null; } }
+  function srvTick(){ if(document.hidden||!srvOn()) return; loadStatus(false); loadLogs(); }
+  function srvStart(){ srvStop(); if(srvBusy||!srvOn()) return; srvTimer=setInterval(srvTick,5000); }
+  document.addEventListener('visibilitychange',function(){ if(document.hidden) srvStop(); else srvStart(); });
+  function loadLogs(){ api('/admin/logs').then(function(r){return r.json();}).then(function(d){ var p=$('logs'); p.textContent=(d.lines||[]).join('\n'); p.scrollTop=p.scrollHeight; }).catch(function(){}); }
+  $('refreshLogs').addEventListener('click', loadLogs);
+  $('savePeriod').addEventListener('click', function(){
+    var per=$('period').value, m=$('periodmsg');
+    api('/admin/config',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({resetPeriod:per,token:tok()})})
+      .then(function(r){return r.json();}).then(function(d){ if(d.ok){ m.textContent='Saved: '+d.resetPeriod; m.className='msg ok'; } else { m.textContent='Failed: '+(d.error||'error'); m.className='msg err'; } })
+      .catch(function(){ m.textContent='Network error.'; m.className='msg err'; });
+  });
+  (function(){ var st=$('saveTheme'); if(!st) return; st.addEventListener('click', function(){
+    var v=$('defTheme')?$('defTheme').value:'', m=$('themeMsg');
+    api('/admin/config',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({defaultTheme:v,token:tok()})})
+      .then(function(r){return r.json();}).then(function(d){ if(d&&d.ok){ if($('defTheme')&&typeof d.defaultTheme==='string') $('defTheme').value=d.defaultTheme; m.textContent='Saved.'; m.className='msg ok'; } else { m.textContent='Failed: '+((d&&d.error)||'error'); m.className='msg err'; } })
+      .catch(function(){ m.textContent='Network error.'; m.className='msg err'; });
+  }); })();
+  (function(){ var sb=$('saveDefaults'); if(!sb) return; sb.addEventListener('click', function(){
+    var DM={defHaptic:'haptic',defVoice:'voice',defAssist:'assist',defAuto:'autobtn',defQuick:'quickbet',defBB:'displaybb'};
+    var defs={}; Object.keys(DM).forEach(function(id){ var el=$(id); if(el && (el.value==='0'||el.value==='1')) defs[DM[id]]=el.value; });
+    var m=$('defaultsMsg');
+    api('/admin/config',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({defaults:defs,token:tok()})})
+      .then(function(r){return r.json();}).then(function(d){ if(d&&d.ok){ m.textContent='Saved.'; m.className='msg ok'; } else { m.textContent='Failed: '+((d&&d.error)||'error'); m.className='msg err'; } })
+      .catch(function(){ m.textContent='Network error.'; m.className='msg err'; });
+  }); })();
+  (function(){ var sl=$('saveLogin'); if(!sl) return; sl.addEventListener('click', function(){
+    var L={ mode:($('defMode')?$('defMode').value:''), host:($('defHost')?$('defHost').value.trim():'') };
+    var m=$('loginMsg');
+    api('/admin/config',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({loginDefaults:L,token:tok()})})
+      .then(function(r){return r.json();}).then(function(d){ if(d&&d.ok){ m.textContent='Saved.'; m.className='msg ok'; } else { m.textContent='Failed: '+((d&&d.error)||'error'); m.className='msg err'; } })
+      .catch(function(){ m.textContent='Network error.'; m.className='msg err'; });
+  }); })();
+  (function(){ var sp=$('savePx'); if(!sp) return; sp.addEventListener('click', function(){
+    var hosts=($('pxHosts')?$('pxHosts').value:'').split(/[\n,]/).map(function(s){return s.trim();}).filter(Boolean);
+    var P={ allowedHosts:hosts, graceSec:($('pxGrace')?$('pxGrace').value.trim():''), connGapMs:($('pxGap')?$('pxGap').value.trim():'') };
+    var m=$('pxMsg');
+    api('/admin/config',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({proxyCfg:P,token:tok()})})
+      .then(function(r){return r.json();}).then(function(d){ if(d&&d.ok){ m.textContent='Saved.'; m.className='msg ok'; } else { m.textContent='Failed: '+((d&&d.error)||'error'); m.className='msg err'; } })
+      .catch(function(){ m.textContent='Network error.'; m.className='msg err'; });
+  }); })();
+  (function(){ var st=$('saveTable'); if(!st) return; st.addEventListener('click', function(){
+    var T={ players:($('tdPlayers')?$('tdPlayers').value.trim():''), blind:($('tdBlind')?$('tdBlind').value.trim():''), stack:($('tdStack')?$('tdStack').value.trim():''), timeout:($('tdTimeout')?$('tdTimeout').value.trim():'') };
+    var m=$('tableMsg');
+    api('/admin/config',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({tableDefaults:T,token:tok()})})
+      .then(function(r){return r.json();}).then(function(d){ if(d&&d.ok){ m.textContent='Saved.'; m.className='msg ok'; } else { m.textContent='Failed: '+((d&&d.error)||'error'); m.className='msg err'; } })
+      .catch(function(){ m.textContent='Network error.'; m.className='msg err'; });
+  }); })();
+  (function(){ var si=$('saveIdent'); if(!si) return; si.addEventListener('click', function(){
+    var m=$('identMsg');
+    api('/admin/config',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({serverName:($('srvName')?$('srvName').value:''),serverTagline:($('srvTagline')?$('srvTagline').value:''),token:tok()})})
+      .then(function(r){return r.json();}).then(function(d){ if(d&&d.ok){ m.textContent='Saved.'; m.className='msg ok'; } else { m.textContent='Failed: '+((d&&d.error)||'error'); m.className='msg err'; } })
+      .catch(function(){ m.textContent='Network error.'; m.className='msg err'; });
+  }); })();
+
+  // app modes (login-screen entry modes)
+  var modesState={offline:true,lan:true,pokerthnet:true};
+  var MODE_LABELS=[['offline','Offline practice (bots)'],['lan','LAN / private server'],['pokerthnet','pokerth.net']];
+  function renderModes(){
+    var el=$('modes'); el.innerHTML='';
+    MODE_LABELS.forEach(function(it){
+      var k=it[0], on=modesState[k]!==false;
+      var row=document.createElement('div');row.className='row';
+      var nm=document.createElement('div');nm.className='nm';var b=document.createElement('b');b.textContent=it[1];nm.appendChild(b);row.appendChild(nm);
+      var t=document.createElement('button');t.className='toggle '+(on?'on':'off');t.textContent=on?'On':'Off';
+      t.addEventListener('click',function(){ toggleMode(k); });
+      row.appendChild(t);el.appendChild(row);
+    });
+  }
+  function toggleMode(k){
+    modesState[k]=!modesState[k]; renderModes();
+    var m=$('modesmsg');
+    api('/admin/config',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({token:tok(),modes:modesState})})
+      .then(function(r){return r.json();}).then(function(d){ if(d.ok){ if(d.modes){ modesState=Object.assign(modesState,d.modes); renderModes(); } m.textContent='Saved.'; m.className='msg ok'; } else { m.textContent='Failed: '+(d.error||'error'); m.className='msg err'; } })
+      .catch(function(){ m.textContent='Network error.'; m.className='msg err'; });
+  }
+
+  // ── Maintenance: update / restart / clear logs (server restarts briefly) ──
+  function maintBusy(b){ srvBusy=b; if(b) srvStop(); else srvStart(); ['btnUpdate','btnRestart','btnClearLogs'].forEach(function(id){ var e=$(id); if(e) e.disabled=b; }); }
+  function pollBack(label){
+    var msg=$('maintmsg'), tries=0; msg.textContent=label+' \u2014 server restarting, reconnecting\u2026'; msg.className='msg';
+    var iv=setInterval(function(){
+      tries++;
+      api('/admin/status',{cache:'no-store'}).then(function(r){return r.json();}).then(function(d){
+        if(d&&d.ok){ clearInterval(iv); maintBusy(false); msg.textContent='Back online \u2014 v'+(d.version||'?')+'.'; msg.className='msg ok'; loadServer(); }
+      }).catch(function(){});
+      if(tries>24){ clearInterval(iv); maintBusy(false); msg.textContent='Still reconnecting\u2026 use Refresh in a moment.'; msg.className='msg err'; }
+    },2500);
+  }
+  function fireAction(path,label){
+    maintBusy(true);
+    api(path,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({token:tok()})})
+      .then(function(r){return r.json();}).then(function(d){ if(d&&d.started){ pollBack(label); } else { maintBusy(false); var m=$('maintmsg'); m.textContent='Failed: '+((d&&d.error)||'error'); m.className='msg err'; } })
+      .catch(function(){ pollBack(label); });
+  }
+  function doUpdate(){ if(confirm('Pull the latest code and restart the server now?')) fireAction('/admin/update','Update started'); }
+  function doUpdateNr(){
+    if(!confirm('Pull the latest code WITHOUT restarting?\n\nServed client files go live immediately (players get them on reload). proxy.js or dependency changes will NOT take effect until a real restart.')) return;
+    var m=$('maintmsg'); m.textContent='Updating (no restart)\u2026'; m.className='msg'; maintBusy(true);
+    api('/admin/update-nr',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({token:tok()})})
+      .then(function(r){return r.json();}).then(function(d){
+        if(d&&d.started){ setTimeout(function(){ maintBusy(false); m.textContent='Pulled \u2014 client files are live, no restart. See the log below.'; m.className='msg ok'; loadUpdateLog(); }, 2500); }
+        else { maintBusy(false); m.textContent='Failed: '+((d&&d.error)||'error'); m.className='msg err'; }
+      }).catch(function(){ maintBusy(false); m.textContent='Update failed \u2014 network error.'; m.className='msg err'; });
+  }
+  function doRestart(){ if(confirm('Restart the server now?')) fireAction('/admin/restart','Restart started'); }
+  function clearLogs(){
+    api('/admin/clear-logs',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({token:tok()})})
+      .then(function(r){return r.json();}).then(function(d){ var m=$('maintmsg'); if(d&&d.ok){ m.textContent='Logs cleared.'; m.className='msg ok'; loadLogs(); } else { m.textContent='Failed.'; m.className='msg err'; } }).catch(function(){ var m=$('maintmsg'); m.textContent='Clear logs failed \u2014 network error.'; m.className='msg err'; });
+  }
+  function loadUpdateLog(){ api('/admin/update-log',{cache:'no-store'}).then(function(r){return r.json();}).then(function(d){ if(d&&d.ok) $('updlog').textContent=d.log||'(empty)'; }).catch(function(){}); }
+  if($('btnUpdateNr')) $('btnUpdateNr').addEventListener('click', doUpdateNr);
+  if($('btnUpdate')) $('btnUpdate').addEventListener('click', doUpdate);
+  if($('btnRestart')) $('btnRestart').addEventListener('click', doRestart);
+  if($('btnClearLogs')) $('btnClearLogs').addEventListener('click', clearLogs);
+  if($('btnUpdLog')) $('btnUpdLog').addEventListener('click', loadUpdateLog);
+  // ── Schedule a restart (warns connected players, then acts after the delay) ──
+  var schedKind='update';
+  document.querySelectorAll('#schedKind button').forEach(function(b){ b.addEventListener('click',function(){ schedKind=b.dataset.k; document.querySelectorAll('#schedKind button').forEach(function(x){x.classList.toggle('on',x===b);}); }); });
+  function schedSay(txt,c){ var m=$('schedState'); m.textContent=txt; m.className='msg '+(c||''); }
+  function scheduleRestart(secs){
+    secs=Math.floor(secs);
+    if(!(secs>=10 && secs<=86400)){ schedSay('Delay must be between 1 and 1440 minutes.','err'); return; }
+    var human=secs>=3600?(secs%3600?Math.round(secs/60)+' min':(secs/3600)+' h'):Math.round(secs/60)+' min';
+    if(!confirm('Schedule \u201c'+(schedKind==='update'?'Update + restart':'Restart only')+'\u201d in '+human+'?\n\nConnected players will be notified now.')) return;
+    schedSay('Scheduling\u2026');
+    api('/admin/schedule-restart',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({seconds:secs,kind:schedKind,message:($('schedMsg').value||'').trim(),token:tok()})})
+      .then(function(r){return r.json();}).then(function(d){ if(d&&d.ok){ schedSay('Scheduled \u2014 '+(d.notified||0)+' player(s) notified.','ok'); loadServer(); } else schedSay('Failed: '+((d&&d.error)||'error'),'err'); })
+      .catch(function(){ schedSay('Schedule failed \u2014 network error.','err'); });
+  }
+  document.querySelectorAll('#schedDelays button').forEach(function(b){ b.addEventListener('click',function(){ scheduleRestart(Number(b.dataset.secs)); }); });
+  if($('schedCustomBtn')) $('schedCustomBtn').addEventListener('click',function(){ scheduleRestart(Number($('schedCustom').value||0)*60); });
+  if($('schedCancel')) $('schedCancel').addEventListener('click',function(){ if(!confirm('Cancel the scheduled restart?'))return;
+    api('/admin/cancel-restart',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({token:tok()})})
+      .then(function(r){return r.json();}).then(function(d){ if(d&&d.ok){ schedSay(d.cancelled?'Cancelled.':'Nothing was scheduled.','ok'); loadServer(); } else schedSay('Cancel failed.','err'); })
+      .catch(function(){ schedSay('Cancel failed \u2014 network error.','err'); }); });
+
+  // ── Broadcasts tab ──────────────────────────────────────────────────────
+  function bcSay(id,txt,c){ var m=$(id); if(m){ m.textContent=txt; m.className='msg '+(c||''); } }
+  function bcGoldPreview(elId,msg,icon){ var el=$(elId); if(!el) return;
+    if(!msg){ el.style.cssText='display:none'; el.textContent=''; return; }
+    el.textContent=(icon?icon+'  ':'')+msg;
+    el.style.cssText='display:block;margin-top:8px;max-width:420px;background:linear-gradient(135deg,rgba(200,168,74,.97),rgba(168,134,40,.97));color:#1a0a00;padding:10px 14px;border-radius:14px;font-weight:600;font-size:.88rem;white-space:pre-line;box-shadow:0 4px 14px rgba(0,0,0,.4)';
+  }
+  function bcDescribe(j){ var s=j.schedule||{},t=s.type,nm=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+    if(t==='interval') return 'Every '+(s.minutes%60===0?(s.minutes/60)+' h':s.minutes+' min');
+    if(t==='daily') return 'Daily at '+s.time;
+    if(t==='everyDays') return 'Every '+s.days+' day(s) at '+s.time;
+    if(t==='weekly') return (s.weekdays||[]).map(function(d){return nm[d];}).join(', ')+' at '+s.time;
+    if(t==='monthly') return 'Day '+s.dom+' each month at '+s.time;
+    if(t==='once') return 'Once at '+new Date(s.at).toLocaleString();
+    return t; }
+  function bcBuildSchedule(){ var t=$('bcType').value;
+    if(t==='interval') return {type:'interval',minutes:Number($('bcMinutes').value)};
+    if(t==='daily') return {type:'daily',time:$('bcTimeDaily').value};
+    if(t==='everyDays') return {type:'everyDays',days:Number($('bcDays').value),time:$('bcTimeEvery').value};
+    if(t==='weekly'){ var wd=[]; document.querySelectorAll('#bcWeekdays button.on').forEach(function(b){wd.push(Number(b.dataset.d));}); return {type:'weekly',weekdays:wd,time:$('bcTimeWeekly').value}; }
+    if(t==='monthly') return {type:'monthly',dom:Number($('bcDom').value),time:$('bcTimeMonthly').value};
+    if(t==='once'){ var v=$('bcOnceAt').value; return {type:'once',at:v?new Date(v).getTime():0}; }
+    return null; }
+  function bcSendNow(){ var msg=($('bcNowMsg').value||'').trim(); if(!msg){ bcSay('bcNowState','Message required.','err'); return; }
+    bcSay('bcNowState','Sending\u2026');
+    api('/admin/broadcast-now',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:msg,icon:$('bcNowIcon').value,token:tok()})})
+      .then(function(r){return r.json();}).then(function(d){ if(d&&d.ok) bcSay('bcNowState','Sent to '+(d.notified||0)+' player(s).','ok'); else bcSay('bcNowState','Failed: '+((d&&d.error)||'error'),'err'); })
+      .catch(function(){ bcSay('bcNowState','Network error.','err'); }); }
+  function addBroadcast(){ var msg=($('bcMsg').value||'').trim(); if(!msg){ bcSay('bcAddState','Message required.','err'); return; }
+    var s=bcBuildSchedule();
+    if(s&&s.type==='weekly'&&!s.weekdays.length){ bcSay('bcAddState','Pick at least one weekday.','err'); return; }
+    if(s&&s.type==='once'&&!(s.at>Date.now())){ bcSay('bcAddState','Pick a future date/time.','err'); return; }
+    var body={message:msg,icon:$('bcIcon').value,schedule:s,token:tok()};
+    var ea=$('bcEndAt').value; if(ea) body.endAt=new Date(ea).getTime();
+    var mr=Number($('bcMaxRuns').value||0); if(mr>0) body.maxRuns=mr;
+    bcSay('bcAddState','Adding\u2026');
+    api('/admin/broadcasts',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)})
+      .then(function(r){return r.json();}).then(function(d){ if(d&&d.ok){ bcSay('bcAddState','Scheduled.','ok'); $('bcMsg').value=''; bcGoldPreview('bcPrev','',''); loadBroadcasts(); } else bcSay('bcAddState','Failed: '+((d&&d.error)||'error'),'err'); })
+      .catch(function(){ bcSay('bcAddState','Network error.','err'); }); }
+  function bcToggle(id,en){ api('/admin/broadcasts/toggle',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id:id,enabled:en,token:tok()})}).then(function(r){return r.json();}).then(function(){loadBroadcasts();}).catch(function(){}); }
+  function bcFire(id){ api('/admin/broadcasts/fire',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id:id,token:tok()})}).then(function(r){return r.json();}).then(function(d){ if(d&&d.ok) bcSay('bcAddState','Sent to '+(d.notified||0)+' player(s).','ok'); loadBroadcasts(); }).catch(function(){}); }
+  function bcDelete(id){ if(!confirm('Delete this scheduled message?'))return; api('/admin/broadcasts/delete',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id:id,token:tok()})}).then(function(r){return r.json();}).then(function(){loadBroadcasts();}).catch(function(){}); }
+  function loadBroadcasts(){ api('/admin/broadcasts').then(function(r){return r.json();}).then(function(d){
+      var sn=$('bcServerNow'); if(sn&&d.serverNow) sn.textContent='Server time: '+new Date(d.serverNow).toLocaleString()+(d.tz?' ('+d.tz+')':'');
+      var el=$('bcList'); if(!el) return; el.innerHTML='';
+      if(!d.ok){ el.innerHTML='<div class="empty err">'+((d&&d.error)||'error')+'</div>'; return; }
+      if(!d.jobs||!d.jobs.length){ el.innerHTML='<div class="empty">No scheduled messages.</div>'; return; }
+      d.jobs.forEach(function(j){
+        var row=document.createElement('div'); row.className='srow'; row.style.cssText='flex-direction:column;align-items:stretch;gap:6px;padding:10px 0';
+        var msg=document.createElement('div'); msg.style.cssText='font-weight:600'; msg.textContent=(j.icon?j.icon+' ':'')+j.message; row.appendChild(msg);
+        var meta=document.createElement('div'); meta.className='muted'; meta.style.fontSize='.8rem';
+        var bits=[bcDescribe(j)];
+        if(j.enabled&&j.nextRun) bits.push('next '+new Date(j.nextRun).toLocaleString()); else if(!j.enabled) bits.push('disabled');
+        if(j.lastRun) bits.push('last '+new Date(j.lastRun).toLocaleString());
+        if(j.maxRuns) bits.push(j.runCount+'/'+j.maxRuns+' sent');
+        if(j.endAt) bits.push('until '+new Date(j.endAt).toLocaleString());
+        meta.textContent=bits.join(' \u00b7 '); row.appendChild(meta);
+        var btns=document.createElement('div'); btns.className='btnrow';
+        var bt=document.createElement('button'); bt.className='use'; bt.textContent=j.enabled?'Disable':'Enable'; bt.addEventListener('click',function(){bcToggle(j.id,!j.enabled);}); btns.appendChild(bt);
+        var bf=document.createElement('button'); bf.className='use'; bf.textContent='Send now'; bf.addEventListener('click',function(){bcFire(j.id);}); btns.appendChild(bf);
+        var bd=document.createElement('button'); bd.className='use danger'; bd.textContent='Delete'; bd.addEventListener('click',function(){bcDelete(j.id);}); btns.appendChild(bd);
+        row.appendChild(btns); el.appendChild(row);
+      });
+    }).catch(function(){ var el=$('bcList'); if(el) el.innerHTML='<div class="empty err">Could not load.</div>'; }); }
+  (function(){ var wk=$('bcWeekdays'); if(wk){ ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].forEach(function(n,i){ var b=document.createElement('button'); b.className='use'; b.dataset.d=i; b.textContent=n; b.addEventListener('click',function(){ b.classList.toggle('on'); }); wk.appendChild(b); }); } })();
+  function bcTypeShow(){ var t=$('bcType')?$('bcType').value:''; document.querySelectorAll('#bcParams .bc-when').forEach(function(d){ d.style.display=d.dataset.for===t?'':'none'; }); }
+  if($('bcType')){ $('bcType').addEventListener('change',bcTypeShow); bcTypeShow(); }
+  if($('bcAdd')) $('bcAdd').addEventListener('click',addBroadcast);
+  if($('bcNowSend')) $('bcNowSend').addEventListener('click',bcSendNow);
+  if($('bcRefresh')) $('bcRefresh').addEventListener('click',loadBroadcasts);
+  function bcPrevSched(){ bcGoldPreview('bcPrev',($('bcMsg').value||'').trim(),$('bcIcon').value); }
+  function bcPrevNow(){ bcGoldPreview('bcNowPrev',($('bcNowMsg').value||'').trim(),$('bcNowIcon').value); }
+  ['bcMsg','bcIcon'].forEach(function(id){ if($(id)){ $(id).addEventListener('input',bcPrevSched); $(id).addEventListener('change',bcPrevSched); } });
+  ['bcNowMsg','bcNowIcon'].forEach(function(id){ if($(id)){ $(id).addEventListener('input',bcPrevNow); $(id).addEventListener('change',bcPrevNow); } });
+  setInterval(function(){ if(document.visibilityState==='visible' && tok() && $('panel-broadcast') && $('panel-broadcast').style.display!=='none') loadBroadcasts(); }, 30000);
+
+  // ── Welcome / first-visit message (per language) ────────────────────────
+  var WC_LANGS=['af','bg','ca','cs','da','de','el','en','es','fi','fr','gd','gl','hi','hr','hu','it','ja','ko','lt','nb','nl','pl','pt-br','pt-pt','ro','ru','sk','sr','sv','ta','tr','uk','vi','zh','zh-tw'];
+  var welcomeState={ enabled:false, 'default':'fr', langs:{} };
+  var wcEdit='fr'; // language currently shown in the editor
+  (function(){ var a=$('wcLang'), b=$('wcDefault'); if(a&&b){ WC_LANGS.forEach(function(c){ var o1=document.createElement('option'); o1.value=c; o1.textContent=c; a.appendChild(o1); var o2=document.createElement('option'); o2.value=c; o2.textContent=c; b.appendChild(o2); }); a.value='fr'; b.value='fr'; } })();
+  function wcFilledList(){ return Object.keys(welcomeState.langs); }
+  function wcUpdateFilled(){ var el=$('wcFilled'); if(!el) return; var f=wcFilledList(); el.textContent = f.length ? ('Filled languages: '+f.join(', ')) : 'No language filled yet.'; }
+  // Read the editor fields into the language being edited (wcEdit) so switching
+  // languages or saving never loses what was typed/pasted — independent of any
+  // input-event quirk on some mobile browsers.
+  function wcCommit(){ var t=($('wcTitle').value||''), b=($('wcBody').value||''); if(t.trim()||b.trim()) welcomeState.langs[wcEdit]={title:t,body:b}; else delete welcomeState.langs[wcEdit]; }
+  function wcShow(code){ wcEdit=code; if($('wcLang')) $('wcLang').value=code; var v=welcomeState.langs[code]||{}; $('wcTitle').value=v.title||''; $('wcBody').value=v.body||''; wcPreview(); wcUpdateFilled(); }
+  function wcPreview(){ var el=$('wcPrev'); if(!el) return; var t=($('wcTitle').value||'').trim(), b=($('wcBody').value||'').trim();
+    if(!t&&!b){ el.style.cssText='display:none'; el.textContent=''; return; }
+    el.textContent=''; el.style.cssText='display:block;margin-top:8px;max-width:440px;background:#1c1812;border:1px solid rgba(200,168,74,.5);border-radius:14px;overflow:hidden';
+    if(t){ var h=document.createElement('div'); h.textContent=t; h.style.cssText='padding:12px 16px;font-weight:700;color:#e0c070;border-bottom:1px solid rgba(200,168,74,.25)'; el.appendChild(h); }
+    var p=document.createElement('div'); p.textContent=b; p.style.cssText='padding:12px 16px;white-space:pre-line;line-height:1.5;color:#efe6d2;font-size:.9rem'; el.appendChild(p);
+  }
+  // First language to show: the configured fallback if it has content, else the
+  // first filled language, else the fallback (empty) — so the live message is
+  // visible immediately from any machine.
+  function wcInitialLang(){ var d=welcomeState['default']||'fr'; if(welcomeState.langs[d]) return d; var f=wcFilledList(); return f.length ? f[0] : d; }
+  function loadWelcome(){ api('/admin/config').then(function(r){return r.json();}).then(function(d){ if(!d||!d.ok||!d.welcome) return; welcomeState={ enabled:!!d.welcome.enabled, 'default':d.welcome['default']||'fr', langs:d.welcome.langs||{} }; if($('wcEnabled')) $('wcEnabled').checked=welcomeState.enabled; if($('wcDefault')) $('wcDefault').value=welcomeState['default']; wcShow(wcInitialLang()); }).catch(function(){}); }
+  function saveWelcome(){ wcCommit(); var body={ welcome:{ enabled:$('wcEnabled').checked, 'default':$('wcDefault').value, langs:welcomeState.langs }, token:tok() };
+    bcSay('wcState','Saving\u2026');
+    api('/admin/config',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)})
+      .then(function(r){return r.json();}).then(function(d){ if(d&&d.ok){ bcSay('wcState','Saved \u2014 returning visitors will see it once more.','ok'); if(d.welcome){ welcomeState={ enabled:!!d.welcome.enabled, 'default':d.welcome['default']||'fr', langs:d.welcome.langs||{} }; wcUpdateFilled(); } } else bcSay('wcState','Failed: '+((d&&d.error)||'error'),'err'); })
+      .catch(function(){ bcSay('wcState','Network error.','err'); }); }
+  if($('wcLang')) $('wcLang').addEventListener('change', function(){ wcCommit(); wcShow($('wcLang').value); });
+  ['wcTitle','wcBody'].forEach(function(id){ if($(id)) $(id).addEventListener('input',function(){ wcCommit(); wcPreview(); wcUpdateFilled(); }); });
+  if($('wcSave')) $('wcSave').addEventListener('click',saveWelcome);
+
+  // Collapsible cards: any card whose first child is its <h2> becomes foldable —
+  // click (or Enter/Space) the title to fold/unfold. We wrap the body once so the
+  // inner controls' own display logic (e.g. the Cancel button) is never touched.
+  // State is remembered per browser; the longest cards start folded on first run.
+  (function(){
+    var STORE='pth_admin_collapsed', saved=null;
+    try{ saved=JSON.parse(localStorage.getItem(STORE)||'null'); }catch(e){}
+    var state = saved || {}, firstRun = !saved;
+    var DEFAULT_FOLDED = ['Default in-game settings','Schedule a restart','Schedule a recurring message','Welcome / rules message'];
+    function slug(s){ return (s||'').trim().replace(/[^a-z0-9]+/gi,'_').replace(/^_+|_+$/g,'').toLowerCase().slice(0,48); }
+    document.querySelectorAll('.card').forEach(function(card){
+      var h2s = card.querySelectorAll('h2');
+      if(h2s.length!==1) return;
+      var h2 = h2s[0];
+      if(card.firstElementChild!==h2) return;          // only header-first cards
+      var body = document.createElement('div'); body.className='card-body';
+      while(h2.nextSibling) body.appendChild(h2.nextSibling);
+      card.appendChild(body);
+      h2.classList.add('collap-h'); h2.setAttribute('role','button'); h2.tabIndex=0;
+      var k = slug(h2.textContent);
+      var txt = (h2.textContent||'').trim();
+      var folded = firstRun ? DEFAULT_FOLDED.some(function(t){ return txt.indexOf(t)===0; }) : !!state[k];
+      function setFold(f, anim){
+        h2.classList.toggle('collapsed', f);
+        if(!anim){ body.style.height = f ? '0px' : 'auto'; return; }
+        if(f){ body.style.height = body.scrollHeight + 'px'; void body.offsetHeight; body.style.height = '0px'; }
+        else { body.style.height = body.scrollHeight + 'px'; setTimeout(function(){ if(!h2.classList.contains('collapsed')) body.style.height = 'auto'; }, 280); }
+      }
+      setFold(folded, false); state[k]=folded;
+      function toggle(){ var f = !h2.classList.contains('collapsed'); setFold(f, true); state[k]=f; try{ localStorage.setItem(STORE, JSON.stringify(state)); }catch(e){} }
+      h2.addEventListener('click', toggle);
+      h2.addEventListener('keydown', function(e){ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); toggle(); } });
+    });
+    if(firstRun){ try{ localStorage.setItem(STORE, JSON.stringify(state)); }catch(e){} }
+  })();
+
+  enter();
+})();
+</script>
+</body>
+</html>

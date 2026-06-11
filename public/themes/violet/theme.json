@@ -1,0 +1,30 @@
+{
+  "name": "Royal Purple",
+  "swatch": "#5a2a7a",
+  "felt": "felt.jpg",
+  "table": {
+    "felt-base-hi": "#5e2c80",
+    "felt-base-mid": "#3c1858",
+    "felt-base-lo": "#200a32",
+    "rail": "#6b3e18",
+    "rail-dark": "#3a2208",
+    "rail-glow": "rgba(120,60,170,0.30)"
+  },
+  "palette": {
+    "felt": "#160a26",
+    "felt-mid": "#20103a",
+    "felt-hi": "#2c1850",
+    "panel": "rgba(22,10,34,0.93)",
+    "panel-hi": "rgba(32,16,48,0.94)",
+    "cream": "#efe6f5",
+    "text": "#b8a0c8",
+    "text-hi": "#e2d2f0",
+    "modal-bg": "linear-gradient(160deg, #1a0a2c 0%, #281244 50%, #120720 100%)",
+    "body-glow": "rgba(120,60,170,0.16)",
+    "gold": "#c8a84a",
+    "gold-hi": "#e0c070",
+    "gold-dim": "#7a6428",
+    "border": "rgba(200,168,74,0.25)",
+    "border-hi": "rgba(200,168,74,0.65)"
+  }
+}
