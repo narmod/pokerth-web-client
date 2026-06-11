@@ -41,6 +41,7 @@ let _curId  = null;
 let _loaded = false;
 let _bodyEl = null;
 let _repeat = 'one';   // 'one' = loop track | 'all' = loop playlist | 'off' = play once
+let _seeking = false;  // true while the user drags the seek bar (don't let timeupdate fight the thumb)
 
 // Web Audio routing. On iOS/WebKit, HTMLMediaElement.volume is read-only, so
 // `audio.volume = x` is silently ignored (volume is hardware-only there). Routing
@@ -87,6 +88,9 @@ function _el() {
     try { _audio.volume = getVolume(); } catch (e) {}
     ['play', 'pause', 'error'].forEach(function (ev) { _audio.addEventListener(ev, _render); });
     _audio.addEventListener('ended', _onEnded);
+    // Progress wiring — bound ONCE on the persistent element (not per-render),
+    // updates whatever progress row currently exists in the panel.
+    ['timeupdate', 'loadedmetadata', 'durationchange', 'seeked'].forEach(function (ev) { _audio.addEventListener(ev, _renderProgress); });
   }
   return _audio;
 }
@@ -173,6 +177,38 @@ function toggleTrack(id) {
 function next() { if (_tracks.length < 2) return play(_curId); var i = _index(_curId); if (i < 0) i = 0; return play(_tracks[(i + 1) % _tracks.length].id); }
 function prev() { if (_tracks.length < 2) return play(_curId); var i = _index(_curId); if (i < 0) i = 0; return play(_tracks[(i - 1 + _tracks.length) % _tracks.length].id); }
 
+// ── Playback position / seeking ──
+function getDuration()    { try { var d = _audio ? _audio.duration : 0; return (isFinite(d) && d > 0) ? d : 0; } catch (e) { return 0; } }
+function getCurrentTime() { try { return _audio ? (_audio.currentTime || 0) : 0; } catch (e) { return 0; } }
+function seek(t) {
+  var d = getDuration(); if (!_audio || !d) return;
+  t = Math.max(0, Math.min(d, t));
+  try { _audio.currentTime = t; } catch (e) {}
+  _renderProgress();
+}
+function _fmtTime(s) {
+  s = Math.floor(s || 0); if (!isFinite(s) || s < 0) s = 0;
+  var h = Math.floor(s / 3600), m = Math.floor((s % 3600) / 60), ss = s % 60;
+  var mm = (h && m < 10) ? '0' + m : '' + m;
+  return (h ? h + ':' : '') + mm + ':' + (ss < 10 ? '0' : '') + ss;
+}
+// Lightweight in-place refresh of the progress row — called on timeupdate / metadata,
+// NEVER rebuilds the panel (would break the select + the drag while seeking).
+function _renderProgress() {
+  if (!_bodyEl) return;
+  var seekEl = _bodyEl.querySelector('.music-seek');
+  var curEl  = _bodyEl.querySelector('.music-cur');
+  var durEl  = _bodyEl.querySelector('.music-dur');
+  if (!seekEl && !curEl && !durEl) return;
+  var d = getDuration(), c = getCurrentTime(), canSeek = d > 0;
+  if (durEl) durEl.textContent = canSeek ? _fmtTime(d) : '0:00';
+  if (!_seeking && curEl) curEl.textContent = _fmtTime(c);
+  if (seekEl) {
+    seekEl.disabled = !canSeek;
+    if (!_seeking) seekEl.value = canSeek ? Math.round(c / d * 1000) : 0;
+  }
+}
+
 // ── UI ──
 function mount(bodyEl) {
   if (bodyEl) _bodyEl = bodyEl;
@@ -197,6 +233,8 @@ function _render() {
   var playing = isPlaying();
   var cur = _byId(_curId);
   var vol = Math.round(getVolume() * 100);
+  var _dur = getDuration(), _cur = getCurrentTime(), _canSeek = _dur > 0;
+  var _pos = _canSeek ? Math.round(_cur / _dur * 1000) : 0;
   var multi = _tracks.length > 1;
   var ppKey = playing ? 'musicPause' : 'musicPlay';
   var ppIcon = playing ? '\u23F8' : '\u25B6';
@@ -221,6 +259,11 @@ function _render() {
       '<span class="music-div"></span>' +
       '<button type="button" class="music-tbtn music-rpt' + (_repeat === 'one' ? ' is-active' : '') + '" data-mact="rep-one" aria-pressed="' + (_repeat === 'one') + '" title="' + _esc(_t('musicRepeatOne', 'Repeat one')) + '" data-i18n-title="musicRepeatOne">\uD83D\uDD02</button>' +
       '<button type="button" class="music-tbtn music-rpt' + (_repeat === 'all' ? ' is-active' : '') + '" data-mact="rep-all" aria-pressed="' + (_repeat === 'all') + '" title="' + _esc(_t('musicRepeatAll', 'Repeat playlist')) + '" data-i18n-title="musicRepeatAll">\uD83D\uDD01</button>' +
+    '</div>' +
+    '<div class="music-seek-row">' +
+      '<span class="music-time music-cur">' + _fmtTime(_cur) + '</span>' +
+      '<input type="range" class="music-seek" min="0" max="1000" step="1" value="' + _pos + '"' + (_canSeek ? '' : ' disabled') + ' aria-label="' + _esc(_t('musicNowPlaying', 'Now playing')) + '">' +
+      '<span class="music-time music-dur">' + (_canSeek ? _fmtTime(_dur) : '0:00') + '</span>' +
     '</div>' +
     '<div class="music-vol">' +
       '<span class="music-vol-ic">\uD83D\uDD0A</span>' +
@@ -269,6 +312,17 @@ function _wire() {
       try { localStorage.setItem(LS_VOL, String(v)); } catch (e) {}
     });
   }
+  var seekEl = _bodyEl.querySelector('.music-seek');
+  if (seekEl) {
+    var doSeek = function () {
+      var d = getDuration(); if (!d) return;
+      var t = (parseInt(seekEl.value, 10) || 0) / 1000 * d;
+      var curEl = _bodyEl.querySelector('.music-cur'); if (curEl) curEl.textContent = _fmtTime(t);
+      seek(t);
+    };
+    seekEl.addEventListener('input',  function () { _seeking = true; doSeek(); });
+    seekEl.addEventListener('change', function () { doSeek(); _seeking = false; });
+  }
 }
 
 // Restore the last-selected track id + repeat mode at load (no playback).
@@ -291,6 +345,9 @@ const Music = {
   setVolume: setVolume,
   getRepeat: getRepeat,
   setRepeat: setRepeat,
+  getDuration: getDuration,
+  getCurrentTime: getCurrentTime,
+  seek: seek,
   mount: mount
 };
 

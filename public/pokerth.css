@@ -5767,6 +5767,12 @@ body.has-keyboard .act-key { display: inline-block; }
 .music-vol-ic { flex: 0 0 auto; font-size: 0.95rem; }
 .music-vol-range { flex: 1 1 auto; min-width: 0; accent-color: var(--gold); }
 .music-vol-val { flex: 0 0 auto; font-size: 0.72rem; color: var(--gold-dim); min-width: 34px; text-align: right; }
+.music-seek-row { display: flex; align-items: center; gap: 8px; }
+.music-seek { flex: 1 1 auto; min-width: 0; accent-color: var(--gold); cursor: pointer; }
+.music-seek[disabled] { opacity: 0.45; cursor: default; }
+.music-time { flex: 0 0 auto; font-size: 0.7rem; color: var(--gold-dim); min-width: 36px; font-variant-numeric: tabular-nums; }
+.music-cur { text-align: right; }
+.music-dur { text-align: left; }
 .music-list { display: flex; flex-direction: column; gap: 4px; }
 .music-row {
   display: flex; align-items: center; gap: 10px;
