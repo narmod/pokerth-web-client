@@ -2760,7 +2760,6 @@ const App = (() => {
     var nameEl  = document.getElementById('pim-name');
     var statsEl = document.getElementById('pim-stats');
     var infoEl  = document.getElementById('pim-info');
-    var changeBtn = modal.querySelector('.pim-change');
     // ── Grand avatar (cercle 96px). Pour MOI : on respecte le choix local
     //    (même ordre que la barre joueur). Pour un autre : même priorité que
     //    les sièges (image réelle > emoji reçu > 🤖 si bot > initiale). ──
@@ -2824,16 +2823,14 @@ const App = (() => {
       }
     }
     if (isSelf) {
-      // Mon profil : onglets stats + bouton « changer d'avatar » (inchangé).
+      // Mon profil : onglets stats (l'avatar du popup est cliquable pour le changer).
       if (infoEl)    { infoEl.style.display = 'none'; infoEl.innerHTML = ''; }
       if (statsEl)   statsEl.style.display = '';
-      if (changeBtn) changeBtn.style.display = '';
       _pimTab = 'session';
       _renderProfileStats();
     } else {
       // Adversaire : rôle + infos en jeu, pas de stats ni de bouton avatar.
       if (statsEl)   { statsEl.style.display = 'none'; statsEl.innerHTML = ''; }
-      if (changeBtn) changeBtn.style.display = 'none';
       if (infoEl) {
         infoEl.innerHTML = _otherPlayerInfoHtml(targetPid);
         infoEl.style.display = '';
@@ -10652,7 +10649,7 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.2.422'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.2.423'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
