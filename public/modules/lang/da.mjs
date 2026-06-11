@@ -450,7 +450,7 @@ export const strings = {
     kickTooltip: 'Smid spiller ud', kickSubtitle:'Vælg en spiller, der skal fjernes fra bordet',
     closeTableTooltip: 'Luk bordet',
     langTooltip: 'Skift sprog',
-    fullscreenTooltip: 'Fuldskærm', menuAdmin:'Admin', autoBtnLabel:'Auto-fold-knap', quickBetLabel:'Hurtige indsats-knapper',
+    fullscreenTooltip: 'Fuldskærm', menuAdmin:'Admin', autoBtnLabel:'Auto-tilstandsvælger', quickBetLabel:'Hurtige indsats-knapper',
     chatPlaceholder: 'Besked…',
     hintFold: 'F — Kast dig',
     hintCheck: 'C — Tjek',

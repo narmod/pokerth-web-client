@@ -194,7 +194,7 @@ export const strings = {
     waitingStartNow:'अभी शुरू करें',
     autoCheckLabel:'अगली बारी ऑटो-चेक',
     autoFoldLabel:'अगली बारी ऑटो-फोल्ड',
-    autoBtnLabel:'ऑटो-फोल्ड बटन', quickBetLabel:'त्वरित-बेट बटन',
+    autoBtnLabel:'ऑटो-मोड चयनकर्ता', quickBetLabel:'त्वरित-बेट बटन',
     autoRearmHint:'हर बारी पुनः सक्रिय',
     autoChecked:'ऑटो-चेक किया',
     preActionTitle:'एक्शन पूर्वावलोकन', preActionHint:'बंद करने के लिए कार्ड टैप करें',

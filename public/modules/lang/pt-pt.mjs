@@ -363,7 +363,7 @@ export const strings = {
     waitingStartNow: 'Começar agora',
     autoCheckLabel: 'Auto-check na próxima vez',
     autoFoldLabel: 'Auto-fold na próxima vez',
-    autoBtnLabel:'Botão Auto-fold', quickBetLabel:'Botões de aposta rápida',
+    autoBtnLabel:'Seletor de modo automático', quickBetLabel:'Botões de aposta rápida',
     autoRearmHint: 'reativa-se a cada vez',
     autoChecked: 'Check automático efetuado',
     autoFolded: 'Fold automático efetuado',

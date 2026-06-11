@@ -193,7 +193,7 @@ export const strings = {
     waitingStartNow:'지금 시작',
     autoCheckLabel:'다음 차례 자동 체크',
     autoFoldLabel:'다음 차례 자동 폴드',
-    autoBtnLabel:'자동 폴드 버튼', quickBetLabel:'빠른 벳 버튼',
+    autoBtnLabel:'자동 모드 선택기', quickBetLabel:'빠른 벳 버튼',
     autoRearmHint:'매 차례 재설정됨',
     autoChecked:'자동 체크됨',
     preActionTitle:'액션 미리보기', preActionHint:'카드를 탭하면 닫힘',

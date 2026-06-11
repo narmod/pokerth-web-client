@@ -450,7 +450,7 @@ export const strings = {
     kickTooltip: 'プレイヤーをキック', kickSubtitle:'テーブルからキックするプレイヤーを選択',
     closeTableTooltip: 'テーブルを閉じる',
     langTooltip: '言語を切り替え',
-    fullscreenTooltip: '全画面', menuAdmin:'管理者', autoBtnLabel:'Auto-fold ボタン', quickBetLabel:'クイックベットボタン',
+    fullscreenTooltip: '全画面', menuAdmin:'管理者', autoBtnLabel:'自動モードセレクター', quickBetLabel:'クイックベットボタン',
     chatPlaceholder: 'メッセージ…',
     hintFold: 'F — フォールド',
     hintCheck: 'C — チェック',

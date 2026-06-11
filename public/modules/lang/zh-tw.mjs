@@ -452,7 +452,7 @@ export const strings = {
     kickTooltip: '踢出玩家', kickSubtitle:'選擇要踢出牌桌的玩家',
     closeTableTooltip: '關閉牌桌',
     langTooltip: '切換語言',
-    fullscreenTooltip: '全屏', menuAdmin:'管理員', autoBtnLabel:'Auto-fold 按鈕', quickBetLabel:'快速下注按鈕',
+    fullscreenTooltip: '全屏', menuAdmin:'管理員', autoBtnLabel:'自動模式選擇器', quickBetLabel:'快速下注按鈕',
     chatPlaceholder: '訊息…',
     hintFold: 'F — 棄牌',
     hintCheck: 'C — 過牌',

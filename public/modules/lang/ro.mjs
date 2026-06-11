@@ -451,7 +451,7 @@ export const strings = {
     kickTooltip: 'Dă afară jucător', kickSubtitle:'Selectează un jucător pentru a-l elimina de la masă',
     closeTableTooltip: 'Închide masa',
     langTooltip: 'Schimbă limba',
-    fullscreenTooltip: 'Ecran complet', menuAdmin:'Admin', autoBtnLabel:'Buton Auto-fold', quickBetLabel:'Butoane de pariere rapidă',
+    fullscreenTooltip: 'Ecran complet', menuAdmin:'Admin', autoBtnLabel:'Selector mod automat', quickBetLabel:'Butoane de pariere rapidă',
     chatPlaceholder: 'Mesaj…',
     hintFold: 'F — Fold',
     hintCheck: 'C — Check',

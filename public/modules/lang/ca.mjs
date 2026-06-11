@@ -451,7 +451,7 @@ export const strings = {
     kickTooltip: 'Expulsa un jugador', kickSubtitle:'Selecciona un jugador per expulsar de la taula',
     closeTableTooltip: 'Tanca la taula',
     langTooltip: 'Canvia d\'idioma',
-    fullscreenTooltip: 'Pantalla completa', menuAdmin:'Admin', autoBtnLabel:'Botó Auto-fold', quickBetLabel:'Apostes ràpides',
+    fullscreenTooltip: 'Pantalla completa', menuAdmin:'Admin', autoBtnLabel:'Selector de mode automàtic', quickBetLabel:'Apostes ràpides',
     chatPlaceholder: 'Missatge…',
     hintFold: 'F — Fold',
     hintCheck: 'C — Check',
