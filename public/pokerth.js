@@ -690,6 +690,9 @@ window.refreshMyAvatar = function() {
   var customImg = (stored === '__img__')
     ? (function(){ try { return localStorage.getItem('pth_avatar_img') || null; } catch(e){ return null; } })()
     : null;
+  // PokerTH avatar UPLOAD (scope A): prepare the custom image so official
+  // clients can see it (no-op for emoji/initial). See _pthPrepareMyUpload.
+  try { if (customImg) _pthPrepareMyUpload(customImg); else _pthClearMyUpload(); } catch(e) {}
   // Effective choice: 'pth' | 'img' | 'initial' | 'emoji-xxx'
   var usePth   = (stored === '__pth__') && !!pthUrl;
   var emojiAv  = (stored && stored !== '__pth__' && stored !== '__img__') ? stored : '';
@@ -760,6 +763,111 @@ window.refreshMyAvatar = function() {
   // login modes and lets users pre-pick "PokerTH avatar" before they
   // even connect.
 };
+
+  // ──────────────────────────────────────────────────────────────────
+  // PokerTH avatar UPLOAD (scope A) — make the local *custom image* avatar
+  // visible to official QML/desktop clients. We normalize the image to a
+  // small PNG, compute its MD5, advertise the hash in InitMessage (field 8),
+  // and stream the bytes back when the server asks (AvatarRequest handler).
+  // Emoji / initial avatars are NOT uploaded (scope A). The web<->web
+  // AVATARIMG: relay is unaffected and still gives instant peer display.
+  // ──────────────────────────────────────────────────────────────────
+
+  // Compact MD5 (RFC 1321) over a Uint8Array -> Uint8Array(16). Pure JS:
+  // SubtleCrypto offers SHA but not MD5, and PokerTH keys avatars by the
+  // MD5 of the raw file bytes.
+  function _md5bytes(input) {
+    function rol(x, c) { return (x << c) | (x >>> (32 - c)); }
+    function add(a, b) { return (a + b) | 0; }
+    var S = [7,12,17,22,7,12,17,22,7,12,17,22,7,12,17,22,
+             5,9,14,20,5,9,14,20,5,9,14,20,5,9,14,20,
+             4,11,16,23,4,11,16,23,4,11,16,23,4,11,16,23,
+             6,10,15,21,6,10,15,21,6,10,15,21,6,10,15,21];
+    var K = [], i;
+    for (i = 0; i < 64; i++) K[i] = (Math.floor(Math.abs(Math.sin(i + 1)) * 4294967296)) | 0;
+    var msgLen = input.length;
+    var withOne = msgLen + 1;
+    var padZeros = ((withOne % 64) <= 56) ? (56 - (withOne % 64)) : (120 - (withOne % 64));
+    var total = withOne + padZeros + 8;
+    var buf = new Uint8Array(total);
+    buf.set(input, 0);
+    buf[msgLen] = 0x80;
+    var bitLen = msgLen * 8;
+    buf[total - 8] = bitLen & 0xff;
+    buf[total - 7] = (bitLen >>> 8) & 0xff;
+    buf[total - 6] = (bitLen >>> 16) & 0xff;
+    buf[total - 5] = (bitLen >>> 24) & 0xff;
+    var a0 = 0x67452301, b0 = 0xefcdab89 | 0, c0 = 0x98badcfe | 0, d0 = 0x10325476;
+    var off;
+    for (off = 0; off < total; off += 64) {
+      var M = [], j;
+      for (j = 0; j < 16; j++) {
+        M[j] = (buf[off + j*4]) | (buf[off + j*4 + 1] << 8) | (buf[off + j*4 + 2] << 16) | (buf[off + j*4 + 3] << 24);
+      }
+      var A = a0, B = b0, C = c0, D = d0, k;
+      for (k = 0; k < 64; k++) {
+        var F, g;
+        if (k < 16) { F = (B & C) | ((~B) & D); g = k; }
+        else if (k < 32) { F = (D & B) | ((~D) & C); g = (5*k + 1) % 16; }
+        else if (k < 48) { F = B ^ C ^ D; g = (3*k + 5) % 16; }
+        else { F = C ^ (B | (~D)); g = (7*k) % 16; }
+        F = add(add(add(F, A), K[k]), M[g]);
+        A = D; D = C; C = B;
+        B = add(B, rol(F, S[k]));
+      }
+      a0 = add(a0, A); b0 = add(b0, B); c0 = add(c0, C); d0 = add(d0, D);
+    }
+    var out = new Uint8Array(16), w, words = [a0, b0, c0, d0];
+    for (w = 0; w < 4; w++) {
+      out[w*4]     = words[w] & 0xff;
+      out[w*4 + 1] = (words[w] >>> 8) & 0xff;
+      out[w*4 + 2] = (words[w] >>> 16) & 0xff;
+      out[w*4 + 3] = (words[w] >>> 24) & 0xff;
+    }
+    return out;
+  }
+
+  // Last data URL we prepared (dedupe so we don't re-encode every refresh).
+  var _pthUploadSrc = null;
+  function _pthClearMyUpload() {
+    _pthUploadSrc = null;
+    try { window._pthMyUpload = null; } catch(e) {}
+  }
+  // Normalize the custom image to a small PNG, hash it, stash bytes+hash so
+  // buildInit can advertise it and the AvatarRequest handler can stream it.
+  // Async + deduped. Hooked from refreshMyAvatar (startup-restore + changes).
+  function _pthPrepareMyUpload(dataUrl) {
+    if (!dataUrl || typeof dataUrl !== 'string') { _pthClearMyUpload(); return; }
+    if (dataUrl === _pthUploadSrc && window._pthMyUpload) return;
+    _pthUploadSrc = dataUrl;
+    var img = new Image();
+    img.onload = function() {
+      try {
+        var SZ = 96; // official avatars are tiny -> stays well under any size cap
+        var cv = document.createElement('canvas');
+        cv.width = SZ; cv.height = SZ;
+        var ctx = cv.getContext('2d');
+        var s = Math.min(img.width, img.height) || SZ;
+        var sx = (img.width - s) / 2, sy = (img.height - s) / 2;
+        ctx.drawImage(img, sx, sy, s, s, 0, 0, SZ, SZ);
+        cv.toBlob(function(blob) {
+          if (!blob) { _pthClearMyUpload(); return; }
+          blob.arrayBuffer().then(function(ab) {
+            var bytes = new Uint8Array(ab);
+            window._pthMyUpload = {
+              bytes: bytes,
+              hashBytes: _md5bytes(bytes),
+              type: 1,            // NetAvatarType: 1=PNG
+              size: bytes.length,
+            };
+          }).catch(function() { _pthClearMyUpload(); });
+        }, 'image/png');
+      } catch(e) { _pthClearMyUpload(); }
+    };
+    img.onerror = function() { _pthClearMyUpload(); };
+    img.src = dataUrl;
+  }
+
 
 window.toggleAvatarPopup = function() {
   var popup = document.getElementById('avatar-popup');
@@ -2046,6 +2154,13 @@ const MSG = (() => {
       }
       fields.push([7, 2, pwd]); // clientUserData
     }
+    // PokerTH avatar UPLOAD (scope A): advertise the prepared custom
+    // image's MD5 so the server requests the bytes and relays the avatar
+    // to official clients. InitMessage field 8 (avatarHash).
+    try {
+      var _up = (typeof window !== 'undefined') ? window._pthMyUpload : null;
+      if (_up && _up.hashBytes && _up.hashBytes.length === 16) fields.push([8, 2, _up.hashBytes]);
+    } catch(e) {}
     const init = Proto.encode(fields);
     return Proto.encode([[1,0,T.Init],[3,2,init]]);
   }
@@ -4174,6 +4289,32 @@ const App = (() => {
       // No assembly into a Blob/Data URL yet, no display. Just log so
       // we can verify the server actually streams the bytes back.
       // ──────────────────────────────────────────────────────────────
+      // ── PokerTH avatar UPLOAD (scope A): the server got our hash from
+      // InitMessage, lacks the file, and is asking US for it. Stream it back
+      // (matching hash only): AvatarHeader -> AvatarData* -> AvatarEnd.
+      case T.AvatarRequest: {
+        const reqId = Proto.u32(sub, 1);
+        const want = Proto.raw(sub, 2); // 16-byte MD5 the server wants
+        const up = (typeof window !== 'undefined') ? window._pthMyUpload : null;
+        const ok = up && up.hashBytes && up.bytes && up.bytes.length && want &&
+                   want.length === up.hashBytes.length &&
+                   up.hashBytes.every(function(b, i) { return b === want[i]; });
+        if (ok) {
+          send(Proto.encode([[1, 0, T.AvatarHeader], [9, 2,
+            Proto.encode([[1, 0, reqId], [2, 0, up.type || 1], [3, 0, up.bytes.length]])]]));
+          const CK = 1024;
+          for (let o = 0; o < up.bytes.length; o += CK) {
+            const part = up.bytes.slice(o, Math.min(o + CK, up.bytes.length));
+            send(Proto.encode([[1, 0, T.AvatarData], [10, 2,
+              Proto.encode([[1, 0, reqId], [2, 2, part]])]]));
+          }
+          send(Proto.encode([[1, 0, T.AvatarEnd], [11, 2, Proto.encode([[1, 0, reqId]])]]));
+        } else {
+          send(Proto.encode([[1, 0, T.UnknownAvatar], [12, 2, Proto.encode([[1, 0, reqId]])]]));
+        }
+        break;
+      }
+
       case T.AvatarHeader: {
         const reqId = Proto.u32(sub, 1);
         const avType = Proto.u32(sub, 2);
@@ -10379,7 +10520,7 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.2.412'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.2.413'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
