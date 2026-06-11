@@ -70,6 +70,27 @@ function isHostAllowed(h) {
   return false;
 }
 
+// ── Upstream port allowlist (anti SSRF-vers-services-locaux) ──
+// localhost / 127.0.0.1 / ::1 sont forcement dans l'allowlist d'hotes (un
+// serveur PokerTH tourne sur cette machine), donc sans contrainte de port le
+// proxy pourrait etre invoque avec host=127.0.0.1&port=22 (SSH), 3306 (MySQL),
+// 6379 (Redis)... La liste de ports limite les connexions au(x) port(s) du
+// service PokerTH. 7234 est toujours autorise ; l'admin peut en ajouter.
+const DEFAULT_ALLOWED_PORTS = [7234];
+const ALLOWED_PORTS = (process.env.ALLOWED_PORTS
+  ? process.env.ALLOWED_PORTS.split(',').map(s => parseInt(s.trim(), 10)).filter(n => n > 0)
+  : DEFAULT_ALLOWED_PORTS
+);
+
+function isPortAllowed(p) {
+  if (!Number.isInteger(p) || p < 1 || p > 65535) return false;
+  if (ALLOWED_PORTS.includes(p)) return true;
+  var px = _adminConfig && _adminConfig.proxyCfg;
+  var extra = (px && Array.isArray(px.allowedPorts)) ? px.allowedPorts : [];
+  for (var i = 0; i < extra.length; i++) { if (parseInt(extra[i], 10) === p) return true; }
+  return false;
+}
+
 dns.setDefaultResultOrder('ipv4first');
 
 // ── Decoder protobuf minimal ──
@@ -760,6 +781,12 @@ function handleAdmin(req, res, reqPathOnly, query) {
               .filter(function (s) { return s && /^[a-z0-9.\-:]+$/.test(s); })
               .slice(0, 50);
           }
+          if (Array.isArray(pc.allowedPorts)) {
+            pout.allowedPorts = pc.allowedPorts
+              .map(function (s) { return parseInt(s, 10); })
+              .filter(function (n) { return Number.isInteger(n) && n >= 1 && n <= 65535; })
+              .slice(0, 20);
+          }
           var _gs = (pc.graceSec == null || pc.graceSec === '') ? null : parseInt(pc.graceSec, 10);
           if (_gs != null && _gs >= 10 && _gs <= 900) pout.graceSec = _gs;
           var _cg = (pc.connGapMs == null || pc.connGapMs === '') ? null : parseInt(pc.connGapMs, 10);
@@ -1156,6 +1183,7 @@ console.log('\n▶ Proxy : ws://localhost:' + PROXY_PORT + '  /  http://localhos
 console.log('▶ TLS   : ' + (FORCE_NOTLS ? 'DISABLED (--notls)' : 'ENABLED by default'));
 console.log('▶ Certs : ' + (INSECURE_TLS ? 'verification DISABLED (--insecure)' : 'verification active'));
 console.log('▶ Allow : ' + ALLOWED_HOSTS.join(', '));
+console.log('▶ Ports : ' + ALLOWED_PORTS.join(', '));
 console.log('\nTips:');
 console.log('  • LAN server without TLS → uncheck TLS in the browser');
 console.log('  • pokerth.net            → TLS checked, registered login needed');
@@ -1369,6 +1397,11 @@ wss.on('connection', (ws, req) => {
   if (!isHostAllowed(host)) {
     console.warn('[!] Rejected connection to non-allowed host: ' + host + ':' + port);
     try { ws.close(4403, 'Host not in allowlist'); } catch (_) {}
+    return;
+  }
+  if (!isPortAllowed(port)) {
+    console.warn('[!] Rejected connection to non-allowed port: ' + host + ':' + port);
+    try { ws.close(4403, 'Port not in allowlist'); } catch (_) {}
     return;
   }
 
