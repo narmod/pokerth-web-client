@@ -451,7 +451,7 @@ export const strings = {
     kickTooltip: 'Đuổi người chơi', kickSubtitle:'Chọn một người chơi để loại khỏi bàn',
     closeTableTooltip: 'Đóng bàn',
     langTooltip: 'Đổi ngôn ngữ',
-    fullscreenTooltip: 'Toàn màn hình', menuAdmin:'Admin', autoBtnLabel:'Bộ chọn chế độ tự động', quickBetLabel:'Nút cược nhanh',
+    fullscreenTooltip: 'Toàn màn hình', menuAdmin:'Admin', autoBtnLabel:'Bộ chọn chế độ tự động', hintBetConfirm:'R để đặt cược', quickBetLabel:'Nút cược nhanh',
     chatPlaceholder: 'Tin nhắn…',
     hintFold: 'F — Fold',
     hintCheck: 'C — Check',

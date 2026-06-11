@@ -450,7 +450,7 @@ export const strings = {
     kickTooltip: 'Sparka ut spelare', kickSubtitle:'Välj en spelare att ta bort från bordet',
     closeTableTooltip: 'Stäng bordet',
     langTooltip: 'Byt språk',
-    fullscreenTooltip: 'Helskärm', menuAdmin:'Admin', autoBtnLabel:'Auto-lägesväljare', quickBetLabel:'Snabbinsats-knappar',
+    fullscreenTooltip: 'Helskärm', menuAdmin:'Admin', autoBtnLabel:'Auto-lägesväljare', hintBetConfirm:'R för att satsa', quickBetLabel:'Snabbinsats-knappar',
     chatPlaceholder: 'Meddelande…',
     hintFold: 'F — Lägg dig',
     hintCheck: 'C — Checka',

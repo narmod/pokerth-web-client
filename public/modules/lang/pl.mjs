@@ -454,7 +454,7 @@ export const strings = {
     kickTooltip: 'Wyrzuć gracza', kickSubtitle:'Wybierz gracza do usunięcia ze stołu',
     closeTableTooltip: 'Zamknij stół',
     langTooltip: 'Zmień język',
-    fullscreenTooltip: 'Pełny ekran', menuAdmin:'Admin', autoBtnLabel:'Wybór trybu automatycznego', quickBetLabel:'Przyciski szybkiego zakładu',
+    fullscreenTooltip: 'Pełny ekran', menuAdmin:'Admin', autoBtnLabel:'Wybór trybu automatycznego', hintBetConfirm:'R aby postawić', quickBetLabel:'Przyciski szybkiego zakładu',
     chatPlaceholder: 'Wiadomość…',
     hintFold: 'F — Fold',
     hintCheck: 'C — Check',

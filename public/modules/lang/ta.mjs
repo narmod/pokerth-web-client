@@ -452,7 +452,7 @@ export const strings = {
     kickTooltip: 'வீரரை வெளியேற்று', kickSubtitle:'மேசையிலிருந்து நீக்க ஒரு வீரரைத் தேர்ந்தெடுக்கவும்',
     closeTableTooltip: 'மேசையை மூடு',
     langTooltip: 'மொழியை மாற்று',
-    fullscreenTooltip: 'முழுத்திரை', menuAdmin:'நிர்வாகி', autoBtnLabel:'தானியங்கி பயன்முறை தேர்வு', quickBetLabel:'விரைவு பந்தயப் பொத்தான்கள்',
+    fullscreenTooltip: 'முழுத்திரை', menuAdmin:'நிர்வாகி', autoBtnLabel:'தானியங்கி பயன்முறை தேர்வு', hintBetConfirm:'பந்தயம் கட்ட R', quickBetLabel:'விரைவு பந்தயப் பொத்தான்கள்',
     chatPlaceholder: 'செய்தி…',
     hintFold: 'F — Fold',
     hintCheck: 'C — Check',

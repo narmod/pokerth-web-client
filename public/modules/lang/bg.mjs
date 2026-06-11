@@ -451,7 +451,7 @@ export const strings = {
     kickTooltip: 'Изгони играч', kickSubtitle:'Изберете играч за премахване от масата',
     closeTableTooltip: 'Затвори масата',
     langTooltip: 'Смени езика',
-    fullscreenTooltip: 'Цял екран', menuAdmin:'Админ', autoBtnLabel:'Избор на авторежим', quickBetLabel:'Бутони за бърз залог',
+    fullscreenTooltip: 'Цял екран', menuAdmin:'Админ', autoBtnLabel:'Избор на авторежим', hintBetConfirm:'R за залог', quickBetLabel:'Бутони за бърз залог',
     chatPlaceholder: 'Съобщение…',
     hintFold: 'F — Fold',
     hintCheck: 'C — Check',

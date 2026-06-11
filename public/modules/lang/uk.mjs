@@ -450,7 +450,7 @@ export const strings = {
     kickTooltip: 'Вигнати гравця', kickSubtitle:'Виберіть гравця для видалення зі столу',
     closeTableTooltip: 'Закрити стіл',
     langTooltip: 'Змінити мову',
-    fullscreenTooltip: 'Повний екран', menuAdmin:'Адмін', autoBtnLabel:'Вибір авторежиму', quickBetLabel:'Кнопки швидкої ставки',
+    fullscreenTooltip: 'Повний екран', menuAdmin:'Адмін', autoBtnLabel:'Вибір авторежиму', hintBetConfirm:'R — ставка', quickBetLabel:'Кнопки швидкої ставки',
     chatPlaceholder: 'Повідомлення…',
     hintFold: 'F — Fold',
     hintCheck: 'C — Check',

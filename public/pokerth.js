@@ -7366,9 +7366,9 @@ const App = (() => {
       +   modeSel
       + '</div>'
       + '<div class="pct-row">'
-      +   '<button class="btn-pct"' + da + ' onclick="setPct(' + p33  + ')"><span class="pct-p">1/3</span><span class="pct-amt">' + fmtChips(p33) + '</span></button>'
-      +   '<button class="btn-pct"' + da + ' onclick="setPct(' + p50  + ')"><span class="pct-p">1/2</span><span class="pct-amt">' + fmtChips(p50) + '</span></button>'
-      +   '<button class="btn-pct"' + da + ' onclick="setPct(' + p100 + ')"><span class="pct-p">Pot</span><span class="pct-amt">' + fmtChips(p100) + '</span></button>'
+      +   '<button class="btn-pct"' + da + ' onclick="setPct(' + p33  + ')"><span class="pct-p">1/3</span><span class="pct-amt">' + fmtChips(p33) + '</span><span class="act-key">1</span></button>'
+      +   '<button class="btn-pct"' + da + ' onclick="setPct(' + p50  + ')"><span class="pct-p">1/2</span><span class="pct-amt">' + fmtChips(p50) + '</span><span class="act-key">2</span></button>'
+      +   '<button class="btn-pct"' + da + ' onclick="setPct(' + p100 + ')"><span class="pct-p">Pot</span><span class="pct-amt">' + fmtChips(p100) + '</span><span class="act-key">3</span></button>'
       + '</div>'
       + raiseRowHtml
       + '<button class="btn-action btn-allin" onclick="App.doAction(6,' + myMoney + ')" title="All-In (A)">' + t('allin') + ' <b>' + fmtChips(myMoney) + '</b><span class="act-key">A</span></button>'
@@ -10272,7 +10272,7 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.2.396'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.2.397'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

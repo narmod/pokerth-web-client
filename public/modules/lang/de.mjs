@@ -369,7 +369,7 @@ export const strings = {
     waitingStartNow: 'Jetzt starten',
     autoCheckLabel: 'Nächster Zug: Auto-Check',
     autoFoldLabel: 'Nächster Zug: Auto-Fold',
-    autoBtnLabel:'Auto-Modus-Auswahl', quickBetLabel:'Schnelleinsatz-Tasten',
+    autoBtnLabel:'Auto-Modus-Auswahl', hintBetConfirm:'R zum Setzen', quickBetLabel:'Schnelleinsatz-Tasten',
     autoRearmHint: 'erneuert sich jede Runde',
     autoChecked: 'Auto-Check',
     autoFolded: 'Auto-Fold',

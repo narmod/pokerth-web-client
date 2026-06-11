@@ -451,7 +451,7 @@ export const strings = {
     kickTooltip: 'Vyhodit hráče', kickSubtitle:'Vyberte hráče k vyhození od stolu',
     closeTableTooltip: 'Zavřít stůl',
     langTooltip: 'Změnit jazyk',
-    fullscreenTooltip: 'Celá obrazovka', menuAdmin:'Admin', autoBtnLabel:'Výběr auto režimu', quickBetLabel:'Tlačítka rychlé sázky',
+    fullscreenTooltip: 'Celá obrazovka', menuAdmin:'Admin', autoBtnLabel:'Výběr auto režimu', hintBetConfirm:'R pro stávku', quickBetLabel:'Tlačítka rychlé sázky',
     chatPlaceholder: 'Zpráva…',
     hintFold: 'F — Fold',
     hintCheck: 'C — Check',

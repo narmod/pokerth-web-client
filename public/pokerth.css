@@ -5525,9 +5525,9 @@ html[data-seat="bar"] .seat-timer-badge { display: none; }
 }
 /* Revele : (a) desktop a la souris (hover + pointeur fin), tout de suite */
 @media (hover: hover) and (pointer: fine) {
-  .btn-action { position: relative; }
+  .btn-action, .btn-pct { position: relative; }
   .act-key { display: inline-block; }
 }
 /* (b) ou des qu'un clavier physique est detecte (classe posee par le JS) */
-body.has-keyboard .btn-action { position: relative; }
+body.has-keyboard .btn-action, body.has-keyboard .btn-pct { position: relative; }
 body.has-keyboard .act-key { display: inline-block; }
