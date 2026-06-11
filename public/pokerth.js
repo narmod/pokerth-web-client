@@ -10106,8 +10106,7 @@ window.refreshAppBadge = refreshAppBadge;
 // simple texte unicode -> aucun changement de protocole). Equivalent des
 // emoticones du chat du client officiel.
 var CHAT_EMOJIS = ['😀','😃','😄','😁','😆','😅','😂','🤣','😊','🙂','😉','😍','😘','😋','😎','🤩','🥳','🤔','😐','😏','😒','😞','😢','😭','😤','😠','😡','🥺','😱','😬','🙄','😴','🤗','🤫','👍','👎','👏','🙌','🙏','💪','🤝','👋','❤️','🔥','⭐','✨','🎉','💯','✅','❌','🃏','♠️','♥️','♦️','♣️'];
-function _populateChatEmojis() {
-  var panel = document.getElementById('g-chat-emoji-panel');
+function _populateChatEmojis(panel, inputId) {
   if (!panel || panel._filled) return;
   panel._filled = true;
   var h = '';
@@ -10118,11 +10117,11 @@ function _populateChatEmojis() {
   panel.innerHTML = h;
   panel.addEventListener('click', function(ev) {
     var b = (ev.target && ev.target.closest) ? ev.target.closest('.chat-emoji-btn') : null;
-    if (b && b.getAttribute('data-emo')) insertChatEmoji(b.getAttribute('data-emo'));
+    if (b && b.getAttribute('data-emo')) insertChatEmoji(b.getAttribute('data-emo'), inputId);
   });
 }
-function insertChatEmoji(emo) {
-  var inp = document.getElementById('g-chat-in');
+function insertChatEmoji(emo, inputId) {
+  var inp = document.getElementById(inputId || 'g-chat-in');
   if (!inp) return;
   var s = (inp.selectionStart != null) ? inp.selectionStart : inp.value.length;
   var e = (inp.selectionEnd   != null) ? inp.selectionEnd   : inp.value.length;
@@ -10131,15 +10130,18 @@ function insertChatEmoji(emo) {
   inp.focus();
   try { inp.setSelectionRange(pos, pos); } catch (err) {}
 }
-function toggleChatEmojiPicker() {
-  var panel = document.getElementById('g-chat-emoji-panel');
-  var btn   = document.getElementById('g-chat-emoji-toggle');
+function toggleChatEmojiPicker(btn) {
+  // btn porte data-panel (id de la grille) + data-input (id du champ de saisie).
+  // Sans argument -> chat de jeu (compat).
+  var panelId = (btn && btn.getAttribute && btn.getAttribute('data-panel')) || 'g-chat-emoji-panel';
+  var inputId = (btn && btn.getAttribute && btn.getAttribute('data-input')) || 'g-chat-in';
+  var panel = document.getElementById(panelId);
   if (!panel) return;
-  _populateChatEmojis();
+  _populateChatEmojis(panel, inputId);
   var open = (panel.style.display === 'none' || panel.style.display === '');
   panel.style.display = open ? 'grid' : 'none';
-  if (btn) btn.classList.toggle('active', open);
-  if (open) { var inp = document.getElementById('g-chat-in'); if (inp) inp.focus(); }
+  if (btn && btn.classList) btn.classList.toggle('active', open);
+  if (open) { var inp = document.getElementById(inputId); if (inp) inp.focus(); }
 }
 window.toggleChatEmojiPicker = toggleChatEmojiPicker;
 window.insertChatEmoji = insertChatEmoji;
@@ -10371,7 +10373,7 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.2.401'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.2.402'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
