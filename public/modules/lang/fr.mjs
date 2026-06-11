@@ -286,7 +286,7 @@ export const strings = {
     chatPlaceholder:'Message…',
     // ── Aides raccourcis clavier (le préfixe lettre reste, le verbe se traduit) ──
     hintFold:'F — Se coucher', hintCheck:'C — Parole', hintCall:'C — Suivre',
-    hintRaise:'R — Relancer', hintRaiseAdjust:'R — Relancer (ajustez le montant)', hintAllin:'A — Tapis', hintBetConfirm:'R pour miser', zoomIn:'Agrandir la table', zoomOut:'Réduire la table',
+    hintRaise:'R — Relancer', hintRaiseAdjust:'R — Relancer (ajustez le montant)', hintAllin:'A — Tapis', hintBetConfirm:'R pour miser', zoomIn:'Agrandir la table', zoomOut:'Réduire la table', emojiPickerTitle:'Insérer un emoji',
     // ── Libellés d'options du formulaire de création (fréquence des blindes) ──
     nHands:'N mains', nMinutes:'N minutes',
     // ── Installation PWA (ajout à l'écran d'accueil) ──

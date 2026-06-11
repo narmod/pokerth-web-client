@@ -10099,6 +10099,51 @@ function refreshAppBadge() {
 }
 window.refreshAppBadge = refreshAppBadge;
 
+// ── Selecteur d'emoji pour le chat de jeu (desktop) ──────────────
+// Bouton dans la barre de saisie (visible seulement sur appareil a souris) qui
+// ouvre une grille d'emojis ; un clic insere l'emoji a la position du curseur
+// dans #g-chat-in. sendGameChat envoie le texte tel quel (les emojis sont du
+// simple texte unicode -> aucun changement de protocole). Equivalent des
+// emoticones du chat du client officiel.
+var CHAT_EMOJIS = ['😀','😃','😄','😁','😆','😅','😂','🤣','😊','🙂','😉','😍','😘','😋','😎','🤩','🥳','🤔','😐','😏','😒','😞','😢','😭','😤','😠','😡','🥺','😱','😬','🙄','😴','🤗','🤫','👍','👎','👏','🙌','🙏','💪','🤝','👋','❤️','🔥','⭐','✨','🎉','💯','✅','❌','🃏','♠️','♥️','♦️','♣️'];
+function _populateChatEmojis() {
+  var panel = document.getElementById('g-chat-emoji-panel');
+  if (!panel || panel._filled) return;
+  panel._filled = true;
+  var h = '';
+  for (var i = 0; i < CHAT_EMOJIS.length; i++) {
+    var e = CHAT_EMOJIS[i];
+    h += '<button type="button" class="chat-emoji-btn" data-emo="' + e + '" title="' + e + '">' + e + '</button>';
+  }
+  panel.innerHTML = h;
+  panel.addEventListener('click', function(ev) {
+    var b = (ev.target && ev.target.closest) ? ev.target.closest('.chat-emoji-btn') : null;
+    if (b && b.getAttribute('data-emo')) insertChatEmoji(b.getAttribute('data-emo'));
+  });
+}
+function insertChatEmoji(emo) {
+  var inp = document.getElementById('g-chat-in');
+  if (!inp) return;
+  var s = (inp.selectionStart != null) ? inp.selectionStart : inp.value.length;
+  var e = (inp.selectionEnd   != null) ? inp.selectionEnd   : inp.value.length;
+  inp.value = inp.value.slice(0, s) + emo + inp.value.slice(e);
+  var pos = s + emo.length;
+  inp.focus();
+  try { inp.setSelectionRange(pos, pos); } catch (err) {}
+}
+function toggleChatEmojiPicker() {
+  var panel = document.getElementById('g-chat-emoji-panel');
+  var btn   = document.getElementById('g-chat-emoji-toggle');
+  if (!panel) return;
+  _populateChatEmojis();
+  var open = (panel.style.display === 'none' || panel.style.display === '');
+  panel.style.display = open ? 'grid' : 'none';
+  if (btn) btn.classList.toggle('active', open);
+  if (open) { var inp = document.getElementById('g-chat-in'); if (inp) inp.focus(); }
+}
+window.toggleChatEmojiPicker = toggleChatEmojiPicker;
+window.insertChatEmoji = insertChatEmoji;
+
 function toggleGameChat() {
   var panel = document.getElementById('g-chat-panel');
   var btn   = document.getElementById('chat-toggle-btn');
@@ -10326,7 +10371,7 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.2.400'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.2.401'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

@@ -5567,3 +5567,41 @@ body.has-keyboard .act-key { display: inline-block; }
 .zoom-btn:hover { background: rgba(40, 52, 46, 0.9); }
 .zoom-btn:active { transform: scale(0.94); }
 .zoom-btn:disabled { opacity: 0.35; cursor: default; }
+
+
+/* ── Selecteur d'emoji du chat (desktop / souris) ───────────────────
+   Bouton dans la barre de saisie + grille repliable au-dessus. Un clic insere
+   l'emoji dans #g-chat-in (envoye tel quel : texte unicode). Mobile -> masque
+   (le clavier natif propose deja les emojis). */
+.chat-emoji-toggle {
+  display: none;            /* desktop (souris) uniquement -- voir media query */
+  align-items: center; justify-content: center;
+  background: var(--inset); color: var(--cream);
+  border: 1px solid var(--border); border-radius: 2px;
+  padding: 0 9px; font-size: 1rem; line-height: 1; cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+@media (hover: hover) and (pointer: fine) {
+  .chat-emoji-toggle { display: flex; }
+}
+.chat-emoji-toggle:hover { background: rgba(var(--gold-rgb), 0.15); border-color: var(--gold-dim); }
+.chat-emoji-toggle.active { background: rgba(var(--gold-rgb), 0.22); border-color: var(--gold-dim); }
+.chat-emoji-panel {
+  grid-template-columns: repeat(8, 1fr);
+  gap: 2px;
+  max-height: 140px;
+  overflow-y: auto;
+  padding: 6px 8px;
+  border-top: 1px solid var(--border);
+  background: var(--panel);
+  flex-shrink: 0;
+}
+.chat-emoji-btn {
+  aspect-ratio: 1; width: 100%;
+  background: none; border: none; border-radius: 5px;
+  font-size: 1.25rem; line-height: 1; cursor: pointer; padding: 0;
+  display: flex; align-items: center; justify-content: center;
+  transition: transform 0.1s ease, background 0.1s;
+}
+.chat-emoji-btn:hover { background: rgba(var(--gold-rgb), 0.15); transform: scale(1.18); }
+.chat-emoji-btn:active { transform: scale(0.9); }
