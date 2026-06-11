@@ -1,0 +1,124 @@
+name: Auto release
+
+# Cuts a release automatically once the PWA cache counter in public/sw.js has
+# advanced by at least 10 since the last release on the same MAJOR.MINOR line.
+#
+# Versioning scheme (see public/sw.js): CACHE_VERSION = 'pokerth-v{MAJOR}.{MINOR}.{N}'
+# where {N} is a monotonic deploy counter that doubles as the patch number. A
+# release tag equals that string without the 'pokerth-' prefix
+# (cache pokerth-v0.2.91  <->  tag v0.2.91).
+#
+# The Docker image is built INLINE here on purpose: a tag/release created with
+# the built-in GITHUB_TOKEN does not re-trigger docker-publish.yml (GitHub's
+# anti-loop rule), so we publish the image from within this same workflow.
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  packages: write
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+
+jobs:
+  maybe-release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout (full history + tags)
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Decide whether to release
+        id: decide
+        run: |
+          set -euo pipefail
+          CACHE=$(grep -E "^const CACHE_VERSION" public/sw.js | grep -oE "pokerth-v[0-9]+\.[0-9]+\.[0-9]+" | head -1 || true)
+          if [ -z "${CACHE}" ]; then
+            echo "::warning::CACHE_VERSION not in 'pokerth-v{MAJOR}.{MINOR}.{N}' format — skipping."
+            echo "release=false" >> "$GITHUB_OUTPUT"; exit 0
+          fi
+          VER=${CACHE#pokerth-v}                 # e.g. 0.2.91
+          MAJOR=$(echo "$VER" | cut -d. -f1)
+          MINOR=$(echo "$VER" | cut -d. -f2)
+          N=$(echo "$VER" | cut -d. -f3)
+          TAG="v${MAJOR}.${MINOR}.${N}"
+          echo "Cache version: ${VER}  (candidate tag ${TAG})"
+
+          if git rev-parse -q --verify "refs/tags/${TAG}" >/dev/null; then
+            echo "Tag ${TAG} already exists — nothing to do."
+            echo "release=false" >> "$GITHUB_OUTPUT"; exit 0
+          fi
+
+          # Highest patch already released on this MAJOR.MINOR line (0 if none).
+          LAST_N=$(git tag -l "v${MAJOR}.${MINOR}.*" \
+            | sed -E "s/^v${MAJOR}\.${MINOR}\.([0-9]+).*/\1/" \
+            | grep -E '^[0-9]+$' | sort -n | tail -1 || true)
+          LAST_N=${LAST_N:-0}
+          echo "Last released N on ${MAJOR}.${MINOR}: ${LAST_N}"
+
+          if [ $(( N - LAST_N )) -ge 10 ]; then
+            echo "Threshold reached (${N} - ${LAST_N} >= 10) — releasing ${TAG}."
+            {
+              echo "release=true"
+              echo "tag=${TAG}"
+              echo "ver=${VER}"
+            } >> "$GITHUB_OUTPUT"
+          else
+            echo "Threshold not reached (${N} - ${LAST_N} < 10) — skipping."
+            echo "release=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Create tag and GitHub release
+        if: steps.decide.outputs.release == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          gh release create "${{ steps.decide.outputs.tag }}" \
+            --target "${GITHUB_SHA}" \
+            --title "${{ steps.decide.outputs.tag }}" \
+            --generate-notes
+
+      - name: Set up QEMU
+        if: steps.decide.outputs.release == 'true'
+        uses: docker/setup-qemu-action@v3
+
+      - name: Set up Docker Buildx
+        if: steps.decide.outputs.release == 'true'
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to GHCR
+        if: steps.decide.outputs.release == 'true'
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata (tags, labels)
+        if: steps.decide.outputs.release == 'true'
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            type=raw,value=${{ steps.decide.outputs.ver }}
+            type=semver,pattern={{major}}.{{minor}},value=${{ steps.decide.outputs.tag }}
+
+      - name: Build and push image
+        if: steps.decide.outputs.release == 'true'
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          platforms: linux/amd64,linux/arm64,linux/arm/v7
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
