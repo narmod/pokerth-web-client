@@ -6424,6 +6424,10 @@ const App = (() => {
     const oval = document.querySelector('.felt-oval');
     const zone = document.getElementById('g-table-zone');
     if (!oval || !zone) return;
+    // Echelle de zoom courante (tablette/desktop) : chaque siege est reduit du
+    // meme facteur que le feutre -> zoom uniforme. Mobile / zoom 1 -> 1 (no-op).
+    var _seatZoom = 1;
+    try { if (typeof _getTableZoom === 'function' && typeof _tableZoomGate === 'function' && _tableZoomGate()) _seatZoom = _getTableZoom(); } catch (e) {}
     const oRect = oval.getBoundingClientRect();
     const zRect = zone.getBoundingClientRect();
     const oCX  = oRect.left - zRect.left + oRect.width  / 2;
@@ -6637,7 +6641,7 @@ const App = (() => {
         cardStr = '<div style="display:flex;gap:2px;margin-top:1px">'
           + cardHtml(sd.card1,'xsm') + cardHtml(sd.card2,'xsm') + '</div>';
       }
-      h += '<div class="' + cls + '" data-pid="' + pid + '" style="position:absolute;top:' + px.top.toFixed(1) + 'px;left:' + px.left.toFixed(1) + 'px;transform:translate(-50%,-50%)">';
+      h += '<div class="' + cls + '" data-pid="' + pid + '" style="position:absolute;top:' + px.top.toFixed(1) + 'px;left:' + px.left.toFixed(1) + 'px;transform:translate(-50%,-50%) scale(' + _seatZoom + ')">';
       const isSB = pid === sbPid;
       const isBB = pid === bbPid;
       let blindBadge = '';
@@ -9456,11 +9460,18 @@ function _getTableZoom() {
   return Math.max(TABLE_ZOOM_MIN, Math.min(TABLE_ZOOM_MAX, z));
 }
 function applyTableZoom() {
+  // Le zoom n'est PAS un transform sur #g-table-zone : renderSeats mesure
+  // #g-table-zone via getBoundingClientRect (valeurs scalees par un transform),
+  // donc scaler ici laissait les sieges ecartes (positions pleine taille). A la
+  // place : autoScaleTable multiplie l'echelle du FEUTRE par le zoom (feutre +
+  // cartes), et renderSeats replace les sieges autour du feutre reduit ET met
+  // chaque siege a l'echelle du zoom (avatars). Resultat : zoom uniforme, les
+  // sieges suivent. On purge tout transform residuel sur #g-table-zone.
   var tz = document.getElementById('g-table-zone');
-  if (!tz) return;
-  var z = _tableZoomGate() ? _getTableZoom() : TABLE_ZOOM_MAX; // mobile : toujours 1.0
-  tz.style.transformOrigin = 'center center';
-  tz.style.transform = (z === 1) ? '' : ('scale(' + z + ')');
+  if (tz && tz.style.transform) tz.style.transform = '';
+  try { if (typeof autoScaleTable === 'function') autoScaleTable(); } catch (e) {}
+  try { if (typeof window._renderSeats === 'function') window._renderSeats(); } catch (e) {}
+  var z = _tableZoomGate() ? _getTableZoom() : TABLE_ZOOM_MAX;
   var bOut = document.getElementById('g-zoom-out');
   var bIn  = document.getElementById('g-zoom-in');
   if (bOut) bOut.disabled = (z <= TABLE_ZOOM_MIN + 0.001);
@@ -9500,9 +9511,9 @@ function autoScaleTable() {
   var scaleMax = isDeskScale ? 1.4 : 1;
   var scale = Math.min(scaleMax, tzW / scW, tzH / scH);
   if (scale < 0.05) scale = 0.5; // fallback visible
-  sc.style.transform = 'scale(' + scale.toFixed(3) + ')';
+  var _ztab = (typeof _getTableZoom === 'function' && typeof _tableZoomGate === 'function' && _tableZoomGate()) ? _getTableZoom() : 1;
+  sc.style.transform = 'scale(' + (scale * _ztab).toFixed(3) + ')';
   sc.style.transformOrigin = 'center center';
-  if (typeof applyTableZoom === 'function') applyTableZoom();
 }
 document.addEventListener('DOMContentLoaded', function() { setTimeout(autoScaleTable, 400); });
 
@@ -10315,7 +10326,7 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.2.399'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.2.400'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
