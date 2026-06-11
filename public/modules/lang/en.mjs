@@ -286,7 +286,7 @@ export const strings = {
     chatPlaceholder:'Message\u2026',
     // ── Keyboard-shortcut hints (letter prefix stays, verb translates) ──
     hintFold:'F — Fold', hintCheck:'C — Check', hintCall:'C — Call',
-    hintRaise:'R — Raise', hintRaiseAdjust:'R — Raise (adjust amount)', hintAllin:'A — All-In', hintBetConfirm:'R to bet',
+    hintRaise:'R — Raise', hintRaiseAdjust:'R — Raise (adjust amount)', hintAllin:'A — All-In', hintBetConfirm:'R to bet', zoomIn:'Enlarge table', zoomOut:'Shrink table',
     // ── Create-form option labels (raise frequency) ──
     nHands:'N hands', nMinutes:'N minutes',
     // ── PWA install (add to home screen) ──

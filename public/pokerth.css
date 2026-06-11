@@ -2906,6 +2906,7 @@ body {
 #s-game { overflow: visible; flex-direction: column; }
 
 .game-area {
+  position: relative; /* ancre des boutons de zoom de la table */
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -5541,3 +5542,28 @@ body.has-keyboard .act-key { display: inline-block; }
   textarea,
   select { font-size: 16px !important; }
 }
+
+
+/* ── Zoom de la table (boutons +/- en haut a droite) ──────────────────────
+   Visible uniquement tablette/desktop. Reduit/re-agrandit #g-table-zone
+   (feutre + cartes communes + adversaires) ; max = taille actuelle (1.0). */
+.zoom-ctrl {
+  position: absolute; top: 8px; right: 8px; z-index: 30;
+  display: none; flex-direction: column; gap: 6px;
+}
+@media (min-width: 900px) and (min-height: 600px) {
+  .zoom-ctrl { display: flex; }
+}
+.zoom-btn {
+  width: 30px; height: 30px; padding: 0;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 8px; cursor: pointer;
+  background: rgba(20, 28, 24, 0.72); color: #e8e8e8;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  font-size: 1.2rem; font-weight: 600; line-height: 1;
+  -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px);
+  transition: background 0.15s, opacity 0.15s;
+}
+.zoom-btn:hover { background: rgba(40, 52, 46, 0.9); }
+.zoom-btn:active { transform: scale(0.94); }
+.zoom-btn:disabled { opacity: 0.35; cursor: default; }

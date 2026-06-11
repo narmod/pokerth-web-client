@@ -9436,6 +9436,48 @@ window.addEventListener('orientationchange', function() {
   setTimeout(function(){ autoScaleTable(); if(typeof renderSeats==='function' && typeof seats!=='undefined' && seats.length) renderSeats(); }, 300);
 });
 
+// ── Zoom de la table (tablette/desktop) ─────────────────────
+// Deux boutons +/- en haut a droite reduisent/re-agrandissent #g-table-zone
+// (feutre + cartes communes + adversaires) via transform:scale. La barre
+// joueur (.player-bar) et la barre d'action (#g-actions) sont DEHORS de
+// #g-table-zone -> elles ne bougent pas. Contrainte : max = taille actuelle
+// (1.0) ; on ne peut que reduire puis re-agrandir jusqu'a 1.0, donc jamais de
+// depassement (ni clip ni pan). transform:scale est purement visuel -> se
+// compose avec autoScaleTable (qui agit sur #g-table-scaler) et survit aux
+// re-rendus de sieges. Neutralise + masque sur mobile.
+var TABLE_ZOOM_MIN = 0.6, TABLE_ZOOM_MAX = 1, TABLE_ZOOM_STEP = 0.1;
+function _tableZoomGate() {
+  return !!(window.matchMedia && window.matchMedia('(min-width: 900px) and (min-height: 600px)').matches);
+}
+function _getTableZoom() {
+  var z = NaN;
+  try { z = parseFloat(localStorage.getItem('pth_table_zoom')); } catch (e) {}
+  if (isNaN(z)) z = TABLE_ZOOM_MAX;
+  return Math.max(TABLE_ZOOM_MIN, Math.min(TABLE_ZOOM_MAX, z));
+}
+function applyTableZoom() {
+  var tz = document.getElementById('g-table-zone');
+  if (!tz) return;
+  var z = _tableZoomGate() ? _getTableZoom() : TABLE_ZOOM_MAX; // mobile : toujours 1.0
+  tz.style.transformOrigin = 'center center';
+  tz.style.transform = (z === 1) ? '' : ('scale(' + z + ')');
+  var bOut = document.getElementById('g-zoom-out');
+  var bIn  = document.getElementById('g-zoom-in');
+  if (bOut) bOut.disabled = (z <= TABLE_ZOOM_MIN + 0.001);
+  if (bIn)  bIn.disabled  = (z >= TABLE_ZOOM_MAX - 0.001);
+}
+function tableZoomStep(dir) {
+  var z = _getTableZoom() + (dir > 0 ? TABLE_ZOOM_STEP : -TABLE_ZOOM_STEP);
+  z = Math.round(z * 100) / 100;
+  z = Math.max(TABLE_ZOOM_MIN, Math.min(TABLE_ZOOM_MAX, z));
+  try { localStorage.setItem('pth_table_zoom', String(z)); } catch (e) {}
+  applyTableZoom();
+}
+window.tableZoomStep = tableZoomStep;
+window.applyTableZoom = applyTableZoom;
+document.addEventListener('DOMContentLoaded', function() { setTimeout(applyTableZoom, 500); });
+window.addEventListener('resize', function() { applyTableZoom(); });
+
 function autoScaleTable() {
   var tz = document.getElementById('g-table-zone');
   var sc = document.getElementById('g-table-scaler');
@@ -9460,6 +9502,7 @@ function autoScaleTable() {
   if (scale < 0.05) scale = 0.5; // fallback visible
   sc.style.transform = 'scale(' + scale.toFixed(3) + ')';
   sc.style.transformOrigin = 'center center';
+  if (typeof applyTableZoom === 'function') applyTableZoom();
 }
 document.addEventListener('DOMContentLoaded', function() { setTimeout(autoScaleTable, 400); });
 
@@ -10272,7 +10315,7 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.2.398'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.2.399'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

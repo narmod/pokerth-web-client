@@ -1271,6 +1271,11 @@ function onAvatarImageChosen(input) {
        methods. -->
   <div id="g-endgame-overlay" class="endgame-overlay" style="display:none"></div>
   <div class="game-area">
+    <!-- Zoom table (tablette/desktop) : reduire puis re-agrandir jusqu'a la taille actuelle (max 1.0) -->
+    <div id="g-zoom-ctrl" class="zoom-ctrl">
+      <button class="zoom-btn" id="g-zoom-in" onclick="tableZoomStep(1)" title="Agrandir la table" data-i18n-title="zoomIn" aria-label="Agrandir la table">+</button>
+      <button class="zoom-btn" id="g-zoom-out" onclick="tableZoomStep(-1)" title="Réduire la table" data-i18n-title="zoomOut" aria-label="Réduire la table">−</button>
+    </div>
     <!-- TABLE -->
     <div class="table-zone" id="g-table-zone">
       <div class="table-scaler" id="g-table-scaler">
