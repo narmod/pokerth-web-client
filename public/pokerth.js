@@ -5756,7 +5756,7 @@ const App = (() => {
       const flag = _ccToFlag(_playerCountries[pid], 'gp-flag');
       const label = nm ? esc(nm) : '#' + pid;
       const av = _avatarChipHtml(pid, label, 'gp-av');
-      return '<span class="gp-player' + (nm ? '' : ' gp-pending') + '">' + av + flag + '<span class="gp-name">' + label + '</span></span>';
+      return '<span class="gp-player' + (nm ? '' : ' gp-pending') + '">' + av + '<span class="gp-name">' + label + '</span>' + flag + '</span>';
     }).join('');
   }
   function _tableHasPid(pid) {
@@ -10652,7 +10652,7 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.2.418'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.2.419'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
