@@ -149,8 +149,13 @@
         <div id="trafChart" class="trafchart"><div class="empty">Loading…</div></div>
       </div>
       <div class="card">
+        <h2 style="margin:0 0 8px">Connections by server</h2>
+        <p class="muted" style="margin:2px 0 10px">Counts a session once per server it connects to. pokerth.net games connect directly but are still reported here. Offline = training vs bots.</p>
+        <div id="trafModes"><div class="empty">Loading…</div></div>
+      </div>
+      <div class="card">
         <h2>Reset traffic stats</h2>
-        <p class="muted" style="margin:6px 0 10px">Clears every visit counter. This cannot be undone.</p>
+        <p class="muted" style="margin:6px 0 10px">⚠ This permanently deletes ALL visit data — today, history and totals. This cannot be undone.</p>
         <button id="btnTrafReset" class="use danger">Reset all traffic stats</button>
         <div id="trafMsg" class="msg"></div>
       </div>
@@ -662,10 +667,16 @@
         var lab=(x.date||'').slice(5);
         return '<div class="bar" title="'+x.date+': '+(x.v||0)+' visits, '+(x.u||0)+' unique"><i style="height:'+h+'%"></i><span>'+lab+'</span></div>';
       }).join('');
+      var md=$('trafModes');
+      if(md){
+        var tm=(d.today&&d.today.m)||{}, am=(d.allTime&&d.allTime.m)||{};
+        var rows=[['pokerth.net','pokerthnet'],['LAN / dedicated','lan'],['Offline (bots)','offline']];
+        md.innerHTML = rows.map(function(rw){ return '<div class="srow"><span>'+rw[0]+'</span><b>'+fmt(tm[rw[1]])+' today · '+fmt(am[rw[1]])+' total</b></div>'; }).join('');
+      }
     }).catch(function(){ var g=$('trafCards'); if(g) g.innerHTML='<div class="empty err">Could not load.</div>'; });
   }
   function resetTraffic(){
-    if(!confirm('Reset all traffic stats? This cannot be undone.')) return;
+    if(!confirm('This permanently deletes ALL traffic data (today, history and totals). This cannot be undone. Continue?')) return;
     api('/admin/visits',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({_reset:true,token:tok()})})
       .then(function(r){return r.json();}).then(function(d){
         var m=$('trafMsg');

@@ -312,13 +312,15 @@ setInterval(maybeRotateStats, 60 * 60 * 1000); // hourly boundary check
 // counter plus an all-time id set keep the "All time" figures exact too.
 const VISITS_FILE = process.env.VISITS_FILE || path.join(__dirname, 'visits.json');
 const VISIT_RETENTION_DAYS = 120; // keep per-day id sets this long (covers 30-day uniques)
-let visitsStore = { days: {}, totalV: 0, allU: {} };
+let visitsStore = { days: {}, totalV: 0, allU: {}, allM: { pokerthnet: 0, lan: 0, offline: 0 } };
 try {
   const _vs = JSON.parse(fs.readFileSync(VISITS_FILE, 'utf8'));
   if (_vs && typeof _vs === 'object') {
     visitsStore.days   = (_vs.days && typeof _vs.days === 'object') ? _vs.days : {};
     visitsStore.totalV = (typeof _vs.totalV === 'number') ? _vs.totalV : 0;
     visitsStore.allU   = (_vs.allU && typeof _vs.allU === 'object') ? _vs.allU : {};
+    const _am = (_vs.allM && typeof _vs.allM === 'object') ? _vs.allM : {};
+    visitsStore.allM   = { pokerthnet: _am.pokerthnet || 0, lan: _am.lan || 0, offline: _am.offline || 0 };
   }
 } catch (e) { /* first run — start empty */ }
 let _visitsSaveTimer = null;
@@ -341,6 +343,18 @@ function pruneVisitDays() {
   keys.sort();
   keys.slice(0, keys.length - VISIT_RETENTION_DAYS).forEach(function (k) { delete visitsStore.days[k]; });
 }
+const VISIT_MODES = ['pokerthnet', 'lan', 'offline'];
+function recordModeConnect(mode) {
+  if (VISIT_MODES.indexOf(mode) < 0) return;
+  const day = visitDayKey();
+  let bucket = visitsStore.days[day];
+  if (!bucket) { bucket = visitsStore.days[day] = { v: 0, ids: {} }; pruneVisitDays(); }
+  if (!bucket.m) bucket.m = {};
+  bucket.m[mode] = (bucket.m[mode] || 0) + 1;
+  if (!visitsStore.allM) visitsStore.allM = {};
+  visitsStore.allM[mode] = (visitsStore.allM[mode] || 0) + 1;
+  saveVisitsSoon();
+}
 function recordVisit(rawId) {
   const day = visitDayKey();
   let bucket = visitsStore.days[day];
@@ -359,6 +373,7 @@ function visitWindow(daysBack) {
   const now = new Date();
   let v = 0;
   const u = {};
+  const m = { pokerthnet: 0, lan: 0, offline: 0 };
   for (let i = 0; i < daysBack; i++) {
     const d = new Date(now);
     d.setDate(now.getDate() - i);
@@ -366,8 +381,9 @@ function visitWindow(daysBack) {
     if (!b) continue;
     v += b.v || 0;
     if (b.ids) for (const k in b.ids) u[k] = 1;
+    if (b.m) for (const mk in m) if (b.m[mk]) m[mk] += b.m[mk];
   }
-  return { v: v, u: Object.keys(u).length };
+  return { v: v, u: Object.keys(u).length, m: m };
 }
 function visitsSummary() {
   const now = new Date();
@@ -384,7 +400,7 @@ function visitsSummary() {
     today: visitWindow(1),
     week: visitWindow(7),
     month: visitWindow(30),
-    allTime: { v: visitsStore.totalV || 0, u: Object.keys(visitsStore.allU).length },
+    allTime: { v: visitsStore.totalV || 0, u: Object.keys(visitsStore.allU).length, m: (function () { const am = visitsStore.allM || {}; return { pokerthnet: am.pokerthnet || 0, lan: am.lan || 0, offline: am.offline || 0 }; })() },
     series: series
   };
 }
@@ -1320,7 +1336,10 @@ const httpServer = http.createServer((req, res) => {
   if (reqPathOnly === '/__visit') {
     if (req.method !== 'POST') { res.writeHead(405); res.end('Method not allowed'); return; }
     readJsonBody(req, function (d) {
-      try { recordVisit(d && d.vid); } catch (e) { /* ignore a bad ping */ }
+      try {
+        if (d && d.mode) recordModeConnect(d.mode);
+        else recordVisit(d && d.vid);
+      } catch (e) { /* ignore a bad ping */ }
       res.writeHead(204, { 'Cache-Control': 'no-store' });
       res.end();
     });

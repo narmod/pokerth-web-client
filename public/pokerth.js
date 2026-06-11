@@ -8431,7 +8431,7 @@ function dismissWinner() {
       }
 
       ws.binaryType = 'arraybuffer';
-      ws.onopen    = () => { _lastRxTime = Date.now(); setStatus(t('proxyConnectedWait')); };
+      ws.onopen    = () => { _lastRxTime = Date.now(); setStatus(t('proxyConnectedWait')); try { window._pthCountConnect && window._pthCountConnect(directWS ? 'pokerthnet' : ((window._offlineMode || ($('server-mode') && $('server-mode').value === 'offline')) ? 'offline' : 'lan')); } catch (e) {} };
       ws.onerror   = () => { _lastConnectFailed = true; setStatus(t('wsError'), 'err'); };
       ws.onmessage = function(e) {
         if (typeof e.data === 'string') {
@@ -10677,7 +10677,7 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.2.431'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.2.432'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
@@ -10758,4 +10758,26 @@ function renderPlayersList() {
     if (document.readyState === 'complete' || document.readyState === 'interactive') fire();
     else window.addEventListener('load', fire, { once: true });
   } catch (e) { fire(); }
+})();
+
+;(function(){
+  // ── Per-mode connection counter ──
+  // Fires once per session per mode when a connection opens. Reports to OUR
+  // proxy (/__visit) even when the game socket is a direct WSS to pokerth.net —
+  // the count-ping is independent of the game transport. No IP, no PII.
+  window._pthCountConnect = function (mode) {
+    try {
+      if (['pokerthnet', 'lan', 'offline'].indexOf(mode) < 0) return;
+      var k = 'pth_conn_' + mode;
+      if (sessionStorage.getItem(k)) return;
+      sessionStorage.setItem(k, '1');
+    } catch (e) { /* sessionStorage blocked — fall through and send once */ }
+    try {
+      var vid = '';
+      try { vid = localStorage.getItem('pth_vid') || ''; } catch (e) {}
+      var body = JSON.stringify({ mode: mode, vid: vid });
+      if (navigator.sendBeacon) navigator.sendBeacon('/__visit', new Blob([body], { type: 'application/json' }));
+      else fetch('/__visit', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: body, keepalive: true }).catch(function () {});
+    } catch (e) {}
+  };
 })();
