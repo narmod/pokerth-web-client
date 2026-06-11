@@ -311,7 +311,7 @@ setInterval(maybeRotateStats, 60 * 60 * 1000); // hourly boundary check
 // so "unique visitors" is exact within a rolling window; an all-time session
 // counter plus an all-time id set keep the "All time" figures exact too.
 const VISITS_FILE = process.env.VISITS_FILE || path.join(__dirname, 'visits.json');
-const VISIT_RETENTION_DAYS = 120; // keep per-day id sets this long (covers 30-day uniques)
+const VISIT_RETENTION_DAYS = 400; // keep per-day id sets this long (covers up to 1-year windows)
 let visitsStore = { days: {}, totalV: 0, allU: {}, allM: { pokerthnet: 0, lan: 0, offline: 0 } };
 try {
   const _vs = JSON.parse(fs.readFileSync(VISITS_FILE, 'utf8'));
@@ -400,6 +400,9 @@ function visitsSummary() {
     today: visitWindow(1),
     week: visitWindow(7),
     month: visitWindow(30),
+    quarter: visitWindow(90),
+    semester: visitWindow(180),
+    year: visitWindow(365),
     allTime: { v: visitsStore.totalV || 0, u: Object.keys(visitsStore.allU).length, m: (function () { const am = visitsStore.allM || {}; return { pokerthnet: am.pokerthnet || 0, lan: am.lan || 0, offline: am.offline || 0 }; })() },
     series: series
   };
@@ -875,6 +878,28 @@ function handleAdmin(req, res, reqPathOnly, query) {
     try { version = (JSON.parse(fs.readFileSync(path.join(__dirname, 'package.json'), 'utf8')).version) || ''; } catch (e) {}
     let sockets = null; try { sockets = wss.clients.size; } catch (e) {}
     return adminJson(res, 200, { ok: true, version: version, node: process.version, uptimeSec: Math.floor(process.uptime()), sockets: sockets, players: Object.keys(statsStore).length, resetPeriod: STATS_RESET_PERIOD, modes: appModes(), defaultTheme: _adminConfig.defaultTheme || '', defaults: _adminConfig.defaults || {}, loginDefaults: _adminConfig.loginDefaults || {}, proxyCfg: _adminConfig.proxyCfg || {}, tableDefaults: _adminConfig.tableDefaults || {}, serverName: _adminConfig.serverName || '', serverTagline: _adminConfig.serverTagline || '', restartAt: (_restartAt > Date.now() ? _restartAt : null), restartKind: (_restartAt > Date.now() ? _restartKind : null) });
+  }
+  if (reqPathOnly === '/admin/visits/export') {
+    if (!adminAuthed(query)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
+    const fmt = (query.format === 'csv') ? 'csv' : 'json';
+    if (fmt === 'csv') {
+      const lines = ['date,visits,unique_visitors,conn_pokerthnet,conn_lan,conn_offline'];
+      Object.keys(visitsStore.days).sort().forEach(function (d) {
+        const b = visitsStore.days[d] || {};
+        const u = b.ids ? Object.keys(b.ids).length : 0;
+        const m = b.m || {};
+        lines.push([d, b.v || 0, u, m.pokerthnet || 0, m.lan || 0, m.offline || 0].join(','));
+      });
+      res.writeHead(200, { 'Content-Type': 'text/csv; charset=utf-8', 'Cache-Control': 'no-store', 'Content-Disposition': 'attachment; filename="pokerth-traffic.csv"' });
+      res.end(lines.join('\n') + '\n');
+      return;
+    }
+    let exVersion = '';
+    try { exVersion = (JSON.parse(fs.readFileSync(path.join(__dirname, 'package.json'), 'utf8')).version) || ''; } catch (e) {}
+    const out = { schema: 'pokerth-traffic/1', exportedAt: new Date().toISOString(), version: exVersion, summary: visitsSummary(), store: visitsStore };
+    res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store', 'Content-Disposition': 'attachment; filename="pokerth-traffic.json"' });
+    res.end(JSON.stringify(out, null, 2));
+    return;
   }
   if (reqPathOnly === '/admin/visits') {
     if (req.method === 'GET') {

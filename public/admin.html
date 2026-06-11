@@ -38,7 +38,7 @@
   .drop.hot{border-color:var(--gold);background:rgba(239,241,245,.08);color:var(--cream)}
   .msg{margin-top:10px;font-size:.85rem;min-height:1.2em}
   .ok{color:#7fd17f}.err{color:#e98a8a}
-  .trafgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+  .trafgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(132px,1fr));gap:10px}
   @media(max-width:560px){.trafgrid{grid-template-columns:repeat(2,1fr)}}
   .tstat{background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:10px;padding:12px}
   .tstat .lbl{font-size:.72rem;color:var(--text);text-transform:uppercase;letter-spacing:.04em}
@@ -152,6 +152,12 @@
         <h2 style="margin:0 0 8px">Connections by server</h2>
         <p class="muted" style="margin:2px 0 10px">Counts a session once per server it connects to. pokerth.net games connect directly but are still reported here. Offline = training vs bots.</p>
         <div id="trafModes"><div class="empty">Loading…</div></div>
+      </div>
+      <div class="card">
+        <h2 style="margin:0 0 8px">Export / backup</h2>
+        <p class="muted" style="margin:2px 0 10px">Download the raw data for backup or import into a database. CSV = one row per day (date, visits, unique, per-server connections). JSON = full backup (restorable to visits.json).</p>
+        <div style="display:flex;gap:8px;flex-wrap:wrap"><button id="btnTrafCsv" class="use">Download CSV</button><button id="btnTrafJson" class="use">Download JSON</button></div>
+        <div id="trafExpMsg" class="msg"></div>
       </div>
       <div class="card">
         <h2>Reset traffic stats</h2>
@@ -653,13 +659,15 @@
       _trafWired = true;
       var rb=$('btnTrafRefresh'); if(rb) rb.addEventListener('click', loadTraffic);
       var xb=$('btnTrafReset');  if(xb) xb.addEventListener('click', resetTraffic);
+      var cb=$('btnTrafCsv');  if(cb) cb.addEventListener('click', function(){ exportTraffic('csv'); });
+      var jb=$('btnTrafJson'); if(jb) jb.addEventListener('click', function(){ exportTraffic('json'); });
     }
     api('/admin/visits').then(function(r){return r.json();}).then(function(d){
       var g=$('trafCards');
       if(!d || !d.ok){ if(g) g.innerHTML='<div class="empty err">'+((d&&d.error)||'error')+'</div>'; return; }
       function fmt(n){ try{return Number(n||0).toLocaleString();}catch(e){return String(n||0);} }
       function tile(lbl,o){ return '<div class="tstat"><div class="lbl">'+lbl+'</div><div class="big">'+fmt(o&&o.v)+'</div><div class="sub">'+fmt(o&&o.u)+' unique</div></div>'; }
-      if(g) g.innerHTML = tile('Today',d.today)+tile('Last 7 days',d.week)+tile('Last 30 days',d.month)+tile('All time',d.allTime);
+      if(g) g.innerHTML = tile('Today',d.today)+tile('Last 7 days',d.week)+tile('Last 30 days',d.month)+tile('Last 90 days',d.quarter)+tile('Last 180 days',d.semester)+tile('Last 365 days',d.year)+tile('All time',d.allTime);
       var c=$('trafChart'), s=(d.series||[]), max=1;
       s.forEach(function(x){ if((x.v||0)>max) max=x.v; });
       if(c) c.innerHTML = s.map(function(x){
@@ -674,6 +682,19 @@
         md.innerHTML = rows.map(function(rw){ return '<div class="srow"><span>'+rw[0]+'</span><b>'+fmt(tm[rw[1]])+' today · '+fmt(am[rw[1]])+' total</b></div>'; }).join('');
       }
     }).catch(function(){ var g=$('trafCards'); if(g) g.innerHTML='<div class="empty err">Could not load.</div>'; });
+  }
+  function exportTraffic(fmt){
+    var m=$('trafExpMsg');
+    if(m){ m.className='msg'; m.textContent='Preparing '+fmt.toUpperCase()+'\u2026'; }
+    api('/admin/visits/export?format='+encodeURIComponent(fmt)).then(function(r){ if(!r.ok) throw new Error('http'); return r.text(); }).then(function(txt){
+      var blob = new Blob([txt], { type: fmt==='csv' ? 'text/csv' : 'application/json' });
+      var url = URL.createObjectURL(blob);
+      var a = document.createElement('a');
+      a.href = url; a.download = 'pokerth-traffic-'+new Date().toISOString().slice(0,10)+'.'+fmt;
+      document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(function(){ URL.revokeObjectURL(url); }, 1500);
+      if(m){ m.className='msg ok'; m.textContent='Downloaded '+fmt.toUpperCase()+'.'; }
+    }).catch(function(){ if(m){ m.className='msg err'; m.textContent='Export failed.'; } });
   }
   function resetTraffic(){
     if(!confirm('This permanently deletes ALL traffic data (today, history and totals). This cannot be undone. Continue?')) return;
