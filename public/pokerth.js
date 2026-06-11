@@ -10677,7 +10677,7 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.2.430'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.2.431'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
@@ -10728,4 +10728,34 @@ function renderPlayersList() {
   window.addEventListener('resize', syncOverlayTop, { passive:true });
   window.addEventListener('orientationchange', function(){ setTimeout(syncOverlayTop, 80); });
   requestAnimationFrame(syncOverlayTop);
+})();
+
+
+;(function(){
+  // ── Anonymous visit ping (traffic counter) ──
+  // Fires once per browser session: total visits = sessions, unique visitors =
+  // distinct persistent random ids. No IP, no PII. Aggregated server-side.
+  try { if (sessionStorage.getItem('pth_visit_sent')) return; } catch (e) { return; }
+  var fire = function () {
+    try {
+      try { sessionStorage.setItem('pth_visit_sent', '1'); } catch (e) {}
+      var vid = '';
+      try { vid = localStorage.getItem('pth_vid') || ''; } catch (e) {}
+      if (!vid) {
+        vid = (window.crypto && crypto.randomUUID) ? crypto.randomUUID()
+            : (Date.now().toString(36) + Math.random().toString(36).slice(2, 10));
+        try { localStorage.setItem('pth_vid', vid); } catch (e) {}
+      }
+      var body = JSON.stringify({ vid: vid });
+      if (navigator.sendBeacon) {
+        navigator.sendBeacon('/__visit', new Blob([body], { type: 'application/json' }));
+      } else {
+        fetch('/__visit', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: body, keepalive: true }).catch(function () {});
+      }
+    } catch (e) { /* never let the counter break the app */ }
+  };
+  try {
+    if (document.readyState === 'complete' || document.readyState === 'interactive') fire();
+    else window.addEventListener('load', fire, { once: true });
+  } catch (e) { fire(); }
 })();

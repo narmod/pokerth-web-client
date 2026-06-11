@@ -19,6 +19,7 @@ const url  = require('url');
 const fs   = require('fs');
 const path = require('path');
 const zlib = require('zlib');
+const crypto = require('crypto');
 
 // In-memory ring buffer of recent log lines, exposed (token-gated) at /admin/logs.
 const LOG_RING = []; const LOG_MAX = 400;
@@ -302,6 +303,91 @@ function maybeRotateStats() {
 }
 maybeRotateStats();
 setInterval(maybeRotateStats, 60 * 60 * 1000); // hourly boundary check
+
+// ── Visit / traffic counter ──
+// Anonymous footfall metrics persisted to visits.json next to this file. Each
+// browser posts ONE ping per session to POST /__visit with a random, client-
+// minted id (never the IP — no PII). Per day we keep { v:sessions, ids:{hash:1} }
+// so "unique visitors" is exact within a rolling window; an all-time session
+// counter plus an all-time id set keep the "All time" figures exact too.
+const VISITS_FILE = process.env.VISITS_FILE || path.join(__dirname, 'visits.json');
+const VISIT_RETENTION_DAYS = 120; // keep per-day id sets this long (covers 30-day uniques)
+let visitsStore = { days: {}, totalV: 0, allU: {} };
+try {
+  const _vs = JSON.parse(fs.readFileSync(VISITS_FILE, 'utf8'));
+  if (_vs && typeof _vs === 'object') {
+    visitsStore.days   = (_vs.days && typeof _vs.days === 'object') ? _vs.days : {};
+    visitsStore.totalV = (typeof _vs.totalV === 'number') ? _vs.totalV : 0;
+    visitsStore.allU   = (_vs.allU && typeof _vs.allU === 'object') ? _vs.allU : {};
+  }
+} catch (e) { /* first run — start empty */ }
+let _visitsSaveTimer = null;
+function saveVisitsSoon() {
+  if (_visitsSaveTimer) return;
+  _visitsSaveTimer = setTimeout(function () {
+    _visitsSaveTimer = null;
+    fs.writeFile(VISITS_FILE, JSON.stringify(visitsStore), function (err) {
+      if (err) console.error('[visits] write failed:', err.message);
+    });
+  }, 1500);
+}
+function visitDayKey(d) {
+  d = d || new Date();
+  return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+}
+function pruneVisitDays() {
+  const keys = Object.keys(visitsStore.days);
+  if (keys.length <= VISIT_RETENTION_DAYS) return;
+  keys.sort();
+  keys.slice(0, keys.length - VISIT_RETENTION_DAYS).forEach(function (k) { delete visitsStore.days[k]; });
+}
+function recordVisit(rawId) {
+  const day = visitDayKey();
+  let bucket = visitsStore.days[day];
+  if (!bucket) { bucket = visitsStore.days[day] = { v: 0, ids: {} }; pruneVisitDays(); }
+  bucket.v++;
+  visitsStore.totalV = (visitsStore.totalV || 0) + 1;
+  if (rawId) {
+    const h = crypto.createHash('sha256').update(String(rawId)).digest('hex').slice(0, 16);
+    if (!bucket.ids) bucket.ids = {};
+    bucket.ids[h] = 1;
+    visitsStore.allU[h] = 1;
+  }
+  saveVisitsSoon();
+}
+function visitWindow(daysBack) {
+  const now = new Date();
+  let v = 0;
+  const u = {};
+  for (let i = 0; i < daysBack; i++) {
+    const d = new Date(now);
+    d.setDate(now.getDate() - i);
+    const b = visitsStore.days[visitDayKey(d)];
+    if (!b) continue;
+    v += b.v || 0;
+    if (b.ids) for (const k in b.ids) u[k] = 1;
+  }
+  return { v: v, u: Object.keys(u).length };
+}
+function visitsSummary() {
+  const now = new Date();
+  const series = [];
+  for (let i = 13; i >= 0; i--) {
+    const d = new Date(now);
+    d.setDate(now.getDate() - i);
+    const k = visitDayKey(d);
+    const b = visitsStore.days[k];
+    series.push({ date: k, v: b ? (b.v || 0) : 0, u: (b && b.ids) ? Object.keys(b.ids).length : 0 });
+  }
+  return {
+    ok: true,
+    today: visitWindow(1),
+    week: visitWindow(7),
+    month: visitWindow(30),
+    allTime: { v: visitsStore.totalV || 0, u: Object.keys(visitsStore.allU).length },
+    series: series
+  };
+}
 
 function readJsonBody(req, cb) {
   let body = '';
@@ -774,6 +860,24 @@ function handleAdmin(req, res, reqPathOnly, query) {
     let sockets = null; try { sockets = wss.clients.size; } catch (e) {}
     return adminJson(res, 200, { ok: true, version: version, node: process.version, uptimeSec: Math.floor(process.uptime()), sockets: sockets, players: Object.keys(statsStore).length, resetPeriod: STATS_RESET_PERIOD, modes: appModes(), defaultTheme: _adminConfig.defaultTheme || '', defaults: _adminConfig.defaults || {}, loginDefaults: _adminConfig.loginDefaults || {}, proxyCfg: _adminConfig.proxyCfg || {}, tableDefaults: _adminConfig.tableDefaults || {}, serverName: _adminConfig.serverName || '', serverTagline: _adminConfig.serverTagline || '', restartAt: (_restartAt > Date.now() ? _restartAt : null), restartKind: (_restartAt > Date.now() ? _restartKind : null) });
   }
+  if (reqPathOnly === '/admin/visits') {
+    if (req.method === 'GET') {
+      if (!adminAuthed(query)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
+      return adminJson(res, 200, visitsSummary());
+    }
+    if (req.method === 'POST') {
+      return readJsonBody(req, function (d) {
+        if (!adminAuthed(query, d && d.token)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
+        if (d && d._reset) {
+          visitsStore = { days: {}, totalV: 0, allU: {} };
+          try { fs.writeFileSync(VISITS_FILE, JSON.stringify(visitsStore)); } catch (e) { console.error('[visits] reset write failed:', e.message); }
+          return adminJson(res, 200, { ok: true, reset: true });
+        }
+        return adminJson(res, 400, { ok: false });
+      });
+    }
+    res.writeHead(405); res.end('Method not allowed'); return;
+  }
   if (reqPathOnly === '/admin/logs') {
     if (!adminAuthed(query)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
     return adminJson(res, 200, { ok: true, lines: LOG_RING.slice(-300) });
@@ -1207,6 +1311,19 @@ const httpServer = http.createServer((req, res) => {
     } catch (e) { /* no lang dir yet — ignore */ }
     res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' });
     res.end(JSON.stringify({ v: Math.floor(newest) }));
+    return;
+  }
+
+  // ── Visit ping (anonymous traffic counter) ──
+  // One beacon per browser session: { vid:"<random>" }. We never read the IP;
+  // the id is a client-minted random token, hashed before storage. 204 reply.
+  if (reqPathOnly === '/__visit') {
+    if (req.method !== 'POST') { res.writeHead(405); res.end('Method not allowed'); return; }
+    readJsonBody(req, function (d) {
+      try { recordVisit(d && d.vid); } catch (e) { /* ignore a bad ping */ }
+      res.writeHead(204, { 'Cache-Control': 'no-store' });
+      res.end();
+    });
     return;
   }
 

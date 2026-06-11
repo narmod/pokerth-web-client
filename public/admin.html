@@ -38,6 +38,16 @@
   .drop.hot{border-color:var(--gold);background:rgba(239,241,245,.08);color:var(--cream)}
   .msg{margin-top:10px;font-size:.85rem;min-height:1.2em}
   .ok{color:#7fd17f}.err{color:#e98a8a}
+  .trafgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+  @media(max-width:560px){.trafgrid{grid-template-columns:repeat(2,1fr)}}
+  .tstat{background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:10px;padding:12px}
+  .tstat .lbl{font-size:.72rem;color:var(--text);text-transform:uppercase;letter-spacing:.04em}
+  .tstat .big{font-size:1.5rem;font-weight:800;color:var(--gold);margin-top:4px;font-variant-numeric:tabular-nums}
+  .tstat .sub{font-size:.78rem;color:var(--text);margin-top:2px}
+  .trafchart{display:flex;align-items:flex-end;gap:4px;height:120px;padding-top:6px}
+  .trafchart .bar{flex:1;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;height:100%;min-width:0}
+  .trafchart .bar i{display:block;width:100%;background:linear-gradient(180deg,#4080d8,#1a3d8b);border-radius:3px 3px 0 0;min-height:2px}
+  .trafchart .bar span{font-size:.58rem;color:var(--text);margin-top:3px;white-space:nowrap}
   .boardhead{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
   .row{display:flex;align-items:center;gap:10px;padding:8px 4px;border-top:1px solid rgba(255,255,255,.06)}
   .row:first-of-type{border-top:0}
@@ -120,11 +130,30 @@
     </div>
     <div class="tabs">
       <button class="tab on" data-t="server">Server</button>
+      <button class="tab" data-t="traffic">Traffic</button>
       <button class="tab" data-t="clients">Clients</button>
       <button class="tab" data-t="broadcast">Broadcasts</button>
       <button class="tab" data-t="board">Leaderboard</button>
       <button class="tab" data-t="packages">Packages</button>
       <button class="tab" data-t="music">Music</button>
+    </div>
+
+    <div id="panel-traffic" style="display:none">
+      <div class="card">
+        <div class="boardhead" style="margin-bottom:6px"><h2 style="margin:0">Traffic</h2><button id="btnTrafRefresh" class="use">Refresh</button></div>
+        <p class="muted" style="margin:2px 0 10px">Anonymous footfall — no IP is ever stored. “Visits” counts browser sessions; “Unique visitors” counts distinct devices.</p>
+        <div class="trafgrid" id="trafCards"><div class="empty">Loading…</div></div>
+      </div>
+      <div class="card">
+        <h2 style="margin:0 0 8px">Last 14 days</h2>
+        <div id="trafChart" class="trafchart"><div class="empty">Loading…</div></div>
+      </div>
+      <div class="card">
+        <h2>Reset traffic stats</h2>
+        <p class="muted" style="margin:6px 0 10px">Clears every visit counter. This cannot be undone.</p>
+        <button id="btnTrafReset" class="use danger">Reset all traffic stats</button>
+        <div id="trafMsg" class="msg"></div>
+      </div>
     </div>
 
     <div id="panel-packages" style="display:none">
@@ -408,8 +437,10 @@
     $('panel-clients').style.display=t==='clients'?'block':'none';
     $('panel-broadcast').style.display=t==='broadcast'?'block':'none';
     $('panel-music').style.display=t==='music'?'block':'none';
+    $('panel-traffic').style.display=t==='traffic'?'block':'none';
     if(t==='music')mzRefresh();
     if(t==='board') loadBoard();
+    if(t==='traffic') loadTraffic();
     if(t==='broadcast'){ loadBroadcasts(); loadWelcome(); }
     if(t==='clients'){ loadStatus(true); loadThemes(); }
     if(t==='server'){ loadServer(); srvStart(); } else { srvStop(); }
@@ -610,6 +641,37 @@
       var sn=$('schedNow'), sc=$('schedCancel');
       if(sn){ if(d.restartAt){ sn.textContent='Scheduled: '+(d.restartKind==='restart'?'restart only':'update + restart')+' at '+new Date(d.restartAt).toLocaleString(); if(sc) sc.style.display=''; } else { sn.textContent='Nothing scheduled.'; if(sc) sc.style.display='none'; } }
     }).catch(function(){ $('status').innerHTML='<div class="empty err">Could not load.</div>'; });
+  }
+  var _trafWired = false;
+  function loadTraffic(){
+    if(!_trafWired){
+      _trafWired = true;
+      var rb=$('btnTrafRefresh'); if(rb) rb.addEventListener('click', loadTraffic);
+      var xb=$('btnTrafReset');  if(xb) xb.addEventListener('click', resetTraffic);
+    }
+    api('/admin/visits').then(function(r){return r.json();}).then(function(d){
+      var g=$('trafCards');
+      if(!d || !d.ok){ if(g) g.innerHTML='<div class="empty err">'+((d&&d.error)||'error')+'</div>'; return; }
+      function fmt(n){ try{return Number(n||0).toLocaleString();}catch(e){return String(n||0);} }
+      function tile(lbl,o){ return '<div class="tstat"><div class="lbl">'+lbl+'</div><div class="big">'+fmt(o&&o.v)+'</div><div class="sub">'+fmt(o&&o.u)+' unique</div></div>'; }
+      if(g) g.innerHTML = tile('Today',d.today)+tile('Last 7 days',d.week)+tile('Last 30 days',d.month)+tile('All time',d.allTime);
+      var c=$('trafChart'), s=(d.series||[]), max=1;
+      s.forEach(function(x){ if((x.v||0)>max) max=x.v; });
+      if(c) c.innerHTML = s.map(function(x){
+        var h=Math.round(((x.v||0)/max)*100);
+        var lab=(x.date||'').slice(5);
+        return '<div class="bar" title="'+x.date+': '+(x.v||0)+' visits, '+(x.u||0)+' unique"><i style="height:'+h+'%"></i><span>'+lab+'</span></div>';
+      }).join('');
+    }).catch(function(){ var g=$('trafCards'); if(g) g.innerHTML='<div class="empty err">Could not load.</div>'; });
+  }
+  function resetTraffic(){
+    if(!confirm('Reset all traffic stats? This cannot be undone.')) return;
+    api('/admin/visits',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({_reset:true,token:tok()})})
+      .then(function(r){return r.json();}).then(function(d){
+        var m=$('trafMsg');
+        if(d && d.ok){ if(m){ m.className='msg ok'; m.textContent='Traffic stats reset.'; } loadTraffic(); }
+        else { if(m){ m.className='msg err'; m.textContent='Reset failed: '+((d&&d.error)||'forbidden'); } }
+      }).catch(function(){ var m=$('trafMsg'); if(m){ m.className='msg err'; m.textContent='Network error.'; } });
   }
   function loadServer(){ loadStatus(true); loadLogs(); loadUpdateLog(); }
   // Theme presets shown in the default-theme dropdown = built-in presets (static
