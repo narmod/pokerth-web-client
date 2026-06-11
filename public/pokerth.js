@@ -10455,6 +10455,36 @@ function joinWithPassword() {
   }
 }
 
+function toggleMusicPanel() {
+  var panel = document.getElementById('music-panel');
+  if (!panel) return;
+  var open = panel.style.display === 'none' || panel.style.display === '';
+  panel.style.display = open ? 'flex' : 'none';
+  if (open) {
+    // First open: render the player UI into the body (manifest-driven).
+    if (!panel._musicMounted) {
+      panel._musicMounted = true;
+      try { if (window.Music && window.Music.mount) window.Music.mount(document.getElementById('music-body')); } catch (e) {}
+    }
+    // Draggable + resizable on desktop/tablet; fixed bottom-sheet on phones —
+    // same window system as the chat / log / reaction panels.
+    if (_winGate()) {
+      _attachFloatControls(panel, { key: 'pth_winpos_music', handle: panel.querySelector('.music-panel-title'), resizable: true, minW: 260, minH: 200 });
+    } else {
+      _disableFloating(panel);
+    }
+  }
+  // Reflect open/closed state on the entry buttons (active = gold).
+  ['music-btn-connect', 'music-toggle-lobby-mob', 'music-toggle-game-mob'].forEach(function (id) {
+    var b = document.getElementById(id);
+    if (!b) return;
+    b.style.background  = open ? 'rgba(var(--gold-rgb),0.2)' : '';
+    b.style.borderColor = open ? 'var(--gold-dim)' : '';
+    b.style.color       = open ? 'var(--gold)' : '';
+  });
+}
+window.toggleMusicPanel = toggleMusicPanel;
+
 function toggleReactionPanel() {
   if (window._directWS) { // pokerth.net : réactions désactivées
     var _p = document.getElementById('g-reaction-panel'); if (_p) _p.style.display = 'none';
@@ -10649,7 +10679,7 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.2.423'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.2.424'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

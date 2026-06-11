@@ -23,7 +23,7 @@
  *                 Cross-origin requests and WS upgrades are left untouched.
  *                 (Fonts are now self-hosted and handled by SWR above.)
  */
-const CACHE_VERSION = 'pokerth-v0.2.423';
+const CACHE_VERSION = 'pokerth-v0.2.424';
 
 // Where navigations fall back to when the network is unavailable.
 const NAV_FALLBACK = '/pokerth-client.html';
@@ -100,6 +100,7 @@ const ASSETS = [
   '/modules/lang/zh.mjs',
   '/modules/lang/zh-tw.mjs',
   '/modules/sounds.mjs',
+  '/modules/music.mjs',
   '/favicon.ico',
   '/favicon.svg',
   '/favicon-32.png',
@@ -245,7 +246,7 @@ self.addEventListener('fetch', function(e) {
 
   if (e.request.mode === 'navigate') {
     e.respondWith(handleNavigation(e));
-  } else if (/\.(?:js|mjs|css)$/.test(url.pathname) || /^\/(?:table\/tables|cards\/decks|themes\/themes)\.json$/.test(url.pathname) || url.pathname === '/app-config') {
+  } else if (/\.(?:js|mjs|css)$/.test(url.pathname) || /^\/(?:table\/tables|cards\/decks|themes\/themes|music\/tracks)\.json$/.test(url.pathname) || url.pathname === '/app-config') {
     // Code, the runtime gallery manifests, AND the live /app-config are
     // network-first: a freshly imported package or a changed admin default must
     // be visible on the next load, never served stale from the SW cache.

@@ -259,6 +259,7 @@ function onAvatarImageChosen(input) {
     <button class="btn-sm btn-icon" id="lang-toggle-connect" onclick="openLangMenu(event)" title="Switch language" data-i18n-title="langTooltip" aria-label="Switch language"></button>
     <button class="btn-sm btn-icon" id="theme-toggle-connect" onclick="openThemePanel(event)" title="Theme" data-i18n-title="themeTooltip" aria-label="Theme">🎨</button>
     <button class="btn-sm btn-icon" onclick="location.reload()" title="Refresh / Rafraîchir" data-i18n-title="refreshTooltip" aria-label="Refresh">↺</button>
+    <button class="btn-sm btn-icon" id="music-btn-connect" onclick="toggleMusicPanel()" title="Music" data-i18n-title="musicTooltip" aria-label="Music">🎵</button>
     <button class="btn-sm btn-icon" id="fs-btn-connect" onclick="toggleFullscreen()" title="Fullscreen" data-i18n-title="fullscreenTooltip" aria-label="Fullscreen">⛶</button>
   </div>
   <!-- Liens officiels PokerTH — cluster miroir en haut-gauche (nouvelle page) -->
@@ -974,6 +975,7 @@ function onAvatarImageChosen(input) {
       <button class="btn-sm" onclick="toggleFullscreen();closeLobbyOverflow()"><span style="margin-right:5px">⛶</span><span data-i18n="fullscreenTooltip">Fullscreen</span></button>
       <button class="btn-sm" id="lang-toggle-lobby-mob" onclick="closeLobbyOverflow();openLangMenu(event)" style="font-size:0.85rem"></button>
       <button class="btn-sm" id="theme-toggle-lobby-mob" onclick="closeLobbyOverflow();openThemePanel(event)" style="font-size:0.85rem">🎨 <span data-i18n="themeTooltip">Theme</span></button>
+      <button class="btn-sm" id="music-toggle-lobby-mob" onclick="closeLobbyOverflow();toggleMusicPanel()" style="font-size:0.85rem">🎵 <span data-i18n="musicTooltip">Music</span></button>
     </div>
   </div>
 
@@ -1172,6 +1174,7 @@ function onAvatarImageChosen(input) {
       <!-- Réglages -->
       <button class="btn-sm" id="lang-toggle-game-mob" onclick="closeHeaderOverflow();openLangMenu(event)" style="font-size:0.85rem"></button>
       <button class="btn-sm" id="theme-toggle-game-mob" onclick="closeHeaderOverflow();openThemePanel(event)" style="font-size:0.85rem">🎨 <span data-i18n="themeTooltip">Theme</span></button>
+      <button class="btn-sm" id="music-toggle-game-mob" onclick="closeHeaderOverflow();toggleMusicPanel()" style="font-size:0.85rem">🎵 <span data-i18n="musicTooltip">Music</span></button>
       <button class="btn-sm" id="displaybb-toggle-mob" onclick="toggleDisplayBB()">🎚️ BB / <b style="color:var(--gold)">¥</b></button>
       <button class="btn-sm" id="haptic-toggle-mob" onclick="toggleHaptic()">📳 Vibration</button>
       <button class="btn-sm" id="voice-toggle-mob" onclick="toggleVoice()">🤐 Voice</button>
@@ -1346,6 +1349,19 @@ function onAvatarImageChosen(input) {
   </div>
 </div>
 
+<!-- Music panel — global floating window (home + lobby + game). Draggable +
+     resizable >= 900px via the chat/log/reaction window system
+     (_attachFloatControls + _winGate, see toggleMusicPanel); fixed bottom-sheet
+     on phones. The track list/controls are rendered into #music-body by
+     window.Music.mount() on first open. -->
+<div id="music-panel" style="display:none">
+  <div class="music-panel-title">
+    <span>🎵 <span data-i18n="musicPanelTitle">Music</span></span>
+    <button class="music-panel-close" onclick="toggleMusicPanel()" title="Close" data-i18n-title="closeTooltip" aria-label="Close">✕</button>
+  </div>
+  <div class="music-body" id="music-body"></div>
+</div>
+
 <!-- ES module: must load BEFORE the main script so its window.* aliases
      are available when pokerth.js starts executing. Modules are deferred
      by default, and the main script below uses `defer` too — defer
@@ -1353,6 +1369,7 @@ function onAvatarImageChosen(input) {
 <script type="module" src="modules/i18n.mjs"></script>
 <script type="module" src="modules/theme.mjs"></script>
 <script type="module" src="modules/sounds.mjs"></script>
+<script type="module" src="modules/music.mjs"></script>
 <!-- Quit-game confirmation dialog: 2 buttons (Quit / Cancel).
      Shown when the user clicks the ✕ button in the header from inside
      a game. Driven by App.confirmLeaveGame() (open) and

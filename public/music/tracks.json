@@ -1,0 +1,18 @@
+{
+  "version": 1,
+  "tracks": [
+    {
+      "id": "club-seamus",
+      "title": "Club Seamus",
+      "artist": "Kevin MacLeod",
+      "file": "/music/Club_Seamus.mp3",
+      "license": "CC BY 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+      "source": "incompetech.com",
+      "sourceUrl": "https://incompetech.com/",
+      "credit": "Club Seamus by Kevin MacLeod — incompetech.com — CC BY 4.0",
+      "active": true,
+      "order": 1
+    }
+  ]
+}
