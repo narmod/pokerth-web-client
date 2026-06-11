@@ -72,6 +72,12 @@ This project is a **web frontend** that connects to any PokerTH server directly 
 ## Screenshots
 
 <p align="center">
+  <img src="docs/screenshots/08-desktop-game-light.png" alt="In-game desktop view — table, theming, reactions and chat" width="840"/>
+  <br/>
+  <em>Desktop view — full table with the live appearance panel (deck, palette, felt, buttons, pucks, seats), emoji reactions, in-game chat with its emoji picker, the action bar with keyboard hints, and the hand log</em>
+</p>
+
+<p align="center">
   <img src="docs/screenshots/01-connect-dark.png" alt="Connect screen (dark theme)" width="260"/>
   <br/>
   <em>Connect screen — pick a login mode and join in seconds (light &amp; dark themes included)</em>
@@ -131,6 +137,7 @@ This project is a **web frontend** that connects to any PokerTH server directly 
 ### Poker table
 - Seats positioned according to server order, **locked after the first deal** (no mid-game layout jumps)
 - **Responsive seat layout** — on phones and tablets the seats tighten around the felt so players stay close to the table; desktop keeps the wider layout
+- **Table zoom** (desktop) — **+ / −** buttons by the table shrink the felt, community cards and opponents together (down to 60 %) or restore them up to the current size, while your own player bar and the action bar stay fixed; the level is remembered
 - Casino-style chip tokens: SB 🔵, BB 🔴, Dealer ⚫ gold — with `chipPop` animation
 - SVG arc timer around the active player's avatar + seconds badge below
 - **Card deal animation**: cards fly from the centre to each seat at the start of every hand
@@ -173,13 +180,14 @@ A full appearance system, reached from the **Theme** button — pick a one-tap p
 
 ### Chat & reactions
 - In-lobby chat and in-game chat (dropdown panels)
+- **Emoji picker in chat** (desktop) — a 😊 button in the chat input (both lobby and in-game) opens an emoji grid; click to insert it at the cursor, then send like any text. Hidden on mobile, where the native keyboard already provides emojis
 - 30 emoji reactions with a 6-second counter, broadcast to all players
 - **Cross-client reactions**: reactions also travel through a shared `/emoji` chat command (handled like `/me`), so they reach other clients and work on pokerth.net too — while a fast `REACT:` relay stays the web↔web path
 
 ### Comfort features
 - Browser notifications when it is your turn (background tab)
 - Tab title flashes: ⚡ YOUR TURN — PokerTH
-- Keyboard shortcuts: **F** = Fold, **C** / Space = Call, **R** = Raise, **A** = All-in
+- Keyboard shortcuts: **F** = Fold, **C** / Space = Call, **R** = Raise, **A** = All-in, plus **1 / 2 / 3** to arm a ⅓ / ½ / pot bet (then **R** to confirm) — the bet buttons show these keycaps on desktop
 - Sound effects: distinct sounds for fold / check / call / raise / all-in / shuffle / drumroll / bad-beat / win fanfare, plus urgent-timer warning
 - **Full i18n in 36 languages**, switchable on the fly and auto-detected from the browser locale — the complete official PokerTH language set plus community additions (Ukrainian, Romanian, Croatian, Serbian and more), with Brazilian and European Portuguese shipped as separate catalogues (pt-BR / pt-PT)
 - Fullscreen mode on all screens
