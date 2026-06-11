@@ -185,6 +185,7 @@ export const strings = {
     waitingNeedMore:'{n} more player(s) needed to start',
     waitingHintAdmin:'You\'re the admin — start when ready or fill with bots',
     waitingHintGuest:'The admin will start the game when enough players are ready',
+    waitingHintSpectator:'You\'re watching as a spectator — the game will start when the admin starts it',
     waitingYou:'You',
     endGameTitleEnd:'Tournament ended',
     endGameTitleWin:'You won the tournament!',

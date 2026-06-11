@@ -7102,7 +7102,7 @@ const App = (() => {
       .filter(function(pid) {
         return seatData[pid] && !seatData[pid].gone;
       });
-    if (!pids.includes(myId) && myId) pids.push(myId);
+    if (!_amSpectator && !pids.includes(myId) && myId) pids.push(myId); // spectators aren't seated
 
     // 'current' MUST come from the same source as the player list below
     // so the two can't disagree visually. We tried using games[gId].players
@@ -7155,7 +7155,7 @@ const App = (() => {
     // Admin hint
     const hint = amGameAdmin
       ? '<div class="wp-hint wp-hint-admin">' + t('waitingHintAdmin') + '</div>'
-      : '<div class="wp-hint">' + t('waitingHintGuest') + '</div>';
+      : '<div class="wp-hint">' + t(_amSpectator ? 'waitingHintSpectator' : 'waitingHintGuest') + '</div>';
 
     // Start-now banner: shown to the ADMIN only, when the table was
     // created with the 'fill with bots' option AND the configured minimum
@@ -7197,7 +7197,7 @@ const App = (() => {
     // Show "+ Bots" whenever the admin has empty seats to fill (works even
     // with a single human, e.g. offline mode). "Start" (humans only) still
     // requires the server minimum of 2 humans.
-    if (amGameAdmin && (current >= 2 || current < maxP)) {
+    if (!_amSpectator && amGameAdmin && (current >= 2 || current < maxP)) {
       var startNoBotsBtn = (current >= 2)
         ? '<button class="wp-ready-btn" onclick="App.startNoBots()" title="' + t('wpStartHumansTip') + '">▶ ' + t('wpStart') + '</button>'
         : '';
@@ -10652,7 +10652,7 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.2.419'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.2.420'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
