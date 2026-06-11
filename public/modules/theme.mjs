@@ -591,9 +591,9 @@ function _dropdownBlock(secId, labelText, kind, curItem, curName, options) {
 // breathing room); if the section is taller than the panel we align its top
 // instead, so the list stays scrollable. Panel-only — no page-scroll effects.
 function _scrollOpenIntoView() {
-  if (!_openSec || !_openBlockEl) return;
-  var panel = document.getElementById(PANEL_ID);
-  if (!panel || panel.isConnected === false || _openBlockEl.isConnected === false) return;
+  if (!_openSec || !_openBlockEl || !_body) return;
+  var panel = _body; // entete fixe : c'est le body qui scrolle desormais
+  if (panel.isConnected === false || _openBlockEl.isConnected === false) return;
   var cs = getComputedStyle(panel);
   var pr = panel.getBoundingClientRect();
   var br = _openBlockEl.getBoundingClientRect();
@@ -710,12 +710,12 @@ function openThemePanel(ev) {
   var panel = document.createElement('div');
   panel.id = PANEL_ID;
   panel.setAttribute('role', 'menu');
-  panel.style.cssText = 'position:fixed;z-index:9999;box-sizing:border-box;width:min(340px, calc(100vw - 16px));max-height:74vh;overflow:auto;'
+  panel.style.cssText = 'position:fixed;z-index:9999;box-sizing:border-box;width:min(340px, calc(100vw - 16px));max-height:74vh;overflow:hidden;display:flex;flex-direction:column;'
     + 'background:var(--panel,#0d1f10);border:1px solid var(--gold-dim,rgba(200,168,74,0.45));'
-    + 'border-radius:10px;padding:11px 13px 13px;box-shadow:0 12px 32px rgba(0,0,0,0.6)';
+    + 'border-radius:10px;padding:0;box-shadow:0 12px 32px rgba(0,0,0,0.6)';
 
   var header = document.createElement('div');
-  header.style.cssText = 'display:flex;align-items:center;justify-content:space-between;margin:0 0 11px';
+  header.style.cssText = 'display:flex;align-items:center;justify-content:space-between;flex:none;padding:11px 13px 9px;border-bottom:1px solid var(--border,rgba(200,168,74,0.18))';
   var title = document.createElement('span');
   title.textContent = _t('themeTooltip', 'Theme');
   title.style.cssText = 'font-size:0.95rem;font-weight:700;color:var(--cream,#f0e6d2)';
@@ -727,6 +727,7 @@ function openThemePanel(ev) {
   panel.appendChild(header);
 
   _body = document.createElement('div');
+  _body.style.cssText = 'flex:1 1 auto;min-height:0;overflow-y:auto;overflow-x:hidden;padding:11px 13px 13px';
   panel.appendChild(_body);
   _render();
   // Re-pull the runtime galleries each time the panel opens, so packages just
