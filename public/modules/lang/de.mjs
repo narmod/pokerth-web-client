@@ -347,6 +347,7 @@ export const strings = {
     waitingNeedMore: 'Noch {n} Spieler werden zum Start benötigt',
     waitingHintAdmin: 'Du bist Admin — starte wann du bereit bist oder fülle mit Bots auf',
     waitingHintGuest: 'Der Admin startet das Spiel, wenn genug Spieler bereit sind',
+    waitingHintSpectator: 'Du schaust als Zuschauer zu — das Spiel startet, wenn der Admin es startet',
     waitingYou: 'Du',
     endGameTitleEnd: 'Turnier beendet',
     endGameTitleWin: 'Du hast das Turnier gewonnen!',

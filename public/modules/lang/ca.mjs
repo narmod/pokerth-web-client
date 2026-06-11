@@ -342,6 +342,7 @@ export const strings = {
     waitingNeedMore: 'Calen {n} jugadors més per començar',
     waitingHintAdmin: 'Ets l\'administrador — comença quan estiguis a punt o omple amb bots',
     waitingHintGuest: 'L\'administrador començarà la partida quan hi hagi prou jugadors',
+    waitingHintSpectator: 'Estàs mirant com a espectador — la partida començarà quan l\'administrador la comenci',
     waitingYou: 'Tu',
     endGameTitleEnd: 'El torneig ha acabat',
     endGameTitleWin: 'Has guanyat el torneig!',

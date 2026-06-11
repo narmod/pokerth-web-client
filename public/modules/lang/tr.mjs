@@ -344,6 +344,7 @@ export const strings = {
     waitingNeedMore: 'Başlamak için {n} oyuncu daha gerekli',
     waitingHintAdmin: 'Yöneticisin — hazır olunca başlat veya botlarla doldur',
     waitingHintGuest: 'Yeterli oyuncu hazır olunca yönetici oyunu başlatacak',
+    waitingHintSpectator: 'İzleyici olarak izliyorsun — yönetici başlattığında oyun başlayacak',
     waitingYou: 'Sen',
     endGameTitleEnd: 'Turnuva bitti',
     endGameTitleWin: 'Turnuvayı kazandın!',

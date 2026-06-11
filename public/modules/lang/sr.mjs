@@ -342,6 +342,7 @@ export const strings = {
     waitingNeedMore: 'Potrebno je još {n} igrača za početak',
     waitingHintAdmin: 'Vi ste administrator — počnite kad ste spremni ili popunite botovima',
     waitingHintGuest: 'Administrator će započeti igru kad bude dovoljno igrača',
+    waitingHintSpectator: 'Gledate kao gledalac — igra će započeti kad je administrator pokrene',
     waitingYou: 'Vi',
     endGameTitleEnd: 'Turnir je završen',
     endGameTitleWin: 'Pobedili ste na turniru!',

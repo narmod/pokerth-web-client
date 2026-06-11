@@ -343,6 +343,7 @@ export const strings = {
     waitingNeedMore: '還需要 {n} 名玩家才能開始',
     waitingHintAdmin: '你是房主 — 準備好後開始或用機器人填充',
     waitingHintGuest: '當玩家足夠時房主將開始遊戲',
+    waitingHintSpectator: '你正以觀眾身份觀看 — 房主開始後遊戲即會開始',
     waitingYou: '你',
     endGameTitleEnd: '錦標賽結束',
     endGameTitleWin: '你贏得了錦標賽！',
