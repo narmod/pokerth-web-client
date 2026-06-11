@@ -718,6 +718,7 @@ function openThemePanel(ev) {
   header.style.cssText = 'display:flex;align-items:center;justify-content:space-between;flex:none;padding:11px 13px 9px;border-bottom:1px solid var(--border,rgba(200,168,74,0.18))';
   var title = document.createElement('span');
   title.textContent = _t('themeTooltip', 'Theme');
+  title.setAttribute('data-i18n', 'themeTooltip'); // suit le changement de langue comme le reste (setLang)
   title.style.cssText = 'font-size:0.95rem;font-weight:700;color:var(--cream,#f0e6d2)';
   var x = document.createElement('button');
   x.type = 'button'; x.innerHTML = '\u2715';
