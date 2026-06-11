@@ -368,6 +368,21 @@ document.addEventListener('keydown', function(e) {
     // All-in
     var btn = document.querySelector('.btn-allin:not([disabled])');
     if (btn) { e.preventDefault(); btn.click(); showKeyHint(t('hintAllin')); }
+  } else if (key === '1' || key === '2' || key === '3') {
+    // Mises rapides : 1 = 1/3 pot, 2 = 1/2 pot, 3 = pot. On clique le bouton .btn-pct
+    // correspondant (il remplit le champ montant via setPct), puis on RETIRE le focus du
+    // champ : sinon, champ focalise, le handler ignore R (il croit qu'on tape un montant)
+    // et la relance ne partirait pas. L'utilisateur valide ensuite avec R (ou Entree).
+    var _pb = _ap.querySelectorAll('.btn-pct:not([disabled])');
+    var _i = key === '1' ? 0 : (key === '2' ? 1 : 2);
+    if (_pb && _pb[_i]) {
+      e.preventDefault();
+      _pb[_i].click();
+      var _ri = document.getElementById('raise-amt');
+      if (_ri) _ri.blur();
+      var _frac = key === '1' ? '1/3' : (key === '2' ? '1/2' : 'Pot');
+      showKeyHint(_frac + ' — ' + t('hintBetConfirm'));
+    }
   } else if (key === 'enter') {
     // Confirmer la relance si l'input est focusé
     var inp = document.getElementById('raise-amt');
@@ -10257,7 +10272,7 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.2.395'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.2.396'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

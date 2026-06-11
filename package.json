@@ -1,6 +1,6 @@
 {
   "name": "pokerth-web-client",
-  "version": "0.2.395",
+  "version": "0.2.396",
   "description": "Experimental modern web client for PokerTH using a WebSocket-to-TCP proxy.",
   "main": "proxy.js",
   "private": false,
