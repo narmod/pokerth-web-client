@@ -254,6 +254,7 @@ export const strings = {
     modeInProgress:'In progress',
     modeClosed:'Closed',
     noTablesAvailable:'No tables available right now.',
+    tablePlayersEmpty:'No players seated.',
     filterAll:'All', filterOpen:'\ud83d\udfe2 Open', filterNoPass:'\ud83d\udd13 No password', filterLive:'\ud83d\udc41 Live',
     noTablesForFilter:'No tables match this filter',
     createTableHdr:'Create a table', gameStyle:'Game style',

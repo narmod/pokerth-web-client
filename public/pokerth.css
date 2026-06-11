@@ -5154,6 +5154,38 @@ body:not(.in-game) .my-zone {
   font-size: 0.88rem;
 }
 .game-row.gcard .btn-join:hover { background: rgba(var(--green-rgb), 0.28); }
+
+/* Liste dépliable des joueurs d'une table (clic sur la carte) */
+.game-players {
+  margin: -7px 0 10px;
+  padding: 9px 12px 11px;
+  background: var(--inset);
+  border: 1px solid var(--border);
+  border-top: none;
+  border-radius: 0 0 12px 12px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 8px;
+  animation: gpReveal 0.18s ease;
+}
+.game-players[hidden] { display: none; }
+.gp-player {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  max-width: 100%;
+  padding: 4px 9px;
+  background: var(--inset-hi);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  font-size: 0.8rem;
+  line-height: 1.2;
+}
+.gp-player .gp-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.gp-player.gp-pending { opacity: 0.55; }
+.cc-flag.gp-flag { width: 18px; height: auto; border-radius: 2px; flex: 0 0 auto; }
+.gp-empty { opacity: 0.6; font-size: 0.8rem; padding: 2px 0; }
+@keyframes gpReveal { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: none; } }
 .game-row.gcard .btn-watch {
   flex: 0 0 auto;
   border: 1px solid var(--border);

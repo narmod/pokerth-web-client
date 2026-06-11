@@ -3431,6 +3431,7 @@ const App = (() => {
   };
   let games     = {};   // gameId → {name, mode, players, maxPlayers, type, priv}
   let players   = {};   // playerId → name
+  let _openTables = new Set(); // gids whose lobby player-list panel is expanded
   let loaded    = false;
   // Table-list filter (design A chips): 'all' | 'open' | 'nopass' | 'live'.
   // Persisted so the choice survives reloads, like other lobby prefs.
@@ -4276,6 +4277,8 @@ const App = (() => {
         const info = Proto.sub(sub, 2);
         const name = Proto.str(info, 1);
         if (name) players[pid] = name;
+        // Rafraîchir un panneau « joueurs à cette table » en attente de ce pseudo.
+        if (name && _openTables.size && _tableHasPid(pid)) renderGames();
         // Code pays (champ 4, optionnel) — présent surtout sur pokerth.net.
         var cc = Proto.str(info, 4);
         if (cc) _playerCountries[pid] = cc.toUpperCase();
@@ -4453,12 +4456,15 @@ const App = (() => {
         const gtype= Proto.u32(gi, 2);
         const maxp = Proto.u32(gi, 3);
 
-        // Compter les joueurs (packed varints dans le champ 4)
-        let pc = 0;
+        // Liste des joueurs présents (varints packed, champ 4 =
+        // playerIds). On garde les IDs pour le panneau dépliable
+        // « joueurs à cette table » ; le compteur en découle.
+        let _seats = [];
         if (sub[4]) {
           let pos = 0; const p = sub[4][0];
-          while (pos < p.length) { const r = Proto.decodeVarint(p, pos); pos = r.pos; pc++; }
+          while (pos < p.length) { const r = Proto.decodeVarint(p, pos); pos = r.pos; _seats.push(r.value); }
         }
+        let pc = _seats.length;
 
         // Pull playerActionTimeout from the NetGameInfo we already decoded
         // above (field 6 of GameListNewMessage). Previous attempts probed
@@ -4481,7 +4487,7 @@ const App = (() => {
         var _germode = Proto.u32(gi, 7) || 1;  // endRaiseMode (1=double,2=+val,3=keep)
         var _gerval  = Proto.u32(gi, 8) || 0;  // endRaiseSmallBlindValue
         var _gsb     = Proto.u32(gi, 12) || 0; // NetGameInfo.firstSmallBlind (field 12)
-        games[id] = { name, mode, players:pc, maxPlayers:maxp, type:gtype, priv:!!priv,
+        games[id] = { name, mode, players:pc, seats:_seats, maxPlayers:maxp, type:gtype, priv:!!priv,
                       timeout: _gto || 15, startMoney: _gsm || 3000,
                       raiseMode: _grmode, raiseHands: _grhands, raiseMins: _grmins, smallBlind: _gsb,
                       endRaiseMode: _germode, endRaiseValue: _gerval };
@@ -4521,13 +4527,31 @@ const App = (() => {
 
       // Un joueur rejoint / quitte une table
       case T.GameListPlayerJoined: {
-        const id = Proto.u32(sub, 1);
-        if (games[id]) { games[id].players++; renderGames(); }
+        const id  = Proto.u32(sub, 1);
+        const pid = Proto.u32(sub, 2);
+        if (games[id]) {
+          if (!games[id].seats) games[id].seats = [];
+          if (pid && games[id].seats.indexOf(pid) === -1) games[id].seats.push(pid);
+          games[id].players = games[id].seats.length;
+          if (pid && !players[pid] && _openTables.has(String(id)) && !_pendingNameRequests.has(pid)) {
+            _pendingNameRequests.add(pid);
+            try { send(Proto.encode([[1,0,T.PlayerInfoRequest],[19,2,Proto.encode([[1,0,pid]])]])); } catch(e) {}
+          }
+          renderGames();
+        }
         break;
       }
       case T.GameListPlayerLeft: {
-        const id = Proto.u32(sub, 1);
-        if (games[id] && games[id].players > 0) { games[id].players--; renderGames(); }
+        const id  = Proto.u32(sub, 1);
+        const pid = Proto.u32(sub, 2);
+        if (games[id]) {
+          if (games[id].seats) {
+            const _ix = games[id].seats.indexOf(pid);
+            if (_ix !== -1) games[id].seats.splice(_ix, 1);
+            games[id].players = games[id].seats.length;
+          } else if (games[id].players > 0) { games[id].players--; }
+          renderGames();
+        }
         break;
       }
       case T.GameListSpectatorJoined: {
@@ -5710,6 +5734,35 @@ const App = (() => {
     });
   }
 
+  // ── Liste dépliable des joueurs par table (lobby) ─────────────
+  // GameListNew fournit l'ENSEMBLE des IDs joueurs de chaque table
+  // (champ 4, playerIds) — pas leur position de siège — donc on liste
+  // qui est présent et on demande à la volée les pseudos inconnus
+  // (même déduplication que le roster des joueurs en ligne).
+  function renderTablePlayers(gid) {
+    const g = games[gid];
+    if (!g) return '';
+    const seats = (g.seats || []);
+    if (!seats.length) return '<div class="gp-empty">' + t('tablePlayersEmpty') + '</div>';
+    return seats.map(function(pid){
+      const nm = players[pid];
+      if (!nm && !_pendingNameRequests.has(pid)) {
+        _pendingNameRequests.add(pid);
+        try { send(Proto.encode([[1,0,T.PlayerInfoRequest],[19,2,Proto.encode([[1,0,pid]])]])); } catch(e) {}
+      }
+      const flag = _ccToFlag(_playerCountries[pid], 'gp-flag');
+      const label = nm ? esc(nm) : '#' + pid;
+      return '<span class="gp-player' + (nm ? '' : ' gp-pending') + '">' + flag + '<span class="gp-name">' + label + '</span></span>';
+    }).join('');
+  }
+  function _tableHasPid(pid) {
+    for (const k of _openTables) {
+      const g = games[k];
+      if (g && g.seats && g.seats.indexOf(pid) !== -1) return true;
+    }
+    return false;
+  }
+
   function renderGames() {
     // Utiliser entries() pour avoir l'id ET l'objet
     const entries = Object.entries(games);
@@ -5764,7 +5817,7 @@ const App = (() => {
       var _blUp = (g.raiseMode === 2) ? (g.raiseMins > 0 ? t('blindsUpMins', { n: g.raiseMins }) : '') : (g.raiseHands > 0 ? t('blindsUpHands', { n: g.raiseHands }) : '');
       if (_blUp) metaBits.push('<span>\u2B06 ' + _blUp + '</span>');
       if (g.timeout)    metaBits.push('<span>\u23F1 ' + g.timeout + 's</span>');
-      return '<div class="game-row gcard" onclick="App.joinGame(' + parseInt(gid) + ')">'
+      return '<div class="game-row gcard" onclick="App.toggleTablePlayers(' + parseInt(gid) + ')">'
         + '<div class="gcard-main">'
         + '<div class="game-name">' + lock + esc(g.name)
         + ' <span class="game-badge ' + badgeCls + '">' + label + '</span></div>'
@@ -5772,6 +5825,9 @@ const App = (() => {
         + (seatDots ? '<div class="game-seats">' + seatDots + '</div>' : '')
         + '</div>'
         + '<div class="gcard-btns">' + joinBtn + watchBtn + '</div>'
+        + '</div>'
+        + '<div class="game-players' + (_openTables.has(String(gid)) ? ' open' : '') + '" id="gp-' + parseInt(gid) + '"' + (_openTables.has(String(gid)) ? '' : ' hidden') + '>'
+        + (_openTables.has(String(gid)) ? renderTablePlayers(gid) : '')
         + '</div>';
     }).join('');
   }
@@ -9135,6 +9191,11 @@ function dismissWinner() {
       var msg = Proto.encode([[1,0,gameId],[2,2,pass||'']]);
       send(Proto.encode([[1,0,21],[22,2,msg]]));
     },
+    toggleTablePlayers(gid) {
+      const key = String(gid);
+      if (_openTables.has(key)) _openTables.delete(key); else _openTables.add(key);
+      renderGames();
+    },
     joinGame(gameId) {
       const g = games[gameId];
       if (!g) return;
@@ -10587,7 +10648,7 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.2.416'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.2.417'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

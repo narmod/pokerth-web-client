@@ -254,6 +254,7 @@ export const strings = {
     modeInProgress:'En cours',
     modeClosed:'Ferm\u00e9e',
     noTablesAvailable:'Aucune table disponible actuellement.',
+    tablePlayersEmpty:'Aucun joueur assis.',
     filterAll:'Toutes', filterOpen:'\ud83d\udfe2 Ouvertes', filterNoPass:'\ud83d\udd13 Sans mot de passe', filterLive:'\ud83d\udc41 En cours',
     noTablesForFilter:'Aucune table ne correspond \u00e0 ce filtre',
     createTableHdr:'Créer une table', gameStyle:'Style de partie',
