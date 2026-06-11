@@ -338,9 +338,14 @@ document.addEventListener('keydown', function(e) {
   // Ne pas intercepter si on tape dans un input/textarea
   var tag = (e.target.tagName || '').toLowerCase();
   if (tag === 'input' || tag === 'textarea' || e.target.isContentEditable) return;
-  // Seulement en jeu et si c'est mon tour
-  if (typeof amInGame === 'undefined' || !amInGame) return;
-  if (typeof turnPid !== 'undefined' && turnPid !== myId) return;
+  // C'est mon tour SSI le vrai panneau d'action interactif est present : #g-actions
+  // contient la grille reelle en ENFANT DIRECT (.action-grid), ou l'apercu hors-tour
+  // enveloppe dans .actions-preview, ou un message d'attente. (Les anciennes gardes
+  // amInGame / turnPid / myId etaient hors de portee de ce handler : il est au niveau
+  // module, alors que ces let vivent dans l'IIFE App -> elles ne s'evaluaient jamais
+  // et le handler sortait toujours.)
+  var _ap = document.querySelector('#g-actions > .action-grid');
+  if (!_ap) return;
 
   var key = e.key.toLowerCase();
 
@@ -10259,7 +10264,7 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.2.392'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.2.393'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
