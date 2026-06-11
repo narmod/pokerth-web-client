@@ -359,18 +359,11 @@ document.addEventListener('keydown', function(e) {
     var btn = document.querySelector('.btn-call:not([disabled]), .btn-check:not([disabled])');
     if (btn) { btn.click(); showKeyHint(btn.classList.contains('btn-check') ? t('hintCheck') : t('hintCall')); }
   } else if (key === 'r') {
-    // Raise — focus sur l'input
-    var inp = document.getElementById('raise-amt');
+    // Raise — clique directement le bouton de relance (relance au montant courant de
+    // l'input), pour une touche directe comme F / C / A. L'ajustement reste possible en
+    // cliquant le champ montant ; Entree valide alors la relance.
     var btn = document.querySelector('.btn-raise:not([disabled])');
-    if (inp && !inp.disabled) {
-      e.preventDefault();
-      if (window.innerWidth >= 640) {
-        inp.focus(); inp.select();
-        showKeyHint(t('hintRaiseAdjust'));
-      } else if (btn) {
-        btn.click(); showKeyHint(t('hintRaise'));
-      }
-    }
+    if (btn) { e.preventDefault(); btn.click(); showKeyHint(t('hintRaise')); }
   } else if (key === 'a') {
     // All-in
     var btn = document.querySelector('.btn-allin:not([disabled])');
@@ -10264,7 +10257,7 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.2.394'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.2.395'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
