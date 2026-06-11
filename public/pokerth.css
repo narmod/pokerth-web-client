@@ -5184,6 +5184,20 @@ body:not(.in-game) .my-zone {
 .gp-player .gp-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .gp-player.gp-pending { opacity: 0.55; }
 .cc-flag.gp-flag { width: 18px; height: auto; border-radius: 2px; flex: 0 0 auto; }
+.gp-av {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--inset);
+  font-size: 1.05rem;
+  line-height: 1;
+}
+.gp-av.letter { font-size: 0.7rem; font-weight: 700; color: var(--gold); }
+.gp-av.has-pth-avatar { background: rgba(0,0,0,0.2); padding: 0; overflow: visible; }
 .gp-empty { opacity: 0.6; font-size: 0.8rem; padding: 2px 0; }
 @keyframes gpReveal { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: none; } }
 .game-row.gcard .btn-watch {

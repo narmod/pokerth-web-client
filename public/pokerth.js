@@ -4320,6 +4320,7 @@ const App = (() => {
                 // Re-render so the seat picks up the image right away.
                 if (typeof window._renderSeats === 'function') window._renderSeats();
                 if (typeof window.refreshMyAvatar === 'function') window.refreshMyAvatar();
+                if (_openTables.size) renderGames();
               }
             }
             // ── Step 2: cache miss -> kick off an AvatarRequest. Dedup
@@ -4432,6 +4433,8 @@ const App = (() => {
         // Re-render: seats around the table + my own seat in the bar.
         if (typeof window._renderSeats === 'function') window._renderSeats();
         if (typeof window.refreshMyAvatar === 'function') window.refreshMyAvatar();
+        // Rafraîchir aussi un panneau « joueurs à cette table » ouvert.
+        if (_openTables.size) renderGames();
         if (hashHex) delete _pthAvatarReqIdToHash[reqId];
         break;
       }
@@ -5752,7 +5755,8 @@ const App = (() => {
       }
       const flag = _ccToFlag(_playerCountries[pid], 'gp-flag');
       const label = nm ? esc(nm) : '#' + pid;
-      return '<span class="gp-player' + (nm ? '' : ' gp-pending') + '">' + flag + '<span class="gp-name">' + label + '</span></span>';
+      const av = _avatarChipHtml(pid, label, 'gp-av');
+      return '<span class="gp-player' + (nm ? '' : ' gp-pending') + '">' + av + flag + '<span class="gp-name">' + label + '</span></span>';
     }).join('');
   }
   function _tableHasPid(pid) {
@@ -10648,7 +10652,7 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.2.417'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.2.418'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
