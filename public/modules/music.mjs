@@ -7,32 +7,40 @@
 // data-driven from /music/tracks.json and presented as a DROPDOWN that
 // auto-refreshes every time the panel opens, so tracks added later (e.g. via
 // the future admin tool) show up automatically with no reload. The UI is
-// multilingual: every label/title carries data-i18n / data-i18n-title, so the
-// app's setLang() pass re-translates the panel live on a language switch.
-// Mirrors the window.* alias pattern of the other modules.
+// multilingual: every label/title carries data-i18n / data-i18n-title /
+// data-i18n-opt, so the app's setLang() pass re-translates the panel live on a
+// language switch. Mirrors the window.* alias pattern of the other modules.
+//
+// Repeat modes (persisted, chosen from a dropdown):
+//   'one' — loop the current track forever (HTMLAudio loop; default)
+//   'all' — loop the whole playlist (advance at end, wrap to the first)
+//   'off' — play the current track once, then stop
 //
 // No autoplay: browsers (iOS especially) refuse audio without a user gesture,
 // so playback only ever begins from a tap on Play (or a dropdown change while
-// already playing). The selected track and the volume are remembered in
-// localStorage; playback itself is NOT auto-resumed on load.
+// already playing). The selected track, the volume and the repeat mode are
+// remembered in localStorage; playback itself is NOT auto-resumed on load.
 //
 //   window.Music.toggleTrack(id) / play(id) / pause() / stop()
 //   window.Music.next() / prev()
 //   window.Music.setVolume(v) / getVolume()
+//   window.Music.setRepeat(mode) / getRepeat()     mode = 'one' | 'all' | 'off'
 //   window.Music.mount(bodyEl)   — render the player UI into a container element
 //   window.Music.refresh()       — re-fetch the manifest + re-render the list
 //   window.Music.isPlaying() / current() / tracks()
 // ─────────────────────────────────────────────────────────────────────────
 
 const MANIFEST_URL = '/music/tracks.json';
-const LS_TRACK = 'pth_music_track';
-const LS_VOL   = 'pth_music_vol';
+const LS_TRACK  = 'pth_music_track';
+const LS_VOL    = 'pth_music_vol';
+const LS_REPEAT = 'pth_music_repeat';
 
 let _tracks = [];
 let _audio  = null;
 let _curId  = null;
 let _loaded = false;
 let _bodyEl = null;
+let _repeat = 'one';   // 'one' = loop track | 'all' = loop playlist | 'off' = play once
 
 function _t(key, fallback) {
   try { if (typeof window.t === 'function') { var s = window.t(key); if (s && s !== key) return s; } } catch (e) {}
@@ -53,15 +61,31 @@ function setVolume(v) {
   _render();
 }
 
+function getRepeat() { return _repeat; }
+function setRepeat(m) {
+  if (m !== 'one' && m !== 'all' && m !== 'off') return;
+  _repeat = m;
+  try { localStorage.setItem(LS_REPEAT, m); } catch (e) {}
+  if (_audio) try { _audio.loop = (m === 'one'); } catch (e) {}
+  _render();
+}
+
 function _el() {
   if (!_audio) {
     _audio = new Audio();
-    _audio.loop = true;
+    _audio.loop = (_repeat === 'one');
     _audio.preload = 'none';
     try { _audio.volume = getVolume(); } catch (e) {}
-    ['play', 'pause', 'ended', 'error'].forEach(function (ev) { _audio.addEventListener(ev, _render); });
+    ['play', 'pause', 'error'].forEach(function (ev) { _audio.addEventListener(ev, _render); });
+    _audio.addEventListener('ended', _onEnded);
   }
   return _audio;
+}
+function _onEnded() {
+  if (_repeat === 'all') { next(); return; }   // advance through the playlist (wraps)
+  // 'off' — stop at the end ('one' never fires 'ended' since loop=true).
+  if (_audio) { try { _audio.currentTime = 0; } catch (e) {} }
+  _render();
 }
 
 async function loadManifest(force) {
@@ -123,6 +147,10 @@ async function refresh() {
   _render();
 }
 
+function _opt(val, key, fallback, cur) {
+  return '<option value="' + _esc(val) + '" data-i18n-opt="' + key + '"' + (cur === val ? ' selected' : '') + '>' + _esc(_t(key, fallback)) + '</option>';
+}
+
 function _render() {
   if (!_bodyEl) return;
   if (!_tracks.length) {
@@ -164,6 +192,15 @@ function _render() {
       '<select id="music-sel" autocomplete="off" aria-label="' + _esc(_t('musicTrack', 'Track')) + '">' + options + '</select>' +
       '<span class="sel-arr">\u25BE</span>' +
     '</div>' +
+    '<label class="music-sel-label" data-i18n="musicRepeat">' + _esc(_t('musicRepeat', 'Repeat')) + '</label>' +
+    '<div class="sel-wrap music-sel-wrap">' +
+      '<select id="music-repeat" autocomplete="off" aria-label="' + _esc(_t('musicRepeat', 'Repeat')) + '">' +
+        _opt('one', 'musicRepeatOne', 'Repeat one', _repeat) +
+        _opt('all', 'musicRepeatAll', 'Repeat playlist', _repeat) +
+        _opt('off', 'musicRepeatOff', 'Play once', _repeat) +
+      '</select>' +
+      '<span class="sel-arr">\u25BE</span>' +
+    '</div>' +
     credit;
 
   _wire();
@@ -179,6 +216,8 @@ function _wire() {
       else { _curId = id; _render(); }   // just arm the selection
     });
   }
+  var rep = _bodyEl.querySelector('#music-repeat');
+  if (rep) { rep.addEventListener('change', function () { setRepeat(rep.value); }); }
   _bodyEl.querySelectorAll('[data-mact]').forEach(function (btn) {
     btn.addEventListener('click', function () {
       var a = btn.getAttribute('data-mact');
@@ -199,8 +238,9 @@ function _wire() {
   }
 }
 
-// Restore the last-selected track id at load (no playback — see header note).
+// Restore the last-selected track id + repeat mode at load (no playback).
 try { _curId = localStorage.getItem(LS_TRACK) || null; } catch (e) {}
+try { var _rm = localStorage.getItem(LS_REPEAT); if (_rm === 'one' || _rm === 'all' || _rm === 'off') _repeat = _rm; } catch (e) {}
 
 const Music = {
   loadManifest: loadManifest,
@@ -216,6 +256,8 @@ const Music = {
   prev: prev,
   getVolume: getVolume,
   setVolume: setVolume,
+  getRepeat: getRepeat,
+  setRepeat: setRepeat,
   mount: mount
 };
 
