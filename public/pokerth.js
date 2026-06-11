@@ -6608,6 +6608,7 @@ const App = (() => {
       pbBar.classList.toggle('pb-out', __amOut);
     }
 
+    var _pkHole = (document.documentElement.getAttribute('data-seat') === 'pokerth');
     let h = '';
     rotated.forEach((pid, i) => {
       const px = pixPos[i];
@@ -6637,7 +6638,7 @@ const App = (() => {
       // Cartes sous le siège : uniquement les adversaires au showdown
       // (mes propres cartes sont déjà visibles dans la player-bar en bas)
       let cardStr = '';
-      if (!isMe && sd.card1 != null && sd.card2 != null) {
+      if (!_pkHole && !isMe && sd.card1 != null && sd.card2 != null) {
         cardStr = '<div style="display:flex;gap:2px;margin-top:1px">'
           + cardHtml(sd.card1,'xsm') + cardHtml(sd.card2,'xsm') + '</div>';
       }
@@ -6702,6 +6703,11 @@ const App = (() => {
         + flagBadge
         + typeBadge
         + '</div>';
+      if (_pkHole && !isGone && !isOut) {
+        var _phc1 = isMe ? myCards[0] : sd.card1;
+        var _phc2 = isMe ? myCards[1] : sd.card2;
+        h += '<div class="seat-holecards">' + cardHtml(_phc1,'xsm') + cardHtml(_phc2,'xsm') + '</div>';
+      }
       // Badge timer sous l'avatar (visible et non confondu avec l'emoji)
       if (isActive) h += '<div class="seat-timer-badge" id="stb-'+pid+'">'
         + ((_timerSec > 0) ? _timerSec + 's' : '') + '</div>';
@@ -10373,7 +10379,7 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.2.404'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.2.405'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

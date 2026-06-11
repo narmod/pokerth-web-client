@@ -18,6 +18,7 @@ export const meta = {
 export const strings = {
   seatCard: 'Card', seatCompact: 'Compact', seatBar: 'Bar',
   seatChip: 'Chip',
+  seatPokerth: 'PokerTH',
   sectionSeat: 'Seats', seatClassic: 'Classic', seatPlate: 'Plate',
     guestHint:'🌐 Guest play on pokerth.net — no account needed.',
     srvOffline:'🏋️ Training mode', offlineHint:'🤖 Play against bots — no connection needed.',

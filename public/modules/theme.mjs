@@ -92,6 +92,7 @@ var PUCKS_ITEMS   = [ {id:'pokerth',key:'pucksPokerth',fallback:'PokerTH',swatch
 // Classic (historical render). Add a pack = one item here; panel lists it auto.
 const SEATS = [
   { id: '',      key: 'seatClassic', fallback: 'Classic', swatch: '#1e3820' },
+  { id: 'pokerth', key: 'seatPokerth', fallback: 'PokerTH', swatch: '#1d222b' },
   { id: 'chip',  key: 'seatChip',    fallback: 'Chip',    swatch: '#caa64a' },
   { id: 'plate', key: 'seatPlate',   fallback: 'Plate',   swatch: '#1d222b' },
   { id: 'card',    key: 'seatCard',    fallback: 'Card',    swatch: '#394150' },
@@ -474,11 +475,16 @@ function _previewHTML(kind, item, big) {
   if (kind === 'seat') {
     var av = big ? 24 : 9, bw = big ? 2 : 1, bh = big ? 5 : 2, g = big ? 3 : 1;
     var _sid = item ? item.id : '';
-    var _avSt = (_sid === 'chip') ? 'border:none;background:radial-gradient(circle at 50% 50%,#b53636 0 62%,transparent 63%),repeating-conic-gradient(from 9deg,#f7f3ea 0 11deg,#7c1f1f 11deg 45deg);box-shadow:0 1px 2px rgba(0,0,0,0.5)' : 'background:#1b2a16;border:'+bw+'px solid #c8a84a;box-shadow:0 1px 2px rgba(0,0,0,0.5)';
+    var _avSt = (_sid === 'chip' || _sid === 'pokerth') ? 'border:none;background:radial-gradient(circle at 50% 50%,#b53636 0 62%,transparent 63%),repeating-conic-gradient(from 9deg,#f7f3ea 0 11deg,#7c1f1f 11deg 45deg);box-shadow:0 1px 2px rgba(0,0,0,0.5)' : 'background:#1b2a16;border:'+bw+'px solid #c8a84a;box-shadow:0 1px 2px rgba(0,0,0,0.5)';
     var avEl = '<i style="width:'+av+'px;height:'+av+'px;border-radius:50%;flex:none;'+_avSt+'"></i>';
     var felt = ';display:flex;align-items:center;justify-content:center;background:radial-gradient(circle at 50% 40%,#1c5a28,#0c3214)';
     var b1 = '<i style="display:block;width:'+(big?34:12)+'px;height:'+bh+'px;border-radius:'+bh+'px;background:#e7eaf0"></i>';
     var b2 = '<i style="display:block;width:'+(big?22:8)+'px;height:'+bh+'px;border-radius:'+bh+'px;background:#c8a84a"></i>';
+    if (item && item.id === 'pokerth') {
+      var cb = '<i style="display:block;width:'+(big?13:5)+'px;height:'+(big?19:7)+'px;border-radius:2px;border:1px solid #fff;background:repeating-linear-gradient(45deg,#b32424 0 '+(big?3:2)+'px,#e85a5a '+(big?3:2)+'px '+(big?6:4)+'px)"></i>';
+      var pk = '<span style="display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:'+(big?3:1)+'px;padding:'+(big?'5px 7px':'2px 3px')+';border-radius:'+(big?9:4)+'px;background:linear-gradient(180deg,#424b5c,#1d222b);border:1px solid rgba(0,0,0,0.5);box-shadow:0 2px 6px rgba(0,0,0,0.5)">' + avEl + cb + cb + '<span style="flex-basis:100%;display:flex;flex-direction:column;align-items:center;gap:'+g+'px">' + b1 + b2 + '</span></span>';
+      return '<span style="' + box + felt + '">' + pk + '</span>';
+    }
     if (item && item.id === 'plate') {
       var pl = '<span style="display:flex;align-items:center;gap:'+(big?6:2)+'px;padding:'+(big?'6px 9px':'2px 3px')+';border-radius:'+(big?9:4)+'px;background:#2a2f38;border:1px solid rgba(255,255,255,0.18);box-shadow:0 2px 6px rgba(0,0,0,0.45)">' + avEl + '<span style="display:flex;flex-direction:column;gap:'+g+'px">' + b1 + b2 + '</span></span>';
       return '<span style="' + box + felt + '">' + pl + '</span>';
