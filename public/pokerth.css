@@ -5424,8 +5424,11 @@ html[data-seat="bar"] .seat-timer-badge { display: none; }
    [avatar | 2 cartes] en LIGNE 1, nom + tapis (span 2 col) en LIGNE 2.
    max-width:none !important bat les caps .seat {max-width !important} des
    media-queries (sinon les cartes retombent sous l'avatar -> vertical).
-   COULEURS : 100% tokens de palette comme plate/card -> var(--field-bg) +
-   var(--border) pour la boite ; nom = var(--text-hi) et tapis = var(--gold)
+   COULEURS : tokens de palette. Boite = var(--panel) et NON var(--field-bg) :
+   --panel est dans PALETTE_TOKENS donc defini par TOUTES les palettes (y
+   compris les paquets importes) ; --field-bg n'y est pas et retombait sur le
+   vert de :root ("style green casino"). Bordure var(--border), nom var(--text-hi),
+   tapis var(--gold)
    herites de la BASE (plus aucune surcharge en dur). La boite suit donc le
    theme PokerTH (claire en PokerTH Light, sombre ailleurs). Cartes injectees
    dans .seat-plate par renderSeats si pack actif : dos adversaires, faces moi. */
@@ -5435,7 +5438,7 @@ html[data-seat="pokerth"] .seat-plate {
   align-items: center; justify-content: center;
   column-gap: 5px; row-gap: 3px; position: relative;
   padding: 5px 8px 6px; border-radius: 9px;
-  background: var(--field-bg, rgba(0,0,0,0.55));
+  background: var(--panel, rgba(0,0,0,0.55));
   border: 1px solid var(--border);
   box-shadow: 0 3px 12px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.05);
 }
