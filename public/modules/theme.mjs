@@ -231,7 +231,37 @@ function _injectAxis(keys, pkg, storeKey, withFelt){
   }
   try{ if(css) localStorage.setItem(storeKey,css); else localStorage.removeItem(storeKey); }catch(e){}
 }
-function _injectPalette(pkg){ _injectAxis(PALETTE_TOKENS, pkg, 'pth_theme_css', false); }
+// Palettes IMPORTEES (paquets) : on ne recoit que les PALETTE_TOKENS ; les
+// autres tokens variant par palette (gold-rgb, field-bg, inset/-hi) restaient
+// sur les valeurs :root (vertes) -> seuls les builtin s'adaptaient. On les
+// DERIVE ici a partir des tokens fournis, puis on les injecte+stocke comme les
+// autres. Les builtin passent pkg=null -> aucune derivation (leurs blocs CSS
+// :root[data-theme=...] definissent deja tout).
+function _hexToRgb(c){
+  if (typeof c !== 'string') return null;
+  var m = c.trim().match(/^#([0-9a-f]{3}|[0-9a-f]{6})$/i); if (!m) return null;
+  var h = m[1]; if (h.length === 3) h = h[0]+h[0]+h[1]+h[1]+h[2]+h[2];
+  var n = parseInt(h, 16); return ((n>>16)&255)+','+((n>>8)&255)+','+(n&255);
+}
+function _isLightColor(c){
+  var r = _hexToRgb(c); if (!r) return false; var p = r.split(',').map(Number);
+  return (0.299*p[0] + 0.587*p[1] + 0.114*p[2]) > 140;
+}
+function _injectPalette(pkg){
+  var keys = PALETTE_TOKENS;
+  if (pkg && pkg.tokens) {
+    var t = pkg.tokens, d = {};
+    var grgb = _hexToRgb(t.gold);
+    if (grgb && t['gold-rgb'] == null) d['gold-rgb'] = grgb;            // halos/bordures or en rgba
+    if (t['field-bg'] == null && (t['panel-hi'] || t.panel)) d['field-bg'] = t['panel-hi'] || t.panel; // champs de saisie
+    var lightPal = (typeof t['text-hi'] === 'string') && !_isLightColor(t['text-hi']); // texte sombre => palette claire
+    if (t['inset'] == null)    d['inset']    = lightPal ? 'rgba(0,0,0,0.06)' : 'rgba(255,255,255,0.05)';
+    if (t['inset-hi'] == null) d['inset-hi'] = lightPal ? 'rgba(0,0,0,0.08)' : 'rgba(255,255,255,0.08)';
+    var dk = Object.keys(d);
+    if (dk.length) { pkg = Object.assign({}, pkg, { tokens: Object.assign({}, t, d) }); keys = PALETTE_TOKENS.concat(dk); }
+  }
+  _injectAxis(keys, pkg, 'pth_theme_css', false);
+}
 function _injectTable(pkg){ _injectAxis(TABLE_TOKENS, pkg, 'pth_table_css', true); }
 function _injectButtons(spec){
   var el=document.documentElement, css='';
