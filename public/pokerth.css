@@ -687,10 +687,6 @@ body {
   box-shadow: 0 0 0 0.5px rgba(0,0,0,0.35);
 }
 .cc-flag-lg { width: 26px; height: 19px; border-radius: 3px; }
-.pim-change {
-  margin-top: 4px;
-  width: 100%;
-}
 /* ── Bloc stats du popup de profil : onglets SESSION/TOTAL/CLASSEMENT,
    identiques au panneau en jeu (réutilise .stats-tabs/.stats-body/.stats-reset). ── */
 .pim-stats {
