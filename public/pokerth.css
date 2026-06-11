@@ -5589,7 +5589,7 @@ body.has-keyboard .act-key { display: inline-block; }
 .chat-emoji-panel {
   grid-template-columns: repeat(8, 1fr);
   gap: 2px;
-  max-height: 140px;
+  max-height: 80px;
   overflow-y: auto;
   padding: 6px 8px;
   border-top: 1px solid var(--border);
@@ -5605,6 +5605,3 @@ body.has-keyboard .act-key { display: inline-block; }
 }
 .chat-emoji-btn:hover { background: rgba(var(--gold-rgb), 0.15); transform: scale(1.18); }
 .chat-emoji-btn:active { transform: scale(0.9); }
-
-/* Le panneau chat du lobby est plus court -> grille emoji plus basse pour tenir. */
-#l-chat-emoji-panel { max-height: 80px; }
