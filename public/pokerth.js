@@ -690,9 +690,10 @@ window.refreshMyAvatar = function() {
   var customImg = (stored === '__img__')
     ? (function(){ try { return localStorage.getItem('pth_avatar_img') || null; } catch(e){ return null; } })()
     : null;
-  // PokerTH avatar UPLOAD (scope A): prepare the custom image so official
-  // clients can see it (no-op for emoji/initial). See _pthPrepareMyUpload.
-  try { if (customImg) _pthPrepareMyUpload(customImg); else _pthClearMyUpload(); } catch(e) {}
+  // PokerTH avatar UPLOAD: render WHATEVER avatar was picked (custom image,
+  // emoji, or initial letter) to a PNG so official clients see it. '__pth__'
+  // uploads nothing -> the official default avatar is kept.
+  try { _pthRefreshUpload(stored, (typeof myName !== 'undefined' ? (myName || '') : '')); } catch(e) {}
   // Effective choice: 'pth' | 'img' | 'initial' | 'emoji-xxx'
   var usePth   = (stored === '__pth__') && !!pthUrl;
   var emojiAv  = (stored && stored !== '__pth__' && stored !== '__img__') ? stored : '';
@@ -827,8 +828,10 @@ window.refreshMyAvatar = function() {
   }
 
   var _pthUploadSrc = null;
+  var _pthUploadKey = null;
   function _pthClearMyUpload() {
     _pthUploadSrc = null;
+    _pthUploadKey = null;
     try { window._pthMyUpload = null; } catch(e) {}
   }
   function _pthPrepareMyUpload(dataUrl) {
@@ -861,6 +864,77 @@ window.refreshMyAvatar = function() {
     img.src = dataUrl;
   }
 
+
+  // Shared tail for the avatar-upload feature: take a 96x96 canvas, encode it
+  // as PNG, enforce the server's size window [32, 30720], compute the MD5 and
+  // publish window._pthMyUpload (consumed by buildInit + the AvatarRequest
+  // handler). Out-of-range -> no announce (never a broken connection).
+  function _pthCanvasToUpload(cv) {
+    cv.toBlob(function(blob) {
+      if (!blob) { _pthClearMyUpload(); return; }
+      blob.arrayBuffer().then(function(ab) {
+        var bytes = new Uint8Array(ab);
+        if (bytes.length < 32 || bytes.length > 30720) { _pthClearMyUpload(); return; }
+        window._pthMyUpload = { bytes: bytes, hashBytes: _md5bytes(bytes), type: 1, size: bytes.length };
+      }).catch(function() { _pthClearMyUpload(); });
+    }, 'image/png');
+  }
+  // Render an EMOJI avatar to a PNG (dark PokerTH disc + the emoji centered),
+  // so official clients see the same thing shown on the web seat.
+  function _pthPrepareEmojiUpload(emoji) {
+    try {
+      var SZ = 96;
+      var cv = document.createElement('canvas'); cv.width = SZ; cv.height = SZ;
+      var ctx = cv.getContext('2d');
+      ctx.beginPath(); ctx.arc(SZ/2, SZ/2, SZ/2, 0, Math.PI*2); ctx.closePath();
+      ctx.fillStyle = '#1d222b'; ctx.fill();
+      ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.font = "60px 'Apple Color Emoji','Segoe UI Emoji','Noto Color Emoji','Twemoji Mozilla',sans-serif";
+      ctx.fillText(emoji, SZ/2, SZ/2 + 2);
+      _pthCanvasToUpload(cv);
+    } catch(e) { _pthClearMyUpload(); }
+  }
+  // Render the INITIAL-letter avatar to a PNG (dark disc + gold bold letter).
+  function _pthPrepareLetterUpload(letter) {
+    try {
+      var SZ = 96;
+      var cv = document.createElement('canvas'); cv.width = SZ; cv.height = SZ;
+      var ctx = cv.getContext('2d');
+      ctx.beginPath(); ctx.arc(SZ/2, SZ/2, SZ/2, 0, Math.PI*2); ctx.closePath();
+      ctx.fillStyle = '#1d222b'; ctx.fill();
+      ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.fillStyle = '#E3C800';
+      ctx.font = "bold 52px system-ui,'Segoe UI',Roboto,Helvetica,Arial,sans-serif";
+      ctx.fillText(letter, SZ/2, SZ/2 + 4);
+      _pthCanvasToUpload(cv);
+    } catch(e) { _pthClearMyUpload(); }
+  }
+  // Dispatcher: prepare the upload for WHATEVER avatar is selected.
+  //   '__img__' -> custom image ; '__pth__' -> nothing (official default kept)
+  //   non-empty  -> emoji string ; '' -> initial letter from the player name.
+  // De-duped by key so we don't re-render on every avatar refresh.
+  function _pthRefreshUpload(stored, name) {
+    try {
+      if (stored === '__img__') {
+        var url = null; try { url = localStorage.getItem('pth_avatar_img') || null; } catch(e) {}
+        if (!url) { _pthClearMyUpload(); return; }
+        var ki = 'img:' + url;
+        if (ki === _pthUploadKey && window._pthMyUpload) return;
+        _pthUploadKey = ki; _pthPrepareMyUpload(url);
+      } else if (stored === '__pth__') {
+        _pthClearMyUpload();
+      } else if (stored) {
+        var ke = 'emoji:' + stored;
+        if (ke === _pthUploadKey && window._pthMyUpload) return;
+        _pthUploadKey = ke; _pthPrepareEmojiUpload(stored);
+      } else {
+        var letter = ((name && name.charAt(0)) || '?').toUpperCase();
+        var kl = 'letter:' + letter;
+        if (kl === _pthUploadKey && window._pthMyUpload) return;
+        _pthUploadKey = kl; _pthPrepareLetterUpload(letter);
+      }
+    } catch(e) { _pthClearMyUpload(); }
+  }
 
 window.toggleAvatarPopup = function() {
   var popup = document.getElementById('avatar-popup');
@@ -10513,7 +10587,7 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.2.415'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.2.416'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
