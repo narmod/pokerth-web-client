@@ -7,14 +7,14 @@
 // data-driven from /music/tracks.json and presented as a DROPDOWN that
 // auto-refreshes every time the panel opens, so tracks added later (e.g. via
 // the future admin tool) show up automatically with no reload. The UI is
-// multilingual: every label/title carries data-i18n / data-i18n-title /
-// data-i18n-opt, so the app's setLang() pass re-translates the panel live on a
-// language switch. Mirrors the window.* alias pattern of the other modules.
+// multilingual: every label/title carries data-i18n / data-i18n-title, so the
+// app's setLang() pass re-translates the panel live on a language switch.
+// Mirrors the window.* alias pattern of the other modules.
 //
-// Repeat modes (persisted, chosen from a dropdown):
-//   'one' — loop the current track forever (HTMLAudio loop; default)
-//   'all' — loop the whole playlist (advance at end, wrap to the first)
-//   'off' — play the current track once, then stop
+// Repeat modes are quick icon buttons in the transport row (universal glyphs):
+//   🔂 'one' — loop the current track forever (HTMLAudio loop; default)
+//   🔁 'all' — loop the whole playlist (advance at end, wrap to the first)
+//   neither lit → 'off' — play the current track once, then stop
 //
 // No autoplay: browsers (iOS especially) refuse audio without a user gesture,
 // so playback only ever begins from a tap on Play (or a dropdown change while
@@ -147,10 +147,6 @@ async function refresh() {
   _render();
 }
 
-function _opt(val, key, fallback, cur) {
-  return '<option value="' + _esc(val) + '" data-i18n-opt="' + key + '"' + (cur === val ? ' selected' : '') + '>' + _esc(_t(key, fallback)) + '</option>';
-}
-
 function _render() {
   if (!_bodyEl) return;
   if (!_tracks.length) {
@@ -181,6 +177,9 @@ function _render() {
       '<button type="button" class="music-tbtn music-tbtn-main" data-mact="toggle" title="' + _esc(_t(ppKey, playing ? 'Pause' : 'Play')) + '" data-i18n-title="' + ppKey + '">' + ppIcon + '</button>' +
       '<button type="button" class="music-tbtn" data-mact="next"' + (multi ? '' : ' disabled') + ' title="' + _esc(_t('musicNext', 'Next')) + '" data-i18n-title="musicNext">\u23ED</button>' +
       '<button type="button" class="music-tbtn" data-mact="stop" title="' + _esc(_t('musicStop', 'Stop')) + '" data-i18n-title="musicStop">\u23F9</button>' +
+      '<span class="music-div"></span>' +
+      '<button type="button" class="music-tbtn music-rpt' + (_repeat === 'one' ? ' is-active' : '') + '" data-mact="rep-one" aria-pressed="' + (_repeat === 'one') + '" title="' + _esc(_t('musicRepeatOne', 'Repeat one')) + '" data-i18n-title="musicRepeatOne">\uD83D\uDD02</button>' +
+      '<button type="button" class="music-tbtn music-rpt' + (_repeat === 'all' ? ' is-active' : '') + '" data-mact="rep-all" aria-pressed="' + (_repeat === 'all') + '" title="' + _esc(_t('musicRepeatAll', 'Repeat playlist')) + '" data-i18n-title="musicRepeatAll">\uD83D\uDD01</button>' +
     '</div>' +
     '<div class="music-vol">' +
       '<span class="music-vol-ic">\uD83D\uDD0A</span>' +
@@ -190,15 +189,6 @@ function _render() {
     '<label class="music-sel-label" data-i18n="musicTrack">' + _esc(_t('musicTrack', 'Track')) + '</label>' +
     '<div class="sel-wrap music-sel-wrap">' +
       '<select id="music-sel" autocomplete="off" aria-label="' + _esc(_t('musicTrack', 'Track')) + '">' + options + '</select>' +
-      '<span class="sel-arr">\u25BE</span>' +
-    '</div>' +
-    '<label class="music-sel-label" data-i18n="musicRepeat">' + _esc(_t('musicRepeat', 'Repeat')) + '</label>' +
-    '<div class="sel-wrap music-sel-wrap">' +
-      '<select id="music-repeat" autocomplete="off" aria-label="' + _esc(_t('musicRepeat', 'Repeat')) + '">' +
-        _opt('one', 'musicRepeatOne', 'Repeat one', _repeat) +
-        _opt('all', 'musicRepeatAll', 'Repeat playlist', _repeat) +
-        _opt('off', 'musicRepeatOff', 'Play once', _repeat) +
-      '</select>' +
       '<span class="sel-arr">\u25BE</span>' +
     '</div>' +
     credit;
@@ -216,8 +206,6 @@ function _wire() {
       else { _curId = id; _render(); }   // just arm the selection
     });
   }
-  var rep = _bodyEl.querySelector('#music-repeat');
-  if (rep) { rep.addEventListener('change', function () { setRepeat(rep.value); }); }
   _bodyEl.querySelectorAll('[data-mact]').forEach(function (btn) {
     btn.addEventListener('click', function () {
       var a = btn.getAttribute('data-mact');
@@ -225,6 +213,8 @@ function _wire() {
       else if (a === 'next') next();
       else if (a === 'prev') prev();
       else if (a === 'stop') stop();
+      else if (a === 'rep-one') setRepeat(_repeat === 'one' ? 'off' : 'one');
+      else if (a === 'rep-all') setRepeat(_repeat === 'all' ? 'off' : 'all');
     });
   });
   var rng = _bodyEl.querySelector('.music-vol-range');
