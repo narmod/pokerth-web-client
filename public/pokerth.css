@@ -5420,23 +5420,24 @@ html[data-seat="bar"] .seat-timer-badge { display: none; }
 
 
 /* ===== Sieges : pack PokerTH (axe data-seat="pokerth") ===================
-   Replique du client officiel : une boite sombre par joueur. GRILLE 2 colonnes :
+   Replique du client officiel : boite par joueur, GRILLE 2 colonnes :
    [avatar | 2 cartes] en LIGNE 1, nom + tapis (span 2 col) en LIGNE 2.
-   max-width:none !important pour battre les caps .seat {max-width !important}
-   des media-queries (sinon avatar+cartes depassent la largeur et les cartes
-   retombent SOUS l'avatar -> rendu vertical). Grille = placement explicite,
-   pas de wrap selon la largeur. Cartes injectees dans .seat-plate par
-   renderSeats quand ce pack est actif : dos adversaires, faces moi (myCards).
-   Le pied (.seat-foot : mise) reste display:contents -> mise sous la boite. */
+   max-width:none !important bat les caps .seat {max-width !important} des
+   media-queries (sinon les cartes retombent sous l'avatar -> vertical).
+   COULEURS : 100% tokens de palette comme plate/card -> var(--field-bg) +
+   var(--border) pour la boite ; nom = var(--text-hi) et tapis = var(--gold)
+   herites de la BASE (plus aucune surcharge en dur). La boite suit donc le
+   theme PokerTH (claire en PokerTH Light, sombre ailleurs). Cartes injectees
+   dans .seat-plate par renderSeats si pack actif : dos adversaires, faces moi. */
 html[data-seat="pokerth"] .seat { max-width: none !important; }
 html[data-seat="pokerth"] .seat-plate {
   display: grid; grid-template-columns: auto auto;
   align-items: center; justify-content: center;
   column-gap: 5px; row-gap: 3px; position: relative;
   padding: 5px 8px 6px; border-radius: 9px;
-  background: linear-gradient(180deg, #424b5c, #1d222b);
-  border: 1px solid rgba(0,0,0,0.45);
-  box-shadow: 0 3px 12px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.06);
+  background: var(--field-bg, rgba(0,0,0,0.55));
+  border: 1px solid var(--border);
+  box-shadow: 0 3px 12px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.05);
 }
 html[data-seat="pokerth"] .seat-avatar { grid-column: 1; grid-row: 1; }
 html[data-seat="pokerth"] .seat-holecards { grid-column: 2; grid-row: 1; display: flex; gap: 2px; flex: none; }
@@ -5444,11 +5445,10 @@ html[data-seat="pokerth"] .seat-info {
   grid-column: 1 / -1; grid-row: 2;
   display: flex; flex-direction: column; align-items: center; gap: 0;
 }
-html[data-seat="pokerth"] .seat-name { max-width: 120px; color: #eff1f5; }
-html[data-seat="pokerth"] .seat-money { color: var(--gold); }
+html[data-seat="pokerth"] .seat-name { max-width: 120px; }
 html[data-seat="pokerth"] .seat.active .seat-plate {
   border-color: var(--gold);
-  box-shadow: 0 0 0 1px var(--gold), 0 0 16px rgba(var(--gold-rgb), 0.5);
+  box-shadow: 0 0 0 1px var(--gold), 0 0 16px rgba(var(--gold-rgb), 0.45);
 }
 html[data-seat="pokerth"] .seat-timer-badge { display: none; }
 
