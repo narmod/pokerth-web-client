@@ -124,6 +124,7 @@
       <button class="tab" data-t="broadcast">Broadcasts</button>
       <button class="tab" data-t="board">Leaderboard</button>
       <button class="tab" data-t="packages">Packages</button>
+      <button class="tab" data-t="music">Music</button>
     </div>
 
     <div id="panel-packages" style="display:none">
@@ -140,6 +141,24 @@
         <h2>Table styles</h2><div id="tables"></div>
         <h2 style="margin-top:14px">Card decks</h2><div id="decks"></div>
         <h2 style="margin-top:14px">Themes</h2><div id="themes"></div>
+      </div>
+    </div>
+
+        <div id="panel-music" style="display:none">
+      <div class="card">
+        <label>Add a track (.mp3)</label>
+        <div class="defrow" style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin:5px 0"><span>Title</span><input id="mzTitle" maxlength="120" placeholder="Track title (required)" autocomplete="off" style="flex:1;min-width:0"></div>
+        <div class="defrow" style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin:5px 0"><span>Artist</span><input id="mzArtist" maxlength="120" placeholder="Artist / composer" autocomplete="off" style="flex:1;min-width:0"></div>
+        <div class="defrow" style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin:5px 0"><span>Credit</span><input id="mzCredit" maxlength="300" placeholder="Credit line shown in-app (auto-filled if blank)" autocomplete="off" style="flex:1;min-width:0"></div>
+        <div class="defrow" style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin:5px 0"><span>License URL</span><input id="mzLicenseUrl" maxlength="300" placeholder="https://… (optional — makes the credit a link)" autocomplete="off" style="flex:1;min-width:0"></div>
+        <div id="mzDrop" class="drop">Drop an <b>.mp3</b> here, or click to choose</div>
+        <input id="mzFile" type="file" accept=".mp3,audio/mpeg" style="display:none">
+        <div id="mzProg" class="prog"><i></i></div>
+        <div id="mzMsg" class="msg"></div>
+        <p class="muted" style="margin:8px 0 0">The track appears in players’ music panel automatically the next time they open it. Please make sure you have the right to share the file and that the author is credited.</p>
+      </div>
+      <div class="card">
+        <h2>Tracks</h2><div id="mzList"><div class="empty">Loading…</div></div>
       </div>
     </div>
 
@@ -388,6 +407,8 @@
     $('panel-server').style.display=t==='server'?'block':'none';
     $('panel-clients').style.display=t==='clients'?'block':'none';
     $('panel-broadcast').style.display=t==='broadcast'?'block':'none';
+    $('panel-music').style.display=t==='music'?'block':'none';
+    if(t==='music')mzRefresh();
     if(t==='board') loadBoard();
     if(t==='broadcast'){ loadBroadcasts(); loadWelcome(); }
     if(t==='clients'){ loadStatus(true); loadThemes(); }
@@ -453,6 +474,46 @@
   function refresh(){ api('/admin/pkg-list?t='+Date.now()).then(function(r){return r.json();}).then(function(d){ if(d.ok)renderPkgs(d); }).catch(function(){ say('Could not refresh the package list \u2014 network error.','err'); }); }
 
   // leaderboard
+  // ── Music (background tracks) ──
+  function mzSay(t,cls){ var m=$('mzMsg'); if(m){ m.textContent=t; m.className='msg '+(cls||''); } }
+  function mzProg(f){ var p=$('mzProg'); if(p){ p.classList.add('on'); p.firstElementChild.style.width=Math.round((f||0)*100)+'%'; } }
+  function mzProgHide(){ var p=$('mzProg'); if(p){ p.classList.remove('on'); p.firstElementChild.style.width='0'; } }
+  function mzUpload(f){
+    if(!/\.mp3$/i.test(f.name) && f.type!=='audio/mpeg'){ mzSay('Choose an .mp3 file.','err'); return; }
+    var title=($('mzTitle').value||'').trim();
+    if(!title){ mzSay('Enter a title first.','err'); $('mzTitle').focus(); return; }
+    mzSay('Uploading \u201c'+f.name+'\u201d\u2026'); mzProg(0);
+    var q='/admin/music-upload?title='+encodeURIComponent(title)
+        +'&artist='+encodeURIComponent(($('mzArtist').value||'').trim())
+        +'&credit='+encodeURIComponent(($('mzCredit').value||'').trim())
+        +'&licenseUrl='+encodeURIComponent(($('mzLicenseUrl').value||'').trim());
+    var xhr=new XMLHttpRequest();
+    xhr.open('POST',q);
+    var t=tok(); if(t) xhr.setRequestHeader('Authorization','Bearer '+t);
+    xhr.upload.addEventListener('progress',function(e){ if(e.lengthComputable) mzProg(e.loaded/e.total); });
+    xhr.addEventListener('load',function(){ mzProgHide(); var d=null; try{ d=JSON.parse(xhr.responseText); }catch(e){}
+      if(d&&d.ok){ mzSay('Added: '+d.title+' \u2014 it now appears in the players\u2019 music panel.','ok'); $('mzTitle').value='';$('mzArtist').value='';$('mzCredit').value='';$('mzLicenseUrl').value=''; mzRefresh(); }
+      else mzSay('Failed: '+((d&&d.error)||('HTTP '+xhr.status)),'err'); });
+    xhr.addEventListener('error',function(){ mzProgHide(); mzSay('Upload failed \u2014 network error.','err'); });
+    xhr.send(f);
+    $('mzFile').value='';
+  }
+  function mzRemove(id,nm){ if(!confirm('Remove \u201c'+nm+'\u201d?'))return;
+    api('/admin/music-remove',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id:id,token:tok()})})
+      .then(function(r){return r.json();}).then(function(d){ if(d.ok)mzRefresh(); else mzSay('Remove: '+(d.error||'error'),'err'); }).catch(function(){ mzSay('Remove failed \u2014 network error.','err'); }); }
+  function mzToggle(id,wasOn){ api('/admin/music-toggle',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id:id,enabled:!wasOn,token:tok()})})
+    .then(function(r){return r.json();}).then(function(d){ if(d&&d.ok)mzRefresh(); else mzSay('Toggle: '+((d&&d.error)||'error'),'err'); }).catch(function(){ mzSay('Toggle failed \u2014 network error.','err'); }); }
+  function mzRenderList(arr){ var el=$('mzList'); if(!el)return; if(!arr||!arr.length){ el.innerHTML='<div class="empty">(no tracks)</div>'; return; } el.innerHTML='';
+    arr.forEach(function(p){ var on=p.active!==false; var row=document.createElement('div'); row.className='row'; if(!on)row.style.opacity='0.55';
+      row.innerHTML='<div class="nm"><b></b><span></span></div>';
+      row.querySelector('b').textContent=p.title||p.id; row.querySelector('span').textContent=(p.artist||'')+(p.artist?' \u00b7 ':'')+p.id+(p.builtin?' \u00b7 built-in':'');
+      var tg=document.createElement('button'); tg.className='toggle '+(on?'on':'off'); tg.textContent=on?'On':'Off'; tg.title=on?'Audible to players \u2014 tap to hide':'Hidden \u2014 tap to show'; tg.addEventListener('click',function(){mzToggle(p.id,on);});
+      row.appendChild(tg);
+      if(!p.builtin){ var del=document.createElement('button'); del.className='del'; del.textContent='Remove'; del.addEventListener('click',function(){mzRemove(p.id,p.title||p.id);}); row.appendChild(del); }
+      el.appendChild(row); }); }
+  function mzRefresh(){ api('/admin/music-list?t='+Date.now()).then(function(r){return r.json();}).then(function(d){ if(d.ok)mzRenderList(d.tracks); else mzRenderList([]); }).catch(function(){ var el=$('mzList'); if(el)el.innerHTML='<div class="empty">Could not load tracks.</div>'; }); }
+  (function(){ var d=$('mzDrop'), f=$('mzFile'); if(d&&f){ d.addEventListener('click',function(){f.click();}); d.addEventListener('dragover',function(e){e.preventDefault();d.classList.add('hot');}); d.addEventListener('dragleave',function(){d.classList.remove('hot');}); d.addEventListener('drop',function(e){e.preventDefault();d.classList.remove('hot');if(e.dataTransfer.files[0])mzUpload(e.dataTransfer.files[0]);}); f.addEventListener('change',function(){if(f.files[0])mzUpload(f.files[0]);}); } })();
+
   function bmsg(t,cls){ $('boardmsg').textContent=t; $('boardmsg').className='msg '+(cls||''); }
   function fmtSigned(n){ n=Math.round(Number(n)||0); return (n>0?'+':'')+n.toLocaleString(); }
   var lastBoard=[];

@@ -687,6 +687,50 @@ function importPackage(kind, idHint, zipBuf, cb) {
   done(null, { id: id, name: nm });
 }
 
+// ── Background music (admin-managed tracks) ──────────────────────────────
+// Built-in tracks ship in public/music/tracks.json (read-only seed). Admin-
+// added tracks live in admin-config.json (musicTracks[]) so `git pull` never
+// touches them, and their MP3s are uploaded to public/music/<id>.mp3 (untracked,
+// also preserved by pull). The client-facing /music/tracks.json is composed
+// server-side (built-ins minus hidden + active admin tracks), mirroring how the
+// deck/theme galleries are filtered. Built-ins can be hidden but not removed.
+const MUSIC_DIR = path.join(PUBLIC_DIR, 'music');
+const MUSIC_BUILTIN_FILE = path.join(MUSIC_DIR, 'tracks.json');
+function musicBuiltins() {
+  try { var j = JSON.parse(fs.readFileSync(MUSIC_BUILTIN_FILE, 'utf8')); var a = Array.isArray(j) ? j : (j && j.tracks); if (Array.isArray(a)) return a; } catch (e) {}
+  return [];
+}
+function musicAdminTracks() { var a = _adminConfig && _adminConfig.musicTracks; return Array.isArray(a) ? a : []; }
+function musicHiddenSet()  { var a = _adminConfig && _adminConfig.musicHidden; return Array.isArray(a) ? a : []; }
+function musicStr(s, max) { return String(s == null ? '' : s).replace(/[\u0000-\u001f\u007f]+/g, ' ').trim().slice(0, max || 200); }
+function isMp3(buf) {
+  if (!buf || buf.length < 3) return false;
+  if (buf[0] === 0x49 && buf[1] === 0x44 && buf[2] === 0x33) return true;   // 'ID3' tag
+  if (buf[0] === 0xFF && (buf[1] & 0xE0) === 0xE0) return true;             // MPEG frame sync
+  return false;
+}
+function musicAllIds() { var s = {}; musicBuiltins().forEach(function (t) { if (t && t.id) s[t.id] = 1; }); musicAdminTracks().forEach(function (t) { if (t && t.id) s[t.id] = 1; }); return s; }
+function uniqueMusicId(base) {
+  base = slugId(base) || ('track-' + Date.now());
+  var taken = musicAllIds(), id = base, n = 2;
+  while (taken[id]) id = base + '-' + (n++);
+  return id;
+}
+// Composed list for the admin UI: built-ins (flagged, with hidden→inactive) then admin tracks.
+function musicListForAdmin() {
+  var hidden = musicHiddenSet();
+  var bi = musicBuiltins().map(function (t) { return Object.assign({}, t, { builtin: true, active: hidden.indexOf(t.id) < 0 }); });
+  var ad = musicAdminTracks().map(function (t) { return Object.assign({}, t, { builtin: false, active: t.active !== false }); });
+  return bi.concat(ad);
+}
+// Composed list served to players: active built-ins + active admin tracks, re-ordered.
+function musicListForClient() {
+  var hidden = musicHiddenSet();
+  var bi = musicBuiltins().filter(function (t) { return t && t.id && hidden.indexOf(t.id) < 0; });
+  var ad = musicAdminTracks().filter(function (t) { return t && t.active !== false; });
+  return bi.concat(ad).map(function (t, i) { return Object.assign({}, t, { order: i + 1 }); });
+}
+
 function handleAdmin(req, res, reqPathOnly, query) {
   // Panel hidden? Answer like any nonexistent path so /admin can't be probed.
   if (!ADMIN_ENABLED) { res.writeHead(404); res.end('Not found'); return; }
@@ -871,6 +915,64 @@ function handleAdmin(req, res, reqPathOnly, query) {
       _adminConfig.pkgFull.table = arr;
       saveAdminConfig();
       return adminJson(res, 200, { ok: true, id: id, full: full });
+    });
+  }
+  if (reqPathOnly === '/admin/music-list') {
+    if (!adminAuthed(query)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
+    return adminJson(res, 200, { ok: true, tracks: musicListForAdmin() });
+  }
+  if (reqPathOnly === '/admin/music-upload' && req.method === 'POST') {
+    if (!adminAuthed(query)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
+    var _mTitle = musicStr(query.title, 120);
+    if (!_mTitle) return adminJson(res, 400, { ok: false, error: 'title required' });
+    return readRawBody(req, MAX_UPLOAD, function (buf) {
+      if (!buf || !buf.length) return adminJson(res, 413, { ok: false, error: 'empty upload or larger than 25 MB' });
+      if (!isMp3(buf)) return adminJson(res, 400, { ok: false, error: 'not an MP3 file' });
+      var id = uniqueMusicId(_mTitle);
+      try { fs.mkdirSync(MUSIC_DIR, { recursive: true }); fs.writeFileSync(path.join(MUSIC_DIR, id + '.mp3'), buf); }
+      catch (e) { return adminJson(res, 500, { ok: false, error: 'write failed' }); }
+      var artist = musicStr(query.artist, 120);
+      var entry = {
+        id: id, title: _mTitle, artist: artist, file: '/music/' + id + '.mp3',
+        license: musicStr(query.license, 60), licenseUrl: musicStr(query.licenseUrl, 300),
+        source: musicStr(query.source, 120), sourceUrl: musicStr(query.sourceUrl, 300),
+        credit: musicStr(query.credit, 300) || (_mTitle + (artist ? ' by ' + artist : '')),
+        active: true
+      };
+      _adminConfig.musicTracks = musicAdminTracks().concat([entry]);
+      saveAdminConfig();
+      return adminJson(res, 200, { ok: true, id: id, title: _mTitle });
+    });
+  }
+  if (reqPathOnly === '/admin/music-remove' && req.method === 'POST') {
+    return readJsonBody(req, function (d) {
+      if (!adminAuthed(query, d && d.token)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
+      var id = slugId(d && d.id);
+      if (!id) return adminJson(res, 400, { ok: false, error: 'id required' });
+      if (musicBuiltins().some(function (t) { return t && t.id === id; })) return adminJson(res, 400, { ok: false, error: 'built-in track cannot be removed (you can hide it instead)' });
+      var arr = musicAdminTracks(), idx = arr.findIndex(function (t) { return t && t.id === id; });
+      if (idx < 0) return adminJson(res, 404, { ok: false, error: 'not found' });
+      arr.splice(idx, 1); _adminConfig.musicTracks = arr; saveAdminConfig();
+      try { fs.rmSync(path.join(MUSIC_DIR, id + '.mp3'), { force: true }); } catch (e) {}
+      return adminJson(res, 200, { ok: true });
+    });
+  }
+  if (reqPathOnly === '/admin/music-toggle' && req.method === 'POST') {
+    return readJsonBody(req, function (d) {
+      if (!adminAuthed(query, d && d.token)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
+      var id = slugId(d && d.id);
+      if (!id) return adminJson(res, 400, { ok: false, error: 'id required' });
+      var enabled = !(d && d.enabled === false);
+      if (musicBuiltins().some(function (t) { return t && t.id === id; })) {
+        var h = musicHiddenSet(), hi = h.indexOf(id);
+        if (enabled) { if (hi >= 0) h.splice(hi, 1); } else { if (hi < 0) h.push(id); }
+        _adminConfig.musicHidden = h; saveAdminConfig();
+        return adminJson(res, 200, { ok: true, id: id, active: enabled });
+      }
+      var arr = musicAdminTracks(), t = arr.find(function (x) { return x && x.id === id; });
+      if (!t) return adminJson(res, 404, { ok: false, error: 'not found' });
+      t.active = enabled; _adminConfig.musicTracks = arr; saveAdminConfig();
+      return adminJson(res, 200, { ok: true, id: id, active: enabled });
     });
   }
   if (reqPathOnly === '/admin/update' && req.method === 'POST') {
@@ -1090,6 +1192,14 @@ const httpServer = http.createServer((req, res) => {
     if (_pkgKind === 'table') { var _full = pkgFullSet('table'); if (_full.length) _list = _list.map(function (x) { return (x && _full.indexOf(x.id) >= 0) ? Object.assign({}, x, { full: true }) : x; }); }
     res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' });
     res.end(JSON.stringify(_list));
+    return;
+  }
+
+  // Client-facing music manifest: built-ins (minus hidden) + active admin tracks,
+  // composed server-side just like the deck/theme galleries above.
+  if (reqPathOnly === '/music/tracks.json') {
+    res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' });
+    res.end(JSON.stringify({ version: 1, tracks: musicListForClient() }));
     return;
   }
 

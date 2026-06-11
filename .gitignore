@@ -13,3 +13,12 @@ stats.meta.json
 !/public/cards/pokerth-new/
 !/public/cards/pokerth-1-0/
 /public/cards/decks.json
+
+# Admin-uploaded background-music tracks (managed from the admin panel; NOT
+# tracked — git pull preserves them). The built-in Club Seamus audio stays
+# tracked, and tracks.json is the built-in seed the server reads.
+/public/music/*.mp3
+!/public/music/Club_Seamus.mp3
+
+# Runtime, server-owned admin config (reset period, defaults, admin music list…)
+admin-config.json
