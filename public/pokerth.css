@@ -5587,7 +5587,7 @@ body.has-keyboard .act-key { display: inline-block; }
 .chat-emoji-toggle:hover { background: rgba(var(--gold-rgb), 0.15); border-color: var(--gold-dim); }
 .chat-emoji-toggle.active { background: rgba(var(--gold-rgb), 0.22); border-color: var(--gold-dim); }
 .chat-emoji-panel {
-  grid-template-columns: repeat(8, 1fr);
+  grid-template-columns: repeat(auto-fill, minmax(32px, 1fr));
   gap: 2px;
   max-height: 80px;
   overflow-y: auto;
