@@ -10461,11 +10461,9 @@ function toggleMusicPanel() {
   var open = panel.style.display === 'none' || panel.style.display === '';
   panel.style.display = open ? 'flex' : 'none';
   if (open) {
-    // First open: render the player UI into the body (manifest-driven).
-    if (!panel._musicMounted) {
-      panel._musicMounted = true;
-      try { if (window.Music && window.Music.mount) window.Music.mount(document.getElementById('music-body')); } catch (e) {}
-    }
+    // (Re-)render the player and refresh the auto-updating track list on every
+    // open — tracks added later then appear without a reload.
+    try { if (window.Music && window.Music.mount) window.Music.mount(document.getElementById('music-body')); } catch (e) {}
     // Draggable + resizable on desktop/tablet; fixed bottom-sheet on phones —
     // same window system as the chat / log / reaction panels.
     if (_winGate()) {
@@ -10679,7 +10677,7 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.2.424'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.2.425'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

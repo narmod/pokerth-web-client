@@ -5782,6 +5782,9 @@ body.has-keyboard .act-key { display: inline-block; }
 .music-row-artist { font-size: 0.68rem; color: var(--gold-dim); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .music-credit { font-size: 0.62rem; line-height: 1.4; color: var(--gold-dim); opacity: 0.85; }
 .music-credit a { color: var(--gold-dim); text-decoration: underline; }
+.music-sel-label { display: block; font-size: 0.52rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--gold-dim); margin-bottom: -4px; }
+.music-sel-wrap { width: 100%; }
+.music-sel-wrap select { width: 100%; }
 /* Barre de titre = poignee de deplacement en mode flottant (makeWinDraggable
    pose deja cursor/touch-action inline ; on garde le curseur de prehension). */
 .floating-win .music-panel-title { cursor: move; touch-action: none; }
