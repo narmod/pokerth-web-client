@@ -5481,3 +5481,17 @@ html[data-seat="bar"] .seat-timer-badge { display: none; }
 /* Bouton "reset des fenetres" du header : visible seulement tablette + desktop. */
 .win-reset-only { display: none; }
 @media (min-width: 900px) and (min-height: 600px) { .win-reset-only { display: inline-flex; } }
+
+
+/* ════════════════════════════════════════════════════════════════════════
+   Combinaisons (memo des mains) : sur tablette/desktop l'overlay ne fait plus
+   ecran. Pas d'assombrissement ni de capture de clic -> la carte (qui y flotte
+   deja, deplacable/redimensionnable) reste ouverte et la barre d'action reste
+   visible + cliquable meme quand une action joueur est requise. Fermeture via
+   le bouton X de la carte ou le 🃏. Mobile (<900px de large ou <600px de haut) :
+   modale assombrie + clic-exterieur ferme (inchange).
+   ════════════════════════════════════════════════════════════════════════ */
+@media (min-width: 900px) and (min-height: 600px) {
+  #hands-overlay { background: transparent; pointer-events: none; }
+  #hands-overlay .hands-card { pointer-events: auto; }
+}
