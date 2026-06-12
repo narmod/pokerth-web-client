@@ -26,6 +26,7 @@
 - [Self-hosting](#self-hosting)
   - [Quick install (one-liner)](#quick-install-one-liner) &nbsp;📂
   - [Docker](#docker) &nbsp;📂
+  - [Environment variables](#env-vars) &nbsp;📂
   - [Manual installation (Ubuntu / Debian)](#manual-installation) &nbsp;📂
   - [Self-hosting on a Raspberry Pi](#raspberry-pi)
 - [Install the app](#install-the-app)
@@ -450,6 +451,30 @@ Notes:
 - A healthcheck pings the HTTP server every 30 s; `docker ps` shows the container as `healthy` once it is up.
 - `PORT` only changes the **published host port** — the container always listens on `8080` internally.
 - Prefer to build the image yourself? Comment out `image:` in `docker-compose.yml` and uncomment `build: .`.
+
+</details>
+
+---
+
+<a id="env-vars"></a>
+## Environment variables
+
+These configure the **proxy** at runtime (read by `proxy.js`). They are separate from the *installer* variables in the [one-liner](#quick-install-one-liner) table above. Under Docker set them in `.env`; under PM2 pass them when starting (e.g. `VAR=value pm2 restart pokerth-web --update-env`). `.env.example` documents each one with examples.
+
+<details>
+<summary><b>📂 Show the environment-variable reference</b></summary>
+
+| Variable | Default | Purpose |
+|---|---|---|
+| `PORT` | `8080` | HTTP / WebSocket port. |
+| `ALLOWED_HOSTS` | `pokerth.net,www.pokerth.net` | Comma-separated allowlist of upstream servers the proxy may dial (anti open-relay). **Add your own server.** |
+| `ALLOWED_PORTS` | `7234` | Comma-separated allowlist of upstream **ports** (anti-SSRF). Set only for a non-standard PokerTH port. |
+| `ADMIN_ENABLED` | _enabled_ | Serve the `/admin` console. Set to `0` / `false` / `off` / `no` to hide it (every `/admin/*` route returns `404`). The `pokerth-web admin on`/`off` command is the persistent way to set this. |
+| `STATS_RESET_PERIOD` | `monthly` | Leaderboard auto-reset: `off` / `daily` / `monthly` / `yearly`. |
+| `STATS_ADMIN_TOKEN` | _(unset)_ | Token that unlocks the admin panel and the remote `/stats` reset; with no token, both are off. |
+| `MYSQL_HOST` · `MYSQL_PORT` · `MYSQL_USER` · `MYSQL_PASSWORD` · `MYSQL_DATABASE` | _(unset)_ · `3306` | Optional **MySQL/MariaDB mirror**. Set `MYSQL_HOST` + `MYSQL_DATABASE` to enable; these override the admin-panel / `db-config` settings. See [Optional MySQL mirror](#mysql-mirror). |
+| `PM2_NAME` | `pokerth-web` | PM2 process name the proxy targets for its self-update / restart actions. |
+| `STATS_FILE` · `STATS_META_FILE` · `VISITS_FILE` · `BROADCASTS_FILE` · `ADMIN_CONFIG_FILE` · `DB_CONFIG_FILE` | _(install dir)_ | **Advanced** — relocate the JSON state files (e.g. onto a persistent volume); each defaults to that filename in the install directory. |
 
 </details>
 
