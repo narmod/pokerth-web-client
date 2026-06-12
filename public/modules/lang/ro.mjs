@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+    soundVolume:'Sunetele jocului',
     musicTooltip:'Muzică', musicPanelTitle:'Muzică', musicNowPlaying:'Se redă acum', musicNoTracks:'Nicio piesă disponibilă', musicVolume:'Volum', musicPlay:'Redare', musicPause:'Pauză', musicStop:'Oprire', musicNext:'Următoarea', musicPrev:'Anterioara', musicTrack:'Piesă', musicRepeat:'Repetare', musicRepeatOne:'Repetă piesa', musicRepeatAll:'Repetă lista', musicRepeatOff:'Redă o dată',
   seatCard: 'Card', seatCompact: 'Compact', seatBar: 'Bar',
   seatChip: 'Chip',

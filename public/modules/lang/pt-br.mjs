@@ -9,6 +9,7 @@ export const meta = {
 };
 
 export const strings = {
+    soundVolume:'Sons do jogo',
     musicTooltip:'Música', musicPanelTitle:'Música', musicNowPlaying:'Tocando agora', musicNoTracks:'Nenhuma faixa disponível', musicVolume:'Volume', musicPlay:'Reproduzir', musicPause:'Pausar', musicStop:'Parar', musicNext:'Próxima', musicPrev:'Anterior', musicTrack:'Faixa', musicRepeat:'Repetir', musicRepeatOne:'Repetir faixa', musicRepeatAll:'Repetir playlist', musicRepeatOff:'Reproduzir uma vez',
   seatCard: 'Card', seatCompact: 'Compact', seatBar: 'Bar',
   seatChip: 'Chip',

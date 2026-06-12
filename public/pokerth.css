@@ -5773,6 +5773,16 @@ body.has-keyboard .act-key { display: inline-block; }
 .music-time { flex: 0 0 auto; font-size: 0.7rem; color: var(--gold-dim); min-width: 36px; font-variant-numeric: tabular-nums; }
 .music-cur { text-align: right; }
 .music-dur { text-align: left; }
+/* ── Section « Sons du jeu » en haut du lecteur (visuellement distincte) ── */
+.music-gamesnd { border: 1px solid var(--border-hi); background: rgba(var(--gold-rgb),0.06); border-radius: 10px; padding: 8px 10px; display: flex; flex-direction: column; gap: 6px; }
+.music-gamesnd-hd { display: flex; align-items: center; gap: 6px; font-size: 0.58rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold-dim); }
+.music-gamesnd-ic { font-size: 0.85rem; }
+.music-gamesnd-row { display: flex; align-items: center; gap: 8px; }
+.music-gs-mute { flex: 0 0 auto; width: 32px; height: 32px; font-size: 0.95rem; }
+.music-gs-range { flex: 1 1 auto; min-width: 0; accent-color: var(--gold); cursor: pointer; }
+.music-gs-val { flex: 0 0 auto; font-size: 0.72rem; color: var(--gold-dim); min-width: 34px; text-align: right; font-variant-numeric: tabular-nums; }
+.music-gamesnd-row.is-off .music-gs-range { opacity: 0.4; }
+.music-gamesnd-row.is-off .music-gs-val { opacity: 0.5; }
 /* ── Popover de réglage du son (bouton son du header) ── */
 .sound-pop {
   position: fixed; z-index: 1200;

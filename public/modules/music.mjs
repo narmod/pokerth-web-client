@@ -40,7 +40,7 @@ let _audio  = null;
 let _curId  = null;
 let _loaded = false;
 let _bodyEl = null;
-let _repeat = 'one';   // 'one' = loop track | 'all' = loop playlist | 'off' = play once
+let _repeat = 'all';   // défaut: boucle playlist | 'one' = loop track | 'off' = play once
 let _seeking = false;  // true while the user drags the seek bar (don't let timeupdate fight the thumb)
 let _durProbed = false; // true once this track's total duration is resolved (see _probeDuration)
 
@@ -257,6 +257,9 @@ function _render() {
   var playing = isPlaying();
   var cur = _byId(_curId);
   var vol = Math.round(getVolume() * 100);
+  var gsVol = 100, gsOn = true;
+  try { if (typeof window.getSoundVolume === 'function') gsVol = Math.round(window.getSoundVolume() * 100); } catch (e) {}
+  try { if (typeof window.isSoundEnabled === 'function') gsOn = window.isSoundEnabled(); } catch (e) {}
   var _dur = getDuration(), _cur = getCurrentTime(), _canSeek = _dur > 0;
   var _pos = _canSeek ? Math.round(_cur / _dur * 1000) : 0;
   var multi = _tracks.length > 1;
@@ -275,6 +278,14 @@ function _render() {
     : '';
 
   _bodyEl.innerHTML =
+    '<div class="music-gamesnd">' +
+      '<div class="music-gamesnd-hd"><span class="music-gamesnd-ic">\uD83C\uDFAE</span><span data-i18n="soundVolume">' + _esc(_t('soundVolume', 'Game sounds')) + '</span></div>' +
+      '<div class="music-gamesnd-row' + (gsOn ? '' : ' is-off') + '">' +
+        '<button type="button" class="music-tbtn music-gs-mute" data-mact="gs-mute" aria-pressed="' + (!gsOn) + '" title="' + _esc(_t('soundVolume', 'Game sounds')) + '">' + (gsOn ? '\uD83D\uDD0A' : '\uD83D\uDD07') + '</button>' +
+        '<input type="range" class="music-gs-range" min="0" max="100" value="' + gsVol + '" aria-label="' + _esc(_t('soundVolume', 'Game sounds')) + '">' +
+        '<span class="music-gs-val">' + gsVol + '%</span>' +
+      '</div>' +
+    '</div>' +
     '<div class="music-transport">' +
       '<button type="button" class="music-tbtn" data-mact="prev"' + (multi ? '' : ' disabled') + ' title="' + _esc(_t('musicPrev', 'Previous')) + '" data-i18n-title="musicPrev">\u23EE</button>' +
       '<button type="button" class="music-tbtn music-tbtn-main" data-mact="toggle" title="' + _esc(_t(ppKey, playing ? 'Pause' : 'Play')) + '" data-i18n-title="' + ppKey + '">' + ppIcon + '</button>' +
@@ -325,6 +336,7 @@ function _wire() {
       else if (a === 'stop') stop();
       else if (a === 'rep-one') setRepeat(_repeat === 'one' ? 'off' : 'one');
       else if (a === 'rep-all') setRepeat(_repeat === 'all' ? 'off' : 'all');
+      else if (a === 'gs-mute') { try { if (typeof window.toggleSound === 'function') window.toggleSound(); } catch (e) {} _render(); }
     });
   });
   var rng = _bodyEl.querySelector('.music-vol-range');
@@ -346,6 +358,17 @@ function _wire() {
     };
     seekEl.addEventListener('input',  function () { _seeking = true; doSeek(); });
     seekEl.addEventListener('change', function () { doSeek(); _seeking = false; });
+  }
+  var gs = _bodyEl.querySelector('.music-gs-range');
+  if (gs) {
+    gs.addEventListener('input', function () {
+      var pct = parseInt(gs.value, 10) || 0;
+      var v = _bodyEl.querySelector('.music-gs-val'); if (v) v.textContent = pct + '%';
+      try { if (typeof window.setSoundVolume === 'function') window.setSoundVolume(pct / 100); } catch (e) {}
+    });
+    gs.addEventListener('change', function () {   // bip de test au niveau choisi (si non coupé)
+      try { if ((typeof window.isSoundEnabled !== 'function' || window.isSoundEnabled()) && typeof window.playTone === 'function') window.playTone(660, 0.08, 0.25); } catch (e) {}
+    });
   }
 }
 
