@@ -160,8 +160,16 @@
       </div>
       <div class="card">
         <h2 style="margin:0 0 8px">Database (MySQL mirror)</h2>
-        <p class="muted" style="margin:2px 0 10px">Mirrors when enabled: traffic_daily, leaderboard, broadcasts.</p>
+        <p class="muted" style="margin:2px 0 10px">Mirrors when enabled: traffic_daily, leaderboard, broadcasts. Configure below, or with the CLI: pokerth-web db-config.</p>
         <div id="trafDb"><div class="empty">Loading…</div></div>
+        <div class="defrow" style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin:10px 0 5px"><span>Host</span><input id="dbHost" maxlength="255" placeholder="127.0.0.1" autocomplete="off" style="flex:1;min-width:0"></div>
+        <div class="defrow" style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin:5px 0"><span>Port</span><input id="dbPort" type="number" min="1" max="65535" placeholder="3306" autocomplete="off" style="flex:1;min-width:0"></div>
+        <div class="defrow" style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin:5px 0"><span>User</span><input id="dbUser" maxlength="128" placeholder="root" autocomplete="off" style="flex:1;min-width:0"></div>
+        <div class="defrow" style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin:5px 0"><span>Password</span><input id="dbPass" type="password" maxlength="255" placeholder="(unchanged)" autocomplete="new-password" style="flex:1;min-width:0"></div>
+        <div class="defrow" style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin:5px 0"><span>Database</span><input id="dbDatabase" maxlength="128" placeholder="pokerth" autocomplete="off" style="flex:1;min-width:0"></div>
+        <div class="defrow" style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin:5px 0"><span>Enabled</span><input id="dbEnabled" type="checkbox"></div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px"><button id="dbTestBtn" class="use">Test connection</button><button id="dbSaveBtn" class="use">Save &amp; connect</button></div>
+        <div id="dbState" class="msg" style="margin-top:8px"></div>
       </div>
       <div class="card">
         <h2 style="margin:0 0 8px">Export / backup</h2>
@@ -671,7 +679,10 @@
       var xb=$('btnTrafReset');  if(xb) xb.addEventListener('click', resetTraffic);
       var cb=$('btnTrafCsv');  if(cb) cb.addEventListener('click', function(){ exportTraffic('csv'); });
       var jb=$('btnTrafJson'); if(jb) jb.addEventListener('click', function(){ exportTraffic('json'); });
+      var dt=$('dbTestBtn'); if(dt) dt.addEventListener('click', dbTest);
+      var ds=$('dbSaveBtn'); if(ds) ds.addEventListener('click', dbSave);
     }
+    loadDbConfig();
     api('/admin/visits').then(function(r){return r.json();}).then(function(d){
       var g=$('trafCards');
       if(!d || !d.ok){ if(g) g.innerHTML='<div class="empty err">'+((d&&d.error)||'error')+'</div>'; return; }
@@ -701,10 +712,11 @@
         var db=d.db||{};
         var esc=function(x){ return (''+x).replace(/[&<>]/g,function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;'}[c]; }); };
         var state;
-        if(!db.enabled){ state='<b style="color:#a0acc4">Off</b> — set MYSQL_* env vars to enable'; }
+        if(!db.enabled){ state='<b style="color:#a0acc4">Off</b> — configure below, or run pokerth-web db-config'; }
         else if(db.connected){ state='<b class="ok">Connected</b>'; }
         else { state='<b class="err">Error</b>'+(db.error?(' — '+esc(db.error)):''); }
         var html='<div class="srow"><span>Status</span><span>'+state+'</span></div>';
+        if(db.enabled && db.source){ html+='<div class="srow"><span>Source</span><b>'+esc(db.source)+'</b></div>'; }
         if(db.enabled && db.lastWrite){ html+='<div class="srow"><span>Last write</span><b>'+esc((''+db.lastWrite).replace('T',' ').slice(0,19))+'</b></div>'; }
         dbx.innerHTML=html;
       }
@@ -731,6 +743,38 @@
         if(d && d.ok){ if(m){ m.className='msg ok'; m.textContent='Traffic stats reset.'; } loadTraffic(); }
         else { if(m){ m.className='msg err'; m.textContent='Reset failed: '+((d&&d.error)||'forbidden'); } }
       }).catch(function(){ var m=$('trafMsg'); if(m){ m.className='msg err'; m.textContent='Network error.'; } });
+  }
+  function dbSetState(msg, kind){ var m=$('dbState'); if(m){ m.className='msg'+(kind?(' '+kind):''); m.textContent=msg||''; } }
+  function loadDbConfig(){
+    api('/admin/db').then(function(r){return r.json();}).then(function(d){
+      if(!d || !d.ok) return;
+      var c=d.config||{}, st=d.status||{};
+      if($('dbHost')) $('dbHost').value=c.host||'';
+      if($('dbPort')) $('dbPort').value=c.port||3306;
+      if($('dbUser')) $('dbUser').value=c.user||'';
+      if($('dbDatabase')) $('dbDatabase').value=c.database||'';
+      if($('dbEnabled')) $('dbEnabled').checked=!!c.enabled;
+      if($('dbPass')){ $('dbPass').value=''; $('dbPass').placeholder=c.hasPassword?'(unchanged \u2014 leave blank to keep)':'(none)'; }
+      var envSrc=(st.source==='env');
+      ['dbHost','dbPort','dbUser','dbPass','dbDatabase','dbEnabled','dbTestBtn','dbSaveBtn'].forEach(function(id){ var el=$(id); if(el) el.disabled=envSrc; });
+      if(envSrc) dbSetState('Configured via environment variables (MYSQL_*). Edit your env / CLI conf to change it; this form is inactive.','');
+      else dbSetState('','');
+    }).catch(function(){});
+  }
+  function dbFormBody(){ var b={ host:($('dbHost')?$('dbHost').value.trim():''), port:Number($('dbPort')?$('dbPort').value:3306)||3306, user:($('dbUser')?$('dbUser').value:''), database:($('dbDatabase')?$('dbDatabase').value.trim():''), enabled:($('dbEnabled')?$('dbEnabled').checked:false), token:tok() }; var pw=($('dbPass')?$('dbPass').value:''); if(pw) b.password=pw; return b; }
+  function dbTest(){
+    dbSetState('Testing\u2026','');
+    api('/admin/db/test',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(dbFormBody())})
+      .then(function(r){return r.json();}).then(function(d){ if(d && d.ok) dbSetState('Connection OK.','ok'); else dbSetState('Failed: '+((d&&d.error)||'error'),'err'); })
+      .catch(function(){ dbSetState('Network error.','err'); });
+  }
+  function dbSave(){
+    dbSetState('Saving\u2026','');
+    api('/admin/db',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(dbFormBody())})
+      .then(function(r){return r.json();}).then(function(d){
+        if(d && d.ok){ var st=d.status||{}; if(!st.enabled) dbSetState('Saved. Mirror is disabled.','ok'); else if(st.connected) dbSetState('Saved & connected.','ok'); else dbSetState('Saved, but connection failed: '+(st.error||'error'),'err'); if($('dbPass')) $('dbPass').value=''; loadTraffic(); }
+        else dbSetState('Failed: '+((d&&d.error)||'forbidden'),'err');
+      }).catch(function(){ dbSetState('Network error.','err'); });
   }
   function loadServer(){ loadStatus(true); loadLogs(); loadUpdateLog(); }
   // Theme presets shown in the default-theme dropdown = built-in presets (static

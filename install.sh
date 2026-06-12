@@ -533,6 +533,79 @@ do_set_token() {
   if [ -n "$STATS_ADMIN_TOKEN" ]; then ok "Admin token set — remote reset endpoint enabled."
   else ok "Admin token cleared — remote reset endpoint disabled."; fi
 }
+do_db_config() {
+  load_state
+  [ -n "$RUN_USER" ] || RUN_USER="$(id -un)"
+  [ -n "$INSTALL_DIR" ] || { errln "No install found (missing $CONF). Install first."; exit 1; }
+  local f="$INSTALL_DIR/db-config.json"
+  step "PokerTH Web Client — MySQL mirror"
+  local cH cP cU cD
+  cH="$(run_as env PTHF="$f" node -e 'try{process.stdout.write(String(JSON.parse(require("fs").readFileSync(process.env.PTHF,"utf8")).host||""))}catch(e){}' 2>/dev/null)"
+  cP="$(run_as env PTHF="$f" node -e 'try{process.stdout.write(String(JSON.parse(require("fs").readFileSync(process.env.PTHF,"utf8")).port||3306))}catch(e){process.stdout.write("3306")}' 2>/dev/null)"
+  cU="$(run_as env PTHF="$f" node -e 'try{process.stdout.write(String(JSON.parse(require("fs").readFileSync(process.env.PTHF,"utf8")).user||""))}catch(e){}' 2>/dev/null)"
+  cD="$(run_as env PTHF="$f" node -e 'try{process.stdout.write(String(JSON.parse(require("fs").readFileSync(process.env.PTHF,"utf8")).database||""))}catch(e){}' 2>/dev/null)"
+  local host port user db
+  host="$(ask 'MySQL host' "${cH:-127.0.0.1}")"
+  port="$(ask 'MySQL port' "${cP:-3306}")"
+  user="$(ask 'MySQL user' "${cU:-root}")"
+  db="$(ask 'MySQL database' "${cD:-pokerth}")"
+  local pass=""
+  if [ "${HAS_TTY:-0}" -eq 1 ]; then
+    printf '%sMySQL password%s [blank = keep current]: ' "$C_BOLD" "$C_RESET" > /dev/tty
+    read -rs pass < /dev/tty || pass=""
+    echo > /dev/tty
+  fi
+  local haspass=0; [ -n "$pass" ] && haspass=1
+  run_as env PTHF="$f" PH="$host" PP="$port" PU="$user" PD="$db" PW="$pass" PHAS="$haspass" node -e '
+    var fs=require("fs"), e=process.env, f=e.PTHF, c={};
+    try{ c=JSON.parse(fs.readFileSync(f,"utf8"))||{}; }catch(_){}
+    c.host=e.PH||""; c.port=Number(e.PP)||3306; c.user=e.PU||""; c.database=e.PD||"";
+    if(e.PHAS==="1"){ c.password=e.PW; }
+    if(typeof c.password!=="string"){ c.password=""; }
+    if(c.enabled===undefined){ c.enabled=true; }
+    fs.writeFileSync(f, JSON.stringify(c,null,2));
+  '
+  run_as chmod 600 "$f" 2>/dev/null || true
+  info "Applying and restarting"
+  app_restart
+  ok "MySQL config saved (stored in $f, perms 600). Review: pokerth-web db-show"
+  if [ -n "$host" ] && [ -n "$db" ]; then ok "Mirror enabled — active on this restart."; else warn "Host or database empty — mirror stays off until both are set."; fi
+}
+do_db_toggle() {
+  load_state
+  [ -n "$RUN_USER" ] || RUN_USER="$(id -un)"
+  [ -n "$INSTALL_DIR" ] || { errln "No install found (missing $CONF). Install first."; exit 1; }
+  local f="$INSTALL_DIR/db-config.json" val="$1"
+  run_as env PTHF="$f" PV="$val" node -e '
+    var fs=require("fs"), e=process.env, f=e.PTHF, c={};
+    try{ c=JSON.parse(fs.readFileSync(f,"utf8"))||{}; }catch(_){}
+    c.enabled = (e.PV==="true");
+    if(typeof c.password!=="string"){ c.password=""; }
+    fs.writeFileSync(f, JSON.stringify(c,null,2));
+  '
+  run_as chmod 600 "$f" 2>/dev/null || true
+  info "Applying and restarting"
+  app_restart
+  if [ "$val" = "true" ]; then ok "MySQL mirror enabled (active if host + database are set)."; else ok "MySQL mirror disabled."; fi
+}
+do_db_show() {
+  load_state
+  [ -n "$RUN_USER" ] || RUN_USER="$(id -un)"
+  [ -n "$INSTALL_DIR" ] || { errln "No install found (missing $CONF). Install first."; exit 1; }
+  local f="$INSTALL_DIR/db-config.json"
+  step "PokerTH Web Client — MySQL mirror config"
+  run_as env PTHF="$f" node -e '
+    var fs=require("fs"), e=process.env, c;
+    try{ c=JSON.parse(fs.readFileSync(e.PTHF,"utf8")); }catch(_){ console.log("  (no db-config.json yet — run: pokerth-web db-config)"); process.exit(0); }
+    var pw = c.password ? ("set ("+String(c.password).length+" chars)") : "(none)";
+    console.log("  host:     "+(c.host||"(none)"));
+    console.log("  port:     "+(c.port||3306));
+    console.log("  user:     "+(c.user||"(none)"));
+    console.log("  database: "+(c.database||"(none)"));
+    console.log("  password: "+pw);
+    console.log("  enabled:  "+(c.enabled!==false));
+  '
+}
 
 # ── ENABLE / DISABLE ADMIN PANEL ──────────────────────────────────────────────
 # Visibility switch, independent from the admin token. `off` makes /admin (and
@@ -874,6 +947,10 @@ Commands:
   set-period  Set auto-reset period: off | daily | monthly | yearly
   set-token   Set (or clear) the admin token for the remote reset endpoint
   admin       Show or hide the admin panel: on | off
+  db-config   Configure the optional MySQL mirror (host, user, password, db)
+  db-on       Enable the MySQL mirror
+  db-off      Disable the MySQL mirror
+  db-show     Show the MySQL mirror config (password masked)
   deck-add    Install a gallery card deck from a .zip file or URL
   deck-list   List installed card decks
   deck-remove Remove an installed gallery deck by id
@@ -903,6 +980,10 @@ case "$CMD" in
   reset-stats|stats-reset) do_reset_stats ;;
   set-period)     do_set_period "$2" ;;
   set-token)      do_set_token "$2" ;;
+  db-config|db-setup|set-mysql) do_db_config ;;
+  db-on)          do_db_toggle true ;;
+  db-off)         do_db_toggle false ;;
+  db-show|db-status) do_db_show ;;
   admin)          do_admin "$2" ;;
   deck-add|deck-install)  do_deck_add "${2:-}" ;;
   deck-list|deck-ls)      do_deck_list ;;

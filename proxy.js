@@ -414,7 +414,7 @@ function visitsSummary() {
     year: visitWindow(365),
     allTime: { v: visitsStore.totalV || 0, u: Object.keys(visitsStore.allU).length, nw: Object.keys(visitsStore.allU).length, rt: visitsStore.totalRet || 0, m: (function () { const am = visitsStore.allM || {}; return { pokerthnet: am.pokerthnet || 0, lan: am.lan || 0, offline: am.offline || 0 }; })() },
     series: series,
-    db: { enabled: _dbStatus.enabled, connected: _dbStatus.connected, error: _dbStatus.error, lastWrite: _dbStatus.lastWrite }
+    db: { enabled: _dbStatus.enabled, connected: _dbStatus.connected, error: _dbStatus.error, lastWrite: _dbStatus.lastWrite, source: _dbStatus.source }
   };
 }
 
@@ -424,23 +424,40 @@ function visitsSummary() {
 // daily traffic aggregates and the leaderboard into MySQL so the data is
 // queryable and joinable. If the mysql2 driver is missing or the database is
 // unreachable, we log a warning and keep running on JSON — the app never crashes.
-const MYSQL_ENABLED = !!(process.env.MYSQL_HOST && process.env.MYSQL_DATABASE);
+// Config can come from db-config.json (managed by the admin panel and the
+// `pokerth-web db-config` CLI) or from MYSQL_* env vars, which take precedence.
+const DB_CONFIG_FILE = process.env.DB_CONFIG_FILE || path.join(__dirname, 'db-config.json');
+let _dbFileCfg = {};
+try { _dbFileCfg = JSON.parse(fs.readFileSync(DB_CONFIG_FILE, 'utf8')) || {}; } catch (e) { _dbFileCfg = {}; }
+function saveDbConfig() {
+  try { fs.writeFileSync(DB_CONFIG_FILE, JSON.stringify(_dbFileCfg, null, 2)); try { fs.chmodSync(DB_CONFIG_FILE, 0o600); } catch (e2) {} }
+  catch (e) { console.error('[db] config write failed:', e.message); }
+}
+function resolveDbCfg() {
+  const eH = process.env.MYSQL_HOST, eD = process.env.MYSQL_DATABASE;
+  if (eH && eD) return { host: eH, port: Number(process.env.MYSQL_PORT) || 3306, user: process.env.MYSQL_USER || 'root', password: process.env.MYSQL_PASSWORD || '', database: eD, enabled: true, source: 'env' };
+  const f = _dbFileCfg || {};
+  if (f.host && f.database && f.enabled !== false) return { host: f.host, port: Number(f.port) || 3306, user: f.user || 'root', password: f.password || '', database: f.database, enabled: true, source: 'file' };
+  return { host: f.host || '', port: Number(f.port) || 3306, user: f.user || 'root', password: '', database: f.database || '', enabled: false, source: (f.host && f.database) ? 'file-disabled' : 'off' };
+}
 let _dbPool = null;
 let _dbLbBusy = false;
 let _dbBcBusy = false;
-const _dbStatus = { enabled: MYSQL_ENABLED, connected: false, error: '', lastWrite: null };
+const _dbStatus = { enabled: false, connected: false, error: '', lastWrite: null, source: 'off' };
 async function initDb() {
-  if (!MYSQL_ENABLED) { console.log('[db] MySQL mirror disabled (set MYSQL_HOST + MYSQL_DATABASE to enable)'); return; }
+  const cfg = resolveDbCfg();
+  _dbStatus.enabled = cfg.enabled; _dbStatus.source = cfg.source;
+  if (!cfg.enabled) { console.log('[db] MySQL mirror disabled (configure via admin panel or: pokerth-web db-config)'); _dbPool = null; return; }
   let mysql;
   try { mysql = require('mysql2/promise'); }
   catch (e) { _dbStatus.error = 'mysql2 not installed — run npm install'; console.error('[db]', _dbStatus.error); return; }
   try {
     _dbPool = mysql.createPool({
-      host: process.env.MYSQL_HOST,
-      port: Number(process.env.MYSQL_PORT) || 3306,
-      user: process.env.MYSQL_USER || 'root',
-      password: process.env.MYSQL_PASSWORD || '',
-      database: process.env.MYSQL_DATABASE,
+      host: cfg.host,
+      port: cfg.port,
+      user: cfg.user || 'root',
+      password: cfg.password || '',
+      database: cfg.database,
       waitForConnections: true, connectionLimit: 4, connectTimeout: 8000, charset: 'utf8mb4'
     });
     await _dbPool.query('CREATE TABLE IF NOT EXISTS traffic_daily (' +
@@ -460,7 +477,7 @@ async function initDb() {
       'created_at BIGINT DEFAULT NULL, last_run BIGINT DEFAULT NULL, run_count INT NOT NULL DEFAULT 0, ' +
       'updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4');
     _dbStatus.connected = true; _dbStatus.error = '';
-    console.log('[db] MySQL mirror connected (' + process.env.MYSQL_DATABASE + ')');
+    console.log('[db] MySQL mirror connected (' + cfg.database + ', source: ' + cfg.source + ')');
     dbFlushTrafficToday();
     dbFlushLeaderboard();
     dbFlushBroadcasts();
@@ -468,6 +485,11 @@ async function initDb() {
     _dbPool = null; _dbStatus.connected = false; _dbStatus.error = e.message;
     console.error('[db] connect/init failed:', e.message);
   }
+}
+async function reconfigureDb() {
+  if (_dbPool) { try { await _dbPool.end(); } catch (e) {} _dbPool = null; }
+  _dbStatus.connected = false; _dbStatus.error = '';
+  await initDb();
 }
 async function dbFlushTrafficToday() {
   if (!_dbPool) return;
@@ -1336,6 +1358,53 @@ function handleAdmin(req, res, reqPathOnly, query) {
       if (had) broadcastNotice('NOTICE:CANCEL');
       console.log('[admin] scheduled action cancelled' + (had ? '' : ' (none pending)'));
       return adminJson(res, 200, { ok: true, cancelled: had });
+    });
+  }
+  if (reqPathOnly === '/admin/db' && req.method === 'GET') {
+    if (!adminAuthed(query, null)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
+    const f = _dbFileCfg || {};
+    return adminJson(res, 200, { ok: true, config: { host: f.host || '', port: Number(f.port) || 3306, user: f.user || '', database: f.database || '', enabled: f.enabled !== false, hasPassword: !!f.password }, status: { enabled: _dbStatus.enabled, connected: _dbStatus.connected, error: _dbStatus.error || '', lastWrite: _dbStatus.lastWrite, source: _dbStatus.source } });
+  }
+  if (reqPathOnly === '/admin/db' && req.method === 'POST') {
+    return readJsonBody(req, function (d) {
+      if (!adminAuthed(query, d && d.token)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
+      if (!d || typeof d !== 'object') return adminJson(res, 400, { ok: false, error: 'bad request' });
+      const c = _dbFileCfg || {};
+      if (typeof d.host === 'string') c.host = d.host.trim().slice(0, 255);
+      if (d.port !== undefined) c.port = Number(d.port) || 3306;
+      if (typeof d.user === 'string') c.user = d.user.slice(0, 128);
+      if (typeof d.database === 'string') c.database = d.database.trim().slice(0, 128);
+      if (typeof d.enabled === 'boolean') c.enabled = d.enabled;
+      if (typeof d.password === 'string' && d.password.length) c.password = d.password.slice(0, 255);
+      if (typeof c.password !== 'string') c.password = '';
+      _dbFileCfg = c; saveDbConfig();
+      reconfigureDb().then(function () {
+        adminJson(res, 200, { ok: true, status: { enabled: _dbStatus.enabled, connected: _dbStatus.connected, error: _dbStatus.error || '', source: _dbStatus.source, lastWrite: _dbStatus.lastWrite } });
+      }).catch(function (e) {
+        adminJson(res, 200, { ok: true, status: { enabled: _dbStatus.enabled, connected: false, error: String((e && e.message) || e), source: _dbStatus.source } });
+      });
+    });
+  }
+  if (reqPathOnly === '/admin/db/test' && req.method === 'POST') {
+    return readJsonBody(req, function (d) {
+      if (!adminAuthed(query, d && d.token)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
+      const f = _dbFileCfg || {};
+      const host = (d && typeof d.host === 'string' && d.host.trim()) ? d.host.trim() : f.host;
+      const port = (d && d.port !== undefined) ? (Number(d.port) || 3306) : (Number(f.port) || 3306);
+      const user = (d && typeof d.user === 'string') ? d.user : (f.user || 'root');
+      const database = (d && typeof d.database === 'string' && d.database.trim()) ? d.database.trim() : f.database;
+      const password = (d && typeof d.password === 'string' && d.password.length) ? d.password : (f.password || '');
+      if (!host || !database) return adminJson(res, 400, { ok: false, error: 'host and database required' });
+      let mysql; try { mysql = require('mysql2/promise'); } catch (e) { return adminJson(res, 200, { ok: false, error: 'mysql2 not installed \u2014 run npm install' }); }
+      (async function () {
+        let conn;
+        try {
+          conn = await mysql.createConnection({ host: host, port: port, user: user || 'root', password: password, database: database, connectTimeout: 8000 });
+          await conn.query('SELECT 1');
+          await conn.end();
+          adminJson(res, 200, { ok: true });
+        } catch (e) { try { if (conn) await conn.end(); } catch (e2) {} adminJson(res, 200, { ok: false, error: String((e && e.message) || e) }); }
+      })();
     });
   }
   if (reqPathOnly === '/admin/broadcasts' && req.method === 'GET') {
