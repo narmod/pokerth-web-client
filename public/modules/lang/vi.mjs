@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+    musicPlayer:'Trình phát',
     soundVolume:'Âm thanh trò chơi',
     musicTooltip:'Nhạc', musicPanelTitle:'Nhạc', musicNowPlaying:'Đang phát', musicNoTracks:'Không có bản nhạc nào', musicVolume:'Âm lượng', musicPlay:'Phát', musicPause:'Tạm dừng', musicStop:'Dừng', musicNext:'Tiếp theo', musicPrev:'Trước', musicTrack:'Bản nhạc', musicRepeat:'Lặp lại', musicRepeatOne:'Lặp lại một bài', musicRepeatAll:'Lặp lại danh sách', musicRepeatOff:'Phát một lần',
   seatCard: 'Card', seatCompact: 'Compact', seatBar: 'Bar',

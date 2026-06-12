@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+    musicPlayer:'Плейър',
     soundVolume:'Звуци на играта',
     musicTooltip:'Музика', musicPanelTitle:'Музика', musicNowPlaying:'Сега се изпълнява', musicNoTracks:'Няма налични песни', musicVolume:'Сила на звука', musicPlay:'Възпроизвеждане', musicPause:'Пауза', musicStop:'Спиране', musicNext:'Следваща', musicPrev:'Предишна', musicTrack:'Песен', musicRepeat:'Повтаряне', musicRepeatOne:'Повтори песента', musicRepeatAll:'Повтори плейлиста', musicRepeatOff:'Възпроизведи веднъж',
   seatCard: 'Card', seatCompact: 'Compact', seatBar: 'Bar',

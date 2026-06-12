@@ -16,6 +16,7 @@ export const meta = {
 };
 
 export const strings = {
+    musicPlayer:'Odtwarzacz',
     soundVolume:'Dźwięki gry',
     musicTooltip:'Muzyka', musicPanelTitle:'Muzyka', musicNowPlaying:'Teraz odtwarzane', musicNoTracks:'Brak dostępnych utworów', musicVolume:'Głośność', musicPlay:'Odtwórz', musicPause:'Pauza', musicStop:'Zatrzymaj', musicNext:'Następny', musicPrev:'Poprzedni', musicTrack:'Utwór', musicRepeat:'Powtarzaj', musicRepeatOne:'Powtarzaj utwór', musicRepeatAll:'Powtarzaj playlistę', musicRepeatOff:'Odtwórz raz',
   seatCard: 'Card', seatCompact: 'Compact', seatBar: 'Bar',

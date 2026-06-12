@@ -12,6 +12,7 @@ export const meta = {
 };
 
 export const strings = {
+    musicPlayer:'Oynatıcı',
     soundVolume:'Oyun sesleri',
     musicTooltip:'Müzik', musicPanelTitle:'Müzik', musicNowPlaying:'Şimdi çalıyor', musicNoTracks:'Parça yok', musicVolume:'Ses', musicPlay:'Oynat', musicPause:'Duraklat', musicStop:'Durdur', musicNext:'Sonraki', musicPrev:'Önceki', musicTrack:'Parça', musicRepeat:'Tekrarla', musicRepeatOne:'Parçayı tekrarla', musicRepeatAll:'Listeyi tekrarla', musicRepeatOff:'Bir kez çal',
   seatCard: 'Card', seatCompact: 'Compact', seatBar: 'Bar',

@@ -9,6 +9,7 @@ export const meta = {
 };
 
 export const strings = {
+    musicPlayer:'プレーヤー',
     soundVolume:'ゲーム音',
     musicTooltip:'音楽', musicPanelTitle:'音楽', musicNowPlaying:'再生中', musicNoTracks:'利用可能な曲がありません', musicVolume:'音量', musicPlay:'再生', musicPause:'一時停止', musicStop:'停止', musicNext:'次へ', musicPrev:'前へ', musicTrack:'トラック', musicRepeat:'リピート', musicRepeatOne:'1曲リピート', musicRepeatAll:'プレイリストをリピート', musicRepeatOff:'一度だけ再生',
   seatCard: 'Card', seatCompact: 'Compact', seatBar: 'Bar',

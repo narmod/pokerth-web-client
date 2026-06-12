@@ -5783,6 +5783,10 @@ body.has-keyboard .act-key { display: inline-block; }
 .music-gs-val { flex: 0 0 auto; font-size: 0.72rem; color: var(--gold-dim); min-width: 34px; text-align: right; font-variant-numeric: tabular-nums; }
 .music-gamesnd-row.is-off .music-gs-range { opacity: 0.4; }
 .music-gamesnd-row.is-off .music-gs-val { opacity: 0.5; }
+/* ── Box jumelle « Lecteur » qui regroupe les commandes musique ── */
+.music-player-box { border: 1px solid var(--border-hi); background: rgba(var(--gold-rgb),0.06); border-radius: 10px; padding: 8px 10px 10px; display: flex; flex-direction: column; gap: 10px; }
+.music-player-hd { display: flex; align-items: center; gap: 6px; font-size: 0.58rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold-dim); }
+.music-player-ic { font-size: 0.85rem; }
 /* ── Popover de réglage du son (bouton son du header) ── */
 .sound-pop {
   position: fixed; z-index: 1200;

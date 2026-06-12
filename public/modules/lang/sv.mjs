@@ -9,6 +9,7 @@ export const meta = {
 };
 
 export const strings = {
+    musicPlayer:'Spelare',
     soundVolume:'Spelljud',
     musicTooltip:'Musik', musicPanelTitle:'Musik', musicNowPlaying:'Spelas nu', musicNoTracks:'Inga spår tillgängliga', musicVolume:'Volym', musicPlay:'Spela', musicPause:'Paus', musicStop:'Stoppa', musicNext:'Nästa', musicPrev:'Föregående', musicTrack:'Spår', musicRepeat:'Upprepa', musicRepeatOne:'Upprepa spår', musicRepeatAll:'Upprepa spellista', musicRepeatOff:'Spela en gång',
   seatCard: 'Card', seatCompact: 'Compact', seatBar: 'Bar',

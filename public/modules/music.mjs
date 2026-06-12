@@ -286,6 +286,8 @@ function _render() {
         '<span class="music-gs-val">' + gsVol + '%</span>' +
       '</div>' +
     '</div>' +
+    '<div class="music-player-box">' +
+    '<div class="music-player-hd"><span class="music-player-ic">\uD83C\uDFA7</span><span data-i18n="musicPlayer">' + _esc(_t('musicPlayer', 'Player')) + '</span></div>' +
     '<div class="music-transport">' +
       '<button type="button" class="music-tbtn" data-mact="prev"' + (multi ? '' : ' disabled') + ' title="' + _esc(_t('musicPrev', 'Previous')) + '" data-i18n-title="musicPrev">\u23EE</button>' +
       '<button type="button" class="music-tbtn music-tbtn-main" data-mact="toggle" title="' + _esc(_t(ppKey, playing ? 'Pause' : 'Play')) + '" data-i18n-title="' + ppKey + '">' + ppIcon + '</button>' +
@@ -310,7 +312,8 @@ function _render() {
       '<select id="music-sel" autocomplete="off" aria-label="' + _esc(_t('musicTrack', 'Track')) + '">' + options + '</select>' +
       '<span class="sel-arr">\u25BE</span>' +
     '</div>' +
-    credit;
+    credit +
+    '</div>';
 
   _wire();
 }
