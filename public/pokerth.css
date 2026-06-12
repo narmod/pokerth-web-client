@@ -5773,6 +5773,29 @@ body.has-keyboard .act-key { display: inline-block; }
 .music-time { flex: 0 0 auto; font-size: 0.7rem; color: var(--gold-dim); min-width: 36px; font-variant-numeric: tabular-nums; }
 .music-cur { text-align: right; }
 .music-dur { text-align: left; }
+/* ── Popover de réglage du son (bouton son du header) ── */
+.sound-pop {
+  position: fixed; z-index: 1200;
+  display: flex; align-items: center; gap: 8px;
+  width: 210px; box-sizing: border-box;
+  padding: 8px 10px;
+  background: var(--panel); color: var(--text);
+  border: 1px solid var(--border-hi); border-radius: 10px;
+  box-shadow: 0 8px 26px rgba(0,0,0,0.45);
+  -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+}
+.sound-pop-mute {
+  flex: 0 0 auto; width: 32px; height: 32px;
+  display: inline-flex; align-items: center; justify-content: center;
+  font-size: 0.95rem; line-height: 1;
+  background: var(--field-bg); color: var(--text);
+  border: 1px solid var(--border); border-radius: 8px; cursor: pointer;
+}
+.sound-pop-mute:hover { border-color: var(--gold-dim); }
+.sound-pop-range { flex: 1 1 auto; min-width: 0; accent-color: var(--gold); cursor: pointer; }
+.sound-pop-val { flex: 0 0 auto; font-size: 0.72rem; color: var(--gold-dim); min-width: 34px; text-align: right; font-variant-numeric: tabular-nums; }
+.sound-pop.is-off .sound-pop-range { opacity: 0.4; }
+.sound-pop.is-off .sound-pop-val { opacity: 0.5; }
 .music-list { display: flex; flex-direction: column; gap: 4px; }
 .music-row {
   display: flex; align-items: center; gap: 10px;

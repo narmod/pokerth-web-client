@@ -280,7 +280,7 @@ export const strings = {
     playersSearchPlaceholder:'Rechercher\u2026',
     tableCount:'table(s)',
     // ── Infobulles (auparavant codées en dur dans title=) ──
-    handsHelpTooltip:'Combinaisons du poker', soundTooltip:'Couper / réactiver le son', logTooltip:'Journal',
+    handsHelpTooltip:'Combinaisons du poker', soundTooltip:'Couper / réactiver le son', soundVolume:'Sons du jeu', logTooltip:'Journal',
     chatTooltip:'Chat', winResetTooltip:'Réinitialiser les fenêtres', moreTooltip:'Plus', closeTooltip:'Fermer', refreshTooltip:'Rafraîchir',
     musicTooltip:'Musique', musicPanelTitle:'Musique', musicNowPlaying:'Lecture en cours', musicNoTracks:'Aucune piste disponible', musicVolume:'Volume', musicPlay:'Lecture', musicPause:'Pause', musicStop:'Arrêter', musicNext:'Suivant', musicPrev:'Précédent', musicTrack:'Piste', musicRepeat:'Répétition', musicRepeatOne:'Répéter le titre', musicRepeatAll:'Répéter la playlist', musicRepeatOff:'Lire une fois',
     avatarTooltip:'Mon avatar PokerTH', profileTooltip:'Mon profil', gameDetailsTooltip:'Détails de la partie',

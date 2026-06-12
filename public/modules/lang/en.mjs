@@ -280,7 +280,7 @@ export const strings = {
     playersSearchPlaceholder:'Search\u2026',
     tableCount:'table(s)',
     // ── Tooltips wired from previously-hardcoded title= attributes ──
-    handsHelpTooltip:'Poker hand rankings', soundTooltip:'Mute / unmute', logTooltip:'Log',
+    handsHelpTooltip:'Poker hand rankings', soundTooltip:'Mute / unmute', soundVolume:'Game sounds', logTooltip:'Log',
     chatTooltip:'Chat', winResetTooltip:'Reset windows', moreTooltip:'More', closeTooltip:'Close', refreshTooltip:'Refresh',
     musicTooltip:'Music', musicPanelTitle:'Music', musicNowPlaying:'Now playing', musicNoTracks:'No tracks available', musicVolume:'Volume', musicPlay:'Play', musicPause:'Pause', musicStop:'Stop', musicNext:'Next', musicPrev:'Previous', musicTrack:'Track', musicRepeat:'Repeat', musicRepeatOne:'Repeat one', musicRepeatAll:'Repeat playlist', musicRepeatOff:'Play once',
     avatarTooltip:'My PokerTH avatar', profileTooltip:'My profile', gameDetailsTooltip:'Game details',

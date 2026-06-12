@@ -38,6 +38,32 @@ function getAudioCtx() {
   if (!_audioCtx) try { _audioCtx = new (window.AudioContext||window.webkitAudioContext)(); } catch(e) {}
   return _audioCtx;
 }
+// ─── Volume maître des effets de jeu ──────────────────────────────────────
+// Tous les sons se branchent sur ce GainNode → un seul réglage pilote le
+// niveau de TOUS les SFX. Recréé automatiquement si le contexte est recréé
+// (iOS peut le fermer/recréer). Clé 'pth_sound_vol' : 0..1 (défaut 1 =
+// loudness inchangée). Le mute reste géré séparément par 'pth_sound'.
+var _master = null;
+function getSoundVolume() {
+  try { var v = parseFloat(localStorage.getItem('pth_sound_vol')); return isNaN(v) ? 1 : Math.max(0, Math.min(1, v)); }
+  catch(e) { return 1; }
+}
+function setSoundVolume(v) {
+  v = parseFloat(v); if (isNaN(v)) v = 1; v = Math.max(0, Math.min(1, v));
+  try { localStorage.setItem('pth_sound_vol', String(v)); } catch(e) {}
+  if (_master) try { _master.gain.value = v; } catch(e) {}
+  return v;
+}
+// Destination des nœuds sonores = le gain maître (créé à la volée sur le
+// contexte courant). Fallback direct sur la sortie si la création échoue.
+function _dest(ctx) {
+  if (!ctx) return null;
+  if (!_master || _master.context !== ctx) {
+    try { _master = ctx.createGain(); _master.gain.value = getSoundVolume(); _master.connect(ctx.destination); }
+    catch(e) { _master = null; return ctx.destination; }
+  }
+  return _master;
+}
 // Relance le contexte dès qu'il n'est pas 'running'. iOS utilise DEUX états
 // d'arrêt : 'suspended' (avant 1er geste) ET 'interrupted' (PWA passée en
 // arrière-plan, appel entrant, autre app qui capte la sortie audio). Ne tester
@@ -89,7 +115,7 @@ function playTone(freq, dur, vol) {
   try {
     if (ctx.state !== 'running') { try { ctx.resume(); } catch(e) {} }
     var o = ctx.createOscillator(), g = ctx.createGain();
-    o.connect(g); g.connect(ctx.destination);
+    o.connect(g); g.connect(_dest(ctx));
     o.frequency.value = freq;
     g.gain.setValueAtTime(vol||0.2, ctx.currentTime);
     g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + dur);
@@ -150,7 +176,7 @@ function notifyMyTurn() {
     if (ctx.state !== 'running') { try { ctx.resume(); } catch(e) {} }
     var o = ctx.createOscillator(), g = ctx.createGain();
     o.type = 'sine'; // smoothest waveform, closest to a real bubble
-    o.connect(g); g.connect(ctx.destination);
+    o.connect(g); g.connect(_dest(ctx));
     var t0 = ctx.currentTime;
     // Pitch sweep: 440Hz -> 880Hz over 80ms (the bubble rising)
     o.frequency.setValueAtTime(440, t0);
@@ -250,6 +276,77 @@ function isSoundEnabled() {
   return _soundEnabled;
 }
 
+// ─── Popover de réglage du son (volume + mute), ancré au bouton du header ──
+// Tap sur #sound-toggle-btn → ouvre/ferme un petit popover : bouton mute +
+// curseur de volume des effets de jeu. L'icône du bouton reflète toujours
+// l'état coupé/actif (toggleSound met le bouton du header à jour).
+var _soundPop = null;
+function _stxt(key, fb) {
+  try { if (typeof window.t === 'function') { var s = window.t(key); if (s && s !== key) return s; } } catch(e) {}
+  return fb;
+}
+function _syncSoundPop() {
+  if (!_soundPop) return;
+  var mb = _soundPop.querySelector('.sound-pop-mute');
+  var rg = _soundPop.querySelector('.sound-pop-range');
+  if (mb) { mb.textContent = _soundEnabled ? '\uD83D\uDD0A' : '\uD83D\uDD07'; mb.setAttribute('aria-pressed', String(!_soundEnabled)); }
+  _soundPop.classList.toggle('is-off', !_soundEnabled);
+  if (rg) rg.value = Math.round(getSoundVolume() * 100);
+}
+function closeSoundPopover() {
+  if (!_soundPop) return;
+  try { _soundPop.remove(); } catch(e) {}
+  _soundPop = null;
+  document.removeEventListener('pointerdown', _soundPopOutside, true);
+  window.removeEventListener('resize', closeSoundPopover);
+}
+function _soundPopOutside(e) {
+  if (!_soundPop) return;
+  var btn = document.getElementById('sound-toggle-btn');
+  if (_soundPop.contains(e.target) || (btn && btn.contains(e.target))) return;
+  closeSoundPopover();
+}
+function toggleSoundPopover(btn) {
+  if (_soundPop) { closeSoundPopover(); return; }          // 2e tap = fermer
+  btn = btn || document.getElementById('sound-toggle-btn');
+  if (!btn) { toggleSound(); return; }                     // pas d'ancre → mute simple
+  var vol = Math.round(getSoundVolume() * 100);
+  var lbl = _stxt('soundVolume', 'Game sounds');
+  var pop = document.createElement('div');
+  pop.className = 'sound-pop' + (_soundEnabled ? '' : ' is-off');
+  pop.setAttribute('role', 'group');
+  pop.setAttribute('aria-label', lbl);
+  pop.innerHTML =
+    '<button type="button" class="sound-pop-mute" aria-pressed="' + String(!_soundEnabled) + '" title="' + lbl + '">' + (_soundEnabled ? '\uD83D\uDD0A' : '\uD83D\uDD07') + '</button>' +
+    '<input type="range" class="sound-pop-range" min="0" max="100" value="' + vol + '" aria-label="' + lbl + '">' +
+    '<span class="sound-pop-val">' + vol + '%</span>';
+  document.body.appendChild(pop);
+  // Position : sous le bouton, bord droit aligné, clampé dans l'écran.
+  var r = btn.getBoundingClientRect();
+  var pw = pop.offsetWidth || 210;
+  var left = Math.min(r.right - pw, window.innerWidth - pw - 8);
+  if (left < 8) left = 8;
+  pop.style.top = (r.bottom + 6) + 'px';
+  pop.style.left = left + 'px';
+  // Câblage
+  var mb = pop.querySelector('.sound-pop-mute');
+  mb.addEventListener('click', function (ev) { ev.stopPropagation(); toggleSound(); _syncSoundPop(); });
+  var rg = pop.querySelector('.sound-pop-range');
+  var val = pop.querySelector('.sound-pop-val');
+  rg.addEventListener('input', function () {
+    var pct = parseInt(rg.value, 10) || 0;
+    if (val) val.textContent = pct + '%';
+    setSoundVolume(pct / 100);
+  });
+  rg.addEventListener('change', function () {                // bip de test au niveau choisi
+    try { _unlockAudio(); if (_soundEnabled) playTone(660, 0.08, 0.25); } catch(e) {}
+  });
+  _soundPop = pop;
+  // Fermer au clic extérieur (différé pour ne pas capter le clic d'ouverture).
+  setTimeout(function () { document.addEventListener('pointerdown', _soundPopOutside, true); }, 0);
+  window.addEventListener('resize', closeSoundPopover);
+}
+
 // ─── iOS / Safari: déverrouillage & reprise audio robustes ─────────────
 // Les navigateurs refusent de démarrer l'AudioContext tant qu'un geste
 // utilisateur n'a pas eu lieu, et iOS le ré-arrête (suspended/interrupted)
@@ -306,6 +403,11 @@ window.notifyBlindsUp = notifyBlindsUp;
 window.notifyTick      = notifyTick;
 window.notifyTickFinal = notifyTickFinal;
 window.toggleSound   = toggleSound;
+window.isSoundEnabled    = isSoundEnabled;
+window.getSoundVolume    = getSoundVolume;
+window.setSoundVolume    = setSoundVolume;
+window.toggleSoundPopover = toggleSoundPopover;
+window.closeSoundPopover  = closeSoundPopover;
 
 // _audioCtx and _soundEnabled were declared with `var` at the top of
 // pokerth.js, so they used to be plain window properties. Mirror them
