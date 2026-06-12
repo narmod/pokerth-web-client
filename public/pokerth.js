@@ -3702,6 +3702,10 @@ const App = (() => {
   // activable. Les boutons d'action y sont affichés en APERÇU seulement
   // (non cliquables). Se ferme automatiquement quand c'est notre tour.
   let _preActionOpen = false;
+  // Verrou anti-fermeture du picker natif (iOS) du selecteur de mode : tant
+  // que l'utilisateur manipule #mode-sel, on differe les reconstructions
+  // d'apercu (renderMyTurnActions(true)) pour ne pas detruire le <select> ouvert.
+  let _modeSelBusy = false, _modeSelPendingPreview = false, _modeSelHoldTimer = null;
   // User preference: show the compact auto check/fold button in the action
   // bar. OFF by default (some players — e.g. kids — found it confusing).
   // Toggled from the header ••• menu and remembered in localStorage. The
@@ -7047,6 +7051,12 @@ const App = (() => {
   // Rendu du panneau "aperçu des actions" (cartes tapées hors de notre tour).
   // Boutons d'action en APERÇU (désactivés) + le seul réglage activable :
   // l'auto-check/fold. Toujours rendu dans #g-actions.
+  function _flushPreviewIfPending() {
+    if (!_modeSelPendingPreview) return;
+    _modeSelPendingPreview = false;
+    if (_preActionOpen && turnPid !== myId) renderMyTurnActions(true);
+  }
+
   function _renderPreActionPanel() {
     // Affiche EXACTEMENT le même panneau d'action que pendant notre tour
     // (Fold / Call / %, relance, All-In, AUTO), mais en mode aperçu :
@@ -7558,6 +7568,13 @@ const App = (() => {
   };
 
   function renderMyTurnActions(preview) {
+    // iOS/Android : ne pas detruire #mode-sel pendant que l'utilisateur le
+    // manipule (le picker natif se fermerait). On differe le rafraichissement
+    // de l'apercu hors-tour jusqu'a la fin de l'interaction (voir _modeSelHold).
+    if (preview && _modeSelBusy && document.getElementById('mode-sel')) {
+      _modeSelPendingPreview = true;
+      return;
+    }
     // Defensive: never render action buttons in spectator mode. The
     // server normally won't send PlayersTurn to spectators, but we
     // guard against it anyway so a stray message can't accidentally
@@ -7628,7 +7645,7 @@ const App = (() => {
     // Sélecteur de mode PERSISTANT (remplace l'ancien bouton AUTO, même emplacement) :
     // Manuel / Auto Check-Call / Auto Check-Fold. Piloté par App.setPlayingMode.
     const modeSel = '<div class="sel-wrap mode-sel-wrap" style="flex:0 1 112px">'
-      + '<select id="mode-sel" autocomplete="off" onchange="App.setPlayingMode(this.selectedIndex)">'
+      + '<select id="mode-sel" autocomplete="off" onfocus="App._modeSelHold(true)" onblur="App._modeSelHold(false)" onchange="App.setPlayingMode(this.selectedIndex)">'
       +   '<option' + (_playingMode === 0 ? ' selected' : '') + '>' + t('modeManual') + '</option>'
       +   '<option' + (_playingMode === 1 ? ' selected' : '') + '>' + t('modeAutoCheckCall') + '</option>'
       +   '<option' + (_playingMode === 2 ? ' selected' : '') + '>' + t('modeAutoCheckFold') + '</option>'
@@ -8888,6 +8905,14 @@ function dismissWinner() {
     // Sélecteur de mode de jeu PERSISTANT (officiel) : 0=Manuel,
     // 1=Auto Check/Call, 2=Auto Check/Fold. Si on choisit un mode auto alors
     // que c'est déjà notre tour, l'action est jouée immédiatement.
+    _modeSelHold(on){
+      // Pose/leve le verrou anti-fermeture du picker de mode (#mode-sel).
+      _modeSelBusy = !!on;
+      clearTimeout(_modeSelHoldTimer); _modeSelHoldTimer = null;
+      if (on) _modeSelHoldTimer = setTimeout(function(){ _modeSelBusy = false; _flushPreviewIfPending(); }, 8000);
+      else _flushPreviewIfPending();
+    },
+
     setPlayingMode(idx) {
       var n = parseInt(idx, 10);
       if (!(n === 1 || n === 2)) n = 0;
@@ -10677,7 +10702,7 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.2.444'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.2.445'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
