@@ -259,7 +259,7 @@ Beyond bridging WebSocket frames to the server's raw TCP/TLS stream, `proxy.js` 
 | `AVATARIMG:pid:dataURL` | Custom image-avatar update |
 
 - **Connection allowlist** — for anti-open-relay safety the proxy only dials servers on a configured allowlist (see the deployment section below).
-- **Helper endpoints** — `GET /__ver` reports the newest mtime of the static assets (this drives the client's "new version" banner), `GET /app-config` exposes the operator's client settings (enabled login modes, default theme & in-game settings, server identity, welcome message), and `GET /stats` serves the shared lifetime leaderboard.
+- **HTTP / JSON API** — beyond the client, the proxy exposes a handful of small JSON endpoints (version check, client config, content manifests, leaderboard, music) plus a token-gated `/admin/*` API used by the [admin panel](#admin-panel). See [**HTTP endpoints**](#http-endpoints) below for the full list.
 
 ### Repository layout
 
@@ -296,6 +296,37 @@ pokerth-web-client/
 ├── LICENSE                  # AGPL-3.0-or-later
 └── README.md
 ```
+
+<a id="http-endpoints"></a>
+### HTTP endpoints
+
+`proxy.js` serves every endpoint on the same host and port as the client.
+
+**Public** — no authentication:
+
+| Method | Path | Purpose |
+|---|---|---|
+| `GET` | `/` | Web client |
+| `GET` | `/privacy` | Privacy page (what the analytics do and don't collect) |
+| `GET` | `/__ver` | Newest static-asset mtime — drives the client's "new version" banner |
+| `GET` | `/app-config` | Operator's client defaults (login modes, default theme & settings, server identity, welcome message) |
+| `GET` | `/cards/decks.json` · `/table/tables.json` · `/themes/themes.json` | Content manifests, filtered to the enabled packages |
+| `GET` | `/music/tracks.json` | Background-music playlist |
+| `GET` / `POST` | `/stats` | `GET` reads the shared leaderboard; `POST` submits a result (or resets it with the admin token) |
+| `POST` | `/__visit` | Records one anonymous visit (privacy-friendly analytics) |
+
+**Admin** — every route needs an `Authorization: Bearer <token>` header, and the whole tree returns a plain `404` when the panel is disabled. Grouped by area:
+
+| Area | Endpoints |
+|---|---|
+| Console & status | `GET /admin`, `GET /admin/status`, `GET`/`POST` `/admin/config` |
+| Logs | `GET /admin/logs`, `POST /admin/clear-logs` |
+| Analytics | `GET /admin/visits`, `GET /admin/visits/export` |
+| Packages | `GET /admin/pkg-list`, `POST /admin/pkg-{upload,remove,toggle,full}` |
+| Music | `GET /admin/music-list`, `POST /admin/music-{upload,remove,toggle,edit,order}` |
+| Update & restart | `POST /admin/update`, `POST /admin/update-nr`, `GET /admin/update-log`, `POST /admin/{schedule,cancel}-restart`, `POST /admin/restart` |
+| Database | `GET`/`POST` `/admin/db`, `POST /admin/db/test` |
+| Broadcasts | `GET`/`POST` `/admin/broadcasts`, `POST /admin/broadcast-now`, `POST /admin/broadcasts/{delete,toggle,fire}` |
 
 ---
 
@@ -655,6 +686,16 @@ pokerth-web help                     # list every command
 
 `set-period`, `set-token` and `admin on|off` are saved to `/etc/pokerth-web.conf` and **re-applied automatically on every update and reboot**, so you set them once.
 
+**Gallery content — card decks, table styles & themes.** Add the same items the admin **Packages** tab manages, each from a local `.zip` or a URL:
+
+```bash
+sudo pokerth-web deck-add  ./mydeck.zip     # card deck    →  deck-list  / deck-remove  <id>
+sudo pokerth-web table-add ./mytable.zip    # table style  →  table-list / table-remove <id>
+sudo pokerth-web theme-add ./mytheme.zip    # UI theme     →  theme-list / theme-remove <id>
+```
+
+Built-in decks, tables and themes are protected and can't be removed.
+
 The same actions work through the one-liner if you prefer not to use the command:
 
 ```bash
@@ -831,3 +872,5 @@ This project is licensed under the **GNU Affero General Public License v3.0 or l
 ## Acknowledgements
 
 A huge thank you to the entire **PokerTH team** for creating and maintaining such a wonderful open-source poker game over all these years. This project would not exist without your work. 🙏
+
+For compatibility, the in-game table — its layout, colours and poker terms — deliberately tracks PokerTH's official **QML client**, so the web client stays visually and behaviourally aligned with it.
