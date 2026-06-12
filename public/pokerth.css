@@ -5619,9 +5619,12 @@ html[data-seat-img-self] .player-bar {
 }
 .hands-floatable .hands-title { cursor: move; touch-action: none; -webkit-user-select: none; user-select: none; }
 
-/* Bouton "reset des fenetres" du header : visible seulement tablette + desktop. */
-.win-reset-only { display: none; }
-@media (min-width: 900px) and (min-height: 600px) { .win-reset-only { display: inline-flex; } }
+/* Bouton "reset des fenetres" du header : visible seulement tablette + desktop.
+   Selecteur sur-specifie (#s-game .header .btn-sm.win-reset-only) pour battre
+   `.header .btn-sm` (base) et `#s-game .header .btn-sm` (@media max-740) qui
+   forcaient sinon display:inline-flex partout, mobile compris. */
+#s-game .header .btn-sm.win-reset-only { display: none; }
+@media (min-width: 900px) and (min-height: 600px) { #s-game .header .btn-sm.win-reset-only { display: inline-flex; } }
 
 
 /* ════════════════════════════════════════════════════════════════════════
