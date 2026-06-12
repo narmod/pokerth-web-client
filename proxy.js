@@ -842,8 +842,9 @@ const BUILTIN_THEMES = ['bleu-nuit', 'casino-vert', 'graphite', 'pokerth-new', '
 function regenManifest(kind) {
   const rel = kind === 'table' ? 'scripts/tables-manifest.mjs'
     : kind === 'theme' ? 'scripts/themes-manifest.mjs'
+    : kind === 'seat' ? 'scripts/seats-manifest.mjs'
     : 'scripts/decks-manifest.mjs';
-  const dir = path.join(PUBLIC_DIR, kind === 'table' ? 'table' : kind === 'theme' ? 'themes' : 'cards');
+  const dir = path.join(PUBLIC_DIR, kind === 'table' ? 'table' : kind === 'theme' ? 'themes' : kind === 'seat' ? 'seats' : 'cards');
   try { spawnSync(process.execPath, [path.join(__dirname, rel), dir], { stdio: 'ignore' }); }
   catch (e) { console.error('[admin] manifest failed:', e.message); }
 }
@@ -854,6 +855,7 @@ function pkgList() {
   });
   return { tables: read(path.join(PUBLIC_DIR, 'table', 'tables.json')),
            decks:  read(path.join(PUBLIC_DIR, 'cards', 'decks.json')),
+           seats:  read(path.join(PUBLIC_DIR, 'seats', 'seats.json')),
            themes: themes };
 }
 // Admin can hide an installed package from players without deleting it. The
@@ -931,12 +933,26 @@ function importPackage(kind, idHint, zipBuf, cb) {
     let listed = false;
     try { listed = JSON.parse(fs.readFileSync(path.join(PUBLIC_DIR, 'themes', 'themes.json'), 'utf8')).some(function (x) { return x && x.id === id; }); } catch (e) {}
     if (!listed) { try { fs.rmSync(dest, { recursive: true, force: true }); } catch (e) {} return done('theme has no usable content (need palette, table, felt, buttons, buttonImages or pucks — and any referenced image file must be in the zip)'); }
+  } else if (kind === 'seat') {
+    // Seat pack = a 9-slice plate image (border-image `fill` paints the box too),
+    // optionally a self.* frame for the hero bar, preview.* and seat.json metadata.
+    const plate = ['plate.png', 'plate.svg', 'plate.webp', 'plate.jpg', 'plate.jpeg'].find(has);
+    if (!plate) return done('not a seat pack (plate.png / plate.svg missing)');
+    if (!id) id = 'seat-' + Date.now();
+    if (['', 'pokerth', 'chip', 'plate', 'card', 'compact', 'bar'].indexOf(id) >= 0) id = 'seat-' + id;   // never clobber a built-in seat id
+    const dest = path.join(PUBLIC_DIR, 'seats', id);
+    try { fs.rmSync(dest, { recursive: true, force: true }); fs.mkdirSync(dest, { recursive: true }); } catch (e) { return done('dest failed'); }
+    try { fs.readdirSync(exDir).forEach(function (f) { if (/^(plate|self|preview)\.(png|svg|webp|jpe?g)$/i.test(f) || f === 'seat.json') cp(f, path.join(dest, f)); }); } catch (e) {}
+    regenManifest('seat');
+    let listed = false;
+    try { listed = JSON.parse(fs.readFileSync(path.join(PUBLIC_DIR, 'seats', 'seats.json'), 'utf8')).some(function (x) { return x && x.id === id; }); } catch (e) {}
+    if (!listed) { try { fs.rmSync(dest, { recursive: true, force: true }); } catch (e) {} return done('seat pack has no usable plate image'); }
   } else return done('unknown kind');
 
   let nm = id;
   try {
-    const sub = kind === 'table' ? 'table' : kind === 'theme' ? 'themes' : 'cards';
-    const mfn = kind === 'table' ? 'tables.json' : kind === 'theme' ? 'themes.json' : 'decks.json';
+    const sub = kind === 'table' ? 'table' : kind === 'theme' ? 'themes' : kind === 'seat' ? 'seats' : 'cards';
+    const mfn = kind === 'table' ? 'tables.json' : kind === 'theme' ? 'themes.json' : kind === 'seat' ? 'seats.json' : 'decks.json';
     const mf = path.join(PUBLIC_DIR, sub, mfn);
     const e = JSON.parse(fs.readFileSync(mf, 'utf8')).find(function (x) { return x.id === id; });
     if (e && e.name) nm = e.name;
@@ -1018,10 +1034,11 @@ function handleAdmin(req, res, reqPathOnly, query) {
   }
   if (reqPathOnly === '/admin/pkg-list') {
     if (!adminAuthed(query)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
-    var _pl = pkgList(), _td = pkgDisabledSet('table'), _dd = pkgDisabledSet('deck'), _hd = pkgDisabledSet('theme'), _tf = pkgFullSet('table');
+    var _pl = pkgList(), _td = pkgDisabledSet('table'), _dd = pkgDisabledSet('deck'), _hd = pkgDisabledSet('theme'), _sd = pkgDisabledSet('seat'), _tf = pkgFullSet('table');
     return adminJson(res, 200, { ok: true,
       tables: (_pl.tables || []).map(function (t) { return Object.assign({}, t, { disabled: _td.indexOf(t.id) >= 0, full: _tf.indexOf(t.id) >= 0 || !!t.full }); }),
       decks:  (_pl.decks  || []).map(function (d) { return Object.assign({}, d, { disabled: _dd.indexOf(d.id) >= 0 }); }),
+      seats:  (_pl.seats  || []).map(function (s) { return Object.assign({}, s, { disabled: _sd.indexOf(s.id) >= 0 }); }),
       themes: (_pl.themes || []).map(function (t) { return Object.assign({}, t, { disabled: _hd.indexOf(t.id) >= 0 }); }) });
   }
   if (reqPathOnly === '/admin/status') {
@@ -1165,8 +1182,8 @@ function handleAdmin(req, res, reqPathOnly, query) {
   }
   if (reqPathOnly === '/admin/pkg-upload' && req.method === 'POST') {
     if (!adminAuthed(query)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
-    const kind = query.kind === 'deck' ? 'deck' : (query.kind === 'table' ? 'table' : (query.kind === 'theme' ? 'theme' : null));
-    if (!kind) return adminJson(res, 400, { ok: false, error: 'kind must be table, deck or theme' });
+    const kind = query.kind === 'deck' ? 'deck' : (query.kind === 'table' ? 'table' : (query.kind === 'theme' ? 'theme' : (query.kind === 'seat' ? 'seat' : null)));
+    if (!kind) return adminJson(res, 400, { ok: false, error: 'kind must be table, deck, theme or seat' });
     return readRawBody(req, MAX_UPLOAD, function (buf) {
       if (!buf || !buf.length) return adminJson(res, 413, { ok: false, error: 'empty upload or larger than 25 MB' });
       importPackage(kind, query.name || '', buf, function (err, info) {
@@ -1178,13 +1195,14 @@ function handleAdmin(req, res, reqPathOnly, query) {
   if (reqPathOnly === '/admin/pkg-remove' && req.method === 'POST') {
     return readJsonBody(req, function (d) {
       if (!adminAuthed(query, d && d.token)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
-      const kind = (d && d.kind === 'deck') ? 'deck' : ((d && d.kind === 'table') ? 'table' : ((d && d.kind === 'theme') ? 'theme' : null));
+      const kind = (d && d.kind === 'deck') ? 'deck' : ((d && d.kind === 'table') ? 'table' : ((d && d.kind === 'theme') ? 'theme' : ((d && d.kind === 'seat') ? 'seat' : null)));
       const id = slugId(d && d.id);
       if (!kind || !id) return adminJson(res, 400, { ok: false, error: 'kind + id required' });
+      if (kind === 'seat' && ['', 'pokerth', 'chip', 'plate', 'card', 'compact', 'bar'].indexOf(id) >= 0) return adminJson(res, 400, { ok: false, error: 'built-in seat cannot be removed' });
       if (kind === 'table' && ['green', 'blue', 'bordeaux', 'slate', 'photo'].indexOf(id) >= 0) return adminJson(res, 400, { ok: false, error: 'built-in table cannot be removed' });
       if (kind === 'deck' && ['svg', 'classic'].indexOf(id) >= 0) return adminJson(res, 400, { ok: false, error: 'built-in deck cannot be removed' });
       if (kind === 'theme' && BUILTIN_THEMES.indexOf(id) >= 0) return adminJson(res, 400, { ok: false, error: 'built-in theme cannot be removed (you can hide it instead)' });
-      const dir = path.join(PUBLIC_DIR, kind === 'table' ? 'table' : kind === 'theme' ? 'themes' : 'cards', id);
+      const dir = path.join(PUBLIC_DIR, kind === 'table' ? 'table' : kind === 'theme' ? 'themes' : kind === 'seat' ? 'seats' : 'cards', id);
       if (!fs.existsSync(dir)) return adminJson(res, 404, { ok: false, error: 'not found' });
       try { fs.rmSync(dir, { recursive: true, force: true }); } catch (e) { return adminJson(res, 500, { ok: false, error: 'remove failed' }); }
       try { var _da = pkgDisabledSet(kind); var _i = _da.indexOf(id); if (_i >= 0) { _da.splice(_i, 1); _adminConfig.pkgDisabled[kind] = _da; saveAdminConfig(); } } catch (e) {}
@@ -1197,7 +1215,7 @@ function handleAdmin(req, res, reqPathOnly, query) {
   if (reqPathOnly === '/admin/pkg-toggle' && req.method === 'POST') {
     return readJsonBody(req, function (d) {
       if (!adminAuthed(query, d && d.token)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
-      const kind = (d && d.kind === 'deck') ? 'deck' : ((d && d.kind === 'table') ? 'table' : ((d && d.kind === 'theme') ? 'theme' : null));
+      const kind = (d && d.kind === 'deck') ? 'deck' : ((d && d.kind === 'table') ? 'table' : ((d && d.kind === 'theme') ? 'theme' : ((d && d.kind === 'seat') ? 'seat' : null)));
       const id = slugId(d && d.id);
       if (!kind || !id) return adminJson(res, 400, { ok: false, error: 'kind + id required' });
       const enabled = !(d && d.enabled === false);   // desired state; false = hide from players
@@ -1585,10 +1603,10 @@ const httpServer = http.createServer((req, res) => {
 
   // Client-facing gallery manifests, with admin-disabled packages filtered out
   // (disabling hides a package from the theme picker without removing its files).
-  if (reqPathOnly === '/table/tables.json' || reqPathOnly === '/cards/decks.json' || reqPathOnly === '/themes/themes.json') {
-    var _pkgKind = reqPathOnly === '/table/tables.json' ? 'table' : (reqPathOnly === '/themes/themes.json' ? 'theme' : 'deck');
-    var _mfSub = _pkgKind === 'table' ? 'table' : (_pkgKind === 'theme' ? 'themes' : 'cards');
-    var _mfName = _pkgKind === 'table' ? 'tables.json' : (_pkgKind === 'theme' ? 'themes.json' : 'decks.json');
+  if (reqPathOnly === '/table/tables.json' || reqPathOnly === '/cards/decks.json' || reqPathOnly === '/themes/themes.json' || reqPathOnly === '/seats/seats.json') {
+    var _pkgKind = reqPathOnly === '/table/tables.json' ? 'table' : (reqPathOnly === '/themes/themes.json' ? 'theme' : (reqPathOnly === '/seats/seats.json' ? 'seat' : 'deck'));
+    var _mfSub = _pkgKind === 'table' ? 'table' : (_pkgKind === 'theme' ? 'themes' : (_pkgKind === 'seat' ? 'seats' : 'cards'));
+    var _mfName = _pkgKind === 'table' ? 'tables.json' : (_pkgKind === 'theme' ? 'themes.json' : (_pkgKind === 'seat' ? 'seats.json' : 'decks.json'));
     var _mf = path.join(PUBLIC_DIR, _mfSub, _mfName);
     var _list = []; try { _list = JSON.parse(fs.readFileSync(_mf, 'utf8')); } catch (e) {}
     if (!Array.isArray(_list)) _list = [];

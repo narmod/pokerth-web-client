@@ -189,7 +189,7 @@
     <div id="panel-packages" style="display:none">
       <div class="card">
         <label>Import a package (.zip)</label>
-        <div class="seg"><button class="on" data-k="table">Table style</button><button data-k="deck">Card deck</button><button data-k="theme">Theme</button></div>
+        <div class="seg"><button class="on" data-k="table">Table style</button><button data-k="deck">Card deck</button><button data-k="seat">Seat pack</button><button data-k="theme">Theme</button></div>
         <div id="drop" class="drop">Drop a <b>.zip</b> here, or click to choose</div>
         <input id="file" type="file" accept=".zip,application/zip" style="display:none">
         <div id="prog" class="prog"><i></i></div>
@@ -199,6 +199,7 @@
         <input id="pkgFilter" class="filter" type="search" placeholder="Filter styles, decks &amp; themes…" autocomplete="off">
         <h2>Table styles</h2><div id="tables"></div>
         <h2 style="margin-top:14px">Card decks</h2><div id="decks"></div>
+        <h2 style="margin-top:14px">Seats</h2><div id="seats"></div>
         <h2 style="margin-top:14px">Themes</h2><div id="themes"></div>
       </div>
     </div>
@@ -490,6 +491,7 @@
   function applyTable(id){ try{localStorage.setItem('pth_table',id);localStorage.setItem('pth_pucks',id);}catch(e){} }
   function applyDeck(id){ try{localStorage.setItem('pth_deck',id);}catch(e){}
     api('/admin/pkg-list').then(function(r){return r.json();}).then(function(d){ var e=(d.decks||[]).find(function(x){return x.id===id;}); try{localStorage.setItem('pth_deck_ext',(e&&e.ext)||'png');}catch(err){} }).catch(function(){}); }
+  function applySeat(id){ try{localStorage.setItem('pth_seat',id);localStorage.removeItem('pth_seat_css');localStorage.removeItem('pth_seat_img');}catch(e){} }
   function showProg(f){ var p=$('prog'); p.classList.add('on'); p.firstElementChild.style.width=Math.round((f||0)*100)+'%'; }
   function hideProg(){ var p=$('prog'); p.classList.remove('on'); p.firstElementChild.style.width='0'; }
   function upload(f){
@@ -500,13 +502,13 @@
     var t=tok(); if(t) xhr.setRequestHeader('Authorization','Bearer '+t);
     xhr.upload.addEventListener('progress',function(e){ if(e.lengthComputable) showProg(e.loaded/e.total); });
     xhr.addEventListener('load',function(){ hideProg(); var d=null; try{ d=JSON.parse(xhr.responseText); }catch(e){}
-      if(d&&d.ok){ if(d.kind==='theme'){ say('Installed theme: '+d.name+' \u2014 it now appears in Theme \u2192 Themes.','ok'); loadThemes(); } else { if(d.kind==='table')applyTable(d.id);else applyDeck(d.id); say('Imported & applied: '+d.name+' \u2014 open the app to see it.','ok'); } refresh(); }
+      if(d&&d.ok){ if(d.kind==='theme'){ say('Installed theme: '+d.name+' \u2014 it now appears in Theme \u2192 Themes.','ok'); loadThemes(); } else if(d.kind==='seat'){ applySeat(d.id); say('Imported & applied seat: '+d.name+' \u2014 open the app to see it.','ok'); } else { if(d.kind==='table')applyTable(d.id);else applyDeck(d.id); say('Imported & applied: '+d.name+' \u2014 open the app to see it.','ok'); } refresh(); }
       else say('Failed: '+((d&&d.error)||('HTTP '+xhr.status)),'err'); });
     xhr.addEventListener('error',function(){ hideProg(); say('Import failed \u2014 network error.','err'); });
     xhr.send(f);
     file.value='';
   }
-  function useNow(k,id){ if(k==='table')applyTable(id);else applyDeck(id); say('Set as active \u2014 open the app to see it.','ok'); }
+  function useNow(k,id){ if(k==='table')applyTable(id);else if(k==='seat')applySeat(id);else applyDeck(id); say('Set as active \u2014 open the app to see it.','ok'); }
   function removePkg(k,id,nm){ if(!confirm('Remove \u201c'+nm+'\u201d?'))return;
     api('/admin/pkg-remove',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({kind:k,id:id,token:tok()})})
       .then(function(r){return r.json();}).then(function(d){ if(d.ok)refresh(); else say('Remove: '+(d.error||'error'),'err'); }).catch(function(){ say('Remove failed \u2014 network error.','err'); }); }
@@ -524,13 +526,14 @@
       var del=document.createElement('button');del.className='del';del.textContent='Remove';del.addEventListener('click',function(){removePkg(k,p.id,p.name||p.id);});
       var fl=null; if(k==='table'){ var isF=!!p.full; fl=document.createElement('button'); fl.className='toggle '+(isF?'on':'off'); fl.textContent=isF?'Full':'Frame'; fl.title=isF?'Full-bleed image, no oval frame - tap to restore the frame':'Classic oval table - tap to show the full image'; fl.addEventListener('click',function(){togglePkgFull(p.id,isF);}); }
       row.appendChild(tg); if(fl) row.appendChild(fl); if(k!=='theme') row.appendChild(use); if(!p.builtin) row.appendChild(del); el.appendChild(row); }); }
-  var lastPkgs={tables:[],decks:[],themes:[]};
+  var lastPkgs={tables:[],decks:[],seats:[],themes:[]};
   function pkgMatch(p,q){ return !q || (((p.name||'')+' '+(p.id||'')).toLowerCase().indexOf(q)>=0); }
   function drawPkgs(){ var q=(($('pkgFilter')&&$('pkgFilter').value)||'').trim().toLowerCase();
     renderList($('tables'), lastPkgs.tables.filter(function(p){return pkgMatch(p,q);}), 'table');
     renderList($('decks'),  lastPkgs.decks.filter(function(p){return pkgMatch(p,q);}),  'deck');
+    renderList($('seats'),  lastPkgs.seats.filter(function(p){return pkgMatch(p,q);}),  'seat');
     renderList($('themes'), lastPkgs.themes.filter(function(p){return pkgMatch(p,q);}), 'theme'); }
-  function renderPkgs(d){ lastPkgs={tables:d.tables||[],decks:d.decks||[],themes:d.themes||[]}; drawPkgs(); }
+  function renderPkgs(d){ lastPkgs={tables:d.tables||[],decks:d.decks||[],seats:d.seats||[],themes:d.themes||[]}; drawPkgs(); }
   if($('pkgFilter')) $('pkgFilter').addEventListener('input', drawPkgs);
   function refresh(){ api('/admin/pkg-list?t='+Date.now()).then(function(r){return r.json();}).then(function(d){ if(d.ok)renderPkgs(d); }).catch(function(){ say('Could not refresh the package list \u2014 network error.','err'); }); }
 

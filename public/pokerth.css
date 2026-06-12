@@ -5528,6 +5528,52 @@ html[data-seat="pokerth"] .seat-timer-badge { display: none; }
 }
 
 
+/* ===== Sieges : packs IMAGE importes (galerie, html[data-seat-img]) =======
+   Un pack image = une plaque 9-slice (border-image ; le mot-cle `fill` fait que
+   l'image peint AUSSI le fond de la boite) posee sur .seat-plate. Variables
+   injectees par theme.mjs (_injectSeatPkg) ; restituees zero-flash par le
+   snippet <head>. Meme boite que le pack « Plaque » integre, mais cadre
+   graphique au lieu de background/bordure CSS. id non liste = repli Classique.
+   Variante « moi » optionnelle (self.*) -> cadre aussi la barre du heros. */
+html[data-seat-img] .seat { max-width: none; }
+html[data-seat-img] .seat-plate {
+  display: flex; align-items: center; gap: 8px; position: relative;
+  padding: var(--seat-pkg-pad, 6px 12px);
+  border-style: solid; border-color: transparent;
+  border-width: var(--seat-pkg-width, 15px);
+  border-image-source: var(--seat-pkg-img);
+  border-image-slice: var(--seat-pkg-slice, 34%) fill;
+  border-image-width: var(--seat-pkg-width, 15px);
+  border-image-repeat: stretch;
+}
+html[data-seat-img] .seat-info {
+  display: flex; flex-direction: column; align-items: flex-start; gap: 1px; min-width: 0;
+}
+html[data-seat-img] .seat-name { text-align: left; max-width: 88px; }
+html[data-seat-img] .seat-foot {
+  display: flex; align-items: center; justify-content: center; gap: 6px; flex-wrap: wrap; margin-top: 3px;
+}
+html[data-seat-img] .seat.active .seat-plate {
+  box-shadow: 0 0 0 1px var(--gold), 0 0 16px rgba(var(--gold-rgb), 0.45);
+}
+html[data-seat-img] .seat-timer-badge { display: none; }
+/* Variante « moi » : la barre du heros recoit le meme cadre (self.* fourni). */
+html[data-seat-img-self] .player-bar {
+  border-style: solid; border-color: transparent;
+  border-width: var(--seat-pkg-self-width, 15px);
+  border-image-source: var(--seat-pkg-self-img);
+  border-image-slice: var(--seat-pkg-self-slice, 34%) fill;
+  border-image-width: var(--seat-pkg-self-width, 15px);
+  border-image-repeat: stretch;
+}
+@media (max-width: 600px) {
+  html[data-seat-img] .seat-plate { gap: 5px; }
+  html[data-seat-img] .seat-name { max-width: 46px; font-size: 0.6rem; }
+  html[data-seat-img] .seat-money { font-size: 0.62rem; }
+  html[data-seat-img] .seat-foot { gap: 4px; margin-top: 2px; }
+}
+
+
 /* ════════════════════════════════════════════════════════════════════════
    FENETRES FLOTTANTES — chat / journal / reactions deplacables & redimension-
    nables. La classe .floating-win est posee par le JS UNIQUEMENT au-dessus du

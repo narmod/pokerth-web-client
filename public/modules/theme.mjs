@@ -172,6 +172,65 @@ function _loadGalleryDecks() {
 }
 _loadGalleryDecks();
 
+// Gallery seat packs (image plates) discovered at runtime from /seats/seats.json
+// (managed by the admin panel). A pack = a 9-slice plate image applied to the
+// seat box via border-image (CSS vars injected here); merged into the Seats axis
+// beside the built-in CSS packs. Best-effort: offline/absent -> built-ins only.
+var _gallerySeats = [];
+function _gallerySeatById(id) { for (var i = 0; i < _gallerySeats.length; i++) if (_gallerySeats[i].id === id) return _gallerySeats[i]; return null; }
+function _isBuiltinSeat(id) { for (var i = 0; i < SEATS.length; i++) if (SEATS[i].id === id) return true; return false; }
+function _loadGallerySeats() {
+  try {
+    fetch('/seats/seats.json', { cache: 'no-store' })
+      .then(function (r) { return r.ok ? r.json() : []; })
+      .then(function (list) {
+        if (!Array.isArray(list)) return;
+        _gallerySeats = list.filter(function (s) { return s && s.id && s.plateUrl; }).map(function (s) {
+          var slice = (s.slice != null ? s.slice : 34), width = (s.width != null ? s.width : 15), pad = s.pad || '6px 12px';
+          return { id: String(s.id), name: s.name || String(s.id), swatch: s.swatch || '#394150', preview: s.preview || null,
+                   plateUrl: s.plateUrl, selfUrl: s.selfUrl || null,
+                   slice: slice, width: width, pad: pad,
+                   selfSlice: (s.selfSlice != null ? s.selfSlice : slice), selfWidth: (s.selfWidth != null ? s.selfWidth : width), selfPad: s.selfPad || pad };
+        }).filter(function (s) { return !_isBuiltinSeat(s.id); });
+        try { seat.apply(seat.get()); } catch (e) {}   // pack now known -> inject its vars
+        if (_body) _render();
+      })
+      .catch(function () {});
+  } catch (e) {}
+}
+// A seat image pack drives the box via CSS vars + data-seat-img (one generic CSS
+// block in pokerth.css). Persisted to pth_seat_css / pth_seat_img so the <head>
+// boot snippet restores it zero-flash on reload. null = clear (back to a built-in).
+function _injectSeatPkg(s) {
+  var el = document.documentElement, css = '';
+  function setv(k, v) { el.style.setProperty(k, v); css += k + ':' + v + ';'; }
+  if (s) {
+    setv('--seat-pkg-img', 'url(' + s.plateUrl + ')');
+    setv('--seat-pkg-slice', s.slice + '%');
+    setv('--seat-pkg-width', s.width + 'px');
+    setv('--seat-pkg-pad', s.pad);
+    el.setAttribute('data-seat-img', '1');
+    if (s.selfUrl) {
+      setv('--seat-pkg-self-img', 'url(' + s.selfUrl + ')');
+      setv('--seat-pkg-self-slice', s.selfSlice + '%');
+      setv('--seat-pkg-self-width', s.selfWidth + 'px');
+      setv('--seat-pkg-self-pad', s.selfPad);
+      el.setAttribute('data-seat-img-self', '1');
+    } else el.removeAttribute('data-seat-img-self');
+  } else {
+    ['--seat-pkg-img', '--seat-pkg-slice', '--seat-pkg-width', '--seat-pkg-pad', '--seat-pkg-self-img', '--seat-pkg-self-slice', '--seat-pkg-self-width', '--seat-pkg-self-pad'].forEach(function (k) { el.style.removeProperty(k); });
+    el.removeAttribute('data-seat-img'); el.removeAttribute('data-seat-img-self');
+  }
+  try { if (css) { localStorage.setItem('pth_seat_css', css); localStorage.setItem('pth_seat_img', (s && s.selfUrl) ? '2' : '1'); } else { localStorage.removeItem('pth_seat_css'); localStorage.removeItem('pth_seat_img'); } } catch (e) {}
+}
+var _seatApply = seat.apply;
+seat.apply = function (id) {
+  _seatApply(id);                                  // sets data-seat + persists pth_seat
+  try { _injectSeatPkg(_gallerySeatById(id) || null); } catch (e) {}
+};
+seat.set = seat.apply;
+_loadGallerySeats();
+
 // Deck changes need the monolith to re-point card faces + back (no re-render).
 var _deckApply = deck.apply;
 function _deckExt(id) { var all = DECKS.concat(_galleryDecks); for (var i = 0; i < all.length; i++) if (all[i].id === id) return all[i].ext || 'png'; return 'png'; }
@@ -503,6 +562,7 @@ function _previewHTML(kind, item, big) {
     return '<span style="' + box + ';' + _feltStyle(t) + '">' + _cardOnFelt(item && item.values ? item.values.deck : '', big) + '</span>';
   }
   if (kind === 'seat') {
+    if (item && item.preview) return '<span style="' + box + ';background:#0b1a0d;display:flex;align-items:center;justify-content:center"><img src="' + item.preview + '" alt="" style="width:100%;height:100%;object-fit:cover;display:block"></span>';
     var av = big ? 24 : 9, bw = big ? 2 : 1, bh = big ? 5 : 2, g = big ? 3 : 1;
     var _sid = item ? item.id : '';
     var _avSt = (_sid === 'chip' || _sid === 'pokerth') ? 'border:none;background:radial-gradient(circle at 50% 50%,#b53636 0 62%,transparent 63%),repeating-conic-gradient(from 9deg,#f7f3ea 0 11deg,#7c1f1f 11deg 45deg);box-shadow:0 1px 2px rgba(0,0,0,0.5)' : 'background:#1b2a16;border:'+bw+'px solid #c8a84a;box-shadow:0 1px 2px rgba(0,0,0,0.5)';
@@ -645,7 +705,7 @@ function _render() {
     // axis), so reusing it as the open-section id made the buttons and palette
     // dropdowns share a key → both opened/closed together. storeKey is unique.
     var secId = ax.storeKey;
-    var opts = (ax === deck) ? DECKS.concat(_galleryDecks) : (ax === palette ? PALETTES.concat(_palettePkgs) : (ax === table ? TABLES.concat(_tablePkgs).concat(_galleryTables) : (ax === buttons ? BUTTONS_ITEMS.concat(_buttonPkgs) : (ax === pucks ? PUCKS_ITEMS.concat(_puckPkgs).concat(_galleryTables) : ax.items))));
+    var opts = (ax === deck) ? DECKS.concat(_galleryDecks) : (ax === palette ? PALETTES.concat(_palettePkgs) : (ax === table ? TABLES.concat(_tablePkgs).concat(_galleryTables) : (ax === buttons ? BUTTONS_ITEMS.concat(_buttonPkgs) : (ax === pucks ? PUCKS_ITEMS.concat(_puckPkgs).concat(_galleryTables) : (ax === seat ? SEATS.concat(_gallerySeats) : ax.items)))));
     var curItem = opts[0];
     for (var i = 0; i < opts.length; i++) if (opts[i].id === cur) curItem = opts[i];
     var curName = curItem.name || _t(curItem.key, curItem.fallback);
