@@ -3408,6 +3408,17 @@ body {
   opacity: 0.96;
 }
 .actions-preview .btn-auto { pointer-events: auto; opacity: 1; }  /* AUTO reste activable */
+/* Hors-tour (apercu) : touches d'action grisees (desaturees + attenuees) pour
+   signaler qu'elles ne sont pas jouables. Le dropdown de mode reste intact.
+   grayscale() porte sur les couleurs du theme en cours -> conforme a toutes
+   les palettes (y compris boutons-images). */
+.actions-preview .btn-action,
+.actions-preview .btn-pct,
+.actions-preview .raise-slider,
+.actions-preview .raise-display {
+  filter: grayscale(0.9);
+  opacity: 0.5;
+}
 .actions-preview .mode-sel-wrap { pointer-events: auto; opacity: 1; }  /* mode dropdown reste activable en aperçu */
 /* Pastille "œil" discrète en haut à droite : signale l'aperçu sans
    modifier la structure du panneau (purement décorative). */
