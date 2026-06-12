@@ -3342,6 +3342,17 @@ body {
   margin-right: 8px;
 }
 
+/* Conteneur centre a la largeur de la barre (--bottom-w) : ancre le pin et
+   l'oeil sur la barre, pas sur le bord de l'ecran (tablette/desktop). */
+.action-wrap {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  max-width: var(--bottom-w);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 .action-bar {
   display: flex;
   gap: 6px;
@@ -3425,7 +3436,7 @@ body {
 .actions-preview::after {
   content: "\1F441\FE0E";
   position: absolute;
-  top: -8px; right: 6px;
+  top: -8px; left: 6px; right: auto;
   font-size: 0.6rem;
   line-height: 1;
   color: var(--gold);
