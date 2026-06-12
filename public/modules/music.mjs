@@ -43,6 +43,7 @@ let _bodyEl = null;
 let _repeat = 'all';   // défaut: boucle playlist | 'one' = loop track | 'off' = play once
 let _seeking = false;  // true while the user drags the seek bar (don't let timeupdate fight the thumb)
 let _durProbed = false; // true once this track's total duration is resolved (see _probeDuration)
+let _probedDur = 0;     // duration resolved off a detached probe element (when the live one says Infinity)
 
 // Web Audio routing. On iOS/WebKit, HTMLMediaElement.volume is read-only, so
 // `audio.volume = x` is silently ignored (volume is hardware-only there). Routing
@@ -163,6 +164,7 @@ async function play(id) {
     _curId = t.id;
     a.src = t.file;
     _durProbed = false;   // new source — re-resolve its duration on metadata load
+    _probedDur = 0;
     try { localStorage.setItem(LS_TRACK, t.id); } catch (e) {}
   }
   _ensureWebAudio(); _resumeCtx();        // build/unlock the audio graph (covers programmatic play too)
@@ -181,28 +183,46 @@ function next() { if (_tracks.length < 2) return play(_curId); var i = _index(_c
 function prev() { if (_tracks.length < 2) return play(_curId); var i = _index(_curId); if (i < 0) i = 0; return play(_tracks[(i - 1 + _tracks.length) % _tracks.length].id); }
 
 // ── Playback position / seeking ──
-// VBR / streamed MP3s (e.g. the incompetech tracks) advertise duration=Infinity
-// until the browser scans to the end of the file, which leaves the total time
-// stuck at 0:00. On metadata load, force a single seek-to-end probe so the
-// browser resolves a real duration, then restore the playback position. Runs at
-// most once per track (guarded by _durProbed, reset on source change in play()).
+// VBR / streamed MP3s advertise duration=Infinity until the browser scans to the
+// end of the file, leaving the total time stuck at 0:00. We resolve a real
+// duration WITHOUT disturbing playback: probe a DETACHED, muted throwaway element
+// (seeking the LIVE element to the clamp-to-end value breaks playback on iOS —
+// the audio gets stuck silent at the end). The resolved value lands in _probedDur,
+// which getDuration() falls back to. Runs at most once per track.
 function _probeDuration() {
   if (!_audio || _durProbed) return;
   var d = _audio.duration;
   if (isFinite(d) && d > 0) { _durProbed = true; return; }   // duration already known
   _durProbed = true;                                         // probe at most once per track
-  var back = _audio.currentTime || 0;
-  var onDur = function () {
-    if (_audio && isFinite(_audio.duration) && _audio.duration > 0) {
-      _audio.removeEventListener('durationchange', onDur);
-      try { _audio.currentTime = back; } catch (e) {}
-      _renderProgress();
-    }
+  var src = (_audio.currentSrc || _audio.src);
+  if (!src) return;
+  var probe;
+  try { probe = new Audio(); } catch (e) { return; }
+  probe.preload = 'metadata';
+  probe.muted = true;
+  var timer = null;
+  var cleanup = function () {
+    if (timer) { clearTimeout(timer); timer = null; }
+    try { probe.removeEventListener('loadedmetadata', onMeta); } catch (e) {}
+    try { probe.removeEventListener('durationchange', onDur); } catch (e) {}
+    try { probe.removeAttribute('src'); probe.load(); } catch (e) {}
   };
-  _audio.addEventListener('durationchange', onDur);
-  try { _audio.currentTime = 1e101; } catch (e) {}          // clamp-to-end trick → forces duration calc
+  var settle = function () {
+    var pd = probe.duration;
+    if (isFinite(pd) && pd > 0) { _probedDur = pd; _renderProgress(); cleanup(); return true; }
+    return false;
+  };
+  var onMeta = function () {
+    if (settle()) return;
+    try { probe.currentTime = 1e101; } catch (e) {}          // clamp-to-end on the DETACHED element only
+  };
+  var onDur = function () { settle(); };
+  probe.addEventListener('loadedmetadata', onMeta);
+  probe.addEventListener('durationchange', onDur);
+  timer = setTimeout(cleanup, 8000);                         // give up quietly after 8s
+  try { probe.src = src; } catch (e) { cleanup(); }
 }
-function getDuration()    { try { var d = _audio ? _audio.duration : 0; return (isFinite(d) && d > 0) ? d : 0; } catch (e) { return 0; } }
+function getDuration()    { try { var d = _audio ? _audio.duration : 0; if (isFinite(d) && d > 0) return d; return _probedDur > 0 ? _probedDur : 0; } catch (e) { return 0; } }
 function getCurrentTime() { try { return _audio ? (_audio.currentTime || 0) : 0; } catch (e) { return 0; } }
 function seek(t) {
   var d = getDuration(); if (!_audio || !d) return;
@@ -225,6 +245,9 @@ function _renderProgress() {
   var durEl  = _bodyEl.querySelector('.music-dur');
   if (!seekEl && !curEl && !durEl) return;
   var d = getDuration(), c = getCurrentTime(), canSeek = d > 0;
+  if (!isFinite(c) || c < 0) c = 0;
+  if (canSeek && c > d) c = d;                 // never display/seek beyond the track
+  if (!canSeek && c > 86400) c = 0;            // guard against a probe leaving a huge currentTime
   if (durEl) durEl.textContent = canSeek ? _fmtTime(d) : '0:00';
   if (!_seeking && curEl) curEl.textContent = _fmtTime(c);
   if (seekEl) {
