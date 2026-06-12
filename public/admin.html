@@ -366,6 +366,7 @@
         <h2>Send a message now</h2>
         <p class="muted" style="margin:0 0 8px">Broadcast an information message to everyone currently connected. Shown as a gold dismissible banner.</p>
         <textarea id="bcNowMsg" class="filter" rows="2" maxlength="500" placeholder="Your message…" style="width:100%;resize:vertical"></textarea>
+        <div class="muted" style="font-size:.78rem;margin-top:4px">Tip: paste a URL, or write <code>[label](https://example.com)</code> for a clickable link (opens in a new tab).</div>
         <div class="periodrow" style="margin-top:8px">
           <select id="bcNowIcon" class="filter" style="margin:0;flex:none;width:auto">
             <option value="">No icon</option><option value="ℹ️">ℹ️ Info</option><option value="📢">📢 Announce</option><option value="⚠️">⚠️ Warning</option><option value="🎉">🎉 Celebrate</option>
@@ -379,6 +380,7 @@
         <h2>Schedule a recurring message</h2>
         <div id="bcServerNow" class="muted" style="margin:0 0 8px"></div>
         <textarea id="bcMsg" class="filter" rows="2" maxlength="500" placeholder="Message to broadcast…" style="width:100%;resize:vertical"></textarea>
+        <div class="muted" style="font-size:.78rem;margin-top:4px">Tip: paste a URL, or write <code>[label](https://example.com)</code> for a clickable link (opens in a new tab).</div>
         <div class="periodrow" style="margin-top:8px">
           <select id="bcIcon" class="filter" style="margin:0;flex:none;width:auto">
             <option value="">No icon</option><option value="ℹ️">ℹ️ Info</option><option value="📢">📢 Announce</option><option value="⚠️">⚠️ Warning</option><option value="🎉">🎉 Celebrate</option>
@@ -422,6 +424,7 @@
         <div id="wcFilled" class="muted" style="margin:0 0 8px;font-size:.8rem"></div>
         <input id="wcTitle" class="filter" maxlength="200" placeholder="Title (optional)" style="width:100%;margin-bottom:8px">
         <textarea id="wcBody" class="filter" rows="5" maxlength="4000" placeholder="Message / rules for this language…" style="width:100%;resize:vertical"></textarea>
+        <div class="muted" style="font-size:.78rem;margin-top:4px">Tip: paste a URL, or write <code>[label](https://example.com)</code> for a clickable link (opens in a new tab).</div>
         <div id="wcPrev"></div>
         <div class="periodrow" style="margin-top:8px"><button id="wcSave" class="use">Save welcome message</button></div>
         <div id="wcState" class="msg"></div>
@@ -959,9 +962,12 @@
 
   // ── Broadcasts tab ──────────────────────────────────────────────────────
   function bcSay(id,txt,c){ var m=$(id); if(m){ m.textContent=txt; m.className='msg '+(c||''); } }
+  function _annEsc(s){ return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
+  function _annA(u,l){ return '<a href="'+u+'" target="_blank" rel="noopener noreferrer nofollow" style="color:inherit;text-decoration:underline">'+l+'</a>'; }
+  function annLinkify(text){ var esc=_annEsc(text); var RE=/\[([^\]\n]+)\]\((https?:\/\/[^\s)]+|mailto:[^\s)]+)\)|((?:https?:\/\/|mailto:)[^\s<)\]]+)/g; return esc.replace(RE,function(w,ml,mu,bu){ if(mu) return _annA(mu,ml); var tr='',m=bu.match(/[.,!?]+$/); if(m){tr=m[0]; bu=bu.slice(0,-tr.length);} return _annA(bu,bu)+tr; }); }
   function bcGoldPreview(elId,msg,icon){ var el=$(elId); if(!el) return;
     if(!msg){ el.style.cssText='display:none'; el.textContent=''; return; }
-    el.textContent=(icon?icon+'  ':'')+msg;
+    el.innerHTML=(icon?_annEsc(icon)+'  ':'')+annLinkify(msg);
     el.style.cssText='display:block;margin-top:8px;max-width:420px;background:linear-gradient(135deg,rgba(200,168,74,.97),rgba(168,134,40,.97));color:#1a0a00;padding:10px 14px;border-radius:14px;font-weight:600;font-size:.88rem;white-space:pre-line;box-shadow:0 4px 14px rgba(0,0,0,.4)';
   }
   function bcDescribe(j){ var s=j.schedule||{},t=s.type,nm=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
@@ -1049,7 +1055,7 @@
     if(!t&&!b){ el.style.cssText='display:none'; el.textContent=''; return; }
     el.textContent=''; el.style.cssText='display:block;margin-top:8px;max-width:440px;background:#1c1812;border:1px solid rgba(200,168,74,.5);border-radius:14px;overflow:hidden';
     if(t){ var h=document.createElement('div'); h.textContent=t; h.style.cssText='padding:12px 16px;font-weight:700;color:#e0c070;border-bottom:1px solid rgba(200,168,74,.25)'; el.appendChild(h); }
-    var p=document.createElement('div'); p.textContent=b; p.style.cssText='padding:12px 16px;white-space:pre-line;line-height:1.5;color:#efe6d2;font-size:.9rem'; el.appendChild(p);
+    var p=document.createElement('div'); p.innerHTML=annLinkify(b); p.style.cssText='padding:12px 16px;white-space:pre-line;line-height:1.5;color:#efe6d2;font-size:.9rem'; el.appendChild(p);
   }
   // First language to show: the configured fallback if it has content, else the
   // first filled language, else the fallback (empty) — so the live message is

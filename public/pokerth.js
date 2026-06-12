@@ -504,7 +504,31 @@ window.hideRestartNotice = hideRestartNotice;
 // ── Information broadcast (admin → all clients) ────────────────────────────
 // Gold toast matching the blinds announcement palette; dismissible (×); stays
 // until closed; a newer message replaces the previous one. Sits just below the
-// restart notice when both are showing. Message/icon set via textContent.
+// restart notice when both are showing. Message is linkified (safe HTML).
+// Operator announcements (broadcasts + welcome) may include links. We escape
+// the text (XSS/layout-safe even though the author is the admin), then linkify
+//   [label](https://url)  ·  bare http(s):// or mailto: URLs
+// Only http/https/mailto are linked; links open in a new tab, rel-protected.
+function _escHtml(s) {
+  return String(s == null ? '' : s)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}
+function _annLink(url, label) {
+  return '<a href="' + url + '" target="_blank" rel="noopener noreferrer nofollow"'
+       + ' style="color:inherit;text-decoration:underline">' + label + '</a>';
+}
+function _linkifyAnnounce(text) {
+  var esc = _escHtml(text);
+  // single pass, alternation: markdown link OR bare URL (avoids double-linking)
+  var RE = /\[([^\]\n]+)\]\((https?:\/\/[^\s)]+|mailto:[^\s)]+)\)|((?:https?:\/\/|mailto:)[^\s<)\]]+)/g;
+  return esc.replace(RE, function (whole, mdLabel, mdUrl, bareUrl) {
+    if (mdUrl) return _annLink(mdUrl, mdLabel);
+    var trail = '', m = bareUrl.match(/[.,!?]+$/);
+    if (m) { trail = m[0]; bareUrl = bareUrl.slice(0, -trail.length); }
+    return _annLink(bareUrl, bareUrl) + trail;
+  });
+}
 function hideInfoToast() { var el = document.getElementById('srv-info-toast'); if (el) el.remove(); }
 function showInfoToast(message, icon) {
   hideInfoToast();
@@ -513,7 +537,7 @@ function showInfoToast(message, icon) {
   el.id = 'srv-info-toast';
   el.style.cssText = 'position:fixed;top:' + top + 'px;left:50%;transform:translateX(-50%);max-width:min(92vw,420px);z-index:9999;display:flex;align-items:flex-start;gap:10px;background:var(--gold);color:var(--on-gold);padding:11px 15px;border-radius:14px;box-shadow:0 8px 28px rgba(0,0,0,.55),0 0 0 1px rgba(255,255,255,.25) inset;font-weight:600;font-size:.9rem;line-height:1.4;white-space:pre-line;';
   if (icon) { var ic = document.createElement('span'); ic.textContent = icon; ic.style.cssText = 'flex:none;font-size:1.1rem;line-height:1.3;'; el.appendChild(ic); }
-  var span = document.createElement('span'); span.textContent = message; el.appendChild(span);
+  var span = document.createElement('span'); span.innerHTML = _linkifyAnnounce(message); el.appendChild(span);
   var x = document.createElement('button');
   x.setAttribute('aria-label', 'Close'); x.textContent = '\u00d7';
   x.style.cssText = 'flex:none;background:transparent;border:0;color:var(--on-gold);font-size:1.25rem;line-height:1;cursor:pointer;padding:0 2px;opacity:.7;';
@@ -601,7 +625,7 @@ function showWelcomeModal(title, body, version) {
     card.appendChild(h);
   }
   var p = document.createElement('div');
-  p.textContent = body || '';
+  p.innerHTML = _linkifyAnnounce(body || '');
   p.style.cssText = 'padding:16px 20px;overflow:auto;white-space:pre-line;line-height:1.55;font-size:.95rem;';
   card.appendChild(p);
   var foot = document.createElement('div');
@@ -10756,7 +10780,7 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.2.462'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.2.463'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
