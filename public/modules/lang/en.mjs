@@ -73,7 +73,7 @@ export const strings = {
     // ── Hand strength: post-flop ──
     hsRoyal:'⭐ Royal Flush', hsSF:'🃏 Straight Flush {r}', hsFour:'🟥 Four {r}s',
     hsFull:'🔴 Full House {a}/{b}', hsFlush:'🟠 Flush', hsStraight:'🟡 Straight {r}',
-    hsThree:'🟢 Three {r}s', hsTwoPair:'🔵 Two Pair {a}/{b}', hsPair:'⚪ Pair of {r}s', hsHigh:'— High Card {r}',
+    hsThree:'🟢 Three {r}s', hsTwoPair:'🔵 Two Pair {a}/{b}', hsPair:'⚪ Pair of {r}s', hsHigh:'High Card {r}',
     // ── Hand strength: pre-flop ──
     pfPremium:'Premium hand', pfAKs:'AKs Premium', pfAKo:'AKo Premium', pfMidPair:'Mid pair',
     pfStrongAceS:'Strong suited Ace', pfStrongAce:'Strong Ace', pfKQs:'KQs', pfKQo:'KQo',

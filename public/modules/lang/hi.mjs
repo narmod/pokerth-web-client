@@ -74,7 +74,7 @@ export const strings = {
     tableNamePh:'टेबल का नाम…',
     hsRoyal:'⭐ Royal Flush', hsSF:'🃏 Straight Flush {r}', hsFour:'🟥 Four {r}s',
     hsFull:'🔴 Full House {a}/{b}', hsFlush:'🟠 Flush', hsStraight:'🟡 Straight {r}',
-    hsThree:'🟢 Three {r}s', hsTwoPair:'🔵 Two Pair {a}/{b}', hsPair:'⚪ Pair of {r}s', hsHigh:'— High Card {r}',
+    hsThree:'🟢 Three {r}s', hsTwoPair:'🔵 Two Pair {a}/{b}', hsPair:'⚪ Pair of {r}s', hsHigh:'High Card {r}',
     pfPremium:'प्रीमियम हैंड', pfAKs:'AKs Premium', pfAKo:'AKo Premium', pfMidPair:'मिड पेयर',
     pfStrongAceS:'स्ट्रॉन्ग सूटेड Ace', pfStrongAce:'स्ट्रॉन्ग Ace', pfKQs:'KQs', pfKQo:'KQo',
     pfSmallPair:'स्मॉल पेयर', pfSuitedConn:'सूटेड कनेक्टर', pfSuitedBroad:'सूटेड ब्रॉडवे',
