@@ -312,13 +312,14 @@ setInterval(maybeRotateStats, 60 * 60 * 1000); // hourly boundary check
 // counter plus an all-time id set keep the "All time" figures exact too.
 const VISITS_FILE = process.env.VISITS_FILE || path.join(__dirname, 'visits.json');
 const VISIT_RETENTION_DAYS = 400; // keep per-day id sets this long (covers up to 1-year windows)
-let visitsStore = { days: {}, totalV: 0, allU: {}, allM: { pokerthnet: 0, lan: 0, offline: 0 } };
+let visitsStore = { days: {}, totalV: 0, totalRet: 0, allU: {}, allM: { pokerthnet: 0, lan: 0, offline: 0 } };
 try {
   const _vs = JSON.parse(fs.readFileSync(VISITS_FILE, 'utf8'));
   if (_vs && typeof _vs === 'object') {
     visitsStore.days   = (_vs.days && typeof _vs.days === 'object') ? _vs.days : {};
     visitsStore.totalV = (typeof _vs.totalV === 'number') ? _vs.totalV : 0;
     visitsStore.allU   = (_vs.allU && typeof _vs.allU === 'object') ? _vs.allU : {};
+    visitsStore.totalRet = (typeof _vs.totalRet === 'number') ? _vs.totalRet : 0;
     const _am = (_vs.allM && typeof _vs.allM === 'object') ? _vs.allM : {};
     visitsStore.allM   = { pokerthnet: _am.pokerthnet || 0, lan: _am.lan || 0, offline: _am.offline || 0 };
   }
@@ -363,15 +364,18 @@ function recordVisit(rawId) {
   visitsStore.totalV = (visitsStore.totalV || 0) + 1;
   if (rawId) {
     const h = crypto.createHash('sha256').update(String(rawId)).digest('hex').slice(0, 16);
+    const seenBefore = !!visitsStore.allU[h]; // returning device, or brand new?
     if (!bucket.ids) bucket.ids = {};
     bucket.ids[h] = 1;
     visitsStore.allU[h] = 1;
+    if (seenBefore) { bucket.rt = (bucket.rt || 0) + 1; visitsStore.totalRet = (visitsStore.totalRet || 0) + 1; }
+    else            { bucket.nw = (bucket.nw || 0) + 1; }
   }
   saveVisitsSoon();
 }
 function visitWindow(daysBack) {
   const now = new Date();
-  let v = 0;
+  let v = 0, nw = 0, rt = 0;
   const u = {};
   const m = { pokerthnet: 0, lan: 0, offline: 0 };
   for (let i = 0; i < daysBack; i++) {
@@ -380,10 +384,12 @@ function visitWindow(daysBack) {
     const b = visitsStore.days[visitDayKey(d)];
     if (!b) continue;
     v += b.v || 0;
+    nw += b.nw || 0;
+    rt += b.rt || 0;
     if (b.ids) for (const k in b.ids) u[k] = 1;
     if (b.m) for (const mk in m) if (b.m[mk]) m[mk] += b.m[mk];
   }
-  return { v: v, u: Object.keys(u).length, m: m };
+  return { v: v, u: Object.keys(u).length, m: m, nw: nw, rt: rt };
 }
 function visitsSummary() {
   const now = new Date();
@@ -403,7 +409,7 @@ function visitsSummary() {
     quarter: visitWindow(90),
     semester: visitWindow(180),
     year: visitWindow(365),
-    allTime: { v: visitsStore.totalV || 0, u: Object.keys(visitsStore.allU).length, m: (function () { const am = visitsStore.allM || {}; return { pokerthnet: am.pokerthnet || 0, lan: am.lan || 0, offline: am.offline || 0 }; })() },
+    allTime: { v: visitsStore.totalV || 0, u: Object.keys(visitsStore.allU).length, nw: Object.keys(visitsStore.allU).length, rt: visitsStore.totalRet || 0, m: (function () { const am = visitsStore.allM || {}; return { pokerthnet: am.pokerthnet || 0, lan: am.lan || 0, offline: am.offline || 0 }; })() },
     series: series
   };
 }
@@ -883,12 +889,12 @@ function handleAdmin(req, res, reqPathOnly, query) {
     if (!adminAuthed(query)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
     const fmt = (query.format === 'csv') ? 'csv' : 'json';
     if (fmt === 'csv') {
-      const lines = ['date,visits,unique_visitors,conn_pokerthnet,conn_lan,conn_offline'];
+      const lines = ['date,visits,unique_visitors,new_visitors,returning_visitors,conn_pokerthnet,conn_lan,conn_offline'];
       Object.keys(visitsStore.days).sort().forEach(function (d) {
         const b = visitsStore.days[d] || {};
         const u = b.ids ? Object.keys(b.ids).length : 0;
         const m = b.m || {};
-        lines.push([d, b.v || 0, u, m.pokerthnet || 0, m.lan || 0, m.offline || 0].join(','));
+        lines.push([d, b.v || 0, u, b.nw || 0, b.rt || 0, m.pokerthnet || 0, m.lan || 0, m.offline || 0].join(','));
       });
       res.writeHead(200, { 'Content-Type': 'text/csv; charset=utf-8', 'Cache-Control': 'no-store', 'Content-Disposition': 'attachment; filename="pokerth-traffic.csv"' });
       res.end(lines.join('\n') + '\n');
@@ -1320,6 +1326,11 @@ const httpServer = http.createServer((req, res) => {
   }
 
   // Friendly path for the pack-creator Studio, mirroring /admin -> admin.html.
+  if (reqPathOnly === '/privacy' || reqPathOnly === '/privacy.html') {
+    const p = path.join(PUBLIC_DIR, 'privacy.html');
+    if (fs.existsSync(p)) return sendFile(req, res, p, 'text/html; charset=utf-8', 'no-store');
+    res.writeHead(404); res.end('privacy.html missing'); return;
+  }
   if (reqPathOnly === '/studio' || reqPathOnly === '/studio.html') {
     const p = path.join(PUBLIC_DIR, 'studio.html');
     if (fs.existsSync(p)) return sendFile(req, res, p, 'text/html; charset=utf-8', 'no-store');

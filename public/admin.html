@@ -154,6 +154,11 @@
         <div id="trafModes"><div class="empty">Loading…</div></div>
       </div>
       <div class="card">
+        <h2 style="margin:0 0 8px">New vs returning visitors</h2>
+        <p class="muted" style="margin:2px 0 10px">Based on an anonymous per-device id — no names. A session is “new” the first time a device is ever seen, otherwise “returning”.</p>
+        <div id="trafNvR"><div class="empty">Loading…</div></div>
+      </div>
+      <div class="card">
         <h2 style="margin:0 0 8px">Export / backup</h2>
         <p class="muted" style="margin:2px 0 10px">Download the raw data for backup or import into a database. CSV = one row per day (date, visits, unique, per-server connections). JSON = full backup (restorable to visits.json).</p>
         <div style="display:flex;gap:8px;flex-wrap:wrap"><button id="btnTrafCsv" class="use">Download CSV</button><button id="btnTrafJson" class="use">Download JSON</button></div>
@@ -680,6 +685,11 @@
         var tm=(d.today&&d.today.m)||{}, am=(d.allTime&&d.allTime.m)||{};
         var rows=[['pokerth.net','pokerthnet'],['LAN / dedicated','lan'],['Offline (bots)','offline']];
         md.innerHTML = rows.map(function(rw){ return '<div class="srow"><span>'+rw[0]+'</span><b>'+fmt(tm[rw[1]])+' today · '+fmt(am[rw[1]])+' total</b></div>'; }).join('');
+      }
+      var nv=$('trafNvR');
+      if(nv){
+        var wins=[['Today',d.today],['Last 7 days',d.week],['Last 30 days',d.month],['All time',d.allTime]];
+        nv.innerHTML = wins.map(function(w){ var o=w[1]||{}; return '<div class="srow"><span>'+w[0]+'</span><b>'+fmt(o.nw)+' new · '+fmt(o.rt)+' returning</b></div>'; }).join('');
       }
     }).catch(function(){ var g=$('trafCards'); if(g) g.innerHTML='<div class="empty err">Could not load.</div>'; });
   }
