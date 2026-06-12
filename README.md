@@ -174,6 +174,7 @@ A full appearance system, reached from the **Theme** button — pick a one-tap p
 - **Emoji avatar** selector: 🎭 button → 500+ icons organised by category (animals, fantasy, fun characters…)
 - Avatars visible by all players in real time (broadcast via proxy `AVATAR:pid:emoji`)
 - **Custom image avatar** — use your own photo instead of an emoji, shared live with the table (broadcast via `AVATARIMG:pid:dataURL`)
+- **Avatars also reach the official clients** — your chosen avatar (emoji, image, or initial) is uploaded over PokerTH's native avatar protocol, so it appears for players on the official desktop/mobile clients too, not just other web players
 - Anti-flicker cache so avatars survive seat re-renders
 - Bots always show 🤖
 - **Session statistics** panel (click your avatar): hands played, wins, win rate, net gain/loss, best/worst hand, last 5 hands with card history
@@ -191,6 +192,8 @@ A full appearance system, reached from the **Theme** button — pick a one-tap p
 - Tab title flashes: ⚡ YOUR TURN — PokerTH
 - Keyboard shortcuts: **F** = Fold, **C** / Space = Call, **R** = Raise, **A** = All-in, plus **1 / 2 / 3** to arm a ⅓ / ½ / pot bet (then **R** to confirm) — the bet buttons show these keycaps on desktop
 - Sound effects: distinct sounds for fold / check / call / raise / all-in / shuffle / drumroll / bad-beat / win fanfare, plus urgent-timer warning
+- **Background music player** — a built-in MP3 player with its own track list (curated by the operator in the admin panel): pick a track and loop it, loop the whole playlist, or play it once
+- **Separate volume for sound effects and music** — adjust each independently *(on iOS the music volume can't be changed — a WebKit limitation — though the game sound effects still can)*
 - **Full i18n in 36 languages**, switchable on the fly and auto-detected from the browser locale — the complete official PokerTH language set plus community additions (Ukrainian, Romanian, Croatian, Serbian and more), with Brazilian and European Portuguese shipped as separate catalogues (pt-BR / pt-PT)
 - Fullscreen mode on all screens
 - Poker hand reference overlay (? button)
