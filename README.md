@@ -49,7 +49,7 @@
 
 **Try it now: [https://pokerth.ddns.net/](https://pokerth.ddns.net/)**
 
-Leave the server selector on **LAN / Dedicated server** (the default) with **Guest mode** unchecked, choose any nickname, and play right away — no account, no install. The demo is hosted on a small VPS connected to a private PokerTH server, so feel free to create a table and invite friends.
+Play right away — no account needed, no install. Pick **pokerth.net** to join the public, official PokerTH server (as a guest, or with your registered account), or **LAN / Dedicated server** to play on the demo's own PokerTH server, hosted on a small VPS — choose any nickname (Guest mode off), create a table, and invite friends.
 
 Want to try with **no server or connection at all**? Pick **🏋️ Training mode** and play instantly against bots — fully offline.
 
@@ -206,7 +206,7 @@ A full appearance system, reached from the **Theme** button — pick a one-tap p
 <a id="login-modes-transport"></a>
 ## Login modes & transport
 
-The client is designed first and foremost for **LAN and private self-hosted servers** — that is its intended use. The connect screen exposes **three server choices** plus a **Guest mode** checkbox (just above the Connect button, **off by default**). One choice — **🏋️ Training mode** — is fully offline (solo play against bots, no server at all); the two online choices, combined with the Guest-mode checkbox, map to the four underlying PokerTH login types, each with its own transport — handy to know when debugging a connection problem.
+The client works equally with the public **pokerth.net** server and with **LAN / private self-hosted servers**. The connect screen exposes **three server choices** plus a **Guest mode** checkbox (just above the Connect button, **off by default**). One choice — **🏋️ Training mode** — is fully offline (solo play against bots, no server at all); the two online choices, combined with the Guest-mode checkbox, map to the four underlying PokerTH login types, each with its own transport — handy to know when debugging a connection problem.
 
 | Server choice | Guest mode | Login type | Transport | Notes |
 |---|---|---|---|---|
@@ -216,7 +216,7 @@ The client is designed first and foremost for **LAN and private self-hosted serv
 | **pokerth.net** | on | Guest (`guest`, type 2) | direct TLS WebSocket | Throwaway guest on the public server |
 | **pokerth.net** | off | Registered account (`auth`, type 1) | direct TLS WebSocket | Login + password; TLS auto-enabled |
 
-The pokerth.net rows connect **directly over a TLS WebSocket, bypassing the proxy**. Please use the public server responsibly and prefer your own LAN or private server for regular play, out of respect for the official PokerTH infrastructure.
+The pokerth.net rows connect **directly over a TLS WebSocket, bypassing the proxy**. Please play fairly on the public server — it is shared by the whole community.
 
 ---
 
