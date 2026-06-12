@@ -159,6 +159,10 @@
         <div id="trafNvR"><div class="empty">Loading…</div></div>
       </div>
       <div class="card">
+        <h2 style="margin:0 0 8px">Database (MySQL mirror)</h2>
+        <div id="trafDb"><div class="empty">Loading…</div></div>
+      </div>
+      <div class="card">
         <h2 style="margin:0 0 8px">Export / backup</h2>
         <p class="muted" style="margin:2px 0 10px">Download the raw data for backup or import into a database. CSV = one row per day (date, visits, unique, per-server connections). JSON = full backup (restorable to visits.json).</p>
         <div style="display:flex;gap:8px;flex-wrap:wrap"><button id="btnTrafCsv" class="use">Download CSV</button><button id="btnTrafJson" class="use">Download JSON</button></div>
@@ -690,6 +694,18 @@
       if(nv){
         var wins=[['Today',d.today],['Last 7 days',d.week],['Last 30 days',d.month],['All time',d.allTime]];
         nv.innerHTML = wins.map(function(w){ var o=w[1]||{}; return '<div class="srow"><span>'+w[0]+'</span><b>'+fmt(o.nw)+' new · '+fmt(o.rt)+' returning</b></div>'; }).join('');
+      }
+      var dbx=$('trafDb');
+      if(dbx){
+        var db=d.db||{};
+        var esc=function(x){ return (''+x).replace(/[&<>]/g,function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;'}[c]; }); };
+        var state;
+        if(!db.enabled){ state='<b style="color:#a0acc4">Off</b> — set MYSQL_* env vars to enable'; }
+        else if(db.connected){ state='<b class="ok">Connected</b>'; }
+        else { state='<b class="err">Error</b>'+(db.error?(' — '+esc(db.error)):''); }
+        var html='<div class="srow"><span>Status</span><span>'+state+'</span></div>';
+        if(db.enabled && db.lastWrite){ html+='<div class="srow"><span>Last write</span><b>'+esc((''+db.lastWrite).replace('T',' ').slice(0,19))+'</b></div>'; }
+        dbx.innerHTML=html;
       }
     }).catch(function(){ var g=$('trafCards'); if(g) g.innerHTML='<div class="empty err">Could not load.</div>'; });
   }

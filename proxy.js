@@ -230,6 +230,7 @@ function saveStatsSoon() {
     fs.writeFile(STATS_FILE, JSON.stringify(statsStore), function (err) {
       if (err) console.error('[stats] write failed:', err.message);
     });
+    dbFlushLeaderboard();
   }, 800);
 }
 
@@ -289,6 +290,7 @@ function wipeLeaderboard(reason) {
   try { fs.writeFileSync(STATS_FILE, '{}'); }
   catch (e) { console.error('[stats] reset write failed:', e.message); }
   console.log('[stats] leaderboard reset (' + reason + ')');
+  dbClearLeaderboard();
 }
 function maybeRotateStats() {
   const key = statsPeriodKey();
@@ -332,6 +334,7 @@ function saveVisitsSoon() {
     fs.writeFile(VISITS_FILE, JSON.stringify(visitsStore), function (err) {
       if (err) console.error('[visits] write failed:', err.message);
     });
+    dbFlushTrafficToday();
   }, 1500);
 }
 function visitDayKey(d) {
@@ -410,9 +413,101 @@ function visitsSummary() {
     semester: visitWindow(180),
     year: visitWindow(365),
     allTime: { v: visitsStore.totalV || 0, u: Object.keys(visitsStore.allU).length, nw: Object.keys(visitsStore.allU).length, rt: visitsStore.totalRet || 0, m: (function () { const am = visitsStore.allM || {}; return { pokerthnet: am.pokerthnet || 0, lan: am.lan || 0, offline: am.offline || 0 }; })() },
-    series: series
+    series: series,
+    db: { enabled: _dbStatus.enabled, connected: _dbStatus.connected, error: _dbStatus.error, lastWrite: _dbStatus.lastWrite }
   };
 }
+
+// ── Optional MySQL mirror ──
+// Enabled only when MYSQL_HOST and MYSQL_DATABASE are set. The JSON files stay
+// the live source of truth (live unique / new-returning counting); we mirror the
+// daily traffic aggregates and the leaderboard into MySQL so the data is
+// queryable and joinable. If the mysql2 driver is missing or the database is
+// unreachable, we log a warning and keep running on JSON — the app never crashes.
+const MYSQL_ENABLED = !!(process.env.MYSQL_HOST && process.env.MYSQL_DATABASE);
+let _dbPool = null;
+let _dbLbBusy = false;
+const _dbStatus = { enabled: MYSQL_ENABLED, connected: false, error: '', lastWrite: null };
+async function initDb() {
+  if (!MYSQL_ENABLED) { console.log('[db] MySQL mirror disabled (set MYSQL_HOST + MYSQL_DATABASE to enable)'); return; }
+  let mysql;
+  try { mysql = require('mysql2/promise'); }
+  catch (e) { _dbStatus.error = 'mysql2 not installed — run npm install'; console.error('[db]', _dbStatus.error); return; }
+  try {
+    _dbPool = mysql.createPool({
+      host: process.env.MYSQL_HOST,
+      port: Number(process.env.MYSQL_PORT) || 3306,
+      user: process.env.MYSQL_USER || 'root',
+      password: process.env.MYSQL_PASSWORD || '',
+      database: process.env.MYSQL_DATABASE,
+      waitForConnections: true, connectionLimit: 4, connectTimeout: 8000, charset: 'utf8mb4'
+    });
+    await _dbPool.query('CREATE TABLE IF NOT EXISTS traffic_daily (' +
+      'day DATE PRIMARY KEY, visits INT NOT NULL DEFAULT 0, unique_visitors INT NOT NULL DEFAULT 0, ' +
+      'new_visitors INT NOT NULL DEFAULT 0, returning_visitors INT NOT NULL DEFAULT 0, ' +
+      'conn_pokerthnet INT NOT NULL DEFAULT 0, conn_lan INT NOT NULL DEFAULT 0, conn_offline INT NOT NULL DEFAULT 0, ' +
+      'updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4');
+    await _dbPool.query('CREATE TABLE IF NOT EXISTS leaderboard (' +
+      'player VARCHAR(190) PRIMARY KEY, hands_played INT NOT NULL DEFAULT 0, hands_won INT NOT NULL DEFAULT 0, ' +
+      'games_played INT NOT NULL DEFAULT 0, games_won INT NOT NULL DEFAULT 0, best_streak INT NOT NULL DEFAULT 0, ' +
+      'net BIGINT NOT NULL DEFAULT 0, big_win BIGINT NOT NULL DEFAULT 0, big_loss BIGINT NOT NULL DEFAULT 0, ' +
+      'avatar VARCHAR(16) DEFAULT NULL, ts BIGINT NOT NULL DEFAULT 0, ' +
+      'updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4');
+    _dbStatus.connected = true; _dbStatus.error = '';
+    console.log('[db] MySQL mirror connected (' + process.env.MYSQL_DATABASE + ')');
+    dbFlushTrafficToday();
+    dbFlushLeaderboard();
+  } catch (e) {
+    _dbPool = null; _dbStatus.connected = false; _dbStatus.error = e.message;
+    console.error('[db] connect/init failed:', e.message);
+  }
+}
+async function dbFlushTrafficToday() {
+  if (!_dbPool) return;
+  try {
+    const day = visitDayKey();
+    const b = visitsStore.days[day] || {};
+    const u = b.ids ? Object.keys(b.ids).length : 0;
+    const m = b.m || {};
+    await _dbPool.query(
+      'INSERT INTO traffic_daily (day, visits, unique_visitors, new_visitors, returning_visitors, conn_pokerthnet, conn_lan, conn_offline) VALUES (?,?,?,?,?,?,?,?) ' +
+      'ON DUPLICATE KEY UPDATE visits=VALUES(visits), unique_visitors=VALUES(unique_visitors), new_visitors=VALUES(new_visitors), returning_visitors=VALUES(returning_visitors), conn_pokerthnet=VALUES(conn_pokerthnet), conn_lan=VALUES(conn_lan), conn_offline=VALUES(conn_offline)',
+      [day, b.v || 0, u, b.nw || 0, b.rt || 0, m.pokerthnet || 0, m.lan || 0, m.offline || 0]
+    );
+    _dbStatus.lastWrite = new Date().toISOString(); _dbStatus.connected = true; _dbStatus.error = '';
+  } catch (e) { _dbStatus.error = e.message; }
+}
+async function dbFlushLeaderboard() {
+  if (!_dbPool || _dbLbBusy) return;
+  _dbLbBusy = true;
+  try {
+    const names = Object.keys(statsStore);
+    for (const name of names) {
+      const s = statsStore[name] || {};
+      await _dbPool.query(
+        'INSERT INTO leaderboard (player, hands_played, hands_won, games_played, games_won, best_streak, net, big_win, big_loss, avatar, ts) VALUES (?,?,?,?,?,?,?,?,?,?,?) ' +
+        'ON DUPLICATE KEY UPDATE hands_played=VALUES(hands_played), hands_won=VALUES(hands_won), games_played=VALUES(games_played), games_won=VALUES(games_won), best_streak=VALUES(best_streak), net=VALUES(net), big_win=VALUES(big_win), big_loss=VALUES(big_loss), avatar=VALUES(avatar), ts=VALUES(ts)',
+        [String(name).slice(0, 190), s.handsPlayed || 0, s.handsWon || 0, s.gamesPlayed || 0, s.gamesWon || 0, s.bestStreak || 0, s.net || 0, s.bigWin || 0, s.bigLoss || 0, (String(s.avatar || '').slice(0, 16) || null), s.ts || 0]
+      );
+    }
+    _dbStatus.lastWrite = new Date().toISOString(); _dbStatus.connected = true; _dbStatus.error = '';
+  } catch (e) { _dbStatus.error = e.message; }
+  finally { _dbLbBusy = false; }
+}
+async function dbDeletePlayer(name) {
+  if (!_dbPool) return;
+  try { await _dbPool.query('DELETE FROM leaderboard WHERE player=?', [String(name).slice(0, 190)]); }
+  catch (e) { _dbStatus.error = e.message; }
+}
+async function dbClearLeaderboard() {
+  if (!_dbPool) return;
+  try { await _dbPool.query('DELETE FROM leaderboard'); } catch (e) { _dbStatus.error = e.message; }
+}
+async function dbClearTraffic() {
+  if (!_dbPool) return;
+  try { await _dbPool.query('DELETE FROM traffic_daily'); } catch (e) { _dbStatus.error = e.message; }
+}
+initDb();
 
 function readJsonBody(req, cb) {
   let body = '';
@@ -916,7 +1011,8 @@ function handleAdmin(req, res, reqPathOnly, query) {
       return readJsonBody(req, function (d) {
         if (!adminAuthed(query, d && d.token)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
         if (d && d._reset) {
-          visitsStore = { days: {}, totalV: 0, allU: {} };
+          visitsStore = { days: {}, totalV: 0, totalRet: 0, allU: {}, allM: { pokerthnet: 0, lan: 0, offline: 0 } };
+          dbClearTraffic();
           try { fs.writeFileSync(VISITS_FILE, JSON.stringify(visitsStore)); } catch (e) { console.error('[visits] reset write failed:', e.message); }
           return adminJson(res, 200, { ok: true, reset: true });
         }
@@ -1441,7 +1537,7 @@ const httpServer = http.createServer((req, res) => {
           res.writeHead(400, { 'Content-Type': 'application/json; charset=utf-8' }); res.end('{"ok":false}'); return;
         }
         const name = d.name.trim().slice(0, 32);
-        if (d._delete) delete statsStore[name];
+        if (d._delete) { delete statsStore[name]; dbDeletePlayer(name); }
         else statsStore[name] = mergeSnapshot(statsStore[name], sanitizeSnapshot(d));
         saveStatsSoon();
         res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' });
