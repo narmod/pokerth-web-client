@@ -42,6 +42,7 @@ let _loaded = false;
 let _bodyEl = null;
 let _repeat = 'one';   // 'one' = loop track | 'all' = loop playlist | 'off' = play once
 let _seeking = false;  // true while the user drags the seek bar (don't let timeupdate fight the thumb)
+let _durProbed = false; // true once this track's total duration is resolved (see _probeDuration)
 
 // Web Audio routing. On iOS/WebKit, HTMLMediaElement.volume is read-only, so
 // `audio.volume = x` is silently ignored (volume is hardware-only there). Routing
@@ -91,6 +92,7 @@ function _el() {
     // Progress wiring — bound ONCE on the persistent element (not per-render),
     // updates whatever progress row currently exists in the panel.
     ['timeupdate', 'loadedmetadata', 'durationchange', 'seeked'].forEach(function (ev) { _audio.addEventListener(ev, _renderProgress); });
+    _audio.addEventListener('loadedmetadata', _probeDuration);
   }
   return _audio;
 }
@@ -160,6 +162,7 @@ async function play(id) {
   if (_curId !== t.id || !a.src) {
     _curId = t.id;
     a.src = t.file;
+    _durProbed = false;   // new source — re-resolve its duration on metadata load
     try { localStorage.setItem(LS_TRACK, t.id); } catch (e) {}
   }
   _ensureWebAudio(); _resumeCtx();        // build/unlock the audio graph (covers programmatic play too)
@@ -178,6 +181,27 @@ function next() { if (_tracks.length < 2) return play(_curId); var i = _index(_c
 function prev() { if (_tracks.length < 2) return play(_curId); var i = _index(_curId); if (i < 0) i = 0; return play(_tracks[(i - 1 + _tracks.length) % _tracks.length].id); }
 
 // ── Playback position / seeking ──
+// VBR / streamed MP3s (e.g. the incompetech tracks) advertise duration=Infinity
+// until the browser scans to the end of the file, which leaves the total time
+// stuck at 0:00. On metadata load, force a single seek-to-end probe so the
+// browser resolves a real duration, then restore the playback position. Runs at
+// most once per track (guarded by _durProbed, reset on source change in play()).
+function _probeDuration() {
+  if (!_audio || _durProbed) return;
+  var d = _audio.duration;
+  if (isFinite(d) && d > 0) { _durProbed = true; return; }   // duration already known
+  _durProbed = true;                                         // probe at most once per track
+  var back = _audio.currentTime || 0;
+  var onDur = function () {
+    if (_audio && isFinite(_audio.duration) && _audio.duration > 0) {
+      _audio.removeEventListener('durationchange', onDur);
+      try { _audio.currentTime = back; } catch (e) {}
+      _renderProgress();
+    }
+  };
+  _audio.addEventListener('durationchange', onDur);
+  try { _audio.currentTime = 1e101; } catch (e) {}          // clamp-to-end trick → forces duration calc
+}
 function getDuration()    { try { var d = _audio ? _audio.duration : 0; return (isFinite(d) && d > 0) ? d : 0; } catch (e) { return 0; } }
 function getCurrentTime() { try { return _audio ? (_audio.currentTime || 0) : 0; } catch (e) { return 0; } }
 function seek(t) {
