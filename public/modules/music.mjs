@@ -183,44 +183,66 @@ function next() { if (_tracks.length < 2) return play(_curId); var i = _index(_c
 function prev() { if (_tracks.length < 2) return play(_curId); var i = _index(_curId); if (i < 0) i = 0; return play(_tracks[(i - 1 + _tracks.length) % _tracks.length].id); }
 
 // ── Playback position / seeking ──
-// VBR / streamed MP3s advertise duration=Infinity until the browser scans to the
-// end of the file, leaving the total time stuck at 0:00. We resolve a real
-// duration WITHOUT disturbing playback: probe a DETACHED, muted throwaway element
-// (seeking the LIVE element to the clamp-to-end value breaks playback on iOS —
-// the audio gets stuck silent at the end). The resolved value lands in _probedDur,
-// which getDuration() falls back to. Runs at most once per track.
+// VBR / streamed MP3s advertise duration=Infinity until the browser scans the
+// whole file, leaving the total time stuck at 0:00 — and iOS never resolves it
+// from the element at all. So when the element can't tell us the duration, read
+// it straight from the file: fetch the first KBs and parse the MP3 Xing/Info
+// header (exact frame count) with a CBR fallback. Pure fetch + arithmetic, works
+// identically on iOS. Result lands in _probedDur, which getDuration() falls back to.
 function _probeDuration() {
   if (!_audio || _durProbed) return;
   var d = _audio.duration;
-  if (isFinite(d) && d > 0) { _durProbed = true; return; }   // duration already known
-  _durProbed = true;                                         // probe at most once per track
-  var src = (_audio.currentSrc || _audio.src);
-  if (!src) return;
-  var probe;
-  try { probe = new Audio(); } catch (e) { return; }
-  probe.preload = 'metadata';
-  probe.muted = true;
-  var timer = null;
-  var cleanup = function () {
-    if (timer) { clearTimeout(timer); timer = null; }
-    try { probe.removeEventListener('loadedmetadata', onMeta); } catch (e) {}
-    try { probe.removeEventListener('durationchange', onDur); } catch (e) {}
-    try { probe.removeAttribute('src'); probe.load(); } catch (e) {}
-  };
-  var settle = function () {
-    var pd = probe.duration;
-    if (isFinite(pd) && pd > 0) { _probedDur = pd; _renderProgress(); cleanup(); return true; }
-    return false;
-  };
-  var onMeta = function () {
-    if (settle()) return;
-    try { probe.currentTime = 1e101; } catch (e) {}          // clamp-to-end on the DETACHED element only
-  };
-  var onDur = function () { settle(); };
-  probe.addEventListener('loadedmetadata', onMeta);
-  probe.addEventListener('durationchange', onDur);
-  timer = setTimeout(cleanup, 8000);                         // give up quietly after 8s
-  try { probe.src = src; } catch (e) { cleanup(); }
+  if (isFinite(d) && d > 0) { _durProbed = true; return; }   // element already knows it
+  _durProbed = true;                                         // resolve at most once per track
+  var t = _byId(_curId);
+  var url = (t && t.file) || _audio.currentSrc || _audio.src;
+  if (!url) return;
+  _parseMp3Duration(url).then(function (sec) {
+    if (sec > 0 && isFinite(sec)) { _probedDur = sec; _renderProgress(); }
+  });
+}
+// Fetch the head of the MP3 and derive its duration from the frame/Xing header.
+async function _parseMp3Duration(url) {
+  try {
+    var resp = await fetch(url, { headers: { 'Range': 'bytes=0-65535' }, cache: 'force-cache' });
+    if (!resp.ok && resp.status !== 206) return 0;
+    var buf = new Uint8Array(await resp.arrayBuffer());
+    var total = 0;
+    var cr = resp.headers.get('Content-Range');
+    if (cr) { var m = /\/(\d+)/.exec(cr); if (m) total = parseInt(m[1], 10); }
+    else { var cl = resp.headers.get('Content-Length'); if (cl) total = parseInt(cl, 10); }
+    return _mp3DurationFromBytes(buf, total);
+  } catch (e) { return 0; }
+}
+function _mp3DurationFromBytes(b, totalSize) {
+  var n = b.length, i = 0;
+  if (n > 10 && b[0] === 0x49 && b[1] === 0x44 && b[2] === 0x33) {   // skip ID3v2
+    i = 10 + (((b[6] & 0x7f) << 21) | ((b[7] & 0x7f) << 14) | ((b[8] & 0x7f) << 7) | (b[9] & 0x7f));
+  }
+  while (i < n - 4 && !(b[i] === 0xFF && (b[i + 1] & 0xE0) === 0xE0)) i++;   // frame sync
+  if (i >= n - 4) return 0;
+  var h1 = b[i + 1], h2 = b[i + 2], h3 = b[i + 3];
+  var ver = (h1 >> 3) & 3, brIdx = (h2 >> 4) & 0x0F, srIdx = (h2 >> 2) & 3, ch = (h3 >> 6) & 3;
+  var mpeg1 = (ver === 3);
+  var srTab = mpeg1 ? [44100, 48000, 32000, 0] : (ver === 2 ? [22050, 24000, 16000, 0] : [11025, 12000, 8000, 0]);
+  var sr = srTab[srIdx]; if (!sr) return 0;
+  var brTab = mpeg1 ? [0,32,40,48,56,64,80,96,112,128,160,192,224,256,320,0]
+                    : [0,8,16,24,32,40,48,56,64,80,96,112,128,144,160,0];
+  var br = brTab[brIdx];                                     // kbps
+  var spf = mpeg1 ? 1152 : 576;                              // samples per frame (Layer III)
+  var off = i + (mpeg1 ? (ch === 3 ? 21 : 36) : (ch === 3 ? 13 : 21));   // Xing/Info tag offset
+  var isXing = off + 8 <= n && ((b[off] === 0x58 && b[off+1] === 0x69 && b[off+2] === 0x6E && b[off+3] === 0x67) ||   // "Xing"
+                                (b[off] === 0x49 && b[off+1] === 0x6E && b[off+2] === 0x66 && b[off+3] === 0x6F));    // "Info"
+  if (isXing) {
+    var flags = (b[off+4] << 24) | (b[off+5] << 16) | (b[off+6] << 8) | b[off+7];
+    if (flags & 1) {
+      var fo = off + 8;
+      var frames = (b[fo] << 24) | (b[fo+1] << 16) | (b[fo+2] << 8) | b[fo+3];
+      if (frames > 0) return frames * spf / sr;
+    }
+  }
+  if (br > 0 && totalSize > i) return (totalSize - i) * 8 / (br * 1000);   // CBR fallback
+  return 0;
 }
 function getDuration()    { try { var d = _audio ? _audio.duration : 0; if (isFinite(d) && d > 0) return d; return _probedDur > 0 ? _probedDur : 0; } catch (e) { return 0; } }
 function getCurrentTime() { try { return _audio ? (_audio.currentTime || 0) : 0; } catch (e) { return 0; } }
