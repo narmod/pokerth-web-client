@@ -6391,7 +6391,7 @@ const App = (() => {
         if (!elNow) return;
         // Indicateur couleur : vert brillant ≥71%, vert 51-70%, jaune 36-50%, orange 26-35%, rouge ≤25%
         var pctCol = pct >= 60 ? '#2ecc71' : pct >= 45 ? '#f0c040' : pct >= 30 ? '#e08a2e' : '#e74c3c';
-        _hsSet(elNow, handLabel + ' — ' + pct + '%', pct, pctCol);
+        _hsSet(elNow, handLabel + ' ' + pct + '%', pct, pctCol);
       }, 0);
     }
   }
@@ -10734,7 +10734,7 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.2.454'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.2.455'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

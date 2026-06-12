@@ -2367,7 +2367,8 @@ body {
   align-items: center;
   justify-content: center;
   padding: 2px 8px;
-  background: rgba(0,0,0,0.28);
+  background: rgba(0,0,0,0.80);
+  border: 1px solid rgba(255,255,255,0.16);
   border-radius: 5px;
   pointer-events: none;
 }
