@@ -567,10 +567,26 @@ function _makeTranslator(fromCode, toCode) {
     .then(function (av) { if (!av || av === 'unavailable') return null; return Translator.create({ sourceLanguage: from, targetLanguage: to }); })
     .catch(function () { return null; });
 }
+// The on-device Translator collapses line breaks (it treats the input as one
+// segment), which flattened the operator's layout. Translate each line on its
+// own and re-join with the original newlines; empty/whitespace lines pass
+// through untouched, and a per-line failure falls back to the source line.
+function _translateLines(tr, text) {
+  if (text == null) return Promise.resolve('');
+  var parts = String(text).split('\n');
+  return parts.reduce(function (acc, line) {
+    return acc.then(function (out) {
+      if (!line.trim()) { out.push(line); return out; }
+      return Promise.resolve(tr.translate(line))
+        .then(function (t) { out.push(t); return out; })
+        .catch(function () { out.push(line); return out; });
+    });
+  }, Promise.resolve([])).then(function (out) { return out.join('\n'); });
+}
 function _translateEntry(title, body, fromCode, toCode) {
   return _makeTranslator(fromCode, toCode).then(function (tr) {
     if (!tr) return null;
-    function one(s) { return s ? tr.translate(s) : Promise.resolve(''); }
+    function one(s) { return s ? _translateLines(tr, s) : Promise.resolve(''); }
     return one(title).then(function (t) { return one(body).then(function (b) { return { title: t, body: b }; }); });
   }).catch(function () { return null; });
 }
@@ -587,7 +603,7 @@ function _detectTranslate(text) {
   if (!text || !target || typeof Translator === 'undefined') return Promise.resolve(null);
   return _detectLang(text).then(function (src) {
     if (!src || _apiLang(src) === _apiLang(target)) return null;
-    return _makeTranslator(src, target).then(function (tr) { return tr ? tr.translate(text) : null; });
+    return _makeTranslator(src, target).then(function (tr) { return tr ? _translateLines(tr, text) : null; });
   }).catch(function () { return null; });
 }
 
@@ -10780,7 +10796,7 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.2.463'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.2.464'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
