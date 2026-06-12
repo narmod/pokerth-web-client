@@ -1753,6 +1753,7 @@ document.addEventListener("DOMContentLoaded", function() {
     function _applyBranding(c) {
       if (!c) return;
       if (c.tableDefaults && typeof c.tableDefaults === 'object') window._adminTableDefaults = c.tableDefaults;
+      if (c.tableNames && typeof c.tableNames === 'object') window._adminTableNames = c.tableNames;
       if (c.serverName) {
         var tn = document.querySelector('#s-connect .card-title-big');
         if (tn) tn.textContent = c.serverName;
@@ -3389,6 +3390,25 @@ const App = (() => {
     var tpl = (typeof t === 'function' && t('tableNameDefault')) || 'Table {name}';
     return tpl.replace('{name}', myName || 'PokerTH');
   }
+  // Nom de table imposé par l'admin pour le mode de connexion courant
+  // (admin -> /app-config.tableNames). Renvoie null si l'admin n'a rien fixé
+  // pour ce mode -> on retombe alors sur le nom auto localisé. Mapping :
+  // offline -> 'offline' ; pokerth.net (guest/auth) -> 'pokerthnet' ;
+  // LAN / serveur privé (lan/unauth) -> 'lan'.
+  function _adminNameForMode() {
+    var a = window._adminTableNames;
+    if (!a || typeof a !== 'object') return null;
+    var key = window._offlineMode ? 'offline'
+            : (_currentLoginMode === 'guest' || _currentLoginMode === 'auth') ? 'pokerthnet'
+            : 'lan';
+    var v = a[key];
+    return (typeof v === 'string' && v.trim()) ? v.trim() : null;
+  }
+  // Nom par défaut effectif du champ « nom de la table » : nom admin du mode
+  // courant s'il existe, sinon le défaut auto localisé (« Table {nom} »).
+  function _defaultNameForMode() {
+    return _adminNameForMode() || _localDefaultName();
+  }
   // Make a game name the PokerTH server will accept. Server rule
   // (serverlobbythread.cpp): the name is trimmed, then rejected as
   // badGameName if it is empty OR isprint() is false for its first *byte*.
@@ -3424,7 +3444,9 @@ const App = (() => {
     var cur = (el.value || '').trim();
     var nm = myName || 'PokerTH';
     var known = ['Table de ' + nm, nm + "'s table", 'Table ' + nm, 'My table', ''];
-    if (known.indexOf(cur) >= 0) el.value = _localDefaultName();
+    var adminN = _adminNameForMode();
+    if (adminN) known.push(adminN);
+    if (known.indexOf(cur) >= 0) el.value = _defaultNameForMode();
   };
   let games     = {};   // gameId → {name, mode, players, maxPlayers, type, priv}
   let players   = {};   // playerId → name
@@ -4167,7 +4189,7 @@ const App = (() => {
         }
         addChat(null, t('connectedAsGuest', { name: myName, id: myId }), 'sys', { key: 'connectedAsGuest', params: { name: myName, id: myId } });
         const cfName = document.getElementById('cf-name');
-        if (cfName) cfName.value = _localDefaultName();  // nom par défaut localisé
+        if (cfName) cfName.value = _defaultNameForMode();  // nom par défaut (mode courant / admin)
         break;
       }
 
@@ -9333,7 +9355,7 @@ function dismissWinner() {
         // turn timer on pokerth.net so public games keep moving (real
         // strangers, can't afford long thinking turns).
         var basePublic = {
-          name: _localDefaultName(),
+          name: _defaultNameForMode(),
           players: 10,
           blind: 10,
           stack: 3000,
@@ -9354,7 +9376,7 @@ function dismissWinner() {
       // when playing among friends. Bots default ON so a small group
       // can start a hand fast.
       var baseLan = {
-        name: _localDefaultName(),
+        name: _defaultNameForMode(),
         players: 10,
         blind: 10,
         stack: 3000,
@@ -9609,7 +9631,7 @@ function dismissWinner() {
         }
         return;
       }
-      const name    = _safeGameName(rawName || _localDefaultName());
+      const name    = _safeGameName(rawName || _defaultNameForMode());
       const nplayers= iv('cf-players', 2);
       const blind   = iv('cf-blind',   10);
       const stack   = iv('cf-stack',   3000);
@@ -10734,7 +10756,7 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.2.461'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.2.462'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

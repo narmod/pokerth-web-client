@@ -292,6 +292,15 @@
         <div id="tableMsg" class="msg"></div>
       </div>
       <div class="card">
+        <h2>Default table name (per mode)</h2>
+        <p class="muted" style="margin:0 0 8px">Pre-fills the table name in the &ldquo;create a table&rdquo; form, per connection mode. &ldquo;Automatic&rdquo; keeps the localized default (&ldquo;X&rsquo;s table&rdquo;); pick &ldquo;Custom&rdquo; to set a fixed name. Players can still rename their table. Max 48 characters.</p>
+        <div class="defrow" style="display:flex;align-items:center;gap:10px;margin:5px 0"><span style="white-space:nowrap">pokerth.net</span><select id="tnNetMode" style="flex:none"><option value="auto">Automatic</option><option value="custom">Custom</option></select><input id="tnNetName" maxlength="48" placeholder="e.g. My online game" autocomplete="off" style="flex:1;min-width:0;display:none"></div>
+        <div class="defrow" style="display:flex;align-items:center;gap:10px;margin:5px 0"><span style="white-space:nowrap">LAN / private</span><select id="tnLanMode" style="flex:none"><option value="auto">Automatic</option><option value="custom">Custom</option></select><input id="tnLanName" maxlength="48" placeholder="custom table name" autocomplete="off" style="flex:1;min-width:0;display:none"></div>
+        <div class="defrow" style="display:flex;align-items:center;gap:10px;margin:5px 0"><span style="white-space:nowrap">Offline (bots)</span><select id="tnOffMode" style="flex:none"><option value="auto">Automatic</option><option value="custom">Custom</option></select><input id="tnOffName" maxlength="48" placeholder="custom table name" autocomplete="off" style="flex:1;min-width:0;display:none"></div>
+        <div style="margin-top:8px"><button id="saveTableName" class="use">Save</button></div>
+        <div id="tableNameMsg" class="msg"></div>
+      </div>
+      <div class="card">
         <h2>Server identity (login screen)</h2>
         <p class="muted" style="margin:0 0 8px">Shown to everyone on the login screen, regardless of theme. Leave blank for the defaults (“PokerTH” / “Web Client”).</p>
         <div class="defrow" style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin:5px 0"><span>Server name</span><input id="srvName" maxlength="40" placeholder="PokerTH" autocomplete="off" style="flex:1;min-width:0"></div>
@@ -667,6 +676,7 @@
         if(d.defaults && typeof d.defaults==='object'){ var _DM={defHaptic:'haptic',defVoice:'voice',defAssist:'assist',defAuto:'autobtn',defQuick:'quickbet',defBB:'displaybb'}; Object.keys(_DM).forEach(function(id){ var el=$(id); if(el){ var dv=d.defaults[_DM[id]]; el.value=(dv==='0'||dv==='1')?dv:''; } }); }
         if(d.loginDefaults && typeof d.loginDefaults==='object'){ var L=d.loginDefaults; if($('defMode'))$('defMode').value=(['offline','lan-dedi','pokerthnet'].indexOf(L.mode)>=0)?L.mode:''; if($('defHost'))$('defHost').value=L.host||''; }
         if(d.tableDefaults && typeof d.tableDefaults==='object'){ var T=d.tableDefaults; var _tm={tdPlayers:'players',tdBlind:'blind',tdStack:'stack',tdTimeout:'timeout'}; Object.keys(_tm).forEach(function(id){ var el=$(id); if(el){ var v=T[_tm[id]]; el.value=(v==null)?'':v; } }); }
+        if(d.tableNames && typeof d.tableNames==='object'){ var TN=d.tableNames; [['tnNetMode','tnNetName','pokerthnet'],['tnLanMode','tnLanName','lan'],['tnOffMode','tnOffName','offline']].forEach(function(t){ var sel=$(t[0]), inp=$(t[1]), v=TN[t[2]], has=(typeof v==='string'&&v.trim()); if(sel) sel.value=has?'custom':'auto'; if(inp){ inp.value=has?v:''; inp.style.display=has?'':'none'; } }); }
         if($('srvName') && typeof d.serverName==='string') $('srvName').value=d.serverName;
         if($('srvTagline') && typeof d.serverTagline==='string') $('srvTagline').value=d.serverTagline;
         if(d.proxyCfg && typeof d.proxyCfg==='object'){ var P=d.proxyCfg; if($('pxHosts'))$('pxHosts').value=(Array.isArray(P.allowedHosts)?P.allowedHosts.join('\n'):''); if($('pxGrace'))$('pxGrace').value=(typeof P.graceSec==='number'?P.graceSec:''); if($('pxGap'))$('pxGap').value=(typeof P.connGapMs==='number'?P.connGapMs:''); if($('pxPorts'))$('pxPorts').value=(Array.isArray(P.allowedPorts)?P.allowedPorts.join('\n'):''); }
@@ -846,6 +856,18 @@
       .then(function(r){return r.json();}).then(function(d){ if(d&&d.ok){ m.textContent='Saved.'; m.className='msg ok'; } else { m.textContent='Failed: '+((d&&d.error)||'error'); m.className='msg err'; } })
       .catch(function(){ m.textContent='Network error.'; m.className='msg err'; });
   }); })();
+  (function(){ var b=$('saveTableName'); if(!b) return;
+    var tog=function(selId,inpId){ var s=$(selId),i=$(inpId); if(s&&i) i.style.display=(s.value==='custom')?'':'none'; };
+    [['tnNetMode','tnNetName'],['tnLanMode','tnLanName'],['tnOffMode','tnOffName']].forEach(function(t){ var s=$(t[0]); if(s) s.addEventListener('change', function(){ tog(t[0],t[1]); }); });
+    b.addEventListener('click', function(){
+      var pick=function(selId,inpId){ var s=$(selId),i=$(inpId); return (s&&s.value==='custom'&&i)?i.value.trim().slice(0,48):''; };
+      var TN={ pokerthnet:pick('tnNetMode','tnNetName'), lan:pick('tnLanMode','tnLanName'), offline:pick('tnOffMode','tnOffName') };
+      var m=$('tableNameMsg');
+      api('/admin/config',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({tableNames:TN,token:tok()})})
+        .then(function(r){return r.json();}).then(function(d){ if(d&&d.ok){ m.textContent='Saved.'; m.className='msg ok'; } else { m.textContent='Failed: '+((d&&d.error)||'error'); m.className='msg err'; } })
+        .catch(function(){ m.textContent='Network error.'; m.className='msg err'; });
+    });
+  })();
   (function(){ var si=$('saveIdent'); if(!si) return; si.addEventListener('click', function(){
     var m=$('identMsg');
     api('/admin/config',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({serverName:($('srvName')?$('srvName').value:''),serverTagline:($('srvTagline')?$('srvTagline').value:''),token:tok()})})
