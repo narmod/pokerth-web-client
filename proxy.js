@@ -253,7 +253,7 @@ const BROADCASTS_FILE = process.env.BROADCASTS_FILE || path.join(__dirname, 'bro
 let _broadcasts = [];
 try { _broadcasts = JSON.parse(fs.readFileSync(BROADCASTS_FILE, 'utf8')); if (!Array.isArray(_broadcasts)) _broadcasts = []; } catch (e) { _broadcasts = []; }
 const _bcTimers = {}; // job id -> setTimeout handle
-function saveBroadcasts() { try { fs.writeFileSync(BROADCASTS_FILE, JSON.stringify(_broadcasts)); } catch (e) { console.error('[broadcast] write failed:', e.message); } }
+function saveBroadcasts() { try { fs.writeFileSync(BROADCASTS_FILE, JSON.stringify(_broadcasts)); } catch (e) { console.error('[broadcast] write failed:', e.message); } dbFlushBroadcasts(); }
 let STATS_RESET_PERIOD = ((_adminConfig.resetPeriod || process.env.STATS_RESET_PERIOD || 'monthly') + '').toLowerCase();
 function appModes() { var m = (_adminConfig && _adminConfig.modes) || {}; return { offline: m.offline !== false, lan: m.lan !== false, pokerthnet: m.pokerthnet !== false }; }
 // First-visit welcome / rules message (operator-authored, per language).
@@ -427,6 +427,7 @@ function visitsSummary() {
 const MYSQL_ENABLED = !!(process.env.MYSQL_HOST && process.env.MYSQL_DATABASE);
 let _dbPool = null;
 let _dbLbBusy = false;
+let _dbBcBusy = false;
 const _dbStatus = { enabled: MYSQL_ENABLED, connected: false, error: '', lastWrite: null };
 async function initDb() {
   if (!MYSQL_ENABLED) { console.log('[db] MySQL mirror disabled (set MYSQL_HOST + MYSQL_DATABASE to enable)'); return; }
@@ -453,10 +454,16 @@ async function initDb() {
       'net BIGINT NOT NULL DEFAULT 0, big_win BIGINT NOT NULL DEFAULT 0, big_loss BIGINT NOT NULL DEFAULT 0, ' +
       'avatar VARCHAR(16) DEFAULT NULL, ts BIGINT NOT NULL DEFAULT 0, ' +
       'updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4');
+    await _dbPool.query('CREATE TABLE IF NOT EXISTS broadcasts (' +
+      'id VARCHAR(64) PRIMARY KEY, message TEXT, icon VARCHAR(32) DEFAULT NULL, schedule_json TEXT, ' +
+      'enabled TINYINT(1) NOT NULL DEFAULT 0, end_at BIGINT DEFAULT NULL, max_runs INT DEFAULT NULL, ' +
+      'created_at BIGINT DEFAULT NULL, last_run BIGINT DEFAULT NULL, run_count INT NOT NULL DEFAULT 0, ' +
+      'updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4');
     _dbStatus.connected = true; _dbStatus.error = '';
     console.log('[db] MySQL mirror connected (' + process.env.MYSQL_DATABASE + ')');
     dbFlushTrafficToday();
     dbFlushLeaderboard();
+    dbFlushBroadcasts();
   } catch (e) {
     _dbPool = null; _dbStatus.connected = false; _dbStatus.error = e.message;
     console.error('[db] connect/init failed:', e.message);
@@ -493,6 +500,28 @@ async function dbFlushLeaderboard() {
     _dbStatus.lastWrite = new Date().toISOString(); _dbStatus.connected = true; _dbStatus.error = '';
   } catch (e) { _dbStatus.error = e.message; }
   finally { _dbLbBusy = false; }
+}
+async function dbFlushBroadcasts() {
+  if (!_dbPool || _dbBcBusy) return;
+  _dbBcBusy = true;
+  try {
+    const ids = [];
+    for (const j of _broadcasts) {
+      ids.push(String(j.id).slice(0, 64));
+      await _dbPool.query(
+        'INSERT INTO broadcasts (id, message, icon, schedule_json, enabled, end_at, max_runs, created_at, last_run, run_count) VALUES (?,?,?,?,?,?,?,?,?,?) ' +
+        'ON DUPLICATE KEY UPDATE message=VALUES(message), icon=VALUES(icon), schedule_json=VALUES(schedule_json), enabled=VALUES(enabled), end_at=VALUES(end_at), max_runs=VALUES(max_runs), created_at=VALUES(created_at), last_run=VALUES(last_run), run_count=VALUES(run_count)',
+        [String(j.id).slice(0, 64), (j.message != null ? String(j.message).slice(0, 2000) : null), (j.icon ? String(j.icon).slice(0, 32) : null), JSON.stringify(j.schedule || null), j.enabled ? 1 : 0, (j.endAt != null ? Number(j.endAt) : null), (j.maxRuns != null ? Number(j.maxRuns) : null), (j.createdAt != null ? Number(j.createdAt) : null), (j.lastRun != null ? Number(j.lastRun) : null), Number(j.runCount) || 0]
+      );
+    }
+    if (ids.length) {
+      await _dbPool.query('DELETE FROM broadcasts WHERE id NOT IN (' + ids.map(function () { return '?'; }).join(',') + ')', ids);
+    } else {
+      await _dbPool.query('DELETE FROM broadcasts');
+    }
+    _dbStatus.lastWrite = new Date().toISOString(); _dbStatus.connected = true; _dbStatus.error = '';
+  } catch (e) { _dbStatus.error = e.message; }
+  finally { _dbBcBusy = false; }
 }
 async function dbDeletePlayer(name) {
   if (!_dbPool) return;
