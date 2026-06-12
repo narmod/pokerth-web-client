@@ -9,7 +9,7 @@ features.
 - **Report a bug** — open an issue with steps to reproduce, your browser/OS, and
   whether you connect via the public demo or your own server.
 - **Suggest a feature** — open a feature request and describe the use case.
-- **Improve a translation** — the 33 language catalogues are largely
+- **Improve a translation** — the 36 language catalogues are largely
   machine-assisted, so native review is especially valuable (see below).
 - **Send a pull request** — see the workflow further down.
 
@@ -31,11 +31,12 @@ variants, and [`docs/PROJECT.md`](docs/PROJECT.md) for an architecture overview.
 
 The codebase is intentionally dependency-light:
 
-- `proxy.js` — the WebSocket→TCP/TLS proxy and static HTTP server (Node, only
-  `ws` as a runtime dependency).
+- `proxy.js` — the WebSocket→TCP/TLS proxy and static HTTP server (Node — `ws` at
+  runtime, plus `mysql2` only for the optional database mirror).
 - `public/pokerth.js` — the bulk of the client logic (vanilla JS, no framework).
-- `public/modules/` — extracted ES modules: `i18n`, `sounds`, and the Protobuf
-  bindings under `public/proto/`.
+- `public/modules/` — extracted ES modules: `i18n` (36 languages), `theme`
+  (theming engine), `sounds`, `music`, and the offline game engine under
+  `public/modules/offline/`; plus the Protobuf bindings under `public/proto/`.
 
 ## Adding or fixing a translation
 
