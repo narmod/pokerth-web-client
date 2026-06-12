@@ -3432,21 +3432,6 @@ body {
   opacity: 0.5;
 }
 .actions-preview .mode-sel-wrap { pointer-events: auto; opacity: 1; }  /* mode dropdown reste activable en aperçu */
-/* Pastille "œil" discrète en haut à droite : signale l'aperçu sans
-   modifier la structure du panneau (purement décorative). */
-.actions-preview::after {
-  content: "\1F441\FE0E";
-  position: absolute;
-  top: -8px; left: 6px; right: auto;
-  font-size: 0.6rem;
-  line-height: 1;
-  color: var(--gold);
-  background: var(--panel);
-  border: 1px solid rgba(var(--gold-rgb), 0.45);
-  border-radius: 999px;
-  padding: 2px 6px;
-  pointer-events: none;
-}
 /* Hidden by default; shown only when the user enables it from the ••• menu. */
 body.hide-auto-btn .btn-auto,
 body.hide-auto-btn .mode-sel-wrap { display: none; }
