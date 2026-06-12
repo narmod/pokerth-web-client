@@ -3706,6 +3706,10 @@ const App = (() => {
   // que l'utilisateur manipule #mode-sel, on differe les reconstructions
   // d'apercu (renderMyTurnActions(true)) pour ne pas detruire le <select> ouvert.
   let _modeSelBusy = false, _modeSelPendingPreview = false, _modeSelHoldTimer = null;
+  // Epingle : garder le panneau d'apercu ouvert en permanence hors-tour
+  // (au lieu de retaper ses cartes a chaque main). Memorise entre sessions.
+  let _actionBarPinned = (function(){ try { return localStorage.getItem('pth_pin_actionbar') === '1'; } catch(e){ return false; } })();
+  let _lastWaitingMsg = '', _lastWaitingIsHtml = false;
   // User preference: show the compact auto check/fold button in the action
   // bar. OFF by default (some players — e.g. kids — found it confusing).
   // Toggled from the header ••• menu and remembered in localStorage. The
@@ -7042,7 +7046,9 @@ const App = (() => {
     // Si le panneau "aperçu" est ouvert et que ce n'est pas notre tour, on
     // affiche le panneau au lieu du message d'attente (et on le garde sticky
     // face aux mises à jour serveur — tour d'un autre joueur, etc.).
-    if (_preActionOpen && turnPid !== myId) { _renderPreActionPanel(); updateBottomLayout(); return; }
+    _lastWaitingMsg = msg; _lastWaitingIsHtml = !!isHtml;
+    var _pinShow = _actionBarPinned && !_amSpectator && _gameStarted && !(myCards[0] == null && myCards[1] == null);
+    if ((_preActionOpen || _pinShow) && turnPid !== myId) { _renderPreActionPanel(); updateBottomLayout(); return; }
     // isHtml=true : msg contient du HTML interne sûr (généré par notre code)
     $('g-actions').innerHTML = '<div class="waiting-msg">' + (isHtml ? msg : esc(msg)) + '</div>';
     updateBottomLayout();
@@ -7055,6 +7061,15 @@ const App = (() => {
     if (!_modeSelPendingPreview) return;
     _modeSelPendingPreview = false;
     if (_preActionOpen && turnPid !== myId) renderMyTurnActions(true);
+  }
+
+  function _updatePinBtn() {
+    var b = document.getElementById('g-pin-btn'); if (!b) return;
+    var on = _actionBarPinned;
+    b.setAttribute('aria-pressed', on ? 'true' : 'false');
+    b.style.opacity = on ? '1' : '0.5';
+    b.style.borderColor = on ? 'var(--gold)' : 'var(--border)';
+    b.style.boxShadow = on ? '0 0 8px var(--border-hi)' : '0 1px 4px rgba(0,0,0,0.28)';
   }
 
   function _renderPreActionPanel() {
@@ -7343,6 +7358,7 @@ const App = (() => {
   }
 
   function updateBottomLayout() {
+    _updatePinBtn();
     var pb = document.querySelector('.player-bar');
     var mz = document.querySelector('.my-zone');
     if (pb && mz) {
@@ -8911,6 +8927,14 @@ function dismissWinner() {
       clearTimeout(_modeSelHoldTimer); _modeSelHoldTimer = null;
       if (on) _modeSelHoldTimer = setTimeout(function(){ _modeSelBusy = false; _flushPreviewIfPending(); }, 8000);
       else _flushPreviewIfPending();
+    },
+
+    toggleActionPin() {
+      _actionBarPinned = !_actionBarPinned;
+      try { localStorage.setItem('pth_pin_actionbar', _actionBarPinned ? '1' : '0'); } catch(e){}
+      _updatePinBtn();
+      // rafraichit immediatement l'UI hors-tour pour refleter le nouvel etat
+      if (turnPid !== myId && _gameStarted) renderGameWaiting(_lastWaitingMsg, _lastWaitingIsHtml);
     },
 
     setPlayingMode(idx) {
@@ -10702,7 +10726,7 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.2.445'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.2.446'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

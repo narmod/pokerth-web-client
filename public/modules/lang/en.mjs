@@ -216,7 +216,7 @@ export const strings = {
     autoChecked:'Auto-checked',
     autoCalled:'Auto-called',
     modeManual:'Manual', modeAutoCheckCall:'Auto Check/Call', modeAutoCheckFold:'Auto Check/Fold',
-    preActionTitle:'Action preview', preActionHint:'tap cards to close',
+    preActionTitle:'Action preview', preActionHint:'tap cards to close', pinActionBar:'Keep the action bar open',
     autoFolded:'Auto-folded',
     initializing:'Initialising…',
     preparingConnection:'Preparing new connection ({n}s)…',

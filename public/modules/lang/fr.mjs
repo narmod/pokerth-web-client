@@ -216,7 +216,7 @@ export const strings = {
     autoChecked:'Auto-check effectué',
     autoCalled:'Auto-call effectué',
     modeManual:'Manuel', modeAutoCheckCall:'Auto Check/Call', modeAutoCheckFold:'Auto Check/Fold',
-    preActionTitle:'Aperçu des actions', preActionHint:'tape tes cartes pour fermer',
+    preActionTitle:'Aperçu des actions', preActionHint:'tape tes cartes pour fermer', pinActionBar:'Garder la barre ouverte',
     autoFolded:'Auto-fold effectué',
     initializing:'Initialisation…',
     preparingConnection:'Préparation de la nouvelle connexion ({n}s)…',
