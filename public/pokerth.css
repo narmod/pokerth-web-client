@@ -257,6 +257,16 @@ html { touch-action: manipulation; -webkit-text-size-adjust: 100%; text-size-adj
 }
 :root[data-table-full="1"] .felt-oval::before { display: none; }
 
+/* Table « Fullscreen » : l'image du pack part en fond plein ecran (--wallpaper,
+   active par data-bg-img -> regle body.in-game ci-dessous) et l'ovale devient
+   invisible. data-table-fs est pose par theme.mjs (pack table en mode fullscreen). */
+:root[data-table-fs="1"] .felt-oval {
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+}
+:root[data-table-fs="1"] .felt-oval::before { display: none; }
+
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
 html, body {
@@ -274,6 +284,18 @@ body {
     radial-gradient(ellipse 140% 70% at 50% 0%, var(--body-glow) 0%, transparent 65%),
     repeating-linear-gradient(45deg, transparent, transparent 3px,
       rgba(0,0,0,0.04) 3px, rgba(0,0,0,0.04) 6px);
+}
+
+/* Fond plein ecran (mode table Fullscreen) : image dans --wallpaper, activee
+   par data-bg-img sur <html>, limitee a l'ecran de jeu (body.in-game) -> le
+   lobby/connexion gardent leur fond. Voile tres leger pour la lisibilite. */
+html[data-bg-img] body.in-game {
+  background-image:
+    linear-gradient(rgba(0,0,0,0.14), rgba(0,0,0,0.14)),
+    var(--wallpaper, none);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 
 /* ─── SCREENS ─── */

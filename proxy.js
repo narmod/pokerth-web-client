@@ -867,6 +867,10 @@ function pkgDisabledSet(kind) { var d = (_adminConfig && _adminConfig.pkgDisable
 // ids live in _adminConfig.pkgFull = { table:[...] }; injected into the served
 // /table/tables.json as full:true so the client (theme.mjs) renders it plein cadre.
 function pkgFullSet(kind) { var d = (_adminConfig && _adminConfig.pkgFull) || {}; var a = d[kind]; return Array.isArray(a) ? a : []; }
+// Like pkgFull, but the felt image becomes a FULL-SCREEN background (no table at
+// all). Ids live in _adminConfig.pkgFullscreen = { table:[...] }; injected into the
+// served /table/tables.json as fullscreen:true. Mutually exclusive with full.
+function pkgFullscreenSet(kind) { var d = (_adminConfig && _adminConfig.pkgFullscreen) || {}; var a = d[kind]; return Array.isArray(a) ? a : []; }
 function readRawBody(req, max, cb) {
   let chunks = [], len = 0, tooBig = false;
   req.on('data', function (c) { len += c.length; if (len > max) { tooBig = true; req.destroy(); return; } chunks.push(c); });
@@ -1034,9 +1038,9 @@ function handleAdmin(req, res, reqPathOnly, query) {
   }
   if (reqPathOnly === '/admin/pkg-list') {
     if (!adminAuthed(query)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
-    var _pl = pkgList(), _td = pkgDisabledSet('table'), _dd = pkgDisabledSet('deck'), _hd = pkgDisabledSet('theme'), _sd = pkgDisabledSet('seat'), _tf = pkgFullSet('table');
+    var _pl = pkgList(), _td = pkgDisabledSet('table'), _dd = pkgDisabledSet('deck'), _hd = pkgDisabledSet('theme'), _sd = pkgDisabledSet('seat'), _tf = pkgFullSet('table'), _tfs = pkgFullscreenSet('table');
     return adminJson(res, 200, { ok: true,
-      tables: (_pl.tables || []).map(function (t) { return Object.assign({}, t, { disabled: _td.indexOf(t.id) >= 0, full: _tf.indexOf(t.id) >= 0 || !!t.full }); }),
+      tables: (_pl.tables || []).map(function (t) { var _fs = _tfs.indexOf(t.id) >= 0; var _fu = !_fs && (_tf.indexOf(t.id) >= 0 || !!t.full); return Object.assign({}, t, { disabled: _td.indexOf(t.id) >= 0, full: _fu, fullscreen: _fs, mode: _fs ? 'fullscreen' : (_fu ? 'full' : 'frame') }); }),
       decks:  (_pl.decks  || []).map(function (d) { return Object.assign({}, d, { disabled: _dd.indexOf(d.id) >= 0 }); }),
       seats:  (_pl.seats  || []).map(function (s) { return Object.assign({}, s, { disabled: _sd.indexOf(s.id) >= 0 }); }),
       themes: (_pl.themes || []).map(function (t) { return Object.assign({}, t, { disabled: _hd.indexOf(t.id) >= 0 }); }) });
@@ -1207,6 +1211,7 @@ function handleAdmin(req, res, reqPathOnly, query) {
       try { fs.rmSync(dir, { recursive: true, force: true }); } catch (e) { return adminJson(res, 500, { ok: false, error: 'remove failed' }); }
       try { var _da = pkgDisabledSet(kind); var _i = _da.indexOf(id); if (_i >= 0) { _da.splice(_i, 1); _adminConfig.pkgDisabled[kind] = _da; saveAdminConfig(); } } catch (e) {}
       try { if (kind === 'table' && _adminConfig.pkgFull && Array.isArray(_adminConfig.pkgFull.table)) { var _fa = _adminConfig.pkgFull.table; var _fi = _fa.indexOf(id); if (_fi >= 0) { _fa.splice(_fi, 1); _adminConfig.pkgFull.table = _fa; saveAdminConfig(); } } } catch (e) {}
+      try { if (kind === 'table' && _adminConfig.pkgFullscreen && Array.isArray(_adminConfig.pkgFullscreen.table)) { var _sa = _adminConfig.pkgFullscreen.table; var _si = _sa.indexOf(id); if (_si >= 0) { _sa.splice(_si, 1); _adminConfig.pkgFullscreen.table = _sa; saveAdminConfig(); } } } catch (e) {}
       regenManifest(kind);
       adminJson(res, 200, { ok: true });
     });
@@ -1234,14 +1239,21 @@ function handleAdmin(req, res, reqPathOnly, query) {
       if (!adminAuthed(query, d && d.token)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
       const id = slugId(d && d.id);
       if (!id) return adminJson(res, 400, { ok: false, error: 'id required' });
-      const full = !!(d && d.full);
+      // Mode: 'frame' | 'full' | 'fullscreen'. Legacy: {full:true/false} => full/frame.
+      var mode = (d && typeof d.mode === 'string') ? d.mode : ((d && d.full) ? 'full' : 'frame');
+      if (mode !== 'full' && mode !== 'fullscreen') mode = 'frame';
       _adminConfig.pkgFull = _adminConfig.pkgFull || {};
-      var arr = Array.isArray(_adminConfig.pkgFull.table) ? _adminConfig.pkgFull.table : [];
-      var i = arr.indexOf(id);
-      if (full) { if (i < 0) arr.push(id); } else { if (i >= 0) arr.splice(i, 1); }
-      _adminConfig.pkgFull.table = arr;
+      _adminConfig.pkgFullscreen = _adminConfig.pkgFullscreen || {};
+      var fa = Array.isArray(_adminConfig.pkgFull.table) ? _adminConfig.pkgFull.table : [];
+      var sa = Array.isArray(_adminConfig.pkgFullscreen.table) ? _adminConfig.pkgFullscreen.table : [];
+      var fi = fa.indexOf(id); if (fi >= 0) fa.splice(fi, 1);
+      var si = sa.indexOf(id); if (si >= 0) sa.splice(si, 1);
+      if (mode === 'full') fa.push(id);
+      else if (mode === 'fullscreen') sa.push(id);
+      _adminConfig.pkgFull.table = fa;
+      _adminConfig.pkgFullscreen.table = sa;
       saveAdminConfig();
-      return adminJson(res, 200, { ok: true, id: id, full: full });
+      return adminJson(res, 200, { ok: true, id: id, mode: mode, full: (mode === 'full') });
     });
   }
   if (reqPathOnly === '/admin/music-list') {
@@ -1612,7 +1624,7 @@ const httpServer = http.createServer((req, res) => {
     if (!Array.isArray(_list)) _list = [];
     var _dis = pkgDisabledSet(_pkgKind);
     if (_dis.length) _list = _list.filter(function (x) { return x && _dis.indexOf(x.id) < 0; });
-    if (_pkgKind === 'table') { var _full = pkgFullSet('table'); if (_full.length) _list = _list.map(function (x) { return (x && _full.indexOf(x.id) >= 0) ? Object.assign({}, x, { full: true }) : x; }); }
+    if (_pkgKind === 'table') { var _full = pkgFullSet('table'), _fscr = pkgFullscreenSet('table'); if (_full.length || _fscr.length) _list = _list.map(function (x) { if (!x) return x; if (_fscr.indexOf(x.id) >= 0) return Object.assign({}, x, { fullscreen: true, full: false, mode: 'fullscreen' }); if (_full.indexOf(x.id) >= 0) return Object.assign({}, x, { full: true, mode: 'full' }); return x; }); }
     res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' });
     res.end(JSON.stringify(_list));
     return;

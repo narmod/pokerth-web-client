@@ -258,7 +258,7 @@ function _loadGalleryTables() {
         _galleryTables = list.filter(function (t) { return t && t.id && t.feltUrl; }).map(function (t) {
           var pk = null, pv = t.pucks;
           if (pv) { pk = {}; ['dealer','sb','bb'].forEach(function (k) { if (pv[k]) pk[k] = 'url(' + pv[k] + ')'; }); }
-          return { id: String(t.id), name: t.name || String(t.id), feltUrl: t.feltUrl, pucks: pk, preview: t.preview || (pv && pv.dealer) || null, swatch: '#1e6b1e', full: !!t.full };
+          return { id: String(t.id), name: t.name || String(t.id), feltUrl: t.feltUrl, pucks: pk, preview: t.preview || (pv && pv.dealer) || null, swatch: '#1e6b1e', full: !!t.full, fs: !!t.fullscreen };
         }).filter(function (t) { if (_isBuiltinTable(t.id)) return false; for (var i=0;i<_tablePkgs.length;i++) if (_tablePkgs[i].id===t.id) return false; return true; });
         try { table.apply(table.get()); pucks.apply(pucks.get()); } catch (e) {}
         if (_body) _render();
@@ -381,22 +381,37 @@ function _applyTableFull(imgUrl){
     }catch(e){}
   }
 }
+// Table « Fullscreen » : l'image du pack devient un fond plein ecran (--wallpaper
+// + data-bg-img, cf. la regle body.in-game du CSS) et l'ovale passe transparent
+// (data-table-fs). Exclusif avec full. null = on nettoie tout (retour normal).
+function _applyTableFullscreen(imgUrl){
+  var el=document.documentElement;
+  if (imgUrl){
+    el.setAttribute('data-table-fs','1');
+    el.setAttribute('data-bg-img','1');
+    el.style.setProperty('--wallpaper','url('+imgUrl+')');
+  } else {
+    el.removeAttribute('data-table-fs');
+    el.removeAttribute('data-bg-img');
+    el.style.removeProperty('--wallpaper');
+  }
+}
 var _tblApply = table.apply;
 table.apply = function(id){
   _tblApply(id);
-  var fimg=null;
+  var fimg=null, fsimg=null;
   try{
     if (_isBuiltinTable(id)) { _injectTable(null); }
     else {
       var pk=_tablePkgById(id);
-      if(pk){ _injectTable(pk); if(pk.full) fimg=(pk.felt?('/themes/'+pk.id+'/'+pk.felt):null); }
+      if(pk){ _injectTable(pk); var pu=(pk.felt?('/themes/'+pk.id+'/'+pk.felt):null); if(pk.fs) fsimg=pu; else if(pk.full) fimg=pu; }
       else {
         var gt=_galleryTableById(id);
-        if(gt){ _injectAxis(TABLE_TOKENS,{id:gt.id,tokens:{},feltUrl:gt.feltUrl},'pth_table_css',true); if(gt.full) fimg=gt.feltUrl||null; }
+        if(gt){ _injectAxis(TABLE_TOKENS,{id:gt.id,tokens:{},feltUrl:gt.feltUrl},'pth_table_css',true); if(gt.fs) fsimg=gt.feltUrl||null; else if(gt.full) fimg=gt.feltUrl||null; }
       }
     }
   }catch(e){}
-  try{ _applyTableFull(fimg); }catch(e){}
+  try{ if(fsimg){ _applyTableFull(null); _applyTableFullscreen(fsimg); } else { _applyTableFullscreen(null); _applyTableFull(fimg); } }catch(e){}
 };
 table.set = table.apply;
 var _btnApply = buttons.apply;
@@ -427,7 +442,7 @@ function _loadThemes(){
         if(!Array.isArray(list)) return;
         var pkgs=list.filter(function(p){return p&&p.id&&(p.palette||p.table||p.felt||p.pucks||p.buttonImages||p.buttons);});
         _palettePkgs=pkgs.filter(function(p){return p.palette;}).map(function(p){ return {id:String(p.id),name:p.name||String(p.id),swatch:p.swatch||'#444',tokens:p.palette}; }).filter(function(p){ return !_isBuiltinPalette(p.id); });
-        _tablePkgs=pkgs.filter(function(p){return p.table||p.felt;}).map(function(p){ return {id:String(p.id),name:p.name||String(p.id),swatch:p.swatch||'#444',tokens:p.table||{},felt:p.felt||null,full:!!p.full}; }).filter(function(p){ return !_isBuiltinTable(p.id); });
+        _tablePkgs=pkgs.filter(function(p){return p.table||p.felt;}).map(function(p){ return {id:String(p.id),name:p.name||String(p.id),swatch:p.swatch||'#444',tokens:p.table||{},felt:p.felt||null,full:!!p.full,fs:!!p.fullscreen}; }).filter(function(p){ return !_isBuiltinTable(p.id); });
         _pkgPresets=pkgs.filter(function(p){return p.palette||p.table||p.felt;}).map(function(p){ var vals={theme:(p.palette?String(p.id):''),table:((p.table||p.felt)?String(p.id):''),buttons:'glossy',pucks:'pokerth-new'}; if(p.deck) vals.deck=String(p.deck); return {id:'pkg-'+p.id,name:p.name||String(p.id),swatch:p.swatch||'#444',values:vals}; });
         _puckPkgs=pkgs.filter(function(p){return p.pucks;}).map(function(p){ var set={},pv=p.pucks; ['dealer','sb','bb'].forEach(function(k){ if(pv[k]) set[k]='url(/themes/'+p.id+'/'+pv[k]+')'; }); return {id:String(p.id),name:p.name||String(p.id),swatch:p.swatch||'#444',set:set,preview:(pv.dealer?'/themes/'+p.id+'/'+pv.dealer:null)}; }).filter(function(p){ return p.id!=='pokerth'; });
         _buttonPkgs=pkgs.filter(function(p){return p.buttonImages||p.buttons;}).map(function(p){ var e={id:String(p.id),name:p.name||String(p.id),swatch:p.swatch||'#444'}; if(p.buttonImages){ e.images={}; ['fold','check','call','raise','allin'].forEach(function(k){ if(p.buttonImages[k]) e.images[k]='url(/themes/'+p.id+'/'+p.buttonImages[k]+')'; }); } if(p.buttons){ e.colors=p.buttons; } return e; }).filter(function(p){ return p.id!=='glossy'; });
