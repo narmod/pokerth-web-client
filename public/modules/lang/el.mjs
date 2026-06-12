@@ -12,7 +12,7 @@ export const meta = {
 export const strings = {
     musicPlayer:'Αναπαραγωγή',
     soundVolume:'Ήχοι παιχνιδιού',
-    musicTooltip:'Μουσική', musicPanelTitle:'Μουσική', musicNowPlaying:'Αναπαράγεται τώρα', musicNoTracks:'Δεν υπάρχουν διαθέσιμα κομμάτια', musicVolume:'Ένταση', musicPlay:'Αναπαραγωγή', musicPause:'Παύση', musicStop:'Διακοπή', musicNext:'Επόμενο', musicPrev:'Προηγούμενο', musicTrack:'Κομμάτι', musicRepeat:'Επανάληψη', musicRepeatOne:'Επανάληψη κομματιού', musicRepeatAll:'Επανάληψη λίστας', musicRepeatOff:'Αναπαραγωγή μία φορά',
+    musicTooltip:'Ήχοι & Μουσική', musicPanelTitle:'Ήχοι & Μουσική', musicNowPlaying:'Αναπαράγεται τώρα', musicNoTracks:'Δεν υπάρχουν διαθέσιμα κομμάτια', musicVolume:'Ένταση', musicPlay:'Αναπαραγωγή', musicPause:'Παύση', musicStop:'Διακοπή', musicNext:'Επόμενο', musicPrev:'Προηγούμενο', musicTrack:'Κομμάτι', musicRepeat:'Επανάληψη', musicRepeatOne:'Επανάληψη κομματιού', musicRepeatAll:'Επανάληψη λίστας', musicRepeatOff:'Αναπαραγωγή μία φορά',
   seatCard: 'Card', seatCompact: 'Compact', seatBar: 'Bar',
   seatChip: 'Chip',
   sectionSeat: 'Θέσεις', seatClassic: 'Classic', seatPlate: 'Plate',

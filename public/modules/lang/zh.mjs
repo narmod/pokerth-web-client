@@ -13,7 +13,7 @@ export const meta = {
 export const strings = {
     musicPlayer:'播放器',
     soundVolume:'游戏音效',
-    musicTooltip:'音乐', musicPanelTitle:'音乐', musicNowPlaying:'正在播放', musicNoTracks:'没有可用曲目', musicVolume:'音量', musicPlay:'播放', musicPause:'暂停', musicStop:'停止', musicNext:'下一首', musicPrev:'上一首', musicTrack:'曲目', musicRepeat:'重复', musicRepeatOne:'单曲循环', musicRepeatAll:'列表循环', musicRepeatOff:'播放一次',
+    musicTooltip:'音效 & 音乐', musicPanelTitle:'音效 & 音乐', musicNowPlaying:'正在播放', musicNoTracks:'没有可用曲目', musicVolume:'音量', musicPlay:'播放', musicPause:'暂停', musicStop:'停止', musicNext:'下一首', musicPrev:'上一首', musicTrack:'曲目', musicRepeat:'重复', musicRepeatOne:'单曲循环', musicRepeatAll:'列表循环', musicRepeatOff:'播放一次',
   seatCard: 'Card', seatCompact: 'Compact', seatBar: 'Bar',
   seatChip: 'Chip',
   sectionSeat: '座位', seatClassic: 'Classic', seatPlate: 'Plate',

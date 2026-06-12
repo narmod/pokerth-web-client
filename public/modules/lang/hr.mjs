@@ -12,7 +12,7 @@ export const meta = {
 export const strings = {
     musicPlayer:'Reproduktor',
     soundVolume:'Zvukovi igre',
-    musicTooltip:'Glazba', musicPanelTitle:'Glazba', musicNowPlaying:'Sada svira', musicNoTracks:'Nema dostupnih pjesama', musicVolume:'Glasnoća', musicPlay:'Reproduciraj', musicPause:'Pauza', musicStop:'Zaustavi', musicNext:'Sljedeća', musicPrev:'Prethodna', musicTrack:'Pjesma', musicRepeat:'Ponavljanje', musicRepeatOne:'Ponovi pjesmu', musicRepeatAll:'Ponovi popis', musicRepeatOff:'Reproduciraj jednom',
+    musicTooltip:'Zvuk & Glazba', musicPanelTitle:'Zvuk & Glazba', musicNowPlaying:'Sada svira', musicNoTracks:'Nema dostupnih pjesama', musicVolume:'Glasnoća', musicPlay:'Reproduciraj', musicPause:'Pauza', musicStop:'Zaustavi', musicNext:'Sljedeća', musicPrev:'Prethodna', musicTrack:'Pjesma', musicRepeat:'Ponavljanje', musicRepeatOne:'Ponovi pjesmu', musicRepeatAll:'Ponovi popis', musicRepeatOff:'Reproduciraj jednom',
   seatCard: 'Card', seatCompact: 'Compact', seatBar: 'Bar',
   seatChip: 'Chip',
   sectionSeat: 'Mjesta', seatClassic: 'Classic', seatPlate: 'Plate',

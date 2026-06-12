@@ -12,7 +12,7 @@ export const meta = {
 export const strings = {
     musicPlayer:'Lejátszó',
     soundVolume:'Játékhangok',
-    musicTooltip:'Zene', musicPanelTitle:'Zene', musicNowPlaying:'Most szól', musicNoTracks:'Nincs elérhető szám', musicVolume:'Hangerő', musicPlay:'Lejátszás', musicPause:'Szünet', musicStop:'Leállítás', musicNext:'Következő', musicPrev:'Előző', musicTrack:'Szám', musicRepeat:'Ismétlés', musicRepeatOne:'Szám ismétlése', musicRepeatAll:'Lejátszási lista ismétlése', musicRepeatOff:'Egyszeri lejátszás',
+    musicTooltip:'Hang & Zene', musicPanelTitle:'Hang & Zene', musicNowPlaying:'Most szól', musicNoTracks:'Nincs elérhető szám', musicVolume:'Hangerő', musicPlay:'Lejátszás', musicPause:'Szünet', musicStop:'Leállítás', musicNext:'Következő', musicPrev:'Előző', musicTrack:'Szám', musicRepeat:'Ismétlés', musicRepeatOne:'Szám ismétlése', musicRepeatAll:'Lejátszási lista ismétlése', musicRepeatOff:'Egyszeri lejátszás',
   seatCard: 'Card', seatCompact: 'Compact', seatBar: 'Bar',
   seatChip: 'Chip',
   sectionSeat: 'Helyek', seatClassic: 'Classic', seatPlate: 'Plate',
