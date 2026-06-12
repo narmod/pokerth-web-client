@@ -498,6 +498,7 @@ export const strings = {
     piStatusSittingOut:'Na shuidhe a-mach',
     piStatusEliminated:'Air a chur às',
     piViewProfile:'Seall pròifil pokerth.net',
+    modeManual:'Le làimh',
 };
 
 export default { meta, strings };

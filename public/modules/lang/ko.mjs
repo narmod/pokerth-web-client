@@ -307,6 +307,7 @@ export const strings = {
     piStatusSittingOut:'대기 중',
     piStatusEliminated:'탈락',
     piViewProfile:'pokerth.net 프로필 보기',
+    modeManual:'수동',
 };
 
 export default { meta, strings };

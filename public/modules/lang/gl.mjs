@@ -497,6 +497,7 @@ export const strings = {
     piStatusSittingOut:'Ausente',
     piStatusEliminated:'Eliminado',
     piViewProfile:'Ver o perfil de pokerth.net',
+    modeManual:'Manual',
 };
 
 export default { meta, strings };

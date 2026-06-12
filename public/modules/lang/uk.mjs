@@ -496,6 +496,7 @@ export const strings = {
     piStatusSittingOut:'Поза грою',
     piStatusEliminated:'Вибув',
     piViewProfile:'Профіль на pokerth.net',
+    modeManual:'Вручну',
 };
 
 export default { meta, strings };

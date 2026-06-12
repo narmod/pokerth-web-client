@@ -500,6 +500,7 @@ export const strings = {
     piStatusSittingOut:'Pauzuje',
     piStatusEliminated:'Wyeliminowany',
     piViewProfile:'Zobacz profil pokerth.net',
+    modeManual:'Ręcznie',
 };
 
 export default { meta, strings };

@@ -498,6 +498,7 @@ export const strings = {
     piStatusSittingOut:'暫離',
     piStatusEliminated:'已淘汰',
     piViewProfile:'查看 pokerth.net 資料',
+    modeManual:'手動',
 };
 
 export default { meta, strings };

@@ -308,6 +308,7 @@ export const strings = {
     piStatusSittingOut:'बाहर बैठे',
     piStatusEliminated:'बाहर हो गए',
     piViewProfile:'pokerth.net प्रोफ़ाइल देखें',
+    modeManual:'मैनुअल',
 };
 
 export default { meta, strings };

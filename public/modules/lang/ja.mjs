@@ -496,6 +496,7 @@ export const strings = {
     piStatusSittingOut:'休憩中',
     piStatusEliminated:'敗退',
     piViewProfile:'pokerth.net プロフィールを見る',
+    modeManual:'手動',
 };
 
 export default { meta, strings };

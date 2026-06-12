@@ -497,6 +497,7 @@ export const strings = {
     piStatusSittingOut:'Praleidžia',
     piStatusEliminated:'Iškrito',
     piViewProfile:'Žiūrėti pokerth.net profilį',
+    modeManual:'Rankinis',
 };
 
 export default { meta, strings };

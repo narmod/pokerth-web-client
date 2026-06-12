@@ -500,6 +500,7 @@ export const strings = {
     piStatusSittingOut:'Zit uit',
     piStatusEliminated:'Uitgeschakeld',
     piViewProfile:'pokerth.net-profiel bekijken',
+    modeManual:'Handmatig',
 };
 
 export default { meta, strings };

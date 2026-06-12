@@ -497,6 +497,7 @@ export const strings = {
     piStatusSittingOut:'Tạm nghỉ',
     piStatusEliminated:'Bị loại',
     piViewProfile:'Xem hồ sơ pokerth.net',
+    modeManual:'Thủ công',
 };
 
 export default { meta, strings };

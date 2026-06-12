@@ -499,6 +499,7 @@ export const strings = {
     piStatusSittingOut:'Beklemede',
     piStatusEliminated:'Elendi',
     piViewProfile:'pokerth.net profilini gör',
+    modeManual:'Manuel',
 };
 
 export default { meta, strings };

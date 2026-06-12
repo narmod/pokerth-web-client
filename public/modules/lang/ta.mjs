@@ -498,6 +498,7 @@ export const strings = {
     piStatusSittingOut:'விலகி உள்ளார்',
     piStatusEliminated:'வெளியேற்றப்பட்டார்',
     piViewProfile:'pokerth.net சுயவிவரத்தைப் பார்க்க',
+    modeManual:'கைமுறை',
 };
 
 export default { meta, strings };

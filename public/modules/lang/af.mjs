@@ -497,6 +497,7 @@ export const strings = {
     piStatusSittingOut:'Sit uit',
     piStatusEliminated:'Uitgeskakel',
     piViewProfile:'Bekyk pokerth.net-profiel',
+    modeManual:'Handmatig',
 };
 
 export default { meta, strings };
