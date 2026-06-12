@@ -32,6 +32,7 @@
 - [Managing &amp; resetting](#managing-resetting)
   - [Managing the service](#managing-the-service)
   - [The admin panel](#admin-panel)
+  - [Optional MySQL mirror](#mysql-mirror)
   - [Resetting the family leaderboard](#leaderboard-reset)
 - [Development (running from source)](#development) &nbsp;📂
 - [Protocol notes](#protocol-notes)
@@ -645,6 +646,9 @@ sudo pokerth-web set-period yearly   # leaderboard auto-reset: off | daily | mon
 sudo pokerth-web reset-stats         # wipe the family leaderboard now
 sudo pokerth-web set-token SECRET    # admin token: unlocks the admin panel + remote reset (no token = both off)
 sudo pokerth-web admin off           # hide the admin panel (/admin returns 404); 'on' to show it again
+sudo pokerth-web db-config           # configure the optional MySQL mirror (interactive)
+sudo pokerth-web db-on               # enable the MySQL mirror (db-off to disable)
+sudo pokerth-web db-show             # show the mirror config, password masked
 sudo pokerth-web uninstall           # stop and remove the service
 pokerth-web help                     # list every command
 ```
@@ -669,13 +673,30 @@ A self-hosted maintainer console lives at **`/admin`** (e.g. `https://your-host/
 
 A good rule of thumb: set a token before relying on the panel, and run `pokerth-web admin off` whenever you don't need it exposed. Always serve it over **HTTPS** — the panel sends the token in an `Authorization: Bearer` header, so it never lands in URLs, logs or browser history.
 
-To use it, open `/admin`, paste your token and **Log in**. The console is organised into five tabs:
+To use it, open `/admin`, paste your token and **Log in**. The console is organised into seven tabs:
 
 - **Server** — live status (version, uptime, connected players, open sockets); one-click self-update **with or without a restart**; schedule a restart or update with a countdown banner shown to players; tune **proxy settings** (extra allowed hosts, session-grace window, connection gap); and view, clear or act on the logs.
+- **Traffic** — privacy-friendly visit analytics: visits and unique visitors across rolling windows (today → 365 days), a daily trend chart, a **new-vs-returning** split, and a **per-server breakdown** (pokerth.net / LAN / Offline); export it all as CSV or JSON, or reset it. This tab also configures the **optional MySQL mirror** (see [Optional MySQL mirror](#mysql-mirror) below): host, user, password and database, an enable switch, plus **Test connection** and **Save & connect** (applied live, no restart).
 - **Clients** — what new visitors get by default: which **login modes** (Offline / LAN / pokerth.net) appear on the connect screen, the **default login form** (mode + host), a **default theme**, **default in-game settings** (BB display, assistance, quick-bet, auto-action, voice, vibration), **default table-creation settings** (max players, small blind, starting stack, action timer), and a **server identity** (name + tagline) that replaces "PokerTH" / "Web Client" on the login screen.
 - **Broadcasts** — send a message to all connected players right now, or on a **recurring schedule** (interval / daily / every-N-days / weekly / monthly / once, with an icon, end date and max sends); plus an editor for the multilingual **welcome / rules message** shown on a player's first visit — with **on-device auto-translation** (where the browser supports it) to fill languages you haven't written yourself.
 - **Leaderboard** — reset the shared leaderboard immediately and set its auto-reset period.
 - **Packages** — install or remove gallery **card decks** and **table styles** from a `.zip` file or URL, and **enable/disable** each one without deleting its files.
+- **Music** — manage the in-app background-music playlist: upload tracks, edit their titles, credits and licence links, reorder them, and enable or disable each one.
+
+<a id="mysql-mirror"></a>
+### Optional MySQL mirror
+
+By default the server keeps everything it needs in small JSON files (`stats.json`, `visits.json`, `broadcasts.json`) — no database required. If you'd like to also stream that data into **MySQL / MariaDB** — for dashboards, backups or external reporting — you can switch on an optional mirror. The JSON files always remain the live source of truth; MySQL is written **in addition**, never instead.
+
+When enabled, three tables are kept in sync and created automatically on first connect: **`traffic_daily`** (daily visits, unique / new / returning, per-server counts), **`leaderboard`** (per-nickname lifetime stats) and **`broadcasts`** (your scheduled messages).
+
+You can configure it three ways — whichever suits you:
+
+- **Admin panel** — the *Traffic* tab has a form (host, port, user, password, database) with an **Enabled** switch, a **Test connection** button, and **Save & connect**, which reconnects live with no restart.
+- **Command line** — `sudo pokerth-web db-config` walks through the same settings (the password prompt is hidden; leave it blank to keep the current one), then restarts. `pokerth-web db-on` / `db-off` toggle the mirror, and `pokerth-web db-show` prints the config with the password masked.
+- **Environment variables** — set `MYSQL_HOST` and `MYSQL_DATABASE` (and optionally `MYSQL_PORT`, `MYSQL_USER`, `MYSQL_PASSWORD`). Convenient for Docker or an existing ops setup.
+
+Both the admin form and the CLI write to **`db-config.json`** in the install directory (created with `600` permissions; the password is stored there and is **never returned** by the admin API). **Environment variables take precedence** when set — useful as an ops override — and in that case the admin form shows the active source and locks itself. The `mysql2` driver ships with the project, so there's nothing else to install.
 
 <a id="leaderboard-reset"></a>
 ### Resetting the family leaderboard

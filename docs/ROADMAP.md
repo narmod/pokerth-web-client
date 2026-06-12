@@ -67,6 +67,16 @@ use too. Items are grouped by status rather than fixed phases.
   enable/disable each one without deleting its files.
 - Shared family leaderboard persisted on the server, sortable, with a configurable auto-reset
   (off / daily / monthly / yearly) and on-demand reset.
+- Traffic analytics: privacy-friendly visit and unique-visitor counts over rolling windows
+  (today → 365 days), a daily trend chart, new-vs-returning split, and a per-server breakdown
+  (pokerth.net / LAN / Offline); CSV/JSON export and reset, with a `/privacy` page documenting
+  what is and isn't collected.
+- Optional MySQL/MariaDB mirror of the traffic, leaderboard and broadcasts tables (the JSON
+  files stay the live source of truth); configurable from the admin panel, the
+  `pokerth-web db-config` CLI, or `MYSQL_*` environment variables, with a live "Test connection"
+  and reconnect-on-save.
+- Music tab: manage the in-app background-music playlist — upload tracks, edit titles/credits/
+  licence links, reorder, and enable/disable each one.
 
 **Experience**
 - Mobile-first design for phones and tablets.
