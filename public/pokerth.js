@@ -7065,6 +7065,14 @@ const App = (() => {
 
   function _updatePinBtn() {
     var b = document.getElementById('g-pin-btn'); if (!b) return;
+    var ga = document.getElementById('g-actions');
+    // Resynchronise la visibilite a chaque changement de contenu de #g-actions
+    // (attente / demarrage / showdown / barre d'action...). Pose une seule fois.
+    if (ga && !ga._pinObs) { ga._pinObs = 1; try { new MutationObserver(_updatePinBtn).observe(ga, { childList: true }); } catch(e){} }
+    // L'epingle n'apparait QUE quand les touches d'action sont affichees (live ou apercu).
+    var hasActions = !!(ga && ga.querySelector('.action-grid'));
+    b.style.display = hasActions ? 'flex' : 'none';
+    if (!hasActions) return;
     var on = _actionBarPinned;
     b.setAttribute('aria-pressed', on ? 'true' : 'false');
     b.style.opacity = on ? '1' : '0.5';
@@ -10726,7 +10734,7 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.2.446'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.2.447'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
