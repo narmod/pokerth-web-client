@@ -88,6 +88,7 @@
     <button class="tab on" data-tab="cards">Cards</button>
     <button class="tab" data-tab="table">Table</button>
     <button class="tab" data-tab="theme">Themes</button>
+    <button class="tab" data-tab="seats">Seats</button>
   </div>
 
   <!-- ===== CARDS ===== -->
@@ -271,6 +272,104 @@
         <canvas id="hsw0" width="120" height="120"></canvas>
         <canvas id="hsw1" width="120" height="120"></canvas>
         <canvas id="hsw2" width="120" height="120"></canvas>
+      </div>
+    </div></div></div>
+  </section>
+
+  <!-- ===== SEATS ===== -->
+  <section id="tab-seats" class="grid hide">
+    <div class="card">
+      <h2>Seat frame (9-slice plate)</h2>
+
+      <label>Preset</label>
+      <select id="sPreset">
+        <option value="gold">Gold (bevel)</option>
+        <option value="silver">Silver</option>
+        <option value="wood">Wood</option>
+        <option value="slate">Slate (flat)</option>
+        <option value="neon">Neon</option>
+        <option value="minimal">Minimal (double)</option>
+      </select>
+
+      <label>Style name</label>
+      <input type="text" id="sName" value="My frame" maxlength="40">
+
+      <div class="row">
+        <div class="col"><label>Frame style</label>
+          <select id="sStyle"><option value="bevel">Bevel</option><option value="groove">Groove</option><option value="flat">Flat</option><option value="double">Double line</option><option value="neon">Neon</option></select>
+        </div>
+        <div class="col"><label>Frame colour</label><input type="color" id="sMain"></div>
+      </div>
+
+      <div class="row">
+        <div class="col"><label>Thickness (sets slice)</label><input type="range" id="sThick" min="18" max="84" value="34"></div>
+        <div class="col"><label>On-screen width (px)</label><input type="range" id="sWidth" min="6" max="28" value="16"></div>
+      </div>
+      <div class="row">
+        <div class="col"><label>Corner radius</label><input type="range" id="sRadius" min="0" max="28" value="0"></div>
+        <div class="col"><label>Inner padding</label>
+          <select id="sPad"><option value="4px 8px">Tight</option><option value="6px 12px" selected>Normal</option><option value="8px 16px">Roomy</option></select>
+        </div>
+      </div>
+
+      <label class="row" style="margin-top:8px"><input type="checkbox" id="sKeyOn" checked> <span style="margin-left:6px">Inner keyline</span></label>
+      <div class="row" id="sKeyRow">
+        <div class="col"><label class="help">Keyline colour</label><input type="color" id="sKey"></div>
+        <div class="col"><label class="help">Keyline width</label><input type="range" id="sKeyW" min="1" max="5" value="2"></div>
+      </div>
+
+      <div class="row">
+        <div class="col"><label>Centre fill</label><input type="color" id="sFill"></div>
+        <div class="col"><label class="row" style="margin-top:24px"><input type="checkbox" id="sTrans"> <span style="margin-left:6px">Transparent centre</span></label></div>
+      </div>
+
+      <hr>
+      <label class="row"><input type="checkbox" id="sSelf" checked> <span style="margin-left:6px">Frame the hero bar too (self.png)</span></label>
+      <div class="row" id="sSelfRow">
+        <div class="col"><label class="help">Self width (px)</label><input type="range" id="sSelfWidth" min="6" max="24" value="12"></div>
+        <div class="col"><label class="help">Self padding</label>
+          <select id="sSelfPad"><option value="4px 8px">Tight</option><option value="5px 10px" selected>Normal</option><option value="8px 16px">Roomy</option></select>
+        </div>
+      </div>
+
+      <details>
+        <summary>Export</summary>
+        <label>Palette (compression)</label>
+        <select id="sQ"><option value="128">Standard &mdash; 128</option><option value="64">Compact &mdash; 64</option><option value="256">High &mdash; 256</option><option value="0">No reduction</option></select>
+      </details>
+
+      <button class="btn" id="sDl">Download seat frame (.zip)</button>
+      <div class="size" id="sSize"></div>
+      <div class="note"><code>plate.png</code> (240&times;240) + <code>self.png</code>/<code>preview.png</code> + <code>seat.json</code>. <code>slice</code> is computed from thickness. Import via Admin &rarr; Packages &rarr; <b>Seat</b>.</div>
+    </div>
+
+    <div><div class="preview"><div class="feltprev" style="gap:18px">
+      <style>
+        #sStage{width:100%;display:flex;flex-direction:column;align-items:center;gap:28px;background:radial-gradient(circle at 50% 36%,#22323f,#0c1117);border-radius:14px;padding:36px 14px}
+        #sPlatePrev{display:flex;align-items:center;gap:8px;box-sizing:border-box;min-width:150px}
+        #sPlatePrev .sp-av2{width:30px;height:30px;border-radius:50%;background:#16331c;border:2px solid var(--sf-main,#caa14a);flex:none}
+        #sPlatePrev .sp-bars{display:flex;flex-direction:column;gap:5px}
+        #sPlatePrev .sp-bar1{width:80px;height:9px;border-radius:5px;background:#cdd3e0}
+        #sPlatePrev .sp-bar2{width:54px;height:9px;border-radius:5px;background:var(--sf-main,#caa14a)}
+        #sSelfPrev{display:flex;align-items:center;gap:10px;box-sizing:border-box;min-width:184px;border-radius:14px;background:linear-gradient(180deg,rgba(34,47,60,.96),rgba(18,28,40,.96))}
+        #sSelfPrev.framed{background:none}
+        #sSelfPrev .ss-av{width:34px;height:34px;border-radius:50%;background:#16331c;border:2px solid var(--sf-main,#caa14a);flex:none}
+        #sSelfPrev .ss-info{display:flex;flex-direction:column;gap:2px}
+        #sSelfPrev .ss-name{font-size:.8rem;font-weight:700;color:#e7efe6}
+        #sSelfPrev .ss-money{font-size:.72rem;font-family:'Inconsolata',ui-monospace,monospace;color:var(--sf-main,#caa14a)}
+        #sStage .sf-cap{font-size:.7rem;letter-spacing:.04em;color:#9fb0c4}
+      </style>
+      <div id="sStage">
+        <div class="sf-cap">Opponent seat</div>
+        <div id="sPlatePrev">
+          <div class="sp-av2"></div>
+          <div class="sp-bars"><div class="sp-bar1"></div><div class="sp-bar2"></div></div>
+        </div>
+        <div class="sf-cap">Hero bar (self)</div>
+        <div id="sSelfPrev">
+          <div class="ss-av"></div>
+          <div class="ss-info"><div class="ss-name">You</div><div class="ss-money">$2,000</div></div>
+        </div>
       </div>
     </div></div></div>
   </section>
@@ -665,6 +764,100 @@ async function exportTheme(){
  btn.disabled=false;btn.textContent=old;
 }
 
+/* ---- seats (9-slice frame generator) ---- */
+function addRR(ctx,x,y,w,h,r){r=Math.max(0,Math.min(r,Math.min(w,h)/2));ctx.moveTo(x+r,y);ctx.arcTo(x+w,y,x+w,y+h,r);ctx.arcTo(x+w,y+h,x,y+h,r);ctx.arcTo(x,y+h,x,y,r);ctx.arcTo(x,y,x+w,y,r);ctx.closePath();}
+function seatRR(ctx,x,y,w,h,r){ctx.beginPath();addRR(ctx,x,y,w,h,r);}
+function drawSeatFrame(ctx,X,Y,W,H,b,r,c){
+ var L=function(a){return lighten(c.main,a);},D=function(a){return darken(c.main,a);};
+ var centerFill=function(){ if(c.trans) return; var ri=Math.max(0,r-b); ctx.save(); seatRR(ctx,X+b,Y+b,W-2*b,H-2*b,ri); ctx.fillStyle=c.fill; ctx.fill(); ctx.restore(); };
+ var innerKey=function(){ if(!c.keyOn) return; ctx.save(); ctx.lineWidth=Math.max(1,b*(c.keyW/16)); ctx.strokeStyle=c.key; seatRR(ctx,X+b,Y+b,W-2*b,H-2*b,Math.max(0,r-b)); ctx.stroke(); ctx.restore(); };
+ if(c.style==='bevel'||c.style==='groove'){
+  var raised=(c.style!=='groove');
+  var oX0=X,oY0=Y,oX1=X+W,oY1=Y+H,iX0=X+b,iY0=Y+b,iX1=X+W-b,iY1=Y+H-b;
+  var face=function(p,col){ctx.fillStyle=col;ctx.beginPath();ctx.moveTo(p[0][0],p[0][1]);for(var k=1;k<4;k++)ctx.lineTo(p[k][0],p[k][1]);ctx.closePath();ctx.fill();};
+  face([[oX0,oY0],[oX1,oY0],[iX1,iY0],[iX0,iY0]], raised?L(0.34):D(0.34));
+  face([[oX0,oY1],[oX0,oY0],[iX0,iY0],[iX0,iY1]], raised?L(0.15):D(0.15));
+  face([[oX1,oY0],[oX1,oY1],[iX1,iY1],[iX1,iY0]], raised?D(0.16):L(0.16));
+  face([[oX1,oY1],[oX0,oY1],[iX0,iY1],[iX1,iY1]], raised?D(0.34):L(0.34));
+  ctx.lineWidth=Math.max(1,b*0.05);ctx.strokeStyle=D(0.5);ctx.strokeRect(X+ctx.lineWidth/2,Y+ctx.lineWidth/2,W-ctx.lineWidth,H-ctx.lineWidth);
+  centerFill(); innerKey();
+ } else if(c.style==='flat'){
+  ctx.save();ctx.beginPath();addRR(ctx,X,Y,W,H,r);addRR(ctx,X+b,Y+b,W-2*b,H-2*b,Math.max(0,r-b));ctx.clip('evenodd');
+  var g=ctx.createLinearGradient(X,Y,X,Y+H);g.addColorStop(0,L(0.10));g.addColorStop(1,D(0.12));ctx.fillStyle=g;ctx.fillRect(X,Y,W,H);ctx.restore();
+  centerFill(); innerKey();
+ } else if(c.style==='double'){
+  if(!c.trans){seatRR(ctx,X,Y,W,H,r);ctx.fillStyle=c.fill;ctx.fill();}
+  var lw=Math.max(2,b*0.16);ctx.lineWidth=lw;ctx.strokeStyle=c.main;
+  var o1=b*0.26;seatRR(ctx,X+o1,Y+o1,W-2*o1,H-2*o1,Math.max(0,r-o1));ctx.stroke();
+  var o2=b*0.74;seatRR(ctx,X+o2,Y+o2,W-2*o2,H-2*o2,Math.max(0,r-o2));ctx.stroke();
+ } else {
+  if(!c.trans){seatRR(ctx,X,Y,W,H,r);ctx.fillStyle=c.fill;ctx.fill();}
+  var off=b*0.5,nlw=Math.max(2,b*0.22);ctx.save();ctx.shadowColor=c.main;ctx.shadowBlur=b*0.7;ctx.lineWidth=nlw;ctx.strokeStyle=c.main;seatRR(ctx,X+off,Y+off,W-2*off,H-2*off,Math.max(0,r-off));ctx.stroke();ctx.stroke();ctx.restore();
+ }
+}
+function renderFrameSource(c){var cv=document.createElement('canvas');cv.width=240;cv.height=240;var ctx=cv.getContext('2d');ctx.clearRect(0,0,240,240);var r=(c.style==='bevel'||c.style==='groove')?0:c.radius;drawSeatFrame(ctx,0,0,240,240,c.thick,r,c);return cv;}
+function renderPreviewPng(c){
+ var cv=document.createElement('canvas');cv.width=220;cv.height=140;var x=cv.getContext('2d');
+ x.fillStyle='#0e1218';x.fillRect(0,0,220,140);
+ var b=c.width,r=(c.style==='bevel'||c.style==='groove')?0:c.radius*c.width/c.thick;
+ drawSeatFrame(x,10,10,200,120,b,r,c);
+ var cx=10+b+22,cy=70;x.beginPath();x.arc(cx,cy,20,0,7);x.fillStyle='#16331c';x.fill();x.lineWidth=3;x.strokeStyle=c.main;x.stroke();
+ var bar=function(bx,by,bw,col){seatRR(x,bx,by,bw,12,6);x.fillStyle=col;x.fill();};
+ bar(cx+30,cy-12,92,'#cdd3e0');bar(cx+30,cy+6,60,c.main);
+ return cv;
+}
+const SEAT_PRESETS={
+ gold:{style:'bevel',main:'#caa14a',thick:34,width:16,radius:0,pad:'6px 12px',keyOn:true,key:'#241a10',keyW:2,fill:'#161d2b',trans:false,self:true,selfWidth:12,selfPad:'5px 10px'},
+ silver:{style:'bevel',main:'#b9c0c9',thick:34,width:16,radius:0,pad:'6px 12px',keyOn:true,key:'#272c34',keyW:2,fill:'#1b212b',trans:false,self:true,selfWidth:12,selfPad:'5px 10px'},
+ wood:{style:'bevel',main:'#7a4a26',thick:38,width:16,radius:4,pad:'6px 12px',keyOn:true,key:'#241608',keyW:2,fill:'#181410',trans:false,self:true,selfWidth:13,selfPad:'5px 10px'},
+ slate:{style:'flat',main:'#3a4250',thick:24,width:12,radius:10,pad:'6px 12px',keyOn:true,key:'#11151c',keyW:2,fill:'#1b2230',trans:false,self:false,selfWidth:10,selfPad:'5px 10px'},
+ neon:{style:'neon',main:'#30e1ff',thick:26,width:13,radius:14,pad:'6px 12px',keyOn:false,key:'#0a1420',keyW:2,fill:'#06121f',trans:false,self:false,selfWidth:11,selfPad:'5px 10px'},
+ minimal:{style:'double',main:'#c9a44e',thick:22,width:11,radius:8,pad:'6px 12px',keyOn:true,key:'#c9a44e',keyW:2,fill:'#11151c',trans:true,self:false,selfWidth:10,selfPad:'5px 10px'}
+};
+function setSeat(id,val){var e=document.getElementById(id);if(!e)return;if(e.type==='checkbox')e.checked=!!val;else e.value=val;}
+function applySeatPreset(name){var p=SEAT_PRESETS[name];if(!p)return;Object.keys(p).forEach(function(k){setSeat('s'+k.charAt(0).toUpperCase()+k.slice(1),p[k]);});renderSeatPreview();}
+function seatCfg(){
+ var thick=+v('sThick'),width=+v('sWidth');
+ var slice=Math.max(6,Math.min(45,Math.round(thick/240*100)));
+ return {name:v('sName'),style:v('sStyle'),main:v('sMain'),key:v('sKey'),keyOn:document.getElementById('sKeyOn').checked,keyW:+v('sKeyW'),
+  fill:v('sFill'),trans:document.getElementById('sTrans').checked,radius:+v('sRadius'),
+  thick:thick,width:width,slice:slice,pad:v('sPad'),
+  self:document.getElementById('sSelf').checked,selfWidth:+v('sSelfWidth'),selfPad:v('sSelfPad'),swatch:v('sMain')};
+}
+function renderSeatPreview(){
+ var stage=document.getElementById('sStage');if(!stage)return;
+ var c=seatCfg();var url=renderFrameSource(c).toDataURL('image/png');
+ stage.style.setProperty('--sf-main',c.main);
+ var p=document.getElementById('sPlatePrev');
+ p.style.borderStyle='solid';p.style.borderColor='transparent';p.style.borderWidth=c.width+'px';
+ p.style.borderImageSource='url('+url+')';p.style.borderImageSlice=c.slice+'% fill';p.style.borderImageWidth=c.width+'px';p.style.borderImageRepeat='stretch';p.style.padding=c.pad;
+ var s=document.getElementById('sSelfPrev');
+ if(c.self){s.classList.add('framed');s.style.borderStyle='solid';s.style.borderColor='transparent';s.style.borderWidth=c.selfWidth+'px';s.style.borderImageSource='url('+url+')';s.style.borderImageSlice=c.slice+'% fill';s.style.borderImageWidth=c.selfWidth+'px';s.style.borderImageRepeat='stretch';s.style.padding=c.selfPad;}
+ else{s.classList.remove('framed');s.style.border='none';s.style.borderImageSource='none';s.style.padding='8px 14px';}
+ document.getElementById('sKeyRow').style.opacity=c.keyOn?1:0.4;
+ document.getElementById('sSelfRow').style.opacity=c.self?1:0.4;
+ document.getElementById('sFill').style.opacity=c.trans?0.4:1;
+}
+async function exportSeats(){
+ var btn=document.getElementById('sDl');btn.disabled=true;var old=btn.textContent;
+ try{
+  var c=seatCfg(),folder=slug(c.name),q=+v('sQ');
+  btn.textContent='Rendering...';
+  var plate=renderFrameSource(c);var platePng=await canvasPNG(plate,q);
+  var prev=renderPreviewPng(c);var prevPng=await canvasPNG(prev,q);
+  var json={name:c.name,slice:c.slice,width:c.width,pad:c.pad,swatch:c.swatch};
+  if(c.self)json.self={slice:c.slice,width:c.selfWidth,pad:c.selfPad};
+  var zip=new JSZip(),f=zip.folder(folder);
+  f.file('plate.png',platePng);
+  if(c.self)f.file('self.png',platePng);
+  f.file('preview.png',prevPng);
+  f.file('seat.json',JSON.stringify(json,null,2)+'\n');
+  btn.textContent='Compressing...';var blob=await zip.generateAsync({type:'blob'});
+  sizeMsg(document.getElementById('sSize'),blob.size);dl(blob,folder+'.zip');
+ }catch(e){document.getElementById('sSize').innerHTML='<span class="warn">Error: '+e.message+'</span>';}
+ btn.disabled=false;btn.textContent=old;
+}
+
 /* ---- theme toggle (shared key with Admin) ---- */
 function setTheme(t){document.documentElement.setAttribute('data-admin-theme',t);try{localStorage.setItem('pth_admin_theme',t);}catch(e){}document.getElementById('themeBtn').textContent=(t==='light'?'Dark':'Light');}
 document.getElementById('themeBtn').addEventListener('click',()=>setTheme(document.documentElement.getAttribute('data-admin-theme')==='light'?'dark':'light'));
@@ -672,8 +865,8 @@ document.getElementById('themeBtn').addEventListener('click',()=>setTheme(docume
 /* ---- wiring ---- */
 document.querySelectorAll('.tab').forEach(t=>t.addEventListener('click',()=>{
  document.querySelectorAll('.tab').forEach(x=>x.classList.remove('on'));t.classList.add('on');
- ['cards','table','theme'].forEach(n=>document.getElementById('tab-'+n).classList.toggle('hide',n!==t.dataset.tab));
- if(t.dataset.tab==='table')renderTablePreview();if(t.dataset.tab==='theme')renderThemePreview();
+ ['cards','table','theme','seats'].forEach(n=>document.getElementById('tab-'+n).classList.toggle('hide',n!==t.dataset.tab));
+ if(t.dataset.tab==='table')renderTablePreview();if(t.dataset.tab==='theme')renderThemePreview();if(t.dataset.tab==='seats')renderSeatPreview();
 }));
 document.getElementById('cPreset').addEventListener('change',e=>applyCardPreset(e.target.value));
 ['cName','cBg1','cBg2','cBgType','cRed','cBlack','cAccent','cBorder','cCourt','cBack','cBackPat','cGlow','cFourColor','cDiamond','cClub','cIndexFont','cIndexSize','cIndexSuit','cFourCorners','cPipStyle','cNumLayout','cWatermark','cCourtAccent','cRadius','cBorderWidth','cTexture','cFinish','cFancyAce'].forEach(id=>document.getElementById(id).addEventListener('input',renderCardPreview));
@@ -685,6 +878,9 @@ document.getElementById('cFourColor').addEventListener('change',updateVis);
 document.getElementById('cDl').addEventListener('click',exportDeck);
 document.getElementById('tDl').addEventListener('click',exportTable);
 document.getElementById('hDl').addEventListener('click',exportTheme);
+['sName','sStyle','sMain','sThick','sWidth','sRadius','sPad','sKeyOn','sKey','sKeyW','sFill','sTrans','sSelf','sSelfWidth','sSelfPad','sQ'].forEach(id=>document.getElementById(id).addEventListener('input',renderSeatPreview));
+document.getElementById('sPreset').addEventListener('change',e=>applySeatPreset(e.target.value));
+document.getElementById('sDl').addEventListener('click',exportSeats);
 
 /* defaults */
 set('tF1','#1f6b3a');set('tF2','#0c3a1d');set('tPd','#e8c14a');set('tPsb','#3f7fd0');set('tPbb','#d9892f');
@@ -692,7 +888,7 @@ set('hSwatch','#1f6b3a');set('hFelt','#1f6b3a');set('hPanel','#15281c');set('hGo
 
 /* init */
 setTheme(document.documentElement.getAttribute('data-admin-theme')||'dark');
-applyCardPreset('classic');renderCardPreview();
+applyCardPreset('classic');renderCardPreview();applySeatPreset('gold');
 document.getElementById('sub').textContent=window.UPNG?'Create card decks, table felts & themes':'Create card decks, table felts & themes (standard compression)';
 </script>
 </body>
