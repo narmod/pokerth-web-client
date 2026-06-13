@@ -2468,18 +2468,17 @@ html[data-bg-img] body.in-game {
   .react-grid { grid-template-columns: repeat(15, 1fr); max-width: none; }
 }
 @media (max-width: 600px) {
-  /* Phone : une seule ligne, emojis plus gros, defilement horizontal (swipe).
-     Tablette (601-900px) et desktop gardent leur grille multi-lignes. */
+  /* Phone : grille montrant 2 lignes ; si tout ne rentre pas -> scroll vertical.
+     Tablette (601-900px) et desktop gardent leur propre grille. */
   .react-grid {
-    display: flex;
-    flex-wrap: nowrap;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, 46px);
+    justify-content: center;
     gap: 8px;
-    overflow-x: auto;
-    overflow-y: hidden;
-    max-height: none;
+    max-height: 104px;      /* ~2 lignes (cellule 46px + interligne) */
+    overflow-y: auto;
+    overflow-x: hidden;
     -webkit-overflow-scrolling: touch;
-    scroll-snap-type: x proximity;
-    padding-bottom: 4px;
   }
   /* Use nearly the full panel width on phones (was 14px each side). */
   #g-reaction-panel { padding: 8px 5px 9px; }
@@ -2502,8 +2501,8 @@ html[data-bg-img] body.in-game {
   .react-btn { font-size: 1.7rem; }
 }
 @media (max-width: 600px) {
-  /* Phone : grosses pastilles carrees, defilement horizontal au swipe. */
-  .react-btn { flex: 0 0 auto; width: 54px; font-size: 2rem; scroll-snap-align: start; }
+  /* Phone : pastilles carrees, taille de cellule pilotee par la grille. */
+  .react-btn { font-size: 1.7rem; }
 }
 .react-btn:hover {
   background: rgba(var(--gold-rgb), 0.15);
