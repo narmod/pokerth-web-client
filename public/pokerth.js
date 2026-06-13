@@ -1656,6 +1656,14 @@ document.addEventListener("DOMContentLoaded", function() {
     }
   })();
 
+  // Snapshot "premier visiteur ?" de façon SYNCHRONE, AVANT que le handler
+  // window.load (-> onServerOrGuestChange) n'écrive pth_server_mode avec la
+  // valeur par défaut du menu. Sans ce snapshot, _applyLoginDefaults (async,
+  // via /app-config) verrait la clé déjà écrite et croirait à un visiteur
+  // existant -> le mode par défaut admin (ex. pokerth.net) ne s'appliquait jamais.
+  try { window._pthHadServerMode = (localStorage.getItem('pth_server_mode') !== null); }
+  catch (e) { window._pthHadServerMode = true; }
+
   // Restaurer le serveur préféré sauvegardé — SAUF si on arrive d'un
   // lien de partage, auquel cas les paramètres du lien doivent gagner
   // (sinon le host sauvegardé d'une session précédente écrase celui
@@ -1774,7 +1782,7 @@ document.addEventListener("DOMContentLoaded", function() {
       if (login.host) { try { var _hi = document.getElementById('host'); if (_hi) _hi.dataset.autoHost = login.host; } catch (e) {} }
       // Default entry mode: pre-select it on a first visit only if it's an enabled option.
       if (login.mode) {
-        var hadMode = true; try { hadMode = localStorage.getItem('pth_server_mode') !== null; } catch (e) {}
+        var hadMode = (window._pthHadServerMode !== false); // snapshot pris au chargement, avant que load n'écrive la clé
         if (!hadMode) {
           var sm = document.getElementById('server-mode');
           if (sm) {
@@ -10842,7 +10850,7 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.2.482'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.2.483'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
