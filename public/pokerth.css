@@ -3468,7 +3468,7 @@ body.hide-pct-btns .pct-row { display: none; }
 .btn-allin:hover { background: var(--btn-allin-bg, rgba(var(--red-rgb), 0.15)); filter: brightness(1.06); }
 .btn-allin b { color: var(--btn-allin-fg-b, #f4b0b0); }
 /* Image-backed action buttons (9-slice SVG/PNG via the Buttons axis). */
-:root[data-btn-img] .btn-action { border: 9px solid transparent; background: transparent; padding: 1px 9px; }
+:root[data-btn-img] .btn-action { border: 9px solid transparent; background: transparent; padding: 1px 9px !important; }
 :root[data-btn-img] .btn-fold  { border-image: var(--btn-fold-img) 9 fill / 9px / 0 stretch; color: var(--btn-fold-fg, #fff); }
 :root[data-btn-img] .btn-check { border-image: var(--btn-check-img) 9 fill / 9px / 0 stretch; color: var(--btn-check-fg, #fff); }
 :root[data-btn-img] .btn-call  { border-image: var(--btn-call-img) 9 fill / 9px / 0 stretch; color: var(--btn-call-fg, #fff); }
