@@ -263,6 +263,7 @@ Beyond bridging WebSocket frames to the server's raw TCP/TLS stream, `proxy.js` 
 | `AVATARIMG:pid:dataURL` | Custom image-avatar update |
 
 - **Connection allowlist** — for anti-open-relay safety the proxy only dials servers on a configured allowlist (see the deployment section below).
+- **Follows the official PokerTH serverlist** — the proxy periodically reads PokerTH's published `serverlist.xml.z`, so the *Internet / PokerTH.net* target tracks the official server automatically if it moves. Default is **Auto**; an operator can pin a **Manual** server from the admin *Game servers* tab. The resolved host/port is auto-added to the dial allowlist. (The browser can't fetch it itself — CORS + zlib — so the proxy does.)
 - **HTTP / JSON API** — beyond the client, the proxy exposes a handful of small JSON endpoints (version check, client config, content manifests, leaderboard, music) plus a token-gated `/admin/*` API used by the [admin panel](#admin-panel). See [**HTTP endpoints**](#http-endpoints) below for the full list.
 
 ### Repository layout
@@ -750,7 +751,7 @@ A self-hosted maintainer console lives at **`/admin`** (e.g. `https://your-host/
 
 A good rule of thumb: set a token before relying on the panel, and run `pokerth-web admin off` whenever you don't need it exposed. Always serve it over **HTTPS** — the panel sends the token in an `Authorization: Bearer` header, so it never lands in URLs, logs or browser history.
 
-To use it, open `/admin`, paste your token and **Log in**. The console is organised into eight tabs:
+To use it, open `/admin`, paste your token and **Log in**. The console is organised into nine tabs:
 
 - **Server** — live status (version, uptime, connected players, open sockets); one-click self-update **with or without a restart**; schedule a restart or update with a countdown banner shown to players; tune **proxy settings** (extra allowed hosts, session-grace window, connection gap); and view, clear or act on the logs.
 - **Traffic** — privacy-friendly visit analytics: visits and unique visitors across rolling windows (today → 365 days), a daily trend chart, a **new-vs-returning** split, and a **per-server breakdown** (pokerth.net / LAN / Offline); export it all as CSV or JSON, or reset it. This tab also configures the **optional MySQL mirror** (see [Optional MySQL mirror](#mysql-mirror) below): host, user, password and database, an enable switch, plus **Test connection** and **Save & connect** (applied live, no restart).
@@ -760,6 +761,7 @@ To use it, open `/admin`, paste your token and **Log in**. The console is organi
 - **Packages** — install or remove gallery **card decks** and **table styles** from a `.zip` file or URL, and **enable/disable** each one without deleting its files.
 - **Music** — manage the in-app background-music playlist: upload tracks, edit their titles, credits and licence links, reorder them, and enable or disable each one.
 - **Keys** — issue **delegate API keys** that unlock only some sections (**Broadcasts**, **Music**, **Packages**, **Leaderboard**). Name a key, tick the categories, and it is shown **once** (with a copy button); the list shows masked previews and a **Revoke** button. A delegate who logs in at `/admin` sees only the tabs their key allows — everything else, including this Keys tab, stays master-only. The same keys work as a plain HTTP API and via `pokerth-web token`.
+- **Game servers** *(master-only)* — the registry of PokerTH servers the proxy may dial (a LAN box or an Internet host), each with host, port, a TLS flag and a **Check** button that reads live player/game counts. It also sets what the *Internet / PokerTH.net* choice targets: **Auto** — follow PokerTH's official serverlist (`serverlist.xml.z`) so a server move is tracked automatically — or **Manual** (a built-in or registered server). The **effective dial allowlist** (anti-open-relay guard) is shown for reference.
 
 <a id="mysql-mirror"></a>
 ### Optional MySQL mirror
