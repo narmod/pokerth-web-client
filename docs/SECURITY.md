@@ -20,6 +20,10 @@ on the open Internet. The proxy is designed primarily for LAN / private use.
 - **Token-gated admin API.** Every `/admin/*` action requires a secret token,
   sent in an `Authorization: Bearer <token>` header so it never lands in URLs or
   logs. With no token configured, all admin actions are refused.
+- **Scoped delegate keys.** Besides the master token, the operator can issue named keys that
+  unlock only some admin sections (e.g. broadcasts only). They are stored in `scoped-tokens.json`
+  (created `600`), are never returned in full by the API (only masked previews), and can only be
+  created or revoked with the master token. A delegate key cannot reach any section outside its scope.
 - **Hideable admin surface.** When `ADMIN_ENABLED` is off (or after
   `pokerth-web admin off`), `/admin` and every `/admin/*` route return a plain
   `404` -- the panel is fully hidden, not merely inert.

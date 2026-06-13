@@ -316,7 +316,7 @@ pokerth-web-client/
 | `GET` | `/app-config` | Operator's client defaults (login modes, default theme & settings, server identity, welcome message) |
 | `GET` | `/cards/decks.json` · `/table/tables.json` · `/themes/themes.json` | Content manifests, filtered to the enabled packages |
 | `GET` | `/music/tracks.json` | Background-music playlist |
-| `GET` / `POST` | `/stats` | `GET` reads the shared leaderboard; `POST` submits a result (or resets it with the admin token) |
+| `GET` / `POST` | `/stats` | `GET` reads the shared leaderboard; `POST` submits a result (and — with the master token or a **leaderboard**-scoped key — resets the board or removes a player) |
 | `POST` | `/__visit` | Records one anonymous visit (privacy-friendly analytics) |
 
 **Admin** — every route needs an `Authorization: Bearer <token>` header, and the whole tree returns a plain `404` when the panel is disabled. Grouped by area:
@@ -331,6 +331,9 @@ pokerth-web-client/
 | Update & restart | `POST /admin/update`, `POST /admin/update-nr`, `GET /admin/update-log`, `POST /admin/{schedule,cancel}-restart`, `POST /admin/restart` |
 | Database | `GET`/`POST` `/admin/db`, `POST /admin/db/test` |
 | Broadcasts | `GET`/`POST` `/admin/broadcasts`, `POST /admin/broadcast-now`, `POST /admin/broadcasts/{delete,toggle,fire}` |
+| Delegate keys | `GET`/`POST` `/admin/tokens`, `POST /admin/tokens/delete`, `GET /admin/whoami` |
+
+Most sections require the master token; the **Broadcasts**, **Music**, **Packages** and **Leaderboard** routes (and the `/stats` reset / remove) also accept a matching **scoped delegate key** — see the **Keys** tab.
 
 ---
 
@@ -477,7 +480,7 @@ These configure the **proxy** at runtime (read by `proxy.js`). They are separate
 | `STATS_ADMIN_TOKEN` | _(unset)_ | Token that unlocks the admin panel and the remote `/stats` reset; with no token, both are off. |
 | `MYSQL_HOST` · `MYSQL_PORT` · `MYSQL_USER` · `MYSQL_PASSWORD` · `MYSQL_DATABASE` | _(unset)_ · `3306` | Optional **MySQL/MariaDB mirror**. Set `MYSQL_HOST` + `MYSQL_DATABASE` to enable; these override the admin-panel / `db-config` settings. See [Optional MySQL mirror](#mysql-mirror). |
 | `PM2_NAME` | `pokerth-web` | PM2 process name the proxy targets for its self-update / restart actions. |
-| `STATS_FILE` · `STATS_META_FILE` · `VISITS_FILE` · `BROADCASTS_FILE` · `ADMIN_CONFIG_FILE` · `DB_CONFIG_FILE` | _(install dir)_ | **Advanced** — relocate the JSON state files (e.g. onto a persistent volume); each defaults to that filename in the install directory. |
+| `STATS_FILE` · `STATS_META_FILE` · `VISITS_FILE` · `BROADCASTS_FILE` · `ADMIN_CONFIG_FILE` · `DB_CONFIG_FILE` · `SCOPED_TOKENS_FILE` | _(install dir)_ | **Advanced** — relocate the JSON state files (e.g. onto a persistent volume); each defaults to that filename in the install directory. |
 
 </details>
 
@@ -704,6 +707,9 @@ pokerth-web status                   # show the PM2 status
 sudo pokerth-web set-period yearly   # leaderboard auto-reset: off | daily | monthly | yearly
 sudo pokerth-web reset-stats         # wipe the family leaderboard now
 sudo pokerth-web set-token SECRET    # admin token: unlocks the admin panel + remote reset (no token = both off)
+sudo pokerth-web token add NAME broadcast,music  # mint a scoped delegate key (categories: broadcast,music,packages,leaderboard)
+pokerth-web token list                           # list delegate keys (tokens masked)
+sudo pokerth-web token rm NAME                   # revoke a delegate key
 sudo pokerth-web admin off           # hide the admin panel (/admin returns 404); 'on' to show it again
 sudo pokerth-web db-config           # configure the optional MySQL mirror (interactive)
 sudo pokerth-web db-on               # enable the MySQL mirror (db-off to disable)
@@ -740,17 +746,20 @@ A self-hosted maintainer console lives at **`/admin`** (e.g. `https://your-host/
 - **Visibility — `pokerth-web admin on|off`.** When **off**, `/admin` and every `/admin/*` route return a plain `404`, so the panel is fully hidden — not merely inert. **On** is the default and serves the panel. The setting is saved to `/etc/pokerth-web.conf` and re-applied on every update and reboot.
 - **Authentication — `pokerth-web set-token <token>`.** Every action in the panel requires this token; with no token set, the page still loads but all actions are refused. The same token also guards the remote `/stats` reset endpoint.
 
+- **Delegate keys (scoped access).** Beyond the master token you can mint named keys that unlock only some sections — handy for giving a partner broadcast- or music-only access. Create and revoke them from the **Keys** tab or with `pokerth-web token`; a delegate sees only their tabs, and keys are never re-shown in full (only masked previews).
+
 A good rule of thumb: set a token before relying on the panel, and run `pokerth-web admin off` whenever you don't need it exposed. Always serve it over **HTTPS** — the panel sends the token in an `Authorization: Bearer` header, so it never lands in URLs, logs or browser history.
 
-To use it, open `/admin`, paste your token and **Log in**. The console is organised into seven tabs:
+To use it, open `/admin`, paste your token and **Log in**. The console is organised into eight tabs:
 
 - **Server** — live status (version, uptime, connected players, open sockets); one-click self-update **with or without a restart**; schedule a restart or update with a countdown banner shown to players; tune **proxy settings** (extra allowed hosts, session-grace window, connection gap); and view, clear or act on the logs.
 - **Traffic** — privacy-friendly visit analytics: visits and unique visitors across rolling windows (today → 365 days), a daily trend chart, a **new-vs-returning** split, and a **per-server breakdown** (pokerth.net / LAN / Offline); export it all as CSV or JSON, or reset it. This tab also configures the **optional MySQL mirror** (see [Optional MySQL mirror](#mysql-mirror) below): host, user, password and database, an enable switch, plus **Test connection** and **Save & connect** (applied live, no restart).
-- **Clients** — what new visitors get by default: which **login modes** (Offline / LAN / pokerth.net) appear on the connect screen, the **default login form** (mode + host), a **default theme**, **default in-game settings** (BB display, assistance, quick-bet, auto-action, voice, vibration), **default table-creation settings** (max players, small blind, starting stack, action timer), and a **server identity** (name + tagline) that replaces "PokerTH" / "Web Client" on the login screen.
-- **Broadcasts** — send a message to all connected players right now, or on a **recurring schedule** (interval / daily / every-N-days / weekly / monthly / once, with an icon, end date and max sends); plus an editor for the multilingual **welcome / rules message** shown on a player's first visit — with **on-device auto-translation** (where the browser supports it) to fill languages you haven't written yourself.
+- **Clients** — what new visitors get by default: which **login modes** (Offline / LAN / pokerth.net) appear on the connect screen, the **default login form** (mode + host), a **default theme**, **default in-game settings** (BB display, assistance, quick-bet, auto-action, voice, vibration), **default table-creation settings** (max players, small blind, starting stack, action timer), an optional **per-mode default table name** (e.g. `My online game` on pokerth.net, the localized default elsewhere), and a **server identity** (name + tagline) that replaces "PokerTH" / "Web Client" on the login screen.
+- **Broadcasts** — send a message to all connected players right now, or on a **recurring schedule** (interval / daily / every-N-days / weekly / monthly / once, with an icon, end date and max sends); plus an editor for the multilingual **welcome / rules message** shown on a player's first visit — with **on-device auto-translation** (where the browser supports it) to fill languages you haven't written yourself. Both broadcasts and the welcome message accept **clickable links** — paste a URL or write `[label](https://example.com)`.
 - **Leaderboard** — reset the shared leaderboard immediately and set its auto-reset period.
 - **Packages** — install or remove gallery **card decks** and **table styles** from a `.zip` file or URL, and **enable/disable** each one without deleting its files.
 - **Music** — manage the in-app background-music playlist: upload tracks, edit their titles, credits and licence links, reorder them, and enable or disable each one.
+- **Keys** — issue **delegate API keys** that unlock only some sections (**Broadcasts**, **Music**, **Packages**, **Leaderboard**). Name a key, tick the categories, and it is shown **once** (with a copy button); the list shows masked previews and a **Revoke** button. A delegate who logs in at `/admin` sees only the tabs their key allows — everything else, including this Keys tab, stays master-only. The same keys work as a plain HTTP API and via `pokerth-web token`.
 
 <a id="mysql-mirror"></a>
 ### Optional MySQL mirror

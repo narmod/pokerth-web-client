@@ -77,6 +77,11 @@ use too. Items are grouped by status rather than fixed phases.
   and reconnect-on-save.
 - Music tab: manage the in-app background-music playlist — upload tracks, edit titles/credits/
   licence links, reorder, and enable/disable each one.
+- Delegate API keys: issue named keys that unlock only chosen admin sections (Broadcasts, Music,
+  Packages, Leaderboard) from the admin **Keys** tab or `pokerth-web token`; created/revoked with the
+  master token only, hot-reloaded with no restart.
+- Clickable links in broadcasts and the welcome/rules message; an operator-set per-mode default
+  table name.
 
 **Experience**
 - Mobile-first design for phones and tablets.
