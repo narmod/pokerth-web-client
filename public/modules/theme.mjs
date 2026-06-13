@@ -82,6 +82,15 @@ var BUTTON_GLOSSY = {
   'btn-raise-bg':'linear-gradient(180deg, #2fa83a 0%, #1f8a2a 48%, #14661e 100%)','btn-raise-fg':'#eaffea',
   'btn-allin-bg':'linear-gradient(180deg, #d9740f 0%, #bd610b 48%, #934a08 100%)','btn-allin-bd':'#934a08','btn-allin-fg':'#fff4ec','btn-allin-fg-b':'#ffffff'
 };
+// Flat = meme code couleur que Glossy mais en aplat (aucun degrade, all-in plein au
+// lieu de transparent -> volontairement plus plat). Teintes = points 48% des degrades Glossy.
+var BUTTON_FLAT = {
+  'btn-fold-bg':'#a81818','btn-fold-fg':'#ffe6e6',
+  'btn-check-bg':'#1f5aa8','btn-check-fg':'#e6f0ff',
+  'btn-call-bg':'#1f5aa8','btn-call-fg':'#e6f0ff',
+  'btn-raise-bg':'#1f8a2a','btn-raise-fg':'#eaffea',
+  'btn-allin-bg':'#bd610b','btn-allin-bd':'#bd610b','btn-allin-fg':'#fff4ec','btn-allin-fg-b':'#ffffff'
+};
 // Pucks axis: a built-in "PokerTH" set (dealer/SB/BB marker images, shared).
 var PUCK_SET = { dealer:'url(/pucks/dealer.svg)', sb:'url(/pucks/sb.svg)', bb:'url(/pucks/bb.svg)' };
 var BUTTONS_ITEMS = [ {id:'',key:'buttonsDefault',fallback:'Flat',swatch:'#6b2020'}, {id:'glossy',key:'buttonsGlossy',fallback:'Glossy',swatch:'#c81818'} ];
@@ -416,9 +425,12 @@ table.apply = function(id){
 table.set = table.apply;
 var _btnApply = buttons.apply;
 buttons.apply = function(id){ _btnApply(id); try{
-  if (id==='glossy') _injectButtons({colors:BUTTON_GLOSSY});
-  else if (!id) _injectButtons(null);
-  else { var pk=_buttonPkgById(id); _injectButtons(pk?{images:pk.images,colors:pk.colors}:null); }
+  // Green Casino (casino-vert) garde son rendu propre (images SVG + couleurs). Flat ('')
+  // = palette Glossy mais en aplat (BUTTON_FLAT). Tous les autres (glossy, PokerTH new,
+  // Sleek) -> degrades Glossy.
+  if (id==='casino-vert') { var pk=_buttonPkgById('casino-vert'); _injectButtons(pk?{images:pk.images,colors:pk.colors}:{colors:BUTTON_GLOSSY}); }
+  else if (!id) _injectButtons({colors:BUTTON_FLAT});
+  else _injectButtons({colors:BUTTON_GLOSSY});
 }catch(e){} };
 buttons.set = buttons.apply;
 var _pkApply = pucks.apply;
@@ -433,7 +445,7 @@ pucks.apply = function(id){ _pkApply(id); try{
   try { if (window._renderSeats) window._renderSeats(); } catch (e) {}
 };
 pucks.set = pucks.apply;
-try{ _injectButtons(buttons.get()==='glossy'?{colors:BUTTON_GLOSSY}:null); _injectPucks(pucks.get()==='pokerth'?PUCK_SET:null); }catch(e){}
+try{ var _bid0=buttons.get(); _injectButtons(_bid0==='casino-vert'?null:(_bid0?{colors:BUTTON_GLOSSY}:{colors:BUTTON_FLAT})); _injectPucks(pucks.get()==='pokerth'?PUCK_SET:null); }catch(e){}
 function _loadThemes(){
   try{
     fetch('/themes/themes.json',{cache:'no-store'})
