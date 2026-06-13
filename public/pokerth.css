@@ -1789,7 +1789,7 @@ html[data-bg-img] body.in-game {
   #g-overflow-menu .btn-sm, #l-overflow-menu .btn-sm { font-size: 0.94rem !important; padding: 9px 32px 9px 14px !important; }
 
   /* ══ Fenetres d'informations ══ */
-  .winner-card { max-width: min(560px, 80vw) !important; padding: 24px 28px !important; }
+  .winner-card { max-width: min(640px, 86vw) !important; padding: 24px 28px !important; }
   .wc-trophy { font-size: 2.5rem !important; }
   .wc-label { font-size: 0.72rem !important; }
   .wc-name { font-size: 1.7rem !important; }
@@ -1797,12 +1797,15 @@ html[data-bg-img] body.in-game {
   .wc-stat-label { font-size: 0.66rem !important; }
   .wc-stat-value { font-size: 1.05rem !important; }
   .wc-section { font-size: 0.7rem !important; }
-  .wc-player-row { grid-template-columns: 30px minmax(0,1fr) auto 110px !important; }
+  .wc-player-row { grid-template-columns: 30px minmax(0,1fr) auto 120px !important; }
   .wc-player-av { width: 30px !important; height: 30px !important; font-size: 0.8rem !important; }
-  .wc-player-name { font-size: 0.9rem !important; }
-  .wc-player-stack { font-size: 0.72rem !important; }
-  .wc-player-delta { font-size: 0.95rem !important; }
+  .wc-player-name { font-size: 1rem !important; }
+  .wc-player-stack { font-size: 0.8rem !important; }
+  .wc-player-delta { font-size: 1.05rem !important; }
   .winner-dismiss { font-size: 0.95rem !important; padding: 12px 24px !important; }
+  /* Resume de manche : cartes agrandies (desktop souris seulement) */
+  .wc-cards-row .pk    { width: 48px !important; height: 68px !important; font-size: 1rem !important; }
+  .wc-player-cards .pk { width: 38px !important; height: 54px !important; font-size: 0.82rem !important; }
 
   .endgame-card { max-width: 600px !important; padding: 26px 34px !important; }
   .eg-trophy { font-size: 3.6rem !important; }
