@@ -102,6 +102,24 @@
   :root[data-admin-theme="light"] .del,
   :root[data-admin-theme="light"] .toggle.off,
   :root[data-admin-theme="light"] .use.danger{color:#c62828}
+
+  /* ── Responsive & desktop polish ──────────────── */
+  @media(min-width:760px){
+    body{padding:28px 20px}
+    .wrap{max-width:820px}
+    .card{padding:18px}
+    .tabs{gap:8px}
+    #login{max-width:440px;margin:0 auto}
+    input[type=password]{max-width:480px}
+  }
+  @media(max-width:600px){
+    body{padding:12px}
+    .top{flex-wrap:wrap}
+    .topbtns{flex-wrap:wrap}
+    .tabs{overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;gap:4px}
+    .tabs::-webkit-scrollbar{display:none}
+    .tab{flex:0 0 auto;white-space:nowrap;padding:8px 11px;font-size:.8rem}
+  }
 </style>
 <script>(function(){try{var t=localStorage.getItem('pth_admin_theme');if(t!=='light'&&t!=='dark')t='dark';document.documentElement.setAttribute('data-admin-theme',t);}catch(e){}})();</script>
 </head>
