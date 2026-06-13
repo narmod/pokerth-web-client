@@ -2474,6 +2474,11 @@ html[data-bg-img] body.in-game {
     display: grid;
     grid-template-columns: repeat(auto-fill, 46px);
     justify-content: center;
+    /* largeur definie + marge nulle : annule le `margin:0 auto` de base qui,
+       sur un item flex, empechait l'etirement (=> 1 seule colonne). */
+    width: 100%;
+    max-width: none;
+    margin: 0;
     gap: 8px;
     max-height: 104px;      /* ~2 lignes (cellule 46px + interligne) */
     overflow-y: auto;
