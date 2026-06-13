@@ -138,6 +138,7 @@
       <button class="tab" data-t="packages" data-scope="packages">Packages</button>
       <button class="tab" data-t="music" data-scope="music">Music</button>
       <button class="tab" data-t="keys">Keys</button>
+      <button class="tab" data-t="servers">Game servers</button>
     </div>
 
     <div id="panel-traffic" style="display:none">
@@ -446,6 +447,21 @@
         <div id="wcState" class="msg"></div>
       </div>
     </div>
+
+    <div id="panel-servers" style="display:none">
+      <div class="card">
+        <div class="boardhead" style="margin-bottom:6px"><h2 style="margin:0">Game servers</h2><button id="srvAddBtn" class="use">+ Add server</button></div>
+        <p class="muted" style="margin:2px 0 10px">PokerTH game servers the web client may dial — your LAN box or an Internet host. Saving a server adds it to the proxy's dial allowlist (host + port). The proxy is only a relay; it does not run or configure the game server itself. “Reachable?” opens a TCP connection to test it.</p>
+        <div id="srvRows"><div class="empty">Loading…</div></div>
+        <div class="periodrow" style="margin-top:10px"><button id="srvSaveBtn" class="use">Save all</button></div>
+        <div id="srvState" class="msg"></div>
+      </div>
+      <div class="card">
+        <h2 style="margin:0 0 8px">Effective dial allowlist</h2>
+        <p class="muted" style="margin:2px 0 8px">Hosts &amp; ports the proxy currently accepts to dial (built-in defaults + env + the servers above). Anti-relay guard — shown for reference.</p>
+        <div id="srvAllow" class="muted" style="font-size:.82rem"><div class="empty">Loading…</div></div>
+      </div>
+    </div>
   </div>
 </div>
 <script>
@@ -457,6 +473,56 @@
   // URL), so it stays out of server access logs and browser history.
   function api(path,opts){ opts=opts||{}; var h=Object.assign({},opts.headers||{}); var t=tok(); if(t) h.Authorization='Bearer '+t; opts.headers=h; return fetch(path,opts); }
   function show(v){ login.style.display=v==='login'?'block':'none'; dash.style.display=v==='dash'?'block':'none'; }
+
+  // ── Game servers (PokerTH dial registry + reachability) — master-only ──
+  var _srv = [];
+  function srvEsc(s){ return String(s==null?'':s).replace(/[&<>"]/g,function(c){return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'})[c];}); }
+  function srvSyncRow(row,i){ if(!_srv[i]) return; _srv[i].name=row.querySelector('.srvN').value.trim(); _srv[i].host=row.querySelector('.srvH').value.trim(); _srv[i].port=parseInt(row.querySelector('.srvP').value,10)||7234; _srv[i].tls=!!row.querySelector('.srvT').checked; }
+  function srvSyncAll(){ var box=$('srvRows'); if(!box) return; [].slice.call(box.querySelectorAll('.srow')).forEach(function(row){ srvSyncRow(row,+row.getAttribute('data-i')); }); }
+  function srvProbe(i,row){ var s=_srv[i]; if(!s||!s.host) return; var st=row.querySelector('.srvStat'); st.textContent='Testing…'; st.className='srvStat msg';
+    api('/admin/servers/probe',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({host:s.host,port:s.port,tls:s.tls})}).then(function(r){return r.json();}).then(function(d){
+      var e=row.querySelector('.srvStat'); if(!e) return;
+      if(!d||!d.ok){ e.textContent='✗ '+srvEsc((d&&d.error)||'error'); e.className='srvStat msg err'; return; }
+      if(d.reachable){ e.textContent='✓ Reachable ('+d.ms+' ms)'; e.className='srvStat msg ok'; }
+      else { e.textContent='✗ '+srvEsc(d.error||'unreachable'); e.className='srvStat msg err'; }
+    }).catch(function(){ var e=row.querySelector('.srvStat'); if(e){ e.textContent='✗ Network error'; e.className='srvStat msg err'; } }); }
+  function renderServers(){
+    var box=$('srvRows'); if(!box) return;
+    if(!_srv.length){ box.innerHTML='<div class="empty">No server yet. Click “+ Add server”.</div>'; return; }
+    box.innerHTML=_srv.map(function(s,i){
+      return '<div class="card srow" style="margin:0 0 8px;padding:10px" data-i="'+i+'">'
+        +'<div class="defrow" style="display:flex;gap:10px;align-items:center;margin:0 0 6px"><span style="width:46px">Name</span><input class="srvN" maxlength="40" placeholder="My LAN game" value="'+srvEsc(s.name)+'" style="flex:1;min-width:0"></div>'
+        +'<div class="defrow" style="display:flex;gap:10px;align-items:center;margin:6px 0"><span style="width:46px">Host</span><input class="srvH" maxlength="255" placeholder="192.168.1.10 or box.ddns.net" value="'+srvEsc(s.host)+'" autocomplete="off" style="flex:1;min-width:0"></div>'
+        +'<div class="periodrow" style="margin:6px 0;flex-wrap:wrap"><label class="muted">Port <input class="srvP" type="number" min="1" max="65535" value="'+(parseInt(s.port,10)||7234)+'" style="margin:0;width:90px"></label><label class="muted">TLS <input class="srvT" type="checkbox" '+(s.tls?'checked':'')+'></label><button class="use srvTest" type="button">Reachable?</button><button class="ghost srvDel" type="button">Remove</button></div>'
+        +'<div class="srvStat msg" style="margin:4px 0 0"></div>'
+        +'</div>';
+    }).join('');
+    [].slice.call(box.querySelectorAll('.srow')).forEach(function(row){
+      var i=+row.getAttribute('data-i');
+      row.querySelector('.srvDel').addEventListener('click',function(){ srvSyncAll(); _srv.splice(i,1); renderServers(); });
+      row.querySelector('.srvTest').addEventListener('click',function(){ srvSyncRow(row,i); srvProbe(i,row); });
+      ['.srvN','.srvH','.srvP','.srvT'].forEach(function(sel){ var el=row.querySelector(sel); if(el) el.addEventListener('change',function(){ srvSyncRow(row,i); }); });
+    });
+  }
+  function loadServers(){
+    var box=$('srvRows'); if(box) box.innerHTML='<div class="empty">Loading…</div>';
+    api('/admin/servers').then(function(r){return r.json();}).then(function(d){
+      if(!d||!d.ok){ if(box) box.innerHTML='<div class="empty">'+srvEsc((d&&d.error)||'Error')+'</div>'; return; }
+      _srv=(d.servers||[]).map(function(s){return {id:s.id,name:s.name||'',host:s.host||'',port:parseInt(s.port,10)||7234,tls:!!s.tls};});
+      renderServers();
+      var al=$('srvAllow'); if(al){ var hosts=(d.allowlist&&d.allowlist.hosts)||[], ports=(d.allowlist&&d.allowlist.ports)||[]; al.innerHTML='<b>Hosts:</b> '+srvEsc(hosts.join(', ')||'—')+'<br><b>Ports:</b> '+srvEsc(ports.join(', ')||'—'); }
+    }).catch(function(){ if(box) box.innerHTML='<div class="empty">Network error</div>'; });
+  }
+  function saveServers(){
+    srvSyncAll(); var st=$('srvState'); if(st){ st.textContent='Saving…'; st.className='msg'; }
+    api('/admin/servers',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({servers:_srv})}).then(function(r){return r.json();}).then(function(d){
+      if(!st) return;
+      if(!d||!d.ok){ st.textContent='✗ '+srvEsc((d&&d.error)||'error'); st.className='msg err'; return; }
+      loadServers(); st.textContent='✓ Saved'; st.className='msg ok';
+    }).catch(function(){ if(st){ st.textContent='✗ Network error'; st.className='msg err'; } });
+  }
+  if($('srvAddBtn')) $('srvAddBtn').addEventListener('click',function(){ srvSyncAll(); _srv.push({id:'',name:'',host:'',port:7234,tls:false}); renderServers(); });
+  if($('srvSaveBtn')) $('srvSaveBtn').addEventListener('click',saveServers);
 
   $('loginBtn').addEventListener('click', doLogin);
   $('ltok').addEventListener('keydown', function(e){ if(e.key==='Enter') doLogin(); });
@@ -519,11 +585,13 @@
     $('panel-music').style.display=t==='music'?'block':'none';
     $('panel-keys').style.display=t==='keys'?'block':'none';
     $('panel-traffic').style.display=t==='traffic'?'block':'none';
+    $('panel-servers').style.display=t==='servers'?'block':'none';
     if(t==='music')mzRefresh();
     if(t==='keys') loadKeys();
     if(t==='board') loadBoard();
     if(t==='packages') api('/admin/pkg-list').then(function(r){return r.json();}).then(function(d){ if(d&&d.ok) renderPkgs(d); }).catch(function(){});
     if(t==='traffic') loadTraffic();
+    if(t==='servers') loadServers();
     if(t==='broadcast'){ loadBroadcasts(); if(_isMaster) loadWelcome(); }
     if(t==='clients'){ loadStatus(true); loadThemes(); }
     if(t==='server'){ loadServer(); srvStart(); } else { srvStop(); }

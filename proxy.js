@@ -68,6 +68,8 @@ function isHostAllowed(h) {
   var px = _adminConfig && _adminConfig.proxyCfg;
   var extra = (px && Array.isArray(px.allowedHosts)) ? px.allowedHosts : [];
   for (var i = 0; i < extra.length; i++) { if (String(extra[i]).toLowerCase() === h) return true; }
+  var regs = (_adminConfig && Array.isArray(_adminConfig.servers)) ? _adminConfig.servers : [];
+  for (var j = 0; j < regs.length; j++) { if (regs[j] && String(regs[j].host).toLowerCase() === h) return true; }
   return false;
 }
 
@@ -89,6 +91,8 @@ function isPortAllowed(p) {
   var px = _adminConfig && _adminConfig.proxyCfg;
   var extra = (px && Array.isArray(px.allowedPorts)) ? px.allowedPorts : [];
   for (var i = 0; i < extra.length; i++) { if (parseInt(extra[i], 10) === p) return true; }
+  var regs = (_adminConfig && Array.isArray(_adminConfig.servers)) ? _adminConfig.servers : [];
+  for (var j = 0; j < regs.length; j++) { if (regs[j] && parseInt(regs[j].port, 10) === p) return true; }
   return false;
 }
 
@@ -246,6 +250,20 @@ const ADMIN_CONFIG_FILE = process.env.ADMIN_CONFIG_FILE || path.join(__dirname, 
 let _adminConfig = {};
 try { _adminConfig = JSON.parse(fs.readFileSync(ADMIN_CONFIG_FILE, 'utf8')) || {}; } catch (e) { _adminConfig = {}; }
 function saveAdminConfig() { try { fs.writeFileSync(ADMIN_CONFIG_FILE, JSON.stringify(_adminConfig)); } catch (e) { console.error('[admin] config write failed:', e.message); } }
+// ── PokerTH game-server registry (admin Layer A) — see /admin/servers ──
+// Entries: { id, name, host, port, tls }. A saved server is auto-added to the
+// dial allowlist via isHostAllowed / isPortAllowed. The proxy remains a pure
+// relay; it does NOT run or configure the dedicated game server itself.
+function _serversList() { var a = _adminConfig && _adminConfig.servers; return Array.isArray(a) ? a : []; }
+function _sanitizeServer(s) {
+  if (!s || typeof s !== 'object') return null;
+  var host = String(s.host || '').trim().toLowerCase().slice(0, 255);
+  if (!host || !/^[a-z0-9._:-]+$/.test(host)) return null;
+  var port = parseInt(s.port, 10); if (!(port >= 1 && port <= 65535)) port = 7234;
+  var name = String(s.name || '').trim().slice(0, 40) || host;
+  var id = String(s.id || '').trim().slice(0, 40) || ('srv_' + Math.random().toString(36).slice(2, 9));
+  return { id: id, name: name, host: host, port: port, tls: !!s.tls };
+}
 
 // Scheduled information broadcasts, persisted to broadcasts.json so recurring
 // messages (daily/weekly/monthly) survive a proxy restart.
@@ -1241,6 +1259,50 @@ function handleAdmin(req, res, reqPathOnly, query) {
       });
     }
     res.writeHead(405); res.end('Method not allowed'); return;
+  }
+  // ── PokerTH server registry (Layer A): dial allowlist + reachability. Master-only. ──
+  if (reqPathOnly === '/admin/servers') {
+    if (req.method !== 'POST') {
+      if (!adminAuthed(query)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
+      var _hosts = ALLOWED_HOSTS.slice();
+      var _ports = ALLOWED_PORTS.slice();
+      var _px = _adminConfig && _adminConfig.proxyCfg;
+      if (_px && Array.isArray(_px.allowedHosts)) _px.allowedHosts.forEach(function (x) { var v = String(x).toLowerCase(); if (v && _hosts.indexOf(v) < 0) _hosts.push(v); });
+      if (_px && Array.isArray(_px.allowedPorts)) _px.allowedPorts.forEach(function (x) { var v = parseInt(x, 10); if (v > 0 && _ports.indexOf(v) < 0) _ports.push(v); });
+      _serversList().forEach(function (s) { if (_hosts.indexOf(s.host) < 0) _hosts.push(s.host); if (_ports.indexOf(s.port) < 0) _ports.push(s.port); });
+      return adminJson(res, 200, { ok: true, servers: _serversList(), allowlist: { hosts: _hosts, ports: _ports } });
+    }
+    return readJsonBody(req, function (d) {
+      if (!adminAuthed(query, d && d.token)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
+      if (!d || !Array.isArray(d.servers)) return adminJson(res, 400, { ok: false, error: 'servers[] required' });
+      var out = [];
+      for (var i = 0; i < d.servers.length && out.length < 50; i++) { var s = _sanitizeServer(d.servers[i]); if (s) out.push(s); }
+      _adminConfig.servers = out;
+      saveAdminConfig();
+      return adminJson(res, 200, { ok: true, servers: out });
+    });
+  }
+  if (reqPathOnly === '/admin/servers/probe' && req.method === 'POST') {
+    return readJsonBody(req, function (d) {
+      if (!adminAuthed(query, d && d.token)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
+      var host = String((d && d.host) || '').trim().toLowerCase();
+      var port = parseInt((d && d.port) || 7234, 10);
+      var useTls = !!(d && d.tls);
+      if (!host) return adminJson(res, 400, { ok: false, error: 'host required' });
+      if (!isPortAllowed(port)) return adminJson(res, 200, { ok: true, reachable: false, ms: 0, error: 'port not allowed' });
+      if (!isHostAllowed(host)) return adminJson(res, 200, { ok: true, reachable: false, ms: 0, error: 'host not in allowlist (save it first)' });
+      var t0 = Date.now(), done = false, sock = null;
+      function finish(ok, err) { if (done) return; done = true; try { if (sock) sock.destroy(); } catch (e) {} return adminJson(res, 200, { ok: true, reachable: ok, ms: Date.now() - t0, error: err || '' }); }
+      try {
+        var opts = { host: host, port: port };
+        sock = useTls
+          ? tls.connect(Object.assign({ rejectUnauthorized: false, servername: /^[0-9.]+$/.test(host) ? undefined : host }, opts), function () { finish(true, ''); })
+          : net.connect(opts, function () { finish(true, ''); });
+        sock.setTimeout(6000);
+        sock.on('timeout', function () { finish(false, 'timeout'); });
+        sock.on('error', function (e) { finish(false, (e && e.code) || 'error'); });
+      } catch (e) { finish(false, (e && e.code) || 'error'); }
+    });
   }
   if (reqPathOnly === '/admin/pkg-upload' && req.method === 'POST') {
     if (!hasScope('packages', query)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
