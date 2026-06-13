@@ -835,7 +835,7 @@ function adminAuthed(query, bodyToken) {
 // The file is hot-reloaded (mtime check), so adding/revoking a key needs no
 // restart. To scope another section later (e.g. "music"): add it to ADMIN_SCOPES
 // and wrap that section's routes with hasScope('music', …) instead of adminAuthed.
-const ADMIN_SCOPES = ['broadcast'];
+const ADMIN_SCOPES = ['broadcast', 'music'];
 const SCOPED_TOKENS_FILE = process.env.SCOPED_TOKENS_FILE || path.join(__dirname, 'scoped-tokens.json');
 let _scopedTokens = [], _scopedMtime = -1;
 function _loadScopedTokens() {
@@ -851,6 +851,14 @@ function _loadScopedTokens() {
   } catch (e) { _scopedTokens = []; }
   _scopedMtime = mt;
   return _scopedTokens;
+}
+// Persist scoped keys (admin UI create/revoke). Mirrors the CLI file format and
+// keeps the in-memory cache in sync so the change is effective immediately.
+function _saveScopedTokens(list) {
+  fs.writeFileSync(SCOPED_TOKENS_FILE, JSON.stringify(list, null, 2));
+  try { fs.chmodSync(SCOPED_TOKENS_FILE, 0o600); } catch (e) {}
+  _scopedTokens = list;
+  try { _scopedMtime = fs.statSync(SCOPED_TOKENS_FILE).mtimeMs; } catch (e) { _scopedMtime = -1; }
 }
 // True if the caller may act on `scope`: the master token grants every scope;
 // otherwise the presented token (Authorization header → query.token, ?token=,
@@ -1307,11 +1315,11 @@ function handleAdmin(req, res, reqPathOnly, query) {
     });
   }
   if (reqPathOnly === '/admin/music-list') {
-    if (!adminAuthed(query)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
+    if (!hasScope('music', query)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
     return adminJson(res, 200, { ok: true, tracks: musicListForAdmin() });
   }
   if (reqPathOnly === '/admin/music-upload' && req.method === 'POST') {
-    if (!adminAuthed(query)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
+    if (!hasScope('music', query)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
     var _mTitle = musicStr(query.title, 120);
     if (!_mTitle) return adminJson(res, 400, { ok: false, error: 'title required' });
     return readRawBody(req, MAX_UPLOAD, function (buf) {
@@ -1335,7 +1343,7 @@ function handleAdmin(req, res, reqPathOnly, query) {
   }
   if (reqPathOnly === '/admin/music-remove' && req.method === 'POST') {
     return readJsonBody(req, function (d) {
-      if (!adminAuthed(query, d && d.token)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
+      if (!hasScope('music', query, d && d.token)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
       var id = slugId(d && d.id);
       if (!id) return adminJson(res, 400, { ok: false, error: 'id required' });
       if (musicBuiltins().some(function (t) { return t && t.id === id; })) return adminJson(res, 400, { ok: false, error: 'built-in track cannot be removed (you can hide it instead)' });
@@ -1348,7 +1356,7 @@ function handleAdmin(req, res, reqPathOnly, query) {
   }
   if (reqPathOnly === '/admin/music-toggle' && req.method === 'POST') {
     return readJsonBody(req, function (d) {
-      if (!adminAuthed(query, d && d.token)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
+      if (!hasScope('music', query, d && d.token)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
       var id = slugId(d && d.id);
       if (!id) return adminJson(res, 400, { ok: false, error: 'id required' });
       var enabled = !(d && d.enabled === false);
@@ -1366,7 +1374,7 @@ function handleAdmin(req, res, reqPathOnly, query) {
   }
   if (reqPathOnly === '/admin/music-edit' && req.method === 'POST') {
     return readJsonBody(req, function (d) {
-      if (!adminAuthed(query, d && d.token)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
+      if (!hasScope('music', query, d && d.token)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
       var id = slugId(d && d.id);
       if (!id) return adminJson(res, 400, { ok: false, error: 'id required' });
       if (musicBuiltins().some(function (t) { return t && t.id === id; })) return adminJson(res, 400, { ok: false, error: 'built-in track cannot be edited' });
@@ -1384,7 +1392,7 @@ function handleAdmin(req, res, reqPathOnly, query) {
   }
   if (reqPathOnly === '/admin/music-order' && req.method === 'POST') {
     return readJsonBody(req, function (d) {
-      if (!adminAuthed(query, d && d.token)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
+      if (!hasScope('music', query, d && d.token)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
       if (!d || !Array.isArray(d.order)) return adminJson(res, 400, { ok: false, error: 'order array required' });
       var known = musicAllIds(), clean = [];
       d.order.forEach(function (x) { var id = slugId(x); if (known[id] && clean.indexOf(id) < 0) clean.push(id); });
@@ -1485,6 +1493,42 @@ function handleAdmin(req, res, reqPathOnly, query) {
           adminJson(res, 200, { ok: true });
         } catch (e) { try { if (conn) await conn.end(); } catch (e2) {} adminJson(res, 200, { ok: false, error: String((e && e.message) || e) }); }
       })();
+    });
+  }
+  if (reqPathOnly === '/admin/tokens' && req.method === 'GET') {
+    if (!adminAuthed(query)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
+    var _keys = _loadScopedTokens().map(function (r) {
+      var t = r.token || '', masked = t.length > 8 ? (t.slice(0, 4) + '\u2026' + t.slice(-4)) : '\u2022\u2022\u2022\u2022';
+      return { name: r.name || '', scopes: (r.scopes || []).filter(function (s) { return ADMIN_SCOPES.indexOf(s) >= 0; }), created: r.created || null, masked: masked };
+    });
+    return adminJson(res, 200, { ok: true, keys: _keys, available: ADMIN_SCOPES });
+  }
+  if (reqPathOnly === '/admin/tokens' && req.method === 'POST') {
+    return readJsonBody(req, function (d) {
+      if (!adminAuthed(query, d && d.token)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
+      var name = (d && typeof d.name === 'string') ? d.name.trim().slice(0, 64) : '';
+      if (!name) return adminJson(res, 400, { ok: false, error: 'name required' });
+      var scopes = (d && Array.isArray(d.scopes)) ? d.scopes.filter(function (s) { return ADMIN_SCOPES.indexOf(s) >= 0; }) : [];
+      if (!scopes.length) return adminJson(res, 400, { ok: false, error: 'pick at least one valid category' });
+      var list = _loadScopedTokens().slice();
+      if (list.some(function (r) { return r.name === name; })) return adminJson(res, 409, { ok: false, error: 'a key with that name already exists' });
+      var newTok = crypto.randomBytes(24).toString('hex');
+      list.push({ name: name, token: newTok, scopes: scopes, created: Date.now() });
+      try { _saveScopedTokens(list); } catch (e) { return adminJson(res, 500, { ok: false, error: 'could not save key' }); }
+      console.log('[admin] delegate key created: ' + name + ' [' + scopes.join(',') + ']');
+      return adminJson(res, 200, { ok: true, name: name, scopes: scopes, token: newTok });
+    });
+  }
+  if (reqPathOnly === '/admin/tokens/delete' && req.method === 'POST') {
+    return readJsonBody(req, function (d) {
+      if (!adminAuthed(query, d && d.token)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
+      var name = (d && typeof d.name === 'string') ? d.name : '';
+      var list = _loadScopedTokens().slice(), n = list.length;
+      list = list.filter(function (r) { return r.name !== name; });
+      if (list.length === n) return adminJson(res, 404, { ok: false, error: 'not found' });
+      try { _saveScopedTokens(list); } catch (e) { return adminJson(res, 500, { ok: false, error: 'could not save' }); }
+      console.log('[admin] delegate key revoked: ' + name);
+      return adminJson(res, 200, { ok: true });
     });
   }
   if (reqPathOnly === '/admin/whoami') {

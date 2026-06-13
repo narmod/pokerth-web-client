@@ -136,7 +136,8 @@
       <button class="tab" data-t="broadcast" data-scope="broadcast">Broadcasts</button>
       <button class="tab" data-t="board">Leaderboard</button>
       <button class="tab" data-t="packages">Packages</button>
-      <button class="tab" data-t="music">Music</button>
+      <button class="tab" data-t="music" data-scope="music">Music</button>
+      <button class="tab" data-t="keys">Keys</button>
     </div>
 
     <div id="panel-traffic" style="display:none">
@@ -307,6 +308,21 @@
         <div class="defrow" style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin:5px 0"><span>Banner / tagline</span><input id="srvTagline" maxlength="60" placeholder="Web Client" autocomplete="off" style="flex:1;min-width:0"></div>
         <div style="margin-top:8px"><button id="saveIdent" class="use">Save</button></div>
         <div id="identMsg" class="msg"></div>
+      </div>
+    </div>
+    <div id="panel-keys" style="display:none">
+      <div class="card">
+        <h2>Create a delegate key</h2>
+        <p class="muted" style="margin:0 0 8px">Give a third party access to only some sections. Pick a name and the categories they may manage. The full key is shown <b>once</b> at creation — copy it then. A lost key cannot be recovered (revoke and create a new one).</p>
+        <div class="defrow" style="display:flex;align-items:center;gap:10px;margin:5px 0"><span style="white-space:nowrap">Name</span><input id="kyName" maxlength="64" placeholder="e.g. music-partner" autocomplete="off" style="flex:1;min-width:0"></div>
+        <div class="defrow" style="margin:8px 0"><div id="kyScopes" style="display:flex;flex-wrap:wrap;gap:6px 16px"></div></div>
+        <div style="margin-top:8px"><button id="kyCreate" class="use">Create key</button></div>
+        <div id="kyNew" style="display:none;margin-top:10px"></div>
+        <div id="kyMsg" class="msg"></div>
+      </div>
+      <div class="card">
+        <div class="boardhead"><h2 style="margin:0">Delegate keys</h2><button id="kyRefresh" class="use">Refresh</button></div>
+        <div id="kyList"><div class="empty">Loading…</div></div>
       </div>
     </div>
     <div id="panel-server">
@@ -501,8 +517,10 @@
     $('panel-clients').style.display=t==='clients'?'block':'none';
     $('panel-broadcast').style.display=t==='broadcast'?'block':'none';
     $('panel-music').style.display=t==='music'?'block':'none';
+    $('panel-keys').style.display=t==='keys'?'block':'none';
     $('panel-traffic').style.display=t==='traffic'?'block':'none';
     if(t==='music')mzRefresh();
+    if(t==='keys') loadKeys();
     if(t==='board') loadBoard();
     if(t==='traffic') loadTraffic();
     if(t==='broadcast'){ loadBroadcasts(); if(_isMaster) loadWelcome(); }
@@ -1058,6 +1076,64 @@
   function bcPrevNow(){ bcGoldPreview('bcNowPrev',($('bcNowMsg').value||'').trim(),$('bcNowIcon').value); }
   ['bcMsg','bcIcon'].forEach(function(id){ if($(id)){ $(id).addEventListener('input',bcPrevSched); $(id).addEventListener('change',bcPrevSched); } });
   ['bcNowMsg','bcNowIcon'].forEach(function(id){ if($(id)){ $(id).addEventListener('input',bcPrevNow); $(id).addEventListener('change',bcPrevNow); } });
+  // -- Delegate keys (master only): create scoped API keys per category --------
+  var _kySC={broadcast:'Broadcasts',music:'Music'};
+  function _kyLabel(s){ return _kySC[s]||s; }
+  function loadKeys(){
+    api('/admin/tokens').then(function(r){return r.json();}).then(function(d){
+      var box=$('kyScopes'), list=$('kyList');
+      if(!d||!d.ok){ if(list) list.innerHTML='<div class="empty">Could not load keys.</div>'; return; }
+      if(box){ box.innerHTML=''; (d.available||[]).forEach(function(s){
+        var lbl=document.createElement('label'); lbl.className='muted'; lbl.style.cssText='display:inline-flex;align-items:center;gap:6px;white-space:nowrap';
+        var cb=document.createElement('input'); cb.type='checkbox'; cb.value=s; cb.style.width='auto';
+        lbl.appendChild(cb); lbl.appendChild(document.createTextNode(' '+_kyLabel(s))); box.appendChild(lbl);
+      }); }
+      if(list){ list.innerHTML='';
+        if(!(d.keys&&d.keys.length)){ list.innerHTML='<div class="empty">No delegate keys yet.</div>'; return; }
+        d.keys.forEach(function(k){
+          var row=document.createElement('div'); row.style.cssText='display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 0;border-bottom:1px solid rgba(127,127,127,.18)';
+          var left=document.createElement('div');
+          var chips=(k.scopes||[]).map(_kyLabel).join(', ');
+          var when=k.created?(' \u00b7 '+new Date(k.created).toLocaleDateString()):'';
+          left.innerHTML='<b>'+_annEsc(k.name||'')+'</b> <span class="muted">['+_annEsc(chips)+']</span><br><span class="muted" style="font-size:.8rem">'+_annEsc(k.masked||'')+when+'</span>';
+          var del=document.createElement('button'); del.className='del'; del.textContent='Revoke'; del.addEventListener('click',function(){ kyRevoke(k.name); });
+          row.appendChild(left); row.appendChild(del); list.appendChild(row);
+        });
+      }
+    }).catch(function(){ var list=$('kyList'); if(list) list.innerHTML='<div class="empty">Network error.</div>'; });
+  }
+  function kyRevoke(name){
+    if(!confirm('Revoke key "'+name+'"? Anyone using it loses access immediately.')) return;
+    api('/admin/tokens/delete',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:name})})
+      .then(function(r){return r.json();}).then(function(d){ if(d&&d.ok){ loadKeys(); } else { alert('Failed: '+((d&&d.error)||'error')); } })
+      .catch(function(){ alert('Network error.'); });
+  }
+  (function(){
+    var b=$('kyCreate'); if(!b) return;
+    var rb=$('kyRefresh'); if(rb) rb.addEventListener('click', loadKeys);
+    b.addEventListener('click', function(){
+      var name=($('kyName').value||'').trim();
+      var scopes=[].slice.call($('kyScopes').querySelectorAll('input:checked')).map(function(c){return c.value;});
+      var m=$('kyMsg');
+      if(!name){ m.textContent='Name required.'; m.className='msg err'; return; }
+      if(!scopes.length){ m.textContent='Pick at least one category.'; m.className='msg err'; return; }
+      api('/admin/tokens',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:name,scopes:scopes})})
+        .then(function(r){return r.json();}).then(function(d){
+          if(d&&d.ok){
+            m.textContent=''; m.className='msg'; $('kyName').value='';
+            var box=$('kyNew'); box.style.display='block'; box.innerHTML='';
+            var p=document.createElement('div'); p.className='muted'; p.style.marginBottom='4px';
+            p.textContent='Key "'+d.name+'" created \u2014 copy it now, it won\u2019t be shown again:';
+            var row=document.createElement('div'); row.style.cssText='display:flex;gap:8px;align-items:center';
+            var code=document.createElement('code'); code.textContent=d.token; code.style.cssText='flex:1;word-break:break-all;padding:6px 8px;background:rgba(0,0,0,.25);border-radius:6px';
+            var cp=document.createElement('button'); cp.className='use'; cp.textContent='Copy';
+            cp.addEventListener('click',function(){ if(navigator.clipboard){ navigator.clipboard.writeText(d.token).then(function(){ cp.textContent='Copied'; },function(){}); } });
+            row.appendChild(code); row.appendChild(cp); box.appendChild(p); box.appendChild(row);
+            loadKeys();
+          } else { m.textContent='Failed: '+((d&&d.error)||'error'); m.className='msg err'; }
+        }).catch(function(){ m.textContent='Network error.'; m.className='msg err'; });
+    });
+  })();
   setInterval(function(){ if(document.visibilityState==='visible' && tok() && $('panel-broadcast') && $('panel-broadcast').style.display!=='none') loadBroadcasts(); }, 30000);
 
   // ── Welcome / first-visit message (per language) ────────────────────────
