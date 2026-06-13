@@ -1760,6 +1760,10 @@ html[data-bg-img] body.in-game {
   .pb-info  { min-width: 120px !important; }
   .pb-action { font-size: 0.9rem !important; min-width: 60px !important; }
   #pb-timer  { font-size: 0.9rem !important; }
+  /* Nos cartes (player-bar du bas) agrandies — desktop souris seulement ;
+     la tablette paysage garde 62x90 du bloc min-width:900px ci-dessus. */
+  .pb-cards .pk { width: 76px !important; height: 108px !important; font-size: 1.6rem !important; }
+  .pb-cards     { gap: 10px !important; }
 
   /* ── Contrôles d'action ── */
   /* Desktop souris uniquement : barre d'action plus compacte pour libérer
