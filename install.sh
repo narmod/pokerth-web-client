@@ -533,6 +533,64 @@ do_set_token() {
   if [ -n "$STATS_ADMIN_TOKEN" ]; then ok "Admin token set — remote reset endpoint enabled."
   else ok "Admin token cleared — remote reset endpoint disabled."; fi
 }
+# -- SCOPED DELEGATE KEYS ------------------------------------------------------
+# Named API keys that grant a SUBSET of admin sections (scopes) -- e.g. give a
+# partner broadcast-only access without handing over the master token. Stored in
+# scoped-tokens.json (chmod 600, untracked, preserved across updates), hot-read
+# by the server (no restart needed to add/revoke).
+TOKEN_SCOPES="broadcast"   # known scopes; extend when more sections are scoped
+do_token() {
+  load_state
+  [ -n "$RUN_USER" ] || RUN_USER="$(id -un)"
+  [ -n "$INSTALL_DIR" ] || { errln "No install found (missing $CONF). Install first."; exit 1; }
+  local f="$INSTALL_DIR/scoped-tokens.json"
+  local sub="${1:-list}"
+  case "$sub" in
+    add)
+      local name="${2:-}" scopes="${3:-}"
+      [ -n "$name" ] && [ -n "$scopes" ] || { errln "Usage: pokerth-web token add <name> <scope[,scope]>   (scopes: $TOKEN_SCOPES)"; exit 1; }
+      local s
+      for s in ${scopes//,/ }; do
+        case " $TOKEN_SCOPES " in *" $s "*) ;; *) errln "Unknown scope '$s'. Allowed: $TOKEN_SCOPES"; exit 1 ;; esac
+      done
+      local newtok; newtok="$(run_as node -e 'process.stdout.write(require("crypto").randomBytes(24).toString("hex"))')"
+      [ -n "$newtok" ] || { errln "Could not generate a token (node missing?)."; exit 1; }
+      run_as env PTF="$f" PTNAME="$name" PTTOK="$newtok" PTSCOPES="$scopes" node -e '
+        const fs=require("fs"); const f=process.env.PTF, name=process.env.PTNAME, tok=process.env.PTTOK;
+        const scopes=process.env.PTSCOPES.split(",").map(function(x){return x.trim();}).filter(Boolean);
+        let a=[]; try{ a=JSON.parse(fs.readFileSync(f,"utf8")); if(!Array.isArray(a)) a=[]; }catch(e){}
+        if(a.some(function(x){return x&&x.name===name;})){ console.error("dup"); process.exit(2); }
+        a.push({name:name,token:tok,scopes:scopes,created:Date.now()});
+        fs.writeFileSync(f, JSON.stringify(a,null,2)); try{ fs.chmodSync(f,0o600); }catch(e){}
+      ' || { errln "A key named '$name' already exists (or write failed). See: pokerth-web token list / token rm <name>."; exit 1; }
+      step "PokerTH Web Client -- delegate key created"
+      ok "Key '$name'  (scopes: $scopes)"
+      printf '  Token: %s\n' "$newtok"
+      info "Shown once -- give it to the third party."
+      info "They authenticate with header 'Authorization: Bearer <token>' (or ?token=)."
+      info "Takes effect immediately -- no restart needed."
+      ;;
+    list|ls)
+      run_as env PTF="$f" node -e '
+        const fs=require("fs"); let a=[]; try{ a=JSON.parse(fs.readFileSync(process.env.PTF,"utf8")); if(!Array.isArray(a)) a=[]; }catch(e){}
+        if(!a.length){ console.log("(no delegate keys)"); process.exit(0); }
+        a.forEach(function(x){ const t=x.token||""; const m=t.length>8?(t.slice(0,4)+"..."+t.slice(-4)):"****"; console.log("- "+(x.name||"?")+"   ["+((x.scopes||[]).join(","))+"]   "+m); });
+      '
+      ;;
+    rm|remove|del)
+      local name="${2:-}"
+      [ -n "$name" ] || { errln "Usage: pokerth-web token rm <name>"; exit 1; }
+      run_as env PTF="$f" PTNAME="$name" node -e '
+        const fs=require("fs"); const name=process.env.PTNAME; let a=[]; try{ a=JSON.parse(fs.readFileSync(process.env.PTF,"utf8")); if(!Array.isArray(a)) a=[]; }catch(e){}
+        const n=a.length; a=a.filter(function(x){ return !(x&&x.name===name); });
+        if(a.length===n){ console.error("none"); process.exit(2); }
+        fs.writeFileSync(process.env.PTF, JSON.stringify(a,null,2)); try{ fs.chmodSync(process.env.PTF,0o600); }catch(e){}
+      ' || { errln "No key named '$name'."; exit 1; }
+      ok "Delegate key '$name' removed."
+      ;;
+    *) errln "Usage: pokerth-web token add <name> <scopes> | token list | token rm <name>"; exit 1 ;;
+  esac
+}
 do_db_config() {
   load_state
   [ -n "$RUN_USER" ] || RUN_USER="$(id -un)"
@@ -946,6 +1004,7 @@ Commands:
   reset-stats Reset the shared family leaderboard (stats.json)
   set-period  Set auto-reset period: off | daily | monthly | yearly
   set-token   Set (or clear) the admin token for the remote reset endpoint
+  token       Manage delegate API keys: token add <name> <scopes> | list | rm <name>
   admin       Show or hide the admin panel: on | off
   db-config   Configure the optional MySQL mirror (host, user, password, db)
   db-on       Enable the MySQL mirror
@@ -980,6 +1039,7 @@ case "$CMD" in
   reset-stats|stats-reset) do_reset_stats ;;
   set-period)     do_set_period "$2" ;;
   set-token)      do_set_token "$2" ;;
+  token)          do_token "$2" "$3" "$4" ;;
   db-config|db-setup|set-mysql) do_db_config ;;
   db-on)          do_db_toggle true ;;
   db-off)         do_db_toggle false ;;

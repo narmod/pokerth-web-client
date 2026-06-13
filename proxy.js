@@ -827,6 +827,48 @@ if (_broadcasts.length) console.log('[broadcast] armed ' + _broadcasts.length + 
 function adminAuthed(query, bodyToken) {
   return !!STATS_ADMIN_TOKEN && (query.token === STATS_ADMIN_TOKEN || bodyToken === STATS_ADMIN_TOKEN);
 }
+// ── Scoped delegate keys (admin → `pokerth-web token` CLI) ─────────────────
+// Beside the master STATS_ADMIN_TOKEN (which grants every scope), named keys may
+// grant a SUBSET of admin sections ("scopes"). They live in scoped-tokens.json
+// (chmod 600, kept out of git, preserved across updates like admin-config.json):
+//   [ { "name": "...", "token": "...", "scopes": ["broadcast"], "created": ... } ]
+// The file is hot-reloaded (mtime check), so adding/revoking a key needs no
+// restart. To scope another section later (e.g. "music"): add it to ADMIN_SCOPES
+// and wrap that section's routes with hasScope('music', …) instead of adminAuthed.
+const ADMIN_SCOPES = ['broadcast'];
+const SCOPED_TOKENS_FILE = process.env.SCOPED_TOKENS_FILE || path.join(__dirname, 'scoped-tokens.json');
+let _scopedTokens = [], _scopedMtime = -1;
+function _loadScopedTokens() {
+  let mt = 0;
+  try { mt = fs.statSync(SCOPED_TOKENS_FILE).mtimeMs; }
+  catch (e) { _scopedTokens = []; _scopedMtime = 0; return _scopedTokens; }
+  if (mt === _scopedMtime) return _scopedTokens;            // unchanged → cached
+  try {
+    const arr = JSON.parse(fs.readFileSync(SCOPED_TOKENS_FILE, 'utf8'));
+    _scopedTokens = Array.isArray(arr) ? arr.filter(function (r) {
+      return r && typeof r.token === 'string' && r.token && Array.isArray(r.scopes);
+    }) : [];
+  } catch (e) { _scopedTokens = []; }
+  _scopedMtime = mt;
+  return _scopedTokens;
+}
+// True if the caller may act on `scope`: the master token grants every scope;
+// otherwise the presented token (Authorization header → query.token, ?token=,
+// or JSON body token) must list that scope.
+function hasScope(scope, query, bodyToken) {
+  if (adminAuthed(query, bodyToken)) return true;
+  var tok = (query && query.token) || bodyToken || '';
+  if (!tok) return false;
+  var list = _loadScopedTokens();
+  for (var i = 0; i < list.length; i++) {
+    if (list[i].token === tok) {
+      var sc = list[i].scopes || [];
+      return sc.indexOf('*') >= 0 || sc.indexOf(scope) >= 0;
+    }
+  }
+  return false;
+}
+
 function adminJson(res, code, obj) {
   res.writeHead(code, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' });
   res.end(JSON.stringify(obj));
@@ -1445,8 +1487,15 @@ function handleAdmin(req, res, reqPathOnly, query) {
       })();
     });
   }
+  if (reqPathOnly === '/admin/whoami') {
+    // Capability probe for the admin UI: report what the presented key may do.
+    if (adminAuthed(query)) return adminJson(res, 200, { ok: true, master: true, scopes: ADMIN_SCOPES });
+    var _wt = (query && query.token) || '', _wr = _loadScopedTokens().find(function (r) { return r.token === _wt; });
+    if (_wr) return adminJson(res, 200, { ok: true, master: false, scopes: (_wr.scopes || []).filter(function (s) { return ADMIN_SCOPES.indexOf(s) >= 0; }) });
+    return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
+  }
   if (reqPathOnly === '/admin/broadcasts' && req.method === 'GET') {
-    if (!adminAuthed(query, null)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
+    if (!hasScope('broadcast', query, null)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
     const now = Date.now();
     const jobs = _broadcasts.map(function (j) {
       return { id: j.id, message: j.message, icon: j.icon || '', schedule: j.schedule, enabled: !!j.enabled, lastRun: j.lastRun || null, runCount: j.runCount || 0, endAt: j.endAt || null, maxRuns: j.maxRuns || null, createdAt: j.createdAt || null, nextRun: (j.enabled ? computeNextRun(j, now) : null) };
@@ -1456,7 +1505,7 @@ function handleAdmin(req, res, reqPathOnly, query) {
   }
   if (reqPathOnly === '/admin/broadcast-now' && req.method === 'POST') {
     return readJsonBody(req, function (d) {
-      if (!adminAuthed(query, d && d.token)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
+      if (!hasScope('broadcast', query, d && d.token)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
       const message = (d && typeof d.message === 'string') ? d.message.slice(0, 500) : '';
       if (!message.trim()) return adminJson(res, 400, { ok: false, error: 'message required' });
       const n = broadcastNotice('INFO:' + _bcIcon(d && d.icon) + ':' + message);
@@ -1466,7 +1515,7 @@ function handleAdmin(req, res, reqPathOnly, query) {
   }
   if (reqPathOnly === '/admin/broadcasts' && req.method === 'POST') {
     return readJsonBody(req, function (d) {
-      if (!adminAuthed(query, d && d.token)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
+      if (!hasScope('broadcast', query, d && d.token)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
       if (!d || typeof d.message !== 'string' || !d.message.trim()) return adminJson(res, 400, { ok: false, error: 'message required' });
       const sched = _bcValidateSchedule(d.schedule);
       if (!sched) return adminJson(res, 400, { ok: false, error: 'invalid schedule' });
@@ -1487,7 +1536,7 @@ function handleAdmin(req, res, reqPathOnly, query) {
   }
   if (reqPathOnly === '/admin/broadcasts/delete' && req.method === 'POST') {
     return readJsonBody(req, function (d) {
-      if (!adminAuthed(query, d && d.token)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
+      if (!hasScope('broadcast', query, d && d.token)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
       const id = d && d.id, i = _broadcasts.findIndex(function (j) { return j.id === id; });
       if (i < 0) return adminJson(res, 404, { ok: false, error: 'not found' });
       clearBroadcastTimer(id); _broadcasts.splice(i, 1); saveBroadcasts();
@@ -1496,7 +1545,7 @@ function handleAdmin(req, res, reqPathOnly, query) {
   }
   if (reqPathOnly === '/admin/broadcasts/toggle' && req.method === 'POST') {
     return readJsonBody(req, function (d) {
-      if (!adminAuthed(query, d && d.token)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
+      if (!hasScope('broadcast', query, d && d.token)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
       const job = _broadcasts.find(function (j) { return j.id === (d && d.id); });
       if (!job) return adminJson(res, 404, { ok: false, error: 'not found' });
       job.enabled = !!(d && d.enabled); saveBroadcasts(); armBroadcast(job);
@@ -1505,7 +1554,7 @@ function handleAdmin(req, res, reqPathOnly, query) {
   }
   if (reqPathOnly === '/admin/broadcasts/fire' && req.method === 'POST') {
     return readJsonBody(req, function (d) {
-      if (!adminAuthed(query, d && d.token)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
+      if (!hasScope('broadcast', query, d && d.token)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
       const job = _broadcasts.find(function (j) { return j.id === (d && d.id); });
       if (!job) return adminJson(res, 404, { ok: false, error: 'not found' });
       const n = fireBroadcast(job); saveBroadcasts();

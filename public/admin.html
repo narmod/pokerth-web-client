@@ -133,7 +133,7 @@
       <button class="tab on" data-t="server">Server</button>
       <button class="tab" data-t="traffic">Traffic</button>
       <button class="tab" data-t="clients">Clients</button>
-      <button class="tab" data-t="broadcast">Broadcasts</button>
+      <button class="tab" data-t="broadcast" data-scope="broadcast">Broadcasts</button>
       <button class="tab" data-t="board">Leaderboard</button>
       <button class="tab" data-t="packages">Packages</button>
       <button class="tab" data-t="music">Music</button>
@@ -413,7 +413,7 @@
         <div class="boardhead"><h2 style="margin:0">Scheduled messages</h2><button id="bcRefresh" class="use">Refresh</button></div>
         <div id="bcList"></div>
       </div>
-      <div class="card">
+      <div class="card" data-master="1">
         <h2>Welcome / rules message (first visit)</h2>
         <p class="muted" style="margin:0 0 8px">Shown once in a centered popup the first time someone opens the app, and again whenever you edit it. Each visitor sees the version matching their language (fallback below). Players dismiss it with “I understand”.</p>
         <label class="muted" style="display:flex;align-items:center;gap:8px;margin:0 0 8px"><input type="checkbox" id="wcEnabled" style="width:auto"> Enabled</label>
@@ -463,11 +463,32 @@
   function _idleCheck(){ if(tok() && dash.style.display!=='none' && Date.now()-_idleLast>IDLE_MS) doLogout('Logged out after 10 minutes of inactivity.'); }
   ['mousemove','mousedown','keydown','touchstart','scroll','click'].forEach(function(ev){ document.addEventListener(ev,_idleReset,{passive:true,capture:true}); });
   setInterval(_idleCheck, 30000);
+  var _isMaster=true;
+  // Limit the dashboard to the sections the current key may use. The master key
+  // sees everything; a scoped key (e.g. broadcast-only) sees just its tab(s), and
+  // any element marked data-master (master-only cards) is hidden.
+  function applyScopeVisibility(info){
+    var master=!!info.master, scopes=info.scopes||[];
+    document.querySelectorAll('.tab').forEach(function(b){
+      var s=b.dataset.scope, ok=master||(!!s && scopes.indexOf(s)>=0);
+      b.style.display = ok ? '' : 'none';
+    });
+    document.querySelectorAll('[data-master]').forEach(function(el){ el.style.display = master ? '' : 'none'; });
+  }
   function enter(){
     if(!tok()){ show('login'); return; }
-    api('/admin/pkg-list').then(function(r){return r.json();}).then(function(d){
-      if(d.ok){ $('loginErr').textContent=''; _idleLast=Date.now(); show('dash'); renderPkgs(d); loadServer(); loadThemes(); srvStart(); }
-      else { $('loginErr').textContent=d.error||'Invalid token'; show('login'); }
+    api('/admin/whoami').then(function(r){return r.json().catch(function(){return {};});}).then(function(info){
+      if(!info || !info.ok){ $('loginErr').textContent=(info&&info.error)||'Invalid token'; show('login'); return; }
+      _isMaster=!!info.master; applyScopeVisibility(info);
+      $('loginErr').textContent=''; _idleLast=Date.now(); show('dash');
+      if(_isMaster){
+        api('/admin/pkg-list').then(function(r){return r.json();}).then(function(d){ if(d&&d.ok) renderPkgs(d); }).catch(function(){});
+        loadServer(); loadThemes(); srvStart();
+      } else {
+        srvStop();
+        var first=[].slice.call(document.querySelectorAll('.tab')).find(function(b){ return b.style.display!=='none'; });
+        if(first){ first.click(); } else { $('dash').insertAdjacentHTML('afterbegin','<p class="muted" style="padding:16px">This key has no accessible sections.</p>'); }
+      }
     }).catch(function(){ $('loginErr').textContent='Network error'; show('login'); });
   }
 
@@ -484,7 +505,7 @@
     if(t==='music')mzRefresh();
     if(t==='board') loadBoard();
     if(t==='traffic') loadTraffic();
-    if(t==='broadcast'){ loadBroadcasts(); loadWelcome(); }
+    if(t==='broadcast'){ loadBroadcasts(); if(_isMaster) loadWelcome(); }
     if(t==='clients'){ loadStatus(true); loadThemes(); }
     if(t==='server'){ loadServer(); srvStart(); } else { srvStop(); }
   }); });

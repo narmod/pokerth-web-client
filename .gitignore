@@ -21,3 +21,6 @@ stats.meta.json
 
 # Runtime, server-owned admin config (reset period, defaults, admin music list…)
 admin-config.json
+
+# Scoped delegate API keys (managed by install.sh: pokerth-web token …; chmod 600)
+scoped-tokens.json
