@@ -452,6 +452,16 @@
       <div class="card">
         <div class="boardhead" style="margin-bottom:6px"><h2 style="margin:0">Game servers</h2><button id="srvAddBtn" class="use">+ Add server</button></div>
         <p class="muted" style="margin:2px 0 10px">PokerTH game servers the web client may dial — your LAN box or an Internet host. Saving a server adds it to the proxy's dial allowlist (host + port). The proxy is only a relay; it does not run or configure the game server itself. “Check” connects to the server to read live player &amp; game counts.</p>
+        <div class="card" style="margin:0 0 10px;padding:10px">
+          <div style="margin-bottom:6px"><b>Internet / PokerTH.net — source</b></div>
+          <label class="muted" style="display:block;margin:3px 0"><input type="radio" name="srvSource" class="srcManual"> <b>Manual</b> — use the active server below (or built-in pokerth.net:7234)</label>
+          <label class="muted" style="display:block;margin:3px 0"><input type="radio" name="srvSource" class="srcAuto"> <b>Auto</b> — download the official serverlist (auto-updates if PokerTH moves)</label>
+          <div class="srcAutoBox" style="display:none;margin:6px 0 0">
+            <div class="defrow" style="display:flex;gap:10px;align-items:center;margin:4px 0"><span style="white-space:nowrap">Serverlist URL</span><input id="srvSlUrl" maxlength="300" placeholder="https://pokerth.net/serverlist.xml.z" autocomplete="off" style="flex:1;min-width:0"></div>
+            <div class="periodrow" style="margin:4px 0"><button id="srvSlCheck" class="use" type="button">Check serverlist</button></div>
+            <div id="srvSlStat" class="msg" style="margin:4px 0 0"></div>
+          </div>
+        </div>
         <div id="srvRows"><div class="empty">Loading…</div></div>
         <div class="periodrow" style="margin-top:10px"><button id="srvSaveBtn" class="use">Save all</button></div>
         <div id="srvState" class="msg"></div>
@@ -477,6 +487,8 @@
   // ── Game servers (PokerTH dial registry + reachability) — master-only ──
   var _srv = [];
   var _activeSrv = '';
+  var _srcMode = 'manual';
+  var _slUrl = '';
   function srvEsc(s){ return String(s==null?'':s).replace(/[&<>"]/g,function(c){return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'})[c];}); }
   function srvSyncRow(row,i){ if(!_srv[i]) return; _srv[i].name=row.querySelector('.srvN').value.trim(); _srv[i].host=row.querySelector('.srvH').value.trim(); _srv[i].port=parseInt(row.querySelector('.srvP').value,10)||7234; _srv[i].tls=!!row.querySelector('.srvT').checked; }
   function srvSyncAll(){ var box=$('srvRows'); if(!box) return; [].slice.call(box.querySelectorAll('.srow')).forEach(function(row){ srvSyncRow(row,+row.getAttribute('data-i')); }); }
@@ -517,13 +529,15 @@
       if(!d||!d.ok){ if(box) box.innerHTML='<div class="empty">'+srvEsc((d&&d.error)||'Error')+'</div>'; return; }
       _srv=(d.servers||[]).map(function(s){return {id:s.id,name:s.name||'',host:s.host||'',port:parseInt(s.port,10)||7234,tls:!!s.tls};});
       _activeSrv=d.activeServerId||'';
+      _srcMode=(d.source==='auto')?'auto':'manual'; _slUrl=d.serverlistUrl||'';
+      applySourceUI(d.serverlist||null);
       renderServers();
       var al=$('srvAllow'); if(al){ var hosts=(d.allowlist&&d.allowlist.hosts)||[], ports=(d.allowlist&&d.allowlist.ports)||[]; al.innerHTML='<b>Hosts:</b> '+srvEsc(hosts.join(', ')||'—')+'<br><b>Ports:</b> '+srvEsc(ports.join(', ')||'—'); }
     }).catch(function(){ if(box) box.innerHTML='<div class="empty">Network error</div>'; });
   }
   function saveServers(){
     srvSyncAll(); var st=$('srvState'); if(st){ st.textContent='Saving…'; st.className='msg'; }
-    api('/admin/servers',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({servers:_srv,activeServerId:_activeSrv})}).then(function(r){return r.json();}).then(function(d){
+    api('/admin/servers',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({servers:_srv,activeServerId:_activeSrv,source:_srcMode,serverlistUrl:($('srvSlUrl')?$('srvSlUrl').value.trim():_slUrl)})}).then(function(r){return r.json();}).then(function(d){
       if(!st) return;
       if(!d||!d.ok){ st.textContent='✗ '+srvEsc((d&&d.error)||'error'); st.className='msg err'; return; }
       loadServers(); st.textContent='✓ Saved'; st.className='msg ok';
@@ -531,6 +545,33 @@
   }
   if($('srvAddBtn')) $('srvAddBtn').addEventListener('click',function(){ srvSyncAll(); _srv.push({id:'',name:'',host:'',port:7234,tls:false}); renderServers(); });
   if($('srvSaveBtn')) $('srvSaveBtn').addEventListener('click',saveServers);
+  function applySourceUI(sl){
+    var rm=document.querySelector('.srcManual'), ra=document.querySelector('.srcAuto'), box=document.querySelector('.srcAutoBox');
+    if(rm) rm.checked=(_srcMode!=='auto'); if(ra) ra.checked=(_srcMode==='auto');
+    if(box) box.style.display=(_srcMode==='auto')?'block':'none';
+    var uf=$('srvSlUrl'); if(uf && document.activeElement!==uf) uf.value=_slUrl||'';
+    if(sl!==undefined){ var st=$('srvSlStat'); if(st){
+      if(sl&&sl.server){ var s=sl.server; st.textContent='Resolved: '+srvEsc(s.name||s.host)+' \u2014 '+srvEsc(s.host)+':'+s.port+(s.tls?' (TLS)':''); st.className='msg ok'; }
+      else if(sl&&sl.error){ st.textContent='Last fetch: '+srvEsc(sl.error); st.className='msg err'; }
+      else { st.textContent=''; st.className='msg'; }
+    } }
+  }
+  function _bindSource(){
+    var rm=document.querySelector('.srcManual'), ra=document.querySelector('.srcAuto'), cb=$('srvSlCheck');
+    if(rm) rm.addEventListener('change',function(){ if(rm.checked){ _srcMode='manual'; applySourceUI(); } });
+    if(ra) ra.addEventListener('change',function(){ if(ra.checked){ _srcMode='auto'; applySourceUI(); } });
+    if(cb) cb.addEventListener('click',function(){
+      var st=$('srvSlStat'); if(st){ st.textContent='Checking\u2026'; st.className='msg'; }
+      var u=$('srvSlUrl')?$('srvSlUrl').value.trim():'';
+      api('/admin/servers/serverlist',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({serverlistUrl:u})}).then(function(r){return r.json();}).then(function(d){
+        if(!st) return;
+        if(!d||!d.ok){ st.textContent='\u2717 '+srvEsc((d&&d.error)||'error'); st.className='msg err'; return; }
+        if(d.fetched&&d.server){ var s=d.server; st.textContent='\u2713 '+srvEsc(s.name||s.host)+' \u2014 '+srvEsc(s.host)+':'+s.port+(s.tls?' (TLS)':''); st.className='msg ok'; }
+        else { st.textContent='\u2717 '+srvEsc(d.error||'no server'); st.className='msg err'; }
+      }).catch(function(){ if(st){ st.textContent='\u2717 Network error'; st.className='msg err'; } });
+    });
+  }
+  _bindSource();
 
   $('loginBtn').addEventListener('click', doLogin);
   $('ltok').addEventListener('keydown', function(e){ if(e.key==='Enter') doLogin(); });

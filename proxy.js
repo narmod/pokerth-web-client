@@ -15,6 +15,7 @@ const net  = require('net');
 const tls  = require('tls');
 const dns  = require('dns');
 const http = require('http');
+const https = require('https');
 const url  = require('url');
 const fs   = require('fs');
 const path = require('path');
@@ -70,6 +71,8 @@ function isHostAllowed(h) {
   for (var i = 0; i < extra.length; i++) { if (String(extra[i]).toLowerCase() === h) return true; }
   var regs = (_adminConfig && Array.isArray(_adminConfig.servers)) ? _adminConfig.servers : [];
   for (var j = 0; j < regs.length; j++) { if (regs[j] && String(regs[j].host).toLowerCase() === h) return true; }
+  var _auto = (typeof _serverlistCache !== 'undefined') && _serverlistCache.server;
+  if (_auto && String(_auto.host).toLowerCase() === h) return true;
   return false;
 }
 
@@ -93,6 +96,8 @@ function isPortAllowed(p) {
   for (var i = 0; i < extra.length; i++) { if (parseInt(extra[i], 10) === p) return true; }
   var regs = (_adminConfig && Array.isArray(_adminConfig.servers)) ? _adminConfig.servers : [];
   for (var j = 0; j < regs.length; j++) { if (regs[j] && parseInt(regs[j].port, 10) === p) return true; }
+  var _auto = (typeof _serverlistCache !== 'undefined') && _serverlistCache.server;
+  if (_auto && parseInt(_auto.port, 10) === p) return true;
   return false;
 }
 
@@ -268,7 +273,7 @@ function _sanitizeServer(s) {
 // pointer (activeServerId) into the registry above. Returns {name,host,port,tls}
 // for /app-config, or null when unset (the client then keeps its built-in
 // pokerth.net:7234 default).
-function _activePokerthnetServer() {
+function _activeManualServer() {
   var id = _adminConfig && _adminConfig.activeServerId;
   if (!id) return null;
   var list = _serversList();
@@ -276,6 +281,101 @@ function _activePokerthnetServer() {
     if (list[i] && list[i].id === id) return { name: list[i].name, host: list[i].host, port: list[i].port, tls: !!list[i].tls };
   }
   return null;
+}
+
+// ── Auto source: official PokerTH serverlist (serverlist.xml.z) ────────────
+// When pokerthnetSource === 'auto', the proxy periodically downloads the
+// official, zlib-compressed serverlist, parses the first <Server>, and uses
+// {host=IPv4Address, port=ProtobufPort, tls=(TLS=='on')} as the Internet/
+// PokerTH.net target — so a server move on pokerth.net is followed automatically.
+// The browser can't do this itself (CORS + zlib), hence server-side here.
+var DEFAULT_SERVERLIST_URL = 'https://pokerth.net/serverlist.xml.z';
+var SERVERLIST_TTL_MS = 30 * 60 * 1000;          // refetch cadence while 'auto'
+var SERVERLIST_MAX_BYTES = 256 * 1024;           // raw download cap (anti-bomb)
+var SERVERLIST_MAX_INFLATED = 1024 * 1024;       // inflated cap (anti-bomb)
+var _serverlistCache = { server: null, fetchedAt: 0, fetching: false, error: '' };
+
+function _pokerthnetSource() { var s = _adminConfig && _adminConfig.pokerthnetSource; return s === 'auto' ? 'auto' : 'manual'; }
+function _serverlistUrl() { var u = _adminConfig && _adminConfig.serverlistUrl; u = String(u || '').trim(); return u || DEFAULT_SERVERLIST_URL; }
+
+function _parseServerlist(xml) {
+  // Minimal regex parse (no XML dep). Returns the first <Server> or null.
+  var blocks = xml.match(/<Server\b[\s\S]*?<\/Server>/gi);
+  if (!blocks || !blocks.length) return null;
+  function attr(b, tag) { var m = new RegExp('<' + tag + '\\s+[^>]*?value\\s*=\\s*"([^"]*)"', 'i').exec(b); return m ? m[1] : ''; }
+  var b = blocks[0];
+  var host = (attr(b, 'IPv4Address') || attr(b, 'IPv6Address')).trim().toLowerCase();
+  var port = parseInt(attr(b, 'ProtobufPort') || attr(b, 'Port') || '7234', 10);
+  var tls = /^(on|1|true|yes)$/i.test(attr(b, 'TLS').trim());
+  var name = (attr(b, 'Name') || host).trim();
+  if (!host || !/^[a-z0-9._:-]+$/.test(host) || !(port >= 1 && port <= 65535)) return null;
+  return { name: name.slice(0, 60), host: host.slice(0, 255), port: port, tls: tls };
+}
+
+function _doFetchServerlist(u, cb) {
+  cb = cb || function () {};
+  var mod, opts;
+  try {
+    var raw0 = String(u || '').trim();
+    if (raw0 && !/^https?:\/\//i.test(raw0)) raw0 = 'https://' + raw0;
+    var parsed = new url.URL(raw0);
+    if (parsed.protocol !== 'https:' && parsed.protocol !== 'http:') return cb({ ok: false, error: 'bad url scheme' });
+    mod = parsed.protocol === 'https:' ? https : http;
+    opts = parsed;
+  } catch (e) { return cb({ ok: false, error: 'bad url' }); }
+  var done = false;
+  function finish(err, server) { if (done) return; done = true; if (err) return cb({ ok: false, error: err }); return cb({ ok: true, server: server }); }
+  var rq;
+  try {
+    rq = mod.get(opts, function (resp) {
+      if (resp.statusCode !== 200) { resp.resume(); return finish('http ' + resp.statusCode); }
+      var chunks = [], total = 0, aborted = false;
+      resp.on('data', function (c) { total += c.length; if (total > SERVERLIST_MAX_BYTES) { aborted = true; try { resp.destroy(); } catch (e) {} return; } chunks.push(c); });
+      resp.on('end', function () {
+        if (aborted) return finish('too large');
+        var rawb = Buffer.concat(chunks), xmlBuf;
+        try {
+          try { xmlBuf = zlib.inflateSync(rawb, { maxOutputLength: SERVERLIST_MAX_INFLATED }); }
+          catch (e1) { try { xmlBuf = zlib.gunzipSync(rawb, { maxOutputLength: SERVERLIST_MAX_INFLATED }); } catch (e2) { xmlBuf = zlib.inflateRawSync(rawb, { maxOutputLength: SERVERLIST_MAX_INFLATED }); } }
+        } catch (e) { return finish('inflate failed'); }
+        var server = _parseServerlist(xmlBuf.toString('utf8'));
+        if (!server) return finish('parse failed (no server)');
+        return finish('', server);
+      });
+      resp.on('error', function (e) { finish((e && e.code) || 'stream error'); });
+    });
+    rq.setTimeout(8000, function () { try { rq.destroy(); } catch (e) {} finish('timeout'); });
+    rq.on('error', function (e) { finish((e && e.code) || 'request error'); });
+  } catch (e) { finish((e && e.code) || 'error'); }
+}
+
+function fetchServerlist(cb) {
+  cb = cb || function () {};
+  if (_serverlistCache.fetching) return cb({ ok: false, error: 'busy', server: _serverlistCache.server });
+  _serverlistCache.fetching = true;
+  _doFetchServerlist(_serverlistUrl(), function (r) {
+    _serverlistCache.fetching = false; _serverlistCache.fetchedAt = Date.now();
+    if (r && r.ok) { _serverlistCache.server = r.server; _serverlistCache.error = ''; }
+    else { _serverlistCache.error = (r && r.error) || 'error'; }
+    return cb(r);
+  });
+}
+
+function maybeRefreshServerlist() {
+  if (_pokerthnetSource() !== 'auto') return;
+  if (_serverlistCache.fetching) return;
+  if (_serverlistCache.server && (Date.now() - _serverlistCache.fetchedAt) < SERVERLIST_TTL_MS) return;
+  fetchServerlist(function () {});
+}
+setTimeout(maybeRefreshServerlist, 2000);
+setInterval(maybeRefreshServerlist, 5 * 60 * 1000);
+
+function _activePokerthnetServer() {
+  if (_pokerthnetSource() === 'auto') {
+    maybeRefreshServerlist();
+    return _serverlistCache.server || null;
+  }
+  return _activeManualServer();
 }
 // ── PokerTH protocol (lobby status probes) — ESM bundle loaded async ──
 let PROTO = null;
@@ -1345,7 +1445,9 @@ function handleAdmin(req, res, reqPathOnly, query) {
       if (_px && Array.isArray(_px.allowedHosts)) _px.allowedHosts.forEach(function (x) { var v = String(x).toLowerCase(); if (v && _hosts.indexOf(v) < 0) _hosts.push(v); });
       if (_px && Array.isArray(_px.allowedPorts)) _px.allowedPorts.forEach(function (x) { var v = parseInt(x, 10); if (v > 0 && _ports.indexOf(v) < 0) _ports.push(v); });
       _serversList().forEach(function (s) { if (_hosts.indexOf(s.host) < 0) _hosts.push(s.host); if (_ports.indexOf(s.port) < 0) _ports.push(s.port); });
-      return adminJson(res, 200, { ok: true, servers: _serversList(), activeServerId: (_adminConfig.activeServerId || ''), allowlist: { hosts: _hosts, ports: _ports } });
+      var _autoSrv = _serverlistCache.server;
+      if (_autoSrv) { if (_hosts.indexOf(_autoSrv.host) < 0) _hosts.push(_autoSrv.host); if (_ports.indexOf(_autoSrv.port) < 0) _ports.push(_autoSrv.port); }
+      return adminJson(res, 200, { ok: true, servers: _serversList(), activeServerId: (_adminConfig.activeServerId || ''), source: _pokerthnetSource(), serverlistUrl: _serverlistUrl(), serverlist: { server: _serverlistCache.server, fetchedAt: _serverlistCache.fetchedAt, error: _serverlistCache.error }, allowlist: { hosts: _hosts, ports: _ports } });
     }
     return readJsonBody(req, function (d) {
       if (!adminAuthed(query, d && d.token)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
@@ -1361,8 +1463,31 @@ function handleAdmin(req, res, reqPathOnly, query) {
       } else if (_adminConfig.activeServerId && !out.some(function (s) { return s.id === _adminConfig.activeServerId; })) {
         _adminConfig.activeServerId = '';
       }
+      // Source of the Internet / PokerTH.net target: 'manual' (active server above
+      // / built-in default) or 'auto' (official serverlist, auto-updating).
+      if (typeof d.source !== 'undefined') {
+        var _src = (String(d.source || '') === 'auto') ? 'auto' : 'manual';
+        var _wasAuto = _pokerthnetSource() === 'auto';
+        _adminConfig.pokerthnetSource = _src;
+        if (_src === 'auto' && !_wasAuto) { _serverlistCache.fetchedAt = 0; setTimeout(maybeRefreshServerlist, 0); }
+      }
+      if (typeof d.serverlistUrl !== 'undefined') {
+        var _u = String(d.serverlistUrl || '').trim().slice(0, 300);
+        var _changed = _u !== (_adminConfig.serverlistUrl || '');
+        _adminConfig.serverlistUrl = _u;
+        if (_changed && _pokerthnetSource() === 'auto') { _serverlistCache.fetchedAt = 0; setTimeout(maybeRefreshServerlist, 0); }
+      }
       saveAdminConfig();
-      return adminJson(res, 200, { ok: true, servers: out, activeServerId: (_adminConfig.activeServerId || '') });
+      return adminJson(res, 200, { ok: true, servers: out, activeServerId: (_adminConfig.activeServerId || ''), source: _pokerthnetSource(), serverlistUrl: _serverlistUrl() });
+    });
+  }
+  if (reqPathOnly === '/admin/servers/serverlist' && req.method === 'POST') {
+    return readJsonBody(req, function (d) {
+      if (!adminAuthed(query, d && d.token)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
+      var _u = (d && typeof d.serverlistUrl !== 'undefined' && String(d.serverlistUrl || '').trim()) ? String(d.serverlistUrl).trim().slice(0, 300) : _serverlistUrl();
+      _doFetchServerlist(_u, function (r) {
+        return adminJson(res, 200, { ok: true, fetched: !!(r && r.ok), error: (r && r.error) || '', server: (r && r.server) || null, url: _u });
+      });
     });
   }
   if (reqPathOnly === '/admin/servers/probe' && req.method === 'POST') {
