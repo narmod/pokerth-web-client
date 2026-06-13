@@ -538,7 +538,7 @@ do_set_token() {
 # partner broadcast-only access without handing over the master token. Stored in
 # scoped-tokens.json (chmod 600, untracked, preserved across updates), hot-read
 # by the server (no restart needed to add/revoke).
-TOKEN_SCOPES="broadcast music"   # known scopes; extend when more sections are scoped
+TOKEN_SCOPES="broadcast music packages leaderboard"   # known scopes; extend when more sections are scoped
 do_token() {
   load_state
   [ -n "$RUN_USER" ] || RUN_USER="$(id -un)"

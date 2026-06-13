@@ -134,8 +134,8 @@
       <button class="tab" data-t="traffic">Traffic</button>
       <button class="tab" data-t="clients">Clients</button>
       <button class="tab" data-t="broadcast" data-scope="broadcast">Broadcasts</button>
-      <button class="tab" data-t="board">Leaderboard</button>
-      <button class="tab" data-t="packages">Packages</button>
+      <button class="tab" data-t="board" data-scope="leaderboard">Leaderboard</button>
+      <button class="tab" data-t="packages" data-scope="packages">Packages</button>
       <button class="tab" data-t="music" data-scope="music">Music</button>
       <button class="tab" data-t="keys">Keys</button>
     </div>
@@ -230,7 +230,7 @@
         <div id="players"></div>
         <div id="boardmsg" class="msg"></div>
       </div>
-      <div class="card">
+      <div class="card" data-master="1">
         <h2>Leaderboard reset</h2>
         <label for="period">Automatic reset period</label>
         <div class="periodrow">
@@ -522,6 +522,7 @@
     if(t==='music')mzRefresh();
     if(t==='keys') loadKeys();
     if(t==='board') loadBoard();
+    if(t==='packages') api('/admin/pkg-list').then(function(r){return r.json();}).then(function(d){ if(d&&d.ok) renderPkgs(d); }).catch(function(){});
     if(t==='traffic') loadTraffic();
     if(t==='broadcast'){ loadBroadcasts(); if(_isMaster) loadWelcome(); }
     if(t==='clients'){ loadStatus(true); loadThemes(); }
@@ -693,8 +694,8 @@
   }
   if($('boardFilter')) $('boardFilter').addEventListener('input', drawBoard);
   function removePlayer(n){ if(!confirm('Remove player \u201c'+n+'\u201d from the leaderboard?'))return;
-    fetch('/stats',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:n,_delete:true})})
-      .then(function(r){return r.json();}).then(function(){ loadBoard(); }).catch(function(){ bmsg('Could not remove player \u2014 network error.','err'); }); }
+    fetch('/stats',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:n,_delete:true,token:tok()})})
+      .then(function(r){return r.json();}).then(function(d){ if(d&&d.ok){ loadBoard(); } else { bmsg('Remove failed: '+((d&&d.error)||'forbidden'),'err'); } }).catch(function(){ bmsg('Could not remove player \u2014 network error.','err'); }); }
   $('resetBtn').addEventListener('click',function(){ if(!confirm('Reset the WHOLE leaderboard? This cannot be undone.'))return;
     fetch('/stats',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({_resetAll:true,token:tok()})})
       .then(function(r){return r.json();}).then(function(d){ if(d.ok){ bmsg('Leaderboard reset.','ok'); loadBoard(); } else bmsg('Reset failed: '+(d.error||'forbidden'),'err'); })
@@ -1077,7 +1078,7 @@
   ['bcMsg','bcIcon'].forEach(function(id){ if($(id)){ $(id).addEventListener('input',bcPrevSched); $(id).addEventListener('change',bcPrevSched); } });
   ['bcNowMsg','bcNowIcon'].forEach(function(id){ if($(id)){ $(id).addEventListener('input',bcPrevNow); $(id).addEventListener('change',bcPrevNow); } });
   // -- Delegate keys (master only): create scoped API keys per category --------
-  var _kySC={broadcast:'Broadcasts',music:'Music'};
+  var _kySC={broadcast:'Broadcasts',music:'Music',packages:'Packages',leaderboard:'Leaderboard'};
   function _kyLabel(s){ return _kySC[s]||s; }
   function loadKeys(){
     api('/admin/tokens').then(function(r){return r.json();}).then(function(d){

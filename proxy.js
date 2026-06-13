@@ -835,7 +835,7 @@ function adminAuthed(query, bodyToken) {
 // The file is hot-reloaded (mtime check), so adding/revoking a key needs no
 // restart. To scope another section later (e.g. "music"): add it to ADMIN_SCOPES
 // and wrap that section's routes with hasScope('music', …) instead of adminAuthed.
-const ADMIN_SCOPES = ['broadcast', 'music'];
+const ADMIN_SCOPES = ['broadcast', 'music', 'packages', 'leaderboard'];
 const SCOPED_TOKENS_FILE = process.env.SCOPED_TOKENS_FILE || path.join(__dirname, 'scoped-tokens.json');
 let _scopedTokens = [], _scopedMtime = -1;
 function _loadScopedTokens() {
@@ -1087,7 +1087,7 @@ function handleAdmin(req, res, reqPathOnly, query) {
     res.writeHead(404); res.end('admin.html missing'); return;
   }
   if (reqPathOnly === '/admin/pkg-list') {
-    if (!adminAuthed(query)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
+    if (!hasScope('packages', query)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
     var _pl = pkgList(), _td = pkgDisabledSet('table'), _dd = pkgDisabledSet('deck'), _hd = pkgDisabledSet('theme'), _sd = pkgDisabledSet('seat'), _tf = pkgFullSet('table'), _tfs = pkgFullscreenSet('table');
     return adminJson(res, 200, { ok: true,
       tables: (_pl.tables || []).map(function (t) { var _fs = _tfs.indexOf(t.id) >= 0; var _fu = !_fs && (_tf.indexOf(t.id) >= 0 || !!t.full); return Object.assign({}, t, { disabled: _td.indexOf(t.id) >= 0, full: _fu, fullscreen: _fs, mode: _fs ? 'fullscreen' : (_fu ? 'full' : 'frame') }); }),
@@ -1243,7 +1243,7 @@ function handleAdmin(req, res, reqPathOnly, query) {
     res.writeHead(405); res.end('Method not allowed'); return;
   }
   if (reqPathOnly === '/admin/pkg-upload' && req.method === 'POST') {
-    if (!adminAuthed(query)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
+    if (!hasScope('packages', query)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
     const kind = query.kind === 'deck' ? 'deck' : (query.kind === 'table' ? 'table' : (query.kind === 'theme' ? 'theme' : (query.kind === 'seat' ? 'seat' : null)));
     if (!kind) return adminJson(res, 400, { ok: false, error: 'kind must be table, deck, theme or seat' });
     return readRawBody(req, MAX_UPLOAD, function (buf) {
@@ -1256,7 +1256,7 @@ function handleAdmin(req, res, reqPathOnly, query) {
   }
   if (reqPathOnly === '/admin/pkg-remove' && req.method === 'POST') {
     return readJsonBody(req, function (d) {
-      if (!adminAuthed(query, d && d.token)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
+      if (!hasScope('packages', query, d && d.token)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
       const kind = (d && d.kind === 'deck') ? 'deck' : ((d && d.kind === 'table') ? 'table' : ((d && d.kind === 'theme') ? 'theme' : ((d && d.kind === 'seat') ? 'seat' : null)));
       const id = slugId(d && d.id);
       if (!kind || !id) return adminJson(res, 400, { ok: false, error: 'kind + id required' });
@@ -1277,7 +1277,7 @@ function handleAdmin(req, res, reqPathOnly, query) {
   // Enable/disable an installed package for players (kept installed either way).
   if (reqPathOnly === '/admin/pkg-toggle' && req.method === 'POST') {
     return readJsonBody(req, function (d) {
-      if (!adminAuthed(query, d && d.token)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
+      if (!hasScope('packages', query, d && d.token)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
       const kind = (d && d.kind === 'deck') ? 'deck' : ((d && d.kind === 'table') ? 'table' : ((d && d.kind === 'theme') ? 'theme' : ((d && d.kind === 'seat') ? 'seat' : null)));
       const id = slugId(d && d.id);
       if (!kind || !id) return adminJson(res, 400, { ok: false, error: 'kind + id required' });
@@ -1294,7 +1294,7 @@ function handleAdmin(req, res, reqPathOnly, query) {
   // Mark/unmark a table package as « full image » (felt replaces the whole CSS table).
   if (reqPathOnly === '/admin/pkg-full' && req.method === 'POST') {
     return readJsonBody(req, function (d) {
-      if (!adminAuthed(query, d && d.token)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
+      if (!hasScope('packages', query, d && d.token)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
       const id = slugId(d && d.id);
       if (!id) return adminJson(res, 400, { ok: false, error: 'id required' });
       // Mode: 'frame' | 'full' | 'fullscreen'. Legacy: {full:true/false} => full/frame.
@@ -1753,7 +1753,7 @@ const httpServer = http.createServer((req, res) => {
         // Admin: wipe the whole leaderboard at once. Disabled unless
         // STATS_ADMIN_TOKEN is set; the request must echo the same token.
         if (d && d._resetAll) {
-          if (!STATS_ADMIN_TOKEN || d.token !== STATS_ADMIN_TOKEN) {
+          if (!hasScope('leaderboard', query, d && d.token)) {
             res.writeHead(403, { 'Content-Type': 'application/json; charset=utf-8' });
             res.end('{"ok":false,"error":"forbidden"}'); return;
           }
@@ -1766,7 +1766,13 @@ const httpServer = http.createServer((req, res) => {
           res.writeHead(400, { 'Content-Type': 'application/json; charset=utf-8' }); res.end('{"ok":false}'); return;
         }
         const name = d.name.trim().slice(0, 32);
-        if (d._delete) { delete statsStore[name]; dbDeletePlayer(name); }
+        if (d._delete) {
+          if (!hasScope('leaderboard', query, d && d.token)) {
+            res.writeHead(403, { 'Content-Type': 'application/json; charset=utf-8' });
+            res.end('{"ok":false,"error":"forbidden"}'); return;
+          }
+          delete statsStore[name]; dbDeletePlayer(name);
+        }
         else statsStore[name] = mergeSnapshot(statsStore[name], sanitizeSnapshot(d));
         saveStatsSoon();
         res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' });
