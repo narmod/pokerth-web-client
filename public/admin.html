@@ -451,7 +451,7 @@
     <div id="panel-servers" style="display:none">
       <div class="card">
         <div class="boardhead" style="margin-bottom:6px"><h2 style="margin:0">Game servers</h2><button id="srvAddBtn" class="use">+ Add server</button></div>
-        <p class="muted" style="margin:2px 0 10px">PokerTH game servers the web client may dial — your LAN box or an Internet host. Saving a server adds it to the proxy's dial allowlist (host + port). The proxy is only a relay; it does not run or configure the game server itself. “Reachable?” opens a TCP connection to test it.</p>
+        <p class="muted" style="margin:2px 0 10px">PokerTH game servers the web client may dial — your LAN box or an Internet host. Saving a server adds it to the proxy's dial allowlist (host + port). The proxy is only a relay; it does not run or configure the game server itself. “Check” connects to the server to read live player &amp; game counts.</p>
         <div id="srvRows"><div class="empty">Loading…</div></div>
         <div class="periodrow" style="margin-top:10px"><button id="srvSaveBtn" class="use">Save all</button></div>
         <div id="srvState" class="msg"></div>
@@ -479,12 +479,16 @@
   function srvEsc(s){ return String(s==null?'':s).replace(/[&<>"]/g,function(c){return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'})[c];}); }
   function srvSyncRow(row,i){ if(!_srv[i]) return; _srv[i].name=row.querySelector('.srvN').value.trim(); _srv[i].host=row.querySelector('.srvH').value.trim(); _srv[i].port=parseInt(row.querySelector('.srvP').value,10)||7234; _srv[i].tls=!!row.querySelector('.srvT').checked; }
   function srvSyncAll(){ var box=$('srvRows'); if(!box) return; [].slice.call(box.querySelectorAll('.srow')).forEach(function(row){ srvSyncRow(row,+row.getAttribute('data-i')); }); }
-  function srvProbe(i,row){ var s=_srv[i]; if(!s||!s.host) return; var st=row.querySelector('.srvStat'); st.textContent='Testing…'; st.className='srvStat msg';
-    api('/admin/servers/probe',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({host:s.host,port:s.port,tls:s.tls})}).then(function(r){return r.json();}).then(function(d){
+  function srvProbe(i,row){ var s=_srv[i]; if(!s||!s.host) return; var st=row.querySelector('.srvStat'); st.textContent='Checking…'; st.className='srvStat msg';
+    api('/admin/servers/lobby',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({host:s.host,port:s.port,tls:s.tls})}).then(function(r){return r.json();}).then(function(d){
       var e=row.querySelector('.srvStat'); if(!e) return;
       if(!d||!d.ok){ e.textContent='✗ '+srvEsc((d&&d.error)||'error'); e.className='srvStat msg err'; return; }
-      if(d.reachable){ e.textContent='✓ Reachable ('+d.ms+' ms)'; e.className='srvStat msg ok'; }
-      else { e.textContent='✗ '+srvEsc(d.error||'unreachable'); e.className='srvStat msg err'; }
+      if(!d.reachable){ e.textContent='✗ '+srvEsc(d.error||'unreachable'); e.className='srvStat msg err'; return; }
+      var parts=['✓ Reachable'+(d.ms!=null?' ('+d.ms+' ms)':'')];
+      if(d.players!=null) parts.push(d.players+' player'+(d.players===1?'':'s'));
+      if(d.games!=null) parts.push(d.games+' game'+(d.games===1?'':'s')+(d.running?' · '+d.running+' running':''));
+      else if(d.error) parts.push('games n/a ('+srvEsc(d.error)+')');
+      e.textContent=parts.join(' · '); e.className='srvStat msg ok';
     }).catch(function(){ var e=row.querySelector('.srvStat'); if(e){ e.textContent='✗ Network error'; e.className='srvStat msg err'; } }); }
   function renderServers(){
     var box=$('srvRows'); if(!box) return;
@@ -493,7 +497,7 @@
       return '<div class="card srow" style="margin:0 0 8px;padding:10px" data-i="'+i+'">'
         +'<div class="defrow" style="display:flex;gap:10px;align-items:center;margin:0 0 6px"><span style="width:46px">Name</span><input class="srvN" maxlength="40" placeholder="My LAN game" value="'+srvEsc(s.name)+'" style="flex:1;min-width:0"></div>'
         +'<div class="defrow" style="display:flex;gap:10px;align-items:center;margin:6px 0"><span style="width:46px">Host</span><input class="srvH" maxlength="255" placeholder="192.168.1.10 or box.ddns.net" value="'+srvEsc(s.host)+'" autocomplete="off" style="flex:1;min-width:0"></div>'
-        +'<div class="periodrow" style="margin:6px 0;flex-wrap:wrap"><label class="muted">Port <input class="srvP" type="number" min="1" max="65535" value="'+(parseInt(s.port,10)||7234)+'" style="margin:0;width:90px"></label><label class="muted">TLS <input class="srvT" type="checkbox" '+(s.tls?'checked':'')+'></label><button class="use srvTest" type="button">Reachable?</button><button class="ghost srvDel" type="button">Remove</button></div>'
+        +'<div class="periodrow" style="margin:6px 0;flex-wrap:wrap"><label class="muted">Port <input class="srvP" type="number" min="1" max="65535" value="'+(parseInt(s.port,10)||7234)+'" style="margin:0;width:90px"></label><label class="muted">TLS <input class="srvT" type="checkbox" '+(s.tls?'checked':'')+'></label><button class="use srvTest" type="button">Check</button><button class="ghost srvDel" type="button">Remove</button></div>'
         +'<div class="srvStat msg" style="margin:4px 0 0"></div>'
         +'</div>';
     }).join('');

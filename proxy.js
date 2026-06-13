@@ -264,6 +264,68 @@ function _sanitizeServer(s) {
   var id = String(s.id || '').trim().slice(0, 40) || ('srv_' + Math.random().toString(36).slice(2, 9));
   return { id: id, name: name, host: host, port: port, tls: !!s.tls };
 }
+// ── PokerTH protocol (lobby status probes) — ESM bundle loaded async ──
+let PROTO = null;
+(function () {
+  try {
+    var _u = require('url').pathToFileURL(path.join(__dirname, 'public', 'proto', 'index.mjs')).href;
+    import(_u).then(function (m) { PROTO = m; }).catch(function (e) { console.warn('[servers] proto bundle load failed:', e && e.message); });
+  } catch (e) { console.warn('[servers] proto setup failed:', e && e.message); }
+})();
+// Headless guest lobby probe: connect, read AnnounceMessage (player count + protocol
+// version, no login), then guest-login and count GameListNewMessage frames. Mirrors the
+// web client's wire framing (4-byte big-endian length prefix + protobuf). Read-only;
+// disconnects after a short quiet window or an overall timeout. cb(result).
+function lobbyProbe(host, port, useTls, cb) {
+  if (!PROTO) return cb({ ok: true, reachable: false, error: 'protocol not ready', ms: 0 });
+  var t0 = Date.now(), done = false, sock = null, rx = Buffer.alloc(0), sentInit = false, gotAck = false;
+  var players = null, ver = '', games = new Map();
+  var overall = setTimeout(function () { finish('timeout'); }, 8000);
+  var quiet = null;
+  function settle() { if (quiet) clearTimeout(quiet); quiet = setTimeout(function () { finish(''); }, 700); }
+  function finish(err) {
+    if (done) return; done = true;
+    clearTimeout(overall); if (quiet) clearTimeout(quiet);
+    try { if (sock) sock.destroy(); } catch (e) {}
+    var total = 0, running = 0;
+    games.forEach(function (m) { if (m === 3) return; total++; if (m === 2) running++; });
+    cb({ ok: true, reachable: (players != null || gotAck), players: players, games: gotAck ? total : null, running: gotAck ? running : null, ver: ver, ms: Date.now() - t0, error: err || '' });
+  }
+  function send(payload) { try { var hdr = Buffer.alloc(4); hdr.writeUInt32BE(payload.length, 0); sock.write(Buffer.concat([hdr, Buffer.from(payload)])); } catch (e) {} }
+  function onMsg(m) {
+    try {
+      if (m.announceMessage) {
+        var a = m.announceMessage; players = a.numPlayersOnServer;
+        var v = a.protocolVersion || { majorVersion: 0, minorVersion: 0 }; ver = v.majorVersion + '.' + v.minorVersion;
+        if (!sentInit) { sentInit = true; var nick = 'Guest' + Math.floor(Math.random() * 900000 + 100000); send(PROTO.buildInit({ nick: nick, major: v.majorVersion, minor: v.minorVersion, login: PROTO.LoginType.guestLogin })); }
+      } else if (m.initAckMessage) { gotAck = true; settle(); }
+      else if (m.gameListNewMessage) { var g = m.gameListNewMessage; games.set(g.gameId, g.gameMode); settle(); }
+      else if (m.errorMessage) { finish('login refused' + (m.errorMessage.errorReason != null ? ' (' + m.errorMessage.errorReason + ')' : '')); }
+    } catch (e) {}
+  }
+  function feed(chunk) {
+    rx = Buffer.concat([rx, chunk]);
+    while (rx.length >= 4) {
+      var len = rx.readUInt32BE(0);
+      if (len > 2000000) { finish('frame too big'); return; }
+      if (rx.length < 4 + len) break;
+      var body = rx.subarray(4, 4 + len); rx = rx.subarray(4 + len);
+      var msg = null; try { msg = PROTO.decode(body); } catch (e) { continue; }
+      onMsg(msg);
+    }
+  }
+  try {
+    var opts = { host: host, port: port };
+    sock = useTls
+      ? tls.connect(Object.assign({ rejectUnauthorized: false, servername: /^[0-9.]+$/.test(host) ? undefined : host }, opts), function () {})
+      : net.connect(opts, function () {});
+    sock.setTimeout(8000);
+    sock.on('data', feed);
+    sock.on('timeout', function () { finish(players != null ? '' : 'timeout'); });
+    sock.on('error', function (e) { if (!done) finish((e && e.code) || 'error'); });
+    sock.on('close', function () { if (!done) finish(''); });
+  } catch (e) { finish((e && e.code) || 'error'); }
+}
 
 // Scheduled information broadcasts, persisted to broadcasts.json so recurring
 // messages (daily/weekly/monthly) survive a proxy restart.
@@ -1302,6 +1364,18 @@ function handleAdmin(req, res, reqPathOnly, query) {
         sock.on('timeout', function () { finish(false, 'timeout'); });
         sock.on('error', function (e) { finish(false, (e && e.code) || 'error'); });
       } catch (e) { finish(false, (e && e.code) || 'error'); }
+    });
+  }
+  if (reqPathOnly === '/admin/servers/lobby' && req.method === 'POST') {
+    return readJsonBody(req, function (d) {
+      if (!adminAuthed(query, d && d.token)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
+      var host = String((d && d.host) || '').trim().toLowerCase();
+      var port = parseInt((d && d.port) || 7234, 10);
+      var useTls = !!(d && d.tls);
+      if (!host) return adminJson(res, 400, { ok: false, error: 'host required' });
+      if (!isPortAllowed(port)) return adminJson(res, 200, { ok: true, reachable: false, error: 'port not allowed' });
+      if (!isHostAllowed(host)) return adminJson(res, 200, { ok: true, reachable: false, error: 'host not in allowlist (save it first)' });
+      lobbyProbe(host, port, useTls, function (r) { return adminJson(res, 200, r); });
     });
   }
   if (reqPathOnly === '/admin/pkg-upload' && req.method === 'POST') {
