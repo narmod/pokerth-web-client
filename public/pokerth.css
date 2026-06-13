@@ -1909,7 +1909,7 @@ html[data-bg-img] body.in-game {
   /* table padding via scaler */
   /* Actions */
   .btn-action { padding: 8px 10px; font-size: 0.76rem; }
-  .pct-row .btn-pct { flex: 1; padding: 10px 4px; font-size: 0.76rem; }
+  .pct-row .btn-pct { flex: 1; padding: 7px 4px; font-size: 0.76rem; }
   .raise-row .raise-input { flex: 1; padding: 10px 6px; font-size: 0.84rem; }
   .my-zone { padding: 5px 8px; }
   .pot-bar { font-size: 0.7rem; }
@@ -1923,7 +1923,7 @@ html[data-bg-img] body.in-game {
    correctly. Previously orphaned after a stray closing brace. */
 .btn-action { padding: 12px 14px; font-size: 0.84rem; flex: 1; min-width: 80px; text-align: center; }
 .pct-row { display: flex; gap: 5px; width: 100%; }
-.pct-row .btn-pct { flex: 1; padding: 10px 4px; font-size: 0.76rem; }
+.pct-row .btn-pct { flex: 1; padding: 7px 4px; font-size: 0.76rem; }
 .raise-row { display: flex; gap: 5px; flex: 2; min-width: 160px; }
 .raise-row .raise-input { flex: 1; padding: 10px 6px; font-size: 0.84rem; }
 .btn-allin { flex: 1.5; }
