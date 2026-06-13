@@ -3393,7 +3393,10 @@ html[data-bg-img] body.in-game {
   font-weight: 700;
   letter-spacing: 0.08em;
   cursor: pointer;
-  border: none;
+  /* Reserve la meme bordure de 9px que les boutons-images (Green Casino/Sleek) pour
+     une hauteur identique a tous les formats ; transparente -> le degrade/aplat se
+     peint dessous (background-clip:border-box) donc invisible. */
+  border: 9px solid transparent;
   transition: filter 0.12s, transform 0.08s;
   white-space: nowrap;
 }
@@ -3462,13 +3465,13 @@ body.hide-pct-btns .pct-row { display: none; }
    red-on-red clash with Fold and discourages accidental taps. */
 .btn-allin {
   background: var(--btn-allin-bg, transparent); color: var(--btn-allin-fg, #e88a8a);
-  border: 1.5px solid var(--btn-allin-bd, #c0392b); outline: none;
+  border: 9px solid transparent; outline: none;
   padding: 8px 12px; font-size: 0.7rem; letter-spacing: 0.1em;
 }
 .btn-allin:hover { background: var(--btn-allin-bg, rgba(var(--red-rgb), 0.15)); filter: brightness(1.06); }
 .btn-allin b { color: var(--btn-allin-fg-b, #f4b0b0); }
 /* Image-backed action buttons (9-slice SVG/PNG via the Buttons axis). */
-:root[data-btn-img] .btn-action { border: 9px solid transparent; background: transparent; padding: 1px 9px; }
+:root[data-btn-img] .btn-action { border: 9px solid transparent; background: transparent; }
 :root[data-btn-img] .btn-fold  { border-image: var(--btn-fold-img) 9 fill / 9px / 0 stretch; color: var(--btn-fold-fg, #fff); }
 :root[data-btn-img] .btn-check { border-image: var(--btn-check-img) 9 fill / 9px / 0 stretch; color: var(--btn-check-fg, #fff); }
 :root[data-btn-img] .btn-call  { border-image: var(--btn-call-img) 9 fill / 9px / 0 stretch; color: var(--btn-call-fg, #fff); }
