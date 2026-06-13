@@ -1804,10 +1804,26 @@ document.addEventListener("DOMContentLoaded", function() {
         if (ts) ts.textContent = c.serverTagline;
       }
     }
+    window._setSrvSourceTag = function (show) {
+      var el = document.getElementById('srv-source-tag');
+      if (!el) return;
+      if (!show || window._pthNetSource !== 'auto') { el.style.display = 'none'; el.textContent = ''; el.removeAttribute('title'); return; }
+      var resolved = !!(window._pthNetServer && window._pthNetServer.host);
+      el.style.display = 'inline-block';
+      if (resolved) {
+        el.textContent = '\uD83C\uDF10 auto \u00b7 serverlist';
+        el.style.color = 'var(--ok, #4ade80)';
+        el.title = 'Server taken from the official PokerTH serverlist (auto-updating)';
+      } else {
+        el.textContent = '\uD83C\uDF10 auto \u00b7 serverlist \u26a0';
+        el.style.color = 'var(--warn, #f59e0b)';
+        el.title = 'Serverlist unreachable \u2014 using the built-in pokerth.net fallback';
+      }
+    };
     function go() {
       fetch('/app-config', { cache: 'no-store' })
         .then(function (r) { return r.json(); })
-        .then(function (c) { if (c) { window._pthNetServer = (c.pokerthnetServer && c.pokerthnetServer.host) ? c.pokerthnetServer : null; } if (c && c.modes) applyModes(c.modes); if (c && c.loginDefaults) _applyLoginDefaults(c.loginDefaults); if (c && c.welcome && c.welcome.enabled && typeof window.maybeShowWelcome === 'function') window.maybeShowWelcome(c.welcome); if (c && typeof c.defaultTheme === 'string') _applyDefaultTheme(c.defaultTheme); if (c && c.defaults) _applyDefaultSettings(c.defaults); _applyBranding(c); })
+        .then(function (c) { if (c) { window._pthNetServer = (c.pokerthnetServer && c.pokerthnetServer.host) ? c.pokerthnetServer : null; window._pthNetSource = (c.pokerthnetSource === 'auto') ? 'auto' : 'manual'; } if (c && c.modes) applyModes(c.modes); if (c && c.loginDefaults) _applyLoginDefaults(c.loginDefaults); if (c && c.welcome && c.welcome.enabled && typeof window.maybeShowWelcome === 'function') window.maybeShowWelcome(c.welcome); if (c && typeof c.defaultTheme === 'string') _applyDefaultTheme(c.defaultTheme); if (c && c.defaults) _applyDefaultSettings(c.defaults); _applyBranding(c); try { if (!window._shareLinkActive && window.App && App.onServerOrGuestChange) App.onServerOrGuestChange(); } catch (e) {} })
         .catch(function () {});
     }
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', go); else go();
@@ -8056,6 +8072,7 @@ function dismissWinner() {
         var _oni = $('nick'); if (_oni) { _oni.removeAttribute('readonly'); _oni.placeholder = t('nickPlaceholder'); }
         if (typeof _stopIpBlockCountdown === 'function') _stopIpBlockCountdown();
         setStatus(t('offlineHint'), '', 'offlineHint');
+        try { if (window._setSrvSourceTag) window._setSrvSourceTag(false); } catch (e) {}
         return;
       }
       const mode = $('login-mode').value;
@@ -8195,6 +8212,7 @@ function dismissWinner() {
           else { _sm.value = 'lan-dedi'; _gc.checked = (mode === 'lan'); }
         }
       } catch (e) {}
+      try { if (window._setSrvSourceTag) window._setSrvSourceTag(mode === 'guest' || mode === 'auth'); } catch (e) {}
     },
 
     // Mappe (serveur visible × case « Mode invité ») vers l'un des 4 modes
@@ -10803,7 +10821,7 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.2.468'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.2.469'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

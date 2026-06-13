@@ -1992,7 +1992,7 @@ const httpServer = http.createServer((req, res) => {
   // Public app config the client reads on load: which entry "modes" are enabled.
   if (reqPathOnly === '/app-config') {
     res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' });
-    res.end(JSON.stringify({ ok: true, modes: appModes(), welcome: _welcomePublic(), defaultTheme: _adminConfig.defaultTheme || '', defaults: _adminConfig.defaults || {}, loginDefaults: _adminConfig.loginDefaults || {}, tableDefaults: _adminConfig.tableDefaults || {}, tableNames: _adminConfig.tableNames || {}, serverName: _adminConfig.serverName || '', serverTagline: _adminConfig.serverTagline || '', pokerthnetServer: _activePokerthnetServer() }));
+    res.end(JSON.stringify({ ok: true, modes: appModes(), welcome: _welcomePublic(), defaultTheme: _adminConfig.defaultTheme || '', defaults: _adminConfig.defaults || {}, loginDefaults: _adminConfig.loginDefaults || {}, tableDefaults: _adminConfig.tableDefaults || {}, tableNames: _adminConfig.tableNames || {}, serverName: _adminConfig.serverName || '', serverTagline: _adminConfig.serverTagline || '', pokerthnetServer: _activePokerthnetServer(), pokerthnetSource: _pokerthnetSource() }));
     return;
   }
 
