@@ -295,7 +295,7 @@ var SERVERLIST_MAX_BYTES = 256 * 1024;           // raw download cap (anti-bomb)
 var SERVERLIST_MAX_INFLATED = 1024 * 1024;       // inflated cap (anti-bomb)
 var _serverlistCache = { server: null, fetchedAt: 0, fetching: false, error: '' };
 
-function _pokerthnetSource() { var s = _adminConfig && _adminConfig.pokerthnetSource; return s === 'auto' ? 'auto' : 'manual'; }
+function _pokerthnetSource() { var s = _adminConfig && _adminConfig.pokerthnetSource; return s === 'manual' ? 'manual' : 'auto'; }
 function _serverlistUrl() { var u = _adminConfig && _adminConfig.serverlistUrl; u = String(u || '').trim(); return u || DEFAULT_SERVERLIST_URL; }
 
 function _parseServerlist(xml) {
