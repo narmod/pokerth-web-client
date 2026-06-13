@@ -2472,15 +2472,15 @@ html[data-bg-img] body.in-game {
      Tablette (601-900px) et desktop gardent leur propre grille. */
   .react-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, 46px);
+    grid-template-columns: repeat(auto-fill, 40px);
     justify-content: center;
     /* largeur definie + marge nulle : annule le `margin:0 auto` de base qui,
        sur un item flex, empechait l'etirement (=> 1 seule colonne). */
     width: 100%;
     max-width: none;
     margin: 0;
-    gap: 8px;
-    max-height: 104px;      /* ~2 lignes (cellule 46px + interligne) */
+    gap: 6px;
+    max-height: 88px;       /* ~2 lignes (cellule 40px + interligne) */
     overflow-y: auto;
     overflow-x: hidden;
     -webkit-overflow-scrolling: touch;
@@ -2507,7 +2507,7 @@ html[data-bg-img] body.in-game {
 }
 @media (max-width: 600px) {
   /* Phone : pastilles carrees, taille de cellule pilotee par la grille. */
-  .react-btn { font-size: 1.7rem; }
+  .react-btn { font-size: 1.5rem; }
 }
 .react-btn:hover {
   background: rgba(var(--gold-rgb), 0.15);
