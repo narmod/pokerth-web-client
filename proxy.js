@@ -264,6 +264,19 @@ function _sanitizeServer(s) {
   var id = String(s.id || '').trim().slice(0, 40) || ('srv_' + Math.random().toString(36).slice(2, 9));
   return { id: id, name: name, host: host, port: port, tls: !!s.tls };
 }
+// The server the client uses for the "Internet / PokerTH.net" entry mode: a
+// pointer (activeServerId) into the registry above. Returns {name,host,port,tls}
+// for /app-config, or null when unset (the client then keeps its built-in
+// pokerth.net:7234 default).
+function _activePokerthnetServer() {
+  var id = _adminConfig && _adminConfig.activeServerId;
+  if (!id) return null;
+  var list = _serversList();
+  for (var i = 0; i < list.length; i++) {
+    if (list[i] && list[i].id === id) return { name: list[i].name, host: list[i].host, port: list[i].port, tls: !!list[i].tls };
+  }
+  return null;
+}
 // ── PokerTH protocol (lobby status probes) — ESM bundle loaded async ──
 let PROTO = null;
 (function () {
@@ -1332,7 +1345,7 @@ function handleAdmin(req, res, reqPathOnly, query) {
       if (_px && Array.isArray(_px.allowedHosts)) _px.allowedHosts.forEach(function (x) { var v = String(x).toLowerCase(); if (v && _hosts.indexOf(v) < 0) _hosts.push(v); });
       if (_px && Array.isArray(_px.allowedPorts)) _px.allowedPorts.forEach(function (x) { var v = parseInt(x, 10); if (v > 0 && _ports.indexOf(v) < 0) _ports.push(v); });
       _serversList().forEach(function (s) { if (_hosts.indexOf(s.host) < 0) _hosts.push(s.host); if (_ports.indexOf(s.port) < 0) _ports.push(s.port); });
-      return adminJson(res, 200, { ok: true, servers: _serversList(), allowlist: { hosts: _hosts, ports: _ports } });
+      return adminJson(res, 200, { ok: true, servers: _serversList(), activeServerId: (_adminConfig.activeServerId || ''), allowlist: { hosts: _hosts, ports: _ports } });
     }
     return readJsonBody(req, function (d) {
       if (!adminAuthed(query, d && d.token)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
@@ -1340,8 +1353,16 @@ function handleAdmin(req, res, reqPathOnly, query) {
       var out = [];
       for (var i = 0; i < d.servers.length && out.length < 50; i++) { var s = _sanitizeServer(d.servers[i]); if (s) out.push(s); }
       _adminConfig.servers = out;
+      // Active server for the client's "Internet / PokerTH.net" mode: keep the
+      // pointer only while it still matches a saved server, else clear it.
+      if (typeof d.activeServerId !== 'undefined') {
+        var _aid = String(d.activeServerId || '').trim().slice(0, 40);
+        _adminConfig.activeServerId = out.some(function (s) { return s.id === _aid; }) ? _aid : '';
+      } else if (_adminConfig.activeServerId && !out.some(function (s) { return s.id === _adminConfig.activeServerId; })) {
+        _adminConfig.activeServerId = '';
+      }
       saveAdminConfig();
-      return adminJson(res, 200, { ok: true, servers: out });
+      return adminJson(res, 200, { ok: true, servers: out, activeServerId: (_adminConfig.activeServerId || '') });
     });
   }
   if (reqPathOnly === '/admin/servers/probe' && req.method === 'POST') {
@@ -1846,7 +1867,7 @@ const httpServer = http.createServer((req, res) => {
   // Public app config the client reads on load: which entry "modes" are enabled.
   if (reqPathOnly === '/app-config') {
     res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' });
-    res.end(JSON.stringify({ ok: true, modes: appModes(), welcome: _welcomePublic(), defaultTheme: _adminConfig.defaultTheme || '', defaults: _adminConfig.defaults || {}, loginDefaults: _adminConfig.loginDefaults || {}, tableDefaults: _adminConfig.tableDefaults || {}, tableNames: _adminConfig.tableNames || {}, serverName: _adminConfig.serverName || '', serverTagline: _adminConfig.serverTagline || '' }));
+    res.end(JSON.stringify({ ok: true, modes: appModes(), welcome: _welcomePublic(), defaultTheme: _adminConfig.defaultTheme || '', defaults: _adminConfig.defaults || {}, loginDefaults: _adminConfig.loginDefaults || {}, tableDefaults: _adminConfig.tableDefaults || {}, tableNames: _adminConfig.tableNames || {}, serverName: _adminConfig.serverName || '', serverTagline: _adminConfig.serverTagline || '', pokerthnetServer: _activePokerthnetServer() }));
     return;
   }
 

@@ -476,6 +476,7 @@
 
   // ── Game servers (PokerTH dial registry + reachability) — master-only ──
   var _srv = [];
+  var _activeSrv = '';
   function srvEsc(s){ return String(s==null?'':s).replace(/[&<>"]/g,function(c){return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'})[c];}); }
   function srvSyncRow(row,i){ if(!_srv[i]) return; _srv[i].name=row.querySelector('.srvN').value.trim(); _srv[i].host=row.querySelector('.srvH').value.trim(); _srv[i].port=parseInt(row.querySelector('.srvP').value,10)||7234; _srv[i].tls=!!row.querySelector('.srvT').checked; }
   function srvSyncAll(){ var box=$('srvRows'); if(!box) return; [].slice.call(box.querySelectorAll('.srow')).forEach(function(row){ srvSyncRow(row,+row.getAttribute('data-i')); }); }
@@ -493,11 +494,11 @@
   function renderServers(){
     var box=$('srvRows'); if(!box) return;
     if(!_srv.length){ box.innerHTML='<div class="empty">No server yet. Click “+ Add server”.</div>'; return; }
-    box.innerHTML=_srv.map(function(s,i){
+    box.innerHTML=('<div class="defrow" style="margin:0 0 8px"><label class="muted" title="Built-in default for the Internet / PokerTH.net button"><input type="radio" name="srvActive" class="srvANone" '+(_activeSrv?'':'checked')+'> <b>Internet / PokerTH.net</b> &rarr; built-in default (pokerth.net:7234)</label></div>')+_srv.map(function(s,i){
       return '<div class="card srow" style="margin:0 0 8px;padding:10px" data-i="'+i+'">'
         +'<div class="defrow" style="display:flex;gap:10px;align-items:center;margin:0 0 6px"><span style="width:46px">Name</span><input class="srvN" maxlength="40" placeholder="My LAN game" value="'+srvEsc(s.name)+'" style="flex:1;min-width:0"></div>'
         +'<div class="defrow" style="display:flex;gap:10px;align-items:center;margin:6px 0"><span style="width:46px">Host</span><input class="srvH" maxlength="255" placeholder="192.168.1.10 or box.ddns.net" value="'+srvEsc(s.host)+'" autocomplete="off" style="flex:1;min-width:0"></div>'
-        +'<div class="periodrow" style="margin:6px 0;flex-wrap:wrap"><label class="muted">Port <input class="srvP" type="number" min="1" max="65535" value="'+(parseInt(s.port,10)||7234)+'" style="margin:0;width:90px"></label><label class="muted">TLS <input class="srvT" type="checkbox" '+(s.tls?'checked':'')+'></label><button class="use srvTest" type="button">Check</button><button class="ghost srvDel" type="button">Remove</button></div>'
+        +'<div class="periodrow" style="margin:6px 0;flex-wrap:wrap"><label class="muted">Port <input class="srvP" type="number" min="1" max="65535" value="'+(parseInt(s.port,10)||7234)+'" style="margin:0;width:90px"></label><label class="muted">TLS <input class="srvT" type="checkbox" '+(s.tls?'checked':'')+'></label><label class="muted" title="Use this server for the Internet / PokerTH.net button">Active <input class="srvA" type="radio" name="srvActive" '+(s.id&&s.id===_activeSrv?'checked':'')+' '+(s.id?'':'disabled')+'></label><button class="use srvTest" type="button">Check</button><button class="ghost srvDel" type="button">Remove</button></div>'
         +'<div class="srvStat msg" style="margin:4px 0 0"></div>'
         +'</div>';
     }).join('');
@@ -506,20 +507,23 @@
       row.querySelector('.srvDel').addEventListener('click',function(){ srvSyncAll(); _srv.splice(i,1); renderServers(); });
       row.querySelector('.srvTest').addEventListener('click',function(){ srvSyncRow(row,i); srvProbe(i,row); });
       ['.srvN','.srvH','.srvP','.srvT'].forEach(function(sel){ var el=row.querySelector(sel); if(el) el.addEventListener('change',function(){ srvSyncRow(row,i); }); });
+      var _aEl=row.querySelector('.srvA'); if(_aEl) _aEl.addEventListener('change',function(){ srvSyncRow(row,i); if(_srv[i]&&_srv[i].id) _activeSrv=_srv[i].id; });
     });
+    var _none=box.querySelector('.srvANone'); if(_none) _none.addEventListener('change',function(){ _activeSrv=''; });
   }
   function loadServers(){
     var box=$('srvRows'); if(box) box.innerHTML='<div class="empty">Loading…</div>';
     api('/admin/servers').then(function(r){return r.json();}).then(function(d){
       if(!d||!d.ok){ if(box) box.innerHTML='<div class="empty">'+srvEsc((d&&d.error)||'Error')+'</div>'; return; }
       _srv=(d.servers||[]).map(function(s){return {id:s.id,name:s.name||'',host:s.host||'',port:parseInt(s.port,10)||7234,tls:!!s.tls};});
+      _activeSrv=d.activeServerId||'';
       renderServers();
       var al=$('srvAllow'); if(al){ var hosts=(d.allowlist&&d.allowlist.hosts)||[], ports=(d.allowlist&&d.allowlist.ports)||[]; al.innerHTML='<b>Hosts:</b> '+srvEsc(hosts.join(', ')||'—')+'<br><b>Ports:</b> '+srvEsc(ports.join(', ')||'—'); }
     }).catch(function(){ if(box) box.innerHTML='<div class="empty">Network error</div>'; });
   }
   function saveServers(){
     srvSyncAll(); var st=$('srvState'); if(st){ st.textContent='Saving…'; st.className='msg'; }
-    api('/admin/servers',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({servers:_srv})}).then(function(r){return r.json();}).then(function(d){
+    api('/admin/servers',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({servers:_srv,activeServerId:_activeSrv})}).then(function(r){return r.json();}).then(function(d){
       if(!st) return;
       if(!d||!d.ok){ st.textContent='✗ '+srvEsc((d&&d.error)||'error'); st.className='msg err'; return; }
       loadServers(); st.textContent='✓ Saved'; st.className='msg ok';

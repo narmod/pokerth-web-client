@@ -1807,7 +1807,7 @@ document.addEventListener("DOMContentLoaded", function() {
     function go() {
       fetch('/app-config', { cache: 'no-store' })
         .then(function (r) { return r.json(); })
-        .then(function (c) { if (c && c.modes) applyModes(c.modes); if (c && c.loginDefaults) _applyLoginDefaults(c.loginDefaults); if (c && c.welcome && c.welcome.enabled && typeof window.maybeShowWelcome === 'function') window.maybeShowWelcome(c.welcome); if (c && typeof c.defaultTheme === 'string') _applyDefaultTheme(c.defaultTheme); if (c && c.defaults) _applyDefaultSettings(c.defaults); _applyBranding(c); })
+        .then(function (c) { if (c) { window._pthNetServer = (c.pokerthnetServer && c.pokerthnetServer.host) ? c.pokerthnetServer : null; } if (c && c.modes) applyModes(c.modes); if (c && c.loginDefaults) _applyLoginDefaults(c.loginDefaults); if (c && c.welcome && c.welcome.enabled && typeof window.maybeShowWelcome === 'function') window.maybeShowWelcome(c.welcome); if (c && typeof c.defaultTheme === 'string') _applyDefaultTheme(c.defaultTheme); if (c && c.defaults) _applyDefaultSettings(c.defaults); _applyBranding(c); })
         .catch(function () {});
     }
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', go); else go();
@@ -8158,10 +8158,14 @@ function dismissWinner() {
           nickEl.setAttribute('readonly', 'readonly');
           nickEl.placeholder = guestName;
         }
-        $('use-tls').checked = false;
+        // Internet / PokerTH.net target: admin-selected server (from /app-config)
+        // or the built-in pokerth.net:7234 default. Guest follows the server's
+        // own TLS flag (set in the /app-config handler -> window._pthNetServer).
+        var _ps = window._pthNetServer;
+        $('use-tls').checked = _ps ? !!_ps.tls : false;
         if (proxyInput) proxyInput.value = proto + '//' + (autoHost||'localhost') + ':' + port;
-        if (hostInput) hostInput.value = 'pokerth.net';
-        if ($('port')) $('port').value = '7234';   // pokerth.net standard port
+        if (hostInput) hostInput.value = _ps ? _ps.host : 'pokerth.net';
+        if ($('port')) $('port').value = String(_ps ? _ps.port : 7234);
         setStatus(t('guestHint'), '', 'guestHint');
       } else {
         // mode === 'auth'  (pokerth.net registered account)
@@ -8171,10 +8175,13 @@ function dismissWinner() {
         // is NEVER persisted in localStorage — that's what the browser
         // keychain (via autocomplete='current-password') is for.
         if (nickEl) nickEl.value = lsGet('pth_auth_login') || '';
+        // Internet / PokerTH.net target: admin-selected server (from /app-config)
+        // or the built-in pokerth.net:7234 default. Credentialed login always TLS.
+        var _ps2 = window._pthNetServer;
         $('use-tls').checked = true;   // TLS is mandatory for credentialed login
         if (proxyInput) proxyInput.value = proto + '//' + (autoHost||'localhost') + ':' + port;
-        if (hostInput) hostInput.value = 'pokerth.net';
-        if ($('port')) $('port').value = '7234';   // pokerth.net standard port
+        if (hostInput) hostInput.value = _ps2 ? _ps2.host : 'pokerth.net';
+        if ($('port')) $('port').value = String(_ps2 ? _ps2.port : 7234);
         setStatus(t('enterCredentials'), '', 'enterCredentials');
       }
 
@@ -10796,7 +10803,7 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.2.466'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.2.467'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
