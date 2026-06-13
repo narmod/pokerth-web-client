@@ -1765,7 +1765,7 @@ html[data-bg-img] body.in-game {
   /* Desktop souris uniquement : barre d'action plus compacte pour libérer
      de la hauteur et mieux voir la table / les cartes. */
   .btn-action { font-size: 0.8rem !important; padding: 8px 18px !important; }
-  .btn-pct { padding: 4px 6px !important; }
+  .btn-pct { padding: 7px 6px !important; }
   .btn-pct .pct-p   { font-size: 0.85rem !important; }
   .btn-pct .pct-amt { font-size: 0.72rem !important; }
   .raise-row .raise-input { font-size: 0.85rem !important; }
@@ -1909,7 +1909,7 @@ html[data-bg-img] body.in-game {
   /* table padding via scaler */
   /* Actions */
   .btn-action { padding: 8px 10px; font-size: 0.76rem; }
-  .pct-row .btn-pct { flex: 1; padding: 4px 4px; font-size: 0.76rem; }
+  .pct-row .btn-pct { flex: 1; padding: 10px 4px; font-size: 0.76rem; }
   .raise-row .raise-input { flex: 1; padding: 10px 6px; font-size: 0.84rem; }
   .my-zone { padding: 5px 8px; }
   .pot-bar { font-size: 0.7rem; }
@@ -1923,7 +1923,7 @@ html[data-bg-img] body.in-game {
    correctly. Previously orphaned after a stray closing brace. */
 .btn-action { padding: 12px 14px; font-size: 0.84rem; flex: 1; min-width: 80px; text-align: center; }
 .pct-row { display: flex; gap: 5px; width: 100%; }
-.pct-row .btn-pct { flex: 1; padding: 4px 4px; font-size: 0.76rem; }
+.pct-row .btn-pct { flex: 1; padding: 10px 4px; font-size: 0.76rem; }
 .raise-row { display: flex; gap: 5px; flex: 2; min-width: 160px; }
 .raise-row .raise-input { flex: 1; padding: 10px 6px; font-size: 0.84rem; }
 .btn-allin { flex: 1.5; }
@@ -3393,10 +3393,7 @@ html[data-bg-img] body.in-game {
   font-weight: 700;
   letter-spacing: 0.08em;
   cursor: pointer;
-  /* Reserve la meme bordure de 9px que les boutons-images (Green Casino/Sleek) pour
-     une hauteur identique a tous les formats ; transparente -> le degrade/aplat se
-     peint dessous (background-clip:border-box) donc invisible. */
-  border: 9px solid transparent;
+  border: none;
   transition: filter 0.12s, transform 0.08s;
   white-space: nowrap;
 }
@@ -3465,13 +3462,13 @@ body.hide-pct-btns .pct-row { display: none; }
    red-on-red clash with Fold and discourages accidental taps. */
 .btn-allin {
   background: var(--btn-allin-bg, transparent); color: var(--btn-allin-fg, #e88a8a);
-  border: 9px solid transparent; outline: none;
+  border: 1.5px solid var(--btn-allin-bd, #c0392b); outline: none;
   padding: 8px 12px; font-size: 0.7rem; letter-spacing: 0.1em;
 }
 .btn-allin:hover { background: var(--btn-allin-bg, rgba(var(--red-rgb), 0.15)); filter: brightness(1.06); }
 .btn-allin b { color: var(--btn-allin-fg-b, #f4b0b0); }
 /* Image-backed action buttons (9-slice SVG/PNG via the Buttons axis). */
-:root[data-btn-img] .btn-action { border: 9px solid transparent; background: transparent; }
+:root[data-btn-img] .btn-action { border: 9px solid transparent; background: transparent; padding: 1px 9px; }
 :root[data-btn-img] .btn-fold  { border-image: var(--btn-fold-img) 9 fill / 9px / 0 stretch; color: var(--btn-fold-fg, #fff); }
 :root[data-btn-img] .btn-check { border-image: var(--btn-check-img) 9 fill / 9px / 0 stretch; color: var(--btn-check-fg, #fff); }
 :root[data-btn-img] .btn-call  { border-image: var(--btn-call-img) 9 fill / 9px / 0 stretch; color: var(--btn-call-fg, #fff); }
@@ -3800,8 +3797,8 @@ body:not(.in-game) .my-zone {
 .btn-pct {
   flex: 1;
   display: flex; flex-direction: column; align-items: center; gap: 1px;
-  background: rgba(var(--gold-rgb), 0.1); border: 9px solid transparent; box-shadow: 0 0 0 1px var(--gold-dim);
-  color: var(--gold); padding: 4px 4px; border-radius: 7px; cursor: pointer;
+  background: rgba(var(--gold-rgb), 0.1); border: 1px solid var(--gold-dim);
+  color: var(--gold); padding: 7px 4px; border-radius: 7px; cursor: pointer;
   font-family: var(--ff-mono); text-align: center;
 }
 .btn-pct .pct-p { font-size: 0.74rem; font-weight: 700; color: var(--gold); }
