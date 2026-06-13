@@ -8117,6 +8117,18 @@ function dismissWinner() {
           userWrap.style.display = 'none';
         }
       }
+      // Roue crantee (options avancees) : visible seulement en LAN / dedie, ou
+      // l'on peut devoir saisir un hote personnalise. En Internet/PokerTH.net,
+      // l'hote/port/TLS sont geres automatiquement -> on cache la roue ET on
+      // referme le bloc avance (rien d'editable n'est expose au joueur).
+      var gearBtn = document.getElementById('conn-adv-btn');
+      var advBlock = document.getElementById('conn-advanced');
+      if (mode === 'lan' || mode === 'unauth') {
+        if (gearBtn) gearBtn.style.display = '';
+      } else {
+        if (gearBtn) { gearBtn.style.display = 'none'; gearBtn.classList.remove('open'); gearBtn.setAttribute('aria-expanded', 'false'); }
+        if (advBlock) advBlock.style.display = 'none';
+      }
 
       const hostInput  = $('host');
       const proxyInput = $('proxy');
@@ -10821,7 +10833,7 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.2.470'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.2.471'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
