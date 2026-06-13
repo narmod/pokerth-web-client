@@ -8172,6 +8172,7 @@ function dismissWinner() {
         $('use-tls').checked = false;
         if (proxyInput) proxyInput.value = proto + '//' + (autoHost||'localhost') + ':' + port;
         if (hostInput && autoHost) hostInput.value = autoHost;
+        if ($('port')) $('port').value = (lsGet('pth_lan_port') || '7234');
         setStatus(t('lanModeNote'), '', 'lanModeNote');
       } else if (mode === 'unauth') {
         $('nick-label').textContent = t('enterNickFree');
@@ -8180,6 +8181,7 @@ function dismissWinner() {
         $('use-tls').checked = false;
         if (proxyInput) proxyInput.value = proto + '//' + (autoHost||'localhost') + ':' + port;
         if (hostInput && autoHost) hostInput.value = autoHost;
+        if ($('port')) $('port').value = (lsGet('pth_lan_port') || '7234');
         setStatus(t('chatAvailPrivate'), '', 'chatAvailPrivate');
       } else if (mode === 'guest') {
         $('nick-label').textContent = t('enterNickGuest');
@@ -8426,6 +8428,7 @@ function dismissWinner() {
         if (lm2) localStorage.setItem('pth_login_mode', lm2.value);
         if (hv)  localStorage.setItem('pth_host',  hv.value.trim());
         if (pv)  localStorage.setItem('pth_port',  pv.value.trim());
+        if (pv && lm2 && (lm2.value === 'lan' || lm2.value === 'unauth')) localStorage.setItem('pth_lan_port', pv.value.trim());
         if (xv)  localStorage.setItem('pth_proxy', xv.value.trim());
         // Auto-save the nickname per-mode (no Remember-me checkbox
         // needed — silent persistence is the new default). Guest is
@@ -10839,7 +10842,7 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.2.475'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.2.476'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
