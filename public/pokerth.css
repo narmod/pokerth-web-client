@@ -1766,8 +1766,8 @@ html[data-bg-img] body.in-game {
      de la hauteur et mieux voir la table / les cartes. */
   .btn-action { font-size: 0.8rem !important; padding: 8px 18px !important; }
   .btn-pct { padding: 7px 6px !important; }
-  .btn-pct .pct-p   { font-size: 0.85rem !important; }
-  .btn-pct .pct-amt { font-size: 0.72rem !important; }
+  /* Pas d'agrandissement des spans quick-bet : meme taille qu'en base/mobile
+     pour garder les boutons 1/3 - 1/2 - Pot a la meme hauteur (compacte). */
   .raise-row .raise-input { font-size: 0.85rem !important; }
 
   /* ── Vignette d'assistance ── */
