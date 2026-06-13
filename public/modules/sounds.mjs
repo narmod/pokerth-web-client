@@ -316,10 +316,26 @@ function toggleSoundPopover(btn) {
   pop.className = 'sound-pop' + (_soundEnabled ? '' : ' is-off');
   pop.setAttribute('role', 'group');
   pop.setAttribute('aria-label', lbl);
+  var musicRow = '';
+  try {
+    if (window.Music && typeof window.Music.getVolume === 'function') {
+      var mvol = Math.round((window.Music.getVolume() || 0) * 100);
+      var mlbl = _stxt('musicVolume', 'Music');
+      musicRow =
+        '<div class="sp-row">' +
+        '<span class="sound-pop-ico" aria-hidden="true">🎵</span>' +
+        '<input type="range" class="sound-pop-range sp-music-range" min="0" max="100" value="' + mvol + '" aria-label="' + mlbl + '">' +
+        '<span class="sound-pop-val sp-music-val">' + mvol + '%</span>' +
+        '</div>';
+    }
+  } catch (e) {}
   pop.innerHTML =
+    '<div class="sp-row">' +
     '<button type="button" class="sound-pop-mute" aria-pressed="' + String(!_soundEnabled) + '" title="' + lbl + '">' + (_soundEnabled ? '\uD83D\uDD0A' : '\uD83D\uDD07') + '</button>' +
     '<input type="range" class="sound-pop-range" min="0" max="100" value="' + vol + '" aria-label="' + lbl + '">' +
-    '<span class="sound-pop-val">' + vol + '%</span>';
+    '<span class="sound-pop-val">' + vol + '%</span>' +
+    '</div>' +
+    musicRow;
   document.body.appendChild(pop);
   // Position : sous le bouton, bord droit aligné, clampé dans l'écran.
   var r = btn.getBoundingClientRect();
@@ -341,6 +357,15 @@ function toggleSoundPopover(btn) {
   rg.addEventListener('change', function () {                // bip de test au niveau choisi
     try { _unlockAudio(); if (_soundEnabled) playTone(660, 0.08, 0.25); } catch(e) {}
   });
+  var _mrg = pop.querySelector('.sp-music-range');
+  if (_mrg) {
+    var _mval = pop.querySelector('.sp-music-val');
+    _mrg.addEventListener('input', function () {
+      var pct = parseInt(_mrg.value, 10) || 0;
+      if (_mval) _mval.textContent = pct + '%';
+      try { if (window.Music && typeof window.Music.setVolume === 'function') window.Music.setVolume(pct / 100); } catch (e) {}
+    });
+  }
   _soundPop = pop;
   // Fermer au clic extérieur (différé pour ne pas capter le clic d'ouverture).
   setTimeout(function () { document.addEventListener('pointerdown', _soundPopOutside, true); }, 0);

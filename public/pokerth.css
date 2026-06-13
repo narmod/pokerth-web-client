@@ -5884,7 +5884,7 @@ body.has-keyboard .act-key { display: inline-block; }
 /* ── Popover de réglage du son (bouton son du header) ── */
 .sound-pop {
   position: fixed; z-index: 1200;
-  display: flex; align-items: center; gap: 8px;
+  display: flex; flex-direction: column; align-items: stretch; gap: 8px;
   width: 210px; box-sizing: border-box;
   padding: 8px 10px;
   background: var(--panel); color: var(--text);
@@ -5902,8 +5902,10 @@ body.has-keyboard .act-key { display: inline-block; }
 .sound-pop-mute:hover { border-color: var(--gold-dim); }
 .sound-pop-range { flex: 1 1 auto; min-width: 0; accent-color: var(--gold); cursor: pointer; }
 .sound-pop-val { flex: 0 0 auto; font-size: 0.72rem; color: var(--gold-dim); min-width: 34px; text-align: right; font-variant-numeric: tabular-nums; }
-.sound-pop.is-off .sound-pop-range { opacity: 0.4; }
-.sound-pop.is-off .sound-pop-val { opacity: 0.5; }
+.sp-row { display: flex; align-items: center; gap: 8px; }
+.sound-pop-ico { flex: 0 0 auto; width: 32px; height: 32px; display: inline-flex; align-items: center; justify-content: center; font-size: 1rem; opacity: 0.9; }
+.sound-pop.is-off .sound-pop-range:not(.sp-music-range) { opacity: 0.4; }
+.sound-pop.is-off .sound-pop-val:not(.sp-music-val) { opacity: 0.5; }
 .music-list { display: flex; flex-direction: column; gap: 4px; }
 .music-row {
   display: flex; align-items: center; gap: 10px;
