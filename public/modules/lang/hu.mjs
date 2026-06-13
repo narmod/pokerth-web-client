@@ -329,6 +329,7 @@ export const strings = {
     enterNickGuest: 'Vendég becenév (Guest + 5 számjegy)',
     enterAccount: 'pokerth.net fióknév',
     enterCredentials: 'Add meg a pokerth.net adataidat.',
+    notRegisteredYet:'Még nincs fiókja?',
     chatAvailPrivate: '✅ Chat és reakciók elérhetők a privát szerveren.',
     connProxy: 'Csatlakozás a proxyhoz...',
     connDirect: 'Közvetlen csatlakozás a pokerth.net-hez...',

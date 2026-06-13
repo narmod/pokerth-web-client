@@ -329,6 +329,7 @@ export const strings = {
     enterNickGuest: 'Biệt danh khách (Guest + 5 chữ số)',
     enterAccount: 'Tên tài khoản pokerth.net',
     enterCredentials: 'Nhập thông tin pokerth.net của bạn.',
+    notRegisteredYet:'Chưa đăng ký?',
     chatAvailPrivate: '✅ Trò chuyện và biểu cảm khả dụng trên máy chủ riêng.',
     connProxy: 'Đang kết nối tới proxy...',
     connDirect: 'Kết nối trực tiếp tới pokerth.net...',

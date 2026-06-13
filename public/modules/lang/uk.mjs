@@ -328,6 +328,7 @@ export const strings = {
     enterNickGuest: 'Псевдонім гостя (Guest + 5 цифр)',
     enterAccount: 'Ім’я акаунта pokerth.net',
     enterCredentials: 'Введіть свої дані pokerth.net.',
+    notRegisteredYet:'Ще не зареєстровані?',
     chatAvailPrivate: '✅ Чат і реакції доступні на приватному сервері.',
     connProxy: 'Підключення до проксі...',
     connDirect: 'Пряме з’єднання з pokerth.net...',

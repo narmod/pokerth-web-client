@@ -330,6 +330,7 @@ export const strings = {
     enterNickGuest: '访客昵称（Guest + 5 位数字）',
     enterAccount: 'pokerth.net 账户名',
     enterCredentials: '请输入你的 pokerth.net 凭据。',
+    notRegisteredYet:'还没注册吗？',
     chatAvailPrivate: '✅ 私人服务器上可用聊天和表情。',
     connProxy: '正在连接代理…',
     connDirect: '正在直接连接 pokerth.net…',

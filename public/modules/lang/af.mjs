@@ -329,6 +329,7 @@ export const strings = {
     enterNickGuest: 'Gas-bynaam (Guest + 5 syfers)',
     enterAccount: 'pokerth.net-rekeningnaam',
     enterCredentials: 'Voer jou pokerth.net-besonderhede in.',
+    notRegisteredYet:'Nog nie geregistreer nie?',
     chatAvailPrivate: '✅ Klets en reaksies beskikbaar op die privaat bediener.',
     connProxy: 'Koppel aan die instaander...',
     connDirect: 'Direkte verbinding aan pokerth.net...',

@@ -328,6 +328,7 @@ export const strings = {
     enterNickGuest: 'Vieraan nimimerkki (Guest + 5 numeroa)',
     enterAccount: 'pokerth.net-tilin nimi',
     enterCredentials: 'Anna pokerth.net-tietosi.',
+    notRegisteredYet:'Etkö ole vielä rekisteröitynyt?',
     chatAvailPrivate: '✅ Chat ja reaktiot käytettävissä yksityisellä palvelimella.',
     connProxy: 'Yhdistetään välityspalvelimeen...',
     connDirect: 'Suora yhteys pokerth.netiin...',

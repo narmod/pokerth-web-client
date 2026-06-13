@@ -8072,11 +8072,17 @@ function dismissWinner() {
         var _oni = $('nick'); if (_oni) { _oni.removeAttribute('readonly'); _oni.placeholder = t('nickPlaceholder'); }
         if (typeof _stopIpBlockCountdown === 'function') _stopIpBlockCountdown();
         setStatus(t('offlineHint'), '', 'offlineHint');
+        var _offReg = document.getElementById('register-link-row'); if (_offReg) _offReg.style.display = 'none';
         try { if (window._setSrvSourceTag) window._setSrvSourceTag(false); } catch (e) {}
         return;
       }
       const mode = $('login-mode').value;
       $('f-pass').style.display = mode === 'auth' ? '' : 'none';
+      // Lien d'inscription pokerth.net : visible uniquement en Internet/PokerTH.net
+      // (modes internes guest/auth) — l'inscription n'a de sens que sur le serveur
+      // officiel. Le libellé est déjà traduit par data-i18n (retraduit par setLang).
+      var _regRow = document.getElementById('register-link-row');
+      if (_regRow) _regRow.style.display = (mode === 'guest' || mode === 'auth') ? '' : 'none';
       // TLS is only ever meaningful when connecting to pokerth.net
       // (which mandates it). On LAN / private servers it's almost
       // always uncheck-and-forget, so we just hide the row there to
@@ -8246,7 +8252,7 @@ function dismissWinner() {
       // Connection-detail fields that only make sense for a real network
       // connection. In offline mode none of them apply, so hide them all
       // (and the advanced gear) — the screen keeps just nickname + Connect.
-      var _connDetailIds = ['conn-adv-btn','conn-advanced','tls-row','guest-mode-row','f-pass','f-server-pass','f-user-pass'];
+      var _connDetailIds = ['conn-adv-btn','conn-advanced','tls-row','guest-mode-row','f-pass','f-server-pass','f-user-pass','register-link-row'];
       if (off) {
         // login-mode is irrelevant offline; force a no-password value so a
         // stale 'auth' (left by a previous pokerth.net selection) can't make
@@ -10833,7 +10839,7 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.2.471'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.2.472'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

@@ -331,6 +331,7 @@ export const strings = {
     enterNickGuest: 'Misafir takma adı (Guest + 5 rakam)',
     enterAccount: 'pokerth.net hesap adı',
     enterCredentials: 'pokerth.net bilgilerinizi girin.',
+    notRegisteredYet:'Henüz kayıt olmadınız mı?',
     chatAvailPrivate: '✅ Özel sunucuda sohbet ve tepkiler kullanılabilir.',
     connProxy: 'Proxy’ye bağlanılıyor...',
     connDirect: 'pokerth.net’e doğrudan bağlanılıyor...',

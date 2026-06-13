@@ -161,6 +161,7 @@ export const strings = {
     enterNickGuest:'अतिथि उपनाम (Guest + 5 अंक)',
     enterAccount:'pokerth.net खाता नाम',
     enterCredentials:'अपने pokerth.net क्रेडेंशियल दर्ज करें।',
+    notRegisteredYet:'अभी तक पंजीकृत नहीं?',
     chatAvailPrivate:'✅ निजी सर्वर पर चैट और प्रतिक्रियाएँ उपलब्ध।',
     connProxy:'प्रॉक्सी से कनेक्ट हो रहा है...',
     connDirect:'pokerth.net से सीधा कनेक्शन...',

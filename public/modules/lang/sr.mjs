@@ -329,6 +329,7 @@ export const strings = {
     enterNickGuest: 'Gostujući nadimak (Guest + 5 cifara)',
     enterAccount: 'Naziv naloga pokerth.net',
     enterCredentials: 'Unesite svoje pokerth.net podatke.',
+    notRegisteredYet:'Још нисте регистровани?',
     chatAvailPrivate: '✅ Ćaskanje i reakcije dostupni na privatnom serveru.',
     connProxy: 'Povezivanje na proksi...',
     connDirect: 'Direktno povezivanje na pokerth.net...',

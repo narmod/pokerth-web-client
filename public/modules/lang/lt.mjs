@@ -329,6 +329,7 @@ export const strings = {
     enterNickGuest: 'Svečio slapyvardis (Guest + 5 skaitmenys)',
     enterAccount: 'pokerth.net paskyros vardas',
     enterCredentials: 'Įveskite savo pokerth.net duomenis.',
+    notRegisteredYet:'Dar neužsiregistravote?',
     chatAvailPrivate: '✅ Pokalbis ir reakcijos galimi privačiame serveryje.',
     connProxy: 'Jungiamasi prie tarpinio serverio...',
     connDirect: 'Tiesioginis ryšys su pokerth.net...',

@@ -329,6 +329,7 @@ export const strings = {
     enterNickGuest: 'Hostovská přezdívka (Guest + 5 číslic)',
     enterAccount: 'Jméno účtu pokerth.net',
     enterCredentials: 'Zadejte své údaje pokerth.net.',
+    notRegisteredYet:'Ještě nemáte účet?',
     chatAvailPrivate: '✅ Chat a reakce dostupné na soukromém serveru.',
     connProxy: 'Připojování k proxy...',
     connDirect: 'Přímé připojení k pokerth.net...',

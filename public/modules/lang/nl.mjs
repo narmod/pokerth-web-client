@@ -334,6 +334,7 @@ export const strings = {
     enterNickGuest: 'Gastbijnaam (Guest + 5 cijfers)',
     enterAccount: 'pokerth.net-accountnaam',
     enterCredentials: 'Voer je pokerth.net-gegevens in.',
+    notRegisteredYet:'Nog niet geregistreerd?',
     chatAvailPrivate: '✅ Chat en reacties beschikbaar op de privéserver.',
     connProxy: 'Verbinden met proxy...',
     connDirect: 'Directe verbinding met pokerth.net...',

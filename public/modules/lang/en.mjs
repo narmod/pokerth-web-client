@@ -171,6 +171,7 @@ export const strings = {
     enterNickGuest:'Guest nickname (Guest + 5 digits)',
     enterAccount:'pokerth.net account name',
     enterCredentials:'Enter your pokerth.net credentials.',
+    notRegisteredYet:'Not registered yet?',
     chatAvailPrivate:'✅ Chat & reactions available on private server.',
     connProxy:'Connecting to proxy...',
     connDirect:'Direct connection to pokerth.net...',

@@ -329,6 +329,7 @@ export const strings = {
     enterNickGuest: 'Ψευδώνυμο επισκέπτη (Guest + 5 ψηφία)',
     enterAccount: 'Όνομα λογαριασμού pokerth.net',
     enterCredentials: 'Εισαγάγετε τα στοιχεία σας pokerth.net.',
+    notRegisteredYet:'Δεν έχετε εγγραφεί ακόμα;',
     chatAvailPrivate: '✅ Συνομιλία και αντιδράσεις διαθέσιμες στον ιδιωτικό διακομιστή.',
     connProxy: 'Σύνδεση στον διαμεσολαβητή...',
     connDirect: 'Άμεση σύνδεση στο pokerth.net...',

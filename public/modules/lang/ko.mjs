@@ -160,6 +160,7 @@ export const strings = {
     enterNickGuest:'게스트 닉네임 (Guest + 숫자 5자리)',
     enterAccount:'pokerth.net 계정 이름',
     enterCredentials:'pokerth.net 로그인 정보를 입력하세요.',
+    notRegisteredYet:'아직 가입하지 않으셨나요?',
     chatAvailPrivate:'✅ 비공개 서버에서 채팅과 리액션 사용 가능.',
     connProxy:'프록시에 접속 중...',
     connDirect:'pokerth.net에 직접 접속 중...',

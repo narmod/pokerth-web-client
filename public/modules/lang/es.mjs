@@ -335,6 +335,7 @@ export const strings = {
     enterNickGuest: 'Apodo de invitado (Guest + 5 dígitos)',
     enterAccount: 'Nombre de cuenta de pokerth.net',
     enterCredentials: 'Introduce tus credenciales de pokerth.net.',
+    notRegisteredYet:'¿Aún no estás registrado?',
     chatAvailPrivate: '✅ Chat y reacciones disponibles en el servidor privado.',
     connProxy: 'Conectando al proxy...',
     connDirect: 'Conexión directa a pokerth.net...',

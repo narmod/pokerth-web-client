@@ -945,6 +945,18 @@ function onAvatarImageChosen(input) {
 
     <button class="btn-primary" onclick="App.connect()" data-i18n="connect">CONNECT</button>
     <div id="cstatus" class="status"></div>
+
+    <!-- Lien d'inscription pokerth.net : visible UNIQUEMENT en mode Internet /
+         PokerTH.net (modes internes guest/auth). Affiché / masqué par
+         App.onLoginModeChange() (et masqué en entraînement comme les autres
+         champs réseau). Le libellé est retraduit À LA VOLÉE par setLang() via
+         data-i18n — aucun JS dédié au changement de langue. L'URL d'inscription
+         est propre à pokerth.net. -->
+    <div id="register-link-row" style="display:none;text-align:center;margin-top:10px">
+      <a href="https://www.pokerth.net/ucp.php?mode=register" target="_blank" rel="noopener noreferrer"
+         data-i18n="notRegisteredYet"
+         style="color:var(--gold);font-size:0.8rem;font-weight:600;text-decoration:none;opacity:0.95">Not registered yet?</a>
+    </div>
   </div>
   <!-- Credits footer (shown only on the connect screen; absent from
        lobby & game so it doesn't eat playable space). -->

@@ -328,6 +328,7 @@ export const strings = {
     enterNickGuest: 'Gästsmeknamn (Guest + 5 siffror)',
     enterAccount: 'pokerth.net-kontonamn',
     enterCredentials: 'Ange dina pokerth.net-uppgifter.',
+    notRegisteredYet:'Inte registrerad än?',
     chatAvailPrivate: '✅ Chatt och reaktioner tillgängliga på privat server.',
     connProxy: 'Ansluter till proxy...',
     connDirect: 'Direktanslutning till pokerth.net...',

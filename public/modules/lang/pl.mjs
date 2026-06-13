@@ -335,6 +335,7 @@ export const strings = {
     enterNickGuest: 'Pseudonim gościa (Guest + 5 cyfr)',
     enterAccount: 'Nazwa konta pokerth.net',
     enterCredentials: 'Wpisz swoje dane pokerth.net.',
+    notRegisteredYet:'Nie masz jeszcze konta?',
     chatAvailPrivate: '✅ Czat i reakcje dostępne na serwerze prywatnym.',
     connProxy: 'Łączenie z proxy...',
     connDirect: 'Bezpośrednie połączenie z pokerth.net...',
