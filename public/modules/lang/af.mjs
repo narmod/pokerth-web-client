@@ -120,7 +120,7 @@ export const strings = {
     timerHurry: '⏰ Tyd: {s} s — speel vinnig!',
     chatRefusedReason: '⚠ Klets geweier: {r}',
     reactionsLanLocal: 'Reaksies (plaaslik — LAN-modus)',
-    reactionsLabel: 'Reaksies',
+    reactionsLabel: 'Reaksies', reactionsMuteTitle: 'Aktiveer / deaktiveer reaksies',
     gameOverMsg: 'Spel verby!',
     tableClosedMsg: '🔒 Tafel gesluit.',
     noHandsPlayed: 'Nog geen hande gespeel nie',

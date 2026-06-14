@@ -120,7 +120,7 @@ export const strings = {
     timerHurry: '⏰ Χρόνος: {s} δ — παίξτε γρήγορα!',
     chatRefusedReason: '⚠ Η συνομιλία απορρίφθηκε: {r}',
     reactionsLanLocal: 'Αντιδράσεις (τοπικές — λειτουργία LAN)',
-    reactionsLabel: 'Αντιδράσεις',
+    reactionsLabel: 'Αντιδράσεις', reactionsMuteTitle: 'Ενεργοποίηση / απενεργοποίηση αντιδράσεων',
     gameOverMsg: 'Τέλος παιχνιδιού!',
     tableClosedMsg: '🔒 Το τραπέζι έκλεισε.',
     noHandsPlayed: 'Δεν παίχτηκε ακόμα κανένα χέρι',

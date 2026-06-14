@@ -120,7 +120,7 @@ export const strings = {
     timerHurry: '⏰ Thời gian: {s} giây — chơi nhanh lên!',
     chatRefusedReason: '⚠ Trò chuyện bị từ chối: {r}',
     reactionsLanLocal: 'Biểu cảm (cục bộ — chế độ LAN)',
-    reactionsLabel: 'Biểu cảm',
+    reactionsLabel: 'Biểu cảm', reactionsMuteTitle: 'Bật / tắt biểu cảm',
     gameOverMsg: 'Kết thúc ván chơi!',
     tableClosedMsg: '🔒 Bàn đã đóng.',
     noHandsPlayed: 'Chưa chơi ván nào',

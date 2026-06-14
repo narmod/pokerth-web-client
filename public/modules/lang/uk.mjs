@@ -119,7 +119,7 @@ export const strings = {
     timerHurry: '⏰ Час: {s} с — грайте швидше!',
     chatRefusedReason: '⚠ Чат відхилено: {r}',
     reactionsLanLocal: 'Реакції (локально — режим LAN)',
-    reactionsLabel: 'Реакції',
+    reactionsLabel: 'Реакції', reactionsMuteTitle: 'Увімкнути / вимкнути реакції',
     gameOverMsg: 'Гру завершено!',
     tableClosedMsg: '🔒 Стіл закрито.',
     noHandsPlayed: 'Ще не зіграно жодної роздачі',

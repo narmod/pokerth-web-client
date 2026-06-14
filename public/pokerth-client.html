@@ -1249,7 +1249,7 @@ function onAvatarImageChosen(input) {
   <div id="g-reaction-panel" style="display:none">
     <div class="react-panel-title">
       <span>😊 <span data-i18n="reactionsLabel">Réactions</span></span>
-      <button class="react-panel-close" onclick="toggleReactionPanel()">✕</button>
+      <span class="react-title-actions"><button type="button" class="react-mute-btn" id="react-mute-toggle" onclick="App.toggleReactionsMute()" aria-pressed="false" title="Activer / désactiver les réactions" data-i18n-title="reactionsMuteTitle"><span class="rm-emo">😊</span></button><button class="react-panel-close" onclick="toggleReactionPanel()">✕</button></span>
     </div>
     <div class="react-grid">
         <button class="react-btn" onclick="App.sendReaction('🎉')" title="🎉">🎉<span class="rc" id="rcp-0"></span></button>

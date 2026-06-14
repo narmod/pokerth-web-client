@@ -120,7 +120,7 @@ export const strings = {
     timerHurry: '⏰ Време: {s} с — играйте бързо!',
     chatRefusedReason: '⚠ Чатът е отказан: {r}',
     reactionsLanLocal: 'Реакции (локални — LAN режим)',
-    reactionsLabel: 'Реакции',
+    reactionsLabel: 'Реакции', reactionsMuteTitle: 'Включване / изключване на реакциите',
     gameOverMsg: 'Край на играта!',
     tableClosedMsg: '🔒 Масата е затворена.',
     noHandsPlayed: 'Все още няма изиграни ръце',

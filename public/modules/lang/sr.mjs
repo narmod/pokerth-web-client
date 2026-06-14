@@ -120,7 +120,7 @@ export const strings = {
     timerHurry: '⏰ Vreme: {s} s — igrajte brzo!',
     chatRefusedReason: '⚠ Ćaskanje odbijeno: {r}',
     reactionsLanLocal: 'Reakcije (lokalne — LAN režim)',
-    reactionsLabel: 'Reakcije',
+    reactionsLabel: 'Reakcije', reactionsMuteTitle: 'Uključi / isključi reakcije',
     gameOverMsg: 'Kraj igre!',
     tableClosedMsg: '🔒 Sto zatvoren.',
     noHandsPlayed: 'Još nije odigrana nijedna ruka',

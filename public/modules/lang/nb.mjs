@@ -119,7 +119,7 @@ export const strings = {
     timerHurry: '⏰ Tid: {s}s — spill raskt!',
     chatRefusedReason: '⚠ Chat avvist: {r}',
     reactionsLanLocal: 'Reaksjoner (lokale — LAN-modus)',
-    reactionsLabel: 'Reaksjoner',
+    reactionsLabel: 'Reaksjoner', reactionsMuteTitle: 'Slå reaksjoner på / av',
     gameOverMsg: 'Spillet er slutt!',
     tableClosedMsg: '🔒 Bordet er lukket.',
     noHandsPlayed: 'Ingen hender spilt ennå',

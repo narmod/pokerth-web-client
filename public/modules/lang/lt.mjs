@@ -120,7 +120,7 @@ export const strings = {
     timerHurry: '⏰ Laikas: {s} s — žaiskite greitai!',
     chatRefusedReason: '⚠ Pokalbis atmestas: {r}',
     reactionsLanLocal: 'Reakcijos (vietinės — LAN režimas)',
-    reactionsLabel: 'Reakcijos',
+    reactionsLabel: 'Reakcijos', reactionsMuteTitle: 'Įjungti / išjungti reakcijas',
     gameOverMsg: 'Žaidimas baigtas!',
     tableClosedMsg: '🔒 Stalas uždarytas.',
     noHandsPlayed: 'Dar nesužaista nė viena partija',

@@ -125,7 +125,7 @@ export const strings = {
     timerHurry: '⏰ Tijd: {s}s — speel snel!',
     chatRefusedReason: '⚠ Chat geweigerd: {r}',
     reactionsLanLocal: 'Reacties (lokaal — LAN-modus)',
-    reactionsLabel: 'Reacties',
+    reactionsLabel: 'Reacties', reactionsMuteTitle: 'Reacties in- / uitschakelen',
     gameOverMsg: 'Spel afgelopen!',
     tableClosedMsg: '🔒 Tafel gesloten.',
     noHandsPlayed: 'Nog geen handen gespeeld',

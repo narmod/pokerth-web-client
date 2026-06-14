@@ -1077,6 +1077,8 @@ function _cmpHand(a, b) {
 var _reactionCounts = {}; // { emoji: count }
 var _reactionTimers = {}; // timers de reset des compteurs
 var _reactSeen = {};      // { 'pid|emoji': {t, via} } -- de-dup d'une reaction recue par 2 canaux (REACT: + /emoji)
+// Mute local des reactions (preference utilisateur, persistee). ON => rien envoye ni recu, grille grisee.
+var _reactMuted = (function(){ try { return localStorage.getItem('pth_react_muted') === '1'; } catch(e){ return false; } })();
 
 // ── Catalogue des effets animés par réaction ──
 // a = animation de l'emoji ; p = particules (objet, ou preset 'sparkle'/'shock'/'confetti')
@@ -1223,6 +1225,7 @@ function updateReactionCount(emoji) {
 // table would silently bump our counters and play the `playTone` chime,
 // which is what the user reported hearing.
 function handleIncomingReaction(pid, emoji, via) {
+  if (_reactMuted) return;                       // reactions coupees localement : aucun rendu, badge ni son
   if (!window.seats || seats.indexOf(pid) < 0) return;
   via = via || 'react';
   var _k = pid + '|' + emoji, _now = Date.now(), _p = _reactSeen[_k];
@@ -1233,6 +1236,17 @@ function handleIncomingReaction(pid, emoji, via) {
   showSeatReaction(pid, emoji);
   // Notif sonore légère
   if (typeof playTone === 'function') playTone(800, 0.05, 0.08);
+}
+
+// Reflete l'etat "couper les reactions" : bouton barre + grille grisee/inerte.
+function _applyReactMuteUI() {
+  var grid = document.querySelector('#g-reaction-panel .react-grid');
+  if (grid) grid.classList.toggle('react-muted', _reactMuted);
+  var btn = document.getElementById('react-mute-toggle');
+  if (btn) {
+    btn.classList.toggle('muted', _reactMuted);
+    btn.setAttribute('aria-pressed', _reactMuted ? 'true' : 'false');
+  }
 }
 
 
@@ -9167,6 +9181,7 @@ function dismissWinner() {
     },
 
     sendReaction(emoji) {
+      if (_reactMuted) return;                    // reactions coupees : on n'envoie rien
       if (!ws || !gId) return;
       // Affichage immediat pour moi.
       handleIncomingReaction(myId, emoji, 'self');
@@ -9178,6 +9193,13 @@ function dismissWinner() {
       // tous les clients (convention sp0ck, facon /me) -> interop web <-> Qt/QML (dont pokerth.net).
       _lastMsgWasReaction = true;
       try { send(MSG.buildGameChat(gId, '/emoji ' + emoji)); } catch (e) {}
+    },
+
+    // Bascule le mute local des reactions (bouton barre dans le panneau).
+    toggleReactionsMute() {
+      _reactMuted = !_reactMuted;
+      try { localStorage.setItem('pth_react_muted', _reactMuted ? '1' : '0'); } catch (e) {}
+      _applyReactMuteUI();
     },
 
     sendGameChat() {
@@ -10693,6 +10715,7 @@ function toggleReactionPanel() {
   if (!panel) return;
   var open = panel.style.display === 'none' || panel.style.display === '';
   panel.style.display = open ? 'flex' : 'none';
+  if (open) _applyReactMuteUI();
   if (open) { if (_winGate()) { _attachFloatControls(panel, { key:'pth_winpos_react', handle: panel.querySelector('.react-panel-title'), resizable:true, minW:240, minH:160, defW:330, defH:340 }); } else { _disableFloating(panel); } }
   if (btn) {
     btn.style.background  = open ? 'rgba(var(--gold-rgb),0.2)' : '';
@@ -10876,7 +10899,7 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.3.0-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.1-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

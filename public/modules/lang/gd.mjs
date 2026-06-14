@@ -121,7 +121,7 @@ export const strings = {
     timerHurry: '⏰ Ùine: {s} s — cluich gu luath!',
     chatRefusedReason: '⚠ Chaidh a\' chabadaich a dhiùltadh: {r}',
     reactionsLanLocal: 'Freagairtean (ionadail — modh LAN)',
-    reactionsLabel: 'Freagairtean',
+    reactionsLabel: 'Freagairtean', reactionsMuteTitle: 'Cuir freagairtean air / dheth',
     gameOverMsg: 'Tha an geama seachad!',
     tableClosedMsg: '🔒 Bòrd dùinte.',
     noHandsPlayed: 'Cha deach làmh sam bith a chluich fhathast',

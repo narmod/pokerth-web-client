@@ -121,7 +121,7 @@ export const strings = {
     timerHurry: '⏰ 时间：{s} 秒 — 请尽快行动！',
     chatRefusedReason: '⚠ 聊天被拒绝：{r}',
     reactionsLanLocal: '表情（本地 — 局域网模式）',
-    reactionsLabel: '表情',
+    reactionsLabel: '表情', reactionsMuteTitle: '开启／关闭表情',
     gameOverMsg: '游戏结束！',
     tableClosedMsg: '🔒 牌桌已关闭。',
     noHandsPlayed: '还没有玩过任何一手',

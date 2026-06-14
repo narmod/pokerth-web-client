@@ -62,7 +62,7 @@ export const strings = {
     sharedTableJoining:'🔗 Shared table found — joining…',
     timerHurry:'⏰ Time: {s}s — play fast!',
     chatRefusedReason:'⚠ Chat refused: {r}',
-    reactionsLanLocal:'Reactions (local — LAN mode)', reactionsLabel:'Reactions',
+    reactionsLanLocal:'Reactions (local — LAN mode)', reactionsLabel:'Reactions', reactionsMuteTitle:'Enable / disable reactions',
     gameOverMsg:'Game over!',
     tableClosedMsg:'🔒 Table closed.',
     noHandsPlayed:'No hands played yet',

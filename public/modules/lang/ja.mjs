@@ -119,7 +119,7 @@ export const strings = {
     timerHurry: '⏰ 時間：{s}秒 — 急いでプレイ！',
     chatRefusedReason: '⚠ チャットが拒否されました：{r}',
     reactionsLanLocal: 'リアクション（ローカル — LANモード）',
-    reactionsLabel: 'リアクション',
+    reactionsLabel: 'リアクション', reactionsMuteTitle: 'リアクションのオン／オフ',
     gameOverMsg: 'ゲーム終了！',
     tableClosedMsg: '🔒 テーブルが閉じられました。',
     noHandsPlayed: 'まだハンドをプレイしていません',

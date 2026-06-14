@@ -2453,6 +2453,41 @@ html[data-bg-img] body.in-game {
   background: none; border: none; color: var(--text);
   cursor: pointer; font-size: 0.9rem; padding: 0 2px; line-height: 1;
 }
+/* Bouton "couper les reactions" : emoji barre d'une interdiction quand actif */
+.react-title-actions { display: flex; align-items: center; gap: 8px; }
+.react-mute-btn {
+  position: relative;
+  width: 26px; height: 26px;
+  display: inline-flex; align-items: center; justify-content: center;
+  background: var(--inset);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-size: 0.95rem; line-height: 1;
+  padding: 0; cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+.react-mute-btn:hover { background: rgba(var(--gold-rgb), 0.15); border-color: var(--gold-dim); }
+.react-mute-btn:active { transform: scale(0.92); }
+.react-mute-btn .rm-emo { transition: filter 0.15s, opacity 0.15s; pointer-events: none; }
+.react-mute-btn.muted { border-color: rgba(var(--red-rgb), 0.55); }
+.react-mute-btn.muted .rm-emo { filter: grayscale(1); opacity: 0.5; }
+.react-mute-btn.muted::after {
+  content: ""; position: absolute;
+  width: 19px; height: 19px;
+  border: 2px solid var(--red); border-radius: 50%;
+  pointer-events: none;
+}
+.react-mute-btn.muted::before {
+  content: ""; position: absolute;
+  width: 19px; height: 2px;
+  background: var(--red); border-radius: 2px;
+  transform: rotate(-45deg);
+  pointer-events: none;
+}
+/* Grille grisee + inerte quand les reactions sont coupees */
+.react-grid.react-muted { filter: grayscale(1); opacity: 0.4; }
+.react-grid.react-muted .react-btn { pointer-events: none; cursor: default; }
+.react-grid.react-muted .react-btn:hover { background: var(--inset); border-color: var(--border); transform: none; }
 .react-grid {
   display: grid;
   /* Desktop: all 30 reactions on a single line. 1fr tracks fill the
