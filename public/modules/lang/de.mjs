@@ -15,6 +15,7 @@ export const meta = {
 };
 
 export const strings = {
+  winResetTooltip: 'Fenster zurücksetzen',
     musicPlayer:'Player',
     soundVolume:'Spielsounds',
     musicTooltip:'Sound & Musik', musicPanelTitle:'Sound & Musik', musicNowPlaying:'Wird abgespielt', musicNoTracks:'Keine Titel verfügbar', musicVolume:'Lautstärke', musicPlay:'Wiedergabe', musicPause:'Pause', musicStop:'Stopp', musicNext:'Weiter', musicPrev:'Zurück', musicTrack:'Titel', musicRepeat:'Wiederholen', musicRepeatOne:'Titel wiederholen', musicRepeatAll:'Playlist wiederholen', musicRepeatOff:'Einmal abspielen',

@@ -15,6 +15,7 @@ export const meta = {
 };
 
 export const strings = {
+  winResetTooltip: 'Vensters herstellen',
     musicPlayer:'Speler',
     soundVolume:'Spelgeluiden',
     musicTooltip:'Geluid & Muziek', musicPanelTitle:'Geluid & Muziek', musicNowPlaying:'Speelt nu', musicNoTracks:'Geen nummers beschikbaar', musicVolume:'Volume', musicPlay:'Afspelen', musicPause:'Pauze', musicStop:'Stoppen', musicNext:'Volgende', musicPrev:'Vorige', musicTrack:'Nummer', musicRepeat:'Herhalen', musicRepeatOne:'Nummer herhalen', musicRepeatAll:'Afspeellijst herhalen', musicRepeatOff:'Eén keer afspelen',

@@ -9,6 +9,7 @@ export const meta = {
 };
 
 export const strings = {
+  winResetTooltip: 'Palauta ikkunat',
     musicPlayer:'Soitin',
     soundVolume:'Pelin äänet',
     musicTooltip:'Äänet & Musiikki', musicPanelTitle:'Äänet & Musiikki', musicNowPlaying:'Nyt soi', musicNoTracks:'Ei kappaleita saatavilla', musicVolume:'Äänenvoimakkuus', musicPlay:'Toista', musicPause:'Keskeytä', musicStop:'Pysäytä', musicNext:'Seuraava', musicPrev:'Edellinen', musicTrack:'Kappale', musicRepeat:'Kertaa', musicRepeatOne:'Kertaa kappale', musicRepeatAll:'Kertaa soittolista', musicRepeatOff:'Toista kerran',

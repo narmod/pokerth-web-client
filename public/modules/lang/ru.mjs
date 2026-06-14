@@ -15,6 +15,7 @@ export const meta = {
 };
 
 export const strings = {
+  winResetTooltip: 'Сбросить окна',
     musicPlayer:'Плеер',
     soundVolume:'Звуки игры',
     musicTooltip:'Звук & Музыка', musicPanelTitle:'Звук & Музыка', musicNowPlaying:'Сейчас играет', musicNoTracks:'Нет доступных треков', musicVolume:'Громкость', musicPlay:'Воспроизвести', musicPause:'Пауза', musicStop:'Стоп', musicNext:'Следующий', musicPrev:'Предыдущий', musicTrack:'Трек', musicRepeat:'Повтор', musicRepeatOne:'Повтор трека', musicRepeatAll:'Повтор плейлиста', musicRepeatOff:'Воспроизвести один раз',

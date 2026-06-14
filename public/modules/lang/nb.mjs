@@ -9,6 +9,7 @@ export const meta = {
 };
 
 export const strings = {
+  winResetTooltip: 'Tilbakestill vinduer',
     musicPlayer:'Avspiller',
     soundVolume:'Spillyder',
     musicTooltip:'Lyd & Musikk', musicPanelTitle:'Lyd & Musikk', musicNowPlaying:'Spilles nå', musicNoTracks:'Ingen spor tilgjengelig', musicVolume:'Volum', musicPlay:'Spill', musicPause:'Pause', musicStop:'Stopp', musicNext:'Neste', musicPrev:'Forrige', musicTrack:'Spor', musicRepeat:'Gjenta', musicRepeatOne:'Gjenta spor', musicRepeatAll:'Gjenta spilleliste', musicRepeatOff:'Spill én gang',

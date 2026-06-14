@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+  winResetTooltip: 'Ablakok visszaállítása',
     musicPlayer:'Lejátszó',
     soundVolume:'Játékhangok',
     musicTooltip:'Hang & Zene', musicPanelTitle:'Hang & Zene', musicNowPlaying:'Most szól', musicNoTracks:'Nincs elérhető szám', musicVolume:'Hangerő', musicPlay:'Lejátszás', musicPause:'Szünet', musicStop:'Leállítás', musicNext:'Következő', musicPrev:'Előző', musicTrack:'Szám', musicRepeat:'Ismétlés', musicRepeatOne:'Szám ismétlése', musicRepeatAll:'Lejátszási lista ismétlése', musicRepeatOff:'Egyszeri lejátszás',

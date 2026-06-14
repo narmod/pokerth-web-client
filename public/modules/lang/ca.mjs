@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+  winResetTooltip: 'Restableix les finestres',
     musicPlayer:'Reproductor',
     soundVolume:'Sons del joc',
     musicTooltip:'So & Música', musicPanelTitle:'So & Música', musicNowPlaying:'S\'està reproduint', musicNoTracks:'No hi ha cap pista disponible', musicVolume:'Volum', musicPlay:'Reprodueix', musicPause:'Pausa', musicStop:'Atura', musicNext:'Següent', musicPrev:'Anterior', musicTrack:'Pista', musicRepeat:'Repeteix', musicRepeatOne:'Repeteix la pista', musicRepeatAll:'Repeteix la llista', musicRepeatOff:'Reprodueix una vegada',

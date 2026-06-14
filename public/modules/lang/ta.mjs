@@ -11,6 +11,7 @@ export const meta = {
 };
 
 export const strings = {
+  winResetTooltip: 'சாளரங்களை மீட்டமை',
     musicPlayer:'பிளேயர்',
     soundVolume:'விளையாட்டு ஒலிகள்',
     musicTooltip:'ஒலி & இசை', musicPanelTitle:'ஒலி & இசை', musicNowPlaying:'இப்போது இயங்குகிறது', musicNoTracks:'பாடல்கள் எதுவும் இல்லை', musicVolume:'ஒலி அளவு', musicPlay:'இயக்கு', musicPause:'இடைநிறுத்து', musicStop:'நிறுத்து', musicNext:'அடுத்து', musicPrev:'முந்தைய', musicTrack:'பாடல்', musicRepeat:'மீண்டும்', musicRepeatOne:'ஒரு பாடலை மீண்டும்', musicRepeatAll:'பட்டியலை மீண்டும்', musicRepeatOff:'ஒருமுறை இயக்கு',

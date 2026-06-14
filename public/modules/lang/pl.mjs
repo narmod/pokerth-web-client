@@ -16,6 +16,7 @@ export const meta = {
 };
 
 export const strings = {
+  winResetTooltip: 'Zresetuj okna',
     musicPlayer:'Odtwarzacz',
     soundVolume:'Dźwięki gry',
     musicTooltip:'Dźwięki & Muzyka', musicPanelTitle:'Dźwięki & Muzyka', musicNowPlaying:'Teraz odtwarzane', musicNoTracks:'Brak dostępnych utworów', musicVolume:'Głośność', musicPlay:'Odtwórz', musicPause:'Pauza', musicStop:'Zatrzymaj', musicNext:'Następny', musicPrev:'Poprzedni', musicTrack:'Utwór', musicRepeat:'Powtarzaj', musicRepeatOne:'Powtarzaj utwór', musicRepeatAll:'Powtarzaj playlistę', musicRepeatOff:'Odtwórz raz',

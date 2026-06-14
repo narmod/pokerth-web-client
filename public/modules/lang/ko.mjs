@@ -13,6 +13,7 @@ export const meta = {
 };
 
 export const strings = {
+  winResetTooltip: '창 초기화',
     musicPlayer:'플레이어',
     soundVolume:'게임 사운드',
     musicTooltip:'사운드 & 음악', musicPanelTitle:'사운드 & 음악', musicNowPlaying:'재생 중', musicNoTracks:'사용 가능한 트랙 없음', musicVolume:'볼륨', musicPlay:'재생', musicPause:'일시정지', musicStop:'정지', musicNext:'다음', musicPrev:'이전', musicTrack:'트랙', musicRepeat:'반복', musicRepeatOne:'한 곡 반복', musicRepeatAll:'전체 반복', musicRepeatOff:'한 번 재생',

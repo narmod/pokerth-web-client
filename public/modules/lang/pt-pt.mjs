@@ -9,6 +9,7 @@ export const meta = {
 };
 
 export const strings = {
+  winResetTooltip: 'Repor janelas',
     musicPlayer:'Leitor',
     soundVolume:'Sons do jogo',
     musicTooltip:'Sons & Música', musicPanelTitle:'Sons & Música', musicNowPlaying:'A reproduzir', musicNoTracks:'Nenhuma faixa disponível', musicVolume:'Volume', musicPlay:'Reproduzir', musicPause:'Pausa', musicStop:'Parar', musicNext:'Seguinte', musicPrev:'Anterior', musicTrack:'Faixa', musicRepeat:'Repetir', musicRepeatOne:'Repetir faixa', musicRepeatAll:'Repetir lista', musicRepeatOff:'Reproduzir uma vez',

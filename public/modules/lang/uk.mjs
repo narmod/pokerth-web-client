@@ -9,6 +9,7 @@ export const meta = {
 };
 
 export const strings = {
+  winResetTooltip: 'Скинути вікна',
     musicPlayer:'Програвач',
     soundVolume:'Звуки гри',
     musicTooltip:'Звук & Музика', musicPanelTitle:'Звук & Музика', musicNowPlaying:'Зараз грає', musicNoTracks:'Немає доступних треків', musicVolume:'Гучність', musicPlay:'Відтворити', musicPause:'Пауза', musicStop:'Стоп', musicNext:'Наступний', musicPrev:'Попередній', musicTrack:'Трек', musicRepeat:'Повтор', musicRepeatOne:'Повтор треку', musicRepeatAll:'Повтор плейлиста', musicRepeatOff:'Відтворити один раз',

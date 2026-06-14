@@ -11,6 +11,7 @@ export const meta = {
 };
 
 export const strings = {
+  winResetTooltip: '重設視窗',
     musicPlayer:'播放器',
     soundVolume:'遊戲音效',
     musicTooltip:'音效 & 音樂', musicPanelTitle:'音效 & 音樂', musicNowPlaying:'正在播放', musicNoTracks:'沒有可用曲目', musicVolume:'音量', musicPlay:'播放', musicPause:'暫停', musicStop:'停止', musicNext:'下一首', musicPrev:'上一首', musicTrack:'曲目', musicRepeat:'重複', musicRepeatOne:'單曲循環', musicRepeatAll:'清單循環', musicRepeatOff:'播放一次',
