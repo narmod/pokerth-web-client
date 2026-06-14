@@ -196,6 +196,7 @@ A full appearance system, reached from the **Theme** button — pick a one-tap p
 - **Separate volume for sound effects and music** — adjust each independently *(on iOS the music volume can't be changed — a WebKit limitation — though the game sound effects still can)*
 - **Full i18n in 36 languages**, switchable on the fly and auto-detected from the browser locale — the complete official PokerTH language set plus community additions (Ukrainian, Romanian, Croatian, Serbian and more), with Brazilian and European Portuguese shipped as separate catalogues (pt-BR / pt-PT)
 - Fullscreen mode on all screens
+- **Detachable panels** — on desktop, drag the title bar of the chat, hand log or reactions panel to pop it out into a free-floating, movable and resizable window (the hand log and reactions also detach on tablet); a **↺** button in the header snaps every panel back to its docked spot. Window positions are remembered.
 - Poker hand reference overlay (? button)
 - Exponential-backoff auto-reconnect with live countdown
 
@@ -896,7 +897,7 @@ A few things worth knowing if you plan to hack on this:
 2. Split the client into maintainable ES modules *(in progress — i18n, sounds and the Protobuf bindings are already extracted; the bulk still lives in `pokerth.js`)*.
 3. Add automated protocol tests with a mock PokerTH server.
 4. Polish reconnection edge cases *(currently exponential backoff, capped at 3–6 attempts depending on the transport)*.
-5. Custom-emoji / image avatar import *(the built-in picker already ships 500+ emojis)*.
+5. **Smarter training-mode bots** — position awareness, continuation betting, and more distinct play-style archetypes *(today's bots use a simple heuristic AI — see [Known limitations](#known-limitations))*.
 6. A read-only embed for streamers *(spectating a table already works; this would add a dedicated streamer-friendly view)*.
 7. Native review of the machine-assisted translations *(36 languages ship today; some wordings — poker terms especially — would benefit from a native pass)*.
 
