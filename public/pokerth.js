@@ -9989,11 +9989,13 @@ var LOBBY_PANEL_GAP = 14;
 function _winGate(){ try{ return window.matchMedia('(min-width:900px) and (min-height:600px)').matches; }catch(e){ return false; } }
 function _chatGate(){ try{ return window.matchMedia('(min-width:900px) and (hover:hover) and (pointer:fine)').matches; }catch(e){ return false; } }
 function _placeWin(panel, left, top){
+  // right/bottom:auto AVANT de mesurer : un panneau encore en base CSS
+  // (left:0;right:0) mesurerait une largeur pleine et se collerait au bord.
+  panel.style.right='auto';   panel.style.bottom='auto';
   var w=panel.offsetWidth, h=panel.offsetHeight, vw=window.innerWidth, vh=window.innerHeight;
   left=Math.max(4, Math.min(left, vw-w-4));
   top =Math.max(4, Math.min(top,  vh-h-4));
   panel.style.left=left+'px'; panel.style.top=top+'px';
-  panel.style.right='auto';   panel.style.bottom='auto';
 }
 function _saveWin(panel, key){
   if(!key) return;
@@ -10192,7 +10194,7 @@ function _makeHandsDraggable(card){
 function resetWindows(){
   // Bouton reset du header (≥900px) : efface les positions memorisees et remet
   // chat/journal/reactions en bandeau + recentre la carte des combinaisons.
-  ['pth_winpos_chat','pth_winpos_lobbychat','pth_winpos_log','pth_winpos_react','pth_winpos_theme','pth_winpos_hands'].forEach(function(k){ try{ localStorage.removeItem(k); }catch(e){} });
+  ['pth_winpos_chat','pth_winpos_lobbychat','pth_winpos_log2','pth_winpos_react','pth_winpos_theme','pth_winpos_hands'].forEach(function(k){ try{ localStorage.removeItem(k); }catch(e){} });
   ['g-chat-panel','lobby-chat-panel','g-log-panel','g-reaction-panel'].forEach(function(id){ var p=document.getElementById(id); if(p) _disableFloating(p); });
   var card=document.getElementById('hands-card-inner');
   if(card){
@@ -10715,7 +10717,7 @@ function toggleLog() {
   if (btn) btn.style.color       = isHidden ? 'var(--gold)' : '';
   if (isHidden) {
     // Poignée de redimensionnement, identique au chat (glisser pour étendre).
-    if (_winGate()) { _attachFloatControls(panel, { key:'pth_winpos_log', handle: panel.querySelector('.g-chat-panel-header'), resizable:true, minW:240, minH:140, defW: _chatGate() ? 340 : 280 }); }
+    if (_winGate()) { _attachFloatControls(panel, { key:'pth_winpos_log2', handle: panel.querySelector('.g-chat-panel-header'), resizable:true, minW:240, minH:140, defW: window.innerWidth >= 1400 ? 340 : 280 }); }
     else { _disableFloating(panel); makeChatResizable(panel, document.getElementById('g-log-body')); }
     var lb = document.getElementById('g-log-body');
     if (lb) lb.scrollTop = 0; // le plus récent est en haut (liste inversée)
@@ -10874,7 +10876,7 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.2.496'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.2.497'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
