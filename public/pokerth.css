@@ -5604,6 +5604,7 @@ html[data-seat-img-self] .player-bar {
    Position/taille pilotees en inline par le JS (left/top/width/height).
    ════════════════════════════════════════════════════════════════════════ */
 #g-chat-panel.floating-win,
+#lobby-chat-panel.floating-win,
 #g-log-panel.floating-win,
 #g-reaction-panel.floating-win {
   border: 1px solid var(--gold-dim);
@@ -5611,6 +5612,9 @@ html[data-seat-img-self] .player-bar {
   box-shadow: 0 14px 36px rgba(0,0,0,0.62);
   overflow: hidden;            /* coins arrondis nets + borne les poignees */
 }
+/* Chat du lobby flottant : la zone messages remplit la fenetre (annule le
+   max-height:120px inline du mode accroche). */
+#lobby-chat-panel.floating-win .chat-msgs { max-height: none !important; flex: 1 1 auto; min-height: 0; }
 /* La barre de titre devient la poignee de deplacement. */
 .floating-win .g-chat-panel-header,
 .floating-win .react-panel-title { cursor: move; touch-action: none; -webkit-user-select: none; user-select: none; }

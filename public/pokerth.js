@@ -10113,7 +10113,7 @@ function _disableFloating(panel){
   panel._winRszWired=false;   // re-injectable si on repasse en flottant
 }
 window.addEventListener('resize', function(){
-  ['g-chat-panel','g-log-panel','g-reaction-panel'].forEach(function(id){
+  ['g-chat-panel','lobby-chat-panel','g-log-panel','g-reaction-panel'].forEach(function(id){
     var p=document.getElementById(id);
     if(p && p.classList.contains('floating-win') && p.style.display!=='none'){
       var r=p.getBoundingClientRect(); _placeWin(p, r.left, r.top);
@@ -10192,8 +10192,8 @@ function _makeHandsDraggable(card){
 function resetWindows(){
   // Bouton reset du header (≥900px) : efface les positions memorisees et remet
   // chat/journal/reactions en bandeau + recentre la carte des combinaisons.
-  ['pth_winpos_chat','pth_winpos_log','pth_winpos_react','pth_winpos_theme','pth_winpos_hands'].forEach(function(k){ try{ localStorage.removeItem(k); }catch(e){} });
-  ['g-chat-panel','g-log-panel','g-reaction-panel'].forEach(function(id){ var p=document.getElementById(id); if(p) _disableFloating(p); });
+  ['pth_winpos_chat','pth_winpos_lobbychat','pth_winpos_log','pth_winpos_react','pth_winpos_theme','pth_winpos_hands'].forEach(function(k){ try{ localStorage.removeItem(k); }catch(e){} });
+  ['g-chat-panel','lobby-chat-panel','g-log-panel','g-reaction-panel'].forEach(function(id){ var p=document.getElementById(id); if(p) _disableFloating(p); });
   var card=document.getElementById('hands-card-inner');
   if(card){
     card.classList.remove('hands-floatable');
@@ -10290,6 +10290,17 @@ function toggleLobbyChat() {
     var _hdr = document.querySelector('#s-lobby .header');
     if (_hdr) panel.style.top = Math.round(_hdr.getBoundingClientRect().bottom) + 'px';
     var _chat = document.getElementById('chat');
+    if (_chatGate()) {
+      // Desktop souris : fenetre flottante (drag + resize + detachement), comme le
+      // chat en jeu. Pas de reservation d'espace : elle flotte au-dessus des tables.
+      if (_lb) _lb.style.paddingTop = '';
+      _attachFloatControls(panel, { key:'pth_winpos_lobbychat', handle: panel.querySelector('.g-chat-panel-header'), resizable:true, minW:240, minH:160 });
+      if (typeof clearUnreadChat === 'function') clearUnreadChat();
+      if (_chat) _chat.scrollTop = _chat.scrollHeight;
+      setTimeout(function(){ var ci = document.getElementById('chat-in'); if(ci) ci.focus(); }, 80);
+      return;
+    }
+    _disableFloating(panel);
     var _defReserve = 0;
     // Overlay : les tables suivent le panneau quand il rétrécit, mais restent
     // en place (recouvertes) quand il dépasse sa taille d'ouverture.
@@ -10863,7 +10874,7 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.2.492'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.2.493'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
