@@ -10023,7 +10023,7 @@ function makeWinDraggable(panel, handle, key){
   handle.addEventListener('pointerdown', function(e){
     if(panel._winDrag===false) return;       // inerte hors mode flottant
     if(e.target.closest && e.target.closest('button')) return; // boutons d'en-tete
-    _ensureFloating(panel);
+    _ensureFloating(panel, e);
     drag=true;
     var r=panel.getBoundingClientRect();
     sx=e.clientX; sy=e.clientY; sl=r.left; st=r.top;
@@ -10121,7 +10121,7 @@ window.addEventListener('resize', function(){
   });
 });
 
-function _ensureFloating(panel){
+function _ensureFloating(panel, dragEv){
   // Promotion bandeau -> fenetre flottante au 1er drag/resize. No-op si deja
   // flottant ou si l'element n'a pas opte (panel._winOpt absent, ex. carte mains).
   if (!panel || panel.classList.contains('floating-win') || !panel._winOpt) return;
@@ -10129,9 +10129,22 @@ function _ensureFloating(panel){
   panel.classList.add('floating-win');
   panel._winDrag=true; panel._winResizable=!!opt.resizable;
   panel.style.setProperty('max-height','none','important');
-  panel.style.width=Math.round(r.width)+'px';
-  panel.style.height=Math.round(r.height)+'px';
-  _placeWin(panel, r.left, r.top);
+  var newW=Math.round(r.width), newH=Math.round(r.height), left=r.left, top=r.top;
+  // Detachement en TIRANT la barre de titre (dragEv present) : on retrecit en
+  // vraie fenetre compacte, recentree sous le curseur (comme restaurer une
+  // fenetre maximisee). Le resize (dragEv absent) garde la taille courante.
+  if (dragEv){
+    var dw=opt.defW||340, dh=opt.defH||300;
+    if (newW>dw){
+      var relX=r.width ? (dragEv.clientX-r.left)/r.width : 0.5;
+      left=Math.round(dragEv.clientX - relX*dw);
+      newW=dw;
+    }
+    if (newH>dh) newH=dh;
+  }
+  panel.style.width=newW+'px';
+  panel.style.height=newH+'px';
+  _placeWin(panel, left, top);
   if (opt.resizable) makeWinResizable(panel, opt.key, opt.minW, opt.minH);
   _saveWin(panel, opt.key);
 }
@@ -10850,7 +10863,7 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.2.490'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.2.491'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
