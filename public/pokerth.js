@@ -10135,12 +10135,12 @@ function _ensureFloating(panel, dragEv){
   // fenetre maximisee). Le resize (dragEv absent) garde la taille courante.
   if (dragEv){
     var dw=opt.defW||340, dh=opt.defH||300;
-    if (newW>dw){
-      var relX=r.width ? (dragEv.clientX-r.left)/r.width : 0.5;
-      left=Math.round(dragEv.clientX - relX*dw);
-      newW=dw;
-    }
-    if (newH>dh) newH=dh;
+    // On FIXE les deux dimensions (et non "reduire si plus grand") : un bandeau
+    // court comme reactions (1 rangee, ~120px) doit s'AGRANDIR a sa taille fenetre
+    // pour montrer tous les emojis d'un coup.
+    var relX=r.width ? (dragEv.clientX-r.left)/r.width : 0.5;
+    left=Math.round(dragEv.clientX - relX*dw);
+    newW=dw; newH=dh;
   }
   panel.style.width=newW+'px';
   panel.style.height=newH+'px';
@@ -10680,7 +10680,7 @@ function toggleReactionPanel() {
   if (!panel) return;
   var open = panel.style.display === 'none' || panel.style.display === '';
   panel.style.display = open ? 'flex' : 'none';
-  if (open) { if (_winGate()) { _attachFloatControls(panel, { key:'pth_winpos_react', handle: panel.querySelector('.react-panel-title'), resizable:true, minW:240, minH:160 }); } else { _disableFloating(panel); } }
+  if (open) { if (_winGate()) { _attachFloatControls(panel, { key:'pth_winpos_react', handle: panel.querySelector('.react-panel-title'), resizable:true, minW:240, minH:160, defW:330, defH:340 }); } else { _disableFloating(panel); } }
   if (btn) {
     btn.style.background  = open ? 'rgba(var(--gold-rgb),0.2)' : '';
     btn.style.borderColor = open ? 'var(--gold-dim)' : '';
@@ -10863,7 +10863,7 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.2.491'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.2.492'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
