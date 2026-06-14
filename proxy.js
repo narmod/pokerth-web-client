@@ -756,7 +756,7 @@ initDb();
 function readJsonBody(req, cb) {
   let body = '';
   req.on('data', function (c) { body += c; if (body.length > 16384) req.destroy(); });
-  req.on('end', function () { try { cb(JSON.parse(body || '{}')); } catch (e) { cb(null); } });
+  req.on('end', function () { let p; try { p = JSON.parse(body || '{}'); } catch (e) { return cb(null); } cb(p); });
   req.on('error', function () { cb(null); });
 }
 // Absolute sanity ceiling for chip totals. This is NOT anti-cheat: the model
@@ -1921,6 +1921,7 @@ const httpServer = http.createServer((req, res) => {
   // index HTML instead of falling through to the static-file branch
   // and 404'ing on a nonexistent file named "/?host=...".
   const reqPathOnly = req.url.split('?')[0];
+  const query = url.parse(req.url, true).query;
   if (reqPathOnly === '/admin' || reqPathOnly === '/admin.html' || reqPathOnly.indexOf('/admin/') === 0) {
     handleAdmin(req, res, reqPathOnly, url.parse(req.url, true).query);
     return;
