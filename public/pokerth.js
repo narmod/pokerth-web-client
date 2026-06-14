@@ -10715,7 +10715,7 @@ function toggleLog() {
   if (btn) btn.style.color       = isHidden ? 'var(--gold)' : '';
   if (isHidden) {
     // Poignée de redimensionnement, identique au chat (glisser pour étendre).
-    if (_winGate()) { _attachFloatControls(panel, { key:'pth_winpos_log', handle: panel.querySelector('.g-chat-panel-header'), resizable:true, minW:240, minH:140 }); }
+    if (_winGate()) { _attachFloatControls(panel, { key:'pth_winpos_log', handle: panel.querySelector('.g-chat-panel-header'), resizable:true, minW:240, minH:140, defW: _chatGate() ? 340 : 280 }); }
     else { _disableFloating(panel); makeChatResizable(panel, document.getElementById('g-log-body')); }
     var lb = document.getElementById('g-log-body');
     if (lb) lb.scrollTop = 0; // le plus récent est en haut (liste inversée)
@@ -10874,7 +10874,7 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.2.495'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.2.496'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
