@@ -5667,6 +5667,11 @@ html[data-seat-img-self] .player-bar {
 #s-game .header .btn-sm.win-reset-only { display: none; }
 @media (min-width: 900px) and (min-height: 600px) { #s-game .header .btn-sm.win-reset-only { display: inline-flex; } }
 
+/* Bouton reset des fenetres dans le LOBBY : desktop SOURIS uniquement
+   (exclu tablette/mobile via hover + pointer:fine), comme le gate du chat lobby. */
+#s-lobby .header .btn-sm.win-reset-lobby { display: none; }
+@media (min-width: 900px) and (hover: hover) and (pointer: fine) { #s-lobby .header .btn-sm.win-reset-lobby { display: inline-flex; } }
+
 
 /* ════════════════════════════════════════════════════════════════════════
    Combinaisons (memo des mains) : sur tablette/desktop l'overlay ne fait plus
