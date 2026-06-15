@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- PokerTH official table (QML gameTableUHD), AGPL-3.0.
+     Source: github.com/pokerth/pokerth (src/gui/qt6-qml/resources). -->
+<PokerTH_TableStyle version="1.0">
+  <StyleDescription value="PokerTH Official"/>
+  <Creator value="PokerTH project"/>
+  <License value="AGPL-3.0"/>
+</PokerTH_TableStyle>

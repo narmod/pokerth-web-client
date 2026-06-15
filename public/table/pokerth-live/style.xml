@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- PokerTH-live (spectator) look. Felt+rail recomposed to match the live
+     spectator table; wood texture from github.com/pokerth/pokerth-live. -->
+<PokerTH_TableStyle version="1.0">
+  <StyleDescription value="PokerTH Live (spectator)"/>
+  <Creator value="PokerTH project / pokerth-live"/>
+</PokerTH_TableStyle>
