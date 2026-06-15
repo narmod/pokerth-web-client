@@ -10705,11 +10705,9 @@ function toggleMusicPanel() {
 window.toggleMusicPanel = toggleMusicPanel;
 
 function toggleReactionPanel() {
-  if (window._directWS) { // pokerth.net : réactions désactivées
-    var _p = document.getElementById('g-reaction-panel'); if (_p) _p.style.display = 'none';
-    var _b = document.getElementById('react-toggle-btn'); if (_b) _b.style.display = 'none';
-    return;
-  }
+  // Réactions actives partout, y compris pokerth.net : sendReaction() relaie
+  // via la commande /emoji dans le chat de partie (interop web <-> Qt/QML).
+  // L'ancien garde-fou _directWS masquait le bouton sur pokerth.net (régression).
   var panel = document.getElementById('g-reaction-panel');
   var btn   = document.getElementById('react-toggle-btn');
   if (!panel) return;
@@ -10899,7 +10897,7 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.3.5-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.6-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
