@@ -253,9 +253,15 @@ html { touch-action: manipulation; -webkit-text-size-adjust: 100%; text-size-adj
   background: var(--table-img, none) center / contain no-repeat;
   border: 0;
   border-radius: 0;
-  box-shadow: 0 18px 50px rgba(0,0,0,0.55);
+  box-shadow: none;
+  filter: drop-shadow(0 12px 18px rgba(0,0,0,0.40));
 }
 :root[data-table-full="1"] .felt-oval::before { display: none; }
+/* Full image (data-table-full): the table PNG carries its own felt + rail with
+   transparent corners, so the frame/zone behind it must stay transparent —
+   otherwise a light panel shows through the corners. Scoped to full mode only. */
+:root[data-table-full="1"] .table-scaler,
+:root[data-table-full="1"] .table-zone { background: transparent !important; }
 
 /* Table « Fullscreen » : l'image du pack part en fond plein ecran (--wallpaper,
    active par data-bg-img -> regle body.in-game ci-dessous) et l'ovale devient
