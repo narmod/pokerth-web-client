@@ -238,6 +238,8 @@ Just want to deal a hand with the family? Start a private table in seconds:
 4. Leave the server selector on **LAN / Dedicated server** (the default), pick a nickname, and join or create a table.
 5. Deal cards and enjoy!
 
+> First connection to a self-hosted PokerTH server on your network? Its **LAN IP must be on the proxy allowlist** or the connect screen can't reach it — add it in **`/admin` → Server → Proxy → Extra allowed hosts** (details in the [one-liner install notes](#quick-install-one-liner)).
+
 ---
 
 ## Architecture
@@ -406,6 +408,8 @@ PORT=8090 NO_TLS=1 ASSUME_YES=1 \
 ```
 
 For HTTPS (recommended — many mobile browsers block plain `ws://`), follow the Nginx + Let's Encrypt steps in the manual installation below.
+
+> **Connecting to a LAN / local PokerTH server?** For anti-open-relay safety the proxy only dials servers on an allowlist. `pokerth.net` and `localhost` / `127.0.0.1` are allowed out of the box, but your PokerTH server's **LAN address must be added explicitly** — the client reaches it by LAN IP (e.g. `192.168.1.110`), **not** `localhost`, even when the game server runs on the **same machine** as the proxy. Easiest after install: open **`/admin` → Server tab → Proxy → Extra allowed hosts**, add the IP (one per line) and save — it applies live, no restart. You can also register the server under the **Game servers** tab, or set `ALLOWED_HOSTS` (see [Environment variables](#env-vars)).
 
 </details>
 
