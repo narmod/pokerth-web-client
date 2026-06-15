@@ -316,7 +316,7 @@ function _isLightColor(c){
   return (0.299*p[0] + 0.587*p[1] + 0.114*p[2]) > 140;
 }
 function _injectPalette(pkg){
-  var keys = PALETTE_TOKENS;
+  var keys = PALETTE_TOKENS.concat(['gold-rgb','field-bg','inset','inset-hi']);
   if (pkg && pkg.tokens) {
     var t = pkg.tokens, d = {};
     var grgb = _hexToRgb(t.gold);
@@ -325,8 +325,7 @@ function _injectPalette(pkg){
     var lightPal = (typeof t['text-hi'] === 'string') && !_isLightColor(t['text-hi']); // texte sombre => palette claire
     if (t['inset'] == null)    d['inset']    = lightPal ? 'rgba(0,0,0,0.06)' : 'rgba(255,255,255,0.05)';
     if (t['inset-hi'] == null) d['inset-hi'] = lightPal ? 'rgba(0,0,0,0.08)' : 'rgba(255,255,255,0.08)';
-    var dk = Object.keys(d);
-    if (dk.length) { pkg = Object.assign({}, pkg, { tokens: Object.assign({}, t, d) }); keys = PALETTE_TOKENS.concat(dk); }
+    if (Object.keys(d).length) { pkg = Object.assign({}, pkg, { tokens: Object.assign({}, t, d) }); }
   }
   _injectAxis(keys, pkg, 'pth_theme_css', false);
 }
