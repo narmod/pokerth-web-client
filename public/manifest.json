@@ -1,7 +1,7 @@
 {
   "name": "PokerTH Web Client",
   "short_name": "PokerTH",
-  "description": "Client web pour les serveurs PokerTH \u2014 Texas Hold'em",
+  "description": "Web client for PokerTH servers \u2014 Texas Hold'em poker",
   "start_url": "/",
   "id": "/",
   "scope": "/",
@@ -80,5 +80,5 @@
       "label": "Lobby \u2014 available tables"
     }
   ],
-  "lang": "fr"
+  "lang": "en"
 }

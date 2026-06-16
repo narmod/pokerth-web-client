@@ -277,6 +277,7 @@ pokerth-web-client/
 ├── public/
 │   ├── pokerth-client.html  # HTML shell + inline head scripts
 │   ├── admin.html           # Maintainer console (served at /admin)
+│   ├── privacy.html         # Privacy page (served at /privacy)
 │   ├── pokerth.js           # Full application logic
 │   ├── pokerth.css          # Styles
 │   ├── manifest.json        # PWA manifest
@@ -288,6 +289,7 @@ pokerth-web-client/
 │   │   ├── lang/            #   36 language catalogues
 │   │   └── offline/         #   local game engine + bots (Training mode)
 │   ├── proto/               # Protobuf bundle & helpers
+│   ├── cards/  table/  themes/  music/   # Deck / felt / theme / music asset packs
 │   └── favicon-*.png        # PWA icons
 ├── docs/
 │   ├── PROJECT.md
@@ -296,6 +298,7 @@ pokerth-web-client/
 │   └── screenshots/         # Screenshots used in this README
 ├── scripts/
 │   ├── build-proto.mjs      # Regenerates the protobuf bundle from .proto
+│   ├── *-manifest.mjs       # Generate deck / table / theme / seat manifests
 │   └── reset-stats.mjs      # Clears the family leaderboard (npm run stats:reset)
 ├── install.sh               # Installer / updater / uninstaller (one-liner)
 ├── Dockerfile               # Multi-arch image (node:20-alpine base)
@@ -888,7 +891,7 @@ A few things worth knowing if you plan to hack on this:
 - The bulk of the logic still lives in a single `pokerth.js` file, though i18n, sounds and the protocol layer have already been extracted into ES modules. Further splitting would help.
 - More automated protocol tests are needed before calling the client production-ready.
 - Spectator mode works but lacks a few quality-of-life touches (e.g. you cannot see other players' cards at showdown the same way the native client does).
-- **Training-mode bots use a simple heuristic AI.** They're perfect for learning the flow, practising the interface, or playing offline with no server — but they won't bluff or adapt like a strong human opponent.
+- **Training-mode bots are a solid practice opponent, not a top pro.** They use Monte-Carlo equity against the real number of opponents, play five distinct archetypes (Rock, TAG, LAG, Calling-station, Maniac), and add position-aware pre-flop play plus continuation bets and semi-bluffs — great for learning the flow, practising the interface, or playing offline with no server, but they still won’t read and adapt to you like a strong human.
 - **PWA features (install to home screen, offline Service Worker, background notifications) require a *secure context*** — i.e. HTTPS, or `localhost`. Over plain `http://` on a LAN IP (e.g. `192.168.1.10:8080`) the game plays perfectly, but the browser disables those three features by design. To get them on a LAN, serve the client over HTTPS — e.g. [`mkcert`](https://github.com/FiloSottile/mkcert) for a locally-trusted certificate, a self-signed cert, a real domain with Let's Encrypt, or a tunnel such as Cloudflare Tunnel / Tailscale.
 - **Translations are not yet natively reviewed.** The 36 language catalogues were produced with care but are largely machine-assisted, so some wordings — especially poker-specific terms — may be imperfect, the less common languages (e.g. Scottish Gaelic, Tamil) most of all. Corrections via issue or pull request are very welcome.
 
@@ -897,13 +900,7 @@ A few things worth knowing if you plan to hack on this:
 <a id="roadmap"></a>
 ## Roadmap / Suggested next steps
 
-1. **Adopt the generated Protobuf bindings.** A protobuf.js runtime and classes generated from `pokerth.proto` now live in `public/proto/`; what remains is switching `pokerth.js` over from its inline hand-written codec to that bundle.
-2. Split the client into maintainable ES modules *(in progress — i18n, sounds and the Protobuf bindings are already extracted; the bulk still lives in `pokerth.js`)*.
-3. Add automated protocol tests with a mock PokerTH server.
-4. Polish reconnection edge cases *(currently exponential backoff, capped at 3–6 attempts depending on the transport)*.
-5. **Smarter training-mode bots** — position awareness, continuation betting, and more distinct play-style archetypes *(today's bots use a simple heuristic AI — see [Known limitations](#known-limitations))*.
-6. A read-only embed for streamers *(spectating a table already works; this would add a dedicated streamer-friendly view)*.
-7. Native review of the machine-assisted translations *(36 languages ship today; some wordings — poker terms especially — would benefit from a native pass)*.
+Development is tracked in **[`docs/ROADMAP.md`](docs/ROADMAP.md)**, grouped as *Shipped · Now · Next · Later*. In short: the current focus is the registered-account login flow on pokerth.net and code-health work — splitting `pokerth.js` into modules, adding linting and an automated test suite, and moving the remaining hand-written Protobuf paths onto the generated bundle in `public/proto/`. Further out: local multiplayer over WebRTC, a streamer-friendly read-only embed, and a native review of the machine-assisted translations.
 
 ---
 

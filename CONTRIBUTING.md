@@ -13,8 +13,8 @@ features.
   machine-assisted, so native review is especially valuable (see below).
 - **Send a pull request** — see the workflow further down.
 
-For questions and ideas that aren't quite issues, use **Discussions** if it's
-enabled on the repo.
+For questions and ideas that aren't quite issues, head over to
+[**Discussions**](https://github.com/narmod/pokerth-web-client/discussions).
 
 ## Development setup
 
