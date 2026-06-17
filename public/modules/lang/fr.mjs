@@ -329,6 +329,8 @@ export const strings = {
     piStatusSittingOut:'Absent',
     piStatusEliminated:'Éliminé',
     piViewProfile:'Voir le profil pokerth.net',
+    rankingTooltip:'Classement', rankingTitle:'Classement', rankingPth:'PokerTH', rankingBbc:'BBC', rankingWec:'WEC',
+    rankingLoading:'Chargement…', rankingSoon:'Classement bientôt disponible.', rankingError:'Impossible de charger le classement.', rankingEmpty:'Aucune entrée.',
 };
 
 export default { meta, strings };

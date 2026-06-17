@@ -267,6 +267,7 @@ function onAvatarImageChosen(input) {
     <a class="btn-sm btn-icon" href="https://www.pokerth.net/" target="_blank" rel="noopener noreferrer" title="PokerTH.net" aria-label="PokerTH.net"><img src="https://www.pokerth.net/favicon.ico" alt="" onerror="this.onerror=null;this.replaceWith('🌐')"></a>
     <a class="btn-sm btn-icon" href="https://discord.gg/QU3nu2MqvB" target="_blank" rel="noopener noreferrer" title="Discord" aria-label="Discord"><svg viewBox="0 0 24 24" style="display:block;width:18px;height:18px" fill="#5865F2" aria-hidden="true"><path d="M20.317 4.3698a19.7913 19.7913 0 00-4.8851-1.5152.0741.0741 0 00-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6177-1.2495a.077.077 0 00-.0785-.037 19.7363 19.7363 0 00-4.8852 1.515.0699.0699 0 00-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 00.0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.0777.0777 0 00.0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 00-.0416-.1057c-.6528-.2476-1.2743-.5495-1.8722-.8923a.077.077 0 01-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 01.0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 01.0785.0095c.1202.099.246.1981.3728.2924a.077.077 0 01-.0066.1276 12.2986 12.2986 0 01-1.873.8914.0766.0766 0 00-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 00.0842.0286c1.961-.6067 3.9495-1.5219 6.0023-3.0294a.077.077 0 00.0313-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6604a.061.061 0 00-.0312-.0286zM8.02 15.3312c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9555-2.4189 2.157-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.9555 2.4189-2.1569 2.4189zm7.9748 0c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9554-2.4189 2.1569-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.946 2.4189-2.1568 2.4189Z"/></svg></a>
     <a class="btn-sm btn-icon" href="https://bbc.pokerth.net/shoutbox" target="_blank" rel="noopener noreferrer" title="Shoutbox" aria-label="Shoutbox">🌐</a>
+    <button class="btn-sm btn-icon" id="ranking-btn-connect" onclick="openRankingModal()" title="Ranking" data-i18n-title="rankingTooltip" aria-label="Ranking">🏆</button>
   </div>
   <div class="card">
     <div class="card-logo" style="padding:18px 0 18px">
@@ -1589,6 +1590,103 @@ if ('serviceWorker' in navigator) {
     </div>
   </div>
 </div>
+
+<!-- Ranking modal (connect screen) — PokerTH / BBC / WEC leaderboards via the
+     same-origin /api/ranking relay (proxy.js). Entry point: 🏆 button next to
+     the corner globe. Tabs mirror sp0ck's QML CommunityPlayerView. Placeholder
+     for now — content/render refined once upstream endpoints + CSRF land. -->
+<div id="ranking-modal" style="display:none">
+  <div class="rk-backdrop" onclick="closeRankingModal()"></div>
+  <div class="rk-card" role="dialog" aria-labelledby="rk-title">
+    <button class="rk-close" type="button" onclick="closeRankingModal()" title="Fermer" data-i18n-title="closeTooltip" aria-label="Fermer">✕</button>
+    <div class="rk-title" id="rk-title">🏆 <span data-i18n="rankingTitle">Ranking</span></div>
+    <div class="rk-tabs">
+      <button type="button" class="rk-tab" data-src="pth" onclick="rankingSelect('pth')" data-i18n="rankingPth">PokerTH</button>
+      <button type="button" class="rk-tab" data-src="bbc" onclick="rankingSelect('bbc')" data-i18n="rankingBbc">BBC</button>
+      <button type="button" class="rk-tab" data-src="wec" onclick="rankingSelect('wec')" data-i18n="rankingWec">WEC</button>
+    </div>
+    <div class="rk-body">
+      <div class="rk-msg" id="rk-loading" data-i18n="rankingLoading">Loading…</div>
+      <div class="rk-msg" id="rk-soon" data-i18n="rankingSoon" style="display:none">Ranking coming soon.</div>
+      <div class="rk-msg" id="rk-error" data-i18n="rankingError" style="display:none">Could not load the ranking.</div>
+      <div class="rk-msg" id="rk-empty" data-i18n="rankingEmpty" style="display:none">No entries.</div>
+      <div id="rk-table-wrap" style="display:none"></div>
+    </div>
+  </div>
+</div>
+<script>
+(function () {
+  var RK_SRCS = ['pth', 'bbc', 'wec'];
+  var RK_CACHE = {};            // src -> { at, state, html }
+  var RK_TTL = 30000;
+  function $(id) { return document.getElementById(id); }
+  function rkState(which) {
+    ['loading', 'soon', 'error', 'empty'].forEach(function (s) {
+      var e = $('rk-' + s); if (e) e.style.display = (s === which) ? '' : 'none';
+    });
+    var tw = $('rk-table-wrap'); if (tw) tw.style.display = (which === 'table') ? '' : 'none';
+  }
+  function rkEsc(v) {
+    return String(v == null ? '' : v).replace(/[&<>"]/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c];
+    });
+  }
+  function rkOutcome(data) {
+    if (!data || data.ok === false) {
+      return { state: (data && data.error === 'endpoint_not_configured') ? 'soon' : 'error', html: '' };
+    }
+    var rows = Array.isArray(data) ? data
+      : (Array.isArray(data.rows) ? data.rows : (Array.isArray(data.data) ? data.data : null));
+    if (!rows || !rows.length) return { state: 'empty', html: '' };
+    var cols = Object.keys(rows[0]);
+    var h = '<table class="rk-table"><thead><tr>';
+    for (var i = 0; i < cols.length; i++) h += '<th>' + rkEsc(cols[i]) + '</th>';
+    h += '</tr></thead><tbody>';
+    for (var r = 0; r < rows.length; r++) {
+      h += '<tr>';
+      for (var k = 0; k < cols.length; k++) h += '<td>' + rkEsc(rows[r][cols[k]]) + '</td>';
+      h += '</tr>';
+    }
+    h += '</tbody></table>';
+    return { state: 'table', html: h };
+  }
+  function rkApply(o) {
+    if (o.state === 'table') { var tw = $('rk-table-wrap'); if (tw) tw.innerHTML = o.html; }
+    rkState(o.state);
+  }
+  window.openRankingModal = function () {
+    var m = $('ranking-modal'); if (!m) return;
+    m.style.display = 'flex';
+    rankingSelect('pth');
+  };
+  window.closeRankingModal = function () {
+    var m = $('ranking-modal'); if (m) m.style.display = 'none';
+  };
+  window.rankingSelect = function (src) {
+    if (RK_SRCS.indexOf(src) < 0) src = 'pth';
+    var tabs = document.querySelectorAll('#ranking-modal .rk-tab');
+    for (var i = 0; i < tabs.length; i++) tabs[i].classList.toggle('active', tabs[i].dataset.src === src);
+    var c = RK_CACHE[src];
+    if (c && (Date.now() - c.at) < RK_TTL) { rkApply(c); return; }
+    rkState('loading');
+    fetch('/api/ranking?src=' + encodeURIComponent(src), { headers: { 'Accept': 'application/json' } })
+      .then(function (r) { return r.text(); })
+      .then(function (t) {
+        var d; try { d = JSON.parse(t); } catch (e) { d = null; }
+        var o = rkOutcome(d);
+        RK_CACHE[src] = { at: Date.now(), state: o.state, html: o.html };
+        rkApply(RK_CACHE[src]);
+      })
+      .catch(function () { rkApply({ state: 'error', html: '' }); });
+  };
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') {
+      var m = $('ranking-modal');
+      if (m && m.style.display && m.style.display !== 'none') window.closeRankingModal();
+    }
+  });
+})();
+</script>
 
 </body>
 </html>

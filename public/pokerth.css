@@ -6023,3 +6023,43 @@ body.has-keyboard .act-key { display: inline-block; }
     border-radius: 14px;
   }
 }
+
+/* ═══════════════════════════════════════════════════════════════════
+   Ranking modal (connect screen) — PokerTH / BBC / WEC.
+   Entry: the 🏆 button in #s-connect .corner-links. Content via the
+   same-origin /api/ranking relay (see proxy.js). Self-contained so it
+   is easy to restyle or move later. All colours via palette tokens.
+   ═══════════════════════════════════════════════════════════════════ */
+#ranking-modal { position: fixed; inset: 0; z-index: 1200; align-items: center; justify-content: center; }
+.rk-backdrop { position: absolute; inset: 0; background: rgba(0,0,0,0.65); }
+.rk-card {
+  position: relative;
+  width: min(440px, calc(100vw - 32px));
+  max-height: min(80vh, 620px);
+  display: flex;
+  flex-direction: column;
+  background: var(--modal-bg);
+  border: 1px solid var(--border-hi);
+  border-radius: 6px;
+  box-shadow: 0 16px 50px rgba(0,0,0,0.8);
+  padding: 16px 18px 14px;
+}
+.rk-close { position: absolute; top: 8px; right: 10px; background: none; border: none; color: var(--text); font-size: 1.1rem; line-height: 1; cursor: pointer; transition: color 0.15s; }
+.rk-close:hover { color: var(--gold); }
+.rk-title { font-family: var(--ff-mono); font-size: 1rem; font-weight: 600; letter-spacing: 0.04em; color: var(--text-hi); margin-bottom: 12px; }
+.rk-tabs { display: flex; gap: 6px; margin-bottom: 12px; }
+.rk-tab {
+  flex: 1; padding: 7px 6px; cursor: pointer;
+  background: var(--inset); color: var(--text);
+  border: 1px solid var(--border); border-radius: 3px;
+  font-family: var(--ff-mono); font-size: 0.8rem; letter-spacing: 0.03em;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+}
+.rk-tab:hover { border-color: var(--border-hi); color: var(--text-hi); }
+.rk-tab.active { background: rgba(var(--gold-rgb), 0.18); border-color: var(--gold); color: var(--gold-hi); }
+.rk-body { flex: 1; min-height: 120px; overflow-y: auto; }
+.rk-msg { text-align: center; color: var(--text); opacity: 0.85; padding: 30px 8px; font-size: 0.82rem; }
+.rk-table { width: 100%; border-collapse: collapse; font-size: 0.78rem; font-family: var(--ff-mono); }
+.rk-table th { position: sticky; top: 0; background: var(--field-bg); text-align: left; color: var(--gold-dim); font-weight: 600; padding: 5px 8px; border-bottom: 1px solid var(--border); white-space: nowrap; }
+.rk-table td { padding: 4px 8px; border-bottom: 1px solid rgba(var(--gold-rgb), 0.08); color: var(--text-hi); }
+.rk-table tbody tr:hover td { background: rgba(var(--gold-rgb), 0.06); }
