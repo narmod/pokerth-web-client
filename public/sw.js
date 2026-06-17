@@ -8,8 +8,8 @@
  * Strategy (v4):
  *   • install   — precache the critical app shell (HTML, JS, CSS, modules,
  *                 manifest, key PWA icons)
- *   • activate  — drop stale caches, enable navigation preload, claim clients,
- *                 notify pages
+ *   • activate  — drop stale caches, enable navigation preload, notify pages
+ *                 (clients.claim is intentionally omitted — see activate note)
  *   • fetch     — split by request type for the best of both worlds:
  *                   – navigations (the HTML document) → NETWORK-FIRST, so a
  *                     fresh deploy is picked up immediately; falls back to the
@@ -23,7 +23,7 @@
  *                 Cross-origin requests and WS upgrades are left untouched.
  *                 (Fonts are now self-hosted and handled by SWR above.)
  */
-const CACHE_VERSION = 'pokerth-v0.3.12-beta';
+const CACHE_VERSION = 'pokerth-v0.3.13-beta';
 
 // Where navigations fall back to when the network is unavailable.
 const NAV_FALLBACK = '/pokerth-client.html';
@@ -133,8 +133,14 @@ self.addEventListener('install', function(e) {
       .then(function(c) { return c.addAll(ASSETS.map(function(u){ return new Request(u, { cache: 'reload' }); })); })
       .catch(function() { /* offline during install — skip */ })
   );
-  // Take over immediately without waiting for all tabs to close.
-  self.skipWaiting();
+  // NOTE: skipWaiting() is deliberately NOT called here. A freshly installed SW
+  // must WAIT until the user applies the update via the /__ver banner (which
+  // posts SKIP_WAITING below, then reloads). Auto-activating would let the new
+  // SW take over a live page and fire controllerchange, which can drop an
+  // in-flight WebSocket to the proxy (close 1005) → the PokerTH server reads it
+  // as a connect-then-drop and blocks the IP for a few minutes (the bug seen
+  // when reconnecting after a reload with a cleared cache). Waiting also keeps
+  // registration.waiting populated so the banner button has a worker to message.
 });
 
 // ── Activate : drop old caches, enable nav preload ──
@@ -156,9 +162,14 @@ self.addEventListener('activate', function(e) {
         return self.registration.navigationPreload.enable();
       }
     }).then(function() {
-      // Start controlling all open pages immediately.
-      return self.clients.claim();
-    }).then(function() {
+      // NOTE: clients.claim() is deliberately NOT called. Taking control of an
+      // already-loaded page fires controllerchange, which can drop an in-flight
+      // WebSocket to the proxy (close 1005) and make the PokerTH server treat it
+      // as a connect-then-drop → temporary IP block. This is the root cause of
+      // the buggy reconnect after a reload (reliably reproduced once the cache
+      // is cleared, since the SW then re-installs from scratch). Updates are
+      // user-driven (the /__ver banner → SKIP_WAITING → reload), so the SW only
+      // ever controls a freshly-navigated page, never a live one.
       // Tell pages a new version is live so they can offer a reload prompt.
       return self.clients.matchAll({ type: 'window' }).then(function(clients) {
         clients.forEach(function(client) {
