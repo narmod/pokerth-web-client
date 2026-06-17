@@ -2258,7 +2258,7 @@ const MSG = (() => {
     62:63, 63:64, 64:65, 65:66,               // Statistics, Chat*
     67:68, 68:69,                              // TimeoutWarning, ResetTimeout
     73:74,                                     // Error
-    78:79, 79:80, 80:81, 81:82,              // Spectator*
+    78:79, 79:80, 80:81, 81:82, 55:56, 56:57, 57:58, 58:59, 59:60, 60:61, 61:62,              // Spectator*
   };
 
   const T = {
@@ -2288,6 +2288,8 @@ const MSG = (() => {
     // Type 80/81 — separate from the lobby-level 78/79 which track
     // spectator counts across all tables.
     GameSpectatorJoined:80, GameSpectatorLeft:81,
+    AskKickPlayer:55, AskKickDenied:56, StartKickPetition:57, VoteKickRequest:58,
+    VoteKickReply:59, KickPetitionUpdate:60, EndKickPetition:61,
   };
 
   // Parse un buffer en {type, sub: champs du sous-message}
@@ -2485,7 +2487,21 @@ const MSG = (() => {
     return Proto.encode([[1,0,30],[31,2,msg]]);
   }
 
-  return { T, parse, buildInit, buildChat, buildGameChat, buildJoin, buildJoinGame, buildRejoinGame, buildStartEventAck, buildMyAction, buildCreateGame, buildLeaveGame, buildStartWithBots, buildKickPlayer };
+  // AskKickPlayerMessage (type 55, env field 56): gameId=1, playerId=2.
+  // Asks the server to open a community vote-kick petition. The server
+  // answers AskKickDenied if not allowed, else broadcasts StartKickPetition.
+  function buildAskKickPlayer(gameId, playerId) {
+    const msg = Proto.encode([[1,0,gameId],[2,0,playerId]]);
+    return Proto.encode([[1,0,T.AskKickPlayer],[56,2,msg]]);
+  }
+  // VoteKickRequestMessage (type 58, env field 59): gameId=1, petitionId=2,
+  // voteKick=3 (bool). Casts our vote on a running petition.
+  function buildVoteKick(gameId, petitionId, voteYes) {
+    const msg = Proto.encode([[1,0,gameId],[2,0,petitionId],[3,0,voteYes?1:0]]);
+    return Proto.encode([[1,0,T.VoteKickRequest],[59,2,msg]]);
+  }
+
+  return { T, parse, buildInit, buildChat, buildGameChat, buildJoin, buildJoinGame, buildRejoinGame, buildStartEventAck, buildMyAction, buildCreateGame, buildLeaveGame, buildStartWithBots, buildKickPlayer, buildAskKickPlayer, buildVoteKick };
 })();
 
 
@@ -2949,6 +2965,22 @@ const App = (() => {
       if (infoEl) {
         infoEl.innerHTML = _otherPlayerInfoHtml(targetPid);
         infoEl.style.display = '';
+        // Community vote-kick entry — live (online) game only, seated
+        // opponent, when we're seated and not the host (the host has the
+        // direct kick). The server still arbitrates via AskKickDenied.
+        try {
+          if (!window._offlineMode && gId && targetPid !== myId && !amGameAdmin &&
+              !_amSpectator && seatData[targetPid] && !seatData[targetPid].gone) {
+            var _vkBtn = document.createElement('button');
+            _vkBtn.className = 'pim-votekick-btn';
+            _vkBtn.textContent = t('petitionAsk');
+            _vkBtn.style.cssText = 'display:block;width:100%;margin-top:10px;padding:8px 0;' +
+              'border:1px solid var(--gold,#E3C800);border-radius:8px;cursor:pointer;' +
+              'background:transparent;color:var(--text,#eff1f5);font-weight:600';
+            _vkBtn.addEventListener('click', function(){ _petAsk(targetPid); });
+            infoEl.appendChild(_vkBtn);
+          }
+        } catch(e) {}
       }
     }
     modal.style.display = 'flex';
@@ -4178,6 +4210,122 @@ const App = (() => {
   }
 
   // ── HANDLER DE MESSAGES ──
+  // ══════════════════════════════════════════════════════════════════
+  //  Vote-kick / kick petitions (pokerth.net & dedicated servers)
+  //  The host kicks directly (KickPlayerRequest, see doKickConfirmed).
+  //  Any seated player can instead open a COMMUNITY petition: everyone
+  //  votes within a deadline and the server removes the target if enough
+  //  YES votes are gathered. The official Qt client has had this for years;
+  //  the web client used to ignore the whole message family. Gated to live
+  //  games (meaningless offline vs bots).
+  // ══════════════════════════════════════════════════════════════════
+  var _pet = null; // { petitionId, target, endsAt, timer, voted } | null
+  function _petName(pid) { return players[pid] || ('#' + pid); }
+  function _petClear() {
+    if (_pet && _pet.timer) { try { clearInterval(_pet.timer); } catch(e) {} }
+    _pet = null;
+    var b = document.getElementById('kick-petition-banner');
+    if (b) b.remove();
+  }
+  function _petStart(o) {
+    if (window._offlineMode) return;
+    if (gId && o.gameId && o.gameId !== gId) return;
+    _petClear();
+    var amTarget = (o.target === myId);
+    _pet = { petitionId: o.petitionId, target: o.target,
+             endsAt: Date.now() + (o.timeout > 0 ? o.timeout : 30) * 1000,
+             timer: null, voted: amTarget };
+    var b = document.createElement('div');
+    b.id = 'kick-petition-banner';
+    b.style.cssText = 'position:fixed;left:50%;top:12px;transform:translateX(-50%);' +
+      'z-index:9000;max-width:min(94vw,460px);padding:10px 14px;border-radius:12px;' +
+      'background:var(--modal-bg,#222a36);color:var(--text,#eff1f5);' +
+      'border:1px solid var(--gold,#E3C800);box-shadow:0 6px 24px rgba(0,0,0,.45);' +
+      'font-family:var(--ff-display,inherit);text-align:center';
+    var title = amTarget ? ('\u26A0 ' + t('petitionAgainstYou'))
+                         : ('\u26A0 ' + t('petitionTitle', { name: _petName(o.target) }));
+    b.innerHTML =
+      '<div style="font-weight:700;margin-bottom:4px">' + esc(title) + '</div>' +
+      '<div id="kp-tally" style="font-size:.82em;opacity:.85;margin-bottom:6px"></div>' +
+      '<div id="kp-time" style="font-size:.78em;opacity:.7;margin-bottom:8px"></div>' +
+      (amTarget ? '' :
+        '<div style="display:flex;gap:8px;justify-content:center">' +
+          '<button id="kp-yes" style="flex:1;max-width:140px;padding:8px 0;border:0;border-radius:8px;' +
+            'font-weight:700;cursor:pointer;background:rgba(var(--red-rgb,217,64,64),1);color:#fff">' +
+            esc(t('petitionVoteYes')) + '</button>' +
+          '<button id="kp-no" style="flex:1;max-width:140px;padding:8px 0;border:0;border-radius:8px;' +
+            'font-weight:700;cursor:pointer;background:var(--green,#3fae5a);color:#06210e">' +
+            esc(t('petitionVoteNo')) + '</button>' +
+        '</div>');
+    document.body.appendChild(b);
+    if (!amTarget) {
+      var y = document.getElementById('kp-yes'), n = document.getElementById('kp-no');
+      if (y) y.addEventListener('click', function(){ _petVote(true); });
+      if (n) n.addEventListener('click', function(){ _petVote(false); });
+    }
+    _petTick();
+    _pet.timer = setInterval(_petTick, 500);
+  }
+  function _petTick() {
+    if (!_pet) return;
+    if (!gId) { _petClear(); return; } // left the table → dismiss
+    var el = document.getElementById('kp-time');
+    var left = Math.max(0, Math.round((_pet.endsAt - Date.now()) / 1000));
+    if (el) el.textContent = t('petitionTimeLeft', { s: left });
+    if (left <= 0) {
+      var y = document.getElementById('kp-yes'), n = document.getElementById('kp-no');
+      if (y) y.disabled = true;
+      if (n) n.disabled = true;
+      if (_pet.timer) { try { clearInterval(_pet.timer); } catch(e) {} _pet.timer = null; }
+    }
+  }
+  function _petUpdate(petitionId, against, inFavour, needed) {
+    if (!_pet || _pet.petitionId !== petitionId) return;
+    var el = document.getElementById('kp-tally');
+    if (el) el.textContent = t('petitionTally', { y: inFavour, n: against, k: needed });
+  }
+  function _petVote(yes) {
+    if (!_pet || _pet.voted) return;
+    try { send(MSG.buildVoteKick(gId, _pet.petitionId, yes)); } catch(e) {}
+    _pet.voted = true;
+    var y = document.getElementById('kp-yes'), n = document.getElementById('kp-no');
+    if (y) y.disabled = true;
+    if (n) n.disabled = true;
+    var tEl = document.getElementById('kp-time');
+    if (tEl) tEl.textContent = t('petitionVoted');
+  }
+  function _petVoteReply(petitionId, replyType) {
+    if (replyType === 2 && typeof showToast === 'function') showToast(t('petitionAlreadyVoted'));
+  }
+  function _petEnd(petitionId, kicked, reason) {
+    if (!_pet || _pet.petitionId !== petitionId) return;
+    var target = _pet.target;
+    if (_pet.timer) { try { clearInterval(_pet.timer); } catch(e) {} _pet.timer = null; }
+    var msg;
+    if (kicked) msg = t('petitionResultKicked', { name: _petName(target) });
+    else if (reason === 3) msg = t('petitionEndTimeout');
+    else if (reason === 2) msg = t('petitionEndLeft');
+    else if (reason === 1) msg = t('petitionEndFew');
+    else msg = t('petitionResultRejected');
+    var b = document.getElementById('kick-petition-banner');
+    if (b) {
+      b.innerHTML = '<div style="font-weight:700">' + esc(msg) + '</div>';
+      setTimeout(function(){ var x = document.getElementById('kick-petition-banner'); if (x) x.remove(); }, 3500);
+    }
+    _pet = null;
+  }
+  function _petAskDenied(reason) {
+    if (typeof showToast === 'function') showToast(t('petitionDenied'));
+  }
+  // Open a petition against an opponent (from the profile popup).
+  function _petAsk(pid) {
+    if (window._offlineMode || !gId || pid === myId) return;
+    try { send(MSG.buildAskKickPlayer(gId, pid)); } catch(e) {}
+    if (typeof closePlayerInfoPopup === 'function') closePlayerInfoPopup();
+    if (typeof showToast === 'function') showToast(t('petitionStarted', { name: _petName(pid) }));
+  }
+  window._petAsk = _petAsk;
+
   function handleMsg(buf) {
     const { type, sub } = MSG.parse(buf);
     const T = MSG.T;
@@ -4185,6 +4333,35 @@ const App = (() => {
     switch (type) {
 
       // Le serveur s'annonce → on envoie notre Init
+      // ── Kick petitions / vote-kick ──
+      case T.StartKickPetition: {
+        _petStart({
+          gameId:     Proto.u32(sub, 1),
+          petitionId: Proto.u32(sub, 2),
+          proposer:   Proto.u32(sub, 3),
+          target:     Proto.u32(sub, 4),
+          timeout:    Proto.u32(sub, 5),
+          needed:     Proto.u32(sub, 6),
+        });
+        break;
+      }
+      case T.KickPetitionUpdate: {
+        _petUpdate(Proto.u32(sub, 2), Proto.u32(sub, 3), Proto.u32(sub, 4), Proto.u32(sub, 5));
+        break;
+      }
+      case T.VoteKickReply: {
+        _petVoteReply(Proto.u32(sub, 2), Proto.u32(sub, 3));
+        break;
+      }
+      case T.EndKickPetition: {
+        _petEnd(Proto.u32(sub, 2), Proto.u32(sub, 5), Proto.u32(sub, 6));
+        break;
+      }
+      case T.AskKickDenied: {
+        _petAskDenied(Proto.u32(sub, 3));
+        break;
+      }
+
       case T.Announce: {
         const pv    = Proto.sub(sub, 1); // protocolVersion (réseau, ex: 5.1)
         const gv    = Proto.sub(sub, 2); // latestGameVersion (appli, ex: 2.0)
@@ -10933,7 +11110,7 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.3.8-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.9-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
