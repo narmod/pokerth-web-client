@@ -1592,9 +1592,9 @@ if ('serviceWorker' in navigator) {
 </div>
 
 <!-- Ranking modal (connect screen) — PokerTH / BBC / WEC leaderboards via the
-     same-origin /api/ranking relay (proxy.js). Entry point: 🏆 button next to
-     the corner globe. Tabs mirror sp0ck's QML CommunityPlayerView. Name search
-     filters the table live (accent-insensitive). Placeholder/messages i18n. -->
+     same-origin /api/ranking relay (proxy.js). Entry: 🏆 button next to the
+     corner globe. BBC supports a season dropdown + All-Time (season 0) like the
+     official QML client; name search filters live (accent-insensitive). i18n. -->
 <div id="ranking-modal" style="display:none">
   <div class="rk-backdrop" onclick="closeRankingModal()"></div>
   <div class="rk-card" role="dialog" aria-labelledby="rk-title">
@@ -1606,6 +1606,14 @@ if ('serviceWorker' in navigator) {
       <button type="button" class="rk-tab" data-src="wec" onclick="rankingSelect('wec')" data-i18n="rankingWec">WEC</button>
     </div>
     <div class="rk-body">
+      <div class="rk-controls" id="rk-controls" style="display:none">
+        <label class="rk-season-lbl"><span data-i18n="rankingSeason">Season</span>:
+          <select id="rk-season" class="rk-season" onchange="rankingSeason()" aria-label="Season"></select>
+        </label>
+        <label class="rk-alltime-lbl">
+          <input type="checkbox" id="rk-alltime" onchange="rankingAllTime()"> <span data-i18n="rankingAllTime">All-Time</span>
+        </label>
+      </div>
       <div class="rk-search-wrap" id="rk-search-wrap" style="display:none">
         <input type="text" id="rk-search" class="rk-search" oninput="rankingFilter()" placeholder="Search a player…" autocomplete="off" spellcheck="false" aria-label="Search a player">
       </div>
@@ -1621,9 +1629,11 @@ if ('serviceWorker' in navigator) {
 <script>
 (function () {
   var RK_SRCS = ['pth', 'bbc', 'wec'];
-  var RK_CACHE = {};                                  // src -> { at, state, rows, cols }
+  var RK_CACHE = {};                              // src|season -> { at, state, rows, cols, season, seasons }
   var RK_TTL = 30000;
-  var RK_CUR = { state: 'loading', rows: [], cols: [] };
+  var RK_SRC = 'pth';
+  var RK_ALLTIME = false;
+  var RK_CUR = { state: 'loading', rows: [], cols: [], seasons: null, season: null };
   function $(id) { return document.getElementById(id); }
   function rkT(key, fb) { try { if (typeof window.t === 'function') { var v = window.t(key); if (v && v !== key) return v; } } catch (e) {} return fb; }
   function rkFold(s) { return String(s == null ? '' : s).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, ''); }
@@ -1649,7 +1659,6 @@ if ('serviceWorker' in navigator) {
     return h + '</tbody></table>';
   }
 
-  // Render the current dataset honouring the search box (filter on `player`).
   function rkRenderCurrent() {
     if (RK_CUR.state !== 'table') { rkState(RK_CUR.state); return; }
     var q = '', si = $('rk-search'); if (si) q = rkFold(si.value.trim());
@@ -1661,16 +1670,64 @@ if ('serviceWorker' in navigator) {
   }
   window.rankingFilter = function () { rkRenderCurrent(); };
 
+  // Season dropdown (newest first); rebuilt only when the season list changes.
+  function rkPopulateSeasons(seasons, current) {
+    var sel = $('rk-season'); if (!sel) return;
+    var ordered = seasons.slice().sort(function (a, b) { return b - a; });
+    var sig = ordered.join(',');
+    if (sel.getAttribute('data-sig') !== sig) {
+      var word = rkEsc(rkT('rankingSeason', 'Season'));
+      var html = '';
+      for (var i = 0; i < ordered.length; i++) html += '<option value="' + ordered[i] + '">' + word + ' ' + ordered[i] + '</option>';
+      sel.innerHTML = html;
+      sel.setAttribute('data-sig', sig);
+    }
+    sel.disabled = RK_ALLTIME;
+    if (!RK_ALLTIME && current != null && current > 0) sel.value = String(current);
+  }
+
+  function rkShow(o) {
+    RK_CUR = o;
+    var ctl = $('rk-controls');
+    if (o.state === 'table' && o.seasons && o.seasons.length) {
+      rkPopulateSeasons(o.seasons, o.season);
+      if (ctl) ctl.style.display = '';
+    } else if (ctl) {
+      ctl.style.display = 'none';
+    }
+    rkRenderCurrent();
+  }
+
   function rkOutcome(data) {
     if (!data || data.ok === false) {
-      return { state: (data && data.error === 'endpoint_not_configured') ? 'soon' : 'error', rows: [], cols: [] };
+      return { state: (data && data.error === 'endpoint_not_configured') ? 'soon' : 'error', rows: [], cols: [], seasons: null, season: null };
     }
     var rows = Array.isArray(data) ? data
       : (Array.isArray(data.rows) ? data.rows : (Array.isArray(data.data) ? data.data : null));
-    if (!rows || !rows.length) return { state: 'empty', rows: [], cols: [] };
-    return { state: 'table', rows: rows, cols: Object.keys(rows[0]) };
+    if (!rows || !rows.length) return { state: 'empty', rows: [], cols: [], seasons: null, season: null };
+    return { state: 'table', rows: rows, cols: Object.keys(rows[0]),
+             seasons: (Array.isArray(data.seasons) ? data.seasons : null),
+             season: (data.season != null ? data.season : null) };
   }
-  function rkShow(o) { RK_CUR = o; rkRenderCurrent(); }
+
+  // Fetch a source, optionally for a season (0 = All-Time on BBC).
+  function rkFetch(src, season) {
+    var url = '/api/ranking?src=' + encodeURIComponent(src);
+    if (season != null) url += '&season=' + encodeURIComponent(season);
+    var ck = src + '|' + (season != null ? season : '');
+    var c = RK_CACHE[ck];
+    if (c && (Date.now() - c.at) < RK_TTL) { rkShow({ state: c.state, rows: c.rows, cols: c.cols, seasons: c.seasons, season: c.season }); return; }
+    RK_CUR = { state: 'loading', rows: [], cols: [], seasons: null, season: null }; rkState('loading');
+    fetch(url, { headers: { 'Accept': 'application/json' } })
+      .then(function (r) { return r.text(); })
+      .then(function (t) {
+        var d; try { d = JSON.parse(t); } catch (e) { d = null; }
+        var o = rkOutcome(d);
+        RK_CACHE[ck] = { at: Date.now(), state: o.state, rows: o.rows, cols: o.cols, seasons: o.seasons, season: o.season };
+        rkShow(o);
+      })
+      .catch(function () { rkShow({ state: 'error', rows: [], cols: [], seasons: null, season: null }); });
+  }
 
   window.openRankingModal = function () {
     var m = $('ranking-modal'); if (!m) return;
@@ -1682,21 +1739,26 @@ if ('serviceWorker' in navigator) {
 
   window.rankingSelect = function (src) {
     if (RK_SRCS.indexOf(src) < 0) src = 'pth';
+    RK_SRC = src; RK_ALLTIME = false;
     var tabs = document.querySelectorAll('#ranking-modal .rk-tab');
     for (var i = 0; i < tabs.length; i++) tabs[i].classList.toggle('active', tabs[i].dataset.src === src);
+    var at = $('rk-alltime'); if (at) at.checked = false;
+    var ctl = $('rk-controls'); if (ctl) ctl.style.display = 'none';
     var si = $('rk-search'); if (si) si.value = '';
-    var c = RK_CACHE[src];
-    if (c && (Date.now() - c.at) < RK_TTL) { rkShow({ state: c.state, rows: c.rows, cols: c.cols }); return; }
-    RK_CUR = { state: 'loading', rows: [], cols: [] }; rkState('loading');
-    fetch('/api/ranking?src=' + encodeURIComponent(src), { headers: { 'Accept': 'application/json' } })
-      .then(function (r) { return r.text(); })
-      .then(function (t) {
-        var d; try { d = JSON.parse(t); } catch (e) { d = null; }
-        var o = rkOutcome(d);
-        RK_CACHE[src] = { at: Date.now(), state: o.state, rows: o.rows, cols: o.cols };
-        rkShow(o);
-      })
-      .catch(function () { rkShow({ state: 'error', rows: [], cols: [] }); });
+    rkFetch(src);
+  };
+
+  window.rankingSeason = function () {
+    var sel = $('rk-season'); if (!sel) return;
+    var at = $('rk-alltime'); if (at) at.checked = false; RK_ALLTIME = false;
+    rkFetch(RK_SRC, parseInt(sel.value, 10));
+  };
+
+  window.rankingAllTime = function () {
+    var at = $('rk-alltime'); RK_ALLTIME = !!(at && at.checked);
+    var sel = $('rk-season'); if (sel) sel.disabled = RK_ALLTIME;
+    if (RK_ALLTIME) rkFetch(RK_SRC, 0);
+    else rkFetch(RK_SRC, sel ? parseInt(sel.value, 10) : null);
   };
 
   document.addEventListener('keydown', function (e) {
@@ -1707,6 +1769,7 @@ if ('serviceWorker' in navigator) {
   });
 })();
 </script>
+
 
 
 </body>

@@ -332,6 +332,7 @@ export const strings = {
     rankingTooltip:'Classement', rankingTitle:'Classement', rankingPth:'PokerTH', rankingBbc:'BBC', rankingWec:'WEC',
     rankingLoading:'Chargement…', rankingSoon:'Classement bientôt disponible.', rankingError:'Impossible de charger le classement.', rankingEmpty:'Aucune entrée.',
     rankingSearch:'Rechercher un joueur…', rankingNoMatch:'Aucun joueur trouvé.',
+    rankingSeason:'Saison', rankingAllTime:'Tous les temps',
 };
 
 export default { meta, strings };

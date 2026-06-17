@@ -1932,7 +1932,7 @@ const RANKING_SOURCES = {
   pth: { name: 'PokerTH', url: '', csrf: null },   // public — no CSRF expected
   // BBC ranking is server-rendered into <ranking-component :results="...">
   // (HTML-entity-encoded JSON). A plain GET is enough — no CSRF for reads.
-  bbc: { name: 'BBC', url: 'https://bbc.pokerth.net/results/ranking', csrf: null, parse: rankingParseBbc },
+  bbc: { name: 'BBC', url: 'https://bbc.pokerth.net/results/ranking', csrf: null, parse: rankingParseBbc, supportsSeason: true },
   wec: { name: 'WEC', url: '',
          csrf: { url: '', read: 'meta', readName: 'csrf-token', send: 'header', sendName: 'X-CSRF-TOKEN' } }
 };
@@ -2000,9 +2000,22 @@ async function rankingCsrfToken(src) {
   return { token: token, cookie: (setCookie.split(';')[0] || '') };
 }
 
-async function rankingUpstream(src) {
+// season query -> upstream ?season=N (N=0 means All-Time on BBC). Sanitised to
+// a small non-negative integer; anything else is ignored (default season).
+function rankingSeasonParam(query) {
+  if (!query || query.season == null || query.season === '') return null;
+  const n = parseInt(query.season, 10);
+  return (Number.isInteger(n) && n >= 0 && n <= 999) ? n : null;
+}
+
+async function rankingUpstream(src, query) {
   if (!src.url) {
     return { status: 503, body: JSON.stringify({ ok: false, error: 'endpoint_not_configured', source: src.name }) };
+  }
+  let url = src.url;
+  if (src.supportsSeason) {
+    const sn = rankingSeasonParam(query);
+    if (sn != null) url += (url.indexOf('?') < 0 ? '?' : '&') + 'season=' + sn;
   }
   const headers = {};
   // HTML-scraped sources (e.g. BBC) must receive the rendered page, not a
@@ -2014,7 +2027,7 @@ async function rankingUpstream(src) {
     // 'query' / 'form' send variants: wire once the real flow is known (TODO).
     if (tok.cookie) headers['Cookie'] = tok.cookie;
   }
-  const r = await rankingFetch(src.url, headers);
+  const r = await rankingFetch(url, headers);
   const body = await r.text();
   if (!r.ok) {
     return { status: 502, body: JSON.stringify({ ok: false, error: 'upstream_' + r.status, source: src.name }) };
@@ -2045,7 +2058,7 @@ function handleRanking(req, res, query) {
     res.end(hit.body);
     return;
   }
-  rankingUpstream(src).then(function (out) {
+  rankingUpstream(src, query).then(function (out) {
     RANKING_CACHE.set(cacheKey, { at: Date.now(), status: out.status, body: out.body });
     res.writeHead(out.status, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'public, max-age=30', 'X-Ranking-Cache': 'miss' });
     res.end(out.body);

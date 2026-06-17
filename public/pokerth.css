@@ -6076,3 +6076,13 @@ body.has-keyboard .act-key { display: inline-block; }
 }
 .rk-search::placeholder { color: var(--text); opacity: 0.6; }
 .rk-search:focus { border-color: var(--gold); }
+
+/* Ranking season + All-Time controls — see #rk-controls in the ranking modal.
+   16px <select> font-size avoids the iOS focus-zoom on the connect screen. */
+.rk-controls { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin-bottom: 10px; font-family: var(--ff-mono); font-size: 0.82rem; color: var(--text); }
+.rk-season-lbl { display: inline-flex; align-items: center; gap: 6px; }
+.rk-season { font-family: var(--ff-mono); font-size: 16px; padding: 5px 8px; background: var(--field-bg); color: var(--text-hi); border: 1px solid var(--border); border-radius: 3px; outline: none; }
+.rk-season:focus { border-color: var(--gold); }
+.rk-season:disabled { opacity: 0.45; }
+.rk-alltime-lbl { display: inline-flex; align-items: center; gap: 6px; cursor: pointer; }
+.rk-alltime-lbl input { accent-color: var(--gold); width: 15px; height: 15px; cursor: pointer; }

@@ -332,6 +332,7 @@ export const strings = {
     rankingTooltip:'Ranking', rankingTitle:'Ranking', rankingPth:'PokerTH', rankingBbc:'BBC', rankingWec:'WEC',
     rankingLoading:'Loading…', rankingSoon:'Ranking coming soon.', rankingError:'Could not load the ranking.', rankingEmpty:'No entries.',
     rankingSearch:'Search a player…', rankingNoMatch:'No player found.',
+    rankingSeason:'Season', rankingAllTime:'All-Time',
 };
 
 export default { meta, strings };
