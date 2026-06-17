@@ -1913,6 +1913,111 @@ function handleAdmin(req, res, reqPathOnly, query) {
 }
 
 // ── HTTP server ──
+// ───────────────────────────────────────────────────────────────────────────
+// Ranking relay (server-side): PokerTH / BBC / WEC.
+// Browser fetch to these hosts is blocked by CORS (confirmed with sp0ck), so the
+// client calls our own same-origin /api/ranking?src=pth|bbc|wec and we fetch the
+// upstream JSON here, where there is no CORS and we set the User-Agent (a normal
+// browser UA is enough to pass the Cloudflare "under attack" filter).
+//
+// PENDING from sp0ck: the exact upstream JSON endpoints and the BBC/WEC CSRF flow.
+// Fill RANKING_SOURCES[*].url (and the .csrf block for bbc/wec) and the relay works
+// end to end. Until then /api/ranking returns endpoint_not_configured (HTTP 503).
+// ───────────────────────────────────────────────────────────────────────────
+const RANKING_UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 ' +
+                   '(KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36';
+
+const RANKING_SOURCES = {
+  // TODO(sp0ck): fill the exact JSON endpoints. BBC page ref: https://bbc.pokerth.net/results/ranking
+  pth: { name: 'PokerTH', url: '', csrf: null },   // public — no CSRF expected
+  bbc: { name: 'BBC', url: '',
+         csrf: { url: '', read: 'meta', readName: 'csrf-token', send: 'header', sendName: 'X-CSRF-TOKEN' } },
+  wec: { name: 'WEC', url: '',
+         csrf: { url: '', read: 'meta', readName: 'csrf-token', send: 'header', sendName: 'X-CSRF-TOKEN' } }
+};
+
+const RANKING_CACHE = new Map();        // cacheKey -> { at, status, body }
+const RANKING_TTL_MS = 60 * 1000;       // short cache to spare the upstream
+const RANKING_TIMEOUT_MS = 8000;
+
+function rankingFetch(targetUrl, extraHeaders) {
+  const ctl = new AbortController();
+  const t = setTimeout(function () { ctl.abort(); }, RANKING_TIMEOUT_MS);
+  const headers = Object.assign({
+    'User-Agent': RANKING_UA,
+    'Accept': 'application/json, text/plain, */*',
+    'Accept-Language': 'en-US,en;q=0.9'
+  }, extraHeaders || {});
+  return fetch(targetUrl, { headers: headers, redirect: 'follow', signal: ctl.signal })
+    .finally(function () { clearTimeout(t); });
+}
+
+// Read a CSRF token from an upstream page per the source's csrf.read strategy.
+// TODO(sp0ck): confirm the real mechanism (meta tag / cookie / JSON field) + how to send it.
+async function rankingCsrfToken(src) {
+  const c = src.csrf;
+  if (!c || !c.url) return { token: '', cookie: '' };
+  const r = await rankingFetch(c.url);
+  const setCookie = r.headers.get('set-cookie') || '';
+  const text = await r.text();
+  let token = '';
+  if (c.read === 'cookie') {
+    const m = new RegExp("(?:^|;\\s*)" + c.readName + "=([^;]+)").exec(setCookie);
+    token = m ? decodeURIComponent(m[1]) : '';
+  } else if (c.read === 'json') {
+    try { token = (JSON.parse(text) || {})[c.readName] || ''; } catch (e) { /* not json */ }
+  } else { // 'meta' — <meta name="csrf-token" content="...">
+    const m = new RegExp("<meta[^>]+name=[\"']" + c.readName + "[\"'][^>]+content=[\"']([^\"']+)", 'i').exec(text);
+    token = m ? m[1] : '';
+  }
+  return { token: token, cookie: (setCookie.split(';')[0] || '') };
+}
+
+async function rankingUpstream(src) {
+  if (!src.url) {
+    return { status: 503, body: JSON.stringify({ ok: false, error: 'endpoint_not_configured', source: src.name }) };
+  }
+  const headers = {};
+  if (src.csrf && src.csrf.url) {
+    const tok = await rankingCsrfToken(src);
+    if (tok.token && src.csrf.send === 'header') headers[src.csrf.sendName] = tok.token;
+    // 'query' / 'form' send variants: wire once the real flow is known (TODO).
+    if (tok.cookie) headers['Cookie'] = tok.cookie;
+  }
+  const r = await rankingFetch(src.url, headers);
+  const body = await r.text();
+  if (!r.ok) {
+    return { status: 502, body: JSON.stringify({ ok: false, error: 'upstream_' + r.status, source: src.name }) };
+  }
+  return { status: 200, body: body };
+}
+
+function handleRanking(req, res, query) {
+  const key = String((query && query.src) || '').toLowerCase();
+  const src = RANKING_SOURCES[key];
+  if (!src) {
+    res.writeHead(400, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' });
+    res.end(JSON.stringify({ ok: false, error: 'unknown_source', allowed: Object.keys(RANKING_SOURCES) }));
+    return;
+  }
+  const cacheKey = key + '|' + (req.url.split('?')[1] || '');
+  const hit = RANKING_CACHE.get(cacheKey);
+  if (hit && (Date.now() - hit.at) < RANKING_TTL_MS) {
+    res.writeHead(hit.status, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'public, max-age=30', 'X-Ranking-Cache': 'hit' });
+    res.end(hit.body);
+    return;
+  }
+  rankingUpstream(src).then(function (out) {
+    RANKING_CACHE.set(cacheKey, { at: Date.now(), status: out.status, body: out.body });
+    res.writeHead(out.status, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'public, max-age=30', 'X-Ranking-Cache': 'miss' });
+    res.end(out.body);
+  }).catch(function (err) {
+    res.writeHead(502, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' });
+    res.end(JSON.stringify({ ok: false, error: 'relay_failed', detail: String((err && err.message) || err) }));
+  });
+}
+
+
 const httpServer = http.createServer((req, res) => {
   // Serve the SPA shell for the root path. We strip the query string
   // before comparing so deep links like
@@ -1973,6 +2078,13 @@ const httpServer = http.createServer((req, res) => {
     res.end(JSON.stringify({ v: Math.floor(newest) }));
     return;
   }
+
+  // ── Ranking relay (PokerTH / BBC / WEC) — see handleRanking above. ──
+  if (reqPathOnly === '/api/ranking') {
+    handleRanking(req, res, query);
+    return;
+  }
+
 
   // ── Visit ping (anonymous traffic counter) ──
   // One beacon per browser session: { vid:"<random>" }. We never read the IP;
