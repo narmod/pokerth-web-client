@@ -1732,13 +1732,27 @@ if ('serviceWorker' in navigator) {
       .catch(function () { rkShow({ state: 'error', rows: [], cols: [], seasons: null, season: null }); });
   }
 
+  // Desktop/tablet only (>=900x600): float the card as a draggable + resizable
+  // window, reusing the in-game chat window system (window._enableFloating).
+  function rkWinGate() { try { return !!(window._winGate && window._winGate() && typeof window._enableFloating === 'function'); } catch (e) { return false; } }
   window.openRankingModal = function () {
     var m = $('ranking-modal'); if (!m) return;
     var si = $('rk-search'); if (si) { si.value = ''; si.placeholder = rkT('rankingSearch', 'Search a player…'); }
     m.style.display = 'flex';
+    var card = m.querySelector('.rk-card');
+    if (card && rkWinGate()) {
+      m.classList.add('rk-floating');
+      try { window._enableFloating(card, { handle: $('rk-title'), resizable: true, key: 'pth-rk-win', defW: 460, defH: 540, minW: 320, minH: 320, defLeft: 60, defTop: 70 }); } catch (e) {}
+    }
     rankingSelect('pth');
   };
-  window.closeRankingModal = function () { var m = $('ranking-modal'); if (m) m.style.display = 'none'; };
+  window.closeRankingModal = function () {
+    var m = $('ranking-modal'); if (!m) return;
+    var card = m.querySelector('.rk-card');
+    if (card && card.classList.contains('floating-win') && typeof window._disableFloating === 'function') { try { window._disableFloating(card); } catch (e) {} }
+    m.classList.remove('rk-floating');
+    m.style.display = 'none';
+  };
 
   window.rankingSelect = function (src) {
     if (RK_SRCS.indexOf(src) < 0) src = 'pth';

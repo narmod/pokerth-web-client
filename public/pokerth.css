@@ -6086,3 +6086,18 @@ body.has-keyboard .act-key { display: inline-block; }
 .rk-season:disabled { opacity: 0.45; }
 .rk-alltime-lbl { display: inline-flex; align-items: center; gap: 6px; cursor: pointer; }
 .rk-alltime-lbl input { accent-color: var(--gold); width: 15px; height: 15px; cursor: pointer; }
+
+/* ── Ranking card as a floating window (desktop/tablet, >=900x600) ────────
+   Reuses the shared floating-win drag/resize system (makeWin* in pokerth.js).
+   The card is position:relative inside the modal, so pin it fixed + drop the
+   dark backdrop + let clicks through behind it. Mobile keeps the modal. */
+#ranking-modal.rk-floating { pointer-events: none; }
+#ranking-modal.rk-floating .rk-backdrop { display: none; }
+#ranking-modal.rk-floating .rk-card { pointer-events: auto; }
+#ranking-modal .rk-card.floating-win {
+  position: fixed; margin: 0; max-height: none;
+  border: 1px solid var(--gold-dim); border-radius: 10px;
+  box-shadow: 0 14px 36px rgba(0,0,0,0.62); overflow: hidden;
+}
+#ranking-modal .rk-card.floating-win .rk-title { cursor: move; touch-action: none; -webkit-user-select: none; user-select: none; }
+#ranking-modal .rk-card.floating-win .rk-title.win-dragging { cursor: grabbing; }
