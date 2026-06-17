@@ -1249,43 +1249,6 @@ function _applyReactMuteUI() {
   }
 }
 
-// ── Régulation d'envoi des réactions /emoji ──────────────────────────────
-// Le chat de partie du serveur PokerTH applique un anti-flood : en envoyant
-// plusieurs /emoji trop vite, le serveur les rejette (ChatReject) et les
-// AUTRES clients ne reçoivent plus nos réactions (le badge local, lui, reste
-// affiché car il est purement côté client). Sur pokerth.net il n'y a pas de
-// proxy : les réactions passent UNIQUEMENT par /emoji, donc soumises au
-// throttle. On espace donc les envois /emoji via une petite file. Le badge
-// local et le canal proxy REACT (web↔web, qui contourne le throttle) restent
-// immédiats — seule la trame /emoji serveur est régulée.
-var _reactEmojiQueue = [];
-var _reactEmojiTimer = null;
-var _reactEmojiLastSent = 0;
-var REACT_EMOJI_MIN_GAP = 1500;   // ms minimum entre deux /emoji (sous le seuil serveur)
-var REACT_EMOJI_QUEUE_MAX = 4;    // file bornée : au-delà, on abandonne l'envoi réseau (badge déjà montré)
-
-function _flushReactEmoji() {
-  _reactEmojiTimer = null;
-  if (!_reactEmojiQueue.length) return;
-  if (!ws || !gId || ws.readyState !== WebSocket.OPEN) { _reactEmojiQueue.length = 0; return; }
-  var now = Date.now();
-  var wait = REACT_EMOJI_MIN_GAP - (now - _reactEmojiLastSent);
-  if (wait > 0) { _reactEmojiTimer = setTimeout(_flushReactEmoji, wait); return; }
-  var emoji = _reactEmojiQueue.shift();
-  _reactEmojiLastSent = now;
-  _lastMsgWasReaction = true;
-  try { send(MSG.buildGameChat(gId, '/emoji ' + emoji)); } catch (e) {}
-  if (_reactEmojiQueue.length) _reactEmojiTimer = setTimeout(_flushReactEmoji, REACT_EMOJI_MIN_GAP);
-}
-
-function _queueReactEmoji(emoji) {
-  _reactEmojiQueue.push(emoji);
-  // Garde les réactions les plus récentes si l'utilisateur spamme.
-  while (_reactEmojiQueue.length > REACT_EMOJI_QUEUE_MAX) _reactEmojiQueue.shift();
-  if (!_reactEmojiTimer) _flushReactEmoji();
-}
-
-
 
 // ═══════════════════════════════════════════════════════════
 // FORCE DE MAIN PRÉ-FLOP
@@ -4164,6 +4127,42 @@ const App = (() => {
       if (el) el.textContent = t(_statusKey);
     } catch (e) {}
   };
+
+  // ── Régulation d'envoi des réactions /emoji ──────────────────────────
+  // Le chat de partie du serveur PokerTH applique un anti-flood : en envoyant
+  // plusieurs /emoji trop vite, le serveur les rejette (ChatReject) et les
+  // AUTRES clients ne reçoivent plus nos réactions (le badge local, lui, reste
+  // affiché car purement côté client). Sur pokerth.net il n'y a pas de proxy :
+  // les réactions passent UNIQUEMENT par /emoji, donc soumises au throttle. On
+  // espace donc les envois /emoji via une petite file. Le badge local et le
+  // canal proxy REACT (web↔web, qui contourne le throttle) restent immédiats —
+  // seule la trame /emoji serveur est régulée. NB : doit vivre DANS l'IIFE App
+  // pour voir ws/gId/send/MSG/_lastMsgWasReaction (cf. avertissement en tête).
+  let _reactEmojiQueue = [];
+  let _reactEmojiTimer = null;
+  let _reactEmojiLastSent = 0;
+  const REACT_EMOJI_MIN_GAP = 1500;   // ms minimum entre deux /emoji (sous le seuil serveur)
+  const REACT_EMOJI_QUEUE_MAX = 4;    // file bornée : au-delà on abandonne l'envoi réseau (badge déjà montré)
+
+  function _flushReactEmoji() {
+    _reactEmojiTimer = null;
+    if (!_reactEmojiQueue.length) return;
+    if (!ws || !gId || ws.readyState !== WebSocket.OPEN) { _reactEmojiQueue.length = 0; return; }
+    const now = Date.now();
+    const wait = REACT_EMOJI_MIN_GAP - (now - _reactEmojiLastSent);
+    if (wait > 0) { _reactEmojiTimer = setTimeout(_flushReactEmoji, wait); return; }
+    const emoji = _reactEmojiQueue.shift();
+    _reactEmojiLastSent = now;
+    _lastMsgWasReaction = true;
+    try { send(MSG.buildGameChat(gId, '/emoji ' + emoji)); } catch (e) {}
+    if (_reactEmojiQueue.length) _reactEmojiTimer = setTimeout(_flushReactEmoji, REACT_EMOJI_MIN_GAP);
+  }
+
+  function _queueReactEmoji(emoji) {
+    _reactEmojiQueue.push(emoji);
+    while (_reactEmojiQueue.length > REACT_EMOJI_QUEUE_MAX) _reactEmojiQueue.shift(); // garde les plus récentes
+    if (!_reactEmojiTimer) _flushReactEmoji();
+  }
 
   // ── RÉSEAU ──
   function send(data) {
@@ -11114,7 +11113,7 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.3.15-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.16-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
