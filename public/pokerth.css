@@ -6063,3 +6063,16 @@ body.has-keyboard .act-key { display: inline-block; }
 .rk-table th { position: sticky; top: 0; background: var(--field-bg); text-align: left; color: var(--gold-dim); font-weight: 600; padding: 5px 8px; border-bottom: 1px solid var(--border); white-space: nowrap; }
 .rk-table td { padding: 4px 8px; border-bottom: 1px solid rgba(var(--gold-rgb), 0.08); color: var(--text-hi); }
 .rk-table tbody tr:hover td { background: rgba(var(--gold-rgb), 0.06); }
+
+/* Ranking search box (name filter) — see #rk-search in the ranking modal.
+   16px font-size avoids the iOS focus-zoom on the connect screen. */
+.rk-search-wrap { margin-bottom: 10px; }
+.rk-search {
+  width: 100%; box-sizing: border-box; padding: 8px 10px;
+  background: var(--field-bg); color: var(--text-hi);
+  border: 1px solid var(--border); border-radius: 3px;
+  font-family: var(--ff-mono); font-size: 16px; outline: none;
+  transition: border-color 0.15s;
+}
+.rk-search::placeholder { color: var(--text); opacity: 0.6; }
+.rk-search:focus { border-color: var(--gold); }

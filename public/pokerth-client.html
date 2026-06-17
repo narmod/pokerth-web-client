@@ -1593,8 +1593,8 @@ if ('serviceWorker' in navigator) {
 
 <!-- Ranking modal (connect screen) — PokerTH / BBC / WEC leaderboards via the
      same-origin /api/ranking relay (proxy.js). Entry point: 🏆 button next to
-     the corner globe. Tabs mirror sp0ck's QML CommunityPlayerView. Placeholder
-     for now — content/render refined once upstream endpoints + CSRF land. -->
+     the corner globe. Tabs mirror sp0ck's QML CommunityPlayerView. Name search
+     filters the table live (accent-insensitive). Placeholder/messages i18n. -->
 <div id="ranking-modal" style="display:none">
   <div class="rk-backdrop" onclick="closeRankingModal()"></div>
   <div class="rk-card" role="dialog" aria-labelledby="rk-title">
@@ -1606,10 +1606,14 @@ if ('serviceWorker' in navigator) {
       <button type="button" class="rk-tab" data-src="wec" onclick="rankingSelect('wec')" data-i18n="rankingWec">WEC</button>
     </div>
     <div class="rk-body">
+      <div class="rk-search-wrap" id="rk-search-wrap" style="display:none">
+        <input type="text" id="rk-search" class="rk-search" oninput="rankingFilter()" placeholder="Search a player…" autocomplete="off" spellcheck="false" aria-label="Search a player">
+      </div>
       <div class="rk-msg" id="rk-loading" data-i18n="rankingLoading">Loading…</div>
       <div class="rk-msg" id="rk-soon" data-i18n="rankingSoon" style="display:none">Ranking coming soon.</div>
       <div class="rk-msg" id="rk-error" data-i18n="rankingError" style="display:none">Could not load the ranking.</div>
       <div class="rk-msg" id="rk-empty" data-i18n="rankingEmpty" style="display:none">No entries.</div>
+      <div class="rk-msg" id="rk-nomatch" data-i18n="rankingNoMatch" style="display:none">No player found.</div>
       <div id="rk-table-wrap" style="display:none"></div>
     </div>
   </div>
@@ -1617,28 +1621,23 @@ if ('serviceWorker' in navigator) {
 <script>
 (function () {
   var RK_SRCS = ['pth', 'bbc', 'wec'];
-  var RK_CACHE = {};            // src -> { at, state, html }
+  var RK_CACHE = {};                                  // src -> { at, state, rows, cols }
   var RK_TTL = 30000;
+  var RK_CUR = { state: 'loading', rows: [], cols: [] };
   function $(id) { return document.getElementById(id); }
+  function rkT(key, fb) { try { if (typeof window.t === 'function') { var v = window.t(key); if (v && v !== key) return v; } } catch (e) {} return fb; }
+  function rkFold(s) { return String(s == null ? '' : s).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, ''); }
+  function rkEsc(v) { return String(v == null ? '' : v).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+
   function rkState(which) {
-    ['loading', 'soon', 'error', 'empty'].forEach(function (s) {
+    ['loading', 'soon', 'error', 'empty', 'nomatch'].forEach(function (s) {
       var e = $('rk-' + s); if (e) e.style.display = (s === which) ? '' : 'none';
     });
     var tw = $('rk-table-wrap'); if (tw) tw.style.display = (which === 'table') ? '' : 'none';
+    var sw = $('rk-search-wrap'); if (sw) sw.style.display = (which === 'table' || which === 'nomatch') ? '' : 'none';
   }
-  function rkEsc(v) {
-    return String(v == null ? '' : v).replace(/[&<>"]/g, function (c) {
-      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c];
-    });
-  }
-  function rkOutcome(data) {
-    if (!data || data.ok === false) {
-      return { state: (data && data.error === 'endpoint_not_configured') ? 'soon' : 'error', html: '' };
-    }
-    var rows = Array.isArray(data) ? data
-      : (Array.isArray(data.rows) ? data.rows : (Array.isArray(data.data) ? data.data : null));
-    if (!rows || !rows.length) return { state: 'empty', html: '' };
-    var cols = Object.keys(rows[0]);
+
+  function rkBuildTable(rows, cols) {
     var h = '<table class="rk-table"><thead><tr>';
     for (var i = 0; i < cols.length; i++) h += '<th>' + rkEsc(cols[i]) + '</th>';
     h += '</tr></thead><tbody>';
@@ -1647,38 +1646,59 @@ if ('serviceWorker' in navigator) {
       for (var k = 0; k < cols.length; k++) h += '<td>' + rkEsc(rows[r][cols[k]]) + '</td>';
       h += '</tr>';
     }
-    h += '</tbody></table>';
-    return { state: 'table', html: h };
+    return h + '</tbody></table>';
   }
-  function rkApply(o) {
-    if (o.state === 'table') { var tw = $('rk-table-wrap'); if (tw) tw.innerHTML = o.html; }
-    rkState(o.state);
+
+  // Render the current dataset honouring the search box (filter on `player`).
+  function rkRenderCurrent() {
+    if (RK_CUR.state !== 'table') { rkState(RK_CUR.state); return; }
+    var q = '', si = $('rk-search'); if (si) q = rkFold(si.value.trim());
+    var rows = RK_CUR.rows;
+    if (q) rows = rows.filter(function (row) { return rkFold(row.player).indexOf(q) >= 0; });
+    if (!rows.length) { rkState('nomatch'); return; }
+    var tw = $('rk-table-wrap'); if (tw) tw.innerHTML = rkBuildTable(rows, RK_CUR.cols);
+    rkState('table');
   }
+  window.rankingFilter = function () { rkRenderCurrent(); };
+
+  function rkOutcome(data) {
+    if (!data || data.ok === false) {
+      return { state: (data && data.error === 'endpoint_not_configured') ? 'soon' : 'error', rows: [], cols: [] };
+    }
+    var rows = Array.isArray(data) ? data
+      : (Array.isArray(data.rows) ? data.rows : (Array.isArray(data.data) ? data.data : null));
+    if (!rows || !rows.length) return { state: 'empty', rows: [], cols: [] };
+    return { state: 'table', rows: rows, cols: Object.keys(rows[0]) };
+  }
+  function rkShow(o) { RK_CUR = o; rkRenderCurrent(); }
+
   window.openRankingModal = function () {
     var m = $('ranking-modal'); if (!m) return;
+    var si = $('rk-search'); if (si) { si.value = ''; si.placeholder = rkT('rankingSearch', 'Search a player…'); }
     m.style.display = 'flex';
     rankingSelect('pth');
   };
-  window.closeRankingModal = function () {
-    var m = $('ranking-modal'); if (m) m.style.display = 'none';
-  };
+  window.closeRankingModal = function () { var m = $('ranking-modal'); if (m) m.style.display = 'none'; };
+
   window.rankingSelect = function (src) {
     if (RK_SRCS.indexOf(src) < 0) src = 'pth';
     var tabs = document.querySelectorAll('#ranking-modal .rk-tab');
     for (var i = 0; i < tabs.length; i++) tabs[i].classList.toggle('active', tabs[i].dataset.src === src);
+    var si = $('rk-search'); if (si) si.value = '';
     var c = RK_CACHE[src];
-    if (c && (Date.now() - c.at) < RK_TTL) { rkApply(c); return; }
-    rkState('loading');
+    if (c && (Date.now() - c.at) < RK_TTL) { rkShow({ state: c.state, rows: c.rows, cols: c.cols }); return; }
+    RK_CUR = { state: 'loading', rows: [], cols: [] }; rkState('loading');
     fetch('/api/ranking?src=' + encodeURIComponent(src), { headers: { 'Accept': 'application/json' } })
       .then(function (r) { return r.text(); })
       .then(function (t) {
         var d; try { d = JSON.parse(t); } catch (e) { d = null; }
         var o = rkOutcome(d);
-        RK_CACHE[src] = { at: Date.now(), state: o.state, html: o.html };
-        rkApply(RK_CACHE[src]);
+        RK_CACHE[src] = { at: Date.now(), state: o.state, rows: o.rows, cols: o.cols };
+        rkShow(o);
       })
-      .catch(function () { rkApply({ state: 'error', html: '' }); });
+      .catch(function () { rkShow({ state: 'error', rows: [], cols: [] }); });
   };
+
   document.addEventListener('keydown', function (e) {
     if (e.key === 'Escape') {
       var m = $('ranking-modal');
@@ -1687,6 +1707,7 @@ if ('serviceWorker' in navigator) {
   });
 })();
 </script>
+
 
 </body>
 </html>
