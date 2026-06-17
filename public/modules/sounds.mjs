@@ -97,6 +97,7 @@ function _unlockAudio() {
     var buf = ctx.createBuffer(1, 1, 22050);
     var src = ctx.createBufferSource();
     src.buffer = buf; src.connect(ctx.destination); src.start(0);
+    _decodeAll();
   } catch(e) {}
 }
 // Vibration mobile (Android). Gated by the dedicated HAPTIC flag (pth_haptic),
@@ -122,25 +123,99 @@ function playTone(freq, dur, vol) {
     o.start(); o.stop(ctx.currentTime + dur);
   } catch(e) {}
 }
+
+// ─── Echantillons sonores PokerTH (sons de jeu) ──────────────────────────
+// Sons officiels du serveur PokerTH (data/sounds/default, AGPL-3.0) convertis
+// en MP3 et servis depuis /sounds/pokerth/. Decodes via decodeAudioData dans
+// le MEME AudioContext que les bips -> pilotes par le meme volume maitre
+// (_dest) et le meme mute (_soundEnabled). Si un sample n'est pas (encore)
+// charge ou indisponible, on retombe sur le bip synthetise correspondant.
+const SOUND_DIR = '/sounds/pokerth/';
+const SAMPLE_FILES = {
+  fold: 'fold', check: 'check', call: 'call', bet: 'bet',
+  raise: 'raise', allin: 'allin', deal: 'dealtwocards', turn: 'yourturn'
+};
+var _rawBytes = {};     // nom logique -> ArrayBuffer brut (conserve pour re-decodage)
+var _buffers = {};      // nom logique -> AudioBuffer decode
+var _decodeCtx = null;  // contexte ayant servi a decoder _buffers
+var _fetchStarted = false;
+
+// Decode UN sample (callback form : la seule supportee par les vieux Safari).
+function _decodeOne(name) {
+  var ctx = getAudioCtx(); if (!ctx) return;
+  if (_decodeCtx !== ctx) { _buffers = {}; _decodeCtx = ctx; } // ctx recree (iOS) -> re-decoder
+  if (_buffers[name] || !_rawBytes[name]) return;
+  try {
+    var copy = _rawBytes[name].slice(0); // decodeAudioData DETACHE son entree
+    ctx.decodeAudioData(copy, function(b) { _buffers[name] = b; }, function() {});
+  } catch(e) {}
+}
+function _decodeAll() { Object.keys(SAMPLE_FILES).forEach(_decodeOne); }
+
+// Telecharge les octets des samples (reseau seul ; decodage differe au geste).
+function _fetchSamples() {
+  if (_fetchStarted) return; _fetchStarted = true;
+  Object.keys(SAMPLE_FILES).forEach(function(name) {
+    fetch(SOUND_DIR + SAMPLE_FILES[name] + '.mp3')
+      .then(function(r) { return r.ok ? r.arrayBuffer() : Promise.reject(new Error('http ' + r.status)); })
+      .then(function(buf) { _rawBytes[name] = buf; if (_audioCtx) _decodeOne(name); })
+      .catch(function() { /* sample indisponible -> repli synthe */ });
+  });
+}
+
+// Joue un sample s'il est pret. true si un son a demarre, false sinon (muet,
+// contexte absent, ou sample pas encore decode) -> l'appelant fait son repli.
+function _playSample(name) {
+  if (!_soundEnabled) return false;
+  var ctx = getAudioCtx(); if (!ctx) return false;
+  if (_decodeCtx !== ctx) { _buffers = {}; _decodeCtx = ctx; }
+  var b = _buffers[name];
+  if (!b) { _decodeOne(name); return false; }
+  try {
+    if (ctx.state !== 'running') { try { ctx.resume(); } catch(e) {} }
+    var src = ctx.createBufferSource();
+    src.buffer = b; src.connect(_dest(ctx)); src.start(0);
+    return true;
+  } catch(e) { return false; }
+}
+
+// Dispatch d'une action de siege selon le code serveur (PlayersActionDone).
+// 1 Fold - 2 Check - 3 Call - 4 Bet - 5 Raise - 6 All-In. Chaque cas joue le
+// sample PokerTH dedie (repli sur le bip synthetise via les notify* existants).
+function playActionSound(action) {
+  switch (action) {
+    case 1: notifyFold(); break;
+    case 2: notifyAction('check'); break;
+    case 3: notifyAction('call'); break;
+    case 4: notifyAction('bet'); break;
+    case 5: notifyRaise(); break;
+    case 6: notifyAllIn(); break;
+    default: notifyAction();
+  }
+}
 function notifyCard() {
   // Bruit de carte distribuée : bref clic
+  if (_playSample('deal')) return;
   playTone(1200, 0.04, 0.12);
 }
-function notifyAction() {
+function notifyAction(kind) {
   // Action d'un joueur (Check, Call, Bet) : un « toc » bref et discret. Monté
   // de 220 Hz à 520 Hz : les petits haut-parleurs de smartphone (Android) ne
   // restituent quasiment pas le grave, l'ancien thud y était inaudible.
+  if (kind && _playSample(kind)) return;
   playTone(520, 0.08, 0.10);
 }
 function notifyFold() {
   // Fold = "abandonner". Deux notes descendantes (effet défaitiste, qui tombe).
   // Remontées (392→294 Hz au lieu de 330→180) pour rester audibles sur les
   // haut-parleurs de smartphone tout en gardant le contour descendant.
+  if (_playSample('fold')) return;
   playTone(392, 0.08, 0.10);
   setTimeout(function(){ playTone(294, 0.12, 0.08); }, 90);
 }
 function notifyRaise() {
   // Raise/Bet = "monter la mise". Deux notes ascendantes, plus brillantes.
+  if (_playSample('raise')) return;
   playTone(440, 0.06, 0.14);
   setTimeout(function(){ playTone(660, 0.10, 0.16); }, 70);
 }
@@ -149,6 +224,7 @@ function notifyAllIn() {
   // climbing rim notches) terminated by a clean high "ding!" (ball lands
   // on a slot). Six tones, exponentially spaced freq, then the bell.
   // Vibrate pattern mimics the rattle + the click.
+  if (!_playSample('allin')) {
   var arp = [392, 466, 554, 659, 784, 932]; // G4 → A#5, 6 chip-drop notes
   arp.forEach(function(f, i) {
     setTimeout(function() { playTone(f, 0.07, 0.18 - i * 0.005); }, i * 55);
@@ -157,6 +233,7 @@ function notifyAllIn() {
   setTimeout(function() { playTone(1568, 0.5, 0.30); }, arp.length * 55 + 80);  // G6
   // Subtle bell harmonic right after for that casino chime feel.
   setTimeout(function() { playTone(2093, 0.4, 0.18); }, arp.length * 55 + 130); // C7
+  }
   _buzz([30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 100, 60, 200]); // casino rattle (haptic-gated)
 }
 function notifyMyTurn() {
@@ -171,6 +248,7 @@ function notifyMyTurn() {
   // hallmark of a bubble. A short exponential decay on gain provides
   // the natural "plop" envelope.
   if (!_soundEnabled) return;
+  if (!_playSample('turn')) {
   var ctx = getAudioCtx(); if (!ctx) return;
   try {
     if (ctx.state !== 'running') { try { ctx.resume(); } catch(e) {} }
@@ -188,6 +266,7 @@ function notifyMyTurn() {
     o.start(t0);
     o.stop(t0 + 0.20);
   } catch(e) {}
+  }
   // Keep the gentle vibration cue on mobile (single short pulse)
   _buzz(80);
   // Keep the golden glow on the player zone
@@ -403,9 +482,13 @@ document.addEventListener('visibilitychange', function() {
 window.addEventListener('pageshow', function() { _ensureRunning(); });
 window.addEventListener('focus', function() { _ensureRunning(); });
 
+// Precharge les samples PokerTH des le chargement du module (decodage differe
+// au 1er geste). Repli synthe tant qu'un sample n'est pas pret / indisponible.
+_fetchSamples();
+
 // ─── Modern ES module exports ───────────────────────────────────────────
 export {
-  getAudioCtx, playTone,
+  getAudioCtx, playTone, playActionSound,
   notifyCard, notifyAction, notifyFold, notifyRaise, notifyAllIn,
   notifyMyTurn, notifyWinner, notifyBigWin, notifyChat, notifyBlindsUp,
   notifyTick, notifyTickFinal,
@@ -420,6 +503,7 @@ window.notifyAction  = notifyAction;
 window.notifyFold    = notifyFold;
 window.notifyRaise   = notifyRaise;
 window.notifyAllIn   = notifyAllIn;
+window.playActionSound = playActionSound;
 window.notifyMyTurn  = notifyMyTurn;
 window.notifyWinner  = notifyWinner;
 window.notifyBigWin  = notifyBigWin;
@@ -451,7 +535,7 @@ Object.defineProperty(window, '_soundEnabled', {
 
 // Single namespaced entry point for migration-aware code.
 window.SOUNDS = {
-  getAudioCtx, playTone,
+  getAudioCtx, playTone, playActionSound,
   notifyCard, notifyAction, notifyFold, notifyRaise, notifyAllIn,
   notifyMyTurn, notifyWinner, notifyBigWin, notifyChat, notifyBlindsUp,
   notifyTick, notifyTickFinal,

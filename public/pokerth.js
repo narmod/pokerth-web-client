@@ -5689,11 +5689,13 @@ const App = (() => {
           if ($('g-mystack')) $('g-mystack').textContent = myMon > 0 ? fmtChips(myMon) : '';
         }
         renderSeats();
-        // Sound: regular thud for fold/check/call/bet/raise; dedicated
-        // casino-roulette + ding fanfare for all-in moments. The visual
-        // animateAllIn() pop is paired with the audio cue so the moment
-        // gets its own identity.
-        if (action === 6) {
+        // Sons d'action : 6 sons PokerTH distincts (fold/check/call/bet/raise/
+        // all-in) via playActionSound(), repli automatique sur les bips
+        // synthetises si un sample n'est pas charge. La pop visuelle
+        // animateAllIn() reste appairee a l'audio pour l'all-in.
+        if (typeof playActionSound === 'function') {
+          playActionSound(action);
+        } else if (action === 6) {
           if (typeof notifyAllIn === 'function') notifyAllIn();
         } else {
           notifyAction();
@@ -11110,7 +11112,7 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.3.10-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.11-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
