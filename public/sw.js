@@ -23,7 +23,7 @@
  *                 Cross-origin requests and WS upgrades are left untouched.
  *                 (Fonts are now self-hosted and handled by SWR above.)
  */
-const CACHE_VERSION = 'pokerth-v0.3.13-beta';
+const CACHE_VERSION = 'pokerth-v0.3.14-beta';
 
 // Where navigations fall back to when the network is unavailable.
 const NAV_FALLBACK = '/pokerth-client.html';
@@ -119,6 +119,7 @@ const ASSETS = [
   '/favicon-192.png',
   '/favicon-512.png',
   '/logo-chip.png',
+  '/img/pokerth-login-bg.webp',
   // PWA install icons referenced by manifest.json
   '/icon-192.png',
   '/icon-512.png',

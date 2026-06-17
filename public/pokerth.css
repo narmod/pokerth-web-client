@@ -320,6 +320,11 @@ html[data-bg-img] body.in-game {
   justify-content: center;
   overflow-y: auto;
   padding: 20px 16px;
+  /* PokerTH official login backdrop (flames) — login screen only, theme-agnostic.
+     Dark veil keeps the centered .card readable over the bright artwork. */
+  background:
+    linear-gradient(rgba(8,10,14,0.55), rgba(8,10,14,0.68)),
+    url("/img/pokerth-login-bg.webp") center / cover no-repeat;
 }
 
 .form-card, .card {
