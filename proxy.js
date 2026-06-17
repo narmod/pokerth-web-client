@@ -1930,11 +1930,38 @@ const RANKING_UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36
 const RANKING_SOURCES = {
   // TODO(sp0ck): fill the exact JSON endpoints. BBC page ref: https://bbc.pokerth.net/results/ranking
   pth: { name: 'PokerTH', url: '', csrf: null },   // public — no CSRF expected
-  bbc: { name: 'BBC', url: '',
-         csrf: { url: '', read: 'meta', readName: 'csrf-token', send: 'header', sendName: 'X-CSRF-TOKEN' } },
+  // BBC ranking is server-rendered into <ranking-component :results="...">
+  // (HTML-entity-encoded JSON). A plain GET is enough — no CSRF for reads.
+  bbc: { name: 'BBC', url: 'https://bbc.pokerth.net/results/ranking', csrf: null, parse: rankingParseBbc },
   wec: { name: 'WEC', url: '',
          csrf: { url: '', read: 'meta', readName: 'csrf-token', send: 'header', sendName: 'X-CSRF-TOKEN' } }
 };
+
+// Extract the BBC ranking from its results page. The table is server-rendered
+// into <ranking-component :results="[…]"> as HTML-entity-encoded JSON, so a
+// plain GET + decode + JSON.parse is all that's needed (no API call, no CSRF).
+function rankingDecodeHtml(s) {
+  return s.replace(/&quot;/g, '"')
+          .replace(/&#0?39;/g, "'").replace(/&apos;/g, "'")
+          .replace(/&lt;/g, '<').replace(/&gt;/g, '>')
+          .replace(/&amp;/g, '&');
+}
+function rankingParseBbc(html) {
+  const m = /:results="([^"]*)"/.exec(html);
+  if (!m) return { ok: false, error: 'parse_no_results', source: 'BBC' };
+  let arr;
+  try { arr = JSON.parse(rankingDecodeHtml(m[1])); }
+  catch (e) { return { ok: false, error: 'parse_json', source: 'BBC' }; }
+  if (!Array.isArray(arr)) return { ok: false, error: 'parse_shape', source: 'BBC' };
+  let season = null, seasons = [];
+  const ms = /:season="(\d+)"/.exec(html); if (ms) season = parseInt(ms[1], 10);
+  const msa = /:allseasons="(\[[^"]*\])"/.exec(html);
+  if (msa) { try { seasons = JSON.parse(msa[1]); } catch (e) { /* ignore */ } }
+  const rows = arr.map(function (p, i) {
+    return { rank: i + 1, player: p.nickname, score: p.score, points: p.points, games: p.games };
+  });
+  return { ok: true, source: 'BBC', season: season, seasons: seasons, rows: rows };
+}
 
 const RANKING_CACHE = new Map();        // cacheKey -> { at, status, body }
 const RANKING_TTL_MS = 60 * 1000;       // short cache to spare the upstream
@@ -1978,6 +2005,9 @@ async function rankingUpstream(src) {
     return { status: 503, body: JSON.stringify({ ok: false, error: 'endpoint_not_configured', source: src.name }) };
   }
   const headers = {};
+  // HTML-scraped sources (e.g. BBC) must receive the rendered page, not a
+  // JSON negotiation — ask for HTML explicitly.
+  if (src.parse) headers['Accept'] = 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8';
   if (src.csrf && src.csrf.url) {
     const tok = await rankingCsrfToken(src);
     if (tok.token && src.csrf.send === 'header') headers[src.csrf.sendName] = tok.token;
@@ -1988,6 +2018,14 @@ async function rankingUpstream(src) {
   const body = await r.text();
   if (!r.ok) {
     return { status: 502, body: JSON.stringify({ ok: false, error: 'upstream_' + r.status, source: src.name }) };
+  }
+  // Source-specific extractor (e.g. BBC scrapes its server-rendered page);
+  // sources without a parser are passed through as-is (already JSON).
+  if (typeof src.parse === 'function') {
+    let parsed;
+    try { parsed = src.parse(body); }
+    catch (e) { return { status: 502, body: JSON.stringify({ ok: false, error: 'parse_failed', source: src.name }) }; }
+    return { status: 200, body: JSON.stringify(parsed) };
   }
   return { status: 200, body: body };
 }
