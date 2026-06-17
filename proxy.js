@@ -1933,8 +1933,7 @@ const RANKING_SOURCES = {
   // BBC ranking is server-rendered into <ranking-component :results="...">
   // (HTML-entity-encoded JSON). A plain GET is enough — no CSRF for reads.
   bbc: { name: 'BBC', url: 'https://bbc.pokerth.net/results/ranking', csrf: null, parse: rankingParseBbc, supportsSeason: true },
-  wec: { name: 'WEC', url: '',
-         csrf: { url: '', read: 'meta', readName: 'csrf-token', send: 'header', sendName: 'X-CSRF-TOKEN' } }
+  wec: { name: 'WEC', url: 'https://wec.pokerth.net/results/ranking', csrf: null, parse: rankingParseWec }
 };
 
 // Extract the BBC ranking from its results page. The table is server-rendered
@@ -1961,6 +1960,21 @@ function rankingParseBbc(html) {
     return { rank: i + 1, player: p.nickname, score: p.score, points: p.points, games: p.games };
   });
   return { ok: true, source: 'BBC', season: season, seasons: seasons, rows: rows };
+}
+
+// WEC leaderboard lives at /results/ranking in <ranking-component :stats="[…]">
+// (HTML-entity-encoded JSON, same row shape as BBC but no seasons). Plain GET.
+function rankingParseWec(html) {
+  const m = /:stats="([^"]*)"/.exec(html);
+  if (!m) return { ok: false, error: 'parse_no_results', source: 'WEC' };
+  let arr;
+  try { arr = JSON.parse(rankingDecodeHtml(m[1])); }
+  catch (e) { return { ok: false, error: 'parse_json', source: 'WEC' }; }
+  if (!Array.isArray(arr)) return { ok: false, error: 'parse_shape', source: 'WEC' };
+  const rows = arr.map(function (p, i) {
+    return { rank: i + 1, player: p.nickname, score: p.score, points: p.points, games: p.games };
+  });
+  return { ok: true, source: 'WEC', rows: rows };
 }
 
 const RANKING_CACHE = new Map();        // cacheKey -> { at, status, body }
