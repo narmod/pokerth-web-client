@@ -3910,6 +3910,19 @@ const App = (() => {
   function show(id) {
     document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
     $(id).classList.add('active');
+    // Ranking window is lobby-only AND Internet-PokerTH-only: close it on any
+    // screen change (never lingers in-game), and show its lobby header button
+    // only when connected to pokerth.net (server-mode 'pokerthnet', not offline).
+    if (window.closeRankingModal) window.closeRankingModal();
+    try {
+      var _rkb = $('ranking-btn-lobby');
+      if (_rkb) {
+        var _smv = '';
+        try { _smv = localStorage.getItem('pth_server_mode') || ''; } catch (e) {}
+        if (!_smv && $('server-mode')) _smv = $('server-mode').value || '';
+        _rkb.style.display = (id === 's-lobby' && !window._offlineMode && _smv === 'pokerthnet') ? '' : 'none';
+      }
+    } catch (e) {}
     if (window._syncOverlayTop) window._syncOverlayTop();
     // Keep the screen awake only while at the table.
     if (id === 's-game') acquireWakeLock(); else releaseWakeLock();
@@ -11113,7 +11126,7 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.3.22-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.23-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
