@@ -333,6 +333,7 @@ export const strings = {
     rankingLoading:'Loading…', rankingSoon:'Ranking coming soon.', rankingError:'Could not load the ranking.', rankingEmpty:'No entries.',
     rankingSearch:'Search a player…', rankingNoMatch:'No player found.',
     rankingSeason:'Season', rankingAllTime:'All-Time',
+    rankingColRank:'#', rankingColPlayer:'Nickname', rankingColScore:'Score', rankingColPoints:'Points', rankingColGames:'Games',
 };
 
 export default { meta, strings };

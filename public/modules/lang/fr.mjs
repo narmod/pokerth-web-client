@@ -333,6 +333,7 @@ export const strings = {
     rankingLoading:'Chargement…', rankingSoon:'Classement bientôt disponible.', rankingError:'Impossible de charger le classement.', rankingEmpty:'Aucune entrée.',
     rankingSearch:'Rechercher un joueur…', rankingNoMatch:'Aucun joueur trouvé.',
     rankingSeason:'Saison', rankingAllTime:'Tous les temps',
+    rankingColRank:'#', rankingColPlayer:'Pseudo', rankingColScore:'Score', rankingColPoints:'Points', rankingColGames:'Parties',
 };
 
 export default { meta, strings };

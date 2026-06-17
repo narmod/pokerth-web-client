@@ -1638,6 +1638,9 @@ if ('serviceWorker' in navigator) {
   function rkT(key, fb) { try { if (typeof window.t === 'function') { var v = window.t(key); if (v && v !== key) return v; } } catch (e) {} return fb; }
   function rkFold(s) { return String(s == null ? '' : s).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, ''); }
   function rkEsc(v) { return String(v == null ? '' : v).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+  // Localised table headers; unknown columns fall back to the raw JSON key.
+  var RK_COL_LABELS = { rank: 'rankingColRank', player: 'rankingColPlayer', games: 'rankingColGames', score: 'rankingColScore', points: 'rankingColPoints' };
+  function rkColLabel(key) { var k = RK_COL_LABELS[key]; return k ? rkT(k, key) : key; }
 
   function rkState(which) {
     ['loading', 'soon', 'error', 'empty', 'nomatch'].forEach(function (s) {
@@ -1649,7 +1652,7 @@ if ('serviceWorker' in navigator) {
 
   function rkBuildTable(rows, cols) {
     var h = '<table class="rk-table"><thead><tr>';
-    for (var i = 0; i < cols.length; i++) h += '<th>' + rkEsc(cols[i]) + '</th>';
+    for (var i = 0; i < cols.length; i++) h += '<th>' + rkEsc(rkColLabel(cols[i])) + '</th>';
     h += '</tr></thead><tbody>';
     for (var r = 0; r < rows.length; r++) {
       h += '<tr>';
