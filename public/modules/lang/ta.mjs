@@ -11,6 +11,10 @@ export const meta = {
 };
 
 export const strings = {
+    rankingTooltip: 'தரவரிசை', rankingTitle: 'தரவரிசை', rankingPth: 'PokerTH', rankingBbc: 'BBC', rankingWec: 'WEC',
+    rankingLoading: 'ஏற்றுகிறது…', rankingSoon: 'தரவரிசை விரைவில் வரும்.', rankingError: 'தரவரிசையை ஏற்ற முடியவில்லை.', rankingEmpty: 'உள்ளீடுகள் இல்லை.',
+    rankingSearch: 'வீரரைத் தேடு…', rankingNoMatch: 'வீரர் யாரும் இல்லை.', rankingSeason: 'பருவம்', rankingAllTime: 'எல்லா காலமும்',
+    rankingColRank: '#', rankingColPlayer: 'புனைப்பெயர்', rankingColScore: 'மதிப்பெண்', rankingColPoints: 'புள்ளிகள்', rankingColGames: 'ஆட்டங்கள்',
   winResetTooltip: 'சாளரங்களை மீட்டமை',
     musicPlayer:'பிளேயர்',
     soundVolume:'விளையாட்டு ஒலிகள்',

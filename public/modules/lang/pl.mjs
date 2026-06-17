@@ -16,6 +16,10 @@ export const meta = {
 };
 
 export const strings = {
+    rankingTooltip: 'Ranking', rankingTitle: 'Ranking', rankingPth: 'PokerTH', rankingBbc: 'BBC', rankingWec: 'WEC',
+    rankingLoading: 'Ładowanie…', rankingSoon: 'Ranking wkrótce dostępny.', rankingError: 'Nie udało się załadować rankingu.', rankingEmpty: 'Brak wpisów.',
+    rankingSearch: 'Szukaj gracza…', rankingNoMatch: 'Nie znaleziono gracza.', rankingSeason: 'Sezon', rankingAllTime: 'Wszech czasów',
+    rankingColRank: '#', rankingColPlayer: 'Pseudonim', rankingColScore: 'Wynik', rankingColPoints: 'Punkty', rankingColGames: 'Gry',
   winResetTooltip: 'Zresetuj okna',
     musicPlayer:'Odtwarzacz',
     soundVolume:'Dźwięki gry',

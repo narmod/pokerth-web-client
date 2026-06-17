@@ -10,6 +10,10 @@ export const meta = {
 };
 
 export const strings = {
+    rankingTooltip: 'Rangsor', rankingTitle: 'Rangsor', rankingPth: 'PokerTH', rankingBbc: 'BBC', rankingWec: 'WEC',
+    rankingLoading: 'Betöltés…', rankingSoon: 'A rangsor hamarosan elérhető.', rankingError: 'Nem sikerült betölteni a rangsort.', rankingEmpty: 'Nincsenek bejegyzések.',
+    rankingSearch: 'Játékos keresése…', rankingNoMatch: 'Nem található játékos.', rankingSeason: 'Évad', rankingAllTime: 'Minden idők',
+    rankingColRank: '#', rankingColPlayer: 'Becenév', rankingColScore: 'Pontszám', rankingColPoints: 'Pontok', rankingColGames: 'Játékok',
   winResetTooltip: 'Ablakok visszaállítása',
     musicPlayer:'Lejátszó',
     soundVolume:'Játékhangok',

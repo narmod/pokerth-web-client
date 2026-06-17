@@ -10,6 +10,10 @@ export const meta = {
 };
 
 export const strings = {
+    rankingTooltip: 'Poredak', rankingTitle: 'Poredak', rankingPth: 'PokerTH', rankingBbc: 'BBC', rankingWec: 'WEC',
+    rankingLoading: 'Učitavanje…', rankingSoon: 'Poredak uskoro dostupan.', rankingError: 'Poredak se nije mogao učitati.', rankingEmpty: 'Nema unosa.',
+    rankingSearch: 'Pretraži igrača…', rankingNoMatch: 'Nijedan igrač nije pronađen.', rankingSeason: 'Sezona', rankingAllTime: 'Svih vremena',
+    rankingColRank: '#', rankingColPlayer: 'Nadimak', rankingColScore: 'Rezultat', rankingColPoints: 'Bodovi', rankingColGames: 'Igre',
   winResetTooltip: 'Vrati prozore',
     musicPlayer:'Reproduktor',
     soundVolume:'Zvukovi igre',

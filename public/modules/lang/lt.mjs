@@ -10,6 +10,10 @@ export const meta = {
 };
 
 export const strings = {
+    rankingTooltip: 'Reitingas', rankingTitle: 'Reitingas', rankingPth: 'PokerTH', rankingBbc: 'BBC', rankingWec: 'WEC',
+    rankingLoading: 'Įkeliama…', rankingSoon: 'Reitingas netrukus bus prieinamas.', rankingError: 'Nepavyko įkelti reitingo.', rankingEmpty: 'Įrašų nėra.',
+    rankingSearch: 'Ieškoti žaidėjo…', rankingNoMatch: 'Žaidėjų nerasta.', rankingSeason: 'Sezonas', rankingAllTime: 'Visų laikų',
+    rankingColRank: '#', rankingColPlayer: 'Slapyvardis', rankingColScore: 'Rezultatas', rankingColPoints: 'Taškai', rankingColGames: 'Žaidimai',
   winResetTooltip: 'Atstatyti langus',
     musicPlayer:'Grotuvas',
     soundVolume:'Žaidimo garsai',

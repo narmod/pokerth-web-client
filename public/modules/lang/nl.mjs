@@ -15,6 +15,10 @@ export const meta = {
 };
 
 export const strings = {
+    rankingTooltip: 'Ranglijst', rankingTitle: 'Ranglijst', rankingPth: 'PokerTH', rankingBbc: 'BBC', rankingWec: 'WEC',
+    rankingLoading: 'Laden…', rankingSoon: 'Ranglijst binnenkort beschikbaar.', rankingError: 'Kon de ranglijst niet laden.', rankingEmpty: 'Geen vermeldingen.',
+    rankingSearch: 'Zoek een speler…', rankingNoMatch: 'Geen speler gevonden.', rankingSeason: 'Seizoen', rankingAllTime: 'Aller tijden',
+    rankingColRank: '#', rankingColPlayer: 'Bijnaam', rankingColScore: 'Score', rankingColPoints: 'Punten', rankingColGames: 'Spellen',
   winResetTooltip: 'Vensters herstellen',
     musicPlayer:'Speler',
     soundVolume:'Spelgeluiden',

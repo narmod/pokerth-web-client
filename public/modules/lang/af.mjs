@@ -10,6 +10,10 @@ export const meta = {
 };
 
 export const strings = {
+    rankingTooltip: 'Ranglys', rankingTitle: 'Ranglys', rankingPth: 'PokerTH', rankingBbc: 'BBC', rankingWec: 'WEC',
+    rankingLoading: 'Laai tans…', rankingSoon: 'Ranglys binnekort beskikbaar.', rankingError: 'Kon nie die ranglys laai nie.', rankingEmpty: 'Geen inskrywings nie.',
+    rankingSearch: 'Soek \'n speler…', rankingNoMatch: 'Geen speler gevind nie.', rankingSeason: 'Seisoen', rankingAllTime: 'Alle tye',
+    rankingColRank: '#', rankingColPlayer: 'Bynaam', rankingColScore: 'Telling', rankingColPoints: 'Punte', rankingColGames: 'Spele',
   winResetTooltip: 'Herstel vensters',
     musicPlayer:'Speler',
     soundVolume:'Spelklanke',

@@ -9,6 +9,10 @@ export const meta = {
 };
 
 export const strings = {
+    rankingTooltip: 'Rangering', rankingTitle: 'Rangering', rankingPth: 'PokerTH', rankingBbc: 'BBC', rankingWec: 'WEC',
+    rankingLoading: 'Laster…', rankingSoon: 'Rangering kommer snart.', rankingError: 'Kunne ikke laste rangeringen.', rankingEmpty: 'Ingen oppføringer.',
+    rankingSearch: 'Søk etter spiller…', rankingNoMatch: 'Ingen spiller funnet.', rankingSeason: 'Sesong', rankingAllTime: 'Gjennom tidene',
+    rankingColRank: '#', rankingColPlayer: 'Kallenavn', rankingColScore: 'Poengsum', rankingColPoints: 'Poeng', rankingColGames: 'Spill',
   winResetTooltip: 'Tilbakestill vinduer',
     musicPlayer:'Avspiller',
     soundVolume:'Spillyder',

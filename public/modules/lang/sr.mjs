@@ -10,6 +10,10 @@ export const meta = {
 };
 
 export const strings = {
+    rankingTooltip: 'Ранг-листа', rankingTitle: 'Ранг-листа', rankingPth: 'PokerTH', rankingBbc: 'BBC', rankingWec: 'WEC',
+    rankingLoading: 'Учитавање…', rankingSoon: 'Ранг-листа ускоро.', rankingError: 'Није могуће учитати ранг-листу.', rankingEmpty: 'Нема уноса.',
+    rankingSearch: 'Претражи играча…', rankingNoMatch: 'Играч није пронађен.', rankingSeason: 'Сезона', rankingAllTime: 'Свих времена',
+    rankingColRank: '#', rankingColPlayer: 'Надимак', rankingColScore: 'Резултат', rankingColPoints: 'Поени', rankingColGames: 'Игре',
   winResetTooltip: 'Vrati prozore',
     musicPlayer:'Плејер',
     soundVolume:'Звукови игре',

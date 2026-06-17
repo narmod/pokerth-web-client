@@ -11,6 +11,10 @@ export const meta = {
 };
 
 export const strings = {
+    rankingTooltip: '排行榜', rankingTitle: '排行榜', rankingPth: 'PokerTH', rankingBbc: 'BBC', rankingWec: 'WEC',
+    rankingLoading: '載入中…', rankingSoon: '排行榜即將推出。', rankingError: '無法載入排行榜。', rankingEmpty: '沒有項目。',
+    rankingSearch: '搜尋玩家…', rankingNoMatch: '找不到玩家。', rankingSeason: '賽季', rankingAllTime: '歷來',
+    rankingColRank: '#', rankingColPlayer: '暱稱', rankingColScore: '分數', rankingColPoints: '積分', rankingColGames: '場數',
   winResetTooltip: '重設視窗',
     musicPlayer:'播放器',
     soundVolume:'遊戲音效',

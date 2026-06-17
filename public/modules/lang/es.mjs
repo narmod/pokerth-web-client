@@ -16,6 +16,10 @@ export const meta = {
 };
 
 export const strings = {
+    rankingTooltip: 'Clasificación', rankingTitle: 'Clasificación', rankingPth: 'PokerTH', rankingBbc: 'BBC', rankingWec: 'WEC',
+    rankingLoading: 'Cargando…', rankingSoon: 'Clasificación disponible pronto.', rankingError: 'No se pudo cargar la clasificación.', rankingEmpty: 'Sin entradas.',
+    rankingSearch: 'Buscar un jugador…', rankingNoMatch: 'Ningún jugador encontrado.', rankingSeason: 'Temporada', rankingAllTime: 'Todos los tiempos',
+    rankingColRank: '#', rankingColPlayer: 'Apodo', rankingColScore: 'Puntuación', rankingColPoints: 'Puntos', rankingColGames: 'Partidas',
   winResetTooltip: 'Restablecer ventanas',
     musicPlayer:'Reproductor',
     soundVolume:'Sonidos del juego',

@@ -10,6 +10,10 @@ export const meta = {
 };
 
 export const strings = {
+    rankingTooltip: 'Κατάταξη', rankingTitle: 'Κατάταξη', rankingPth: 'PokerTH', rankingBbc: 'BBC', rankingWec: 'WEC',
+    rankingLoading: 'Φόρτωση…', rankingSoon: 'Η κατάταξη έρχεται σύντομα.', rankingError: 'Αδυναμία φόρτωσης κατάταξης.', rankingEmpty: 'Καμία καταχώριση.',
+    rankingSearch: 'Αναζήτηση παίκτη…', rankingNoMatch: 'Δεν βρέθηκε παίκτης.', rankingSeason: 'Σεζόν', rankingAllTime: 'Όλων των εποχών',
+    rankingColRank: '#', rankingColPlayer: 'Ψευδώνυμο', rankingColScore: 'Σκορ', rankingColPoints: 'Πόντοι', rankingColGames: 'Παιχνίδια',
   winResetTooltip: 'Επαναφορά παραθύρων',
     musicPlayer:'Αναπαραγωγή',
     soundVolume:'Ήχοι παιχνιδιού',

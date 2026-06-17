@@ -9,6 +9,10 @@ export const meta = {
 };
 
 export const strings = {
+    rankingTooltip: 'Sijoituslista', rankingTitle: 'Sijoituslista', rankingPth: 'PokerTH', rankingBbc: 'BBC', rankingWec: 'WEC',
+    rankingLoading: 'Ladataan…', rankingSoon: 'Sijoituslista tulossa pian.', rankingError: 'Sijoituslistaa ei voitu ladata.', rankingEmpty: 'Ei merkintöjä.',
+    rankingSearch: 'Etsi pelaajaa…', rankingNoMatch: 'Pelaajaa ei löytynyt.', rankingSeason: 'Kausi', rankingAllTime: 'Kaikkien aikojen',
+    rankingColRank: '#', rankingColPlayer: 'Nimimerkki', rankingColScore: 'Tulos', rankingColPoints: 'Pisteet', rankingColGames: 'Pelit',
   winResetTooltip: 'Palauta ikkunat',
     musicPlayer:'Soitin',
     soundVolume:'Pelin äänet',

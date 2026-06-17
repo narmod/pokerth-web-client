@@ -14,6 +14,10 @@ export const meta = {
 };
 
 export const strings = {
+    rankingTooltip: 'रैंकिंग', rankingTitle: 'रैंकिंग', rankingPth: 'PokerTH', rankingBbc: 'BBC', rankingWec: 'WEC',
+    rankingLoading: 'लोड हो रहा है…', rankingSoon: 'रैंकिंग जल्द आ रही है।', rankingError: 'रैंकिंग लोड नहीं हो सकी।', rankingEmpty: 'कोई प्रविष्टि नहीं।',
+    rankingSearch: 'खिलाड़ी खोजें…', rankingNoMatch: 'कोई खिलाड़ी नहीं मिला।', rankingSeason: 'सीज़न', rankingAllTime: 'सर्वकालिक',
+    rankingColRank: '#', rankingColPlayer: 'उपनाम', rankingColScore: 'स्कोर', rankingColPoints: 'अंक', rankingColGames: 'खेल',
   winResetTooltip: 'विंडो रीसेट करें',
     musicPlayer:'प्लेयर',
     soundVolume:'गेम ध्वनियाँ',

@@ -10,6 +10,10 @@ export const meta = {
 };
 
 export const strings = {
+    rankingTooltip: 'Clasament', rankingTitle: 'Clasament', rankingPth: 'PokerTH', rankingBbc: 'BBC', rankingWec: 'WEC',
+    rankingLoading: 'Se încarcă…', rankingSoon: 'Clasamentul va fi disponibil în curând.', rankingError: 'Clasamentul nu a putut fi încărcat.', rankingEmpty: 'Nicio intrare.',
+    rankingSearch: 'Caută un jucător…', rankingNoMatch: 'Niciun jucător găsit.', rankingSeason: 'Sezon', rankingAllTime: 'Din toate timpurile',
+    rankingColRank: '#', rankingColPlayer: 'Poreclă', rankingColScore: 'Scor', rankingColPoints: 'Puncte', rankingColGames: 'Jocuri',
   winResetTooltip: 'Resetează ferestrele',
     musicPlayer:'Player',
     soundVolume:'Sunetele jocului',

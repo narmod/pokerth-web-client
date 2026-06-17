@@ -10,6 +10,10 @@ export const meta = {
 };
 
 export const strings = {
+    rankingTooltip: 'Classificació', rankingTitle: 'Classificació', rankingPth: 'PokerTH', rankingBbc: 'BBC', rankingWec: 'WEC',
+    rankingLoading: 'Carregant…', rankingSoon: 'Classificació disponible aviat.', rankingError: 'No s\'ha pogut carregar la classificació.', rankingEmpty: 'Cap entrada.',
+    rankingSearch: 'Cerca un jugador…', rankingNoMatch: 'Cap jugador trobat.', rankingSeason: 'Temporada', rankingAllTime: 'Tots els temps',
+    rankingColRank: '#', rankingColPlayer: 'Sobrenom', rankingColScore: 'Puntuació', rankingColPoints: 'Punts', rankingColGames: 'Partides',
   winResetTooltip: 'Restableix les finestres',
     musicPlayer:'Reproductor',
     soundVolume:'Sons del joc',

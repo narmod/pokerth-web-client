@@ -12,6 +12,10 @@ export const meta = {
 };
 
 export const strings = {
+    rankingTooltip: 'Sıralama', rankingTitle: 'Sıralama', rankingPth: 'PokerTH', rankingBbc: 'BBC', rankingWec: 'WEC',
+    rankingLoading: 'Yükleniyor…', rankingSoon: 'Sıralama yakında.', rankingError: 'Sıralama yüklenemedi.', rankingEmpty: 'Kayıt yok.',
+    rankingSearch: 'Oyuncu ara…', rankingNoMatch: 'Oyuncu bulunamadı.', rankingSeason: 'Sezon', rankingAllTime: 'Tüm zamanlar',
+    rankingColRank: '#', rankingColPlayer: 'Takma ad', rankingColScore: 'Skor', rankingColPoints: 'Puan', rankingColGames: 'Oyunlar',
   winResetTooltip: 'Pencereleri sıfırla',
     musicPlayer:'Oynatıcı',
     soundVolume:'Oyun sesleri',

@@ -9,6 +9,10 @@ export const meta = {
 };
 
 export const strings = {
+    rankingTooltip: 'ランキング', rankingTitle: 'ランキング', rankingPth: 'PokerTH', rankingBbc: 'BBC', rankingWec: 'WEC',
+    rankingLoading: '読み込み中…', rankingSoon: 'ランキングは近日公開。', rankingError: 'ランキングを読み込めませんでした。', rankingEmpty: 'エントリーがありません。',
+    rankingSearch: 'プレイヤーを検索…', rankingNoMatch: 'プレイヤーが見つかりません。', rankingSeason: 'シーズン', rankingAllTime: '全期間',
+    rankingColRank: '#', rankingColPlayer: 'ニックネーム', rankingColScore: 'スコア', rankingColPoints: 'ポイント', rankingColGames: 'ゲーム数',
   winResetTooltip: 'ウィンドウをリセット',
     musicPlayer:'プレーヤー',
     soundVolume:'ゲーム音',

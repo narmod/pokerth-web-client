@@ -10,6 +10,10 @@ export const meta = {
 };
 
 export const strings = {
+    rankingTooltip: 'Класиране', rankingTitle: 'Класиране', rankingPth: 'PokerTH', rankingBbc: 'BBC', rankingWec: 'WEC',
+    rankingLoading: 'Зареждане…', rankingSoon: 'Класирането предстои скоро.', rankingError: 'Класирането не можа да се зареди.', rankingEmpty: 'Няма записи.',
+    rankingSearch: 'Търсене на играч…', rankingNoMatch: 'Няма намерен играч.', rankingSeason: 'Сезон', rankingAllTime: 'За всички времена',
+    rankingColRank: '#', rankingColPlayer: 'Псевдоним', rankingColScore: 'Резултат', rankingColPoints: 'Точки', rankingColGames: 'Игри',
   winResetTooltip: 'Нулиране на прозорците',
     musicPlayer:'Плейър',
     soundVolume:'Звуци на играта',

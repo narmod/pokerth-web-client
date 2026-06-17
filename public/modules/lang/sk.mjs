@@ -10,6 +10,10 @@ export const meta = {
 };
 
 export const strings = {
+    rankingTooltip: 'Rebríček', rankingTitle: 'Rebríček', rankingPth: 'PokerTH', rankingBbc: 'BBC', rankingWec: 'WEC',
+    rankingLoading: 'Načítava sa…', rankingSoon: 'Rebríček bude čoskoro k dispozícii.', rankingError: 'Rebríček sa nepodarilo načítať.', rankingEmpty: 'Žiadne záznamy.',
+    rankingSearch: 'Hľadať hráča…', rankingNoMatch: 'Nenašiel sa žiadny hráč.', rankingSeason: 'Sezóna', rankingAllTime: 'Celkovo',
+    rankingColRank: '#', rankingColPlayer: 'Prezývka', rankingColScore: 'Skóre', rankingColPoints: 'Body', rankingColGames: 'Hry',
   winResetTooltip: 'Obnoviť okná',
     musicPlayer:'Prehrávač',
     soundVolume:'Zvuky hry',

@@ -15,6 +15,10 @@ export const meta = {
 };
 
 export const strings = {
+    rankingTooltip: 'Rangliste', rankingTitle: 'Rangliste', rankingPth: 'PokerTH', rankingBbc: 'BBC', rankingWec: 'WEC',
+    rankingLoading: 'Wird geladen…', rankingSoon: 'Rangliste bald verfügbar.', rankingError: 'Rangliste konnte nicht geladen werden.', rankingEmpty: 'Keine Einträge.',
+    rankingSearch: 'Spieler suchen…', rankingNoMatch: 'Kein Spieler gefunden.', rankingSeason: 'Saison', rankingAllTime: 'Allzeit',
+    rankingColRank: '#', rankingColPlayer: 'Spitzname', rankingColScore: 'Punktzahl', rankingColPoints: 'Punkte', rankingColGames: 'Spiele',
   winResetTooltip: 'Fenster zurücksetzen',
     musicPlayer:'Player',
     soundVolume:'Spielsounds',
