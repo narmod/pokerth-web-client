@@ -133,12 +133,14 @@ function playTone(freq, dur, vol) {
 const SOUND_DIR = '/sounds/pokerth/';
 const SAMPLE_FILES = {
   fold: 'fold', check: 'check', call: 'call', bet: 'bet',
-  raise: 'raise', allin: 'allin', deal: 'dealtwocards', turn: 'yourturn'
+  raise: 'raise', allin: 'allin', deal: 'dealtwocards', turn: 'yourturn',
+  blinds1: 'blinds_raises_level1', blinds2: 'blinds_raises_level2', blinds3: 'blinds_raises_level3'
 };
 var _rawBytes = {};     // nom logique -> ArrayBuffer brut (conserve pour re-decodage)
 var _buffers = {};      // nom logique -> AudioBuffer decode
 var _decodeCtx = null;  // contexte ayant servi a decoder _buffers
 var _fetchStarted = false;
+var _blindRaiseCount = 0;  // escalade montee de blinds (reset au GameStartInitial)
 
 // Decode UN sample (callback form : la seule supportee par les vieux Safari).
 function _decodeOne(name) {
@@ -312,12 +314,21 @@ function notifyChat() {
   playTone(880, 0.07, 0.1);
   _buzz([25]);
 }
+// Remet l'escalade de blinds a zero (appele au demarrage d'une partie).
+function resetBlindRaises() { _blindRaiseCount = 0; }
 function notifyBlindsUp() {
   // Montée des blinds : trois notes ascendantes "level up", brèves et
   // brillantes, distinctes du notifyRaise (qui n'en a que deux).
-  playTone(660, 0.08, 0.16);
-  setTimeout(function(){ playTone(880, 0.08, 0.17); }, 90);
-  setTimeout(function(){ playTone(1175, 0.16, 0.18); }, 190);
+  _blindRaiseCount++;
+  // Escalade fidele a l'upstream PokerTH : level1 aux hausses 1-2, level2 aux
+  // 3-4, level3 a partir de la 5e.
+  var lvl = _blindRaiseCount <= 2 ? 'blinds1' : (_blindRaiseCount <= 4 ? 'blinds2' : 'blinds3');
+  if (!_playSample(lvl)) {
+    // Repli synthe : trois notes ascendantes "level up".
+    playTone(660, 0.08, 0.16);
+    setTimeout(function(){ playTone(880, 0.08, 0.17); }, 90);
+    setTimeout(function(){ playTone(1175, 0.16, 0.18); }, 190);
+  }
   _buzz([40, 50, 40]);
 }
 // Décompte des dernières secondes (mon tour) : tic discret sur 5-4-3-2…
@@ -488,7 +499,7 @@ _fetchSamples();
 
 // ─── Modern ES module exports ───────────────────────────────────────────
 export {
-  getAudioCtx, playTone, playActionSound,
+  getAudioCtx, playTone, playActionSound, resetBlindRaises,
   notifyCard, notifyAction, notifyFold, notifyRaise, notifyAllIn,
   notifyMyTurn, notifyWinner, notifyBigWin, notifyChat, notifyBlindsUp,
   notifyTick, notifyTickFinal,
@@ -509,6 +520,7 @@ window.notifyWinner  = notifyWinner;
 window.notifyBigWin  = notifyBigWin;
 window.notifyChat    = notifyChat;
 window.notifyBlindsUp = notifyBlindsUp;
+window.resetBlindRaises = resetBlindRaises;
 window.notifyTick      = notifyTick;
 window.notifyTickFinal = notifyTickFinal;
 window.toggleSound   = toggleSound;
@@ -535,7 +547,7 @@ Object.defineProperty(window, '_soundEnabled', {
 
 // Single namespaced entry point for migration-aware code.
 window.SOUNDS = {
-  getAudioCtx, playTone, playActionSound,
+  getAudioCtx, playTone, playActionSound, resetBlindRaises,
   notifyCard, notifyAction, notifyFold, notifyRaise, notifyAllIn,
   notifyMyTurn, notifyWinner, notifyBigWin, notifyChat, notifyBlindsUp,
   notifyTick, notifyTickFinal,
