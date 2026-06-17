@@ -4625,12 +4625,25 @@ body:not(.in-game) .my-zone {
   font-size: 0.75rem;
   line-height: 1;
   color: var(--text-hi);
+  /* Theme-adaptive opaque chip so the cluster reads over the flames bg
+     (--inset alone is ~5% and vanished on the busy backdrop). */
+  background: var(--panel);
+  border: 1px solid var(--border);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.45);
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+  transition: background 0.2s, border-color 0.2s, color 0.2s;
+}
+#s-connect > div:first-child .btn-sm:hover,
+#s-connect .corner-links .btn-sm:hover {
+  background: var(--panel-hi);
+  border-color: var(--border-hi);
 }
 #s-connect > div:first-child .btn-icon,
 #s-connect .corner-links .btn-icon {
   width: 30px;
   padding: 0;
-  background: var(--inset);
+  background: var(--panel);
 }
 
 #s-connect .corner-links .btn-icon{ text-decoration:none; }
@@ -4649,12 +4662,13 @@ body:not(.in-game) .my-zone {
   left: 0;
   right: 0;
   text-align: center;
-  color: var(--gold-dim);
+  color: var(--text-hi);
   font-family: var(--ff-mono);
   font-size: 0.62rem;
   letter-spacing: 0.04em;
   line-height: 1.5;
-  opacity: 0.7;
+  opacity: 0.95;
+  text-shadow: 0 1px 4px rgba(0,0,0,0.95), 0 0 2px rgba(0,0,0,0.8);
   pointer-events: auto;
   z-index: 1;
 }
@@ -4662,14 +4676,26 @@ body:not(.in-game) .my-zone {
   margin: 1px 0;
 }
 .connect-footer a {
-  color: var(--gold-dim);
+  color: var(--gold-hi);
   text-decoration: none;
-  border-bottom: 1px dotted rgba(var(--gold-rgb), 0.3);
+  text-shadow: 0 1px 4px rgba(0,0,0,0.95);
+  border-bottom: 1px dotted rgba(var(--gold-rgb), 0.5);
   transition: color 0.2s, border-color 0.2s;
 }
 .connect-footer a:hover {
   color: var(--gold);
   border-bottom-color: var(--gold);
+}
+/* pokerth-light: footer overlays the dark flames, so the theme's dark
+   tokens would vanish -> warm-light values that harmonise with the fire. */
+:root[data-theme="pokerth-light"] .connect-footer { color: #ece8dc; }
+:root[data-theme="pokerth-light"] .connect-footer a {
+  color: #f0d68a;
+  border-bottom-color: rgba(240,214,138,0.5);
+}
+:root[data-theme="pokerth-light"] .connect-footer a:hover {
+  color: #ffe9ad;
+  border-bottom-color: #ffe9ad;
 }
 /* On very short screens (e.g. landscape mobile) hide the footer so
    the login card has more room. */
