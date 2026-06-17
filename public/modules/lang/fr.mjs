@@ -121,6 +121,9 @@ export const strings = {
     petitionEndTimeout:'Délai écoulé', petitionEndLeft:'Joueur déjà parti',
     petitionEndFew:'Pas assez de joueurs', petitionDenied:'Impossible de lancer le vote pour le moment',
     petitionAlreadyVoted:'Vous avez déjà voté',
+    // ── Invitations à une partie ──
+    inviteTitle:'{name} vous invite à {table}', inviteAccept:'Accepter', inviteDecline:'Refuser',
+    inviteAccepted:'Connexion à la table...',
     kickAtLeast2:'Au moins 2 joueurs sont nécessaires pour démarrer.',
     // ── Copie du lien ──
     linkCopied:'🔗 Lien copié !', linkCopyFailed:'Copie impossible — lien affiché', copiedShort:'Copié',

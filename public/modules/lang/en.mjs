@@ -122,6 +122,9 @@ export const strings = {
     petitionEndTimeout:'Vote timed out', petitionEndLeft:'Player already left',
     petitionEndFew:'Not enough players', petitionDenied:'Cannot start a vote right now',
     petitionAlreadyVoted:'You already voted',
+    // ── Game invitations ──
+    inviteTitle:'{name} invited you to {table}', inviteAccept:'Accept', inviteDecline:'Decline',
+    inviteAccepted:'Joining the table...',
     // ── Copy link ──
     linkCopied:'🔗 Link copied!', linkCopyFailed:'Copy failed — link shown', copiedShort:'Copied',
     piYou:'(you)', piSpectators:'Spectators', reconnIn:'Reconnecting in ', reconnInProgress:'Reconnecting…',

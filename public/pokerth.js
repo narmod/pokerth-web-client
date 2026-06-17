@@ -2211,6 +2211,7 @@ const MSG = (() => {
     18:19, 19:20,                              // PlayerInfo req/reply
     21:22, 22:23, 23:24, 24:25, 25:26,        // Join*
     26:27, 27:28, 28:29, 29:30,               // GamePlayer*
+    32:33, 33:34, 34:35, 35:36,                // Invite*: InvitePlayerToGame, InviteNotify, RejectGameInvitation, RejectInvNotify
     36:37, 37:38, 38:39,                       // StartEvent, StartEventAck, GameStartInitial
     40:41, 41:42, 42:43,                       // HandStart, PlayersTurn, MyActionRequest
     43:44,                                     // YourActionRejected
@@ -2239,6 +2240,7 @@ const MSG = (() => {
     JoinExisting:21, JoinNew:22, RejoinExisting:23,
     JoinNew:22, JoinGameAck:24, JoinGameFailed:25,
     GamePlayerJoined:26, GamePlayerLeft:27, GameAdminChanged:28, RemovedFromGame:29,
+    InvitePlayerToGame:32, InviteNotify:33, RejectGameInvitation:34, RejectInvNotify:35,
     StartEvent:36, StartEventAck:37, GameStartInitial:38,
     HandStart:40, PlayersTurn:41, MyActionRequest:42,
     YourActionRejected:43,
@@ -2464,7 +2466,13 @@ const MSG = (() => {
     return Proto.encode([[1,0,T.VoteKickRequest],[59,2,msg]]);
   }
 
-  return { T, parse, buildInit, buildChat, buildGameChat, buildJoin, buildJoinGame, buildRejoinGame, buildStartEventAck, buildMyAction, buildCreateGame, buildLeaveGame, buildStartWithBots, buildKickPlayer, buildAskKickPlayer, buildVoteKick };
+  // RejectGameInvitationMessage (type 34, env field 35): gameId=1, myRejectReason=2.
+  //   reason: 0 = rejectReasonNo (polite decline), 1 = rejectReasonBusy.
+  function buildRejectInvite(gameId, reason) {
+    const msg = Proto.encode([[1,0,gameId],[2,0,reason?reason:0]]);
+    return Proto.encode([[1,0,T.RejectGameInvitation],[35,2,msg]]);
+  }
+  return { T, parse, buildInit, buildChat, buildGameChat, buildJoin, buildJoinGame, buildRejoinGame, buildStartEventAck, buildMyAction, buildCreateGame, buildLeaveGame, buildStartWithBots, buildKickPlayer, buildAskKickPlayer, buildVoteKick, buildRejectInvite };
 })();
 
 
@@ -4338,6 +4346,64 @@ const App = (() => {
   }
   window._petAsk = _petAsk;
 
+  // ─────────────────────────────────────────────────────────────
+  //  Game invitations (InviteNotifyMessage — pokerth.net & dedicated)
+  //  The host invites us to a (possibly invite-only) table; the server
+  //  forwards an InviteNotify. We surface an Accept/Decline banner,
+  //  mirroring the Qt client's invitation dialog. Accept = join the
+  //  table exactly like a lobby click; Decline = RejectGameInvitation.
+  // ─────────────────────────────────────────────────────────────
+  var _inv = null; // { gameId } | null
+  function _inviteClear() {
+    _inv = null;
+    var b = document.getElementById('game-invite-banner');
+    if (b) b.remove();
+  }
+  function _inviteShow(o) {
+    if (window._offlineMode) return;
+    // Same invite already up → keep it (server may resend on reconnect).
+    if (_inv && _inv.gameId === o.gameId && document.getElementById('game-invite-banner')) return;
+    _inviteClear();
+    _inv = { gameId: o.gameId };
+    var host = _petName(o.byWhom);
+    var tbl  = (games[o.gameId] && games[o.gameId].name) || ('#' + o.gameId);
+    var b = document.createElement('div');
+    b.id = 'game-invite-banner';
+    b.style.cssText = 'position:fixed;left:50%;top:12px;transform:translateX(-50%);' +
+      'z-index:9000;max-width:min(94vw,460px);padding:10px 14px;border-radius:12px;' +
+      'background:var(--modal-bg,#222a36);color:var(--text,#eff1f5);' +
+      'border:1px solid var(--gold,#E3C800);box-shadow:0 6px 24px rgba(0,0,0,.45);' +
+      'font-family:var(--ff-display,inherit);text-align:center';
+    b.innerHTML =
+      '<div style="font-weight:700;margin-bottom:8px">\u2709 ' +
+        esc(t('inviteTitle', { name: host, table: tbl })) + '</div>' +
+      '<div style="display:flex;gap:8px;justify-content:center">' +
+        '<button id="gi-yes" style="flex:1;max-width:140px;padding:8px 0;border:0;border-radius:8px;' +
+          'font-weight:700;cursor:pointer;background:var(--green,#3fae5a);color:#06210e">' +
+          esc(t('inviteAccept')) + '</button>' +
+        '<button id="gi-no" style="flex:1;max-width:140px;padding:8px 0;border:0;border-radius:8px;' +
+          'font-weight:700;cursor:pointer;background:rgba(var(--red-rgb,217,64,64),1);color:#fff">' +
+          esc(t('inviteDecline')) + '</button>' +
+      '</div>';
+    document.body.appendChild(b);
+    var y = document.getElementById('gi-yes'), n = document.getElementById('gi-no');
+    if (y) y.addEventListener('click', _inviteAccept);
+    if (n) n.addEventListener('click', _inviteDecline);
+  }
+  function _inviteAccept() {
+    if (!_inv) return;
+    var gid = _inv.gameId;
+    _inviteClear();
+    try { send(MSG.buildJoinGame(gid, false)); } catch(e) {}
+    if (typeof addChat === 'function') addChat(null, t('inviteAccepted'), 'sys', { key: 'inviteAccepted' });
+  }
+  function _inviteDecline() {
+    if (!_inv) return;
+    var gid = _inv.gameId;
+    _inviteClear();
+    try { send(MSG.buildRejectInvite(gid, 0)); } catch(e) {}
+  }
+
   function handleMsg(buf) {
     const { type, sub } = MSG.parse(buf);
     const T = MSG.T;
@@ -4373,6 +4439,18 @@ const App = (() => {
         _petAskDenied(Proto.u32(sub, 3));
         break;
       }
+
+      // ── Game invitation: the host invited us to a table ──
+      case T.InviteNotify: {
+        // InviteNotify: gameId=1, playerIdWho=2 (invitee), playerIdByWhom=3 (host)
+        if (Proto.u32(sub, 2) === myId) {
+          _inviteShow({ gameId: Proto.u32(sub, 1), byWhom: Proto.u32(sub, 3) });
+        }
+        break;
+      }
+      // Someone declined an invite WE sent — outgoing invites not yet a
+      // web feature, so nothing to surface; swallow to avoid the default.
+      case T.RejectInvNotify: { break; }
 
       case T.Announce: {
         const pv    = Proto.sub(sub, 1); // protocolVersion (réseau, ex: 5.1)
@@ -11126,7 +11204,7 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.3.23-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.24-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
