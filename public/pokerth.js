@@ -2266,6 +2266,84 @@ const MSG = (() => {
     return { type, sub };
   }
 
+  // ─── SCRAM-SHA-1 (RFC 5802) — authenticated login to pokerth.net ──────
+  // The official client authenticates via libgsasl SCRAM-SHA-1
+  // (SessionData::CreateClientAuthSession(Gsasl*, user, password)). We reproduce
+  // the same exchange with Web Crypto so account login is instant like the
+  // native client, instead of the old empty-response shortcut that pokerth.net
+  // no longer accepts directly:
+  //   InitMessage.clientUserData = client-first-message  "n,,n=user,r=cnonce"
+  //   AuthServerChallengeMessage = server-first-message  "r=..,s=..,i=.."
+  //   AuthClientResponseMessage  = client-final-message  "c=biws,r=..,p=proof"
+  // Maths: PBKDF2-SHA1 / HMAC-SHA1 / SHA1 (all in SubtleCrypto). Password is used
+  // as-is; SASLprep of non-ASCII passwords is not implemented yet.
+  const _scEnc = new TextEncoder();
+  const _scDec = new TextDecoder();
+  function _scNonce() {
+    const r = new Uint8Array(18); crypto.getRandomValues(r);
+    let bin = ''; for (let i = 0; i < r.length; i++) bin += String.fromCharCode(r[i]);
+    return btoa(bin); // base64 is SCRAM-safe (contains no comma)
+  }
+  function _scName(x) { return String(x).replace(/=/g, '=3D').replace(/,/g, '=2C'); }
+  function _scB64ToBytes(b64) {
+    const bin = atob(b64); const o = new Uint8Array(bin.length);
+    for (let i = 0; i < bin.length; i++) o[i] = bin.charCodeAt(i); return o;
+  }
+  function _scBytesToB64(b) {
+    let bin = ''; for (let i = 0; i < b.length; i++) bin += String.fromCharCode(b[i]); return btoa(bin);
+  }
+  async function _scHmac(keyBytes, dataBytes) {
+    const k = await crypto.subtle.importKey('raw', keyBytes, { name: 'HMAC', hash: 'SHA-1' }, false, ['sign']);
+    return new Uint8Array(await crypto.subtle.sign('HMAC', k, dataBytes));
+  }
+  async function _scSha1(b) { return new Uint8Array(await crypto.subtle.digest('SHA-1', b)); }
+  async function _scPbkdf2(passBytes, saltBytes, iters) {
+    const k = await crypto.subtle.importKey('raw', passBytes, 'PBKDF2', false, ['deriveBits']);
+    return new Uint8Array(await crypto.subtle.deriveBits(
+      { name: 'PBKDF2', salt: saltBytes, iterations: iters, hash: 'SHA-1' }, k, 160));
+  }
+  function scramClientFirst(username) {
+    const cnonce = _scNonce();
+    const bare = 'n=' + _scName(username) + ',r=' + cnonce;
+    return { clientFirst: 'n,,' + bare, clientFirstBare: bare, cnonce: cnonce };
+  }
+  // Find the server-first-message among a decoded message's fields, so we don't
+  // depend on its exact field number (it looks like "r=..,s=..,i=..").
+  function scramFindServerFirst(subObj) {
+    for (const k in subObj) {
+      if (!Object.prototype.hasOwnProperty.call(subObj, k)) continue;
+      const v = subObj[k] && subObj[k][0];
+      if (v instanceof Uint8Array) {
+        try {
+          const t = _scDec.decode(v);
+          if (/(^|,)r=/.test(t) && /,s=/.test(t) && /,i=\d/.test(t)) return t;
+        } catch (e) {}
+      }
+    }
+    return '';
+  }
+  async function scramClientFinal(password, clientFirstBare, serverFirst) {
+    const a = {};
+    serverFirst.split(',').forEach(function (kv) {
+      const i = kv.indexOf('='); if (i > 0) a[kv.slice(0, i)] = kv.slice(i + 1);
+    });
+    const rnonce = a.r || '';
+    const salt = _scB64ToBytes(a.s || '');
+    const iters = parseInt(a.i || '0', 10);
+    if (!rnonce || !salt.length || !(iters > 0)) throw new Error('bad SCRAM server-first');
+    const finalBare = 'c=biws,r=' + rnonce;            // biws = base64("n,,")
+    const authMsg = _scEnc.encode(clientFirstBare + ',' + serverFirst + ',' + finalBare);
+    const salted = await _scPbkdf2(_scEnc.encode(String(password)), salt, iters);
+    const clientKey = await _scHmac(salted, _scEnc.encode('Client Key'));
+    const storedKey = await _scSha1(clientKey);
+    const clientSig = await _scHmac(storedKey, authMsg);
+    const proof = new Uint8Array(clientKey.length);
+    for (let i = 0; i < proof.length; i++) proof[i] = clientKey[i] ^ clientSig[i];
+    const serverKey = await _scHmac(salted, _scEnc.encode('Server Key'));
+    const serverSig = await _scHmac(serverKey, authMsg);
+    return { clientFinal: finalBare + ',p=' + _scBytesToB64(proof), serverSignatureB64: _scBytesToB64(serverSig) };
+  }
+
   // Construit un InitMessage (guest, unauth ou authenticated user)
   // buildId = (CLIENT_TYPE_QT_WIDGET<<24)|(MAJOR<<16)|(MINOR<<8)|PATCH
   // = (0x01<<24)|(2<<16)|(0<<8)|6 = 0x01020006 = 16908294 (PokerTH 2.0.6)
@@ -2291,17 +2369,13 @@ const MSG = (() => {
     if (serverPass) {
       fields.push([4, 2, String(serverPass)]); // authServerPassword
     }
-    // Authenticated login : password en bytes dans clientUserData (tag 7, max 256 bytes).
-    // Tronqué si nécessaire pour rester sous la limite imposée par le serveur.
+    // Authenticated login : clientUserData (tag 7) carries the SCRAM-SHA-1
+    // *client-first-message* (NOT the plaintext password). The proof is computed
+    // later, when the server's AuthServerChallenge arrives.
     if (loginType === 1 && password) {
-      let pwd = String(password);
-      // Sanity check : max 256 bytes UTF-8 (cf. netpacketvalidator.cpp:184)
-      const enc = new TextEncoder().encode(pwd);
-      if (enc.length > 256) {
-        console.warn('[buildInit] password > 256 bytes UTF-8, truncated');
-        pwd = new TextDecoder().decode(enc.slice(0, 256));
-      }
-      fields.push([7, 2, pwd]); // clientUserData
+      const _sc = scramClientFirst(nick);
+      try { window._pthScram = { password: String(password), clientFirstBare: _sc.clientFirstBare, cnonce: _sc.cnonce }; } catch (e) {}
+      fields.push([7, 2, _sc.clientFirst]); // clientUserData = SCRAM client-first
     }
     // PokerTH avatar UPLOAD (scope A): advertise the prepared custom image's
     // MD5 so the server requests the bytes and relays the avatar to official
@@ -2425,8 +2499,11 @@ const MSG = (() => {
     return Proto.encode([[1, 0, 22], [23, 2, msg]]);
   }
 
-  function buildAuthResponse() {
-    const msg = Proto.encode([[1, 2, new Uint8Array(0)]]);
+  function buildAuthResponse(token) {
+    const tok = (token instanceof Uint8Array) ? token
+              : (typeof token === 'string') ? _scEnc.encode(token)
+              : new Uint8Array(0);
+    const msg = Proto.encode([[1, 2, tok]]);
     return Proto.encode([[1, 0, T.AuthClientResp], [5, 2, msg]]);
   }
 
@@ -2478,7 +2555,7 @@ const MSG = (() => {
     const msg = Proto.encode([[1,0,gameId],[2,0,playerId]]);
     return Proto.encode([[1,0,T.InvitePlayerToGame],[33,2,msg]]);
   }
-  return { T, parse, buildInit, buildChat, buildGameChat, buildJoin, buildJoinGame, buildRejoinGame, buildStartEventAck, buildMyAction, buildCreateGame, buildLeaveGame, buildStartWithBots, buildKickPlayer, buildAskKickPlayer, buildVoteKick, buildRejectInvite, buildInvitePlayer };
+  return { T, parse, scramClientFirst, scramClientFinal, scramFindServerFirst, buildInit, buildChat, buildGameChat, buildJoin, buildJoinGame, buildRejoinGame, buildStartEventAck, buildMyAction, buildCreateGame, buildLeaveGame, buildStartWithBots, buildKickPlayer, buildAskKickPlayer, buildVoteKick, buildRejectInvite, buildInvitePlayer };
 })();
 
 
@@ -4636,9 +4713,23 @@ const App = (() => {
 
       // Erreur serveur
       case T.AuthChallenge: {
-        // SCRAM removed on server — reply with empty response
         setStatus(t('verifyingAccount'));
-        send(MSG.buildAuthResponse());
+        // Real SCRAM-SHA-1: find the server-first-message and answer with the
+        // client-final-message (proof). Falls back to the legacy empty response
+        // if there is no SCRAM context or the challenge can't be parsed, so
+        // SCRAM-removed servers keep working.
+        var _sf = MSG.scramFindServerFirst(sub);
+        var _scx = (typeof window !== 'undefined') ? window._pthScram : null;
+        if (_scx && _sf) {
+          MSG.scramClientFinal(_scx.password, _scx.clientFirstBare, _sf).then(function (r) {
+            send(MSG.buildAuthResponse(r.clientFinal));
+          }).catch(function (e) {
+            try { console.warn('[SCRAM]', e && e.message); } catch (_e) {}
+            send(MSG.buildAuthResponse());
+          });
+        } else {
+          send(MSG.buildAuthResponse());
+        }
         break;
       }
 
@@ -11365,7 +11456,7 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.3.56-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.57-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
