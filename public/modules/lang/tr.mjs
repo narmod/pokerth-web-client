@@ -13,6 +13,7 @@ export const meta = {
 
 export const strings = {
     rankingTooltip: 'Sıralama', rankingTitle: 'Sıralama', rankingPth: 'PokerTH', rankingBbc: 'BBC', rankingWec: 'WEC',
+    rankingMemberSince: 'Üyelik tarihi', rankingAwards: 'Ödüller', rankingTickets: 'Biletler', rankingThisSeason: 'Bu sezon', rankingThisMonth: 'Bu ay', rankingThisYear: 'Bu yıl', rankingStep: 'Adım', rankingRank: 'Sıralama', rankingBack: 'Geri',
     rankingLoading: 'Yükleniyor…', rankingSoon: 'Sıralama yakında.', rankingError: 'Sıralama yüklenemedi.', rankingEmpty: 'Kayıt yok.',
     rankingSearch: 'Oyuncu ara…', rankingNoMatch: 'Oyuncu bulunamadı.', rankingSeason: 'Sezon', rankingAllTime: 'Tüm zamanlar',
     rankingColRank: '#', rankingColPlayer: 'Takma ad', rankingColScore: 'Skor', rankingColPoints: 'Puan', rankingColGames: 'Oyunlar',

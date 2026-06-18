@@ -11,6 +11,7 @@ export const meta = {
 
 export const strings = {
     rankingTooltip: 'Reitingas', rankingTitle: 'Reitingas', rankingPth: 'PokerTH', rankingBbc: 'BBC', rankingWec: 'WEC',
+    rankingMemberSince: 'Narys nuo', rankingAwards: 'Apdovanojimai', rankingTickets: 'Bilietai', rankingThisSeason: 'Šis sezonas', rankingThisMonth: 'Šis mėnuo', rankingThisYear: 'Šie metai', rankingStep: 'Pakopa', rankingRank: 'Rangas', rankingBack: 'Atgal',
     rankingLoading: 'Įkeliama…', rankingSoon: 'Reitingas netrukus bus prieinamas.', rankingError: 'Nepavyko įkelti reitingo.', rankingEmpty: 'Įrašų nėra.',
     rankingSearch: 'Ieškoti žaidėjo…', rankingNoMatch: 'Žaidėjų nerasta.', rankingSeason: 'Sezonas', rankingAllTime: 'Visų laikų',
     rankingColRank: '#', rankingColPlayer: 'Slapyvardis', rankingColScore: 'Rezultatas', rankingColPoints: 'Taškai', rankingColGames: 'Žaidimai',

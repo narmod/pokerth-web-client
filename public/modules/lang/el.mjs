@@ -11,6 +11,7 @@ export const meta = {
 
 export const strings = {
     rankingTooltip: 'Κατάταξη', rankingTitle: 'Κατάταξη', rankingPth: 'PokerTH', rankingBbc: 'BBC', rankingWec: 'WEC',
+    rankingMemberSince: 'Μέλος από', rankingAwards: 'Βραβεία', rankingTickets: 'Εισιτήρια', rankingThisSeason: 'Αυτή τη σεζόν', rankingThisMonth: 'Αυτόν τον μήνα', rankingThisYear: 'Φέτος', rankingStep: 'Βήμα', rankingRank: 'Κατάταξη', rankingBack: 'Πίσω',
     rankingLoading: 'Φόρτωση…', rankingSoon: 'Η κατάταξη έρχεται σύντομα.', rankingError: 'Αδυναμία φόρτωσης κατάταξης.', rankingEmpty: 'Καμία καταχώριση.',
     rankingSearch: 'Αναζήτηση παίκτη…', rankingNoMatch: 'Δεν βρέθηκε παίκτης.', rankingSeason: 'Σεζόν', rankingAllTime: 'Όλων των εποχών',
     rankingColRank: '#', rankingColPlayer: 'Ψευδώνυμο', rankingColScore: 'Σκορ', rankingColPoints: 'Πόντοι', rankingColGames: 'Παιχνίδια',

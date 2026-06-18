@@ -10,6 +10,7 @@ export const meta = {
 
 export const strings = {
     rankingTooltip: 'Sijoituslista', rankingTitle: 'Sijoituslista', rankingPth: 'PokerTH', rankingBbc: 'BBC', rankingWec: 'WEC',
+    rankingMemberSince: 'Jäsen alkaen', rankingAwards: 'Palkinnot', rankingTickets: 'Liput', rankingThisSeason: 'Tämä kausi', rankingThisMonth: 'Tässä kuussa', rankingThisYear: 'Tänä vuonna', rankingStep: 'Taso', rankingRank: 'Sija', rankingBack: 'Takaisin',
     rankingLoading: 'Ladataan…', rankingSoon: 'Sijoituslista tulossa pian.', rankingError: 'Sijoituslistaa ei voitu ladata.', rankingEmpty: 'Ei merkintöjä.',
     rankingSearch: 'Etsi pelaajaa…', rankingNoMatch: 'Pelaajaa ei löytynyt.', rankingSeason: 'Kausi', rankingAllTime: 'Kaikkien aikojen',
     rankingColRank: '#', rankingColPlayer: 'Nimimerkki', rankingColScore: 'Tulos', rankingColPoints: 'Pisteet', rankingColGames: 'Pelit',

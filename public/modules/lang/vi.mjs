@@ -11,6 +11,7 @@ export const meta = {
 
 export const strings = {
     rankingTooltip: 'Xếp hạng', rankingTitle: 'Xếp hạng', rankingPth: 'PokerTH', rankingBbc: 'BBC', rankingWec: 'WEC',
+    rankingMemberSince: 'Thành viên từ', rankingAwards: 'Giải thưởng', rankingTickets: 'Vé', rankingThisSeason: 'Mùa này', rankingThisMonth: 'Tháng này', rankingThisYear: 'Năm nay', rankingStep: 'Bước', rankingRank: 'Hạng', rankingBack: 'Quay lại',
     rankingLoading: 'Đang tải…', rankingSoon: 'Xếp hạng sắp ra mắt.', rankingError: 'Không thể tải xếp hạng.', rankingEmpty: 'Không có mục nào.',
     rankingSearch: 'Tìm người chơi…', rankingNoMatch: 'Không tìm thấy người chơi.', rankingSeason: 'Mùa', rankingAllTime: 'Mọi thời đại',
     rankingColRank: '#', rankingColPlayer: 'Biệt danh', rankingColScore: 'Điểm số', rankingColPoints: 'Điểm', rankingColGames: 'Số ván',

@@ -10,6 +10,7 @@ export const meta = {
 
 export const strings = {
     rankingTooltip: 'Classificação', rankingTitle: 'Classificação', rankingPth: 'PokerTH', rankingBbc: 'BBC', rankingWec: 'WEC',
+    rankingMemberSince: 'Membro desde', rankingAwards: 'Prémios', rankingTickets: 'Bilhetes', rankingThisSeason: 'Esta temporada', rankingThisMonth: 'Este mês', rankingThisYear: 'Este ano', rankingStep: 'Etapa', rankingRank: 'Classificação', rankingBack: 'Voltar',
     rankingLoading: 'A carregar…', rankingSoon: 'Classificação disponível em breve.', rankingError: 'Não foi possível carregar a classificação.', rankingEmpty: 'Sem entradas.',
     rankingSearch: 'Procurar um jogador…', rankingNoMatch: 'Nenhum jogador encontrado.', rankingSeason: 'Temporada', rankingAllTime: 'De sempre',
     rankingColRank: '#', rankingColPlayer: 'Alcunha', rankingColScore: 'Pontuação', rankingColPoints: 'Pontos', rankingColGames: 'Jogos',

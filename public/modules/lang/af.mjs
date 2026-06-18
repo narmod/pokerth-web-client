@@ -11,6 +11,7 @@ export const meta = {
 
 export const strings = {
     rankingTooltip: 'Ranglys', rankingTitle: 'Ranglys', rankingPth: 'PokerTH', rankingBbc: 'BBC', rankingWec: 'WEC',
+    rankingMemberSince: 'Lid sedert', rankingAwards: 'Toekennings', rankingTickets: 'Kaartjies', rankingThisSeason: 'Hierdie seisoen', rankingThisMonth: 'Hierdie maand', rankingThisYear: 'Hierdie jaar', rankingStep: 'Stap', rankingRank: 'Rang', rankingBack: 'Terug',
     rankingLoading: 'Laai tans…', rankingSoon: 'Ranglys binnekort beskikbaar.', rankingError: 'Kon nie die ranglys laai nie.', rankingEmpty: 'Geen inskrywings nie.',
     rankingSearch: 'Soek \'n speler…', rankingNoMatch: 'Geen speler gevind nie.', rankingSeason: 'Seisoen', rankingAllTime: 'Alle tye',
     rankingColRank: '#', rankingColPlayer: 'Bynaam', rankingColScore: 'Telling', rankingColPoints: 'Punte', rankingColGames: 'Spele',

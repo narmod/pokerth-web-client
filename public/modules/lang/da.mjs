@@ -10,6 +10,7 @@ export const meta = {
 
 export const strings = {
     rankingTooltip: 'Rangliste', rankingTitle: 'Rangliste', rankingPth: 'PokerTH', rankingBbc: 'BBC', rankingWec: 'WEC',
+    rankingMemberSince: 'Medlem siden', rankingAwards: 'Præmier', rankingTickets: 'Billetter', rankingThisSeason: 'Denne sæson', rankingThisMonth: 'Denne måned', rankingThisYear: 'I år', rankingStep: 'Trin', rankingRank: 'Rang', rankingBack: 'Tilbage',
     rankingLoading: 'Indlæser…', rankingSoon: 'Rangliste kommer snart.', rankingError: 'Kunne ikke indlæse ranglisten.', rankingEmpty: 'Ingen poster.',
     rankingSearch: 'Søg en spiller…', rankingNoMatch: 'Ingen spiller fundet.', rankingSeason: 'Sæson', rankingAllTime: 'Alle tider',
     rankingColRank: '#', rankingColPlayer: 'Kaldenavn', rankingColScore: 'Score', rankingColPoints: 'Point', rankingColGames: 'Spil',

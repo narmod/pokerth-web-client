@@ -10,6 +10,7 @@ export const meta = {
 
 export const strings = {
     rankingTooltip: 'Ranking', rankingTitle: 'Ranking', rankingPth: 'PokerTH', rankingBbc: 'BBC', rankingWec: 'WEC',
+    rankingMemberSince: 'Medlem sedan', rankingAwards: 'Utmärkelser', rankingTickets: 'Biljetter', rankingThisSeason: 'Den här säsongen', rankingThisMonth: 'Den här månaden', rankingThisYear: 'I år', rankingStep: 'Steg', rankingRank: 'Rang', rankingBack: 'Tillbaka',
     rankingLoading: 'Laddar…', rankingSoon: 'Ranking kommer snart.', rankingError: 'Det gick inte att ladda rankingen.', rankingEmpty: 'Inga poster.',
     rankingSearch: 'Sök en spelare…', rankingNoMatch: 'Ingen spelare hittades.', rankingSeason: 'Säsong', rankingAllTime: 'Genom tiderna',
     rankingColRank: '#', rankingColPlayer: 'Smeknamn', rankingColScore: 'Score', rankingColPoints: 'Poäng', rankingColGames: 'Spel',

@@ -14,6 +14,7 @@ export const meta = {
 
 export const strings = {
     rankingTooltip: '랭킹', rankingTitle: '랭킹', rankingPth: 'PokerTH', rankingBbc: 'BBC', rankingWec: 'WEC',
+    rankingMemberSince: '가입일', rankingAwards: '수상', rankingTickets: '티켓', rankingThisSeason: '이번 시즌', rankingThisMonth: '이번 달', rankingThisYear: '올해', rankingStep: '단계', rankingRank: '순위', rankingBack: '뒤로',
     rankingLoading: '불러오는 중…', rankingSoon: '랭킹 곧 제공 예정.', rankingError: '랭킹을 불러올 수 없습니다.', rankingEmpty: '항목 없음.',
     rankingSearch: '플레이어 검색…', rankingNoMatch: '플레이어를 찾을 수 없습니다.', rankingSeason: '시즌', rankingAllTime: '전체 기간',
     rankingColRank: '#', rankingColPlayer: '닉네임', rankingColScore: '점수', rankingColPoints: '포인트', rankingColGames: '게임 수',

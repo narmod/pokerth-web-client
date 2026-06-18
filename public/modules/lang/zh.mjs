@@ -12,6 +12,7 @@ export const meta = {
 
 export const strings = {
     rankingTooltip: '排行榜', rankingTitle: '排行榜', rankingPth: 'PokerTH', rankingBbc: 'BBC', rankingWec: 'WEC',
+    rankingMemberSince: '加入于', rankingAwards: '奖项', rankingTickets: '门票', rankingThisSeason: '本赛季', rankingThisMonth: '本月', rankingThisYear: '今年', rankingStep: '阶段', rankingRank: '排名', rankingBack: '返回',
     rankingLoading: '加载中…', rankingSoon: '排行榜即将推出。', rankingError: '无法加载排行榜。', rankingEmpty: '没有条目。',
     rankingSearch: '搜索玩家…', rankingNoMatch: '未找到玩家。', rankingSeason: '赛季', rankingAllTime: '历史',
     rankingColRank: '#', rankingColPlayer: '昵称', rankingColScore: '分数', rankingColPoints: '积分', rankingColGames: '场数',

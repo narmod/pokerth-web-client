@@ -12,6 +12,7 @@ export const meta = {
 
 export const strings = {
     rankingTooltip: 'Rangachadh', rankingTitle: 'Rangachadh', rankingPth: 'PokerTH', rankingBbc: 'BBC', rankingWec: 'WEC',
+    rankingMemberSince: 'Ball bho', rankingAwards: 'Duaisean', rankingTickets: 'Tiocaidean', rankingThisSeason: 'An seusan seo', rankingThisMonth: 'Am mìos seo', rankingThisYear: 'Am bliadhna', rankingStep: 'Ceum', rankingRank: 'Rang', rankingBack: 'Air ais',
     rankingLoading: 'A\' luchdadh…', rankingSoon: 'Rangachadh a\' tighinn a dh\'aithghearr.', rankingError: 'Cha b\' urrainn an rangachadh a luchdadh.', rankingEmpty: 'Gun chlàran.',
     rankingSearch: 'Lorg cluicheadair…', rankingNoMatch: 'Cluicheadair gun lorg.', rankingSeason: 'Seusan', rankingAllTime: 'Fad na h-ùine',
     rankingColRank: '#', rankingColPlayer: 'Far-ainm', rankingColScore: 'Sgòr', rankingColPoints: 'Puingean', rankingColGames: 'Geamannan',

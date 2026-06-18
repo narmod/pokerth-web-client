@@ -10,6 +10,7 @@ export const meta = {
 
 export const strings = {
     rankingTooltip: 'Рейтинг', rankingTitle: 'Рейтинг', rankingPth: 'PokerTH', rankingBbc: 'BBC', rankingWec: 'WEC',
+    rankingMemberSince: 'Учасник з', rankingAwards: 'Нагороди', rankingTickets: 'Квитки', rankingThisSeason: 'Цей сезон', rankingThisMonth: 'Цей місяць', rankingThisYear: 'Цей рік', rankingStep: 'Щабель', rankingRank: 'Ранг', rankingBack: 'Назад',
     rankingLoading: 'Завантаження…', rankingSoon: 'Рейтинг незабаром.', rankingError: 'Не вдалося завантажити рейтинг.', rankingEmpty: 'Немає записів.',
     rankingSearch: 'Пошук гравця…', rankingNoMatch: 'Гравця не знайдено.', rankingSeason: 'Сезон', rankingAllTime: 'За весь час',
     rankingColRank: '#', rankingColPlayer: 'Псевдонім', rankingColScore: 'Рахунок', rankingColPoints: 'Очки', rankingColGames: 'Ігри',
