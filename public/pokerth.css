@@ -6161,7 +6161,9 @@ body.has-keyboard .act-key { display: inline-block; }
 .rk-awards::-webkit-scrollbar { height: 6px; }
 .rk-awards::-webkit-scrollbar-thumb { background: var(--gold-dim); border-radius: 3px; }
 .rk-awards::-webkit-scrollbar-track { background: transparent; }
-.rk-award { flex: 0 0 auto; width: 54px; height: 54px; object-fit: contain; border-radius: 4px; background: rgba(var(--gold-rgb), 0.05); }
+.rk-award { flex: 0 0 auto; width: 54px; height: 54px; object-fit: contain; border-radius: 4px; background: rgba(var(--gold-rgb), 0.05); cursor: pointer; }
+#rk-awpop { display: none; position: fixed; inset: 0; z-index: 2000; background: rgba(0, 0, 0, 0.85); align-items: center; justify-content: center; padding: 24px; cursor: pointer; pointer-events: auto; }
+#rk-awpop img { max-width: 90vw; max-height: 90vh; object-fit: contain; border-radius: 6px; box-shadow: 0 8px 40px rgba(0, 0, 0, 0.6); }
 .rk-tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(64px, 1fr)); gap: 6px; }
 .rk-tile { background: var(--field-bg); border: 1px solid var(--border); border-radius: 4px; padding: 8px 4px; text-align: center; }
 .rk-tile-v { font-family: var(--ff-mono); font-size: 0.95rem; font-weight: 600; color: var(--text-hi); }

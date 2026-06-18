@@ -1626,6 +1626,7 @@ if ('serviceWorker' in navigator) {
      corner globe. BBC supports a season dropdown + All-Time (season 0) like the
      official QML client; name search filters live (accent-insensitive). i18n. -->
 <div id="ranking-modal" style="display:none">
+  <div id="rk-awpop" onclick="this.style.display='none'"><img alt=""></div>
   <div class="rk-backdrop" onclick="closeRankingModal()"></div>
   <div class="rk-card" role="dialog" aria-labelledby="rk-title">
     <button class="rk-close" type="button" onclick="closeRankingModal()" title="Fermer" data-i18n-title="closeTooltip" aria-label="Fermer">✕</button>
@@ -1863,6 +1864,7 @@ if ('serviceWorker' in navigator) {
     if (prof) prof.style.display = isProf ? 'block' : 'none';
   }
   window.rankingBackToList = function () { rkSetView('list'); };
+  window.rkAwardPop = function (url) { var p = document.getElementById('rk-awpop'); if (!p) return; p.querySelector('img').src = url || ''; p.style.display = 'flex'; };
 
   function rkSection(title, inner) {
     return '<div class="rk-sec"><div class="rk-sec-h">' + rkEsc(title) + '</div>' + inner + '</div>';
@@ -1889,7 +1891,7 @@ if ('serviceWorker' in navigator) {
       var aw = '<div class="rk-awards">';
       for (var i = 0; i < d.awards.length; i++) {
         var t = rkEsc(d.awards[i].title || '');
-        aw += '<img class="rk-award" src="' + rkEsc(d.awards[i].img) + '" alt="' + t + '" title="' + t + '" loading="lazy">';
+        aw += '<img class="rk-award" src="' + rkEsc(d.awards[i].img) + '" alt="' + t + '" title="' + t + '" loading="lazy" data-full="' + rkEsc(d.awards[i].img) + '" onclick="rkAwardPop(this.dataset.full)">';
       }
       h += rkSection(rkT('rankingAwards', 'Awards'), aw + '</div>');
     }
