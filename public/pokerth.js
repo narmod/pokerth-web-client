@@ -2372,10 +2372,24 @@ const MSG = (() => {
     // Authenticated login : clientUserData (tag 7) carries the SCRAM-SHA-1
     // *client-first-message* (NOT the plaintext password). The proof is computed
     // later, when the server's AuthServerChallenge arrives.
+    // SubtleCrypto only exists in a secure context (HTTPS / localhost). On a
+    // plain-HTTP deployment we cannot compute the SCRAM proof, so we must NOT
+    // start a SCRAM handshake we can't finish (a half-done SCRAM is rejected by
+    // pokerth.net). Fall back to the legacy behaviour: password in clientUserData.
     if (loginType === 1 && password) {
-      const _sc = scramClientFirst(nick);
-      try { window._pthScram = { password: String(password), clientFirstBare: _sc.clientFirstBare, cnonce: _sc.cnonce }; } catch (e) {}
-      fields.push([7, 2, _sc.clientFirst]); // clientUserData = SCRAM client-first
+      const _subtleOk = (typeof crypto !== 'undefined') && crypto.subtle && (typeof crypto.subtle.importKey === 'function');
+      if (_subtleOk) {
+        const _sc = scramClientFirst(nick);
+        try { window._pthScram = { password: String(password), clientFirstBare: _sc.clientFirstBare, cnonce: _sc.cnonce }; } catch (e) {}
+        fields.push([7, 2, _sc.clientFirst]); // clientUserData = SCRAM client-first
+      } else {
+        try { window._pthScram = null; } catch (e) {}
+        try { console.info('[auth] SubtleCrypto unavailable (insecure context) — using legacy auth; serve over HTTPS for SCRAM'); } catch (e) {}
+        let pwd = String(password);
+        const enc = new TextEncoder().encode(pwd);
+        if (enc.length > 256) pwd = new TextDecoder().decode(enc.slice(0, 256));
+        fields.push([7, 2, pwd]); // legacy clientUserData = password (no SubtleCrypto)
+      }
     }
     // PokerTH avatar UPLOAD (scope A): advertise the prepared custom image's
     // MD5 so the server requests the bytes and relays the avatar to official
@@ -11456,7 +11470,7 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.3.57-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.58-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
