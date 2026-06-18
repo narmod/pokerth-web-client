@@ -125,6 +125,8 @@ export const strings = {
     // ── Game invitations ──
     inviteTitle:'{name} invited you to {table}', inviteAccept:'Accept', inviteDecline:'Decline',
     inviteAccepted:'Joining the table...',
+    inviteMenu:'Invite players', inviteModalTitle:'Invite players', inviteSubtitle:'Online players not yet at the table',
+    inviteBtn:'Invite', inviteSent:'Invited', inviteNoPlayers:'No one available', inviteSentToast:'Invitation sent to {name}',
     // ── Copy link ──
     linkCopied:'🔗 Link copied!', linkCopyFailed:'Copy failed — link shown', copiedShort:'Copied',
     piYou:'(you)', piSpectators:'Spectators', reconnIn:'Reconnecting in ', reconnInProgress:'Reconnecting…',

@@ -1198,6 +1198,8 @@ function onAvatarImageChosen(input) {
       <button class="btn-sm" id="auto-pref-mob" onclick="toggleAutoBtnPref()">🔁 Auto button</button>
       <button class="btn-sm" id="pct-pref-mob" onclick="toggleQuickBetPref()">💰 Quick-bet buttons</button>
       <button class="btn-sm" id="assist-toggle-mob" onclick="toggleAssist()">💡 <span data-i18n="assist">Assistance</span><span id="assist-state-mob" class="menu-tick"></span></button>
+      <div class="menu-sep" id="invite-sep-mob" style="display:none"></div>
+      <button class="btn-sm" id="invite-players-mob" onclick="closeHeaderOverflow();App.openInviteModal()" style="display:none">✉️ <span data-i18n="inviteMenu">Inviter des joueurs</span></button>
       <!-- Admin (séparateur + boutons révélés ensemble) -->
       <div class="menu-sep menu-sep-admin" id="admin-sep-mob" style="display:none"><span data-i18n="menuAdmin">Admin</span></div>
       <button class="btn-sm" id="admin-startnobots-mob" onclick="App.startNoBots();closeHeaderOverflow()" style="display:none;color:var(--green);border-color:rgba(var(--green-rgb),0.4)"><span data-i18n="startNoBots">▶ Start (no bots)</span></button>
@@ -1572,6 +1574,18 @@ if ('serviceWorker' in navigator) {
     <div class="km-subtitle" id="km-subtitle" data-i18n="kickSubtitle">Select a player to remove from the table</div>
     <div class="km-list" id="km-list">
       <div class="km-empty">— Aucun joueur —</div>
+    </div>
+  </div>
+</div>
+
+<div id="invite-modal" style="display:none">
+  <div class="km-backdrop" onclick="App.closeInviteModal()"></div>
+  <div class="km-card" role="dialog" aria-labelledby="im-title">
+    <button class="km-close" type="button" onclick="App.closeInviteModal()" title="Fermer" data-i18n-title="closeTooltip" aria-label="Fermer">✕</button>
+    <div class="km-title" id="im-title">✉️ <span data-i18n="inviteModalTitle">Inviter des joueurs</span></div>
+    <div class="km-subtitle" id="im-subtitle" data-i18n="inviteSubtitle">Joueurs en ligne pas encore à la table</div>
+    <div class="km-list" id="im-list">
+      <div class="km-empty">—</div>
     </div>
   </div>
 </div>

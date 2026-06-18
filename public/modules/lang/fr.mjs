@@ -124,6 +124,8 @@ export const strings = {
     // ── Invitations à une partie ──
     inviteTitle:'{name} vous invite à {table}', inviteAccept:'Accepter', inviteDecline:'Refuser',
     inviteAccepted:'Connexion à la table...',
+    inviteMenu:'Inviter des joueurs', inviteModalTitle:'Inviter des joueurs', inviteSubtitle:'Joueurs en ligne pas encore à la table',
+    inviteBtn:'Inviter', inviteSent:'Invité', inviteNoPlayers:'Personne de disponible', inviteSentToast:'Invitation envoyée à {name}',
     kickAtLeast2:'Au moins 2 joueurs sont nécessaires pour démarrer.',
     // ── Copie du lien ──
     linkCopied:'🔗 Lien copié !', linkCopyFailed:'Copie impossible — lien affiché', copiedShort:'Copié',

@@ -2472,7 +2472,13 @@ const MSG = (() => {
     const msg = Proto.encode([[1,0,gameId],[2,0,reason?reason:0]]);
     return Proto.encode([[1,0,T.RejectGameInvitation],[35,2,msg]]);
   }
-  return { T, parse, buildInit, buildChat, buildGameChat, buildJoin, buildJoinGame, buildRejoinGame, buildStartEventAck, buildMyAction, buildCreateGame, buildLeaveGame, buildStartWithBots, buildKickPlayer, buildAskKickPlayer, buildVoteKick, buildRejectInvite };
+  // InvitePlayerToGameMessage (type 32, env field 33): gameId=1, playerId=2.
+  // Outgoing invite — ask the server to invite <playerId> to <gameId>.
+  function buildInvitePlayer(gameId, playerId) {
+    const msg = Proto.encode([[1,0,gameId],[2,0,playerId]]);
+    return Proto.encode([[1,0,T.InvitePlayerToGame],[33,2,msg]]);
+  }
+  return { T, parse, buildInit, buildChat, buildGameChat, buildJoin, buildJoinGame, buildRejoinGame, buildStartEventAck, buildMyAction, buildCreateGame, buildLeaveGame, buildStartWithBots, buildKickPlayer, buildAskKickPlayer, buildVoteKick, buildRejectInvite, buildInvitePlayer };
 })();
 
 
@@ -3367,6 +3373,7 @@ const App = (() => {
   window.closeGameInfoPopup = closeGameInfoPopup;
   let seats     = [];  // player IDs in seat order (from GameStartInitial) — figé après 1ère main
   let seatData  = {};  // {pid: {money, bet, action, active, folded}}
+  let _invSent = {}; // pids invited during the current invite-modal session
   let myCards   = [null, null];
   let commCards = [];
   // Clé/IV AES dérivés du mot de passe pour déchiffrer les cartes envoyées
@@ -5153,6 +5160,14 @@ const App = (() => {
         if (akbm) akbm.style.display = amGameAdmin ? '' : 'none';
         var asbm = document.getElementById('admin-start-mob');
         if (asbm) asbm.style.display = amGameAdmin ? '' : 'none';
+        // Invite-players entry (menu ≡): any seated, non-spectator player
+        // online may invite others; the server arbitrates. Hidden offline
+        // and for spectators.
+        var _imb = document.getElementById('invite-players-mob');
+        var _ims = document.getElementById('invite-sep-mob');
+        var _canInv = !window._offlineMode && !_amSpectator;
+        if (_imb) _imb.style.display = _canInv ? '' : 'none';
+        if (_ims) _ims.style.display = _canInv ? '' : 'none';
         addChat(null, t('joinedTableWaiting', { gid: gId, admin: isAdmin ? ' (admin)' : '' }), 'sys', { key: 'joinedTableWaiting', params: { gid: gId, admin: isAdmin ? ' (admin)' : '' } });
         show('s-game');
         // Clear any leftover felt from a previously-viewed table. After
@@ -9219,6 +9234,66 @@ function dismissWinner() {
       var modal = document.getElementById('kick-modal');
       if (modal) modal.style.display = 'none';
     },
+    // ── Send invitations (InvitePlayerToGame) — opened from the ≡ menu ──
+    // Lists online lobby players who aren't already at this table; each
+    // row sends an invite for the current gId. The recipient gets the
+    // Accept/Decline banner (handled by InviteNotify on their side).
+    openInviteModal() {
+      if (window._offlineMode || _amSpectator || !gId) return;
+      var modal = document.getElementById('invite-modal');
+      var list  = document.getElementById('im-list');
+      if (!modal || !list) return;
+      _invSent = {}; // fresh session
+      App._renderInviteList(App._inviteEligiblePids());
+      modal.style.display = 'flex';
+    },
+    _inviteEligiblePids() {
+      var seated = {};
+      Object.keys(seatData).forEach(function(s){ seated[parseInt(s,10)] = true; });
+      var pids = [];
+      _lobbyPids.forEach(function(p){ if (p !== myId && !seated[p]) pids.push(p); });
+      pids.sort(function(a,b){
+        var na=(players[a]||('#'+a)).toLowerCase(), nb=(players[b]||('#'+b)).toLowerCase();
+        return na<nb?-1:na>nb?1:0;
+      });
+      return pids;
+    },
+    _renderInviteList(pids) {
+      var list = document.getElementById('im-list');
+      if (!list) return;
+      if (!pids.length) {
+        list.innerHTML = '<div class="km-empty">— ' + t('inviteNoPlayers') + ' —</div>';
+        return;
+      }
+      list.innerHTML = pids.map(function(pid) {
+        var name = players[pid] || ('#' + pid);
+        var avChip = (typeof window._avatarChipHtml === 'function')
+          ? window._avatarChipHtml(pid, name, 'km-av')
+          : '<span class="km-av letter">' + (name[0]||'?').toUpperCase() + '</span>';
+        var escName = String(name).replace(/[<>&"]/g, function(c){
+          return {'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;'}[c];
+        });
+        var btn = _invSent[pid]
+          ? '<button class="im-invite" type="button" disabled style="opacity:.55;border:1px solid var(--border,#444);background:transparent;color:var(--text,#eff1f5);border-radius:8px;padding:6px 12px;font-weight:600">' + t('inviteSent') + '</button>'
+          : '<button class="im-invite" type="button" onclick="App.sendInvite(' + pid + ')" style="border:1px solid var(--green,#3fae5a);background:transparent;color:var(--text,#eff1f5);border-radius:8px;padding:6px 12px;font-weight:600;cursor:pointer">' + t('inviteBtn') + '</button>';
+        return '<div class="km-row">' +
+                 avChip +
+                 '<div class="km-info"><div class="km-name">' + escName + '</div></div>' +
+                 btn +
+               '</div>';
+      }).join('');
+    },
+    sendInvite(pid) {
+      if (window._offlineMode || !gId || pid === myId) return;
+      try { send(MSG.buildInvitePlayer(gId, pid)); } catch(e) {}
+      _invSent[pid] = true;
+      App._renderInviteList(App._inviteEligiblePids());
+      if (typeof showToast === 'function') showToast(t('inviteSentToast', { name: players[pid] || ('#'+pid) }));
+    },
+    closeInviteModal() {
+      var modal = document.getElementById('invite-modal');
+      if (modal) modal.style.display = 'none';
+    },
     // Step 2: ask confirmation before sending the kick.
     askConfirmKick(pid) {
       if (!amGameAdmin) return;
@@ -11204,7 +11279,7 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.3.24-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.25-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
