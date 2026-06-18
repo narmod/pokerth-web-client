@@ -1972,15 +1972,33 @@ if ('serviceWorker' in navigator) {
       return inner;
     }
     function done() {
-      var html = '';
+      // Keep only the cups this player actually appears in, in display order.
+      var have = [];
       for (var i = 0; i < RK_CUPS_ORDER.length; i++) {
         var s = RK_CUPS_ORDER[i], d = results[s];
         if (!d || d.ok === false) continue;
         if (!((d.stats && d.stats.length) || (d.awards && d.awards.length) || d.tickets)) continue;
-        html += rkSection(rkT(RK_CUPS_LBL[s], RK_CUPS_FB[s]), renderCup(d));
+        have.push({ src: s, d: d });
       }
-      if (!html) { box.innerHTML = '<div class="rk-cups-empty">' + rkEsc(rkT('piNoCupData', 'No cup ranking for this player.')) + '</div>'; return; }
-      box.innerHTML = '<div class="rk-cups-h">🏆 ' + rkEsc(rkT('piCups', 'Cups')) + '</div>' + html;
+      if (!have.length) { box.innerHTML = '<div class="rk-cups-empty">' + rkEsc(rkT('piNoCupData', 'No cup ranking for this player.')) + '</div>'; return; }
+      var html = '<div class="rk-cups-h">🏆 ' + rkEsc(rkT('piCups', 'Cups')) + '</div>';
+      var multi = have.length > 1;
+      // One tab per cup (only when there are several) so a player present in
+      // many cups doesn't make the popup scroll endlessly. Every pane is in the
+      // DOM; switching just toggles visibility (instant, no refetch).
+      if (multi) {
+        html += '<div class="rk-cups-tabs">';
+        for (var t = 0; t < have.length; t++) {
+          html += '<button type="button" class="rk-cups-tab' + (t === 0 ? ' active' : '') + '" data-idx="' + t + '" onclick="rkCupTabClick(this)">'
+            + rkEsc(rkT(RK_CUPS_LBL[have[t].src], RK_CUPS_FB[have[t].src])) + '</button>';
+        }
+        html += '</div>';
+      }
+      for (var p = 0; p < have.length; p++) {
+        var head = multi ? '' : ('<div class="rk-sec-h">' + rkEsc(rkT(RK_CUPS_LBL[have[p].src], RK_CUPS_FB[have[p].src])) + '</div>');
+        html += '<div class="rk-cups-pane' + (p === 0 ? ' active' : '') + '" data-idx="' + p + '"' + (p === 0 ? '' : ' style="display:none"') + '>' + head + renderCup(have[p].d) + '</div>';
+      }
+      box.innerHTML = html;
     }
     RK_CUPS_ORDER.forEach(function (s) {
       fetch('/api/player?src=' + encodeURIComponent(s) + '&nick=' + encodeURIComponent(nick), { headers: { 'Accept': 'application/json' } })
@@ -1989,6 +2007,22 @@ if ('serviceWorker' in navigator) {
         .catch(function () { results[s] = null; })
         .then(function () { if (--pending === 0) done(); });
     });
+  };
+
+  // Switch the active cup pane inside the player popup (#pim-cups). Tabs and
+  // panes are siblings under the same container; no data is re-fetched.
+  window.rkCupTabClick = function (btn) {
+    var bar = btn.parentNode, box = bar && bar.parentNode;
+    if (!box) return;
+    var idx = btn.getAttribute('data-idx');
+    var tabs = bar.querySelectorAll('.rk-cups-tab');
+    for (var i = 0; i < tabs.length; i++) tabs[i].classList.toggle('active', tabs[i] === btn);
+    var panes = box.querySelectorAll('.rk-cups-pane');
+    for (var j = 0; j < panes.length; j++) {
+      var on = panes[j].getAttribute('data-idx') === idx;
+      panes[j].classList.toggle('active', on);
+      panes[j].style.display = on ? '' : 'none';
+    }
   };
 
   // Desktop/tablet only (>=900x600): float the card as a draggable + resizable

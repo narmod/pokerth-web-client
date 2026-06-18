@@ -646,6 +646,9 @@ html[data-bg-img] body.in-game {
   gap: 12px;
   animation: slideDown 0.18s ease;
 }
+/* Children keep their intrinsic height; the card scrolls instead of squashing
+   them (notably the avatar) when the cups make it taller than the viewport. */
+.pim-card > * { flex-shrink: 0; }
 .pim-close {
   position: absolute;
   top: 8px;
@@ -6177,6 +6180,10 @@ body.has-keyboard .act-key { display: inline-block; }
 .rk-cups-h { font-family: var(--ff-mono); font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--gold-hi); margin: 4px 0 8px; }
 .rk-cup-sub { font-family: var(--ff-mono); font-size: 0.64rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text); opacity: 0.7; margin: 8px 0 4px; }
 .rk-cups-msg, .rk-cups-empty { font-family: var(--ff-mono); font-size: 0.74rem; color: var(--text); opacity: 0.7; margin: 6px 0; }
+.rk-cups-tabs { display: flex; gap: 4px; margin: 2px 0 10px; flex-wrap: wrap; }
+.rk-cups-tab { flex: 1 1 auto; min-width: 64px; padding: 6px 8px; font-family: var(--ff-mono); font-size: 0.72rem; font-weight: 600; letter-spacing: 0.03em; color: var(--text); background: var(--field-bg); border: 1px solid var(--border); border-radius: 4px; cursor: pointer; transition: color 0.15s, border-color 0.15s, background 0.15s; }
+.rk-cups-tab:hover { border-color: var(--gold); color: var(--gold-hi); }
+.rk-cups-tab.active { color: var(--gold-hi); border-color: var(--gold); background: rgba(var(--gold-rgb), 0.08); }
 .rk-pager { display: flex; align-items: center; justify-content: center; gap: 12px; padding: 8px 0 2px; }
 .rk-page-btn { background: var(--inset); color: var(--text); border: 1px solid var(--border); border-radius: 4px; width: 32px; height: 28px; line-height: 1; font-size: 1.1rem; cursor: pointer; transition: border-color 0.15s, color 0.15s; }
 .rk-page-btn:hover:not(:disabled) { border-color: var(--gold); color: var(--gold-hi); }
