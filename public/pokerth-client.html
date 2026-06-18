@@ -255,12 +255,15 @@ function onAvatarImageChosen(input) {
 <!-- ╚════════════════════╝ -->
 <div id="s-connect" class="screen active">
   <div style="position:absolute;top:12px;right:16px;display:flex;gap:6px;z-index:10">
-    <button class="btn-sm btn-icon" id="lang-toggle-connect" onclick="openLangMenu(event)" title="Switch language" data-i18n-title="langTooltip" aria-label="Switch language"></button>
-    <button class="btn-sm btn-icon" id="theme-toggle-connect" onclick="openThemePanel(event)" title="Theme" data-i18n-title="themeTooltip" aria-label="Theme">🎨</button>
-    <button class="btn-sm btn-icon" id="music-btn-connect" onclick="toggleMusicPanel()" title="Sounds &amp; Music" data-i18n-title="musicTooltip" aria-label="Sounds &amp; Music">🎵</button>
-    <button class="btn-sm btn-icon" id="fs-btn-connect" onclick="toggleFullscreen()" title="Fullscreen" data-i18n-title="fullscreenTooltip" aria-label="Fullscreen">⛶</button>
     <button class="btn-sm btn-icon" id="install-btn" onclick="pwaInstall()" title="Install app" data-i18n-title="installTooltip" aria-label="Install app" style="display:none">📲</button>
-    <button class="btn-sm btn-icon" onclick="location.reload()" title="Refresh / Rafraîchir" data-i18n-title="refreshTooltip" aria-label="Refresh">↺</button>
+    <button class="btn-sm btn-icon" id="connect-overflow-btn" onclick="toggleConnectOverflow(event)" title="More" data-i18n-title="moreTooltip" aria-label="More">•••</button>
+    <div id="connect-overflow-menu">
+      <button class="btn-sm" id="lang-toggle-connect-mob" onclick="closeConnectOverflow();openLangMenu(event)" style="font-size:0.85rem"></button>
+      <button class="btn-sm" onclick="closeConnectOverflow();openThemePanel(event)"><span style="margin-right:5px">🎨</span><span data-i18n="themeTooltip">Theme</span></button>
+      <button class="btn-sm" id="music-toggle-connect-mob" onclick="closeConnectOverflow();toggleMusicPanel()"><span style="margin-right:5px">🎵</span><span data-i18n="musicTooltip">Sounds &amp; Music</span></button>
+      <button class="btn-sm" onclick="toggleFullscreen();closeConnectOverflow()"><span style="margin-right:5px">⛶</span><span data-i18n="fullscreenTooltip">Fullscreen</span></button>
+      <button class="btn-sm" onclick="location.reload()"><span style="margin-right:5px">↺</span><span data-i18n="refreshTooltip">Refresh</span></button>
+    </div>
   </div>
   <!-- Liens officiels PokerTH — cluster miroir en haut-gauche (nouvelle page) -->
   <div class="corner-links" style="position:absolute;top:12px;left:16px;display:flex;gap:6px;z-index:10">

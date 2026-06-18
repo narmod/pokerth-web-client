@@ -2026,7 +2026,8 @@ html[data-bg-img] body.in-game {
    across phone / tablet / desktop (requested by narmod). The ••• button is
    always visible, and the secondary actions live exclusively in its menu. */
 #g-overflow-btn,
-#l-overflow-btn { display: inline-flex; align-items: center; }
+#l-overflow-btn,
+#connect-overflow-btn { display: inline-flex; align-items: center; }
 
 /* Direct header twins of the menu actions: hidden at all sizes (they are
    provided by the ••• menu now). Was previously a mobile-only rule. */
@@ -2044,7 +2045,8 @@ html[data-bg-img] body.in-game {
 
 /* Menu déroulant */
 #g-overflow-menu,
-#l-overflow-menu {
+#l-overflow-menu,
+#connect-overflow-menu {
   display: none;
   position: absolute;
   top: 100%;
@@ -2064,9 +2066,11 @@ html[data-bg-img] body.in-game {
   box-shadow: 0 12px 32px rgba(0,0,0,0.7);
 }
 #g-overflow-menu.open,
-#l-overflow-menu.open { display: flex; }
+#l-overflow-menu.open,
+#connect-overflow-menu.open { display: flex; }
 #g-overflow-menu .btn-sm,
-#l-overflow-menu .btn-sm {
+#l-overflow-menu .btn-sm,
+#connect-overflow-menu .btn-sm {
   width: 100%;
   box-sizing: border-box;
   text-align: left;
@@ -2093,7 +2097,8 @@ html[data-bg-img] body.in-game {
   pointer-events: none;
 }
 #g-overflow-menu .btn-sm:hover,
-#l-overflow-menu .btn-sm:hover {
+#l-overflow-menu .btn-sm:hover,
+#connect-overflow-menu .btn-sm:hover {
   background: var(--border);
 }
 /* Group separators inside the ••• menu. Plain hairline between groups,

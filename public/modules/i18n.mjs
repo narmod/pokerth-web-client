@@ -381,7 +381,7 @@ function setLang(l) {
   });
   // Mobile overflow-menu entries (one in the game header, one in the
   // lobby header) keep a text label alongside the flag.
-  ['lang-toggle-game-mob', 'lang-toggle-lobby-mob'].forEach(function(id){
+  ['lang-toggle-game-mob', 'lang-toggle-lobby-mob', 'lang-toggle-connect-mob'].forEach(function(id){
     var bMob = document.getElementById(id);
     if (bMob) bMob.innerHTML = flagSvg + ' ' + langLabel;
   });

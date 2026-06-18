@@ -10874,6 +10874,16 @@ function closeLobbyOverflow() {
   var m = document.getElementById('l-overflow-menu');
   if (m) m.classList.remove('open');
 }
+function toggleConnectOverflow(e) {
+  if (e) e.stopPropagation();
+  var m = document.getElementById('connect-overflow-menu');
+  if (!m) return;
+  m.classList.toggle('open');
+}
+function closeConnectOverflow() {
+  var m = document.getElementById('connect-overflow-menu');
+  if (m) m.classList.remove('open');
+}
 // Lobby brand: tap the ♠ to slide the POKERTH word in/out. Only matters on
 // narrow screens (CSS keeps the word always visible on wide ones). Auto-folds
 // again after a few seconds so it doesn't permanently re-crowd the header.
@@ -10900,6 +10910,11 @@ document.addEventListener('click', function(e) {
   var lmenu = document.getElementById('l-overflow-menu');
   if (lmenu && lbtn && !lbtn.contains(e.target) && !lmenu.contains(e.target)) {
     lmenu.classList.remove('open');
+  }
+  var cbtn = document.getElementById('connect-overflow-btn');
+  var cmenu = document.getElementById('connect-overflow-menu');
+  if (cmenu && cbtn && !cbtn.contains(e.target) && !cmenu.contains(e.target)) {
+    cmenu.classList.remove('open');
   }
 });
 
@@ -11076,7 +11091,7 @@ function toggleMusicPanel() {
     }
   }
   // Reflect open/closed state on the entry buttons (active = gold).
-  ['music-btn-connect', 'music-toggle-lobby-mob', 'music-toggle-game-mob'].forEach(function (id) {
+  ['music-btn-connect', 'music-toggle-lobby-mob', 'music-toggle-game-mob', 'music-toggle-connect-mob'].forEach(function (id) {
     var b = document.getElementById(id);
     if (!b) return;
     b.style.background  = open ? 'rgba(var(--gold-rgb),0.2)' : '';
@@ -11279,7 +11294,7 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.3.31-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.32-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
