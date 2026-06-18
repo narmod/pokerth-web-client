@@ -6157,8 +6157,11 @@ body.has-keyboard .act-key { display: inline-block; }
 .rk-prof-since { font-family: var(--ff-mono); font-size: 0.74rem; color: var(--text); opacity: 0.8; margin-top: 2px; }
 .rk-sec { margin-bottom: 14px; }
 .rk-sec-h { font-family: var(--ff-mono); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--gold-dim); margin-bottom: 6px; }
-.rk-awards { display: flex; flex-wrap: wrap; gap: 8px; }
-.rk-award { width: 54px; height: 54px; object-fit: contain; border-radius: 4px; background: rgba(var(--gold-rgb), 0.05); }
+.rk-awards { display: flex; flex-wrap: nowrap; gap: 8px; overflow-x: auto; overflow-y: hidden; padding-bottom: 6px; -webkit-overflow-scrolling: touch; scrollbar-width: thin; scrollbar-color: var(--gold-dim) transparent; }
+.rk-awards::-webkit-scrollbar { height: 6px; }
+.rk-awards::-webkit-scrollbar-thumb { background: var(--gold-dim); border-radius: 3px; }
+.rk-awards::-webkit-scrollbar-track { background: transparent; }
+.rk-award { flex: 0 0 auto; width: 54px; height: 54px; object-fit: contain; border-radius: 4px; background: rgba(var(--gold-rgb), 0.05); }
 .rk-tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(64px, 1fr)); gap: 6px; }
 .rk-tile { background: var(--field-bg); border: 1px solid var(--border); border-radius: 4px; padding: 8px 4px; text-align: center; }
 .rk-tile-v { font-family: var(--ff-mono); font-size: 0.95rem; font-weight: 600; color: var(--text-hi); }
