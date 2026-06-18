@@ -339,7 +339,7 @@ export const strings = {
     rankingSearch:'Search a player…', rankingNoMatch:'No player found.',
     rankingSeason:'Season', rankingAllTime:'All-Time',
     rankingColRank:'#', rankingColPlayer:'Nickname', rankingColScore:'Score', rankingColPoints:'Points', rankingColGames:'Games',
-    rankingMemberSince:'Member since', rankingAwards:'Awards', rankingTickets:'Tickets', rankingThisSeason:'This season', rankingStep:'Step', rankingRank:'Rank', rankingBack:'Back', rankingThisMonth:'This month', rankingThisYear:'This year',
+    rankingMemberSince:'Member since', rankingAwards:'Awards', rankingTickets:'Tickets', rankingThisSeason:'This season', rankingStep:'Step', rankingRank:'Rank', rankingBack:'Back', rankingThisMonth:'This month', rankingThisYear:'This year', rankingCurrentSeason:'Current season',
 };
 
 export default { meta, strings };

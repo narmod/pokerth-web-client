@@ -1928,8 +1928,10 @@ const RANKING_UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36
                    '(KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36';
 
 const RANKING_SOURCES = {
-  // TODO(sp0ck): fill the exact JSON endpoints. BBC page ref: https://bbc.pokerth.net/results/ranking
-  pth: { name: 'PokerTH', url: '', csrf: null },   // public — no CSRF expected
+  // PokerTH official leaderboard — a real JSON API (no CSRF), one POST per season:
+  //   POST /pthranking/ranking/leaderboard/<season>  body {page,pageSize,sort,filters}
+  //   -> { data:[...], total, seasons:[...] }  (final_score/average_score already strings)
+  pth: { name: 'PokerTH', leaderboard: 'https://www.pokerth.net/pthranking/ranking/leaderboard/', json: true, parse: rankingParsePth, pageSize: 50 },
   // BBC ranking is server-rendered into <ranking-component :results="...">
   // (HTML-entity-encoded JSON). A plain GET is enough — no CSRF for reads.
   bbc: { name: 'BBC', url: 'https://bbc.pokerth.net/results/ranking', csrf: null, parse: rankingParseBbc, supportsSeason: true },
@@ -1981,7 +1983,7 @@ const RANKING_CACHE = new Map();        // cacheKey -> { at, status, body }
 const RANKING_TTL_MS = 60 * 1000;       // short cache to spare the upstream
 const RANKING_TIMEOUT_MS = 8000;
 
-function rankingFetch(targetUrl, extraHeaders) {
+function rankingFetch(targetUrl, extraHeaders, opts) {
   const ctl = new AbortController();
   const t = setTimeout(function () { ctl.abort(); }, RANKING_TIMEOUT_MS);
   const headers = Object.assign({
@@ -1989,7 +1991,8 @@ function rankingFetch(targetUrl, extraHeaders) {
     'Accept': 'application/json, text/plain, */*',
     'Accept-Language': 'en-US,en;q=0.9'
   }, extraHeaders || {});
-  return fetch(targetUrl, { headers: headers, redirect: 'follow', signal: ctl.signal })
+  const init = Object.assign({ headers: headers, redirect: 'follow', signal: ctl.signal }, opts || {});
+  return fetch(targetUrl, init)
     .finally(function () { clearTimeout(t); });
 }
 
@@ -2022,7 +2025,57 @@ function rankingSeasonParam(query) {
   return (Number.isInteger(n) && n >= 0 && n <= 999) ? n : null;
 }
 
+// Map the PokerTH leaderboard JSON to our generic row shape (rank/player/score/
+// points/games). The official endpoint is POST-only with a JSON body and paginates.
+function rankingParsePth(res) {
+  const rows = (Array.isArray(res.data) ? res.data : []).map(function (r, i) {
+    return {
+      rank: (r.rank_pos != null ? r.rank_pos : i + 1),
+      player: r.username,
+      score: r.final_score,       // already a formatted decimal string (e.g. "173.27")
+      points: r.points_sum,
+      games: r.season_games
+    };
+  });
+  let seasons = Array.isArray(res.seasons) ? res.seasons.slice() : [];
+  if (seasons.indexOf('current') < 0) seasons.unshift('current');
+  return { ok: true, source: 'PTH', rows: rows, seasons: seasons, total: (res.total != null ? res.total : rows.length) };
+}
+
+async function rankingUpstreamPth(src, query) {
+  let season = String((query && query.season) || 'current').trim();
+  if (!/^[A-Za-z0-9_]{1,16}$/.test(season)) season = 'current';
+  const q = String((query && query.q) || '').trim().slice(0, 64);
+  let page = parseInt((query && query.page) || '1', 10);
+  if (!Number.isInteger(page) || page < 1) page = 1;
+  if (page > 100000) page = 100000;
+  const pageSize = src.pageSize || 50;
+  const payload = {
+    page: page,
+    pageSize: pageSize,
+    sort: { prop: 'rank_pos', order: 'descending' },
+    filters: q ? { value: q, props: 'username' } : null
+  };
+  const r = await rankingFetch(src.leaderboard + encodeURIComponent(season), {
+    'Content-Type': 'application/json',
+    'X-Requested-With': 'XMLHttpRequest',
+    'Accept': 'application/json'
+  }, { method: 'POST', body: JSON.stringify(payload) });
+  const body = await r.text();
+  if (!r.ok) return { status: 502, body: JSON.stringify({ ok: false, error: 'upstream_' + r.status, source: src.name }) };
+  let json;
+  try { json = JSON.parse(body); } catch (e) { return { status: 502, body: JSON.stringify({ ok: false, error: 'parse_failed', source: src.name }) }; }
+  let parsed;
+  try { parsed = src.parse(json); }
+  catch (e) { return { status: 502, body: JSON.stringify({ ok: false, error: 'map_failed', source: src.name }) }; }
+  parsed.season = season;
+  parsed.page = page;
+  parsed.pageSize = pageSize;
+  return { status: 200, body: JSON.stringify(parsed) };
+}
+
 async function rankingUpstream(src, query) {
+  if (src.json && src.leaderboard) return rankingUpstreamPth(src, query);
   if (!src.url) {
     return { status: 503, body: JSON.stringify({ ok: false, error: 'endpoint_not_configured', source: src.name }) };
   }
@@ -2154,21 +2207,48 @@ function playerParseWec(html, base) {
   ]);
 }
 
+// PokerTH official profile: JSON (no CSRF). Single "current season" block,
+// no awards/tickets. Scores in player.ranking are integers x100 -> /100.
+function playerParsePth(json, base) {
+  if (!json || !json.status || !json.player) return { ok: false, error: 'no_player', source: 'PTH' };
+  const p = json.player;
+  const r = p.ranking || {};
+  function sc(v) { return (v == null) ? null : (Number(v) / 100).toFixed(2); }
+  const block = {
+    label: 'rankingThisSeason',
+    rank: (json.pos != null && json.pos > 0 ? json.pos : null),
+    score: sc(r.final_score),
+    games: (r.season_games != null ? r.season_games : null),
+    points: (r.points_sum != null ? r.points_sum : null)
+  };
+  const hasStats = (block.rank != null || block.score != null || block.games != null || block.points != null);
+  return {
+    ok: true,
+    source: 'PTH',
+    nickname: p.username,
+    memberSince: (p.created ? String(p.created).slice(0, 10) : null),
+    tickets: null,
+    awards: [],
+    stats: hasStats ? [block] : []
+  };
+}
+
 const PLAYER_SOURCES = {
-  bbc: { name: 'BBC', base: 'https://bbc.pokerth.net', parse: playerParseBbc },
-  wec: { name: 'WEC', base: 'https://wec.pokerth.net', parse: playerParseWec }
+  bbc: { name: 'BBC', base: 'https://bbc.pokerth.net', url: function (b, n) { return b + '/player/' + encodeURIComponent(n); }, parse: playerParseBbc },
+  wec: { name: 'WEC', base: 'https://wec.pokerth.net', url: function (b, n) { return b + '/player/' + encodeURIComponent(n); }, parse: playerParseWec },
+  pth: { name: 'PokerTH', base: 'https://www.pokerth.net', url: function (b, n) { return b + '/pthranking/player/show?username=' + encodeURIComponent(n); }, json: true, parse: playerParsePth }
 };
 
 async function playerUpstream(src, nick) {
-  const targetUrl = src.base + '/player/' + encodeURIComponent(nick);
-  const r = await rankingFetch(targetUrl, { 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' });
+  const targetUrl = src.url(src.base, nick);
+  const r = await rankingFetch(targetUrl, { 'Accept': src.json ? 'application/json, text/plain, */*' : 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' });
   const body = await r.text();
   if (r.status === 404) return { status: 404, body: JSON.stringify({ ok: false, error: 'player_not_found', source: src.name }) };
   if (!r.ok) return { status: 502, body: JSON.stringify({ ok: false, error: 'upstream_' + r.status, source: src.name }) };
   let parsed;
-  try { parsed = src.parse(body, src.base); }
+  try { parsed = src.json ? src.parse(JSON.parse(body), src.base) : src.parse(body, src.base); }
   catch (e) { return { status: 502, body: JSON.stringify({ ok: false, error: 'parse_failed', source: src.name }) }; }
-  return { status: 200, body: JSON.stringify(parsed) };
+  return { status: (parsed && parsed.ok === false) ? 404 : 200, body: JSON.stringify(parsed) };
 }
 
 function handlePlayer(req, res, query) {

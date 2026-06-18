@@ -6163,6 +6163,11 @@ body.has-keyboard .act-key { display: inline-block; }
 .rk-tile { background: var(--field-bg); border: 1px solid var(--border); border-radius: 4px; padding: 8px 4px; text-align: center; }
 .rk-tile-v { font-family: var(--ff-mono); font-size: 0.95rem; font-weight: 600; color: var(--text-hi); }
 .rk-tile-l { font-family: var(--ff-mono); font-size: 0.62rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text); opacity: 0.75; margin-top: 3px; }
+.rk-pager { display: flex; align-items: center; justify-content: center; gap: 12px; padding: 8px 0 2px; }
+.rk-page-btn { background: var(--inset); color: var(--text); border: 1px solid var(--border); border-radius: 4px; width: 32px; height: 28px; line-height: 1; font-size: 1.1rem; cursor: pointer; transition: border-color 0.15s, color 0.15s; }
+.rk-page-btn:hover:not(:disabled) { border-color: var(--gold); color: var(--gold-hi); }
+.rk-page-btn:disabled { opacity: 0.4; cursor: default; }
+.rk-page-lbl { font-family: var(--ff-mono); font-size: 0.8rem; color: var(--text); min-width: 56px; text-align: center; }
 
 /* ═══════════════════════════════════════════════════════════════════
    Menu « liens PokerTH » (écran connect) — regroupe PokerTH.net /

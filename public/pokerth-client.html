@@ -1653,6 +1653,7 @@ if ('serviceWorker' in navigator) {
       <div class="rk-msg" id="rk-empty" data-i18n="rankingEmpty" style="display:none">No entries.</div>
       <div class="rk-msg" id="rk-nomatch" data-i18n="rankingNoMatch" style="display:none">No player found.</div>
       <div id="rk-table-wrap" style="display:none"></div>
+      <div id="rk-pager" class="rk-pager" style="display:none"></div>
     </div>
     <div id="rk-profile" style="display:none">
       <button type="button" class="rk-back" onclick="rankingBackToList()" title="Back" data-i18n-title="rankingBack" aria-label="Back">←</button>
@@ -1663,7 +1664,10 @@ if ('serviceWorker' in navigator) {
 <script>
 (function () {
   var RK_SRCS = ['pth', 'bbc', 'wec'];
-  var RK_PROFILE_SRCS = ['bbc', 'wec'];           // sources exposing a /api/player profile
+  var RK_PROFILE_SRCS = ['bbc', 'wec', 'pth'];    // sources exposing a /api/player profile
+  var RK_SERVER = ['pth'];                        // server-paginated + server-side search
+  var RK_PAGE = 1;                                // current page (server sources)
+  var rkSearchTimer = null;
   var RK_CACHE = {};                              // src|season -> { at, state, rows, cols, season, seasons }
   var RK_TTL = 30000;
   var RK_SRC = 'pth';
@@ -1706,18 +1710,73 @@ if ('serviceWorker' in navigator) {
 
   function rkRenderCurrent() {
     if (RK_CUR.state !== 'table') { rkState(RK_CUR.state); return; }
-    var q = '', si = $('rk-search'); if (si) q = rkFold(si.value.trim());
     var rows = RK_CUR.rows;
-    if (q) rows = rows.filter(function (row) { return rkFold(row.player).indexOf(q) >= 0; });
+    if (RK_SERVER.indexOf(RK_SRC) < 0) {
+      var q = '', si = $('rk-search'); if (si) q = rkFold(si.value.trim());
+      if (q) rows = rows.filter(function (row) { return rkFold(row.player).indexOf(q) >= 0; });
+    }
     if (!rows.length) { rkState('nomatch'); return; }
     var tw = $('rk-table-wrap'); if (tw) tw.innerHTML = rkBuildTable(rows, RK_CUR.cols);
     rkState('table');
   }
-  window.rankingFilter = function () { rkRenderCurrent(); };
+  window.rankingFilter = function () {
+    if (RK_SERVER.indexOf(RK_SRC) >= 0) {
+      if (rkSearchTimer) clearTimeout(rkSearchTimer);
+      rkSearchTimer = setTimeout(function () {
+        var sel = $('rk-season');
+        rkFetch(RK_SRC, sel ? sel.value : 'current', 1);
+      }, 400);
+    } else {
+      rkRenderCurrent();
+    }
+  };
+
+  // Pagination (server-paginated sources, e.g. PokerTH).
+  function rkPageCount(o) {
+    return (o && o.total != null && o.pageSize) ? Math.max(1, Math.ceil(o.total / o.pageSize)) : 1;
+  }
+  function rkRenderPager(o) {
+    var pg = $('rk-pager'); if (!pg) return;
+    var server = RK_SERVER.indexOf(RK_SRC) >= 0;
+    var show = server && (o.state === 'table' || o.state === 'nomatch') && o.total != null && o.total > 0 && o.pageSize;
+    if (!show) { pg.style.display = 'none'; pg.innerHTML = ''; return; }
+    var pc = rkPageCount(o);
+    var page = o.page || RK_PAGE || 1;
+    var prevDis = page <= 1 ? ' disabled' : '';
+    var nextDis = page >= pc ? ' disabled' : '';
+    pg.innerHTML =
+      '<button type="button" class="rk-page-btn" onclick="rankingPage(-1)"' + prevDis + ' aria-label="Previous">\u2039</button>'
+      + '<span class="rk-page-lbl">' + page + ' / ' + pc + '</span>'
+      + '<button type="button" class="rk-page-btn" onclick="rankingPage(1)"' + nextDis + ' aria-label="Next">\u203A</button>';
+    pg.style.display = '';
+  }
+  window.rankingPage = function (delta) {
+    var pc = rkPageCount(RK_CUR);
+    var np = Math.min(pc, Math.max(1, (RK_PAGE || 1) + delta));
+    if (np === RK_PAGE) return;
+    var sel = $('rk-season');
+    rkFetch(RK_SRC, sel ? sel.value : 'current', np);
+  };
 
   // Season dropdown (newest first); rebuilt only when the season list changes.
   function rkPopulateSeasons(seasons, current) {
     var sel = $('rk-season'); if (!sel) return;
+    if (RK_SERVER.indexOf(RK_SRC) >= 0) {
+      // PokerTH: string seasons ('current' + 'YYYY_Q'…) — keep server order, no sort.
+      var sig0 = 'S:' + seasons.join(',');
+      if (sel.getAttribute('data-sig') !== sig0) {
+        var h0 = '';
+        for (var k = 0; k < seasons.length; k++) {
+          var sv = seasons[k];
+          var lbl = (sv === 'current') ? rkEsc(rkT('rankingCurrentSeason', 'Current season')) : rkEsc(sv);
+          h0 += '<option value="' + rkEsc(sv) + '">' + lbl + '</option>';
+        }
+        sel.innerHTML = h0; sel.setAttribute('data-sig', sig0);
+      }
+      sel.disabled = false;
+      if (current != null) sel.value = String(current);
+      return;
+    }
     var ordered = seasons.slice().sort(function (a, b) { return b - a; });
     var sig = ordered.join(',');
     if (sel.getAttribute('data-sig') !== sig) {
@@ -1734,12 +1793,16 @@ if ('serviceWorker' in navigator) {
   function rkShow(o) {
     RK_CUR = o;
     var ctl = $('rk-controls');
-    if (o.state === 'table' && o.seasons && o.seasons.length) {
+    var showCtl = (o.state === 'table' || o.state === 'nomatch') && o.seasons && o.seasons.length;
+    if (showCtl) {
       rkPopulateSeasons(o.seasons, o.season);
+      var atl = document.querySelector('#ranking-modal .rk-alltime-lbl');
+      if (atl) atl.style.display = (RK_SERVER.indexOf(RK_SRC) >= 0) ? 'none' : '';
       if (ctl) ctl.style.display = '';
     } else if (ctl) {
       ctl.style.display = 'none';
     }
+    rkRenderPager(o);
     rkRenderCurrent();
   }
 
@@ -1747,28 +1810,41 @@ if ('serviceWorker' in navigator) {
     if (!data || data.ok === false) {
       return { state: (data && data.error === 'endpoint_not_configured') ? 'soon' : 'error', rows: [], cols: [], seasons: null, season: null };
     }
+    var seasons = (Array.isArray(data.seasons) ? data.seasons : null);
+    var season = (data.season != null ? data.season : null);
+    var total = (data.total != null ? data.total : null);
+    var page = (data.page != null ? data.page : null);
+    var pageSize = (data.pageSize != null ? data.pageSize : null);
     var rows = Array.isArray(data) ? data
       : (Array.isArray(data.rows) ? data.rows : (Array.isArray(data.data) ? data.data : null));
-    if (!rows || !rows.length) return { state: 'empty', rows: [], cols: [], seasons: null, season: null };
-    return { state: 'table', rows: rows, cols: Object.keys(rows[0]),
-             seasons: (Array.isArray(data.seasons) ? data.seasons : null),
-             season: (data.season != null ? data.season : null) };
+    if (!rows || !rows.length) return { state: 'empty', rows: [], cols: [], seasons: seasons, season: season, total: total, page: page, pageSize: pageSize };
+    return { state: 'table', rows: rows, cols: Object.keys(rows[0]), seasons: seasons, season: season, total: total, page: page, pageSize: pageSize };
   }
 
   // Fetch a source, optionally for a season (0 = All-Time on BBC).
-  function rkFetch(src, season) {
+  function rkFetch(src, season, page) {
+    var server = RK_SERVER.indexOf(src) >= 0;
     var url = '/api/ranking?src=' + encodeURIComponent(src);
-    if (season != null) url += '&season=' + encodeURIComponent(season);
-    var ck = src + '|' + (season != null ? season : '');
+    if (season != null && season !== '') url += '&season=' + encodeURIComponent(season);
+    var q = '';
+    if (server) {
+      var si = $('rk-search'); if (si) q = si.value.trim();
+      if (q) url += '&q=' + encodeURIComponent(q);
+      if (page == null) page = RK_PAGE;
+      RK_PAGE = page;
+      url += '&page=' + page;
+    }
+    var ck = src + '|' + (season != null ? season : '') + '|' + q + '|' + (server ? page : '');
     var c = RK_CACHE[ck];
-    if (c && (Date.now() - c.at) < RK_TTL) { rkShow({ state: c.state, rows: c.rows, cols: c.cols, seasons: c.seasons, season: c.season }); return; }
+    if (c && (Date.now() - c.at) < RK_TTL) { rkShow({ state: c.state, rows: c.rows, cols: c.cols, seasons: c.seasons, season: c.season, total: c.total, page: c.page, pageSize: c.pageSize }); return; }
     RK_CUR = { state: 'loading', rows: [], cols: [], seasons: null, season: null }; rkState('loading');
     fetch(url, { headers: { 'Accept': 'application/json' } })
       .then(function (r) { return r.text(); })
       .then(function (t) {
         var d; try { d = JSON.parse(t); } catch (e) { d = null; }
         var o = rkOutcome(d);
-        RK_CACHE[ck] = { at: Date.now(), state: o.state, rows: o.rows, cols: o.cols, seasons: o.seasons, season: o.season };
+        if (server && o.state === 'empty' && q) o.state = 'nomatch';
+        RK_CACHE[ck] = { at: Date.now(), state: o.state, rows: o.rows, cols: o.cols, seasons: o.seasons, season: o.season, total: o.total, page: o.page, pageSize: o.pageSize };
         rkShow(o);
       })
       .catch(function () { rkShow({ state: 'error', rows: [], cols: [], seasons: null, season: null }); });
@@ -1878,7 +1954,7 @@ if ('serviceWorker' in navigator) {
   window.rankingSelect = function (src) {
     rkSetView('list');
     if (RK_SRCS.indexOf(src) < 0) src = 'pth';
-    RK_SRC = src; RK_ALLTIME = false;
+    RK_SRC = src; RK_ALLTIME = false; RK_PAGE = 1;
     var tabs = document.querySelectorAll('#ranking-modal .rk-tab');
     for (var i = 0; i < tabs.length; i++) tabs[i].classList.toggle('active', tabs[i].dataset.src === src);
     var at = $('rk-alltime'); if (at) at.checked = false;
@@ -1890,7 +1966,8 @@ if ('serviceWorker' in navigator) {
   window.rankingSeason = function () {
     var sel = $('rk-season'); if (!sel) return;
     var at = $('rk-alltime'); if (at) at.checked = false; RK_ALLTIME = false;
-    rkFetch(RK_SRC, parseInt(sel.value, 10));
+    if (RK_SERVER.indexOf(RK_SRC) >= 0) rkFetch(RK_SRC, sel.value, 1);
+    else rkFetch(RK_SRC, parseInt(sel.value, 10));
   };
 
   window.rankingAllTime = function () {
