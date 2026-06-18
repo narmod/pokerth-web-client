@@ -11184,6 +11184,15 @@ function exportLog() {
 }
 window.exportLog = exportLog;
 
+// Vide l'historique visible d'un chat (local uniquement — pas d'effet serveur).
+// 'lobby' -> #chat ; 'game' -> #g-chat-msgs. Le chat n'a pas de store séparé
+// (_retranslateSysChat relit le DOM), donc vider le conteneur suffit.
+function clearChatPanel(which){
+  var el = document.getElementById(which === 'lobby' ? 'chat' : 'g-chat-msgs');
+  if (el) el.innerHTML = '';
+}
+window.clearChatPanel = clearChatPanel;
+
 // ── Players online panel ──
 // Wired to the #h-players pill in the lobby header. Toggles a
 // dropdown that lists every pid in _lobbyPids with its name (or
@@ -11304,7 +11313,7 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.3.49-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.50-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

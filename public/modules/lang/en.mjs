@@ -287,7 +287,7 @@ export const strings = {
     quickCreateBody:'No tables found. How many players?',
     quickCreateLabel:'Players:',
     quickCreateBtn:'Create',
-    logPanelTitle:'Log', logCopied:'Log copied', logEmpty:'Log is empty', logExportTitle:'Export log',
+    logPanelTitle:'Log', logCopied:'Log copied', logEmpty:'Log is empty', logExportTitle:'Export log', chatClearTitle:'Clear chat',
     disconnectDialogTitle:'Disconnect?',
     disconnectDialogBody:'You will be returned to the login screen.',
     disconnectQuit:'Disconnect',
