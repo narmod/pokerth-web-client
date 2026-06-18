@@ -1792,7 +1792,7 @@ html[data-bg-img] body.in-game {
   .header { min-height: 44px !important; }
   .header-brand { font-size: 1.25rem !important; }
   .header .btn-sm { height: 36px !important; font-size: 0.92rem !important; padding: 0 16px !important; }
-  .header .btn-icon { width: 40px !important; }
+  .header .btn-icon { width: 40px !important; padding: 0 !important; }
 
   /* ── Barre du pot ── */
   #pot-strip { min-height: 32px !important; }
