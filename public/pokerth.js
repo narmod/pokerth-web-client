@@ -2942,6 +2942,13 @@ const App = (() => {
       if (infoEl) {
         infoEl.innerHTML = _otherPlayerInfoHtml(targetPid);
         infoEl.style.display = '';
+        // Cups (PokerTH/BBC/WEC) : remplissage asynchrone du conteneur #pim-cups
+        // (présent uniquement pour un joueur enregistré sur pokerth.net).
+        try {
+          if (document.getElementById('pim-cups') && typeof window.rkLoadPlayerCups === 'function') {
+            window.rkLoadPlayerCups(getPlayerName(targetPid), 'pim-cups');
+          }
+        } catch(e) {}
         // Community vote-kick entry — live (online) game only, seated
         // opponent, when we're seated and not the host (the host has the
         // direct kick). The server still arbitrates via AskKickDenied.
@@ -3013,6 +3020,9 @@ const App = (() => {
     var modeEl = document.getElementById('login-mode');
     var onNet = !!(modeEl && (modeEl.value === 'guest' || modeEl.value === 'auth'));
     if (!isBot(pid) && onNet && (rg2 === 2 || rg2 === 3)) {
+      // Conteneur des classements de coupes (rempli en asynchrone par
+      // window.rkLoadPlayerCups depuis openPlayerInfoPopup).
+      html += '<div id="pim-cups" class="pim-cups"></div>';
       var nm = getPlayerName(pid);
       html += '<a class="pim-profile-link" href="https://www.pokerth.net/app.php/player?u='
             + encodeURIComponent(nm) + '" target="_blank" rel="noopener noreferrer">'
@@ -11280,9 +11290,6 @@ function renderPlayersList() {
     body.innerHTML = '<div class="pl-empty">' + (q ? '— ' : '—') + '</div>';
     return;
   }
-  // Liens vers le profil pokerth.net : uniquement en mode pokerth.net (guest/auth).
-  var _modeEl = document.getElementById('login-mode');
-  var _onPokerthNet = !!(_modeEl && (_modeEl.value === 'guest' || _modeEl.value === 'auth'));
   body.innerHTML = rows.map(function(r) {
     var esc = function(s) { return String(s).replace(/[<>&"]/g, function(c){return {'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;'}[c];}); };
     // Avatar chip via the unified helper (same priority order as
@@ -11296,13 +11303,12 @@ function renderPlayersList() {
     var flag = _flagOf(r.pid) || '';
     var _ccRaw = (_ls.countries && _ls.countries[r.pid]) ? String(_ls.countries[r.pid]).trim().toUpperCase() : '';
     var cc = /^[A-Z]{2}$/.test(_ccRaw) ? _ccRaw : '';
-    // Nom cliquable → profil pokerth.net (?u=pseudo), nouvel onglet. Seulement
-    // pour les joueurs ENREGISTRÉS (droits 2=normal / 3=admin) ; pas les invités.
-    var _rg = _ls.rights ? _ls.rights[r.pid] : 0;
-    var _registered = _onPokerthNet && (_rg === 2 || _rg === 3);
-    var nameHtml = _registered
-      ? '<a class="pl-name-link" href="https://www.pokerth.net/app.php/player?u=' + encodeURIComponent(r.name) + '" target="_blank" rel="noopener noreferrer">' + esc(r.name) + '</a>'
-      : esc(r.name);
+    // Nom cliquable → ouvre le popup joueur (rôle, drapeau, cups, lien profil).
+    // Tous les joueurs (enregistrés ET invités) ; le popup gère le contenu.
+    var nameHtml = '<span class="pl-name-link" role="button" tabindex="0"'
+      + ' onclick="window.openPlayerInfoPopup(' + r.pid + ')"'
+      + ' onkeydown="if(event.key===\'Enter\')window.openPlayerInfoPopup(' + r.pid + ')">'
+      + esc(r.name) + '</span>';
     return '<div class="pl-row' + (r.isMe ? ' pl-me' : '') + '">' +
              avChip +
              '<span class="pl-name">' + nameHtml + '</span>' +
@@ -11313,7 +11319,7 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.3.51-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.52-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

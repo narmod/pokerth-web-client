@@ -1932,6 +1932,65 @@ if ('serviceWorker' in navigator) {
       .catch(function () { pb.innerHTML = '<div class="rk-msg">' + rkEsc(rkT('rankingError', 'Could not load the ranking.')) + '</div>'; });
   };
 
+  // ── Cups summary for the player popup (pokerth.js → openPlayerInfoPopup) ──
+  // Fetches the player's profile on each cup (PokerTH / BBC / WEC) via the same
+  // /api/player relay as the ranking profile card, and renders the same stats
+  // grouped per cup. Auto-loaded inline; only called for registered pokerth.net
+  // players. Reuses the ranking renderers so there is a single source of truth.
+  var RK_CUPS_ORDER = ['pth', 'bbc', 'wec'];
+  var RK_CUPS_LBL = { pth: 'rankingPth', bbc: 'rankingBbc', wec: 'rankingWec' };
+  var RK_CUPS_FB = { pth: 'PokerTH', bbc: 'BBC', wec: 'WEC' };
+  window.rkLoadPlayerCups = function (nick, containerId) {
+    var box = document.getElementById(containerId);
+    if (!box) return;
+    nick = String(nick == null ? '' : nick).trim();
+    if (!nick) { box.innerHTML = ''; return; }
+    box.innerHTML = '<div class="rk-cups-msg">' + rkEsc(rkT('rankingLoading', 'Loading…')) + '</div>';
+    var results = {};
+    var pending = RK_CUPS_ORDER.length;
+    function renderCup(d) {
+      var inner = '';
+      if (d.stats && d.stats.length) {
+        for (var j = 0; j < d.stats.length; j++) {
+          var blk = d.stats[j];
+          inner += '<div class="rk-cup-sub">' + rkEsc(rkT(blk.label, RK_STAT_FB[blk.label] || blk.label)) + '</div>' + rkStatTiles(blk);
+        }
+      }
+      if (d.tickets) {
+        var step = rkT('rankingStep', 'Step');
+        inner += '<div class="rk-cup-sub">' + rkEsc(rkT('rankingTickets', 'Tickets')) + '</div>'
+          + '<div class="rk-tiles">' + rkTile(d.tickets.s2, step + ' 2') + rkTile(d.tickets.s3, step + ' 3') + rkTile(d.tickets.s4, step + ' 4') + '</div>';
+      }
+      if (d.awards && d.awards.length) {
+        var aw = '<div class="rk-awards">';
+        for (var k = 0; k < d.awards.length; k++) {
+          var at = rkEsc(d.awards[k].title || '');
+          aw += '<img class="rk-award" src="' + rkEsc(d.awards[k].img) + '" alt="' + at + '" title="' + at + '" loading="lazy" data-full="' + rkEsc(d.awards[k].img) + '" onclick="rkAwardPop(this.dataset.full)">';
+        }
+        inner += aw + '</div>';
+      }
+      return inner;
+    }
+    function done() {
+      var html = '';
+      for (var i = 0; i < RK_CUPS_ORDER.length; i++) {
+        var s = RK_CUPS_ORDER[i], d = results[s];
+        if (!d || d.ok === false) continue;
+        if (!((d.stats && d.stats.length) || (d.awards && d.awards.length) || d.tickets)) continue;
+        html += rkSection(rkT(RK_CUPS_LBL[s], RK_CUPS_FB[s]), renderCup(d));
+      }
+      if (!html) { box.innerHTML = '<div class="rk-cups-empty">' + rkEsc(rkT('piNoCupData', 'No cup ranking for this player.')) + '</div>'; return; }
+      box.innerHTML = '<div class="rk-cups-h">🏆 ' + rkEsc(rkT('piCups', 'Cups')) + '</div>' + html;
+    }
+    RK_CUPS_ORDER.forEach(function (s) {
+      fetch('/api/player?src=' + encodeURIComponent(s) + '&nick=' + encodeURIComponent(nick), { headers: { 'Accept': 'application/json' } })
+        .then(function (r) { return r.text(); })
+        .then(function (t) { var d; try { d = JSON.parse(t); } catch (e) { d = null; } results[s] = d; })
+        .catch(function () { results[s] = null; })
+        .then(function () { if (--pending === 0) done(); });
+    });
+  };
+
   // Desktop/tablet only (>=900x600): float the card as a draggable + resizable
   // window, reusing the in-game chat window system (window._enableFloating).
   function rkWinGate() { try { return !!(window._winGate && window._winGate() && typeof window._enableFloating === 'function'); } catch (e) { return false; } }

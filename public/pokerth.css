@@ -636,6 +636,9 @@ html[data-bg-img] body.in-game {
   padding: 24px 20px 18px;
   min-width: 260px;
   max-width: 320px;
+  max-height: calc(100vh - 32px);
+  max-height: calc(100dvh - 32px);
+  overflow-y: auto;
   box-shadow: 0 8px 32px rgba(0,0,0,0.6);
   display: flex;
   flex-direction: column;
@@ -6168,6 +6171,12 @@ body.has-keyboard .act-key { display: inline-block; }
 .rk-tile { background: var(--field-bg); border: 1px solid var(--border); border-radius: 4px; padding: 8px 4px; text-align: center; }
 .rk-tile-v { font-family: var(--ff-mono); font-size: 0.95rem; font-weight: 600; color: var(--text-hi); }
 .rk-tile-l { font-family: var(--ff-mono); font-size: 0.62rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text); opacity: 0.75; margin-top: 3px; }
+/* Cups summary inside the player-info popup (#pim-cups) — reuses the ranking
+   profile tiles; adds a top heading and per-period sub-labels. */
+.pim-cups { width: 100%; margin-top: 6px; }
+.rk-cups-h { font-family: var(--ff-mono); font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--gold-hi); margin: 4px 0 8px; }
+.rk-cup-sub { font-family: var(--ff-mono); font-size: 0.64rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text); opacity: 0.7; margin: 8px 0 4px; }
+.rk-cups-msg, .rk-cups-empty { font-family: var(--ff-mono); font-size: 0.74rem; color: var(--text); opacity: 0.7; margin: 6px 0; }
 .rk-pager { display: flex; align-items: center; justify-content: center; gap: 12px; padding: 8px 0 2px; }
 .rk-page-btn { background: var(--inset); color: var(--text); border: 1px solid var(--border); border-radius: 4px; width: 32px; height: 28px; line-height: 1; font-size: 1.1rem; cursor: pointer; transition: border-color 0.15s, color 0.15s; }
 .rk-page-btn:hover:not(:disabled) { border-color: var(--gold); color: var(--gold-hi); }
