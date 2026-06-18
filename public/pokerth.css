@@ -1986,20 +1986,35 @@ html[data-bg-img] body.in-game {
   .pb-info { min-width: 45px; }
   .pb-cards .pk { width: 22px; height: 32px; font-size: 0.56rem; }
 
-  /* Actions: horizontal, compact */
-  .action-grid { flex-direction: row !important; flex-wrap: wrap; gap: 3px; max-width: 100%; }
-  .action-top-row { flex: none; display: flex; gap: 3px; }
-  .action-top-row .btn-action { padding: 6px 10px; font-size: 0.68rem; }
-  .pct-row { flex: none; gap: 4px; }
-  .btn-pct {
-    padding: 9px 6px;
-    font-size: 0.72rem;
-    font-weight: 700;
-    border-width: 1.5px;
+  /* Actions : barre compacte sur 2 rangees FORCEES (plus de wrap aleatoire).
+     Rangee 1 (pleine largeur) : Fold | Call | mode.
+     Rangee 2 (pleine largeur) : 1/3 1/2 Pot | relance | All-In.
+     flex-basis:100% sur la 1re rangee impose un retour a la ligne net ; la
+     reserve sous la table est recalculee en JS (updateBottomLayout) d'apres
+     la hauteur reelle de la barre -> les cartes communes / la riviere ne
+     sont jamais recouvertes, meme si une rangee venait a deborder. */
+  .action-grid {
+    flex-direction: row !important;
+    flex-wrap: wrap !important;
+    gap: 4px;
+    width: 100%;
+    max-width: 100%;
   }
-  .raise-row { flex: none; gap: 3px; }
-  .raise-input { width: 52px; padding: 5px 4px; font-size: 0.68rem; }
-  .btn-action { padding: 6px 10px; font-size: 0.68rem; }
+  .action-grid > * { min-width: 0; }
+  .action-top-row { flex: 1 1 100%; display: flex; gap: 4px; }
+  .action-top-row .btn-action:not(.btn-auto) { flex: 1; }
+  .mode-sel-wrap { flex: 0 1 104px !important; }
+  .pct-row  { flex: 1 1 auto; gap: 3px; }
+  .raise-row, .raise-row-mobile { flex: 2 1 auto; gap: 3px; min-width: 0; }
+  .btn-allin { flex: 1 1 auto; white-space: nowrap; }
+  /* Compacite : rangees basses, police reduite, montant des % masque pour
+     garder chaque rangee sur UNE seule ligne. */
+  .btn-action { padding: 5px 9px; font-size: 0.66rem; }
+  .btn-pct { padding: 5px 5px; font-size: 0.62rem; font-weight: 700; border-width: 1px; }
+  .btn-pct .pct-p { font-size: 0.68rem; }
+  .btn-pct .pct-amt { display: none; }
+  .raise-input { width: 48px; padding: 4px 4px; font-size: 0.66rem; }
+  .raise-display { font-size: 0.62rem; min-width: 30px; }
 
 .header { padding: 2px 6px; }
 .pill { font-size: 0.56rem; padding: 1px 4px; }
