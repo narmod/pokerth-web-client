@@ -1645,7 +1645,7 @@ if ('serviceWorker' in navigator) {
         </label>
       </div>
       <div class="rk-search-wrap" id="rk-search-wrap" style="display:none">
-        <input type="text" id="rk-search" class="rk-search" oninput="rankingFilter()" placeholder="Search a player…" autocomplete="off" spellcheck="false" aria-label="Search a player">
+        <input type="text" id="rk-search" class="rk-search" oninput="rankingFilter()" placeholder="Search a player…" data-i18n-placeholder="rankingSearch" autocomplete="off" spellcheck="false" aria-label="Search a player">
       </div>
       <div class="rk-msg" id="rk-loading" data-i18n="rankingLoading">Loading…</div>
       <div class="rk-msg" id="rk-soon" data-i18n="rankingSoon" style="display:none">Ranking coming soon.</div>
@@ -1763,7 +1763,7 @@ if ('serviceWorker' in navigator) {
     var sel = $('rk-season'); if (!sel) return;
     if (RK_SERVER.indexOf(RK_SRC) >= 0) {
       // PokerTH: string seasons ('current' + 'YYYY_Q'…) — keep server order, no sort.
-      var sig0 = 'S:' + seasons.join(',');
+      var sig0 = 'S:' + rkT('rankingCurrentSeason', 'Current season') + '|' + seasons.join(',');
       if (sel.getAttribute('data-sig') !== sig0) {
         var h0 = '';
         for (var k = 0; k < seasons.length; k++) {
@@ -1778,9 +1778,9 @@ if ('serviceWorker' in navigator) {
       return;
     }
     var ordered = seasons.slice().sort(function (a, b) { return b - a; });
-    var sig = ordered.join(',');
+    var word = rkEsc(rkT('rankingSeason', 'Season'));
+    var sig = word + '|' + ordered.join(',');
     if (sel.getAttribute('data-sig') !== sig) {
-      var word = rkEsc(rkT('rankingSeason', 'Season'));
       var html = '';
       for (var i = 0; i < ordered.length; i++) html += '<option value="' + ordered[i] + '">' + word + ' ' + ordered[i] + '</option>';
       sel.innerHTML = html;
@@ -1851,7 +1851,8 @@ if ('serviceWorker' in navigator) {
   }
 
   // ── Player profile (click a name in the ranking) ─────────────────────────
-  var RK_PROF_CACHE = {};                         // src|nick -> { at, html }
+  var RK_PROF_CACHE = {};                         // src|nick -> { at, data }
+  var RK_PROF_CUR = null;                          // last-rendered profile data (re-localise)
   function rkSetView(which) {                      // 'list' | 'profile'
     var isProf = (which === 'profile');
     var tabs = document.querySelector('#ranking-modal .rk-tabs');
@@ -1916,15 +1917,15 @@ if ('serviceWorker' in navigator) {
     pb.innerHTML = '<div class="rk-msg">' + rkEsc(rkT('rankingLoading', 'Loading\u2026')) + '</div>';
     var ck = src + '|' + String(nick).toLowerCase();
     var c = RK_PROF_CACHE[ck];
-    if (c && (Date.now() - c.at) < RK_TTL) { pb.innerHTML = c.html; return; }
+    if (c && (Date.now() - c.at) < RK_TTL) { RK_PROF_CUR = c.data; pb.innerHTML = rkRenderProfile(c.data); return; }
     fetch('/api/player?src=' + encodeURIComponent(src) + '&nick=' + encodeURIComponent(nick), { headers: { 'Accept': 'application/json' } })
       .then(function (r) { return r.text(); })
       .then(function (t) {
         var d; try { d = JSON.parse(t); } catch (e) { d = null; }
         if (!d || d.ok === false) { pb.innerHTML = '<div class="rk-msg">' + rkEsc(rkT('rankingError', 'Could not load the ranking.')) + '</div>'; return; }
-        var html = rkRenderProfile(d);
-        RK_PROF_CACHE[ck] = { at: Date.now(), html: html };
-        pb.innerHTML = html;
+        RK_PROF_CACHE[ck] = { at: Date.now(), data: d };
+        RK_PROF_CUR = d;
+        pb.innerHTML = rkRenderProfile(d);
       })
       .catch(function () { pb.innerHTML = '<div class="rk-msg">' + rkEsc(rkT('rankingError', 'Could not load the ranking.')) + '</div>'; });
   };
@@ -1975,6 +1976,25 @@ if ('serviceWorker' in navigator) {
     var sel = $('rk-season'); if (sel) sel.disabled = RK_ALLTIME;
     if (RK_ALLTIME) rkFetch(RK_SRC, 0);
     else rkFetch(RK_SRC, sel ? parseInt(sel.value, 10) : null);
+  };
+
+  // Re-localise the open ranking window when the language changes (called by
+  // setLang). Static labels use data-i18n; here we re-render the JS-built parts:
+  // table headers, season options, profile card, and the search placeholder.
+  window._retranslateRanking = function () {
+    var modal = $('ranking-modal');
+    if (!modal || !modal.style.display || modal.style.display === 'none') return;
+    var si = $('rk-search'); if (si) si.placeholder = rkT('rankingSearch', 'Search a player\u2026');
+    var prof = $('rk-profile');
+    if (prof && prof.style.display === 'block') {
+      if (RK_PROF_CUR) { var pb = $('rk-prof-body'); if (pb) pb.innerHTML = rkRenderProfile(RK_PROF_CUR); }
+      return;
+    }
+    if (RK_CUR && RK_CUR.state === 'table' && RK_CUR.rows && RK_CUR.rows.length) {
+      var tw = $('rk-table-wrap'); if (tw) tw.innerHTML = rkBuildTable(RK_CUR.rows, RK_CUR.cols);
+    }
+    var sel = $('rk-season'); if (sel) sel.removeAttribute('data-sig');
+    if (RK_CUR && RK_CUR.seasons && RK_CUR.seasons.length) rkPopulateSeasons(RK_CUR.seasons, RK_CUR.season);
   };
 
   var rkTW = $('rk-table-wrap');
