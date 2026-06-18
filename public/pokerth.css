@@ -6168,17 +6168,16 @@ body.has-keyboard .act-key { display: inline-block; }
 .rk-awards::-webkit-scrollbar-thumb { background: var(--gold-dim); border-radius: 3px; }
 .rk-awards::-webkit-scrollbar-track { background: transparent; }
 .rk-award { flex: 0 0 auto; width: 54px; height: 54px; object-fit: contain; border-radius: 4px; background: rgba(var(--gold-rgb), 0.05); cursor: pointer; }
-#rk-awpop { display: none; position: fixed; inset: 0; z-index: 2000; background: rgba(0, 0, 0, 0.85); align-items: center; justify-content: center; padding: 24px; cursor: pointer; pointer-events: auto; }
+#rk-awpop { display: none; position: fixed; inset: 0; z-index: 10000; background: rgba(0, 0, 0, 0.85); align-items: center; justify-content: center; padding: 24px; cursor: pointer; pointer-events: auto; }
 #rk-awpop img { max-width: 90vw; max-height: 90vh; object-fit: contain; border-radius: 6px; box-shadow: 0 8px 40px rgba(0, 0, 0, 0.6); }
 .rk-tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(64px, 1fr)); gap: 6px; }
 .rk-tile { background: var(--field-bg); border: 1px solid var(--border); border-radius: 4px; padding: 8px 4px; text-align: center; }
 .rk-tile-v { font-family: var(--ff-mono); font-size: 0.95rem; font-weight: 600; color: var(--text-hi); }
 .rk-tile-l { font-family: var(--ff-mono); font-size: 0.62rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text); opacity: 0.75; margin-top: 3px; }
 /* Cups summary inside the player-info popup (#pim-cups) — reuses the ranking
-   profile tiles; adds a top heading and per-period sub-labels. */
+   profile renderer (rkProfileBody); adds a top heading + one tab per cup. */
 .pim-cups { width: 100%; margin-top: 6px; }
 .rk-cups-h { font-family: var(--ff-mono); font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--gold-hi); margin: 4px 0 8px; }
-.rk-cup-sub { font-family: var(--ff-mono); font-size: 0.64rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text); opacity: 0.7; margin: 8px 0 4px; }
 .rk-cups-msg, .rk-cups-empty { font-family: var(--ff-mono); font-size: 0.74rem; color: var(--text); opacity: 0.7; margin: 6px 0; }
 .rk-cups-tabs { display: flex; gap: 4px; margin: 2px 0 10px; flex-wrap: wrap; }
 .rk-cups-tab { flex: 1 1 auto; min-width: 64px; padding: 6px 8px; font-family: var(--ff-mono); font-size: 0.72rem; font-weight: 600; letter-spacing: 0.03em; color: var(--text); background: var(--field-bg); border: 1px solid var(--border); border-radius: 4px; cursor: pointer; transition: color 0.15s, border-color 0.15s, background 0.15s; }

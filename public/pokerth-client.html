@@ -1864,7 +1864,7 @@ if ('serviceWorker' in navigator) {
     if (prof) prof.style.display = isProf ? 'block' : 'none';
   }
   window.rankingBackToList = function () { rkSetView('list'); };
-  window.rkAwardPop = function (url) { var p = document.getElementById('rk-awpop'); if (!p) return; p.querySelector('img').src = url || ''; p.style.display = 'flex'; };
+  window.rkAwardPop = function (url) { var p = document.getElementById('rk-awpop'); if (!p) return; if (p.parentNode !== document.body) document.body.appendChild(p); p.querySelector('img').src = url || ''; p.style.display = 'flex'; };
 
   function rkSection(title, inner) {
     return '<div class="rk-sec"><div class="rk-sec-h">' + rkEsc(title) + '</div>' + inner + '</div>';
@@ -1883,10 +1883,10 @@ if ('serviceWorker' in navigator) {
       + '</div>';
   }
   var RK_STAT_FB = { rankingThisSeason: 'This season', rankingThisMonth: 'This month', rankingThisYear: 'This year', rankingAllTime: 'All-Time' };
-  function rkRenderProfile(d) {
-    var h = '<div class="rk-prof-head"><div class="rk-prof-name">' + rkEsc(d.nickname) + '</div>';
-    if (d.memberSince) h += '<div class="rk-prof-since">' + rkEsc(rkT('rankingMemberSince', 'Member since')) + ' ' + rkEsc(d.memberSince) + '</div>';
-    h += '</div>';
+  // Profile body (awards → tickets → stats). Shared by the ranking profile card
+  // and the per-cup panes of the player popup so both render identically.
+  function rkProfileBody(d) {
+    var h = '';
     if (d.awards && d.awards.length) {
       var aw = '<div class="rk-awards">';
       for (var i = 0; i < d.awards.length; i++) {
@@ -1911,6 +1911,12 @@ if ('serviceWorker' in navigator) {
       }
     }
     return h;
+  }
+  function rkRenderProfile(d) {
+    var h = '<div class="rk-prof-head"><div class="rk-prof-name">' + rkEsc(d.nickname) + '</div>';
+    if (d.memberSince) h += '<div class="rk-prof-since">' + rkEsc(rkT('rankingMemberSince', 'Member since')) + ' ' + rkEsc(d.memberSince) + '</div>';
+    h += '</div>';
+    return h + rkProfileBody(d);
   }
   window.rkOpenProfile = function (nick) {
     var src = RK_SRC;
@@ -1948,29 +1954,6 @@ if ('serviceWorker' in navigator) {
     box.innerHTML = '<div class="rk-cups-msg">' + rkEsc(rkT('rankingLoading', 'Loading…')) + '</div>';
     var results = {};
     var pending = RK_CUPS_ORDER.length;
-    function renderCup(d) {
-      var inner = '';
-      if (d.stats && d.stats.length) {
-        for (var j = 0; j < d.stats.length; j++) {
-          var blk = d.stats[j];
-          inner += '<div class="rk-cup-sub">' + rkEsc(rkT(blk.label, RK_STAT_FB[blk.label] || blk.label)) + '</div>' + rkStatTiles(blk);
-        }
-      }
-      if (d.tickets) {
-        var step = rkT('rankingStep', 'Step');
-        inner += '<div class="rk-cup-sub">' + rkEsc(rkT('rankingTickets', 'Tickets')) + '</div>'
-          + '<div class="rk-tiles">' + rkTile(d.tickets.s2, step + ' 2') + rkTile(d.tickets.s3, step + ' 3') + rkTile(d.tickets.s4, step + ' 4') + '</div>';
-      }
-      if (d.awards && d.awards.length) {
-        var aw = '<div class="rk-awards">';
-        for (var k = 0; k < d.awards.length; k++) {
-          var at = rkEsc(d.awards[k].title || '');
-          aw += '<img class="rk-award" src="' + rkEsc(d.awards[k].img) + '" alt="' + at + '" title="' + at + '" loading="lazy" data-full="' + rkEsc(d.awards[k].img) + '" onclick="rkAwardPop(this.dataset.full)">';
-        }
-        inner += aw + '</div>';
-      }
-      return inner;
-    }
     function done() {
       // Keep only the cups this player actually appears in, in display order.
       var have = [];
@@ -1981,11 +1964,11 @@ if ('serviceWorker' in navigator) {
         have.push({ src: s, d: d });
       }
       if (!have.length) { box.innerHTML = '<div class="rk-cups-empty">' + rkEsc(rkT('piNoCupData', 'No cup ranking for this player.')) + '</div>'; return; }
-      var html = '<div class="rk-cups-h">🏆 ' + rkEsc(rkT('piCups', 'Cups')) + '</div>';
       var multi = have.length > 1;
-      // One tab per cup (only when there are several) so a player present in
-      // many cups doesn't make the popup scroll endlessly. Every pane is in the
-      // DOM; switching just toggles visibility (instant, no refetch).
+      // Single cup → the cup name is the heading; several cups → "Cups" + one tab
+      // per cup (so a player in many cups doesn't make the popup scroll forever).
+      var topLabel = multi ? rkT('piCups', 'Cups') : rkT(RK_CUPS_LBL[have[0].src], RK_CUPS_FB[have[0].src]);
+      var html = '<div class="rk-cups-h">🏆 ' + rkEsc(topLabel) + '</div>';
       if (multi) {
         html += '<div class="rk-cups-tabs">';
         for (var t = 0; t < have.length; t++) {
@@ -1994,9 +1977,10 @@ if ('serviceWorker' in navigator) {
         }
         html += '</div>';
       }
+      // Each pane uses the SAME renderer as the ranking profile card
+      // (awards on top, then tickets, then the stat tables) so both match.
       for (var p = 0; p < have.length; p++) {
-        var head = multi ? '' : ('<div class="rk-sec-h">' + rkEsc(rkT(RK_CUPS_LBL[have[p].src], RK_CUPS_FB[have[p].src])) + '</div>');
-        html += '<div class="rk-cups-pane' + (p === 0 ? ' active' : '') + '" data-idx="' + p + '"' + (p === 0 ? '' : ' style="display:none"') + '>' + head + renderCup(have[p].d) + '</div>';
+        html += '<div class="rk-cups-pane' + (p === 0 ? ' active' : '') + '" data-idx="' + p + '"' + (p === 0 ? '' : ' style="display:none"') + '>' + rkProfileBody(have[p].d) + '</div>';
       }
       box.innerHTML = html;
     }
