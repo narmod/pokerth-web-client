@@ -1663,7 +1663,7 @@ if ('serviceWorker' in navigator) {
 <script>
 (function () {
   var RK_SRCS = ['pth', 'bbc', 'wec'];
-  var RK_PROFILE_SRCS = ['bbc'];                 // sources exposing a /api/player profile
+  var RK_PROFILE_SRCS = ['bbc', 'wec'];           // sources exposing a /api/player profile
   var RK_CACHE = {};                              // src|season -> { at, state, rows, cols, season, seasons }
   var RK_TTL = 30000;
   var RK_SRC = 'pth';
@@ -1803,6 +1803,7 @@ if ('serviceWorker' in navigator) {
       + rkTile(b.points != null ? b.points : '\u2014', rkColLabel('points'))
       + '</div>';
   }
+  var RK_STAT_FB = { rankingThisSeason: 'This season', rankingThisMonth: 'This month', rankingThisYear: 'This year', rankingAllTime: 'All-Time' };
   function rkRenderProfile(d) {
     var h = '<div class="rk-prof-head"><div class="rk-prof-name">' + rkEsc(d.nickname) + '</div>';
     if (d.memberSince) h += '<div class="rk-prof-since">' + rkEsc(rkT('rankingMemberSince', 'Member since')) + ' ' + rkEsc(d.memberSince) + '</div>';
@@ -1824,8 +1825,12 @@ if ('serviceWorker' in navigator) {
         + '</div>';
       h += rkSection(rkT('rankingTickets', 'Tickets'), tk);
     }
-    if (d.seasonStats) h += rkSection(rkT('rankingThisSeason', 'This season'), rkStatTiles(d.seasonStats));
-    if (d.alltimeStats) h += rkSection(rkT('rankingAllTime', 'All-Time'), rkStatTiles(d.alltimeStats));
+    if (d.stats && d.stats.length) {
+      for (var j = 0; j < d.stats.length; j++) {
+        var blk = d.stats[j];
+        h += rkSection(rkT(blk.label, RK_STAT_FB[blk.label] || blk.label), rkStatTiles(blk));
+      }
+    }
     return h;
   }
   window.rkOpenProfile = function (nick) {

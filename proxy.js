@@ -2088,7 +2088,22 @@ function handleRanking(req, res, query) {
 // props (:player, :stats, :awards, :season), HTML-entity-encoded JSON. A plain
 // GET + decode is enough (no CSRF). We normalise it to a flat, source-agnostic
 // shape so the client renderer stays trivial and WEC can plug in later.
-function playerParseBbc(html, base) {
+// Shared profile normaliser. Each source renders /player/{nick} server-side as
+// Vue props (:player, :stats, :awards), HTML-entity-encoded JSON. We flatten to
+// a source-agnostic shape: a `stats` array of labelled blocks, so BBC (season +
+// all-time) and WEC (month + year + all-time) both render via one client path.
+// Tickets are BBC-only (Step 2/3/4); null when the source has none.
+function playerStatBlock(b, label) {
+  if (!b || typeof b !== 'object') return null;
+  return {
+    label: label,
+    rank: (b.pos != null ? b.pos : null),
+    score: (b.score != null ? b.score : null),
+    games: (b.games != null ? b.games : null),
+    points: (b.points != null ? b.points : null)
+  };
+}
+function playerNorm(html, base, source, statMap) {
   function prop(name) {
     const m = new RegExp(':' + name + '="([^"]*)"').exec(html);
     return m ? m[1] : null;
@@ -2099,40 +2114,49 @@ function playerParseBbc(html, base) {
     try { return JSON.parse(rankingDecodeHtml(raw)); } catch (e) { return null; }
   }
   const player = jprop('player');
-  if (!player || player.nickname == null) return { ok: false, error: 'no_player', source: 'BBC' };
-  const stats = jprop('stats') || {};
+  if (!player || player.nickname == null) return { ok: false, error: 'no_player', source: source };
+  const statsObj = jprop('stats') || {};
   const awardsRaw = jprop('awards');
-  const seasonRaw = prop('season');
-  function statBlock(b) {
-    if (!b || typeof b !== 'object') return null;
-    return {
-      rank: (b.pos != null ? b.pos : null),
-      score: (b.score != null ? b.score : null),
-      games: (b.games != null ? b.games : null),
-      points: (b.points != null ? b.points : null)
-    };
-  }
   const awards = (Array.isArray(awardsRaw) ? awardsRaw : []).map(function (a) {
     let img = (a && a.filename) ? String(a.filename) : '';
     if (img && img.charAt(0) === '/') img = base + img;
     return { img: img, title: (a && a.title) || '' };
   }).filter(function (a) { return a.img; });
+  const stats = [];
+  for (let i = 0; i < statMap.length; i++) {
+    const blk = playerStatBlock(statsObj[statMap[i].field], statMap[i].label);
+    if (blk) stats.push(blk);
+  }
+  const tickets = (player.s2_tickets != null || player.s3_tickets != null || player.s4_tickets != null)
+    ? { s2: player.s2_tickets || 0, s3: player.s3_tickets || 0, s4: player.s4_tickets || 0 }
+    : null;
   return {
     ok: true,
-    source: 'BBC',
+    source: source,
     nickname: player.nickname,
     memberSince: (player.created_at ? String(player.created_at).slice(0, 10) : null),
-    tickets: { s2: player.s2_tickets || 0, s3: player.s3_tickets || 0, s4: player.s4_tickets || 0 },
-    season: (seasonRaw != null ? parseInt(seasonRaw, 10) : null),
-    seasonStats: statBlock(stats.season),
-    alltimeStats: statBlock(stats.alltime),
-    awards: awards
+    tickets: tickets,
+    awards: awards,
+    stats: stats
   };
+}
+function playerParseBbc(html, base) {
+  return playerNorm(html, base, 'BBC', [
+    { field: 'season', label: 'rankingThisSeason' },
+    { field: 'alltime', label: 'rankingAllTime' }
+  ]);
+}
+function playerParseWec(html, base) {
+  return playerNorm(html, base, 'WEC', [
+    { field: 'month', label: 'rankingThisMonth' },
+    { field: 'year', label: 'rankingThisYear' },
+    { field: 'alltime', label: 'rankingAllTime' }
+  ]);
 }
 
 const PLAYER_SOURCES = {
-  bbc: { name: 'BBC', base: 'https://bbc.pokerth.net', parse: playerParseBbc }
-  // wec: wired once wec.pokerth.net/player/{nick} is confirmed to render the same props.
+  bbc: { name: 'BBC', base: 'https://bbc.pokerth.net', parse: playerParseBbc },
+  wec: { name: 'WEC', base: 'https://wec.pokerth.net', parse: playerParseWec }
 };
 
 async function playerUpstream(src, nick) {
