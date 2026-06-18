@@ -4709,7 +4709,8 @@ body:not(.in-game) .my-zone {
    Lists table players with an inline trash button to kick. Same
    visual language as #player-info-modal and #game-info-modal. */
 #kick-modal,
-#kick-confirm-modal {
+#kick-confirm-modal,
+#invite-modal {
   position: fixed;
   inset: 0;
   z-index: 9999;
