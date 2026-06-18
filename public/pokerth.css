@@ -2009,10 +2009,10 @@ html[data-bg-img] body.in-game {
   .my-zone .action-top-row { flex: 1 1 100%; display: flex; gap: 4px; }
   .my-zone .action-top-row .btn-action:not(.btn-auto) { flex: 1; }
   .my-zone .mode-sel-wrap { flex: 0 1 100px; }
-  .my-zone .pct-row { flex: 1 1 auto; gap: 3px; }
+  .my-zone .pct-row { flex: 1 1 auto; gap: 3px; width: auto; }
   .my-zone .raise-row, .my-zone .raise-row-mobile { flex: 2 1 auto; gap: 3px; min-width: 0; }
   .my-zone .btn-allin { flex: 1 1 auto; white-space: nowrap; }
-  .my-zone .btn-action { padding: 4px 8px; font-size: 0.62rem; }
+  .my-zone .btn-action { padding: 4px 8px; font-size: 0.62rem; min-width: 0; }
   .my-zone .btn-pct { padding: 4px 4px; font-size: 0.58rem; font-weight: 700; border-width: 1px; }
   .my-zone .btn-pct .pct-p { font-size: 0.62rem; }
   .my-zone .btn-pct .pct-amt { display: none; }
