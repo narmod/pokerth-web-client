@@ -2942,13 +2942,6 @@ const App = (() => {
       if (infoEl) {
         infoEl.innerHTML = _otherPlayerInfoHtml(targetPid);
         infoEl.style.display = '';
-        // Cups (PokerTH/BBC/WEC) : remplissage asynchrone du conteneur #pim-cups
-        // (présent uniquement pour un joueur enregistré sur pokerth.net).
-        try {
-          if (document.getElementById('pim-cups') && typeof window.rkLoadPlayerCups === 'function') {
-            window.rkLoadPlayerCups(getPlayerName(targetPid), 'pim-cups');
-          }
-        } catch(e) {}
         // Community vote-kick entry — live (online) game only, seated
         // opponent, when we're seated and not the host (the host has the
         // direct kick). The server still arbitrates via AskKickDenied.
@@ -3020,8 +3013,10 @@ const App = (() => {
     var modeEl = document.getElementById('login-mode');
     var onNet = !!(modeEl && (modeEl.value === 'guest' || modeEl.value === 'auth'));
     if (!isBot(pid) && onNet && (rg2 === 2 || rg2 === 3)) {
-      // Conteneur des classements de coupes (rempli en asynchrone par
-      // window.rkLoadPlayerCups depuis openPlayerInfoPopup).
+      // Coupes À LA DEMANDE : aucun réseau à l'ouverture. Le bouton déclenche
+      // window._pimLoadCups(pid) → rkLoadPlayerCups remplit #pim-cups (1 fois).
+      html += '<button type="button" id="pim-cups-btn" class="pim-cups-btn" onclick="window._pimLoadCups(' + pid + ')">🏆 '
+            + esc(tt('piShowCups', 'Show cups')) + '</button>';
       html += '<div id="pim-cups" class="pim-cups"></div>';
       var nm = getPlayerName(pid);
       html += '<a class="pim-profile-link" href="https://www.pokerth.net/app.php/player?u='
@@ -3069,6 +3064,18 @@ const App = (() => {
     if (modal) modal.style.display = 'none';
   }
   window.closePlayerInfoPopup = closePlayerInfoPopup;
+
+  // Coupes à la demande : appelé par le bouton « Voir les coupes » du popup.
+  // Masque le bouton et lance le chargement (3 requêtes /api/player) une seule
+  // fois, sur action explicite — jamais en automatique à l'ouverture.
+  function _pimLoadCups(pid) {
+    var btn = document.getElementById('pim-cups-btn');
+    if (btn) btn.style.display = 'none';
+    if (document.getElementById('pim-cups') && typeof window.rkLoadPlayerCups === 'function') {
+      try { window.rkLoadPlayerCups(getPlayerName(pid), 'pim-cups'); } catch(e) {}
+    }
+  }
+  window._pimLoadCups = _pimLoadCups;
 
   // ──────────────────────────────────────────────────────────────
   // Open the existing avatar-popup as a floating modal, from the
@@ -11319,7 +11326,7 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.3.54-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.55-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
