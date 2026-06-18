@@ -470,7 +470,7 @@ export const strings = {
     quickCreateLabel: 'Spelers:',
     quickCreateBtn: 'Maken',
     logPanelTitle: 'Logboek',
-    logCopied:'Logboek gekopieerd', logEmpty:'Logboek is leeg', logExportTitle:'Logboek exporteren',
+    logCopied:'Logboek gekopieerd', logEmpty:'Logboek is leeg', logExportTitle:'Logboek exporteren', chatClearTitle:'Chat wissen',
     disconnectDialogTitle: 'Verbinding verbreken?',
     disconnectDialogBody: 'Je keert terug naar het inlogscherm.',
     disconnectQuit: 'Verbinding verbreken',

@@ -470,7 +470,7 @@ export const strings = {
     quickCreateLabel: 'Spieler:',
     quickCreateBtn: 'Erstellen',
     logPanelTitle: 'Protokoll',
-    logCopied:'Protokoll kopiert', logEmpty:'Protokoll ist leer', logExportTitle:'Protokoll exportieren',
+    logCopied:'Protokoll kopiert', logEmpty:'Protokoll ist leer', logExportTitle:'Protokoll exportieren', chatClearTitle:'Chat leeren',
     disconnectDialogTitle: 'Trennen?',
     disconnectDialogBody: 'Du wirst zum Login-Bildschirm zurückgebracht.',
     disconnectQuit: 'Trennen',

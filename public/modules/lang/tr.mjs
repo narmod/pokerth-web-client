@@ -469,7 +469,7 @@ export const strings = {
     quickCreateLabel: 'Oyuncular:',
     quickCreateBtn: 'Oluştur',
     logPanelTitle: 'Günlük',
-    logCopied:'Günlük kopyalandı', logEmpty:'Günlük boş', logExportTitle:'Günlüğü dışa aktar',
+    logCopied:'Günlük kopyalandı', logEmpty:'Günlük boş', logExportTitle:'Günlüğü dışa aktar', chatClearTitle:'Sohbeti temizle',
     disconnectDialogTitle: 'Bağlantı kesilsin mi?',
     disconnectDialogBody: 'Giriş ekranına döneceksin.',
     disconnectQuit: 'Bağlantıyı kes',

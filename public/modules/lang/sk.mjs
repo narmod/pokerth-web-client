@@ -467,7 +467,7 @@ export const strings = {
     quickCreateLabel: 'Hráči:',
     quickCreateBtn: 'Vytvoriť',
     logPanelTitle: 'Záznam',
-    logCopied:'Denník skopírovaný', logEmpty:'Denník je prázdny', logExportTitle:'Exportovať denník',
+    logCopied:'Denník skopírovaný', logEmpty:'Denník je prázdny', logExportTitle:'Exportovať denník', chatClearTitle:'Vymazať chat',
     disconnectDialogTitle: 'Odpojiť?',
     disconnectDialogBody: 'Vrátite sa na prihlasovaciu obrazovku.',
     disconnectQuit: 'Odpojiť',

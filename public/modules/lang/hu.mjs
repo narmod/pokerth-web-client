@@ -467,7 +467,7 @@ export const strings = {
     quickCreateLabel: 'Játékosok:',
     quickCreateBtn: 'Létrehozás',
     logPanelTitle: 'Napló',
-    logCopied:'Napló másolva', logEmpty:'A napló üres', logExportTitle:'Napló exportálása',
+    logCopied:'Napló másolva', logEmpty:'A napló üres', logExportTitle:'Napló exportálása', chatClearTitle:'Chat törlése',
     disconnectDialogTitle: 'Lecsatlakozol?',
     disconnectDialogBody: 'Visszatérsz a bejelentkezési képernyőre.',
     disconnectQuit: 'Lecsatlakozás',

@@ -467,7 +467,7 @@ export const strings = {
     quickCreateLabel: 'Jugadors:',
     quickCreateBtn: 'Crea',
     logPanelTitle: 'Registre',
-    logCopied:'Registre copiat', logEmpty:'El registre és buit', logExportTitle:'Exporta el registre',
+    logCopied:'Registre copiat', logEmpty:'El registre és buit', logExportTitle:'Exporta el registre', chatClearTitle:'Esborra el xat',
     disconnectDialogTitle: 'Vols desconnectar?',
     disconnectDialogBody: 'Tornaràs a la pantalla d\'inici de sessió.',
     disconnectQuit: 'Desconnecta',

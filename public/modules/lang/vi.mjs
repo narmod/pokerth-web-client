@@ -467,7 +467,7 @@ export const strings = {
     quickCreateLabel: 'Người chơi:',
     quickCreateBtn: 'Tạo',
     logPanelTitle: 'Nhật ký',
-    logCopied:'Đã sao chép nhật ký', logEmpty:'Nhật ký trống', logExportTitle:'Xuất nhật ký',
+    logCopied:'Đã sao chép nhật ký', logEmpty:'Nhật ký trống', logExportTitle:'Xuất nhật ký', chatClearTitle:'Xóa trò chuyện',
     disconnectDialogTitle: 'Ngắt kết nối?',
     disconnectDialogBody: 'Bạn sẽ quay về màn hình đăng nhập.',
     disconnectQuit: 'Ngắt kết nối',

@@ -469,7 +469,7 @@ export const strings = {
     quickCreateLabel: 'Игроки:',
     quickCreateBtn: 'Создать',
     logPanelTitle: 'Журнал',
-    logCopied:'Журнал скопирован', logEmpty:'Журнал пуст', logExportTitle:'Экспорт журнала',
+    logCopied:'Журнал скопирован', logEmpty:'Журнал пуст', logExportTitle:'Экспорт журнала', chatClearTitle:'Очистить чат',
     disconnectDialogTitle: 'Отключиться?',
     disconnectDialogBody: 'Вы вернётесь на экран входа.',
     disconnectQuit: 'Отключиться',

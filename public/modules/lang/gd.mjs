@@ -468,7 +468,7 @@ export const strings = {
     quickCreateLabel: 'Cluicheadairean:',
     quickCreateBtn: 'Cruthaich',
     logPanelTitle: 'Loga',
-    logCopied:'Loga air a chopaigeadh', logEmpty:'Tha an loga falamh', logExportTitle:'Às-phortaich an loga',
+    logCopied:'Loga air a chopaigeadh', logEmpty:'Tha an loga falamh', logExportTitle:'Às-phortaich an loga', chatClearTitle:'Falamhaich a\' chabadaich',
     disconnectDialogTitle: 'Dì-cheangail?',
     disconnectDialogBody: 'Tillidh tu dhan sgrìn clàraidh a-steach.',
     disconnectQuit: 'Dì-cheangail',

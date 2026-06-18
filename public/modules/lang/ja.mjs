@@ -466,7 +466,7 @@ export const strings = {
     quickCreateLabel: 'プレイヤー：',
     quickCreateBtn: '作成',
     logPanelTitle: 'ログ',
-    logCopied:'ログをコピーしました', logEmpty:'ログは空です', logExportTitle:'ログをエクスポート',
+    logCopied:'ログをコピーしました', logEmpty:'ログは空です', logExportTitle:'ログをエクスポート', chatClearTitle:'チャットをクリア',
     disconnectDialogTitle: '切断しますか？',
     disconnectDialogBody: 'ログイン画面に戻ります。',
     disconnectQuit: '切断',
