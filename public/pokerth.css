@@ -1993,7 +1993,7 @@ html[data-bg-img] body.in-game {
   .player-bar .pb-name { font-size: 0.58rem; }
   .player-bar .pb-money { font-size: 0.5rem; }
   .player-bar .pb-info { min-width: 45px; }
-  .player-bar .pb-cards .pk { width: 22px; height: 32px; font-size: 0.56rem; }
+  .player-bar .pb-cards .pk { width: 34px; height: 48px; font-size: 0.78rem; }
   .player-bar .pb-action { font-size: 0.56rem; min-width: 0; }
 
   /* Barre d'action — 2 rangees compactes et previsibles.
@@ -2027,7 +2027,22 @@ html[data-bg-img] body.in-game {
 .header { padding: 2px 6px; }
 .pill { font-size: 0.56rem; padding: 1px 4px; }
   #g-blind, #g-players { display: none; }
-  .game-area { padding-bottom: 90px !important; }
+  /* ── Bas d'ecran en FLUX (deterministe) ──────────────────────────────
+     Plutot que 2 barres position:fixed empilees via une hauteur mesuree en
+     JS (fragile : la barre d'action flottait au milieu de l'ecran), on remet
+     .my-zone et .player-bar dans le flux de .game-area (colonne flex) : la
+     table (flex:1) occupe le haut, la barre d'action puis le dock s'empilent
+     dessous, colles en bas. position:relative (et non static) -> .player-bar
+     reste le contexte de #hand-strength (absolu) et .action-wrap celui de
+     l'epingle. */
+  .game-area { padding-bottom: 0 !important; }
+  .my-zone, .player-bar {
+    position: relative !important;
+    left: auto !important; right: auto !important; bottom: auto !important;
+    z-index: auto;
+  }
+  .my-zone    { order: 2; }
+  .player-bar { order: 3; background: transparent !important; border-top: 0 !important; }
 }
 
 

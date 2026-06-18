@@ -7795,21 +7795,11 @@ const App = (() => {
     if (pb && mz) {
       var pbH = pb.offsetHeight || 52;
       mz.style.bottom = pbH + 'px';
-      // Paysage mobile (hauteur tres reduite) : la barre d'action peut occuper
-      // 2 rangees. On reserve dynamiquement, SOUS la table, la hauteur reelle
-      // (dock joueur + barre d'action) + une petite marge, pour que les cartes
-      // communes / la riviere ne soient jamais masquees. Hors de ce cas, on
-      // rend la main au CSS (clamp d'origine).
-      if (ga) {
-        var landscapeShort = false;
-        try { landscapeShort = window.matchMedia('(max-height: 500px) and (orientation: landscape)').matches; } catch(e){}
-        if (landscapeShort) {
-          var reserve = pbH + (mz.offsetHeight || 0) + 6;
-          ga.style.setProperty('padding-bottom', reserve + 'px', 'important');
-        } else {
-          ga.style.removeProperty('padding-bottom');
-        }
-      }
+      // En paysage, le bas d'ecran est en FLUX (gere par le CSS) : aucune
+      // reserve a poser ici. Ailleurs (barres position:fixed), le CSS (clamp)
+      // gere la reserve sous les barres. On nettoie toute reserve inline
+      // eventuellement posee par une version precedente.
+      if (ga) ga.style.removeProperty('padding-bottom');
     }
   }
 
@@ -11311,7 +11301,7 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.3.41-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.42-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
