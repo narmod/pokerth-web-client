@@ -6102,3 +6102,79 @@ body.has-keyboard .act-key { display: inline-block; }
 }
 #ranking-modal .rk-card.floating-win .rk-title { cursor: move; touch-action: none; -webkit-user-select: none; user-select: none; }
 #ranking-modal .rk-card.floating-win .rk-title.win-dragging { cursor: grabbing; }
+
+/* ═══════════════════════════════════════════════════════════════════
+   Menu « liens PokerTH » (écran connect) — regroupe PokerTH.net /
+   Discord / Shoutbox / Week-End Cup dans un seul <details> pour
+   désencombrer le header (surtout sur téléphone). Reprend la chrome du
+   menu ••• (#g-overflow-menu). Le 🏆 Ranking reste un bouton séparé.
+   ═══════════════════════════════════════════════════════════════════ */
+#s-connect .corner-links .cl-links { position: relative; }
+#s-connect .corner-links .cl-links > summary {
+  list-style: none;
+  cursor: pointer;
+}
+#s-connect .corner-links .cl-links > summary::-webkit-details-marker { display: none; }
+#s-connect .corner-links .cl-links > summary::marker { content: ""; }
+#s-connect .corner-links .cl-links > summary img { display: block; width: 18px; height: 18px; }
+
+#s-connect .corner-links .cl-menu {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  z-index: 200;
+  min-width: 172px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 6px 5px;
+  box-sizing: border-box;
+  background: var(--modal-bg);
+  border: 1px solid var(--border-hi);
+  border-radius: 7px;
+  box-shadow: 0 12px 32px rgba(0,0,0,0.7);
+}
+/* Lignes du menu : on neutralise la « chip » héritée des .btn-sm du
+   cluster (fond/bord/ombre/hauteur fixe) pour des lignes plates. */
+#s-connect .corner-links .cl-menu .btn-sm {
+  width: 100%;
+  height: auto;
+  min-width: 0;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 9px;
+  text-align: left;
+  padding: 7px 12px;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  white-space: nowrap;
+  text-decoration: none;
+  background: transparent;
+  border: 1px solid transparent;
+  box-shadow: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+#s-connect .corner-links .cl-menu .btn-sm:hover {
+  background: var(--panel-hi);
+  border-color: var(--border-hi);
+}
+#s-connect .corner-links .cl-menu .cl-ico {
+  flex: none;
+  width: 18px;
+  height: 18px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+#s-connect .corner-links .cl-menu .cl-ico img,
+#s-connect .corner-links .cl-menu .cl-ico svg { display: block; width: 18px; height: 18px; }
+#s-connect .corner-links .cl-menu .cl-ico-emo {
+  flex: none;
+  width: 18px;
+  text-align: center;
+  font-size: 0.95rem;
+  line-height: 1;
+}
