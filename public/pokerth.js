@@ -1488,7 +1488,7 @@ _hideFullscreenIfUnsupported();
         '<div class="ip-step"><span class="ip-ico">2.</span><span>' +
           _tr('installIosStep2', 'Choose <b>\u201CAdd to Home Screen\u201D</b>.') + '</span></div>' +
         '<div class="ip-step"><span class="ip-ico">3.</span><span>' +
-          _tr('installIosStep3', 'Confirm with <b>Add</b> \u2014 the app lands on your home screen.') + '</span></div>';
+          _tr('installIosStep3', 'Confirm with <b>Add</b> — the app lands on your home screen.') + '</span></div>';
     } else {
       html =
         '<div class="ip-step"><span class="ip-ico">\u22EE</span><span>' +
@@ -1838,7 +1838,7 @@ document.addEventListener("DOMContentLoaded", function() {
       } else {
         el.textContent = '\uD83C\uDF10 auto \u00b7 serverlist \u26a0';
         el.style.color = 'var(--warn, #f59e0b)';
-        el.title = 'Serverlist unreachable \u2014 using the built-in pokerth.net fallback';
+        el.title = 'Serverlist unreachable — using the built-in pokerth.net fallback';
       }
     };
     function go() {
@@ -3921,6 +3921,41 @@ const App = (() => {
   let _lastInitNick = null;     // user-typed nickname at time of last Init
   let _lastInitTime = 0;        // timestamp of last Init sent
   let _connectingNow = false;   // re-entrancy guard to ignore double-clicks
+  let _connectTimeout = null;   // safety net so the connect button never stays stuck
+  let _connectBtnLabel = null;  // saved label restored on _endConnecting
+  function _connectBtnEl(){ return document.querySelector('#s-connect .btn-primary'); }
+  function _beginConnecting(){
+    // Lock the WHOLE connection attempt (click → success OR failure), not just
+    // the short pre-flight waits. Otherwise a re-click DURING the slow auth
+    // handshake tears down the in-flight socket and reopens a fresh one — a
+    // connect/close storm that makes the PokerTH server block the IP (err 7).
+    _connectingNow = true;
+    var _fr = (typeof _lang === 'undefined' || _lang !== 'en');
+    var b = _connectBtnEl();
+    if (b) {
+      if (_connectBtnLabel === null) _connectBtnLabel = b.textContent;
+      b.disabled = true;
+      b.textContent = _fr ? '⏳ Connexion…' : '⏳ Connecting…';
+    }
+    if (_connectTimeout) clearTimeout(_connectTimeout);
+    _connectTimeout = setTimeout(function(){
+      // If auth never resolves, free the button so the user isn't stuck. We do
+      // NOT close the socket: it may still complete, and a manual re-click will
+      // now cleanly close+reopen (single cycle) via the lingering-WS path.
+      if (!_connectingNow) return;
+      _endConnecting();
+      try { setStatus(_fr ? 'La connexion prend du temps… réessaie si besoin.' : 'Connection is taking a while… retry if needed.', 'err'); } catch(e) {}
+    }, 20000);
+  }
+  function _endConnecting(){
+    _connectingNow = false;
+    if (_connectTimeout) { clearTimeout(_connectTimeout); _connectTimeout = null; }
+    var b = _connectBtnEl();
+    if (b) {
+      b.disabled = false;
+      if (_connectBtnLabel !== null) { b.textContent = _connectBtnLabel; _connectBtnLabel = null; }
+    }
+  }
   const MODE_SWAP_MIN_GAP = 3000;  // ms — server blocks below ~2s in tests
   let _currentLoginMode = 'lan';
   let _lastMsgWasReaction = false; // true si le dernier chat envoyé était une réaction
@@ -4555,6 +4590,7 @@ const App = (() => {
       case T.InitAck: {
         _wasAuthenticated = true;
         _lastConnectFailed = false; // connexion réussie
+        _endConnecting();           // login OK → unlock the connect button
         _reconnectAttempts = 0;
         myId = Proto.u32(sub, 2);
         _rejoinNickRetries = 0;
@@ -4607,6 +4643,7 @@ const App = (() => {
       }
 
       case T.Error: {
+        _endConnecting();   // server rejected → free the button now
         _lastConnectFailed = true;
         const codes = {1:t('connErrVersion'),2:t('connErrFull'),3:t('connErrAuth'),
           4:t('connErrNickTaken'),5:t('connErrNickInvalid'),6:t('connErrMaintenance'),7:t('connErrBlocked')};
@@ -6255,8 +6292,8 @@ const App = (() => {
         ? '<button class="btn-join" onclick="event.stopPropagation();App.joinGame(' + parseInt(gid) + ')">' + joinLabel + '</button>'
         : '';
       // Seat dots from the REAL lobby counts (filled = taken, hollow =
-      // free). The lobby list gives only player counts \u2014 no per-seat
-      // identities \u2014 so we visualise occupancy, never fake avatars.
+      // free). The lobby list gives only player counts — no per-seat
+      // identities — so we visualise occupancy, never fake avatars.
       var seatDots = '';
       var cap = Math.min(g.maxPlayers || 0, 10);
       for (var s = 0; s < cap; s++) seatDots += '<span class="seat-dot' + (s < g.players ? ' on' : '') + '"></span>';
@@ -8950,9 +8987,10 @@ function dismissWinner() {
         }
       }
 
+      _beginConnecting();   // lock button for the whole attempt (anti IP-block)
       ws.binaryType = 'arraybuffer';
       ws.onopen    = () => { _lastRxTime = Date.now(); setStatus(t('proxyConnectedWait')); try { window._pthCountConnect && window._pthCountConnect(directWS ? 'pokerthnet' : ((window._offlineMode || ($('server-mode') && $('server-mode').value === 'offline')) ? 'offline' : 'lan')); } catch (e) {} };
-      ws.onerror   = () => { _lastConnectFailed = true; setStatus(t('wsError'), 'err'); };
+      ws.onerror   = () => { _lastConnectFailed = true; _endConnecting(); setStatus(t('wsError'), 'err'); };
       ws.onmessage = function(e) {
         if (typeof e.data === 'string') {
           // Message texte = protocole proxy (réactions)
@@ -9016,6 +9054,7 @@ function dismissWinner() {
         onRawData(e.data);
       };
       ws.onclose = function(e) {
+        _endConnecting();   // free the connect button on any close
         ws = null;
         clearTimeout(window._reconnectTimer);
         clearInterval(window._reconnectCountdown);
@@ -11326,7 +11365,7 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.3.55-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.56-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
