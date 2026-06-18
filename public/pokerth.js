@@ -5037,7 +5037,10 @@ const App = (() => {
             handleIncomingReaction(pid, _reEmoji, 'chat');
             // Pas d'affichage dans le chat — animation seule
           }
-        } else {
+        } else if (!(pid === myId && ctype !== 3)) {
+          // Mon propre message : déjà affiché en optimiste à l'envoi (classe 'mine').
+          // Le serveur le rediffuse à tous, expéditeur compris → on ignore l'écho
+          // pour ne pas afficher la ligne en double (broadcast ctype===3 conservé).
           addChat(who, text, cls);
         }
         break;
@@ -11301,7 +11304,7 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.3.48-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.49-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
