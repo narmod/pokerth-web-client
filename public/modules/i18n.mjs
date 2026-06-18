@@ -383,7 +383,7 @@ function setLang(l) {
   // lobby header) keep a text label alongside the flag.
   ['lang-toggle-game-mob', 'lang-toggle-lobby-mob', 'lang-toggle-connect-mob'].forEach(function(id){
     var bMob = document.getElementById(id);
-    if (bMob) bMob.innerHTML = flagSvg + ' ' + langLabel;
+    if (bMob) bMob.innerHTML = '<span style="margin-right:5px">' + flagSvg + '</span>' + langLabel;
   });
   // Update more/less options label
   var ml = document.getElementById('cf-more-label');
