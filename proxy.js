@@ -2083,6 +2083,102 @@ function handleRanking(req, res, query) {
 }
 
 
+// ── Player profile relay (clicking a name in the ranking) ──────────────────
+// BBC renders the full profile card server-side at /player/{nickname} as Vue
+// props (:player, :stats, :awards, :season), HTML-entity-encoded JSON. A plain
+// GET + decode is enough (no CSRF). We normalise it to a flat, source-agnostic
+// shape so the client renderer stays trivial and WEC can plug in later.
+function playerParseBbc(html, base) {
+  function prop(name) {
+    const m = new RegExp(':' + name + '="([^"]*)"').exec(html);
+    return m ? m[1] : null;
+  }
+  function jprop(name) {
+    const raw = prop(name);
+    if (raw == null) return null;
+    try { return JSON.parse(rankingDecodeHtml(raw)); } catch (e) { return null; }
+  }
+  const player = jprop('player');
+  if (!player || player.nickname == null) return { ok: false, error: 'no_player', source: 'BBC' };
+  const stats = jprop('stats') || {};
+  const awardsRaw = jprop('awards');
+  const seasonRaw = prop('season');
+  function statBlock(b) {
+    if (!b || typeof b !== 'object') return null;
+    return {
+      rank: (b.pos != null ? b.pos : null),
+      score: (b.score != null ? b.score : null),
+      games: (b.games != null ? b.games : null),
+      points: (b.points != null ? b.points : null)
+    };
+  }
+  const awards = (Array.isArray(awardsRaw) ? awardsRaw : []).map(function (a) {
+    let img = (a && a.filename) ? String(a.filename) : '';
+    if (img && img.charAt(0) === '/') img = base + img;
+    return { img: img, title: (a && a.title) || '' };
+  }).filter(function (a) { return a.img; });
+  return {
+    ok: true,
+    source: 'BBC',
+    nickname: player.nickname,
+    memberSince: (player.created_at ? String(player.created_at).slice(0, 10) : null),
+    tickets: { s2: player.s2_tickets || 0, s3: player.s3_tickets || 0, s4: player.s4_tickets || 0 },
+    season: (seasonRaw != null ? parseInt(seasonRaw, 10) : null),
+    seasonStats: statBlock(stats.season),
+    alltimeStats: statBlock(stats.alltime),
+    awards: awards
+  };
+}
+
+const PLAYER_SOURCES = {
+  bbc: { name: 'BBC', base: 'https://bbc.pokerth.net', parse: playerParseBbc }
+  // wec: wired once wec.pokerth.net/player/{nick} is confirmed to render the same props.
+};
+
+async function playerUpstream(src, nick) {
+  const targetUrl = src.base + '/player/' + encodeURIComponent(nick);
+  const r = await rankingFetch(targetUrl, { 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' });
+  const body = await r.text();
+  if (r.status === 404) return { status: 404, body: JSON.stringify({ ok: false, error: 'player_not_found', source: src.name }) };
+  if (!r.ok) return { status: 502, body: JSON.stringify({ ok: false, error: 'upstream_' + r.status, source: src.name }) };
+  let parsed;
+  try { parsed = src.parse(body, src.base); }
+  catch (e) { return { status: 502, body: JSON.stringify({ ok: false, error: 'parse_failed', source: src.name }) }; }
+  return { status: 200, body: JSON.stringify(parsed) };
+}
+
+function handlePlayer(req, res, query) {
+  const key = String((query && query.src) || '').toLowerCase();
+  const src = PLAYER_SOURCES[key];
+  if (!src) {
+    res.writeHead(400, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' });
+    res.end(JSON.stringify({ ok: false, error: 'unknown_source', allowed: Object.keys(PLAYER_SOURCES) }));
+    return;
+  }
+  const nick = String((query && query.nick) || '').trim();
+  if (!nick) {
+    res.writeHead(400, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' });
+    res.end(JSON.stringify({ ok: false, error: 'missing_nick' }));
+    return;
+  }
+  const cacheKey = 'player|' + key + '|' + nick.toLowerCase();
+  const hit = RANKING_CACHE.get(cacheKey);
+  if (hit && (Date.now() - hit.at) < RANKING_TTL_MS) {
+    res.writeHead(hit.status, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'public, max-age=30', 'X-Ranking-Cache': 'hit' });
+    res.end(hit.body);
+    return;
+  }
+  playerUpstream(src, nick).then(function (out) {
+    RANKING_CACHE.set(cacheKey, { at: Date.now(), status: out.status, body: out.body });
+    res.writeHead(out.status, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'public, max-age=30', 'X-Ranking-Cache': 'miss' });
+    res.end(out.body);
+  }).catch(function (err) {
+    res.writeHead(502, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' });
+    res.end(JSON.stringify({ ok: false, error: 'relay_failed', detail: String((err && err.message) || err) }));
+  });
+}
+
+
 const httpServer = http.createServer((req, res) => {
   // Serve the SPA shell for the root path. We strip the query string
   // before comparing so deep links like
@@ -2147,6 +2243,10 @@ const httpServer = http.createServer((req, res) => {
   // ── Ranking relay (PokerTH / BBC / WEC) — see handleRanking above. ──
   if (reqPathOnly === '/api/ranking') {
     handleRanking(req, res, query);
+    return;
+  }
+  if (reqPathOnly === '/api/player') {
+    handlePlayer(req, res, query);
     return;
   }
 

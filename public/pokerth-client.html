@@ -1654,11 +1654,16 @@ if ('serviceWorker' in navigator) {
       <div class="rk-msg" id="rk-nomatch" data-i18n="rankingNoMatch" style="display:none">No player found.</div>
       <div id="rk-table-wrap" style="display:none"></div>
     </div>
+    <div id="rk-profile" style="display:none">
+      <button type="button" class="rk-back" onclick="rankingBackToList()" title="Back" data-i18n-title="rankingBack" aria-label="Back">←</button>
+      <div id="rk-prof-body"></div>
+    </div>
   </div>
 </div>
 <script>
 (function () {
   var RK_SRCS = ['pth', 'bbc', 'wec'];
+  var RK_PROFILE_SRCS = ['bbc'];                 // sources exposing a /api/player profile
   var RK_CACHE = {};                              // src|season -> { at, state, rows, cols, season, seasons }
   var RK_TTL = 30000;
   var RK_SRC = 'pth';
@@ -1686,7 +1691,14 @@ if ('serviceWorker' in navigator) {
     h += '</tr></thead><tbody>';
     for (var r = 0; r < rows.length; r++) {
       h += '<tr>';
-      for (var k = 0; k < cols.length; k++) h += '<td>' + rkEsc(rows[r][cols[k]]) + '</td>';
+      for (var k = 0; k < cols.length; k++) {
+        var col = cols[k], cv = rows[r][col];
+        if (col === 'player' && RK_PROFILE_SRCS.indexOf(RK_SRC) >= 0) {
+          h += '<td><button type="button" class="rk-name" data-nick="' + rkEsc(cv) + '">' + rkEsc(cv) + '</button></td>';
+        } else {
+          h += '<td>' + rkEsc(cv) + '</td>';
+        }
+      }
       h += '</tr>';
     }
     return h + '</tbody></table>';
@@ -1762,6 +1774,80 @@ if ('serviceWorker' in navigator) {
       .catch(function () { rkShow({ state: 'error', rows: [], cols: [], seasons: null, season: null }); });
   }
 
+  // ── Player profile (click a name in the ranking) ─────────────────────────
+  var RK_PROF_CACHE = {};                         // src|nick -> { at, html }
+  function rkSetView(which) {                      // 'list' | 'profile'
+    var isProf = (which === 'profile');
+    var tabs = document.querySelector('#ranking-modal .rk-tabs');
+    var body = document.querySelector('#ranking-modal .rk-body');
+    var prof = $('rk-profile');
+    if (tabs) tabs.style.display = isProf ? 'none' : '';
+    if (body) body.style.display = isProf ? 'none' : '';
+    if (prof) prof.style.display = isProf ? 'block' : 'none';
+  }
+  window.rankingBackToList = function () { rkSetView('list'); };
+
+  function rkSection(title, inner) {
+    return '<div class="rk-sec"><div class="rk-sec-h">' + rkEsc(title) + '</div>' + inner + '</div>';
+  }
+  function rkTile(v, l) {
+    return '<div class="rk-tile"><div class="rk-tile-v">' + rkEsc(v) + '</div><div class="rk-tile-l">' + rkEsc(l) + '</div></div>';
+  }
+  function rkStatTiles(b) {
+    if (!b) return '';
+    var rank = (b.rank != null && +b.rank > 0) ? ('#' + b.rank) : '\u2014';
+    return '<div class="rk-tiles">'
+      + rkTile(rank, rkT('rankingRank', 'Rank'))
+      + rkTile(b.score != null ? b.score : '\u2014', rkColLabel('score'))
+      + rkTile(b.games != null ? b.games : '\u2014', rkColLabel('games'))
+      + rkTile(b.points != null ? b.points : '\u2014', rkColLabel('points'))
+      + '</div>';
+  }
+  function rkRenderProfile(d) {
+    var h = '<div class="rk-prof-head"><div class="rk-prof-name">' + rkEsc(d.nickname) + '</div>';
+    if (d.memberSince) h += '<div class="rk-prof-since">' + rkEsc(rkT('rankingMemberSince', 'Member since')) + ' ' + rkEsc(d.memberSince) + '</div>';
+    h += '</div>';
+    if (d.awards && d.awards.length) {
+      var aw = '<div class="rk-awards">';
+      for (var i = 0; i < d.awards.length; i++) {
+        var t = rkEsc(d.awards[i].title || '');
+        aw += '<img class="rk-award" src="' + rkEsc(d.awards[i].img) + '" alt="' + t + '" title="' + t + '" loading="lazy">';
+      }
+      h += rkSection(rkT('rankingAwards', 'Awards'), aw + '</div>');
+    }
+    if (d.tickets) {
+      var step = rkT('rankingStep', 'Step');
+      var tk = '<div class="rk-tiles">'
+        + rkTile(d.tickets.s2, step + ' 2')
+        + rkTile(d.tickets.s3, step + ' 3')
+        + rkTile(d.tickets.s4, step + ' 4')
+        + '</div>';
+      h += rkSection(rkT('rankingTickets', 'Tickets'), tk);
+    }
+    if (d.seasonStats) h += rkSection(rkT('rankingThisSeason', 'This season'), rkStatTiles(d.seasonStats));
+    if (d.alltimeStats) h += rkSection(rkT('rankingAllTime', 'All-Time'), rkStatTiles(d.alltimeStats));
+    return h;
+  }
+  window.rkOpenProfile = function (nick) {
+    var src = RK_SRC;
+    rkSetView('profile');
+    var pb = $('rk-prof-body'); if (!pb) return;
+    pb.innerHTML = '<div class="rk-msg">' + rkEsc(rkT('rankingLoading', 'Loading\u2026')) + '</div>';
+    var ck = src + '|' + String(nick).toLowerCase();
+    var c = RK_PROF_CACHE[ck];
+    if (c && (Date.now() - c.at) < RK_TTL) { pb.innerHTML = c.html; return; }
+    fetch('/api/player?src=' + encodeURIComponent(src) + '&nick=' + encodeURIComponent(nick), { headers: { 'Accept': 'application/json' } })
+      .then(function (r) { return r.text(); })
+      .then(function (t) {
+        var d; try { d = JSON.parse(t); } catch (e) { d = null; }
+        if (!d || d.ok === false) { pb.innerHTML = '<div class="rk-msg">' + rkEsc(rkT('rankingError', 'Could not load the ranking.')) + '</div>'; return; }
+        var html = rkRenderProfile(d);
+        RK_PROF_CACHE[ck] = { at: Date.now(), html: html };
+        pb.innerHTML = html;
+      })
+      .catch(function () { pb.innerHTML = '<div class="rk-msg">' + rkEsc(rkT('rankingError', 'Could not load the ranking.')) + '</div>'; });
+  };
+
   // Desktop/tablet only (>=900x600): float the card as a draggable + resizable
   // window, reusing the in-game chat window system (window._enableFloating).
   function rkWinGate() { try { return !!(window._winGate && window._winGate() && typeof window._enableFloating === 'function'); } catch (e) { return false; } }
@@ -1785,6 +1871,7 @@ if ('serviceWorker' in navigator) {
   };
 
   window.rankingSelect = function (src) {
+    rkSetView('list');
     if (RK_SRCS.indexOf(src) < 0) src = 'pth';
     RK_SRC = src; RK_ALLTIME = false;
     var tabs = document.querySelectorAll('#ranking-modal .rk-tab');
@@ -1808,11 +1895,19 @@ if ('serviceWorker' in navigator) {
     else rkFetch(RK_SRC, sel ? parseInt(sel.value, 10) : null);
   };
 
+  var rkTW = $('rk-table-wrap');
+  if (rkTW) rkTW.addEventListener('click', function (e) {
+    var b = (e.target && e.target.closest) ? e.target.closest('.rk-name') : null;
+    if (b && b.getAttribute('data-nick') != null) window.rkOpenProfile(b.getAttribute('data-nick'));
+  });
+
   document.addEventListener('keydown', function (e) {
-    if (e.key === 'Escape') {
-      var m = $('ranking-modal');
-      if (m && m.style.display && m.style.display !== 'none') window.closeRankingModal();
-    }
+    if (e.key !== 'Escape') return;
+    var m = $('ranking-modal');
+    if (!m || !m.style.display || m.style.display === 'none') return;
+    var prof = $('rk-profile');
+    if (prof && prof.style.display === 'block') window.rankingBackToList();
+    else window.closeRankingModal();
   });
 })();
 </script>

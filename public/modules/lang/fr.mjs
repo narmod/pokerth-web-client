@@ -339,6 +339,7 @@ export const strings = {
     rankingSearch:'Rechercher un joueur…', rankingNoMatch:'Aucun joueur trouvé.',
     rankingSeason:'Saison', rankingAllTime:'Tous les temps',
     rankingColRank:'#', rankingColPlayer:'Pseudo', rankingColScore:'Score', rankingColPoints:'Points', rankingColGames:'Parties',
+    rankingMemberSince:'Membre depuis', rankingAwards:'Récompenses', rankingTickets:'Tickets', rankingThisSeason:'Cette saison', rankingStep:'Palier', rankingRank:'Rang', rankingBack:'Retour',
 };
 
 export default { meta, strings };

@@ -6108,6 +6108,24 @@ body.has-keyboard .act-key { display: inline-block; }
 #ranking-modal .rk-card.floating-win .rk-title { cursor: move; touch-action: none; -webkit-user-select: none; user-select: none; }
 #ranking-modal .rk-card.floating-win .rk-title.win-dragging { cursor: grabbing; }
 
+/* ── Player profile (clicking a name in the ranking) ─────────────────────── */
+.rk-name { background: none; border: none; padding: 0; margin: 0; font: inherit; letter-spacing: inherit; color: var(--gold-hi); cursor: pointer; }
+.rk-name:hover { color: var(--gold); text-decoration: underline; }
+#rk-profile { flex: 1; min-height: 120px; overflow-y: auto; }
+.rk-back { background: var(--inset); color: var(--text); border: 1px solid var(--border); border-radius: 3px; width: 32px; height: 28px; line-height: 1; font-size: 1.05rem; cursor: pointer; margin-bottom: 12px; transition: border-color 0.15s, color 0.15s; }
+.rk-back:hover { border-color: var(--gold); color: var(--gold-hi); }
+.rk-prof-head { margin-bottom: 14px; }
+.rk-prof-name { font-family: var(--ff-mono); font-size: 1.15rem; font-weight: 600; letter-spacing: 0.02em; color: var(--gold-hi); word-break: break-word; }
+.rk-prof-since { font-family: var(--ff-mono); font-size: 0.74rem; color: var(--text); opacity: 0.8; margin-top: 2px; }
+.rk-sec { margin-bottom: 14px; }
+.rk-sec-h { font-family: var(--ff-mono); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--gold-dim); margin-bottom: 6px; }
+.rk-awards { display: flex; flex-wrap: wrap; gap: 8px; }
+.rk-award { width: 54px; height: 54px; object-fit: contain; border-radius: 4px; background: rgba(var(--gold-rgb), 0.05); }
+.rk-tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(64px, 1fr)); gap: 6px; }
+.rk-tile { background: var(--field-bg); border: 1px solid var(--border); border-radius: 4px; padding: 8px 4px; text-align: center; }
+.rk-tile-v { font-family: var(--ff-mono); font-size: 0.95rem; font-weight: 600; color: var(--text-hi); }
+.rk-tile-l { font-family: var(--ff-mono); font-size: 0.62rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text); opacity: 0.75; margin-top: 3px; }
+
 /* ═══════════════════════════════════════════════════════════════════
    Menu « liens PokerTH » (écran connect) — regroupe PokerTH.net /
    Discord / Shoutbox / Week-End Cup dans un seul <details> pour
