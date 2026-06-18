@@ -213,6 +213,18 @@ export const strings = {
     kickAtLeast2: 'Er zijn minstens 2 spelers nodig om te beginnen.',
     // ── Vote-kick ──
     petitionAsk: 'Stemming voor wegsturen starten',
+    // game invitations
+    inviteTitle: '{name} heeft je uitgenodigd voor {table}',
+    inviteAccept: 'Accepteren',
+    inviteDecline: 'Weigeren',
+    inviteAccepted: 'Aan tafel deelnemen...',
+    inviteMenu: 'Spelers uitnodigen',
+    inviteModalTitle: 'Spelers uitnodigen',
+    inviteSubtitle: 'Online spelers die nog niet aan tafel zitten',
+    inviteBtn: 'Uitnodigen',
+    inviteSent: 'Uitgenodigd',
+    inviteNoPlayers: 'Niemand beschikbaar',
+    inviteSentToast: 'Uitnodiging verzonden naar {name}',
     petitionTitle: '{name} wegsturen?',
     petitionAgainstYou: 'Er loopt een stemming om jou weg te sturen',
     petitionVoteYes: 'Wegsturen',

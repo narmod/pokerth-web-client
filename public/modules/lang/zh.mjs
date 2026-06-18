@@ -209,6 +209,18 @@ export const strings = {
     kickAtLeast2: '至少需要 2 名玩家才能开始。',
     // ── Vote-kick ──
     petitionAsk: '发起踢人投票',
+    // game invitations
+    inviteTitle: '{name} 邀请你加入 {table}',
+    inviteAccept: '接受',
+    inviteDecline: '拒绝',
+    inviteAccepted: '正在加入牌桌...',
+    inviteMenu: '邀请玩家',
+    inviteModalTitle: '邀请玩家',
+    inviteSubtitle: '尚未在牌桌上的在线玩家',
+    inviteBtn: '邀请',
+    inviteSent: '已邀请',
+    inviteNoPlayers: '没有可用玩家',
+    inviteSentToast: '已向 {name} 发送邀请',
     petitionTitle: '将 {name} 踢出？',
     petitionAgainstYou: '正在进行将你踢出的投票',
     petitionVoteYes: '踢出',

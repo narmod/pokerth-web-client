@@ -208,6 +208,18 @@ export const strings = {
     kickAtLeast2: 'Minstens 2 spelers nodig om te begin.',
     // ── Vote-kick ──
     petitionAsk: 'Begin uitskop-stemming',
+    // game invitations
+    inviteTitle: '{name} het jou na {table} genooi',
+    inviteAccept: 'Aanvaar',
+    inviteDecline: 'Weier',
+    inviteAccepted: 'Sluit by die tafel aan...',
+    inviteMenu: 'Nooi spelers',
+    inviteModalTitle: 'Nooi spelers',
+    inviteSubtitle: 'Aanlyn spelers nog nie by die tafel nie',
+    inviteBtn: 'Nooi',
+    inviteSent: 'Genooi',
+    inviteNoPlayers: 'Niemand beskikbaar nie',
+    inviteSentToast: 'Uitnodiging aan {name} gestuur',
     petitionTitle: 'Skop {name} uit?',
     petitionAgainstYou: 'Daar is \'n stemming om jou uit te skop aan die gang',
     petitionVoteYes: 'Skop uit',

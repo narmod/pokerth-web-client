@@ -108,6 +108,18 @@ export const strings = {
     kickAtLeast2:'시작하려면 최소 2명이 필요합니다.',
     // ── Vote-kick ──
     petitionAsk: '추방 투표 시작',
+    // game invitations
+    inviteTitle: '{name} 님이 {table}에 초대했습니다',
+    inviteAccept: '수락',
+    inviteDecline: '거절',
+    inviteAccepted: '테이블에 참가하는 중...',
+    inviteMenu: '플레이어 초대',
+    inviteModalTitle: '플레이어 초대',
+    inviteSubtitle: '아직 테이블에 없는 온라인 플레이어',
+    inviteBtn: '초대',
+    inviteSent: '초대됨',
+    inviteNoPlayers: '사용 가능한 사람이 없습니다',
+    inviteSentToast: '{name} 님에게 초대를 보냈습니다',
     petitionTitle: '{name}을(를) 추방할까요?',
     petitionAgainstYou: '당신을 추방하는 투표가 진행 중입니다',
     petitionVoteYes: '추방',

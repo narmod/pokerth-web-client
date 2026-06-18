@@ -207,6 +207,18 @@ export const strings = {
     kickAtLeast2: 'São necessários pelo menos 2 jogadores para começar.',
     // ── Vote-kick ──
     petitionAsk: 'Iniciar votação de expulsão',
+    // game invitations
+    inviteTitle: '{name} convidou você para {table}',
+    inviteAccept: 'Aceitar',
+    inviteDecline: 'Recusar',
+    inviteAccepted: 'Entrando na mesa...',
+    inviteMenu: 'Convidar jogadores',
+    inviteModalTitle: 'Convidar jogadores',
+    inviteSubtitle: 'Jogadores online que ainda não estão na mesa',
+    inviteBtn: 'Convidar',
+    inviteSent: 'Convidado',
+    inviteNoPlayers: 'Ninguém disponível',
+    inviteSentToast: 'Convite enviado para {name}',
     petitionTitle: 'Expulsar {name}?',
     petitionAgainstYou: 'Há uma votação em andamento para expulsar você',
     petitionVoteYes: 'Expulsar',

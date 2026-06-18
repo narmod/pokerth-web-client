@@ -208,6 +208,18 @@ export const strings = {
     kickAtLeast2: 'Χρειάζονται τουλάχιστον 2 παίκτες για έναρξη.',
     // ── Vote-kick ──
     petitionAsk: 'Έναρξη ψηφοφορίας αποβολής',
+    // game invitations
+    inviteTitle: 'Ο/Η {name} σας προσκάλεσε στο {table}',
+    inviteAccept: 'Αποδοχή',
+    inviteDecline: 'Απόρριψη',
+    inviteAccepted: 'Σύνδεση στο τραπέζι...',
+    inviteMenu: 'Πρόσκληση παικτών',
+    inviteModalTitle: 'Πρόσκληση παικτών',
+    inviteSubtitle: 'Συνδεδεμένοι παίκτες που δεν είναι ακόμη στο τραπέζι',
+    inviteBtn: 'Πρόσκληση',
+    inviteSent: 'Προσκλήθηκε',
+    inviteNoPlayers: 'Κανείς διαθέσιμος',
+    inviteSentToast: 'Η πρόσκληση στάλθηκε στον/στην {name}',
     petitionTitle: 'Αποβολή του {name};',
     petitionAgainstYou: 'Διεξάγεται ψηφοφορία για την αποβολή σου',
     petitionVoteYes: 'Αποβολή',

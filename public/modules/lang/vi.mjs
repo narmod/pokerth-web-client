@@ -208,6 +208,18 @@ export const strings = {
     kickAtLeast2: 'Cần ít nhất 2 người chơi để bắt đầu.',
     // ── Vote-kick ──
     petitionAsk: 'Bắt đầu bỏ phiếu đuổi',
+    // game invitations
+    inviteTitle: '{name} đã mời bạn vào {table}',
+    inviteAccept: 'Chấp nhận',
+    inviteDecline: 'Từ chối',
+    inviteAccepted: 'Đang vào bàn...',
+    inviteMenu: 'Mời người chơi',
+    inviteModalTitle: 'Mời người chơi',
+    inviteSubtitle: 'Người chơi trực tuyến chưa ở bàn',
+    inviteBtn: 'Mời',
+    inviteSent: 'Đã mời',
+    inviteNoPlayers: 'Không có ai khả dụng',
+    inviteSentToast: 'Đã gửi lời mời tới {name}',
     petitionTitle: 'Đuổi {name}?',
     petitionAgainstYou: 'Đang có cuộc bỏ phiếu đuổi bạn',
     petitionVoteYes: 'Đuổi',

@@ -207,6 +207,18 @@ export const strings = {
     kickAtLeast2: 'Minst 2 spelare krävs för att starta.',
     // ── Vote-kick ──
     petitionAsk: 'Starta utröstning',
+    // game invitations
+    inviteTitle: '{name} bjöd in dig till {table}',
+    inviteAccept: 'Acceptera',
+    inviteDecline: 'Avböj',
+    inviteAccepted: 'Ansluter till bordet...',
+    inviteMenu: 'Bjud in spelare',
+    inviteModalTitle: 'Bjud in spelare',
+    inviteSubtitle: 'Spelare online som inte är vid bordet än',
+    inviteBtn: 'Bjud in',
+    inviteSent: 'Inbjuden',
+    inviteNoPlayers: 'Ingen tillgänglig',
+    inviteSentToast: 'Inbjudan skickad till {name}',
     petitionTitle: 'Rösta ut {name}?',
     petitionAgainstYou: 'En omröstning om att rösta ut dig pågår',
     petitionVoteYes: 'Rösta ut',

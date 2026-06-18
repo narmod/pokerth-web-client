@@ -208,6 +208,18 @@ export const strings = {
     kickAtLeast2: 'Нужни са поне 2 играчи за старт.',
     // ── Vote-kick ──
     petitionAsk: 'Гласуване за изгонване',
+    // game invitations
+    inviteTitle: '{name} ви покани в {table}',
+    inviteAccept: 'Приеми',
+    inviteDecline: 'Откажи',
+    inviteAccepted: 'Присъединяване към масата...',
+    inviteMenu: 'Покани играчи',
+    inviteModalTitle: 'Покани играчи',
+    inviteSubtitle: 'Онлайн играчи, които още не са на масата',
+    inviteBtn: 'Покани',
+    inviteSent: 'Поканен',
+    inviteNoPlayers: 'Няма свободни играчи',
+    inviteSentToast: 'Поканата е изпратена до {name}',
     petitionTitle: 'Да изгоним ли {name}?',
     petitionAgainstYou: 'Тече гласуване за вашето изгонване',
     petitionVoteYes: 'Изгони',

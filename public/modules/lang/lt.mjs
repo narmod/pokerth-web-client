@@ -208,6 +208,18 @@ export const strings = {
     kickAtLeast2: 'Pradžiai reikia bent 2 žaidėjų.',
     // ── Vote-kick ──
     petitionAsk: 'Pradėti balsavimą dėl pašalinimo',
+    // game invitations
+    inviteTitle: '{name} pakvietė jus į {table}',
+    inviteAccept: 'Priimti',
+    inviteDecline: 'Atmesti',
+    inviteAccepted: 'Jungiamasi prie stalo...',
+    inviteMenu: 'Pakviesti žaidėjų',
+    inviteModalTitle: 'Pakviesti žaidėjų',
+    inviteSubtitle: 'Prisijungę žaidėjai, dar nesantys prie stalo',
+    inviteBtn: 'Pakviesti',
+    inviteSent: 'Pakviestas',
+    inviteNoPlayers: 'Nėra prieinamų',
+    inviteSentToast: 'Kvietimas išsiųstas žaidėjui {name}',
     petitionTitle: 'Pašalinti {name}?',
     petitionAgainstYou: 'Vyksta balsavimas dėl tavo pašalinimo',
     petitionVoteYes: 'Pašalinti',

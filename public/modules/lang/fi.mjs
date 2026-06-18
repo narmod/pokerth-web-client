@@ -207,6 +207,18 @@ export const strings = {
     kickAtLeast2: 'Aloitukseen tarvitaan vähintään 2 pelaajaa.',
     // ── Vote-kick ──
     petitionAsk: 'Aloita potkuäänestys',
+    // game invitations
+    inviteTitle: '{name} kutsui sinut pöytään {table}',
+    inviteAccept: 'Hyväksy',
+    inviteDecline: 'Hylkää',
+    inviteAccepted: 'Liitytään pöytään...',
+    inviteMenu: 'Kutsu pelaajia',
+    inviteModalTitle: 'Kutsu pelaajia',
+    inviteSubtitle: 'Online-pelaajat, jotka eivät ole vielä pöydässä',
+    inviteBtn: 'Kutsu',
+    inviteSent: 'Kutsuttu',
+    inviteNoPlayers: 'Ei ketään saatavilla',
+    inviteSentToast: 'Kutsu lähetetty pelaajalle {name}',
     petitionTitle: 'Potkitaanko {name} pois?',
     petitionAgainstYou: 'Äänestys poistamisestasi on käynnissä',
     petitionVoteYes: 'Potki pois',

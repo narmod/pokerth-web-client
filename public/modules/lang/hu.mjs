@@ -208,6 +208,18 @@ export const strings = {
     kickAtLeast2: 'A kezdéshez legalább 2 játékos szükséges.',
     // ── Vote-kick ──
     petitionAsk: 'Kirúgási szavazás indítása',
+    // game invitations
+    inviteTitle: '{name} meghívott ide: {table}',
+    inviteAccept: 'Elfogadás',
+    inviteDecline: 'Elutasítás',
+    inviteAccepted: 'Csatlakozás az asztalhoz...',
+    inviteMenu: 'Játékosok meghívása',
+    inviteModalTitle: 'Játékosok meghívása',
+    inviteSubtitle: 'Online játékosok, akik még nincsenek az asztalnál',
+    inviteBtn: 'Meghívás',
+    inviteSent: 'Meghívva',
+    inviteNoPlayers: 'Senki sem érhető el',
+    inviteSentToast: 'Meghívó elküldve neki: {name}',
     petitionTitle: '{name} kirúgása?',
     petitionAgainstYou: 'Szavazás folyik a kirúgásodról',
     petitionVoteYes: 'Kirúgás',

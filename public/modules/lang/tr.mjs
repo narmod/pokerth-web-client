@@ -210,6 +210,18 @@ export const strings = {
     kickAtLeast2: 'Başlamak için en az 2 oyuncu gerekir.',
     // ── Vote-kick ──
     petitionAsk: 'Atma oylaması başlat',
+    // game invitations
+    inviteTitle: '{name} sizi {table} masasına davet etti',
+    inviteAccept: 'Kabul et',
+    inviteDecline: 'Reddet',
+    inviteAccepted: 'Masaya katılınıyor...',
+    inviteMenu: 'Oyuncu davet et',
+    inviteModalTitle: 'Oyuncu davet et',
+    inviteSubtitle: 'Henüz masada olmayan çevrimiçi oyuncular',
+    inviteBtn: 'Davet et',
+    inviteSent: 'Davet edildi',
+    inviteNoPlayers: 'Uygun kimse yok',
+    inviteSentToast: '{name} oyuncusuna davet gönderildi',
     petitionTitle: '{name} atılsın mı?',
     petitionAgainstYou: 'Seni atmak için oylama sürüyor',
     petitionVoteYes: 'At',

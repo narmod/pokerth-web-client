@@ -208,6 +208,18 @@ export const strings = {
     kickAtLeast2: 'Sunt necesari cel puțin 2 jucători pentru a începe.',
     // ── Vote-kick ──
     petitionAsk: 'Pornește votul de excludere',
+    // game invitations
+    inviteTitle: '{name} te-a invitat la {table}',
+    inviteAccept: 'Acceptă',
+    inviteDecline: 'Refuză',
+    inviteAccepted: 'Te alături la masă...',
+    inviteMenu: 'Invită jucători',
+    inviteModalTitle: 'Invită jucători',
+    inviteSubtitle: 'Jucători online care nu sunt încă la masă',
+    inviteBtn: 'Invită',
+    inviteSent: 'Invitat',
+    inviteNoPlayers: 'Nimeni disponibil',
+    inviteSentToast: 'Invitație trimisă către {name}',
     petitionTitle: 'Excludem {name}?',
     petitionAgainstYou: 'Există un vot în curs pentru excluderea ta',
     petitionVoteYes: 'Exclude',

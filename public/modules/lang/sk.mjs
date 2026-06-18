@@ -208,6 +208,18 @@ export const strings = {
     kickAtLeast2: 'Na štart sú potrební aspoň 2 hráči.',
     // ── Vote-kick ──
     petitionAsk: 'Spustiť hlasovanie o vyhodení',
+    // game invitations
+    inviteTitle: '{name} vás pozval k {table}',
+    inviteAccept: 'Prijať',
+    inviteDecline: 'Odmietnuť',
+    inviteAccepted: 'Pripájanie k stolu...',
+    inviteMenu: 'Pozvať hráčov',
+    inviteModalTitle: 'Pozvať hráčov',
+    inviteSubtitle: 'Hráči online, ktorí ešte nie sú pri stole',
+    inviteBtn: 'Pozvať',
+    inviteSent: 'Pozvaný',
+    inviteNoPlayers: 'Nikto k dispozícii',
+    inviteSentToast: 'Pozvánka odoslaná hráčovi {name}',
     petitionTitle: 'Vyhodiť {name}?',
     petitionAgainstYou: 'Prebieha hlasovanie o tvojom vyhodení',
     petitionVoteYes: 'Vyhodiť',

@@ -208,6 +208,18 @@ export const strings = {
     kickAtLeast2: 'Za početak su potrebna bar 2 igrača.',
     // ── Vote-kick ──
     petitionAsk: 'Pokreni glasanje za izbacivanje',
+    // game invitations
+    inviteTitle: '{name} vas je pozvao za {table}',
+    inviteAccept: 'Prihvati',
+    inviteDecline: 'Odbij',
+    inviteAccepted: 'Pridruživanje stolu...',
+    inviteMenu: 'Pozovi igrače',
+    inviteModalTitle: 'Pozovi igrače',
+    inviteSubtitle: 'Igrači na mreži koji još nisu za stolom',
+    inviteBtn: 'Pozovi',
+    inviteSent: 'Pozvan',
+    inviteNoPlayers: 'Niko nije dostupan',
+    inviteSentToast: 'Pozivnica poslata igraču {name}',
     petitionTitle: 'Izbaciti {name}?',
     petitionAgainstYou: 'U toku je glasanje o tvom izbacivanju',
     petitionVoteYes: 'Izbaci',

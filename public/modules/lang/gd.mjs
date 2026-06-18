@@ -209,6 +209,18 @@ export const strings = {
     kickAtLeast2: 'Feumar co-dhiù 2 chluicheadair gus tòiseachadh.',
     // ── Vote-kick ──
     petitionAsk: 'Tòisich bhòt airson cur a-mach',
+    // game invitations
+    inviteTitle: 'Thug {name} cuireadh dhut gu {table}',
+    inviteAccept: 'Gabh ris',
+    inviteDecline: 'Diùlt',
+    inviteAccepted: "A' tighinn a-steach dhan bhòrd...",
+    inviteMenu: 'Thoir cuireadh do chluicheadairean',
+    inviteModalTitle: 'Thoir cuireadh do chluicheadairean',
+    inviteSubtitle: "Cluicheadairean air-loidhne nach eil aig a' bhòrd fhathast",
+    inviteBtn: 'Cuireadh',
+    inviteSent: 'Air a chuireadh',
+    inviteNoPlayers: 'Chan eil duine ri làimh',
+    inviteSentToast: 'Chaidh an cuireadh a chur gu {name}',
     petitionTitle: 'A bheil thu airson {name} a chur a-mach?',
     petitionAgainstYou: 'Tha bhòt a\' dol airson do chur a-mach',
     petitionVoteYes: 'Cuir a-mach',

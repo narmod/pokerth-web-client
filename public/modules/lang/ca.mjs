@@ -208,6 +208,18 @@ export const strings = {
     kickAtLeast2: 'Calen almenys 2 jugadors per començar.',
     // ── Vote-kick ──
     petitionAsk: 'Iniciar vot d\'expulsió',
+    // game invitations
+    inviteTitle: "{name} t'ha convidat a {table}",
+    inviteAccept: 'Accepta',
+    inviteDecline: 'Rebutja',
+    inviteAccepted: 'Entrant a la taula...',
+    inviteMenu: 'Convida jugadors',
+    inviteModalTitle: 'Convida jugadors',
+    inviteSubtitle: 'Jugadors en línia que encara no són a la taula',
+    inviteBtn: 'Convida',
+    inviteSent: 'Convidat',
+    inviteNoPlayers: 'Ningú disponible',
+    inviteSentToast: 'Invitació enviada a {name}',
     petitionTitle: 'Expulsar {name}?',
     petitionAgainstYou: 'Hi ha un vot en curs per expulsar-te',
     petitionVoteYes: 'Expulsar',

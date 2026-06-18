@@ -209,6 +209,18 @@ export const strings = {
     kickAtLeast2: 'தொடங்க குறைந்தது 2 வீரர்கள் தேவை.',
     // ── Vote-kick ──
     petitionAsk: 'வெளியேற்ற வாக்கெடுப்பைத் தொடங்கு',
+    // game invitations
+    inviteTitle: '{name} உங்களை {table} இற்கு அழைத்துள்ளார்',
+    inviteAccept: 'ஏற்க',
+    inviteDecline: 'நிராகரி',
+    inviteAccepted: 'மேசையில் சேர்கிறது...',
+    inviteMenu: 'வீரர்களை அழை',
+    inviteModalTitle: 'வீரர்களை அழை',
+    inviteSubtitle: 'இன்னும் மேசையில் இல்லாத ஆன்லைன் வீரர்கள்',
+    inviteBtn: 'அழை',
+    inviteSent: 'அழைக்கப்பட்டது',
+    inviteNoPlayers: 'யாரும் கிடைக்கவில்லை',
+    inviteSentToast: '{name} க்கு அழைப்பு அனுப்பப்பட்டது',
     petitionTitle: '{name} ஐ வெளியேற்றவா?',
     petitionAgainstYou: 'உங்களை வெளியேற்ற வாக்கெடுப்பு நடக்கிறது',
     petitionVoteYes: 'வெளியேற்று',

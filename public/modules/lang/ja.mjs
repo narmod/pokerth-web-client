@@ -207,6 +207,18 @@ export const strings = {
     kickAtLeast2: '開始には少なくとも2人のプレイヤーが必要です。',
     // ── Vote-kick ──
     petitionAsk: 'キック投票を開始',
+    // game invitations
+    inviteTitle: '{name} があなたを {table} に招待しました',
+    inviteAccept: '承認',
+    inviteDecline: '拒否',
+    inviteAccepted: 'テーブルに参加しています...',
+    inviteMenu: 'プレイヤーを招待',
+    inviteModalTitle: 'プレイヤーを招待',
+    inviteSubtitle: 'まだテーブルにいないオンラインのプレイヤー',
+    inviteBtn: '招待',
+    inviteSent: '招待済み',
+    inviteNoPlayers: '利用可能なプレイヤーがいません',
+    inviteSentToast: '{name} に招待を送信しました',
     petitionTitle: '{name} をキックしますか？',
     petitionAgainstYou: 'あなたをキックする投票が進行中です',
     petitionVoteYes: 'キック',

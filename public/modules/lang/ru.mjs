@@ -213,6 +213,18 @@ export const strings = {
     kickAtLeast2: 'Для начала нужно не менее 2 игроков.',
     // ── Vote-kick ──
     petitionAsk: 'Голосование за исключение',
+    // game invitations
+    inviteTitle: '{name} пригласил вас за {table}',
+    inviteAccept: 'Принять',
+    inviteDecline: 'Отклонить',
+    inviteAccepted: 'Присоединение к столу...',
+    inviteMenu: 'Пригласить игроков',
+    inviteModalTitle: 'Пригласить игроков',
+    inviteSubtitle: 'Игроки онлайн, ещё не за столом',
+    inviteBtn: 'Пригласить',
+    inviteSent: 'Приглашён',
+    inviteNoPlayers: 'Никого нет',
+    inviteSentToast: 'Приглашение отправлено игроку {name}',
     petitionTitle: 'Исключить {name}?',
     petitionAgainstYou: 'Идёт голосование за ваше исключение',
     petitionVoteYes: 'Исключить',

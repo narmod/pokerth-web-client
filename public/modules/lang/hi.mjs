@@ -109,6 +109,18 @@ export const strings = {
     kickAtLeast2:'शुरू करने के लिए कम से कम 2 खिलाड़ी चाहिए।',
     // ── Vote-kick ──
     petitionAsk: 'निकालने का वोट शुरू करें',
+    // game invitations
+    inviteTitle: '{name} ने आपको {table} में आमंत्रित किया',
+    inviteAccept: 'स्वीकारें',
+    inviteDecline: 'अस्वीकारें',
+    inviteAccepted: 'टेबल में शामिल हो रहे हैं...',
+    inviteMenu: 'खिलाड़ियों को आमंत्रित करें',
+    inviteModalTitle: 'खिलाड़ियों को आमंत्रित करें',
+    inviteSubtitle: 'ऑनलाइन खिलाड़ी जो अभी टेबल पर नहीं हैं',
+    inviteBtn: 'आमंत्रित करें',
+    inviteSent: 'आमंत्रित',
+    inviteNoPlayers: 'कोई उपलब्ध नहीं',
+    inviteSentToast: '{name} को आमंत्रण भेजा गया',
     petitionTitle: '{name} को निकालें?',
     petitionAgainstYou: 'आपको निकालने के लिए वोट चल रहा है',
     petitionVoteYes: 'निकालें',
