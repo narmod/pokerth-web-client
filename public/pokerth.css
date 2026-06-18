@@ -1974,47 +1974,51 @@ html[data-bg-img] body.in-game {
 
   /* Fixed bars: very compact */
   .pot-bar { font-size: 0.65rem; padding: 1px 0; }
-  .my-zone {
-    bottom: 44px !important;
-    padding: 3px 6px !important;
-  }
-  .player-bar { padding: 2px 6px !important; }
-  .player-bar-left { padding: 2px 8px; gap: 5px; }
-  .pb-avatar { width: 22px; height: 22px; font-size: 0.58rem; }
-  .pb-name { font-size: 0.58rem; }
-  .pb-money { font-size: 0.5rem; }
-  .pb-info { min-width: 45px; }
-  .pb-cards .pk { width: 22px; height: 32px; font-size: 0.56rem; }
+  /* NB cascade : les regles de base (.btn-action, .action-grid, .pb-cards .pk,
+     .pb-avatar, .player-bar-left...) sont definies PLUS BAS dans le fichier.
+     Une @media n'augmente PAS la specificite -> a specificite egale, ces
+     regles de base l'emportaient sur ce bloc et la compaction paysage etait
+     ignoree (boutons + dock affiches en taille bureau). On porte donc ces
+     overrides par .my-zone / .player-bar pour gagner en specificite. */
 
-  /* Actions : barre compacte sur 2 rangees FORCEES (plus de wrap aleatoire).
+  /* Dock joueur (.player-bar) — compact */
+  .my-zone { padding: 3px 6px !important; }
+  .player-bar { padding: 2px 6px !important; }
+  .player-bar .player-bar-left { padding: 2px 8px; gap: 5px; }
+  .player-bar .pb-avatar { width: 22px; height: 22px; font-size: 0.58rem; }
+  .player-bar .pb-name { font-size: 0.58rem; }
+  .player-bar .pb-money { font-size: 0.5rem; }
+  .player-bar .pb-info { min-width: 45px; }
+  .player-bar .pb-cards .pk { width: 22px; height: 32px; font-size: 0.56rem; }
+  .player-bar .pb-action { font-size: 0.56rem; min-width: 0; }
+
+  /* Barre d'action — 2 rangees compactes et previsibles.
      Rangee 1 (pleine largeur) : Fold | Call | mode.
      Rangee 2 (pleine largeur) : 1/3 1/2 Pot | relance | All-In.
-     flex-basis:100% sur la 1re rangee impose un retour a la ligne net ; la
-     reserve sous la table est recalculee en JS (updateBottomLayout) d'apres
-     la hauteur reelle de la barre -> les cartes communes / la riviere ne
-     sont jamais recouvertes, meme si une rangee venait a deborder. */
-  .action-grid {
-    flex-direction: row !important;
-    flex-wrap: wrap !important;
+     La hauteur reelle (dock + barre) est mesuree en JS (updateBottomLayout)
+     -> .my-zone se place AU-DESSUS du dock (plus de touches cachees) et la
+     table reserve juste l'espace necessaire (riviere jamais masquee). */
+  .my-zone .action-grid {
+    flex-direction: row;
+    flex-wrap: wrap;
     gap: 4px;
     width: 100%;
     max-width: 100%;
   }
-  .action-grid > * { min-width: 0; }
-  .action-top-row { flex: 1 1 100%; display: flex; gap: 4px; }
-  .action-top-row .btn-action:not(.btn-auto) { flex: 1; }
-  .mode-sel-wrap { flex: 0 1 104px !important; }
-  .pct-row  { flex: 1 1 auto; gap: 3px; }
-  .raise-row, .raise-row-mobile { flex: 2 1 auto; gap: 3px; min-width: 0; }
-  .btn-allin { flex: 1 1 auto; white-space: nowrap; }
-  /* Compacite : rangees basses, police reduite, montant des % masque pour
-     garder chaque rangee sur UNE seule ligne. */
-  .btn-action { padding: 5px 9px; font-size: 0.66rem; }
-  .btn-pct { padding: 5px 5px; font-size: 0.62rem; font-weight: 700; border-width: 1px; }
-  .btn-pct .pct-p { font-size: 0.68rem; }
-  .btn-pct .pct-amt { display: none; }
-  .raise-input { width: 48px; padding: 4px 4px; font-size: 0.66rem; }
-  .raise-display { font-size: 0.62rem; min-width: 30px; }
+  .my-zone .action-grid > * { min-width: 0; }
+  .my-zone .action-top-row { flex: 1 1 100%; display: flex; gap: 4px; }
+  .my-zone .action-top-row .btn-action:not(.btn-auto) { flex: 1; }
+  .my-zone .mode-sel-wrap { flex: 0 1 100px; }
+  .my-zone .pct-row { flex: 1 1 auto; gap: 3px; }
+  .my-zone .raise-row, .my-zone .raise-row-mobile { flex: 2 1 auto; gap: 3px; min-width: 0; }
+  .my-zone .btn-allin { flex: 1 1 auto; white-space: nowrap; }
+  .my-zone .btn-action { padding: 4px 8px; font-size: 0.62rem; }
+  .my-zone .btn-pct { padding: 4px 4px; font-size: 0.58rem; font-weight: 700; border-width: 1px; }
+  .my-zone .btn-pct .pct-p { font-size: 0.62rem; }
+  .my-zone .btn-pct .pct-amt { display: none; }
+  .my-zone .raise-input { width: 46px; padding: 4px; font-size: 0.62rem; }
+  .my-zone .raise-slider { flex: 1 1 auto; min-width: 48px; max-width: 110px; }
+  .my-zone .raise-display { font-size: 0.6rem; min-width: 28px; }
 
 .header { padding: 2px 6px; }
 .pill { font-size: 0.56rem; padding: 1px 4px; }
