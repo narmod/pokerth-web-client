@@ -1984,7 +1984,11 @@ html[data-bg-img] body.in-game {
   /* Dock joueur (.player-bar) — compact */
   .my-zone { padding: 3px 6px !important; }
   .player-bar { padding: 2px 6px !important; }
-  .player-bar .player-bar-left { padding: 2px 8px; gap: 5px; }
+  /* Largeur du dock DISSOCIEE de la barre d'action : au lieu de s'etirer a
+     --bottom-w (560px) / pleine largeur, il s'ajuste a son contenu et reste
+     centre (justify-content du parent) -> pastille compacte, plus de grand
+     vide en paysage. */
+  .player-bar .player-bar-left { padding: 2px 8px; gap: 5px; flex: 0 1 auto; width: -webkit-fit-content; width: fit-content; max-width: 100%; }
   .player-bar .pb-avatar { width: 22px; height: 22px; font-size: 0.58rem; }
   .player-bar .pb-name { font-size: 0.58rem; }
   .player-bar .pb-money { font-size: 0.5rem; }
