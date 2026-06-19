@@ -200,6 +200,13 @@
       <button class="btn" id="cDlSvg">Download deck (.svg vector)</button>
       <div class="size" id="cSize"></div>
       <div class="note">52 faces <code>0.png</code>…<code>51.png</code> + <code>flipside.png</code> + <code>deckstyle.xml</code>. Glow / textures increase file size. Import via Admin → Packages → <b>Card deck</b>. The <b>.svg vector</b> button outputs <code>0.svg</code>…<code>51.svg</code> — resolution-independent, tiny (colours, four-colour, back &amp; name apply).</div>
+      <details style="margin-top:10px">
+        <summary>Import &amp; convert an existing deck (.zip)</summary>
+        <p class="help">Upscales an old/low-res PNG deck to the <b>resolution selected above</b> and re-packs it to the importable format (SVG decks are re-packed as-is). Raster can't gain detail — for crisp results, generate a vector deck instead.</p>
+        <input type="file" id="cvtFile" accept=".zip,application/zip">
+        <button class="btn" id="cvtBtn" style="margin-top:8px">Import &amp; convert</button>
+        <div class="size" id="cvtMsg"></div>
+      </details>
     </div>
     <div><div class="preview" id="cPrev"></div></div>
   </section>
@@ -918,6 +925,55 @@ async function exportDeckSVG(){
   finally{btn.disabled=false;btn.textContent=old;}
 }
 document.getElementById('cDlSvg').addEventListener('click',exportDeckSVG);
+/* ===== Import & convert an existing deck zip (upscale PNG to cRes + re-pack) ===== */
+async function convertOldDeck(){
+  const inp=document.getElementById('cvtFile'),msg=document.getElementById('cvtMsg'),btn=document.getElementById('cvtBtn');
+  if(!inp.files||!inp.files[0]){msg.innerHTML='<span class="warn">Choose a .zip first.</span>';return;}
+  btn.disabled=true;const old=btn.textContent;
+  try{
+    msg.textContent='Reading zip…';
+    const src=await JSZip.loadAsync(inp.files[0]);
+    const names=Object.keys(src.files).filter(n=>!src.files[n].dir);
+    let ext=null,root='';
+    for(const e of ['png','svg']){
+      const z=names.find(n=>n==='0.'+e||n.endsWith('/0.'+e));
+      const fl=names.find(n=>n==='flipside.'+e||n.endsWith('/flipside.'+e));
+      if(z&&fl){ext=e;root=z.slice(0,z.length-('0.'+e).length);break;}
+    }
+    if(!ext)throw new Error('Not a card deck (need 0..51 + flipside, .png or .svg).');
+    for(let i=0;i<52;i++)if(!names.includes(root+i+'.'+ext))throw new Error('Missing '+i+'.'+ext);
+    let nm='';const xn=names.find(n=>n.startsWith(root)&&n.toLowerCase().endsWith('.xml'));
+    if(xn){const mm=(await src.files[xn].async('string')).match(/StyleDescription[^>]*value\s*=\s*"([^"]+)"/i);if(mm)nm=mm[1].trim();}
+    if(!nm)nm=(root?root.replace(/\/+$/,'').split('/').pop():inp.files[0].name.replace(/\.zip$/i,''))||'deck';
+    const folder=slug(nm),out=new JSZip(),f=out.folder(folder);
+    function loadImg(path){return src.files[path].async('blob').then(b=>{const u=URL.createObjectURL(b);return new Promise((r,j)=>{const i=new Image();i.onload=()=>{setTimeout(()=>URL.revokeObjectURL(u),4000);r(i);};i.onerror=()=>j(new Error('decode '+path));i.src=u;});});}
+    if(ext==='svg'){
+      for(let i=0;i<52;i++)f.file(i+'.svg',await src.files[root+i+'.svg'].async('string'));
+      f.file('flipside.svg',await src.files[root+'flipside.svg'].async('string'));
+    }else{
+      const dim=v('cRes').split('x'),TW=+dim[0],TH=+dim[1];
+      const cv=document.createElement('canvas');cv.width=TW;cv.height=TH;const ctx=cv.getContext('2d');
+      ctx.imageSmoothingEnabled=true;ctx.imageSmoothingQuality='high';
+      async function up(path){const im=await loadImg(path);ctx.clearRect(0,0,TW,TH);ctx.drawImage(im,0,0,TW,TH);return await new Promise(r=>cv.toBlob(b=>r(b),'image/png'));}
+      for(let i=0;i<52;i++){msg.textContent='Upscaling '+(i+1)+'/52…';f.file(i+'.png',await up(root+i+'.png'));await new Promise(r=>setTimeout(r));}
+      f.file('flipside.png',await up(root+'flipside.png'));
+      const pv=document.createElement('canvas');pv.width=420;pv.height=300;const px=pv.getContext('2d');
+      px.imageSmoothingEnabled=true;px.imageSmoothingQuality='high';
+      const a=await loadImg(root+'24.png'),b=await loadImg(root+'38.png'),cw=150,ch=210;
+      px.save();px.translate(150,155);px.rotate(-0.16);px.drawImage(a,-cw/2,-ch/2,cw,ch);px.restore();
+      px.save();px.translate(270,155);px.rotate(0.16);px.drawImage(b,-cw/2,-ch/2,cw,ch);px.restore();
+      f.file('preview.png',await new Promise(r=>pv.toBlob(x=>r(x),'image/png')));
+    }
+    f.file(folder+'deckstyle.xml',deckXML(nm));
+    msg.textContent='Compressing…';const blob=await out.generateAsync({type:'blob'});
+    const tag=ext==='svg'?'vector re-pack':(v('cRes')+' upscale');
+    sizeMsg(document.getElementById('cSize'),blob.size);dl(blob,folder+'-'+(ext==='svg'?'svg':v('cRes'))+'.zip');
+    msg.innerHTML='Converted <b>'+folder+'</b> ('+tag+').';
+  }catch(e){msg.innerHTML='<span class="warn">Error: '+e.message+'</span>';}
+  finally{btn.disabled=false;btn.textContent=old;}
+}
+document.getElementById('cvtBtn').addEventListener('click',convertOldDeck);
+
 
 document.getElementById('tDl').addEventListener('click',exportTable);
 document.getElementById('hDl').addEventListener('click',exportTheme);
