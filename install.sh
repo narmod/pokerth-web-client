@@ -740,18 +740,23 @@ do_deck_add() {
   info "Extracting"
   unzip -q -o "$zip" -d "$tmp/x" || { errln "Not a valid zip archive"; rm -rf "$tmp"; exit 1; }
 
-  local root=""
-  if [ -f "$tmp/x/0.png" ] && [ -f "$tmp/x/flipside.png" ]; then
-    root="$tmp/x"
-  else
-    root="$(find "$tmp/x" -type f -name '0.png' -printf '%h\n' 2>/dev/null | head -n1)"
-  fi
-  if [ -z "$root" ] || [ ! -f "$root/flipside.png" ]; then
-    errln "This is not a PokerTH card deck (need 0.png..51.png + flipside.png)."; rm -rf "$tmp"; exit 1
+  # Card images may be PNG (raster/community decks) or SVG (QML vector ports).
+  # Detect the extension from the 0.<ext> + flipside.<ext> pair, at the zip
+  # root or inside a single sub-folder.
+  local root="" ext="" e r
+  for e in png svg; do
+    if [ -f "$tmp/x/0.$e" ] && [ -f "$tmp/x/flipside.$e" ]; then
+      root="$tmp/x"; ext="$e"; break
+    fi
+    r="$(find "$tmp/x" -type f -name "0.$e" -printf '%h\n' 2>/dev/null | head -n1)"
+    if [ -n "$r" ] && [ -f "$r/flipside.$e" ]; then root="$r"; ext="$e"; break; fi
+  done
+  if [ -z "$root" ] || [ -z "$ext" ]; then
+    errln "This is not a PokerTH card deck (need 0..51 + flipside, all .png or all .svg)."; rm -rf "$tmp"; exit 1
   fi
   local missing=0 i
-  for i in $(seq 0 51); do [ -f "$root/$i.png" ] || missing=$((missing+1)); done
-  [ "$missing" -eq 0 ] || { errln "Incomplete deck: $missing of 52 card images missing."; rm -rf "$tmp"; exit 1; }
+  for i in $(seq 0 51); do [ -f "$root/$i.$ext" ] || missing=$((missing+1)); done
+  [ "$missing" -eq 0 ] || { errln "Incomplete deck: $missing of 52 card images missing (.$ext)."; rm -rf "$tmp"; exit 1; }
 
   local base; base="$(basename "$root")"
   if [ "$base" = "x" ]; then base="$(basename "$src")"; base="${base%.zip}"; fi
@@ -763,8 +768,9 @@ do_deck_add() {
   info "Installing as '$id'"
   as_root rm -rf "$dest"
   as_root mkdir -p "$dest"
-  as_root cp "$root"/*.png "$dest"/ 2>/dev/null || true
+  as_root cp "$root"/*."$ext" "$dest"/ 2>/dev/null || true
   local f; for f in "$root"/*.xml; do [ -f "$f" ] && as_root cp "$f" "$dest"/; done
+  for f in preview.png preview.svg; do [ -f "$root/$f" ] && as_root cp "$root/$f" "$dest"/; done
   as_root chown -R "$RUN_USER":"$RUN_USER" "$dest"
   rm -rf "$tmp"
 
