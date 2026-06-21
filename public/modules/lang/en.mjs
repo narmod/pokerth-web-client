@@ -336,7 +336,7 @@ export const strings = {
     piStatusEliminated:'Eliminated',
     piViewProfile:'View pokerth.net profile',
     piCups:'Cups',
-    piShowCups:'Show cups',
+    piShowCups:'Show cups', piIgnore:'Ignore', piUnignore:'Unignore',
     piNoCupData:'No cup ranking for this player.',
     rankingTooltip:'Ranking', rankingTitle:'Ranking', rankingPth:'PokerTH', rankingBbc:'BBC', rankingWec:'WEC',
     rankingLoading:'Loading…', rankingSoon:'Ranking coming soon.', rankingError:'Could not load the ranking.', rankingEmpty:'No entries.',

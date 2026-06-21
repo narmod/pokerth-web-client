@@ -301,6 +301,27 @@ function _advGet(key, defOn) {
     return v === '1';
   } catch (e) { return !!defOn; }
 }
+// ── Joueurs ignorés (préférence locale, par nom). Le chat du joueur est masqué
+//    et son avatar anonymisé (sauf si « ne pas masquer les avatars ignorés »
+//    est activée). Voir _ignHide (sièges), addChat/addGameChat (filtre) et
+//    window._toggleIgnore (carte joueur). ──
+var _ignoredSet = (function(){ try { return new Set(JSON.parse(localStorage.getItem('pth_ignored') || '[]')); } catch (e) { return new Set(); } })();
+function _isIgnored(name){ return !!name && _ignoredSet.has(String(name)); }
+function _setIgnoredName(name, on){
+  name = String(name || ''); if (!name) return;
+  if (on) _ignoredSet.add(name); else _ignoredSet.delete(name);
+  try { localStorage.setItem('pth_ignored', JSON.stringify(Array.from(_ignoredSet))); } catch (e) {}
+  if (on) {
+    ['chat', 'g-chat-msgs'].forEach(function(id){
+      var box = document.getElementById(id);
+      if (!box) return;
+      box.querySelectorAll('.msg').forEach(function(m){
+        var w = m.querySelector('.who');
+        if (w && w.textContent === name && !m.classList.contains('mine')) m.remove();
+      });
+    });
+  }
+}
 function applyAdvOpts() {
   try {
     var b = document.body;
@@ -311,6 +332,7 @@ function applyAdvOpts() {
     try { document.documentElement.setAttribute('data-seat-layout', (localStorage.getItem('pth_seat_layout') === 'official') ? 'official' : 'classic'); } catch (e) {}
     try { if (typeof window._refreshOwnCards === 'function') window._refreshOwnCards(); } catch (e) {}
     try { if (typeof window._renderOdds === 'function') window._renderOdds(); } catch (e) {}
+    try { if (typeof window._renderSeats === 'function') window._renderSeats(); } catch (e) {}
   } catch (e) {}
 }
 window.applyAdvOpts = applyAdvOpts;
@@ -336,6 +358,7 @@ function openAdvancedOptions() {
   sync('adv-ownclick', 'own_click', false);
   sync('adv-guardcall', 'guard_call', false);
   sync('adv-odds', 'odds_monitor', false);
+  sync('adv-nohideignored', 'no_hide_ignored', false);
   try { var _sl = document.getElementById('adv-seatlayout'); if (_sl) _sl.value = (localStorage.getItem('pth_seat_layout') === 'official') ? 'official' : 'classic'; } catch (e) {}
   try { _rebindAction = null; _renderKeyButtons(); } catch (e) {}
   m.style.display = '';
@@ -3245,6 +3268,14 @@ const App = (() => {
     modal.style.display = 'flex';
   }
   window.openPlayerInfoPopup = openPlayerInfoPopup;
+  // Basculer l'ignorance d'un joueur (par nom) puis rafraîchir sièges + popup.
+  window._toggleIgnore = function(pid){
+    var nm = (typeof getPlayerName === 'function') ? getPlayerName(pid) : null;
+    if (!nm) return;
+    _setIgnoredName(nm, !_isIgnored(nm));
+    try { if (typeof window._renderSeats === 'function') window._renderSeats(); } catch (e) {}
+    try { openPlayerInfoPopup(pid); } catch (e) {}
+  };
 
   // Contenu du popup pour un AUTRE joueur : rôle (🤖 Bot / Invité / Enregistré
   // / Admin), puis — s'il est attablé — ses jetons / mise / statut / position
@@ -3305,6 +3336,10 @@ const App = (() => {
             + encodeURIComponent(nm) + '" target="_blank" rel="noopener noreferrer">'
             + esc(tt('piViewProfile', 'View pokerth.net profile')) + '</a>';
     }
+    var _ignNm = getPlayerName(pid);
+    html += '<button type="button" class="pim-ignore-btn" onclick="window._toggleIgnore(' + pid + ')" '
+          + 'style="display:block;width:100%;margin-top:10px;padding:8px 0;border:1px solid var(--border-hi,rgba(200,168,74,.4));border-radius:8px;cursor:pointer;background:transparent;color:var(--text,#eff1f5);font-weight:600">'
+          + (_isIgnored(_ignNm) ? '🔔 ' + esc(tt('piUnignore', 'Unignore')) : '🔕 ' + esc(tt('piIgnore', 'Ignore'))) + '</button>';
     return html;
   }
 
@@ -6627,6 +6662,7 @@ const App = (() => {
 
   // ── CHAT ──
   function addChat(sender, text, cls='', spec) {
+    if (sender && cls !== 'mine' && _isIgnored(sender)) return; // joueur ignoré : aucun rendu
     if (typeof addGameChat === 'function') addGameChat(sender, text, cls, spec);
     // Flash lobby chat button on new message
     var lcp = document.getElementById('lobby-chat-panel');
@@ -7768,14 +7804,15 @@ const App = (() => {
                    sd.folded && !isGone ? 'folded' : '',
                    isOut && !isGone ? 'seat-out' : '',
                    isGone ? 'seat-ghost' : ''].filter(Boolean).join(' ');
-      const initial    = getPlayerInitial(pid);
+      var _ignHide = !isMe && _isIgnored(getPlayerName(pid)) && !_advGet('no_hide_ignored', false);
+      const initial    = _ignHide ? ((getPlayerName(pid) || '?').charAt(0).toUpperCase() || '?') : getPlayerInitial(pid);
       const typeBadge  = getPlayerTypeBadge(pid);
       var _hasEmojiAv = isMe
         ? (function(){ try { var av = localStorage.getItem('pth_avatar'); return !!av && av !== '__pth__' && av !== '__img__'; } catch(e){ return false; } })()
-        : !!_playerAvatars[pid];
+        : (_ignHide ? false : !!_playerAvatars[pid]);
       const avatarType = isMe
         ? (_hasEmojiAv ? ' emoji-av' : '')
-        : (isBot(pid) ? ' is-bot emoji-av' : (_hasEmojiAv ? ' emoji-av is-human' : ' is-human'));
+        : (isBot(pid) && !_ignHide ? ' is-bot emoji-av' : (_hasEmojiAv ? ' emoji-av is-human' : ' is-human'));
       const moneyStr = sd.money != null && sd.money >= 0 ? fmtChips(sd.money) : '—';
       // Cartes sous le siège : uniquement les adversaires au showdown
       // (mes propres cartes sont déjà visibles dans la player-bar en bas)
@@ -7831,6 +7868,7 @@ const App = (() => {
       }
       // Autres joueurs : image perso reçue via le proxy (prioritaire sur l'emoji).
       if (!isMe && _playerImgAvatars[pid]) pthAvUrl = _playerImgAvatars[pid];
+      if (_ignHide) pthAvUrl = null;
       const pthImg = pthAvUrl
         ? '<img class="seat-pth-img" src="' + pthAvUrl + '" alt="" draggable="false">'
         : '';
@@ -10818,6 +10856,7 @@ window._readMyId = function() {
 
 // ── Game chat (mirrors lobby addChat) ──
 function addGameChat(sender, text, cls, spec) {
+  if (sender && cls !== 'mine' && _isIgnored(sender)) return; // joueur ignoré
   var el = document.getElementById('g-chat-msgs');
   if (!el) return;
   if (sender) { try { if (localStorage.getItem('pth_chat_noemoji') === '1') text = _advStripEmoji(text); } catch (e) {} }
@@ -11882,7 +11921,7 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.3.74-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.75-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

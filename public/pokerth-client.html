@@ -1700,7 +1700,7 @@ if ('serviceWorker' in navigator) {
       <div class="adv-sec" data-i18n="advSecAvatars">Avatars</div>
       <label class="adv-row"><input type="checkbox" id="adv-flag" onchange="setAdvOpt('show_flag',this.checked)"><span data-i18n="advFlagAvatar">Country flag on avatar</span></label>
       <label class="adv-row adv-soon"><input type="checkbox" disabled><span data-i18n="advNetColor">Network status color on avatar</span><em data-i18n="advSoon">soon</em></label>
-      <label class="adv-row adv-soon"><input type="checkbox" disabled><span data-i18n="advNoHideIgnored">Don't hide ignored players' avatars</span><em data-i18n="advSoon">soon</em></label>
+      <label class="adv-row"><input type="checkbox" id="adv-nohideignored" onchange="setAdvOpt('no_hide_ignored',this.checked)"><span data-i18n="advNoHideIgnored">Don't hide ignored players' avatars</span></label>
 
       <div class="adv-sec" data-i18n="advSecHelp">Assistance</div>
       <label class="adv-row"><input type="checkbox" id="adv-odds" onchange="setAdvOpt('odds_monitor',this.checked)"><span data-i18n="advOddsMonitor">Hand odds monitor</span></label>

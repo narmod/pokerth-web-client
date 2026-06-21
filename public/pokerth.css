@@ -101,10 +101,10 @@ html { touch-action: manipulation; -webkit-text-size-adjust: 100%; text-size-adj
   --modal-bg:   linear-gradient(160deg, #12161d 0%, #1d222b 50%, #0e1218 100%);
   --panel:      rgba(20,25,33,0.92);
   --panel-hi:   rgba(29,34,43,0.94);
-  --gold:       #eff1f5;
-  --gold-rgb:   239,241,245;
-  --gold-hi:    #ffffff;
-  --gold-dim:   #a0acc4;
+  --gold:       #E3C800;
+  --gold-rgb:   227,200,0;
+  --gold-hi:    #ffd700;
+  --gold-dim:   #b09a00;
   --timer-normal: #cdd3e0;
   --cream:      #eff1f5;
   --field-bg:   #161c25;
@@ -133,10 +133,10 @@ html { touch-action: manipulation; -webkit-text-size-adjust: 100%; text-size-adj
   --modal-bg:   linear-gradient(160deg, #f6f8fb 0%, #e9edf4 50%, #f2f5f9 100%);
   --panel:      rgba(248,250,253,0.94);
   --panel-hi:   rgba(255,255,255,0.96);
-  --gold:       #1d222b;
-  --gold-rgb:   29,34,43;
-  --gold-hi:    #0d1117;
-  --gold-dim:   #576378;
+  --gold:       #E3C800;
+  --gold-rgb:   227,200,0;
+  --gold-hi:    #ffd700;
+  --gold-dim:   #b09a00;
   --timer-normal: #394150;
   --timer-glow: 0 1px 1px rgba(0,0,0,0.22);
   --timer-bg:   rgba(255,255,255,0.92);
@@ -157,7 +157,7 @@ html { touch-action: manipulation; -webkit-text-size-adjust: 100%; text-size-adj
   --field-bg:   #ffffff;
   --inset: rgba(0,0,0,0.06);
   --inset-hi: rgba(0,0,0,0.08);
-  --on-gold:    #fdf6e6;
+  --on-gold:    #110900;
   --text:       #576378;
   --text-hi:    #1d222b;
   --red:        #a62f22;
