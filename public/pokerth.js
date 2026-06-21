@@ -8717,7 +8717,16 @@ const App = (() => {
       // Aperçu hors-tour : EXACTEMENT le même panneau, mais non interactif
       // (la classe .actions-preview coupe pointer-events sauf sur AUTO).
       // Aucun son, aucune vibration, aucun keepalive serveur.
-      $('g-actions').innerHTML =
+      // Mode masqué (player-bar cachée) : le narrateur de tour ("X ●●●"),
+      // normalement affiché À LA PLACE de l'aperçu, est ré-injecté AU-DESSUS
+      // des boutons pour conserver l'info "à qui le tour".
+      var _narr = '';
+      if (_advGet('hide_pbar', false) && turnPid && turnPid !== myId && seatData[turnPid]) {
+        _narr = '<div class="act-narrator"><span style="font-family:inherit">'
+              + esc(getPlayerName(turnPid)) + '</span>'
+              + '<span class="thinking-dots"><span></span><span></span><span></span></span></div>';
+      }
+      $('g-actions').innerHTML = _narr +
         '<div class="actions-preview" data-cap="' + esc(t('preActionTitle')) + '">' + h + '</div>';
       updateBottomLayout();
       return;
@@ -11931,7 +11940,7 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.3.83-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.84-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

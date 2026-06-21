@@ -3708,6 +3708,12 @@ body.hide-pct-btns .pct-row { display: none; }
   color: var(--text); font-size: 0.8rem;
   font-style: italic; padding: 4px 0;
 }
+/* Narrateur de tour ("X ●●●") ré-affiché au-dessus des boutons en mode masqué. */
+.act-narrator {
+  display: flex; align-items: center; justify-content: center;
+  font-style: italic; font-size: 0.8rem; color: var(--text-dim, var(--gold-dim));
+  padding: 0 0 5px; line-height: 1;
+}
 
 /* ══ PASSWORD PROMPT ══ */
 #password-prompt {
