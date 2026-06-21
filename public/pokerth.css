@@ -6300,3 +6300,18 @@ body.adv-no-flag .seat-flag{display:none !important}
 /* Anti-Call accidentel : bouton Call en attente de confirmation (2e tap). */
 .btn-action.btn-call.confirm-call{background:linear-gradient(#f0a020,#b36b00);border-color:#ffd24d;color:#1a1205;animation:callConfirmPulse .85s ease-in-out infinite}
 @keyframes callConfirmPulse{0%,100%{box-shadow:0 0 0 2px #ffd24d,0 0 12px rgba(240,160,32,.55)}50%{box-shadow:0 0 0 2px #ffd24d,0 0 19px rgba(240,160,32,.9)}}
+/* Moniteur d'odds (option) : panneau compact en haut-gauche, semi-transparent,
+   display-only (pointer-events:none -> ne bloque pas les sièges derrière). */
+#odds-monitor{position:fixed;top:54px;left:8px;z-index:42;width:132px;padding:5px 7px 6px;background:rgba(20,26,38,.86);border:1px solid rgba(255,255,255,.12);border-radius:9px;box-shadow:0 4px 14px rgba(0,0,0,.42);font-size:10px;line-height:1.25;color:#cdd3e0;pointer-events:none;user-select:none}
+#odds-monitor .odds-hd{font-weight:700;font-size:10.5px;color:#E3C800;margin-bottom:3px;letter-spacing:.3px}
+#odds-monitor .odds-approx{opacity:.65;font-weight:400}
+#odds-monitor .odds-wait{opacity:.6;padding:2px 0}
+#odds-monitor .odds-row{display:flex;align-items:center;gap:4px;height:13px}
+#odds-monitor .odds-cat{flex:0 0 50px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;opacity:.88}
+#odds-monitor .odds-bar{flex:1;height:6px;background:rgba(255,255,255,.08);border-radius:3px;overflow:hidden}
+#odds-monitor .odds-bar>i{display:block;height:100%;width:0;background:linear-gradient(90deg,#8a93a6,#5a6478);border-radius:3px}
+#odds-monitor .odds-pct{flex:0 0 27px;text-align:right;font-variant-numeric:tabular-nums;opacity:.92}
+#odds-monitor .odds-row.warm .odds-bar>i{background:linear-gradient(90deg,#f0a020,#b36b00)}
+#odds-monitor .odds-row.hot .odds-bar>i{background:linear-gradient(90deg,#50c878,#1e8c4e)}
+#odds-monitor .odds-row.hot .odds-pct{color:#7ce0a0;font-weight:700}
+@media (max-width:560px){#odds-monitor{width:120px;font-size:9.5px;top:48px}#odds-monitor .odds-cat{flex-basis:44px}}

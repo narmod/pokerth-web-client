@@ -287,6 +287,7 @@ var _lastCallSeen = -1;
 var _callConfirmArmed = false;
 var _callConfirmTimer = null;
 var _lastBoardCount = -1; // nb de cartes du board au dernier rendu (détecte la street)
+var _oddsSeq = 0; // jeton du moniteur d'odds : abandonne tout calcul périmé
 function _advStripEmoji(s) {
   s = String(s == null ? '' : s);
   try { s = s.replace(/\p{Extended_Pictographic}/gu, ''); } catch (e) {}
@@ -309,6 +310,7 @@ function applyAdvOpts() {
     b.classList.toggle('adv-no-flag', !_advGet('show_flag', true));
     try { document.documentElement.setAttribute('data-seat-layout', (localStorage.getItem('pth_seat_layout') === 'official') ? 'official' : 'classic'); } catch (e) {}
     try { if (typeof window._refreshOwnCards === 'function') window._refreshOwnCards(); } catch (e) {}
+    try { if (typeof window._renderOdds === 'function') window._renderOdds(); } catch (e) {}
   } catch (e) {}
 }
 window.applyAdvOpts = applyAdvOpts;
@@ -333,6 +335,7 @@ function openAdvancedOptions() {
   sync('adv-flag', 'show_flag', true);
   sync('adv-ownclick', 'own_click', false);
   sync('adv-guardcall', 'guard_call', false);
+  sync('adv-odds', 'odds_monitor', false);
   try { var _sl = document.getElementById('adv-seatlayout'); if (_sl) _sl.value = (localStorage.getItem('pth_seat_layout') === 'official') ? 'official' : 'classic'; } catch (e) {}
   m.style.display = '';
 }
@@ -1422,6 +1425,51 @@ function evaluateBestHand(holeCards, commCards) {
     if (!best || _cmpHand(res, best) > 0) best = res;
   }
   return best;
+}
+
+// Distribution d'équité : probabilité d'obtenir chaque catégorie de main (rang
+// 0..9) au showdown, à partir de mes 2 cartes + le board connu (0 à 5 cartes).
+// Énumère EXACTEMENT quand il reste <= 2 cartes (flop : C(47,2)=1081 ; turn : 46 ;
+// river : 1), sinon Monte-Carlo (préflop). Calcul DÉCOUPÉ en tranches ~10 ms via
+// setTimeout pour ne jamais geler l'UI ; onDone({pct:[p0..p9], exact}) ou null.
+// isStale() (optionnel) : si vrai entre deux tranches, on abandonne sans callback.
+function _oddsCompute(hole, board, onDone, isStale) {
+  function done(v) { try { onDone(v); } catch (e) {} }
+  if (!hole || hole[0] == null || hole[1] == null) { done(null); return; }
+  var b = (board || []).filter(function (c) { return c != null && c >= 0 && c < 52; });
+  var seen = {}; seen[hole[0]] = true; seen[hole[1]] = true;
+  for (var i = 0; i < b.length; i++) seen[b[i]] = true;
+  var deck = []; for (var c = 0; c < 52; c++) if (!seen[c]) deck.push(c);
+  var need = 5 - b.length; if (need < 0) need = 0;
+  var hole2 = [hole[0], hole[1]];
+  var counts = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], total = 0;
+  if (need === 0) {
+    var r0 = evaluateBestHand(hole2, b);
+    if (r0) { counts[r0.r]++; total = 1; }
+    done(total ? { pct: counts.map(function (c) { return c / total; }), exact: true } : null);
+    return;
+  }
+  var exact = (need <= 2);
+  var combos = exact ? _getCombos(deck, need) : null;
+  var TRIALS = exact ? combos.length : 1500;
+  var n = deck.length, idx = 0;
+  function now() { return (typeof performance !== 'undefined' && performance.now) ? performance.now() : Date.now(); }
+  function chunk() {
+    if (isStale && isStale()) return; // une street plus récente a pris le relais
+    var start = now();
+    while (idx < TRIALS) {
+      var extra;
+      if (exact) { extra = combos[idx]; }
+      else { var picked = [], used = {}; while (picked.length < need) { var ri = (Math.random() * n) | 0; if (!used[ri]) { used[ri] = true; picked.push(deck[ri]); } } extra = picked; }
+      var res = evaluateBestHand(hole2, b.concat(extra));
+      if (res) { counts[res.r]++; total++; }
+      idx++;
+      if ((idx & 31) === 0 && (now() - start) > 10) break; // rendre la main toutes les ~10 ms
+    }
+    if (idx < TRIALS) { setTimeout(chunk, 0); }
+    else { done(total ? { pct: counts.map(function (c) { return c / total; }), exact: exact } : null); }
+  }
+  chunk();
 }
 
 
@@ -5933,6 +5981,7 @@ const App = (() => {
         setTimeout(autoScaleTable, 100);
         setTimeout(animateCardDeal, 200);
         setTimeout(renderPreFlopStrength, 350);
+        setTimeout(renderOddsMonitor, 400); // moniteur d'odds (préflop)
         // Init stats
         var startMon = (seatData[myId]||{}).money || 0;
         if (!_statsInited && startMon > 0) initStats(startMon);
@@ -6103,6 +6152,7 @@ const App = (() => {
         renderComm(true); // flip animation
         renderSeats();
         setTimeout(renderHandStrength, 150); // force de la main au flop (was 500ms)
+        setTimeout(renderOddsMonitor, 220); // moniteur d'odds (flop)
         const _lhPotF = pot;
         logAction(function(){ return '--- ' + t('flop') + ' [' + flopStr + '] · ' + t('pot') + ' ' + _groupThousands(_lhPotF) + ' ---'; });
         notifyCard(); notifyCard(); notifyCard();
@@ -6129,6 +6179,7 @@ const App = (() => {
         logAction(function(){ return '--- ' + t('turn') + ' [' + tvName + '] · ' + t('pot') + ' ' + _groupThousands(_lhPotT) + ' ---'; });
         renderComm(true); // flip animation
         setTimeout(renderHandStrength, 150); // force de la main au turn (was 500ms)
+        setTimeout(renderOddsMonitor, 220); // moniteur d'odds (turn)
         notifyCard();
         break;
       }
@@ -6154,6 +6205,7 @@ const App = (() => {
         logAction(function(){ return '--- ' + t('river') + ' [' + rvName + '] · ' + t('pot') + ' ' + _groupThousands(_lhPotR) + ' ---'; });
         renderComm(true, true); // flip animation + dramatic river
         setTimeout(renderHandStrength, 200); // force de la main à la river (was 600ms)
+        setTimeout(renderOddsMonitor, 240); // moniteur d'odds (river)
         playTone(350, 0.08, 0.08); setTimeout(function(){ notifyCard(); }, 200);
 
         break;
@@ -8362,6 +8414,44 @@ const App = (() => {
     _applyAssistUI();
     if (typeof showKeyHint === 'function') showKeyHint(t('assist') + (_assistOn ? ' \u2713' : ''));
   };
+
+  // Moniteur d'odds (option pth_odds_monitor) : panneau compact listant la
+  // probabilité d'obtenir chaque catégorie de main au showdown. Calcul découpé
+  // (voir _oddsCompute) et abandonné si une street plus récente survient. Les
+  // anciennes valeurs restent affichées pendant le recalcul (pas de clignotement).
+  function renderOddsMonitor() {
+    var el = document.getElementById('odds-monitor');
+    if (!el) return;
+    var on = false; try { on = (localStorage.getItem('pth_odds_monitor') === '1'); } catch (e) {}
+    if (!on || myCards[0] == null || myCards[1] == null) { el.style.display = 'none'; el.innerHTML = ''; el._built = false; return; }
+    el.style.display = '';
+    if (!el._built) { el.innerHTML = '<div class="odds-hd">' + esc(t('oddsTitle')) + '</div><div class="odds-body odds-wait">…</div>'; el._built = true; }
+    var seq = ++_oddsSeq;
+    var hole = [myCards[0], myCards[1]];
+    var board = commCards.slice();
+    _oddsCompute(hole, board, function (r) {
+      if (seq !== _oddsSeq) return;
+      if (!r) { el.style.display = 'none'; el.innerHTML = ''; el._built = false; return; }
+      var CATS = [
+        [9, t('oddsRoyal')], [8, t('oddsSF')], [7, t('oddsQuads')], [6, t('oddsFull')],
+        [5, t('oddsFlush')], [4, t('oddsStraight')], [3, t('oddsTrips')], [2, t('oddsTwoPair')],
+        [1, t('oddsPair')], [0, t('oddsHigh')]
+      ];
+      var rows = '';
+      for (var i = 0; i < CATS.length; i++) {
+        var ri = CATS[i][0], p = r.pct[ri] * 100, pw = Math.max(0, Math.min(100, p));
+        var ptxt = p >= 0.5 ? Math.round(p) + '%' : (p > 0 ? '<1%' : '0%');
+        var cls = pw >= 50 ? ' hot' : (pw >= 15 ? ' warm' : '');
+        rows += '<div class="odds-row' + cls + '"><span class="odds-cat">' + esc(CATS[i][1])
+          + '</span><span class="odds-bar"><i style="width:' + pw.toFixed(1) + '%"></i></span>'
+          + '<span class="odds-pct">' + ptxt + '</span></div>';
+      }
+      el.innerHTML = '<div class="odds-hd">' + esc(t('oddsTitle')) + (r.exact ? '' : ' <span class="odds-approx">≈</span>')
+        + '</div><div class="odds-body">' + rows + '</div>';
+      el._built = true;
+    }, function () { return seq !== _oddsSeq; });
+  }
+  window._renderOdds = renderOddsMonitor;
 
   function renderMyTurnActions(preview) {
     // iOS/Android : ne pas detruire #mode-sel pendant que l'utilisateur le
@@ -11702,7 +11792,7 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.3.70-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.71-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
