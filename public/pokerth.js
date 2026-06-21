@@ -7343,7 +7343,7 @@ const App = (() => {
   function _officialSeatPix(n, isPortrait, zW, zH) {
     var M = n - 1; // adversaires
     if (M < 1) return null;
-    var SLOTS_P = { L_bottom:[0.15,0.785], R_bottom:[0.85,0.785], L_lower:[0.15,0.645], R_lower:[0.85,0.645], L_upper:[0.15,0.345], R_upper:[0.85,0.345], TL:[0.15,0.205], TR:[0.85,0.205], TC:[0.50,0.075] };
+    var SLOTS_P = { L_bottom:[0.15,0.81], R_bottom:[0.85,0.81], L_lower:[0.15,0.61], R_lower:[0.85,0.61], L_upper:[0.15,0.41], R_upper:[0.85,0.41], TL:[0.15,0.21], TR:[0.85,0.21], TC:[0.50,0.13] };
     var SEQ_P = {
       1:['TC'], 2:['TL','TR'], 3:['TL','TC','TR'],
       4:['L_upper','TL','TR','R_upper'], 5:['L_upper','TL','TC','TR','R_upper'],
@@ -11610,7 +11610,7 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.3.67-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.68-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
