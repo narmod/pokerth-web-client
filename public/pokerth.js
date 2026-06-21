@@ -8281,13 +8281,21 @@ const App = (() => {
     var mz = document.querySelector('.my-zone');
     var ga = document.querySelector('.game-area');
     if (pb && mz) {
-      var pbH = pb.offsetHeight || 52;
+      var _masked = document.body.classList.contains('adv-hide-pbar');
+      // Player-bar masquee : elle est display:none (offsetHeight=0 -> le fallback
+      // 52 ferait flotter la barre d'action). On la colle a bottom:0 et on reserve
+      // SA hauteur sous les sieges pour que la self-box reste visible (pas de
+      // chevauchement avec la barre d'action epinglee).
+      var pbH = _masked ? 0 : (pb.offsetHeight || 52);
       mz.style.bottom = pbH + 'px';
       // En paysage, le bas d'ecran est en FLUX (gere par le CSS) : aucune
       // reserve a poser ici. Ailleurs (barres position:fixed), le CSS (clamp)
       // gere la reserve sous les barres. On nettoie toute reserve inline
       // eventuellement posee par une version precedente.
-      if (ga) ga.style.removeProperty('padding-bottom');
+      if (ga) {
+        if (_masked) ga.style.paddingBottom = (mz.offsetHeight || 0) + 'px';
+        else ga.style.removeProperty('padding-bottom');
+      }
     }
   }
 
@@ -11923,7 +11931,7 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.3.82-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.83-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

@@ -6300,7 +6300,10 @@ body.adv-no-flag .seat-flag{display:none !important}
 /* Player-bar masquée : tes cartes/infos s'affichent dans ta self-box (siège).
    La barre d'action descend tout en bas (pin forcé en JS -> visible en permanence). */
 body.adv-hide-pbar .player-bar{display:none !important}
-body.adv-hide-pbar .my-zone{bottom:0;padding-bottom:max(8px,env(safe-area-inset-bottom))}
+/* Reserve de repli pour les sieges (le JS affine a la hauteur exacte de la barre
+   d'action des le prochain rendu). Garde la self-box au-dessus de la barre epinglee. */
+body.adv-hide-pbar .game-area{padding-bottom:clamp(210px,34dvh,290px)}
+body.adv-hide-pbar .my-zone{bottom:0 !important;padding-bottom:max(8px,env(safe-area-inset-bottom))}
 /* Selecteur "Placement des sieges" dans Options avancees. */
 .adv-row .adv-sel{flex:0 0 auto;min-width:132px}
 /* Option "révéler mes cartes au tap" : les dos de la player-bar sont cliquables,
