@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+  advHidePbar:'Versteek my spelerbalk (onder)',
   deckSvg: "PokerTH",
   pucksPokerth: "PokerTH",
   seatPokerth: "PokerTH",

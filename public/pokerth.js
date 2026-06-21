@@ -329,6 +329,7 @@ function applyAdvOpts() {
     b.classList.toggle('adv-no-blinds', !_advGet('show_blinds', true));
     b.classList.toggle('adv-no-community', !_advGet('show_community', true));
     b.classList.toggle('adv-no-flag', !_advGet('show_flag', true));
+    b.classList.toggle('adv-hide-pbar', _advGet('hide_pbar', false));
     try { document.documentElement.setAttribute('data-seat-layout', (localStorage.getItem('pth_seat_layout') === 'official') ? 'official' : 'classic'); } catch (e) {}
     try { if (typeof window._refreshOwnCards === 'function') window._refreshOwnCards(); } catch (e) {}
     try { if (typeof window._renderOdds === 'function') window._renderOdds(); } catch (e) {}
@@ -350,6 +351,7 @@ function openAdvancedOptions() {
   };
   sync('adv-anim', 'anim_cards', true);
   sync('adv-blinds', 'show_blinds', true);
+  sync('adv-hidepbar', 'hide_pbar', false);
   sync('adv-community', 'show_community', true);
   sync('adv-focusbet', 'focus_bet', false);
   sync('adv-noemoji', 'chat_noemoji', false);
@@ -11921,7 +11923,7 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.3.77-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.78-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

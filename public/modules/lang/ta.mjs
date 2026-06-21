@@ -11,6 +11,7 @@ export const meta = {
 };
 
 export const strings = {
+  advHidePbar:'எனது வீரர் பட்டியை மறை (கீழே)',
   deckSvg: "PokerTH",
   pucksPokerth: "PokerTH",
   seatPokerth: "PokerTH",

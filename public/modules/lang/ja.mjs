@@ -9,6 +9,7 @@ export const meta = {
 };
 
 export const strings = {
+  advHidePbar:'自分のプレイヤーバーを隠す（下部）',
   deckSvg: "PokerTH",
   pucksPokerth: "PokerTH",
   seatPokerth: "PokerTH",

@@ -15,6 +15,7 @@ export const meta = {
 };
 
 export const strings = {
+  advHidePbar:'Nascondi la mia barra giocatore (in basso)',
   deckSvg: "PokerTH",
   pucksPokerth: "PokerTH",
   seatPokerth: "PokerTH",

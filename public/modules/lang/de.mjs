@@ -15,6 +15,7 @@ export const meta = {
 };
 
 export const strings = {
+  advHidePbar:'Meine Spielerleiste ausblenden (unten)',
   deckSvg: "PokerTH",
   pucksPokerth: "PokerTH",
   seatPokerth: "PokerTH",

@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+  advHidePbar:'Sakrij moju traku igrača (dolje)',
   deckSvg: "PokerTH",
   pucksPokerth: "PokerTH",
   seatPokerth: "PokerTH",

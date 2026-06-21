@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+  advHidePbar:'Agochar a miña barra de xogador (abaixo)',
   deckSvg: "PokerTH",
   pucksPokerth: "PokerTH",
   seatPokerth: "PokerTH",

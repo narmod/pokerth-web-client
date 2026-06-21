@@ -15,6 +15,7 @@ export const meta = {
 };
 
 export const strings = {
+  advHidePbar:'Mijn spelerbalk verbergen (onderaan)',
   deckSvg: "PokerTH",
   pucksPokerth: "PokerTH",
   seatPokerth: "PokerTH",

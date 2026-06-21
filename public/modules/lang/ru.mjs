@@ -15,6 +15,7 @@ export const meta = {
 };
 
 export const strings = {
+  advHidePbar:'Скрыть мою панель игрока (внизу)',
   deckSvg: "PokerTH",
   pucksPokerth: "PokerTH",
   seatPokerth: "PokerTH",

@@ -9,6 +9,7 @@ export const meta = {
 };
 
 export const strings = {
+  advHidePbar:'Skjul min spillerbjælke (nederst)',
   deckSvg: "PokerTH",
   pucksPokerth: "PokerTH",
   seatPokerth: "PokerTH",

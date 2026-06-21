@@ -11,6 +11,7 @@ export const meta = {
 };
 
 export const strings = {
+  advHidePbar:'Falaich am bàr-cluicheadair agam (gu h-ìosal)',
   deckSvg: "PokerTH",
   pucksPokerth: "PokerTH",
   seatPokerth: "PokerTH",

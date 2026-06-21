@@ -16,6 +16,7 @@ export const meta = {
 };
 
 export const strings = {
+  advHidePbar:'Hide my player bar (bottom)',
   seatCard: 'Card', seatCompact: 'Compact', seatBar: 'Bar',
   seatChip: 'Chip',
   seatPokerth: 'PokerTH',

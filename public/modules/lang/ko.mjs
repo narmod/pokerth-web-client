@@ -13,6 +13,7 @@ export const meta = {
 };
 
 export const strings = {
+  advHidePbar:'내 플레이어 바 숨기기 (하단)',
   deckSvg: "PokerTH",
   pucksPokerth: "PokerTH",
   seatPokerth: "PokerTH",
