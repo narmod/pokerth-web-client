@@ -6326,8 +6326,8 @@ body.adv-hide-pbar .seat.me .seat-holecards.shc-big {
   order: 2; display: flex !important; gap: 4px; flex: none; grid-column: auto; grid-row: auto;
 }
 body.adv-hide-pbar .seat.me .seat-holecards.shc-big .pk {
-  width: 54px !important; height: 77px !important;
-  font-size: 1.15rem !important; border-radius: 6px !important;
+  width: 40px !important; height: 57px !important;
+  font-size: 0.85rem !important; border-radius: 5px !important;
 }
 body.adv-hide-pbar .seat.me .seat-info {
   order: 3; flex-basis: 100%;
