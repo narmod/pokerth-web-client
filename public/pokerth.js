@@ -7957,7 +7957,7 @@ const App = (() => {
     // affiche le panneau au lieu du message d'attente (et on le garde sticky
     // face aux mises à jour serveur — tour d'un autre joueur, etc.).
     _lastWaitingMsg = msg; _lastWaitingIsHtml = !!isHtml;
-    var _pinShow = _actionBarPinned && !_amSpectator && _gameStarted && !(myCards[0] == null && myCards[1] == null);
+    var _pinShow = (_actionBarPinned || _advGet('hide_pbar', false)) && !_amSpectator && _gameStarted && !(myCards[0] == null && myCards[1] == null);
     if ((_preActionOpen || _pinShow) && turnPid !== myId) { _renderPreActionPanel(); updateBottomLayout(); return; }
     // isHtml=true : msg contient du HTML interne sûr (généré par notre code)
     $('g-actions').innerHTML = '<div class="waiting-msg">' + (isHtml ? msg : esc(msg)) + '</div>';
@@ -7983,7 +7983,7 @@ const App = (() => {
     var hasActions = !!(ga && ga.querySelector('.action-grid'));
     b.style.display = hasActions ? 'flex' : 'none';
     if (!hasActions) return;
-    var on = _actionBarPinned;
+    var on = _actionBarPinned || _advGet('hide_pbar', false);
     b.setAttribute('aria-pressed', on ? 'true' : 'false');
     b.style.opacity = on ? '1' : '0.5';
     b.style.borderColor = on ? 'var(--gold)' : 'var(--border)';
@@ -11923,7 +11923,7 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.3.80-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.81-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
