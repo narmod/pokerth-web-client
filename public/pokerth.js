@@ -280,6 +280,13 @@ var _sdLosers = new Set();
 // sont face cachée tant que _ownReveal est faux ; un tap sur la player-bar bascule.
 // Remis à faux à chaque nouvelle main (confidentialité), forcé à vrai au showdown.
 var _ownReveal = false;
+// Anti-Call accidentel (pth_guard_call) : suit le montant "à suivre" vu à ma
+// dernière décision sur la street courante (reset par street). Si une grosse
+// relance fait bondir ce montant, le bouton Call exige une confirmation (2e tap).
+var _lastCallSeen = -1;
+var _callConfirmArmed = false;
+var _callConfirmTimer = null;
+var _lastBoardCount = -1; // nb de cartes du board au dernier rendu (détecte la street)
 function _advStripEmoji(s) {
   s = String(s == null ? '' : s);
   try { s = s.replace(/\p{Extended_Pictographic}/gu, ''); } catch (e) {}
@@ -325,6 +332,7 @@ function openAdvancedOptions() {
   sync('adv-fadelosers', 'fade_losers', true);
   sync('adv-flag', 'show_flag', true);
   sync('adv-ownclick', 'own_click', false);
+  sync('adv-guardcall', 'guard_call', false);
   try { var _sl = document.getElementById('adv-seatlayout'); if (_sl) _sl.value = (localStorage.getItem('pth_seat_layout') === 'official') ? 'official' : 'classic'; } catch (e) {}
   m.style.display = '';
 }
@@ -5759,6 +5767,7 @@ const App = (() => {
         _preActionOpen = false; // referme tout panneau "aperçu" à chaque main
         try { _sdLosers = new Set(); } catch (e) {} // reset estompage perdants (nouvelle main)
         _ownReveal = false; // cartes propres re-masquées à chaque main (si option active)
+        _lastCallSeen = -1; _callConfirmArmed = false; // reset anti-Call (nouvelle main)
 
         // ── SPECTATOR BOOTSTRAP ──
         // When the user joined as spectator of a hand-in-progress, the
@@ -8380,6 +8389,23 @@ const App = (() => {
     const myBet   = (seatData[myId] || {}).bet || 0;
     const toCall  = Math.max(0, highestBet - myBet);
     const canCheck = toCall === 0;
+    // ── Anti-Call accidentel : grosse relance ? ──
+    // Vrai si "à suivre" a au moins DOUBLÉ et bondi de >= 2 BB depuis ma dernière
+    // décision sur CETTE street (suivi remis à zéro par street via le nombre de
+    // cartes du board). Si vrai, le clic Call passera par App.confirmCall (2e tap).
+    var _bigRaise = false;
+    if (!preview) {
+      var _gc = false; try { _gc = (localStorage.getItem('pth_guard_call') === '1'); } catch (e) {}
+      var _ncomm = (commCards || []).filter(function (c) { return c != null; }).length;
+      if (_ncomm !== _lastBoardCount) { _lastCallSeen = -1; _lastBoardCount = _ncomm; }
+      if (_gc && !canCheck && toCall > 0) {
+        var _bb = Math.max(1, smallBlind * 2);
+        var _base = (_lastCallSeen >= 0) ? _lastCallSeen : _bb;
+        if (toCall >= 2 * _base && (toCall - _base) >= 2 * _bb) _bigRaise = true;
+      }
+      _lastCallSeen = toCall;
+      _callConfirmArmed = false; // panneau frais : aucune confirmation en attente
+    }
     const minBet  = minRaise > 0 ? minRaise : Math.max(highestBet > 0 ? highestBet : smallBlind * 2, smallBlind * 2);
     const p33  = Math.min(myMoney, Math.max(minBet, Math.round(pot * 0.33)));
     const p50  = Math.min(myMoney, Math.max(minBet, Math.round(pot * 0.5)));
@@ -8407,6 +8433,12 @@ const App = (() => {
       callLabel  = t('call') + ' <b>' + fmtChips(toCall) + '</b>' + potOdds;
       callAction = 'App.doAction(3,' + toCall + ')';
       callClass  = 'btn-call';
+    }
+    // Anti-Call accidentel : si grosse relance + option active, exiger un 2e tap.
+    if (_bigRaise && callClass === 'btn-call') {
+      var _ca   = (toCall >= myMoney) ? 6 : 3;
+      var _camt = (toCall >= myMoney) ? myMoney : toCall;
+      callAction = 'App.confirmCall(' + _ca + ',' + _camt + ')';
     }
     const raiseLabel = highestBet > 0 ? t('raise') : t('bet');
 
@@ -8494,6 +8526,31 @@ const App = (() => {
     send(MSG.buildMyAction(gId, handNum, gameState, action, bet));
     $('g-actions').innerHTML = '<div class="waiting-msg">' + t('actionSent') + '</div>';
     stopTurnTimer();
+  }
+  // Anti-Call accidentel : 1er tap arme la confirmation (le bouton Call devient
+  // ambre « Confirm $X ? »), un 2e tap dans les 3 s valide l'action. Au-delà, ou
+  // sur un nouveau panneau, l'armement retombe (cf. reset dans renderMyTurnActions).
+  function confirmCall(action, amount) {
+    var btn = document.querySelector('#g-actions .btn-action.btn-call');
+    if (!_callConfirmArmed) {
+      _callConfirmArmed = true;
+      if (btn) {
+        if (btn._origCall == null) btn._origCall = btn.innerHTML;
+        btn.classList.add('confirm-call');
+        btn.innerHTML = t('confirmCall') + ' <b>' + fmtChips(amount) + '</b> ?<span class="act-key">C</span>';
+      }
+      try { if (navigator.vibrate) navigator.vibrate(18); } catch (e) {}
+      if (_callConfirmTimer) clearTimeout(_callConfirmTimer);
+      _callConfirmTimer = setTimeout(function () {
+        _callConfirmArmed = false;
+        var b = document.querySelector('#g-actions .btn-action.btn-call.confirm-call');
+        if (b) { b.classList.remove('confirm-call'); if (b._origCall != null) { b.innerHTML = b._origCall; b._origCall = null; } }
+      }, 3000);
+      return;
+    }
+    _callConfirmArmed = false;
+    if (_callConfirmTimer) { clearTimeout(_callConfirmTimer); _callConfirmTimer = null; }
+    doAction(action, amount);
   }
   function doRaise() {
     // Validation préventive du montant avant envoi : sans ce clamp, un
@@ -10147,6 +10204,7 @@ function dismissWinner() {
     },
     dismissWinner() { dismissWinner(); },
     doAction(action, bet) { doAction(action, bet); },
+    confirmCall(action, amount) { confirmCall(action, amount); },
     doRaise() { doRaise(); },
 
     // ── Per-login-mode CreateGame defaults ───────────────────────────────
@@ -11644,7 +11702,7 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.3.69-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.70-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

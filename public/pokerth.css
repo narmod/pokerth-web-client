@@ -6297,3 +6297,6 @@ body.adv-no-flag .seat-flag{display:none !important}
    lueur or pour signaler l'interaction (uniquement quand masquées). */
 #g-myseat-cards.own-peek{cursor:pointer}
 #g-myseat-cards.own-peek .pk.back{box-shadow:0 0 0 2px var(--accent,#E3C800),0 0 9px rgba(227,200,0,.55);transition:box-shadow .15s}
+/* Anti-Call accidentel : bouton Call en attente de confirmation (2e tap). */
+.btn-action.btn-call.confirm-call{background:linear-gradient(#f0a020,#b36b00);border-color:#ffd24d;color:#1a1205;animation:callConfirmPulse .85s ease-in-out infinite}
+@keyframes callConfirmPulse{0%,100%{box-shadow:0 0 0 2px #ffd24d,0 0 12px rgba(240,160,32,.55)}50%{box-shadow:0 0 0 2px #ffd24d,0 0 19px rgba(240,160,32,.9)}}

@@ -1682,7 +1682,7 @@ if ('serviceWorker' in navigator) {
 
       <div class="adv-sec" data-i18n="advSecBet">Betting &amp; turn</div>
       <label class="adv-row"><input type="checkbox" id="adv-focusbet" onchange="setAdvOpt('focus_bet',this.checked)"><span data-i18n="advFocusBet">Focus bet field on my turn</span></label>
-      <label class="adv-row adv-soon"><input type="checkbox" disabled><span data-i18n="advGuardCall">Prevent accidental Call after a big raise</span><em data-i18n="advSoon">soon</em></label>
+      <label class="adv-row"><input type="checkbox" id="adv-guardcall" onchange="setAdvOpt('guard_call',this.checked)"><span data-i18n="advGuardCall">Prevent accidental Call after a big raise</span></label>
 
       <div class="adv-sec" data-i18n="advSecTable">Table</div>
       <label class="adv-row"><input type="checkbox" id="adv-blinds" onchange="setAdvOpt('show_blinds',this.checked)"><span data-i18n="advShowBlinds">Show dealer / blind buttons</span></label>
