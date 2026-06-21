@@ -7789,6 +7789,7 @@ const App = (() => {
     }
 
     var _pkHole = (document.documentElement.getAttribute('data-seat') === 'pokerth');
+    var _maskMode = _advGet('hide_pbar', false); // mode masqué : self-box = siège
     let h = '';
     rotated.forEach((pid, i) => {
       const px = pixPos[i];
@@ -7885,11 +7886,16 @@ const App = (() => {
         + flagBadge
         + typeBadge
         + '</div>';
-      if (_pkHole && !isGone && !isOut) {
+      // Mode masqué : MES cartes en grand dans le siège (self-box), quel que
+      // soit le style de siège. Sinon, comportement habituel (style pokerth = xsm).
+      var _selfBig = isMe && _maskMode && !isGone && !isOut;
+      if ((_pkHole || _selfBig) && !isGone && !isOut) {
         var _ownHide = isMe && _ownCardsHidden();
         var _phc1 = isMe ? (_ownHide ? null : myCards[0]) : sd.card1;
         var _phc2 = isMe ? (_ownHide ? null : myCards[1]) : sd.card2;
-        h += '<div class="seat-holecards">' + cardHtml(_phc1,'xsm') + cardHtml(_phc2,'xsm') + '</div>';
+        var _hcCls = _selfBig ? 'seat-holecards shc-big' : 'seat-holecards';
+        var _hcSz  = _selfBig ? '' : 'xsm';
+        h += '<div class="' + _hcCls + '">' + cardHtml(_phc1,_hcSz) + cardHtml(_phc2,_hcSz) + '</div>';
       }
       // Badge timer sous l'avatar (visible et non confondu avec l'emoji)
       if (isActive) h += '<div class="seat-timer-badge" id="stb-'+pid+'">'
@@ -11943,7 +11949,7 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.3.85-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.86-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

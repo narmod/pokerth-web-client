@@ -6310,6 +6310,29 @@ body.adv-hide-pbar .player-bar{display:none !important}
    d'action des le prochain rendu). Garde la self-box au-dessus de la barre epinglee. */
 body.adv-hide-pbar .game-area{padding-bottom:clamp(210px,34dvh,290px)}
 body.adv-hide-pbar .my-zone{bottom:0 !important;padding-bottom:max(8px,env(safe-area-inset-bottom))}
+/* Mode masqué : MA self-box (siège) affiche mes cartes EN GRAND (~taille tapis),
+   quel que soit le style de siège. On force un layout flex : avatar + cartes,
+   puis nom/tapis dessous. */
+body.adv-hide-pbar .seat.me .seat-plate {
+  display: flex !important; flex-wrap: wrap;
+  align-items: center; justify-content: center; gap: 7px;
+  padding: 6px 11px 7px;
+  background: var(--panel, rgba(0,0,0,0.55));
+  border: 1px solid var(--border); border-radius: 13px;
+  box-shadow: 0 3px 12px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.05);
+}
+body.adv-hide-pbar .seat.me .seat-avatar { order: 1; }
+body.adv-hide-pbar .seat.me .seat-holecards.shc-big {
+  order: 2; display: flex !important; gap: 4px; flex: none; grid-column: auto; grid-row: auto;
+}
+body.adv-hide-pbar .seat.me .seat-holecards.shc-big .pk {
+  width: 54px !important; height: 77px !important;
+  font-size: 1.15rem !important; border-radius: 6px !important;
+}
+body.adv-hide-pbar .seat.me .seat-info {
+  order: 3; flex-basis: 100%;
+  display: flex; flex-direction: column; align-items: center; gap: 0;
+}
 /* Selecteur "Placement des sieges" dans Options avancees. */
 .adv-row .adv-sel{flex:0 0 auto;min-width:132px}
 /* Option "révéler mes cartes au tap" : les dos de la player-bar sont cliquables,
