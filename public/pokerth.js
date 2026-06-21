@@ -296,6 +296,7 @@ function applyAdvOpts() {
     b.classList.toggle('adv-no-blinds', !_advGet('show_blinds', true));
     b.classList.toggle('adv-no-community', !_advGet('show_community', true));
     b.classList.toggle('adv-no-flag', !_advGet('show_flag', true));
+    try { document.documentElement.setAttribute('data-seat-layout', (localStorage.getItem('pth_seat_layout') === 'official') ? 'official' : 'classic'); } catch (e) {}
   } catch (e) {}
 }
 window.applyAdvOpts = applyAdvOpts;
@@ -318,6 +319,7 @@ function openAdvancedOptions() {
   sync('adv-noemoji', 'chat_noemoji', false);
   sync('adv-fadelosers', 'fade_losers', true);
   sync('adv-flag', 'show_flag', true);
+  try { var _sl = document.getElementById('adv-seatlayout'); if (_sl) _sl.value = (localStorage.getItem('pth_seat_layout') === 'official') ? 'official' : 'classic'; } catch (e) {}
   m.style.display = '';
 }
 window.openAdvancedOptions = openAdvancedOptions;
@@ -326,6 +328,15 @@ function closeAdvancedOptions() {
   if (m) m.style.display = 'none';
 }
 window.closeAdvancedOptions = closeAdvancedOptions;
+// Placement des sièges (Options avancées) : 'classic' | 'official'. Persiste +
+// re-rend les sièges via le hook global window._renderSeats.
+function setSeatLayout(v) {
+  v = (v === 'official') ? 'official' : 'classic';
+  try { localStorage.setItem('pth_seat_layout', v); } catch (e) {}
+  try { document.documentElement.setAttribute('data-seat-layout', v); } catch (e) {}
+  try { if (typeof window._renderSeats === 'function') window._renderSeats(); } catch (e) {}
+}
+window.setSeatLayout = setSeatLayout;
 // Appliquer les classes body dès l'init (les prefs sont reflétées au chargement).
 try {
   if (document.readyState === 'loading')
@@ -7353,6 +7364,13 @@ const App = (() => {
     // meme facteur que le feutre -> zoom uniforme. Mobile / zoom 1 -> 1 (no-op).
     var _seatZoom = 1;
     try { if (typeof _getTableZoom === 'function' && typeof _tableZoomGate === 'function' && _tableZoomGate()) _seatZoom = _getTableZoom(); } catch (e) {}
+    // Placement des sièges : 'classic' (ellipse maison, défaut) ou 'official'
+    // (disposition du client PokerTH : ellipse ouverte vers le haut en paysage,
+    // self pondéré). En portrait, 'official' retombe sur 'classic' (slots fixes = P2).
+    var _seatLayoutOfficial = false;
+    try { _seatLayoutOfficial = (localStorage.getItem('pth_seat_layout') === 'official'); } catch (e) {}
+    var _seatPortrait = (window.innerHeight > window.innerWidth);
+    var _useOfficialSeats = _seatLayoutOfficial && !_seatPortrait;
     const oRect = oval.getBoundingClientRect();
     const zRect = zone.getBoundingClientRect();
     const oCX  = oRect.left - zRect.left + oRect.width  / 2;
@@ -7402,7 +7420,22 @@ const App = (() => {
     // player's clamp already enforces): keeps seats above the player-bar.
     const botFloor = zRect.height - margin;
     const pixPos = rotated.map(function(_, i) {
-      var ang = (90 - i * stepA) * Math.PI / 180;
+      var ang;
+      if (_useOfficialSeats) {
+        // Disposition officielle (paysage) : self = « grosse perle » au point bas
+        // (90°) ; les N adversaires répartis sur l'arc avec self pondéré.
+        // dOpp = 360/(N+0.5) ; premier adversaire à 90 + (dSelf+dOpp)/2 ; dSelf = 0.5·dOpp.
+        if (i === 0) {
+          ang = 90;
+        } else {
+          var _N = n - 1;
+          var _dOpp = 360 / (_N + 0.5);
+          ang = 90 + (0.5 * _dOpp + _dOpp) / 2 + (i - 1) * _dOpp;
+        }
+        ang = ang * Math.PI / 180;
+      } else {
+        ang = (90 - i * stepA) * Math.PI / 180;
+      }
       var sinAng = Math.sin(ang);
       // i === 0 is the local player (sin=1 by construction).
       // sinAng > 0       → bottom half → ryBot
@@ -7421,7 +7454,7 @@ const App = (() => {
       // final position instead, so they drop just outside the rim. The local
       // player (i===0) and the top seats are left exactly as before, and so
       // are tablet/desktop.
-      if (isSmall && i !== 0 && sinAng > 0) {
+      if (!_useOfficialSeats && isSmall && i !== 0 && sinAng > 0) {
         topPos = Math.min(oCY + ryBotRaw * sinAng, botFloor);
       }
       var leftPos = oCX + rxPx*Math.cos(ang);
@@ -7432,7 +7465,7 @@ const App = (() => {
       // top-centre seat i=2) and pull them slightly toward the centre. The
       // local player (i===0) and the top-centre seat (i===2) are untouched,
       // as are all other player counts and tablet/desktop.
-      if (isSmall && n === 4 && (i === 1 || i === 3)) {
+      if (!_useOfficialSeats && isSmall && n === 4 && (i === 1 || i === 3)) {
         var dir = (i === 1) ? 1 : -1;
         topPos  = oCY - oRect.height / 2 - 26;   // remontée au-dessus du rebord
         leftPos = oCX + dir * rxPx * 0.81;       // rentrée vers le centre
@@ -11539,7 +11572,7 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.3.65-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.66-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
