@@ -6297,13 +6297,10 @@ body.adv-no-community #ranking-btn-connect,body.adv-no-community #ranking-btn-lo
 .seat.loser-fade .pk{opacity:.4;filter:grayscale(.55);transition:opacity .45s ease,filter .45s ease}
 /* Drapeau pays sur l'avatar (showCountryFlagOnAvatar) — visibilite togglable. */
 body.adv-no-flag .seat-flag{display:none !important}
-/* Mode self-box officielle : player-bar (info) AU-DESSUS, boutons d'action tout
-   en bas, via le flux flex de .game-area (même mécanisme qu'en paysage). Le pin
-   est forcé en JS pour que les boutons restent visibles en permanence. */
-body.adv-hide-pbar .game-area{padding-bottom:0 !important}
-body.adv-hide-pbar .my-zone,body.adv-hide-pbar .player-bar{position:relative !important;left:auto !important;right:auto !important;bottom:auto !important}
-body.adv-hide-pbar .player-bar{order:2;background:transparent !important;border-top:0 !important}
-body.adv-hide-pbar .my-zone{order:3;padding-bottom:max(8px,env(safe-area-inset-bottom))}
+/* Player-bar masquée : tes cartes/infos s'affichent dans ta self-box (siège).
+   La barre d'action descend tout en bas (pin forcé en JS -> visible en permanence). */
+body.adv-hide-pbar .player-bar{display:none !important}
+body.adv-hide-pbar .my-zone{bottom:0;padding-bottom:max(8px,env(safe-area-inset-bottom))}
 /* Selecteur "Placement des sieges" dans Options avancees. */
 .adv-row .adv-sel{flex:0 0 auto;min-width:132px}
 /* Option "révéler mes cartes au tap" : les dos de la player-bar sont cliquables,
