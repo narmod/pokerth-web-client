@@ -6310,18 +6310,23 @@ body.adv-hide-pbar .player-bar{display:none !important}
    d'action des le prochain rendu). Garde la self-box au-dessus de la barre epinglee. */
 body.adv-hide-pbar .game-area{padding-bottom:clamp(210px,34dvh,290px)}
 body.adv-hide-pbar .my-zone{bottom:0 !important;padding-bottom:max(8px,env(safe-area-inset-bottom))}
-/* Mode masqué : MA self-box (siège) affiche mes cartes EN GRAND (~taille tapis),
-   quel que soit le style de siège. On force un layout flex : avatar + cartes,
-   puis nom/tapis dessous. */
+/* Mode masqué : MA self-box (siège) = avatar compact + cartes ~taille tapis COTE
+   A COTE, nom/tapis dessous. max-width:none lève la limite 40-68px du siège (sinon
+   avatar+cartes passent à la ligne -> boîte trop haute). Avatar réduit + padding
+   serré pour une boîte compacte. */
+body.adv-hide-pbar .seat.me { max-width: none !important; min-width: 0 !important; }
 body.adv-hide-pbar .seat.me .seat-plate {
-  display: flex !important; flex-wrap: wrap;
-  align-items: center; justify-content: center; gap: 7px;
-  padding: 6px 11px 7px;
+  display: flex !important; flex-wrap: wrap; max-width: none !important;
+  align-items: center; justify-content: center; gap: 6px;
+  padding: 4px 8px 5px;
   background: var(--panel, rgba(0,0,0,0.55));
-  border: 1px solid var(--border); border-radius: 13px;
-  box-shadow: 0 3px 12px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.05);
+  border: 1px solid var(--border); border-radius: 11px;
+  box-shadow: 0 2px 9px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.05);
 }
-body.adv-hide-pbar .seat.me .seat-avatar { order: 1; }
+body.adv-hide-pbar .seat.me .seat-avatar {
+  width: 40px !important; height: 40px !important; font-size: 1rem !important;
+  order: 1; flex: none;
+}
 body.adv-hide-pbar .seat.me .seat-holecards.shc-big {
   order: 2; display: flex !important; gap: 4px; flex: none; grid-column: auto; grid-row: auto;
 }
