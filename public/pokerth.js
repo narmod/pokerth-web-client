@@ -7331,6 +7331,47 @@ const App = (() => {
     return ''; // Badges supprimés : 🤖 identifie les bots, pas de 👤 pour les humains
   }
 
+  // Positions des sièges en mode 'official' (slots fixes du client PokerTH).
+  // Retourne [self, opp1, opp2, …] en px relatifs à la zone (top/left = CENTRE
+  // du siège, cf. transform translate(-50%,-50%)). Index 0 = null : la self
+  // garde sa position classique. Les adversaires (ordre de table depuis la self)
+  // sont mappés sur les slots, séquence symétrique par nombre d'adversaires.
+  //   Portrait : 2 colonnes G/D + rangée haute (client QML — cf. capture).
+  //   Paysage  : grille périmètre, 5 sièges en haut + sièges bas (client desktop).
+  // Fractions = part de la zone (x: 0=gauche..1=droite, y: 0=haut..1=bas).
+  // Hors plage (>9 adversaires) : retourne null -> calcul classique conservé.
+  function _officialSeatPix(n, isPortrait, zW, zH) {
+    var M = n - 1; // adversaires
+    if (M < 1) return null;
+    var SLOTS_P = { L_bottom:[0.15,0.785], R_bottom:[0.85,0.785], L_lower:[0.15,0.645], R_lower:[0.85,0.645], L_upper:[0.15,0.345], R_upper:[0.85,0.345], TL:[0.15,0.205], TR:[0.85,0.205], TC:[0.50,0.075] };
+    var SEQ_P = {
+      1:['TC'], 2:['TL','TR'], 3:['TL','TC','TR'],
+      4:['L_upper','TL','TR','R_upper'], 5:['L_upper','TL','TC','TR','R_upper'],
+      6:['L_lower','L_upper','TL','TR','R_upper','R_lower'],
+      7:['L_lower','L_upper','TL','TC','TR','R_upper','R_lower'],
+      8:['L_bottom','L_lower','L_upper','TL','TR','R_upper','R_lower','R_bottom'],
+      9:['L_bottom','L_lower','L_upper','TL','TC','TR','R_upper','R_lower','R_bottom']
+    };
+    var SLOTS_L = { T1:[0.09,0.16], T2:[0.30,0.16], T3:[0.50,0.16], T4:[0.70,0.16], T5:[0.91,0.16], B1:[0.09,0.60], B2:[0.30,0.60], B4:[0.70,0.60], B5:[0.91,0.60] };
+    var SEQ_L = {
+      1:['T3'], 2:['T2','T4'], 3:['T2','T3','T4'],
+      4:['T1','T2','T4','T5'], 5:['T1','T2','T3','T4','T5'],
+      6:['B1','T1','T2','T4','T5','B5'],
+      7:['B1','T1','T2','T3','T4','T5','B5'],
+      8:['B2','B1','T1','T2','T4','T5','B5','B4'],
+      9:['B2','B1','T1','T2','T3','T4','T5','B5','B4']
+    };
+    var slots = isPortrait ? SLOTS_P : SLOTS_L;
+    var seq   = (isPortrait ? SEQ_P : SEQ_L)[M];
+    if (!seq) return null;
+    var out = [null]; // index 0 = self -> conserve la position classique
+    for (var i = 0; i < seq.length; i++) {
+      var f = slots[seq[i]];
+      out.push(f ? { top: f[1] * zH, left: f[0] * zW } : null);
+    }
+    return out;
+  }
+
   function renderSeatsImmediate() {
     const el = $('g-seats');
     // Clic/tap sur un siège → popup d'info du joueur. Délégation posée une
@@ -7365,12 +7406,13 @@ const App = (() => {
     var _seatZoom = 1;
     try { if (typeof _getTableZoom === 'function' && typeof _tableZoomGate === 'function' && _tableZoomGate()) _seatZoom = _getTableZoom(); } catch (e) {}
     // Placement des sièges : 'classic' (ellipse maison, défaut) ou 'official'
-    // (disposition du client PokerTH : ellipse ouverte vers le haut en paysage,
-    // self pondéré). En portrait, 'official' retombe sur 'classic' (slots fixes = P2).
+    // (slots fixes du client PokerTH : grille périmètre en paysage façon client
+    // desktop, colonnes G/D + rangée haute en portrait façon client QML). Les
+    // positions officielles sont appliquées en surcouche après la passe classique
+    // (voir _officialSeatPix + le bloc de surcouche plus bas).
     var _seatLayoutOfficial = false;
     try { _seatLayoutOfficial = (localStorage.getItem('pth_seat_layout') === 'official'); } catch (e) {}
     var _seatPortrait = (window.innerHeight > window.innerWidth);
-    var _useOfficialSeats = _seatLayoutOfficial && !_seatPortrait;
     const oRect = oval.getBoundingClientRect();
     const zRect = zone.getBoundingClientRect();
     const oCX  = oRect.left - zRect.left + oRect.width  / 2;
@@ -7420,22 +7462,7 @@ const App = (() => {
     // player's clamp already enforces): keeps seats above the player-bar.
     const botFloor = zRect.height - margin;
     const pixPos = rotated.map(function(_, i) {
-      var ang;
-      if (_useOfficialSeats) {
-        // Disposition officielle (paysage) : self = « grosse perle » au point bas
-        // (90°) ; les N adversaires répartis sur l'arc avec self pondéré.
-        // dOpp = 360/(N+0.5) ; premier adversaire à 90 + (dSelf+dOpp)/2 ; dSelf = 0.5·dOpp.
-        if (i === 0) {
-          ang = 90;
-        } else {
-          var _N = n - 1;
-          var _dOpp = 360 / (_N + 0.5);
-          ang = 90 + (0.5 * _dOpp + _dOpp) / 2 + (i - 1) * _dOpp;
-        }
-        ang = ang * Math.PI / 180;
-      } else {
-        ang = (90 - i * stepA) * Math.PI / 180;
-      }
+      var ang = (90 - i * stepA) * Math.PI / 180;
       var sinAng = Math.sin(ang);
       // i === 0 is the local player (sin=1 by construction).
       // sinAng > 0       → bottom half → ryBot
@@ -7454,7 +7481,7 @@ const App = (() => {
       // final position instead, so they drop just outside the rim. The local
       // player (i===0) and the top seats are left exactly as before, and so
       // are tablet/desktop.
-      if (!_useOfficialSeats && isSmall && i !== 0 && sinAng > 0) {
+      if (isSmall && i !== 0 && sinAng > 0) {
         topPos = Math.min(oCY + ryBotRaw * sinAng, botFloor);
       }
       var leftPos = oCX + rxPx*Math.cos(ang);
@@ -7465,13 +7492,24 @@ const App = (() => {
       // top-centre seat i=2) and pull them slightly toward the centre. The
       // local player (i===0) and the top-centre seat (i===2) are untouched,
       // as are all other player counts and tablet/desktop.
-      if (!_useOfficialSeats && isSmall && n === 4 && (i === 1 || i === 3)) {
+      if (isSmall && n === 4 && (i === 1 || i === 3)) {
         var dir = (i === 1) ? 1 : -1;
         topPos  = oCY - oRect.height / 2 - 26;   // remontée au-dessus du rebord
         leftPos = oCX + dir * rxPx * 0.81;       // rentrée vers le centre
       }
       return { top: topPos, left: leftPos };
     });
+    // ── Placement officiel : surcouche slots fixes (portrait + paysage) ──
+    // Remplace les positions des ADVERSAIRES par les slots du client PokerTH
+    // (grille périmètre en paysage / colonnes G-D en portrait). La self (index 0)
+    // garde sa position classique. Désactivé si la self n'est pas assise (myIdx<0)
+    // ou hors plage (>9 adversaires) : on conserve alors le calcul classique.
+    if (_seatLayoutOfficial && myIdx >= 0) {
+      try {
+        var _offPos = _officialSeatPix(rotated.length, _seatPortrait, zRect.width, zRect.height);
+        if (_offPos) { for (var _op = 1; _op < pixPos.length; _op++) { if (_offPos[_op]) pixPos[_op] = _offPos[_op]; } }
+      } catch (e) {}
+    }
     // ── Calcul SB / BB à partir du dealer ──
     // We must SKIP seats whose player has left (.gone) -- otherwise
     // the SB/BB chips get assigned to a ghost seat that hides all
@@ -11572,7 +11610,7 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.3.66-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.67-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
