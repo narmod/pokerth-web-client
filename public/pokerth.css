@@ -6310,33 +6310,35 @@ body.adv-hide-pbar .player-bar{display:none !important}
    d'action des le prochain rendu). Garde la self-box au-dessus de la barre epinglee. */
 body.adv-hide-pbar .game-area{padding-bottom:clamp(210px,34dvh,290px)}
 body.adv-hide-pbar .my-zone{bottom:0 !important;padding-bottom:max(8px,env(safe-area-inset-bottom))}
-/* Mode masqué : MA self-box (siège) = avatar compact + cartes ~taille tapis COTE
-   A COTE, nom/tapis dessous. max-width:none lève la limite 40-68px du siège (sinon
-   avatar+cartes passent à la ligne -> boîte trop haute). Avatar réduit + padding
-   serré pour une boîte compacte. */
+/* Mode masqué : MA self-box (siège) = avatar + cartes ~taille tapis COTE A COTE,
+   nom/tapis dessous. IMPORTANT cohérence : on GARDE le style du siège choisi -> on
+   n'impose ni boîte ni taille d'avatar (le fond/bordure viennent du style ; aucun
+   fond pour les styles "sans boîte"). max-width:none lève la limite 40-68px du siège
+   (sinon avatar+cartes passent à la ligne -> boîte trop haute). */
 body.adv-hide-pbar .seat.me { max-width: none !important; min-width: 0 !important; }
 body.adv-hide-pbar .seat.me .seat-plate {
   display: flex !important; flex-wrap: wrap; max-width: none !important;
   align-items: center; justify-content: center; gap: 6px;
-  padding: 4px 8px 5px;
-  background: var(--panel, rgba(0,0,0,0.55));
-  border: 1px solid var(--border); border-radius: 11px;
-  box-shadow: 0 2px 9px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.05);
 }
-body.adv-hide-pbar .seat.me .seat-avatar {
-  width: 40px !important; height: 40px !important; font-size: 1rem !important;
-  order: 1; flex: none;
-}
+body.adv-hide-pbar .seat.me .seat-avatar { order: 1; flex: none; }
 body.adv-hide-pbar .seat.me .seat-holecards.shc-big {
   order: 2; display: flex !important; gap: 4px; flex: none; grid-column: auto; grid-row: auto;
-}
-body.adv-hide-pbar .seat.me .seat-holecards.shc-big .pk {
-  width: 40px !important; height: 57px !important;
-  font-size: 0.85rem !important; border-radius: 5px !important;
 }
 body.adv-hide-pbar .seat.me .seat-info {
   order: 3; flex-basis: 100%;
   display: flex; flex-direction: column; align-items: center; gap: 0;
+}
+/* Taille des cartes self alignée sur les cartes communes, PAR BREAKPOINT :
+   ~40 sur mobile, 62 sur desktop/tablette (comme .comm-row .pk en >=900px). */
+body.adv-hide-pbar .seat.me .seat-holecards.shc-big .pk {
+  width: 40px !important; height: 57px !important;
+  font-size: 0.85rem !important; border-radius: 5px !important;
+}
+@media (min-width: 900px) {
+  body.adv-hide-pbar .seat.me .seat-holecards.shc-big .pk {
+    width: 62px !important; height: 88px !important;
+    font-size: 1.3rem !important; border-radius: 7px !important;
+  }
 }
 /* Selecteur "Placement des sieges" dans Options avancees. */
 .adv-row .adv-sel{flex:0 0 auto;min-width:132px}
