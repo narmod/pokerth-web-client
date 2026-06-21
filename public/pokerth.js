@@ -337,12 +337,14 @@ function openAdvancedOptions() {
   sync('adv-guardcall', 'guard_call', false);
   sync('adv-odds', 'odds_monitor', false);
   try { var _sl = document.getElementById('adv-seatlayout'); if (_sl) _sl.value = (localStorage.getItem('pth_seat_layout') === 'official') ? 'official' : 'classic'; } catch (e) {}
+  try { _rebindAction = null; _renderKeyButtons(); } catch (e) {}
   m.style.display = '';
 }
 window.openAdvancedOptions = openAdvancedOptions;
 function closeAdvancedOptions() {
   var m = document.getElementById('adv-modal');
   if (m) m.style.display = 'none';
+  _rebindAction = null;
 }
 window.closeAdvancedOptions = closeAdvancedOptions;
 // Placement des sièges (Options avancées) : 'classic' | 'official'. Persiste +
@@ -435,6 +437,49 @@ function getAvatarColor(pid) {
   }, true);
 })();
 
+// ── Raccourcis clavier d'action personnalisables ──
+// Bindings par défaut (rétro-compatibles avec l'historique f/c/r/a + 1/2/3).
+// Espace (=Call) et Entrée (=valider la relance) restent fixes, non remappables.
+var _KEY_DEFAULTS = { fold: 'f', call: 'c', raise: 'r', allin: 'a', bet1: '1', bet2: '2', bet3: '3' };
+function _keyBindings() {
+  var kb = {}; for (var k in _KEY_DEFAULTS) kb[k] = _KEY_DEFAULTS[k];
+  try { var s = localStorage.getItem('pth_keys'); if (s) { var o = JSON.parse(s) || {}; for (var k2 in kb) if (typeof o[k2] === 'string' && o[k2]) kb[k2] = o[k2].toLowerCase(); } } catch (e) {}
+  return kb;
+}
+function _saveKeyBindings(kb) { try { localStorage.setItem('pth_keys', JSON.stringify(kb)); } catch (e) {} }
+var _rebindAction = null; // action en cours de réassignation (clic sur un bouton de touche)
+function _renderKeyButtons() {
+  var kb = _keyBindings();
+  var rows = document.querySelectorAll('#adv-modal .adv-keyrow');
+  for (var i = 0; i < rows.length; i++) {
+    var act = rows[i].getAttribute('data-act');
+    var btn = rows[i].querySelector('.kb-btn');
+    if (!btn) continue;
+    if (_rebindAction === act) { btn.textContent = '…'; btn.classList.add('kb-active'); }
+    else { btn.textContent = (kb[act] || '—').toUpperCase(); btn.classList.remove('kb-active'); }
+  }
+}
+function rebindKey(act) { _rebindAction = (_rebindAction === act) ? null : act; _renderKeyButtons(); } // re-clic = annule
+window.rebindKey = rebindKey;
+function resetKeys() { var d = {}; for (var k in _KEY_DEFAULTS) d[k] = _KEY_DEFAULTS[k]; _saveKeyBindings(d); _rebindAction = null; _renderKeyButtons(); }
+window.resetKeys = resetKeys;
+// Capture des touches en mode réassignation (phase capturing -> avant le handler de
+// jeu, qu'on neutralise via stopPropagation). Échap annule ; lettre/chiffre valide.
+document.addEventListener('keydown', function (e) {
+  if (!_rebindAction) return;
+  e.preventDefault(); e.stopPropagation();
+  var k = (e.key || '').toLowerCase();
+  if (k === 'escape') { _rebindAction = null; _renderKeyButtons(); return; }
+  if (k.length !== 1 || !/[a-z0-9]/.test(k)) return; // on attend une lettre/chiffre
+  var kb = _keyBindings();
+  var old = kb[_rebindAction];
+  for (var a in kb) { if (kb[a] === k && a !== _rebindAction) kb[a] = old; } // conflit -> échange
+  kb[_rebindAction] = k;
+  _saveKeyBindings(kb);
+  _rebindAction = null;
+  _renderKeyButtons();
+}, true);
+
 document.addEventListener('keydown', function(e) {
   // Ne pas intercepter si on tape dans un input/textarea
   var tag = (e.target.tagName || '').toLowerCase();
@@ -449,42 +494,49 @@ document.addEventListener('keydown', function(e) {
   if (!_ap) return;
 
   var key = e.key.toLowerCase();
+  var KB = _keyBindings();
+  var act = null;
+  if (key === KB.fold) act = 'fold';
+  else if (key === KB.call || key === ' ') act = 'call'; // Espace = alias Call (fixe)
+  else if (key === KB.raise) act = 'raise';
+  else if (key === KB.allin) act = 'allin';
+  else if (key === KB.bet1) act = 'bet1';
+  else if (key === KB.bet2) act = 'bet2';
+  else if (key === KB.bet3) act = 'bet3';
+  else if (key === 'enter') act = 'enter'; // Entrée = valider la relance (fixe)
+  if (!act) return;
 
-  if (key === 'f') {
+  if (act === 'fold') {
     // Fold
     var btn = document.querySelector('.btn-fold:not([disabled])');
     if (btn) { e.preventDefault(); btn.click(); showKeyHint(t('hintFold')); }
-  } else if (key === 'c' || key === ' ') {
+  } else if (act === 'call') {
     // Call ou Check
     e.preventDefault();
     var btn = document.querySelector('.btn-call:not([disabled]), .btn-check:not([disabled])');
     if (btn) { btn.click(); showKeyHint(btn.classList.contains('btn-check') ? t('hintCheck') : t('hintCall')); }
-  } else if (key === 'r') {
-    // Raise — clique directement le bouton de relance (relance au montant courant de
-    // l'input), pour une touche directe comme F / C / A. L'ajustement reste possible en
-    // cliquant le champ montant ; Entree valide alors la relance.
+  } else if (act === 'raise') {
+    // Raise — clique directement le bouton de relance (au montant courant de l'input).
     var btn = document.querySelector('.btn-raise:not([disabled])');
     if (btn) { e.preventDefault(); btn.click(); showKeyHint(t('hintRaise')); }
-  } else if (key === 'a') {
+  } else if (act === 'allin') {
     // All-in
     var btn = document.querySelector('.btn-allin:not([disabled])');
     if (btn) { e.preventDefault(); btn.click(); showKeyHint(t('hintAllin')); }
-  } else if (key === '1' || key === '2' || key === '3') {
-    // Mises rapides : 1 = 1/3 pot, 2 = 1/2 pot, 3 = pot. On clique le bouton .btn-pct
-    // correspondant (il remplit le champ montant via setPct), puis on RETIRE le focus du
-    // champ : sinon, champ focalise, le handler ignore R (il croit qu'on tape un montant)
-    // et la relance ne partirait pas. L'utilisateur valide ensuite avec R (ou Entree).
+  } else if (act === 'bet1' || act === 'bet2' || act === 'bet3') {
+    // Mises rapides : remplit le champ via .btn-pct puis retire le focus (sinon R/Entrée
+    // seraient ignorés, le champ montant étant focalisé). Valider ensuite par Raise.
     var _pb = _ap.querySelectorAll('.btn-pct:not([disabled])');
-    var _i = key === '1' ? 0 : (key === '2' ? 1 : 2);
+    var _i = act === 'bet1' ? 0 : (act === 'bet2' ? 1 : 2);
     if (_pb && _pb[_i]) {
       e.preventDefault();
       _pb[_i].click();
       var _ri = document.getElementById('raise-amt');
       if (_ri) _ri.blur();
-      var _frac = key === '1' ? '1/3' : (key === '2' ? '1/2' : 'Pot');
+      var _frac = act === 'bet1' ? '1/3' : (act === 'bet2' ? '1/2' : 'Pot');
       showKeyHint(_frac + ' — ' + t('hintBetConfirm'));
     }
-  } else if (key === 'enter') {
+  } else if (act === 'enter') {
     // Confirmer la relance si l'input est focusé
     var inp = document.getElementById('raise-amt');
     if (document.activeElement === inp) {
@@ -8538,17 +8590,18 @@ const App = (() => {
     const allInOnly = myMoney <= toCall;    // ne peut que call ou all-in
 
     const isMobile = window.innerWidth < 640;
+    var KB = _keyBindings(); // touches liées (badges des boutons)
     const raiseRowHtml = isMobile
       ? '<div class="raise-row raise-row-mobile">'
         + '<input class="raise-slider" id="raise-slider" type="range" min="' + minBet + '" max="' + myMoney + '" value="' + minBet + '" step="1"' + da
         + ' oninput="document.getElementById(\'raise-amt\').value=this.value;document.getElementById(\'raise-display\').textContent=this.value">'
         + '<span class="raise-display" id="raise-display">' + minBet + '</span>'
         + '<input id="raise-amt" type="hidden" value="' + minBet + '"' + da + '>'
-        + '<button class="btn-action btn-raise raise-btn"' + da + ' onclick="App.doRaise()" title="Raise (R)">' + raiseLabel + '<span class="act-key">R</span></button>'
+        + '<button class="btn-action btn-raise raise-btn"' + da + ' onclick="App.doRaise()" title="Raise (R)">' + raiseLabel + '<span class="act-key">' + KB.raise.toUpperCase() + '</span></button>'
         + '</div>'
       : '<div class="raise-row">'
         + '<input class="raise-input" id="raise-amt" type="number" min="' + minBet + '" max="' + myMoney + '" value="' + minBet + '"' + da + '>'
-        + '<button class="btn-action btn-raise raise-btn"' + da + ' onclick="App.doRaise()" title="Raise (R)">' + raiseLabel + '<span class="act-key">R</span></button>'
+        + '<button class="btn-action btn-raise raise-btn"' + da + ' onclick="App.doRaise()" title="Raise (R)">' + raiseLabel + '<span class="act-key">' + KB.raise.toUpperCase() + '</span></button>'
         + '</div>';
 
     // Sélecteur de mode PERSISTANT (remplace l'ancien bouton AUTO, même emplacement) :
@@ -8562,17 +8615,17 @@ const App = (() => {
 
     const h = '<div class="action-grid">'
       + '<div class="action-top-row">'
-      +   '<button class="btn-action btn-fold" onclick="App.doAction(1,0)" title="Fold (F)">' + t('fold') + '<span class="act-key">F</span></button>'
-      +   '<button class="btn-action ' + callClass + '" onclick="' + callAction + '" title="Call/Check (C)">' + callLabel + '<span class="act-key">C</span></button>'
+      +   '<button class="btn-action btn-fold" onclick="App.doAction(1,0)" title="Fold (F)">' + t('fold') + '<span class="act-key">' + KB.fold.toUpperCase() + '</span></button>'
+      +   '<button class="btn-action ' + callClass + '" onclick="' + callAction + '" title="Call/Check (C)">' + callLabel + '<span class="act-key">' + KB.call.toUpperCase() + '</span></button>'
       +   modeSel
       + '</div>'
       + '<div class="pct-row">'
-      +   '<button class="btn-pct"' + da + ' onclick="setPct(' + p33  + ')"><span class="pct-p">1/3</span><span class="pct-amt">' + fmtChips(p33) + '</span><span class="act-key">1</span></button>'
-      +   '<button class="btn-pct"' + da + ' onclick="setPct(' + p50  + ')"><span class="pct-p">1/2</span><span class="pct-amt">' + fmtChips(p50) + '</span><span class="act-key">2</span></button>'
-      +   '<button class="btn-pct"' + da + ' onclick="setPct(' + p100 + ')"><span class="pct-p">Pot</span><span class="pct-amt">' + fmtChips(p100) + '</span><span class="act-key">3</span></button>'
+      +   '<button class="btn-pct"' + da + ' onclick="setPct(' + p33  + ')"><span class="pct-p">1/3</span><span class="pct-amt">' + fmtChips(p33) + '</span><span class="act-key">' + KB.bet1.toUpperCase() + '</span></button>'
+      +   '<button class="btn-pct"' + da + ' onclick="setPct(' + p50  + ')"><span class="pct-p">1/2</span><span class="pct-amt">' + fmtChips(p50) + '</span><span class="act-key">' + KB.bet2.toUpperCase() + '</span></button>'
+      +   '<button class="btn-pct"' + da + ' onclick="setPct(' + p100 + ')"><span class="pct-p">Pot</span><span class="pct-amt">' + fmtChips(p100) + '</span><span class="act-key">' + KB.bet3.toUpperCase() + '</span></button>'
       + '</div>'
       + raiseRowHtml
-      + '<button class="btn-action btn-allin" onclick="App.doAction(6,' + myMoney + ')" title="All-In (A)">' + t('allin') + ' <b>' + fmtChips(myMoney) + '</b><span class="act-key">A</span></button>'
+      + '<button class="btn-action btn-allin" onclick="App.doAction(6,' + myMoney + ')" title="All-In (A)">' + t('allin') + ' <b>' + fmtChips(myMoney) + '</b><span class="act-key">' + KB.allin.toUpperCase() + '</span></button>'
       + '</div>';
 
     if (preview) {
@@ -8627,7 +8680,7 @@ const App = (() => {
       if (btn) {
         if (btn._origCall == null) btn._origCall = btn.innerHTML;
         btn.classList.add('confirm-call');
-        btn.innerHTML = t('confirmCall') + ' <b>' + fmtChips(amount) + '</b> ?<span class="act-key">C</span>';
+        btn.innerHTML = t('confirmCall') + ' <b>' + fmtChips(amount) + '</b> ?<span class="act-key">' + KB.call.toUpperCase() + '</span>';
       }
       try { if (navigator.vibrate) navigator.vibrate(18); } catch (e) {}
       if (_callConfirmTimer) clearTimeout(_callConfirmTimer);
@@ -11792,7 +11845,7 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.3.71-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.72-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

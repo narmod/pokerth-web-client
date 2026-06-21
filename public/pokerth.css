@@ -6315,3 +6315,15 @@ body.adv-no-flag .seat-flag{display:none !important}
 #odds-monitor .odds-row.hot .odds-bar>i{background:linear-gradient(90deg,#50c878,#1e8c4e)}
 #odds-monitor .odds-row.hot .odds-pct{color:#7ce0a0;font-weight:700}
 @media (max-width:560px){#odds-monitor{width:120px;font-size:9.5px;top:48px}#odds-monitor .odds-cat{flex-basis:44px}}
+/* Raccourcis clavier personnalisables (Options avancées). */
+.adv-keys{display:flex;flex-direction:column;gap:5px;margin-top:2px}
+.adv-keyrow{display:flex;align-items:center;gap:9px}
+.adv-keyrow>span{flex:1;font-size:.92rem}
+.kb-btn{flex:0 0 auto;min-width:42px;height:30px;padding:0 9px;border-radius:7px;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.06);color:var(--col100,#eff1f5);font-family:var(--ff-mono,monospace);font-weight:700;font-size:.95rem;text-transform:uppercase;cursor:pointer;transition:background .12s,border-color .12s}
+.kb-btn:hover{background:rgba(255,255,255,.12)}
+.kb-btn.kb-active{border-color:var(--gold,#E3C800);background:rgba(227,200,0,.18);color:var(--gold,#E3C800);animation:kbPulse .9s ease-in-out infinite}
+@keyframes kbPulse{0%,100%{box-shadow:0 0 0 1px var(--gold,#E3C800)}50%{box-shadow:0 0 0 2px var(--gold,#E3C800),0 0 8px rgba(227,200,0,.5)}}
+.adv-keyhint{display:flex;align-items:center;gap:9px;margin-top:3px}
+.adv-keyhint>span{flex:1;font-size:.74rem;opacity:.62;line-height:1.25}
+.kb-reset{flex:0 0 auto;height:28px;padding:0 11px;border-radius:7px;border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.05);color:var(--col200,#cdd3e0);font-size:.8rem;cursor:pointer}
+.kb-reset:hover{background:rgba(255,255,255,.1)}
