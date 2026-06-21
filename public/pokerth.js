@@ -7981,8 +7981,11 @@ const App = (() => {
     if (ga && !ga._pinObs) { ga._pinObs = 1; try { new MutationObserver(_updatePinBtn).observe(ga, { childList: true }); } catch(e){} }
     // L'epingle n'apparait QUE quand les touches d'action sont affichees (live ou apercu).
     var hasActions = !!(ga && ga.querySelector('.action-grid'));
-    b.style.display = hasActions ? 'flex' : 'none';
-    if (!hasActions) return;
+    // Mode masqué : la barre d'action est deja affichee en permanence par l'option
+    // (independamment du pin) -> le bouton pin devient inutile, on le cache.
+    var _maskMode = _advGet('hide_pbar', false);
+    b.style.display = (hasActions && !_maskMode) ? 'flex' : 'none';
+    if (!hasActions || _maskMode) return;
     var on = _actionBarPinned || _advGet('hide_pbar', false);
     b.setAttribute('aria-pressed', on ? 'true' : 'false');
     b.style.opacity = on ? '1' : '0.5';
@@ -11940,7 +11943,7 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.3.84-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.85-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
