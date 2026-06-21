@@ -6293,3 +6293,7 @@ body.adv-no-community #ranking-btn-connect,body.adv-no-community #ranking-btn-lo
 body.adv-no-flag .seat-flag{display:none !important}
 /* Selecteur "Placement des sieges" dans Options avancees. */
 .adv-row .adv-sel{flex:0 0 auto;min-width:132px}
+/* Option "révéler mes cartes au tap" : les dos de la player-bar sont cliquables,
+   lueur or pour signaler l'interaction (uniquement quand masquées). */
+#g-myseat-cards.own-peek{cursor:pointer}
+#g-myseat-cards.own-peek .pk.back{box-shadow:0 0 0 2px var(--accent,#E3C800),0 0 9px rgba(227,200,0,.55);transition:box-shadow .15s}

@@ -276,6 +276,10 @@ function setMyTurnActive(active) {
 // Sièges « perdants » au showdown (pids) → cartes estompées (fadeOutLosingCards).
 // Rempli dans EndOfHandShow (si pth_fade_losers != '0'), vidé à HandStart.
 var _sdLosers = new Set();
+// Option "révéler mes cartes au tap" (pth_own_click) : quand activée, mes cartes
+// sont face cachée tant que _ownReveal est faux ; un tap sur la player-bar bascule.
+// Remis à faux à chaque nouvelle main (confidentialité), forcé à vrai au showdown.
+var _ownReveal = false;
 function _advStripEmoji(s) {
   s = String(s == null ? '' : s);
   try { s = s.replace(/\p{Extended_Pictographic}/gu, ''); } catch (e) {}
@@ -297,6 +301,7 @@ function applyAdvOpts() {
     b.classList.toggle('adv-no-community', !_advGet('show_community', true));
     b.classList.toggle('adv-no-flag', !_advGet('show_flag', true));
     try { document.documentElement.setAttribute('data-seat-layout', (localStorage.getItem('pth_seat_layout') === 'official') ? 'official' : 'classic'); } catch (e) {}
+    try { if (typeof window._refreshOwnCards === 'function') window._refreshOwnCards(); } catch (e) {}
   } catch (e) {}
 }
 window.applyAdvOpts = applyAdvOpts;
@@ -319,6 +324,7 @@ function openAdvancedOptions() {
   sync('adv-noemoji', 'chat_noemoji', false);
   sync('adv-fadelosers', 'fade_losers', true);
   sync('adv-flag', 'show_flag', true);
+  sync('adv-ownclick', 'own_click', false);
   try { var _sl = document.getElementById('adv-seatlayout'); if (_sl) _sl.value = (localStorage.getItem('pth_seat_layout') === 'official') ? 'official' : 'classic'; } catch (e) {}
   m.style.display = '';
 }
@@ -5752,6 +5758,7 @@ const App = (() => {
         // clic manuel sur une action.
         _preActionOpen = false; // referme tout panneau "aperçu" à chaque main
         try { _sdLosers = new Set(); } catch (e) {} // reset estompage perdants (nouvelle main)
+        _ownReveal = false; // cartes propres re-masquées à chaque main (si option active)
 
         // ── SPECTATOR BOOTSTRAP ──
         // When the user joined as spectator of a hand-in-progress, the
@@ -6160,6 +6167,8 @@ const App = (() => {
       }
 
       case T.EndOfHandShow: {
+        _ownReveal = true; // showdown : mes cartes sont publiques, on les montre
+        try { renderMyCards(); } catch (e) {}
         const results = sub[2] || [];
         const winners = [];
         for (const rb of results) {
@@ -6636,13 +6645,37 @@ const App = (() => {
     return '<div class="pk '+cls+red+spade2+'" data-c="'+n+'" style="--cf:url('+_deckFace(n)+')"><span class="c-rank">'+rank+'</span><span class="c-suit">'+suit+'</span></div>';
   }
 
-  function renderMyCards() {
-    const c1 = myCards[0] != null ? myCards[0] : null;
-    const c2 = myCards[1] != null ? myCards[1] : null;
-    // Only update player bar cards (small)
-    const pb = document.getElementById('g-myseat-cards');
-    if (pb) pb.innerHTML = cardHtml(c1,'md') + cardHtml(c2,'md');
+  // Cartes propres masquées ? (option pth_own_click active ET pas encore révélées)
+  function _ownCardsHidden() {
+    try { return localStorage.getItem('pth_own_click') === '1' && !_ownReveal; } catch (e) { return false; }
   }
+  function renderMyCards() {
+    const pb = document.getElementById('g-myseat-cards');
+    if (!pb) return;
+    var optOn = false; try { optOn = (localStorage.getItem('pth_own_click') === '1'); } catch (e) {}
+    var hide = optOn && !_ownReveal;
+    const c1 = hide ? null : (myCards[0] != null ? myCards[0] : null);
+    const c2 = hide ? null : (myCards[1] != null ? myCards[1] : null);
+    pb.innerHTML = cardHtml(c1, 'md') + cardHtml(c2, 'md');
+    pb.classList.toggle('own-peek', hide);
+    pb.style.cursor = optOn ? 'pointer' : '';
+    // Tap sur la player-bar = bascule la révélation (uniquement si l'option est active).
+    if (!pb._revealBound) {
+      pb._revealBound = true;
+      pb.addEventListener('click', function () {
+        var on = false; try { on = (localStorage.getItem('pth_own_click') === '1'); } catch (e) {}
+        if (!on) return;
+        _ownReveal = !_ownReveal;
+        renderMyCards();
+        try { if (seats.length) renderSeats(); } catch (e) {}
+      });
+    }
+  }
+  // Re-rendu des cartes propres (player-bar + sièges) après bascule de l'option.
+  window._refreshOwnCards = function () {
+    try { renderMyCards(); } catch (e) {}
+    try { if (seats.length) renderSeats(); } catch (e) {}
+  };
 
 
 
@@ -7700,8 +7733,9 @@ const App = (() => {
         + typeBadge
         + '</div>';
       if (_pkHole && !isGone && !isOut) {
-        var _phc1 = isMe ? myCards[0] : sd.card1;
-        var _phc2 = isMe ? myCards[1] : sd.card2;
+        var _ownHide = isMe && _ownCardsHidden();
+        var _phc1 = isMe ? (_ownHide ? null : myCards[0]) : sd.card1;
+        var _phc2 = isMe ? (_ownHide ? null : myCards[1]) : sd.card2;
         h += '<div class="seat-holecards">' + cardHtml(_phc1,'xsm') + cardHtml(_phc2,'xsm') + '</div>';
       }
       // Badge timer sous l'avatar (visible et non confondu avec l'emoji)
@@ -11610,7 +11644,7 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.3.68-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.69-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

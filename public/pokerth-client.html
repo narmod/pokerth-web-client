@@ -1678,7 +1678,7 @@ if ('serviceWorker' in navigator) {
       <div class="adv-sec" data-i18n="advSecCards">Cards</div>
       <label class="adv-row"><input type="checkbox" id="adv-anim" onchange="setAdvOpt('anim_cards',this.checked)"><span data-i18n="advAnimCards">Card animations</span></label>
       <label class="adv-row"><input type="checkbox" id="adv-fadelosers" onchange="setAdvOpt('fade_losers',this.checked)"><span data-i18n="advFadeLosers">Fade losing cards at showdown</span></label>
-      <label class="adv-row adv-soon"><input type="checkbox" disabled><span data-i18n="advOwnClick">Reveal my cards on tap</span><em data-i18n="advSoon">soon</em></label>
+      <label class="adv-row"><input type="checkbox" id="adv-ownclick" onchange="setAdvOpt('own_click',this.checked)"><span data-i18n="advOwnClick">Reveal my cards on tap</span></label>
 
       <div class="adv-sec" data-i18n="advSecBet">Betting &amp; turn</div>
       <label class="adv-row"><input type="checkbox" id="adv-focusbet" onchange="setAdvOpt('focus_bet',this.checked)"><span data-i18n="advFocusBet">Focus bet field on my turn</span></label>
