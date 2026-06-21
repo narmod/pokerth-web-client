@@ -258,7 +258,67 @@ function setMyTurnActive(active) {
   if (!mz) return;
   if (active) mz.classList.add('my-turn-active');
   else mz.classList.remove('my-turn-active');
+  // Options avancées : focus auto du champ de mise à mon tour (opt-in).
+  if (active) {
+    try {
+      if (localStorage.getItem('pth_focus_bet') === '1') {
+        var _ri = document.getElementById('raise-amt');
+        if (_ri) setTimeout(function () { try { _ri.focus(); } catch (e) {} }, 60);
+      }
+    } catch (e) {}
+  }
 }
+
+// ── Options avancées (fenêtre de parité QML) ────────────────────────────────
+// Réglages persistés en localStorage (pth_*). Les bascules « présentation »
+// sont appliquées via des classes sur <body> (CSS) pour rester additif et sûr.
+// Les lignes grisées « bientôt » dépendent d'un travail backend/moteur à venir.
+function _advGet(key, defOn) {
+  try {
+    var v = localStorage.getItem('pth_' + key);
+    if (v === null) return !!defOn;
+    return v === '1';
+  } catch (e) { return !!defOn; }
+}
+function applyAdvOpts() {
+  try {
+    var b = document.body;
+    b.classList.toggle('adv-no-cardanim', !_advGet('anim_cards', true));
+    b.classList.toggle('adv-no-blinds', !_advGet('show_blinds', true));
+    b.classList.toggle('adv-no-community', !_advGet('show_community', true));
+  } catch (e) {}
+}
+window.applyAdvOpts = applyAdvOpts;
+function setAdvOpt(key, on) {
+  try { localStorage.setItem('pth_' + key, on ? '1' : '0'); } catch (e) {}
+  applyAdvOpts();
+}
+window.setAdvOpt = setAdvOpt;
+function openAdvancedOptions() {
+  var m = document.getElementById('adv-modal');
+  if (!m) return;
+  var sync = function (id, key, defOn) {
+    var el = document.getElementById(id);
+    if (el) el.checked = _advGet(key, defOn);
+  };
+  sync('adv-anim', 'anim_cards', true);
+  sync('adv-blinds', 'show_blinds', true);
+  sync('adv-community', 'show_community', true);
+  sync('adv-focusbet', 'focus_bet', false);
+  m.style.display = '';
+}
+window.openAdvancedOptions = openAdvancedOptions;
+function closeAdvancedOptions() {
+  var m = document.getElementById('adv-modal');
+  if (m) m.style.display = 'none';
+}
+window.closeAdvancedOptions = closeAdvancedOptions;
+// Appliquer les classes body dès l'init (les prefs sont reflétées au chargement).
+try {
+  if (document.readyState === 'loading')
+    document.addEventListener('DOMContentLoaded', applyAdvOpts);
+  else applyAdvOpts();
+} catch (e) {}
 
 // Animation des cartes de ma main (deal)
 function animateDealMyCards() {
@@ -11449,7 +11509,7 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.3.61-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.62-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

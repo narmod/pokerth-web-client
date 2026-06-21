@@ -1008,6 +1008,7 @@ function onAvatarImageChosen(input) {
       <button class="btn-sm" id="lang-toggle-lobby-mob" onclick="closeLobbyOverflow();openLangMenu(event)" style="font-size:0.85rem"></button>
       <button class="btn-sm" id="theme-toggle-lobby-mob" onclick="closeLobbyOverflow();openThemePanel(event)" style="font-size:0.85rem">🎨 <span data-i18n="themeTooltip">Theme</span></button>
       <button class="btn-sm" id="music-toggle-lobby-mob" onclick="closeLobbyOverflow();toggleMusicPanel()" style="font-size:0.85rem">🎵 <span data-i18n="musicTooltip">Sounds &amp; Music</span></button>
+      <button class="btn-sm" id="adv-opts-lobby-mob" onclick="closeLobbyOverflow();openAdvancedOptions()" style="font-size:0.85rem">⚙️ <span data-i18n="advTitle">Advanced options</span></button>
     </div>
   </div>
 
@@ -1213,6 +1214,7 @@ function onAvatarImageChosen(input) {
       <button class="btn-sm" id="auto-pref-mob" onclick="toggleAutoBtnPref()">🔁 Auto button</button>
       <button class="btn-sm" id="pct-pref-mob" onclick="toggleQuickBetPref()">💰 Quick-bet buttons</button>
       <button class="btn-sm" id="assist-toggle-mob" onclick="toggleAssist()">💡 <span data-i18n="assist">Assistance</span><span id="assist-state-mob" class="menu-tick"></span></button>
+      <button class="btn-sm" id="adv-opts-mob" onclick="closeHeaderOverflow();openAdvancedOptions()">⚙️ <span data-i18n="advTitle">Advanced options</span></button>
       <div class="menu-sep" id="invite-sep-mob" style="display:none"></div>
       <button class="btn-sm" id="invite-players-mob" onclick="closeHeaderOverflow();App.openInviteModal()" style="display:none">✉️ <span data-i18n="inviteMenu">Inviter des joueurs</span></button>
       <!-- Admin (séparateur + boutons révélés ensemble) -->
@@ -1662,6 +1664,46 @@ if ('serviceWorker' in navigator) {
     </div>
   </div>
 </div>
+
+<!-- Advanced options modal — QML-parity gameplay settings, reachable from the
+     gear (overflow) menu in both lobby and game. Multilingual (en+fr; others
+     fall back to English). Live toggles persist to pth_* and apply via body
+     classes / setMyTurnActive; "soon" rows are staged (backend/engine work). -->
+<div id="adv-modal" style="display:none">
+  <div class="km-backdrop" onclick="closeAdvancedOptions()"></div>
+  <div class="km-card adv-card" role="dialog" aria-labelledby="adv-title">
+    <button class="km-close" type="button" onclick="closeAdvancedOptions()" title="Fermer" data-i18n-title="closeTooltip" aria-label="Fermer">✕</button>
+    <div class="km-title" id="adv-title">⚙️ <span data-i18n="advTitle">Advanced options</span></div>
+    <div class="adv-body">
+      <div class="adv-sec" data-i18n="advSecCards">Cards</div>
+      <label class="adv-row"><input type="checkbox" id="adv-anim" onchange="setAdvOpt('anim_cards',this.checked)"><span data-i18n="advAnimCards">Card animations</span></label>
+      <label class="adv-row adv-soon"><input type="checkbox" disabled><span data-i18n="advFadeLosers">Fade losing cards at showdown</span><em data-i18n="advSoon">soon</em></label>
+      <label class="adv-row adv-soon"><input type="checkbox" disabled><span data-i18n="advOwnClick">Reveal my cards on tap</span><em data-i18n="advSoon">soon</em></label>
+
+      <div class="adv-sec" data-i18n="advSecBet">Betting &amp; turn</div>
+      <label class="adv-row"><input type="checkbox" id="adv-focusbet" onchange="setAdvOpt('focus_bet',this.checked)"><span data-i18n="advFocusBet">Focus bet field on my turn</span></label>
+      <label class="adv-row adv-soon"><input type="checkbox" disabled><span data-i18n="advGuardCall">Prevent accidental Call after a big raise</span><em data-i18n="advSoon">soon</em></label>
+
+      <div class="adv-sec" data-i18n="advSecTable">Table</div>
+      <label class="adv-row"><input type="checkbox" id="adv-blinds" onchange="setAdvOpt('show_blinds',this.checked)"><span data-i18n="advShowBlinds">Show dealer / blind buttons</span></label>
+
+      <div class="adv-sec" data-i18n="advSecChat">Chat</div>
+      <label class="adv-row adv-soon"><input type="checkbox" disabled><span data-i18n="advNoChatEmoji">Disable emojis in chat</span><em data-i18n="advSoon">soon</em></label>
+
+      <div class="adv-sec" data-i18n="advSecCommunity">Community</div>
+      <label class="adv-row"><input type="checkbox" id="adv-community" onchange="setAdvOpt('show_community',this.checked)"><span data-i18n="advShowCommunity">Show Ranking entry</span></label>
+
+      <div class="adv-sec" data-i18n="advSecAvatars">Avatars</div>
+      <label class="adv-row adv-soon"><input type="checkbox" disabled><span data-i18n="advFlagAvatar">Country flag on avatar</span><em data-i18n="advSoon">soon</em></label>
+      <label class="adv-row adv-soon"><input type="checkbox" disabled><span data-i18n="advNetColor">Network status color on avatar</span><em data-i18n="advSoon">soon</em></label>
+      <label class="adv-row adv-soon"><input type="checkbox" disabled><span data-i18n="advNoHideIgnored">Don't hide ignored players' avatars</span><em data-i18n="advSoon">soon</em></label>
+
+      <div class="adv-sec" data-i18n="advSecHelp">Assistance</div>
+      <label class="adv-row adv-soon"><input type="checkbox" disabled><span data-i18n="advOddsMonitor">Hand odds monitor</span><em data-i18n="advSoon">soon</em></label>
+    </div>
+  </div>
+</div>
+
 <script>
 (function () {
   var RK_SRCS = ['pth', 'bbc', 'wec'];

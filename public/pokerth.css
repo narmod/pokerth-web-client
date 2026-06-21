@@ -6266,3 +6266,21 @@ body.has-keyboard .act-key { display: inline-block; }
   font-size: 0.95rem;
   line-height: 1;
 }
+
+/* ── Advanced options modal (QML-parity settings) ──────────────────────────
+   Entrée via la roue crantée (jeu + lobby). Chrome réutilisé de .km-* ; corps
+   .adv-* propre. Bascules présentation appliquées par applyAdvOpts() via des
+   classes sur <body>. */
+#adv-modal{position:fixed;inset:0;z-index:1200;display:flex;align-items:center;justify-content:center}
+.adv-card{max-width:420px;width:calc(100% - 32px)}
+.adv-body{max-height:62vh;overflow:auto;margin-top:8px;padding-right:2px}
+.adv-sec{font-size:0.62rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--gold-dim);margin:13px 0 4px;font-weight:700}
+.adv-sec:first-child{margin-top:4px}
+.adv-row{display:flex;align-items:center;gap:9px;padding:6px 2px;font-size:0.82rem;color:var(--text);cursor:pointer}
+.adv-row input[type=checkbox]{accent-color:var(--gold);flex-shrink:0;width:16px;height:16px}
+.adv-row > span{flex:1}
+.adv-row em{font-size:0.58rem;font-style:normal;letter-spacing:0.08em;text-transform:uppercase;color:var(--gold-dim);border:1px solid var(--border);border-radius:10px;padding:1px 7px;opacity:0.85}
+.adv-row.adv-soon{opacity:0.5;cursor:default}
+body.adv-no-cardanim .seat-holecards *,body.adv-no-cardanim .hand-cards *,body.adv-no-cardanim #g-myseat-cards *{transition:none !important;animation:none !important}
+body.adv-no-blinds .blind-chip,body.adv-no-blinds .dealer-chip{display:none !important}
+body.adv-no-community #ranking-btn-connect,body.adv-no-community #ranking-btn-lobby{display:none !important}
