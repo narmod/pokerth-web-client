@@ -295,6 +295,7 @@ function applyAdvOpts() {
     b.classList.toggle('adv-no-cardanim', !_advGet('anim_cards', true));
     b.classList.toggle('adv-no-blinds', !_advGet('show_blinds', true));
     b.classList.toggle('adv-no-community', !_advGet('show_community', true));
+    b.classList.toggle('adv-no-flag', !_advGet('show_flag', true));
   } catch (e) {}
 }
 window.applyAdvOpts = applyAdvOpts;
@@ -316,6 +317,7 @@ function openAdvancedOptions() {
   sync('adv-focusbet', 'focus_bet', false);
   sync('adv-noemoji', 'chat_noemoji', false);
   sync('adv-fadelosers', 'fade_losers', true);
+  sync('adv-flag', 'show_flag', true);
   m.style.display = '';
 }
 window.openAdvancedOptions = openAdvancedOptions;
@@ -11537,7 +11539,7 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.3.64-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.65-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

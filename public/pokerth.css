@@ -6289,3 +6289,5 @@ body.adv-no-community #ranking-btn-connect,body.adv-no-community #ranking-btn-lo
    .loser-fade est pose sur le siege par renderSeatsImmediate quand le pid est dans
    _sdLosers (rempli a EndOfHandShow). Seules les cartes sont attenuees. */
 .seat.loser-fade .pk{opacity:.4;filter:grayscale(.55);transition:opacity .45s ease,filter .45s ease}
+/* Drapeau pays sur l'avatar (showCountryFlagOnAvatar) — visibilite togglable. */
+body.adv-no-flag .seat-flag{display:none !important}
