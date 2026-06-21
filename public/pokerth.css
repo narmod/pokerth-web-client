@@ -6284,3 +6284,8 @@ body.has-keyboard .act-key { display: inline-block; }
 body.adv-no-cardanim .seat-holecards *,body.adv-no-cardanim .hand-cards *,body.adv-no-cardanim #g-myseat-cards *{transition:none !important;animation:none !important}
 body.adv-no-blinds .blind-chip,body.adv-no-blinds .dealer-chip{display:none !important}
 body.adv-no-community #ranking-btn-connect,body.adv-no-community #ranking-btn-lobby{display:none !important}
+
+/* Estompage des cartes des perdants au showdown (fadeOutLosingCards). Le marquage
+   .loser-fade est pose sur le siege par renderSeatsImmediate quand le pid est dans
+   _sdLosers (rempli a EndOfHandShow). Seules les cartes sont attenuees. */
+.seat.loser-fade .pk{opacity:.4;filter:grayscale(.55);transition:opacity .45s ease,filter .45s ease}

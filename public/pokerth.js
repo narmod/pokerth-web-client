@@ -273,6 +273,9 @@ function setMyTurnActive(active) {
 // Réglages persistés en localStorage (pth_*). Les bascules « présentation »
 // sont appliquées via des classes sur <body> (CSS) pour rester additif et sûr.
 // Les lignes grisées « bientôt » dépendent d'un travail backend/moteur à venir.
+// Sièges « perdants » au showdown (pids) → cartes estompées (fadeOutLosingCards).
+// Rempli dans EndOfHandShow (si pth_fade_losers != '0'), vidé à HandStart.
+var _sdLosers = new Set();
 function _advStripEmoji(s) {
   s = String(s == null ? '' : s);
   try { s = s.replace(/\p{Extended_Pictographic}/gu, ''); } catch (e) {}
@@ -312,6 +315,7 @@ function openAdvancedOptions() {
   sync('adv-community', 'show_community', true);
   sync('adv-focusbet', 'focus_bet', false);
   sync('adv-noemoji', 'chat_noemoji', false);
+  sync('adv-fadelosers', 'fade_losers', true);
   m.style.display = '';
 }
 window.openAdvancedOptions = openAdvancedOptions;
@@ -5734,6 +5738,7 @@ const App = (() => {
         // pas de reset par main. Le joueur le change via le dropdown ou un
         // clic manuel sur une action.
         _preActionOpen = false; // referme tout panneau "aperçu" à chaque main
+        try { _sdLosers = new Set(); } catch (e) {} // reset estompage perdants (nouvelle main)
 
         // ── SPECTATOR BOOTSTRAP ──
         // When the user joined as spectator of a hand-in-progress, the
@@ -6200,6 +6205,20 @@ const App = (() => {
             recordHand(false, myLoss, myPairLoss);
           }
         }
+        // Options avancées : marquer les perdants du showdown (cartes révélées
+        // mais pas gagnantes) pour estomper leurs cartes (fadeOutLosingCards, ON par défaut).
+        try {
+          _sdLosers = new Set();
+          if (localStorage.getItem('pth_fade_losers') !== '0') {
+            var _winPids = {};
+            winners.forEach(function (w) { _winPids[w.pid] = 1; });
+            for (var _lp in seatData) {
+              var _ls = seatData[_lp];
+              if (_ls && _ls.card1 != null && _ls.card2 != null && !_winPids[_lp])
+                _sdLosers.add(parseInt(_lp, 10));
+            }
+          }
+        } catch (e) {}
         pot = 0; $('g-pot').textContent = 'Pot: 0';
         if ($('g-potbar')) $('g-potbar').textContent = 'Pot: 0';
         renderSeats();
@@ -7546,7 +7565,7 @@ const App = (() => {
         cardStr = '<div style="display:flex;gap:2px;margin-top:1px">'
           + cardHtml(sd.card1,'xsm') + cardHtml(sd.card2,'xsm') + '</div>';
       }
-      h += '<div class="' + cls + '" data-pid="' + pid + '" style="position:absolute;top:' + px.top.toFixed(1) + 'px;left:' + px.left.toFixed(1) + 'px;transform:translate(-50%,-50%) scale(' + _seatZoom + ')">';
+      h += '<div class="' + cls + ((!isMe && _sdLosers && _sdLosers.has(pid)) ? ' loser-fade' : '') + '" data-pid="' + pid + '" style="position:absolute;top:' + px.top.toFixed(1) + 'px;left:' + px.left.toFixed(1) + 'px;transform:translate(-50%,-50%) scale(' + _seatZoom + ')">';
       const isSB = pid === sbPid;
       const isBB = pid === bbPid;
       let blindBadge = '';
@@ -11518,7 +11537,7 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.3.63-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.64-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
