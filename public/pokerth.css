@@ -6298,6 +6298,7 @@ body.adv-no-community #ranking-btn-connect,body.adv-no-community #ranking-btn-lo
 /* Drapeau pays sur l'avatar (showCountryFlagOnAvatar) — visibilite togglable. */
 body.adv-no-flag .seat-flag{display:none !important}
 body.adv-hide-pbar .player-bar{display:none !important}
+body.adv-hide-pbar .my-zone{bottom:0;padding-bottom:max(8px,env(safe-area-inset-bottom))}
 /* Selecteur "Placement des sieges" dans Options avancees. */
 .adv-row .adv-sel{flex:0 0 auto;min-width:132px}
 /* Option "révéler mes cartes au tap" : les dos de la player-bar sont cliquables,
