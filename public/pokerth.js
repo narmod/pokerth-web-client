@@ -273,6 +273,12 @@ function setMyTurnActive(active) {
 // Réglages persistés en localStorage (pth_*). Les bascules « présentation »
 // sont appliquées via des classes sur <body> (CSS) pour rester additif et sûr.
 // Les lignes grisées « bientôt » dépendent d'un travail backend/moteur à venir.
+function _advStripEmoji(s) {
+  s = String(s == null ? '' : s);
+  try { s = s.replace(/\p{Extended_Pictographic}/gu, ''); } catch (e) {}
+  s = s.replace(/[\uFE0F\u200D\u20E3]/g, '').replace(/[ \t]{2,}/g, ' ').trim();
+  return s;
+}
 function _advGet(key, defOn) {
   try {
     var v = localStorage.getItem('pth_' + key);
@@ -305,6 +311,7 @@ function openAdvancedOptions() {
   sync('adv-blinds', 'show_blinds', true);
   sync('adv-community', 'show_community', true);
   sync('adv-focusbet', 'focus_bet', false);
+  sync('adv-noemoji', 'chat_noemoji', false);
   m.style.display = '';
 }
 window.openAdvancedOptions = openAdvancedOptions;
@@ -6475,6 +6482,7 @@ const App = (() => {
       clearTimeout(window._lobbyChatFlash);
       window._lobbyChatFlash = setTimeout(function(){ lcb.style.color=''; }, 3000);
     }
+    if (sender) { try { if (localStorage.getItem('pth_chat_noemoji') === '1') text = _advStripEmoji(text); } catch (e) {} }
     const el = $('chat');
     const d  = document.createElement('div');
     d.className = 'msg ' + cls;
@@ -10448,6 +10456,7 @@ window._readMyId = function() {
 function addGameChat(sender, text, cls, spec) {
   var el = document.getElementById('g-chat-msgs');
   if (!el) return;
+  if (sender) { try { if (localStorage.getItem('pth_chat_noemoji') === '1') text = _advStripEmoji(text); } catch (e) {} }
   var d = document.createElement('div');
   d.className = 'msg ' + (cls || '');
   function e(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
@@ -11509,7 +11518,7 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.3.62-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.63-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
