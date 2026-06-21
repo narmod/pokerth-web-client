@@ -6302,7 +6302,8 @@ body.adv-no-flag .seat-flag{display:none !important}
 @keyframes callConfirmPulse{0%,100%{box-shadow:0 0 0 2px #ffd24d,0 0 12px rgba(240,160,32,.55)}50%{box-shadow:0 0 0 2px #ffd24d,0 0 19px rgba(240,160,32,.9)}}
 /* Moniteur d'odds (option) : panneau compact en haut-gauche, semi-transparent,
    display-only (pointer-events:none -> ne bloque pas les sièges derrière). */
-#odds-monitor{position:fixed;top:54px;left:8px;z-index:42;width:132px;padding:5px 7px 6px;background:rgba(20,26,38,.86);border:1px solid rgba(255,255,255,.12);border-radius:9px;box-shadow:0 4px 14px rgba(0,0,0,.42);font-size:10px;line-height:1.25;color:#cdd3e0;pointer-events:none;user-select:none}
+#odds-monitor{position:fixed;top:54px;left:8px;z-index:42;width:132px;padding:5px 7px 6px;background:rgba(20,26,38,.86);border:1px solid rgba(255,255,255,.12);border-radius:9px;box-shadow:0 4px 14px rgba(0,0,0,.42);font-size:10px;line-height:1.25;color:#cdd3e0;pointer-events:auto;user-select:none;cursor:move;touch-action:none}
+#odds-monitor.odds-drag{opacity:.96;box-shadow:0 8px 24px rgba(0,0,0,.58);border-color:rgba(227,200,0,.45)}
 #odds-monitor .odds-hd{font-weight:700;font-size:10.5px;color:#E3C800;margin-bottom:3px;letter-spacing:.3px}
 #odds-monitor .odds-approx{opacity:.65;font-weight:400}
 #odds-monitor .odds-wait{opacity:.6;padding:2px 0}

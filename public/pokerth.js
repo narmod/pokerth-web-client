@@ -8471,12 +8471,49 @@ const App = (() => {
   // probabilité d'obtenir chaque catégorie de main au showdown. Calcul découpé
   // (voir _oddsCompute) et abandonné si une street plus récente survient. Les
   // anciennes valeurs restent affichées pendant le recalcul (pas de clignotement).
+  // Rend le moniteur d'odds déplaçable sur tous les appareils (souris + tactile +
+  // stylet) via la Pointer Events API. Position mémorisée (pth_odds_pos) et bornée à
+  // l'écran. Attaché à #odds-monitor lui-même -> survit aux reconstructions d'innerHTML.
+  function _attachOddsDrag(el) {
+    var drag = null;
+    function clampPos(left, top) {
+      var w = el.offsetWidth || 132, h = el.offsetHeight || 60;
+      var maxL = Math.max(0, window.innerWidth - w), maxT = Math.max(0, window.innerHeight - h);
+      return [Math.max(0, Math.min(left, maxL)), Math.max(0, Math.min(top, maxT))];
+    }
+    function applyPos(left, top) {
+      var c = clampPos(left, top);
+      el.style.left = c[0] + 'px'; el.style.top = c[1] + 'px';
+      el.style.right = 'auto'; el.style.bottom = 'auto';
+    }
+    try { var s = localStorage.getItem('pth_odds_pos'); if (s) { var o = JSON.parse(s); if (o && typeof o.left === 'number') applyPos(o.left, o.top); } } catch (e) {}
+    el.addEventListener('pointerdown', function (e) {
+      var r = el.getBoundingClientRect();
+      drag = { dx: e.clientX - r.left, dy: e.clientY - r.top };
+      try { el.setPointerCapture(e.pointerId); } catch (_) {}
+      el.classList.add('odds-drag'); e.preventDefault();
+    });
+    el.addEventListener('pointermove', function (e) {
+      if (!drag) return; e.preventDefault();
+      applyPos(e.clientX - drag.dx, e.clientY - drag.dy);
+    });
+    function end(e) {
+      if (!drag) return; drag = null; el.classList.remove('odds-drag');
+      try { el.releasePointerCapture(e.pointerId); } catch (_) {}
+      try { var r = el.getBoundingClientRect(); localStorage.setItem('pth_odds_pos', JSON.stringify({ left: Math.round(r.left), top: Math.round(r.top) })); } catch (_) {}
+    }
+    el.addEventListener('pointerup', end);
+    el.addEventListener('pointercancel', end);
+    window.addEventListener('resize', function () { var r = el.getBoundingClientRect(); applyPos(r.left, r.top); });
+  }
+
   function renderOddsMonitor() {
     var el = document.getElementById('odds-monitor');
     if (!el) return;
     var on = false; try { on = (localStorage.getItem('pth_odds_monitor') === '1'); } catch (e) {}
     if (!on || myCards[0] == null || myCards[1] == null) { el.style.display = 'none'; el.innerHTML = ''; el._built = false; return; }
     el.style.display = '';
+    if (!el._drag) { _attachOddsDrag(el); el._drag = true; }
     if (!el._built) { el.innerHTML = '<div class="odds-hd">' + esc(t('oddsTitle')) + '</div><div class="odds-body odds-wait">…</div>'; el._built = true; }
     var seq = ++_oddsSeq;
     var hole = [myCards[0], myCards[1]];
@@ -11845,7 +11882,7 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.3.72-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.73-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
