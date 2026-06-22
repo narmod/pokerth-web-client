@@ -7599,7 +7599,7 @@ const App = (() => {
   //   Paysage  : grille périmètre, 5 sièges en haut + sièges bas (client desktop).
   // Fractions = part de la zone (x: 0=gauche..1=droite, y: 0=haut..1=bas).
   // Hors plage (>9 adversaires) : retourne null -> calcul classique conservé.
-  function _officialSeatPix(n, isPortrait, zW, zH) {
+  function _officialSeatPix(n, isPortrait, zW, zH, oCX, oCY, oRect) {
     var M = n - 1; // adversaires
     if (M < 1) return null;
     // ── PORTRAIT : slots officiels QML (GameTable.qml slotPosPortrait) ──
@@ -7681,10 +7681,18 @@ const App = (() => {
     var dOpp = 360 / (opps + selfWeight);
     var dSelf = selfWeight * dOpp;
     var firstOppAngle = 90 + (dSelf + dOpp) / 2;
+    // Cale l'ellipse QML sur l'ovale de feutre : on normalise les fractions
+    // QML (cosV, vFactor in [-1,1]) puis on les mappe sur les rayons du feutre
+    // (oRect) + marge, pour que les sieges epousent la table au lieu de s'etaler
+    // sur toute la largeur (la zone est bien plus large que le feutre en paysage).
+    var rxPx = (oRect.width / 2) + Math.max(40, oRect.width * 0.10);
+    var ryPx = (oRect.height / 2) + Math.max(44, oRect.height * 0.34);
     var out = [null]; // index 0 = self -> position classique (bas)
     for (var k = 1; k <= opps; k++) {
       var p = point(firstOppAngle + (k - 1) * dOpp);
-      out.push({ top: p[1] * zH, left: p[0] * zW });
+      var nx = radiusX > 0 ? (p[0] - 0.5) / radiusX : 0;     // cosV shape [-1,1]
+      var ny = radiusY > 0 ? (p[1] - centerY) / radiusY : 0; // vFactor shape [-1,1]
+      out.push({ top: oCY + ny * ryPx, left: oCX + nx * rxPx });
     }
     return out;
   }
@@ -7821,9 +7829,13 @@ const App = (() => {
     // (grille périmètre en paysage / colonnes G-D en portrait). La self (index 0)
     // garde sa position classique. Désactivé si la self n'est pas assise (myIdx<0)
     // ou hors plage (>9 adversaires) : on conserve alors le calcul classique.
-    if (_seatLayoutOfficial && myIdx >= 0) {
+    // Le placement officiel ne s'applique que sur TELEPHONE (petit ecran) :
+    // portrait -> slots colonnes QML ; paysage -> ellipse QML calee sur le feutre.
+    // Sur tablette/desktop on garde le placement classique (maison), plus aere.
+    var _isPhone = Math.min(window.innerWidth, window.innerHeight) < 540;
+    if (_seatLayoutOfficial && myIdx >= 0 && _isPhone) {
       try {
-        var _offPos = _officialSeatPix(rotated.length, _seatPortrait, zRect.width, zRect.height);
+        var _offPos = _officialSeatPix(rotated.length, _seatPortrait, zRect.width, zRect.height, oCX, oCY, oRect);
         if (_offPos) { for (var _op = 1; _op < pixPos.length; _op++) { if (_offPos[_op]) pixPos[_op] = _offPos[_op]; } }
       } catch (e) {}
     }
@@ -12078,7 +12090,7 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.3.96-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.97-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
