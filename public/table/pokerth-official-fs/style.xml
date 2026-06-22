@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- PokerTH official table background, fullscreen wallpaper mode (data-table-fs).
+     Genuine asset table.png (1980x1200, bottom-aligned felt+rail) extracted from
+     the official QML client (libpokerth_qml-client, "PokerTH default QML table
+     style"). The `fullscreen` marker makes the client use this image as a full
+     screen background (cover) with the felt oval transparent — matching the
+     desktop/QML look (PreserveAspectCrop). AGPL-3.0, source github.com/pokerth/pokerth. -->
+<PokerTH_TableStyle version="1.0">
+  <StyleDescription value="PokerTH Official (Fullscreen)"/>
+  <Creator value="PokerTH project"/>
+  <License value="AGPL-3.0"/>
+</PokerTH_TableStyle>

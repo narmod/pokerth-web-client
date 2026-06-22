@@ -59,6 +59,10 @@ for (const name of names) {
   // Marqueur « image complète » : un fichier `full` (ou `.full`) dans le dossier de la
   // table => full:true => le client remplace tout le tapis CSS par cette image (contain).
   if (existsSync(join(p, 'full')) || existsSync(join(p, '.full'))) entry.full = true;
+  // Marqueur « plein écran » : un fichier `fullscreen` (ou `.fullscreen`) => fullscreen:true
+  // => le client utilise cette image comme fond plein écran (cover, --wallpaper) et rend
+  // l'ovale du feutre transparent (data-table-fs). Exclusif avec `full` côté client.
+  if (existsSync(join(p, 'fullscreen')) || existsSync(join(p, '.fullscreen'))) entry.fullscreen = true;
   out.push(entry);
 }
 out.sort((a, b) => a.name.localeCompare(b.name));
