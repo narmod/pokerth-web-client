@@ -6371,7 +6371,7 @@ html:not([data-seat="pokerth"]) body.adv-hide-pbar .seat.me .seat-info {
    display-only (pointer-events:none -> ne bloque pas les sièges derrière). */
 #odds-monitor{--ws:1;position:fixed;top:54px;left:8px;z-index:42;width:132px;padding:calc(5px*var(--ws)) calc(7px*var(--ws)) calc(6px*var(--ws));background:var(--panel);border:1px solid var(--border);border-radius:calc(9px*var(--ws));box-shadow:0 4px 14px rgba(0,0,0,.42);font-size:calc(10px*var(--ws));line-height:1.25;color:var(--text);pointer-events:auto;user-select:none;cursor:move;touch-action:none}
 #odds-monitor.odds-drag{opacity:.96;box-shadow:0 8px 24px rgba(0,0,0,.58);border-color:var(--border-hi)}
-#odds-monitor .odds-hd{font-weight:700;font-size:calc(10.5px*var(--ws));color:var(--gold);margin-bottom:calc(3px*var(--ws));letter-spacing:.3px}
+#odds-monitor .odds-hd{font-weight:700;font-size:calc(10.5px*var(--ws));color:var(--gold);margin-bottom:calc(3px*var(--ws));letter-spacing:.3px;padding-right:calc(14px*var(--ws))}
 #odds-monitor .odds-approx{opacity:.65;font-weight:400}
 #odds-monitor .odds-wait{opacity:.6;padding:2px 0}
 #odds-monitor .odds-row{display:flex;align-items:center;gap:calc(4px*var(--ws));height:calc(13px*var(--ws))}
@@ -6387,7 +6387,7 @@ html:not([data-seat="pokerth"]) body.adv-hide-pbar .seat.me .seat-info {
 /* Fenetre flottante "Assistance" (force de la main) -- meme modele que #odds-monitor. */
 #assist-win{--ws:1;position:fixed;top:54px;right:8px;z-index:42;width:150px;min-width:110px;max-width:210px;padding:calc(5px*var(--ws)) calc(8px*var(--ws)) calc(7px*var(--ws));background:var(--panel);border:1px solid var(--border);border-radius:calc(9px*var(--ws));box-shadow:0 4px 14px rgba(0,0,0,.42);color:var(--text);pointer-events:auto;user-select:none;cursor:move;touch-action:none}
 #assist-win.hsw-drag{opacity:.96;box-shadow:0 8px 24px rgba(0,0,0,.58);border-color:var(--border-hi)}
-#assist-win .hsw-hd{font-weight:700;font-size:calc(10.5px*var(--ws));color:var(--gold);margin-bottom:calc(5px*var(--ws));letter-spacing:.3px}
+#assist-win .hsw-hd{font-weight:700;font-size:calc(10.5px*var(--ws));color:var(--gold);margin-bottom:calc(5px*var(--ws));letter-spacing:.3px;padding-right:calc(14px*var(--ws))}
 #assist-win .hs-lbl{display:block;background:transparent;border:0;padding:0;max-width:none;overflow:hidden}
 #assist-win .hs-txt{display:block;font-size:calc(11.5px*var(--ws));line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 #assist-win #hand-strength{position:static;left:auto;right:auto;top:auto;height:auto;pointer-events:none;margin-top:calc(6px*var(--ws))}
@@ -6395,6 +6395,9 @@ html:not([data-seat="pokerth"]) body.adv-hide-pbar .seat.me .seat-info {
 #assist-win .hs-fill{border-radius:calc(3px*var(--ws))}
 @media (min-width:561px){#assist-win{resize:horizontal;overflow:hidden;max-width:340px}}
 @media (max-width:560px){#assist-win{--ws:.96;width:auto;min-width:110px;top:48px}}
+/* Croix de fermeture des fenetres flottantes (odds + assistance). Suit --ws + le theme. */
+.win-x{position:absolute;top:calc(2px*var(--ws,1));right:calc(3px*var(--ws,1));width:calc(15px*var(--ws,1));height:calc(15px*var(--ws,1));line-height:calc(14px*var(--ws,1));text-align:center;border:0;background:transparent;color:var(--text);opacity:.5;font-size:calc(12px*var(--ws,1));cursor:pointer;padding:0;border-radius:calc(4px*var(--ws,1));z-index:3;font-family:inherit}
+.win-x:hover{opacity:1;color:var(--gold)}
 /* Raccourcis clavier personnalisables (Options avancées). */
 .adv-keys{display:flex;flex-direction:column;gap:5px;margin-top:2px}
 .adv-keyrow{display:flex;align-items:center;gap:9px}

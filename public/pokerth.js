@@ -342,6 +342,15 @@ function setAdvOpt(key, on) {
   applyAdvOpts();
 }
 window.setAdvOpt = setAdvOpt;
+// Croix de fermeture des fenetres flottantes : coupe l'option et masque.
+window.closeOddsWin = function () {
+  try { setAdvOpt('odds_monitor', false); } catch (e) {}
+  var cb = document.getElementById('adv-odds'); if (cb) cb.checked = false;
+};
+window.closeAssistWin = function () {
+  try { if (typeof window.setAssist === 'function') window.setAssist(false); } catch (e) {}
+  var cb = document.getElementById('adv-assist'); if (cb) cb.checked = false;
+};
 // Options avancees : sur desktop + tablette (>640px) la carte devient
 // redimensionnable (resize:both cote CSS). Un modal centre en flexbox "fuit" la
 // poignee ; on ancre donc la carte en absolu et on la centre a l'ouverture pour
@@ -395,6 +404,7 @@ function openAdvancedOptions() {
   sync('adv-flag', 'show_flag', true);
   sync('adv-ownclick', 'own_click', false);
   sync('adv-guardcall', 'guard_call', false);
+  sync('adv-assist', 'assist', true);
   sync('adv-odds', 'odds_monitor', false);
   sync('adv-nohideignored', 'no_hide_ignored', false);
   try { var _sl = document.getElementById('adv-seatlayout'); if (_sl) _sl.value = (localStorage.getItem('pth_seat_layout') === 'official') ? 'official' : 'classic'; } catch (e) {}
@@ -8710,6 +8720,13 @@ const App = (() => {
     _applyAssistUI();
     if (typeof showKeyHint === 'function') showKeyHint(t('assist') + (_assistOn ? ' \u2713' : ''));
   };
+  // Variante setter (pour la case a cocher des options avancees) : pose l'etat
+  // exact au lieu de basculer, puis rafraichit la fenetre d'assistance.
+  window.setAssist = function(on) {
+    _assistOn = !!on;
+    try { localStorage.setItem('pth_assist', _assistOn ? '1' : '0'); } catch(e) {}
+    _applyAssistUI();
+  };
 
   // Moniteur d'odds (option pth_odds_monitor) : panneau compact listant la
   // probabilité d'obtenir chaque catégorie de main au showdown. Calcul découpé
@@ -8755,6 +8772,7 @@ const App = (() => {
       try { _ro.observe(el); } catch (e) {}
     }
     el.addEventListener('pointerdown', function (e) {
+      if (e.target && e.target.closest && e.target.closest('.win-x')) return;
       var r = el.getBoundingClientRect();
       if (_canResize() && (r.right - e.clientX) <= 18 && (r.bottom - e.clientY) <= 18) return;
       drag = { dx: e.clientX - r.left, dy: e.clientY - r.top };
@@ -8782,7 +8800,7 @@ const App = (() => {
     if (!on || myCards[0] == null || myCards[1] == null) { el.style.display = 'none'; el.innerHTML = ''; el._built = false; return; }
     el.style.display = '';
     if (!el._drag) { _attachPanelDrag(el, 'pth_odds_pos', 'odds-drag'); el._drag = true; }
-    if (!el._built) { el.innerHTML = '<div class="odds-hd">' + esc(t('oddsTitle')) + '</div><div class="odds-body odds-wait">…</div>'; el._built = true; }
+    if (!el._built) { el.innerHTML = '<button class="win-x" type="button" onclick="closeOddsWin()" title="' + esc(t('closeTooltip')) + '" aria-label="X">\u2715</button>' + '<div class="odds-hd">' + esc(t('oddsTitle')) + '</div><div class="odds-body odds-wait">…</div>'; el._built = true; }
     var seq = ++_oddsSeq;
     var hole = [myCards[0], myCards[1]];
     var board = commCards.slice();
@@ -8803,7 +8821,7 @@ const App = (() => {
           + '</span><span class="odds-bar"><i style="width:' + pw.toFixed(1) + '%"></i></span>'
           + '<span class="odds-pct">' + ptxt + '</span></div>';
       }
-      el.innerHTML = '<div class="odds-hd">' + esc(t('oddsTitle')) + (r.exact ? '' : ' <span class="odds-approx">≈</span>')
+      el.innerHTML = '<button class="win-x" type="button" onclick="closeOddsWin()" title="' + esc(t('closeTooltip')) + '" aria-label="X">\u2715</button>' + '<div class="odds-hd">' + esc(t('oddsTitle')) + (r.exact ? '' : ' <span class="odds-approx">≈</span>')
         + '</div><div class="odds-body">' + rows + '</div>';
       el._built = true;
     }, function () { return seq !== _oddsSeq; });
@@ -12156,7 +12174,7 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.3.103-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.104-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
