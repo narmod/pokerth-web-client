@@ -451,6 +451,10 @@ function openAdvancedOptions() {
   sync('adv-guardcall', 'guard_call', false);
   sync('adv-assist', 'assist', true);
   sync('adv-odds', 'odds_monitor', false);
+  sync('adv-autobtn', 'show_auto', false);
+  sync('adv-quickbet', 'show_pct', false);
+  sync('adv-voice', 'voice', false);
+  sync('adv-displaybb', 'display_bb', false);
   sync('adv-nohideignored', 'no_hide_ignored', false);
   try { var _sl = document.getElementById('adv-seatlayout'); if (_sl) _sl.value = (localStorage.getItem('pth_seat_layout') === 'official') ? 'official' : 'classic'; } catch (e) {}
   try { _rebindAction = null; _renderKeyButtons(); } catch (e) {}
@@ -4396,6 +4400,13 @@ const App = (() => {
     return _showPctBtns;
   }
   window.toggleQuickBetPref = toggleQuickBetPref;
+  // Setters (etat precis) pour les cases des Options avancees : bascule le toggle
+  // existant seulement si l'etat courant differe de la valeur voulue, ce qui
+  // reutilise toute la logique d'application + retour visuel des toggles.
+  window.setVoice = function (on) { if (!!on !== _voiceEnabled) toggleVoice(); };
+  window.setAutoBtn = function (on) { if (!!on !== _showAutoBtn) toggleAutoBtnPref(); };
+  window.setQuickBet = function (on) { if (!!on !== _showPctBtns) toggleQuickBetPref(); };
+  window.setDisplayBB = function (on) { if (!!on !== _displayBB) toggleDisplayBB(); };
   let _lastConnectParams = null;
   // Track mode + name of last Init sent so we can detect 'rapid mode swap'
   // patterns that the PokerTH server's anti-brute-force flags as
@@ -12238,7 +12249,7 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.3.106-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.107-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
