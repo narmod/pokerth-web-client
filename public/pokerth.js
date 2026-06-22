@@ -7602,33 +7602,6 @@ const App = (() => {
   function _officialSeatPix(n, isPortrait, zW, zH, oCX, oCY, oRect) {
     var M = n - 1; // adversaires
     if (M < 1) return null;
-    var isPhone = Math.min(window.innerWidth, window.innerHeight) < 540;
-    // ── TABLETTE / DESKTOP : grille 2 rangees (haut + bas), facon client poker ──
-    // Rangee du haut au-dessus du feutre, rangee du bas en-dessous (encadrant la
-    // self au centre). Calee sur l'ovale -> les joueurs restent proches de la table
-    // (pas d'etalement comme l'ellipse maison sur grand ecran). On remplit le haut
-    // d'abord (max 5), le surplus va en bas par paires symetriques.
-    if (!isPhone) {
-      var gMargin = Math.max(26, oRect.height * 0.18);
-      var gTopY = oCY - oRect.height / 2 - gMargin;
-      var gBotY = oCY + oRect.height / 2 + gMargin;
-      var gEdge = oRect.width / 2 + Math.max(12, oRect.width * 0.03);
-      var botN = M <= 5 ? 0 : (M <= 7 ? 2 : 4);
-      var topN = M - botN;
-      var half = botN / 2;
-      var _gBotFrac = function (rank) { return half <= 1 ? 0.92 : (0.45 + 0.47 * rank / (half - 1)); };
-      var outG = [null]; // index 0 = self -> position classique (bas-centre)
-      // Ordre adversaires = anti-horaire : bas-gauche (interieur->exterieur),
-      // rangee haut (gauche->droite), bas-droite (exterieur->interieur).
-      for (var lr = 0; lr < half; lr++)
-        outG.push({ top: gBotY, left: oCX - gEdge * _gBotFrac(lr) });
-      for (var gt = 0; gt < topN; gt++)
-        outG.push({ top: gTopY, left: topN <= 1 ? oCX : oCX + gEdge * (-1 + 2 * gt / (topN - 1)) });
-      for (var rr = half - 1; rr >= 0; rr--)
-        outG.push({ top: gBotY, left: oCX + gEdge * _gBotFrac(rr) });
-      return outG;
-    }
-    // ── TELEPHONE ──
     // ── PORTRAIT : slots officiels QML (GameTable.qml slotPosPortrait) ──
     // Valeurs alignees 1:1 sur le client officiel + nudge px (slotForSeat) :
     // sieges du bas +14px, sieges du haut -4px (px de la zone de jeu).
@@ -7856,11 +7829,11 @@ const App = (() => {
     // (grille périmètre en paysage / colonnes G-D en portrait). La self (index 0)
     // garde sa position classique. Désactivé si la self n'est pas assise (myIdx<0)
     // ou hors plage (>9 adversaires) : on conserve alors le calcul classique.
-    // Placement officiel (PokerTH), adapte a l'appareil (gere dans _officialSeatPix) :
-    //  - telephone portrait -> slots colonnes QML
-    //  - telephone paysage  -> ellipse QML (collier) calee sur le feutre
-    //  - tablette / desktop -> grille 2 rangees (haut + bas) facon client poker
-    if (_seatLayoutOfficial && myIdx >= 0) {
+    // Le placement officiel ne s'applique que sur TELEPHONE (petit ecran) :
+    // portrait -> slots colonnes QML ; paysage -> ellipse QML calee sur le feutre.
+    // Sur tablette/desktop on garde le placement classique (maison), plus aere.
+    var _isPhone = Math.min(window.innerWidth, window.innerHeight) < 540;
+    if (_seatLayoutOfficial && myIdx >= 0 && _isPhone) {
       try {
         var _offPos = _officialSeatPix(rotated.length, _seatPortrait, zRect.width, zRect.height, oCX, oCY, oRect);
         if (_offPos) { for (var _op = 1; _op < pixPos.length; _op++) { if (_offPos[_op]) pixPos[_op] = _offPos[_op]; } }
@@ -12117,7 +12090,7 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.3.98-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.99-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
