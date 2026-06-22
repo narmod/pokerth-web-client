@@ -14,7 +14,7 @@ export const meta = {
 };
 
 export const strings = {
-  advHidePbar:'मेरी प्लेयर बार छिपाएँ (नीचे)',
+  advHidePbar:'PokerTH मोड (प्लेयर बार छिपी हुई)',
   deckSvg: "PokerTH",
   pucksPokerth: "PokerTH",
   seatPokerth: "PokerTH",

@@ -10,7 +10,7 @@ export const meta = {
 };
 
 export const strings = {
-  advHidePbar:'Skryť môj panel hráča (dole)',
+  advHidePbar:'Režim PokerTH (panel hráča skrytý)',
   deckSvg: "PokerTH",
   pucksPokerth: "PokerTH",
   seatPokerth: "PokerTH",

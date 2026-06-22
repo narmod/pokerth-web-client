@@ -10,7 +10,7 @@ export const meta = {
 };
 
 export const strings = {
-  advHidePbar:'Ascunde bara mea de jucător (jos)',
+  advHidePbar:'Mod PokerTH (bara de jucător ascunsă)',
   deckSvg: "PokerTH",
   pucksPokerth: "PokerTH",
   seatPokerth: "PokerTH",

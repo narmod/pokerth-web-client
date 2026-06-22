@@ -10,7 +10,7 @@ export const meta = {
 };
 
 export const strings = {
-  advHidePbar:'Versteek my spelerbalk (onder)',
+  advHidePbar:'PokerTH-modus (spelerbalk versteek)',
   deckSvg: "PokerTH",
   pucksPokerth: "PokerTH",
   seatPokerth: "PokerTH",

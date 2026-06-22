@@ -10,7 +10,7 @@ export const meta = {
 };
 
 export const strings = {
-  advHidePbar:'Сакриј моју траку играча (доле)',
+  advHidePbar:'Режим PokerTH (трака играча скривена)',
   deckSvg: "PokerTH",
   pucksPokerth: "PokerTH",
   seatPokerth: "PokerTH",

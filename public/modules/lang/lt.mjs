@@ -10,7 +10,7 @@ export const meta = {
 };
 
 export const strings = {
-  advHidePbar:'Slėpti mano žaidėjo juostą (apačioje)',
+  advHidePbar:'PokerTH režimas (žaidėjo juosta paslėpta)',
   deckSvg: "PokerTH",
   pucksPokerth: "PokerTH",
   seatPokerth: "PokerTH",

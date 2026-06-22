@@ -9,7 +9,7 @@ export const meta = {
 };
 
 export const strings = {
-  advHidePbar:'Dölj mitt spelarfält (nederst)',
+  advHidePbar:'PokerTH-läge (spelarfält dolt)',
   deckSvg: "PokerTH",
   pucksPokerth: "PokerTH",
   seatPokerth: "PokerTH",

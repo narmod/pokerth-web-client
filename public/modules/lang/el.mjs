@@ -10,7 +10,7 @@ export const meta = {
 };
 
 export const strings = {
-  advHidePbar:'Απόκρυψη της μπάρας παίκτη μου (κάτω)',
+  advHidePbar:'Λειτουργία PokerTH (μπάρα παίκτη κρυμμένη)',
   deckSvg: "PokerTH",
   pucksPokerth: "PokerTH",
   seatPokerth: "PokerTH",

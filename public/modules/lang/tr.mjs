@@ -12,7 +12,7 @@ export const meta = {
 };
 
 export const strings = {
-  advHidePbar:'Oyuncu çubuğumu gizle (altta)',
+  advHidePbar:'PokerTH modu (oyuncu çubuğu gizli)',
   deckSvg: "PokerTH",
   pucksPokerth: "PokerTH",
   seatPokerth: "PokerTH",

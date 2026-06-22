@@ -10,7 +10,7 @@ export const meta = {
 };
 
 export const strings = {
-  advHidePbar:'Saját játékossáv elrejtése (lent)',
+  advHidePbar:'PokerTH mód (játékossáv elrejtve)',
   deckSvg: "PokerTH",
   pucksPokerth: "PokerTH",
   seatPokerth: "PokerTH",
