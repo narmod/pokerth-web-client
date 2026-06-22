@@ -2014,27 +2014,22 @@ html[data-bg-img] body.in-game {
      La hauteur reelle (dock + barre) est mesuree en JS (updateBottomLayout)
      -> .my-zone se place AU-DESSUS du dock (plus de touches cachees) et la
      table reserve juste l'espace necessaire (riviere jamais masquee). */
-  .my-zone .action-grid {
-    flex-direction: row;
-    flex-wrap: wrap;
-    gap: 4px;
-    width: 100%;
-    max-width: 100%;
-  }
+  /* Barre d'action paysage : 3 zones compactes (montant+slider / pastilles+All-In+mode /
+     Fold-Call-Raise), meme structure que l'officiel mais plus dense. Hauteur mesuree en JS. */
+  .my-zone .action-grid { gap: 4px; width: 100%; max-width: 100%; }
   .my-zone .action-grid > * { min-width: 0; }
-  .my-zone .action-top-row { flex: 1 1 100%; display: flex; gap: 4px; }
-  .my-zone .action-top-row .btn-action:not(.btn-auto) { flex: 1; }
-  .my-zone .mode-sel-wrap { flex: 0 1 100px; }
-  .my-zone .pct-row { flex: 1 1 auto; gap: 3px; width: auto; }
-  .my-zone .raise-row, .my-zone .raise-row-mobile { flex: 2 1 auto; gap: 3px; min-width: 0; }
-  .my-zone .btn-allin { flex: 1 1 auto; white-space: nowrap; }
-  .my-zone .btn-action { padding: 4px 8px; font-size: 0.62rem; min-width: 0; }
-  .my-zone .btn-pct { padding: 4px 4px; font-size: 0.58rem; font-weight: 700; border-width: 1px; }
-  .my-zone .btn-pct .pct-p { font-size: 0.62rem; }
-  .my-zone .btn-pct .pct-amt { display: none; }
-  .my-zone .raise-input { width: 46px; padding: 4px; font-size: 0.62rem; }
-  .my-zone .raise-slider { flex: 1 1 auto; min-width: 48px; max-width: 110px; }
-  .my-zone .raise-display { font-size: 0.6rem; min-width: 28px; }
+  .my-zone .bet-row { gap: 6px; }
+  .my-zone .bet-row .raise-amt-field { width: 58px; padding: 4px; font-size: 0.66rem; }
+  .my-zone .bet-row .raise-slider { flex: 1 1 auto; min-width: 60px; }
+  .my-zone .mid-row { gap: 4px; }
+  .my-zone .mid-row .pct-row { flex: 1 1 auto; gap: 3px; }
+  .my-zone .mid-row .mode-sel-wrap { flex: 0 0 88px; }
+  .my-zone .mid-row .btn-allin { flex: 0 0 auto; white-space: nowrap; padding: 4px 8px; font-size: 0.6rem; min-width: 0; }
+  .my-zone .act-buttons-row { gap: 4px; }
+  .my-zone .act-buttons-row .btn-action { padding: 4px 8px; font-size: 0.62rem; min-width: 0; }
+  .my-zone .mid-row .btn-pct { padding: 4px 4px; font-size: 0.58rem; font-weight: 700; border-width: 1px; }
+  .my-zone .mid-row .btn-pct .pct-p { font-size: 0.62rem; }
+  .my-zone .mid-row .btn-pct .pct-amt { display: none; }
 
 .header { padding: 2px 6px; }
 .pill { font-size: 0.56rem; padding: 1px 4px; }
@@ -3574,15 +3569,16 @@ html[data-bg-img] body.in-game {
 body.hide-auto-btn .btn-auto,
 body.hide-auto-btn .mode-sel-wrap { display: none; }
 body.hide-pct-btns .pct-row { display: none; }
-/* All-In as a SECONDARY action: outlined, not a big red bar — avoids the
-   red-on-red clash with Fold and discourages accidental taps. */
+/* All-In : bouton orange compact dans la ligne 1/3-1/2-Pot (layout officiel).
+   Les themes a images de boutons (data-btn-img) repeignent via border-image. */
 .btn-allin {
-  background: var(--btn-allin-bg, transparent); color: var(--btn-allin-fg, #e88a8a);
-  border: 1.5px solid var(--btn-allin-bd, #c0392b); outline: none;
-  padding: 8px 12px; font-size: 0.7rem; letter-spacing: 0.1em;
+  background: var(--btn-allin-bg, linear-gradient(180deg, #e08a2e, #b5651d));
+  color: var(--btn-allin-fg, #fff);
+  border: 1px solid var(--btn-allin-bd, #f0a350); outline: none;
+  padding: 8px 12px; font-size: 0.7rem; letter-spacing: 0.06em;
 }
-.btn-allin:hover { background: var(--btn-allin-bg, rgba(var(--red-rgb), 0.15)); filter: brightness(1.06); }
-.btn-allin b { color: var(--btn-allin-fg-b, #f4b0b0); }
+.btn-allin:hover { filter: brightness(1.08); }
+.btn-allin b { color: var(--btn-allin-fg-b, #fff); }
 /* Image-backed action buttons (9-slice SVG/PNG via the Buttons axis). */
 :root[data-btn-img] .btn-action { border: 9px solid transparent; background: transparent; padding: 1px 9px !important; }
 :root[data-btn-img] .btn-fold  { border-image: var(--btn-fold-img) 9 fill / 9px / 0 stretch; color: var(--btn-fold-fg, #fff); }
@@ -3901,12 +3897,30 @@ body:not(.in-game) .my-zone {
   max-width: var(--bottom-w);
   margin: 0 auto;
 }
-/* Row 1: Fold + Check/Call */
-.action-grid > .btn-fold,
-.action-grid > .btn-check,
-.action-grid > .btn-call {
-  flex: 1;
+/* Layout officiel : 3 zones (montant+slider / pastilles+All-In+mode / Fold-Call-Raise) */
+/* Bas : Fold | Call/Check | Raise — trois boutons egaux */
+.act-buttons-row { display: flex; gap: 6px; }
+.act-buttons-row .btn-action { flex: 1; min-width: 0; }
+/* Haut : champ montant editable + slider */
+.bet-row { display: flex; gap: 8px; align-items: center; }
+.bet-row .raise-slider { flex: 1; }
+.raise-amt-field {
+  flex: 0 0 auto; width: 78px;
+  background: var(--field-bg);
+  border: 1px solid var(--btn-raise-bg, #4CAF50);
+  border-radius: 7px;
+  color: var(--btn-raise-bg, #4CAF50);
+  padding: 8px 6px; font-family: var(--ff-mono); font-size: 0.9rem;
+  font-weight: 700; text-align: center; outline: none;
 }
+.raise-amt-field:focus { border-color: var(--gold); }
+.raise-amt-field:disabled { opacity: 0.3; cursor: not-allowed; filter: grayscale(0.6); }
+/* Milieu : 1/3 1/2 Pot | All-In | mode */
+.mid-row { display: flex; gap: 6px; align-items: stretch; }
+.mid-row .pct-row { flex: 1 1 auto; width: auto; }
+.mid-row .btn-allin { flex: 0 0 auto; min-width: 0; white-space: nowrap; }
+.mode-sel-wrap { flex: 0 0 auto; }
+.mid-row .mode-sel-wrap { flex: 0 1 112px; }
 /* First two buttons side by side */
 .action-top-row {
   display: flex; gap: 6px;

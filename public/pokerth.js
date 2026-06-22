@@ -8758,24 +8758,17 @@ const App = (() => {
     const da = canRaise ? '' : ' disabled'; // disabled attribute
     const allInOnly = myMoney <= toCall;    // ne peut que call ou all-in
 
-    const isMobile = window.innerWidth < 640;
     var KB = _keyBindings(); // touches liées (badges des boutons)
-    const raiseRowHtml = isMobile
-      ? '<div class="raise-row raise-row-mobile">'
-        + '<input class="raise-slider" id="raise-slider" type="range" min="' + minBet + '" max="' + myMoney + '" value="' + minBet + '" step="1"' + da
-        + ' oninput="document.getElementById(\'raise-amt\').value=this.value;document.getElementById(\'raise-display\').textContent=this.value">'
-        + '<span class="raise-display" id="raise-display">' + minBet + '</span>'
-        + '<input id="raise-amt" type="hidden" value="' + minBet + '"' + da + '>'
-        + '<button class="btn-action btn-raise raise-btn"' + da + ' onclick="App.doRaise()" title="Raise (R)">' + raiseLabel + '<span class="act-key">' + KB.raise.toUpperCase() + '</span></button>'
-        + '</div>'
-      : '<div class="raise-row">'
-        + '<input class="raise-input" id="raise-amt" type="number" min="' + minBet + '" max="' + myMoney + '" value="' + minBet + '"' + da + '>'
-        + '<button class="btn-action btn-raise raise-btn"' + da + ' onclick="App.doRaise()" title="Raise (R)">' + raiseLabel + '<span class="act-key">' + KB.raise.toUpperCase() + '</span></button>'
-        + '</div>';
+    const betRowHtml = '<div class="bet-row">'
+      + '<input class="raise-amt-field" id="raise-amt" type="number" min="' + minBet + '" max="' + myMoney + '" value="' + minBet + '"' + da
+      + ' oninput="var s=document.getElementById(\'raise-slider\');if(s)s.value=this.value">'
+      + '<input class="raise-slider" id="raise-slider" type="range" min="' + minBet + '" max="' + myMoney + '" value="' + minBet + '" step="1"' + da
+      + ' oninput="var a=document.getElementById(\'raise-amt\');if(a)a.value=this.value">'
+      + '</div>';
 
     // Sélecteur de mode PERSISTANT (remplace l'ancien bouton AUTO, même emplacement) :
     // Manuel / Auto Check-Call / Auto Check-Fold. Piloté par App.setPlayingMode.
-    const modeSel = '<div class="sel-wrap mode-sel-wrap" style="flex:0 1 112px">'
+    const modeSel = '<div class="sel-wrap mode-sel-wrap">'
       + '<select id="mode-sel" autocomplete="off" onfocus="App._modeSelHold(true)" onblur="App._modeSelHold(false)" onchange="App.setPlayingMode(this.selectedIndex)">'
       +   '<option' + (_playingMode === 0 ? ' selected' : '') + '>' + t('modeManual') + '</option>'
       +   '<option' + (_playingMode === 1 ? ' selected' : '') + '>' + t('modeAutoCheckCall') + '</option>'
@@ -8783,18 +8776,21 @@ const App = (() => {
       + '</select><span class="sel-arr">▾</span></div>';
 
     const h = '<div class="action-grid">'
-      + '<div class="action-top-row">'
-      +   '<button class="btn-action btn-fold" onclick="App.doAction(1,0)" title="Fold (F)">' + t('fold') + '<span class="act-key">' + KB.fold.toUpperCase() + '</span></button>'
-      +   '<button class="btn-action ' + callClass + '" onclick="' + callAction + '" title="Call/Check (C)">' + callLabel + '<span class="act-key">' + KB.call.toUpperCase() + '</span></button>'
+      + betRowHtml
+      + '<div class="mid-row">'
+      +   '<div class="pct-row">'
+      +     '<button class="btn-pct"' + da + ' onclick="setPct(' + p33  + ')"><span class="pct-p">1/3</span><span class="pct-amt">' + fmtChips(p33) + '</span><span class="act-key">' + KB.bet1.toUpperCase() + '</span></button>'
+      +     '<button class="btn-pct"' + da + ' onclick="setPct(' + p50  + ')"><span class="pct-p">1/2</span><span class="pct-amt">' + fmtChips(p50) + '</span><span class="act-key">' + KB.bet2.toUpperCase() + '</span></button>'
+      +     '<button class="btn-pct"' + da + ' onclick="setPct(' + p100 + ')"><span class="pct-p">Pot</span><span class="pct-amt">' + fmtChips(p100) + '</span><span class="act-key">' + KB.bet3.toUpperCase() + '</span></button>'
+      +   '</div>'
+      +   '<button class="btn-action btn-allin" onclick="App.doAction(6,' + myMoney + ')" title="All-In (A)">' + t('allin') + ' <b>' + fmtChips(myMoney) + '</b><span class="act-key">' + KB.allin.toUpperCase() + '</span></button>'
       +   modeSel
       + '</div>'
-      + '<div class="pct-row">'
-      +   '<button class="btn-pct"' + da + ' onclick="setPct(' + p33  + ')"><span class="pct-p">1/3</span><span class="pct-amt">' + fmtChips(p33) + '</span><span class="act-key">' + KB.bet1.toUpperCase() + '</span></button>'
-      +   '<button class="btn-pct"' + da + ' onclick="setPct(' + p50  + ')"><span class="pct-p">1/2</span><span class="pct-amt">' + fmtChips(p50) + '</span><span class="act-key">' + KB.bet2.toUpperCase() + '</span></button>'
-      +   '<button class="btn-pct"' + da + ' onclick="setPct(' + p100 + ')"><span class="pct-p">Pot</span><span class="pct-amt">' + fmtChips(p100) + '</span><span class="act-key">' + KB.bet3.toUpperCase() + '</span></button>'
+      + '<div class="act-buttons-row">'
+      +   '<button class="btn-action btn-fold" onclick="App.doAction(1,0)" title="Fold (F)">' + t('fold') + '<span class="act-key">' + KB.fold.toUpperCase() + '</span></button>'
+      +   '<button class="btn-action ' + callClass + '" onclick="' + callAction + '" title="Call/Check (C)">' + callLabel + '<span class="act-key">' + KB.call.toUpperCase() + '</span></button>'
+      +   '<button class="btn-action btn-raise raise-btn"' + da + ' onclick="App.doRaise()" title="Raise (R)">' + raiseLabel + '<span class="act-key">' + KB.raise.toUpperCase() + '</span></button>'
       + '</div>'
-      + raiseRowHtml
-      + '<button class="btn-action btn-allin" onclick="App.doAction(6,' + myMoney + ')" title="All-In (A)">' + t('allin') + ' <b>' + fmtChips(myMoney) + '</b><span class="act-key">' + KB.allin.toUpperCase() + '</span></button>'
       + '</div>';
 
     if (preview) {
@@ -12024,7 +12020,7 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.3.94-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.95-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
