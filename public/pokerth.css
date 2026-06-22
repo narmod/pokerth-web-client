@@ -6310,25 +6310,14 @@ body.adv-hide-pbar .player-bar{display:none !important}
    d'action des le prochain rendu). Garde la self-box au-dessus de la barre epinglee. */
 body.adv-hide-pbar .game-area{padding-bottom:clamp(210px,34dvh,290px)}
 body.adv-hide-pbar .my-zone{bottom:0 !important;padding-bottom:max(8px,env(safe-area-inset-bottom))}
-/* Mode masqué : MA self-box (siège) = avatar + cartes ~taille tapis COTE A COTE,
-   nom/tapis dessous. IMPORTANT cohérence : on GARDE le style du siège choisi -> on
-   n'impose ni boîte ni taille d'avatar (le fond/bordure viennent du style ; aucun
-   fond pour les styles "sans boîte"). max-width:none lève la limite 40-68px du siège
-   (sinon avatar+cartes passent à la ligne -> boîte trop haute). */
-body.adv-hide-pbar .seat.me { max-width: none !important; min-width: 0 !important; }
-body.adv-hide-pbar .seat.me .seat-plate {
-  display: flex !important; flex-wrap: wrap; max-width: none !important;
-  align-items: center; justify-content: center; gap: 6px;
-}
-body.adv-hide-pbar .seat.me .seat-avatar { order: 1; flex: none; }
-body.adv-hide-pbar .seat.me .seat-holecards.shc-big {
-  order: 2; display: flex !important; gap: 4px; flex: none; grid-column: auto; grid-row: auto;
-}
-body.adv-hide-pbar .seat.me .seat-info {
-  order: 3; flex-basis: 100%;
-  display: flex; flex-direction: column; align-items: center; gap: 0;
-}
-/* Taille des cartes self alignée sur les cartes communes, PAR BREAKPOINT :
+/* Mode masqué (Mode PokerTH) : MA self-box (siège) affiche mes cartes ~taille tapis.
+   COHERENCE PAR STYLE :
+   - Style "pokerth" : on GARDE la grille native -> self-box IDENTIQUE aux adversaires,
+     on agrandit SEULEMENT mes cartes (aucune surcharge de layout ci-dessous).
+   - Autres styles : ils ne placent pas mes cartes nativement -> on force un layout flex
+     (avatar|cartes, nom dessous) + max-width:none (sinon empilement vertical). */
+
+/* Taille des cartes self alignée sur les cartes communes, PAR BREAKPOINT, TOUS STYLES :
    ~40 sur mobile, 62 sur desktop/tablette (comme .comm-row .pk en >=900px). */
 body.adv-hide-pbar .seat.me .seat-holecards.shc-big .pk {
   width: 40px !important; height: 57px !important;
@@ -6339,6 +6328,21 @@ body.adv-hide-pbar .seat.me .seat-holecards.shc-big .pk {
     width: 62px !important; height: 88px !important;
     font-size: 1.3rem !important; border-radius: 7px !important;
   }
+}
+
+/* Layout flex : styles NON-pokerth UNIQUEMENT (le pokerth garde sa grille native). */
+html:not([data-seat="pokerth"]) body.adv-hide-pbar .seat.me { max-width: none !important; min-width: 0 !important; }
+html:not([data-seat="pokerth"]) body.adv-hide-pbar .seat.me .seat-plate {
+  display: flex !important; flex-wrap: wrap; max-width: none !important;
+  align-items: center; justify-content: center; gap: 6px;
+}
+html:not([data-seat="pokerth"]) body.adv-hide-pbar .seat.me .seat-avatar { order: 1; flex: none; }
+html:not([data-seat="pokerth"]) body.adv-hide-pbar .seat.me .seat-holecards.shc-big {
+  order: 2; display: flex !important; gap: 4px; flex: none; grid-column: auto; grid-row: auto;
+}
+html:not([data-seat="pokerth"]) body.adv-hide-pbar .seat.me .seat-info {
+  order: 3; flex-basis: 100%;
+  display: flex; flex-direction: column; align-items: center; gap: 0;
 }
 /* Selecteur "Placement des sieges" dans Options avancees. */
 .adv-row .adv-sel{flex:0 0 auto;min-width:132px}
