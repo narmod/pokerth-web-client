@@ -5995,6 +5995,10 @@ body.has-keyboard .act-key { display: inline-block; }
   flex-direction: column;
   gap: 10px;
 }
+.music-foot { flex: 0 0 auto; border-top: 1px solid var(--gold-dim); padding: 11px 14px; }
+.music-foot-row { display: flex; align-items: center; gap: 10px; cursor: pointer; color: var(--text); font-size: 0.9rem; user-select: none; }
+.music-foot-lbl { display: inline-flex; align-items: center; }
+.music-foot-row input[type=checkbox] { width: 18px; height: 18px; accent-color: var(--gold); cursor: pointer; flex: 0 0 auto; }
 .music-empty { color: var(--gold-dim); font-size: 0.85rem; text-align: center; padding: 18px 4px; }
 .music-now { display: flex; flex-direction: column; gap: 2px; }
 .music-now-label { font-size: 0.52rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--gold-dim); }

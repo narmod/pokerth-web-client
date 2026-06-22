@@ -4407,6 +4407,7 @@ const App = (() => {
   window.setAutoBtn = function (on) { if (!!on !== _showAutoBtn) toggleAutoBtnPref(); };
   window.setQuickBet = function (on) { if (!!on !== _showPctBtns) toggleQuickBetPref(); };
   window.setDisplayBB = function (on) { if (!!on !== _displayBB) toggleDisplayBB(); };
+  window.setHaptic = function (on) { if (!!on !== _hapticEnabled) toggleHaptic(); };
   let _lastConnectParams = null;
   // Track mode + name of last Init sent so we can detect 'rapid mode swap'
   // patterns that the PokerTH server's anti-brute-force flags as
@@ -12032,6 +12033,9 @@ function toggleMusicPanel() {
     // (Re-)render the player and refresh the auto-updating track list on every
     // open — tracks added later then appear without a reload.
     try { if (window.Music && window.Music.mount) window.Music.mount(document.getElementById('music-body')); } catch (e) {}
+    // Reflet de l'etat vibration sur la case Vibration (deplacee ici depuis le
+    // menu crantee). Defaut ON : pth_haptic absent => coche.
+    try { var _hb = document.getElementById('music-haptic'); if (_hb) _hb.checked = (localStorage.getItem('pth_haptic') !== '0'); } catch (e) {}
     // Draggable + resizable on desktop/tablet; fixed bottom-sheet on phones —
     // same window system as the chat / log / reaction panels.
     if (_winGate()) {
@@ -12249,7 +12253,7 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.3.107-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.108-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

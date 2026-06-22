@@ -1209,7 +1209,6 @@ function onAvatarImageChosen(input) {
       <button class="btn-sm" id="lang-toggle-game-mob" onclick="closeHeaderOverflow();openLangMenu(event)" style="font-size:0.85rem"></button>
       <button class="btn-sm" id="theme-toggle-game-mob" onclick="closeHeaderOverflow();openThemePanel(event)" style="font-size:0.85rem"><span style="margin-right:7px">🎨</span><span data-i18n="themeTooltip">Theme</span></button>
       <button class="btn-sm" id="music-toggle-game-mob" onclick="closeHeaderOverflow();toggleMusicPanel()" style="font-size:0.85rem"><span style="margin-right:7px">🎵</span><span data-i18n="musicTooltip">Sounds &amp; Music</span></button>
-      <button class="btn-sm" id="haptic-toggle-mob" onclick="toggleHaptic()">📳 Vibration</button>
       <button class="btn-sm" id="adv-opts-mob" onclick="closeHeaderOverflow();openAdvancedOptions()"><span style="margin-right:7px">⚙️</span><span data-i18n="advTitle">Advanced options</span></button>
       <div class="menu-sep" id="invite-sep-mob" style="display:none"></div>
       <button class="btn-sm" id="invite-players-mob" onclick="closeHeaderOverflow();App.openInviteModal()" style="display:none">✉️ <span data-i18n="inviteMenu">Inviter des joueurs</span></button>
@@ -1394,6 +1393,12 @@ function onAvatarImageChosen(input) {
     <button class="music-panel-close" onclick="toggleMusicPanel()" title="Close" data-i18n-title="closeTooltip" aria-label="Close">✕</button>
   </div>
   <div class="music-body" id="music-body"></div>
+  <div class="music-foot">
+    <label class="music-foot-row">
+      <input type="checkbox" id="music-haptic" onchange="setHaptic(this.checked)">
+      <span class="music-foot-lbl"><span style="margin-right:8px">📳</span><span data-i18n="hapticLabel">Vibration</span></span>
+    </label>
+  </div>
 </div>
 
 <!-- ES module: must load BEFORE the main script so its window.* aliases
