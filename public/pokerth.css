@@ -6383,6 +6383,16 @@ html:not([data-seat="pokerth"]) body.adv-hide-pbar .seat.me .seat-info {
 #odds-monitor .odds-row.hot .odds-bar>i{background:linear-gradient(90deg,#50c878,#1e8c4e)}
 #odds-monitor .odds-row.hot .odds-pct{color:#7ce0a0;font-weight:700}
 @media (max-width:560px){#odds-monitor{width:120px;font-size:9.5px;top:48px}#odds-monitor .odds-cat{flex-basis:44px}}
+/* Fenetre flottante "Assistance" (force de la main) -- meme modele que #odds-monitor. */
+#assist-win{position:fixed;top:54px;right:8px;z-index:42;min-width:120px;max-width:210px;padding:5px 8px 7px;background:rgba(20,26,38,.86);border:1px solid rgba(255,255,255,.12);border-radius:9px;box-shadow:0 4px 14px rgba(0,0,0,.42);color:#cdd3e0;pointer-events:auto;user-select:none;cursor:move;touch-action:none}
+#assist-win.hsw-drag{opacity:.96;box-shadow:0 8px 24px rgba(0,0,0,.58);border-color:rgba(227,200,0,.45)}
+#assist-win .hsw-hd{font-weight:700;font-size:10.5px;color:#E3C800;margin-bottom:5px;letter-spacing:.3px}
+#assist-win .hs-lbl{display:block;background:transparent;border:0;padding:0;max-width:none}
+#assist-win .hs-txt{font-size:11.5px;line-height:1.2;white-space:nowrap}
+#assist-win #hand-strength{position:static;left:auto;right:auto;top:auto;height:auto;pointer-events:none;margin-top:6px}
+#assist-win .hs-track{display:block;position:static;left:auto;right:auto;top:auto;height:6px;border-radius:3px}
+#assist-win .hs-fill{border-radius:3px}
+@media (max-width:560px){#assist-win{top:48px;min-width:110px}#assist-win .hs-txt{font-size:11px}}
 /* Raccourcis clavier personnalisables (Options avancées). */
 .adv-keys{display:flex;flex-direction:column;gap:5px;margin-top:2px}
 .adv-keyrow{display:flex;align-items:center;gap:9px}

@@ -7255,11 +7255,16 @@ const App = (() => {
     if (fill) { fill.style.width = p + '%'; if (col) fill.style.background = col; }
     var lbl = document.getElementById('hs-lbl');
     if (lbl) { var txt = lbl.querySelector('.hs-txt') || lbl; txt.textContent = text; if (col) txt.style.color = col; lbl.style.display = ''; }
+    // Fenetre flottante de l'assistance (meme modele que #odds-monitor) : drag + show.
+    var aw = document.getElementById('assist-win');
+    if (aw) { if (!aw._drag && typeof _attachPanelDrag === 'function') { _attachPanelDrag(aw, 'pth_assist_pos', 'hsw-drag'); aw._drag = true; } aw.style.display = ''; }
   }
   function _hsHide(el) {
     if (el) el.style.display = 'none';
     var lbl = document.getElementById('hs-lbl');
     if (lbl) { lbl.style.display = 'none'; var txt = lbl.querySelector('.hs-txt'); if (txt) txt.textContent = ''; }
+    var aw = document.getElementById('assist-win');
+    if (aw) aw.style.display = 'none';
   }
   function renderPreFlopStrength() {
     var el = document.getElementById('hand-strength');
@@ -8676,7 +8681,7 @@ const App = (() => {
   // Rend le moniteur d'odds déplaçable sur tous les appareils (souris + tactile +
   // stylet) via la Pointer Events API. Position mémorisée (pth_odds_pos) et bornée à
   // l'écran. Attaché à #odds-monitor lui-même -> survit aux reconstructions d'innerHTML.
-  function _attachOddsDrag(el) {
+  function _attachPanelDrag(el, posKey, dragClass) {
     var drag = null;
     function clampPos(left, top) {
       var w = el.offsetWidth || 132, h = el.offsetHeight || 60;
@@ -8688,21 +8693,21 @@ const App = (() => {
       el.style.left = c[0] + 'px'; el.style.top = c[1] + 'px';
       el.style.right = 'auto'; el.style.bottom = 'auto';
     }
-    try { var s = localStorage.getItem('pth_odds_pos'); if (s) { var o = JSON.parse(s); if (o && typeof o.left === 'number') applyPos(o.left, o.top); } } catch (e) {}
+    try { var s = localStorage.getItem(posKey); if (s) { var o = JSON.parse(s); if (o && typeof o.left === 'number') applyPos(o.left, o.top); } } catch (e) {}
     el.addEventListener('pointerdown', function (e) {
       var r = el.getBoundingClientRect();
       drag = { dx: e.clientX - r.left, dy: e.clientY - r.top };
       try { el.setPointerCapture(e.pointerId); } catch (_) {}
-      el.classList.add('odds-drag'); e.preventDefault();
+      el.classList.add(dragClass); e.preventDefault();
     });
     el.addEventListener('pointermove', function (e) {
       if (!drag) return; e.preventDefault();
       applyPos(e.clientX - drag.dx, e.clientY - drag.dy);
     });
     function end(e) {
-      if (!drag) return; drag = null; el.classList.remove('odds-drag');
+      if (!drag) return; drag = null; el.classList.remove(dragClass);
       try { el.releasePointerCapture(e.pointerId); } catch (_) {}
-      try { var r = el.getBoundingClientRect(); localStorage.setItem('pth_odds_pos', JSON.stringify({ left: Math.round(r.left), top: Math.round(r.top) })); } catch (_) {}
+      try { var r = el.getBoundingClientRect(); localStorage.setItem(posKey, JSON.stringify({ left: Math.round(r.left), top: Math.round(r.top) })); } catch (_) {}
     }
     el.addEventListener('pointerup', end);
     el.addEventListener('pointercancel', end);
@@ -8715,7 +8720,7 @@ const App = (() => {
     var on = false; try { on = (localStorage.getItem('pth_odds_monitor') === '1'); } catch (e) {}
     if (!on || myCards[0] == null || myCards[1] == null) { el.style.display = 'none'; el.innerHTML = ''; el._built = false; return; }
     el.style.display = '';
-    if (!el._drag) { _attachOddsDrag(el); el._drag = true; }
+    if (!el._drag) { _attachPanelDrag(el, 'pth_odds_pos', 'odds-drag'); el._drag = true; }
     if (!el._built) { el.innerHTML = '<div class="odds-hd">' + esc(t('oddsTitle')) + '</div><div class="odds-body odds-wait">…</div>'; el._built = true; }
     var seq = ++_oddsSeq;
     var hole = [myCards[0], myCards[1]];
@@ -12090,7 +12095,7 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.3.99-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.100-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
