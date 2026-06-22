@@ -329,8 +329,8 @@ function applyAdvOpts() {
     b.classList.toggle('adv-no-blinds', !_advGet('show_blinds', true));
     b.classList.toggle('adv-no-community', !_advGet('show_community', true));
     b.classList.toggle('adv-no-flag', !_advGet('show_flag', true));
-    b.classList.toggle('adv-hide-pbar', _advGet('hide_pbar', false));
-    try { document.documentElement.setAttribute('data-seat-layout', (localStorage.getItem('pth_seat_layout') === 'official') ? 'official' : 'classic'); } catch (e) {}
+    b.classList.toggle('adv-hide-pbar', _advGet('hide_pbar', true));
+    try { document.documentElement.setAttribute('data-seat-layout', (localStorage.getItem('pth_seat_layout') === 'classic') ? 'classic' : 'official'); } catch (e) {}
     try { if (typeof window._refreshOwnCards === 'function') window._refreshOwnCards(); } catch (e) {}
     try { if (typeof window._renderOdds === 'function') window._renderOdds(); } catch (e) {}
     try { if (typeof window._renderSeats === 'function') window._renderSeats(); } catch (e) {}
@@ -441,7 +441,7 @@ function openAdvancedOptions() {
   };
   sync('adv-anim', 'anim_cards', true);
   sync('adv-blinds', 'show_blinds', true);
-  sync('adv-hidepbar', 'hide_pbar', false);
+  sync('adv-hidepbar', 'hide_pbar', true);
   sync('adv-community', 'show_community', true);
   sync('adv-focusbet', 'focus_bet', false);
   sync('adv-noemoji', 'chat_noemoji', false);
@@ -456,7 +456,7 @@ function openAdvancedOptions() {
   sync('adv-voice', 'voice', false);
   sync('adv-displaybb', 'display_bb', false);
   sync('adv-nohideignored', 'no_hide_ignored', false);
-  try { var _sl = document.getElementById('adv-seatlayout'); if (_sl) _sl.value = (localStorage.getItem('pth_seat_layout') === 'official') ? 'official' : 'classic'; } catch (e) {}
+  try { var _sl = document.getElementById('adv-seatlayout'); if (_sl) _sl.value = (localStorage.getItem('pth_seat_layout') === 'classic') ? 'classic' : 'official'; } catch (e) {}
   try { _rebindAction = null; _renderKeyButtons(); } catch (e) {}
   try { advSelectCat('ui'); } catch (e) {}
   try { _advSyncContext(); } catch (e) {}
@@ -533,12 +533,12 @@ function resetAdvDefaults() {
     : 'Reset all options and keyboard shortcuts to their defaults?';
   if (!window.confirm(msg)) return;
   var defs = {
-    anim_cards: true, show_blinds: true, hide_pbar: false, show_community: true,
+    anim_cards: true, show_blinds: true, hide_pbar: true, show_community: true,
     focus_bet: false, chat_noemoji: false, fade_losers: true, show_flag: true,
     own_click: false, guard_call: false, odds_monitor: false, no_hide_ignored: false
   };
   try { for (var k in defs) setAdvOpt(k, defs[k]); } catch (e) {}
-  try { setSeatLayout('classic'); } catch (e) {}
+  try { setSeatLayout('official'); } catch (e) {}
   try { resetKeys(); } catch (e) {}
   try { openAdvancedOptions(); } catch (e) {}   // re-sync des cases + retour onglet Interface
 }
@@ -7844,7 +7844,7 @@ const App = (() => {
     // positions officielles sont appliquées en surcouche après la passe classique
     // (voir _officialSeatPix + le bloc de surcouche plus bas).
     var _seatLayoutOfficial = false;
-    try { _seatLayoutOfficial = (localStorage.getItem('pth_seat_layout') === 'official'); } catch (e) {}
+    try { _seatLayoutOfficial = (localStorage.getItem('pth_seat_layout') !== 'classic'); } catch (e) {}
     var _seatPortrait = (window.innerHeight > window.innerWidth);
     const oRect = oval.getBoundingClientRect();
     const zRect = zone.getBoundingClientRect();
@@ -8042,7 +8042,7 @@ const App = (() => {
     }
 
     var _pkHole = (document.documentElement.getAttribute('data-seat') === 'pokerth');
-    var _maskMode = _advGet('hide_pbar', false); // mode masqué : self-box = siège
+    var _maskMode = _advGet('hide_pbar', true); // mode masqué : self-box = siège
     let h = '';
     rotated.forEach((pid, i) => {
       const px = pixPos[i];
@@ -8216,7 +8216,7 @@ const App = (() => {
     // affiche le panneau au lieu du message d'attente (et on le garde sticky
     // face aux mises à jour serveur — tour d'un autre joueur, etc.).
     _lastWaitingMsg = msg; _lastWaitingIsHtml = !!isHtml;
-    var _pinShow = (_actionBarPinned || _advGet('hide_pbar', false)) && !_amSpectator && _gameStarted && !(myCards[0] == null && myCards[1] == null);
+    var _pinShow = (_actionBarPinned || _advGet('hide_pbar', true)) && !_amSpectator && _gameStarted && !(myCards[0] == null && myCards[1] == null);
     if ((_preActionOpen || _pinShow) && turnPid !== myId) { _renderPreActionPanel(); updateBottomLayout(); return; }
     // isHtml=true : msg contient du HTML interne sûr (généré par notre code)
     $('g-actions').innerHTML = '<div class="waiting-msg">' + (isHtml ? msg : esc(msg)) + '</div>';
@@ -8242,10 +8242,10 @@ const App = (() => {
     var hasActions = !!(ga && ga.querySelector('.action-grid'));
     // Mode masqué : la barre d'action est deja affichee en permanence par l'option
     // (independamment du pin) -> le bouton pin devient inutile, on le cache.
-    var _maskMode = _advGet('hide_pbar', false);
+    var _maskMode = _advGet('hide_pbar', true);
     b.style.display = (hasActions && !_maskMode) ? 'flex' : 'none';
     if (!hasActions || _maskMode) return;
-    var on = _actionBarPinned || _advGet('hide_pbar', false);
+    var on = _actionBarPinned || _advGet('hide_pbar', true);
     b.setAttribute('aria-pressed', on ? 'true' : 'false');
     b.style.opacity = on ? '1' : '0.5';
     b.style.borderColor = on ? 'var(--gold)' : 'var(--border)';
@@ -9011,7 +9011,7 @@ const App = (() => {
       // normalement affiché À LA PLACE de l'aperçu, est ré-injecté AU-DESSUS
       // des boutons pour conserver l'info "à qui le tour".
       var _narr = '';
-      if (_advGet('hide_pbar', false) && turnPid && turnPid !== myId && seatData[turnPid]) {
+      if (_advGet('hide_pbar', true) && turnPid && turnPid !== myId && seatData[turnPid]) {
         _narr = '<div class="act-narrator"><span style="font-family:inherit">'
               + esc(getPlayerName(turnPid)) + '</span>'
               + '<span class="thinking-dots"><span></span><span></span><span></span></span></div>';
@@ -12182,7 +12182,7 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.3.112-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.113-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
