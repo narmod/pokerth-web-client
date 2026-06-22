@@ -298,15 +298,18 @@ body {
       rgba(0,0,0,0.04) 3px, rgba(0,0,0,0.04) 6px);
 }
 
-/* Fond plein ecran (mode table Fullscreen) : image dans --wallpaper, activee
-   par data-bg-img sur <html>, limitee a l'ecran de jeu (body.in-game) -> le
-   lobby/connexion gardent leur fond. Voile tres leger pour la lisibilite. */
-html[data-bg-img] body.in-game {
+/* Fond « Fullscreen » : l'image (--wallpaper) est posee sur la ZONE DE TABLE
+   (au-dessus de la barre d'action) et non sur tout le body -> le bas de l'image
+   (lisere) reste visible juste au-dessus de la barre. Ancrage bas + cover.
+   .table-zone (flex:1) occupe la zone de jeu au-dessus de la barre d'action ;
+   l'ovale (.felt-oval) est transparent et laisse voir ce fond. data-table-fs est
+   pose par theme.mjs. S'applique a TOUS les tapis en mode fullscreen. */
+:root[data-table-fs="1"] .table-zone {
   background-image:
     linear-gradient(rgba(0,0,0,0.14), rgba(0,0,0,0.14)),
     var(--wallpaper, none);
   background-size: cover;
-  background-position: center;
+  background-position: center bottom;
   background-repeat: no-repeat;
 }
 
