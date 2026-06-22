@@ -7257,7 +7257,7 @@ const App = (() => {
     if (lbl) { var txt = lbl.querySelector('.hs-txt') || lbl; txt.textContent = text; if (col) txt.style.color = col; lbl.style.display = ''; }
     // Fenetre flottante de l'assistance (meme modele que #odds-monitor) : drag + show.
     var aw = document.getElementById('assist-win');
-    if (aw) { if (!aw._drag && typeof _attachPanelDrag === 'function') { _attachPanelDrag(aw, 'pth_assist_pos', 'hsw-drag'); aw._drag = true; } aw.style.display = ''; }
+    if (aw) { aw.style.display = ''; if (!aw._drag && typeof _attachPanelDrag === 'function') { _attachPanelDrag(aw, 'pth_assist_pos', 'hsw-drag'); aw._drag = true; } }
   }
   function _hsHide(el) {
     if (el) el.style.display = 'none';
@@ -8683,6 +8683,14 @@ const App = (() => {
   // l'écran. Attaché à #odds-monitor lui-même -> survit aux reconstructions d'innerHTML.
   function _attachPanelDrag(el, posKey, dragClass) {
     var drag = null;
+    var BASE_W = (el.id === 'odds-monitor') ? 132 : 150;
+    var SZKEY = posKey.replace('_pos', '_w');
+    function _canResize() { try { return window.matchMedia('(min-width:561px)').matches; } catch (e) { return false; } }
+    function applyWs() {
+      if (!_canResize()) { el.style.removeProperty('--ws'); el.style.removeProperty('width'); return; }
+      var w = el.offsetWidth || BASE_W;
+      el.style.setProperty('--ws', (w / BASE_W).toFixed(3));
+    }
     function clampPos(left, top) {
       var w = el.offsetWidth || 132, h = el.offsetHeight || 60;
       var maxL = Math.max(0, window.innerWidth - w), maxT = Math.max(0, window.innerHeight - h);
@@ -8694,8 +8702,24 @@ const App = (() => {
       el.style.right = 'auto'; el.style.bottom = 'auto';
     }
     try { var s = localStorage.getItem(posKey); if (s) { var o = JSON.parse(s); if (o && typeof o.left === 'number') applyPos(o.left, o.top); } } catch (e) {}
+    // Redimensionnement (desktop) : restaurer la largeur sauvee + ancrer a gauche
+    // (left/top) pour que resize:horizontal fonctionne meme si l'ancrage CSS etait a droite.
+    if (_canResize()) {
+      try { var sw0 = localStorage.getItem(SZKEY); if (sw0) { var wv = parseInt(sw0, 10); if (wv > 0) el.style.width = wv + 'px'; } } catch (e) {}
+      if (!el.style.left) { var rr = el.getBoundingClientRect(); el.style.left = Math.round(rr.left) + 'px'; el.style.top = Math.round(rr.top) + 'px'; el.style.right = 'auto'; el.style.bottom = 'auto'; }
+    }
+    applyWs();
+    if (typeof ResizeObserver === 'function') {
+      var _rt = null;
+      var _ro = new ResizeObserver(function () {
+        applyWs();
+        if (_canResize()) { clearTimeout(_rt); _rt = setTimeout(function () { try { localStorage.setItem(SZKEY, String(Math.round(el.offsetWidth))); } catch (e) {} }, 250); }
+      });
+      try { _ro.observe(el); } catch (e) {}
+    }
     el.addEventListener('pointerdown', function (e) {
       var r = el.getBoundingClientRect();
+      if (_canResize() && (r.right - e.clientX) <= 18 && (r.bottom - e.clientY) <= 18) return;
       drag = { dx: e.clientX - r.left, dy: e.clientY - r.top };
       try { el.setPointerCapture(e.pointerId); } catch (_) {}
       el.classList.add(dragClass); e.preventDefault();
@@ -8711,7 +8735,7 @@ const App = (() => {
     }
     el.addEventListener('pointerup', end);
     el.addEventListener('pointercancel', end);
-    window.addEventListener('resize', function () { var r = el.getBoundingClientRect(); applyPos(r.left, r.top); });
+    window.addEventListener('resize', function () { applyWs(); var r = el.getBoundingClientRect(); applyPos(r.left, r.top); });
   }
 
   function renderOddsMonitor() {
@@ -12095,7 +12119,7 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.3.101-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.102-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

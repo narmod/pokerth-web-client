@@ -6369,30 +6369,32 @@ html:not([data-seat="pokerth"]) body.adv-hide-pbar .seat.me .seat-info {
 @keyframes callConfirmPulse{0%,100%{box-shadow:0 0 0 2px #ffd24d,0 0 12px rgba(240,160,32,.55)}50%{box-shadow:0 0 0 2px #ffd24d,0 0 19px rgba(240,160,32,.9)}}
 /* Moniteur d'odds (option) : panneau compact en haut-gauche, semi-transparent,
    display-only (pointer-events:none -> ne bloque pas les sièges derrière). */
-#odds-monitor{position:fixed;top:54px;left:8px;z-index:42;width:132px;padding:5px 7px 6px;background:rgba(20,26,38,.86);border:1px solid rgba(255,255,255,.12);border-radius:9px;box-shadow:0 4px 14px rgba(0,0,0,.42);font-size:10px;line-height:1.25;color:#cdd3e0;pointer-events:auto;user-select:none;cursor:move;touch-action:none}
-#odds-monitor.odds-drag{opacity:.96;box-shadow:0 8px 24px rgba(0,0,0,.58);border-color:rgba(227,200,0,.45)}
-#odds-monitor .odds-hd{font-weight:700;font-size:10.5px;color:#E3C800;margin-bottom:3px;letter-spacing:.3px}
+#odds-monitor{--ws:1;position:fixed;top:54px;left:8px;z-index:42;width:132px;padding:calc(5px*var(--ws)) calc(7px*var(--ws)) calc(6px*var(--ws));background:var(--panel);border:1px solid var(--border);border-radius:calc(9px*var(--ws));box-shadow:0 4px 14px rgba(0,0,0,.42);font-size:calc(10px*var(--ws));line-height:1.25;color:var(--text);pointer-events:auto;user-select:none;cursor:move;touch-action:none}
+#odds-monitor.odds-drag{opacity:.96;box-shadow:0 8px 24px rgba(0,0,0,.58);border-color:var(--border-hi)}
+#odds-monitor .odds-hd{font-weight:700;font-size:calc(10.5px*var(--ws));color:var(--gold);margin-bottom:calc(3px*var(--ws));letter-spacing:.3px}
 #odds-monitor .odds-approx{opacity:.65;font-weight:400}
 #odds-monitor .odds-wait{opacity:.6;padding:2px 0}
-#odds-monitor .odds-row{display:flex;align-items:center;gap:4px;height:13px}
-#odds-monitor .odds-cat{flex:0 0 50px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;opacity:.88}
-#odds-monitor .odds-bar{flex:1;height:6px;background:rgba(255,255,255,.08);border-radius:3px;overflow:hidden}
-#odds-monitor .odds-bar>i{display:block;height:100%;width:0;background:linear-gradient(90deg,#8a93a6,#5a6478);border-radius:3px}
-#odds-monitor .odds-pct{flex:0 0 27px;text-align:right;font-variant-numeric:tabular-nums;opacity:.92}
+#odds-monitor .odds-row{display:flex;align-items:center;gap:calc(4px*var(--ws));height:calc(13px*var(--ws))}
+#odds-monitor .odds-cat{flex:0 0 calc(50px*var(--ws));white-space:nowrap;overflow:hidden;text-overflow:ellipsis;opacity:.88}
+#odds-monitor .odds-bar{flex:1;height:calc(6px*var(--ws));background:rgba(var(--gold-rgb),.14);border-radius:calc(3px*var(--ws));overflow:hidden}
+#odds-monitor .odds-bar>i{display:block;height:100%;width:0;background:linear-gradient(90deg,#8a93a6,#5a6478);border-radius:calc(3px*var(--ws))}
+#odds-monitor .odds-pct{flex:0 0 calc(27px*var(--ws));text-align:right;font-variant-numeric:tabular-nums;opacity:.92}
 #odds-monitor .odds-row.warm .odds-bar>i{background:linear-gradient(90deg,#f0a020,#b36b00)}
 #odds-monitor .odds-row.hot .odds-bar>i{background:linear-gradient(90deg,#50c878,#1e8c4e)}
 #odds-monitor .odds-row.hot .odds-pct{color:#7ce0a0;font-weight:700}
-@media (max-width:560px){#odds-monitor{width:120px;font-size:9.5px;top:48px}#odds-monitor .odds-cat{flex-basis:44px}}
+@media (min-width:561px){#odds-monitor{resize:horizontal;overflow:hidden;min-width:104px;max-width:340px}}
+@media (max-width:560px){#odds-monitor{--ws:.95;width:120px;top:48px}}
 /* Fenetre flottante "Assistance" (force de la main) -- meme modele que #odds-monitor. */
-#assist-win{position:fixed;top:54px;right:8px;z-index:42;min-width:120px;max-width:210px;padding:5px 8px 7px;background:rgba(20,26,38,.86);border:1px solid rgba(255,255,255,.12);border-radius:9px;box-shadow:0 4px 14px rgba(0,0,0,.42);color:#cdd3e0;pointer-events:auto;user-select:none;cursor:move;touch-action:none}
-#assist-win.hsw-drag{opacity:.96;box-shadow:0 8px 24px rgba(0,0,0,.58);border-color:rgba(227,200,0,.45)}
-#assist-win .hsw-hd{font-weight:700;font-size:10.5px;color:#E3C800;margin-bottom:5px;letter-spacing:.3px}
-#assist-win .hs-lbl{display:block;background:transparent;border:0;padding:0;max-width:none}
-#assist-win .hs-txt{font-size:11.5px;line-height:1.2;white-space:nowrap}
-#assist-win #hand-strength{position:static;left:auto;right:auto;top:auto;height:auto;pointer-events:none;margin-top:6px}
-#assist-win .hs-track{display:block;position:static;left:auto;right:auto;top:auto;height:6px;border-radius:3px}
-#assist-win .hs-fill{border-radius:3px}
-@media (max-width:560px){#assist-win{top:48px;min-width:110px}#assist-win .hs-txt{font-size:11px}}
+#assist-win{--ws:1;position:fixed;top:54px;right:8px;z-index:42;width:150px;min-width:110px;max-width:210px;padding:calc(5px*var(--ws)) calc(8px*var(--ws)) calc(7px*var(--ws));background:var(--panel);border:1px solid var(--border);border-radius:calc(9px*var(--ws));box-shadow:0 4px 14px rgba(0,0,0,.42);color:var(--text);pointer-events:auto;user-select:none;cursor:move;touch-action:none}
+#assist-win.hsw-drag{opacity:.96;box-shadow:0 8px 24px rgba(0,0,0,.58);border-color:var(--border-hi)}
+#assist-win .hsw-hd{font-weight:700;font-size:calc(10.5px*var(--ws));color:var(--gold);margin-bottom:calc(5px*var(--ws));letter-spacing:.3px}
+#assist-win .hs-lbl{display:block;background:transparent;border:0;padding:0;max-width:none;overflow:hidden}
+#assist-win .hs-txt{display:block;font-size:calc(11.5px*var(--ws));line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#assist-win #hand-strength{position:static;left:auto;right:auto;top:auto;height:auto;pointer-events:none;margin-top:calc(6px*var(--ws))}
+#assist-win .hs-track{display:block;position:static;left:auto;right:auto;top:auto;height:calc(6px*var(--ws));border-radius:calc(3px*var(--ws))}
+#assist-win .hs-fill{border-radius:calc(3px*var(--ws))}
+@media (min-width:561px){#assist-win{resize:horizontal;overflow:hidden;max-width:340px}}
+@media (max-width:560px){#assist-win{--ws:.96;width:auto;min-width:110px;top:48px}}
 /* Raccourcis clavier personnalisables (Options avancées). */
 .adv-keys{display:flex;flex-direction:column;gap:5px;margin-top:2px}
 .adv-keyrow{display:flex;align-items:center;gap:9px}
