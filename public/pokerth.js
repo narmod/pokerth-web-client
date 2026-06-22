@@ -451,8 +451,8 @@ function openAdvancedOptions() {
   sync('adv-guardcall', 'guard_call', false);
   sync('adv-assist', 'assist', true);
   sync('adv-odds', 'odds_monitor', false);
-  sync('adv-autobtn', 'show_auto', false);
-  sync('adv-quickbet', 'show_pct', false);
+  sync('adv-autobtn', 'show_auto', true);
+  sync('adv-quickbet', 'show_pct', true);
   sync('adv-voice', 'voice', false);
   sync('adv-displaybb', 'display_bb', false);
   sync('adv-nohideignored', 'no_hide_ignored', false);
@@ -539,6 +539,8 @@ function resetAdvDefaults() {
   };
   try { for (var k in defs) setAdvOpt(k, defs[k]); } catch (e) {}
   try { setSeatLayout('official'); } catch (e) {}
+  try { if (typeof window.setAutoBtn === 'function') window.setAutoBtn(true); } catch (e) {}
+  try { if (typeof window.setQuickBet === 'function') window.setQuickBet(true); } catch (e) {}
   try { resetKeys(); } catch (e) {}
   try { openAdvancedOptions(); } catch (e) {}   // re-sync des cases + retour onglet Interface
 }
@@ -4352,8 +4354,8 @@ const App = (() => {
   // Toggled from the header ••• menu and remembered in localStorage. The
   // button is always rendered but hidden via a <body> class when off, so the
   // toggle takes effect instantly without re-rendering the action bar.
-  let _showAutoBtn = false;
-  try { _showAutoBtn = localStorage.getItem('pth_show_auto') === '1'; } catch (e) {}
+  let _showAutoBtn = true;
+  try { _showAutoBtn = localStorage.getItem('pth_show_auto') !== '0'; } catch (e) {}
   try { document.body.classList.toggle('hide-auto-btn', !_showAutoBtn); } catch (e) {}
   function toggleAutoBtnPref() {
     _showAutoBtn = !_showAutoBtn;
@@ -4369,8 +4371,8 @@ const App = (() => {
   // enable it from the ••• menu and the choice is remembered in localStorage.
   // The row is always rendered and hidden via a <body> class so the toggle
   // applies instantly without re-rendering the action bar.
-  let _showPctBtns = false;
-  try { _showPctBtns = localStorage.getItem('pth_show_pct') === '1'; } catch (e) {}
+  let _showPctBtns = true;
+  try { _showPctBtns = localStorage.getItem('pth_show_pct') !== '0'; } catch (e) {}
   try { document.body.classList.toggle('hide-pct-btns', !_showPctBtns); } catch (e) {}
   function toggleQuickBetPref() {
     _showPctBtns = !_showPctBtns;
@@ -12182,7 +12184,7 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.3.114-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.115-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
