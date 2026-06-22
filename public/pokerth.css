@@ -2532,13 +2532,13 @@ html[data-bg-img] body.in-game {
 .react-mute-btn .rm-emo { transition: filter 0.15s, opacity 0.15s; pointer-events: none; }
 .react-mute-btn.muted { border-color: rgba(var(--red-rgb), 0.55); }
 .react-mute-btn.muted .rm-emo { filter: grayscale(1); opacity: 0.5; }
-.react-mute-btn.muted::after {
+.react-mute-btn::after {
   content: ""; position: absolute;
   width: 19px; height: 19px;
   border: 2px solid var(--red); border-radius: 50%;
   pointer-events: none;
 }
-.react-mute-btn.muted::before {
+.react-mute-btn::before {
   content: ""; position: absolute;
   width: 19px; height: 2px;
   background: var(--red); border-radius: 2px;
