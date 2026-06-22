@@ -415,9 +415,14 @@ function _advSyncContext() {
     var p = modal.querySelector('.adv-panel[data-cat="' + cat + '"]');
     if (p) p.classList.toggle('adv-panel-off', !enabled);
   };
+  var onConnect = false;            // page de login (pré-connexion : pas encore de profil ni serveur)
+  try { var _sc = document.getElementById('s-connect'); onConnect = !!(_sc && _sc.classList.contains('active')); } catch (e) {}
+  var connected = !onConnect;       // lobby ou partie = contexte de jeu connecté
   setEnabled('local', inGame);      // « Remplir avec des bots » : seulement à une table
   setEnabled('log', inGame);        // Journal : seulement en partie
   setEnabled('network', false);     // Jeu en réseau (LAN) : pas encore disponible
+  setEnabled('internet', connected);// pas de serveur à quitter avant connexion
+  setEnabled('avatar', connected);  // profil / avatar indisponible avant connexion
   try {
     var host = (window._pthNetServer && window._pthNetServer.host) ? window._pthNetServer.host : null;
     var el = modal.querySelector('#adv-srv-host');
@@ -12019,7 +12024,7 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.3.90-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.91-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
