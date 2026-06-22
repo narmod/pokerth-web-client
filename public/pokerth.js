@@ -363,6 +363,8 @@ function openAdvancedOptions() {
   sync('adv-nohideignored', 'no_hide_ignored', false);
   try { var _sl = document.getElementById('adv-seatlayout'); if (_sl) _sl.value = (localStorage.getItem('pth_seat_layout') === 'official') ? 'official' : 'classic'; } catch (e) {}
   try { _rebindAction = null; _renderKeyButtons(); } catch (e) {}
+  try { advSelectCat('ui'); } catch (e) {}
+  try { _advSyncContext(); } catch (e) {}
   m.style.display = '';
 }
 window.openAdvancedOptions = openAdvancedOptions;
@@ -372,6 +374,74 @@ function closeAdvancedOptions() {
   _rebindAction = null;
 }
 window.closeAdvancedOptions = closeAdvancedOptions;
+// Options avancées : navigation par catégories (parité du dialogue officiel
+// PokerTH QML). Sidebar icône+texte en tablette/desktop ; barre d'icônes seules
+// en haut sur téléphone (géré en CSS). Les catégories hors « Interface » relient
+// l'UI existante (thème, son, avatar, journal, connexion…), elles ne dupliquent
+// rien. advSelectCat() bascule l'onglet actif ; les catégories grisées sont
+// inertes.
+function advSelectCat(cat) {
+  var modal = document.getElementById('adv-modal');
+  if (!modal) return;
+  var btn = modal.querySelector('.adv-cat[data-cat="' + cat + '"]');
+  if (btn && btn.hasAttribute('disabled')) return;   // catégorie sans objet : on ignore
+  var cats = modal.querySelectorAll('.adv-cat');
+  for (var i = 0; i < cats.length; i++) {
+    var on = cats[i].getAttribute('data-cat') === cat;
+    cats[i].classList.toggle('is-active', on);
+    cats[i].setAttribute('aria-selected', on ? 'true' : 'false');
+  }
+  var panels = modal.querySelectorAll('.adv-panel');
+  for (var j = 0; j < panels.length; j++) {
+    panels[j].classList.toggle('is-active', panels[j].getAttribute('data-cat') === cat);
+  }
+  try { var pn = modal.querySelector('.adv-panels'); if (pn) pn.scrollTop = 0; } catch (e) {}
+}
+window.advSelectCat = advSelectCat;
+
+// Grise les catégories sans objet dans le contexte courant (lobby vs partie) et
+// renseigne le serveur courant dans l'onglet « Jeu Internet ».
+function _advSyncContext() {
+  var modal = document.getElementById('adv-modal');
+  if (!modal) return;
+  var inGame = false;
+  try { inGame = document.body.classList.contains('in-game'); } catch (e) {}
+  var setEnabled = function (cat, enabled) {
+    var b = modal.querySelector('.adv-cat[data-cat="' + cat + '"]');
+    if (b) {
+      if (enabled) { b.removeAttribute('disabled'); b.removeAttribute('aria-disabled'); }
+      else { b.setAttribute('disabled', ''); b.setAttribute('aria-disabled', 'true'); }
+    }
+    var p = modal.querySelector('.adv-panel[data-cat="' + cat + '"]');
+    if (p) p.classList.toggle('adv-panel-off', !enabled);
+  };
+  setEnabled('local', inGame);      // « Remplir avec des bots » : seulement à une table
+  setEnabled('log', inGame);        // Journal : seulement en partie
+  setEnabled('network', false);     // Jeu en réseau (LAN) : pas encore disponible
+  try {
+    var host = (window._pthNetServer && window._pthNetServer.host) ? window._pthNetServer.host : null;
+    var el = modal.querySelector('#adv-srv-host');
+    if (el) el.textContent = host || (typeof window.t === 'function' ? window.t('advSrvUnknown') : '\u2014');
+  } catch (e) {}
+}
+
+// « Paramètres par défaut » : réinitialise options + raccourcis (avec confirmation).
+function resetAdvDefaults() {
+  var msg = (typeof window.t === 'function' && window.t('advResetConfirm') !== 'advResetConfirm')
+    ? window.t('advResetConfirm')
+    : 'Reset all options and keyboard shortcuts to their defaults?';
+  if (!window.confirm(msg)) return;
+  var defs = {
+    anim_cards: true, show_blinds: true, hide_pbar: false, show_community: true,
+    focus_bet: false, chat_noemoji: false, fade_losers: true, show_flag: true,
+    own_click: false, guard_call: false, odds_monitor: false, no_hide_ignored: false
+  };
+  try { for (var k in defs) setAdvOpt(k, defs[k]); } catch (e) {}
+  try { setSeatLayout('classic'); } catch (e) {}
+  try { resetKeys(); } catch (e) {}
+  try { openAdvancedOptions(); } catch (e) {}   // re-sync des cases + retour onglet Interface
+}
+window.resetAdvDefaults = resetAdvDefaults;
 // Placement des sièges (Options avancées) : 'classic' | 'official'. Persiste +
 // re-rend les sièges via le hook global window._renderSeats.
 function setSeatLayout(v) {
@@ -11949,7 +12019,7 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.3.89-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.90-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

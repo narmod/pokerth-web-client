@@ -6377,3 +6377,43 @@ body.adv-hide-pbar .seat.me .seat-holecards.shc-big .pk {
 .adv-keyhint>span{flex:1;font-size:.74rem;opacity:.62;line-height:1.25}
 .kb-reset{flex:0 0 auto;height:28px;padding:0 11px;border-radius:7px;border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.05);color:var(--col200,#cdd3e0);font-size:.8rem;cursor:pointer}
 .kb-reset:hover{background:rgba(255,255,255,.1)}
+
+/* ===== Options avancées : navigation par catégories (parité dialogue officiel PokerTH) ===== */
+/* Tablette/desktop : sidebar icône+texte à gauche. Téléphone : barre d'icônes seules en haut. */
+.adv-card{max-width:620px}
+.adv-layout{display:flex;gap:14px;margin-top:10px;align-items:stretch}
+.adv-nav{flex:0 0 168px;display:flex;flex-direction:column;gap:2px;border-right:1px solid var(--border);padding-right:10px;overflow-y:auto;max-height:62vh}
+.adv-cat{display:flex;align-items:center;gap:10px;width:100%;padding:8px 9px;border:0;border-radius:8px;background:transparent;color:var(--text);font-size:.82rem;font-weight:600;text-align:left;cursor:pointer;transition:background .12s,color .12s}
+.adv-cat:hover:not(:disabled):not(.is-active){background:rgba(255,255,255,.05)}
+.adv-cat .adv-cat-ic{flex:0 0 auto;width:19px;height:19px;display:inline-flex;align-items:center;justify-content:center;opacity:.85}
+.adv-cat .adv-cat-ic svg{width:19px;height:19px;display:block}
+.adv-cat .adv-cat-lbl{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.adv-cat.is-active{background:rgba(227,200,0,.13);color:var(--gold,#E3C800);box-shadow:inset 2px 0 0 0 var(--gold,#E3C800)}
+.adv-cat.is-active .adv-cat-ic{opacity:1}
+.adv-cat:disabled,.adv-cat[disabled]{opacity:.38;cursor:default}
+.adv-panels{flex:1;min-width:0;max-height:62vh;overflow:auto;padding-right:2px}
+.adv-panel{display:none}
+.adv-panel.is-active{display:block}
+.adv-panels .adv-body{max-height:none;overflow:visible;margin-top:0}
+/* Panneaux « reliés » : description + bouton d'accès à l'UI existante. */
+.adv-link{display:flex;flex-direction:column;gap:12px;align-items:flex-start;padding:6px 2px}
+.adv-link-desc{font-size:.85rem;line-height:1.4;color:var(--col200,#cdd3e0)}
+.adv-link-btn{align-self:stretch;padding:11px 14px;border-radius:9px;border:1px solid var(--gold-dim,#b09a00);background:rgba(227,200,0,.12);color:var(--gold,#E3C800);font-size:.9rem;font-weight:700;cursor:pointer;transition:background .12s,border-color .12s,transform .08s}
+.adv-link-btn:hover{background:rgba(227,200,0,.2);border-color:var(--gold,#E3C800)}
+.adv-link-btn:active{transform:scale(.985)}
+.adv-link-btn.adv-link-danger{border-color:rgba(217,64,64,.6);background:rgba(217,64,64,.12);color:#e87070}
+.adv-link-btn.adv-link-danger:hover{background:rgba(217,64,64,.2);border-color:#d94040}
+.adv-srv{display:flex;align-items:center;gap:8px;font-size:.8rem;color:var(--col300,#a0acc4)}
+.adv-srv .adv-srv-host{color:var(--text);font-weight:600;font-family:var(--ff-mono,monospace);word-break:break-all}
+.adv-soon-tag{display:inline-block;font-size:.66rem;letter-spacing:.08em;text-transform:uppercase;color:var(--gold-dim,#b09a00);border:1px solid var(--border);border-radius:11px;padding:3px 10px;opacity:.85}
+.adv-panel-off{opacity:.55}
+/* Téléphone : la nav devient une barre d'icônes scrollable en haut (libellés cachés). */
+@media (max-width:640px){
+  .adv-card{max-width:560px}
+  .adv-layout{flex-direction:column;gap:10px}
+  .adv-nav{flex:0 0 auto;flex-direction:row;gap:4px;border-right:0;border-bottom:1px solid var(--border);padding:0 0 8px;max-height:none;overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch}
+  .adv-cat{flex:0 0 auto;width:auto;padding:7px 10px;border-radius:9px;justify-content:center}
+  .adv-cat .adv-cat-lbl{display:none}
+  .adv-cat.is-active{background:rgba(227,200,0,.16);box-shadow:inset 0 -2px 0 0 var(--gold,#E3C800)}
+  .adv-panels{max-height:56vh}
+}

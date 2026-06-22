@@ -1675,7 +1675,21 @@ if ('serviceWorker' in navigator) {
   <div class="km-card adv-card" role="dialog" aria-labelledby="adv-title">
     <button class="km-close" type="button" onclick="closeAdvancedOptions()" title="Fermer" data-i18n-title="closeTooltip" aria-label="Fermer">✕</button>
     <div class="km-title" id="adv-title"><span style="margin-right:7px">⚙️</span><span data-i18n="advTitle">Advanced options</span></div>
-    <div class="adv-body">
+    <div class="adv-layout">
+      <nav class="adv-nav" role="tablist" aria-label="Settings categories">
+        <button type="button" class="adv-cat is-active" data-cat="ui" id="adv-cat-ui" role="tab" aria-selected="true" aria-controls="adv-panel-ui" onclick="advSelectCat('ui')"><span class="adv-cat-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/></svg></span><span class="adv-cat-lbl" data-i18n="advCatUI">User interface</span></button>
+        <button type="button" class="adv-cat" data-cat="style" id="adv-cat-style" role="tab" aria-selected="false" aria-controls="adv-panel-style" onclick="advSelectCat('style')"><span class="adv-cat-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a9 9 0 1 0 .5 18c1 0 1.5-.8 1.5-1.6 0-.5-.2-.9-.5-1.2-.3-.3-.5-.7-.5-1.2 0-.9.7-1.5 1.6-1.5H17a4 4 0 0 0 4-4c0-4.4-4-7.5-9-7.5z"/><circle cx="7.5" cy="11.5" r="1.1" fill="currentColor" stroke="none"/><circle cx="11" cy="7.5" r="1.1" fill="currentColor" stroke="none"/><circle cx="15.5" cy="9" r="1.1" fill="currentColor" stroke="none"/></svg></span><span class="adv-cat-lbl" data-i18n="advCatStyle">Style</span></button>
+        <button type="button" class="adv-cat" data-cat="sound" id="adv-cat-sound" role="tab" aria-selected="false" aria-controls="adv-panel-sound" onclick="advSelectCat('sound')"><span class="adv-cat-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9.5v5h3.5L13 19V5L7.5 9.5H4z"/><path d="M16.5 8.5a5 5 0 0 1 0 7"/></svg></span><span class="adv-cat-lbl" data-i18n="advCatSound">Sound</span></button>
+        <button type="button" class="adv-cat" data-cat="local" id="adv-cat-local" role="tab" aria-selected="false" aria-controls="adv-panel-local" onclick="advSelectCat('local')"><span class="adv-cat-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.5c-1 1.6-6.5 5.6-6.5 9.4 0 2 1.6 3.3 3.4 3.3 1 0 1.9-.4 2.5-1.1-.2 1.8-1 3.2-2.4 4.4h6c-1.4-1.2-2.2-2.6-2.4-4.4.6.7 1.5 1.1 2.5 1.1 1.8 0 3.4-1.3 3.4-3.3 0-3.8-5.5-7.8-6.5-9.4z"/></svg></span><span class="adv-cat-lbl" data-i18n="advCatLocal">Local game</span></button>
+        <button type="button" class="adv-cat" data-cat="network" id="adv-cat-network" role="tab" aria-selected="false" aria-controls="adv-panel-network" onclick="advSelectCat('network')"><span class="adv-cat-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="4.5" rx="1"/><rect x="2.5" y="16.5" width="6" height="4.5" rx="1"/><rect x="15.5" y="16.5" width="6" height="4.5" rx="1"/><path d="M12 7.5V13M5.5 16.5V13H18.5V16.5"/></svg></span><span class="adv-cat-lbl" data-i18n="advCatNetwork">Network game</span></button>
+        <button type="button" class="adv-cat" data-cat="internet" id="adv-cat-internet" role="tab" aria-selected="false" aria-controls="adv-panel-internet" onclick="advSelectCat('internet')"><span class="adv-cat-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><path d="M3.5 12h17M12 3.5c2.3 2.3 2.3 14.7 0 17M12 3.5c-2.3 2.3-2.3 14.7 0 17"/></svg></span><span class="adv-cat-lbl" data-i18n="advCatInternet">Internet game</span></button>
+        <button type="button" class="adv-cat" data-cat="avatar" id="adv-cat-avatar" role="tab" aria-selected="false" aria-controls="adv-panel-avatar" onclick="advSelectCat('avatar')"><span class="adv-cat-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="3.5" width="17" height="17" rx="3"/><circle cx="12" cy="10" r="2.8"/><path d="M6.8 18a5.2 5.2 0 0 1 10.4 0"/></svg></span><span class="adv-cat-lbl" data-i18n="advCatAvatar">Nicknames / Avatars</span></button>
+        <button type="button" class="adv-cat" data-cat="log" id="adv-cat-log" role="tab" aria-selected="false" aria-controls="adv-panel-log" onclick="advSelectCat('log')"><span class="adv-cat-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4.5" width="18" height="15" rx="2"/><path d="M7 10l3 2.5-3 2.5M12.5 15h4.5"/></svg></span><span class="adv-cat-lbl" data-i18n="advCatLog">Log messages</span></button>
+        <button type="button" class="adv-cat" data-cat="reset" id="adv-cat-reset" role="tab" aria-selected="false" aria-controls="adv-panel-reset" onclick="advSelectCat('reset')"><span class="adv-cat-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9h10.5a5 5 0 0 1 0 10H8"/><path d="M7.5 4.5 3.5 9l4 4.5"/></svg></span><span class="adv-cat-lbl" data-i18n="advCatReset">Restore defaults</span></button>
+      </nav>
+      <div class="adv-panels">
+        <section class="adv-panel is-active" data-cat="ui" id="adv-panel-ui" role="tabpanel" aria-labelledby="adv-cat-ui">
+      <div class="adv-body">
       <div class="adv-sec" data-i18n="advSecCards">Cards</div>
       <label class="adv-row"><input type="checkbox" id="adv-anim" onchange="setAdvOpt('anim_cards',this.checked)"><span data-i18n="advAnimCards">Card animations</span></label>
       <label class="adv-row"><input type="checkbox" id="adv-fadelosers" onchange="setAdvOpt('fade_losers',this.checked)"><span data-i18n="advFadeLosers">Fade losing cards at showdown</span></label>
@@ -1716,6 +1730,58 @@ if ('serviceWorker' in navigator) {
         <div class="adv-keyrow" data-act="bet2"><span>Bet 1/2</span><button type="button" class="kb-btn" onclick="rebindKey('bet2')">2</button></div>
         <div class="adv-keyrow" data-act="bet3"><span>Bet Pot</span><button type="button" class="kb-btn" onclick="rebindKey('bet3')">3</button></div>
         <div class="adv-keyhint"><span data-i18n="kbHint">Tap a key, then press the new key. Space = Call, Enter = confirm raise.</span><button type="button" class="kb-reset" onclick="resetKeys()" data-i18n="kbReset">Reset</button></div>
+      </div>
+    </div>
+        </section>
+        <section class="adv-panel" data-cat="style" id="adv-panel-style" role="tabpanel" aria-labelledby="adv-cat-style">
+          <div class="adv-link">
+            <div class="adv-link-desc" data-i18n="advStyleDesc">Card decks, table felt, seat skins and the colour theme.</div>
+            <button type="button" class="adv-link-btn" onclick="closeAdvancedOptions();openThemePanel()"><span data-i18n="advStyleOpen">Open the theme picker</span></button>
+          </div>
+        </section>
+        <section class="adv-panel" data-cat="sound" id="adv-panel-sound" role="tabpanel" aria-labelledby="adv-cat-sound">
+          <div class="adv-link">
+            <div class="adv-link-desc" data-i18n="advSoundDesc">Game sound, music volume and reaction mute.</div>
+            <button type="button" class="adv-link-btn" id="adv-sound-btn" onclick="toggleSoundPopover(this)"><span data-i18n="advSoundOpen">Sound &amp; volume settings</span></button>
+          </div>
+        </section>
+        <section class="adv-panel" data-cat="local" id="adv-panel-local" role="tabpanel" aria-labelledby="adv-cat-local">
+          <div class="adv-link">
+            <div class="adv-link-desc" data-i18n="advLocalDesc">Practise against bots: fill the empty seats at your table.</div>
+            <button type="button" class="adv-link-btn" onclick="closeAdvancedOptions();App.startWithBots()"><span data-i18n="advLocalOpen">Fill seats with bots</span></button>
+          </div>
+        </section>
+        <section class="adv-panel" data-cat="network" id="adv-panel-network" role="tabpanel" aria-labelledby="adv-cat-network">
+          <div class="adv-link">
+            <div class="adv-link-desc" data-i18n="advNetworkDesc">Host a game over your local network (LAN).</div>
+            <div class="adv-soon-tag" data-i18n="advSoonTag">Coming soon</div>
+          </div>
+        </section>
+        <section class="adv-panel" data-cat="internet" id="adv-panel-internet" role="tabpanel" aria-labelledby="adv-cat-internet">
+          <div class="adv-link">
+            <div class="adv-link-desc" data-i18n="advInternetDesc">You are connected to a PokerTH server.</div>
+            <div class="adv-srv"><span data-i18n="advSrvLabel">Server</span><span id="adv-srv-host" class="adv-srv-host">&#8212;</span></div>
+            <button type="button" class="adv-link-btn" onclick="closeAdvancedOptions();App.confirmDisconnect()"><span data-i18n="advInternetOpen">Change server / disconnect</span></button>
+          </div>
+        </section>
+        <section class="adv-panel" data-cat="avatar" id="adv-panel-avatar" role="tabpanel" aria-labelledby="adv-cat-avatar">
+          <div class="adv-link">
+            <div class="adv-link-desc" data-i18n="advAvatarDesc">Your nickname and avatar image.</div>
+            <button type="button" class="adv-link-btn" onclick="closeAdvancedOptions();openAvatarPickerFromLobby()"><span data-i18n="advAvatarOpen">Edit nickname / avatar</span></button>
+          </div>
+        </section>
+        <section class="adv-panel" data-cat="log" id="adv-panel-log" role="tabpanel" aria-labelledby="adv-cat-log">
+          <div class="adv-link">
+            <div class="adv-link-desc" data-i18n="advLogDesc">In-game log and chat overlay.</div>
+            <button type="button" class="adv-link-btn" onclick="closeAdvancedOptions();toggleLog()"><span data-i18n="advLogOpen">Open the log</span></button>
+          </div>
+        </section>
+        <section class="adv-panel" data-cat="reset" id="adv-panel-reset" role="tabpanel" aria-labelledby="adv-cat-reset">
+          <div class="adv-link">
+            <div class="adv-link-desc" data-i18n="advResetDesc">Reset all advanced options and keyboard shortcuts to their defaults.</div>
+            <button type="button" class="adv-link-btn adv-link-danger" onclick="resetAdvDefaults()"><span data-i18n="advResetBtn">Restore defaults</span></button>
+          </div>
+        </section>
       </div>
     </div>
   </div>
