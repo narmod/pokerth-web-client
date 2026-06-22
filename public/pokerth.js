@@ -356,6 +356,42 @@ window.closeAssistWin = function () {
 // poignee ; on ancre donc la carte en absolu et on la centre a l'ouverture pour
 // un redimensionnement 1:1 stable. Taille memorisee (pth_adv_size). Sur mobile :
 // centrage flex natif, aucun resize.
+// Options avancees deplacables (desktop + tablette uniquement) : drag depuis la
+// barre de titre seulement, pour ne pas gener les controles du formulaire ni la
+// poignee de resize. Position memorisee (pth_adv_pos), bornee a l'ecran.
+function _advAttachDrag(card) {
+  if (card._advDrag) return;
+  card._advDrag = true;
+  var drag = null;
+  function apply(left, top) {
+    var w = card.offsetWidth, h = card.offsetHeight;
+    var maxL = Math.max(8, window.innerWidth - w), maxT = Math.max(8, window.innerHeight - h);
+    card.style.left = Math.max(8, Math.min(left, maxL)) + 'px';
+    card.style.top = Math.max(8, Math.min(top, maxT)) + 'px';
+  }
+  card.addEventListener('pointerdown', function (e) {
+    var ok = false; try { ok = window.matchMedia('(min-width:641px)').matches; } catch (ex) {}
+    if (!ok) return;
+    var t = e.target;
+    if (!t || !t.closest || !t.closest('.km-title')) return;
+    var r = card.getBoundingClientRect();
+    drag = { dx: e.clientX - r.left, dy: e.clientY - r.top };
+    try { card.setPointerCapture(e.pointerId); } catch (_) {}
+    card.classList.add('adv-dragging');
+    e.preventDefault();
+  });
+  card.addEventListener('pointermove', function (e) {
+    if (!drag) return; e.preventDefault();
+    apply(e.clientX - drag.dx, e.clientY - drag.dy);
+  });
+  function end(e) {
+    if (!drag) return; drag = null; card.classList.remove('adv-dragging');
+    try { card.releasePointerCapture(e.pointerId); } catch (_) {}
+    try { var r = card.getBoundingClientRect(); localStorage.setItem('pth_adv_pos', JSON.stringify({ left: Math.round(r.left), top: Math.round(r.top) })); } catch (_) {}
+  }
+  card.addEventListener('pointerup', end);
+  card.addEventListener('pointercancel', end);
+}
 function _advSetupResize() {
   var card = document.querySelector('#adv-modal .adv-card');
   if (!card) return;
@@ -372,8 +408,17 @@ function _advSetupResize() {
   } catch (e) {}
   card.style.position = 'absolute';
   var w = card.offsetWidth, h = card.offsetHeight;
-  card.style.left = Math.max(8, Math.round((window.innerWidth - w) / 2)) + 'px';
-  card.style.top = Math.max(8, Math.round((window.innerHeight - h) / 2)) + 'px';
+  // Position : restaurer celle memorisee (apres deplacement), sinon centrer.
+  // Toujours bornee a l'ecran au cas ou le viewport aurait change.
+  var L, T, sp = null;
+  try { sp = JSON.parse(localStorage.getItem('pth_adv_pos') || 'null'); } catch (e) {}
+  if (sp && typeof sp.left === 'number') { L = sp.left; T = sp.top; }
+  else { L = Math.round((window.innerWidth - w) / 2); T = Math.round((window.innerHeight - h) / 2); }
+  L = Math.max(8, Math.min(L, Math.max(8, window.innerWidth - w)));
+  T = Math.max(8, Math.min(T, Math.max(8, window.innerHeight - h)));
+  card.style.left = L + 'px';
+  card.style.top = T + 'px';
+  _advAttachDrag(card);
   if (!card._advRO && typeof ResizeObserver === 'function') {
     var _t = null;
     card._advRO = new ResizeObserver(function () {
@@ -12193,7 +12238,7 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.3.105-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.106-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

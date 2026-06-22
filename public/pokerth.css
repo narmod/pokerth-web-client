@@ -6457,4 +6457,6 @@ html:not([data-seat="pokerth"]) body.adv-hide-pbar .seat.me .seat-info {
   .adv-card .adv-layout{flex:1 1 auto;min-height:0}
   .adv-card .adv-nav{max-height:none;min-height:0}
   .adv-card .adv-panels{max-height:none;min-height:0}
+  .adv-card .km-title{cursor:move;user-select:none;touch-action:none}
+  .adv-card.adv-dragging{opacity:.97}
 }
