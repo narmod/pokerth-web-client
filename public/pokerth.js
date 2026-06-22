@@ -342,6 +342,42 @@ function setAdvOpt(key, on) {
   applyAdvOpts();
 }
 window.setAdvOpt = setAdvOpt;
+// Options avancees : sur desktop + tablette (>640px) la carte devient
+// redimensionnable (resize:both cote CSS). Un modal centre en flexbox "fuit" la
+// poignee ; on ancre donc la carte en absolu et on la centre a l'ouverture pour
+// un redimensionnement 1:1 stable. Taille memorisee (pth_adv_size). Sur mobile :
+// centrage flex natif, aucun resize.
+function _advSetupResize() {
+  var card = document.querySelector('#adv-modal .adv-card');
+  if (!card) return;
+  var canResize = false;
+  try { canResize = window.matchMedia('(min-width:641px)').matches; } catch (e) {}
+  if (!canResize) {
+    card.style.position = ''; card.style.left = ''; card.style.top = '';
+    card.style.width = ''; card.style.height = '';
+    return;
+  }
+  try {
+    var sz = JSON.parse(localStorage.getItem('pth_adv_size') || 'null');
+    if (sz && sz.w) { card.style.width = sz.w + 'px'; if (sz.h) card.style.height = sz.h + 'px'; }
+  } catch (e) {}
+  card.style.position = 'absolute';
+  var w = card.offsetWidth, h = card.offsetHeight;
+  card.style.left = Math.max(8, Math.round((window.innerWidth - w) / 2)) + 'px';
+  card.style.top = Math.max(8, Math.round((window.innerHeight - h) / 2)) + 'px';
+  if (!card._advRO && typeof ResizeObserver === 'function') {
+    var _t = null;
+    card._advRO = new ResizeObserver(function () {
+      if (!card.offsetWidth) return;
+      clearTimeout(_t);
+      _t = setTimeout(function () {
+        if (!card.offsetWidth) return;
+        try { localStorage.setItem('pth_adv_size', JSON.stringify({ w: Math.round(card.offsetWidth), h: Math.round(card.offsetHeight) })); } catch (e) {}
+      }, 250);
+    });
+    try { card._advRO.observe(card); } catch (e) {}
+  }
+}
 function openAdvancedOptions() {
   var m = document.getElementById('adv-modal');
   if (!m) return;
@@ -366,6 +402,7 @@ function openAdvancedOptions() {
   try { advSelectCat('ui'); } catch (e) {}
   try { _advSyncContext(); } catch (e) {}
   m.style.display = '';
+  try { _advSetupResize(); } catch (e) {}
 }
 window.openAdvancedOptions = openAdvancedOptions;
 function closeAdvancedOptions() {
@@ -12119,7 +12156,7 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.3.102-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.103-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
