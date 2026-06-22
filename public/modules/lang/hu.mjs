@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+  assist:'Segítség',
   advHidePbar:'PokerTH mód (játékossáv elrejtve)',
   deckSvg: "PokerTH",
   pucksPokerth: "PokerTH",

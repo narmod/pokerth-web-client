@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+  assist:'Asistență',
   advHidePbar:'Mod PokerTH (bara de jucător ascunsă)',
   deckSvg: "PokerTH",
   pucksPokerth: "PokerTH",

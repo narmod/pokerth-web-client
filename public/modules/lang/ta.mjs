@@ -11,6 +11,7 @@ export const meta = {
 };
 
 export const strings = {
+  assist:'உதவி',
   advHidePbar:'PokerTH பயன்முறை (வீரர் பட்டி மறைக்கப்பட்டது)',
   deckSvg: "PokerTH",
   pucksPokerth: "PokerTH",

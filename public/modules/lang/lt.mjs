@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+  assist:'Pagalba',
   advHidePbar:'PokerTH režimas (žaidėjo juosta paslėpta)',
   deckSvg: "PokerTH",
   pucksPokerth: "PokerTH",

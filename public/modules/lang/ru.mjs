@@ -15,6 +15,7 @@ export const meta = {
 };
 
 export const strings = {
+  assist:'Помощь',
   advHidePbar:'Режим PokerTH (панель игрока скрыта)',
   deckSvg: "PokerTH",
   pucksPokerth: "PokerTH",

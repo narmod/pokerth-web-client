@@ -14,6 +14,7 @@ export const meta = {
 };
 
 export const strings = {
+  assist:'सहायता',
   advHidePbar:'PokerTH मोड (प्लेयर बार छिपी हुई)',
   deckSvg: "PokerTH",
   pucksPokerth: "PokerTH",

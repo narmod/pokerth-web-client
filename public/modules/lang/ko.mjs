@@ -13,6 +13,7 @@ export const meta = {
 };
 
 export const strings = {
+  assist:'어시스트',
   advHidePbar:'PokerTH 모드 (플레이어 바 숨김)',
   deckSvg: "PokerTH",
   pucksPokerth: "PokerTH",

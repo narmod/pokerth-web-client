@@ -15,6 +15,7 @@ export const meta = {
 };
 
 export const strings = {
+  assist:'Assistenz',
   advHidePbar:'PokerTH-Modus (Spielerleiste ausgeblendet)',
   deckSvg: "PokerTH",
   pucksPokerth: "PokerTH",

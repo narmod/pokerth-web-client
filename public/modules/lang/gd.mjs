@@ -11,6 +11,7 @@ export const meta = {
 };
 
 export const strings = {
+  assist:'Taic',
   advHidePbar:'Modh PokerTH (bàr-cluicheadair falaichte)',
   deckSvg: "PokerTH",
   pucksPokerth: "PokerTH",

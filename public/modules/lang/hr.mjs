@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+  assist:'Pomoć',
   advHidePbar:'PokerTH način (traka igrača skrivena)',
   deckSvg: "PokerTH",
   pucksPokerth: "PokerTH",

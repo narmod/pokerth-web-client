@@ -15,6 +15,7 @@ export const meta = {
 };
 
 export const strings = {
+  assist:'Hulp',
   advHidePbar:'PokerTH-modus (spelerbalk verborgen)',
   deckSvg: "PokerTH",
   pucksPokerth: "PokerTH",

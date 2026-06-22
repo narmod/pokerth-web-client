@@ -9,6 +9,7 @@ export const meta = {
 };
 
 export const strings = {
+  assist:'Apu',
   advHidePbar:'PokerTH-tila (pelaajapalkki piilotettu)',
   deckSvg: "PokerTH",
   pucksPokerth: "PokerTH",

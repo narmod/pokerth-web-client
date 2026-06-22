@@ -16,6 +16,7 @@ export const meta = {
 };
 
 export const strings = {
+  assist:'Pomoc',
   advHidePbar:'Tryb PokerTH (pasek gracza ukryty)',
   deckSvg: "PokerTH",
   pucksPokerth: "PokerTH",

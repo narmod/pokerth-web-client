@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+  assist:'Hỗ trợ',
   advHidePbar:'Chế độ PokerTH (thanh người chơi ẩn)',
   deckSvg: "PokerTH",
   pucksPokerth: "PokerTH",
