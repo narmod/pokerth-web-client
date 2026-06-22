@@ -7295,8 +7295,27 @@ const App = (() => {
   }
 
   // ─── Force de la main ───
+  // Sur le theme clair, les couleurs de force de main sont claires (prevues pour
+  // fond sombre) et deviennent illisibles sur le panneau quasi-blanc. On les
+  // fonce a luminance ~0.30 en conservant la teinte (texte + barre). Autres
+  // themes (sombres) : inchange.
+  function _hsContrastCol(col) {
+    var isLight = false;
+    try { isLight = (document.documentElement.getAttribute('data-theme') === 'pokerth-light'); } catch (e) {}
+    if (!isLight) return col;
+    var m = /^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/.exec(col || '');
+    if (!m) return col;
+    var hx = m[1];
+    if (hx.length === 3) hx = hx[0]+hx[0]+hx[1]+hx[1]+hx[2]+hx[2];
+    var r = parseInt(hx.slice(0,2),16), g = parseInt(hx.slice(2,4),16), b = parseInt(hx.slice(4,6),16);
+    var lum = (0.299*r + 0.587*g + 0.114*b) / 255;
+    if (lum <= 0.33) return col;
+    var f = 0.27 / lum;
+    return 'rgb(' + Math.round(r*f) + ',' + Math.round(g*f) + ',' + Math.round(b*f) + ')';
+  }
   function _hsSet(el, text, pct, col) {
     if (!el) return;
+    col = _hsContrastCol(col);
     var p = (pct == null || isNaN(pct)) ? 0 : Math.max(0, Math.min(100, pct));
     var fill = el.querySelector('.hs-fill');
     if (fill) { fill.style.width = p + '%'; if (col) fill.style.background = col; }
@@ -12174,7 +12193,7 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.3.104-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.105-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
