@@ -419,13 +419,23 @@ function toggleSoundPopover(btn) {
         '</div>';
     }
   } catch (e) {}
+  // Vibration (haptique mobile) — meme commande que Sons & Musique.
+  var hOn = true; try { hOn = localStorage.getItem('pth_haptic') !== '0'; } catch (e) {}
+  var hlbl = _stxt('hapticLabel', 'Vibration');
+  var hapticRow =
+    '<div class="sp-row sp-haptic">' +
+    '<span class="sound-pop-ico" aria-hidden="true">📳</span>' +
+    '<span class="sp-haptic-lbl">' + hlbl + '</span>' +
+    '<input type="checkbox" class="sp-haptic-cb"' + (hOn ? ' checked' : '') + ' aria-label="' + hlbl + '">' +
+    '</div>';
   pop.innerHTML =
     '<div class="sp-row">' +
     '<button type="button" class="sound-pop-mute" aria-pressed="' + String(!_soundEnabled) + '" title="' + lbl + '">' + (_soundEnabled ? '\uD83D\uDD0A' : '\uD83D\uDD07') + '</button>' +
     '<input type="range" class="sound-pop-range" min="0" max="100" value="' + vol + '" aria-label="' + lbl + '">' +
     '<span class="sound-pop-val">' + vol + '%</span>' +
     '</div>' +
-    musicRow;
+    musicRow +
+    hapticRow;
   document.body.appendChild(pop);
   // Position : sous le bouton, bord droit aligné, clampé dans l'écran.
   var r = btn.getBoundingClientRect();
@@ -454,6 +464,12 @@ function toggleSoundPopover(btn) {
       var pct = parseInt(_mrg.value, 10) || 0;
       if (_mval) _mval.textContent = pct + '%';
       try { if (window.Music && typeof window.Music.setVolume === 'function') window.Music.setVolume(pct / 100); } catch (e) {}
+    });
+  }
+  var _hcb = pop.querySelector('.sp-haptic-cb');
+  if (_hcb) {
+    _hcb.addEventListener('change', function () {
+      try { if (typeof window.setHaptic === 'function') window.setHaptic(_hcb.checked); } catch (e) {}
     });
   }
   _soundPop = pop;
