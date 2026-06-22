@@ -7602,31 +7602,89 @@ const App = (() => {
   function _officialSeatPix(n, isPortrait, zW, zH) {
     var M = n - 1; // adversaires
     if (M < 1) return null;
-    var SLOTS_P = { L_bottom:[0.15,0.81], R_bottom:[0.85,0.81], L_lower:[0.15,0.61], R_lower:[0.85,0.61], L_upper:[0.15,0.41], R_upper:[0.85,0.41], TL:[0.15,0.21], TR:[0.85,0.21], TC:[0.50,0.13] };
-    var SEQ_P = {
-      1:['TC'], 2:['TL','TR'], 3:['TL','TC','TR'],
-      4:['L_upper','TL','TR','R_upper'], 5:['L_upper','TL','TC','TR','R_upper'],
-      6:['L_lower','L_upper','TL','TR','R_upper','R_lower'],
-      7:['L_lower','L_upper','TL','TC','TR','R_upper','R_lower'],
-      8:['L_bottom','L_lower','L_upper','TL','TR','R_upper','R_lower','R_bottom'],
-      9:['L_bottom','L_lower','L_upper','TL','TC','TR','R_upper','R_lower','R_bottom']
-    };
-    var SLOTS_L = { T1:[0.09,0.16], T2:[0.30,0.16], T3:[0.50,0.16], T4:[0.70,0.16], T5:[0.91,0.16], B1:[0.09,0.60], B2:[0.30,0.60], B4:[0.70,0.60], B5:[0.91,0.60] };
-    var SEQ_L = {
-      1:['T3'], 2:['T2','T4'], 3:['T2','T3','T4'],
-      4:['T1','T2','T4','T5'], 5:['T1','T2','T3','T4','T5'],
-      6:['B1','T1','T2','T4','T5','B5'],
-      7:['B1','T1','T2','T3','T4','T5','B5'],
-      8:['B2','B1','T1','T2','T4','T5','B5','B4'],
-      9:['B2','B1','T1','T2','T3','T4','T5','B5','B4']
-    };
-    var slots = isPortrait ? SLOTS_P : SLOTS_L;
-    var seq   = (isPortrait ? SEQ_P : SEQ_L)[M];
-    if (!seq) return null;
-    var out = [null]; // index 0 = self -> conserve la position classique
-    for (var i = 0; i < seq.length; i++) {
-      var f = slots[seq[i]];
-      out.push(f ? { top: f[1] * zH, left: f[0] * zW } : null);
+    // ── PORTRAIT : slots officiels QML (GameTable.qml slotPosPortrait) ──
+    // Valeurs alignees 1:1 sur le client officiel + nudge px (slotForSeat) :
+    // sieges du bas +14px, sieges du haut -4px (px de la zone de jeu).
+    if (isPortrait) {
+      var SLOTS_P = {
+        L_bottom:[0.15,0.785], L_lower:[0.15,0.65], L_upper:[0.15,0.345],
+        TL:[0.15,0.21], TC:[0.50,0.075], TR:[0.85,0.21],
+        R_upper:[0.85,0.345], R_lower:[0.85,0.65], R_bottom:[0.85,0.785]
+      };
+      var SEQ_P = {
+        1:['TC'], 2:['TL','TR'], 3:['TL','TC','TR'],
+        4:['L_upper','TL','TR','R_upper'], 5:['L_upper','TL','TC','TR','R_upper'],
+        6:['L_lower','L_upper','TL','TR','R_upper','R_lower'],
+        7:['L_lower','L_upper','TL','TC','TR','R_upper','R_lower'],
+        8:['L_bottom','L_lower','L_upper','TL','TR','R_upper','R_lower','R_bottom'],
+        9:['L_bottom','L_lower','L_upper','TL','TC','TR','R_upper','R_lower','R_bottom']
+      };
+      var seqP = SEQ_P[M];
+      if (!seqP) return null;
+      var outP = [null]; // index 0 = self -> position classique
+      for (var i = 0; i < seqP.length; i++) {
+        var nm = seqP[i], f = SLOTS_P[nm];
+        if (!f) { outP.push(null); continue; }
+        var nud = (nm === 'L_lower' || nm === 'L_bottom' || nm === 'R_lower' || nm === 'R_bottom') ? 14
+                : (nm === 'L_upper' || nm === 'TL' || nm === 'R_upper' || nm === 'TR') ? -4 : 0;
+        outP.push({ top: f[1] * zH + nud, left: f[0] * zW });
+      }
+      return outP;
+    }
+    // ── PAYSAGE : ellipse officielle (GameTable.qml buildLandscapeSlots) ──
+    // Modele "collier" : self = grosse perle au point bas (90deg), les N
+    // adversaires se repartissent sur le reste de l'arc (selfWeight). point()
+    // applique le modelage vertical officiel (squash / gravity / pairSpread).
+    // Le web n'a pas la bisection boxScale -> tailles de box de base QML (wide),
+    // s = 1. Les fractions resultantes pourront etre calees visuellement.
+    var compact = zH < 600;
+    var s = 1;
+    var oppBaseH = 84, oppBaseW = 114, selfBaseH = 84, selfBaseW = 114;
+    var visualW = oppBaseW * s, visualH = oppBaseH * s, selfVisualH = selfBaseH * s;
+    var sideBadgeGapBase = 48, selfBadgeGapBase = 8;
+    var sideMargin = Math.max(18, zW * 0.025) + sideBadgeGapBase * s;
+    var sideX = (sideMargin + visualW / 2) / Math.max(zW, 1);
+    var radiusX = Math.max(0.22, 0.5 - sideX);
+    var topY = ((compact ? 0 : 4) + visualH / 2) / Math.max(zH, 1);
+    var selfTop = zH - 4 - selfVisualH;
+    var selfGapY = compact ? Math.max(8, selfBadgeGapBase * s * 0.5) : selfBadgeGapBase * s;
+    var bottomY = (selfTop - selfGapY - visualH / 2) / Math.max(zH, 1);
+    var centerY = (topY + bottomY) / 2;
+    var radiusY = (bottomY - topY) / 2;
+    var lowerSquash = compact ? 0.2 : 1.0;
+    var sideGravity = 0.25, topCosSquash = 1.4;
+    var gravityUpperOnly = compact;
+    var lowerGravity = compact ? 0.0 : 0.15;
+    var maxBottomY = (selfTop + selfVisualH * 0.35 - visualH / 2) / Math.max(zH, 1);
+    var vMaxLower = radiusY > 0 ? (maxBottomY - centerY) / radiusY : 1.0;
+    var selfClearX = (selfBaseW * s / 2 + visualW / 2 + 12) / Math.max(zW, 1);
+    function point(deg) {
+      var rad = deg * Math.PI / 180;
+      var sinV = Math.sin(rad), cosV = Math.cos(rad), sinOrig = sinV;
+      if (sinV > 0 && lowerSquash !== 1.0) sinV = Math.pow(sinV, lowerSquash);
+      if (sinV <= 0 && cosV !== 0) cosV = (cosV < 0 ? -1 : 1) * Math.pow(Math.abs(cosV), topCosSquash);
+      var vFactor = sinV
+                  + ((!gravityUpperOnly || sinV <= 0) ? sideGravity * Math.abs(cosV) : 0)
+                  + (sinV > 0 ? lowerGravity * sinV : 0);
+      if (!compact && cosV !== 0) {
+        var ps = 0.02 * Math.abs(cosV);
+        vFactor += (sinOrig < 0 ? -ps : ps);
+      }
+      if (vFactor > 1.0) vFactor = 1.0;
+      if (vFactor < -1.0) vFactor = -1.0;
+      if (compact && sinV > 0 && Math.abs(radiusX * cosV) > selfClearX && vMaxLower > vFactor)
+        vFactor = vFactor + (vMaxLower - vFactor) * sinOrig;
+      return [0.5 + radiusX * cosV, centerY + radiusY * vFactor];
+    }
+    var opps = Math.max(1, M);
+    var selfWeight = compact ? 0.5 : 0.3;
+    var dOpp = 360 / (opps + selfWeight);
+    var dSelf = selfWeight * dOpp;
+    var firstOppAngle = 90 + (dSelf + dOpp) / 2;
+    var out = [null]; // index 0 = self -> position classique (bas)
+    for (var k = 1; k <= opps; k++) {
+      var p = point(firstOppAngle + (k - 1) * dOpp);
+      out.push({ top: p[1] * zH, left: p[0] * zW });
     }
     return out;
   }
@@ -12020,7 +12078,7 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.3.95-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.96-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
