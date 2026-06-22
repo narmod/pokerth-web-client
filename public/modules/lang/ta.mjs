@@ -11,6 +11,7 @@ export const meta = {
 };
 
 export const strings = {
+  advDisplayBB: 'தொகைகளை பிக் பிளைண்டில் காட்டு',
   assist:'உதவி',
   advHidePbar:'PokerTH பயன்முறை (வீரர் பட்டி மறைக்கப்பட்டது)',
   deckSvg: "PokerTH",

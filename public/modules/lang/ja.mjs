@@ -9,6 +9,7 @@ export const meta = {
 };
 
 export const strings = {
+  advDisplayBB: '金額をビッグブラインドで表示',
   assist:'アシスト',
   advHidePbar:'PokerTH モード（プレイヤーバー非表示）',
   deckSvg: "PokerTH",

@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+  advDisplayBB: 'Wys bedrae in groot blinds',
   assist:'Hulp',
   advHidePbar:'PokerTH-modus (spelerbalk versteek)',
   deckSvg: "PokerTH",

@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+  advDisplayBB: 'Hiển thị số tiền theo big blind',
   assist:'Hỗ trợ',
   advHidePbar:'Chế độ PokerTH (thanh người chơi ẩn)',
   deckSvg: "PokerTH",

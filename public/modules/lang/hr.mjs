@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+  advDisplayBB: 'Prikaži iznose u velikim blindovima',
   assist:'Pomoć',
   advHidePbar:'PokerTH način (traka igrača skrivena)',
   deckSvg: "PokerTH",

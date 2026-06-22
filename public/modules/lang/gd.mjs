@@ -11,6 +11,7 @@ export const meta = {
 };
 
 export const strings = {
+  advDisplayBB: 'Seall na suimean ann am big blinds',
   assist:'Taic',
   advHidePbar:'Modh PokerTH (bàr-cluicheadair falaichte)',
   deckSvg: "PokerTH",

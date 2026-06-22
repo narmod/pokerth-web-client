@@ -16,6 +16,7 @@ export const meta = {
 };
 
 export const strings = {
+  advDisplayBB: 'Pokaż kwoty w dużych ciemnych',
   assist:'Pomoc',
   advHidePbar:'Tryb PokerTH (pasek gracza ukryty)',
   deckSvg: "PokerTH",

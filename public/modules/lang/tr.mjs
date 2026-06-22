@@ -12,6 +12,7 @@ export const meta = {
 };
 
 export const strings = {
+  advDisplayBB: 'Tutarları büyük blind olarak göster',
   assist:'Yardım',
   advHidePbar:'PokerTH modu (oyuncu çubuğu gizli)',
   deckSvg: "PokerTH",

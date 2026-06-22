@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+  advDisplayBB: 'Mostra els imports en big blinds',
   assist:'Assistència',
   advHidePbar:'Mode PokerTH (barra de jugador amagada)',
   deckSvg: "PokerTH",

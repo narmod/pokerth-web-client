@@ -11,6 +11,7 @@ export const meta = {
 };
 
 export const strings = {
+  advDisplayBB: '以大盲注显示金额',
   assist:'辅助',
   advHidePbar:'PokerTH 模式（玩家栏隐藏）',
   deckSvg: "PokerTH",

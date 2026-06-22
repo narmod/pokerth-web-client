@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+  advDisplayBB: 'Zobraziť sumy vo veľkých blindoch',
   assist:'Asistencia',
   advHidePbar:'Režim PokerTH (panel hráča skrytý)',
   deckSvg: "PokerTH",

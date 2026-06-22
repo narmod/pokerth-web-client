@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+  advDisplayBB: 'Összegek megjelenítése nagyvakban',
   assist:'Segítség',
   advHidePbar:'PokerTH mód (játékossáv elrejtve)',
   deckSvg: "PokerTH",

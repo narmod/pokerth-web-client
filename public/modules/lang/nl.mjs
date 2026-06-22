@@ -15,6 +15,7 @@ export const meta = {
 };
 
 export const strings = {
+  advDisplayBB: 'Bedragen tonen in big blinds',
   assist:'Hulp',
   advHidePbar:'PokerTH-modus (spelerbalk verborgen)',
   deckSvg: "PokerTH",

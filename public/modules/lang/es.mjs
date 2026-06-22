@@ -16,6 +16,7 @@ export const meta = {
 };
 
 export const strings = {
+  advDisplayBB: 'Mostrar importes en ciegas grandes',
   assist:'Asistencia',
   advHidePbar:'Modo PokerTH (barra de jugador oculta)',
   deckSvg: "PokerTH",

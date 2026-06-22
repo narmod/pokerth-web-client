@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+  advDisplayBB: 'Εμφάνιση ποσών σε big blind',
   assist:'Βοήθεια',
   advHidePbar:'Λειτουργία PokerTH (μπάρα παίκτη κρυμμένη)',
   deckSvg: "PokerTH",

@@ -9,6 +9,7 @@ export const meta = {
 };
 
 export const strings = {
+  advDisplayBB: 'Näytä summat isoina blindeina',
   assist:'Apu',
   advHidePbar:'PokerTH-tila (pelaajapalkki piilotettu)',
   deckSvg: "PokerTH",

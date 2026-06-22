@@ -15,6 +15,7 @@ export const meta = {
 };
 
 export const strings = {
+  advDisplayBB: 'Beträge in Big Blinds anzeigen',
   assist:'Assistenz',
   advHidePbar:'PokerTH-Modus (Spielerleiste ausgeblendet)',
   deckSvg: "PokerTH",

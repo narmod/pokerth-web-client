@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+  advDisplayBB: 'Rodyti sumas didžiaisiais statymais',
   assist:'Pagalba',
   advHidePbar:'PokerTH režimas (žaidėjo juosta paslėpta)',
   deckSvg: "PokerTH",

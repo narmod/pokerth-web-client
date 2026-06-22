@@ -15,6 +15,7 @@ export const meta = {
 };
 
 export const strings = {
+  advDisplayBB: 'Показывать суммы в больших блайндах',
   assist:'Помощь',
   advHidePbar:'Режим PokerTH (панель игрока скрыта)',
   deckSvg: "PokerTH",

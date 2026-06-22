@@ -9,6 +9,7 @@ export const meta = {
 };
 
 export const strings = {
+  advDisplayBB: 'Mostrar montantes em big blinds',
   assist:'Assistência',
   advHidePbar:'Modo PokerTH (barra de jogador oculta)',
   deckSvg: "PokerTH",

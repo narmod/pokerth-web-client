@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+  advDisplayBB: 'Afișează sumele în big blind',
   assist:'Asistență',
   advHidePbar:'Mod PokerTH (bara de jucător ascunsă)',
   deckSvg: "PokerTH",

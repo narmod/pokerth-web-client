@@ -13,6 +13,7 @@ export const meta = {
 };
 
 export const strings = {
+  advDisplayBB: '금액을 빅 블라인드로 표시',
   assist:'어시스트',
   advHidePbar:'PokerTH 모드 (플레이어 바 숨김)',
   deckSvg: "PokerTH",

@@ -9,6 +9,7 @@ export const meta = {
 };
 
 export const strings = {
+  advDisplayBB: 'Vis beløp i big blinds',
   assist:'Hjelp',
   advHidePbar:'PokerTH-modus (spillerlinje skjult)',
   deckSvg: "PokerTH",
