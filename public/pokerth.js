@@ -11527,10 +11527,13 @@ function _makeHandsDraggable(card){
   card.addEventListener('pointercancel', end);
 }
 function resetWindows(){
-  // Bouton reset du header (≥900px) : efface les positions memorisees et remet
-  // chat/journal/reactions en bandeau + recentre la carte des combinaisons.
-  ['pth_winpos_chat','pth_winpos_lobbychat','pth_winpos_log2','pth_winpos_react','pth_winpos_theme','pth_winpos_hands'].forEach(function(k){ try{ localStorage.removeItem(k); }catch(e){} });
-  ['g-chat-panel','lobby-chat-panel','g-log-panel','g-reaction-panel'].forEach(function(id){ var p=document.getElementById(id); if(p) _disableFloating(p); });
+  // Bouton reset du header (≥900px) : efface TOUTES les positions/tailles
+  // memorisees et remet chaque fenetre a son etat par defaut (bandeau, ou
+  // position CSS d'origine pour les fenetres flottantes).
+  ['pth_winpos_chat','pth_winpos_lobbychat','pth_winpos_log2','pth_winpos_react','pth_winpos_theme','pth_winpos_hands','pth_winpos_music','pth_odds_pos','pth_odds_w','pth_assist_pos','pth_assist_w','pth_adv_pos','pth_adv_size'].forEach(function(k){ try{ localStorage.removeItem(k); }catch(e){} });
+  ['g-chat-panel','lobby-chat-panel','g-log-panel','g-reaction-panel','music-panel'].forEach(function(id){ var p=document.getElementById(id); if(p) _disableFloating(p); });
+  // Fenetres flottantes odds/assist : retire les styles inline -> retour aux defauts CSS.
+  ['odds-monitor','assist-win'].forEach(function(id){ var el=document.getElementById(id); if(el){ ['left','top','right','bottom','width'].forEach(function(pr){ el.style[pr]=''; }); el.style.removeProperty('--ws'); } });
   var card=document.getElementById('hands-card-inner');
   if(card){
     card.classList.remove('hands-floatable');
@@ -12179,7 +12182,7 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.3.110-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.111-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
