@@ -4125,14 +4125,10 @@ const App = (() => {
     // Give immediate tactile + textual confirmation.
     if (_hapticEnabled) hapticBuzz(40);
     else { try { if (navigator && typeof navigator.vibrate === 'function') navigator.vibrate(0); } catch(e) {} } // cancel any queued buzz
-    var fr = (typeof _lang === 'undefined' || _lang !== 'en');
     var label = _hapticEnabled
       ? t('hapticOn')
       : t('hapticOff');
     if (typeof showKeyHint === 'function') showKeyHint(label);
-    // Refresh the menu button label/emoji.
-    var b = document.getElementById('haptic-toggle-mob');
-    if (b) b.innerHTML = '📳 ' + t('hapticLabel') + _menuTick(_hapticEnabled);
     // Direct header twin (tablet/desktop): icon-only.
     var bd = document.getElementById('haptic-toggle-btn');
     if (bd) bd.textContent = (_hapticEnabled ? '📳' : '📴');
@@ -4144,7 +4140,6 @@ const App = (() => {
   function toggleDisplayBB() {
     _displayBB = !_displayBB;
     try { localStorage.setItem('pth_display_bb', _displayBB ? '1' : '0'); } catch (e) {}
-    refreshDisplayBBButton();
     // Repaint everything that shows a live amount.
     try { if (typeof renderSeats === 'function' && seats.length) renderSeats(); } catch (e) {}
     // Re-render the action buttons only if they're currently showing (i.e.
@@ -4157,15 +4152,6 @@ const App = (() => {
     try { repaintPot(); } catch (e) {}
     if (typeof showKeyHint === 'function') showKeyHint(_displayBB ? t('displayBB') : t('displayChips'));
     return _displayBB;
-  }
-  // Update the menu button label (short toggle "BB / ¥", active side marked).
-  function refreshDisplayBBButton() {
-    var b = document.getElementById('displaybb-toggle-mob');
-    if (b) b.innerHTML = '🎚️ ' + (_displayBB
-      ? '<b style="color:var(--gold)">BB</b> / ¥'
-      : 'BB / <b style="color:var(--gold)">¥</b>');
-    var bd = document.getElementById('displaybb-toggle-btn');
-    if (bd) bd.textContent = _displayBB ? 'BB' : '¥';
   }
   // Re-render the pot label from the last known pot value, in the current
   // mode. We keep the last numeric pot in _lastPotValue (set by setPot) so a
@@ -4292,8 +4278,6 @@ const App = (() => {
     try { localStorage.setItem('pth_voice', _voiceEnabled ? '1' : '0'); } catch(e) {}
     var label = _voiceEnabled ? t('voiceOn') : t('voiceOff');
     if (typeof showKeyHint === 'function') showKeyHint(label);
-    var b = document.getElementById('voice-toggle-mob');
-    if (b) b.innerHTML = '🗣️ ' + t('voiceLabel') + _menuTick(_voiceEnabled);
     // Direct header twin (tablet/desktop): icon-only.
     var vd = document.getElementById('voice-toggle-btn');
     if (vd) vd.textContent = (_voiceEnabled ? '🗣️' : '🤐');
@@ -4376,8 +4360,6 @@ const App = (() => {
     try { localStorage.setItem('pth_show_auto', _showAutoBtn ? '1' : '0'); } catch (e) {}
     if (!_showAutoBtn) _playingMode = 0; // repasse en Manuel si l'UI auto est masquée
     try { document.body.classList.toggle('hide-auto-btn', !_showAutoBtn); } catch (e) {}
-    var b = document.getElementById('auto-pref-mob');
-    if (b) b.innerHTML = '🔁 ' + t('autoBtnLabel') + _menuTick(_showAutoBtn);
     if (typeof showKeyHint === 'function') showKeyHint(t('autoBtnLabel') + (_showAutoBtn ? ' \u2713' : ''));
     return _showAutoBtn;
   }
@@ -4394,8 +4376,6 @@ const App = (() => {
     _showPctBtns = !_showPctBtns;
     try { localStorage.setItem('pth_show_pct', _showPctBtns ? '1' : '0'); } catch (e) {}
     try { document.body.classList.toggle('hide-pct-btns', !_showPctBtns); } catch (e) {}
-    var b = document.getElementById('pct-pref-mob');
-    if (b) b.innerHTML = '💰 ' + t('quickBetLabel') + _menuTick(_showPctBtns);
     if (typeof showKeyHint === 'function') showKeyHint(t('quickBetLabel') + (_showPctBtns ? ' \u2713' : ''));
     return _showPctBtns;
   }
@@ -11741,60 +11721,6 @@ function toggleHeaderOverflow(e) {
   if (e) e.stopPropagation();
   var m = document.getElementById('g-overflow-menu');
   if (!m) return;
-  // Sync the haptic toggle label/emoji with the current state before
-  // the menu becomes visible (📳 = on, 📴 = off).
-  try {
-    var hb = document.getElementById('haptic-toggle-mob');
-    if (hb) {
-      var on = true;
-      try { on = localStorage.getItem('pth_haptic') !== '0'; } catch(e2) {}
-      var fr = (typeof window._lang === 'undefined') ? true : (window._lang !== 'en');
-      // window._lang may not be exposed; fall back to checking <html lang>.
-      try {
-        var lg = document.documentElement.getAttribute('lang');
-        if (lg) fr = (lg !== 'en');
-      } catch(e3) {}
-      hb.innerHTML = '📳 ' + t('hapticLabel') + _menuTick(on);
-    }
-  } catch(e4) {}
-  // Same for the voice-announcement toggle (🗣️ = on, 🤐 = off).
-  try {
-    var vb = document.getElementById('voice-toggle-mob');
-    if (vb) {
-      var von = false;
-      try { von = localStorage.getItem('pth_voice') === '1'; } catch(e5) {}
-      vb.innerHTML = '🗣️ ' + t('voiceLabel') + _menuTick(von);
-    }
-  } catch(e6) {}
-  // Same for the chip-display toggle (short "BB / ¥", active side in gold).
-  try {
-    var db = document.getElementById('displaybb-toggle-mob');
-    if (db) {
-      var bbOn = false;
-      try { bbOn = localStorage.getItem('pth_display_bb') === '1'; } catch(e7) {}
-      db.innerHTML = '🎚️ ' + (bbOn
-        ? '<b style="color:var(--gold)">BB</b> / ¥'
-        : 'BB / <b style="color:var(--gold)">¥</b>');
-    }
-  } catch(e8) {}
-  // Auto-button visibility toggle (☑ shown / ☐ hidden), localised each open.
-  try {
-    var ab = document.getElementById('auto-pref-mob');
-    if (ab) {
-      var aon = false;
-      try { aon = localStorage.getItem('pth_show_auto') === '1'; } catch(e9) {}
-      ab.innerHTML = '🔁 ' + t('autoBtnLabel') + _menuTick(aon);
-    }
-  } catch(e10) {}
-  // Quick-bet (33/50/100) visibility toggle — same scheme as the auto button.
-  try {
-    var pb = document.getElementById('pct-pref-mob');
-    if (pb) {
-      var pon = false;
-      try { pon = localStorage.getItem('pth_show_pct') === '1'; } catch(e11) {}
-      pb.innerHTML = '💰 ' + t('quickBetLabel') + _menuTick(pon);
-    }
-  } catch(e12) {}
   // ADMIN section divider: mirror the admin buttons' visibility (use the
   // Close-table item as proxy — it's shown whenever the user is admin).
   try {
@@ -12253,7 +12179,7 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.3.109-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.110-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
