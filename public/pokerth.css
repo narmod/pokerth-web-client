@@ -3903,7 +3903,7 @@ body:not(.in-game) .my-zone {
 /* Layout officiel : 3 zones (montant+slider / pastilles+All-In+mode / Fold-Call-Raise) */
 /* Bas : Fold | Call/Check | Raise — trois boutons egaux */
 .act-buttons-row { display: flex; gap: 6px; }
-.act-buttons-row .btn-action { flex: 1; min-width: 0; }
+.act-buttons-row .btn-action { flex: 1; min-width: 0; padding: 17px 12px; font-size: 0.9rem; }
 /* Haut : champ montant editable + slider */
 .bet-row { display: flex; gap: 8px; align-items: center; }
 .bet-row .raise-slider { flex: 1; }
