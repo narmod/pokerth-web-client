@@ -6398,7 +6398,7 @@ html:not([data-seat="pokerth"]) body.adv-hide-pbar .seat.me .seat-info {
 #assist-win.hsw-drag{opacity:.96;box-shadow:0 8px 24px rgba(0,0,0,.58);border-color:var(--border-hi)}
 #assist-win .hsw-hd{font-weight:700;font-size:calc(10.5px*var(--ws));color:var(--gold);margin-bottom:calc(5px*var(--ws));letter-spacing:.3px;padding-right:calc(14px*var(--ws))}
 #assist-win .hs-lbl{display:block;background:transparent;border:0;padding:0;max-width:none;overflow:hidden}
-#assist-win .hs-txt{display:block;font-size:calc(11.5px*var(--ws)) !important;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#assist-win .hs-txt{display:block;font-size:calc(11.5px*var(--ws)) !important;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-shadow:none}
 #assist-win #hand-strength{position:static;left:auto;right:auto;top:auto;height:auto;pointer-events:none;margin-top:calc(6px*var(--ws))}
 #assist-win .hs-track{display:block;position:static;left:auto;right:auto;top:auto;height:calc(6px*var(--ws));border-radius:calc(3px*var(--ws))}
 #assist-win .hs-fill{border-radius:calc(3px*var(--ws))}

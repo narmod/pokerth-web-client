@@ -7384,7 +7384,7 @@ const App = (() => {
       ? ' ' + ('★'.repeat(res.stars+1) + '☆☆').slice(0,3)
       : '';
     var pfIdx = Math.max(0, Math.min(4, res.stars + 1));
-    var pfCols = ['#aaa','#7ec8e3','#a8d8a8','#f0c040','#e74c3c'];
+    var pfCols = ['#a0acc4','#4080d8','#50b840','#E3C800','#e05050'];
     _hsSet(el, label + stars, Math.round(pfIdx / 4 * 100), pfCols[pfIdx]);
     el.style.display = 'block';
   }
@@ -7404,7 +7404,7 @@ const App = (() => {
     var result = evaluateBestHand(holeNorm, validComm);
     if (!result) { _hsHide(el); return; }
     var handLabel = result.label;
-    var colors = ['#aaa','#aaa','#7ec8e3','#7ec8e3','#a8d8a8','#6dbe6d','#f0c040','#f09030','#e07020','#e74c3c'];
+    var colors = ['#a0acc4','#a0acc4','#6aa0e8','#4080d8','#50c878','#50b840','#E3C800','#FFC107','#FF6D00','#e05050'];
     var handColor = colors[result.r] || 'var(--gold)';
     // Afficher le nom immédiatement, calcul win% en async
     _hsSet(el, handLabel + (validComm.length >= 3 ? ' …' : ''), Math.round(result.r / 9 * 100), handColor);
@@ -7422,7 +7422,7 @@ const App = (() => {
         var elNow = document.getElementById('hand-strength');
         if (!elNow) return;
         // Indicateur couleur : vert brillant ≥71%, vert 51-70%, jaune 36-50%, orange 26-35%, rouge ≤25%
-        var pctCol = pct >= 60 ? '#2ecc71' : pct >= 45 ? '#f0c040' : pct >= 30 ? '#e08a2e' : '#e74c3c';
+        var pctCol = pct >= 60 ? '#50c878' : pct >= 45 ? '#E3C800' : pct >= 30 ? '#FF6D00' : '#e05050';
         _hsSet(elNow, handLabel + ' · ' + pct + '%', pct, pctCol);
       }, 0);
     }
@@ -12184,7 +12184,7 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.3.117-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.118-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
