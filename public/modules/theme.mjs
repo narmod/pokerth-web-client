@@ -76,20 +76,20 @@ const DECKS = [
 // actions stay readable). Tokens map to var(--btn-*) in pokerth.css.
 var BUTTON_TOKENS = ['btn-fold-bg','btn-fold-fg','btn-check-bg','btn-check-fg','btn-call-bg','btn-call-fg','btn-raise-bg','btn-raise-fg','btn-allin-bg','btn-allin-bd','btn-allin-fg','btn-allin-fg-b'];
 var BUTTON_GLOSSY = {
-  'btn-fold-bg':'linear-gradient(180deg, #d23030 0%, #a81818 48%, #800f0f 100%)','btn-fold-fg':'#ffe6e6',
-  'btn-check-bg':'linear-gradient(180deg, #2f7ad0 0%, #1f5aa8 48%, #143f7a 100%)','btn-check-fg':'#e6f0ff',
-  'btn-call-bg':'linear-gradient(180deg, #2f7ad0 0%, #1f5aa8 48%, #143f7a 100%)','btn-call-fg':'#e6f0ff',
-  'btn-raise-bg':'linear-gradient(180deg, #2fa83a 0%, #1f8a2a 48%, #14661e 100%)','btn-raise-fg':'#eaffea',
-  'btn-allin-bg':'linear-gradient(180deg, #d9740f 0%, #bd610b 48%, #934a08 100%)','btn-allin-bd':'#934a08','btn-allin-fg':'#fff4ec','btn-allin-fg-b':'#ffffff'
+  'btn-fold-bg':'linear-gradient(180deg, #d94040 0%, #b22d2d 48%, #8b1a1a 100%)','btn-fold-fg':'#ffe6e6',
+  'btn-check-bg':'linear-gradient(180deg, #4080d8 0%, #2d5fb2 48%, #1a3d8b 100%)','btn-check-fg':'#e6f0ff',
+  'btn-call-bg':'linear-gradient(180deg, #4080d8 0%, #2d5fb2 48%, #1a3d8b 100%)','btn-call-fg':'#e6f0ff',
+  'btn-raise-bg':'linear-gradient(180deg, #50b840 0%, #378f2a 48%, #1e6614 100%)','btn-raise-fg':'#eaffea',
+  'btn-allin-bg':'linear-gradient(180deg, #9e2a2a 0%, #7d1e1e 48%, #5c1111 100%)','btn-allin-bd':'#ef5350','btn-allin-fg':'#fff4ec','btn-allin-fg-b':'#ffffff'
 };
 // Flat = meme code couleur que Glossy mais en aplat (aucun degrade, all-in plein au
 // lieu de transparent -> volontairement plus plat). Teintes = points 48% des degrades Glossy.
 var BUTTON_FLAT = {
-  'btn-fold-bg':'#a81818','btn-fold-fg':'#ffe6e6',
-  'btn-check-bg':'#1f5aa8','btn-check-fg':'#e6f0ff',
-  'btn-call-bg':'#1f5aa8','btn-call-fg':'#e6f0ff',
-  'btn-raise-bg':'#1f8a2a','btn-raise-fg':'#eaffea',
-  'btn-allin-bg':'#bd610b','btn-allin-bd':'#bd610b','btn-allin-fg':'#fff4ec','btn-allin-fg-b':'#ffffff'
+  'btn-fold-bg':'#b22d2d','btn-fold-fg':'#ffe6e6',
+  'btn-check-bg':'#2d5fb2','btn-check-fg':'#e6f0ff',
+  'btn-call-bg':'#2d5fb2','btn-call-fg':'#e6f0ff',
+  'btn-raise-bg':'#378f2a','btn-raise-fg':'#eaffea',
+  'btn-allin-bg':'#7d1e1e','btn-allin-bd':'#7d1e1e','btn-allin-fg':'#fff4ec','btn-allin-fg-b':'#ffffff'
 };
 // Pucks axis: a built-in "PokerTH" set (dealer/SB/BB marker images, shared).
 var PUCK_SET = { dealer:'url(/pucks/dealer.svg)', sb:'url(/pucks/sb.svg)', bb:'url(/pucks/bb.svg)' };
