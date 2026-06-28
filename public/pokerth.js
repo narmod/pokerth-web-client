@@ -7732,12 +7732,17 @@ const App = (() => {
       var seqP = SEQ_P[M];
       if (!seqP) return null;
       var outP = [null]; // index 0 = self -> position classique
+      // Grand ecran (zone bien plus large que le feutre) : caler les colonnes sur le
+      // feutre au lieu des fractions de zone (sinon elles partent aux bords en desktop).
+      var _bigSeat = zW > oRect.width * 1.35;
+      var _slotRx = oRect.width / 2 + Math.max(40, oRect.width * 0.06);
       for (var i = 0; i < seqP.length; i++) {
         var nm = seqP[i], f = SLOTS_P[nm];
         if (!f) { outP.push(null); continue; }
         var nud = (nm === 'L_lower' || nm === 'L_bottom' || nm === 'R_lower' || nm === 'R_bottom') ? 14
                 : (nm === 'L_upper' || nm === 'TL' || nm === 'R_upper' || nm === 'TR') ? -4 : 0;
-        outP.push({ top: f[1] * zH + nud, left: f[0] * zW });
+        var _lx = _bigSeat ? (oCX + ((f[0] - 0.5) / 0.35) * _slotRx) : (f[0] * zW);
+        outP.push({ top: f[1] * zH + nud, left: _lx });
       }
       return outP;
     }
@@ -7848,8 +7853,13 @@ const App = (() => {
     var _seatModeV = 'auto';
     try { var _sm = localStorage.getItem('pth_seat_layout'); _seatModeV = (_sm === 'pokerth-official' || _sm === 'pokerth-ellipse') ? _sm : 'auto'; } catch (e) {}
     var _seatPortrait = (window.innerHeight > window.innerWidth);
-    // auto = orientation reelle ; pokerth-official = slots forces ; pokerth-ellipse = ellipse forcee
-    var _forceSeatPortrait = (_seatModeV === 'pokerth-official') ? true : (_seatModeV === 'pokerth-ellipse') ? false : _seatPortrait;
+    var _isPhone = Math.min(window.innerWidth, window.innerHeight) < 540;
+    // auto : tel -> geometrie officielle (portrait=slots / paysage=ellipse) ; grand ecran -> layout maison.
+    // pokerth-official = slots forces partout ; pokerth-ellipse = ellipse forcee partout.
+    var _applyOfficial, _forceSeatPortrait;
+    if (_seatModeV === 'pokerth-official') { _applyOfficial = true; _forceSeatPortrait = true; }
+    else if (_seatModeV === 'pokerth-ellipse') { _applyOfficial = true; _forceSeatPortrait = false; }
+    else { _applyOfficial = _isPhone; _forceSeatPortrait = _seatPortrait; }
     const oRect = oval.getBoundingClientRect();
     const zRect = zone.getBoundingClientRect();
     const oCX  = oRect.left - zRect.left + oRect.width  / 2;
@@ -7941,10 +7951,7 @@ const App = (() => {
     // (grille périmètre en paysage / colonnes G-D en portrait). La self (index 0)
     // garde sa position classique. Désactivé si la self n'est pas assise (myIdx<0)
     // ou hors plage (>9 adversaires) : on conserve alors le calcul classique.
-    // Le placement officiel ne s'applique que sur TELEPHONE (petit ecran) :
-    // portrait -> slots colonnes QML ; paysage -> ellipse QML calee sur le feutre.
-    // Sur tablette/desktop on garde le placement classique (maison), plus aere.
-    if (myIdx >= 0) {
+    if (_applyOfficial && myIdx >= 0) {
       try {
         var _offPos = _officialSeatPix(rotated.length, _forceSeatPortrait, zRect.width, zRect.height, oCX, oCY, oRect);
         if (_offPos) { for (var _op = 1; _op < pixPos.length; _op++) { if (_offPos[_op]) pixPos[_op] = _offPos[_op]; } }
@@ -12185,7 +12192,7 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.3.122-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.123-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
