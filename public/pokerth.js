@@ -7712,7 +7712,6 @@ const App = (() => {
   function _officialSeatPix(n, isPortrait, zW, zH, oCX, oCY, oRect) {
     var M = n - 1; // adversaires
     if (M < 1) return null;
-    var _bigScreen = Math.min(zW, zH) >= 540; // desktop/tablette : sieges plus espaces, cales sur le feutre
     // ── PORTRAIT : slots officiels QML (GameTable.qml slotPosPortrait) ──
     // Valeurs alignees 1:1 sur le client officiel + nudge px (slotForSeat) :
     // sieges du bas +14px, sieges du haut -4px (px de la zone de jeu).
@@ -7733,40 +7732,30 @@ const App = (() => {
       var seqP = SEQ_P[M];
       if (!seqP) return null;
       var outP = [null]; // index 0 = self -> position classique
-      if (_bigScreen) {
-        // Grand ecran : repartir chaque colonne (gauche/droite) UNIFORMEMENT le long du
-        // feutre, + TC juste au-dessus. Les fractions QML regroupent les sieges en haut
-        // (portrait) -> en desktop ca tasse les box et chevauche les badges de mise.
-        var _slotRx = oRect.width / 2 + Math.max(75, oRect.width * 0.12);
-        var _halfH = oRect.height / 2;
-        var lanes = { L: [], R: [], T: [] };
-        for (var i = 0; i < seqP.length; i++) {
-          var nm = seqP[i];
-          var lane = (nm === 'TC') ? 'T' : ((nm.charAt(0) === 'L' || nm === 'TL') ? 'L' : 'R');
-          lanes[lane].push({ idx: i + 1, vy: SLOTS_P[nm][1] });
-          outP.push(null);
-        }
-        var vRange = Math.min(oCY - 96, (zH - oCY) - 110);
-        if (vRange < 70) vRange = 70;
-        var sides = ['L', 'R'];
-        for (var si = 0; si < 2; si++) {
-          var arr = lanes[sides[si]];
-          arr.sort(function(a, b){ return a.vy - b.vy; });
-          var k = arr.length, lx = oCX + (sides[si] === 'L' ? -_slotRx : _slotRx);
-          var sp = (k <= 1) ? 0 : Math.min(175, (2 * vRange) / (k - 1));
-          var y0 = oCY - sp * (k - 1) / 2;
-          for (var j = 0; j < k; j++) outP[arr[j].idx] = { top: y0 + j * sp, left: lx };
-        }
-        if (lanes.T.length) outP[lanes.T[0].idx] = { top: oCY - (_halfH + 84), left: oCX };
-        return outP;
+      // Repartir chaque colonne UNIFORMEMENT le long du feutre + TC au-dessus, sur TOUS
+      // les ecrans. _slotRx borne (zW/2-66) pour garder les box dans l'ecran (pas de coupe
+      // sur les bords). Espacement vertical borne (barre Pot en haut / zone d'action en bas).
+      var _slotRx = Math.min(oRect.width / 2 + Math.max(75, oRect.width * 0.12), zW / 2 - 66);
+      var _halfH = oRect.height / 2;
+      var lanes = { L: [], R: [], T: [] };
+      for (var i = 0; i < seqP.length; i++) {
+        var nm = seqP[i];
+        var lane = (nm === 'TC') ? 'T' : ((nm.charAt(0) === 'L' || nm === 'TL') ? 'L' : 'R');
+        lanes[lane].push({ idx: i + 1, vy: SLOTS_P[nm][1] });
+        outP.push(null);
       }
-      for (var i2 = 0; i2 < seqP.length; i2++) {
-        var nm2 = seqP[i2], f2 = SLOTS_P[nm2];
-        if (!f2) { outP.push(null); continue; }
-        var nud2 = (nm2 === 'L_lower' || nm2 === 'L_bottom' || nm2 === 'R_lower' || nm2 === 'R_bottom') ? 14
-                 : (nm2 === 'L_upper' || nm2 === 'TL' || nm2 === 'R_upper' || nm2 === 'TR') ? -4 : 0;
-        outP.push({ top: f2[1] * zH + nud2, left: f2[0] * zW });
+      var vRange = Math.min(oCY - 96, (zH - oCY) - 110);
+      if (vRange < 70) vRange = 70;
+      var sides = ['L', 'R'];
+      for (var si = 0; si < 2; si++) {
+        var arr = lanes[sides[si]];
+        arr.sort(function(a, b){ return a.vy - b.vy; });
+        var k = arr.length, lx = oCX + (sides[si] === 'L' ? -_slotRx : _slotRx);
+        var sp = (k <= 1) ? 0 : Math.min(175, (2 * vRange) / (k - 1));
+        var y0 = oCY - sp * (k - 1) / 2;
+        for (var j = 0; j < k; j++) outP[arr[j].idx] = { top: y0 + j * sp, left: lx };
       }
+      if (lanes.T.length) outP[lanes.T[0].idx] = { top: oCY - (_halfH + 84), left: oCX };
       return outP;
     }
     // ── PAYSAGE : ellipse officielle (GameTable.qml buildLandscapeSlots) ──
@@ -7824,25 +7813,13 @@ const App = (() => {
     // (oRect) + marge, pour que les sieges epousent la table au lieu de s'etaler
     // sur toute la largeur (la zone est bien plus large que le feutre en paysage).
     var out = [null]; // index 0 = self -> position classique (bas)
-    if (_bigScreen) {
-      // Grand ecran : ovale propre, repartition reguliere par angle (on contourne le
-      // modelage vertical QML telephone qui tasse/decale les sieges en desktop). Rayons
-      // cales sur le feutre, garde-fous haut (barre Pot) et bas (zone d'action).
-      var _erx = oRect.width / 2 + Math.max(75, oRect.width * 0.12);
-      var _ery = Math.max(120, Math.min(oRect.height / 2 + Math.max(120, oRect.height * 0.45), oCY - 98, (zH - oCY) - 110));
-      for (var ke = 1; ke <= opps; ke++) {
-        var ang = (firstOppAngle + (ke - 1) * dOpp) * Math.PI / 180;
-        out.push({ top: oCY + Math.sin(ang) * _ery, left: oCX + Math.cos(ang) * _erx });
-      }
-      return out;
-    }
-    var rxPx = (oRect.width / 2) + Math.max(40, oRect.width * 0.10);
-    var ryPx = (oRect.height / 2) + Math.max(44, oRect.height * 0.34);
-    for (var k = 1; k <= opps; k++) {
-      var p = point(firstOppAngle + (k - 1) * dOpp);
-      var nx = radiusX > 0 ? (p[0] - 0.5) / radiusX : 0;     // cosV shape [-1,1]
-      var ny = radiusY > 0 ? (p[1] - centerY) / radiusY : 0; // vFactor shape [-1,1]
-      out.push({ top: oCY + ny * ryPx, left: oCX + nx * rxPx });
+    // Ovale regulier (repartition par angle) sur TOUS les ecrans. _erx borne (zW/2-66)
+    // pour garder les box dans l'ecran ; _ery borne haut (barre Pot) / bas (actions).
+    var _erx = Math.min(oRect.width / 2 + Math.max(75, oRect.width * 0.12), zW / 2 - 66);
+    var _ery = Math.max(70, Math.min(oRect.height / 2 + Math.max(120, oRect.height * 0.45), oCY - 98, (zH - oCY) - 110));
+    for (var ke = 1; ke <= opps; ke++) {
+      var ang = (firstOppAngle + (ke - 1) * dOpp) * Math.PI / 180;
+      out.push({ top: oCY + Math.sin(ang) * _ery, left: oCX + Math.cos(ang) * _erx });
     }
     return out;
   }
@@ -12227,7 +12204,7 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.3.127-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.128-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
