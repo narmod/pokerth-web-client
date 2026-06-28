@@ -7709,7 +7709,7 @@ const App = (() => {
   //   Paysage  : grille périmètre, 5 sièges en haut + sièges bas (client desktop).
   // Fractions = part de la zone (x: 0=gauche..1=droite, y: 0=haut..1=bas).
   // Hors plage (>9 adversaires) : retourne null -> calcul classique conservé.
-  function _officialSeatPix(n, isPortrait, zW, zH, oCX, oCY, oRect) {
+  function _officialSeatPix(n, isPortrait, zW, zH, oCX, oCY, oRect, boxScale) {
     var M = n - 1; // adversaires
     if (M < 1) return null;
     // ── PORTRAIT : slots officiels QML (GameTable.qml slotPosPortrait) ──
@@ -7735,7 +7735,7 @@ const App = (() => {
       // Repartir chaque colonne UNIFORMEMENT le long du feutre + TC au-dessus, sur TOUS
       // les ecrans. _slotRx borne (zW/2-66) pour garder les box dans l'ecran (pas de coupe
       // sur les bords). Espacement vertical borne (barre Pot en haut / zone d'action en bas).
-      var _slotRx = Math.min(oRect.width / 2 + Math.max(75, oRect.width * 0.12), zW / 2 - 66);
+      var _slotRx = Math.min(oRect.width / 2 + Math.max(75, oRect.width * 0.12), zW / 2 - (58 * (boxScale || 1) + 8));
       var _halfH = oRect.height / 2;
       var lanes = { L: [], R: [], T: [] };
       for (var i = 0; i < seqP.length; i++) {
@@ -7815,7 +7815,7 @@ const App = (() => {
     var out = [null]; // index 0 = self -> position classique (bas)
     // Ovale regulier (repartition par angle) sur TOUS les ecrans. _erx borne (zW/2-66)
     // pour garder les box dans l'ecran ; _ery borne haut (barre Pot) / bas (actions).
-    var _erx = Math.min(oRect.width / 2 + Math.max(75, oRect.width * 0.12), zW / 2 - 66);
+    var _erx = Math.min(oRect.width / 2 + Math.max(75, oRect.width * 0.12), zW / 2 - (58 * (boxScale || 1) + 8));
     var _ery = Math.max(70, Math.min(oRect.height / 2 + Math.max(120, oRect.height * 0.45), oCY - 98, (zH - oCY) - 110));
     for (var ke = 1; ke <= opps; ke++) {
       var ang = (firstOppAngle + (ke - 1) * dOpp) * Math.PI / 180;
@@ -7857,6 +7857,10 @@ const App = (() => {
     // meme facteur que le feutre -> zoom uniforme. Mobile / zoom 1 -> 1 (no-op).
     var _seatZoom = 1;
     try { if (typeof _getTableZoom === 'function' && typeof _tableZoomGate === 'function' && _tableZoomGate()) _seatZoom = _getTableZoom(); } catch (e) {}
+    // Petits ecrans : reduire la taille des box (avatars + texte) pour qu'elles tiennent
+    // autour du feutre sans le chevaucher (le client officiel fait pareil via boxScale).
+    var _seatBoxScale = 1;
+    try { var _sbw = window.innerWidth, _sbh = window.innerHeight; if (Math.min(_sbw, _sbh) < 540) _seatBoxScale = (_sbh > _sbw) ? 0.78 : 0.86; } catch (e) {}
     // Placement des sièges : 'classic' (ellipse maison, défaut) ou 'official'
     // (slots fixes du client PokerTH : grille périmètre en paysage façon client
     // desktop, colonnes G/D + rangée haute en portrait façon client QML). Les
@@ -7965,7 +7969,7 @@ const App = (() => {
     // ou hors plage (>9 adversaires) : on conserve alors le calcul classique.
     if (_applyOfficial && myIdx >= 0) {
       try {
-        var _offPos = _officialSeatPix(rotated.length, _forceSeatPortrait, zRect.width, zRect.height, oCX, oCY, oRect);
+        var _offPos = _officialSeatPix(rotated.length, _forceSeatPortrait, zRect.width, zRect.height, oCX, oCY, oRect, _seatBoxScale);
         if (_offPos) { for (var _op = 1; _op < pixPos.length; _op++) { if (_offPos[_op]) pixPos[_op] = _offPos[_op]; } }
       } catch (e) {}
     }
@@ -8099,7 +8103,7 @@ const App = (() => {
         cardStr = '<div style="display:flex;gap:2px;margin-top:1px">'
           + cardHtml(sd.card1,'xsm') + cardHtml(sd.card2,'xsm') + '</div>';
       }
-      h += '<div class="' + cls + ((!isMe && _sdLosers && _sdLosers.has(pid)) ? ' loser-fade' : '') + '" data-pid="' + pid + '" style="position:absolute;top:' + px.top.toFixed(1) + 'px;left:' + px.left.toFixed(1) + 'px;transform:translate(-50%,-50%) scale(' + _seatZoom + ')">';
+      h += '<div class="' + cls + ((!isMe && _sdLosers && _sdLosers.has(pid)) ? ' loser-fade' : '') + '" data-pid="' + pid + '" style="position:absolute;top:' + px.top.toFixed(1) + 'px;left:' + px.left.toFixed(1) + 'px;transform:translate(-50%,-50%) scale(' + (_seatZoom * _seatBoxScale) + ')">';
       const isSB = pid === sbPid;
       const isBB = pid === bbPid;
       let blindBadge = '';
@@ -11314,7 +11318,8 @@ function autoScaleTable() {
   // Sur desktop, on autorise jusqu'à 1.4 max
   // Sur mobile, on peut réduire en dessous de 1 pour tout faire tenir
   var isDeskScale = window.innerWidth >= 900 && window.matchMedia && window.matchMedia('(hover: hover) and (pointer: fine)').matches;
-  var scaleMax = isDeskScale ? 1.4 : 1;
+  var _narrowPortrait = window.innerWidth < 540 && window.innerHeight > window.innerWidth;
+  var scaleMax = isDeskScale ? 1.4 : (_narrowPortrait ? 0.74 : 1);
   var scale = Math.min(scaleMax, tzW / scW, tzH / scH);
   if (scale < 0.05) scale = 0.5; // fallback visible
   var _ztab = (typeof _getTableZoom === 'function' && typeof _tableZoomGate === 'function' && _tableZoomGate()) ? _getTableZoom() : 1;
@@ -12204,7 +12209,7 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.3.128-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.129-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
