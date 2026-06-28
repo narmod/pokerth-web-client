@@ -7733,18 +7733,39 @@ const App = (() => {
       var seqP = SEQ_P[M];
       if (!seqP) return null;
       var outP = [null]; // index 0 = self -> position classique
-      // Grand ecran : colonnes calees sur le feutre (X) ET etalees verticalement (Y)
-      // autour du feutre, sinon les box desktop se chevauchent ou collent a la table.
-      var _slotRx = oRect.width / 2 + Math.max(90, oRect.width * 0.16);
-      var _slotRy = Math.min(oRect.height / 2 + Math.max(120, oRect.height * 0.50), oCY - 92);
-      for (var i = 0; i < seqP.length; i++) {
-        var nm = seqP[i], f = SLOTS_P[nm];
-        if (!f) { outP.push(null); continue; }
-        var nud = (nm === 'L_lower' || nm === 'L_bottom' || nm === 'R_lower' || nm === 'R_bottom') ? 14
-                : (nm === 'L_upper' || nm === 'TL' || nm === 'R_upper' || nm === 'TR') ? -4 : 0;
-        var _lx = _bigScreen ? (oCX + ((f[0] - 0.5) / 0.35) * _slotRx) : (f[0] * zW);
-        var _ly = _bigScreen ? (oCY + ((f[1] - 0.43) / 0.355) * _slotRy + nud) : (f[1] * zH + nud);
-        outP.push({ top: _ly, left: _lx });
+      if (_bigScreen) {
+        // Grand ecran : repartir chaque colonne (gauche/droite) UNIFORMEMENT le long du
+        // feutre, + TC juste au-dessus. Les fractions QML regroupent les sieges en haut
+        // (portrait) -> en desktop ca tasse les box et chevauche les badges de mise.
+        var _slotRx = oRect.width / 2 + Math.max(75, oRect.width * 0.12);
+        var _halfH = oRect.height / 2;
+        var lanes = { L: [], R: [], T: [] };
+        for (var i = 0; i < seqP.length; i++) {
+          var nm = seqP[i];
+          var lane = (nm === 'TC') ? 'T' : ((nm.charAt(0) === 'L' || nm === 'TL') ? 'L' : 'R');
+          lanes[lane].push({ idx: i + 1, vy: SLOTS_P[nm][1] });
+          outP.push(null);
+        }
+        var vRange = Math.min(oCY - 96, (zH - oCY) - 110);
+        if (vRange < 70) vRange = 70;
+        var sides = ['L', 'R'];
+        for (var si = 0; si < 2; si++) {
+          var arr = lanes[sides[si]];
+          arr.sort(function(a, b){ return a.vy - b.vy; });
+          var k = arr.length, lx = oCX + (sides[si] === 'L' ? -_slotRx : _slotRx);
+          var sp = (k <= 1) ? 0 : Math.min(175, (2 * vRange) / (k - 1));
+          var y0 = oCY - sp * (k - 1) / 2;
+          for (var j = 0; j < k; j++) outP[arr[j].idx] = { top: y0 + j * sp, left: lx };
+        }
+        if (lanes.T.length) outP[lanes.T[0].idx] = { top: oCY - (_halfH + 84), left: oCX };
+        return outP;
+      }
+      for (var i2 = 0; i2 < seqP.length; i2++) {
+        var nm2 = seqP[i2], f2 = SLOTS_P[nm2];
+        if (!f2) { outP.push(null); continue; }
+        var nud2 = (nm2 === 'L_lower' || nm2 === 'L_bottom' || nm2 === 'R_lower' || nm2 === 'R_bottom') ? 14
+                 : (nm2 === 'L_upper' || nm2 === 'TL' || nm2 === 'R_upper' || nm2 === 'TR') ? -4 : 0;
+        outP.push({ top: f2[1] * zH + nud2, left: f2[0] * zW });
       }
       return outP;
     }
@@ -12194,7 +12215,7 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.3.125-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.126-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
