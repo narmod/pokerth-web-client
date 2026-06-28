@@ -7874,10 +7874,10 @@ const App = (() => {
     var _seatPortrait = (window.innerHeight > window.innerWidth);
     var _isPhone = Math.min(window.innerWidth, window.innerHeight) < 540;
     // auto : tel -> geometrie officielle (portrait=slots / paysage=ellipse) ; grand ecran -> layout maison.
-    // pokerth-official = slots forces partout ; pokerth-ellipse = ellipse forcee partout.
+    // pokerth-official = slots QML forces partout ; pokerth-ellipse = ellipse MAISON (dispo "actuel" 0.3.121) partout.
     var _applyOfficial, _forceSeatPortrait;
     if (_seatModeV === 'pokerth-official') { _applyOfficial = true; _forceSeatPortrait = true; }
-    else if (_seatModeV === 'pokerth-ellipse') { _applyOfficial = true; _forceSeatPortrait = false; }
+    else if (_seatModeV === 'pokerth-ellipse') { _applyOfficial = false; _forceSeatPortrait = _seatPortrait; }
     else { _applyOfficial = _isPhone; _forceSeatPortrait = _seatPortrait; }
     const oRect = oval.getBoundingClientRect();
     const zRect = zone.getBoundingClientRect();
@@ -12255,7 +12255,7 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.3.135-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.136-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
