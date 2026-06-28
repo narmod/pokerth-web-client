@@ -7752,11 +7752,11 @@ const App = (() => {
         var arr = lanes[sides[si]];
         arr.sort(function(a, b){ return a.vy - b.vy; });
         var k = arr.length, lx = oCX + (sides[si] === 'L' ? -_slotRx : _slotRx);
-        var sp = (k <= 1) ? 0 : Math.min(_small ? 106 : 175, (2 * vRange) / (k - 1));
+        var sp = (k <= 1) ? 0 : Math.min(_small ? Math.round(96 * boxScale + 12) : 175, (2 * vRange) / (k - 1));
         var y0 = oCY - sp * (k - 1) / 2;
         for (var j = 0; j < k; j++) outP[arr[j].idx] = { top: y0 + j * sp, left: lx };
       }
-      if (lanes.T.length) outP[lanes.T[0].idx] = { top: oCY - (_halfH + (_small ? 60 : 84)), left: oCX };
+      if (lanes.T.length) outP[lanes.T[0].idx] = { top: oCY - (_halfH + (_small ? Math.round(48 * boxScale + 12) : 84)), left: oCX };
       return outP;
     }
     // ── PAYSAGE : ellipse officielle (GameTable.qml buildLandscapeSlots) ──
@@ -7817,7 +7817,7 @@ const App = (() => {
     // Ovale regulier (repartition par angle) sur TOUS les ecrans. _erx borne (zW/2-66)
     // pour garder les box dans l'ecran ; _ery borne haut (barre Pot) / bas (actions).
     var _erx = Math.min(oRect.width / 2 + Math.max(75, oRect.width * 0.12), zW / 2 - (58 * (boxScale || 1) + 8));
-    var _eryFloor = _small ? (64 + Math.max(0, M - 4) * 15) : 120; // resserre a peu de joueurs, evite le chevauchement de l'arc a table pleine
+    var _eryFloor = _small ? (boxScale * (54 + Math.max(0, M - 4) * 6)) : 120; // anneau au plus pres : boites reduites a table pleine -> rayon mini sans chevauchement
     var _ery = Math.max(70, Math.min(oRect.height / 2 + Math.max(_eryFloor, oRect.height * 0.45), oCY - 98, (zH - oCY) - 110));
     for (var ke = 1; ke <= opps; ke++) {
       var ang = (firstOppAngle + (ke - 1) * dOpp) * Math.PI / 180;
@@ -7862,7 +7862,7 @@ const App = (() => {
     // Petits ecrans : reduire la taille des box (avatars + texte) pour qu'elles tiennent
     // autour du feutre sans le chevaucher (le client officiel fait pareil via boxScale).
     var _seatBoxScale = 1;
-    try { var _sbw = window.innerWidth, _sbh = window.innerHeight; if (Math.min(_sbw, _sbh) < 540) _seatBoxScale = (_sbh > _sbw) ? 0.78 : 0.86; } catch (e) {}
+    try { var _sbw = window.innerWidth, _sbh = window.innerHeight; if (Math.min(_sbw, _sbh) < 540) { var _opp = Math.max(0, rotated.length - 1); _seatBoxScale = (_sbh > _sbw) ? Math.max(0.62, 0.80 - Math.max(0, _opp - 4) * 0.028) : Math.max(0.70, 0.86 - Math.max(0, _opp - 4) * 0.02); } } catch (e) {}
     // Placement des sièges : 'classic' (ellipse maison, défaut) ou 'official'
     // (slots fixes du client PokerTH : grille périmètre en paysage façon client
     // desktop, colonnes G/D + rangée haute en portrait façon client QML). Les
@@ -12211,7 +12211,7 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.3.130-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.131-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
