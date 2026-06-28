@@ -5896,7 +5896,7 @@ body.has-keyboard .act-key { display: inline-block; }
    (feutre + cartes communes + adversaires) ; max = taille actuelle (1.0). */
 .zoom-ctrl {
   position: absolute; top: 8px; right: 8px; z-index: 30;
-  display: none; flex-direction: column; gap: 6px;
+  display: flex; flex-direction: column; gap: 6px; /* visible sur tous les appareils */
 }
 @media (min-width: 900px) and (min-height: 600px) {
   .zoom-ctrl { display: flex; }

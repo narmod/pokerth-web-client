@@ -8105,7 +8105,7 @@ const App = (() => {
         cardStr = '<div style="display:flex;gap:2px;margin-top:1px">'
           + cardHtml(sd.card1,'xsm') + cardHtml(sd.card2,'xsm') + '</div>';
       }
-      h += '<div class="' + cls + ((!isMe && _sdLosers && _sdLosers.has(pid)) ? ' loser-fade' : '') + '" data-pid="' + pid + '" style="position:absolute;top:' + px.top.toFixed(1) + 'px;left:' + px.left.toFixed(1) + 'px;transform:translate(-50%,-50%) scale(' + (_seatZoom * _seatBoxScale) + ')">';
+      h += '<div class="' + cls + ((!isMe && _sdLosers && _sdLosers.has(pid)) ? ' loser-fade' : '') + '" data-pid="' + pid + '" style="position:absolute;top:' + px.top.toFixed(1) + 'px;left:' + px.left.toFixed(1) + 'px;transform:translate(-50%,-50%) scale(' + _seatBoxScale + ')">';
       const isSB = pid === sbPid;
       const isBB = pid === bbPid;
       let blindBadge = '';
@@ -11261,14 +11261,14 @@ window.addEventListener('orientationchange', function() {
 // depassement (ni clip ni pan). transform:scale est purement visuel -> se
 // compose avec autoScaleTable (qui agit sur #g-table-scaler) et survit aux
 // re-rendus de sieges. Neutralise + masque sur mobile.
-var TABLE_ZOOM_MIN = 0.6, TABLE_ZOOM_MAX = 1, TABLE_ZOOM_STEP = 0.1;
+var TABLE_ZOOM_MIN = 0.6, TABLE_ZOOM_MAX = 2.0, TABLE_ZOOM_STEP = 0.1, TABLE_ZOOM_DEFAULT = 1;
 function _tableZoomGate() {
-  return !!(window.matchMedia && window.matchMedia('(min-width: 900px) and (min-height: 600px)').matches);
+  return true; // zoom disponible sur TOUS les appareils (mobile inclus)
 }
 function _getTableZoom() {
   var z = NaN;
   try { z = parseFloat(localStorage.getItem('pth_table_zoom')); } catch (e) {}
-  if (isNaN(z)) z = TABLE_ZOOM_MAX;
+  if (isNaN(z)) z = TABLE_ZOOM_DEFAULT;
   return Math.max(TABLE_ZOOM_MIN, Math.min(TABLE_ZOOM_MAX, z));
 }
 function applyTableZoom() {
@@ -11283,11 +11283,61 @@ function applyTableZoom() {
   if (tz && tz.style.transform) tz.style.transform = '';
   try { if (typeof autoScaleTable === 'function') autoScaleTable(); } catch (e) {}
   try { if (typeof window._renderSeats === 'function') window._renderSeats(); } catch (e) {}
-  var z = _tableZoomGate() ? _getTableZoom() : TABLE_ZOOM_MAX;
+  _applyZoomTransforms();
+  var z = _getTableZoom();
+  var maxFit = window._tableZoomMaxFit || TABLE_ZOOM_MAX;
   var bOut = document.getElementById('g-zoom-out');
   var bIn  = document.getElementById('g-zoom-in');
+  var bRst = document.getElementById('g-zoom-reset');
   if (bOut) bOut.disabled = (z <= TABLE_ZOOM_MIN + 0.001);
-  if (bIn)  bIn.disabled  = (z >= TABLE_ZOOM_MAX - 0.001);
+  if (bIn)  bIn.disabled  = (z >= Math.min(TABLE_ZOOM_MAX, maxFit) - 0.001);
+  if (bRst) bRst.disabled = (Math.abs(z - TABLE_ZOOM_DEFAULT) < 0.001);
+}
+// Agrandissement UNIFORME borne : le feutre (#g-table-scaler) et la couche des
+// sieges (#g-seats) sont mis a l'echelle autour du centre du feutre. Le zoom
+// effectif est plafonne (mesure des sieges) pour que TOUTE la table reste dans
+// la zone -> rien hors-ecran. renderSeats reste neutre (zoom gere ici).
+function _applyZoomTransforms() {
+  var sc = document.getElementById('g-table-scaler');
+  var seats = document.getElementById('g-seats');
+  var oval = document.querySelector('.felt-oval');
+  var zone = document.getElementById('g-table-zone');
+  if (!sc || !seats || !oval || !zone) return;
+  var autofit = window._tableAutofit || 1;
+  // 1) etat neutre (zoom 1) pour mesurer
+  sc.style.transform = 'scale(' + autofit.toFixed(3) + ')';
+  sc.style.transformOrigin = 'center center';
+  seats.style.transform = 'none';
+  var zr = zone.getBoundingClientRect();
+  var orr = oval.getBoundingClientRect();
+  var oCX = orr.left - zr.left + orr.width / 2;
+  var oCY = orr.top - zr.top + orr.height / 2;
+  var req = _getTableZoom();
+  var margin = 4;
+  // 2) plus grand zoom ou chaque siege reste dans la zone (mise a l'echelle
+  //    autour du centre du feutre)
+  var maxFit = TABLE_ZOOM_MAX;
+  var els = seats.querySelectorAll('.seat');
+  for (var i = 0; i < els.length; i++) {
+    var r = els[i].getBoundingClientRect();
+    if (!r.width) continue;
+    var L = r.left - zr.left, R = r.right - zr.left, T = r.top - zr.top, B = r.bottom - zr.top;
+    if (L < oCX) { var f1 = (oCX - margin) / (oCX - L); if (f1 < maxFit) maxFit = f1; }
+    if (R > oCX) { var f2 = ((zr.width - margin) - oCX) / (R - oCX); if (f2 < maxFit) maxFit = f2; }
+    if (T < oCY) { var f3 = (oCY - margin) / (oCY - T); if (f3 < maxFit) maxFit = f3; }
+    if (B > oCY) { var f4 = ((zr.height - margin) - oCY) / (B - oCY); if (f4 < maxFit) maxFit = f4; }
+  }
+  if (maxFit < TABLE_ZOOM_MIN) maxFit = TABLE_ZOOM_MIN;
+  window._tableZoomMaxFit = maxFit;
+  var eff = Math.max(TABLE_ZOOM_MIN, Math.min(req, maxFit, TABLE_ZOOM_MAX));
+  window._tableZoomEff = eff;
+  // garder le stockage = zoom REELLEMENT applique (evite que les boutons
+  // semblent inertes quand le plafond "toujours visible" limite le zoom-avant)
+  try { if (Math.abs(eff - req) > 0.005) localStorage.setItem('pth_table_zoom', String(Math.round(eff * 100) / 100)); } catch (e) {}
+  // 3) appliquer : feutre + sieges a l'echelle eff autour du centre du feutre
+  sc.style.transform = 'scale(' + (autofit * eff).toFixed(3) + ')';
+  seats.style.transformOrigin = oCX.toFixed(1) + 'px ' + oCY.toFixed(1) + 'px';
+  seats.style.transform = 'scale(' + eff.toFixed(3) + ')';
 }
 function tableZoomStep(dir) {
   var z = _getTableZoom() + (dir > 0 ? TABLE_ZOOM_STEP : -TABLE_ZOOM_STEP);
@@ -11296,7 +11346,12 @@ function tableZoomStep(dir) {
   try { localStorage.setItem('pth_table_zoom', String(z)); } catch (e) {}
   applyTableZoom();
 }
+function tableZoomReset() {
+  try { localStorage.setItem('pth_table_zoom', String(TABLE_ZOOM_DEFAULT)); } catch (e) {}
+  applyTableZoom();
+}
 window.tableZoomStep = tableZoomStep;
+window.tableZoomReset = tableZoomReset;
 window.applyTableZoom = applyTableZoom;
 document.addEventListener('DOMContentLoaded', function() { setTimeout(applyTableZoom, 500); });
 window.addEventListener('resize', function() { applyTableZoom(); });
@@ -11324,8 +11379,8 @@ function autoScaleTable() {
   var scaleMax = isDeskScale ? 1.4 : (_narrowPortrait ? 0.74 : 1);
   var scale = Math.min(scaleMax, tzW / scW, tzH / scH);
   if (scale < 0.05) scale = 0.5; // fallback visible
-  var _ztab = (typeof _getTableZoom === 'function' && typeof _tableZoomGate === 'function' && _tableZoomGate()) ? _getTableZoom() : 1;
-  sc.style.transform = 'scale(' + (scale * _ztab).toFixed(3) + ')';
+  window._tableAutofit = scale; // zoom applique separement (voir _applyZoomTransforms)
+  sc.style.transform = 'scale(' + scale.toFixed(3) + ')';
   sc.style.transformOrigin = 'center center';
 }
 document.addEventListener('DOMContentLoaded', function() { setTimeout(autoScaleTable, 400); });
@@ -12211,7 +12266,7 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.3.132-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.133-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
