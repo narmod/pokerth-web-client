@@ -1,13 +1,50 @@
 # PokerTH Web Client
 
-> A modern, mobile-friendly browser client for [PokerTH](https://github.com/pokerth/pokerth) — the legendary open-source Texas Hold'em poker game.
->
-> **Load once, play anywhere:** cached as a PWA for instant launches, fully offline against bots, and ready to connect to any PokerTH server when you are.
+<p align="center">
+  <a href="https://pokerth.ddns.net/">
+    <img src="public/screenshots/social-preview.png" alt="PokerTH Web Client — play Texas Hold'em in your browser" width="680"/>
+  </a>
+</p>
 
-[![Publish Docker image](https://github.com/narmod/pokerth-web-client/actions/workflows/docker-publish.yml/badge.svg)](https://github.com/narmod/pokerth-web-client/actions/workflows/docker-publish.yml)
-[![Container image](https://img.shields.io/badge/ghcr.io-pokerth--web--client-2496ed?logo=docker&logoColor=white)](https://github.com/narmod/pokerth-web-client/pkgs/container/pokerth-web-client)
-[![Raspberry Pi ready](https://img.shields.io/badge/Raspberry%20Pi-ready-c51a4a?logo=raspberrypi&logoColor=white)](#raspberry-pi)
-[![License: AGPL v3](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)](LICENSE)
+<p align="center">
+  <strong>Play <a href="https://github.com/pokerth/pokerth">PokerTH</a> — the legendary open-source Texas Hold'em — right in your browser.</strong>
+  <br/>
+  No install &middot; phone, tablet &amp; desktop &middot; installable as a PWA &middot; play offline against bots &middot; connect to any PokerTH server.
+</p>
+
+<p align="center">
+  <a href="https://pokerth.ddns.net/"><img src="https://img.shields.io/badge/%E2%96%B6%20Live%20demo-pokerth.ddns.net-2E7D32?style=for-the-badge" alt="Live demo — pokerth.ddns.net"/></a>
+</p>
+
+<p align="center">
+  <a href="https://github.com/narmod/pokerth-web-client/actions/workflows/docker-publish.yml"><img src="https://github.com/narmod/pokerth-web-client/actions/workflows/docker-publish.yml/badge.svg" alt="Publish Docker image"/></a>
+  <a href="https://github.com/narmod/pokerth-web-client/pkgs/container/pokerth-web-client"><img src="https://img.shields.io/badge/ghcr.io-pokerth--web--client-2496ed?logo=docker&logoColor=white" alt="Container image"/></a>
+  <a href="#raspberry-pi"><img src="https://img.shields.io/badge/Raspberry%20Pi-ready-c51a4a?logo=raspberrypi&logoColor=white" alt="Raspberry Pi ready"/></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/License-AGPL%20v3-blue.svg" alt="License: AGPL v3"/></a>
+</p>
+
+---
+
+<a id="highlights"></a>
+## ✨ Highlights
+
+- 🎮 **Zero install** — open a URL and you're at the table
+- 📱 **Installable PWA** — add to your home screen for a fullscreen app feel on iOS &amp; Android
+- 🏋️ **Offline training vs bots** — no server, proxy or connection required
+- 🔌 **Any PokerTH server** — including the public **pokerth.net**
+- 🃏 **Full Texas Hold'em** — flying card deals, sliding chips, 3D card flips, emoji reactions, in-game chat and a hand log
+- 🎨 **Deep theming** — mix palette × felt × deck × buttons × pucks × seats
+- 🌍 **36 languages**
+
+<p align="center">
+  <img src="docs/screenshots/08-desktop-game-light.png" alt="In-game desktop view — full table, live theming, reactions, chat, action bar and hand log" width="860"/>
+  <br/>
+  <em>The web client in action — full table with the live appearance panel (deck, palette, felt, buttons, pucks, seats), emoji reactions, in-game chat with its emoji picker, the action bar with keyboard hints, and the hand log</em>
+</p>
+
+<!-- 🎞️ HERO GIF SLOT — once docs/screenshots/00-hero.gif is recorded, add it just above the screenshot above:
+     <p align="center"><img src="docs/screenshots/00-hero.gif" alt="PokerTH Web Client — a hand in motion" width="860"/></p>
+-->
 
 ---
 
@@ -15,6 +52,7 @@
 
 <sub>📂 = collapsible section — click the **“Show…”** line to expand it.</sub>
 
+- [✨ Highlights](#highlights)
 - [🎮 Live demo](#live-demo)
 - [Why this project exists](#why-this-project-exists)
 - [Screenshots](#screenshots)
@@ -72,12 +110,6 @@ This project is a **web frontend** that connects to any PokerTH server directly 
 ---
 
 ## Screenshots
-
-<p align="center">
-  <img src="docs/screenshots/08-desktop-game-light.png" alt="In-game desktop view — table, theming, reactions and chat" width="840"/>
-  <br/>
-  <em>Desktop view — full table with the live appearance panel (deck, palette, felt, buttons, pucks, seats), emoji reactions, in-game chat with its emoji picker, the action bar with keyboard hints, and the hand log</em>
-</p>
 
 <p align="center">
   <img src="docs/screenshots/01-connect-dark.png" alt="Connect screen (dark theme)" width="260"/>
