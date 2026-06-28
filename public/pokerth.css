@@ -1922,7 +1922,7 @@ body {
      grandit. Largeur en vw -> proportionnelle au feutre (68vw) ; 5 cartes +
      gaps restent sous la largeur interieure ; capee en px. Zero impact
      feutre/sieges (cartes en position absolue dans l'ovale). */
-  .comm-row .pk { width: min(48px, 11vw) !important; height: min(68px, 15.5vw) !important; font-size: min(1.05rem, 3.1vw) !important; border-radius: 6px !important; }
+  .comm-row .pk { width: min(52px, 12vw) !important; height: min(73px, 16.8vw) !important; font-size: min(1.12rem, 3.4vw) !important; border-radius: 6px !important; }
 
   /* Chips : très excentrés pour éviter le chevauchement avec le timer */
   .blind-chip  { width: 17px !important; height: 17px !important; top: -13px !important; left: -13px !important; }
@@ -2015,7 +2015,7 @@ body {
   .player-bar .pb-name { font-size: 0.58rem; }
   .player-bar .pb-money { font-size: 0.5rem; }
   .player-bar .pb-info { min-width: 45px; }
-  .player-bar .pb-cards .pk { width: 34px; height: 48px; font-size: 0.78rem; }
+  .player-bar .pb-cards .pk { width: 50px; height: 70px; font-size: 1.05rem; }
   .player-bar .pb-action { font-size: 0.56rem; min-width: 0; }
 
   /* Barre d'action — 2 rangees compactes et previsibles.

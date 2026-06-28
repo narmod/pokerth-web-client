@@ -7863,7 +7863,7 @@ const App = (() => {
     // Petits ecrans : reduire la taille des box (avatars + texte) pour qu'elles tiennent
     // autour du feutre sans le chevaucher (le client officiel fait pareil via boxScale).
     var _seatBoxScale = 1;
-    try { var _sbw = window.innerWidth, _sbh = window.innerHeight; if (Math.min(_sbw, _sbh) < 540) { var _opp = Math.max(0, rotated.length - 1); _seatBoxScale = (_sbh > _sbw) ? Math.max(0.56, 0.80 - Math.max(0, _opp - 4) * 0.040) : Math.max(0.70, 0.86 - Math.max(0, _opp - 4) * 0.02); } } catch (e) {}
+    try { var _sbw = window.innerWidth, _sbh = window.innerHeight; if (Math.min(_sbw, _sbh) < 540) { var _opp = Math.max(0, rotated.length - 1); _seatBoxScale = (_sbh > _sbw) ? Math.max(0.72, 0.90 - Math.max(0, _opp - 4) * 0.026) : Math.max(0.80, 0.98 - Math.max(0, _opp - 4) * 0.022); } } catch (e) {}
     // Placement des sièges : 'classic' (ellipse maison, défaut) ou 'official'
     // (slots fixes du client PokerTH : grille périmètre en paysage façon client
     // desktop, colonnes G/D + rangée haute en portrait façon client QML). Les
@@ -11306,40 +11306,24 @@ function _applyZoomTransforms() {
   var zone = document.getElementById('g-table-zone');
   if (!sc || !seats || !oval || !zone) return;
   var autofit = window._tableAutofit || 1;
-  // 1) etat neutre (zoom 1) pour mesurer
-  sc.style.transform = 'scale(' + autofit.toFixed(3) + ')';
-  sc.style.transformOrigin = 'center center';
-  seats.style.transform = 'none';
   var zr = zone.getBoundingClientRect();
   var orr = oval.getBoundingClientRect();
+  // centre du feutre en coords zone (invariant a l'echelle -> mesure directe ok)
   var oCX = orr.left - zr.left + orr.width / 2;
   var oCY = orr.top - zr.top + orr.height / 2;
-  var req = _getTableZoom();
-  var margin = 4;
-  // 2) plus grand zoom ou chaque siege reste dans la zone (mise a l'echelle
-  //    autour du centre du feutre)
-  var maxFit = TABLE_ZOOM_MAX;
-  var els = seats.querySelectorAll('.seat');
-  for (var i = 0; i < els.length; i++) {
-    var r = els[i].getBoundingClientRect();
-    if (!r.width) continue;
-    var L = r.left - zr.left, R = r.right - zr.left, T = r.top - zr.top, B = r.bottom - zr.top;
-    if (L < oCX) { var f1 = (oCX - margin) / (oCX - L); if (f1 < maxFit) maxFit = f1; }
-    if (R > oCX) { var f2 = ((zr.width - margin) - oCX) / (R - oCX); if (f2 < maxFit) maxFit = f2; }
-    if (T < oCY) { var f3 = (oCY - margin) / (oCY - T); if (f3 < maxFit) maxFit = f3; }
-    if (B > oCY) { var f4 = ((zr.height - margin) - oCY) / (B - oCY); if (f4 < maxFit) maxFit = f4; }
-  }
-  if (maxFit < TABLE_ZOOM_MIN) maxFit = TABLE_ZOOM_MIN;
-  window._tableZoomMaxFit = maxFit;
-  var eff = Math.max(TABLE_ZOOM_MIN, Math.min(req, maxFit, TABLE_ZOOM_MAX));
+  // Chevauchement / debordement autorise : on applique le zoom demande tel quel
+  // (plus de plafond "toujours visible"). Agrandissement UNIFORME du feutre, des
+  // sieges et de mes cartes autour du centre du feutre.
+  var eff = Math.max(TABLE_ZOOM_MIN, Math.min(_getTableZoom(), TABLE_ZOOM_MAX));
   window._tableZoomEff = eff;
-  // garder le stockage = zoom REELLEMENT applique (evite que les boutons
-  // semblent inertes quand le plafond "toujours visible" limite le zoom-avant)
-  try { if (Math.abs(eff - req) > 0.005) localStorage.setItem('pth_table_zoom', String(Math.round(eff * 100) / 100)); } catch (e) {}
-  // 3) appliquer : feutre + sieges a l'echelle eff autour du centre du feutre
+  window._tableZoomMaxFit = TABLE_ZOOM_MAX;
   sc.style.transform = 'scale(' + (autofit * eff).toFixed(3) + ')';
+  sc.style.transformOrigin = 'center center';
   seats.style.transformOrigin = oCX.toFixed(1) + 'px ' + oCY.toFixed(1) + 'px';
   seats.style.transform = 'scale(' + eff.toFixed(3) + ')';
+  // mes cartes (player-bar) grandissent aussi au zoom-avant
+  var myc = document.getElementById('g-myseat-cards');
+  if (myc) { myc.style.transformOrigin = 'left center'; myc.style.transform = (eff > 1.001 ? 'scale(' + eff.toFixed(3) + ')' : ''); }
 }
 function tableZoomStep(dir) {
   var z = _getTableZoom() + (dir > 0 ? TABLE_ZOOM_STEP : -TABLE_ZOOM_STEP);
@@ -12271,7 +12255,7 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.3.134-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.135-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
