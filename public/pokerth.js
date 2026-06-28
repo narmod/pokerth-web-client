@@ -7823,9 +7823,21 @@ const App = (() => {
     // QML (cosV, vFactor in [-1,1]) puis on les mappe sur les rayons du feutre
     // (oRect) + marge, pour que les sieges epousent la table au lieu de s'etaler
     // sur toute la largeur (la zone est bien plus large que le feutre en paysage).
-    var rxPx = (oRect.width / 2) + Math.max(40, oRect.width * (_bigScreen ? 0.17 : 0.10));
-    var ryPx = (oRect.height / 2) + Math.max(44, oRect.height * (_bigScreen ? 0.25 : 0.34));
     var out = [null]; // index 0 = self -> position classique (bas)
+    if (_bigScreen) {
+      // Grand ecran : ovale propre, repartition reguliere par angle (on contourne le
+      // modelage vertical QML telephone qui tasse/decale les sieges en desktop). Rayons
+      // cales sur le feutre, garde-fous haut (barre Pot) et bas (zone d'action).
+      var _erx = oRect.width / 2 + Math.max(75, oRect.width * 0.12);
+      var _ery = Math.max(120, Math.min(oRect.height / 2 + Math.max(120, oRect.height * 0.45), oCY - 98, (zH - oCY) - 110));
+      for (var ke = 1; ke <= opps; ke++) {
+        var ang = (firstOppAngle + (ke - 1) * dOpp) * Math.PI / 180;
+        out.push({ top: oCY + Math.sin(ang) * _ery, left: oCX + Math.cos(ang) * _erx });
+      }
+      return out;
+    }
+    var rxPx = (oRect.width / 2) + Math.max(40, oRect.width * 0.10);
+    var ryPx = (oRect.height / 2) + Math.max(44, oRect.height * 0.34);
     for (var k = 1; k <= opps; k++) {
       var p = point(firstOppAngle + (k - 1) * dOpp);
       var nx = radiusX > 0 ? (p[0] - 0.5) / radiusX : 0;     // cosV shape [-1,1]
@@ -12215,7 +12227,7 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.3.126-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.127-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
