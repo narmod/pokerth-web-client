@@ -7736,7 +7736,7 @@ const App = (() => {
       // Grand ecran : colonnes calees sur le feutre (X) ET etalees verticalement (Y)
       // autour du feutre, sinon les box desktop se chevauchent ou collent a la table.
       var _slotRx = oRect.width / 2 + Math.max(90, oRect.width * 0.16);
-      var _slotRy = oRect.height / 2 + Math.max(140, oRect.height * 0.62);
+      var _slotRy = Math.min(oRect.height / 2 + Math.max(120, oRect.height * 0.50), oCY - 92);
       for (var i = 0; i < seqP.length; i++) {
         var nm = seqP[i], f = SLOTS_P[nm];
         if (!f) { outP.push(null); continue; }
@@ -7802,8 +7802,8 @@ const App = (() => {
     // QML (cosV, vFactor in [-1,1]) puis on les mappe sur les rayons du feutre
     // (oRect) + marge, pour que les sieges epousent la table au lieu de s'etaler
     // sur toute la largeur (la zone est bien plus large que le feutre en paysage).
-    var rxPx = (oRect.width / 2) + Math.max(40, oRect.width * (_bigScreen ? 0.16 : 0.10));
-    var ryPx = (oRect.height / 2) + Math.max(44, oRect.height * (_bigScreen ? 0.50 : 0.34));
+    var rxPx = (oRect.width / 2) + Math.max(40, oRect.width * (_bigScreen ? 0.17 : 0.10));
+    var ryPx = (oRect.height / 2) + Math.max(44, oRect.height * (_bigScreen ? 0.25 : 0.34));
     var out = [null]; // index 0 = self -> position classique (bas)
     for (var k = 1; k <= opps; k++) {
       var p = point(firstOppAngle + (k - 1) * dOpp);
@@ -12194,7 +12194,7 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.3.124-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.125-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
