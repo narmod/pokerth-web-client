@@ -330,7 +330,7 @@ function applyAdvOpts() {
     b.classList.toggle('adv-no-community', !_advGet('show_community', true));
     b.classList.toggle('adv-no-flag', !_advGet('show_flag', true));
     b.classList.toggle('adv-hide-pbar', _advGet('hide_pbar', true));
-    try { document.documentElement.setAttribute('data-seat-layout', (localStorage.getItem('pth_seat_layout') === 'classic') ? 'classic' : 'official'); } catch (e) {}
+    try { var _slm = localStorage.getItem('pth_seat_layout'); _slm = (_slm === 'pokerth-official' || _slm === 'pokerth-ellipse') ? _slm : 'auto'; document.documentElement.setAttribute('data-seat-layout', _slm); } catch (e) {}
     try { if (typeof window._refreshOwnCards === 'function') window._refreshOwnCards(); } catch (e) {}
     try { if (typeof window._renderOdds === 'function') window._renderOdds(); } catch (e) {}
     try { if (typeof window._renderSeats === 'function') window._renderSeats(); } catch (e) {}
@@ -456,7 +456,7 @@ function openAdvancedOptions() {
   sync('adv-voice', 'voice', false);
   sync('adv-displaybb', 'display_bb', false);
   sync('adv-nohideignored', 'no_hide_ignored', false);
-  try { var _sl = document.getElementById('adv-seatlayout'); if (_sl) _sl.value = (localStorage.getItem('pth_seat_layout') === 'classic') ? 'classic' : 'official'; } catch (e) {}
+  try { var _sl = document.getElementById('adv-seatlayout'); if (_sl) { var _slv = localStorage.getItem('pth_seat_layout'); _sl.value = (_slv === 'pokerth-official' || _slv === 'pokerth-ellipse') ? _slv : 'auto'; } } catch (e) {}
   try { _rebindAction = null; _renderKeyButtons(); } catch (e) {}
   try { advSelectCat('ui'); } catch (e) {}
   try { _advSyncContext(); } catch (e) {}
@@ -545,10 +545,10 @@ function resetAdvDefaults() {
   try { openAdvancedOptions(); } catch (e) {}   // re-sync des cases + retour onglet Interface
 }
 window.resetAdvDefaults = resetAdvDefaults;
-// Placement des sièges (Options avancées) : 'classic' | 'official'. Persiste +
+// Placement des sièges (Options avancées) : 'auto' | 'pokerth-official' | 'pokerth-ellipse'. Persiste +
 // re-rend les sièges via le hook global window._renderSeats.
 function setSeatLayout(v) {
-  v = (v === 'official') ? 'official' : 'classic';
+  v = (v === 'pokerth-official' || v === 'pokerth-ellipse') ? v : 'auto';
   try { localStorage.setItem('pth_seat_layout', v); } catch (e) {}
   try { document.documentElement.setAttribute('data-seat-layout', v); } catch (e) {}
   try { if (typeof window._renderSeats === 'function') window._renderSeats(); } catch (e) {}
@@ -7845,9 +7845,11 @@ const App = (() => {
     // desktop, colonnes G/D + rangée haute en portrait façon client QML). Les
     // positions officielles sont appliquées en surcouche après la passe classique
     // (voir _officialSeatPix + le bloc de surcouche plus bas).
-    var _seatLayoutOfficial = false;
-    try { _seatLayoutOfficial = (localStorage.getItem('pth_seat_layout') !== 'classic'); } catch (e) {}
+    var _seatModeV = 'auto';
+    try { var _sm = localStorage.getItem('pth_seat_layout'); _seatModeV = (_sm === 'pokerth-official' || _sm === 'pokerth-ellipse') ? _sm : 'auto'; } catch (e) {}
     var _seatPortrait = (window.innerHeight > window.innerWidth);
+    // auto = orientation reelle ; pokerth-official = slots forces ; pokerth-ellipse = ellipse forcee
+    var _forceSeatPortrait = (_seatModeV === 'pokerth-official') ? true : (_seatModeV === 'pokerth-ellipse') ? false : _seatPortrait;
     const oRect = oval.getBoundingClientRect();
     const zRect = zone.getBoundingClientRect();
     const oCX  = oRect.left - zRect.left + oRect.width  / 2;
@@ -7942,10 +7944,9 @@ const App = (() => {
     // Le placement officiel ne s'applique que sur TELEPHONE (petit ecran) :
     // portrait -> slots colonnes QML ; paysage -> ellipse QML calee sur le feutre.
     // Sur tablette/desktop on garde le placement classique (maison), plus aere.
-    var _isPhone = Math.min(window.innerWidth, window.innerHeight) < 540;
-    if (_seatLayoutOfficial && myIdx >= 0 && _isPhone) {
+    if (myIdx >= 0) {
       try {
-        var _offPos = _officialSeatPix(rotated.length, _seatPortrait, zRect.width, zRect.height, oCX, oCY, oRect);
+        var _offPos = _officialSeatPix(rotated.length, _forceSeatPortrait, zRect.width, zRect.height, oCX, oCY, oRect);
         if (_offPos) { for (var _op = 1; _op < pixPos.length; _op++) { if (_offPos[_op]) pixPos[_op] = _offPos[_op]; } }
       } catch (e) {}
     }
@@ -12184,7 +12185,7 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.3.121-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.122-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
