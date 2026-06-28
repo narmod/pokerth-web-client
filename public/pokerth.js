@@ -7712,6 +7712,7 @@ const App = (() => {
   function _officialSeatPix(n, isPortrait, zW, zH, oCX, oCY, oRect) {
     var M = n - 1; // adversaires
     if (M < 1) return null;
+    var _bigScreen = Math.min(zW, zH) >= 540; // desktop/tablette : sieges plus espaces, cales sur le feutre
     // ── PORTRAIT : slots officiels QML (GameTable.qml slotPosPortrait) ──
     // Valeurs alignees 1:1 sur le client officiel + nudge px (slotForSeat) :
     // sieges du bas +14px, sieges du haut -4px (px de la zone de jeu).
@@ -7732,17 +7733,18 @@ const App = (() => {
       var seqP = SEQ_P[M];
       if (!seqP) return null;
       var outP = [null]; // index 0 = self -> position classique
-      // Grand ecran (zone bien plus large que le feutre) : caler les colonnes sur le
-      // feutre au lieu des fractions de zone (sinon elles partent aux bords en desktop).
-      var _bigSeat = zW > oRect.width * 1.35;
-      var _slotRx = oRect.width / 2 + Math.max(40, oRect.width * 0.06);
+      // Grand ecran : colonnes calees sur le feutre (X) ET etalees verticalement (Y)
+      // autour du feutre, sinon les box desktop se chevauchent ou collent a la table.
+      var _slotRx = oRect.width / 2 + Math.max(90, oRect.width * 0.16);
+      var _slotRy = oRect.height / 2 + Math.max(140, oRect.height * 0.62);
       for (var i = 0; i < seqP.length; i++) {
         var nm = seqP[i], f = SLOTS_P[nm];
         if (!f) { outP.push(null); continue; }
         var nud = (nm === 'L_lower' || nm === 'L_bottom' || nm === 'R_lower' || nm === 'R_bottom') ? 14
                 : (nm === 'L_upper' || nm === 'TL' || nm === 'R_upper' || nm === 'TR') ? -4 : 0;
-        var _lx = _bigSeat ? (oCX + ((f[0] - 0.5) / 0.35) * _slotRx) : (f[0] * zW);
-        outP.push({ top: f[1] * zH + nud, left: _lx });
+        var _lx = _bigScreen ? (oCX + ((f[0] - 0.5) / 0.35) * _slotRx) : (f[0] * zW);
+        var _ly = _bigScreen ? (oCY + ((f[1] - 0.43) / 0.355) * _slotRy + nud) : (f[1] * zH + nud);
+        outP.push({ top: _ly, left: _lx });
       }
       return outP;
     }
@@ -7800,8 +7802,8 @@ const App = (() => {
     // QML (cosV, vFactor in [-1,1]) puis on les mappe sur les rayons du feutre
     // (oRect) + marge, pour que les sieges epousent la table au lieu de s'etaler
     // sur toute la largeur (la zone est bien plus large que le feutre en paysage).
-    var rxPx = (oRect.width / 2) + Math.max(40, oRect.width * 0.10);
-    var ryPx = (oRect.height / 2) + Math.max(44, oRect.height * 0.34);
+    var rxPx = (oRect.width / 2) + Math.max(40, oRect.width * (_bigScreen ? 0.16 : 0.10));
+    var ryPx = (oRect.height / 2) + Math.max(44, oRect.height * (_bigScreen ? 0.50 : 0.34));
     var out = [null]; // index 0 = self -> position classique (bas)
     for (var k = 1; k <= opps; k++) {
       var p = point(firstOppAngle + (k - 1) * dOpp);
@@ -12192,7 +12194,7 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.3.123-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.124-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
