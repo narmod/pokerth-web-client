@@ -7851,6 +7851,7 @@ const App = (() => {
     const n = seats.length;
     const myIdx = seats.indexOf(myId);
     const rotated = myIdx >= 0 ? [...seats.slice(myIdx), ...seats.slice(0, myIdx)] : seats;
+    try { window._seatCount = rotated.length; } catch (e) {}
     // Position seats using actual pixel coords from getBoundingClientRect
     const oval = document.querySelector('.felt-oval');
     const zone = document.getElementById('g-table-zone');
@@ -7862,7 +7863,7 @@ const App = (() => {
     // Petits ecrans : reduire la taille des box (avatars + texte) pour qu'elles tiennent
     // autour du feutre sans le chevaucher (le client officiel fait pareil via boxScale).
     var _seatBoxScale = 1;
-    try { var _sbw = window.innerWidth, _sbh = window.innerHeight; if (Math.min(_sbw, _sbh) < 540) { var _opp = Math.max(0, rotated.length - 1); _seatBoxScale = (_sbh > _sbw) ? Math.max(0.62, 0.80 - Math.max(0, _opp - 4) * 0.028) : Math.max(0.70, 0.86 - Math.max(0, _opp - 4) * 0.02); } } catch (e) {}
+    try { var _sbw = window.innerWidth, _sbh = window.innerHeight; if (Math.min(_sbw, _sbh) < 540) { var _opp = Math.max(0, rotated.length - 1); _seatBoxScale = (_sbh > _sbw) ? Math.max(0.56, 0.80 - Math.max(0, _opp - 4) * 0.040) : Math.max(0.70, 0.86 - Math.max(0, _opp - 4) * 0.02); } } catch (e) {}
     // Placement des sièges : 'classic' (ellipse maison, défaut) ou 'official'
     // (slots fixes du client PokerTH : grille périmètre en paysage façon client
     // desktop, colonnes G/D + rangée haute en portrait façon client QML). Les
@@ -11281,6 +11282,7 @@ function applyTableZoom() {
   // sieges suivent. On purge tout transform residuel sur #g-table-zone.
   var tz = document.getElementById('g-table-zone');
   if (tz && tz.style.transform) tz.style.transform = '';
+  try { if (typeof window._renderSeats === 'function') window._renderSeats(); } catch (e) {}
   try { if (typeof autoScaleTable === 'function') autoScaleTable(); } catch (e) {}
   try { if (typeof window._renderSeats === 'function') window._renderSeats(); } catch (e) {}
   _applyZoomTransforms();
@@ -11376,7 +11378,10 @@ function autoScaleTable() {
   // Sur mobile, on peut réduire en dessous de 1 pour tout faire tenir
   var isDeskScale = window.innerWidth >= 900 && window.matchMedia && window.matchMedia('(hover: hover) and (pointer: fine)').matches;
   var _narrowPortrait = window.innerWidth < 540 && window.innerHeight > window.innerWidth;
-  var scaleMax = isDeskScale ? 1.4 : (_narrowPortrait ? 0.74 : 1);
+  var _npOpp = Math.max(0, (window._seatCount || 6) - 1); // adversaires (pour le feutre)
+  // Portrait etroit : plus il y a de joueurs, plus les boites sont petites,
+  // donc plus le feutre peut etre grand sans chevaucher les sieges lateraux.
+  var scaleMax = isDeskScale ? 1.4 : (_narrowPortrait ? Math.min(0.85, Math.max(0.74, 0.74 + (_npOpp - 6) * 0.034)) : 1);
   var scale = Math.min(scaleMax, tzW / scW, tzH / scH);
   if (scale < 0.05) scale = 0.5; // fallback visible
   window._tableAutofit = scale; // zoom applique separement (voir _applyZoomTransforms)
@@ -12266,7 +12271,7 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.3.133-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.134-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
