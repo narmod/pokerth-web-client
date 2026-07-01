@@ -11344,6 +11344,10 @@ function _applyZoomTransforms() {
   // mes cartes (player-bar) grandissent aussi au zoom-avant
   var myc = document.getElementById('g-myseat-cards');
   if (myc) { myc.style.transformOrigin = 'left center'; myc.style.transform = (eff > 1.001 ? 'scale(' + eff.toFixed(3) + ')' : ''); }
+  // Cartes communes (#g-comm) : le scaler porte deja autofit*eff -> on neutralise
+  // la compensation posee par autoScaleTable (sinon double facteur = eff^2).
+  var _ccz = document.getElementById('g-comm');
+  if (_ccz) _ccz.style.transform = '';
 }
 function tableZoomStep(dir) {
   var z = _getTableZoom() + (dir > 0 ? TABLE_ZOOM_STEP : -TABLE_ZOOM_STEP);
@@ -11536,6 +11540,13 @@ function autoScaleTable() {
   window._tableAutofit = scale; // zoom applique separement (voir _applyZoomTransforms)
   sc.style.transform = 'scale(' + scale.toFixed(3) + ')';
   sc.style.transformOrigin = 'center center';
+  // Cartes communes : ici le scaler est a autofit SANS le zoom. On compense
+  // #g-comm par scale(zoom) pour qu'elles grossissent/retrecissent comme les
+  // sieges (qui portent scale(eff) via #g-seats). Neutralise dans
+  // _applyZoomTransforms ou le scaler porte deja autofit*eff (pas de double).
+  var _cz = (typeof _getTableZoom === 'function') ? _getTableZoom() : 1;
+  var _cc = document.getElementById('g-comm');
+  if (_cc) { _cc.style.transformOrigin = 'center center'; _cc.style.transform = (Math.abs(_cz - 1) > 0.001 ? 'scale(' + _cz.toFixed(3) + ')' : ''); }
 }
 document.addEventListener('DOMContentLoaded', function() { setTimeout(autoScaleTable, 400); });
 
@@ -12420,7 +12431,7 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.3.137-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.138-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
