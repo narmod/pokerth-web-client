@@ -5915,6 +5915,31 @@ body.has-keyboard .act-key { display: inline-block; }
 .zoom-btn:active { transform: scale(0.94); }
 .zoom-btn:disabled { opacity: 0.35; cursor: default; }
 
+/* -- Bouton "editer le placement" (mode custom) + edition glisser-deposer -- */
+#g-seat-edit { display: none; }
+html[data-seat-layout="custom"] #g-seat-edit { display: flex; }
+#g-seat-edit.active { background: #E3C800; color: #1d222b; border-color: #E3C800; }
+html[data-seat-edit="1"] { -webkit-user-select: none; user-select: none; }
+html[data-seat-edit="1"] #g-seats .seat[data-pid] { cursor: grab; touch-action: none; outline: 2px dashed rgba(227, 200, 0, 0.75); outline-offset: 2px; border-radius: 10px; }
+html[data-seat-edit="1"] #g-seats .seat.seat-ghost { outline: none; cursor: default; }
+#g-seats .seat.seat-dragging { cursor: grabbing; z-index: 50; }
+.seat-edit-banner {
+  position: fixed; left: 50%; bottom: 16px; transform: translateX(-50%);
+  z-index: 60; display: flex; align-items: center; gap: 10px;
+  padding: 8px 12px; border-radius: 12px; max-width: calc(100vw - 24px);
+  background: rgba(20, 28, 24, 0.92); color: #eff1f5;
+  border: 1px solid rgba(227, 200, 0, 0.55);
+  -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
+  font-size: 0.9rem; box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+}
+.seat-edit-banner .seb-hint { opacity: 0.92; }
+.seat-edit-banner button {
+  border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 8px;
+  padding: 5px 10px; cursor: pointer; font-weight: 600; font-size: 0.85rem;
+  background: rgba(255, 255, 255, 0.08); color: #eff1f5;
+}
+.seat-edit-banner .seb-done { background: #E3C800; color: #1d222b; border-color: #E3C800; }
+
 
 /* ── Selecteur d'emoji du chat (desktop / souris) ───────────────────
    Bouton dans la barre de saisie + grille repliable au-dessus. Un clic insere

@@ -1313,6 +1313,7 @@ function onAvatarImageChosen(input) {
     <div id="g-zoom-ctrl" class="zoom-ctrl">
       <button class="zoom-btn" id="g-zoom-in" onclick="tableZoomStep(1)" title="Agrandir la table" data-i18n-title="zoomIn" aria-label="Agrandir la table">+</button>
       <button class="zoom-btn" id="g-zoom-reset" onclick="tableZoomReset()" title="Réinitialiser la vue" data-i18n-title="zoomReset" aria-label="Réinitialiser la vue">↺</button>
+      <button class="zoom-btn" id="g-seat-edit" onclick="toggleSeatEdit()" title="Éditer le placement des sièges" data-i18n-title="seatEditToggle" aria-label="Éditer le placement des sièges">✎</button>
       <button class="zoom-btn" id="g-zoom-out" onclick="tableZoomStep(-1)" title="Réduire la table" data-i18n-title="zoomOut" aria-label="Réduire la table">−</button>
     </div>
     <!-- TABLE -->
@@ -1710,7 +1711,7 @@ if ('serviceWorker' in navigator) {
       <label class="adv-row"><input type="checkbox" id="adv-hidepbar" onchange="setAdvOpt('hide_pbar',this.checked)"><span data-i18n="advHidePbar">PokerTH mode (player bar hidden)</span></label>
 
       <div class="adv-sec" data-i18n="advSecSeats">Seats</div>
-      <div class="adv-row"><span data-i18n="advSeatLayout">Seat placement</span><div class="sel-wrap adv-sel"><select id="adv-seatlayout" onchange="setSeatLayout(this.value)"><option value="auto" data-i18n="seatLayoutAuto">Automatic</option><option value="pokerth-official" data-i18n="seatLayoutOfficial">PokerTH official</option><option value="pokerth-ellipse" data-i18n="seatLayoutEllipse">PokerTH ellipse</option></select><span class="sel-arr">▾</span></div></div>
+      <div class="adv-row"><span data-i18n="advSeatLayout">Seat placement</span><div class="sel-wrap adv-sel"><select id="adv-seatlayout" onchange="setSeatLayout(this.value)"><option value="auto" data-i18n="seatLayoutAuto">Automatic</option><option value="pokerth-official" data-i18n="seatLayoutOfficial">PokerTH official</option><option value="pokerth-ellipse" data-i18n="seatLayoutEllipse">PokerTH ellipse</option><option value="custom" data-i18n="seatLayoutCustom">Custom</option></select><span class="sel-arr">▾</span></div></div>
 
       <div class="adv-sec" data-i18n="advSecChat">Chat</div>
       <label class="adv-row"><input type="checkbox" id="adv-noemoji" onchange="setAdvOpt('chat_noemoji',this.checked)"><span data-i18n="advNoChatEmoji">Disable emojis in chat</span></label>

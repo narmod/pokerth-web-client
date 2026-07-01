@@ -330,7 +330,7 @@ function applyAdvOpts() {
     b.classList.toggle('adv-no-community', !_advGet('show_community', true));
     b.classList.toggle('adv-no-flag', !_advGet('show_flag', true));
     b.classList.toggle('adv-hide-pbar', _advGet('hide_pbar', true));
-    try { var _slm = localStorage.getItem('pth_seat_layout'); _slm = (_slm === 'pokerth-official' || _slm === 'pokerth-ellipse') ? _slm : 'auto'; document.documentElement.setAttribute('data-seat-layout', _slm); } catch (e) {}
+    try { var _slm = localStorage.getItem('pth_seat_layout'); _slm = (_slm === 'pokerth-official' || _slm === 'pokerth-ellipse' || _slm === 'custom') ? _slm : 'auto'; document.documentElement.setAttribute('data-seat-layout', _slm); } catch (e) {}
     try { if (typeof window._refreshOwnCards === 'function') window._refreshOwnCards(); } catch (e) {}
     try { if (typeof window._renderOdds === 'function') window._renderOdds(); } catch (e) {}
     try { if (typeof window._renderSeats === 'function') window._renderSeats(); } catch (e) {}
@@ -456,7 +456,7 @@ function openAdvancedOptions() {
   sync('adv-voice', 'voice', false);
   sync('adv-displaybb', 'display_bb', false);
   sync('adv-nohideignored', 'no_hide_ignored', false);
-  try { var _sl = document.getElementById('adv-seatlayout'); if (_sl) { var _slv = localStorage.getItem('pth_seat_layout'); _sl.value = (_slv === 'pokerth-official' || _slv === 'pokerth-ellipse') ? _slv : 'auto'; } } catch (e) {}
+  try { var _sl = document.getElementById('adv-seatlayout'); if (_sl) { var _slv = localStorage.getItem('pth_seat_layout'); _sl.value = (_slv === 'pokerth-official' || _slv === 'pokerth-ellipse' || _slv === 'custom') ? _slv : 'auto'; } } catch (e) {}
   try { _rebindAction = null; _renderKeyButtons(); } catch (e) {}
   try { advSelectCat('ui'); } catch (e) {}
   try { _advSyncContext(); } catch (e) {}
@@ -548,7 +548,7 @@ window.resetAdvDefaults = resetAdvDefaults;
 // Placement des sièges (Options avancées) : 'auto' | 'pokerth-official' | 'pokerth-ellipse'. Persiste +
 // re-rend les sièges via le hook global window._renderSeats.
 function setSeatLayout(v) {
-  v = (v === 'pokerth-official' || v === 'pokerth-ellipse') ? v : 'auto';
+  v = (v === 'pokerth-official' || v === 'pokerth-ellipse' || v === 'custom') ? v : 'auto';
   try { localStorage.setItem('pth_seat_layout', v); } catch (e) {}
   try { document.documentElement.setAttribute('data-seat-layout', v); } catch (e) {}
   try { if (typeof window._renderSeats === 'function') window._renderSeats(); } catch (e) {}
@@ -7827,6 +7827,7 @@ const App = (() => {
   }
 
   function renderSeatsImmediate() {
+    if (window._seatEditMode) return;   // gel des re-rendus pendant l'edition de placement (drag actif)
     const el = $('g-seats');
     // Clic/tap sur un siège → popup d'info du joueur. Délégation posée une
     // seule fois : #g-seats persiste, seul son contenu est recréé à chaque
@@ -7834,6 +7835,7 @@ const App = (() => {
     if (el && !el._seatClickBound) {
       el._seatClickBound = true;
       el.addEventListener('click', function(ev) {
+        if (window._seatEditMode) return;   // pas de popup pendant l'edition (clic = drag)
         var seat = (ev.target && ev.target.closest) ? ev.target.closest('.seat[data-pid]') : null;
         if (!seat || seat.classList.contains('seat-ghost')) return; // siège vide / joueur parti
         var sp = parseInt(seat.getAttribute('data-pid'), 10);
@@ -7870,7 +7872,7 @@ const App = (() => {
     // positions officielles sont appliquées en surcouche après la passe classique
     // (voir _officialSeatPix + le bloc de surcouche plus bas).
     var _seatModeV = 'auto';
-    try { var _sm = localStorage.getItem('pth_seat_layout'); _seatModeV = (_sm === 'pokerth-official' || _sm === 'pokerth-ellipse') ? _sm : 'auto'; } catch (e) {}
+    try { var _sm = localStorage.getItem('pth_seat_layout'); _seatModeV = (_sm === 'pokerth-official' || _sm === 'pokerth-ellipse' || _sm === 'custom') ? _sm : 'auto'; } catch (e) {}
     var _seatPortrait = (window.innerHeight > window.innerWidth);
     var _isPhone = Math.min(window.innerWidth, window.innerHeight) < 540;
     // auto : tel -> geometrie officielle (portrait=slots / paysage=ellipse) ; grand ecran -> layout maison.
@@ -7878,6 +7880,7 @@ const App = (() => {
     var _applyOfficial, _forceSeatPortrait;
     if (_seatModeV === 'pokerth-official') { _applyOfficial = true; _forceSeatPortrait = true; }
     else if (_seatModeV === 'pokerth-ellipse') { _applyOfficial = false; _forceSeatPortrait = _seatPortrait; }
+    else if (_seatModeV === 'custom') { _applyOfficial = false; _forceSeatPortrait = _seatPortrait; }
     else { _applyOfficial = _isPhone; _forceSeatPortrait = _seatPortrait; }
     const oRect = oval.getBoundingClientRect();
     const zRect = zone.getBoundingClientRect();
@@ -7970,6 +7973,23 @@ const App = (() => {
     // (grille périmètre en paysage / colonnes G-D en portrait). La self (index 0)
     // garde sa position classique. Désactivé si la self n'est pas assise (myIdx<0)
     // ou hors plage (>9 adversaires) : on conserve alors le calcul classique.
+    // -- Placement personnalise (custom) : surcouche fractions sauvees --
+    // Chaque slot (0 = moi inclus) prend sa fraction de #g-table-zone si
+    // elle existe ; sinon on garde la position classique calculee (repli).
+    // Exclusif avec le placement officiel ci-dessous (depend du mode).
+    if (_seatModeV === 'custom' && myIdx >= 0) {
+      try {
+        var _cust = (typeof window._seatCustomGet === 'function') ? window._seatCustomGet(rotated.length) : null;
+        if (_cust) {
+          for (var _cs = 0; _cs < pixPos.length; _cs++) {
+            var _cf = _cust[_cs];
+            if (_cf && typeof _cf.fx === 'number' && typeof _cf.fy === 'number') {
+              pixPos[_cs] = { left: _cf.fx * zRect.width, top: _cf.fy * zRect.height };
+            }
+          }
+        }
+      } catch (e) {}
+    }
     if (_applyOfficial && myIdx >= 0) {
       try {
         var _offPos = _officialSeatPix(rotated.length, _forceSeatPortrait, zRect.width, zRect.height, oCX, oCY, oRect, _seatBoxScale);
@@ -11339,6 +11359,151 @@ function tableZoomReset() {
 window.tableZoomStep = tableZoomStep;
 window.tableZoomReset = tableZoomReset;
 window.applyTableZoom = applyTableZoom;
+
+// ════════════════════════════════════════════════════════════════════════
+// Placement personnalise des sieges (mode 'custom') -- glisser-deposer en jeu.
+// Positions stockees en FRACTIONS de #g-table-zone, par orientation (p/l) et
+// par nombre de joueurs, indexees par slot (0 = moi, toujours). Le rendu
+// (renderSeatsImmediate) applique ces fractions en surcouche, avec repli sur
+// la position classique si un slot n'a pas encore ete place. Le zoom agit sur
+// le conteneur #g-seats -> les fractions se composent avec le zoom.
+// ════════════════════════════════════════════════════════════════════════
+function _seatCustOri(){ return (window.innerHeight > window.innerWidth) ? 'p' : 'l'; }
+function _seatCustAll(){
+  try { var raw = localStorage.getItem('pth_seat_custom'); var o = raw ? JSON.parse(raw) : null;
+        return (o && typeof o === 'object') ? o : {}; } catch (e) { return {}; }
+}
+window._seatCustomGet = function(n){
+  var all = _seatCustAll(), byN = all[_seatCustOri()];
+  return (byN && byN[String(n)]) ? byN[String(n)] : null;
+};
+function _seatCustomSet(n, slot, fx, fy){
+  var all = _seatCustAll(), ori = _seatCustOri();
+  if (!all[ori]) all[ori] = {};
+  if (!all[ori][String(n)]) all[ori][String(n)] = {};
+  all[ori][String(n)][String(slot)] = { fx: fx, fy: fy };
+  try { localStorage.setItem('pth_seat_custom', JSON.stringify(all)); } catch (e) {}
+}
+function _seatCustomReset(n){
+  var all = _seatCustAll(), ori = _seatCustOri();
+  if (all[ori] && all[ori][String(n)]) { delete all[ori][String(n)];
+    try { localStorage.setItem('pth_seat_custom', JSON.stringify(all)); } catch (e) {} }
+}
+
+var _seatEditPrevZoom = null;
+window._seatEditMode = false;
+
+function _seatEditActive(){
+  try { return localStorage.getItem('pth_seat_layout') === 'custom'; } catch (e) { return false; }
+}
+// Re-rend proprement les sieges meme en mode edition (contourne le gel).
+function _seatEditRerender(){
+  var was = window._seatEditMode; window._seatEditMode = false;
+  try { if (typeof window._renderSeats === 'function') window._renderSeats(); } catch (e) {}
+  window._seatEditMode = was;
+}
+function toggleSeatEdit(){
+  if (!_seatEditActive()) return;                        // dispo uniquement en mode custom
+  if (window._seatEditMode) { _seatEditExit(); return; }
+  if (!document.querySelector('#g-seats .seat')) return; // aucune table affichee
+  _seatEditEnter();
+}
+window.toggleSeatEdit = toggleSeatEdit;
+
+function _seatEditEnter(){
+  // Rendu propre a zoom 1 AVANT de geler (drag 1:1, sieges alignes sur le feutre)
+  _seatEditPrevZoom = _getTableZoom();
+  try { localStorage.setItem('pth_table_zoom', String(TABLE_ZOOM_DEFAULT)); } catch (e) {}
+  try { applyTableZoom(); } catch (e) {}
+  window._seatEditMode = true;                           // gele les re-rendus
+  document.documentElement.setAttribute('data-seat-edit', '1');
+  var b = document.getElementById('g-seat-edit'); if (b) b.classList.add('active');
+  _seatEditBindDrag();
+  _seatEditBanner(true);
+}
+function _seatEditExit(){
+  window._seatEditMode = false;
+  document.documentElement.removeAttribute('data-seat-edit');
+  var b = document.getElementById('g-seat-edit'); if (b) b.classList.remove('active');
+  _seatEditBanner(false);
+  if (_seatEditPrevZoom != null) {
+    try { localStorage.setItem('pth_table_zoom', String(_seatEditPrevZoom)); } catch (e) {}
+    _seatEditPrevZoom = null;
+  }
+  try { applyTableZoom(); } catch (e) {}                  // rend + transforms au zoom restaure
+}
+
+// Glisser un siege (self comprise). Delegation posee une seule fois sur
+// #g-seats (persiste ; seul son contenu est recree). Ignore les sieges
+// fantomes (joueur parti). Sauvegarde la fraction au relachement.
+function _seatEditBindDrag(){
+  var host = document.getElementById('g-seats');
+  if (!host || host._seatEditBound) return;
+  host._seatEditBound = true;
+  var drag = null;
+  host.addEventListener('pointerdown', function(ev){
+    if (!window._seatEditMode) return;
+    var seat = (ev.target && ev.target.closest) ? ev.target.closest('.seat[data-pid]') : null;
+    if (!seat || seat.classList.contains('seat-ghost')) return;
+    var zone = document.getElementById('g-table-zone'); if (!zone) return;
+    ev.preventDefault(); ev.stopPropagation();
+    var zr = zone.getBoundingClientRect();
+    var curLeft = parseFloat(seat.style.left) || 0;
+    var curTop  = parseFloat(seat.style.top)  || 0;
+    drag = { seat: seat, zr: zr,
+             slot: Array.prototype.indexOf.call(host.children, seat),
+             offX: (ev.clientX - zr.left) - curLeft,
+             offY: (ev.clientY - zr.top)  - curTop,
+             nx: curLeft, ny: curTop };
+    seat.classList.add('seat-dragging');
+    try { host.setPointerCapture(ev.pointerId); } catch (e) {}
+  });
+  host.addEventListener('pointermove', function(ev){
+    if (!drag) return;
+    ev.preventDefault();
+    var zr = drag.zr;
+    var nx = Math.max(8, Math.min((ev.clientX - zr.left) - drag.offX, zr.width  - 8));
+    var ny = Math.max(8, Math.min((ev.clientY - zr.top)  - drag.offY, zr.height - 8));
+    drag.nx = nx; drag.ny = ny;
+    drag.seat.style.left = nx.toFixed(1) + 'px';
+    drag.seat.style.top  = ny.toFixed(1) + 'px';
+  });
+  function _end(ev){
+    if (!drag) return;
+    var zr = drag.zr, n = window._seatCount || 0;
+    if (n && drag.slot >= 0 && zr.width && zr.height) {
+      _seatCustomSet(n, drag.slot, drag.nx / zr.width, drag.ny / zr.height);
+    }
+    drag.seat.classList.remove('seat-dragging');
+    try { host.releasePointerCapture(ev.pointerId); } catch (e) {}
+    drag = null;
+  }
+  host.addEventListener('pointerup', _end);
+  host.addEventListener('pointercancel', _end);
+}
+
+// Banniere d'edition (hint + reinitialiser + termine).
+function _seatEditBanner(show){
+  var el = document.getElementById('seat-edit-banner');
+  if (!show) { if (el) el.remove(); return; }
+  if (el) return;
+  var tr = (typeof window.t === 'function') ? window.t : function(k){ return k; };
+  el = document.createElement('div');
+  el.id = 'seat-edit-banner';
+  el.className = 'seat-edit-banner';
+  el.innerHTML = '<span class="seb-hint"></span>'
+    + '<button type="button" class="seb-reset"></button>'
+    + '<button type="button" class="seb-done"></button>';
+  el.querySelector('.seb-hint').textContent  = tr('seatEditHint');
+  el.querySelector('.seb-reset').textContent = tr('seatEditReset');
+  el.querySelector('.seb-done').textContent  = tr('seatEditDone');
+  el.querySelector('.seb-reset').addEventListener('click', function(){
+    _seatCustomReset(window._seatCount || 0); _seatEditRerender();
+  });
+  el.querySelector('.seb-done').addEventListener('click', function(){ _seatEditExit(); });
+  document.body.appendChild(el);
+}
+
 document.addEventListener('DOMContentLoaded', function() { setTimeout(applyTableZoom, 500); });
 window.addEventListener('resize', function() { applyTableZoom(); });
 
@@ -12255,7 +12420,7 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.3.136-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.137-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
