@@ -11546,7 +11546,7 @@ function autoScaleTable() {
   // _applyZoomTransforms ou le scaler porte deja autofit*eff (pas de double).
   var _cz = (typeof _getTableZoom === 'function') ? _getTableZoom() : 1;
   var _cc = document.getElementById('g-comm');
-  if (_cc) { _cc.style.transformOrigin = 'center center'; _cc.style.transform = (Math.abs(_cz - 1) > 0.001 ? 'scale(' + _cz.toFixed(3) + ')' : ''); }
+  if (_cc) { _cc.style.transformOrigin = 'center center'; _cc.style.transform = (Math.abs(_cz - 1) > 0.001 ? 'translate(-50%, -50%) scale(' + _cz.toFixed(3) + ')' : ''); }
 }
 document.addEventListener('DOMContentLoaded', function() { setTimeout(autoScaleTable, 400); });
 
@@ -12431,7 +12431,7 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.3.138-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.139-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
