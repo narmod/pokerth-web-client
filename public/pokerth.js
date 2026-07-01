@@ -551,7 +551,13 @@ function setSeatLayout(v) {
   v = (v === 'pokerth-official' || v === 'pokerth-ellipse' || v === 'custom') ? v : 'auto';
   try { localStorage.setItem('pth_seat_layout', v); } catch (e) {}
   try { document.documentElement.setAttribute('data-seat-layout', v); } catch (e) {}
-  try { if (typeof window._renderSeats === 'function') window._renderSeats(); } catch (e) {}
+  // Quitter le mode custom pendant l'edition doit TERMINER l'edition, sinon le
+  // rendu reste gele (window._seatEditMode) et les autres modes semblent inertes.
+  if (window._seatEditMode && v !== 'custom' && typeof window._seatEditExit === 'function') {
+    try { window._seatEditExit(); } catch (e) {}   // re-rend au passage
+  } else {
+    try { if (typeof window._renderSeats === 'function') window._renderSeats(); } catch (e) {}
+  }
 }
 window.setSeatLayout = setSeatLayout;
 // Appliquer les classes body dès l'init (les prefs sont reflétées au chargement).
@@ -7827,7 +7833,7 @@ const App = (() => {
   }
 
   function renderSeatsImmediate() {
-    if (window._seatEditMode) return;   // gel des re-rendus pendant l'edition de placement (drag actif)
+    if (window._seatEditMode) { if (document.documentElement.getAttribute('data-seat-layout') === 'custom') return; window._seatEditMode = false; }   // gel pendant l'edition (custom seul) ; auto-degele si le mode a change
     const el = $('g-seats');
     // Clic/tap sur un siège → popup d'info du joueur. Délégation posée une
     // seule fois : #g-seats persiste, seul son contenu est recréé à chaque
@@ -11413,6 +11419,7 @@ function toggleSeatEdit(){
   _seatEditEnter();
 }
 window.toggleSeatEdit = toggleSeatEdit;
+window._seatEditExit = _seatEditExit;
 
 function _seatEditEnter(){
   // Rendu propre a zoom 1 AVANT de geler (drag 1:1, sieges alignes sur le feutre)
@@ -12431,7 +12438,7 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.3.139-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.140-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
