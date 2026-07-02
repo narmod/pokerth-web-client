@@ -267,7 +267,7 @@ function _loadGalleryTables() {
         _galleryTables = list.filter(function (t) { return t && t.id && t.feltUrl; }).map(function (t) {
           var pk = null, pv = t.pucks;
           if (pv) { pk = {}; ['dealer','sb','bb'].forEach(function (k) { if (pv[k]) pk[k] = 'url(' + pv[k] + ')'; }); }
-          return { id: String(t.id), name: t.name || String(t.id), feltUrl: t.feltUrl, pucks: pk, preview: t.preview || (pv && pv.dealer) || null, swatch: '#1e6b1e', full: !!t.full, fs: !!t.fullscreen };
+          return { id: String(t.id), name: t.name || String(t.id), feltUrl: t.feltUrl, pucks: pk, preview: t.preview || (pv && pv.dealer) || null, swatch: '#1e6b1e', full: !!t.full, fs: !!t.fullscreen, align: (typeof t.align === 'string' ? t.align : null) };
         }).filter(function (t) { if (_isBuiltinTable(t.id)) return false; for (var i=0;i<_tablePkgs.length;i++) if (_tablePkgs[i].id===t.id) return false; return true; });
         try { table.apply(table.get()); pucks.apply(pucks.get()); } catch (e) {}
         if (_body) _render();
@@ -392,22 +392,25 @@ function _applyTableFull(imgUrl){
 // Table « Fullscreen » : l'image du pack devient un fond plein ecran (--wallpaper
 // + data-bg-img, cf. la regle body.in-game du CSS) et l'ovale passe transparent
 // (data-table-fs). Exclusif avec full. null = on nettoie tout (retour normal).
-function _applyTableFullscreen(imgUrl){
+function _applyTableFullscreen(imgUrl, alignPos){
   var el=document.documentElement;
   if (imgUrl){
     el.setAttribute('data-table-fs','1');
     el.setAttribute('data-bg-img','1');
     el.style.setProperty('--wallpaper','url('+imgUrl+')');
+    if (alignPos) el.style.setProperty('--wallpaper-pos', alignPos);
+    else el.style.removeProperty('--wallpaper-pos');
   } else {
     el.removeAttribute('data-table-fs');
     el.removeAttribute('data-bg-img');
     el.style.removeProperty('--wallpaper');
+    el.style.removeProperty('--wallpaper-pos');
   }
 }
 var _tblApply = table.apply;
 table.apply = function(id){
   _tblApply(id);
-  var fimg=null, fsimg=null;
+  var fimg=null, fsimg=null, fsalign=null;
   try{
     if (_isBuiltinTable(id)) { _injectTable(null); }
     else {
@@ -415,11 +418,11 @@ table.apply = function(id){
       if(pk){ _injectTable(pk); var pu=(pk.felt?('/themes/'+pk.id+'/'+pk.felt):null); if(pk.fs) fsimg=pu; else if(pk.full) fimg=pu; }
       else {
         var gt=_galleryTableById(id);
-        if(gt){ _injectAxis(TABLE_TOKENS,{id:gt.id,tokens:{},feltUrl:gt.feltUrl},'pth_table_css',true); if(gt.fs) fsimg=gt.feltUrl||null; else if(gt.full) fimg=gt.feltUrl||null; }
+        if(gt){ _injectAxis(TABLE_TOKENS,{id:gt.id,tokens:{},feltUrl:gt.feltUrl},'pth_table_css',true); if(gt.fs){ fsimg=gt.feltUrl||null; fsalign=gt.align||null; } else if(gt.full) fimg=gt.feltUrl||null; }
       }
     }
   }catch(e){}
-  try{ if(fsimg){ _applyTableFull(null); _applyTableFullscreen(fsimg); } else { _applyTableFullscreen(null); _applyTableFull(fimg); } }catch(e){}
+  try{ if(fsimg){ _applyTableFull(null); _applyTableFullscreen(fsimg, fsalign); } else { _applyTableFullscreen(null); _applyTableFull(fimg); } }catch(e){}
 };
 table.set = table.apply;
 var _btnApply = buttons.apply;

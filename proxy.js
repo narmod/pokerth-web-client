@@ -1114,6 +1114,12 @@ function pkgFullSet(kind) { var d = (_adminConfig && _adminConfig.pkgFull) || {}
 // all). Ids live in _adminConfig.pkgFullscreen = { table:[...] }; injected into the
 // served /table/tables.json as fullscreen:true. Mutually exclusive with full.
 function pkgFullscreenSet(kind) { var d = (_adminConfig && _adminConfig.pkgFullscreen) || {}; var a = d[kind]; return Array.isArray(a) ? a : []; }
+// Per-table anchor of the fullscreen felt: which part of the image stays visible
+// when the cover crop cuts it (CSS background-position). Stored as
+// _adminConfig.pkgAlign = { table: { id: 'center top' } }; injected into the served
+// /table/tables.json as align:'…'. Whitelisted 3x3 anchors only.
+var PKG_ALIGN_VALUES = ['left top', 'center top', 'right top', 'left center', 'center center', 'right center', 'left bottom', 'center bottom', 'right bottom'];
+function pkgAlignMap(kind) { var d = (_adminConfig && _adminConfig.pkgAlign) || {}; var m = d[kind]; return (m && typeof m === 'object' && !Array.isArray(m)) ? m : {}; }
 function readRawBody(req, max, cb) {
   let chunks = [], len = 0, tooBig = false;
   req.on('data', function (c) { len += c.length; if (len > max) { tooBig = true; req.destroy(); return; } chunks.push(c); });
@@ -1297,9 +1303,9 @@ function handleAdmin(req, res, reqPathOnly, query) {
   }
   if (reqPathOnly === '/admin/pkg-list') {
     if (!hasScope('packages', query)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
-    var _pl = pkgList(), _td = pkgDisabledSet('table'), _dd = pkgDisabledSet('deck'), _hd = pkgDisabledSet('theme'), _sd = pkgDisabledSet('seat'), _tf = pkgFullSet('table'), _tfs = pkgFullscreenSet('table');
+    var _pl = pkgList(), _td = pkgDisabledSet('table'), _dd = pkgDisabledSet('deck'), _hd = pkgDisabledSet('theme'), _sd = pkgDisabledSet('seat'), _tf = pkgFullSet('table'), _tfs = pkgFullscreenSet('table'), _ta = pkgAlignMap('table');
     return adminJson(res, 200, { ok: true,
-      tables: (_pl.tables || []).map(function (t) { var _fs = _tfs.indexOf(t.id) >= 0 || (_tf.indexOf(t.id) < 0 && !!t.fullscreen); var _fu = !_fs && (_tf.indexOf(t.id) >= 0 || !!t.full); return Object.assign({}, t, { disabled: _td.indexOf(t.id) >= 0, full: _fu, fullscreen: _fs, mode: _fs ? 'fullscreen' : (_fu ? 'full' : 'frame') }); }),
+      tables: (_pl.tables || []).map(function (t) { var _fs = _tfs.indexOf(t.id) >= 0 || (_tf.indexOf(t.id) < 0 && !!t.fullscreen); var _fu = !_fs && (_tf.indexOf(t.id) >= 0 || !!t.full); return Object.assign({}, t, { disabled: _td.indexOf(t.id) >= 0, full: _fu, fullscreen: _fs, align: _ta[t.id] || null, mode: _fs ? 'fullscreen' : (_fu ? 'full' : 'frame') }); }),
       decks:  (_pl.decks  || []).map(function (d) { return Object.assign({}, d, { disabled: _dd.indexOf(d.id) >= 0 }); }),
       seats:  (_pl.seats  || []).map(function (s) { return Object.assign({}, s, { disabled: _sd.indexOf(s.id) >= 0 }); }),
       themes: (_pl.themes || []).map(function (t) { return Object.assign({}, t, { disabled: _hd.indexOf(t.id) >= 0 }); }) });
@@ -1568,6 +1574,7 @@ function handleAdmin(req, res, reqPathOnly, query) {
       try { var _da = pkgDisabledSet(kind); var _i = _da.indexOf(id); if (_i >= 0) { _da.splice(_i, 1); _adminConfig.pkgDisabled[kind] = _da; saveAdminConfig(); } } catch (e) {}
       try { if (kind === 'table' && _adminConfig.pkgFull && Array.isArray(_adminConfig.pkgFull.table)) { var _fa = _adminConfig.pkgFull.table; var _fi = _fa.indexOf(id); if (_fi >= 0) { _fa.splice(_fi, 1); _adminConfig.pkgFull.table = _fa; saveAdminConfig(); } } } catch (e) {}
       try { if (kind === 'table' && _adminConfig.pkgFullscreen && Array.isArray(_adminConfig.pkgFullscreen.table)) { var _sa = _adminConfig.pkgFullscreen.table; var _si = _sa.indexOf(id); if (_si >= 0) { _sa.splice(_si, 1); _adminConfig.pkgFullscreen.table = _sa; saveAdminConfig(); } } } catch (e) {}
+      try { if (kind === 'table' && _adminConfig.pkgAlign && _adminConfig.pkgAlign.table && Object.prototype.hasOwnProperty.call(_adminConfig.pkgAlign.table, id)) { delete _adminConfig.pkgAlign.table[id]; saveAdminConfig(); } } catch (e) {}
       regenManifest(kind);
       adminJson(res, 200, { ok: true });
     });
@@ -1610,6 +1617,21 @@ function handleAdmin(req, res, reqPathOnly, query) {
       _adminConfig.pkgFullscreen.table = sa;
       saveAdminConfig();
       return adminJson(res, 200, { ok: true, id: id, mode: mode, full: (mode === 'full') });
+    });
+  }
+  if (reqPathOnly === '/admin/pkg-align' && req.method === 'POST') {
+    return readJsonBody(req, function (d) {
+      if (!hasScope('packages', query, d && d.token)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
+      const id = slugId(d && d.id);
+      if (!id) return adminJson(res, 400, { ok: false, error: 'id required' });
+      var align = (d && typeof d.align === 'string') ? d.align.trim().toLowerCase() : '';
+      if (align && PKG_ALIGN_VALUES.indexOf(align) < 0) return adminJson(res, 400, { ok: false, error: 'bad align (e.g. "center top")' });
+      _adminConfig.pkgAlign = _adminConfig.pkgAlign || {};
+      var m = (_adminConfig.pkgAlign.table && typeof _adminConfig.pkgAlign.table === 'object' && !Array.isArray(_adminConfig.pkgAlign.table)) ? _adminConfig.pkgAlign.table : {};
+      if (align) m[id] = align; else delete m[id];
+      _adminConfig.pkgAlign.table = m;
+      saveAdminConfig();
+      return adminJson(res, 200, { ok: true, id: id, align: align || null });
     });
   }
   if (reqPathOnly === '/admin/music-list') {
@@ -2405,7 +2427,7 @@ const httpServer = http.createServer((req, res) => {
     if (!Array.isArray(_list)) _list = [];
     var _dis = pkgDisabledSet(_pkgKind);
     if (_dis.length) _list = _list.filter(function (x) { return x && _dis.indexOf(x.id) < 0; });
-    if (_pkgKind === 'table') { var _full = pkgFullSet('table'), _fscr = pkgFullscreenSet('table'); if (_full.length || _fscr.length) _list = _list.map(function (x) { if (!x) return x; if (_fscr.indexOf(x.id) >= 0) return Object.assign({}, x, { fullscreen: true, full: false, mode: 'fullscreen' }); if (_full.indexOf(x.id) >= 0) return Object.assign({}, x, { full: true, fullscreen: false, mode: 'full' }); return x; }); }
+    if (_pkgKind === 'table') { var _full = pkgFullSet('table'), _fscr = pkgFullscreenSet('table'), _alg = pkgAlignMap('table'); if (_full.length || _fscr.length || Object.keys(_alg).length) _list = _list.map(function (x) { if (!x) return x; var y = Object.assign({}, x); if (_fscr.indexOf(x.id) >= 0) { y.fullscreen = true; y.full = false; y.mode = 'fullscreen'; } else if (_full.indexOf(x.id) >= 0) { y.full = true; y.fullscreen = false; y.mode = 'full'; } if (_alg[x.id]) y.align = _alg[x.id]; return y; }); }
     res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' });
     res.end(JSON.stringify(_list));
     return;

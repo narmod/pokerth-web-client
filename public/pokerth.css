@@ -309,7 +309,7 @@ body {
     linear-gradient(rgba(0,0,0,0.14), rgba(0,0,0,0.14)),
     var(--wallpaper, none);
   background-size: cover;
-  background-position: center bottom;
+  background-position: var(--wallpaper-pos, center bottom);
   background-repeat: no-repeat;
 }
 
