@@ -7983,7 +7983,7 @@ const App = (() => {
     // Chaque slot (0 = moi inclus) prend sa fraction de #g-table-zone si
     // elle existe ; sinon on garde la position classique calculee (repli).
     // Exclusif avec le placement officiel ci-dessous (depend du mode).
-    if (_seatModeV === 'custom' && myIdx >= 0) {
+    if (_seatModeV === 'custom') {
       try {
         var _cust = (typeof window._seatCustomGet === 'function') ? window._seatCustomGet(rotated.length) : null;
         if (_cust) {
@@ -7996,10 +7996,14 @@ const App = (() => {
         }
       } catch (e) {}
     }
-    if (_applyOfficial && myIdx >= 0) {
+    if (_applyOfficial) {
       try {
         var _offPos = _officialSeatPix(rotated.length, _forceSeatPortrait, zRect.width, zRect.height, oCX, oCY, oRect, _seatBoxScale);
-        if (_offPos) { for (var _op = 1; _op < pixPos.length; _op++) { if (_offPos[_op]) pixPos[_op] = _offPos[_op]; } }
+        // Assis (myIdx>=0) : la self (slot 0) garde sa place classique en bas,
+        // on ne remplace que les adversaires (1+). Spectateur (myIdx<0) : pas de
+        // self -> on place TOUS les slots (0 inclus) pour que l'officiel s'applique.
+        var _op0 = (myIdx >= 0) ? 1 : 0;
+        if (_offPos) { for (var _op = _op0; _op < pixPos.length; _op++) { if (_offPos[_op]) pixPos[_op] = _offPos[_op]; } }
       } catch (e) {}
     }
     // ── Calcul SB / BB à partir du dealer ──
@@ -12438,7 +12442,7 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.3.143-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.144-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
