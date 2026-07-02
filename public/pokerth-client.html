@@ -1709,6 +1709,7 @@ if ('serviceWorker' in navigator) {
       <div class="adv-sec" data-i18n="advSecTable">Table</div>
       <label class="adv-row"><input type="checkbox" id="adv-blinds" onchange="setAdvOpt('show_blinds',this.checked)"><span data-i18n="advShowBlinds">Show dealer / blind buttons</span></label>
       <label class="adv-row"><input type="checkbox" id="adv-hidepbar" onchange="setAdvOpt('hide_pbar',this.checked)"><span data-i18n="advHidePbar">PokerTH mode (player bar hidden)</span></label>
+      <label class="adv-row"><input type="checkbox" id="adv-zoomfollow" onchange="setAdvOpt('zoom_follow',this.checked)"><span data-i18n="advZoomFollow">Zoom follows the active seat (overview at showdown)</span></label>
 
       <div class="adv-sec" data-i18n="advSecSeats">Seats</div>
       <div class="adv-row"><span data-i18n="advSeatLayout">Seat placement</span><div class="sel-wrap adv-sel"><select id="adv-seatlayout" onchange="setSeatLayout(this.value)"><option value="auto" data-i18n="seatLayoutAuto">Automatic</option><option value="pokerth-official" data-i18n="seatLayoutOfficial">PokerTH official</option><option value="pokerth-ellipse" data-i18n="seatLayoutEllipse">PokerTH ellipse</option><option value="custom" data-i18n="seatLayoutCustom">Custom</option></select><span class="sel-arr">▾</span></div></div>

@@ -457,6 +457,7 @@ function openAdvancedOptions() {
   sync('adv-displaybb', 'display_bb', false);
   sync('adv-nohideignored', 'no_hide_ignored', false);
   sync('adv-fkeysalt', 'fkeys_alt', false);
+  sync('adv-zoomfollow', 'zoom_follow', false);
   try { var _sl = document.getElementById('adv-seatlayout'); if (_sl) { var _slv = localStorage.getItem('pth_seat_layout'); _sl.value = (_slv === 'pokerth-official' || _slv === 'pokerth-ellipse' || _slv === 'custom') ? _slv : 'auto'; } } catch (e) {}
   try { _rebindAction = null; _renderKeyButtons(); } catch (e) {}
   try { advSelectCat('ui'); } catch (e) {}
@@ -537,7 +538,7 @@ function resetAdvDefaults() {
     anim_cards: true, show_blinds: true, hide_pbar: true, show_community: true,
     focus_bet: false, chat_noemoji: false, fade_losers: true, show_flag: true,
     own_click: false, guard_call: false, odds_monitor: false, no_hide_ignored: false,
-    fkeys_alt: false
+    fkeys_alt: false, zoom_follow: false
   };
   try { for (var k in defs) setAdvOpt(k, defs[k]); } catch (e) {}
   try { setSeatLayout('official'); } catch (e) {}
@@ -11541,7 +11542,8 @@ var _zoomFollowTimer = null;
 var _zoomPendingPid = -1, _zoomFollowedPid = -1;
 var _zoomPreShowdown = null; // valeur de zoom sauvée pendant la suspension
 function _zoomFollowOn() {
-  return (window._tableZoomEff || _getTableZoom()) > 1.001 && !window._seatEditMode;
+  return (window._tableZoomEff || _getTableZoom()) > 1.001 && !window._seatEditMode
+    && _advGet('zoom_follow', false);  // opt-in : Options avancées → Tapis
 }
 function _zoomPanToSeat(pid) {
   var zone = document.getElementById('g-table-zone');
@@ -11596,6 +11598,7 @@ window._zoomFollowTurn = function (pid, sec) {
 window._zoomFollowActed = function () { if (_zoomPendingPid > 0) _zoomDoFollow(); };
 // Showdown → dézoom d'ensemble (zoom sauvé, restauré à la main suivante).
 window._zoomShowdownSuspend = function () {
+  if (!_advGet('zoom_follow', false)) return;  // option coupée (défaut) → zoom intact au showdown
   if (_zoomFollowTimer) { clearTimeout(_zoomFollowTimer); _zoomFollowTimer = null; }
   _zoomPendingPid = -1; _zoomFollowedPid = -1;
   var z = _getTableZoom();
@@ -12687,7 +12690,7 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.3.151-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.152-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
