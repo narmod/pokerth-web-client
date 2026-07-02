@@ -13,6 +13,9 @@ export const meta = {
 };
 
 export const strings = {
+  advFkeysAlt: 'F1–F4 순서 반전 (F1 = All-In)',
+  kbHintF: 'PokerTH 공식 키도 사용할 수 있습니다: F1–F4 = Fold · Check/Call · Bet/Raise · All-In, F6/F7/F8 = 수동 / Auto Check-Fold / Auto Check-Call, Alt+M/K/F = 모드, Alt+C 채팅, Alt+L 로그, Alt+I 확률.',
+  advZoomFollow: '줌이 활성 좌석을 따라갑니다 (showdown 시 전체 보기)',
   seatLayoutCustom:'사용자 지정', seatEditToggle:'좌석 배치 편집', seatEditHint:'좌석을 드래그하세요 — 내 좌석 포함', seatEditReset:'초기화', seatEditDone:'완료',
   advDisplayBB: '금액을 빅 블라인드로 표시',
   assist:'어시스트',

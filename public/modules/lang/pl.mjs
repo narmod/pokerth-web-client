@@ -16,6 +16,9 @@ export const meta = {
 };
 
 export const strings = {
+  advFkeysAlt: 'Odwróć kolejność F1–F4 (F1 = All-In)',
+  kbHintF: 'Działają też oficjalne klawisze PokerTH: F1–F4 = Fold · Check/Call · Bet/Raise · All-In, F6/F7/F8 = Ręcznie / Auto Check-Fold / Auto Check-Call, Alt+M/K/F = tryby, Alt+C czat, Alt+L dziennik, Alt+I szanse.',
+  advZoomFollow: 'Zoom podąża za aktywnym miejscem (widok ogólny przy showdownie)',
   seatLayoutCustom:'Niestandardowy', seatEditToggle:'Edytuj rozmieszczenie miejsc', seatEditHint:'Przeciągnij miejsca — także swoje', seatEditReset:'Resetuj', seatEditDone:'Gotowe',
   advDisplayBB: 'Pokaż kwoty w dużych ciemnych',
   assist:'Pomoc',

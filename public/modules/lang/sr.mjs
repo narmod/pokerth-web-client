@@ -10,6 +10,9 @@ export const meta = {
 };
 
 export const strings = {
+  advFkeysAlt: 'Обрни редослед F1–F4 (F1 = All-In)',
+  kbHintF: 'Раде и званични PokerTH тастери: F1–F4 = Fold · Check/Call · Bet/Raise · All-In, F6/F7/F8 = Ручно / Auto Check-Fold / Auto Check-Call, Alt+M/K/F = режими, Alt+C ћаскање, Alt+L дневник, Alt+I шансе.',
+  advZoomFollow: 'Зум прати активно место (преглед при showdown-у)',
   seatLayoutCustom:'Prilagođeno', seatEditToggle:'Uredi raspored mesta', seatEditHint:'Prevucite mesta — uključujući svoje', seatEditReset:'Poništi', seatEditDone:'Gotovo',
   advDisplayBB: 'Prikaži iznose u velikim blajndovima',
   assist:'Pomoć',

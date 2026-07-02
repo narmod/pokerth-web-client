@@ -14,6 +14,9 @@ export const meta = {
 };
 
 export const strings = {
+  advFkeysAlt: 'F1–F4 का क्रम उलटें (F1 = All-In)',
+  kbHintF: 'PokerTH की आधिकारिक कुंजियाँ भी काम करती हैं: F1–F4 = Fold · Check/Call · Bet/Raise · All-In, F6/F7/F8 = मैनुअल / Auto Check-Fold / Auto Check-Call, Alt+M/K/F = मोड, Alt+C चैट, Alt+L लॉग, Alt+I संभावनाएँ.',
+  advZoomFollow: 'ज़ूम सक्रिय सीट का अनुसरण करता है (showdown पर पूर्ण दृश्य)',
   seatLayoutCustom:'कस्टम', seatEditToggle:'सीट व्यवस्था संपादित करें', seatEditHint:'सीटें खींचें — अपनी सहित', seatEditReset:'रीसेट करें', seatEditDone:'पूर्ण',
   advDisplayBB: 'राशि को बिग ब्लाइंड में दिखाएँ',
   assist:'सहायता',

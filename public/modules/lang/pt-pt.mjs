@@ -9,6 +9,9 @@ export const meta = {
 };
 
 export const strings = {
+  advFkeysAlt: 'Inverter a ordem F1–F4 (F1 = All-In)',
+  kbHintF: 'As teclas oficiais do PokerTH também funcionam: F1–F4 = Fold · Check/Call · Bet/Raise · All-In, F6/F7/F8 = Manual / Auto Check-Fold / Auto Check-Call, Alt+M/K/F = modos, Alt+C conversa, Alt+L registo, Alt+I probabilidades.',
+  advZoomFollow: 'O zoom segue o lugar ativo (vista geral no showdown)',
   seatLayoutCustom:'Personalizado', seatEditToggle:'Editar disposição dos lugares', seatEditHint:'Arraste os lugares — incluindo o seu', seatEditReset:'Repor', seatEditDone:'Concluído',
   advDisplayBB: 'Mostrar montantes em big blinds',
   assist:'Assistência',

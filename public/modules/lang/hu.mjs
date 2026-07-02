@@ -10,6 +10,9 @@ export const meta = {
 };
 
 export const strings = {
+  advFkeysAlt: 'F1–F4 sorrend megfordítása (F1 = All-In)',
+  kbHintF: 'A hivatalos PokerTH billentyűk is működnek: F1–F4 = Fold · Check/Call · Bet/Raise · All-In, F6/F7/F8 = Kézi / Auto Check-Fold / Auto Check-Call, Alt+M/K/F = módok, Alt+C csevegés, Alt+L napló, Alt+I esélyek.',
+  advZoomFollow: 'A zoom követi az aktív helyet (áttekintés a showdownnál)',
   seatLayoutCustom:'Egyéni', seatEditToggle:'Ülőhelyek elrendezésének szerkesztése', seatEditHint:'Húzd a helyeket — a sajátodat is', seatEditReset:'Visszaállítás', seatEditDone:'Kész',
   advDisplayBB: 'Összegek megjelenítése nagyvakban',
   assist:'Segítség',

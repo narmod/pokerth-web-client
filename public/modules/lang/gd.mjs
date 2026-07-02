@@ -11,6 +11,9 @@ export const meta = {
 };
 
 export const strings = {
+  advFkeysAlt: 'Cuir òrdugh F1–F4 an comhair a chùil (F1 = All-In)',
+  kbHintF: 'Obraichidh iuchraichean oifigeil PokerTH cuideachd: F1–F4 = Fold · Check/Call · Bet/Raise · All-In, F6/F7/F8 = Le làimh / Auto Check-Fold / Auto Check-Call, Alt+M/K/F = modhan, Alt+C cabadaich, Alt+L loga, Alt+I seansan.',
+  advZoomFollow: 'Leanaidh an sùm an suidheachan gnìomhach (sealladh farsaing aig an showdown)',
   seatLayoutCustom:'Gnàthaichte', seatEditToggle:'Deasaich suidheachadh nan suidheachan', seatEditHint:'Slaod na suidheachain — an fhear agad nam measg', seatEditReset:'Ath-shuidhich', seatEditDone:'Deiseil',
   advDisplayBB: 'Seall na suimean ann am big blinds',
   assist:'Taic',

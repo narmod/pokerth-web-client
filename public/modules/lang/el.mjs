@@ -10,6 +10,9 @@ export const meta = {
 };
 
 export const strings = {
+  advFkeysAlt: 'Αντιστροφή σειράς F1–F4 (F1 = All-In)',
+  kbHintF: 'Λειτουργούν και τα επίσημα πλήκτρα του PokerTH: F1–F4 = Fold · Check/Call · Bet/Raise · All-In, F6/F7/F8 = Χειροκίνητο / Auto Check-Fold / Auto Check-Call, Alt+M/K/F = λειτουργίες, Alt+C συνομιλία, Alt+L ημερολόγιο, Alt+I πιθανότητες.',
+  advZoomFollow: 'Το ζουμ ακολουθεί την ενεργή θέση (γενική εικόνα στο showdown)',
   seatLayoutCustom:'Προσαρμοσμένο', seatEditToggle:'Επεξεργασία διάταξης θέσεων', seatEditHint:'Σύρετε τις θέσεις — και τη δική σας', seatEditReset:'Επαναφορά', seatEditDone:'Τέλος',
   advDisplayBB: 'Εμφάνιση ποσών σε big blind',
   assist:'Βοήθεια',

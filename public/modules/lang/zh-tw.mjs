@@ -11,6 +11,9 @@ export const meta = {
 };
 
 export const strings = {
+  advFkeysAlt: '反轉 F1–F4 順序（F1 = All-In）',
+  kbHintF: 'PokerTH 官方按鍵也可使用：F1–F4 = Fold · Check/Call · Bet/Raise · All-In，F6/F7/F8 = 手動 / Auto Check-Fold / Auto Check-Call，Alt+M/K/F = 模式，Alt+C 聊天，Alt+L 紀錄，Alt+I 勝率。',
+  advZoomFollow: '縮放跟隨行動中的座位（showdown 時顯示全局）',
   seatLayoutCustom:'自訂', seatEditToggle:'編輯座位配置', seatEditHint:'拖曳座位 — 包括你自己的', seatEditReset:'重設', seatEditDone:'完成',
   advDisplayBB: '以大盲注顯示金額',
   assist:'輔助',

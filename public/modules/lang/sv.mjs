@@ -9,6 +9,9 @@ export const meta = {
 };
 
 export const strings = {
+  advFkeysAlt: 'Vänd på F1–F4-ordningen (F1 = All-In)',
+  kbHintF: 'De officiella PokerTH-tangenterna fungerar också: F1–F4 = Fold · Check/Call · Bet/Raise · All-In, F6/F7/F8 = Manuell / Auto Check-Fold / Auto Check-Call, Alt+M/K/F = lägen, Alt+C chatt, Alt+L logg, Alt+I odds.',
+  advZoomFollow: 'Zoomen följer den aktiva platsen (översikt vid showdown)',
   seatLayoutCustom:'Anpassad', seatEditToggle:'Redigera platsplacering', seatEditHint:'Dra platserna — även din egen', seatEditReset:'Återställ', seatEditDone:'Klar',
   advDisplayBB: 'Visa belopp i big blinds',
   assist:'Hjälp',

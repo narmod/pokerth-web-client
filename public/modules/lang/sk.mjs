@@ -10,6 +10,9 @@ export const meta = {
 };
 
 export const strings = {
+  advFkeysAlt: 'Obrátiť poradie F1–F4 (F1 = All-In)',
+  kbHintF: 'Fungujú aj oficiálne klávesy PokerTH: F1–F4 = Fold · Check/Call · Bet/Raise · All-In, F6/F7/F8 = Ručne / Auto Check-Fold / Auto Check-Call, Alt+M/K/F = režimy, Alt+C chat, Alt+L denník, Alt+I šance.',
+  advZoomFollow: 'Zoom sleduje aktívne miesto (prehľad pri showdowne)',
   seatLayoutCustom:'Vlastné', seatEditToggle:'Upraviť rozmiestnenie miest', seatEditHint:'Presuňte miesta — vrátane vlastného', seatEditReset:'Obnoviť', seatEditDone:'Hotovo',
   advDisplayBB: 'Zobraziť sumy vo veľkých blindoch',
   assist:'Asistencia',

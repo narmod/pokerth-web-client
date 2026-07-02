@@ -9,6 +9,9 @@ export const meta = {
 };
 
 export const strings = {
+  advFkeysAlt: 'Käännä F1–F4-järjestys (F1 = All-In)',
+  kbHintF: 'Myös viralliset PokerTH-näppäimet toimivat: F1–F4 = Fold · Check/Call · Bet/Raise · All-In, F6/F7/F8 = Manuaalinen / Auto Check-Fold / Auto Check-Call, Alt+M/K/F = tilat, Alt+C chat, Alt+L loki, Alt+I todennäköisyydet.',
+  advZoomFollow: 'Zoomaus seuraa aktiivista paikkaa (yleiskuva showdownissa)',
   seatLayoutCustom:'Mukautettu', seatEditToggle:'Muokkaa paikkojen sijoittelua', seatEditHint:'Vedä paikkoja — myös omaasi', seatEditReset:'Nollaa', seatEditDone:'Valmis',
   advDisplayBB: 'Näytä summat isoina blindeina',
   assist:'Apu',

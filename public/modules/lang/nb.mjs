@@ -9,6 +9,9 @@ export const meta = {
 };
 
 export const strings = {
+  advFkeysAlt: 'Snu F1–F4-rekkefølgen (F1 = All-In)',
+  kbHintF: 'De offisielle PokerTH-tastene virker også: F1–F4 = Fold · Check/Call · Bet/Raise · All-In, F6/F7/F8 = Manuell / Auto Check-Fold / Auto Check-Call, Alt+M/K/F = moduser, Alt+C chat, Alt+L logg, Alt+I odds.',
+  advZoomFollow: 'Zoom følger det aktive setet (oversikt ved showdown)',
   seatLayoutCustom:'Egendefinert', seatEditToggle:'Rediger plassering av seter', seatEditHint:'Dra setene — også ditt eget', seatEditReset:'Tilbakestill', seatEditDone:'Ferdig',
   advDisplayBB: 'Vis beløp i big blinds',
   assist:'Hjelp',

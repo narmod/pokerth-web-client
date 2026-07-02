@@ -9,6 +9,9 @@ export const meta = {
 };
 
 export const strings = {
+  advFkeysAlt: 'Зворотний порядок F1–F4 (F1 = All-In)',
+  kbHintF: 'Працюють і офіційні клавіші PokerTH: F1–F4 = Fold · Check/Call · Bet/Raise · All-In, F6/F7/F8 = Вручну / Auto Check-Fold / Auto Check-Call, Alt+M/K/F = режими, Alt+C чат, Alt+L журнал, Alt+I шанси.',
+  advZoomFollow: 'Зум слідкує за активним місцем (загальний вигляд під час showdown)',
   seatLayoutCustom:'Користувацьке', seatEditToggle:'Змінити розташування місць', seatEditHint:'Перетягуйте місця — зокрема своє', seatEditReset:'Скинути', seatEditDone:'Готово',
   advDisplayBB: 'Показувати суми у великих блайндах',
   assist:'Допомога',

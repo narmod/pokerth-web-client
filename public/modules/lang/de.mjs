@@ -15,6 +15,9 @@ export const meta = {
 };
 
 export const strings = {
+  advFkeysAlt: 'F1–F4-Reihenfolge umkehren (F1 = All-In)',
+  kbHintF: 'Die offiziellen PokerTH-Tasten funktionieren ebenfalls: F1–F4 = Fold · Check/Call · Bet/Raise · All-In, F6/F7/F8 = Manuell / Auto Check-Fold / Auto Check-Call, Alt+M/K/F = Modi, Alt+C Chat, Alt+L Verlauf, Alt+I Chancen.',
+  advZoomFollow: 'Zoom folgt dem aktiven Sitz (Übersicht beim Showdown)',
   seatLayoutCustom:'Benutzerdefiniert', seatEditToggle:'Sitzplatzierung bearbeiten', seatEditHint:'Sitze ziehen — auch deinen', seatEditReset:'Zurücksetzen', seatEditDone:'Fertig',
   advDisplayBB: 'Beträge in Big Blinds anzeigen',
   assist:'Assistenz',

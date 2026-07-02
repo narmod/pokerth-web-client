@@ -9,6 +9,9 @@ export const meta = {
 };
 
 export const strings = {
+  advFkeysAlt: 'F1–F4の順序を反転（F1 = All-In）',
+  kbHintF: 'PokerTH公式キーも使用できます：F1–F4 = Fold · Check/Call · Bet/Raise · All-In、F6/F7/F8 = 手動 / Auto Check-Fold / Auto Check-Call、Alt+M/K/F = モード、Alt+C チャット、Alt+L ログ、Alt+I 勝率。',
+  advZoomFollow: 'ズームがアクティブな席を追従（showdown時は全体表示）',
   seatLayoutCustom:'カスタム', seatEditToggle:'座席配置を編集', seatEditHint:'座席をドラッグ — 自分の席も', seatEditReset:'リセット', seatEditDone:'完了',
   advDisplayBB: '金額をビッグブラインドで表示',
   assist:'アシスト',

@@ -15,6 +15,9 @@ export const meta = {
 };
 
 export const strings = {
+  advFkeysAlt: 'Volgorde F1–F4 omkeren (F1 = All-In)',
+  kbHintF: 'De officiële PokerTH-toetsen werken ook: F1–F4 = Fold · Check/Call · Bet/Raise · All-In, F6/F7/F8 = Handmatig / Auto Check-Fold / Auto Check-Call, Alt+M/K/F = modi, Alt+C chat, Alt+L logboek, Alt+I kansen.',
+  advZoomFollow: 'Zoom volgt de actieve stoel (overzicht bij de showdown)',
   seatLayoutCustom:'Aangepast', seatEditToggle:'Stoelindeling bewerken', seatEditHint:'Sleep de stoelen — ook die van jou', seatEditReset:'Herstellen', seatEditDone:'Klaar',
   advDisplayBB: 'Bedragen tonen in big blinds',
   assist:'Hulp',

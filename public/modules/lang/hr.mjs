@@ -10,6 +10,9 @@ export const meta = {
 };
 
 export const strings = {
+  advFkeysAlt: 'Obrni redoslijed F1–F4 (F1 = All-In)',
+  kbHintF: 'Rade i službene PokerTH tipke: F1–F4 = Fold · Check/Call · Bet/Raise · All-In, F6/F7/F8 = Ručno / Auto Check-Fold / Auto Check-Call, Alt+M/K/F = načini, Alt+C chat, Alt+L dnevnik, Alt+I izgledi.',
+  advZoomFollow: 'Zoom prati aktivno mjesto (pregled pri showdownu)',
   seatLayoutCustom:'Prilagođeno', seatEditToggle:'Uredi raspored mjesta', seatEditHint:'Povucite mjesta — uključujući svoje', seatEditReset:'Poništi', seatEditDone:'Gotovo',
   advDisplayBB: 'Prikaži iznose u velikim blindovima',
   assist:'Pomoć',

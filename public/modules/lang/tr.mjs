@@ -12,6 +12,9 @@ export const meta = {
 };
 
 export const strings = {
+  advFkeysAlt: 'F1–F4 sırasını tersine çevir (F1 = All-In)',
+  kbHintF: 'Resmî PokerTH tuşları da çalışır: F1–F4 = Fold · Check/Call · Bet/Raise · All-In, F6/F7/F8 = Manuel / Auto Check-Fold / Auto Check-Call, Alt+M/K/F = modlar, Alt+C sohbet, Alt+L günlük, Alt+I olasılıklar.',
+  advZoomFollow: 'Yakınlaştırma aktif koltuğu takip eder (showdown sırasında genel görünüm)',
   seatLayoutCustom:'Özel', seatEditToggle:'Koltuk yerleşimini düzenle', seatEditHint:'Koltukları sürükleyin — kendinizinki dahil', seatEditReset:'Sıfırla', seatEditDone:'Bitti',
   advDisplayBB: 'Tutarları büyük blind olarak göster',
   assist:'Yardım',

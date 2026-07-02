@@ -10,6 +10,9 @@ export const meta = {
 };
 
 export const strings = {
+  advFkeysAlt: 'Đảo thứ tự F1–F4 (F1 = All-In)',
+  kbHintF: 'Các phím chính thức của PokerTH cũng hoạt động: F1–F4 = Fold · Check/Call · Bet/Raise · All-In, F6/F7/F8 = Thủ công / Auto Check-Fold / Auto Check-Call, Alt+M/K/F = chế độ, Alt+C trò chuyện, Alt+L nhật ký, Alt+I tỉ lệ.',
+  advZoomFollow: 'Thu phóng theo ghế đang hành động (toàn cảnh khi showdown)',
   seatLayoutCustom:'Tùy chỉnh', seatEditToggle:'Chỉnh vị trí chỗ ngồi', seatEditHint:'Kéo các chỗ ngồi — kể cả của bạn', seatEditReset:'Đặt lại', seatEditDone:'Xong',
   advDisplayBB: 'Hiển thị số tiền theo big blind',
   assist:'Hỗ trợ',

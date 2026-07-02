@@ -11,6 +11,9 @@ export const meta = {
 };
 
 export const strings = {
+  advFkeysAlt: 'F1–F4 வரிசையை மாற்றவும் (F1 = All-In)',
+  kbHintF: 'PokerTH அதிகாரப்பூர்வ விசைகளும் செயல்படும்: F1–F4 = Fold · Check/Call · Bet/Raise · All-In, F6/F7/F8 = கைமுறை / Auto Check-Fold / Auto Check-Call, Alt+M/K/F = முறைகள், Alt+C அரட்டை, Alt+L பதிவு, Alt+I வாய்ப்புகள்.',
+  advZoomFollow: 'ஜூம் செயலில் உள்ள இருக்கையைப் பின்தொடரும் (showdown-இல் முழு காட்சி)',
   seatLayoutCustom:'தனிப்பயன்', seatEditToggle:'இருக்கை அமைப்பைத் திருத்து', seatEditHint:'இருக்கைகளை இழுக்கவும் — உங்களுடையது உட்பட', seatEditReset:'மீட்டமை', seatEditDone:'முடிந்தது',
   advDisplayBB: 'தொகைகளை பிக் பிளைண்டில் காட்டு',
   assist:'உதவி',

@@ -10,6 +10,9 @@ export const meta = {
 };
 
 export const strings = {
+  advFkeysAlt: 'Inversează ordinea F1–F4 (F1 = All-In)',
+  kbHintF: 'Funcționează și tastele oficiale PokerTH: F1–F4 = Fold · Check/Call · Bet/Raise · All-In, F6/F7/F8 = Manual / Auto Check-Fold / Auto Check-Call, Alt+M/K/F = moduri, Alt+C chat, Alt+L jurnal, Alt+I șanse.',
+  advZoomFollow: 'Zoomul urmărește locul activ (vedere de ansamblu la showdown)',
   seatLayoutCustom:'Personalizat', seatEditToggle:'Editează aranjarea locurilor', seatEditHint:'Trage locurile — inclusiv al tău', seatEditReset:'Resetează', seatEditDone:'Gata',
   advDisplayBB: 'Afișează sumele în big blind',
   assist:'Asistență',
