@@ -2209,9 +2209,20 @@ function playerNorm(html, base, source, statMap) {
   if (!player || player.nickname == null) return { ok: false, error: 'no_player', source: source };
   const statsObj = jprop('stats') || {};
   const awardsRaw = jprop('awards');
+  // Les images d'awards sont relayees par /api/award-img : chargees en direct
+  // depuis le navigateur, Cloudflare les bloque (hotlink/challenge sur *.pokerth.net
+  // avec Referer etranger). Le VPS, lui, passe grace a RANKING_UA.
   const awards = (Array.isArray(awardsRaw) ? awardsRaw : []).map(function (a) {
-    let img = (a && a.filename) ? String(a.filename) : '';
-    if (img && img.charAt(0) === '/') img = base + img;
+    let file = (a && a.filename) ? String(a.filename) : '';
+    if (file.indexOf(base) === 0) file = file.slice(base.length);   // absolue -> chemin
+    let img = '';
+    if (AWARD_FILE_RE.test(file)) {
+      img = '/api/award-img?src=' + source.toLowerCase() + '&file=' + encodeURIComponent(file);
+    } else if (file && file.charAt(0) === '/') {
+      img = base + file;                                            // repli : direct
+    } else {
+      img = file;
+    }
     return { img: img, title: (a && a.title) || '' };
   }).filter(function (a) { return a.img; });
   const stats = [];
@@ -2288,6 +2299,49 @@ async function playerUpstream(src, nick) {
   try { parsed = src.json ? src.parse(JSON.parse(body), src.base) : src.parse(body, src.base); }
   catch (e) { return { status: 502, body: JSON.stringify({ ok: false, error: 'parse_failed', source: src.name }) }; }
   return { status: (parsed && parsed.ok === false) ? 404 : 200, body: JSON.stringify(parsed) };
+}
+
+// ── Award image relay ───────────────────────────────────────────────────────
+// GET /api/award-img?src=bbc|wec|pth&file=/storage/awards/<name>.<ext>
+// Chemin strictement valide (un seul segment, extensions image), fetch amont
+// avec RANKING_UA, cache memoire 6 h (noms de fichiers content-addressed).
+const AWARD_FILE_RE = /^\/storage\/awards\/[A-Za-z0-9._-]+\.(png|jpe?g|gif|webp)$/;
+const AWARD_CACHE = new Map();          // file url -> { at, status, type, buf }
+const AWARD_TTL_MS = 6 * 60 * 60 * 1000;
+const AWARD_CACHE_MAX = 200;
+function handleAwardImg(req, res, query) {
+  const src = PLAYER_SOURCES[String((query && query.src) || '').toLowerCase()];
+  const file = String((query && query.file) || '');
+  if (!src || !AWARD_FILE_RE.test(file)) {
+    res.writeHead(400, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' });
+    res.end(JSON.stringify({ ok: false, error: 'bad_award_request' }));
+    return;
+  }
+  const targetUrl = src.base + file;
+  const hit = AWARD_CACHE.get(targetUrl);
+  if (hit && (Date.now() - hit.at) < AWARD_TTL_MS) {
+    res.writeHead(hit.status, { 'Content-Type': hit.type, 'Cache-Control': 'public, max-age=86400', 'X-Award-Cache': 'hit' });
+    res.end(hit.buf);
+    return;
+  }
+  rankingFetch(targetUrl, { 'Accept': 'image/*' }).then(function (r) {
+    if (!r.ok) {
+      res.writeHead(502, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' });
+      res.end(JSON.stringify({ ok: false, error: 'upstream_' + r.status }));
+      return null;
+    }
+    const type = r.headers.get('content-type') || 'image/png';
+    return r.arrayBuffer().then(function (ab) {
+      const buf = Buffer.from(ab);
+      if (AWARD_CACHE.size >= AWARD_CACHE_MAX) AWARD_CACHE.clear();
+      AWARD_CACHE.set(targetUrl, { at: Date.now(), status: 200, type: type, buf: buf });
+      res.writeHead(200, { 'Content-Type': type, 'Cache-Control': 'public, max-age=86400', 'X-Award-Cache': 'miss' });
+      res.end(buf);
+    });
+  }).catch(function (err) {
+    res.writeHead(502, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' });
+    res.end(JSON.stringify({ ok: false, error: 'relay_failed', detail: String((err && err.message) || err) }));
+  });
 }
 
 function handlePlayer(req, res, query) {
@@ -2390,6 +2444,10 @@ const httpServer = http.createServer((req, res) => {
   }
   if (reqPathOnly === '/api/player') {
     handlePlayer(req, res, query);
+    return;
+  }
+  if (reqPathOnly === '/api/award-img') {
+    handleAwardImg(req, res, query);
     return;
   }
 
