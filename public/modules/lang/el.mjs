@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+  seatLayoutCustom:'Προσαρμοσμένο', seatEditToggle:'Επεξεργασία διάταξης θέσεων', seatEditHint:'Σύρετε τις θέσεις — και τη δική σας', seatEditReset:'Επαναφορά', seatEditDone:'Τέλος',
   advDisplayBB: 'Εμφάνιση ποσών σε big blind',
   assist:'Βοήθεια',
   advHidePbar:'Λειτουργία PokerTH (μπάρα παίκτη κρυμμένη)',

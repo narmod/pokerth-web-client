@@ -13,6 +13,7 @@ export const meta = {
 };
 
 export const strings = {
+  seatLayoutCustom:'사용자 지정', seatEditToggle:'좌석 배치 편집', seatEditHint:'좌석을 드래그하세요 — 내 좌석 포함', seatEditReset:'초기화', seatEditDone:'완료',
   advDisplayBB: '금액을 빅 블라인드로 표시',
   assist:'어시스트',
   advHidePbar:'PokerTH 모드 (플레이어 바 숨김)',

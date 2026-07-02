@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+  seatLayoutCustom:'Prilagođeno', seatEditToggle:'Uredi raspored mjesta', seatEditHint:'Povucite mjesta — uključujući svoje', seatEditReset:'Poništi', seatEditDone:'Gotovo',
   advDisplayBB: 'Prikaži iznose u velikim blindovima',
   assist:'Pomoć',
   advHidePbar:'PokerTH način (traka igrača skrivena)',

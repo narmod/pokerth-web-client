@@ -14,6 +14,7 @@ export const meta = {
 };
 
 export const strings = {
+  seatLayoutCustom:'कस्टम', seatEditToggle:'सीट व्यवस्था संपादित करें', seatEditHint:'सीटें खींचें — अपनी सहित', seatEditReset:'रीसेट करें', seatEditDone:'पूर्ण',
   advDisplayBB: 'राशि को बिग ब्लाइंड में दिखाएँ',
   assist:'सहायता',
   advHidePbar:'PokerTH मोड (प्लेयर बार छिपी हुई)',

@@ -9,6 +9,7 @@ export const meta = {
 };
 
 export const strings = {
+  seatLayoutCustom:'Anpassad', seatEditToggle:'Redigera platsplacering', seatEditHint:'Dra platserna — även din egen', seatEditReset:'Återställ', seatEditDone:'Klar',
   advDisplayBB: 'Visa belopp i big blinds',
   assist:'Hjälp',
   advHidePbar:'PokerTH-läge (spelarfält dolt)',

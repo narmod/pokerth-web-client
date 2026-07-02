@@ -15,6 +15,7 @@ export const meta = {
 };
 
 export const strings = {
+  seatLayoutCustom:'Benutzerdefiniert', seatEditToggle:'Sitzplatzierung bearbeiten', seatEditHint:'Sitze ziehen — auch deinen', seatEditReset:'Zurücksetzen', seatEditDone:'Fertig',
   advDisplayBB: 'Beträge in Big Blinds anzeigen',
   assist:'Assistenz',
   advHidePbar:'PokerTH-Modus (Spielerleiste ausgeblendet)',

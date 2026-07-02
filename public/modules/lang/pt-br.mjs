@@ -9,6 +9,7 @@ export const meta = {
 };
 
 export const strings = {
+  seatLayoutCustom:'Personalizado', seatEditToggle:'Editar disposição dos assentos', seatEditHint:'Arraste os assentos — incluindo o seu', seatEditReset:'Redefinir', seatEditDone:'Concluído',
   advDisplayBB: 'Mostrar valores em big blinds',
   assist:'Assistência',
   advHidePbar:'Modo PokerTH (barra de jogador oculta)',

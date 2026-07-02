@@ -11,6 +11,7 @@ export const meta = {
 };
 
 export const strings = {
+  seatLayoutCustom:'தனிப்பயன்', seatEditToggle:'இருக்கை அமைப்பைத் திருத்து', seatEditHint:'இருக்கைகளை இழுக்கவும் — உங்களுடையது உட்பட', seatEditReset:'மீட்டமை', seatEditDone:'முடிந்தது',
   advDisplayBB: 'தொகைகளை பிக் பிளைண்டில் காட்டு',
   assist:'உதவி',
   advHidePbar:'PokerTH பயன்முறை (வீரர் பட்டி மறைக்கப்பட்டது)',

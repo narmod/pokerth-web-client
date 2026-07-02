@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+  seatLayoutCustom:'Egyéni', seatEditToggle:'Ülőhelyek elrendezésének szerkesztése', seatEditHint:'Húzd a helyeket — a sajátodat is', seatEditReset:'Visszaállítás', seatEditDone:'Kész',
   advDisplayBB: 'Összegek megjelenítése nagyvakban',
   assist:'Segítség',
   advHidePbar:'PokerTH mód (játékossáv elrejtve)',

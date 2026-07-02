@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+  seatLayoutCustom:'Vlastné', seatEditToggle:'Upraviť rozmiestnenie miest', seatEditHint:'Presuňte miesta — vrátane vlastného', seatEditReset:'Obnoviť', seatEditDone:'Hotovo',
   advDisplayBB: 'Zobraziť sumy vo veľkých blindoch',
   assist:'Asistencia',
   advHidePbar:'Režim PokerTH (panel hráča skrytý)',

@@ -9,6 +9,7 @@ export const meta = {
 };
 
 export const strings = {
+  seatLayoutCustom:'Користувацьке', seatEditToggle:'Змінити розташування місць', seatEditHint:'Перетягуйте місця — зокрема своє', seatEditReset:'Скинути', seatEditDone:'Готово',
   advDisplayBB: 'Показувати суми у великих блайндах',
   assist:'Допомога',
   advHidePbar:'Режим PokerTH (панель гравця прихована)',

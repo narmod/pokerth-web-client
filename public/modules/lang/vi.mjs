@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+  seatLayoutCustom:'Tùy chỉnh', seatEditToggle:'Chỉnh vị trí chỗ ngồi', seatEditHint:'Kéo các chỗ ngồi — kể cả của bạn', seatEditReset:'Đặt lại', seatEditDone:'Xong',
   advDisplayBB: 'Hiển thị số tiền theo big blind',
   assist:'Hỗ trợ',
   advHidePbar:'Chế độ PokerTH (thanh người chơi ẩn)',

@@ -15,6 +15,7 @@ export const meta = {
 };
 
 export const strings = {
+  seatLayoutCustom:'Пользовательский', seatEditToggle:'Изменить расстановку мест', seatEditHint:'Перетаскивайте места — включая своё', seatEditReset:'Сбросить', seatEditDone:'Готово',
   advDisplayBB: 'Показывать суммы в больших блайндах',
   assist:'Помощь',
   advHidePbar:'Режим PokerTH (панель игрока скрыта)',

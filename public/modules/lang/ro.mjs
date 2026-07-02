@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+  seatLayoutCustom:'Personalizat', seatEditToggle:'Editează aranjarea locurilor', seatEditHint:'Trage locurile — inclusiv al tău', seatEditReset:'Resetează', seatEditDone:'Gata',
   advDisplayBB: 'Afișează sumele în big blind',
   assist:'Asistență',
   advHidePbar:'Mod PokerTH (bara de jucător ascunsă)',

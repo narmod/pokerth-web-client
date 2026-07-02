@@ -11,6 +11,7 @@ export const meta = {
 };
 
 export const strings = {
+  seatLayoutCustom:'自訂', seatEditToggle:'編輯座位配置', seatEditHint:'拖曳座位 — 包括你自己的', seatEditReset:'重設', seatEditDone:'完成',
   advDisplayBB: '以大盲注顯示金額',
   assist:'輔助',
   advHidePbar:'PokerTH 模式（玩家列隱藏）',

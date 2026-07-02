@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+  seatLayoutCustom:'Pasgemaak', seatEditToggle:'Wysig sitplekuitleg', seatEditHint:'Sleep die sitplekke — ook joune', seatEditReset:'Herstel', seatEditDone:'Klaar',
   advDisplayBB: 'Wys bedrae in groot blinds',
   assist:'Hulp',
   advHidePbar:'PokerTH-modus (spelerbalk versteek)',

@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+  seatLayoutCustom:'По избор', seatEditToggle:'Редактиране на разположението на местата', seatEditHint:'Плъзгайте местата — включително своето', seatEditReset:'Нулиране', seatEditDone:'Готово',
   advDisplayBB: 'Показвай сумите в големи блайндове',
   assist:'Помощ',
   advHidePbar:'Режим PokerTH (лентата на играча е скрита)',

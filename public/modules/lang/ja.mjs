@@ -9,6 +9,7 @@ export const meta = {
 };
 
 export const strings = {
+  seatLayoutCustom:'カスタム', seatEditToggle:'座席配置を編集', seatEditHint:'座席をドラッグ — 自分の席も', seatEditReset:'リセット', seatEditDone:'完了',
   advDisplayBB: '金額をビッグブラインドで表示',
   assist:'アシスト',
   advHidePbar:'PokerTH モード（プレイヤーバー非表示）',

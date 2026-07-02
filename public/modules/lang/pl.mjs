@@ -16,6 +16,7 @@ export const meta = {
 };
 
 export const strings = {
+  seatLayoutCustom:'Niestandardowy', seatEditToggle:'Edytuj rozmieszczenie miejsc', seatEditHint:'Przeciągnij miejsca — także swoje', seatEditReset:'Resetuj', seatEditDone:'Gotowe',
   advDisplayBB: 'Pokaż kwoty w dużych ciemnych',
   assist:'Pomoc',
   advHidePbar:'Tryb PokerTH (pasek gracza ukryty)',

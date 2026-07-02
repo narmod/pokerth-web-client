@@ -12,6 +12,7 @@ export const meta = {
 };
 
 export const strings = {
+  seatLayoutCustom:'Özel', seatEditToggle:'Koltuk yerleşimini düzenle', seatEditHint:'Koltukları sürükleyin — kendinizinki dahil', seatEditReset:'Sıfırla', seatEditDone:'Bitti',
   advDisplayBB: 'Tutarları büyük blind olarak göster',
   assist:'Yardım',
   advHidePbar:'PokerTH modu (oyuncu çubuğu gizli)',

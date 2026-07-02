@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+  seatLayoutCustom:'Pasirinktinis', seatEditToggle:'Redaguoti vietų išdėstymą', seatEditHint:'Vilkite vietas — įskaitant savo', seatEditReset:'Atstatyti', seatEditDone:'Atlikta',
   advDisplayBB: 'Rodyti sumas didžiaisiais statymais',
   assist:'Pagalba',
   advHidePbar:'PokerTH režimas (žaidėjo juosta paslėpta)',

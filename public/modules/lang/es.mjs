@@ -16,6 +16,7 @@ export const meta = {
 };
 
 export const strings = {
+  seatLayoutCustom:'Personalizado', seatEditToggle:'Editar la colocación de asientos', seatEditHint:'Arrastra los asientos — incluido el tuyo', seatEditReset:'Restablecer', seatEditDone:'Listo',
   advDisplayBB: 'Mostrar importes en ciegas grandes',
   assist:'Asistencia',
   advHidePbar:'Modo PokerTH (barra de jugador oculta)',

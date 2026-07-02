@@ -15,6 +15,7 @@ export const meta = {
 };
 
 export const strings = {
+  seatLayoutCustom:'Aangepast', seatEditToggle:'Stoelindeling bewerken', seatEditHint:'Sleep de stoelen — ook die van jou', seatEditReset:'Herstellen', seatEditDone:'Klaar',
   advDisplayBB: 'Bedragen tonen in big blinds',
   assist:'Hulp',
   advHidePbar:'PokerTH-modus (spelerbalk verborgen)',

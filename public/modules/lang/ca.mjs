@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+  seatLayoutCustom:'Personalitzat', seatEditToggle:'Edita la disposició dels seients', seatEditHint:'Arrossega els seients — inclòs el teu', seatEditReset:'Restableix', seatEditDone:'Fet',
   advDisplayBB: 'Mostra els imports en big blinds',
   assist:'Assistència',
   advHidePbar:'Mode PokerTH (barra de jugador amagada)',

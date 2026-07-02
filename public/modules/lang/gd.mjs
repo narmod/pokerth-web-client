@@ -11,6 +11,7 @@ export const meta = {
 };
 
 export const strings = {
+  seatLayoutCustom:'Gnàthaichte', seatEditToggle:'Deasaich suidheachadh nan suidheachan', seatEditHint:'Slaod na suidheachain — an fhear agad nam measg', seatEditReset:'Ath-shuidhich', seatEditDone:'Deiseil',
   advDisplayBB: 'Seall na suimean ann am big blinds',
   assist:'Taic',
   advHidePbar:'Modh PokerTH (bàr-cluicheadair falaichte)',
