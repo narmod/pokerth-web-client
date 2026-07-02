@@ -9925,9 +9925,19 @@ function dismissWinner() {
       window._directWS = directWS;
       // Marqueur de mode pour le CSS : drapeaux agrandis uniquement sur pokerth.net.
       try { document.body.classList.toggle('pth-net', !!directWS); } catch (e) {}
-      // Diffusions admin en mode direct : ouvrir le canal notify-only vers le
-      // proxy (fermé sinon — en mode proxy la socket principale les reçoit déjà).
-      try { if (directWS) _openNotifyWS(proxyUrl); else _closeNotifyWS(); } catch (e) {}
+      // Diffusions admin : quand la socket de jeu ne passe pas par le proxy
+      // (direct pokerth.net OU entraînement offline), ouvrir le canal
+      // notify-only. En mode proxy la socket principale les reçoit déjà.
+      // Repli d'URL en offline (champ proxy potentiellement vide) : le site
+      // qui sert l'app héberge aussi le proxy → dériver de location.
+      try {
+        if (directWS || _off) {
+          var _nBase = proxyUrl || ((location.protocol === 'https:' ? 'wss://' : 'ws://') + location.host);
+          _openNotifyWS(_nBase);
+        } else {
+          _closeNotifyWS();
+        }
+      } catch (e) {}
       try {
         var _rtb = document.getElementById('react-toggle-btn');
         if (_rtb) _rtb.style.display = '';
@@ -12491,7 +12501,7 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.3.145-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.146-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
