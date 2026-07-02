@@ -932,11 +932,15 @@ do_table_add() {
   info "Extracting"
   unzip -q -o "$zip" -d "$tmp/x" || { errln "Not a valid zip archive"; rm -rf "$tmp"; exit 1; }
 
-  local root=""
-  if [ -f "$tmp/x/table.png" ]; then root="$tmp/x"; else
-    root="$(find "$tmp/x" -type f -name 'table.png' -printf '%h\n' 2>/dev/null | head -n1)"; fi
-  if [ -z "$root" ] || [ ! -f "$root/table.png" ]; then
-    errln "This is not a PokerTH table style (need table.png, usually with *tablestyle.xml + puck images)."; rm -rf "$tmp"; exit 1; fi
+  local root="" feltsrc="" cand
+  for cand in felt.png felt.jpg felt.jpeg felt.webp table.png; do
+    if [ -f "$tmp/x/$cand" ]; then root="$tmp/x"; feltsrc="$cand"; break; fi
+    root="$(find "$tmp/x" -type f -name "$cand" -printf '%h\n' 2>/dev/null | head -n1)"
+    if [ -n "$root" ] && [ -f "$root/$cand" ]; then feltsrc="$cand"; break; fi
+    root=""
+  done
+  if [ -z "$root" ] || [ -z "$feltsrc" ]; then
+    errln "This is not a PokerTH table pack (need felt.png / felt.jpg — or legacy table.png)."; rm -rf "$tmp"; exit 1; fi
 
   local base; base="$(basename "$root")"
   if [ "$base" = "x" ]; then base="$(basename "$src")"; base="${base%.zip}"; fi
@@ -947,15 +951,32 @@ do_table_add() {
   local dest="$INSTALL_DIR/public/table/$id"
   info "Installing as '$id'"
   as_root rm -rf "$dest"; as_root mkdir -p "$dest"
-  if command -v convert >/dev/null 2>&1; then
-    as_root convert "$root/table.png" -resize '1280x720>' -strip -quality 82 "$dest/felt.jpg" 2>/dev/null \
-      || as_root cp "$root/table.png" "$dest/felt.png"
-  else
-    as_root cp "$root/table.png" "$dest/felt.png"
-  fi
-  [ -f "$root/dealerPuck.png" ]     && as_root cp "$root/dealerPuck.png"     "$dest/dealer.png"
-  [ -f "$root/smallblindPuck.png" ] && as_root cp "$root/smallblindPuck.png" "$dest/sb.png"
-  [ -f "$root/bigblindPuck.png" ]   && as_root cp "$root/bigblindPuck.png"   "$dest/bb.png"
+  case "$feltsrc" in
+    felt.png)  as_root cp "$root/felt.png"  "$dest/felt.png" ;;
+    felt.jpg)  as_root cp "$root/felt.jpg"  "$dest/felt.jpg" ;;
+    felt.jpeg) as_root cp "$root/felt.jpeg" "$dest/felt.jpg" ;;
+    felt.webp) as_root cp "$root/felt.webp" "$dest/felt.webp" ;;
+    table.png)
+      if command -v convert >/dev/null 2>&1; then
+        as_root convert "$root/table.png" -resize '1280x720>' -strip -quality 82 "$dest/felt.jpg" 2>/dev/null \
+          || as_root cp "$root/table.png" "$dest/felt.png"
+      else
+        as_root cp "$root/table.png" "$dest/felt.png"
+      fi ;;
+  esac
+  # Render-mode markers from the pack (fullscreen wins; mutually exclusive client-side)
+  if [ -f "$root/fullscreen" ] || [ -f "$root/.fullscreen" ]; then as_root touch "$dest/fullscreen"
+  elif [ -f "$root/full" ] || [ -f "$root/.full" ]; then as_root touch "$dest/full"; fi
+  # Pucks: gallery names first (dealer/sb/bb, svg > png > webp), legacy names as fallback
+  local pk ext
+  for pk in dealer sb bb; do
+    for ext in svg png webp; do
+      if [ -f "$root/$pk.$ext" ]; then as_root cp "$root/$pk.$ext" "$dest/$pk.$ext"; break; fi
+    done
+  done
+  [ -f "$root/dealerPuck.png" ]     && [ ! -e "$dest/dealer.svg" ] && [ ! -e "$dest/dealer.png" ] && [ ! -e "$dest/dealer.webp" ] && as_root cp "$root/dealerPuck.png"     "$dest/dealer.png"
+  [ -f "$root/smallblindPuck.png" ] && [ ! -e "$dest/sb.svg" ]     && [ ! -e "$dest/sb.png" ]     && [ ! -e "$dest/sb.webp" ]     && as_root cp "$root/smallblindPuck.png" "$dest/sb.png"
+  [ -f "$root/bigblindPuck.png" ]   && [ ! -e "$dest/bb.svg" ]     && [ ! -e "$dest/bb.png" ]     && [ ! -e "$dest/bb.webp" ]     && as_root cp "$root/bigblindPuck.png"   "$dest/bb.png"
   [ -f "$root/preview.png" ]        && as_root cp "$root/preview.png"        "$dest/preview.png"
   local f; for f in "$root"/*tablestyle.xml "$root"/*.xml; do [ -f "$f" ] && { as_root cp "$f" "$dest/style.xml"; break; }; done
   as_root chown -R "$RUN_USER":"$RUN_USER" "$dest"

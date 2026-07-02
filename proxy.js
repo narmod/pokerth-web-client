@@ -1134,19 +1134,35 @@ function importPackage(kind, idHint, zipBuf, cb) {
   let id = slugId(idHint);
 
   if (kind === 'table') {
-    if (!has('table.png')) return done('not a PokerTH table style (table.png missing)');
+    // New gallery format: felt.png|jpg|jpeg|webp (Studio export) — copied as-is so a
+    // PNG-32 « full » table keeps its transparent corners. Legacy PokerTH desktop
+    // packs (table.png) keep the old convert→felt.jpg pipeline.
+    const feltSrc = ['felt.png', 'felt.jpg', 'felt.jpeg', 'felt.webp', 'table.png'].find(has);
+    if (!feltSrc) return done('not a PokerTH table pack (felt.png / felt.jpg — or legacy table.png — missing)');
     if (!id) id = 'table-' + Date.now();
     if (['green', 'blue', 'bordeaux', 'slate', 'photo', 'table'].indexOf(id) >= 0) id = 'table-' + id;
     const dest = path.join(PUBLIC_DIR, 'table', id);
     try { fs.rmSync(dest, { recursive: true, force: true }); fs.mkdirSync(dest, { recursive: true }); } catch (e) { return done('dest failed'); }
-    let okFelt = false;
-    if (spawnSync('convert', ['-version'], { stdio: 'ignore' }).status === 0) {
-      okFelt = spawnSync('convert', [path.join(exDir, 'table.png'), '-resize', '1280x720>', '-strip', '-quality', '82', path.join(dest, 'felt.jpg')], { stdio: 'ignore' }).status === 0;
+    if (feltSrc === 'table.png') {
+      let okFelt = false;
+      if (spawnSync('convert', ['-version'], { stdio: 'ignore' }).status === 0) {
+        okFelt = spawnSync('convert', [path.join(exDir, 'table.png'), '-resize', '1280x720>', '-strip', '-quality', '82', path.join(dest, 'felt.jpg')], { stdio: 'ignore' }).status === 0;
+      }
+      if (!okFelt) cp('table.png', path.join(dest, 'felt.png'));
+    } else {
+      cp(feltSrc, path.join(dest, feltSrc === 'felt.jpeg' ? 'felt.jpg' : feltSrc));
     }
-    if (!okFelt) cp('table.png', path.join(dest, 'felt.png'));
-    if (has('dealerPuck.png'))     cp('dealerPuck.png',     path.join(dest, 'dealer.png'));
-    if (has('smallblindPuck.png')) cp('smallblindPuck.png', path.join(dest, 'sb.png'));
-    if (has('bigblindPuck.png'))   cp('bigblindPuck.png',   path.join(dest, 'bb.png'));
+    // Render-mode markers from the pack (fullscreen wins; mutually exclusive client-side).
+    if (has('fullscreen') || has('.fullscreen')) { try { fs.writeFileSync(path.join(dest, 'fullscreen'), ''); } catch (e) {} }
+    else if (has('full') || has('.full')) { try { fs.writeFileSync(path.join(dest, 'full'), ''); } catch (e) {} }
+    // Pucks: gallery names first (dealer/sb/bb, svg > png > webp), legacy names as fallback.
+    ['dealer', 'sb', 'bb'].forEach(function (pk) {
+      const srcp = [pk + '.svg', pk + '.png', pk + '.webp'].find(has);
+      if (srcp) cp(srcp, path.join(dest, srcp));
+    });
+    if (has('dealerPuck.png')     && !['dealer.svg', 'dealer.png', 'dealer.webp'].some(has)) cp('dealerPuck.png',     path.join(dest, 'dealer.png'));
+    if (has('smallblindPuck.png') && !['sb.svg', 'sb.png', 'sb.webp'].some(has))             cp('smallblindPuck.png', path.join(dest, 'sb.png'));
+    if (has('bigblindPuck.png')   && !['bb.svg', 'bb.png', 'bb.webp'].some(has))             cp('bigblindPuck.png',   path.join(dest, 'bb.png'));
     if (has('preview.png'))        cp('preview.png',        path.join(dest, 'preview.png'));
     try { const xml = fs.readdirSync(exDir).find(function (f) { return /\.xml$/i.test(f); }); if (xml) cp(xml, path.join(dest, 'style.xml')); } catch (e) {}
     regenManifest('table');
