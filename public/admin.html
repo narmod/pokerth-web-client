@@ -411,6 +411,9 @@
           </select>
           <button id="bcNowSend" class="use">Send now</button>
         </div>
+        <div class="periodrow" style="margin-top:8px">
+          <label class="muted">Countdown to (optional) <input id="bcNowCd" class="filter" type="datetime-local" style="margin:0;width:auto"></label>
+        </div>
         <div id="bcNowPrev"></div>
         <div id="bcNowState" class="msg"></div>
       </div>
@@ -445,6 +448,7 @@
         <div class="periodrow" style="margin-top:8px">
           <label class="muted">Start (optional) <input id="bcStartAt" class="filter" type="datetime-local" style="margin:0;width:auto"></label>
           <label class="muted">End (optional) <input id="bcEndAt" class="filter" type="datetime-local" style="margin:0;width:auto"></label>
+          <label class="muted">Countdown to (optional) <input id="bcCd" class="filter" type="datetime-local" style="margin:0;width:auto"></label>
           <label class="muted">Max sends <input id="bcMaxRuns" class="filter" type="number" min="1" placeholder="∞" style="margin:0;width:80px"></label>
         </div>
         <div id="bcPrev"></div>
@@ -1171,8 +1175,10 @@
     if(t==='once'){ var v=$('bcOnceAt').value; return {type:'once',at:v?new Date(v).getTime():0}; }
     return null; }
   function bcSendNow(){ var msg=($('bcNowMsg').value||'').trim(); if(!msg){ bcSay('bcNowState','Message required.','err'); return; }
+    var nb={message:msg,icon:$('bcNowIcon').value,target:(($('bcNowTarget')&&$('bcNowTarget').value)||'all'),token:tok()};
+    var ncd=$('bcNowCd')?$('bcNowCd').value:''; if(ncd){ var ncdMs=new Date(ncd).getTime(); if(!(ncdMs>Date.now())){ bcSay('bcNowState','Countdown must be in the future.','err'); return; } nb.countdownAt=ncdMs; }
     bcSay('bcNowState','Sending\u2026');
-    api('/admin/broadcast-now',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:msg,icon:$('bcNowIcon').value,target:(($('bcNowTarget')&&$('bcNowTarget').value)||'all'),token:tok()})})
+    api('/admin/broadcast-now',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(nb)})
       .then(function(r){return r.json();}).then(function(d){ if(d&&d.ok) bcSay('bcNowState','Sent to '+(d.notified||0)+' player(s).','ok'); else bcSay('bcNowState','Failed: '+((d&&d.error)||'error'),'err'); })
       .catch(function(){ bcSay('bcNowState','Network error.','err'); }); }
   function addBroadcast(){ var msg=($('bcMsg').value||'').trim(); if(!msg){ bcSay('bcAddState','Message required.','err'); return; }
@@ -1181,6 +1187,7 @@
     if(s&&s.type==='once'&&!(s.at>Date.now())){ bcSay('bcAddState','Pick a future date/time.','err'); return; }
     var body={message:msg,icon:$('bcIcon').value,schedule:s,target:(($('bcTarget')&&$('bcTarget').value)||'all'),token:tok()};
     var sa=$('bcStartAt')?$('bcStartAt').value:''; if(sa) body.startAt=new Date(sa).getTime();
+    var cdv=$('bcCd')?$('bcCd').value:''; if(cdv){ var cdMs=new Date(cdv).getTime(); if(!(cdMs>Date.now())){ bcSay('bcAddState','Countdown must be in the future.','err'); return; } body.countdownAt=cdMs; }
     var ea=$('bcEndAt').value; if(ea) body.endAt=new Date(ea).getTime();
     if(body.startAt&&body.endAt&&body.startAt>=body.endAt){ bcSay('bcAddState','Start must be before end.','err'); return; }
     var mr=Number($('bcMaxRuns').value||0); if(mr>0) body.maxRuns=mr;
@@ -1207,6 +1214,7 @@
         if(j.lastRun) bits.push('last '+new Date(j.lastRun).toLocaleString());
         if(j.maxRuns) bits.push(j.runCount+'/'+j.maxRuns+' sent');
         if(j.startAt) bits.push('from '+new Date(j.startAt).toLocaleString());
+        if(j.countdownAt) bits.push('\u23f3 countdown to '+new Date(j.countdownAt).toLocaleString());
         if(j.endAt) bits.push('until '+new Date(j.endAt).toLocaleString());
         meta.textContent=bits.join(' \u00b7 '); row.appendChild(meta);
         var btns=document.createElement('div'); btns.className='btnrow';

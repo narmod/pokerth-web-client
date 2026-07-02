@@ -666,13 +666,14 @@ async function initDb() {
       'updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4');
     await _dbPool.query('CREATE TABLE IF NOT EXISTS broadcasts (' +
       'id VARCHAR(64) PRIMARY KEY, message TEXT, icon VARCHAR(32) DEFAULT NULL, schedule_json TEXT, ' +
-      'enabled TINYINT(1) NOT NULL DEFAULT 0, start_at BIGINT DEFAULT NULL, end_at BIGINT DEFAULT NULL, max_runs INT DEFAULT NULL, ' +
+      'enabled TINYINT(1) NOT NULL DEFAULT 0, start_at BIGINT DEFAULT NULL, end_at BIGINT DEFAULT NULL, countdown_at BIGINT DEFAULT NULL, max_runs INT DEFAULT NULL, ' +
       'created_at BIGINT DEFAULT NULL, last_run BIGINT DEFAULT NULL, run_count INT NOT NULL DEFAULT 0, ' +
       "target VARCHAR(16) NOT NULL DEFAULT 'all', " +
       'updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4');
     // Migration douce pour les tables existantes (MariaDB ; sans IF NOT EXISTS on ignore l'erreur "duplicate column").
     try { await _dbPool.query("ALTER TABLE broadcasts ADD COLUMN IF NOT EXISTS target VARCHAR(16) NOT NULL DEFAULT 'all'"); } catch (e) {}
     try { await _dbPool.query('ALTER TABLE broadcasts ADD COLUMN IF NOT EXISTS start_at BIGINT DEFAULT NULL'); } catch (e) {}
+    try { await _dbPool.query('ALTER TABLE broadcasts ADD COLUMN IF NOT EXISTS countdown_at BIGINT DEFAULT NULL'); } catch (e) {}
     _dbStatus.connected = true; _dbStatus.error = '';
     console.log('[db] MySQL mirror connected (' + cfg.database + ', source: ' + cfg.source + ')');
     dbFlushTrafficToday();
@@ -728,9 +729,9 @@ async function dbFlushBroadcasts() {
     for (const j of _broadcasts) {
       ids.push(String(j.id).slice(0, 64));
       await _dbPool.query(
-        'INSERT INTO broadcasts (id, message, icon, schedule_json, enabled, start_at, end_at, max_runs, created_at, last_run, run_count, target) VALUES (?,?,?,?,?,?,?,?,?,?,?,?) ' +
-        'ON DUPLICATE KEY UPDATE message=VALUES(message), icon=VALUES(icon), schedule_json=VALUES(schedule_json), enabled=VALUES(enabled), start_at=VALUES(start_at), end_at=VALUES(end_at), max_runs=VALUES(max_runs), created_at=VALUES(created_at), last_run=VALUES(last_run), run_count=VALUES(run_count), target=VALUES(target)',
-        [String(j.id).slice(0, 64), (j.message != null ? String(j.message).slice(0, 2000) : null), (j.icon ? String(j.icon).slice(0, 32) : null), JSON.stringify(j.schedule || null), j.enabled ? 1 : 0, (j.startAt != null ? Number(j.startAt) : null), (j.endAt != null ? Number(j.endAt) : null), (j.maxRuns != null ? Number(j.maxRuns) : null), (j.createdAt != null ? Number(j.createdAt) : null), (j.lastRun != null ? Number(j.lastRun) : null), Number(j.runCount) || 0, _bcTarget(j.target)]
+        'INSERT INTO broadcasts (id, message, icon, schedule_json, enabled, start_at, end_at, countdown_at, max_runs, created_at, last_run, run_count, target) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?) ' +
+        'ON DUPLICATE KEY UPDATE message=VALUES(message), icon=VALUES(icon), schedule_json=VALUES(schedule_json), enabled=VALUES(enabled), start_at=VALUES(start_at), end_at=VALUES(end_at), countdown_at=VALUES(countdown_at), max_runs=VALUES(max_runs), created_at=VALUES(created_at), last_run=VALUES(last_run), run_count=VALUES(run_count), target=VALUES(target)',
+        [String(j.id).slice(0, 64), (j.message != null ? String(j.message).slice(0, 2000) : null), (j.icon ? String(j.icon).slice(0, 32) : null), JSON.stringify(j.schedule || null), j.enabled ? 1 : 0, (j.startAt != null ? Number(j.startAt) : null), (j.endAt != null ? Number(j.endAt) : null), (j.countdownAt != null ? Number(j.countdownAt) : null), (j.maxRuns != null ? Number(j.maxRuns) : null), (j.createdAt != null ? Number(j.createdAt) : null), (j.lastRun != null ? Number(j.lastRun) : null), Number(j.runCount) || 0, _bcTarget(j.target)]
       );
     }
     if (ids.length) {
@@ -952,6 +953,11 @@ function _bcIcon(x) { return _BC_ICONS.indexOf(x) >= 0 ? x : ''; }
 // LAN via proxy / entraînement offline). Voir ws._bcMode.
 const _BC_TARGETS = ['all', 'pthnet', 'lan', 'offline'];
 function _bcTarget(x) { return _BC_TARGETS.indexOf(x) >= 0 ? x : 'all'; }
+// Trame d'une diffusion : INFO: classique, ou INFOCD:<échéance>: avec compte à
+// rebours affiché en direct côté client (inscriptions de tournoi, etc.).
+function _bcFrame(icon, message, cdAt) {
+  return (cdAt ? 'INFOCD:' + cdAt + ':' : 'INFO:') + (icon || '') + ':' + (message || '');
+}
 function _parseHM(t) { const m = /^(\d{1,2}):(\d{2})$/.exec(t || ''); if (!m) return null; const h = +m[1], mi = +m[2]; if (h > 23 || mi > 59) return null; return [h, mi]; }
 function _atTime(baseMs, h, mi) { const d = new Date(baseMs); d.setHours(h, mi, 0, 0); return d.getTime(); }
 function _bcValidateSchedule(s) {
@@ -1005,11 +1011,14 @@ function computeNextRun(job, from) {
   }
   if (next == null) return null;
   if (job.endAt && next > job.endAt) return null;
+  if (job.countdownAt && next > job.countdownAt) return null; // plus rien après l'échéance
   if (job.maxRuns && (job.runCount || 0) >= job.maxRuns) return null;
   return next;
 }
 function fireBroadcast(job) {
-  const n = broadcastNotice('INFO:' + (job.icon || '') + ':' + (job.message || ''), job.target);
+  const cd = Number(job.countdownAt) || 0;
+  if (cd && Date.now() >= cd) { console.log('[broadcast] job ' + job.id + ' skipped (countdown expired)'); return 0; }
+  const n = broadcastNotice(_bcFrame(job.icon, job.message, cd), job.target);
   job.lastRun = Date.now();
   job.runCount = (job.runCount || 0) + 1;
   console.log('[broadcast] job ' + job.id + ' fired (' + _bcTarget(job.target) + ') -> ' + n + ' client(s)');
@@ -1879,7 +1888,7 @@ function handleAdmin(req, res, reqPathOnly, query) {
     if (!hasScope('broadcast', query, null)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
     const now = Date.now();
     const jobs = _broadcasts.map(function (j) {
-      return { id: j.id, message: j.message, icon: j.icon || '', target: j.target || 'all', schedule: j.schedule, enabled: !!j.enabled, lastRun: j.lastRun || null, runCount: j.runCount || 0, startAt: j.startAt || null, endAt: j.endAt || null, maxRuns: j.maxRuns || null, createdAt: j.createdAt || null, nextRun: (j.enabled ? computeNextRun(j, now) : null) };
+      return { id: j.id, message: j.message, icon: j.icon || '', target: j.target || 'all', schedule: j.schedule, enabled: !!j.enabled, lastRun: j.lastRun || null, runCount: j.runCount || 0, startAt: j.startAt || null, endAt: j.endAt || null, countdownAt: j.countdownAt || null, maxRuns: j.maxRuns || null, createdAt: j.createdAt || null, nextRun: (j.enabled ? computeNextRun(j, now) : null) };
     });
     let tz = ''; try { tz = Intl.DateTimeFormat().resolvedOptions().timeZone || ''; } catch (e) {}
     return adminJson(res, 200, { ok: true, jobs: jobs, serverNow: now, tz: tz });
@@ -1890,7 +1899,9 @@ function handleAdmin(req, res, reqPathOnly, query) {
       const message = (d && typeof d.message === 'string') ? d.message.slice(0, 500) : '';
       if (!message.trim()) return adminJson(res, 400, { ok: false, error: 'message required' });
       const tgt = _bcTarget(d && d.target);
-      const n = broadcastNotice('INFO:' + _bcIcon(d && d.icon) + ':' + message, tgt);
+      const cd = (d && d.countdownAt && Number(d.countdownAt) > 0) ? Number(d.countdownAt) : 0;
+      if (cd && cd <= Date.now()) return adminJson(res, 400, { ok: false, error: 'countdown already passed' });
+      const n = broadcastNotice(_bcFrame(_bcIcon(d && d.icon), message, cd), tgt);
       console.log('[broadcast] one-off (' + tgt + ') -> ' + n + ' client(s)');
       return adminJson(res, 200, { ok: true, notified: n });
     });
@@ -1901,6 +1912,8 @@ function handleAdmin(req, res, reqPathOnly, query) {
       if (!d || typeof d.message !== 'string' || !d.message.trim()) return adminJson(res, 400, { ok: false, error: 'message required' });
       const sched = _bcValidateSchedule(d.schedule);
       if (!sched) return adminJson(res, 400, { ok: false, error: 'invalid schedule' });
+      const _cd = (d.countdownAt && Number(d.countdownAt) > 0) ? Number(d.countdownAt) : null;
+      if (_cd && _cd <= Date.now()) return adminJson(res, 400, { ok: false, error: 'countdown already passed' });
       const _st = (d.startAt && Number(d.startAt) > 0) ? Number(d.startAt) : null;
       const _en = (d.endAt && Number(d.endAt) > Date.now()) ? Number(d.endAt) : null;
       if (_st && _en && _st >= _en) return adminJson(res, 400, { ok: false, error: 'start must be before end' });
@@ -1912,6 +1925,7 @@ function handleAdmin(req, res, reqPathOnly, query) {
         enabled: d.enabled === false ? false : true,
         startAt: _st,
         endAt: _en,
+        countdownAt: _cd,
         maxRuns: (d.maxRuns && Number(d.maxRuns) > 0) ? Math.floor(Number(d.maxRuns)) : null,
         target: _bcTarget(d.target),
         createdAt: Date.now(), lastRun: null, runCount: 0

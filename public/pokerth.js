@@ -886,15 +886,42 @@ function _linkifyAnnounce(text) {
     return _annLink(bareUrl, bareUrl) + trail;
   });
 }
-function hideInfoToast() { var el = document.getElementById('srv-info-toast'); if (el) el.remove(); }
-function showInfoToast(message, icon) {
+function hideInfoToast() { if (window._infoToastCdTimer) { clearInterval(window._infoToastCdTimer); window._infoToastCdTimer = null; } var el = document.getElementById('srv-info-toast'); if (el) el.remove(); }
+// Format compact d'un temps restant : '2d 03:04:05', '1:02:03' ou '12:34'.
+function _fmtCountdown(ms) {
+  if (ms < 0) ms = 0;
+  var t = Math.floor(ms / 1000);
+  var d = Math.floor(t / 86400); t -= d * 86400;
+  var h = Math.floor(t / 3600);  t -= h * 3600;
+  var m = Math.floor(t / 60), sec = t - m * 60;
+  function p(n) { return (n < 10 ? '0' : '') + n; }
+  if (d > 0) return d + 'd ' + p(h) + ':' + p(m) + ':' + p(sec);
+  if (h > 0) return h + ':' + p(m) + ':' + p(sec);
+  return m + ':' + p(sec);
+}
+function showInfoToast(message, icon, cdAt) {
   hideInfoToast();
   var top = document.getElementById('srv-restart-notice') ? 76 : 16;
   var el = document.createElement('div');
   el.id = 'srv-info-toast';
   el.style.cssText = 'position:fixed;top:' + top + 'px;left:50%;transform:translateX(-50%);max-width:min(92vw,420px);z-index:9999;display:flex;align-items:flex-start;gap:10px;background:var(--gold);color:var(--on-gold);padding:11px 15px;border-radius:14px;box-shadow:0 8px 28px rgba(0,0,0,.55),0 0 0 1px rgba(255,255,255,.25) inset;font-weight:600;font-size:.9rem;line-height:1.4;white-space:pre-line;';
   if (icon) { var ic = document.createElement('span'); ic.textContent = icon; ic.style.cssText = 'flex:none;font-size:1.1rem;line-height:1.3;'; el.appendChild(ic); }
-  var span = document.createElement('span'); span.innerHTML = _linkifyAnnounce(message); el.appendChild(span);
+  var span = document.createElement('span'); span.innerHTML = _linkifyAnnounce(message);
+  // Compte à rebours optionnel (échéance en epoch ms) : ligne dédiée, tick 1 s,
+  // s'arrête à 0:00. Timer nettoyé par hideInfoToast().
+  if (cdAt && Number(cdAt) > 0) {
+    var cdEl = document.createElement('span');
+    cdEl.style.cssText = 'display:block;margin-top:4px;font-weight:700;font-variant-numeric:tabular-nums;';
+    var _cdTick = function () {
+      var left = Number(cdAt) - Date.now();
+      cdEl.textContent = '\u23f3 ' + _fmtCountdown(left);
+      if (left <= 0 && window._infoToastCdTimer) { clearInterval(window._infoToastCdTimer); window._infoToastCdTimer = null; }
+    };
+    _cdTick();
+    window._infoToastCdTimer = setInterval(_cdTick, 1000);
+    span.appendChild(cdEl);
+  }
+  el.appendChild(span);
   var x = document.createElement('button');
   x.setAttribute('aria-label', 'Close'); x.textContent = '\u00d7';
   x.style.cssText = 'flex:none;background:transparent;border:0;color:var(--on-gold);font-size:1.25rem;line-height:1;cursor:pointer;padding:0 2px;opacity:.7;';
@@ -1030,11 +1057,11 @@ function maybeShowWelcome(w) {
 // Broadcast info toast: show immediately, then (on supported browsers) detect
 // the message language and replace it with an on-device translation if needed.
 var _bcSeq = 0;
-function _showBroadcast(message, icon) {
+function _showBroadcast(message, icon, cdAt) {
   _bcSeq++; var seq = _bcSeq;
-  showInfoToast(message, icon);
+  showInfoToast(message, icon, cdAt);
   _detectTranslate(message).then(function (tr) {
-    if (tr && tr !== message && seq === _bcSeq && document.getElementById('srv-info-toast')) showInfoToast(tr, icon);
+    if (tr && tr !== message && seq === _bcSeq && document.getElementById('srv-info-toast')) showInfoToast(tr, icon, cdAt);
   }).catch(function () {});
 }
 window.maybeShowWelcome = maybeShowWelcome;
@@ -4746,6 +4773,17 @@ const App = (() => {
           var nkind = ns2 >= 0 ? nrest.slice(0, ns2) : nrest, nnote = ns2 >= 0 ? nrest.slice(ns2 + 1) : '';
           if (ndead && typeof showRestartNotice === 'function') showRestartNotice(ndead, nkind, nnote);
         }
+      }
+      return true;
+    }
+    if (data.startsWith('INFOCD:')) {
+      // INFOCD:<échéance epoch ms>:<icône>:<message> — diffusion avec compte à rebours.
+      var cb = data.slice(7), cs1 = cb.indexOf(':');
+      if (cs1 > 0) {
+        var cdAt = parseInt(cb.slice(0, cs1), 10), crest = cb.slice(cs1 + 1), cs2 = crest.indexOf(':');
+        var cicon = cs2 >= 0 ? crest.slice(0, cs2) : '';
+        var cmsg = cs2 >= 0 ? crest.slice(cs2 + 1) : crest;
+        if (cmsg && cdAt && typeof _showBroadcast === 'function') _showBroadcast(cmsg, cicon, cdAt);
       }
       return true;
     }
@@ -12501,7 +12539,7 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.3.148-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.149-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
