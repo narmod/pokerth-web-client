@@ -214,20 +214,41 @@
   <!-- ===== TABLE ===== -->
   <section id="tab-table" class="grid hide">
     <div class="card">
-      <h2>Table style (felt + pucks)</h2>
+      <h2>Table pack (felt + mode + pucks)</h2>
       <label>Table name</label>
       <input type="text" id="tName" value="My table" maxlength="40">
 
-      <label>Felt</label>
+      <label>Convert an existing pack (.zip) — optional</label>
+      <input type="file" id="tPackZip" accept=".zip,application/zip">
+      <p class="help" id="tPackInfo">Loads <code>felt.*</code> (or legacy <code>table.png</code>), the name from the pack's XML, and the current mode (<code>full</code> / <code>fullscreen</code> marker).</p>
+
+      <label>Felt image (replaces colours)</label>
+      <input type="file" id="tFImg" accept="image/*">
+
+      <label>…or generated felt</label>
       <div class="row">
         <div class="col"><label class="help">Centre → edge colour</label><input type="color" id="tF1"> <input type="color" id="tF2"></div>
         <div class="col"><label class="help">Style</label>
           <select id="tFType"><option value="radial">Radial (table)</option><option value="vgrad">Vertical gradient</option><option value="solid">Solid</option></select>
         </div>
       </div>
-      <label>…or felt image (replaces colour)</label>
-      <input type="file" id="tFImg" accept="image/*">
       <label class="row" style="margin-top:8px"><input type="checkbox" id="tVig" checked> <span style="margin-left:6px">Vignette (darken edges)</span></label>
+
+      <label style="margin-top:12px">Render mode (exactly as in the client)</label>
+      <div class="swatches" id="tModeChips">
+        <button type="button" class="chip on" data-mode="classic">Classic (oval)</button>
+        <button type="button" class="chip" data-mode="full">Full table</button>
+        <button type="button" class="chip" data-mode="fullscreen">Fullscreen</button>
+      </div>
+      <p class="help" id="tModeHelp"></p>
+
+      <div id="tFullOpts" style="display:none">
+        <div class="row">
+          <div class="col"><label>Aspect ratio</label><select id="tRatio"><option value="2.2">2.2</option><option value="2.4" selected>2.4 (recommended)</option><option value="2.7">2.7</option></select></div>
+          <div class="col"><label>Corner radius (<span id="tRadV">46</span>%)</label><input type="range" id="tRad" min="20" max="50" value="46" style="width:100%"></div>
+        </div>
+        <label class="row" style="margin-top:6px"><input type="checkbox" id="tKeepAlpha"> <span style="margin-left:6px">Keep the image's own transparency (don't re-mask, no added rail)</span></label>
+      </div>
 
       <hr>
       <label class="row"><input type="checkbox" id="tPucks" checked> <span style="margin-left:6px">Generate D / SB / BB pucks</span></label>
@@ -239,12 +260,12 @@
         </div>
       </div>
 
-      <button class="btn" id="tDl">Download table (.zip)</button>
+      <button class="btn" id="tDl">Download table pack (.zip)</button>
       <div class="size" id="tSize"></div>
-      <div class="note"><code>table.png</code> (felt, 1280×720) + <code>dealerPuck.png</code> / <code>smallblindPuck.png</code> / <code>bigblindPuck.png</code> + <code>tablestyle.xml</code>. Import via Admin → Packages → <b>Table style</b>.</div>
+      <div class="note">Gallery pack: <code>&lt;id&gt;/felt.png|jpg</code> + <code>preview.png</code> + <code>style.xml</code> (+ <code>dealer/sb/bb.png</code>, + <code>full</code> or <code>fullscreen</code> marker file). Install: unzip into <code>public/table/</code> on the server, then regenerate the manifest (<code>node scripts/tables-manifest.mjs public/table</code> or Admin → Refresh) → the table appears in Theme → Table with the chosen mode.</div>
     </div>
     <div><div class="preview"><div class="feltprev">
-      <canvas class="felt" id="tPrev" width="640" height="360"></canvas>
+      <canvas class="felt" id="tPrev" width="320" height="580" style="max-width:300px"></canvas>
       <div class="pucks"><canvas id="tPd0" width="140" height="140"></canvas><canvas id="tPsb0" width="140" height="140"></canvas><canvas id="tPbb0" width="140" height="140"></canvas></div>
     </div></div></div>
   </section>
@@ -680,10 +701,58 @@ function drawPuck(canvas,label,color){
  ctx.strokeStyle='rgba(0,0,0,.25)';ctx.lineWidth=r*0.06;ctx.beginPath();ctx.arc(cx,cy,r,0,7);ctx.stroke();
  ctx.fillStyle='#fff';ctx.textAlign='center';ctx.textBaseline='middle';ctx.font='bold '+(r*0.7)+'px ui-sans-serif,system-ui,sans-serif';ctx.fillText(label,cx,cy+r*0.04);
 }
-let FELTIMG=null;
+let FELTIMG=null,FELTALPHA=false,TMODE='classic';
+const TMODE_HELP={
+ classic:'Felt texture shown inside the CSS oval (rail & shape kept by the client). Any image, drawn cover.',
+ full:'The image IS the whole table (felt + rail) with transparent corners, shown entire (contain). Exported as PNG-32. If the source is a plain felt, a stadium mask + a simple rail are applied.',
+ fullscreen:'The image becomes the play-area background: cover, anchored to the bottom, ending right above the action bar.'};
+function setTMode(m){TMODE=m;document.querySelectorAll('#tModeChips .chip').forEach(c=>c.classList.toggle('on',c.dataset.mode===m));document.getElementById('tFullOpts').style.display=(m==='full')?'':'none';document.getElementById('tModeHelp').textContent=TMODE_HELP[m]||'';renderTablePreview();}
+function feltCanvas(w,h){const c=document.createElement('canvas');c.width=w;c.height=h;paintFelt(c.getContext('2d'),w,h,v('tF1'),v('tF2'),v('tFType'),document.getElementById('tVig').checked,FELTIMG);return c;}
+function stadiumPath(x,w,h,r){const rr=Math.min(r,h/2,w/2);x.beginPath();x.moveTo(rr,0);x.lineTo(w-rr,0);x.arcTo(w,0,w,rr,rr);x.lineTo(w,h-rr);x.arcTo(w,h,w-rr,h,rr);x.lineTo(rr,h);x.arcTo(0,h,0,h-rr,rr);x.lineTo(0,rr);x.arcTo(0,0,rr,0,rr);x.closePath();}
+function buildFullCanvas(W){
+ const R=parseFloat(v('tRatio'))||2.4,H=Math.round(W/R);
+ const out=document.createElement('canvas');out.width=W;out.height=H;const x=out.getContext('2d');
+ if(document.getElementById('tKeepAlpha').checked&&FELTIMG){const iw=FELTIMG.width,ih=FELTIMG.height,sc=Math.min(W/iw,H/ih),nw=iw*sc,nh=ih*sc;x.drawImage(FELTIMG,(W-nw)/2,(H-nh)/2,nw,nh);return out;}
+ const pad=Math.round(H*0.035),w2=W-2*pad,h2=H-2*pad,r=Math.min(h2/2,h2*((parseInt(v('tRad'),10)||46)/100));
+ x.save();x.translate(pad,pad);
+ stadiumPath(x,w2,h2,r);x.save();x.clip();x.drawImage(feltCanvas(w2,h2),0,0);x.restore();
+ stadiumPath(x,w2,h2,r);x.lineWidth=Math.max(6,h2*0.05);x.strokeStyle='rgba(56,34,18,0.96)';x.stroke();
+ stadiumPath(x,w2,h2,r);x.lineWidth=Math.max(2,h2*0.012);x.strokeStyle='rgba(216,180,110,0.85)';x.stroke();
+ x.restore();return out;}
+function buildFsCanvas(){const iw=FELTIMG?FELTIMG.width:1600,ih=FELTIMG?FELTIMG.height:900,W=Math.min(iw,1980),H=Math.round(W*ih/iw);return feltCanvas(W,H);}
+function drawCover(x,src,dx,dy,dw,dh,anchor){const iw=src.width,ih=src.height,sc=Math.max(dw/iw,dh/ih),nw=iw*sc,nh=ih*sc;const ox=dx+(dw-nw)/2,oy=(anchor==='bottom')?dy+dh-nh:dy+(dh-nh)/2;x.save();x.beginPath();x.rect(dx,dy,dw,dh);x.clip();x.drawImage(src,ox,oy,nw,nh);x.restore();}
+function detectAlpha(img){try{const c=document.createElement('canvas');c.width=32;c.height=32;const x=c.getContext('2d');x.drawImage(img,0,0,32,32);const d=x.getImageData(0,0,32,32).data;for(let i=3;i<d.length;i+=4)if(d[i]<250)return true;}catch(e){}return false;}
 function renderTablePreview(){
- const f1=v('tF1'),f2=v('tF2'),ty=v('tFType'),vig=document.getElementById('tVig').checked;
- const cv=document.getElementById('tPrev');paintFelt(cv.getContext('2d'),cv.width,cv.height,f1,f2,ty,vig,FELTIMG);
+ const cv=document.getElementById('tPrev'),x=cv.getContext('2d'),W=cv.width,H=cv.height;
+ const hdr=44,pot=20,act=132,zoneY=hdr+pot,zoneH=H-zoneY-act;
+ x.clearRect(0,0,W,H);
+ x.fillStyle='#232a34';x.fillRect(0,0,W,H);
+ if(TMODE==='fullscreen'){
+  drawCover(x,buildFsCanvas(),0,zoneY,W,zoneH,'bottom');
+  x.fillStyle='rgba(0,0,0,0.14)';x.fillRect(0,zoneY,W,zoneH);
+ }else if(TMODE==='full'){
+  const src=buildFullCanvas(640),sc=Math.min(W*0.96/src.width,zoneH*0.9/src.height),nw=src.width*sc,nh=src.height*sc;
+  x.save();x.shadowColor='rgba(0,0,0,0.4)';x.shadowBlur=14;x.shadowOffsetY=8;x.drawImage(src,(W-nw)/2,zoneY+(zoneH-nh)/2,nw,nh);x.restore();
+ }else{
+  const ow=W*0.86,oh=ow*0.617,ox=(W-ow)/2,oy=zoneY+(zoneH-oh)/2;
+  x.save();x.beginPath();x.ellipse(ox+ow/2,oy+oh/2,ow/2,oh/2,0,0,Math.PI*2);x.clip();x.drawImage(feltCanvas(Math.round(ow),Math.round(oh)),ox,oy);x.restore();
+  x.lineWidth=7;x.strokeStyle='rgba(40,26,14,0.95)';x.beginPath();x.ellipse(ox+ow/2,oy+oh/2,ow/2-3,oh/2-3,0,0,Math.PI*2);x.stroke();
+  x.lineWidth=2;x.strokeStyle='rgba(220,185,120,0.7)';x.beginPath();x.ellipse(ox+ow/2,oy+oh/2,ow/2-7,oh/2-7,0,0,Math.PI*2);x.stroke();
+ }
+ x.fillStyle='#e8ebf0';x.fillRect(0,0,W,hdr);x.fillStyle='#3a4250';x.font='bold 13px ui-sans-serif,system-ui';x.textAlign='left';x.fillText('TABLE',12,27);
+ x.fillStyle='rgba(20,26,34,0.55)';x.fillRect(0,hdr,W,pot);x.fillStyle='#cfd6e2';x.font='10px ui-sans-serif,system-ui';x.textAlign='center';x.fillText('Main #1      Pot : 0      Pre-flop',W/2,hdr+14);
+ const ay=H-act;x.fillStyle='#f1f3f7';x.fillRect(0,ay,W,act);x.strokeStyle='#c3cad6';x.beginPath();x.moveTo(0,ay);x.lineTo(W,ay);x.stroke();
+ x.fillStyle='#ffffff';roundRectPath(x,10,ay+10,60,26,8);x.fill();
+ x.fillStyle='#d7dbe4';roundRectPath(x,82,ay+20,W-96,6,3);x.fill();
+ x.fillStyle='#c77b1e';roundRectPath(x,10,ay+46,W*0.42,26,8);x.fill();
+ x.fillStyle='#ffffff';roundRectPath(x,W*0.46,ay+46,W*0.54-12,26,8);x.fill();
+ const bw=(W-36)/3,by=ay+act-42;
+ x.fillStyle='#b02a2a';roundRectPath(x,12,by,bw,30,9);x.fill();
+ x.fillStyle='#1a3d8b';roundRectPath(x,12+bw+6,by,bw,30,9);x.fill();
+ x.fillStyle='#1e7a2e';roundRectPath(x,12+2*(bw+6),by,bw,30,9);x.fill();
+ x.fillStyle='#ffffff';x.font='bold 11px ui-sans-serif,system-ui';x.textAlign='center';
+ x.fillText('Fold',12+bw/2,by+19);x.fillText('Call',12+bw+6+bw/2,by+19);x.fillText('Raise',12+2*(bw+6)+bw/2,by+19);
+ x.fillStyle='#3a4250';x.font='bold 10px ui-sans-serif,system-ui';x.fillText('All-In',10+W*0.21,ay+63);
  document.getElementById('tPuckOpts').style.opacity=document.getElementById('tPucks').checked?1:.4;
  drawPuck(document.getElementById('tPd0'),'D',v('tPd'));drawPuck(document.getElementById('tPsb0'),'SB',v('tPsb'));drawPuck(document.getElementById('tPbb0'),'BB',v('tPbb'));
 }
@@ -735,16 +804,19 @@ async function exportTable(){
  const btn=document.getElementById('tDl');btn.disabled=true;const old=btn.textContent;
  try{
   const name=v('tName'),folder=slug(name);const zip=new JSZip(),f=zip.folder(folder);
-  const cv=document.createElement('canvas');cv.width=1280;cv.height=720;
-  paintFelt(cv.getContext('2d'),1280,720,v('tF1'),v('tF2'),v('tFType'),document.getElementById('tVig').checked,FELTIMG);
-  f.file('table.png',await canvasPNG(cv,0));
+  let felt;
+  if(TMODE==='full'){felt=buildFullCanvas(1600);f.file('felt.png',await canvasPNG(felt,0));f.file('full','');}
+  else if(TMODE==='fullscreen'){felt=buildFsCanvas();if(FELTIMG&&FELTALPHA)f.file('felt.png',await canvasPNG(felt,0));else f.file('felt.jpg',await jpegBytes(felt));f.file('fullscreen','');}
+  else{felt=feltCanvas(1280,720);if(FELTIMG&&FELTALPHA)f.file('felt.png',await canvasPNG(felt,0));else f.file('felt.jpg',await jpegBytes(felt));}
+  const th=document.createElement('canvas');th.width=480;th.height=Math.max(1,Math.round(480*felt.height/felt.width));th.getContext('2d').drawImage(felt,0,0,th.width,th.height);
+  f.file('preview.png',await canvasPNG(th,0));
   if(document.getElementById('tPucks').checked){
    const p=document.createElement('canvas');p.width=240;p.height=240;
-   drawPuck(p,'D',v('tPd'));f.file('dealerPuck.png',await canvasPNG(p,0));
-   drawPuck(p,'SB',v('tPsb'));f.file('smallblindPuck.png',await canvasPNG(p,0));
-   drawPuck(p,'BB',v('tPbb'));f.file('bigblindPuck.png',await canvasPNG(p,0));
+   drawPuck(p,'D',v('tPd'));f.file('dealer.png',await canvasPNG(p,0));
+   drawPuck(p,'SB',v('tPsb'));f.file('sb.png',await canvasPNG(p,0));
+   drawPuck(p,'BB',v('tPbb'));f.file('bb.png',await canvasPNG(p,0));
   }
-  f.file(folder+'tablestyle.xml',deckXML(name));
+  f.file('style.xml','<?xml version="1.0" encoding="UTF-8" ?>\n<PokerTH_TableStyle version="1.0">\n  <StyleDescription value="'+esc(name)+'" />\n</PokerTH_TableStyle>\n');
   const blob=await zip.generateAsync({type:'blob'});sizeMsg(document.getElementById('tSize'),blob.size);dl(blob,folder+'.zip');
  }catch(e){document.getElementById('tSize').innerHTML='<span class="warn">Error: '+e.message+'</span>';}
  btn.disabled=false;btn.textContent=old;
@@ -880,7 +952,29 @@ document.getElementById('cPreset').addEventListener('change',e=>applyCardPreset(
 ['cName','cBg1','cBg2','cBgType','cRed','cBlack','cAccent','cBorder','cCourt','cBack','cBackPat','cGlow','cFourColor','cDiamond','cClub','cIndexFont','cIndexSize','cIndexSuit','cFourCorners','cPipStyle','cNumLayout','cWatermark','cCourtAccent','cRadius','cBorderWidth','cTexture','cFinish','cFancyAce'].forEach(id=>document.getElementById(id).addEventListener('input',renderCardPreview));
 ['tName','tF1','tF2','tFType','tVig','tPucks','tPd','tPsb','tPbb'].forEach(id=>document.getElementById(id).addEventListener('input',renderTablePreview));
 ['hName','hSwatch','hFelt','hPanel','hGold','hText','hFeltImg','hPucksOn'].forEach(id=>document.getElementById(id).addEventListener('input',renderThemePreview));
-document.getElementById('tFImg').addEventListener('change',e=>{const file=e.target.files[0];if(!file){FELTIMG=null;renderTablePreview();return;}const img=new Image();img.onload=()=>{FELTIMG=img;renderTablePreview();};img.src=URL.createObjectURL(file);});
+document.getElementById('tFImg').addEventListener('change',e=>{const file=e.target.files[0];if(!file){FELTIMG=null;FELTALPHA=false;renderTablePreview();return;}loadFeltFile(file);});
+function loadFeltFile(file){return new Promise((res,rej)=>{const img=new Image();img.onload=()=>{FELTIMG=img;FELTALPHA=detectAlpha(img);document.getElementById('tKeepAlpha').checked=FELTALPHA;renderTablePreview();res();};img.onerror=rej;img.src=URL.createObjectURL(file);});}
+document.querySelectorAll('#tModeChips .chip').forEach(c=>c.addEventListener('click',()=>setTMode(c.dataset.mode)));
+['tRad'].forEach(id=>document.getElementById(id).addEventListener('input',()=>{document.getElementById('tRadV').textContent=v('tRad');renderTablePreview();}));
+['tRatio','tKeepAlpha'].forEach(id=>document.getElementById(id).addEventListener('change',renderTablePreview));
+document.getElementById('tPackZip').addEventListener('change',async e=>{
+ const file=e.target.files[0];if(!file)return;const info=document.getElementById('tPackInfo');info.textContent='Reading pack…';
+ try{
+  const zip=await JSZip.loadAsync(file);let feltEntry=null,xmlEntry=null,mode='classic';
+  zip.forEach((path,entry)=>{if(entry.dir)return;const base=path.split('/').pop().toLowerCase();
+   if(/^felt\.(png|jpe?g|webp)$/.test(base))feltEntry=entry;else if(base==='table.png'&&!feltEntry)feltEntry=entry;
+   if(base.endsWith('.xml'))xmlEntry=entry;
+   if(base==='fullscreen'||base==='.fullscreen')mode='fullscreen';else if((base==='full'||base==='.full')&&mode!=='fullscreen')mode='full';});
+  if(!feltEntry)throw new Error('no felt.* / table.png in the zip');
+  if(xmlEntry){const t=await xmlEntry.async('string');const m=t.match(/StyleDescription[^>]*value\s*=\s*"([^"]+)"/i);if(m&&m[1].trim())set('tName',m[1].trim());}
+  const blob=await feltEntry.async('blob');await loadFeltFile(blob);
+  if(mode==='full')document.getElementById('tKeepAlpha').checked=FELTALPHA;
+  setTMode(mode);
+  info.textContent='Pack loaded: '+feltEntry.name+' · mode '+mode+(FELTALPHA?' · alpha':'');
+ }catch(err){info.innerHTML='<span class="warn">Pack error: '+(err&&err.message?err.message:err)+'</span>';}
+ e.target.value='';
+});
+setTMode('classic');
 function updateVis(){var on=document.getElementById('cFourColor').checked;document.getElementById('fourColorRow').style.display=on?'':'none';}
 document.getElementById('cFourColor').addEventListener('change',updateVis);
 document.getElementById('cDl').addEventListener('click',exportDeck);
