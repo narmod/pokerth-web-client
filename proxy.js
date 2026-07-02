@@ -2806,6 +2806,19 @@ wss.on('connection', (ws, req) => {
   const useTls = params.get('tls') !== '0' && !FORCE_NOTLS;
   const sid    = params.get('sid') || null;
 
+  // ── Notify-only channel (?notify=1) ──
+  // Clients connectés en DIRECT à pokerth.net : leur socket de jeu ne passe
+  // pas par ce proxy. Ce canal léger n'ouvre AUCUN pont amont — la socket
+  // reste simplement dans wss.clients, donc broadcastNotice() (INFO:/NOTICE:)
+  // l'atteint sans autre modification. Le heartbeat existant la surveille.
+  if (params.get('notify') === '1') {
+    console.log('[i] Notify-only client attached (' + wss.clients.size + ' ws total)');
+    if (_restartAt > Date.now() && _restartNotice) { try { ws.send(_restartNotice); } catch (e) {} }
+    ws.on('message', function () {});       // aucun trafic entrant attendu
+    ws.on('error', function () {});
+    return;
+  }
+
   // ── Reject hosts outside the allowlist ──
   if (!isHostAllowed(host)) {
     console.warn('[!] Rejected connection to non-allowed host: ' + host + ':' + port);

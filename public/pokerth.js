@@ -4730,6 +4730,69 @@ const App = (() => {
     if (!_reactEmojiTimer) _flushReactEmoji();
   }
 
+  // ── Trames de contrôle du proxy (texte) ─────────────────────────────
+  // NOTICE: (redémarrage programmé / annulation) et INFO: (diffusions admin).
+  // Retourne true si la trame a été consommée. Partagé entre la socket
+  // principale (mode proxy) et le canal notify-only (mode pokerth.net direct).
+  function _handleCtrlFrame(data) {
+    if (typeof data !== 'string') return false;
+    if (data.startsWith('NOTICE:')) {
+      var nbody = data.slice(7);
+      if (nbody === 'CANCEL') { if (typeof hideRestartNotice === 'function') hideRestartNotice(); if (typeof showToast === 'function') showToast(t('srvRestartCancelled'), { icon: '', duration: 4000 }); return true; }
+      if (nbody.startsWith('RESTART:')) {
+        var nr = nbody.slice(8), ns1 = nr.indexOf(':');
+        if (ns1 > 0) {
+          var ndead = parseInt(nr.slice(0, ns1), 10), nrest = nr.slice(ns1 + 1), ns2 = nrest.indexOf(':');
+          var nkind = ns2 >= 0 ? nrest.slice(0, ns2) : nrest, nnote = ns2 >= 0 ? nrest.slice(ns2 + 1) : '';
+          if (ndead && typeof showRestartNotice === 'function') showRestartNotice(ndead, nkind, nnote);
+        }
+      }
+      return true;
+    }
+    if (data.startsWith('INFO:')) {
+      var ib = data.slice(5), is1 = ib.indexOf(':');
+      var iicon = is1 >= 0 ? ib.slice(0, is1) : '';
+      var imsg = is1 >= 0 ? ib.slice(is1 + 1) : ib;
+      if (imsg && typeof _showBroadcast === 'function') _showBroadcast(imsg, iicon);
+      return true;
+    }
+    return false;
+  }
+
+  // ── Canal notify-only (mode pokerth.net direct) ──────────────────────
+  // En direct, la socket de jeu va droit sur wss://www.pokerth.net/pthlive :
+  // elle ne traverse pas notre proxy, donc broadcastNotice() côté serveur ne
+  // peut pas l'atteindre. On ouvre un second WebSocket minimal vers le proxy
+  // (?notify=1) qui ne transporte QUE les trames texte NOTICE:/INFO:.
+  // Reconnexion silencieuse (15 s) tant que le canal est demandé.
+  let _notifyWS = null, _notifyUrl = '', _notifyTimer = null;
+  function _closeNotifyWS() {
+    _notifyUrl = '';
+    if (_notifyTimer) { clearTimeout(_notifyTimer); _notifyTimer = null; }
+    if (_notifyWS) { try { _notifyWS.onclose = null; _notifyWS.close(); } catch (e) {} _notifyWS = null; }
+  }
+  function _openNotifyWS(baseUrl) {
+    if (!baseUrl) return;
+    const u = baseUrl + (baseUrl.indexOf('?') >= 0 ? '&' : '?') + 'notify=1';
+    if (_notifyWS && _notifyUrl === u) return; // déjà ouvert sur la bonne URL
+    _closeNotifyWS();
+    _notifyUrl = u;
+    (function dial() {
+      if (!_notifyUrl) return;
+      var sck = null;
+      try { sck = new WebSocket(_notifyUrl); } catch (e) {}
+      if (!sck) { _notifyTimer = setTimeout(dial, 30000); return; }
+      _notifyWS = sck;
+      sck.onmessage = function (e) { if (typeof e.data === 'string') _handleCtrlFrame(e.data); };
+      sck.onerror = function () { try { sck.close(); } catch (e) {} };
+      sck.onclose = function () {
+        if (sck !== _notifyWS) return;
+        _notifyWS = null;
+        if (_notifyUrl) _notifyTimer = setTimeout(dial, 15000);
+      };
+    })();
+  }
+
   // ── RÉSEAU ──
   function send(data) {
     if (!ws || ws.readyState !== WebSocket.OPEN) return;
@@ -9862,6 +9925,9 @@ function dismissWinner() {
       window._directWS = directWS;
       // Marqueur de mode pour le CSS : drapeaux agrandis uniquement sur pokerth.net.
       try { document.body.classList.toggle('pth-net', !!directWS); } catch (e) {}
+      // Diffusions admin en mode direct : ouvrir le canal notify-only vers le
+      // proxy (fermé sinon — en mode proxy la socket principale les reçoit déjà).
+      try { if (directWS) _openNotifyWS(proxyUrl); else _closeNotifyWS(); } catch (e) {}
       try {
         var _rtb = document.getElementById('react-toggle-btn');
         if (_rtb) _rtb.style.display = '';
@@ -9915,26 +9981,7 @@ function dismissWinner() {
       ws.onmessage = function(e) {
         if (typeof e.data === 'string') {
           // Message texte = protocole proxy (réactions)
-          if (e.data.startsWith('NOTICE:')) {
-            var nbody = e.data.slice(7);
-            if (nbody === 'CANCEL') { if (typeof hideRestartNotice === 'function') hideRestartNotice(); if (typeof showToast === 'function') showToast(t('srvRestartCancelled'), { icon: '', duration: 4000 }); return; }
-            if (nbody.startsWith('RESTART:')) {
-              var nr = nbody.slice(8), ns1 = nr.indexOf(':');
-              if (ns1 > 0) {
-                var ndead = parseInt(nr.slice(0, ns1), 10), nrest = nr.slice(ns1 + 1), ns2 = nrest.indexOf(':');
-                var nkind = ns2 >= 0 ? nrest.slice(0, ns2) : nrest, nnote = ns2 >= 0 ? nrest.slice(ns2 + 1) : '';
-                if (ndead && typeof showRestartNotice === 'function') showRestartNotice(ndead, nkind, nnote);
-              }
-            }
-            return;
-          }
-          if (e.data.startsWith('INFO:')) {
-            var ib = e.data.slice(5), is1 = ib.indexOf(':');
-            var iicon = is1 >= 0 ? ib.slice(0, is1) : '';
-            var imsg = is1 >= 0 ? ib.slice(is1 + 1) : ib;
-            if (imsg && typeof _showBroadcast === 'function') _showBroadcast(imsg, iicon);
-            return;
-          }
+          if (_handleCtrlFrame(e.data)) return;
           // Avatar IMAGE perso diffusé via le proxy. Le data URL contient
           // des ':' -> on découpe uniquement sur le 1er séparateur après le pid.
           if (e.data.startsWith('AVATARIMG:')) {
@@ -9986,6 +10033,7 @@ function dismissWinner() {
         // reconnect scheduler below and drops the user back into the lobby a few
         // seconds after they returned to the home screen.
         if (_intentionalDisconnect) {
+          _closeNotifyWS();
           return;
         }
 
@@ -10117,6 +10165,7 @@ function dismissWinner() {
     },
     disconnect() {
       _intentionalDisconnect = true;
+      _closeNotifyWS();
       _wasAuthenticated = false;
       _lastConnectFailed = false; // déco propre → pas de rate limit
       // Déconnexion volontaire → faire tourner le sid : la prochaine connexion
@@ -12442,7 +12491,7 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.3.144-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.145-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

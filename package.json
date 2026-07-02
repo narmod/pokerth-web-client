@@ -1,6 +1,6 @@
 {
   "name": "pokerth-web-client",
-  "version": "0.3.144-beta",
+  "version": "0.3.145-beta",
   "description": "Experimental modern web client for PokerTH using a WebSocket-to-TCP proxy.",
   "main": "proxy.js",
   "private": false,
@@ -22,8 +22,8 @@
   "author": "Arnaud Obscur",
   "license": "AGPL-3.0-or-later",
   "dependencies": {
-    "ws": "^8.18.0",
-    "mysql2": "^3.6.0"
+    "mysql2": "^3.6.0",
+    "ws": "^8.21.0"
   },
   "devDependencies": {
     "protobufjs": "^8.4.2",
