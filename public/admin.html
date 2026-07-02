@@ -443,6 +443,7 @@
           <div class="bc-when" data-for="once" style="display:none"><label class="muted">On <input id="bcOnceAt" class="filter" type="datetime-local" style="margin:0;width:auto"></label></div>
         </div>
         <div class="periodrow" style="margin-top:8px">
+          <label class="muted">Start (optional) <input id="bcStartAt" class="filter" type="datetime-local" style="margin:0;width:auto"></label>
           <label class="muted">End (optional) <input id="bcEndAt" class="filter" type="datetime-local" style="margin:0;width:auto"></label>
           <label class="muted">Max sends <input id="bcMaxRuns" class="filter" type="number" min="1" placeholder="∞" style="margin:0;width:80px"></label>
         </div>
@@ -1179,7 +1180,9 @@
     if(s&&s.type==='weekly'&&!s.weekdays.length){ bcSay('bcAddState','Pick at least one weekday.','err'); return; }
     if(s&&s.type==='once'&&!(s.at>Date.now())){ bcSay('bcAddState','Pick a future date/time.','err'); return; }
     var body={message:msg,icon:$('bcIcon').value,schedule:s,target:(($('bcTarget')&&$('bcTarget').value)||'all'),token:tok()};
+    var sa=$('bcStartAt')?$('bcStartAt').value:''; if(sa) body.startAt=new Date(sa).getTime();
     var ea=$('bcEndAt').value; if(ea) body.endAt=new Date(ea).getTime();
+    if(body.startAt&&body.endAt&&body.startAt>=body.endAt){ bcSay('bcAddState','Start must be before end.','err'); return; }
     var mr=Number($('bcMaxRuns').value||0); if(mr>0) body.maxRuns=mr;
     bcSay('bcAddState','Adding\u2026');
     api('/admin/broadcasts',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)})
@@ -1203,6 +1206,7 @@
         if(j.enabled&&j.nextRun) bits.push('next '+new Date(j.nextRun).toLocaleString()); else if(!j.enabled) bits.push('disabled');
         if(j.lastRun) bits.push('last '+new Date(j.lastRun).toLocaleString());
         if(j.maxRuns) bits.push(j.runCount+'/'+j.maxRuns+' sent');
+        if(j.startAt) bits.push('from '+new Date(j.startAt).toLocaleString());
         if(j.endAt) bits.push('until '+new Date(j.endAt).toLocaleString());
         meta.textContent=bits.join(' \u00b7 '); row.appendChild(meta);
         var btns=document.createElement('div'); btns.className='btnrow';

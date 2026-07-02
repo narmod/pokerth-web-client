@@ -666,12 +666,13 @@ async function initDb() {
       'updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4');
     await _dbPool.query('CREATE TABLE IF NOT EXISTS broadcasts (' +
       'id VARCHAR(64) PRIMARY KEY, message TEXT, icon VARCHAR(32) DEFAULT NULL, schedule_json TEXT, ' +
-      'enabled TINYINT(1) NOT NULL DEFAULT 0, end_at BIGINT DEFAULT NULL, max_runs INT DEFAULT NULL, ' +
+      'enabled TINYINT(1) NOT NULL DEFAULT 0, start_at BIGINT DEFAULT NULL, end_at BIGINT DEFAULT NULL, max_runs INT DEFAULT NULL, ' +
       'created_at BIGINT DEFAULT NULL, last_run BIGINT DEFAULT NULL, run_count INT NOT NULL DEFAULT 0, ' +
       "target VARCHAR(16) NOT NULL DEFAULT 'all', " +
       'updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4');
     // Migration douce pour les tables existantes (MariaDB ; sans IF NOT EXISTS on ignore l'erreur "duplicate column").
     try { await _dbPool.query("ALTER TABLE broadcasts ADD COLUMN IF NOT EXISTS target VARCHAR(16) NOT NULL DEFAULT 'all'"); } catch (e) {}
+    try { await _dbPool.query('ALTER TABLE broadcasts ADD COLUMN IF NOT EXISTS start_at BIGINT DEFAULT NULL'); } catch (e) {}
     _dbStatus.connected = true; _dbStatus.error = '';
     console.log('[db] MySQL mirror connected (' + cfg.database + ', source: ' + cfg.source + ')');
     dbFlushTrafficToday();
@@ -727,9 +728,9 @@ async function dbFlushBroadcasts() {
     for (const j of _broadcasts) {
       ids.push(String(j.id).slice(0, 64));
       await _dbPool.query(
-        'INSERT INTO broadcasts (id, message, icon, schedule_json, enabled, end_at, max_runs, created_at, last_run, run_count, target) VALUES (?,?,?,?,?,?,?,?,?,?,?) ' +
-        'ON DUPLICATE KEY UPDATE message=VALUES(message), icon=VALUES(icon), schedule_json=VALUES(schedule_json), enabled=VALUES(enabled), end_at=VALUES(end_at), max_runs=VALUES(max_runs), created_at=VALUES(created_at), last_run=VALUES(last_run), run_count=VALUES(run_count), target=VALUES(target)',
-        [String(j.id).slice(0, 64), (j.message != null ? String(j.message).slice(0, 2000) : null), (j.icon ? String(j.icon).slice(0, 32) : null), JSON.stringify(j.schedule || null), j.enabled ? 1 : 0, (j.endAt != null ? Number(j.endAt) : null), (j.maxRuns != null ? Number(j.maxRuns) : null), (j.createdAt != null ? Number(j.createdAt) : null), (j.lastRun != null ? Number(j.lastRun) : null), Number(j.runCount) || 0, _bcTarget(j.target)]
+        'INSERT INTO broadcasts (id, message, icon, schedule_json, enabled, start_at, end_at, max_runs, created_at, last_run, run_count, target) VALUES (?,?,?,?,?,?,?,?,?,?,?,?) ' +
+        'ON DUPLICATE KEY UPDATE message=VALUES(message), icon=VALUES(icon), schedule_json=VALUES(schedule_json), enabled=VALUES(enabled), start_at=VALUES(start_at), end_at=VALUES(end_at), max_runs=VALUES(max_runs), created_at=VALUES(created_at), last_run=VALUES(last_run), run_count=VALUES(run_count), target=VALUES(target)',
+        [String(j.id).slice(0, 64), (j.message != null ? String(j.message).slice(0, 2000) : null), (j.icon ? String(j.icon).slice(0, 32) : null), JSON.stringify(j.schedule || null), j.enabled ? 1 : 0, (j.startAt != null ? Number(j.startAt) : null), (j.endAt != null ? Number(j.endAt) : null), (j.maxRuns != null ? Number(j.maxRuns) : null), (j.createdAt != null ? Number(j.createdAt) : null), (j.lastRun != null ? Number(j.lastRun) : null), Number(j.runCount) || 0, _bcTarget(j.target)]
       );
     }
     if (ids.length) {
@@ -967,6 +968,12 @@ function _bcValidateSchedule(s) {
 // Pure: next fire time (epoch ms) strictly after `from`, or null if none remain.
 function computeNextRun(job, from) {
   const s = job.schedule || {};
+  // Fenêtre de diffusion : rien avant startAt. Pour un intervalle jamais
+  // déclenché, le 1er envoi tombe exactement à startAt ; pour les horaires
+  // (daily/everyDays/weekly/monthly), à la 1re occurrence de l'horaire à
+  // partir de startAt.
+  const _sa = Number(job.startAt) || 0;
+  if (_sa && from < _sa) from = (s.type === 'interval' && !job.lastRun) ? _sa - (Math.floor(Number(s.minutes) || 0) * 60000) : _sa - 1;
   let next = null;
   if (s.type === 'once') {
     next = (s.at && s.at > from) ? s.at : null;
@@ -1872,7 +1879,7 @@ function handleAdmin(req, res, reqPathOnly, query) {
     if (!hasScope('broadcast', query, null)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
     const now = Date.now();
     const jobs = _broadcasts.map(function (j) {
-      return { id: j.id, message: j.message, icon: j.icon || '', target: j.target || 'all', schedule: j.schedule, enabled: !!j.enabled, lastRun: j.lastRun || null, runCount: j.runCount || 0, endAt: j.endAt || null, maxRuns: j.maxRuns || null, createdAt: j.createdAt || null, nextRun: (j.enabled ? computeNextRun(j, now) : null) };
+      return { id: j.id, message: j.message, icon: j.icon || '', target: j.target || 'all', schedule: j.schedule, enabled: !!j.enabled, lastRun: j.lastRun || null, runCount: j.runCount || 0, startAt: j.startAt || null, endAt: j.endAt || null, maxRuns: j.maxRuns || null, createdAt: j.createdAt || null, nextRun: (j.enabled ? computeNextRun(j, now) : null) };
     });
     let tz = ''; try { tz = Intl.DateTimeFormat().resolvedOptions().timeZone || ''; } catch (e) {}
     return adminJson(res, 200, { ok: true, jobs: jobs, serverNow: now, tz: tz });
@@ -1894,13 +1901,17 @@ function handleAdmin(req, res, reqPathOnly, query) {
       if (!d || typeof d.message !== 'string' || !d.message.trim()) return adminJson(res, 400, { ok: false, error: 'message required' });
       const sched = _bcValidateSchedule(d.schedule);
       if (!sched) return adminJson(res, 400, { ok: false, error: 'invalid schedule' });
+      const _st = (d.startAt && Number(d.startAt) > 0) ? Number(d.startAt) : null;
+      const _en = (d.endAt && Number(d.endAt) > Date.now()) ? Number(d.endAt) : null;
+      if (_st && _en && _st >= _en) return adminJson(res, 400, { ok: false, error: 'start must be before end' });
       const job = {
         id: 'bc_' + Date.now().toString(36) + Math.random().toString(36).slice(2, 7),
         message: d.message.slice(0, 500),
         icon: _bcIcon(d.icon),
         schedule: sched,
         enabled: d.enabled === false ? false : true,
-        endAt: (d.endAt && Number(d.endAt) > Date.now()) ? Number(d.endAt) : null,
+        startAt: _st,
+        endAt: _en,
         maxRuns: (d.maxRuns && Number(d.maxRuns) > 0) ? Math.floor(Number(d.maxRuns)) : null,
         target: _bcTarget(d.target),
         createdAt: Date.now(), lastRun: null, runCount: 0
