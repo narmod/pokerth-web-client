@@ -6208,6 +6208,8 @@ const App = (() => {
         // pas de reset par main. Le joueur le change via le dropdown ou un
         // clic manuel sur une action.
         _preActionOpen = false; // referme tout panneau "aperçu" à chaque main
+        // Zoom-follow : reset du suivi + restauration d'un zoom suspendu au showdown
+        try { if (window._zoomHandStart) window._zoomHandStart(); } catch (_e) {}
         try { _sdLosers = new Set(); } catch (e) {} // reset estompage perdants (nouvelle main)
         _ownReveal = false; // cartes propres re-masquées à chaque main (si option active)
         _lastCallSeen = -1; _callConfirmArmed = false; // reset anti-Call (nouvelle main)
@@ -6447,6 +6449,8 @@ const App = (() => {
         } else {
           clearTurnNotif();
           setMyTurnActive(false);
+          // Zoom-follow : planifie le cadrage du siège actif (parité QML §3.4)
+          try { if (window._zoomFollowTurn) window._zoomFollowTurn(turnPid, gameTimeout); } catch (_e) {}
           // isHtml=true : HTML interne sûr, pas du contenu utilisateur
           renderGameWaiting(
             '<span style="font-family:inherit">' + esc(getPlayerName(turnPid)) + '</span>'
@@ -6464,6 +6468,8 @@ const App = (() => {
         const money  = Proto.u32(sub, 6);
         highestBet   = Proto.u32(sub, 7);
         minRaise     = Proto.u32(sub, 8);
+        // Zoom-follow : le joueur a agi → pan en attente exécuté tout de suite
+        try { if (window._zoomFollowActed) window._zoomFollowActed(); } catch (_e) {}
         const aLabels = ['','Fold','Check','Call','Bet','Raise','All-in'];
         const aLabel  = aLabels[action] || '?';
         if (seatData[pid]) {
@@ -6624,6 +6630,8 @@ const App = (() => {
 
       case T.EndOfHandShow: {
         _ownReveal = true; // showdown : mes cartes sont publiques, on les montre
+        // Zoom-follow : suspension du zoom pour la vue d'ensemble du showdown
+        try { if (window._zoomShowdownSuspend) window._zoomShowdownSuspend(); } catch (_e) {}
         try { renderMyCards(); } catch (e) {}
         const results = sub[2] || [];
         const winners = [];
@@ -11428,6 +11436,7 @@ window.addEventListener('orientationchange', function() {
 // compose avec autoScaleTable (qui agit sur #g-table-scaler) et survit aux
 // re-rendus de sieges. Neutralise + masque sur mobile.
 var TABLE_ZOOM_MIN = 0.6, TABLE_ZOOM_MAX = 2.0, TABLE_ZOOM_STEP = 0.1, TABLE_ZOOM_DEFAULT = 1;
+var _zoomPanX = 0, _zoomPanY = 0; // translation « suivi du siège actif » (px zone)
 function _tableZoomGate() {
   return true; // zoom disponible sur TOUS les appareils (mobile inclus)
 }
@@ -11474,18 +11483,30 @@ function _applyZoomTransforms() {
   var zr = zone.getBoundingClientRect();
   var orr = oval.getBoundingClientRect();
   // centre du feutre en coords zone (invariant a l'echelle -> mesure directe ok)
-  var oCX = orr.left - zr.left + orr.width / 2;
-  var oCY = orr.top - zr.top + orr.height / 2;
+  // Pan compensé : la mesure écran inclut la translation courante — on la
+  // retire pour retrouver le centre du feutre en coordonnées LOCALES
+  // (pré-transform), qui servent de transform-origin.
+  var oCX = orr.left - zr.left + orr.width / 2 - _zoomPanX;
+  var oCY = orr.top - zr.top + orr.height / 2 - _zoomPanY;
   // Chevauchement / debordement autorise : on applique le zoom demande tel quel
   // (plus de plafond "toujours visible"). Agrandissement UNIFORME du feutre, des
   // sieges et de mes cartes autour du centre du feutre.
   var eff = Math.max(TABLE_ZOOM_MIN, Math.min(_getTableZoom(), TABLE_ZOOM_MAX));
   window._tableZoomEff = eff;
   window._tableZoomMaxFit = TABLE_ZOOM_MAX;
-  sc.style.transform = 'scale(' + (autofit * eff).toFixed(3) + ')';
+  // Pan du suivi du siège actif : clampé à l'excédent visible ((eff−1)·½zone,
+  // comme le QML), nul dès qu'on repasse à zoom ≤ 1.
+  if (eff <= 1.001) { _zoomPanX = 0; _zoomPanY = 0; }
+  var _maxPX = Math.max(0, (eff - 1) * zr.width / 2);
+  var _maxPY = Math.max(0, (eff - 1) * zr.height / 2);
+  _zoomPanX = Math.max(-_maxPX, Math.min(_maxPX, _zoomPanX));
+  _zoomPanY = Math.max(-_maxPY, Math.min(_maxPY, _zoomPanY));
+  var _pan = (_zoomPanX || _zoomPanY)
+    ? 'translate(' + _zoomPanX.toFixed(1) + 'px,' + _zoomPanY.toFixed(1) + 'px) ' : '';
+  sc.style.transform = _pan + 'scale(' + (autofit * eff).toFixed(3) + ')';
   sc.style.transformOrigin = 'center center';
   seats.style.transformOrigin = oCX.toFixed(1) + 'px ' + oCY.toFixed(1) + 'px';
-  seats.style.transform = 'scale(' + eff.toFixed(3) + ')';
+  seats.style.transform = _pan + 'scale(' + eff.toFixed(3) + ')';
   // mes cartes (player-bar) grandissent aussi au zoom-avant
   var myc = document.getElementById('g-myseat-cards');
   if (myc) { myc.style.transformOrigin = 'left center'; myc.style.transform = (eff > 1.001 ? 'scale(' + eff.toFixed(3) + ')' : ''); }
@@ -11508,6 +11529,95 @@ function tableZoomReset() {
 window.tableZoomStep = tableZoomStep;
 window.tableZoomReset = tableZoomReset;
 window.applyTableZoom = applyTableZoom;
+
+// ── Zoom-follow du siège actif + suspension au showdown (parité QML, bible §3.4) ──
+// Quand un adversaire est au tour et que la table est zoomée (>1), le cadrage
+// NE saute PAS tout de suite : on programme un pan différé
+// (max(800 ms, timeout×250 ms ≈ ¼ du temps de réflexion)) et on pane
+// immédiatement si le joueur agit (PlayersActionDone). Au showdown, le zoom se
+// suspend (dézoom = vue d'ensemble) et se réactive automatiquement à la main
+// suivante s'il était actif. Aucun suivi pendant l'édition des sièges.
+var _zoomFollowTimer = null;
+var _zoomPendingPid = -1, _zoomFollowedPid = -1;
+var _zoomPreShowdown = null; // valeur de zoom sauvée pendant la suspension
+function _zoomFollowOn() {
+  return (window._tableZoomEff || _getTableZoom()) > 1.001 && !window._seatEditMode;
+}
+function _zoomPanToSeat(pid) {
+  var zone = document.getElementById('g-table-zone');
+  var oval = document.querySelector('.felt-oval');
+  var seatEl = document.querySelector('#g-seats .seat[data-pid="' + pid + '"]');
+  if (!zone || !oval || !seatEl) return;
+  var eff = window._tableZoomEff || _getTableZoom();
+  if (eff <= 1.001) return;
+  // Coordonnées LOCALES (pré-transform) : offsetLeft/Top du siège (layout, non
+  // transformé) + centre du feutre re-déduit de la mesure écran compensée du
+  // pan courant. Cible : centre du siège → centre de la zone ;
+  // t = c − o − (p−o)·eff, clampé ensuite par _applyZoomTransforms.
+  var zr = zone.getBoundingClientRect();
+  var orr = oval.getBoundingClientRect();
+  var oX = orr.left - zr.left + orr.width / 2 - _zoomPanX;
+  var oY = orr.top - zr.top + orr.height / 2 - _zoomPanY;
+  var pX = seatEl.offsetLeft + seatEl.offsetWidth / 2;
+  var pY = seatEl.offsetTop + seatEl.offsetHeight / 2;
+  _zoomPanX = zr.width / 2 - oX - (pX - oX) * eff;
+  _zoomPanY = zr.height / 2 - oY - (pY - oY) * eff;
+  // Pan animé (220 ms OutCubic comme le QML) ; transition retirée ensuite pour
+  // ne pas animer les resize / re-rendus ultérieurs.
+  var sc = document.getElementById('g-table-scaler');
+  var seats = document.getElementById('g-seats');
+  [sc, seats].forEach(function (el) {
+    if (el) el.style.transition = 'transform 220ms cubic-bezier(0.33, 1, 0.68, 1)';
+  });
+  try { _applyZoomTransforms(); } catch (e) {}
+  setTimeout(function () {
+    [sc, seats].forEach(function (el) { if (el) el.style.transition = ''; });
+  }, 260);
+}
+function _zoomDoFollow() {
+  if (_zoomFollowTimer) { clearTimeout(_zoomFollowTimer); _zoomFollowTimer = null; }
+  if (!_zoomFollowOn()) { _zoomPendingPid = -1; return; }
+  if (_zoomPendingPid <= 0) return;
+  _zoomPanToSeat(_zoomPendingPid);
+  _zoomFollowedPid = _zoomPendingPid;
+  _zoomPendingPid = -1;
+}
+// Adversaire au tour → planifier le pan (jamais pour soi : parité QML,
+// la self-box reste le point fixe du cadrage).
+window._zoomFollowTurn = function (pid, sec) {
+  if (!_zoomFollowOn() || !pid) return;
+  if (pid === _zoomFollowedPid) return;                       // déjà cadré
+  if (pid === _zoomPendingPid && _zoomFollowTimer) return;    // déjà planifié
+  _zoomPendingPid = pid;
+  if (_zoomFollowTimer) clearTimeout(_zoomFollowTimer);
+  _zoomFollowTimer = setTimeout(_zoomDoFollow, Math.max(800, (sec > 0 ? sec : 8) * 250));
+};
+// Le joueur a agi → exécuter tout pan en attente immédiatement.
+window._zoomFollowActed = function () { if (_zoomPendingPid > 0) _zoomDoFollow(); };
+// Showdown → dézoom d'ensemble (zoom sauvé, restauré à la main suivante).
+window._zoomShowdownSuspend = function () {
+  if (_zoomFollowTimer) { clearTimeout(_zoomFollowTimer); _zoomFollowTimer = null; }
+  _zoomPendingPid = -1; _zoomFollowedPid = -1;
+  var z = _getTableZoom();
+  if (z > 1.001 && _zoomPreShowdown == null) {
+    _zoomPreShowdown = z;
+    _zoomPanX = 0; _zoomPanY = 0;
+    try { localStorage.setItem('pth_table_zoom', '1'); } catch (e) {}
+    try { applyTableZoom(); } catch (e) {}
+  }
+};
+// Nouvelle main → reset du suivi + restauration du zoom suspendu.
+window._zoomHandStart = function () {
+  if (_zoomFollowTimer) { clearTimeout(_zoomFollowTimer); _zoomFollowTimer = null; }
+  _zoomPendingPid = -1; _zoomFollowedPid = -1;
+  var need = (_zoomPreShowdown != null) || _zoomPanX || _zoomPanY;
+  _zoomPanX = 0; _zoomPanY = 0;
+  if (_zoomPreShowdown != null) {
+    var z = _zoomPreShowdown; _zoomPreShowdown = null;
+    try { localStorage.setItem('pth_table_zoom', String(z)); } catch (e) {}
+  }
+  if (need) { try { applyTableZoom(); } catch (e) {} }
+};
 
 // ════════════════════════════════════════════════════════════════════════
 // Placement personnalise des sieges (mode 'custom') -- glisser-deposer en jeu.
@@ -12577,7 +12687,7 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.3.150-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.151-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
