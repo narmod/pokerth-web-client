@@ -6501,3 +6501,25 @@ html:not([data-seat="pokerth"]) body.adv-hide-pbar .seat.me .seat-info {
   .adv-card .km-title{cursor:move;user-select:none;touch-action:none}
   .adv-card.adv-dragging{opacity:.97}
 }
+
+/* ── Badge « main gagnante » sous les community cards (parité QML WinningHandBadge,
+   bible 28/06 §9) : pastille vert sombre rgba(0.05,0.24,0.05,0.92), bord #FFD700,
+   halo or. Dans .felt-oval → suit le zoom/pan comme les cartes. Visible pendant
+   tout le showdown, masqué à la main suivante. top posé en JS (sous #g-comm). ── */
+.win-hand-badge {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 50;                 /* au-dessus des cartes, sous les overlays */
+  padding: 3px 12px;
+  border-radius: 999px;
+  background: rgba(13, 61, 13, 0.92);
+  border: 1px solid #FFD700;
+  box-shadow: 0 0 10px rgba(255, 215, 0, 0.45);
+  color: #ffe98a;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  pointer-events: none;
+}

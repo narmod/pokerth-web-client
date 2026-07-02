@@ -6211,6 +6211,8 @@ const App = (() => {
         _preActionOpen = false; // referme tout panneau "aperçu" à chaque main
         // Zoom-follow : reset du suivi + restauration d'un zoom suspendu au showdown
         try { if (window._zoomHandStart) window._zoomHandStart(); } catch (_e) {}
+        // Badge « main gagnante » : masqué dès la nouvelle main
+        try { if (window._hideWinHandBadge) window._hideWinHandBadge(); } catch (_e) {}
         try { _sdLosers = new Set(); } catch (e) {} // reset estompage perdants (nouvelle main)
         _ownReveal = false; // cartes propres re-masquées à chaque main (si option active)
         _lastCallSeen = -1; _callConfirmArmed = false; // reset anti-Call (nouvelle main)
@@ -9343,6 +9345,26 @@ function _snapshotHandResults() {
 }
 
   // ── Winner overlay ──
+// ── Badge « main gagnante » sous les community cards (parité QML, bible §9) ──
+// Affiché pendant tout le showdown avec le libellé de la meilleure main
+// (déjà traduit par evaluateBestHand) ; masqué à la main suivante. Positionné
+// juste sous #g-comm : le badge vit dans .felt-oval → il suit zoom et pan.
+function showWinHandBadge(label) {
+  var b = document.getElementById('g-win-hand');
+  if (!b) return;
+  if (!label) { b.style.display = 'none'; return; }
+  var comm = document.getElementById('g-comm');
+  var oval = document.querySelector('.felt-oval');
+  b.textContent = label;   // textContent : libellé traduit, jamais du HTML
+  if (comm && oval)
+    b.style.top = Math.round(oval.clientHeight / 2 + comm.offsetHeight / 2 + 8) + 'px';
+  b.style.display = '';
+}
+window._hideWinHandBadge = function () {
+  var b = document.getElementById('g-win-hand');
+  if (b) b.style.display = 'none';
+};
+
 function showWinnerOverlay(winners) {
   var ov = document.getElementById('g-winner-overlay');
   if (!ov || !winners || winners.length === 0) return;
@@ -9426,6 +9448,8 @@ function showWinnerOverlay(winners) {
     if (bestHandLabel) {
       html += '<div class="wc-best-hand">' + bestHandLabel + '</div>';
     }
+    // Badge sous les community cards, pour toute la durée du showdown
+    try { showWinHandBadge(bestHandLabel); } catch (e) {}
   }
 
   // ── Players results ──
@@ -12690,7 +12714,7 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.3.153-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.154-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
