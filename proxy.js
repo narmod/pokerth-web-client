@@ -1962,8 +1962,9 @@ function handleAdmin(req, res, reqPathOnly, query) {
 // Fill RANKING_SOURCES[*].url (and the .csrf block for bbc/wec) and the relay works
 // end to end. Until then /api/ranking returns endpoint_not_configured (HTTP 503).
 // ───────────────────────────────────────────────────────────────────────────
-const RANKING_UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 ' +
-                   '(KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36';
+// UA whiteliste par le filtre Cloudflare de sp0ck (= celui du client QML officiel,
+// WebNetworkAccessManager). Verifie le 2026-07-02 : BBC/WEC/PTH passent en 200.
+const RANKING_UA = 'PokerTH/2.0 (Qt Network)';
 
 const RANKING_SOURCES = {
   // PokerTH official leaderboard — a real JSON API (no CSRF), one POST per season:
