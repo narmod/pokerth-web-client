@@ -406,6 +406,9 @@
           <select id="bcNowIcon" class="filter" style="margin:0;flex:none;width:auto">
             <option value="">No icon</option><option value="ℹ️">ℹ️ Info</option><option value="📢">📢 Announce</option><option value="⚠️">⚠️ Warning</option><option value="🎉">🎉 Celebrate</option>
           </select>
+          <select id="bcNowTarget" class="filter" style="margin:0;flex:none;width:auto">
+            <option value="all">All modes</option><option value="pthnet">pokerth.net</option><option value="lan">LAN</option><option value="offline">Training (offline)</option>
+          </select>
           <button id="bcNowSend" class="use">Send now</button>
         </div>
         <div id="bcNowPrev"></div>
@@ -419,6 +422,9 @@
         <div class="periodrow" style="margin-top:8px">
           <select id="bcIcon" class="filter" style="margin:0;flex:none;width:auto">
             <option value="">No icon</option><option value="ℹ️">ℹ️ Info</option><option value="📢">📢 Announce</option><option value="⚠️">⚠️ Warning</option><option value="🎉">🎉 Celebrate</option>
+          </select>
+          <select id="bcTarget" class="filter" style="margin:0;flex:none;width:auto">
+            <option value="all">All modes</option><option value="pthnet">pokerth.net</option><option value="lan">LAN</option><option value="offline">Training (offline)</option>
           </select>
           <select id="bcType" class="filter" style="margin:0;flex:1">
             <option value="interval">Every…</option><option value="daily">Daily at…</option><option value="everyDays">Every X days at…</option><option value="weekly">Weekly on… at…</option><option value="monthly">Day X each month at…</option><option value="once">Once at…</option>
@@ -1165,14 +1171,14 @@
     return null; }
   function bcSendNow(){ var msg=($('bcNowMsg').value||'').trim(); if(!msg){ bcSay('bcNowState','Message required.','err'); return; }
     bcSay('bcNowState','Sending\u2026');
-    api('/admin/broadcast-now',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:msg,icon:$('bcNowIcon').value,token:tok()})})
+    api('/admin/broadcast-now',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:msg,icon:$('bcNowIcon').value,target:(($('bcNowTarget')&&$('bcNowTarget').value)||'all'),token:tok()})})
       .then(function(r){return r.json();}).then(function(d){ if(d&&d.ok) bcSay('bcNowState','Sent to '+(d.notified||0)+' player(s).','ok'); else bcSay('bcNowState','Failed: '+((d&&d.error)||'error'),'err'); })
       .catch(function(){ bcSay('bcNowState','Network error.','err'); }); }
   function addBroadcast(){ var msg=($('bcMsg').value||'').trim(); if(!msg){ bcSay('bcAddState','Message required.','err'); return; }
     var s=bcBuildSchedule();
     if(s&&s.type==='weekly'&&!s.weekdays.length){ bcSay('bcAddState','Pick at least one weekday.','err'); return; }
     if(s&&s.type==='once'&&!(s.at>Date.now())){ bcSay('bcAddState','Pick a future date/time.','err'); return; }
-    var body={message:msg,icon:$('bcIcon').value,schedule:s,token:tok()};
+    var body={message:msg,icon:$('bcIcon').value,schedule:s,target:(($('bcTarget')&&$('bcTarget').value)||'all'),token:tok()};
     var ea=$('bcEndAt').value; if(ea) body.endAt=new Date(ea).getTime();
     var mr=Number($('bcMaxRuns').value||0); if(mr>0) body.maxRuns=mr;
     bcSay('bcAddState','Adding\u2026');
@@ -1191,7 +1197,9 @@
         var row=document.createElement('div'); row.className='srow'; row.style.cssText='flex-direction:column;align-items:stretch;gap:6px;padding:10px 0';
         var msg=document.createElement('div'); msg.style.cssText='font-weight:600'; msg.textContent=(j.icon?j.icon+' ':'')+j.message; row.appendChild(msg);
         var meta=document.createElement('div'); meta.className='muted'; meta.style.fontSize='.8rem';
+        var tgN={all:'All modes',pthnet:'pokerth.net',lan:'LAN',offline:'Training'};
         var bits=[bcDescribe(j)];
+        if(j.target&&j.target!=='all') bits.push('\u2192 '+(tgN[j.target]||j.target));
         if(j.enabled&&j.nextRun) bits.push('next '+new Date(j.nextRun).toLocaleString()); else if(!j.enabled) bits.push('disabled');
         if(j.lastRun) bits.push('last '+new Date(j.lastRun).toLocaleString());
         if(j.maxRuns) bits.push(j.runCount+'/'+j.maxRuns+' sent');

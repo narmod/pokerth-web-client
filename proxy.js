@@ -668,7 +668,10 @@ async function initDb() {
       'id VARCHAR(64) PRIMARY KEY, message TEXT, icon VARCHAR(32) DEFAULT NULL, schedule_json TEXT, ' +
       'enabled TINYINT(1) NOT NULL DEFAULT 0, end_at BIGINT DEFAULT NULL, max_runs INT DEFAULT NULL, ' +
       'created_at BIGINT DEFAULT NULL, last_run BIGINT DEFAULT NULL, run_count INT NOT NULL DEFAULT 0, ' +
+      "target VARCHAR(16) NOT NULL DEFAULT 'all', " +
       'updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4');
+    // Migration douce pour les tables existantes (MariaDB ; sans IF NOT EXISTS on ignore l'erreur "duplicate column").
+    try { await _dbPool.query("ALTER TABLE broadcasts ADD COLUMN IF NOT EXISTS target VARCHAR(16) NOT NULL DEFAULT 'all'"); } catch (e) {}
     _dbStatus.connected = true; _dbStatus.error = '';
     console.log('[db] MySQL mirror connected (' + cfg.database + ', source: ' + cfg.source + ')');
     dbFlushTrafficToday();
@@ -724,9 +727,9 @@ async function dbFlushBroadcasts() {
     for (const j of _broadcasts) {
       ids.push(String(j.id).slice(0, 64));
       await _dbPool.query(
-        'INSERT INTO broadcasts (id, message, icon, schedule_json, enabled, end_at, max_runs, created_at, last_run, run_count) VALUES (?,?,?,?,?,?,?,?,?,?) ' +
-        'ON DUPLICATE KEY UPDATE message=VALUES(message), icon=VALUES(icon), schedule_json=VALUES(schedule_json), enabled=VALUES(enabled), end_at=VALUES(end_at), max_runs=VALUES(max_runs), created_at=VALUES(created_at), last_run=VALUES(last_run), run_count=VALUES(run_count)',
-        [String(j.id).slice(0, 64), (j.message != null ? String(j.message).slice(0, 2000) : null), (j.icon ? String(j.icon).slice(0, 32) : null), JSON.stringify(j.schedule || null), j.enabled ? 1 : 0, (j.endAt != null ? Number(j.endAt) : null), (j.maxRuns != null ? Number(j.maxRuns) : null), (j.createdAt != null ? Number(j.createdAt) : null), (j.lastRun != null ? Number(j.lastRun) : null), Number(j.runCount) || 0]
+        'INSERT INTO broadcasts (id, message, icon, schedule_json, enabled, end_at, max_runs, created_at, last_run, run_count, target) VALUES (?,?,?,?,?,?,?,?,?,?,?) ' +
+        'ON DUPLICATE KEY UPDATE message=VALUES(message), icon=VALUES(icon), schedule_json=VALUES(schedule_json), enabled=VALUES(enabled), end_at=VALUES(end_at), max_runs=VALUES(max_runs), created_at=VALUES(created_at), last_run=VALUES(last_run), run_count=VALUES(run_count), target=VALUES(target)',
+        [String(j.id).slice(0, 64), (j.message != null ? String(j.message).slice(0, 2000) : null), (j.icon ? String(j.icon).slice(0, 32) : null), JSON.stringify(j.schedule || null), j.enabled ? 1 : 0, (j.endAt != null ? Number(j.endAt) : null), (j.maxRuns != null ? Number(j.maxRuns) : null), (j.createdAt != null ? Number(j.createdAt) : null), (j.lastRun != null ? Number(j.lastRun) : null), Number(j.runCount) || 0, _bcTarget(j.target)]
       );
     }
     if (ids.length) {
@@ -927,9 +930,12 @@ function restartOnlyCmd() {
 }
 // Broadcast a text control frame to every connected client — out-of-band, on the
 // same channel the reaction/avatar relay already uses. Returns how many got it.
-function broadcastNotice(text) {
+function broadcastNotice(text, target) {
+  // target absent ou 'all' = tout le monde ; sinon seuls les clients dont le
+  // mode (ws._bcMode : 'pthnet' | 'lan' | 'offline') correspond.
+  const tgt = (target && target !== 'all') ? target : null;
   let n = 0;
-  try { wss.clients.forEach(function (c) { if (c.readyState === 1) { try { c.send(text); n++; } catch (e) {} } }); } catch (e) {}
+  try { wss.clients.forEach(function (c) { if (c.readyState === 1 && (!tgt || c._bcMode === tgt)) { try { c.send(text); n++; } catch (e) {} } }); } catch (e) {}
   return n;
 }
 function clearScheduledRestart() {
@@ -941,6 +947,10 @@ function clearScheduledRestart() {
 const _BC_ICONS = ['', '\u2139\ufe0f', '\ud83d\udce2', '\u26a0\ufe0f', '\ud83c\udf89']; // '' ℹ️ 📢 ⚠️ 🎉
 const _BC_MAXT = 2000000000; // ~23 days, under setTimeout's 32-bit ceiling → re-arm beyond
 function _bcIcon(x) { return _BC_ICONS.indexOf(x) >= 0 ? x : ''; }
+// Cible d'une diffusion : tous les modes ou un seul (pokerth.net direct /
+// LAN via proxy / entraînement offline). Voir ws._bcMode.
+const _BC_TARGETS = ['all', 'pthnet', 'lan', 'offline'];
+function _bcTarget(x) { return _BC_TARGETS.indexOf(x) >= 0 ? x : 'all'; }
 function _parseHM(t) { const m = /^(\d{1,2}):(\d{2})$/.exec(t || ''); if (!m) return null; const h = +m[1], mi = +m[2]; if (h > 23 || mi > 59) return null; return [h, mi]; }
 function _atTime(baseMs, h, mi) { const d = new Date(baseMs); d.setHours(h, mi, 0, 0); return d.getTime(); }
 function _bcValidateSchedule(s) {
@@ -992,10 +1002,10 @@ function computeNextRun(job, from) {
   return next;
 }
 function fireBroadcast(job) {
-  const n = broadcastNotice('INFO:' + (job.icon || '') + ':' + (job.message || ''));
+  const n = broadcastNotice('INFO:' + (job.icon || '') + ':' + (job.message || ''), job.target);
   job.lastRun = Date.now();
   job.runCount = (job.runCount || 0) + 1;
-  console.log('[broadcast] job ' + job.id + ' fired -> ' + n + ' client(s)');
+  console.log('[broadcast] job ' + job.id + ' fired (' + _bcTarget(job.target) + ') -> ' + n + ' client(s)');
   return n;
 }
 function clearBroadcastTimer(id) { if (_bcTimers[id]) { clearTimeout(_bcTimers[id]); delete _bcTimers[id]; } }
@@ -1862,7 +1872,7 @@ function handleAdmin(req, res, reqPathOnly, query) {
     if (!hasScope('broadcast', query, null)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
     const now = Date.now();
     const jobs = _broadcasts.map(function (j) {
-      return { id: j.id, message: j.message, icon: j.icon || '', schedule: j.schedule, enabled: !!j.enabled, lastRun: j.lastRun || null, runCount: j.runCount || 0, endAt: j.endAt || null, maxRuns: j.maxRuns || null, createdAt: j.createdAt || null, nextRun: (j.enabled ? computeNextRun(j, now) : null) };
+      return { id: j.id, message: j.message, icon: j.icon || '', target: j.target || 'all', schedule: j.schedule, enabled: !!j.enabled, lastRun: j.lastRun || null, runCount: j.runCount || 0, endAt: j.endAt || null, maxRuns: j.maxRuns || null, createdAt: j.createdAt || null, nextRun: (j.enabled ? computeNextRun(j, now) : null) };
     });
     let tz = ''; try { tz = Intl.DateTimeFormat().resolvedOptions().timeZone || ''; } catch (e) {}
     return adminJson(res, 200, { ok: true, jobs: jobs, serverNow: now, tz: tz });
@@ -1872,8 +1882,9 @@ function handleAdmin(req, res, reqPathOnly, query) {
       if (!hasScope('broadcast', query, d && d.token)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
       const message = (d && typeof d.message === 'string') ? d.message.slice(0, 500) : '';
       if (!message.trim()) return adminJson(res, 400, { ok: false, error: 'message required' });
-      const n = broadcastNotice('INFO:' + _bcIcon(d && d.icon) + ':' + message);
-      console.log('[broadcast] one-off -> ' + n + ' client(s)');
+      const tgt = _bcTarget(d && d.target);
+      const n = broadcastNotice('INFO:' + _bcIcon(d && d.icon) + ':' + message, tgt);
+      console.log('[broadcast] one-off (' + tgt + ') -> ' + n + ' client(s)');
       return adminJson(res, 200, { ok: true, notified: n });
     });
   }
@@ -1891,6 +1902,7 @@ function handleAdmin(req, res, reqPathOnly, query) {
         enabled: d.enabled === false ? false : true,
         endAt: (d.endAt && Number(d.endAt) > Date.now()) ? Number(d.endAt) : null,
         maxRuns: (d.maxRuns && Number(d.maxRuns) > 0) ? Math.floor(Number(d.maxRuns)) : null,
+        target: _bcTarget(d.target),
         createdAt: Date.now(), lastRun: null, runCount: 0
       };
       _broadcasts.push(job); saveBroadcasts(); armBroadcast(job);
@@ -2742,6 +2754,8 @@ function _attachWs(S, ws) {
   // Relay scope = the upstream this socket is bridged to. Reactions/avatars
   // only fan out to peers sharing the same host:port.
   ws._relayKey = S.host + ':' + S.port;
+  // Mode pour le ciblage des diffusions : pokerth.net via proxy = pthnet, sinon LAN.
+  ws._bcMode = (S.host && String(S.host).indexOf('pokerth.net') >= 0) ? 'pthnet' : 'lan';
   _allClients.add(ws);
   // If a restart is currently scheduled, tell this freshly-attached client too.
   if (_restartAt > Date.now() && _restartNotice) { try { ws.send(_restartNotice); } catch (e) {} }
@@ -2812,7 +2826,8 @@ wss.on('connection', (ws, req) => {
   // reste simplement dans wss.clients, donc broadcastNotice() (INFO:/NOTICE:)
   // l'atteint sans autre modification. Le heartbeat existant la surveille.
   if (params.get('notify') === '1') {
-    console.log('[i] Notify-only client attached (' + wss.clients.size + ' ws total)');
+    ws._bcMode = params.get('mode') === 'offline' ? 'offline' : 'pthnet';
+    console.log('[i] Notify-only client attached (' + ws._bcMode + ', ' + wss.clients.size + ' ws total)');
     if (_restartAt > Date.now() && _restartNotice) { try { ws.send(_restartNotice); } catch (e) {} }
     ws.on('message', function () {});       // aucun trafic entrant attendu
     ws.on('error', function () {});

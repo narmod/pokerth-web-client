@@ -4771,9 +4771,9 @@ const App = (() => {
     if (_notifyTimer) { clearTimeout(_notifyTimer); _notifyTimer = null; }
     if (_notifyWS) { try { _notifyWS.onclose = null; _notifyWS.close(); } catch (e) {} _notifyWS = null; }
   }
-  function _openNotifyWS(baseUrl) {
+  function _openNotifyWS(baseUrl, mode) {
     if (!baseUrl) return;
-    const u = baseUrl + (baseUrl.indexOf('?') >= 0 ? '&' : '?') + 'notify=1';
+    const u = baseUrl + (baseUrl.indexOf('?') >= 0 ? '&' : '?') + 'notify=1&mode=' + (mode === 'offline' ? 'offline' : 'pthnet');
     if (_notifyWS && _notifyUrl === u) return; // déjà ouvert sur la bonne URL
     _closeNotifyWS();
     _notifyUrl = u;
@@ -9933,7 +9933,7 @@ function dismissWinner() {
       try {
         if (directWS || _off) {
           var _nBase = proxyUrl || ((location.protocol === 'https:' ? 'wss://' : 'ws://') + location.host);
-          _openNotifyWS(_nBase);
+          _openNotifyWS(_nBase, _off ? 'offline' : 'pthnet');
         } else {
           _closeNotifyWS();
         }
@@ -12501,7 +12501,7 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.3.146-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.147-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
