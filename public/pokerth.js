@@ -2690,6 +2690,7 @@ const MSG = (() => {
     62:63, 63:64, 64:65, 65:66,               // Statistics, Chat*
     67:68, 68:69,                              // TimeoutWarning, ResetTimeout
     73:74,                                     // Error
+    76:77, 77:78,                              // AdminBanPlayer + Ack (kickban total)
     78:79, 79:80, 80:81, 81:82, 55:56, 56:57, 57:58, 58:59, 59:60, 60:61, 61:62,              // Spectator*
   };
 
@@ -2716,6 +2717,7 @@ const MSG = (() => {
     AllInShowCards:48, EndOfHandShow:49, EndOfHandHide:50, EndOfGame:53,
     Statistics:62, ChatRequest:63, Chat:64, ChatReject:65,
     TimeoutWarning:67, ResetTimeout:68, Error:73,
+    AdminBanPlayer:76, AdminBanPlayerAck:77,
     GameListSpectatorJoined:78, GameListSpectatorLeft:79,
     // Spectators on the table we're currently in (or watching).
     // Type 80/81 — separate from the lobby-level 78/79 which track
@@ -3004,6 +3006,14 @@ const MSG = (() => {
     return Proto.encode([[1,0,30],[31,2,msg]]);
   }
 
+  // AdminBanPlayerMessage (type 76, champ enveloppe 77) : banPlayerId=1.
+  // « Kickban total » — réservé aux admins pokerth.net (playerRights=3),
+  // comme Lobby.adminBanPlayer du client QML (PlayerListItem, bible §16).
+  function buildAdminBanPlayer(playerId) {
+    const msg = Proto.encode([[1,0,playerId]]);
+    return Proto.encode([[1,0,76],[77,2,msg]]);
+  }
+
   // AskKickPlayerMessage (type 55, env field 56): gameId=1, playerId=2.
   // Asks the server to open a community vote-kick petition. The server
   // answers AskKickDenied if not allowed, else broadcasts StartKickPetition.
@@ -3030,7 +3040,7 @@ const MSG = (() => {
     const msg = Proto.encode([[1,0,gameId],[2,0,playerId]]);
     return Proto.encode([[1,0,T.InvitePlayerToGame],[33,2,msg]]);
   }
-  return { T, parse, scramClientFirst, scramClientFinal, scramFindServerFirst, buildInit, buildChat, buildGameChat, buildJoin, buildJoinGame, buildRejoinGame, buildStartEventAck, buildMyAction, buildCreateGame, buildLeaveGame, buildStartWithBots, buildKickPlayer, buildAskKickPlayer, buildVoteKick, buildRejectInvite, buildInvitePlayer };
+  return { T, parse, scramClientFirst, scramClientFinal, scramFindServerFirst, buildInit, buildChat, buildGameChat, buildJoin, buildJoinGame, buildRejoinGame, buildStartEventAck, buildMyAction, buildCreateGame, buildLeaveGame, buildStartWithBots, buildKickPlayer, buildAdminBanPlayer, buildAskKickPlayer, buildVoteKick, buildRejectInvite, buildInvitePlayer };
 })();
 
 
@@ -3523,6 +3533,17 @@ const App = (() => {
     try { if (typeof window._renderSeats === 'function') window._renderSeats(); } catch (e) {}
     try { openPlayerInfoPopup(pid); } catch (e) {}
   };
+  // « Kickban total » admin — AdminBanPlayerMessage (type 76), équivalent du
+  // Lobby.adminBanPlayer du client QML. Confirmation avant envoi ; le résultat
+  // revient par AdminBanPlayerAckMessage (toast, voir le switch réseau).
+  window._adminBanPlayer = function (pid) {
+    var nm = (typeof getPlayerName === 'function') ? (getPlayerName(pid) || ('#' + pid)) : ('#' + pid);
+    var q = (typeof t === 'function' && t('kickbanConfirm') !== 'kickbanConfirm')
+      ? t('kickbanConfirm', { name: nm })
+      : ('Ban ' + nm + ' from the server (total kickban)?');
+    if (!window.confirm(q)) return;
+    try { send(MSG.buildAdminBanPlayer(pid)); } catch (e) {}
+  };
 
   // Contenu du popup pour un AUTRE joueur : rôle (🤖 Bot / Invité / Enregistré
   // / Admin), puis — s'il est attablé — ses jetons / mise / statut / position
@@ -3587,6 +3608,14 @@ const App = (() => {
     html += '<button type="button" class="pim-ignore-btn" onclick="window._toggleIgnore(' + pid + ')" '
           + 'style="display:block;width:100%;margin-top:10px;padding:8px 0;border:1px solid var(--border-hi,rgba(200,168,74,.4));border-radius:8px;cursor:pointer;background:transparent;color:var(--text,#eff1f5);font-weight:600">'
           + (_isIgnored(_ignNm) ? '🔔 ' + esc(tt('piUnignore', 'Unignore')) : '🔕 ' + esc(tt('piIgnore', 'Ignore'))) + '</button>';
+    // Kickban total — visible UNIQUEMENT si JE suis admin pokerth.net
+    // (playerRights=3), jamais sur soi ni sur un bot. Marteau (gavel), comme
+    // le PlayerListItem du client QML officiel.
+    if (!isBot(pid) && pid !== myId && (_playerRights[myId] || 0) === 3) {
+      html += '<button type="button" class="pim-kickban-btn" onclick="window._adminBanPlayer(' + pid + ')" '
+            + 'style="display:block;width:100%;margin-top:8px;padding:8px 0;border:1px solid var(--danger,#e05050);border-radius:8px;cursor:pointer;background:transparent;color:var(--danger,#e05050);font-weight:600">'
+            + '🔨 ' + esc(tt('piKickban', 'Total kickban')) + '</button>';
+    }
     return html;
   }
 
@@ -5265,6 +5294,23 @@ const App = (() => {
         // Legacy auth (SCRAM temporarily disabled): empty AuthClientResponse.
         setStatus(t('verifyingAccount'));
         send(MSG.buildAuthResponse());
+        break;
+      }
+
+      case T.AdminBanPlayerAck: {
+        // AdminBanPlayerAckMessage : banPlayerId=1, banPlayerResult=2
+        // (0 accepté · 1 en attente · 2 pas de BDD · 3 erreur BDD · 4 invalide)
+        var _kbPid = Proto.u32(sub, 1);
+        var _kbRes = Proto.u32(sub, 2);
+        var _kbNm = getPlayerName(_kbPid) || ('#' + _kbPid);
+        if (_kbRes === 0 || _kbRes === 1) {
+          showToast((typeof t === 'function' && t('kickbanOk') !== 'kickbanOk')
+            ? t('kickbanOk', { name: _kbNm }) : ('Kickban: ' + _kbNm));
+        } else {
+          showToast(((typeof t === 'function' && t('kickbanFail') !== 'kickbanFail')
+            ? t('kickbanFail') : 'Kickban failed') + ' (' + _kbRes + ')',
+            { tone: 'error', icon: '\u2715' });
+        }
         break;
       }
 
@@ -12714,7 +12760,7 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.3.154-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.155-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
