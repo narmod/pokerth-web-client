@@ -1802,6 +1802,7 @@ if ('serviceWorker' in navigator) {
   var RK_SERVER = ['pth'];                        // server-paginated + server-side search
   var RK_PAGE = 1;                                // current page (server sources)
   var rkSearchTimer = null;
+  var rkFetchSeq = 0;                             // discards out-of-order /api/ranking responses
   var RK_CACHE = {};                              // src|season -> { at, state, rows, cols, season, seasons }
   var RK_TTL = 30000;
   var RK_SRC = 'pth';
@@ -1820,7 +1821,7 @@ if ('serviceWorker' in navigator) {
       var e = $('rk-' + s); if (e) e.style.display = (s === which) ? '' : 'none';
     });
     var tw = $('rk-table-wrap'); if (tw) tw.style.display = (which === 'table') ? '' : 'none';
-    var sw = $('rk-search-wrap'); if (sw) sw.style.display = (which === 'table' || which === 'nomatch') ? '' : 'none';
+    var sw = $('rk-search-wrap'); if (sw) sw.style.display = (which === 'table' || which === 'nomatch' || which === 'loading') ? '' : 'none';
   }
 
   function rkBuildTable(rows, cols) {
@@ -1854,14 +1855,16 @@ if ('serviceWorker' in navigator) {
     rkState('table');
   }
   window.rankingFilter = function () {
+    if (rkSearchTimer) clearTimeout(rkSearchTimer);
     if (RK_SERVER.indexOf(RK_SRC) >= 0) {
-      if (rkSearchTimer) clearTimeout(rkSearchTimer);
       rkSearchTimer = setTimeout(function () {
         var sel = $('rk-season');
-        rkFetch(RK_SRC, sel ? sel.value : 'current', 1);
+        rkFetch(RK_SRC, sel ? sel.value : 'current', 1, true);
       }, 400);
     } else {
-      rkRenderCurrent();
+      // BBC/WEC (filtre client) : coalescer les frappes — reconstruire tout le
+      // tableau (innerHTML) à chaque touche fige le thread principal sur mobile.
+      rkSearchTimer = setTimeout(rkRenderCurrent, 120);
     }
   };
 
@@ -1889,7 +1892,7 @@ if ('serviceWorker' in navigator) {
     var np = Math.min(pc, Math.max(1, (RK_PAGE || 1) + delta));
     if (np === RK_PAGE) return;
     var sel = $('rk-season');
-    rkFetch(RK_SRC, sel ? sel.value : 'current', np);
+    rkFetch(RK_SRC, sel ? sel.value : 'current', np, true);
   };
 
   // Season dropdown (newest first); rebuilt only when the season list changes.
@@ -1956,7 +1959,10 @@ if ('serviceWorker' in navigator) {
   }
 
   // Fetch a source, optionally for a season (0 = All-Time on BBC).
-  function rkFetch(src, season, page) {
+  // keep=true (recherche / pagination) : garder le tableau affiche pendant le
+  // fetch au lieu de basculer sur 'loading' — sinon rkState() masque le champ
+  // de recherche, l'input perd le focus et le clavier iOS se referme.
+  function rkFetch(src, season, page, keep) {
     var server = RK_SERVER.indexOf(src) >= 0;
     var url = '/api/ranking?src=' + encodeURIComponent(src);
     if (season != null && season !== '') url += '&season=' + encodeURIComponent(season);
@@ -1968,20 +1974,24 @@ if ('serviceWorker' in navigator) {
       RK_PAGE = page;
       url += '&page=' + page;
     }
+    var seq = ++rkFetchSeq;                       // invalide toute requete en vol plus ancienne
     var ck = src + '|' + (season != null ? season : '') + '|' + q + '|' + (server ? page : '');
     var c = RK_CACHE[ck];
     if (c && (Date.now() - c.at) < RK_TTL) { rkShow({ state: c.state, rows: c.rows, cols: c.cols, seasons: c.seasons, season: c.season, total: c.total, page: c.page, pageSize: c.pageSize }); return; }
-    RK_CUR = { state: 'loading', rows: [], cols: [], seasons: null, season: null }; rkState('loading');
+    if (!keep || (RK_CUR.state !== 'table' && RK_CUR.state !== 'nomatch')) {
+      RK_CUR = { state: 'loading', rows: [], cols: [], seasons: null, season: null }; rkState('loading');
+    }
     fetch(url, { headers: { 'Accept': 'application/json' } })
       .then(function (r) { return r.text(); })
       .then(function (t) {
+        if (seq !== rkFetchSeq) return;           // reponse perimee (frappe plus recente)
         var d; try { d = JSON.parse(t); } catch (e) { d = null; }
         var o = rkOutcome(d);
         if (server && o.state === 'empty' && q) o.state = 'nomatch';
         RK_CACHE[ck] = { at: Date.now(), state: o.state, rows: o.rows, cols: o.cols, seasons: o.seasons, season: o.season, total: o.total, page: o.page, pageSize: o.pageSize };
         rkShow(o);
       })
-      .catch(function () { rkShow({ state: 'error', rows: [], cols: [], seasons: null, season: null }); });
+      .catch(function () { if (seq === rkFetchSeq) rkShow({ state: 'error', rows: [], cols: [], seasons: null, season: null }); });
   }
 
   // ── Player profile (click a name in the ranking) ─────────────────────────
