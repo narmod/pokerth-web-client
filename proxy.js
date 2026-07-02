@@ -1299,7 +1299,7 @@ function handleAdmin(req, res, reqPathOnly, query) {
     if (!hasScope('packages', query)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
     var _pl = pkgList(), _td = pkgDisabledSet('table'), _dd = pkgDisabledSet('deck'), _hd = pkgDisabledSet('theme'), _sd = pkgDisabledSet('seat'), _tf = pkgFullSet('table'), _tfs = pkgFullscreenSet('table');
     return adminJson(res, 200, { ok: true,
-      tables: (_pl.tables || []).map(function (t) { var _fs = _tfs.indexOf(t.id) >= 0; var _fu = !_fs && (_tf.indexOf(t.id) >= 0 || !!t.full); return Object.assign({}, t, { disabled: _td.indexOf(t.id) >= 0, full: _fu, fullscreen: _fs, mode: _fs ? 'fullscreen' : (_fu ? 'full' : 'frame') }); }),
+      tables: (_pl.tables || []).map(function (t) { var _fs = _tfs.indexOf(t.id) >= 0 || (_tf.indexOf(t.id) < 0 && !!t.fullscreen); var _fu = !_fs && (_tf.indexOf(t.id) >= 0 || !!t.full); return Object.assign({}, t, { disabled: _td.indexOf(t.id) >= 0, full: _fu, fullscreen: _fs, mode: _fs ? 'fullscreen' : (_fu ? 'full' : 'frame') }); }),
       decks:  (_pl.decks  || []).map(function (d) { return Object.assign({}, d, { disabled: _dd.indexOf(d.id) >= 0 }); }),
       seats:  (_pl.seats  || []).map(function (s) { return Object.assign({}, s, { disabled: _sd.indexOf(s.id) >= 0 }); }),
       themes: (_pl.themes || []).map(function (t) { return Object.assign({}, t, { disabled: _hd.indexOf(t.id) >= 0 }); }) });
@@ -2405,7 +2405,7 @@ const httpServer = http.createServer((req, res) => {
     if (!Array.isArray(_list)) _list = [];
     var _dis = pkgDisabledSet(_pkgKind);
     if (_dis.length) _list = _list.filter(function (x) { return x && _dis.indexOf(x.id) < 0; });
-    if (_pkgKind === 'table') { var _full = pkgFullSet('table'), _fscr = pkgFullscreenSet('table'); if (_full.length || _fscr.length) _list = _list.map(function (x) { if (!x) return x; if (_fscr.indexOf(x.id) >= 0) return Object.assign({}, x, { fullscreen: true, full: false, mode: 'fullscreen' }); if (_full.indexOf(x.id) >= 0) return Object.assign({}, x, { full: true, mode: 'full' }); return x; }); }
+    if (_pkgKind === 'table') { var _full = pkgFullSet('table'), _fscr = pkgFullscreenSet('table'); if (_full.length || _fscr.length) _list = _list.map(function (x) { if (!x) return x; if (_fscr.indexOf(x.id) >= 0) return Object.assign({}, x, { fullscreen: true, full: false, mode: 'fullscreen' }); if (_full.indexOf(x.id) >= 0) return Object.assign({}, x, { full: true, fullscreen: false, mode: 'full' }); return x; }); }
     res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' });
     res.end(JSON.stringify(_list));
     return;
