@@ -458,6 +458,10 @@ function openAdvancedOptions() {
   sync('adv-nohideignored', 'no_hide_ignored', false);
   sync('adv-fkeysalt', 'fkeys_alt', false);
   sync('adv-zoomfollow', 'zoom_follow', false);
+  sync('adv-snd-actions', 'snd_actions', true);
+  sync('adv-snd-lobby', 'snd_lobby', true);
+  sync('adv-snd-net', 'snd_net', true);
+  sync('adv-snd-blinds', 'snd_blinds', true);
   try { var _sl = document.getElementById('adv-seatlayout'); if (_sl) { var _slv = localStorage.getItem('pth_seat_layout'); _sl.value = (_slv === 'pokerth-official' || _slv === 'pokerth-ellipse' || _slv === 'custom') ? _slv : 'auto'; } } catch (e) {}
   try { _rebindAction = null; _renderKeyButtons(); } catch (e) {}
   try { advSelectCat('ui'); } catch (e) {}
@@ -538,7 +542,8 @@ function resetAdvDefaults() {
     anim_cards: true, show_blinds: true, hide_pbar: true, show_community: true,
     focus_bet: false, chat_noemoji: false, fade_losers: true, show_flag: true,
     own_click: false, guard_call: false, odds_monitor: false, no_hide_ignored: false,
-    fkeys_alt: false, zoom_follow: false
+    fkeys_alt: false, zoom_follow: false,
+    snd_actions: true, snd_lobby: true, snd_net: true, snd_blinds: true
   };
   try { for (var k in defs) setAdvOpt(k, defs[k]); } catch (e) {}
   try { setSeatLayout('official'); } catch (e) {}
@@ -5764,6 +5769,11 @@ const App = (() => {
             // Pas d'affichage dans le chat — animation seule
           }
         } else if (!(pid === myId && ctype !== 3)) {
+          // Son de notification du chat LOBBY (lobbychatnotify.wav) —
+          // messages d'autrui uniquement (chatTypeLobby = 0)
+          if (ctype === 0 && pid && pid !== myId) {
+            try { if (typeof notifyLobbyChat === 'function') notifyLobbyChat(); } catch (_e) {}
+          }
           // Mon propre message : déjà affiché en optimiste à l'envoi (classe 'mine').
           // Le serveur le rediffuse à tous, expéditeur compris → on ignore l'écho
           // pour ne pas afficher la ligne en double (broadcast ctype===3 conservé).
@@ -6045,6 +6055,10 @@ const App = (() => {
         }
         const name = players[pid] || '#'+pid;
         addChat(null, name + ' ' + t('joinedGame'), 'sys', { prefix: name + ' ', key: 'joinedGame' });
+        // Son « joueur connecté » (playerconnected.wav) — parties réseau seulement
+        if (pid !== myId && !window._offlineMode) {
+          try { if (typeof notifyPlayerConnected === 'function') notifyPlayerConnected(); } catch (_e) {}
+        }
         // Ask the server for this player's name if we don't have it yet,
         // so the waiting panel can display a real pseudo rather than '#42'.
         if (!players[pid]) {
@@ -6112,6 +6126,10 @@ const App = (() => {
         const evGameId = Proto.u32(sub, 1);
         send(MSG.buildStartEventAck(evGameId));
         addChat(null, t('gameStarting'), 'sys', { key: 'gameStarting' });
+        // Son « partie prête » (onlinegameready.wav) — parties réseau seulement
+        if (!window._offlineMode) {
+          try { if (typeof notifyGameReady === 'function') notifyGameReady(); } catch (_e) {}
+        }
         _eliminatedLogged.clear();
         break;
       }
@@ -12760,7 +12778,7 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.3.155-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.156-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

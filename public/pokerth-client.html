@@ -1757,6 +1757,13 @@ if ('serviceWorker' in navigator) {
             <div class="adv-link-desc" data-i18n="advSoundDesc">Game sound, music volume and reaction mute.</div>
             <button type="button" class="adv-link-btn" id="adv-sound-btn" onclick="toggleSoundPopover(this)"><span data-i18n="advSoundOpen">Sound &amp; volume settings</span></button>
           </div>
+          <div class="adv-body">
+          <div class="adv-sec" data-i18n="advSecSndCats">Sound categories</div>
+          <label class="adv-row"><input type="checkbox" id="adv-snd-actions" onchange="setAdvOpt('snd_actions',this.checked)"><span data-i18n="advSndActions">Game action sounds (Check, Call, Raise…)</span></label>
+          <label class="adv-row"><input type="checkbox" id="adv-snd-lobby" onchange="setAdvOpt('snd_lobby',this.checked)"><span data-i18n="advSndLobby">Lobby chat notification</span></label>
+          <label class="adv-row"><input type="checkbox" id="adv-snd-net" onchange="setAdvOpt('snd_net',this.checked)"><span data-i18n="advSndNet">Network game notifications (player joined, game ready)</span></label>
+          <label class="adv-row"><input type="checkbox" id="adv-snd-blinds" onchange="setAdvOpt('snd_blinds',this.checked)"><span data-i18n="advSndBlinds">Blind raise notification</span></label>
+          </div>
         </section>
         <section class="adv-panel" data-cat="local" id="adv-panel-local" role="tabpanel" aria-labelledby="adv-cat-local">
           <div class="adv-link">

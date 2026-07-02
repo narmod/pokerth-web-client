@@ -51,6 +51,17 @@ function getSoundVolume() {
 function setSoundVolume(v) {
   v = parseFloat(v); if (isNaN(v)) v = 1; v = Math.max(0, Math.min(1, v));
   try { localStorage.setItem('pth_sound_vol', String(v)); } catch(e) {}
+}
+
+// ─── Catégories de sons (parité réglages Sound du client QML, bible §14) ──
+// 4 interrupteurs indépendants, ACTIFS par défaut (valeur absente = on) :
+//   pth_snd_actions — actions de jeu (fold…all-in, deal, yourturn)
+//   pth_snd_blinds  — hausse des blinds (level 1/2/3)
+//   pth_snd_lobby   — notification du chat lobby
+//   pth_snd_net     — partie réseau (joueur connecté, partie prête)
+// Écrits par setAdvOpt('snd_*') dans Options avancées → Son.
+function sndCat(key) {
+  try { return localStorage.getItem('pth_snd_' + key) !== '0'; } catch(e) { return true; }
   if (_master) try { _master.gain.value = v; } catch(e) {}
   return v;
 }
@@ -134,7 +145,8 @@ const SOUND_DIR = '/sounds/pokerth/';
 const SAMPLE_FILES = {
   fold: 'fold', check: 'check', call: 'call', bet: 'bet',
   raise: 'raise', allin: 'allin', deal: 'dealtwocards', turn: 'yourturn',
-  blinds1: 'blinds_raises_level1', blinds2: 'blinds_raises_level2', blinds3: 'blinds_raises_level3'
+  blinds1: 'blinds_raises_level1', blinds2: 'blinds_raises_level2', blinds3: 'blinds_raises_level3',
+  playerconnected: 'playerconnected', gameready: 'onlinegameready', lobbychat: 'lobbychatnotify'
 };
 var _rawBytes = {};     // nom logique -> ArrayBuffer brut (conserve pour re-decodage)
 var _buffers = {};      // nom logique -> AudioBuffer decode
@@ -185,6 +197,7 @@ function _playSample(name) {
 // 1 Fold - 2 Check - 3 Call - 4 Bet - 5 Raise - 6 All-In. Chaque cas joue le
 // sample PokerTH dedie (repli sur le bip synthetise via les notify* existants).
 function playActionSound(action) {
+  if (!sndCat('actions')) return;
   switch (action) {
     case 1: notifyFold(); break;
     case 2: notifyAction('check'); break;
@@ -197,6 +210,7 @@ function playActionSound(action) {
 }
 function notifyCard() {
   // Bruit de carte distribuée : bref clic
+  if (!sndCat('actions')) return;
   if (_playSample('deal')) return;
   playTone(1200, 0.04, 0.12);
 }
@@ -249,7 +263,7 @@ function notifyMyTurn() {
   // glides from 440Hz to 880Hz in 80ms. That upward chirp is the
   // hallmark of a bubble. A short exponential decay on gain provides
   // the natural "plop" envelope.
-  if (!_soundEnabled) return;
+  if (!_soundEnabled || !sndCat('actions')) return;
   if (!_playSample('turn')) {
   var ctx = getAudioCtx(); if (!ctx) return;
   try {
@@ -314,12 +328,33 @@ function notifyChat() {
   playTone(880, 0.07, 0.1);
   _buzz([25]);
 }
+// ─── Notifications réseau & lobby (samples officiels PokerTH) ─────────────
+// playerconnected.wav : un joueur rejoint la table en attente.
+function notifyPlayerConnected() {
+  if (!_soundEnabled || !sndCat('net')) return;
+  if (_playSample('playerconnected')) return;
+  playTone(660, 0.07, 0.12);
+  setTimeout(function(){ playTone(880, 0.09, 0.12); }, 80);
+}
+// onlinegameready.wav : la partie réseau est prête à démarrer (StartEvent).
+function notifyGameReady() {
+  if (!_soundEnabled || !sndCat('net')) return;
+  if (_playSample('gameready')) return;
+  [523, 659, 784].forEach(function(f, i){ setTimeout(function(){ playTone(f, 0.10, 0.16); }, i * 90); });
+}
+// lobbychatnotify.wav : message reçu dans le chat du lobby.
+function notifyLobbyChat() {
+  if (!_soundEnabled || !sndCat('lobby')) return;
+  if (_playSample('lobbychat')) return;
+  playTone(880, 0.07, 0.10);
+}
 // Remet l'escalade de blinds a zero (appele au demarrage d'une partie).
 function resetBlindRaises() { _blindRaiseCount = 0; }
 function notifyBlindsUp() {
   // Montée des blinds : trois notes ascendantes "level up", brèves et
   // brillantes, distinctes du notifyRaise (qui n'en a que deux).
   _blindRaiseCount++;
+  if (!sndCat('blinds')) return;   // catégorie coupée : escalade comptée, son muet
   // Escalade fidele a l'upstream PokerTH : level1 aux hausses 1-2, level2 aux
   // 3-4, level3 a partir de la 5e.
   var lvl = _blindRaiseCount <= 2 ? 'blinds1' : (_blindRaiseCount <= 4 ? 'blinds2' : 'blinds3');
@@ -518,6 +553,7 @@ export {
   getAudioCtx, playTone, playActionSound, resetBlindRaises,
   notifyCard, notifyAction, notifyFold, notifyRaise, notifyAllIn,
   notifyMyTurn, notifyWinner, notifyBigWin, notifyChat, notifyBlindsUp,
+  notifyPlayerConnected, notifyGameReady, notifyLobbyChat,
   notifyTick, notifyTickFinal,
   toggleSound, isSoundEnabled,
 };
@@ -536,6 +572,9 @@ window.notifyWinner  = notifyWinner;
 window.notifyBigWin  = notifyBigWin;
 window.notifyChat    = notifyChat;
 window.notifyBlindsUp = notifyBlindsUp;
+window.notifyPlayerConnected = notifyPlayerConnected;
+window.notifyGameReady = notifyGameReady;
+window.notifyLobbyChat = notifyLobbyChat;
 window.resetBlindRaises = resetBlindRaises;
 window.notifyTick      = notifyTick;
 window.notifyTickFinal = notifyTickFinal;
@@ -566,6 +605,7 @@ window.SOUNDS = {
   getAudioCtx, playTone, playActionSound, resetBlindRaises,
   notifyCard, notifyAction, notifyFold, notifyRaise, notifyAllIn,
   notifyMyTurn, notifyWinner, notifyBigWin, notifyChat, notifyBlindsUp,
+  notifyPlayerConnected, notifyGameReady, notifyLobbyChat,
   notifyTick, notifyTickFinal,
   toggleSound, isSoundEnabled,
 };
