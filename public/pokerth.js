@@ -456,6 +456,7 @@ function openAdvancedOptions() {
   sync('adv-voice', 'voice', false);
   sync('adv-displaybb', 'display_bb', false);
   sync('adv-nohideignored', 'no_hide_ignored', false);
+  sync('adv-fkeysalt', 'fkeys_alt', false);
   try { var _sl = document.getElementById('adv-seatlayout'); if (_sl) { var _slv = localStorage.getItem('pth_seat_layout'); _sl.value = (_slv === 'pokerth-official' || _slv === 'pokerth-ellipse' || _slv === 'custom') ? _slv : 'auto'; } } catch (e) {}
   try { _rebindAction = null; _renderKeyButtons(); } catch (e) {}
   try { advSelectCat('ui'); } catch (e) {}
@@ -535,7 +536,8 @@ function resetAdvDefaults() {
   var defs = {
     anim_cards: true, show_blinds: true, hide_pbar: true, show_community: true,
     focus_bet: false, chat_noemoji: false, fade_losers: true, show_flag: true,
-    own_click: false, guard_call: false, odds_monitor: false, no_hide_ignored: false
+    own_click: false, guard_call: false, odds_monitor: false, no_hide_ignored: false,
+    fkeys_alt: false
   };
   try { for (var k in defs) setAdvOpt(k, defs[k]); } catch (e) {}
   try { setSeatLayout('official'); } catch (e) {}
@@ -694,13 +696,49 @@ document.addEventListener('keydown', function(e) {
   // amInGame / turnPid / myId etaient hors de portee de ce handler : il est au niveau
   // module, alors que ces let vivent dans l'IIFE App -> elles ne s'evaluaient jamais
   // et le handler sortait toujours.)
+  // ── Mapping officiel PokerTH (QML 28/06, bible §6) — actif sur tout l'écran de jeu ──
+  // F6/F7/F8 = Manuel / Auto Check-Fold / Auto Check-Call ; Alt+M/K/F = modes
+  // Manuel / Auto Check-Call / Auto Check-Fold ; Alt+C chat, Alt+L journal,
+  // Alt+I moniteur d'odds (équivalent du panneau « Chancen »). F11 = plein
+  // écran natif du navigateur (non intercepté). Fonctionne HORS tour, comme
+  // les ApplicationShortcut du QML.
+  var _sg = document.getElementById('s-game');
+  if (_sg && _sg.classList.contains('active') && !e.ctrlKey && !e.metaKey) {
+    if (e.altKey) {
+      var ak = (e.key || '').toLowerCase();
+      var _mode = ak === 'm' ? 0 : ak === 'k' ? 1 : ak === 'f' ? 2 : -1;
+      if (_mode >= 0) { e.preventDefault(); try { if (window.App && App.setPlayingMode) App.setPlayingMode(_mode); } catch (_e) {} return; }
+      if (ak === 'c') { e.preventDefault(); try { toggleGameChat(); } catch (_e) {} return; }
+      if (ak === 'l') { e.preventDefault(); try { toggleLog(); } catch (_e) {} return; }
+      if (ak === 'i') {
+        e.preventDefault();
+        try {
+          var _on = !_advGet('odds_monitor', false);
+          setAdvOpt('odds_monitor', _on);
+          var _cb = document.getElementById('adv-odds'); if (_cb) _cb.checked = _on;
+        } catch (_e) {}
+        return;
+      }
+    } else if (e.key === 'F6' || e.key === 'F7' || e.key === 'F8') {
+      e.preventDefault();
+      try { if (window.App && App.setPlayingMode) App.setPlayingMode(e.key === 'F6' ? 0 : e.key === 'F7' ? 2 : 1); } catch (_e) {}
+      return;
+    }
+  }
   var _ap = document.querySelector('#g-actions > .action-grid');
   if (!_ap) return;
 
   var key = e.key.toLowerCase();
   var KB = _keyBindings();
   var act = null;
-  if (key === KB.fold) act = 'fold';
+  // F1–F4 : ordre officiel Fold · Check/Call · Bet/Raise · All-In, inversé si
+  // « pth_fkeys_alt » (équivalent AlternateFKeysUserActionMode du client Qt).
+  var _fAlt = _advGet('fkeys_alt', false);
+  if (e.key === 'F1') act = _fAlt ? 'allin' : 'fold';
+  else if (e.key === 'F2') act = _fAlt ? 'raise' : 'call';
+  else if (e.key === 'F3') act = _fAlt ? 'call' : 'raise';
+  else if (e.key === 'F4') act = _fAlt ? 'fold' : 'allin';
+  else if (key === KB.fold) act = 'fold';
   else if (key === KB.call || key === ' ') act = 'call'; // Espace = alias Call (fixe)
   else if (key === KB.raise) act = 'raise';
   else if (key === KB.allin) act = 'allin';
@@ -12539,7 +12577,7 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.3.149-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.150-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

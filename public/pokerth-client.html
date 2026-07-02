@@ -1737,6 +1737,8 @@ if ('serviceWorker' in navigator) {
         <div class="adv-keyrow" data-act="bet1"><span>Bet 1/3</span><button type="button" class="kb-btn" onclick="rebindKey('bet1')">1</button></div>
         <div class="adv-keyrow" data-act="bet2"><span>Bet 1/2</span><button type="button" class="kb-btn" onclick="rebindKey('bet2')">2</button></div>
         <div class="adv-keyrow" data-act="bet3"><span>Bet Pot</span><button type="button" class="kb-btn" onclick="rebindKey('bet3')">3</button></div>
+        <label class="adv-row"><input type="checkbox" id="adv-fkeysalt" onchange="setAdvOpt('fkeys_alt',this.checked)"><span data-i18n="advFkeysAlt">Reverse F1–F4 order (F1 = All-In)</span></label>
+        <div class="adv-keyhint"><span data-i18n="kbHintF">Official PokerTH keys also work: F1–F4 = Fold · Check/Call · Bet/Raise · All-In, F6/F7/F8 = Manual / Auto Check-Fold / Auto Check-Call, Alt+M/K/F = modes, Alt+C chat, Alt+L log, Alt+I odds.</span></div>
         <div class="adv-keyhint"><span data-i18n="kbHint">Tap a key, then press the new key. Space = Call, Enter = confirm raise.</span><button type="button" class="kb-reset" onclick="resetKeys()" data-i18n="kbReset">Reset</button></div>
       </div>
     </div>
