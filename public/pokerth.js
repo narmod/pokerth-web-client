@@ -2230,7 +2230,7 @@ document.addEventListener("DOMContentLoaded", function() {
     function _applyDefaultTheme(presetId) {
       if (!presetId) return;
       try {
-        var keys = ['pth_theme', 'pth_table', 'pth_deck', 'pth_buttons', 'pth_pucks', 'pth_seat'];
+        var keys = ['pth_theme', 'pth_table', 'pth_deck', 'pth_buttons', 'pth_pucks', 'pth_seat', 'pth_cardback', 'pth_cardback_img', 'pth_cardback_ext'];
         for (var i = 0; i < keys.length; i++) { if (localStorage.getItem(keys[i]) !== null) return; }
       } catch (e) { return; }
       var tries = 0;
@@ -7114,6 +7114,18 @@ const App = (() => {
     return '/cards/' + d + '/' + n + '.' + ext;
   }
   function _deckBack() {
+    // Axe « Dos de carte » indépendant (theme.mjs) : 'custom' = image importée
+    // (dataURL), '<deckId>' = flipside de ce deck ; '' = assorti au deck courant.
+    try {
+      var _ov = localStorage.getItem('pth_cardback') || '';
+      if (_ov === 'custom') {
+        var _im = localStorage.getItem('pth_cardback_img');
+        if (_im) return _im;
+      } else if (_ov) {
+        var _oe = localStorage.getItem('pth_cardback_ext') || 'png';
+        return '/cards/' + _ov + '/flipside.' + _oe + '?v=' + (window.BUILD_VERSION || '0');
+      }
+    } catch (e) {}
     var d = document.documentElement.getAttribute('data-deck') || '';
     if (!d) return '';
     var ext = document.documentElement.getAttribute('data-deck-ext') || 'png';
@@ -12778,7 +12790,7 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.3.156-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.157-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

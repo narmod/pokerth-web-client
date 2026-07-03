@@ -253,6 +253,88 @@ deck.apply = function (id) {
 };
 deck.set = deck.apply;
 
+// ── Axe « Dos de carte » — indépendant du deck (parité 3 axes QML, bible §13).
+// pth_cardback : '' = assorti au deck (historique) · '<deckId>' = flipside de
+// ce deck · 'custom' = image importée (dataURL compacte dans pth_cardback_img).
+// pth_cardback_ext mémorise l'extension du deck choisi pour le boot <head>
+// zéro-flash. L'application réelle passe par window._refreshDeck (pokerth.js),
+// dont _deckBack() consulte ces clés en priorité.
+function cardbackGet() { try { return localStorage.getItem('pth_cardback') || ''; } catch (e) { return ''; } }
+function cardbackApply(id, ext) {
+  try {
+    if (id) localStorage.setItem('pth_cardback', id); else localStorage.removeItem('pth_cardback');
+    if (id && id !== 'custom') localStorage.setItem('pth_cardback_ext', ext || _deckExt(id));
+    else localStorage.removeItem('pth_cardback_ext');
+  } catch (e) {}
+  try { if (window._refreshDeck) window._refreshDeck(); } catch (e) {}
+}
+// Import d'une image de dos : redimensionnée en canvas « cover » au ratio
+// carte 5:7 (240×336), encodée WebP (repli JPEG) pour rester compacte dans
+// localStorage (< ~250 Ko), puis appliquée immédiatement.
+function _cardbackImport(file) {
+  var img = new Image();
+  var url = URL.createObjectURL(file);
+  img.onload = function () {
+    try {
+      var W = 240, H = 336, cv = document.createElement('canvas');
+      cv.width = W; cv.height = H;
+      var cx = cv.getContext('2d');
+      var s = Math.max(W / img.width, H / img.height);
+      var dw = img.width * s, dh = img.height * s;
+      cx.drawImage(img, (W - dw) / 2, (H - dh) / 2, dw, dh);
+      var data = cv.toDataURL('image/webp', 0.85);
+      if (data.indexOf('data:image/webp') !== 0) data = cv.toDataURL('image/jpeg', 0.85);
+      if (data.length > 250000) data = cv.toDataURL('image/jpeg', 0.7);
+      localStorage.setItem('pth_cardback_img', data);
+      cardbackApply('custom');
+    } catch (e) {}
+    try { URL.revokeObjectURL(url); } catch (e) {}
+    if (_body) _render();
+  };
+  img.onerror = function () { try { URL.revokeObjectURL(url); } catch (e) {} };
+  img.src = url;
+}
+function _cardbackPickFile() {
+  var inp = document.createElement('input');
+  inp.type = 'file'; inp.accept = 'image/*';
+  inp.onchange = function () { var f = inp.files && inp.files[0]; if (f) _cardbackImport(f); };
+  inp.click();
+}
+// Options : Assorti au deck · dos de chaque deck connu (intégrés + galerie) ·
+// image importée (si présente) · « Importer une image… » (action).
+function _cardbackOptions() {
+  var bust = '?v=' + (window.BUILD_VERSION || '0');
+  var cd = deck.get();
+  var opts = [{ id: '', key: 'cardbackAuto', fallback: 'Match the deck',
+                backUrl: cd ? ('/cards/' + cd + '/flipside.' + _deckExt(cd) + bust) : null }];
+  DECKS.concat(_galleryDecks).forEach(function (d) {
+    opts.push({ id: d.id, name: (d.name || _t(d.key, d.fallback)), ext: d.ext || 'png',
+                backUrl: '/cards/' + d.id + '/flipside.' + (d.ext || 'png') + bust });
+  });
+  try {
+    if (localStorage.getItem('pth_cardback_img'))
+      opts.push({ id: 'custom', key: 'cardbackCustom', fallback: 'Imported image',
+                  backUrl: localStorage.getItem('pth_cardback_img') });
+  } catch (e) {}
+  opts.push({ id: '__import', key: 'cardbackImport', fallback: 'Import an image…' });
+  return opts;
+}
+function _cardbackBlock() {
+  var cur = cardbackGet();
+  var opts = _cardbackOptions();
+  var curItem = opts[0];
+  for (var i = 0; i < opts.length; i++) if (opts[i].id === cur) curItem = opts[i];
+  var curName = curItem.name || _t(curItem.key, curItem.fallback);
+  var options = opts.map(function (it) {
+    return { item: it, name: (it.name || _t(it.key, it.fallback)), active: it.id === cur,
+      onClick: function () {
+        if (it.id === '__import') { _cardbackPickFile(); return; }
+        cardbackApply(it.id, it.ext); _openSec = null; _render();
+      } };
+  });
+  return _dropdownBlock('pth_cardback', _t('sectionCardback', 'Card back'), 'cardback', curItem, curName, options);
+}
+
 // Gallery table styles imported at runtime from /table/tables.json (managed by
 // install.sh table-add). Each carries a felt image + matching dealer/SB/BB pucks,
 // and is offered in BOTH the Table panel (felt + pucks) and the Pucks panel.
@@ -580,6 +662,13 @@ function _previewHTML(kind, item, big) {
     var cards = (item && item.id) ? _pngFan(item.id, big) : _classicFan(big);
     return '<span style="' + box + ';background:linear-gradient(160deg,#1c5a28,#0c3214)">' + cards + '</span>';
   }
+  if (kind === 'cardback') {
+    if (item && item.id === '__import')
+      return '<span style="' + box + ';display:flex;align-items:center;justify-content:center;background:#14331a;color:#c8a84a;font-weight:800;font-size:' + (big ? '1.5rem' : '0.85rem') + '">+</span>';
+    var bu = item && item.backUrl;
+    if (bu) return '<span style="' + box + ';background:linear-gradient(160deg,#1c5a28,#0c3214)"><img src="' + bu + '" alt="" style="position:absolute;top:50%;left:50%;height:' + (big ? 80 : 76) + '%;width:auto;aspect-ratio:5/7;object-fit:cover;border-radius:3px;transform:translate(-50%,-50%);box-shadow:0 1px 3px rgba(0,0,0,.5)"></span>';
+    return '<span style="' + box + ';background:linear-gradient(160deg,#1c5a28,#0c3214)">' + _miniBack(big, 'top:50%;left:50%;transform:translate(-50%,-50%);') + '</span>';
+  }
   if (kind === 'pucks') {
     if (item && item.preview) return '<span style="' + box + ';background:#0b1a0d;display:flex;align-items:center;justify-content:center"><img src="' + item.preview + '" alt="" style="width:90%;height:90%;object-fit:contain;display:block"></span>';
     var ds = big ? 22 : 13;
@@ -745,6 +834,8 @@ function _render() {
       };
     });
     _body.appendChild(_dropdownBlock(secId, _t(ax.titleKey, ax.titleFallback), kind, curItem, curName, options));
+    // Axe « Dos de carte » : juste sous l'axe Cartes (parité 3 axes QML)
+    if (ax === deck) _body.appendChild(_cardbackBlock());
   });
 
   // After (re)building the body, keep an expanded section in view.
