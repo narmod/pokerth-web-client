@@ -9,6 +9,7 @@ export const meta = {
 };
 
 export const strings = {
+  piKickban: 'Повний кікбан', kickbanConfirm: 'Забанити {name} на сервері (повний кікбан)?', kickbanOk: '{name} отримав кікбан', kickbanFail: 'Кікбан не вдався', advSecSndCats: 'Категорії звуків', advSndActions: 'Звуки ігрових дій (Check, Call, Raise…)', advSndLobby: 'Сповіщення чату лобі', advSndNet: 'Сповіщення мережевої гри (гравець приєднався, гра готова)', advSndBlinds: 'Сповіщення про підвищення блайндів', sectionCardback: 'Сорочка карт', cardbackAuto: 'Відповідно до колоди', cardbackCustom: 'Імпортоване зображення', cardbackImport: 'Імпортувати зображення…',
   advFkeysAlt: 'Зворотний порядок F1–F4 (F1 = All-In)',
   kbHintF: 'Працюють і офіційні клавіші PokerTH: F1–F4 = Fold · Check/Call · Bet/Raise · All-In, F6/F7/F8 = Вручну / Auto Check-Fold / Auto Check-Call, Alt+M/K/F = режими, Alt+C чат, Alt+L журнал, Alt+I шанси.',
   advZoomFollow: 'Зум слідкує за активним місцем (загальний вигляд під час showdown)',

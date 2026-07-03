@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+  piKickban: 'Totale kickban', kickbanConfirm: 'Verban {name} van die bediener (totale kickban)?', kickbanOk: '{name} is gekickban', kickbanFail: 'Kickban het misluk', advSecSndCats: 'Klankkategorieë', advSndActions: 'Klanke van spelaksies (Check, Call, Raise…)', advSndLobby: 'Kennisgewing van portaalklets', advSndNet: 'Netwerkspel-kennisgewings (speler aangesluit, spel gereed)', advSndBlinds: 'Kennisgewing van blindes-verhoging', sectionCardback: 'Kaartrug', cardbackAuto: 'Pas by die kaartstel', cardbackCustom: 'Ingevoerde beeld', cardbackImport: 'Voer \'n beeld in…',
   advFkeysAlt: 'Keer F1–F4-volgorde om (F1 = All-In)',
   kbHintF: 'Amptelike PokerTH-sleutels werk ook: F1–F4 = Fold · Check/Call · Bet/Raise · All-In, F6/F7/F8 = Handmatig / Auto Check-Fold / Auto Check-Call, Alt+M/K/F = modusse, Alt+C klets, Alt+L logboek, Alt+I kanse.',
   advZoomFollow: 'Zoem volg die aktiewe sitplek (oorsig by die showdown)',

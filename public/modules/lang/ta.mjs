@@ -11,6 +11,7 @@ export const meta = {
 };
 
 export const strings = {
+  piKickban: 'முழு கிக்பேன்', kickbanConfirm: '{name}-ஐ சேவையகத்திலிருந்து தடை செய்யவா (முழு கிக்பேன்)?', kickbanOk: '{name} கிக்பேன் செய்யப்பட்டார்', kickbanFail: 'கிக்பேன் தோல்வியடைந்தது', advSecSndCats: 'ஒலி வகைகள்', advSndActions: 'விளையாட்டு செயல்களின் ஒலிகள் (Check, Call, Raise…)', advSndLobby: 'லாபி அரட்டை அறிவிப்பு', advSndNet: 'நெட்வொர்க் விளையாட்டு அறிவிப்புகள் (வீரர் இணைந்தார், விளையாட்டு தயார்)', advSndBlinds: 'blinds உயர்வு அறிவிப்பு', sectionCardback: 'சீட்டுகளின் பின்புறம்', cardbackAuto: 'டெக்கிற்கு ஏற்ப', cardbackCustom: 'இறக்குமதி செய்யப்பட்ட படம்', cardbackImport: 'படத்தை இறக்குமதி செய்…',
   advFkeysAlt: 'F1–F4 வரிசையை மாற்றவும் (F1 = All-In)',
   kbHintF: 'PokerTH அதிகாரப்பூர்வ விசைகளும் செயல்படும்: F1–F4 = Fold · Check/Call · Bet/Raise · All-In, F6/F7/F8 = கைமுறை / Auto Check-Fold / Auto Check-Call, Alt+M/K/F = முறைகள், Alt+C அரட்டை, Alt+L பதிவு, Alt+I வாய்ப்புகள்.',
   advZoomFollow: 'ஜூம் செயலில் உள்ள இருக்கையைப் பின்தொடரும் (showdown-இல் முழு காட்சி)',

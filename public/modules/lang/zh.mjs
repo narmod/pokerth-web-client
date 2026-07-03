@@ -11,6 +11,7 @@ export const meta = {
 };
 
 export const strings = {
+  piKickban: '完全踢除封禁', kickbanConfirm: '要将 {name} 从服务器封禁吗（完全踢除封禁）？', kickbanOk: '{name} 已被踢除封禁', kickbanFail: '踢除封禁失败', advSecSndCats: '音效类别', advSndActions: '游戏动作音效（Check、Call、Raise…）', advSndLobby: '大厅聊天通知音', advSndNet: '网络对局通知音（玩家加入、对局就绪）', advSndBlinds: '盲注上调通知音', sectionCardback: '牌背', cardbackAuto: '与牌组一致', cardbackCustom: '导入的图片', cardbackImport: '导入图片…',
   advFkeysAlt: '反转 F1–F4 顺序（F1 = All-In）',
   kbHintF: 'PokerTH 官方按键也可使用：F1–F4 = Fold · Check/Call · Bet/Raise · All-In，F6/F7/F8 = 手动 / Auto Check-Fold / Auto Check-Call，Alt+M/K/F = 模式，Alt+C 聊天，Alt+L 日志，Alt+I 胜率。',
   advZoomFollow: '缩放跟随行动中的座位（showdown 时显示全局）',

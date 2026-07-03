@@ -16,6 +16,7 @@ export const meta = {
 };
 
 export const strings = {
+  piKickban: 'Pełny kickban', kickbanConfirm: 'Zbanować gracza {name} na serwerze (pełny kickban)?', kickbanOk: '{name} otrzymał kickbana', kickbanFail: 'Kickban się nie powiódł', advSecSndCats: 'Kategorie dźwięków', advSndActions: 'Dźwięki akcji w grze (Check, Call, Raise…)', advSndLobby: 'Powiadomienie czatu lobby', advSndNet: 'Powiadomienia gry sieciowej (gracz dołączył, gra gotowa)', advSndBlinds: 'Powiadomienie o podbiciu blindów', sectionCardback: 'Rewers kart', cardbackAuto: 'Dopasowany do talii', cardbackCustom: 'Zaimportowany obraz', cardbackImport: 'Importuj obraz…',
   advFkeysAlt: 'Odwróć kolejność F1–F4 (F1 = All-In)',
   kbHintF: 'Działają też oficjalne klawisze PokerTH: F1–F4 = Fold · Check/Call · Bet/Raise · All-In, F6/F7/F8 = Ręcznie / Auto Check-Fold / Auto Check-Call, Alt+M/K/F = tryby, Alt+C czat, Alt+L dziennik, Alt+I szanse.',
   advZoomFollow: 'Zoom podąża za aktywnym miejscem (widok ogólny przy showdownie)',

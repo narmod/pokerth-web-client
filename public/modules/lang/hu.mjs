@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+  piKickban: 'Teljes kickban', kickbanConfirm: 'Kitiltod {name} játékost a szerverről (teljes kickban)?', kickbanOk: '{name} kickbant kapott', kickbanFail: 'A kickban nem sikerült', advSecSndCats: 'Hangkategóriák', advSndActions: 'Játékműveletek hangjai (Check, Call, Raise…)', advSndLobby: 'Lobbi-csevegés értesítés', advSndNet: 'Hálózati játék értesítései (játékos csatlakozott, játék kész)', advSndBlinds: 'Értesítés a blindok emeléséről', sectionCardback: 'Kártyahátlap', cardbackAuto: 'A paklihoz illő', cardbackCustom: 'Importált kép', cardbackImport: 'Kép importálása…',
   advFkeysAlt: 'F1–F4 sorrend megfordítása (F1 = All-In)',
   kbHintF: 'A hivatalos PokerTH billentyűk is működnek: F1–F4 = Fold · Check/Call · Bet/Raise · All-In, F6/F7/F8 = Kézi / Auto Check-Fold / Auto Check-Call, Alt+M/K/F = módok, Alt+C csevegés, Alt+L napló, Alt+I esélyek.',
   advZoomFollow: 'A zoom követi az aktív helyet (áttekintés a showdownnál)',

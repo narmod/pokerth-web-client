@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+  piKickban: 'Úplný kickban', kickbanConfirm: 'Zabanovať hráča {name} na serveri (úplný kickban)?', kickbanOk: '{name} dostal kickban', kickbanFail: 'Kickban zlyhal', advSecSndCats: 'Kategórie zvukov', advSndActions: 'Zvuky herných akcií (Check, Call, Raise…)', advSndLobby: 'Upozornenie na chat lobby', advSndNet: 'Upozornenia sieťovej hry (hráč sa pripojil, hra pripravená)', advSndBlinds: 'Upozornenie na zvýšenie blindov', sectionCardback: 'Rub kariet', cardbackAuto: 'Podľa balíčka', cardbackCustom: 'Importovaný obrázok', cardbackImport: 'Importovať obrázok…',
   advFkeysAlt: 'Obrátiť poradie F1–F4 (F1 = All-In)',
   kbHintF: 'Fungujú aj oficiálne klávesy PokerTH: F1–F4 = Fold · Check/Call · Bet/Raise · All-In, F6/F7/F8 = Ručne / Auto Check-Fold / Auto Check-Call, Alt+M/K/F = režimy, Alt+C chat, Alt+L denník, Alt+I šance.',
   advZoomFollow: 'Zoom sleduje aktívne miesto (prehľad pri showdowne)',

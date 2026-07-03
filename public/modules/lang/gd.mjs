@@ -11,6 +11,7 @@ export const meta = {
 };
 
 export const strings = {
+  piKickban: 'Kickban iomlan', kickbanConfirm: 'A bheil thu airson {name} a thoirmeasg on fhrithealaiche (kickban iomlan)?', kickbanOk: 'Fhuair {name} kickban', kickbanFail: 'Dh\'fhàillig an kickban', advSecSndCats: 'Roinnean fuaime', advSndActions: 'Fuaimean ghnìomhan a\' gheama (Check, Call, Raise…)', advSndLobby: 'Brath cabadaich an lobaidh', advSndNet: 'Brathan geama lìonraidh (chaidh cluicheadair a-steach, geama deiseil)', advSndBlinds: 'Brath àrdachadh nan blinds', sectionCardback: 'Cùl nan cairtean', cardbackAuto: 'A rèir na paca', cardbackCustom: 'Dealbh air ion-phortadh', cardbackImport: 'Ion-phortaich dealbh…',
   advFkeysAlt: 'Cuir òrdugh F1–F4 an comhair a chùil (F1 = All-In)',
   kbHintF: 'Obraichidh iuchraichean oifigeil PokerTH cuideachd: F1–F4 = Fold · Check/Call · Bet/Raise · All-In, F6/F7/F8 = Le làimh / Auto Check-Fold / Auto Check-Call, Alt+M/K/F = modhan, Alt+C cabadaich, Alt+L loga, Alt+I seansan.',
   advZoomFollow: 'Leanaidh an sùm an suidheachan gnìomhach (sealladh farsaing aig an showdown)',

@@ -9,6 +9,7 @@ export const meta = {
 };
 
 export const strings = {
+  piKickban: 'Täysi kickban', kickbanConfirm: 'Estetäänkö {name} palvelimelta (täysi kickban)?', kickbanOk: '{name} sai kickbanin', kickbanFail: 'Kickban epäonnistui', advSecSndCats: 'Ääniluokat', advSndActions: 'Peliäänet (Check, Call, Raise…)', advSndLobby: 'Aulachatin ilmoitus', advSndNet: 'Verkkopelin ilmoitukset (pelaaja liittyi, peli valmis)', advSndBlinds: 'Ilmoitus blindien korotuksesta', sectionCardback: 'Korttien selkäpuoli', cardbackAuto: 'Pakan mukainen', cardbackCustom: 'Tuotu kuva', cardbackImport: 'Tuo kuva…',
   advFkeysAlt: 'Käännä F1–F4-järjestys (F1 = All-In)',
   kbHintF: 'Myös viralliset PokerTH-näppäimet toimivat: F1–F4 = Fold · Check/Call · Bet/Raise · All-In, F6/F7/F8 = Manuaalinen / Auto Check-Fold / Auto Check-Call, Alt+M/K/F = tilat, Alt+C chat, Alt+L loki, Alt+I todennäköisyydet.',
   advZoomFollow: 'Zoomaus seuraa aktiivista paikkaa (yleiskuva showdownissa)',

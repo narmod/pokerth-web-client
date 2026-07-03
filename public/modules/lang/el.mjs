@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+  piKickban: 'Πλήρες kickban', kickbanConfirm: 'Αποκλεισμός του {name} από τον διακομιστή (πλήρες kickban);', kickbanOk: 'Ο {name} αποκλείστηκε (kickban)', kickbanFail: 'Το kickban απέτυχε', advSecSndCats: 'Κατηγορίες ήχων', advSndActions: 'Ήχοι ενεργειών παιχνιδιού (Check, Call, Raise…)', advSndLobby: 'Ειδοποίηση συνομιλίας λόμπι', advSndNet: 'Ειδοποιήσεις δικτυακού παιχνιδιού (παίκτης συνδέθηκε, παιχνίδι έτοιμο)', advSndBlinds: 'Ειδοποίηση αύξησης blinds', sectionCardback: 'Πλάτη καρτών', cardbackAuto: 'Σύμφωνα με την τράπουλα', cardbackCustom: 'Εισηγμένη εικόνα', cardbackImport: 'Εισαγωγή εικόνας…',
   advFkeysAlt: 'Αντιστροφή σειράς F1–F4 (F1 = All-In)',
   kbHintF: 'Λειτουργούν και τα επίσημα πλήκτρα του PokerTH: F1–F4 = Fold · Check/Call · Bet/Raise · All-In, F6/F7/F8 = Χειροκίνητο / Auto Check-Fold / Auto Check-Call, Alt+M/K/F = λειτουργίες, Alt+C συνομιλία, Alt+L ημερολόγιο, Alt+I πιθανότητες.',
   advZoomFollow: 'Το ζουμ ακολουθεί την ενεργή θέση (γενική εικόνα στο showdown)',

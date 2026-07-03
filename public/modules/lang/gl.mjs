@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+  piKickban: 'Kickban total', kickbanConfirm: 'Expulsar e vetar a {name} do servidor (kickban total)?', kickbanOk: '{name} recibiu un kickban', kickbanFail: 'O kickban fallou', advSecSndCats: 'Categorías de sons', advSndActions: 'Sons das accións de xogo (Check, Call, Raise…)', advSndLobby: 'Notificación do chat do lobby', advSndNet: 'Notificacións de partida en rede (xogador conectado, partida lista)', advSndBlinds: 'Notificación de suba de blinds', sectionCardback: 'Dorso das cartas', cardbackAuto: 'A xogo coa baralla', cardbackCustom: 'Imaxe importada', cardbackImport: 'Importar unha imaxe…',
   advFkeysAlt: 'Inverter a orde F1–F4 (F1 = All-In)',
   kbHintF: 'As teclas oficiais de PokerTH tamén funcionan: F1–F4 = Fold · Check/Call · Bet/Raise · All-In, F6/F7/F8 = Manual / Auto Check-Fold / Auto Check-Call, Alt+M/K/F = modos, Alt+C chat, Alt+L rexistro, Alt+I probabilidades.',
   advZoomFollow: 'O zoom segue o asento activo (vista xeral no showdown)',

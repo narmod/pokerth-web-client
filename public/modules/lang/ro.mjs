@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+  piKickban: 'Kickban total', kickbanConfirm: 'Interzici {name} pe server (kickban total)?', kickbanOk: '{name} a primit kickban', kickbanFail: 'Kickban eșuat', advSecSndCats: 'Categorii de sunete', advSndActions: 'Sunetele acțiunilor de joc (Check, Call, Raise…)', advSndLobby: 'Notificare chat lobby', advSndNet: 'Notificări joc în rețea (jucător conectat, joc pregătit)', advSndBlinds: 'Notificare la creșterea blindurilor', sectionCardback: 'Spatele cărților', cardbackAuto: 'Asortat cu pachetul', cardbackCustom: 'Imagine importată', cardbackImport: 'Importă o imagine…',
   advFkeysAlt: 'Inversează ordinea F1–F4 (F1 = All-In)',
   kbHintF: 'Funcționează și tastele oficiale PokerTH: F1–F4 = Fold · Check/Call · Bet/Raise · All-In, F6/F7/F8 = Manual / Auto Check-Fold / Auto Check-Call, Alt+M/K/F = moduri, Alt+C chat, Alt+L jurnal, Alt+I șanse.',
   advZoomFollow: 'Zoomul urmărește locul activ (vedere de ansamblu la showdown)',

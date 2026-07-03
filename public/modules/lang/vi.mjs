@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+  piKickban: 'Kickban toàn phần', kickbanConfirm: 'Cấm {name} khỏi máy chủ (kickban toàn phần)?', kickbanOk: '{name} đã bị kickban', kickbanFail: 'Kickban thất bại', advSecSndCats: 'Danh mục âm thanh', advSndActions: 'Âm thanh hành động trong ván (Check, Call, Raise…)', advSndLobby: 'Thông báo trò chuyện sảnh', advSndNet: 'Thông báo ván chơi mạng (người chơi tham gia, ván sẵn sàng)', advSndBlinds: 'Thông báo tăng blind', sectionCardback: 'Mặt sau lá bài', cardbackAuto: 'Đồng bộ với bộ bài', cardbackCustom: 'Hình ảnh đã nhập', cardbackImport: 'Nhập một hình ảnh…',
   advFkeysAlt: 'Đảo thứ tự F1–F4 (F1 = All-In)',
   kbHintF: 'Các phím chính thức của PokerTH cũng hoạt động: F1–F4 = Fold · Check/Call · Bet/Raise · All-In, F6/F7/F8 = Thủ công / Auto Check-Fold / Auto Check-Call, Alt+M/K/F = chế độ, Alt+C trò chuyện, Alt+L nhật ký, Alt+I tỉ lệ.',
   advZoomFollow: 'Thu phóng theo ghế đang hành động (toàn cảnh khi showdown)',
