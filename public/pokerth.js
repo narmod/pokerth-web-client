@@ -9009,6 +9009,16 @@ const App = (() => {
   }
 
   window._renderSeats = function() { if (seats.length) renderSeats(); };
+  // Pseudos pour la complétion Tab du chat (parité ChatBox QML, bible §11) :
+  // en jeu = les joueurs de la table ; au lobby = tous les joueurs connus.
+  window._chatNicks = function (gameScope) {
+    try {
+      if (gameScope && seats.length) {
+        return seats.map(function (p) { return players[p] || ''; }).filter(Boolean);
+      }
+      return Object.values(players || {}).filter(Boolean);
+    } catch (e) { return []; }
+  };
   // Repeindre la pastille "N joueur(s)" du header lobby dans la langue
   // courante. Posée imperativement à la réception des messages serveur
   // (PlayerList / Statistics), elle n'a pas de data-i18n et restait donc
@@ -10875,6 +10885,7 @@ function dismissWinner() {
       if (!text || !ws) return;
       input.value = '';
       _lastMsgWasReaction = false;
+      try { if (window._chatPushHist) window._chatPushHist(text); } catch (e) {}
       send(gId ? MSG.buildGameChat(gId, text) : MSG.buildChat(text));
       addGameChat(myName, text, 'mine');
     },
@@ -10883,6 +10894,7 @@ function dismissWinner() {
       const text  = input.value.trim();
       if (!text || !ws) return;
       input.value = '';
+      try { if (window._chatPushHist) window._chatPushHist(text); } catch (e) {}
       send(MSG.buildChat(text, 0));
       // Affichage optimiste
       addChat(myName, text, 'mine');
@@ -12544,11 +12556,17 @@ var CHAT_EMOJIS = ['😀','😃','😄','😁','😆','😅','😂','🤣','😊
 function _populateChatEmojis(panel, inputId) {
   if (!panel || panel._filled) return;
   panel._filled = true;
-  var h = '';
-  for (var i = 0; i < CHAT_EMOJIS.length; i++) {
-    var e = CHAT_EMOJIS[i];
-    h += '<button type="button" class="chat-emoji-btn" data-emo="' + e + '" title="' + e + '">' + e + '</button>';
+  function row(list) {
+    var s = '';
+    for (var i = 0; i < list.length; i++) {
+      var e = list[i];
+      s += '<button type="button" class="chat-emoji-btn" data-emo="' + e + '" title="' + e + '">' + e + '</button>';
+    }
+    return s;
   }
+  var tt = function (k, fb) { return (typeof t === 'function' && t(k) !== k) ? t(k) : fb; };
+  var h = '<div class="chat-emoji-sec">' + tt('emoFrequent', 'Frequent') + '</div>' + row(CHAT_EMOJIS)
+        + '<div class="chat-emoji-sec">' + tt('emoAll', 'All') + '</div>' + row(CHAT_EMOJIS_ALL);
   panel.innerHTML = h;
   panel.addEventListener('click', function(ev) {
     var b = (ev.target && ev.target.closest) ? ev.target.closest('.chat-emoji-btn') : null;
@@ -12578,8 +12596,97 @@ function toggleChatEmojiPicker(btn) {
   if (btn && btn.classList) btn.classList.toggle('active', open);
   if (open) { var inp = document.getElementById(inputId); if (inp) inp.focus(); }
 }
+// ── Chat : complétion Tab des pseudos + historique de saisie ↑/↓ ────────────
+// (parité ChatBox QML, bible §11). Historique partagé jeu+lobby, en mémoire
+// de session, plafonné. Toute frappe réinitialise l'itération Tab ET la
+// navigation d'historique, comme le QML.
+var _chatHist = [];
+var _CHAT_HIST_MAX = 50;
+window._chatPushHist = function (txt) {
+  if (!txt) return;
+  if (_chatHist[_chatHist.length - 1] === txt) return; // pas de doublon consécutif
+  _chatHist.push(txt);
+  if (_chatHist.length > _CHAT_HIST_MAX) _chatHist.shift();
+};
+function _attachChatKeys(id, gameScope) {
+  var inp = document.getElementById(id);
+  if (!inp || inp._keysAttached) return;
+  inp._keysAttached = true;
+  var tabMatches = null, tabIdx = 0, tabStart = 0, tabTail = '';
+  var histIdx = -1, draft = '';
+  function caretEnd() { try { inp.setSelectionRange(inp.value.length, inp.value.length); } catch (e) {} }
+  inp.addEventListener('keydown', function (e) {
+    // ── Tab : complète un pseudo, re-Tab itère sur les correspondances ──
+    if (e.key === 'Tab' && !e.shiftKey && !e.ctrlKey && !e.metaKey && !e.altKey) {
+      if (tabMatches && tabMatches.length) {
+        tabIdx = (tabIdx + 1) % tabMatches.length;
+      } else {
+        var pos = (inp.selectionStart != null) ? inp.selectionStart : inp.value.length;
+        var m = inp.value.slice(0, pos).match(/(\S+)$/);
+        if (!m) return;                       // rien à compléter → Tab normal
+        var prefix = m[1].toLowerCase();
+        var nicks = (window._chatNicks ? window._chatNicks(gameScope) : []) || [];
+        var seen = {};
+        var matches = nicks.filter(function (n) {
+          var k = n.toLowerCase();
+          if (seen[k] || k.indexOf(prefix) !== 0) return false;
+          seen[k] = 1; return true;
+        });
+        if (!matches.length) return;          // aucun pseudo → Tab normal
+        tabMatches = matches; tabIdx = 0;
+        tabStart = pos - m[1].length;
+        tabTail = inp.value.slice((inp.selectionEnd != null) ? inp.selectionEnd : pos);
+      }
+      e.preventDefault();
+      var nick = tabMatches[tabIdx];
+      var suffix = (tabStart === 0) ? ': ' : ' '; // en tête de message : « nick: »
+      inp.value = inp.value.slice(0, tabStart) + nick + suffix + tabTail;
+      var np = tabStart + nick.length + suffix.length;
+      try { inp.setSelectionRange(np, np); } catch (err) {}
+      return;
+    }
+    // ── ↑ / ↓ : historique des messages envoyés ──
+    if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+      if (!_chatHist.length) return;
+      e.preventDefault();
+      tabMatches = null;
+      if (e.key === 'ArrowUp') {
+        if (histIdx === -1) { draft = inp.value; histIdx = _chatHist.length - 1; }
+        else if (histIdx > 0) histIdx--;
+        inp.value = _chatHist[histIdx]; caretEnd();
+      } else {
+        if (histIdx === -1) return;
+        histIdx++;
+        if (histIdx >= _chatHist.length) { histIdx = -1; inp.value = draft; }
+        else inp.value = _chatHist[histIdx];
+        caretEnd();
+      }
+      return;
+    }
+    // Toute autre frappe réinitialise Tab et la navigation d'historique
+    tabMatches = null;
+    histIdx = -1;
+  });
+}
+(function () {
+  function _initChatKeys() {
+    _attachChatKeys('chat-in', false);
+    _attachChatKeys('g-chat-in', true);
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', _initChatKeys);
+  else _initChatKeys();
+})();
+
 window.toggleChatEmojiPicker = toggleChatEmojiPicker;
 window.insertChatEmoji = insertChatEmoji;
+
+// ── Picker emoji COMPLET (parité EmojiPicker QML, bible §11) ────────────────
+// ~1070 émojis générés par plages Unicode stables (≤ 12.0 pour un rendu
+// natif fiable iOS/Android/desktop — pas de police embarquée, contrairement
+// au NotoColorEmoji du QML). Affichés en 2 sections : « Fréquents »
+// (CHAT_EMOJIS, la liste historique) puis « Tous ».
+var CHAT_EMOJIS_ALL = ["😀","😁","😂","😃","😄","😅","😆","😇","😈","😉","😊","😋","😌","😍","😎","😏","😐","😑","😒","😓","😔","😕","😖","😗","😘","😙","😚","😛","😜","😝","😞","😟","😠","😡","😢","😣","😤","😥","😦","😧","😨","😩","😪","😫","😬","😭","😮","😯","😰","😱","😲","😳","😴","😵","😶","😷","😸","😹","😺","😻","😼","😽","😾","😿","🙀","🙁","🙂","🙃","🙄","🙅","🙆","🙇","🙈","🙉","🙊","🙋","🙌","🙍","🙎","🙏","🤏","🤐","🤑","🤒","🤓","🤔","🤕","🤖","🤗","🤘","🤙","🤚","🤛","🤜","🤝","🤞","🤟","🤠","🤡","🤢","🤣","🤤","🤥","🤦","🤧","🤨","🤩","🤪","🤫","🤬","🤭","🤮","🤯","🤰","🤱","🤲","🤳","🤴","🤵","🤶","🤷","🤸","🤹","🤺","🤼","🤽","🤾","🤿","🥀","🥁","🥂","🥃","🥄","🥅","🥇","🥈","🥉","🥊","🥋","🥌","🥍","🥎","🥏","🥐","🥑","🥒","🥓","🥔","🥕","🥖","🥗","🥘","🥙","🥚","🥛","🥜","🥝","🥞","🥟","🥠","🥡","🥢","🥣","🥤","🥥","🥦","🥧","🥨","🥩","🥪","🥫","🥬","🥭","🥮","🥯","🥰","🥱","🥳","🥴","🥵","🥶","🥺","🥻","🥼","🥽","🥾","🥿","🦀","🦁","🦂","🦃","🦄","🦅","🦆","🦇","🦈","🦉","🦊","🦋","🦌","🦍","🦎","🦏","🦐","🦑","🦒","🦓","🦔","🦕","🦖","🦗","🦘","🦙","🦚","🦛","🦜","🦝","🦞","🦟","🦠","🦡","🦢","🦣","🦤","🦥","🦦","🦧","🦨","🦩","🦪","🦫","🦬","🦭","🦮","🦯","🦰","🦱","🦲","🦳","🦴","🦵","🦶","🦷","🦸","🦹","🦺","🦻","🦼","🦽","🦾","🦿","🧀","🧁","🧂","🧃","🧄","🧅","🧆","🧇","🧈","🧉","🧊","🧍","🧎","🧏","🧐","🧑","🧒","🧓","🧔","🧕","🧖","🧗","🧘","🧙","🧚","🧛","🧜","🧝","🧞","🧟","🧠","🧡","🧢","🧣","🧤","🧥","🧦","🧧","🧨","🧩","🧪","🧫","🧬","🧭","🧮","🧯","🧰","🧱","🧲","🧳","🧴","🧵","🧶","🧷","🧸","🧹","🧺","🧻","🧼","🧽","🧾","🧿","🌀","🌁","🌂","🌃","🌄","🌅","🌆","🌇","🌈","🌉","🌊","🌋","🌌","🌍","🌎","🌏","🌐","🌑","🌒","🌓","🌔","🌕","🌖","🌗","🌘","🌙","🌚","🌛","🌜","🌝","🌞","🌟","🌠","🌡","🌢","🌣","🌤","🌥","🌦","🌧","🌨","🌩","🌪","🌫","🌬","🌭","🌮","🌯","🌰","🌱","🌲","🌳","🌴","🌵","🌶","🌷","🌸","🌹","🌺","🌻","🌼","🌽","🌾","🌿","🍀","🍁","🍂","🍃","🍄","🍅","🍆","🍇","🍈","🍉","🍊","🍋","🍌","🍍","🍎","🍏","🍐","🍑","🍒","🍓","🍔","🍕","🍖","🍗","🍘","🍙","🍚","🍛","🍜","🍝","🍞","🍟","🍠","🍡","🍢","🍣","🍤","🍥","🍦","🍧","🍨","🍩","🍪","🍫","🍬","🍭","🍮","🍯","🍰","🍱","🍲","🍳","🍴","🍵","🍶","🍷","🍸","🍹","🍺","🍻","🍼","🍽","🍾","🍿","🎀","🎁","🎂","🎃","🎄","🎅","🎆","🎇","🎈","🎉","🎊","🎋","🎌","🎍","🎎","🎏","🎐","🎑","🎒","🎓","🎔","🎕","🎖","🎗","🎘","🎙","🎚","🎛","🎜","🎝","🎞","🎟","🎠","🎡","🎢","🎣","🎤","🎥","🎦","🎧","🎨","🎩","🎪","🎫","🎬","🎭","🎮","🎯","🎰","🎱","🎲","🎳","🎴","🎵","🎶","🎷","🎸","🎹","🎺","🎻","🎼","🎽","🎾","🎿","🏀","🏁","🏂","🏃","🏄","🏅","🏆","🏇","🏈","🏉","🏊","🏋","🏌","🏍","🏎","🏏","🏐","🏑","🏒","🏓","🏔","🏕","🏖","🏗","🏘","🏙","🏚","🏛","🏜","🏝","🏞","🏟","🏠","🏡","🏢","🏣","🏤","🏥","🏦","🏧","🏨","🏩","🏪","🏫","🏬","🏭","🏮","🏯","🏰","🏱","🏲","🏳","🏴","🏵","🏶","🏷","🏸","🏹","🏺","🐀","🐁","🐂","🐃","🐄","🐅","🐆","🐇","🐈","🐉","🐊","🐋","🐌","🐍","🐎","🐏","🐐","🐑","🐒","🐓","🐔","🐕","🐖","🐗","🐘","🐙","🐚","🐛","🐜","🐝","🐞","🐟","🐠","🐡","🐢","🐣","🐤","🐥","🐦","🐧","🐨","🐩","🐪","🐫","🐬","🐭","🐮","🐯","🐰","🐱","🐲","🐳","🐴","🐵","🐶","🐷","🐸","🐹","🐺","🐻","🐼","🐽","🐾","🐿","👀","👁","👂","👃","👄","👅","👆","👇","👈","👉","👊","👋","👌","👍","👎","👏","👐","👑","👒","👓","👔","👕","👖","👗","👘","👙","👚","👛","👜","👝","👞","👟","👠","👡","👢","👣","👤","👥","👦","👧","👨","👩","👪","👫","👬","👭","👮","👯","👰","👱","👲","👳","👴","👵","👶","👷","👸","👹","👺","👻","👼","👽","👾","👿","💀","💁","💂","💃","💄","💅","💆","💇","💈","💉","💊","💋","💌","💍","💎","💏","💐","💑","💒","💓","💔","💕","💖","💗","💘","💙","💚","💛","💜","💝","💞","💟","💠","💡","💢","💣","💤","💥","💦","💧","💨","💩","💪","💫","💬","💭","💮","💯","💰","💱","💲","💳","💴","💵","💶","💷","💸","💹","💺","💻","💼","💽","💾","💿","📀","📁","📂","📃","📄","📅","📆","📇","📈","📉","📊","📋","📌","📍","📎","📏","📐","📑","📒","📓","📔","📕","📖","📗","📘","📙","📚","📛","📜","📝","📞","📟","📠","📡","📢","📣","📤","📥","📦","📧","📨","📩","📪","📫","📬","📭","📮","📯","📰","📱","📲","📳","📴","📵","📶","📷","📸","📹","📺","📻","📼","📽","📾","📿","🔀","🔁","🔂","🔃","🔄","🔅","🔆","🔇","🔈","🔉","🔊","🔋","🔌","🔍","🔎","🔏","🔐","🔑","🔒","🔓","🔔","🔕","🔖","🔗","🔘","🔙","🔚","🔛","🔜","🔝","🔞","🔟","🔠","🔡","🔢","🔣","🔤","🔥","🔦","🔧","🔨","🔩","🔪","🔫","🔬","🔭","🔮","🔯","🔰","🔱","🔲","🔳","🔴","🔵","🔶","🔷","🔸","🔹","🔺","🔻","🔼","🔽","🕐","🕑","🕒","🕓","🕔","🕕","🕖","🕗","🕘","🕙","🕚","🕛","🕜","🕝","🕞","🕟","🕠","🕡","🕢","🕣","🕤","🕥","🕦","🕧","🕺","🖕","🖖","🖤","🗻","🗼","🗽","🗾","🗿","🚀","🚁","🚂","🚃","🚄","🚅","🚆","🚇","🚈","🚉","🚊","🚋","🚌","🚍","🚎","🚏","🚐","🚑","🚒","🚓","🚔","🚕","🚖","🚗","🚘","🚙","🚚","🚛","🚜","🚝","🚞","🚟","🚠","🚡","🚢","🚣","🚤","🚥","🚦","🚧","🚨","🚩","🚪","🚫","🚬","🚭","🚮","🚯","🚰","🚱","🚲","🚳","🚴","🚵","🚶","🚷","🚸","🚹","🚺","🚻","🚼","🚽","🚾","🚿","🛀","🛁","🛂","🛃","🛄","🛅","🛋","🛌","🛍","🛎","🛏","🛐","🛑","🛒","🛴","🛵","🛶","🛷","🛸","🛹","🛺","☀️","☁️","☂️","☃️","☄️","☎️","☔️","☕️","☘️","☠️","☢️","☣️","☦️","☪️","☮️","☯️","☸️","☹️","☺️","♈️","♉️","♊️","♋️","♌️","♍️","♎️","♏️","♐️","♑️","♒️","♓️","♠️","♣️","♥️","♦️","♨️","♻️","⚠️","⚡️","⚪","⚫","⚽","⚾","⛄","⛅","⛎","⛔","⛪","⛲","⛳","⛴","⛵","⛺","⛽","✂️","✈️","✉️","✊","✋","✨","✳️","✴️","❄️","❇️","❌","❗","❤️","⭐"];
+
 
 function toggleGameChat() {
   var panel = document.getElementById('g-chat-panel');
@@ -12843,7 +12950,7 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.3.163-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.164-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

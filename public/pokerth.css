@@ -6610,3 +6610,14 @@ html.reduce-fx *, html.reduce-fx *::before, html.reduce-fx *::after {
   line-height: 1.05;
   white-space: nowrap;
 }
+
+/* ── Picker emoji complet : panneau plus haut + titres de sections ── */
+.chat-emoji-panel { max-height: 180px; }
+.chat-emoji-sec {
+  grid-column: 1 / -1;
+  font-size: 0.62rem;
+  color: var(--text-dim, #8b93a7);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  padding: 4px 2px 1px;
+}
