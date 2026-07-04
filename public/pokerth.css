@@ -6621,3 +6621,15 @@ html.reduce-fx *, html.reduce-fx *::before, html.reduce-fx *::after {
   letter-spacing: 0.1em;
   padding: 4px 2px 1px;
 }
+
+/* ── Indicateur de ping sur mon avatar (opt-in, coin de la player bar) ── */
+.player-bar-left { position: relative; }
+.ping-dot {
+  position: absolute;
+  left: 1px; top: 1px;
+  width: 9px; height: 9px;
+  border-radius: 50%;
+  border: 1.5px solid var(--panel, #1c2230);
+  z-index: 3;
+  pointer-events: none;
+}

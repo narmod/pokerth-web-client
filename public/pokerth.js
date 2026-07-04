@@ -98,6 +98,37 @@ function animatePlayerEliminated(pid) {
 }
 
 // Pot énorme
+// ── Indicateur de ping sur mon avatar (parité ShowPingStateInAvatar, bible
+// §15) — OPT-IN. Mesure le RTT vers l'origine (fetch no-store de /__ver,
+// l'endpoint mtime du proxy) toutes les 15 s, uniquement en jeu, onglet
+// visible et partie réseau : le tick est un no-op quasi gratuit sinon
+// (économie batterie iOS). Vert < 120 ms · jaune < 300 ms · rouge au-delà ·
+// gris si la mesure échoue.
+function _pingColor(ms) { return ms < 120 ? '#50c878' : ms < 300 ? '#FFC107' : '#e05050'; }
+function _pingDotHide() { var d = document.getElementById('g-ping-dot'); if (d) d.style.display = 'none'; }
+function _pingTick() {
+  try {
+    if (!_advGet('ping_avatar', false) || document.hidden || window._offlineMode) { _pingDotHide(); return; }
+    var sg = document.getElementById('s-game');
+    if (!sg || !sg.classList.contains('active')) { _pingDotHide(); return; }
+    var t0 = performance.now();
+    fetch('/__ver?ping=' + Date.now(), { cache: 'no-store' }).then(function () {
+      var ms = Math.round(performance.now() - t0);
+      var d = document.getElementById('g-ping-dot');
+      if (!d) return;
+      d.style.display = '';
+      d.style.background = _pingColor(ms);
+      d.title = ms + ' ms';
+    }).catch(function () {
+      var d = document.getElementById('g-ping-dot');
+      if (d) { d.style.display = ''; d.style.background = '#8b93a7'; d.title = '\u2014'; }
+    });
+  } catch (e) {}
+}
+window._pingTick = _pingTick;
+setInterval(_pingTick, 15000);
+setTimeout(_pingTick, 3000);
+
 function updatePotSize(potVal) {
   var maxStack = 3000; // valeur par défaut
   if (window.seats && window.seats.length > 0) {
@@ -464,6 +495,8 @@ function openAdvancedOptions() {
   sync('adv-snd-blinds', 'snd_blinds', true);
   sync('adv-reducefx', 'reduce_fx', false);
   sync('adv-statusbar', 'status_bar', true);
+  sync('adv-pingavatar', 'ping_avatar', false);
+  sync('adv-autoleave', 'auto_leave', false);
   // Barre d'état de jeu (pot-strip : H#/G#, pot+bets, phase) masquable
   try {
     var _ps = document.getElementById('pot-strip');
@@ -554,7 +587,7 @@ function resetAdvDefaults() {
     own_click: false, guard_call: false, odds_monitor: false, no_hide_ignored: false,
     fkeys_alt: false, zoom_follow: false,
     snd_actions: true, snd_lobby: true, snd_net: true, snd_blinds: true,
-    reduce_fx: false, status_bar: true
+    reduce_fx: false, status_bar: true, ping_avatar: false, auto_leave: false
   };
   try { for (var k in defs) setAdvOpt(k, defs[k]); } catch (e) {}
   try { setSeatLayout('official'); } catch (e) {}
@@ -6929,6 +6962,16 @@ const App = (() => {
         stopTurnTimer();
         dismissWinner();
         showEndGameOverlay(winnerPid, { eliminated: _egElim, place: _egPlace });
+        // Retour automatique au lobby (parité NetAutoLeaveGameAfterFinish,
+        // bible §15) — OPT-IN, parties réseau seulement. 12 s pour laisser
+        // lire l'écran de fin ; annulé si l'utilisateur quitte avant
+        // (leaveGame purge le timer).
+        if (_advGet('auto_leave', false) && !window._offlineMode) {
+          try { clearTimeout(window._autoLeaveTimer); } catch (_e) {}
+          window._autoLeaveTimer = setTimeout(function () {
+            try { if (amInGame && window.App && App.leaveGame) App.leaveGame(); } catch (_e) {}
+          }, 12000);
+        }
         break;
       }
     }
@@ -10829,6 +10872,9 @@ function dismissWinner() {
     },
 
     leaveGame() {
+      // Annuler tout auto-retour programmé + masquer le dot de ping
+      try { clearTimeout(window._autoLeaveTimer); } catch (e) {}
+      try { _pingDotHide(); } catch (e) {}
       // Offline (vs bots) returns to the lobby just like online: the fake
       // server closes the current game (GameListUpdate=closed) on leave, so the
       // lobby ends up clean and the user can create another table.
@@ -12950,7 +12996,7 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.3.164-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.165-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
