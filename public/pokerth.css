@@ -5678,26 +5678,48 @@ html[data-seat="bar"] .seat-timer-badge { display: none; }
    theme PokerTH (claire en PokerTH Light, sombre ailleurs). Cartes injectees
    dans .seat-plate par renderSeats si pack actif : dos adversaires, faces moi. */
 html[data-seat="pokerth"] .seat { max-width: none !important; }
+/* GamePlayerBox.qml : dégradé lighter(panel,~18%)→panel (QML : #434c5e→#1d222b),
+   radius 6, bordure blanche 6 %, ombre 0 3px (opacité .42), opacity .9.
+   color-mix garde la fidélité QML en PokerTH Dark ET suit les autres thèmes. */
 html[data-seat="pokerth"] .seat-plate {
   display: grid; grid-template-columns: auto auto;
   align-items: center; justify-content: center;
-  column-gap: 5px; row-gap: 3px; position: relative;
-  padding: 5px 8px 6px; border-radius: 9px;
-  background: var(--panel, rgba(0,0,0,0.55));
-  border: 1px solid var(--border);
-  box-shadow: 0 3px 12px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.05);
+  column-gap: 4px; row-gap: 3px; position: relative;
+  padding: 4px 4px 5px; border-radius: 6px;
+  background: linear-gradient(to bottom, color-mix(in srgb, var(--panel, #1d222b), #ffffff 13%), var(--panel, #1d222b));
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.42);
+  opacity: 0.9;
+  transition: transform 0.18s ease-out;
 }
-html[data-seat="pokerth"] .seat-avatar { grid-column: 1; grid-row: 1; }
-html[data-seat="pokerth"] .seat-holecards { grid-column: 2; grid-row: 1; display: flex; gap: 2px; flex: none; }
+html[data-seat="pokerth"] .seat-avatar { grid-column: 1; grid-row: 1; border-radius: 8px; }
+html[data-seat="pokerth"] .seat-holecards { grid-column: 2; grid-row: 1; display: flex; gap: 4px; flex: none; }
+/* Wide (par défaut) : nom à GAUCHE ligne 1, tapis accent à DROITE ligne 2
+   (infoBar 2 lignes du QML : nom 15px DemiBold #eff1f5 ls .3 / $stack bold). */
 html[data-seat="pokerth"] .seat-info {
   grid-column: 1 / -1; grid-row: 2;
-  display: flex; flex-direction: column; align-items: center; gap: 0;
+  display: flex; flex-direction: column; gap: 0;
+  align-items: stretch; min-width: 0;
 }
-html[data-seat="pokerth"] .seat-name { max-width: 120px; }
+html[data-seat="pokerth"] .seat-name {
+  max-width: 120px; text-align: left;
+  font-weight: 600; letter-spacing: 0.3px;
+}
+html[data-seat="pokerth"] .seat-money { text-align: right; font-weight: 700; }
+/* Non-wide (hauteur scalée < 76 ou portrait) : « nom · tapis » sur UNE ligne. */
+html[data-seat="pokerth"] .seat-narrow .seat-info { flex-direction: row; align-items: baseline; justify-content: space-between; gap: 6px; }
+html[data-seat="pokerth"] .seat-narrow .seat-name { max-width: 76px; font-size: 0.62rem; }
+html[data-seat="pokerth"] .seat-narrow .seat-money { font-size: 0.64rem; }
+/* Joueur au tour : boîte « soulevée » scale 1.04 (playerBox.scale QML) + glow or. */
 html[data-seat="pokerth"] .seat.active .seat-plate {
+  transform: scale(1.04);
   border-color: var(--gold);
   box-shadow: 0 0 0 1px var(--gold), 0 0 16px rgba(var(--gold-rgb), 0.45);
+  opacity: 1;
 }
+/* Couché : 0.72 ; éliminé : la base gère déjà l'estompe (transition QML 250ms). */
+html[data-seat="pokerth"] .seat { transition: opacity 0.25s ease-out; }
+html[data-seat="pokerth"] .seat.folded { opacity: 0.72; }
 html[data-seat="pokerth"] .seat-timer-badge { display: none; }
 
 /* Portrait : boite plus compacte. */

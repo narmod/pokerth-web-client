@@ -8614,9 +8614,14 @@ const App = (() => {
       // the minimal-visibility .seat-ghost class instead of .seat-out.
       // The two are mutually exclusive (gone implies active=false), but
       // we still gate the seat-out class on !isGone to be explicit.
+      // Parité GamePlayerBox QML : wideLayout = hauteur SCALÉE >= 76
+      // (84·s < 76 <=> s < 0.905) -> texte 1 ligne « nom · $tapis » ; le
+      // portrait (oppBaseHeight 71) est TOUJOURS non-wide dans le QML.
+      var _seatNarrow = _pkHole && (_seatPortrait || (84 * _seatBoxScale) < 76);
       const cls = ['seat', isMe?'me':'', isDealer?'dealer':'', isActive?'active':'',
                    sd.folded && !isGone ? 'folded' : '',
                    isOut && !isGone ? 'seat-out' : '',
+                   _seatNarrow ? 'seat-narrow' : '',
                    isGone ? 'seat-ghost' : ''].filter(Boolean).join(' ');
       var _ignHide = !isMe && _isIgnored(getPlayerName(pid)) && !_advGet('no_hide_ignored', false);
       const initial    = _ignHide ? ((getPlayerName(pid) || '?').charAt(0).toUpperCase() || '?') : getPlayerInitial(pid);
@@ -13206,7 +13211,7 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.3.173-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.174-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
