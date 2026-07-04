@@ -6648,3 +6648,26 @@ html.reduce-fx *, html.reduce-fx *::before, html.reduce-fx *::after {
 
 /* ── Compteur « joueurs restants » dans la pot-strip (👥n après G#/H#) ── */
 #g-hand .strip-remain { opacity: 0.85; font-weight: 600; white-space: nowrap; }
+
+/* ── Bouton « Show » post-main : flotte AU-DESSUS de mes cartes (player bar),
+   pastille or, visible seulement pendant la fenêtre d'attente. ── */
+.pb-cards { position: relative; }
+.show-cards-btn {
+  position: absolute;
+  left: 50%;
+  top: -26px;
+  transform: translateX(-50%);
+  z-index: 6;
+  padding: 3px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--gold, #c8a84a);
+  background: var(--panel, #1c2230);
+  color: var(--gold, #c8a84a);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  white-space: nowrap;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.45);
+}
+.show-cards-btn:hover { background: var(--gold, #c8a84a); color: #1c2230; }

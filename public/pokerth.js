@@ -769,6 +769,15 @@ document.addEventListener('keydown', function(e) {
         } catch (_e) {}
         return;
       }
+    } else if (e.key === 'F5') {
+      // F5 officiel = « Show » — intercepté SEULEMENT quand le bouton est
+      // visible (fenêtre post-main) ; sinon F5 garde son rôle navigateur.
+      var _sb5 = document.getElementById('g-show-btn');
+      if (_sb5 && _sb5.style.display !== 'none') {
+        e.preventDefault();
+        try { if (window.App && App.showMyCards) App.showMyCards(); } catch (_e) {}
+      }
+      return;
     } else if (e.key === 'F6' || e.key === 'F7' || e.key === 'F8') {
       e.preventDefault();
       try { if (window.App && App.setPlayingMode) App.setPlayingMode(e.key === 'F6' ? 0 : e.key === 'F7' ? 2 : 1); } catch (_e) {}
@@ -2736,6 +2745,7 @@ const MSG = (() => {
     45:46, 46:47, 47:48,                       // DealFlop, DealTurn, DealRiver
     48:49,                                     // AllInShowCards
     49:50, 50:51, 53:54,                       // EndOfHandShow, EndOfHandHide, EndOfGame
+    51:52, 52:53,                              // ShowMyCardsRequest + AfterHandShowCards
     62:63, 63:64, 64:65, 65:66,               // Statistics, Chat*
     67:68, 68:69,                              // TimeoutWarning, ResetTimeout
     73:74,                                     // Error
@@ -2764,6 +2774,7 @@ const MSG = (() => {
     YourActionRejected:43,
     PlayersActionDone:44, DealFlop:45, DealTurn:46, DealRiver:47,
     AllInShowCards:48, EndOfHandShow:49, EndOfHandHide:50, EndOfGame:53,
+    ShowMyCardsRequest:51, AfterHandShowCards:52,
     Statistics:62, ChatRequest:63, Chat:64, ChatReject:65,
     TimeoutWarning:67, ResetTimeout:68, Error:73,
     AdminBanPlayer:76, AdminBanPlayerAck:77,
@@ -3063,6 +3074,14 @@ const MSG = (() => {
     return Proto.encode([[1,0,30],[31,2,msg]]);
   }
 
+  // ShowMyCardsRequestMessage (type 51, champ enveloppe 52) : corps VIDE.
+  // Fenêtre WaitNextHand du serveur (entre EndOfHand et la main suivante) :
+  // n'importe quel joueur de la partie peut montrer ses cartes ; le serveur
+  // rediffuse AfterHandShowCardsMessage à tous (cf. servergamestate.cpp).
+  function buildShowMyCards() {
+    return Proto.encode([[1,0,51],[52,2,Proto.encode([])]]);
+  }
+
   // AdminBanPlayerMessage (type 76, champ enveloppe 77) : banPlayerId=1.
   // « Kickban total » — réservé aux admins pokerth.net (playerRights=3),
   // comme Lobby.adminBanPlayer du client QML (PlayerListItem, bible §16).
@@ -3097,7 +3116,7 @@ const MSG = (() => {
     const msg = Proto.encode([[1,0,gameId],[2,0,playerId]]);
     return Proto.encode([[1,0,T.InvitePlayerToGame],[33,2,msg]]);
   }
-  return { T, parse, scramClientFirst, scramClientFinal, scramFindServerFirst, buildInit, buildChat, buildGameChat, buildJoin, buildJoinGame, buildRejoinGame, buildStartEventAck, buildMyAction, buildCreateGame, buildLeaveGame, buildStartWithBots, buildKickPlayer, buildAdminBanPlayer, buildAskKickPlayer, buildVoteKick, buildRejectInvite, buildInvitePlayer };
+  return { T, parse, scramClientFirst, scramClientFinal, scramFindServerFirst, buildInit, buildChat, buildGameChat, buildJoin, buildJoinGame, buildRejoinGame, buildStartEventAck, buildMyAction, buildCreateGame, buildLeaveGame, buildStartWithBots, buildKickPlayer, buildShowMyCards, buildAdminBanPlayer, buildAskKickPlayer, buildVoteKick, buildRejectInvite, buildInvitePlayer };
 })();
 
 
@@ -6463,6 +6482,8 @@ const App = (() => {
         } catch (e) {}
         // Compteur de joueurs restants (recréé : le textContent ci-dessus l'a purgé)
         try { _updateRemain(); } catch (e) {}
+        // Fin de la fenêtre « Show » de la main précédente
+        try { _setCanShow(false); } catch (e) {}
         // ── Alerte au moment de la montée (les 2 modes) ──
         // Si le small blind a augmenté (hors 1ʳᵉ main) : bandeau + son, en
         // réutilisant l'explication qu'on vient de préparer.
@@ -6904,6 +6925,10 @@ const App = (() => {
         }
         logEliminations();
         if (won > 0) { _snapshotHandResults(); showWinnerOverlay([{pid, won, cash, c1:null, c2:null}]); }
+        // « Show » volontaire : main terminée SANS abattage → mes cartes
+        // n'ont pas été révélées. Réseau seulement (le FakeServer offline
+        // ignore le type 51) et jamais en spectateur.
+        if (!_amSpectator && !window._offlineMode && myCards[0] != null) _setCanShow(true);
         break;
       }
 
@@ -6954,6 +6979,33 @@ const App = (() => {
         break;
       }
 
+      case T.AfterHandShowCards: {
+        // Show volontaire d'un joueur (rediffusion serveur du
+        // ShowMyCardsRequest). PlayerResult : playerId=1, resultCard1=2,
+        // resultCard2=3 (moneyWon/playerMoney ignorés : déjà appliqués par
+        // EndOfHand*). Même chemin de révélation que le showdown :
+        // seatData.card1/2 + renderSeats + ligne logShowdown.
+        const _sPr  = Proto.sub(sub, 1);
+        const _sPid = Proto.u32(_sPr, 1);
+        const _sC1  = Proto.u32orNull(_sPr, 2);
+        const _sC2  = Proto.u32orNull(_sPr, 3);
+        if (_sPid && _sC1 != null && _sC2 != null) {
+          if (seatData[_sPid]) { seatData[_sPid].card1 = _sC1; seatData[_sPid].card2 = _sC2; }
+          if (_sPid === myId) { _ownReveal = true; try { renderMyCards(); } catch (e) {} _setCanShow(false); }
+          try { renderSeats(); } catch (e) {}
+          const _sBd = commCards.slice();
+          logAction(function () {
+            var ev = (typeof evaluateBestHand === 'function') ? evaluateBestHand([_sC1, _sC2], _sBd) : null;
+            return t('logShowdown', {
+              name:  getPlayerName(_sPid),
+              cards: cardName(_sC1, false) + ' ' + cardName(_sC2, false),
+              hand:  ev ? ev.label : ''
+            });
+          });
+        }
+        break;
+      }
+
       case T.EndOfGame: {
         const winnerPid = Proto.u32(sub, 2);
         const _egPlace = Proto.u32(sub, 3);    // offline: classement à l'élimination (0 si absent)
@@ -6964,6 +7016,7 @@ const App = (() => {
         // suppress any further winner pop-ups.
         stopTurnTimer();
         dismissWinner();
+        try { _setCanShow(false); } catch (_e) {}
         showEndGameOverlay(winnerPid, { eliminated: _egElim, place: _egPlace });
         // Retour automatique au lobby (parité NetAutoLeaveGameAfterFinish,
         // bible §15) — OPT-IN, parties réseau seulement. 12 s pour laisser
@@ -7050,6 +7103,16 @@ const App = (() => {
       if (g && g.seats && g.seats.indexOf(pid) !== -1) return true;
     }
     return false;
+  }
+
+  // ── « Show » volontaire post-main (feedback communauté : bouton AU-DESSUS
+  // des cartes, pas à la place du All-In comme le QML). Fenêtre : de
+  // EndOfHandHide (main gagnée sans abattage → mes cartes non révélées)
+  // jusqu'au HandStart suivant. One-shot. ──
+  function _setCanShow(on) {
+    window._canShowCards = !!on;
+    var b = document.getElementById('g-show-btn');
+    if (b) b.style.display = on ? '' : 'none';
   }
 
   // ── Compteur « joueurs restants » dans la pot-strip (feedback communauté
@@ -10917,8 +10980,9 @@ function dismissWinner() {
     },
 
     leaveGame() {
-      // Annuler tout auto-retour programmé + masquer le dot de ping
+      // Annuler tout auto-retour programmé + masquer le dot de ping + Show
       try { clearTimeout(window._autoLeaveTimer); } catch (e) {}
+      try { _setCanShow(false); } catch (e) {}
       try { _pingDotHide(); } catch (e) {}
       // Offline (vs bots) returns to the lobby just like online: the fake
       // server closes the current game (GameListUpdate=closed) on leave, so the
@@ -10979,6 +11043,13 @@ function dismissWinner() {
       try { if (window._chatPushHist) window._chatPushHist(text); } catch (e) {}
       send(gId ? MSG.buildGameChat(gId, text) : MSG.buildChat(text));
       addGameChat(myName, text, 'mine');
+    },
+    // « Show » : envoie ShowMyCardsRequest (type 51, corps vide) pendant la
+    // fenêtre d'attente ; la rediffusion AfterHandShowCards rendra les cartes.
+    showMyCards() {
+      if (!window._canShowCards || !ws || !gId) return;
+      try { send(MSG.buildShowMyCards()); } catch (e) {}
+      _setCanShow(false);
     },
     sendChat() {
       const input = $('chat-in');
@@ -13047,7 +13118,7 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.3.168-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.169-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

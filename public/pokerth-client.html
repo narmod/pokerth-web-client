@@ -1421,6 +1421,8 @@ function onAvatarImageChosen(input) {
         </div>
         <div class="pb-cards" id="g-myseat-cards" onclick="App.togglePreActionPanel&&App.togglePreActionPanel()" title="Aperçu des actions" data-i18n-title="preActionTitle" style="cursor:pointer">
           <div class="pk sm back"></div><div class="pk sm back"></div>
+          <!-- « Show » post-main : au-dessus des cartes (suggestion communauté), F5 -->
+          <button type="button" id="g-show-btn" class="show-cards-btn" style="display:none" onclick="event.stopPropagation();App.showMyCards&&App.showMyCards()" title="F5"><span data-i18n="showCards">Show</span> 👁</button>
         </div>
         <div class="pb-right-zone"><div class="pb-act-row"><div class="pb-action" id="g-myseat-action"></div><div id="pb-timer" style="font-size:0.72rem;color:var(--gold);font-family:var(--ff-mono);font-weight:700;min-width:28px;text-align:right"></div></div></div>
       </div>
