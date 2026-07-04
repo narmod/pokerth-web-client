@@ -3953,6 +3953,9 @@ const App = (() => {
       rows: [
         [t('players'),
             activeCount + ' / ' + (meta.maxPlayers || '?')],
+        // Restants = ni partis ni éliminés (déplacé ici depuis la strip)
+        [t('plRemaining'),
+            _gameStarted ? String(_remainCount()) : t('piNotStarted')],
         [t('piHandNo'),
             (handNum > 0) ? ('H#' + handNum) : t('piNotStarted')],
         [t('piPot'),
@@ -6161,7 +6164,6 @@ const App = (() => {
         addChat(null, t('playerLeftTable', { name: name }), 'sys', { key: 'playerLeftTable', params: { name: name } });
         if (seatData[pid]) { seatData[pid].active = false; seatData[pid].gone = true; }
         renderSeats();
-        try { _updateRemain(); } catch (e) {}
         // Refresh the waiting panel if the game hasn't started yet.
         if (!_gameStarted) renderWaitingPanel();
         // ── Detect "only one player left" and force end-of-game ──
@@ -6407,8 +6409,9 @@ const App = (() => {
           if (seatData[_sp2] && seatData[_sp2].money != null) _seatStackAtHandStart[_sp2] = seatData[_sp2].money;
         }
         _myStackAtHandStart = (_seatStackAtHandStart[myId] != null) ? _seatStackAtHandStart[myId] : null;
-        // Game ID + n° de main (parité GameStatusBar QML : « Game · Hand »)
-        $('g-hand').textContent = (gId ? 'G#' + gId + ' \u00b7 ' : '') + t('handOf') + handNum;
+        // N° de main seul : le Game ID vit dans le popup d'info de table
+        // (titre « … · #id ») — retiré de la strip (feedback : trop chargée).
+        $('g-hand').textContent = t('handOf') + handNum;
         $('g-round').textContent = t('preflop');
         gameState = 0; // preflop
         commCards = [null, null, null, null, null];
@@ -6480,8 +6483,6 @@ const App = (() => {
               + ' onclick="window.showBlindsInfo&&window.showBlindsInfo()">' + _chip + '</span>');
           }
         } catch (e) {}
-        // Compteur de joueurs restants (recréé : le textContent ci-dessus l'a purgé)
-        try { _updateRemain(); } catch (e) {}
         // Fin de la fenêtre « Show » de la main précédente
         try { _setCanShow(false); } catch (e) {}
         // ── Alerte au moment de la montée (les 2 modes) ──
@@ -7115,31 +7116,16 @@ const App = (() => {
     if (b) b.style.display = on ? '' : 'none';
   }
 
-  // ── Compteur « joueurs restants » dans la pot-strip (feedback communauté
-  // 2.1.0 : les départs passent inaperçus avec le placement dynamique).
-  // Restant = siège ni parti (gone) ni éliminé (money connu ≤ 0). Rendu en
-  // enfant de #g-hand (recréé après chaque réécriture au HandStart), visible
-  // à partir de 2 joueurs et seulement en partie démarrée. ──
-  function _updateRemain() {
-    var host = document.getElementById('g-hand');
-    if (!host) return;
-    var el = document.getElementById('g-remain');
-    if (!el) {
-      el = document.createElement('span');
-      el.id = 'g-remain';
-      el.className = 'strip-remain';
-      host.appendChild(el);
-    }
-    var n = 0;
+  // ── « Joueurs restants » : ni parti (gone) ni éliminé (money connu ≤ 0).
+  // Affiché dans le POPUP d'info de table (feedback : la strip était trop
+  // chargée) — plus aucun rendu dans la pot-strip. ──
+  function _remainCount() {
     try {
-      n = seats.filter(function (p) {
+      return seats.filter(function (p) {
         var sd = seatData[p];
         return sd && !sd.gone && !(sd.money != null && sd.money <= 0 && sd.active === false);
       }).length;
-    } catch (e) {}
-    if (!_gameStarted || n < 2) { el.textContent = ''; el.removeAttribute('title'); return; }
-    el.textContent = ' \u00b7 \uD83D\uDC65' + n;
-    el.title = t('plRemaining') + ': ' + n;
+    } catch (e) { return 0; }
   }
 
   // ── LobbyStatsBar (parité QML, bible §16) : « X joueurs · Y en cours ·
@@ -13118,7 +13104,7 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.3.170-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.171-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
