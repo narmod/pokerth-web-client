@@ -4340,6 +4340,7 @@ const App = (() => {
   // mode switch can repaint without a server message.
   var _lastPotValue = null;
   function setPot(pot) {
+    var _prevPot = (typeof _lastPotValue === 'number') ? _lastPotValue : 0;
     _lastPotValue = (typeof pot === 'number') ? pot : (parseInt(pot, 10) || 0);
     // « Bets » = mises de la street en cours, non encore collectées
     // (parité GameStatusBar QML, bible §7 : Total/Bets). Affiché seulement
@@ -4356,6 +4357,16 @@ const App = (() => {
     var b = document.getElementById('g-potbar');
     if (a) a.innerHTML = _potTxt + _betsHtml;
     if (b) b.innerHTML = _potTxt + _betsHtml;
+    // « Pop » à chaque hausse du pot (parité pot badge QML, bible §9) —
+    // relance de l'animation par reflow, pas de listener à nettoyer.
+    if (_lastPotValue > _prevPot) {
+      [a, b].forEach(function (el) {
+        if (!el) return;
+        el.classList.remove('pot-pop');
+        void el.offsetWidth;
+        el.classList.add('pot-pop');
+      });
+    }
   }
   function repaintPot() {
     if (typeof _lastPotValue !== 'number') return;
@@ -13236,7 +13247,7 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.3.176-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.177-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
