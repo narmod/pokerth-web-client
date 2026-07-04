@@ -9054,6 +9054,21 @@ const App = (() => {
   window._renderSeats = function() { if (seats.length) renderSeats(); };
   // Pseudos pour la complétion Tab du chat (parité ChatBox QML, bible §11) :
   // en jeu = les joueurs de la table ; au lobby = tous les joueurs connus.
+  // Activité d'un joueur pour le panneau « Joueurs » (parité tooltip QML
+  // 2.1) : nom de la table où il est assis — games[*].seats est tenu à jour
+  // en continu par GameListNew / GameListPlayerJoined / GameListPlayerLeft —
+  // ou '' s'il est au lobby.
+  window._playerActivity = function (pid) {
+    try {
+      for (var id in games) {
+        var g = games[id];
+        if (g && g.mode !== 3 && g.seats && g.seats.indexOf(pid) !== -1) {
+          return g.name || ('#' + id);
+        }
+      }
+    } catch (e) {}
+    return '';
+  };
   window._chatNicks = function (gameScope) {
     try {
       if (gameScope && seats.length) {
@@ -12986,9 +13001,15 @@ function renderPlayersList() {
       + ' onclick="window.openPlayerInfoPopup(' + r.pid + ')"'
       + ' onkeydown="if(event.key===\'Enter\')window.openPlayerInfoPopup(' + r.pid + ')">'
       + esc(r.name) + '</span>';
+    // Activité : table où le joueur est assis (🎮 nom, tooltip « En cours »),
+    // rien s'il est au lobby. Donnée live via window._playerActivity.
+    var act = (typeof window._playerActivity === 'function') ? window._playerActivity(r.pid) : '';
+    var actHtml = act
+      ? '<span class="pl-game" title="' + esc((typeof t === 'function' ? t('modeInProgress') : '') + ' \u00b7 ' + act) + '">\uD83C\uDFAE ' + esc(act) + '</span>'
+      : '';
     return '<div class="pl-row' + (r.isMe ? ' pl-me' : '') + '">' +
              avChip +
-             '<span class="pl-name">' + nameHtml + '</span>' +
+             '<span class="pl-name">' + nameHtml + actHtml + '</span>' +
              '<span class="pl-flag">' + flag + (cc ? '<span class="pl-cc">' + cc + '</span>' : '') + '</span>' +
              '<span class="pl-star">' + (r.isMe ? '★' : '') + '</span>' +
              '<span class="pl-id">#' + r.pid + '</span>' +
@@ -12996,7 +13017,7 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.3.166-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.167-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

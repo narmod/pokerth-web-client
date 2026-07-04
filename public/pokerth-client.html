@@ -1108,7 +1108,7 @@ function onAvatarImageChosen(input) {
     <div id="l-chat-emoji-panel" class="chat-emoji-panel" style="display:none"></div>
     <div class="chat-input" style="border-top:1px solid var(--border);flex-shrink:0">
       <button type="button" class="chat-emoji-toggle" id="l-chat-emoji-toggle" onclick="toggleChatEmojiPicker(this)" data-panel="l-chat-emoji-panel" data-input="chat-in" title="Insérer un emoji" data-i18n-title="emojiPickerTitle" aria-label="Insérer un emoji">😊</button>
-      <input id="chat-in" placeholder="Message…" data-i18n-placeholder="chatPlaceholder" onkeydown="if(event.key==='Enter') App.sendChat()">
+      <input id="chat-in" maxlength="128" placeholder="Message…" data-i18n-placeholder="chatPlaceholder" onkeydown="if(event.key==='Enter') App.sendChat()">
       <button class="chat-send" onclick="App.sendChat()">▶</button>
     </div>
   </div>
@@ -1327,7 +1327,7 @@ function onAvatarImageChosen(input) {
     <div id="g-chat-emoji-panel" class="chat-emoji-panel" style="display:none"></div>
     <div class="chat-input" style="border-top:1px solid var(--border);flex-shrink:0">
       <button type="button" class="chat-emoji-toggle" id="g-chat-emoji-toggle" onclick="toggleChatEmojiPicker(this)" data-panel="g-chat-emoji-panel" data-input="g-chat-in" title="Insérer un emoji" data-i18n-title="emojiPickerTitle" aria-label="Insérer un emoji">😊</button>
-      <input id="g-chat-in" placeholder="Message…" data-i18n-placeholder="chatPlaceholder" onkeydown="if(event.key==='Enter')App.sendGameChat()">
+      <input id="g-chat-in" maxlength="128" placeholder="Message…" data-i18n-placeholder="chatPlaceholder" onkeydown="if(event.key==='Enter')App.sendGameChat()">
       <button class="chat-send" onclick="App.sendGameChat()">▶</button>
     </div>
   </div>

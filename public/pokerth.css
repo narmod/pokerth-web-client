@@ -6633,3 +6633,15 @@ html.reduce-fx *, html.reduce-fx *::before, html.reduce-fx *::after {
   z-index: 3;
   pointer-events: none;
 }
+
+/* ── Activité joueur dans le panneau « Joueurs » : 🎮 nom de la table ── */
+.pl-row .pl-game {
+  display: block;
+  font-size: 0.62rem;
+  color: var(--text-dim, #8b93a7);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+  line-height: 1.2;
+}
