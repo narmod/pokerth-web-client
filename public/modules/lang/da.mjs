@@ -9,6 +9,7 @@ export const meta = {
 };
 
 export const strings = {
+  advReduceFx: 'Reducer grafiske effekter (skygger/glød) — til svage enheder', avatarGallery: 'Avatargalleri', avatarGalleryTooltip: 'Avatargalleri', avgalPeople: 'Personer', avgalMisc: 'Diverse', lsbRunning: 'i gang', lsbOpen: 'åbne', statusBets: 'Indsatser', advStatusBar: 'Spilstatuslinje (hånd nr., pot, indsatser, fase)',
   piKickban: 'Total kickban', kickbanConfirm: 'Udeluk {name} fra serveren (total kickban)?', kickbanOk: '{name} er blevet kickbannet', kickbanFail: 'Kickban mislykkedes', advSecSndCats: 'Lydkategorier', advSndActions: 'Lyde for spilhandlinger (Check, Call, Raise…)', advSndLobby: 'Notifikation for lobbychat', advSndNet: 'Netværksspil-notifikationer (spiller tilsluttet, spil klart)', advSndBlinds: 'Notifikation ved blindforhøjelse', sectionCardback: 'Kortbagside', cardbackAuto: 'Match kortsættet', cardbackCustom: 'Importeret billede', cardbackImport: 'Importér et billede…',
   advFkeysAlt: 'Omvend F1–F4-rækkefølgen (F1 = All-In)',
   kbHintF: 'De officielle PokerTH-taster virker også: F1–F4 = Fold · Check/Call · Bet/Raise · All-In, F6/F7/F8 = Manuel / Auto Check-Fold / Auto Check-Call, Alt+M/K/F = tilstande, Alt+C chat, Alt+L log, Alt+I odds.',

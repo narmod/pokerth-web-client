@@ -13,6 +13,7 @@ export const meta = {
 };
 
 export const strings = {
+  advReduceFx: '그래픽 효과 줄이기 (그림자/광채) — 저사양 기기용', avatarGallery: '아바타 갤러리', avatarGalleryTooltip: '아바타 갤러리', avgalPeople: '인물', avgalMisc: '기타', lsbRunning: '진행 중', lsbOpen: '열림', statusBets: '베팅', advStatusBar: '게임 상태 표시줄 (핸드 번호, 팟, 베팅, 단계)',
   piKickban: '완전 킥밴', kickbanConfirm: '{name}을(를) 서버에서 차단할까요 (완전 킥밴)?', kickbanOk: '{name}이(가) 킥밴되었습니다', kickbanFail: '킥밴에 실패했습니다', advSecSndCats: '소리 카테고리', advSndActions: '게임 액션 소리 (Check, Call, Raise…)', advSndLobby: '로비 채팅 알림', advSndNet: '네트워크 게임 알림 (플레이어 참가, 게임 준비 완료)', advSndBlinds: '블라인드 인상 알림', sectionCardback: '카드 뒷면', cardbackAuto: '덱과 일치', cardbackCustom: '가져온 이미지', cardbackImport: '이미지 가져오기…',
   advFkeysAlt: 'F1–F4 순서 반전 (F1 = All-In)',
   kbHintF: 'PokerTH 공식 키도 사용할 수 있습니다: F1–F4 = Fold · Check/Call · Bet/Raise · All-In, F6/F7/F8 = 수동 / Auto Check-Fold / Auto Check-Call, Alt+M/K/F = 모드, Alt+C 채팅, Alt+L 로그, Alt+I 확률.',

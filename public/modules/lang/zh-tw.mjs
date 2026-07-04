@@ -11,6 +11,7 @@ export const meta = {
 };
 
 export const strings = {
+  advReduceFx: '降低圖形效果（陰影/光暈）— 適用於低效能裝置', avatarGallery: '頭像圖庫', avatarGalleryTooltip: '頭像圖庫', avgalPeople: '人物', avgalMisc: '其他', lsbRunning: '進行中', lsbOpen: '開放中', statusBets: '下注', advStatusBar: '對局狀態列（手牌編號、彩池、下注、階段）',
   piKickban: '完全踢除封鎖', kickbanConfirm: '要將 {name} 從伺服器封鎖嗎（完全踢除封鎖）？', kickbanOk: '{name} 已被踢除封鎖', kickbanFail: '踢除封鎖失敗', advSecSndCats: '音效類別', advSndActions: '遊戲動作音效（Check、Call、Raise…）', advSndLobby: '大廳聊天通知音', advSndNet: '網路對局通知音（玩家加入、對局就緒）', advSndBlinds: '盲注調升通知音', sectionCardback: '牌背', cardbackAuto: '與牌組一致', cardbackCustom: '匯入的圖片', cardbackImport: '匯入圖片…',
   advFkeysAlt: '反轉 F1–F4 順序（F1 = All-In）',
   kbHintF: 'PokerTH 官方按鍵也可使用：F1–F4 = Fold · Check/Call · Bet/Raise · All-In，F6/F7/F8 = 手動 / Auto Check-Fold / Auto Check-Call，Alt+M/K/F = 模式，Alt+C 聊天，Alt+L 紀錄，Alt+I 勝率。',

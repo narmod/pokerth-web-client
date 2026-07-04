@@ -12,6 +12,7 @@ export const meta = {
 };
 
 export const strings = {
+  advReduceFx: 'Grafik efektlerini azalt (gölgeler/parlama) — zayıf cihazlar için', avatarGallery: 'Avatar galerisi', avatarGalleryTooltip: 'Avatar galerisi', avgalPeople: 'Kişiler', avgalMisc: 'Çeşitli', lsbRunning: 'devam ediyor', lsbOpen: 'açık', statusBets: 'Bahisler', advStatusBar: 'Oyun durum çubuğu (el no, pot, bahisler, aşama)',
   piKickban: 'Tam kickban', kickbanConfirm: '{name} sunucudan yasaklansın mı (tam kickban)?', kickbanOk: '{name} kickban aldı', kickbanFail: 'Kickban başarısız oldu', advSecSndCats: 'Ses kategorileri', advSndActions: 'Oyun eylemi sesleri (Check, Call, Raise…)', advSndLobby: 'Lobi sohbeti bildirimi', advSndNet: 'Ağ oyunu bildirimleri (oyuncu katıldı, oyun hazır)', advSndBlinds: 'Blind artışı bildirimi', sectionCardback: 'Kart arkası', cardbackAuto: 'Desteyle uyumlu', cardbackCustom: 'İçe aktarılan görsel', cardbackImport: 'Bir görsel içe aktar…',
   advFkeysAlt: 'F1–F4 sırasını tersine çevir (F1 = All-In)',
   kbHintF: 'Resmî PokerTH tuşları da çalışır: F1–F4 = Fold · Check/Call · Bet/Raise · All-In, F6/F7/F8 = Manuel / Auto Check-Fold / Auto Check-Call, Alt+M/K/F = modlar, Alt+C sohbet, Alt+L günlük, Alt+I olasılıklar.',

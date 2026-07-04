@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+  advReduceFx: 'Smanji grafičke efekte (sjene/sjaj) — za slabije uređaje', avatarGallery: 'Galerija avatara', avatarGalleryTooltip: 'Galerija avatara', avgalPeople: 'Ljudi', avgalMisc: 'Razno', lsbRunning: 'u tijeku', lsbOpen: 'otvorene', statusBets: 'Ulozi', advStatusBar: 'Statusna traka igre (br. ruke, pot, ulozi, faza)',
   piKickban: 'Potpuni kickban', kickbanConfirm: 'Zabraniti igrača {name} na poslužitelju (potpuni kickban)?', kickbanOk: '{name} je dobio kickban', kickbanFail: 'Kickban nije uspio', advSecSndCats: 'Kategorije zvukova', advSndActions: 'Zvukovi radnji u igri (Check, Call, Raise…)', advSndLobby: 'Obavijest lobby chata', advSndNet: 'Obavijesti mrežne igre (igrač se pridružio, igra spremna)', advSndBlinds: 'Obavijest o povećanju blindova', sectionCardback: 'Poleđina karata', cardbackAuto: 'Prema špilu', cardbackCustom: 'Uvezena slika', cardbackImport: 'Uvezi sliku…',
   advFkeysAlt: 'Obrni redoslijed F1–F4 (F1 = All-In)',
   kbHintF: 'Rade i službene PokerTH tipke: F1–F4 = Fold · Check/Call · Bet/Raise · All-In, F6/F7/F8 = Ručno / Auto Check-Fold / Auto Check-Call, Alt+M/K/F = načini, Alt+C chat, Alt+L dnevnik, Alt+I izgledi.',

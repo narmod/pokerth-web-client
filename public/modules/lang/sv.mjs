@@ -9,6 +9,7 @@ export const meta = {
 };
 
 export const strings = {
+  advReduceFx: 'Minska grafiska effekter (skuggor/glöd) — för svaga enheter', avatarGallery: 'Avatargalleri', avatarGalleryTooltip: 'Avatargalleri', avgalPeople: 'Personer', avgalMisc: 'Diverse', lsbRunning: 'pågår', lsbOpen: 'öppna', statusBets: 'Insatser', advStatusBar: 'Spelstatusrad (hand nr, pott, insatser, fas)',
   piKickban: 'Total kickban', kickbanConfirm: 'Stäng av {name} från servern (total kickban)?', kickbanOk: '{name} har fått kickban', kickbanFail: 'Kickban misslyckades', advSecSndCats: 'Ljudkategorier', advSndActions: 'Ljud för spelhandlingar (Check, Call, Raise…)', advSndLobby: 'Avisering för lobbychatt', advSndNet: 'Aviseringar för nätverksspel (spelare anslöt, spel redo)', advSndBlinds: 'Avisering vid blindhöjning', sectionCardback: 'Kortbaksida', cardbackAuto: 'Matchar kortleken', cardbackCustom: 'Importerad bild', cardbackImport: 'Importera en bild…',
   advFkeysAlt: 'Vänd på F1–F4-ordningen (F1 = All-In)',
   kbHintF: 'De officiella PokerTH-tangenterna fungerar också: F1–F4 = Fold · Check/Call · Bet/Raise · All-In, F6/F7/F8 = Manuell / Auto Check-Fold / Auto Check-Call, Alt+M/K/F = lägen, Alt+C chatt, Alt+L logg, Alt+I odds.',

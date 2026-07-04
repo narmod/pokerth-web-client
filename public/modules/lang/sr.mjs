@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+  advReduceFx: 'Смањи графичке ефекте (сенке/сјај) — за слабије уређаје', avatarGallery: 'Галерија аватара', avatarGalleryTooltip: 'Галерија аватара', avgalPeople: 'Људи', avgalMisc: 'Разно', lsbRunning: 'у току', lsbOpen: 'отворене', statusBets: 'Улози', advStatusBar: 'Статусна трака игре (бр. руке, пот, улози, фаза)',
   piKickban: 'Потпуни кикбан', kickbanConfirm: 'Забранити играча {name} на серверу (потпуни кикбан)?', kickbanOk: '{name} је добио кикбан', kickbanFail: 'Кикбан није успео', advSecSndCats: 'Категорије звукова', advSndActions: 'Звукови акција у игри (Check, Call, Raise…)', advSndLobby: 'Обавештење лоби ћаскања', advSndNet: 'Обавештења мрежне игре (играч се придружио, игра спремна)', advSndBlinds: 'Обавештење о повећању блиндова', sectionCardback: 'Полеђина карата', cardbackAuto: 'Према шпилу', cardbackCustom: 'Увезена слика', cardbackImport: 'Увези слику…',
   advFkeysAlt: 'Обрни редослед F1–F4 (F1 = All-In)',
   kbHintF: 'Раде и званични PokerTH тастери: F1–F4 = Fold · Check/Call · Bet/Raise · All-In, F6/F7/F8 = Ручно / Auto Check-Fold / Auto Check-Call, Alt+M/K/F = режими, Alt+C ћаскање, Alt+L дневник, Alt+I шансе.',

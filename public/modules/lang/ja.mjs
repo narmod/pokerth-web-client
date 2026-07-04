@@ -9,6 +9,7 @@ export const meta = {
 };
 
 export const strings = {
+  advReduceFx: 'グラフィック効果を軽減（影/グロー）— 低性能端末向け', avatarGallery: 'アバターギャラリー', avatarGalleryTooltip: 'アバターギャラリー', avgalPeople: '人物', avgalMisc: 'その他', lsbRunning: '進行中', lsbOpen: '募集中', statusBets: 'ベット', advStatusBar: 'ゲームステータスバー（ハンド番号・ポット・ベット・フェーズ）',
   piKickban: '完全キックバン', kickbanConfirm: '{name} をサーバーから追放しますか（完全キックバン）？', kickbanOk: '{name} をキックバンしました', kickbanFail: 'キックバンに失敗しました', advSecSndCats: 'サウンドのカテゴリ', advSndActions: 'ゲームアクションの音（Check、Call、Raise…）', advSndLobby: 'ロビーチャットの通知音', advSndNet: 'ネットワークゲームの通知音（プレイヤー参加、ゲーム準備完了）', advSndBlinds: 'ブラインド上昇の通知音', sectionCardback: 'カードの裏面', cardbackAuto: 'デッキに合わせる', cardbackCustom: 'インポートした画像', cardbackImport: '画像をインポート…',
   advFkeysAlt: 'F1–F4の順序を反転（F1 = All-In）',
   kbHintF: 'PokerTH公式キーも使用できます：F1–F4 = Fold · Check/Call · Bet/Raise · All-In、F6/F7/F8 = 手動 / Auto Check-Fold / Auto Check-Call、Alt+M/K/F = モード、Alt+C チャット、Alt+L ログ、Alt+I 勝率。',

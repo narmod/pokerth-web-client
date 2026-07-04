@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+  advReduceFx: 'Omezit grafické efekty (stíny/záře) — pro slabší zařízení', avatarGallery: 'Galerie avatarů', avatarGalleryTooltip: 'Galerie avatarů', avgalPeople: 'Lidé', avgalMisc: 'Různé', lsbRunning: 'probíhá', lsbOpen: 'otevřené', statusBets: 'Sázky', advStatusBar: 'Stavový řádek hry (č. ruky, pot, sázky, fáze)',
   piKickban: 'Úplný kickban', kickbanConfirm: 'Zabanovat hráče {name} na serveru (úplný kickban)?', kickbanOk: '{name} dostal kickban', kickbanFail: 'Kickban se nezdařil', advSecSndCats: 'Kategorie zvuků', advSndActions: 'Zvuky herních akcí (Check, Call, Raise…)', advSndLobby: 'Upozornění na chat lobby', advSndNet: 'Upozornění síťové hry (hráč se připojil, hra připravena)', advSndBlinds: 'Upozornění na zvýšení blindů', sectionCardback: 'Rub karet', cardbackAuto: 'Podle balíčku', cardbackCustom: 'Importovaný obrázek', cardbackImport: 'Importovat obrázek…',
   advFkeysAlt: 'Obrátit pořadí F1–F4 (F1 = All-In)',
   kbHintF: 'Fungují i oficiální klávesy PokerTH: F1–F4 = Fold · Check/Call · Bet/Raise · All-In, F6/F7/F8 = Ručně / Auto Check-Fold / Auto Check-Call, Alt+M/K/F = režimy, Alt+C chat, Alt+L deník, Alt+I šance.',

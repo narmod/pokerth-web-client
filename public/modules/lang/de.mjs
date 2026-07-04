@@ -15,6 +15,7 @@ export const meta = {
 };
 
 export const strings = {
+  advReduceFx: 'Grafikeffekte reduzieren (Schatten/Glow) — für schwache Geräte', avatarGallery: 'Avatar-Galerie', avatarGalleryTooltip: 'Avatar-Galerie', avgalPeople: 'Personen', avgalMisc: 'Verschiedenes', lsbRunning: 'laufend', lsbOpen: 'offen', statusBets: 'Einsätze', advStatusBar: 'Spielstatusleiste (Hand-Nr., Pot, Einsätze, Phase)',
   piKickban: 'Totaler Kickban', kickbanConfirm: '{name} vom Server verbannen (totaler Kickban)?', kickbanOk: '{name} wurde gekickbannt', kickbanFail: 'Kickban fehlgeschlagen', advSecSndCats: 'Klangkategorien', advSndActions: 'Klänge der Spielaktionen (Check, Call, Raise…)', advSndLobby: 'Benachrichtigung für Lobby-Chat', advSndNet: 'Netzwerkspiel-Benachrichtigungen (Spieler beigetreten, Spiel bereit)', advSndBlinds: 'Benachrichtigung bei Blinds-Erhöhung', sectionCardback: 'Kartenrückseite', cardbackAuto: 'Passend zum Kartenstapel', cardbackCustom: 'Importiertes Bild', cardbackImport: 'Bild importieren…',
   advFkeysAlt: 'F1–F4-Reihenfolge umkehren (F1 = All-In)',
   kbHintF: 'Die offiziellen PokerTH-Tasten funktionieren ebenfalls: F1–F4 = Fold · Check/Call · Bet/Raise · All-In, F6/F7/F8 = Manuell / Auto Check-Fold / Auto Check-Call, Alt+M/K/F = Modi, Alt+C Chat, Alt+L Verlauf, Alt+I Chancen.',
