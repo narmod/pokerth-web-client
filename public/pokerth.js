@@ -463,6 +463,12 @@ function openAdvancedOptions() {
   sync('adv-snd-net', 'snd_net', true);
   sync('adv-snd-blinds', 'snd_blinds', true);
   sync('adv-reducefx', 'reduce_fx', false);
+  sync('adv-statusbar', 'status_bar', true);
+  // Barre d'état de jeu (pot-strip : H#/G#, pot+bets, phase) masquable
+  try {
+    var _ps = document.getElementById('pot-strip');
+    if (_ps) _ps.style.display = _advGet('status_bar', true) ? '' : 'none';
+  } catch (e) {}
   // Mode « effets réduits » (parité QmlReduceEffects) : classe sur <html>,
   // le CSS coupe ombres / glow / backdrop-filter.
   try { document.documentElement.classList.toggle('reduce-fx', _advGet('reduce_fx', false)); } catch (e) {}
@@ -548,7 +554,7 @@ function resetAdvDefaults() {
     own_click: false, guard_call: false, odds_monitor: false, no_hide_ignored: false,
     fkeys_alt: false, zoom_follow: false,
     snd_actions: true, snd_lobby: true, snd_net: true, snd_blinds: true,
-    reduce_fx: false
+    reduce_fx: false, status_bar: true
   };
   try { for (var k in defs) setAdvOpt(k, defs[k]); } catch (e) {}
   try { setSeatLayout('official'); } catch (e) {}
@@ -4280,10 +4286,17 @@ const App = (() => {
   var _lastPotValue = null;
   function setPot(pot) {
     _lastPotValue = (typeof pot === 'number') ? pot : (parseInt(pot, 10) || 0);
+    // « Bets » = mises de la street en cours, non encore collectées
+    // (parité GameStatusBar QML, bible §7 : Total/Bets). Affiché seulement
+    // s'il y a des mises sur le tapis, pour ne pas alourdir la strip.
+    var _bets = 0;
+    try { for (var _k in seatData) _bets += (seatData[_k].bet || 0); } catch (e) {}
+    var txt = t('pot') + ' ' + fmtChips(_lastPotValue)
+      + (_bets > 0 ? ' \u00b7 ' + t('statusBets') + ' ' + fmtChips(_bets) : '');
     var a = document.getElementById('g-pot');
     var b = document.getElementById('g-potbar');
-    if (a) a.textContent = t('pot') + ' ' + fmtChips(_lastPotValue);
-    if (b) b.textContent = t('pot') + ' ' + fmtChips(_lastPotValue);
+    if (a) a.textContent = txt;
+    if (b) b.textContent = txt;
   }
   function repaintPot() {
     if (typeof _lastPotValue !== 'number') return;
@@ -6337,7 +6350,8 @@ const App = (() => {
           if (seatData[_sp2] && seatData[_sp2].money != null) _seatStackAtHandStart[_sp2] = seatData[_sp2].money;
         }
         _myStackAtHandStart = (_seatStackAtHandStart[myId] != null) ? _seatStackAtHandStart[myId] : null;
-        $('g-hand').textContent = t('handOf') + handNum;
+        // Game ID + n° de main (parité GameStatusBar QML : « Game · Hand »)
+        $('g-hand').textContent = (gId ? 'G#' + gId + ' \u00b7 ' : '') + t('handOf') + handNum;
         $('g-round').textContent = t('preflop');
         gameState = 0; // preflop
         commCards = [null, null, null, null, null];
@@ -12825,7 +12839,7 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.3.160-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.161-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
