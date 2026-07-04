@@ -186,6 +186,7 @@ This project is a **web frontend** that connects to any PokerTH server directly 
 - **Post-flop win probability** — Monte Carlo simulation against random opponent ranges
 - **Spades vs clubs visual distinction**: spades get a subtle blue tint so ♠ and ♣ never get confused on small screens
 - Pot strip showing hand number, total pot, and current betting round
+- **Table info popup** — tap the table name in the header for the full picture: game type (public/private), configuration (blinds, starting stack, action timer), live state (phase, hand number, pot) and the player list
 
 ### In-game settings (⚙ menu)
 Per-player toggles, remembered in `localStorage` and applied instantly:
@@ -223,6 +224,9 @@ A full appearance system, reached from the **Theme** button — pick a one-tap p
 - **Emoji picker in chat** (desktop) — a 😊 button in the chat input (both lobby and in-game) opens an emoji grid; click to insert it at the cursor, then send like any text. Hidden on mobile, where the native keyboard already provides emojis
 - 30 emoji reactions with a 6-second counter, broadcast to all players
 - **Cross-client reactions**: reactions also travel through a shared `/emoji` chat command (handled like `/me`), so they reach other clients and work on pokerth.net too — while a fast `REACT:` relay stays the web↔web path
+- **Ignore a player** — a 🔕 button in any player's card mutes them: their chat messages stop appearing, persisted across sessions by nickname; an advanced toggle chooses whether their avatar stays visible or is hidden too
+- **Mute reactions** — a toggle in the reactions panel silences incoming reactions locally (no animation, badge or sound) without affecting anyone else; remembered across sessions
+- **Disable emojis in chat** — an advanced option that strips emojis from received chat messages (mirrors the official client's setting)
 
 ### Comfort features
 - Browser notifications when it is your turn (background tab)

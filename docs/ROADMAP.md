@@ -96,6 +96,13 @@ use too. Items are grouped by status rather than fixed phases.
 - Session statistics panel (hands, wins, win rate, net result, best/worst hands).
 - In-game and lobby chat, plus 30 emoji reactions that now interoperate cross-client through a
   shared `/emoji` chat channel (and work on pokerth.net too).
+- Ranking modal (PokerTH / BBC / WEC leaderboards with seasons, All-Time, search and
+  pagination) plus per-player profile cards, via same-origin `/api/ranking` and
+  `/api/player` relays.
+- In-game invitations from the lobby players list (native protocol — reaches official
+  clients too), community vote-kick petitions, and country flags on avatars.
+- Player-comfort moderation: ignore a player (persisted), locally mute reactions, and an
+  option to strip emojis from received chat.
 - Lobby game cards show player counts, status, and each table's blind level and raise schedule.
 - Sound effects for every action.
 - Internationalisation in 36 languages, auto-detected and switchable on the fly.
