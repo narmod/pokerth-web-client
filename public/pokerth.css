@@ -6645,3 +6645,6 @@ html.reduce-fx *, html.reduce-fx *::before, html.reduce-fx *::after {
   max-width: 100%;
   line-height: 1.2;
 }
+
+/* ── Compteur « joueurs restants » dans la pot-strip (👥n après G#/H#) ── */
+#g-hand .strip-remain { opacity: 0.85; font-weight: 600; white-space: nowrap; }

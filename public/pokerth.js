@@ -6142,6 +6142,7 @@ const App = (() => {
         addChat(null, t('playerLeftTable', { name: name }), 'sys', { key: 'playerLeftTable', params: { name: name } });
         if (seatData[pid]) { seatData[pid].active = false; seatData[pid].gone = true; }
         renderSeats();
+        try { _updateRemain(); } catch (e) {}
         // Refresh the waiting panel if the game hasn't started yet.
         if (!_gameStarted) renderWaitingPanel();
         // ── Detect "only one player left" and force end-of-game ──
@@ -6460,6 +6461,8 @@ const App = (() => {
               + ' onclick="window.showBlindsInfo&&window.showBlindsInfo()">' + _chip + '</span>');
           }
         } catch (e) {}
+        // Compteur de joueurs restants (recréé : le textContent ci-dessus l'a purgé)
+        try { _updateRemain(); } catch (e) {}
         // ── Alerte au moment de la montée (les 2 modes) ──
         // Si le small blind a augmenté (hors 1ʳᵉ main) : bandeau + son, en
         // réutilisant l'explication qu'on vient de préparer.
@@ -7047,6 +7050,33 @@ const App = (() => {
       if (g && g.seats && g.seats.indexOf(pid) !== -1) return true;
     }
     return false;
+  }
+
+  // ── Compteur « joueurs restants » dans la pot-strip (feedback communauté
+  // 2.1.0 : les départs passent inaperçus avec le placement dynamique).
+  // Restant = siège ni parti (gone) ni éliminé (money connu ≤ 0). Rendu en
+  // enfant de #g-hand (recréé après chaque réécriture au HandStart), visible
+  // à partir de 2 joueurs et seulement en partie démarrée. ──
+  function _updateRemain() {
+    var host = document.getElementById('g-hand');
+    if (!host) return;
+    var el = document.getElementById('g-remain');
+    if (!el) {
+      el = document.createElement('span');
+      el.id = 'g-remain';
+      el.className = 'strip-remain';
+      host.appendChild(el);
+    }
+    var n = 0;
+    try {
+      n = seats.filter(function (p) {
+        var sd = seatData[p];
+        return sd && !sd.gone && !(sd.money != null && sd.money <= 0 && sd.active === false);
+      }).length;
+    } catch (e) {}
+    if (!_gameStarted || n < 2) { el.textContent = ''; el.removeAttribute('title'); return; }
+    el.textContent = ' \u00b7 \uD83D\uDC65' + n;
+    el.title = t('plRemaining') + ': ' + n;
   }
 
   // ── LobbyStatsBar (parité QML, bible §16) : « X joueurs · Y en cours ·
@@ -13017,7 +13047,7 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.3.167-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.168-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
