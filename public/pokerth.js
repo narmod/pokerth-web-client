@@ -4291,12 +4291,16 @@ const App = (() => {
     // s'il y a des mises sur le tapis, pour ne pas alourdir la strip.
     var _bets = 0;
     try { for (var _k in seatData) _bets += (seatData[_k].bet || 0); } catch (e) {}
-    var txt = t('pot') + ' ' + fmtChips(_lastPotValue)
-      + (_bets > 0 ? ' \u00b7 ' + t('statusBets') + ' ' + fmtChips(_bets) : '');
+    // Ligne 1 : le pot. Ligne 2 (dédiée, plus petite/atténuée) : les mises —
+    // évite le retour à la ligne au milieu du texte sur écran étroit.
+    var _potTxt = esc(t('pot') + ' ' + fmtChips(_lastPotValue));
+    var _betsHtml = _bets > 0
+      ? '<span class="pot-bets">' + esc(t('statusBets') + ' ' + fmtChips(_bets)) + '</span>'
+      : '';
     var a = document.getElementById('g-pot');
     var b = document.getElementById('g-potbar');
-    if (a) a.textContent = txt;
-    if (b) b.textContent = txt;
+    if (a) a.innerHTML = _potTxt + _betsHtml;
+    if (b) b.innerHTML = _potTxt + _betsHtml;
   }
   function repaintPot() {
     if (typeof _lastPotValue !== 'number') return;
@@ -12839,7 +12843,7 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.3.162-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.163-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

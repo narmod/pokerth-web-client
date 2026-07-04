@@ -6597,3 +6597,16 @@ html.reduce-fx *, html.reduce-fx *::before, html.reduce-fx *::after {
   width: 100%; aspect-ratio: 1; display: block;
   border-radius: 7px; object-fit: cover;
 }
+
+/* ── Mises de la street : 2e ligne dédiée dans la strip (sous le pot),
+   compacte et atténuée — plus de retour à la ligne moche au milieu. ── */
+.pot-center { line-height: 1.12; }
+#g-pot .pot-bets, #g-potbar .pot-bets {
+  display: block;
+  font-size: 0.74em;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  opacity: 0.72;
+  line-height: 1.05;
+  white-space: nowrap;
+}
