@@ -9,6 +9,7 @@ export const meta = {
 };
 
 export const strings = {
+  plRemaining: 'Gjenværende spillere', showCards: 'Vis',
   emoFrequent: 'Ofte brukt', emoAll: 'Alle', advPingAvatar: 'Ping-indikator på avataren min (grønn/gul/rød)', advAutoLeave: 'Gå automatisk tilbake til lobbyen når spillet er slutt',
   advReduceFx: 'Reduser grafiske effekter (skygger/glød) — for svake enheter', avatarGallery: 'Avatargalleri', avatarGalleryTooltip: 'Avatargalleri', avgalPeople: 'Personer', avgalMisc: 'Diverse', lsbRunning: 'pågår', lsbOpen: 'åpne', statusBets: 'Innsatser', advStatusBar: 'Spillstatuslinje (hånd nr., pott, innsatser, fase)',
   piKickban: 'Total kickban', kickbanConfirm: 'Utesteng {name} fra serveren (total kickban)?', kickbanOk: '{name} er kickbannet', kickbanFail: 'Kickban mislyktes', advSecSndCats: 'Lydkategorier', advSndActions: 'Lyder for spillhandlinger (Check, Call, Raise…)', advSndLobby: 'Varsel for lobbychat', advSndNet: 'Varsler for nettverksspill (spiller ble med, spill klart)', advSndBlinds: 'Varsel ved blindøkning', sectionCardback: 'Kortbakside', cardbackAuto: 'Tilpasset kortstokken', cardbackCustom: 'Importert bilde', cardbackImport: 'Importer et bilde…',

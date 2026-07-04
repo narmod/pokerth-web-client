@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+  plRemaining: 'Oorblywende spelers', showCards: 'Wys',
   emoFrequent: 'Gereeld', emoAll: 'Alles', advPingAvatar: 'Ping-aanwyser op my avatar (groen/geel/rooi)', advAutoLeave: 'Keer outomaties terug na die portaal wanneer die spel eindig',
   advReduceFx: 'Verminder grafiese effekte (skadu\'s/gloed) — vir stadige toestelle', avatarGallery: 'Avatar-galery', avatarGalleryTooltip: 'Avatar-galery', avgalPeople: 'Mense', avgalMisc: 'Allerlei', lsbRunning: 'aan die gang', lsbOpen: 'oop', statusBets: 'Insette', advStatusBar: 'Spelstatusbalk (hand nr., pot, insette, fase)',
   piKickban: 'Totale kickban', kickbanConfirm: 'Verban {name} van die bediener (totale kickban)?', kickbanOk: '{name} is gekickban', kickbanFail: 'Kickban het misluk', advSecSndCats: 'Klankkategorieë', advSndActions: 'Klanke van spelaksies (Check, Call, Raise…)', advSndLobby: 'Kennisgewing van portaalklets', advSndNet: 'Netwerkspel-kennisgewings (speler aangesluit, spel gereed)', advSndBlinds: 'Kennisgewing van blindes-verhoging', sectionCardback: 'Kaartrug', cardbackAuto: 'Pas by die kaartstel', cardbackCustom: 'Ingevoerde beeld', cardbackImport: 'Voer \'n beeld in…',

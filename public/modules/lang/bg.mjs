@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+  plRemaining: 'Оставащи играчи', showCards: 'Покажи',
   emoFrequent: 'Често използвани', emoAll: 'Всички', advPingAvatar: 'Индикатор за пинг върху аватара ми (зелен/жълт/червен)', advAutoLeave: 'Автоматично връщане в лобито в края на играта',
   advReduceFx: 'Намалени графични ефекти (сенки/сияние) — за слаби устройства', avatarGallery: 'Галерия с аватари', avatarGalleryTooltip: 'Галерия с аватари', avgalPeople: 'Хора', avgalMisc: 'Разни', lsbRunning: 'в ход', lsbOpen: 'отворени', statusBets: 'Залози', advStatusBar: 'Лента за състоянието на играта (ръка №, пот, залози, фаза)',
   piKickban: 'Пълен кикбан', kickbanConfirm: 'Да се забрани {name} от сървъра (пълен кикбан)?', kickbanOk: '{name} беше кикбанат', kickbanFail: 'Кикбанът се провали', advSecSndCats: 'Категории звуци', advSndActions: 'Звуци на игровите действия (Check, Call, Raise…)', advSndLobby: 'Известие за лоби чата', advSndNet: 'Известия за мрежова игра (играч се присъедини, играта е готова)', advSndBlinds: 'Известие за вдигане на блиндовете', sectionCardback: 'Гръб на картите', cardbackAuto: 'Според тестето', cardbackCustom: 'Импортирано изображение', cardbackImport: 'Импортиране на изображение…',

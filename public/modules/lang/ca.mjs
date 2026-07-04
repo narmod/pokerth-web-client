@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+  plRemaining: 'Jugadors restants', showCards: 'Mostra',
   emoFrequent: 'Freqüents', emoAll: 'Tots', advPingAvatar: 'Indicador de ping al meu avatar (verd/groc/vermell)', advAutoLeave: 'Torna automàticament al vestíbul quan acaba la partida',
   advReduceFx: 'Redueix els efectes gràfics (ombres/brillantor) — per a dispositius modestos', avatarGallery: 'Galeria d\'avatars', avatarGalleryTooltip: 'Galeria d\'avatars', avgalPeople: 'Persones', avgalMisc: 'Diversos', lsbRunning: 'en curs', lsbOpen: 'obertes', statusBets: 'Apostes', advStatusBar: 'Barra d\'estat de la partida (mà núm., pot, apostes, fase)',
   piKickban: 'Kickban total', kickbanConfirm: 'Vols bandejar {name} del servidor (kickban total)?', kickbanOk: '{name} ha rebut un kickban', kickbanFail: 'El kickban ha fallat', advSecSndCats: 'Categories de sons', advSndActions: 'Sons de les accions de joc (Check, Call, Raise…)', advSndLobby: 'Notificació del xat del vestíbul', advSndNet: 'Notificacions de partida en xarxa (jugador connectat, partida a punt)', advSndBlinds: 'Notificació de pujada de blinds', sectionCardback: 'Dors de les cartes', cardbackAuto: 'Segons la baralla', cardbackCustom: 'Imatge importada', cardbackImport: 'Importa una imatge…',

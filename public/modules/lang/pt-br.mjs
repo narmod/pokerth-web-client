@@ -9,6 +9,7 @@ export const meta = {
 };
 
 export const strings = {
+  plRemaining: 'Jogadores restantes', showCards: 'Mostrar',
   emoFrequent: 'Frequentes', emoAll: 'Todos', advPingAvatar: 'Indicador de ping no meu avatar (verde/amarelo/vermelho)', advAutoLeave: 'Voltar automaticamente ao lobby quando a partida terminar',
   advReduceFx: 'Reduzir efeitos gráficos (sombras/brilho) — para aparelhos modestos', avatarGallery: 'Galeria de avatares', avatarGalleryTooltip: 'Galeria de avatares', avgalPeople: 'Pessoas', avgalMisc: 'Diversos', lsbRunning: 'em andamento', lsbOpen: 'abertas', statusBets: 'Apostas', advStatusBar: 'Barra de status da partida (mão nº, pote, apostas, fase)',
   piKickban: 'Kickban total', kickbanConfirm: 'Banir {name} do servidor (kickban total)?', kickbanOk: '{name} recebeu um kickban', kickbanFail: 'O kickban falhou', advSecSndCats: 'Categorias de sons', advSndActions: 'Sons das ações do jogo (Check, Call, Raise…)', advSndLobby: 'Notificação do chat do lobby', advSndNet: 'Notificações de partida em rede (jogador entrou, partida pronta)', advSndBlinds: 'Notificação de aumento dos blinds', sectionCardback: 'Verso das cartas', cardbackAuto: 'Combinando com o baralho', cardbackCustom: 'Imagem importada', cardbackImport: 'Importar uma imagem…',

@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+  plRemaining: 'Jucători rămași', showCards: 'Arată',
   emoFrequent: 'Frecvente', emoAll: 'Toate', advPingAvatar: 'Indicator de ping pe avatarul meu (verde/galben/roșu)', advAutoLeave: 'Revenire automată în lobby la finalul jocului',
   advReduceFx: 'Reduce efectele grafice (umbre/strălucire) — pentru dispozitive modeste', avatarGallery: 'Galerie de avatare', avatarGalleryTooltip: 'Galerie de avatare', avgalPeople: 'Persoane', avgalMisc: 'Diverse', lsbRunning: 'în desfășurare', lsbOpen: 'deschise', statusBets: 'Pariuri', advStatusBar: 'Bară de stare a jocului (mâna nr., pot, pariuri, fază)',
   piKickban: 'Kickban total', kickbanConfirm: 'Interzici {name} pe server (kickban total)?', kickbanOk: '{name} a primit kickban', kickbanFail: 'Kickban eșuat', advSecSndCats: 'Categorii de sunete', advSndActions: 'Sunetele acțiunilor de joc (Check, Call, Raise…)', advSndLobby: 'Notificare chat lobby', advSndNet: 'Notificări joc în rețea (jucător conectat, joc pregătit)', advSndBlinds: 'Notificare la creșterea blindurilor', sectionCardback: 'Spatele cărților', cardbackAuto: 'Asortat cu pachetul', cardbackCustom: 'Imagine importată', cardbackImport: 'Importă o imagine…',

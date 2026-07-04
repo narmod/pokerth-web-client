@@ -11,6 +11,7 @@ export const meta = {
 };
 
 export const strings = {
+  plRemaining: '剩余玩家', showCards: '亮牌',
   emoFrequent: '常用', emoAll: '全部', advPingAvatar: '在我的头像上显示 Ping（绿/黄/红）', advAutoLeave: '对局结束后自动返回大厅',
   advReduceFx: '降低图形效果（阴影/光晕）— 适用于低性能设备', avatarGallery: '头像图库', avatarGalleryTooltip: '头像图库', avgalPeople: '人物', avgalMisc: '其他', lsbRunning: '进行中', lsbOpen: '开放中', statusBets: '下注', advStatusBar: '对局状态栏（手牌编号、彩池、下注、阶段）',
   piKickban: '完全踢除封禁', kickbanConfirm: '要将 {name} 从服务器封禁吗（完全踢除封禁）？', kickbanOk: '{name} 已被踢除封禁', kickbanFail: '踢除封禁失败', advSecSndCats: '音效类别', advSndActions: '游戏动作音效（Check、Call、Raise…）', advSndLobby: '大厅聊天通知音', advSndNet: '网络对局通知音（玩家加入、对局就绪）', advSndBlinds: '盲注上调通知音', sectionCardback: '牌背', cardbackAuto: '与牌组一致', cardbackCustom: '导入的图片', cardbackImport: '导入图片…',

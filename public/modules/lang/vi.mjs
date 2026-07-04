@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+  plRemaining: 'Người chơi còn lại', showCards: 'Lật bài',
   emoFrequent: 'Thường dùng', emoAll: 'Tất cả', advPingAvatar: 'Chỉ báo ping trên ảnh đại diện của tôi (xanh/vàng/đỏ)', advAutoLeave: 'Tự động trở về sảnh khi ván kết thúc',
   advReduceFx: 'Giảm hiệu ứng đồ họa (bóng/quầng sáng) — cho thiết bị yếu', avatarGallery: 'Thư viện ảnh đại diện', avatarGalleryTooltip: 'Thư viện ảnh đại diện', avgalPeople: 'Người', avgalMisc: 'Khác', lsbRunning: 'đang diễn ra', lsbOpen: 'đang mở', statusBets: 'Cược', advStatusBar: 'Thanh trạng thái ván (số ván, pot, cược, giai đoạn)',
   piKickban: 'Kickban toàn phần', kickbanConfirm: 'Cấm {name} khỏi máy chủ (kickban toàn phần)?', kickbanOk: '{name} đã bị kickban', kickbanFail: 'Kickban thất bại', advSecSndCats: 'Danh mục âm thanh', advSndActions: 'Âm thanh hành động trong ván (Check, Call, Raise…)', advSndLobby: 'Thông báo trò chuyện sảnh', advSndNet: 'Thông báo ván chơi mạng (người chơi tham gia, ván sẵn sàng)', advSndBlinds: 'Thông báo tăng blind', sectionCardback: 'Mặt sau lá bài', cardbackAuto: 'Đồng bộ với bộ bài', cardbackCustom: 'Hình ảnh đã nhập', cardbackImport: 'Nhập một hình ảnh…',

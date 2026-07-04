@@ -11,6 +11,7 @@ export const meta = {
 };
 
 export const strings = {
+  plRemaining: 'Cluicheadairean air fhàgail', showCards: 'Seall',
   emoFrequent: 'Cumanta', emoAll: 'Na h-uile', advPingAvatar: 'Taisbeanair ping air m\'avatar (uaine/buidhe/dearg)', advAutoLeave: 'Till dhan lobaidh gu fèin-obrachail nuair a thig an geama gu crìch',
   advReduceFx: 'Lùghdaich èifeachdan grafaigeach (sgàilean/deàrrsadh) — do dh\'uidheaman lag', avatarGallery: 'Gailearaidh avataran', avatarGalleryTooltip: 'Gailearaidh avataran', avgalPeople: 'Daoine', avgalMisc: 'Measgachadh', lsbRunning: 'a\' ruith', lsbOpen: 'fosgailte', statusBets: 'Geallan', advStatusBar: 'Bàr staid a\' gheama (àir. làimhe, poit, geallan, ìre)',
   piKickban: 'Kickban iomlan', kickbanConfirm: 'A bheil thu airson {name} a thoirmeasg on fhrithealaiche (kickban iomlan)?', kickbanOk: 'Fhuair {name} kickban', kickbanFail: 'Dh\'fhàillig an kickban', advSecSndCats: 'Roinnean fuaime', advSndActions: 'Fuaimean ghnìomhan a\' gheama (Check, Call, Raise…)', advSndLobby: 'Brath cabadaich an lobaidh', advSndNet: 'Brathan geama lìonraidh (chaidh cluicheadair a-steach, geama deiseil)', advSndBlinds: 'Brath àrdachadh nan blinds', sectionCardback: 'Cùl nan cairtean', cardbackAuto: 'A rèir na paca', cardbackCustom: 'Dealbh air ion-phortadh', cardbackImport: 'Ion-phortaich dealbh…',

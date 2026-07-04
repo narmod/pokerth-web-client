@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+  plRemaining: 'Likę žaidėjai', showCards: 'Rodyti',
   emoFrequent: 'Dažni', emoAll: 'Visi', advPingAvatar: 'Ping indikatorius mano avatare (žalia/geltona/raudona)', advAutoLeave: 'Automatiškai grįžti į vestibiulį pasibaigus žaidimui',
   advReduceFx: 'Sumažinti grafinius efektus (šešėliai/švytėjimas) — silpniems įrenginiams', avatarGallery: 'Avatarų galerija', avatarGalleryTooltip: 'Avatarų galerija', avgalPeople: 'Žmonės', avgalMisc: 'Įvairūs', lsbRunning: 'vyksta', lsbOpen: 'atviri', statusBets: 'Statymai', advStatusBar: 'Žaidimo būsenos juosta (rankos nr., bankas, statymai, fazė)',
   piKickban: 'Visiškas kickban', kickbanConfirm: 'Užblokuoti {name} serveryje (visiškas kickban)?', kickbanOk: '{name} gavo kickban', kickbanFail: 'Kickban nepavyko', advSecSndCats: 'Garsų kategorijos', advSndActions: 'Žaidimo veiksmų garsai (Check, Call, Raise…)', advSndLobby: 'Vestibiulio pokalbio pranešimas', advSndNet: 'Tinklo žaidimo pranešimai (žaidėjas prisijungė, žaidimas paruoštas)', advSndBlinds: 'Pranešimas apie blind didinimą', sectionCardback: 'Kortų nugarėlė', cardbackAuto: 'Pagal kaladę', cardbackCustom: 'Importuotas paveikslėlis', cardbackImport: 'Importuoti paveikslėlį…',

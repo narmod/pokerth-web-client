@@ -15,6 +15,7 @@ export const meta = {
 };
 
 export const strings = {
+  plRemaining: 'Resterende spelers', showCards: 'Tonen',
   emoFrequent: 'Vaak gebruikt', emoAll: 'Alle', advPingAvatar: 'Ping-indicator op mijn avatar (groen/geel/rood)', advAutoLeave: 'Automatisch terug naar de lobby als het spel eindigt',
   advReduceFx: 'Verminder grafische effecten (schaduwen/gloed) — voor zwakke apparaten', avatarGallery: 'Avatargalerij', avatarGalleryTooltip: 'Avatargalerij', avgalPeople: 'Personen', avgalMisc: 'Diversen', lsbRunning: 'bezig', lsbOpen: 'open', statusBets: 'Inzetten', advStatusBar: 'Spelstatusbalk (hand nr., pot, inzetten, fase)',
   piKickban: 'Totale kickban', kickbanConfirm: '{name} van de server verbannen (totale kickban)?', kickbanOk: '{name} is gekickbanned', kickbanFail: 'Kickban mislukt', advSecSndCats: 'Geluidscategorieën', advSndActions: 'Geluiden van spelacties (Check, Call, Raise…)', advSndLobby: 'Melding voor lobbychat', advSndNet: 'Meldingen van netwerkspel (speler toegetreden, spel klaar)', advSndBlinds: 'Melding bij blindverhoging', sectionCardback: 'Achterkant van de kaarten', cardbackAuto: 'Passend bij het kaartspel', cardbackCustom: 'Geïmporteerde afbeelding', cardbackImport: 'Importeer een afbeelding…',

@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+  plRemaining: 'Zbývající hráči', showCards: 'Ukázat',
   emoFrequent: 'Časté', emoAll: 'Vše', advPingAvatar: 'Indikátor pingu na mém avataru (zelená/žlutá/červená)', advAutoLeave: 'Automatický návrat do lobby po skončení hry',
   advReduceFx: 'Omezit grafické efekty (stíny/záře) — pro slabší zařízení', avatarGallery: 'Galerie avatarů', avatarGalleryTooltip: 'Galerie avatarů', avgalPeople: 'Lidé', avgalMisc: 'Různé', lsbRunning: 'probíhá', lsbOpen: 'otevřené', statusBets: 'Sázky', advStatusBar: 'Stavový řádek hry (č. ruky, pot, sázky, fáze)',
   piKickban: 'Úplný kickban', kickbanConfirm: 'Zabanovat hráče {name} na serveru (úplný kickban)?', kickbanOk: '{name} dostal kickban', kickbanFail: 'Kickban se nezdařil', advSecSndCats: 'Kategorie zvuků', advSndActions: 'Zvuky herních akcí (Check, Call, Raise…)', advSndLobby: 'Upozornění na chat lobby', advSndNet: 'Upozornění síťové hry (hráč se připojil, hra připravena)', advSndBlinds: 'Upozornění na zvýšení blindů', sectionCardback: 'Rub karet', cardbackAuto: 'Podle balíčku', cardbackCustom: 'Importovaný obrázek', cardbackImport: 'Importovat obrázek…',

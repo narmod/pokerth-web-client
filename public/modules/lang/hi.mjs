@@ -14,6 +14,7 @@ export const meta = {
 };
 
 export const strings = {
+  plRemaining: 'शेष खिलाड़ी', showCards: 'दिखाएँ',
   emoFrequent: 'अक्सर', emoAll: 'सभी', advPingAvatar: 'मेरे अवतार पर पिंग संकेतक (हरा/पीला/लाल)', advAutoLeave: 'खेल समाप्त होने पर स्वचालित रूप से लॉबी में वापसी',
   advReduceFx: 'ग्राफ़िक प्रभाव कम करें (छाया/चमक) — कमज़ोर उपकरणों के लिए', avatarGallery: 'अवतार गैलरी', avatarGalleryTooltip: 'अवतार गैलरी', avgalPeople: 'लोग', avgalMisc: 'विविध', lsbRunning: 'चालू', lsbOpen: 'खुली', statusBets: 'दांव', advStatusBar: 'खेल स्थिति पट्टी (हाथ सं., पॉट, दांव, चरण)',
   piKickban: 'पूर्ण किकबैन', kickbanConfirm: '{name} को सर्वर से प्रतिबंधित करें (पूर्ण किकबैन)?', kickbanOk: '{name} को किकबैन कर दिया गया', kickbanFail: 'किकबैन विफल रहा', advSecSndCats: 'ध्वनि श्रेणियाँ', advSndActions: 'खेल क्रियाओं की ध्वनियाँ (Check, Call, Raise…)', advSndLobby: 'लॉबी चैट सूचना', advSndNet: 'नेटवर्क गेम सूचनाएँ (खिलाड़ी जुड़ा, खेल तैयार)', advSndBlinds: 'ब्लाइंड बढ़ने की सूचना', sectionCardback: 'कार्ड का पिछला भाग', cardbackAuto: 'डेक से मेल', cardbackCustom: 'आयातित छवि', cardbackImport: 'छवि आयात करें…',

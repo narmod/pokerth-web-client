@@ -15,6 +15,7 @@ export const meta = {
 };
 
 export const strings = {
+  plRemaining: 'Verbleibende Spieler', showCards: 'Zeigen',
   emoFrequent: 'Häufig', emoAll: 'Alle', advPingAvatar: 'Ping-Anzeige auf meinem Avatar (grün/gelb/rot)', advAutoLeave: 'Automatisch zur Lobby zurückkehren, wenn das Spiel endet',
   advReduceFx: 'Grafikeffekte reduzieren (Schatten/Glow) — für schwache Geräte', avatarGallery: 'Avatar-Galerie', avatarGalleryTooltip: 'Avatar-Galerie', avgalPeople: 'Personen', avgalMisc: 'Verschiedenes', lsbRunning: 'laufend', lsbOpen: 'offen', statusBets: 'Einsätze', advStatusBar: 'Spielstatusleiste (Hand-Nr., Pot, Einsätze, Phase)',
   piKickban: 'Totaler Kickban', kickbanConfirm: '{name} vom Server verbannen (totaler Kickban)?', kickbanOk: '{name} wurde gekickbannt', kickbanFail: 'Kickban fehlgeschlagen', advSecSndCats: 'Klangkategorien', advSndActions: 'Klänge der Spielaktionen (Check, Call, Raise…)', advSndLobby: 'Benachrichtigung für Lobby-Chat', advSndNet: 'Netzwerkspiel-Benachrichtigungen (Spieler beigetreten, Spiel bereit)', advSndBlinds: 'Benachrichtigung bei Blinds-Erhöhung', sectionCardback: 'Kartenrückseite', cardbackAuto: 'Passend zum Kartenstapel', cardbackCustom: 'Importiertes Bild', cardbackImport: 'Bild importieren…',
