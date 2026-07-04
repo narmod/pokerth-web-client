@@ -35,6 +35,7 @@
 - 🃏 **Full Texas Hold'em** — flying card deals, sliding chips, 3D card flips, emoji reactions, in-game chat and a hand log
 - 🎨 **Deep theming** — mix palette × felt × deck × buttons × pucks × seats
 - 🌍 **36 languages**
+- 🤝 **Full parity with the official QML client** — F-key shortcuts, admin tools, sounds, full chat and more, kept move-for-move in sync
 
 <p align="center">
   <img src="docs/screenshots/08-desktop-game-light.png" alt="In-game desktop view — full table, live theming, reactions, chat, action bar and hand log" width="860"/>
@@ -231,6 +232,31 @@ A full appearance system, reached from the **Theme** button — pick a one-tap p
 - **Detachable panels** — on desktop, drag the title bar of the chat, hand log or reactions panel to pop it out into a free-floating, movable and resizable window (the hand log and reactions also detach on tablet); a **↺** button in the header snaps every panel back to its docked spot. Window positions are remembered.
 - Poker hand reference overlay (? button)
 - Exponential-backoff auto-reconnect with live countdown
+
+### Official client (QML) parity
+The in-game screen was audited feature-by-feature against PokerTH's official QML client
+(sources extracted from the official Android APK builds) and brought to **full parity**
+— milestone `v0.3.166-beta`:
+- **Keyboard shortcuts**: F1–F8 mirror the official client (fold / check-call / bet-raise /
+  all-in, alternate key order, playing-mode switches), plus **F5** to show your cards
+  after a hand that ended with no showdown
+- **Game status bar**: hand number, game ID, total pot with the current round's bets on
+  their own line, and a live players-remaining count
+- **Winning-hand badge** under the community cards at showdown, and **zoom-follow**
+  (opt-in, mobile) — the table view auto-pans to the active seat and steps back out to
+  the full table at showdown
+- **Full chat**: Tab nickname-completion with cycling, ↑ / ↓ message history, and a
+  1,000+ emoji picker (frequent + full grid) alongside the original 30 reaction emoji
+- **Admin tools**: a "Kickban" button in the player card for server admins
+- **Sound categories** — independent toggles for actions, blind raises, lobby chat, and
+  network events (player joined, game ready) — plus three additional official sound samples
+- **Card-back** as its own axis, independent from the card deck, with the option to
+  import your own image
+- **Reduced-effects mode** for low-powered devices, a gallery of **89 official PokerTH
+  avatars**, a **lobby stats bar** (players / running / open games), and hand-category
+  icons in the win-probability panel
+- **Ping indicator** on your own avatar, and an optional **auto-return to the lobby**
+  when a game ends
 
 ### PWA
 - `manifest.json` + Service Worker (`sw.js`) with versioned **network-first** cache
@@ -932,7 +958,7 @@ A few things worth knowing if you plan to hack on this:
 <a id="roadmap"></a>
 ## Roadmap / Suggested next steps
 
-Development is tracked in **[`docs/ROADMAP.md`](docs/ROADMAP.md)**, grouped as *Shipped · Now · Next · Later*. In short: the current focus is the registered-account login flow on pokerth.net and code-health work — splitting `pokerth.js` into modules, adding linting and an automated test suite, and moving the remaining hand-written Protobuf paths onto the generated bundle in `public/proto/`. Further out: local multiplayer over WebRTC, a streamer-friendly read-only embed, and a native review of the machine-assisted translations.
+Development is tracked in **[`docs/ROADMAP.md`](docs/ROADMAP.md)**, grouped as *Shipped · Now · Next · Later*. **Full feature parity with the official QML client was reached in `v0.3.166-beta`** — every gap identified from the official APK builds has been closed (see [Official client (QML) parity](#official-client-qml-parity) above). Current focus: the registered-account login flow on pokerth.net and code-health work — splitting `pokerth.js` into modules, adding linting and an automated test suite, and moving the remaining hand-written Protobuf paths onto the generated bundle in `public/proto/`. Further out: local multiplayer over WebRTC, a streamer-friendly read-only embed, and a native review of the machine-assisted translations.
 
 ---
 
@@ -947,3 +973,5 @@ This project is licensed under the **GNU Affero General Public License v3.0 or l
 A huge thank you to the entire **PokerTH team** for creating and maintaining such a wonderful open-source poker game over all these years. This project would not exist without your work. 🙏
 
 For compatibility, the in-game table — its layout, colours and poker terms — deliberately tracks PokerTH's official **QML client**, so the web client stays visually and behaviourally aligned with it.
+
+This project is developed in ongoing collaboration with the PokerTH maintainer, with the goal of becoming one of the project's official clients.

@@ -4,6 +4,9 @@ This is a living document. The client began as a way to play poker with family o
 phones and tablets, and is growing toward something the wider PokerTH community can
 use too. Items are grouped by status rather than fixed phases.
 
+> **Milestone `v0.3.166-beta`**: the in-game screen reached full feature parity with
+> PokerTH's official QML client — see *Official client (QML) parity* below.
+
 ## ✅ Shipped
 
 **Core gameplay**
@@ -96,6 +99,34 @@ use too. Items are grouped by status rather than fixed phases.
 - Lobby game cards show player counts, status, and each table's blind level and raise schedule.
 - Sound effects for every action.
 - Internationalisation in 36 languages, auto-detected and switchable on the fly.
+
+**Official client (QML) parity — full parity reached (milestone `v0.3.166-beta`)**
+- The in-game screen was audited feature-by-feature against PokerTH's official QML client
+  (sources extracted from the official Android APK builds) and every identified gap has
+  been closed:
+  - F1–F8 keyboard shortcuts matching the official client (fold / check-call / bet-raise /
+    all-in, alternate key order, playing-mode switches), plus F5 to show your cards after
+    a hand that ended with no showdown.
+  - Game status bar: hand number, game ID, total pot with the current round's bets on
+    their own line, and a live players-remaining count.
+  - Winning-hand badge under the community cards at showdown.
+  - Zoom-follow (opt-in, mobile): the table view auto-pans to the active seat and steps
+    back out to the full table at showdown.
+  - Full chat: Tab nickname-completion with cycling, ↑ / ↓ message history, and a
+    1,000+ emoji picker (frequent + full grid) alongside the original 30 reactions.
+  - Admin "Kickban" button in the player card.
+  - Sound categories (actions / blind raises / lobby chat / network events), each
+    independently toggleable, plus three additional official sound samples.
+  - Card-back as its own axis, independent from the card deck, with custom-image import.
+  - Reduced-effects mode for low-powered devices, a gallery of 89 official PokerTH
+    avatars, a lobby stats bar (players / running / open games), and hand-category icons
+    in the win-probability panel.
+  - Ping indicator on your own avatar, and an optional auto-return to the lobby when a
+    game ends.
+- Follow-up fixes from official-client community feedback: chat length capped to match
+  the server limit, a player's current table shown in the lobby players list, and the
+  players-remaining counter above.
+- Client kept compatible with server-side PokerTH 2.1.0 (build-ID check).
 
 **Platform**
 - Installable PWA (mobile and desktop; works offline in Training mode).
