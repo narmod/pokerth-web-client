@@ -9,6 +9,7 @@ export const meta = {
 };
 
 export const strings = {
+  emoFrequent: 'Часті', emoAll: 'Усі', advPingAvatar: 'Індикатор пінгу на моєму аватарі (зелений/жовтий/червоний)', advAutoLeave: 'Автоповернення до лобі після завершення гри',
   advReduceFx: 'Спростити графічні ефекти (тіні/світіння) — для слабких пристроїв', avatarGallery: 'Галерея аватарів', avatarGalleryTooltip: 'Галерея аватарів', avgalPeople: 'Люди', avgalMisc: 'Різне', lsbRunning: 'тривають', lsbOpen: 'відкриті', statusBets: 'Ставки', advStatusBar: 'Рядок стану гри (№ роздачі, банк, ставки, фаза)',
   piKickban: 'Повний кікбан', kickbanConfirm: 'Забанити {name} на сервері (повний кікбан)?', kickbanOk: '{name} отримав кікбан', kickbanFail: 'Кікбан не вдався', advSecSndCats: 'Категорії звуків', advSndActions: 'Звуки ігрових дій (Check, Call, Raise…)', advSndLobby: 'Сповіщення чату лобі', advSndNet: 'Сповіщення мережевої гри (гравець приєднався, гра готова)', advSndBlinds: 'Сповіщення про підвищення блайндів', sectionCardback: 'Сорочка карт', cardbackAuto: 'Відповідно до колоди', cardbackCustom: 'Імпортоване зображення', cardbackImport: 'Імпортувати зображення…',
   advFkeysAlt: 'Зворотний порядок F1–F4 (F1 = All-In)',

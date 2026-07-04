@@ -9,6 +9,7 @@ export const meta = {
 };
 
 export const strings = {
+  emoFrequent: 'Usein käytetyt', emoAll: 'Kaikki', advPingAvatar: 'Ping-ilmaisin avatarissani (vihreä/keltainen/punainen)', advAutoLeave: 'Palaa automaattisesti aulaan pelin päättyessä',
   advReduceFx: 'Vähennä grafiikkatehosteita (varjot/hehku) — heikoille laitteille', avatarGallery: 'Avatar-galleria', avatarGalleryTooltip: 'Avatar-galleria', avgalPeople: 'Ihmiset', avgalMisc: 'Sekalaiset', lsbRunning: 'käynnissä', lsbOpen: 'avoinna', statusBets: 'Panokset', advStatusBar: 'Pelin tilarivi (käsi nro, potti, panokset, vaihe)',
   piKickban: 'Täysi kickban', kickbanConfirm: 'Estetäänkö {name} palvelimelta (täysi kickban)?', kickbanOk: '{name} sai kickbanin', kickbanFail: 'Kickban epäonnistui', advSecSndCats: 'Ääniluokat', advSndActions: 'Peliäänet (Check, Call, Raise…)', advSndLobby: 'Aulachatin ilmoitus', advSndNet: 'Verkkopelin ilmoitukset (pelaaja liittyi, peli valmis)', advSndBlinds: 'Ilmoitus blindien korotuksesta', sectionCardback: 'Korttien selkäpuoli', cardbackAuto: 'Pakan mukainen', cardbackCustom: 'Tuotu kuva', cardbackImport: 'Tuo kuva…',
   advFkeysAlt: 'Käännä F1–F4-järjestys (F1 = All-In)',

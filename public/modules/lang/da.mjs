@@ -9,6 +9,7 @@ export const meta = {
 };
 
 export const strings = {
+  emoFrequent: 'Ofte brugte', emoAll: 'Alle', advPingAvatar: 'Ping-indikator på min avatar (grøn/gul/rød)', advAutoLeave: 'Vend automatisk tilbage til lobbyen, når spillet slutter',
   advReduceFx: 'Reducer grafiske effekter (skygger/glød) — til svage enheder', avatarGallery: 'Avatargalleri', avatarGalleryTooltip: 'Avatargalleri', avgalPeople: 'Personer', avgalMisc: 'Diverse', lsbRunning: 'i gang', lsbOpen: 'åbne', statusBets: 'Indsatser', advStatusBar: 'Spilstatuslinje (hånd nr., pot, indsatser, fase)',
   piKickban: 'Total kickban', kickbanConfirm: 'Udeluk {name} fra serveren (total kickban)?', kickbanOk: '{name} er blevet kickbannet', kickbanFail: 'Kickban mislykkedes', advSecSndCats: 'Lydkategorier', advSndActions: 'Lyde for spilhandlinger (Check, Call, Raise…)', advSndLobby: 'Notifikation for lobbychat', advSndNet: 'Netværksspil-notifikationer (spiller tilsluttet, spil klart)', advSndBlinds: 'Notifikation ved blindforhøjelse', sectionCardback: 'Kortbagside', cardbackAuto: 'Match kortsættet', cardbackCustom: 'Importeret billede', cardbackImport: 'Importér et billede…',
   advFkeysAlt: 'Omvend F1–F4-rækkefølgen (F1 = All-In)',

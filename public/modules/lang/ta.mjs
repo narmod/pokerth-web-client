@@ -11,6 +11,7 @@ export const meta = {
 };
 
 export const strings = {
+  emoFrequent: 'அடிக்கடி', emoAll: 'அனைத்தும்', advPingAvatar: 'என் அவதாரில் பிங் காட்டி (பச்சை/மஞ்சள்/சிவப்பு)', advAutoLeave: 'ஆட்டம் முடிந்ததும் தானாக லாபிக்கு திரும்பு',
   advReduceFx: 'வரைகலை விளைவுகளைக் குறை (நிழல்/ஒளி) — குறைந்த திறன் சாதனங்களுக்கு', avatarGallery: 'அவதார் தொகுப்பு', avatarGalleryTooltip: 'அவதார் தொகுப்பு', avgalPeople: 'மனிதர்கள்', avgalMisc: 'இதர', lsbRunning: 'நடைபெறுகின்றன', lsbOpen: 'திறந்தவை', statusBets: 'பந்தயங்கள்', advStatusBar: 'ஆட்ட நிலைப் பட்டை (கை எண், பாட், பந்தயங்கள், கட்டம்)',
   piKickban: 'முழு கிக்பேன்', kickbanConfirm: '{name}-ஐ சேவையகத்திலிருந்து தடை செய்யவா (முழு கிக்பேன்)?', kickbanOk: '{name} கிக்பேன் செய்யப்பட்டார்', kickbanFail: 'கிக்பேன் தோல்வியடைந்தது', advSecSndCats: 'ஒலி வகைகள்', advSndActions: 'விளையாட்டு செயல்களின் ஒலிகள் (Check, Call, Raise…)', advSndLobby: 'லாபி அரட்டை அறிவிப்பு', advSndNet: 'நெட்வொர்க் விளையாட்டு அறிவிப்புகள் (வீரர் இணைந்தார், விளையாட்டு தயார்)', advSndBlinds: 'blinds உயர்வு அறிவிப்பு', sectionCardback: 'சீட்டுகளின் பின்புறம்', cardbackAuto: 'டெக்கிற்கு ஏற்ப', cardbackCustom: 'இறக்குமதி செய்யப்பட்ட படம்', cardbackImport: 'படத்தை இறக்குமதி செய்…',
   advFkeysAlt: 'F1–F4 வரிசையை மாற்றவும் (F1 = All-In)',

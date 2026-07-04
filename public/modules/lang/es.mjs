@@ -16,6 +16,7 @@ export const meta = {
 };
 
 export const strings = {
+  emoFrequent: 'Frecuentes', emoAll: 'Todos', advPingAvatar: 'Indicador de ping en mi avatar (verde/amarillo/rojo)', advAutoLeave: 'Volver automáticamente al lobby al terminar la partida',
   advReduceFx: 'Reducir los efectos gráficos (sombras/brillo) — para dispositivos modestos', avatarGallery: 'Galería de avatares', avatarGalleryTooltip: 'Galería de avatares', avgalPeople: 'Personas', avgalMisc: 'Varios', lsbRunning: 'en curso', lsbOpen: 'abiertas', statusBets: 'Apuestas', advStatusBar: 'Barra de estado de la partida (mano n.º, bote, apuestas, fase)',
   piKickban: 'Kickban total', kickbanConfirm: '¿Expulsar y banear a {name} del servidor (kickban total)?', kickbanOk: '{name} ha recibido un kickban', kickbanFail: 'El kickban ha fallado', advSecSndCats: 'Categorías de sonidos', advSndActions: 'Sonidos de las acciones de juego (Check, Call, Raise…)', advSndLobby: 'Notificación del chat del lobby', advSndNet: 'Notificaciones de partida en red (jugador conectado, partida lista)', advSndBlinds: 'Notificación de subida de blinds', sectionCardback: 'Dorso de las cartas', cardbackAuto: 'A juego con la baraja', cardbackCustom: 'Imagen importada', cardbackImport: 'Importar una imagen…',
   advFkeysAlt: 'Invertir el orden F1–F4 (F1 = All-In)',

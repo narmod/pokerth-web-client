@@ -9,6 +9,7 @@ export const meta = {
 };
 
 export const strings = {
+  emoFrequent: 'Ofta använda', emoAll: 'Alla', advPingAvatar: 'Ping-indikator på min avatar (grön/gul/röd)', advAutoLeave: 'Återgå automatiskt till lobbyn när spelet är slut',
   advReduceFx: 'Minska grafiska effekter (skuggor/glöd) — för svaga enheter', avatarGallery: 'Avatargalleri', avatarGalleryTooltip: 'Avatargalleri', avgalPeople: 'Personer', avgalMisc: 'Diverse', lsbRunning: 'pågår', lsbOpen: 'öppna', statusBets: 'Insatser', advStatusBar: 'Spelstatusrad (hand nr, pott, insatser, fas)',
   piKickban: 'Total kickban', kickbanConfirm: 'Stäng av {name} från servern (total kickban)?', kickbanOk: '{name} har fått kickban', kickbanFail: 'Kickban misslyckades', advSecSndCats: 'Ljudkategorier', advSndActions: 'Ljud för spelhandlingar (Check, Call, Raise…)', advSndLobby: 'Avisering för lobbychatt', advSndNet: 'Aviseringar för nätverksspel (spelare anslöt, spel redo)', advSndBlinds: 'Avisering vid blindhöjning', sectionCardback: 'Kortbaksida', cardbackAuto: 'Matchar kortleken', cardbackCustom: 'Importerad bild', cardbackImport: 'Importera en bild…',
   advFkeysAlt: 'Vänd på F1–F4-ordningen (F1 = All-In)',

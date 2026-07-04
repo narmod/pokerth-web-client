@@ -15,6 +15,7 @@ export const meta = {
 };
 
 export const strings = {
+  emoFrequent: 'Частые', emoAll: 'Все', advPingAvatar: 'Индикатор пинга на моём аватаре (зелёный/жёлтый/красный)', advAutoLeave: 'Автовозврат в лобби по окончании игры',
   advReduceFx: 'Упростить графические эффекты (тени/свечение) — для слабых устройств', avatarGallery: 'Галерея аватаров', avatarGalleryTooltip: 'Галерея аватаров', avgalPeople: 'Люди', avgalMisc: 'Разное', lsbRunning: 'идут', lsbOpen: 'открыты', statusBets: 'Ставки', advStatusBar: 'Строка состояния игры (№ раздачи, банк, ставки, фаза)',
   piKickban: 'Полный кикбан', kickbanConfirm: 'Забанить {name} на сервере (полный кикбан)?', kickbanOk: '{name} получил кикбан', kickbanFail: 'Кикбан не удался', advSecSndCats: 'Категории звуков', advSndActions: 'Звуки игровых действий (Check, Call, Raise…)', advSndLobby: 'Уведомление чата лобби', advSndNet: 'Уведомления сетевой игры (игрок подключился, игра готова)', advSndBlinds: 'Уведомление о повышении блайндов', sectionCardback: 'Рубашка карт', cardbackAuto: 'Под стать колоде', cardbackCustom: 'Импортированное изображение', cardbackImport: 'Импортировать изображение…',
   advFkeysAlt: 'Обратный порядок F1–F4 (F1 = All-In)',

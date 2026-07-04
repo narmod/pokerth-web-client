@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+  emoFrequent: 'Česti', emoAll: 'Svi', advPingAvatar: 'Indikator pinga na mom avataru (zeleno/žuto/crveno)', advAutoLeave: 'Automatski povratak u lobby po završetku igre',
   advReduceFx: 'Smanji grafičke efekte (sjene/sjaj) — za slabije uređaje', avatarGallery: 'Galerija avatara', avatarGalleryTooltip: 'Galerija avatara', avgalPeople: 'Ljudi', avgalMisc: 'Razno', lsbRunning: 'u tijeku', lsbOpen: 'otvorene', statusBets: 'Ulozi', advStatusBar: 'Statusna traka igre (br. ruke, pot, ulozi, faza)',
   piKickban: 'Potpuni kickban', kickbanConfirm: 'Zabraniti igrača {name} na poslužitelju (potpuni kickban)?', kickbanOk: '{name} je dobio kickban', kickbanFail: 'Kickban nije uspio', advSecSndCats: 'Kategorije zvukova', advSndActions: 'Zvukovi radnji u igri (Check, Call, Raise…)', advSndLobby: 'Obavijest lobby chata', advSndNet: 'Obavijesti mrežne igre (igrač se pridružio, igra spremna)', advSndBlinds: 'Obavijest o povećanju blindova', sectionCardback: 'Poleđina karata', cardbackAuto: 'Prema špilu', cardbackCustom: 'Uvezena slika', cardbackImport: 'Uvezi sliku…',
   advFkeysAlt: 'Obrni redoslijed F1–F4 (F1 = All-In)',
