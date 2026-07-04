@@ -462,6 +462,10 @@ function openAdvancedOptions() {
   sync('adv-snd-lobby', 'snd_lobby', true);
   sync('adv-snd-net', 'snd_net', true);
   sync('adv-snd-blinds', 'snd_blinds', true);
+  sync('adv-reducefx', 'reduce_fx', false);
+  // Mode « effets réduits » (parité QmlReduceEffects) : classe sur <html>,
+  // le CSS coupe ombres / glow / backdrop-filter.
+  try { document.documentElement.classList.toggle('reduce-fx', _advGet('reduce_fx', false)); } catch (e) {}
   try { var _sl = document.getElementById('adv-seatlayout'); if (_sl) { var _slv = localStorage.getItem('pth_seat_layout'); _sl.value = (_slv === 'pokerth-official' || _slv === 'pokerth-ellipse' || _slv === 'custom') ? _slv : 'auto'; } } catch (e) {}
   try { _rebindAction = null; _renderKeyButtons(); } catch (e) {}
   try { advSelectCat('ui'); } catch (e) {}
@@ -543,7 +547,8 @@ function resetAdvDefaults() {
     focus_bet: false, chat_noemoji: false, fade_losers: true, show_flag: true,
     own_click: false, guard_call: false, odds_monitor: false, no_hide_ignored: false,
     fkeys_alt: false, zoom_follow: false,
-    snd_actions: true, snd_lobby: true, snd_net: true, snd_blinds: true
+    snd_actions: true, snd_lobby: true, snd_net: true, snd_blinds: true,
+    reduce_fx: false
   };
   try { for (var k in defs) setAdvOpt(k, defs[k]); } catch (e) {}
   try { setSeatLayout('official'); } catch (e) {}
@@ -5420,6 +5425,7 @@ const App = (() => {
             _hasStatistics = true;
             _lobbyPlayerCount = Proto.u32(s,2);
             $('h-players').textContent = _lobbyPlayerCount + ' ' + t('playersOnline');
+            updateLobbyStatsBar();
           }
         }
         break;
@@ -6982,6 +6988,22 @@ const App = (() => {
     return false;
   }
 
+  // ── LobbyStatsBar (parité QML, bible §16) : « X joueurs · Y en cours ·
+  // Z ouvertes », alimentée par la liste des tables + StatisticsMessage. ──
+  function updateLobbyStatsBar() {
+    var el = document.getElementById('lsb-text');
+    if (!el) return;
+    var open = 0, running = 0;
+    try {
+      Object.values(games).forEach(function (g) {
+        if (g.mode === 2) running++;
+        else if (g.mode === 1) open++;
+      });
+    } catch (e) {}
+    el.textContent = _lobbyPlayerCount + ' ' + t('playersOnline') + ' \u00b7 '
+      + running + ' ' + t('lsbRunning') + ' \u00b7 ' + open + ' ' + t('lsbOpen');
+  }
+
   function renderGames() {
     // Utiliser entries() pour avoir l'id ET l'objet
     const entries = Object.entries(games);
@@ -6989,6 +7011,7 @@ const App = (() => {
 
     // Per-chip counts + active highlight (on the full set).
     _refreshFilterChips(entries);
+    updateLobbyStatsBar();
 
     if (entries.length === 0) {
       $('g-count').textContent = '0 table(s)';
@@ -9156,17 +9179,21 @@ const App = (() => {
     _oddsCompute(hole, board, function (r) {
       if (seq !== _oddsSeq) return;
       if (!r) { el.style.display = 'none'; el.innerHTML = ''; el._built = false; return; }
+      // Icônes SVG officielles des 10 mains (resources/hands/ du client QML)
       var CATS = [
-        [9, t('oddsRoyal')], [8, t('oddsSF')], [7, t('oddsQuads')], [6, t('oddsFull')],
-        [5, t('oddsFlush')], [4, t('oddsStraight')], [3, t('oddsTrips')], [2, t('oddsTwoPair')],
-        [1, t('oddsPair')], [0, t('oddsHigh')]
+        [9, t('oddsRoyal'), 'royalflush'], [8, t('oddsSF'), 'straightflush'],
+        [7, t('oddsQuads'), 'fourofakind'], [6, t('oddsFull'), 'fullhouse'],
+        [5, t('oddsFlush'), 'flush'], [4, t('oddsStraight'), 'straight'],
+        [3, t('oddsTrips'), 'threeofakind'], [2, t('oddsTwoPair'), 'twopair'],
+        [1, t('oddsPair'), 'onepair'], [0, t('oddsHigh'), 'highcard']
       ];
       var rows = '';
       for (var i = 0; i < CATS.length; i++) {
         var ri = CATS[i][0], p = r.pct[ri] * 100, pw = Math.max(0, Math.min(100, p));
         var ptxt = p >= 0.5 ? Math.round(p) + '%' : (p > 0 ? '<1%' : '0%');
         var cls = pw >= 50 ? ' hot' : (pw >= 15 ? ' warm' : '');
-        rows += '<div class="odds-row' + cls + '"><span class="odds-cat">' + esc(CATS[i][1])
+        rows += '<div class="odds-row' + cls + '"><img class="odds-ico" src="/img/hands/' + CATS[i][2] + '.svg" alt="">'
+          + '<span class="odds-cat">' + esc(CATS[i][1])
           + '</span><span class="odds-bar"><i style="width:' + pw.toFixed(1) + '%"></i></span>'
           + '<span class="odds-pct">' + ptxt + '</span></div>';
       }
@@ -12798,7 +12825,7 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.3.159-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.160-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

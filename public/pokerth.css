@@ -6523,3 +6523,77 @@ html:not([data-seat="pokerth"]) body.adv-hide-pbar .seat.me .seat-info {
   white-space: nowrap;
   pointer-events: none;
 }
+
+/* ── Mode « effets réduits » (parité QmlReduceEffects, bible §1) : coupe les
+   effets décoratifs coûteux — ombres, glow, backdrop-filter — pour les
+   appareils faibles. Opt-in : Options avancées → Tapis. ── */
+html.reduce-fx *, html.reduce-fx *::before, html.reduce-fx *::after {
+  box-shadow: none !important;
+  text-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+/* ── Icônes des 10 mains dans le moniteur d'odds (resources/hands/ QML) ── */
+#odds-monitor .odds-ico {
+  flex: 0 0 auto;
+  width: calc(19px * var(--ws));
+  height: calc(12.5px * var(--ws));
+  opacity: 0.9;
+}
+
+/* ── LobbyStatsBar (parité QML) : bandeau discret sous la liste des tables ── */
+.lobby-statsbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 5px 10px;
+  font-size: 0.68rem;
+  color: var(--text-dim, #8b93a7);
+  border-top: 1px solid var(--line, #2c3548);
+}
+.lobby-statsbar a { color: var(--gold-dim, #9a824a); text-decoration: none; }
+.lobby-statsbar a:hover { text-decoration: underline; }
+
+/* ── Galerie d'avatars d'exemple (client Qt-Widgets officiel) ── */
+.avgal-overlay {
+  position: fixed; inset: 0; z-index: 1200;
+  display: none; align-items: center; justify-content: center;
+  background: rgba(0, 0, 0, 0.55);
+}
+.avgal-box {
+  position: relative;
+  background: var(--panel, #1c2230);
+  border: 1px solid var(--line, #2c3548);
+  border-radius: 14px;
+  width: min(560px, 92vw);
+  max-height: 80vh;
+  display: flex; flex-direction: column;
+  padding: 14px;
+}
+.avgal-title {
+  font-weight: 700; margin: 0 22px 8px 0;
+  color: var(--gold, #c8a84a);
+  letter-spacing: 0.06em; text-transform: uppercase; font-size: 0.8rem;
+}
+.avgal-body { overflow-y: auto; }
+.avgal-cat {
+  margin: 10px 0 6px; font-size: 0.68rem;
+  color: var(--text-dim, #8b93a7);
+  text-transform: uppercase; letter-spacing: 0.1em;
+}
+.avgal-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(52px, 1fr));
+  gap: 6px;
+}
+.avgal-item {
+  padding: 0; border: 1px solid transparent; border-radius: 8px;
+  background: transparent; cursor: pointer;
+}
+.avgal-item:hover, .avgal-item:focus-visible { border-color: var(--gold, #c8a84a); }
+.avgal-item img {
+  width: 100%; aspect-ratio: 1; display: block;
+  border-radius: 7px; object-fit: cover;
+}
