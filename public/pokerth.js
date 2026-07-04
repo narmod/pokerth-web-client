@@ -9437,6 +9437,13 @@ const App = (() => {
     window.addEventListener('resize', function () { applyWs(); var r = el.getBoundingClientRect(); applyPos(r.left, r.top); });
   }
 
+  // Header du moniteur de cotes : onglets Journal | Cotes (Cotes actif).
+  function _oddsHd(suffix) {
+    return '<div class="odds-hd info-tabs">'
+      + '<button type="button" class="info-tab" onclick="window._infoTab&&window._infoTab(\'log\')">\uD83D\uDCCB ' + esc(t('logPanelTitle')) + '</button>'
+      + '<button type="button" class="info-tab active">\uD83D\uDCCA ' + esc(t('oddsTitle')) + (suffix || '') + '</button>'
+      + '</div>';
+  }
   function renderOddsMonitor() {
     var el = document.getElementById('odds-monitor');
     if (!el) return;
@@ -9444,7 +9451,7 @@ const App = (() => {
     if (!on || myCards[0] == null || myCards[1] == null) { el.style.display = 'none'; el.innerHTML = ''; el._built = false; return; }
     el.style.display = '';
     if (!el._drag) { _attachPanelDrag(el, 'pth_odds_pos', 'odds-drag'); el._drag = true; }
-    if (!el._built) { el.innerHTML = '<button class="win-x" type="button" onclick="closeOddsWin()" title="' + esc(t('closeTooltip')) + '" aria-label="X">\u2715</button>' + '<div class="odds-hd">' + esc(t('oddsTitle')) + '</div><div class="odds-body odds-wait">…</div>'; el._built = true; }
+    if (!el._built) { el.innerHTML = '<button class="win-x" type="button" onclick="closeOddsWin()" title="' + esc(t('closeTooltip')) + '" aria-label="X">\u2715</button>' + _oddsHd('') + '<div class="odds-body odds-wait">…</div>'; el._built = true; }
     var seq = ++_oddsSeq;
     var hole = [myCards[0], myCards[1]];
     var board = commCards.slice();
@@ -9469,8 +9476,8 @@ const App = (() => {
           + '</span><span class="odds-bar"><i style="width:' + pw.toFixed(1) + '%"></i></span>'
           + '<span class="odds-pct">' + ptxt + '</span></div>';
       }
-      el.innerHTML = '<button class="win-x" type="button" onclick="closeOddsWin()" title="' + esc(t('closeTooltip')) + '" aria-label="X">\u2715</button>' + '<div class="odds-hd">' + esc(t('oddsTitle')) + (r.exact ? '' : ' <span class="odds-approx">≈</span>')
-        + '</div><div class="odds-body">' + rows + '</div>';
+      el.innerHTML = '<button class="win-x" type="button" onclick="closeOddsWin()" title="' + esc(t('closeTooltip')) + '" aria-label="X">\u2715</button>' + _oddsHd(r.exact ? '' : ' <span class="odds-approx">≈</span>')
+        + '<div class="odds-body">' + rows + '</div>';
       el._built = true;
     }, function () { return seq !== _oddsSeq; });
   }
@@ -13030,6 +13037,24 @@ function toggleReactionPanel() {
   }, 80);
 }
 
+// ── Onglets du « panneau info » (parité GameInfoPanel QML, bible §8) :
+// Journal (Verlauf) et Cotes (Chancen) restent DEUX panneaux web (DOM,
+// position et logique conservés — édition minimale du monolithe), mais
+// chacun porte la barre d'onglets de l'autre : cliquer bascule. ──
+window._infoTab = function (which) {
+  var logPanel = document.getElementById('g-log-panel');
+  var logOpen = logPanel && logPanel.style.display !== 'none';
+  if (which === 'odds') {
+    if (logOpen) { try { toggleLog(); } catch (e) {} }
+    try { setAdvOpt('odds_monitor', true); } catch (e) {}
+    var cb = document.getElementById('adv-odds'); if (cb) cb.checked = true;
+    try { if (window._renderOdds) window._renderOdds(); } catch (e) {}
+  } else {
+    try { if (window.closeOddsWin) window.closeOddsWin(); } catch (e) {}
+    if (!logOpen) { try { toggleLog(); } catch (e) {} }
+  }
+};
+
 function toggleLog() {
   var panel = document.getElementById('g-log-panel');
   var btn   = document.getElementById('log-toggle-btn');
@@ -13211,7 +13236,7 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.3.174-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.175-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

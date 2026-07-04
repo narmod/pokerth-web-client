@@ -1317,7 +1317,7 @@ function onAvatarImageChosen(input) {
        so the two share styles: header with title + close button,
        scrollable body inside a fixed-height container. -->
   <div id="g-log-panel" style="display:none;flex-direction:column">
-    <div class="g-chat-panel-header"><span style="font-size:0.65rem;color:var(--gold-dim);letter-spacing:0.15em;text-transform:uppercase">📋 <span data-i18n="logPanelTitle">Journal</span></span><span style="display:flex;gap:2px;align-items:center"><button onclick="exportLog()" data-i18n-title="logExportTitle" title="Exporter le journal" style="background:none;border:none;color:var(--gold-dim);cursor:pointer;font-size:0.9rem;padding:0 4px">📤</button><button onclick="toggleLog()" style="background:none;border:none;color:var(--text);cursor:pointer;font-size:0.85rem;padding:0 4px">✕</button></span></div>
+    <div class="g-chat-panel-header"><span class="info-tabs"><button type="button" class="info-tab active">📋 <span data-i18n="logPanelTitle">Journal</span></button><button type="button" class="info-tab" onclick="window._infoTab&&window._infoTab('odds')">📊 <span data-i18n="oddsTitle">Cotes</span></button></span><span style="display:flex;gap:2px;align-items:center"><button onclick="exportLog()" data-i18n-title="logExportTitle" title="Exporter le journal" style="background:none;border:none;color:var(--gold-dim);cursor:pointer;font-size:0.9rem;padding:0 4px">📤</button><button onclick="toggleLog()" style="background:none;border:none;color:var(--text);cursor:pointer;font-size:0.85rem;padding:0 4px">✕</button></span></div>
     <div class="log-msgs" id="g-log-body" style="flex:1;min-height:60px;overflow-y:auto;padding:6px 12px;background:var(--field-bg)"></div>
   </div>
   <!-- Chat dropdown (below header) -->

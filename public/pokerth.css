@@ -6690,3 +6690,25 @@ html.reduce-fx *, html.reduce-fx *::before, html.reduce-fx *::after {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.45);
 }
 .show-cards-btn:hover { background: var(--gold, #c8a84a); color: #1c2230; }
+
+/* ── Onglets du panneau info (Journal | Cotes — parité GameInfoPanel QML) ── */
+.info-tabs { display: flex; gap: 2px; align-items: center; min-width: 0; }
+.info-tab {
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: var(--text-dim, #8b93a7);
+  cursor: pointer;
+  font-size: 0.62rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 2px 6px 3px;
+  white-space: nowrap;
+}
+.info-tab.active {
+  color: var(--gold-dim, #c8a84a);
+  border-bottom-color: var(--gold-dim, #c8a84a);
+  cursor: default;
+}
+.info-tab:not(.active):hover { color: var(--text, #e8ecf4); }
+#odds-monitor .odds-hd.info-tabs { justify-content: flex-start; }
