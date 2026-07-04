@@ -8103,6 +8103,158 @@ const App = (() => {
     return ''; // Badges supprimés : 🤖 identifie les bots, pas de 👤 pour les humains
   }
 
+  // ── QML_LANDSCAPE_LAYOUT_BEGIN ──
+  // Port 1:1 de GamePage.qml (build officiel 2026-06-28) : boxScale par
+  // BISECTION de faisabilité (14 itérations, plancher 0.55, plafond
+  // fillCap(compact?1.7:1.4)) + buildLandscapeSlots() avec les rayons
+  // s-dépendants et TOUS les correctifs (lowerSquash, sideGravity,
+  // topCosSquash, lowerGravity, pairSpread, vMaxLower/maxBottomY,
+  // selfClearX). pairSpread est DÉLIBÉRÉMENT absent de feasibleAt(),
+  // comme dans le QML (sinon la bisection remplirait l'écart créé).
+  // Fonction PURE (aucun DOM) → testée en Node (window._qmlLandscapeLayout).
+  function _qmlLandscapeLayout(oppCnt, zW, zH, compact) {
+    var oppBaseW = 114, oppBaseH = 84, selfBaseW = 114, selfBaseH = 84;
+    var opponentGapBase = 10, selfBadgeGapBase = 8, sideBadgeGapBase = 48;
+    var gap = 12;
+    var selfWeight = compact ? 0.5 : 0.3;
+    var stepDeg = oppCnt >= 1 ? 360 / (oppCnt + selfWeight) : 360;
+    var firstAngle = 90 + (selfWeight * stepDeg + stepDeg) / 2;
+
+    // Plafond dépendant du nombre de joueurs + croissance plein écran
+    // (√(w·h)) + rétreint dense sur fenêtres très larges — port exact.
+    function fillCap(maxScale) {
+      var base = 0.95;
+      var t = Math.max(0, Math.min(1, (oppCnt - 1) / 5));
+      var countCap = base + (maxScale - base) * t;
+      var grow = (1 - t) * Math.max(0, (Math.sqrt(zW * zH) - 760) / 700);
+      var denseShrink = t * Math.min(0.15, Math.max(0, (zW - 1024) / 4000));
+      return Math.min(2.2, countCap * (1 + grow) - denseShrink);
+    }
+
+    // Géométrie s-dépendante (mêmes formules pour la bisection ET les slots).
+    function geom(s) {
+      var visualW = oppBaseW * s, visualH = oppBaseH * s, selfVisualH = selfBaseH * s;
+      var sideMargin = Math.max(18, zW * 0.025) + sideBadgeGapBase * s;
+      var selfGapY = compact ? Math.max(8, selfBadgeGapBase * s * 0.5) : selfBadgeGapBase * s;
+      var sideX = (sideMargin + visualW / 2) / Math.max(zW, 1);
+      var radiusX = Math.max(0.22, 0.5 - sideX);
+      var topBadgeExt = compact ? 39 : 0;
+      var topY = ((compact ? 0 : 4) + visualH / 2 + topBadgeExt * s) / Math.max(zH, 1);
+      var selfTop = zH - 4 - selfVisualH;
+      var bottomY = (selfTop - selfGapY - visualH / 2) / Math.max(zH, 1);
+      var centerY = (topY + bottomY) / 2;
+      var radiusY = (bottomY - topY) / 2;
+      var maxBottomY = (selfTop + selfVisualH * 0.35 - visualH / 2) / Math.max(zH, 1);
+      var vMaxLower = radiusY > 0 ? (maxBottomY - centerY) / radiusY : 1.0;
+      var selfClearX = (selfBaseW * s / 2 + visualW / 2 + 12) / Math.max(zW, 1);
+      return { visualW: visualW, visualH: visualH, selfVisualH: selfVisualH,
+               radiusX: radiusX, radiusY: radiusY, centerY: centerY, selfTop: selfTop,
+               vMaxLower: vMaxLower, selfClearX: selfClearX };
+    }
+
+    var lowerSquash = compact ? 0.2 : 1.0;
+    var sideGravity = 0.25, topCosSquash = 1.4;
+    var gravityUpperOnly = compact;
+    var lowerGravity = compact ? 0.0 : 0.15;
+
+    // withPairSpread=false pour la bisection (comme feasibleAt QML),
+    // true pour les slots finaux (comme buildLandscapeSlots QML).
+    function slotVec(g, deg, withPairSpread) {
+      var rad = deg * Math.PI / 180;
+      var sinV = Math.sin(rad), cosV = Math.cos(rad), sinOrig = sinV;
+      if (sinV > 0 && lowerSquash !== 1.0) sinV = Math.pow(sinV, lowerSquash);
+      if (sinV <= 0 && Math.abs(cosV) > 1e-9)
+        cosV = (cosV < 0 ? -1 : 1) * Math.pow(Math.abs(cosV), topCosSquash);
+      var vFactor = sinV
+                  + ((!gravityUpperOnly || sinV <= 0) ? sideGravity * Math.abs(cosV) : 0)
+                  + (sinV > 0 ? lowerGravity * sinV : 0);
+      if (withPairSpread && !compact && Math.abs(cosV) > 1e-9) {
+        var ps = 0.02 * Math.abs(cosV);
+        vFactor += (sinOrig < 0 ? -ps : ps);
+      }
+      if (vFactor > 1.0) vFactor = 1.0;
+      if (vFactor < -1.0) vFactor = -1.0;
+      if (compact && sinV > 0 && Math.abs(g.radiusX * cosV) > g.selfClearX && g.vMaxLower > vFactor)
+        vFactor = vFactor + (g.vMaxLower - vFactor) * sinOrig;
+      return [cosV, vFactor];
+    }
+
+    function feasibleAt(s) {
+      if (oppCnt < 2) return true;
+      var g = geom(s);
+      if (g.radiusY <= 0 || g.radiusX <= 0) return false;
+      var radiusXpix = g.radiusX * zW, radiusYpix = g.radiusY * zH;
+      var centerYpix = g.centerY * zH;
+      // Contrainte community (wide régulier) : la rangée de cartes + badge du
+      // pot doivent tenir entre la plus basse box du haut et la self-box.
+      if (!compact) {
+        var topOppBottom = -1e9;
+        for (var iC = 0; iC < oppCnt; iC++) {
+          var vC = slotVec(g, firstAngle + iC * stepDeg, false);
+          if (vC[1] >= 0) continue;
+          var b = centerYpix + radiusYpix * vC[1] + g.visualH / 2
+                + (Math.abs(vC[0]) < 0.25 ? s * 25 : 0);
+          if (b > topOppBottom) topOppBottom = b;
+        }
+        if (topOppBottom > -1e9
+            && (zH - 12 - g.selfVisualH) - topOppBottom < 0.95 * s * 124 + 28)
+          return false;
+      }
+      // Contrainte paires voisines : séparées horizontalement OU verticalement
+      // (badges de mise inclus côté X).
+      var xNeeded = s * (oppBaseW + sideBadgeGapBase) + gap;
+      var yNeeded = s * oppBaseH + gap;
+      for (var iPair = 1; iPair < oppCnt; iPair++) {
+        var v1 = slotVec(g, firstAngle + (iPair - 1) * stepDeg, false);
+        var v2 = slotVec(g, firstAngle + iPair * stepDeg, false);
+        if (Math.abs(v1[0] - v2[0]) * radiusXpix < xNeeded
+            && Math.abs(v1[1] - v2[1]) * radiusYpix < yNeeded)
+          return false;
+      }
+      return true;
+    }
+
+    // Heads-up : pas de paire à tester, seule la community doit tenir.
+    function feasibleHeadsUp(s) {
+      if (s <= 0) return false;
+      var visualH = oppBaseH * s, selfVisualH = selfBaseH * s;
+      var topYband = (compact ? 0 : 4) + visualH / 2;
+      var topOppBottom = topYband + visualH / 2 + s * 25;
+      return (zH - 12 - selfVisualH) - topOppBottom >= 0.95 * s * 124 + 28;
+    }
+
+    var lo = 0.55, hi = fillCap(compact ? 1.7 : 1.4), sFin;
+    if (hi < lo) hi = lo;
+    if (oppCnt < 2) {
+      if (!feasibleHeadsUp(lo)) sFin = lo;
+      else if (feasibleHeadsUp(hi)) sFin = hi;
+      else { for (var iH = 0; iH < 14; iH++) { var mH = (lo + hi) / 2; if (feasibleHeadsUp(mH)) lo = mH; else hi = mH; } sFin = lo; }
+    } else if (!feasibleAt(lo)) {
+      sFin = lo;
+    } else if (feasibleAt(hi)) {
+      sFin = hi;
+    } else {
+      for (var it = 0; it < 14; it++) { var mid = (lo + hi) / 2; if (feasibleAt(mid)) lo = mid; else hi = mid; }
+      sFin = lo;
+    }
+
+    // Slots finaux aux rayons du s retenu (pairSpread actif, comme le QML).
+    var gF = geom(sFin);
+    var slots = [], raw = [];
+    for (var k = 0; k < oppCnt; k++) {
+      var dK = firstAngle + k * stepDeg;
+      var v = slotVec(gF, dK, true);
+      slots.push({ x: zW * (0.5 + gF.radiusX * v[0]), y: zH * (gF.centerY + gF.radiusY * v[1]) });
+      // Slots SANS pairSpread : l'invariant de séparation garanti par la
+      // bisection (exposé pour les tests déterministes).
+      var v0 = slotVec(gF, dK, false);
+      raw.push({ x: zW * (0.5 + gF.radiusX * v0[0]), y: zH * (gF.centerY + gF.radiusY * v0[1]) });
+    }
+    return { s: sFin, slots: slots, raw: raw };
+  }
+  window._qmlLandscapeLayout = _qmlLandscapeLayout;
+  // ── QML_LANDSCAPE_LAYOUT_END ──
+
   // Positions des sièges en mode 'official' (slots fixes du client PokerTH).
   // Retourne [self, opp1, opp2, …] en px relatifs à la zone (top/left = CENTRE
   // du siège, cf. transform translate(-50%,-50%)). Index 0 = null : la self
@@ -8162,70 +8314,17 @@ const App = (() => {
       if (lanes.T.length) outP[lanes.T[0].idx] = { top: oCY - (_halfH + (_small ? Math.round(48 * boxScale + 12) : 84)), left: oCX };
       return outP;
     }
-    // ── PAYSAGE : ellipse officielle (GameTable.qml buildLandscapeSlots) ──
-    // Modele "collier" : self = grosse perle au point bas (90deg), les N
-    // adversaires se repartissent sur le reste de l'arc (selfWeight). point()
-    // applique le modelage vertical officiel (squash / gravity / pairSpread).
-    // Le web n'a pas la bisection boxScale -> tailles de box de base QML (wide),
-    // s = 1. Les fractions resultantes pourront etre calees visuellement.
-    var compact = zH < 600;
-    var s = 1;
-    var oppBaseH = 84, oppBaseW = 114, selfBaseH = 84, selfBaseW = 114;
-    var visualW = oppBaseW * s, visualH = oppBaseH * s, selfVisualH = selfBaseH * s;
-    var sideBadgeGapBase = 48, selfBadgeGapBase = 8;
-    var sideMargin = Math.max(18, zW * 0.025) + sideBadgeGapBase * s;
-    var sideX = (sideMargin + visualW / 2) / Math.max(zW, 1);
-    var radiusX = Math.max(0.22, 0.5 - sideX);
-    var topY = ((compact ? 0 : 4) + visualH / 2) / Math.max(zH, 1);
-    var selfTop = zH - 4 - selfVisualH;
-    var selfGapY = compact ? Math.max(8, selfBadgeGapBase * s * 0.5) : selfBadgeGapBase * s;
-    var bottomY = (selfTop - selfGapY - visualH / 2) / Math.max(zH, 1);
-    var centerY = (topY + bottomY) / 2;
-    var radiusY = (bottomY - topY) / 2;
-    var lowerSquash = compact ? 0.2 : 1.0;
-    var sideGravity = 0.25, topCosSquash = 1.4;
-    var gravityUpperOnly = compact;
-    var lowerGravity = compact ? 0.0 : 0.15;
-    var maxBottomY = (selfTop + selfVisualH * 0.35 - visualH / 2) / Math.max(zH, 1);
-    var vMaxLower = radiusY > 0 ? (maxBottomY - centerY) / radiusY : 1.0;
-    var selfClearX = (selfBaseW * s / 2 + visualW / 2 + 12) / Math.max(zW, 1);
-    function point(deg) {
-      var rad = deg * Math.PI / 180;
-      var sinV = Math.sin(rad), cosV = Math.cos(rad), sinOrig = sinV;
-      if (sinV > 0 && lowerSquash !== 1.0) sinV = Math.pow(sinV, lowerSquash);
-      if (sinV <= 0 && cosV !== 0) cosV = (cosV < 0 ? -1 : 1) * Math.pow(Math.abs(cosV), topCosSquash);
-      var vFactor = sinV
-                  + ((!gravityUpperOnly || sinV <= 0) ? sideGravity * Math.abs(cosV) : 0)
-                  + (sinV > 0 ? lowerGravity * sinV : 0);
-      if (!compact && cosV !== 0) {
-        var ps = 0.02 * Math.abs(cosV);
-        vFactor += (sinOrig < 0 ? -ps : ps);
-      }
-      if (vFactor > 1.0) vFactor = 1.0;
-      if (vFactor < -1.0) vFactor = -1.0;
-      if (compact && sinV > 0 && Math.abs(radiusX * cosV) > selfClearX && vMaxLower > vFactor)
-        vFactor = vFactor + (vMaxLower - vFactor) * sinOrig;
-      return [0.5 + radiusX * cosV, centerY + radiusY * vFactor];
-    }
-    var opps = Math.max(1, M);
-    var selfWeight = compact ? 0.5 : 0.3;
-    var dOpp = 360 / (opps + selfWeight);
-    var dSelf = selfWeight * dOpp;
-    var firstOppAngle = 90 + (dSelf + dOpp) / 2;
-    // Cale l'ellipse QML sur l'ovale de feutre : on normalise les fractions
-    // QML (cosV, vFactor in [-1,1]) puis on les mappe sur les rayons du feutre
-    // (oRect) + marge, pour que les sieges epousent la table au lieu de s'etaler
-    // sur toute la largeur (la zone est bien plus large que le feutre en paysage).
+    // ── PAYSAGE : ellipse officielle — DÉLÉGUÉE au port 1:1 du QML ──
+    // (_qmlLandscapeLayout ci-dessus : bisection boxScale + rayons
+    // s-dépendants + correctifs). compact = landscapeCompact QML
+    // (paysage && hauteur fenêtre < 600, bible §2). L'échelle retournée
+    // est propagée via out._boxScale (appliquée en transform scale sur
+    // chaque siège, comme le boxScale du client officiel).
+    var compact = (typeof window !== 'undefined' ? window.innerHeight : zH) < 600;
+    var lay = _qmlLandscapeLayout(M, zW, zH, compact);
     var out = [null]; // index 0 = self -> position classique (bas)
-    // Ovale regulier (repartition par angle) sur TOUS les ecrans. _erx borne (zW/2-66)
-    // pour garder les box dans l'ecran ; _ery borne haut (barre Pot) / bas (actions).
-    var _erx = Math.min(oRect.width / 2 + Math.max(75, oRect.width * 0.12), zW / 2 - (58 * (boxScale || 1) + 8));
-    var _eryFloor = _small ? (boxScale * (54 + Math.max(0, M - 4) * 6)) : 120; // anneau au plus pres : boites reduites a table pleine -> rayon mini sans chevauchement
-    var _ery = Math.max(70, Math.min(oRect.height / 2 + Math.max(_eryFloor, oRect.height * 0.45), oCY - 98, (zH - oCY) - 110));
-    for (var ke = 1; ke <= opps; ke++) {
-      var ang = (firstOppAngle + (ke - 1) * dOpp) * Math.PI / 180;
-      out.push({ top: oCY + Math.sin(ang) * _ery, left: oCX + Math.cos(ang) * _erx });
-    }
+    for (var ke = 0; ke < M; ke++) out.push({ top: lay.slots[ke].y, left: lay.slots[ke].x });
+    out._boxScale = lay.s;
     return out;
   }
 
@@ -8401,6 +8500,9 @@ const App = (() => {
         // self -> on place TOUS les slots (0 inclus) pour que l'officiel s'applique.
         var _op0 = (myIdx >= 0) ? 1 : 0;
         if (_offPos) { for (var _op = _op0; _op < pixPos.length; _op++) { if (_offPos[_op]) pixPos[_op] = _offPos[_op]; } }
+        // Échelle bisectée du QML (paysage seulement) : remplace l'heuristique
+        // téléphone, chaque box adverse est mise à l'échelle comme l'officiel.
+        if (_offPos && _offPos._boxScale && !_forceSeatPortrait) _seatBoxScale = _offPos._boxScale;
       } catch (e) {}
     }
     // ── Calcul SB / BB à partir du dealer ──
@@ -13104,7 +13206,7 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.3.172-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.173-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
