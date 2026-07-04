@@ -13,6 +13,7 @@ export const meta = {
 };
 
 export const strings = {
+  buttonsPokerth: 'PokerTH',
   advCatUI: '사용자 인터페이스', advCatStyle: '스타일', advCatSound: '소리', advCatLocal: '로컬 게임', advCatNetwork: '네트워크 게임', advCatInternet: '인터넷 게임', advCatAvatar: '닉네임 / 아바타', advCatLog: '로그 메시지', advCatReset: '기본 설정', advStyleDesc: '카드 덱, 테이블 펠트, 좌석 모양, 색상 테마.', advStyleOpen: '테마 선택기 열기', advSoundDesc: '게임 소리, 음악 볼륨, 리액션 음소거.', advSoundOpen: '소리 및 볼륨 설정', advLocalDesc: '봇을 상대로 연습: 테이블의 빈 자리를 채우세요.', advLocalOpen: '빈 자리를 봇으로 채우기', advNetworkDesc: '로컬 네트워크(LAN)에서 게임을 호스팅합니다.', advSoonTag: '곧 제공', advInternetDesc: 'PokerTH 서버에 연결되어 있습니다.', advSrvLabel: '서버', advInternetOpen: '서버 변경 / 연결 해제', advSrvUnknown: '—', advAvatarDesc: '닉네임과 아바타 이미지.', advAvatarOpen: '닉네임 / 아바타 편집', advLogDesc: '게임 로그와 채팅 오버레이.', advLogOpen: '로그 열기', advResetDesc: '모든 고급 옵션과 키보드 단축키를 기본값으로 재설정합니다.', advResetBtn: '기본값 복원', advResetConfirm: '모든 옵션과 단축키를 기본값으로 재설정할까요?', seatLayoutAuto: '자동', seatLayoutEllipse: 'PokerTH 타원', zoomReset: '보기 재설정', installTooltip: '앱 설치', piIgnore: '무시', piUnignore: '무시 해제',
   plRemaining: '남은 플레이어', showCards: '공개',
   emoFrequent: '자주 사용', emoAll: '전체', advPingAvatar: '내 아바타에 핑 표시 (녹색/노랑/빨강)', advAutoLeave: '게임 종료 시 자동으로 로비로 돌아가기',

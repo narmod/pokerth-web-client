@@ -6712,3 +6712,45 @@ html.reduce-fx *, html.reduce-fx *::before, html.reduce-fx *::after {
 }
 .info-tab:not(.active):hover { color: var(--text, #e8ecf4); }
 #odds-monitor .odds-hd.info-tabs { justify-content: flex-start; }
+
+/* ===== Boutons d'action : pack « PokerTH » (axe data-buttons="pokerth") ====
+   GameActionBar.qml au pixel : radius 9, dégradé Top→Bottom par action
+   (§12.3), bord = couleur Edge, police 15px bold letterSpacing .5 (12px en
+   landscapeCompact), rangée 54px (40px landscapeCompact), press scale .96
+   (90ms). « Call $X » passe sur 2 lignes en portrait (1 ligne en compact). */
+html[data-buttons="pokerth"] .btn-action {
+  border-radius: 9px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  font-size: 15px;
+  color: #fff;
+  min-height: 54px;
+  border-width: 1px;
+  border-style: solid;
+  transition: transform 0.09s ease-out;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
+}
+html[data-buttons="pokerth"] .btn-action:active:not([disabled]) { transform: scale(0.96); }
+html[data-buttons="pokerth"] .btn-fold {
+  background: linear-gradient(to bottom, #d94040, #8b1a1a); border-color: #e87070;
+}
+html[data-buttons="pokerth"] .btn-call,
+html[data-buttons="pokerth"] .btn-check {
+  background: linear-gradient(to bottom, #4080d8, #1a3d8b); border-color: #6aa0e8;
+}
+html[data-buttons="pokerth"] .btn-raise {
+  background: linear-gradient(to bottom, #50b840, #1e6614); border-color: #7ad06a;
+}
+html[data-buttons="pokerth"] .btn-allin {
+  background: linear-gradient(to bottom, #9e2a2a, #5c1111); border-color: #ef5350;
+}
+html[data-buttons="pokerth"] .btn-action[disabled] { filter: grayscale(0.55) brightness(0.7); }
+/* Portrait : montant du Call/All-In sur une 2e ligne (libellé QML 2 lignes). */
+@media (orientation: portrait) {
+  html[data-buttons="pokerth"] .btn-call b,
+  html[data-buttons="pokerth"] .btn-allin b { display: block; font-size: 0.88em; line-height: 1.15; }
+}
+/* landscapeCompact (paysage bas) : rangée 40px, police 12px, 1 ligne. */
+@media (orientation: landscape) and (max-height: 600px) {
+  html[data-buttons="pokerth"] .btn-action { min-height: 40px; font-size: 12px; padding-top: 6px; padding-bottom: 6px; }
+}

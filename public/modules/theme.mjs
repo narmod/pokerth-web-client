@@ -93,7 +93,7 @@ var BUTTON_FLAT = {
 };
 // Pucks axis: a built-in "PokerTH" set (dealer/SB/BB marker images, shared).
 var PUCK_SET = { dealer:'url(/pucks/dealer.svg)', sb:'url(/pucks/sb.svg)', bb:'url(/pucks/bb.svg)' };
-var BUTTONS_ITEMS = [ {id:'',key:'buttonsDefault',fallback:'Flat',swatch:'#6b2020'}, {id:'glossy',key:'buttonsGlossy',fallback:'Glossy',swatch:'#c81818'} ];
+var BUTTONS_ITEMS = [ {id:'',key:'buttonsDefault',fallback:'Flat',swatch:'#6b2020'}, {id:'glossy',key:'buttonsGlossy',fallback:'Glossy',swatch:'#c81818'}, {id:'pokerth',key:'buttonsPokerth',fallback:'PokerTH',swatch:'#4080d8'} ];
 var PUCKS_ITEMS   = [ {id:'pokerth',key:'pucksPokerth',fallback:'PokerTH',swatch:'#3a78d8',preview:'/pucks/dealer.svg'} ];
 // Seats axis: seat "packs" (layout + graphics), like decks/tables. A pack is a
 // CSS block keyed on html[data-seat="<id>"] (seat DOM stays neutral via
@@ -125,7 +125,7 @@ const AXES = [deck, palette, table, buttons, pucks, seat];
 // (this project's look). "Official PokerTH" ≈ the official client (dark UI +
 // textured green felt + vector cards). Order = display order.
 const PRESETS = [
-  { id: 'official', key: 'presetPokerthOfficial', fallback: 'PokerTH Dark', swatch: '#1d222b', values: { theme: 'pokerth', table: 'pokerth-live', deck: 'pokerth-new', buttons: 'glossy', pucks: 'pokerth-new' } },
+  { id: 'official', key: 'presetPokerthOfficial', fallback: 'PokerTH Dark', swatch: '#1d222b', values: { theme: 'pokerth', table: 'pokerth-live', deck: 'pokerth-new', buttons: 'pokerth', pucks: 'pokerth-new' } },
   { id: 'officiallight', key: 'presetPokerthOfficialLight', fallback: 'PokerTH Light', swatch: '#dce2ec', values: { theme: 'pokerth-light', table: 'pokerth-live', deck: 'pokerth-new', buttons: 'glossy', pucks: 'pokerth-new' } },
   { id: 'casino',  key: 'presetCasino',   fallback: 'Green Casino',     swatch: '#1e6b1e', values: { theme: '',     table: '',      deck: 'casino-vert', buttons: 'casino-vert', pucks: 'casino-vert' } },
 ];

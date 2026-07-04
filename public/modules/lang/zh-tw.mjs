@@ -11,6 +11,7 @@ export const meta = {
 };
 
 export const strings = {
+  buttonsPokerth: 'PokerTH',
   advCatUI: '使用者介面', advCatStyle: '風格', advCatSound: '聲音', advCatLocal: '本機對局', advCatNetwork: '網路對局', advCatInternet: '網際網路對局', advCatAvatar: '暱稱 / 頭像', advCatLog: '日誌訊息', advCatReset: '預設設定', advStyleDesc: '牌組、桌布、座位外觀與配色主題。', advStyleOpen: '開啟主題選擇器', advSoundDesc: '遊戲音效、音樂音量與反應靜音。', advSoundOpen: '聲音與音量設定', advLocalDesc: '與機器人練習：填滿你牌桌上的空位。', advLocalOpen: '用機器人填滿空位', advNetworkDesc: '在你的區域網路（LAN）中主持對局。', advSoonTag: '即將推出', advInternetDesc: '你已連線到 PokerTH 伺服器。', advSrvLabel: '伺服器', advInternetOpen: '更換伺服器 / 中斷連線', advSrvUnknown: '—', advAvatarDesc: '你的暱稱與頭像圖片。', advAvatarOpen: '編輯暱稱 / 頭像', advLogDesc: '對局日誌與聊天浮層。', advLogOpen: '開啟日誌', advResetDesc: '將所有進階選項與鍵盤快速鍵重設為預設值。', advResetBtn: '還原預設', advResetConfirm: '將所有選項與快速鍵重設為預設值？', seatLayoutAuto: '自動', seatLayoutEllipse: 'PokerTH 橢圓', zoomReset: '重設檢視', installTooltip: '安裝應用程式', piIgnore: '封鎖', piUnignore: '取消封鎖',
   plRemaining: '剩餘玩家', showCards: '亮牌',
   emoFrequent: '常用', emoAll: '全部', advPingAvatar: '在我的頭像上顯示 Ping（綠/黃/紅）', advAutoLeave: '對局結束後自動返回大廳',
