@@ -168,6 +168,10 @@ This project is a **web frontend** that connects to any PokerTH server directly 
 - Advanced table creation: blinds, timeout (default 15 s), max players (default 5), **bot difficulty** (Easy / Mixed / Normal / Hard), **game-style presets** (🐢 Relaxed / ⚖️ Normal / ⚡ Fast), **blind-increase schedule** (every N hands or N minutes) with a raise mode (double / to a target / keep last), table speed (1–10), deal delay, **game type** (Normal / Registered-only / Invite-only), ranking on/off, spectators allowed/blocked, bots fill (with a min-humans-before-bots threshold), and an optional password
 - Spectator mode (👁 Watch)
 - Lobby chat
+- **🏆 Ranking** — a leaderboard modal (🏆 button on the connect screen and in the lobby) covering **PokerTH, BBC and WEC** rankings, with a season picker, an All-Time toggle, and — on the PokerTH source — live search and pagination; results are cached briefly client-side. Tapping a player opens their **profile card** (member since, last login, current-season rank/score, last 5 games) fetched live from the same relay
+- **Invite a player** to your table from the lobby players list — reaches the invited player instantly, including on the official desktop/mobile clients
+- **Vote-kick** — any player can start a community petition to remove a disruptive player mid-game; others vote to resolve it (separate from the admin-only Kickban, see *Official client (QML) parity* below)
+- **Country flag on avatar** — an optional badge showing each player's country, sourced from the server
 
 ### Poker table
 - Seats positioned according to server order, **locked after the first deal** (no mid-game layout jumps)
@@ -381,6 +385,8 @@ pokerth-web-client/
 | `GET` | `/app-config` | Operator's client defaults (login modes, default theme & settings, server identity, welcome message) |
 | `GET` | `/cards/decks.json` · `/table/tables.json` · `/themes/themes.json` | Content manifests, filtered to the enabled packages |
 | `GET` | `/music/tracks.json` | Background-music playlist |
+| `GET` | `/api/ranking` | Same-origin relay for the PokerTH / BBC / WEC ranking leaderboards (params: `src`, `season`, `q`, `page`) |
+| `GET` | `/api/player` | Same-origin relay for a single player's profile card (params: `src`, `nick`) |
 | `GET` / `POST` | `/stats` | `GET` reads the shared leaderboard; `POST` submits a result (and — with the master token or a **leaderboard**-scoped key — resets the board or removes a player) |
 | `POST` | `/__visit` | Records one anonymous visit (privacy-friendly analytics) |
 
