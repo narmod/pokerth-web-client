@@ -13193,7 +13193,17 @@ function renderPlayersList() {
     body.innerHTML = '<div class="pl-empty">' + (q ? '— ' : '—') + '</div>';
     return;
   }
-  body.innerHTML = rows.map(function(r) {
+  // ── Variante A : sections « En partie / Au lobby » (choix utilisateur
+  // sur maquette). L'activité est calculée UNE fois par joueur, chaque
+  // groupe garde le tri (moi d'abord, puis alphabétique) et la recherche
+  // filtre les deux sections. Headers affichés seulement si les deux
+  // groupes sont non vides (sinon liste plate, rien à séparer). ──
+  rows.forEach(function(r) {
+    r.act = (typeof window._playerActivity === 'function') ? window._playerActivity(r.pid) : '';
+  });
+  var _inGame = rows.filter(function(r) { return r.act; });
+  var _atLobby = rows.filter(function(r) { return !r.act; });
+  var rowHtml = function(r) {
     var esc = function(s) { return String(s).replace(/[<>&"]/g, function(c){return {'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;'}[c];}); };
     // Avatar chip via the unified helper (same priority order as
     // every other compact list in the app: real PokerTH image >
@@ -13212,24 +13222,33 @@ function renderPlayersList() {
       + ' onclick="window.openPlayerInfoPopup(' + r.pid + ')"'
       + ' onkeydown="if(event.key===\'Enter\')window.openPlayerInfoPopup(' + r.pid + ')">'
       + esc(r.name) + '</span>';
-    // Activité : table où le joueur est assis (🎮 nom, tooltip « En cours »),
-    // rien s'il est au lobby. Donnée live via window._playerActivity.
-    var act = (typeof window._playerActivity === 'function') ? window._playerActivity(r.pid) : '';
-    var actHtml = act
-      ? '<span class="pl-game" title="' + esc((typeof t === 'function' ? t('modeInProgress') : '') + ' \u00b7 ' + act) + '">\uD83C\uDFAE ' + esc(act) + '</span>'
+    // Activité (pré-calculée) : nom de la table sous le pseudo, comme la
+    // maquette A ; rien pour un joueur au lobby.
+    var actHtml = r.act
+      ? '<span class="pl-game" title="' + esc((typeof t === 'function' ? t('modeInProgress') : '') + ' \u00b7 ' + r.act) + '">\uD83C\uDFAE ' + esc(r.act) + '</span>'
       : '';
     return '<div class="pl-row' + (r.isMe ? ' pl-me' : '') + '">' +
              avChip +
-             '<span class="pl-name">' + nameHtml + '</span>' +
-             actHtml +
+             '<span class="pl-name">' + nameHtml + actHtml + '</span>' +
              '<span class="pl-flag">' + flag + (cc ? '<span class="pl-cc">' + cc + '</span>' : '') + '</span>' +
              '<span class="pl-star">' + (r.isMe ? '★' : '') + '</span>' +
              '<span class="pl-id">#' + r.pid + '</span>' +
            '</div>';
-  }).join('');
+  };
+  var _tt = function(k, fb) { return (typeof t === 'function' && t(k) !== k) ? t(k) : fb; };
+  var html = '';
+  if (_inGame.length && _atLobby.length) {
+    html += '<div class="pl-sec">\uD83C\uDFAE ' + _tt('plInGame', 'In game') + ' <span class="pl-sec-n">\u00b7 ' + _inGame.length + '</span></div>';
+    html += _inGame.map(rowHtml).join('');
+    html += '<div class="pl-sec">\uD83D\uDECB\uFE0F ' + _tt('plLobby', 'In the lobby') + ' <span class="pl-sec-n">\u00b7 ' + _atLobby.length + '</span></div>';
+    html += _atLobby.map(rowHtml).join('');
+  } else {
+    html = _inGame.concat(_atLobby).map(rowHtml).join('');
+  }
+  body.innerHTML = html;
 }
 
-;(function(){ window.BUILD_VERSION='0.3.180-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.181-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

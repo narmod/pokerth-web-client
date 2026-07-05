@@ -6661,22 +6661,31 @@ html.reduce-fx *, html.reduce-fx *::before, html.reduce-fx *::after {
 }
 
 /* ── Activité joueur dans le panneau « Joueurs » : 🎮 nom de la table ── */
-/* Colonne « Table » (variante B) : pastille verte alignée entre le pseudo
-   et le drapeau — 1 ligne par joueur, ellipsée si le nom de table est long. */
+/* Variante A : sections « En partie / Au lobby » ; le nom de la table
+   redevient une sous-ligne discrète sous le pseudo. */
 .pl-row .pl-game {
-  flex: none;
+  display: block;
   font-size: 0.62rem;
-  color: var(--success, #4caf50);
-  background: rgba(76, 175, 80, 0.12);
-  border: 1px solid rgba(76, 175, 80, 0.35);
-  border-radius: 999px;
-  padding: 1px 8px;
+  color: var(--text-dim, #8b93a7);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: 112px;
-  line-height: 1.45;
+  max-width: 100%;
+  line-height: 1.2;
 }
+.players-list .pl-sec {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 2px 4px;
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--gold-dim, #c8a84a);
+  border-bottom: 1px solid var(--inset, rgba(255,255,255,0.08));
+}
+.players-list .pl-sec-n { color: var(--text-dim, #8b93a7); font-weight: 600; }
 
 /* ── Bouton « Show » post-main : flotte AU-DESSUS de mes cartes (player bar),
    pastille or, visible seulement pendant la fenêtre d'attente. ── */
