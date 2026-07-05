@@ -8331,7 +8331,13 @@ const App = (() => {
     // (paysage && hauteur fenêtre < 600, bible §2). L'échelle retournée
     // est propagée via out._boxScale (appliquée en transform scale sur
     // chaque siège, comme le boxScale du client officiel).
-    var compact = (typeof window !== 'undefined' ? window.innerHeight : zH) < 600;
+    // landscapeCompact complet (bible §2, build 28/06) : mobile = hauteur
+    // < 600 ; desktop = ratio > 1.85 ET hauteur < 1300 (un moniteur 16:9,
+    // ratio 1.78, n'est PAS compact — protection du build 28/06). Union des
+    // deux règles : couvre téléphones ET fenêtres desktop très aplaties.
+    var _wH = (typeof window !== 'undefined') ? window.innerHeight : zH;
+    var _wW = (typeof window !== 'undefined') ? window.innerWidth  : zW;
+    var compact = _wH < 600 || (_wW / Math.max(_wH, 1) > 1.85 && _wH < 1300);
     var lay = _qmlLandscapeLayout(M, zW, zH, compact);
     var out = [null]; // index 0 = self -> position classique (bas)
     for (var ke = 0; ke < M; ke++) out.push({ top: lay.slots[ke].y, left: lay.slots[ke].x });
@@ -13247,7 +13253,7 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.3.177-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.178-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
