@@ -1097,6 +1097,8 @@ function onAvatarImageChosen(input) {
     <div class="players-search">
       <input id="players-search-in" placeholder="Search…" data-i18n-placeholder="playersSearchPlaceholder"
              oninput="renderPlayersList()" />
+    
+      <span class="pl-sort"><button type="button" id="pls-az" class="pl-sort-btn active" title="Sort A–Z" data-i18n-title="plSortAZ" onclick="setPlSort('az')">A–Z</button><button type="button" id="pls-cc" class="pl-sort-btn" title="Sort by country" data-i18n-title="plSortCountry" onclick="setPlSort('cc')">🌍</button></span>
     </div>
     <div class="players-list" id="players-list-body" style="flex:1;min-height:60px;overflow-y:auto;padding:6px 12px;background:var(--field-bg)"></div>
   </div>
@@ -1242,6 +1244,7 @@ function onAvatarImageChosen(input) {
         <button class="filter-chip" data-filter="open" onclick="App.setTableFilter('open')"><span class="fc-ic">🟢</span><span class="fc-label" data-i18n="filterOpen">Open</span> <span class="cnt" id="fc-open"></span></button>
         <button class="filter-chip" data-filter="nopass" onclick="App.setTableFilter('nopass')"><span class="fc-ic">🔓</span><span class="fc-label" data-i18n="filterNoPass">No password</span> <span class="cnt" id="fc-nopass"></span></button>
         <button class="filter-chip" data-filter="live" onclick="App.setTableFilter('live')"><span class="fc-ic">👁</span><span class="fc-label" data-i18n="filterLive">Live</span> <span class="cnt" id="fc-live"></span></button>
+        <button class="filter-chip" data-filter="ranked" onclick="App.setTableFilter('ranked')"><span class="fc-ic">🏆</span><span class="fc-label" data-i18n="filterRanked">Ranked</span> <span class="cnt" id="fc-ranked"></span></button>
       </div>
       <div class="games-scroll" id="g-list">
         <div class="empty">Loading tables<br><span class="ld"><span>●</span><span>●</span><span>●</span></span></div>

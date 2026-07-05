@@ -7071,13 +7071,14 @@ const App = (() => {
       case 'open':   return g.mode === 1 && g.players < (g.maxPlayers || 0);
       case 'nopass': return !prot;
       case 'live':   return g.mode === 2;
+      case 'ranked': return g.type === 4; // partie classée (parité filtre QML)
       default:       return true; // 'all'
     }
   }
   function _refreshFilterChips(entries) {
     // Counts are computed on the FULL set so each chip shows how many
     // tables it would reveal, regardless of the currently active filter.
-    var ids = ['all', 'open', 'nopass', 'live'];
+    var ids = ['all', 'open', 'nopass', 'live', 'ranked'];
     ids.forEach(function(f) {
       var el = document.getElementById('fc-' + f);
       if (el) el.textContent = '(' + entries.filter(function(e){ return _tableMatches(e[1], f); }).length + ')';
@@ -13153,6 +13154,11 @@ function togglePlayersPanel() {
   }
 }
 
+// Bascule du tri du panneau Joueurs (A–Z / pays), persistée.
+window.setPlSort = function (m) {
+  try { localStorage.setItem('pth_pl_sort', m === 'cc' ? 'cc' : 'az'); } catch (e) {}
+  try { renderPlayersList(); } catch (e) {}
+};
 function renderPlayersList() {
   var body = document.getElementById('players-list-body');
   var countEl = document.getElementById('players-panel-count');
@@ -13182,12 +13188,28 @@ function renderPlayersList() {
   var q = (document.getElementById('players-search-in') || {}).value || '';
   q = q.toLowerCase().trim();
   if (q) rows = rows.filter(function(r) { return r.name.toLowerCase().includes(q); });
-  // Sort: me first, then alphabetical
+  // Tri : moi d'abord, puis A–Z ou par pays (parité tri joueurs QML,
+  // bible §16). Choix persistant (pth_pl_sort) ; les sans-pays en dernier.
+  var _plSort = 'az';
+  try { _plSort = localStorage.getItem('pth_pl_sort') || 'az'; } catch (e) {}
   rows.sort(function(a, b) {
     if (a.isMe && !b.isMe) return -1;
     if (b.isMe && !a.isMe) return 1;
+    if (_plSort === 'cc') {
+      // Codes pays via le pont App.getLobbyState().countries (la variable
+      // _playerCountries vit dans l'IIFE App, inaccessible d'ici).
+      var _ccs = (_ls && _ls.countries) || {};
+      var ca = (_ccs[a.pid] || '\uffff');
+      var cb = (_ccs[b.pid] || '\uffff');
+      if (ca !== cb) return ca < cb ? -1 : 1;
+    }
     return a.name.localeCompare(b.name);
   });
+  try {
+    var _bAz = document.getElementById('pls-az'), _bCc = document.getElementById('pls-cc');
+    if (_bAz) _bAz.classList.toggle('active', _plSort !== 'cc');
+    if (_bCc) _bCc.classList.toggle('active', _plSort === 'cc');
+  } catch (e) {}
   if (countEl) countEl.textContent = pids.length;
   if (rows.length === 0) {
     body.innerHTML = '<div class="pl-empty">' + (q ? '— ' : '—') + '</div>';
@@ -13248,7 +13270,7 @@ function renderPlayersList() {
   body.innerHTML = html;
 }
 
-;(function(){ window.BUILD_VERSION='0.3.183-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.184-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

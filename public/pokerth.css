@@ -6794,3 +6794,24 @@ html[data-buttons="pokerth"] .btn-action[disabled] { filter: grayscale(0.55) bri
   100% { transform: scale(1); }
 }
 .pot-pop { animation: potPop 0.3s ease-out; display: inline-block; }
+
+/* ── Tri du panneau Joueurs (A–Z / pays) + 5e pastille de filtre ── */
+.players-search { display: flex; align-items: center; gap: 6px; }
+.players-search input { flex: 1; min-width: 0; }
+.pl-sort { display: flex; gap: 2px; flex: none; }
+.pl-sort-btn {
+  background: var(--inset, rgba(255,255,255,0.06));
+  border: 1px solid var(--border, rgba(255,255,255,0.14));
+  border-radius: 8px;
+  color: var(--text-dim, #8b93a7);
+  cursor: pointer;
+  font-size: 0.62rem;
+  font-weight: 700;
+  padding: 5px 8px;
+  line-height: 1;
+}
+.pl-sort-btn.active {
+  color: var(--gold, #c8a84a);
+  border-color: var(--gold-dim, #c8a84a);
+}
+.filter-chips { flex-wrap: wrap; }
