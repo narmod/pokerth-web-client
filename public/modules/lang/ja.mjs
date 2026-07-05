@@ -9,6 +9,7 @@ export const meta = {
 };
 
 export const strings = {
+  filterRanked: 'ランク戦', plSortAZ: 'A–Z順', plSortCountry: '国別に並べ替え',
   plInGame: '対戦中', plLobby: 'ロビー',
   buttonsPokerth: 'PokerTH',
   advCatUI: 'ユーザーインターフェース', advCatStyle: 'スタイル', advCatSound: 'サウンド', advCatLocal: 'ローカルゲーム', advCatNetwork: 'ネットワークゲーム', advCatInternet: 'インターネットゲーム', advCatAvatar: 'ニックネーム / アバター', advCatLog: 'ログメッセージ', advCatReset: '初期設定', advStyleDesc: 'カードデッキ、テーブルフェルト、座席の外観、カラーテーマ。', advStyleOpen: 'テーマ選択を開く', advSoundDesc: 'ゲーム音、音楽の音量、リアクションのミュート。', advSoundOpen: 'サウンドと音量の設定', advLocalDesc: 'ボット相手に練習：テーブルの空席を埋めます。', advLocalOpen: '空席をボットで埋める', advNetworkDesc: 'ローカルネットワーク（LAN）でゲームをホストします。', advSoonTag: '近日公開', advInternetDesc: 'PokerTH サーバーに接続しています。', advSrvLabel: 'サーバー', advInternetOpen: 'サーバーの変更 / 切断', advSrvUnknown: '—', advAvatarDesc: 'ニックネームとアバター画像。', advAvatarOpen: 'ニックネーム / アバターを編集', advLogDesc: 'ゲームログとチャットオーバーレイ。', advLogOpen: 'ログを開く', advResetDesc: 'すべての詳細オプションとキーボードショートカットを初期値に戻します。', advResetBtn: '初期設定に戻す', advResetConfirm: 'すべてのオプションとショートカットを初期値に戻しますか？', seatLayoutAuto: '自動', seatLayoutEllipse: 'PokerTH 楕円', zoomReset: '表示をリセット', installTooltip: 'アプリをインストール', piIgnore: '無視', piUnignore: '無視を解除',
