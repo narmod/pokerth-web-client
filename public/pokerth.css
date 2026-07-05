@@ -8,6 +8,25 @@
    feel snappy and stable (avatar picker, reaction buttons, action
    buttons during a hand, etc.).
    ───────────────────────────────────────────────────────────────────── */
+/* ── Police officielle Inter (parité QML, point 7 du chantier clone) ──
+   Fichier EXACT du client officiel (Inter-VariableFont de l'APK, axes
+   opsz 14-32 + wght 100-900), converti en woff2 (877 Ko → 350 Ko),
+   self-hosted (public/fonts/, licence OFL jointe). Les tokens --ff-* des
+   thèmes PokerTH référencent déjà 'Inter' : ce @font-face les résout enfin
+   (ils retombaient silencieusement sur system-ui). */
+@font-face {
+  font-family: 'Inter';
+  src: url('fonts/InterVariable.woff2') format('woff2');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+/* Texte courant en Inter dans les thèmes PokerTH uniquement (le QML utilise
+   Inter partout) ; les autres thèmes gardent leur pile système. Les contrôles
+   de formulaire n'héritent pas par défaut -> inherit explicite. */
+:root[data-theme^="pokerth"] body { font-family: 'Inter', system-ui, sans-serif; }
+:root[data-theme^="pokerth"] :is(button, input, select, textarea) { font-family: inherit; }
+
 html { touch-action: manipulation; -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
 
 :root {
