@@ -14,6 +14,7 @@ export const meta = {
 };
 
 export const strings = {
+  plInGame: 'खेल में', plLobby: 'लॉबी में',
   buttonsPokerth: 'PokerTH',
   advCatUI: 'उपयोगकर्ता इंटरफ़ेस', advCatStyle: 'शैली', advCatSound: 'ध्वनि', advCatLocal: 'स्थानीय खेल', advCatNetwork: 'नेटवर्क खेल', advCatInternet: 'इंटरनेट खेल', advCatAvatar: 'उपनाम / अवतार', advCatLog: 'लॉग संदेश', advCatReset: 'डिफ़ॉल्ट सेटिंग्स', advStyleDesc: 'कार्ड डेक, टेबल का कपड़ा, सीटों का रूप और रंग थीम।', advStyleOpen: 'थीम चयनकर्ता खोलें', advSoundDesc: 'खेल की ध्वनियाँ, संगीत की मात्रा और प्रतिक्रियाओं का म्यूट।', advSoundOpen: 'ध्वनि और वॉल्यूम सेटिंग्स', advLocalDesc: 'बॉट्स के विरुद्ध अभ्यास करें: अपनी मेज़ की खाली सीटें भरें।', advLocalOpen: 'सीटें बॉट्स से भरें', advNetworkDesc: 'अपने स्थानीय नेटवर्क (LAN) पर खेल होस्ट करें।', advSoonTag: 'जल्द आ रहा है', advInternetDesc: 'आप एक PokerTH सर्वर से जुड़े हैं।', advSrvLabel: 'सर्वर', advInternetOpen: 'सर्वर बदलें / डिस्कनेक्ट करें', advSrvUnknown: '—', advAvatarDesc: 'आपका उपनाम और अवतार छवि।', advAvatarOpen: 'उपनाम / अवतार संपादित करें', advLogDesc: 'खेल का लॉग और चैट ओवरले।', advLogOpen: 'लॉग खोलें', advResetDesc: 'सभी उन्नत विकल्प और कीबोर्ड शॉर्टकट डिफ़ॉल्ट मानों पर रीसेट करें।', advResetBtn: 'डिफ़ॉल्ट बहाल करें', advResetConfirm: 'सभी विकल्प और शॉर्टकट डिफ़ॉल्ट मानों पर रीसेट करें?', seatLayoutAuto: 'स्वचालित', seatLayoutEllipse: 'PokerTH दीर्घवृत्त', zoomReset: 'दृश्य रीसेट करें', installTooltip: 'ऐप इंस्टॉल करें', piIgnore: 'अनदेखा करें', piUnignore: 'अनदेखा करना बंद करें',
   plRemaining: 'शेष खिलाड़ी', showCards: 'दिखाएँ',
