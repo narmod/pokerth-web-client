@@ -13220,7 +13220,8 @@ function renderPlayersList() {
       : '';
     return '<div class="pl-row' + (r.isMe ? ' pl-me' : '') + '">' +
              avChip +
-             '<span class="pl-name">' + nameHtml + actHtml + '</span>' +
+             '<span class="pl-name">' + nameHtml + '</span>' +
+             actHtml +
              '<span class="pl-flag">' + flag + (cc ? '<span class="pl-cc">' + cc + '</span>' : '') + '</span>' +
              '<span class="pl-star">' + (r.isMe ? '★' : '') + '</span>' +
              '<span class="pl-id">#' + r.pid + '</span>' +
@@ -13228,7 +13229,7 @@ function renderPlayersList() {
   }).join('');
 }
 
-;(function(){ window.BUILD_VERSION='0.3.179-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.180-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

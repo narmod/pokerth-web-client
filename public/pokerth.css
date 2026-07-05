@@ -6661,15 +6661,21 @@ html.reduce-fx *, html.reduce-fx *::before, html.reduce-fx *::after {
 }
 
 /* ── Activité joueur dans le panneau « Joueurs » : 🎮 nom de la table ── */
+/* Colonne « Table » (variante B) : pastille verte alignée entre le pseudo
+   et le drapeau — 1 ligne par joueur, ellipsée si le nom de table est long. */
 .pl-row .pl-game {
-  display: block;
+  flex: none;
   font-size: 0.62rem;
-  color: var(--text-dim, #8b93a7);
+  color: var(--success, #4caf50);
+  background: rgba(76, 175, 80, 0.12);
+  border: 1px solid rgba(76, 175, 80, 0.35);
+  border-radius: 999px;
+  padding: 1px 8px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: 100%;
-  line-height: 1.2;
+  max-width: 112px;
+  line-height: 1.45;
 }
 
 /* ── Bouton « Show » post-main : flotte AU-DESSUS de mes cartes (player bar),
