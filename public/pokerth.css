@@ -6767,10 +6767,10 @@ html[data-buttons="pokerth"] .btn-action[disabled] { filter: grayscale(0.55) bri
   html[data-buttons="pokerth"] .btn-allin b { display: block; font-size: 0.88em; line-height: 1.15; }
 }
 /* landscapeCompact (bible §2) : rangée 40px, police 12px, 1 ligne.
-   Mobile = paysage h<600 ; desktop = ratio>1.85 && h<1300 (le 16:9 classique,
-   ratio 1.78, reste non-compact — nouveauté protectrice du build 28/06). */
+   Mobile = paysage h<600 ; desktop = ratio>2.1 && h<1300 (un 16:9 MAXIMISE,
+   ratio ~1.91, reste non-compact — aligne sur le client officiel 2.1.1). */
 @media (orientation: landscape) and (max-height: 600px),
-       (min-aspect-ratio: 185/100) and (max-height: 1299px) {
+       (min-aspect-ratio: 210/100) and (max-height: 1299px) {
   html[data-buttons="pokerth"] .btn-action { min-height: 40px; font-size: 12px; padding-top: 6px; padding-bottom: 6px; }
 }
 

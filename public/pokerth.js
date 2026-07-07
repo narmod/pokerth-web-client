@@ -8333,12 +8333,12 @@ const App = (() => {
     // est propagée via out._boxScale (appliquée en transform scale sur
     // chaque siège, comme le boxScale du client officiel).
     // landscapeCompact complet (bible §2, build 28/06) : mobile = hauteur
-    // < 600 ; desktop = ratio > 1.85 ET hauteur < 1300 (un moniteur 16:9,
-    // ratio 1.78, n'est PAS compact — protection du build 28/06). Union des
+    // < 600 ; desktop = ratio > 2.1 ET hauteur < 1300 (un 16:9 MAXIMISE,
+    // ratio ~1.91, n'est PAS compact — aligne sur le client officiel 2.1.1). Union des
     // deux règles : couvre téléphones ET fenêtres desktop très aplaties.
     var _wH = (typeof window !== 'undefined') ? window.innerHeight : zH;
     var _wW = (typeof window !== 'undefined') ? window.innerWidth  : zW;
-    var compact = _wH < 600 || (_wW / Math.max(_wH, 1) > 1.85 && _wH < 1300);
+    var compact = _wH < 600 || (_wW / Math.max(_wH, 1) > 2.1 && _wH < 1300);
     var lay = _qmlLandscapeLayout(M, zW, zH, compact);
     var out = [null]; // index 0 = self -> position classique (bas)
     for (var ke = 0; ke < M; ke++) out.push({ top: lay.slots[ke].y, left: lay.slots[ke].x });
@@ -13270,7 +13270,7 @@ function renderPlayersList() {
   body.innerHTML = html;
 }
 
-;(function(){ window.BUILD_VERSION='0.3.185-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.186-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
