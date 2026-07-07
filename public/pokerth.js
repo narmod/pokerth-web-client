@@ -8149,14 +8149,14 @@ const App = (() => {
       var sideMargin = Math.max(18, zW * 0.025) + sideBadgeGapBase * s;
       var selfGapY = compact ? Math.max(8, selfBadgeGapBase * s * 0.5) : selfBadgeGapBase * s;
       var sideX = (sideMargin + visualW / 2) / Math.max(zW, 1);
-      var radiusX = Math.max(0.22, 0.5 - sideX);
+      var radiusX = Math.min(0.36, Math.max(0.22, 0.5 - sideX));
       var topBadgeExt = compact ? 39 : 0;
       var topY = ((compact ? 0 : 4) + visualH / 2 + topBadgeExt * s) / Math.max(zH, 1);
       var selfTop = zH - 4 - selfVisualH;
       var bottomY = (selfTop - selfGapY - visualH / 2) / Math.max(zH, 1);
       var centerY = (topY + bottomY) / 2;
       var radiusY = (bottomY - topY) / 2;
-      var maxBottomY = (selfTop + selfVisualH * 0.35 - visualH / 2) / Math.max(zH, 1);
+      var maxBottomY = (selfTop + selfVisualH * 0.55 - visualH / 2) / Math.max(zH, 1);
       var vMaxLower = radiusY > 0 ? (maxBottomY - centerY) / radiusY : 1.0;
       var selfClearX = (selfBaseW * s / 2 + visualW / 2 + 12) / Math.max(zW, 1);
       return { visualW: visualW, visualH: visualH, selfVisualH: selfVisualH,
@@ -8401,7 +8401,7 @@ const App = (() => {
     if (_seatModeV === 'pokerth-official') { _applyOfficial = true; _forceSeatPortrait = true; }
     else if (_seatModeV === 'pokerth-ellipse') { _applyOfficial = false; _forceSeatPortrait = _seatPortrait; }
     else if (_seatModeV === 'custom') { _applyOfficial = false; _forceSeatPortrait = _seatPortrait; }
-    else { _applyOfficial = _isPhone; _forceSeatPortrait = _seatPortrait; }
+    else { _applyOfficial = true; _forceSeatPortrait = _seatPortrait; }  // auto = client officiel (geometrie officielle partout, orientation respectee)
     const oRect = oval.getBoundingClientRect();
     const zRect = zone.getBoundingClientRect();
     const oCX  = oRect.left - zRect.left + oRect.width  / 2;
@@ -13270,7 +13270,7 @@ function renderPlayersList() {
   body.innerHTML = html;
 }
 
-;(function(){ window.BUILD_VERSION='0.3.186-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.187-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
