@@ -8643,6 +8643,7 @@ const App = (() => {
 
     var _pkHole = (document.documentElement.getAttribute('data-seat') === 'pokerth');
     var _maskMode = _advGet('hide_pbar', true); // mode masqué : self-box = siège
+    var _bigOwn = false; try { _bigOwn = localStorage.getItem('pth_big_own_cards') === '1'; } catch (e) {} // bouton "agrandir mes cartes"
     let h = '';
     rotated.forEach((pid, i) => {
       const px = pixPos[i];
@@ -8748,7 +8749,7 @@ const App = (() => {
         + '</div>';
       // Mode masqué : MES cartes en grand dans le siège (self-box), quel que
       // soit le style de siège. Sinon, comportement habituel (style pokerth = xsm).
-      var _selfBig = isMe && _maskMode && !isGone && !isOut;
+      var _selfBig = isMe && !isGone && !isOut && ((_pkHole && _bigOwn) || (!_pkHole && _maskMode));
       if ((_pkHole || _selfBig) && !isGone && !isOut) {
         var _ownHide = isMe && _ownCardsHidden();
         var _phc1 = isMe ? (_ownHide ? null : myCards[0]) : sd.card1;
@@ -11933,6 +11934,8 @@ function applyTableZoom() {
   if (bOut) bOut.disabled = (z <= TABLE_ZOOM_MIN + 0.001);
   if (bIn)  bIn.disabled  = (z >= Math.min(TABLE_ZOOM_MAX, maxFit) - 0.001);
   if (bRst) bRst.disabled = (Math.abs(z - TABLE_ZOOM_DEFAULT) < 0.001);
+  var bCz = document.getElementById('g-cardzoom');
+  if (bCz) { var _czon=false; try{ _czon=localStorage.getItem('pth_big_own_cards')==='1'; }catch(e){} bCz.classList.toggle('active', _czon); }
 }
 // Agrandissement UNIFORME borne : le feutre (#g-table-scaler) et la couche des
 // sieges (#g-seats) sont mis a l'echelle autour du centre du feutre. Le zoom
@@ -12135,6 +12138,17 @@ function toggleSeatEdit(){
   _seatEditEnter();
 }
 window.toggleSeatEdit = toggleSeatEdit;
+// Bouton "Agrandir mes cartes" (a cote des zooms) : bascule persistante de la
+// taille de MES cartes dans le siege (style pokerth). Defaut off = boite comme
+// les adversaires ; l'utilisateur agrandit ses cartes s'il le souhaite.
+function toggleOwnCardZoom(){
+  var on=false; try{ on = localStorage.getItem('pth_big_own_cards')==='1'; }catch(e){}
+  on=!on;
+  try{ localStorage.setItem('pth_big_own_cards', on?'1':'0'); }catch(e){}
+  var b=document.getElementById('g-cardzoom'); if(b) b.classList.toggle('active', on);
+  try{ if(typeof window._renderSeats==='function') window._renderSeats(); }catch(e){}
+}
+window.toggleOwnCardZoom = toggleOwnCardZoom;
 window._seatEditExit = _seatEditExit;
 
 function _seatEditEnter(){
@@ -13296,7 +13310,7 @@ function renderPlayersList() {
   body.innerHTML = html;
 }
 
-;(function(){ window.BUILD_VERSION='0.3.190-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.191-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

@@ -5970,6 +5970,8 @@ body.has-keyboard .act-key { display: inline-block; }
 .zoom-btn:hover { background: rgba(40, 52, 46, 0.9); }
 .zoom-btn:active { transform: scale(0.94); }
 .zoom-btn:disabled { opacity: 0.35; cursor: default; }
+.zoom-btn.active { background: var(--accent, #E3C800); color: #1a1205; border-color: var(--accent, #E3C800); }
+html:not([data-seat="pokerth"]) #g-cardzoom { display: none; }
 
 /* -- Bouton "editer le placement" (mode custom) + edition glisser-deposer -- */
 #g-seat-edit { display: none; }
@@ -6430,12 +6432,12 @@ body.adv-hide-pbar .my-zone{bottom:0 !important;padding-bottom:max(8px,env(safe-
 
 /* Taille des cartes self alignée sur les cartes communes, PAR BREAKPOINT, TOUS STYLES :
    ~40 sur mobile, 62 sur desktop/tablette (comme .comm-row .pk en >=900px). */
-body.adv-hide-pbar .seat.me .seat-holecards.shc-big .pk {
+.seat.me .seat-holecards.shc-big .pk {
   width: 40px !important; height: 57px !important;
   font-size: 0.85rem !important; border-radius: 5px !important;
 }
 @media (min-width: 900px) {
-  body.adv-hide-pbar .seat.me .seat-holecards.shc-big .pk {
+  .seat.me .seat-holecards.shc-big .pk {
     width: 62px !important; height: 88px !important;
     font-size: 1.3rem !important; border-radius: 7px !important;
   }
