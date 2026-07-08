@@ -3159,6 +3159,7 @@ body {
   display: flex;
   gap: 5px;
   align-items: center;
+  justify-content: center; /* #g-comm est en flux pleine largeur (ID position:relative) -> centrer les cartes dedans */
 }
 
 /* Pot display */
