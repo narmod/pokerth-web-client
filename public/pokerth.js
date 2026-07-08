@@ -8457,7 +8457,7 @@ const App = (() => {
     // For all other top-half seats (sinAng > -0.95), we keep yMulTop so the
     // lateral pairs don't drift horizontally toward each other.
     const yMulTopC  = isSmall ? 0.14 : 0.18;
-    const yMulMe    = isSmall ? 0.16 : 0.22;
+    const yMulMe    = isSmall ? 0.16 : (_advGet('hide_pbar', true) ? 0.06 : 0.22); // player-bar masquee -> self pres du rebord (0.22 = air pour la barre)
     const ryBotRaw  = oRect.height / 2 + borderClear + oRect.height * yMulBot;
     const ryTopRaw  = oRect.height / 2 + borderClear + oRect.height * yMulTop;
     const ryTopCRaw = oRect.height / 2 + borderClear + oRect.height * yMulTopC;
@@ -13364,7 +13364,7 @@ function renderPlayersList() {
   body.innerHTML = html;
 }
 
-;(function(){ window.BUILD_VERSION='0.3.195-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.196-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
