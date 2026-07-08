@@ -8415,11 +8415,15 @@ const App = (() => {
     try { var _sm = localStorage.getItem('pth_seat_layout'); _seatModeV = (_sm === 'pokerth-official' || _sm === 'pokerth-ellipse' || _sm === 'custom') ? _sm : 'auto'; } catch (e) {}
     var _seatPortrait = (window.innerHeight > window.innerWidth);
     var _isPhone = Math.min(window.innerWidth, window.innerHeight) < 540;
-    // auto : tel -> geometrie officielle (portrait=slots / paysage=ellipse) ; grand ecran -> layout maison.
-    // pokerth-official = slots QML forces partout ; pokerth-ellipse = ellipse MAISON (dispo "actuel" 0.3.121) partout.
+    // auto : bascule entre les deux modes officiels selon l'orientation
+    //   (portrait = slots officiels, paysage = ellipse officielle 2.1.1).
+    // pokerth-official = slots QML officiels forces PARTOUT (meme en paysage).
+    // pokerth-ellipse  = geometrie officielle orientation-respectee (slots en
+    //   portrait, ellipse officielle en paysage) = base sur l'app officielle.
+    // custom = ellipse maison + glisser-deposer.
     var _applyOfficial, _forceSeatPortrait;
     if (_seatModeV === 'pokerth-official') { _applyOfficial = true; _forceSeatPortrait = true; }
-    else if (_seatModeV === 'pokerth-ellipse') { _applyOfficial = false; _forceSeatPortrait = _seatPortrait; }
+    else if (_seatModeV === 'pokerth-ellipse') { _applyOfficial = true; _forceSeatPortrait = _seatPortrait; }
     else if (_seatModeV === 'custom') { _applyOfficial = false; _forceSeatPortrait = _seatPortrait; }
     else { _applyOfficial = true; _forceSeatPortrait = _seatPortrait; }  // auto = client officiel (geometrie officielle partout, orientation respectee)
     const oRect = oval.getBoundingClientRect();
@@ -13292,7 +13296,7 @@ function renderPlayersList() {
   body.innerHTML = html;
 }
 
-;(function(){ window.BUILD_VERSION='0.3.189-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.190-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
