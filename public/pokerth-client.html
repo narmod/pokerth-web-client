@@ -2289,7 +2289,9 @@ if ('serviceWorker' in navigator) {
       m.classList.add('rk-floating');
       try { window._enableFloating(card, { handle: $('rk-title'), resizable: true, key: 'pth-rk-win', defW: 460, defH: 540, minW: 320, minH: 320, defLeft: 60, defTop: 70 }); } catch (e) {}
     }
-    rankingSelect('pth');
+    // Communaute par defaut = derniere source choisie (parite 2.1.2 defaultCommunity).
+    var _rkDef = 'pth'; try { _rkDef = localStorage.getItem('pth_rank_src') || 'pth'; } catch (e) {}
+    rankingSelect(_rkDef);
   };
   window.closeRankingModal = function () {
     var m = $('ranking-modal'); if (!m) return;
@@ -2303,6 +2305,7 @@ if ('serviceWorker' in navigator) {
     rkSetView('list');
     if (RK_SRCS.indexOf(src) < 0) src = 'pth';
     RK_SRC = src; RK_ALLTIME = false; RK_PAGE = 1;
+    try { localStorage.setItem('pth_rank_src', src); } catch (e) {}
     var tabs = document.querySelectorAll('#ranking-modal .rk-tab');
     for (var i = 0; i < tabs.length; i++) tabs[i].classList.toggle('active', tabs[i].dataset.src === src);
     var at = $('rk-alltime'); if (at) at.checked = false;
