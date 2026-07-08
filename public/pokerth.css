@@ -5734,6 +5734,13 @@ html[data-seat="pokerth"] .seat-money { text-align: right; font-weight: 700; }
 html[data-seat="pokerth"] .seat-narrow .seat-info { flex-direction: row; align-items: baseline; justify-content: space-between; gap: 6px; }
 html[data-seat="pokerth"] .seat-narrow .seat-name { max-width: 76px; font-size: 0.62rem; }
 html[data-seat="pokerth"] .seat-narrow .seat-money { font-size: 0.64rem; }
+/* Desktop : texte des sieges un peu plus discret (les boites sont deja scalees par boxScale). */
+@media (min-width: 900px) and (hover: hover) and (pointer: fine) {
+  html[data-seat="pokerth"] .seat-name  { font-size: 0.84rem !important; }
+  html[data-seat="pokerth"] .seat-money { font-size: 0.82rem !important; }
+  html[data-seat="pokerth"] .seat-bet   { font-size: 0.72rem !important; }
+  html[data-seat="pokerth"] .seat-action-label { font-size: 0.7rem !important; }
+}
 /* Joueur au tour : boîte « soulevée » scale 1.04 (playerBox.scale QML) + glow or. */
 html[data-seat="pokerth"] .seat.active .seat-plate {
   transform: scale(1.04);

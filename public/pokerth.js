@@ -8171,7 +8171,7 @@ const App = (() => {
       var sideX = (sideMargin + visualW / 2) / Math.max(zW, 1);
       var radiusX = Math.min(0.36, Math.max(0.22, 0.5 - sideX));
       var topBadgeExt = compact ? 39 : 0;
-      var topY = ((compact ? 0 : 4) + visualH / 2 + topBadgeExt * s) / Math.max(zH, 1);
+      var topY = ((compact ? 0 : 28) + visualH / 2 + topBadgeExt * s) / Math.max(zH, 1);
       var selfTop = zH - 4 - selfVisualH;
       var bottomY = (selfTop - selfGapY - visualH / 2) / Math.max(zH, 1);
       var centerY = (topY + bottomY) / 2;
@@ -13312,7 +13312,7 @@ function renderPlayersList() {
   body.innerHTML = html;
 }
 
-;(function(){ window.BUILD_VERSION='0.3.192-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.193-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
