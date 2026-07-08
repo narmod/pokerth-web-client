@@ -3428,6 +3428,10 @@ body {
 /* ♦ carreau : rouge plus orangé/vermillon pour le distinguer du ♥ (narmod)
    — les deux étant identiquement rouges, les confondre était facile. */
 .pk.diamond { color: #e85a2c; }
+/* Deck 4 couleurs (parite 2.1.2 nobus_4c_classic) : ♦ bleu, ♣ vert ;
+   ♥ rouge et ♠ noir inchanges. Glyphes seulement (un deck d'images prime). */
+body.adv-4color .pk.diamond { color: #1a6fd4; }
+body.adv-4color .pk:not(.red):not(.spade):not(.back) { color: #1e8c3a; }
 /* Dos de carte « Medaillon + Treillis » (theme feutre/or) : SVG vectoriel
    net et scalable a toutes les tailles, rasterise une fois, zero cout runtime.
    Defini une seule fois dans --card-back, partage avec .fly-card. */

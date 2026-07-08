@@ -361,6 +361,7 @@ function applyAdvOpts() {
     b.classList.toggle('adv-no-community', !_advGet('show_community', true));
     b.classList.toggle('adv-no-flag', !_advGet('show_flag', true));
     b.classList.toggle('adv-hide-pbar', _advGet('hide_pbar', true));
+    b.classList.toggle('adv-4color', _advGet('four_color', false)); // deck 4 couleurs (glyphes)
     try { var _slm = localStorage.getItem('pth_seat_layout'); _slm = (_slm === 'pokerth-official' || _slm === 'pokerth-ellipse' || _slm === 'custom') ? _slm : 'auto'; document.documentElement.setAttribute('data-seat-layout', _slm); } catch (e) {}
     try { if (typeof window._refreshOwnCards === 'function') window._refreshOwnCards(); } catch (e) {}
     try { if (typeof window._renderOdds === 'function') window._renderOdds(); } catch (e) {}
@@ -473,6 +474,7 @@ function openAdvancedOptions() {
   sync('adv-anim', 'anim_cards', true);
   sync('adv-blinds', 'show_blinds', true);
   sync('adv-hidepbar', 'hide_pbar', true);
+  sync('adv-4color', 'four_color', false);
   sync('adv-community', 'show_community', true);
   sync('adv-focusbet', 'focus_bet', false);
   sync('adv-noemoji', 'chat_noemoji', false);
@@ -582,7 +584,7 @@ function resetAdvDefaults() {
     : 'Reset all options and keyboard shortcuts to their defaults?';
   if (!window.confirm(msg)) return;
   var defs = {
-    anim_cards: true, show_blinds: true, hide_pbar: true, show_community: true,
+    anim_cards: true, show_blinds: true, hide_pbar: true, show_community: true, four_color: false,
     focus_bet: false, chat_noemoji: false, fade_losers: true, show_flag: true,
     own_click: false, guard_call: false, odds_monitor: false, no_hide_ignored: false,
     fkeys_alt: false, zoom_follow: false,
@@ -13364,7 +13366,7 @@ function renderPlayersList() {
   body.innerHTML = html;
 }
 
-;(function(){ window.BUILD_VERSION='0.3.197-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.198-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
