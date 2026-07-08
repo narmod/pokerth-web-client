@@ -2875,13 +2875,13 @@ const MSG = (() => {
   }
 
   // Construit un InitMessage (guest, unauth ou authenticated user)
-  // buildId = (CLIENT_TYPE_QT_WIDGET<<24)|(MAJOR<<16)|(MINOR<<8)|REV
-  // = (0x01<<24)|(2<<16)|(1<<8)|0 = 0x01020100 = 16908544 (PokerTH 2.1.0).
-  // Le serveur 2.1.0 (pokerth.net, déployé le 2026-07-03) REJETTE désormais
-  // tout buildId Qt-Widget < 0x01020008 (2.0.8) avec
-  // ERR_NET_VERSION_NOT_SUPPORTED (« Version incompatible ») — cf.
-  // serverlobbythread.cpp HandleNetPacketInit + game_defs.h
-  // MIN_BUILD_ID_QT_WIDGET. On s'identifie comme le client officiel 2.1.0,
+  // buildId = (CLIENT_TYPE_QT_WIDGET<<24)|(MAJOR<<16)|(MINOR<<8)|REV.
+  // POLITIQUE SERVEUR (game_defs.h, verifiee sur le tag v2.1.2 du 2026-07-08) :
+  // MIN_BUILD_ID_* = release PRECEDENTE ; seules la release courante et la
+  // precedente sont acceptees. En 2.1.2 : min Qt-Widget = 0x01020101 (2.1.1).
+  // => A CHAQUE release PokerTH, bumper BUILD_ID ci-dessous sinon
+  // ERR_NET_VERSION_NOT_SUPPORTED (« Version incompatible »").
+  // On s'identifie comme le client officiel Qt-Widget courant,
   // exactement comme le client QML le fait (CLIENT_TYPE_QT_WIDGET tant que
   // pokerth.net n'expose pas de type dédié). TODO sp0ck : demander un
   // CLIENT_TYPE_WEB (0x03) officiel.
@@ -2890,7 +2890,7 @@ const MSG = (() => {
   //   Ref: pokerth/src/net/clientstate.cpp:1465-1469 + serverlobbythread.cpp:1255-1256
   function buildInit(nick, major, minor, loginType, password, serverPass) {
     loginType = loginType !== undefined ? loginType : 0;
-    const BUILD_ID = 16908544; // 0x01020100 = Qt-Widget 2.1.0 (min serveur 2.1 : 0x01020008)
+    const BUILD_ID = 16908546; // 0x01020102 = Qt-Widget 2.1.2 (min serveur 2.1.2 : 0x01020101 = 2.1.1)
     const ver = Proto.encode([[1,0,major],[2,0,minor]]);
     const fields = [
       [1,2,ver],       // requestedVersion (= protocolVersion from Announce)
@@ -13364,7 +13364,7 @@ function renderPlayersList() {
   body.innerHTML = html;
 }
 
-;(function(){ window.BUILD_VERSION='0.3.196-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.197-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
