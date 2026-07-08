@@ -6246,6 +6246,8 @@ html[data-seat-edit="1"] #g-seats .seat.seat-ghost { outline: none; cursor: defa
 .rk-msg { text-align: center; color: var(--text); opacity: 0.85; padding: 30px 8px; font-size: 0.82rem; }
 .rk-table { width: 100%; border-collapse: collapse; font-size: 0.78rem; font-family: var(--ff-mono); }
 .rk-table th { position: sticky; top: 0; background: var(--field-bg); text-align: left; color: var(--gold-dim); font-weight: 600; padding: 5px 8px; border-bottom: 1px solid var(--border); white-space: nowrap; }
+.rk-table th.rk-th-sort { cursor: pointer; user-select: none; }
+.rk-table th.rk-th-sort:hover { color: var(--gold); }
 .rk-table td { padding: 4px 8px; border-bottom: 1px solid rgba(var(--gold-rgb), 0.08); color: var(--text-hi); }
 .rk-table tbody tr:hover td { background: rgba(var(--gold-rgb), 0.06); }
 

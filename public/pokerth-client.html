@@ -1913,6 +1913,7 @@ if ('serviceWorker' in navigator) {
   var RK_SRC = 'pth';
   var RK_ALLTIME = false;
   var RK_CUR = { state: 'loading', rows: [], cols: [], seasons: null, season: null };
+  var RK_SORT = { col: null, dir: 1 }; // tri par colonne (parite QML 2.1.2 RankingHeaderCell)
   function $(id) { return document.getElementById(id); }
   function rkT(key, fb) { try { if (typeof window.t === 'function') { var v = window.t(key); if (v && v !== key) return v; } } catch (e) {} return fb; }
   function rkFold(s) { return String(s == null ? '' : s).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, ''); }
@@ -1931,7 +1932,10 @@ if ('serviceWorker' in navigator) {
 
   function rkBuildTable(rows, cols) {
     var h = '<table class="rk-table"><thead><tr>';
-    for (var i = 0; i < cols.length; i++) h += '<th>' + rkEsc(rkColLabel(cols[i])) + '</th>';
+    for (var i = 0; i < cols.length; i++) {
+      var _ind = (RK_SORT.col === cols[i]) ? (RK_SORT.dir > 0 ? ' \u25B2' : ' \u25BC') : '';
+      h += '<th class="rk-th-sort" onclick="rkSortBy(\'' + cols[i] + '\')">' + rkEsc(rkColLabel(cols[i])) + _ind + '</th>';
+    }
     h += '</tr></thead><tbody>';
     for (var r = 0; r < rows.length; r++) {
       h += '<tr>';
@@ -1956,9 +1960,25 @@ if ('serviceWorker' in navigator) {
       if (q) rows = rows.filter(function (row) { return rkFold(row.player).indexOf(q) >= 0; });
     }
     if (!rows.length) { rkState('nomatch'); return; }
+    if (RK_SORT.col && RK_CUR.cols.indexOf(RK_SORT.col) >= 0) {
+      rows = rows.slice().sort(function (a, b) { return rkCmpVal(a[RK_SORT.col], b[RK_SORT.col]) * RK_SORT.dir; });
+    }
     var tw = $('rk-table-wrap'); if (tw) tw.innerHTML = rkBuildTable(rows, RK_CUR.cols);
     rkState('table');
   }
+  // Tri numerique si les deux valeurs sont des nombres (espaces/virgules toleres),
+  // sinon alphabetique. Meme esprit que RankingHeaderCell (QML 2.1.2).
+  function rkCmpVal(a, b) {
+    var na = parseFloat(String(a == null ? '' : a).replace(/[\s,\u00A0]/g, '').replace(/[^0-9.\-]/g, ''));
+    var nb = parseFloat(String(b == null ? '' : b).replace(/[\s,\u00A0]/g, '').replace(/[^0-9.\-]/g, ''));
+    if (!isNaN(na) && !isNaN(nb)) return na - nb;
+    return String(a == null ? '' : a).localeCompare(String(b == null ? '' : b));
+  }
+  window.rkSortBy = function (col) {
+    if (RK_SORT.col === col) { RK_SORT.dir = -RK_SORT.dir; }
+    else { RK_SORT.col = col; RK_SORT.dir = (col === 'player') ? 1 : -1; } // stats: desc d'abord
+    rkRenderCurrent();
+  };
   window.rankingFilter = function () {
     if (rkSearchTimer) clearTimeout(rkSearchTimer);
     if (RK_SERVER.indexOf(RK_SRC) >= 0) {
@@ -2084,7 +2104,7 @@ if ('serviceWorker' in navigator) {
     var c = RK_CACHE[ck];
     if (c && (Date.now() - c.at) < RK_TTL) { rkShow({ state: c.state, rows: c.rows, cols: c.cols, seasons: c.seasons, season: c.season, total: c.total, page: c.page, pageSize: c.pageSize }); return; }
     if (!keep || (RK_CUR.state !== 'table' && RK_CUR.state !== 'nomatch')) {
-      RK_CUR = { state: 'loading', rows: [], cols: [], seasons: null, season: null }; rkState('loading');
+      RK_CUR = { state: 'loading', rows: [], cols: [], seasons: null, season: null }; RK_SORT = { col: null, dir: 1 }; rkState('loading');
     }
     fetch(url, { headers: { 'Accept': 'application/json' } })
       .then(function (r) { return r.text(); })
