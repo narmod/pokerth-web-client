@@ -8775,6 +8775,22 @@ const App = (() => {
       h += '</div>'; // ferme .seat
     });
     el.innerHTML = h;
+    // Self-box : remonter si son bas depasse la zone (tapis coupe en plein
+    // ecran avec le boxScale de l'ellipse). Mesure reelle -> valable pour
+    // tous les styles et tous les niveaux de zoom des cartes.
+    try {
+      var _meEl = el.querySelector('.seat.me');
+      if (_meEl) {
+        var _zr2 = zone.getBoundingClientRect();
+        var _mr2 = _meEl.getBoundingClientRect();
+        var _ovf = _mr2.bottom - (_zr2.bottom - 4);
+        if (_ovf > 0) {
+          var _mt = parseFloat(_meEl.style.top) || 0;
+          _meEl.style.top = (_mt - _ovf).toFixed(1) + 'px';
+          if (pixPos[0]) pixPos[0].top = _mt - _ovf;
+        }
+      }
+    } catch (e) {}
     _lastPixPos = pixPos;
     // Patcher l'avatar du joueur local immédiatement après le rendu.
     // Anti-flicker safety net: re-applies the emoji to .seat-initial
@@ -13312,7 +13328,7 @@ function renderPlayersList() {
   body.innerHTML = html;
 }
 
-;(function(){ window.BUILD_VERSION='0.3.193-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.194-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
