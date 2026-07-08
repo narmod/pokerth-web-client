@@ -5744,6 +5744,16 @@ html[data-seat="pokerth"] .seat.active .seat-plate {
 html[data-seat="pokerth"] .seat { transition: opacity 0.25s ease-out; }
 html[data-seat="pokerth"] .seat.folded { opacity: 0.72; }
 html[data-seat="pokerth"] .seat-timer-badge { display: none; }
+/* Countdown RECTANGULAIRE (style pokerth) : cadre depletif autour de la boite,
+   remplace l'anneau rond .seat-timer. Couleurs officielles 2.1.1. */
+html[data-seat="pokerth"] .seat-avatar .seat-timer { display: none; }
+html[data-seat="pokerth"] .seat-timer-rect {
+  position: absolute; inset: -3px;
+  width: calc(100% + 6px); height: calc(100% + 6px);
+  pointer-events: none; overflow: visible; z-index: 3;
+}
+html[data-seat="pokerth"] .seat-timer-rect .rt-bg  { fill: none; stroke: #0e1a30; stroke-width: 3; vector-effect: non-scaling-stroke; }
+html[data-seat="pokerth"] .seat-timer-rect .rt-arc { fill: none; stroke-width: 3; stroke-linecap: round; vector-effect: non-scaling-stroke; transition: stroke-dashoffset 0.9s linear; }
 
 /* Portrait : boite plus compacte. */
 @media (max-width: 600px) {

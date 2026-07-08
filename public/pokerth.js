@@ -8021,6 +8021,21 @@ const App = (() => {
       + '</svg>';
   }
 
+  // Countdown RECTANGULAIRE (style de siege 'pokerth') : cadre depletif autour
+  // de la .seat-plate au lieu de l'anneau rond. pathLength=100 -> depletion
+  // uniforme quelle que soit la taille/aspect de la boite. Couleurs officielles
+  // 2.1.1 : self #6E9CEC / adversaires #4070D0 / piste #0e1a30.
+  function _timerRectSvg(secs, total, isMe) {
+    var frac = Math.max(0, secs / (total || 30));
+    var off = (100 * (1 - frac)).toFixed(1);
+    var col = isMe ? '#6E9CEC' : '#4070D0';
+    return '<svg class="seat-timer-rect" viewBox="0 0 100 100" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">'
+      + '<rect class="rt-bg"  x="2" y="2" width="96" height="96" rx="7" pathLength="100"/>'
+      + '<rect class="rt-arc" x="2" y="2" width="96" height="96" rx="7" pathLength="100"'
+      + ' style="stroke:' + col + '" stroke-dasharray="100" stroke-dashoffset="' + off + '"/>'
+      + '</svg>';
+  }
+
   function _updateTimer() {
     _timerSec = Math.max(0, _timerSec - 1);
     // Update SVG arcs in place — no full re-render
@@ -8034,6 +8049,11 @@ const App = (() => {
     document.querySelectorAll('.seat-timer .arc').forEach(function(el) {
       el.style.stroke = col;
       el.setAttribute('stroke-dashoffset', offset);
+    });
+    // Countdown rectangulaire (style pokerth) : depletion sur pathLength=100.
+    var _roff = (100 * (1 - _timerSec / (_timerTot || 30))).toFixed(1);
+    document.querySelectorAll('.seat-timer-rect .rt-arc').forEach(function(el) {
+      el.setAttribute('stroke-dashoffset', _roff);
     });
     // No <text> inside .seat-timer — the countdown number is rendered in the
     // seat badge (stb-*) and the player-bar below, not in the SVG.
@@ -8076,7 +8096,7 @@ const App = (() => {
     _timerID = null;
     _timerSec = 0;
     // Clear timers from DOM
-    document.querySelectorAll('.seat-timer').forEach(function(el){ el.remove(); });
+    document.querySelectorAll('.seat-timer, .seat-timer-rect').forEach(function(el){ el.remove(); });
     var pb = document.getElementById('pb-timer');
     if (pb) pb.textContent = '';
     var mz = document.querySelector('.my-zone');
@@ -8664,7 +8684,7 @@ const App = (() => {
       let blindBadge = '';
       if (isSB) blindBadge = chipSvg('SB','#1565c0','#fff','#0a3d7a');
       else if (isBB) blindBadge = chipSvg('BB','#b71c1c','#fff','#6d0c0c');
-      const timerSvg = isActive ? _timerSvg(_timerSec, _timerTot) : '';
+      const timerSvg = isActive ? (_pkHole ? '' : _timerSvg(_timerSec, _timerTot)) : '';
       const avatarCls = 'seat-avatar' + (isActive ? ' timing' : '') + avatarType;
       // Couleur unique par joueur (basée sur pid)
       const aColor = isMe ? null : getAvatarColor(pid);
@@ -8711,6 +8731,8 @@ const App = (() => {
         : '';
       const avCls2 = avatarCls + (pthAvUrl ? ' has-pth-avatar' : '');
       h += '<div class="seat-plate">'; // pack siege : avatar + (nom/tapis) -- display:contents en classique
+      // Countdown rectangulaire (style pokerth) : cadre autour de la boite.
+      if (isActive && _pkHole) h += _timerRectSvg(_timerSec, _timerTot, isMe);
       h += '<div class="' + avCls2 + '" style="' + avatarStyle + '">'
         + pthImg
         + '<span class="seat-initial">' + initial + '</span>'
@@ -13270,7 +13292,7 @@ function renderPlayersList() {
   body.innerHTML = html;
 }
 
-;(function(){ window.BUILD_VERSION='0.3.187-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.188-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
