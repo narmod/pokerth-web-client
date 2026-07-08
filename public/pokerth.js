@@ -8544,7 +8544,7 @@ const App = (() => {
         if (_offPos) { for (var _op = _op0; _op < pixPos.length; _op++) { if (_offPos[_op]) pixPos[_op] = _offPos[_op]; } }
         // Échelle bisectée du QML (paysage seulement) : remplace l'heuristique
         // téléphone, chaque box adverse est mise à l'échelle comme l'officiel.
-        if (_offPos && _offPos._boxScale && !_forceSeatPortrait) _seatBoxScale = _offPos._boxScale;
+        if (_offPos && _offPos._boxScale && !_forceSeatPortrait) _seatBoxScale = _offPos._boxScale * (compact ? 1 : 0.9);  // -10% desktop : sieges moins massifs
       } catch (e) {}
     }
     // ── Calcul SB / BB à partir du dealer ──
@@ -8683,7 +8683,7 @@ const App = (() => {
         cardStr = '<div style="display:flex;gap:2px;margin-top:1px">'
           + cardHtml(sd.card1,'xsm') + cardHtml(sd.card2,'xsm') + '</div>';
       }
-      h += '<div class="' + cls + ((!isMe && _sdLosers && _sdLosers.has(pid)) ? ' loser-fade' : '') + '" data-pid="' + pid + '" style="position:absolute;top:' + px.top.toFixed(1) + 'px;left:' + px.left.toFixed(1) + 'px;transform:translate(-50%,-50%) scale(' + _seatBoxScale + ')">';
+      h += '<div class="' + cls + ((!isMe && _sdLosers && _sdLosers.has(pid)) ? ' loser-fade' : '') + '" data-pid="' + pid + '"' + (isMe ? ' data-base-top="' + px.top.toFixed(1) + '" data-base-left="' + px.left.toFixed(1) + '" data-base-scale="' + _seatBoxScale + '"' : '') + ' style="position:absolute;top:' + px.top.toFixed(1) + 'px;left:' + px.left.toFixed(1) + 'px;transform:translate(-50%,-50%) scale(' + _seatBoxScale + ')">';
       const isSB = pid === sbPid;
       const isBB = pid === bbPid;
       let blindBadge = '';
@@ -8780,16 +8780,19 @@ const App = (() => {
     // tous les styles et tous les niveaux de zoom des cartes.
     try {
       var _meEl = el.querySelector('.seat.me');
-      if (_meEl) {
-        var _zr2 = zone.getBoundingClientRect();
-        var _mr2 = _meEl.getBoundingClientRect();
-        var _ovf = _mr2.bottom - (_zr2.bottom - 4);
-        if (_ovf > 0) {
-          var _mt = parseFloat(_meEl.style.top) || 0;
-          _meEl.style.top = (_mt - _ovf).toFixed(1) + 'px';
-          if (pixPos[0]) pixPos[0].top = _mt - _ovf;
+      if (_meEl && _meEl.dataset.baseTop) {
+        // Coordonnees LOCALES (offsetHeight n'est pas affecte par les transforms
+        // de zoom, contrairement a getBoundingClientRect) -> clamp stable a tout zoom.
+        var _bh2 = _meEl.offsetHeight * _seatBoxScale;
+        var _bt2 = parseFloat(_meEl.dataset.baseTop) || 0;
+        var _floor2 = zone.clientHeight - 4 - _bh2 / 2;
+        if (_bt2 > _floor2) {
+          _meEl.dataset.baseTop = _floor2.toFixed(1);
+          _meEl.style.top = _floor2.toFixed(1) + 'px';
+          if (pixPos[0]) pixPos[0].top = _floor2;
         }
       }
+      if (typeof window._applySelfZoomCounter === 'function') window._applySelfZoomCounter();
     } catch (e) {}
     _lastPixPos = pixPos;
     // Patcher l'avatar du joueur local immédiatement après le rendu.
@@ -11958,6 +11961,38 @@ function applyTableZoom() {
 // sieges (#g-seats) sont mis a l'echelle autour du centre du feutre. Le zoom
 // effectif est plafonne (mesure des sieges) pour que TOUTE la table reste dans
 // la zone -> rien hors-ecran. renderSeats reste neutre (zoom gere ici).
+// Parite QML (bible §3.4) : le zoomLayer officiel = adversaires + cartes communes ;
+// la SELF-BOX reste fixe. #g-seats etant scale en bloc, on contre-transforme la
+// self : position p' telle que pan + c + eff*(p'-c) = position de base, et
+// echelle base/eff. A eff<=1 on restaure simplement les valeurs de base.
+function _applySelfZoomCounter() {
+  try {
+    var me = document.querySelector('#g-seats .seat.me');
+    if (!me || !me.dataset.baseTop) return;
+    var zone = document.getElementById('g-table-zone');
+    var oval = document.querySelector('.felt-oval');
+    if (!zone || !oval) return;
+    var eff = window._tableZoomEff || 1;
+    var bs = parseFloat(me.dataset.baseScale) || 1;
+    var bt = parseFloat(me.dataset.baseTop) || 0;
+    var bl = parseFloat(me.dataset.baseLeft) || 0;
+    if (eff <= 1.001) {
+      me.style.top = bt.toFixed(1) + 'px'; me.style.left = bl.toFixed(1) + 'px';
+      me.style.transform = 'translate(-50%,-50%) scale(' + bs + ')';
+      return;
+    }
+    var zr = zone.getBoundingClientRect(), orr = oval.getBoundingClientRect();
+    var oCX = orr.left - zr.left + orr.width / 2 - _zoomPanX;
+    var oCY = orr.top - zr.top + orr.height / 2 - _zoomPanY;
+    var lx = oCX + (bl - _zoomPanX - oCX) / eff;
+    var ly = oCY + (bt - _zoomPanY - oCY) / eff;
+    me.style.left = lx.toFixed(1) + 'px';
+    me.style.top = ly.toFixed(1) + 'px';
+    me.style.transform = 'translate(-50%,-50%) scale(' + (bs / eff).toFixed(4) + ')';
+  } catch (e) {}
+}
+window._applySelfZoomCounter = _applySelfZoomCounter;
+
 function _applyZoomTransforms() {
   var sc = document.getElementById('g-table-scaler');
   var seats = document.getElementById('g-seats');
@@ -11999,6 +12034,7 @@ function _applyZoomTransforms() {
   // la compensation posee par autoScaleTable (sinon double facteur = eff^2).
   var _ccz = document.getElementById('g-comm');
   if (_ccz) _ccz.style.transform = '';
+  _applySelfZoomCounter();
 }
 function tableZoomStep(dir) {
   var z = _getTableZoom() + (dir > 0 ? TABLE_ZOOM_STEP : -TABLE_ZOOM_STEP);
@@ -13328,7 +13364,7 @@ function renderPlayersList() {
   body.innerHTML = html;
 }
 
-;(function(){ window.BUILD_VERSION='0.3.194-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.195-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
