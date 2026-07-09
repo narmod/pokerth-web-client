@@ -2229,7 +2229,8 @@ function playerStatBlock(b, label) {
     rank: (b.pos != null ? b.pos : null),
     score: (b.score != null ? b.score : null),
     games: (b.games != null ? b.games : null),
-    points: (b.points != null ? b.points : null)
+    points: (b.points != null ? b.points : null),
+    places: (Array.isArray(b.places) ? b.places : null)
   };
 }
 function playerNorm(html, base, source, statMap) {
@@ -2309,6 +2310,16 @@ function playerParsePth(json, base) {
     points: (r.points_sum != null ? r.points_sum : null)
   };
   const hasStats = (block.rank != null || block.score != null || block.games != null || block.points != null);
+  // Repartition des places (Season Stats) : pokerth.net renvoie bar_stats (comptes
+  // par place 1..10) + stats[1] (objet {"1":"8.3%",...}). On les transmet tels
+  // quels pour le camembert du profil (parite QML SeasonStatsSection).
+  const _bs = Array.isArray(json.bar_stats) ? json.bar_stats : [];
+  const _counts = [];
+  for (let _p = 0; _p < 10; _p++) _counts.push(Number(_bs[_p]) || 0);
+  const _pctObj = (json.stats && json.stats.length > 1 && json.stats[1] && typeof json.stats[1] === 'object') ? json.stats[1] : null;
+  const _percents = [];
+  for (let _p = 1; _p <= 10; _p++) _percents.push(_pctObj && _pctObj[_p] != null ? String(_pctObj[_p]) : '');
+  const placement = _counts.some(function (n) { return n > 0; }) ? { counts: _counts, percents: _percents } : null;
   return {
     ok: true,
     source: 'PTH',
@@ -2316,7 +2327,8 @@ function playerParsePth(json, base) {
     memberSince: (p.created ? String(p.created).slice(0, 10) : null),
     tickets: null,
     awards: [],
-    stats: hasStats ? [block] : []
+    stats: hasStats ? [block] : [],
+    placement: placement
   };
 }
 

@@ -6322,6 +6322,39 @@ html[data-seat-edit="1"] #g-seats .seat.seat-ghost { outline: none; cursor: defa
 .rk-cups-tab { flex: 1 1 auto; min-width: 64px; padding: 6px 8px; font-family: var(--ff-mono); font-size: 0.72rem; font-weight: 600; letter-spacing: 0.03em; color: var(--text); background: var(--field-bg); border: 1px solid var(--border); border-radius: 4px; cursor: pointer; transition: color 0.15s, border-color 0.15s, background 0.15s; }
 .rk-cups-tab:hover { border-color: var(--gold); color: var(--gold-hi); }
 .rk-cups-tab.active { color: var(--sel-hi,var(--gold-hi)); border-color: var(--sel,var(--gold)); background: rgba(var(--sel-rgb,var(--gold-rgb)), 0.08); }
+
+/* ── Repartition des places (camembert) — SeasonStatsSection + PlacementResult ── */
+.rk-place-legend { display:flex; flex-wrap:wrap; gap:10px; margin:8px 0; }
+.rk-lg { display:inline-flex; align-items:center; gap:5px; font-family:var(--ff-mono); font-size:0.66rem; color:var(--text); }
+.rk-lg i { width:11px; height:11px; border-radius:2px; display:inline-block; flex:0 0 auto; }
+.rk-ps-tw, .rk-pr-tw { overflow-x:auto; -webkit-overflow-scrolling:touch; }
+.rk-ps-table, .rk-pr-table { border-collapse:collapse; width:100%; font-family:var(--ff-mono); }
+.rk-ps-table { min-width:340px; }
+.rk-pr-table { min-width:280px; }
+.rk-ps-table th, .rk-ps-table td, .rk-pr-table th, .rk-pr-table td { padding:4px 3px; text-align:center; font-size:0.67rem; border-bottom:1px solid var(--border); }
+.rk-ps-table th, .rk-pr-table th { color:var(--text-hi); font-weight:700; }
+.rk-ps-table td, .rk-pr-table td { color:var(--text); }
+.rk-ps-table .rk-ps-lbl { text-align:left; color:var(--text); opacity:0.8; white-space:nowrap; }
+.rk-ps-pie { display:flex; justify-content:center; margin:10px 0; }
+.rk-ps-pie canvas { width:200px; height:200px; max-width:62vw; max-height:62vw; }
+.rk-ps-bars { display:flex; align-items:flex-end; gap:3px; height:150px; margin-top:6px; padding-top:14px; }
+.rk-ps-bar { flex:1 1 0; display:flex; flex-direction:column; align-items:center; justify-content:flex-end; height:100%; min-width:0; }
+.rk-ps-bar i { display:block; width:62%; border-radius:2px 2px 0 0; }
+.rk-ps-bar b { font-family:var(--ff-mono); font-size:0.58rem; color:var(--text); opacity:0.85; line-height:1; margin-bottom:2px; min-height:0.58rem; }
+.rk-ps-bar u { font-family:var(--ff-mono); font-size:0.56rem; color:var(--text); opacity:0.7; text-decoration:none; margin-top:3px; }
+.rk-pr { display:flex; gap:14px; flex-wrap:wrap; align-items:flex-start; }
+.rk-pr-chart { cursor:pointer; flex:0 0 auto; }
+.rk-pr-bars { display:flex; align-items:flex-end; gap:2px; width:200px; height:100px; }
+.rk-pr-chart.show-pie .rk-pr-bars { display:none; }
+.rk-pr-bars i { flex:1 1 0; display:block; border-radius:2px 2px 0 0; }
+.rk-pr-pie { display:none; }
+.rk-pr-chart.show-pie .rk-pr-pie { display:flex; justify-content:center; }
+.rk-pr-pie canvas { width:140px; height:140px; }
+.rk-pr-tw { flex:1 1 200px; }
+.rk-step-tabs { display:flex; gap:4px; flex-wrap:wrap; margin:2px 0 8px; }
+.rk-step-tab { padding:4px 10px; font-family:var(--ff-mono); font-size:0.68rem; color:var(--text); background:var(--field-bg); border:1px solid var(--border); border-radius:4px; cursor:pointer; }
+.rk-step-tab.active { color:var(--gold-hi); border-color:var(--gold); background:rgba(var(--gold-rgb),0.08); }
+
 .rk-pager { display: flex; align-items: center; justify-content: center; gap: 12px; padding: 8px 0 2px; }
 .rk-page-btn { background: var(--inset); color: var(--text); border: 1px solid var(--border); border-radius: 4px; width: 32px; height: 28px; line-height: 1; font-size: 1.1rem; cursor: pointer; transition: border-color 0.15s, color 0.15s; }
 .rk-page-btn:hover:not(:disabled) { border-color: var(--gold); color: var(--gold-hi); }

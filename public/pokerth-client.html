@@ -2150,6 +2150,125 @@ if ('serviceWorker' in navigator) {
       + rkTile(b.points != null ? b.points : '\u2014', rkColLabel('points'))
       + '</div>';
   }
+  // ── Repartition des places (camembert) — parite QML 2.1.2 ────────────────
+  // SeasonStatsSection (PTH, placementColors) + PlacementResult (BBC/WEC,
+  // heatColors, toggle barres/camembert). Camembert dessine sur <canvas> (port
+  // de PlacementPieChart : depart -90deg, sens horaire, liseres blancs 2px).
+  var RK_PLACE_COLORS = ['#56e289','#68e256','#aee256','#e2c856','#e2a056','#e25468','#e256ae','#cf56e2','#8a56e2','#5668e2'];
+  var RK_HEAT_COLORS  = ['#4ba800','#78bb00','#a5cd00','#d2e000','#fff200','#ffc100','#ff9100','#ff6100','#ff3000','#ff0000'];
+  var RK_PLACE_LABELS = ['1st','2nd','3rd','4th','5th','6th','7th','8th','9th','10th'];
+  function rkNums(a){ var o=[]; for(var i=0;i<10;i++) o.push((a && a[i]!=null)?(Number(a[i])||0):0); return o; }
+  function rkPaintPie(cv){
+    try{
+      var vals=JSON.parse(cv.getAttribute('data-vals')||'[]');
+      var cols=JSON.parse(cv.getAttribute('data-cols')||'[]');
+      var ctx=cv.getContext('2d');
+      if(ctx.reset) ctx.reset(); else ctx.clearRect(0,0,cv.width,cv.height);
+      var total=0,i; for(i=0;i<vals.length;i++) total+=Number(vals[i])||0;
+      if(total<=0) return;
+      var w=cv.width,h=cv.height,cx=w/2,cy=h/2,r=Math.min(w,h)/2-2;
+      var start=-Math.PI/2; ctx.lineWidth=2; ctx.strokeStyle='#ffffff';
+      for(var j=0;j<vals.length;j++){ var v=Number(vals[j])||0; if(v<=0) continue;
+        var end=start+(v/total)*2*Math.PI;
+        ctx.beginPath(); ctx.moveTo(cx,cy); ctx.arc(cx,cy,r,start,end); ctx.closePath();
+        ctx.fillStyle=cols[j%cols.length]; ctx.fill(); ctx.stroke(); start=end; }
+    }catch(e){}
+  }
+  function rkPaintPies(root){ if(!root||!root.querySelectorAll) return; var cs=root.querySelectorAll('canvas.rk-pie'); for(var i=0;i<cs.length;i++) rkPaintPie(cs[i]); }
+  window.rkPaintPies = rkPaintPies;
+  function rkPieCanvas(vals, cols, size){
+    return '<canvas class="rk-pie" width="'+size+'" height="'+size+'" data-vals="'
+      + rkEsc(JSON.stringify(rkNums(vals))) + '" data-cols="' + rkEsc(JSON.stringify(cols)) + '"></canvas>';
+  }
+  function rkPlaceLegend(cols){
+    var h='<div class="rk-place-legend">';
+    for(var i=0;i<10;i++) h+='<span class="rk-lg"><i style="background:'+cols[i]+'"></i>'+RK_PLACE_LABELS[i]+'</span>';
+    return h+'</div>';
+  }
+  function rkPlaceBars(counts, cols){
+    var c=rkNums(counts), max=1, i;
+    for(i=0;i<10;i++) max=Math.max(max, c[i]);
+    var tickStep=Math.max(1, Math.ceil(max/6));
+    var topValue=tickStep*Math.ceil(max/tickStep) || 1;
+    var h='<div class="rk-ps-bars">';
+    for(i=0;i<10;i++){
+      var pc=topValue>0?(c[i]/topValue*100):0;
+      h+='<div class="rk-ps-bar"><b>'+(c[i]>0?c[i]:'')+'</b>'
+        + '<i style="height:'+(c[i]>0?Math.max(2,pc):0)+'%;background:'+cols[i]+'"></i>'
+        + '<u>'+RK_PLACE_LABELS[i]+'</u></div>';
+    }
+    return h+'</div>';
+  }
+  // PTH — SeasonStatsSection (placementColors).
+  function rkSeasonStats(pl){
+    if(!pl) return '';
+    var counts=rkNums(pl.counts), pcts=pl.percents||[], total=0, i;
+    for(i=0;i<10;i++) total+=counts[i];
+    if(total<=0) return '';
+    var cols=RK_PLACE_COLORS;
+    var head='<tr><th></th>'; for(i=0;i<10;i++) head+='<th>'+(i+1)+'</th>'; head+='</tr>';
+    var cnt='<tr><td class="rk-ps-lbl">'+rkEsc(rkT('rankingColGames','Games'))+'</td>';
+    for(i=0;i<10;i++) cnt+='<td>'+counts[i]+'</td>'; cnt+='</tr>';
+    var pct='<tr><td class="rk-ps-lbl">'+rkEsc(rkT('rankingShare','Share'))+'</td>';
+    for(i=0;i<10;i++){ var s=(pcts[i]!=null&&pcts[i]!=='')?pcts[i]:(total>0?Math.round(counts[i]/total*100)+'%':'0%'); pct+='<td>'+rkEsc(s)+'</td>'; }
+    pct+='</tr>';
+    var table='<div class="rk-ps-tw"><table class="rk-ps-table">'+head+cnt+pct+'</table></div>';
+    var pie='<div class="rk-ps-pie">'+rkPieCanvas(counts, cols, 220)+'</div>';
+    return rkSection(rkT('rankingSeasonStats','Season Stats'), table + rkPlaceLegend(cols) + pie + rkPlaceBars(counts, cols));
+  }
+  // BBC/WEC — PlacementResult (heatColors, toggle barres/camembert au clic).
+  window.rkPrToggle = function(el){ if(el) el.classList.toggle('show-pie'); };
+  function rkPlacementResult(values){
+    var v=rkNums(values), cols=RK_HEAT_COLORS, total=0, max=1, i;
+    for(i=0;i<10;i++){ total+=v[i]; max=Math.max(max,v[i]); }
+    if(total<=0) return '';
+    var bars='<div class="rk-pr-bars">';
+    for(i=0;i<10;i++){ var pc=max>0?(v[i]/max*100):0;
+      bars+='<i style="height:'+(v[i]>0?Math.max(1,pc):0)+'%;background:'+cols[i]+'" title="'+RK_PLACE_LABELS[i]+': '+v[i]+'"></i>'; }
+    bars+='</div>';
+    var pie='<div class="rk-pr-pie">'+rkPieCanvas(v, cols, 150)+'</div>';
+    var chart='<div class="rk-pr-chart" onclick="rkPrToggle(this)" title="'+rkEsc(rkT('rankingToggleChart','Switch bar / pie'))+'">'+bars+pie+'</div>';
+    var head='<tr>'; for(i=0;i<10;i++) head+='<th>'+(i+1)+'.</th>'; head+='</tr>';
+    var cnt='<tr>'; for(i=0;i<10;i++) cnt+='<td>'+v[i]+'</td>'; cnt+='</tr>';
+    var pct='<tr>'; for(i=0;i<10;i++){ var s=total>0?Math.round(v[i]/total*100)+'%':'0%'; pct+='<td>'+s+'</td>'; } pct+='</tr>';
+    var table='<div class="rk-pr-tw"><table class="rk-pr-table">'+head+cnt+pct+'</table></div>';
+    return '<div class="rk-pr">'+chart+table+'</div>';
+  }
+  window.rkStepTab = function(btn){
+    var bar=btn.parentNode, box=bar&&bar.parentNode; if(!box) return;
+    var idx=btn.getAttribute('data-idx');
+    var tabs=bar.querySelectorAll('.rk-step-tab');
+    for(var i=0;i<tabs.length;i++) tabs[i].classList.toggle('active', tabs[i]===btn);
+    var panes=box.querySelectorAll('.rk-step-pane');
+    for(var j=0;j<panes.length;j++) panes[j].style.display = (panes[j].getAttribute('data-idx')===idx)?'':'none';
+  };
+  // BBC : places = tableau de steps (chacun 10-array ou null) -> onglets Step ;
+  // WEC : un seul 10-array plat -> pas d'onglets.
+  function rkResultsForBlock(block){
+    if(!block || !block.places) return '';
+    var pl=block.places; if(!(pl && pl.length)) return '';
+    var stepped=Array.isArray(pl[0]);
+    var steps=[];
+    if(stepped){ for(var i=0;i<pl.length;i++){ if(pl[i] && pl[i].length) steps.push({label: rkT('rankingStep','Step')+' '+(i+1), data: pl[i]}); } }
+    else steps.push({label:'', data: pl});
+    if(!steps.length) return '';
+    var inner='';
+    if(steps.length>1){
+      inner+='<div class="rk-step-tabs">';
+      for(var t=0;t<steps.length;t++) inner+='<button type="button" class="rk-step-tab'+(t===0?' active':'')+'" data-idx="'+t+'" onclick="rkStepTab(this)">'+rkEsc(steps[t].label)+'</button>';
+      inner+='</div>';
+    }
+    var any=false;
+    for(var p=0;p<steps.length;p++){
+      var body=rkPlacementResult(steps[p].data); if(!body) continue; any=true;
+      inner+='<div class="rk-step-pane" data-idx="'+p+'"'+(p===0?'':' style="display:none"')+'>'+body+'</div>';
+    }
+    if(!any) return '';
+    inner+=rkPlaceLegend(RK_HEAT_COLORS);
+    var title=rkT('rankingResults','Results')+((steps.length===1&&steps[0].label)?(' — '+steps[0].label):'');
+    return rkSection(title, inner);
+  }
+
   var RK_STAT_FB = { rankingThisSeason: 'This season', rankingThisMonth: 'This month', rankingThisYear: 'This year', rankingAllTime: 'All-Time' };
   // Profile body (awards → tickets → stats). Shared by the ranking profile card
   // and the per-cup panes of the player popup so both render identically.
@@ -2176,8 +2295,10 @@ if ('serviceWorker' in navigator) {
       for (var j = 0; j < d.stats.length; j++) {
         var blk = d.stats[j];
         h += rkSection(rkT(blk.label, RK_STAT_FB[blk.label] || blk.label), rkStatTiles(blk));
+        h += rkResultsForBlock(blk);
       }
     }
+    if (d.placement) h += rkSeasonStats(d.placement);
     return h;
   }
   function rkRenderProfile(d) {
@@ -2193,7 +2314,7 @@ if ('serviceWorker' in navigator) {
     pb.innerHTML = '<div class="rk-msg">' + rkEsc(rkT('rankingLoading', 'Loading\u2026')) + '</div>';
     var ck = src + '|' + String(nick).toLowerCase();
     var c = RK_PROF_CACHE[ck];
-    if (c && (Date.now() - c.at) < RK_TTL) { RK_PROF_CUR = c.data; pb.innerHTML = rkRenderProfile(c.data); return; }
+    if (c && (Date.now() - c.at) < RK_TTL) { RK_PROF_CUR = c.data; pb.innerHTML = rkRenderProfile(c.data); rkPaintPies(pb); return; }
     fetch('/api/player?src=' + encodeURIComponent(src) + '&nick=' + encodeURIComponent(nick), { headers: { 'Accept': 'application/json' } })
       .then(function (r) { return r.text(); })
       .then(function (t) {
@@ -2201,7 +2322,7 @@ if ('serviceWorker' in navigator) {
         if (!d || d.ok === false) { pb.innerHTML = '<div class="rk-msg">' + rkEsc(rkT('rankingError', 'Could not load the ranking.')) + '</div>'; return; }
         RK_PROF_CACHE[ck] = { at: Date.now(), data: d };
         RK_PROF_CUR = d;
-        pb.innerHTML = rkRenderProfile(d);
+        pb.innerHTML = rkRenderProfile(d); rkPaintPies(pb);
       })
       .catch(function () { pb.innerHTML = '<div class="rk-msg">' + rkEsc(rkT('rankingError', 'Could not load the ranking.')) + '</div>'; });
   };
@@ -2250,7 +2371,7 @@ if ('serviceWorker' in navigator) {
       for (var p = 0; p < have.length; p++) {
         html += '<div class="rk-cups-pane' + (p === 0 ? ' active' : '') + '" data-idx="' + p + '"' + (p === 0 ? '' : ' style="display:none"') + '>' + rkProfileBody(have[p].d) + '</div>';
       }
-      box.innerHTML = html;
+      box.innerHTML = html; rkPaintPies(box);
     }
     RK_CUPS_ORDER.forEach(function (s) {
       fetch('/api/player?src=' + encodeURIComponent(s) + '&nick=' + encodeURIComponent(nick), { headers: { 'Accept': 'application/json' } })
@@ -2337,7 +2458,7 @@ if ('serviceWorker' in navigator) {
     var si = $('rk-search'); if (si) si.placeholder = rkT('rankingSearch', 'Search a player\u2026');
     var prof = $('rk-profile');
     if (prof && prof.style.display === 'block') {
-      if (RK_PROF_CUR) { var pb = $('rk-prof-body'); if (pb) pb.innerHTML = rkRenderProfile(RK_PROF_CUR); }
+      if (RK_PROF_CUR) { var pb = $('rk-prof-body'); if (pb) { pb.innerHTML = rkRenderProfile(RK_PROF_CUR); rkPaintPies(pb); } }
       return;
     }
     if (RK_CUR && RK_CUR.state === 'table' && RK_CUR.rows && RK_CUR.rows.length) {
