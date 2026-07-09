@@ -349,7 +349,7 @@ export const strings = {
     rankingSearch:'Search a player…', rankingNoMatch:'No player found.',
     rankingSeason:'Season', rankingAllTime:'All-Time',
     rankingColRank:'#', rankingColPlayer:'Nickname', rankingColScore:'Score', rankingColPoints:'Points', rankingColGames:'Games',
-    rankingMemberSince:'Member since', rankingAwards:'Awards', rankingTickets:'Tickets', rankingThisSeason:'This season', rankingStep:'Step', rankingRank:'Rank', rankingBack:'Back', rankingThisMonth:'This month', rankingThisYear:'This year', rankingCurrentSeason:'Current season', rankingSeasonStats:'Season Stats', rankingShare:'Share', rankingResults:'Results', rankingToggleChart:'Switch bar / pie',
+    rankingMemberSince:'Member since', rankingAwards:'Awards', rankingTickets:'Tickets', rankingThisSeason:'This season', rankingStep:'Step', rankingRank:'Rank', rankingBack:'Back', rankingThisMonth:'This month', rankingThisYear:'This year', rankingCurrentSeason:'Current season', themeExport:'Export theme (.zip)', rankingSeasonStats:'Season Stats', rankingShare:'Share', rankingResults:'Results', rankingToggleChart:'Switch bar / pie',
 };
 
 export default { meta, strings };

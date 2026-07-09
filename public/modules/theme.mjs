@@ -360,7 +360,7 @@ function _loadGalleryTables() {
 
 // ── Theme packages : un "table style" importe se decompose en une palette (couleurs UI/popups)
 //    + un tapis (feutre, liseré, image) + un preset combinant les deux. ──
-var _palettePkgs = [], _tablePkgs = [], _pkgPresets = [], _puckPkgs = [], _buttonPkgs = [];
+var _palettePkgs = [], _tablePkgs = [], _pkgPresets = [], _puckPkgs = [], _buttonPkgs = [], _themePkgs = [];
 var PALETTE_TOKENS = ['felt','felt-mid','felt-hi','panel','panel-hi','gold','gold-hi','gold-dim','cream','text','text-hi','border','border-hi','modal-bg','body-glow'];
 var TABLE_TOKENS = ['felt-base-hi','felt-base-mid','felt-base-lo','rail','rail-dark','rail-glow'];
 function _palettePkgById(id){ for (var i=0;i<_palettePkgs.length;i++) if (_palettePkgs[i].id===id) return _palettePkgs[i]; return null; }
@@ -537,6 +537,7 @@ function _loadThemes(){
       .then(function(list){
         if(!Array.isArray(list)) return;
         var pkgs=list.filter(function(p){return p&&p.id&&(p.palette||p.table||p.felt||p.pucks||p.buttonImages||p.buttons);});
+        _themePkgs=pkgs.map(function(p){ return {id:String(p.id),name:p.name||String(p.id),swatch:p.swatch||'#444'}; });
         _palettePkgs=pkgs.filter(function(p){return p.palette;}).map(function(p){ return {id:String(p.id),name:p.name||String(p.id),swatch:p.swatch||'#444',tokens:p.palette}; }).filter(function(p){ return !_isBuiltinPalette(p.id); });
         _tablePkgs=pkgs.filter(function(p){return p.table||p.felt;}).map(function(p){ return {id:String(p.id),name:p.name||String(p.id),swatch:p.swatch||'#444',tokens:p.table||{},felt:p.felt||null,full:!!p.full,fs:!!p.fullscreen}; }).filter(function(p){ return !_isBuiltinTable(p.id); });
         _pkgPresets=pkgs.filter(function(p){return p.palette||p.table||p.felt;}).map(function(p){ var vals={theme:(p.palette?String(p.id):''),table:'pokerth-live',buttons:'glossy',pucks:'pokerth-new'}; if(p.deck) vals.deck=String(p.deck); return {id:'pkg-'+p.id,name:p.name||String(p.id),swatch:p.swatch||'#444',values:vals}; });
@@ -550,6 +551,88 @@ function _loadThemes(){
 }
 _loadThemes();
 _loadGalleryTables();
+
+// ── Export de theme en .zip (P3) — 100% client : fetch statique du paquet
+//    /themes/<id>/ (theme.json + assets referencesx) -> archive ZIP store-only
+//    (meme format que l'ingestion admin `kind:theme`, ré-importable tel quel).
+function _strU8(s){ if (typeof TextEncoder !== 'undefined') return new TextEncoder().encode(s);
+  var a=[]; for(var i=0;i<s.length;i++){ var c=s.charCodeAt(i);
+    if(c<128)a.push(c); else if(c<2048){a.push(192|(c>>6));a.push(128|(c&63));}
+    else {a.push(224|(c>>12));a.push(128|((c>>6)&63));a.push(128|(c&63));} } return new Uint8Array(a); }
+var _crcTab=(function(){ var t=[],c,n,k; for(n=0;n<256;n++){ c=n; for(k=0;k<8;k++) c=(c&1)?(0xEDB88320^(c>>>1)):(c>>>1); t[n]=c>>>0; } return t; })();
+function _crc32(u8){ var c=0xFFFFFFFF; for(var i=0;i<u8.length;i++) c=_crcTab[(c^u8[i])&0xFF]^(c>>>8); return (c^0xFFFFFFFF)>>>0; }
+function _zipStore(files){
+  var parts=[], central=[], offset=0;
+  function u16(v){ return [v&255,(v>>8)&255]; }
+  function u32(v){ v=v>>>0; return [v&255,(v>>8)&255,(v>>16)&255,(v>>24)&255]; }
+  var DATE=0x0021, TIME=0; // 1980-01-01
+  files.forEach(function(f){
+    var name=_strU8(f.name), data=f.data, crc=_crc32(data);
+    var lh=[].concat(u32(0x04034b50),u16(20),u16(0),u16(0),u16(TIME),u16(DATE),u32(crc),u32(data.length),u32(data.length),u16(name.length),u16(0));
+    parts.push(new Uint8Array(lh)); parts.push(name); parts.push(data);
+    var cd=[].concat(u32(0x02014b50),u16(20),u16(20),u16(0),u16(0),u16(TIME),u16(DATE),u32(crc),u32(data.length),u32(data.length),u16(name.length),u16(0),u16(0),u16(0),u16(0),u32(0),u32(offset));
+    central.push(new Uint8Array(cd)); central.push(name);
+    offset += lh.length + name.length + data.length;
+  });
+  var cdSize=0; central.forEach(function(p){ cdSize+=p.length; });
+  var eocd=new Uint8Array([].concat(u32(0x06054b50),u16(0),u16(0),u16(files.length),u16(files.length),u32(cdSize),u32(offset),u16(0)));
+  var all=parts.concat(central); all.push(eocd);
+  return new Blob(all, {type:'application/zip'});
+}
+function _dlBlob(blob,name){ try{ var u=URL.createObjectURL(blob); var a=document.createElement('a'); a.href=u; a.download=name;
+  document.body.appendChild(a); a.click(); setTimeout(function(){ try{document.body.removeChild(a);URL.revokeObjectURL(u);}catch(e){} },0); }catch(e){} }
+function _exportTheme(id, btn){
+  var old = btn ? btn.textContent : '';
+  if(btn){ btn.disabled=true; btn.textContent='\u2026'; }
+  var base='/themes/'+encodeURIComponent(id)+'/';
+  fetch(base+'theme.json',{cache:'no-store'}).then(function(r){ if(!r.ok) throw new Error('theme.json '+r.status); return r.text(); })
+  .then(function(cfgText){
+    var cfg=JSON.parse(cfgText);
+    var files=[{name:'theme.json', data:_strU8(cfgText)}];
+    var assets=[];
+    if(cfg.felt) assets.push(cfg.felt);
+    if(cfg.buttonImages) ['fold','check','call','raise','allin'].forEach(function(k){ if(cfg.buttonImages[k]) assets.push(cfg.buttonImages[k]); });
+    if(cfg.pucks) ['dealer','sb','bb'].forEach(function(k){ if(cfg.pucks[k]) assets.push(cfg.pucks[k]); });
+    var seen={}, uniq=[]; assets.forEach(function(a){ if(a && !seen[a]){ seen[a]=1; uniq.push(a); } });
+    return uniq.reduce(function(chain, fname){
+      return chain.then(function(acc){
+        return fetch(base+encodeURIComponent(fname),{cache:'no-store'}).then(function(rr){ if(!rr.ok) throw new Error(fname+' '+rr.status); return rr.arrayBuffer(); })
+          .then(function(buf){ acc.push({name:fname, data:new Uint8Array(buf)}); return acc; });
+      });
+    }, Promise.resolve(files));
+  })
+  .then(function(files){
+    _dlBlob(_zipStore(files), id+'.zip');
+    if(btn){ btn.textContent='\u2713'; setTimeout(function(){ btn.textContent=old; btn.disabled=false; },1200); }
+  })
+  .catch(function(e){ try{ console.warn('theme export failed:', e); }catch(_){}
+    if(btn){ btn.textContent='\u2717'; setTimeout(function(){ btn.textContent=old; btn.disabled=false; },1600); } });
+}
+function _exportBlock(){
+  if(!_themePkgs || !_themePkgs.length) return null;
+  var wrap=document.createElement('div');
+  wrap.appendChild(_sectionHeader(_t('themeExport','Export theme (.zip)'), ''));
+  _themePkgs.forEach(function(p){
+    var row=document.createElement('div');
+    row.style.cssText='display:flex;align-items:center;gap:8px;padding:5px 2px;';
+    var sw=document.createElement('span');
+    sw.style.cssText='width:16px;height:16px;border-radius:3px;flex:0 0 auto;border:1px solid var(--border,rgba(200,168,74,0.3));background:'+(p.swatch||'#444');
+    var nm=document.createElement('span');
+    nm.textContent=p.name;
+    nm.style.cssText='flex:1 1 auto;min-width:0;font-family:var(--ff-mono,monospace);font-size:0.8rem;color:var(--text,#ccc);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;';
+    var btn=document.createElement('button');
+    btn.type='button'; btn.textContent='\u2913 .zip';
+    btn.style.cssText='flex:0 0 auto;font-family:var(--ff-mono,monospace);font-size:0.72rem;padding:4px 9px;border:1px solid var(--border,rgba(200,168,74,0.3));border-radius:4px;background:var(--field-bg,#1a1a1a);color:var(--gold-hi,#e8c860);cursor:pointer;';
+    btn.onclick=function(){ _exportTheme(p.id, btn); };
+    row.appendChild(sw); row.appendChild(nm); row.appendChild(btn);
+    wrap.appendChild(row);
+  });
+  var sep=document.createElement('div');
+  sep.style.cssText='height:1px;background:var(--border,rgba(200,168,74,0.18));margin:8px 0 11px';
+  wrap.appendChild(sep);
+  return wrap;
+}
+
 
 // ── Single "Theme" panel ────────────────────────────────────────────────
 const PANEL_ID = 'theme-panel', OVERLAY_ID = 'theme-panel-overlay';
@@ -812,6 +895,9 @@ function _render() {
   var sep = document.createElement('div');
   sep.style.cssText = 'height:1px;background:var(--border,rgba(200,168,74,0.18));margin:3px 0 11px';
   _body.appendChild(sep);
+
+  // 1b) Export de theme installe en .zip
+  try { var _expEl = _exportBlock(); if (_expEl) _body.appendChild(_expEl); } catch (e) {}
 
   // 2) Customize (per-axis dropdowns)
   _body.appendChild(_sectionHeader(_t('sectionCustomize', 'Customize'), ''));
