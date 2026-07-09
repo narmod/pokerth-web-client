@@ -627,10 +627,31 @@ function _exportBlock(){
     row.appendChild(sw); row.appendChild(nm); row.appendChild(btn);
     wrap.appendChild(row);
   });
-  var sep=document.createElement('div');
-  sep.style.cssText='height:1px;background:var(--border,rgba(200,168,74,0.18));margin:8px 0 11px';
-  wrap.appendChild(sep);
   return wrap;
+}
+
+// Section repliable « Options avancées » (fermee par defaut, bas du panneau) —
+// meme mecanique d'accordeon que _dropdownBlock (_openSec). Contient l'export
+// de themes ; accueillera l'import de .zip ensuite.
+function _advancedBlock(){
+  var content = _exportBlock();
+  if (!content) return null;                 // rien a montrer tant qu'aucun theme charge
+  var secId = 'advanced';
+  var open = _openSec === secId;
+  var sec = document.createElement('div'); sec.style.cssText = 'margin:0 0 11px';
+  var btn = document.createElement('button'); btn.type = 'button';
+  btn.style.cssText = 'display:flex;align-items:center;gap:8px;width:100%;box-sizing:border-box;padding:7px 9px;border-radius:8px;cursor:pointer;text-align:left;color:var(--cream,#f0e6d2);font-size:0.84rem;background:rgba(255,255,255,0.03);border:1px solid ' + (open ? 'var(--gold,#c8a84a)' : 'var(--border,rgba(200,168,74,0.25))');
+  btn.innerHTML = '<span style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' + _t('sectionAdvanced', 'Advanced') + '</span>'
+    + '<span style="color:var(--text,#9aaa92);font-size:0.72rem;display:inline-block;transition:transform .15s;transform:rotate(' + (open ? '180' : '0') + 'deg)">\u25be</span>';
+  btn.addEventListener('click', function (e) { e.stopPropagation(); _openSec = open ? null : secId; _render(); });
+  sec.appendChild(btn);
+  if (open) {
+    _openBlockEl = sec;
+    var body = document.createElement('div'); body.style.cssText = 'margin-top:8px';
+    body.appendChild(content);
+    sec.appendChild(body);
+  }
+  return sec;
 }
 
 
@@ -896,9 +917,6 @@ function _render() {
   sep.style.cssText = 'height:1px;background:var(--border,rgba(200,168,74,0.18));margin:3px 0 11px';
   _body.appendChild(sep);
 
-  // 1b) Export de theme installe en .zip
-  try { var _expEl = _exportBlock(); if (_expEl) _body.appendChild(_expEl); } catch (e) {}
-
   // 2) Customize (per-axis dropdowns)
   _body.appendChild(_sectionHeader(_t('sectionCustomize', 'Customize'), ''));
   AXES.forEach(function (ax) {
@@ -923,6 +941,9 @@ function _render() {
     // Axe « Dos de carte » : juste sous l'axe Cartes (parité 3 axes QML)
     if (ax === deck) _body.appendChild(_cardbackBlock());
   });
+
+  // 3) Options avancees (export .zip ; import a venir) — repliable, en bas.
+  try { var _advEl = _advancedBlock(); if (_advEl) _body.appendChild(_advEl); } catch (e) {}
 
   // After (re)building the body, keep an expanded section in view.
   if (_openSec && _openBlockEl && typeof requestAnimationFrame === 'function') {
