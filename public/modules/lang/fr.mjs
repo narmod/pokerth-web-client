@@ -282,7 +282,7 @@ export const strings = {
     tablePlayersEmpty:'Aucun joueur assis.',
     filterAll:'Toutes', filterOpen:'\ud83d\udfe2 Ouvertes', filterNoPass:'\ud83d\udd13 Sans mot de passe', filterLive:'\ud83d\udc41 En cours',
     noTablesForFilter:'Aucune table ne correspond \u00e0 ce filtre',
-    createTableHdr:'Créer une table', gameStyle:'Style de partie',
+    navBack:'Retour', createTableHdr:'Créer une table', gameStyle:'Style de partie',
     presetCalmName:'Tranquille', presetCalmDesc:'parties longues',
     presetNormalName:'Normal', presetNormalDesc:'équilibré',
     presetFastName:'Rapide', presetFastDesc:'ça va vite !',

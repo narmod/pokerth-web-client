@@ -11686,17 +11686,22 @@ function dismissWinner() {
     },
 
     toggleCreateForm() {
-      var f = document.getElementById('create-form');
-      if (!f) return;
-      var open = !f.classList.contains('open');
-      f.classList.toggle('open', open);
-      f.style.display = open ? 'block' : 'none';
-      // Apply per-login-mode defaults the first time the form opens (or
-      // whenever the user has not yet customized a field).
-      if (open) this._applyCreateFormDefaults(false);
-      // Rotate the header toggle arrow / square off its bottom corners.
-      var btn = document.getElementById('create-toggle-btn');
-      if (btn) btn.classList.toggle('open', open);
+      // Conservé pour compat (intent PWA ?go=create) : ouvre la page dédiée.
+      this.openCreatePage();
+    },
+    // Ouvre l'écran dédié « Créer une partie ». Le formulaire existant
+    // (#create-form, tous ses champs/handlers) est déplacé une seule fois dans
+    // la page, ce qui préserve toute la logique de createGame().
+    openCreatePage() {
+      var form = document.getElementById('create-form');
+      var body = document.getElementById('create-page-body');
+      if (form && body && form.parentNode !== body) body.appendChild(form);
+      if (form) { form.style.display = 'block'; form.classList.add('open'); }
+      try { this._applyCreateFormDefaults(false); } catch (e) {}
+      show('s-create');
+    },
+    closeCreatePage() {
+      show('s-lobby');
     },
     // Quick-style presets: fill the create-form numeric fields in one tap.
     // The full form stays fully editable afterwards — presets are just a
@@ -11903,7 +11908,7 @@ function dismissWinner() {
         }));
       } catch (e) {}
       var f = document.getElementById('create-form');
-      if (f) { f.style.display = 'none'; f.classList.remove('open'); }
+      if (f) { f.classList.remove('open'); }
     },
     getLobbyState() {
       // Read-only snapshot of the bits the players-panel renderer
@@ -13471,7 +13476,7 @@ function renderPlayersList() {
   body.innerHTML = html;
 }
 
-;(function(){ window.BUILD_VERSION='0.3.219-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.220-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

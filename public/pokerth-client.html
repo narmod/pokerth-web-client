@@ -1121,10 +1121,9 @@ function onAvatarImageChosen(input) {
 
     <!-- Colonne création -->
     <div class="create-col">
-      <button class="create-toggle" id="create-toggle-btn" onclick="App.toggleCreateForm()">
+      <button class="create-toggle" id="create-toggle-btn" onclick="App.openCreatePage()">
         <span class="ct-ico">🛠️</span>
         <span data-i18n="createTableHdr">Créer une table</span>
-        <span class="ct-arrow" aria-hidden="true"></span>
       </button>
       <div id="create-form" style="display:none">
         <!-- Préréglages : remplissent les champs en un clic -->
@@ -1262,6 +1261,18 @@ function onAvatarImageChosen(input) {
 
 
 
+
+<!-- Écran dédié « Créer une partie » — garde les champs existants.
+     #create-form y est déplacé à la 1re ouverture par App.openCreatePage(). -->
+<div id="s-create" class="screen">
+  <div class="cp-header">
+    <button class="cp-back" type="button" onclick="App.closeCreatePage()"><span class="cp-back-ico" aria-hidden="true">←</span> <span data-i18n="navBack">Retour</span></button>
+    <span class="cp-title" data-i18n="createTableHdr">Créer une partie</span>
+  </div>
+  <div class="cp-scroll">
+    <div class="cp-body" id="create-page-body"></div>
+  </div>
+</div>
 
 <div id="s-game" class="screen">
   <div class="header">

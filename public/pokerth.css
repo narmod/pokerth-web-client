@@ -339,6 +339,43 @@ body {
 :-moz-full-screen      { background: var(--felt); }
 .screen.active { display: flex; }
 
+/* ── Écran dédié « Créer une partie » (page pleine, garde le formulaire existant) ── */
+#s-create { flex-direction: column; background: var(--field-bg); }
+.cp-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 18px;
+  border-bottom: 1px solid var(--border);
+  background: var(--chrome-tint);
+  flex-shrink: 0;
+}
+.cp-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 14px;
+  background: var(--field-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text);
+  font-family: var(--ff-display);
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+.cp-back:hover { border-color: var(--gold-dim); }
+.cp-back-ico { font-size: 1.05rem; line-height: 1; }
+.cp-title {
+  font-family: var(--ff-display);
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--text);
+  letter-spacing: 0.02em;
+}
+.cp-scroll { flex: 1; overflow-y: auto; padding: 20px 18px 40px; }
+.cp-body { max-width: 720px; margin: 0 auto; }
+.cp-body #create-form { display: block; }
+
 /* ══════════════════════════════════════════
    CONNECT SCREEN
 ══════════════════════════════════════════ */
