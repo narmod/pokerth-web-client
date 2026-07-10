@@ -8546,11 +8546,31 @@ const App = (() => {
         }
       } catch (e) {}
     }
-    var _selfAtPearl = false; // self épinglée au bas de l'ellipse (voir plus bas)
+    // ── Self = "grosse perle" au point bas de l'ellipse (comme le client
+    // officiel) ── Épinglée au sol de la zone EN PAYSAGE dès qu'aucune
+    // player-bar n'est à protéger (barre masquée OU style "pokerth" où la self
+    // EST un siège). INDÉPENDANT du mode de placement : vaut pour auto /
+    // officiel / ellipse ET custom sans position self sauvée. On respecte une
+    // self posée à la main (custom) et la player-bar réellement affichée.
+    var _pkStyleNow = false;
+    try { _pkStyleNow = (document.documentElement.getAttribute('data-seat') === 'pokerth'); } catch (e) {}
+    var _selfHasCustom = false;
+    if (_seatModeV === 'custom' && myIdx >= 0) {
+      try { var _cSelf = (typeof window._seatCustomGet === 'function') ? window._seatCustomGet(rotated.length) : null;
+            _selfHasCustom = !!(_cSelf && _cSelf[0] && typeof _cSelf[0].fy === 'number'); } catch (e) {}
+    }
+    var _selfAtPearl = (myIdx >= 0 && !_forceSeatPortrait && !_selfHasCustom
+                        && (_advGet('hide_pbar', true) || _pkStyleNow));
+    // Diagnostic : dans la console, tape  _seatDbg  pour voir le build réellement
+    // servi + le mode de placement + si la self est bien épinglée au point bas.
+    try { window._seatDbg = { build: window.BUILD_VERSION, mode: _seatModeV,
+      forcePortrait: _forceSeatPortrait, pkStyle: _pkStyleNow,
+      hidePbar: _advGet('hide_pbar', true), selfHasCustom: _selfHasCustom,
+      selfAtPearl: _selfAtPearl }; } catch (e) {}
     if (_applyOfficial) {
       try {
         var _offPos = _officialSeatPix(rotated.length, _forceSeatPortrait, zRect.width, zRect.height, oCX, oCY, oRect, _seatBoxScale);
-        // Assis (myIdx>=0) : la self (slot 0) garde sa place classique en bas,
+        // Assis (myIdx>=0) : la self (slot 0) est gérée séparément (perle) ;
         // on ne remplace que les adversaires (1+). Spectateur (myIdx<0) : pas de
         // self -> on place TOUS les slots (0 inclus) pour que l'officiel s'applique.
         var _op0 = (myIdx >= 0) ? 1 : 0;
@@ -8558,17 +8578,10 @@ const App = (() => {
         // Échelle bisectée du QML (paysage seulement) : remplace l'heuristique
         // téléphone, chaque box adverse est mise à l'échelle comme l'officiel.
         if (_offPos && _offPos._boxScale && !_forceSeatPortrait) _seatBoxScale = _offPos._boxScale * (compact ? 1 : 0.9);  // -10% desktop : sieges moins massifs
-        // Self = "grosse perle" au point bas de l'ellipse (paysage officiel,
-        // joueur assis) SI aucune player-bar à protéger : soit elle est masquée
-        // (hide_pbar), soit on est en style de siège "pokerth" (la self EST un
-        // siège avec ses cartes → pas de barre). Signal fiable plutôt que le seul
-        // flag hide_pbar (qui peut valoir 0 alors que la barre n'est de toute
-        // façon pas affichée dans ce style).
-        var _pkStyleNow = false;
-        try { _pkStyleNow = (document.documentElement.getAttribute('data-seat') === 'pokerth'); } catch (e) {}
-        _selfAtPearl = !!(_offPos && _offPos._self && myIdx >= 0 && !_forceSeatPortrait
-                          && (_advGet('hide_pbar', true) || _pkStyleNow));
-        if (_selfAtPearl) pixPos[0] = _offPos._self;
+        // Point bas exact de l'ellipse pour la self (quand l'officiel est actif).
+        // L'ÉPINGLAGE mesuré au rendu (plus bas) reste la garantie finale, même
+        // si l'officiel est désactivé (custom / classique).
+        if (_selfAtPearl && _offPos && _offPos._self) pixPos[0] = _offPos._self;
       } catch (e) {}
     }
     // ── Calcul SB / BB à partir du dealer ──
@@ -13400,7 +13413,7 @@ function renderPlayersList() {
   body.innerHTML = html;
 }
 
-;(function(){ window.BUILD_VERSION='0.3.206-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.207-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
