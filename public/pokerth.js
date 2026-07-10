@@ -2692,15 +2692,56 @@ const PTHCrypto = (function () {
     return out;
   }
 
-  async function _sha1(bytes){ return new Uint8Array(await crypto.subtle.digest('SHA-1', bytes)); }
+  // SHA-1 pur-JS (synchrone) — indépendant de crypto.subtle, qui n'est exposé
+  // qu'en contexte SÉCURISÉ (https ou localhost). Sur une page servie en http
+  // (ex. serveur local http://host:8080), crypto.subtle est undefined : la
+  // dérivation rejetait, _cardKey/_cardIV restaient null, et un compte auth ne
+  // voyait que le DOS de ses cartes toute la partie. L'AES étant déjà pur-JS,
+  // seul le SHA-1 dépendait encore de Web Crypto — on l'affranchit ici.
+  function _sha1(bytes){
+    const ml = bytes.length;
+    const withOne = ml + 1;                       // octet 0x80 après le message
+    const k = ((56 - (withOne % 64)) + 64) % 64;  // padding jusqu'à ≡56 mod 64
+    const total = withOne + k + 8;                // + 8 octets de longueur (bits)
+    const msg = new Uint8Array(total);
+    msg.set(bytes, 0);
+    msg[ml] = 0x80;
+    const dv = new DataView(msg.buffer);
+    const bitLen = ml * 8;
+    dv.setUint32(total - 8, (Math.floor(bitLen / 0x100000000)) >>> 0); // high (≈0 ici)
+    dv.setUint32(total - 4, bitLen >>> 0);                             // low
+    let h0=0x67452301, h1=0xEFCDAB89, h2=0x98BADCFE, h3=0x10325476, h4=0xC3D2E1F0;
+    const w = new Uint32Array(80);
+    const rotl = (x, c) => (x << c) | (x >>> (32 - c));
+    for (let off = 0; off < total; off += 64) {
+      for (let i = 0; i < 16; i++) w[i] = dv.getUint32(off + i * 4);
+      for (let i = 16; i < 80; i++) w[i] = rotl(w[i-3] ^ w[i-8] ^ w[i-14] ^ w[i-16], 1);
+      let a=h0, b=h1, c=h2, d=h3, e=h4;
+      for (let i = 0; i < 80; i++) {
+        let f, kk;
+        if (i < 20)      { f = (b & c) | (~b & d);          kk = 0x5A827999; }
+        else if (i < 40) { f = b ^ c ^ d;                   kk = 0x6ED9EBA1; }
+        else if (i < 60) { f = (b & c) | (b & d) | (c & d); kk = 0x8F1BBCDC; }
+        else             { f = b ^ c ^ d;                   kk = 0xCA62C1D6; }
+        const t = (rotl(a, 5) + f + e + kk + w[i]) | 0;
+        e = d; d = c; c = rotl(b, 30); b = a; a = t;
+      }
+      h0 = (h0 + a) | 0; h1 = (h1 + b) | 0; h2 = (h2 + c) | 0; h3 = (h3 + d) | 0; h4 = (h4 + e) | 0;
+    }
+    const out = new Uint8Array(20);
+    const od = new DataView(out.buffer);
+    od.setUint32(0, h0 >>> 0);  od.setUint32(4, h1 >>> 0);  od.setUint32(8, h2 >>> 0);
+    od.setUint32(12, h3 >>> 0); od.setUint32(16, h4 >>> 0);
+    return out;
+  }
   // BytesToKey de PokerTH (SHA-1, sans sel) :
   //   key = SHA1(SHA1(pwd))[0:16]
   //   iv  = SHA1(SHA1(pwd))[16:20] ++ SHA1(SHA1( SHA1(SHA1(pwd))++pwd ))[0:12]
-  async function deriveKeyIv(pwdBytes){
-    const keyBuf1 = await _sha1(await _sha1(pwdBytes));
+  function deriveKeyIv(pwdBytes){
+    const keyBuf1 = _sha1(_sha1(pwdBytes));
     const cat = new Uint8Array(20 + pwdBytes.length);
     cat.set(keyBuf1, 0); cat.set(pwdBytes, 20);
-    const keyBuf2 = await _sha1(await _sha1(cat));
+    const keyBuf2 = _sha1(_sha1(cat));
     const key = new Uint8Array(keyBuf1.subarray(0, 16));
     const iv = new Uint8Array(16);
     iv.set(keyBuf1.subarray(16, 20), 0);
@@ -5326,14 +5367,17 @@ const App = (() => {
           ? (useAcctAuth ? userAcctPass : ($('pass') ? $('pass').value : ''))
           : null;
         // Compte authentifié : pokerth.net chiffre nos cartes (encryptedCards)
-        // avec une clé dérivée du mot de passe. On la pré-calcule maintenant
-        // (async, SHA-1) — prête bien avant le 1er HandStart. Sinon on efface
-        // toute clé résiduelle (passage auth → invité sans recharger la page).
+        // avec une clé dérivée du mot de passe. On la calcule maintenant
+        // (SHA-1 pur-JS, SYNCHRONE) — donc prête à coup sûr avant le 1er
+        // HandStart (plus de course async) et fonctionnelle même hors contexte
+        // sécurisé (http local). Sinon on efface toute clé résiduelle
+        // (passage auth → invité sans recharger la page).
         _cardKey = null; _cardIV = null;
         if (loginType === 1 && authPass) {
-          PTHCrypto.deriveKeyIv(new TextEncoder().encode(authPass))
-            .then(function (r) { _cardKey = r.key; _cardIV = r.iv; })
-            .catch(function () { _cardKey = null; _cardIV = null; });
+          try {
+            const _kv = PTHCrypto.deriveKeyIv(new TextEncoder().encode(authPass));
+            _cardKey = _kv.key; _cardIV = _kv.iv;
+          } catch (e) { _cardKey = null; _cardIV = null; }
         }
         // Pré-armer le rejoin AVANT d'envoyer Init : si une partie récente est
         // mémorisée (pth_resume, même pseudo, < 5 min), on note _pendingRejoin
@@ -13658,7 +13702,7 @@ function renderPlayersList() {
   body.innerHTML = _shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>';
 }
 
-;(function(){ window.BUILD_VERSION='0.3.245-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.246-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
