@@ -3404,7 +3404,10 @@ body {
    Bet/Raise vert · All-in rouge sombre (palette Theme.qml, bible §7). */
 .seat-action-badge {
   position: absolute;
-  top: -7px; left: 50%; transform: translateX(-50%);
+  /* Posée sur les cartes (moitié droite de la rangée avatar+cartes), comme le
+     client officiel — la rangée du haut est centrée dans .seat, on décale donc
+     la vignette vers la droite pour la caler au-dessus des cartes. */
+  top: -5px; left: calc(50% + 17px); transform: translateX(-50%);
   z-index: 7;
   white-space: nowrap;
   font-family: var(--ff-display);
