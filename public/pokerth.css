@@ -3935,6 +3935,21 @@ body:not(.in-game) .my-zone {
   max-width: var(--bottom-w);
   margin: 0 auto;
 }
+/* ── Barre d'action : panneau centré borné (fidélité client officiel) ──
+   Sur desktop/tablette, le fond épouse la largeur des boutons (radius,
+   comme le QML officiel, bible §5) au lieu de s'étirer sur toute la largeur
+   de l'écran. Sur téléphone (largeur < 900 OU paysage court), on garde la
+   bande pleine largeur collée au bas. */
+@media (min-width: 900px) and (min-height: 600px) {
+  .my-zone { background: transparent; border-top: none; }
+  .my-zone .action-grid {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 8px 10px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.38);
+  }
+}
 /* Layout officiel : 3 zones (montant+slider / pastilles+All-In+mode / Fold-Call-Raise) */
 /* Bas : Fold | Call/Check | Raise — trois boutons egaux */
 .act-buttons-row { display: flex; gap: 6px; }
