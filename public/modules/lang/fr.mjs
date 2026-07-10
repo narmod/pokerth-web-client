@@ -354,6 +354,7 @@ export const strings = {
     footPlayer:'Joueur', footCreate:'＋ Créer une partie', gameInfoTitle:'Infos de partie', gameInfoEmpty:'Sélectionne une partie',
     gfNone:'Aucun filtre', gfOpen:'Jeux ouverts', gfOpenNF:'Jeux ouverts et non complets', gfOpenNFNP:'Jeux ouverts, non complets, non privés', gfOpenNFP:'Jeux ouverts, non complets, privés', gfOpenNFR:'Jeux ouverts, non complets, classés',
     infoTypeLabel:'Type', infoCapitalLabel:'Capital', infoPlayersInGame:'Joueurs dans la partie', reportGameTitle:'Signaler le nom de la partie', reportGameConfirm:'Signaler', reportGameMsg:'Voulez-vous vraiment signaler le nom de la partie « {name} » comme inapproprié ?', reportGameDone:'Nom de la partie signalé. Merci.',
+    plIgnore:'Ignorer', plStats:'Statistiques du joueur',
 };
 
 export default { meta, strings };

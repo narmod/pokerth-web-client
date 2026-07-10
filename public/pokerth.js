@@ -13513,6 +13513,21 @@ window.setPlSort = function (m) {
   try { localStorage.setItem('pth_pl_sort', m === 'cc' ? 'cc' : 'az'); } catch (e) {}
   try { renderPlayersList(); } catch (e) {}
 };
+// Icônes d'action par joueur (colonne Joueurs connectés) : ⊘ ignorer + 📊 stats.
+// Monochromes (currentColor) pour suivre le thème, comme l'officiel.
+var _PL_BAN_SVG = '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><line x1="5.6" y1="5.6" x2="18.4" y2="18.4"/></svg>';
+var _PL_BAR_SVG = '<svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" aria-hidden="true"><rect x="4" y="12" width="4" height="8" rx="1"/><rect x="10" y="7" width="4" height="13" rx="1"/><rect x="16" y="3" width="4" height="17" rx="1"/></svg>';
+// Bascule ignorer depuis la LISTE (léger : toggle + re-render, sans ouvrir le
+// popup — contrairement à window._toggleIgnore qui est pour la carte joueur).
+window._plToggleIgnore = function(pid){
+  try {
+    var nm = (window._readPlayers ? window._readPlayers()[pid] : null);
+    if (!nm) return;
+    _setIgnoredName(nm, !_isIgnored(nm));
+    if (typeof renderPlayersList === 'function') renderPlayersList();
+  } catch(e){}
+};
+
 function renderPlayersList() {
   var body = document.getElementById('players-list-body');
   var countEl = document.getElementById('players-panel-count');
@@ -13603,12 +13618,18 @@ function renderPlayersList() {
     var actHtml = r.act
       ? '<span class="pl-game" title="' + esc((typeof t === 'function' ? t('modeInProgress') : '') + ' \u00b7 ' + r.act) + '">\uD83C\uDFAE ' + esc(r.act) + '</span>'
       : '';
+    var _ign  = _isIgnored(r.name);
+    var _acts = '<span class="pl-acts">'
+      + '<button type="button" class="pl-act pl-act-ban' + (_ign ? ' on' : '') + '" title="' + _tt('plIgnore','Ignore') + '" aria-label="' + _tt('plIgnore','Ignore') + '" onclick="event.stopPropagation();window._plToggleIgnore(' + r.pid + ')">' + _PL_BAN_SVG + '</button>'
+      + '<button type="button" class="pl-act pl-act-stats" title="' + _tt('plStats','Stats') + '" aria-label="' + _tt('plStats','Stats') + '" onclick="event.stopPropagation();window.openPlayerInfoPopup(' + r.pid + ')">' + _PL_BAR_SVG + '</button>'
+      + '</span>';
     return '<div class="pl-row' + (r.isMe ? ' pl-me' : '') + '">' +
              avChip +
              '<span class="pl-name">' + nameHtml + actHtml + '</span>' +
              '<span class="pl-flag">' + flag + (cc ? '<span class="pl-cc">' + cc + '</span>' : '') + '</span>' +
              '<span class="pl-star">' + (r.isMe ? '★' : '') + '</span>' +
              '<span class="pl-id">#' + r.pid + '</span>' +
+             _acts +
            '</div>';
   };
   var _tt = function(k, fb) { return (typeof t === 'function' && t(k) !== k) ? t(k) : fb; };
@@ -13624,7 +13645,7 @@ function renderPlayersList() {
   body.innerHTML = html;
 }
 
-;(function(){ window.BUILD_VERSION='0.3.233-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.234-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

@@ -354,6 +354,7 @@ export const strings = {
     footPlayer:'Player', footCreate:'＋ Create a table', gameInfoTitle:'Game info', gameInfoEmpty:'Select a table',
     gfNone:'No game list filter', gfOpen:'Show open games', gfOpenNF:'Show open & non-full games', gfOpenNFNP:'Show open & non-full & non-private games', gfOpenNFP:'Show open & non-full & private games', gfOpenNFR:'Show open & non-full & ranking games',
     infoTypeLabel:'Type', infoCapitalLabel:'Capital', infoPlayersInGame:'Players in game', reportGameTitle:'Report the game name', reportGameConfirm:'Report', reportGameMsg:'Do you really want to report the game name « {name} » as inappropriate?', reportGameDone:'Game name reported. Thank you.',
+    plIgnore:'Ignore', plStats:'Player stats',
 };
 
 export default { meta, strings };
