@@ -4550,6 +4550,12 @@ const App = (() => {
   // activable. Les boutons d'action y sont affichés en APERÇU seulement
   // (non cliquables). Se ferme automatiquement quand c'est notre tour.
   let _preActionOpen = false;
+  // Pré-sélection d'action (comme le client officiel, bible §5.3) : on peut
+  // armer Fold/Call/Raise/All-In avant son tour (bord or), recliquer pour
+  // désarmer, et l'action s'exécute quand notre tour arrive. Invalidée si la
+  // mise à suivre change, reset à chaque nouvelle main.
+  var _preAction = '';        // '' | 'fold' | 'call' | 'raise' | 'allin'
+  var _preActionHighest = 0;  // highestBet mémorisé à l'armement (invalidation)
   // Verrou anti-fermeture du picker natif (iOS) du selecteur de mode : tant
   // que l'utilisateur manipule #mode-sel, on differe les reconstructions
   // d'apercu (renderMyTurnActions(true)) pour ne pas detruire le <select> ouvert.
@@ -6377,6 +6383,7 @@ const App = (() => {
         // pas de reset par main. Le joueur le change via le dropdown ou un
         // clic manuel sur une action.
         _preActionOpen = false; // referme tout panneau "aperçu" à chaque main
+        _preAction = '';        // désarme toute pré-action à chaque nouvelle main
         // Zoom-follow : reset du suivi + restauration d'un zoom suspendu au showdown
         try { if (window._zoomHandStart) window._zoomHandStart(); } catch (_e) {}
         // Badge « main gagnante » : masqué dès la nouvelle main
@@ -6608,6 +6615,10 @@ const App = (() => {
           // C'est notre tour : on referme tout panneau "aperçu" pour ne pas
           // interférer avec la barre d'actions normale (et tous ses effets).
           _preActionOpen = false;
+          // Pré-action armée (comme l'officiel) : si une action a été armée avant
+          // notre tour et qu'elle est encore valide, on la joue directement sans
+          // afficher les boutons live.
+          if (_preAction) { var _pdid = _runPreAction(); _preAction = ''; if (_pdid) break; }
           // Mode auto PERSISTANT (Manuel/Auto Check-Call/Auto Check-Fold) :
           // si un mode auto est actif, jouer l'action sans afficher les boutons.
           // Le mode reste actif (pas de désarmement), comme le client officiel.
@@ -9599,6 +9610,25 @@ const App = (() => {
   }
   window._renderOdds = renderOddsMonitor;
 
+  // Exécute l'action pré-armée quand notre tour arrive (runPreAction officiel).
+  // Recalcule le contexte au moment de l'exécution. Un Fold pré-armé devient
+  // Check si le check est gratuit. Retourne true si une action a été jouée.
+  function _runPreAction() {
+    if (!_preAction || _amSpectator) return false;
+    var pa = _preAction;
+    var myMoney = (seatData[myId] || {}).money || 0;
+    var myBet   = (seatData[myId] || {}).bet   || 0;
+    var toCall  = Math.max(0, highestBet - myBet);
+    var canCheck = toCall === 0;
+    var minBet = minRaise > 0 ? minRaise : Math.max(highestBet > 0 ? highestBet : smallBlind * 2, smallBlind * 2);
+    var canRaise = myMoney > toCall && myMoney >= minBet;
+    if (pa === 'fold')  { if (canCheck) doAction(2, 0); else doAction(1, 0); return true; }
+    if (pa === 'call')  { if (canCheck) doAction(2, 0); else if (toCall >= myMoney) doAction(6, myMoney); else doAction(3, toCall); return true; }
+    if (pa === 'allin') { doAction(6, myMoney); return true; }
+    if (pa === 'raise') { if (!canRaise) return false; if (minBet >= myMoney) doAction(6, myMoney); else doAction(5, minBet); return true; }
+    return false;
+  }
+
   function renderMyTurnActions(preview) {
     // iOS/Android : ne pas detruire #mode-sel pendant que l'utilisateur le
     // manipule (le picker natif se fermerait). On differe le rafraichissement
@@ -9620,6 +9650,12 @@ const App = (() => {
         true
       );
       return;
+    }
+    // Invalidation d'une pré-action call/raise si la mise à suivre a changé
+    // depuis l'armement (comme l'officiel : onCallAmountChanged). Fold/All-In
+    // restent valides (pas de dépendance au montant).
+    if (_preAction && (_preAction === 'call' || _preAction === 'raise') && highestBet !== _preActionHighest) {
+      _preAction = '';
     }
     const myMoney = (seatData[myId] || {}).money || 0;
     const myBet   = (seatData[myId] || {}).bet || 0;
@@ -9700,6 +9736,12 @@ const App = (() => {
       +   '<option' + (_playingMode === 2 ? ' selected' : '') + '>' + t('modeAutoCheckFold') + '</option>'
       + '</select><span class="sel-arr">▾</span></div>';
 
+    // En aperçu (hors-tour), les 4 boutons d'action ARMENT une pré-action au
+    // lieu d'agir ; le bouton armé reçoit la classe .prearmed (bord or).
+    var _pv = !!preview;
+    function _preClk(name, live) { return _pv ? "App.armPreAction('" + name + "')" : live; }
+    function _preCls(name) { return (_pv && _preAction === name) ? ' prearmed' : ''; }
+
     const h = '<div class="action-grid">'
       + betRowHtml
       + '<div class="mid-row">'
@@ -9708,13 +9750,13 @@ const App = (() => {
       +     '<button class="btn-pct"' + da + ' onclick="setPct(' + p50  + ')"><span class="pct-p">1/2</span><span class="pct-amt">' + fmtChips(p50) + '</span><span class="act-key">' + KB.bet2.toUpperCase() + '</span></button>'
       +     '<button class="btn-pct"' + da + ' onclick="setPct(' + p100 + ')"><span class="pct-p">Pot</span><span class="pct-amt">' + fmtChips(p100) + '</span><span class="act-key">' + KB.bet3.toUpperCase() + '</span></button>'
       +   '</div>'
-      +   '<button class="btn-action btn-allin" onclick="App.doAction(6,' + myMoney + ')" title="All-In (A)">' + t('allin') + ' <b>' + fmtChips(myMoney) + '</b><span class="act-key">' + KB.allin.toUpperCase() + '</span></button>'
+      +   '<button class="btn-action btn-allin' + _preCls('allin') + '" onclick="' + _preClk('allin', 'App.doAction(6,' + myMoney + ')') + '" title="All-In (A)">' + t('allin') + ' <b>' + fmtChips(myMoney) + '</b><span class="act-key">' + KB.allin.toUpperCase() + '</span></button>'
       +   modeSel
       + '</div>'
       + '<div class="act-buttons-row">'
-      +   '<button class="btn-action btn-fold" onclick="App.doAction(1,0)" title="Fold (F)">' + t('fold') + '<span class="act-key">' + KB.fold.toUpperCase() + '</span></button>'
-      +   '<button class="btn-action ' + callClass + '" onclick="' + callAction + '" title="Call/Check (C)">' + callLabel + '<span class="act-key">' + KB.call.toUpperCase() + '</span></button>'
-      +   '<button class="btn-action btn-raise raise-btn"' + da + ' onclick="App.doRaise()" title="Raise (R)">' + raiseLabel + '<span class="act-key">' + KB.raise.toUpperCase() + '</span></button>'
+      +   '<button class="btn-action btn-fold' + _preCls('fold') + '" onclick="' + _preClk('fold', 'App.doAction(1,0)') + '" title="Fold (F)">' + t('fold') + '<span class="act-key">' + KB.fold.toUpperCase() + '</span></button>'
+      +   '<button class="btn-action ' + callClass + _preCls('call') + '" onclick="' + _preClk('call', callAction) + '" title="Call/Check (C)">' + callLabel + '<span class="act-key">' + KB.call.toUpperCase() + '</span></button>'
+      +   '<button class="btn-action btn-raise raise-btn' + _preCls('raise') + '"' + da + ' onclick="' + _preClk('raise', 'App.doRaise()') + '" title="Raise (R)">' + raiseLabel + '<span class="act-key">' + KB.raise.toUpperCase() + '</span></button>'
       + '</div>'
       + '</div>';
 
@@ -11137,6 +11179,18 @@ function dismissWinner() {
       _preActionOpen = !_preActionOpen;
       if (_preActionOpen) _renderPreActionPanel();
       else _closePreActionPanel();
+    },
+
+    // Arme / désarme une pré-action (Fold/Call/Raise/All-In) avant notre tour,
+    // comme le client officiel. Reclic sur la même = désarmement. Le bouton armé
+    // est surligné en or ; l'action s'exécute quand notre tour arrive.
+    armPreAction(name) {
+      if (turnPid === myId) return;                       // à notre tour : inchangé (les boutons agissent)
+      if (_amSpectator || !_gameStarted) return;
+      if (myCards[0] == null && myCards[1] == null) return; // pas de cartes
+      _preAction = (_preAction === name) ? '' : name;      // toggle
+      _preActionHighest = highestBet;                       // mémorise le contexte de mise
+      renderMyTurnActions(true);                            // re-render pour le surlignage or
     },
 
     // Bascule rapide du mode depuis le panneau aperçu : Manuel <-> Auto Check/Fold.
@@ -13422,7 +13476,7 @@ function renderPlayersList() {
   body.innerHTML = html;
 }
 
-;(function(){ window.BUILD_VERSION='0.3.214-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.215-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

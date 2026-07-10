@@ -3621,7 +3621,12 @@ body.adv-4color .pk:not(.red):not(.spade):not(.back) { color: #1e8c3a; }
    signaler qu'elles ne sont pas jouables. Le dropdown de mode reste intact.
    grayscale() porte sur les couleurs du theme en cours -> conforme a toutes
    les palettes (y compris boutons-images). */
-.actions-preview .btn-action,
+/* Pré-sélection : les 4 boutons d'action restent CLIQUABLES et colorés en
+   aperçu — on peut armer/désarmer une action avant son tour (client officiel).
+   Un bouton désactivé (relance indisponible) reste grisé et inactif. */
+.actions-preview .btn-action { pointer-events: auto; filter: none; opacity: 1; }
+.actions-preview .btn-action:disabled { pointer-events: none; filter: grayscale(0.9); opacity: 0.5; }
+/* Contrôles de montant : encore inactifs en aperçu (la pré-relance part au min). */
 .actions-preview .btn-pct,
 .actions-preview .raise-slider,
 .actions-preview .raise-display {
@@ -3629,6 +3634,23 @@ body.adv-4color .pk:not(.red):not(.spade):not(.back) { color: #1e8c3a; }
   opacity: 0.5;
 }
 .actions-preview .mode-sel-wrap { pointer-events: auto; opacity: 1; }  /* mode dropdown reste activable en aperçu */
+
+/* Action pré-armée : bord or + point or en haut à droite (bible §5.3). */
+.btn-action.prearmed {
+  position: relative;
+  outline: 2px solid #FFD700;
+  outline-offset: -2px;
+  box-shadow: 0 0 0 1px #FFD700, 0 0 12px rgba(255,215,0,0.55);
+}
+.btn-action.prearmed::after {
+  content: '';
+  position: absolute;
+  top: -4px; right: -4px;
+  width: 9px; height: 9px;
+  border-radius: 50%;
+  background: #FFD700;
+  box-shadow: 0 0 4px rgba(255,215,0,0.9);
+}
 /* Hidden by default; shown only when the user enables it from the ••• menu. */
 body.hide-auto-btn .btn-auto,
 body.hide-auto-btn .mode-sel-wrap { display: none; }
