@@ -7315,7 +7315,7 @@ const App = (() => {
     d.className = 'msg ' + cls;
     const emT = function (s) { var h = esc(s); if (!_noEmo && typeof window.applyChatEmoteShortcuts === 'function') { try { h = window.applyChatEmoteShortcuts(h); } catch (_e) {} } return h; };
     if (sender) {
-      d.innerHTML = `<span class="who">${esc(sender)}</span>: <span class="txt">${emT(text)}</span>`;
+      d.innerHTML = `<span class="msg-time">${_chatTs()}</span> <span class="who">${esc(sender)}</span>: <span class="txt">${emT(text)}</span>`;
     } else {
       d.innerHTML = `<span class="txt">${esc(text)}</span>`;
     }
@@ -12074,6 +12074,14 @@ window._readMyId = function() {
 
 
 // ── Game chat (mirrors lobby addChat) ──
+// Heure locale [HH:MM:SS] préfixée aux messages de chat des joueurs (parité
+// officielle). Les messages système (sans expéditeur) restent sans heure.
+function _chatTs() {
+  var d = new Date();
+  function p(n){ return (n < 10 ? '0' : '') + n; }
+  return '[' + p(d.getHours()) + ':' + p(d.getMinutes()) + ':' + p(d.getSeconds()) + ']';
+}
+
 function addGameChat(sender, text, cls, spec) {
   if (sender && cls !== 'mine' && _isIgnored(sender)) return; // joueur ignoré
   var el = document.getElementById('g-chat-msgs');
@@ -12088,7 +12096,7 @@ function addGameChat(sender, text, cls, spec) {
   // sauf en mode « chat sans emoji ». Le nom d'expéditeur n'est jamais converti.
   function emT(s) { var h = e(s); if (!_noEmo && typeof window.applyChatEmoteShortcuts === 'function') { try { h = window.applyChatEmoteShortcuts(h); } catch (_e) {} } return h; }
   if (sender) {
-    d.innerHTML = '<span class="who">'+e(sender)+'</span>: <span class="txt">'+emT(text)+'</span>';
+    d.innerHTML = '<span class="msg-time">'+_chatTs()+'</span> <span class="who">'+e(sender)+'</span>: <span class="txt">'+emT(text)+'</span>';
   } else {
     d.innerHTML = '<span class="txt">'+e(text)+'</span>';
   }
@@ -13598,7 +13606,7 @@ function renderPlayersList() {
   body.innerHTML = html;
 }
 
-;(function(){ window.BUILD_VERSION='0.3.231-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.232-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

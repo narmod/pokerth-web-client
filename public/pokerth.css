@@ -7304,3 +7304,6 @@ html[data-buttons="pokerth"] .btn-action[disabled] { filter: grayscale(0.55) bri
 
 /* Ligne de partie sélectionnée */
 .game-row.gcard.sel { border-color:var(--gold); box-shadow:0 0 0 1px var(--gold) inset; background:rgba(var(--gold-rgb),0.06); }
+
+/* Heure des messages de chat [HH:MM:SS] — gris discret, monospace (parité officielle) */
+.msg .msg-time { color: var(--text-dim, #8b93a7); font-family: var(--ff-mono, monospace); font-size: 0.88em; margin-right: 2px; }
