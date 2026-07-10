@@ -111,15 +111,63 @@ function avpShowCat(cat, btn) {
   document.querySelectorAll(".avp-cat").forEach(function(c) {
     c.classList.toggle("selected", c.dataset.cat === cat);
   });
-  document.querySelectorAll(".avp-btn").forEach(function(b) {
-    if (b.classList.contains("avp-pin")) return; // keep __pth__ + none
-    b.style.display = (b.dataset.cat === cat) ? "" : "none";
-  });
   try { localStorage.setItem("pth_avatar_cat", cat); } catch(e) {}
-  // Scroll the grid back to the top when switching categories so the
-  // user always starts at the first emoji of the new set.
-  var grid = document.querySelector(".avp-grid");
-  if (grid) grid.scrollTop = 0;
+  // The example-avatar gallery is now a category tab like any other,
+  // but its buttons (photo thumbnails) are built on demand from
+  // /img/avatars/index.json. Ensure they exist before filtering, then
+  // filter. Every other category is static markup and filters at once.
+  var applyFilter = function() {
+    document.querySelectorAll(".avp-btn").forEach(function(b) {
+      if (b.classList.contains("avp-pin")) return; // keep __pth__/__img__/none
+      b.style.display = (b.dataset.cat === cat) ? "" : "none";
+    });
+    // Scroll the grid back to the top when switching categories so the
+    // user always starts at the first item of the new set.
+    var grid = document.querySelector(".avp-grid");
+    if (grid) grid.scrollTop = 0;
+  };
+  if (cat === "gallery") { avpEnsureGallery(applyFilter); }
+  else { applyFilter(); }
+}
+
+// Build the example-avatar thumbnails into the picker grid once, as
+// .avp-btn[data-cat="gallery"] buttons so avpShowCat can filter them
+// like any other category. Selecting one reuses the "custom image"
+// pipeline (_setAvatarFromUrl → __img__ + broadcast). Called lazily the
+// first time the gallery tab is shown so page load stays cheap.
+var _avpGalBuilt = false;
+function avpEnsureGallery(cb) {
+  if (_avpGalBuilt) { if (cb) cb(); return; }
+  var build = function(data) {
+    _avGalData = data;
+    var grid = document.querySelector(".avp-grid");
+    if (grid && data) {
+      var frag = document.createDocumentFragment();
+      ["people", "misc"].forEach(function(cat) {
+        (data[cat] || []).forEach(function(fn) {
+          var u = "/img/avatars/" + cat + "/" + fn;
+          var b = document.createElement("button");
+          b.type = "button";
+          b.className = "avp-btn avp-gal-item";
+          b.dataset.cat = "gallery";
+          b.style.display = "none";
+          b.onclick = function() { _setAvatarFromUrl(u); };
+          var img = document.createElement("img");
+          img.loading = "lazy"; img.src = u; img.alt = ""; img.draggable = false;
+          b.appendChild(img);
+          frag.appendChild(b);
+        });
+      });
+      grid.appendChild(frag);
+    }
+    _avpGalBuilt = true;
+    if (cb) cb();
+  };
+  if (_avGalData) { build(_avGalData); return; }
+  fetch("/img/avatars/index.json")
+    .then(function(r) { return r.json(); })
+    .then(build)
+    .catch(function() { _avpGalBuilt = true; if (cb) cb(); });
 }
 
 // Decide which category to show when the popup opens: prefer the one
@@ -208,44 +256,6 @@ var _avGalData = null;
 function closeAvatarGallery() {
   var m = document.getElementById("avatar-gallery-modal");
   if (m) m.style.display = "none";
-}
-function _avGalRender(m) {
-  var b = m.querySelector(".avgal-body");
-  var tt = function (k, fb) {
-    return (typeof window.t === "function" && window.t(k) !== k) ? window.t(k) : fb;
-  };
-  var html = "";
-  ["people", "misc"].forEach(function (cat) {
-    var list = (_avGalData && _avGalData[cat]) || [];
-    if (!list.length) return;
-    html += '<div class="avgal-cat">' + tt(cat === "people" ? "avgalPeople" : "avgalMisc", cat === "people" ? "People" : "Misc") + "</div>";
-    html += '<div class="avgal-grid">';
-    list.forEach(function (fn) {
-      var u = "/img/avatars/" + cat + "/" + fn;
-      html += '<button type="button" class="avgal-item" onclick="_setAvatarFromUrl(\'' + u + '\')"><img loading="lazy" src="' + u + '" alt=""></button>';
-    });
-    html += "</div>";
-  });
-  b.innerHTML = html;
-}
-function openAvatarGallery() {
-  var m = document.getElementById("avatar-gallery-modal");
-  if (!m) {
-    m = document.createElement("div");
-    m.id = "avatar-gallery-modal";
-    m.className = "avgal-overlay";
-    m.onclick = function (e) { if (e.target === m) closeAvatarGallery(); };
-    m.innerHTML = '<div class="avgal-box"><button type="button" class="win-x" onclick="closeAvatarGallery()" aria-label="X">\u2715</button><div class="avgal-title"></div><div class="avgal-body">\u2026</div></div>';
-    document.body.appendChild(m);
-  }
-  m.style.display = "flex";
-  m.querySelector(".avgal-title").textContent =
-    (typeof window.t === "function" && window.t("avatarGallery") !== "avatarGallery") ? window.t("avatarGallery") : "Avatar gallery";
-  if (_avGalData) { _avGalRender(m); return; }
-  fetch("/img/avatars/index.json")
-    .then(function (r) { return r.json(); })
-    .then(function (d) { _avGalData = d; _avGalRender(m); })
-    .catch(function () { m.querySelector(".avgal-body").textContent = "\u2014"; });
 }
 function _setAvatarFromUrl(url) {
   var img = new Image();
@@ -455,7 +465,8 @@ function onAvatarImageChosen(input) {
         <button type="button" onclick="toggleAvatarPopup()" style="background:none;border:none;color:var(--text);cursor:pointer;font-size:1rem">✕</button>
       </div>
       <div class="avp-cats" role="tablist">
-        <button type="button" class="avp-cat selected" data-cat="people" onclick="avpShowCat('people', this)" data-i18n-title="avCatPeople" title="Personnes" aria-label="Personnes">🧑</button>
+        <button type="button" class="avp-cat selected" data-cat="gallery" onclick="avpShowCat('gallery', this)" data-i18n-title="avatarGallery" title="Galerie d'avatars" aria-label="Galerie d'avatars">🖼️</button>
+        <button type="button" class="avp-cat" data-cat="people" onclick="avpShowCat('people', this)" data-i18n-title="avCatPeople" title="Personnes" aria-label="Personnes">🧑</button>
         <button type="button" class="avp-cat" data-cat="fantasy" onclick="avpShowCat('fantasy', this)" data-i18n-title="avCatFantasy" title="Fantastique" aria-label="Fantastique">🧙</button>
         <button type="button" class="avp-cat" data-cat="poker" onclick="avpShowCat('poker', this)" data-i18n-title="avCatPoker" title="Poker" aria-label="Poker">🃏</button>
         <button type="button" class="avp-cat" data-cat="animals" onclick="avpShowCat('animals', this)" data-i18n-title="avCatAnimals" title="Animaux" aria-label="Animaux">🐶</button>
@@ -472,7 +483,6 @@ function onAvatarImageChosen(input) {
      sentinel "__pth__" the JS branches on. -->
 <button type="button" class="avp-btn avp-pth avp-pin" data-av="__pth__" id="avp-btn-pth" onclick="selectAvatarPopup('__pth__')" title="Mon avatar PokerTH" data-i18n-title="avatarTooltip"><img src="/favicon.svg" alt="PokerTH" draggable="false" style="width:26px;height:26px;object-fit:contain;pointer-events:none"></button>
 <button type="button" class="avp-btn avp-img avp-pin" data-av="__img__" id="avp-btn-img" onclick="pickAvatarImage()" title="Choisir une image perso / Custom image" data-i18n-title="avatarImageTooltip">📷</button>
-<button type="button" class="avp-btn avp-gal avp-pin" id="avp-btn-gal" onclick="openAvatarGallery()" title="Galerie d'avatars / Avatar gallery" data-i18n-title="avatarGalleryTooltip">🖼️</button>
 <button type="button" class="avp-btn avp-none avp-pin" data-av="" onclick="selectAvatarPopup('')">Aa</button>
 <button type="button" class="avp-btn" data-av="🌸" data-cat="plants" style="display:none" onclick="selectAvatarPopup('🌸')">🌸</button>
 <button type="button" class="avp-btn" data-av="🌺" data-cat="plants" style="display:none" onclick="selectAvatarPopup('🌺')">🌺</button>
