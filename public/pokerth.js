@@ -3152,14 +3152,14 @@ const App = (() => {
   let _endRaiseMode = 1;
   let _endRaiseValue = 0;
 
-  // ── Chip display mode: absolute value (¥) or big blinds (BB) ──
+  // ── Chip display mode: absolute value ($) or big blinds (BB) ──
   // Pure display feature, no protocol impact. Toggled from the in-game
   // overflow menu and persisted. fmtChips() is the single formatter used
   // everywhere a live game amount is shown (pot, stacks, bets, action
   // buttons) so the whole table switches consistently.
   let _displayBB = false;
   try { _displayBB = (localStorage.getItem('pth_display_bb') === '1'); } catch (e) {}
-  // Format a raw chip amount as either "1234 ¥" or "61,7 BB" depending on
+  // Format a raw chip amount as either "$1234" or "61,7 BB" depending on
   // the current mode. The big blind is smallBlind*2; if it's not known yet
   // (0, before the first hand) we fall back to the raw value to avoid a
   // divide-by-zero. One decimal, shown only when non-zero, with the decimal
@@ -3176,9 +3176,9 @@ const App = (() => {
   }
   function fmtChips(amount) {
     var v = (typeof amount === 'number') ? amount : parseInt(amount, 10) || 0;
-    if (!_displayBB) return _groupThousands(v) + ' ¥';
+    if (!_displayBB) return '$' + _groupThousands(v);
     var bb = (smallBlind || 0) * 2;
-    if (!bb) return _groupThousands(v) + ' ¥';
+    if (!bb) return '$' + _groupThousands(v);
     var n = v / bb;
     // Round to 1 decimal, drop a trailing .0
     var r = Math.round(n * 10) / 10;
@@ -3190,7 +3190,7 @@ const App = (() => {
   // Amount formatted for SPEECH. Mirrors fmtChips' BB mode (already TTS-clean,
   // e.g. "12,5 BB"), but in chip mode returns the bare integer WITHOUT the
   // thousands separator: the narrow no-break space in _groupThousands makes
-  // engines read "12 345" as two numbers. No ¥ glyph (its reading varies).
+  // engines read "12 345" as two numbers. No $ glyph (its reading varies).
   function fmtChipsVoice(amount) {
     var v = (typeof amount === 'number') ? amount : parseInt(amount, 10) || 0;
     var bb = (smallBlind || 0) * 2;
@@ -3946,9 +3946,9 @@ const App = (() => {
       title: t('piConfiguration'),
       rows: [
         [t('blinds'),
-            (smallBlind || 0) + ' / ' + ((smallBlind || 0) * 2) + ' ¥'],
+            '$' + (smallBlind || 0) + ' / $' + ((smallBlind || 0) * 2)],
         [t('piStartingStack'),
-            _groupThousands(meta.startMoney || 0) + ' ¥'],
+            '$' + _groupThousands(meta.startMoney || 0)],
         [t('piActionTimer'),
             (meta.timeout || gameTimeout || 15) + ' s'],
       ],
@@ -3966,7 +3966,7 @@ const App = (() => {
         [t('piHandNo'),
             (handNum > 0) ? ('H#' + handNum) : t('piNotStarted')],
         [t('piPot'),
-            _groupThousands(pot) + ' ¥'],
+            '$' + _groupThousands(pot)],
         [t('piPhase'),
             round],
       ],
@@ -4325,7 +4325,7 @@ const App = (() => {
   }
   window.toggleHaptic = toggleHaptic;
 
-  // ── Toggle chip display between absolute value (¥) and big blinds (BB) ──
+  // ── Toggle chip display between absolute value ($) and big blinds (BB) ──
   function toggleDisplayBB() {
     _displayBB = !_displayBB;
     try { localStorage.setItem('pth_display_bb', _displayBB ? '1' : '0'); } catch (e) {}
@@ -4352,18 +4352,15 @@ const App = (() => {
     // « Bets » = mises de la street en cours, non encore collectées
     // (parité GameStatusBar QML, bible §7 : Total/Bets). Affiché seulement
     // s'il y a des mises sur le tapis, pour ne pas alourdir la strip.
-    var _bets = 0;
-    try { for (var _k in seatData) _bets += (seatData[_k].bet || 0); } catch (e) {}
-    // Ligne 1 : le pot. Ligne 2 (dédiée, plus petite/atténuée) : les mises —
-    // évite le retour à la ligne au milieu du texte sur écran étroit.
+    // Pot seul (les « Mises » redondantes ont été retirées à la demande).
+    // Barre d'état (#g-pot) : « Pot $X ». Badge au-dessus des cartes (#g-potbar,
+    // tablette/desktop) : juste le montant « $X », masqué quand le pot est nul.
     var _potTxt = esc(t('pot') + ' ' + fmtChips(_lastPotValue));
-    var _betsHtml = _bets > 0
-      ? '<span class="pot-bets">' + esc(t('statusBets') + ' ' + fmtChips(_bets)) + '</span>'
-      : '';
+    var _potAmt = esc(fmtChips(_lastPotValue));
     var a = document.getElementById('g-pot');
     var b = document.getElementById('g-potbar');
-    if (a) a.innerHTML = _potTxt + _betsHtml;
-    if (b) b.innerHTML = _potTxt + _betsHtml;
+    if (a) a.innerHTML = _potTxt;
+    if (b) { b.innerHTML = _potAmt; b.classList.toggle('has-pot', _lastPotValue > 0); }
     // « Pop » à chaque hausse du pot (parité pot badge QML, bible §9) —
     // relance de l'animation par reflow, pas de listener à nettoyer.
     if (_lastPotValue > _prevPot) {
@@ -6028,8 +6025,7 @@ const App = (() => {
         // no-op when joining a genuinely fresh table).
         try {
           pot = 0; collectedPot = 0;
-          if ($('g-pot'))    $('g-pot').textContent = 'Pot: 0';
-          if ($('g-potbar')) $('g-potbar').textContent = 'Pot: 0';
+          setPot(0);
           commCards = [];
           var _czComm  = document.getElementById('g-comm');  if (_czComm)  _czComm.innerHTML  = '';
           var _czSeats = document.getElementById('g-seats'); if (_czSeats) _czSeats.innerHTML = '';
@@ -6891,8 +6887,7 @@ const App = (() => {
             }
           }
         } catch (e) {}
-        pot = 0; $('g-pot').textContent = 'Pot: 0';
-        if ($('g-potbar')) $('g-potbar').textContent = 'Pot: 0';
+        pot = 0; setPot(0);
         renderSeats();
         // Animations de fin de main
         var iWon = winners.some(function(w){ return w.pid === myId; });
@@ -6945,7 +6940,7 @@ const App = (() => {
             recordHand(false, myHideNet, myPairHide);
           }
         }
-        pot = 0; $('g-pot').textContent = 'Pot: 0';
+        pot = 0; setPot(0);
         renderSeats();
         // Détection élimination (stack à 0)
         for (var _ep of seats) {
@@ -7565,7 +7560,7 @@ const App = (() => {
       return '<div class="hand-hist-item">'
         + '<div style="display:flex;justify-content:space-between">'
         + '<span style="color:var(--gold-dim);font-size:0.55rem">Main #'+h2.num+'</span>'
-        + '<span class="hand-hist-result '+dcls+'">'+(h2.delta>0?'+':'')+_groupThousands(h2.delta)+' ¥</span>'
+        + '<span class="hand-hist-result '+dcls+'">'+(h2.delta>0?'+':'')+'$'+_groupThousands(h2.delta)+'</span>'
         + '</div>'
         + '<div class="hand-hist-cards">'
         + (h2.cards ? h2.cards.map(function(c){ return '<span style="background:#fff;color:'+(c.red?'#c0392b':'#111')+';border-radius:2px;padding:1px 3px;font-size:0.6rem;font-weight:700">'+c.r+c.s+'</span>'; }).join('') : '')
@@ -7577,9 +7572,9 @@ const App = (() => {
       + _statsRow(t('statWins'), s.handsWon, 'pos')
       + _statsRow(t('statWinRate'), wr+'%')
       + '<hr class="stat-divider">'
-      + _statsRow(t('statNet'), (gain>0?'+':'')+_groupThousands(gain)+' ¥', gainCls)
-      + _statsRow(t('statBestWin'), '+'+_groupThousands(s.bigWin)+' ¥', 'pos')
-      + _statsRow(t('statWorstLoss'), _groupThousands(s.bigLoss)+' ¥', 'neg')
+      + _statsRow(t('statNet'), (gain>0?'+':'')+'$' + _groupThousands(gain), gainCls)
+      + _statsRow(t('statBestWin'), '+'+'$' + _groupThousands(s.bigWin), 'pos')
+      + _statsRow(t('statWorstLoss'), '$' + _groupThousands(s.bigLoss), 'neg')
       + '<hr class="stat-divider">'
       + '<div style="font-size:0.58rem;color:var(--gold-dim);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:4px">'+t('statRecentHands')+'</div>'
       + histHtml
@@ -7604,9 +7599,9 @@ const App = (() => {
       + _statsRow(t('statWins'), s.handsWon, 'pos')
       + _statsRow(t('statWinRate'), wr+'%')
       + '<hr class="stat-divider">'
-      + _statsRow(t('statNet'), (gain>0?'+':'')+_groupThousands(gain)+' ¥', gainCls)
-      + _statsRow(t('statBestWin'), '+'+_groupThousands(s.bigWin)+' ¥', 'pos')
-      + _statsRow(t('statWorstLoss'), _groupThousands(s.bigLoss)+' ¥', 'neg')
+      + _statsRow(t('statNet'), (gain>0?'+':'')+'$' + _groupThousands(gain), gainCls)
+      + _statsRow(t('statBestWin'), '+'+'$' + _groupThousands(s.bigWin), 'pos')
+      + _statsRow(t('statWorstLoss'), '$' + _groupThousands(s.bigLoss), 'neg')
       + '<hr class="stat-divider">'
       + '<button class="stats-reset" onclick="window._statsReset()">'+t('statReset')+'</button>'
       + '</div>';
@@ -7678,7 +7673,7 @@ const App = (() => {
           var wrp  = hp>0 ? Math.round((p.handsWon||0)/hp*100) : 0;
           // Secondary line adapts to the active criterion so the ranked value is visible.
           var sub;
-          if (_boardSort==='per100')       sub = (p100>0?'+':'')+_groupThousands(p100)+' ¥/100 · '+hp;
+          if (_boardSort==='per100')       sub = (p100>0?'+':'')+'$'+_groupThousands(p100)+'/100 · '+hp;
           else if (_boardSort==='winrate') sub = wrp+'% · '+hp;
           else if (_boardSort==='streak')  sub = '🔥 '+(p.bestStreak||0);
           else                             sub = '🏆'+(p.gamesWon||0)+' · '+(p.handsWon||0);
@@ -7686,7 +7681,7 @@ const App = (() => {
             + '<span class="board-rank">'+medal+'</span>'
             + '<span class="board-av">'+esc(av)+'</span>'
             + '<span class="board-name">'+esc(p.name)+'</span>'
-            + '<span class="board-net '+ncls+'">'+(net>0?'+':'')+_groupThousands(net)+' ¥</span>'
+            + '<span class="board-net '+ncls+'">'+(net>0?'+':'')+'$'+_groupThousands(net)+'</span>'
             + '<span class="board-sub">'+sub+'</span>'
             + '</div>';
         }).join('');
@@ -9215,10 +9210,10 @@ const App = (() => {
           '<div class="eg-stat-row"><span class="eg-stat-label">' + t('endGameHandsPlayed') + '</span><span class="eg-stat-val">' + s.handsPlayed + '</span></div>' +
           '<div class="eg-stat-row"><span class="eg-stat-label">' + t('endGameHandsWon') + '</span><span class="eg-stat-val pos">' + s.handsWon + ' (' + wr + '%)</span></div>' +
           '<hr class="eg-stat-divider">' +
-          '<div class="eg-stat-row"><span class="eg-stat-label">' + t('endGameFinalStack') + '</span><span class="eg-stat-val">' + _groupThousands(finalStack) + ' ¥</span></div>' +
-          '<div class="eg-stat-row"><span class="eg-stat-label">' + t('endGameNetGain') + '</span><span class="eg-stat-val ' + gainCls + '">' + (s.totalGain > 0 ? '+' : '') + _groupThousands(s.totalGain) + ' ¥</span></div>' +
-          '<div class="eg-stat-row"><span class="eg-stat-label">' + t('endGameBestWin') + '</span><span class="eg-stat-val pos">+' + _groupThousands(s.bigWin) + ' ¥</span></div>' +
-          '<div class="eg-stat-row"><span class="eg-stat-label">' + t('endGameWorstLoss') + '</span><span class="eg-stat-val neg">' + _groupThousands(s.bigLoss) + ' ¥</span></div>' +
+          '<div class="eg-stat-row"><span class="eg-stat-label">' + t('endGameFinalStack') + '</span><span class="eg-stat-val">' + '$' + _groupThousands(finalStack)+'</span></div>' +
+          '<div class="eg-stat-row"><span class="eg-stat-label">' + t('endGameNetGain') + '</span><span class="eg-stat-val ' + gainCls + '">' + (s.totalGain > 0 ? '+' : '') + '$' + _groupThousands(s.totalGain)+'</span></div>' +
+          '<div class="eg-stat-row"><span class="eg-stat-label">' + t('endGameBestWin') + '</span><span class="eg-stat-val pos">+' + '$' + _groupThousands(s.bigWin)+'</span></div>' +
+          '<div class="eg-stat-row"><span class="eg-stat-label">' + t('endGameWorstLoss') + '</span><span class="eg-stat-val neg">' + '$' + _groupThousands(s.bigLoss)+'</span></div>' +
         '</div>' +
         '<div class="eg-actions">' +
           (window._offlineMode ? '<button class="eg-btn primary" onclick="App.offlineReplay()">' + t('endGameReplay') + '</button>' : '') +
@@ -9956,13 +9951,13 @@ function showWinnerOverlay(winners) {
   html += '<div class="wc-label">' + (isMyWin ? t('youWon') : t('handWinner')) + '</div>';
   html += '<div class="wc-name">' + winnerNames + '</div>';
   html += '</div>';
-  html += '<div class="wc-gain">+' + _groupThousands(totalWon) + ' ¥</div>';
+  html += '<div class="wc-gain">+' + '$' + _groupThousands(totalWon)+'</div>';
   html += '</div>';
 
   // ── Stats ──
   html += '<div class="wc-stats">';
   html += '<div class="wc-stat"><div class="wc-stat-label">' + t('handOf') + '</div><div class="wc-stat-value">' + handNum + '</div></div>';
-  html += '<div class="wc-stat"><div class="wc-stat-label">' + t('totalPot') + '</div><div class="wc-stat-value">' + _groupThousands(totalWon) + ' ¥</div></div>';
+  html += '<div class="wc-stat"><div class="wc-stat-label">' + t('totalPot') + '</div><div class="wc-stat-value">' + '$' + _groupThousands(totalWon)+'</div></div>';
   html += '<div class="wc-stat"><div class="wc-stat-label">' + t('players') + '</div><div class="wc-stat-value">' + _playersInHand + '</div></div>';
   html += '<div class="wc-stat"><div class="wc-stat-label">' + t('blinds') + '</div><div class="wc-stat-value">' + smallBlind + '/' + (smallBlind*2) + '</div></div>';
   html += '</div>';
@@ -10051,15 +10046,15 @@ function showWinnerOverlay(winners) {
     if (isW) {
       // Gagnant : on affiche le pot ramassé (cohérent avec l'en-tête).
       deltaClass = "pos";
-      deltaTxt = "+" + _groupThousands(wObj ? wObj.won : 0) + " ¥";
+      deltaTxt = "+" + "$" + _groupThousands(wObj ? wObj.won : 0);
     } else if (_net != null && _net < 0) {
       // Perdant : perte nette de la main, en rouge.
       deltaClass = "neg";
-      deltaTxt = _groupThousands(_net) + " ¥";
+      deltaTxt = "$" + _groupThousands(_net);
     } else if (_net != null && _net > 0) {
       // Gain net positif sans être « le » gagnant (split pot / side pot).
       deltaClass = "pos";
-      deltaTxt = "+" + _groupThousands(_net) + " ¥";
+      deltaTxt = "+" + "$" + _groupThousands(_net);
     } else {
       deltaClass = "";
       deltaTxt = "";
@@ -10070,7 +10065,7 @@ function showWinnerOverlay(winners) {
     html += _avatarChipHtml(pid, name, 'wc-player-av');
     html += '<div class="wc-player-info">';
     html += '<div class="wc-player-name">' + esc(name) + (isW ? " 🏆" : "") + (isMe ? " 👤" : "") + '</div>';
-    html += '<div class="wc-player-stack">' + (_money != null ? _groupThousands(_money) + " ¥" : "—") + '</div>';
+    html += '<div class="wc-player-stack">' + (_money != null ? "$" + _groupThousands(_money) : "—") + '</div>';
     html += '</div>';
     // Cartes : on rend TOUJOURS le conteneur (avec 2 cartes ou 2 dos en
     // placeholder), sinon la ligne n'aurait que 3 colonnes et la grille
@@ -13476,7 +13471,7 @@ function renderPlayersList() {
   body.innerHTML = html;
 }
 
-;(function(){ window.BUILD_VERSION='0.3.216-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.217-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

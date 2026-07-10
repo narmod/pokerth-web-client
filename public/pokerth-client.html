@@ -1157,7 +1157,7 @@ function onAvatarImageChosen(input) {
           <span class="cf-num-wrap">
             <input type="number" id="cf-blind" class="cf-range-num" min="1" max="1000000" step="1" value="10"
                    oninput="App.rangeFromNum('cf-blind-range', this)" onchange="App.clampNum(this);App.rangeFromNum('cf-blind-range', this)">
-            <span class="cf-money">¥</span>
+            <span class="cf-money">$</span>
           </span>
         </label>
         <input id="cf-blind-range" class="cf-range" type="range" min="1" max="1000" step="1" value="10"
@@ -1169,7 +1169,7 @@ function onAvatarImageChosen(input) {
           <span class="cf-num-wrap">
             <input type="number" id="cf-stack" class="cf-range-num" min="500" max="1000000" step="1" value="3000"
                    oninput="App.rangeFromNum('cf-stack-range', this)" onchange="App.clampNum(this);App.rangeFromNum('cf-stack-range', this)">
-            <span class="cf-money">¥</span>
+            <span class="cf-money">$</span>
           </span>
         </label>
         <input id="cf-stack-range" class="cf-range" type="range" min="500" max="1000000" step="500" value="3000"
@@ -1404,6 +1404,8 @@ function onAvatarImageChosen(input) {
     <div class="table-zone" id="g-table-zone">
       <div class="table-scaler" id="g-table-scaler">
         <div class="felt-oval">
+          <!-- Badge pot au-dessus des cartes (tablette/desktop) — alimenté par setPot -->
+          <div class="pot-badge" id="g-potbar"></div>
           <div class="comm-row" id="g-comm"></div>
           <!-- Badge « main gagnante » du showdown (parité QML WinningHandBadge) -->
           <div class="win-hand-badge" id="g-win-hand" style="display:none"></div>

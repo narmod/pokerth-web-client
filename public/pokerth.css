@@ -3165,6 +3165,46 @@ body {
 /* Pot display */
 .pot-display { display: none; }
 
+/* Badge pot au-dessus des cartes (parité pot badge QML §9). Positionné dans le
+   feutre, juste au-dessus de la rangée de cartes communes. Affiché seulement sur
+   tablette/desktop (≥900px) ET quand le pot est non nul (classe .has-pot posée
+   par setPot). Sur mobile le pot reste dans la barre d'état sous le header. */
+.pot-badge {
+  display: none;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, calc(-100% - 46px));
+  z-index: 6;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 13px;
+  background: rgba(0, 0, 0, 0.5);
+  border: 1.5px solid var(--gold);
+  border-radius: 999px;
+  color: var(--gold);
+  font-family: var(--ff-display);
+  font-weight: 700;
+  font-size: 0.95rem;
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+  box-shadow: 0 2px 9px rgba(0, 0, 0, 0.42);
+  pointer-events: none;
+}
+.pot-badge::before {
+  content: '';
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 50% 38%, #ffe89a 0%, #f2c94c 55%, #c99a1e 100%);
+  border: 2px dashed rgba(0, 0, 0, 0.28);
+  box-sizing: border-box;
+  flex: 0 0 auto;
+}
+@media (min-width: 900px) {
+  .pot-badge.has-pot { display: inline-flex; }
+}
+
 .pot-bar {
   text-align: center;
   padding: 3px 0;
