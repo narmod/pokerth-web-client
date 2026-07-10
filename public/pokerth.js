@@ -13513,6 +13513,19 @@ window.setPlSort = function (m) {
   try { localStorage.setItem('pth_pl_sort', m === 'cc' ? 'cc' : 'az'); } catch (e) {}
   try { renderPlayersList(); } catch (e) {}
 };
+// Déroulant de tri (parité officielle) : 'az' / 'cc' = mode de tri ;
+// 'idle' = bascule l'affichage des joueurs inactifs (hors partie), puis le
+// select revient sur le tri courant.
+window.plSortSelect = function (val) {
+  if (val === 'idle') {
+    var shown = true;
+    try { shown = localStorage.getItem('pth_pl_showidle') !== '0'; } catch (e) {}
+    try { localStorage.setItem('pth_pl_showidle', shown ? '0' : '1'); } catch (e) {}
+    try { renderPlayersList(); } catch (e) {}   // re-render remet aussi la bonne valeur au select
+  } else {
+    window.setPlSort(val);
+  }
+};
 // Icônes d'action par joueur (colonne Joueurs connectés) : ⊘ ignorer + 📊 stats.
 // Monochromes (currentColor) pour suivre le thème, comme l'officiel.
 var _PL_BAN_SVG = '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><line x1="5.6" y1="5.6" x2="18.4" y2="18.4"/></svg>';
@@ -13628,13 +13641,29 @@ function renderPlayersList() {
              '<span class="pl-name">' + nameHtml + actHtml + '</span>' +
              '<span class="pl-flag">' + flag + (cc ? '<span class="pl-cc">' + cc + '</span>' : '') + '</span>' +
              '<span class="pl-star">' + (r.isMe ? '★' : '') + '</span>' +
-             '<span class="pl-id">#' + r.pid + '</span>' +
              _acts +
            '</div>';
   };
   var _tt = function(k, fb) { return (typeof t === 'function' && t(k) !== k) ? t(k) : fb; };
+  // Filtre « joueurs inactifs » (hors partie) : masquable via le déroulant de tri.
+  var _showIdle = true;
+  try { _showIdle = localStorage.getItem('pth_pl_showidle') !== '0'; } catch (e) {}
+  // Synchronise le déroulant (valeur = tri courant ; libellé de l'option inactifs).
+  try {
+    var _sortSel = document.getElementById('pl-sort-select');
+    if (_sortSel) {
+      var _curSort = 'az'; try { _curSort = localStorage.getItem('pth_pl_sort') || 'az'; } catch (e2) {}
+      _sortSel.value = _curSort === 'cc' ? 'cc' : 'az';
+      var _idleOpt = _sortSel.querySelector('option[value="idle"]');
+      if (_idleOpt) _idleOpt.textContent = _showIdle ? _tt('plHideIdle', 'Hide idle players') : _tt('plShowIdle', 'Display idle players');
+    }
+  } catch (e) {}
   var html = '';
-  if (_inGame.length && _atLobby.length) {
+  if (!_showIdle) {
+    // Uniquement les joueurs en partie.
+    html = _inGame.map(rowHtml).join('');
+    if (!_inGame.length) html = '<div class="pl-empty">—</div>';
+  } else if (_inGame.length && _atLobby.length) {
     html += '<div class="pl-sec">\uD83C\uDFAE ' + _tt('plInGame', 'In game') + ' <span class="pl-sec-n">\u00b7 ' + _inGame.length + '</span></div>';
     html += _inGame.map(rowHtml).join('');
     html += '<div class="pl-sec">\uD83D\uDECB\uFE0F ' + _tt('plLobby', 'In the lobby') + ' <span class="pl-sec-n">\u00b7 ' + _atLobby.length + '</span></div>';
@@ -13645,7 +13674,7 @@ function renderPlayersList() {
   body.innerHTML = html;
 }
 
-;(function(){ window.BUILD_VERSION='0.3.234-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.235-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

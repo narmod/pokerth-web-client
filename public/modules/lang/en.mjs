@@ -355,6 +355,7 @@ export const strings = {
     gfNone:'No game list filter', gfOpen:'Show open games', gfOpenNF:'Show open & non-full games', gfOpenNFNP:'Show open & non-full & non-private games', gfOpenNFP:'Show open & non-full & private games', gfOpenNFR:'Show open & non-full & ranking games',
     infoTypeLabel:'Type', infoCapitalLabel:'Capital', infoPlayersInGame:'Players in game', reportGameTitle:'Report the game name', reportGameConfirm:'Report', reportGameMsg:'Do you really want to report the game name « {name} » as inappropriate?', reportGameDone:'Game name reported. Thank you.',
     plIgnore:'Ignore', plStats:'Player stats',
+    plSortAlpha:'Sort alphabetically', plShowIdle:'Display idle players', plHideIdle:'Hide idle players',
 };
 
 export default { meta, strings };

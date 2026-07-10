@@ -7313,3 +7313,7 @@ html[data-buttons="pokerth"] .btn-action[disabled] { filter: grayscale(0.55) bri
 .pl-act { background:none; border:none; padding:3px; cursor:pointer; color:var(--gold-dim,#9a824a); display:inline-flex; align-items:center; border-radius:4px; line-height:0; }
 .pl-act:hover { color:var(--gold); background:rgba(var(--gold-rgb),0.12); }
 .pl-act.pl-act-ban.on { color:var(--red,#e05050); }
+
+/* Déroulant de tri en bas de la colonne Joueurs connectés (parité officielle) */
+.pl-sortbar { flex:0 0 auto; padding:6px 8px; border-top:1px solid var(--border); background:var(--chrome-tint,var(--panel)); }
+.pl-sortbar .sel-wrap { width:100%; }
