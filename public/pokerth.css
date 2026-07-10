@@ -3399,6 +3399,29 @@ body {
   text-transform: uppercase; color: var(--text);
 }
 
+/* ── Vignette d'action ovale posée sur la box (fidélité client officiel) ──
+   Texte traduit (i18n), couleur par action : Fold rouge · Check/Call bleu ·
+   Bet/Raise vert · All-in rouge sombre (palette Theme.qml, bible §7). */
+.seat-action-badge {
+  position: absolute;
+  top: -7px; left: 50%; transform: translateX(-50%);
+  z-index: 7;
+  white-space: nowrap;
+  font-family: var(--ff-display);
+  font-size: 0.6rem; font-weight: 700; letter-spacing: 0.03em;
+  padding: 2px 10px; border-radius: 999px;
+  color: #fff;
+  border: 1px solid rgba(0,0,0,0.35);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.45);
+  pointer-events: none;
+}
+.seat-action-badge.act-c1 { background: #8b1a1a; border-color: #e87070; } /* Fold */
+.seat-action-badge.act-c2,
+.seat-action-badge.act-c3 { background: #1a3d8b; border-color: #6aa0e8; } /* Check / Call */
+.seat-action-badge.act-c4,
+.seat-action-badge.act-c5 { background: #1e6614; border-color: #7ad06a; } /* Bet / Raise */
+.seat-action-badge.act-c6 { background: #5c1111; border-color: #ef5350; } /* All-in */
+
 @keyframes pulse-gold {
   0%,100% { box-shadow: 0 0 10px rgba(var(--gold-rgb), 0.5); }
   50%      { box-shadow: 0 0 22px rgba(var(--gold-rgb), 0.9); }

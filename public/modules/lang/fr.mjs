@@ -44,6 +44,7 @@ export const strings = {
     lobbyChat:'Chat du lobby', joinBtn:'▶ Rejoindre', waitStart:'En attente du démarrage…',
     handLabel:'M#', preflop:'Pré-flop', flop:'Flop', turn:'Tournant', river:'Rivière',
     fold:'Fold', check:'Check', call:'Call', raise:'Relance', allin:'All-In',
+    actBadgeFold:'Se coucher', actBadgeCheck:'Parole', actBadgeCall:'Suivre', actBadgeBet:'Miser', actBadgeRaise:'Relancer', actBadgeAllin:'Tapis',
     pot:'Pot :', journal:'📋', chat:'💬', sound:'🔊', mute:'🔇',
     thinking:'réfléchit…', myCards:'Mes cartes :', logEliminated:'{name} éliminé', logShowdown:'{name} : {cards} — {hand}', logDealer:'Donneur : {name}', gameStart:'Début',
     bet:'Mise', wins:'gagne', handOf:'Main #',

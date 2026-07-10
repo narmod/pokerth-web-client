@@ -8814,7 +8814,16 @@ const App = (() => {
       h += '</div>';   // ferme .seat-plate
       h += '<div class="seat-foot">'; // pied : mise / action / cartes
       if (sd.bet) h += '<div class="seat-bet">' + fmtChips(sd.bet) + '</div>';
-      if (sd.action) h += '<div class="seat-action-label">' + esc(sd.action) + '</div>';
+      // Action → vignette ovale posée sur la box (traduite, couleur par action,
+      // comme le client officiel). Le texte non-action (gains au showdown,
+      // '+X'/'🏆') garde le libellé simple.
+      var _acCode = ({'Fold':1,'Check':2,'Call':3,'Bet':4,'Raise':5,'All-in':6})[sd.action] || 0;
+      if (_acCode) {
+        var _acKey = ['','actBadgeFold','actBadgeCheck','actBadgeCall','actBadgeBet','actBadgeRaise','actBadgeAllin'][_acCode];
+        h += '<div class="seat-action-badge act-c' + _acCode + '">' + esc(t(_acKey)) + '</div>';
+      } else if (sd.action) {
+        h += '<div class="seat-action-label">' + esc(sd.action) + '</div>';
+      }
       h += cardStr;
       h += '</div>'; // ferme .seat-foot
       h += '</div>'; // ferme .seat
@@ -13413,7 +13422,7 @@ function renderPlayersList() {
   body.innerHTML = html;
 }
 
-;(function(){ window.BUILD_VERSION='0.3.209-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.210-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
