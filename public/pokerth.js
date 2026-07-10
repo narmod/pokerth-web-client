@@ -8546,6 +8546,7 @@ const App = (() => {
         }
       } catch (e) {}
     }
+    var _selfAtPearl = false; // self épinglée au bas de l'ellipse (voir plus bas)
     if (_applyOfficial) {
       try {
         var _offPos = _officialSeatPix(rotated.length, _forceSeatPortrait, zRect.width, zRect.height, oCX, oCY, oRect, _seatBoxScale);
@@ -8558,9 +8559,16 @@ const App = (() => {
         // téléphone, chaque box adverse est mise à l'échelle comme l'officiel.
         if (_offPos && _offPos._boxScale && !_forceSeatPortrait) _seatBoxScale = _offPos._boxScale * (compact ? 1 : 0.9);  // -10% desktop : sieges moins massifs
         // Self = "grosse perle" au point bas de l'ellipse (paysage officiel,
-        // joueur assis, player-bar masquée). Sinon on garde la position
-        // classique (plus haute) pour laisser la place à la player-bar.
-        if (_offPos && _offPos._self && myIdx >= 0 && _advGet('hide_pbar', true)) pixPos[0] = _offPos._self;
+        // joueur assis) SI aucune player-bar à protéger : soit elle est masquée
+        // (hide_pbar), soit on est en style de siège "pokerth" (la self EST un
+        // siège avec ses cartes → pas de barre). Signal fiable plutôt que le seul
+        // flag hide_pbar (qui peut valoir 0 alors que la barre n'est de toute
+        // façon pas affichée dans ce style).
+        var _pkStyleNow = false;
+        try { _pkStyleNow = (document.documentElement.getAttribute('data-seat') === 'pokerth'); } catch (e) {}
+        _selfAtPearl = !!(_offPos && _offPos._self && myIdx >= 0 && !_forceSeatPortrait
+                          && (_advGet('hide_pbar', true) || _pkStyleNow));
+        if (_selfAtPearl) pixPos[0] = _offPos._self;
       } catch (e) {}
     }
     // ── Calcul SB / BB à partir du dealer ──
@@ -8810,7 +8818,11 @@ const App = (() => {
         var _bh2 = _meEl.offsetHeight * _seatBoxScale;
         var _bt2 = parseFloat(_meEl.dataset.baseTop) || 0;
         var _floor2 = zone.clientHeight - 4 - _bh2 / 2;
-        if (_bt2 > _floor2) {
+        // Mode "perle" (paysage officiel, pas de player-bar) : on ÉPINGLE la
+        // self au sol de la zone par MESURE réelle à chaque rendu — garantit le
+        // point bas de l'ellipse quels que soient le boxScale et le style.
+        // Sinon : simple garde anti-débordement (remonte si le bas dépasse).
+        if (_selfAtPearl || _bt2 > _floor2) {
           _meEl.dataset.baseTop = _floor2.toFixed(1);
           _meEl.style.top = _floor2.toFixed(1) + 'px';
           if (pixPos[0]) pixPos[0].top = _floor2;
@@ -13388,7 +13400,7 @@ function renderPlayersList() {
   body.innerHTML = html;
 }
 
-;(function(){ window.BUILD_VERSION='0.3.205-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.206-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
