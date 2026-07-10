@@ -1239,6 +1239,10 @@ window.refreshMyAvatar = function() {
       // chip logo as a graceful placeholder instead of an initial.
       pbAv.innerHTML = '<img class="pb-pth-img" src="/favicon.svg" alt="" draggable="false">';
       pbAv.classList.add('has-pth-avatar');
+    } else if (!av) {
+      // Aucun avatar/emoji choisi → jeton PokerTH par défaut (client officiel).
+      pbAv.innerHTML = '<img class="pb-pth-img" src="/favicon.svg" alt="" draggable="false">';
+      pbAv.classList.add('has-pth-avatar');
     } else {
       pbAv.textContent = display;
       pbAv.classList.remove('has-pth-avatar');
@@ -1258,7 +1262,8 @@ window.refreshMyAvatar = function() {
       //   3) nothing (fall back to emoji or initial)
       var effectiveUrl = usePth ? pthUrl
                        : (customImg ? customImg
-                       : (stored === '__pth__' ? '/favicon.svg' : null));
+                       : (stored === '__pth__' ? '/favicon.svg'
+                       : (av ? null : '/favicon.svg')));
       if (effectiveUrl) {
         if (!img) {
           img = document.createElement('img');
@@ -8693,11 +8698,6 @@ const App = (() => {
       else if (isBB) blindBadge = chipSvg('BB','#b71c1c','#fff','#6d0c0c');
       const timerSvg = isActive ? (_pkHole ? '' : _timerSvg(_timerSec, _timerTot)) : '';
       const avatarCls = 'seat-avatar' + (isActive ? ' timing' : '') + avatarType;
-      // Couleur unique par joueur (basée sur pid)
-      const aColor = isMe ? null : getAvatarColor(pid);
-      const avatarStyle = aColor
-        ? 'position:relative;background:' + aColor.bg + ';border-color:' + aColor.border + ';color:' + aColor.text + ';box-shadow:0 0 0 2px ' + aColor.border + '44'
-        : 'position:relative';
       const dealerChip = isDealer ? dealerChipSvg() : '';
       // Drapeau du pays sur l'avatar (coin bas-droite, comme un badge).
       // Vide si pays inconnu → rien affiché.
@@ -8733,6 +8733,19 @@ const App = (() => {
       // Autres joueurs : image perso reçue via le proxy (prioritaire sur l'emoji).
       if (!isMe && _playerImgAvatars[pid]) pthAvUrl = _playerImgAvatars[pid];
       if (_ignHide) pthAvUrl = null;
+      // ── Avatar par défaut = jeton PokerTH (fidélité client officiel) ──
+      // Aucun avatar perso (image) NI emoji choisi → on affiche le
+      // logo-jeton plutôt qu'un carré-lettre coloré. Vaut pour moi, les
+      // adversaires humains ET les bots (tous identiques, comme l'officiel).
+      // Réutilise _hasEmojiAv déjà calculé plus haut (gère aussi _ignHide).
+      let _isDefaultChip = false;
+      if (!pthAvUrl && !_hasEmojiAv && !_ignHide) { pthAvUrl = '/favicon.svg'; _isDefaultChip = true; }
+      // Couleur unique par joueur — neutralisée pour le jeton par défaut
+      // (fond neutre derrière le jeton, comme mon siège / l'officiel).
+      const aColor = (isMe || _isDefaultChip) ? null : getAvatarColor(pid);
+      const avatarStyle = aColor
+        ? 'position:relative;background:' + aColor.bg + ';border-color:' + aColor.border + ';color:' + aColor.text + ';box-shadow:0 0 0 2px ' + aColor.border + '44'
+        : 'position:relative';
       const pthImg = pthAvUrl
         ? '<img class="seat-pth-img" src="' + pthAvUrl + '" alt="" draggable="false">'
         : '';
@@ -13366,7 +13379,7 @@ function renderPlayersList() {
   body.innerHTML = html;
 }
 
-;(function(){ window.BUILD_VERSION='0.3.203-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.204-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
