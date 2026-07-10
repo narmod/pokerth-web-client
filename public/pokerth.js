@@ -8289,7 +8289,8 @@ const App = (() => {
       var v0 = slotVec(gF, dK, false);
       raw.push({ x: zW * (0.5 + gF.radiusX * v0[0]), y: zH * (gF.centerY + gF.radiusY * v0[1]) });
     }
-    return { s: sFin, slots: slots, raw: raw };
+    return { s: sFin, slots: slots, raw: raw,
+             selfX: zW * 0.5, selfY: gF.selfTop + gF.selfVisualH / 2 };
   }
   window._qmlLandscapeLayout = _qmlLandscapeLayout;
   // ── QML_LANDSCAPE_LAYOUT_END ──
@@ -8367,9 +8368,13 @@ const App = (() => {
     var _wW = (typeof window !== 'undefined') ? window.innerWidth  : zW;
     var compact = _wH < 600 || (_wW / Math.max(_wH, 1) > 2.1 && _wH < 1300);
     var lay = _qmlLandscapeLayout(M, zW, zH, compact);
-    var out = [null]; // index 0 = self -> position classique (bas)
+    var out = [null]; // index 0 = self -> perle du bas de l'ellipse (voir _self)
     for (var ke = 0; ke < M; ke++) out.push({ top: lay.slots[ke].y, left: lay.slots[ke].x });
     out._boxScale = lay.s;
+    // Position officielle de la self = "grosse perle" au point bas de l'ellipse
+    // (appliquée par l'appelant quand la player-bar est masquée). out[0] reste
+    // null pour ne pas perturber le cas spectateur.
+    out._self = { top: lay.selfY, left: lay.selfX };
     return out;
   }
 
@@ -8552,6 +8557,10 @@ const App = (() => {
         // Échelle bisectée du QML (paysage seulement) : remplace l'heuristique
         // téléphone, chaque box adverse est mise à l'échelle comme l'officiel.
         if (_offPos && _offPos._boxScale && !_forceSeatPortrait) _seatBoxScale = _offPos._boxScale * (compact ? 1 : 0.9);  // -10% desktop : sieges moins massifs
+        // Self = "grosse perle" au point bas de l'ellipse (paysage officiel,
+        // joueur assis, player-bar masquée). Sinon on garde la position
+        // classique (plus haute) pour laisser la place à la player-bar.
+        if (_offPos && _offPos._self && myIdx >= 0 && _advGet('hide_pbar', true)) pixPos[0] = _offPos._self;
       } catch (e) {}
     }
     // ── Calcul SB / BB à partir du dealer ──
@@ -13379,7 +13388,7 @@ function renderPlayersList() {
   body.innerHTML = html;
 }
 
-;(function(){ window.BUILD_VERSION='0.3.204-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.205-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
