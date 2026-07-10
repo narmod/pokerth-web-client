@@ -1262,6 +1262,7 @@ function onAvatarImageChosen(input) {
         <span id="g-count" style="color:var(--text)">0 <span data-i18n="tableCount">table(s)</span></span>
       </div>
       <div class="filter-bar" id="g-filter-bar">
+        <button type="button" class="fbar-players" onclick="togglePlayersPanel()" title="Joueurs en ligne" data-i18n-title="playersOnlineTitle" aria-label="Joueurs en ligne">👥</button>
         <button class="filter-chip active" data-filter="all" onclick="App.setTableFilter('all')"><span class="fc-label" data-i18n="filterAll">All</span> <span class="cnt" id="fc-all"></span></button>
         <button class="filter-chip" data-filter="open" onclick="App.setTableFilter('open')"><span class="fc-ic">🟢</span><span class="fc-label" data-i18n="filterOpen">Open</span> <span class="cnt" id="fc-open"></span></button>
         <button class="filter-chip" data-filter="nopass" onclick="App.setTableFilter('nopass')"><span class="fc-ic">🔓</span><span class="fc-label" data-i18n="filterNoPass">No password</span> <span class="cnt" id="fc-nopass"></span></button>
@@ -1271,11 +1272,7 @@ function onAvatarImageChosen(input) {
       <div class="games-scroll" id="g-list">
         <div class="empty">Loading tables<br><span class="ld"><span>●</span><span>●</span><span>●</span></span></div>
       </div>
-      <!-- LobbyStatsBar (parité QML, bible §16) : joueurs · en cours · ouvertes + lien -->
-      <div class="lobby-statsbar" id="lobby-statsbar">
-        <span id="lsb-text">—</span>
-        <a href="https://www.pokerth.net" target="_blank" rel="noopener noreferrer">PokerTH.net</a>
-      </div>
+      <!-- LobbyStatsBar déplacée tout en bas (sous la barre du bas) — parité photo officielle -->
     </div>
 
     <!-- Colonne Infos de partie — parité QML LobbyPage (haut de la colonne droite,
@@ -1292,6 +1289,12 @@ function onAvatarImageChosen(input) {
    <div class="lobby-footbar">
      <span class="lfb-name"><span data-i18n="footPlayer">Player</span> : <b id="lobby-foot-name">—</b></span>
      <button type="button" class="lfb-create" onclick="App.openCreatePage()" data-i18n="footCreate">＋ Create a table</button>
+   </div>
+
+   <!-- LobbyStatsBar (parité QML, bible §16) — tout en bas, pleine largeur -->
+   <div class="lobby-statsbar" id="lobby-statsbar">
+     <span id="lsb-text">—</span>
+     <a href="https://www.pokerth.net" target="_blank" rel="noopener noreferrer">PokerTH.net</a>
    </div>
   </div>
 </div>
