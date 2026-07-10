@@ -13514,7 +13514,7 @@ function renderPlayersList() {
   body.innerHTML = html;
 }
 
-;(function(){ window.BUILD_VERSION='0.3.226-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.227-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
@@ -13636,6 +13636,19 @@ function renderPlayersList() {
     if(cp && cp.parentNode!==g) g.appendChild(cp);
   }
 
+  /* ── Barre du haut : recherche joueur (gauche) + filtre parties (droite),
+        pleine largeur au-dessus des 3 colonnes — parité LobbyPage officielle. ── */
+  function ensureTopbar(){
+    var lb=document.querySelector('#s-lobby .lobby-body'), g=grid();
+    if(!lb || !g) return;
+    var tb=lb.querySelector('.lobby-topbar');
+    if(!tb){ tb=document.createElement('div'); tb.className='lobby-topbar'; lb.insertBefore(tb, g); }
+    var srch=document.querySelector('.players-search');
+    var filt=document.getElementById('g-filter-bar');
+    if(srch && srch.parentNode!==tb) tb.appendChild(srch);
+    if(filt && filt.parentNode!==tb) tb.appendChild(filt);
+  }
+
   /* ── Poignées de redimensionnement (wide) ── */
   var MINC=280, MINL=160, MINR=200, MININFO=120, HW=12;
   function ensureHandles(){
@@ -13726,7 +13739,7 @@ function renderPlayersList() {
     var el=document.getElementById('lobby-foot-name');
     if(el) el.textContent=(typeof myName!=='undefined' && myName)?myName:'—';
   }
-  function boot(){ reparent(); ensureHandles(); ensureScrim(); sync(); foot(); }
+  function boot(){ reparent(); ensureTopbar(); ensureHandles(); ensureScrim(); sync(); foot(); }
   if(document.readyState!=='loading') boot();
   else document.addEventListener('DOMContentLoaded', boot);
   var _rt;

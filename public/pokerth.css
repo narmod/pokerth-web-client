@@ -7245,3 +7245,18 @@ html[data-buttons="pokerth"] .btn-action[disabled] { filter: grayscale(0.55) bri
   .fbar-players:hover { border-color:var(--gold-dim); }
   #h-players { display:none !important; }   /* redondant avec le bouton de la barre de filtre */
 }
+
+/* ── Barre du haut du lobby : recherche joueur + filtre parties, au-dessus des colonnes ── */
+.lobby-topbar { display:flex; align-items:center; gap:10px; flex-wrap:wrap; flex-shrink:0; padding:0 0 10px; }
+.lobby-topbar .players-search {
+  flex:1 1 280px; display:flex; align-items:center; gap:6px;
+  padding:0 !important; background:transparent !important; border:none !important;
+}
+.lobby-topbar .players-search input { flex:1 1 auto; width:auto; }
+.lobby-topbar #g-filter-bar { flex:1 1 260px; padding:0 !important; margin:0; }
+/* En mobile la barre s'empile proprement (recherche puis filtre) */
+@media (max-width: 899.98px) {
+  .lobby-topbar { gap:8px; padding:0 0 8px; }
+  .lobby-topbar .players-search { flex:1 1 100%; }
+  .lobby-topbar #g-filter-bar { flex:1 1 100%; }
+}
