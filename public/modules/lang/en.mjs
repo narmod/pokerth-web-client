@@ -357,6 +357,7 @@ export const strings = {
     plIgnore:'Ignore', plStats:'Player stats',
     plSortAlpha:'Sort alphabetically', plShowIdle:'Display idle players', plHideIdle:'Hide idle players',
     plNotPlaying:'Not playing',
+    gameTimeLabel:'Time', visRanked:'Ranked', infoBlindsUp:'Blinds up',
 };
 
 export default { meta, strings };

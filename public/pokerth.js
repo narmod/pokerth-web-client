@@ -5764,8 +5764,9 @@ const App = (() => {
         var _germode = Proto.u32(gi, 7) || 1;  // endRaiseMode (1=double,2=+val,3=keep)
         var _gerval  = Proto.u32(gi, 8) || 0;  // endRaiseSmallBlindValue
         var _gsb     = Proto.u32(gi, 12) || 0; // NetGameInfo.firstSmallBlind (field 12)
+        var _gdelay  = Proto.u32(gi, 10) || 0; // NetGameInfo.delayBetweenHands (field 10) → 2e « Temps »
         games[id] = { name, mode, players:pc, seats:_seats, maxPlayers:maxp, type:gtype, priv:!!priv,
-                      timeout: _gto || 15, startMoney: _gsm || 3000,
+                      timeout: _gto || 15, startMoney: _gsm || 3000, delay: _gdelay,
                       raiseMode: _grmode, raiseHands: _grhands, raiseMins: _grmins, smallBlind: _gsb,
                       endRaiseMode: _germode, endRaiseValue: _gerval };
         if (!loaded) { loaded = true; }
@@ -7175,6 +7176,8 @@ const App = (() => {
     var typeKey = _GTYPE_KEY[g.type];
     var typeLbl = GTYPE(g.type) || '';
     var seats   = g.seats || [];
+    var _blUp = (g.raiseMode === 2) ? (g.raiseMins > 0 ? t('blindsUpMins', { n: g.raiseMins }) : '') : (g.raiseHands > 0 ? t('blindsUpHands', { n: g.raiseHands }) : '');
+    var _dly  = g.delay || 0;
     el.innerHTML =
       '<div class="g-chat-panel-header">'
         + '<span class="lgi-htitle" data-i18n="gameInfoTitle">' + t('gameInfoTitle') + '</span>'
@@ -7185,6 +7188,8 @@ const App = (() => {
           + (typeKey ? '<span data-i18n="' + typeKey + '">' + esc(typeLbl) + '</span>' : esc(typeLbl)) + '</div>'
         + '<div class="lgi-row lgi-blinds">SB : ' + _groupThousands(g.smallBlind || 0)
           + ' | <span data-i18n="infoCapitalLabel">' + t('infoCapitalLabel') + '</span> : ' + _groupThousands(g.startMoney || 0) + '</div>'
+        + (_blUp ? '<div class="lgi-row"><span data-i18n="infoBlindsUp">' + t('infoBlindsUp') + '</span> : ' + _blUp + '</div>' : '')
+        + '<div class="lgi-row"><span data-i18n="gameTimeLabel">' + t('gameTimeLabel') + '</span> : ' + (g.timeout || 0) + 's' + (_dly ? '/' + _dly + 's' : '') + '</div>'
         + '<div class="lgi-ptitle"><span data-i18n="infoPlayersInGame">' + t('infoPlayersInGame') + '</span> (' + seats.length + ')</div>'
         + '<div class="lgi-players">' + _renderInfoPlayerRows(gid) + '</div>'
       + '</div>';
@@ -7285,27 +7290,20 @@ const App = (() => {
       const joinBtn = g.mode !== 3
         ? '<button class="btn-join" onclick="event.stopPropagation();App.joinGame(' + parseInt(gid) + ')">' + joinLabel + '</button>'
         : '';
-      // Seat dots from the REAL lobby counts (filled = taken, hollow =
-      // free). The lobby list gives only player counts — no per-seat
-      // identities — so we visualise occupancy, never fake avatars.
-      var seatDots = '';
-      var cap = Math.min(g.maxPlayers || 0, 10);
-      for (var s = 0; s < cap; s++) seatDots += '<span class="seat-dot' + (s < g.players ? ' on' : '') + '"></span>';
+      // Meta façon officiel : X/max · Temps : Xs/Ys · Publique/Privée · Classement.
+      // (cash, blindes, hausse et points de sièges sont désormais dans le panneau Infos.)
       var metaBits = [];
-      if (type) metaBits.push('<span class="game-type">' + type + '</span>');
-      metaBits.push('<span>👥 ' + g.players + (g.maxPlayers ? '/' + g.maxPlayers : '') + '</span>');
-      if (g.startMoney) metaBits.push('<span>🪙 ' + _groupThousands(g.startMoney) + '</span>');
-      if (g.smallBlind) metaBits.push('<span>🃏 ' + _groupThousands(g.smallBlind) + '/' + _groupThousands(g.smallBlind * 2) + '</span>');
-      var _blUp = (g.raiseMode === 2) ? (g.raiseMins > 0 ? t('blindsUpMins', { n: g.raiseMins }) : '') : (g.raiseHands > 0 ? t('blindsUpHands', { n: g.raiseHands }) : '');
-      if (_blUp) metaBits.push('<span>\u2B06 ' + _blUp + '</span>');
-      if (g.timeout)    metaBits.push('<span>\u23F1 ' + g.timeout + 's</span>');
+      metaBits.push('<span>👥 ' + g.players + '/' + (g.maxPlayers || 10) + '</span>');
+      var _dly = g.delay || 0;
+      metaBits.push('<span>' + t('gameTimeLabel') + ' : ' + (g.timeout || 0) + 's' + (_dly ? '/' + _dly + 's' : '') + '</span>');
+      metaBits.push('<span>' + ((g.priv || g.type === 3) ? t('piPrivate') : t('piPublic')) + '</span>');
+      if (g.type === 4) metaBits.push('<span>' + t('visRanked') + '</span>');
       var _sel = (String(gid) === String(_selectedGame)) ? ' sel' : '';
       return '<div class="game-row gcard' + _sel + '" onclick="App.selectGame(' + parseInt(gid) + ')">'
         + '<div class="gcard-main">'
         + '<div class="game-name">' + lock + esc(g.name)
         + ' <span class="game-badge ' + badgeCls + '">' + label + '</span></div>'
         + '<div class="game-meta">' + metaBits.join('') + '</div>'
-        + (seatDots ? '<div class="game-seats">' + seatDots + '</div>' : '')
         + '</div>'
         + '<div class="gcard-btns">' + joinBtn + watchBtn + '</div>'
         + '</div>';
@@ -13660,7 +13658,7 @@ function renderPlayersList() {
   body.innerHTML = _shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>';
 }
 
-;(function(){ window.BUILD_VERSION='0.3.241-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.242-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
