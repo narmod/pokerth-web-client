@@ -7322,3 +7322,7 @@ html[data-buttons="pokerth"] .btn-action[disabled] { filter: grayscale(0.55) bri
 /* Colonne statut « en partie » : manette allumée (vert) si le joueur joue, éteinte sinon */
 .players-list .pl-row .pl-status { flex:0 0 auto; display:inline-flex; align-items:center; justify-content:center; width:22px; color:var(--border); line-height:0; }
 .players-list .pl-row .pl-status.on { color:var(--green,#50c878); }
+
+/* Nom du joueur dans la barre du bas : cliquable → ouvre le profil */
+.lobby-footbar .lfb-name-link { cursor:pointer; text-decoration:underline; text-decoration-color:var(--gold-dim); text-underline-offset:2px; }
+.lobby-footbar .lfb-name-link:hover { color:var(--gold-hi,var(--gold)); text-decoration-color:var(--gold-hi,var(--gold)); }
