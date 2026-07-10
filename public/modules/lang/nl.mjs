@@ -631,6 +631,7 @@ export const strings = {
     piViewProfile:'pokerth.net-profiel bekijken',
     modeManual:'Handmatig',
     plIgnore:'Negeren', plStats:'Spelersstatistieken', plNotPlaying:'Speelt momenteel niet', plSortAlpha:'Alfabetisch sorteren', plShowIdle:'Inactieve spelers tonen', plHideIdle:'Inactieve spelers verbergen', gameTimeLabel:'Tijd', visRanked:'Ranglijst', infoBlindsUp:'Blinds verhogen',
+    spectatorBtn:'Toeschouwer',
 };
 
 export default { meta, strings };

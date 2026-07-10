@@ -358,6 +358,7 @@ export const strings = {
     plSortAlpha:'Trier par ordre alphabétique', plShowIdle:'Afficher les joueurs inactifs', plHideIdle:'Masquer les joueurs inactifs',
     plNotPlaying:'Ne joue pas actuellement',
     gameTimeLabel:'Temps', visRanked:'Classement', infoBlindsUp:'Hausse des blindes',
+    spectatorBtn:'Spectateur',
 };
 
 export default { meta, strings };

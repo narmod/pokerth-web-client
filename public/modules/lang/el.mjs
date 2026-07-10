@@ -628,6 +628,7 @@ export const strings = {
     piViewProfile:'Προβολή προφίλ pokerth.net',
     modeManual:'Χειροκίνητο',
     plIgnore:'Αγνόηση', plStats:'Στατιστικά παίκτη', plNotPlaying:'Δεν παίζει αυτή τη στιγμή', plSortAlpha:'Ταξινόμηση αλφαβητικά', plShowIdle:'Εμφάνιση ανενεργών παικτών', plHideIdle:'Απόκρυψη ανενεργών παικτών', gameTimeLabel:'Χρόνος', visRanked:'Κατάταξη', infoBlindsUp:'Αύξηση τυφλών',
+    spectatorBtn:'Παρακολούθηση',
 };
 
 export default { meta, strings };

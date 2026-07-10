@@ -628,6 +628,7 @@ export const strings = {
     piViewProfile:'Prikaži pokerth.net profil',
     modeManual:'Ручно',
     plIgnore:'Игнориши', plStats:'Статистика играча', plNotPlaying:'Тренутно не игра', plSortAlpha:'Сортирај по азбуци', plShowIdle:'Прикажи неактивне играче', plHideIdle:'Сакриј неактивне играче', gameTimeLabel:'Време', visRanked:'Ранг-листа', infoBlindsUp:'Повећање блиндова',
+    spectatorBtn:'Гледај',
 };
 
 export default { meta, strings };

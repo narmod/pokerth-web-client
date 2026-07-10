@@ -439,6 +439,7 @@ export const strings = {
     piViewProfile:'pokerth.net प्रोफ़ाइल देखें',
     modeManual:'मैनुअल',
     plIgnore:'अनदेखा करें', plStats:'खिलाड़ी के आँकड़े', plNotPlaying:'अभी नहीं खेल रहा', plSortAlpha:'वर्णानुक्रम में क्रमबद्ध करें', plShowIdle:'निष्क्रिय खिलाड़ी दिखाएँ', plHideIdle:'निष्क्रिय खिलाड़ी छिपाएँ', gameTimeLabel:'समय', visRanked:'रैंकिंग', infoBlindsUp:'ब्लाइंड्स बढ़ना',
+    spectatorBtn:'दर्शक',
 };
 
 export default { meta, strings };

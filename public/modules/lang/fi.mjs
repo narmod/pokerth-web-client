@@ -627,6 +627,7 @@ export const strings = {
     piViewProfile:'Näytä pokerth.net-profiili',
     modeManual:'Manuaalinen',
     plIgnore:'Ohita', plStats:'Pelaajan tilastot', plNotPlaying:'Ei pelaa juuri nyt', plSortAlpha:'Järjestä aakkosjärjestykseen', plShowIdle:'Näytä joutilaat pelaajat', plHideIdle:'Piilota joutilaat pelaajat', gameTimeLabel:'Aika', visRanked:'Sijoituslista', infoBlindsUp:'Blindien nosto',
+    spectatorBtn:'Katso',
 };
 
 export default { meta, strings };

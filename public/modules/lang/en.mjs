@@ -358,6 +358,7 @@ export const strings = {
     plSortAlpha:'Sort alphabetically', plShowIdle:'Display idle players', plHideIdle:'Hide idle players',
     plNotPlaying:'Not playing',
     gameTimeLabel:'Time', visRanked:'Ranked', infoBlindsUp:'Blinds up',
+    spectatorBtn:'Spectate',
 };
 
 export default { meta, strings };

@@ -7340,3 +7340,11 @@ html[data-buttons="pokerth"] .btn-action[disabled] { filter: grayscale(0.55) bri
 /* Avatar avant le nom dans la barre du bas du lobby */
 #lobby-foot-av { display:inline-flex; align-items:center; vertical-align:middle; margin-right:6px; }
 #lobby-foot-av .pl-av { width:20px; height:20px; }
+
+/* Bouton « Spectateur » (parties en cours) : même gabarit que Rejoindre, teinte bleue */
+.game-row.gcard .btn-spectate {
+  border-color: rgba(var(--blue-rgb), 0.55);
+  background: rgba(var(--blue-rgb), 0.12);
+  color: var(--info);
+}
+.game-row.gcard .btn-spectate:hover { background: rgba(var(--blue-rgb), 0.22); }

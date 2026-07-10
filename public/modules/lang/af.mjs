@@ -628,6 +628,7 @@ export const strings = {
     piViewProfile:'Bekyk pokerth.net-profiel',
     modeManual:'Handmatig',
     plIgnore:'Ignoreer', plStats:'Speler-statistieke', plNotPlaying:'Speel nie tans nie', plSortAlpha:'Sorteer alfabeties', plShowIdle:'Wys ledige spelers', plHideIdle:'Versteek ledige spelers', gameTimeLabel:'Tyd', visRanked:'Ranglys', infoBlindsUp:'Blinds verhoog',
+    spectatorBtn:'Kyk',
 };
 
 export default { meta, strings };

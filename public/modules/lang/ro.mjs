@@ -628,6 +628,7 @@ export const strings = {
     piViewProfile:'Vezi profilul pokerth.net',
     modeManual:'Manual',
     plIgnore:'Ignoră', plStats:'Statisticile jucătorului', plNotPlaying:'Nu joacă în acest moment', plSortAlpha:'Sortează alfabetic', plShowIdle:'Afișează jucătorii inactivi', plHideIdle:'Ascunde jucătorii inactivi', gameTimeLabel:'Timp', visRanked:'Clasament', infoBlindsUp:'Creșterea blindurilor',
+    spectatorBtn:'Spectator',
 };
 
 export default { meta, strings };

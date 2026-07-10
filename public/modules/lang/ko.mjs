@@ -438,6 +438,7 @@ export const strings = {
     piViewProfile:'pokerth.net 프로필 보기',
     modeManual:'수동',
     plIgnore:'무시', plStats:'플레이어 통계', plNotPlaying:'현재 플레이 중이 아님', plSortAlpha:'알파벳순 정렬', plShowIdle:'대기 중인 플레이어 표시', plHideIdle:'대기 중인 플레이어 숨기기', gameTimeLabel:'시간', visRanked:'랭킹', infoBlindsUp:'블라인드 상승',
+    spectatorBtn:'관전',
 };
 
 export default { meta, strings };

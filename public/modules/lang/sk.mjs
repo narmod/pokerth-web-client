@@ -628,6 +628,7 @@ export const strings = {
     piViewProfile:'Zobraziť profil pokerth.net',
     modeManual:'Ručne',
     plIgnore:'Ignorovať', plStats:'Štatistiky hráča', plNotPlaying:'Momentálne nehrá', plSortAlpha:'Zoradiť podľa abecedy', plShowIdle:'Zobraziť neaktívnych hráčov', plHideIdle:'Skryť neaktívnych hráčov', gameTimeLabel:'Čas', visRanked:'Rebríček', infoBlindsUp:'Zvýšenie blindov',
+    spectatorBtn:'Sledovať',
 };
 
 export default { meta, strings };

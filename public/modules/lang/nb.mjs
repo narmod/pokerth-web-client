@@ -627,6 +627,7 @@ export const strings = {
     piViewProfile:'Vis pokerth.net-profil',
     modeManual:'Manuell',
     plIgnore:'Ignorer', plStats:'Spillerstatistikk', plNotPlaying:'Spiller ikke akkurat nå', plSortAlpha:'Sorter alfabetisk', plShowIdle:'Vis inaktive spillere', plHideIdle:'Skjul inaktive spillere', gameTimeLabel:'Tid', visRanked:'Rangering', infoBlindsUp:'Blinds øker',
+    spectatorBtn:'Tilskuer',
 };
 
 export default { meta, strings };

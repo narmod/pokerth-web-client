@@ -630,6 +630,7 @@ export const strings = {
     piViewProfile:'Профиль на pokerth.net',
     modeManual:'Вручную',
     plIgnore:'Игнорировать', plStats:'Статистика игрока', plNotPlaying:'Сейчас не играет', plSortAlpha:'Сортировать по алфавиту', plShowIdle:'Показать неактивных игроков', plHideIdle:'Скрыть неактивных игроков', gameTimeLabel:'Время', visRanked:'Рейтинг', infoBlindsUp:'Повышение блайндов',
+    spectatorBtn:'Наблюдать',
 };
 
 export default { meta, strings };

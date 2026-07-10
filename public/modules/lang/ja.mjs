@@ -627,6 +627,7 @@ export const strings = {
     piViewProfile:'pokerth.net プロフィールを見る',
     modeManual:'手動',
     plIgnore:'無視', plStats:'プレイヤー統計', plNotPlaying:'現在プレイしていません', plSortAlpha:'アルファベット順に並べ替え', plShowIdle:'待機中のプレイヤーを表示', plHideIdle:'待機中のプレイヤーを非表示', gameTimeLabel:'時間', visRanked:'ランキング', infoBlindsUp:'ブラインドの上昇',
+    spectatorBtn:'観戦',
 };
 
 export default { meta, strings };

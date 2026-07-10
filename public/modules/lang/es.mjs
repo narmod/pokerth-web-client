@@ -632,6 +632,7 @@ export const strings = {
     piViewProfile:'Ver perfil de pokerth.net',
     modeManual:'Manual',
     plIgnore:'Ignorar', plStats:'Estadísticas del jugador', plNotPlaying:'No está jugando', plSortAlpha:'Ordenar alfabéticamente', plShowIdle:'Mostrar jugadores inactivos', plHideIdle:'Ocultar jugadores inactivos', gameTimeLabel:'Tiempo', visRanked:'Clasificación', infoBlindsUp:'Subida de ciegas',
+    spectatorBtn:'Espectador',
 };
 
 export default { meta, strings };
