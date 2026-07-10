@@ -13517,14 +13517,10 @@ window.setPlSort = function (m) {
 // 'idle' = bascule l'affichage des joueurs inactifs (hors partie), puis le
 // select revient sur le tri courant.
 window.plSortSelect = function (val) {
-  if (val === 'idle') {
-    var shown = true;
-    try { shown = localStorage.getItem('pth_pl_showidle') !== '0'; } catch (e) {}
-    try { localStorage.setItem('pth_pl_showidle', shown ? '0' : '1'); } catch (e) {}
-    try { renderPlayersList(); } catch (e) {}   // re-render remet aussi la bonne valeur au select
-  } else {
-    window.setPlSort(val);
-  }
+  if (['az','cc','idle'].indexOf(val) === -1) val = 'az';
+  try { localStorage.setItem('pth_pl_mode', val); } catch (e) {}
+  if (val === 'az' || val === 'cc') { try { localStorage.setItem('pth_pl_sort', val); } catch (e) {} } // compat
+  try { renderPlayersList(); } catch (e) {}
 };
 // Icônes d'action par joueur (colonne Joueurs connectés) : ⊘ ignorer + 📊 stats.
 // Monochromes (currentColor) pour suivre le thème, comme l'officiel.
@@ -13574,8 +13570,12 @@ function renderPlayersList() {
   if (q) rows = rows.filter(function(r) { return r.name.toLowerCase().includes(q); });
   // Tri : moi d'abord, puis A–Z ou par pays (parité tri joueurs QML,
   // bible §16). Choix persistant (pth_pl_sort) ; les sans-pays en dernier.
-  var _plSort = 'az';
-  try { _plSort = localStorage.getItem('pth_pl_sort') || 'az'; } catch (e) {}
+  // Mode unique (single-select, parité officielle) : 'az' (alpha, tous) ·
+  // 'cc' (par pays, tous) · 'idle' (n'affiche QUE les joueurs inactifs).
+  var _plMode = 'az';
+  try { _plMode = localStorage.getItem('pth_pl_mode') || localStorage.getItem('pth_pl_sort') || 'az'; } catch (e) {}
+  if (['az','cc','idle'].indexOf(_plMode) === -1) _plMode = 'az';
+  var _plSort = (_plMode === 'cc') ? 'cc' : 'az';
   rows.sort(function(a, b) {
     if (a.isMe && !b.isMe) return -1;
     if (b.isMe && !a.isMe) return 1;
@@ -13646,26 +13646,18 @@ function renderPlayersList() {
            '</div>';
   };
   var _tt = function(k, fb) { return (typeof t === 'function' && t(k) !== k) ? t(k) : fb; };
-  // Filtre « joueurs inactifs » (hors partie) : masquable via le déroulant de tri.
-  var _showIdle = true;
-  try { _showIdle = localStorage.getItem('pth_pl_showidle') !== '0'; } catch (e) {}
-  // Synchronise le déroulant (valeur = tri courant ; libellé de l'option inactifs).
+  // Synchronise la valeur du déroulant sur le mode courant.
   try {
     var _sortSel = document.getElementById('pl-sort-select');
-    if (_sortSel) {
-      var _curSort = 'az'; try { _curSort = localStorage.getItem('pth_pl_sort') || 'az'; } catch (e2) {}
-      _sortSel.value = _curSort === 'cc' ? 'cc' : 'az';
-      var _idleOpt = _sortSel.querySelector('option[value="idle"]');
-      if (_idleOpt) _idleOpt.textContent = _showIdle ? _tt('plHideIdle', 'Hide idle players') : _tt('plShowIdle', 'Display idle players');
-    }
+    if (_sortSel) _sortSel.value = _plMode;
   } catch (e) {}
-  // Liste À PLAT (parité officielle) : plus de sections « en partie » / « au lobby ».
-  // Le tri est déjà appliqué à `rows` ; le filtre inactifs masque les joueurs hors partie.
-  var _shown = _showIdle ? rows : rows.filter(function(r){ return r.act; });
+  // Liste À PLAT (parité officielle). Mode 'idle' → n'affiche QUE les joueurs
+  // inactifs (hors partie) ; sinon tous les joueurs, dans l'ordre de tri.
+  var _shown = (_plMode === 'idle') ? rows.filter(function(r){ return !r.act; }) : rows;
   body.innerHTML = _shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>';
 }
 
-;(function(){ window.BUILD_VERSION='0.3.237-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.238-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
