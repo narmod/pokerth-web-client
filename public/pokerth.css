@@ -7261,3 +7261,12 @@ html[data-buttons="pokerth"] .btn-action[disabled] { filter: grayscale(0.55) bri
   .lobby-topbar .players-search { flex:1 1 100%; }
   .lobby-topbar #g-filter-bar { flex:1 1 100%; }
 }
+
+/* Colonne Parties : encadrée + fond plein comme les 3 autres colonnes
+   (bordure/rayon/fond identiques ; supprime aussi le fond rayé qui traversait). */
+#s-lobby .lobby-grid > .games-col {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--panel);
+  padding: 8px;
+}
