@@ -7336,3 +7336,7 @@ html[data-buttons="pokerth"] .btn-action[disabled] { filter: grayscale(0.55) bri
    clic = fermeture). Le panneau lui-même a un fond opaque var(--panel). */
 #s-lobby .lob-scrim { position:fixed; top:var(--ovl-top,48px); left:0; right:0; bottom:0; background:rgba(0,0,0,0.5); z-index:98; opacity:0; pointer-events:none; transition:opacity .22s ease; }
 #s-lobby .lob-scrim.on { opacity:1; pointer-events:auto; }
+
+/* Avatar avant le nom dans la barre du bas du lobby */
+#lobby-foot-av { display:inline-flex; align-items:center; vertical-align:middle; margin-right:6px; }
+#lobby-foot-av .pl-av { width:20px; height:20px; }

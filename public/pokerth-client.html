@@ -1309,7 +1309,7 @@ function onAvatarImageChosen(input) {
 
    <!-- Barre du bas — parité QML : joueur courant + accès à la création de table. -->
    <div class="lobby-footbar">
-     <span class="lfb-name"><span data-i18n="footPlayer">Player</span> : <b id="lobby-foot-name" class="lfb-name-link" role="button" tabindex="0" onclick="openPlayerInfoPopup()" onkeydown="if(event.key==='Enter')openPlayerInfoPopup()" title="Mon profil" data-i18n-title="profileTooltip">—</b></span>
+     <span class="lfb-name"><span data-i18n="footPlayer">Player</span> : <span id="lobby-foot-av"></span><b id="lobby-foot-name" class="lfb-name-link" role="button" tabindex="0" onclick="openPlayerInfoPopup()" onkeydown="if(event.key==='Enter')openPlayerInfoPopup()" title="Mon profil" data-i18n-title="profileTooltip">—</b></span>
      <button type="button" class="lfb-create" onclick="App.openCreatePage()" data-i18n="footCreate">＋ Create a table</button>
    </div>
 
