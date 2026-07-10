@@ -3174,7 +3174,8 @@ body {
   position: absolute;
   left: 50%;
   top: 50%;
-  transform: translate(-50%, calc(-100% - 46px));
+  --pot-badge-lift: 68px;   /* écart au-dessus des cartes (réglable ici) */
+  transform: translate(-50%, calc(-100% - var(--pot-badge-lift)));
   z-index: 6;
   align-items: center;
   gap: 6px;
@@ -3213,8 +3214,8 @@ body {
   .pot-badge.has-pot.pot-pop { display: inline-flex; }
 }
 @keyframes potBadgePop {
-  0%, 100% { transform: translate(-50%, calc(-100% - 46px)) scale(1); }
-  40%      { transform: translate(-50%, calc(-100% - 46px)) scale(1.16); }
+  0%, 100% { transform: translate(-50%, calc(-100% - var(--pot-badge-lift))) scale(1); }
+  40%      { transform: translate(-50%, calc(-100% - var(--pot-badge-lift))) scale(1.16); }
 }
 
 .pot-bar {
