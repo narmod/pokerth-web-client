@@ -5538,6 +5538,14 @@ const App = (() => {
         // Code pays (champ 4, optionnel) — présent surtout sur pokerth.net.
         var cc = Proto.str(info, 4);
         if (cc) _playerCountries[pid] = cc.toUpperCase();
+        // Panneau « Infos de partie » : rafraîchir si ce joueur appartient à la
+        // partie sélectionnée (nom/drapeau qui arrivent en asynchrone).
+        if ((name || cc) && _selectedGame != null) {
+          var _selG = games[_selectedGame];
+          if (_selG && _selG.seats && _selG.seats.indexOf(pid) !== -1) {
+            try { renderGameInfoPanel(_selectedGame); } catch(e) {}
+          }
+        }
         // Droits (champ 3) : 1=invité, 2=enregistré, 3=admin. Sert à ne
         // rendre cliquables que les joueurs ayant un compte pokerth.net.
         var rights = Proto.u32(info, 3);
@@ -5715,13 +5723,23 @@ const App = (() => {
         const gtype= Proto.u32(gi, 2);
         const maxp = Proto.u32(gi, 3);
 
-        // Liste des joueurs présents (varints packed, champ 4 =
-        // playerIds). On garde les IDs pour le panneau dépliable
-        // « joueurs à cette table » ; le compteur en découle.
+        // Liste des joueurs présents (champ 4 = playerIds). Selon l'état de la
+        // partie, le serveur l'envoie tantôt en varints PACKED (un buffer),
+        // tantôt en REPEATED (une valeur par occurrence). On gère les deux,
+        // sinon les sièges restaient vides pour certaines parties (panneau
+        // « Joueurs dans la partie (0) » alors que la partie a des joueurs).
         let _seats = [];
         if (sub[4]) {
-          let pos = 0; const p = sub[4][0];
-          while (pos < p.length) { const r = Proto.decodeVarint(p, pos); pos = r.pos; _seats.push(r.value); }
+          var _raw4 = sub[4];
+          for (var _i4 = 0; _i4 < _raw4.length; _i4++) {
+            var _el4 = _raw4[_i4];
+            if (typeof _el4 === 'number') {
+              _seats.push(_el4);                                   // repeated non-packed
+            } else if (_el4 && _el4.length !== undefined) {
+              var _p4 = 0;                                         // packed varints
+              while (_p4 < _el4.length) { var _r4 = Proto.decodeVarint(_el4, _p4); _p4 = _r4.pos; _seats.push(_r4.value); }
+            }
+          }
         }
         let pc = _seats.length;
 
@@ -13606,7 +13624,7 @@ function renderPlayersList() {
   body.innerHTML = html;
 }
 
-;(function(){ window.BUILD_VERSION='0.3.232-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.233-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
