@@ -351,6 +351,7 @@ export const strings = {
     rankingSeason:'Season', rankingAllTime:'All-Time',
     rankingColRank:'#', rankingColPlayer:'Nickname', rankingColScore:'Score', rankingColPoints:'Points', rankingColGames:'Games',
     rankingMemberSince:'Member since', rankingAwards:'Awards', rankingTickets:'Tickets', rankingThisSeason:'This season', rankingStep:'Step', rankingRank:'Rank', rankingBack:'Back', rankingThisMonth:'This month', rankingThisYear:'This year', rankingCurrentSeason:'Current season', themeExport:'Export theme (.zip)', sectionAdvanced:'Advanced', rankingSeasonStats:'Season Stats', rankingShare:'Share', rankingResults:'Results', rankingToggleChart:'Switch bar / pie',
+    footPlayer:'Player', footCreate:'＋ Create a table', gameInfoTitle:'Game info', gameInfoEmpty:'Select a table',
 };
 
 export default { meta, strings };

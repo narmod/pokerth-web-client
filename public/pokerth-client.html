@@ -1278,6 +1278,20 @@ function onAvatarImageChosen(input) {
       </div>
     </div>
 
+    <!-- Colonne Infos de partie — parité QML LobbyPage (haut de la colonne droite,
+         Chat juste en dessous). Placeholder Phase 1 ; alimenté par la partie
+         sélectionnée en Phase 2. Masqué en compact, affiché en 3-colonnes. -->
+    <div id="lobby-gameinfo">
+      <div class="g-chat-panel-header"><span style="font-size:0.65rem;color:var(--gold-dim);letter-spacing:0.15em;text-transform:uppercase" data-i18n="gameInfoTitle">Game info</span></div>
+      <div class="lgi-empty" data-i18n="gameInfoEmpty">Select a table</div>
+    </div>
+
+   </div>
+
+   <!-- Barre du bas — parité QML : joueur courant + accès à la création de table. -->
+   <div class="lobby-footbar">
+     <span class="lfb-name"><span data-i18n="footPlayer">Player</span> : <b id="lobby-foot-name">—</b></span>
+     <button type="button" class="lfb-create" onclick="App.openCreatePage()" data-i18n="footCreate">＋ Create a table</button>
    </div>
   </div>
 </div>

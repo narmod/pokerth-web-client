@@ -3480,6 +3480,7 @@ const App = (() => {
     var chip = _avatarChipHtml(myId, myName, 'h-nick-av');
     // Build: <span class="h-nick-av"...>...</span> <name>
     el.innerHTML = chip + ' ' + esc(myName);
+    if (window._lobby3Foot) window._lobby3Foot();   // sync barre du bas (Phase 1)
   }
   window.updateLobbyPill = updateLobbyPill;
 
@@ -12794,6 +12795,8 @@ function resetChatSize(panel, msgs) {
 }
 
 function toggleLobbyChat() {
+  // 3-colonnes (≥900) : le chat est une colonne persistante → pas de toggle.
+  if (window._lobby3IsWide && window._lobby3IsWide()) return;
   var panel = document.getElementById('lobby-chat-panel');
   var btn   = document.getElementById('lobby-chat-btn');
   if (!panel) return;
@@ -13347,6 +13350,8 @@ window.clearChatPanel = clearChatPanel;
 // dropdown that lists every pid in _lobbyPids with its name (or
 // '#<pid>' if the PlayerInfoReply hasn't arrived yet).
 function togglePlayersPanel() {
+  // 3-colonnes (≥900) : la liste joueurs est une colonne persistante → pas de toggle.
+  if (window._lobby3IsWide && window._lobby3IsWide()) return;
   var panel = document.getElementById('players-panel');
   if (!panel) return;
   var isHidden = panel.style.display === 'none';
@@ -13505,7 +13510,7 @@ function renderPlayersList() {
   body.innerHTML = html;
 }
 
-;(function(){ window.BUILD_VERSION='0.3.222-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.223-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
@@ -13608,4 +13613,49 @@ function renderPlayersList() {
       else fetch('/__visit', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: body, keepalive: true }).catch(function () {});
     } catch (e) {}
   };
+})();
+
+/* ═══ Lobby 3-colonnes — parité QML LobbyPage (Phase 1) ═══
+   Reparente #players-panel & #lobby-chat-panel dans .lobby-grid, synchronise
+   leur affichage selon le breakpoint (≥900 = colonnes ; <900 = overlays fixes
+   togglables, inchangés), et alimente la barre du bas. Purement additif. */
+;(function lobby3col(){
+  function W(){ try { return window.matchMedia('(min-width:900px)').matches; } catch(e){ return false; } }
+  function grid(){ return document.querySelector('#s-lobby .lobby-grid'); }
+  function reparent(){
+    var g = grid(); if (!g) return;
+    var pp = document.getElementById('players-panel');
+    var cp = document.getElementById('lobby-chat-panel');
+    if (pp && pp.parentNode !== g) g.appendChild(pp);
+    if (cp && cp.parentNode !== g) g.appendChild(cp);
+  }
+  function sync(){
+    var pp = document.getElementById('players-panel');
+    var cp = document.getElementById('lobby-chat-panel');
+    var lb = document.querySelector('#s-lobby .lobby-body');
+    if (W()) {
+      // Colonnes persistantes : display:flex (inline) → le CSS grid les place et
+      // la garde display!=='none' des refreshs joueurs passe.
+      if (pp) pp.style.display = 'flex';
+      if (cp) cp.style.display = 'flex';
+      if (lb) lb.style.paddingTop = '';          // purge d'une éventuelle réservation compact
+      try { renderPlayersList(); } catch(e){}
+    } else {
+      // Compact : overlays fermés par défaut (comportement mobile d'origine).
+      if (pp) pp.style.display = 'none';
+      if (cp) cp.style.display = 'none';
+    }
+  }
+  function foot(){
+    var el = document.getElementById('lobby-foot-name');
+    if (el) el.textContent = (typeof myName !== 'undefined' && myName) ? myName : '—';
+  }
+  function boot(){ reparent(); sync(); foot(); }
+  if (document.readyState !== 'loading') boot();
+  else document.addEventListener('DOMContentLoaded', boot);
+  var _rt;
+  window.addEventListener('resize', function(){ clearTimeout(_rt); _rt = setTimeout(sync, 120); });
+  window._lobby3Foot   = foot;
+  window._lobby3IsWide = W;
+  window._lobby3Sync   = sync;
 })();
