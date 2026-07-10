@@ -5578,8 +5578,8 @@ body:not(.in-game) .my-zone {
 .game-row.gcard .game-name { white-space: normal; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; font-size: 0.95rem; }
 .game-row.gcard .game-meta { flex-wrap: wrap; gap: 4px 10px; font-size: 0.74rem; }
 .game-badge { font-size: 0.6rem; font-weight: 700; letter-spacing: 0.05em; padding: 2px 7px; border-radius: 20px; text-transform: uppercase; white-space: nowrap; }
-.game-badge.live   { color: var(--green); background: rgba(var(--green-rgb), 0.15); border: 1px solid rgba(var(--green-rgb), 0.4); }
-.game-badge.wait   { color: var(--gold); background: rgba(var(--gold-rgb), 0.12); border: 1px solid rgba(var(--gold-rgb), 0.4); }
+.game-badge.live   { color: var(--red,#e05050); background: rgba(var(--red-rgb), 0.14); border: 1px solid rgba(var(--red-rgb), 0.4); }
+.game-badge.wait   { color: var(--green); background: rgba(var(--green-rgb), 0.15); border: 1px solid rgba(var(--green-rgb), 0.4); }
 .game-badge.closed { color: #999; background: var(--inset); border: 1px solid var(--border); }
 .game-seats { display: flex; gap: 3px; margin-top: 8px; flex-wrap: wrap; }
 .seat-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--inset); border: 1px solid var(--border); }
