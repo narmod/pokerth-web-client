@@ -325,7 +325,11 @@ function notifyBigWin() {
   _buzz([120, 80, 120, 80, 200]);
 }
 function notifyChat() {
-  playTone(880, 0.07, 0.1);
+  // Même bip que le QML : sample officiel lobbychatnotify.mp3 (repli bip synthé
+  // s'il n'est pas encore décodé). La vibration reste toujours jouée.
+  if (_soundEnabled && sndCat('lobby')) {
+    if (!_playSample('lobbychat')) playTone(880, 0.07, 0.1);
+  }
   _buzz([25]);
 }
 // ─── Notifications réseau & lobby (samples officiels PokerTH) ─────────────

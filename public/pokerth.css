@@ -1464,7 +1464,7 @@ body {
   line-height: 1.45;
   word-break: break-word;
 }
-.msg .who   { color: var(--gold); }
+.msg .who   { color: var(--gold); font-weight: 700; }
 .msg .txt   { color: var(--text-hi); }
 .msg.sys    { color: var(--text); font-size: 0.75rem; font-style: italic; }
 .msg.reaction { font-size: 1.1rem; opacity: 0.85; font-style: italic; }
