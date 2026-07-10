@@ -3949,7 +3949,21 @@ body:not(.in-game) .my-zone {
     padding: 8px 10px;
     box-shadow: 0 6px 20px rgba(0,0,0,0.38);
   }
+  /* Tour actif : le halo doré est porté par le panneau BORNÉ, pas par une
+     bande dorée pleine largeur sur .my-zone. */
+  .my-zone.my-turn-active { animation: none; border-top: none; }
+  .my-zone.my-turn-active .action-grid {
+    border-color: var(--gold);
+    animation: myTurnPanelGlow 1.5s ease-in-out infinite;
+  }
 }
+@keyframes myTurnPanelGlow {
+  0%,100% { box-shadow: 0 6px 20px rgba(0,0,0,0.38), 0 0 0 1px var(--gold), 0 0 18px rgba(var(--gold-rgb), 0.35); }
+  50%     { box-shadow: 0 6px 20px rgba(0,0,0,0.38), 0 0 0 1px #ffe066,     0 0 30px rgba(var(--gold-rgb), 0.6); }
+}
+/* Narrateur de tour ("X ●●●") retiré (fidélité : l'officiel n'a pas ce texte,
+   le tour est signalé par la surbrillance du siège). */
+.act-narrator { display: none !important; }
 /* Layout officiel : 3 zones (montant+slider / pastilles+All-In+mode / Fold-Call-Raise) */
 /* Bas : Fold | Call/Check | Raise — trois boutons egaux */
 .act-buttons-row { display: flex; gap: 6px; }
