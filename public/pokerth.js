@@ -12795,8 +12795,9 @@ function resetChatSize(panel, msgs) {
 }
 
 function toggleLobbyChat() {
-  // 3-colonnes (≥900) : le chat est une colonne persistante → pas de toggle.
-  if (window._lobby3IsWide && window._lobby3IsWide()) return;
+  // Chat intégré au lobby (colonne en wide, sous les tables en compact)
+  // → plus de fenêtre flottante ni d'overlay. No-op dans les deux modes.
+  return;
   var panel = document.getElementById('lobby-chat-panel');
   var btn   = document.getElementById('lobby-chat-btn');
   if (!panel) return;
@@ -13352,6 +13353,8 @@ window.clearChatPanel = clearChatPanel;
 function togglePlayersPanel() {
   // 3-colonnes (≥900) : la liste joueurs est une colonne persistante → pas de toggle.
   if (window._lobby3IsWide && window._lobby3IsWide()) return;
+  // Compact (Phase 1b) : slide-in intégré au lobby (plus d'overlay flottant).
+  if (window._lobby3TogglePlayers) { window._lobby3TogglePlayers(); return; }
   var panel = document.getElementById('players-panel');
   if (!panel) return;
   var isHidden = panel.style.display === 'none';
@@ -13510,7 +13513,7 @@ function renderPlayersList() {
   body.innerHTML = html;
 }
 
-;(function(){ window.BUILD_VERSION='0.3.223-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.224-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
@@ -13615,47 +13618,123 @@ function renderPlayersList() {
   };
 })();
 
-/* ═══ Lobby 3-colonnes — parité QML LobbyPage (Phase 1) ═══
-   Reparente #players-panel & #lobby-chat-panel dans .lobby-grid, synchronise
-   leur affichage selon le breakpoint (≥900 = colonnes ; <900 = overlays fixes
-   togglables, inchangés), et alimente la barre du bas. Purement additif. */
+/* ═══ Lobby responsive v2 — parité QML LobbyPage (Phase 1b) ═══
+   Reparente les panneaux dans la grille, gère les poignées de resize (wide,
+   voisins qui suivent), le chat intégré + slide-in Joueurs/Infos (compact),
+   et la barre du bas. Purement additif. */
 ;(function lobby3col(){
   function W(){ try { return window.matchMedia('(min-width:900px)').matches; } catch(e){ return false; } }
   function grid(){ return document.querySelector('#s-lobby .lobby-grid'); }
+  function sLobby(){ return document.getElementById('s-lobby'); }
+
   function reparent(){
-    var g = grid(); if (!g) return;
-    var pp = document.getElementById('players-panel');
-    var cp = document.getElementById('lobby-chat-panel');
-    if (pp && pp.parentNode !== g) g.appendChild(pp);
-    if (cp && cp.parentNode !== g) g.appendChild(cp);
+    var g=grid(); if(!g) return;
+    var pp=document.getElementById('players-panel');
+    var cp=document.getElementById('lobby-chat-panel');
+    if(pp && pp.parentNode!==g) g.appendChild(pp);
+    if(cp && cp.parentNode!==g) g.appendChild(cp);
   }
-  function sync(){
-    var pp = document.getElementById('players-panel');
-    var cp = document.getElementById('lobby-chat-panel');
-    var lb = document.querySelector('#s-lobby .lobby-body');
-    if (W()) {
-      // Colonnes persistantes : display:flex (inline) → le CSS grid les place et
-      // la garde display!=='none' des refreshs joueurs passe.
-      if (pp) pp.style.display = 'flex';
-      if (cp) cp.style.display = 'flex';
-      if (lb) lb.style.paddingTop = '';          // purge d'une éventuelle réservation compact
-      try { renderPlayersList(); } catch(e){}
-    } else {
-      // Compact : overlays fermés par défaut (comportement mobile d'origine).
-      if (pp) pp.style.display = 'none';
-      if (cp) cp.style.display = 'none';
+
+  /* ── Poignées de redimensionnement (wide) ── */
+  var MINC=280, MINL=160, MINR=200, MININFO=120, HW=12;
+  function ensureHandles(){
+    var g=grid(); if(!g) return;
+    ['l','r','v'].forEach(function(k){
+      if(g.querySelector('.lob-h-'+k)) return;
+      var h=document.createElement('div');
+      h.className='lob-h lob-h-'+k; h.dataset.lobh=k;
+      h.addEventListener('pointerdown', startDrag);
+      g.appendChild(h);
+    });
+    try{
+      var L=localStorage.getItem('pth_lob_l'), R=localStorage.getItem('pth_lob_r'), I=localStorage.getItem('pth_lob_info');
+      if(L) g.style.setProperty('--lc-l', parseInt(L,10)+'px');
+      if(R) g.style.setProperty('--lc-r', parseInt(R,10)+'px');
+      if(I) g.style.setProperty('--lc-info', parseInt(I,10)+'px');
+    }catch(e){}
+  }
+  function startDrag(e){
+    if(!W()) return;
+    var g=grid(); if(!g) return;
+    var k=e.currentTarget.dataset.lobh, gr=g.getBoundingClientRect(), self=e.currentTarget;
+    self.classList.add('drag');
+    try{ self.setPointerCapture(e.pointerId); }catch(_){}
+    function move(ev){
+      if(k==='l'){
+        var maxL=gr.width - MINC - MINR - 2*HW;
+        g.style.setProperty('--lc-l', Math.round(Math.max(MINL, Math.min(ev.clientX-gr.left, maxL)))+'px');
+      } else if(k==='r'){
+        var maxR=gr.width - MINC - MINL - 2*HW;
+        g.style.setProperty('--lc-r', Math.round(Math.max(MINR, Math.min(gr.right-ev.clientX, maxR)))+'px');
+      } else {
+        var maxI=gr.height - MININFO - HW;
+        g.style.setProperty('--lc-info', Math.round(Math.max(MININFO, Math.min(ev.clientY-gr.top, maxI)))+'px');
+      }
     }
+    function up(){
+      self.classList.remove('drag');
+      document.removeEventListener('pointermove',move,true);
+      document.removeEventListener('pointerup',up,true);
+      try{
+        var cs=getComputedStyle(g);
+        localStorage.setItem('pth_lob_l', parseInt(cs.getPropertyValue('--lc-l'))||240);
+        localStorage.setItem('pth_lob_r', parseInt(cs.getPropertyValue('--lc-r'))||300);
+        localStorage.setItem('pth_lob_info', parseInt(cs.getPropertyValue('--lc-info'))||220);
+      }catch(_){}
+    }
+    document.addEventListener('pointermove',move,true);
+    document.addEventListener('pointerup',up,true);
+    e.preventDefault();
+  }
+
+  /* ── Slide-in mobile (Joueurs / Infos) + scrim ── */
+  function ensureScrim(){
+    var s=sLobby(); if(!s) return null;
+    var sc=s.querySelector('.lob-scrim');
+    if(!sc){ sc=document.createElement('div'); sc.className='lob-scrim';
+      sc.addEventListener('click', closeSlide); s.appendChild(sc); }
+    return sc;
+  }
+  function setScrim(on){ var sc=ensureScrim(); if(sc) sc.classList.toggle('on', !!on && !W()); }
+  function closeSlide(){ var s=sLobby(); if(s) s.classList.remove('pl-open','gi-open'); setScrim(false); }
+  function togglePlayers(){
+    if(W()) return;
+    var s=sLobby(); if(!s) return;
+    var open=!s.classList.contains('pl-open');
+    s.classList.toggle('pl-open', open); s.classList.remove('gi-open');
+    setScrim(open);
+    if(open){ try{renderPlayersList();}catch(e){} var inp=document.getElementById('players-search-in'); if(inp) setTimeout(function(){inp.focus();},60); }
+  }
+  function openInfo(){
+    if(W()) return;
+    var s=sLobby(); if(!s) return;
+    s.classList.add('gi-open'); s.classList.remove('pl-open'); setScrim(true);
+  }
+
+  function sync(){
+    var pp=document.getElementById('players-panel');
+    var cp=document.getElementById('lobby-chat-panel');
+    var lb=document.querySelector('#s-lobby .lobby-body');
+    if(pp) pp.style.display='flex';   // placement géré par le CSS (grille wide / slide-in compact)
+    if(cp) cp.style.display='flex';
+    if(lb) lb.style.paddingTop='';
+    if(W()) closeSlide();             // pas de slide-in résiduel en wide
+    try{ renderPlayersList(); }catch(e){}
   }
   function foot(){
-    var el = document.getElementById('lobby-foot-name');
-    if (el) el.textContent = (typeof myName !== 'undefined' && myName) ? myName : '—';
+    var el=document.getElementById('lobby-foot-name');
+    if(el) el.textContent=(typeof myName!=='undefined' && myName)?myName:'—';
   }
-  function boot(){ reparent(); sync(); foot(); }
-  if (document.readyState !== 'loading') boot();
+  function boot(){ reparent(); ensureHandles(); ensureScrim(); sync(); foot(); }
+  if(document.readyState!=='loading') boot();
   else document.addEventListener('DOMContentLoaded', boot);
   var _rt;
-  window.addEventListener('resize', function(){ clearTimeout(_rt); _rt = setTimeout(sync, 120); });
-  window._lobby3Foot   = foot;
-  window._lobby3IsWide = W;
-  window._lobby3Sync   = sync;
+  window.addEventListener('resize', function(){ clearTimeout(_rt); _rt=setTimeout(sync,120); });
+
+  window._lobby3Foot         = foot;
+  window._lobby3IsWide       = W;
+  window._lobby3Sync         = sync;
+  window._lobby3TogglePlayers= togglePlayers;
+  window._lobby3OpenInfo     = openInfo;
+  window._lobby3CloseSlide   = closeSlide;
 })();

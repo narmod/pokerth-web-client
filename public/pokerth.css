@@ -7104,81 +7104,125 @@ html[data-buttons="pokerth"] .btn-action[disabled] { filter: grayscale(0.55) bri
 .filter-chips { flex-wrap: wrap; }
 
 /* ═══════════════════════════════════════════════════════════════════
-   Lobby 3-colonnes — parité QML LobbyPage (Phase 1)
-   ≥900 : Joueurs | Parties | (Infos + Chat) en grille redimensionnée.
-   <900 : centre seul ; #players-panel & #lobby-chat-panel conservent leur
-   position:fixed d'origine (overlays togglables) → mobile INCHANGÉ.
+   Lobby responsive v2 — parité QML LobbyPage (Phase 1b)
+   ≥900 : 3 colonnes REDIMENSIONNABLES (poignées ; voisins suivent).
+          Colonne droite = Infos (haut) / Chat (bas) + séparateur vertical.
+   <900  : Parties + Chat INTÉGRÉ (empilés) ; Joueurs & Infos en slide-in.
    ═══════════════════════════════════════════════════════════════════ */
 
-/* Création : plus de colonne inline ; on passe par la barre du bas → #s-create */
 #s-lobby .lobby-grid > .create-col { display: none; }
 
-/* Placeholder Infos (rempli en Phase 2) — masqué par défaut, affiché en wide */
-#lobby-gameinfo { display: none; flex-direction: column; }
-#lobby-gameinfo .lgi-empty {
-  flex: 1 1 auto; display: flex; align-items: center; justify-content: center;
-  color: var(--text-dim, #8b93a7); font-size: 0.8rem; padding: 18px; text-align: center;
-}
-
 /* Barre du bas : Joueur + Créer une partie (les 2 modes, épinglée en pied) */
-.lobby-footbar {
-  display: flex; align-items: center; gap: 12px;
-  padding: 8px 14px; border-top: 1px solid var(--border);
-  background: var(--panel); flex-shrink: 0;
-  position: sticky; bottom: 0; z-index: 20;
-}
-.lobby-footbar .lfb-name { color: var(--text); font-size: 0.82rem; white-space: nowrap; }
-.lobby-footbar .lfb-name b { color: var(--gold); }
-.lobby-footbar .lfb-create {
-  margin-left: auto; flex: 1 1 auto; max-width: 460px;
-  border: 1px solid var(--border); background: rgba(var(--gold-rgb),0.07);
-  color: var(--gold); border-radius: 8px; padding: 9px 14px; cursor: pointer;
-  font-family: var(--ff-display); font-weight: 600; font-size: 0.92rem;
-}
-.lobby-footbar .lfb-create:hover { background: rgba(var(--gold-rgb),0.14); }
+.lobby-footbar { display:flex; align-items:center; gap:12px; padding:8px 14px;
+  border-top:1px solid var(--border); background:var(--panel); flex-shrink:0;
+  position:sticky; bottom:0; z-index:20; }
+.lobby-footbar .lfb-name { color:var(--text); font-size:0.82rem; white-space:nowrap; }
+.lobby-footbar .lfb-name b { color:var(--gold); }
+.lobby-footbar .lfb-create { margin-left:auto; flex:1 1 auto; max-width:460px;
+  border:1px solid var(--border); background:rgba(var(--gold-rgb),0.07); color:var(--gold);
+  border-radius:8px; padding:9px 14px; cursor:pointer; font-family:var(--ff-display);
+  font-weight:600; font-size:0.92rem; }
+.lobby-footbar .lfb-create:hover { background:rgba(var(--gold-rgb),0.14); }
 
+/* Infos placeholder (rempli en Phase 2) */
+#lobby-gameinfo { display:none; flex-direction:column; }
+#lobby-gameinfo .lgi-empty { flex:1 1 auto; display:flex; align-items:center; justify-content:center;
+  color:var(--text-dim,#8b93a7); font-size:0.8rem; padding:18px; text-align:center; }
+
+/* Chat toujours présent → on masque son bouton de fermeture et son trigger header */
+#lobby-chat-panel .g-chat-panel-header button[onclick*="toggleLobbyChat"] { display:none; }
+#lobby-chat-btn { display:none !important; }
+
+/* Poignées de redimensionnement (wide) — occupent leur piste de grille */
+.lob-h { display:none; position:relative; }
+.lob-h::after { content:''; position:absolute; background:var(--border); transition:background .12s; }
+.lob-h:hover::after, .lob-h.drag::after { background:var(--gold); }
+.lob-h-l, .lob-h-r { cursor:col-resize; }
+.lob-h-l { grid-area:hl; } .lob-h-r { grid-area:hr; } .lob-h-v { grid-area:hv; cursor:row-resize; }
+.lob-h-l::after, .lob-h-r::after { top:0; bottom:0; left:50%; width:2px; transform:translateX(-50%); }
+.lob-h-v::after { left:0; right:0; top:50%; height:2px; transform:translateY(-50%); }
+
+/* Scrim pour les slide-in mobiles */
+.lob-scrim { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.45); z-index:98; }
+.lob-scrim.on { display:block; }
+
+/* ── WIDE ≥900 : 3 colonnes redimensionnables ── */
 @media (min-width: 900px) {
-  /* Le lobby occupe la hauteur ; ce sont les colonnes qui défilent. */
-  #s-lobby { overflow: hidden; }
-  #s-lobby .lobby-body {
-    flex: 1 1 auto; min-height: 0; overflow: hidden;
-    display: flex; flex-direction: column; padding: 12px 14px;
-  }
+  #s-lobby { overflow:hidden; }
+  #s-lobby .lobby-body { flex:1 1 auto; min-height:0; overflow:hidden; display:flex; flex-direction:column; padding:12px 14px; }
   #s-lobby .lobby-grid {
-    flex: 1 1 auto; min-height: 0;
-    grid-template-columns: minmax(160px,1fr) minmax(280px,2fr) minmax(200px,1fr);
-    grid-template-areas: "players games info" "players games chat";
-    gap: 12px; align-items: stretch;
+    position:relative; flex:1 1 auto; min-height:0; gap:0; display:grid;
+    grid-template-columns: var(--lc-l,240px) 12px minmax(0,1fr) 12px var(--lc-r,300px);
+    grid-template-rows: var(--lc-info,220px) 12px minmax(120px,1fr);
+    grid-template-areas:
+      "players hl games hr info"
+      "players hl games hr hv"
+      "players hl games hr chat";
+    align-items:stretch;
   }
+  .lob-h { display:block; }
 
-  /* Placement des 4 zones */
-  #s-lobby .lobby-grid > #players-panel    { grid-area: players; }
-  #s-lobby .lobby-grid > .games-col        { grid-area: games; }
-  #s-lobby .lobby-grid > #lobby-gameinfo   { grid-area: info; display: flex; }
-  #s-lobby .lobby-grid > #lobby-chat-panel { grid-area: chat; }
+  #s-lobby .lobby-grid > #players-panel    { grid-area:players; }
+  #s-lobby .lobby-grid > .games-col        { grid-area:games; }
+  #s-lobby .lobby-grid > #lobby-gameinfo   { grid-area:info; display:flex; }
+  #s-lobby .lobby-grid > #lobby-chat-panel { grid-area:chat; }
 
   /* Panneaux : sortis du mode overlay → posés statiquement dans leur colonne */
   #s-lobby .lobby-grid > #players-panel,
   #s-lobby .lobby-grid > #lobby-gameinfo,
   #s-lobby .lobby-grid > #lobby-chat-panel {
-    position: static !important; inset: auto !important; transform: none !important;
-    width: auto !important; height: auto !important; max-height: none !important;
-    box-shadow: none; border: 1px solid var(--border); border-radius: 8px;
-    background: var(--panel); min-height: 0;
+    position:static !important; inset:auto !important; transform:none !important;
+    width:auto !important; height:auto !important; max-height:none !important; margin:0 !important;
+    box-shadow:none; border:1px solid var(--border); border-radius:8px;
+    background:var(--panel); min-height:0;
   }
   #s-lobby .lobby-grid > #players-panel,
-  #s-lobby .lobby-grid > #lobby-chat-panel { display: flex !important; }
+  #s-lobby .lobby-grid > #lobby-chat-panel { display:flex !important; }
 
-  /* Colonnes : entête figée, corps scrollable */
   #s-lobby .lobby-grid > #players-panel .players-list,
   #s-lobby .lobby-grid > #lobby-chat-panel .chat-msgs {
-    flex: 1 1 auto; min-height: 0; max-height: none !important; overflow-y: auto;
+    flex:1 1 auto; min-height:0; max-height:none !important; overflow-y:auto;
+  }
+  #s-lobby .lobby-grid > .games-col { display:flex; flex-direction:column; min-height:0; overflow:hidden; }
+  #s-lobby .lobby-grid > .games-col .games-scroll { flex:1 1 auto; min-height:0; overflow-y:auto; align-content:start; }
+
+  #s-lobby #h-players { display:none !important; }
+  #s-lobby .lobby-grid > #players-panel .g-chat-panel-header button[onclick*="togglePlayersPanel"] { display:none; }
+}
+
+/* ── COMPACT <900 : Parties + Chat intégrés ; Joueurs/Infos en slide-in ── */
+@media (max-width: 899.98px) {
+  #s-lobby { overflow:hidden; }
+  #s-lobby .lobby-body { flex:1 1 auto; min-height:0; overflow:hidden; display:flex; flex-direction:column; padding:10px 10px; }
+  #s-lobby .lobby-grid { flex:1 1 auto; min-height:0; display:flex; flex-direction:column; gap:8px; }
+  .lob-h { display:none !important; }
+
+  #s-lobby .lobby-grid > .games-col { order:1; flex:1 1 auto; min-height:0; display:flex; flex-direction:column; }
+  #s-lobby .lobby-grid > .games-col .games-scroll { flex:1 1 auto; min-height:0; overflow-y:auto; align-content:start; }
+
+  /* Chat intégré sous les tables (plus de fenêtre flottante ni d'overlay) */
+  #s-lobby .lobby-grid > #lobby-chat-panel {
+    order:2; position:static !important; inset:auto !important; transform:none !important;
+    display:flex !important; width:auto !important; flex:0 0 auto;
+    max-height:min(240px,34dvh) !important; box-shadow:none; z-index:auto;
+    border:1px solid var(--border); border-radius:8px;
   }
 
-  /* Colonne Parties : liste scrollable, statsbar en pied de colonne */
-  #s-lobby .lobby-grid > .games-col { display: flex; flex-direction: column; min-height: 0; overflow: hidden; }
-  #s-lobby .lobby-grid > .games-col .games-scroll { flex: 1 1 auto; min-height: 0; overflow-y: auto; align-content: start; }
+  /* Joueurs : slide-in depuis la gauche */
+  #s-lobby .lobby-grid > #players-panel {
+    position:fixed !important; top:var(--ovl-top,48px); bottom:0; left:0; right:auto !important;
+    width:min(320px,84vw); max-height:none !important; display:flex !important;
+    transform:translateX(-100%); transition:transform .22s ease; z-index:99; border-radius:0;
+    box-shadow:2px 0 22px rgba(0,0,0,0.55);
+  }
+  #s-lobby.pl-open .lobby-grid > #players-panel { transform:translateX(0); }
 
-  /* Triggers header redondants quand les colonnes sont persistantes */
-  #s-lobby #h-players, #lobby-chat-btn { display: none !important; }
+  /* Infos : slide-in depuis la droite (contenu Phase 2) */
+  #s-lobby .lobby-grid > #lobby-gameinfo {
+    position:fixed !important; top:var(--ovl-top,48px); bottom:0; right:0; left:auto;
+    width:min(340px,88vw); display:flex !important; max-height:none !important; border-radius:0;
+    transform:translateX(100%); transition:transform .22s ease; z-index:99;
+    box-shadow:-2px 0 22px rgba(0,0,0,0.55); border-left:1px solid var(--border);
+  }
+  #s-lobby.gi-open .lobby-grid > #lobby-gameinfo { transform:translateX(0); }
 }
