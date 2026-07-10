@@ -4850,9 +4850,10 @@ body:not(.in-game) .my-zone {
   font-size: 0.78rem;
 }
 .players-list .pl-row {
-  display: flex;
+  display: grid;
+  grid-template-columns: 22px minmax(0,1fr) 22px 48px 16px auto;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
   padding: 4px 0;          /* container provides the 12px lateral padding now */
   font-family: var(--ff-mono);
   font-size: 0.78rem;
@@ -7309,7 +7310,7 @@ html[data-buttons="pokerth"] .btn-action[disabled] { filter: grayscale(0.55) bri
 .msg .msg-time { color: var(--text-dim, #8b93a7); font-family: var(--ff-mono, monospace); font-size: 0.88em; margin-right: 2px; }
 
 /* Icônes d'action par joueur (colonne Joueurs connectés) : ⊘ ignorer + 📊 stats */
-.players-list .pl-row .pl-acts { display:inline-flex; align-items:center; gap:2px; flex:0 0 auto; margin-left:4px; }
+.players-list .pl-row .pl-acts { display:inline-flex; align-items:center; gap:2px; justify-self:end; margin-left:0; }
 .pl-act { background:none; border:none; padding:3px; cursor:pointer; color:var(--gold-dim,#9a824a); display:inline-flex; align-items:center; border-radius:4px; line-height:0; }
 .pl-act:hover { color:var(--gold); background:rgba(var(--gold-rgb),0.12); }
 .pl-act.pl-act-ban.on { color:var(--red,#e05050); }
