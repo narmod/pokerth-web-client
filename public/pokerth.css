@@ -7132,6 +7132,10 @@ html[data-buttons="pokerth"] .btn-action[disabled] { filter: grayscale(0.55) bri
 /* Chat toujours présent → on masque son bouton de fermeture et son trigger header */
 #lobby-chat-panel .g-chat-panel-header button[onclick*="toggleLobbyChat"] { display:none; }
 #lobby-chat-btn { display:none !important; }
+/* Corps du chat : remplit le panneau (override du max-height:120px inline) — 2 modes */
+#s-lobby .lobby-grid > #lobby-chat-panel .chat-msgs {
+  flex:1 1 auto !important; min-height:0 !important; max-height:none !important; overflow-y:auto;
+}
 
 /* Poignées de redimensionnement (wide) — occupent leur piste de grille */
 .lob-h { display:none; position:relative; }
@@ -7197,14 +7201,14 @@ html[data-buttons="pokerth"] .btn-action[disabled] { filter: grayscale(0.55) bri
   #s-lobby .lobby-grid { flex:1 1 auto; min-height:0; display:flex; flex-direction:column; gap:8px; }
   .lob-h { display:none !important; }
 
-  #s-lobby .lobby-grid > .games-col { order:1; flex:1 1 auto; min-height:0; display:flex; flex-direction:column; }
+  #s-lobby .lobby-grid > .games-col { order:1; flex:1.4 1 0; min-height:0; display:flex; flex-direction:column; }
   #s-lobby .lobby-grid > .games-col .games-scroll { flex:1 1 auto; min-height:0; overflow-y:auto; align-content:start; }
 
   /* Chat intégré sous les tables (plus de fenêtre flottante ni d'overlay) */
   #s-lobby .lobby-grid > #lobby-chat-panel {
     order:2; position:static !important; inset:auto !important; transform:none !important;
-    display:flex !important; width:auto !important; flex:0 0 auto;
-    max-height:min(240px,34dvh) !important; box-shadow:none; z-index:auto;
+    display:flex !important; width:auto !important; flex:1 1 0; min-height:160px;
+    max-height:none !important; box-shadow:none; z-index:auto;
     border:1px solid var(--border); border-radius:8px;
   }
 

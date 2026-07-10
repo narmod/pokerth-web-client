@@ -3480,7 +3480,8 @@ const App = (() => {
     var chip = _avatarChipHtml(myId, myName, 'h-nick-av');
     // Build: <span class="h-nick-av"...>...</span> <name>
     el.innerHTML = chip + ' ' + esc(myName);
-    if (window._lobby3Foot) window._lobby3Foot();   // sync barre du bas (Phase 1)
+    var _fn = document.getElementById('lobby-foot-name');   // barre du bas (Phase 1b)
+    if (_fn) _fn.textContent = myName || '—';
   }
   window.updateLobbyPill = updateLobbyPill;
 
@@ -13513,7 +13514,7 @@ function renderPlayersList() {
   body.innerHTML = html;
 }
 
-;(function(){ window.BUILD_VERSION='0.3.224-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.225-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
