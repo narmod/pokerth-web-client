@@ -282,7 +282,7 @@ export const strings = {
     tablePlayersEmpty:'No players seated.',
     filterAll:'All', filterOpen:'\ud83d\udfe2 Open', filterNoPass:'\ud83d\udd13 No password', filterLive:'\ud83d\udc41 Live',
     noTablesForFilter:'No tables match this filter',
-    navBack:'Back', createTableHdr:'Create a table', gameStyle:'Game style',
+    navBack:'Back', createTableHdr:'Create a table', gameNameLabel:'Game name', passwordLabel:'Password', startCash:'Starting stack', blindsSettings:'Blind settings', firstSmallBlind:'First small blind', blindInterval:'Blind increase interval', unitHands:'hands', unitMinutes:'minutes', timeLimits:'Time limits', actionTimeout:'Time per action', pauseBetweenHands:'Pause between hands',  gameStyle:'Game style',
     presetCalmName:'Relaxed', presetCalmDesc:'long games',
     presetNormalName:'Normal', presetNormalDesc:'balanced',
     presetFastName:'Fast', presetFastDesc:'fast-paced!',

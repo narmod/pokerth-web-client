@@ -376,6 +376,54 @@ body {
 .cp-body { max-width: 720px; margin: 0 auto; }
 .cp-body #create-form { display: block; }
 
+/* ── Champs « Créer une partie » façon officiel (steppers / toggles / sections) ── */
+.cf-block { margin-bottom: 14px; }
+.cf-row { display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 9px 0; }
+.cf-row-col { flex-direction: column; align-items: stretch; gap: 6px; }
+.cf-lbl { font-size: 0.9rem; color: var(--text); font-weight: 500; }
+.cf-input, .cf-select {
+  width: 100%; box-sizing: border-box;
+  background: var(--field-bg); border: 1px solid var(--border); border-radius: 8px;
+  color: var(--text); padding: 9px 12px; font-size: 0.92rem; outline: none;
+}
+.cf-input:focus, .cf-select:focus { border-color: var(--gold-dim); }
+.cf-sec {
+  margin: 16px 0 2px; padding-top: 14px;
+  font-size: 0.82rem; font-weight: 700; color: var(--text);
+  letter-spacing: 0.02em; text-transform: none;
+  border-top: 1px solid var(--border);
+}
+/* Stepper − valeur + */
+.cf-step { display: inline-flex; align-items: center; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; background: var(--field-bg); }
+.cf-step-btn {
+  width: 34px; height: 34px; background: transparent; border: none;
+  color: var(--text); font-size: 1.15rem; line-height: 1; cursor: pointer;
+  display: inline-flex; align-items: center; justify-content: center;
+}
+.cf-step-btn:hover { background: rgba(127,127,127,0.14); }
+.cf-step-num {
+  width: 72px; border: none; background: transparent; color: var(--text);
+  text-align: center; font-size: 0.92rem; font-family: var(--ff-display);
+  outline: none; -moz-appearance: textfield;
+}
+.cf-step-num::-webkit-inner-spin-button, .cf-step-num::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+.cf-step-sm .cf-step-num { width: 48px; }
+/* Toggle switch */
+.cf-switch { position: relative; display: inline-block; width: 44px; height: 24px; cursor: pointer; flex: none; }
+.cf-switch input { position: absolute; opacity: 0; width: 0; height: 0; }
+.cf-switch-tr { position: absolute; inset: 0; background: var(--border); border-radius: 999px; transition: background 0.16s; }
+.cf-switch-tr::before {
+  content: ''; position: absolute; width: 18px; height: 18px; left: 3px; top: 3px;
+  background: #fff; border-radius: 50%; transition: transform 0.16s; box-shadow: 0 1px 3px rgba(0,0,0,0.35);
+}
+.cf-switch input:checked + .cf-switch-tr { background: #2f81f7; }
+.cf-switch input:checked + .cf-switch-tr::before { transform: translateX(20px); }
+/* Intervalle blindes : radios + stepper */
+.cf-interval { display: flex; align-items: center; flex-wrap: wrap; gap: 16px; }
+.cf-radio { display: inline-flex; align-items: center; gap: 6px; font-size: 0.9rem; color: var(--text); cursor: pointer; }
+.cf-radio input { accent-color: #2f81f7; }
+.cf-create-btn { flex: 1; padding: 12px; }
+
 /* ══════════════════════════════════════════
    CONNECT SCREEN
 ══════════════════════════════════════════ */

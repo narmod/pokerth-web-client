@@ -1126,113 +1126,136 @@ function onAvatarImageChosen(input) {
         <span data-i18n="createTableHdr">Créer une table</span>
       </button>
       <div id="create-form" style="display:none">
-        <!-- Préréglages : remplissent les champs en un clic -->
-        <div class="cf-presets-label" data-i18n="gameStyle">Style de partie</div>
-        <div class="cf-presets">
-          <button type="button" class="cf-preset" data-preset="tranquille" onclick="App.applyPreset('tranquille',this)"><span class="cfp-ico">🐢</span><span class="cfp-n" data-i18n="presetCalmName">Tranquille</span><span class="cfp-d" data-i18n="presetCalmDesc">parties longues</span></button>
-          <button type="button" class="cf-preset" data-preset="normal" onclick="App.applyPreset('normal',this)"><span class="cfp-ico">⚖️</span><span class="cfp-n" data-i18n="presetNormalName">Normal</span><span class="cfp-d" data-i18n="presetNormalDesc">équilibré</span></button>
-          <button type="button" class="cf-preset" data-preset="rapide" onclick="App.applyPreset('rapide',this)"><span class="cfp-ico">⚡</span><span class="cfp-n" data-i18n="presetFastName">Rapide</span><span class="cfp-d" data-i18n="presetFastDesc">ça va vite !</span></button>
+        <!-- Style de partie (TON différenciateur — conservé) -->
+        <div class="cf-block">
+          <div class="cf-presets-label" data-i18n="gameStyle">Style de partie</div>
+          <div class="cf-presets">
+            <button type="button" class="cf-preset" data-preset="tranquille" onclick="App.applyPreset('tranquille',this)"><span class="cfp-ico">🐢</span><span class="cfp-n" data-i18n="presetCalmName">Tranquille</span><span class="cfp-d" data-i18n="presetCalmDesc">parties longues</span></button>
+            <button type="button" class="cf-preset" data-preset="normal" onclick="App.applyPreset('normal',this)"><span class="cfp-ico">⚖️</span><span class="cfp-n" data-i18n="presetNormalName">Normal</span><span class="cfp-d" data-i18n="presetNormalDesc">équilibré</span></button>
+            <button type="button" class="cf-preset" data-preset="rapide" onclick="App.applyPreset('rapide',this)"><span class="cfp-ico">⚡</span><span class="cfp-n" data-i18n="presetFastName">Rapide</span><span class="cfp-d" data-i18n="presetFastDesc">ça va vite !</span></button>
+          </div>
         </div>
 
-    <div class="create-fields cf-name-wrap">
-      <div class="cf"><label data-i18n="tableName">Table name</label><input id="cf-name" placeholder="Table..." data-i18n-placeholder="tableNamePh"></div>
-    </div>
-    <div class="cf-sliders">
-      <div class="cf-slider">
-        <label>
-          <span data-i18n="maxPlayers">Max players</span>
-          <span class="cf-num-wrap">
-            <input type="number" id="cf-players" class="cf-range-num" min="2" max="10" step="1" value="10"
-                   oninput="App.rangeFromNum('cf-players-range', this)" onchange="App.clampNum(this);App.rangeFromNum('cf-players-range', this)">
-            <span class="cf-unit cf-unit-ico">👤</span>
-          </span>
-        </label>
-        <input id="cf-players-range" class="cf-range" type="range" min="2" max="10" step="1" value="10"
-               oninput="App.numFromRange('cf-players', this)">
-      </div>
-      <div class="cf-slider">
-        <label>
-          <span data-i18n="smallBlind">Small blind</span>
-          <span class="cf-num-wrap">
-            <input type="number" id="cf-blind" class="cf-range-num" min="1" max="1000000" step="1" value="10"
-                   oninput="App.rangeFromNum('cf-blind-range', this)" onchange="App.clampNum(this);App.rangeFromNum('cf-blind-range', this)">
-            <span class="cf-money">$</span>
-          </span>
-        </label>
-        <input id="cf-blind-range" class="cf-range" type="range" min="1" max="1000" step="1" value="10"
-               oninput="App.numFromRange('cf-blind', this)">
-      </div>
-      <div class="cf-slider">
-        <label>
-          <span data-i18n="stack">Stack</span>
-          <span class="cf-num-wrap">
-            <input type="number" id="cf-stack" class="cf-range-num" min="500" max="1000000" step="1" value="3000"
-                   oninput="App.rangeFromNum('cf-stack-range', this)" onchange="App.clampNum(this);App.rangeFromNum('cf-stack-range', this)">
-            <span class="cf-money">$</span>
-          </span>
-        </label>
-        <input id="cf-stack-range" class="cf-range" type="range" min="500" max="1000000" step="500" value="3000"
-               oninput="App.numFromRange('cf-stack', this)">
-      </div>
-      <div class="cf-slider">
-        <label>
-          <span data-i18n="timeout">Timeout (s)</span>
-          <span class="cf-num-wrap">
-            <input type="number" id="cf-timeout" class="cf-range-num" min="5" max="120" step="1" value="15"
-                   oninput="App.rangeFromNum('cf-timeout-range', this)" onchange="App.clampNum(this);App.rangeFromNum('cf-timeout-range', this)">
-            <span class="cf-unit">s</span>
-          </span>
-        </label>
-        <input id="cf-timeout-range" class="cf-range" type="range" min="5" max="120" step="1" value="15"
-               oninput="App.numFromRange('cf-timeout', this)">
-      </div>
-    </div>
-    <!-- Bot difficulty — Training mode only; sets the AI level of bots that fill the table -->
-    <div id="cf-skill-row" style="display:none;margin-top:4px">
-      <div class="cf-presets-label" data-i18n="botDifficulty">Bot difficulty</div>
-      <div class="cf-presets" id="cf-skill-pills">
-        <button type="button" class="cf-preset" data-skill="easy"   onclick="App.setBotSkill('easy',this)"><span class="cfp-ico">🌱</span><span class="cfp-n" data-i18n="botEasy">Easy</span></button>
-        <button type="button" class="cf-preset" data-skill="mixed"  onclick="App.setBotSkill('mixed',this)"><span class="cfp-ico">🎲</span><span class="cfp-n" data-i18n="botMixed">Mixed</span></button>
-        <button type="button" class="cf-preset" data-skill="normal" onclick="App.setBotSkill('normal',this)"><span class="cfp-ico">🎯</span><span class="cfp-n" data-i18n="botNormal">Normal</span></button>
-        <button type="button" class="cf-preset" data-skill="hard"   onclick="App.setBotSkill('hard',this)"><span class="cfp-ico">🦈</span><span class="cfp-n" data-i18n="botHard">Hard</span></button>
-      </div>
-    </div>
-    <div style="margin:8px 0 2px">
-      <button type="button" onclick="App.toggleMoreOptions()" id="cf-more-btn" style="background:none;border:none;color:var(--gold-dim);cursor:pointer;font-size:0.64rem;letter-spacing:0.12em;text-transform:uppercase;padding:2px 0;display:flex;align-items:center;gap:5px">
-        <span id="cf-more-arrow">&#9658;</span> <span id="cf-more-label" data-i18n="moreOptions">More options</span>
-      </button>
-    </div>
-    <div id="cf-more-opts" style="display:none">
-      <div class="create-fields">
-        <div class="cf cf-sm"><label data-i18n="raiseEvery">Raise every</label><select id="cf-raise-mode" style="background:var(--inset);border:1px solid var(--border);border-radius:2px;color:var(--cream);padding:4px 6px;font-size:0.78rem;outline:none"><option value="1" data-i18n-opt="nHands">N hands</option><option value="2" data-i18n-opt="nMinutes">N minutes</option></select></div>
-        <div class="cf cf-sm"><label data-i18n="raiseN">N</label><input id="cf-raise-every" type="number" min="1" max="100" value="7"></div>
-        <div class="cf cf-sm"><label data-i18n="blindRaise">Blind raise</label><select id="cf-end-raise" onchange="var r=document.getElementById('cf-end-raise-val-row');if(r)r.style.display=this.value=='2'?'':' none'" style="background:var(--inset);border:1px solid var(--border);border-radius:2px;color:var(--cream);padding:4px 6px;font-size:0.78rem;outline:none"><option value="1" data-i18n-opt="blindDouble">Double</option><option value="2" data-i18n-opt="blindToValue">To value</option><option value="3" data-i18n-opt="blindKeepLast">Keep last</option></select></div>
-        <div class="cf cf-sm" id="cf-end-raise-val-row" style="display:none"><label data-i18n="targetBlind">Target blind</label><input id="cf-end-raise-val" type="number" min="1" value="200"></div>
-        <div class="cf cf-sm"><label data-i18n="speed">Speed (1-10)</label><input id="cf-gui-speed" type="number" min="1" max="10" value="5"></div>
-        <div class="cf cf-sm"><label data-i18n="delayHands">Delay (hands)</label><input id="cf-delay" type="number" min="0" max="20" value="7"></div>
-        <div class="cf cf-sm"><label data-i18n="gameType">Game type</label><select id="cf-game-type" style="background:var(--inset);border:1px solid var(--border);border-radius:2px;color:var(--cream);padding:4px 6px;font-size:0.78rem;outline:none"><option value="1" data-i18n-opt="gameNormal">Normal</option><option value="2" data-i18n-opt="gameRegistered">Registered only</option><option value="3" data-i18n-opt="gameInvite">Invite only</option><option value="4" data-i18n-opt="gameRanking">Ranking</option></select></div>
-        <div class="cf cf-sm"><label data-i18n="allowSpectators">Spectators</label><select id="cf-allow-spectators" style="background:var(--inset);border:1px solid var(--border);border-radius:2px;color:var(--cream);padding:4px 6px;font-size:0.78rem;outline:none"><option value="1" data-i18n-opt="allowOn">Allowed</option><option value="0" data-i18n-opt="allowOff">Blocked</option></select></div>
-      </div>
-    </div>
-    <!-- Password -->
-    <div style="margin-top:8px">
-      <label class="tls-row" style="cursor:pointer;font-size:0.72rem;color:var(--text);gap:8px">
-        <input type="checkbox" id="cf-use-password" style="accent-color:var(--gold);flex-shrink:0" onchange="var r=document.getElementById('cf-password-row');if(r)r.style.display=this.checked?'flex':'none'">
-        <span data-i18n="addPassword">Add a password (optional)</span>
-      </label>
-      <div id="cf-password-row" style="display:none;margin-top:6px;align-items:center;gap:8px">
-        <label data-i18n="tablePassword" style="font-size:0.66rem;color:var(--gold-dim);text-transform:uppercase;letter-spacing:0.1em;white-space:nowrap">Password:</label>
-        <input id="cf-password" type="password" maxlength="64" style="flex:1;background:var(--inset);border:1px solid var(--border);border-radius:2px;color:var(--cream);padding:4px 8px;font-family:var(--ff-mono);font-size:0.82rem;outline:none" placeholder="••••••">
-      </div>
-    </div>
-    <div class="cf-actions" style="display:flex;gap:10px;margin-top:14px">
-      <button type="button" class="btn-cf-reset" onclick="App.resetCreateForm()"><span class="cf-reset-ico" aria-hidden="true">↺</span><span class="cf-reset-lbl" data-i18n="resetForm">↺ Reset</span></button>
-      <button class="btn-primary" data-i18n="createTable" onclick="App.createGame()" style="flex:1;padding:10px">+ Create table</button>
-    </div>
+        <!-- Nom de la partie -->
+        <div class="cf-row cf-row-col">
+          <label class="cf-lbl" data-i18n="gameNameLabel">Nom de la partie</label>
+          <input id="cf-name" class="cf-input" placeholder="Table..." data-i18n-placeholder="tableNamePh">
+        </div>
+
+        <!-- Type de partie -->
+        <div class="cf-row cf-row-col">
+          <label class="cf-lbl" data-i18n="gameType">Type de partie</label>
+          <div class="sel-wrap"><select id="cf-game-type" class="cf-select">
+            <option value="1" data-i18n-opt="gameNormal">Normal</option>
+            <option value="2" data-i18n-opt="gameRegistered">Registered only</option>
+            <option value="3" data-i18n-opt="gameInvite">Invite only</option>
+            <option value="4" data-i18n-opt="gameRanking">Ranking</option>
+          </select><span class="sel-arr">▾</span></div>
+        </div>
+
+        <!-- Mot de passe (toggle) -->
+        <div class="cf-row">
+          <label class="cf-lbl" data-i18n="passwordLabel">Mot de passe</label>
+          <label class="cf-switch"><input type="checkbox" id="cf-use-password" onchange="var r=document.getElementById('cf-password-row');if(r)r.style.display=this.checked?'flex':'none'"><span class="cf-switch-tr"></span></label>
+        </div>
+        <div id="cf-password-row" class="cf-row cf-row-col" style="display:none">
+          <label class="cf-lbl" data-i18n="tablePassword">Password</label>
+          <input id="cf-password" class="cf-input" type="password" maxlength="64" placeholder="••••••">
+        </div>
+
+        <!-- Spectateurs autorisés (toggle) -->
+        <div class="cf-row">
+          <label class="cf-lbl" data-i18n="allowSpectators">Spectateurs autorisés</label>
+          <label class="cf-switch"><input type="checkbox" id="cf-allow-spectators" checked><span class="cf-switch-tr"></span></label>
+        </div>
+
+        <!-- Joueurs max (stepper) -->
+        <div class="cf-row">
+          <label class="cf-lbl" data-i18n="maxPlayers">Joueurs max.</label>
+          <div class="cf-step">
+            <button type="button" class="cf-step-btn" onclick="App.stepField('cf-players',-1)">&minus;</button>
+            <input id="cf-players" class="cf-step-num" type="number" min="2" max="10" step="1" value="10" onchange="App.clampNum(this)">
+            <button type="button" class="cf-step-btn" onclick="App.stepField('cf-players',1)">+</button>
+          </div>
+        </div>
+
+        <!-- Capital de départ (stepper) -->
+        <div class="cf-row">
+          <label class="cf-lbl" data-i18n="startCash">Capital de départ</label>
+          <div class="cf-step cf-step-money">
+            <button type="button" class="cf-step-btn" onclick="App.stepField('cf-stack',-1)">&minus;</button>
+            <input id="cf-stack" class="cf-step-num" type="number" min="500" max="1000000" step="500" value="3000" onchange="App.clampNum(this)">
+            <button type="button" class="cf-step-btn" onclick="App.stepField('cf-stack',1)">+</button>
+          </div>
+        </div>
+
+        <!-- Réglages des blindes -->
+        <div class="cf-sec" data-i18n="blindsSettings">Réglages des blindes</div>
+        <div class="cf-row">
+          <label class="cf-lbl" data-i18n="firstSmallBlind">Première petite blinde</label>
+          <div class="cf-step cf-step-money">
+            <button type="button" class="cf-step-btn" onclick="App.stepField('cf-blind',-1)">&minus;</button>
+            <input id="cf-blind" class="cf-step-num" type="number" min="1" max="1000000" step="1" value="10" onchange="App.clampNum(this)">
+            <button type="button" class="cf-step-btn" onclick="App.stepField('cf-blind',1)">+</button>
+          </div>
+        </div>
+        <div class="cf-row cf-row-col">
+          <label class="cf-lbl" data-i18n="blindInterval">Intervalle d'augmentation des blindes</label>
+          <div class="cf-interval">
+            <label class="cf-radio"><input type="radio" name="cf-rm" id="cf-rm1" checked onchange="App.setRaiseMode(1)"> <span data-i18n="unitHands">mains</span></label>
+            <label class="cf-radio"><input type="radio" name="cf-rm" id="cf-rm2" onchange="App.setRaiseMode(2)"> <span data-i18n="unitMinutes">minutes</span></label>
+            <div class="cf-step cf-step-sm">
+              <button type="button" class="cf-step-btn" onclick="App.stepField('cf-raise-every',-1)">&minus;</button>
+              <input id="cf-raise-every" class="cf-step-num" type="number" min="1" max="180" step="1" value="8" onchange="App.clampNum(this)">
+              <button type="button" class="cf-step-btn" onclick="App.stepField('cf-raise-every',1)">+</button>
+            </div>
+          </div>
+          <input type="hidden" id="cf-raise-mode" value="1">
+        </div>
+
+        <!-- Limites de temps -->
+        <div class="cf-sec" data-i18n="timeLimits">Limites de temps</div>
+        <div class="cf-row">
+          <label class="cf-lbl" data-i18n="actionTimeout">Limite de temps par action</label>
+          <div class="cf-step cf-step-sec">
+            <button type="button" class="cf-step-btn" onclick="App.stepField('cf-timeout',-1)">&minus;</button>
+            <input id="cf-timeout" class="cf-step-num" type="number" min="5" max="120" step="1" value="20" onchange="App.clampNum(this)">
+            <button type="button" class="cf-step-btn" onclick="App.stepField('cf-timeout',1)">+</button>
+          </div>
+        </div>
+        <div class="cf-row">
+          <label class="cf-lbl" data-i18n="pauseBetweenHands">Pause entre les mains</label>
+          <div class="cf-step cf-step-sec">
+            <button type="button" class="cf-step-btn" onclick="App.stepField('cf-delay',-1)">&minus;</button>
+            <input id="cf-delay" class="cf-step-num" type="number" min="0" max="20" step="1" value="7" onchange="App.clampNum(this)">
+            <button type="button" class="cf-step-btn" onclick="App.stepField('cf-delay',1)">+</button>
+          </div>
+        </div>
+
+        <!-- Niveau des bots (TON option — mode entraînement, conservé) -->
+        <div id="cf-skill-row" style="display:none;margin-top:8px">
+          <div class="cf-presets-label" data-i18n="botDifficulty">Bot difficulty</div>
+          <div class="cf-presets" id="cf-skill-pills">
+            <button type="button" class="cf-preset" data-skill="easy"   onclick="App.setBotSkill('easy',this)"><span class="cfp-ico">🌱</span><span class="cfp-n" data-i18n="botEasy">Easy</span></button>
+            <button type="button" class="cf-preset" data-skill="mixed"  onclick="App.setBotSkill('mixed',this)"><span class="cfp-ico">🎲</span><span class="cfp-n" data-i18n="botMixed">Mixed</span></button>
+            <button type="button" class="cf-preset" data-skill="normal" onclick="App.setBotSkill('normal',this)"><span class="cfp-ico">🎯</span><span class="cfp-n" data-i18n="botNormal">Normal</span></button>
+            <button type="button" class="cf-preset" data-skill="hard"   onclick="App.setBotSkill('hard',this)"><span class="cfp-ico">🦈</span><span class="cfp-n" data-i18n="botHard">Hard</span></button>
+          </div>
+        </div>
+
+        <!-- Champs avancés conservés (non affichés par l'officiel) -->
+        <input type="hidden" id="cf-end-raise" value="1">
+        <input type="hidden" id="cf-end-raise-val" value="200">
+        <input type="hidden" id="cf-gui-speed" value="5">
+
+        <div class="cf-actions">
+          <button type="button" class="btn-cf-reset" onclick="App.resetCreateForm()"><span class="cf-reset-ico" aria-hidden="true">↺</span><span class="cf-reset-lbl" data-i18n="resetForm">↺ Reset</span></button>
+          <button class="btn-primary cf-create-btn" data-i18n="createTable" onclick="App.createGame()">+ Créer</button>
+        </div>
       </div>
     </div>
 
-    <!-- Colonne tables -->
+        <!-- Colonne tables -->
     <div class="games-col">
       <div class="pane-header">
         <span data-i18n="availTables">Available tables</span>

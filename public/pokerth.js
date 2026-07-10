@@ -11655,7 +11655,10 @@ function dismissWinner() {
       if (d.gameType      != null) set('cf-game-type',    d.gameType);
       if (d.allowSpectators != null) {
         var asEl = document.getElementById('cf-allow-spectators');
-        if (asEl) asEl.value = d.allowSpectators ? '1' : '0';
+        if (asEl) {
+          if (asEl.type === 'checkbox') asEl.checked = !!d.allowSpectators;
+          else asEl.value = d.allowSpectators ? '1' : '0';
+        }
       }
       // Sync the "min humans before bots" row visibility with the checkbox.
       var mhRow = document.getElementById('cf-min-humans-row');
@@ -11702,6 +11705,22 @@ function dismissWinner() {
     },
     closeCreatePage() {
       show('s-lobby');
+    },
+    // Stepper +/- (page « Créer une partie ») : incrémente/décrémente un champ
+    // numérique selon son step/min/max. Réutilise les IDs existants.
+    stepField(id, dir) {
+      var el = document.getElementById(id); if (!el) return;
+      var step = parseInt(el.step, 10) || 1;
+      var min = (el.min !== '' && el.min != null) ? parseInt(el.min, 10) : -Infinity;
+      var max = (el.max !== '' && el.max != null) ? parseInt(el.max, 10) :  Infinity;
+      var v = (parseInt(el.value, 10) || 0) + dir * step;
+      v = Math.max(min, Math.min(max, v));
+      el.value = v;
+    },
+    // Intervalle de hausse des blindes : le radio mains/minutes pilote le champ
+    // caché cf-raise-mode (1 = mains, 2 = minutes) lu par createGame().
+    setRaiseMode(n) {
+      var el = document.getElementById('cf-raise-mode'); if (el) el.value = n;
     },
     // Quick-style presets: fill the create-form numeric fields in one tap.
     // The full form stays fully editable afterwards — presets are just a
@@ -11879,7 +11898,9 @@ function dismissWinner() {
       // (older clients, or when the form hasn't been opened) — matches the
       // proto's default. The UI dropdown sends '1' = allowed, '0' = blocked.
       const allowSpecRaw = document.getElementById('cf-allow-spectators');
-      const allowSpec = allowSpecRaw ? (allowSpecRaw.value !== '0') : true;
+      const allowSpec = allowSpecRaw
+        ? (allowSpecRaw.type === 'checkbox' ? allowSpecRaw.checked : allowSpecRaw.value !== '0')
+        : true;
       const opts = {
         raiseMode:       sv('cf-raise-mode',    1),
         raiseEvery:      iv('cf-raise-every',   7),
@@ -13476,7 +13497,7 @@ function renderPlayersList() {
   body.innerHTML = html;
 }
 
-;(function(){ window.BUILD_VERSION='0.3.220-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.221-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
