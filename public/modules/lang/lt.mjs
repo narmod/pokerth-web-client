@@ -627,6 +627,7 @@ export const strings = {
     piStatusEliminated:'Iškrito',
     piViewProfile:'Žiūrėti pokerth.net profilį',
     modeManual:'Rankinis',
+    plIgnore:'Ignoruoti', plStats:'Žaidėjo statistika', plNotPlaying:'Šiuo metu nežaidžia', plSortAlpha:'Rikiuoti pagal abėcėlę', plShowIdle:'Rodyti neaktyvius žaidėjus', plHideIdle:'Slėpti neaktyvius žaidėjus', gameTimeLabel:'Laikas', visRanked:'Reitingas', infoBlindsUp:'Blaindų didinimas',
 };
 
 export default { meta, strings };

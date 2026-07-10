@@ -627,6 +627,7 @@ export const strings = {
     piStatusEliminated:'Bị loại',
     piViewProfile:'Xem hồ sơ pokerth.net',
     modeManual:'Thủ công',
+    plIgnore:'Bỏ qua', plStats:'Thống kê người chơi', plNotPlaying:'Hiện không chơi', plSortAlpha:'Sắp xếp theo bảng chữ cái', plShowIdle:'Hiển thị người chơi rảnh', plHideIdle:'Ẩn người chơi rảnh', gameTimeLabel:'Thời gian', visRanked:'Xếp hạng', infoBlindsUp:'Tăng tiền mù',
 };
 
 export default { meta, strings };

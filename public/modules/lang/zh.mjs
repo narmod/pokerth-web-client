@@ -628,6 +628,7 @@ export const strings = {
     piStatusEliminated:'已淘汰',
     piViewProfile:'查看 pokerth.net 资料',
     modeManual:'手动',
+    plIgnore:'忽略', plStats:'玩家统计', plNotPlaying:'当前未在游戏中', plSortAlpha:'按字母排序', plShowIdle:'显示空闲玩家', plHideIdle:'隐藏空闲玩家', gameTimeLabel:'时间', visRanked:'排名', infoBlindsUp:'盲注提高',
 };
 
 export default { meta, strings };

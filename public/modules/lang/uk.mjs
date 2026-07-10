@@ -626,6 +626,7 @@ export const strings = {
     piStatusEliminated:'Вибув',
     piViewProfile:'Профіль на pokerth.net',
     modeManual:'Вручну',
+    plIgnore:'Ігнорувати', plStats:'Статистика гравця', plNotPlaying:'Зараз не грає', plSortAlpha:'Сортувати за абеткою', plShowIdle:'Показати неактивних гравців', plHideIdle:'Сховати неактивних гравців', gameTimeLabel:'Час', visRanked:'Рейтинг', infoBlindsUp:'Підвищення блайндів',
 };
 
 export default { meta, strings };

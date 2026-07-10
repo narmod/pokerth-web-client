@@ -630,6 +630,7 @@ export const strings = {
     piStatusEliminated:'Ausgeschieden',
     piViewProfile:'pokerth.net-Profil ansehen',
     modeManual:'Manuell',
+    plIgnore:'Ignorieren', plStats:'Spielerstatistik', plNotPlaying:'Spielt gerade nicht', plSortAlpha:'Alphabetisch sortieren', plShowIdle:'Inaktive Spieler anzeigen', plHideIdle:'Inaktive Spieler ausblenden', gameTimeLabel:'Zeit', visRanked:'Rangliste', infoBlindsUp:'Blinds-Erhöhung',
 };
 
 export default { meta, strings };

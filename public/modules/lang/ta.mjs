@@ -628,6 +628,7 @@ export const strings = {
     piStatusEliminated:'வெளியேற்றப்பட்டார்',
     piViewProfile:'pokerth.net சுயவிவரத்தைப் பார்க்க',
     modeManual:'கைமுறை',
+    plIgnore:'புறக்கணி', plStats:'வீரர் புள்ளிவிவரங்கள்', plNotPlaying:'தற்போது விளையாடவில்லை', plSortAlpha:'அகர வரிசையில் வரிசைப்படுத்து', plShowIdle:'செயலற்ற வீரர்களைக் காட்டு', plHideIdle:'செயலற்ற வீரர்களை மறை', gameTimeLabel:'நேரம்', visRanked:'தரவரிசை', infoBlindsUp:'பிளைண்ட்ஸ் உயர்வு',
 };
 
 export default { meta, strings };

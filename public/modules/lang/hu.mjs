@@ -627,6 +627,7 @@ export const strings = {
     piStatusEliminated:'Kiesett',
     piViewProfile:'pokerth.net-profil megtekintése',
     modeManual:'Kézi',
+    plIgnore:'Mellőzés', plStats:'Játékos statisztikái', plNotPlaying:'Jelenleg nem játszik', plSortAlpha:'Rendezés ábécésorrendbe', plShowIdle:'Inaktív játékosok megjelenítése', plHideIdle:'Inaktív játékosok elrejtése', gameTimeLabel:'Idő', visRanked:'Ranglista', infoBlindsUp:'Vakok emelése',
 };
 
 export default { meta, strings };

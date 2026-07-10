@@ -628,6 +628,7 @@ export const strings = {
     piStatusEliminated:'Air a chur às',
     piViewProfile:'Seall pròifil pokerth.net',
     modeManual:'Le làimh',
+    plIgnore:'Leig seachad', plStats:'Stàitistig a\' chluicheadair', plNotPlaying:'Chan eil e a\' cluich an-dràsta', plSortAlpha:'Seòrsaich a-rèir na h-aibidil', plShowIdle:'Seall cluicheadairean nan tàmh', plHideIdle:'Falaich cluicheadairean nan tàmh', gameTimeLabel:'Ùine', visRanked:'Rangachadh', infoBlindsUp:'Àrdachadh nan dall',
 };
 
 export default { meta, strings };

@@ -629,6 +629,7 @@ export const strings = {
     piStatusEliminated:'Elendi',
     piViewProfile:'pokerth.net profilini gör',
     modeManual:'Manuel',
+    plIgnore:'Yoksay', plStats:'Oyuncu istatistikleri', plNotPlaying:'Şu anda oynamıyor', plSortAlpha:'Alfabetik sırala', plShowIdle:'Boşta oyuncuları göster', plHideIdle:'Boşta oyuncuları gizle', gameTimeLabel:'Süre', visRanked:'Sıralama', infoBlindsUp:'Blind artışı',
 };
 
 export default { meta, strings };

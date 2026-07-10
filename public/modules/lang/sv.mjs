@@ -626,6 +626,7 @@ export const strings = {
     piStatusEliminated:'Utslagen',
     piViewProfile:'Visa pokerth.net-profil',
     modeManual:'Manuell',
+    plIgnore:'Ignorera', plStats:'Spelarstatistik', plNotPlaying:'Spelar inte just nu', plSortAlpha:'Sortera alfabetiskt', plShowIdle:'Visa inaktiva spelare', plHideIdle:'Dölj inaktiva spelare', gameTimeLabel:'Tid', visRanked:'Ranking', infoBlindsUp:'Höjning av blinds',
 };
 
 export default { meta, strings };
