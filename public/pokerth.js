@@ -3511,20 +3511,14 @@ const App = (() => {
   // modal (which has a 'Change avatar' button).
   // ──────────────────────────────────────────────────────────────
   function updateLobbyPill() {
+    // #h-nick (pill profil) retiré du header ; on reste défensif s'il existe.
     var el = document.getElementById('h-nick');
-    if (!el) return;
-    if (!myName) { el.textContent = '—'; return; }
-    // The unified avatar chip helper handles all 5 fallback cases
-    // (real PokerTH image / placeholder logo / emoji / bot / initial).
-    // Wrap it in a tiny span so the CSS can size it independently of
-    // whatever the chip class would normally enforce.
-    // Header : nom seul (avatar retiré à la demande).
-    el.innerHTML = esc(myName);
+    if (el) el.innerHTML = myName ? esc(myName) : '—';
     // Barre du bas : avatar AVANT le nom.
     var _fn = document.getElementById('lobby-foot-name');   // barre du bas (Phase 1b)
     if (_fn) _fn.textContent = myName || '—';
     var _fav = document.getElementById('lobby-foot-av');
-    if (_fav) _fav.innerHTML = _avatarChipHtml(myId, myName, 'pl-av');
+    if (_fav) _fav.innerHTML = myName ? _avatarChipHtml(myId, myName, 'pl-av') : '';
   }
   window.updateLobbyPill = updateLobbyPill;
 
@@ -13704,7 +13698,7 @@ function renderPlayersList() {
   body.innerHTML = _shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>';
 }
 
-;(function(){ window.BUILD_VERSION='0.3.252-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.253-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
