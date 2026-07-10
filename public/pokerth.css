@@ -3204,6 +3204,18 @@ body {
 @media (min-width: 900px) {
   .pot-badge.has-pot { display: inline-flex; }
 }
+/* Le badge se positionne via transform:translate ; l'animation générique
+   .pot-pop (transform:scale) écraserait ce translate → le badge sautait sur
+   les cartes au flop. Pop dédié qui conserve le translate, et pas de
+   display:inline-block forcé (respecte la visibilité tablette/desktop). */
+.pot-badge.pot-pop { display: none; animation: potBadgePop 0.3s ease-out; }
+@media (min-width: 900px) {
+  .pot-badge.has-pot.pot-pop { display: inline-flex; }
+}
+@keyframes potBadgePop {
+  0%, 100% { transform: translate(-50%, calc(-100% - 46px)) scale(1); }
+  40%      { transform: translate(-50%, calc(-100% - 46px)) scale(1.16); }
+}
 
 .pot-bar {
   text-align: center;
