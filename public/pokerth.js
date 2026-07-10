@@ -13624,9 +13624,12 @@ function renderPlayersList() {
     var cc = /^[A-Z]{2}$/.test(_ccRaw) ? _ccRaw : '';
     // Nom cliquable → ouvre le popup joueur (rôle, drapeau, cups, lien profil).
     // Tous les joueurs (enregistrés ET invités) ; le popup gère le contenu.
+    // Pour MOI : appeler openPlayerInfoPopup() SANS argument → exactement la
+    // même fenêtre que le bouton joueur du header. Pour les autres : avec pid.
+    var _ppArg = r.isMe ? '' : String(r.pid);
     var nameHtml = '<span class="pl-name-link" role="button" tabindex="0"'
-      + ' onclick="window.openPlayerInfoPopup(' + r.pid + ')"'
-      + ' onkeydown="if(event.key===\'Enter\')window.openPlayerInfoPopup(' + r.pid + ')">'
+      + ' onclick="window.openPlayerInfoPopup(' + _ppArg + ')"'
+      + ' onkeydown="if(event.key===\'Enter\')window.openPlayerInfoPopup(' + _ppArg + ')">'
       + esc(r.name) + '</span>';
     // Statut « en partie » : une seule manette dans sa colonne (allumée si le
     // joueur est dans une partie, éteinte sinon). Plus de nom de partie sous le pseudo.
@@ -13634,7 +13637,7 @@ function renderPlayersList() {
     var _ign  = _isIgnored(r.name);
     var _acts = '<span class="pl-acts">'
       + '<button type="button" class="pl-act pl-act-ban' + (_ign ? ' on' : '') + '" title="' + _tt('plIgnore','Ignore') + '" aria-label="' + _tt('plIgnore','Ignore') + '" onclick="event.stopPropagation();window._plToggleIgnore(' + r.pid + ')">' + _PL_BAN_SVG + '</button>'
-      + '<button type="button" class="pl-act pl-act-stats" title="' + _tt('plStats','Stats') + '" aria-label="' + _tt('plStats','Stats') + '" onclick="event.stopPropagation();window.openPlayerInfoPopup(' + r.pid + ')">' + _PL_BAR_SVG + '</button>'
+      + '<button type="button" class="pl-act pl-act-stats" title="' + _tt('plStats','Stats') + '" aria-label="' + _tt('plStats','Stats') + '" onclick="event.stopPropagation();window.openPlayerInfoPopup(' + _ppArg + ')">' + _PL_BAR_SVG + '</button>'
       + '</span>';
     return '<div class="pl-row' + (r.isMe ? ' pl-me' : '') + '">' +
              avChip +
@@ -13657,7 +13660,7 @@ function renderPlayersList() {
   body.innerHTML = _shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>';
 }
 
-;(function(){ window.BUILD_VERSION='0.3.238-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.239-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
@@ -13800,6 +13803,23 @@ function renderPlayersList() {
     if(W()){ if(tb && srch.parentNode!==tb) tb.insertBefore(srch, tb.firstChild); }
     else { if(pp && list && srch.parentNode!==pp) pp.insertBefore(srch, list); }
   }
+  // Barre du bas (Joueur + Créer) : sous la colonne Parties en wide (largeur =
+  // colonne centrale), tout en bas pleine largeur en compact.
+  function placeFootbar(){
+    var fb=document.querySelector('#s-lobby .lobby-footbar');
+    var lb=document.querySelector('#s-lobby .lobby-body');
+    var games=document.querySelector('#s-lobby .lobby-grid > .games-col');
+    var stats=document.getElementById('lobby-statsbar');
+    if(!fb) return;
+    if(W()){
+      if(games && fb.parentNode!==games) games.appendChild(fb);
+    } else {
+      if(lb && fb.parentNode!==lb){
+        if(stats && stats.parentNode===lb) lb.insertBefore(fb, stats);
+        else lb.appendChild(fb);
+      }
+    }
+  }
 
   /* ── Poignées de redimensionnement (wide) ── */
   var MINC=280, MINL=160, MINR=200, MININFO=120, HW=12;
@@ -13901,6 +13921,7 @@ function renderPlayersList() {
     if(cp) cp.style.display='flex';
     if(lb) lb.style.paddingTop='';
     placeSearch();
+    placeFootbar();
     if(W()) closeSlide();             // pas de slide-in résiduel en wide
     try{ renderPlayersList(); }catch(e){}
   }
