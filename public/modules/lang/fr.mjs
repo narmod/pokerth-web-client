@@ -43,8 +43,8 @@ export const strings = {
     loadingTables:'Chargement des tables…', noTables:'Aucune table disponible',
     lobbyChat:'Chat du lobby', joinBtn:'▶ Rejoindre', waitStart:'En attente du démarrage…',
     handLabel:'M#', preflop:'Pré-flop', flop:'Flop', turn:'Tournant', river:'Rivière',
-    fold:'Se coucher', check:'Parole', call:'Suivre', raise:'Relancer', allin:'Tapis',
-    actBadgeFold:'Se coucher', actBadgeCheck:'Parole', actBadgeCall:'Suivre', actBadgeBet:'Miser', actBadgeRaise:'Relancer', actBadgeAllin:'Tapis',
+    fold:'Se coucher', check:'Check', call:'Suivre', raise:'Relancer', allin:'Tapis',
+    actBadgeFold:'Se coucher', actBadgeCheck:'Check', actBadgeCall:'Suivre', actBadgeBet:'Miser', actBadgeRaise:'Relancer', actBadgeAllin:'Tapis',
     pot:'Pot :', journal:'📋', chat:'💬', sound:'🔊', mute:'🔇',
     thinking:'réfléchit…', myCards:'Mes cartes :', logEliminated:'{name} éliminé', logShowdown:'{name} : {cards} — {hand}', logDealer:'Donneur : {name}', gameStart:'Début',
     bet:'Miser', wins:'gagne', handOf:'Main #',
@@ -314,7 +314,7 @@ export const strings = {
     fullscreenTooltip:'Plein écran', menuAdmin:'Admin',
     chatPlaceholder:'Message…',
     // ── Aides raccourcis clavier (le préfixe lettre reste, le verbe se traduit) ──
-    hintFold:'F — Se coucher', hintCheck:'C — Parole', hintCall:'C — Suivre',
+    hintFold:'F — Se coucher', hintCheck:'C — Check', hintCall:'C — Suivre',
     hintRaise:'R — Relancer', hintRaiseAdjust:'R — Relancer (ajustez le montant)', hintAllin:'A — Tapis', hintBetConfirm:'R pour miser', zoomIn:'Agrandir la table', zoomOut:'Réduire la table', zoomReset:'Réinitialiser la vue', seatEditToggle:'Éditer le placement des sièges', seatEditHint:'Glissez les sièges — le vôtre inclus', seatEditReset:'Réinitialiser', seatEditDone:'Terminé', emojiPickerTitle:'Insérer un emoji',
     // ── Libellés d'options du formulaire de création (fréquence des blindes) ──
     nHands:'N mains', nMinutes:'N minutes',
