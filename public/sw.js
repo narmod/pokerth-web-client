@@ -23,7 +23,7 @@
  *                 Cross-origin requests and WS upgrades are left untouched.
  *                 (Fonts are now self-hosted and handled by SWR above.)
  */
-const CACHE_VERSION = 'pokerth-v0.3.221-beta';
+const CACHE_VERSION = 'pokerth-v0.3.222-beta';
 
 // Where navigations fall back to when the network is unavailable.
 const NAV_FALLBACK = '/pokerth-client.html';
@@ -35,6 +35,7 @@ const ASSETS = [
   '/',
   '/pokerth-client.html',
   '/pokerth.js',
+  '/chat-emotes.js',
   '/pokerth.css',
   // Self-hosted fonts (Cinzel + Inconsolata) — offline + privacy
   '/fonts/fonts.css',

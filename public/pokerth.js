@@ -7251,12 +7251,15 @@ const App = (() => {
       clearTimeout(window._lobbyChatFlash);
       window._lobbyChatFlash = setTimeout(function(){ lcb.style.color=''; }, 3000);
     }
-    if (sender) { try { if (localStorage.getItem('pth_chat_noemoji') === '1') text = _advStripEmoji(text); } catch (e) {} }
+    var _noEmo = false;
+    try { _noEmo = (localStorage.getItem('pth_chat_noemoji') === '1'); } catch (e) {}
+    if (sender && _noEmo) { try { text = _advStripEmoji(text); } catch (e) {} }
     const el = $('chat');
     const d  = document.createElement('div');
     d.className = 'msg ' + cls;
+    const emT = function (s) { var h = esc(s); if (!_noEmo && typeof window.applyChatEmoteShortcuts === 'function') { try { h = window.applyChatEmoteShortcuts(h); } catch (_e) {} } return h; };
     if (sender) {
-      d.innerHTML = `<span class="who">${esc(sender)}</span>: <span class="txt">${esc(text)}</span>`;
+      d.innerHTML = `<span class="who">${esc(sender)}</span>: <span class="txt">${emT(text)}</span>`;
     } else {
       d.innerHTML = `<span class="txt">${esc(text)}</span>`;
     }
@@ -11989,12 +11992,17 @@ function addGameChat(sender, text, cls, spec) {
   if (sender && cls !== 'mine' && _isIgnored(sender)) return; // joueur ignoré
   var el = document.getElementById('g-chat-msgs');
   if (!el) return;
-  if (sender) { try { if (localStorage.getItem('pth_chat_noemoji') === '1') text = _advStripEmoji(text); } catch (e) {} }
+  var _noEmo = false;
+  try { _noEmo = (localStorage.getItem('pth_chat_noemoji') === '1'); } catch (e) {}
+  if (sender && _noEmo) { try { text = _advStripEmoji(text); } catch (e) {} }
   var d = document.createElement('div');
   d.className = 'msg ' + (cls || '');
   function e(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+  // Corps du message : shortcodes :nom: + émoticônes ASCII (port officiel),
+  // sauf en mode « chat sans emoji ». Le nom d'expéditeur n'est jamais converti.
+  function emT(s) { var h = e(s); if (!_noEmo && typeof window.applyChatEmoteShortcuts === 'function') { try { h = window.applyChatEmoteShortcuts(h); } catch (_e) {} } return h; }
   if (sender) {
-    d.innerHTML = '<span class="who">'+e(sender)+'</span>: <span class="txt">'+e(text)+'</span>';
+    d.innerHTML = '<span class="who">'+e(sender)+'</span>: <span class="txt">'+emT(text)+'</span>';
   } else {
     d.innerHTML = '<span class="txt">'+e(text)+'</span>';
   }
@@ -13497,7 +13505,7 @@ function renderPlayersList() {
   body.innerHTML = html;
 }
 
-;(function(){ window.BUILD_VERSION='0.3.221-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.222-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
