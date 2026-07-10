@@ -352,6 +352,7 @@ export const strings = {
     rankingColRank:'#', rankingColPlayer:'Pseudo', rankingColScore:'Score', rankingColPoints:'Points', rankingColGames:'Parties',
     rankingMemberSince:'Membre depuis', rankingAwards:'Récompenses', rankingTickets:'Tickets', rankingThisSeason:'Cette saison', rankingStep:'Palier', rankingRank:'Rang', rankingBack:'Retour', rankingThisMonth:'Ce mois', rankingThisYear:'Cette année', rankingCurrentSeason:'Saison actuelle', themeExport:'Exporter le thème (.zip)', sectionAdvanced:'Options avancées', rankingSeasonStats:'Stats de saison', rankingShare:'Part', rankingResults:'Résultats', rankingToggleChart:'Basculer barres / camembert',
     footPlayer:'Joueur', footCreate:'＋ Créer une partie', gameInfoTitle:'Infos de partie', gameInfoEmpty:'Sélectionne une partie',
+    gfNone:'Aucun filtre', gfOpen:'Jeux ouverts', gfOpenNF:'Jeux ouverts et non complets', gfOpenNFNP:'Jeux ouverts, non complets, non privés', gfOpenNFP:'Jeux ouverts, non complets, privés', gfOpenNFR:'Jeux ouverts, non complets, classés',
 };
 
 export default { meta, strings };

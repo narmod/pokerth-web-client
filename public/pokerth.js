@@ -4277,7 +4277,7 @@ const App = (() => {
   // Table-list filter (design A chips): 'all' | 'open' | 'nopass' | 'live'.
   // Persisted so the choice survives reloads, like other lobby prefs.
   let _tableFilter = (function(){
-    try { return localStorage.getItem('pth_table_filter') || 'all'; } catch(e) { return 'all'; }
+    try { var v = localStorage.getItem('pth_table_filter'); return (v && /^[0-5]$/.test(v)) ? v : '0'; } catch(e) { return '0'; }
   })();
   let autoAction = false;
   let amGameAdmin = false;  // true if we created this game
@@ -7081,26 +7081,24 @@ const App = (() => {
   //   nopass = not password-protected / invite-only
   //   live   = game in progress (mode 2)             → watchable
   function _tableMatches(g, filter) {
-    var prot = g.priv || g.type === 3;
-    switch (filter) {
-      case 'open':   return g.mode === 1 && g.players < (g.maxPlayers || 0);
-      case 'nopass': return !prot;
-      case 'live':   return g.mode === 2;
-      case 'ranked': return g.type === 4; // partie classée (parité filtre QML)
-      default:       return true; // 'all'
+    var f = parseInt(filter, 10); if (isNaN(f)) f = 0;
+    var prot    = g.priv || g.type === 3;
+    var open    = g.mode === 1;
+    var nonfull = g.players < (g.maxPlayers || 0);
+    switch (f) {
+      case 1: return open;                            // Jeux ouverts
+      case 2: return open && nonfull;                 // + non complets
+      case 3: return open && nonfull && !prot;        // + non privés
+      case 4: return open && nonfull && prot;         // + privés
+      case 5: return open && nonfull && g.type === 4; // + classés
+      default: return true;                           // 0 = Aucun filtre
     }
   }
   function _refreshFilterChips(entries) {
-    // Counts are computed on the FULL set so each chip shows how many
-    // tables it would reveal, regardless of the currently active filter.
-    var ids = ['all', 'open', 'nopass', 'live', 'ranked'];
-    ids.forEach(function(f) {
-      var el = document.getElementById('fc-' + f);
-      if (el) el.textContent = '(' + entries.filter(function(e){ return _tableMatches(e[1], f); }).length + ')';
-    });
-    document.querySelectorAll('#g-filter-bar .filter-chip').forEach(function(b) {
-      b.classList.toggle('active', b.dataset.filter === _tableFilter);
-    });
+    // Menu déroulant (parité QML gameListFilter) : on synchronise juste la
+    // valeur sélectionnée avec le filtre actif.
+    var sel = document.getElementById('g-filter-select');
+    if (sel && sel.value !== String(_tableFilter)) sel.value = String(_tableFilter);
   }
 
   // ── Liste dépliable des joueurs par table (lobby) ─────────────
@@ -11524,9 +11522,9 @@ function dismissWinner() {
       send(MSG.buildJoinGame(parseInt(gameId), false));
     },
     setTableFilter(f) {
-      if (['all','open','nopass','live'].indexOf(f) === -1) f = 'all';
-      _tableFilter = f;
-      try { localStorage.setItem('pth_table_filter', f); } catch(e) {}
+      var n = parseInt(f, 10); if (isNaN(n) || n < 0 || n > 5) n = 0;
+      _tableFilter = String(n);
+      try { localStorage.setItem('pth_table_filter', _tableFilter); } catch(e) {}
       renderGames();
     },
     dismissWinner() { dismissWinner(); },
@@ -13514,7 +13512,7 @@ function renderPlayersList() {
   body.innerHTML = html;
 }
 
-;(function(){ window.BUILD_VERSION='0.3.227-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.228-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
@@ -13643,10 +13641,19 @@ function renderPlayersList() {
     if(!lb || !g) return;
     var tb=lb.querySelector('.lobby-topbar');
     if(!tb){ tb=document.createElement('div'); tb.className='lobby-topbar'; lb.insertBefore(tb, g); }
-    var srch=document.querySelector('.players-search');
     var filt=document.getElementById('g-filter-bar');
-    if(srch && srch.parentNode!==tb) tb.appendChild(srch);
     if(filt && filt.parentNode!==tb) tb.appendChild(filt);
+  }
+  // Recherche joueur : dans la barre du haut en wide (à gauche du filtre),
+  // dans le panneau Joueurs en compact (parité officielle).
+  function placeSearch(){
+    var srch=document.querySelector('.players-search');
+    var tb=document.querySelector('#s-lobby .lobby-topbar');
+    var pp=document.getElementById('players-panel');
+    var list=document.getElementById('players-list-body');
+    if(!srch) return;
+    if(W()){ if(tb && srch.parentNode!==tb) tb.insertBefore(srch, tb.firstChild); }
+    else { if(pp && list && srch.parentNode!==pp) pp.insertBefore(srch, list); }
   }
 
   /* ── Poignées de redimensionnement (wide) ── */
@@ -13732,6 +13739,7 @@ function renderPlayersList() {
     if(pp) pp.style.display='flex';   // placement géré par le CSS (grille wide / slide-in compact)
     if(cp) cp.style.display='flex';
     if(lb) lb.style.paddingTop='';
+    placeSearch();
     if(W()) closeSlide();             // pas de slide-in résiduel en wide
     try{ renderPlayersList(); }catch(e){}
   }

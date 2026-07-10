@@ -1263,11 +1263,17 @@ function onAvatarImageChosen(input) {
       </div>
       <div class="filter-bar" id="g-filter-bar">
         <button type="button" class="fbar-players" onclick="togglePlayersPanel()" title="Joueurs en ligne" data-i18n-title="playersOnlineTitle" aria-label="Joueurs en ligne">👥</button>
-        <button class="filter-chip active" data-filter="all" onclick="App.setTableFilter('all')"><span class="fc-label" data-i18n="filterAll">All</span> <span class="cnt" id="fc-all"></span></button>
-        <button class="filter-chip" data-filter="open" onclick="App.setTableFilter('open')"><span class="fc-ic">🟢</span><span class="fc-label" data-i18n="filterOpen">Open</span> <span class="cnt" id="fc-open"></span></button>
-        <button class="filter-chip" data-filter="nopass" onclick="App.setTableFilter('nopass')"><span class="fc-ic">🔓</span><span class="fc-label" data-i18n="filterNoPass">No password</span> <span class="cnt" id="fc-nopass"></span></button>
-        <button class="filter-chip" data-filter="live" onclick="App.setTableFilter('live')"><span class="fc-ic">👁</span><span class="fc-label" data-i18n="filterLive">Live</span> <span class="cnt" id="fc-live"></span></button>
-        <button class="filter-chip" data-filter="ranked" onclick="App.setTableFilter('ranked')"><span class="fc-ic">🏆</span><span class="fc-label" data-i18n="filterRanked">Ranked</span> <span class="cnt" id="fc-ranked"></span></button>
+        <div class="sel-wrap gfilt-wrap">
+          <select id="g-filter-select" onchange="App.setTableFilter(this.value)">
+            <option value="0" data-i18n-opt="gfNone">No game list filter</option>
+            <option value="1" data-i18n-opt="gfOpen">Show open games</option>
+            <option value="2" data-i18n-opt="gfOpenNF">Show open &amp; non-full games</option>
+            <option value="3" data-i18n-opt="gfOpenNFNP">Show open &amp; non-full &amp; non-private games</option>
+            <option value="4" data-i18n-opt="gfOpenNFP">Show open &amp; non-full &amp; private games</option>
+            <option value="5" data-i18n-opt="gfOpenNFR">Show open &amp; non-full &amp; ranking games</option>
+          </select>
+          <span class="sel-arr">▾</span>
+        </div>
       </div>
       <div class="games-scroll" id="g-list">
         <div class="empty">Loading tables<br><span class="ld"><span>●</span><span>●</span><span>●</span></span></div>

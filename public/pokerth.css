@@ -7253,7 +7253,8 @@ html[data-buttons="pokerth"] .btn-action[disabled] { filter: grayscale(0.55) bri
   padding:0 !important; background:transparent !important; border:none !important;
 }
 .lobby-topbar .players-search input { flex:1 1 auto; width:auto; }
-.lobby-topbar #g-filter-bar { flex:1 1 260px; padding:0 !important; margin:0; }
+.lobby-topbar #g-filter-bar { flex:1 1 260px; padding:0 !important; margin:0; display:flex; align-items:center; gap:8px; }
+.lobby-topbar #g-filter-bar .gfilt-wrap { flex:1 1 auto; }
 /* En mobile la barre s'empile proprement (recherche puis filtre) */
 @media (max-width: 899.98px) {
   .lobby-topbar { gap:8px; padding:0 0 8px; }

@@ -352,6 +352,7 @@ export const strings = {
     rankingColRank:'#', rankingColPlayer:'Nickname', rankingColScore:'Score', rankingColPoints:'Points', rankingColGames:'Games',
     rankingMemberSince:'Member since', rankingAwards:'Awards', rankingTickets:'Tickets', rankingThisSeason:'This season', rankingStep:'Step', rankingRank:'Rank', rankingBack:'Back', rankingThisMonth:'This month', rankingThisYear:'This year', rankingCurrentSeason:'Current season', themeExport:'Export theme (.zip)', sectionAdvanced:'Advanced', rankingSeasonStats:'Season Stats', rankingShare:'Share', rankingResults:'Results', rankingToggleChart:'Switch bar / pie',
     footPlayer:'Player', footCreate:'＋ Create a table', gameInfoTitle:'Game info', gameInfoEmpty:'Select a table',
+    gfNone:'No game list filter', gfOpen:'Show open games', gfOpenNF:'Show open & non-full games', gfOpenNFNP:'Show open & non-full & non-private games', gfOpenNFP:'Show open & non-full & private games', gfOpenNFR:'Show open & non-full & ranking games',
 };
 
 export default { meta, strings };
