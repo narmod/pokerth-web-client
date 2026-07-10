@@ -353,6 +353,7 @@ export const strings = {
     rankingMemberSince:'Membre depuis', rankingAwards:'Récompenses', rankingTickets:'Tickets', rankingThisSeason:'Cette saison', rankingStep:'Palier', rankingRank:'Rang', rankingBack:'Retour', rankingThisMonth:'Ce mois', rankingThisYear:'Cette année', rankingCurrentSeason:'Saison actuelle', themeExport:'Exporter le thème (.zip)', sectionAdvanced:'Options avancées', rankingSeasonStats:'Stats de saison', rankingShare:'Part', rankingResults:'Résultats', rankingToggleChart:'Basculer barres / camembert',
     footPlayer:'Joueur', footCreate:'＋ Créer une partie', gameInfoTitle:'Infos de partie', gameInfoEmpty:'Sélectionne une partie',
     gfNone:'Aucun filtre', gfOpen:'Jeux ouverts', gfOpenNF:'Jeux ouverts et non complets', gfOpenNFNP:'Jeux ouverts, non complets, non privés', gfOpenNFP:'Jeux ouverts, non complets, privés', gfOpenNFR:'Jeux ouverts, non complets, classés',
+    infoTypeLabel:'Type', infoCapitalLabel:'Capital', infoPlayersInGame:'Joueurs dans la partie', reportGameTitle:'Signaler le nom de la partie', reportGameConfirm:'Signaler', reportGameMsg:'Voulez-vous vraiment signaler le nom de la partie « {name} » comme inapproprié ?', reportGameDone:'Nom de la partie signalé. Merci.',
 };
 
 export default { meta, strings };

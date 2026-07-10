@@ -4279,6 +4279,7 @@ const App = (() => {
   let _tableFilter = (function(){
     try { var v = localStorage.getItem('pth_table_filter'); return (v && /^[0-5]$/.test(v)) ? v : '0'; } catch(e) { return '0'; }
   })();
+  let _selectedGame = null;   // partie sélectionnée pour le panneau « Infos de partie »
   let autoAction = false;
   let amGameAdmin = false;  // true if we created this game
 
@@ -7123,6 +7124,62 @@ const App = (() => {
       return '<span class="gp-player' + (nm ? '' : ' gp-pending') + '">' + av + '<span class="gp-name">' + label + '</span>' + flag + '</span>';
     }).join('');
   }
+
+  // ── Panneau « Infos de partie » (parité officielle) : Type · SB/Capital ·
+  //    Joueurs dans la partie. Alimenté au clic sur une ligne. Les libellés
+  //    portent data-i18n → retraduits automatiquement par setLang. ──
+  var _GTYPE_KEY = { 1:'gtypeNormal', 2:'gtypeRegistered', 3:'gtypeInvite', 4:'gtypeRanked' };
+  function _renderInfoPlayerRows(gid) {
+    var g = games[gid]; if (!g) return '';
+    var seats = g.seats || [];
+    if (!seats.length) return '<div class="lgi-pempty">' + t('tablePlayersEmpty') + '</div>';
+    return seats.map(function(pid){
+      var nm = players[pid];
+      if (!nm && !_pendingNameRequests.has(pid)) {
+        _pendingNameRequests.add(pid);
+        try { send(Proto.encode([[1,0,T.PlayerInfoRequest],[19,2,Proto.encode([[1,0,pid]])]])); } catch(e) {}
+      }
+      var flag  = _ccToFlag(_playerCountries[pid], 'gp-flag');
+      var label = nm ? esc(nm) : '#' + pid;
+      var av    = _avatarChipHtml(pid, label, 'gp-av');
+      return '<div class="lgi-prow' + (nm ? '' : ' lgi-pending') + '">' + av + flag + '<span class="lgi-pname">' + label + '</span></div>';
+    }).join('');
+  }
+  function renderGameInfoPanel(gid) {
+    var el = document.getElementById('lobby-gameinfo');
+    if (!el) return;
+    var g = (gid != null) ? games[gid] : null;
+    if (!g) {
+      el.innerHTML = '<div class="g-chat-panel-header"><span class="lgi-htitle" data-i18n="gameInfoTitle">' + t('gameInfoTitle') + '</span></div>'
+                   + '<div class="lgi-empty" data-i18n="gameInfoEmpty">' + t('gameInfoEmpty') + '</div>';
+      return;
+    }
+    var typeKey = _GTYPE_KEY[g.type];
+    var typeLbl = GTYPE(g.type) || '';
+    var seats   = g.seats || [];
+    el.innerHTML =
+      '<div class="g-chat-panel-header">'
+        + '<span class="lgi-htitle" data-i18n="gameInfoTitle">' + t('gameInfoTitle') + '</span>'
+        + '<button class="lgi-report" type="button" onclick="App.reportGameName(' + parseInt(gid) + ')" title="' + t('reportGameTitle') + '" data-i18n-title="reportGameTitle" aria-label="' + t('reportGameTitle') + '">🚩</button>'
+      + '</div>'
+      + '<div class="lgi-scroll">'
+        + '<div class="lgi-row"><span class="lgi-ico">🎲</span> <span data-i18n="infoTypeLabel">' + t('infoTypeLabel') + '</span> : '
+          + (typeKey ? '<span data-i18n="' + typeKey + '">' + esc(typeLbl) + '</span>' : esc(typeLbl)) + '</div>'
+        + '<div class="lgi-row lgi-blinds">SB : ' + _groupThousands(g.smallBlind || 0)
+          + ' | <span data-i18n="infoCapitalLabel">' + t('infoCapitalLabel') + '</span> : ' + _groupThousands(g.startMoney || 0) + '</div>'
+        + '<div class="lgi-ptitle"><span data-i18n="infoPlayersInGame">' + t('infoPlayersInGame') + '</span> (' + seats.length + ')</div>'
+        + '<div class="lgi-players">' + _renderInfoPlayerRows(gid) + '</div>'
+      + '</div>';
+  }
+  // Rafraîchit le panneau si une partie est sélectionnée (noms/joueurs qui arrivent).
+  function _refreshGameInfoPanel() {
+    if (_selectedGame != null) {
+      if (games[_selectedGame]) renderGameInfoPanel(_selectedGame);
+      else { _selectedGame = null; renderGameInfoPanel(null); }
+    }
+  }
+  window._refreshGameInfoPanel = _refreshGameInfoPanel;   // rappelé par setLang (i18n.mjs)
+
   function _tableHasPid(pid) {
     for (const k of _openTables) {
       const g = games[k];
@@ -7224,7 +7281,8 @@ const App = (() => {
       var _blUp = (g.raiseMode === 2) ? (g.raiseMins > 0 ? t('blindsUpMins', { n: g.raiseMins }) : '') : (g.raiseHands > 0 ? t('blindsUpHands', { n: g.raiseHands }) : '');
       if (_blUp) metaBits.push('<span>\u2B06 ' + _blUp + '</span>');
       if (g.timeout)    metaBits.push('<span>\u23F1 ' + g.timeout + 's</span>');
-      return '<div class="game-row gcard" onclick="App.toggleTablePlayers(' + parseInt(gid) + ')">'
+      var _sel = (String(gid) === String(_selectedGame)) ? ' sel' : '';
+      return '<div class="game-row gcard' + _sel + '" onclick="App.selectGame(' + parseInt(gid) + ')">'
         + '<div class="gcard-main">'
         + '<div class="game-name">' + lock + esc(g.name)
         + ' <span class="game-badge ' + badgeCls + '">' + label + '</span></div>'
@@ -7232,11 +7290,9 @@ const App = (() => {
         + (seatDots ? '<div class="game-seats">' + seatDots + '</div>' : '')
         + '</div>'
         + '<div class="gcard-btns">' + joinBtn + watchBtn + '</div>'
-        + '</div>'
-        + '<div class="game-players' + (_openTables.has(String(gid)) ? ' open' : '') + '" id="gp-' + parseInt(gid) + '"' + (_openTables.has(String(gid)) ? '' : ' hidden') + '>'
-        + (_openTables.has(String(gid)) ? renderTablePlayers(gid) : '')
         + '</div>';
     }).join('');
+    _refreshGameInfoPanel();
   }
 
   // ── CHAT ──
@@ -11495,10 +11551,40 @@ function dismissWinner() {
       var msg = Proto.encode([[1,0,gameId],[2,2,pass||'']]);
       send(Proto.encode([[1,0,21],[22,2,msg]]));
     },
-    toggleTablePlayers(gid) {
-      const key = String(gid);
-      if (_openTables.has(key)) _openTables.delete(key); else _openTables.add(key);
-      renderGames();
+    // Clic sur une ligne de partie → sélection + panneau « Infos de partie »
+    // (remplace l'ancienne liste dépliable sous la ligne).
+    selectGame(gid) {
+      _selectedGame = gid;
+      renderGameInfoPanel(gid);
+      renderGames();  // surbrillance de la ligne sélectionnée
+      if (window._lobby3OpenInfo) window._lobby3OpenInfo();  // slide-in en compact
+    },
+    // Conservé pour rétro-compat éventuelle ; délègue à la sélection.
+    toggleTablePlayers(gid) { this.selectGame(gid); },
+
+    // ── Signaler le nom de la partie (parité officielle) ──
+    reportGameName(gid) {
+      var g = games[gid]; if (!g) return;
+      this._reportGid = gid;
+      var msg = document.getElementById('rcm-msg');
+      if (msg) msg.textContent = t('reportGameMsg', { name: g.name || ('#' + gid) });
+      var modal = document.getElementById('report-confirm-modal');
+      if (modal) modal.style.display = 'flex';
+    },
+    cancelReportGame() {
+      var modal = document.getElementById('report-confirm-modal');
+      if (modal) modal.style.display = 'none';
+      this._reportGid = null;
+    },
+    doReportGame() {
+      var gid = this._reportGid;
+      this.cancelReportGame();
+      if (gid == null) return;
+      // NOTE : l'envoi serveur (modération) n'existe pas encore côté protocole
+      // web — à brancher avec sp0ck. Pour l'instant : accusé local.
+      try { addChat(null, t('reportGameDone'), 'sys'); } catch(e) {}
+      var btn = document.querySelector('#lobby-gameinfo .lgi-report');
+      if (btn) { var o = btn.textContent; btn.textContent = '✅'; setTimeout(function(){ btn.textContent = o; }, 1800); }
     },
     joinGame(gameId) {
       const g = games[gameId];
@@ -13512,7 +13598,7 @@ function renderPlayersList() {
   body.innerHTML = html;
 }
 
-;(function(){ window.BUILD_VERSION='0.3.230-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.231-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

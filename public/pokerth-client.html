@@ -1777,6 +1777,20 @@ if ('serviceWorker' in navigator) {
   </div>
 </div>
 
+<!-- Signaler le nom de la partie (parité officielle) — même style que kick-confirm. -->
+<div id="report-confirm-modal" style="display:none">
+  <div class="km-backdrop" onclick="App.cancelReportGame()"></div>
+  <div class="kcm-card" role="alertdialog" aria-labelledby="rcm-title">
+    <div class="kcm-icon">🚩</div>
+    <div class="kcm-title" id="rcm-title" data-i18n="reportGameTitle">Report the game name</div>
+    <div class="kcm-msg" id="rcm-msg">—</div>
+    <div class="kcm-btns">
+      <button class="kcm-cancel" type="button" onclick="App.cancelReportGame()" data-i18n="leaveCancel">Cancel</button>
+      <button class="kcm-confirm" type="button" onclick="App.doReportGame()"><span data-i18n="reportGameConfirm">Report</span></button>
+    </div>
+  </div>
+</div>
+
 <!-- Ranking modal (connect screen) — PokerTH / BBC / WEC leaderboards via the
      same-origin /api/ranking relay (proxy.js). Entry: 🏆 button next to the
      corner globe. BBC supports a season dropdown + All-Time (season 0) like the
