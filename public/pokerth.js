@@ -13512,7 +13512,7 @@ function renderPlayersList() {
   body.innerHTML = html;
 }
 
-;(function(){ window.BUILD_VERSION='0.3.229-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.230-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
@@ -13667,17 +13667,26 @@ function renderPlayersList() {
       h.addEventListener('pointerdown', startDrag);
       g.appendChild(h);
     });
+    if(!g.querySelector('.lob-hm')){
+      var hm=document.createElement('div');
+      hm.className='lob-hm'; hm.dataset.lobh='m';
+      hm.addEventListener('pointerdown', startDrag);
+      g.appendChild(hm);
+    }
     try{
-      var L=localStorage.getItem('pth_lob_l'), R=localStorage.getItem('pth_lob_r'), I=localStorage.getItem('pth_lob_info');
+      var L=localStorage.getItem('pth_lob_l'), R=localStorage.getItem('pth_lob_r'), I=localStorage.getItem('pth_lob_info'), M=localStorage.getItem('pth_lob_mgames');
       if(L) g.style.setProperty('--lc-l', parseInt(L,10)+'px');
       if(R) g.style.setProperty('--lc-r', parseInt(R,10)+'px');
       if(I) g.style.setProperty('--lc-info', parseInt(I,10)+'px');
+      if(M) g.style.setProperty('--m-games-h', parseInt(M,10)+'px');
     }catch(e){}
   }
   function startDrag(e){
-    if(!W()) return;
+    var k=e.currentTarget.dataset.lobh;
+    // Poignées l/r/v = wide uniquement ; poignée m = compact uniquement.
+    if(k==='m'){ if(W()) return; } else { if(!W()) return; }
     var g=grid(); if(!g) return;
-    var k=e.currentTarget.dataset.lobh, gr=g.getBoundingClientRect(), self=e.currentTarget;
+    var gr=g.getBoundingClientRect(), self=e.currentTarget;
     self.classList.add('drag');
     try{ self.setPointerCapture(e.pointerId); }catch(_){}
     function move(ev){
@@ -13687,9 +13696,12 @@ function renderPlayersList() {
       } else if(k==='r'){
         var maxR=gr.width - MINC - MINL - 2*HW;
         g.style.setProperty('--lc-r', Math.round(Math.max(MINR, Math.min(gr.right-ev.clientX, maxR)))+'px');
-      } else {
+      } else if(k==='v'){
         var maxI=gr.height - MININFO - HW;
         g.style.setProperty('--lc-info', Math.round(Math.max(MININFO, Math.min(ev.clientY-gr.top, maxI)))+'px');
+      } else { // 'm' : hauteur des Tables en compact (le Chat remplit le reste)
+        var maxM=gr.height - 130 - 16;
+        g.style.setProperty('--m-games-h', Math.round(Math.max(120, Math.min(ev.clientY-gr.top, maxM)))+'px');
       }
     }
     function up(){
@@ -13698,9 +13710,13 @@ function renderPlayersList() {
       document.removeEventListener('pointerup',up,true);
       try{
         var cs=getComputedStyle(g);
-        localStorage.setItem('pth_lob_l', parseInt(cs.getPropertyValue('--lc-l'))||240);
-        localStorage.setItem('pth_lob_r', parseInt(cs.getPropertyValue('--lc-r'))||300);
-        localStorage.setItem('pth_lob_info', parseInt(cs.getPropertyValue('--lc-info'))||220);
+        if(k==='m'){
+          localStorage.setItem('pth_lob_mgames', parseInt(cs.getPropertyValue('--m-games-h'))||0);
+        } else {
+          localStorage.setItem('pth_lob_l', parseInt(cs.getPropertyValue('--lc-l'))||240);
+          localStorage.setItem('pth_lob_r', parseInt(cs.getPropertyValue('--lc-r'))||300);
+          localStorage.setItem('pth_lob_info', parseInt(cs.getPropertyValue('--lc-info'))||220);
+        }
       }catch(_){}
     }
     document.addEventListener('pointermove',move,true);

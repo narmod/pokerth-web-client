@@ -7198,16 +7198,16 @@ html[data-buttons="pokerth"] .btn-action[disabled] { filter: grayscale(0.55) bri
 @media (max-width: 899.98px) {
   #s-lobby { overflow:hidden; }
   #s-lobby .lobby-body { flex:1 1 auto; min-height:0; overflow:hidden; display:flex; flex-direction:column; padding:10px 10px; }
-  #s-lobby .lobby-grid { flex:1 1 auto; min-height:0; display:flex; flex-direction:column; gap:8px; }
+  #s-lobby .lobby-grid { flex:1 1 auto; min-height:0; display:flex; flex-direction:column; gap:8px; align-items:stretch; }
   .lob-h { display:none !important; }
 
-  #s-lobby .lobby-grid > .games-col { order:1; flex:1 1 0; min-height:0; display:flex; flex-direction:column; }
+  #s-lobby .lobby-grid > .games-col { order:1; flex:0 0 var(--m-games-h, 52%); min-height:0; display:flex; flex-direction:column; }
   #s-lobby .lobby-grid > .games-col .games-scroll { flex:1 1 auto; min-height:0; overflow-y:auto; align-content:start; }
 
   /* Chat intégré sous les tables (plus de fenêtre flottante ni d'overlay) */
   #s-lobby .lobby-grid > #lobby-chat-panel {
-    order:2; position:static !important; inset:auto !important; transform:none !important;
-    display:flex !important; width:auto !important; flex:1 1 0; min-height:160px;
+    order:3; position:static !important; inset:auto !important; transform:none !important;
+    display:flex !important; width:auto !important; flex:1 1 0; min-height:140px;
     max-height:none !important; box-shadow:none; z-index:auto;
     border:1px solid var(--border); border-radius:8px;
   }
@@ -7269,4 +7269,18 @@ html[data-buttons="pokerth"] .btn-action[disabled] { filter: grayscale(0.55) bri
   border-radius: 8px;
   background: var(--panel);
   padding: 8px;
+}
+
+/* Poignée de redimensionnement Tables/Chat — MOBILE uniquement (SplitView vertical) */
+.lob-hm { display:none; }
+@media (max-width: 899.98px) {
+  .lob-hm {
+    display:block; order:2; flex:0 0 16px; position:relative;
+    cursor:row-resize; touch-action:none;
+  }
+  .lob-hm::after {
+    content:''; position:absolute; left:30%; right:30%; top:50%; height:4px;
+    transform:translateY(-50%); background:var(--border); border-radius:3px;
+  }
+  .lob-hm:active::after, .lob-hm.drag::after { background:var(--gold); }
 }
