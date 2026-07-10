@@ -356,6 +356,7 @@ export const strings = {
     infoTypeLabel:'Type', infoCapitalLabel:'Capital', infoPlayersInGame:'Players in game', reportGameTitle:'Report the game name', reportGameConfirm:'Report', reportGameMsg:'Do you really want to report the game name « {name} » as inappropriate?', reportGameDone:'Game name reported. Thank you.',
     plIgnore:'Ignore', plStats:'Player stats',
     plSortAlpha:'Sort alphabetically', plShowIdle:'Display idle players', plHideIdle:'Hide idle players',
+    plNotPlaying:'Not playing',
 };
 
 export default { meta, strings };

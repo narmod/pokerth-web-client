@@ -13530,6 +13530,8 @@ window.plSortSelect = function (val) {
 // Monochromes (currentColor) pour suivre le thème, comme l'officiel.
 var _PL_BAN_SVG = '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><line x1="5.6" y1="5.6" x2="18.4" y2="18.4"/></svg>';
 var _PL_BAR_SVG = '<svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" aria-hidden="true"><rect x="4" y="12" width="4" height="8" rx="1"/><rect x="10" y="7" width="4" height="13" rx="1"/><rect x="16" y="3" width="4" height="17" rx="1"/></svg>';
+// Manette : statut « en partie » (colonne dédiée). Allumée si le joueur joue.
+var _PL_PAD_SVG = '<svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true"><path d="M6.5 7h11a4 4 0 0 1 4 4v3.1A2.9 2.9 0 0 1 16.3 16l-1-1.4H8.7l-1 1.4A2.9 2.9 0 0 1 2.5 14.1V11a4 4 0 0 1 4-4Zm.5 3v1.5H5.5V13H7v1.5h1.5V13H10v-1.5H8.5V10H7Zm8.6.1a1 1 0 1 0 0 2 1 1 0 0 0 0-2Zm1.9-1.9a1 1 0 1 0 0 2 1 1 0 0 0 0-2Z"/></svg>';
 // Bascule ignorer depuis la LISTE (léger : toggle + re-render, sans ouvrir le
 // popup — contrairement à window._toggleIgnore qui est pour la carte joueur).
 window._plToggleIgnore = function(pid){
@@ -13626,11 +13628,9 @@ function renderPlayersList() {
       + ' onclick="window.openPlayerInfoPopup(' + r.pid + ')"'
       + ' onkeydown="if(event.key===\'Enter\')window.openPlayerInfoPopup(' + r.pid + ')">'
       + esc(r.name) + '</span>';
-    // Activité (pré-calculée) : nom de la table sous le pseudo, comme la
-    // maquette A ; rien pour un joueur au lobby.
-    var actHtml = r.act
-      ? '<span class="pl-game" title="' + esc((typeof t === 'function' ? t('modeInProgress') : '') + ' \u00b7 ' + r.act) + '">\uD83C\uDFAE ' + esc(r.act) + '</span>'
-      : '';
+    // Statut « en partie » : une seule manette dans sa colonne (allumée si le
+    // joueur est dans une partie, éteinte sinon). Plus de nom de partie sous le pseudo.
+    var _status = '<span class="pl-status' + (r.act ? ' on' : '') + '" title="' + (r.act ? esc(r.act) : _tt('plNotPlaying','Not playing')) + '">' + _PL_PAD_SVG + '</span>';
     var _ign  = _isIgnored(r.name);
     var _acts = '<span class="pl-acts">'
       + '<button type="button" class="pl-act pl-act-ban' + (_ign ? ' on' : '') + '" title="' + _tt('plIgnore','Ignore') + '" aria-label="' + _tt('plIgnore','Ignore') + '" onclick="event.stopPropagation();window._plToggleIgnore(' + r.pid + ')">' + _PL_BAN_SVG + '</button>'
@@ -13638,7 +13638,8 @@ function renderPlayersList() {
       + '</span>';
     return '<div class="pl-row' + (r.isMe ? ' pl-me' : '') + '">' +
              avChip +
-             '<span class="pl-name">' + nameHtml + actHtml + '</span>' +
+             '<span class="pl-name">' + nameHtml + '</span>' +
+             _status +
              '<span class="pl-flag">' + flag + (cc ? '<span class="pl-cc">' + cc + '</span>' : '') + '</span>' +
              '<span class="pl-star">' + (r.isMe ? '★' : '') + '</span>' +
              _acts +
@@ -13658,23 +13659,13 @@ function renderPlayersList() {
       if (_idleOpt) _idleOpt.textContent = _showIdle ? _tt('plHideIdle', 'Hide idle players') : _tt('plShowIdle', 'Display idle players');
     }
   } catch (e) {}
-  var html = '';
-  if (!_showIdle) {
-    // Uniquement les joueurs en partie.
-    html = _inGame.map(rowHtml).join('');
-    if (!_inGame.length) html = '<div class="pl-empty">—</div>';
-  } else if (_inGame.length && _atLobby.length) {
-    html += '<div class="pl-sec">\uD83C\uDFAE ' + _tt('plInGame', 'In game') + ' <span class="pl-sec-n">\u00b7 ' + _inGame.length + '</span></div>';
-    html += _inGame.map(rowHtml).join('');
-    html += '<div class="pl-sec">\uD83D\uDECB\uFE0F ' + _tt('plLobby', 'In the lobby') + ' <span class="pl-sec-n">\u00b7 ' + _atLobby.length + '</span></div>';
-    html += _atLobby.map(rowHtml).join('');
-  } else {
-    html = _inGame.concat(_atLobby).map(rowHtml).join('');
-  }
-  body.innerHTML = html;
+  // Liste À PLAT (parité officielle) : plus de sections « en partie » / « au lobby ».
+  // Le tri est déjà appliqué à `rows` ; le filtre inactifs masque les joueurs hors partie.
+  var _shown = _showIdle ? rows : rows.filter(function(r){ return r.act; });
+  body.innerHTML = _shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>';
 }
 
-;(function(){ window.BUILD_VERSION='0.3.235-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.236-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

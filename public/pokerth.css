@@ -7317,3 +7317,7 @@ html[data-buttons="pokerth"] .btn-action[disabled] { filter: grayscale(0.55) bri
 /* Déroulant de tri en bas de la colonne Joueurs connectés (parité officielle) */
 .pl-sortbar { flex:0 0 auto; padding:6px 8px; border-top:1px solid var(--border); background:var(--chrome-tint,var(--panel)); }
 .pl-sortbar .sel-wrap { width:100%; }
+
+/* Colonne statut « en partie » : manette allumée (vert) si le joueur joue, éteinte sinon */
+.players-list .pl-row .pl-status { flex:0 0 auto; display:inline-flex; align-items:center; justify-content:center; width:22px; color:var(--border); line-height:0; }
+.players-list .pl-row .pl-status.on { color:var(--green,#50c878); }
