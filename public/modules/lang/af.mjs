@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+  showPlayers: `Wys spelers`,
   footJoin: `Sluit aan`,
   spectatingBadge: `Toeskouer`,
   reportGameTitle: `Rapporteer onvanpaste spelnaam`, reportGameConfirm: `Rapporteer`, reportGameMsg: `Is jy seker jy wil die spelnaam "{name}" as onvanpas rapporteer?`, reportGameAccepted: `Die spelnaamrapport is deur die bediener aanvaar. Dankie.`, reportGameDup: `Hierdie spelnaam is reeds deur 'n ander speler gerapporteer.`, reportGameError: `'n Interne fout het voorgekom toe spelnaam gerapporteer is.`,

@@ -9,6 +9,7 @@ export const meta = {
 };
 
 export const strings = {
+  showPlayers: `Näytä pelaajat`,
   footJoin: `Liity`,
   spectatingBadge: `Katsoja`,
   reportGameTitle: `Ilmoita sopimattomasta pelin nimestä`, reportGameConfirm: `Ilmoita`, reportGameMsg: `Haluatko varmasti ilmoittaa pelin nimen "{name}" sopimattomaksi?`, reportGameAccepted: `Palvelin hyväksyi ilmoituksen pelin nimestä. Kiitos.`, reportGameDup: `Toinen pelaaja on jo ilmoittanut tästä pelin nimestä.`, reportGameError: `Pelin nimen ilmoittamisessa tapahtui virhe.`,

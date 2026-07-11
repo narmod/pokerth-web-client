@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+  showPlayers: `Εμφάνιση παικτών`,
   footJoin: `Είσοδος`,
   spectatingBadge: `Θεατής`,
   reportGameTitle: `Αναφορά ακατάλληλου ονόματος παιχνιδιού`, reportGameConfirm: `Αναφορά`, reportGameMsg: `Είστε βέβαιοι ότι θέλετε να αναφέρετε το όνομα παιχνιδιού «{name}» ως ακατάλληλο;`, reportGameAccepted: `Η αναφορά του ονόματος παιχνιδιού έγινε δεκτή από τον διακομιστή. Ευχαριστούμε.`, reportGameDup: `Αυτό το όνομα παιχνιδιού έχει ήδη αναφερθεί από άλλον παίκτη.`, reportGameError: `Παρουσιάστηκε σφάλμα κατά την αναφορά του ονόματος παιχνιδιού.`,

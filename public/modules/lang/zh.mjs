@@ -11,6 +11,7 @@ export const meta = {
 };
 
 export const strings = {
+  showPlayers: `显示玩家`,
   footJoin: `加入`,
   spectatingBadge: `观战中`,
   reportGameTitle: `举报不当的游戏名称`, reportGameConfirm: `举报`, reportGameMsg: `确定要将游戏名称"{name}"举报为不当内容吗？`, reportGameAccepted: `服务器已接受该游戏名称的举报。谢谢。`, reportGameDup: `该游戏名称已被其他玩家举报。`, reportGameError: `举报游戏名称时发生错误。`,

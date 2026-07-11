@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+  showPlayers: `Прикажи играче`,
   footJoin: `Uđi`,
   spectatingBadge: `Гледалац`,
   reportGameTitle: `Пријави неприкладан назив игре`, reportGameConfirm: `Пријави`, reportGameMsg: `Да ли сте сигурни да желите да пријавите назив игре „{name}“ као неприкладан?`, reportGameAccepted: `Сервер је прихватио пријаву назива игре. Хвала.`, reportGameDup: `Овај назив игре је већ пријавио други играч.`, reportGameError: `Дошло је до грешке при пријави назива игре.`,

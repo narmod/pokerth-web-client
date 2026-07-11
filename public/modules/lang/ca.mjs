@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+  showPlayers: `Mostra els jugadors`,
   footJoin: `Entra`,
   spectatingBadge: `Espectador`,
   reportGameTitle: `Reporteu un nom de joc no apropiat`, reportGameConfirm: `Reporta`, reportGameMsg: `Esteu segur que voleu reportar el nom de joc: "{name}" com a no apropriat?`, reportGameAccepted: `L'informe del nom de joc ha sigut acceptat pel servidor. Gràcies.`, reportGameDup: `Aquest informe de nom de joc ja ha estat reportat per un altre jugador.`, reportGameError: `S'ha produït un error quan s'estava reportant el nom de joc.`,

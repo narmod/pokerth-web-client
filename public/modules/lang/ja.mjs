@@ -9,6 +9,7 @@ export const meta = {
 };
 
 export const strings = {
+  showPlayers: `プレイヤーを表示`,
   footJoin: `参加`,
   spectatingBadge: `観戦中`,
   reportGameTitle: `不適切なゲーム名を報告`, reportGameConfirm: `報告`, reportGameMsg: `ゲーム名「{name}」を不適切として報告してもよろしいですか？`, reportGameAccepted: `ゲーム名の報告がサーバーに受理されました。ありがとうございます。`, reportGameDup: `このゲーム名は既に他のプレイヤーによって報告されています。`, reportGameError: `ゲーム名の報告中にエラーが発生しました。`,

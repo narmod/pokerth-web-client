@@ -12,6 +12,7 @@ export const meta = {
 };
 
 export const strings = {
+  showPlayers: `Oyuncuları göster`,
   footJoin: `Katıl`,
   spectatingBadge: `İzleyici`,
   reportGameTitle: `Uygunsuz oyun adını bildir`, reportGameConfirm: `Bildir`, reportGameMsg: `"{name}" oyun adını uygunsuz olarak bildirmek istediğinize emin misiniz?`, reportGameAccepted: `Oyun adı bildirimi sunucu tarafından kabul edildi. Teşekkürler.`, reportGameDup: `Bu oyun adı zaten başka bir oyuncu tarafından bildirilmiş.`, reportGameError: `Oyun adı bildirilirken bir hata oluştu.`,

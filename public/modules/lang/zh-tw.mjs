@@ -11,6 +11,7 @@ export const meta = {
 };
 
 export const strings = {
+  showPlayers: `顯示玩家`,
   footJoin: `加入`,
   spectatingBadge: `觀戰中`,
   reportGameTitle: `檢舉不當的遊戲名稱`, reportGameConfirm: `檢舉`, reportGameMsg: `確定要將遊戲名稱「{name}」檢舉為不當內容嗎？`, reportGameAccepted: `伺服器已接受該遊戲名稱的檢舉。謝謝。`, reportGameDup: `該遊戲名稱已被其他玩家檢舉。`, reportGameError: `檢舉遊戲名稱時發生錯誤。`,

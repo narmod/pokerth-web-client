@@ -11,6 +11,7 @@ export const meta = {
 };
 
 export const strings = {
+  showPlayers: `Seall cluicheadairean`,
   footJoin: `Gabh pàirt`,
   spectatingBadge: `Neach-amhairc`,
   reportGameTitle: `Aithris ainm cluicheadair mì-iomchaidh`, reportGameConfirm: `Aithris`, reportGameMsg: `A bheil thu cinnteach gu bheil thu airson ainm a' gheama: "{name}" aithris mar mhì-iomchaidh?`, reportGameAccepted: `Ghabh am frithealaiche ris an aithris air ainm a' gheama. Mòran taing.`, reportGameDup: `Chaidh ainm a' gheama seo aithris le cluicheadair eile mu thràth.`, reportGameError: `Thachair mearachd le aithris air ainm a' gheama.`,

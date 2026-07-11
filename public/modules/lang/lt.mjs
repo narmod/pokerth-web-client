@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+  showPlayers: `Rodyti žaidėjus`,
   footJoin: `Prisijungti`,
   spectatingBadge: `Stebėtojas`,
   reportGameTitle: `Pranešti apie netinkamą žaidimo pavadinimą`, reportGameConfirm: `Pranešti`, reportGameMsg: `Ar tikrai norite pranešti apie žaidimo pavadinimą „{name}“ kaip netinkamą?`, reportGameAccepted: `Serveris priėmė pranešimą apie žaidimo pavadinimą. Ačiū.`, reportGameDup: `Apie šį žaidimo pavadinimą jau pranešė kitas žaidėjas.`, reportGameError: `Pranešant apie žaidimo pavadinimą įvyko klaida.`,
