@@ -61,8 +61,7 @@ const PALETTES = [
 // 'felt' = feutre ovale (--felt-img). id '' = PokerTH officiel fullscreen (defaut).
 const TABLES = [
   { id: '',             key: 'tablePokerthOfficial', fallback: 'PokerTH',      swatch: '#1d222b', feltUrl: '/table/pokerth-official-fs/felt.png', mode: 'fs',   puck: 'pokerth', btn: 'glossy' },
-  { id: 'pokerth-live', key: 'tablePokerthLive',     fallback: 'PokerTH Live', swatch: '#0e4a2a', feltUrl: '/table/pokerth-live/felt.png',        mode: 'full', puck: 'pokerth', btn: 'glossy' },
-  { id: 'green',        key: 'tableGreenFelt',       fallback: 'Table Green',  swatch: '#1e6b1e', feltUrl: '/table/felt-green.jpg',               mode: 'felt', puck: 'pokerth', btn: 'glossy' },
+  { id: 'pokerth-live', key: 'tablePokerthLive',     fallback: 'Spectator Tools', swatch: '#0e4a2a', feltUrl: '/table/pokerth-live/felt.png',        mode: 'full', puck: 'pokerth', btn: 'glossy' },
   { id: 'casino',       key: 'tableCasino',          fallback: 'Green Casino', swatch: '#1e6b1e', feltUrl: '/table/felt-green.jpg',               mode: 'felt', puck: 'casino',  btn: 'casino' },
   // Tapis par defaut du client QML (data/gfx/qml/table/*, AGPL-3.0) — plein ecran.
   { id: 'danuxi', key: 'tableDanuxi', fallback: "Danuxi Blue", swatch: '#1f3a5c', feltUrl: '/table/danuxi/felt.png', preview: '/table/danuxi/preview.png', mode: 'fs', skin: true, align: 'center' },
@@ -206,6 +205,8 @@ try {
 // Selecteur pucks retire (fenetre style QML) : les pucks suivent toujours le tapis.
 // On force pth_pucks vide (Auto) une fois pour tous.
 try { if (!localStorage.getItem('pth_pucksC_mig')) { localStorage.removeItem('pth_pucks'); localStorage.setItem('pth_pucksC_mig','1'); } } catch (e) {}
+// Table « Green » retiree : les utilisateurs qui l'avaient retombent sur le defaut.
+try { if (localStorage.getItem('pth_table') === 'green') { localStorage.removeItem('pth_table'); localStorage.removeItem('pth_table_css'); localStorage.removeItem('pth_table_fs'); localStorage.removeItem('pth_table_full'); } } catch (e) {}
 
 // Apply saved values on load (idempotent with the <head> boot snippet).
 try { if (!localStorage.getItem('pth_seat_dmig')) { if (localStorage.getItem('pth_seat') === '') localStorage.removeItem('pth_seat'); localStorage.setItem('pth_seat_dmig', '1'); } } catch (e) {}
