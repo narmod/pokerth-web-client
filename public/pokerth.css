@@ -7241,6 +7241,14 @@ html[data-buttons="pokerth"] .btn-action[disabled] { filter: grayscale(0.55) bri
 .lobby-footbar .lfb-spectate { border-color:rgba(var(--blue-rgb),0.55); background:rgba(var(--blue-rgb),0.12); color:var(--info); }
 .lobby-footbar .lfb-spectate:hover { background:rgba(var(--blue-rgb),0.22); }
 
+/* Mobile (téléphone) : le pseudo passe sur sa propre ligne et les boutons
+   Rejoindre/Spectateur/Créer se placent EN DESSOUS, côte à côte à parts égales
+   (sinon 3 éléments sur une ligne étroite tronquent les libellés). */
+@media (max-width: 640px) {
+  .lobby-footbar { flex-wrap:wrap; }
+  .lobby-footbar .lfb-name { flex:1 1 100%; }
+}
+
 /* Infos placeholder (rempli en Phase 2) */
 #lobby-gameinfo { display:none; flex-direction:column; }
 #lobby-gameinfo .lgi-empty { flex:1 1 auto; display:flex; align-items:center; justify-content:center;
