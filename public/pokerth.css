@@ -5816,6 +5816,34 @@ body:not(.in-game) .my-zone {
 .btn-cf-reset:hover  { border-color: var(--border-hi); color: var(--gold); }
 .btn-cf-reset:active { transform: scale(0.98); }
 
+/* ── Barre d'actions du formulaire « Créer une table » ──
+   Même forme que les boutons de la barre du bas du lobby (.lobby-footbar .lfb-*) :
+   coins arrondis 8 px, ff-display 600. Trois actions alignées :
+   Réinitialiser (neutre) · Annuler (retour lobby, rouge doux) · Créer (or, primaire). */
+.cf-actions {
+  display: flex;
+  align-items: stretch;
+  gap: 10px;
+  margin-top: 4px;
+}
+.cf-actions > button {
+  flex: 1 1 0; min-width: 0; text-align: center;
+  border: 1px solid transparent; border-radius: 8px; padding: 9px 14px;
+  cursor: pointer; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  font-family: var(--ff-display); font-weight: 600; font-size: 0.92rem; letter-spacing: 0.02em;
+  transition: background 0.15s, border-color 0.15s, color 0.15s, transform 0.1s, box-shadow 0.15s;
+}
+.cf-actions > button:active { transform: scale(0.98); }
+/* Réinitialiser — neutre (bordure or atténuée) ; ne s'étire pas (icône seule sur mobile) */
+.cf-actions .btn-cf-reset { flex-grow: 0; background: transparent; color: var(--text-hi); border-color: var(--gold-dim); }
+.cf-actions .btn-cf-reset:hover { border-color: var(--border-hi); color: var(--gold); }
+/* Annuler — retour au lobby sans créer (rouge doux, comme une annulation QML) */
+.cf-actions .btn-cf-cancel { background: rgba(var(--red-rgb), 0.10); color: var(--red); border-color: rgba(var(--red-rgb), 0.5); }
+.cf-actions .btn-cf-cancel:hover { background: rgba(var(--red-rgb), 0.20); }
+/* Créer — action primaire (or plein), un peu plus large */
+.cf-actions .cf-create-btn { flex-grow: 1.6; background: var(--gold); color: var(--on-gold); border-color: transparent; box-shadow: 0 4px 16px rgba(var(--gold-rgb), 0.2); }
+.cf-actions .cf-create-btn:hover { background: var(--gold-hi); box-shadow: 0 6px 24px rgba(var(--gold-rgb), 0.35); }
+
 /* ── Reusable toast (showToast in pokerth.js) ──
    Styled to match the header ••• overflow menu: dark panel, gold-hi hairline
    border, soft drop shadow, Inconsolata. */

@@ -189,7 +189,7 @@ export const strings = {
     errGuestsNotAllowed:'Registered accounts only — guests cannot join',
     errInvalidGame:'Cannot join this game',
     moreOptions:'More options', lessOptions:'Less options',
-    resetForm:'↺ Reset', fieldsReset:'Fields reset',
+    resetForm:'↺ Reset', cancelBtn:'Cancel', fieldsReset:'Fields reset',
     nameTooLong:'Table name too long (max {max} characters) — the table cannot be created.',
     addPassword:'Add a password (optional)', tablePassword:'Password:',
     rememberMe:'Remember nickname (password never stored)',

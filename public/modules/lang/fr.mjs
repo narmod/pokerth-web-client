@@ -189,7 +189,7 @@ export const strings = {
     errGuestsNotAllowed:'Comptes enregistrés uniquement — les invités ne peuvent pas rejoindre',
     errInvalidGame:'Impossible de rejoindre cette partie',
     moreOptions:'Plus d\'options', lessOptions:'Moins d\'options',
-    resetForm:'↺ Réinitialiser', fieldsReset:'Champs réinitialisés',
+    resetForm:'↺ Réinitialiser', cancelBtn:'Annuler', fieldsReset:'Champs réinitialisés',
     nameTooLong:'Nom de table trop long ({max} caractères max) — impossible de créer la table.',
     addPassword:'Ajouter un mot de passe (optionnel)', tablePassword:'Mot de passe :',
     rememberMe:'Mémoriser le pseudo (mot de passe non mémorisé)',
