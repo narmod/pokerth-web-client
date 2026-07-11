@@ -1000,43 +1000,78 @@ function _scrollOpenIntoView() {
   }
 }
 
-function _render() {
+// ── Fenetre style QML : onglets + liste verticale (grande vignette + nom + auteur). ──
+var _activeTab = 'table';
+var TABLE_AUTHORS = {
+  '':'PokerTH', 'pokerth-live':'PokerTH', 'green':'PokerTH', 'casino':'PokerTH',
+  danuxi:'Daniel Hammer', mute:'mute design', mute2:'mute design', teal:'Pinboc', lemming:'lemming',
+  matrix:'PokerTH Development Team', star_trek:'PokerTH Development Team', tripsixes:'TripSixes',
+  wanted:'Etienne Graphic Designer', xanax:'Sebastien Kerguen'
+};
+var _TABS = [
+  { id:'table',    kind:'table',    titleKey:'sectionTable',    fallback:'Table' },
+  { id:'deck',     kind:'deck',     titleKey:'sectionDeck',     fallback:'Cards' },
+  { id:'cardback', kind:'cardback', titleKey:'sectionCardback', fallback:'Card back' },
+  { id:'seat',     kind:'seat',     titleKey:'sectionSeat',     fallback:'Seats' }
+];
+function _tabItems(id){
+  if (id==='table')    return { cur: table.get(), opts: TABLES.concat(_galleryTables), pick:function(x){ table.apply(x); } };
+  if (id==='deck')     return { cur: deck.get(),  opts: DECKS.concat(_galleryDecks),   pick:function(x){ deck.apply(x); } };
+  if (id==='seat')     return { cur: seat.get(),  opts: SEATS.concat(_gallerySeats),   pick:function(x){ seat.apply(x); } };
+  if (id==='cardback') return { cur: cardbackGet(), opts: _cardbackOptions(), pick:function(x){ if(x==='__import'){ _cardbackPickFile(); return true; } cardbackApply(x); } };
+  return { cur:'', opts:[], pick:function(){} };
+}
+function _styleAuthor(kind, item){
+  if (kind==='table') return TABLE_AUTHORS[item.id] || item.by || null;
+  if (kind==='deck'){ for (var i=0;i<DECKS.length;i++) if (DECKS[i].id===item.id) return 'PokerTH'; return item.by || null; }
+  return item.by || null;
+}
+function _styleRow(kind, item, name, author, active, onClick){
+  var row = document.createElement('div');
+  row.style.cssText = 'display:flex;align-items:center;gap:11px;padding:9px 10px;cursor:pointer;border-radius:9px;'
+    + (active ? 'background:rgba(var(--sel-rgb,227,200,0),0.12);box-shadow:inset 0 0 0 1.5px var(--sel,#E3C800);'
+              : 'border:1px solid var(--border,rgba(200,168,74,0.18));background:rgba(255,255,255,0.02);');
+  var txt = '<div style="flex:1;min-width:0">'
+    + '<div style="font-size:0.9rem;font-weight:600;color:var(--cream,#f0e6d2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' + name + '</div>'
+    + (author ? '<div style="font-size:0.72rem;color:var(--text,#9aaa92);margin-top:1px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' + _t('styleBy','by') + ' ' + author + '</div>' : '')
+    + (active ? '<div style="font-size:0.72rem;font-weight:700;color:var(--sel,#E3C800);margin-top:2px">\u2713 ' + _t('styleSelected','Selected') + '</div>' : '')
+    + '</div>';
+  row.innerHTML = _previewHTML(kind, item, true) + txt;
+  if (!active) {
+    row.addEventListener('mouseenter', function(){ row.style.background='var(--inset-hi,rgba(255,255,255,0.06))'; });
+    row.addEventListener('mouseleave', function(){ row.style.background='rgba(255,255,255,0.02)'; });
+  }
+  row.addEventListener('click', function(e){ e.stopPropagation(); onClick(); });
+  return row;
+}
+function _render(){
   if (!_body) return;
   _body.innerHTML = '';
-  _openBlockEl = null;
-
-  // Structure officielle (facon "Stil" du client QML) : plus de menu de presets,
-  // juste les axes independants — Mode (palette), Table (feutre+pucks+boutons),
-  // Cartes (+ dos de carte), Sieges. Le style de table pilote pucks+boutons.
-  AXES.forEach(function (ax) {
-    var cur = ax.get();
-    var kind = (ax === palette) ? 'palette' : (ax === table) ? 'table' : (ax === deck) ? 'deck' : (ax === pucks) ? 'pucks' : (ax === seat) ? 'seat' : 'palette';
-    var secId = ax.storeKey;
-    var opts = (ax === deck) ? DECKS.concat(_galleryDecks)
-             : (ax === palette) ? PALETTES
-             : (ax === table) ? TABLES.concat(_galleryTables)
-             : (ax === pucks) ? PUCKS_ITEMS.concat(_galleryTables.filter(function(g){return g.pucks;}))
-             : (ax === seat) ? SEATS.concat(_gallerySeats)
-             : ax.items;
-    var curItem = opts[0];
-    for (var i = 0; i < opts.length; i++) if (opts[i].id === cur) curItem = opts[i];
-    var curName = curItem.name || _t(curItem.key, curItem.fallback);
-    var options = opts.map(function (it) {
-      return { item: it, name: (it.name || _t(it.key, it.fallback)), active: it.id === cur,
-        onClick: (function (id) { return function () { ax.apply(id); _openSec = null; _render(); }; })(it.id) };
-    });
-    _body.appendChild(_dropdownBlock(secId, _t(ax.titleKey, ax.titleFallback), kind, curItem, curName, options));
-    // Axe « Dos de carte » : juste sous l'axe Cartes (parite 3 axes QML).
-    if (ax === deck) _body.appendChild(_cardbackBlock());
+  // Barre d'onglets (Table de jeu · Jeu de cartes · Dos de carte · Sieges).
+  var tabbar = document.createElement('div');
+  tabbar.style.cssText = 'display:flex;gap:2px;margin:0 0 11px;border-bottom:1px solid var(--border,rgba(200,168,74,0.18))';
+  _TABS.forEach(function(tb){
+    var act = _activeTab === tb.id;
+    var b = document.createElement('button'); b.type='button'; b.textContent = _t(tb.titleKey, tb.fallback);
+    b.style.cssText = 'flex:1;min-width:0;padding:8px 4px;cursor:pointer;font-size:0.75rem;font-weight:600;background:none;border:0;'
+      + 'border-bottom:2px solid ' + (act ? 'var(--sel,#E3C800)' : 'transparent') + ';color:' + (act ? 'var(--cream,#f0e6d2)' : 'var(--text,#9aaa92)')
+      + ';white-space:nowrap;overflow:hidden;text-overflow:ellipsis';
+    b.addEventListener('click', function(e){ e.stopPropagation(); _activeTab = tb.id; _render(); });
+    tabbar.appendChild(b);
   });
-
-  // Options avancees (export .zip ; import a venir) — repliable, en bas.
-  try { var _advEl = _advancedBlock(); if (_advEl) _body.appendChild(_advEl); } catch (e) {}
-
-  // After (re)building the body, keep an expanded section in view.
-  if (_openSec && _openBlockEl && typeof requestAnimationFrame === 'function') {
-    requestAnimationFrame(_scrollOpenIntoView);
-  }
+  _body.appendChild(tabbar);
+  // Liste de l'onglet actif.
+  var tab = _TABS[0]; for (var t=0;t<_TABS.length;t++) if (_TABS[t].id===_activeTab) tab=_TABS[t];
+  var info = _tabItems(_activeTab);
+  var list = document.createElement('div'); list.style.cssText = 'display:flex;flex-direction:column;gap:7px';
+  info.opts.forEach(function(it){
+    var name = it.name || _t(it.key, it.fallback);
+    var author = _styleAuthor(tab.kind, it);
+    var active = it.id === info.cur;
+    var row = _styleRow(tab.kind, it, name, author, active, (function(id){ return function(){ var keep = info.pick(id); if (!keep) _render(); }; })(it.id));
+    list.appendChild(row);
+  });
+  _body.appendChild(list);
 }
 
 function _makeThemeDraggable(panel, handle){
@@ -1085,7 +1120,7 @@ function openThemePanel(ev) {
   var panel = document.createElement('div');
   panel.id = PANEL_ID;
   panel.setAttribute('role', 'menu');
-  panel.style.cssText = 'position:fixed;z-index:9999;box-sizing:border-box;width:min(340px, calc(100vw - 16px));max-height:74vh;overflow:hidden;display:flex;flex-direction:column;'
+  panel.style.cssText = 'position:fixed;z-index:9999;box-sizing:border-box;width:min(400px, calc(100vw - 16px));max-height:74vh;overflow:hidden;display:flex;flex-direction:column;'
     + 'background:var(--panel,#0d1f10);border:1px solid var(--gold-dim,rgba(200,168,74,0.45));'
     + 'border-radius:10px;padding:0;box-shadow:0 12px 32px rgba(0,0,0,0.6)';
 
@@ -1105,6 +1140,7 @@ function openThemePanel(ev) {
   _body = document.createElement('div');
   _body.style.cssText = 'flex:1 1 auto;min-height:0;overflow-y:auto;overflow-x:hidden;padding:11px 13px 13px';
   panel.appendChild(_body);
+  _activeTab = 'table';
   _render();
   // Re-pull the runtime galleries each time the panel opens, so packages just
   // imported in the admin show up without reloading the app. Each loader calls
