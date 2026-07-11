@@ -6792,9 +6792,16 @@ body.adv-hide-pbar .my-zone{bottom:0 !important;padding-bottom:max(8px,env(safe-
   .seat.me .seat-holecards.shc-l1 .pk { width: 34px !important; height: 48px !important; font-size: 0.8rem !important; border-radius: 4px !important; }
   .seat.me .seat-holecards.shc-l2 .pk { width: 48px !important; height: 68px !important; font-size: 1.05rem !important; border-radius: 5px !important; }
 }
-/* Pastille de niveau (1/2/3) sur le bouton. */
+/* Paliers supplementaires 4 et 5 : plus gros que shc-big (niveau 3). Meme mecanisme. */
+.seat.me .seat-holecards.shc-l3 .pk { width: 50px !important; height: 71px !important; font-size: 1.05rem !important; border-radius: 6px !important; }
+.seat.me .seat-holecards.shc-l4 .pk { width: 60px !important; height: 85px !important; font-size: 1.25rem !important; border-radius: 7px !important; }
+@media (min-width: 900px) {
+  .seat.me .seat-holecards.shc-l3 .pk { width: 76px !important; height: 108px !important; font-size: 1.6rem !important; border-radius: 8px !important; }
+  .seat.me .seat-holecards.shc-l4 .pk { width: 90px !important; height: 128px !important; font-size: 1.9rem !important; border-radius: 9px !important; }
+}
+/* Pastille de niveau (1/2/3/4/5) sur le bouton. */
 #g-cardzoom { position: relative; }
-#g-cardzoom[data-lvl="1"]::after, #g-cardzoom[data-lvl="2"]::after, #g-cardzoom[data-lvl="3"]::after {
+#g-cardzoom[data-lvl="1"]::after, #g-cardzoom[data-lvl="2"]::after, #g-cardzoom[data-lvl="3"]::after, #g-cardzoom[data-lvl="4"]::after, #g-cardzoom[data-lvl="5"]::after {
   content: attr(data-lvl); position: absolute; top: -4px; right: -4px;
   min-width: 13px; height: 13px; border-radius: 7px; font-size: 9px; line-height: 13px;
   background: #1a1205; color: var(--accent, #E3C800); font-weight: 700; text-align: center;

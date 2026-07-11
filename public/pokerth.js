@@ -8945,7 +8945,7 @@ const App = (() => {
 
     var _pkHole = (document.documentElement.getAttribute('data-seat') === 'pokerth');
     var _maskMode = _advGet('hide_pbar', true); // mode masqué : self-box = siège
-    var _ownLvl = 0; try { _ownLvl = Math.min(3, Math.max(0, parseInt(localStorage.getItem('pth_big_own_cards'), 10) || 0)); } catch (e) {} // niveau "agrandir mes cartes" 0-3
+    var _ownLvl = 0; try { _ownLvl = Math.min(5, Math.max(0, parseInt(localStorage.getItem('pth_big_own_cards'), 10) || 0)); } catch (e) {} // niveau "agrandir mes cartes" 0-5
     let h = '';
     rotated.forEach((pid, i) => {
       const px = pixPos[i];
@@ -9064,7 +9064,7 @@ const App = (() => {
         var _ownHide = isMe && _ownCardsHidden();
         var _phc1 = isMe ? (_ownHide ? null : myCards[0]) : sd.card1;
         var _phc2 = isMe ? (_ownHide ? null : myCards[1]) : sd.card2;
-        var _hcBigCls = _selfBig ? (' shc-big' + (_ownLvl === 1 ? ' shc-l1' : _ownLvl === 2 ? ' shc-l2' : '')) : '';
+        var _hcBigCls = _selfBig ? (' shc-big' + (_ownLvl === 1 ? ' shc-l1' : _ownLvl === 2 ? ' shc-l2' : _ownLvl === 4 ? ' shc-l3' : _ownLvl === 5 ? ' shc-l4' : '')) : '';
         var _hcCls = 'seat-holecards' + _hcBigCls;
         var _hcSz  = _selfBig ? '' : 'xsm';
         h += '<div class="' + _hcCls + '">' + cardHtml(_phc1,_hcSz) + cardHtml(_phc2,_hcSz) + '</div>';
@@ -12292,7 +12292,7 @@ function applyTableZoom() {
   if (bIn)  bIn.disabled  = (z >= Math.min(TABLE_ZOOM_MAX, maxFit) - 0.001);
   if (bRst) bRst.disabled = (Math.abs(z - TABLE_ZOOM_DEFAULT) < 0.001);
   var bCz = document.getElementById('g-cardzoom');
-  if (bCz) { var _czl=0; try{ _czl=Math.min(3, Math.max(0, parseInt(localStorage.getItem('pth_big_own_cards'),10) || 0)); }catch(e){} bCz.classList.toggle('active', _czl>0); bCz.setAttribute('data-lvl', String(_czl)); }
+  if (bCz) { var _czl=0; try{ _czl=Math.min(5, Math.max(0, parseInt(localStorage.getItem('pth_big_own_cards'),10) || 0)); }catch(e){} bCz.classList.toggle('active', _czl>0); bCz.setAttribute('data-lvl', String(_czl)); }
 }
 // Agrandissement UNIFORME borne : le feutre (#g-table-scaler) et la couche des
 // sieges (#g-seats) sont mis a l'echelle autour du centre du feutre. Le zoom
@@ -12532,8 +12532,8 @@ window.toggleSeatEdit = toggleSeatEdit;
 // taille de MES cartes dans le siege (style pokerth). Defaut off = boite comme
 // les adversaires ; l'utilisateur agrandit ses cartes s'il le souhaite.
 function toggleOwnCardZoom(){
-  var lvl=0; try{ lvl = Math.min(3, Math.max(0, parseInt(localStorage.getItem('pth_big_own_cards'),10) || 0)); }catch(e){}
-  lvl = (lvl + 1) % 4;   // cycle : petit -> M -> L -> XL -> petit
+  var lvl=0; try{ lvl = Math.min(5, Math.max(0, parseInt(localStorage.getItem('pth_big_own_cards'),10) || 0)); }catch(e){}
+  lvl = (lvl + 1) % 6;   // cycle : petit -> 1 -> 2 -> 3 -> 4 -> 5 -> petit
   try{ localStorage.setItem('pth_big_own_cards', String(lvl)); }catch(e){}
   var b=document.getElementById('g-cardzoom');
   if(b){ b.classList.toggle('active', lvl>0); b.setAttribute('data-lvl', String(lvl)); }
@@ -13744,7 +13744,7 @@ function renderPlayersList() {
   body.innerHTML = _shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>';
 }
 
-;(function(){ window.BUILD_VERSION='0.3.284-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.285-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
