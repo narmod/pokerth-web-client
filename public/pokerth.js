@@ -497,6 +497,7 @@ function openAdvancedOptions() {
   sync('adv-snd-blinds', 'snd_blinds', true);
   sync('adv-reducefx', 'reduce_fx', false);
   sync('adv-statusbar', 'status_bar', true);
+  try { var _dm = document.getElementById('adv-darkmode'); if (_dm && window.getTheme) _dm.value = window.getTheme() || 'auto'; } catch (e) {}
   sync('adv-pingavatar', 'ping_avatar', false);
   sync('adv-autoleave', 'auto_leave', false);
   // Barre d'état de jeu (pot-strip : H#/G#, pot+bets, phase) masquable
@@ -13698,7 +13699,7 @@ function renderPlayersList() {
   body.innerHTML = _shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>';
 }
 
-;(function(){ window.BUILD_VERSION='0.3.266-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.267-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

@@ -123,7 +123,7 @@ const SEATS = [
   { id: 'compact', key: 'seatCompact', fallback: 'Compact', swatch: '#1e3820' },
   { id: 'bar',     key: 'seatBar',     fallback: 'Bar',     swatch: '#2a2f38' },
 ];
-const palette = makeAxis({ storeKey: 'pth_theme', attr: 'data-theme', items: PALETTES, def: 'pokerth', titleKey: 'sectionPalette', titleFallback: 'Palette' });
+const palette = makeAxis({ storeKey: 'pth_theme', attr: 'data-theme', items: PALETTES, def: 'auto',    titleKey: 'sectionPalette', titleFallback: 'Palette' });
 const table   = makeAxis({ storeKey: 'pth_table', attr: 'data-table', items: TABLES, def: '', titleKey: 'sectionTable',   titleFallback: 'Table' });
 const deck    = makeAxis({ storeKey: 'pth_deck',  attr: 'data-deck',  def: 'pokerth-new',  items: DECKS,    titleKey: 'sectionDeck',    titleFallback: 'Cards' });
 const buttons = makeAxis({ storeKey: 'pth_buttons', attr: 'data-buttons', def: 'glossy', items: BUTTONS_ITEMS, titleKey: 'sectionButtons', titleFallback: 'Buttons' });
@@ -133,7 +133,7 @@ const pucks   = makeAxis({ storeKey: 'pth_pucks',   attr: 'data-pucks',   def: '
 var _seatDef = 'pokerth';
 try { if (typeof window !== 'undefined' && window.innerWidth < 640) _seatDef = ''; } catch (e) {}
 const seat    = makeAxis({ storeKey: 'pth_seat',    attr: 'data-seat',    def: _seatDef,      items: SEATS,         titleKey: 'sectionSeat',    titleFallback: 'Seats' });
-const AXES = [palette, table, pucks, deck, seat];
+const AXES = [table, deck, seat];
 
 // ── Presets (main themes) ───────────────────────────────────────────────────
 // A preset is just a named combo of axis ids. "Casino vert" = all defaults
@@ -182,7 +182,7 @@ try { if (localStorage.getItem('pth_deck') === 'svg') { localStorage.setItem('pt
 try {
   if (!localStorage.getItem('pth_axesA_mig')) {
     var _mTh = localStorage.getItem('pth_theme');
-    if (_mTh !== 'pokerth' && _mTh !== 'pokerth-light') { localStorage.setItem('pth_theme', 'pokerth'); localStorage.removeItem('pth_theme_css'); }
+    if (_mTh && _mTh !== 'pokerth' && _mTh !== 'pokerth-light' && _mTh !== 'auto') { localStorage.setItem('pth_theme', 'pokerth'); localStorage.removeItem('pth_theme_css'); }
     var _mTb = localStorage.getItem('pth_table'), _mDk = localStorage.getItem('pth_deck'), _mNew;
     if (_mDk === 'casino-vert') _mNew = 'casino';
     else if (_mTb === 'pokerth-live') _mNew = 'pokerth-live';
@@ -203,6 +203,9 @@ try {
     localStorage.setItem('pth_pucksB_mig', '1');
   }
 } catch (e) {}
+// Selecteur pucks retire (fenetre style QML) : les pucks suivent toujours le tapis.
+// On force pth_pucks vide (Auto) une fois pour tous.
+try { if (!localStorage.getItem('pth_pucksC_mig')) { localStorage.removeItem('pth_pucks'); localStorage.setItem('pth_pucksC_mig','1'); } } catch (e) {}
 
 // Apply saved values on load (idempotent with the <head> boot snippet).
 try { if (!localStorage.getItem('pth_seat_dmig')) { if (localStorage.getItem('pth_seat') === '') localStorage.removeItem('pth_seat'); localStorage.setItem('pth_seat_dmig', '1'); } } catch (e) {}
@@ -495,7 +498,27 @@ function _injectPucks(set){
   try{ if(css) localStorage.setItem('pth_pucks_css',css); else localStorage.removeItem('pth_pucks_css'); }catch(e){}
 }
 var _palApply = palette.apply;
+// Mode « Automatique » : suit l'OS/navigateur (prefers-color-scheme) et se met a
+// jour en direct si le systeme bascule. pth_theme='auto' est stocke ; data-theme
+// recoit la palette resolue (pokerth / pokerth-light).
+function _resolveAuto(){ try{ return (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) ? 'pokerth-light' : 'pokerth'; }catch(e){ return 'pokerth'; } }
+var _autoMql=null,_autoHandler=null;
+function _setupAutoListener(on){
+  try{ if(!window.matchMedia) return;
+    if(on){ if(_autoMql) return; _autoMql=window.matchMedia('(prefers-color-scheme: light)');
+      _autoHandler=function(){ try{ if((localStorage.getItem('pth_theme')||'auto')==='auto') document.documentElement.setAttribute('data-theme',_resolveAuto()); }catch(e){} };
+      if(_autoMql.addEventListener) _autoMql.addEventListener('change',_autoHandler); else if(_autoMql.addListener) _autoMql.addListener(_autoHandler);
+    } else { if(_autoMql&&_autoHandler){ if(_autoMql.removeEventListener) _autoMql.removeEventListener('change',_autoHandler); else if(_autoMql.removeListener) _autoMql.removeListener(_autoHandler); } _autoMql=null;_autoHandler=null; }
+  }catch(e){}
+}
 palette.apply = function(id){
+  if(id==='auto'){
+    try{ localStorage.setItem('pth_theme','auto'); }catch(e){}
+    document.documentElement.setAttribute('data-theme', _resolveAuto());
+    try{ _injectPalette(null); }catch(e){}
+    _setupAutoListener(true); return;
+  }
+  _setupAutoListener(false);
   _palApply(id);
   try{ if (_isBuiltinPalette(id)) _injectPalette(null); else { var pk=_palettePkgById(id); if(pk) _injectPalette(pk); } }catch(e){}
 };
