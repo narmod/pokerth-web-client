@@ -1863,18 +1863,23 @@ if ('serviceWorker' in navigator) {
       </nav>
       <div class="adv-panels">
         <section class="adv-panel is-active" data-cat="ui" id="adv-panel-ui" role="tabpanel" aria-labelledby="adv-cat-ui">
-      <div class="adv-body">
+      <div class="adv-subtabs" role="tablist" aria-label="Interface sections">
+        <button type="button" class="adv-subtab is-active" data-uitab="general" role="tab" aria-selected="true" onclick="advUiTab('general')" data-i18n="advUiGeneral">General</button>
+        <button type="button" class="adv-subtab" data-uitab="network" role="tab" aria-selected="false" onclick="advUiTab('network')" data-i18n="advUiNetwork">Network</button>
+      </div>
+      <div class="adv-body adv-uipanel is-active" data-uitab="general">
       <div class="adv-sec" data-i18n="advSecAppearance">Appearance</div>
       <div class="adv-row"><span data-i18n="advDarkMode">Dark mode</span><div class="sel-wrap adv-sel"><select id="adv-darkmode" onchange="if(window.setTheme)window.setTheme(this.value)"><option value="auto" data-i18n="modeAuto">Automatic</option><option value="pokerth-light" data-i18n="modeLight">Light</option><option value="pokerth" data-i18n="modeDark">Dark</option></select><span class="sel-arr">▾</span></div></div>
       <div class="adv-row"><span data-i18n="advLanguage">Language</span><div class="sel-wrap adv-sel"><button type="button" id="adv-lang-btn" class="adv-lang-btn" onclick="openLangMenu(event)" aria-haspopup="menu" aria-label="Switch language" data-i18n-title="langTooltip"></button><span class="sel-arr">▾</span></div></div>
+      <label class="adv-row"><input type="checkbox" id="adv-tooltips" onchange="setTooltips(this.checked)"><span data-i18n="advShowTooltips">Show tooltips</span></label>
+      <label class="adv-row adv-soon"><input type="checkbox" disabled><span data-i18n="advDisableSplash">Disable the splash screen on startup</span><em data-i18n="advNA">n/a</em></label>
+      <label class="adv-row adv-soon"><input type="checkbox" disabled><span data-i18n="advDontTranslatePoker">Don't translate poker terms (Check, Call, Raise)</span><em data-i18n="advNA">n/a</em></label>
       <div class="adv-sec" data-i18n="advSecCards">Cards</div>
       <label class="adv-row"><input type="checkbox" id="adv-anim" onchange="setAdvOpt('anim_cards',this.checked)"><span data-i18n="advAnimCards">Card animations</span></label>
       <label class="adv-row"><input type="checkbox" id="adv-fadelosers" onchange="setAdvOpt('fade_losers',this.checked)"><span data-i18n="advFadeLosers">Fade losing cards at showdown</span></label>
       <label class="adv-row"><input type="checkbox" id="adv-ownclick" onchange="setAdvOpt('own_click',this.checked)"><span data-i18n="advOwnClick">Reveal my cards on tap</span></label>
 
       <div class="adv-sec" data-i18n="advSecBet">Betting &amp; turn</div>
-      <label class="adv-row"><input type="checkbox" id="adv-focusbet" onchange="setAdvOpt('focus_bet',this.checked)"><span data-i18n="advFocusBet">Focus bet field on my turn</span></label>
-      <label class="adv-row"><input type="checkbox" id="adv-guardcall" onchange="setAdvOpt('guard_call',this.checked)"><span data-i18n="advGuardCall">Prevent accidental Call after a big raise</span></label>
       <label class="adv-row"><input type="checkbox" id="adv-autobtn" onchange="setAutoBtn(this.checked)"><span data-i18n="autoBtnLabel">Auto mode selector</span></label>
       <label class="adv-row"><input type="checkbox" id="adv-quickbet" onchange="setQuickBet(this.checked)"><span data-i18n="quickBetLabel">Quick-bet buttons</span></label>
       <label class="adv-row"><input type="checkbox" id="adv-voice" onchange="setVoice(this.checked)"><span data-i18n="voiceLabel">Voice announcements</span></label>
@@ -1897,11 +1902,10 @@ if ('serviceWorker' in navigator) {
 
       <div class="adv-sec" data-i18n="advSecCommunity">Community</div>
       <label class="adv-row"><input type="checkbox" id="adv-community" onchange="setAdvOpt('show_community',this.checked)"><span data-i18n="advShowCommunity">Show Ranking entry</span></label>
+      <div class="adv-row"><span data-i18n="advDefCommunity">Default community</span><div class="sel-wrap adv-sel"><select id="adv-defcommunity" onchange="setDefaultCommunity(this.value)"><option value="pth">PokerTH</option><option value="bbc">BBC</option><option value="wec">WEC</option></select><span class="sel-arr">▾</span></div></div>
 
       <div class="adv-sec" data-i18n="advSecAvatars">Avatars</div>
       <label class="adv-row"><input type="checkbox" id="adv-flag" onchange="setAdvOpt('show_flag',this.checked)"><span data-i18n="advFlagAvatar">Country flag on avatar</span></label>
-      <label class="adv-row"><input type="checkbox" id="adv-pingavatar" onchange="setAdvOpt('ping_avatar',this.checked);try{window._pingTick&&window._pingTick()}catch(e){}"><span data-i18n="advPingAvatar">Ping indicator on my avatar (green/yellow/red)</span></label>
-      <label class="adv-row adv-soon"><input type="checkbox" disabled><span data-i18n="advNetColor">Network status color on avatar</span><em data-i18n="advSoon">soon</em></label>
       <label class="adv-row"><input type="checkbox" id="adv-nohideignored" onchange="setAdvOpt('no_hide_ignored',this.checked)"><span data-i18n="advNoHideIgnored">Don't hide ignored players' avatars</span></label>
 
       <div class="adv-sec" data-i18n="advSecHelp">Assistance</div>
@@ -1921,7 +1925,18 @@ if ('serviceWorker' in navigator) {
         <div class="adv-keyhint"><span data-i18n="kbHintF">Official PokerTH keys also work: F1–F4 = Fold · Check/Call · Bet/Raise · All-In, F6/F7/F8 = Manual / Auto Check-Fold / Auto Check-Call, Alt+M/K/F = modes, Alt+C chat, Alt+L log, Alt+I odds.</span></div>
         <div class="adv-keyhint"><span data-i18n="kbHint">Tap a key, then press the new key. Space = Call, Enter = confirm raise.</span><button type="button" class="kb-reset" onclick="resetKeys()" data-i18n="kbReset">Reset</button></div>
       </div>
-    </div>
+      </div>
+      <div class="adv-body adv-uipanel" data-uitab="network">
+      <div class="adv-sec" data-i18n="advSecAvatars">Avatars</div>
+      <label class="adv-row"><input type="checkbox" id="adv-pingavatar" onchange="setAdvOpt('ping_avatar',this.checked);try{window._pingTick&&window._pingTick()}catch(e){}"><span data-i18n="advNetStateColor">Show network status colour in the avatar corner</span></label>
+
+      <div class="adv-sec" data-i18n="advSecBet">Betting &amp; turn</div>
+      <label class="adv-row"><input type="checkbox" id="adv-focusbet" onchange="setAdvOpt('focus_bet',this.checked)"><span data-i18n="advFocusBet">Focus bet field on my turn</span></label>
+      <label class="adv-row"><input type="checkbox" id="adv-guardcall" onchange="setAdvOpt('guard_call',this.checked)"><span data-i18n="advGuardCall">Prevent accidental Call after a big raise</span></label>
+
+      <div class="adv-sec" data-i18n="advSecReactions">Reactions</div>
+      <label class="adv-row"><input type="checkbox" id="adv-noreact" onchange="setReactMuted(this.checked)"><span data-i18n="advDisableReactions">Disable emoji reactions</span></label>
+      </div>
         </section>
         <section class="adv-panel" data-cat="style" id="adv-panel-style" role="tabpanel" aria-labelledby="adv-cat-style">
           <div class="adv-body"><div id="adv-theme-host"></div></div>

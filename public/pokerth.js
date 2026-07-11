@@ -374,6 +374,40 @@ function setAdvOpt(key, on) {
   applyAdvOpts();
 }
 window.setAdvOpt = setAdvOpt;
+// Options avancees : infobulles natives (title). Off => on retire les title
+// (ranges dans data-ttl) ; On => on les restaure. Applique au chargement et a
+// chaque bascule. Les title ajoutes dynamiquement apres coupure gardent leur
+// title jusqu'a la prochaine application (limite mineure, non bloquante).
+function applyTooltips() {
+  try {
+    var on = _advGet('tooltips', true);
+    if (on) {
+      var r = document.querySelectorAll('[data-ttl]');
+      for (var i = 0; i < r.length; i++) { r[i].setAttribute('title', r[i].getAttribute('data-ttl')); r[i].removeAttribute('data-ttl'); }
+    } else {
+      var t = document.querySelectorAll('[title]');
+      for (var j = 0; j < t.length; j++) { t[j].setAttribute('data-ttl', t[j].getAttribute('title')); t[j].removeAttribute('title'); }
+    }
+  } catch (e) {}
+}
+window.applyTooltips = applyTooltips;
+function setTooltips(on) {
+  try { localStorage.setItem('pth_tooltips', on ? '1' : '0'); } catch (e) {}
+  applyTooltips();
+}
+window.setTooltips = setTooltips;
+// Options avancees : communaute par defaut du classement (pth/bbc/wec). Reutilise
+// la preference existante pth_rank_src (derniere source ouverte = defaut). Si le
+// classement est ouvert, applique tout de suite.
+function setDefaultCommunity(v) {
+  v = (v === 'bbc' || v === 'wec') ? v : 'pth';
+  try { localStorage.setItem('pth_rank_src', v); } catch (e) {}
+  try {
+    var m = document.getElementById('ranking-modal');
+    if (m && m.style.display !== 'none' && typeof window.rankingSelect === 'function') window.rankingSelect(v);
+  } catch (e) {}
+}
+window.setDefaultCommunity = setDefaultCommunity;
 // Croix de fermeture des fenetres flottantes : coupe l'option et masque.
 window.closeOddsWin = function () {
   try { setAdvOpt('odds_monitor', false); } catch (e) {}
@@ -510,6 +544,10 @@ function openAdvancedOptions() {
   try { document.documentElement.classList.toggle('reduce-fx', _advGet('reduce_fx', false)); } catch (e) {}
   try { var _sl = document.getElementById('adv-seatlayout'); if (_sl) { var _slv = localStorage.getItem('pth_seat_layout'); _sl.value = (_slv === 'pokerth-official' || _slv === 'pokerth-ellipse' || _slv === 'custom') ? _slv : 'auto'; } } catch (e) {}
   try { _rebindAction = null; _renderKeyButtons(); } catch (e) {}
+  sync('adv-tooltips', 'tooltips', true);
+  try { var _nr = document.getElementById('adv-noreact'); if (_nr) _nr.checked = (localStorage.getItem('pth_react_muted') === '1'); } catch (e) {}
+  try { var _dc = document.getElementById('adv-defcommunity'); if (_dc) _dc.value = (localStorage.getItem('pth_rank_src') || 'pth'); } catch (e) {}
+  try { advUiTab('general'); } catch (e) {}
   try { advSelectCat('ui'); } catch (e) {}
   try { _advSyncContext(); } catch (e) {}
   m.style.display = '';
@@ -547,6 +585,24 @@ function advSelectCat(cat) {
   try { if (cat === 'style' && window.renderThemeInto) window.renderThemeInto(document.getElementById('adv-theme-host')); } catch (e) {}
 }
 window.advSelectCat = advSelectCat;
+
+// Options avancees : sous-onglets « General » / « Network » du panneau Interface
+// (parite de la fenetre officielle : onglets General / Reseau).
+function advUiTab(name) {
+  var modal = document.getElementById('adv-modal');
+  if (!modal) return;
+  var tabs = modal.querySelectorAll('.adv-subtab');
+  for (var i = 0; i < tabs.length; i++) {
+    var on = tabs[i].getAttribute('data-uitab') === name;
+    tabs[i].classList.toggle('is-active', on);
+    tabs[i].setAttribute('aria-selected', on ? 'true' : 'false');
+  }
+  var ps = modal.querySelectorAll('.adv-uipanel');
+  for (var j = 0; j < ps.length; j++) {
+    ps[j].classList.toggle('is-active', ps[j].getAttribute('data-uitab') === name);
+  }
+}
+window.advUiTab = advUiTab;
 
 // Grise les catégories sans objet dans le contexte courant (lobby vs partie) et
 // renseigne le serveur courant dans l'onglet « Jeu Internet ».
@@ -597,6 +653,9 @@ function resetAdvDefaults() {
   try { setSeatLayout('official'); } catch (e) {}
   try { if (typeof window.setAutoBtn === 'function') window.setAutoBtn(true); } catch (e) {}
   try { if (typeof window.setQuickBet === 'function') window.setQuickBet(true); } catch (e) {}
+  try { if (typeof window.setTooltips === 'function') window.setTooltips(true); } catch (e) {}
+  try { if (typeof window.setReactMuted === 'function') window.setReactMuted(false); } catch (e) {}
+  try { if (typeof window.setDefaultCommunity === 'function') window.setDefaultCommunity('pth'); } catch (e) {}
   try { resetKeys(); } catch (e) {}
   try { openAdvancedOptions(); } catch (e) {}   // re-sync des cases + retour onglet Interface
 }
@@ -621,6 +680,11 @@ try {
   if (document.readyState === 'loading')
     document.addEventListener('DOMContentLoaded', applyAdvOpts);
   else applyAdvOpts();
+} catch (e) {}
+try {
+  if (document.readyState === 'loading')
+    document.addEventListener('DOMContentLoaded', applyTooltips);
+  else applyTooltips();
 } catch (e) {}
 
 // Animation des cartes de ma main (deal)
@@ -1754,6 +1818,14 @@ function _applyReactMuteUI() {
     btn.setAttribute('aria-pressed', _reactMuted ? 'true' : 'false');
   }
 }
+// Options avancees : couper/retablir les reactions emoji (parite DisableEmojiReactions).
+// Meme preference que le bouton « muet » du panneau de reactions (pth_react_muted).
+function setReactMuted(on) {
+  _reactMuted = !!on;
+  try { localStorage.setItem('pth_react_muted', _reactMuted ? '1' : '0'); } catch (e) {}
+  _applyReactMuteUI();
+}
+window.setReactMuted = setReactMuted;
 
 
 // ═══════════════════════════════════════════════════════════
@@ -13780,7 +13852,7 @@ function renderPlayersList() {
   body.innerHTML = _shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>';
 }
 
-;(function(){ window.BUILD_VERSION='0.3.295-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.296-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

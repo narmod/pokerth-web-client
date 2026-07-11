@@ -6896,6 +6896,12 @@ html:not([data-seat="pokerth"]) body.adv-hide-pbar .seat.me .seat-info {
 .adv-panels{flex:1;min-width:0;max-height:62vh;overflow:auto;padding-right:2px}
 .adv-panel{display:none}
 .adv-panel.is-active{display:block}
+.adv-subtabs{display:flex;gap:6px;margin:0 0 10px}
+.adv-subtab{flex:1;padding:7px 6px;cursor:pointer;background:var(--inset);color:var(--text);border:1px solid var(--border);border-radius:6px;font-size:0.82rem;font-weight:600;letter-spacing:0.02em;transition:background .15s,border-color .15s,color .15s}
+.adv-subtab:hover{border-color:var(--border-hi);color:var(--text-hi)}
+.adv-subtab.is-active{background:rgba(var(--gold-rgb),.15);border-color:var(--gold);color:var(--gold)}
+.adv-uipanel{display:none}
+.adv-uipanel.is-active{display:block}
 .adv-panels .adv-body{max-height:none;overflow:visible;margin-top:0}
 /* Panneaux « reliés » : description + bouton d'accès à l'UI existante. */
 .adv-link{display:flex;flex-direction:column;gap:12px;align-items:flex-start;padding:6px 2px}
