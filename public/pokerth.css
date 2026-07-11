@@ -4724,9 +4724,9 @@ body:not(.in-game) .my-zone {
   padding: 1px 9px;
   margin-right: 8px;
   border-radius: 999px;
-  border: 1px solid var(--gold);
-  background: rgba(var(--gold-rgb), 0.18);
-  color: var(--gold);
+  border: 1px solid var(--sel, #E3C800);
+  background: rgba(var(--sel-rgb, 227,200,0), 0.22);
+  color: var(--sel, #E3C800);
   font-size: clamp(0.54rem, 1.3vw, 0.66rem);
   font-weight: 700;
   letter-spacing: 0.08em;
