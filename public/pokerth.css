@@ -6798,6 +6798,24 @@ body.adv-hide-pbar .player-bar{display:none !important}
    d'action des le prochain rendu). Garde la self-box au-dessus de la barre epinglee. */
 body.adv-hide-pbar .game-area{padding-bottom:clamp(210px,34dvh,290px)}
 body.adv-hide-pbar .my-zone{bottom:0 !important;padding-bottom:max(8px,env(safe-area-inset-bottom))}
+/* ── Mobile PORTRAIT + table plein écran + dock masqué : barre d'action COLLÉE
+   au bord bas. Le panneau des boutons devient une bande pleine largeur dont le
+   fond descend jusqu'au bord (coins bas droits) ; la marge du home-indicator
+   (safe-area) passe DANS le panneau -> plus de bande "bois" (fond de table)
+   visible sous les boutons. Scopé phone portrait uniquement : tablette/desktop
+   gardent la carte flottante centrée, le paysage garde son flux. */
+@media (orientation: portrait) and (max-width: 899px) {
+  html[data-table-fs="1"] body.adv-hide-pbar .my-zone {
+    padding-left: 0 !important; padding-right: 0 !important; padding-bottom: 0 !important;
+  }
+  html[data-table-fs="1"] body.adv-hide-pbar .my-zone .action-wrap { max-width: none; width: 100%; }
+  html[data-table-fs="1"] body.adv-hide-pbar .my-zone .action-grid {
+    max-width: none; width: 100%; margin: 0;
+    border-radius: 12px 12px 0 0;   /* coins hauts arrondis, bas droits */
+    border-bottom: 0;
+    padding-bottom: calc(8px + env(safe-area-inset-bottom));
+  }
+}
 /* Mode masqué (Mode PokerTH) : MA self-box (siège) affiche mes cartes ~taille tapis.
    COHERENCE PAR STYLE :
    - Style "pokerth" : on GARDE la grille native -> self-box IDENTIQUE aux adversaires,
