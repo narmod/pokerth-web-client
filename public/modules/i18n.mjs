@@ -120,6 +120,52 @@ const _ADVLANG_I18N = {
   hi: 'भाषा'
 };
 for (const _c in _ADVLANG_I18N) { if (LANG[_c]) LANG[_c].advLanguage = _ADVLANG_I18N[_c]; }
+// ── Contrôle « Mode sombre » d'Options avancées (label + 3 options) traduit
+// dans les 36 langues (source unique ici ; ces clés n'étaient qu'en/fr).
+const _DARKMODE_I18N = {
+  en: 'Dark mode', fr: 'Mode sombre', de: 'Dunkelmodus', es: 'Modo oscuro', it: 'Modalità scura',
+  'pt-BR': 'Modo escuro', 'pt-PT': 'Modo escuro', nl: 'Donkere modus', pl: 'Tryb ciemny', ru: 'Тёмная тема',
+  zh: '深色模式', tr: 'Koyu mod', uk: 'Темна тема', ja: 'ダークモード', sv: 'Mörkt läge',
+  nb: 'Mørk modus', da: 'Mørk tilstand', fi: 'Tumma tila', cs: 'Tmavý režim', sk: 'Tmavý režim',
+  ro: 'Mod întunecat', hu: 'Sötét mód', el: 'Σκοτεινή λειτουργία', bg: 'Тъмен режим', hr: 'Tamni način',
+  sr: 'Тамни режим', af: 'Donker modus', ca: 'Mode fosc', gl: 'Modo escuro', gd: 'Modh dorcha',
+  lt: 'Tamsus režimas', ta: 'இருண்ட பயன்முறை', vi: 'Chế độ tối', ko: '다크 모드', 'zh-TW': '深色模式',
+  hi: 'डार्क मोड'
+};
+const _MODEAUTO_I18N = {
+  en: 'Automatic', fr: 'Automatique', de: 'Automatisch', es: 'Automático', it: 'Automatico',
+  'pt-BR': 'Automático', 'pt-PT': 'Automático', nl: 'Automatisch', pl: 'Automatyczny', ru: 'Автоматически',
+  zh: '自动', tr: 'Otomatik', uk: 'Автоматично', ja: '自動', sv: 'Automatisk',
+  nb: 'Automatisk', da: 'Automatisk', fi: 'Automaattinen', cs: 'Automaticky', sk: 'Automaticky',
+  ro: 'Automat', hu: 'Automatikus', el: 'Αυτόματο', bg: 'Автоматично', hr: 'Automatski',
+  sr: 'Аутоматски', af: 'Outomaties', ca: 'Automàtic', gl: 'Automático', gd: 'Fèin-obrachail',
+  lt: 'Automatinis', ta: 'தானியங்கு', vi: 'Tự động', ko: '자동', 'zh-TW': '自動',
+  hi: 'स्वचालित'
+};
+const _MODELIGHT_I18N = {
+  en: 'Light', fr: 'Clair', de: 'Hell', es: 'Claro', it: 'Chiaro',
+  'pt-BR': 'Claro', 'pt-PT': 'Claro', nl: 'Licht', pl: 'Jasny', ru: 'Светлая',
+  zh: '浅色', tr: 'Açık', uk: 'Світла', ja: 'ライト', sv: 'Ljust',
+  nb: 'Lys', da: 'Lys', fi: 'Vaalea', cs: 'Světlý', sk: 'Svetlý',
+  ro: 'Luminos', hu: 'Világos', el: 'Φωτεινό', bg: 'Светъл', hr: 'Svijetli',
+  sr: 'Светли', af: 'Lig', ca: 'Clar', gl: 'Claro', gd: 'Soilleir',
+  lt: 'Šviesus', ta: 'வெளிர்', vi: 'Sáng', ko: '라이트', 'zh-TW': '淺色',
+  hi: 'लाइट'
+};
+const _MODEDARK_I18N = {
+  en: 'Dark', fr: 'Sombre', de: 'Dunkel', es: 'Oscuro', it: 'Scuro',
+  'pt-BR': 'Escuro', 'pt-PT': 'Escuro', nl: 'Donker', pl: 'Ciemny', ru: 'Тёмная',
+  zh: '深色', tr: 'Koyu', uk: 'Темна', ja: 'ダーク', sv: 'Mörkt',
+  nb: 'Mørk', da: 'Mørk', fi: 'Tumma', cs: 'Tmavý', sk: 'Tmavý',
+  ro: 'Întunecat', hu: 'Sötét', el: 'Σκοτεινό', bg: 'Тъмен', hr: 'Tamni',
+  sr: 'Тамни', af: 'Donker', ca: 'Fosc', gl: 'Escuro', gd: 'Dorcha',
+  lt: 'Tamsus', ta: 'இருள்', vi: 'Tối', ko: '다크', 'zh-TW': '深色',
+  hi: 'डार्क'
+};
+for (const _c in _DARKMODE_I18N) { if (LANG[_c]) LANG[_c].advDarkMode = _DARKMODE_I18N[_c]; }
+for (const _c in _MODEAUTO_I18N) { if (LANG[_c]) LANG[_c].modeAuto = _MODEAUTO_I18N[_c]; }
+for (const _c in _MODELIGHT_I18N) { if (LANG[_c]) LANG[_c].modeLight = _MODELIGHT_I18N[_c]; }
+for (const _c in _MODEDARK_I18N) { if (LANG[_c]) LANG[_c].modeDark = _MODEDARK_I18N[_c]; }
 // ── Clé 'serverPassword' : libellé du champ (optionnel) du mot de passe
 // SERVEUR (authServerPassword), affiché sous « plus d'options » pour les
 // serveurs auto-hébergés. Ajoutée ici pour toutes les langues ; toute langue

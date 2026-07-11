@@ -6739,7 +6739,9 @@ html[data-seat-edit="1"] #g-seats .seat.seat-ghost { outline: none; cursor: defa
    Entrée via la roue crantée (jeu + lobby). Chrome réutilisé de .km-* ; corps
    .adv-* propre. Bascules présentation appliquées par applyAdvOpts() via des
    classes sur <body>. */
-#adv-modal{position:fixed;inset:0;z-index:1200;display:flex;align-items:center;justify-content:center}
+#adv-modal{position:fixed;inset:0;z-index:1200;display:flex;align-items:center;justify-content:center;pointer-events:none}
+#adv-modal .km-backdrop{display:none}
+#adv-modal .km-card{pointer-events:auto}
 .adv-card{max-width:420px;width:calc(100% - 32px)}
 .adv-body{max-height:62vh;overflow:auto;margin-top:8px;padding-right:2px}
 .adv-sec{font-size:0.62rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--gold-dim);margin:13px 0 4px;font-weight:700}
