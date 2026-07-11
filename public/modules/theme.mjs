@@ -62,7 +62,7 @@ const PALETTES = [
 const TABLES = [
   { id: '',             key: 'tablePokerthOfficial', fallback: 'PokerTH',      swatch: '#1d222b', feltUrl: '/table/pokerth-official-fs/felt.png', mode: 'fs',   puck: 'pokerth', btn: 'glossy' },
   { id: 'pokerth-live', key: 'tablePokerthLive',     fallback: 'Spectator Tools', swatch: '#0e4a2a', feltUrl: '/table/pokerth-live/felt.png',        mode: 'full', puck: 'pokerth', btn: 'glossy' },
-  { id: 'casino',       key: 'tableCasino',          fallback: 'Green Casino', swatch: '#1e6b1e', feltUrl: '/table/felt-green.jpg',               mode: 'felt', puck: 'casino',  btn: 'casino' },
+  { id: 'casino',       key: 'tableCasino',          fallback: 'Green Casino', swatch: '#1e6b1e', feltUrl: '/table/casino/felt.png', preview: '/table/casino/preview.png', mode: 'fs', align: 'center', puck: 'casino',  btn: 'casino' },
   // Tapis par defaut du client QML (data/gfx/qml/table/*, AGPL-3.0) — plein ecran.
   { id: 'danuxi', key: 'tableDanuxi', fallback: "Danuxi Blue", swatch: '#1f3a5c', feltUrl: '/table/danuxi/felt.png', preview: '/table/danuxi/preview.png', mode: 'fs', skin: true, align: 'center' },
   { id: 'mute', key: 'tableMute', fallback: "Mute", swatch: '#2a2f38', feltUrl: '/table/mute/felt.png', preview: '/table/mute/preview.png', mode: 'fs', skin: true, align: 'center' },
@@ -580,6 +580,7 @@ var _tblApply = table.apply;
 function _builtinTableById(id){ for (var i=0;i<TABLES.length;i++) if (TABLES[i].id===id) return TABLES[i]; return null; }
 // Teintes par tapis QML (PlayerBoxAccent + ChatLog* du tablestyle.xml).
 var _SKIN_TINT = {
+  casino:{a:'#c8a84a',bg:'#0c1a0e',su:'#14281a',bo:'rgba(200,168,74,0.32)',tx:'#ede8dc',se:'#c8d8c0',mu:'#9aaa92'},
   danuxi:{a:'#8a3fd6',bg:'#28253c',su:'#444163',bo:'#6e53a2',tx:'#eff1f5',se:'#cdd3e0',mu:'#7b79ad'},
   mute:{a:'#7ea6d0',bg:'#272f3c',su:'#434f62',bo:'#6981a0',tx:'#eff1f5',se:'#cdd3e0',mu:'#788dac'},
   mute2:{a:'#2a86c8',bg:'#1e2c3b',su:'#374b61',bo:'#43739c',tx:'#eff1f5',se:'#cdd3e0',mu:'#6887aa'},
@@ -601,7 +602,7 @@ table.apply = function(id){
   _tblApply(id);   // pose data-table + persiste pth_table
   try {
     var tb = _builtinTableById(id);
-    _injectSkinTint(tb && tb.skin ? tb.id : null);   // teinte chat/log + accent de box du tapis QML
+    _injectSkinTint(tb ? tb.id : null);   // teinte chat/log + accent de box (tapis QML + Green Casino)
     if (tb) {
       // Style officiel bundle : feutre + pucks + boutons ; mode fs/full/felt.
       _injectAxis(TABLE_TOKENS, { feltUrl: tb.feltUrl }, 'pth_table_css', true);

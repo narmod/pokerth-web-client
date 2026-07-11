@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Green Casino table (custom image, fullscreen wallpaper). Casino pucks/buttons
+     from themes/casino-vert, green/gold colour tint. -->
+<PokerTH_TableStyle version="1.0">
+  <StyleDescription value="Green Casino"/>
+  <Creator value="narmod"/>
+  <License value="AGPL-3.0"/>
+</PokerTH_TableStyle>
