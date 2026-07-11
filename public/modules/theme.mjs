@@ -56,12 +56,14 @@ const PALETTES = [
   { id: 'pokerth-light', key: 'themeLight', fallback: 'Light', swatch: '#dce2ec' },
 ];
 // Styles de table facon officielle (StyleProvider) : chaque style embarque son
-// feutre (image) + ses pucks + son skin de boutons d'action. id '' = PokerTH (defaut).
+// feutre + ses pucks + son skin de boutons. mode: 'fs' = image plein ecran
+// (--wallpaper, ovale transparent) · 'full' = image dans l'ovale (--table-img) ·
+// 'felt' = feutre ovale (--felt-img). id '' = PokerTH officiel fullscreen (defaut).
 const TABLES = [
-  { id: '',             key: 'tablePokerthOfficial', fallback: 'PokerTH',      swatch: '#1d222b', feltUrl: '/table/pokerth-official/felt.png', puck: 'pokerth', btn: 'glossy' },
-  { id: 'pokerth-live', key: 'tablePokerthLive',     fallback: 'PokerTH Live', swatch: '#0e4a2a', feltUrl: '/table/pokerth-live/felt.png',     puck: 'pokerth', btn: 'glossy' },
-  { id: 'green',        key: 'tableGreenFelt',       fallback: 'Table Green',  swatch: '#1e6b1e', feltUrl: '/table/felt-green.jpg',            puck: 'pokerth', btn: 'glossy' },
-  { id: 'casino',       key: 'tableCasino',          fallback: 'Green Casino', swatch: '#1e6b1e', feltUrl: '/table/felt-green.jpg',            puck: 'casino',  btn: 'casino' },
+  { id: '',             key: 'tablePokerthOfficial', fallback: 'PokerTH',      swatch: '#1d222b', feltUrl: '/table/pokerth-official-fs/felt.png', mode: 'fs',   puck: 'pokerth', btn: 'glossy' },
+  { id: 'pokerth-live', key: 'tablePokerthLive',     fallback: 'PokerTH Live', swatch: '#0e4a2a', feltUrl: '/table/pokerth-live/felt.png',        mode: 'full', puck: 'pokerth', btn: 'glossy' },
+  { id: 'green',        key: 'tableGreenFelt',       fallback: 'Table Green',  swatch: '#1e6b1e', feltUrl: '/table/felt-green.jpg',               mode: 'felt', puck: 'pokerth', btn: 'glossy' },
+  { id: 'casino',       key: 'tableCasino',          fallback: 'Green Casino', swatch: '#1e6b1e', feltUrl: '/table/felt-green.jpg',               mode: 'felt', puck: 'casino',  btn: 'casino' },
 ];
 const DECKS = [
   { id: 'casino-vert', key: 'deckCasinoVert', fallback: 'Green Casino', swatch: '#1e6b1e', ext: 'svg' },
@@ -509,11 +511,24 @@ function _applyTableFullscreen(imgUrl, alignPos){
     el.style.setProperty('--wallpaper','url('+imgUrl+')');
     if (alignPos) el.style.setProperty('--wallpaper-pos', alignPos);
     else el.style.removeProperty('--wallpaper-pos');
+    // Persistance zero-flash : le boot <head> restitue --wallpaper (via pth_table_css)
+    // + data-table-fs/data-bg-img (via pth_table_fs). Exclusif avec le mode 'full'.
+    try{
+      localStorage.setItem('pth_table_fs','1'); localStorage.removeItem('pth_table_full');
+      var cur=(localStorage.getItem('pth_table_css')||'').replace(/--wallpaper(?:-pos)?:[^;]*;?/g,'');
+      cur+='--wallpaper:url('+imgUrl+');'+(alignPos?('--wallpaper-pos:'+alignPos+';'):'');
+      localStorage.setItem('pth_table_css',cur);
+    }catch(e){}
   } else {
     el.removeAttribute('data-table-fs');
     el.removeAttribute('data-bg-img');
     el.style.removeProperty('--wallpaper');
     el.style.removeProperty('--wallpaper-pos');
+    try{
+      localStorage.removeItem('pth_table_fs');
+      var c2=(localStorage.getItem('pth_table_css')||'').replace(/--wallpaper(?:-pos)?:[^;]*;?/g,'');
+      if(c2) localStorage.setItem('pth_table_css',c2); else localStorage.removeItem('pth_table_css');
+    }catch(e){}
   }
 }
 var _tblApply = table.apply;
@@ -523,11 +538,13 @@ table.apply = function(id){
   try {
     var tb = _builtinTableById(id);
     if (tb) {
-      // Style officiel bundle : feutre (image) + pucks + boutons ; ovale normal.
-      _applyTableFullscreen(null); _applyTableFull(null);
+      // Style officiel bundle : feutre + pucks + boutons ; mode fs/full/felt.
       _injectAxis(TABLE_TOKENS, { feltUrl: tb.feltUrl }, 'pth_table_css', true);
       _injectPucks(tb.puck === 'casino' ? CASINO_PUCKS : PUCK_SET);
       _injectButtons(tb.btn === 'casino' ? CASINO_BTN : { colors: BUTTON_GLOSSY });
+      if (tb.mode === 'fs') { _applyTableFull(null); _applyTableFullscreen(tb.feltUrl, tb.align || null); }
+      else if (tb.mode === 'full') { _applyTableFullscreen(null); _applyTableFull(tb.feltUrl); }
+      else { _applyTableFullscreen(null); _applyTableFull(null); }
     } else {
       // Table de galerie (import serveur) : comportement historique (feutre + pucks).
       var fimg=null, fsimg=null, fsalign=null, gt=_galleryTableById(id);
