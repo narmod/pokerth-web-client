@@ -4720,10 +4720,11 @@ body:not(.in-game) .my-zone {
   justify-content: center;
   gap: 8px;
   padding: 6px 12px;
-  background: linear-gradient(180deg, rgba(var(--blue-rgb), 0.15), rgba(var(--blue-rgb), 0.05));
-  border-bottom: 1px solid rgba(var(--blue-rgb), 0.35);
+  background: linear-gradient(180deg, rgba(10,26,54,0.9), rgba(6,16,36,0.9));
+  border-bottom: 1px solid rgba(var(--blue-rgb), 0.5);
   font-size: 0.75rem;
-  color: var(--info);
+  color: #9ec5ff;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.6);
   font-family: var(--ff-display);
   letter-spacing: 0.1em;
   text-transform: uppercase;
