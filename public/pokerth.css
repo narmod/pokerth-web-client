@@ -6192,6 +6192,10 @@ html[data-seat-img-self] .player-bar {
   grid-template-columns: repeat(auto-fit, minmax(44px, 1fr));
   max-width: none; margin: 0;
   flex: 1 1 auto; min-height: 0; overflow: auto;
+  /* Téléphone (<600px) : le média impose max-height:88px (~2 lignes) à .react-grid.
+     En fenêtre flottante on l'annule pour que la grille remplisse la fenêtre et
+     défile normalement (comme desktop/tablette où ce plafond n'existe pas). */
+  max-height: none;
 }
 /* 8 poignees de redimensionnement (bords + coins), injectees en JS.
    Transparentes : seul le curseur signale la zone. Placees sur les bords
