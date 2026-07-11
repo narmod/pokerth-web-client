@@ -1573,7 +1573,7 @@ body {
 .pot-right { text-align: right; }
 .pot-center {
   font-size: clamp(0.68rem, 1.6vw, 0.82rem);
-  color: var(--gold);
+  color: var(--sel, #E3C800);
   font-weight: 700;
   letter-spacing: 0.12em;
   text-align: center;
@@ -3294,9 +3294,9 @@ body {
   gap: 6px;
   padding: 4px 13px;
   background: rgba(0, 0, 0, 0.5);
-  border: 1.5px solid var(--gold);
+  border: 1.5px solid var(--sel, #E3C800);   /* accent or QML (colorAccent), stable clair/sombre */
   border-radius: 999px;
-  color: var(--gold);
+  color: var(--sel, #E3C800);
   font-family: var(--ff-display);
   font-weight: 700;
   font-size: 0.95rem;
