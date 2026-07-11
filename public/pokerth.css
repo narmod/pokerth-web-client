@@ -6153,7 +6153,26 @@ html[data-seat-img-self] .player-bar {
   position: fixed !important;   /* indispensable pour _placeWin/drag (l'overlay ne le centre plus) */
   padding: 0; border-top-width: 1px; max-width: none; max-height: none;
   display: flex; flex-direction: column; background: var(--modal-bg);
-  z-index: 201;
+  z-index: 201; container-type: inline-size;
+}
+/* Mode compact quand la fenêtre Combinaisons est réduite : cartes + textes plus
+   petits pour éviter le débordement (les !important du media desktop sont ici
+   surchargés car ces règles viennent après dans la cascade). */
+@container (max-width: 380px) {
+  .hand-row { gap: 6px; padding: 6px 4px; }
+  .hand-cards { gap: 1px; }
+  .hc { width: 17px !important; height: 25px !important; font-size: 0.46rem !important; border-radius: 2px; }
+  .hand-rank { width: 14px; font-size: 0.68rem !important; }
+  .hand-rail { width: 3px; }
+  .hand-name { font-size: 0.66rem !important; letter-spacing: 0.01em; gap: 4px; }
+  .hand-ico { font-size: 0.82rem !important; }
+  .hand-desc { font-size: 0.56rem !important; }
+  .hands-legend { font-size: 0.54rem !important; gap: 6px; }
+}
+@container (max-width: 250px) {
+  .hc { width: 14px !important; height: 21px !important; font-size: 0.4rem !important; }
+  .hand-name { font-size: 0.6rem !important; }
+  .hand-desc { font-size: 0.52rem !important; }
 }
 #hands-card-inner.floating-win .hands-scroll {
   flex: 1 1 auto; min-height: 0; overflow-y: auto; overflow-x: hidden;
