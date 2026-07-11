@@ -13001,9 +13001,16 @@ function makeWinResizable(panel, key, minW, minH){
       if(nw<minW){ if(dir.indexOf('w')>=0) nl-=(minW-nw); nw=minW; }
       if(nh<minH){ if(dir.indexOf('n')>=0) nt-=(minH-nh); nh=minH; }
       var vw=window.innerWidth, vh=window.innerHeight;
-      nw=Math.min(nw, vw-8); nh=Math.min(nh, vh-8);
+      // Borne la TAILLE pour garder le bord opposé au coin tiré dans l'écran,
+      // sans repousser le coin ancré (sinon la fenêtre « recule » en s'agrandissant).
+      if(dir.indexOf('e')>=0) nw=Math.min(nw, vw-nl-6);
+      if(dir.indexOf('s')>=0) nh=Math.min(nh, vh-nt-6);
+      if(dir.indexOf('w')>=0 && nl<6){ nw-=(6-nl); nl=6; }
+      if(dir.indexOf('n')>=0 && nt<6){ nh-=(6-nt); nt=6; }
+      nw=Math.max(minW, Math.min(nw, vw-12)); nh=Math.max(minH, Math.min(nh, vh-12));
       panel.style.width=nw+'px'; panel.style.height=nh+'px';
-      _placeWin(panel, nl, nt);
+      panel.style.right='auto'; panel.style.bottom='auto';
+      panel.style.left=nl+'px'; panel.style.top=nt+'px';
     });
     function end(e){
       if(!on) return; on=false;
@@ -13974,7 +13981,7 @@ function renderPlayersList() {
   body.innerHTML = _shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>';
 }
 
-;(function(){ window.BUILD_VERSION='0.3.324-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.325-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
