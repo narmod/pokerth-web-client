@@ -6315,6 +6315,8 @@ const App = (() => {
         // start-now banner and the live table at the same time.
         var _ga = document.getElementById('g-actions');
         if (_ga) _ga.innerHTML = '';
+        // La partie démarre → on masque la wait-page et on révèle le feutre.
+        try { _wpHide(); } catch(e) {}
         // Same goes for the "▶ Start" / "▶ Bots" admin buttons in the
         // header: once the game has started they no longer make sense.
         // Hide all four (desktop + mobile-overflow variants) defensively.
@@ -6476,6 +6478,7 @@ const App = (() => {
         if (!_gameStarted) {
           _gameStarted = true;
           _seatsFrozen = true;
+          try { _wpHide(); } catch(e) {}
         }
         if (seats.length === 0) {
           seats = Object.keys(seatData)
@@ -9096,6 +9099,15 @@ const App = (() => {
   // Refreshed automatically by GamePlayerJoined, GamePlayerLeft and
   // PlayerInfoReply handlers; frozen once GameStartInitial fires.
   // ─────────────────────────────────────────────────────────────────
+  // État de la case « Compléter avec des joueurs ordinateur » de la wait-page
+  // (parité fillCpuCheck.checked côté QML). En mémoire de session seulement.
+  window._wpFillBots = window._wpFillBots || false;
+  window._wpSetFillBots = function(v) {
+    window._wpFillBots = !!v;
+    // Re-rendu : l'état actif du bouton « Démarrer » dépend de la case.
+    try { window._renderWaitingPanel && window._renderWaitingPanel(); } catch(e) {}
+  };
+
   function renderWaitingPanel() {
     if (_gameStarted) return;
     const g = games[gId] || {};
@@ -9189,54 +9201,80 @@ const App = (() => {
     // useful, and that join triggers a re-render of this panel.
     try { refreshStartNoBotsVisibility(); } catch(e) {}
 
-    // ── Admin start panel ─────────────────────────────────────
-    //
-    // Shown to the admin whenever there are >= 2 humans at the table
-    // (the minimum required by the server to start a hand). It used
-    // to require _createWithBots + _minHumansNeeded — those gates are
-    // gone now because the panel offers BOTH choices side by side:
-    //
-    //   ▶ Démarrer      → App.startNoBots()    (humans only)
-    //   ▶ + Bots        → App.startWithBots()  (fill empty seats)
-    //
-    // We use the existing wp-ready-* style language for visual
-    // continuity (green theme, soft pulse), and label them concisely
-    // so they fit on one row even on the smallest mobile widths.
-    // The same buttons also exist in the header (▶ Start / ▶ Bots)
-    // and one click on either path is enough — duplicating them in
-    // the waiting panel is a deliberate UX choice: that's where the
-    // admin is already looking, especially on mobile where the
-    // header buttons are tucked into the ••• overflow.
-    let readyBlock = '';
-    // Show "+ Bots" whenever the admin has empty seats to fill (works even
-    // with a single human, e.g. offline mode). "Start" (humans only) still
-    // requires the server minimum of 2 humans.
-    if (!_amSpectator && amGameAdmin && (current >= 2 || current < maxP)) {
-      var startNoBotsBtn = (current >= 2)
-        ? '<button class="wp-ready-btn" onclick="App.startNoBots()" title="' + t('wpStartHumansTip') + '">▶ ' + t('wpStart') + '</button>'
-        : '';
-      var fillBotsBtn = (current < maxP)
-        ? '<button class="wp-ready-btn wp-ready-btn-bots" onclick="App.startWithBots()" title="' + t('wpFillBotsTip') + '">▶ + Bots</button>'
-        : '';
-      readyBlock =
-        '<div class="wp-ready-row">' +
-          '<div class="wp-ready-label">✓ ' + t('wpReady') + '</div>' +
-          '<div class="wp-ready-btn-row">' + startNoBotsBtn + fillBotsBtn + '</div>' +
-        '</div>';
+    // ── Actions (parité GameWaitPage.qml) ─────────────────────────
+    // Admin (non-spectateur, hors ranking) : case « Compléter avec des
+    // joueurs ordinateur » + « Démarrer la partie » (actif ssi ≥ 2 joueurs)
+    // + « Quitter ». Joueur simple / spectateur : uniquement « Quitter ».
+    // UN SEUL bouton Démarrer ; la case décide du remplissage bots — comme
+    // Lobby.startGame(fillCpuCheck.checked) côté QML (au lieu des deux boutons
+    // « ▶ Démarrer » / « ▶ + Bots » de l'ancien panneau).
+    var isRanking = (((games[gId] || {}).type) || 0) === 4;
+    var isHostCtl = !_amSpectator && amGameAdmin && !isRanking;
+    // Démarrable si ≥ 2 humains (comme QML) OU si la case « bots » est cochée
+    // et qu'il reste des sièges à remplir (préserve le solo vs bots / offline).
+    var canStart  = isHostCtl && (current >= 2 || (window._wpFillBots && current >= 1 && current < maxP));
+
+    var fillBotsRow = '';
+    if (isHostCtl && current < maxP) {
+      fillBotsRow =
+        '<label class="wp-fillbots"><input type="checkbox" id="wp-fillbots-cb"'
+        + (window._wpFillBots ? ' checked' : '')
+        + ' onchange="window._wpSetFillBots(this.checked)"><span>'
+        + t('wpFillBots') + '</span></label>';
     }
+    var leaveBtn =
+      '<button class="wp-btn wp-btn-leave" onclick="App.confirmLeaveGame()">'
+      + t('wpLeaveGame') + '</button>';
+    var startBtn = isHostCtl
+      ? '<button class="wp-btn wp-btn-start" onclick="App.startFromWait()"'
+        + (canStart ? '' : ' disabled')
+        + ' title="' + t('wpStartHumansTip') + '">' + t('wpStartGame') + '</button>'
+      : '';
+    var actionsRow = '<div class="wp-actions">' + leaveBtn + startBtn + '</div>';
+
+    // Bloc « Infos de partie » (nom, type, blind, capital, temps d'action).
+    var _g2 = games[gId] || {};
+    var infoRows =
+        (_g2.type ? '<div class="wp-info-row">' + t('infoTypeLabel') + ' : ' + esc(_gameTypeLabel(_g2.type)) + '</div>' : '')
+      + (_g2.smallBlind ? '<div class="wp-info-row">' + t('smallBlind') + ' : <b>' + _groupThousands(_g2.smallBlind) + '</b></div>' : '')
+      + '<div class="wp-info-row">' + t('startCash') + ' : <b>' + _groupThousands(gameStartMoney || _g2.startMoney || 3000) + '</b></div>'
+      + '<div class="wp-info-row">' + t('actionTimeout') + ' : <b>' + (gameTimeout || _g2.timeout || 15) + ' s</b></div>';
+    var _wpName = (_gameMeta && _gameMeta.name) || _g2.name || ('#' + gId);
+    var infoBlock =
+        '<div class="wp-info">'
+      +   '<div class="wp-info-name">' + esc(_wpName) + '</div>'
+      +   infoRows
+      + '</div>';
 
     const html =
-      '<div class="waiting-panel">' +
-        '<div class="wp-title">⏳ ' + t('waitingStart') + '</div>' +
-        '<div class="wp-count">' + t('waitingPlayerCount') + ' <b>' + current + '</b> / ' + maxP + '</div>' +
+      '<div class="wp-card">' +
+        '<div class="wp-title">⏳ ' + t('wpWaitingPlayers') + '</div>' +
+        infoBlock +
         '<div class="wp-bar">' + dots + '</div>' +
         statusLine +
+        '<div class="wp-players-hdr">' + t('infoPlayersInGame') + ' (' + current + ')</div>' +
         '<ul class="wp-list">' + rows + '</ul>' +
-        readyBlock +
+        fillBotsRow +
+        actionsRow +
         hint +
       '</div>';
-    renderGameWaiting(html, true);
+    // La wait-page recouvre le feutre tant que la partie n'a pas démarré
+    // (parité GameWaitPage QML : on ne bascule sur le gametable qu'à
+    // GameStartInitial, où _wpHide() est appelé). On garde la barre
+    // d'action vide derrière.
+    var _wpEl = document.getElementById('g-wait-page');
+    if (_wpEl) { _wpEl.innerHTML = html; _wpEl.style.display = 'flex'; }
+    try { var _gaEl = document.getElementById('g-actions'); if (_gaEl) _gaEl.innerHTML = ''; } catch(e) {}
   }
+
+  // Masque la wait-page et révèle le feutre. Appelé à GameStartInitial et
+  // au départ de la table.
+  function _wpHide() {
+    var el = document.getElementById('g-wait-page');
+    if (el) { el.style.display = 'none'; el.innerHTML = ''; }
+  }
+  window._wpHide = _wpHide;
+  window._renderWaitingPanel = renderWaitingPanel;
 
   // ─────────────────────────────────────────────────────────────────
   // End-of-game overlay — shown when EndOfGame fires (server signals
@@ -11203,6 +11241,7 @@ function dismissWinner() {
       gId = 0; seats = []; seatData = {}; _specPids = new Set();
       var _ego = document.getElementById('g-endgame-overlay');
       if (_ego) _ego.style.display = 'none';
+      try { _wpHide(); } catch(e) {}
       myCards = [null,null]; commCards = [];
       stopTurnTimer();
       dismissWinner();
@@ -11382,6 +11421,7 @@ function dismissWinner() {
       gId = 0; seats = []; seatData = {}; _specPids = new Set();
       var _ego = document.getElementById('g-endgame-overlay');
       if (_ego) _ego.style.display = 'none';
+      try { _wpHide(); } catch(e) {}
       myCards = [null,null]; commCards = [];
       stopTurnTimer();
       dismissWinner();
@@ -12012,6 +12052,13 @@ function dismissWinner() {
       }
       addGameChat(null, '▶ Starting (humans only)…', 'sys');
       send(MSG.buildStartWithBots(gId, false));
+    },
+    // Bouton unique « Démarrer la partie » de la wait-page (parité QML :
+    // Lobby.startGame(fillCpuCheck.checked)). La case « Compléter avec des
+    // joueurs ordinateur » décide du remplissage bots.
+    startFromWait() {
+      if (window._wpFillBots) this.startWithBots();
+      else this.startNoBots();
     },
     createGame() {
       const g = id => document.getElementById(id);
@@ -13703,7 +13750,7 @@ function renderPlayersList() {
   body.innerHTML = _shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>';
 }
 
-;(function(){ window.BUILD_VERSION='0.3.275-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.276-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

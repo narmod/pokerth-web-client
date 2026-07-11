@@ -17,6 +17,7 @@ export const meta = {
 
 export const strings = {
   buttonsPokerth: 'PokerTH',
+  wpWaitingPlayers:'Waiting for players …', wpFillBots:'Fill up with computer players', wpStartGame:'Start Game', wpLeaveGame:'Leave Game',
   assist:'Assistance',advCatUI:'User interface',advCatStyle:'Style',advCatSound:'Sound',advCatLocal:'Local game',advCatNetwork:'Network game',advCatInternet:'Internet game',advCatAvatar:'Nicknames / Avatars',advCatLog:'Log messages',advCatReset:'Restore defaults',
   advStyleDesc:'Card decks, table felt, seat skins and the colour theme.',advStyleOpen:'Open the theme picker',advSoundDesc:'Game sound, music volume and reaction mute.',advSoundOpen:'Sound & volume settings',advLocalDesc:'Practise against bots: fill the empty seats at your table.',advLocalOpen:'Fill seats with bots',advNetworkDesc:'Host a game over your local network (LAN).',advSoonTag:'Coming soon',advInternetDesc:'You are connected to a PokerTH server.',advSrvLabel:'Server',advInternetOpen:'Change server / disconnect',advSrvUnknown:'\u2014',advAvatarDesc:'Your nickname and avatar image.',advAvatarOpen:'Edit nickname / avatar',advLogDesc:'In-game log and chat overlay.',advLogOpen:'Open the log',advResetDesc:'Reset all advanced options and keyboard shortcuts to their defaults.',advResetBtn:'Restore defaults',advResetConfirm:'Reset all options and keyboard shortcuts to their defaults?',
   advHidePbar:'PokerTH mode (player bar hidden)',

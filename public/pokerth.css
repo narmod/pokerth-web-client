@@ -4419,6 +4419,58 @@ body:not(.in-game) .my-zone {
   font-style: italic; margin-top: 4px; text-align: center;
 }
 .wp-hint-admin { color: rgb(var(--green2-rgb)); font-style: normal; font-weight: 600; }
+
+/* ── Wait-page (parité GameWaitPage QML) : recouvre le feutre avant le début.
+   Remplie par renderWaitingPanel() dans #g-wait-page, masquée à
+   GameStartInitial. Options différenciées admin (case bots + Démarrer +
+   Quitter) / joueur simple (Quitter seul). ── */
+.wait-page {
+  position: absolute; inset: 0; z-index: 40;
+  display: flex; flex-direction: column; align-items: center;
+  gap: 12px; overflow-y: auto;
+  padding: 20px 14px calc(20px + env(safe-area-inset-bottom, 0px));
+  background: var(--field-bg);
+}
+.wait-page .wp-card {
+  width: 100%; max-width: 440px;
+  display: flex; flex-direction: column; align-items: stretch; gap: 10px;
+}
+.wait-page .wp-title {
+  text-align: center; font-size: 1rem; font-weight: 700;
+  color: var(--gold); letter-spacing: 0.02em; margin: 0;
+}
+.wp-info {
+  background: var(--panel); border: 1px solid var(--border);
+  border-radius: 12px; padding: 12px 14px;
+  display: flex; flex-direction: column; gap: 3px;
+}
+.wp-info-name { font-weight: 700; color: var(--cream); font-size: 0.95rem; margin-bottom: 3px; }
+.wp-info-row { font-size: 0.78rem; color: var(--gold-dim); }
+.wp-info-row b { color: var(--gold); font-weight: 700; }
+.wp-players-hdr {
+  font-size: 0.7rem; color: var(--gold-dim); text-transform: uppercase;
+  letter-spacing: 0.12em; text-align: center; margin-top: 2px;
+}
+.wp-fillbots {
+  display: flex; align-items: center; gap: 9px; cursor: pointer;
+  font-size: 0.82rem; color: var(--text); padding: 6px 2px; user-select: none;
+}
+.wp-fillbots input { width: 16px; height: 16px; accent-color: var(--green); cursor: pointer; flex: 0 0 auto; }
+.wp-actions { display: flex; gap: 8px; margin-top: 4px; }
+.wp-actions .wp-btn {
+  flex: 1; padding: 12px 10px; border-radius: 9px;
+  font-weight: 700; letter-spacing: 0.4px; font-size: 0.88rem;
+  cursor: pointer; border: 1px solid var(--border);
+  background: var(--panel-hi, var(--panel)); color: var(--text);
+  transition: transform .09s, filter .12s;
+}
+.wp-btn-leave { color: var(--red); border-color: rgba(var(--red-rgb), 0.4); }
+.wp-btn-start {
+  color: #fff; border-color: #7ad06a;
+  background: linear-gradient(180deg, #50b840, #1e6614);
+}
+.wp-btn-start:disabled { opacity: 0.45; cursor: not-allowed; filter: grayscale(0.45); }
+.wp-btn:not(:disabled):active { transform: scale(0.97); }
 /* When the action-bar hosts the waiting panel (no real action buttons
    yet), override its default right-alignment so the panel sits in the
    middle of the bottom strip. Once the game starts, .waiting-panel is

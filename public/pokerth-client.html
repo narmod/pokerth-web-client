@@ -1461,6 +1461,10 @@ function onAvatarImageChosen(input) {
        methods. -->
   <div id="g-endgame-overlay" class="endgame-overlay" style="display:none"></div>
   <div class="game-area">
+    <!-- Wait-page (parité GameWaitPage QML) : recouvre le feutre tant que la
+         partie n'a pas démarré ; remplie par renderWaitingPanel(), masquée à
+         GameStartInitial via _wpHide(). Options différenciées admin/joueur. -->
+    <div id="g-wait-page" class="wait-page" style="display:none"></div>
     <!-- Zoom table (tablette/desktop) : reduire puis re-agrandir jusqu'a la taille actuelle (max 1.0) -->
     <div id="g-zoom-ctrl" class="zoom-ctrl">
       <button class="zoom-btn" id="g-zoom-in" onclick="tableZoomStep(1)" title="Agrandir la table" data-i18n-title="zoomIn" aria-label="Agrandir la table">+</button>
