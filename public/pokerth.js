@@ -7585,10 +7585,12 @@ const App = (() => {
       const joinLabel = (g.priv || g.type === 3)
         ? '🔒 ' + rawJoin.replace(/^\u25B6\s*/, '')
         : rawJoin.replace(/^\u25B6\s*/, '');
-      const watchBtn = g.mode === 2
+      // Pas de Rejoindre/Spectateur sur MA propre table (déjà assis) : gid === gId.
+      const isMyTable = (typeof gId !== 'undefined' && gId !== 0 && String(gid) === String(gId));
+      const watchBtn = (g.mode === 2 && !isMyTable)
         ? '<button class="btn-join btn-spectate" title="' + t('watchTitle') + '" onclick="event.stopPropagation();App.spectateGame(' + gid + ')">👁 ' + t('spectatorBtn') + '</button>'
         : '';
-      const joinBtn = g.mode === 1
+      const joinBtn = (g.mode === 1 && !isMyTable)
         ? '<button class="btn-join" onclick="event.stopPropagation();App.joinGame(' + parseInt(gid) + ')">' + joinLabel + '</button>'
         : '';
       // Meta façon officiel : X/max · Temps : Xs/Ys · Publique/Privée · Classement.
@@ -13890,7 +13892,7 @@ function renderPlayersList() {
   body.innerHTML = _shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>';
 }
 
-;(function(){ window.BUILD_VERSION='0.3.306-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.307-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
