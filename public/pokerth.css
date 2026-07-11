@@ -323,13 +323,28 @@ body {
    .table-zone (flex:1) occupe la zone de jeu au-dessus de la barre d'action ;
    l'ovale (.felt-oval) est transparent et laisse voir ce fond. data-table-fs est
    pose par theme.mjs. S'applique a TOUS les tapis en mode fullscreen. */
-:root[data-table-fs="1"] .table-zone {
+/* Fullscreen : le feutre couvre TOUT l'ecran de jeu (#s-game, 100dvh) -> il
+   descend jusqu'en bas, derriere la barre d'action, et l'entoure. La zone de
+   table devient transparente (le fond vient de #s-game), et la barre d'action
+   + player-bar sont transparentes ; seul le panneau des boutons (.action-grid)
+   flotte sur le feutre. Scoping data-table-fs -> n'affecte que le mode fullscreen. */
+:root[data-table-fs="1"] #s-game {
   background-image:
     linear-gradient(rgba(0,0,0,0.14), rgba(0,0,0,0.14)),
     var(--wallpaper, none);
   background-size: cover;
   background-position: var(--wallpaper-pos, center bottom);
   background-repeat: no-repeat;
+}
+:root[data-table-fs="1"] .table-zone { background-image: none; }
+:root[data-table-fs="1"] .my-zone,
+:root[data-table-fs="1"] .player-bar { background: transparent !important; border-top: 0 !important; }
+:root[data-table-fs="1"] .my-zone .action-grid {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 8px 10px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.38);
 }
 
 /* ─── SCREENS ─── */
