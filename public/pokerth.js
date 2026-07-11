@@ -7362,6 +7362,10 @@ const App = (() => {
     var isHost   = !_amSpectator && amGameAdmin && !isRank;
     var count    = _gamePresentPids().length;
     var canStart = isHost && (count >= 2 || window._offlineMode);
+    // Mode entraînement (offline) : la case « Fill up with computer players »
+    // est cochée par défaut. Sans effet sur les autres modes, et un (dé)cochage
+    // explicite de l'utilisateur (_wpFillBotsUserSet) est respecté.
+    if (!window._wpFillBotsUserSet) window._wpFillBots = !!window._offlineMode;
     var fillRow  = (isHost && count < maxP)
       ? '<label class="wp-fillbots"><input type="checkbox" id="wp-fillbots-cb"' + (window._wpFillBots ? ' checked' : '') + ' onchange="window._wpSetFillBots(this.checked)"><span>' + t('wpFillBots') + '</span></label>'
       : '';
@@ -9238,7 +9242,10 @@ const App = (() => {
   // État de la case « Compléter avec des joueurs ordinateur » de la wait-page
   // (parité fillCpuCheck.checked côté QML). En mémoire de session seulement.
   window._wpFillBots = window._wpFillBots || false;
-  window._wpSetFillBots = function(v) { window._wpFillBots = !!v; };
+  // A été explicitement (dé)coché par l'utilisateur ? Tant que non, le défaut
+  // suit le mode : coché en entraînement (offline), décoché ailleurs.
+  window._wpFillBotsUserSet = window._wpFillBotsUserSet || false;
+  window._wpSetFillBots = function(v) { window._wpFillBots = !!v; window._wpFillBotsUserSet = true; };
 
   function renderWaitingPanel() {
     if (_gameStarted) return;
@@ -13752,7 +13759,7 @@ function renderPlayersList() {
   body.innerHTML = _shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>';
 }
 
-;(function(){ window.BUILD_VERSION='0.3.287-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.288-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
