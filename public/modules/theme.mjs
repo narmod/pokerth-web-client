@@ -98,7 +98,7 @@ var PUCK_SET = { dealer:'url(/pucks/dealer.svg)', sb:'url(/pucks/sb.svg)', bb:'u
 var CASINO_PUCKS = { dealer:'url(/themes/casino-vert/dealer.svg)', sb:'url(/themes/casino-vert/sb.svg)', bb:'url(/themes/casino-vert/bb.svg)' };
 var CASINO_BTN = { images:{ fold:'url(/themes/casino-vert/btn-fold.svg)', check:'url(/themes/casino-vert/btn-check.svg)', call:'url(/themes/casino-vert/btn-call.svg)', raise:'url(/themes/casino-vert/btn-raise.svg)', allin:'url(/themes/casino-vert/btn-allin.svg)' }, colors:{ 'btn-fold-fg':'#ffd0d0','btn-check-fg':'#c0ffc0','btn-call-fg':'#c0d8ff','btn-raise-fg':'#110900','btn-allin-fg':'#e88a8a','btn-allin-fg-b':'#f4b0b0' } };
 var BUTTONS_ITEMS = [ {id:'',key:'buttonsDefault',fallback:'Flat',swatch:'#6b2020'}, {id:'glossy',key:'buttonsGlossy',fallback:'Glossy',swatch:'#c81818'}, {id:'pokerth',key:'buttonsPokerth',fallback:'PokerTH',swatch:'#4080d8'} ];
-var PUCKS_ITEMS   = [ {id:'pokerth',key:'pucksPokerth',fallback:'PokerTH',swatch:'#3a78d8',preview:'/pucks/dealer.svg'} ];
+var PUCKS_ITEMS   = [ {id:'',key:'pucksAuto',fallback:'Auto (table)',swatch:'#3a78d8',preview:'/pucks/dealer.svg'}, {id:'pokerth',key:'pucksPokerth',fallback:'PokerTH',swatch:'#3a78d8',preview:'/pucks/dealer.svg'}, {id:'casino',key:'pucksCasino',fallback:'Casino',swatch:'#caa64a',preview:'/themes/casino-vert/dealer.svg'} ];
 // Seats axis: seat "packs" (layout + graphics), like decks/tables. A pack is a
 // CSS block keyed on html[data-seat="<id>"] (seat DOM stays neutral via
 // display:contents -> CSS-only) + optional assets under /seats/<id>/. id '' =
@@ -116,13 +116,13 @@ const palette = makeAxis({ storeKey: 'pth_theme', attr: 'data-theme', items: PAL
 const table   = makeAxis({ storeKey: 'pth_table', attr: 'data-table', items: TABLES, def: '', titleKey: 'sectionTable',   titleFallback: 'Table' });
 const deck    = makeAxis({ storeKey: 'pth_deck',  attr: 'data-deck',  def: 'pokerth-new',  items: DECKS,    titleKey: 'sectionDeck',    titleFallback: 'Cards' });
 const buttons = makeAxis({ storeKey: 'pth_buttons', attr: 'data-buttons', def: 'glossy', items: BUTTONS_ITEMS, titleKey: 'sectionButtons', titleFallback: 'Buttons' });
-const pucks   = makeAxis({ storeKey: 'pth_pucks',   attr: 'data-pucks',   def: 'pokerth-new', items: PUCKS_ITEMS,   titleKey: 'sectionPucks',   titleFallback: 'Pucks' });
+const pucks   = makeAxis({ storeKey: 'pth_pucks',   attr: 'data-pucks',   def: '',           items: PUCKS_ITEMS,   titleKey: 'sectionPucks',   titleFallback: 'Pucks' });
 // Defaut dependant du viewport : Classic sur mobile, PokerTH sur tablette/desktop. Evalue
 // une fois au chargement ; un choix enregistre prime toujours.
 var _seatDef = 'pokerth';
 try { if (typeof window !== 'undefined' && window.innerWidth < 640) _seatDef = ''; } catch (e) {}
 const seat    = makeAxis({ storeKey: 'pth_seat',    attr: 'data-seat',    def: _seatDef,      items: SEATS,         titleKey: 'sectionSeat',    titleFallback: 'Seats' });
-const AXES = [palette, table, deck, seat];
+const AXES = [palette, table, pucks, deck, seat];
 
 // ── Presets (main themes) ───────────────────────────────────────────────────
 // A preset is just a named combo of axis ids. "Casino vert" = all defaults
@@ -180,6 +180,16 @@ try {
     localStorage.removeItem('pth_table_css'); localStorage.removeItem('pth_table_full');
     localStorage.removeItem('pth_buttons_css'); localStorage.removeItem('pth_pucks_css');
     localStorage.setItem('pth_axesA_mig', '1');
+  }
+} catch (e) {}
+
+// Pucks redevient un axe selectionnable (defaut « Auto (table) »). Nettoie les
+// anciennes valeurs de pth_pucks hors {pokerth,casino} -> Auto, une seule fois.
+try {
+  if (!localStorage.getItem('pth_pucksB_mig')) {
+    var _mpp = localStorage.getItem('pth_pucks');
+    if (_mpp !== 'pokerth' && _mpp !== 'casino') localStorage.removeItem('pth_pucks');
+    localStorage.setItem('pth_pucksB_mig', '1');
   }
 } catch (e) {}
 
@@ -540,7 +550,6 @@ table.apply = function(id){
     if (tb) {
       // Style officiel bundle : feutre + pucks + boutons ; mode fs/full/felt.
       _injectAxis(TABLE_TOKENS, { feltUrl: tb.feltUrl }, 'pth_table_css', true);
-      _injectPucks(tb.puck === 'casino' ? CASINO_PUCKS : PUCK_SET);
       _injectButtons(tb.btn === 'casino' ? CASINO_BTN : { colors: BUTTON_GLOSSY });
       if (tb.mode === 'fs') { _applyTableFull(null); _applyTableFullscreen(tb.feltUrl, tb.align || null); }
       else if (tb.mode === 'full') { _applyTableFullscreen(null); _applyTableFull(tb.feltUrl); }
@@ -551,12 +560,12 @@ table.apply = function(id){
       if (gt) {
         _injectAxis(TABLE_TOKENS, { id:gt.id, tokens:{}, feltUrl:gt.feltUrl }, 'pth_table_css', true);
         if (gt.fs) { fsimg=gt.feltUrl||null; fsalign=gt.align||null; } else if (gt.full) fimg=gt.feltUrl||null;
-        _injectPucks(gt.pucks || PUCK_SET);
         _injectButtons({ colors: BUTTON_GLOSSY });
       }
       if (fsimg) { _applyTableFull(null); _applyTableFullscreen(fsimg, fsalign); }
       else { _applyTableFullscreen(null); _applyTableFull(fimg); }
     }
+    pucks.apply(pucks.get());   // Auto -> puck du tapis courant ; sinon respecte le choix explicite
   } catch (e) {}
   try { if (window._renderSeats) window._renderSeats(); } catch (e) {}
 };
@@ -572,9 +581,12 @@ buttons.apply = function(id){ _btnApply(id); try{
 }catch(e){} };
 buttons.set = buttons.apply;
 var _pkApply = pucks.apply;
+// Puck du tapis courant (built-in ou galerie) — utilise pour le mode « Auto (table) ».
+function _tablePuckSet(){ var tb=_builtinTableById(table.get()); if(tb) return tb.puck==='casino'?CASINO_PUCKS:PUCK_SET; var gt=_galleryTableById(table.get()); if(gt&&gt.pucks) return gt.pucks; return PUCK_SET; }
 pucks.apply = function(id){ _pkApply(id); try{
-  if (id==='pokerth') _injectPucks(PUCK_SET);
-  else if (!id) _injectPucks(null);
+  if (!id) _injectPucks(_tablePuckSet());          // Auto -> suit le tapis
+  else if (id==='pokerth') _injectPucks(PUCK_SET);
+  else if (id==='casino') _injectPucks(CASINO_PUCKS);
   else { var pk=_puckPkgById(id); if(pk) _injectPucks(pk.set); else { var gt=_galleryTableById(id); if(gt) _injectPucks(gt.pucks||null); } }
 }catch(e){}
   // Les pucks sont des <img> figes au rendu (le feutre, lui, est une variable CSS live) :
@@ -960,11 +972,12 @@ function _render() {
   // Cartes (+ dos de carte), Sieges. Le style de table pilote pucks+boutons.
   AXES.forEach(function (ax) {
     var cur = ax.get();
-    var kind = (ax === palette) ? 'palette' : (ax === table) ? 'table' : (ax === deck) ? 'deck' : (ax === seat) ? 'seat' : 'palette';
+    var kind = (ax === palette) ? 'palette' : (ax === table) ? 'table' : (ax === deck) ? 'deck' : (ax === pucks) ? 'pucks' : (ax === seat) ? 'seat' : 'palette';
     var secId = ax.storeKey;
     var opts = (ax === deck) ? DECKS.concat(_galleryDecks)
              : (ax === palette) ? PALETTES
              : (ax === table) ? TABLES.concat(_galleryTables)
+             : (ax === pucks) ? PUCKS_ITEMS.concat(_galleryTables.filter(function(g){return g.pucks;}))
              : (ax === seat) ? SEATS.concat(_gallerySeats)
              : ax.items;
     var curItem = opts[0];
