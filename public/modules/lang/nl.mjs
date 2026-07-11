@@ -15,6 +15,7 @@ export const meta = {
 };
 
 export const strings = {
+  reportGameTitle: `Ongepaste spelnaam melden`, reportGameConfirm: `Melden`, reportGameMsg: `Weet je zeker dat je de spelnaam "{name}" als ongepast wilt melden?`, reportGameAccepted: `De melding van de spelnaam is door de server geaccepteerd. Bedankt.`, reportGameDup: `Deze spelnaam is al door een andere speler gemeld.`, reportGameError: `Er is een fout opgetreden bij het melden van de spelnaam.`,
   filterRanked: 'Gerangschikt', plSortAZ: 'Sorteren A–Z', plSortCountry: 'Sorteren op land',
   plInGame: 'In een spel', plLobby: 'In de lobby',
   buttonsPokerth: 'PokerTH',

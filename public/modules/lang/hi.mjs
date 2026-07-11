@@ -14,6 +14,7 @@ export const meta = {
 };
 
 export const strings = {
+  reportGameTitle: `अनुचित गेम नाम की रिपोर्ट करें`, reportGameConfirm: `रिपोर्ट करें`, reportGameMsg: `क्या आप वाकई गेम नाम "{name}" को अनुचित के रूप में रिपोर्ट करना चाहते हैं?`, reportGameAccepted: `गेम नाम की रिपोर्ट सर्वर द्वारा स्वीकार कर ली गई। धन्यवाद।`, reportGameDup: `इस गेम नाम की रिपोर्ट पहले ही किसी अन्य खिलाड़ी द्वारा की जा चुकी है।`, reportGameError: `गेम नाम की रिपोर्ट करते समय एक त्रुटि हुई।`,
   filterRanked: 'रैंक वाली', plSortAZ: 'A–Z क्रम', plSortCountry: 'देश के अनुसार क्रमबद्ध करें',
   plInGame: 'खेल में', plLobby: 'लॉबी में',
   buttonsPokerth: 'PokerTH',

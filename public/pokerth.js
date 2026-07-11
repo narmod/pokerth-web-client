@@ -2814,6 +2814,7 @@ const MSG = (() => {
     51:52, 52:53,                              // ShowMyCardsRequest + AfterHandShowCards
     62:63, 63:64, 64:65, 65:66,               // Statistics, Chat*
     67:68, 68:69,                              // TimeoutWarning, ResetTimeout
+    69:70, 70:71, 71:72, 72:73,               // Report Avatar/Game + Acks
     73:74,                                     // Error
     76:77, 77:78,                              // AdminBanPlayer + Ack (kickban total)
     78:79, 79:80, 80:81, 81:82, 55:56, 56:57, 57:58, 58:59, 59:60, 60:61, 61:62,              // Spectator*
@@ -2843,6 +2844,7 @@ const MSG = (() => {
     ShowMyCardsRequest:51, AfterHandShowCards:52,
     Statistics:62, ChatRequest:63, Chat:64, ChatReject:65,
     TimeoutWarning:67, ResetTimeout:68, Error:73,
+    ReportAvatar:69, ReportAvatarAck:70, ReportGame:71, ReportGameAck:72,
     AdminBanPlayer:76, AdminBanPlayerAck:77,
     GameListSpectatorJoined:78, GameListSpectatorLeft:79,
     // Spectators on the table we're currently in (or watching).
@@ -5466,6 +5468,20 @@ const App = (() => {
         // Legacy auth (SCRAM temporarily disabled): empty AuthClientResponse.
         setStatus(t('verifyingAccount'));
         send(MSG.buildAuthResponse());
+        break;
+      }
+
+      case T.ReportGameAck: {
+        // ReportGameAckMessage : reportedGameId=1, reportGameResult=2
+        // (0 accepté · 1 déjà signalé · 2 invalide/erreur)
+        var _rgRes = Proto.u32(sub, 2);
+        if (_rgRes === 0) {
+          showToast(t('reportGameAccepted'), { icon: '\u2713' });
+        } else if (_rgRes === 1) {
+          showToast(t('reportGameDup'), { icon: '\u2139' });
+        } else {
+          showToast(t('reportGameError'), { tone: 'error', icon: '\u2715' });
+        }
         break;
       }
 
@@ -11655,9 +11671,13 @@ function dismissWinner() {
       var gid = this._reportGid;
       this.cancelReportGame();
       if (gid == null) return;
-      // NOTE : l'envoi serveur (modération) n'existe pas encore côté protocole
-      // web — à brancher avec sp0ck. Pour l'instant : accusé local.
-      try { addChat(null, t('reportGameDone'), 'sys'); } catch(e) {}
+      // Envoi réel du ReportGameMessage (type 71) : le serveur crée une
+      // entrée de modération (créateur + nom de table) et répond par un
+      // ReportGameAck (accepté / déjà signalé / erreur) → toast ci-dessous.
+      try {
+        var _rg = Proto.encode([[1, 0, 71], [72, 2, Proto.encode([[1, 0, gid >>> 0]])]]);
+        send(_rg);
+      } catch(e) {}
       var btn = document.querySelector('#lobby-gameinfo .lgi-report');
       if (btn) { var o = btn.textContent; btn.textContent = '✅'; setTimeout(function(){ btn.textContent = o; }, 1800); }
     },
@@ -13724,7 +13744,7 @@ function renderPlayersList() {
   body.innerHTML = _shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>';
 }
 
-;(function(){ window.BUILD_VERSION='0.3.283-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.284-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

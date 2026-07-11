@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+  reportGameTitle: `Rapporteer onvanpaste spelnaam`, reportGameConfirm: `Rapporteer`, reportGameMsg: `Is jy seker jy wil die spelnaam "{name}" as onvanpas rapporteer?`, reportGameAccepted: `Die spelnaamrapport is deur die bediener aanvaar. Dankie.`, reportGameDup: `Hierdie spelnaam is reeds deur 'n ander speler gerapporteer.`, reportGameError: `'n Interne fout het voorgekom toe spelnaam gerapporteer is.`,
   filterRanked: 'Ranglys', plSortAZ: 'Sorteer A–Z', plSortCountry: 'Sorteer volgens land',
   plInGame: 'In \'n spel', plLobby: 'In die voorportaal',
   buttonsPokerth: 'PokerTH',

@@ -16,6 +16,7 @@ export const meta = {
 };
 
 export const strings = {
+  reportGameTitle: `Report inappropriate game name`, reportGameConfirm: `Report`, reportGameMsg: `Are you sure you want to report the game name "{name}" as inappropriate?`, reportGameAccepted: `The game name report was accepted by the server. Thank you.`, reportGameDup: `This game name was already reported by another player.`, reportGameError: `An error occurred while reporting the game name.`,
   buttonsPokerth: 'PokerTH',
   wpWaitingPlayers:'Waiting for players …', wpFillBots:'Fill up with computer players', wpStartGame:'Start Game', wpLeaveGame:'Leave Game',
   assist:'Assistance',advCatUI:'User interface',advCatStyle:'Style',advCatSound:'Sound',advCatLocal:'Local game',advCatNetwork:'Network game',advCatInternet:'Internet game',advCatAvatar:'Nicknames / Avatars',advCatLog:'Log messages',advCatReset:'Restore defaults',
@@ -354,8 +355,7 @@ export const strings = {
     rankingMemberSince:'Member since', rankingAwards:'Awards', rankingTickets:'Tickets', rankingThisSeason:'This season', rankingStep:'Step', rankingRank:'Rank', rankingBack:'Back', rankingThisMonth:'This month', rankingThisYear:'This year', rankingCurrentSeason:'Current season', themeExport:'Export theme (.zip)', sectionAdvanced:'Advanced', rankingSeasonStats:'Season Stats', rankingShare:'Share', rankingResults:'Results', rankingToggleChart:'Switch bar / pie',
     footPlayer:'Player', footCreate:'＋ Create a table', gameInfoTitle:'Game info', gameInfoEmpty:'Select a table',
     gfNone:'No game list filter', gfOpen:'Show open games', gfOpenNF:'Show open & non-full games', gfOpenNFNP:'Show open & non-full & non-private games', gfOpenNFP:'Show open & non-full & private games', gfOpenNFR:'Show open & non-full & ranking games',
-    infoTypeLabel:'Type', infoCapitalLabel:'Capital', infoPlayersInGame:'Players in game', reportGameTitle:'Report the game name', reportGameConfirm:'Report', reportGameMsg:'Do you really want to report the game name « {name} » as inappropriate?', reportGameDone:'Game name reported. Thank you.',
-    plIgnore:'Ignore', plStats:'Player stats',
+    infoTypeLabel:'Type', infoCapitalLabel:'Capital', infoPlayersInGame:'Players in game', plIgnore:'Ignore', plStats:'Player stats',
     plSortAlpha:'Sort alphabetically', plShowIdle:'Display idle players', plHideIdle:'Hide idle players',
     plNotPlaying:'Not playing',
     gameTimeLabel:'Time', visRanked:'Ranked', infoBlindsUp:'Blinds up',

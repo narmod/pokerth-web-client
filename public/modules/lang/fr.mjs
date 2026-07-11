@@ -16,6 +16,7 @@ export const meta = {
 };
 
 export const strings = {
+  reportGameTitle: `Signaler un nom de partie inapproprié`, reportGameConfirm: `Signaler`, reportGameMsg: `Voulez-vous vraiment signaler le nom de la partie : « {name} » comme inapproprié ?`, reportGameAccepted: `Le signalement du nom de la partie a été accepté par le serveur. Merci.`, reportGameDup: `Ce nom de partie a déjà été signalé par un autre joueur.`, reportGameError: `Une erreur s'est produite lors du signalement du nom de la partie.`,
   buttonsPokerth: 'PokerTH',
   wpWaitingPlayers:'En attente de joueurs …', wpFillBots:'Compléter avec des joueurs ordinateur', wpStartGame:'Démarrer la partie', wpLeaveGame:'Quitter la partie',
   assist:'Assistance',advCatUI:'Interface utilisateur',advCatStyle:'Style',advCatSound:'Son',advCatLocal:'Jeu local',advCatNetwork:'Jeu en réseau',advCatInternet:'Jeu Internet',advCatAvatar:'Pseudos / Avatars',advCatLog:'Messages de journal',advCatReset:'Paramètres par défaut',
@@ -354,8 +355,7 @@ export const strings = {
     rankingMemberSince:'Membre depuis', rankingAwards:'Récompenses', rankingTickets:'Tickets', rankingThisSeason:'Cette saison', rankingStep:'Palier', rankingRank:'Rang', rankingBack:'Retour', rankingThisMonth:'Ce mois', rankingThisYear:'Cette année', rankingCurrentSeason:'Saison actuelle', themeExport:'Exporter le thème (.zip)', sectionAdvanced:'Options avancées', rankingSeasonStats:'Stats de saison', rankingShare:'Part', rankingResults:'Résultats', rankingToggleChart:'Basculer barres / camembert',
     footPlayer:'Joueur', footCreate:'＋ Créer une partie', gameInfoTitle:'Infos de partie', gameInfoEmpty:'Sélectionne une partie',
     gfNone:'Aucun filtre', gfOpen:'Jeux ouverts', gfOpenNF:'Jeux ouverts et non complets', gfOpenNFNP:'Jeux ouverts, non complets, non privés', gfOpenNFP:'Jeux ouverts, non complets, privés', gfOpenNFR:'Jeux ouverts, non complets, classés',
-    infoTypeLabel:'Type', infoCapitalLabel:'Capital', infoPlayersInGame:'Joueurs dans la partie', reportGameTitle:'Signaler le nom de la partie', reportGameConfirm:'Signaler', reportGameMsg:'Voulez-vous vraiment signaler le nom de la partie « {name} » comme inapproprié ?', reportGameDone:'Nom de la partie signalé. Merci.',
-    plIgnore:'Ignorer', plStats:'Statistiques du joueur',
+    infoTypeLabel:'Type', infoCapitalLabel:'Capital', infoPlayersInGame:'Joueurs dans la partie', plIgnore:'Ignorer', plStats:'Statistiques du joueur',
     plSortAlpha:'Trier par ordre alphabétique', plShowIdle:'Afficher les joueurs inactifs', plHideIdle:'Masquer les joueurs inactifs',
     plNotPlaying:'Ne joue pas actuellement',
     gameTimeLabel:'Temps', visRanked:'Classement', infoBlindsUp:'Hausse des blindes',

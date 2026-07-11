@@ -13,6 +13,7 @@ export const meta = {
 };
 
 export const strings = {
+  reportGameTitle: `부적절한 게임 이름 신고`, reportGameConfirm: `신고`, reportGameMsg: `게임 이름 "{name}"을(를) 부적절한 것으로 신고하시겠습니까?`, reportGameAccepted: `게임 이름 신고가 서버에서 접수되었습니다. 감사합니다.`, reportGameDup: `이 게임 이름은 이미 다른 플레이어가 신고했습니다.`, reportGameError: `게임 이름을 신고하는 중 오류가 발생했습니다.`,
   filterRanked: '랭크전', plSortAZ: 'A–Z 정렬', plSortCountry: '국가별 정렬',
   plInGame: '게임 중', plLobby: '로비',
   buttonsPokerth: 'PokerTH',

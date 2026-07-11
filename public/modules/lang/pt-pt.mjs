@@ -9,6 +9,7 @@ export const meta = {
 };
 
 export const strings = {
+  reportGameTitle: `Reportar nome de jogo inapropriado`, reportGameConfirm: `Reportar`, reportGameMsg: `Tens a certeza de que queres reportar o nome do jogo: "{name}" como inapropriado?`, reportGameAccepted: `O reporte do nome do jogo foi aceite pelo servidor. Obrigado.`, reportGameDup: `Este nome de jogo já foi reportado por outro jogador.`, reportGameError: `Ocorreu um erro ao reportar o nome do jogo.`,
   filterRanked: 'Classificadas', plSortAZ: 'Ordenar A–Z', plSortCountry: 'Ordenar por país',
   plInGame: 'Em jogo', plLobby: 'No lobby',
   buttonsPokerth: 'PokerTH',
