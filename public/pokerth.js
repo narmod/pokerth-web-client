@@ -1817,6 +1817,9 @@ function _applyReactMuteUI() {
     btn.classList.toggle('muted', _reactMuted);
     btn.setAttribute('aria-pressed', _reactMuted ? 'true' : 'false');
   }
+  // Bouton emoji sur le tapis : grisé quand les réactions sont coupées.
+  var tbtn = document.getElementById('react-toggle-btn');
+  if (tbtn) tbtn.classList.toggle('muted', _reactMuted);
 }
 // Options avancees : couper/retablir les reactions emoji (parite DisableEmojiReactions).
 // Meme preference que le bouton « muet » du panneau de reactions (pth_react_muted).
@@ -6253,6 +6256,7 @@ const App = (() => {
           clearSpectatorActions();
         }
         document.body.classList.add('in-game');
+        try { _applyReactMuteUI(); } catch(e) {}
         // Diffuser l'avatar aux autres joueurs via le proxy. We use
         // _myAvatarToBroadcast() which collapses the '__pth__' sentinel
         // to '' -- the other players will then receive an empty avatar
@@ -13953,7 +13957,7 @@ function renderPlayersList() {
   body.innerHTML = _shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>';
 }
 
-;(function(){ window.BUILD_VERSION='0.3.317-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.318-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

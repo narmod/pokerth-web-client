@@ -1345,7 +1345,6 @@ function onAvatarImageChosen(input) {
     <div class="header-pills"></div>
     <button class="btn-sm btn-icon" id="fs-btn-game" onclick="toggleFullscreen()" title="Fullscreen" data-i18n-title="fullscreenTooltip">⛶</button>
     <button class="btn-sm btn-icon" id="sound-toggle-btn" onclick="toggleSoundPopover(this)" title="Couper/Unmute" data-i18n-title="soundTooltip">🔊</button>
-    <button class="btn-sm btn-icon btn-hands" onclick="toggleHandsHelp()" title="Combinaisons du poker" data-i18n-title="handsHelpTooltip" aria-label="Combinaisons du poker">🃏</button>
     <button class="btn-sm btn-icon" id="haptic-toggle-btn" onclick="toggleHaptic()" title="Vibration" data-i18n-title="hapticLabel" aria-label="Vibration">📳</button>
     <button class="btn-sm btn-icon" id="voice-toggle-btn" onclick="toggleVoice()" title="Annonce vocale" data-i18n-title="voiceLabel" aria-label="Annonce vocale">🤐</button>
     <button class="btn-sm" id="admin-startnobots-btn" onclick="App.startNoBots()" style="display:none;color:var(--green);border-color:rgba(var(--green-rgb),0.4)" title="Start without bots (humans only)" data-i18n-title="wpStartHumansTip"><span data-i18n="startNoBots">▶ Start (no bots)</span></button>
@@ -1462,6 +1461,7 @@ function onAvatarImageChosen(input) {
       <button class="g-felt-btn" id="react-toggle-btn" onclick="toggleReactionPanel()" title="Réactions" data-i18n-title="reactionsLabel">😊</button>
     </div>
     <div class="g-felt-corner g-felt-tr">
+      <button class="g-felt-btn" id="hands-toggle-btn" onclick="toggleHandsHelp()" title="Combinaisons du poker" data-i18n-title="handsHelpTooltip" aria-label="Combinaisons du poker">🃏</button>
       <button class="g-felt-btn" id="log-toggle-btn" onclick="toggleLog()" title="Journal" data-i18n-title="logTooltip">📋</button>
     </div>
     <!-- Zoom table : bouton repliable en mobile (une touche qui déploie les autres) -->

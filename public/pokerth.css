@@ -6302,6 +6302,8 @@ body.has-keyboard .act-key { display: inline-block; }
 .g-felt-btn:hover { background:rgba(40,52,46,0.9); }
 .g-felt-btn:active { transform:scale(0.94); }
 .g-felt-btn.active { background:var(--accent,#E3C800); color:#1a1205; border-color:var(--accent,#E3C800); }
+/* Bouton emoji grisé quand les réactions sont désactivées (mute) */
+.g-felt-btn.muted { opacity:0.4; filter:grayscale(1); }
 /* Le zoom passe SOUS le journal (haut-droite) pour ne pas le chevaucher */
 .zoom-ctrl { top:50px; }
 /* Toggle du zoom : masqué en desktop, visible en mobile */
