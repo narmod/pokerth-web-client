@@ -7445,6 +7445,7 @@ const App = (() => {
     if (!mine) {
       bar.style.display = 'none'; bar.innerHTML = '';
       if (create) create.style.display = '';
+      try { _updateFootJoin(); } catch(e){}
       return;
     }
     var g        = games[gId] || {};
@@ -7473,6 +7474,7 @@ const App = (() => {
     bar.innerHTML = fillRow + '<div class="wp-actions">' + leaveBtn + startBtn + '</div>' + hint;
     bar.style.display = 'flex';
     if (create) create.style.display = 'none';
+    try { _updateFootJoin(); } catch(e){}
   }
   window._renderLobbyWaitActions = _renderLobbyWaitActions;
   // Rafraîchit le panneau si une partie est sélectionnée (noms/joueurs qui arrivent).
@@ -7483,8 +7485,12 @@ const App = (() => {
     var g = (_selectedGame != null && typeof games !== 'undefined') ? games[_selectedGame] : null;
     var bj = document.getElementById('lobby-foot-join');
     var bs = document.getElementById('lobby-foot-spec');
-    var joinable  = !!(g && g.mode === 1) && !amInGame;   // partie ouverte
-    var watchable = !!(g && g.mode === 2) && !amInGame;   // partie en cours
+    // Déjà dans une partie (assis, en attente de démarrage OU démarrée) : on
+    // ne propose ni Rejoindre ni Spectateur — seules Démarrer/Quitter restent.
+    // gId!=0 couvre l'attente (amInGame est encore faux avant le démarrage).
+    var busy = amInGame || (typeof gId !== 'undefined' && gId !== 0);
+    var joinable  = !!(g && g.mode === 1) && !busy;   // partie ouverte
+    var watchable = !!(g && g.mode === 2) && !busy;   // partie en cours
     if (bj) bj.style.display = joinable  ? '' : 'none';
     if (bs) bs.style.display = watchable ? '' : 'none';
   }
@@ -13884,7 +13890,7 @@ function renderPlayersList() {
   body.innerHTML = _shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>';
 }
 
-;(function(){ window.BUILD_VERSION='0.3.305-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.306-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
