@@ -5678,6 +5678,12 @@ body:not(.in-game) .my-zone {
 .gcard-caret { flex:0 0 auto; background:none; border:none; cursor:pointer; color:var(--gold-dim);
   font-size:0.95rem; line-height:1; padding:4px 6px; border-radius:6px; transition:color .12s, background .12s; }
 .gcard-caret:hover { color:var(--gold); background:var(--inset-hi); }
+/* Flèche « voir les joueurs » sur les lignes de partie : redondante avec le
+   panneau INFOS DE PARTIE dans le lobby normal → masquée. Réaffichée uniquement
+   quand je suis connecté à une table en attente du démarrage (#s-lobby.lobby-waiting),
+   où le panneau Infos n'est plus au premier plan et où j'ai besoin de voir qui a rejoint. */
+#s-lobby:not(.lobby-waiting) .gcard-caret { display: none; }
+#s-lobby:not(.lobby-waiting) .game-players { display: none; }
 /* Boutons façon maquette v3 : Rejoindre en vert (extensible) + œil compact */
 .game-row.gcard .btn-join {
   flex: 1;
