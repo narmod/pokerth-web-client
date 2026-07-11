@@ -65,16 +65,16 @@ const TABLES = [
   { id: 'green',        key: 'tableGreenFelt',       fallback: 'Table Green',  swatch: '#1e6b1e', feltUrl: '/table/felt-green.jpg',               mode: 'felt', puck: 'pokerth', btn: 'glossy' },
   { id: 'casino',       key: 'tableCasino',          fallback: 'Green Casino', swatch: '#1e6b1e', feltUrl: '/table/felt-green.jpg',               mode: 'felt', puck: 'casino',  btn: 'casino' },
   // Tapis par defaut du client QML (data/gfx/qml/table/*, AGPL-3.0) — plein ecran.
-  { id: 'danuxi', key: 'tableDanuxi', fallback: "Danuxi Blue", swatch: '#1f3a5c', feltUrl: '/table/danuxi/felt.png', preview: '/table/danuxi/preview.png', mode: 'fs', skin: true },
-  { id: 'mute', key: 'tableMute', fallback: "Mute", swatch: '#2a2f38', feltUrl: '/table/mute/felt.png', preview: '/table/mute/preview.png', mode: 'fs', skin: true },
-  { id: 'mute2', key: 'tableMute2', fallback: "Mute 02", swatch: '#1f6aa8', feltUrl: '/table/mute2/felt.png', preview: '/table/mute2/preview.png', mode: 'fs', skin: true },
-  { id: 'teal', key: 'tableTeal', fallback: "Teal", swatch: '#0e5c5c', feltUrl: '/table/teal/felt.png', preview: '/table/teal/preview.png', mode: 'fs', skin: true },
-  { id: 'lemming', key: 'tableLemming', fallback: "Lemming", swatch: '#2e6b2e', feltUrl: '/table/lemming/felt.png', preview: '/table/lemming/preview.png', mode: 'fs', skin: true },
-  { id: 'matrix', key: 'tableMatrix', fallback: "Matrix", swatch: '#0b2b12', feltUrl: '/table/matrix/felt.png', preview: '/table/matrix/preview.png', mode: 'fs', skin: true },
-  { id: 'star_trek', key: 'tableStarTrek', fallback: "Star Trek", swatch: '#101826', feltUrl: '/table/star_trek/felt.png', preview: '/table/star_trek/preview.png', mode: 'fs', skin: true },
-  { id: 'tripsixes', key: 'tableTripSixes', fallback: "TripSixes", swatch: '#5a1010', feltUrl: '/table/tripsixes/felt.png', preview: '/table/tripsixes/preview.png', mode: 'fs', skin: true },
-  { id: 'wanted', key: 'tableWanted', fallback: "Wanted", swatch: '#6b4a1e', feltUrl: '/table/wanted/felt.png', preview: '/table/wanted/preview.png', mode: 'fs', skin: true },
-  { id: 'xanax', key: 'tableXanax', fallback: "Xanax", swatch: '#394150', feltUrl: '/table/xanax/felt.png', preview: '/table/xanax/preview.png', mode: 'fs', skin: true },
+  { id: 'danuxi', key: 'tableDanuxi', fallback: "Danuxi Blue", swatch: '#1f3a5c', feltUrl: '/table/danuxi/felt.png', preview: '/table/danuxi/preview.png', mode: 'fs', skin: true, align: 'center' },
+  { id: 'mute', key: 'tableMute', fallback: "Mute", swatch: '#2a2f38', feltUrl: '/table/mute/felt.png', preview: '/table/mute/preview.png', mode: 'fs', skin: true, align: 'center' },
+  { id: 'mute2', key: 'tableMute2', fallback: "Mute 02", swatch: '#1f6aa8', feltUrl: '/table/mute2/felt.png', preview: '/table/mute2/preview.png', mode: 'fs', skin: true, align: 'center' },
+  { id: 'teal', key: 'tableTeal', fallback: "Teal", swatch: '#0e5c5c', feltUrl: '/table/teal/felt.png', preview: '/table/teal/preview.png', mode: 'fs', skin: true, align: 'center bottom' },
+  { id: 'lemming', key: 'tableLemming', fallback: "Lemming", swatch: '#2e6b2e', feltUrl: '/table/lemming/felt.png', preview: '/table/lemming/preview.png', mode: 'fs', skin: true, align: 'center bottom' },
+  { id: 'matrix', key: 'tableMatrix', fallback: "Matrix", swatch: '#0b2b12', feltUrl: '/table/matrix/felt.png', preview: '/table/matrix/preview.png', mode: 'fs', skin: true, align: 'center' },
+  { id: 'star_trek', key: 'tableStarTrek', fallback: "Star Trek", swatch: '#101826', feltUrl: '/table/star_trek/felt.png', preview: '/table/star_trek/preview.png', mode: 'fs', skin: true, align: 'center' },
+  { id: 'tripsixes', key: 'tableTripSixes', fallback: "TripSixes", swatch: '#5a1010', feltUrl: '/table/tripsixes/felt.png', preview: '/table/tripsixes/preview.png', mode: 'fs', skin: true, align: 'center' },
+  { id: 'wanted', key: 'tableWanted', fallback: "Wanted", swatch: '#6b4a1e', feltUrl: '/table/wanted/felt.png', preview: '/table/wanted/preview.png', mode: 'fs', skin: true, align: 'center' },
+  { id: 'xanax', key: 'tableXanax', fallback: "Xanax", swatch: '#394150', feltUrl: '/table/xanax/felt.png', preview: '/table/xanax/preview.png', mode: 'fs', skin: true, align: 'center' },
 ];
 const DECKS = [
   { id: 'casino-vert', key: 'deckCasinoVert', fallback: 'Green Casino', swatch: '#1e6b1e', ext: 'svg' },
@@ -561,7 +561,8 @@ table.apply = function(id){
     if (tb) {
       // Style officiel bundle : feutre + pucks + boutons ; mode fs/full/felt.
       _injectAxis(TABLE_TOKENS, { feltUrl: tb.feltUrl }, 'pth_table_css', true);
-      _injectButtons(tb.btn === 'casino' ? CASINO_BTN : { colors: BUTTON_GLOSSY });
+      if (tb.skin) { var _bd='/table/'+tb.id+'/'; _injectButtons({ images:{ fold:'url('+_bd+'actionFold.svg)', check:'url('+_bd+'actionCall.svg)', call:'url('+_bd+'actionCall.svg)', raise:'url('+_bd+'actionRaise.svg)', allin:'url('+_bd+'actionAllIn.svg)' }, colors:{ 'btn-fold-fg':'#f0f3f8','btn-check-fg':'#f0f3f8','btn-call-fg':'#f0f3f8','btn-raise-fg':'#f0f3f8','btn-allin-fg':'#fff4ec','btn-allin-fg-b':'#ffffff' } }); }
+      else _injectButtons(tb.btn === 'casino' ? CASINO_BTN : { colors: BUTTON_GLOSSY });
       if (tb.mode === 'fs') { _applyTableFull(null); _applyTableFullscreen(tb.feltUrl, tb.align || null); }
       else if (tb.mode === 'full') { _applyTableFullscreen(null); _applyTableFull(tb.feltUrl); }
       else { _applyTableFullscreen(null); _applyTableFull(null); }
