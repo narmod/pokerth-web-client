@@ -166,6 +166,38 @@ for (const _c in _DARKMODE_I18N) { if (LANG[_c]) LANG[_c].advDarkMode = _DARKMOD
 for (const _c in _MODEAUTO_I18N) { if (LANG[_c]) LANG[_c].modeAuto = _MODEAUTO_I18N[_c]; }
 for (const _c in _MODELIGHT_I18N) { if (LANG[_c]) LANG[_c].modeLight = _MODELIGHT_I18N[_c]; }
 for (const _c in _MODEDARK_I18N) { if (LANG[_c]) LANG[_c].modeDark = _MODEDARK_I18N[_c]; }
+// ── Deux dernières clés du panneau Options avancées absentes des fichiers de
+// langue (en/fr les ont déjà inline) : entête « Apparence » + « Deck 4 couleurs ».
+const _ADVAPPEAR_I18N = {
+  de: 'Erscheinungsbild', es: 'Apariencia', it: 'Aspetto', 'pt-BR': 'Aparência', 'pt-PT': 'Aparência',
+  nl: 'Weergave', pl: 'Wygląd', ru: 'Внешний вид', zh: '外观', tr: 'Görünüm',
+  uk: 'Вигляд', ja: '外観', sv: 'Utseende', nb: 'Utseende', da: 'Udseende',
+  fi: 'Ulkoasu', cs: 'Vzhled', sk: 'Vzhľad', ro: 'Aspect', hu: 'Megjelenés',
+  el: 'Εμφάνιση', bg: 'Външен вид', hr: 'Izgled', sr: 'Изглед', af: 'Voorkoms',
+  ca: 'Aparença', gl: 'Aparencia', gd: 'Coltas', lt: 'Išvaizda', ta: 'தோற்றம்',
+  vi: 'Giao diện', ko: '외관', 'zh-TW': '外觀', hi: 'दिखावट'
+};
+const _FOURCOLOR_I18N = {
+  de: '4-farbiges Deck (\u2666 blau, \u2663 grün)', es: 'Baraja de 4 colores (\u2666 azul, \u2663 verde)',
+  it: 'Mazzo a 4 colori (\u2666 blu, \u2663 verde)', 'pt-BR': 'Baralho de 4 cores (\u2666 azul, \u2663 verde)',
+  'pt-PT': 'Baralho de 4 cores (\u2666 azul, \u2663 verde)', nl: 'Kaartspel met 4 kleuren (\u2666 blauw, \u2663 groen)',
+  pl: 'Talia 4-kolorowa (\u2666 niebieski, \u2663 zielony)', ru: '4-цветная колода (\u2666 синий, \u2663 зелёный)',
+  zh: '四色牌 (\u2666 蓝, \u2663 绿)', tr: '4 renkli deste (\u2666 mavi, \u2663 yeşil)',
+  uk: '4-кольорова колода (\u2666 синій, \u2663 зелений)', ja: '4色デッキ (\u2666 青, \u2663 緑)',
+  sv: '4-färgad kortlek (\u2666 blå, \u2663 grön)', nb: '4-farget kortstokk (\u2666 blå, \u2663 grønn)',
+  da: '4-farvet kortspil (\u2666 blå, \u2663 grøn)', fi: '4-värinen pakka (\u2666 sininen, \u2663 vihreä)',
+  cs: '4barevný balíček (\u2666 modrá, \u2663 zelená)', sk: '4-farebný balíček (\u2666 modrá, \u2663 zelená)',
+  ro: 'Pachet cu 4 culori (\u2666 albastru, \u2663 verde)', hu: '4 színű pakli (\u2666 kék, \u2663 zöld)',
+  el: 'Τράπουλα 4 χρωμάτων (\u2666 μπλε, \u2663 πράσινο)', bg: '4-цветно тесте (\u2666 синьо, \u2663 зелено)',
+  hr: 'Špil u 4 boje (\u2666 plava, \u2663 zelena)', sr: 'Шпил у 4 боје (\u2666 плава, \u2663 зелена)',
+  af: '4-kleur pak (\u2666 blou, \u2663 groen)', ca: 'Baralla de 4 colors (\u2666 blau, \u2663 verd)',
+  gl: 'Baralla de 4 cores (\u2666 azul, \u2663 verde)', gd: 'Deic 4-dhathach (\u2666 gorm, \u2663 uaine)',
+  lt: '4 spalvų kaladė (\u2666 mėlyna, \u2663 žalia)', ta: '4-வண்ண அட்டைகள் (\u2666 நீலம், \u2663 பச்சை)',
+  vi: 'Bộ bài 4 màu (\u2666 xanh dương, \u2663 xanh lá)', ko: '4색 덱 (\u2666 파랑, \u2663 초록)',
+  'zh-TW': '四色牌 (\u2666 藍, \u2663 綠)', hi: '4-रंग वाली गड्डी (\u2666 नीला, \u2663 हरा)'
+};
+for (const _c in _ADVAPPEAR_I18N) { if (LANG[_c]) LANG[_c].advSecAppearance = _ADVAPPEAR_I18N[_c]; }
+for (const _c in _FOURCOLOR_I18N) { if (LANG[_c]) LANG[_c].advFourColor = _FOURCOLOR_I18N[_c]; }
 // ── Clé 'serverPassword' : libellé du champ (optionnel) du mot de passe
 // SERVEUR (authServerPassword), affiché sous « plus d'options » pour les
 // serveurs auto-hébergés. Ajoutée ici pour toutes les langues ; toute langue
