@@ -6153,27 +6153,24 @@ html[data-seat-img-self] .player-bar {
   position: fixed !important;   /* indispensable pour _placeWin/drag (l'overlay ne le centre plus) */
   padding: 0; border-top-width: 1px; max-width: none; max-height: none;
   display: flex; flex-direction: column; background: var(--modal-bg);
-  z-index: 201; container-type: inline-size;
+  z-index: 201;
 }
-/* Mode compact quand la fenêtre Combinaisons est réduite : cartes + textes plus
-   petits pour éviter le débordement (les !important du media desktop sont ici
-   surchargés car ces règles viennent après dans la cascade). */
-@container (max-width: 380px) {
-  .hand-row { gap: 6px; padding: 6px 4px; }
-  .hand-cards { gap: 1px; }
-  .hc { width: 17px !important; height: 25px !important; font-size: 0.46rem !important; border-radius: 2px; }
-  .hand-rank { width: 14px; font-size: 0.68rem !important; }
-  .hand-rail { width: 3px; }
-  .hand-name { font-size: 0.66rem !important; letter-spacing: 0.01em; gap: 4px; }
-  .hand-ico { font-size: 0.82rem !important; }
-  .hand-desc { font-size: 0.56rem !important; }
-  .hands-legend { font-size: 0.54rem !important; gap: 6px; }
-}
-@container (max-width: 250px) {
-  .hc { width: 14px !important; height: 21px !important; font-size: 0.4rem !important; }
-  .hand-name { font-size: 0.6rem !important; }
-  .hand-desc { font-size: 0.52rem !important; }
-}
+/* Mode compact quand la fenêtre Combinaisons est réduite (classe posée par un
+   ResizeObserver JS — plus fiable qu'une container-query sur un élément fixed
+   redimensionné). Surcharge les !important du media desktop via une spécificité
+   plus élevée + !important. */
+#hands-card-inner.hands-cmp .hand-row { gap: 6px; padding: 6px 4px; }
+#hands-card-inner.hands-cmp .hand-cards { gap: 1px; }
+#hands-card-inner.hands-cmp .hc { width: 17px !important; height: 25px !important; font-size: 0.46rem !important; border-radius: 2px; }
+#hands-card-inner.hands-cmp .hand-rank { width: 14px; font-size: 0.68rem !important; }
+#hands-card-inner.hands-cmp .hand-rail { width: 3px; }
+#hands-card-inner.hands-cmp .hand-name { font-size: 0.66rem !important; letter-spacing: 0.01em; gap: 4px; }
+#hands-card-inner.hands-cmp .hand-ico { font-size: 0.82rem !important; }
+#hands-card-inner.hands-cmp .hand-desc { font-size: 0.56rem !important; }
+#hands-card-inner.hands-cmp .hands-legend { font-size: 0.54rem !important; gap: 6px; }
+#hands-card-inner.hands-cmp-xs .hc { width: 14px !important; height: 21px !important; font-size: 0.4rem !important; }
+#hands-card-inner.hands-cmp-xs .hand-name { font-size: 0.6rem !important; }
+#hands-card-inner.hands-cmp-xs .hand-desc { font-size: 0.52rem !important; }
 #hands-card-inner.floating-win .hands-scroll {
   flex: 1 1 auto; min-height: 0; overflow-y: auto; overflow-x: hidden;
   -webkit-overflow-scrolling: touch; padding: 12px 14px;
