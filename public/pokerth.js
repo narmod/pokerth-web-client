@@ -673,6 +673,29 @@ function setSeatLayout(v) {
   } else {
     try { if (typeof window._renderSeats === 'function') window._renderSeats(); } catch (e) {}
   }
+  // Petit écran (téléphone) : le panneau d'options couvre le feutre, donc le
+  // re-rendu se fait « derrière » et n'est pas visible tant qu'on ne ferme pas.
+  // Sur desktop/tablette la carte (420px) est petite -> les sièges du pourtour
+  // restent visibles autour et le changement paraît immédiat. On réplique ça
+  // sur téléphone en rendant la carte brièvement translucide (aperçu de la
+  // nouvelle disposition), sans la fermer.
+  try {
+    if (window.innerWidth < 900) {
+      var _pm = document.getElementById('adv-modal');
+      var _pc = (_pm && _pm.style.display !== 'none') ? _pm.querySelector('.km-card') : null;
+      if (_pc) {
+        if (_pc._peekT) clearTimeout(_pc._peekT);
+        _pc.style.transition = 'opacity .18s ease';
+        _pc.style.opacity = '0.1';
+        _pc.style.pointerEvents = 'none';
+        _pc._peekT = setTimeout(function () {
+          _pc.style.opacity = '';
+          _pc.style.pointerEvents = '';
+          _pc._peekT = null;
+        }, 1100);
+      }
+    }
+  } catch (e) {}
 }
 window.setSeatLayout = setSeatLayout;
 // Appliquer les classes body dès l'init (les prefs sont reflétées au chargement).
@@ -13947,7 +13970,7 @@ function renderPlayersList() {
   body.innerHTML = _shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>';
 }
 
-;(function(){ window.BUILD_VERSION='0.3.321-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.322-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
