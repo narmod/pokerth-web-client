@@ -15,6 +15,7 @@ export const meta = {
 };
 
 export const strings = {
+  advUiGeneral:'Generale', advUiNetwork:'Rete', advShowTooltips:'Mostra i suggerimenti', advDisableSplash:'Disabilita la schermata iniziale all\'avvio', advDontTranslatePoker:'Non tradurre i termini del poker (Check, Call, Raise)', advNA:'web', advLanguage:'Lingua', advDefCommunity:'Community predefinita', advSecReactions:'Reazioni', advDisableReactions:'Disabilita le reazioni emoji', advNetStateColor:'Mostra il colore dello stato di rete nell\'angolo dell\'avatar',
   showPlayers: `Mostra giocatori`,
   footJoin: `Entra`,
   spectatingBadge: `Spettatore`,

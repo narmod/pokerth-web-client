@@ -16,6 +16,7 @@ export const meta = {
 };
 
 export const strings = {
+  advUiGeneral:'Ogólne', advUiNetwork:'Sieć', advShowTooltips:'Pokaż podpowiedzi', advDisableSplash:'Wyłącz ekran powitalny przy uruchamianiu', advDontTranslatePoker:'Nie tłumacz terminów pokerowych (Check, Call, Raise)', advNA:'web', advLanguage:'Język', advDefCommunity:'Domyślna społeczność', advSecReactions:'Reakcje', advDisableReactions:'Wyłącz reakcje emoji', advNetStateColor:'Pokaż kolor stanu sieci w rogu awatara',
   showPlayers: `Pokaż graczy`,
   footJoin: `Dołącz`,
   spectatingBadge: `Obserwator`,

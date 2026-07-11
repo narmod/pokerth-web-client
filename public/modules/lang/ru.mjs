@@ -15,6 +15,7 @@ export const meta = {
 };
 
 export const strings = {
+  advUiGeneral:'Общие', advUiNetwork:'Сеть', advShowTooltips:'Показывать подсказки', advDisableSplash:'Отключить заставку при запуске', advDontTranslatePoker:'Не переводить покерные термины (Check, Call, Raise)', advNA:'web', advLanguage:'Язык', advDefCommunity:'Сообщество по умолчанию', advSecReactions:'Реакции', advDisableReactions:'Отключить эмодзи-реакции', advNetStateColor:'Показывать цвет состояния сети в углу аватара',
   showPlayers: `Показать игроков`,
   footJoin: `Войти`,
   spectatingBadge: `Наблюдатель`,

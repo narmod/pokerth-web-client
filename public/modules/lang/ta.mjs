@@ -11,6 +11,7 @@ export const meta = {
 };
 
 export const strings = {
+  advUiGeneral:'பொது', advUiNetwork:'பிணையம்', advShowTooltips:'கருவிக் குறிப்புகளைக் காட்டு', advDisableSplash:'தொடக்கத்தில் தொடக்கத் திரையை முடக்கு', advDontTranslatePoker:'போக்கர் சொற்களை மொழிபெயர்க்க வேண்டாம் (Check, Call, Raise)', advNA:'web', advLanguage:'மொழி', advDefCommunity:'இயல்புநிலை சமூகம்', advSecReactions:'எதிர்வினைகள்', advDisableReactions:'எமோஜி எதிர்வினைகளை முடக்கு', advNetStateColor:'அவதாரத்தின் மூலையில் பிணைய நிலை நிறத்தைக் காட்டு',
   showPlayers: `வீரர்களைக் காட்டு`,
   footJoin: `சேர்`,
   spectatingBadge: `பார்வையாளர்`,

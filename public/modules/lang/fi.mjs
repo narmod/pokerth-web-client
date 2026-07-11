@@ -9,6 +9,7 @@ export const meta = {
 };
 
 export const strings = {
+  advUiGeneral:'Yleiset', advUiNetwork:'Verkko', advShowTooltips:'Näytä työkaluvihjeet', advDisableSplash:'Poista aloitusnäyttö käytöstä käynnistyksessä', advDontTranslatePoker:'Älä käännä pokeritermejä (Check, Call, Raise)', advNA:'web', advLanguage:'Kieli', advDefCommunity:'Oletusyhteisö', advSecReactions:'Reaktiot', advDisableReactions:'Poista emoji-reaktiot käytöstä', advNetStateColor:'Näytä verkon tilan väri avatarin kulmassa',
   showPlayers: `Näytä pelaajat`,
   footJoin: `Liity`,
   spectatingBadge: `Katsoja`,

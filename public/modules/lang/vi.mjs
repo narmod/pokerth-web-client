@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+  advUiGeneral:'Chung', advUiNetwork:'Mạng', advShowTooltips:'Hiển thị chú giải công cụ', advDisableSplash:'Tắt màn hình chờ khi khởi động', advDontTranslatePoker:'Không dịch các thuật ngữ poker (Check, Call, Raise)', advNA:'web', advLanguage:'Ngôn ngữ', advDefCommunity:'Cộng đồng mặc định', advSecReactions:'Phản ứng', advDisableReactions:'Tắt phản ứng biểu tượng cảm xúc', advNetStateColor:'Hiển thị màu trạng thái mạng ở góc ảnh đại diện',
   showPlayers: `Xem người chơi`,
   footJoin: `Vào`,
   spectatingBadge: `Đang xem`,

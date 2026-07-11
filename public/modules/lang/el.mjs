@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+  advUiGeneral:'Γενικά', advUiNetwork:'Δίκτυο', advShowTooltips:'Εμφάνιση υποδείξεων', advDisableSplash:'Απενεργοποίηση οθόνης εκκίνησης', advDontTranslatePoker:'Να μη μεταφράζονται οι όροι πόκερ (Check, Call, Raise)', advNA:'web', advLanguage:'Γλώσσα', advDefCommunity:'Προεπιλεγμένη κοινότητα', advSecReactions:'Αντιδράσεις', advDisableReactions:'Απενεργοποίηση αντιδράσεων emoji', advNetStateColor:'Εμφάνιση χρώματος κατάστασης δικτύου στη γωνία του άβαταρ',
   showPlayers: `Εμφάνιση παικτών`,
   footJoin: `Είσοδος`,
   spectatingBadge: `Θεατής`,

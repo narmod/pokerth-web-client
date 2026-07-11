@@ -9,6 +9,7 @@ export const meta = {
 };
 
 export const strings = {
+  advUiGeneral:'Загальні', advUiNetwork:'Мережа', advShowTooltips:'Показувати підказки', advDisableSplash:'Вимкнути заставку під час запуску', advDontTranslatePoker:'Не перекладати покерні терміни (Check, Call, Raise)', advNA:'web', advLanguage:'Мова', advDefCommunity:'Спільнота за замовчуванням', advSecReactions:'Реакції', advDisableReactions:'Вимкнути емодзі-реакції', advNetStateColor:'Показувати колір стану мережі в кутку аватара',
   showPlayers: `Показати гравців`,
   footJoin: `Приєднатися`,
   spectatingBadge: `Спостерігач`,

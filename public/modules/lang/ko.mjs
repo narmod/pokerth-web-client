@@ -13,6 +13,7 @@ export const meta = {
 };
 
 export const strings = {
+  advUiGeneral:'일반', advUiNetwork:'네트워크', advShowTooltips:'툴팁 표시', advDisableSplash:'시작 시 스플래시 화면 비활성화', advDontTranslatePoker:'포커 용어를 번역하지 않음 (Check, Call, Raise)', advNA:'web', advLanguage:'언어', advDefCommunity:'기본 커뮤니티', advSecReactions:'반응', advDisableReactions:'이모지 반응 비활성화', advNetStateColor:'아바터 모서리에 네트워크 상태 색상 표시',
   showPlayers: `플레이어 표시`,
   footJoin: `참가`,
   spectatingBadge: `관전 중`,

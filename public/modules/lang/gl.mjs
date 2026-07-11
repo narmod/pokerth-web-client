@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+  advUiGeneral:'Xeral', advUiNetwork:'Rede', advShowTooltips:'Amosar os consellos', advDisableSplash:'Desactivar a pantalla de benvida no inicio', advDontTranslatePoker:'Non traducir os termos de póker (Check, Call, Raise)', advNA:'web', advLanguage:'Idioma', advDefCommunity:'Comunidade predeterminada', advSecReactions:'Reaccións', advDisableReactions:'Desactivar as reaccións emoji', advNetStateColor:'Amosar a cor do estado da rede na esquina do avatar',
   showPlayers: `Ver xogadores`,
   footJoin: `Entrar`,
   spectatingBadge: `Espectador`,

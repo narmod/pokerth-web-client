@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+  advUiGeneral:'Bendra', advUiNetwork:'Tinklas', advShowTooltips:'Rodyti paaiškinimus', advDisableSplash:'Išjungti pasveikinimo ekraną paleidžiant', advDontTranslatePoker:'Neversti pokerio terminų (Check, Call, Raise)', advNA:'web', advLanguage:'Kalba', advDefCommunity:'Numatytoji bendruomenė', advSecReactions:'Reakcijos', advDisableReactions:'Išjungti emoji reakcijas', advNetStateColor:'Rodyti tinklo būsenos spalvą avataro kampe',
   showPlayers: `Rodyti žaidėjus`,
   footJoin: `Prisijungti`,
   spectatingBadge: `Stebėtojas`,

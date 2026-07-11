@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+  advUiGeneral:'Obecné', advUiNetwork:'Síť', advShowTooltips:'Zobrazit popisky', advDisableSplash:'Zakázat úvodní obrazovku při spuštění', advDontTranslatePoker:'Nepřekládat pokerové výrazy (Check, Call, Raise)', advNA:'web', advLanguage:'Jazyk', advDefCommunity:'Výchozí komunita', advSecReactions:'Reakce', advDisableReactions:'Zakázat emoji reakce', advNetStateColor:'Zobrazit barvu stavu sítě v rohu avatara',
   showPlayers: `Zobrazit hráče`,
   footJoin: `Připojit se`,
   spectatingBadge: `Divák`,

@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+  advUiGeneral:'Опште', advUiNetwork:'Мрежа', advShowTooltips:'Прикажи описе', advDisableSplash:'Онемогући почетни екран при покретању', advDontTranslatePoker:'Не преводи покер изразе (Check, Call, Raise)', advNA:'web', advLanguage:'Језик', advDefCommunity:'Подразумевана заједница', advSecReactions:'Реакције', advDisableReactions:'Онемогући емоџи реакције', advNetStateColor:'Прикажи боју стања мреже у углу аватара',
   showPlayers: `Прикажи играче`,
   footJoin: `Uđi`,
   spectatingBadge: `Гледалац`,

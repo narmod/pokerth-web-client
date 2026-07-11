@@ -11,6 +11,7 @@ export const meta = {
 };
 
 export const strings = {
+  advUiGeneral:'Coitcheann', advUiNetwork:'Lìonra', advShowTooltips:'Seall gliocasan-inneil', advDisableSplash:'Cuir à comas an sgrìn-fhàilte aig an tòiseachadh', advDontTranslatePoker:'Na eadar-theangaich briathran poker (Check, Call, Raise)', advNA:'web', advLanguage:'Cànan', advDefCommunity:'Coimhearsnachd bhunaiteach', advSecReactions:'Freagairtean', advDisableReactions:'Cuir à comas freagairtean emoji', advNetStateColor:'Seall dath staid an lìonraidh ann an oisean an avatar',
   showPlayers: `Seall cluicheadairean`,
   footJoin: `Gabh pàirt`,
   spectatingBadge: `Neach-amhairc`,

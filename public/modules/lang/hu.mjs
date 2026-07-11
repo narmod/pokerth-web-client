@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+  advUiGeneral:'Általános', advUiNetwork:'Hálózat', advShowTooltips:'Elemleírások megjelenítése', advDisableSplash:'Nyitóképernyő letiltása indításkor', advDontTranslatePoker:'Ne fordítsa a pókerkifejezéseket (Check, Call, Raise)', advNA:'web', advLanguage:'Nyelv', advDefCommunity:'Alapértelmezett közösség', advSecReactions:'Reakciók', advDisableReactions:'Emoji-reakciók letiltása', advNetStateColor:'Hálózati állapot színének megjelenítése az avatar sarkában',
   showPlayers: `Játékosok megjelenítése`,
   footJoin: `Csatlakozás`,
   spectatingBadge: `Néző`,

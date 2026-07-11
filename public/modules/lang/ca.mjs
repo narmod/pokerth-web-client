@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+  advUiGeneral:'General', advUiNetwork:'Xarxa', advShowTooltips:'Mostra els consells', advDisableSplash:'Desactiva la pantalla de benvinguda a l\'inici', advDontTranslatePoker:'No tradueixis els termes de pòquer (Check, Call, Raise)', advNA:'web', advLanguage:'Idioma', advDefCommunity:'Comunitat predeterminada', advSecReactions:'Reaccions', advDisableReactions:'Desactiva les reaccions emoji', advNetStateColor:'Mostra el color de l\'estat de la xarxa a la cantonada de l\'avatar',
   showPlayers: `Mostra els jugadors`,
   footJoin: `Entra`,
   spectatingBadge: `Espectador`,

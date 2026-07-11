@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+  advUiGeneral:'General', advUiNetwork:'Rețea', advShowTooltips:'Afișează sfaturile', advDisableSplash:'Dezactivează ecranul de pornire la lansare', advDontTranslatePoker:'Nu traduce termenii de poker (Check, Call, Raise)', advNA:'web', advLanguage:'Limbă', advDefCommunity:'Comunitate implicită', advSecReactions:'Reacții', advDisableReactions:'Dezactivează reacțiile emoji', advNetStateColor:'Afișează culoarea stării rețelei în colțul avatarului',
   showPlayers: `Afișează jucătorii`,
   footJoin: `Intră`,
   spectatingBadge: `Spectator`,

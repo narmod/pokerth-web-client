@@ -9,6 +9,7 @@ export const meta = {
 };
 
 export const strings = {
+  advUiGeneral:'Generelt', advUiNetwork:'Nettverk', advShowTooltips:'Vis verktøytips', advDisableSplash:'Deaktiver velkomstskjermen ved oppstart', advDontTranslatePoker:'Ikke oversett pokeruttrykk (Check, Call, Raise)', advNA:'web', advLanguage:'Språk', advDefCommunity:'Standardfellesskap', advSecReactions:'Reaksjoner', advDisableReactions:'Deaktiver emoji-reaksjoner', advNetStateColor:'Vis nettverksstatusfarge i avatarhjørnet',
   showPlayers: `Vis spillere`,
   footJoin: `Bli med`,
   spectatingBadge: `Tilskuer`,

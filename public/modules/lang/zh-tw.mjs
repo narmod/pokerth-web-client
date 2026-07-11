@@ -11,6 +11,7 @@ export const meta = {
 };
 
 export const strings = {
+  advUiGeneral:'一般', advUiNetwork:'網路', advShowTooltips:'顯示工具提示', advDisableSplash:'啟動時停用啟動畫面', advDontTranslatePoker:'不翻譯撲克術語（Check、Call、Raise）', advNA:'web', advLanguage:'語言', advDefCommunity:'預設社群', advSecReactions:'表情反應', advDisableReactions:'停用表情符號反應', advNetStateColor:'在頭像角落顯示網路狀態顏色',
   showPlayers: `顯示玩家`,
   footJoin: `加入`,
   spectatingBadge: `觀戰中`,

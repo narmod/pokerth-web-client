@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+  advUiGeneral:'Algemeen', advUiNetwork:'Netwerk', advShowTooltips:'Wys nutswenke', advDisableSplash:'Deaktiveer die aanvangskerm met opstart', advDontTranslatePoker:'Moenie pokerterme vertaal nie (Check, Call, Raise)', advNA:'web', advLanguage:'Taal', advDefCommunity:'Verstekgemeenskap', advSecReactions:'Reaksies', advDisableReactions:'Deaktiveer emoji-reaksies', advNetStateColor:'Wys netwerkstatuskleur in die avatar-hoek',
   showPlayers: `Wys spelers`,
   footJoin: `Sluit aan`,
   spectatingBadge: `Toeskouer`,

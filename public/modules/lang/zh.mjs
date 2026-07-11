@@ -11,6 +11,7 @@ export const meta = {
 };
 
 export const strings = {
+  advUiGeneral:'常规', advUiNetwork:'网络', advShowTooltips:'显示工具提示', advDisableSplash:'启动时禁用启动画面', advDontTranslatePoker:'不翻译扑克术语（Check、Call、Raise）', advNA:'web', advLanguage:'语言', advDefCommunity:'默认社区', advSecReactions:'表情反应', advDisableReactions:'禁用表情反应', advNetStateColor:'在头像角落显示网络状态颜色',
   showPlayers: `显示玩家`,
   footJoin: `加入`,
   spectatingBadge: `观战中`,

@@ -12,6 +12,7 @@ export const meta = {
 };
 
 export const strings = {
+  advUiGeneral:'Genel', advUiNetwork:'Ağ', advShowTooltips:'İpuçlarını göster', advDisableSplash:'Başlangıçta açılış ekranını devre dışı bırak', advDontTranslatePoker:'Poker terimlerini çevirme (Check, Call, Raise)', advNA:'web', advLanguage:'Dil', advDefCommunity:'Varsayılan topluluk', advSecReactions:'Tepkiler', advDisableReactions:'Emoji tepkilerini devre dışı bırak', advNetStateColor:'Avatar köşesinde ağ durumu rengini göster',
   showPlayers: `Oyuncuları göster`,
   footJoin: `Katıl`,
   spectatingBadge: `İzleyici`,

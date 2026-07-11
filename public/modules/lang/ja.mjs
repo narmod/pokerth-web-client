@@ -9,6 +9,7 @@ export const meta = {
 };
 
 export const strings = {
+  advUiGeneral:'一般', advUiNetwork:'ネットワーク', advShowTooltips:'ツールチップを表示', advDisableSplash:'起動時のスプラッシュ画面を無効にする', advDontTranslatePoker:'ポーカー用語を翻訳しない（Check、Call、Raise）', advNA:'web', advLanguage:'言語', advDefCommunity:'デフォルトのコミュニティ', advSecReactions:'リアクション', advDisableReactions:'絵文字リアクションを無効にする', advNetStateColor:'アバターの隅にネットワーク状態の色を表示',
   showPlayers: `プレイヤーを表示`,
   footJoin: `参加`,
   spectatingBadge: `観戦中`,

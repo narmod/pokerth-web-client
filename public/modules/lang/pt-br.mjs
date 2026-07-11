@@ -9,6 +9,7 @@ export const meta = {
 };
 
 export const strings = {
+  advUiGeneral:'Geral', advUiNetwork:'Rede', advShowTooltips:'Mostrar dicas de ferramentas', advDisableSplash:'Desativar a tela de abertura na inicialização', advDontTranslatePoker:'Não traduzir os termos de pôquer (Check, Call, Raise)', advNA:'web', advLanguage:'Idioma', advDefCommunity:'Comunidade padrão', advSecReactions:'Reações', advDisableReactions:'Desativar as reações de emoji', advNetStateColor:'Mostrar a cor do status da rede no canto do avatar',
   showPlayers: `Ver jogadores`,
   footJoin: `Entrar`,
   spectatingBadge: `Assistindo`,
