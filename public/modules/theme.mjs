@@ -577,10 +577,30 @@ function _applyTableFullscreen(imgUrl, alignPos){
 }
 var _tblApply = table.apply;
 function _builtinTableById(id){ for (var i=0;i<TABLES.length;i++) if (TABLES[i].id===id) return TABLES[i]; return null; }
+// Teintes par tapis QML (PlayerBoxAccent + ChatLog* du tablestyle.xml).
+var _SKIN_TINT = {
+  danuxi:{a:'#8a3fd6',bg:'#28253c',su:'#444163',bo:'#6e53a2',tx:'#eff1f5',se:'#cdd3e0',mu:'#7b79ad'},
+  mute:{a:'#7ea6d0',bg:'#272f3c',su:'#434f62',bo:'#6981a0',tx:'#eff1f5',se:'#cdd3e0',mu:'#788dac'},
+  mute2:{a:'#2a86c8',bg:'#1e2c3b',su:'#374b61',bo:'#43739c',tx:'#eff1f5',se:'#cdd3e0',mu:'#6887aa'},
+  teal:{a:'#159ba6',bg:'#1c2e37',su:'#344e5c',bo:'#397c8d',tx:'#eff1f5',se:'#cdd3e0',mu:'#638ba4'},
+  lemming:{a:'#9aa0a6',bg:'#262627',su:'#414243',bo:'#777a7c',tx:'#e6e6e6',se:'#c2c2c2',mu:'#8d8e90'},
+  matrix:{a:'#35c94a',bg:'#06120a',su:'#0e2314',bo:'#1f7a3a',tx:'#d6ffe0',se:'#a7e6ba',mu:'#5f9e74'},
+  star_trek:{a:'#4d9cff',bg:'#080b12',su:'#161d2c',bo:'#527db5',tx:'#e9eef7',se:'#c8d3e6',mu:'#738eb5'},
+  tripsixes:{a:'#4fae7a',bg:'#223033',su:'#3c5056',bo:'#538579',tx:'#eff1f5',se:'#cdd3e0',mu:'#6f8f9b'},
+  wanted:{a:'#c08a3e',bg:'#2d2c2d',su:'#4c4b4d',bo:'#86755e',tx:'#eff1f5',se:'#cdd3e0',mu:'#86888f'},
+  xanax:{a:'#4a63c8',bg:'#22283b',su:'#3b4661',bo:'#51639c',tx:'#eff1f5',se:'#cdd3e0',mu:'#6e80aa'}
+};
+function _injectSkinTint(id){
+  var el=document.documentElement, m=(id&&_SKIN_TINT[id])||null;
+  var K={'--chatlog-bg':'bg','--chatlog-surface':'su','--chatlog-border':'bo','--chatlog-text':'tx','--chatlog-text2':'se','--chatlog-muted':'mu','--box-accent':'a'};
+  for (var k in K){ if(m) el.style.setProperty(k, m[K[k]]); else el.style.removeProperty(k); }
+  if (m) el.setAttribute('data-box-accent','1'); else el.removeAttribute('data-box-accent');
+}
 table.apply = function(id){
   _tblApply(id);   // pose data-table + persiste pth_table
   try {
     var tb = _builtinTableById(id);
+    _injectSkinTint(tb && tb.skin ? tb.id : null);   // teinte chat/log + accent de box du tapis QML
     if (tb) {
       // Style officiel bundle : feutre + pucks + boutons ; mode fs/full/felt.
       _injectAxis(TABLE_TOKENS, { feltUrl: tb.feltUrl }, 'pth_table_css', true);
