@@ -2221,7 +2221,6 @@ body {
    provided by the ••• menu now). Was previously a mobile-only rule. */
 #fs-btn-game,
 #lang-toggle-game,
-#log-toggle-btn,
 #admin-start-btn,
 #admin-startnobots-btn,
 #admin-close-btn,
@@ -6306,12 +6305,10 @@ body.has-keyboard .act-key { display: inline-block; }
 /* Le zoom passe SOUS le journal (haut-droite) pour ne pas le chevaucher */
 .zoom-ctrl { top:50px; }
 /* Toggle du zoom : masqué en desktop, visible en mobile */
-.zoom-toggle { display:none; }
-@media (max-width: 640px) {
-  .zoom-toggle { display:flex; }
-  .zoom-ctrl .zoom-btn:not(.zoom-toggle) { display:none; }
-  .zoom-ctrl.open .zoom-btn { display:flex; }
-}
+/* Zoom repliable à TOUS les écrans : la touche 🔍 déploie les boutons. */
+.zoom-toggle { display:flex; }
+.zoom-ctrl .zoom-btn:not(.zoom-toggle) { display:none; }
+.zoom-ctrl.open .zoom-btn { display:flex; }
 .zoom-btn.active { background: var(--accent, #E3C800); color: #1a1205; border-color: var(--accent, #E3C800); }
 
 /* -- Bouton "editer le placement" (mode custom) + edition glisser-deposer -- */
