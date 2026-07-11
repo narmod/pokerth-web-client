@@ -7318,12 +7318,10 @@ const App = (() => {
     var bar = document.getElementById('lobby-wait-actions');
     if (!bar) return;
     var create = document.querySelector('.lobby-footbar .lfb-create');
-    var nameEl = document.querySelector('.lobby-footbar .lfb-name');
     var mine = (gId !== 0 && !_gameStarted);
     if (!mine) {
       bar.style.display = 'none'; bar.innerHTML = '';
       if (create) create.style.display = '';
-      if (nameEl) nameEl.style.display = '';
       return;
     }
     var g        = games[gId] || {};
@@ -7343,7 +7341,6 @@ const App = (() => {
     bar.innerHTML = fillRow + '<div class="wp-actions">' + leaveBtn + startBtn + '</div>' + hint;
     bar.style.display = 'flex';
     if (create) create.style.display = 'none';
-    if (nameEl) nameEl.style.display = 'none';
   }
   window._renderLobbyWaitActions = _renderLobbyWaitActions;
   // Rafraîchit le panneau si une partie est sélectionnée (noms/joueurs qui arrivent).
@@ -13711,7 +13708,7 @@ function renderPlayersList() {
   body.innerHTML = _shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>';
 }
 
-;(function(){ window.BUILD_VERSION='0.3.279-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.280-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
