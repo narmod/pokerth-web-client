@@ -1558,8 +1558,8 @@ body {
   align-items: center;
   justify-content: space-between;
   padding: 3px 14px;
-  background: var(--chrome-tint);
-  border-bottom: 1px solid var(--border);
+  background: rgba(0,0,0,0.78);   /* bandeau QML officiel (bible §7) — noir translucide, lisible sur feutre comme sur chrome clair */
+  border-bottom: 1px solid rgba(255,255,255,0.08);
   flex-shrink: 0;
   min-height: 24px;
   font-family: var(--ff-display);
@@ -1567,7 +1567,7 @@ body {
 }
 .pot-side {
   font-size: clamp(0.6rem, 1.4vw, 0.72rem);
-  color: var(--text);
+  color: #cdd3e0;   /* libelle gris clair (QML col200) — lisible sur le bandeau sombre quelle que soit la palette */
   min-width: 60px;
 }
 .pot-right { text-align: right; }
