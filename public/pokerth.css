@@ -2919,9 +2919,10 @@ body {
 #hands-overlay {
   position: fixed; inset: 0; z-index: 200;
   display: flex; align-items: center; justify-content: center;
-  background: rgba(0,0,0,0.82); padding: 12px;
-  animation: fadeIn 0.2s ease;
+  background: transparent; pointer-events: none;  /* fenêtre flottante, pas de backdrop */
+  padding: 12px;
 }
+#hands-card-inner { pointer-events: auto; }
 .hands-card {
   background: var(--modal-bg);
   border: 1px solid var(--gold-dim); border-top: 3px solid var(--gold);
@@ -6140,11 +6141,21 @@ html[data-seat-img-self] .player-bar {
 #g-chat-panel.floating-win,
 #lobby-chat-panel.floating-win,
 #g-log-panel.floating-win,
-#g-reaction-panel.floating-win {
+#g-reaction-panel.floating-win,
+#hands-card-inner.floating-win {
   border: 1px solid var(--gold-dim);
   border-radius: 10px;
   box-shadow: 0 14px 36px rgba(0,0,0,0.62);
   overflow: hidden;            /* coins arrondis nets + borne les poignees */
+}
+/* Fenêtre Combinaisons alignée sur les autres fenêtres flottantes */
+#hands-card-inner.floating-win {
+  padding: 0; border-top-width: 1px; max-width: none; max-height: none;
+  display: flex; flex-direction: column; background: var(--modal-bg);
+}
+#hands-card-inner.floating-win .hands-scroll {
+  flex: 1 1 auto; min-height: 0; overflow-y: auto; overflow-x: hidden;
+  -webkit-overflow-scrolling: touch; padding: 12px 14px;
 }
 /* Chat du lobby flottant : la zone messages remplit la fenetre (annule le
    max-height:120px inline du mode accroche). */

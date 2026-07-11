@@ -13281,11 +13281,11 @@ function renderHandsHelp() {
     + '<span class="hl"><span class="hl-mini dim"></span>' + t('handsLegNo') + '</span>'
     + '<span class="hl"><span class="hl-grad"></span>' + t('handsLegForce') + '</span>'
     + '</div>';
-  inner.innerHTML = '<div class="hands-title">' + t('handsTitle') + '</div>'
+  inner.innerHTML = '<div class="g-chat-panel-header"><span style="font-size:0.65rem;color:var(--gold-dim);letter-spacing:0.15em;text-transform:uppercase">' + t('handsTitle') + '</span>'
+    + '<button onclick="toggleHandsHelp()" title="' + t('handsClose') + '" style="background:none;border:none;color:var(--text);cursor:pointer;font-size:0.85rem;padding:0 4px">\u2715</button></div>'
     + '<div class="hands-scroll">'
     + legend
     + rows
-    + '<button class="hands-close" onclick="toggleHandsHelp()">' + t('handsClose') + '</button>'
     + '</div>';
 }
 
@@ -13378,28 +13378,18 @@ document.addEventListener('click', function(e) {
 
 function toggleHandsHelp() {
   var ov = document.getElementById('hands-overlay');
-  if (!ov) return;
-  var opening = ov.style.display === 'none';
   var card = document.getElementById('hands-card-inner');
+  if (!ov || !card) return;
+  var opening = ov.style.display === 'none';
   if (opening) {
     renderHandsHelp();
     ov.style.display = 'flex';
-    if (card && window.matchMedia && window.matchMedia('(min-width:900px) and (min-height:600px)').matches) {
-      card.classList.add('hands-floatable');
-      card._winResizable = true;
-      var _r = _restoreWin(card, 'pth_winpos_hands');
-      if (!_r) _placeWin(card, (window.innerWidth - card.offsetWidth) / 2, (window.innerHeight - card.offsetHeight) / 2);
-      card._winRszWired = false;                       // innerHTML reconstruit -> re-injecter les poignees
-      makeWinResizable(card, 'pth_winpos_hands', 300, 220);
-      _makeHandsDraggable(card);
-    } else if (card) {
-      card.classList.remove('hands-floatable');
-      card._winResizable = false;
-      var _hs = card.querySelectorAll('.win-rsz'); for (var _i = 0; _i < _hs.length; _i++) _hs[_i].remove();
-      ['position','left','top','right','bottom','width','height'].forEach(function (p) { card.style[p] = ''; });
-    }
+    card._winRszWired = false;   // innerHTML reconstruit -> re-injecter les poignees
+    var btn = document.getElementById('hands-toggle-btn');
+    // Même système de fenêtre que chat/journal/réactions (déplaçable + redimensionnable partout).
+    _openFloatingNearBtn(card, btn, { key:'pth_winpos_hands', handle: card.querySelector('.g-chat-panel-header'), resizable:true, minW:280, minH:220, defW:380, defH:440 }, 'right');
   } else {
-    if (card && card.classList.contains('hands-floatable')) _saveWin(card, 'pth_winpos_hands');
+    if (card.classList.contains('floating-win')) _saveWin(card, 'pth_winpos_hands');
     ov.style.display = 'none';
   }
 }
@@ -13957,7 +13947,7 @@ function renderPlayersList() {
   body.innerHTML = _shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>';
 }
 
-;(function(){ window.BUILD_VERSION='0.3.318-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.319-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
