@@ -1307,6 +1307,7 @@ function onAvatarImageChosen(input) {
      <!-- Rejoindre la partie sélectionnée (parité LobbyPage QML : bouton Join en bas).
           Visible seulement quand une partie OUVERTE est sélectionnée. -->
      <button type="button" class="lfb-join" id="lobby-foot-join" style="display:none" onclick="App.joinSelectedGame()" data-i18n="footJoin">Join</button>
+     <button type="button" class="lfb-spectate" id="lobby-foot-spec" style="display:none" onclick="App.spectateSelectedGame()" data-i18n="spectatorBtn">Spectate</button>
      <button type="button" class="lfb-create" onclick="App.openCreatePage()" data-i18n="footCreate">＋ Create a table</button>
      <!-- Options d'attente (case bots + Démarrer/Quitter) — remplacent « Créer
           une partie » quand je suis dans une partie non démarrée (parité
