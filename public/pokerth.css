@@ -7231,8 +7231,12 @@ html[data-buttons="pokerth"] .btn-action[disabled] { filter: grayscale(0.55) bri
 .lobby-footbar .lfb-create:hover,
 .lobby-footbar .lfb-join:hover,
 .lobby-footbar .lfb-spectate:hover { background:rgba(var(--gold-rgb),0.14); }
-.lobby-footbar .lfb-create { margin-left:auto; flex:1 1 auto; max-width:460px; }
-.lobby-footbar .lfb-join, .lobby-footbar .lfb-spectate { flex:0 0 auto; }
+/* Largeurs égales + alignés : Rejoindre / Spectateur / Créer se partagent la barre
+   à parts égales (parité RowLayout fillWidth du LobbyPage QML). « Joueur : … »
+   reste à gauche à sa taille naturelle. */
+.lobby-footbar .lfb-create,
+.lobby-footbar .lfb-join,
+.lobby-footbar .lfb-spectate { flex:1 1 0; min-width:0; text-align:center; }
 
 /* Infos placeholder (rempli en Phase 2) */
 #lobby-gameinfo { display:none; flex-direction:column; }
