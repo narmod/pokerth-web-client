@@ -1585,9 +1585,9 @@ body {
   margin-left: 6px;
   padding: 0 6px;
   border-radius: 8px;
-  background: rgba(var(--gold-rgb), 0.16);
-  border: 1px solid var(--gold-dim);
-  color: var(--gold);
+  background: rgba(227,200,0,0.14);          /* teinte accent or QML, stable clair/sombre */
+  border: 1px solid rgba(227,200,0,0.55);
+  color: var(--sel, #E3C800);
   font-family: var(--ff-mono);
   font-weight: 700;
   font-size: 0.62rem;
@@ -1596,7 +1596,7 @@ body {
   cursor: pointer;
   transition: background 0.15s, border-color 0.15s;
 }
-.blinds-next:hover, .blinds-next:focus { background: rgba(var(--gold-rgb), 0.3); border-color: var(--gold); outline: none; }
+.blinds-next:hover, .blinds-next:focus { background: rgba(227,200,0,0.26); border-color: var(--sel, #E3C800); outline: none; }
 /* Bandeau d'info/alerte blinds. Centré en haut, masqué par défaut, révélé
    via .show (transition). Affiche : ↑ Blinds  cur → next  · quand. */
 .blinds-up-toast {
