@@ -4764,26 +4764,7 @@ body:not(.in-game) .my-zone {
 /* Replacement message that occupies the action area when the user
    is a spectator. Same vertical footprint as the action buttons so
    the layout doesn't jump around between hands. */
-.spectator-message {
-  width: 100%;
-  padding: 18px 14px;
-  text-align: center;
-  font-size: 0.78rem;
-  color: var(--gold-dim);
-  background: rgba(var(--blue-rgb), 0.06);
-  border: 1px solid rgba(var(--blue-rgb), 0.25);
-  border-radius: 4px;
-  font-style: italic;
-}
-.spectator-message .sm-icon {
-  font-size: 1.4rem;
-  display: block;
-  margin-bottom: 4px;
-  font-style: normal;
-}
-@media (max-width: 640px) {
-  .spectator-message { padding: 14px 10px; font-size: 0.72rem; }
-}
+
 
 
 /* ══ QUIT-GAME CONFIRMATION DIALOG ══

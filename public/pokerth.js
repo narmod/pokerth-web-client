@@ -6176,16 +6176,9 @@ const App = (() => {
         // join paths leave _amSpectator untouched (still false) so this
         // branch is skipped and the regular waiting panel logic applies.
         if (_amSpectator) {
-          // Replace action area with a static spectator message.
-          // renderGameWaiting() targets #g-actions, perfect for this.
-          renderGameWaiting(
-            '<div class="spectator-message">' +
-              '<span class="sm-icon">👁</span>' +
-              t('spectatorActionMsg') +
-            '</div>',
-            true
-          );
-        } else {
+          // Pas de barre d'action en mode spectateur (parité client QML officiel,
+          // qui n'affiche rien à la place des boutons).
+          clearSpectatorActions();
         }
         document.body.classList.add('in-game');
         // Diffuser l'avatar aux autres joueurs via le proxy. We use
@@ -9192,6 +9185,14 @@ const App = (() => {
     });
   }
 
+  // Mode spectateur : aucune barre d'action, comme le client QML officiel
+  // (rien n'est affiché à la place des boutons). On vide simplement #g-actions.
+  function clearSpectatorActions() {
+    var ga = document.getElementById('g-actions');
+    if (ga) ga.innerHTML = '';
+    try { updateBottomLayout(); } catch (e) {}
+  }
+
   function renderGameWaiting(msg, isHtml) {
     // Si le panneau "aperçu" est ouvert et que ce n'est pas notre tour, on
     // affiche le panneau au lieu du message d'attente (et on le garde sticky
@@ -9816,13 +9817,7 @@ const App = (() => {
     // guard against it anyway so a stray message can't accidentally
     // give the user an action UI they shouldn't have.
     if (_amSpectator) {
-      renderGameWaiting(
-        '<div class="spectator-message">' +
-          '<span class="sm-icon">👁</span>' +
-          t('spectatorActionMsg') +
-        '</div>',
-        true
-      );
+      clearSpectatorActions();
       return;
     }
     // Invalidation d'une pré-action call/raise si la mise à suivre a changé
@@ -13785,7 +13780,7 @@ function renderPlayersList() {
   body.innerHTML = _shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>';
 }
 
-;(function(){ window.BUILD_VERSION='0.3.289-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.290-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
