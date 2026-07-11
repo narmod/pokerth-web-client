@@ -671,31 +671,22 @@ function setSeatLayout(v) {
   if (window._seatEditMode && v !== 'custom' && typeof window._seatEditExit === 'function') {
     try { window._seatEditExit(); } catch (e) {}   // re-rend au passage
   } else {
-    try { if (typeof window._renderSeats === 'function') window._renderSeats(); } catch (e) {}
+    // iOS : le re-rendu via requestAnimationFrame (window._renderSeats) peut ne
+    // PAS s'appliquer a la partie en cours apres la fermeture du selecteur natif
+    // (rAF gele pendant l'ouverture du picker) -> impression qu'il faut rejoindre
+    // une partie. On force donc un rendu SYNCHRONE immediat (window._renderSeatsNow),
+    // puis on repete via setTimeout (les timers ne sont pas geles) pour rattraper
+    // tout etat de mesure transitoire. Desktop/tablette : deja instantane, inchange.
+    var _applyNow = function () {
+      try {
+        if (typeof window._renderSeatsNow === 'function') window._renderSeatsNow();
+        else if (typeof window._renderSeats === 'function') window._renderSeats();
+      } catch (e) {}
+    };
+    _applyNow();
+    setTimeout(_applyNow, 120);
+    setTimeout(_applyNow, 400);
   }
-  // Petit écran (téléphone) : le panneau d'options couvre le feutre, donc le
-  // re-rendu se fait « derrière » et n'est pas visible tant qu'on ne ferme pas.
-  // Sur desktop/tablette la carte (420px) est petite -> les sièges du pourtour
-  // restent visibles autour et le changement paraît immédiat. On réplique ça
-  // sur téléphone en rendant la carte brièvement translucide (aperçu de la
-  // nouvelle disposition), sans la fermer.
-  try {
-    if (window.innerWidth < 900) {
-      var _pm = document.getElementById('adv-modal');
-      var _pc = (_pm && _pm.style.display !== 'none') ? _pm.querySelector('.km-card') : null;
-      if (_pc) {
-        if (_pc._peekT) clearTimeout(_pc._peekT);
-        _pc.style.transition = 'opacity .18s ease';
-        _pc.style.opacity = '0.1';
-        _pc.style.pointerEvents = 'none';
-        _pc._peekT = setTimeout(function () {
-          _pc.style.opacity = '';
-          _pc.style.pointerEvents = '';
-          _pc._peekT = null;
-        }, 1100);
-      }
-    }
-  } catch (e) {}
 }
 window.setSeatLayout = setSeatLayout;
 // Appliquer les classes body dès l'init (les prefs sont reflétées au chargement).
@@ -9695,6 +9686,9 @@ const App = (() => {
   }
 
   window._renderSeats = function() { if (seats.length) renderSeats(); };
+  // Variante SYNCHRONE (sans requestAnimationFrame) : rend immediatement, utilisee
+  // par setSeatLayout sur iOS ou le rAF peut etre gele apres le selecteur natif.
+  window._renderSeatsNow = function() { if (seats.length) { try { renderSeatsImmediate(); } catch (e) {} } };
   // Pseudos pour la complétion Tab du chat (parité ChatBox QML, bible §11) :
   // en jeu = les joueurs de la table ; au lobby = tous les joueurs connus.
   // Activité d'un joueur pour le panneau « Joueurs » (parité tooltip QML
@@ -13980,7 +13974,7 @@ function renderPlayersList() {
   body.innerHTML = _shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>';
 }
 
-;(function(){ window.BUILD_VERSION='0.3.323-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.324-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
