@@ -7220,23 +7220,26 @@ html[data-buttons="pokerth"] .btn-action[disabled] { filter: grayscale(0.55) bri
   position:sticky; bottom:0; z-index:20; }
 .lobby-footbar .lfb-name { color:var(--text); font-size:0.82rem; white-space:nowrap; }
 .lobby-footbar .lfb-name b { color:var(--gold); }
-/* Boutons de la barre du bas — même style « palette QML » que « Créer une table ».
-   Rejoindre / Spectateur / Créer partagent l'apparence ; seul « Créer » s'étire. */
+/* Boutons de la barre du bas. Forme commune : largeurs ÉGALES et adaptatives —
+   « Joueur : … » (nowrap) garde sa place et les boutons rétrécissent quand le
+   pseudo est long (flex:1 1 0 + min-width:0 + ellipsis). Couleurs : Rejoindre en
+   vert et Spectateur en bleu (comme les boutons des lignes) ; Créer en or/neutre. */
 .lobby-footbar .lfb-create,
 .lobby-footbar .lfb-join,
 .lobby-footbar .lfb-spectate {
-  border:1px solid var(--border); background:rgba(var(--gold-rgb),0.07); color:var(--gold);
-  border-radius:8px; padding:9px 14px; cursor:pointer; font-family:var(--ff-display);
-  font-weight:600; font-size:0.92rem; white-space:nowrap; }
-.lobby-footbar .lfb-create:hover,
-.lobby-footbar .lfb-join:hover,
-.lobby-footbar .lfb-spectate:hover { background:rgba(var(--gold-rgb),0.14); }
-/* Largeurs égales + alignés : Rejoindre / Spectateur / Créer se partagent la barre
-   à parts égales (parité RowLayout fillWidth du LobbyPage QML). « Joueur : … »
-   reste à gauche à sa taille naturelle. */
-.lobby-footbar .lfb-create,
-.lobby-footbar .lfb-join,
-.lobby-footbar .lfb-spectate { flex:1 1 0; min-width:0; text-align:center; }
+  flex:1 1 0; min-width:0; text-align:center;
+  border:1px solid transparent; border-radius:8px; padding:9px 14px; cursor:pointer;
+  font-family:var(--ff-display); font-weight:600; font-size:0.92rem;
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+/* Créer : palette QML (or/neutre) */
+.lobby-footbar .lfb-create { border-color:var(--border); background:rgba(var(--gold-rgb),0.07); color:var(--gold); }
+.lobby-footbar .lfb-create:hover { background:rgba(var(--gold-rgb),0.14); }
+/* Rejoindre : vert (identique au bouton Rejoindre des lignes) */
+.lobby-footbar .lfb-join { border-color:var(--green); background:rgba(var(--green-rgb),0.12); color:var(--green); }
+.lobby-footbar .lfb-join:hover { background:rgba(var(--green-rgb),0.28); }
+/* Spectateur : bleu (identique au bouton Spectateur des lignes) */
+.lobby-footbar .lfb-spectate { border-color:rgba(var(--blue-rgb),0.55); background:rgba(var(--blue-rgb),0.12); color:var(--info); }
+.lobby-footbar .lfb-spectate:hover { background:rgba(var(--blue-rgb),0.22); }
 
 /* Infos placeholder (rempli en Phase 2) */
 #lobby-gameinfo { display:none; flex-direction:column; }
