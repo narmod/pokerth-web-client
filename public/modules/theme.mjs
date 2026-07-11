@@ -592,12 +592,97 @@ var _SKIN_TINT = {
   wanted:{a:'#c08a3e',bg:'#2d2c2d',su:'#4c4b4d',bo:'#86755e',tx:'#eff1f5',se:'#cdd3e0',mu:'#86888f'},
   xanax:{a:'#4a63c8',bg:'#22283b',su:'#3b4661',bo:'#51639c',tx:'#eff1f5',se:'#cdd3e0',mu:'#6e80aa'}
 };
-function _injectSkinTint(id){
-  var el=document.documentElement, m=(id&&_SKIN_TINT[id])||null;
+function _injectTintObj(m){
+  var el=document.documentElement;
   var K={'--chatlog-bg':'bg','--chatlog-surface':'su','--chatlog-border':'bo','--chatlog-text':'tx','--chatlog-text2':'se','--chatlog-muted':'mu','--box-accent':'a'};
-  for (var k in K){ if(m) el.style.setProperty(k, m[K[k]]); else el.style.removeProperty(k); }
-  if (m) el.setAttribute('data-box-accent','1'); else el.removeAttribute('data-box-accent');
+  for (var k in K){ var v=m?m[K[k]]:null; if(v) el.style.setProperty(k, v); else el.style.removeProperty(k); }
+  if (m && m.a) el.setAttribute('data-box-accent','1'); else el.removeAttribute('data-box-accent');
 }
+function _injectSkinTint(id){ _injectTintObj((id&&_SKIN_TINT[id])||null); }
+
+// ── Import LOCAL de styles (tables ; decks/sieges a venir). Lecteur ZIP (store +
+//    deflate) + IndexedDB pour les assets, injection dans les galeries existantes. ──
+function _u8str(u8,off,len){ var t=''; for(var i=0;i<len;i++) t+=String.fromCharCode(u8[off+i]); try{ return decodeURIComponent(escape(t)); }catch(e){ return t; } }
+function _inflateRaw(u8){ var ds=new DecompressionStream('deflate-raw'); return new Response(new Blob([u8]).stream().pipeThrough(ds)).arrayBuffer().then(function(ab){ return new Uint8Array(ab); }); }
+function _unzip(buf){
+  var dv=new DataView(buf), u8=new Uint8Array(buf), n=buf.byteLength, eocd=-1;
+  for(var i=n-22;i>=0 && i>=n-22-65536;i--){ if(dv.getUint32(i,true)===0x06054b50){ eocd=i; break; } }
+  if(eocd<0) return Promise.reject(new Error('ZIP invalide'));
+  var cnt=dv.getUint16(eocd+10,true), cdOff=dv.getUint32(eocd+16,true), p=cdOff, tasks=[];
+  for(var e=0;e<cnt;e++){
+    if(dv.getUint32(p,true)!==0x02014b50) break;
+    var method=dv.getUint16(p+10,true), compSize=dv.getUint32(p+20,true);
+    var nameLen=dv.getUint16(p+28,true), extraLen=dv.getUint16(p+30,true), commentLen=dv.getUint16(p+32,true);
+    var lho=dv.getUint32(p+42,true), name=_u8str(u8,p+46,nameLen);
+    var lNameLen=dv.getUint16(lho+26,true), lExtraLen=dv.getUint16(lho+28,true), dataOff=lho+30+lNameLen+lExtraLen;
+    tasks.push({name:name, method:method, comp:u8.slice(dataOff,dataOff+compSize)});
+    p+=46+nameLen+extraLen+commentLen;
+  }
+  var out={};
+  return tasks.reduce(function(pr,t){ return pr.then(function(){
+    if(t.name.charAt(t.name.length-1)==='/') return;
+    var base=t.name.split('/').pop();
+    if(t.method===0){ out[base]=t.comp; return; }
+    if(t.method===8) return _inflateRaw(t.comp).then(function(d){ out[base]=d; });
+  }); }, Promise.resolve()).then(function(){ return out; });
+}
+function _idb(){ return new Promise(function(res,rej){ try{ var r=indexedDB.open('pth_imports',1); r.onupgradeneeded=function(){ try{ r.result.createObjectStore('items',{keyPath:'id'}); }catch(e){} }; r.onsuccess=function(){ res(r.result); }; r.onerror=function(){ rej(r.error); }; }catch(e){ rej(e); } }); }
+function _idbPut(rec){ return _idb().then(function(db){ return new Promise(function(res,rej){ var tx=db.transaction('items','readwrite'); tx.objectStore('items').put(rec); tx.oncomplete=function(){res();}; tx.onerror=function(){rej(tx.error);}; }); }); }
+function _idbAll(){ return _idb().then(function(db){ return new Promise(function(res,rej){ var tx=db.transaction('items','readonly'); var rq=tx.objectStore('items').getAll(); rq.onsuccess=function(){ res(rq.result||[]); }; rq.onerror=function(){rej(rq.error);}; }); }); }
+function _idbDel(id){ return _idb().then(function(db){ return new Promise(function(res,rej){ var tx=db.transaction('items','readwrite'); tx.objectStore('items').delete(id); tx.oncomplete=function(){res();}; tx.onerror=function(){rej(tx.error);}; }); }); }
+function _uid(){ return Date.now().toString(36)+Math.random().toString(36).slice(2,7); }
+function _mimeOf(name){ var x=(name||'').split('.').pop().toLowerCase(); return x==='png'?'image/png':(x==='jpg'||x==='jpeg')?'image/jpeg':x==='svg'?'image/svg+xml':'application/octet-stream'; }
+function _xmlVal(xml,tag){ var m=xml.match(new RegExp('<'+tag+'\\s+value="([^"]*)"')); return (m&&m[1])?m[1]:null; }
+
+function _importedTableToGallery(rec){
+  var A=rec.assets, m=rec.meta||{}, url=function(n){ return (n&&A[n])?URL.createObjectURL(A[n]):null; };
+  var feltUrl=url(m.table), pv=url(m.preview)||feltUrl, pucks=null;
+  var pd=url(m.dealer), ps=url(m.sb), pb=url(m.bb);
+  if(pd||ps||pb){ pucks={}; if(pd)pucks.dealer='url('+pd+')'; if(ps)pucks.sb='url('+ps+')'; if(pb)pucks.bb='url('+pb+')'; }
+  var bf=url(m.fold), bc=url(m.call), br=url(m.raise), ba=url(m.allin), btn=null;
+  if(bf||bc||br||ba){ btn={}; if(bf)btn.fold='url('+bf+')'; if(bc){btn.check='url('+bc+')';btn.call='url('+bc+')';} if(br)btn.raise='url('+br+')'; if(ba)btn.allin='url('+ba+')'; }
+  return { id:rec.id, name:rec.name, feltUrl:feltUrl, preview:pv, pucks:pucks, fs:true, align:m.align||'center', _imported:true, _type:'table', _btn:btn, _tint:m.tint||null };
+}
+function _importTablePackage(file){
+  return file.arrayBuffer().then(_unzip).then(function(files){
+    var xmlName=null; for(var k in files){ if(/tablestyle\.xml$/i.test(k)){ xmlName=k; break; } if(/\.xml$/i.test(k)) xmlName=xmlName||k; }
+    var meta={ table:'table.png', preview:'preview.png', dealer:'dealerPuck.svg', sb:'smallblindPuck.svg', bb:'bigblindPuck.svg', fold:'actionFold.svg', call:'actionCall.svg', raise:'actionRaise.svg', allin:'actionAllIn.svg', align:'center', tint:null };
+    var name='Imported table';
+    if(xmlName){ var xml=new TextDecoder().decode(files[xmlName]);
+      name=_xmlVal(xml,'StyleDescription')||name;
+      meta.align=(_xmlVal(xml,'TableBackgroundAlign')==='bottom')?'center bottom':'center';
+      meta.table=_xmlVal(xml,'Table')||meta.table; meta.preview=_xmlVal(xml,'Preview')||meta.preview;
+      meta.dealer=_xmlVal(xml,'DealerPuck')||meta.dealer; meta.sb=_xmlVal(xml,'SmallBlindPuck')||meta.sb; meta.bb=_xmlVal(xml,'BigBlindPuck')||meta.bb;
+      meta.fold=_xmlVal(xml,'FoldButton')||meta.fold; meta.call=_xmlVal(xml,'CheckCallButton')||meta.call; meta.raise=_xmlVal(xml,'BetRaiseButton')||meta.raise; meta.allin=_xmlVal(xml,'AllInButton')||meta.allin;
+      var acc=_xmlVal(xml,'PlayerBoxAccent'), cbg=_xmlVal(xml,'ChatLogBackground');
+      if(acc||cbg) meta.tint={ a:acc, bg:cbg, su:_xmlVal(xml,'ChatLogSurface'), bo:_xmlVal(xml,'ChatLogBorder'), tx:_xmlVal(xml,'ChatLogText'), se:_xmlVal(xml,'ChatLogTextSecondary'), mu:_xmlVal(xml,'ChatLogTextMuted') };
+    }
+    var assets={}; [meta.table,meta.preview,meta.dealer,meta.sb,meta.bb,meta.fold,meta.call,meta.raise,meta.allin].forEach(function(fn){ if(fn&&files[fn]&&!assets[fn]) assets[fn]=new Blob([files[fn]],{type:_mimeOf(fn)}); });
+    if(!assets[meta.table]) return Promise.reject(new Error('table.png manquant'));
+    var rec={ id:'imp-t-'+_uid(), type:'table', name:name, meta:meta, assets:assets };
+    return _idbPut(rec).then(function(){ _galleryTables.push(_importedTableToGallery(rec)); try{ if(_body) _render(); }catch(e){} return rec; });
+  });
+}
+function _loadImportedTables(){
+  return _idbAll().then(function(recs){
+    (recs||[]).filter(function(r){ return r && r.type==='table'; }).forEach(function(rec){ if(!_galleryTableById(rec.id)){ try{ _galleryTables.push(_importedTableToGallery(rec)); }catch(e){} } });
+    try{ var cur=table.get(); if(cur && /^imp-/.test(cur) && _galleryTableById(cur)) table.apply(cur); }catch(e){}   // rafraichit les blob URLs de la table active
+    try{ if(_body) _render(); }catch(e){}
+  }).catch(function(){});
+}
+function _deleteImported(id){
+  _idbDel(id).then(function(){
+    for(var i=0;i<_galleryTables.length;i++) if(_galleryTables[i].id===id){ _galleryTables.splice(i,1); break; }
+    try{ if(table.get()===id) table.apply(''); }catch(e){}
+    try{ if(_body) _render(); }catch(e){}
+  }).catch(function(){});
+}
+function _pickTableImport(){
+  var inp=document.createElement('input'); inp.type='file'; inp.accept='.zip,application/zip';
+  inp.onchange=function(){ var f=inp.files&&inp.files[0]; if(f){ _importTablePackage(f).catch(function(err){ try{ alert((_t('importError','Import failed'))+' : '+((err&&err.message)||err)); }catch(e){} }); } };
+  inp.click();
+}
+try { _loadImportedTables(); } catch (e) {}
 table.apply = function(id){
   _tblApply(id);   // pose data-table + persiste pth_table
   try {
@@ -617,7 +702,9 @@ table.apply = function(id){
       if (gt) {
         _injectAxis(TABLE_TOKENS, { id:gt.id, tokens:{}, feltUrl:gt.feltUrl }, 'pth_table_css', true);
         if (gt.fs) { fsimg=gt.feltUrl||null; fsalign=gt.align||null; } else if (gt.full) fimg=gt.feltUrl||null;
-        _injectButtons({ colors: BUTTON_GLOSSY });
+        if (gt._btn) _injectButtons({ images: gt._btn, colors:{ 'btn-fold-fg':'#f0f3f8','btn-check-fg':'#f0f3f8','btn-call-fg':'#f0f3f8','btn-raise-fg':'#f0f3f8','btn-allin-fg':'#fff4ec','btn-allin-fg-b':'#ffffff' } });
+        else _injectButtons({ colors: BUTTON_GLOSSY });
+        if (gt._tint) _injectTintObj(gt._tint);
       }
       if (fsimg) { _applyTableFull(null); _applyTableFullscreen(fsimg, fsalign); }
       else { _applyTableFullscreen(null); _applyTableFull(fimg); }
@@ -1059,6 +1146,12 @@ function _styleRow(kind, item, name, author, active, onClick){
     + (active ? '<div style="font-size:0.72rem;font-weight:700;color:var(--sel,#E3C800);margin-top:2px">\u2713 ' + _t('styleSelected','Selected') + '</div>' : '')
     + '</div>';
   row.innerHTML = _previewHTML(kind, item, true) + txt;
+  if (item && item._imported) {
+    var del=document.createElement('button'); del.type='button'; del.textContent='\u2715'; del.title=_t('delete','Delete');
+    del.style.cssText='flex:0 0 auto;background:none;border:0;color:var(--text,#9aaa92);cursor:pointer;font-size:0.95rem;padding:2px 6px;line-height:1';
+    del.addEventListener('click', function(e){ e.stopPropagation(); try{ if(confirm(_t('confirmDeleteStyle','Delete this imported style?'))) _deleteImported(item.id); }catch(_){ _deleteImported(item.id); } });
+    row.appendChild(del);
+  }
   if (!active) {
     row.addEventListener('mouseenter', function(){ row.style.background='var(--inset-hi,rgba(255,255,255,0.06))'; });
     row.addEventListener('mouseleave', function(){ row.style.background='rgba(255,255,255,0.02)'; });
@@ -1093,6 +1186,12 @@ function _render(){
     var row = _styleRow(tab.kind, it, name, author, active, (function(id){ return function(){ var keep = info.pick(id); if (!keep) _render(); }; })(it.id));
     list.appendChild(row);
   });
+  if (_activeTab === 'table') {
+    var imp=document.createElement('button'); imp.type='button'; imp.textContent='\u2795 '+_t('importTable','Import a table (.zip)');
+    imp.style.cssText='margin-top:5px;padding:10px;border:1px dashed var(--border,rgba(200,168,74,0.4));border-radius:9px;background:none;color:var(--gold,#c8a84a);cursor:pointer;font-size:0.82rem;font-weight:600;text-align:center';
+    imp.addEventListener('click', function(e){ e.stopPropagation(); _pickTableImport(); });
+    list.appendChild(imp);
+  }
   _body.appendChild(list);
 }
 
@@ -1168,7 +1267,7 @@ function openThemePanel(ev) {
   // imported in the admin show up without reloading the app. Each loader calls
   // _render() again when its fetch resolves (network-first via the service
   // worker), refreshing the open panel in place.
-  try { _loadGalleryDecks(); _loadGalleryTables(); _loadThemes(); } catch (e) {}
+  try { _loadGalleryDecks(); _loadGalleryTables(); _loadThemes(); _loadImportedTables(); } catch (e) {}
 
   if (overlay) document.body.appendChild(overlay);
   document.body.appendChild(panel);
@@ -1214,7 +1313,7 @@ window.renderThemeInto = function(host){
   if(!host) return;
   _body = host; _activeTab = 'table';
   try { _render(); } catch(e){}
-  try { _loadGalleryDecks(); _loadGalleryTables(); _loadThemes(); _loadGallerySeats(); } catch(e){}
+  try { _loadGalleryDecks(); _loadGalleryTables(); _loadThemes(); _loadGallerySeats(); _loadImportedTables(); } catch(e){}
 };
 window._refreshThemePanel = function () { try { _render(); } catch (e) {} };
 window.closeThemePanel = closeThemePanel;
