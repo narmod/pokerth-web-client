@@ -346,6 +346,15 @@ body {
   padding: 8px 10px;
   box-shadow: 0 6px 20px rgba(0,0,0,0.38);
 }
+/* Panneau d'attente (« EN ATTENTE / + BOTS ») : hors partie il occupe la barre
+   d'action -> lui aussi doit flotter sur le feutre avec le fond de palette,
+   sinon il devient transparent en fullscreen. */
+:root[data-table-fs="1"] .my-zone .waiting-panel {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.38);
+}
 
 /* ─── SCREENS ─── */
 .screen { display: none; height: 100vh; height: 100dvh; }
