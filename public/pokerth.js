@@ -4432,6 +4432,33 @@ const App = (() => {
       });
     }
   }
+  // Statut spectateur dans le bandeau du pot (#pot-strip), en remplacement de
+  // l'ancien bandeau séparé — parité GameStatusBar QML §7. Pastille « Spectating »
+  // si je regarde, et œil + compteur de spectateurs (moi inclus) dès qu'au moins
+  // un spectateur est présent. _specPids exclut le pid local, d'où le +1.
+  function updateSpectatorStrip() {
+    try {
+      var badge = document.getElementById('g-spec-badge');
+      var cnt   = document.getElementById('g-spec-count');
+      var num   = document.getElementById('g-spec-n');
+      if (badge) badge.classList.toggle('on', !!_amSpectator);
+      var n = (_specPids ? _specPids.size : 0) + (_amSpectator ? 1 : 0);
+      if (num) num.textContent = n;
+      if (cnt) {
+        cnt.classList.toggle('on', n > 0);
+        // Tooltip = noms des spectateurs (parité ToolTip QML spectatorNames)
+        var names = [];
+        if (_amSpectator) names.push(t('piYou'));
+        if (_specPids) _specPids.forEach(function(pid) {
+          var nm = (typeof getPlayerName === 'function') ? getPlayerName(pid) : null;
+          names.push(nm || ('#' + pid));
+        });
+        cnt.title = names.join('\n');
+      }
+    } catch (e) {}
+  }
+  window.updateSpectatorStrip = updateSpectatorStrip;
+
   function repaintPot() {
     if (typeof _lastPotValue !== 'number') return;
     setPot(_lastPotValue);
@@ -5924,6 +5951,7 @@ const App = (() => {
         const spid = Proto.u32(sub, 2);
         if (spid && spid !== myId) {
           _specPids.add(spid);
+          updateSpectatorStrip();
           // Request the pseudo if we don't have it yet. PlayerInfoReply
           // will populate players[spid] and the modal renderer reads
           // straight from there, so the row updates next time the modal
@@ -5947,6 +5975,7 @@ const App = (() => {
         const spid = Proto.u32(sub, 2);
         if (spid) {
           _specPids.delete(spid);
+          updateSpectatorStrip();
           var _gim2 = document.getElementById('game-info-modal');
           if (_gim2 && _gim2.style.display === 'flex') {
             try { openGameInfoPopup(); } catch(e) {}
@@ -6146,9 +6175,7 @@ const App = (() => {
         // a 'You are watching' message in place of the action bar. Player
         // join paths leave _amSpectator untouched (still false) so this
         // branch is skipped and the regular waiting panel logic applies.
-        var _specBan = document.getElementById('g-spectator-banner');
         if (_amSpectator) {
-          if (_specBan) _specBan.style.display = '';
           // Replace action area with a static spectator message.
           // renderGameWaiting() targets #g-actions, perfect for this.
           renderGameWaiting(
@@ -6159,7 +6186,6 @@ const App = (() => {
             true
           );
         } else {
-          if (_specBan) _specBan.style.display = 'none';
         }
         document.body.classList.add('in-game');
         // Diffuser l'avatar aux autres joueurs via le proxy. We use
@@ -11232,8 +11258,8 @@ function dismissWinner() {
       if (ws && gId) { try { send(MSG.buildLeaveGame(gId)); } catch(e) {} }
       _pendingRejoin = 0; _rejoinNickRetries = 0;
       try { localStorage.removeItem('pth_resume'); } catch(e) {}
-      amInGame = false; amGameAdmin = false; _gameStarted = false; _seatsFrozen = false; _amSpectator = false; var _sb2 = document.getElementById('g-spectator-banner'); if (_sb2) _sb2.style.display = 'none';
-      gId = 0; seats = []; seatData = {}; _specPids = new Set();
+      amInGame = false; amGameAdmin = false; _gameStarted = false; _seatsFrozen = false; _amSpectator = false;
+      gId = 0; seats = []; seatData = {}; _specPids = new Set(); updateSpectatorStrip();
       var _ego = document.getElementById('g-endgame-overlay');
       if (_ego) _ego.style.display = 'none';
       try { _wpHide(); } catch(e) {}
@@ -11392,7 +11418,7 @@ function dismissWinner() {
       [ 'admin-close-btn', 'admin-close-mob',
         'admin-start-btn', 'admin-start-mob',
         'admin-kick-btn', 'admin-kick-mob',
-        'g-admin-badge', 'g-spectator-banner', 'g-endgame-overlay'
+        'g-admin-badge', 'g-endgame-overlay'
       ].forEach(function (id) {
         var el = document.getElementById(id);
         if (el) el.style.display = 'none';
@@ -11413,8 +11439,8 @@ function dismissWinner() {
       // ré-aspiré dans la table à la prochaine reconnexion/réouverture).
       _pendingRejoin = 0; _rejoinNickRetries = 0;
       try { localStorage.removeItem('pth_resume'); } catch(e) {}
-      amInGame = false; amGameAdmin = false; _gameStarted = false; _seatsFrozen = false; _amSpectator = false; var _sb2 = document.getElementById('g-spectator-banner'); if (_sb2) _sb2.style.display = 'none';
-      gId = 0; seats = []; seatData = {}; _specPids = new Set();
+      amInGame = false; amGameAdmin = false; _gameStarted = false; _seatsFrozen = false; _amSpectator = false;
+      gId = 0; seats = []; seatData = {}; _specPids = new Set(); updateSpectatorStrip();
       var _ego = document.getElementById('g-endgame-overlay');
       if (_ego) _ego.style.display = 'none';
       try { _wpHide(); } catch(e) {}
@@ -11566,7 +11592,7 @@ function dismissWinner() {
       // Remember that we joined as spectator. Used by JoinGameAck to flip
       // the UI into 'watch only' mode (banner up top, action area replaced
       // with a message instead of fold/call buttons).
-      _amSpectator = true;
+      _amSpectator = true; updateSpectatorStrip();
       addChat(null, '👁 ' + t('spectatingTable') + (g.name||('#'+gameId)) + '…', 'sys', { prefix: '👁 ', key: 'spectatingTable', suffix: (g.name||('#'+gameId)) + '…' });
       // Use the shared MSG.buildJoinGame helper which now correctly
       // encodes spectateOnly into field 4. The previous hand-rolled
@@ -13759,7 +13785,7 @@ function renderPlayersList() {
   body.innerHTML = _shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>';
 }
 
-;(function(){ window.BUILD_VERSION='0.3.288-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.289-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

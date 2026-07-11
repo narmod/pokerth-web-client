@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+  spectatingBadge: `Đang xem`,
   reportGameTitle: `Thông báo cho ban quản trị về tên của màn chơi vi phạm luật`, reportGameConfirm: `Tố cáo`, reportGameMsg: `Bạn có chắc rằng bạn muốn tố cáo tên màn game : "{name}" vì lý do không hợp lệ hay không?`, reportGameAccepted: `Thông báo về tên màn chơi đã được máy chủ ghi nhận. Cảm ơn bạn.`, reportGameDup: `Tên của màn chơi này hiện đã bị một người dùng khác thông báo rằng bạn đã vi phạm luật.`, reportGameError: `Một lỗi đã xảy ra khi tiến hành gửi thông báo vi phạm tên màn chơi.`,
   filterRanked: 'Xếp hạng', plSortAZ: 'Sắp xếp A–Z', plSortCountry: 'Sắp xếp theo quốc gia',
   plInGame: 'Đang chơi', plLobby: 'Ở sảnh',

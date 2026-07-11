@@ -16,6 +16,7 @@ export const meta = {
 };
 
 export const strings = {
+  spectatingBadge: `Spectating`,
   reportGameTitle: `Report inappropriate game name`, reportGameConfirm: `Report`, reportGameMsg: `Are you sure you want to report the game name "{name}" as inappropriate?`, reportGameAccepted: `The game name report was accepted by the server. Thank you.`, reportGameDup: `This game name was already reported by another player.`, reportGameError: `An error occurred while reporting the game name.`,
   buttonsPokerth: 'PokerTH',
   wpWaitingPlayers:'Waiting for players …', wpFillBots:'Fill up with computer players', wpStartGame:'Start Game', wpLeaveGame:'Leave Game',

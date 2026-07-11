@@ -4714,32 +4714,51 @@ body:not(.in-game) .my-zone {
    Subtle blue tint to differentiate from regular player view, with
    a small animated pulse on the eye emoji to draw attention without
    being noisy. */
-#g-spectator-banner {
-  display: flex;
+/* Statut spectateur intégré au bandeau du pot #pot-strip (parité GameStatusBar
+   QML §7) : pastille or « Spectating » (visible si je suis spectateur) + œil
+   avec compteur (visible dès qu'au moins un spectateur regarde). g-pot (flex:1)
+   pousse ces éléments à droite, juste avant la phase (#g-round). */
+#g-spec-badge {
+  display: none;               /* activé par JS via .on quand _amSpectator */
   align-items: center;
-  justify-content: center;
-  gap: 8px;
-  padding: 6px 12px;
-  background: linear-gradient(180deg, rgba(10,26,54,0.9), rgba(6,16,36,0.9));
-  border-bottom: 1px solid rgba(var(--blue-rgb), 0.5);
-  font-size: 0.75rem;
-  color: #9ec5ff;
-  text-shadow: 0 1px 2px rgba(0,0,0,0.6);
-  font-family: var(--ff-display);
-  letter-spacing: 0.1em;
+  padding: 1px 9px;
+  margin-right: 8px;
+  border-radius: 999px;
+  border: 1px solid var(--gold);
+  background: rgba(var(--gold-rgb), 0.18);
+  color: var(--gold);
+  font-size: clamp(0.54rem, 1.3vw, 0.66rem);
+  font-weight: 700;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
-#g-spectator-banner .sb-eye {
-  font-size: 1rem;
+#g-spec-badge.on { display: inline-flex; }
+#g-spec-count {
+  display: none;               /* activé par JS via .on quand count > 0 */
+  align-items: center;
+  gap: 3px;
+  margin-right: 8px;
+  color: #eff1f5;
+  font-size: clamp(0.58rem, 1.4vw, 0.72rem);
+  font-weight: 700;
+  flex-shrink: 0;
+  cursor: default;
+}
+#g-spec-count.on { display: inline-flex; }
+#g-spec-count .sc-eye {
+  font-size: 0.92em;
+  opacity: 0.9;
   animation: sbEyePulse 2.4s ease-in-out infinite;
 }
 @keyframes sbEyePulse {
-  0%,100% { opacity: 0.75; transform: scale(1); }
-  50%     { opacity: 1;    transform: scale(1.15); }
+  0%,100% { opacity: 0.7; transform: scale(1); }
+  50%     { opacity: 1;   transform: scale(1.12); }
 }
 @media (max-width: 640px) {
-  #g-spectator-banner { padding: 5px 10px; font-size: 0.66rem; }
-  #g-spectator-banner .sb-eye { font-size: 0.9rem; }
+  #g-spec-badge { padding: 1px 7px; }
+  #g-spec-count, #g-spec-badge { margin-right: 6px; }
 }
 
 /* Replacement message that occupies the action area when the user

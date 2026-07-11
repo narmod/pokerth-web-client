@@ -15,6 +15,7 @@ export const meta = {
 };
 
 export const strings = {
+  spectatingBadge: `Наблюдатель`,
   reportGameTitle: `Сообщить о недопустимом названии игры`, reportGameConfirm: `Сообщить`, reportGameMsg: `Вы действительно хотите сообщить, что название игры "{name}" является недопустимым?`, reportGameAccepted: `Сообщение о названии игры было принято сервером. Спасибо.`, reportGameDup: `Об этом названии игры уже сообщалось другим игроком.`, reportGameError: `Произошла ошибка при сообщении о названии игры.`,
   filterRanked: 'Рейтинговые', plSortAZ: 'Сортировка А–Я', plSortCountry: 'Сортировка по стране',
   plInGame: 'В игре', plLobby: 'В лобби',

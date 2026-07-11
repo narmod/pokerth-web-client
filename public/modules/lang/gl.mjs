@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+  spectatingBadge: `Espectador`,
   reportGameTitle: `Informar de que o nome non é axeitado`, reportGameConfirm: `Informar`, reportGameMsg: `Está seguro de que quere informar de que o nome da partida «{name}» non é axeitado?`, reportGameAccepted: `O servidor aceptou o informe sobre o nome da partida. Grazas por colaborar.`, reportGameDup: `Xa outro usuario informara sobre o nome desta partida.`, reportGameError: `Produciuse un erro ao informar sobre o nome da partida.`,
   filterRanked: 'Clasificadas', plSortAZ: 'Ordenar A–Z', plSortCountry: 'Ordenar por país',
   plInGame: 'En partida', plLobby: 'No lobby',

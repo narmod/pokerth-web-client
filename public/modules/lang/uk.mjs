@@ -9,6 +9,7 @@ export const meta = {
 };
 
 export const strings = {
+  spectatingBadge: `Спостерігач`,
   reportGameTitle: `Поскаржитися на неприйнятну назву гри`, reportGameConfirm: `Поскаржитися`, reportGameMsg: `Ви впевнені, що хочете поскаржитися на назву гри «{name}» як неприйнятну?`, reportGameAccepted: `Сервер прийняв скаргу на назву гри. Дякуємо.`, reportGameDup: `На цю назву гри вже поскаржився інший гравець.`, reportGameError: `Під час надсилання скарги на назву гри сталася помилка.`,
   filterRanked: 'Рейтингові', plSortAZ: 'Сортування А–Я', plSortCountry: 'Сортування за країною',
   plInGame: 'У грі', plLobby: 'У лобі',
