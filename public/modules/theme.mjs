@@ -292,6 +292,44 @@ seat.set = seat.apply;
 _loadGallerySeats();
 
 // Deck changes need the monolith to re-point card faces + back (no re-render).
+var _impDeck = {};   // deckId importe -> { faces:{n:blobUrl}, back:blobUrl }
+// Resolveur d'URL de carte : blob URL si deck importe, sinon null (chemin standard).
+window._deckCardUrl = function(deckId, n){ var d=_impDeck[deckId]; if(!d) return null; return (n==='flipside') ? (d.back||'') : (d.faces[n]||''); };
+function _deckInGallery(id){ for(var i=0;i<_galleryDecks.length;i++) if(_galleryDecks[i].id===id) return true; return false; }
+function _importedDeckToGallery(rec){
+  var A=rec.assets, ext=(rec.meta&&rec.meta.ext)||'png', faces={}, back=null;
+  for(var i=0;i<52;i++){ var fn=i+'.'+ext; if(A[fn]) faces[i]=URL.createObjectURL(A[fn]); }
+  if(A['flipside.'+ext]) back=URL.createObjectURL(A['flipside.'+ext]);
+  _impDeck[rec.id]={faces:faces, back:back};
+  return { id:rec.id, name:rec.name, ext:ext, _imported:true, _type:'deck' };
+}
+function _importDeckPackage(file){
+  return file.arrayBuffer().then(_unzip).then(function(files){
+    var ext=null, exts=['svg','png','jpg','jpeg'];
+    for(var e=0;e<exts.length;e++){ if(files['0.'+exts[e]]){ ext=exts[e]; break; } }
+    if(!ext) return Promise.reject(new Error('cartes 0..51 introuvables'));
+    var name='Imported deck';
+    for(var k in files){ if(/deckstyle\.xml$/i.test(k)){ name=_xmlVal(new TextDecoder().decode(files[k]),'StyleDescription')||name; break; } }
+    var assets={}, faceCount=0;
+    for(var i=0;i<52;i++){ var fn=i+'.'+ext; if(files[fn]){ assets[fn]=new Blob([files[fn]],{type:_mimeOf(fn)}); faceCount++; } }
+    if(faceCount<52) return Promise.reject(new Error('deck incomplet ('+faceCount+'/52 cartes)'));
+    if(files['flipside.'+ext]) assets['flipside.'+ext]=new Blob([files['flipside.'+ext]],{type:_mimeOf('x.'+ext)});
+    var rec={ id:'imp-d-'+_uid(), type:'deck', name:name, meta:{ext:ext}, assets:assets };
+    return _idbPut(rec).then(function(){ _galleryDecks.push(_importedDeckToGallery(rec)); try{ if(_body) _render(); }catch(e){} return rec; });
+  });
+}
+function _loadImportedDecks(){
+  return _idbAll().then(function(recs){
+    (recs||[]).filter(function(r){ return r&&r.type==='deck'; }).forEach(function(rec){ if(!_deckInGallery(rec.id)){ try{ _galleryDecks.push(_importedDeckToGallery(rec)); }catch(e){} } });
+    try{ var cur=deck.get(); if(cur && /^imp-/.test(cur) && _impDeck[cur]){ deck.apply(cur); } }catch(e){}
+    try{ if(_body) _render(); }catch(e){}
+  }).catch(function(){});
+}
+function _pickDeckImport(){
+  var inp=document.createElement('input'); inp.type='file'; inp.accept='.zip,application/zip';
+  inp.onchange=function(){ var f=inp.files&&inp.files[0]; if(f){ _importDeckPackage(f).catch(function(err){ try{ alert((_t('importError','Import failed'))+' : '+((err&&err.message)||err)); }catch(e){} }); } };
+  inp.click();
+}
 var _deckApply = deck.apply;
 function _deckExt(id) { var all = DECKS.concat(_galleryDecks); for (var i = 0; i < all.length; i++) if (all[i].id === id) return all[i].ext || 'png'; return 'png'; }
 deck.apply = function (id) {
@@ -672,8 +710,8 @@ function _loadImportedTables(){
 }
 function _deleteImported(id){
   _idbDel(id).then(function(){
-    for(var i=0;i<_galleryTables.length;i++) if(_galleryTables[i].id===id){ _galleryTables.splice(i,1); break; }
-    try{ if(table.get()===id) table.apply(''); }catch(e){}
+    for(var i=0;i<_galleryTables.length;i++) if(_galleryTables[i].id===id){ _galleryTables.splice(i,1); try{ if(table.get()===id) table.apply(''); }catch(e){} break; }
+    for(var j=0;j<_galleryDecks.length;j++) if(_galleryDecks[j].id===id){ _galleryDecks.splice(j,1); delete _impDeck[id]; try{ if(deck.get()===id) deck.apply(''); }catch(e){} break; }
     try{ if(_body) _render(); }catch(e){}
   }).catch(function(){});
 }
@@ -682,7 +720,7 @@ function _pickTableImport(){
   inp.onchange=function(){ var f=inp.files&&inp.files[0]; if(f){ _importTablePackage(f).catch(function(err){ try{ alert((_t('importError','Import failed'))+' : '+((err&&err.message)||err)); }catch(e){} }); } };
   inp.click();
 }
-try { _loadImportedTables(); } catch (e) {}
+try { _loadImportedTables(); _loadImportedDecks(); } catch (e) {}
 table.apply = function(id){
   _tblApply(id);   // pose data-table + persiste pth_table
   try {
@@ -939,7 +977,9 @@ function _feltStyle(t) {
 }
 function _pngFan(deckId, big) {
   function c(src, x, r) { return '<img src="' + src + '" alt="" style="position:absolute;top:50%;left:' + x + '%;height:' + (big ? 80 : 76) + '%;width:auto;aspect-ratio:5/7;border-radius:3px;transform:translateY(-50%) rotate(' + r + 'deg);box-shadow:0 1px 3px rgba(0,0,0,.5)">'; }
-  var ext = _deckExt(deckId); var bust = '?v=' + (window.BUILD_VERSION || '0'); return c('/cards/' + deckId + '/flipside.' + ext + bust, big ? 8 : 6, -12) + c('/cards/' + deckId + '/25.' + ext, big ? 32 : 30, 0) + c('/cards/' + deckId + '/38.' + ext, big ? 54 : 52, 12);
+  var ext = _deckExt(deckId); var bust = '?v=' + (window.BUILD_VERSION || '0');
+  var U=function(n,dflt){ var u=window._deckCardUrl&&window._deckCardUrl(deckId,n); return u||dflt; };
+  return c(U('flipside','/cards/' + deckId + '/flipside.' + ext + bust), big ? 8 : 6, -12) + c(U(25,'/cards/' + deckId + '/25.' + ext), big ? 32 : 30, 0) + c(U(38,'/cards/' + deckId + '/38.' + ext), big ? 54 : 52, 12);
 }
 // Mini card faces for previews, matching the in-game Classic layout
 // (rank+suit index top-left, large suit pip centered).
@@ -960,7 +1000,7 @@ function _classicFan(big) {
     + _miniFront('A', '\u2660', false, big, 'top:50%;left:' + (big ? 54 : 52) + '%;transform:translateY(-50%) rotate(12deg);');
 }
 function _cardOnFelt(deckId, big) {
-  if (deckId) return '<img src="/cards/' + deckId + '/38.' + _deckExt(deckId) + '" alt="" style="position:absolute;top:50%;left:50%;height:' + (big ? 78 : 74) + '%;width:auto;aspect-ratio:5/7;border-radius:3px;transform:translate(-50%,-50%) rotate(-6deg);box-shadow:0 2px 5px rgba(0,0,0,.5)">';
+  if (deckId) return '<img src="' + ((window._deckCardUrl&&window._deckCardUrl(deckId,38))||('/cards/' + deckId + '/38.' + _deckExt(deckId))) + '" alt="" style="position:absolute;top:50%;left:50%;height:' + (big ? 78 : 74) + '%;width:auto;aspect-ratio:5/7;border-radius:3px;transform:translate(-50%,-50%) rotate(-6deg);box-shadow:0 2px 5px rgba(0,0,0,.5)">';
   return _miniFront('A', '\u2660', false, big, 'top:50%;left:50%;transform:translate(-50%,-50%) rotate(-6deg);');
 }
 function _previewHTML(kind, item, big) {
@@ -1186,10 +1226,12 @@ function _render(){
     var row = _styleRow(tab.kind, it, name, author, active, (function(id){ return function(){ var keep = info.pick(id); if (!keep) _render(); }; })(it.id));
     list.appendChild(row);
   });
-  if (_activeTab === 'table') {
-    var imp=document.createElement('button'); imp.type='button'; imp.textContent='\u2795 '+_t('importTable','Import a table (.zip)');
+  if (_activeTab === 'table' || _activeTab === 'deck') {
+    var _isT=_activeTab==='table';
+    var imp=document.createElement('button'); imp.type='button';
+    imp.textContent='\u2795 '+(_isT?_t('importTable','Import a table (.zip)'):_t('importDeck','Import a deck (.zip)'));
     imp.style.cssText='margin-top:5px;padding:10px;border:1px dashed var(--border,rgba(200,168,74,0.4));border-radius:9px;background:none;color:var(--gold,#c8a84a);cursor:pointer;font-size:0.82rem;font-weight:600;text-align:center';
-    imp.addEventListener('click', function(e){ e.stopPropagation(); _pickTableImport(); });
+    imp.addEventListener('click', function(e){ e.stopPropagation(); if(_isT) _pickTableImport(); else _pickDeckImport(); });
     list.appendChild(imp);
   }
   _body.appendChild(list);
@@ -1267,7 +1309,7 @@ function openThemePanel(ev) {
   // imported in the admin show up without reloading the app. Each loader calls
   // _render() again when its fetch resolves (network-first via the service
   // worker), refreshing the open panel in place.
-  try { _loadGalleryDecks(); _loadGalleryTables(); _loadThemes(); _loadImportedTables(); } catch (e) {}
+  try { _loadGalleryDecks(); _loadGalleryTables(); _loadThemes(); _loadImportedTables(); _loadImportedDecks(); } catch (e) {}
 
   if (overlay) document.body.appendChild(overlay);
   document.body.appendChild(panel);
@@ -1313,7 +1355,7 @@ window.renderThemeInto = function(host){
   if(!host) return;
   _body = host; _activeTab = 'table';
   try { _render(); } catch(e){}
-  try { _loadGalleryDecks(); _loadGalleryTables(); _loadThemes(); _loadGallerySeats(); _loadImportedTables(); } catch(e){}
+  try { _loadGalleryDecks(); _loadGalleryTables(); _loadThemes(); _loadGallerySeats(); _loadImportedTables(); _loadImportedDecks(); } catch(e){}
 };
 window._refreshThemePanel = function () { try { _render(); } catch (e) {} };
 window.closeThemePanel = closeThemePanel;

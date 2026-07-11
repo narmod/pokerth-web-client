@@ -7423,6 +7423,7 @@ const App = (() => {
   function _deckFace(n) {
     var d = document.documentElement.getAttribute('data-deck') || '';
     if (!d) return '';
+    try { var _imp = window._deckCardUrl && window._deckCardUrl(d, n); if (_imp) return _imp; } catch (e) {}
     var ext = document.documentElement.getAttribute('data-deck-ext') || 'png';
     return '/cards/' + d + '/' + n + '.' + ext;
   }
@@ -7435,12 +7436,14 @@ const App = (() => {
         var _im = localStorage.getItem('pth_cardback_img');
         if (_im) return _im;
       } else if (_ov) {
+        try { var _imo = window._deckCardUrl && window._deckCardUrl(_ov, 'flipside'); if (_imo) return _imo; } catch (e) {}
         var _oe = localStorage.getItem('pth_cardback_ext') || 'png';
         return '/cards/' + _ov + '/flipside.' + _oe + '?v=' + (window.BUILD_VERSION || '0');
       }
     } catch (e) {}
     var d = document.documentElement.getAttribute('data-deck') || '';
     if (!d) return '';
+    try { var _impb = window._deckCardUrl && window._deckCardUrl(d, 'flipside'); if (_impb) return _impb; } catch (e) {}
     var ext = document.documentElement.getAttribute('data-deck-ext') || 'png';
     // Le dos est servi en stale-while-revalidate par le SW (sans cache:'reload'),
     // donc sans suffixe un flipside.svg modifie ne s'affiche qu'au chargement
@@ -13700,7 +13703,7 @@ function renderPlayersList() {
   body.innerHTML = _shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>';
 }
 
-;(function(){ window.BUILD_VERSION='0.3.273-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.274-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

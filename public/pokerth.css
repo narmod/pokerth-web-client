@@ -7383,8 +7383,11 @@ html[data-buttons="pokerth"] .btn-action[disabled] { filter: grayscale(0.55) bri
 .gchat-input, .g-chat-input { background: var(--chatlog-surface, var(--panel)); border-bottom-color: var(--chatlog-border, var(--border)); }
 .gchat-input input, .g-chat-input input { background: var(--chatlog-surface, var(--field-bg)); border-color: var(--chatlog-border, var(--border)); color: var(--chatlog-text, var(--cream)); }
 .log-panel-body { color: var(--chatlog-text, var(--cream)); }
-.chat-msgs .msg .txt { color: var(--chatlog-text, var(--text-hi)); }
-.chat-msgs .msg.sys { color: var(--chatlog-muted, var(--text)); }
+#g-chat-msgs { color: var(--chatlog-text, var(--text-hi)); }
+#g-chat-msgs .msg .txt { color: var(--chatlog-text, var(--text-hi)); }
+#g-chat-msgs .msg.sys { color: var(--chatlog-text2, var(--chatlog-text, var(--text))); }
+#g-chat-msgs .msg .who { color: var(--box-accent, var(--gold)); }
+#g-chat-msgs .msg .msg-time { color: var(--chatlog-muted, var(--text-dim, #8b93a7)); }
 html[data-box-accent][data-seat="pokerth"] .seat-plate,
 html[data-box-accent][data-seat="plate"] .seat-plate,
 html[data-box-accent][data-seat="card"] .seat-plate,
