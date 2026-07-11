@@ -107,6 +107,19 @@ const _DISPLAYCHIPS_I18N = {
 };
 for (const _c in _DISPLAYBB_I18N) { if (LANG[_c]) LANG[_c].displayBB = _DISPLAYBB_I18N[_c]; }
 for (const _c in _DISPLAYCHIPS_I18N) { if (LANG[_c]) LANG[_c].displayChips = _DISPLAYCHIPS_I18N[_c]; }
+// ── Clé 'advLanguage' : libellé « Langue » de la ligne Langue dans Options
+// avancées → Interface. Traduite dans les 36 langues (source unique ici).
+const _ADVLANG_I18N = {
+  en: 'Language', fr: 'Langue', de: 'Sprache', es: 'Idioma', it: 'Lingua',
+  'pt-BR': 'Idioma', 'pt-PT': 'Idioma', nl: 'Taal', pl: 'Język', ru: 'Язык',
+  zh: '语言', tr: 'Dil', uk: 'Мова', ja: '言語', sv: 'Språk',
+  nb: 'Språk', da: 'Sprog', fi: 'Kieli', cs: 'Jazyk', sk: 'Jazyk',
+  ro: 'Limbă', hu: 'Nyelv', el: 'Γλώσσα', bg: 'Език', hr: 'Jezik',
+  sr: 'Језик', af: 'Taal', ca: 'Idioma', gl: 'Idioma', gd: 'Cànan',
+  lt: 'Kalba', ta: 'மொழி', vi: 'Ngôn ngữ', ko: '언어', 'zh-TW': '語言',
+  hi: 'भाषा'
+};
+for (const _c in _ADVLANG_I18N) { if (LANG[_c]) LANG[_c].advLanguage = _ADVLANG_I18N[_c]; }
 // ── Clé 'serverPassword' : libellé du champ (optionnel) du mot de passe
 // SERVEUR (authServerPassword), affiché sous « plus d'options » pour les
 // serveurs auto-hébergés. Ajoutée ici pour toutes les langues ; toute langue
