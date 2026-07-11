@@ -1123,6 +1123,10 @@ function onAvatarImageChosen(input) {
       <input id="chat-in" maxlength="128" placeholder="Message…" data-i18n-placeholder="chatPlaceholder" onkeydown="if(event.key==='Enter') App.sendChat()">
       <button class="chat-send" onclick="App.sendChat()">▶</button>
     </div>
+    <!-- Options d'attente (case bots + Démarrer/Quitter) intégrées au bas du
+         panneau central quand je suis dans ma partie non démarrée — parité
+         client officiel. Rempli par _renderLobbyWaitActions(). -->
+    <div id="lobby-wait-actions" style="display:none"></div>
   </div>
 
   <!-- Lobby body : création (repliable) au-dessus des tables -->
@@ -1309,10 +1313,6 @@ function onAvatarImageChosen(input) {
      <button type="button" class="lfb-join" id="lobby-foot-join" style="display:none" onclick="App.joinSelectedGame()" data-i18n="footJoin">Join</button>
      <button type="button" class="lfb-spectate" id="lobby-foot-spec" style="display:none" onclick="App.spectateSelectedGame()"><span class="lfb-eye" aria-hidden="true">👁</span> <span data-i18n="spectatorBtn">Spectate</span></button>
      <button type="button" class="lfb-create" onclick="App.openCreatePage()" data-i18n="footCreate">＋ Create a table</button>
-     <!-- Options d'attente (case bots + Démarrer/Quitter) — remplacent « Créer
-          une partie » quand je suis dans une partie non démarrée (parité
-          officiel). Rempli par _renderLobbyWaitActions(). -->
-     <div id="lobby-wait-actions" style="display:none"></div>
    </div>
 
    <!-- LobbyStatsBar (parité QML, bible §16) — tout en bas, pleine largeur -->

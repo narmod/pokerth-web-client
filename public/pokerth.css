@@ -7443,9 +7443,13 @@ html[data-buttons="pokerth"] .btn-action[disabled] { filter: grayscale(0.55) bri
 /* Barre du bas (centre) : options d'attente qui remplacent « + Créer une
    partie » quand je suis dans une partie non démarrée (parité officiel). */
 #lobby-wait-actions {
-  margin:0 auto; flex:1 1 auto; max-width:560px;
+  flex:0 0 auto;
   display:flex; flex-wrap:wrap; align-items:center; gap:8px 12px;
+  padding:10px 12px; border-top:1px solid var(--border);
 }
+/* En mode « ma partie en attente », la barre du bas (Joueur/Créer) n'a plus
+   lieu d'être : les actions Démarrer/Quitter sont au centre, sous le chat. */
+#s-lobby.lobby-waiting .lobby-footbar { display:none; }
 #lobby-wait-actions .wp-fillbots { flex:1 1 100%; justify-content:center; padding:2px; }
 #lobby-wait-actions .wp-actions { flex:1 1 auto; display:flex; gap:10px; width:100%; }
 #lobby-wait-actions .wp-actions .wp-btn { flex:1 1 auto; }
