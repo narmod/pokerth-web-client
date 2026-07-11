@@ -7379,7 +7379,7 @@ html[data-buttons="pokerth"] .btn-action[disabled] { filter: grayscale(0.55) bri
    L'accent de box est garde par html[data-box-accent] (les replis par style de
    siege different, donc on n'applique la regle que quand un tapis skinne est actif). */
 #g-chat-panel, #g-reaction-panel, #g-log-panel { background: var(--chatlog-bg, var(--panel)); border-bottom-color: var(--chatlog-border, var(--border)); }
-.g-chat-panel-header { background: var(--chatlog-surface, var(--chrome-tint)); border-bottom-color: var(--chatlog-border, var(--border)); }
+.g-chat-panel-header { border-bottom-color: var(--chatlog-border, var(--border)); }
 .gchat-input, .g-chat-input { background: var(--chatlog-surface, var(--panel)); border-bottom-color: var(--chatlog-border, var(--border)); }
 .gchat-input input, .g-chat-input input { background: var(--chatlog-surface, var(--field-bg)); border-color: var(--chatlog-border, var(--border)); color: var(--chatlog-text, var(--cream)); }
 .log-panel-body { color: var(--chatlog-text, var(--cream)); }
