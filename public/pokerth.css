@@ -6823,6 +6823,10 @@ html:not([data-seat="pokerth"]) body.adv-hide-pbar .seat.me .seat-info {
 }
 /* Selecteur "Placement des sieges" dans Options avancees. */
 .adv-row .adv-sel{flex:0 0 auto;min-width:132px}
+.adv-lang-btn{-webkit-appearance:none;appearance:none;width:100%;display:flex;align-items:center;gap:8px;background:var(--field-bg);border:1px solid var(--border);border-radius:2px;color:var(--cream);padding:8px 32px 8px 11px;font-family:var(--ff-mono);font-size:0.88rem;text-align:left;outline:none;cursor:pointer}
+.adv-lang-btn:focus{border-color:var(--gold)}
+.adv-lang-btn .lf{display:inline-flex;width:22px;flex:none}
+.adv-lang-btn .ln{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 /* Option "révéler mes cartes au tap" : les dos de la player-bar sont cliquables,
    lueur or pour signaler l'interaction (uniquement quand masquées). */
 #g-myseat-cards.own-peek{cursor:pointer}

@@ -342,7 +342,6 @@ function onAvatarImageChosen(input) {
     <button class="btn-sm btn-icon" id="install-btn" onclick="pwaInstall()" title="Install app" data-i18n-title="installTooltip" aria-label="Install app" style="display:none">📲</button>
     <button class="btn-sm btn-icon" id="connect-overflow-btn" onclick="toggleConnectOverflow(event)" title="More" data-i18n-title="moreTooltip" aria-label="More"><svg viewBox="0 0 24 24" style="display:block;width:18px;height:18px" fill="currentColor" aria-hidden="true"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58a.49.49 0 0 0 .12-.61l-1.92-3.32a.488.488 0 0 0-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54a.484.484 0 0 0-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58a.49.49 0 0 0-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg></button>
     <div id="connect-overflow-menu">
-      <button class="btn-sm" id="lang-toggle-connect-mob" onclick="closeConnectOverflow();openLangMenu(event)" style="font-size:0.85rem"></button>
       <button class="btn-sm" id="music-toggle-connect-mob" onclick="closeConnectOverflow();toggleMusicPanel()"><span style="margin-right:7px">🎵</span><span data-i18n="musicTooltip">Sounds &amp; Music</span></button>
       <button class="btn-sm" id="adv-opts-connect-mob" onclick="closeConnectOverflow();openAdvancedOptions()" style="font-size:0.85rem"><span style="margin-right:7px">⚙️</span><span data-i18n="advTitle">Advanced options</span></button>
       <button class="btn-sm" onclick="toggleFullscreen();closeConnectOverflow()"><span style="margin-right:7px">⛶</span><span data-i18n="fullscreenTooltip">Fullscreen</span></button>
@@ -360,7 +359,7 @@ function onAvatarImageChosen(input) {
         <a class="btn-sm" href="https://wec.pokerth.net/" target="_blank" rel="noopener noreferrer" onclick="this.closest('details').open=false"><span class="cl-ico"><img src="/wec-icon.png" alt="" onerror="this.onerror=null;this.replaceWith('🃏')"></span>WeCup</a>
       </div>
     </details>
-    <button class="btn-sm btn-icon" id="ranking-btn-connect" onclick="openRankingModal()" title="Ranking" data-i18n-title="rankingTooltip" aria-label="Ranking">🏆</button>
+    <button class="btn-sm btn-icon" id="ranking-btn-connect" onclick="openRankingModal()" title="Ranking" data-i18n-title="rankingTooltip" aria-label="Ranking">🌐</button>
   </div>
   <script>
   /* Ferme le menu liens (corner-links) au clic exterieur / Echap. */
@@ -1081,13 +1080,11 @@ function onAvatarImageChosen(input) {
       <span class="pill" id="h-players" onclick="togglePlayersPanel()" style="cursor:pointer">—</span>
     </div>
     <button class="btn-sm btn-icon" id="fs-btn-lobby" onclick="toggleFullscreen()" title="Fullscreen" data-i18n-title="fullscreenTooltip">⛶</button>
-    <button class="btn-sm btn-icon" id="lang-toggle-lobby" onclick="openLangMenu(event)" title="Switch language" data-i18n-title="langTooltip" aria-label="Switch language"></button>
-    <button class="btn-sm btn-icon" id="ranking-btn-lobby" onclick="openRankingModal()" title="Ranking" data-i18n-title="rankingTooltip" aria-label="Ranking" style="display:none">🏆</button>
+    <button class="btn-sm btn-icon" id="ranking-btn-lobby" onclick="openRankingModal()" title="Ranking" data-i18n-title="rankingTooltip" aria-label="Ranking" style="display:none">🌐</button>
     <button class="btn-sm btn-icon" id="lobby-chat-btn" onclick="toggleLobbyChat()" title="Chat" data-i18n-title="chatTooltip">💬</button>
     <button class="btn-sm btn-icon" id="l-overflow-btn" onclick="toggleLobbyOverflow(event)" title="Plus" data-i18n-title="moreTooltip"><svg viewBox="0 0 24 24" style="display:block;width:18px;height:18px" fill="currentColor" aria-hidden="true"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58a.49.49 0 0 0 .12-.61l-1.92-3.32a.488.488 0 0 0-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54a.484.484 0 0 0-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58a.49.49 0 0 0-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg></button>
     <div id="l-overflow-menu">
       <button class="btn-sm" onclick="toggleFullscreen();closeLobbyOverflow()"><span style="margin-right:7px">⛶</span><span data-i18n="fullscreenTooltip">Fullscreen</span></button>
-      <button class="btn-sm" id="lang-toggle-lobby-mob" onclick="closeLobbyOverflow();openLangMenu(event)" style="font-size:0.85rem"></button>
       <button class="btn-sm" id="music-toggle-lobby-mob" onclick="closeLobbyOverflow();toggleMusicPanel()" style="font-size:0.85rem"><span style="margin-right:7px">🎵</span><span data-i18n="musicTooltip">Sounds &amp; Music</span></button>
       <button class="btn-sm" id="adv-opts-lobby-mob" onclick="closeLobbyOverflow();openAdvancedOptions()" style="font-size:0.85rem"><span style="margin-right:7px">⚙️</span><span data-i18n="advTitle">Advanced options</span></button>
     </div>
@@ -1345,7 +1342,6 @@ function onAvatarImageChosen(input) {
     <button class="btn-sm btn-icon" id="fs-btn-game" onclick="toggleFullscreen()" title="Fullscreen" data-i18n-title="fullscreenTooltip">⛶</button>
     <button class="btn-sm btn-icon" id="sound-toggle-btn" onclick="toggleSoundPopover(this)" title="Couper/Unmute" data-i18n-title="soundTooltip">🔊</button>
     <button class="btn-sm btn-icon btn-hands" onclick="toggleHandsHelp()" title="Combinaisons du poker" data-i18n-title="handsHelpTooltip" aria-label="Combinaisons du poker">🃏</button>
-    <button class="btn-sm btn-icon" id="lang-toggle-game" onclick="openLangMenu(event)" title="Switch language" data-i18n-title="langTooltip" aria-label="Switch language"></button>
     <button class="btn-sm btn-icon" id="log-toggle-btn" onclick="toggleLog()" title="Journal" data-i18n-title="logTooltip">📋</button>
     <button class="btn-sm btn-icon" id="react-toggle-btn" onclick="toggleReactionPanel()" title="Réactions" data-i18n-title="reactionsLabel">😊</button>
     <button class="btn-sm btn-icon" id="chat-toggle-btn" onclick="toggleGameChat()" title="Chat" data-i18n-title="chatTooltip">💬</button>
@@ -1363,7 +1359,6 @@ function onAvatarImageChosen(input) {
       <button class="btn-sm" onclick="toggleLog();closeHeaderOverflow()">📋 Journal</button>
       <div class="menu-sep"></div>
       <!-- Réglages -->
-      <button class="btn-sm" id="lang-toggle-game-mob" onclick="closeHeaderOverflow();openLangMenu(event)" style="font-size:0.85rem"></button>
       <button class="btn-sm" id="music-toggle-game-mob" onclick="closeHeaderOverflow();toggleMusicPanel()" style="font-size:0.85rem"><span style="margin-right:7px">🎵</span><span data-i18n="musicTooltip">Sounds &amp; Music</span></button>
       <button class="btn-sm" id="adv-opts-mob" onclick="closeHeaderOverflow();openAdvancedOptions()"><span style="margin-right:7px">⚙️</span><span data-i18n="advTitle">Advanced options</span></button>
       <div class="menu-sep" id="invite-sep-mob" style="display:none"></div>
@@ -1871,6 +1866,7 @@ if ('serviceWorker' in navigator) {
       <div class="adv-body">
       <div class="adv-sec" data-i18n="advSecAppearance">Appearance</div>
       <div class="adv-row"><span data-i18n="advDarkMode">Dark mode</span><div class="sel-wrap adv-sel"><select id="adv-darkmode" onchange="if(window.setTheme)window.setTheme(this.value)"><option value="auto" data-i18n="modeAuto">Automatic</option><option value="pokerth-light" data-i18n="modeLight">Light</option><option value="pokerth" data-i18n="modeDark">Dark</option></select><span class="sel-arr">▾</span></div></div>
+      <div class="adv-row"><span data-i18n="advLanguage">Language</span><div class="sel-wrap adv-sel"><button type="button" id="adv-lang-btn" class="adv-lang-btn" onclick="openLangMenu(event)" aria-haspopup="menu" aria-label="Switch language" data-i18n-title="langTooltip"></button><span class="sel-arr">▾</span></div></div>
       <div class="adv-sec" data-i18n="advSecCards">Cards</div>
       <label class="adv-row"><input type="checkbox" id="adv-anim" onchange="setAdvOpt('anim_cards',this.checked)"><span data-i18n="advAnimCards">Card animations</span></label>
       <label class="adv-row"><input type="checkbox" id="adv-fadelosers" onchange="setAdvOpt('fade_losers',this.checked)"><span data-i18n="advFadeLosers">Fade losing cards at showdown</span></label>

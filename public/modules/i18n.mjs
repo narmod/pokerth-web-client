@@ -385,6 +385,9 @@ function setLang(l) {
     var bMob = document.getElementById(id);
     if (bMob) bMob.innerHTML = '<span style="margin-right:5px">' + flagSvg + '</span>' + langLabel;
   });
+  // Contrôle « Langue » des Options avancées : drapeau + nom natif de la langue
+  // active ; le clic ouvre le même picker à drapeaux (openLangMenu).
+  try { var _alb = document.getElementById('adv-lang-btn'); if (_alb) _alb.innerHTML = '<span class="lf">' + flagSvg + '</span><span class="ln">' + langLabel + '</span>'; } catch (e) {}
   // Update more/less options label
   var ml = document.getElementById('cf-more-label');
   if (ml) { var cfOpen = document.getElementById('cf-more-opts'); ml.textContent = (cfOpen && cfOpen.style.display !== 'none') ? t('lessOptions') : t('moreOptions'); }
