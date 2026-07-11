@@ -64,6 +64,17 @@ const TABLES = [
   { id: 'pokerth-live', key: 'tablePokerthLive',     fallback: 'PokerTH Live', swatch: '#0e4a2a', feltUrl: '/table/pokerth-live/felt.png',        mode: 'full', puck: 'pokerth', btn: 'glossy' },
   { id: 'green',        key: 'tableGreenFelt',       fallback: 'Table Green',  swatch: '#1e6b1e', feltUrl: '/table/felt-green.jpg',               mode: 'felt', puck: 'pokerth', btn: 'glossy' },
   { id: 'casino',       key: 'tableCasino',          fallback: 'Green Casino', swatch: '#1e6b1e', feltUrl: '/table/felt-green.jpg',               mode: 'felt', puck: 'casino',  btn: 'casino' },
+  // Tapis par defaut du client QML (data/gfx/qml/table/*, AGPL-3.0) — plein ecran.
+  { id: 'danuxi', key: 'tableDanuxi', fallback: "Danuxi Blue", swatch: '#1f3a5c', feltUrl: '/table/danuxi/felt.png', preview: '/table/danuxi/preview.png', mode: 'fs', puck: 'pokerth', btn: 'glossy' },
+  { id: 'mute', key: 'tableMute', fallback: "Mute", swatch: '#2a2f38', feltUrl: '/table/mute/felt.png', preview: '/table/mute/preview.png', mode: 'fs', puck: 'pokerth', btn: 'glossy' },
+  { id: 'mute2', key: 'tableMute2', fallback: "Mute 02", swatch: '#1f6aa8', feltUrl: '/table/mute2/felt.png', preview: '/table/mute2/preview.png', mode: 'fs', puck: 'pokerth', btn: 'glossy' },
+  { id: 'teal', key: 'tableTeal', fallback: "Teal", swatch: '#0e5c5c', feltUrl: '/table/teal/felt.png', preview: '/table/teal/preview.png', mode: 'fs', puck: 'pokerth', btn: 'glossy' },
+  { id: 'lemming', key: 'tableLemming', fallback: "Lemming", swatch: '#2e6b2e', feltUrl: '/table/lemming/felt.png', preview: '/table/lemming/preview.png', mode: 'fs', puck: 'pokerth', btn: 'glossy' },
+  { id: 'matrix', key: 'tableMatrix', fallback: "Matrix", swatch: '#0b2b12', feltUrl: '/table/matrix/felt.png', preview: '/table/matrix/preview.png', mode: 'fs', puck: 'pokerth', btn: 'glossy' },
+  { id: 'star_trek', key: 'tableStarTrek', fallback: "Star Trek", swatch: '#101826', feltUrl: '/table/star_trek/felt.png', preview: '/table/star_trek/preview.png', mode: 'fs', puck: 'pokerth', btn: 'glossy' },
+  { id: 'tripsixes', key: 'tableTripSixes', fallback: "TripSixes", swatch: '#5a1010', feltUrl: '/table/tripsixes/felt.png', preview: '/table/tripsixes/preview.png', mode: 'fs', puck: 'pokerth', btn: 'glossy' },
+  { id: 'wanted', key: 'tableWanted', fallback: "Wanted", swatch: '#6b4a1e', feltUrl: '/table/wanted/felt.png', preview: '/table/wanted/preview.png', mode: 'fs', puck: 'pokerth', btn: 'glossy' },
+  { id: 'xanax', key: 'tableXanax', fallback: "Xanax", swatch: '#394150', feltUrl: '/table/xanax/felt.png', preview: '/table/xanax/preview.png', mode: 'fs', puck: 'pokerth', btn: 'glossy' },
 ];
 const DECKS = [
   { id: 'casino-vert', key: 'deckCasinoVert', fallback: 'Green Casino', swatch: '#1e6b1e', ext: 'svg' },
@@ -785,6 +796,7 @@ function _presetById(id) { var all = PRESETS.concat(_pkgPresets); for (var i = 0
 
 function _feltStyle(t) {
   if (t && t.id === 'photo') return 'background:url(/table/felt-green.jpg) center/cover';
+  if (t && t.preview) return 'background:url(' + t.preview + ') center/cover';
   if (t && t.feltUrl) return 'background:url(' + t.feltUrl + ') center/cover';
   if (t && t.felt) return 'background:url(/themes/' + t.id + '/' + t.felt + ') center/cover';
   var sw = (t && t.swatch) || '#1e6b1e';

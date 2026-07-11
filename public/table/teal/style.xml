@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Teal QML table style. Fullscreen wallpaper (data-table-fs). Extracted from the official
+     PokerTH QML client (data/gfx/qml/table/teal/table.png), AGPL-3.0.
+     Source: github.com/pokerth/pokerth. -->
+<PokerTH_TableStyle version="1.0">
+  <StyleDescription value="Teal QML table style"/>
+  <Creator value="PokerTH project"/>
+  <License value="AGPL-3.0"/>
+</PokerTH_TableStyle>
