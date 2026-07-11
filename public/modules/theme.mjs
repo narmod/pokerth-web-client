@@ -489,8 +489,10 @@ function _isLightColor(c){
   var r = _hexToRgb(c); if (!r) return false; var p = r.split(',').map(Number);
   return (0.299*p[0] + 0.587*p[1] + 0.114*p[2]) > 140;
 }
+var _paletteChatlog = null;   // fenetres (chat/journal) derivees d'une palette importee, appliquees via la couche teinte
 function _injectPalette(pkg){
   var keys = PALETTE_TOKENS.concat(['gold-rgb','field-bg','inset','inset-hi']);
+  _paletteChatlog = null;   // builtin / aucune palette : fenetres via repli CSS (--panel/--text-hi/--cream)
   if (pkg && pkg.tokens) {
     var t = pkg.tokens, d = {};
     var grgb = _hexToRgb(t.gold);
@@ -500,6 +502,17 @@ function _injectPalette(pkg){
     if (t['inset'] == null)    d['inset']    = lightPal ? 'rgba(0,0,0,0.06)' : 'rgba(255,255,255,0.05)';
     if (t['inset-hi'] == null) d['inset-hi'] = lightPal ? 'rgba(0,0,0,0.08)' : 'rgba(255,255,255,0.08)';
     if (Object.keys(d).length) { pkg = Object.assign({}, pkg, { tokens: Object.assign({}, t, d) }); }
+    // Fenetres flottantes (chat/journal) : fond = PANNEAU + texte a CONTRASTE
+    // garanti (calcule sur la luminosite du panneau). Applique via la couche
+    // teinte (_injectSkinTint) pour survivre a table.apply -> TOUTES les palettes
+    // importees suivent la palette, pas seulement pokerth builtin.
+    var _pc = t.panel || t['panel-hi'];
+    if (_pc) {
+      var _dark = !_isLightColor(_pc);
+      _paletteChatlog = { bg:_pc, su:_pc,
+        tx:(_dark ? '#eff1f5' : '#1d222b'),
+        mu:(_dark ? 'rgba(239,241,245,0.5)' : 'rgba(29,34,43,0.5)') };
+    }
   }
   _injectAxis(keys, pkg, 'pth_theme_css', false);
 }
@@ -550,16 +563,22 @@ function _setupAutoListener(on){
     } else { if(_autoMql&&_autoHandler){ if(_autoMql.removeEventListener) _autoMql.removeEventListener('change',_autoHandler); else if(_autoMql.removeListener) _autoMql.removeListener(_autoHandler); } _autoMql=null;_autoHandler=null; }
   }catch(e){}
 }
+// Re-applique la teinte chat/log de la table courante apres un changement de
+// palette a chaud (sinon _paletteChatlog ne serait relu qu'au prochain
+// table.apply / reload).
+function _reapplyChatlogTint(){ try{ var _tb=_builtinTableById(table.get()); _injectSkinTint(_tb?_tb.id:null); }catch(e){} }
 palette.apply = function(id){
   if(id==='auto'){
     try{ localStorage.setItem('pth_theme','auto'); }catch(e){}
     document.documentElement.setAttribute('data-theme', _resolveAuto());
     try{ _injectPalette(null); }catch(e){}
+    try{ _reapplyChatlogTint(); }catch(e){}
     _setupAutoListener(true); return;
   }
   _setupAutoListener(false);
   _palApply(id);
   try{ if (_isBuiltinPalette(id)) _injectPalette(null); else { var pk=_palettePkgById(id); if(pk) _injectPalette(pk); } }catch(e){}
+  try{ _reapplyChatlogTint(); }catch(e){}
 };
 palette.set = palette.apply;
 // Table « image complète » (full:true) : pose data-table-full + --table-img (URL nue)
@@ -636,7 +655,7 @@ function _injectTintObj(m){
   for (var k in K){ var v=m?m[K[k]]:null; if(v) el.style.setProperty(k, v); else el.style.removeProperty(k); }
   if (m && m.a) el.setAttribute('data-box-accent','1'); else el.removeAttribute('data-box-accent');
 }
-function _injectSkinTint(id){ _injectTintObj((id&&_SKIN_TINT[id])||null); }
+function _injectSkinTint(id){ _injectTintObj((id&&_SKIN_TINT[id]) || _paletteChatlog || null); }
 
 // ── Import LOCAL de styles (tables ; decks/sieges a venir). Lecteur ZIP (store +
 //    deflate) + IndexedDB pour les assets, injection dans les galeries existantes. ──

@@ -3916,7 +3916,7 @@ body.hide-pct-btns .pct-row { display: none; }
   font-family: var(--ff-mono);
   font-size: 0.74rem;
   line-height: 1.45;
-  color: var(--cream);
+  color: var(--chatlog-text, var(--cream));
 }
 .log-msgs > div {
   padding: 1px 0;
