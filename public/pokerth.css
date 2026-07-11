@@ -5835,14 +5835,14 @@ body:not(.in-game) .my-zone {
 }
 .cf-actions > button:active { transform: scale(0.98); }
 /* Réinitialiser — neutre (bordure or atténuée) ; ne s'étire pas (icône seule sur mobile) */
-.cf-actions .btn-cf-reset { flex-grow: 0; background: transparent; color: var(--text-hi); border-color: var(--gold-dim); }
+.cf-actions .btn-cf-reset { flex: 0 0 auto; background: transparent; color: var(--text-hi); border-color: var(--gold-dim); }
 .cf-actions .btn-cf-reset:hover { border-color: var(--border-hi); color: var(--gold); }
 /* Annuler — retour au lobby sans créer (rouge doux, comme une annulation QML) */
 .cf-actions .btn-cf-cancel { background: rgba(var(--red-rgb), 0.10); color: var(--red); border-color: rgba(var(--red-rgb), 0.5); }
 .cf-actions .btn-cf-cancel:hover { background: rgba(var(--red-rgb), 0.20); }
-/* Créer — action primaire (or plein), un peu plus large */
-.cf-actions .cf-create-btn { flex-grow: 1.6; background: var(--gold); color: var(--on-gold); border-color: transparent; box-shadow: 0 4px 16px rgba(var(--gold-rgb), 0.2); }
-.cf-actions .cf-create-btn:hover { background: var(--gold-hi); box-shadow: 0 6px 24px rgba(var(--gold-rgb), 0.35); }
+/* Créer — couleur identique au bouton Créer du lobby (.lfb-create : or/neutre teinté), un peu plus large */
+.cf-actions .cf-create-btn { flex-grow: 1.6; background: rgba(var(--gold-rgb), 0.07); color: var(--gold); border-color: var(--border); }
+.cf-actions .cf-create-btn:hover { background: rgba(var(--gold-rgb), 0.14); }
 
 /* ── Reusable toast (showToast in pokerth.js) ──
    Styled to match the header ••• overflow menu: dark panel, gold-hi hairline
