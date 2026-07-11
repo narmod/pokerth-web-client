@@ -8829,10 +8829,24 @@ const App = (() => {
     //   portrait, ellipse officielle en paysage) = base sur l'app officielle.
     // custom = ellipse maison + glisser-deposer.
     var _applyOfficial, _forceSeatPortrait;
-    if (_seatModeV === 'pokerth-official') { _applyOfficial = true; _forceSeatPortrait = true; }
-    else if (_seatModeV === 'pokerth-ellipse') { _applyOfficial = true; _forceSeatPortrait = _seatPortrait; }
-    else if (_seatModeV === 'custom') { _applyOfficial = false; _forceSeatPortrait = _seatPortrait; }
-    else { _applyOfficial = true; _forceSeatPortrait = _seatPortrait; }  // auto = client officiel (geometrie officielle partout, orientation respectee)
+    // ── 4 rendus VISIBLEMENT distincts (surtout en portrait, ou auto/official/
+    //    ellipse etaient auparavant identiques) ──
+    if (_seatModeV === 'pokerth-official') {
+      // Slots QML officiels forces PARTOUT (colonnes G/D + rangee haute en portrait).
+      _applyOfficial = true; _forceSeatPortrait = true;
+    } else if (_seatModeV === 'pokerth-ellipse') {
+      // Ellipse « collier » officielle dans LES DEUX orientations (arc ouvert vers
+      // le haut, self = perle du bas). En portrait -> ovale vertical, distinct des slots.
+      _applyOfficial = true; _forceSeatPortrait = false;
+    } else if (_seatModeV === 'custom') {
+      // Placement perso : ellipse maison + positions sauvees (glisser-deposer).
+      _applyOfficial = false; _forceSeatPortrait = _seatPortrait;
+    } else {
+      // auto : PORTRAIT = anneau « maison » (ellipse de base, distinct des slots
+      //        officiels) ; PAYSAGE = ellipse officielle (orientation respectee, inchange).
+      if (_seatPortrait) { _applyOfficial = false; _forceSeatPortrait = true; }
+      else               { _applyOfficial = true;  _forceSeatPortrait = false; }
+    }
     const oRect = oval.getBoundingClientRect();
     const zRect = zone.getBoundingClientRect();
     const oCX  = oRect.left - zRect.left + oRect.width  / 2;
@@ -13939,7 +13953,7 @@ function renderPlayersList() {
   body.innerHTML = _shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>';
 }
 
-;(function(){ window.BUILD_VERSION='0.3.316-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.317-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
