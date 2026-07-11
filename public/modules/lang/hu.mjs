@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+  footJoin: `Csatlakozás`,
   spectatingBadge: `Néző`,
   reportGameTitle: `Nem megfelelő játéknév jelentése`, reportGameConfirm: `Jelentés`, reportGameMsg: `Biztosan jelenteni szeretné a(z) „{name}” játéknevet nem megfelelőként?`, reportGameAccepted: `A szerver elfogadta a játéknév jelentését. Köszönjük.`, reportGameDup: `Ezt a játéknevet már jelentette egy másik játékos.`, reportGameError: `Hiba történt a játéknév jelentése közben.`,
   filterRanked: 'Rangsorolt', plSortAZ: 'Rendezés A–Z', plSortCountry: 'Rendezés ország szerint',

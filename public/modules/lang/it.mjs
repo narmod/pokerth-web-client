@@ -15,6 +15,7 @@ export const meta = {
 };
 
 export const strings = {
+  footJoin: `Entra`,
   spectatingBadge: `Spettatore`,
   reportGameTitle: `Segnala nome di partita offensivo`, reportGameConfirm: `Segnala`, reportGameMsg: `Sei sicuro di voler segnalare il nome della partita: "{name}" come offensivo?`, reportGameAccepted: `La segnalazione sul nome della partita è stata accettata dal server. Grazie.`, reportGameDup: `Questo nome di partita è già stato segnalato da un altro giocatore.`, reportGameError: `Si è verificato un errore durante la segnalazione del nome di partita.`,
   filterRanked: 'Classificate', plSortAZ: 'Ordina A–Z', plSortCountry: 'Ordina per paese',

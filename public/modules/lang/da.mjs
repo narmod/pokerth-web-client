@@ -9,6 +9,7 @@ export const meta = {
 };
 
 export const strings = {
+  footJoin: `Deltag`,
   spectatingBadge: `Tilskuer`,
   reportGameTitle: `Rapportér upassende spilnavn`, reportGameConfirm: `Rapportér`, reportGameMsg: `Er du sikker på, at du vil rapportere spilnavnet "{name}" som upassende?`, reportGameAccepted: `Rapporten om spilnavnet blev accepteret af serveren. Tak.`, reportGameDup: `Dette spilnavn er allerede blevet rapporteret af en anden spiller.`, reportGameError: `Der opstod en fejl under rapporteringen af spilnavnet.`,
   filterRanked: 'Rangerede', plSortAZ: 'Sortér A–Z', plSortCountry: 'Sortér efter land',

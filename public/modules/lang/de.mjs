@@ -15,6 +15,7 @@ export const meta = {
 };
 
 export const strings = {
+  footJoin: `Beitreten`,
   spectatingBadge: `Zuschauen`,
   reportGameTitle: `Unangemessenen Spielnamen melden`, reportGameConfirm: `Melden`, reportGameMsg: `Möchten Sie den Spielnamen wirklich als unangemessen melden: "{name}"?`, reportGameAccepted: `Die Meldung des Spielnamens wurde vom Server angenommen. Vielen Dank.`, reportGameDup: `Dieser Spielname wurde bereits von einem anderen Spieler gemeldet.`, reportGameError: `Beim Melden des Spielnamens ist ein Fehler aufgetreten.`,
   filterRanked: 'Gewertet', plSortAZ: 'Sortieren A–Z', plSortCountry: 'Nach Land sortieren',

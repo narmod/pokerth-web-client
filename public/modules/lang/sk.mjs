@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+  footJoin: `Pripojiť sa`,
   spectatingBadge: `Divák`,
   reportGameTitle: `Nahlásiť nevhodný názov hry`, reportGameConfirm: `Nahlásiť`, reportGameMsg: `Naozaj chcete nahlásiť názov hry „{name}“ ako nevhodný?`, reportGameAccepted: `Server prijal nahlásenie názvu hry. Ďakujeme.`, reportGameDup: `Tento názov hry už nahlásil iný hráč.`, reportGameError: `Pri nahlasovaní názvu hry sa vyskytla chyba.`,
   filterRanked: 'Hodnotené', plSortAZ: 'Zoradiť A–Z', plSortCountry: 'Zoradiť podľa krajiny',

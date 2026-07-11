@@ -16,6 +16,7 @@ export const meta = {
 };
 
 export const strings = {
+  footJoin: `Dołącz`,
   spectatingBadge: `Obserwator`,
   reportGameTitle: `Zgłoś nieodpowiednią nazwę gry`, reportGameConfirm: `Zgłoś`, reportGameMsg: `Czy na pewno chcesz zgłosić nieodpowiednią nazwę gracza: "{name}"?`, reportGameAccepted: `Zgłoszenie nieodpowiedniej nazwy gry zostało przyjęte. Dziękujemy.`, reportGameDup: `Ta nazwa gra została już uprzednio zgłoszona przez innego gracza.`, reportGameError: `Wystąpił błąd podczas zgłaszania nieodpowiedniej nazwy gry.`,
   filterRanked: 'Rankingowe', plSortAZ: 'Sortuj A–Z', plSortCountry: 'Sortuj według kraju',

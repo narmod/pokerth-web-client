@@ -7476,7 +7476,19 @@ const App = (() => {
   }
   window._renderLobbyWaitActions = _renderLobbyWaitActions;
   // Rafraîchit le panneau si une partie est sélectionnée (noms/joueurs qui arrivent).
+  // Affiche/masque le bouton « Rejoindre » du bas selon la partie sélectionnée :
+  // visible seulement pour une partie OUVERTE (mode 1) et si je ne suis pas déjà
+  // en partie (le footer montre alors les options d'attente). Parité LobbyPage QML.
+  function _updateFootJoin() {
+    var b = document.getElementById('lobby-foot-join');
+    if (!b) return;
+    var g = (_selectedGame != null && typeof games !== 'undefined') ? games[_selectedGame] : null;
+    var show = !!(g && g.mode === 1) && !amInGame;
+    b.style.display = show ? '' : 'none';
+  }
+
   function _refreshGameInfoPanel() {
+    _updateFootJoin();
     if (_selectedGame != null) {
       if (games[_selectedGame]) renderGameInfoPanel(_selectedGame);
       else { _selectedGame = null; renderGameInfoPanel(null); }
@@ -7590,6 +7602,7 @@ const App = (() => {
         + '</div>';
     }).join('');
     _refreshGameInfoPanel();
+    _updateFootJoin();
   }
 
   // ── CHAT ──
@@ -11749,6 +11762,12 @@ function dismissWinner() {
     },
     // Clic sur une ligne de partie → sélection + panneau « Infos de partie »
     // (remplace l'ancienne liste dépliable sous la ligne).
+    // Rejoindre la partie sélectionnée depuis le bouton du bas (parité QML).
+    joinSelectedGame() {
+      if (_selectedGame == null || typeof games === 'undefined') return;
+      var g = games[_selectedGame];
+      if (g && g.mode === 1) this.joinGame(_selectedGame);
+    },
     selectGame(gid) {
       _selectedGame = gid;
       renderGameInfoPanel(gid);
@@ -13857,7 +13876,7 @@ function renderPlayersList() {
   body.innerHTML = _shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>';
 }
 
-;(function(){ window.BUILD_VERSION='0.3.298-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.299-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

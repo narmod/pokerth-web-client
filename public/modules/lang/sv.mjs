@@ -9,6 +9,7 @@ export const meta = {
 };
 
 export const strings = {
+  footJoin: `Gå med`,
   spectatingBadge: `Åskådare`,
   reportGameTitle: `Rapportera olämpligt spelnamn`, reportGameConfirm: `Rapportera`, reportGameMsg: `Är du säker på att du vill rapportera spelnamnet "{name}" som olämpligt?`, reportGameAccepted: `Rapporten om spelnamnet accepterades av servern. Tack.`, reportGameDup: `Detta spelnamn har redan rapporterats av en annan spelare.`, reportGameError: `Ett fel uppstod när spelnamnet rapporterades.`,
   filterRanked: 'Rankade', plSortAZ: 'Sortera A–Z', plSortCountry: 'Sortera efter land',
