@@ -290,6 +290,7 @@ SUMMARY
   step "Fetching the project into ${INSTALL_DIR}"
   if [ -d "$INSTALL_DIR/.git" ]; then
     info "Existing checkout — updating with git pull"
+    run_as git -C "$INSTALL_DIR" checkout -- public/themes/themes.json 2>/dev/null || true
     run_as git -C "$INSTALL_DIR" pull --ff-only
   else
     if [ -e "$INSTALL_DIR" ] && [ -n "$(ls -A "$INSTALL_DIR" 2>/dev/null)" ]; then
@@ -382,6 +383,10 @@ do_update() {
   ok "Updating '$APP_NAME' in $INSTALL_DIR (user $RUN_USER)"
 
   info "git pull"
+  # themes.json est regenere localement (scripts/themes-manifest.mjs) apres chaque
+  # update -> arbre "sale" au pull suivant. On ecarte la copie locale juste avant
+  # le pull pour que 'git pull --ff-only' ne soit jamais bloque (regeneree ensuite).
+  run_as git -C "$INSTALL_DIR" checkout -- public/themes/themes.json 2>/dev/null || true
   run_as git -C "$INSTALL_DIR" pull --ff-only
   info "npm install (runtime only)"
   ( cd "$INSTALL_DIR" && run_as npm install --omit=dev )
