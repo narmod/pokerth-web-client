@@ -1206,6 +1206,14 @@ function openThemePanel(ev) {
 export { PALETTES, TABLES, DECKS, PRESETS, AXES, makeAxis, applyPreset, activePreset, openThemePanel, closeThemePanel };
 
 window.openThemePanel = openThemePanel;
+// Rendu EMBARQUE de la fenetre thème dans un conteneur (Options avancees > Style),
+// facon QML : on reutilise le meme _render (onglets + listes) en ciblant le host.
+window.renderThemeInto = function(host){
+  if(!host) return;
+  _body = host; _activeTab = 'table';
+  try { _render(); } catch(e){}
+  try { _loadGalleryDecks(); _loadGalleryTables(); _loadThemes(); _loadGallerySeats(); } catch(e){}
+};
 window._refreshThemePanel = function () { try { _render(); } catch (e) {} };
 window.closeThemePanel = closeThemePanel;
 window.openThemeMenu = openThemePanel;   // back-compat
