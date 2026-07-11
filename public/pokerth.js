@@ -6324,6 +6324,7 @@ const App = (() => {
         // La partie démarre → on quitte la wait-page du lobby et on bascule
         // sur le gametable (le feutre a été préparé au JoinGameAck).
         try { show('s-game'); } catch(e) {}
+        try { _renderLobbyWaitActions(); } catch(e) {}  // restaure « + Créer une partie » côté lobby
         // Reset de l'escalade des sons de montee de blinds (nouvelle partie).
         if (typeof resetBlindRaises === 'function') resetBlindRaises();
         // Clear the waiting panel ("EN ATTENTE…") immediately when the
@@ -7272,6 +7273,7 @@ const App = (() => {
     if (!g) {
       el.innerHTML = '<div class="g-chat-panel-header"><span class="lgi-htitle" data-i18n="gameInfoTitle">' + t('gameInfoTitle') + '</span></div>'
                    + '<div class="lgi-empty" data-i18n="gameInfoEmpty">' + t('gameInfoEmpty') + '</div>';
+      try { _renderLobbyWaitActions(); } catch(e) {}
       return;
     }
     var typeKey = _GTYPE_KEY[g.type];
@@ -7283,29 +7285,6 @@ const App = (() => {
     var _rows   = _mine ? _renderInfoRowsFromPids(_pids) : _renderInfoPlayerRows(gid);
     var _blUp = (g.raiseMode === 2) ? (g.raiseMins > 0 ? t('blindsUpMins', { n: g.raiseMins }) : '') : (g.raiseHands > 0 ? t('blindsUpHands', { n: g.raiseHands }) : '');
     var _dly  = g.delay || 0;
-
-    // ── Centre-bas : options d'attente selon le type d'utilisateur ──
-    // (parité GameWaitPage.qml). Admin (hors ranking) : case « Compléter avec
-    // des bots » + « Démarrer la partie » (actif à ≥ 2 joueurs, comme
-    // l'officiel) + « Quitter ». Joueur simple / spectateur : « Quitter » seul.
-    var _waitBar = '';
-    if (_mine) {
-      var _maxP     = g.maxPlayers || (_gameMeta && _gameMeta.maxPlayers) || 10;
-      var _isRank   = (g.type || 0) === 4;
-      var _isHost   = !_amSpectator && amGameAdmin && !_isRank;
-      // Officiel : Démarrer actif seulement à ≥ 2 joueurs. Exception offline
-      // (jeu vs bots en solo) où l'on peut toujours lancer.
-      var _canStart = _isHost && (_count >= 2 || window._offlineMode);
-      var _fillRow  = (_isHost && _count < _maxP)
-        ? '<label class="wp-fillbots"><input type="checkbox" id="wp-fillbots-cb"' + (window._wpFillBots ? ' checked' : '') + ' onchange="window._wpSetFillBots(this.checked)"><span>' + t('wpFillBots') + '</span></label>'
-        : '';
-      var _leaveBtn = '<button class="wp-btn wp-btn-leave" onclick="App.confirmLeaveGame()">' + t('wpLeaveGame') + '</button>';
-      var _startBtn = _isHost
-        ? '<button class="wp-btn wp-btn-start" onclick="App.startFromWait()"' + (_canStart ? '' : ' disabled') + ' title="' + t('wpStartHumansTip') + '">' + t('wpStartGame') + '</button>'
-        : '';
-      var _hint     = _isHost ? '' : '<div class="lgi-waithint">' + t(_amSpectator ? 'waitingHintSpectator' : 'waitingHintGuest') + '</div>';
-      _waitBar = '<div class="lgi-waitbar">' + _fillRow + '<div class="wp-actions">' + _leaveBtn + _startBtn + '</div>' + _hint + '</div>';
-    }
 
     el.innerHTML =
       '<div class="g-chat-panel-header">'
@@ -7322,9 +7301,51 @@ const App = (() => {
         + '<div class="lgi-row"><span data-i18n="gameTimeLabel">' + t('gameTimeLabel') + '</span> : ' + (g.timeout || 0) + 's' + (_dly ? '/' + _dly + 's' : '') + '</div>'
         + '<div class="lgi-ptitle"><span data-i18n="infoPlayersInGame">' + t('infoPlayersInGame') + '</span> (' + _count + ')</div>'
         + '<div class="lgi-players">' + _rows + '</div>'
-      + '</div>'
-      + _waitBar;
+      + '</div>';
+    // Les options d'attente (case bots + Démarrer/Quitter) vivent désormais
+    // dans la barre du bas (centre), à la place de « + Créer une partie » —
+    // parité client officiel.
+    try { _renderLobbyWaitActions(); } catch(e) {}
   }
+  // Barre du bas (centre) : options d'attente selon le type d'utilisateur, à la
+  // place de « + Créer une partie » (parité GameWaitPage.qml officiel). Rendue
+  // tant que je suis dans une partie NON démarrée (gId posé au JoinGameAck).
+  //   Admin (hors ranking) : case « Compléter avec des bots » (si sièges libres)
+  //     + « Démarrer la partie » (actif à ≥ 2 joueurs, offline exempté)
+  //     + « Quitter la partie ».
+  //   Joueur simple / spectateur : « Quitter la partie » + hint d'attente.
+  function _renderLobbyWaitActions() {
+    var bar = document.getElementById('lobby-wait-actions');
+    if (!bar) return;
+    var create = document.querySelector('.lobby-footbar .lfb-create');
+    var nameEl = document.querySelector('.lobby-footbar .lfb-name');
+    var mine = (gId !== 0 && !_gameStarted);
+    if (!mine) {
+      bar.style.display = 'none'; bar.innerHTML = '';
+      if (create) create.style.display = '';
+      if (nameEl) nameEl.style.display = '';
+      return;
+    }
+    var g        = games[gId] || {};
+    var maxP     = g.maxPlayers || (_gameMeta && _gameMeta.maxPlayers) || 10;
+    var isRank   = (g.type || (_gameMeta && _gameMeta.type) || 1) === 4;
+    var isHost   = !_amSpectator && amGameAdmin && !isRank;
+    var count    = _gamePresentPids().length;
+    var canStart = isHost && (count >= 2 || window._offlineMode);
+    var fillRow  = (isHost && count < maxP)
+      ? '<label class="wp-fillbots"><input type="checkbox" id="wp-fillbots-cb"' + (window._wpFillBots ? ' checked' : '') + ' onchange="window._wpSetFillBots(this.checked)"><span>' + t('wpFillBots') + '</span></label>'
+      : '';
+    var leaveBtn = '<button class="wp-btn wp-btn-leave" onclick="App.confirmLeaveGame()">' + t('wpLeaveGame') + '</button>';
+    var startBtn = isHost
+      ? '<button class="wp-btn wp-btn-start" onclick="App.startFromWait()"' + (canStart ? '' : ' disabled') + ' title="' + t('wpStartHumansTip') + '">' + t('wpStartGame') + '</button>'
+      : '';
+    var hint = isHost ? '' : '<div class="lfb-waithint">' + t(_amSpectator ? 'waitingHintSpectator' : 'waitingHintGuest') + '</div>';
+    bar.innerHTML = fillRow + '<div class="wp-actions">' + leaveBtn + startBtn + '</div>' + hint;
+    bar.style.display = 'flex';
+    if (create) create.style.display = 'none';
+    if (nameEl) nameEl.style.display = 'none';
+  }
+  window._renderLobbyWaitActions = _renderLobbyWaitActions;
   // Rafraîchit le panneau si une partie est sélectionnée (noms/joueurs qui arrivent).
   function _refreshGameInfoPanel() {
     if (_selectedGame != null) {
@@ -13690,7 +13711,7 @@ function renderPlayersList() {
   body.innerHTML = _shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>';
 }
 
-;(function(){ window.BUILD_VERSION='0.3.278-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.279-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
