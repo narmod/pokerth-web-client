@@ -7378,6 +7378,14 @@ html[data-buttons="pokerth"] .btn-action[disabled] { filter: grayscale(0.55) bri
 .lgi-blinds { color:var(--text-dim,#8b93a7); }
 .lgi-ptitle { font-weight:700; color:var(--text); font-size:0.82rem; margin-top:6px; }
 .lgi-players { display:flex; flex-direction:column; gap:5px; }
+.lgi-gname { font-weight:700; color:var(--cream); font-size:0.9rem; }
+/* Centre-bas du panneau info : options d'attente (case bots + Démarrer/Quitter
+   selon le rôle), posées en pied non-scrollable du #lobby-gameinfo. */
+.lgi-waitbar {
+  flex:0 0 auto; border-top:1px solid var(--border);
+  padding:10px 12px; display:flex; flex-direction:column; gap:8px;
+}
+.lgi-waithint { font-size:0.74rem; color:var(--gold-dim); font-style:italic; text-align:center; }
 .lgi-prow { display:flex; align-items:center; gap:8px; padding:6px 8px; border-radius:6px; background:var(--inset); border:1px solid var(--border); }
 .lgi-pname { flex:1 1 auto; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-size:0.82rem; color:var(--text); }
 .lgi-prow.lgi-pending { opacity:0.6; }

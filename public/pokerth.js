@@ -6079,7 +6079,21 @@ const App = (() => {
         if (_imb) _imb.style.display = _canInv ? '' : 'none';
         if (_ims) _ims.style.display = _canInv ? '' : 'none';
         addChat(null, t('joinedTableWaiting', { gid: gId, admin: isAdmin ? ' (admin)' : '' }), 'sys', { key: 'joinedTableWaiting', params: { gid: gId, admin: isAdmin ? ' (admin)' : '' } });
-        show('s-game');
+        // Ne plus basculer directement sur le feutre : tant que la partie n'a
+        // pas démarré, on RESTE dans le lobby (parité GameWaitPage) avec la
+        // partie sélectionnée dans le panneau central #lobby-gameinfo et ses
+        // options d'attente (case bots + Démarrer/Quitter selon le rôle). Le
+        // gametable ne s'affiche qu'à GameStartInitial. On prépare quand même
+        // le feutre (nettoyage ci-dessous) pour qu'il soit propre au démarrage.
+        if (_gameStarted) {
+          show('s-game');
+        } else {
+          _selectedGame = gId;
+          try { renderGameInfoPanel(gId); } catch(e) {}
+          try { renderGames(); } catch(e) {}
+          try { if (window._lobby3OpenInfo) window._lobby3OpenInfo(); } catch(e) {}
+          show('s-lobby');
+        }
         // Clear any leftover felt from a previously-viewed table. After
         // leaveGame the rendered seats / pot / community stay in the DOM,
         // and since seats[] is empty on entry renderSeats() won't redraw —
@@ -6306,6 +6320,9 @@ const App = (() => {
 
       case T.GameStartInitial: {
         _gameStarted = true;
+        // La partie démarre → on quitte la wait-page du lobby et on bascule
+        // sur le gametable (le feutre a été préparé au JoinGameAck).
+        try { show('s-game'); } catch(e) {}
         // Reset de l'escalade des sons de montee de blinds (nouvelle partie).
         if (typeof resetBlindRaises === 'function') resetBlindRaises();
         // Clear the waiting panel ("EN ATTENTE…") immediately when the
@@ -6479,6 +6496,7 @@ const App = (() => {
           _gameStarted = true;
           _seatsFrozen = true;
           try { _wpHide(); } catch(e) {}
+          try { show('s-game'); } catch(e) {}
         }
         if (seats.length === 0) {
           seats = Object.keys(seatData)
@@ -7209,10 +7227,44 @@ const App = (() => {
       return '<div class="lgi-prow' + (nm ? '' : ' lgi-pending') + '">' + av + flag + '<span class="lgi-pname">' + label + '</span></div>';
     }).join('');
   }
+  // pids présents à MA table pendant l'attente : seatData non 'gone' + moi si
+  // absent (le serveur n'écho pas toujours mon propre join, surtout créateur).
+  function _gamePresentPids() {
+    var pids = Object.keys(seatData).map(Number).filter(function(pid){ return seatData[pid] && !seatData[pid].gone; });
+    if (!_amSpectator && myId && pids.indexOf(myId) === -1) pids.push(myId);
+    return pids;
+  }
+  // Rendu des lignes joueurs depuis une liste de pids arbitraire (pour ma
+  // partie en attente, où games[gId].seats peut être vide/en retard).
+  function _renderInfoRowsFromPids(pids) {
+    if (!pids || !pids.length) return '<div class="lgi-pempty">' + t('tablePlayersEmpty') + '</div>';
+    return pids.map(function(pid){
+      var nm = players[pid];
+      if (!nm && pid === myId) nm = (document.getElementById('nick') ? document.getElementById('nick').value : '') || myName;
+      if (!nm && !_pendingNameRequests.has(pid)) {
+        _pendingNameRequests.add(pid);
+        try { send(Proto.encode([[1,0,T.PlayerInfoRequest],[19,2,Proto.encode([[1,0,pid]])]])); } catch(e) {}
+      }
+      var flag  = _ccToFlag(_playerCountries[pid], 'gp-flag');
+      var label = nm ? esc(nm) : '#' + pid;
+      var av    = _avatarChipHtml(pid, label, 'gp-av');
+      return '<div class="lgi-prow' + (nm ? '' : ' lgi-pending') + '">' + av + flag + '<span class="lgi-pname">' + label + '</span></div>';
+    }).join('');
+  }
   function renderGameInfoPanel(gid) {
     var el = document.getElementById('lobby-gameinfo');
     if (!el) return;
+    // Est-ce MA partie en cours d'attente (créée ou rejointe, pas démarrée) ?
+    var _mine = (gid != null && gid === gId && amInGame && !_gameStarted);
     var g = (gid != null) ? games[gid] : null;
+    // Créateur : games[gId] peut ne pas encore être peuplé (GameListNew arrive
+    // juste après). On synthétise depuis _gameMeta + variables live.
+    if (!g && _mine && _gameMeta) {
+      g = { name:_gameMeta.name, type:_gameMeta.type, maxPlayers:_gameMeta.maxPlayers,
+            priv:_gameMeta.priv, timeout: gameTimeout || _gameMeta.timeout || 0,
+            startMoney: gameStartMoney || _gameMeta.startMoney || 0,
+            smallBlind: smallBlind || 0, seats: [], mode: 1 };
+    }
     if (!g) {
       el.innerHTML = '<div class="g-chat-panel-header"><span class="lgi-htitle" data-i18n="gameInfoTitle">' + t('gameInfoTitle') + '</span></div>'
                    + '<div class="lgi-empty" data-i18n="gameInfoEmpty">' + t('gameInfoEmpty') + '</div>';
@@ -7220,24 +7272,54 @@ const App = (() => {
     }
     var typeKey = _GTYPE_KEY[g.type];
     var typeLbl = GTYPE(g.type) || '';
-    var seats   = g.seats || [];
+    // Liste + décompte des joueurs : pour MA partie, on prend les pids réels
+    // (seatData) au lieu de g.seats qui peut être vide sur une table fraîche.
+    var _pids   = _mine ? _gamePresentPids() : (g.seats || []);
+    var _count  = _pids.length;
+    var _rows   = _mine ? _renderInfoRowsFromPids(_pids) : _renderInfoPlayerRows(gid);
     var _blUp = (g.raiseMode === 2) ? (g.raiseMins > 0 ? t('blindsUpMins', { n: g.raiseMins }) : '') : (g.raiseHands > 0 ? t('blindsUpHands', { n: g.raiseHands }) : '');
     var _dly  = g.delay || 0;
+
+    // ── Centre-bas : options d'attente selon le type d'utilisateur ──
+    // (parité GameWaitPage.qml). Admin (hors ranking) : case « Compléter avec
+    // des bots » + « Démarrer la partie » (actif à ≥ 2 joueurs, comme
+    // l'officiel) + « Quitter ». Joueur simple / spectateur : « Quitter » seul.
+    var _waitBar = '';
+    if (_mine) {
+      var _maxP     = g.maxPlayers || (_gameMeta && _gameMeta.maxPlayers) || 10;
+      var _isRank   = (g.type || 0) === 4;
+      var _isHost   = !_amSpectator && amGameAdmin && !_isRank;
+      // Officiel : Démarrer actif seulement à ≥ 2 joueurs. Exception offline
+      // (jeu vs bots en solo) où l'on peut toujours lancer.
+      var _canStart = _isHost && (_count >= 2 || window._offlineMode);
+      var _fillRow  = (_isHost && _count < _maxP)
+        ? '<label class="wp-fillbots"><input type="checkbox" id="wp-fillbots-cb"' + (window._wpFillBots ? ' checked' : '') + ' onchange="window._wpSetFillBots(this.checked)"><span>' + t('wpFillBots') + '</span></label>'
+        : '';
+      var _leaveBtn = '<button class="wp-btn wp-btn-leave" onclick="App.confirmLeaveGame()">' + t('wpLeaveGame') + '</button>';
+      var _startBtn = _isHost
+        ? '<button class="wp-btn wp-btn-start" onclick="App.startFromWait()"' + (_canStart ? '' : ' disabled') + ' title="' + t('wpStartHumansTip') + '">' + t('wpStartGame') + '</button>'
+        : '';
+      var _hint     = _isHost ? '' : '<div class="lgi-waithint">' + t(_amSpectator ? 'waitingHintSpectator' : 'waitingHintGuest') + '</div>';
+      _waitBar = '<div class="lgi-waitbar">' + _fillRow + '<div class="wp-actions">' + _leaveBtn + _startBtn + '</div>' + _hint + '</div>';
+    }
+
     el.innerHTML =
       '<div class="g-chat-panel-header">'
         + '<span class="lgi-htitle" data-i18n="gameInfoTitle">' + t('gameInfoTitle') + '</span>'
         + '<button class="lgi-report" type="button" onclick="App.reportGameName(' + parseInt(gid) + ')" title="' + t('reportGameTitle') + '" data-i18n-title="reportGameTitle" aria-label="' + t('reportGameTitle') + '">🚩</button>'
       + '</div>'
       + '<div class="lgi-scroll">'
+        + (_mine && g.name ? '<div class="lgi-row lgi-gname">' + esc(g.name) + '</div>' : '')
         + '<div class="lgi-row"><span class="lgi-ico">🎲</span> <span data-i18n="infoTypeLabel">' + t('infoTypeLabel') + '</span> : '
           + (typeKey ? '<span data-i18n="' + typeKey + '">' + esc(typeLbl) + '</span>' : esc(typeLbl)) + '</div>'
         + '<div class="lgi-row lgi-blinds">SB : ' + _groupThousands(g.smallBlind || 0)
           + ' | <span data-i18n="infoCapitalLabel">' + t('infoCapitalLabel') + '</span> : ' + _groupThousands(g.startMoney || 0) + '</div>'
         + (_blUp ? '<div class="lgi-row"><span data-i18n="infoBlindsUp">' + t('infoBlindsUp') + '</span> : ' + _blUp + '</div>' : '')
         + '<div class="lgi-row"><span data-i18n="gameTimeLabel">' + t('gameTimeLabel') + '</span> : ' + (g.timeout || 0) + 's' + (_dly ? '/' + _dly + 's' : '') + '</div>'
-        + '<div class="lgi-ptitle"><span data-i18n="infoPlayersInGame">' + t('infoPlayersInGame') + '</span> (' + seats.length + ')</div>'
-        + '<div class="lgi-players">' + _renderInfoPlayerRows(gid) + '</div>'
-      + '</div>';
+        + '<div class="lgi-ptitle"><span data-i18n="infoPlayersInGame">' + t('infoPlayersInGame') + '</span> (' + _count + ')</div>'
+        + '<div class="lgi-players">' + _rows + '</div>'
+      + '</div>'
+      + _waitBar;
   }
   // Rafraîchit le panneau si une partie est sélectionnée (noms/joueurs qui arrivent).
   function _refreshGameInfoPanel() {
@@ -9102,169 +9184,21 @@ const App = (() => {
   // État de la case « Compléter avec des joueurs ordinateur » de la wait-page
   // (parité fillCpuCheck.checked côté QML). En mémoire de session seulement.
   window._wpFillBots = window._wpFillBots || false;
-  window._wpSetFillBots = function(v) {
-    window._wpFillBots = !!v;
-    // Re-rendu : l'état actif du bouton « Démarrer » dépend de la case.
-    try { window._renderWaitingPanel && window._renderWaitingPanel(); } catch(e) {}
-  };
+  window._wpSetFillBots = function(v) { window._wpFillBots = !!v; };
 
   function renderWaitingPanel() {
     if (_gameStarted) return;
-    const g = games[gId] || {};
-    const maxP    = g.maxPlayers || 5;
-    const minToStart = 2;
-
-    // Collect the pids currently AT THE TABLE. We can't use seatData.active
-    // because that flag is per-hand (it's set true on HandStart, false when
-    // the player folds or sits out). Before the first hand has even started,
-    // every newly-joined player is created with active=false by design — so
-    // filtering on 'active' would hide them all in the waiting panel.
-    //
-    // Instead we use a dedicated 'gone' flag, set by the GamePlayerLeft
-    // handler and reset by GamePlayerJoined. A pid is at the table iff its
-    // seatData entry exists AND .gone is not true.
-    const pids = Object.keys(seatData)
-      .map(Number)
-      .filter(function(pid) {
-        return seatData[pid] && !seatData[pid].gone;
-      });
-    if (!_amSpectator && !pids.includes(myId) && myId) pids.push(myId); // spectators aren't seated
-
-    // 'current' MUST come from the same source as the player list below
-    // so the two can't disagree visually. We tried using games[gId].players
-    // as a fallback (commit 6e03ed1) and as a 'safety net' value here, but
-    // both lead to inconsistencies:
-    //
-    //   * games[gId].players is the LOBBY counter, only updated by
-    //     GameListPlayerJoined / Left. Once a client enters a game, the
-    //     server stops sending those messages to it, so this counter
-    //     freezes at its last value — typically reflecting the state
-    //     when the user joined.
-    //
-    //   * Combining it via Math.max with pids.length produces:
-    //         lobby counter=2 (stale), pids.length=1 (real)  → shows 2
-    //     even though the list right below only has 1 pseudo. This was
-    //     visible after a user disconnected and reconnected.
-    //
-    // pids is the same array we iterate to build the list below. By
-    // anchoring current on pids.length we guarantee count and list
-    // always agree.
-    const current = Math.max(pids.length, 1);
-
-    // Build the player list rows
-    let rows = '';
-    for (const pid of pids) {
-      const isMe = pid === myId;
-      const nick = isMe
-        ? (document.getElementById('nick') ? document.getElementById('nick').value : (players[pid] || ''))
-        : (players[pid] || ('#' + pid));
-      // Unified chip: real PokerTH image > placeholder logo > emoji >
-      // bot icon > initial letter. Same decision tree as the seat.
-      const avChip = _avatarChipHtml(pid, nick, 'wp-av');
-      const meTag  = isMe ? ' <span class="wp-me">' + t('waitingYou') + '</span>' : '';
-      rows += '<li class="wp-player">' + avChip + '<span class="wp-name">' + esc(nick) + '</span>' + meTag + '</li>';
-    }
-
-    // Progress bar (filled circles for present, empty for missing)
-    let dots = '';
-    for (let i = 0; i < maxP; i++) {
-      dots += (i < current) ? '<span class="wp-dot wp-dot-on"></span>'
-                            : '<span class="wp-dot wp-dot-off"></span>';
-    }
-
-    // Minimum-to-start message
-    const enough = current >= minToStart;
-    const statusLine = enough
-      ? '<div class="wp-ok">' + t('waitingEnough') + '</div>'
-      : '<div class="wp-need">' + t('waitingNeedMore', { n: (minToStart - current) }) + '</div>';
-
-    // Admin hint
-    const hint = amGameAdmin
-      ? '<div class="wp-hint wp-hint-admin">' + t('waitingHintAdmin') + '</div>'
-      : '<div class="wp-hint">' + t(_amSpectator ? 'waitingHintSpectator' : 'waitingHintGuest') + '</div>';
-
-    // Start-now banner: shown to the ADMIN only, when the table was
-    // created with the 'fill with bots' option AND the configured minimum
-    // number of humans is reached. The banner contains a pulsing button
-    // that triggers the existing App.startWithBots() flow. It replaces the
-    // implicit (and broken) auto-start that the original code seemed to
-    // promise but never wired up: window._minHumansNeeded was written but
-    // never read anywhere.
-    //
-    // We re-evaluate the threshold every render (panel refreshes on join/
-    // leave/PlayerInfoReply), so the banner appears/disappears as people
-    // come and go.
-    // Side-effect: refresh the standalone "▶ Start (no bots)" admin
-    // button visibility. We do it here rather than in the JoinGameAck
-    // handler because admins typically have count=1 at JoinGameAck
-    // (just themselves) — the second human is what makes the button
-    // useful, and that join triggers a re-render of this panel.
-    try { refreshStartNoBotsVisibility(); } catch(e) {}
-
-    // ── Actions (parité GameWaitPage.qml) ─────────────────────────
-    // Admin (non-spectateur, hors ranking) : case « Compléter avec des
-    // joueurs ordinateur » + « Démarrer la partie » (actif ssi ≥ 2 joueurs)
-    // + « Quitter ». Joueur simple / spectateur : uniquement « Quitter ».
-    // UN SEUL bouton Démarrer ; la case décide du remplissage bots — comme
-    // Lobby.startGame(fillCpuCheck.checked) côté QML (au lieu des deux boutons
-    // « ▶ Démarrer » / « ▶ + Bots » de l'ancien panneau).
-    var isRanking = (((games[gId] || {}).type) || 0) === 4;
-    var isHostCtl = !_amSpectator && amGameAdmin && !isRanking;
-    // Démarrable si ≥ 2 humains (comme QML) OU si la case « bots » est cochée
-    // et qu'il reste des sièges à remplir (préserve le solo vs bots / offline).
-    var canStart  = isHostCtl && (current >= 2 || (window._wpFillBots && current >= 1 && current < maxP));
-
-    var fillBotsRow = '';
-    if (isHostCtl && current < maxP) {
-      fillBotsRow =
-        '<label class="wp-fillbots"><input type="checkbox" id="wp-fillbots-cb"'
-        + (window._wpFillBots ? ' checked' : '')
-        + ' onchange="window._wpSetFillBots(this.checked)"><span>'
-        + t('wpFillBots') + '</span></label>';
-    }
-    var leaveBtn =
-      '<button class="wp-btn wp-btn-leave" onclick="App.confirmLeaveGame()">'
-      + t('wpLeaveGame') + '</button>';
-    var startBtn = isHostCtl
-      ? '<button class="wp-btn wp-btn-start" onclick="App.startFromWait()"'
-        + (canStart ? '' : ' disabled')
-        + ' title="' + t('wpStartHumansTip') + '">' + t('wpStartGame') + '</button>'
-      : '';
-    var actionsRow = '<div class="wp-actions">' + leaveBtn + startBtn + '</div>';
-
-    // Bloc « Infos de partie » (nom, type, blind, capital, temps d'action).
-    var _g2 = games[gId] || {};
-    var infoRows =
-        (_g2.type ? '<div class="wp-info-row">' + t('infoTypeLabel') + ' : ' + esc(_gameTypeLabel(_g2.type)) + '</div>' : '')
-      + (_g2.smallBlind ? '<div class="wp-info-row">' + t('smallBlind') + ' : <b>' + _groupThousands(_g2.smallBlind) + '</b></div>' : '')
-      + '<div class="wp-info-row">' + t('startCash') + ' : <b>' + _groupThousands(gameStartMoney || _g2.startMoney || 3000) + '</b></div>'
-      + '<div class="wp-info-row">' + t('actionTimeout') + ' : <b>' + (gameTimeout || _g2.timeout || 15) + ' s</b></div>';
-    var _wpName = (_gameMeta && _gameMeta.name) || _g2.name || ('#' + gId);
-    var infoBlock =
-        '<div class="wp-info">'
-      +   '<div class="wp-info-name">' + esc(_wpName) + '</div>'
-      +   infoRows
-      + '</div>';
-
-    const html =
-      '<div class="wp-card">' +
-        '<div class="wp-title">⏳ ' + t('wpWaitingPlayers') + '</div>' +
-        infoBlock +
-        '<div class="wp-bar">' + dots + '</div>' +
-        statusLine +
-        '<div class="wp-players-hdr">' + t('infoPlayersInGame') + ' (' + current + ')</div>' +
-        '<ul class="wp-list">' + rows + '</ul>' +
-        fillBotsRow +
-        actionsRow +
-        hint +
-      '</div>';
-    // La wait-page recouvre le feutre tant que la partie n'a pas démarré
-    // (parité GameWaitPage QML : on ne bascule sur le gametable qu'à
-    // GameStartInitial, où _wpHide() est appelé). On garde la barre
-    // d'action vide derrière.
-    var _wpEl = document.getElementById('g-wait-page');
-    if (_wpEl) { _wpEl.innerHTML = html; _wpEl.style.display = 'flex'; }
-    try { var _gaEl = document.getElementById('g-actions'); if (_gaEl) _gaEl.innerHTML = ''; } catch(e) {}
+    // Refonte « wait-page dans le lobby » : pendant l'attente on reste sur
+    // s-lobby et c'est le panneau central #lobby-gameinfo qui porte les infos
+    // de partie, la liste des joueurs et les options d'attente (case bots +
+    // Démarrer / Quitter, selon admin ou joueur simple). On rafraîchit donc
+    // simplement ce panneau à chaque join / leave / PlayerInfoReply.
+    try {
+      if (amInGame && gId) {
+        if (_selectedGame !== gId) _selectedGame = gId;
+        renderGameInfoPanel(gId);
+      }
+    } catch (e) {}
   }
 
   // Masque la wait-page et révèle le feutre. Appelé à GameStartInitial et
@@ -11242,6 +11176,7 @@ function dismissWinner() {
       var _ego = document.getElementById('g-endgame-overlay');
       if (_ego) _ego.style.display = 'none';
       try { _wpHide(); } catch(e) {}
+      _selectedGame = null; try { renderGameInfoPanel(null); } catch(e) {}
       myCards = [null,null]; commCards = [];
       stopTurnTimer();
       dismissWinner();
@@ -11422,6 +11357,7 @@ function dismissWinner() {
       var _ego = document.getElementById('g-endgame-overlay');
       if (_ego) _ego.style.display = 'none';
       try { _wpHide(); } catch(e) {}
+      _selectedGame = null; try { renderGameInfoPanel(null); } catch(e) {}
       myCards = [null,null]; commCards = [];
       stopTurnTimer();
       dismissWinner();
@@ -13750,7 +13686,7 @@ function renderPlayersList() {
   body.innerHTML = _shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>';
 }
 
-;(function(){ window.BUILD_VERSION='0.3.276-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.277-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
