@@ -12303,29 +12303,20 @@ function applyTableZoom() {
 // self : position p' telle que pan + c + eff*(p'-c) = position de base, et
 // echelle base/eff. A eff<=1 on restaure simplement les valeurs de base.
 function _applySelfZoomCounter() {
+  // Zoom UNIFORME : la self-box suit le zoom global exactement comme les
+  // sieges adverses (elle grossit ET se deplace). On restaure sa transform de
+  // base ; c'est le scale(eff) de #g-seats qui la porte comme n'importe quel
+  // siege. Plus de contre-scale (l'ancienne parite QML "self-box fixe" est
+  // volontairement abandonnee ici a la demande).
   try {
     var me = document.querySelector('#g-seats .seat.me');
     if (!me || !me.dataset.baseTop) return;
-    var zone = document.getElementById('g-table-zone');
-    var oval = document.querySelector('.felt-oval');
-    if (!zone || !oval) return;
-    var eff = window._tableZoomEff || 1;
     var bs = parseFloat(me.dataset.baseScale) || 1;
     var bt = parseFloat(me.dataset.baseTop) || 0;
     var bl = parseFloat(me.dataset.baseLeft) || 0;
-    if (eff <= 1.001) {
-      me.style.top = bt.toFixed(1) + 'px'; me.style.left = bl.toFixed(1) + 'px';
-      me.style.transform = 'translate(-50%,-50%) scale(' + bs + ')';
-      return;
-    }
-    var zr = zone.getBoundingClientRect(), orr = oval.getBoundingClientRect();
-    var oCX = orr.left - zr.left + orr.width / 2 - _zoomPanX;
-    var oCY = orr.top - zr.top + orr.height / 2 - _zoomPanY;
-    var lx = oCX + (bl - _zoomPanX - oCX) / eff;
-    var ly = oCY + (bt - _zoomPanY - oCY) / eff;
-    me.style.left = lx.toFixed(1) + 'px';
-    me.style.top = ly.toFixed(1) + 'px';
-    me.style.transform = 'translate(-50%,-50%) scale(' + (bs / eff).toFixed(4) + ')';
+    me.style.top = bt.toFixed(1) + 'px';
+    me.style.left = bl.toFixed(1) + 'px';
+    me.style.transform = 'translate(-50%,-50%) scale(' + bs + ')';
   } catch (e) {}
 }
 window._applySelfZoomCounter = _applySelfZoomCounter;
@@ -13744,7 +13735,7 @@ function renderPlayersList() {
   body.innerHTML = _shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>';
 }
 
-;(function(){ window.BUILD_VERSION='0.3.285-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.286-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
