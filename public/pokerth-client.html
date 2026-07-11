@@ -1346,9 +1346,6 @@ function onAvatarImageChosen(input) {
     <button class="btn-sm btn-icon" id="fs-btn-game" onclick="toggleFullscreen()" title="Fullscreen" data-i18n-title="fullscreenTooltip">⛶</button>
     <button class="btn-sm btn-icon" id="sound-toggle-btn" onclick="toggleSoundPopover(this)" title="Couper/Unmute" data-i18n-title="soundTooltip">🔊</button>
     <button class="btn-sm btn-icon btn-hands" onclick="toggleHandsHelp()" title="Combinaisons du poker" data-i18n-title="handsHelpTooltip" aria-label="Combinaisons du poker">🃏</button>
-    <button class="btn-sm btn-icon" id="log-toggle-btn" onclick="toggleLog()" title="Journal" data-i18n-title="logTooltip">📋</button>
-    <button class="btn-sm btn-icon" id="react-toggle-btn" onclick="toggleReactionPanel()" title="Réactions" data-i18n-title="reactionsLabel">😊</button>
-    <button class="btn-sm btn-icon" id="chat-toggle-btn" onclick="toggleGameChat()" title="Chat" data-i18n-title="chatTooltip">💬</button>
     <button class="btn-sm btn-icon win-reset-only" id="win-reset-btn" onclick="resetWindows()" title="Réinitialiser les fenêtres" data-i18n-title="winResetTooltip" aria-label="Réinitialiser les fenêtres">↺</button>
     <button class="btn-sm btn-icon" id="haptic-toggle-btn" onclick="toggleHaptic()" title="Vibration" data-i18n-title="hapticLabel" aria-label="Vibration">📳</button>
     <button class="btn-sm btn-icon" id="voice-toggle-btn" onclick="toggleVoice()" title="Annonce vocale" data-i18n-title="voiceLabel" aria-label="Annonce vocale">🤐</button>
@@ -1460,8 +1457,18 @@ function onAvatarImageChosen(input) {
        methods. -->
   <div id="g-endgame-overlay" class="endgame-overlay" style="display:none"></div>
   <div class="game-area">
-    <!-- Zoom table (tablette/desktop) : reduire puis re-agrandir jusqu'a la taille actuelle (max 1.0) -->
+    <!-- Boutons ronds sur le tapis (parité GamePage QML) : chat + emoji en
+         haut-gauche, journal en haut-droite. -->
+    <div class="g-felt-corner g-felt-tl">
+      <button class="g-felt-btn" id="chat-toggle-btn" onclick="toggleGameChat()" title="Chat" data-i18n-title="chatTooltip">💬</button>
+      <button class="g-felt-btn" id="react-toggle-btn" onclick="toggleReactionPanel()" title="Réactions" data-i18n-title="reactionsLabel">😊</button>
+    </div>
+    <div class="g-felt-corner g-felt-tr">
+      <button class="g-felt-btn" id="log-toggle-btn" onclick="toggleLog()" title="Journal" data-i18n-title="logTooltip">📋</button>
+    </div>
+    <!-- Zoom table : bouton repliable en mobile (une touche qui déploie les autres) -->
     <div id="g-zoom-ctrl" class="zoom-ctrl">
+      <button class="zoom-btn zoom-toggle" id="g-zoom-toggle" onclick="toggleZoomCtrl()" title="Zoom" aria-label="Zoom" aria-expanded="false">🔍</button>
       <button class="zoom-btn" id="g-zoom-in" onclick="tableZoomStep(1)" title="Agrandir la table" data-i18n-title="zoomIn" aria-label="Agrandir la table">+</button>
       <button class="zoom-btn" id="g-zoom-reset" onclick="tableZoomReset()" title="Réinitialiser la vue" data-i18n-title="zoomReset" aria-label="Réinitialiser la vue">↺</button>
       <button class="zoom-btn" id="g-seat-edit" onclick="toggleSeatEdit()" title="Éditer le placement des sièges" data-i18n-title="seatEditToggle" aria-label="Éditer le placement des sièges">✎</button>

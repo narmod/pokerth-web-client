@@ -6291,6 +6291,27 @@ body.has-keyboard .act-key { display: inline-block; }
 .zoom-btn:hover { background: rgba(40, 52, 46, 0.9); }
 .zoom-btn:active { transform: scale(0.94); }
 .zoom-btn:disabled { opacity: 0.35; cursor: default; }
+/* Boutons ronds posés sur le tapis (chat+emoji haut-gauche, journal haut-droite) */
+.g-felt-corner { position:absolute; z-index:30; display:flex; gap:6px; }
+.g-felt-tl { top:8px; left:8px; }
+.g-felt-tr { top:8px; right:8px; }
+.g-felt-btn { position:relative; width:34px; height:34px; padding:0; border-radius:50%;
+  display:flex; align-items:center; justify-content:center; cursor:pointer;
+  background:rgba(20,28,24,0.72); color:#e8e8e8; border:1px solid rgba(255,255,255,0.18);
+  font-size:1.05rem; line-height:1; -webkit-backdrop-filter:blur(4px); backdrop-filter:blur(4px);
+  transition:background .15s, transform .1s; }
+.g-felt-btn:hover { background:rgba(40,52,46,0.9); }
+.g-felt-btn:active { transform:scale(0.94); }
+.g-felt-btn.active { background:var(--accent,#E3C800); color:#1a1205; border-color:var(--accent,#E3C800); }
+/* Le zoom passe SOUS le journal (haut-droite) pour ne pas le chevaucher */
+.zoom-ctrl { top:50px; }
+/* Toggle du zoom : masqué en desktop, visible en mobile */
+.zoom-toggle { display:none; }
+@media (max-width: 640px) {
+  .zoom-toggle { display:flex; }
+  .zoom-ctrl .zoom-btn:not(.zoom-toggle) { display:none; }
+  .zoom-ctrl.open .zoom-btn { display:flex; }
+}
 .zoom-btn.active { background: var(--accent, #E3C800); color: #1a1205; border-color: var(--accent, #E3C800); }
 
 /* -- Bouton "editer le placement" (mode custom) + edition glisser-deposer -- */

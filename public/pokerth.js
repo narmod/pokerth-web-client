@@ -12543,6 +12543,16 @@ function _applyZoomTransforms() {
   if (_ccz) _ccz.style.transform = '';
   _applySelfZoomCounter();
 }
+// Zoom repliable en mobile : une touche 🔍 qui déploie les boutons de zoom.
+function toggleZoomCtrl() {
+  var el = document.getElementById('g-zoom-ctrl');
+  if (!el) return;
+  var open = el.classList.toggle('open');
+  var t = document.getElementById('g-zoom-toggle');
+  if (t) t.setAttribute('aria-expanded', open ? 'true' : 'false');
+}
+window.toggleZoomCtrl = toggleZoomCtrl;
+
 function tableZoomStep(dir) {
   var z = _getTableZoom() + (dir > 0 ? TABLE_ZOOM_STEP : -TABLE_ZOOM_STEP);
   z = Math.round(z * 100) / 100;
@@ -13914,7 +13924,7 @@ function renderPlayersList() {
   body.innerHTML = _shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>';
 }
 
-;(function(){ window.BUILD_VERSION='0.3.311-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.312-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
