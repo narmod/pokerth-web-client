@@ -6150,8 +6150,10 @@ html[data-seat-img-self] .player-bar {
 }
 /* Fenêtre Combinaisons alignée sur les autres fenêtres flottantes */
 #hands-card-inner.floating-win {
+  position: fixed !important;   /* indispensable pour _placeWin/drag (l'overlay ne le centre plus) */
   padding: 0; border-top-width: 1px; max-width: none; max-height: none;
   display: flex; flex-direction: column; background: var(--modal-bg);
+  z-index: 201;
 }
 #hands-card-inner.floating-win .hands-scroll {
   flex: 1 1 auto; min-height: 0; overflow-y: auto; overflow-x: hidden;
