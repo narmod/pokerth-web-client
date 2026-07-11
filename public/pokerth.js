@@ -5653,8 +5653,9 @@ const App = (() => {
           }
         }
         // If the waiting panel is visible, update it so the new pseudo
-        // appears in place of the temporary '#<pid>' placeholder.
-        if (!_gameStarted && amInGame) renderWaitingPanel();
+        // appears in place of the temporary '#<pid>' placeholder. On teste gId
+        // (posé au JoinGameAck) et non amInGame (true seulement au démarrage).
+        if (!_gameStarted && gId) renderWaitingPanel();
         // Same idea for the lobby players panel.
         var _pp2 = document.getElementById('players-panel');
         if (_pp2 && _pp2.style.display !== 'none' && typeof renderPlayersList === 'function') renderPlayersList();
@@ -7255,7 +7256,10 @@ const App = (() => {
     var el = document.getElementById('lobby-gameinfo');
     if (!el) return;
     // Est-ce MA partie en cours d'attente (créée ou rejointe, pas démarrée) ?
-    var _mine = (gid != null && gid === gId && amInGame && !_gameStarted);
+    // On se base sur gId (posé dès JoinGameAck) et NON sur amInGame, qui n'est
+    // mis à true qu'à GameStartInitial → sinon la barre d'options n'apparaît
+    // jamais pendant l'attente.
+    var _mine = (gid != null && gId !== 0 && gid === gId && !_gameStarted);
     var g = (gid != null) ? games[gid] : null;
     // Créateur : games[gId] peut ne pas encore être peuplé (GameListNew arrive
     // juste après). On synthétise depuis _gameMeta + variables live.
@@ -9194,7 +9198,7 @@ const App = (() => {
     // Démarrer / Quitter, selon admin ou joueur simple). On rafraîchit donc
     // simplement ce panneau à chaque join / leave / PlayerInfoReply.
     try {
-      if (amInGame && gId) {
+      if (gId) {
         if (_selectedGame !== gId) _selectedGame = gId;
         renderGameInfoPanel(gId);
       }
@@ -13686,7 +13690,7 @@ function renderPlayersList() {
   body.innerHTML = _shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>';
 }
 
-;(function(){ window.BUILD_VERSION='0.3.277-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.278-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
