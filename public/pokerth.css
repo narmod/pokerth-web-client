@@ -5627,7 +5627,16 @@ body:not(.in-game) .my-zone {
 .cf-range:hover::-moz-range-thumb { background: var(--gold-hi); }
 
 /* Liste des tables : grille + cartes détaillées */
-.games-col .pane-header { border: none; padding: 0 2px 10px; }
+/* Entête « Tables disponibles » : mêmes attributs que les autres entêtes de
+   panneau (.g-chat-panel-header) — fond chrome, bordure basse, padding et
+   typo identiques. */
+.games-col .pane-header {
+  padding: 4px 10px;
+  background: var(--chrome-tint);
+  border-bottom: 1px solid var(--border);
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
+}
 .games-scroll { display: grid; gap: 12px; grid-template-columns: 1fr; overflow: visible; }
 /* Barre de filtre des tables (design A : puces arrondies) */
 .filter-bar { display: flex; gap: 6px; flex-wrap: wrap; padding: 0 2px 12px; }
