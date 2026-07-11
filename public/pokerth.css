@@ -7305,6 +7305,15 @@ html[data-buttons="pokerth"] .btn-action[disabled] { filter: grayscale(0.55) bri
   #s-lobby .lobby-grid > #lobby-gameinfo   { grid-area:info; display:flex; }
   #s-lobby .lobby-grid > #lobby-chat-panel { grid-area:chat; }
 
+  /* Ma partie en attente : liste (games) à droite ; mes infos (info) + le chat
+     au centre. Simple ré-affectation des zones — le contenu ne bouge pas. */
+  #s-lobby.lobby-waiting .lobby-grid {
+    grid-template-areas:
+      "players hl info hr games"
+      "players hl hv   hr games"
+      "players hl chat hr games";
+  }
+
   /* Panneaux : sortis du mode overlay → posés statiquement dans leur colonne */
   #s-lobby .lobby-grid > #players-panel,
   #s-lobby .lobby-grid > #lobby-gameinfo,

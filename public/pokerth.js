@@ -7442,6 +7442,10 @@ const App = (() => {
     if (!bar) return;
     var create = document.querySelector('.lobby-footbar .lfb-create');
     var mine = (gId !== 0 && !_gameStarted);
+    // Mode « ma partie en attente » : la liste passe à droite et mes infos +
+    // le chat au centre (parité client officiel) — piloté par une classe CSS.
+    var _sl = document.getElementById('s-lobby');
+    if (_sl) _sl.classList.toggle('lobby-waiting', mine);
     if (!mine) {
       bar.style.display = 'none'; bar.innerHTML = '';
       if (create) create.style.display = '';
@@ -13892,7 +13896,7 @@ function renderPlayersList() {
   body.innerHTML = _shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>';
 }
 
-;(function(){ window.BUILD_VERSION='0.3.307-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.308-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
