@@ -987,6 +987,22 @@ function _linkifyAnnounce(text) {
     return _annLink(bareUrl, bareUrl) + trail;
   });
 }
+// ── Liens cliquables dans le chat ──────────────────────────────────
+// Rend cliquables les URLs http(s)/mailto d'un texte de chat DÉJÀ échappé HTML
+// (pipeline chat : esc() + éventuel applyChatEmoteShortcuts, qui n'insère aucune
+// balise — que du texte + emojis unicode). URLs nues uniquement ; la ponctuation
+// de fin (.,!?) reste hors du lien ; les guillemets sont neutralisés pour l'attribut
+// href (défense XSS : esc() côté chat n'échappe pas " / '). Ouvre dans un nouvel onglet.
+function _linkifyChatHtml(html) {
+  var RE = /((?:https?:\/\/|mailto:)[^\s<]+)/g;
+  return String(html == null ? '' : html).replace(RE, function (url) {
+    var trail = '', m = url.match(/[.,!?]+$/);
+    if (m) { trail = m[0]; url = url.slice(0, -trail.length); }
+    var href = url.replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+    return _annLink(href, url) + trail;
+  });
+}
+window._linkifyChatHtml = _linkifyChatHtml;
 function hideInfoToast() { if (window._infoToastCdTimer) { clearInterval(window._infoToastCdTimer); window._infoToastCdTimer = null; } var el = document.getElementById('srv-info-toast'); if (el) el.remove(); }
 // Format compact d'un temps restant : '2d 03:04:05', '1:02:03' ou '12:34'.
 function _fmtCountdown(ms) {
@@ -7478,7 +7494,7 @@ const App = (() => {
     const el = $('chat');
     const d  = document.createElement('div');
     d.className = 'msg ' + cls;
-    const emT = function (s) { var h = esc(s); if (!_noEmo && typeof window.applyChatEmoteShortcuts === 'function') { try { h = window.applyChatEmoteShortcuts(h); } catch (_e) {} } return h; };
+    const emT = function (s) { var h = esc(s); if (!_noEmo && typeof window.applyChatEmoteShortcuts === 'function') { try { h = window.applyChatEmoteShortcuts(h); } catch (_e) {} } if (typeof window._linkifyChatHtml === 'function') { try { h = window._linkifyChatHtml(h); } catch (_e2) {} } return h; };
     if (sender) {
       d.innerHTML = `<span class="msg-time">${_chatTs()}</span> <span class="who">${esc(sender)}</span>: <span class="txt">${emT(text)}</span>`;
     } else {
@@ -12160,7 +12176,7 @@ function addGameChat(sender, text, cls, spec) {
   function e(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
   // Corps du message : shortcodes :nom: + émoticônes ASCII (port officiel),
   // sauf en mode « chat sans emoji ». Le nom d'expéditeur n'est jamais converti.
-  function emT(s) { var h = e(s); if (!_noEmo && typeof window.applyChatEmoteShortcuts === 'function') { try { h = window.applyChatEmoteShortcuts(h); } catch (_e) {} } return h; }
+  function emT(s) { var h = e(s); if (!_noEmo && typeof window.applyChatEmoteShortcuts === 'function') { try { h = window.applyChatEmoteShortcuts(h); } catch (_e) {} } if (typeof window._linkifyChatHtml === 'function') { try { h = window._linkifyChatHtml(h); } catch (_e2) {} } return h; }
   if (sender) {
     d.innerHTML = '<span class="msg-time">'+_chatTs()+'</span> <span class="who">'+e(sender)+'</span>: <span class="txt">'+emT(text)+'</span>';
   } else {
@@ -13708,7 +13724,7 @@ function renderPlayersList() {
   body.innerHTML = _shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>';
 }
 
-;(function(){ window.BUILD_VERSION='0.3.280-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.281-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
