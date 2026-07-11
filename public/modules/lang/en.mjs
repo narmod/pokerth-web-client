@@ -16,6 +16,7 @@ export const meta = {
 };
 
 export const strings = {
+  showPlayers: `Show players`,
   footJoin: `Join`,
   spectatingBadge: `Spectating`,
   reportGameTitle: `Report inappropriate game name`, reportGameConfirm: `Report`, reportGameMsg: `Are you sure you want to report the game name "{name}" as inappropriate?`, reportGameAccepted: `The game name report was accepted by the server. Thank you.`, reportGameDup: `This game name was already reported by another player.`, reportGameError: `An error occurred while reporting the game name.`,

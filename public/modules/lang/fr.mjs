@@ -16,6 +16,7 @@ export const meta = {
 };
 
 export const strings = {
+  showPlayers: `Voir les joueurs`,
   footJoin: `Rejoindre`,
   spectatingBadge: `Spectateur`,
   reportGameTitle: `Signaler un nom de partie inapproprié`, reportGameConfirm: `Signaler`, reportGameMsg: `Voulez-vous vraiment signaler le nom de la partie : « {name} » comme inapproprié ?`, reportGameAccepted: `Le signalement du nom de la partie a été accepté par le serveur. Merci.`, reportGameDup: `Ce nom de partie a déjà été signalé par un autre joueur.`, reportGameError: `Une erreur s'est produite lors du signalement du nom de la partie.`,

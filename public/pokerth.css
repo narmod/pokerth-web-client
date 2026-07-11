@@ -5674,7 +5674,10 @@ body:not(.in-game) .my-zone {
 .game-seats { display: flex; gap: 3px; margin-top: 8px; flex-wrap: wrap; }
 .seat-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--inset); border: 1px solid var(--border); }
 .seat-dot.on { background: var(--gold); border-color: var(--gold); box-shadow: 0 0 5px rgba(var(--gold-rgb), 0.5); }
-.gcard-btns { display: flex; gap: 8px; }
+.gcard-btns { display: flex; gap: 8px; align-items: center; }
+.gcard-caret { flex:0 0 auto; background:none; border:none; cursor:pointer; color:var(--gold-dim);
+  font-size:0.95rem; line-height:1; padding:4px 6px; border-radius:6px; transition:color .12s, background .12s; }
+.gcard-caret:hover { color:var(--gold); background:var(--inset-hi); }
 /* Boutons façon maquette v3 : Rejoindre en vert (extensible) + œil compact */
 .game-row.gcard .btn-join {
   flex: 1;

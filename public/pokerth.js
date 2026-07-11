@@ -7606,14 +7606,17 @@ const App = (() => {
       metaBits.push('<span>' + ((g.priv || g.type === 3) ? t('piPrivate') : t('piPublic')) + '</span>');
       if (g.type === 4) metaBits.push('<span>' + t('visRanked') + '</span>');
       var _sel = (String(gid) === String(_selectedGame)) ? ' sel' : '';
-      return '<div class="game-row gcard' + _sel + '" onclick="App.selectGame(' + parseInt(gid) + ')">'
+      var _open = _openTables.has(String(gid));
+      var caret = '<button class="gcard-caret" onclick="event.stopPropagation();App.toggleTablePlayers(' + parseInt(gid) + ')" title="' + t('showPlayers') + '" aria-label="' + t('showPlayers') + '" aria-expanded="' + (_open?'true':'false') + '">' + (_open ? '\u25B4' : '\u25BE') + '</button>';
+      return '<div class="game-row gcard' + _sel + (_open ? ' gc-open' : '') + '" onclick="App.selectGame(' + parseInt(gid) + ')">'
         + '<div class="gcard-main">'
         + '<div class="game-name">' + lock + esc(g.name)
         + ' <span class="game-badge ' + badgeCls + '">' + label + '</span></div>'
         + '<div class="game-meta">' + metaBits.join('') + '</div>'
         + '</div>'
-        + '<div class="gcard-btns">' + joinBtn + watchBtn + '</div>'
-        + '</div>';
+        + '<div class="gcard-btns">' + joinBtn + watchBtn + caret + '</div>'
+        + '</div>'
+        + (_open ? '<div class="game-players">' + renderTablePlayers(gid) + '</div>' : '');
     }).join('');
     _refreshGameInfoPanel();
     _updateFootJoin();
@@ -11795,7 +11798,22 @@ function dismissWinner() {
       if (window._lobby3OpenInfo) window._lobby3OpenInfo();  // slide-in en compact
     },
     // Conservé pour rétro-compat éventuelle ; délègue à la sélection.
-    toggleTablePlayers(gid) { this.selectGame(gid); },
+    // Déplie/replie la liste des joueurs d'une table dans la liste (accordéon).
+    toggleTablePlayers(gid) {
+      var k = String(gid);
+      if (_openTables.has(k)) { _openTables.delete(k); }
+      else {
+        _openTables.add(k);
+        var g = games[gid];
+        if (g && g.seats) g.seats.forEach(function(pid){
+          if (pid && !players[pid] && !_pendingNameRequests.has(pid)) {
+            _pendingNameRequests.add(pid);
+            try { send(Proto.encode([[1,0,T.PlayerInfoRequest],[19,2,Proto.encode([[1,0,pid]])]])); } catch(e){}
+          }
+        });
+      }
+      renderGames();
+    },
 
     // ── Signaler le nom de la partie (parité officielle) ──
     reportGameName(gid) {
@@ -13896,7 +13914,7 @@ function renderPlayersList() {
   body.innerHTML = _shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>';
 }
 
-;(function(){ window.BUILD_VERSION='0.3.309-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.310-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
