@@ -2944,7 +2944,7 @@ const MSG = (() => {
   // buildId = (CLIENT_TYPE_QT_WIDGET<<24)|(MAJOR<<16)|(MINOR<<8)|REV.
   // POLITIQUE SERVEUR (game_defs.h, verifiee sur le tag v2.1.2 du 2026-07-08) :
   // MIN_BUILD_ID_* = release PRECEDENTE ; seules la release courante et la
-  // precedente sont acceptees. En 2.1.2 : min Qt-Widget = 0x01020101 (2.1.1).
+  // precedente sont acceptees. En 2.1.3 : min Qt-Widget = 0x01020102 (2.1.2).
   // => A CHAQUE release PokerTH, bumper BUILD_ID ci-dessous sinon
   // ERR_NET_VERSION_NOT_SUPPORTED (« Version incompatible »").
   // On s'identifie comme le client officiel Qt-Widget courant,
@@ -2956,7 +2956,7 @@ const MSG = (() => {
   //   Ref: pokerth/src/net/clientstate.cpp:1465-1469 + serverlobbythread.cpp:1255-1256
   function buildInit(nick, major, minor, loginType, password, serverPass) {
     loginType = loginType !== undefined ? loginType : 0;
-    const BUILD_ID = 16908546; // 0x01020102 = Qt-Widget 2.1.2 (min serveur 2.1.2 : 0x01020101 = 2.1.1)
+    const BUILD_ID = 16908547; // 0x01020103 = Qt-Widget 2.1.3 (min serveur 2.1.3 : 0x01020102 = 2.1.2)
     const ver = Proto.encode([[1,0,major],[2,0,minor]]);
     const fields = [
       [1,2,ver],       // requestedVersion (= protocolVersion from Announce)
@@ -13724,7 +13724,7 @@ function renderPlayersList() {
   body.innerHTML = _shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>';
 }
 
-;(function(){ window.BUILD_VERSION='0.3.281-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.282-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
