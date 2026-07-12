@@ -6506,6 +6506,7 @@ const App = (() => {
 
       case T.GameStartInitial: {
         _gameStarted = true;
+        try { _updateLobbyWaitStatus(); } catch(e) {}
         // La partie démarre → on quitte la wait-page du lobby et on bascule
         // sur le gametable (le feutre a été préparé au JoinGameAck).
         try { show('s-game'); } catch(e) {}
@@ -9471,13 +9472,26 @@ const App = (() => {
         renderGameInfoPanel(gId);
       }
     } catch (e) {}
+    try { _updateLobbyWaitStatus(); } catch (e) {}
   }
+
+  // Statut « En attente de joueurs… » centre dans le header du lobby :
+  // visible tant que je suis dans une table creee/rejointe non demarree.
+  // Le texte est i18n (hdrWaitingPlayers) ; les points sont animes en CSS.
+  function _updateLobbyWaitStatus() {
+    var el = document.getElementById('lobby-wait-status');
+    if (!el) return;
+    var waiting = !!(amInGame && !_gameStarted && gId);
+    el.style.display = waiting ? '' : 'none';
+  }
+  window._updateLobbyWaitStatus = _updateLobbyWaitStatus;
 
   // Masque la wait-page et révèle le feutre. Appelé à GameStartInitial et
   // au départ de la table.
   function _wpHide() {
     var el = document.getElementById('g-wait-page');
     if (el) { el.style.display = 'none'; el.innerHTML = ''; }
+    try { _updateLobbyWaitStatus(); } catch (e) {}
   }
   window._wpHide = _wpHide;
   window._renderWaitingPanel = renderWaitingPanel;
@@ -14027,7 +14041,7 @@ function renderPlayersList() {
   body.innerHTML = _shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>';
 }
 
-;(function(){ window.BUILD_VERSION='0.3.349-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.350-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

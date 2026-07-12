@@ -700,6 +700,57 @@ body {
   .header-brand--game .g-brand-click { gap: 4px; }
 }
 
+/* ── Statut d'attente centre dans le header du lobby ──
+   Affiche « En attente de joueurs » + points animes tant que la partie
+   creee/rejointe n'a pas demarre. Centre en absolu (independant des
+   boutons), non cliquable (laisse passer les clics). Palette QML (or). */
+.lobby-wait-status {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  max-width: min(70vw, 460px);
+  font-family: var(--ff-display);
+  font-size: clamp(0.72rem, 1.8vw, 0.95rem);
+  letter-spacing: 0.05em;
+  color: var(--gold);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  pointer-events: none;
+  z-index: 1;
+}
+.lws-hourglass {
+  font-size: 0.95em;
+  display: inline-block;
+  animation: lwsHourglass 2.6s ease-in-out infinite;
+}
+@keyframes lwsHourglass {
+  0%, 78%, 100% { transform: rotate(0deg); }
+  90%          { transform: rotate(180deg); }
+}
+.wait-dots { display: inline-flex; }
+.wait-dots span {
+  opacity: 0.25;
+  animation: waitDot 1.4s ease-in-out infinite;
+}
+.wait-dots span:nth-child(2) { animation-delay: 0.2s; }
+.wait-dots span:nth-child(3) { animation-delay: 0.4s; }
+@keyframes waitDot {
+  0%, 100% { opacity: 0.25; }
+  30%      { opacity: 1; }
+}
+@media (max-width: 560px) {
+  .lobby-wait-status { max-width: 62vw; font-size: 0.72rem; gap: 5px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .lws-hourglass { animation: none; }
+  .wait-dots span { animation: none; opacity: 0.85; }
+}
+
 /* ── Game-info modal (opened by clicking the "TABLE" label) ──
    Centered card with backdrop. The card holds a title (table name)
    + a subtitle (admin/private badges), and a body filled by JS with
