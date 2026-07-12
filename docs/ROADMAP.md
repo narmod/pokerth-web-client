@@ -4,8 +4,10 @@ This is a living document. The client began as a way to play poker with family o
 phones and tablets, and is growing toward something the wider PokerTH community can
 use too. Items are grouped by status rather than fixed phases.
 
-> **Milestone `v0.3.166-beta`**: the in-game screen reached full feature parity with
-> PokerTH's official QML client — see *Official client (QML) parity* below.
+> **Tracking the official client, continuously.** The in-game screen is kept aligned
+> with PokerTH's official QML client on an ongoing basis — as the official client
+> evolves (currently the 2.1.3 build), the web client re-syncs to match. See
+> *Official client (QML) tracking* below.
 
 ## ✅ Shipped
 
@@ -41,8 +43,14 @@ use too. Items are grouped by status rather than fixed phases.
   follows the active theme.
 - Theme panel fully localised in all 36 languages, with live switching and a live preview
   of each deck.
-- Semantic-colour system so the whole UI recolours consistently per theme — gold is kept
-  only for deliberate game assets (dealer button, chip denominations, win bursts).
+- Semantic-colour system so the whole UI recolours consistently per theme — gold uses the
+  official QML accent (`#E3C800`) and is kept only for deliberate game assets (dealer
+  button, chip denominations, win bursts).
+- Official card decks: seven decks ported straight from the QML 2.1.3 client, alongside the
+  gallery decks, each with a live preview.
+- Official table style: the default "PokerTH" felt now points to the client's own
+  `default` table asset, and the Matrix table is kept re-synced with the 2.1.3 build.
+- Style import: install a table/deck/back from a `.zip`, parsing the four 2.1.3 style keys.
 - Coloured glossy action buttons (Fold red / Check-Call blue / Raise green / All-In orange)
   and an animated flaming-chip emblem on the login screen (respects reduced-motion).
 - Six theme-aware seat "packs" (Classic, Chip, Plate, Card, Compact, Bar), switchable like
@@ -88,14 +96,29 @@ use too. Items are grouped by status rather than fixed phases.
 
 **Experience**
 - Mobile-first design for phones and tablets.
-- Adaptive seat layout that scales from 2 to 10 players per screen size, with a phone-specific
-  fix so 4-player side seats stay fully on-screen.
+- Adaptive seat layout that scales from 2 to 10 players per screen size, with four distinct
+  portrait renderings — automatic ring, official fixed slots, elliptical "necklace", and a
+  free drag-and-drop custom layout — and seat sizing tuned to the official 2.1.3 client.
 - Accessibility & mobile polish: honours `prefers-reduced-motion` and reduced-transparency,
   with touch-comfort tweaks (overscroll containment, touch-callout suppression on cards/buttons).
 - Emoji avatars (500+) and custom image avatars, broadcast live, with anti-flicker caching.
 - Session statistics panel (hands, wins, win rate, net result, best/worst hands).
 - In-game and lobby chat, plus 30 emoji reactions that now interoperate cross-client through a
   shared `/emoji` chat channel (and work on pokerth.net too).
+- Unified header banner across the connect, lobby and in-game screens, with frameless
+  monochrome SVG icons (identical on every device) and floating drop-down menus. The in-game
+  header centres the table name and shows Admin / Public-Private status badges in the
+  official palette.
+- Redesigned waiting room: your details and chat sit centre-stage with the game list beside
+  them on desktop, an animated "waiting for players" status, and a tap-to-expand accordion
+  listing each table's seated players.
+- In-game panels open as compact floating windows anchored under their round on-felt button
+  (chat, emoji, hand log) instead of taking over the screen — each movable, resizable and
+  snap-back-able. A new draggable **Hand-odds (Combinaisons)** window joins them, and the
+  table zoom is collapsible everywhere. On phone portrait the action bar hugs the bottom
+  edge for a full-screen table.
+- Music and sound split: a dedicated **Music player** panel (with game-sound settings moved
+  out to Advanced options).
 - Ranking modal (PokerTH / BBC / WEC leaderboards with seasons, All-Time, search and
   pagination) plus per-player profile cards, via same-origin `/api/ranking` and
   `/api/player` relays.
@@ -107,10 +130,12 @@ use too. Items are grouped by status rather than fixed phases.
 - Sound effects for every action.
 - Internationalisation in 36 languages, auto-detected and switchable on the fly.
 
-**Official client (QML) parity — full parity reached (milestone `v0.3.166-beta`)**
-- The in-game screen was audited feature-by-feature against PokerTH's official QML client
-  (sources extracted from the official Android APK builds) and every identified gap has
-  been closed:
+**Official client (QML) tracking — kept aligned on an ongoing basis**
+- The in-game screen is audited feature-by-feature against PokerTH's official QML client
+  (sources extracted from the official desktop AppImage and Android APK builds) and
+  re-synced as that client evolves. Feature parity was first reached in the `v0.3.166`
+  series; work since has been fidelity tuning against the newer **2.1.3** build. Feature
+  coverage includes:
   - F1–F8 keyboard shortcuts matching the official client (fold / check-call / bet-raise /
     all-in, alternate key order, playing-mode switches), plus F5 to show your cards after
     a hand that ended with no showdown.
@@ -130,6 +155,15 @@ use too. Items are grouped by status rather than fixed phases.
     in the win-probability panel.
   - Ping indicator on your own avatar, and an optional auto-return to the lobby when a
     game ends.
+- Fidelity pass against the **2.1.3** build:
+  - Action bar matched to the official layout: localized "Suivre \$X / Relancer \$X"
+    labels, a compact All-In / "Tapis" button (~52 px, no amount shown), quick-bet
+    1/3 · 1/2 · Pot buttons in the official dark green with no amount labels, the official
+    card ratio, and a crisp pulsed gold turn-glow.
+  - Pre-selection preview desaturated uniformly when it is not your turn.
+  - App header height matched to the official topBar (38 px, 30 px in landscape-compact).
+  - Seat geometry tuned to 2.1.3: self-weight 0.5, fill-cap 1.9 / 2.3, and mode-dependent
+    self-box sizing.
 - Follow-up fixes from official-client community feedback: chat length capped to match
   the server limit, a player's current table shown in the lobby players list, and the
   players-remaining counter above.
