@@ -4601,11 +4601,18 @@ body:not(.in-game) .my-zone {
   background: var(--panel-hi, var(--panel)); color: var(--text);
   transition: transform .09s, filter .12s;
 }
-.wp-btn-leave { color: var(--red); border-color: rgba(var(--red-rgb), 0.4); }
-.wp-btn-start {
-  color: #fff; border-color: #7ad06a;
-  background: linear-gradient(180deg, #50b840, #1e6614);
+/* Quitter la partie : tuile rouge comme « Annuler » de la création
+   (.btn-cf-cancel) — piloté par la palette QML via --red / --red-rgb.
+   Scopé sous .wp-actions pour battre la spécificité de .wp-actions .wp-btn. */
+.wp-actions .wp-btn-leave { color: var(--red); background: rgba(var(--red-rgb), 0.10); border-color: rgba(var(--red-rgb), 0.5); }
+.wp-actions .wp-btn-leave:not(:disabled):hover { background: rgba(var(--red-rgb), 0.20); }
+/* Démarrer la partie : même couleur que « Créer une partie » du lobby
+   (.lfb-create / .cf-create-btn) — navy neutre QML, texte blanc. */
+.wp-actions .wp-btn-start {
+  color: #ffffff; border-color: transparent;
+  background: #2b3444;
 }
+.wp-actions .wp-btn-start:not(:disabled):hover { background: #384252; }
 .wp-btn-start:disabled { opacity: 0.45; cursor: not-allowed; filter: grayscale(0.45); }
 .wp-btn:not(:disabled):active { transform: scale(0.97); }
 /* When the action-bar hosts the waiting panel (no real action buttons
