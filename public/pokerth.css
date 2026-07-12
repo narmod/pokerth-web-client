@@ -155,13 +155,13 @@ html { touch-action: manipulation; -webkit-text-size-adjust: 100%; text-size-adj
   --modal-bg:   linear-gradient(160deg, #f6f8fb 0%, #e9edf4 50%, #f2f5f9 100%);
   --panel:      rgba(248,250,253,0.94);
   --panel-hi:   rgba(255,255,255,0.96);
-  --gold:       #E3C800;
-  --gold-rgb:   227,200,0;
-  --gold-hi:    #f2dc4d;
-  --gold-dim:   #b09a00;
-  --sel:        #E3C800;
-  --sel-rgb:    227,200,0;
-  --sel-hi:     #ffd700;
+  --gold:       #9a7d0a;
+  --gold-rgb:   154,125,10;
+  --gold-hi:    #c2a02e;
+  --gold-dim:   #7a6208;
+  --sel:        #9a7d0a;
+  --sel-rgb:    154,125,10;
+  --sel-hi:     #c2a02e;
   --timer-normal: #394150;
   --timer-glow: 0 1px 1px rgba(0,0,0,0.22);
   --timer-bg:   rgba(255,255,255,0.92);
@@ -182,7 +182,7 @@ html { touch-action: manipulation; -webkit-text-size-adjust: 100%; text-size-adj
   --field-bg:   #ffffff;
   --inset: rgba(0,0,0,0.06);
   --inset-hi: rgba(0,0,0,0.08);
-  --on-gold:    #110900;
+  --on-gold:    #fdf6e6;
   --text:       #576378;
   --text-hi:    #1d222b;
   --red:        #a62f22;
@@ -497,7 +497,7 @@ body {
   font-family: var(--ff-display);
   font-size: 1.5rem;
   font-weight: 700;
-  color: var(--gold);
+  color: var(--text-hi);
   letter-spacing: 0.12em;
   line-height: 1;
 }
@@ -1179,8 +1179,8 @@ body {
 }
 
 .btn-primary {
-  background: var(--gold);
-  color: var(--on-gold);
+  background: #2b3444;
+  color: #ffffff;
   border: none;
   padding: 12px;
   font-family: var(--ff-display);
@@ -1190,9 +1190,9 @@ body {
   cursor: pointer;
   border-radius: 2px;
   transition: background 0.15s, transform 0.1s, box-shadow 0.15s;
-  box-shadow: 0 4px 16px rgba(var(--gold-rgb), 0.2);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.28);
 }
-.btn-primary:hover { background: var(--gold-hi); box-shadow: 0 6px 24px rgba(var(--gold-rgb), 0.35); }
+.btn-primary:hover { background: #384252; box-shadow: 0 6px 24px rgba(0,0,0,0.4); }
 .btn-primary:active { transform: scale(0.98); }
 
 .status {
