@@ -25,3 +25,17 @@ and redistributed here under the terms of the AGPL-3.0.
 - Origin: http://commons.wikimedia.org/wiki/Poker_(cards_deck) (Wikimedia Commons)
 - Copyright: © the PokerTH development team
 - License: GNU Affero General Public License v3.0 (AGPL-3.0)
+
+## Additional QML card decks (ported for parity with the official client)
+
+The following vector decks (each `0.svg`–`51.svg` + `flipside.svg`) are taken
+from the **PokerTH** project (`src/gui/qt6-qml/data/gfx/qml/cards/` and
+`.../backside/`) and redistributed under the AGPL-3.0:
+
+- Stardust Light / Stardust Dark, Nobus 4 colours classic, Star Trek, Lemming,
+  Xanax parchment — © the PokerTH development team.
+- Bella Union 4 colours — © Julio Gomez (julio.go83@gmail.com).
+
+- Source: https://github.com/pokerth/pokerth (branch `stable`,
+  `src/gui/qt6-qml/` data resources)
+- License: GNU Affero General Public License v3.0 (AGPL-3.0)
