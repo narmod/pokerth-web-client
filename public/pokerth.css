@@ -7498,6 +7498,17 @@ html[data-buttons="pokerth"] .btn-action[disabled] { filter: grayscale(0.55) bri
 @media (max-width: 640px) {
   .lobby-footbar { flex-wrap:wrap; }
   .lobby-footbar .lfb-name { flex:1 1 100%; }
+  /* Mobile : Rejoindre/Spectateur uniquement sur les cartes de table.
+     On masque leurs doublons de la barre du bas (pseudo + Créer restent). */
+  .lobby-footbar .lfb-join,
+  .lobby-footbar .lfb-spectate { display: none; }
+}
+
+/* Desktop / tablette (> 640) : Rejoindre/Spectateur uniquement via la barre du
+   bas (sur la table selectionnee). On retire leurs doublons sur chaque carte —
+   la ligne reste cliquable pour selectionner la table. */
+@media (min-width: 641px) {
+  #s-lobby .game-row.gcard .btn-join { display: none; }
 }
 
 /* Infos placeholder (rempli en Phase 2) */
