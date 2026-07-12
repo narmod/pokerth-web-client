@@ -521,6 +521,7 @@ function openAdvancedOptions() {
   sync('adv-autobtn', 'show_auto', true);
   sync('adv-quickbet', 'show_pct', true);
   sync('adv-voice', 'voice', false);
+  sync('adv-haptic', 'haptic', true);
   sync('adv-displaybb', 'display_bb', false);
   sync('adv-nohideignored', 'no_hide_ignored', false);
   sync('adv-fkeysalt', 'fkeys_alt', false);
@@ -13739,7 +13740,6 @@ function toggleMusicPanel() {
     try { if (window.Music && window.Music.mount) window.Music.mount(document.getElementById('music-body')); } catch (e) {}
     // Reflet de l'etat vibration sur la case Vibration (deplacee ici depuis le
     // menu crantee). Defaut ON : pth_haptic absent => coche.
-    try { var _hb = document.getElementById('music-haptic'); if (_hb) _hb.checked = (localStorage.getItem('pth_haptic') !== '0'); } catch (e) {}
     // Draggable + resizable on desktop/tablet; fixed bottom-sheet on phones —
     // same window system as the chat / log / reaction panels.
     if (_winGate()) {
@@ -14043,7 +14043,7 @@ function renderPlayersList() {
   body.innerHTML = _shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>';
 }
 
-;(function(){ window.BUILD_VERSION='0.3.375-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.376-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

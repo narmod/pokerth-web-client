@@ -1566,12 +1566,6 @@ function onAvatarImageChosen(input) {
     <button class="music-panel-close" onclick="toggleMusicPanel()" title="Close" data-i18n-title="closeTooltip" aria-label="Close">✕</button>
   </div>
   <div class="music-body" id="music-body"></div>
-  <div class="music-foot">
-    <label class="music-foot-row">
-      <input type="checkbox" id="music-haptic" onchange="setHaptic(this.checked)">
-      <span class="music-foot-lbl"><span style="margin-right:8px">📳</span><span data-i18n="hapticLabel">Vibration</span></span>
-    </label>
-  </div>
 </div>
 
 <!-- ES module: must load BEFORE the main script so its window.* aliases
@@ -1898,6 +1892,7 @@ if ('serviceWorker' in navigator) {
       <label class="adv-row"><input type="checkbox" id="adv-autobtn" onchange="setAutoBtn(this.checked)"><span data-i18n="autoBtnLabel">Auto mode selector</span></label>
       <label class="adv-row"><input type="checkbox" id="adv-quickbet" onchange="setQuickBet(this.checked)"><span data-i18n="quickBetLabel">Quick-bet buttons</span></label>
       <label class="adv-row"><input type="checkbox" id="adv-voice" onchange="setVoice(this.checked)"><span data-i18n="voiceLabel">Voice announcements</span></label>
+      <label class="adv-row"><input type="checkbox" id="adv-haptic" onchange="setHaptic(this.checked)"><span data-i18n="hapticLabel">Vibration</span></label>
       <label class="adv-row"><input type="checkbox" id="adv-displaybb" onchange="setDisplayBB(this.checked)"><span data-i18n="advDisplayBB">Show amounts in big blinds</span></label>
 
       <div class="adv-sec" data-i18n="advSecTable">Table</div>
