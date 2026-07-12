@@ -155,9 +155,9 @@ html { touch-action: manipulation; -webkit-text-size-adjust: 100%; text-size-adj
   --modal-bg:   linear-gradient(160deg, #f6f8fb 0%, #e9edf4 50%, #f2f5f9 100%);
   --panel:      rgba(248,250,253,0.94);
   --panel-hi:   rgba(255,255,255,0.96);
-  --gold:       #9a7d0a;
-  --gold-rgb:   154,125,10;
-  --gold-hi:    #c2a02e;
+  --gold:       #1d222b;
+  --gold-rgb:   29,34,43;
+  --gold-hi:    #000000;
   --gold-dim:   #576378;
   --sel:        #9a7d0a;
   --sel-rgb:    154,125,10;
