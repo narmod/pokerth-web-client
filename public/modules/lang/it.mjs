@@ -121,7 +121,7 @@ export const strings = {
   winResetTooltip: 'Reimposta finestre',
     musicPlayer:'Lettore',
     soundVolume:'Suoni di gioco',
-    musicTooltip:'Suoni & Musica', musicPanelTitle:'Suoni & Musica', musicNowPlaying:'In riproduzione', musicNoTracks:'Nessun brano disponibile', musicVolume:'Volume', musicPlay:'Riproduci', musicPause:'Pausa', musicStop:'Interrompi', musicNext:'Successivo', musicPrev:'Precedente', musicTrack:'Brano', musicRepeat:'Ripeti', musicRepeatOne:'Ripeti brano', musicRepeatAll:'Ripeti playlist', musicRepeatOff:'Riproduci una volta',
+    musicTooltip:'Suoni & Musica', musicPanelTitle:'Lettore musicale', musicNowPlaying:'In riproduzione', musicNoTracks:'Nessun brano disponibile', musicVolume:'Volume', musicPlay:'Riproduci', musicPause:'Pausa', musicStop:'Interrompi', musicNext:'Successivo', musicPrev:'Precedente', musicTrack:'Brano', musicRepeat:'Ripeti', musicRepeatOne:'Ripeti brano', musicRepeatAll:'Ripeti playlist', musicRepeatOff:'Riproduci una volta',
   seatCard: 'Card', seatCompact: 'Compact', seatBar: 'Bar',
   seatChip: 'Chip',
   sectionSeat: 'Posti', seatClassic: 'Classic', seatPlate: 'Plate',

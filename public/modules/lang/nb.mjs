@@ -115,7 +115,7 @@ export const strings = {
   winResetTooltip: 'Tilbakestill vinduer',
     musicPlayer:'Avspiller',
     soundVolume:'Spillyder',
-    musicTooltip:'Lyd & Musikk', musicPanelTitle:'Lyd & Musikk', musicNowPlaying:'Spilles nå', musicNoTracks:'Ingen spor tilgjengelig', musicVolume:'Volum', musicPlay:'Spill', musicPause:'Pause', musicStop:'Stopp', musicNext:'Neste', musicPrev:'Forrige', musicTrack:'Spor', musicRepeat:'Gjenta', musicRepeatOne:'Gjenta spor', musicRepeatAll:'Gjenta spilleliste', musicRepeatOff:'Spill én gang',
+    musicTooltip:'Lyd & Musikk', musicPanelTitle:'Musikkspiller', musicNowPlaying:'Spilles nå', musicNoTracks:'Ingen spor tilgjengelig', musicVolume:'Volum', musicPlay:'Spill', musicPause:'Pause', musicStop:'Stopp', musicNext:'Neste', musicPrev:'Forrige', musicTrack:'Spor', musicRepeat:'Gjenta', musicRepeatOne:'Gjenta spor', musicRepeatAll:'Gjenta spilleliste', musicRepeatOff:'Spill én gang',
   seatCard: 'Card', seatCompact: 'Compact', seatBar: 'Bar',
   seatChip: 'Chip',
   sectionSeat: 'Plasser', seatClassic: 'Classic', seatPlate: 'Plate',

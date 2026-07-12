@@ -118,7 +118,7 @@ export const strings = {
   winResetTooltip: 'Pencereleri sıfırla',
     musicPlayer:'Oynatıcı',
     soundVolume:'Oyun sesleri',
-    musicTooltip:'Ses & Müzik', musicPanelTitle:'Ses & Müzik', musicNowPlaying:'Şimdi çalıyor', musicNoTracks:'Parça yok', musicVolume:'Ses', musicPlay:'Oynat', musicPause:'Duraklat', musicStop:'Durdur', musicNext:'Sonraki', musicPrev:'Önceki', musicTrack:'Parça', musicRepeat:'Tekrarla', musicRepeatOne:'Parçayı tekrarla', musicRepeatAll:'Listeyi tekrarla', musicRepeatOff:'Bir kez çal',
+    musicTooltip:'Ses & Müzik', musicPanelTitle:'Müzik çalar', musicNowPlaying:'Şimdi çalıyor', musicNoTracks:'Parça yok', musicVolume:'Ses', musicPlay:'Oynat', musicPause:'Duraklat', musicStop:'Durdur', musicNext:'Sonraki', musicPrev:'Önceki', musicTrack:'Parça', musicRepeat:'Tekrarla', musicRepeatOne:'Parçayı tekrarla', musicRepeatAll:'Listeyi tekrarla', musicRepeatOff:'Bir kez çal',
   seatCard: 'Card', seatCompact: 'Compact', seatBar: 'Bar',
   seatChip: 'Chip',
   sectionSeat: 'Koltuklar', seatClassic: 'Classic', seatPlate: 'Plate',

@@ -116,7 +116,7 @@ export const strings = {
   winResetTooltip: 'Resetează ferestrele',
     musicPlayer:'Player',
     soundVolume:'Sunetele jocului',
-    musicTooltip:'Sunete & Muzică', musicPanelTitle:'Sunete & Muzică', musicNowPlaying:'Se redă acum', musicNoTracks:'Nicio piesă disponibilă', musicVolume:'Volum', musicPlay:'Redare', musicPause:'Pauză', musicStop:'Oprire', musicNext:'Următoarea', musicPrev:'Anterioara', musicTrack:'Piesă', musicRepeat:'Repetare', musicRepeatOne:'Repetă piesa', musicRepeatAll:'Repetă lista', musicRepeatOff:'Redă o dată',
+    musicTooltip:'Sunete & Muzică', musicPanelTitle:'Player muzical', musicNowPlaying:'Se redă acum', musicNoTracks:'Nicio piesă disponibilă', musicVolume:'Volum', musicPlay:'Redare', musicPause:'Pauză', musicStop:'Oprire', musicNext:'Următoarea', musicPrev:'Anterioara', musicTrack:'Piesă', musicRepeat:'Repetare', musicRepeatOne:'Repetă piesa', musicRepeatAll:'Repetă lista', musicRepeatOff:'Redă o dată',
   seatCard: 'Card', seatCompact: 'Compact', seatBar: 'Bar',
   seatChip: 'Chip',
   sectionSeat: 'Locuri', seatClassic: 'Classic', seatPlate: 'Plate',

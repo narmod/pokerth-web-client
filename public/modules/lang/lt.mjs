@@ -116,7 +116,7 @@ export const strings = {
   winResetTooltip: 'Atstatyti langus',
     musicPlayer:'Grotuvas',
     soundVolume:'Žaidimo garsai',
-    musicTooltip:'Garsai & Muzika', musicPanelTitle:'Garsai & Muzika', musicNowPlaying:'Dabar groja', musicNoTracks:'Nėra takelių', musicVolume:'Garsumas', musicPlay:'Groti', musicPause:'Pristabdyti', musicStop:'Stabdyti', musicNext:'Kitas', musicPrev:'Ankstesnis', musicTrack:'Takelis', musicRepeat:'Kartoti', musicRepeatOne:'Kartoti takelį', musicRepeatAll:'Kartoti grojaraštį', musicRepeatOff:'Groti vieną kartą',
+    musicTooltip:'Garsai & Muzika', musicPanelTitle:'Muzikos grotuvas', musicNowPlaying:'Dabar groja', musicNoTracks:'Nėra takelių', musicVolume:'Garsumas', musicPlay:'Groti', musicPause:'Pristabdyti', musicStop:'Stabdyti', musicNext:'Kitas', musicPrev:'Ankstesnis', musicTrack:'Takelis', musicRepeat:'Kartoti', musicRepeatOne:'Kartoti takelį', musicRepeatAll:'Kartoti grojaraštį', musicRepeatOff:'Groti vieną kartą',
   seatCard: 'Card', seatCompact: 'Compact', seatBar: 'Bar',
   seatChip: 'Chip',
   sectionSeat: 'Vietos', seatClassic: 'Classic', seatPlate: 'Plate',

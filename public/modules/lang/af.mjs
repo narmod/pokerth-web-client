@@ -116,7 +116,7 @@ export const strings = {
   winResetTooltip: 'Herstel vensters',
     musicPlayer:'Speler',
     soundVolume:'Spelklanke',
-    musicTooltip:'Klank & Musiek', musicPanelTitle:'Klank & Musiek', musicNowPlaying:'Speel nou', musicNoTracks:'Geen snitte beskikbaar nie', musicVolume:'Volume', musicPlay:'Speel', musicPause:'Onderbreek', musicStop:'Stop', musicNext:'Volgende', musicPrev:'Vorige', musicTrack:'Snit', musicRepeat:'Herhaal', musicRepeatOne:'Herhaal snit', musicRepeatAll:'Herhaal speellys', musicRepeatOff:'Speel een keer',
+    musicTooltip:'Klank & Musiek', musicPanelTitle:'Musiekspeler', musicNowPlaying:'Speel nou', musicNoTracks:'Geen snitte beskikbaar nie', musicVolume:'Volume', musicPlay:'Speel', musicPause:'Onderbreek', musicStop:'Stop', musicNext:'Volgende', musicPrev:'Vorige', musicTrack:'Snit', musicRepeat:'Herhaal', musicRepeatOne:'Herhaal snit', musicRepeatAll:'Herhaal speellys', musicRepeatOff:'Speel een keer',
   seatCard: 'Card', seatCompact: 'Compact', seatBar: 'Bar',
   seatChip: 'Chip',
   sectionSeat: 'Sitplekke', seatClassic: 'Classic', seatPlate: 'Plate',

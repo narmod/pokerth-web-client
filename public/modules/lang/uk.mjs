@@ -115,7 +115,7 @@ export const strings = {
   winResetTooltip: 'Скинути вікна',
     musicPlayer:'Програвач',
     soundVolume:'Звуки гри',
-    musicTooltip:'Звук & Музика', musicPanelTitle:'Звук & Музика', musicNowPlaying:'Зараз грає', musicNoTracks:'Немає доступних треків', musicVolume:'Гучність', musicPlay:'Відтворити', musicPause:'Пауза', musicStop:'Стоп', musicNext:'Наступний', musicPrev:'Попередній', musicTrack:'Трек', musicRepeat:'Повтор', musicRepeatOne:'Повтор треку', musicRepeatAll:'Повтор плейлиста', musicRepeatOff:'Відтворити один раз',
+    musicTooltip:'Звук & Музика', musicPanelTitle:'Музичний плеєр', musicNowPlaying:'Зараз грає', musicNoTracks:'Немає доступних треків', musicVolume:'Гучність', musicPlay:'Відтворити', musicPause:'Пауза', musicStop:'Стоп', musicNext:'Наступний', musicPrev:'Попередній', musicTrack:'Трек', musicRepeat:'Повтор', musicRepeatOne:'Повтор треку', musicRepeatAll:'Повтор плейлиста', musicRepeatOff:'Відтворити один раз',
   seatCard: 'Card', seatCompact: 'Compact', seatBar: 'Bar',
   seatChip: 'Chip',
   sectionSeat: 'Місця', seatClassic: 'Classic', seatPlate: 'Plate',

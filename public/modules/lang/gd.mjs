@@ -117,7 +117,7 @@ export const strings = {
   winResetTooltip: 'Ath-shuidhich na h-uinneagan',
     musicPlayer:'Cluicheadair',
     soundVolume:'Fuaimean geama',
-    musicTooltip:'Fuaim & Ceòl', musicPanelTitle:'Fuaim & Ceòl', musicNowPlaying:'A\' cluich an-dràsta', musicNoTracks:'Chan eil traca sam bith ann', musicVolume:'Àirde na fuaime', musicPlay:'Cluich', musicPause:'Cuir \'na stad', musicStop:'Sguir', musicNext:'Air adhart', musicPrev:'Air ais', musicTrack:'Traca', musicRepeat:'Ath-chluich', musicRepeatOne:'Ath-chluich an traca', musicRepeatAll:'Ath-chluich an liosta', musicRepeatOff:'Cluich aon turas',
+    musicTooltip:'Fuaim & Ceòl', musicPanelTitle:'Cluicheadair ciùil', musicNowPlaying:'A\' cluich an-dràsta', musicNoTracks:'Chan eil traca sam bith ann', musicVolume:'Àirde na fuaime', musicPlay:'Cluich', musicPause:'Cuir \'na stad', musicStop:'Sguir', musicNext:'Air adhart', musicPrev:'Air ais', musicTrack:'Traca', musicRepeat:'Ath-chluich', musicRepeatOne:'Ath-chluich an traca', musicRepeatAll:'Ath-chluich an liosta', musicRepeatOff:'Cluich aon turas',
   seatCard: 'Card', seatCompact: 'Compact', seatBar: 'Bar',
   seatChip: 'Chip',
   sectionSeat: 'Suidheachain', seatClassic: 'Classic', seatPlate: 'Plate',

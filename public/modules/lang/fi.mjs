@@ -115,7 +115,7 @@ export const strings = {
   winResetTooltip: 'Palauta ikkunat',
     musicPlayer:'Soitin',
     soundVolume:'Pelin äänet',
-    musicTooltip:'Äänet & Musiikki', musicPanelTitle:'Äänet & Musiikki', musicNowPlaying:'Nyt soi', musicNoTracks:'Ei kappaleita saatavilla', musicVolume:'Äänenvoimakkuus', musicPlay:'Toista', musicPause:'Keskeytä', musicStop:'Pysäytä', musicNext:'Seuraava', musicPrev:'Edellinen', musicTrack:'Kappale', musicRepeat:'Kertaa', musicRepeatOne:'Kertaa kappale', musicRepeatAll:'Kertaa soittolista', musicRepeatOff:'Toista kerran',
+    musicTooltip:'Äänet & Musiikki', musicPanelTitle:'Musiikkisoitin', musicNowPlaying:'Nyt soi', musicNoTracks:'Ei kappaleita saatavilla', musicVolume:'Äänenvoimakkuus', musicPlay:'Toista', musicPause:'Keskeytä', musicStop:'Pysäytä', musicNext:'Seuraava', musicPrev:'Edellinen', musicTrack:'Kappale', musicRepeat:'Kertaa', musicRepeatOne:'Kertaa kappale', musicRepeatAll:'Kertaa soittolista', musicRepeatOff:'Toista kerran',
   seatCard: 'Card', seatCompact: 'Compact', seatBar: 'Bar',
   seatChip: 'Chip',
   sectionSeat: 'Paikat', seatClassic: 'Classic', seatPlate: 'Plate',

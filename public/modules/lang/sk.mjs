@@ -116,7 +116,7 @@ export const strings = {
   winResetTooltip: 'Obnoviť okná',
     musicPlayer:'Prehrávač',
     soundVolume:'Zvuky hry',
-    musicTooltip:'Zvuky & Hudba', musicPanelTitle:'Zvuky & Hudba', musicNowPlaying:'Práve hrá', musicNoTracks:'Žiadne skladby k dispozícii', musicVolume:'Hlasitosť', musicPlay:'Prehrať', musicPause:'Pozastaviť', musicStop:'Zastaviť', musicNext:'Ďalšia', musicPrev:'Predchádzajúca', musicTrack:'Skladba', musicRepeat:'Opakovať', musicRepeatOne:'Opakovať skladbu', musicRepeatAll:'Opakovať playlist', musicRepeatOff:'Prehrať raz',
+    musicTooltip:'Zvuky & Hudba', musicPanelTitle:'Prehrávač hudby', musicNowPlaying:'Práve hrá', musicNoTracks:'Žiadne skladby k dispozícii', musicVolume:'Hlasitosť', musicPlay:'Prehrať', musicPause:'Pozastaviť', musicStop:'Zastaviť', musicNext:'Ďalšia', musicPrev:'Predchádzajúca', musicTrack:'Skladba', musicRepeat:'Opakovať', musicRepeatOne:'Opakovať skladbu', musicRepeatAll:'Opakovať playlist', musicRepeatOff:'Prehrať raz',
   seatCard: 'Card', seatCompact: 'Compact', seatBar: 'Bar',
   seatChip: 'Chip',
   sectionSeat: 'Miesta', seatClassic: 'Classic', seatPlate: 'Plate',

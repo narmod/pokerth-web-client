@@ -120,7 +120,7 @@ export const strings = {
   winResetTooltip: 'विंडो रीसेट करें',
     musicPlayer:'प्लेयर',
     soundVolume:'गेम ध्वनियाँ',
-    musicTooltip:'ध्वनि & संगीत', musicPanelTitle:'ध्वनि & संगीत', musicNowPlaying:'अभी चल रहा है', musicNoTracks:'कोई ट्रैक उपलब्ध नहीं', musicVolume:'वॉल्यूम', musicPlay:'चलाएँ', musicPause:'रोकें', musicStop:'बंद करें', musicNext:'अगला', musicPrev:'पिछला', musicTrack:'ट्रैक', musicRepeat:'दोहराएँ', musicRepeatOne:'एक ट्रैक दोहराएँ', musicRepeatAll:'प्लेलिस्ट दोहराएँ', musicRepeatOff:'एक बार चलाएँ',
+    musicTooltip:'ध्वनि & संगीत', musicPanelTitle:'संगीत प्लेयर', musicNowPlaying:'अभी चल रहा है', musicNoTracks:'कोई ट्रैक उपलब्ध नहीं', musicVolume:'वॉल्यूम', musicPlay:'चलाएँ', musicPause:'रोकें', musicStop:'बंद करें', musicNext:'अगला', musicPrev:'पिछला', musicTrack:'ट्रैक', musicRepeat:'दोहराएँ', musicRepeatOne:'एक ट्रैक दोहराएँ', musicRepeatAll:'प्लेलिस्ट दोहराएँ', musicRepeatOff:'एक बार चलाएँ',
   seatCard: 'Card', seatCompact: 'Compact', seatBar: 'Bar',
   seatChip: 'Chip',
   sectionSeat: 'सीटें', seatClassic: 'Classic', seatPlate: 'Plate',

@@ -115,7 +115,7 @@ export const strings = {
   winResetTooltip: 'Redefinir janelas',
     musicPlayer:'Reprodutor',
     soundVolume:'Sons do jogo',
-    musicTooltip:'Sons & Música', musicPanelTitle:'Sons & Música', musicNowPlaying:'Tocando agora', musicNoTracks:'Nenhuma faixa disponível', musicVolume:'Volume', musicPlay:'Reproduzir', musicPause:'Pausar', musicStop:'Parar', musicNext:'Próxima', musicPrev:'Anterior', musicTrack:'Faixa', musicRepeat:'Repetir', musicRepeatOne:'Repetir faixa', musicRepeatAll:'Repetir playlist', musicRepeatOff:'Reproduzir uma vez',
+    musicTooltip:'Sons & Música', musicPanelTitle:'Reprodutor de música', musicNowPlaying:'Tocando agora', musicNoTracks:'Nenhuma faixa disponível', musicVolume:'Volume', musicPlay:'Reproduzir', musicPause:'Pausar', musicStop:'Parar', musicNext:'Próxima', musicPrev:'Anterior', musicTrack:'Faixa', musicRepeat:'Repetir', musicRepeatOne:'Repetir faixa', musicRepeatAll:'Repetir playlist', musicRepeatOff:'Reproduzir uma vez',
   seatCard: 'Card', seatCompact: 'Compact', seatBar: 'Bar',
   seatChip: 'Chip',
   sectionSeat: 'Assentos', seatClassic: 'Classic', seatPlate: 'Plate',
