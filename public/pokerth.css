@@ -2362,13 +2362,12 @@ body {
 #connect-overflow-menu {
   display: none;
   position: absolute;
-  top: 100%;
+  top: calc(100% + 6px);
   right: 0;
   z-index: 200;
   background: var(--modal-bg);
   border: 1px solid var(--border-hi);
-  border-top: none;
-  border-radius: 0 0 6px 6px;
+  border-radius: 10px;
   padding: 6px 5px;
   /* Largeur FIXE : le menu ne doit plus s'élargir/rétrécir selon la
      longueur du libellé (✓ présent ou non, FR/EN). */
@@ -6962,7 +6961,7 @@ html[data-seat-edit="1"] #g-seats .seat.seat-ghost { outline: none; cursor: defa
 
 #s-connect .connect-header .cl-menu {
   position: absolute;
-  top: 100%;
+  top: calc(100% + 6px);
   left: 0;
   z-index: 200;
   width: 232px;
@@ -6973,8 +6972,7 @@ html[data-seat-edit="1"] #g-seats .seat.seat-ghost { outline: none; cursor: defa
   box-sizing: border-box;
   background: var(--modal-bg);
   border: 1px solid var(--border-hi);
-  border-top: none;
-  border-radius: 0 0 6px 6px;
+  border-radius: 10px;
   box-shadow: 0 12px 32px rgba(0,0,0,0.7);
 }
 /* Lignes du menu : on neutralise la « chip » héritée des .btn-sm du
