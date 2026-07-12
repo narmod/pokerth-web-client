@@ -5849,6 +5849,14 @@ body:not(.in-game) .my-zone {
 /* Créer — couleur identique au bouton Créer du lobby (.lfb-create : or/neutre teinté), un peu plus large */
 .cf-actions .cf-create-btn { flex-grow: 1.6; background: #2b3444; color: #ffffff; border-color: transparent; }
 .cf-actions .cf-create-btn:hover { background: #384252; }
+/* Mobile (<640px) : la barre passe sur deux lignes. Reset (icône) + Annuler
+   restent en haut ; « Créer » — l'action primaire — descend pleine largeur sur
+   sa propre ligne, donc jamais tronquée quelle que soit la langue (fr « ＋ Créer
+   cette table », de…), et devient une plus grande cible tactile. */
+@media (max-width: 639px) {
+  .cf-actions { flex-wrap: wrap; }
+  .cf-actions .cf-create-btn { flex: 1 0 100%; }
+}
 
 /* ── Reusable toast (showToast in pokerth.js) ──
    Styled to match the header ••• overflow menu: dark panel, gold-hi hairline
