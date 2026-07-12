@@ -2062,6 +2062,13 @@ body {
   /* Aligne sur GameActionBar QML : rangee ~54 px, police 15 px. */
   .btn-action { font-size: 0.94rem !important; padding: 18px 18px !important; }
   .btn-pct { padding: 7px 6px !important; }
+  /* Bouton Tapis compact facon All-In QML (~52 px, pas de montant). Desktop
+     souris uniquement -> ne touche pas le rendu mobile. */
+  .mid-row .btn-allin {
+    flex: 0 0 52px !important; width: 52px !important; min-width: 52px !important;
+    box-sizing: border-box; padding-left: 6px !important; padding-right: 6px !important;
+    font-size: 0.82rem !important;
+  }
   /* Pas d'agrandissement des spans quick-bet : meme taille qu'en base/mobile
      pour garder les boutons 1/3 - 1/2 - Pot a la meme hauteur (compacte). */
   .raise-row .raise-input { font-size: 0.85rem !important; }
