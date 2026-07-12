@@ -4024,6 +4024,46 @@ const App = (() => {
     }
   }
 
+  // ──────────────────────────────────────────────────────────────
+  // En-tete de jeu : nom de la table + badges de statut, centres.
+  // _updateGameHeader() peuple #g-name (nom reel de la partie),
+  // #g-admin-badge (visible si je suis admin) et #g-public-badge
+  // (Public/Prive selon _gameMeta.priv). _resetGameHeader() remet
+  // l'etiquette "TABLE" et masque les badges au depart de la table.
+  // ──────────────────────────────────────────────────────────────
+  function _updateGameHeader() {
+    var nameEl = document.getElementById('g-name');
+    if (nameEl && _gameMeta) {
+      nameEl.textContent = _gameMeta.name || ('#' + (_gameMeta.id || gId));
+    }
+    var adm = document.getElementById('g-admin-badge');
+    if (adm) adm.style.display = amGameAdmin ? '' : 'none';
+    var pub = document.getElementById('g-public-badge');
+    if (pub) {
+      var priv = !!(_gameMeta && _gameMeta.priv);
+      pub.style.display = '';
+      pub.classList.toggle('g-status-private', priv);
+      pub.classList.toggle('g-status-public', !priv);
+      if (pub.firstChild && pub.firstChild.nodeType === 3) {
+        pub.firstChild.nodeValue = priv ? '\uD83D\uDD12\u00a0' : '\uD83C\uDF10\u00a0';
+      }
+      var lbl = pub.querySelector('span');
+      if (lbl) {
+        var key = priv ? 'piPrivate' : 'piPublic';
+        lbl.setAttribute('data-i18n', key);
+        lbl.textContent = t(key);
+      }
+    }
+  }
+  window._updateGameHeader = _updateGameHeader;
+
+  function _resetGameHeader() {
+    var n = document.getElementById('g-name'); if (n) n.textContent = 'TABLE';
+    var a = document.getElementById('g-admin-badge'); if (a) a.style.display = 'none';
+    var pb = document.getElementById('g-public-badge'); if (pb) pb.style.display = 'none';
+  }
+  window._resetGameHeader = _resetGameHeader;
+
   function openGameInfoPopup() {
     var modal = document.getElementById('game-info-modal');
     if (!modal) return;
@@ -6201,12 +6241,11 @@ const App = (() => {
           timeout:    _gm.timeout || gameTimeout || 15,
           startMoney: _gm.startMoney || gameStartMoney || 3000,
         };
-        // Note: we intentionally keep the static "TABLE" label in the
-        // header rather than swapping in _gameMeta.name. Long table
-        // names like "WebGame-Nono le rigolo" overflow the header on
-        // mobile and hide the admin badge + control buttons. The full
-        // name is still shown as the title of the game-info modal
-        // when the user clicks "TABLE".
+        // Le header affiche desormais le nom reel de la partie (centre) +
+        // les badges de statut (Admin / Public-Prive), tout en restant
+        // cliquable pour ouvrir la modale de details. Le nom tronque en
+        // "..." cote CSS pour ne pas deborder sur mobile.
+        try { _updateGameHeader(); } catch(e) {}
         var acb = document.getElementById('admin-close-btn');
         if (acb) acb.style.display = amGameAdmin ? '' : 'none';
         var asb = document.getElementById('admin-start-btn');
@@ -6303,6 +6342,7 @@ const App = (() => {
         }
         const admBadge = document.getElementById('g-admin-badge');
         if (admBadge) admBadge.style.display = amGameAdmin ? '' : 'none';
+        try { _updateGameHeader(); } catch(e) {}
         setTimeout(function(){ autoScaleTable(); }, 200);
         renderWaitingPanel();
         // The list of already-present players arrives via subsequent
@@ -7193,6 +7233,7 @@ const App = (() => {
         const newAdminId = Proto.u32(sub, 2);
         if (newAdminId !== myId) amGameAdmin = false;
         else amGameAdmin = true;
+        try { _updateGameHeader(); } catch(e) {}
         break;
       }
 
@@ -11559,11 +11600,12 @@ function dismissWinner() {
       [ 'admin-close-btn', 'admin-close-mob',
         'admin-start-btn', 'admin-start-mob',
         'admin-kick-btn', 'admin-kick-mob',
-        'g-admin-badge', 'g-endgame-overlay'
+        'g-admin-badge', 'g-public-badge', 'g-endgame-overlay'
       ].forEach(function (id) {
         var el = document.getElementById(id);
         if (el) el.style.display = 'none';
       });
+      try { _resetGameHeader(); } catch (e) {}
     },
 
     leaveGame() {
@@ -13985,7 +14027,7 @@ function renderPlayersList() {
   body.innerHTML = _shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>';
 }
 
-;(function(){ window.BUILD_VERSION='0.3.347-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.348-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

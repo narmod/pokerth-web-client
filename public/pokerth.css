@@ -625,6 +625,78 @@ body {
   color: var(--gold);
 }
 
+/* ── En-tête de jeu : nom de table centré + badges de statut (palette QML) ──
+   Le libellé statique « TABLE » devient le nom réel de la partie, centré sur
+   la barre (position absolue → indépendant de la largeur des boutons), suivi
+   de badges Admin (or #E3C800) et Public/Privé (vert #27ae60). Reste cliquable
+   → openGameInfoPopup(). Le nom tronque en « … » ; les badges ne rétrécissent
+   pas (le nom cède en premier). */
+.header-brand--game {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  max-width: min(72vw, 560px);
+  justify-content: center;
+  pointer-events: none;   /* les zones vides laissent passer les clics aux boutons */
+  z-index: 1;
+}
+.header-brand--game .g-brand-click {
+  pointer-events: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  max-width: 100%;
+  cursor: pointer;
+}
+/* Annule l'atténuation globale `.header-brand span { opacity:.6 }` (definie
+   plus bas → on double la classe pour gagner en specificite). */
+.header-brand.header-brand--game span { opacity: 1; font-size: inherit; }
+.header-brand--game #g-name {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--text-hi);
+  transition: color 0.15s;
+}
+.header-brand--game .g-brand-click:hover #g-name { color: var(--gold); }
+.g-brand-sep { color: var(--text); opacity: 0.45; flex-shrink: 0; }
+.g-status-badge {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  font-family: var(--ff-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.04em;
+  padding: 2px 7px;
+  border-radius: 3px;
+  white-space: nowrap;
+  line-height: 1;
+}
+.g-status-admin {
+  color: var(--gold);
+  background: rgba(var(--gold-rgb), 0.12);
+  border: 1px solid rgba(var(--gold-rgb), 0.35);
+}
+.g-status-public {
+  color: var(--green);
+  background: rgba(var(--green-rgb), 0.12);
+  border: 1px solid rgba(var(--green-rgb), 0.35);
+}
+.g-status-private {
+  color: var(--text);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border);
+}
+/* Petits écrans : on resserre pour ne pas mordre sur les boutons du header. */
+@media (max-width: 560px) {
+  .header-brand--game { max-width: 78vw; }
+  .g-status-badge { font-size: 0.54rem; padding: 2px 5px; }
+  .header-brand--game .g-brand-click { gap: 4px; }
+}
+
 /* ── Game-info modal (opened by clicking the "TABLE" label) ──
    Centered card with backdrop. The card holds a title (table name)
    + a subtitle (admin/private badges), and a body filled by JS with
