@@ -4045,7 +4045,7 @@ const App = (() => {
       pub.classList.toggle('g-status-private', priv);
       pub.classList.toggle('g-status-public', !priv);
       if (pub.firstChild && pub.firstChild.nodeType === 3) {
-        pub.firstChild.nodeValue = priv ? '\uD83D\uDD12\u00a0' : '\uD83C\uDF10\u00a0';
+        pub.firstChild.nodeValue = priv ? '\uD83D\uDD12' : '\uD83C\uDF10';
       }
       var lbl = pub.querySelector('span');
       if (lbl) {
@@ -14027,7 +14027,7 @@ function renderPlayersList() {
   body.innerHTML = _shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>';
 }
 
-;(function(){ window.BUILD_VERSION='0.3.348-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.349-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

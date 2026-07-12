@@ -675,6 +675,7 @@ body {
   white-space: nowrap;
   line-height: 1;
 }
+.gsb-label { margin-left: 4px; }
 .g-status-admin {
   color: var(--gold);
   background: rgba(var(--gold-rgb), 0.12);
@@ -692,8 +693,10 @@ body {
 }
 /* Petits écrans : on resserre pour ne pas mordre sur les boutons du header. */
 @media (max-width: 560px) {
-  .header-brand--game { max-width: 78vw; }
-  .g-status-badge { font-size: 0.54rem; padding: 2px 5px; }
+  .header-brand--game { max-width: 82vw; }
+  /* Emoji seul (le libelle deborde sur petit ecran). */
+  .header-brand--game .gsb-label { display: none; }
+  .g-status-badge { font-size: 0.6rem; padding: 2px 5px; }
   .header-brand--game .g-brand-click { gap: 4px; }
 }
 
