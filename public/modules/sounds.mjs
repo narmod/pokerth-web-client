@@ -398,7 +398,7 @@ function toggleSound() {
   var btn = document.getElementById('sound-toggle-btn');
   if (btn) {
     btn.innerHTML    = _soundEnabled ? SND_ON_SVG : SND_OFF_SVG;
-    btn.style.color  = _soundEnabled ? '' : 'rgba(255,255,255,0.35)';
+    btn.style.opacity = _soundEnabled ? '' : '0.5';
     btn.title = _soundEnabled ? 'Mute' : 'Unmute';
   }
 }
