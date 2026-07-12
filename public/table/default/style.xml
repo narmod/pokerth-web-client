@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- PokerTH default QML table style (official). Non-fullscreen table image,
+     bottom-aligned. Imported from the official PokerTH QML client
+     (data/gfx/qml/table/default/), AGPL-3.0. Source: github.com/pokerth/pokerth. -->
+<PokerTH_TableStyle version="1.0">
+  <StyleDescription value="PokerTH default"/>
+  <Creator value="PokerTH Development Team"/>
+  <License value="AGPL-3.0"/>
+</PokerTH_TableStyle>
