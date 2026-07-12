@@ -5241,6 +5241,26 @@ body:not(.in-game) .my-zone {
   background:rgba(255,255,255,0.07);
   border-color:transparent;
 }
+/* Aucun contour au focus/clic non plus (comme le client officiel) : pas de
+   ring navigateur, pas de bord, pas d'ombre — repos, hover, focus, actif. */
+#s-connect .connect-header .btn-sm,
+#s-connect .connect-header .btn-sm:focus,
+#s-connect .connect-header .btn-sm:focus-visible,
+#s-connect .connect-header .btn-sm:active,
+#s-connect .connect-header #cl-links-connect > summary:focus,
+#s-connect .connect-header #cl-links-connect > summary:focus-visible,
+#s-lobby .header .btn-icon,
+#s-game .header .btn-icon,
+#s-lobby .header .btn-icon:focus,
+#s-game .header .btn-icon:focus,
+#s-lobby .header .btn-icon:focus-visible,
+#s-game .header .btn-icon:focus-visible,
+#s-lobby .header .btn-icon:active,
+#s-game .header .btn-icon:active{
+  outline:none;
+  border-color:transparent;
+  box-shadow:none;
+}
 #s-lobby .header #ranking-btn-lobby{ color:#E3C800; }
 #s-lobby .header #lobby-chat-btn{ color:#c3ccda; }
 #s-lobby .header #l-overflow-btn{ color:#c3ccda; }
