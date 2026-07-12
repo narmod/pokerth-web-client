@@ -35,7 +35,7 @@
 - 🃏 **Full Texas Hold'em** — flying card deals, sliding chips, 3D card flips, emoji reactions, in-game chat and a hand log
 - 🎨 **Deep theming** — mix palette × felt × deck × buttons × pucks × seats
 - 🌍 **36 languages**
-- 🤝 **Full parity with the official QML client** — F-key shortcuts, admin tools, sounds, full chat and more, kept move-for-move in sync
+- 🤝 **Tracks the official QML client** — F-key shortcuts, admin tools, sounds, full chat and more, kept in sync as the official client evolves (currently the 2.1.3 build)
 
 <p align="center">
   <img src="docs/screenshots/08-desktop-game-light.png" alt="In-game desktop view — full table, live theming, reactions, chat, action bar and hand log" width="860"/>
@@ -168,14 +168,15 @@ This project is a **web frontend** that connects to any PokerTH server directly 
 - Advanced table creation: blinds, timeout (default 15 s), max players (default 5), **bot difficulty** (Easy / Mixed / Normal / Hard), **game-style presets** (🐢 Relaxed / ⚖️ Normal / ⚡ Fast), **blind-increase schedule** (every N hands or N minutes) with a raise mode (double / to a target / keep last), table speed (1–10), deal delay, **game type** (Normal / Registered-only / Invite-only), ranking on/off, spectators allowed/blocked, bots fill (with a min-humans-before-bots threshold), and an optional password
 - Spectator mode (👁 Watch)
 - Lobby chat
+- **Waiting room** — while a table fills up, your details and chat sit centre-stage with the game list beside them on desktop, an animated "waiting for players" status, and a tap-to-expand accordion listing each table's seated players
 - **🏆 Ranking** — a leaderboard modal (🏆 button on the connect screen and in the lobby) covering **PokerTH, BBC and WEC** rankings, with a season picker, an All-Time toggle, and — on the PokerTH source — live search and pagination; results are cached briefly client-side. Tapping a player opens their **profile card** (member since, last login, current-season rank/score, last 5 games) fetched live from the same relay
 - **Invite a player** to your table from the lobby players list — reaches the invited player instantly, including on the official desktop/mobile clients
-- **Vote-kick** — any player can start a community petition to remove a disruptive player mid-game; others vote to resolve it (separate from the admin-only Kickban, see *Official client (QML) parity* below)
+- **Vote-kick** — any player can start a community petition to remove a disruptive player mid-game; others vote to resolve it (separate from the admin-only Kickban, see *Official client (QML) tracking* below)
 - **Country flag on avatar** — an optional badge showing each player's country, sourced from the server
 
 ### Poker table
 - Seats positioned according to server order, **locked after the first deal** (no mid-game layout jumps)
-- **Responsive seat layout** — on phones and tablets the seats tighten around the felt so players stay close to the table; desktop keeps the wider layout
+- **Responsive seat layout** — on phones and tablets the seats tighten around the felt so players stay close to the table; desktop keeps the wider layout. Portrait offers four seat renderings — automatic ring, official fixed slots, elliptical "necklace", and a free drag-and-drop custom layout — with seat geometry tuned to the official 2.1.3 client (self-weight 0.5, fill-cap 1.9 / 2.3)
 - **Table zoom** (desktop) — **+ / −** buttons by the table shrink the felt, community cards and opponents together (down to 60 %) or restore them up to the current size, while your own player bar and the action bar stay fixed; the level is remembered
 - Casino-style chip tokens: SB 🔵, BB 🔴, Dealer ⚫ gold — with `chipPop` animation
 - SVG arc timer around the active player's avatar + seconds badge below
@@ -186,7 +187,7 @@ This project is a **web frontend** that connects to any PokerTH server directly 
 - **Post-flop win probability** — Monte Carlo simulation against random opponent ranges
 - **Spades vs clubs visual distinction**: spades get a subtle blue tint so ♠ and ♣ never get confused on small screens
 - Pot strip showing hand number, total pot, and current betting round
-- **Table info popup** — tap the table name in the header for the full picture: game type (public/private), configuration (blinds, starting stack, action timer), live state (phase, hand number, pot) and the player list
+- **In-game header** — the table name is centred with Admin / Public-Private status badges in the official palette. Tap it for the full **table info popup**: game type (public/private), configuration (blinds, starting stack, action timer), live state (phase, hand number, pot) and the player list
 
 ### In-game settings (⚙ menu)
 Per-player toggles, remembered in `localStorage` and applied instantly:
@@ -201,11 +202,13 @@ Per-player toggles, remembered in `localStorage` and applied instantly:
 ### Themes & customization
 A full appearance system, reached from the **Theme** button — pick a one-tap preset or fine-tune every axis yourself:
 - **Presets** (one tap): **PokerTH Dark** (the default, reproducing the official client's look), **PokerTH Light**, and **Green Casino** — plus gallery themes (Midnight Blue, Graphite, Royal Purple, Sleek)
-- **Customize** — six independent axes, each remembered in `localStorage`: UI **palette**, **table felt** (Green / Blue / Burgundy / Slate / PokerTH / Textured), **card deck** (PokerTH, PokerTH 1.0, PokerTH new, Green Casino), **action buttons** (Flat / Glossy), **chip pucks**, and **seat style**
+- **Customize** — six independent axes, each remembered in `localStorage`: UI **palette**, **table felt** (a dozen styles: PokerTH, Spectator Tools, Green Casino, Danuxi Blue, Matrix, Star Trek, TripSixes, Wanted, Xanax…), **card deck** (four built-in — PokerTH, PokerTH 1.0, PokerTH new, Green Casino — plus seven official PokerTH decks in the gallery: Bella Union, Nobus Classic, Stardust (light & dark), Star Trek, Lemming, Xanax), **action buttons** (Flat / Glossy), **chip pucks**, and **seat style**
 - **Seat styles** — six theme-aware seat "packs", switchable like decks: **Classic** (the historical render), **Chip**, **Plate**, **Card**, **Compact**, and **Bar**. Pack names stay in English across all languages (like the poker terms). The default adapts to the device — **Compact on phones**, **Plate on tablet & desktop** — and any explicit choice is saved in `localStorage` and always wins
 - **Light & dark aware**: every theme carries its own `color-scheme`, and the browser status-bar `theme-color` follows the active theme
 - **Glossy coloured action buttons** (Fold red / Check-Call blue / Raise green / All-In orange) and a live preview of each card deck right in the panel
 - Fully **localized in all 36 languages** and switchable instantly, with no reload
+- **Official accent** — gold uses PokerTH's QML accent `#E3C800`, kept only for deliberate game assets (dealer button, chip denominations, win bursts)
+- **Import a style** — add a table, card deck or card-back from a `.zip` or URL (parses the four 2.1.3 style keys)
 - Operators can set a **default theme** for first-time visitors (see [the admin panel](#admin-panel))
 
 ### Player experience
@@ -237,14 +240,15 @@ A full appearance system, reached from the **Theme** button — pick a one-tap p
 - **Separate volume for sound effects and music** — adjust each independently *(on iOS the music volume can't be changed — a WebKit limitation — though the game sound effects still can)*
 - **Full i18n in 36 languages**, switchable on the fly and auto-detected from the browser locale — the complete official PokerTH language set plus community additions (Ukrainian, Romanian, Croatian, Serbian and more), with Brazilian and European Portuguese shipped as separate catalogues (pt-BR / pt-PT)
 - Fullscreen mode on all screens
-- **Detachable panels** — on desktop, drag the title bar of the chat, hand log or reactions panel to pop it out into a free-floating, movable and resizable window (the hand log and reactions also detach on tablet); a **↺** button in the header snaps every panel back to its docked spot. Window positions are remembered.
+- **On-felt panels** — chat, emoji, hand log and a new **Hand-odds (Combinaisons)** window open as compact, movable and resizable floating windows anchored under their round on-felt button (on every device, instead of taking over the screen); a **↺** button in the header snaps every panel back to its docked spot, and the table zoom is collapsible everywhere. Window positions are remembered. On phone portrait the action bar hugs the bottom edge for a full-screen table.
 - Poker hand reference overlay (? button)
 - Exponential-backoff auto-reconnect with live countdown
 
-### Official client (QML) parity
-The in-game screen was audited feature-by-feature against PokerTH's official QML client
-(sources extracted from the official Android APK builds) and brought to **full parity**
-— milestone `v0.3.166-beta`:
+### Official client (QML) tracking
+The in-game screen is audited feature-by-feature against PokerTH's official QML client
+(sources extracted from the official desktop AppImage and Android APK builds) and kept
+aligned as that client evolves. Feature parity was first reached in the `v0.3.166` series;
+the work since has been fidelity tuning against the newer **2.1.3** build:
 - **Keyboard shortcuts**: F1–F8 mirror the official client (fold / check-call / bet-raise /
   all-in, alternate key order, playing-mode switches), plus **F5** to show your cards
   after a hand that ended with no showdown
@@ -265,6 +269,16 @@ The in-game screen was audited feature-by-feature against PokerTH's official QML
   icons in the win-probability panel
 - **Ping indicator** on your own avatar, and an optional **auto-return to the lobby**
   when a game ends
+- **Fidelity pass against 2.1.3**:
+  - Action bar matched to the official layout — localized *Suivre \$X / Relancer \$X*
+    labels, a compact All-In / *Tapis* button (~52 px, no amount), quick-bet
+    1/3 · 1/2 · Pot buttons in the official dark green with no amount labels, the official
+    card ratio, and a crisp pulsed gold turn-glow; the pre-selection preview desaturates
+    uniformly when it is not your turn
+  - App chrome matched to the official client — a unified header banner across the connect,
+    lobby and in-game screens (topBar height 38 px, 30 px in landscape-compact) with
+    frameless monochrome SVG icons and floating drop-down menus
+  - Seat geometry tuned to 2.1.3 (self-weight 0.5, fill-cap 1.9 / 2.3)
 
 ### PWA
 - `manifest.json` + Service Worker (`sw.js`) with versioned **network-first** cache
@@ -968,7 +982,7 @@ A few things worth knowing if you plan to hack on this:
 <a id="roadmap"></a>
 ## Roadmap / Suggested next steps
 
-Development is tracked in **[`docs/ROADMAP.md`](docs/ROADMAP.md)**, grouped as *Shipped · Now · Next · Later*. **Full feature parity with the official QML client was reached in `v0.3.166-beta`** — every gap identified from the official APK builds has been closed (see [Official client (QML) parity](#official-client-qml-parity) above). Current focus: the registered-account login flow on pokerth.net and code-health work — splitting `pokerth.js` into modules, adding linting and an automated test suite, and moving the remaining hand-written Protobuf paths onto the generated bundle in `public/proto/`. Further out: local multiplayer over WebRTC, a streamer-friendly read-only embed, and a native review of the machine-assisted translations.
+Development is tracked in **[`docs/ROADMAP.md`](docs/ROADMAP.md)**, grouped as *Shipped · Now · Next · Later*. The in-game screen **tracks the official QML client continuously** — feature parity was first reached in the `v0.3.166` series and the work since has been fidelity tuning against the newer 2.1.3 build (see [Official client (QML) tracking](#official-client-qml-tracking) above). Current focus: the registered-account login flow on pokerth.net and code-health work — splitting `pokerth.js` into modules, adding linting and an automated test suite, and moving the remaining hand-written Protobuf paths onto the generated bundle in `public/proto/`. Further out: local multiplayer over WebRTC, a streamer-friendly read-only embed, and a native review of the machine-assisted translations.
 
 ---
 
