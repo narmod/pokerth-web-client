@@ -5206,8 +5206,8 @@ body:not(.in-game) .my-zone {
    them. Apply the same dimensions here so the three (or four) buttons
    line up neatly.
    ═══════════════════════════════════════════════════════════════════ */
-#s-connect > div:first-child .btn-sm,
-#s-connect .corner-links .btn-sm {
+#s-connect > div:first-child .btn-icon,
+#s-connect .corner-links .btn-icon {
   height: 30px;
   min-width: 30px;
   padding: 0 10px;
@@ -5224,8 +5224,8 @@ body:not(.in-game) .my-zone {
   box-shadow: none;
   transition: background 0.2s, border-color 0.2s, color 0.2s;
 }
-#s-connect > div:first-child .btn-sm:hover,
-#s-connect .corner-links .btn-sm:hover {
+#s-connect > div:first-child .btn-icon:hover,
+#s-connect .corner-links .btn-icon:hover {
   background: rgba(255,255,255,0.07);
   border-color: transparent;
 }
@@ -5290,10 +5290,10 @@ body:not(.in-game) .my-zone {
 }
 /* Aucun contour au focus/clic non plus (comme le client officiel) : pas de
    ring navigateur, pas de bord, pas d'ombre — repos, hover, focus, actif. */
-#s-connect .connect-header .btn-sm,
-#s-connect .connect-header .btn-sm:focus,
-#s-connect .connect-header .btn-sm:focus-visible,
-#s-connect .connect-header .btn-sm:active,
+#s-connect .connect-header .btn-icon,
+#s-connect .connect-header .btn-icon:focus,
+#s-connect .connect-header .btn-icon:focus-visible,
+#s-connect .connect-header .btn-icon:active,
 #s-connect .connect-header #cl-links-connect > summary:focus,
 #s-connect .connect-header #cl-links-connect > summary:focus-visible,
 #s-lobby .header .btn-icon,
