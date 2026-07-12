@@ -4387,13 +4387,13 @@ body:not(.in-game) .my-zone {
 .btn-pct {
   flex: 1;
   display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1px;
-  background: rgba(var(--gold-rgb), 0.1); border: 1px solid var(--gold-dim);
-  color: var(--gold); padding: 7px 4px; border-radius: 7px; cursor: pointer;
+  background: #1b5e20; border: 1px solid #4CAF50;
+  color: #fff; padding: 7px 4px; border-radius: 7px; cursor: pointer;
   font-family: var(--ff-mono); text-align: center;
 }
-.btn-pct .pct-p { font-size: 0.74rem; font-weight: 700; color: var(--gold); }
+.btn-pct .pct-p { font-size: 0.74rem; font-weight: 700; color: #fff; }
 .btn-pct .pct-amt { font-size: 0.6rem; font-weight: 400; color: var(--text); }
-.btn-pct:hover { background: rgba(var(--gold-rgb), 0.22); }
+.btn-pct:hover { background: #388e3c; }
 .btn-pct:disabled,
 .btn-action:disabled {
   opacity: 0.28;
