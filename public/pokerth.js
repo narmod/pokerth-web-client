@@ -8679,7 +8679,7 @@ const App = (() => {
       return (zH - 12 - selfVisualH) - topOppBottom >= 0.95 * s * 124 + 28;
     }
 
-    var lo = 0.55, hi = fillCap(compact ? 1.9 : 1.6), sFin;   // A etape2 : plafond prudent (1.6/1.9), officiel = 1.9/2.3
+    var lo = 0.55, hi = fillCap(compact ? 2.3 : 1.9), sFin;   // A : plafond de croissance officiel 2.1.3
     if (hi < lo) hi = lo;
     if (oppCnt < 2) {
       if (!feasibleHeadsUp(lo)) sFin = lo;
@@ -13985,7 +13985,7 @@ function renderPlayersList() {
   body.innerHTML = _shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>';
 }
 
-;(function(){ window.BUILD_VERSION='0.3.346-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.347-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
