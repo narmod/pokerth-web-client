@@ -9690,6 +9690,7 @@ const App = (() => {
     } else {
       el.focus(); // Desktop : focus pour permettre l'ajustement
     }
+    if (window._syncRaiseBtnAmt) window._syncRaiseBtnAmt();
   }
   window.setPct = setPct;
   // Exposer pour les animations + fonctions globales
@@ -10055,12 +10056,8 @@ const App = (() => {
     const p33  = Math.min(myMoney, Math.max(minBet, Math.round(pot * 0.33)));
     const p50  = Math.min(myMoney, Math.max(minBet, Math.round(pot * 0.5)));
     const p100 = Math.min(myMoney, Math.max(minBet, pot));
-    // Pot odds : toCall / (pot + toCall) * 100
-    var potOdds = '';
-    if (!canCheck && toCall > 0 && pot + toCall > 0) {
-      var oddsP = Math.round(toCall / (pot + toCall) * 100);
-      potOdds = ' <span style="font-size:0.7em;opacity:0.8">(' + oddsP + '%)</span>';
-    }
+    // (Pot odds « (X%) » retire du bouton Suivre : parite GameActionBar QML
+    //  qui n'affiche que « Call $X ».)
     // Si toCall >= myMoney, le call consommerait tout le stack — c'est
     // un all-in implicite. On route vers action=6 (All-in) au lieu de
     // action=3 (Call), sinon le serveur rejette (montant > stack).
@@ -10075,7 +10072,7 @@ const App = (() => {
       callAction = 'App.doAction(6,' + myMoney + ')';
       callClass  = 'btn-call';
     } else {
-      callLabel  = t('call') + ' <b>' + fmtChips(toCall) + '</b>' + potOdds;
+      callLabel  = t('call') + ' <b>' + fmtChips(toCall) + '</b>';
       callAction = 'App.doAction(3,' + toCall + ')';
       callClass  = 'btn-call';
     }
@@ -10129,9 +10126,27 @@ const App = (() => {
       + '<div class="act-buttons-row">'
       +   '<button class="btn-action btn-fold' + _preCls('fold') + '" onclick="' + _preClk('fold', 'App.doAction(1,0)') + '" title="Fold (F)">' + t('fold') + '<span class="act-key">' + KB.fold.toUpperCase() + '</span></button>'
       +   '<button class="btn-action ' + callClass + _preCls('call') + '" onclick="' + _preClk('call', callAction) + '" title="Call/Check (C)">' + callLabel + '<span class="act-key">' + KB.call.toUpperCase() + '</span></button>'
-      +   '<button class="btn-action btn-raise raise-btn' + _preCls('raise') + '"' + da + ' onclick="' + _preClk('raise', 'App.doRaise()') + '" title="Raise (R)">' + raiseLabel + '<span class="act-key">' + KB.raise.toUpperCase() + '</span></button>'
+      +   '<button class="btn-action btn-raise raise-btn' + _preCls('raise') + '"' + da + ' onclick="' + _preClk('raise', 'App.doRaise()') + '" title="Raise (R)">' + raiseLabel + (canRaise ? ' <b class="raise-btn-amt">$' + fmtChips(minBet) + '</b>' : '') + '<span class="act-key">' + KB.raise.toUpperCase() + '</span></button>'
       + '</div>'
       + '</div>';
+
+    // Montant dynamique sur le bouton Relancer (parite GameActionBar QML :
+    // « Relancer $X », X suit le champ/slider). Def unique, appelee apres
+    // chaque injection (live + apercu) ; exposee pour setPct.
+    function _wireRaiseBtn() {
+      var _amt = document.getElementById('raise-amt');
+      var _sld = document.getElementById('raise-slider');
+      function _sync() {
+        var v = parseInt((_amt || {}).value, 10);
+        if (!Number.isFinite(v)) v = minBet;
+        var els = document.querySelectorAll('#g-actions .raise-btn-amt');
+        for (var i = 0; i < els.length; i++) els[i].textContent = '$' + fmtChips(v);
+      }
+      if (_amt) _amt.addEventListener('input', _sync);
+      if (_sld) _sld.addEventListener('input', _sync);
+      window._syncRaiseBtnAmt = _sync;
+      _sync();
+    }
 
     if (preview) {
       // Aperçu hors-tour : EXACTEMENT le même panneau, mais non interactif
@@ -10149,10 +10164,12 @@ const App = (() => {
       $('g-actions').innerHTML = _narr +
         '<div class="actions-preview" data-cap="' + esc(t('preActionTitle')) + '">' + h + '</div>';
       updateBottomLayout();
+      _wireRaiseBtn();
       return;
     }
     $('g-actions').innerHTML = h;
     updateBottomLayout(); // paysage : recalcule la reserve sous la table apres le rendu live
+    _wireRaiseBtn();
     // visual notification (they used to be one call, but the local function
     // shadowed the audio one).
     if (typeof window.notifyMyTurn === 'function') window.notifyMyTurn();
@@ -14043,7 +14060,7 @@ function renderPlayersList() {
   body.innerHTML = _shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>';
 }
 
-;(function(){ window.BUILD_VERSION='0.3.385-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.386-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
