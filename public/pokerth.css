@@ -7932,3 +7932,71 @@ html[data-box-accent][data-seat="pokerth"] .seat-plate,
 html[data-box-accent][data-seat="plate"] .seat-plate,
 html[data-box-accent][data-seat="card"] .seat-plate,
 html[data-box-accent][data-seat="bar"] .seat-plate { border-color: var(--box-accent); }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   PERF iOS — Glows composités GPU (remplace les pulses box-shadow)
+   ───────────────────────────────────────────────────────────────────────────
+   Problème : animer `box-shadow` n'est PAS composité sur iOS Safari → repaint
+   CPU à chaque frame (60 fps). Pendant une partie il y a quasi toujours ≥1
+   glow actif (anneau du siège au tour ; barre d'action pendant MON tour où
+   plusieurs se cumulaient) → chauffe soutenue.
+   Correctif : le box-shadow devient STATIQUE (rasterisé une fois) et la
+   pulsation passe par un calque ::before/::after dont on n'anime QUE
+   `opacity`/`transform` (pur compositing GPU, aucun repaint).
+   Fidélité visuelle conservée (§4.3 QML « cadre or pulsé »).
+   Neutralisé automatiquement par `html.reduce-fx` (box-shadow:none sur *::after)
+   et par prefers-reduced-motion (iteration-count:1). Sélecteurs préfixés :root
+   pour tenir la spécificité des bases data-table-fs. ═════════════════════════ */
+
+@keyframes glowRingFade  { 0%,100% { opacity:.55; transform:scale(.94); } 50% { opacity:1; transform:scale(1); } }
+@keyframes glowPulseFade { 0%,100% { opacity:.5; } 50% { opacity:1; } }
+@keyframes actBarPopT    { 0% { transform:scale(1); } 35% { transform:scale(1.03); } 100% { transform:scale(1); } }
+
+/* ── Siège au tour : anneau (ex-activeRing) ── */
+:root .seat.active .seat-avatar { animation: none !important; }   /* base statique de la 3583 conservée */
+:root .seat.active .seat-avatar::before {
+  content:""; position:absolute; inset:0; border-radius:50%;
+  pointer-events:none; z-index:-1;
+  box-shadow: 0 0 0 4px rgba(var(--gold-rgb), 0.55), 0 0 20px rgba(var(--gold-rgb), 0.6);
+  will-change: opacity, transform;
+  animation: glowRingFade 1.2s ease-in-out infinite;
+}
+
+/* ── Mon tour : barre d'action (ex-myTurnBorder / myTurnPanelGlow / actBarTurnPulse) ── */
+:root .my-zone.my-turn-active { animation: none; border-top: none; }
+:root .my-zone.my-turn-active .action-grid {
+  position: relative;
+  border-color: var(--gold);
+  box-shadow: 0 0 0 2px var(--gold), 0 0 16px 2px rgba(var(--gold-rgb), 0.42);  /* statique */
+  animation: actBarPopT 0.55s cubic-bezier(.2,.9,.3,1.15) both;                  /* pop = transform seul */
+}
+:root .my-zone.my-turn-active .action-grid::after {
+  content:""; position:absolute; inset:0; border-radius:inherit;
+  pointer-events:none; z-index:-1;
+  box-shadow: 0 0 0 2px #ffe066, 0 0 32px 7px rgba(var(--gold-rgb), 0.74);       /* pic, statique */
+  will-change: opacity;
+  animation: glowPulseFade 1.4s ease-in-out 0.5s infinite;
+}
+
+/* ── Dock joueur actif (ex-pulse-gold) ── */
+:root .player-bar.pb-active .player-bar-left { position: relative; animation: none; }
+:root .player-bar.pb-active .player-bar-left::after {
+  content:""; position:absolute; inset:0; border-radius:inherit;
+  pointer-events:none; z-index:-1;
+  box-shadow: 0 0 22px rgba(var(--gold-rgb), 0.9);
+  will-change: opacity;
+  animation: glowPulseFade 1.5s ease-in-out infinite;
+}
+
+/* ── Anti-call : bouton Call en attente de 2e tap (ex-callConfirmPulse) ── */
+:root .btn-action.btn-call.confirm-call {
+  position: relative; animation: none;
+  box-shadow: 0 0 0 2px #ffd24d, 0 0 12px rgba(240,160,32,.55);                  /* statique */
+}
+:root .btn-action.btn-call.confirm-call::after {
+  content:""; position:absolute; inset:0; border-radius:inherit;
+  pointer-events:none; z-index:-1;
+  box-shadow: 0 0 0 2px #ffd24d, 0 0 19px rgba(240,160,32,.9);
+  will-change: opacity;
+  animation: glowPulseFade .85s ease-in-out infinite;
+}
