@@ -4318,6 +4318,27 @@ body:not(.in-game) .my-zone {
   0%,100% { box-shadow: 0 6px 20px rgba(0,0,0,0.38), 0 0 0 1px var(--gold), 0 0 18px rgba(var(--gold-rgb), 0.35); }
   50%     { box-shadow: 0 6px 20px rgba(0,0,0,0.38), 0 0 0 1px #ffe066,     0 0 30px rgba(var(--gold-rgb), 0.6); }
 }
+/* ── Mon tour : halo doré NET sur le panneau d'action (TOUTES tailles) ──
+   L'ancien halo fort (myTurnPanelGlow) etait verrouille derriere
+   @media(min-width:900px) ; sur telephone/paysage court, le seul signal
+   etait la pulsation de la bordure-haut de .my-zone sur 1px -> quasi
+   invisible. Ici : cadre or pulse + petit "pop" a chaque nouveau tour,
+   partout. .action-grid est recree a chaque tour -> le pop se rejoue seul.
+   Fidelite QML §4.3 : « cadre or pulse (turn glow) quand c'est mon tour ». */
+.my-zone.my-turn-active .action-grid {
+  border-radius: 12px;
+  animation: actBarTurnPop 0.55s cubic-bezier(.2,.9,.3,1.15) both,
+             actBarTurnPulse 1.4s ease-in-out 0.5s infinite;
+}
+@keyframes actBarTurnPop {
+  0%   { box-shadow: 0 0 0 0 rgba(var(--gold-rgb), 0);            transform: scale(1); }
+  35%  { box-shadow: 0 0 0 2px var(--gold), 0 0 36px 8px rgba(var(--gold-rgb), 0.9);  transform: scale(1.03); }
+  100% { box-shadow: 0 0 0 2px var(--gold), 0 0 18px 2px rgba(var(--gold-rgb), 0.45); transform: scale(1); }
+}
+@keyframes actBarTurnPulse {
+  0%,100% { box-shadow: 0 0 0 2px var(--gold), 0 0 16px 2px rgba(var(--gold-rgb), 0.42); }
+  50%     { box-shadow: 0 0 0 2px #ffe066,     0 0 32px 7px rgba(var(--gold-rgb), 0.74); }
+}
 /* Narrateur de tour ("X ●●●") retiré (fidélité : l'officiel n'a pas ce texte,
    le tour est signalé par la surbrillance du siège). */
 .act-narrator { display: none !important; }
