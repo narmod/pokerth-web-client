@@ -5167,25 +5167,22 @@ body:not(.in-game) .my-zone {
   font-size: 0.75rem;
   line-height: 1;
   color: var(--text-hi);
-  /* Theme-adaptive opaque chip so the cluster reads over the flames bg
-     (--inset alone is ~5% and vanished on the busy backdrop). */
-  background: var(--panel);
-  border: 1px solid var(--border);
-  box-shadow: 0 2px 8px rgba(0,0,0,0.45);
-  backdrop-filter: blur(3px);
-  -webkit-backdrop-filter: blur(3px);
+  /* Frameless : icône nue sur le bandeau (plus de chip). */
+  background: transparent;
+  border: 1px solid transparent;
+  box-shadow: none;
   transition: background 0.2s, border-color 0.2s, color 0.2s;
 }
 #s-connect > div:first-child .btn-sm:hover,
 #s-connect .corner-links .btn-sm:hover {
-  background: var(--panel-hi);
-  border-color: var(--border-hi);
+  background: rgba(255,255,255,0.07);
+  border-color: transparent;
 }
 #s-connect > div:first-child .btn-icon,
 #s-connect .corner-links .btn-icon {
   width: 30px;
   padding: 0;
-  background: var(--panel);
+  background: transparent;
 }
 
 #s-connect .corner-links .btn-icon{ text-decoration:none; }
@@ -5204,8 +5201,8 @@ body:not(.in-game) .my-zone {
 }
 #s-connect .connect-header .hdr-group{ display:flex; align-items:center; gap:6px; }
 /* Ancrage des menus overflow sur LEUR bouton (et non sur toute la barre)
-   pour éviter le décalage horizontal du padding — comme le menu ☰. */
-#s-connect .connect-header .hdr-right{ position:relative; }
+   pour éviter le décalage horizontal du padding — comme le menu ☰.
+   Connexion utilise le même wrapper .hdr-ovf-wrap que lobby/jeu. */
 .hdr-ovf-wrap{ position:relative; display:inline-flex; align-items:center; }
 /* Icônes pleines : plus d'encadré (ni fond, ni bord, ni ombre) — l'icône
    seule sur la barre. */
