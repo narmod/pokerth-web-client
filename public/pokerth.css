@@ -2386,10 +2386,15 @@ body {
   width: 100%;
   box-sizing: border-box;
   text-align: left;
+  /* Lignes plates comme le menu ☰ : pas de cadre dessiné (le .btn-sm de
+     base a un border --border), fond transparent au repos. */
+  background: transparent;
+  border: 1px solid transparent;
+  box-shadow: none;
   /* padding-right généreux : on réserve la place du ✓ (positionné en
      absolu à droite) pour que le texte ne passe jamais dessous. */
   padding: 7px 30px 7px 12px;
-  border-radius: 3px;
+  border-radius: 4px;
   font-size: 0.8rem;
   position: relative;
   overflow: hidden;
@@ -2411,7 +2416,8 @@ body {
 #g-overflow-menu .btn-sm:hover,
 #l-overflow-menu .btn-sm:hover,
 #connect-overflow-menu .btn-sm:hover {
-  background: var(--border);
+  background: var(--panel-hi);
+  border-color: var(--border-hi);
 }
 /* Group separators inside the ••• menu. Plain hairline between groups,
    and a centred labelled divider for the (admin-only) action block. */
