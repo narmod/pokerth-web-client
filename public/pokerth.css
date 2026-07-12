@@ -47,8 +47,8 @@ html { touch-action: manipulation; -webkit-text-size-adjust: 100%; text-size-adj
   --rail-glow:     rgba(107,62,24,0.3);
   --panel:      rgba(8,18,10,0.88);
   --panel-hi:   rgba(14,28,16,0.9);
-  --gold:       #c8a84a;
-  --gold-rgb:   200,168,74;
+  --gold:       #E3C800;
+  --gold-rgb:   227,200,0;
   --chrome-tint: rgba(0,0,0,0.35);
   --pos:        #4cff88;
   --neg:        #ff6b6b;
@@ -62,8 +62,8 @@ html { touch-action: manipulation; -webkit-text-size-adjust: 100%; text-size-adj
   --ld-quit-fg: #fad6d0;
   --ld-create-fg: #d6f5dc;
   --wp-need-fg: #e0a040;
-  --gold-hi:    #e0c070;
-  --gold-dim:   #7a6428;
+  --gold-hi:    #f2dc4d;
+  --gold-dim:   #b09a00;
   --cream:      #ede8dc;
   --field-bg:   #0c1e0e;
   --inset: rgba(255,255,255,0.05);
@@ -90,9 +90,9 @@ html { touch-action: manipulation; -webkit-text-size-adjust: 100%; text-size-adj
   --modal-bg:   linear-gradient(160deg, #0e1014 0%, #161a20 50%, #0c0e12 100%);
   --panel:      rgba(12,14,18,0.90);
   --panel-hi:   rgba(20,23,29,0.92);
-  --gold:       #c8a84a;
-  --gold-hi:    #e0c070;
-  --gold-dim:   #7a6428;
+  --gold:       #E3C800;
+  --gold-hi:    #f2dc4d;
+  --gold-dim:   #b09a00;
   --cream:      #ece9e2;
   --field-bg:   #12151b;
   --inset: rgba(255,255,255,0.05);
@@ -155,10 +155,10 @@ html { touch-action: manipulation; -webkit-text-size-adjust: 100%; text-size-adj
   --modal-bg:   linear-gradient(160deg, #f6f8fb 0%, #e9edf4 50%, #f2f5f9 100%);
   --panel:      rgba(248,250,253,0.94);
   --panel-hi:   rgba(255,255,255,0.96);
-  --gold:       #1d222b;
-  --gold-rgb:   29,34,43;
-  --gold-hi:    #0d1117;
-  --gold-dim:   #576378;
+  --gold:       #E3C800;
+  --gold-rgb:   227,200,0;
+  --gold-hi:    #f2dc4d;
+  --gold-dim:   #b09a00;
   --sel:        #E3C800;
   --sel-rgb:    227,200,0;
   --sel-hi:     #ffd700;
@@ -182,7 +182,7 @@ html { touch-action: manipulation; -webkit-text-size-adjust: 100%; text-size-adj
   --field-bg:   #ffffff;
   --inset: rgba(0,0,0,0.06);
   --inset-hi: rgba(0,0,0,0.08);
-  --on-gold:    #fdf6e6;
+  --on-gold:    #110900;
   --text:       #576378;
   --text-hi:    #1d222b;
   --red:        #a62f22;
