@@ -1941,7 +1941,7 @@ body {
   /* ── Cartes communes (flop/turn/river) ── */
   .comm-row .pk {
     width: 62px !important;
-    height: 88px !important;
+    height: 87px !important; /* ratio carte 120:168 (0.714) */
     font-size: 1.3rem !important;
     border-radius: 7px !important;
   }
@@ -2039,7 +2039,7 @@ body {
   }
   .seat .pk.xsm {
     width: 32px !important;
-    height: 46px !important;
+    height: 45px !important; /* ratio carte 120:168 (0.714) */
     font-size: 0.8rem !important;
   }
 
@@ -2059,9 +2059,8 @@ body {
   .pb-cards     { gap: 10px !important; }
 
   /* ── Contrôles d'action ── */
-  /* Desktop souris uniquement : barre d'action plus compacte pour libérer
-     de la hauteur et mieux voir la table / les cartes. */
-  .btn-action { font-size: 0.8rem !important; padding: 8px 18px !important; }
+  /* Aligne sur GameActionBar QML : rangee ~54 px, police 15 px. */
+  .btn-action { font-size: 0.94rem !important; padding: 18px 18px !important; }
   .btn-pct { padding: 7px 6px !important; }
   /* Pas d'agrandissement des spans quick-bet : meme taille qu'en base/mobile
      pour garder les boutons 1/3 - 1/2 - Pot a la meme hauteur (compacte). */
