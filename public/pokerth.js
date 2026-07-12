@@ -5613,7 +5613,6 @@ const App = (() => {
         if ('Notification' in window && Notification.permission === 'default') {
           Notification.requestPermission().catch(function(){});
         }
-        addChat(null, t('connectedAsGuest', { name: myName, id: myId }), 'sys', { key: 'connectedAsGuest', params: { name: myName, id: myId } });
         const cfName = document.getElementById('cf-name');
         if (cfName) cfName.value = _defaultNameForMode();  // nom par défaut (mode courant / admin)
         break;
@@ -14044,7 +14043,7 @@ function renderPlayersList() {
   body.innerHTML = _shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>';
 }
 
-;(function(){ window.BUILD_VERSION='0.3.352-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.353-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
