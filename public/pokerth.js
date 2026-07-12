@@ -8572,7 +8572,7 @@ const App = (() => {
     var oppBaseW = 114, oppBaseH = 84, selfBaseW = 114, selfBaseH = 84;
     var opponentGapBase = 10, selfBadgeGapBase = 8, sideBadgeGapBase = 48;
     var gap = 12;
-    var selfWeight = compact ? 0.5 : 0.3;
+    var selfWeight = 0.5;   // 2.1.3 : arc de la perle self identique en wide et compact
     var stepDeg = oppCnt >= 1 ? 360 / (oppCnt + selfWeight) : 360;
     var firstAngle = 90 + (selfWeight * stepDeg + stepDeg) / 2;
 
@@ -13985,7 +13985,7 @@ function renderPlayersList() {
   body.innerHTML = _shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>';
 }
 
-;(function(){ window.BUILD_VERSION='0.3.342-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.343-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
