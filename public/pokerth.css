@@ -677,7 +677,11 @@ body {
   line-height: 1;
 }
 .gsb-label { margin-left: 0; }
-.g-status-badge svg { flex: none; width: 1.3em; height: 1.3em; }
+.g-status-badge svg { flex: none; width: 1.4em; height: 1.4em; }
+/* Spécificité (0,3,0) pour battre `.header-brand.header-brand--game span
+   { font-size: inherit }` (0,2,1) qui, sinon, force le texte du badge à la
+   taille pleine du nom de table. Ici : texte = 0.45em du nom de table. */
+.header-brand--game .g-brand-click .g-status-badge { font-size: 0.45em; }
 .g-status-admin {
   color: var(--gold);
   background: rgba(var(--gold-rgb), 0.12);
