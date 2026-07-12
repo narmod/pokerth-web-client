@@ -3942,14 +3942,17 @@ body.adv-4color .pk:not(.red):not(.spade):not(.back) { color: #1e8c3a; }
 /* Pré-sélection : les 4 boutons d'action restent CLIQUABLES et colorés en
    aperçu — on peut armer/désarmer une action avant son tour (client officiel).
    Un bouton désactivé (relance indisponible) reste grisé et inactif. */
-.actions-preview .btn-action { pointer-events: auto; filter: none; opacity: 1; }
-.actions-preview .btn-action:disabled { pointer-events: none; filter: grayscale(0.9); opacity: 0.5; }
+.actions-preview .btn-action { pointer-events: auto; filter: saturate(0.5); opacity: 0.62; }
+.actions-preview .btn-action:disabled { pointer-events: none; filter: grayscale(0.9); opacity: 0.4; }
+.actions-preview .btn-action.prearmed { filter: none; opacity: 1; }  /* action pre-armee : pleine couleur */
 /* Contrôles de montant : encore inactifs en aperçu (la pré-relance part au min). */
 .actions-preview .btn-pct,
 .actions-preview .raise-slider,
 .actions-preview .raise-display {
-  filter: grayscale(0.9);
-  opacity: 0.5;
+  /* Hors-tour : couleurs conservees mais ternies (desaturees + attenuees),
+     signal uniforme « pas ton tour » sans virer au gris. */
+  filter: saturate(0.5);
+  opacity: 0.62;
 }
 .actions-preview .mode-sel-wrap { pointer-events: auto; opacity: 1; }  /* mode dropdown reste activable en aperçu */
 
