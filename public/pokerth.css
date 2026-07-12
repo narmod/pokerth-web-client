@@ -371,7 +371,8 @@ body {
   gap: 14px;
   padding: 12px 18px;
   border-bottom: 1px solid var(--border);
-  background: var(--chrome-tint);
+  /* Meme fond que les .header globaux (etait --chrome-tint, trop discret). */
+  background: var(--panel);
   flex-shrink: 0;
 }
 .cp-back {
@@ -5802,6 +5803,12 @@ body:not(.in-game) .my-zone {
    et ne suit pas la palette -> en clair il vire au gris et masque le texte
    var(--text) (noms de presets non actifs, libelle mot de passe). Fond clair force. */
 :root[data-theme="pokerth-light"] #create-form { background: rgba(255,255,255,0.62); }
+
+/* En page pleine « Creer une table » (#s-create), le formulaire n'est plus
+   colle sous le bouton toggle accordeon de la colonne lobby : on referme donc
+   le cadre en haut (contour complet + coins arrondis), sinon le bord superieur
+   apparait coupe juste sous le header. Deux ids => bat la regle de base. */
+#s-create #create-form { border-top: 1px solid var(--border); border-radius: 10px; }
 
 /* ── PokerTH clair : corrections de contraste (clair uniquement) ──
    Plusieurs elements gardent des couleurs CLAIRES codees en dur (pensees pour le
