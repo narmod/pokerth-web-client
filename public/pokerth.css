@@ -1347,14 +1347,15 @@ body {
 .header {
   display: flex;
   align-items: center;
-  padding: clamp(4px,1.2vh,10px) clamp(8px,2vw,20px);
+  padding: 4px clamp(8px,2vw,20px);
   background: var(--panel);
   border-bottom: 1px solid var(--border);
   /* Wider gap so the action buttons are more spaced out horizontally
      (requested by narmod). Was clamp(4px,1.2vw,14px). */
   gap: clamp(6px,2.2vw,18px);
   flex-shrink: 0;
-  min-height: 36px;
+  /* Aligne sur le topBar QML officiel : 38 px (30 en landscapeCompact). */
+  min-height: 38px;
   overflow: hidden;
 }
 
@@ -2069,10 +2070,10 @@ body {
   .hs-txt { font-size: 0.7rem !important; }
 
   /* ── Header ── */
-  .header { min-height: 44px !important; }
-  .header-brand { font-size: 1.25rem !important; }
-  .header .btn-sm { height: 36px !important; font-size: 0.92rem !important; padding: 0 16px !important; }
-  .header .btn-icon { width: 40px !important; padding: 0 !important; }
+  .header { min-height: 38px !important; }
+  .header-brand { font-size: 1.05rem !important; }
+  .header .btn-sm { height: 30px !important; font-size: 0.82rem !important; padding: 0 13px !important; }
+  .header .btn-icon { width: 34px !important; padding: 0 !important; }
 
   /* ── Barre du pot ── */
   #pot-strip { min-height: 32px !important; }
@@ -2236,6 +2237,10 @@ body {
 
 /* ── Phone LANDSCAPE (wide, short) ── */
 @media (max-height: 500px) and (orientation: landscape) {
+  /* Header aplati facon landscapeCompact du QML officiel : 30 px, marges reduites. */
+  .header { min-height: 30px !important; padding: 2px 6px !important; }
+  .header .btn-sm { height: 26px !important; }
+  .header .btn-icon { width: 30px !important; }
   .blind-chip  { width: 18px !important; height: 18px !important; top: -12px !important; left: -12px !important; }
   .dealer-chip { width: 18px !important; height: 18px !important; top: -12px !important; right: -12px !important; }
   .seat-flag   { bottom: -5px !important; right: -5px !important; }
