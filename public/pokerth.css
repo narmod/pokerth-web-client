@@ -668,7 +668,7 @@ body {
   display: inline-flex;
   align-items: center;
   font-family: var(--ff-mono);
-  font-size: 0.52rem;
+  font-size: 0.46rem;
   letter-spacing: 0.04em;
   padding: 1px 6px;
   border-radius: 4px;
@@ -697,7 +697,7 @@ body {
   .header-brand--game { max-width: 82vw; }
   /* Emoji seul (le libelle deborde sur petit ecran). */
   .header-brand--game .gsb-label { display: none; }
-  .g-status-badge { font-size: 0.5rem; padding: 1px 5px; }
+  .g-status-badge { font-size: 0.44rem; padding: 1px 5px; }
   .header-brand--game .g-brand-click { gap: 4px; }
 }
 
@@ -5263,6 +5263,17 @@ body:not(.in-game) .my-zone {
 #s-lobby .header #l-overflow-btn{ color:#c3ccda; }
 #s-game .header #sound-toggle-btn{ color:#c3ccda; }
 #s-game .header #g-overflow-btn{ color:#c3ccda; }
+
+/* Mode clair : les icônes acier #c3ccda deviennent quasi invisibles sur la
+   barre claire -> on les fonce (près du noir) pour un contraste marqué. */
+:root[data-theme="pokerth-light"] #s-connect .connect-header #cl-links-connect > summary,
+:root[data-theme="pokerth-light"] #s-connect .connect-header #connect-overflow-btn,
+:root[data-theme="pokerth-light"] #s-lobby .header #lobby-chat-btn,
+:root[data-theme="pokerth-light"] #s-lobby .header #l-overflow-btn,
+:root[data-theme="pokerth-light"] #s-game .header #sound-toggle-btn,
+:root[data-theme="pokerth-light"] #s-game .header #g-overflow-btn{
+  color:#1d222b;
+}
 #s-connect .corner-links .btn-icon img{ display:block; width:18px; height:18px; }
 
 /* ═══════════════════════════════════════════════════════════════════
