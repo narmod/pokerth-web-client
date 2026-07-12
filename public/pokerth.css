@@ -5197,15 +5197,25 @@ body:not(.in-game) .my-zone {
   justify-content:space-between;
 }
 #s-connect .connect-header .hdr-group{ display:flex; align-items:center; gap:6px; }
-/* Sur la barre, plus besoin du chip opaque individuel (qui servait à lire
-   par-dessus les flammes) : les boutons se posent sur la barre comme dans
-   le header lobby/jeu. */
+/* Icônes pleines : plus d'encadré (ni fond, ni bord, ni ombre) — l'icône
+   seule sur la barre. */
 #s-connect .connect-header .btn-sm{
-  background:var(--inset);
+  background:transparent;
+  border-color:transparent;
   box-shadow:none;
   backdrop-filter:none; -webkit-backdrop-filter:none;
 }
-#s-connect .connect-header .btn-sm:hover{ background:var(--panel-hi); border-color:var(--border-hi); }
+#s-connect .connect-header .btn-icon{ background:transparent; }
+#s-connect .connect-header .btn-sm:hover{
+  background:rgba(255,255,255,0.07);
+  border-color:transparent;
+}
+/* Couleurs des icônes (Option B) : ☰ + trophée dorés, install vert,
+   engrenage acier. Les SVG utilisent currentColor -> on colore le bouton. */
+#s-connect .connect-header #cl-links-connect > summary{ color:#E3C800; }
+#s-connect .connect-header #ranking-btn-connect{ color:#E3C800; }
+#s-connect .connect-header #install-btn{ color:#3ba55d; }
+#s-connect .connect-header #connect-overflow-btn{ color:#c3ccda; }
 #s-connect .corner-links .btn-icon img{ display:block; width:18px; height:18px; }
 
 /* ═══════════════════════════════════════════════════════════════════
@@ -6921,34 +6931,35 @@ html[data-seat-edit="1"] #g-seats .seat.seat-ghost { outline: none; cursor: defa
    désencombrer le header (surtout sur téléphone). Reprend la chrome du
    menu ••• (#g-overflow-menu). Le 🏆 Ranking reste un bouton séparé.
    ═══════════════════════════════════════════════════════════════════ */
-#s-connect .corner-links .cl-links { position: relative; }
-#s-connect .corner-links .cl-links > summary {
+#s-connect .connect-header .cl-links { position: relative; }
+#s-connect .connect-header .cl-links > summary {
   list-style: none;
   cursor: pointer;
 }
-#s-connect .corner-links .cl-links > summary::-webkit-details-marker { display: none; }
-#s-connect .corner-links .cl-links > summary::marker { content: ""; }
-#s-connect .corner-links .cl-links > summary img { display: block; width: 18px; height: 18px; }
+#s-connect .connect-header .cl-links > summary::-webkit-details-marker { display: none; }
+#s-connect .connect-header .cl-links > summary::marker { content: ""; }
+#s-connect .connect-header .cl-links > summary img { display: block; width: 18px; height: 18px; }
 
-#s-connect .corner-links .cl-menu {
+#s-connect .connect-header .cl-menu {
   position: absolute;
-  top: calc(100% + 4px);
+  top: 100%;
   left: 0;
   z-index: 200;
-  min-width: 172px;
+  width: 232px;
   display: flex;
   flex-direction: column;
-  gap: 3px;
+  gap: 4px;
   padding: 6px 5px;
   box-sizing: border-box;
   background: var(--modal-bg);
   border: 1px solid var(--border-hi);
-  border-radius: 7px;
+  border-top: none;
+  border-radius: 0 0 6px 6px;
   box-shadow: 0 12px 32px rgba(0,0,0,0.7);
 }
 /* Lignes du menu : on neutralise la « chip » héritée des .btn-sm du
    cluster (fond/bord/ombre/hauteur fixe) pour des lignes plates. */
-#s-connect .corner-links .cl-menu .btn-sm {
+#s-connect .connect-header .cl-menu .btn-sm {
   width: 100%;
   height: auto;
   min-width: 0;
@@ -6969,11 +6980,11 @@ html[data-seat-edit="1"] #g-seats .seat.seat-ghost { outline: none; cursor: defa
   backdrop-filter: none;
   -webkit-backdrop-filter: none;
 }
-#s-connect .corner-links .cl-menu .btn-sm:hover {
+#s-connect .connect-header .cl-menu .btn-sm:hover {
   background: var(--panel-hi);
   border-color: var(--border-hi);
 }
-#s-connect .corner-links .cl-menu .cl-ico {
+#s-connect .connect-header .cl-menu .cl-ico {
   flex: none;
   width: 18px;
   height: 18px;
@@ -6981,9 +6992,9 @@ html[data-seat-edit="1"] #g-seats .seat.seat-ghost { outline: none; cursor: defa
   align-items: center;
   justify-content: center;
 }
-#s-connect .corner-links .cl-menu .cl-ico img,
-#s-connect .corner-links .cl-menu .cl-ico svg { display: block; width: 18px; height: 18px; }
-#s-connect .corner-links .cl-menu .cl-ico-emo {
+#s-connect .connect-header .cl-menu .cl-ico img,
+#s-connect .connect-header .cl-menu .cl-ico svg { display: block; width: 18px; height: 18px; }
+#s-connect .connect-header .cl-menu .cl-ico-emo {
   flex: none;
   width: 18px;
   text-align: center;
