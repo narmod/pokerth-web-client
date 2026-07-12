@@ -46,10 +46,8 @@ use too. Items are grouped by status rather than fixed phases.
 - Semantic-colour system so the whole UI recolours consistently per theme — gold uses the
   official QML accent (`#E3C800`) and is kept only for deliberate game assets (dealer
   button, chip denominations, win bursts).
-- Official card decks: seven decks ported straight from the QML 2.1.3 client, alongside the
-  gallery decks, each with a live preview.
-- Official table style: the default "PokerTH" felt now points to the client's own
-  `default` table asset, and the Matrix table is kept re-synced with the 2.1.3 build.
+- Official card decks: seven more official PokerTH decks (Bella Union, Nobus Classic,
+  Stardust, Star Trek, Lemming, Xanax) added to the deck gallery, each with a live preview.
 - Style import: install a table/deck/back from a `.zip`, parsing the four 2.1.3 style keys.
 - Coloured glossy action buttons (Fold red / Check-Call blue / Raise green / All-In orange)
   and an animated flaming-chip emblem on the login screen (respects reduced-motion).
@@ -162,8 +160,8 @@ use too. Items are grouped by status rather than fixed phases.
     card ratio, and a crisp pulsed gold turn-glow.
   - Pre-selection preview desaturated uniformly when it is not your turn.
   - App header height matched to the official topBar (38 px, 30 px in landscape-compact).
-  - Seat geometry tuned to 2.1.3: self-weight 0.5, fill-cap 1.9 / 2.3, and mode-dependent
-    self-box sizing.
+  - Seat geometry tuned to 2.1.3: self-weight 0.5 and fill-cap 1.9 / 2.3 (landscape /
+    compact).
 - Follow-up fixes from official-client community feedback: chat length capped to match
   the server limit, a player's current table shown in the lobby players list, and the
   players-remaining counter above.
