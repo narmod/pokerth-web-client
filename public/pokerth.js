@@ -9481,7 +9481,10 @@ const App = (() => {
   function _updateLobbyWaitStatus() {
     var el = document.getElementById('lobby-wait-status');
     if (!el) return;
-    var waiting = !!(amInGame && !_gameStarted && gId);
+    // « En attente » = je suis dans une table rejointe/creee non demarree.
+    // NB : amInGame ne passe a true qu'au debut de la 1re main (HandStart),
+    // donc on s'appuie sur gId (table courante) + !_gameStarted uniquement.
+    var waiting = !!(gId && !_gameStarted);
     el.style.display = waiting ? '' : 'none';
   }
   window._updateLobbyWaitStatus = _updateLobbyWaitStatus;
@@ -14041,7 +14044,7 @@ function renderPlayersList() {
   body.innerHTML = _shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>';
 }
 
-;(function(){ window.BUILD_VERSION='0.3.350-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.351-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
