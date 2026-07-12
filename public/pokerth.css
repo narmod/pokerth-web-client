@@ -668,14 +668,15 @@ body {
   display: inline-flex;
   align-items: center;
   font-family: var(--ff-mono);
-  font-size: 0.6rem;
+  font-size: 0.52rem;
   letter-spacing: 0.04em;
-  padding: 2px 7px;
-  border-radius: 3px;
+  padding: 1px 6px;
+  border-radius: 4px;
+  gap: 3px;
   white-space: nowrap;
   line-height: 1;
 }
-.gsb-label { margin-left: 4px; }
+.gsb-label { margin-left: 0; }
 .g-status-admin {
   color: var(--gold);
   background: rgba(var(--gold-rgb), 0.12);
@@ -696,7 +697,7 @@ body {
   .header-brand--game { max-width: 82vw; }
   /* Emoji seul (le libelle deborde sur petit ecran). */
   .header-brand--game .gsb-label { display: none; }
-  .g-status-badge { font-size: 0.6rem; padding: 2px 5px; }
+  .g-status-badge { font-size: 0.5rem; padding: 1px 5px; }
   .header-brand--game .g-brand-click { gap: 4px; }
 }
 
