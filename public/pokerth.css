@@ -5212,7 +5212,7 @@ body:not(.in-game) .my-zone {
 }
 /* Couleurs des icônes (Option B) : ☰ + trophée dorés, install vert,
    engrenage acier. Les SVG utilisent currentColor -> on colore le bouton. */
-#s-connect .connect-header #cl-links-connect > summary{ color:#E3C800; }
+#s-connect .connect-header #cl-links-connect > summary{ color:#c3ccda; }
 #s-connect .connect-header #ranking-btn-connect{ color:#E3C800; }
 #s-connect .connect-header #install-btn{ color:#3ba55d; }
 #s-connect .connect-header #connect-overflow-btn{ color:#c3ccda; }
