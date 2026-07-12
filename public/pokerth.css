@@ -5216,6 +5216,26 @@ body:not(.in-game) .my-zone {
 #s-connect .connect-header #ranking-btn-connect{ color:#E3C800; }
 #s-connect .connect-header #install-btn{ color:#3ba55d; }
 #s-connect .connect-header #connect-overflow-btn{ color:#c3ccda; }
+
+/* ═══ Headers lobby + jeu : même traitement que connexion ═══════════════
+   Icônes pleines (sans encadré) + couleurs. Frameless scopé aux .btn-icon
+   pour ne pas toucher aux boutons-texte admin (Start/Close/Kick). */
+#s-lobby .header .btn-icon,
+#s-game .header .btn-icon{
+  background:transparent;
+  border-color:transparent;
+  box-shadow:none;
+}
+#s-lobby .header .btn-icon:hover,
+#s-game .header .btn-icon:hover{
+  background:rgba(255,255,255,0.07);
+  border-color:transparent;
+}
+#s-lobby .header #ranking-btn-lobby{ color:#E3C800; }
+#s-lobby .header #lobby-chat-btn{ color:#c3ccda; }
+#s-lobby .header #l-overflow-btn{ color:#c3ccda; }
+#s-game .header #sound-toggle-btn{ color:#c3ccda; }
+#s-game .header #g-overflow-btn{ color:#c3ccda; }
 #s-connect .corner-links .btn-icon img{ display:block; width:18px; height:18px; }
 
 /* ═══════════════════════════════════════════════════════════════════
