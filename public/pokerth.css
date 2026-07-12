@@ -275,7 +275,8 @@ html { touch-action: manipulation; -webkit-text-size-adjust: 100%; text-size-adj
    sont pas affectés : eux gardent l'ovale + le liseré. L'image vit dans --table-img
    (URL nue, sans cover) ; data-table-full="1" est posé par theme.mjs et l'applier <head>. */
 :root[data-table-full="1"] .felt-oval {
-  background: var(--table-img, none) center / contain no-repeat;
+  /* align bottom : le style « default » officiel place la table en bas. */
+  background: var(--table-img, none) center bottom / contain no-repeat;
   border: 0;
   border-radius: 0;
   box-shadow: none;

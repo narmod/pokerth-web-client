@@ -60,7 +60,7 @@ const PALETTES = [
 // (--wallpaper, ovale transparent) · 'full' = image dans l'ovale (--table-img) ·
 // 'felt' = feutre ovale (--felt-img). id '' = PokerTH officiel fullscreen (defaut).
 const TABLES = [
-  { id: '',             key: 'tablePokerthOfficial', fallback: 'PokerTH',      swatch: '#1d222b', feltUrl: '/table/pokerth-official-fs/felt.png', mode: 'fs',   puck: 'pokerth', btn: 'glossy' },
+  { id: '',             key: 'tablePokerthOfficial', fallback: 'PokerTH',      swatch: '#1d222b', feltUrl: '/table/default/felt.png', preview: '/table/default/preview.png', mode: 'full', skin: true, align: 'center bottom' },
   { id: 'pokerth-live', key: 'tablePokerthLive',     fallback: 'Spectator Tools', swatch: '#0e4a2a', feltUrl: '/table/pokerth-live/felt.png',        mode: 'full', puck: 'pokerth', btn: 'glossy' },
   { id: 'casino',       key: 'tableCasino',          fallback: 'Green Casino', swatch: '#1e6b1e', feltUrl: '/table/casino/felt.png', preview: '/table/casino/preview.png', mode: 'fs', align: 'center', puck: 'casino',  btn: 'casino' },
   // Tapis par defaut du client QML (data/gfx/qml/table/*, AGPL-3.0) — plein ecran.
