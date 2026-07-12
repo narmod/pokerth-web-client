@@ -8,6 +8,28 @@ this file captures what matters to players and operators.
 
 ## [Unreleased]
 
+Fidelity and interface work bringing the client closer to PokerTH's official QML
+client, now tracking the **2.1.3** build.
+
+### Changed
+- **Closer to the official 2.1.3 client.** The in-game action bar now matches the
+  official layout -- localised "Suivre \$X / Relancer \$X" labels, a compact
+  All-In / "Tapis" button, and 1/3 / 1/2 / Pot quick-bets in the official green --
+  alongside the official gold accent (`#E3C800`), the official app-header height,
+  and seat geometry tuned to 2.1.3.
+- **Reworked interface.** A unified header banner spans the connect, lobby and
+  in-game screens, with frameless monochrome icons and floating menus; the in-game
+  header centres the table name with Admin / Public-Private status badges. The
+  waiting room was redesigned (your details and chat centre-stage, with an
+  expandable per-table player list), and in-game chat, emoji, the hand log and a
+  new hand-odds window now open as compact, movable floating windows on the felt
+  instead of taking over the screen.
+
+### Added
+- **Seven official PokerTH card decks** in the deck gallery, plus one-click import
+  of a table, card deck or card-back from a `.zip`.
+- **A dedicated Music player panel** (game-sound settings moved to Advanced options).
+
 ## 0.3 line — public beta (2026)
 
 The `0.3` line marks the move into public beta. What landed across the
