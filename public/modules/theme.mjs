@@ -605,20 +605,25 @@ function _applyTableFull(imgUrl){
 // Table « Fullscreen » : l'image du pack devient un fond plein ecran (--wallpaper
 // + data-bg-img, cf. la regle body.in-game du CSS) et l'ovale passe transparent
 // (data-table-fs). Exclusif avec full. null = on nettoie tout (retour normal).
-function _applyTableFullscreen(imgUrl, alignPos){
+function _applyTableFullscreen(imgUrl, alignPos, zoom){
   var el=document.documentElement;
+  // 2.1.3 : TableBackgroundZoom (>1 = fond agrandi/rogne). cover par defaut ; en
+  // zoom on passe a une taille en % (surbalayage centre, equivalent du crop QML).
+  var wsize=(zoom&&zoom>0&&zoom!==1)?((zoom*100).toFixed(1)+'%'):null;
   if (imgUrl){
     el.setAttribute('data-table-fs','1');
     el.setAttribute('data-bg-img','1');
     el.style.setProperty('--wallpaper','url('+imgUrl+')');
     if (alignPos) el.style.setProperty('--wallpaper-pos', alignPos);
     else el.style.removeProperty('--wallpaper-pos');
+    if (wsize) el.style.setProperty('--wallpaper-size', wsize);
+    else el.style.removeProperty('--wallpaper-size');
     // Persistance zero-flash : le boot <head> restitue --wallpaper (via pth_table_css)
     // + data-table-fs/data-bg-img (via pth_table_fs). Exclusif avec le mode 'full'.
     try{
       localStorage.setItem('pth_table_fs','1'); localStorage.removeItem('pth_table_full');
-      var cur=(localStorage.getItem('pth_table_css')||'').replace(/--wallpaper(?:-pos)?:[^;]*;?/g,'');
-      cur+='--wallpaper:url('+imgUrl+');'+(alignPos?('--wallpaper-pos:'+alignPos+';'):'');
+      var cur=(localStorage.getItem('pth_table_css')||'').replace(/--wallpaper(?:-pos|-size)?:[^;]*;?/g,'');
+      cur+='--wallpaper:url('+imgUrl+');'+(alignPos?('--wallpaper-pos:'+alignPos+';'):'')+(wsize?('--wallpaper-size:'+wsize+';'):'');
       localStorage.setItem('pth_table_css',cur);
     }catch(e){}
   } else {
@@ -626,9 +631,10 @@ function _applyTableFullscreen(imgUrl, alignPos){
     el.removeAttribute('data-bg-img');
     el.style.removeProperty('--wallpaper');
     el.style.removeProperty('--wallpaper-pos');
+    el.style.removeProperty('--wallpaper-size');
     try{
       localStorage.removeItem('pth_table_fs');
-      var c2=(localStorage.getItem('pth_table_css')||'').replace(/--wallpaper(?:-pos)?:[^;]*;?/g,'');
+      var c2=(localStorage.getItem('pth_table_css')||'').replace(/--wallpaper(?:-pos|-size)?:[^;]*;?/g,'');
       if(c2) localStorage.setItem('pth_table_css',c2); else localStorage.removeItem('pth_table_css');
     }catch(e){}
   }
@@ -698,7 +704,7 @@ function _importedTableToGallery(rec){
   if(pd||ps||pb){ pucks={}; if(pd)pucks.dealer='url('+pd+')'; if(ps)pucks.sb='url('+ps+')'; if(pb)pucks.bb='url('+pb+')'; }
   var bf=url(m.fold), bc=url(m.call), br=url(m.raise), ba=url(m.allin), btn=null;
   if(bf||bc||br||ba){ btn={}; if(bf)btn.fold='url('+bf+')'; if(bc){btn.check='url('+bc+')';btn.call='url('+bc+')';} if(br)btn.raise='url('+br+')'; if(ba)btn.allin='url('+ba+')'; }
-  return { id:rec.id, name:rec.name, feltUrl:feltUrl, preview:pv, pucks:pucks, fs:true, align:m.align||'center', _imported:true, _type:'table', _btn:btn, _tint:m.tint||null };
+  return { id:rec.id, name:rec.name, feltUrl:feltUrl, preview:pv, previewPortrait:url(m.previewPortrait)||null, pucks:pucks, fs:true, align:m.align||'center', _imported:true, _type:'table', _btn:btn, _btnfg:(m.btnfg||null), _zoom:(m.zoom||null), _btnRadius:(m.btnRadius!=null?m.btnRadius:null), _tint:m.tint||null };
 }
 function _importTablePackage(file){
   return file.arrayBuffer().then(_unzip).then(function(files){
@@ -713,8 +719,15 @@ function _importTablePackage(file){
       meta.fold=_xmlVal(xml,'FoldButton')||meta.fold; meta.call=_xmlVal(xml,'CheckCallButton')||meta.call; meta.raise=_xmlVal(xml,'BetRaiseButton')||meta.raise; meta.allin=_xmlVal(xml,'AllInButton')||meta.allin;
       var acc=_xmlVal(xml,'PlayerBoxAccent'), cbg=_xmlVal(xml,'ChatLogBackground');
       if(acc||cbg) meta.tint={ a:acc, bg:cbg, su:_xmlVal(xml,'ChatLogSurface'), bo:_xmlVal(xml,'ChatLogBorder'), tx:_xmlVal(xml,'ChatLogText'), se:_xmlVal(xml,'ChatLogTextSecondary'), mu:_xmlVal(xml,'ChatLogTextMuted') };
+      // 2.1.3 : couleurs de libelle par bouton (styles a boutons sombres), zoom/cadrage
+      //         du fond, rayon des boutons d'action et apercu portrait.
+      var _bfg={ fold:_xmlVal(xml,'FoldButtonTextColor'), check:_xmlVal(xml,'CheckCallButtonTextColor'), raise:_xmlVal(xml,'BetRaiseButtonTextColor'), allin:_xmlVal(xml,'AllInButtonTextColor') };
+      if(_bfg.fold||_bfg.check||_bfg.raise||_bfg.allin) meta.btnfg=_bfg;
+      var _bz=parseFloat(_xmlVal(xml,'TableBackgroundZoom')); if(isFinite(_bz)&&_bz>0&&_bz!==1) meta.zoom=_bz;
+      var _br2=parseFloat(_xmlVal(xml,'ActionButtonBorderRadius')); if(isFinite(_br2)&&_br2>=0) meta.btnRadius=_br2;
+      var _pp=_xmlVal(xml,'PreviewPortrait'); if(_pp) meta.previewPortrait=_pp;
     }
-    var assets={}; [meta.table,meta.preview,meta.dealer,meta.sb,meta.bb,meta.fold,meta.call,meta.raise,meta.allin].forEach(function(fn){ if(fn&&files[fn]&&!assets[fn]) assets[fn]=new Blob([files[fn]],{type:_mimeOf(fn)}); });
+    var assets={}; [meta.table,meta.preview,meta.previewPortrait,meta.dealer,meta.sb,meta.bb,meta.fold,meta.call,meta.raise,meta.allin].forEach(function(fn){ if(fn&&files[fn]&&!assets[fn]) assets[fn]=new Blob([files[fn]],{type:_mimeOf(fn)}); });
     if(!assets[meta.table]) return Promise.reject(new Error('table.png manquant'));
     var rec={ id:'imp-t-'+_uid(), type:'table', name:name, meta:meta, assets:assets };
     return _idbPut(rec).then(function(){ _galleryTables.push(_importedTableToGallery(rec)); try{ if(_body) _render(); }catch(e){} return rec; });
@@ -745,6 +758,7 @@ table.apply = function(id){
   try {
     var tb = _builtinTableById(id);
     _injectSkinTint(tb ? tb.id : null);   // teinte chat/log + accent de box (tapis QML + Green Casino)
+    try{ document.documentElement.style.removeProperty('--act-btn-radius'); }catch(e){}   // 2.1.3: reset rayon boutons (repose par un tapis importe si defini)
     if (tb) {
       // Style officiel bundle : feutre + pucks + boutons ; mode fs/full/felt.
       _injectAxis(TABLE_TOKENS, { feltUrl: tb.feltUrl }, 'pth_table_css', true);
@@ -755,15 +769,18 @@ table.apply = function(id){
       else { _applyTableFullscreen(null); _applyTableFull(null); }
     } else {
       // Table de galerie (import serveur) : comportement historique (feutre + pucks).
-      var fimg=null, fsimg=null, fsalign=null, gt=_galleryTableById(id);
+      var fimg=null, fsimg=null, fsalign=null, fszoom=null, gt=_galleryTableById(id);
       if (gt) {
         _injectAxis(TABLE_TOKENS, { id:gt.id, tokens:{}, feltUrl:gt.feltUrl }, 'pth_table_css', true);
-        if (gt.fs) { fsimg=gt.feltUrl||null; fsalign=gt.align||null; } else if (gt.full) fimg=gt.feltUrl||null;
-        if (gt._btn) _injectButtons({ images: gt._btn, colors:{ 'btn-fold-fg':'#f0f3f8','btn-check-fg':'#f0f3f8','btn-call-fg':'#f0f3f8','btn-raise-fg':'#f0f3f8','btn-allin-fg':'#fff4ec','btn-allin-fg-b':'#ffffff' } });
+        if (gt.fs) { fsimg=gt.feltUrl||null; fsalign=gt.align||null; fszoom=gt._zoom||null; } else if (gt.full) fimg=gt.feltUrl||null;
+        // 2.1.3 : *ButtonTextColor -> couleur de libelle par bouton (repli sur les clairs).
+        if (gt._btn) { var _fg=gt._btnfg||{}; _injectButtons({ images: gt._btn, colors:{ 'btn-fold-fg':(_fg.fold||'#f0f3f8'),'btn-check-fg':(_fg.check||'#f0f3f8'),'btn-call-fg':(_fg.check||'#f0f3f8'),'btn-raise-fg':(_fg.raise||'#f0f3f8'),'btn-allin-fg':(_fg.allin||'#fff4ec'),'btn-allin-fg-b':(_fg.allin||'#ffffff') } }); }
         else _injectButtons({ colors: BUTTON_GLOSSY });
+        // 2.1.3 : ActionButtonBorderRadius (defaut 9). Expose la var pour le CSS.
+        try{ if(gt._btnRadius!=null && gt._btnRadius!==9) document.documentElement.style.setProperty('--act-btn-radius', gt._btnRadius+'px'); }catch(e){}
         if (gt._tint) _injectTintObj(gt._tint);
       }
-      if (fsimg) { _applyTableFull(null); _applyTableFullscreen(fsimg, fsalign); }
+      if (fsimg) { _applyTableFull(null); _applyTableFullscreen(fsimg, fsalign, fszoom); }
       else { _applyTableFullscreen(null); _applyTableFull(fimg); }
     }
     pucks.apply(pucks.get());   // Auto -> puck du tapis courant ; sinon respecte le choix explicite
