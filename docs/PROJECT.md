@@ -5,8 +5,8 @@ PokerTH Web Client is a modern, browser-based interface for
 game. It lets players join the existing PokerTH server ecosystem — or play
 offline against bots — from any desktop, tablet, or phone browser, with no
 native install. It is developed in coordination with the upstream PokerTH
-project, aiming to align closely with the official Qt client while staying fully
-compatible with current PokerTH servers.
+project, aiming to align closely with the official QML client (currently the 2.1.3
+build) while staying fully compatible with current PokerTH servers.
 
 This document is a high-level map of *what the project is* and *how it fits
 together*. For installation, hosting, and the complete feature list, see the
@@ -26,7 +26,7 @@ look and assets.
 - A modern, mobile-first web interface for PokerTH (phones, tablets, desktop).
 - Full compatibility with existing PokerTH servers (public `pokerth.net`,
   dedicated, and LAN).
-- Visual and behavioural fidelity to the official Qt client (layout, colours,
+- Visual and behavioural fidelity to the official QML client (layout, colours,
   poker terms kept in English).
 - A zero-dependency offline Training mode, so the app is useful with no server
   at all.
@@ -78,8 +78,8 @@ Browser  ⇄  in-memory FakeServer + local engine + bots   (Training mode: no pr
   number of opponents (`bots.mjs`), and a `FakeServer` (`server.mjs`) that mimics
   the real lobby/protocol so Training mode reuses the same UI code path.
 - **Theming** (`public/modules/theme.mjs`, `public/themes/`, `public/cards/`) —
-  Independently selectable axes (UI palette, table felt, card deck, chip pucks,
-  seat style) with one-click presets, plus a card-deck **Studio** at `/studio`.
+  Independently selectable axes (UI palette, table felt, card deck, action
+  buttons, chip pucks, seat style) with one-click presets, plus a card-deck **Studio** at `/studio`.
 - **Admin console** (`public/admin.html`, served at `/admin`) — Token-protected
   maintainer UI over the proxy's `/admin/*` API; can be hidden entirely (returns
   a plain 404 when disabled).
