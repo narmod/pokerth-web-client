@@ -6599,6 +6599,9 @@ html[data-seat-img-self] .player-bar {
 /* (b) ou des qu'un clavier physique est detecte (classe posee par le JS) */
 body.has-keyboard .btn-action, body.has-keyboard .btn-pct { position: relative; }
 body.has-keyboard .act-key { display: inline-block; }
+/* Le bouton Tapis est etroit : le badge de touche « A » chevauchait le texte
+   (« Tapís »). Le QML n'affiche aucun badge sur les boutons -> on le retire ici. */
+.btn-allin .act-key { display: none !important; }
 
 /* iOS Safari : empeche le zoom auto au focus d'un champ (declenche quand
    font-size < 16px). Force a 16px sur tactile uniquement ; le pinch-zoom
