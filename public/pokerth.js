@@ -10126,7 +10126,7 @@ const App = (() => {
       + '<div class="act-buttons-row">'
       +   '<button class="btn-action btn-fold' + _preCls('fold') + '" onclick="' + _preClk('fold', 'App.doAction(1,0)') + '" title="Fold (F)">' + t('fold') + '<span class="act-key">' + KB.fold.toUpperCase() + '</span></button>'
       +   '<button class="btn-action ' + callClass + _preCls('call') + '" onclick="' + _preClk('call', callAction) + '" title="Call/Check (C)">' + callLabel + '<span class="act-key">' + KB.call.toUpperCase() + '</span></button>'
-      +   '<button class="btn-action btn-raise raise-btn' + _preCls('raise') + '"' + da + ' onclick="' + _preClk('raise', 'App.doRaise()') + '" title="Raise (R)">' + raiseLabel + (canRaise ? ' <b class="raise-btn-amt">$' + fmtChips(minBet) + '</b>' : '') + '<span class="act-key">' + KB.raise.toUpperCase() + '</span></button>'
+      +   '<button class="btn-action btn-raise raise-btn' + _preCls('raise') + '"' + da + ' onclick="' + _preClk('raise', 'App.doRaise()') + '" title="Raise (R)">' + raiseLabel + (canRaise ? ' <b class="raise-btn-amt">' + fmtChips(minBet) + '</b>' : '') + '<span class="act-key">' + KB.raise.toUpperCase() + '</span></button>'
       + '</div>'
       + '</div>';
 
@@ -10140,7 +10140,7 @@ const App = (() => {
         var v = parseInt((_amt || {}).value, 10);
         if (!Number.isFinite(v)) v = minBet;
         var els = document.querySelectorAll('#g-actions .raise-btn-amt');
-        for (var i = 0; i < els.length; i++) els[i].textContent = '$' + fmtChips(v);
+        for (var i = 0; i < els.length; i++) els[i].textContent = fmtChips(v);
       }
       if (_amt) _amt.addEventListener('input', _sync);
       if (_sld) _sld.addEventListener('input', _sync);
@@ -14060,7 +14060,7 @@ function renderPlayersList() {
   body.innerHTML = _shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>';
 }
 
-;(function(){ window.BUILD_VERSION='0.3.388-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.389-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
