@@ -8569,10 +8569,10 @@ const App = (() => {
   // comme dans le QML (sinon la bisection remplirait l'écart créé).
   // Fonction PURE (aucun DOM) → testée en Node (window._qmlLandscapeLayout).
   function _qmlLandscapeLayout(oppCnt, zW, zH, compact) {
-    var oppBaseW = 114, oppBaseH = 84, selfBaseW = compact ? 128 : 114, selfBaseH = compact ? 94 : 96;   // 2.1.3 : self 96/94 (reserve d'espace)
+    var oppBaseW = 114, oppBaseH = 84, selfBaseW = 114, selfBaseH = 84;
     var opponentGapBase = 10, selfBadgeGapBase = 8, sideBadgeGapBase = 48;
     var gap = 12;
-    var selfWeight = 0.5;   // 2.1.3 : arc de la perle self identique en wide et compact
+    var selfWeight = compact ? 0.5 : 0.3;
     var stepDeg = oppCnt >= 1 ? 360 / (oppCnt + selfWeight) : 360;
     var firstAngle = 90 + (selfWeight * stepDeg + stepDeg) / 2;
 
@@ -8679,7 +8679,7 @@ const App = (() => {
       return (zH - 12 - selfVisualH) - topOppBottom >= 0.95 * s * 124 + 28;
     }
 
-    var lo = 0.55, hi = fillCap(compact ? 2.3 : 1.9), sFin;   // 2.1.3 : plafond de croissance officiel
+    var lo = 0.55, hi = fillCap(compact ? 1.7 : 1.4), sFin;
     if (hi < lo) hi = lo;
     if (oppCnt < 2) {
       if (!feasibleHeadsUp(lo)) sFin = lo;
@@ -9151,12 +9151,7 @@ const App = (() => {
         cardStr = '<div style="display:flex;gap:2px;margin-top:1px">'
           + cardHtml(sd.card1,'xsm') + cardHtml(sd.card2,'xsm') + '</div>';
       }
-      // 2.1.3 : la self-box est plus grande que les adversaires (96/94/82 vs 84/71).
-      // On multiplie l'echelle du SEUL seat self ; report sur data-base-scale pour
-      // que le table-zoom (_applySelfZoomCounter) et le self-zoom cartes restent exacts.
-      var _selfMul = isMe ? ((_forceSeatPortrait || _seatPortrait) ? (82/71) : (compact ? (94/84) : (96/84))) : 1;
-      var _thisScale = _seatBoxScale * _selfMul;
-      h += '<div class="' + cls + ((!isMe && _sdLosers && _sdLosers.has(pid)) ? ' loser-fade' : '') + '" data-pid="' + pid + '"' + (isMe ? ' data-base-top="' + px.top.toFixed(1) + '" data-base-left="' + px.left.toFixed(1) + '" data-base-scale="' + _thisScale + '"' : '') + ' style="position:absolute;top:' + px.top.toFixed(1) + 'px;left:' + px.left.toFixed(1) + 'px;transform:translate(-50%,-50%) scale(' + _thisScale + ')">';
+      h += '<div class="' + cls + ((!isMe && _sdLosers && _sdLosers.has(pid)) ? ' loser-fade' : '') + '" data-pid="' + pid + '"' + (isMe ? ' data-base-top="' + px.top.toFixed(1) + '" data-base-left="' + px.left.toFixed(1) + '" data-base-scale="' + _seatBoxScale + '"' : '') + ' style="position:absolute;top:' + px.top.toFixed(1) + 'px;left:' + px.left.toFixed(1) + 'px;transform:translate(-50%,-50%) scale(' + _seatBoxScale + ')">';
       const isSB = pid === sbPid;
       const isBB = pid === bbPid;
       let blindBadge = '';
@@ -13990,7 +13985,7 @@ function renderPlayersList() {
   body.innerHTML = _shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>';
 }
 
-;(function(){ window.BUILD_VERSION='0.3.341-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.342-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
