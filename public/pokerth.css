@@ -4386,7 +4386,7 @@ body:not(.in-game) .my-zone {
 }
 .btn-pct {
   flex: 1;
-  display: flex; flex-direction: column; align-items: center; gap: 1px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1px;
   background: rgba(var(--gold-rgb), 0.1); border: 1px solid var(--gold-dim);
   color: var(--gold); padding: 7px 4px; border-radius: 7px; cursor: pointer;
   font-family: var(--ff-mono); text-align: center;
@@ -6603,7 +6603,8 @@ body.has-keyboard .btn-action, body.has-keyboard .btn-pct { position: relative; 
 body.has-keyboard .act-key { display: inline-block; }
 /* Le bouton Tapis est etroit : le badge de touche « A » chevauchait le texte
    (« Tapís »). Le QML n'affiche aucun badge sur les boutons -> on le retire ici. */
-.btn-allin .act-key { display: none !important; }
+.btn-allin .act-key,
+.btn-pct .act-key { display: none !important; } /* pas de badge de touche sur Tapis ni bets rapides (parite QML) */
 
 /* iOS Safari : empeche le zoom auto au focus d'un champ (declenche quand
    font-size < 16px). Force a 16px sur tactile uniquement ; le pinch-zoom
