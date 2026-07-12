@@ -5203,6 +5203,10 @@ body:not(.in-game) .my-zone {
   justify-content:space-between;
 }
 #s-connect .connect-header .hdr-group{ display:flex; align-items:center; gap:6px; }
+/* Ancrage des menus overflow sur LEUR bouton (et non sur toute la barre)
+   pour éviter le décalage horizontal du padding — comme le menu ☰. */
+#s-connect .connect-header .hdr-right{ position:relative; }
+.hdr-ovf-wrap{ position:relative; display:inline-flex; align-items:center; }
 /* Icônes pleines : plus d'encadré (ni fond, ni bord, ni ombre) — l'icône
    seule sur la barre. */
 #s-connect .connect-header .btn-sm{
