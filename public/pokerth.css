@@ -668,25 +668,25 @@ body {
   display: inline-flex;
   align-items: center;
   font-family: var(--ff-mono);
-  font-size: 0.5em;
+  font-size: 0.42em;
   letter-spacing: 0.04em;
-  padding: 1px 6px;
+  padding: 1px 5px;
   border-radius: 4px;
   gap: 3px;
   white-space: nowrap;
   line-height: 1;
 }
 .gsb-label { margin-left: 0; }
-.g-status-badge svg { flex: none; width: 1.6em; height: 1.6em; }
+.g-status-badge svg { flex: none; width: 1.3em; height: 1.3em; }
 .g-status-admin {
   color: var(--gold);
   background: rgba(var(--gold-rgb), 0.12);
   border: 1px solid rgba(var(--gold-rgb), 0.35);
 }
 .g-status-public {
-  color: var(--green);
-  background: rgba(var(--green-rgb), 0.12);
-  border: 1px solid rgba(var(--green-rgb), 0.35);
+  color: rgb(var(--blue-rgb));
+  background: rgba(var(--blue-rgb), 0.12);
+  border: 1px solid rgba(var(--blue-rgb), 0.35);
 }
 .g-status-private {
   color: var(--text);
