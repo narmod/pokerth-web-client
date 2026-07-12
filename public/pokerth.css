@@ -7763,6 +7763,14 @@ html[data-buttons="pokerth"] .btn-action[disabled] { filter: grayscale(0.55) bri
   padding: 8px;
 }
 
+/* Header « Tables disponibles » : collé aux bords de la colonne (annule le
+   padding 8px) → même forme pleine-largeur que les headers des 3 autres
+   panneaux ; overflow:hidden + border-radius de .games-col arrondissent ses
+   coins hauts pour un rendu identique. */
+#s-lobby .lobby-grid > .games-col > .g-chat-panel-header {
+  margin: -8px -8px 8px;
+}
+
 /* Poignée de redimensionnement Tables/Chat — MOBILE uniquement (SplitView vertical) */
 .lob-hm { display:none; }
 @media (max-width: 899.98px) {
