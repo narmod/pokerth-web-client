@@ -5183,6 +5183,29 @@ body:not(.in-game) .my-zone {
 }
 
 #s-connect .corner-links .btn-icon{ text-decoration:none; }
+
+/* ═══ Bandeau header de la page de connexion ═══════════════════════════
+   Barre unique en haut, même chrome que le header lobby/jeu (.header :
+   fond --panel + bord bas --border). position:absolute pour ne pas
+   décentrer la carte ; overflow:visible + ancrage positionné pour que
+   #connect-overflow-menu tombe sous la barre (même principe que
+   #s-lobby .header). ☰ liens + 🏆 à gauche · install + ••• à droite.
+   Le style/taille fin des boutons est traité à l'étape suivante. */
+#s-connect .connect-header{
+  position:absolute; top:0; left:0; right:0; z-index:20;
+  overflow:visible;
+  justify-content:space-between;
+}
+#s-connect .connect-header .hdr-group{ display:flex; align-items:center; gap:6px; }
+/* Sur la barre, plus besoin du chip opaque individuel (qui servait à lire
+   par-dessus les flammes) : les boutons se posent sur la barre comme dans
+   le header lobby/jeu. */
+#s-connect .connect-header .btn-sm{
+  background:var(--inset);
+  box-shadow:none;
+  backdrop-filter:none; -webkit-backdrop-filter:none;
+}
+#s-connect .connect-header .btn-sm:hover{ background:var(--panel-hi); border-color:var(--border-hi); }
 #s-connect .corner-links .btn-icon img{ display:block; width:18px; height:18px; }
 
 /* ═══════════════════════════════════════════════════════════════════
