@@ -8019,8 +8019,12 @@ html[data-box-accent][data-seat="bar"] .seat-plate { border-color: var(--box-acc
    contraintes + le Tapis a fond plat (le border-image 9-slice du skin se
    dechire sur ce petit bouton). */
 @media (max-width: 740px) and (orientation: portrait) {
-  .my-zone .action-grid { width: 100%; max-width: 100%; box-sizing: border-box; gap: 5px; }
+  .my-zone .action-grid { width: 100%; max-width: 100%; min-width: 0; box-sizing: border-box; gap: 5px; }
   .my-zone .action-grid > * { min-width: 0; }
+  /* .action-grid est un flex-item de .my-zone : sans min-width:0 il ne rentre
+     pas sous la largeur de son contenu et deborde de l'ecran a mon tour
+     (en apercu le wrapper .actions-preview masquait le probleme). */
+  .my-zone .actions-preview { min-width: 0; max-width: 100%; box-sizing: border-box; }
   .my-zone .mid-row { gap: 5px; }
   .my-zone .mid-row .pct-row { flex: 1 1 auto; gap: 4px; min-width: 0; }
   .my-zone .mid-row .mode-sel-wrap { flex: 0 0 92px; min-width: 0; }
