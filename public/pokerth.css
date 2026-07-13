@@ -8010,3 +8010,29 @@ html[data-box-accent][data-seat="bar"] .seat-plate { border-color: var(--box-acc
   will-change: opacity;
   animation: glowPulseFade .85s ease-in-out infinite;
 }
+
+/* ── Barre d'action en PORTRAIT téléphone ──────────────────────────────
+   Les contraintes de largeur de la barre n'existaient que dans le bloc
+   paysage (@media max-height:500 landscape) ; en portrait la barre gardait
+   les tailles « desktop » (Tapis flex:1.5, dropdown large, btn min-width:80)
+   et debordait de l'ecran a droite/gauche. On reproduit ici les memes
+   contraintes + le Tapis a fond plat (le border-image 9-slice du skin se
+   dechire sur ce petit bouton). */
+@media (max-width: 740px) and (orientation: portrait) {
+  .my-zone .action-grid { width: 100%; max-width: 100%; box-sizing: border-box; gap: 5px; }
+  .my-zone .action-grid > * { min-width: 0; }
+  .my-zone .mid-row { gap: 5px; }
+  .my-zone .mid-row .pct-row { flex: 1 1 auto; gap: 4px; min-width: 0; }
+  .my-zone .mid-row .mode-sel-wrap { flex: 0 0 92px; min-width: 0; }
+  .my-zone .act-buttons-row { gap: 5px; }
+  .my-zone .act-buttons-row .btn-action { min-width: 0; }
+  .my-zone .mid-row .btn-pct { min-width: 0; }
+  .my-zone .mid-row .btn-allin {
+    flex: 0 0 auto; white-space: nowrap; min-width: 0; font-size: 0.72rem;
+    border-image: none !important;
+    border: 1px solid #ef5350 !important;
+    background: linear-gradient(180deg, #9e2a2a, #5c1111) !important;
+    color: #fff !important;
+    padding: 8px 12px !important;
+  }
+}
