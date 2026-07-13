@@ -2316,14 +2316,7 @@ body {
   .my-zone .mid-row .mode-sel-wrap { flex: 0 0 88px; }
   /* Tapis mobile : fond plat (rouge sombre QML All-In) au lieu du border-image
      9-slice du skin, qui se dechire sur un si petit bouton (rendu raye). */
-  .my-zone .mid-row .btn-allin {
-    flex: 0 0 auto; white-space: nowrap; font-size: 0.6rem; min-width: 0;
-    border-image: none !important;
-    border: 1px solid #ef5350 !important;
-    background: linear-gradient(180deg, #9e2a2a, #5c1111) !important;
-    color: #fff !important;
-    padding: 5px 10px !important;
-  }
+  .my-zone .mid-row .btn-allin { flex: 0 0 auto; white-space: nowrap; min-width: 0; font-size: 0.6rem; }
   .my-zone .act-buttons-row { gap: 4px; }
   .my-zone .act-buttons-row .btn-action { padding: 4px 8px; font-size: 0.62rem; min-width: 0; }
   .my-zone .mid-row .btn-pct { padding: 4px 4px; font-size: 0.58rem; font-weight: 700; border-width: 1px; }
@@ -4400,13 +4393,13 @@ body:not(.in-game) .my-zone {
 .btn-pct {
   flex: 1;
   display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1px;
-  background: #1b5e20; border: 1px solid #4CAF50;
-  color: #fff; padding: 7px 4px; border-radius: 7px; cursor: pointer;
+  background: rgba(var(--gold-rgb), 0.1); border: 1px solid var(--gold-dim);
+  color: var(--gold); padding: 7px 4px; border-radius: 7px; cursor: pointer;
   font-family: var(--ff-mono); text-align: center;
 }
-.btn-pct .pct-p { font-size: 0.74rem; font-weight: 700; color: #fff; }
+.btn-pct .pct-p { font-size: 0.74rem; font-weight: 700; color: var(--gold); }
 .btn-pct .pct-amt { font-size: 0.6rem; font-weight: 400; color: var(--text); }
-.btn-pct:hover { background: #388e3c; }
+.btn-pct:hover { background: rgba(var(--gold-rgb), 0.22); }
 .btn-pct:disabled,
 .btn-action:disabled {
   opacity: 0.28;
@@ -8041,12 +8034,5 @@ html[data-box-accent][data-seat="bar"] .seat-plate { border-color: var(--box-acc
      le retrecissement et la barre deborde de l'ecran a mon tour. */
   .my-zone .action-wrap { max-width: 100%; min-width: 0; width: 100%; }
   .my-zone #g-actions { min-width: 0; max-width: 100%; width: 100%; }
-  .my-zone .mid-row .btn-allin {
-    flex: 0 0 auto; white-space: nowrap; min-width: 0; font-size: 0.72rem;
-    border-image: none !important;
-    border: 1px solid #ef5350 !important;
-    background: linear-gradient(180deg, #9e2a2a, #5c1111) !important;
-    color: #fff !important;
-    padding: 8px 12px !important;
-  }
+  .my-zone .mid-row .btn-allin { flex: 0 0 auto; white-space: nowrap; min-width: 0; font-size: 0.72rem; }
 }
