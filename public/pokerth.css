@@ -2314,7 +2314,16 @@ body {
   .my-zone .mid-row { gap: 4px; }
   .my-zone .mid-row .pct-row { flex: 1 1 auto; gap: 3px; }
   .my-zone .mid-row .mode-sel-wrap { flex: 0 0 88px; }
-  .my-zone .mid-row .btn-allin { flex: 0 0 auto; white-space: nowrap; padding: 4px 8px; font-size: 0.6rem; min-width: 0; }
+  /* Tapis mobile : fond plat (rouge sombre QML All-In) au lieu du border-image
+     9-slice du skin, qui se dechire sur un si petit bouton (rendu raye). */
+  .my-zone .mid-row .btn-allin {
+    flex: 0 0 auto; white-space: nowrap; font-size: 0.6rem; min-width: 0;
+    border-image: none !important;
+    border: 1px solid #ef5350 !important;
+    background: linear-gradient(180deg, #9e2a2a, #5c1111) !important;
+    color: #fff !important;
+    padding: 5px 10px !important;
+  }
   .my-zone .act-buttons-row { gap: 4px; }
   .my-zone .act-buttons-row .btn-action { padding: 4px 8px; font-size: 0.62rem; min-width: 0; }
   .my-zone .mid-row .btn-pct { padding: 4px 4px; font-size: 0.58rem; font-weight: 700; border-width: 1px; }
@@ -4303,6 +4312,7 @@ body:not(.in-game) .my-zone {
   width: 100%;
   max-width: var(--bottom-w);
   margin: 0 auto;
+  box-sizing: border-box; /* inclut padding+border : evite le debordement pleine largeur mobile */
 }
 /* ── Barre d'action : panneau centré borné (fidélité client officiel) ──
    Sur desktop/tablette, le fond épouse la largeur des boutons (radius,
