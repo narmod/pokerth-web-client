@@ -1956,14 +1956,8 @@ body {
     height: min(256px, min(32vw, calc(100dvh - 300px))) !important;
   }
 
-  /* ── Cartes communes (flop/turn/river) ── */
-  .comm-row .pk {
-    width: 62px !important;
-    height: 87px !important; /* ratio carte 120:168 (0.714) */
-    font-size: 1.3rem !important;
-    border-radius: 7px !important;
-  }
-  .comm-row { gap: 7px !important; }
+  /* ── Cartes communes : tailles gerees par --comm-scale (voir .comm-row,
+     slot QML 46x64 x echelle par appareil) — plus d'override fixe ici. ── */
 
   /* ── Mes cartes dans la player-bar ── */
   .pb-cards .pk {
@@ -2211,12 +2205,8 @@ body {
   .pk { width: 28px; height: 40px; font-size: 0.68rem; }
   .pk.sm { width: 22px; height: 32px; font-size: 0.54rem; }
 
-  /* Cartes communes (flop/turn/river) agrandies pour mieux remplir le feutre.
-     Les .pk de SIEGE restent petits (regle ci-dessus) ; seul .comm-row .pk
-     grandit. Largeur en vw -> proportionnelle au feutre (68vw) ; 5 cartes +
-     gaps restent sous la largeur interieure ; capee en px. Zero impact
-     feutre/sieges (cartes en position absolue dans l'ovale). */
-  .comm-row .pk { width: min(52px, 12vw) !important; height: min(73px, 16.8vw) !important; font-size: min(1.12rem, 3.4vw) !important; border-radius: 6px !important; }
+  /* Cartes communes : tailles gerees par --comm-scale (slot QML 46x64,
+     echelle 1.15 en portrait telephone) — plus d'override fixe ici. */
 
   /* Chips : très excentrés pour éviter le chevauchement avec le timer */
   .blind-chip  { width: 17px !important; height: 17px !important; top: -13px !important; left: -13px !important; }
@@ -3466,14 +3456,31 @@ body {
    mobile/tablet visibly drifted the cards toward the bottom rim of the
    felt. Pure 50% centers them on the vertical axis of the oval (the
    gradient halo and shadow ring are already designed around 50%/45%). */
+/* ── Cartes communes : modele QML 2.1.3 (bible §9) — slot 46x64 (ratio
+   120:168 ≈ 0.714), spacing 3, le tout multiplie par --comm-scale
+   (equivalent communityScale QML). UNE seule regle de taille pour tous les
+   appareils ; seule l'echelle change par media ci-dessous (valeurs calees
+   sur les rendus existants pour eviter toute regression) :
+   desktop 1.35 (≈62x87) · tablette/base 1.0 (46x64 natif) ·
+   phone portrait 1.15 (≈53x74) · paysage compact 0.62 (≈29x40). */
+:root { --comm-scale: 1; }
+@media (min-width: 900px) and (min-height: 600px) { :root { --comm-scale: 1.35; } }
+@media (max-width: 740px) and (orientation: portrait) { :root { --comm-scale: 1.15; } }
+@media (orientation: landscape) and (max-height: 600px) { :root { --comm-scale: 0.62; } }
 .comm-row {
   position: absolute;
   top: 50%; left: 50%;
   transform: translate(-50%, -50%);
   display: flex;
-  gap: 5px;
+  gap: calc(3px * var(--comm-scale, 1));
   align-items: center;
   justify-content: center; /* #g-comm est en flux pleine largeur (ID position:relative) -> centrer les cartes dedans */
+}
+.comm-row .pk {
+  width: calc(46px * var(--comm-scale, 1));
+  height: calc(64px * var(--comm-scale, 1));
+  font-size: calc(1.02rem * var(--comm-scale, 1));
+  border-radius: calc(5px * var(--comm-scale, 1));
 }
 
 /* Pot display */
