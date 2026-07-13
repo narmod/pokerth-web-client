@@ -4003,7 +4003,14 @@ body.hide-pct-btns .pct-row { display: none; }
      border:9px transparent + padding de .btn-action (data-btn-img) : meme hauteur
      que les autres boutons. Les themes sans skin gardent leur Tapis natif. */
   border-image: none;
-  background: var(--btn-allin-img) border-box center / 100% 100% no-repeat;
+  /* proprietes separees : le shorthand avec border-box avant la position
+     cassait le parsing de background-size -> l'image ne remplissait pas. */
+  background-image: var(--btn-allin-img);
+  background-size: 100% 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-origin: border-box;
+  background-clip: border-box;
   color: var(--btn-allin-fg, #fff);
 }
 :root[data-btn-img] .btn-allin b { color: var(--btn-allin-fg-b, #fff); }
