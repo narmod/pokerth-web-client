@@ -2321,11 +2321,12 @@ body {
      l'image DU THEME (pas une couleur en dur) -> chaque theme garde son Tapis. */
   .my-zone .mid-row .btn-allin {
     flex: 0 0 auto; white-space: nowrap; min-width: 0; font-size: 0.6rem;
+    align-self: stretch; height: 100%; min-height: 100%; box-sizing: border-box;
     display: flex; align-items: center; justify-content: center;
-    border: 9px solid transparent !important; border-image: none !important;
-    background: var(--btn-allin-img, linear-gradient(180deg, #9e2a2a, #5c1111)) border-box center / 100% 100% no-repeat !important;
+    border: none !important; border-image: none !important;
+    background: var(--btn-allin-img, linear-gradient(180deg, #9e2a2a, #5c1111)) center / 100% 100% no-repeat !important;
     color: var(--btn-allin-fg, #fff) !important;
-    padding: 1px 9px !important;
+    padding: 0 12px !important;
   }
   .my-zone .act-buttons-row { gap: 4px; }
   .my-zone .act-buttons-row .btn-action { padding: 4px 8px; font-size: 0.62rem; min-width: 0; }
@@ -8046,10 +8047,11 @@ html[data-box-accent][data-seat="bar"] .seat-plate { border-color: var(--box-acc
   .my-zone #g-actions { min-width: 0; max-width: 100%; width: 100%; }
   .my-zone .mid-row .btn-allin {
     flex: 0 0 auto; white-space: nowrap; min-width: 0; font-size: 0.72rem;
+    align-self: stretch; height: 100%; min-height: 100%; box-sizing: border-box;
     display: flex; align-items: center; justify-content: center;
-    border: 9px solid transparent !important; border-image: none !important;
-    background: var(--btn-allin-img, linear-gradient(180deg, #9e2a2a, #5c1111)) border-box center / 100% 100% no-repeat !important;
+    border: none !important; border-image: none !important;
+    background: var(--btn-allin-img, linear-gradient(180deg, #9e2a2a, #5c1111)) center / 100% 100% no-repeat !important;
     color: var(--btn-allin-fg, #fff) !important;
-    padding: 1px 9px !important;
+    padding: 0 12px !important;
   }
 }
