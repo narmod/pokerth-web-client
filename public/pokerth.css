@@ -2332,6 +2332,8 @@ body {
   .my-zone .mid-row .btn-pct { padding: 4px 4px; font-size: 0.58rem; font-weight: 700; border-width: 1px; }
   .my-zone .mid-row .btn-pct .pct-p { font-size: 0.62rem; }
   .my-zone .mid-row .btn-pct .pct-amt { display: none; }
+  /* Pas de badges de touches clavier sur mobile (parite QML), comme en portrait. */
+  .my-zone .act-key { display: none !important; }
 
 .header { padding: 2px 6px; }
 .pill { font-size: 0.56rem; padding: 1px 4px; }
@@ -8040,16 +8042,25 @@ html[data-box-accent][data-seat="bar"] .seat-plate { border-color: var(--box-acc
      pas sous la largeur de son contenu et deborde de l'ecran a mon tour
      (en apercu le wrapper .actions-preview masquait le probleme). */
   .my-zone .actions-preview { min-width: 0; max-width: 100%; box-sizing: border-box; }
-  .my-zone .mid-row { gap: 5px; }
-  .my-zone .mid-row .pct-row { flex: 1 1 auto; gap: 4px; min-width: 0; }
-  .my-zone .mid-row .mode-sel-wrap { flex: 0 0 92px; min-width: 0; }
+  .my-zone .mid-row { gap: 5px; align-items: center; }
+  /* Geometrie QML phonePortrait (bible §5.2/§5.5) : quick-bets COMPACTS a
+     gauche (38 px de haut, largeur au contenu — plus etires pleine largeur),
+     Tapis (52 px min) juste apres, dropdown de mode 132 px POUSSE a droite
+     (margin-left:auto), comme le client officiel 2.1.3. */
+  .my-zone .mid-row .pct-row { flex: 0 0 auto; gap: 4px; min-width: 0; }
+  .my-zone .mid-row .mode-sel-wrap { flex: 0 1 132px; min-width: 0; height: 38px; margin-left: auto; }
   .my-zone .act-buttons-row { gap: 5px; }
-  .my-zone .act-buttons-row .btn-action { min-width: 0; }
-  .my-zone .mid-row .btn-pct { min-width: 0; }
+  /* Rangee Fold / Suivre / Relancer : 56 px de haut (Theme.compact QML),
+     police 15 px bold, letterSpacing 0.5, radius 9 — tailles officielles. */
+  .my-zone .act-buttons-row .btn-action { min-width: 0; min-height: 56px; font-size: 0.9375rem; letter-spacing: 0.5px; border-radius: 9px; padding: 6px 8px; }
+  .my-zone .mid-row .btn-pct { flex: 0 0 auto; min-width: 44px; height: 38px; padding: 0 10px; border-radius: 9px; }
+  /* Pas de badges de touches clavier sur mobile (le QML n'en affiche aucun). */
+  .my-zone .act-key { display: none !important; }
   /* Champ montant borné : non contraint, il faisait ~180px et elargissait la
      bet-row -> .action-grid -> tout debordait. (Le bloc paysage le bornait deja.) */
   .my-zone .bet-row { gap: 6px; }
-  .my-zone .bet-row .raise-amt-field { width: 64px; min-width: 0; flex: 0 0 auto; padding: 5px; font-size: 0.72rem; }
+  /* Champ montant : 78 px de large, police 13 px (spec QML §5.2). */
+  .my-zone .bet-row .raise-amt-field { width: 78px; min-width: 0; flex: 0 0 auto; padding: 8px 6px; font-size: 0.8125rem; }
   .my-zone .bet-row .raise-slider { flex: 1 1 auto; min-width: 40px; }
   /* Toute la chaine de conteneurs doit pouvoir se comprimer : sans min-width:0
      sur .action-wrap ET #g-actions (flex-items), le contenu min-content bloque
@@ -8057,11 +8068,12 @@ html[data-box-accent][data-seat="bar"] .seat-plate { border-color: var(--box-acc
   .my-zone .action-wrap { max-width: 100%; min-width: 0; width: 100%; }
   .my-zone #g-actions { min-width: 0; max-width: 100%; width: 100%; }
   .my-zone .mid-row .btn-allin {
-    flex: 0 0 auto; white-space: nowrap; min-width: 0; font-size: 0.72rem;
+    flex: 0 0 auto; white-space: nowrap; min-width: 52px; height: 38px; font-size: 0.72rem;
     border-image: none !important;
     border: 1px solid #ef5350 !important;
     background: linear-gradient(180deg, #9e2a2a, #5c1111) !important;
     color: #fff !important;
-    padding: 8px 12px !important;
+    padding: 0 12px !important;
+    border-radius: 9px;
   }
 }
