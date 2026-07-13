@@ -3480,9 +3480,9 @@ body {
 .pot-display { display: none; }
 
 /* Badge pot au-dessus des cartes (parité pot badge QML §9). Positionné dans le
-   feutre, juste au-dessus de la rangée de cartes communes. Affiché seulement sur
-   tablette/desktop (≥900px) ET quand le pot est non nul (classe .has-pot posée
-   par setPot). Sur mobile le pot reste dans la barre d'état sous le header. */
+   feutre, juste au-dessus de la rangée de cartes communes. Affiché sur TOUTES
+   les tailles (mobile compris, demande narmod) quand le pot est non nul
+   (classe .has-pot posée par setPot). */
 .pot-badge {
   display: none;
   position: absolute;
@@ -3516,17 +3516,18 @@ body {
   box-sizing: border-box;
   flex: 0 0 auto;
 }
-@media (min-width: 900px) {
-  .pot-badge.has-pot { display: inline-flex; }
+.pot-badge.has-pot { display: inline-flex; }
+/* Mobile : version compacte (cartes communes plus petites -> badge plus pres). */
+@media (max-width: 899px) {
+  .pot-badge { --pot-badge-lift: 54px; font-size: 0.8rem; padding: 3px 10px; }
+  .pot-badge::before { width: 12px; height: 12px; }
 }
 /* Le badge se positionne via transform:translate ; l'animation générique
    .pot-pop (transform:scale) écraserait ce translate → le badge sautait sur
    les cartes au flop. Pop dédié qui conserve le translate, et pas de
    display:inline-block forcé (respecte la visibilité tablette/desktop). */
 .pot-badge.pot-pop { display: none; animation: potBadgePop 0.3s ease-out; }
-@media (min-width: 900px) {
-  .pot-badge.has-pot.pot-pop { display: inline-flex; }
-}
+.pot-badge.has-pot.pot-pop { display: inline-flex; }
 @keyframes potBadgePop {
   0%, 100% { transform: translate(-50%, calc(-100% - var(--pot-badge-lift))) scale(1); }
   40%      { transform: translate(-50%, calc(-100% - var(--pot-badge-lift))) scale(1.16); }

@@ -9622,13 +9622,26 @@ const App = (() => {
       // chevauchement avec la barre d'action epinglee).
       var pbH = _masked ? 0 : (pb.offsetHeight || 52);
       mz.style.bottom = pbH + 'px';
-      // En paysage, le bas d'ecran est en FLUX (gere par le CSS) : aucune
-      // reserve a poser ici. Ailleurs (barres position:fixed), le CSS (clamp)
-      // gere la reserve sous les barres. On nettoie toute reserve inline
-      // eventuellement posee par une version precedente.
+      // Reserve EXACTE sous la table -> le tapis colle au-dessus de la barre
+      // d'action (demande narmod). Quand les barres sont position:fixed
+      // (portrait mobile, desktop), on MESURE leur hauteur reelle (dock +
+      // barre d'action) au lieu du clamp CSS approximatif (110-140 px) qui
+      // laissait un grand vide sous la self-box ou masquait le bas de zone.
+      // En paysage court les barres sont en FLUX : le CSS force deja
+      // padding-bottom:0 !important -> on nettoie l'inline.
       if (ga) {
-        if (_masked) ga.style.paddingBottom = (mz.offsetHeight || 0) + 'px';
-        else ga.style.removeProperty('padding-bottom');
+        var _fixed = false;
+        try { _fixed = getComputedStyle(mz).position === 'fixed'; } catch (e) {}
+        if (_fixed) {
+          var _res = pbH + (mz.offsetHeight || 0);
+          var _cur = parseInt(ga.style.paddingBottom, 10) || 0;
+          if (_cur !== _res) {
+            ga.style.paddingBottom = _res + 'px';
+            // La hauteur visible de la zone vient de changer : replacer les
+            // sieges (guard _cur!==_res -> pas de boucle de re-rendu).
+            setTimeout(function () { try { if (typeof renderSeats === 'function' && typeof seats !== 'undefined' && seats.length) renderSeats(); } catch (e) {} }, 50);
+          }
+        } else ga.style.removeProperty('padding-bottom');
       }
     }
   }
@@ -14059,7 +14072,7 @@ function renderPlayersList() {
   body.innerHTML = _shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>';
 }
 
-;(function(){ window.BUILD_VERSION='0.3.428-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.429-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
