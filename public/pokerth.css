@@ -2497,6 +2497,11 @@ body {
     justify-content: center;
     box-sizing: border-box;
   }
+  /* Boutons-icone (quitter, son, trophee, roue crantee) : le padding 0 9px
+     ci-dessus laissait 16 px de contenu dans les 34 px -> les SVG 22 px se
+     faisaient COMPRESSER (flex-shrink) et paraissaient plus petits qu'aux
+     headers login/lobby. On restaure padding 0 -> icones 22 px partout. */
+  #s-game .header .btn-icon { width: 34px; padding: 0; }
   /* Le menu ••• du jeu reprend le style "liste" (aligné à gauche, plus
      compact) au lieu d'hériter du centrage/hauteur fixe des boutons du
      header ci-dessus => menu nettement moins large. Sélecteur 2 ids pour
@@ -5345,6 +5350,7 @@ html[data-table="pokerth-live"] .raise-slider { accent-color: #4CAF50; }
 #s-lobby .header #lobby-chat-btn{ color:#c3ccda; }
 #s-lobby .header #l-overflow-btn{ color:#c3ccda; }
 #s-game .header #sound-toggle-btn{ color:#c3ccda; }
+#s-game .header #ranking-btn-game{ color:#E3C800; }
 #s-game .header #g-overflow-btn{ color:#c3ccda; }
 
 /* Mode clair : les icônes acier #c3ccda deviennent quasi invisibles sur la

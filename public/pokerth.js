@@ -4897,6 +4897,10 @@ const App = (() => {
         try { _smv = localStorage.getItem('pth_server_mode') || ''; } catch (e) {}
         if (!_smv && $('server-mode')) _smv = $('server-mode').value || '';
         _rkb.style.display = (id === 's-lobby' && !window._offlineMode && _smv === 'pokerthnet') ? '' : 'none';
+        // Trophee aussi dans le header de jeu (entre le son et la roue crantee),
+        // memes conditions : pokerth.net uniquement, jamais en offline.
+        var _rkg = $('ranking-btn-game');
+        if (_rkg) _rkg.style.display = (id === 's-game' && !window._offlineMode && _smv === 'pokerthnet') ? '' : 'none';
       }
     } catch (e) {}
     if (window._syncOverlayTop) window._syncOverlayTop();
@@ -14060,7 +14064,7 @@ function renderPlayersList() {
   body.innerHTML = _shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>';
 }
 
-;(function(){ window.BUILD_VERSION='0.3.422-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.423-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
