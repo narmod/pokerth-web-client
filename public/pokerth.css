@@ -4322,9 +4322,10 @@ body:not(.in-game) .my-zone {
 /* ── Barre d'action : panneau centré borné (fidélité client officiel) ──
    Sur desktop/tablette, le fond épouse la largeur des boutons (radius,
    comme le QML officiel, bible §5) au lieu de s'étirer sur toute la largeur
-   de l'écran. Sur téléphone (largeur < 900 OU paysage court), on garde la
-   bande pleine largeur collée au bas. */
-@media (min-width: 900px) and (min-height: 600px) {
+   de l'écran. Actif aussi sur tout desktop/souris (hover+pointer:fine),
+   fenêtre étroite comprise. Les téléphones tactiles (pointer:coarse) gardent
+   la bande pleine largeur collée au bas. */
+@media (min-width: 900px) and (min-height: 600px), (hover: hover) and (pointer: fine) {
   .my-zone { background: transparent; border-top: none; }
   .my-zone .action-grid {
     background: var(--panel);
