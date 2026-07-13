@@ -2524,6 +2524,19 @@ body {
     text-overflow: ellipsis;
     white-space: nowrap;
   }
+  /* Nom de table sur mobile : la boite centree en ABSOLU (82vw) passait sous
+     les icones de droite (son / trophee / roue) -> titre et pastille Public
+     chevauchaient le haut-parleur. On remet le nom DANS LE FLUX flex, colle
+     apres la porte : flex:1 + min-width:0 -> #g-name tronque en « ... » et
+     cede toujours la place aux boutons. Desktop/tablette restent centres. */
+  #s-game .header-brand--game {
+    position: static;
+    transform: none;
+    max-width: none;
+    flex: 1 1 auto;
+    min-width: 0;
+    justify-content: flex-start;
+  }
   /* Keep header-pills as a flex:1 spacer (still empty in #s-game) so that
      the action buttons get pushed to the RIGHT edge of the header on
      mobile. Previously this was display:none, which collapsed the spacer
