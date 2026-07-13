@@ -2320,6 +2320,10 @@ body {
      border-image 9-slice, qui se dechirait sur ce bouton etroit. Reste
      l'image DU THEME (pas une couleur en dur) -> chaque theme garde son Tapis. */
   .my-zone .mid-row .btn-allin { flex: 0 0 auto; white-space: nowrap; min-width: 0; font-size: 0.6rem; }
+  /* Tapis des themes a skin sur mobile : Safari n'etire pas un <button> (align-self
+     stretch/height 100% ignores), et le border:9px l'empeche de matcher. On retire
+     le border et on donne la hauteur par padding -> meme hauteur que 1/3,1/2,Pot,dropdown. */
+  :root[data-btn-img] .my-zone .mid-row .btn-allin { border: none !important; padding: 4px 12px !important; }
   .my-zone .act-buttons-row { gap: 4px; }
   .my-zone .act-buttons-row .btn-action { padding: 4px 8px; font-size: 0.62rem; min-width: 0; }
   .my-zone .mid-row .btn-pct { padding: 4px 4px; font-size: 0.58rem; font-weight: 700; border-width: 1px; }
@@ -8053,4 +8057,8 @@ html[data-box-accent][data-seat="bar"] .seat-plate { border-color: var(--box-acc
   .my-zone .action-wrap { max-width: 100%; min-width: 0; width: 100%; }
   .my-zone #g-actions { min-width: 0; max-width: 100%; width: 100%; }
   .my-zone .mid-row .btn-allin { flex: 0 0 auto; white-space: nowrap; min-width: 0; font-size: 0.72rem; }
+  /* Tapis des themes a skin sur mobile : Safari n'etire pas un <button> (align-self
+     stretch/height 100% ignores), et le border:9px l'empeche de matcher. On retire
+     le border et on donne la hauteur par padding -> meme hauteur que 1/3,1/2,Pot,dropdown. */
+  :root[data-btn-img] .my-zone .mid-row .btn-allin { border: none !important; padding: 4px 12px !important; }
 }
