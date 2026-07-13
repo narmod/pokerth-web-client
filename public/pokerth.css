@@ -4379,7 +4379,7 @@ body:not(.in-game) .my-zone {
 .raise-amt-field {
   flex: 0 0 auto; width: 78px;
   background: var(--field-bg);
-  border: 1px solid var(--btn-raise-bg, #4CAF50);
+  border: 2px solid var(--btn-raise-bg, #4CAF50);
   border-radius: 7px;
   color: var(--btn-raise-bg, #4CAF50);
   padding: 8px 6px; font-family: var(--ff-mono); font-size: 0.81rem;
