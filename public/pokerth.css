@@ -1345,6 +1345,16 @@ body {
 #create-form.open { display: block !important; }
 
 /* Header */
+/* ── Hauteur de header UNIFORME (tous ecrans, tous appareils, tous OS) ──
+   Base QML officiel 2.1.3 : topBar 38 px, 30 px en landscapeCompact
+   (paysage mobile h<600, ou desktop ratio>2.1 && h<1300 — delta §2).
+   Une seule variable consommee par TOUTES les regles de header (base,
+   desktop, mobile portrait, paysage, connexion) -> plus aucune divergence. */
+:root { --header-h: 38px; }
+@media (orientation: landscape) and (max-height: 600px),
+       (min-aspect-ratio: 210/100) and (max-height: 1299px) {
+  :root { --header-h: 30px; }
+}
 .header {
   display: flex;
   align-items: center;
@@ -1355,8 +1365,9 @@ body {
      (requested by narmod). Was clamp(4px,1.2vw,14px). */
   gap: clamp(6px,2.2vw,18px);
   flex-shrink: 0;
+  box-sizing: border-box;
   /* Aligne sur le topBar QML officiel : 38 px (30 en landscapeCompact). */
-  min-height: 38px;
+  min-height: var(--header-h, 38px);
   overflow: hidden;
 }
 
@@ -2080,7 +2091,7 @@ body {
   .hs-txt { font-size: 0.7rem !important; }
 
   /* ── Header ── */
-  .header { min-height: 38px !important; }
+  .header { min-height: var(--header-h, 38px) !important; }
   .header-brand { font-size: 1.05rem !important; }
   .header .btn-sm { height: 30px !important; font-size: 0.82rem !important; padding: 0 13px !important; }
   .header .btn-icon { width: 34px !important; padding: 0 !important; }
@@ -2248,7 +2259,7 @@ body {
 /* ── Phone LANDSCAPE (wide, short) ── */
 @media (max-height: 500px) and (orientation: landscape) {
   /* Header aplati facon landscapeCompact du QML officiel : 30 px, marges reduites. */
-  .header { min-height: 30px !important; padding: 2px 6px !important; }
+  .header { min-height: var(--header-h, 30px) !important; padding: 2px 6px !important; }
   .header .btn-sm { height: 26px !important; }
   .header .btn-icon { width: 30px !important; }
   .blind-chip  { width: 18px !important; height: 18px !important; top: -12px !important; left: -12px !important; }
@@ -2547,10 +2558,10 @@ body {
     min-width: 0;
   }
   #s-game .header { gap: 4px; padding: 3px 8px; }
-  /* Bandeaux du haut un peu plus épais sur mobile (demande narmod) :
-     header de table + barre du pot. Surcharge top/bottom uniquement,
-     en gardant le padding horizontal des règles précédentes. */
-  #s-game .header { padding-top: 8px; padding-bottom: 8px; min-height: 48px; }
+  /* Hauteur de header UNIFORME (demande narmod) : meme 38 px que desktop,
+     tablette et login — base topBar QML 2.1.3. Padding vertical 4 px
+     (boutons 30 px + 4+4 = 38). L'ancien 48 px mobile est retire. */
+  #s-game .header { padding-top: 4px; padding-bottom: 4px; min-height: var(--header-h, 38px); }
   #pot-strip { padding-top: 5px; padding-bottom: 5px; min-height: 30px; }
   /* Toutes les écritures de la barre du pot, plus grandes sur mobile
      (demande narmod) : n° de main + tour (.pot-side), montant (.pot-center),
@@ -2587,10 +2598,9 @@ body {
   #s-lobby #fs-btn-lobby,
   #s-lobby #lang-toggle-lobby { display: none; }
   #s-lobby .header { gap: 6px; padding: 3px 8px; }
-  /* Header du lobby aligné sur le header du jeu (48px) sur mobile, pour
-     une hauteur uniforme entre les écrans (demande narmod). Même valeur
-     que #s-game .header plus haut. */
-  #s-lobby .header { padding-top: 8px; padding-bottom: 8px; min-height: 48px; }
+  /* Header du lobby aligné sur le header du jeu, pour une hauteur uniforme
+     entre les écrans (demande narmod). Même variable que #s-game .header. */
+  #s-lobby .header { padding-top: 4px; padding-bottom: 4px; min-height: var(--header-h, 38px); }
   #s-lobby .header-pills { flex: 1; min-width: 0; }
 }
 
