@@ -4410,6 +4410,18 @@ body:not(.in-game) .my-zone {
 .btn-pct .pct-p { font-size: 0.74rem; font-weight: 700; color: var(--gold); }
 .btn-pct .pct-amt { font-size: 0.6rem; font-weight: 400; color: var(--text); }
 .btn-pct:hover { background: rgba(var(--gold-rgb), 0.22); }
+/* Bets rapides : vert QML (comme le client officiel) UNIQUEMENT sur les tapis
+   maison PokerTH (pas d'attribut data-table) et Spectator (data-table=pokerth-live).
+   Les tapis QML importes (data-table=danuxi...) et Casino gardent la teinte du theme. */
+html:not([data-table]) .btn-pct,
+html[data-table=""] .btn-pct,
+html[data-table="pokerth-live"] .btn-pct { background: #1b5e20; border-color: #4CAF50; color: #fff; }
+html:not([data-table]) .btn-pct .pct-p,
+html[data-table=""] .btn-pct .pct-p,
+html[data-table="pokerth-live"] .btn-pct .pct-p { color: #fff; }
+html:not([data-table]) .btn-pct:hover,
+html[data-table=""] .btn-pct:hover,
+html[data-table="pokerth-live"] .btn-pct:hover { background: #388e3c; }
 .btn-pct:disabled,
 .btn-action:disabled {
   opacity: 0.28;
