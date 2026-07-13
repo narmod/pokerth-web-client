@@ -8031,6 +8031,16 @@ html[data-box-accent][data-seat="bar"] .seat-plate { border-color: var(--box-acc
   .my-zone .act-buttons-row { gap: 5px; }
   .my-zone .act-buttons-row .btn-action { min-width: 0; }
   .my-zone .mid-row .btn-pct { min-width: 0; }
+  /* Champ montant borné : non contraint, il faisait ~180px et elargissait la
+     bet-row -> .action-grid -> tout debordait. (Le bloc paysage le bornait deja.) */
+  .my-zone .bet-row { gap: 6px; }
+  .my-zone .bet-row .raise-amt-field { width: 64px; min-width: 0; flex: 0 0 auto; padding: 5px; font-size: 0.72rem; }
+  .my-zone .bet-row .raise-slider { flex: 1 1 auto; min-width: 40px; }
+  /* Toute la chaine de conteneurs doit pouvoir se comprimer : sans min-width:0
+     sur .action-wrap ET #g-actions (flex-items), le contenu min-content bloque
+     le retrecissement et la barre deborde de l'ecran a mon tour. */
+  .my-zone .action-wrap { max-width: 100%; min-width: 0; width: 100%; }
+  .my-zone #g-actions { min-width: 0; max-width: 100%; width: 100%; }
   .my-zone .mid-row .btn-allin {
     flex: 0 0 auto; white-space: nowrap; min-width: 0; font-size: 0.72rem;
     border-image: none !important;
