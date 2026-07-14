@@ -1772,10 +1772,13 @@ body {
 }
 /* Compteur "blinds" cliquable à côté du n° de main dans le bandeau du pot. */
 .blinds-next {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  height: 18px;               /* même hauteur que #g-spec-badge (bandeau) */
+  box-sizing: border-box;
   margin-left: 6px;
-  padding: 0 6px;
-  border-radius: 8px;
+  padding: 0 9px;
+  border-radius: 999px;
   background: rgba(227,200,0,0.14);          /* teinte accent or QML, stable clair/sombre */
   border: 1px solid rgba(227,200,0,0.55);
   color: var(--sel, #E3C800);
@@ -5028,7 +5031,9 @@ html[data-table="pokerth-live"] .raise-slider { accent-color: #4CAF50; }
 #g-spec-badge {
   display: none;               /* activé par JS via .on quand _amSpectator */
   align-items: center;
-  padding: 1px 9px;
+  height: 18px;                /* hauteur partagée avec .blinds-next */
+  box-sizing: border-box;
+  padding: 0 9px;
   margin-right: 8px;
   border-radius: 999px;
   border: 1px solid var(--sel, #E3C800);
