@@ -9749,6 +9749,16 @@ const App = (() => {
 
   function updateBottomLayout() {
     _updatePinBtn();
+    // Echelle continue de la barre d'action (--bar-k) : suit la fenetre
+    // comme le client QML. Desktop/tablette uniquement (les blocs mobiles
+    // ont deja leurs valeurs QML fixes). 1 a partir de 1400x860, plancher
+    // 0.78 ; largeur ET hauteur comptent (retrecir l'une reduit la barre).
+    try {
+      var _bw = window.innerWidth, _bh = window.innerHeight, _bk = 1;
+      if (Math.min(_bw, _bh) >= 540) _bk = Math.max(0.78, Math.min(1, Math.min(_bw / 1400, _bh / 860)));
+      _bk = Math.round(_bk * 1000) / 1000;
+      if (window.__barK !== _bk) { window.__barK = _bk; document.documentElement.style.setProperty('--bar-k', _bk); }
+    } catch (e) {}
     var pb = document.querySelector('.player-bar');
     var mz = document.querySelector('.my-zone');
     var ga = document.querySelector('.game-area');
@@ -14211,7 +14221,7 @@ function renderPlayersList() {
   body.innerHTML = _shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>';
 }
 
-;(function(){ window.BUILD_VERSION='0.3.460-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.461-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
