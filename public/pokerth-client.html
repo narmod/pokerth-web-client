@@ -1352,6 +1352,7 @@ function onAvatarImageChosen(input) {
     <button class="btn-sm btn-icon" id="fs-btn-game" onclick="toggleFullscreen()" title="Fullscreen" data-i18n-title="fullscreenTooltip">⛶</button>
     <button class="btn-sm btn-icon" id="sound-toggle-btn" onclick="toggleSoundPopover(this)" title="Couper/Unmute" data-i18n-title="soundTooltip"><svg viewBox="0 0 24 24" style="display:block;width:22px;height:22px" fill="currentColor" aria-hidden="true"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg></button>
     <button class="btn-sm btn-icon" id="ranking-btn-game" onclick="openRankingModal()" title="Ranking" data-i18n-title="rankingTooltip" aria-label="Ranking" style="display:none"><svg viewBox="0 0 24 24" style="display:block;width:22px;height:22px" fill="currentColor" aria-hidden="true"><path d="M19 5h-2V3H7v2H5C3.9 5 3 5.9 3 7v1c0 2.55 1.92 4.63 4.39 4.94.63 1.5 1.98 2.63 3.61 2.96V19H7v2h10v-2h-4v-3.1c1.63-.33 2.98-1.46 3.61-2.96C19.08 12.63 21 10.55 21 8V7c0-1.1-.9-2-2-2zM5 8V7h2v3.82C5.84 10.4 5 9.3 5 8zm14 0c0 1.3-.84 2.4-2 2.82V7h2v1z"/></svg></button>
+    <button class="btn-sm btn-icon" id="tableranking-btn-game" onclick="openTableRanking()" title="Table ranking" data-i18n-title="tableRankTooltip" aria-label="Table ranking" style="display:none"><svg viewBox="0 0 24 24" style="display:block;width:22px;height:22px" fill="currentColor" aria-hidden="true"><path d="M9 3h6v18H9V3zm2 2v14h2V5h-2zM2 11h5v10H2V11zm2 2v6h1v-6H4zm13 -2h5v10h-5V11zm2 2v6h1v-6h-1z"/></svg></button>
     <button class="btn-sm btn-icon" id="haptic-toggle-btn" onclick="toggleHaptic()" title="Vibration" data-i18n-title="hapticLabel" aria-label="Vibration">📳</button>
     <button class="btn-sm btn-icon" id="voice-toggle-btn" onclick="toggleVoice()" title="Annonce vocale" data-i18n-title="voiceLabel" aria-label="Annonce vocale">🤐</button>
     <button class="btn-sm" id="admin-startnobots-btn" onclick="App.startNoBots()" style="display:none;color:var(--green);border-color:rgba(var(--green-rgb),0.4)" title="Start without bots (humans only)" data-i18n-title="wpStartHumansTip"><span data-i18n="startNoBots">▶ Start (no bots)</span></button>
@@ -1856,6 +1857,30 @@ if ('serviceWorker' in navigator) {
     <div id="rk-profile" style="display:none">
       <button type="button" class="rk-back" onclick="rankingBackToList()" title="Back" data-i18n-title="rankingBack" aria-label="Back">←</button>
       <div id="rk-prof-body"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Table ranking modal (parité QML GameTableStatsPage) : classement de saison
+     des joueurs de la table courante. PokerTH via /api/tableranking (endpoint
+     gametable/show de pokerth.net) ; BBC/WEC = /api/ranking filtré côté client
+     sur les nicks de la table. Entrée : bouton podium du header de jeu. -->
+<div id="tableranking-modal" style="display:none">
+  <div class="rk-backdrop" onclick="closeTableRanking()"></div>
+  <div class="rk-card" role="dialog" aria-labelledby="trk-title">
+    <button class="rk-close" type="button" onclick="closeTableRanking()" title="Fermer" data-i18n-title="closeTooltip" aria-label="Fermer">✕</button>
+    <div class="rk-title" id="trk-title">🏆 <span id="trk-title-txt">Table ranking</span></div>
+    <div class="rk-tabs">
+      <button type="button" class="rk-tab" data-src="pth" onclick="trSelect('pth')" data-i18n="rankingPth">PokerTH</button>
+      <button type="button" class="rk-tab" data-src="bbc" onclick="trSelect('bbc')" data-i18n="rankingBbc">BBC</button>
+      <button type="button" class="rk-tab" data-src="wec" onclick="trSelect('wec')" data-i18n="rankingWec">WEC</button>
+    </div>
+    <div class="rk-body">
+      <div class="trk-sub" id="trk-sub"></div>
+      <div class="rk-msg" id="trk-loading" data-i18n="rankingLoading">Loading…</div>
+      <div class="rk-msg" id="trk-error" data-i18n="rankingError" style="display:none">Could not load the ranking.</div>
+      <div class="rk-msg" id="trk-empty" data-i18n="rankingEmpty" style="display:none">No entries.</div>
+      <div id="trk-table-wrap" style="display:none"></div>
     </div>
   </div>
 </div>
@@ -2602,6 +2627,179 @@ if ('serviceWorker' in navigator) {
     var prof = $('rk-profile');
     if (prof && prof.style.display === 'block') window.rankingBackToList();
     else window.closeRankingModal();
+  });
+})();
+</script>
+
+<script>
+(function () {
+  // ── Classement de la table (parité QML GameTableStatsPage) ────────────────
+  // PokerTH = endpoint dédié gametable/show (relais /api/tableranking, scores
+  // déjà ÷100 côté proxy). BBC/WEC = rangliste générale /api/ranking filtrée
+  // sur les nicks de la table ; rank = position dans la liste complète.
+  var TR_SRCS = ['pth', 'bbc', 'wec'];
+  var TR_SRC = 'pth';
+  var TR_CTX = null;                        // { name, nicks } figé à l'ouverture
+  var TR_CUR = { state: 'loading', rows: [], cols: [] };
+  var TR_SORT = { col: 'rank', dir: 1 };    // défaut QML : rank_pos ascendant
+  var trFetchSeq = 0;
+  var TR_CACHE = {};                        // src|nicks -> { at, rows }
+  var TR_TTL = 30000;
+  function $(id) { return document.getElementById(id); }
+  function trT(key, fb) { try { if (typeof window.t === 'function') { var v = window.t(key); if (v && v !== key) return v; } } catch (e) {} return fb; }
+  function trEsc(v) { return String(v == null ? '' : v).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+  function trFold(s) { return String(s == null ? '' : s).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, ''); }
+
+  // Colonnes façon QML : #, Player, Games, Avg (PokerTH) / Points (BBC/WEC), Score.
+  var TR_COLS = { pth: ['rank', 'player', 'games', 'avg', 'score'], bbc: ['rank', 'player', 'games', 'points', 'score'], wec: ['rank', 'player', 'games', 'points', 'score'] };
+  var TR_COL_LABELS = { rank: 'rankingColRank', player: 'rankingColPlayer', games: 'rankingColGames', avg: 'rankingColAvg', points: 'rankingColPoints', score: 'rankingColScore' };
+  function trColLabel(k) { var kk = TR_COL_LABELS[k]; return kk ? trT(kk, (k === 'avg') ? 'Avg' : k) : k; }
+
+  function trState(which) {
+    ['loading', 'error', 'empty'].forEach(function (st) {
+      var e = $('trk-' + st); if (e) e.style.display = (st === which) ? '' : 'none';
+    });
+    var tw = $('trk-table-wrap'); if (tw) tw.style.display = (which === 'table') ? '' : 'none';
+  }
+
+  function trTitleSub() {
+    var tt = $('trk-title-txt');
+    if (tt) {
+      var name = (TR_CTX && TR_CTX.name) ? TR_CTX.name : '';
+      tt.textContent = name
+        ? trT('tableRankTitle', 'Table ranking – {name}').replace('{name}', name)
+        : trT('tableRankTitleNoName', 'Table ranking');
+    }
+    var sub = $('trk-sub');
+    if (sub) {
+      var k = (TR_SRC === 'bbc') ? 'tableRankSubBbc' : (TR_SRC === 'wec') ? 'tableRankSubWec' : 'tableRankSubPth';
+      sub.textContent = trT(k, 'Current season standings of the players at this table.');
+    }
+  }
+
+  // Tri numérique si possible, sinon alphabétique (même esprit que le modal ranking).
+  function trCmpVal(a, b) {
+    var na = parseFloat(String(a == null ? '' : a).replace(/[\s,\u00A0]/g, '').replace(/[^0-9.\-]/g, ''));
+    var nb = parseFloat(String(b == null ? '' : b).replace(/[\s,\u00A0]/g, '').replace(/[^0-9.\-]/g, ''));
+    if (!isNaN(na) && !isNaN(nb)) return na - nb;
+    return String(a == null ? '' : a).localeCompare(String(b == null ? '' : b));
+  }
+  window.trSortBy = function (col) {
+    if (TR_SORT.col === col) { TR_SORT.dir = -TR_SORT.dir; }
+    else { TR_SORT.col = col; TR_SORT.dir = (col === 'player' || col === 'rank') ? 1 : -1; }
+    trRender();
+  };
+
+  function trRender() {
+    if (TR_CUR.state !== 'table') { trState(TR_CUR.state); return; }
+    var rows = TR_CUR.rows;
+    if (!rows.length) { trState('empty'); return; }
+    var cols = TR_CUR.cols;
+    if (TR_SORT.col && cols.indexOf(TR_SORT.col) >= 0) {
+      rows = rows.slice().sort(function (a, b) { return trCmpVal(a[TR_SORT.col], b[TR_SORT.col]) * TR_SORT.dir; });
+    }
+    var h = '<table class="rk-table"><thead><tr>';
+    for (var i = 0; i < cols.length; i++) {
+      var ind = (TR_SORT.col === cols[i]) ? (TR_SORT.dir > 0 ? ' \u25B2' : ' \u25BC') : '';
+      h += '<th class="rk-th-sort" onclick="trSortBy(\'' + cols[i] + '\')">' + trEsc(trColLabel(cols[i])) + ind + '</th>';
+    }
+    h += '</tr></thead><tbody>';
+    for (var r = 0; r < rows.length; r++) {
+      h += '<tr>';
+      for (var k = 0; k < cols.length; k++) h += '<td>' + trEsc(rows[r][cols[k]]) + '</td>';
+      h += '</tr>';
+    }
+    h += '</tbody></table>';
+    var tw = $('trk-table-wrap'); if (tw) tw.innerHTML = h;
+    trState('table');
+  }
+
+  function trShowRows(rows) {
+    TR_CUR = { state: rows.length ? 'table' : 'empty', rows: rows, cols: TR_COLS[TR_SRC] || TR_COLS.pth };
+    trRender();
+  }
+
+  function trFetch() {
+    if (!TR_CTX || !TR_CTX.nicks || !TR_CTX.nicks.length) {
+      TR_CUR = { state: 'empty', rows: [], cols: [] }; trRender(); return;
+    }
+    var seq = ++trFetchSeq;
+    var src = TR_SRC;
+    var ck = src + '|' + TR_CTX.nicks.join(',').toLowerCase();
+    var c = TR_CACHE[ck];
+    if (c && (Date.now() - c.at) < TR_TTL) { trShowRows(c.rows); return; }
+    TR_CUR = { state: 'loading', rows: [], cols: [] }; TR_SORT = { col: 'rank', dir: 1 }; trState('loading');
+    var url = (src === 'pth')
+      ? '/api/tableranking?nicks=' + encodeURIComponent(TR_CTX.nicks.join(','))
+      : '/api/ranking?src=' + encodeURIComponent(src);
+    fetch(url, { headers: { 'Accept': 'application/json' } })
+      .then(function (r) { return r.text(); })
+      .then(function (t) {
+        if (seq !== trFetchSeq) return;                 // réponse périmée
+        var d; try { d = JSON.parse(t); } catch (e) { d = null; }
+        if (!d || d.ok === false || !Array.isArray(d.rows)) {
+          TR_CUR = { state: 'error', rows: [], cols: [] }; trRender(); return;
+        }
+        var rows = d.rows;
+        if (src !== 'pth') {
+          // Filtre client sur les nicks de la table (comme la page QML) ;
+          // rank = position dans la rangliste complète, joueurs absents omis.
+          var wanted = {};
+          for (var i = 0; i < TR_CTX.nicks.length; i++) wanted[trFold(TR_CTX.nicks[i])] = true;
+          rows = rows.filter(function (r) { return wanted[trFold(r.player)]; })
+                     .map(function (r) { return { rank: r.rank, player: r.player, games: r.games, points: r.points, score: r.score }; });
+        }
+        TR_CACHE[ck] = { at: Date.now(), rows: rows };
+        trShowRows(rows);
+      })
+      .catch(function () { if (seq === trFetchSeq) { TR_CUR = { state: 'error', rows: [], cols: [] }; trRender(); } });
+  }
+
+  window.trSelect = function (src) {
+    if (TR_SRCS.indexOf(src) < 0) src = 'pth';
+    TR_SRC = src;
+    var tabs = document.querySelectorAll('#tableranking-modal .rk-tab');
+    for (var i = 0; i < tabs.length; i++) tabs[i].classList.toggle('active', tabs[i].dataset.src === src);
+    trTitleSub();
+    trFetch();
+  };
+
+  // Fenêtre flottante sur desktop/tablette, comme le modal ranking.
+  function trWinGate() { try { return !!(window._winGate && window._winGate() && typeof window._enableFloating === 'function'); } catch (e) { return false; } }
+  window.openTableRanking = function () {
+    var ctx = (typeof window.getTableRankingCtx === 'function') ? window.getTableRankingCtx() : null;
+    if (!ctx) return;
+    TR_CTX = ctx;
+    var m = $('tableranking-modal'); if (!m) return;
+    m.style.display = 'flex';
+    var card = m.querySelector('.rk-card');
+    if (card && trWinGate()) {
+      m.classList.add('rk-floating');
+      try { window._enableFloating(card, { handle: $('trk-title'), resizable: true, key: 'pth-trk-win', defW: 460, defH: 420, minW: 320, minH: 280, defLeft: 80, defTop: 90 }); } catch (e) {}
+    }
+    var def = 'pth'; try { def = localStorage.getItem('pth_rank_src') || 'pth'; } catch (e) {}
+    window.trSelect(def);
+  };
+  window.closeTableRanking = function () {
+    var m = $('tableranking-modal'); if (!m) return;
+    var card = m.querySelector('.rk-card');
+    if (card && card.classList.contains('floating-win') && typeof window._disableFloating === 'function') { try { window._disableFloating(card); } catch (e) {} }
+    m.classList.remove('rk-floating');
+    m.style.display = 'none';
+  };
+
+  // Re-localisation à chaud (appelée par setLang si présent).
+  window._retranslateTableRanking = function () {
+    var m = $('tableranking-modal');
+    if (!m || !m.style.display || m.style.display === 'none') return;
+    trTitleSub();
+    if (TR_CUR && TR_CUR.state === 'table') trRender();
+  };
+
+  document.addEventListener('keydown', function (e) {
+    if (e.key !== 'Escape') return;
+    var m = $('tableranking-modal');
+    if (m && m.style.display && m.style.display !== 'none') window.closeTableRanking();
   });
 })();
 </script>

@@ -363,6 +363,8 @@ export const strings = {
     rankingSearch:'Search a player…', rankingNoMatch:'No player found.',
     rankingSeason:'Season', rankingAllTime:'All-Time',
     rankingColRank:'#', rankingColPlayer:'Nickname', rankingColScore:'Score', rankingColPoints:'Points', rankingColGames:'Games',
+    rankingColAvg:'Avg', tableRankTooltip:'Table ranking', tableRankTitle:'Table ranking \u2013 {name}', tableRankTitleNoName:'Table ranking',
+    tableRankSubPth:'Current season standings of the players at this table.', tableRankSubBbc:'Current BBC season standings of the players at this table.', tableRankSubWec:'Current WEC month standings of the players at this table.',
     rankingMemberSince:'Member since', rankingAwards:'Awards', rankingTickets:'Tickets', rankingThisSeason:'This season', rankingStep:'Step', rankingRank:'Rank', rankingBack:'Back', rankingThisMonth:'This month', rankingThisYear:'This year', rankingCurrentSeason:'Current season', themeExport:'Export theme (.zip)', sectionAdvanced:'Advanced', rankingSeasonStats:'Season Stats', rankingShare:'Share', rankingResults:'Results', rankingToggleChart:'Switch bar / pie',
     footPlayer:'Player', footCreate:'＋ Create a table', gameInfoTitle:'Game info', gameInfoEmpty:'Select a table',
     gfNone:'No game list filter', gfOpen:'Show open games', gfOpenNF:'Show open & non-full games', gfOpenNFNP:'Show open & non-full & non-private games', gfOpenNFP:'Show open & non-full & private games', gfOpenNFR:'Show open & non-full & ranking games',

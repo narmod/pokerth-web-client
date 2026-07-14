@@ -363,6 +363,8 @@ export const strings = {
     rankingSearch:'Rechercher un joueur…', rankingNoMatch:'Aucun joueur trouvé.',
     rankingSeason:'Saison', rankingAllTime:'Tous les temps',
     rankingColRank:'#', rankingColPlayer:'Pseudo', rankingColScore:'Score', rankingColPoints:'Points', rankingColGames:'Parties',
+    rankingColAvg:'Moy', tableRankTooltip:'Classement de la table', tableRankTitle:'Classement de la table \u2013 {name}', tableRankTitleNoName:'Classement de la table',
+    tableRankSubPth:'Classement de la saison en cours des joueurs de cette table.', tableRankSubBbc:'Classement de la saison BBC en cours des joueurs de cette table.', tableRankSubWec:'Classement du mois WEC en cours des joueurs de cette table.',
     rankingMemberSince:'Membre depuis', rankingAwards:'Récompenses', rankingTickets:'Tickets', rankingThisSeason:'Cette saison', rankingStep:'Palier', rankingRank:'Rang', rankingBack:'Retour', rankingThisMonth:'Ce mois', rankingThisYear:'Cette année', rankingCurrentSeason:'Saison actuelle', themeExport:'Exporter le thème (.zip)', sectionAdvanced:'Options avancées', rankingSeasonStats:'Stats de saison', rankingShare:'Part', rankingResults:'Résultats', rankingToggleChart:'Basculer barres / camembert',
     footPlayer:'Joueur', footCreate:'＋ Créer une partie', gameInfoTitle:'Infos de partie', gameInfoEmpty:'Sélectionne une partie',
     gfNone:'Aucun filtre', gfOpen:'Jeux ouverts', gfOpenNF:'Jeux ouverts et non complets', gfOpenNFNP:'Jeux ouverts, non complets, non privés', gfOpenNFP:'Jeux ouverts, non complets, privés', gfOpenNFR:'Jeux ouverts, non complets, classés',

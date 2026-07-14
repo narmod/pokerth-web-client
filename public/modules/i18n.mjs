@@ -497,6 +497,7 @@ function setLang(l) {
   try { if (typeof window._localizeCreateNameField === 'function') window._localizeCreateNameField(); } catch(e) {}
   // Re-traduire la fenêtre de classement (parties dynamiques rendues en JS).
   try { if (typeof window._retranslateRanking === 'function') window._retranslateRanking(); } catch(e) {}
+  try { if (typeof window._retranslateTableRanking === 'function') window._retranslateTableRanking(); } catch(e) {}
   // Update lang toggle buttons
   document.querySelectorAll('.lang-btn').forEach(function(b){
     b.classList.toggle('active', b.dataset.lang === _lang);

@@ -4363,6 +4363,23 @@ const App = (() => {
     if (modal) modal.style.display = 'none';
   }
   window.closeGameInfoPopup = closeGameInfoPopup;
+
+  // ── Classement de la table (parité QML GameTableStatsPage) : contexte pour
+  //    le modal de client.html — nom de la table + nicks dans l'ordre des
+  //    sièges (GameTable.tableStatsNicks() côté officiel). Les pids sans nom
+  //    connu sont omis (le serveur ignore de toute façon les nicks inconnus).
+  //    null hors partie ou en mode entraînement (bots sans classement). ──
+  window.getTableRankingCtx = function () {
+    if (window._offlineMode || !gId) return null;
+    var g = games[gId] || {};
+    var order = (seats && seats.length) ? seats : (g.seats || []);
+    var nicks = [];
+    for (var i = 0; i < order.length && nicks.length < 10; i++) {
+      var nm = players[order[i]];
+      if (nm) nicks.push(nm);
+    }
+    return { name: g.name || '', nicks: nicks };
+  };
   let seats     = [];  // player IDs in seat order (from GameStartInitial) — figé après 1ère main
   let seatData  = {};  // {pid: {money, bet, action, active, folded}}
   let _invSent = {}; // pids invited during the current invite-modal session
@@ -5000,12 +5017,17 @@ const App = (() => {
     // entrainement, LAN) — le classement passe par le relais /api/ranking,
     // independant du mode de connexion (restriction pokerth.net levee).
     if (window.closeRankingModal) window.closeRankingModal();
+    if (window.closeTableRanking) window.closeTableRanking();
     try {
       var _rkb = $('ranking-btn-lobby');
       if (_rkb) _rkb.style.display = (id === 's-lobby') ? '' : 'none';
       // Trophee aussi dans le header de jeu (entre le son et la roue crantee).
       var _rkg = $('ranking-btn-game');
       if (_rkg) _rkg.style.display = (id === 's-game') ? '' : 'none';
+      // Podium « classement de la table » (parite QML : lien du nom de table
+      // dans la GameStatusBar) — masque en mode entrainement (bots sans saison).
+      var _rkt = $('tableranking-btn-game');
+      if (_rkt) _rkt.style.display = (id === 's-game' && !window._offlineMode) ? '' : 'none';
     } catch (e) {}
     if (window._syncOverlayTop) window._syncOverlayTop();
     // Keep the screen awake only while at the table.
@@ -14611,7 +14633,7 @@ function renderPlayersList() {
   body.innerHTML = _shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>';
 }
 
-;(function(){ window.BUILD_VERSION='0.3.500-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.501-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

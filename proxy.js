@@ -2212,6 +2212,75 @@ function handleRanking(req, res, query) {
 }
 
 
+// ── Table ranking relay (parite QML GameTableStatsPage) ────────────────────
+// Le client appelle /api/tableranking?nicks=a,b,c (sieges dans l'ordre) et on
+// relaie le POST JSON de la vue table de pokerth.net (meme endpoint que le
+// lien « nom de table » du client officiel) :
+//   POST /pthranking/gametable/show   body { u1:…, …, u10:… }
+//   -> { status, msg:[{ player_id, username, rank_pos, final_score,
+//        average_score, season_games, points_sum }] }   (scores ×100)
+// Les nicks inconnus (invites / sans saison) sont simplement omis par le
+// serveur. BBC/WEC : pas d'endpoint dedie — le client filtre /api/ranking.
+function handleTableRanking(req, res, query) {
+  const raw = String((query && query.nicks) || '').slice(0, 700);
+  const nicks = raw.split(',').map(function (s) { return s.trim().slice(0, 64); })
+                   .filter(Boolean).slice(0, 10);
+  if (!nicks.length) {
+    res.writeHead(400, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' });
+    res.end(JSON.stringify({ ok: false, error: 'no_nicks' }));
+    return;
+  }
+  const cacheKey = 'tbl|' + nicks.join(',').toLowerCase();
+  const hit = RANKING_CACHE.get(cacheKey);
+  if (hit && (Date.now() - hit.at) < RANKING_TTL_MS) {
+    res.writeHead(hit.status, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'public, max-age=30', 'X-Ranking-Cache': 'hit' });
+    res.end(hit.body);
+    return;
+  }
+  const payload = {};
+  for (let i = 1; i <= 10; i++) payload['u' + i] = nicks[i - 1] || '';
+  rankingFetch('https://www.pokerth.net/pthranking/gametable/show', {
+    'Content-Type': 'application/json',
+    'X-Requested-With': 'XMLHttpRequest',
+    'Accept': 'application/json'
+  }, { method: 'POST', body: JSON.stringify(payload) })
+    .then(function (r) { return r.text().then(function (body) { return { r: r, body: body }; }); })
+    .then(function (o) {
+      let out;
+      if (!o.r.ok) {
+        out = { status: 502, body: JSON.stringify({ ok: false, error: 'upstream_' + o.r.status, source: 'PTH' }) };
+      } else {
+        let json = null;
+        try { json = JSON.parse(o.body); } catch (e) { /* parse_failed ci-dessous */ }
+        if (!json || !json.status || !Array.isArray(json.msg)) {
+          out = { status: 502, body: JSON.stringify({ ok: false, error: 'parse_failed', source: 'PTH' }) };
+        } else {
+          // Le serveur repond en ordre de requete (sieges) — trier par
+          // placement comme la page QML (meilleur d'abord). Scores ×100.
+          const list = json.msg.slice().sort(function (a, b) { return a.rank_pos - b.rank_pos; });
+          const rows = list.map(function (r) {
+            return {
+              rank: r.rank_pos,
+              player: r.username,
+              games: r.season_games,
+              avg: (Number(r.average_score) / 100).toFixed(2),
+              score: (Number(r.final_score) / 100).toFixed(2)
+            };
+          });
+          out = { status: 200, body: JSON.stringify({ ok: true, source: 'PTH', rows: rows }) };
+        }
+      }
+      RANKING_CACHE.set(cacheKey, { at: Date.now(), status: out.status, body: out.body });
+      res.writeHead(out.status, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'public, max-age=30', 'X-Ranking-Cache': 'miss' });
+      res.end(out.body);
+    })
+    .catch(function (err) {
+      res.writeHead(502, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' });
+      res.end(JSON.stringify({ ok: false, error: 'relay_failed', detail: String((err && err.message) || err) }));
+    });
+}
+
+
 // ── Player profile relay (clicking a name in the ranking) ──────────────────
 // BBC renders the full profile card server-side at /player/{nickname} as Vue
 // props (:player, :stats, :awards, :season), HTML-entity-encoded JSON. A plain
@@ -2489,6 +2558,10 @@ const httpServer = http.createServer((req, res) => {
   // ── Ranking relay (PokerTH / BBC / WEC) — see handleRanking above. ──
   if (reqPathOnly === '/api/ranking') {
     handleRanking(req, res, query);
+    return;
+  }
+  if (reqPathOnly === '/api/tableranking') {
+    handleTableRanking(req, res, query);
     return;
   }
   if (reqPathOnly === '/api/player') {
