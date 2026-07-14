@@ -1152,7 +1152,6 @@ function onAvatarImageChosen(input) {
             <button type="button" class="cf-preset" data-preset="tranquille" onclick="App.applyPreset('tranquille',this)"><span class="cfp-ico">🐢</span><span class="cfp-n" data-i18n="presetCalmName">Tranquille</span><span class="cfp-d" data-i18n="presetCalmDesc">parties longues</span></button>
             <button type="button" class="cf-preset" data-preset="normal" onclick="App.applyPreset('normal',this)"><span class="cfp-ico">⚖️</span><span class="cfp-n" data-i18n="presetNormalName">Normal</span><span class="cfp-d" data-i18n="presetNormalDesc">équilibré</span></button>
             <button type="button" class="cf-preset" data-preset="rapide" onclick="App.applyPreset('rapide',this)"><span class="cfp-ico">⚡</span><span class="cfp-n" data-i18n="presetFastName">Rapide</span><span class="cfp-d" data-i18n="presetFastDesc">ça va vite !</span></button>
-            <button type="button" class="cf-preset" id="cf-preset-save" onclick="App.saveCreatePrefs()" title="Save this form as my personal preferences" data-i18n-title="createPrefsSaveTip"><span class="cfp-ico">💾</span><span class="cfp-n" data-i18n="presetSaveName">Mes préfs</span><span class="cfp-d" data-i18n="presetSaveDesc">enregistrer ces réglages</span></button>
             <button type="button" class="cf-preset" id="cf-preset-perso" data-preset="perso" style="display:none" onclick="App.applyCreatePrefs(this)"><span class="cfp-ico">⭐</span><span class="cfp-n" data-i18n="presetPersoName">Perso</span><span class="cfp-d" data-i18n="presetPersoDesc">mes réglages</span></button>
           </div>
         </div>
@@ -1270,6 +1269,7 @@ function onAvatarImageChosen(input) {
         <input type="hidden" id="cf-gui-speed" value="5">
 
         <div class="cf-actions">
+          <button type="button" class="btn-cf-reset" id="cf-prefs-save-btn" onclick="App.saveCreatePrefs()" title="Save this form as my personal preferences" data-i18n-title="createPrefsSaveTip"><span class="cf-reset-ico" aria-hidden="true">💾</span><span class="cf-reset-lbl" data-i18n="createPrefsSave">💾 My prefs</span></button>
           <button type="button" class="btn-cf-reset" onclick="App.resetCreateForm()"><span class="cf-reset-ico" aria-hidden="true">↺</span><span class="cf-reset-lbl" data-i18n="resetForm">↺ Reset</span></button>
           <button type="button" class="btn-cf-cancel" onclick="App.closeCreatePage()" data-i18n="cancelBtn">Annuler</button>
           <button type="button" class="cf-create-btn" data-i18n="createTable" onclick="App.createGame()">+ Créer</button>
