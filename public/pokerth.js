@@ -9244,7 +9244,7 @@ const App = (() => {
       //    Classe betside-* sur .seat ; le CSS positionne .seat-bet en absolu.
       //    Self exclue (sa mise est dans la barre d'action). ──
       var _betSideCls = '';
-      if (_pkHole && !isMe) {
+      if (_pkHole) {
         var _bdx = px.left - oCX, _bdy = px.top - oCY, _bs;
         if (_seatStyleV === 'pokerth-portrait') {
           var _idx = -_bdx, _idy = -_bdy;
@@ -9285,6 +9285,9 @@ const App = (() => {
       const timerSvg = isActive ? (_pkHole ? '' : _timerSvg(_timerSec, _timerTot)) : '';
       const avatarCls = 'seat-avatar' + (isActive ? ' timing' : '') + avatarType;
       const dealerChip = isDealer ? dealerChipSvg() : '';
+      // Packs PokerTH : pucks D/SB/BB posés sur le CÔTÉ de la boîte (comme
+      // l'officiel), pas sur l'avatar -> on les sort de l'avatar ici.
+      var _avPucks = _pkHole ? '' : (blindBadge + dealerChip);
       // Drapeau du pays sur l'avatar (coin bas-droite, comme un badge).
       // Vide si pays inconnu → rien affiché.
       const seatFlag = _ccToFlag(_playerCountries[pid]);
@@ -9343,8 +9346,7 @@ const App = (() => {
         + pthImg
         + '<span class="seat-initial">' + initial + '</span>'
         + timerSvg
-        + blindBadge
-        + dealerChip
+        + _avPucks
         + flagBadge
         + typeBadge
         + '</div>';
@@ -9371,6 +9373,7 @@ const App = (() => {
       h += '<div class="seat-money">' + moneyStr + '</div>';
       h += '</div>';   // ferme .seat-info
       h += '</div>';   // ferme .seat-plate
+      if (_pkHole && (blindBadge || dealerChip)) h += '<div class="seat-pucks">' + blindBadge + dealerChip + '</div>';
       h += '<div class="seat-foot">'; // pied : mise / action / cartes
       if (sd.bet) h += '<div class="seat-bet">' + fmtChips(sd.bet) + '</div>';
       // Action → vignette ovale posée sur la box (traduite, couleur par action,
@@ -14208,7 +14211,7 @@ function renderPlayersList() {
   body.innerHTML = _shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>';
 }
 
-;(function(){ window.BUILD_VERSION='0.3.459-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.460-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
