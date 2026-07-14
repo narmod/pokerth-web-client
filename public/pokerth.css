@@ -7545,6 +7545,20 @@ body.adv-hide-pbar .my-zone{bottom:0 !important;padding-bottom:max(8px,env(safe-
 .seat.me .seat-holecards.shc-l1 .pk { width: calc(46px * var(--comm-scale, 1) * 0.90) !important; height: calc(64px * var(--comm-scale, 1) * 0.90) !important; font-size: calc(1.02rem * var(--comm-scale, 1) * 0.90) !important; border-radius: calc(5px * var(--comm-scale, 1)) !important; }
 .seat.me .seat-holecards.shc-l2 .pk { width: calc(46px * var(--comm-scale, 1) * 0.95) !important; height: calc(64px * var(--comm-scale, 1) * 0.95) !important; font-size: calc(1.02rem * var(--comm-scale, 1) * 0.95) !important; border-radius: calc(5px * var(--comm-scale, 1)) !important; }
 .seat.me .seat-holecards.shc-l3 .pk { width: calc(46px * var(--comm-scale, 1)) !important; height: calc(64px * var(--comm-scale, 1)) !important; font-size: calc(1.02rem * var(--comm-scale, 1)) !important; border-radius: calc(5px * var(--comm-scale, 1)) !important; }
+/* Paysage mobile (landscapeCompact) : cartes self a la taille EXACTE de la
+   riviere des le niveau 0 (le transform du siege les reduit deja ~20%) —
+   demande narmod « grossir les cartes de la selfbox ». Tout le cycle est mis
+   au plafond pour rester monotone (plateau, jamais de retrecissement). */
+@media (orientation: landscape) and (max-height: 600px) {
+  .seat.me .seat-holecards.shc-big .pk,
+  .seat.me .seat-holecards.shc-l1 .pk,
+  .seat.me .seat-holecards.shc-l2 .pk,
+  .seat.me .seat-holecards.shc-l3 .pk {
+    width: calc(46px * var(--comm-scale, 1)) !important;
+    height: calc(64px * var(--comm-scale, 1)) !important;
+    font-size: calc(1.02rem * var(--comm-scale, 1)) !important;
+  }
+}
 /* Pastille de niveau (1/2/3/4/5) sur le bouton. */
 #g-cardzoom { position: relative; }
 #g-cardzoom[data-lvl="1"]::after, #g-cardzoom[data-lvl="2"]::after, #g-cardzoom[data-lvl="3"]::after {
