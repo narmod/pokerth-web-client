@@ -300,6 +300,7 @@ export const strings = {
     presetNormalName:'Normal', presetNormalDesc:'balanced',
     presetFastName:'Fast', presetFastDesc:'fast-paced!',
     presetPersoName:'My prefs', presetPersoDesc:'my settings',
+    presetSaveName:'My prefs', presetSaveDesc:'save these settings',
     proxyConnectedWait:'Proxy connected \u2014 waiting for PokerTH server\u2026',
     errConnLost:'Connection lost. You can reconnect in a few seconds.',
     autoTableFound:'\u26a1 Table found \u2014 joining #{n}',

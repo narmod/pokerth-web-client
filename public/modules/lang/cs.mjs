@@ -566,6 +566,7 @@ export const strings = {
     presetNormalDesc: 'vyvážená',
     presetFastName: 'Rychlá',
     presetPersoName:'Moje', presetPersoDesc:'moje nastavení',
+    presetSaveName:'Moje předvolby', presetSaveDesc:'uložit tato nastavení',
     createPrefsSave:'💾 Moje předvolby', createPrefsSaveTip:'Uložit tento formulář jako mé osobní předvolby', createPrefsSaved:'Předvolby uloženy', createPrefsLoaded:'Předvolby načteny', createPrefsNone:'Zatím žádné uložené předvolby',
     presetFastDesc: 'rychlé tempo!',
     proxyConnectedWait: 'Proxy připojena — čeká se na server PokerTH…',

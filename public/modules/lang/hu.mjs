@@ -566,6 +566,7 @@ export const strings = {
     presetNormalDesc: 'kiegyensúlyozott',
     presetFastName: 'Gyors',
     presetPersoName:'Sajátom', presetPersoDesc:'saját beállításaim',
+    presetSaveName:'Saját beállítások', presetSaveDesc:'beállítások mentése',
     createPrefsSave:'💾 Saját beállítások', createPrefsSaveTip:'Az űrlap mentése személyes beállításként', createPrefsSaved:'Beállítások mentve', createPrefsLoaded:'Beállítások betöltve', createPrefsNone:'Még nincsenek mentett beállítások',
     presetFastDesc: 'gyors tempó!',
     proxyConnectedWait: 'Proxy csatlakozva — várakozás a PokerTH-szerverre…',

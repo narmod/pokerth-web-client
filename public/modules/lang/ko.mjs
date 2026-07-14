@@ -390,6 +390,7 @@ export const strings = {
     presetNormalName:'일반', presetNormalDesc:'균형',
     presetFastName:'빠름', presetFastDesc:'빠른 진행!',
     presetPersoName:'내 설정', presetPersoDesc:'나의 설정',
+    presetSaveName:'내 설정', presetSaveDesc:'이 설정 저장',
     createPrefsSave:'💾 내 설정', createPrefsSaveTip:'이 양식을 개인 설정으로 저장', createPrefsSaved:'설정이 저장되었습니다', createPrefsLoaded:'설정을 불러왔습니다', createPrefsNone:'저장된 설정이 아직 없습니다',
     proxyConnectedWait:'프록시 접속됨 \u2014 PokerTH 서버 대기 중\u2026',
     errConnLost:'연결이 끊겼습니다. 잠시 후 다시 접속할 수 있습니다.',

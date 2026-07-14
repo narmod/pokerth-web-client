@@ -569,6 +569,7 @@ export const strings = {
     presetNormalDesc: 'zrównoważony',
     presetFastName: 'Szybki',
     presetPersoName:'Moje', presetPersoDesc:'moje ustawienia',
+    presetSaveName:'Moje ustawienia', presetSaveDesc:'zapisz te ustawienia',
     createPrefsSave:'💾 Moje ustawienia', createPrefsSaveTip:'Zapisz ten formularz jako moje osobiste ustawienia', createPrefsSaved:'Ustawienia zapisane', createPrefsLoaded:'Ustawienia wczytane', createPrefsNone:'Brak zapisanych ustawień',
     presetFastDesc: 'szybkie tempo!',
     proxyConnectedWait: 'Proxy połączone — oczekiwanie na serwer PokerTH…',

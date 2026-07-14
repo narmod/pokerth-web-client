@@ -566,6 +566,7 @@ export const strings = {
     presetNormalDesc: 'балансиран',
     presetFastName: 'Бърз',
     presetPersoName:'Мои', presetPersoDesc:'моите настройки',
+    presetSaveName:'Моите предпочитания', presetSaveDesc:'запази тези настройки',
     createPrefsSave:'💾 Моите предпочитания', createPrefsSaveTip:'Запази този формуляр като мои лични предпочитания', createPrefsSaved:'Предпочитанията са запазени', createPrefsLoaded:'Предпочитанията са заредени', createPrefsNone:'Все още няма запазени предпочитания',
     presetFastDesc: 'бързо темпо!',
     proxyConnectedWait: 'Проксито е свързано — изчакване на сървър PokerTH…',

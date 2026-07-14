@@ -566,6 +566,7 @@ export const strings = {
     presetNormalDesc: 'uravnotežena',
     presetFastName: 'Brza',
     presetPersoName:'Моје', presetPersoDesc:'моја подешавања',
+    presetSaveName:'Моја подешавања', presetSaveDesc:'сачувај ова подешавања',
     createPrefsSave:'💾 Моја подешавања', createPrefsSaveTip:'Сачувај овај образац као моја лична подешавања', createPrefsSaved:'Подешавања сачувана', createPrefsLoaded:'Подешавања учитана', createPrefsNone:'Још нема сачуваних подешавања',
     presetFastDesc: 'brz tempo!',
     proxyConnectedWait: 'Proksi povezan — čekanje na PokerTH server…',

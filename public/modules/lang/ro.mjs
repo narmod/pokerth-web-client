@@ -566,6 +566,7 @@ export const strings = {
     presetNormalDesc: 'echilibrat',
     presetFastName: 'Rapid',
     presetPersoName:'Al meu', presetPersoDesc:'setările mele',
+    presetSaveName:'Preferințele mele', presetSaveDesc:'salvează aceste setări',
     createPrefsSave:'💾 Preferințele mele', createPrefsSaveTip:'Salvează acest formular ca preferințe personale', createPrefsSaved:'Preferințe salvate', createPrefsLoaded:'Preferințe încărcate', createPrefsNone:'Încă nu există preferințe salvate',
     presetFastDesc: 'ritm alert!',
     proxyConnectedWait: 'Proxy conectat — se așteaptă serverul PokerTH…',

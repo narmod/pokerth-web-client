@@ -565,6 +565,7 @@ export const strings = {
     presetNormalDesc: 'バランス型',
     presetFastName: '高速',
     presetPersoName:'マイ設定', presetPersoDesc:'自分の設定',
+    presetSaveName:'マイ設定', presetSaveDesc:'この設定を保存',
     createPrefsSave:'💾 マイ設定', createPrefsSaveTip:'このフォームを個人設定として保存', createPrefsSaved:'設定を保存しました', createPrefsLoaded:'設定を読み込みました', createPrefsNone:'保存された設定はまだありません',
     presetFastDesc: 'ハイテンポ！',
     proxyConnectedWait: 'プロキシ接続済み — PokerTHサーバーを待っています…',

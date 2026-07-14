@@ -565,6 +565,7 @@ export const strings = {
     presetNormalDesc: 'збалансований',
     presetFastName: 'Швидкий',
     presetPersoName:'Мої', presetPersoDesc:'мої налаштування',
+    presetSaveName:'Мої налаштування', presetSaveDesc:'зберегти ці налаштування',
     createPrefsSave:'💾 Мої налаштування', createPrefsSaveTip:'Зберегти цю форму як особисті налаштування', createPrefsSaved:'Налаштування збережено', createPrefsLoaded:'Налаштування завантажено', createPrefsNone:'Збережених налаштувань ще немає',
     presetFastDesc: 'швидкий темп!',
     proxyConnectedWait: 'Проксі підключено — очікування сервера PokerTH…',

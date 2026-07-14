@@ -569,6 +569,7 @@ export const strings = {
     presetNormalDesc: 'ausgewogen',
     presetFastName: 'Schnell',
     presetPersoName:'Meine', presetPersoDesc:'meine Einstellungen',
+    presetSaveName:'Meine Vorgaben', presetSaveDesc:'diese Einstellungen speichern',
     createPrefsSave:'💾 Meine Vorgaben', createPrefsSaveTip:'Dieses Formular als persönliche Vorgaben speichern', createPrefsSaved:'Vorgaben gespeichert', createPrefsLoaded:'Vorgaben geladen', createPrefsNone:'Noch keine gespeicherten Vorgaben',
     presetFastDesc: 'rasantes Tempo!',
     proxyConnectedWait: 'Proxy verbunden — warte auf PokerTH-Server…',

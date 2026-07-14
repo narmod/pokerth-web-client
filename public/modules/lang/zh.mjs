@@ -567,6 +567,7 @@ export const strings = {
     presetNormalDesc: '均衡',
     presetFastName: '快速',
     presetPersoName:'我的', presetPersoDesc:'我的设置',
+    presetSaveName:'我的偏好', presetSaveDesc:'保存这些设置',
     createPrefsSave:'💾 我的偏好', createPrefsSaveTip:'将此表单保存为我的个人偏好', createPrefsSaved:'偏好已保存', createPrefsLoaded:'偏好已加载', createPrefsNone:'暂无已保存的偏好',
     presetFastDesc: '快节奏！',
     proxyConnectedWait: '代理已连接 — 等待 PokerTH 服务器…',

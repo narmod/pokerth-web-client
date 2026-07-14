@@ -566,6 +566,7 @@ export const strings = {
     presetNormalDesc: 'cân bằng',
     presetFastName: 'Nhanh',
     presetPersoName:'Của tôi', presetPersoDesc:'cài đặt của tôi',
+    presetSaveName:'Tùy chọn của tôi', presetSaveDesc:'lưu các cài đặt này',
     createPrefsSave:'💾 Tùy chọn của tôi', createPrefsSaveTip:'Lưu biểu mẫu này làm tùy chọn cá nhân của tôi', createPrefsSaved:'Đã lưu tùy chọn', createPrefsLoaded:'Đã tải tùy chọn', createPrefsNone:'Chưa có tùy chọn nào được lưu',
     presetFastDesc: 'nhịp độ nhanh!',
     proxyConnectedWait: 'Proxy đã kết nối — đang chờ máy chủ PokerTH…',

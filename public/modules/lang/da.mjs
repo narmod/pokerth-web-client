@@ -565,6 +565,7 @@ export const strings = {
     presetNormalDesc: 'balanceret',
     presetFastName: 'Hurtig',
     presetPersoName:'Mine', presetPersoDesc:'mine indstillinger',
+    presetSaveName:'Mine præf.', presetSaveDesc:'gem disse indstillinger',
     createPrefsSave:'💾 Mine præf.', createPrefsSaveTip:'Gem denne formular som mine personlige præferencer', createPrefsSaved:'Præferencer gemt', createPrefsLoaded:'Præferencer indlæst', createPrefsNone:'Ingen gemte præferencer endnu',
     presetFastDesc: 'højt tempo!',
     proxyConnectedWait: 'Proxy tilsluttet — venter på PokerTH-server…',

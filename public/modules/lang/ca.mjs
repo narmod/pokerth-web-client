@@ -566,6 +566,7 @@ export const strings = {
     presetNormalDesc: 'equilibrat',
     presetFastName: 'Ràpid',
     presetPersoName:'Meu', presetPersoDesc:'els meus ajustos',
+    presetSaveName:'Les meves prefs', presetSaveDesc:'desa aquests ajustos',
     createPrefsSave:'💾 Les meves prefs', createPrefsSaveTip:'Desa aquest formulari com a preferències personals', createPrefsSaved:'Preferències desades', createPrefsLoaded:'Preferències carregades', createPrefsNone:'Encara no hi ha preferències desades',
     presetFastDesc: 'ritme ràpid!',
     proxyConnectedWait: 'Proxy connectat — esperant el servidor PokerTH…',

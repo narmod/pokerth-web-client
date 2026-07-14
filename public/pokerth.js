@@ -671,10 +671,20 @@ function _advSyncContext() {
   try { var _sc = document.getElementById('s-connect'); onConnect = !!(_sc && _sc.classList.contains('active')); } catch (e) {}
   var connected = !onConnect;       // lobby ou partie = contexte de jeu connecté
   setEnabled('local', inGame);      // « Remplir avec des bots » : seulement à une table
-  setEnabled('log', inGame);        // Journal : seulement en partie
+  // Journal et Partie Internet contiennent désormais des RÉGLAGES persistants
+  // (journal on/off + intervalle ; liste des joueurs ignorés) → catégories
+  // toujours accessibles. Seuls leurs liens contextuels (« Ouvrir le journal »,
+  // serveur/déconnexion) sont masqués hors contexte.
+  setEnabled('log', true);
   setEnabled('network', false);     // Jeu en réseau (LAN) : pas encore disponible
-  setEnabled('internet', connected);// pas de serveur à quitter avant connexion
+  setEnabled('internet', true);
   setEnabled('avatar', connected);  // profil / avatar indisponible avant connexion
+  try {
+    var _lgLink = modal.querySelector('.adv-panel[data-cat="log"] .adv-link');
+    if (_lgLink) _lgLink.style.display = inGame ? '' : 'none';
+    var _inLink = modal.querySelector('.adv-panel[data-cat="internet"] .adv-link');
+    if (_inLink) _inLink.style.display = connected ? '' : 'none';
+  } catch (e) {}
   try {
     var host = (window._pthNetServer && window._pthNetServer.host) ? window._pthNetServer.host : null;
     var el = modal.querySelector('#adv-srv-host');
@@ -14781,7 +14791,7 @@ function renderPlayersList() {
   body.innerHTML = _shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>';
 }
 
-;(function(){ window.BUILD_VERSION='0.3.510-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.511-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
