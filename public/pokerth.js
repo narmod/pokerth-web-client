@@ -8876,11 +8876,18 @@ const App = (() => {
     // autour du feutre sans le chevaucher (le client officiel fait pareil via boxScale).
     var _seatBoxScale = 1;
     try { var _sbw = window.innerWidth, _sbh = window.innerHeight; if (Math.min(_sbw, _sbh) < 540) { var _opp = Math.max(0, rotated.length - 1); _seatBoxScale = (_sbh > _sbw) ? Math.max(0.72, 0.90 - Math.max(0, _opp - 4) * 0.026) : Math.max(0.80, 0.98 - Math.max(0, _opp - 4) * 0.022); } } catch (e) {}
-    // Self-box PLUS GROSSE que les adversaires, comme le client officiel
-    // (QML 2.1.3 delta §4.2 : self 82 vs opp 71 en portrait, 96 vs 84 en
-    // wide -> ~+15%). C'est l'agrandissement de BASE (zoom 0) ; le cycle de
-    // zoom des cartes (#g-cardzoom) reste independant et s'ajoute par-dessus.
-    var SELF_BOX_MUL = 1.15;
+    // Self-box PLUS GROSSE que les adversaires, comme le client officiel,
+    // avec le ratio QML PAR APPAREIL (delta 2.1.3 §4.2) :
+    //   portrait 82/71 = 1.155 · desktop/tablette wide 96/84 = 1.143 ·
+    //   landscapeCompact 94/71 = 1.32.
+    // C'est l'agrandissement de BASE (zoom 0) ; le cycle de zoom des cartes
+    // (#g-cardzoom) reste independant et s'ajoute par-dessus.
+    var SELF_BOX_MUL = 1.143;
+    try {
+      var _smw = window.innerWidth, _smh = window.innerHeight;
+      if (_smh > _smw) SELF_BOX_MUL = 1.155;
+      else if (_smh < 600) SELF_BOX_MUL = 1.32;
+    } catch (e) {}
     // Placement des sièges : 'classic' (ellipse maison, défaut) ou 'official'
     // (slots fixes du client PokerTH : grille périmètre en paysage façon client
     // desktop, colonnes G/D + rangée haute en portrait façon client QML). Les
@@ -9269,9 +9276,12 @@ const App = (() => {
         + flagBadge
         + typeBadge
         + '</div>';
-      // Mode masqué : MES cartes en grand dans le siège (self-box), quel que
-      // soit le style de siège. Sinon, comportement habituel (style pokerth = xsm).
-      var _selfBig = isMe && !isGone && !isOut && ((_pkHole && _ownLvl > 0) || (!_pkHole && _maskMode));
+      // Cartes self GRANDES PAR DEFAUT (niveau 0 = taille de base QML :
+      // shc-big ~ cartes communes, cf. GamePlayerSelfBox). Le cycle
+      // #g-cardzoom (1-5) reste un reglage utilisateur par-dessus
+      // (l1/l2 plus petites, l3/l4 plus grandes). Hors style pokerth,
+      // les cartes self n'apparaissent dans le siege qu'en mode masque.
+      var _selfBig = isMe && !isGone && !isOut && (_pkHole || _maskMode);
       if ((_pkHole || _selfBig) && !isGone && !isOut) {
         var _ownHide = isMe && _ownCardsHidden();
         var _phc1 = isMe ? (_ownHide ? null : myCards[0]) : sd.card1;
@@ -14077,7 +14087,7 @@ function renderPlayersList() {
   body.innerHTML = _shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>';
 }
 
-;(function(){ window.BUILD_VERSION='0.3.436-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.437-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
