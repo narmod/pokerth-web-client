@@ -545,6 +545,7 @@ function openAdvancedOptions() {
   try { document.documentElement.classList.toggle('reduce-fx', _advGet('reduce_fx', false)); } catch (e) {}
   try { var _sl = document.getElementById('adv-seatlayout'); if (_sl) { var _slv = localStorage.getItem('pth_seat_layout'); _sl.value = (_slv === 'pokerth-official' || _slv === 'pokerth-ellipse' || _slv === 'custom') ? _slv : 'auto'; } } catch (e) {}
   try { var _ssy = document.getElementById('adv-seatsync'); if (_ssy) _ssy.checked = (localStorage.getItem('pth_seat_sync') === '1'); } catch (e) {}
+  try { var _ctr = document.getElementById('adv-chattranslate'); if (_ctr) { _ctr.checked = (localStorage.getItem('pth_chat_translate') === '1'); if (!window._chatTrSupported) { var _ctl = _ctr.closest('label'); if (_ctl) _ctl.style.opacity = '0.55'; } } } catch (e) {}
   try { _rebindAction = null; _renderKeyButtons(); } catch (e) {}
   sync('adv-tooltips', 'tooltips', true);
   try { var _nr = document.getElementById('adv-noreact'); if (_nr) _nr.checked = (localStorage.getItem('pth_react_muted') === '1'); } catch (e) {}
@@ -717,6 +718,83 @@ function setSeatSync(on) {
   if (on) _applySeatSync();
 }
 window.setSeatSync = setSeatSync;
+// ── Traduction du chat par l'API du NAVIGATEUR (Translator/LanguageDetector,
+// Chrome/Edge recents ; sur l'appareil, rien ne sort). Opt-in via Options
+// avancees (pth_chat_translate). Bouton 🌐 par message recu : 1er tap =
+// traduire vers la langue du client (telechargement du modele autorise par
+// le geste utilisateur), 2e tap = revenir a l'original. Cache de traducteurs
+// par paire de langues.
+window._chatTrSupported = (function () {
+  try { return typeof Translator !== 'undefined' && typeof Translator.create === 'function'; } catch (e) { return false; }
+})();
+function _chatTrTarget() {
+  try { var l = localStorage.getItem('pth_lang'); if (l) return l.split('-')[0]; } catch (e) {}
+  try { return (document.documentElement.lang || navigator.language || 'en').split('-')[0]; } catch (e) { return 'en'; }
+}
+function _applyChatTranslateFlag() {
+  var on = false;
+  try { on = localStorage.getItem('pth_chat_translate') === '1'; } catch (e) {}
+  document.body.classList.toggle('chat-tr-on', !!(on && window._chatTrSupported));
+}
+function setChatTranslate(on) {
+  try { localStorage.setItem('pth_chat_translate', on ? '1' : '0'); } catch (e) {}
+  _applyChatTranslateFlag();
+  if (on && !window._chatTrSupported) { try { alert(t('chatTranslateUnsupported')); } catch (e) {} }
+}
+window.setChatTranslate = setChatTranslate;
+window._chatTrPairs = {};
+window._chatTranslate = function (btn) {
+  var msg = btn && btn.closest ? btn.closest('.msg') : null;
+  var span = msg ? msg.querySelector('.txt') : null;
+  if (!msg || !span) return;
+  // Toggle retour a l'original
+  if (msg.dataset.trShown === '1') {
+    if (msg.dataset.origHtml) span.innerHTML = msg.dataset.origHtml;
+    msg.dataset.trShown = '0'; btn.classList.remove('tr-active');
+    return;
+  }
+  if (msg.dataset.trText) { // deja traduit : re-afficher depuis le cache
+    if (!msg.dataset.origHtml) msg.dataset.origHtml = span.innerHTML;
+    span.textContent = msg.dataset.trText;
+    msg.dataset.trShown = '1'; btn.classList.add('tr-active');
+    return;
+  }
+  var orig = msg.dataset.orig || span.textContent || '';
+  if (!orig.trim() || !window._chatTrSupported) return;
+  btn.disabled = true; btn.classList.add('tr-busy');
+  var tgt = _chatTrTarget();
+  (async function () {
+    try {
+      var src = null;
+      try {
+        if (typeof LanguageDetector !== 'undefined' && LanguageDetector.create) {
+          if (!window._chatTrDetector) window._chatTrDetector = await LanguageDetector.create();
+          var det = await window._chatTrDetector.detect(orig);
+          if (det && det[0] && det[0].detectedLanguage && det[0].detectedLanguage !== 'und') src = det[0].detectedLanguage.split('-')[0];
+        }
+      } catch (e) {}
+      if (!src) src = 'en';
+      if (src === tgt) { // deja dans la langue du client
+        btn.disabled = false; btn.classList.remove('tr-busy'); btn.classList.add('tr-same');
+        return;
+      }
+      var key = src + '>' + tgt;
+      if (!window._chatTrPairs[key]) window._chatTrPairs[key] = await Translator.create({ sourceLanguage: src, targetLanguage: tgt });
+      var out = await window._chatTrPairs[key].translate(orig);
+      if (out && out.trim()) {
+        msg.dataset.trText = out;
+        if (!msg.dataset.origHtml) msg.dataset.origHtml = span.innerHTML;
+        span.textContent = out;
+        msg.dataset.trShown = '1'; btn.classList.add('tr-active');
+      }
+    } catch (e) {
+      btn.classList.add('tr-err');
+      try { btn.title = t('chatTranslateFailed'); } catch (_e) {}
+    }
+    btn.disabled = false; btn.classList.remove('tr-busy');
+  })();
+};
+try { _applyChatTranslateFlag(); } catch (e) {}
 window._applySeatSync = _applySeatSync;
 setTimeout(function () { try { _applySeatSync(); } catch (e) {} }, 800);
 // Appliquer les classes body dès l'init (les prefs sont reflétées au chargement).
@@ -12655,7 +12733,11 @@ function addGameChat(sender, text, cls, spec) {
   // sauf en mode « chat sans emoji ». Le nom d'expéditeur n'est jamais converti.
   function emT(s) { var h = e(s); if (!_noEmo && typeof window.applyChatEmoteShortcuts === 'function') { try { h = window.applyChatEmoteShortcuts(h); } catch (_e) {} } if (typeof window._linkifyChatHtml === 'function') { try { h = window._linkifyChatHtml(h); } catch (_e2) {} } return h; }
   if (sender) {
-    d.innerHTML = '<span class="msg-time">'+_chatTs()+'</span> <span class="who">'+e(sender)+'</span>: <span class="txt">'+emT(text)+'</span>';
+    d.innerHTML = '<span class="msg-time">'+_chatTs()+'</span> <span class="who">'+e(sender)+'</span>: <span class="txt">'+emT(text)+'</span>'
+      // Traduction par message (API navigateur, opt-in Options avancees) :
+      // bouton visible seulement si body.chat-tr-on (option + support).
+      + (cls !== 'mine' ? '<button class="chat-tr-btn" title="Traduire" onclick="window._chatTranslate(this)" aria-label="Translate">\u{1F310}</button>' : '');
+    try { d.dataset.orig = text; } catch (_e) {}
   } else {
     d.innerHTML = '<span class="txt">'+e(text)+'</span>';
   }
@@ -14241,7 +14323,7 @@ function renderPlayersList() {
   body.innerHTML = _shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>';
 }
 
-;(function(){ window.BUILD_VERSION='0.3.472-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.473-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

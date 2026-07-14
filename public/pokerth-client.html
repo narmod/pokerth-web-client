@@ -1921,6 +1921,7 @@ if ('serviceWorker' in navigator) {
 
       <div class="adv-sec" data-i18n="advSecChat">Chat</div>
       <label class="adv-row"><input type="checkbox" id="adv-noemoji" onchange="setAdvOpt('chat_noemoji',this.checked)"><span data-i18n="advNoChatEmoji">Disable emojis in chat</span></label>
+      <label class="adv-row"><input type="checkbox" id="adv-chattranslate" onchange="setChatTranslate(this.checked)"><span data-i18n="advChatTranslate">Chat translation (browser API, per-message button)</span></label>
 
       <div class="adv-sec" data-i18n="advSecCommunity">Community</div>
       <label class="adv-row"><input type="checkbox" id="adv-community" onchange="setAdvOpt('show_community',this.checked)"><span data-i18n="advShowCommunity">Show Ranking entry</span></label>

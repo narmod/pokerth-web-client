@@ -8211,3 +8211,13 @@ html[data-box-accent][data-seat="bar"] .seat-plate { border-color: var(--box-acc
     border-radius: 9px;
   }
 }
+
+/* ── Traduction du chat (API navigateur, opt-in) : bouton 🌐 par message,
+   visible seulement quand body.chat-tr-on (option activee ET API dispo). ── */
+.chat-tr-btn { display: none; background: none; border: none; cursor: pointer; font-size: 0.72rem; padding: 0 3px; margin-left: 4px; opacity: 0.45; vertical-align: baseline; line-height: 1; }
+body.chat-tr-on .msg .chat-tr-btn { display: inline; }
+.chat-tr-btn:hover { opacity: 0.9; }
+.chat-tr-btn.tr-active { opacity: 1; filter: drop-shadow(0 0 2px var(--gold)); }
+.chat-tr-btn.tr-busy { opacity: 0.3; cursor: wait; }
+.chat-tr-btn.tr-err { opacity: 0.7; filter: grayscale(1); }
+.chat-tr-btn.tr-same { opacity: 0.25; cursor: default; }
