@@ -7491,6 +7491,7 @@ html[data-seat-edit="1"] #g-seats .seat.seat-ghost { outline: none; cursor: defa
 body.adv-no-cardanim .seat-holecards *,body.adv-no-cardanim .hand-cards *,body.adv-no-cardanim #g-myseat-cards *{transition:none !important;animation:none !important}
 body.adv-no-blinds .blind-chip,body.adv-no-blinds .dealer-chip{display:none !important}
 body.adv-no-community #ranking-btn-connect,body.adv-no-community #ranking-btn-lobby,body.adv-no-community #ranking-btn-game{display:none !important}
+body.adv-no-tablezoom #g-zoom-ctrl{display:none !important}
 
 /* Estompage des cartes des perdants au showdown (fadeOutLosingCards). Le marquage
    .loser-fade est pose sur le siege par renderSeatsImmediate quand le pid est dans
