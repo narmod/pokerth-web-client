@@ -4331,9 +4331,11 @@ body.hide-pct-btns .pct-row { display: none; }
 .wc-player-delta.neg { color:var(--neg); }
 /* Bouton au style bouton QML (bible §5.5 + §12.3, action primaire verte) :
    degrade Top->Bottom, bord Edge, radius 9, bold ls 0.5, press scale 0.96. */
-.winner-dismiss { background:linear-gradient(180deg,#50b840,#1e6614); color:#fff; border:1px solid #7ad06a; padding:11px 24px; font-family: var(--ff-display); font-size:0.82rem; font-weight:700; border-radius:9px; cursor:pointer; letter-spacing:0.5px; text-shadow:0 1px 2px rgba(0,0,0,0.35); transition:filter 0.12s, transform 0.09s ease-out; display:block; width:100%; margin-top:4px; flex:0 0 auto; }
-.winner-dismiss:hover { filter:brightness(1.12); }
-.winner-dismiss:active { transform:scale(0.96); }
+/* « Continuer » : mêmes couleurs que le bouton Connexion de la page de login
+   (.btn-primary : ardoise #2b3444, texte blanc, radius 2, ombre douce). */
+.winner-dismiss { background:#2b3444; color:#ffffff; border:none; padding:12px 24px; font-family: var(--ff-display); font-size:0.82rem; font-weight:700; border-radius:2px; cursor:pointer; letter-spacing:0.15em; box-shadow:0 4px 16px rgba(0,0,0,0.28); transition:background 0.15s, transform 0.1s, box-shadow 0.15s; display:block; width:100%; margin-top:4px; flex:0 0 auto; }
+.winner-dismiss:hover { background:#384252; box-shadow:0 6px 24px rgba(0,0,0,0.4); }
+.winner-dismiss:active { transform:scale(0.98); }
 
 
 /* ── Player bar + my-zone : cachées hors jeu (contrôlées par body.in-game) ── */
