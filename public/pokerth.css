@@ -6634,6 +6634,50 @@ html[data-seat^="pokerth"] .seat-timeout-bar .stb-fill {
   transition: width 0.9s linear;
 }
 html[data-seat^="pokerth"] .seat-timeout-bar.me .stb-fill { background: var(--timeout-fill-self, #6E9CEC); }
+/* ── Bandeau self QML (GamePlayerSelfBox.topStrip) ─────────────────────────
+   Strip 18 px à 6 px AU-DESSUS de la self-box : badge d'action aligné à
+   DROITE (hPadding 16 → padding 0 8px), barre de timeout 56×7 centrée
+   horizontalement, mise (BetChip) à gauche de l'indicateur visible —
+   badge : bord à bord + 8 px ; barre : 50 % + 28 + 8 px du bord droit. */
+html[data-seat^="pokerth"] .seat.me .seat-self-strip {
+  position: absolute; left: 0; right: 0;
+  bottom: calc(100% + 6px);
+  height: 18px;
+  display: flex; align-items: center; justify-content: flex-end; gap: 8px;
+  pointer-events: none; z-index: 26;
+}
+html[data-seat^="pokerth"] .seat.me .seat-self-strip .seat-action-badge {
+  position: static; top: auto; left: auto; transform: none;
+  height: 18px; box-sizing: border-box;
+  display: inline-flex; align-items: center;
+  padding: 0 8px; border-radius: 9px;
+  font-size: 12px; font-weight: 700; letter-spacing: 0;
+  color: #eaf1ff; box-shadow: none;
+  animation: stripPop 0.23s ease-out;
+}
+@keyframes stripPop { 0% { scale: 0.6; } 48% { scale: 1.12; } 100% { scale: 1; } }
+/* Barre self : 56×7 (QML), centrée horizontalement dans le strip. */
+html[data-seat^="pokerth"] .seat.me .seat-self-strip .seat-timeout-bar {
+  position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
+  width: 56px; height: 7px; border-radius: 4px;
+}
+/* Mise self : visible dans le strip (annule le display:none du siège self),
+   en flux, sans positionnement betside. Quand seule la barre est visible,
+   elle se cale à gauche de celle-ci (betRightMargin QML). */
+html[data-seat^="pokerth"] .seat.me .seat-self-strip .seat-bet {
+  display: inline-flex; position: static; transform: none; margin: 0;
+}
+html[data-seat^="pokerth"] .seat.me .seat-self-strip.has-tb .seat-bet {
+  margin-right: calc(50% + 36px);
+}
+/* Puck self : en haut à DROITE, hors de la box (QML : left = bord droit + 6,
+   top = bord haut). Défini APRÈS les règles betside-* (même spécificité). */
+html[data-seat^="pokerth"] .seat.me .seat-pucks {
+  left: calc(100% + 6px); right: auto;
+  top: 0; bottom: auto; transform: none;
+}
+/* Self au tour : cadre du PlayerTurnGlow un peu plus épais (borderWidth 2 QML). */
+html[data-seat^="pokerth"] .seat.me.active .seat-plate::after { border-width: 2px; }
 /* Couché : 0.72 ; éliminé : la base gère déjà l'estompe (transition QML 250ms). */
 html[data-seat^="pokerth"] .seat { transition: opacity 0.25s ease-out; }
 html[data-seat^="pokerth"] .seat.folded { opacity: 0.72; }
