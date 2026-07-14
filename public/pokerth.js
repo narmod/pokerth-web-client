@@ -7713,6 +7713,7 @@ const App = (() => {
 
   // ── CHAT ──
   function addChat(sender, text, cls='', spec) {
+    if (cls === 'sys') return; // messages systeme retires du chat (demande narmod)
     if (sender && cls !== 'mine' && _isIgnored(sender)) return; // joueur ignoré : aucun rendu
     if (typeof addGameChat === 'function') addGameChat(sender, text, cls, spec);
     // Flash lobby chat button on new message
@@ -12638,6 +12639,7 @@ function _chatTs() {
 }
 
 function addGameChat(sender, text, cls, spec) {
+  if (cls === 'sys') return; // messages systeme retires du chat (demande narmod)
   if (sender && cls !== 'mine' && _isIgnored(sender)) return; // joueur ignoré
   var el = document.getElementById('g-chat-msgs');
   if (!el) return;
@@ -14237,7 +14239,7 @@ function renderPlayersList() {
   body.innerHTML = _shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>';
 }
 
-;(function(){ window.BUILD_VERSION='0.3.470-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.471-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
