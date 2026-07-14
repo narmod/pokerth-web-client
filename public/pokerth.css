@@ -2292,7 +2292,7 @@ body {
      overrides par .my-zone / .player-bar pour gagner en specificite. */
 
   /* Dock joueur (.player-bar) — compact */
-  .my-zone { padding: 3px 6px !important; }
+  .my-zone { padding: 2px 6px !important; }
   .player-bar { padding: 2px 6px !important; }
   /* Largeur du dock DISSOCIEE de la barre d'action : au lieu de s'etirer a
      --bottom-w (560px) / pleine largeur, il s'ajuste a son contenu et reste
@@ -2321,20 +2321,24 @@ body {
      c'est elle qui rendait la barre geante en paysage). Meme organisation
      que le portrait/QML : quick-bets compacts a gauche, Tapis, mode a
      droite. */
-  .my-zone .action-grid { gap: 3px; width: 100%; max-width: 100%; }
+  .my-zone .action-grid { gap: 2px; width: 100%; max-width: 100%; }
   .my-zone .action-grid > * { min-width: 0; }
   .my-zone .bet-row { gap: 6px; }
   /* Champ montant : 78 px (spec QML §5.2, conservee en compact). */
-  .my-zone .bet-row .raise-amt-field { width: 78px; flex: 0 0 auto; height: 26px; min-height: 26px; padding: 2px 5px; font-size: 0.75rem; }
+  .my-zone .bet-row .raise-amt-field { width: 78px; flex: 0 0 auto; height: 24px; min-height: 24px; padding: 1px 5px; font-size: 0.72rem; }
   .my-zone .bet-row .raise-slider { flex: 1 1 auto; min-width: 60px; }
   .my-zone .mid-row { gap: 4px; align-items: center; }
   .my-zone .mid-row .pct-row { flex: 0 0 auto; gap: 3px; }
-  .my-zone .mid-row .mode-sel-wrap { flex: 0 1 110px; min-width: 0; height: 26px; margin-left: auto; }
+  .my-zone .mid-row .mode-sel-wrap { flex: 0 1 110px; min-width: 0; height: 24px; margin-left: auto; }
+  /* Le select gardait son padding vertical de base dans un wrap de 24px ->
+     libelle « Manuel » rogne. Padding vertical 0 + height 100% : le texte
+     (16px force par la regle iOS anti-zoom) tient et se centre. */
+  .my-zone .mid-row .mode-sel-wrap select { height: 100%; padding-top: 0; padding-bottom: 0; line-height: 1.1; }
   /* Tapis : l'image du theme (--btn-allin-img) en fond etire au lieu du
      border-image 9-slice, qui se dechirait sur ce bouton etroit. Reste
      l'image DU THEME (pas une couleur en dur) -> chaque theme garde son Tapis. */
   .my-zone .mid-row .btn-allin {
-    flex: 0 0 auto; white-space: nowrap; min-width: 48px; height: 26px; min-height: 26px; font-size: 0.6rem;
+    flex: 0 0 auto; white-space: nowrap; min-width: 48px; height: 24px; min-height: 24px; font-size: 0.6rem;
     border-image: none !important;
     border: 1px solid #ef5350 !important;
     background: linear-gradient(180deg, #9e2a2a, #5c1111) !important;
@@ -2343,8 +2347,8 @@ body {
     border-radius: 9px;
   }
   .my-zone .act-buttons-row { gap: 4px; }
-  .my-zone .act-buttons-row .btn-action { min-height: 34px; padding: 0 8px; font-size: 0.72rem; letter-spacing: 0.5px; border-radius: 9px; min-width: 0; }
-  .my-zone .mid-row .btn-pct { flex: 0 0 auto; min-width: 40px; height: 26px; min-height: 26px; padding: 0 8px; border-radius: 9px; font-size: 0.58rem; font-weight: 700; border-width: 1px; }
+  .my-zone .act-buttons-row .btn-action { min-height: 30px; padding: 0 8px; font-size: 0.72rem; letter-spacing: 0.5px; border-radius: 9px; min-width: 0; }
+  .my-zone .mid-row .btn-pct { flex: 0 0 auto; min-width: 40px; height: 24px; min-height: 24px; padding: 0 8px; border-radius: 9px; font-size: 0.58rem; font-weight: 700; border-width: 1px; }
   .my-zone .mid-row .btn-pct .pct-p { font-size: 0.62rem; }
   .my-zone .mid-row .btn-pct .pct-amt { display: none; }
   /* Pas de badges de touches clavier sur mobile (parite QML), comme en portrait. */
