@@ -8713,7 +8713,13 @@ const App = (() => {
       // Contrainte paires voisines : séparées horizontalement OU verticalement
       // (badges de mise inclus côté X).
       var xNeeded = s * (oppBaseW + sideBadgeGapBase) + gap;
-      var yNeeded = s * oppBaseH + gap;
+      // Budget vertical : +26px pour le badge d'action ("Se coucher"...),
+      // pose en surplomb au-dessus de chaque box (top:-5px, ~20px de haut)
+      // et volontairement EXCLU de la mesure des boxes (il apparait/
+      // disparait). Sans ce budget, deux voisins verticaux convergent au
+      // gap minimal et le badge du bas touche la box du haut (visible hors
+      // fullscreen, ou la bisection n'a pas de marge naturelle).
+      var yNeeded = s * oppBaseH + gap + 26;
       for (var iPair = 1; iPair < oppCnt; iPair++) {
         var v1 = slotVec(g, firstAngle + (iPair - 1) * stepDeg, false);
         var v2 = slotVec(g, firstAngle + iPair * stepDeg, false);
@@ -14141,7 +14147,7 @@ function renderPlayersList() {
   body.innerHTML = _shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>';
 }
 
-;(function(){ window.BUILD_VERSION='0.3.443-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.444-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
