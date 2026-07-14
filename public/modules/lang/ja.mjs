@@ -9,6 +9,8 @@ export const meta = {
 };
 
 export const strings = {
+    // PlayerWinnerOverlay (badge gagnant sur la boîte, parité QML)
+    winnerBadge:'勝者',
     // GameStatusBar (bandeau d'info de jeu, parité QML §7)
     gsbTotal:'合計:', gsbBets:'ベット:', gsbGame:'ゲーム:', gsbHand:'ハンド:',
   seatPokerthPortrait: "PokerTH 縦向き", seatPokerthLandscape: "PokerTH 横向き",

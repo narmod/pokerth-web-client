@@ -11,6 +11,8 @@ export const meta = {
 };
 
 export const strings = {
+    // PlayerWinnerOverlay (badge gagnant sur la boîte, parité QML)
+    winnerBadge:'BUANNAICHE',
     // GameStatusBar (bandeau d'info de jeu, parité QML §7)
     gsbTotal:'Iomlan:', gsbBets:'Geallan:', gsbGame:'Geama:', gsbHand:'Làmh:',
   seatPokerthPortrait: "PokerTH Portraid", seatPokerthLandscape: "PokerTH Dreach-tìre",

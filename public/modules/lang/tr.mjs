@@ -12,6 +12,8 @@ export const meta = {
 };
 
 export const strings = {
+    // PlayerWinnerOverlay (badge gagnant sur la boîte, parité QML)
+    winnerBadge:'KAZANAN',
     // GameStatusBar (bandeau d'info de jeu, parité QML §7)
     gsbTotal:'Toplam:', gsbBets:'Bahisler:', gsbGame:'Oyun:', gsbHand:'El:',
   seatPokerthPortrait: "PokerTH Dikey", seatPokerthLandscape: "PokerTH Yatay",

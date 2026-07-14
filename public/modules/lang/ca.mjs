@@ -10,6 +10,8 @@ export const meta = {
 };
 
 export const strings = {
+    // PlayerWinnerOverlay (badge gagnant sur la boîte, parité QML)
+    winnerBadge:'GUANYADOR',
     // GameStatusBar (bandeau d'info de jeu, parité QML §7)
     gsbTotal:'Total:', gsbBets:'Apostes:', gsbGame:'Partida:', gsbHand:'Mà:',
   seatPokerthPortrait: "PokerTH Vertical", seatPokerthLandscape: "PokerTH Apaïsat",

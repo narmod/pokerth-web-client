@@ -307,6 +307,7 @@ function setMyTurnActive(active) {
 // Sièges « perdants » au showdown (pids) → cartes estompées (fadeOutLosingCards).
 // Rempli dans EndOfHandShow (si pth_fade_losers != '0'), vidé à HandStart.
 var _sdLosers = new Set();
+var _sdWinners = new Set();   // sièges gagnants du showdown (PlayerWinnerOverlay QML)
 // Option "révéler mes cartes au tap" (pth_own_click) : quand activée, mes cartes
 // sont face cachée tant que _ownReveal est faux ; un tap sur la player-bar bascule.
 // Remis à faux à chaque nouvelle main (confidentialité), forcé à vrai au showdown.
@@ -6758,6 +6759,7 @@ const App = (() => {
         // Badge « main gagnante » : masqué dès la nouvelle main
         try { if (window._hideWinHandBadge) window._hideWinHandBadge(); } catch (_e) {}
         try { _sdLosers = new Set(); } catch (e) {} // reset estompage perdants (nouvelle main)
+        try { _sdWinners = new Set(); } catch (e) {} // reset surbrillance gagnants (nouvelle main)
         _ownReveal = false; // cartes propres re-masquées à chaque main (si option active)
         _lastCallSeen = -1; _callConfirmArmed = false; // reset anti-Call (nouvelle main)
 
@@ -7266,6 +7268,8 @@ const App = (() => {
             }
           }
         } catch (e) {}
+        // PlayerWinnerOverlay QML : marquer les sièges gagnants jusqu'à la main suivante.
+        try { _sdWinners = new Set(winners.map(function (w) { return w.pid; })); } catch (e) {}
         pot = 0; setPot(0);
         renderSeats();
         // Animations de fin de main
@@ -7303,6 +7307,7 @@ const App = (() => {
         const cash = Proto.u32(sub, 4);
         if (seatData[pid]) { seatData[pid].money = cash; if(won) seatData[pid].action = '+'+won; }
         if (won > 0) logAction('🏆 ' + getPlayerName(pid) + ' +' + _groupThousands(won));
+        try { _sdWinners = won > 0 ? new Set([pid]) : new Set(); } catch (e) {}
         // Enregistrer le résultat de la main pour moi (fin sans abattage).
         var myHideMon = (seatData[myId] || {}).money;
         if (myHideMon != null) {
@@ -9364,7 +9369,7 @@ const App = (() => {
         cardStr = '<div style="display:flex;gap:2px;margin-top:1px">'
           + cardHtml(sd.card1,'xsm') + cardHtml(sd.card2,'xsm') + '</div>';
       }
-      h += '<div class="' + cls + ((!isMe && _sdLosers && _sdLosers.has(pid)) ? ' loser-fade' : '') + '" data-pid="' + pid + '"' + (isMe ? ' data-base-top="' + px.top.toFixed(1) + '" data-base-left="' + px.left.toFixed(1) + '" data-base-scale="' + (_seatBoxScale * SELF_BOX_MUL).toFixed(4) + '"' : '') + ' style="position:absolute;top:' + px.top.toFixed(1) + 'px;left:' + px.left.toFixed(1) + 'px;transform:translate(-50%,-50%) scale(' + (isMe ? (_seatBoxScale * SELF_BOX_MUL).toFixed(4) : _seatBoxScale) + ')">';
+      h += '<div class="' + cls + ((!isMe && _sdLosers && _sdLosers.has(pid)) ? ' loser-fade' : '') + ((_sdWinners && _sdWinners.has(pid)) ? ' winner' + (px.top < 70 ? ' winner-below' : '') : '') + '" data-pid="' + pid + '"' + (isMe ? ' data-base-top="' + px.top.toFixed(1) + '" data-base-left="' + px.left.toFixed(1) + '" data-base-scale="' + (_seatBoxScale * SELF_BOX_MUL).toFixed(4) + '"' : '') + ' style="position:absolute;top:' + px.top.toFixed(1) + 'px;left:' + px.left.toFixed(1) + 'px;transform:translate(-50%,-50%) scale(' + (isMe ? (_seatBoxScale * SELF_BOX_MUL).toFixed(4) : _seatBoxScale) + ')">';
       const isSB = pid === sbPid;
       const isBB = pid === bbPid;
       let blindBadge = '';
@@ -9489,6 +9494,11 @@ const App = (() => {
       }
       h += '</div>';   // ferme .seat-info
       h += '</div>';   // ferme .seat-plate
+      // PlayerWinnerOverlay QML : badge « WINNER » (pilule or/vert sombre) ancré
+      // au-dessus de la boîte (au-dessous via .winner-below pour la plus haute).
+      if (_pkHole && _sdWinners && _sdWinners.has(pid)) {
+        h += '<div class="seat-winner-badge">' + esc(t('winnerBadge')) + '</div>';
+      }
       if (_pkHole && (blindBadge || dealerChip)) h += '<div class="seat-pucks">' + blindBadge + dealerChip + '</div>';
       h += '<div class="seat-foot">'; // pied : mise / action / cartes
       if (sd.bet) h += '<div class="seat-bet">' + fmtChips(sd.bet) + '</div>';
@@ -14345,7 +14355,7 @@ function renderPlayersList() {
   body.innerHTML = _shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>';
 }
 
-;(function(){ window.BUILD_VERSION='0.3.482-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.483-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

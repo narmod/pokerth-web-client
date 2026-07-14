@@ -10,6 +10,8 @@ export const meta = {
 };
 
 export const strings = {
+    // PlayerWinnerOverlay (badge gagnant sur la boîte, parité QML)
+    winnerBadge:'NUGALĖTOJAS',
     // GameStatusBar (bandeau d'info de jeu, parité QML §7)
     gsbTotal:'Iš viso:', gsbBets:'Statymai:', gsbGame:'Žaidimas:', gsbHand:'Ranka:',
   seatPokerthPortrait: "PokerTH Stačias", seatPokerthLandscape: "PokerTH Gulsčias",

@@ -10,6 +10,8 @@ export const meta = {
 };
 
 export const strings = {
+    // PlayerWinnerOverlay (badge gagnant sur la boîte, parité QML)
+    winnerBadge:'POBJEDNIK',
     // GameStatusBar (bandeau d'info de jeu, parité QML §7)
     gsbTotal:'Ukupno:', gsbBets:'Ulozi:', gsbGame:'Igra:', gsbHand:'Ruka:',
   seatPokerthPortrait: "PokerTH Okomito", seatPokerthLandscape: "PokerTH Vodoravno",

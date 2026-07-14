@@ -9,6 +9,8 @@ export const meta = {
 };
 
 export const strings = {
+    // PlayerWinnerOverlay (badge gagnant sur la boîte, parité QML)
+    winnerBadge:'VOITTAJA',
     // GameStatusBar (bandeau d'info de jeu, parité QML §7)
     gsbTotal:'Yhteensä:', gsbBets:'Panokset:', gsbGame:'Peli:', gsbHand:'Käsi:',
   seatPokerthPortrait: "PokerTH Pysty", seatPokerthLandscape: "PokerTH Vaaka",

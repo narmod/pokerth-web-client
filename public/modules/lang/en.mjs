@@ -16,6 +16,8 @@ export const meta = {
 };
 
 export const strings = {
+    // PlayerWinnerOverlay (badge gagnant sur la boîte, parité QML)
+    winnerBadge:'WINNER',
     // GameStatusBar (bandeau d'info de jeu, parité QML §7)
     gsbTotal:'Total:', gsbBets:'Bets:', gsbGame:'Game:', gsbHand:'Hand:',
   advUiGeneral:'General', advUiNetwork:'Network', advShowTooltips:'Show tooltips', advDisableSplash:'Disable the splash screen on startup', advDontTranslatePoker:'Don\'t translate poker terms (Check, Call, Raise)', advNA:'web', advLanguage:'Language', advDefCommunity:'Default community', advSecReactions:'Reactions', advDisableReactions:'Disable emoji reactions', advNetStateColor:'Show network status colour in the avatar corner',

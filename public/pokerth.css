@@ -6582,6 +6582,37 @@ html[data-seat^="pokerth"] .seat.active .seat-plate::after {
   animation: turnGlowPulse 1.5s ease-in-out infinite;
 }
 @keyframes turnGlowPulse { 0%, 100% { opacity: 0.65; } 50% { opacity: 1; } }
+/* PlayerWinnerOverlay QML : cadre or #FFD700 3px + halo autour de la boîte du
+   gagnant (ne couvre pas les cartes), badge « WINNER » pilule (h 16, radius 8,
+   fond #0d3d0d, bord/texte or 9px bold) à 6px AU-DESSUS de la boîte —
+   au-dessous (.winner-below) pour la boîte la plus haute (TC portrait).
+   Défini APRÈS le turn glow : à showdown, la règle winner l'emporte sur
+   ::after. Tokens thème : --winner-frame / --winner-halo / --winner-badge-bg. */
+html[data-seat^="pokerth"] .seat.winner .seat-plate { opacity: 1; }
+html[data-seat^="pokerth"] .seat.winner .seat-plate::after {
+  content: ""; position: absolute; inset: -2px; border-radius: 8px;
+  border: 3px solid var(--winner-frame, #FFD700);
+  box-shadow: 0 0 16px 2px var(--winner-halo, rgba(255, 215, 0, 0.6));
+  pointer-events: none; z-index: 19;
+  animation: none; opacity: 1;
+}
+html[data-seat^="pokerth"] .seat-winner-badge {
+  position: absolute; left: 50%; transform: translateX(-50%);
+  bottom: calc(100% + 6px);
+  height: 16px; box-sizing: border-box;
+  display: inline-flex; align-items: center;
+  padding: 0 6px; border-radius: 8px;
+  background: var(--winner-badge-bg, #0d3d0d);
+  border: 1px solid var(--winner-frame, #FFD700);
+  color: var(--winner-frame, #FFD700);
+  font-family: var(--ff-display); font-size: 9px; font-weight: 700;
+  letter-spacing: 0.04em; white-space: nowrap;
+  z-index: 30; pointer-events: none;
+}
+html[data-seat^="pokerth"] .seat.winner-below .seat-winner-badge { bottom: auto; top: calc(100% + 6px); }
+/* QML : le badge d'action est masqué pendant l'état gagnant (visible: !isWinner). */
+html[data-seat^="pokerth"] .seat.winner .seat-action-badge,
+html[data-seat^="pokerth"] .seat.winner .seat-action-label { display: none; }
 /* Couché : 0.72 ; éliminé : la base gère déjà l'estompe (transition QML 250ms). */
 html[data-seat^="pokerth"] .seat { transition: opacity 0.25s ease-out; }
 html[data-seat^="pokerth"] .seat.folded { opacity: 0.72; }

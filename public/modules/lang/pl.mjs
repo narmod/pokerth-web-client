@@ -16,6 +16,8 @@ export const meta = {
 };
 
 export const strings = {
+    // PlayerWinnerOverlay (badge gagnant sur la boîte, parité QML)
+    winnerBadge:'ZWYCIĘZCA',
     // GameStatusBar (bandeau d'info de jeu, parité QML §7)
     gsbTotal:'Razem:', gsbBets:'Zakłady:', gsbGame:'Gra:', gsbHand:'Rozdanie:',
   seatPokerthPortrait: "PokerTH Pionowo", seatPokerthLandscape: "PokerTH Poziomo",
