@@ -290,6 +290,10 @@ seat.apply = function (id) {
   try { _injectSeatPkg(_gallerySeatById(id) || null); } catch (e) {}
 };
 seat.set = seat.apply;
+// Setter public pour le monolithe (option « Synchroniser les sieges » des
+// Options avancees) : reutilise toute la logique du module (persistance
+// pth_seat + nettoyage des packs d'images importes).
+try { window._setSeatPack = seat.set; } catch (e) {}
 _loadGallerySeats();
 
 // Deck changes need the monolith to re-point card faces + back (no re-render).

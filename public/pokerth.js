@@ -544,6 +544,7 @@ function openAdvancedOptions() {
   // le CSS coupe ombres / glow / backdrop-filter.
   try { document.documentElement.classList.toggle('reduce-fx', _advGet('reduce_fx', false)); } catch (e) {}
   try { var _sl = document.getElementById('adv-seatlayout'); if (_sl) { var _slv = localStorage.getItem('pth_seat_layout'); _sl.value = (_slv === 'pokerth-official' || _slv === 'pokerth-ellipse' || _slv === 'custom') ? _slv : 'auto'; } } catch (e) {}
+  try { var _ssy = document.getElementById('adv-seatsync'); if (_ssy) _ssy.checked = (localStorage.getItem('pth_seat_sync') === '1'); } catch (e) {}
   try { _rebindAction = null; _renderKeyButtons(); } catch (e) {}
   sync('adv-tooltips', 'tooltips', true);
   try { var _nr = document.getElementById('adv-noreact'); if (_nr) _nr.checked = (localStorage.getItem('pth_react_muted') === '1'); } catch (e) {}
@@ -690,6 +691,34 @@ function setSeatLayout(v) {
   }
 }
 window.setSeatLayout = setSeatLayout;
+// ── Synchronisation automatique du PACK de sieges avec l'orientation
+// (Options avancees, sous le placement) : si activee, ecran PORTRAIT ->
+// sieges « PokerTH portrait », ecran PAYSAGE -> sieges « PokerTH
+// landscape ». Force le pack (le choix manuel du panneau Style est
+// remplace tant que l'option est active). Applique au demarrage, au
+// resize et au changement d'orientation.
+function _applySeatSync() {
+  try {
+    if (localStorage.getItem('pth_seat_sync') !== '1') return;
+    var want = (window.innerHeight > window.innerWidth) ? 'pokerth-portrait' : 'pokerth';
+    if ((document.documentElement.getAttribute('data-seat') || '') === want) return;
+    if (typeof window._setSeatPack === 'function') window._setSeatPack(want);
+    else {
+      // Module theme pas encore charge : application directe (meme effet,
+      // les deux packs pokerth sont purement CSS).
+      document.documentElement.setAttribute('data-seat', want);
+      try { localStorage.setItem('pth_seat', want); } catch (e) {}
+    }
+    try { if (typeof window._renderSeats === 'function') window._renderSeats(); } catch (e) {}
+  } catch (e) {}
+}
+function setSeatSync(on) {
+  try { localStorage.setItem('pth_seat_sync', on ? '1' : '0'); } catch (e) {}
+  if (on) _applySeatSync();
+}
+window.setSeatSync = setSeatSync;
+window._applySeatSync = _applySeatSync;
+setTimeout(function () { try { _applySeatSync(); } catch (e) {} }, 800);
 // Appliquer les classes body dès l'init (les prefs sont reflétées au chargement).
 try {
   if (document.readyState === 'loading')
@@ -12620,11 +12649,12 @@ window._retranslateSysChat = function() {
 
 window.addEventListener('resize', function() {
   if (typeof updateBottomLayout === 'function') updateBottomLayout();
+  if (typeof window._applySeatSync === 'function') window._applySeatSync();
   autoScaleTable();
   setTimeout(function(){ if(typeof renderSeats==='function' && typeof seats!=='undefined' && seats.length) renderSeats(); }, 100);
 });
 window.addEventListener('orientationchange', function() {
-  setTimeout(function(){ autoScaleTable(); if(typeof renderSeats==='function' && typeof seats!=='undefined' && seats.length) renderSeats(); }, 300);
+  setTimeout(function(){ if (typeof window._applySeatSync === 'function') window._applySeatSync(); autoScaleTable(); if(typeof renderSeats==='function' && typeof seats!=='undefined' && seats.length) renderSeats(); }, 300);
 });
 
 // ── Zoom de la table (tablette/desktop) ─────────────────────
@@ -14161,7 +14191,7 @@ function renderPlayersList() {
   body.innerHTML = _shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>';
 }
 
-;(function(){ window.BUILD_VERSION='0.3.452-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.453-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
