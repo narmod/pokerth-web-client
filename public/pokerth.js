@@ -9133,7 +9133,7 @@ const App = (() => {
     try {
       var _smw = window.innerWidth, _smh = window.innerHeight;
       if (_smh > _smw) SELF_BOX_MUL = 1.155;
-      else if (_smh < 600) SELF_BOX_MUL = 1.119;
+      else if (_smh < 600) SELF_BOX_MUL = 1.3;   // paysage mobile : self volontairement plus grosse que le ratio QML 1.119 (demande narmod ; la garde mesurée protège la rivière)
     } catch (e) {}
     // Placement des sièges : 'classic' (ellipse maison, défaut) ou 'official'
     // (slots fixes du client PokerTH : grille périmètre en paysage façon client
@@ -9321,7 +9321,7 @@ const App = (() => {
           // hauteur d'écran est minuscule, les boîtes pleines paraissaient
           // énormes et se touchaient ; demande narmod). Le zoom + repart de
           // cette base réduite.
-          _seatBoxScale = _forceSeatPortrait ? _offPos._boxScale : _offPos._boxScale * (compact ? 0.8 : 0.9);
+          _seatBoxScale = _forceSeatPortrait ? _offPos._boxScale : _offPos._boxScale * (compact ? 0.88 : 0.9);
           // Rabot anti-chevauchement MESURÉ (voir garde post-rendu) : corrige
           // sur écran ce que la bisection théorique aurait laissé passer.
           _seatBoxScale *= (window._seatFitShave || 1);
@@ -14611,7 +14611,7 @@ function renderPlayersList() {
   body.innerHTML = _shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>';
 }
 
-;(function(){ window.BUILD_VERSION='0.3.497-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.498-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
