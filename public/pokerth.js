@@ -564,6 +564,7 @@ function openAdvancedOptions() {
   sync('adv-fkeysalt', 'fkeys_alt', false);
   sync('adv-tablezoom', 'table_zoom', true);
   sync('adv-lobbychat', 'lobby_chat', true);
+  sync('adv-pausehands', 'pause_hands', false);
   try { renderIgnoredList(); } catch (e) {}
   sync('adv-logon', 'log_on', true);
   try { var _li = document.getElementById('adv-loginterval'); if (_li) _li.value = _getLogInterval(); } catch (e) {}
@@ -670,7 +671,7 @@ function _advSyncContext() {
   var onConnect = false;            // page de login (pré-connexion : pas encore de profil ni serveur)
   try { var _sc = document.getElementById('s-connect'); onConnect = !!(_sc && _sc.classList.contains('active')); } catch (e) {}
   var connected = !onConnect;       // lobby ou partie = contexte de jeu connecté
-  setEnabled('local', inGame);      // « Remplir avec des bots » : seulement à une table
+  setEnabled('local', true);        // réglages persistants (pause entre les mains)
   // Journal et Partie Internet contiennent désormais des RÉGLAGES persistants
   // (journal on/off + intervalle ; liste des joueurs ignorés) → catégories
   // toujours accessibles. Seuls leurs liens contextuels (« Ouvrir le journal »,
@@ -680,6 +681,8 @@ function _advSyncContext() {
   setEnabled('internet', true);
   setEnabled('avatar', connected);  // profil / avatar indisponible avant connexion
   try {
+    var _lcLink = modal.querySelector('.adv-panel[data-cat="local"] .adv-link');
+    if (_lcLink) _lcLink.style.display = inGame ? '' : 'none';
     var _lgLink = modal.querySelector('.adv-panel[data-cat="log"] .adv-link');
     if (_lgLink) _lgLink.style.display = inGame ? '' : 'none';
     var _inLink = modal.querySelector('.adv-panel[data-cat="internet"] .adv-link');
@@ -702,7 +705,7 @@ function resetAdvDefaults() {
     anim_cards: true, show_blinds: true, hide_pbar: true, show_community: true, four_color: false,
     focus_bet: false, chat_noemoji: false, fade_losers: true, show_flag: true,
     own_click: false, guard_call: false, odds_monitor: false, no_hide_ignored: false,
-    fkeys_alt: false, zoom_follow: false, table_zoom: true, lobby_chat: true, log_on: true,
+    fkeys_alt: false, zoom_follow: false, table_zoom: true, lobby_chat: true, log_on: true, pause_hands: false,
     snd_actions: true, snd_lobby: true, snd_net: true, snd_blinds: true,
     reduce_fx: false, status_bar: true, ping_avatar: false, auto_leave: false
   };
@@ -10938,7 +10941,7 @@ function showWinnerOverlay(winners) {
   // Option avancée « Fenêtre du gagnant » (activée par défaut) : quand elle est
   // décochée, on saute uniquement l'AFFICHAGE — les sons de victoire ci-dessus
   // restent joués et la partie enchaîne normalement (dismissWinner est no-op).
-  if (!_advGet('winner_popup', true)) return;
+  if (!_advGet('winner_popup', true)) { _maybeShowNextHandBtn(); return; }
 
   // Snapshot figé à la fin de la main (montants + qui était réellement engagé).
   var snap = _handResultSnapshot || {};
@@ -11103,13 +11106,27 @@ function showWinnerOverlay(winners) {
   ov.innerHTML = html;
   ov.style.display = 'flex';
   clearTimeout(window._winnerTimer);
-  window._winnerTimer = setTimeout(function(){ App.dismissWinner(); }, 12000);
+  // Pause entre les mains (entraînement) : la fenêtre attend le Continuer —
+  // pas d'auto-fermeture (sinon la pause n'en serait pas une).
+  if (!(window._offlineMode && _advGet('pause_hands', false)))
+    window._winnerTimer = setTimeout(function(){ App.dismissWinner(); }, 12000);
 }
 
 function dismissWinner() {
   var ov = document.getElementById('g-winner-overlay');
   if (ov) ov.style.display = 'none';
   clearTimeout(window._winnerTimer);
+  var nb = document.getElementById('g-next-hand-btn');
+  if (nb) nb.style.display = 'none';
+  // Reprise de la pause entre les mains (idempotent : no-op sans pause).
+  try { if (window._offlineMode && window.PokerOffline && window.PokerOffline.resumeNextHand) window.PokerOffline.resumeNextHand(); } catch (e) {}
+}
+// Repli quand la fenêtre du gagnant est désactivée mais la pause active :
+// un bouton « ▶ Main suivante » flottant pour reprendre.
+function _maybeShowNextHandBtn() {
+  if (!(window._offlineMode && _advGet('pause_hands', false))) return;
+  var b = document.getElementById('g-next-hand-btn');
+  if (b) b.style.display = '';
 }
 
   return {
@@ -11633,7 +11650,10 @@ function dismissWinner() {
         }
         try {
           ws = window.PokerOffline.createSocket({ nick: myName,
-            botSkill: (function(){ try { return localStorage.getItem('pth_offline_skill') || 'mixed'; } catch (e) { return 'mixed'; } })() });
+            botSkill: (function(){ try { return localStorage.getItem('pth_offline_skill') || 'mixed'; } catch (e) { return 'mixed'; } })(),
+            // Pause entre les mains (parité QML PauseBetweenHands) : lue en
+            // direct pour être basculable en cours de partie.
+            pauseGate: function () { return _advGet('pause_hands', false); } });
         } catch (e) {
           setStatus('Offline init failed: ' + e.message, 'err');
           return;
@@ -14791,7 +14811,7 @@ function renderPlayersList() {
   body.innerHTML = _shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>';
 }
 
-;(function(){ window.BUILD_VERSION='0.3.511-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.512-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

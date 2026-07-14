@@ -41,6 +41,11 @@ export class FakeServer {
     this.rng     = opts.rng  || Math.random;
     this.botPool = opts.botPool || [];
     this.botSkill = opts.botSkill || 'mixed';   // 'easy'|'normal'|'hard'|'mixed'
+    // Pause entre les mains (parité QML PauseBetweenHands) : callback LU EN
+    // DIRECT à chaque fin de main (l'option peut être basculée en cours de
+    // partie). Quand elle rend vrai, nextHand attend resumeNextHand().
+    this.pauseGate = (typeof opts.pauseGate === 'function') ? opts.pauseGate : null;
+    this._pendingNext = null;
     this.cfg = Object.assign({ startMoney:3000, smallBlind:10, raiseEvery:8, maxPlayers:6, timeout:30, gameName:'Offline', raiseMode:1, endRaiseMode:1, endRaiseValue:0, guiSpeed:5, delayHands:2 }, opts.config||{});
     this.meId = 1; this.gameId = 1;
     this.players = [{ id:1, name:(opts.me&&opts.me.name)||'You', isBot:false }];
@@ -232,6 +237,10 @@ export class FakeServer {
     this.pace(()=>this.table.start(), 300);
   }
   _clearHumanTimer(){ if(this._humanTimer){ clearTimeout(this._humanTimer); this._humanTimer=null; } }
+  // Reprise après une pause entre les mains. Idempotent : sans continuation
+  // en attente, ne fait rien (appelé aussi par le Continuer du popup gagnant
+  // quand la pause n'est pas active).
+  resumeNextHand(){ var f=this._pendingNext; this._pendingNext=null; if(f && !this.stopped) this.pace(f, 200); }
   // Pas de temporisation entre cartes du run-out, modulé par la vitesse de jeu.
   _roStep(){ return Math.max(450, 1100 - (this.cfg.guiSpeed||5)*70); }
   // Envoi d'une distribution de board : immédiat en jeu normal ; en run-out
@@ -416,7 +425,15 @@ export class FakeServer {
           this.pace(()=>{ if(!this.stopped) this._send('EndOfGame',[[1,0,G],[2,0,this.meId],[3,0,_pl],[4,0,1]]); }, _oe);
           break;   // ne pas enchaîner nextHand
         }
-        var _dh=Math.max(600, Math.min(4000, (this.cfg.delayHands||2)*380)); var _o=_dh + this._roAcc; this._roAcc = 0; this.pace(()=>{ if(!this.stopped && this.table){ this._applyKicks(); this.table.nextHand(); } }, _o); break;
+        var _dh=Math.max(600, Math.min(4000, (this.cfg.delayHands||2)*380)); var _o=_dh + this._roAcc; this._roAcc = 0;
+        var _next=()=>{ if(!this.stopped && this.table){ this._applyKicks(); this.table.nextHand(); } };
+        // Pause entre les mains : on retient la continuation au lieu de la
+        // programmer — la reprise vient de resumeNextHand() (bouton Continuer
+        // de la fenêtre du gagnant ou bouton « Main suivante »). Le temps
+        // d'attente est purement mural : aucune influence sur le rng/moteur.
+        if (this.pauseGate && this.pauseGate()) { this._pendingNext = _next; }
+        else this.pace(_next, _o);
+        break;
       }
       case 'gameOver': {
         this._clearHumanTimer();

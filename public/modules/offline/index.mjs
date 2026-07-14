@@ -51,7 +51,12 @@ export function createSocket(config){
   const rng = config.rng || Math.random;
   const server = new FakeServer({ me:{ name: config.nick || 'You' }, botPool: BOT_POOL, rng,
     botSkill: config.botSkill || 'mixed',
+    pauseGate: config.pauseGate || null,
     pace: (fn, ms)=> setTimeout(fn, ms||0) });
+  // Reprise de la pause entre les mains : exposée pour le bouton Continuer
+  // du client (idempotente ; remplacée à chaque nouvelle connexion offline).
+  if (typeof window !== 'undefined' && window.PokerOffline)
+    window.PokerOffline.resumeNextHand = ()=>{ try { server.resumeNextHand(); } catch(e){} };
   return new FakeSocket(server);
 }
 

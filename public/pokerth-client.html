@@ -1541,6 +1541,7 @@ function onAvatarImageChosen(input) {
 <!-- ║  GLOBAL CHAT  ║ -->
 <!-- ╚═══════════════╝ -->
 <button id="gchat-fab" onclick="toggleGameChat()" title="Chat" data-i18n-title="chatTooltip">💬</button>
+<button id="g-next-hand-btn" style="display:none" onclick="App.dismissWinner()">▶ <span data-i18n="nextHandBtn">Next hand</span></button>
 
 <!-- Password prompt modal -->
 <div id="password-prompt" style="display:none">
@@ -2014,6 +2015,10 @@ if ('serviceWorker' in navigator) {
           <div class="adv-link">
             <div class="adv-link-desc" data-i18n="advLocalDesc">Practise against bots: fill the empty seats at your table.</div>
             <button type="button" class="adv-link-btn" onclick="closeAdvancedOptions();App.startWithBots()"><span data-i18n="advLocalOpen">Fill seats with bots</span></button>
+          </div>
+          <div class="adv-body">
+            <div class="adv-sec" data-i18n="advSecLocalGame">Training game</div>
+            <label class="adv-row"><input type="checkbox" id="adv-pausehands" onchange="setAdvOpt('pause_hands',this.checked)"><span data-i18n="advPauseHands">Pause between hands (continue with the winner window)</span></label>
           </div>
         </section>
         <section class="adv-panel" data-cat="network" id="adv-panel-network" role="tabpanel" aria-labelledby="adv-cat-network">
