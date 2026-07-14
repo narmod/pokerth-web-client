@@ -6448,9 +6448,6 @@ html[data-seat^="pokerth"] .seat-name {
 }
 html[data-seat^="pokerth"] .seat-money { text-align: right; font-weight: 700; }
 /* Non-wide (hauteur scalée < 76 ou portrait) : « nom · tapis » sur UNE ligne. */
-/* Style « PokerTH portrait » : variante 1 ligne IMPOSEE par le style (le JS
-   pose aussi .seat-narrow ; cette regle est le filet CSS). */
-html[data-seat="pokerth-portrait"] .seat-info { flex-direction: row; align-items: baseline; justify-content: space-between; gap: 6px; }
 html[data-seat^="pokerth"] .seat-narrow .seat-info { flex-direction: row; align-items: baseline; justify-content: space-between; gap: 6px; }
 html[data-seat^="pokerth"] .seat-narrow .seat-name { max-width: 76px; font-size: 0.62rem; }
 html[data-seat^="pokerth"] .seat-narrow .seat-money { font-size: 0.64rem; }

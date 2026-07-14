@@ -9198,12 +9198,16 @@ const App = (() => {
       // Parité GamePlayerBox QML : wideLayout = hauteur SCALÉE >= 76
       // (84·s < 76 <=> s < 0.905) -> texte 1 ligne « nom · $tapis » ; le
       // portrait (oppBaseHeight 71) est TOUJOURS non-wide dans le QML.
-      // DEUX styles de sieges au choix (liste des sieges), fideles au QML
-      // (bible §4.2) : « PokerTH portrait » = box 1 ligne (nom · cash,
-      // hauteur 71 QML) TOUJOURS ; « PokerTH landscape » = box wide 2 lignes
-      // (nom / cash, hauteur 84 QML) TOUJOURS. Plus de bascule automatique :
-      // le choix du style fait foi sur tous les peripheriques.
-      var _seatNarrow = (_seatStyleV === 'pokerth-portrait');
+      // Variante de siege COUPLEE au placement (demande narmod, fidele au
+      // QML §4.2) : placement en slots PORTRAIT -> sieges PokerTH portrait
+      // (1 ligne nom · cash) ; placement en ELLIPSE -> sieges PokerTH
+      // landscape (2 lignes nom / cash), avec la regle QML wideLayout
+      // (boxes ecrasees 84*scale<76 -> retour 1 ligne). En placement
+      // Personnalise (aucune orientation imposee), le style choisi dans la
+      // liste fait foi.
+      var _seatNarrow = _pkHole && (_applyOfficial
+        ? (_forceSeatPortrait || (84 * _seatBoxScale) < 76)
+        : (_seatStyleV === 'pokerth-portrait'));
       const cls = ['seat', isMe?'me':'', isDealer?'dealer':'', isActive?'active':'',
                    sd.folded && !isGone ? 'folded' : '',
                    isOut && !isGone ? 'seat-out' : '',
@@ -14157,7 +14161,7 @@ function renderPlayersList() {
   body.innerHTML = _shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>';
 }
 
-;(function(){ window.BUILD_VERSION='0.3.449-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.450-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
