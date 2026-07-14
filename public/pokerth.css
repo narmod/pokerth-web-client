@@ -3506,19 +3506,23 @@ body {
   position: absolute;
   left: 50%;
   top: 50%;
-  --pot-badge-lift: 68px;   /* écart au-dessus des cartes (réglable ici) */
+  /* Ancrage QML : bottom du badge = top des cartes communes + marge 8px,
+     le tout suivant communityScale (--comm-scale). Demi-hauteur de carte
+     32px + marge 8px = 40px x echelle -> position ET taille identiques au
+     client officiel, en portrait comme en paysage, sur tous les appareils. */
+  --pot-badge-lift: calc(40px * var(--comm-scale, 1));
   transform: translate(-50%, calc(-100% - var(--pot-badge-lift)));
   z-index: 6;
   align-items: center;
   gap: 6px;
-  padding: 4px 13px;
+  padding: max(2px, calc(3px * var(--comm-scale, 1))) max(7px, calc(10px * var(--comm-scale, 1)));
   background: rgba(0, 0, 0, 0.5);
   border: 1.5px solid var(--sel, #E3C800);   /* accent or QML (colorAccent), stable clair/sombre */
   border-radius: 999px;
   color: var(--sel, #E3C800);
   font-family: var(--ff-display);
   font-weight: 700;
-  font-size: 0.95rem;
+  font-size: max(10px, calc(13px * var(--comm-scale, 1))); /* suit communityScale */
   letter-spacing: 0.05em;
   white-space: nowrap;
   box-shadow: 0 2px 9px rgba(0, 0, 0, 0.42);
@@ -3526,8 +3530,8 @@ body {
 }
 .pot-badge::before {
   content: '';
-  width: 15px;
-  height: 15px;
+  width: max(9px, calc(12px * var(--comm-scale, 1)));
+  height: max(9px, calc(12px * var(--comm-scale, 1)));
   border-radius: 50%;
   background: radial-gradient(circle at 50% 38%, #ffe89a 0%, #f2c94c 55%, #c99a1e 100%);
   border: 2px dashed rgba(0, 0, 0, 0.28);
@@ -3535,11 +3539,6 @@ body {
   flex: 0 0 auto;
 }
 .pot-badge.has-pot { display: inline-flex; }
-/* Mobile : version compacte (cartes communes plus petites -> badge plus pres). */
-@media (max-width: 899px) {
-  .pot-badge { --pot-badge-lift: 54px; font-size: 0.8rem; padding: 3px 10px; }
-  .pot-badge::before { width: 12px; height: 12px; }
-}
 /* Le badge se positionne via transform:translate ; l'animation générique
    .pot-pop (transform:scale) écraserait ce translate → le badge sautait sur
    les cartes au flop. Pop dédié qui conserve le translate, et pas de
