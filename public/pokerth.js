@@ -9025,6 +9025,10 @@ const App = (() => {
       // Échelle bisectée QML (Hochformat) : les slots sont fixes, seule
       // l'échelle empêche les chevauchements — comme le client officiel.
       outP._boxScale = _qmlPortraitScale(M, zW, zH, zoomMul);
+      // Marge de zoom restante (grise le bouton + au plafond de faisabilité) :
+      // l'échelle bouge-t-elle encore au cran de zoom suivant ?
+      var _znP = Math.min(2, (zoomMul || 1) + 0.1);
+      outP._zoomHeadroom = _qmlPortraitScale(M, zW, zH, _znP) > outP._boxScale + 0.004;
       return outP;
     }
     // ── PAYSAGE : ellipse officielle — DÉLÉGUÉE au port 1:1 du QML ──
@@ -9050,6 +9054,9 @@ const App = (() => {
     var out = [null]; // index 0 = self -> perle du bas de l'ellipse (voir _self)
     for (var ke = 0; ke < M; ke++) out.push({ top: lay.slots[ke].y, left: lay.slots[ke].x });
     out._boxScale = lay.s;
+    // Marge de zoom restante (bouton +) au cran suivant — bisection pure, ~gratuit.
+    var _znL = Math.min(2, (zoomMul || 1) + 0.1);
+    out._zoomHeadroom = _qmlLandscapeLayout(M, zW, zH, compact, _znL).s > lay.s + 0.004;
     // Position officielle de la self = "grosse perle" au point bas de l'ellipse
     // (appliquée par l'appelant quand la player-bar est masquée). out[0] reste
     // null pour ne pas perturber le cas spectateur.
@@ -9303,6 +9310,13 @@ const App = (() => {
         if (_offPos && _offPos._boxScale) {
           _seatBoxScale = _forceSeatPortrait ? _offPos._boxScale : _offPos._boxScale * (compact ? 1 : 0.9);  // portrait : bisection QML pure ; paysage desktop : -10% (sieges moins massifs)
           window._zoomInLayout = true;   // le zoom est DANS l'échelle : pas de loupe par-dessus
+          // Bouton + grisé quand le plafond de faisabilité est atteint (plus
+          // aucune marge au cran suivant) ou au max du réglage.
+          window._tableZoomMaxed = !_offPos._zoomHeadroom;
+          try {
+            var _bin = document.getElementById('g-zoom-in');
+            if (_bin) _bin.disabled = window._tableZoomMaxed || (_layoutZoom >= TABLE_ZOOM_MAX - 0.001);
+          } catch (e) {}
         }
         // Point bas exact de l'ellipse pour la self (quand l'officiel est actif).
         // L'ÉPINGLAGE mesuré au rendu (plus bas) reste la garantie finale, même
@@ -12971,7 +12985,10 @@ window.addEventListener('resize', function() {
   setTimeout(function(){ if(typeof renderSeats==='function' && typeof seats!=='undefined' && seats.length) renderSeats(); }, 100);
 });
 window.addEventListener('orientationchange', function() {
-  setTimeout(function(){ if (typeof window._applySeatSync === 'function') window._applySeatSync(); autoScaleTable(); if(typeof renderSeats==='function' && typeof seats!=='undefined' && seats.length) renderSeats(); }, 300);
+  setTimeout(function(){ if (typeof window._applySeatSync === 'function') window._applySeatSync(); autoScaleTable(); if(typeof renderSeats==='function' && typeof seats!=='undefined' && seats.length) renderSeats();
+    // Zoom par orientation : appliquer la valeur mémorisée pour la nouvelle
+    // orientation + rafraîchir l'état des boutons +/−/↺.
+    try { if (typeof applyTableZoom === 'function') applyTableZoom(); } catch (e) {} }, 300);
 });
 
 // ── Zoom de la table (tablette/desktop) ─────────────────────
@@ -12988,9 +13005,18 @@ var _zoomPanX = 0, _zoomPanY = 0; // translation « suivi du siège actif » (px
 function _tableZoomGate() {
   return true; // zoom disponible sur TOUS les appareils (mobile inclus)
 }
+// Zoom mémorisé PAR ORIENTATION (portrait / paysage séparés) — l'ancien
+// réglage unique pth_table_zoom sert de repli de migration.
+function _tableZoomKey() {
+  try { return (window.innerHeight > window.innerWidth) ? 'pth_table_zoom_p' : 'pth_table_zoom_l'; }
+  catch (e) { return 'pth_table_zoom_l'; }
+}
 function _getTableZoom() {
   var z = NaN;
-  try { z = parseFloat(localStorage.getItem('pth_table_zoom')); } catch (e) {}
+  try {
+    z = parseFloat(localStorage.getItem(_tableZoomKey()));
+    if (isNaN(z)) z = parseFloat(localStorage.getItem('pth_table_zoom'));
+  } catch (e) {}
   if (isNaN(z)) z = TABLE_ZOOM_DEFAULT;
   return Math.max(TABLE_ZOOM_MIN, Math.min(TABLE_ZOOM_MAX, z));
 }
@@ -13014,7 +13040,8 @@ function applyTableZoom() {
   var bIn  = document.getElementById('g-zoom-in');
   var bRst = document.getElementById('g-zoom-reset');
   if (bOut) bOut.disabled = (z <= TABLE_ZOOM_MIN + 0.001);
-  if (bIn)  bIn.disabled  = (z >= Math.min(TABLE_ZOOM_MAX, maxFit) - 0.001);
+  if (bIn)  bIn.disabled  = (z >= Math.min(TABLE_ZOOM_MAX, maxFit) - 0.001)
+                          || (!!window._zoomInLayout && !!window._tableZoomMaxed);
   if (bRst) bRst.disabled = (Math.abs(z - TABLE_ZOOM_DEFAULT) < 0.001);
   var bCz = document.getElementById('g-cardzoom');
   if (bCz) { var _czl=0; try{ _czl=Math.min(5, Math.max(0, parseInt(localStorage.getItem('pth_big_own_cards'),10) || 0)); }catch(e){} bCz.classList.toggle('active', _czl>0); bCz.setAttribute('data-lvl', String(_czl)); }
@@ -13126,11 +13153,11 @@ function tableZoomStep(dir) {
   var z = _getTableZoom() + (dir > 0 ? TABLE_ZOOM_STEP : -TABLE_ZOOM_STEP);
   z = Math.round(z * 100) / 100;
   z = Math.max(TABLE_ZOOM_MIN, Math.min(TABLE_ZOOM_MAX, z));
-  try { localStorage.setItem('pth_table_zoom', String(z)); } catch (e) {}
+  try { localStorage.setItem(_tableZoomKey(), String(z)); } catch (e) {}
   applyTableZoom();
 }
 function tableZoomReset() {
-  try { localStorage.setItem('pth_table_zoom', String(TABLE_ZOOM_DEFAULT)); } catch (e) {}
+  try { localStorage.setItem(_tableZoomKey(), String(TABLE_ZOOM_DEFAULT)); } catch (e) {}
   applyTableZoom();
 }
 window.tableZoomStep = tableZoomStep;
@@ -14514,7 +14541,7 @@ function renderPlayersList() {
   body.innerHTML = _shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>';
 }
 
-;(function(){ window.BUILD_VERSION='0.3.493-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.494-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
