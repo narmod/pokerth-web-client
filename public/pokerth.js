@@ -8919,13 +8919,11 @@ const App = (() => {
     // ── 4 rendus VISIBLEMENT distincts (surtout en portrait, ou auto/official/
     //    ellipse etaient auparavant identiques) ──
     if (_seatModeV === 'pokerth-official') {
-      // Mode officiel QML 2.1.3 (bible §3) : les slots se choisissent selon
-      // le RATIO de la tableZone — zone haute = slots portrait, zone large =
-      // ellipse officielle. Avant : slots portrait forces partout -> sur
-      // desktop, la grille portrait (paires 0.135 / trou 0.305) donnait des
-      // ecarts inegaux entre groupes de 2. Le ratio est evalue plus bas, une
-      // fois zRect mesure.
-      _applyOfficial = true; _forceSeatPortrait = true; // affine via zRect ci-dessous
+      // Slots QML officiels (grille portrait) forces PARTOUT : meme
+      // disposition sur TOUS les peripheriques et orientations (choix
+      // narmod). NB : les ecarts inegaux entre groupes de 2 (paires de
+      // slots a 0.135, trou 0.305) sont inherents a cette grille QML.
+      _applyOfficial = true; _forceSeatPortrait = true;
     } else if (_seatModeV === 'pokerth-ellipse') {
       // Ellipse « collier » officielle dans LES DEUX orientations (arc ouvert vers
       // le haut, self = perle du bas). En portrait -> ovale vertical, distinct des slots.
@@ -8934,15 +8932,14 @@ const App = (() => {
       // Placement perso : ellipse maison + positions sauvees (glisser-deposer).
       _applyOfficial = false; _forceSeatPortrait = _seatPortrait;
     } else {
-      // auto : PORTRAIT = anneau « maison » (ellipse de base, distinct des slots
-      //        officiels) ; PAYSAGE = ellipse officielle (orientation respectee, inchange).
-      if (_seatPortrait) { _applyOfficial = false; _forceSeatPortrait = true; }
-      else               { _applyOfficial = true;  _forceSeatPortrait = false; }
+      // auto : reproduit le client QML officiel (bible §3, layout unifie) —
+      // PORTRAIT = slots officiels (grille pokerth-official) ;
+      // PAYSAGE = ellipse officielle (pokerth-ellipse).
+      if (_seatPortrait) { _applyOfficial = true; _forceSeatPortrait = true; }
+      else               { _applyOfficial = true; _forceSeatPortrait = false; }
     }
     const oRect = oval.getBoundingClientRect();
     const zRect = zone.getBoundingClientRect();
-    // Mode 'pokerth-official' : choix des slots par RATIO de zone (QML §3).
-    if (_seatModeV === 'pokerth-official') _forceSeatPortrait = zRect.height >= zRect.width;
     const oCX  = oRect.left - zRect.left + oRect.width  / 2;
     const oCY  = oRect.top  - zRect.top  + oRect.height / 2;
     const isMob = window.innerWidth < 640;       // phone (kept for reference)
@@ -14154,7 +14151,7 @@ function renderPlayersList() {
   body.innerHTML = _shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>';
 }
 
-;(function(){ window.BUILD_VERSION='0.3.445-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.446-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
