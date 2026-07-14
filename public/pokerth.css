@@ -1711,6 +1711,7 @@ body {
    puis Partie/Main (gris). Tailles 13/11 px, compact 11/10/9 px.
    Centre (spécifique web, conservé) : badge blinds + statut spectateur. */
 #pot-strip {
+  position: relative;             /* ancre du badge blinds (.gsb-mid absolu) */
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -1733,7 +1734,18 @@ body {
   white-space: nowrap;
 }
 .gsb-right { align-items: flex-end; text-align: right; }
-.gsb-mid { display: flex; align-items: center; gap: 6px; min-width: 0; }
+/* Centre (badge blinds + spectateur) : position ABSOLUE à 33 % — décalé à
+   gauche du centre et surtout FIXE, indépendant de la largeur des montants
+   Total/Mises (demande narmod). Hors flux → gauche/droite restent 1:1 QML. */
+.gsb-mid {
+  position: absolute;
+  left: 33%;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
 .gsb-row { display: inline-flex; align-items: baseline; gap: 5px; }
 .gsb-lbl { color: #9e9e9e; font-size: 13px; }
 .gsb-row .gsb-lbl + .gsb-lbl { margin-left: 8px; }   /* espace Partie · Main */
@@ -2567,28 +2579,21 @@ body {
     text-overflow: ellipsis;
     white-space: nowrap;
   }
-  /* Nom de table sur mobile : la boite centree en ABSOLU (82vw) passait sous
-     les icones de droite (son / trophee / roue) -> titre et pastille Public
-     chevauchaient le haut-parleur. On remet le nom DANS LE FLUX flex, colle
-     apres la porte : flex:1 + min-width:0 -> #g-name tronque en « ... » et
-     cede toujours la place aux boutons. Desktop/tablette restent centres. */
+  /* Nom de table sur mobile : DANS LE FLUX flex (pas d'absolu → jamais sous
+     les icones de droite) mais CENTRE entre la porte (quitter) et le premier
+     bouton de droite (son) — demande narmod. flex:1 + justify center ; le
+     nom tronque en « ... » et cede toujours la place aux boutons. */
   #s-game .header-brand--game {
     position: static;
     transform: none;
     max-width: none;
     flex: 1 1 auto;
     min-width: 0;
-    justify-content: flex-start;
+    justify-content: center;
   }
-  /* Keep header-pills as a flex:1 spacer (still empty in #s-game) so that
-     the action buttons get pushed to the RIGHT edge of the header on
-     mobile. Previously this was display:none, which collapsed the spacer
-     and left the buttons clustered near the centre-left -- the brand on
-     the far left and a large gap on the right. */
-  #s-game .header-pills {
-    flex: 1;
-    min-width: 0;
-  }
+  /* header-pills : plus besoin de spacer — la brand flex:1 ci-dessus occupe
+     deja tout l'espace libre et pousse les boutons a droite. */
+  #s-game .header-pills { display: none; }
   #s-game .header { gap: 4px; padding: 3px 8px; }
   /* Hauteur de header UNIFORME (demande narmod) : meme 38 px que desktop,
      tablette et login — base topBar QML 2.1.3. Padding vertical 4 px
