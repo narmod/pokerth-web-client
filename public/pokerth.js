@@ -364,6 +364,7 @@ function applyAdvOpts() {
     b.classList.toggle('adv-hide-pbar', _advGet('hide_pbar', true));
     b.classList.toggle('adv-4color', _advGet('four_color', false)); // deck 4 couleurs (glyphes)
     b.classList.toggle('adv-no-tablezoom', !_advGet('table_zoom', true)); // interrupteur zoom (parite QML tableZoomEnabled)
+    b.classList.toggle('adv-no-lobbychat', !_advGet('lobby_chat', true)); // chat du lobby (parite QML UseLobbyChat)
     try { if (typeof window.applyTableZoom === 'function') window.applyTableZoom(); } catch (e) {}
     try { var _slm = localStorage.getItem('pth_seat_layout'); _slm = (_slm === 'pokerth-official' || _slm === 'pokerth-ellipse' || _slm === 'custom') ? _slm : 'auto'; document.documentElement.setAttribute('data-seat-layout', _slm); } catch (e) {}
     try { if (typeof window._refreshOwnCards === 'function') window._refreshOwnCards(); } catch (e) {}
@@ -529,6 +530,7 @@ function openAdvancedOptions() {
   sync('adv-nohideignored', 'no_hide_ignored', false);
   sync('adv-fkeysalt', 'fkeys_alt', false);
   sync('adv-tablezoom', 'table_zoom', true);
+  sync('adv-lobbychat', 'lobby_chat', true);
   sync('adv-zoomfollow', 'zoom_follow', false);
   sync('adv-snd-actions', 'snd_actions', true);
   sync('adv-snd-lobby', 'snd_lobby', true);
@@ -654,7 +656,7 @@ function resetAdvDefaults() {
     anim_cards: true, show_blinds: true, hide_pbar: true, show_community: true, four_color: false,
     focus_bet: false, chat_noemoji: false, fade_losers: true, show_flag: true,
     own_click: false, guard_call: false, odds_monitor: false, no_hide_ignored: false,
-    fkeys_alt: false, zoom_follow: false, table_zoom: true,
+    fkeys_alt: false, zoom_follow: false, table_zoom: true, lobby_chat: true,
     snd_actions: true, snd_lobby: true, snd_net: true, snd_blinds: true,
     reduce_fx: false, status_bar: true, ping_avatar: false, auto_leave: false
   };
@@ -14651,7 +14653,7 @@ function renderPlayersList() {
   body.innerHTML = _shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>';
 }
 
-;(function(){ window.BUILD_VERSION='0.3.505-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.506-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
