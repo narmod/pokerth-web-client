@@ -8610,7 +8610,7 @@ const App = (() => {
   // comme dans le QML (sinon la bisection remplirait l'écart créé).
   // Fonction PURE (aucun DOM) → testée en Node (window._qmlLandscapeLayout).
   function _qmlLandscapeLayout(oppCnt, zW, zH, compact) {
-    var oppBaseW = 114, oppBaseH = 84, selfBaseW = 114, selfBaseH = 84;
+    var oppBaseW = 114, oppBaseH = 84, selfBaseW = 114, selfBaseH = 96; // self 96 (QML 2.1.3 §4.2), opp 84
     var opponentGapBase = 10, selfBadgeGapBase = 8, sideBadgeGapBase = 48;
     var gap = 12;
     var selfWeight = 0.5;   // 2.1.3 : arc de la perle self identique en wide et compact
@@ -8876,6 +8876,11 @@ const App = (() => {
     // autour du feutre sans le chevaucher (le client officiel fait pareil via boxScale).
     var _seatBoxScale = 1;
     try { var _sbw = window.innerWidth, _sbh = window.innerHeight; if (Math.min(_sbw, _sbh) < 540) { var _opp = Math.max(0, rotated.length - 1); _seatBoxScale = (_sbh > _sbw) ? Math.max(0.72, 0.90 - Math.max(0, _opp - 4) * 0.026) : Math.max(0.80, 0.98 - Math.max(0, _opp - 4) * 0.022); } } catch (e) {}
+    // Self-box PLUS GROSSE que les adversaires, comme le client officiel
+    // (QML 2.1.3 delta §4.2 : self 82 vs opp 71 en portrait, 96 vs 84 en
+    // wide -> ~+15%). C'est l'agrandissement de BASE (zoom 0) ; le cycle de
+    // zoom des cartes (#g-cardzoom) reste independant et s'ajoute par-dessus.
+    var SELF_BOX_MUL = 1.15;
     // Placement des sièges : 'classic' (ellipse maison, défaut) ou 'official'
     // (slots fixes du client PokerTH : grille périmètre en paysage façon client
     // desktop, colonnes G/D + rangée haute en portrait façon client QML). Les
@@ -9192,7 +9197,7 @@ const App = (() => {
         cardStr = '<div style="display:flex;gap:2px;margin-top:1px">'
           + cardHtml(sd.card1,'xsm') + cardHtml(sd.card2,'xsm') + '</div>';
       }
-      h += '<div class="' + cls + ((!isMe && _sdLosers && _sdLosers.has(pid)) ? ' loser-fade' : '') + '" data-pid="' + pid + '"' + (isMe ? ' data-base-top="' + px.top.toFixed(1) + '" data-base-left="' + px.left.toFixed(1) + '" data-base-scale="' + _seatBoxScale + '"' : '') + ' style="position:absolute;top:' + px.top.toFixed(1) + 'px;left:' + px.left.toFixed(1) + 'px;transform:translate(-50%,-50%) scale(' + _seatBoxScale + ')">';
+      h += '<div class="' + cls + ((!isMe && _sdLosers && _sdLosers.has(pid)) ? ' loser-fade' : '') + '" data-pid="' + pid + '"' + (isMe ? ' data-base-top="' + px.top.toFixed(1) + '" data-base-left="' + px.left.toFixed(1) + '" data-base-scale="' + (_seatBoxScale * SELF_BOX_MUL).toFixed(4) + '"' : '') + ' style="position:absolute;top:' + px.top.toFixed(1) + 'px;left:' + px.left.toFixed(1) + 'px;transform:translate(-50%,-50%) scale(' + (isMe ? (_seatBoxScale * SELF_BOX_MUL).toFixed(4) : _seatBoxScale) + ')">';
       const isSB = pid === sbPid;
       const isBB = pid === bbPid;
       let blindBadge = '';
@@ -9309,7 +9314,7 @@ const App = (() => {
       if (_meEl && _meEl.dataset.baseTop) {
         // Coordonnees LOCALES (offsetHeight n'est pas affecte par les transforms
         // de zoom, contrairement a getBoundingClientRect) -> clamp stable a tout zoom.
-        var _bh2 = _meEl.offsetHeight * _seatBoxScale;
+        var _bh2 = _meEl.offsetHeight * _seatBoxScale * SELF_BOX_MUL;
         var _bt2 = parseFloat(_meEl.dataset.baseTop) || 0;
         var _floor2 = zone.clientHeight - 4 - _bh2 / 2;
         // Mode "perle" (paysage officiel, pas de player-bar) : on ÉPINGLE la
@@ -14072,7 +14077,7 @@ function renderPlayersList() {
   body.innerHTML = _shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>';
 }
 
-;(function(){ window.BUILD_VERSION='0.3.435-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.436-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
