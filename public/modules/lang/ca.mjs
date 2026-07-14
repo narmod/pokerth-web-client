@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+  seatPokerthPortrait: "PokerTH Vertical", seatPokerthLandscape: "PokerTH Apaïsat",
   advUiGeneral:'General', advUiNetwork:'Xarxa', advShowTooltips:'Mostra els consells', advDisableSplash:'Desactiva la pantalla de benvinguda a l\'inici', advDontTranslatePoker:'No tradueixis els termes de pòquer (Check, Call, Raise)', advNA:'web', advLanguage:'Idioma', advDefCommunity:'Comunitat predeterminada', advSecReactions:'Reaccions', advDisableReactions:'Desactiva les reaccions emoji', advNetStateColor:'Mostra el color de l\'estat de la xarxa a la cantonada de l\'avatar',
   showPlayers: `Mostra els jugadors`,
   footJoin: `Entra`,
@@ -18,7 +19,7 @@ export const strings = {
   filterRanked: 'Classificades', plSortAZ: 'Ordena A–Z', plSortCountry: 'Ordena per país',
   plInGame: 'En partida', plLobby: 'Al vestíbul',
   buttonsPokerth: 'PokerTH',
-  advCatUI: 'Interfície d\'usuari', advCatStyle: 'Estil', advCatSound: 'So', advCatLocal: 'Partida local', advCatNetwork: 'Partida en xarxa', advCatInternet: 'Partida per Internet', advCatAvatar: 'Sobrenoms / Avatars', advCatLog: 'Missatges de registre', advCatReset: 'Valors per defecte', advStyleDesc: 'Baralles, feltre de la taula, aspecte dels seients i tema de colors.', advStyleOpen: 'Obre el selector de temes', advSoundDesc: 'Sons del joc, volum de la música i silenci de les reaccions.', advSoundOpen: 'Configuració de so i volum', advLocalDesc: 'Practica contra bots: omple els seients buits de la teva taula.', advLocalOpen: 'Omplir els seients amb bots', advNetworkDesc: 'Allotja una partida a la teva xarxa local (LAN).', advSoonTag: 'Properament', advInternetDesc: 'Estàs connectat a un servidor PokerTH.', advSrvLabel: 'Servidor', advInternetOpen: 'Canviar de servidor / desconnectar', advSrvUnknown: '—', advAvatarDesc: 'El teu sobrenom i la teva imatge d\'avatar.', advAvatarOpen: 'Edita el sobrenom / l\'avatar', advLogDesc: 'Registre de la partida i xat superposat.', advLogOpen: 'Obre el registre', advResetDesc: 'Restableix totes les opcions avançades i les dreceres de teclat als valors per defecte.', advResetBtn: 'Restableix els valors per defecte', advResetConfirm: 'Vols restablir totes les opcions i dreceres als valors per defecte?', seatLayoutAuto: 'Automàtic', seatLayoutEllipse: 'El·lipse PokerTH', zoomReset: 'Restableix la vista', installTooltip: 'Instal·la l\'aplicació', piIgnore: 'Ignora', piUnignore: 'Deixa d\'ignorar',
+  advCatUI: 'Interfície d\'usuari', advCatStyle: 'Estil', advCatSound: 'So', advCatLocal: 'Partida local', advCatNetwork: 'Partida en xarxa', advCatInternet: 'Partida per Internet', advCatAvatar: 'Sobrenoms / Avatars', advCatLog: 'Missatges de registre', advCatReset: 'Valors per defecte', advStyleDesc: 'Baralles, feltre de la taula, aspecte dels seients i tema de colors.', advStyleOpen: 'Obre el selector de temes', advSoundDesc: 'Sons del joc, volum de la música i silenci de les reaccions.', advSoundOpen: 'Configuració de so i volum', advLocalDesc: 'Practica contra bots: omple els seients buits de la teva taula.', advLocalOpen: 'Omplir els seients amb bots', advNetworkDesc: 'Allotja una partida a la teva xarxa local (LAN).', advSoonTag: 'Properament', advInternetDesc: 'Estàs connectat a un servidor PokerTH.', advSrvLabel: 'Servidor', advInternetOpen: 'Canviar de servidor / desconnectar', advSrvUnknown: '—', advAvatarDesc: 'El teu sobrenom i la teva imatge d\'avatar.', advAvatarOpen: 'Edita el sobrenom / l\'avatar', advLogDesc: 'Registre de la partida i xat superposat.', advLogOpen: 'Obre el registre', advResetDesc: 'Restableix totes les opcions avançades i les dreceres de teclat als valors per defecte.', advResetBtn: 'Restableix els valors per defecte', advResetConfirm: 'Vols restablir totes les opcions i dreceres als valors per defecte?', seatLayoutAuto: 'Automàtic', seatLayoutEllipse: "Apaïsat", zoomReset: 'Restableix la vista', installTooltip: 'Instal·la l\'aplicació', piIgnore: 'Ignora', piUnignore: 'Deixa d\'ignorar',
   plRemaining: 'Jugadors restants', showCards: 'Mostra',
   emoFrequent: 'Freqüents', emoAll: 'Tots', advPingAvatar: 'Indicador de ping al meu avatar (verd/groc/vermell)', advAutoLeave: 'Torna automàticament al vestíbul quan acaba la partida',
   advReduceFx: 'Redueix els efectes gràfics (ombres/brillantor) — per a dispositius modestos', avatarGallery: 'Galeria d\'avatars', avatarGalleryTooltip: 'Galeria d\'avatars', avgalPeople: 'Persones', avgalMisc: 'Diversos', lsbRunning: 'en curs', lsbOpen: 'obertes', statusBets: 'Apostes', advStatusBar: 'Barra d\'estat de la partida (mà núm., pot, apostes, fase)',
@@ -67,7 +68,7 @@ export const strings = {
   advSoon: "aviat",
   advSeatLayout: "Disposició dels seients",
   seatLayoutClassic: "Actual",
-  seatLayoutOfficial: "Oficial (PokerTH)",
+  seatLayoutOfficial: "Vertical",
   confirmCall: "Confirma",
   kbReset: "Restableix",
   kbHint: "Toca una tecla i prem la nova. Espai = Call, Retorn = confirma la pujada.",

@@ -13,6 +13,7 @@ export const meta = {
 };
 
 export const strings = {
+  seatPokerthPortrait: "PokerTH 세로", seatPokerthLandscape: "PokerTH 가로",
   advUiGeneral:'일반', advUiNetwork:'네트워크', advShowTooltips:'툴팁 표시', advDisableSplash:'시작 시 스플래시 화면 비활성화', advDontTranslatePoker:'포커 용어를 번역하지 않음 (Check, Call, Raise)', advNA:'web', advLanguage:'언어', advDefCommunity:'기본 커뮤니티', advSecReactions:'반응', advDisableReactions:'이모지 반응 비활성화', advNetStateColor:'아바터 모서리에 네트워크 상태 색상 표시',
   showPlayers: `플레이어 표시`,
   footJoin: `참가`,
@@ -21,7 +22,7 @@ export const strings = {
   filterRanked: '랭크전', plSortAZ: 'A–Z 정렬', plSortCountry: '국가별 정렬',
   plInGame: '게임 중', plLobby: '로비',
   buttonsPokerth: 'PokerTH',
-  advCatUI: '사용자 인터페이스', advCatStyle: '스타일', advCatSound: '소리', advCatLocal: '로컬 게임', advCatNetwork: '네트워크 게임', advCatInternet: '인터넷 게임', advCatAvatar: '닉네임 / 아바타', advCatLog: '로그 메시지', advCatReset: '기본 설정', advStyleDesc: '카드 덱, 테이블 펠트, 좌석 모양, 색상 테마.', advStyleOpen: '테마 선택기 열기', advSoundDesc: '게임 소리, 음악 볼륨, 리액션 음소거.', advSoundOpen: '소리 및 볼륨 설정', advLocalDesc: '봇을 상대로 연습: 테이블의 빈 자리를 채우세요.', advLocalOpen: '빈 자리를 봇으로 채우기', advNetworkDesc: '로컬 네트워크(LAN)에서 게임을 호스팅합니다.', advSoonTag: '곧 제공', advInternetDesc: 'PokerTH 서버에 연결되어 있습니다.', advSrvLabel: '서버', advInternetOpen: '서버 변경 / 연결 해제', advSrvUnknown: '—', advAvatarDesc: '닉네임과 아바타 이미지.', advAvatarOpen: '닉네임 / 아바타 편집', advLogDesc: '게임 로그와 채팅 오버레이.', advLogOpen: '로그 열기', advResetDesc: '모든 고급 옵션과 키보드 단축키를 기본값으로 재설정합니다.', advResetBtn: '기본값 복원', advResetConfirm: '모든 옵션과 단축키를 기본값으로 재설정할까요?', seatLayoutAuto: '자동', seatLayoutEllipse: 'PokerTH 타원', zoomReset: '보기 재설정', installTooltip: '앱 설치', piIgnore: '무시', piUnignore: '무시 해제',
+  advCatUI: '사용자 인터페이스', advCatStyle: '스타일', advCatSound: '소리', advCatLocal: '로컬 게임', advCatNetwork: '네트워크 게임', advCatInternet: '인터넷 게임', advCatAvatar: '닉네임 / 아바타', advCatLog: '로그 메시지', advCatReset: '기본 설정', advStyleDesc: '카드 덱, 테이블 펠트, 좌석 모양, 색상 테마.', advStyleOpen: '테마 선택기 열기', advSoundDesc: '게임 소리, 음악 볼륨, 리액션 음소거.', advSoundOpen: '소리 및 볼륨 설정', advLocalDesc: '봇을 상대로 연습: 테이블의 빈 자리를 채우세요.', advLocalOpen: '빈 자리를 봇으로 채우기', advNetworkDesc: '로컬 네트워크(LAN)에서 게임을 호스팅합니다.', advSoonTag: '곧 제공', advInternetDesc: 'PokerTH 서버에 연결되어 있습니다.', advSrvLabel: '서버', advInternetOpen: '서버 변경 / 연결 해제', advSrvUnknown: '—', advAvatarDesc: '닉네임과 아바타 이미지.', advAvatarOpen: '닉네임 / 아바타 편집', advLogDesc: '게임 로그와 채팅 오버레이.', advLogOpen: '로그 열기', advResetDesc: '모든 고급 옵션과 키보드 단축키를 기본값으로 재설정합니다.', advResetBtn: '기본값 복원', advResetConfirm: '모든 옵션과 단축키를 기본값으로 재설정할까요?', seatLayoutAuto: '자동', seatLayoutEllipse: "가로", zoomReset: '보기 재설정', installTooltip: '앱 설치', piIgnore: '무시', piUnignore: '무시 해제',
   plRemaining: '남은 플레이어', showCards: '공개',
   emoFrequent: '자주 사용', emoAll: '전체', advPingAvatar: '내 아바타에 핑 표시 (녹색/노랑/빨강)', advAutoLeave: '게임 종료 시 자동으로 로비로 돌아가기',
   advReduceFx: '그래픽 효과 줄이기 (그림자/광채) — 저사양 기기용', avatarGallery: '아바타 갤러리', avatarGalleryTooltip: '아바타 갤러리', avgalPeople: '인물', avgalMisc: '기타', lsbRunning: '진행 중', lsbOpen: '열림', statusBets: '베팅', advStatusBar: '게임 상태 표시줄 (핸드 번호, 팟, 베팅, 단계)',
@@ -70,7 +71,7 @@ export const strings = {
   advSoon: "곧",
   advSeatLayout: "좌석 배치",
   seatLayoutClassic: "현재",
-  seatLayoutOfficial: "공식 (PokerTH)",
+  seatLayoutOfficial: "세로",
   confirmCall: "확인",
   kbReset: "초기화",
   kbHint: "키를 누른 다음 새 키를 누르세요. 스페이스 = Call, Enter = 레이즈 확정.",

@@ -16,6 +16,7 @@ export const meta = {
 };
 
 export const strings = {
+  seatPokerthPortrait: "PokerTH Pionowo", seatPokerthLandscape: "PokerTH Poziomo",
   advUiGeneral:'Ogólne', advUiNetwork:'Sieć', advShowTooltips:'Pokaż podpowiedzi', advDisableSplash:'Wyłącz ekran powitalny przy uruchamianiu', advDontTranslatePoker:'Nie tłumacz terminów pokerowych (Check, Call, Raise)', advNA:'web', advLanguage:'Język', advDefCommunity:'Domyślna społeczność', advSecReactions:'Reakcje', advDisableReactions:'Wyłącz reakcje emoji', advNetStateColor:'Pokaż kolor stanu sieci w rogu awatara',
   showPlayers: `Pokaż graczy`,
   footJoin: `Dołącz`,
@@ -24,7 +25,7 @@ export const strings = {
   filterRanked: 'Rankingowe', plSortAZ: 'Sortuj A–Z', plSortCountry: 'Sortuj według kraju',
   plInGame: 'W grze', plLobby: 'W lobby',
   buttonsPokerth: 'PokerTH',
-  advCatUI: 'Interfejs użytkownika', advCatStyle: 'Styl', advCatSound: 'Dźwięk', advCatLocal: 'Gra lokalna', advCatNetwork: 'Gra sieciowa', advCatInternet: 'Gra internetowa', advCatAvatar: 'Pseudonimy / Awatary', advCatLog: 'Komunikaty dziennika', advCatReset: 'Ustawienia domyślne', advStyleDesc: 'Talie kart, sukno stołu, wygląd miejsc i motyw kolorów.', advStyleOpen: 'Otwórz wybór motywów', advSoundDesc: 'Dźwięki gry, głośność muzyki i wyciszenie reakcji.', advSoundOpen: 'Ustawienia dźwięku i głośności', advLocalDesc: 'Ćwicz z botami: zapełnij puste miejsca przy swoim stole.', advLocalOpen: 'Zapełnij miejsca botami', advNetworkDesc: 'Hostuj grę w sieci lokalnej (LAN).', advSoonTag: 'Wkrótce', advInternetDesc: 'Jesteś połączony z serwerem PokerTH.', advSrvLabel: 'Serwer', advInternetOpen: 'Zmień serwer / rozłącz', advSrvUnknown: '—', advAvatarDesc: 'Twój pseudonim i obraz awatara.', advAvatarOpen: 'Edytuj pseudonim / awatar', advLogDesc: 'Dziennik gry i nakładka czatu.', advLogOpen: 'Otwórz dziennik', advResetDesc: 'Przywróć wszystkie opcje zaawansowane i skróty klawiszowe do wartości domyślnych.', advResetBtn: 'Przywróć domyślne', advResetConfirm: 'Przywrócić wszystkie opcje i skróty klawiszowe do wartości domyślnych?', seatLayoutAuto: 'Automatyczny', seatLayoutEllipse: 'Elipsa PokerTH', zoomReset: 'Zresetuj widok', installTooltip: 'Zainstaluj aplikację', piIgnore: 'Ignoruj', piUnignore: 'Przestań ignorować',
+  advCatUI: 'Interfejs użytkownika', advCatStyle: 'Styl', advCatSound: 'Dźwięk', advCatLocal: 'Gra lokalna', advCatNetwork: 'Gra sieciowa', advCatInternet: 'Gra internetowa', advCatAvatar: 'Pseudonimy / Awatary', advCatLog: 'Komunikaty dziennika', advCatReset: 'Ustawienia domyślne', advStyleDesc: 'Talie kart, sukno stołu, wygląd miejsc i motyw kolorów.', advStyleOpen: 'Otwórz wybór motywów', advSoundDesc: 'Dźwięki gry, głośność muzyki i wyciszenie reakcji.', advSoundOpen: 'Ustawienia dźwięku i głośności', advLocalDesc: 'Ćwicz z botami: zapełnij puste miejsca przy swoim stole.', advLocalOpen: 'Zapełnij miejsca botami', advNetworkDesc: 'Hostuj grę w sieci lokalnej (LAN).', advSoonTag: 'Wkrótce', advInternetDesc: 'Jesteś połączony z serwerem PokerTH.', advSrvLabel: 'Serwer', advInternetOpen: 'Zmień serwer / rozłącz', advSrvUnknown: '—', advAvatarDesc: 'Twój pseudonim i obraz awatara.', advAvatarOpen: 'Edytuj pseudonim / awatar', advLogDesc: 'Dziennik gry i nakładka czatu.', advLogOpen: 'Otwórz dziennik', advResetDesc: 'Przywróć wszystkie opcje zaawansowane i skróty klawiszowe do wartości domyślnych.', advResetBtn: 'Przywróć domyślne', advResetConfirm: 'Przywrócić wszystkie opcje i skróty klawiszowe do wartości domyślnych?', seatLayoutAuto: 'Automatyczny', seatLayoutEllipse: "Poziomo", zoomReset: 'Zresetuj widok', installTooltip: 'Zainstaluj aplikację', piIgnore: 'Ignoruj', piUnignore: 'Przestań ignorować',
   plRemaining: 'Pozostali gracze', showCards: 'Pokaż',
   emoFrequent: 'Częste', emoAll: 'Wszystkie', advPingAvatar: 'Wskaźnik pingu na moim awatarze (zielony/żółty/czerwony)', advAutoLeave: 'Automatyczny powrót do lobby po zakończeniu gry',
   advReduceFx: 'Ogranicz efekty graficzne (cienie/poświata) — dla słabszych urządzeń', avatarGallery: 'Galeria awatarów', avatarGalleryTooltip: 'Galeria awatarów', avgalPeople: 'Ludzie', avgalMisc: 'Różne', lsbRunning: 'w toku', lsbOpen: 'otwarte', statusBets: 'Zakłady', advStatusBar: 'Pasek stanu gry (nr rozdania, pula, zakłady, faza)',
@@ -73,7 +74,7 @@ export const strings = {
   advSoon: "wkrótce",
   advSeatLayout: "Rozkład miejsc",
   seatLayoutClassic: "Bieżący",
-  seatLayoutOfficial: "Oficjalny (PokerTH)",
+  seatLayoutOfficial: "Pionowo",
   confirmCall: "Potwierdź",
   kbReset: "Resetuj",
   kbHint: "Dotknij klawisz, potem naciśnij nowy. Spacja = Call, Enter = potwierdź przebicie.",

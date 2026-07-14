@@ -11,6 +11,7 @@ export const meta = {
 };
 
 export const strings = {
+  seatPokerthPortrait: "PokerTH செங்குத்து", seatPokerthLandscape: "PokerTH கிடைமட்டம்",
   advUiGeneral:'பொது', advUiNetwork:'பிணையம்', advShowTooltips:'கருவிக் குறிப்புகளைக் காட்டு', advDisableSplash:'தொடக்கத்தில் தொடக்கத் திரையை முடக்கு', advDontTranslatePoker:'போக்கர் சொற்களை மொழிபெயர்க்க வேண்டாம் (Check, Call, Raise)', advNA:'web', advLanguage:'மொழி', advDefCommunity:'இயல்புநிலை சமூகம்', advSecReactions:'எதிர்வினைகள்', advDisableReactions:'எமோஜி எதிர்வினைகளை முடக்கு', advNetStateColor:'அவதாரத்தின் மூலையில் பிணைய நிலை நிறத்தைக் காட்டு',
   showPlayers: `வீரர்களைக் காட்டு`,
   footJoin: `சேர்`,
@@ -19,7 +20,7 @@ export const strings = {
   filterRanked: 'தரவரிசை', plSortAZ: 'A–Z வரிசை', plSortCountry: 'நாடு வாரியாக வரிசைப்படுத்து',
   plInGame: 'ஆட்டத்தில்', plLobby: 'லாபியில்',
   buttonsPokerth: 'PokerTH',
-  advCatUI: 'பயனர் இடைமுகம்', advCatStyle: 'பாணி', advCatSound: 'ஒலி', advCatLocal: 'உள்ளூர் ஆட்டம்', advCatNetwork: 'நெட்வொர்க் ஆட்டம்', advCatInternet: 'இணைய ஆட்டம்', advCatAvatar: 'புனைப்பெயர்கள் / அவதாரங்கள்', advCatLog: 'பதிவு செய்திகள்', advCatReset: 'இயல்புநிலை அமைப்புகள்', advStyleDesc: 'சீட்டு அடுக்குகள், மேசைத் துணி, இருக்கைகளின் தோற்றம் மற்றும் வண்ணத் தீம்.', advStyleOpen: 'தீம் தேர்வியைத் திற', advSoundDesc: 'ஆட்ட ஒலிகள், இசை அளவு மற்றும் எதிர்வினைகளின் அமைதி.', advSoundOpen: 'ஒலி மற்றும் அளவு அமைப்புகள்', advLocalDesc: 'போட்களுக்கு எதிராகப் பயிற்சி: உங்கள் மேசையின் காலி இருக்கைகளை நிரப்புங்கள்.', advLocalOpen: 'இருக்கைகளை போட்களால் நிரப்பு', advNetworkDesc: 'உங்கள் உள்ளூர் நெட்வொர்க்கில் (LAN) ஆட்டத்தை நடத்துங்கள்.', advSoonTag: 'விரைவில்', advInternetDesc: 'நீங்கள் ஒரு PokerTH சேவையகத்துடன் இணைக்கப்பட்டுள்ளீர்கள்.', advSrvLabel: 'சேவையகம்', advInternetOpen: 'சேவையகத்தை மாற்று / துண்டி', advSrvUnknown: '—', advAvatarDesc: 'உங்கள் புனைப்பெயர் மற்றும் அவதாரப் படம்.', advAvatarOpen: 'புனைப்பெயர் / அவதாரத்தைத் திருத்து', advLogDesc: 'ஆட்டப் பதிவு மற்றும் அரட்டை மேலடுக்கு.', advLogOpen: 'பதிவைத் திற', advResetDesc: 'அனைத்து மேம்பட்ட விருப்பங்களையும் விசைப்பலகை குறுக்குவழிகளையும் இயல்புநிலைக்கு மீட்டமை.', advResetBtn: 'இயல்புநிலையை மீட்டமை', advResetConfirm: 'அனைத்து விருப்பங்களையும் குறுக்குவழிகளையும் இயல்புநிலைக்கு மீட்டமைக்கவா?', seatLayoutAuto: 'தானியங்கி', seatLayoutEllipse: 'PokerTH நீள்வட்டம்', zoomReset: 'காட்சியை மீட்டமை', installTooltip: 'செயலியை நிறுவு', piIgnore: 'புறக்கணி', piUnignore: 'புறக்கணிப்பதை நிறுத்து',
+  advCatUI: 'பயனர் இடைமுகம்', advCatStyle: 'பாணி', advCatSound: 'ஒலி', advCatLocal: 'உள்ளூர் ஆட்டம்', advCatNetwork: 'நெட்வொர்க் ஆட்டம்', advCatInternet: 'இணைய ஆட்டம்', advCatAvatar: 'புனைப்பெயர்கள் / அவதாரங்கள்', advCatLog: 'பதிவு செய்திகள்', advCatReset: 'இயல்புநிலை அமைப்புகள்', advStyleDesc: 'சீட்டு அடுக்குகள், மேசைத் துணி, இருக்கைகளின் தோற்றம் மற்றும் வண்ணத் தீம்.', advStyleOpen: 'தீம் தேர்வியைத் திற', advSoundDesc: 'ஆட்ட ஒலிகள், இசை அளவு மற்றும் எதிர்வினைகளின் அமைதி.', advSoundOpen: 'ஒலி மற்றும் அளவு அமைப்புகள்', advLocalDesc: 'போட்களுக்கு எதிராகப் பயிற்சி: உங்கள் மேசையின் காலி இருக்கைகளை நிரப்புங்கள்.', advLocalOpen: 'இருக்கைகளை போட்களால் நிரப்பு', advNetworkDesc: 'உங்கள் உள்ளூர் நெட்வொர்க்கில் (LAN) ஆட்டத்தை நடத்துங்கள்.', advSoonTag: 'விரைவில்', advInternetDesc: 'நீங்கள் ஒரு PokerTH சேவையகத்துடன் இணைக்கப்பட்டுள்ளீர்கள்.', advSrvLabel: 'சேவையகம்', advInternetOpen: 'சேவையகத்தை மாற்று / துண்டி', advSrvUnknown: '—', advAvatarDesc: 'உங்கள் புனைப்பெயர் மற்றும் அவதாரப் படம்.', advAvatarOpen: 'புனைப்பெயர் / அவதாரத்தைத் திருத்து', advLogDesc: 'ஆட்டப் பதிவு மற்றும் அரட்டை மேலடுக்கு.', advLogOpen: 'பதிவைத் திற', advResetDesc: 'அனைத்து மேம்பட்ட விருப்பங்களையும் விசைப்பலகை குறுக்குவழிகளையும் இயல்புநிலைக்கு மீட்டமை.', advResetBtn: 'இயல்புநிலையை மீட்டமை', advResetConfirm: 'அனைத்து விருப்பங்களையும் குறுக்குவழிகளையும் இயல்புநிலைக்கு மீட்டமைக்கவா?', seatLayoutAuto: 'தானியங்கி', seatLayoutEllipse: "கிடைமட்டம்", zoomReset: 'காட்சியை மீட்டமை', installTooltip: 'செயலியை நிறுவு', piIgnore: 'புறக்கணி', piUnignore: 'புறக்கணிப்பதை நிறுத்து',
   plRemaining: 'மீதமுள்ள வீரர்கள்', showCards: 'காட்டு',
   emoFrequent: 'அடிக்கடி', emoAll: 'அனைத்தும்', advPingAvatar: 'என் அவதாரில் பிங் காட்டி (பச்சை/மஞ்சள்/சிவப்பு)', advAutoLeave: 'ஆட்டம் முடிந்ததும் தானாக லாபிக்கு திரும்பு',
   advReduceFx: 'வரைகலை விளைவுகளைக் குறை (நிழல்/ஒளி) — குறைந்த திறன் சாதனங்களுக்கு', avatarGallery: 'அவதார் தொகுப்பு', avatarGalleryTooltip: 'அவதார் தொகுப்பு', avgalPeople: 'மனிதர்கள்', avgalMisc: 'இதர', lsbRunning: 'நடைபெறுகின்றன', lsbOpen: 'திறந்தவை', statusBets: 'பந்தயங்கள்', advStatusBar: 'ஆட்ட நிலைப் பட்டை (கை எண், பாட், பந்தயங்கள், கட்டம்)',
@@ -68,7 +69,7 @@ export const strings = {
   advSoon: "விரைவில்",
   advSeatLayout: "இருக்கை அமைப்பு",
   seatLayoutClassic: "தற்போதைய",
-  seatLayoutOfficial: "அதிகாரப்பூர்வ (PokerTH)",
+  seatLayoutOfficial: "செங்குத்து",
   confirmCall: "உறுதிசெய்",
   kbReset: "மீட்டமை",
   kbHint: "ஒரு விசையைத் தட்டி, பின் புதிய விசையை அழுத்தவும். ஸ்பேஸ் = Call, Enter = ரெய்ஸை உறுதிசெய்.",

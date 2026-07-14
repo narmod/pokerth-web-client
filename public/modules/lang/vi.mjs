@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+  seatPokerthPortrait: "PokerTH Dọc", seatPokerthLandscape: "PokerTH Ngang",
   advUiGeneral:'Chung', advUiNetwork:'Mạng', advShowTooltips:'Hiển thị chú giải công cụ', advDisableSplash:'Tắt màn hình chờ khi khởi động', advDontTranslatePoker:'Không dịch các thuật ngữ poker (Check, Call, Raise)', advNA:'web', advLanguage:'Ngôn ngữ', advDefCommunity:'Cộng đồng mặc định', advSecReactions:'Phản ứng', advDisableReactions:'Tắt phản ứng biểu tượng cảm xúc', advNetStateColor:'Hiển thị màu trạng thái mạng ở góc ảnh đại diện',
   showPlayers: `Xem người chơi`,
   footJoin: `Vào`,
@@ -18,7 +19,7 @@ export const strings = {
   filterRanked: 'Xếp hạng', plSortAZ: 'Sắp xếp A–Z', plSortCountry: 'Sắp xếp theo quốc gia',
   plInGame: 'Đang chơi', plLobby: 'Ở sảnh',
   buttonsPokerth: 'PokerTH',
-  advCatUI: 'Giao diện người dùng', advCatStyle: 'Kiểu dáng', advCatSound: 'Âm thanh', advCatLocal: 'Ván cục bộ', advCatNetwork: 'Ván qua mạng', advCatInternet: 'Ván qua Internet', advCatAvatar: 'Biệt danh / Ảnh đại diện', advCatLog: 'Thông báo nhật ký', advCatReset: 'Cài đặt mặc định', advStyleDesc: 'Bộ bài, nỉ bàn, giao diện chỗ ngồi và chủ đề màu sắc.', advStyleOpen: 'Mở trình chọn chủ đề', advSoundDesc: 'Âm thanh trò chơi, âm lượng nhạc và tắt tiếng phản ứng.', advSoundOpen: 'Cài đặt âm thanh và âm lượng', advLocalDesc: 'Luyện tập với bot: lấp đầy các chỗ trống ở bàn của bạn.', advLocalOpen: 'Lấp chỗ trống bằng bot', advNetworkDesc: 'Tổ chức ván chơi trên mạng cục bộ (LAN) của bạn.', advSoonTag: 'Sắp ra mắt', advInternetDesc: 'Bạn đang kết nối với máy chủ PokerTH.', advSrvLabel: 'Máy chủ', advInternetOpen: 'Đổi máy chủ / ngắt kết nối', advSrvUnknown: '—', advAvatarDesc: 'Biệt danh và ảnh đại diện của bạn.', advAvatarOpen: 'Sửa biệt danh / ảnh đại diện', advLogDesc: 'Nhật ký ván chơi và lớp phủ trò chuyện.', advLogOpen: 'Mở nhật ký', advResetDesc: 'Đặt lại mọi tùy chọn nâng cao và phím tắt về giá trị mặc định.', advResetBtn: 'Khôi phục mặc định', advResetConfirm: 'Đặt lại mọi tùy chọn và phím tắt về giá trị mặc định?', seatLayoutAuto: 'Tự động', seatLayoutEllipse: 'Hình elip PokerTH', zoomReset: 'Đặt lại chế độ xem', installTooltip: 'Cài đặt ứng dụng', piIgnore: 'Bỏ qua', piUnignore: 'Ngừng bỏ qua',
+  advCatUI: 'Giao diện người dùng', advCatStyle: 'Kiểu dáng', advCatSound: 'Âm thanh', advCatLocal: 'Ván cục bộ', advCatNetwork: 'Ván qua mạng', advCatInternet: 'Ván qua Internet', advCatAvatar: 'Biệt danh / Ảnh đại diện', advCatLog: 'Thông báo nhật ký', advCatReset: 'Cài đặt mặc định', advStyleDesc: 'Bộ bài, nỉ bàn, giao diện chỗ ngồi và chủ đề màu sắc.', advStyleOpen: 'Mở trình chọn chủ đề', advSoundDesc: 'Âm thanh trò chơi, âm lượng nhạc và tắt tiếng phản ứng.', advSoundOpen: 'Cài đặt âm thanh và âm lượng', advLocalDesc: 'Luyện tập với bot: lấp đầy các chỗ trống ở bàn của bạn.', advLocalOpen: 'Lấp chỗ trống bằng bot', advNetworkDesc: 'Tổ chức ván chơi trên mạng cục bộ (LAN) của bạn.', advSoonTag: 'Sắp ra mắt', advInternetDesc: 'Bạn đang kết nối với máy chủ PokerTH.', advSrvLabel: 'Máy chủ', advInternetOpen: 'Đổi máy chủ / ngắt kết nối', advSrvUnknown: '—', advAvatarDesc: 'Biệt danh và ảnh đại diện của bạn.', advAvatarOpen: 'Sửa biệt danh / ảnh đại diện', advLogDesc: 'Nhật ký ván chơi và lớp phủ trò chuyện.', advLogOpen: 'Mở nhật ký', advResetDesc: 'Đặt lại mọi tùy chọn nâng cao và phím tắt về giá trị mặc định.', advResetBtn: 'Khôi phục mặc định', advResetConfirm: 'Đặt lại mọi tùy chọn và phím tắt về giá trị mặc định?', seatLayoutAuto: 'Tự động', seatLayoutEllipse: "Ngang", zoomReset: 'Đặt lại chế độ xem', installTooltip: 'Cài đặt ứng dụng', piIgnore: 'Bỏ qua', piUnignore: 'Ngừng bỏ qua',
   plRemaining: 'Người chơi còn lại', showCards: 'Lật bài',
   emoFrequent: 'Thường dùng', emoAll: 'Tất cả', advPingAvatar: 'Chỉ báo ping trên ảnh đại diện của tôi (xanh/vàng/đỏ)', advAutoLeave: 'Tự động trở về sảnh khi ván kết thúc',
   advReduceFx: 'Giảm hiệu ứng đồ họa (bóng/quầng sáng) — cho thiết bị yếu', avatarGallery: 'Thư viện ảnh đại diện', avatarGalleryTooltip: 'Thư viện ảnh đại diện', avgalPeople: 'Người', avgalMisc: 'Khác', lsbRunning: 'đang diễn ra', lsbOpen: 'đang mở', statusBets: 'Cược', advStatusBar: 'Thanh trạng thái ván (số ván, pot, cược, giai đoạn)',
@@ -67,7 +68,7 @@ export const strings = {
   advSoon: "sắp có",
   advSeatLayout: "Bố trí chỗ ngồi",
   seatLayoutClassic: "Hiện tại",
-  seatLayoutOfficial: "Chính thức (PokerTH)",
+  seatLayoutOfficial: "Dọc",
   confirmCall: "Xác nhận",
   kbReset: "Đặt lại",
   kbHint: "Chạm một phím rồi nhấn phím mới. Phím cách = Call, Enter = xác nhận raise.",

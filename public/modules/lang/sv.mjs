@@ -9,6 +9,7 @@ export const meta = {
 };
 
 export const strings = {
+  seatPokerthPortrait: "PokerTH Stående", seatPokerthLandscape: "PokerTH Liggande",
   advUiGeneral:'Allmänt', advUiNetwork:'Nätverk', advShowTooltips:'Visa verktygstips', advDisableSplash:'Inaktivera startskärmen vid uppstart', advDontTranslatePoker:'Översätt inte pokertermer (Check, Call, Raise)', advNA:'web', advLanguage:'Språk', advDefCommunity:'Standardgemenskap', advSecReactions:'Reaktioner', advDisableReactions:'Inaktivera emoji-reaktioner', advNetStateColor:'Visa nätverksstatusfärg i avatarens hörn',
   showPlayers: `Visa spelare`,
   footJoin: `Gå med`,
@@ -17,7 +18,7 @@ export const strings = {
   filterRanked: 'Rankade', plSortAZ: 'Sortera A–Z', plSortCountry: 'Sortera efter land',
   plInGame: 'I spel', plLobby: 'I lobbyn',
   buttonsPokerth: 'PokerTH',
-  advCatUI: 'Användargränssnitt', advCatStyle: 'Stil', advCatSound: 'Ljud', advCatLocal: 'Lokalt spel', advCatNetwork: 'Nätverksspel', advCatInternet: 'Internetspel', advCatAvatar: 'Smeknamn / Avatarer', advCatLog: 'Loggmeddelanden', advCatReset: 'Standardinställningar', advStyleDesc: 'Kortlekar, bordsfilt, sätesutseende och färgtema.', advStyleOpen: 'Öppna temaväljaren', advSoundDesc: 'Spelljud, musikvolym och tystade reaktioner.', advSoundOpen: 'Ljud- och volyminställningar', advLocalDesc: 'Träna mot bottar: fyll de tomma platserna vid ditt bord.', advLocalOpen: 'Fyll platserna med bottar', advNetworkDesc: 'Var värd för ett spel i ditt lokala nätverk (LAN).', advSoonTag: 'Kommer snart', advInternetDesc: 'Du är ansluten till en PokerTH-server.', advSrvLabel: 'Server', advInternetOpen: 'Byt server / koppla från', advSrvUnknown: '—', advAvatarDesc: 'Ditt smeknamn och din avatarbild.', advAvatarOpen: 'Redigera smeknamn / avatar', advLogDesc: 'Spellogg och chattöverlägg.', advLogOpen: 'Öppna loggen', advResetDesc: 'Återställ alla avancerade alternativ och kortkommandon till standardvärdena.', advResetBtn: 'Återställ standarder', advResetConfirm: 'Återställa alla alternativ och kortkommandon till standardvärdena?', seatLayoutAuto: 'Automatiskt', seatLayoutEllipse: 'PokerTH-ellips', zoomReset: 'Återställ vyn', installTooltip: 'Installera appen', piIgnore: 'Ignorera', piUnignore: 'Sluta ignorera',
+  advCatUI: 'Användargränssnitt', advCatStyle: 'Stil', advCatSound: 'Ljud', advCatLocal: 'Lokalt spel', advCatNetwork: 'Nätverksspel', advCatInternet: 'Internetspel', advCatAvatar: 'Smeknamn / Avatarer', advCatLog: 'Loggmeddelanden', advCatReset: 'Standardinställningar', advStyleDesc: 'Kortlekar, bordsfilt, sätesutseende och färgtema.', advStyleOpen: 'Öppna temaväljaren', advSoundDesc: 'Spelljud, musikvolym och tystade reaktioner.', advSoundOpen: 'Ljud- och volyminställningar', advLocalDesc: 'Träna mot bottar: fyll de tomma platserna vid ditt bord.', advLocalOpen: 'Fyll platserna med bottar', advNetworkDesc: 'Var värd för ett spel i ditt lokala nätverk (LAN).', advSoonTag: 'Kommer snart', advInternetDesc: 'Du är ansluten till en PokerTH-server.', advSrvLabel: 'Server', advInternetOpen: 'Byt server / koppla från', advSrvUnknown: '—', advAvatarDesc: 'Ditt smeknamn och din avatarbild.', advAvatarOpen: 'Redigera smeknamn / avatar', advLogDesc: 'Spellogg och chattöverlägg.', advLogOpen: 'Öppna loggen', advResetDesc: 'Återställ alla avancerade alternativ och kortkommandon till standardvärdena.', advResetBtn: 'Återställ standarder', advResetConfirm: 'Återställa alla alternativ och kortkommandon till standardvärdena?', seatLayoutAuto: 'Automatiskt', seatLayoutEllipse: "Liggande", zoomReset: 'Återställ vyn', installTooltip: 'Installera appen', piIgnore: 'Ignorera', piUnignore: 'Sluta ignorera',
   plRemaining: 'Återstående spelare', showCards: 'Visa',
   emoFrequent: 'Ofta använda', emoAll: 'Alla', advPingAvatar: 'Ping-indikator på min avatar (grön/gul/röd)', advAutoLeave: 'Återgå automatiskt till lobbyn när spelet är slut',
   advReduceFx: 'Minska grafiska effekter (skuggor/glöd) — för svaga enheter', avatarGallery: 'Avatargalleri', avatarGalleryTooltip: 'Avatargalleri', avgalPeople: 'Personer', avgalMisc: 'Diverse', lsbRunning: 'pågår', lsbOpen: 'öppna', statusBets: 'Insatser', advStatusBar: 'Spelstatusrad (hand nr, pott, insatser, fas)',
@@ -66,7 +67,7 @@ export const strings = {
   advSoon: "snart",
   advSeatLayout: "Platsplacering",
   seatLayoutClassic: "Nuvarande",
-  seatLayoutOfficial: "Officiell (PokerTH)",
+  seatLayoutOfficial: "Stående",
   confirmCall: "Bekräfta",
   kbReset: "Återställ",
   kbHint: "Tryck på en tangent och sedan på den nya. Mellanslag = Call, Enter = bekräfta höjning.",

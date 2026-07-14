@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+  seatPokerthPortrait: "PokerTH Портрет", seatPokerthLandscape: "PokerTH Пејзаж",
   advUiGeneral:'Опште', advUiNetwork:'Мрежа', advShowTooltips:'Прикажи описе', advDisableSplash:'Онемогући почетни екран при покретању', advDontTranslatePoker:'Не преводи покер изразе (Check, Call, Raise)', advNA:'web', advLanguage:'Језик', advDefCommunity:'Подразумевана заједница', advSecReactions:'Реакције', advDisableReactions:'Онемогући емоџи реакције', advNetStateColor:'Прикажи боју стања мреже у углу аватара',
   showPlayers: `Прикажи играче`,
   footJoin: `Uđi`,
@@ -18,7 +19,7 @@ export const strings = {
   filterRanked: 'Рангиране', plSortAZ: 'Сортирај А–Ш', plSortCountry: 'Сортирај по држави',
   plInGame: 'У игри', plLobby: 'У лобију',
   buttonsPokerth: 'PokerTH',
-  advCatUI: 'Кориснички интерфејс', advCatStyle: 'Стил', advCatSound: 'Звук', advCatLocal: 'Локална игра', advCatNetwork: 'Мрежна игра', advCatInternet: 'Интернет игра', advCatAvatar: 'Надимци / Аватари', advCatLog: 'Поруке дневника', advCatReset: 'Подразумевана подешавања', advStyleDesc: 'Шпилови карата, чоја стола, изглед места и тема боја.', advStyleOpen: 'Отвори избор тема', advSoundDesc: 'Звукови игре, јачина музике и утишавање реакција.', advSoundOpen: 'Подешавања звука и јачине', advLocalDesc: 'Вежбај против ботова: попуни празна места за својим столом.', advLocalOpen: 'Попуни места ботовима', advNetworkDesc: 'Хостуј игру у локалној мрежи (LAN).', advSoonTag: 'Ускоро', advInternetDesc: 'Повезан си на PokerTH сервер.', advSrvLabel: 'Сервер', advInternetOpen: 'Промени сервер / прекини везу', advSrvUnknown: '—', advAvatarDesc: 'Твој надимак и слика аватара.', advAvatarOpen: 'Измени надимак / аватар', advLogDesc: 'Дневник игре и ћаскање преко стола.', advLogOpen: 'Отвори дневник', advResetDesc: 'Врати сва напредна подешавања и пречице на подразумеване вредности.', advResetBtn: 'Врати подразумевано', advResetConfirm: 'Вратити сва подешавања и пречице на подразумеване вредности?', seatLayoutAuto: 'Аутоматски', seatLayoutEllipse: 'PokerTH елипса', zoomReset: 'Ресетуј приказ', installTooltip: 'Инсталирај апликацију', piIgnore: 'Игнориши', piUnignore: 'Престани да игноришеш',
+  advCatUI: 'Кориснички интерфејс', advCatStyle: 'Стил', advCatSound: 'Звук', advCatLocal: 'Локална игра', advCatNetwork: 'Мрежна игра', advCatInternet: 'Интернет игра', advCatAvatar: 'Надимци / Аватари', advCatLog: 'Поруке дневника', advCatReset: 'Подразумевана подешавања', advStyleDesc: 'Шпилови карата, чоја стола, изглед места и тема боја.', advStyleOpen: 'Отвори избор тема', advSoundDesc: 'Звукови игре, јачина музике и утишавање реакција.', advSoundOpen: 'Подешавања звука и јачине', advLocalDesc: 'Вежбај против ботова: попуни празна места за својим столом.', advLocalOpen: 'Попуни места ботовима', advNetworkDesc: 'Хостуј игру у локалној мрежи (LAN).', advSoonTag: 'Ускоро', advInternetDesc: 'Повезан си на PokerTH сервер.', advSrvLabel: 'Сервер', advInternetOpen: 'Промени сервер / прекини везу', advSrvUnknown: '—', advAvatarDesc: 'Твој надимак и слика аватара.', advAvatarOpen: 'Измени надимак / аватар', advLogDesc: 'Дневник игре и ћаскање преко стола.', advLogOpen: 'Отвори дневник', advResetDesc: 'Врати сва напредна подешавања и пречице на подразумеване вредности.', advResetBtn: 'Врати подразумевано', advResetConfirm: 'Вратити сва подешавања и пречице на подразумеване вредности?', seatLayoutAuto: 'Аутоматски', seatLayoutEllipse: "Пејзаж", zoomReset: 'Ресетуј приказ', installTooltip: 'Инсталирај апликацију', piIgnore: 'Игнориши', piUnignore: 'Престани да игноришеш',
   plRemaining: 'Преостали играчи', showCards: 'Покажи',
   emoFrequent: 'Чести', emoAll: 'Сви', advPingAvatar: 'Индикатор пинга на мом аватару (зелено/жуто/црвено)', advAutoLeave: 'Аутоматски повратак у лоби по завршетку игре',
   advReduceFx: 'Смањи графичке ефекте (сенке/сјај) — за слабије уређаје', avatarGallery: 'Галерија аватара', avatarGalleryTooltip: 'Галерија аватара', avgalPeople: 'Људи', avgalMisc: 'Разно', lsbRunning: 'у току', lsbOpen: 'отворене', statusBets: 'Улози', advStatusBar: 'Статусна трака игре (бр. руке, пот, улози, фаза)',
@@ -67,7 +68,7 @@ export const strings = {
   advSoon: "ускоро",
   advSeatLayout: "Распоред места",
   seatLayoutClassic: "Тренутни",
-  seatLayoutOfficial: "Званични (PokerTH)",
+  seatLayoutOfficial: "Портрет",
   confirmCall: "Потврди",
   kbReset: "Ресетуј",
   kbHint: "Додирните тастер, па притисните нови. Размак = Call, Enter = потврди подизање.",

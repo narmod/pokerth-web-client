@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+  seatPokerthPortrait: "PokerTH Stačias", seatPokerthLandscape: "PokerTH Gulsčias",
   advUiGeneral:'Bendra', advUiNetwork:'Tinklas', advShowTooltips:'Rodyti paaiškinimus', advDisableSplash:'Išjungti pasveikinimo ekraną paleidžiant', advDontTranslatePoker:'Neversti pokerio terminų (Check, Call, Raise)', advNA:'web', advLanguage:'Kalba', advDefCommunity:'Numatytoji bendruomenė', advSecReactions:'Reakcijos', advDisableReactions:'Išjungti emoji reakcijas', advNetStateColor:'Rodyti tinklo būsenos spalvą avataro kampe',
   showPlayers: `Rodyti žaidėjus`,
   footJoin: `Prisijungti`,
@@ -18,7 +19,7 @@ export const strings = {
   filterRanked: 'Reitinguoti', plSortAZ: 'Rikiuoti A–Z', plSortCountry: 'Rikiuoti pagal šalį',
   plInGame: 'Žaidime', plLobby: 'Vestibiulyje',
   buttonsPokerth: 'PokerTH',
-  advCatUI: 'Naudotojo sąsaja', advCatStyle: 'Stilius', advCatSound: 'Garsas', advCatLocal: 'Vietinis žaidimas', advCatNetwork: 'Tinklo žaidimas', advCatInternet: 'Interneto žaidimas', advCatAvatar: 'Slapyvardžiai / Avatarai', advCatLog: 'Žurnalo pranešimai', advCatReset: 'Numatytosios nuostatos', advStyleDesc: 'Kortų kaladės, stalo gelumbė, vietų išvaizda ir spalvų tema.', advStyleOpen: 'Atverti temų parinkiklį', advSoundDesc: 'Žaidimo garsai, muzikos garsumas ir reakcijų nutildymas.', advSoundOpen: 'Garso ir garsumo nuostatos', advLocalDesc: 'Treniruokis prieš botus: užpildyk tuščias vietas prie savo stalo.', advLocalOpen: 'Užpildyti vietas botais', advNetworkDesc: 'Talpinti žaidimą vietiniame tinkle (LAN).', advSoonTag: 'Netrukus', advInternetDesc: 'Esi prisijungęs prie PokerTH serverio.', advSrvLabel: 'Serveris', advInternetOpen: 'Keisti serverį / atsijungti', advSrvUnknown: '—', advAvatarDesc: 'Tavo slapyvardis ir avataro paveikslėlis.', advAvatarOpen: 'Redaguoti slapyvardį / avatarą', advLogDesc: 'Žaidimo žurnalas ir pokalbio perdanga.', advLogOpen: 'Atverti žurnalą', advResetDesc: 'Atstatyti visas išplėstines parinktis ir sparčiuosius klavišus į numatytąsias reikšmes.', advResetBtn: 'Atkurti numatytąsias', advResetConfirm: 'Atstatyti visas parinktis ir sparčiuosius klavišus į numatytąsias reikšmes?', seatLayoutAuto: 'Automatinis', seatLayoutEllipse: 'PokerTH elipsė', zoomReset: 'Atstatyti vaizdą', installTooltip: 'Įdiegti programėlę', piIgnore: 'Ignoruoti', piUnignore: 'Nebeignoruoti',
+  advCatUI: 'Naudotojo sąsaja', advCatStyle: 'Stilius', advCatSound: 'Garsas', advCatLocal: 'Vietinis žaidimas', advCatNetwork: 'Tinklo žaidimas', advCatInternet: 'Interneto žaidimas', advCatAvatar: 'Slapyvardžiai / Avatarai', advCatLog: 'Žurnalo pranešimai', advCatReset: 'Numatytosios nuostatos', advStyleDesc: 'Kortų kaladės, stalo gelumbė, vietų išvaizda ir spalvų tema.', advStyleOpen: 'Atverti temų parinkiklį', advSoundDesc: 'Žaidimo garsai, muzikos garsumas ir reakcijų nutildymas.', advSoundOpen: 'Garso ir garsumo nuostatos', advLocalDesc: 'Treniruokis prieš botus: užpildyk tuščias vietas prie savo stalo.', advLocalOpen: 'Užpildyti vietas botais', advNetworkDesc: 'Talpinti žaidimą vietiniame tinkle (LAN).', advSoonTag: 'Netrukus', advInternetDesc: 'Esi prisijungęs prie PokerTH serverio.', advSrvLabel: 'Serveris', advInternetOpen: 'Keisti serverį / atsijungti', advSrvUnknown: '—', advAvatarDesc: 'Tavo slapyvardis ir avataro paveikslėlis.', advAvatarOpen: 'Redaguoti slapyvardį / avatarą', advLogDesc: 'Žaidimo žurnalas ir pokalbio perdanga.', advLogOpen: 'Atverti žurnalą', advResetDesc: 'Atstatyti visas išplėstines parinktis ir sparčiuosius klavišus į numatytąsias reikšmes.', advResetBtn: 'Atkurti numatytąsias', advResetConfirm: 'Atstatyti visas parinktis ir sparčiuosius klavišus į numatytąsias reikšmes?', seatLayoutAuto: 'Automatinis', seatLayoutEllipse: "Gulsčias", zoomReset: 'Atstatyti vaizdą', installTooltip: 'Įdiegti programėlę', piIgnore: 'Ignoruoti', piUnignore: 'Nebeignoruoti',
   plRemaining: 'Likę žaidėjai', showCards: 'Rodyti',
   emoFrequent: 'Dažni', emoAll: 'Visi', advPingAvatar: 'Ping indikatorius mano avatare (žalia/geltona/raudona)', advAutoLeave: 'Automatiškai grįžti į vestibiulį pasibaigus žaidimui',
   advReduceFx: 'Sumažinti grafinius efektus (šešėliai/švytėjimas) — silpniems įrenginiams', avatarGallery: 'Avatarų galerija', avatarGalleryTooltip: 'Avatarų galerija', avgalPeople: 'Žmonės', avgalMisc: 'Įvairūs', lsbRunning: 'vyksta', lsbOpen: 'atviri', statusBets: 'Statymai', advStatusBar: 'Žaidimo būsenos juosta (rankos nr., bankas, statymai, fazė)',
@@ -67,7 +68,7 @@ export const strings = {
   advSoon: "netrukus",
   advSeatLayout: "Vietų išdėstymas",
   seatLayoutClassic: "Dabartinis",
-  seatLayoutOfficial: "Oficialus (PokerTH)",
+  seatLayoutOfficial: "Stačias",
   confirmCall: "Patvirtinti",
   kbReset: "Atstatyti",
   kbHint: "Palieskite klavišą, tada paspauskite naują. Tarpas = Call, Enter = patvirtinti kėlimą.",

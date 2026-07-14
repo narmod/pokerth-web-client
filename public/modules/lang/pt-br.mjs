@@ -9,6 +9,7 @@ export const meta = {
 };
 
 export const strings = {
+  seatPokerthPortrait: "PokerTH Retrato", seatPokerthLandscape: "PokerTH Paisagem",
   advUiGeneral:'Geral', advUiNetwork:'Rede', advShowTooltips:'Mostrar dicas de ferramentas', advDisableSplash:'Desativar a tela de abertura na inicialização', advDontTranslatePoker:'Não traduzir os termos de pôquer (Check, Call, Raise)', advNA:'web', advLanguage:'Idioma', advDefCommunity:'Comunidade padrão', advSecReactions:'Reações', advDisableReactions:'Desativar as reações de emoji', advNetStateColor:'Mostrar a cor do status da rede no canto do avatar',
   showPlayers: `Ver jogadores`,
   footJoin: `Entrar`,
@@ -17,7 +18,7 @@ export const strings = {
   filterRanked: 'Ranqueadas', plSortAZ: 'Ordenar A–Z', plSortCountry: 'Ordenar por país',
   plInGame: 'Em jogo', plLobby: 'No lobby',
   buttonsPokerth: 'PokerTH',
-  advCatUI: 'Interface do usuário', advCatStyle: 'Estilo', advCatSound: 'Som', advCatLocal: 'Partida local', advCatNetwork: 'Partida em rede', advCatInternet: 'Partida pela Internet', advCatAvatar: 'Apelidos / Avatares', advCatLog: 'Mensagens de log', advCatReset: 'Padrões', advStyleDesc: 'Baralhos, feltro da mesa, aparência dos assentos e tema de cores.', advStyleOpen: 'Abrir o seletor de temas', advSoundDesc: 'Sons do jogo, volume da música e silenciamento das reações.', advSoundOpen: 'Configurações de som e volume', advLocalDesc: 'Pratique contra bots: preencha os assentos vazios da sua mesa.', advLocalOpen: 'Preencher assentos com bots', advNetworkDesc: 'Hospede uma partida na sua rede local (LAN).', advSoonTag: 'Em breve', advInternetDesc: 'Você está conectado a um servidor PokerTH.', advSrvLabel: 'Servidor', advInternetOpen: 'Trocar de servidor / desconectar', advSrvUnknown: '—', advAvatarDesc: 'Seu apelido e sua imagem de avatar.', advAvatarOpen: 'Editar apelido / avatar', advLogDesc: 'Log da partida e chat sobreposto.', advLogOpen: 'Abrir o log', advResetDesc: 'Redefinir todas as opções avançadas e atalhos de teclado para os padrões.', advResetBtn: 'Restaurar padrões', advResetConfirm: 'Redefinir todas as opções e atalhos de teclado para os padrões?', seatLayoutAuto: 'Automático', seatLayoutEllipse: 'Elipse PokerTH', zoomReset: 'Redefinir a visão', installTooltip: 'Instalar o aplicativo', piIgnore: 'Ignorar', piUnignore: 'Deixar de ignorar',
+  advCatUI: 'Interface do usuário', advCatStyle: 'Estilo', advCatSound: 'Som', advCatLocal: 'Partida local', advCatNetwork: 'Partida em rede', advCatInternet: 'Partida pela Internet', advCatAvatar: 'Apelidos / Avatares', advCatLog: 'Mensagens de log', advCatReset: 'Padrões', advStyleDesc: 'Baralhos, feltro da mesa, aparência dos assentos e tema de cores.', advStyleOpen: 'Abrir o seletor de temas', advSoundDesc: 'Sons do jogo, volume da música e silenciamento das reações.', advSoundOpen: 'Configurações de som e volume', advLocalDesc: 'Pratique contra bots: preencha os assentos vazios da sua mesa.', advLocalOpen: 'Preencher assentos com bots', advNetworkDesc: 'Hospede uma partida na sua rede local (LAN).', advSoonTag: 'Em breve', advInternetDesc: 'Você está conectado a um servidor PokerTH.', advSrvLabel: 'Servidor', advInternetOpen: 'Trocar de servidor / desconectar', advSrvUnknown: '—', advAvatarDesc: 'Seu apelido e sua imagem de avatar.', advAvatarOpen: 'Editar apelido / avatar', advLogDesc: 'Log da partida e chat sobreposto.', advLogOpen: 'Abrir o log', advResetDesc: 'Redefinir todas as opções avançadas e atalhos de teclado para os padrões.', advResetBtn: 'Restaurar padrões', advResetConfirm: 'Redefinir todas as opções e atalhos de teclado para os padrões?', seatLayoutAuto: 'Automático', seatLayoutEllipse: "Paisagem", zoomReset: 'Redefinir a visão', installTooltip: 'Instalar o aplicativo', piIgnore: 'Ignorar', piUnignore: 'Deixar de ignorar',
   plRemaining: 'Jogadores restantes', showCards: 'Mostrar',
   emoFrequent: 'Frequentes', emoAll: 'Todos', advPingAvatar: 'Indicador de ping no meu avatar (verde/amarelo/vermelho)', advAutoLeave: 'Voltar automaticamente ao lobby quando a partida terminar',
   advReduceFx: 'Reduzir efeitos gráficos (sombras/brilho) — para aparelhos modestos', avatarGallery: 'Galeria de avatares', avatarGalleryTooltip: 'Galeria de avatares', avgalPeople: 'Pessoas', avgalMisc: 'Diversos', lsbRunning: 'em andamento', lsbOpen: 'abertas', statusBets: 'Apostas', advStatusBar: 'Barra de status da partida (mão nº, pote, apostas, fase)',
@@ -66,7 +67,7 @@ export const strings = {
   advSoon: "em breve",
   advSeatLayout: "Disposição dos lugares",
   seatLayoutClassic: "Atual",
-  seatLayoutOfficial: "Oficial (PokerTH)",
+  seatLayoutOfficial: "Retrato",
   confirmCall: "Confirmar",
   kbReset: "Redefinir",
   kbHint: "Toque numa tecla e depois pressione a nova. Espaço = Call, Enter = confirmar o aumento.",

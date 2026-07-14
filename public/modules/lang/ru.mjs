@@ -15,6 +15,7 @@ export const meta = {
 };
 
 export const strings = {
+  seatPokerthPortrait: "PokerTH Портрет", seatPokerthLandscape: "PokerTH Альбом",
   advUiGeneral:'Общие', advUiNetwork:'Сеть', advShowTooltips:'Показывать подсказки', advDisableSplash:'Отключить заставку при запуске', advDontTranslatePoker:'Не переводить покерные термины (Check, Call, Raise)', advNA:'web', advLanguage:'Язык', advDefCommunity:'Сообщество по умолчанию', advSecReactions:'Реакции', advDisableReactions:'Отключить эмодзи-реакции', advNetStateColor:'Показывать цвет состояния сети в углу аватара',
   showPlayers: `Показать игроков`,
   footJoin: `Войти`,
@@ -23,7 +24,7 @@ export const strings = {
   filterRanked: 'Рейтинговые', plSortAZ: 'Сортировка А–Я', plSortCountry: 'Сортировка по стране',
   plInGame: 'В игре', plLobby: 'В лобби',
   buttonsPokerth: 'PokerTH',
-  advCatUI: 'Интерфейс пользователя', advCatStyle: 'Стиль', advCatSound: 'Звук', advCatLocal: 'Локальная игра', advCatNetwork: 'Сетевая игра', advCatInternet: 'Интернет-игра', advCatAvatar: 'Никнеймы / Аватары', advCatLog: 'Сообщения журнала', advCatReset: 'Настройки по умолчанию', advStyleDesc: 'Колоды карт, сукно стола, вид мест и цветовая тема.', advStyleOpen: 'Открыть выбор тем', advSoundDesc: 'Звуки игры, громкость музыки и отключение реакций.', advSoundOpen: 'Настройки звука и громкости', advLocalDesc: 'Тренируйтесь против ботов: заполните пустые места за столом.', advLocalOpen: 'Заполнить места ботами', advNetworkDesc: 'Разместить игру в локальной сети (LAN).', advSoonTag: 'Скоро', advInternetDesc: 'Вы подключены к серверу PokerTH.', advSrvLabel: 'Сервер', advInternetOpen: 'Сменить сервер / отключиться', advSrvUnknown: '—', advAvatarDesc: 'Ваш никнейм и изображение аватара.', advAvatarOpen: 'Изменить никнейм / аватар', advLogDesc: 'Журнал игры и чат поверх стола.', advLogOpen: 'Открыть журнал', advResetDesc: 'Сбросить все дополнительные настройки и горячие клавиши к значениям по умолчанию.', advResetBtn: 'Восстановить значения по умолчанию', advResetConfirm: 'Сбросить все настройки и горячие клавиши к значениям по умолчанию?', seatLayoutAuto: 'Автоматически', seatLayoutEllipse: 'Эллипс PokerTH', zoomReset: 'Сбросить вид', installTooltip: 'Установить приложение', piIgnore: 'Игнорировать', piUnignore: 'Не игнорировать',
+  advCatUI: 'Интерфейс пользователя', advCatStyle: 'Стиль', advCatSound: 'Звук', advCatLocal: 'Локальная игра', advCatNetwork: 'Сетевая игра', advCatInternet: 'Интернет-игра', advCatAvatar: 'Никнеймы / Аватары', advCatLog: 'Сообщения журнала', advCatReset: 'Настройки по умолчанию', advStyleDesc: 'Колоды карт, сукно стола, вид мест и цветовая тема.', advStyleOpen: 'Открыть выбор тем', advSoundDesc: 'Звуки игры, громкость музыки и отключение реакций.', advSoundOpen: 'Настройки звука и громкости', advLocalDesc: 'Тренируйтесь против ботов: заполните пустые места за столом.', advLocalOpen: 'Заполнить места ботами', advNetworkDesc: 'Разместить игру в локальной сети (LAN).', advSoonTag: 'Скоро', advInternetDesc: 'Вы подключены к серверу PokerTH.', advSrvLabel: 'Сервер', advInternetOpen: 'Сменить сервер / отключиться', advSrvUnknown: '—', advAvatarDesc: 'Ваш никнейм и изображение аватара.', advAvatarOpen: 'Изменить никнейм / аватар', advLogDesc: 'Журнал игры и чат поверх стола.', advLogOpen: 'Открыть журнал', advResetDesc: 'Сбросить все дополнительные настройки и горячие клавиши к значениям по умолчанию.', advResetBtn: 'Восстановить значения по умолчанию', advResetConfirm: 'Сбросить все настройки и горячие клавиши к значениям по умолчанию?', seatLayoutAuto: 'Автоматически', seatLayoutEllipse: "Альбом", zoomReset: 'Сбросить вид', installTooltip: 'Установить приложение', piIgnore: 'Игнорировать', piUnignore: 'Не игнорировать',
   plRemaining: 'Осталось игроков', showCards: 'Показать',
   emoFrequent: 'Частые', emoAll: 'Все', advPingAvatar: 'Индикатор пинга на моём аватаре (зелёный/жёлтый/красный)', advAutoLeave: 'Автовозврат в лобби по окончании игры',
   advReduceFx: 'Упростить графические эффекты (тени/свечение) — для слабых устройств', avatarGallery: 'Галерея аватаров', avatarGalleryTooltip: 'Галерея аватаров', avgalPeople: 'Люди', avgalMisc: 'Разное', lsbRunning: 'идут', lsbOpen: 'открыты', statusBets: 'Ставки', advStatusBar: 'Строка состояния игры (№ раздачи, банк, ставки, фаза)',
@@ -72,7 +73,7 @@ export const strings = {
   advSoon: "скоро",
   advSeatLayout: "Расположение мест",
   seatLayoutClassic: "Текущее",
-  seatLayoutOfficial: "Официальное (PokerTH)",
+  seatLayoutOfficial: "Портрет",
   confirmCall: "Подтвердить",
   kbReset: "Сбросить",
   kbHint: "Коснитесь клавиши, затем нажмите новую. Пробел = Call, Enter = подтвердить рейз.",

@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+  seatPokerthPortrait: "PokerTH Portret", seatPokerthLandscape: "PokerTH Peisaj",
   advUiGeneral:'General', advUiNetwork:'Rețea', advShowTooltips:'Afișează sfaturile', advDisableSplash:'Dezactivează ecranul de pornire la lansare', advDontTranslatePoker:'Nu traduce termenii de poker (Check, Call, Raise)', advNA:'web', advLanguage:'Limbă', advDefCommunity:'Comunitate implicită', advSecReactions:'Reacții', advDisableReactions:'Dezactivează reacțiile emoji', advNetStateColor:'Afișează culoarea stării rețelei în colțul avatarului',
   showPlayers: `Afișează jucătorii`,
   footJoin: `Intră`,
@@ -18,7 +19,7 @@ export const strings = {
   filterRanked: 'Clasate', plSortAZ: 'Sortare A–Z', plSortCountry: 'Sortare după țară',
   plInGame: 'În joc', plLobby: 'În lobby',
   buttonsPokerth: 'PokerTH',
-  advCatUI: 'Interfața utilizatorului', advCatStyle: 'Stil', advCatSound: 'Sunet', advCatLocal: 'Joc local', advCatNetwork: 'Joc în rețea', advCatInternet: 'Joc pe Internet', advCatAvatar: 'Porecle / Avatare', advCatLog: 'Mesaje de jurnal', advCatReset: 'Setări implicite', advStyleDesc: 'Pachete de cărți, postavul mesei, aspectul locurilor și tema de culori.', advStyleOpen: 'Deschide selectorul de teme', advSoundDesc: 'Sunetele jocului, volumul muzicii și dezactivarea reacțiilor.', advSoundOpen: 'Setări de sunet și volum', advLocalDesc: 'Exersează împotriva boților: umple locurile goale de la masa ta.', advLocalOpen: 'Umple locurile cu boți', advNetworkDesc: 'Găzduiește un joc în rețeaua ta locală (LAN).', advSoonTag: 'În curând', advInternetDesc: 'Ești conectat la un server PokerTH.', advSrvLabel: 'Server', advInternetOpen: 'Schimbă serverul / deconectează-te', advSrvUnknown: '—', advAvatarDesc: 'Porecla ta și imaginea avatarului.', advAvatarOpen: 'Editează porecla / avatarul', advLogDesc: 'Jurnalul jocului și chatul suprapus.', advLogOpen: 'Deschide jurnalul', advResetDesc: 'Resetează toate opțiunile avansate și scurtăturile de tastatură la valorile implicite.', advResetBtn: 'Restabilește implicitele', advResetConfirm: 'Resetezi toate opțiunile și scurtăturile la valorile implicite?', seatLayoutAuto: 'Automat', seatLayoutEllipse: 'Elipsă PokerTH', zoomReset: 'Resetează vederea', installTooltip: 'Instalează aplicația', piIgnore: 'Ignoră', piUnignore: 'Nu mai ignora',
+  advCatUI: 'Interfața utilizatorului', advCatStyle: 'Stil', advCatSound: 'Sunet', advCatLocal: 'Joc local', advCatNetwork: 'Joc în rețea', advCatInternet: 'Joc pe Internet', advCatAvatar: 'Porecle / Avatare', advCatLog: 'Mesaje de jurnal', advCatReset: 'Setări implicite', advStyleDesc: 'Pachete de cărți, postavul mesei, aspectul locurilor și tema de culori.', advStyleOpen: 'Deschide selectorul de teme', advSoundDesc: 'Sunetele jocului, volumul muzicii și dezactivarea reacțiilor.', advSoundOpen: 'Setări de sunet și volum', advLocalDesc: 'Exersează împotriva boților: umple locurile goale de la masa ta.', advLocalOpen: 'Umple locurile cu boți', advNetworkDesc: 'Găzduiește un joc în rețeaua ta locală (LAN).', advSoonTag: 'În curând', advInternetDesc: 'Ești conectat la un server PokerTH.', advSrvLabel: 'Server', advInternetOpen: 'Schimbă serverul / deconectează-te', advSrvUnknown: '—', advAvatarDesc: 'Porecla ta și imaginea avatarului.', advAvatarOpen: 'Editează porecla / avatarul', advLogDesc: 'Jurnalul jocului și chatul suprapus.', advLogOpen: 'Deschide jurnalul', advResetDesc: 'Resetează toate opțiunile avansate și scurtăturile de tastatură la valorile implicite.', advResetBtn: 'Restabilește implicitele', advResetConfirm: 'Resetezi toate opțiunile și scurtăturile la valorile implicite?', seatLayoutAuto: 'Automat', seatLayoutEllipse: "Peisaj", zoomReset: 'Resetează vederea', installTooltip: 'Instalează aplicația', piIgnore: 'Ignoră', piUnignore: 'Nu mai ignora',
   plRemaining: 'Jucători rămași', showCards: 'Arată',
   emoFrequent: 'Frecvente', emoAll: 'Toate', advPingAvatar: 'Indicator de ping pe avatarul meu (verde/galben/roșu)', advAutoLeave: 'Revenire automată în lobby la finalul jocului',
   advReduceFx: 'Reduce efectele grafice (umbre/strălucire) — pentru dispozitive modeste', avatarGallery: 'Galerie de avatare', avatarGalleryTooltip: 'Galerie de avatare', avgalPeople: 'Persoane', avgalMisc: 'Diverse', lsbRunning: 'în desfășurare', lsbOpen: 'deschise', statusBets: 'Pariuri', advStatusBar: 'Bară de stare a jocului (mâna nr., pot, pariuri, fază)',
@@ -67,7 +68,7 @@ export const strings = {
   advSoon: "în curând",
   advSeatLayout: "Aranjarea locurilor",
   seatLayoutClassic: "Curent",
-  seatLayoutOfficial: "Oficial (PokerTH)",
+  seatLayoutOfficial: "Portret",
   confirmCall: "Confirmă",
   kbReset: "Resetează",
   kbHint: "Atinge o tastă, apoi apasă pe cea nouă. Spațiu = Call, Enter = confirmă mărirea.",

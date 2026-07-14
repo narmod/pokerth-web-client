@@ -11,6 +11,7 @@ export const meta = {
 };
 
 export const strings = {
+  seatPokerthPortrait: "PokerTH 竖向", seatPokerthLandscape: "PokerTH 横向",
   advUiGeneral:'常规', advUiNetwork:'网络', advShowTooltips:'显示工具提示', advDisableSplash:'启动时禁用启动画面', advDontTranslatePoker:'不翻译扑克术语（Check、Call、Raise）', advNA:'web', advLanguage:'语言', advDefCommunity:'默认社区', advSecReactions:'表情反应', advDisableReactions:'禁用表情反应', advNetStateColor:'在头像角落显示网络状态颜色',
   showPlayers: `显示玩家`,
   footJoin: `加入`,
@@ -19,7 +20,7 @@ export const strings = {
   filterRanked: '排名对局', plSortAZ: '按 A–Z 排序', plSortCountry: '按国家排序',
   plInGame: '对局中', plLobby: '大厅中',
   buttonsPokerth: 'PokerTH',
-  advCatUI: '用户界面', advCatStyle: '风格', advCatSound: '声音', advCatLocal: '本地对局', advCatNetwork: '网络对局', advCatInternet: '互联网对局', advCatAvatar: '昵称 / 头像', advCatLog: '日志消息', advCatReset: '默认设置', advStyleDesc: '牌组、桌布、座位外观和配色主题。', advStyleOpen: '打开主题选择器', advSoundDesc: '游戏音效、音乐音量和反应静音。', advSoundOpen: '声音与音量设置', advLocalDesc: '与机器人练习：填满你牌桌上的空位。', advLocalOpen: '用机器人填满空位', advNetworkDesc: '在你的局域网（LAN）中主持对局。', advSoonTag: '即将推出', advInternetDesc: '你已连接到 PokerTH 服务器。', advSrvLabel: '服务器', advInternetOpen: '更换服务器 / 断开连接', advSrvUnknown: '—', advAvatarDesc: '你的昵称和头像图片。', advAvatarOpen: '编辑昵称 / 头像', advLogDesc: '对局日志和聊天悬浮层。', advLogOpen: '打开日志', advResetDesc: '将所有高级选项和键盘快捷键重置为默认值。', advResetBtn: '恢复默认', advResetConfirm: '将所有选项和快捷键重置为默认值？', seatLayoutAuto: '自动', seatLayoutEllipse: 'PokerTH 椭圆', zoomReset: '重置视图', installTooltip: '安装应用', piIgnore: '屏蔽', piUnignore: '取消屏蔽',
+  advCatUI: '用户界面', advCatStyle: '风格', advCatSound: '声音', advCatLocal: '本地对局', advCatNetwork: '网络对局', advCatInternet: '互联网对局', advCatAvatar: '昵称 / 头像', advCatLog: '日志消息', advCatReset: '默认设置', advStyleDesc: '牌组、桌布、座位外观和配色主题。', advStyleOpen: '打开主题选择器', advSoundDesc: '游戏音效、音乐音量和反应静音。', advSoundOpen: '声音与音量设置', advLocalDesc: '与机器人练习：填满你牌桌上的空位。', advLocalOpen: '用机器人填满空位', advNetworkDesc: '在你的局域网（LAN）中主持对局。', advSoonTag: '即将推出', advInternetDesc: '你已连接到 PokerTH 服务器。', advSrvLabel: '服务器', advInternetOpen: '更换服务器 / 断开连接', advSrvUnknown: '—', advAvatarDesc: '你的昵称和头像图片。', advAvatarOpen: '编辑昵称 / 头像', advLogDesc: '对局日志和聊天悬浮层。', advLogOpen: '打开日志', advResetDesc: '将所有高级选项和键盘快捷键重置为默认值。', advResetBtn: '恢复默认', advResetConfirm: '将所有选项和快捷键重置为默认值？', seatLayoutAuto: '自动', seatLayoutEllipse: "横向", zoomReset: '重置视图', installTooltip: '安装应用', piIgnore: '屏蔽', piUnignore: '取消屏蔽',
   plRemaining: '剩余玩家', showCards: '亮牌',
   emoFrequent: '常用', emoAll: '全部', advPingAvatar: '在我的头像上显示 Ping（绿/黄/红）', advAutoLeave: '对局结束后自动返回大厅',
   advReduceFx: '降低图形效果（阴影/光晕）— 适用于低性能设备', avatarGallery: '头像图库', avatarGalleryTooltip: '头像图库', avgalPeople: '人物', avgalMisc: '其他', lsbRunning: '进行中', lsbOpen: '开放中', statusBets: '下注', advStatusBar: '对局状态栏（手牌编号、彩池、下注、阶段）',
@@ -68,7 +69,7 @@ export const strings = {
   advSoon: "即将推出",
   advSeatLayout: "座位排列",
   seatLayoutClassic: "当前",
-  seatLayoutOfficial: "官方 (PokerTH)",
+  seatLayoutOfficial: "竖向",
   confirmCall: "确认",
   kbReset: "重置",
   kbHint: "先点一个键，再按下新键。空格 = Call，Enter = 确认加注。",

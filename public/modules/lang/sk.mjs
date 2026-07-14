@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+  seatPokerthPortrait: "PokerTH Na výšku", seatPokerthLandscape: "PokerTH Na šírku",
   advUiGeneral:'Všeobecné', advUiNetwork:'Sieť', advShowTooltips:'Zobraziť popisy', advDisableSplash:'Zakázať úvodnú obrazovku pri spustení', advDontTranslatePoker:'Neprekladať pokerové výrazy (Check, Call, Raise)', advNA:'web', advLanguage:'Jazyk', advDefCommunity:'Predvolená komunita', advSecReactions:'Reakcie', advDisableReactions:'Zakázať emoji reakcie', advNetStateColor:'Zobraziť farbu stavu siete v rohu avatara',
   showPlayers: `Zobraziť hráčov`,
   footJoin: `Pripojiť sa`,
@@ -18,7 +19,7 @@ export const strings = {
   filterRanked: 'Hodnotené', plSortAZ: 'Zoradiť A–Z', plSortCountry: 'Zoradiť podľa krajiny',
   plInGame: 'V hre', plLobby: 'V lobby',
   buttonsPokerth: 'PokerTH',
-  advCatUI: 'Používateľské rozhranie', advCatStyle: 'Štýl', advCatSound: 'Zvuk', advCatLocal: 'Miestna hra', advCatNetwork: 'Sieťová hra', advCatInternet: 'Internetová hra', advCatAvatar: 'Prezývky / Avatary', advCatLog: 'Správy protokolu', advCatReset: 'Predvolené nastavenia', advStyleDesc: 'Balíčky kariet, plátno stola, vzhľad miest a farebná téma.', advStyleOpen: 'Otvoriť výber tém', advSoundDesc: 'Zvuky hry, hlasitosť hudby a stlmenie reakcií.', advSoundOpen: 'Nastavenia zvuku a hlasitosti', advLocalDesc: 'Trénuj proti botom: zaplň prázdne miesta pri svojom stole.', advLocalOpen: 'Zaplniť miesta botmi', advNetworkDesc: 'Hostuj hru v miestnej sieti (LAN).', advSoonTag: 'Už čoskoro', advInternetDesc: 'Si pripojený k serveru PokerTH.', advSrvLabel: 'Server', advInternetOpen: 'Zmeniť server / odpojiť', advSrvUnknown: '—', advAvatarDesc: 'Tvoja prezývka a obrázok avatara.', advAvatarOpen: 'Upraviť prezývku / avatar', advLogDesc: 'Protokol hry a chat cez stôl.', advLogOpen: 'Otvoriť protokol', advResetDesc: 'Obnoviť všetky rozšírené voľby a klávesové skratky na predvolené hodnoty.', advResetBtn: 'Obnoviť predvolené', advResetConfirm: 'Obnoviť všetky voľby a klávesové skratky na predvolené hodnoty?', seatLayoutAuto: 'Automaticky', seatLayoutEllipse: 'Elipsa PokerTH', zoomReset: 'Obnoviť zobrazenie', installTooltip: 'Nainštalovať aplikáciu', piIgnore: 'Ignorovať', piUnignore: 'Prestať ignorovať',
+  advCatUI: 'Používateľské rozhranie', advCatStyle: 'Štýl', advCatSound: 'Zvuk', advCatLocal: 'Miestna hra', advCatNetwork: 'Sieťová hra', advCatInternet: 'Internetová hra', advCatAvatar: 'Prezývky / Avatary', advCatLog: 'Správy protokolu', advCatReset: 'Predvolené nastavenia', advStyleDesc: 'Balíčky kariet, plátno stola, vzhľad miest a farebná téma.', advStyleOpen: 'Otvoriť výber tém', advSoundDesc: 'Zvuky hry, hlasitosť hudby a stlmenie reakcií.', advSoundOpen: 'Nastavenia zvuku a hlasitosti', advLocalDesc: 'Trénuj proti botom: zaplň prázdne miesta pri svojom stole.', advLocalOpen: 'Zaplniť miesta botmi', advNetworkDesc: 'Hostuj hru v miestnej sieti (LAN).', advSoonTag: 'Už čoskoro', advInternetDesc: 'Si pripojený k serveru PokerTH.', advSrvLabel: 'Server', advInternetOpen: 'Zmeniť server / odpojiť', advSrvUnknown: '—', advAvatarDesc: 'Tvoja prezývka a obrázok avatara.', advAvatarOpen: 'Upraviť prezývku / avatar', advLogDesc: 'Protokol hry a chat cez stôl.', advLogOpen: 'Otvoriť protokol', advResetDesc: 'Obnoviť všetky rozšírené voľby a klávesové skratky na predvolené hodnoty.', advResetBtn: 'Obnoviť predvolené', advResetConfirm: 'Obnoviť všetky voľby a klávesové skratky na predvolené hodnoty?', seatLayoutAuto: 'Automaticky', seatLayoutEllipse: "Na šírku", zoomReset: 'Obnoviť zobrazenie', installTooltip: 'Nainštalovať aplikáciu', piIgnore: 'Ignorovať', piUnignore: 'Prestať ignorovať',
   plRemaining: 'Zostávajúci hráči', showCards: 'Ukázať',
   emoFrequent: 'Časté', emoAll: 'Všetky', advPingAvatar: 'Indikátor pingu na mojom avatare (zelená/žltá/červená)', advAutoLeave: 'Automatický návrat do lobby po skončení hry',
   advReduceFx: 'Obmedziť grafické efekty (tiene/žiara) — pre slabšie zariadenia', avatarGallery: 'Galéria avatarov', avatarGalleryTooltip: 'Galéria avatarov', avgalPeople: 'Ľudia', avgalMisc: 'Rôzne', lsbRunning: 'prebieha', lsbOpen: 'otvorené', statusBets: 'Stávky', advStatusBar: 'Stavový riadok hry (č. ruky, pot, stávky, fáza)',
@@ -67,7 +68,7 @@ export const strings = {
   advSoon: "čoskoro",
   advSeatLayout: "Rozloženie miest",
   seatLayoutClassic: "Aktuálne",
-  seatLayoutOfficial: "Oficiálne (PokerTH)",
+  seatLayoutOfficial: "Na výšku",
   confirmCall: "Potvrdiť",
   kbReset: "Obnoviť",
   kbHint: "Klepnite na kláves a stlačte nový. Medzerník = Call, Enter = potvrdiť navýšenie.",

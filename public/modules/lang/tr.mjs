@@ -12,6 +12,7 @@ export const meta = {
 };
 
 export const strings = {
+  seatPokerthPortrait: "PokerTH Dikey", seatPokerthLandscape: "PokerTH Yatay",
   advUiGeneral:'Genel', advUiNetwork:'Ağ', advShowTooltips:'İpuçlarını göster', advDisableSplash:'Başlangıçta açılış ekranını devre dışı bırak', advDontTranslatePoker:'Poker terimlerini çevirme (Check, Call, Raise)', advNA:'web', advLanguage:'Dil', advDefCommunity:'Varsayılan topluluk', advSecReactions:'Tepkiler', advDisableReactions:'Emoji tepkilerini devre dışı bırak', advNetStateColor:'Avatar köşesinde ağ durumu rengini göster',
   showPlayers: `Oyuncuları göster`,
   footJoin: `Katıl`,
@@ -20,7 +21,7 @@ export const strings = {
   filterRanked: 'Dereceli', plSortAZ: 'A–Z sırala', plSortCountry: 'Ülkeye göre sırala',
   plInGame: 'Oyunda', plLobby: 'Lobide',
   buttonsPokerth: 'PokerTH',
-  advCatUI: 'Kullanıcı arayüzü', advCatStyle: 'Stil', advCatSound: 'Ses', advCatLocal: 'Yerel oyun', advCatNetwork: 'Ağ oyunu', advCatInternet: 'İnternet oyunu', advCatAvatar: 'Takma adlar / Avatarlar', advCatLog: 'Günlük mesajları', advCatReset: 'Varsayılanlar', advStyleDesc: 'Kart desteleri, masa çuhası, koltuk görünümü ve renk teması.', advStyleOpen: 'Tema seçiciyi aç', advSoundDesc: 'Oyun sesleri, müzik ses düzeyi ve tepkileri sessize alma.', advSoundOpen: 'Ses ve ses düzeyi ayarları', advLocalDesc: 'Botlara karşı antrenman yap: masandaki boş koltukları doldur.', advLocalOpen: 'Koltukları botlarla doldur', advNetworkDesc: 'Yerel ağında (LAN) bir oyun barındır.', advSoonTag: 'Yakında', advInternetDesc: 'Bir PokerTH sunucusuna bağlısın.', advSrvLabel: 'Sunucu', advInternetOpen: 'Sunucu değiştir / bağlantıyı kes', advSrvUnknown: '—', advAvatarDesc: 'Takma adın ve avatar görselin.', advAvatarOpen: 'Takma adı / avatarı düzenle', advLogDesc: 'Oyun günlüğü ve sohbet katmanı.', advLogOpen: 'Günlüğü aç', advResetDesc: 'Tüm gelişmiş seçenekleri ve klavye kısayollarını varsayılanlara sıfırla.', advResetBtn: 'Varsayılanları geri yükle', advResetConfirm: 'Tüm seçenekler ve klavye kısayolları varsayılanlara sıfırlansın mı?', seatLayoutAuto: 'Otomatik', seatLayoutEllipse: 'PokerTH elipsi', zoomReset: 'Görünümü sıfırla', installTooltip: 'Uygulamayı yükle', piIgnore: 'Yoksay', piUnignore: 'Yoksaymayı bırak',
+  advCatUI: 'Kullanıcı arayüzü', advCatStyle: 'Stil', advCatSound: 'Ses', advCatLocal: 'Yerel oyun', advCatNetwork: 'Ağ oyunu', advCatInternet: 'İnternet oyunu', advCatAvatar: 'Takma adlar / Avatarlar', advCatLog: 'Günlük mesajları', advCatReset: 'Varsayılanlar', advStyleDesc: 'Kart desteleri, masa çuhası, koltuk görünümü ve renk teması.', advStyleOpen: 'Tema seçiciyi aç', advSoundDesc: 'Oyun sesleri, müzik ses düzeyi ve tepkileri sessize alma.', advSoundOpen: 'Ses ve ses düzeyi ayarları', advLocalDesc: 'Botlara karşı antrenman yap: masandaki boş koltukları doldur.', advLocalOpen: 'Koltukları botlarla doldur', advNetworkDesc: 'Yerel ağında (LAN) bir oyun barındır.', advSoonTag: 'Yakında', advInternetDesc: 'Bir PokerTH sunucusuna bağlısın.', advSrvLabel: 'Sunucu', advInternetOpen: 'Sunucu değiştir / bağlantıyı kes', advSrvUnknown: '—', advAvatarDesc: 'Takma adın ve avatar görselin.', advAvatarOpen: 'Takma adı / avatarı düzenle', advLogDesc: 'Oyun günlüğü ve sohbet katmanı.', advLogOpen: 'Günlüğü aç', advResetDesc: 'Tüm gelişmiş seçenekleri ve klavye kısayollarını varsayılanlara sıfırla.', advResetBtn: 'Varsayılanları geri yükle', advResetConfirm: 'Tüm seçenekler ve klavye kısayolları varsayılanlara sıfırlansın mı?', seatLayoutAuto: 'Otomatik', seatLayoutEllipse: "Yatay", zoomReset: 'Görünümü sıfırla', installTooltip: 'Uygulamayı yükle', piIgnore: 'Yoksay', piUnignore: 'Yoksaymayı bırak',
   plRemaining: 'Kalan oyuncular', showCards: 'Göster',
   emoFrequent: 'Sık kullanılan', emoAll: 'Tümü', advPingAvatar: 'Avatarımda ping göstergesi (yeşil/sarı/kırmızı)', advAutoLeave: 'Oyun bitince otomatik olarak lobiye dön',
   advReduceFx: 'Grafik efektlerini azalt (gölgeler/parlama) — zayıf cihazlar için', avatarGallery: 'Avatar galerisi', avatarGalleryTooltip: 'Avatar galerisi', avgalPeople: 'Kişiler', avgalMisc: 'Çeşitli', lsbRunning: 'devam ediyor', lsbOpen: 'açık', statusBets: 'Bahisler', advStatusBar: 'Oyun durum çubuğu (el no, pot, bahisler, aşama)',
@@ -69,7 +70,7 @@ export const strings = {
   advSoon: "yakında",
   advSeatLayout: "Koltuk düzeni",
   seatLayoutClassic: "Geçerli",
-  seatLayoutOfficial: "Resmî (PokerTH)",
+  seatLayoutOfficial: "Dikey",
   confirmCall: "Onayla",
   kbReset: "Sıfırla",
   kbHint: "Bir tuşa dokunun, sonra yeni tuşa basın. Boşluk = Call, Enter = raise'i onayla.",

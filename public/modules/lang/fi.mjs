@@ -9,6 +9,7 @@ export const meta = {
 };
 
 export const strings = {
+  seatPokerthPortrait: "PokerTH Pysty", seatPokerthLandscape: "PokerTH Vaaka",
   advUiGeneral:'Yleiset', advUiNetwork:'Verkko', advShowTooltips:'Näytä työkaluvihjeet', advDisableSplash:'Poista aloitusnäyttö käytöstä käynnistyksessä', advDontTranslatePoker:'Älä käännä pokeritermejä (Check, Call, Raise)', advNA:'web', advLanguage:'Kieli', advDefCommunity:'Oletusyhteisö', advSecReactions:'Reaktiot', advDisableReactions:'Poista emoji-reaktiot käytöstä', advNetStateColor:'Näytä verkon tilan väri avatarin kulmassa',
   showPlayers: `Näytä pelaajat`,
   footJoin: `Liity`,
@@ -17,7 +18,7 @@ export const strings = {
   filterRanked: 'Rankatut', plSortAZ: 'Lajittele A–Z', plSortCountry: 'Lajittele maittain',
   plInGame: 'Pelissä', plLobby: 'Aulassa',
   buttonsPokerth: 'PokerTH',
-  advCatUI: 'Käyttöliittymä', advCatStyle: 'Tyyli', advCatSound: 'Ääni', advCatLocal: 'Paikallinen peli', advCatNetwork: 'Verkkopeli', advCatInternet: 'Internet-peli', advCatAvatar: 'Nimimerkit / Avatarit', advCatLog: 'Lokiviestit', advCatReset: 'Oletusasetukset', advStyleDesc: 'Korttipakat, pöydän verka, istuinten ulkoasu ja väriteema.', advStyleOpen: 'Avaa teemavalitsin', advSoundDesc: 'Peliäänet, musiikin äänenvoimakkuus ja reaktioiden mykistys.', advSoundOpen: 'Ääni- ja voimakkuusasetukset', advLocalDesc: 'Harjoittele botteja vastaan: täytä pöytäsi tyhjät paikat.', advLocalOpen: 'Täytä paikat boteilla', advNetworkDesc: 'Isännöi peliä lähiverkossasi (LAN).', advSoonTag: 'Tulossa pian', advInternetDesc: 'Olet yhteydessä PokerTH-palvelimeen.', advSrvLabel: 'Palvelin', advInternetOpen: 'Vaihda palvelinta / katkaise yhteys', advSrvUnknown: '—', advAvatarDesc: 'Nimimerkkisi ja avatar-kuvasi.', advAvatarOpen: 'Muokkaa nimimerkkiä / avataria', advLogDesc: 'Pelin loki ja chat-peittokuva.', advLogOpen: 'Avaa loki', advResetDesc: 'Palauta kaikki lisäasetukset ja pikanäppäimet oletusarvoihin.', advResetBtn: 'Palauta oletukset', advResetConfirm: 'Palautetaanko kaikki asetukset ja pikanäppäimet oletusarvoihin?', seatLayoutAuto: 'Automaattinen', seatLayoutEllipse: 'PokerTH-ellipsi', zoomReset: 'Palauta näkymä', installTooltip: 'Asenna sovellus', piIgnore: 'Ohita', piUnignore: 'Lopeta ohittaminen',
+  advCatUI: 'Käyttöliittymä', advCatStyle: 'Tyyli', advCatSound: 'Ääni', advCatLocal: 'Paikallinen peli', advCatNetwork: 'Verkkopeli', advCatInternet: 'Internet-peli', advCatAvatar: 'Nimimerkit / Avatarit', advCatLog: 'Lokiviestit', advCatReset: 'Oletusasetukset', advStyleDesc: 'Korttipakat, pöydän verka, istuinten ulkoasu ja väriteema.', advStyleOpen: 'Avaa teemavalitsin', advSoundDesc: 'Peliäänet, musiikin äänenvoimakkuus ja reaktioiden mykistys.', advSoundOpen: 'Ääni- ja voimakkuusasetukset', advLocalDesc: 'Harjoittele botteja vastaan: täytä pöytäsi tyhjät paikat.', advLocalOpen: 'Täytä paikat boteilla', advNetworkDesc: 'Isännöi peliä lähiverkossasi (LAN).', advSoonTag: 'Tulossa pian', advInternetDesc: 'Olet yhteydessä PokerTH-palvelimeen.', advSrvLabel: 'Palvelin', advInternetOpen: 'Vaihda palvelinta / katkaise yhteys', advSrvUnknown: '—', advAvatarDesc: 'Nimimerkkisi ja avatar-kuvasi.', advAvatarOpen: 'Muokkaa nimimerkkiä / avataria', advLogDesc: 'Pelin loki ja chat-peittokuva.', advLogOpen: 'Avaa loki', advResetDesc: 'Palauta kaikki lisäasetukset ja pikanäppäimet oletusarvoihin.', advResetBtn: 'Palauta oletukset', advResetConfirm: 'Palautetaanko kaikki asetukset ja pikanäppäimet oletusarvoihin?', seatLayoutAuto: 'Automaattinen', seatLayoutEllipse: "Vaaka", zoomReset: 'Palauta näkymä', installTooltip: 'Asenna sovellus', piIgnore: 'Ohita', piUnignore: 'Lopeta ohittaminen',
   plRemaining: 'Jäljellä olevat pelaajat', showCards: 'Näytä',
   emoFrequent: 'Usein käytetyt', emoAll: 'Kaikki', advPingAvatar: 'Ping-ilmaisin avatarissani (vihreä/keltainen/punainen)', advAutoLeave: 'Palaa automaattisesti aulaan pelin päättyessä',
   advReduceFx: 'Vähennä grafiikkatehosteita (varjot/hehku) — heikoille laitteille', avatarGallery: 'Avatar-galleria', avatarGalleryTooltip: 'Avatar-galleria', avgalPeople: 'Ihmiset', avgalMisc: 'Sekalaiset', lsbRunning: 'käynnissä', lsbOpen: 'avoinna', statusBets: 'Panokset', advStatusBar: 'Pelin tilarivi (käsi nro, potti, panokset, vaihe)',
@@ -66,7 +67,7 @@ export const strings = {
   advSoon: "pian",
   advSeatLayout: "Paikkojen asettelu",
   seatLayoutClassic: "Nykyinen",
-  seatLayoutOfficial: "Virallinen (PokerTH)",
+  seatLayoutOfficial: "Pysty",
   confirmCall: "Vahvista",
   kbReset: "Palauta",
   kbHint: "Napauta näppäintä ja paina sitten uutta. Välilyönti = Call, Enter = vahvista korotus.",

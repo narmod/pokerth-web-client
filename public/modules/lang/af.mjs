@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+  seatPokerthPortrait: "PokerTH Portret", seatPokerthLandscape: "PokerTH Landskap",
   advUiGeneral:'Algemeen', advUiNetwork:'Netwerk', advShowTooltips:'Wys nutswenke', advDisableSplash:'Deaktiveer die aanvangskerm met opstart', advDontTranslatePoker:'Moenie pokerterme vertaal nie (Check, Call, Raise)', advNA:'web', advLanguage:'Taal', advDefCommunity:'Verstekgemeenskap', advSecReactions:'Reaksies', advDisableReactions:'Deaktiveer emoji-reaksies', advNetStateColor:'Wys netwerkstatuskleur in die avatar-hoek',
   showPlayers: `Wys spelers`,
   footJoin: `Sluit aan`,
@@ -18,7 +19,7 @@ export const strings = {
   filterRanked: 'Ranglys', plSortAZ: 'Sorteer A–Z', plSortCountry: 'Sorteer volgens land',
   plInGame: 'In \'n spel', plLobby: 'In die voorportaal',
   buttonsPokerth: 'PokerTH',
-  advCatUI: 'Gebruikerskoppelvlak', advCatStyle: 'Styl', advCatSound: 'Klank', advCatLocal: 'Plaaslike spel', advCatNetwork: 'Netwerkspel', advCatInternet: 'Internetspel', advCatAvatar: 'Byname / Avatars', advCatLog: 'Loginskrywings', advCatReset: 'Verstekwaardes', advStyleDesc: 'Kaartstelle, tafeldoek, sitplekvoorkoms en die kleurtema.', advStyleOpen: 'Maak die temakieser oop', advSoundDesc: 'Spelklanke, musiekvolume en demping van reaksies.', advSoundOpen: 'Klank- en volume-instellings', advLocalDesc: 'Oefen teen bots: vul die leë sitplekke by jou tafel.', advLocalOpen: 'Vul sitplekke met bots', advNetworkDesc: 'Huisves \'n spel op jou plaaslike netwerk (LAN).', advSoonTag: 'Binnekort', advInternetDesc: 'Jy is aan \'n PokerTH-bediener gekoppel.', advSrvLabel: 'Bediener', advInternetOpen: 'Verander bediener / ontkoppel', advSrvUnknown: '—', advAvatarDesc: 'Jou bynaam en jou avatarbeeld.', advAvatarOpen: 'Wysig bynaam / avatar', advLogDesc: 'Spellog en klets-oorlegsel.', advLogOpen: 'Maak die log oop', advResetDesc: 'Stel alle gevorderde opsies en sleutelbordkortpaaie terug na die verstekwaardes.', advResetBtn: 'Herstel verstekwaardes', advResetConfirm: 'Stel alle opsies en kortpaaie terug na die verstekwaardes?', seatLayoutAuto: 'Outomaties', seatLayoutEllipse: 'PokerTH-ellips', zoomReset: 'Stel aansig terug', installTooltip: 'Installeer die toep', piIgnore: 'Ignoreer', piUnignore: 'Moenie meer ignoreer nie',
+  advCatUI: 'Gebruikerskoppelvlak', advCatStyle: 'Styl', advCatSound: 'Klank', advCatLocal: 'Plaaslike spel', advCatNetwork: 'Netwerkspel', advCatInternet: 'Internetspel', advCatAvatar: 'Byname / Avatars', advCatLog: 'Loginskrywings', advCatReset: 'Verstekwaardes', advStyleDesc: 'Kaartstelle, tafeldoek, sitplekvoorkoms en die kleurtema.', advStyleOpen: 'Maak die temakieser oop', advSoundDesc: 'Spelklanke, musiekvolume en demping van reaksies.', advSoundOpen: 'Klank- en volume-instellings', advLocalDesc: 'Oefen teen bots: vul die leë sitplekke by jou tafel.', advLocalOpen: 'Vul sitplekke met bots', advNetworkDesc: 'Huisves \'n spel op jou plaaslike netwerk (LAN).', advSoonTag: 'Binnekort', advInternetDesc: 'Jy is aan \'n PokerTH-bediener gekoppel.', advSrvLabel: 'Bediener', advInternetOpen: 'Verander bediener / ontkoppel', advSrvUnknown: '—', advAvatarDesc: 'Jou bynaam en jou avatarbeeld.', advAvatarOpen: 'Wysig bynaam / avatar', advLogDesc: 'Spellog en klets-oorlegsel.', advLogOpen: 'Maak die log oop', advResetDesc: 'Stel alle gevorderde opsies en sleutelbordkortpaaie terug na die verstekwaardes.', advResetBtn: 'Herstel verstekwaardes', advResetConfirm: 'Stel alle opsies en kortpaaie terug na die verstekwaardes?', seatLayoutAuto: 'Outomaties', seatLayoutEllipse: "Landskap", zoomReset: 'Stel aansig terug', installTooltip: 'Installeer die toep', piIgnore: 'Ignoreer', piUnignore: 'Moenie meer ignoreer nie',
   plRemaining: 'Oorblywende spelers', showCards: 'Wys',
   emoFrequent: 'Gereeld', emoAll: 'Alles', advPingAvatar: 'Ping-aanwyser op my avatar (groen/geel/rooi)', advAutoLeave: 'Keer outomaties terug na die portaal wanneer die spel eindig',
   advReduceFx: 'Verminder grafiese effekte (skadu\'s/gloed) — vir stadige toestelle', avatarGallery: 'Avatar-galery', avatarGalleryTooltip: 'Avatar-galery', avgalPeople: 'Mense', avgalMisc: 'Allerlei', lsbRunning: 'aan die gang', lsbOpen: 'oop', statusBets: 'Insette', advStatusBar: 'Spelstatusbalk (hand nr., pot, insette, fase)',
@@ -67,7 +68,7 @@ export const strings = {
   advSoon: "binnekort",
   advSeatLayout: "Sitplekuitleg",
   seatLayoutClassic: "Huidig",
-  seatLayoutOfficial: "Amptelik (PokerTH)",
+  seatLayoutOfficial: "Portret",
   confirmCall: "Bevestig",
   kbReset: "Herstel",
   kbHint: "Tik 'n sleutel en druk dan die nuwe een. Spasie = Call, Enter = bevestig verhoging.",

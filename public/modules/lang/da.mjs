@@ -9,6 +9,7 @@ export const meta = {
 };
 
 export const strings = {
+  seatPokerthPortrait: "PokerTH Stående", seatPokerthLandscape: "PokerTH Liggende",
   advUiGeneral:'Generelt', advUiNetwork:'Netværk', advShowTooltips:'Vis værktøjstips', advDisableSplash:'Deaktivér velkomstskærmen ved opstart', advDontTranslatePoker:'Oversæt ikke pokerudtryk (Check, Call, Raise)', advNA:'web', advLanguage:'Sprog', advDefCommunity:'Standardfællesskab', advSecReactions:'Reaktioner', advDisableReactions:'Deaktivér emoji-reaktioner', advNetStateColor:'Vis netværksstatusfarve i avatarens hjørne',
   showPlayers: `Vis spillere`,
   footJoin: `Deltag`,
@@ -17,7 +18,7 @@ export const strings = {
   filterRanked: 'Rangerede', plSortAZ: 'Sortér A–Z', plSortCountry: 'Sortér efter land',
   plInGame: 'I spil', plLobby: 'I lobbyen',
   buttonsPokerth: 'PokerTH',
-  advCatUI: 'Brugergrænseflade', advCatStyle: 'Stil', advCatSound: 'Lyd', advCatLocal: 'Lokalt spil', advCatNetwork: 'Netværksspil', advCatInternet: 'Internetspil', advCatAvatar: 'Kaldenavne / Avatarer', advCatLog: 'Logmeddelelser', advCatReset: 'Standardindstillinger', advStyleDesc: 'Kortdæk, bordfilt, sædeudseende og farvetema.', advStyleOpen: 'Åbn temavælgeren', advSoundDesc: 'Spillyde, musiklydstyrke og lydløse reaktioner.', advSoundOpen: 'Lyd- og lydstyrkeindstillinger', advLocalDesc: 'Træn mod bots: fyld de tomme pladser ved dit bord.', advLocalOpen: 'Fyld pladserne med bots', advNetworkDesc: 'Vær vært for et spil på dit lokale netværk (LAN).', advSoonTag: 'Kommer snart', advInternetDesc: 'Du er forbundet til en PokerTH-server.', advSrvLabel: 'Server', advInternetOpen: 'Skift server / afbryd', advSrvUnknown: '—', advAvatarDesc: 'Dit kaldenavn og dit avatarbillede.', advAvatarOpen: 'Rediger kaldenavn / avatar', advLogDesc: 'Spillog og chat-overlay.', advLogOpen: 'Åbn loggen', advResetDesc: 'Nulstil alle avancerede indstillinger og tastaturgenveje til standardværdierne.', advResetBtn: 'Gendan standarder', advResetConfirm: 'Nulstil alle indstillinger og tastaturgenveje til standardværdierne?', seatLayoutAuto: 'Automatisk', seatLayoutEllipse: 'PokerTH-ellipse', zoomReset: 'Nulstil visning', installTooltip: 'Installer appen', piIgnore: 'Ignorer', piUnignore: 'Ignorer ikke længere',
+  advCatUI: 'Brugergrænseflade', advCatStyle: 'Stil', advCatSound: 'Lyd', advCatLocal: 'Lokalt spil', advCatNetwork: 'Netværksspil', advCatInternet: 'Internetspil', advCatAvatar: 'Kaldenavne / Avatarer', advCatLog: 'Logmeddelelser', advCatReset: 'Standardindstillinger', advStyleDesc: 'Kortdæk, bordfilt, sædeudseende og farvetema.', advStyleOpen: 'Åbn temavælgeren', advSoundDesc: 'Spillyde, musiklydstyrke og lydløse reaktioner.', advSoundOpen: 'Lyd- og lydstyrkeindstillinger', advLocalDesc: 'Træn mod bots: fyld de tomme pladser ved dit bord.', advLocalOpen: 'Fyld pladserne med bots', advNetworkDesc: 'Vær vært for et spil på dit lokale netværk (LAN).', advSoonTag: 'Kommer snart', advInternetDesc: 'Du er forbundet til en PokerTH-server.', advSrvLabel: 'Server', advInternetOpen: 'Skift server / afbryd', advSrvUnknown: '—', advAvatarDesc: 'Dit kaldenavn og dit avatarbillede.', advAvatarOpen: 'Rediger kaldenavn / avatar', advLogDesc: 'Spillog og chat-overlay.', advLogOpen: 'Åbn loggen', advResetDesc: 'Nulstil alle avancerede indstillinger og tastaturgenveje til standardværdierne.', advResetBtn: 'Gendan standarder', advResetConfirm: 'Nulstil alle indstillinger og tastaturgenveje til standardværdierne?', seatLayoutAuto: 'Automatisk', seatLayoutEllipse: "Liggende", zoomReset: 'Nulstil visning', installTooltip: 'Installer appen', piIgnore: 'Ignorer', piUnignore: 'Ignorer ikke længere',
   plRemaining: 'Resterende spillere', showCards: 'Vis',
   emoFrequent: 'Ofte brugte', emoAll: 'Alle', advPingAvatar: 'Ping-indikator på min avatar (grøn/gul/rød)', advAutoLeave: 'Vend automatisk tilbage til lobbyen, når spillet slutter',
   advReduceFx: 'Reducer grafiske effekter (skygger/glød) — til svage enheder', avatarGallery: 'Avatargalleri', avatarGalleryTooltip: 'Avatargalleri', avgalPeople: 'Personer', avgalMisc: 'Diverse', lsbRunning: 'i gang', lsbOpen: 'åbne', statusBets: 'Indsatser', advStatusBar: 'Spilstatuslinje (hånd nr., pot, indsatser, fase)',
@@ -66,7 +67,7 @@ export const strings = {
   advSoon: "snart",
   advSeatLayout: "Pladsopstilling",
   seatLayoutClassic: "Nuværende",
-  seatLayoutOfficial: "Officiel (PokerTH)",
+  seatLayoutOfficial: "Stående",
   confirmCall: "Bekræft",
   kbReset: "Nulstil",
   kbHint: "Tryk på en tast, og tryk så på den nye. Mellemrum = Call, Enter = bekræft raise.",

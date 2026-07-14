@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+  seatPokerthPortrait: "PokerTH Портрет", seatPokerthLandscape: "PokerTH Пейзаж",
   advUiGeneral:'Общи', advUiNetwork:'Мрежа', advShowTooltips:'Показване на подсказки', advDisableSplash:'Изключване на началния екран при стартиране', advDontTranslatePoker:'Без превод на покер термините (Check, Call, Raise)', advNA:'web', advLanguage:'Език', advDefCommunity:'Общност по подразбиране', advSecReactions:'Реакции', advDisableReactions:'Изключване на емоджи реакциите', advNetStateColor:'Показване на цвета на състоянието на мрежата в ъгъла на аватара',
   showPlayers: `Показване на играчите`,
   footJoin: `Влез`,
@@ -18,7 +19,7 @@ export const strings = {
   filterRanked: 'Класирани', plSortAZ: 'Сортиране А–Я', plSortCountry: 'Сортиране по държава',
   plInGame: 'В игра', plLobby: 'В лобито',
   buttonsPokerth: 'PokerTH',
-  advCatUI: 'Потребителски интерфейс', advCatStyle: 'Стил', advCatSound: 'Звук', advCatLocal: 'Локална игра', advCatNetwork: 'Мрежова игра', advCatInternet: 'Интернет игра', advCatAvatar: 'Псевдоними / Аватари', advCatLog: 'Съобщения от дневника', advCatReset: 'Настройки по подразбиране', advStyleDesc: 'Тестета карти, сукно на масата, вид на местата и цветова тема.', advStyleOpen: 'Отвори избора на теми', advSoundDesc: 'Звуци на играта, сила на музиката и заглушаване на реакциите.', advSoundOpen: 'Настройки на звука и силата', advLocalDesc: 'Тренирай срещу ботове: запълни празните места на масата си.', advLocalOpen: 'Запълни местата с ботове', advNetworkDesc: 'Хоствай игра в локалната си мрежа (LAN).', advSoonTag: 'Скоро', advInternetDesc: 'Свързан си със сървър на PokerTH.', advSrvLabel: 'Сървър', advInternetOpen: 'Смяна на сървър / прекъсване', advSrvUnknown: '—', advAvatarDesc: 'Твоят псевдоним и изображение на аватара.', advAvatarOpen: 'Редактирай псевдоним / аватар', advLogDesc: 'Дневник на играта и чат отгоре.', advLogOpen: 'Отвори дневника', advResetDesc: 'Върни всички разширени настройки и клавишни комбинации към стойностите по подразбиране.', advResetBtn: 'Възстанови по подразбиране', advResetConfirm: 'Да се върнат ли всички настройки и клавишни комбинации към стойностите по подразбиране?', seatLayoutAuto: 'Автоматично', seatLayoutEllipse: 'Елипса PokerTH', zoomReset: 'Нулирай изгледа', installTooltip: 'Инсталирай приложението', piIgnore: 'Игнорирай', piUnignore: 'Спри да игнорираш',
+  advCatUI: 'Потребителски интерфейс', advCatStyle: 'Стил', advCatSound: 'Звук', advCatLocal: 'Локална игра', advCatNetwork: 'Мрежова игра', advCatInternet: 'Интернет игра', advCatAvatar: 'Псевдоними / Аватари', advCatLog: 'Съобщения от дневника', advCatReset: 'Настройки по подразбиране', advStyleDesc: 'Тестета карти, сукно на масата, вид на местата и цветова тема.', advStyleOpen: 'Отвори избора на теми', advSoundDesc: 'Звуци на играта, сила на музиката и заглушаване на реакциите.', advSoundOpen: 'Настройки на звука и силата', advLocalDesc: 'Тренирай срещу ботове: запълни празните места на масата си.', advLocalOpen: 'Запълни местата с ботове', advNetworkDesc: 'Хоствай игра в локалната си мрежа (LAN).', advSoonTag: 'Скоро', advInternetDesc: 'Свързан си със сървър на PokerTH.', advSrvLabel: 'Сървър', advInternetOpen: 'Смяна на сървър / прекъсване', advSrvUnknown: '—', advAvatarDesc: 'Твоят псевдоним и изображение на аватара.', advAvatarOpen: 'Редактирай псевдоним / аватар', advLogDesc: 'Дневник на играта и чат отгоре.', advLogOpen: 'Отвори дневника', advResetDesc: 'Върни всички разширени настройки и клавишни комбинации към стойностите по подразбиране.', advResetBtn: 'Възстанови по подразбиране', advResetConfirm: 'Да се върнат ли всички настройки и клавишни комбинации към стойностите по подразбиране?', seatLayoutAuto: 'Автоматично', seatLayoutEllipse: "Пейзаж", zoomReset: 'Нулирай изгледа', installTooltip: 'Инсталирай приложението', piIgnore: 'Игнорирай', piUnignore: 'Спри да игнорираш',
   plRemaining: 'Оставащи играчи', showCards: 'Покажи',
   emoFrequent: 'Често използвани', emoAll: 'Всички', advPingAvatar: 'Индикатор за пинг върху аватара ми (зелен/жълт/червен)', advAutoLeave: 'Автоматично връщане в лобито в края на играта',
   advReduceFx: 'Намалени графични ефекти (сенки/сияние) — за слаби устройства', avatarGallery: 'Галерия с аватари', avatarGalleryTooltip: 'Галерия с аватари', avgalPeople: 'Хора', avgalMisc: 'Разни', lsbRunning: 'в ход', lsbOpen: 'отворени', statusBets: 'Залози', advStatusBar: 'Лента за състоянието на играта (ръка №, пот, залози, фаза)',
@@ -67,7 +68,7 @@ export const strings = {
   advSoon: "скоро",
   advSeatLayout: "Подредба на местата",
   seatLayoutClassic: "Текуща",
-  seatLayoutOfficial: "Официална (PokerTH)",
+  seatLayoutOfficial: "Портрет",
   confirmCall: "Потвърди",
   kbReset: "Нулирай",
   kbHint: "Докоснете клавиш, после натиснете новия. Интервал = Call, Enter = потвърди вдигането.",

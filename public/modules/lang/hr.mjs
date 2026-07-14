@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+  seatPokerthPortrait: "PokerTH Okomito", seatPokerthLandscape: "PokerTH Vodoravno",
   advUiGeneral:'Općenito', advUiNetwork:'Mreža', advShowTooltips:'Prikaži opise', advDisableSplash:'Onemogući početni zaslon pri pokretanju', advDontTranslatePoker:'Ne prevodi pokerske izraze (Check, Call, Raise)', advNA:'web', advLanguage:'Jezik', advDefCommunity:'Zadana zajednica', advSecReactions:'Reakcije', advDisableReactions:'Onemogući emoji reakcije', advNetStateColor:'Prikaži boju stanja mreže u kutu avatara',
   showPlayers: `Prikaži igrače`,
   footJoin: `Uđi`,
@@ -18,7 +19,7 @@ export const strings = {
   filterRanked: 'Rangirane', plSortAZ: 'Sortiraj A–Z', plSortCountry: 'Sortiraj po državi',
   plInGame: 'U igri', plLobby: 'U lobbyju',
   buttonsPokerth: 'PokerTH',
-  advCatUI: 'Korisničko sučelje', advCatStyle: 'Stil', advCatSound: 'Zvuk', advCatLocal: 'Lokalna igra', advCatNetwork: 'Mrežna igra', advCatInternet: 'Internetska igra', advCatAvatar: 'Nadimci / Avatari', advCatLog: 'Poruke dnevnika', advCatReset: 'Zadane postavke', advStyleDesc: 'Špilovi karata, tkanina stola, izgled mjesta i tema boja.', advStyleOpen: 'Otvori odabir tema', advSoundDesc: 'Zvukovi igre, glasnoća glazbe i utišavanje reakcija.', advSoundOpen: 'Postavke zvuka i glasnoće', advLocalDesc: 'Vježbaj protiv botova: popuni prazna mjesta za svojim stolom.', advLocalOpen: 'Popuni mjesta botovima', advNetworkDesc: 'Hostaj igru u lokalnoj mreži (LAN).', advSoonTag: 'Uskoro', advInternetDesc: 'Povezan si s PokerTH poslužiteljem.', advSrvLabel: 'Poslužitelj', advInternetOpen: 'Promijeni poslužitelj / prekini vezu', advSrvUnknown: '—', advAvatarDesc: 'Tvoj nadimak i slika avatara.', advAvatarOpen: 'Uredi nadimak / avatar', advLogDesc: 'Dnevnik igre i chat preko stola.', advLogOpen: 'Otvori dnevnik', advResetDesc: 'Vrati sve napredne opcije i tipkovničke prečace na zadane vrijednosti.', advResetBtn: 'Vrati zadano', advResetConfirm: 'Vratiti sve opcije i prečace na zadane vrijednosti?', seatLayoutAuto: 'Automatski', seatLayoutEllipse: 'PokerTH elipsa', zoomReset: 'Poništi prikaz', installTooltip: 'Instaliraj aplikaciju', piIgnore: 'Ignoriraj', piUnignore: 'Prestani ignorirati',
+  advCatUI: 'Korisničko sučelje', advCatStyle: 'Stil', advCatSound: 'Zvuk', advCatLocal: 'Lokalna igra', advCatNetwork: 'Mrežna igra', advCatInternet: 'Internetska igra', advCatAvatar: 'Nadimci / Avatari', advCatLog: 'Poruke dnevnika', advCatReset: 'Zadane postavke', advStyleDesc: 'Špilovi karata, tkanina stola, izgled mjesta i tema boja.', advStyleOpen: 'Otvori odabir tema', advSoundDesc: 'Zvukovi igre, glasnoća glazbe i utišavanje reakcija.', advSoundOpen: 'Postavke zvuka i glasnoće', advLocalDesc: 'Vježbaj protiv botova: popuni prazna mjesta za svojim stolom.', advLocalOpen: 'Popuni mjesta botovima', advNetworkDesc: 'Hostaj igru u lokalnoj mreži (LAN).', advSoonTag: 'Uskoro', advInternetDesc: 'Povezan si s PokerTH poslužiteljem.', advSrvLabel: 'Poslužitelj', advInternetOpen: 'Promijeni poslužitelj / prekini vezu', advSrvUnknown: '—', advAvatarDesc: 'Tvoj nadimak i slika avatara.', advAvatarOpen: 'Uredi nadimak / avatar', advLogDesc: 'Dnevnik igre i chat preko stola.', advLogOpen: 'Otvori dnevnik', advResetDesc: 'Vrati sve napredne opcije i tipkovničke prečace na zadane vrijednosti.', advResetBtn: 'Vrati zadano', advResetConfirm: 'Vratiti sve opcije i prečace na zadane vrijednosti?', seatLayoutAuto: 'Automatski', seatLayoutEllipse: "Vodoravno", zoomReset: 'Poništi prikaz', installTooltip: 'Instaliraj aplikaciju', piIgnore: 'Ignoriraj', piUnignore: 'Prestani ignorirati',
   plRemaining: 'Preostali igrači', showCards: 'Pokaži',
   emoFrequent: 'Česti', emoAll: 'Svi', advPingAvatar: 'Indikator pinga na mom avataru (zeleno/žuto/crveno)', advAutoLeave: 'Automatski povratak u lobby po završetku igre',
   advReduceFx: 'Smanji grafičke efekte (sjene/sjaj) — za slabije uređaje', avatarGallery: 'Galerija avatara', avatarGalleryTooltip: 'Galerija avatara', avgalPeople: 'Ljudi', avgalMisc: 'Razno', lsbRunning: 'u tijeku', lsbOpen: 'otvorene', statusBets: 'Ulozi', advStatusBar: 'Statusna traka igre (br. ruke, pot, ulozi, faza)',
@@ -67,7 +68,7 @@ export const strings = {
   advSoon: "uskoro",
   advSeatLayout: "Raspored mjesta",
   seatLayoutClassic: "Trenutni",
-  seatLayoutOfficial: "Službeni (PokerTH)",
+  seatLayoutOfficial: "Okomito",
   confirmCall: "Potvrdi",
   kbReset: "Vrati",
   kbHint: "Dodirnite tipku pa pritisnite novu. Razmak = Call, Enter = potvrdi podizanje.",

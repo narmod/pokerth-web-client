@@ -9,6 +9,7 @@ export const meta = {
 };
 
 export const strings = {
+  seatPokerthPortrait: "PokerTH 縦向き", seatPokerthLandscape: "PokerTH 横向き",
   advUiGeneral:'一般', advUiNetwork:'ネットワーク', advShowTooltips:'ツールチップを表示', advDisableSplash:'起動時のスプラッシュ画面を無効にする', advDontTranslatePoker:'ポーカー用語を翻訳しない（Check、Call、Raise）', advNA:'web', advLanguage:'言語', advDefCommunity:'デフォルトのコミュニティ', advSecReactions:'リアクション', advDisableReactions:'絵文字リアクションを無効にする', advNetStateColor:'アバターの隅にネットワーク状態の色を表示',
   showPlayers: `プレイヤーを表示`,
   footJoin: `参加`,
@@ -17,7 +18,7 @@ export const strings = {
   filterRanked: 'ランク戦', plSortAZ: 'A–Z順', plSortCountry: '国別に並べ替え',
   plInGame: '対戦中', plLobby: 'ロビー',
   buttonsPokerth: 'PokerTH',
-  advCatUI: 'ユーザーインターフェース', advCatStyle: 'スタイル', advCatSound: 'サウンド', advCatLocal: 'ローカルゲーム', advCatNetwork: 'ネットワークゲーム', advCatInternet: 'インターネットゲーム', advCatAvatar: 'ニックネーム / アバター', advCatLog: 'ログメッセージ', advCatReset: '初期設定', advStyleDesc: 'カードデッキ、テーブルフェルト、座席の外観、カラーテーマ。', advStyleOpen: 'テーマ選択を開く', advSoundDesc: 'ゲーム音、音楽の音量、リアクションのミュート。', advSoundOpen: 'サウンドと音量の設定', advLocalDesc: 'ボット相手に練習：テーブルの空席を埋めます。', advLocalOpen: '空席をボットで埋める', advNetworkDesc: 'ローカルネットワーク（LAN）でゲームをホストします。', advSoonTag: '近日公開', advInternetDesc: 'PokerTH サーバーに接続しています。', advSrvLabel: 'サーバー', advInternetOpen: 'サーバーの変更 / 切断', advSrvUnknown: '—', advAvatarDesc: 'ニックネームとアバター画像。', advAvatarOpen: 'ニックネーム / アバターを編集', advLogDesc: 'ゲームログとチャットオーバーレイ。', advLogOpen: 'ログを開く', advResetDesc: 'すべての詳細オプションとキーボードショートカットを初期値に戻します。', advResetBtn: '初期設定に戻す', advResetConfirm: 'すべてのオプションとショートカットを初期値に戻しますか？', seatLayoutAuto: '自動', seatLayoutEllipse: 'PokerTH 楕円', zoomReset: '表示をリセット', installTooltip: 'アプリをインストール', piIgnore: '無視', piUnignore: '無視を解除',
+  advCatUI: 'ユーザーインターフェース', advCatStyle: 'スタイル', advCatSound: 'サウンド', advCatLocal: 'ローカルゲーム', advCatNetwork: 'ネットワークゲーム', advCatInternet: 'インターネットゲーム', advCatAvatar: 'ニックネーム / アバター', advCatLog: 'ログメッセージ', advCatReset: '初期設定', advStyleDesc: 'カードデッキ、テーブルフェルト、座席の外観、カラーテーマ。', advStyleOpen: 'テーマ選択を開く', advSoundDesc: 'ゲーム音、音楽の音量、リアクションのミュート。', advSoundOpen: 'サウンドと音量の設定', advLocalDesc: 'ボット相手に練習：テーブルの空席を埋めます。', advLocalOpen: '空席をボットで埋める', advNetworkDesc: 'ローカルネットワーク（LAN）でゲームをホストします。', advSoonTag: '近日公開', advInternetDesc: 'PokerTH サーバーに接続しています。', advSrvLabel: 'サーバー', advInternetOpen: 'サーバーの変更 / 切断', advSrvUnknown: '—', advAvatarDesc: 'ニックネームとアバター画像。', advAvatarOpen: 'ニックネーム / アバターを編集', advLogDesc: 'ゲームログとチャットオーバーレイ。', advLogOpen: 'ログを開く', advResetDesc: 'すべての詳細オプションとキーボードショートカットを初期値に戻します。', advResetBtn: '初期設定に戻す', advResetConfirm: 'すべてのオプションとショートカットを初期値に戻しますか？', seatLayoutAuto: '自動', seatLayoutEllipse: "横向き", zoomReset: '表示をリセット', installTooltip: 'アプリをインストール', piIgnore: '無視', piUnignore: '無視を解除',
   plRemaining: '残りプレイヤー', showCards: '公開',
   emoFrequent: 'よく使う', emoAll: 'すべて', advPingAvatar: '自分のアバターにピング表示（緑/黄/赤）', advAutoLeave: 'ゲーム終了時に自動でロビーへ戻る',
   advReduceFx: 'グラフィック効果を軽減（影/グロー）— 低性能端末向け', avatarGallery: 'アバターギャラリー', avatarGalleryTooltip: 'アバターギャラリー', avgalPeople: '人物', avgalMisc: 'その他', lsbRunning: '進行中', lsbOpen: '募集中', statusBets: 'ベット', advStatusBar: 'ゲームステータスバー（ハンド番号・ポット・ベット・フェーズ）',
@@ -66,7 +67,7 @@ export const strings = {
   advSoon: "近日",
   advSeatLayout: "席の配置",
   seatLayoutClassic: "現在",
-  seatLayoutOfficial: "公式 (PokerTH)",
+  seatLayoutOfficial: "縦向き",
   confirmCall: "確認",
   kbReset: "リセット",
   kbHint: "キーをタップしてから新しいキーを押します。スペース = Call、Enter = レイズ確定。",

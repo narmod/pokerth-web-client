@@ -15,6 +15,7 @@ export const meta = {
 };
 
 export const strings = {
+  seatPokerthPortrait: "PokerTH Staand", seatPokerthLandscape: "PokerTH Liggend",
   advUiGeneral:'Algemeen', advUiNetwork:'Netwerk', advShowTooltips:'Tooltips tonen', advDisableSplash:'Het opstartscherm uitschakelen', advDontTranslatePoker:'Pokertermen niet vertalen (Check, Call, Raise)', advNA:'web', advLanguage:'Taal', advDefCommunity:'Standaardcommunity', advSecReactions:'Reacties', advDisableReactions:'Emoji-reacties uitschakelen', advNetStateColor:'Netwerkstatuskleur in de avatarhoek tonen',
   showPlayers: `Spelers tonen`,
   footJoin: `Meedoen`,
@@ -23,7 +24,7 @@ export const strings = {
   filterRanked: 'Gerangschikt', plSortAZ: 'Sorteren A–Z', plSortCountry: 'Sorteren op land',
   plInGame: 'In een spel', plLobby: 'In de lobby',
   buttonsPokerth: 'PokerTH',
-  advCatUI: 'Gebruikersinterface', advCatStyle: 'Stijl', advCatSound: 'Geluid', advCatLocal: 'Lokaal spel', advCatNetwork: 'Netwerkspel', advCatInternet: 'Internetspel', advCatAvatar: 'Bijnamen / Avatars', advCatLog: 'Logberichten', advCatReset: 'Standaardinstellingen', advStyleDesc: 'Kaartendecks, tafelvilt, stoelskins en het kleurenthema.', advStyleOpen: 'Themakiezer openen', advSoundDesc: 'Spelgeluiden, muziekvolume en dempen van reacties.', advSoundOpen: 'Geluids- en volume-instellingen', advLocalDesc: 'Oefen tegen bots: vul de lege stoelen aan je tafel.', advLocalOpen: 'Stoelen vullen met bots', advNetworkDesc: 'Host een spel via je lokale netwerk (LAN).', advSoonTag: 'Binnenkort', advInternetDesc: 'Je bent verbonden met een PokerTH-server.', advSrvLabel: 'Server', advInternetOpen: 'Server wisselen / verbinding verbreken', advSrvUnknown: '—', advAvatarDesc: 'Je bijnaam en je avatarafbeelding.', advAvatarOpen: 'Bijnaam / avatar bewerken', advLogDesc: 'Spellog en chat-overlay.', advLogOpen: 'Log openen', advResetDesc: 'Alle geavanceerde opties en sneltoetsen terugzetten naar de standaardwaarden.', advResetBtn: 'Standaardinstellingen herstellen', advResetConfirm: 'Alle opties en sneltoetsen terugzetten naar de standaardwaarden?', seatLayoutAuto: 'Automatisch', seatLayoutEllipse: 'PokerTH-ellips', zoomReset: 'Weergave herstellen', installTooltip: 'App installeren', piIgnore: 'Negeren', piUnignore: 'Niet meer negeren',
+  advCatUI: 'Gebruikersinterface', advCatStyle: 'Stijl', advCatSound: 'Geluid', advCatLocal: 'Lokaal spel', advCatNetwork: 'Netwerkspel', advCatInternet: 'Internetspel', advCatAvatar: 'Bijnamen / Avatars', advCatLog: 'Logberichten', advCatReset: 'Standaardinstellingen', advStyleDesc: 'Kaartendecks, tafelvilt, stoelskins en het kleurenthema.', advStyleOpen: 'Themakiezer openen', advSoundDesc: 'Spelgeluiden, muziekvolume en dempen van reacties.', advSoundOpen: 'Geluids- en volume-instellingen', advLocalDesc: 'Oefen tegen bots: vul de lege stoelen aan je tafel.', advLocalOpen: 'Stoelen vullen met bots', advNetworkDesc: 'Host een spel via je lokale netwerk (LAN).', advSoonTag: 'Binnenkort', advInternetDesc: 'Je bent verbonden met een PokerTH-server.', advSrvLabel: 'Server', advInternetOpen: 'Server wisselen / verbinding verbreken', advSrvUnknown: '—', advAvatarDesc: 'Je bijnaam en je avatarafbeelding.', advAvatarOpen: 'Bijnaam / avatar bewerken', advLogDesc: 'Spellog en chat-overlay.', advLogOpen: 'Log openen', advResetDesc: 'Alle geavanceerde opties en sneltoetsen terugzetten naar de standaardwaarden.', advResetBtn: 'Standaardinstellingen herstellen', advResetConfirm: 'Alle opties en sneltoetsen terugzetten naar de standaardwaarden?', seatLayoutAuto: 'Automatisch', seatLayoutEllipse: "Liggend", zoomReset: 'Weergave herstellen', installTooltip: 'App installeren', piIgnore: 'Negeren', piUnignore: 'Niet meer negeren',
   plRemaining: 'Resterende spelers', showCards: 'Tonen',
   emoFrequent: 'Vaak gebruikt', emoAll: 'Alle', advPingAvatar: 'Ping-indicator op mijn avatar (groen/geel/rood)', advAutoLeave: 'Automatisch terug naar de lobby als het spel eindigt',
   advReduceFx: 'Verminder grafische effecten (schaduwen/gloed) — voor zwakke apparaten', avatarGallery: 'Avatargalerij', avatarGalleryTooltip: 'Avatargalerij', avgalPeople: 'Personen', avgalMisc: 'Diversen', lsbRunning: 'bezig', lsbOpen: 'open', statusBets: 'Inzetten', advStatusBar: 'Spelstatusbalk (hand nr., pot, inzetten, fase)',
@@ -72,7 +73,7 @@ export const strings = {
   advSoon: "binnenkort",
   advSeatLayout: "Plaatsindeling",
   seatLayoutClassic: "Huidig",
-  seatLayoutOfficial: "Officieel (PokerTH)",
+  seatLayoutOfficial: "Staand",
   confirmCall: "Bevestigen",
   kbReset: "Herstellen",
   kbHint: "Tik op een toets en druk dan op de nieuwe. Spatie = Call, Enter = verhoging bevestigen.",
