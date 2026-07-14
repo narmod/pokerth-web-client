@@ -2026,6 +2026,11 @@ if ('serviceWorker' in navigator) {
             <div class="adv-srv"><span data-i18n="advSrvLabel">Server</span><span id="adv-srv-host" class="adv-srv-host">&#8212;</span></div>
             <button type="button" class="adv-link-btn" onclick="closeAdvancedOptions();App.confirmDisconnect()"><span data-i18n="advInternetOpen">Change server / disconnect</span></button>
           </div>
+          <div class="adv-body">
+            <div class="adv-sec" data-i18n="advSecIgnored">Ignored players</div>
+            <div class="adv-ign-desc" data-i18n="advIgnoredDesc">Players on the ignore list are hidden from chat.</div>
+            <div id="adv-ignored-list"></div>
+          </div>
         </section>
         <section class="adv-panel" data-cat="avatar" id="adv-panel-avatar" role="tabpanel" aria-labelledby="adv-cat-avatar">
           <div class="adv-link">

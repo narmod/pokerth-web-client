@@ -339,6 +339,28 @@ function _advGet(key, defOn) {
 //    window._toggleIgnore (carte joueur). ──
 var _ignoredSet = (function(){ try { return new Set(JSON.parse(localStorage.getItem('pth_ignored') || '[]')); } catch (e) { return new Set(); } })();
 function _isIgnored(name){ return !!name && _ignoredSet.has(String(name)); }
+// Liste centrale des ignorés (Options avancées > Partie Internet — parité
+// QML Ignorierte Spieler) : rendu + bouton « Retirer » par joueur.
+function renderIgnoredList(){
+  var box = document.getElementById('adv-ignored-list');
+  if (!box) return;
+  var esc = function(v){ return String(v == null ? '' : v).replace(/[&<>"]/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); };
+  var tt = function(k, fb){ try { if (typeof window.t === 'function') { var v = window.t(k); if (v && v !== k) return v; } } catch (e) {} return fb; };
+  var names = Array.from(_ignoredSet).sort(function(a, b){ return String(a).localeCompare(String(b)); });
+  if (!names.length) { box.innerHTML = '<div class="adv-ign-empty">' + esc(tt('advIgnoredEmpty', '(no ignored players)')) + '</div>'; return; }
+  box.innerHTML = names.map(function(n){
+    return '<div class="adv-ign-row"><span class="adv-ign-name">' + esc(n) + '</span>'
+         + '<button type="button" class="adv-ign-rm" data-name="' + esc(n) + '">' + esc(tt('advIgnoredRemove', 'Remove')) + '</button></div>';
+  }).join('');
+}
+window.renderIgnoredList = renderIgnoredList;
+document.addEventListener('click', function(e){
+  var b = (e.target && e.target.closest) ? e.target.closest('.adv-ign-rm') : null;
+  if (!b) return;
+  _setIgnoredName(b.getAttribute('data-name'), false);
+  renderIgnoredList();
+  try { if (typeof window._renderSeats === 'function') window._renderSeats(); } catch (err) {}
+});
 function _setIgnoredName(name, on){
   name = String(name || ''); if (!name) return;
   if (on) _ignoredSet.add(name); else _ignoredSet.delete(name);
@@ -531,6 +553,7 @@ function openAdvancedOptions() {
   sync('adv-fkeysalt', 'fkeys_alt', false);
   sync('adv-tablezoom', 'table_zoom', true);
   sync('adv-lobbychat', 'lobby_chat', true);
+  try { renderIgnoredList(); } catch (e) {}
   sync('adv-zoomfollow', 'zoom_follow', false);
   sync('adv-snd-actions', 'snd_actions', true);
   sync('adv-snd-lobby', 'snd_lobby', true);
@@ -14653,7 +14676,7 @@ function renderPlayersList() {
   body.innerHTML = _shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>';
 }
 
-;(function(){ window.BUILD_VERSION='0.3.506-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.507-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

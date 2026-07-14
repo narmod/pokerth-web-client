@@ -7493,6 +7493,12 @@ body.adv-no-blinds .blind-chip,body.adv-no-blinds .dealer-chip{display:none !imp
 body.adv-no-community #ranking-btn-connect,body.adv-no-community #ranking-btn-lobby,body.adv-no-community #ranking-btn-game{display:none !important}
 body.adv-no-tablezoom #g-zoom-ctrl{display:none !important}
 body.adv-no-lobbychat #lobby-chat-panel,body.adv-no-lobbychat #lobby-chat-btn{display:none !important}
+.adv-ign-desc{font-size:0.76rem;color:var(--text);opacity:0.7;margin:2px 2px 8px}
+.adv-ign-row{display:flex;align-items:center;gap:9px;padding:5px 2px;font-size:0.82rem;color:var(--text);border-bottom:1px solid rgba(var(--gold-rgb),0.08)}
+.adv-ign-name{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.adv-ign-rm{font-size:0.68rem;letter-spacing:0.05em;color:var(--text);background:none;border:1px solid var(--border);border-radius:10px;padding:2px 10px;cursor:pointer}
+.adv-ign-rm:hover{color:var(--gold);border-color:var(--gold-dim)}
+.adv-ign-empty{font-size:0.78rem;color:var(--text);opacity:0.55;padding:4px 2px}
 @media (min-width:900px){body.adv-no-lobbychat #s-lobby .lobby-grid{grid-template-rows:minmax(0,1fr) 0 0}body.adv-no-lobbychat #s-lobby .lob-h-v{display:none}}
 
 /* Estompage des cartes des perdants au showdown (fadeOutLosingCards). Le marquage
