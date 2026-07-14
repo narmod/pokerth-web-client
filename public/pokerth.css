@@ -6483,7 +6483,29 @@ html[data-seat^="pokerth"] .seat-plate {
   opacity: 0.9;
   transition: transform 0.18s ease-out;
 }
-html[data-seat^="pokerth"] .seat-avatar { grid-column: 1; grid-row: 1; border-radius: 8px; }
+/* AvatarCardRow QML : avatar CARRÉ = hauteur de rangée (box 84 → rangée 40 en
+   wide ; box 71 → rangée 43 en narrow/portrait), radius 2, bord 1px col200,
+   fond col700 opacité 0.9. Cartes : cardH == hauteur d'avatar, ratio 120:168
+   (wide 29×40, narrow 31×43 ≈ largeur totale QML ~121). !important : bat les
+   tailles d'avatar des media queries. Tokens surchargeables par thème. */
+html[data-seat^="pokerth"] .seat-avatar {
+  grid-column: 1; grid-row: 1;
+  width: 40px !important; height: 40px !important;
+  border-radius: 2px;
+  background: var(--seat-avatar-bg, rgba(29, 34, 43, 0.9));
+  border: 1px solid var(--seat-avatar-border, rgba(205, 211, 224, 0.9));
+}
+html[data-seat^="pokerth"] .seat-holecards .pk { width: 29px; height: 40px; font-size: 0.6rem; }
+html[data-seat^="pokerth"] .seat-narrow .seat-avatar { width: 43px !important; height: 43px !important; }
+html[data-seat^="pokerth"] .seat-narrow .seat-holecards .pk { width: 31px; height: 43px; }
+/* QML : pas de bord vert (self) ni or (au tour) sur l'avatar — le tour est
+   signalé par le PlayerTurnGlow de la boîte. Halo/anneau neutralisés. */
+html[data-seat^="pokerth"] .seat.me .seat-avatar,
+html[data-seat^="pokerth"] .seat.active .seat-avatar {
+  border-color: var(--seat-avatar-border, rgba(205, 211, 224, 0.9));
+  box-shadow: none;
+  animation: none !important;
+}
 html[data-seat^="pokerth"] .seat-holecards { grid-column: 2; grid-row: 1; display: flex; gap: 4px; flex: none; }
 /* PlayerActionBadge QML : centré sur la rangée de hole-cards (x/y = cardsCenter),
    hauteur 18, radius 9, padding H 7, texte #eaf1ff 12px bold, pop à l'apparition
@@ -6514,19 +6536,29 @@ html[data-seat^="pokerth"] .seat-info {
   align-items: stretch; min-width: 0;
 }
 html[data-seat^="pokerth"] .seat-name {
-  max-width: 120px; text-align: left;
+  max-width: 106px; text-align: left;
+  font-size: 15px !important;               /* QML wide : 15px DemiBold */
   font-weight: 600; letter-spacing: 0.3px;
   color: #eff1f5; /* col100 QML */
 }
-html[data-seat^="pokerth"] .seat-money { text-align: right; font-weight: 700; color: #E3C800; font-family: var(--ff-display); } /* accent or QML */
+html[data-seat^="pokerth"] .seat-money { text-align: right; font-size: 15px !important; font-weight: 700; color: #E3C800; font-family: var(--ff-display); } /* accent or QML, 15px bold */
+/* Wide (infoBar QML) : ligne 2 = drapeau 22×15 en bas-GAUCHE + stack à droite. */
+html[data-seat^="pokerth"] .seat-info-row2 {
+  display: flex; align-items: flex-end; gap: 6px; min-width: 0;
+}
+html[data-seat^="pokerth"] .seat-info-row2 .seat-money { margin-left: auto; }
+html[data-seat^="pokerth"] .seat-info-row2 .seat-flag {
+  position: static; filter: none; animation: none; line-height: 0; pointer-events: none;
+}
+html[data-seat^="pokerth"] .seat-info-row2 .seat-flag .cc-flag { width: 22px !important; height: 15px !important; }
 /* Non-wide (hauteur scalée < 76 ou portrait) : « nom · tapis » sur UNE ligne. */
 html[data-seat^="pokerth"] .seat-narrow .seat-info { flex-direction: row; align-items: baseline; justify-content: space-between; gap: 6px; }
-html[data-seat^="pokerth"] .seat-narrow .seat-name { max-width: 76px; font-size: 0.62rem; }
-html[data-seat^="pokerth"] .seat-narrow .seat-money { font-size: 0.64rem; }
+html[data-seat^="pokerth"] .seat-narrow .seat-name { max-width: 62px; font-size: 12px !important; }
+html[data-seat^="pokerth"] .seat-narrow .seat-money { font-size: 12px !important; }
 /* Desktop : texte des sieges un peu plus discret (les boites sont deja scalees par boxScale). */
 @media (min-width: 900px) and (hover: hover) and (pointer: fine) {
-  html[data-seat^="pokerth"] .seat-name  { font-size: 0.76rem !important; }
-  html[data-seat^="pokerth"] .seat-money { font-size: 0.74rem !important; }
+  /* Nom/tapis : tailles QML fixes (15/12 px) définies dans la base — plus
+     d'override desktop, le boxScale de l'ellipse fait la mise à l'échelle. */
   html[data-seat^="pokerth"] .seat-bet   { font-size: 0.66rem !important; }
   html[data-seat^="pokerth"] .seat-action-label { font-size: 0.64rem !important; }
 }
@@ -6611,13 +6643,6 @@ html[data-seat^="pokerth"] .seat-timer-rect {
 }
 html[data-seat^="pokerth"] .seat-timer-rect .rt-bg  { fill: none; stroke: #0e1a30; stroke-width: 3; vector-effect: non-scaling-stroke; }
 html[data-seat^="pokerth"] .seat-timer-rect .rt-arc { fill: none; stroke-width: 3; stroke-linecap: round; vector-effect: non-scaling-stroke; transition: stroke-dashoffset 0.9s linear; }
-
-/* Portrait : boite plus compacte. */
-@media (max-width: 600px) {
-  html[data-seat^="pokerth"] .seat-plate { column-gap: 4px; row-gap: 2px; padding: 3px 6px 4px; border-radius: 8px; }
-  html[data-seat^="pokerth"] .seat-name { max-width: 80px; font-size: 0.6rem; }
-  html[data-seat^="pokerth"] .seat-money { font-size: 0.62rem; }
-}
 
 
 /* ===== Sieges : packs IMAGE importes (galerie, html[data-seat-img]) =======

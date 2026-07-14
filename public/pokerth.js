@@ -9439,12 +9439,14 @@ const App = (() => {
       h += '<div class="seat-plate">'; // pack siege : avatar + (nom/tapis) -- display:contents en classique
       // Countdown rectangulaire (style pokerth) : cadre autour de la boite.
       if (isActive && _pkHole) h += _timerRectSvg(_timerSec, _timerTot, isMe);
+      // Packs pokerth : drapeau retiré du coin d'avatar — le QML l'affiche
+      // 22×15 en bas-gauche de la zone info (wide) et pas du tout en portrait.
       h += '<div class="' + avCls2 + '" style="' + avatarStyle + '">'
         + pthImg
         + '<span class="seat-initial">' + initial + '</span>'
         + timerSvg
         + _avPucks
-        + flagBadge
+        + (_pkHole ? '' : flagBadge)
         + typeBadge
         + '</div>';
       // Cartes self GRANDES PAR DEFAUT (niveau 0 = taille de base QML :
@@ -9479,7 +9481,12 @@ const App = (() => {
         + ((_timerSec > 0) ? _timerSec + 's' : '') + '</div>';
       h += '<div class="seat-info">';
       h += '<div class="seat-name">' + esc(isMe ? myName : getPlayerName(pid)) + '</div>';
-      h += '<div class="seat-money">' + moneyStr + '</div>';
+      if (_pkHole && !_seatNarrow) {
+        // infoBar QML (wideLayout) : drapeau 22×15 en bas-gauche + stack or à droite.
+        h += '<div class="seat-info-row2">' + flagBadge + '<div class="seat-money">' + moneyStr + '</div></div>';
+      } else {
+        h += '<div class="seat-money">' + moneyStr + '</div>';
+      }
       h += '</div>';   // ferme .seat-info
       h += '</div>';   // ferme .seat-plate
       if (_pkHole && (blindBadge || dealerChip)) h += '<div class="seat-pucks">' + blindBadge + dealerChip + '</div>';
@@ -14338,7 +14345,7 @@ function renderPlayersList() {
   body.innerHTML = _shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>';
 }
 
-;(function(){ window.BUILD_VERSION='0.3.480-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.481-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
