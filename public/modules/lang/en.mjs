@@ -300,6 +300,7 @@ export const strings = {
     presetNormalName:'Normal', presetNormalDesc:'balanced',
     presetFastName:'Fast', presetFastDesc:'fast-paced!',
     presetPersoName:'My prefs', presetPersoDesc:'my settings',
+    presetRankingName:'Ranking', presetRankingDesc:'official pace', presetWecupName:'WeCup', presetWecupDesc:'balanced tournament', presetBbcName:'BBC', presetBbcDesc:'time-based blinds',
     presetSaveName:'My prefs', presetSaveDesc:'save these settings',
     proxyConnectedWait:'Proxy connected \u2014 waiting for PokerTH server\u2026',
     errConnLost:'Connection lost. You can reconnect in a few seconds.',

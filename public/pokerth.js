@@ -12904,10 +12904,20 @@ function _maybeShowNextHandBtn() {
       //   Normal     = défauts du client PokerTH desktop (150 BB, hausse/8 mains)
       //   Rapide     = turbo (30 BB, blindes rapides, timer court)
       // raiseEvery est en MAINS : le preset rebascule l'intervalle sur « mains ».
+      // Formats pokerth.net documentés sur le forum officiel (v0.3.517) :
+      //   Ranking = réglages exacts des parties classées (10k / SB 50 /
+      //             double toutes les 11 mains / 5 s) — hyper-turbo assumé.
+      //   WeCup   = réglages des finales mensuelles WEC (double/25 mains,
+      //             15 s, délai 7 s) — le format « équilibré » communautaire.
+      //   BBC     = hausse AU TEMPS façon tournois BBC (toutes les 5 min).
+      // raiseMode : 1 = mains (défaut), 2 = minutes.
       var P = {
-        tranquille: { stack:5000, blind:10, timeout:30, raiseEvery:15, delay:10 },
-        normal:     { stack:3000, blind:10, timeout:20, raiseEvery:8,  delay:7  },
-        rapide:     { stack:1500, blind:25, timeout:7,  raiseEvery:4,  delay:3  }
+        tranquille: { stack:5000,  blind:10, timeout:30, raiseEvery:15, delay:10 },
+        normal:     { stack:3000,  blind:10, timeout:20, raiseEvery:8,  delay:7  },
+        rapide:     { stack:1500,  blind:25, timeout:7,  raiseEvery:4,  delay:3  },
+        ranking:    { stack:10000, blind:50, timeout:5,  raiseEvery:11, delay:5  },
+        wecup:      { stack:10000, blind:50, timeout:15, raiseEvery:25, delay:7  },
+        bbc:        { stack:10000, blind:25, timeout:10, raiseEvery:5,  delay:5, raiseMode:2 }
       };
       var v = P[name];
       if (!v) return;
@@ -12917,9 +12927,11 @@ function _maybeShowNextHandBtn() {
       set('cf-timeout',     v.timeout);
       set('cf-raise-every', v.raiseEvery);
       set('cf-delay',       v.delay);
-      // Cohérence : la hausse du preset est en mains → radio + champ caché.
-      this.setRaiseMode(1);
-      var rm1 = document.getElementById('cf-rm1'); if (rm1) rm1.checked = true;
+      // Cohérence : chaque preset fixe aussi l'unité de hausse (mains par
+      // défaut, minutes pour BBC) → champ caché + radio.
+      var rmode = v.raiseMode || 1;
+      this.setRaiseMode(rmode);
+      var rmEl = document.getElementById(rmode === 2 ? 'cf-rm2' : 'cf-rm1'); if (rmEl) rmEl.checked = true;
       var all = document.querySelectorAll('.cf-preset');
       for (var i = 0; i < all.length; i++) all[i].classList.remove('active');
       var sel = btn || document.querySelector('.cf-preset[data-preset="' + name + '"]');
@@ -14894,7 +14906,7 @@ function renderPlayersList() {
   body.innerHTML = _shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>';
 }
 
-;(function(){ window.BUILD_VERSION='0.3.516-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.517-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

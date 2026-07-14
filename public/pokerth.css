@@ -5996,9 +5996,9 @@ html[data-table="pokerth-live"] .raise-slider { accent-color: #4CAF50; }
 
 /* Préréglages */
 .cf-presets-label { font-size: 0.6rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--gold-dim); font-weight: 600; margin: 0 2px 8px; }
-.cf-presets { display: flex; gap: 8px; margin-bottom: 16px; }
+.cf-presets { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
 .cf-preset {
-  flex: 1; border: 1.5px solid var(--border); border-radius: 9px; background: var(--inset);
+  flex: 1 1 104px; border: 1.5px solid var(--border); border-radius: 9px; background: var(--inset);
   color: var(--text); cursor: pointer; padding: 11px 6px; text-align: center;
   transition: border-color 0.2s, background 0.2s; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; gap: 3px;
 }
