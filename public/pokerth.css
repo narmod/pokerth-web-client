@@ -7277,19 +7277,21 @@ body.adv-hide-pbar .my-zone{bottom:0 !important;padding-bottom:max(8px,env(safe-
     font-size: 1.3rem !important; border-radius: 7px !important;
   }
 }
-/* Paliers intermediaires du zoom de mes cartes (cycle 0-3 du bouton #g-cardzoom). */
-.seat.me .seat-holecards.shc-l1 .pk { width: 28px !important; height: 40px !important; font-size: 0.65rem !important; border-radius: 4px !important; }
-.seat.me .seat-holecards.shc-l2 .pk { width: 34px !important; height: 48px !important; font-size: 0.75rem !important; border-radius: 4px !important; }
+/* Paliers du zoom de mes cartes (cycle 0-5 du bouton #g-cardzoom).
+   Echelle STRICTEMENT CROISSANTE depuis le niveau 0 (= taille de base QML,
+   shc-big : 40x57 mobile / 62x88 desktop) : chaque niveau agrandit d'~12%.
+   Plus aucun palier plus petit que la base. */
+.seat.me .seat-holecards.shc-l1 .pk { width: 45px !important; height: 64px !important; font-size: 0.95rem !important; border-radius: 5px !important; }
+.seat.me .seat-holecards.shc-l2 .pk { width: 50px !important; height: 71px !important; font-size: 1.05rem !important; border-radius: 6px !important; }
+.seat.me .seat-holecards.shc-l3 .pk { width: 56px !important; height: 80px !important; font-size: 1.18rem !important; border-radius: 6px !important; }
+.seat.me .seat-holecards.shc-l4 .pk { width: 63px !important; height: 90px !important; font-size: 1.32rem !important; border-radius: 7px !important; }
+.seat.me .seat-holecards.shc-l5 .pk { width: 71px !important; height: 101px !important; font-size: 1.5rem !important; border-radius: 8px !important; }
 @media (min-width: 900px) {
-  .seat.me .seat-holecards.shc-l1 .pk { width: 34px !important; height: 48px !important; font-size: 0.8rem !important; border-radius: 4px !important; }
-  .seat.me .seat-holecards.shc-l2 .pk { width: 48px !important; height: 68px !important; font-size: 1.05rem !important; border-radius: 5px !important; }
-}
-/* Paliers supplementaires 4 et 5 : plus gros que shc-big (niveau 3). Meme mecanisme. */
-.seat.me .seat-holecards.shc-l3 .pk { width: 50px !important; height: 71px !important; font-size: 1.05rem !important; border-radius: 6px !important; }
-.seat.me .seat-holecards.shc-l4 .pk { width: 60px !important; height: 85px !important; font-size: 1.25rem !important; border-radius: 7px !important; }
-@media (min-width: 900px) {
-  .seat.me .seat-holecards.shc-l3 .pk { width: 76px !important; height: 108px !important; font-size: 1.6rem !important; border-radius: 8px !important; }
-  .seat.me .seat-holecards.shc-l4 .pk { width: 90px !important; height: 128px !important; font-size: 1.9rem !important; border-radius: 9px !important; }
+  .seat.me .seat-holecards.shc-l1 .pk { width: 69px !important; height: 98px !important; font-size: 1.45rem !important; border-radius: 8px !important; }
+  .seat.me .seat-holecards.shc-l2 .pk { width: 78px !important; height: 111px !important; font-size: 1.6rem !important; border-radius: 8px !important; }
+  .seat.me .seat-holecards.shc-l3 .pk { width: 87px !important; height: 124px !important; font-size: 1.8rem !important; border-radius: 9px !important; }
+  .seat.me .seat-holecards.shc-l4 .pk { width: 97px !important; height: 138px !important; font-size: 2rem !important; border-radius: 10px !important; }
+  .seat.me .seat-holecards.shc-l5 .pk { width: 109px !important; height: 155px !important; font-size: 2.25rem !important; border-radius: 11px !important; }
 }
 /* Pastille de niveau (1/2/3/4/5) sur le bouton. */
 #g-cardzoom { position: relative; }

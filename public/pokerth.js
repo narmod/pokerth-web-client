@@ -9286,7 +9286,7 @@ const App = (() => {
         var _ownHide = isMe && _ownCardsHidden();
         var _phc1 = isMe ? (_ownHide ? null : myCards[0]) : sd.card1;
         var _phc2 = isMe ? (_ownHide ? null : myCards[1]) : sd.card2;
-        var _hcBigCls = _selfBig ? (' shc-big' + (_ownLvl === 1 ? ' shc-l1' : _ownLvl === 2 ? ' shc-l2' : _ownLvl === 4 ? ' shc-l3' : _ownLvl === 5 ? ' shc-l4' : '')) : '';
+        var _hcBigCls = _selfBig ? (' shc-big' + (_ownLvl >= 1 && _ownLvl <= 5 ? ' shc-l' + _ownLvl : '')) : '';  // 0 = base QML ; 1-5 = agrandissements croissants
         var _hcCls = 'seat-holecards' + _hcBigCls;
         var _hcSz  = _selfBig ? '' : 'xsm';
         h += '<div class="' + _hcCls + '">' + cardHtml(_phc1,_hcSz) + cardHtml(_phc2,_hcSz) + '</div>';
@@ -14087,7 +14087,7 @@ function renderPlayersList() {
   body.innerHTML = _shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>';
 }
 
-;(function(){ window.BUILD_VERSION='0.3.437-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.438-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
