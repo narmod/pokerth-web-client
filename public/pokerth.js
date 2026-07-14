@@ -9197,7 +9197,13 @@ const App = (() => {
       // Parité GamePlayerBox QML : wideLayout = hauteur SCALÉE >= 76
       // (84·s < 76 <=> s < 0.905) -> texte 1 ligne « nom · $tapis » ; le
       // portrait (oppBaseHeight 71) est TOUJOURS non-wide dans le QML.
-      var _seatNarrow = _pkHole && (_seatPortrait || (84 * _seatBoxScale) < 76);
+      // DEUX types de sieges comme le client QML (bible §4.2) — lies a la
+      // DISPOSITION effective, pas a l'orientation fenetre :
+      //   slots portrait (_forceSeatPortrait) -> siege PORTRAIT (1 ligne
+      //   « nom · cash », hauteur 71 QML) ;
+      //   ellipse -> siege WIDE (2 lignes nom / cash, hauteur 84 QML),
+      //   sauf boxes trop ecrasees (regle QML wideLayout : 84*scale < 76).
+      var _seatNarrow = _pkHole && (_forceSeatPortrait || (84 * _seatBoxScale) < 76);
       const cls = ['seat', isMe?'me':'', isDealer?'dealer':'', isActive?'active':'',
                    sd.folded && !isGone ? 'folded' : '',
                    isOut && !isGone ? 'seat-out' : '',
@@ -14151,7 +14157,7 @@ function renderPlayersList() {
   body.innerHTML = _shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>';
 }
 
-;(function(){ window.BUILD_VERSION='0.3.446-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.447-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
