@@ -12875,6 +12875,14 @@ function _maybeShowNextHandBtn() {
       // des préférences existent pour le MODE COURANT (pastille 💾 ou Options
       // avancées), avec l'ancien pth_create_prefs en repli.
       try { var _pp = document.getElementById('cf-preset-perso'); if (_pp) _pp.style.display = this.hasCreatePrefs() ? '' : 'none'; } catch (e) {}
+      // Invité pokerth.net : seule la création de parties « Normal » est
+      // permise par le serveur — on masque le choix du type et on force 1.
+      try {
+        var _isGuest = (_currentLoginMode === 'guest');
+        var _gtr = document.getElementById('cf-gtype-row');
+        if (_gtr) _gtr.style.display = _isGuest ? 'none' : '';
+        if (_isGuest) { var _gts = document.getElementById('cf-game-type'); if (_gts) _gts.value = '1'; }
+      } catch (e) {}
       show('s-create');
     },
     closeCreatePage() {
@@ -13201,7 +13209,7 @@ function _maybeShowNextHandBtn() {
         endRaiseValue:   iv('cf-end-raise-val', 200),
         guiSpeed:        iv('cf-gui-speed',     5),
         delayHands:      iv('cf-delay',         7),
-        gameType:        sv('cf-game-type',     1),
+        gameType:        (_currentLoginMode === 'guest') ? 1 : sv('cf-game-type', 1),   // invité : Normal imposé
         allowSpectators: allowSpec,
         password:        tablePass,
       };
@@ -14918,7 +14926,7 @@ function renderPlayersList() {
   body.innerHTML = _shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>';
 }
 
-;(function(){ window.BUILD_VERSION='0.3.518-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.519-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

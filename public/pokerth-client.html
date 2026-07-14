@@ -1165,8 +1165,8 @@ function onAvatarImageChosen(input) {
           <input id="cf-name" class="cf-input" placeholder="Table..." data-i18n-placeholder="tableNamePh">
         </div>
 
-        <!-- Type de partie -->
-        <div class="cf-row cf-row-col">
+        <!-- Type de partie (masqué pour un invité pokerth.net : seul Normal est permis) -->
+        <div class="cf-row cf-row-col" id="cf-gtype-row">
           <label class="cf-lbl" data-i18n="gameType">Type de partie</label>
           <div class="sel-wrap"><select id="cf-game-type" class="cf-select">
             <option value="1" data-i18n-opt="gameNormal">Normal</option>
