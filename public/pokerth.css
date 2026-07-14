@@ -6470,6 +6470,18 @@ html[data-seat^="pokerth"] .seat.active .seat-plate {
   box-shadow: 0 0 0 1px var(--gold), 0 0 16px rgba(var(--gold-rgb), 0.45);
   opacity: 1;
 }
+/* Self au tour : cadre or PULSÉ (PlayerTurnGlow du GamePlayerSelfBox officiel).
+   Box-shadow statique héritée de .seat.active ci-dessus + ::before qui pulse en
+   OPACITÉ uniquement (iOS-safe ; pas d'anim de box-shadow). ::before et non
+   ::after (mémo sièges). Boîte/taille/layout restent identiques aux adversaires ;
+   seule la pulsation distingue le self au tour. Vaut pour les deux packs
+   (pokerth landscape + portrait). .seat-plate est déjà position:relative. */
+html[data-seat^="pokerth"] .seat.me.active .seat-plate::before {
+  content: ""; position: absolute; inset: 0; border-radius: inherit;
+  pointer-events: none; z-index: -1; will-change: opacity;
+  box-shadow: 0 0 0 2px #ffe066, 0 0 24px 4px rgba(var(--gold-rgb), 0.7);
+  animation: glowPulseFade 1.5s ease-in-out infinite;
+}
 /* Couché : 0.72 ; éliminé : la base gère déjà l'estompe (transition QML 250ms). */
 html[data-seat^="pokerth"] .seat { transition: opacity 0.25s ease-out; }
 html[data-seat^="pokerth"] .seat.folded { opacity: 0.72; }
