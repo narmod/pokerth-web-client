@@ -8733,7 +8733,7 @@ const App = (() => {
   // selfClearX). pairSpread est DÉLIBÉRÉMENT absent de feasibleAt(),
   // comme dans le QML (sinon la bisection remplirait l'écart créé).
   // Fonction PURE (aucun DOM) → testée en Node (window._qmlLandscapeLayout).
-  function _qmlLandscapeLayout(oppCnt, zW, zH, compact) {
+  function _qmlLandscapeLayout(oppCnt, zW, zH, compact, zoomMul) {
     var oppBaseW = 114, oppBaseH = 84, selfBaseW = 114, selfBaseH = 96; // self 96 (QML 2.1.3 §4.2), opp 84
     // MESURE REELLE des boxes (posee par renderSeats apres chaque rendu) :
     // les constantes ci-dessus sous-estiment les boxes DOM (nom + cash +
@@ -8863,7 +8863,12 @@ const App = (() => {
       return (zH - 12 - selfVisualH) - topOppBottom >= 0.95 * s * 124 + 28;
     }
 
-    var lo = 0.55, hi = fillCap(compact ? 2.3 : 1.9), sFin;   // A : plafond de croissance officiel 2.1.3
+    // Zoom « dans le layout » : sémantique s = base × zoom, bornée par la
+    // faisabilité (murs / paires / community / self). Le plafond de bisection
+    // n'est relevé que pour le zoom AVANT ; le dézoom réduit proportionnellement.
+    var _zm = Math.max(0.3, Math.min(2, zoomMul || 1));
+    var _capBase = fillCap(compact ? 2.3 : 1.9);
+    var lo = 0.55, hi = _capBase * Math.max(1, _zm), sFin;   // A : plafond officiel 2.1.3 (× zoom avant seulement)
     if (hi < lo) hi = lo;
     if (oppCnt < 2) {
       if (!feasibleHeadsUp(lo)) sFin = lo;
@@ -8878,6 +8883,13 @@ const App = (() => {
       sFin = lo;
     }
 
+    // Sémantique du zoom (voir en tête) : sMaxZ = sFin (faisabilité au plafond
+    // étendu) ; s1 = référence zoom 1 = min(sMaxZ, plafond de base) — la
+    // bisection est monotone, pas besoin d'un second passage.
+    var sMaxZ = sFin;
+    var s1 = Math.min(sMaxZ, _capBase);
+    if (_zm <= 1.001) sFin = Math.max(0.55, s1 * _zm);
+    else sFin = Math.max(s1, Math.min(s1 * _zm, sMaxZ));
     // Slots finaux aux rayons du s retenu (pairSpread actif, comme le QML).
     var gF = geom(sFin);
     var slots = [], raw = [];
@@ -8913,7 +8925,7 @@ const App = (() => {
   // bottom (opp >= 8, nudge +14 intégré : 0.215·H − 26), séparation de paires
   // (voisins de slotSeqPortrait : dx OU dy >= boîte·s + 8). Plafond fillCap(1.85),
   // plancher 0.55, 14 itérations. Fonction PURE (window._qmlPortraitScale).
-  function _qmlPortraitScale(oppCnt, zW, zH) {
+  function _qmlPortraitScale(oppCnt, zW, zH, zoomMul) {
     var oppW = 121, oppH = 71, selfH = 82;   // bases QML 2.1.3 (portrait)
     try {
       var _md = window._seatDimsMeasured;
@@ -8932,12 +8944,16 @@ const App = (() => {
     };
     var seq = SEQ[oppCnt] || [];
     var gapP = 8;
-    function feas(sT) {
+    var _zm = Math.max(0.3, Math.min(2, zoomMul || 1));
+    function feas(sT, commGuard) {
       if (sT <= 0) return false;
       var vW = oppW * sT, vH = oppH * sT, sH = selfH * sT;
       if (vW > 2 * (0.15 * zW - 4)) return false;
       if (vH > 2 * (0.075 * zH - 4)) return false;
       if (oppCnt >= 8 && 0.215 * zH - 26 - sH - vH / 2 < gapP) return false;
+      // Zoom avant : les rangées upper (0.345) et lower (0.65) ne mordent pas
+      // la bande médiane des cartes communes — >= 88 px libres réservés.
+      if (commGuard && (0.65 - 0.345) * zH - vH < 88) return false;
       var xN = vW + gapP, yN = vH + gapP;
       for (var i = 0; i < seq.length - 1; i++) {
         var a = SLOTS[seq[i]], b = SLOTS[seq[i + 1]];
@@ -8947,21 +8963,31 @@ const App = (() => {
       }
       return true;
     }
+    function bisectP(hiB, commGuard) {
+      var loB = 0.55; if (hiB < loB) hiB = loB;
+      if (!feas(loB, commGuard)) return loB;
+      if (feas(hiB, commGuard)) return hiB;
+      for (var it = 0; it < 14; it++) { var mP = (loB + hiB) / 2; if (feas(mP, commGuard)) loB = mP; else hiB = mP; }
+      return loB;
+    }
     var base = 0.95, t = Math.max(0, Math.min(1, (oppCnt - 1) / 5));
     var countCap = base + (1.85 - base) * t;
     var grow = (1 - t) * Math.max(0, (Math.sqrt(zW * zH) - 760) / 700);
     var denseShrink = t * Math.min(0.15, Math.max(0, (zW - 1024) / 4000));
-    var hi = Math.min(2.2, countCap * (1 + grow) - denseShrink);
-    var lo = 0.55; if (hi < lo) hi = lo;
+    var hiCap = Math.min(2.2, countCap * (1 + grow) - denseShrink);
+    // Sémantique du zoom : s = base × zoom, BORNÉ par la faisabilité.
+    //   zoom <= 1 : réduction proportionnelle directe (toujours faisable) ;
+    //   zoom > 1  : croissance proportionnelle plafonnée par la bisection
+    //               étendue (garde community incluse), jamais sous la base.
+    var s1 = bisectP(hiCap, false);
     var sP;
-    if (!feas(lo)) sP = lo;
-    else if (feas(hi)) sP = hi;
-    else { for (var it = 0; it < 14; it++) { var mP = (lo + hi) / 2; if (feas(mP)) lo = mP; else hi = mP; } sP = lo; }
+    if (_zm <= 1.001) sP = s1 * _zm;
+    else sP = Math.max(s1, Math.min(s1 * _zm, bisectP(hiCap * _zm, true)));
     return Math.max(0.55, sP);
   }
   window._qmlPortraitScale = _qmlPortraitScale;
 
-  function _officialSeatPix(n, isPortrait, zW, zH, oCX, oCY, oRect, boxScale) {
+  function _officialSeatPix(n, isPortrait, zW, zH, oCX, oCY, oRect, boxScale, zoomMul) {
     var M = n - 1; // adversaires
     if (M < 1) return null;
     var _small = (boxScale || 1) < 0.99; // petit ecran : resserrer l'anneau vers le feutre
@@ -8998,7 +9024,7 @@ const App = (() => {
       }
       // Échelle bisectée QML (Hochformat) : les slots sont fixes, seule
       // l'échelle empêche les chevauchements — comme le client officiel.
-      outP._boxScale = _qmlPortraitScale(M, zW, zH);
+      outP._boxScale = _qmlPortraitScale(M, zW, zH, zoomMul);
       return outP;
     }
     // ── PAYSAGE : ellipse officielle — DÉLÉGUÉE au port 1:1 du QML ──
@@ -9020,7 +9046,7 @@ const App = (() => {
     // compact a tort et ecrasait les paires de sieges laterales. On exige
     // une fenetre REELLEMENT aplatie : h < 800.
     var compact = _wH < 600 || (_wW / Math.max(_wH, 1) > 2.1 && _wH < 800);
-    var lay = _qmlLandscapeLayout(M, zW, zH, compact);
+    var lay = _qmlLandscapeLayout(M, zW, zH, compact, zoomMul);
     var out = [null]; // index 0 = self -> perle du bas de l'ellipse (voir _self)
     for (var ke = 0; ke < M; ke++) out.push({ top: lay.slots[ke].y, left: lay.slots[ke].x });
     out._boxScale = lay.s;
@@ -9261,9 +9287,12 @@ const App = (() => {
       forcePortrait: _forceSeatPortrait, pkStyle: _pkStyleNow,
       hidePbar: _advGet('hide_pbar', true), selfHasCustom: _selfHasCustom,
       selfAtPearl: _selfAtPearl }; } catch (e) {}
+    window._zoomInLayout = false;   // vrai quand le +/− est consommé par la bisection
     if (_applyOfficial) {
       try {
-        var _offPos = _officialSeatPix(rotated.length, _forceSeatPortrait, zRect.width, zRect.height, oCX, oCY, oRect, _seatBoxScale);
+        var _layoutZoom = 1;
+        try { if (typeof _getTableZoom === 'function') _layoutZoom = _getTableZoom(); } catch (e) {}
+        var _offPos = _officialSeatPix(rotated.length, _forceSeatPortrait, zRect.width, zRect.height, oCX, oCY, oRect, _seatBoxScale, _layoutZoom);
         // Assis (myIdx>=0) : la self (slot 0) est gérée séparément (perle) ;
         // on ne remplace que les adversaires (1+). Spectateur (myIdx<0) : pas de
         // self -> on place TOUS les slots (0 inclus) pour que l'officiel s'applique.
@@ -9271,7 +9300,10 @@ const App = (() => {
         if (_offPos) { for (var _op = _op0; _op < pixPos.length; _op++) { if (_offPos[_op]) pixPos[_op] = _offPos[_op]; } }
         // Échelle bisectée du QML (paysage seulement) : remplace l'heuristique
         // téléphone, chaque box adverse est mise à l'échelle comme l'officiel.
-        if (_offPos && _offPos._boxScale) _seatBoxScale = _forceSeatPortrait ? _offPos._boxScale : _offPos._boxScale * (compact ? 1 : 0.9);  // portrait : bisection QML pure ; paysage desktop : -10% (sieges moins massifs)
+        if (_offPos && _offPos._boxScale) {
+          _seatBoxScale = _forceSeatPortrait ? _offPos._boxScale : _offPos._boxScale * (compact ? 1 : 0.9);  // portrait : bisection QML pure ; paysage desktop : -10% (sieges moins massifs)
+          window._zoomInLayout = true;   // le zoom est DANS l'échelle : pas de loupe par-dessus
+        }
         // Point bas exact de l'ellipse pour la self (quand l'officiel est actif).
         // L'ÉPINGLAGE mesuré au rendu (plus bas) reste la garantie finale, même
         // si l'officiel est désactivé (custom / classique).
@@ -13049,7 +13081,13 @@ function _applyZoomTransforms() {
   // Chevauchement / debordement autorise : on applique le zoom demande tel quel
   // (plus de plafond "toujours visible"). Agrandissement UNIFORME du feutre, des
   // sieges et de mes cartes autour du centre du feutre.
-  var eff = Math.max(TABLE_ZOOM_MIN, Math.min(_getTableZoom(), TABLE_ZOOM_MAX));
+  // Mode « zoom dans le layout » (placement officiel actif) : le +/− est déjà
+  // consommé par la bisection de renderSeats — les joueurs grossissent SANS
+  // sortir du cadre, se toucher ni recouvrir la rivière. Les couches ne sont
+  // alors PAS re-scalées (eff = 1, ni pan ni loupe). La loupe uniforme reste
+  // le comportement du placement classique/custom.
+  var eff = window._zoomInLayout ? 1
+          : Math.max(TABLE_ZOOM_MIN, Math.min(_getTableZoom(), TABLE_ZOOM_MAX));
   window._tableZoomEff = eff;
   window._tableZoomMaxFit = TABLE_ZOOM_MAX;
   // Pan du suivi du siège actif : clampé à l'excédent visible ((eff−1)·½zone,
@@ -14476,7 +14514,7 @@ function renderPlayersList() {
   body.innerHTML = _shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>';
 }
 
-;(function(){ window.BUILD_VERSION='0.3.492-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.493-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
