@@ -12897,15 +12897,16 @@ function _maybeShowNextHandBtn() {
     },
 
     applyPreset(name, btn) {
+      // Rythme seulement : les styles ne touchent plus au nombre de joueurs
+      // (choix indépendant du tempo, demande d'Arnaud v0.3.515).
       var P = {
-        tranquille: { players:8, stack:5000, blind:10, timeout:30 },
-        normal:     { players:6, stack:3000, blind:10, timeout:15 },
-        rapide:     { players:6, stack:1500, blind:25, timeout:5  }
+        tranquille: { stack:5000, blind:10, timeout:30 },
+        normal:     { stack:3000, blind:10, timeout:15 },
+        rapide:     { stack:1500, blind:25, timeout:5  }
       };
       var v = P[name];
       if (!v) return;
       var set = function(id, val){ var e = document.getElementById(id); if (e) { e.value = val; e.dispatchEvent(new Event('input')); } };
-      set('cf-players', v.players);
       set('cf-stack',   v.stack);
       set('cf-blind',   v.blind);
       set('cf-timeout', v.timeout);
@@ -14883,7 +14884,7 @@ function renderPlayersList() {
   body.innerHTML = _shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>';
 }
 
-;(function(){ window.BUILD_VERSION='0.3.514-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.515-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
