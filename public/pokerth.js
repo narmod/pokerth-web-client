@@ -8611,6 +8611,19 @@ const App = (() => {
   // Fonction PURE (aucun DOM) → testée en Node (window._qmlLandscapeLayout).
   function _qmlLandscapeLayout(oppCnt, zW, zH, compact) {
     var oppBaseW = 114, oppBaseH = 84, selfBaseW = 114, selfBaseH = 96; // self 96 (QML 2.1.3 §4.2), opp 84
+    // MESURE REELLE des boxes (posee par renderSeats apres chaque rendu) :
+    // les constantes ci-dessus sous-estiment les boxes DOM (nom + cash +
+    // cartes + badges), donc la bisection de faisabilite laissait des
+    // chevauchements a l'ecran. offsetWidth/Height ignorent les transforms
+    // -> tailles intrinseques, la bisection reduit s jusqu'au vrai non-
+    // chevauchement (compact comme normal).
+    try {
+      var _md = window._seatDimsMeasured;
+      if (_md && _md.w > 40 && _md.h > 30) {
+        oppBaseW = _md.w; oppBaseH = _md.h; selfBaseW = _md.w;
+        if (_md.sh > 40) selfBaseH = _md.sh;
+      }
+    } catch (e) {}
     var opponentGapBase = 10, selfBadgeGapBase = 8, sideBadgeGapBase = 48;
     var gap = 12;
     var selfWeight = 0.5;   // 2.1.3 : arc de la perle self identique en wide et compact
@@ -9331,6 +9344,25 @@ const App = (() => {
         }
       }
       if (typeof window._applySelfZoomCounter === 'function') window._applySelfZoomCounter();
+    } catch (e) {}
+    // Mesure des tailles REELLES de boxes pour le layout ellipse (voir
+    // _qmlLandscapeLayout). Re-rendu UNIQUE si la mesure a change de plus
+    // de 2px (garde anti-boucle : _seatDimsRerender + seuil).
+    try {
+      var _s0m = el.querySelector('.seat:not(.me)');
+      var _m0m = el.querySelector('.seat.me');
+      if (_s0m) {
+        var _nw = _s0m.offsetWidth, _nh = _s0m.offsetHeight;
+        var _nsh = _m0m ? Math.round(_m0m.offsetHeight * SELF_BOX_MUL) : 0;
+        var _pdm = window._seatDimsMeasured;
+        if (_nw > 40 && _nh > 30 && (!_pdm || Math.abs(_pdm.w - _nw) > 2 || Math.abs(_pdm.h - _nh) > 2 || Math.abs((_pdm.sh || 0) - _nsh) > 2)) {
+          window._seatDimsMeasured = { w: _nw, h: _nh, sh: _nsh };
+          if (!window._seatDimsRerender) {
+            window._seatDimsRerender = true;
+            setTimeout(function () { window._seatDimsRerender = false; try { if (typeof renderSeats === 'function') renderSeats(); } catch (e) {} }, 30);
+          }
+        }
+      }
     } catch (e) {}
     _lastPixPos = pixPos;
     // Patcher l'avatar du joueur local immédiatement après le rendu.
@@ -14080,7 +14112,7 @@ function renderPlayersList() {
   body.innerHTML = _shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>';
 }
 
-;(function(){ window.BUILD_VERSION='0.3.441-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.442-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
