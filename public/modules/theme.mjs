@@ -115,7 +115,8 @@ var PUCKS_ITEMS   = [ {id:'',key:'pucksAuto',fallback:'Auto (table)',swatch:'#3a
 // Classic (historical render). Add a pack = one item here; panel lists it auto.
 const SEATS = [
   { id: '',      key: 'seatClassic', fallback: 'Classic', swatch: '#1e3820' },
-  { id: 'pokerth', key: 'seatPokerth', fallback: 'PokerTH', swatch: '#1d222b' },
+  { id: 'pokerth', key: 'seatPokerthLandscape', fallback: 'PokerTH landscape', swatch: '#1d222b' },
+  { id: 'pokerth-portrait', key: 'seatPokerthPortrait', fallback: 'PokerTH portrait', swatch: '#1d222b' },
   { id: 'chip',  key: 'seatChip',    fallback: 'Chip',    swatch: '#caa64a' },
   { id: 'plate', key: 'seatPlate',   fallback: 'Plate',   swatch: '#1d222b' },
   { id: 'card',    key: 'seatCard',    fallback: 'Card',    swatch: '#394150' },

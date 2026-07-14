@@ -9053,7 +9053,7 @@ const App = (() => {
     // officiel / ellipse ET custom sans position self sauvée. On respecte une
     // self posée à la main (custom) et la player-bar réellement affichée.
     var _pkStyleNow = false;
-    try { _pkStyleNow = (document.documentElement.getAttribute('data-seat') === 'pokerth'); } catch (e) {}
+    try { _pkStyleNow = ((document.documentElement.getAttribute('data-seat') || '').indexOf('pokerth') === 0); } catch (e) {}
     var _selfHasCustom = false;
     if (_seatModeV === 'custom' && myIdx >= 0) {
       try { var _cSelf = (typeof window._seatCustomGet === 'function') ? window._seatCustomGet(rotated.length) : null;
@@ -9178,7 +9178,8 @@ const App = (() => {
       pbBar.classList.toggle('pb-out', __amOut);
     }
 
-    var _pkHole = (document.documentElement.getAttribute('data-seat') === 'pokerth');
+    var _seatStyleV = document.documentElement.getAttribute('data-seat') || '';
+    var _pkHole = (_seatStyleV.indexOf('pokerth') === 0); // pokerth (landscape) + pokerth-portrait
     var _maskMode = _advGet('hide_pbar', true); // mode masqué : self-box = siège
     var _ownLvl = 0; try { _ownLvl = Math.min(3, Math.max(0, parseInt(localStorage.getItem('pth_big_own_cards'), 10) || 0)); } catch (e) {} // niveau "agrandir mes cartes" 0-3 (plafond = riviere)
     let h = '';
@@ -9197,13 +9198,12 @@ const App = (() => {
       // Parité GamePlayerBox QML : wideLayout = hauteur SCALÉE >= 76
       // (84·s < 76 <=> s < 0.905) -> texte 1 ligne « nom · $tapis » ; le
       // portrait (oppBaseHeight 71) est TOUJOURS non-wide dans le QML.
-      // DEUX types de sieges comme le client QML (bible §4.2) — lies a la
-      // DISPOSITION effective, pas a l'orientation fenetre :
-      //   slots portrait (_forceSeatPortrait) -> siege PORTRAIT (1 ligne
-      //   « nom · cash », hauteur 71 QML) ;
-      //   ellipse -> siege WIDE (2 lignes nom / cash, hauteur 84 QML),
-      //   sauf boxes trop ecrasees (regle QML wideLayout : 84*scale < 76).
-      var _seatNarrow = _pkHole && (_forceSeatPortrait || (84 * _seatBoxScale) < 76);
+      // DEUX styles de sieges au choix (liste des sieges), fideles au QML
+      // (bible §4.2) : « PokerTH portrait » = box 1 ligne (nom · cash,
+      // hauteur 71 QML) TOUJOURS ; « PokerTH landscape » = box wide 2 lignes
+      // (nom / cash, hauteur 84 QML) TOUJOURS. Plus de bascule automatique :
+      // le choix du style fait foi sur tous les peripheriques.
+      var _seatNarrow = (_seatStyleV === 'pokerth-portrait');
       const cls = ['seat', isMe?'me':'', isDealer?'dealer':'', isActive?'active':'',
                    sd.folded && !isGone ? 'folded' : '',
                    isOut && !isGone ? 'seat-out' : '',
@@ -14157,7 +14157,7 @@ function renderPlayersList() {
   body.innerHTML = _shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>';
 }
 
-;(function(){ window.BUILD_VERSION='0.3.447-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.448-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
