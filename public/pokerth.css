@@ -2314,30 +2314,37 @@ body {
      table reserve juste l'espace necessaire (riviere jamais masquee). */
   /* Barre d'action paysage : 3 zones compactes (montant+slider / pastilles+All-In+mode /
      Fold-Call-Raise), meme structure que l'officiel mais plus dense. Hauteur mesuree en JS. */
+  /* ── Profil PAYSAGE mobile de la barre d'action : valeurs QML
+     landscapeCompact (bible §5.5) — rangee d'action 40 px, police 12 px,
+     radius 9, letterSpacing 0.5. min-height:40px annule EXPLICITEMENT le
+     min-height:54px de la regle de base (definie plus bas dans le fichier,
+     c'est elle qui rendait la barre geante en paysage). Meme organisation
+     que le portrait/QML : quick-bets compacts a gauche, Tapis, mode a
+     droite. */
   .my-zone .action-grid { gap: 4px; width: 100%; max-width: 100%; }
   .my-zone .action-grid > * { min-width: 0; }
   .my-zone .bet-row { gap: 6px; }
-  .my-zone .bet-row .raise-amt-field { width: 58px; padding: 4px; font-size: 0.66rem; }
+  /* Champ montant : 78 px (spec QML §5.2, conservee en compact). */
+  .my-zone .bet-row .raise-amt-field { width: 78px; flex: 0 0 auto; padding: 4px 5px; font-size: 0.75rem; }
   .my-zone .bet-row .raise-slider { flex: 1 1 auto; min-width: 60px; }
-  .my-zone .mid-row { gap: 4px; }
-  .my-zone .mid-row .pct-row { flex: 1 1 auto; gap: 3px; }
-  .my-zone .mid-row .mode-sel-wrap { flex: 0 0 88px; }
-  /* Tapis mobile : fond plat (rouge sombre QML All-In) au lieu du border-image
-     9-slice du skin, qui se dechire sur un si petit bouton (rendu raye). */
+  .my-zone .mid-row { gap: 4px; align-items: center; }
+  .my-zone .mid-row .pct-row { flex: 0 0 auto; gap: 3px; }
+  .my-zone .mid-row .mode-sel-wrap { flex: 0 1 110px; min-width: 0; height: 30px; margin-left: auto; }
   /* Tapis : l'image du theme (--btn-allin-img) en fond etire au lieu du
      border-image 9-slice, qui se dechirait sur ce bouton etroit. Reste
      l'image DU THEME (pas une couleur en dur) -> chaque theme garde son Tapis. */
   .my-zone .mid-row .btn-allin {
-    flex: 0 0 auto; white-space: nowrap; min-width: 0; font-size: 0.6rem;
+    flex: 0 0 auto; white-space: nowrap; min-width: 48px; height: 30px; font-size: 0.6rem;
     border-image: none !important;
     border: 1px solid #ef5350 !important;
     background: linear-gradient(180deg, #9e2a2a, #5c1111) !important;
     color: #fff !important;
-    padding: 5px 10px !important;
+    padding: 0 10px !important;
+    border-radius: 9px;
   }
   .my-zone .act-buttons-row { gap: 4px; }
-  .my-zone .act-buttons-row .btn-action { padding: 4px 8px; font-size: 0.62rem; min-width: 0; }
-  .my-zone .mid-row .btn-pct { padding: 4px 4px; font-size: 0.58rem; font-weight: 700; border-width: 1px; }
+  .my-zone .act-buttons-row .btn-action { min-height: 40px; padding: 2px 8px; font-size: 0.75rem; letter-spacing: 0.5px; border-radius: 9px; min-width: 0; }
+  .my-zone .mid-row .btn-pct { flex: 0 0 auto; min-width: 40px; height: 30px; padding: 0 8px; border-radius: 9px; font-size: 0.58rem; font-weight: 700; border-width: 1px; }
   .my-zone .mid-row .btn-pct .pct-p { font-size: 0.62rem; }
   .my-zone .mid-row .btn-pct .pct-amt { display: none; }
   /* Pas de badges de touches clavier sur mobile (parite QML), comme en portrait. */
