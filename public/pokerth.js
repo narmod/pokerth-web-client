@@ -9406,8 +9406,14 @@ const App = (() => {
         // vers le feutre, jamais hors ecran (demande narmod, parite QML
         // betSide).
         if (_forceSeatPortrait) {
-          var _idx = -_bdx, _idy = -_bdy;
-          _bs = (Math.abs(_idx) >= Math.abs(_idy)) ? (_idx > 0 ? 'r' : 'l') : (_idy > 0 ? 'b' : 't');
+          // Parité QML exacte (GamePage Repeater) : en portrait SEUL X compte —
+          // colonne gauche (x < 0.45) → mise/puck à DROITE (vers le feutre),
+          // colonne droite (x > 0.55) → à GAUCHE, centre (TC) → DESSOUS.
+          // (L'ancien choix par angle envoyait la mise AU-DESSUS pour les
+          // sièges du bas → SB/BB entraient en collision avec le montant
+          // et la boîte voisine.)
+          var _fx = px.left / Math.max(zRect.width, 1);
+          _bs = _fx < 0.45 ? 'r' : (_fx > 0.55 ? 'l' : 'b');
         } else {
           _bs = (_bdx > -zRect.width * 0.06) ? 'r' : 'l';
         }
@@ -14454,7 +14460,7 @@ function renderPlayersList() {
   body.innerHTML = _shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>';
 }
 
-;(function(){ window.BUILD_VERSION='0.3.487-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.488-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
