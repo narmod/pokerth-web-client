@@ -9290,9 +9290,10 @@ const App = (() => {
       // dessinés (D sombre doré, SB bleu, BB rouge) qui ne correspondent pas.
       // Un puck de thème explicite (_pthPuck) reste prioritaire.
       if (_pkHole) {
+        // Fidélité table par défaut QML : Dealer = disque crème officiel ;
+        // SB reste BLEU et BB reste ROUGE (chipSvg ci-dessus) -> on ne touche
+        // qu'au dealer. Un puck de thème explicite reste prioritaire.
         if (isDealer) dealerChip = '<img class="dealer-chip" src="' + (_pthPuck('--puck-dealer') || '/pucks/dealer.svg') + '" alt="D" width="20" height="20">';
-        if (isSB)      blindBadge = '<img class="blind-chip" src="' + (_pthPuck('--puck-sb') || '/pucks/sb.svg') + '" alt="SB" width="20" height="20">';
-        else if (isBB) blindBadge = '<img class="blind-chip" src="' + (_pthPuck('--puck-bb') || '/pucks/bb.svg') + '" alt="BB" width="20" height="20">';
       }
       // Packs PokerTH : pucks posés sur le CÔTÉ de la boîte -> hors de l'avatar.
       var _avPucks = _pkHole ? '' : (blindBadge + dealerChip);
@@ -14237,7 +14238,7 @@ function renderPlayersList() {
   body.innerHTML = _shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>';
 }
 
-;(function(){ window.BUILD_VERSION='0.3.465-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.466-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
