@@ -4235,10 +4235,16 @@ body.hide-pct-btns .pct-row { display: none; }
 .winner-overlay {
   position: fixed; inset: 0; z-index: 100;
   display: flex; align-items: center; justify-content: center;
-  background: rgba(0,0,0,0.78);
+  /* PAS de voile noir (demande narmod) : la table reste visible derriere,
+     seuls la carte et son ombre apparaissent. pointer-events:none sur le
+     conteneur -> la table reste cliquable autour ; la carte re-active ses
+     propres clics. */
+  background: transparent;
+  pointer-events: none;
   padding: 12px;
   animation: fadeIn 0.25s ease;
 }
+.winner-overlay .winner-card { pointer-events: auto; }
 @keyframes fadeIn { from { opacity:0 } to { opacity:1 } }
 .winner-card {
   background: var(--modal-bg);
@@ -4293,8 +4299,11 @@ body.hide-pct-btns .pct-row { display: none; }
 .wc-player-delta { font-size:0.76rem; font-weight:700; text-align:right; white-space:nowrap; }
 .wc-player-delta.pos { color:var(--pos); }
 .wc-player-delta.neg { color:var(--neg); }
-.winner-dismiss { background:var(--gold); color:var(--on-gold); border:none; padding:9px 24px; font-family: var(--ff-display); font-size:0.76rem; font-weight:700; border-radius:4px; cursor:pointer; letter-spacing:0.08em; transition:background 0.15s; display:block; width:100%; margin-top:4px; flex:0 0 auto; }
-.winner-dismiss:hover { background:var(--gold-hi); }
+/* Bouton au style bouton QML (bible §5.5 + §12.3, action primaire verte) :
+   degrade Top->Bottom, bord Edge, radius 9, bold ls 0.5, press scale 0.96. */
+.winner-dismiss { background:linear-gradient(180deg,#50b840,#1e6614); color:#fff; border:1px solid #7ad06a; padding:11px 24px; font-family: var(--ff-display); font-size:0.82rem; font-weight:700; border-radius:9px; cursor:pointer; letter-spacing:0.5px; text-shadow:0 1px 2px rgba(0,0,0,0.35); transition:filter 0.12s, transform 0.09s ease-out; display:block; width:100%; margin-top:4px; flex:0 0 auto; }
+.winner-dismiss:hover { filter:brightness(1.12); }
+.winner-dismiss:active { transform:scale(0.96); }
 
 
 /* ── Player bar + my-zone : cachées hors jeu (contrôlées par body.in-game) ── */
