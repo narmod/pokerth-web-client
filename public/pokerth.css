@@ -6485,6 +6485,16 @@ html[data-seat^="pokerth"] .seat.me.active .seat-plate::before {
 /* Couché : 0.72 ; éliminé : la base gère déjà l'estompe (transition QML 250ms). */
 html[data-seat^="pokerth"] .seat { transition: opacity 0.25s ease-out; }
 html[data-seat^="pokerth"] .seat.folded { opacity: 0.72; }
+/* Mise (pack PokerTH) : icône jeton à gauche du montant, comme le BetChip du
+   client officiel (chipStack.svg). On garde la pastille de base (fond sombre,
+   montant crème) et on préfixe juste le jeton PokerTH. */
+html[data-seat^="pokerth"] .seat-bet {
+  display: inline-flex; align-items: center; gap: 4px; padding-left: 4px;
+}
+html[data-seat^="pokerth"] .seat-bet::before {
+  content: ""; width: 12px; height: 12px; flex: none;
+  background: url(/favicon.svg) center/contain no-repeat;
+}
 html[data-seat^="pokerth"] .seat-timer-badge { display: none; }
 /* Countdown RECTANGULAIRE (style pokerth) : cadre depletif autour de la boite,
    remplace l'anneau rond .seat-timer. Couleurs officielles 2.1.1. */
