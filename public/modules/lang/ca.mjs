@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+    advRemoveGone:"Elimina els jugadors que marxen i recol·loca la taula",
     advWinnerPopup:"Finestra del guanyador al final de la mà",
     // PlayerWinnerOverlay (badge gagnant sur la boîte, parité QML)
     winnerBadge:'GUANYADOR',

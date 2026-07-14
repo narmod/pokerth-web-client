@@ -534,6 +534,7 @@ function openAdvancedOptions() {
   sync('adv-reducefx', 'reduce_fx', false);
   sync('adv-statusbar', 'status_bar', true);
   sync('adv-winnerpopup', 'winner_popup', true);
+  sync('adv-removegone', 'remove_gone', false);
   try { var _dm = document.getElementById('adv-darkmode'); if (_dm && window.getTheme) _dm.value = window.getTheme() || 'auto'; } catch (e) {}
   sync('adv-pingavatar', 'ping_avatar', false);
   sync('adv-autoleave', 'auto_leave', false);
@@ -9056,7 +9057,16 @@ const App = (() => {
     // ones as .seat-out so they render visually faded but in place.
     const n = seats.length;
     const myIdx = seats.indexOf(myId);
-    const rotated = myIdx >= 0 ? [...seats.slice(myIdx), ...seats.slice(0, myIdx)] : seats;
+    let rotated = myIdx >= 0 ? [...seats.slice(myIdx), ...seats.slice(0, myIdx)] : seats;
+    // ── Option avancée « Retirer les joueurs partis » (défaut OFF : le siège
+    // fantôme grisé reste, comportement historique). Activée : les partis
+    // (.gone) sortent de la table et les joueurs restants sont REPLACÉS selon
+    // la table de placement du nouveau compte (slots QML M→sièges + échelle
+    // bisectée), exactement comme si la partie avait ce nombre de joueurs. ──
+    if (_advGet('remove_gone', false)) {
+      var _kept = rotated.filter(function (p) { var _sg = seatData[p]; return !(_sg && _sg.gone); });
+      if (_kept.length) rotated = _kept;
+    }
     try { window._seatCount = rotated.length; } catch (e) {}
     // Position seats using actual pixel coords from getBoundingClientRect
     const oval = document.querySelector('.felt-oval');
@@ -14466,7 +14476,7 @@ function renderPlayersList() {
   body.innerHTML = _shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>';
 }
 
-;(function(){ window.BUILD_VERSION='0.3.491-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.492-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

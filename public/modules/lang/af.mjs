@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+    advRemoveGone:"Verwyder vertrekte spelers en herrangskik die tafel",
     advWinnerPopup:"Wennervenster aan die einde van die hand",
     // PlayerWinnerOverlay (badge gagnant sur la boîte, parité QML)
     winnerBadge:'WENNER',

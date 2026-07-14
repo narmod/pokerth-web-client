@@ -12,6 +12,7 @@ export const meta = {
 };
 
 export const strings = {
+    advRemoveGone:"Ayrılan oyuncuları kaldır ve masayı yeniden yerleştir",
     advWinnerPopup:"El sonunda kazanan penceresi",
     // PlayerWinnerOverlay (badge gagnant sur la boîte, parité QML)
     winnerBadge:'KAZANAN',

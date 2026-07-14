@@ -15,6 +15,7 @@ export const meta = {
 };
 
 export const strings = {
+    advRemoveGone:"Rimuovi i giocatori usciti e ridisponi il tavolo",
     advWinnerPopup:"Finestra del vincitore a fine mano",
     // PlayerWinnerOverlay (badge gagnant sur la boîte, parité QML)
     winnerBadge:'VINCITORE',

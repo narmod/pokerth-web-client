@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+    advRemoveGone:"Ukloni otišle igrače i preraspodeli sto",
     advWinnerPopup:"Prozor pobednika na kraju ruke",
     // PlayerWinnerOverlay (badge gagnant sur la boîte, parité QML)
     winnerBadge:'POBEDNIK',

@@ -9,6 +9,7 @@ export const meta = {
 };
 
 export const strings = {
+    advRemoveGone:"退出したプレイヤーを外してテーブルを再配置",
     advWinnerPopup:"ハンド終了時の勝者ウィンドウ",
     // PlayerWinnerOverlay (badge gagnant sur la boîte, parité QML)
     winnerBadge:'勝者',

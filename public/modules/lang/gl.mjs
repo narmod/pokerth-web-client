@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+    advRemoveGone:"Eliminar os xogadores que marchan e recolocar a mesa",
     advWinnerPopup:"Ventá do gañador ao final da man",
     // PlayerWinnerOverlay (badge gagnant sur la boîte, parité QML)
     winnerBadge:'GAÑADOR',

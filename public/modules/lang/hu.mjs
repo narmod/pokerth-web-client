@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+    advRemoveGone:"Távozó játékosok eltávolítása és az asztal újrarendezése",
     advWinnerPopup:"Győztes ablak a leosztás végén",
     // PlayerWinnerOverlay (badge gagnant sur la boîte, parité QML)
     winnerBadge:'GYŐZTES',

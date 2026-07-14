@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+    advRemoveGone:"Xóa người chơi đã rời đi và sắp xếp lại bàn",
     advWinnerPopup:"Cửa sổ người thắng khi kết thúc ván bài",
     // PlayerWinnerOverlay (badge gagnant sur la boîte, parité QML)
     winnerBadge:'NGƯỜI THẮNG',

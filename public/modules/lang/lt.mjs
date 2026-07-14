@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+    advRemoveGone:"Pašalinti išėjusius žaidėjus ir perstatyti stalą",
     advWinnerPopup:"Nugalėtojo langas rankos pabaigoje",
     // PlayerWinnerOverlay (badge gagnant sur la boîte, parité QML)
     winnerBadge:'NUGALĖTOJAS',

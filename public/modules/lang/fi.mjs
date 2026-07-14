@@ -9,6 +9,7 @@ export const meta = {
 };
 
 export const strings = {
+    advRemoveGone:"Poista poistuneet pelaajat ja järjestä pöytä uudelleen",
     advWinnerPopup:"Voittajaikkuna käden lopussa",
     // PlayerWinnerOverlay (badge gagnant sur la boîte, parité QML)
     winnerBadge:'VOITTAJA',

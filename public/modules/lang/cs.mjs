@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+    advRemoveGone:"Odebrat odešlé hráče a přeuspořádat stůl",
     advWinnerPopup:"Okno vítěze na konci rozdání",
     // PlayerWinnerOverlay (badge gagnant sur la boîte, parité QML)
     winnerBadge:'VÍTĚZ',
