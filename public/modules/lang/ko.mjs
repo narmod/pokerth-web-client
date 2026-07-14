@@ -389,6 +389,8 @@ export const strings = {
     presetCalmName:'여유', presetCalmDesc:'긴 게임',
     presetNormalName:'일반', presetNormalDesc:'균형',
     presetFastName:'빠름', presetFastDesc:'빠른 진행!',
+    presetPersoName:'내 설정', presetPersoDesc:'나의 설정',
+    createPrefsSave:'💾 내 설정', createPrefsSaveTip:'이 양식을 개인 설정으로 저장', createPrefsSaved:'설정이 저장되었습니다', createPrefsLoaded:'설정을 불러왔습니다', createPrefsNone:'저장된 설정이 아직 없습니다',
     proxyConnectedWait:'프록시 접속됨 \u2014 PokerTH 서버 대기 중\u2026',
     errConnLost:'연결이 끊겼습니다. 잠시 후 다시 접속할 수 있습니다.',
     autoTableFound:'\u26a1 테이블 발견 \u2014 #{n} 참가 중',

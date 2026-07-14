@@ -565,6 +565,8 @@ export const strings = {
     presetNormalName: 'Normalna',
     presetNormalDesc: 'uravnotežena',
     presetFastName: 'Brza',
+    presetPersoName:'Moje', presetPersoDesc:'moje postavke',
+    createPrefsSave:'💾 Moje postavke', createPrefsSaveTip:'Spremi ovaj obrazac kao moje osobne postavke', createPrefsSaved:'Postavke spremljene', createPrefsLoaded:'Postavke učitane', createPrefsNone:'Još nema spremljenih postavki',
     presetFastDesc: 'brz tempo!',
     proxyConnectedWait: 'Proxy spojen — čekanje na PokerTH poslužitelj…',
     errConnLost: 'Veza prekinuta. Možete se ponovno spojiti za nekoliko sekundi.',

@@ -564,6 +564,8 @@ export const strings = {
     presetNormalName: 'Normal',
     presetNormalDesc: 'balanceret',
     presetFastName: 'Hurtig',
+    presetPersoName:'Mine', presetPersoDesc:'mine indstillinger',
+    createPrefsSave:'💾 Mine præf.', createPrefsSaveTip:'Gem denne formular som mine personlige præferencer', createPrefsSaved:'Præferencer gemt', createPrefsLoaded:'Præferencer indlæst', createPrefsNone:'Ingen gemte præferencer endnu',
     presetFastDesc: 'højt tempo!',
     proxyConnectedWait: 'Proxy tilsluttet — venter på PokerTH-server…',
     errConnLost: 'Forbindelse mistet. Du kan tilslutte igen om et par sekunder.',

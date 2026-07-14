@@ -12768,6 +12768,9 @@ function dismissWinner() {
       if (form && body && form.parentNode !== body) body.appendChild(form);
       if (form) { form.style.display = 'block'; form.classList.add('open'); }
       try { this._applyCreateFormDefaults(false); } catch (e) {}
+      // Pastille « Perso » (charger mes préférences) : visible seulement si
+      // un instantané pth_create_prefs existe (bouton 💾 du pied de page).
+      try { var _pp = document.getElementById('cf-preset-perso'); if (_pp) _pp.style.display = this.hasCreatePrefs() ? '' : 'none'; } catch (e) {}
       show('s-create');
     },
     closeCreatePage() {
@@ -12888,12 +12891,13 @@ function dismissWinner() {
     },
     saveCreatePrefs() {
       try { localStorage.setItem('pth_create_prefs', JSON.stringify(this._readCreateForm())); } catch (e) {}
+      try { var _pp = document.getElementById('cf-preset-perso'); if (_pp) _pp.style.display = ''; } catch (e) {}
       if (typeof showToast === 'function') showToast(t('createPrefsSaved') || 'Preferences saved');
     },
     hasCreatePrefs() {
       try { return !!localStorage.getItem('pth_create_prefs'); } catch (e) { return false; }
     },
-    applyCreatePrefs() {
+    applyCreatePrefs(btn) {
       var d = null;
       try { d = JSON.parse(localStorage.getItem('pth_create_prefs') || 'null'); } catch (e) {}
       if (!d || typeof d !== 'object') {
@@ -12927,9 +12931,12 @@ function dismissWinner() {
       var bt = document.getElementById('cf-bots');
       if (bt && d.bots != null) { bt.checked = !!d.bots; try { this.toggleMinHumans(); } catch (e) {} }
       set('cf-min-humans', d.minHumans);
-      // Les préférences remplacent tout style prédéfini : on éteint les pastilles.
+      // Les préférences remplacent tout style prédéfini : seule la pastille
+      // « Perso » reste allumée.
       var presets = document.querySelectorAll('.cf-preset[data-preset]');
       for (var i = 0; i < presets.length; i++) presets[i].classList.remove('active');
+      var perso = btn || document.getElementById('cf-preset-perso');
+      if (perso) perso.classList.add('active');
       if (typeof showToast === 'function') showToast(t('createPrefsLoaded') || 'Preferences loaded');
     },
     // Reset the create-table form to its FACTORY defaults: the per-mode
@@ -14774,7 +14781,7 @@ function renderPlayersList() {
   body.innerHTML = _shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>';
 }
 
-;(function(){ window.BUILD_VERSION='0.3.509-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.510-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

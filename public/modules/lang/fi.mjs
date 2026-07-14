@@ -564,6 +564,8 @@ export const strings = {
     presetNormalName: 'Normaali',
     presetNormalDesc: 'tasapainoinen',
     presetFastName: 'Nopea',
+    presetPersoName:'Omat', presetPersoDesc:'omat asetukseni',
+    createPrefsSave:'💾 Omat asetukset', createPrefsSaveTip:'Tallenna tämä lomake henkilökohtaisiksi asetuksiksi', createPrefsSaved:'Asetukset tallennettu', createPrefsLoaded:'Asetukset ladattu', createPrefsNone:'Ei vielä tallennettuja asetuksia',
     presetFastDesc: 'nopea tahti!',
     proxyConnectedWait: 'Välityspalvelin yhdistetty — odotetaan PokerTH-palvelinta…',
     errConnLost: 'Yhteys katkesi. Voit yhdistää uudelleen muutaman sekunnin kuluttua.',

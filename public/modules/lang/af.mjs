@@ -565,6 +565,8 @@ export const strings = {
     presetNormalName: 'Normaal',
     presetNormalDesc: 'gebalanseer',
     presetFastName: 'Vinnig',
+    presetPersoName:'Myne', presetPersoDesc:'my instellings',
+    createPrefsSave:'💾 My voorkeure', createPrefsSaveTip:'Stoor hierdie vorm as my persoonlike voorkeure', createPrefsSaved:'Voorkeure gestoor', createPrefsLoaded:'Voorkeure gelaai', createPrefsNone:'Nog geen gestoorde voorkeure nie',
     presetFastDesc: 'vinnige tempo!',
     proxyConnectedWait: 'Instaander gekoppel — wag vir die PokerTH-bediener…',
     errConnLost: 'Verbinding verloor. Jy kan oor ’n paar sekondes weer koppel.',

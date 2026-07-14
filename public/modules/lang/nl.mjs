@@ -568,6 +568,8 @@ export const strings = {
     presetNormalName: 'Normaal',
     presetNormalDesc: 'gebalanceerd',
     presetFastName: 'Snel',
+    presetPersoName:'Mijn', presetPersoDesc:'mijn instellingen',
+    createPrefsSave:'💾 Mijn voorkeuren', createPrefsSaveTip:'Dit formulier opslaan als mijn persoonlijke voorkeuren', createPrefsSaved:'Voorkeuren opgeslagen', createPrefsLoaded:'Voorkeuren geladen', createPrefsNone:'Nog geen opgeslagen voorkeuren',
     presetFastDesc: 'hoog tempo!',
     proxyConnectedWait: 'Proxy verbonden — wachten op PokerTH-server…',
     errConnLost: 'Verbinding verloren. Je kunt over enkele seconden opnieuw verbinden.',

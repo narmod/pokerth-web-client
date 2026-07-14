@@ -566,6 +566,8 @@ export const strings = {
     presetNormalName: 'Àbhaisteach',
     presetNormalDesc: 'cothromach',
     presetFastName: 'Luath',
+    presetPersoName:'Agamsa', presetPersoDesc:'na roghainnean agam',
+    createPrefsSave:'💾 Mo roghainnean', createPrefsSaveTip:'Sàbhail am foirm seo mar roghainnean pearsanta', createPrefsSaved:'Roghainnean air an sàbhaladh', createPrefsLoaded:'Roghainnean air an luchdadh', createPrefsNone:'Chan eil roghainnean air an sàbhaladh fhathast',
     presetFastDesc: 'astar luath!',
     proxyConnectedWait: 'Progsaidh ceangailte — a\' feitheamh ris an fhrithealaiche PokerTH…',
     errConnLost: 'Chaidh an ceangal a chall. \'S urrainn dhut ceangal a-rithist an ceann diog no dhà.',

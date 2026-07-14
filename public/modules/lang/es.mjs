@@ -569,6 +569,8 @@ export const strings = {
     presetNormalName: 'Normal',
     presetNormalDesc: 'equilibrado',
     presetFastName: 'Rápido',
+    presetPersoName:'Mío', presetPersoDesc:'mis ajustes',
+    createPrefsSave:'💾 Mis prefs', createPrefsSaveTip:'Guardar este formulario como mis preferencias personales', createPrefsSaved:'Preferencias guardadas', createPrefsLoaded:'Preferencias cargadas', createPrefsNone:'Aún no hay preferencias guardadas',
     presetFastDesc: '¡ritmo rápido!',
     proxyConnectedWait: 'Proxy conectado — esperando al servidor PokerTH…',
     errConnLost: 'Conexión perdida. Puedes reconectarte en unos segundos.',

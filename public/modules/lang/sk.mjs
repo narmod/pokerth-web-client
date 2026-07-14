@@ -565,6 +565,8 @@ export const strings = {
     presetNormalName: 'Normálna',
     presetNormalDesc: 'vyvážená',
     presetFastName: 'Rýchla',
+    presetPersoName:'Moje', presetPersoDesc:'moje nastavenia',
+    createPrefsSave:'💾 Moje predvoľby', createPrefsSaveTip:'Uložiť tento formulár ako moje osobné predvoľby', createPrefsSaved:'Predvoľby uložené', createPrefsLoaded:'Predvoľby načítané', createPrefsNone:'Zatiaľ žiadne uložené predvoľby',
     presetFastDesc: 'rýchle tempo!',
     proxyConnectedWait: 'Proxy pripojená — čaká sa na server PokerTH…',
     errConnLost: 'Spojenie stratené. O pár sekúnd sa môžete znova pripojiť.',
