@@ -9164,7 +9164,7 @@ const App = (() => {
 
     var _pkHole = (document.documentElement.getAttribute('data-seat') === 'pokerth');
     var _maskMode = _advGet('hide_pbar', true); // mode masqué : self-box = siège
-    var _ownLvl = 0; try { _ownLvl = Math.min(5, Math.max(0, parseInt(localStorage.getItem('pth_big_own_cards'), 10) || 0)); } catch (e) {} // niveau "agrandir mes cartes" 0-5
+    var _ownLvl = 0; try { _ownLvl = Math.min(3, Math.max(0, parseInt(localStorage.getItem('pth_big_own_cards'), 10) || 0)); } catch (e) {} // niveau "agrandir mes cartes" 0-3 (plafond = riviere)
     let h = '';
     rotated.forEach((pid, i) => {
       const px = pixPos[i];
@@ -9286,7 +9286,7 @@ const App = (() => {
         var _ownHide = isMe && _ownCardsHidden();
         var _phc1 = isMe ? (_ownHide ? null : myCards[0]) : sd.card1;
         var _phc2 = isMe ? (_ownHide ? null : myCards[1]) : sd.card2;
-        var _hcBigCls = _selfBig ? (' shc-big' + (_ownLvl >= 1 && _ownLvl <= 5 ? ' shc-l' + _ownLvl : '')) : '';  // 0 = base QML ; 1-5 = agrandissements croissants
+        var _hcBigCls = _selfBig ? (' shc-big' + (_ownLvl >= 1 && _ownLvl <= 3 ? ' shc-l' + _ownLvl : '')) : '';  // 0 = base QML (85% riviere) ; 1-3 croissants, plafond riviere
         var _hcCls = 'seat-holecards' + _hcBigCls;
         var _hcSz  = _selfBig ? '' : 'xsm';
         h += '<div class="' + _hcCls + '">' + cardHtml(_phc1,_hcSz) + cardHtml(_phc2,_hcSz) + '</div>';
@@ -12854,8 +12854,8 @@ window.toggleSeatEdit = toggleSeatEdit;
 // taille de MES cartes dans le siege (style pokerth). Defaut off = boite comme
 // les adversaires ; l'utilisateur agrandit ses cartes s'il le souhaite.
 function toggleOwnCardZoom(){
-  var lvl=0; try{ lvl = Math.min(5, Math.max(0, parseInt(localStorage.getItem('pth_big_own_cards'),10) || 0)); }catch(e){}
-  lvl = (lvl + 1) % 6;   // cycle : petit -> 1 -> 2 -> 3 -> 4 -> 5 -> petit
+  var lvl=0; try{ lvl = Math.min(3, Math.max(0, parseInt(localStorage.getItem('pth_big_own_cards'),10) || 0)); }catch(e){}
+  lvl = (lvl + 1) % 4;   // cycle : base QML (85% riviere) -> 90% -> 95% -> 100% (riviere) -> base
   try{ localStorage.setItem('pth_big_own_cards', String(lvl)); }catch(e){}
   var b=document.getElementById('g-cardzoom');
   if(b){ b.classList.toggle('active', lvl>0); b.setAttribute('data-lvl', String(lvl)); }
@@ -14087,7 +14087,7 @@ function renderPlayersList() {
   body.innerHTML = _shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>';
 }
 
-;(function(){ window.BUILD_VERSION='0.3.438-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.439-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

@@ -7265,37 +7265,26 @@ body.adv-hide-pbar .my-zone{bottom:0 !important;padding-bottom:max(8px,env(safe-
    - Autres styles : ils ne placent pas mes cartes nativement -> on force un layout flex
      (avatar|cartes, nom dessous) + max-width:none (sinon empilement vertical). */
 
-/* Taille des cartes self alignée sur les cartes communes, PAR BREAKPOINT, TOUS STYLES :
-   ~40 sur mobile, 62 sur desktop/tablette (comme .comm-row .pk en >=900px). */
+/* Taille des cartes self RATTACHEE aux cartes communes via --comm-scale
+   (slot QML 46x64 x echelle par appareil) : chaque palier est une FRACTION
+   <= 1 de la taille riviere -> le zoom ne peut JAMAIS la depasser, sur tous
+   les appareils. Niveau 0 (base QML) = 85% de la riviere. */
 .seat.me .seat-holecards.shc-big .pk {
-  width: 40px !important; height: 57px !important;
-  font-size: 0.85rem !important; border-radius: 5px !important;
+  width: calc(46px * var(--comm-scale, 1) * 0.85) !important;
+  height: calc(64px * var(--comm-scale, 1) * 0.85) !important;
+  font-size: calc(1.02rem * var(--comm-scale, 1) * 0.85) !important;
+  border-radius: calc(5px * var(--comm-scale, 1)) !important;
 }
-@media (min-width: 900px) {
-  .seat.me .seat-holecards.shc-big .pk {
-    width: 62px !important; height: 88px !important;
-    font-size: 1.3rem !important; border-radius: 7px !important;
-  }
-}
-/* Paliers du zoom de mes cartes (cycle 0-5 du bouton #g-cardzoom).
-   Echelle STRICTEMENT CROISSANTE depuis le niveau 0 (= taille de base QML,
-   shc-big : 40x57 mobile / 62x88 desktop) : chaque niveau agrandit d'~12%.
-   Plus aucun palier plus petit que la base. */
-.seat.me .seat-holecards.shc-l1 .pk { width: 45px !important; height: 64px !important; font-size: 0.95rem !important; border-radius: 5px !important; }
-.seat.me .seat-holecards.shc-l2 .pk { width: 50px !important; height: 71px !important; font-size: 1.05rem !important; border-radius: 6px !important; }
-.seat.me .seat-holecards.shc-l3 .pk { width: 56px !important; height: 80px !important; font-size: 1.18rem !important; border-radius: 6px !important; }
-.seat.me .seat-holecards.shc-l4 .pk { width: 63px !important; height: 90px !important; font-size: 1.32rem !important; border-radius: 7px !important; }
-.seat.me .seat-holecards.shc-l5 .pk { width: 71px !important; height: 101px !important; font-size: 1.5rem !important; border-radius: 8px !important; }
-@media (min-width: 900px) {
-  .seat.me .seat-holecards.shc-l1 .pk { width: 69px !important; height: 98px !important; font-size: 1.45rem !important; border-radius: 8px !important; }
-  .seat.me .seat-holecards.shc-l2 .pk { width: 78px !important; height: 111px !important; font-size: 1.6rem !important; border-radius: 8px !important; }
-  .seat.me .seat-holecards.shc-l3 .pk { width: 87px !important; height: 124px !important; font-size: 1.8rem !important; border-radius: 9px !important; }
-  .seat.me .seat-holecards.shc-l4 .pk { width: 97px !important; height: 138px !important; font-size: 2rem !important; border-radius: 10px !important; }
-  .seat.me .seat-holecards.shc-l5 .pk { width: 109px !important; height: 155px !important; font-size: 2.25rem !important; border-radius: 11px !important; }
-}
+/* Paliers du zoom de mes cartes (cycle 0-3 du bouton #g-cardzoom),
+   STRICTEMENT CROISSANTS depuis la base et PLAFONNES a la riviere :
+   0 = 85% · 1 = 90% · 2 = 95% · 3 = 100% (= taille exacte des cartes
+   communes). Fractions de --comm-scale -> adapte a chaque appareil. */
+.seat.me .seat-holecards.shc-l1 .pk { width: calc(46px * var(--comm-scale, 1) * 0.90) !important; height: calc(64px * var(--comm-scale, 1) * 0.90) !important; font-size: calc(1.02rem * var(--comm-scale, 1) * 0.90) !important; border-radius: calc(5px * var(--comm-scale, 1)) !important; }
+.seat.me .seat-holecards.shc-l2 .pk { width: calc(46px * var(--comm-scale, 1) * 0.95) !important; height: calc(64px * var(--comm-scale, 1) * 0.95) !important; font-size: calc(1.02rem * var(--comm-scale, 1) * 0.95) !important; border-radius: calc(5px * var(--comm-scale, 1)) !important; }
+.seat.me .seat-holecards.shc-l3 .pk { width: calc(46px * var(--comm-scale, 1)) !important; height: calc(64px * var(--comm-scale, 1)) !important; font-size: calc(1.02rem * var(--comm-scale, 1)) !important; border-radius: calc(5px * var(--comm-scale, 1)) !important; }
 /* Pastille de niveau (1/2/3/4/5) sur le bouton. */
 #g-cardzoom { position: relative; }
-#g-cardzoom[data-lvl="1"]::after, #g-cardzoom[data-lvl="2"]::after, #g-cardzoom[data-lvl="3"]::after, #g-cardzoom[data-lvl="4"]::after, #g-cardzoom[data-lvl="5"]::after {
+#g-cardzoom[data-lvl="1"]::after, #g-cardzoom[data-lvl="2"]::after, #g-cardzoom[data-lvl="3"]::after {
   content: attr(data-lvl); position: absolute; top: -4px; right: -4px;
   min-width: 13px; height: 13px; border-radius: 7px; font-size: 9px; line-height: 13px;
   background: #1a1205; color: var(--accent, #E3C800); font-weight: 700; text-align: center;
