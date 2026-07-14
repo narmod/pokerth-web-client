@@ -7550,13 +7550,16 @@ body.adv-hide-pbar .my-zone{bottom:0 !important;padding-bottom:max(8px,env(safe-
    demande narmod « grossir les cartes de la selfbox ». Tout le cycle est mis
    au plafond pour rester monotone (plateau, jamais de retrecissement). */
 @media (orientation: landscape) and (max-height: 600px) {
+  /* Division par --sscale (échelle transform du siège, posée par renderSeats) :
+     sans elle, la taille rivière était RE-réduite par le scale du siège
+     (~x0.8) → cartes minuscules. Taille écran = taille rivière EXACTE. */
   .seat.me .seat-holecards.shc-big .pk,
   .seat.me .seat-holecards.shc-l1 .pk,
   .seat.me .seat-holecards.shc-l2 .pk,
   .seat.me .seat-holecards.shc-l3 .pk {
-    width: calc(46px * var(--comm-scale, 1)) !important;
-    height: calc(64px * var(--comm-scale, 1)) !important;
-    font-size: calc(1.02rem * var(--comm-scale, 1)) !important;
+    width: calc(46px * var(--comm-scale, 1) / var(--sscale, 1)) !important;
+    height: calc(64px * var(--comm-scale, 1) / var(--sscale, 1)) !important;
+    font-size: calc(1.02rem * var(--comm-scale, 1) / var(--sscale, 1)) !important;
   }
 }
 /* Pastille de niveau (1/2/3/4/5) sur le bouton. */
