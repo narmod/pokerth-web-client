@@ -9996,6 +9996,17 @@ const App = (() => {
     // donc on s'appuie sur gId (table courante) + !_gameStarted uniquement.
     var waiting = !!(gId && !_gameStarted);
     el.style.display = waiting ? '' : 'none';
+    // Parite QML GameWaitPage : en spectateur, « Spectating — waiting for the
+    // next hand » remplace « Waiting for players ». La cle data-i18n est
+    // permutee pour que setLang retraduise correctement a chaud.
+    var txt = document.getElementById('lws-txt');
+    if (txt) {
+      var key = _amSpectator ? 'hdrSpectatingWait' : 'hdrWaitingPlayers';
+      if (txt.getAttribute('data-i18n') !== key) {
+        txt.setAttribute('data-i18n', key);
+        try { txt.textContent = t(key); } catch (e) {}
+      }
+    }
   }
   window._updateLobbyWaitStatus = _updateLobbyWaitStatus;
 
@@ -14633,7 +14644,7 @@ function renderPlayersList() {
   body.innerHTML = _shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>';
 }
 
-;(function(){ window.BUILD_VERSION='0.3.501-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.502-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
