@@ -2043,6 +2043,11 @@ if ('serviceWorker' in navigator) {
             <div class="adv-link-desc" data-i18n="advLogDesc">In-game log and chat overlay.</div>
             <button type="button" class="adv-link-btn" onclick="closeAdvancedOptions();toggleLog()"><span data-i18n="advLogOpen">Open the log</span></button>
           </div>
+          <div class="adv-body">
+            <div class="adv-sec" data-i18n="advSecLogSettings">Log settings</div>
+            <label class="adv-row"><input type="checkbox" id="adv-logon" onchange="setAdvOpt('log_on',this.checked)"><span data-i18n="advLogOn">Enable logging</span></label>
+            <div class="adv-row"><span data-i18n="advLogInterval">Log interval</span><div class="sel-wrap adv-sel"><select id="adv-loginterval" onchange="setLogInterval(this.value)"><option value="action" data-i18n-opt="advLogEveryAction">Every action</option><option value="hand" data-i18n-opt="advLogEveryHand">Every hand</option></select><span class="sel-arr">▾</span></div></div>
+          </div>
         </section>
         <section class="adv-panel" data-cat="reset" id="adv-panel-reset" role="tabpanel" aria-labelledby="adv-cat-reset">
           <div class="adv-link">

@@ -434,6 +434,17 @@ function setDefaultCommunity(v) {
   } catch (e) {}
 }
 window.setDefaultCommunity = setDefaultCommunity;
+// Intervalle du journal (parite QML LogInterval) : 'action' (chaque action)
+// ou 'hand' (une entree par etape de main seulement). Persiste ; lu en direct
+// par logAction via _getLogInterval.
+function _getLogInterval() {
+  try { var v = localStorage.getItem('pth_log_interval'); return (v === 'hand') ? 'hand' : 'action'; }
+  catch (e) { return 'action'; }
+}
+window._getLogInterval = _getLogInterval;
+window.setLogInterval = function (v) {
+  try { localStorage.setItem('pth_log_interval', (v === 'hand') ? 'hand' : 'action'); } catch (e) {}
+};
 // Croix de fermeture des fenetres flottantes : coupe l'option et masque.
 window.closeOddsWin = function () {
   try { setAdvOpt('odds_monitor', false); } catch (e) {}
@@ -554,6 +565,8 @@ function openAdvancedOptions() {
   sync('adv-tablezoom', 'table_zoom', true);
   sync('adv-lobbychat', 'lobby_chat', true);
   try { renderIgnoredList(); } catch (e) {}
+  sync('adv-logon', 'log_on', true);
+  try { var _li = document.getElementById('adv-loginterval'); if (_li) _li.value = _getLogInterval(); } catch (e) {}
   sync('adv-zoomfollow', 'zoom_follow', false);
   sync('adv-snd-actions', 'snd_actions', true);
   sync('adv-snd-lobby', 'snd_lobby', true);
@@ -679,7 +692,7 @@ function resetAdvDefaults() {
     anim_cards: true, show_blinds: true, hide_pbar: true, show_community: true, four_color: false,
     focus_bet: false, chat_noemoji: false, fade_losers: true, show_flag: true,
     own_click: false, guard_call: false, odds_monitor: false, no_hide_ignored: false,
-    fkeys_alt: false, zoom_follow: false, table_zoom: true, lobby_chat: true,
+    fkeys_alt: false, zoom_follow: false, table_zoom: true, lobby_chat: true, log_on: true,
     snd_actions: true, snd_lobby: true, snd_net: true, snd_blinds: true,
     reduce_fx: false, status_bar: true, ping_avatar: false, auto_leave: false
   };
@@ -690,6 +703,7 @@ function resetAdvDefaults() {
   try { if (typeof window.setTooltips === 'function') window.setTooltips(true); } catch (e) {}
   try { if (typeof window.setReactMuted === 'function') window.setReactMuted(false); } catch (e) {}
   try { if (typeof window.setDefaultCommunity === 'function') window.setDefaultCommunity('pth'); } catch (e) {}
+  try { if (typeof window.setLogInterval === 'function') window.setLogInterval('action'); } catch (e) {}
   try { resetKeys(); } catch (e) {}
   try { openAdvancedOptions(); } catch (e) {}   // re-sync des cases + retour onglet Interface
 }
@@ -7096,7 +7110,7 @@ const App = (() => {
         pot = collectedPot;
         for (const p of seats) if (seatData[p]) pot += seatData[p].bet;
         setPot(pot);
-        logAction(getPlayerName(pid) + ': ' + aLabel + (bet ? ' ' + bet : ''));
+        logAction(getPlayerName(pid) + ': ' + aLabel + (bet ? ' ' + bet : ''), true);
         speak(voiceActionPhrase(action, pid, bet));
         if (pid === myId) {
           const myMon = (seatData[myId] || {}).money || 0;
@@ -10222,7 +10236,14 @@ const App = (() => {
   // se re-traduit instantanément au changement de langue. Une chaîne passée
   // directement (lignes sans terme traduisible) est simplement figée.
   const actionLog = [];
-  function logAction(entry) {
+  function logAction(entry, isAction) {
+    // Parite QML LogsSettings : LogOnOff coupe la collecte (les entrees deja
+    // enregistrees restent affichees) ; LogInterval 'hand' saute les lignes
+    // d'action individuelles (isAction) et ne garde que les etapes de main.
+    try {
+      if (!_advGet('log_on', true)) return;
+      if (isAction && _getLogInterval() === 'hand') return;
+    } catch (e) {}
     var fn = (typeof entry === 'function') ? entry : function(){ return entry; };
     actionLog.push(fn);
     if (actionLog.length > 500) actionLog.shift();
@@ -14676,7 +14697,7 @@ function renderPlayersList() {
   body.innerHTML = _shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>';
 }
 
-;(function(){ window.BUILD_VERSION='0.3.507-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.508-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

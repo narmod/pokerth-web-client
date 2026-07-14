@@ -308,6 +308,7 @@ export const strings = {
     quickCreateLabel:'Players:',
     quickCreateBtn:'Create',
     logPanelTitle:'Log', logCopied:'Log copied', logEmpty:'Log is empty', logExportTitle:'Export log',
+    advSecLogSettings:'Log settings', advLogOn:'Enable logging', advLogInterval:'Log interval', advLogEveryAction:'Every action', advLogEveryHand:'Every hand',
     advSecIgnored:'Ignored players', advIgnoredDesc:'Players on the ignore list are hidden from chat.', advIgnoredEmpty:'(no ignored players)', advIgnoredRemove:'Remove',
     advLobbyChat:'Show the lobby chat',
     advTableZoom:'Enable table zoom (magnifier buttons)',
