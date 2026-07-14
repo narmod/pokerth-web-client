@@ -12897,19 +12897,29 @@ function _maybeShowNextHandBtn() {
     },
 
     applyPreset(name, btn) {
-      // Rythme seulement : les styles ne touchent plus au nombre de joueurs
+      // Rythme seulement : les styles ne touchent pas au nombre de joueurs
       // (choix indépendant du tempo, demande d'Arnaud v0.3.515).
+      // Structures alignées sur les formats réellement joués (v0.3.516) :
+      //   Tranquille = deepstack lent (250 BB, blindes qui montent peu)
+      //   Normal     = défauts du client PokerTH desktop (150 BB, hausse/8 mains)
+      //   Rapide     = turbo (30 BB, blindes rapides, timer court)
+      // raiseEvery est en MAINS : le preset rebascule l'intervalle sur « mains ».
       var P = {
-        tranquille: { stack:5000, blind:10, timeout:30 },
-        normal:     { stack:3000, blind:10, timeout:15 },
-        rapide:     { stack:1500, blind:25, timeout:5  }
+        tranquille: { stack:5000, blind:10, timeout:30, raiseEvery:15, delay:10 },
+        normal:     { stack:3000, blind:10, timeout:20, raiseEvery:8,  delay:7  },
+        rapide:     { stack:1500, blind:25, timeout:7,  raiseEvery:4,  delay:3  }
       };
       var v = P[name];
       if (!v) return;
       var set = function(id, val){ var e = document.getElementById(id); if (e) { e.value = val; e.dispatchEvent(new Event('input')); } };
-      set('cf-stack',   v.stack);
-      set('cf-blind',   v.blind);
-      set('cf-timeout', v.timeout);
+      set('cf-stack',       v.stack);
+      set('cf-blind',       v.blind);
+      set('cf-timeout',     v.timeout);
+      set('cf-raise-every', v.raiseEvery);
+      set('cf-delay',       v.delay);
+      // Cohérence : la hausse du preset est en mains → radio + champ caché.
+      this.setRaiseMode(1);
+      var rm1 = document.getElementById('cf-rm1'); if (rm1) rm1.checked = true;
       var all = document.querySelectorAll('.cf-preset');
       for (var i = 0; i < all.length; i++) all[i].classList.remove('active');
       var sel = btn || document.querySelector('.cf-preset[data-preset="' + name + '"]');
@@ -14884,7 +14894,7 @@ function renderPlayersList() {
   body.innerHTML = _shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>';
 }
 
-;(function(){ window.BUILD_VERSION='0.3.515-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.516-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
