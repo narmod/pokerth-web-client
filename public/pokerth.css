@@ -6670,13 +6670,13 @@ html[data-seat^="pokerth"] .seat.me .seat-self-strip .seat-bet {
 html[data-seat^="pokerth"] .seat.me .seat-self-strip.has-tb .seat-bet {
   margin-right: calc(50% + 36px);
 }
-/* Puck self : AU-DESSUS du seat, posé sur le coin haut-droit de la box
-   (comme le client QML en portrait). !important requis : les règles
-   betside-* arrivent PLUS BAS dans le fichier à spécificité égale et
-   remettaient le puck SUR les cartes du self. */
+/* Puck self : HORS du siège — ancre QML exacte du GamePlayerSelfBox
+   (anchors.left = bord droit de la box + 6, aligné au haut). !important
+   requis : les règles betside-* arrivent PLUS BAS dans le fichier à
+   spécificité égale et remettaient le puck SUR les cartes du self. */
 html[data-seat^="pokerth"] .seat.me .seat-pucks {
-  left: auto !important; right: -14px !important;
-  top: -16px !important; bottom: auto !important; transform: none !important;
+  left: calc(100% + 6px) !important; right: auto !important;
+  top: 0 !important; bottom: auto !important; transform: none !important;
 }
 /* Self au tour : cadre du PlayerTurnGlow un peu plus épais (borderWidth 2 QML). */
 html[data-seat^="pokerth"] .seat.me.active .seat-plate::after { border-width: 2px; }
