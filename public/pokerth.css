@@ -4466,11 +4466,11 @@ body:not(.in-game) .my-zone {
   flex: 1;
   display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1px;
   background: rgba(var(--gold-rgb), 0.1); border: 1px solid var(--gold-dim);
-  color: var(--gold); padding: calc(7px * var(--bar-k, 1)) calc(4px * var(--bar-k, 1)); min-height: calc(38px * var(--bar-k, 1)); border-radius: 7px; cursor: pointer;
+  color: var(--gold); padding: calc(7px * var(--bar-k, 1)) calc(4px * var(--bar-k, 1)); min-height: calc(6.5px + 31.5px * var(--bar-k, 1)); /* 38px a k=1, 24px pile a la frontiere paysage (k=0.556) */ border-radius: 7px; cursor: pointer;
   font-family: var(--ff-mono); text-align: center;
 }
 .btn-pct .pct-p { font-size: calc(0.74rem * var(--bar-kf, 1)); font-weight: 700; color: var(--gold); }
-.btn-pct .pct-amt { font-size: 0.6rem; font-weight: 400; color: var(--text); }
+.btn-pct .pct-amt { font-size: calc(0.6rem * var(--bar-kf, 1)); font-weight: 400; color: var(--text); }
 .btn-pct:hover { background: rgba(var(--gold-rgb), 0.22); }
 /* Bets rapides : vert QML (comme le client officiel) UNIQUEMENT sur les tapis
    maison PokerTH (pas d'attribut data-table) et Spectator (data-table=pokerth-live).
