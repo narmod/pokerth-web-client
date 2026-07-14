@@ -6427,7 +6427,11 @@ html[data-seat^="pokerth"] .seat-plate {
   align-items: center; justify-content: center;
   column-gap: 4px; row-gap: 3px; position: relative;
   padding: 4px 4px 5px; border-radius: 6px;
-  background: linear-gradient(to bottom, color-mix(in srgb, var(--panel, #1d222b), #ffffff 13%), var(--panel, #1d222b));
+  /* Degrade EXACT du QML (GamePlayerBox : col600 #394150 eclairci x1.18
+     -> col700 #1d222b), FIXE — la plaque ne suit pas le --panel du theme
+     de table (le client officiel garde sa plaque ardoise sur tous les
+     feutres). */
+  background: linear-gradient(180deg, #434c5f, #1d222b);
   border: 1px solid rgba(255, 255, 255, 0.06);
   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.42);
   opacity: 0.9;
@@ -6445,8 +6449,9 @@ html[data-seat^="pokerth"] .seat-info {
 html[data-seat^="pokerth"] .seat-name {
   max-width: 120px; text-align: left;
   font-weight: 600; letter-spacing: 0.3px;
+  color: #eff1f5; /* col100 QML */
 }
-html[data-seat^="pokerth"] .seat-money { text-align: right; font-weight: 700; }
+html[data-seat^="pokerth"] .seat-money { text-align: right; font-weight: 700; color: #E3C800; font-family: var(--ff-display); } /* accent or QML */
 /* Non-wide (hauteur scalée < 76 ou portrait) : « nom · tapis » sur UNE ligne. */
 html[data-seat^="pokerth"] .seat-narrow .seat-info { flex-direction: row; align-items: baseline; justify-content: space-between; gap: 6px; }
 html[data-seat^="pokerth"] .seat-narrow .seat-name { max-width: 76px; font-size: 0.62rem; }
