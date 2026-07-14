@@ -9346,17 +9346,46 @@ const App = (() => {
       if (typeof window._applySelfZoomCounter === 'function') window._applySelfZoomCounter();
     } catch (e) {}
     // Mesure des tailles REELLES de boxes pour le layout ellipse (voir
-    // _qmlLandscapeLayout). Re-rendu UNIQUE si la mesure a change de plus
-    // de 2px (garde anti-boucle : _seatDimsRerender + seuil).
+    // _qmlLandscapeLayout). ATTENTION : .seat a max-width:68px et son contenu
+    // visuel DEBORDE (plaque avatar+cartes+nom+cash) -> offsetWidth mesurait
+    // ~68px au lieu du contour (~150px) et aggravait les chevauchements.
+    // On mesure donc l'UNION des rects des enfants structurels du siege,
+    // en EXCLUANT les surcouches volatiles (badge d'action, label, timer :
+    // le layout QML les budgete deja via sideBadgeGap/topBadgeExt), puis on
+    // divise par l'echelle appliquee (scale du siege x zoom table) pour
+    // retrouver la taille intrinseque. Re-rendu UNIQUE si la mesure change
+    // de plus de 2px (garde anti-boucle : _seatDimsRerender + seuil).
     try {
+      var _zoomEffM = window._tableZoomEff || 1;
+      var _unionSeat = function (seatEl, appliedScale) {
+        var div = appliedScale * _zoomEffM;
+        if (!(div > 0.05)) return null;
+        var minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity, found = false;
+        for (var ci = 0; ci < seatEl.children.length; ci++) {
+          var kid = seatEl.children[ci];
+          var kc = kid.className || '';
+          if (typeof kc !== 'string') kc = '';
+          if (kc.indexOf('seat-action-badge') !== -1 || kc.indexOf('seat-action-label') !== -1 || kc.indexOf('seat-timer-badge') !== -1) continue;
+          var kr = kid.getBoundingClientRect();
+          if (!kr.width && !kr.height) continue;
+          found = true;
+          if (kr.left < minX) minX = kr.left;
+          if (kr.top < minY) minY = kr.top;
+          if (kr.right > maxX) maxX = kr.right;
+          if (kr.bottom > maxY) maxY = kr.bottom;
+        }
+        if (!found) return null;
+        return { w: Math.round((maxX - minX) / div), h: Math.round((maxY - minY) / div) };
+      };
       var _s0m = el.querySelector('.seat:not(.me)');
       var _m0m = el.querySelector('.seat.me');
-      if (_s0m) {
-        var _nw = _s0m.offsetWidth, _nh = _s0m.offsetHeight;
-        var _nsh = _m0m ? Math.round(_m0m.offsetHeight * SELF_BOX_MUL) : 0;
+      var _dims = _s0m ? _unionSeat(_s0m, _seatBoxScale) : null;
+      if (_dims && _dims.w > 40 && _dims.h > 30) {
+        var _selfDims = _m0m ? _unionSeat(_m0m, _seatBoxScale * SELF_BOX_MUL) : null;
+        var _nsh = _selfDims ? Math.round(_selfDims.h * SELF_BOX_MUL) : 0;
         var _pdm = window._seatDimsMeasured;
-        if (_nw > 40 && _nh > 30 && (!_pdm || Math.abs(_pdm.w - _nw) > 2 || Math.abs(_pdm.h - _nh) > 2 || Math.abs((_pdm.sh || 0) - _nsh) > 2)) {
-          window._seatDimsMeasured = { w: _nw, h: _nh, sh: _nsh };
+        if (!_pdm || Math.abs(_pdm.w - _dims.w) > 2 || Math.abs(_pdm.h - _dims.h) > 2 || Math.abs((_pdm.sh || 0) - _nsh) > 2) {
+          window._seatDimsMeasured = { w: _dims.w, h: _dims.h, sh: _nsh };
           if (!window._seatDimsRerender) {
             window._seatDimsRerender = true;
             setTimeout(function () { window._seatDimsRerender = false; try { if (typeof renderSeats === 'function') renderSeats(); } catch (e) {} }, 30);
@@ -14112,7 +14141,7 @@ function renderPlayersList() {
   body.innerHTML = _shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>';
 }
 
-;(function(){ window.BUILD_VERSION='0.3.442-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.443-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
