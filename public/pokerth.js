@@ -9314,6 +9314,9 @@ const App = (() => {
         // téléphone, chaque box adverse est mise à l'échelle comme l'officiel.
         if (_offPos && _offPos._boxScale) {
           _seatBoxScale = _forceSeatPortrait ? _offPos._boxScale : _offPos._boxScale * (compact ? 1 : 0.9);  // portrait : bisection QML pure ; paysage desktop : -10% (sieges moins massifs)
+          // Rabot anti-chevauchement MESURÉ (voir garde post-rendu) : corrige
+          // sur écran ce que la bisection théorique aurait laissé passer.
+          _seatBoxScale *= (window._seatFitShave || 1);
           window._zoomInLayout = true;   // le zoom est DANS l'échelle : pas de loupe par-dessus
           // Bouton + grisé quand le plafond de faisabilité est atteint (plus
           // aucune marge au cran suivant) ou au max du réglage.
@@ -9677,6 +9680,54 @@ const App = (() => {
       h += '</div>'; // ferme .seat
     });
     el.innerHTML = h;
+    // ── Garde anti-chevauchement MESURÉE (placement officiel) : après CHAQUE
+    // rendu, on vérifie les rects RÉELS des plates — débordement de la zone,
+    // recouvrement entre sièges (> 4 px sur les 2 axes) ou siège sur la bande
+    // des cartes communes (> 6 px). En cas de violation, l'échelle est rabotée
+    // de 6 % (window._seatFitShave, plancher 0.6) et on re-rend : convergence
+    // en quelques frames. Vérité écran → couvre zoom hérité, angles morts du
+    // port compact, dimensions mesurées en retard, etc. Le rabot se remet à 1
+    // quand le nombre de sièges ou la taille de zone change. ──
+    try {
+      var _fitKey = rotated.length + ':' + Math.round(zRect.width) + 'x' + Math.round(zRect.height) + ':' + (_forceSeatPortrait ? 'p' : 'l');
+      if (window._seatFitKey !== _fitKey) { window._seatFitKey = _fitKey; window._seatFitShave = 1; }
+      if (_applyOfficial && !window._seatFitBusy) {
+        var _zrG = zone.getBoundingClientRect();
+        var _prs = [];
+        el.querySelectorAll('.seat:not(.seat-ghost) .seat-plate').forEach(function (pl) {
+          var rr = pl.getBoundingClientRect();
+          if (rr.width > 4 && rr.height > 4) _prs.push(rr);
+        });
+        var _badFit = false;
+        for (var _fi = 0; _fi < _prs.length && !_badFit; _fi++) {
+          var rA = _prs[_fi];
+          if (rA.left < _zrG.left - 4 || rA.right > _zrG.right + 4 || rA.top < _zrG.top - 4 || rA.bottom > _zrG.bottom + 4) { _badFit = true; break; }
+          for (var _fj = _fi + 1; _fj < _prs.length; _fj++) {
+            var rB = _prs[_fj];
+            var ox = Math.min(rA.right, rB.right) - Math.max(rA.left, rB.left);
+            var oy = Math.min(rA.bottom, rB.bottom) - Math.max(rA.top, rB.top);
+            if (ox > 4 && oy > 4) { _badFit = true; break; }
+          }
+        }
+        if (!_badFit) {
+          var _cm = document.getElementById('g-comm');
+          if (_cm) {
+            var rC = _cm.getBoundingClientRect();
+            if (rC.width > 10) for (var _fk = 0; _fk < _prs.length; _fk++) {
+              var rS = _prs[_fk];
+              var cx = Math.min(rS.right, rC.right) - Math.max(rS.left, rC.left);
+              var cy = Math.min(rS.bottom, rC.bottom) - Math.max(rS.top, rC.top);
+              if (cx > 6 && cy > 6) { _badFit = true; break; }
+            }
+          }
+        }
+        if (_badFit && (window._seatFitShave || 1) > 0.6) {
+          window._seatFitShave = Math.max(0.6, (window._seatFitShave || 1) * 0.94);
+          window._seatFitBusy = true;
+          setTimeout(function () { window._seatFitBusy = false; try { renderSeats(); } catch (e) {} }, 30);
+        }
+      }
+    } catch (e) {}
     // Self-box : remonter si son bas depasse la zone (tapis coupe en plein
     // ecran avec le boxScale de l'ellipse). Mesure reelle -> valable pour
     // tous les styles et tous les niveaux de zoom des cartes.
@@ -13020,7 +13071,12 @@ function _getTableZoom() {
   var z = NaN;
   try {
     z = parseFloat(localStorage.getItem(_tableZoomKey()));
-    if (isNaN(z)) z = parseFloat(localStorage.getItem('pth_table_zoom'));
+    if (isNaN(z)) {
+      // Migration : l'ancien réglage unique n'est repris que s'il est <= 1 —
+      // un zoom-loupe > 1 hérité gonflerait le layout au-delà du faisable.
+      var _lz = parseFloat(localStorage.getItem('pth_table_zoom'));
+      if (!isNaN(_lz) && _lz <= 1) z = _lz;
+    }
   } catch (e) {}
   if (isNaN(z)) z = TABLE_ZOOM_DEFAULT;
   return Math.max(TABLE_ZOOM_MIN, Math.min(TABLE_ZOOM_MAX, z));
@@ -14546,7 +14602,7 @@ function renderPlayersList() {
   body.innerHTML = _shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>';
 }
 
-;(function(){ window.BUILD_VERSION='0.3.495-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.496-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
