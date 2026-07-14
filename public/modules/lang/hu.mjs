@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+    advWinnerPopup:"Győztes ablak a leosztás végén",
     // PlayerWinnerOverlay (badge gagnant sur la boîte, parité QML)
     winnerBadge:'GYŐZTES',
     // GameStatusBar (bandeau d'info de jeu, parité QML §7)

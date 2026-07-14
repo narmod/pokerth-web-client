@@ -11,6 +11,7 @@ export const meta = {
 };
 
 export const strings = {
+    advWinnerPopup:"Uinneag buannaiche aig deireadh na làimhe",
     // PlayerWinnerOverlay (badge gagnant sur la boîte, parité QML)
     winnerBadge:'BUANNAICHE',
     // GameStatusBar (bandeau d'info de jeu, parité QML §7)

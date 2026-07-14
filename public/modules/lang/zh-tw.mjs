@@ -11,6 +11,7 @@ export const meta = {
 };
 
 export const strings = {
+    advWinnerPopup:"每手結束時的獲勝者視窗",
     // PlayerWinnerOverlay (badge gagnant sur la boîte, parité QML)
     winnerBadge:'獲勝者',
     // GameStatusBar (bandeau d'info de jeu, parité QML §7)

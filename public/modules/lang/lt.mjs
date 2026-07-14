@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+    advWinnerPopup:"Nugalėtojo langas rankos pabaigoje",
     // PlayerWinnerOverlay (badge gagnant sur la boîte, parité QML)
     winnerBadge:'NUGALĖTOJAS',
     // GameStatusBar (bandeau d'info de jeu, parité QML §7)

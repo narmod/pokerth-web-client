@@ -11,6 +11,7 @@ export const meta = {
 };
 
 export const strings = {
+    advWinnerPopup:"கை முடிவில் வெற்றியாளர் சாளரம்",
     // PlayerWinnerOverlay (badge gagnant sur la boîte, parité QML)
     winnerBadge:'வெற்றியாளர்',
     // GameStatusBar (bandeau d'info de jeu, parité QML §7)

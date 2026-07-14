@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+    advWinnerPopup:"Wennervenster aan die einde van die hand",
     // PlayerWinnerOverlay (badge gagnant sur la boîte, parité QML)
     winnerBadge:'WENNER',
     // GameStatusBar (bandeau d'info de jeu, parité QML §7)

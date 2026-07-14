@@ -13,6 +13,7 @@ export const meta = {
 };
 
 export const strings = {
+    advWinnerPopup:"핸드 종료 시 승자 창",
     // PlayerWinnerOverlay (badge gagnant sur la boîte, parité QML)
     winnerBadge:'승자',
     // GameStatusBar (bandeau d'info de jeu, parité QML §7)

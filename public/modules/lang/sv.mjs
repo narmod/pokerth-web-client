@@ -9,6 +9,7 @@ export const meta = {
 };
 
 export const strings = {
+    advWinnerPopup:"Vinnarfönster vid handens slut",
     // PlayerWinnerOverlay (badge gagnant sur la boîte, parité QML)
     winnerBadge:'VINNARE',
     // GameStatusBar (bandeau d'info de jeu, parité QML §7)

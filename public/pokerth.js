@@ -533,6 +533,7 @@ function openAdvancedOptions() {
   sync('adv-snd-blinds', 'snd_blinds', true);
   sync('adv-reducefx', 'reduce_fx', false);
   sync('adv-statusbar', 'status_bar', true);
+  sync('adv-winnerpopup', 'winner_popup', true);
   try { var _dm = document.getElementById('adv-darkmode'); if (_dm && window.getTheme) _dm.value = window.getTheme() || 'auto'; } catch (e) {}
   sync('adv-pingavatar', 'ping_avatar', false);
   sync('adv-autoleave', 'auto_leave', false);
@@ -10721,6 +10722,11 @@ function showWinnerOverlay(winners) {
   }
   var trophy = isMyWin ? "🎉" : "🏆";
 
+  // Option avancée « Fenêtre du gagnant » (activée par défaut) : quand elle est
+  // décochée, on saute uniquement l'AFFICHAGE — les sons de victoire ci-dessus
+  // restent joués et la partie enchaîne normalement (dismissWinner est no-op).
+  if (!_advGet('winner_popup', true)) return;
+
   // Snapshot figé à la fin de la main (montants + qui était réellement engagé).
   var snap = _handResultSnapshot || {};
   var winnerPidsEarly = winners.map(function(w){ return w.pid; });
@@ -14460,7 +14466,7 @@ function renderPlayersList() {
   body.innerHTML = _shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>';
 }
 
-;(function(){ window.BUILD_VERSION='0.3.489-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.490-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
