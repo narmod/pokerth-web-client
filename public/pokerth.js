@@ -12855,6 +12855,83 @@ function dismissWinner() {
       var row = document.getElementById('cf-min-humans-row');
       if (row) row.style.display = (cb && cb.checked) ? 'flex' : 'none';
     },
+    // ── Préférences personnelles de création (parité QML InternetGame*/Net*,
+    //    en mieux : un instantané EXPLICITE, distinct du « dernier utilisé »
+    //    automatique pth_last_create). saveCreatePrefs fige TOUT le
+    //    formulaire (nom et mot de passe de table inclus, comme
+    //    InternetGameName/InternetGamePassword côté QML) ; applyCreatePrefs
+    //    le réinjecte — c'est le point d'entrée de la future pastille
+    //    « Perso » à droite du style de partie. ──
+    _readCreateForm() {
+      var g = function(id){ return document.getElementById(id); };
+      var iv = function(id, def){ var e = g(id); var v = e ? parseInt(e.value, 10) : NaN; return isNaN(v) ? def : v; };
+      var svv = function(id, def){ var e = g(id); return (e && e.value != null && e.value !== '') ? e.value : def; };
+      return {
+        name:            (g('cf-name') ? g('cf-name').value : '').trim(),
+        players:         iv('cf-players', 10),
+        blind:           iv('cf-blind', 10),
+        stack:           iv('cf-stack', 3000),
+        timeout:         iv('cf-timeout', 15),
+        raiseMode:       svv('cf-raise-mode', '1'),
+        raiseEvery:      iv('cf-raise-every', 7),
+        endRaiseMode:    svv('cf-end-raise', '1'),
+        endRaiseValue:   iv('cf-end-raise-val', 200),
+        guiSpeed:        iv('cf-gui-speed', 5),
+        delayHands:      iv('cf-delay', 7),
+        gameType:        svv('cf-game-type', '1'),
+        allowSpectators: (function(){ var e = g('cf-allow-spectators'); if (!e) return true; return e.type === 'checkbox' ? e.checked : e.value !== '0'; })(),
+        usePassword:     !!(g('cf-use-password') && g('cf-use-password').checked),
+        password:        (g('cf-use-password') && g('cf-use-password').checked && g('cf-password')) ? g('cf-password').value : '',
+        bots:            !!(g('cf-bots') && g('cf-bots').checked),
+        minHumans:       iv('cf-min-humans', 2),
+      };
+    },
+    saveCreatePrefs() {
+      try { localStorage.setItem('pth_create_prefs', JSON.stringify(this._readCreateForm())); } catch (e) {}
+      if (typeof showToast === 'function') showToast(t('createPrefsSaved') || 'Preferences saved');
+    },
+    hasCreatePrefs() {
+      try { return !!localStorage.getItem('pth_create_prefs'); } catch (e) { return false; }
+    },
+    applyCreatePrefs() {
+      var d = null;
+      try { d = JSON.parse(localStorage.getItem('pth_create_prefs') || 'null'); } catch (e) {}
+      if (!d || typeof d !== 'object') {
+        if (typeof showToast === 'function') showToast(t('createPrefsNone') || 'No saved preferences yet', { tone: 'error' });
+        return;
+      }
+      var set = function(id, val){ var e = document.getElementById(id); if (e == null || val == null) return; e.value = val; e.dispatchEvent(new Event('input')); };
+      if (d.name) set('cf-name', d.name);
+      set('cf-players',       d.players);
+      set('cf-blind',         d.blind);
+      set('cf-stack',         d.stack);
+      set('cf-timeout',       d.timeout);
+      set('cf-raise-mode',    d.raiseMode);
+      set('cf-raise-every',   d.raiseEvery);
+      set('cf-end-raise',     d.endRaiseMode);
+      set('cf-end-raise-val', d.endRaiseValue);
+      set('cf-gui-speed',     d.guiSpeed);
+      set('cf-delay',         d.delayHands);
+      set('cf-game-type',     d.gameType);
+      var asp = document.getElementById('cf-allow-spectators');
+      if (asp && d.allowSpectators != null) {
+        if (asp.type === 'checkbox') asp.checked = !!d.allowSpectators;
+        else { asp.value = d.allowSpectators ? '1' : '0'; asp.dispatchEvent(new Event('input')); }
+      }
+      var pw = document.getElementById('cf-use-password');
+      if (pw) { pw.checked = !!d.usePassword; try { pw.dispatchEvent(new Event('change')); } catch (e) {} }
+      var pwr = document.getElementById('cf-password-row');
+      if (pwr) pwr.style.display = d.usePassword ? '' : 'none';
+      var pwv = document.getElementById('cf-password');
+      if (pwv) pwv.value = d.usePassword ? (d.password || '') : '';
+      var bt = document.getElementById('cf-bots');
+      if (bt && d.bots != null) { bt.checked = !!d.bots; try { this.toggleMinHumans(); } catch (e) {} }
+      set('cf-min-humans', d.minHumans);
+      // Les préférences remplacent tout style prédéfini : on éteint les pastilles.
+      var presets = document.querySelectorAll('.cf-preset[data-preset]');
+      for (var i = 0; i < presets.length; i++) presets[i].classList.remove('active');
+      if (typeof showToast === 'function') showToast(t('createPrefsLoaded') || 'Preferences loaded');
+    },
     // Reset the create-table form to its FACTORY defaults: the per-mode
     // baseline (LAN vs pokerth.net), explicitly IGNORING the last-used
     // settings saved in localStorage (skipSaved=true). Resets every field —
@@ -14697,7 +14774,7 @@ function renderPlayersList() {
   body.innerHTML = _shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>';
 }
 
-;(function(){ window.BUILD_VERSION='0.3.508-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.509-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

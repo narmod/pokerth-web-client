@@ -1268,6 +1268,7 @@ function onAvatarImageChosen(input) {
         <input type="hidden" id="cf-gui-speed" value="5">
 
         <div class="cf-actions">
+          <button type="button" class="btn-cf-reset" onclick="App.saveCreatePrefs()" title="Save as my preferences" data-i18n-title="createPrefsSaveTip"><span class="cf-reset-ico" aria-hidden="true">💾</span><span class="cf-reset-lbl" data-i18n="createPrefsSave">💾 My prefs</span></button>
           <button type="button" class="btn-cf-reset" onclick="App.resetCreateForm()"><span class="cf-reset-ico" aria-hidden="true">↺</span><span class="cf-reset-lbl" data-i18n="resetForm">↺ Reset</span></button>
           <button type="button" class="btn-cf-cancel" onclick="App.closeCreatePage()" data-i18n="cancelBtn">Annuler</button>
           <button type="button" class="cf-create-btn" data-i18n="createTable" onclick="App.createGame()">+ Créer</button>

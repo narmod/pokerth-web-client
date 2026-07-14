@@ -308,6 +308,7 @@ export const strings = {
     quickCreateLabel:'Joueurs\u00a0:',
     quickCreateBtn:'Cr\u00e9er',
     logPanelTitle:'Journal', logCopied:'Journal copié', logEmpty:'Journal vide', logExportTitle:'Exporter le journal',
+    createPrefsSave:'💾 Mes préfs', createPrefsSaveTip:'Enregistrer ce formulaire comme mes préférences personnelles', createPrefsSaved:'Préférences enregistrées', createPrefsLoaded:'Préférences chargées', createPrefsNone:'Aucune préférence enregistrée pour l\'instant',
     advSecLogSettings:'Réglages du journal', advLogOn:'Activer le journal', advLogInterval:'Intervalle du journal', advLogEveryAction:'Chaque action', advLogEveryHand:'Chaque main',
     advSecIgnored:'Joueurs ignorés', advIgnoredDesc:'Les joueurs de la liste d\'ignorés sont masqués dans le chat.', advIgnoredEmpty:'(aucun joueur ignoré)', advIgnoredRemove:'Retirer',
     advLobbyChat:'Afficher le chat du lobby',
