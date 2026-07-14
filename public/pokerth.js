@@ -8906,6 +8906,59 @@ const App = (() => {
   //   Paysage  : grille périmètre, 5 sièges en haut + sièges bas (client desktop).
   // Fractions = part de la zone (x: 0=gauche..1=droite, y: 0=haut..1=bas).
   // Hors plage (>9 adversaires) : retourne null -> calcul classique conservé.
+  // ── Échelle PORTRAIT officielle (GamePage.qml boxScale, branche Hochformat) :
+  // bisection de faisabilité — murs (0.15·W / 0.075·H), self-box vs rangée
+  // bottom (opp >= 8, nudge +14 intégré : 0.215·H − 26), séparation de paires
+  // (voisins de slotSeqPortrait : dx OU dy >= boîte·s + 8). Plafond fillCap(1.85),
+  // plancher 0.55, 14 itérations. Fonction PURE (window._qmlPortraitScale).
+  function _qmlPortraitScale(oppCnt, zW, zH) {
+    var oppW = 121, oppH = 71, selfH = 82;   // bases QML 2.1.3 (portrait)
+    try {
+      var _md = window._seatDimsMeasured;
+      if (_md && _md.w > 40 && _md.h > 30) { oppW = _md.w; oppH = _md.h; if (_md.sh > 40) selfH = _md.sh; }
+    } catch (e) {}
+    var SLOTS = { L_bottom:[0.15,0.785], L_lower:[0.15,0.65], L_upper:[0.15,0.345],
+                  TL:[0.15,0.21], TC:[0.50,0.075], TR:[0.85,0.21],
+                  R_upper:[0.85,0.345], R_lower:[0.85,0.65], R_bottom:[0.85,0.785] };
+    var SEQ = {
+      1:['TC'], 2:['TL','TR'], 3:['TL','TC','TR'],
+      4:['L_upper','TL','TR','R_upper'], 5:['L_upper','TL','TC','TR','R_upper'],
+      6:['L_lower','L_upper','TL','TR','R_upper','R_lower'],
+      7:['L_lower','L_upper','TL','TC','TR','R_upper','R_lower'],
+      8:['L_bottom','L_lower','L_upper','TL','TR','R_upper','R_lower','R_bottom'],
+      9:['L_bottom','L_lower','L_upper','TL','TC','TR','R_upper','R_lower','R_bottom']
+    };
+    var seq = SEQ[oppCnt] || [];
+    var gapP = 8;
+    function feas(sT) {
+      if (sT <= 0) return false;
+      var vW = oppW * sT, vH = oppH * sT, sH = selfH * sT;
+      if (vW > 2 * (0.15 * zW - 4)) return false;
+      if (vH > 2 * (0.075 * zH - 4)) return false;
+      if (oppCnt >= 8 && 0.215 * zH - 26 - sH - vH / 2 < gapP) return false;
+      var xN = vW + gapP, yN = vH + gapP;
+      for (var i = 0; i < seq.length - 1; i++) {
+        var a = SLOTS[seq[i]], b = SLOTS[seq[i + 1]];
+        if (!a || !b) continue;
+        var dx = Math.abs(a[0] - b[0]) * zW, dy = Math.abs(a[1] - b[1]) * zH;
+        if (dx < xN && dy < yN) return false;
+      }
+      return true;
+    }
+    var base = 0.95, t = Math.max(0, Math.min(1, (oppCnt - 1) / 5));
+    var countCap = base + (1.85 - base) * t;
+    var grow = (1 - t) * Math.max(0, (Math.sqrt(zW * zH) - 760) / 700);
+    var denseShrink = t * Math.min(0.15, Math.max(0, (zW - 1024) / 4000));
+    var hi = Math.min(2.2, countCap * (1 + grow) - denseShrink);
+    var lo = 0.55; if (hi < lo) hi = lo;
+    var sP;
+    if (!feas(lo)) sP = lo;
+    else if (feas(hi)) sP = hi;
+    else { for (var it = 0; it < 14; it++) { var mP = (lo + hi) / 2; if (feas(mP)) lo = mP; else hi = mP; } sP = lo; }
+    return Math.max(0.55, sP);
+  }
+  window._qmlPortraitScale = _qmlPortraitScale;
+
   function _officialSeatPix(n, isPortrait, zW, zH, oCX, oCY, oRect, boxScale) {
     var M = n - 1; // adversaires
     if (M < 1) return null;
@@ -8941,6 +8994,9 @@ const App = (() => {
         var nm = seqP[i];
         outP.push({ left: SLOTS_P[nm][0] * zW, top: SLOTS_P[nm][1] * zH + (NUDGE_P[nm] || 0) });
       }
+      // Échelle bisectée QML (Hochformat) : les slots sont fixes, seule
+      // l'échelle empêche les chevauchements — comme le client officiel.
+      outP._boxScale = _qmlPortraitScale(M, zW, zH);
       return outP;
     }
     // ── PAYSAGE : ellipse officielle — DÉLÉGUÉE au port 1:1 du QML ──
@@ -9204,7 +9260,7 @@ const App = (() => {
         if (_offPos) { for (var _op = _op0; _op < pixPos.length; _op++) { if (_offPos[_op]) pixPos[_op] = _offPos[_op]; } }
         // Échelle bisectée du QML (paysage seulement) : remplace l'heuristique
         // téléphone, chaque box adverse est mise à l'échelle comme l'officiel.
-        if (_offPos && _offPos._boxScale && !_forceSeatPortrait) _seatBoxScale = _offPos._boxScale * (compact ? 1 : 0.9);  // -10% desktop : sieges moins massifs
+        if (_offPos && _offPos._boxScale) _seatBoxScale = _forceSeatPortrait ? _offPos._boxScale : _offPos._boxScale * (compact ? 1 : 0.9);  // portrait : bisection QML pure ; paysage desktop : -10% (sieges moins massifs)
         // Point bas exact de l'ellipse pour la self (quand l'officiel est actif).
         // L'ÉPINGLAGE mesuré au rendu (plus bas) reste la garantie finale, même
         // si l'officiel est désactivé (custom / classique).
@@ -14398,7 +14454,7 @@ function renderPlayersList() {
   body.innerHTML = _shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>';
 }
 
-;(function(){ window.BUILD_VERSION='0.3.486-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.487-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
