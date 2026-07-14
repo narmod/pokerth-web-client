@@ -6613,6 +6613,27 @@ html[data-seat^="pokerth"] .seat.winner-below .seat-winner-badge { bottom: auto;
 /* QML : le badge d'action est masqué pendant l'état gagnant (visible: !isWinner). */
 html[data-seat^="pokerth"] .seat.winner .seat-action-badge,
 html[data-seat^="pokerth"] .seat.winner .seat-action-label { display: none; }
+/* PlayerTimeoutBar QML (bloc F) : 44×9, track #0e1a30 bordé blanc 55 %,
+   remplissage #4070D0 (self #6E9CEC), radius pilule, centrée sur les cartes à
+   l'emplacement du badge d'action. S'AJOUTE au cadre rectangulaire décomptant
+   (conservé). Tokens thème : --timeout-track / --timeout-fill(-self). */
+html[data-seat^="pokerth"] .seat-timeout-bar {
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+  width: 44px; height: 9px; box-sizing: border-box;
+  border-radius: 5px;
+  background: var(--timeout-track, #0e1a30);
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+  overflow: hidden;
+  z-index: 18; pointer-events: none;
+}
+html[data-seat^="pokerth"] .seat-timeout-bar .stb-fill {
+  height: 100%;
+  border-radius: 4px;
+  background: var(--timeout-fill, #4070D0);
+  transition: width 0.9s linear;
+}
+html[data-seat^="pokerth"] .seat-timeout-bar.me .stb-fill { background: var(--timeout-fill-self, #6E9CEC); }
 /* Couché : 0.72 ; éliminé : la base gère déjà l'estompe (transition QML 250ms). */
 html[data-seat^="pokerth"] .seat { transition: opacity 0.25s ease-out; }
 html[data-seat^="pokerth"] .seat.folded { opacity: 0.72; }

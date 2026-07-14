@@ -8637,6 +8637,11 @@ const App = (() => {
     document.querySelectorAll('.seat-timer-rect .rt-arc').forEach(function(el) {
       el.setAttribute('stroke-dashoffset', _roff);
     });
+    // Barre de timeout QML (bloc F) : remplissage décompté linéairement.
+    var _tw = (100 * Math.max(0, _timerSec / (_timerTot || 30))).toFixed(1) + '%';
+    document.querySelectorAll('.seat-timeout-bar .stb-fill').forEach(function(el) {
+      el.style.width = _tw;
+    });
     // No <text> inside .seat-timer — the countdown number is rendered in the
     // seat badge (stb-*) and the player-bar below, not in the SVG.
     // Badge timer sous chaque siège
@@ -9479,7 +9484,16 @@ const App = (() => {
         var _hcSz  = _selfBig ? '' : 'xsm';
         var _hcBadge = (_pkHole && _acBadge) ? _acBadge : '';
         if (_hcBadge) _acInCards = true;
-        h += '<div class="' + _hcCls + '">' + cardHtml(_phc1,_hcSz) + cardHtml(_phc2,_hcSz) + _hcBadge + '</div>';
+        // Bloc F — PlayerTimeoutBar QML (44×9) : centrée sur les cartes tant que
+        // le siège est au tour SANS badge d'action ni état gagnant. S'AJOUTE au
+        // cadre rectangulaire décomptant (conservé, demande narmod). La largeur
+        // du remplissage est tenue à jour chaque seconde par _updateTimer.
+        var _tbar = '';
+        if (_pkHole && isActive && !_acBadge && !(_sdWinners && _sdWinners.has(pid))) {
+          var _tfrac = Math.max(0, Math.min(1, _timerSec / (_timerTot || 30)));
+          _tbar = '<div class="seat-timeout-bar' + (isMe ? ' me' : '') + '"><div class="stb-fill" style="width:' + (_tfrac * 100).toFixed(1) + '%"></div></div>';
+        }
+        h += '<div class="' + _hcCls + '">' + cardHtml(_phc1,_hcSz) + cardHtml(_phc2,_hcSz) + _hcBadge + _tbar + '</div>';
       }
       // Badge timer sous l'avatar (visible et non confondu avec l'emoji)
       if (isActive) h += '<div class="seat-timer-badge" id="stb-'+pid+'">'
@@ -14355,7 +14369,7 @@ function renderPlayersList() {
   body.innerHTML = _shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>';
 }
 
-;(function(){ window.BUILD_VERSION='0.3.483-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.484-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
