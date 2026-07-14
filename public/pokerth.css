@@ -3832,12 +3832,14 @@ body {
   box-shadow: 0 2px 6px rgba(0,0,0,0.45);
   pointer-events: none;
 }
-.seat-action-badge.act-c1 { background: #8b1a1a; border-color: #e87070; } /* Fold */
+/* Couleurs = colonne « Badge » du Theme QML (actionBadgeColor : plus sombre que
+   le Bottom des boutons), bord = Edge. Surchargeables par thème via var(). */
+.seat-action-badge.act-c1 { background: var(--act-badge-fold, #5a1010);  border-color: var(--act-edge-fold, #e87070); } /* Fold */
 .seat-action-badge.act-c2,
-.seat-action-badge.act-c3 { background: #1a3d8b; border-color: #6aa0e8; } /* Check / Call */
+.seat-action-badge.act-c3 { background: var(--act-badge-call, #122a55);  border-color: var(--act-edge-call, #6aa0e8); } /* Check / Call */
 .seat-action-badge.act-c4,
-.seat-action-badge.act-c5 { background: #1e6614; border-color: #7ad06a; } /* Bet / Raise */
-.seat-action-badge.act-c6 { background: #5c1111; border-color: #ef5350; } /* All-in */
+.seat-action-badge.act-c5 { background: var(--act-badge-raise, #123f0b); border-color: var(--act-edge-raise, #7ad06a); } /* Bet / Raise */
+.seat-action-badge.act-c6 { background: var(--act-badge-allin, #3c0a0a); border-color: var(--act-edge-allin, #ef5350); } /* All-in */
 
 @keyframes pulse-gold {
   0%,100% { box-shadow: 0 0 10px rgba(var(--gold-rgb), 0.5); }
@@ -6483,6 +6485,27 @@ html[data-seat^="pokerth"] .seat-plate {
 }
 html[data-seat^="pokerth"] .seat-avatar { grid-column: 1; grid-row: 1; border-radius: 8px; }
 html[data-seat^="pokerth"] .seat-holecards { grid-column: 2; grid-row: 1; display: flex; gap: 4px; flex: none; }
+/* PlayerActionBadge QML : centré sur la rangée de hole-cards (x/y = cardsCenter),
+   hauteur 18, radius 9, padding H 7, texte #eaf1ff 12px bold, pop à l'apparition
+   (0.6→1.12→1.0). Le badge est injecté DANS .seat-holecards par renderSeats. */
+html[data-seat^="pokerth"] .seat-holecards { position: relative; }
+html[data-seat^="pokerth"] .seat-holecards .seat-action-badge {
+  position: absolute; top: 50%; left: 50%;
+  height: 18px; box-sizing: border-box;
+  display: inline-flex; align-items: center;
+  padding: 0 7px; border-radius: 9px;
+  font-size: 12px; font-weight: 700; letter-spacing: 0;
+  color: #eaf1ff;
+  box-shadow: none;
+  z-index: 18;
+  transform: translate(-50%, -50%);
+  animation: seatBadgePop 0.23s ease-out;
+}
+@keyframes seatBadgePop {
+  0%   { transform: translate(-50%, -50%) scale(0.6); }
+  48%  { transform: translate(-50%, -50%) scale(1.12); }
+  100% { transform: translate(-50%, -50%) scale(1); }
+}
 /* Wide (par défaut) : nom à GAUCHE ligne 1, tapis accent à DROITE ligne 2
    (infoBar 2 lignes du QML : nom 15px DemiBold #eff1f5 ls .3 / $stack bold). */
 html[data-seat^="pokerth"] .seat-info {

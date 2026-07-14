@@ -9453,6 +9453,16 @@ const App = (() => {
       // (l1/l2 plus petites, l3/l4 plus grandes). Hors style pokerth,
       // les cartes self n'apparaissent dans le siege qu'en mode masque.
       var _selfBig = isMe && !isGone && !isOut && (_pkHole || _maskMode);
+      // ── Badge d'action (PlayerActionBadge QML) : construit AVANT les cartes
+      // pour pouvoir être centré SUR la rangée de hole-cards dans les packs
+      // pokerth (x/y = cardsCenter, comme le client officiel). Hors pokerth,
+      // il reste rendu dans le pied du siège (comportement historique).
+      var _acCode = ({'Fold':1,'Check':2,'Call':3,'Bet':4,'Raise':5,'All-in':6})[sd.action] || 0;
+      var _acBadge = '', _acInCards = false;
+      if (_acCode) {
+        var _acKey = ['','actBadgeFold','actBadgeCheck','actBadgeCall','actBadgeBet','actBadgeRaise','actBadgeAllin'][_acCode];
+        _acBadge = '<div class="seat-action-badge act-c' + _acCode + '">' + esc(t(_acKey)) + '</div>';
+      }
       if ((_pkHole || _selfBig) && !isGone && !isOut) {
         var _ownHide = isMe && _ownCardsHidden();
         var _phc1 = isMe ? (_ownHide ? null : myCards[0]) : sd.card1;
@@ -9460,7 +9470,9 @@ const App = (() => {
         var _hcBigCls = _selfBig ? (' shc-big' + (_ownLvl >= 1 && _ownLvl <= 3 ? ' shc-l' + _ownLvl : '')) : '';  // 0 = base QML (85% riviere) ; 1-3 croissants, plafond riviere
         var _hcCls = 'seat-holecards' + _hcBigCls;
         var _hcSz  = _selfBig ? '' : 'xsm';
-        h += '<div class="' + _hcCls + '">' + cardHtml(_phc1,_hcSz) + cardHtml(_phc2,_hcSz) + '</div>';
+        var _hcBadge = (_pkHole && _acBadge) ? _acBadge : '';
+        if (_hcBadge) _acInCards = true;
+        h += '<div class="' + _hcCls + '">' + cardHtml(_phc1,_hcSz) + cardHtml(_phc2,_hcSz) + _hcBadge + '</div>';
       }
       // Badge timer sous l'avatar (visible et non confondu avec l'emoji)
       if (isActive) h += '<div class="seat-timer-badge" id="stb-'+pid+'">'
@@ -9473,13 +9485,11 @@ const App = (() => {
       if (_pkHole && (blindBadge || dealerChip)) h += '<div class="seat-pucks">' + blindBadge + dealerChip + '</div>';
       h += '<div class="seat-foot">'; // pied : mise / action / cartes
       if (sd.bet) h += '<div class="seat-bet">' + fmtChips(sd.bet) + '</div>';
-      // Action → vignette ovale posée sur la box (traduite, couleur par action,
-      // comme le client officiel). Le texte non-action (gains au showdown,
+      // Action → badge préparé plus haut (posé sur les cartes en pack pokerth,
+      // sinon ici dans le pied). Le texte non-action (gains au showdown,
       // '+X'/'🏆') garde le libellé simple.
-      var _acCode = ({'Fold':1,'Check':2,'Call':3,'Bet':4,'Raise':5,'All-in':6})[sd.action] || 0;
       if (_acCode) {
-        var _acKey = ['','actBadgeFold','actBadgeCheck','actBadgeCall','actBadgeBet','actBadgeRaise','actBadgeAllin'][_acCode];
-        h += '<div class="seat-action-badge act-c' + _acCode + '">' + esc(t(_acKey)) + '</div>';
+        if (!_acInCards) h += _acBadge;
       } else if (sd.action) {
         h += '<div class="seat-action-label">' + esc(sd.action) + '</div>';
       }
@@ -14328,7 +14338,7 @@ function renderPlayersList() {
   body.innerHTML = _shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>';
 }
 
-;(function(){ window.BUILD_VERSION='0.3.478-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.479-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
