@@ -2019,12 +2019,31 @@ if ('serviceWorker' in navigator) {
           <div class="adv-body">
             <div class="adv-sec" data-i18n="advSecLocalGame">Training game</div>
             <label class="adv-row"><input type="checkbox" id="adv-pausehands" onchange="setAdvOpt('pause_hands',this.checked)"><span data-i18n="advPauseHands">Pause between hands (continue with the winner window)</span></label>
+            <div class="adv-sec" data-i18n="advSecTablePrefs">Table preferences</div>
+            <div class="adv-ign-desc" data-i18n="advTablePrefsDesc">Defaults for the tables you create in this mode — the ⭐ pill on the create form loads them.</div>
+            <div class="adv-row"><span data-i18n="maxPlayers">Max players</span><input type="number" class="adv-numin" id="advp-local-players" min="2" max="10" step="1" onchange="advPrefSet('local','players',this)"></div>
+            <div class="adv-row"><span data-i18n="startCash">Starting stack</span><input type="number" class="adv-numin" id="advp-local-stack" min="500" max="1000000" step="500" onchange="advPrefSet('local','stack',this)"></div>
+            <div class="adv-row"><span data-i18n="firstSmallBlind">First small blind</span><input type="number" class="adv-numin" id="advp-local-blind" min="1" max="1000000" step="1" onchange="advPrefSet('local','blind',this)"></div>
+            <div class="adv-row"><span data-i18n="advRaiseEveryHands">Raise blinds every N hands</span><input type="number" class="adv-numin" id="advp-local-raise" min="1" max="180" step="1" onchange="advPrefSet('local','raiseEvery',this)"></div>
+            <div class="adv-row"><span data-i18n="actionTimeout">Time per action</span><input type="number" class="adv-numin" id="advp-local-timeout" min="5" max="120" step="1" onchange="advPrefSet('local','timeout',this)"></div>
+            <div class="adv-row"><span data-i18n="pauseBetweenHands">Pause between hands</span><input type="number" class="adv-numin" id="advp-local-delay" min="0" max="20" step="1" onchange="advPrefSet('local','delayHands',this)"></div>
+            <div class="adv-row"><span data-i18n="advGameSpeed">Game speed (1–11)</span><input type="number" class="adv-numin" id="advp-local-speed" min="1" max="11" step="1" onchange="advPrefSet('local','guiSpeed',this)"></div>
           </div>
         </section>
         <section class="adv-panel" data-cat="network" id="adv-panel-network" role="tabpanel" aria-labelledby="adv-cat-network">
           <div class="adv-link">
             <div class="adv-link-desc" data-i18n="advNetworkDesc">Host a game over your local network (LAN).</div>
             <div class="adv-soon-tag" data-i18n="advSoonTag">Coming soon</div>
+          </div>
+          <div class="adv-body">
+            <div class="adv-sec" data-i18n="advSecTablePrefs">Table preferences</div>
+            <div class="adv-ign-desc" data-i18n="advTablePrefsDesc">Defaults for the tables you create in this mode — the ⭐ pill on the create form loads them.</div>
+            <div class="adv-row"><span data-i18n="maxPlayers">Max players</span><input type="number" class="adv-numin" id="advp-lan-players" min="2" max="10" step="1" onchange="advPrefSet('lan','players',this)"></div>
+            <div class="adv-row"><span data-i18n="startCash">Starting stack</span><input type="number" class="adv-numin" id="advp-lan-stack" min="500" max="1000000" step="500" onchange="advPrefSet('lan','stack',this)"></div>
+            <div class="adv-row"><span data-i18n="firstSmallBlind">First small blind</span><input type="number" class="adv-numin" id="advp-lan-blind" min="1" max="1000000" step="1" onchange="advPrefSet('lan','blind',this)"></div>
+            <div class="adv-row"><span data-i18n="advRaiseEveryHands">Raise blinds every N hands</span><input type="number" class="adv-numin" id="advp-lan-raise" min="1" max="180" step="1" onchange="advPrefSet('lan','raiseEvery',this)"></div>
+            <div class="adv-row"><span data-i18n="actionTimeout">Time per action</span><input type="number" class="adv-numin" id="advp-lan-timeout" min="5" max="120" step="1" onchange="advPrefSet('lan','timeout',this)"></div>
+            <div class="adv-row"><span data-i18n="pauseBetweenHands">Pause between hands</span><input type="number" class="adv-numin" id="advp-lan-delay" min="0" max="20" step="1" onchange="advPrefSet('lan','delayHands',this)"></div>
           </div>
         </section>
         <section class="adv-panel" data-cat="internet" id="adv-panel-internet" role="tabpanel" aria-labelledby="adv-cat-internet">
@@ -2037,6 +2056,17 @@ if ('serviceWorker' in navigator) {
             <div class="adv-sec" data-i18n="advSecIgnored">Ignored players</div>
             <div class="adv-ign-desc" data-i18n="advIgnoredDesc">Players on the ignore list are hidden from chat.</div>
             <div id="adv-ignored-list"></div>
+            <div class="adv-sec" data-i18n="advSecTablePrefs">Table preferences</div>
+            <div class="adv-ign-desc" data-i18n="advTablePrefsDesc">Defaults for the tables you create in this mode — the ⭐ pill on the create form loads them.</div>
+            <div class="adv-row"><span data-i18n="gameNameLabel">Game name</span><input type="text" class="adv-textin" id="advp-net-name" maxlength="60" onchange="advPrefSet('net','name',this)"></div>
+            <div class="adv-row"><span data-i18n="gameType">Game type</span><div class="sel-wrap adv-sel"><select id="advp-net-gtype" onchange="advPrefSet('net','gameType',this)"><option value="1" data-i18n-opt="gameNormal">Normal</option><option value="2" data-i18n-opt="gameRegistered">Registered only</option><option value="3" data-i18n-opt="gameInvite">Invite only</option><option value="4" data-i18n-opt="gameRanking">Ranking</option></select><span class="sel-arr">▾</span></div></div>
+            <label class="adv-row"><input type="checkbox" id="advp-net-spect" onchange="advPrefSet('net','allowSpectators',this)"><span data-i18n="allowSpectators">Spectators</span></label>
+            <div class="adv-row"><span data-i18n="maxPlayers">Max players</span><input type="number" class="adv-numin" id="advp-net-players" min="2" max="10" step="1" onchange="advPrefSet('net','players',this)"></div>
+            <div class="adv-row"><span data-i18n="startCash">Starting stack</span><input type="number" class="adv-numin" id="advp-net-stack" min="500" max="1000000" step="500" onchange="advPrefSet('net','stack',this)"></div>
+            <div class="adv-row"><span data-i18n="firstSmallBlind">First small blind</span><input type="number" class="adv-numin" id="advp-net-blind" min="1" max="1000000" step="1" onchange="advPrefSet('net','blind',this)"></div>
+            <div class="adv-row"><span data-i18n="advRaiseEveryHands">Raise blinds every N hands</span><input type="number" class="adv-numin" id="advp-net-raise" min="1" max="180" step="1" onchange="advPrefSet('net','raiseEvery',this)"></div>
+            <div class="adv-row"><span data-i18n="actionTimeout">Time per action</span><input type="number" class="adv-numin" id="advp-net-timeout" min="5" max="120" step="1" onchange="advPrefSet('net','timeout',this)"></div>
+            <div class="adv-row"><span data-i18n="pauseBetweenHands">Pause between hands</span><input type="number" class="adv-numin" id="advp-net-delay" min="0" max="20" step="1" onchange="advPrefSet('net','delayHands',this)"></div>
           </div>
         </section>
         <section class="adv-panel" data-cat="avatar" id="adv-panel-avatar" role="tabpanel" aria-labelledby="adv-cat-avatar">

@@ -597,6 +597,7 @@ function openAdvancedOptions() {
   try { var _dc = document.getElementById('adv-defcommunity'); if (_dc) _dc.value = (localStorage.getItem('pth_rank_src') || 'pth'); } catch (e) {}
   try { advUiTab('general'); } catch (e) {}
   try { advSelectCat('ui'); } catch (e) {}
+  try { _advSyncPrefs(); } catch (e) {}
   try { _advSyncContext(); } catch (e) {}
   m.style.display = '';
   try { _advSetupResize(); } catch (e) {}
@@ -654,6 +655,66 @@ window.advUiTab = advUiTab;
 
 // Grise les catégories sans objet dans le contexte courant (lobby vs partie) et
 // renseigne le serveur courant dans l'onglet « Jeu Internet ».
+// ── Préférences de table par mode (passe G — parité QML LocalGameSettings /
+// NetworkGameSettings / InternetGameSettings). Trois emplacements localStorage :
+// pth_prefs_local / pth_prefs_lan / pth_prefs_internet. Édités champ par champ
+// dans les Options avancées (persistance immédiate) ; la pastille 💾 du
+// formulaire de création écrit l'instantané complet dans l'emplacement du mode
+// courant et ⭐ Perso le recharge (App._createPrefsKey). ──
+var _ADV_PREFS_KEYS = { local: 'pth_prefs_local', lan: 'pth_prefs_lan', net: 'pth_prefs_internet' };
+function _advPrefsBaseline(mode) {
+  var b = { players: 10, stack: 3000, blind: 10, raiseEvery: 7, timeout: 15, delayHands: 7 };
+  if (mode === 'local') b.guiSpeed = 5;
+  if (mode === 'net') { b.timeout = 5; b.name = ''; b.gameType = '1'; b.allowSpectators = true; }
+  return b;
+}
+function _advPrefsRead(mode) {
+  var d = null;
+  try { d = JSON.parse(localStorage.getItem(_ADV_PREFS_KEYS[mode]) || 'null'); } catch (e) {}
+  // Héritage pré-passe G : l'ancien instantané unique sert de repli en lecture.
+  if (!d) { try { d = JSON.parse(localStorage.getItem('pth_create_prefs') || 'null'); } catch (e) {} }
+  var b = _advPrefsBaseline(mode);
+  if (d && typeof d === 'object') { for (var k in b) { if (d[k] != null) b[k] = d[k]; } }
+  return b;
+}
+function advPrefSet(mode, field, el) {
+  var key = _ADV_PREFS_KEYS[mode];
+  if (!key || !el) return;
+  var v;
+  if (el.type === 'checkbox') v = !!el.checked;
+  else if (el.type === 'number') {
+    try { if (window.App && App.clampNum) App.clampNum(el); } catch (e) {}
+    v = parseInt(el.value, 10);
+    if (isNaN(v)) return;
+  } else v = el.value;
+  var d = null;
+  try { d = JSON.parse(localStorage.getItem(key) || 'null'); } catch (e) {}
+  // Premier réglage du mode : on fige l'état affiché (repli inclus) pour que
+  // l'objet stocké soit cohérent avec ce que l'utilisateur voit.
+  if (!d || typeof d !== 'object') d = _advPrefsRead(mode);
+  d[field] = v;
+  try { localStorage.setItem(key, JSON.stringify(d)); } catch (e) {}
+}
+window.advPrefSet = advPrefSet;
+function _advSyncPrefs() {
+  var fields = {
+    local: ['players', 'stack', 'blind', 'raiseEvery', 'timeout', 'delayHands', 'guiSpeed'],
+    lan:   ['players', 'stack', 'blind', 'raiseEvery', 'timeout', 'delayHands'],
+    net:   ['name', 'gameType', 'allowSpectators', 'players', 'stack', 'blind', 'raiseEvery', 'timeout', 'delayHands']
+  };
+  var ids = { players: 'players', stack: 'stack', blind: 'blind', raiseEvery: 'raise', timeout: 'timeout', delayHands: 'delay', guiSpeed: 'speed', name: 'name', gameType: 'gtype', allowSpectators: 'spect' };
+  for (var m in fields) {
+    var d = _advPrefsRead(m);
+    for (var i = 0; i < fields[m].length; i++) {
+      var f = fields[m][i];
+      var el = document.getElementById('advp-' + m + '-' + ids[f]);
+      if (!el) continue;
+      if (el.type === 'checkbox') el.checked = !!d[f];
+      else el.value = (d[f] != null) ? d[f] : '';
+    }
+  }
+}
+
 function _advSyncContext() {
   var modal = document.getElementById('adv-modal');
   if (!modal) return;
@@ -677,7 +738,7 @@ function _advSyncContext() {
   // toujours accessibles. Seuls leurs liens contextuels (« Ouvrir le journal »,
   // serveur/déconnexion) sont masqués hors contexte.
   setEnabled('log', true);
-  setEnabled('network', false);     // Jeu en réseau (LAN) : pas encore disponible
+  setEnabled('network', true);      // Jeu en réseau (LAN) : préférences de table éditables (l'hébergement reste « bientôt »)
   setEnabled('internet', true);
   setEnabled('avatar', connected);  // profil / avatar indisponible avant connexion
   try {
@@ -12799,7 +12860,8 @@ function _maybeShowNextHandBtn() {
       if (form) { form.style.display = 'block'; form.classList.add('open'); }
       try { this._applyCreateFormDefaults(false); } catch (e) {}
       // Pastille « Perso » (charger mes préférences) : visible seulement si
-      // un instantané pth_create_prefs existe (bouton 💾 du pied de page).
+      // des préférences existent pour le MODE COURANT (pastille 💾 ou Options
+      // avancées), avec l'ancien pth_create_prefs en repli.
       try { var _pp = document.getElementById('cf-preset-perso'); if (_pp) _pp.style.display = this.hasCreatePrefs() ? '' : 'none'; } catch (e) {}
       show('s-create');
     },
@@ -12888,13 +12950,24 @@ function _maybeShowNextHandBtn() {
       var row = document.getElementById('cf-min-humans-row');
       if (row) row.style.display = (cb && cb.checked) ? 'flex' : 'none';
     },
-    // ── Préférences personnelles de création (parité QML InternetGame*/Net*,
-    //    en mieux : un instantané EXPLICITE, distinct du « dernier utilisé »
-    //    automatique pth_last_create). saveCreatePrefs fige TOUT le
-    //    formulaire (nom et mot de passe de table inclus, comme
-    //    InternetGameName/InternetGamePassword côté QML) ; applyCreatePrefs
-    //    le réinjecte — c'est le point d'entrée de la future pastille
-    //    « Perso » à droite du style de partie. ──
+    // ── Préférences personnelles de création, PAR MODE depuis la passe G :
+    //    trois emplacements pth_prefs_local / pth_prefs_lan / pth_prefs_internet
+    //    (parité QML LocalGameSettings / NetworkGameSettings / InternetGameSettings),
+    //    également éditables champ par champ dans les Options avancées.
+    //    saveCreatePrefs (pastille 💾) fige TOUT le formulaire dans l'emplacement
+    //    du mode courant ; applyCreatePrefs (pastille ⭐ Perso) le réinjecte.
+    //    L'ancien instantané unique pth_create_prefs reste un repli en lecture. ──
+    _createPrefsKey() {
+      if (window._offlineMode) return 'pth_prefs_local';
+      var m = _currentLoginMode || 'lan';
+      return (m === 'guest' || m === 'auth') ? 'pth_prefs_internet' : 'pth_prefs_lan';
+    },
+    _readCreatePrefsRaw() {
+      var d = null;
+      try { d = JSON.parse(localStorage.getItem(this._createPrefsKey()) || 'null'); } catch (e) {}
+      if (!d) { try { d = JSON.parse(localStorage.getItem('pth_create_prefs') || 'null'); } catch (e) {} }
+      return (d && typeof d === 'object') ? d : null;
+    },
     _readCreateForm() {
       var g = function(id){ return document.getElementById(id); };
       var iv = function(id, def){ var e = g(id); var v = e ? parseInt(e.value, 10) : NaN; return isNaN(v) ? def : v; };
@@ -12920,17 +12993,16 @@ function _maybeShowNextHandBtn() {
       };
     },
     saveCreatePrefs() {
-      try { localStorage.setItem('pth_create_prefs', JSON.stringify(this._readCreateForm())); } catch (e) {}
+      try { localStorage.setItem(this._createPrefsKey(), JSON.stringify(this._readCreateForm())); } catch (e) {}
       try { var _pp = document.getElementById('cf-preset-perso'); if (_pp) _pp.style.display = ''; } catch (e) {}
       if (typeof showToast === 'function') showToast(t('createPrefsSaved') || 'Preferences saved');
     },
     hasCreatePrefs() {
-      try { return !!localStorage.getItem('pth_create_prefs'); } catch (e) { return false; }
+      try { return !!(localStorage.getItem(this._createPrefsKey()) || localStorage.getItem('pth_create_prefs')); } catch (e) { return false; }
     },
     applyCreatePrefs(btn) {
-      var d = null;
-      try { d = JSON.parse(localStorage.getItem('pth_create_prefs') || 'null'); } catch (e) {}
-      if (!d || typeof d !== 'object') {
+      var d = this._readCreatePrefsRaw();
+      if (!d) {
         if (typeof showToast === 'function') showToast(t('createPrefsNone') || 'No saved preferences yet', { tone: 'error' });
         return;
       }
@@ -14811,7 +14883,7 @@ function renderPlayersList() {
   body.innerHTML = _shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>';
 }
 
-;(function(){ window.BUILD_VERSION='0.3.512-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.513-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

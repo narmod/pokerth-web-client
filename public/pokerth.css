@@ -7485,6 +7485,8 @@ html[data-seat-edit="1"] #g-seats .seat.seat-ghost { outline: none; cursor: defa
 .adv-row{display:flex;align-items:center;gap:9px;padding:6px 2px;font-size:0.82rem;color:var(--text);cursor:pointer}
 .adv-row input[type=checkbox]{accent-color:var(--gold);flex-shrink:0;width:16px;height:16px}
 .adv-row > span{flex:1}
+.adv-row .adv-numin{flex:0 0 auto;width:92px;text-align:right;background:transparent;color:var(--text);border:1px solid var(--border);border-radius:8px;padding:5px 8px;font:inherit;font-size:0.82rem}
+.adv-row .adv-textin{flex:0 0 auto;width:150px;background:transparent;color:var(--text);border:1px solid var(--border);border-radius:8px;padding:5px 8px;font:inherit;font-size:0.82rem}
 .adv-row em{font-size:0.58rem;font-style:normal;letter-spacing:0.08em;text-transform:uppercase;color:var(--gold-dim);border:1px solid var(--border);border-radius:10px;padding:1px 7px;opacity:0.85}
 .adv-webtag{font-size:0.58rem;font-style:normal;letter-spacing:0.08em;text-transform:uppercase;color:var(--green);border:1px solid rgba(var(--green-rgb),0.45);border-radius:10px;padding:1px 7px;opacity:0.9;flex-shrink:0}
 .adv-row.adv-soon{opacity:0.5;cursor:default}

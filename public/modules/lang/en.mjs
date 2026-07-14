@@ -312,6 +312,7 @@ export const strings = {
     logPanelTitle:'Log', logCopied:'Log copied', logEmpty:'Log is empty', logExportTitle:'Export log',
     createPrefsSave:'💾 My prefs', createPrefsSaveTip:'Save this form as my personal preferences', createPrefsSaved:'Preferences saved', createPrefsLoaded:'Preferences loaded', createPrefsNone:'No saved preferences yet',
     advSecLocalGame:'Training game', advPauseHands:'Pause between hands (continue with the winner window)', nextHandBtn:'Next hand',
+    advSecTablePrefs:'Table preferences', advTablePrefsDesc:'Defaults for the tables you create in this mode — the ⭐ pill on the create form loads them.', advRaiseEveryHands:'Raise blinds every N hands', advGameSpeed:'Game speed (1–11)',
     advSecLogSettings:'Log settings', advLogOn:'Enable logging', advLogInterval:'Log interval', advLogEveryAction:'Every action', advLogEveryHand:'Every hand',
     advSecIgnored:'Ignored players', advIgnoredDesc:'Players on the ignore list are hidden from chat.', advIgnoredEmpty:'(no ignored players)', advIgnoredRemove:'Remove',
     advLobbyChat:'Show the lobby chat',
