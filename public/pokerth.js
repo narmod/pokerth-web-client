@@ -8945,16 +8945,21 @@ const App = (() => {
     var seq = SEQ[oppCnt] || [];
     var gapP = 8;
     var _zm = Math.max(0.3, Math.min(2, zoomMul || 1));
-    function feas(sT, commGuard) {
+    // zoomed = bisection du ZOOM AVANT : les marges de confort tombent —
+    // seules restent les règles dures demandées : rester DANS le tapis
+    // (murs au bord exact), ne pas se CHEVAUCHER (2 px de contact mini) et
+    // ne pas recouvrir la rivière (bande médiane >= 88 px). Au repos (zoom 1),
+    // les marges QML historiques (8 px, murs -4) restent inchangées.
+    function feas(sT, zoomed) {
       if (sT <= 0) return false;
       var vW = oppW * sT, vH = oppH * sT, sH = selfH * sT;
-      if (vW > 2 * (0.15 * zW - 4)) return false;
-      if (vH > 2 * (0.075 * zH - 4)) return false;
-      if (oppCnt >= 8 && 0.215 * zH - 26 - sH - vH / 2 < gapP) return false;
-      // Zoom avant : les rangées upper (0.345) et lower (0.65) ne mordent pas
-      // la bande médiane des cartes communes — >= 88 px libres réservés.
-      if (commGuard && (0.65 - 0.345) * zH - vH < 88) return false;
-      var xN = vW + gapP, yN = vH + gapP;
+      var wallM = zoomed ? 0 : 4;
+      var gapC  = zoomed ? 2 : gapP;
+      if (vW > 2 * (0.15 * zW - wallM)) return false;
+      if (vH > 2 * (0.075 * zH - wallM)) return false;
+      if (oppCnt >= 8 && 0.215 * zH - (zoomed ? 16 : 26) - sH - vH / 2 < gapC) return false;
+      if (zoomed && (0.65 - 0.345) * zH - vH < 88) return false;
+      var xN = vW + gapC, yN = vH + gapC;
       for (var i = 0; i < seq.length - 1; i++) {
         var a = SLOTS[seq[i]], b = SLOTS[seq[i + 1]];
         if (!a || !b) continue;
@@ -14541,7 +14546,7 @@ function renderPlayersList() {
   body.innerHTML = _shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>';
 }
 
-;(function(){ window.BUILD_VERSION='0.3.494-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.495-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
