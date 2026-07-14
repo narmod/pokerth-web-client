@@ -12875,6 +12875,17 @@ function _maybeShowNextHandBtn() {
       // des préférences existent pour le MODE COURANT (pastille 💾 ou Options
       // avancées), avec l'ancien pth_create_prefs en repli.
       try { var _pp = document.getElementById('cf-preset-perso'); if (_pp) _pp.style.display = this.hasCreatePrefs() ? '' : 'none'; } catch (e) {}
+      // Mode entraînement : le style de partie mémorisé (« normal » par
+      // défaut) est présélectionné à l'ouverture — valeurs ET surbrillance,
+      // comme le niveau de bots (mixte) juste au-dessus.
+      try {
+        if (window._offlineMode) {
+          var _st = 'normal';
+          try { _st = localStorage.getItem('pth_create_style') || 'normal'; } catch (e) {}
+          if (!/^(tranquille|normal|rapide|ranking|wecup|bbc)$/.test(_st)) _st = 'normal';
+          this.applyPreset(_st);
+        }
+      } catch (e) {}
       // Invité pokerth.net : seule la création de parties « Normal » est
       // permise par le serveur — on masque le choix du type et on force 1.
       try {
@@ -12952,10 +12963,16 @@ function _maybeShowNextHandBtn() {
       var rmode = v.raiseMode || 1;
       this.setRaiseMode(rmode);
       var rmEl = document.getElementById(rmode === 2 ? 'cf-rm2' : 'cf-rm1'); if (rmEl) rmEl.checked = true;
-      var all = document.querySelectorAll('.cf-preset');
+      // Seules les pastilles de STYLE (data-preset) sont concernées — surtout
+      // pas celles de difficulté des bots (data-skill), sinon leur
+      // présélection disparaît à chaque choix de style.
+      var all = document.querySelectorAll('.cf-preset[data-preset]');
       for (var i = 0; i < all.length; i++) all[i].classList.remove('active');
       var sel = btn || document.querySelector('.cf-preset[data-preset="' + name + '"]');
       if (sel) sel.classList.add('active');
+      // Mémoriser le dernier style choisi (présélectionné à la prochaine
+      // ouverture en mode entraînement ; « normal » par défaut).
+      try { localStorage.setItem('pth_create_style', name); } catch (e) {}
     },
     // ── Synchronisation curseur ↔ champ chiffré éditable ──
     // Le champ chiffré (id cf-players / cf-stack) est la valeur lue par
@@ -14926,7 +14943,7 @@ function renderPlayersList() {
   body.innerHTML = _shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>';
 }
 
-;(function(){ window.BUILD_VERSION='0.3.520-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.521-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
