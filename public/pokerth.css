@@ -6489,11 +6489,16 @@ html[data-seat^="pokerth"] .seat.folded { opacity: 0.72; }
    client officiel (chipStack.svg). On garde la pastille de base (fond sombre,
    montant crème) et on préfixe juste le jeton PokerTH. */
 html[data-seat^="pokerth"] .seat-bet {
-  display: inline-flex; align-items: center; gap: 4px; padding-left: 4px;
+  display: inline-flex; align-items: center; gap: 3px;
+  padding: 1px 6px 1px 3px; background: rgba(0,0,0,0.42); border: none;
+  color: #fff; font-family: var(--ff-display); font-weight: 700;
 }
+/* Chip DORÉ (BetChip officiel) dessiné en CSS : centre clair -> or -> bord or
+   sombre. Remplace l'ancien favicon rouge, peu lisible et non fidèle. */
 html[data-seat^="pokerth"] .seat-bet::before {
-  content: ""; width: 12px; height: 12px; flex: none;
-  background: url(/favicon.svg) center/contain no-repeat;
+  content: ""; width: 11px; height: 11px; flex: none; border-radius: 50%;
+  background: radial-gradient(circle at 50% 42%, #ffe680 0 36%, #E3C800 36% 60%, #a8850a 60% 100%);
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.35), 0 0 0 0.5px rgba(0,0,0,0.45);
 }
 /* Mise HORS de la boîte (packs PokerTH) : la pastille jeton+montant est posée
    sur le côté de la box, côté calculé en JS (classe betside-* sur .seat).
