@@ -9118,6 +9118,9 @@ const App = (() => {
     // autour du feutre sans le chevaucher (le client officiel fait pareil via boxScale).
     var _seatBoxScale = 1;
     try { var _sbw = window.innerWidth, _sbh = window.innerHeight; if (Math.min(_sbw, _sbh) < 540) { var _opp = Math.max(0, rotated.length - 1); _seatBoxScale = (_sbh > _sbw) ? Math.max(0.72, 0.90 - Math.max(0, _opp - 4) * 0.026) : Math.max(0.80, 0.98 - Math.max(0, _opp - 4) * 0.022); } } catch (e) {}
+    // Rabot mesuré : appliqué à TOUS les modes de placement (l'officiel le
+    // ré-applique après sa bisection ; classic/custom en profitent ici).
+    _seatBoxScale *= (window._seatFitShave || 1);
     // Self-box PLUS GROSSE que les adversaires, comme le client officiel,
     // avec le ratio QML PAR APPAREIL (delta 2.1.3 §4.2 — selfBaseHeight /
     // oppBaseHeight) :
@@ -9313,7 +9316,12 @@ const App = (() => {
         // Échelle bisectée du QML (paysage seulement) : remplace l'heuristique
         // téléphone, chaque box adverse est mise à l'échelle comme l'officiel.
         if (_offPos && _offPos._boxScale) {
-          _seatBoxScale = _forceSeatPortrait ? _offPos._boxScale : _offPos._boxScale * (compact ? 1 : 0.9);  // portrait : bisection QML pure ; paysage desktop : -10% (sieges moins massifs)
+          // Portrait : bisection QML pure. Paysage : sièges volontairement plus
+          // petits que la bisection — desktop -10%, MOBILE COMPACT -20% (la
+          // hauteur d'écran est minuscule, les boîtes pleines paraissaient
+          // énormes et se touchaient ; demande narmod). Le zoom + repart de
+          // cette base réduite.
+          _seatBoxScale = _forceSeatPortrait ? _offPos._boxScale : _offPos._boxScale * (compact ? 0.8 : 0.9);
           // Rabot anti-chevauchement MESURÉ (voir garde post-rendu) : corrige
           // sur écran ce que la bisection théorique aurait laissé passer.
           _seatBoxScale *= (window._seatFitShave || 1);
@@ -9691,7 +9699,7 @@ const App = (() => {
     try {
       var _fitKey = rotated.length + ':' + Math.round(zRect.width) + 'x' + Math.round(zRect.height) + ':' + (_forceSeatPortrait ? 'p' : 'l');
       if (window._seatFitKey !== _fitKey) { window._seatFitKey = _fitKey; window._seatFitShave = 1; }
-      if (_applyOfficial && !window._seatFitBusy) {
+      if (!window._seatFitBusy) {
         var _zrG = zone.getBoundingClientRect();
         var _prs = [];
         el.querySelectorAll('.seat:not(.seat-ghost) .seat-plate').forEach(function (pl) {
@@ -9706,7 +9714,7 @@ const App = (() => {
             var rB = _prs[_fj];
             var ox = Math.min(rA.right, rB.right) - Math.max(rA.left, rB.left);
             var oy = Math.min(rA.bottom, rB.bottom) - Math.max(rA.top, rB.top);
-            if (ox > 4 && oy > 4) { _badFit = true; break; }
+            if (ox > 2 && oy > 2) { _badFit = true; break; }
           }
         }
         if (!_badFit) {
@@ -9717,15 +9725,16 @@ const App = (() => {
               var rS = _prs[_fk];
               var cx = Math.min(rS.right, rC.right) - Math.max(rS.left, rC.left);
               var cy = Math.min(rS.bottom, rC.bottom) - Math.max(rS.top, rC.top);
-              if (cx > 6 && cy > 6) { _badFit = true; break; }
+              if (cx > 4 && cy > 4) { _badFit = true; break; }
             }
           }
         }
-        if (_badFit && (window._seatFitShave || 1) > 0.6) {
-          window._seatFitShave = Math.max(0.6, (window._seatFitShave || 1) * 0.94);
+        if (_badFit && (window._seatFitShave || 1) > 0.5) {
+          window._seatFitShave = Math.max(0.5, (window._seatFitShave || 1) * 0.94);
           window._seatFitBusy = true;
           setTimeout(function () { window._seatFitBusy = false; try { renderSeats(); } catch (e) {} }, 30);
         }
+        try { if (window._seatDbg) { window._seatDbg.fitShave = window._seatFitShave || 1; window._seatDbg.fitBad = _badFit; } } catch (e) {}
       }
     } catch (e) {}
     // Self-box : remonter si son bas depasse la zone (tapis coupe en plein
@@ -14602,7 +14611,7 @@ function renderPlayersList() {
   body.innerHTML = _shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>';
 }
 
-;(function(){ window.BUILD_VERSION='0.3.496-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.497-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
