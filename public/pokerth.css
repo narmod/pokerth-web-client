@@ -1776,7 +1776,6 @@ body {
   align-items: center;
   height: 18px;               /* même hauteur que #g-spec-badge (bandeau) */
   box-sizing: border-box;
-  margin-left: 6px;
   padding: 0 9px;
   border-radius: 999px;
   background: rgba(227,200,0,0.14);          /* teinte accent or QML, stable clair/sombre */
@@ -1786,10 +1785,13 @@ body {
   font-weight: 700;
   font-size: 0.62rem;
   letter-spacing: 0.04em;
-  vertical-align: middle;
   cursor: pointer;
   transition: background 0.15s, border-color 0.15s;
 }
+/* Le slot n'est qu'un point d'insertion JS : display:contents → le badge
+   devient enfant flex DIRECT de .gsb-mid et se centre verticalement
+   exactement comme #g-spec-badge (même offset depuis le haut de la barre). */
+#g-blinds-slot { display: contents; }
 .blinds-next:hover, .blinds-next:focus { background: rgba(227,200,0,0.26); border-color: var(--sel, #E3C800); outline: none; }
 /* Bandeau d'info/alerte blinds. Centré en haut, masqué par défaut, révélé
    via .show (transition). Affiche : ↑ Blinds  cur → next  · quand. */
