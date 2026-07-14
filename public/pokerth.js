@@ -9235,11 +9235,30 @@ const App = (() => {
       // qui change le PACK lui-meme. L'ancien couplage implicite au
       // placement (v0.3.450) rendait le selecteur de sieges inoperant.
       var _seatNarrow = (_seatStyleV === 'pokerth-portrait');
+      // ── Mise « hors boîte » (packs PokerTH), placement fidèle au client
+      //    officiel. Landscape : le jeton est TOUJOURS sur un côté HORIZONTAL
+      //    (extérieur) — 'l' pour les sièges nettement à gauche du centre, 'r'
+      //    pour le reste (haut-centre inclus, comme la capture officielle) ;
+      //    seuil = 6% de la largeur de la tableZone. Portrait : côté INTÉRIEUR
+      //    (vers le pot), axe dominant l/r/t/b (le haut-centre passe en 'b').
+      //    Classe betside-* sur .seat ; le CSS positionne .seat-bet en absolu.
+      //    Self exclue (sa mise est dans la barre d'action). ──
+      var _betSideCls = '';
+      if (_pkHole && !isMe) {
+        var _bdx = px.left - oCX, _bdy = px.top - oCY, _bs;
+        if (_seatStyleV === 'pokerth-portrait') {
+          var _idx = -_bdx, _idy = -_bdy;
+          _bs = (Math.abs(_idx) >= Math.abs(_idy)) ? (_idx > 0 ? 'r' : 'l') : (_idy > 0 ? 'b' : 't');
+        } else {
+          _bs = (_bdx > -zRect.width * 0.06) ? 'r' : 'l';
+        }
+        _betSideCls = 'betside-' + _bs;
+      }
       const cls = ['seat', isMe?'me':'', isDealer?'dealer':'', isActive?'active':'',
                    sd.folded && !isGone ? 'folded' : '',
                    isOut && !isGone ? 'seat-out' : '',
                    _seatNarrow ? 'seat-narrow' : '',
-                   isGone ? 'seat-ghost' : ''].filter(Boolean).join(' ');
+                   isGone ? 'seat-ghost' : '', _betSideCls].filter(Boolean).join(' ');
       var _ignHide = !isMe && _isIgnored(getPlayerName(pid)) && !_advGet('no_hide_ignored', false);
       const initial    = _ignHide ? ((getPlayerName(pid) || '?').charAt(0).toUpperCase() || '?') : getPlayerInitial(pid);
       const typeBadge  = getPlayerTypeBadge(pid);
@@ -14189,7 +14208,7 @@ function renderPlayersList() {
   body.innerHTML = _shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>';
 }
 
-;(function(){ window.BUILD_VERSION='0.3.457-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.458-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

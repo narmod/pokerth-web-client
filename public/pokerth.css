@@ -6495,6 +6495,16 @@ html[data-seat^="pokerth"] .seat-bet::before {
   content: ""; width: 12px; height: 12px; flex: none;
   background: url(/favicon.svg) center/contain no-repeat;
 }
+/* Mise HORS de la boîte (packs PokerTH) : la pastille jeton+montant est posée
+   sur le côté de la box, côté calculé en JS (classe betside-* sur .seat).
+   .seat-bet devient absolu (ancré à .seat = la box), sorti du flux colonne. */
+html[data-seat^="pokerth"] .seat[class*="betside-"] .seat-bet {
+  position: absolute; z-index: 6; margin: 0;
+}
+html[data-seat^="pokerth"] .seat.betside-r .seat-bet { left: calc(100% + 5px); top: 42%; }
+html[data-seat^="pokerth"] .seat.betside-l .seat-bet { right: calc(100% + 5px); top: 42%; }
+html[data-seat^="pokerth"] .seat.betside-t .seat-bet { bottom: calc(100% + 5px); left: 50%; transform: translateX(-50%); }
+html[data-seat^="pokerth"] .seat.betside-b .seat-bet { top: calc(100% + 5px); left: 50%; transform: translateX(-50%); }
 html[data-seat^="pokerth"] .seat-timer-badge { display: none; }
 /* Countdown RECTANGULAIRE (style pokerth) : cadre depletif autour de la boite,
    remplace l'anneau rond .seat-timer. Couleurs officielles 2.1.1. */
