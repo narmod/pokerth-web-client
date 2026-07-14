@@ -6296,7 +6296,6 @@ const App = (() => {
         var _canInv = !window._offlineMode && !_amSpectator;
         if (_imb) _imb.style.display = _canInv ? '' : 'none';
         if (_ims) _ims.style.display = _canInv ? '' : 'none';
-        addChat(null, t('joinedTableWaiting', { gid: gId, admin: isAdmin ? ' (admin)' : '' }), 'sys', { key: 'joinedTableWaiting', params: { gid: gId, admin: isAdmin ? ' (admin)' : '' } });
         // Ne plus basculer directement sur le feutre : tant que la partie n'a
         // pas démarré, on RESTE dans le lobby (parité GameWaitPage) avec la
         // partie sélectionnée dans le panneau central #lobby-gameinfo et ses
@@ -6452,7 +6451,6 @@ const App = (() => {
           renderSeats();
         }
         const name = players[pid] || '#'+pid;
-        addChat(null, name + ' ' + t('joinedGame'), 'sys', { prefix: name + ' ', key: 'joinedGame' });
         // Son « joueur connecté » (playerconnected.wav) — parties réseau seulement
         if (pid !== myId && !window._offlineMode) {
           try { if (typeof notifyPlayerConnected === 'function') notifyPlayerConnected(); } catch (_e) {}
@@ -6523,7 +6521,6 @@ const App = (() => {
         // Répondre avec StartEventAck
         const evGameId = Proto.u32(sub, 1);
         send(MSG.buildStartEventAck(evGameId));
-        addChat(null, t('gameStarting'), 'sys', { key: 'gameStarting' });
         // Son « partie prête » (onlinegameready.wav) — parties réseau seulement
         if (!window._offlineMode) {
           try { if (typeof notifyGameReady === 'function') notifyGameReady(); } catch (_e) {}
@@ -12469,7 +12466,6 @@ function dismissWinner() {
     },
     startWithBots() {
       if (!gId) return;
-      addGameChat(null, '▶ Starting with bots…', 'sys');
       send(MSG.buildStartWithBots(gId, true));
     },
     // Start the game with the humans currently at the table and NO
@@ -12503,7 +12499,6 @@ function dismissWinner() {
         addGameChat(null, '⚠ ' + t('kickAtLeast2'), 'sys', { prefix: '⚠ ', key: 'kickAtLeast2' });
         return;
       }
-      addGameChat(null, '▶ Starting (humans only)…', 'sys');
       send(MSG.buildStartWithBots(gId, false));
     },
     // Bouton unique « Démarrer la partie » de la wait-page (parité QML :
@@ -12562,7 +12557,6 @@ function dismissWinner() {
         allowSpectators: allowSpec,
         password:        tablePass,
       };
-      addChat(null, '+ Creating "' + name + '" (' + nplayers + 'p' + (bots ? ' + bots' : '') + ')...', 'sys');
       send(MSG.buildCreateGame(name, nplayers, blind, stack, timeout, opts));
       // Remember these settings so the next time the create form opens it
       // starts from what the user actually used last (not just the per-mode
@@ -14243,7 +14237,7 @@ function renderPlayersList() {
   body.innerHTML = _shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>';
 }
 
-;(function(){ window.BUILD_VERSION='0.3.469-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.470-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
