@@ -9,6 +9,8 @@ export const meta = {
 };
 
 export const strings = {
+    // GameStatusBar (bandeau d'info de jeu, parité QML §7)
+    gsbTotal:'Всього:', gsbBets:'Ставки:', gsbGame:'Гра:', gsbHand:'Роздача:',
   seatPokerthPortrait: "PokerTH Портрет", seatPokerthLandscape: "PokerTH Альбом",
   advUiGeneral:'Загальні', advUiNetwork:'Мережа', advShowTooltips:'Показувати підказки', advDisableSplash:'Вимкнути заставку під час запуску', advDontTranslatePoker:'Не перекладати покерні терміни (Check, Call, Raise)', advNA:'web', advLanguage:'Мова', advDefCommunity:'Спільнота за замовчуванням', advSecReactions:'Реакції', advDisableReactions:'Вимкнути емодзі-реакції', advNetStateColor:'Показувати колір стану мережі в кутку аватара',
   showPlayers: `Показати гравців`,

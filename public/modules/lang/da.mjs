@@ -9,6 +9,8 @@ export const meta = {
 };
 
 export const strings = {
+    // GameStatusBar (bandeau d'info de jeu, parité QML §7)
+    gsbTotal:'Total:', gsbBets:'Indsatser:', gsbGame:'Spil:', gsbHand:'Hånd:',
   seatPokerthPortrait: "PokerTH Stående", seatPokerthLandscape: "PokerTH Liggende",
   advUiGeneral:'Generelt', advUiNetwork:'Netværk', advShowTooltips:'Vis værktøjstips', advDisableSplash:'Deaktivér velkomstskærmen ved opstart', advDontTranslatePoker:'Oversæt ikke pokerudtryk (Check, Call, Raise)', advNA:'web', advLanguage:'Sprog', advDefCommunity:'Standardfællesskab', advSecReactions:'Reaktioner', advDisableReactions:'Deaktivér emoji-reaktioner', advNetStateColor:'Vis netværksstatusfarve i avatarens hjørne',
   showPlayers: `Vis spillere`,

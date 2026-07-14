@@ -10,6 +10,8 @@ export const meta = {
 };
 
 export const strings = {
+    // GameStatusBar (bandeau d'info de jeu, parité QML §7)
+    gsbTotal:'Iš viso:', gsbBets:'Statymai:', gsbGame:'Žaidimas:', gsbHand:'Ranka:',
   seatPokerthPortrait: "PokerTH Stačias", seatPokerthLandscape: "PokerTH Gulsčias",
   advUiGeneral:'Bendra', advUiNetwork:'Tinklas', advShowTooltips:'Rodyti paaiškinimus', advDisableSplash:'Išjungti pasveikinimo ekraną paleidžiant', advDontTranslatePoker:'Neversti pokerio terminų (Check, Call, Raise)', advNA:'web', advLanguage:'Kalba', advDefCommunity:'Numatytoji bendruomenė', advSecReactions:'Reakcijos', advDisableReactions:'Išjungti emoji reakcijas', advNetStateColor:'Rodyti tinklo būsenos spalvą avataro kampe',
   showPlayers: `Rodyti žaidėjus`,

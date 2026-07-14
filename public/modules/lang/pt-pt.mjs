@@ -9,6 +9,8 @@ export const meta = {
 };
 
 export const strings = {
+    // GameStatusBar (bandeau d'info de jeu, parité QML §7)
+    gsbTotal:'Total:', gsbBets:'Apostas:', gsbGame:'Jogo:', gsbHand:'Mão:',
   seatPokerthPortrait: "PokerTH Retrato", seatPokerthLandscape: "PokerTH Paisagem",
   advUiGeneral:'Geral', advUiNetwork:'Rede', advShowTooltips:'Mostrar dicas', advDisableSplash:'Desativar o ecrã de apresentação no arranque', advDontTranslatePoker:'Não traduzir os termos de póquer (Check, Call, Raise)', advNA:'web', advLanguage:'Idioma', advDefCommunity:'Comunidade predefinida', advSecReactions:'Reações', advDisableReactions:'Desativar as reações emoji', advNetStateColor:'Mostrar a cor do estado da rede no canto do avatar',
   showPlayers: `Ver jogadores`,

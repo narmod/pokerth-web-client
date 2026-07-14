@@ -1376,13 +1376,23 @@ function onAvatarImageChosen(input) {
       <button class="btn-sm" id="admin-kick-mob" onclick="App.openKickModal();closeHeaderOverflow()" style="display:none">👥 <span data-i18n="kickTooltip">Kick player</span></button>
     </div></span>
   </div>
+  <!-- GameStatusBar (parité QML §7, hauteur 40/28) : gauche Total+Mises,
+       droite Phase + Partie/Main. Centre = badge blinds (spécifique web,
+       conservé) + statut spectateur. -->
   <div id="pot-strip">
-    <span id="g-hand" class="pot-side">H#1</span>
-    <span id="g-pot"  class="pot-center">POT: 0</span>
-    <!-- Statut spectateur intégré au bandeau du pot (parité GameStatusBar QML §7) -->
-    <span id="g-spec-badge" data-i18n="spectatingBadge">Spectating</span>
-    <span id="g-spec-count"><span class="sc-eye">👁</span><span id="g-spec-n">0</span></span>
-    <span id="g-round" class="pot-side pot-right">Pre-flop</span>
+    <span class="gsb-col gsb-left">
+      <span class="gsb-row"><span class="gsb-lbl" data-i18n="gsbTotal">Total:</span> <span id="g-pot" class="gsb-total">$0</span></span>
+      <span class="gsb-row"><span class="gsb-lbl" data-i18n="gsbBets">Bets:</span> <span id="g-bets" class="gsb-bets">$0</span></span>
+    </span>
+    <span class="gsb-mid">
+      <span id="g-blinds-slot"></span>
+      <span id="g-spec-badge" data-i18n="spectatingBadge">Spectating</span>
+      <span id="g-spec-count"><span class="sc-eye">👁</span><span id="g-spec-n">0</span></span>
+    </span>
+    <span class="gsb-col gsb-right">
+      <span id="g-round" class="gsb-phase">Pre-flop</span>
+      <span class="gsb-row gsb-gh"><span class="gsb-lbl" data-i18n="gsbGame">Game:</span> <span id="g-gameid" class="gsb-val">–</span><span class="gsb-lbl" data-i18n="gsbHand">Hand:</span> <span id="g-handn" class="gsb-val">1</span></span>
+    </span>
   </div>
   <!-- Log dropdown (below header) -->
   <!-- Log dropdown (below header) — same structure as chat panel

@@ -4123,13 +4123,9 @@ const App = (() => {
     subEl.innerHTML = badges.join(' ');
 
     // Body: 3 sections of label/value rows.
-    var pot = 0;
-    var potEl = document.getElementById('g-pot');
-    if (potEl) {
-      // Extract numeric part from "POT: 1234" / "Pot : 1234"
-      var m = String(potEl.textContent || '').match(/[\d]+/);
-      pot = m ? parseInt(m[0], 10) : 0;
-    }
+    // Pot total mémorisé par setPot (le bandeau affiche désormais le pot
+    // collecté séparé des mises → plus de parsing DOM possible).
+    var pot = (typeof window._lastPotTotal === 'number') ? window._lastPotTotal : 0;
     var round = '—';
     var roundEl = document.getElementById('g-round');
     if (roundEl) round = (roundEl.textContent || '—').trim();
@@ -4568,17 +4564,19 @@ const App = (() => {
   function setPot(pot) {
     var _prevPot = (typeof _lastPotValue === 'number') ? _lastPotValue : 0;
     _lastPotValue = (typeof pot === 'number') ? pot : (parseInt(pot, 10) || 0);
-    // « Bets » = mises de la street en cours, non encore collectées
-    // (parité GameStatusBar QML, bible §7 : Total/Bets). Affiché seulement
-    // s'il y a des mises sur le tapis, pour ne pas alourdir la strip.
-    // Pot seul (les « Mises » redondantes ont été retirées à la demande).
-    // Barre d'état (#g-pot) : « Pot $X ». Badge au-dessus des cartes (#g-potbar,
-    // tablette/desktop) : juste le montant « $X », masqué quand le pot est nul.
-    var _potTxt = esc(t('pot') + ' ' + fmtChips(_lastPotValue));
+    window._lastPotTotal = _lastPotValue;   // pot total (lu par le popup d'info)
+    // Parité GameStatusBar QML §7 : « Total » = pot collecté des streets
+    // précédentes (collectedPot), « Bets/Mises » = mises de la street en
+    // cours (= totalPot − collecté). Le badge au-dessus des cartes
+    // (#g-potbar) garde le pot TOTAL, comme le pot badge QML.
+    var _cp    = (typeof collectedPot === 'number') ? Math.min(collectedPot, _lastPotValue) : _lastPotValue;
+    var _bets  = Math.max(0, _lastPotValue - _cp);
     var _potAmt = esc(fmtChips(_lastPotValue));
-    var a = document.getElementById('g-pot');
-    var b = document.getElementById('g-potbar');
-    if (a) a.innerHTML = _potTxt;
+    var a  = document.getElementById('g-pot');
+    var eb = document.getElementById('g-bets');
+    var b  = document.getElementById('g-potbar');
+    if (a)  a.innerHTML  = esc(fmtChips(_cp));
+    if (eb) eb.innerHTML = esc(fmtChips(_bets));
     if (b) { b.innerHTML = _potAmt; b.classList.toggle('has-pot', _lastPotValue > 0); }
     // « Pop » à chaque hausse du pot (parité pot badge QML, bible §9) —
     // relance de l'animation par reflow, pas de listener à nettoyer.
@@ -6730,7 +6728,10 @@ const App = (() => {
         _myStackAtHandStart = (_seatStackAtHandStart[myId] != null) ? _seatStackAtHandStart[myId] : null;
         // N° de main seul : le Game ID vit dans le popup d'info de table
         // (titre « … · #id ») — retiré de la strip (feedback : trop chargée).
-        $('g-hand').textContent = t('handOf') + handNum;
+        // GameStatusBar : « Partie : <gId> · Main : <n> » (droite du bandeau)
+        var _ghn = document.getElementById('g-handn');  if (_ghn) _ghn.textContent = handNum;
+        var _ggi = document.getElementById('g-gameid'); if (_ggi) _ggi.textContent = gId || '\u2013';
+        var _gbs = document.getElementById('g-blinds-slot'); if (_gbs) _gbs.innerHTML = '';
         $('g-round').textContent = t('preflop');
         gameState = 0; // preflop
         commCards = [null, null, null, null, null];
@@ -6797,9 +6798,10 @@ const App = (() => {
           // Pastille du bandeau : cliquable → affiche l'explication.
           if (_chip) {
             var _tip = (_whenTxt || '').replace(/"/g, '');
-            $('g-hand').insertAdjacentHTML('beforeend',
-              ' <span class="blinds-next" role="button" tabindex="0" title="' + _tip + '"'
-              + ' onclick="window.showBlindsInfo&&window.showBlindsInfo()">' + _chip + '</span>');
+            var _slot = document.getElementById('g-blinds-slot');
+            if (_slot) _slot.innerHTML =
+              '<span class="blinds-next" role="button" tabindex="0" title="' + _tip + '"'
+              + ' onclick="window.showBlindsInfo&&window.showBlindsInfo()">' + _chip + '</span>';
           }
         } catch (e) {}
         // Fin de la fenêtre « Show » de la main précédente
@@ -14239,7 +14241,7 @@ function renderPlayersList() {
   body.innerHTML = _shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>';
 }
 
-;(function(){ window.BUILD_VERSION='0.3.471-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.472-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

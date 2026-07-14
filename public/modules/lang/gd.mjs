@@ -11,6 +11,8 @@ export const meta = {
 };
 
 export const strings = {
+    // GameStatusBar (bandeau d'info de jeu, parité QML §7)
+    gsbTotal:'Iomlan:', gsbBets:'Geallan:', gsbGame:'Geama:', gsbHand:'Làmh:',
   seatPokerthPortrait: "PokerTH Portraid", seatPokerthLandscape: "PokerTH Dreach-tìre",
   advUiGeneral:'Coitcheann', advUiNetwork:'Lìonra', advShowTooltips:'Seall gliocasan-inneil', advDisableSplash:'Cuir à comas an sgrìn-fhàilte aig an tòiseachadh', advDontTranslatePoker:'Na eadar-theangaich briathran poker (Check, Call, Raise)', advNA:'web', advLanguage:'Cànan', advDefCommunity:'Coimhearsnachd bhunaiteach', advSecReactions:'Freagairtean', advDisableReactions:'Cuir à comas freagairtean emoji', advNetStateColor:'Seall dath staid an lìonraidh ann an oisean an avatar',
   showPlayers: `Seall cluicheadairean`,

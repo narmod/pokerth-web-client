@@ -10,6 +10,8 @@ export const meta = {
 };
 
 export const strings = {
+    // GameStatusBar (bandeau d'info de jeu, parité QML §7)
+    gsbTotal:'Totaal:', gsbBets:'Weddenskappe:', gsbGame:'Spel:', gsbHand:'Hand:',
   seatPokerthPortrait: "PokerTH Portret", seatPokerthLandscape: "PokerTH Landskap",
   advUiGeneral:'Algemeen', advUiNetwork:'Netwerk', advShowTooltips:'Wys nutswenke', advDisableSplash:'Deaktiveer die aanvangskerm met opstart', advDontTranslatePoker:'Moenie pokerterme vertaal nie (Check, Call, Raise)', advNA:'web', advLanguage:'Taal', advDefCommunity:'Verstekgemeenskap', advSecReactions:'Reaksies', advDisableReactions:'Deaktiveer emoji-reaksies', advNetStateColor:'Wys netwerkstatuskleur in die avatar-hoek',
   showPlayers: `Wys spelers`,

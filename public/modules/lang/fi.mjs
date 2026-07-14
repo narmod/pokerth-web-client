@@ -9,6 +9,8 @@ export const meta = {
 };
 
 export const strings = {
+    // GameStatusBar (bandeau d'info de jeu, parité QML §7)
+    gsbTotal:'Yhteensä:', gsbBets:'Panokset:', gsbGame:'Peli:', gsbHand:'Käsi:',
   seatPokerthPortrait: "PokerTH Pysty", seatPokerthLandscape: "PokerTH Vaaka",
   advUiGeneral:'Yleiset', advUiNetwork:'Verkko', advShowTooltips:'Näytä työkaluvihjeet', advDisableSplash:'Poista aloitusnäyttö käytöstä käynnistyksessä', advDontTranslatePoker:'Älä käännä pokeritermejä (Check, Call, Raise)', advNA:'web', advLanguage:'Kieli', advDefCommunity:'Oletusyhteisö', advSecReactions:'Reaktiot', advDisableReactions:'Poista emoji-reaktiot käytöstä', advNetStateColor:'Näytä verkon tilan väri avatarin kulmassa',
   showPlayers: `Näytä pelaajat`,

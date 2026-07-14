@@ -10,6 +10,8 @@ export const meta = {
 };
 
 export const strings = {
+    // GameStatusBar (bandeau d'info de jeu, parité QML §7)
+    gsbTotal:'Total:', gsbBets:'Pariuri:', gsbGame:'Joc:', gsbHand:'Mână:',
   seatPokerthPortrait: "PokerTH Portret", seatPokerthLandscape: "PokerTH Peisaj",
   advUiGeneral:'General', advUiNetwork:'Rețea', advShowTooltips:'Afișează sfaturile', advDisableSplash:'Dezactivează ecranul de pornire la lansare', advDontTranslatePoker:'Nu traduce termenii de poker (Check, Call, Raise)', advNA:'web', advLanguage:'Limbă', advDefCommunity:'Comunitate implicită', advSecReactions:'Reacții', advDisableReactions:'Dezactivează reacțiile emoji', advNetStateColor:'Afișează culoarea stării rețelei în colțul avatarului',
   showPlayers: `Afișează jucătorii`,

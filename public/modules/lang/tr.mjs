@@ -12,6 +12,8 @@ export const meta = {
 };
 
 export const strings = {
+    // GameStatusBar (bandeau d'info de jeu, parité QML §7)
+    gsbTotal:'Toplam:', gsbBets:'Bahisler:', gsbGame:'Oyun:', gsbHand:'El:',
   seatPokerthPortrait: "PokerTH Dikey", seatPokerthLandscape: "PokerTH Yatay",
   advUiGeneral:'Genel', advUiNetwork:'Ağ', advShowTooltips:'İpuçlarını göster', advDisableSplash:'Başlangıçta açılış ekranını devre dışı bırak', advDontTranslatePoker:'Poker terimlerini çevirme (Check, Call, Raise)', advNA:'web', advLanguage:'Dil', advDefCommunity:'Varsayılan topluluk', advSecReactions:'Tepkiler', advDisableReactions:'Emoji tepkilerini devre dışı bırak', advNetStateColor:'Avatar köşesinde ağ durumu rengini göster',
   showPlayers: `Oyuncuları göster`,

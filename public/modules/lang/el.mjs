@@ -10,6 +10,8 @@ export const meta = {
 };
 
 export const strings = {
+    // GameStatusBar (bandeau d'info de jeu, parité QML §7)
+    gsbTotal:'Σύνολο:', gsbBets:'Πονταρίσματα:', gsbGame:'Παιχνίδι:', gsbHand:'Χέρι:',
   seatPokerthPortrait: "PokerTH Κατακόρυφα", seatPokerthLandscape: "PokerTH Οριζόντια",
   advUiGeneral:'Γενικά', advUiNetwork:'Δίκτυο', advShowTooltips:'Εμφάνιση υποδείξεων', advDisableSplash:'Απενεργοποίηση οθόνης εκκίνησης', advDontTranslatePoker:'Να μη μεταφράζονται οι όροι πόκερ (Check, Call, Raise)', advNA:'web', advLanguage:'Γλώσσα', advDefCommunity:'Προεπιλεγμένη κοινότητα', advSecReactions:'Αντιδράσεις', advDisableReactions:'Απενεργοποίηση αντιδράσεων emoji', advNetStateColor:'Εμφάνιση χρώματος κατάστασης δικτύου στη γωνία του άβαταρ',
   showPlayers: `Εμφάνιση παικτών`,

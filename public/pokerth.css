@@ -1704,32 +1704,59 @@ body {
 
 /* Mobile responsive */
 /* ══════════════════════════════════
-/* ══ POT INFO BAR ══ */
+/* ══ GAME STATUS BAR (parité GameStatusBar QML §7 + delta 2.1.3) ══
+   Bandeau noir rgba(0,0,0,0.78), hauteur 40 px (28 en landscapeCompact),
+   marges 16 px. Gauche : Total $X (vert #99D500, gras) / Mises $Y (#7aa800),
+   libellés gris #9e9e9e. Droite : phase (blanc DemiBold, letterSpacing 0.5)
+   puis Partie/Main (gris). Tailles 13/11 px, compact 11/10/9 px.
+   Centre (spécifique web, conservé) : badge blinds + statut spectateur. */
 #pot-strip {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 3px 14px;
-  background: rgba(0,0,0,0.78);   /* bandeau QML officiel (bible §7) — noir translucide, lisible sur feutre comme sur chrome clair */
+  gap: 10px;
+  padding: 0 16px;                /* marges QML 16 px */
+  background: rgba(0,0,0,0.78);
   border-bottom: 1px solid rgba(255,255,255,0.08);
   flex-shrink: 0;
-  min-height: 24px;
+  height: 40px;                   /* QML 2.1.3 : landscapeCompact ? 28 : 40 */
+  box-sizing: border-box;
   font-family: var(--ff-display);
-  letter-spacing: 0.08em;
+  overflow: hidden;
 }
-.pot-side {
-  font-size: clamp(0.6rem, 1.4vw, 0.72rem);
-  color: #cdd3e0;   /* libelle gris clair (QML col200) — lisible sur le bandeau sombre quelle que soit la palette */
-  min-width: 60px;
+.gsb-col {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  line-height: 1.3;
+  min-width: 0;
+  white-space: nowrap;
 }
-.pot-right { text-align: right; }
-.pot-center {
-  font-size: clamp(0.68rem, 1.6vw, 0.82rem);
-  color: var(--sel, #E3C800);
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  text-align: center;
-  flex: 1;
+.gsb-right { align-items: flex-end; text-align: right; }
+.gsb-mid { display: flex; align-items: center; gap: 6px; min-width: 0; }
+.gsb-row { display: inline-flex; align-items: baseline; gap: 5px; }
+.gsb-lbl { color: #9e9e9e; font-size: 13px; }
+.gsb-row .gsb-lbl + .gsb-lbl { margin-left: 8px; }   /* espace Partie · Main */
+.gsb-total { color: #99D500; font-weight: 700; font-size: 13px; }
+.gsb-left .gsb-row:last-child .gsb-lbl,
+.gsb-gh .gsb-lbl, .gsb-val { font-size: 11px; }
+.gsb-bets { color: #7aa800; font-weight: 600; font-size: 11px; }
+.gsb-val  { color: #9e9e9e; }
+.gsb-phase {
+  color: #ffffff;
+  font-weight: 600;               /* DemiBold */
+  font-size: 13px;
+  letter-spacing: 0.5px;
+}
+/* landscapeCompact (parité Responsive QML 2.1.3) : barre 28 px, tailles 11/10/9 */
+@media (orientation: landscape) and (max-height: 600px),
+       (min-aspect-ratio: 210/100) and (max-height: 799px) {
+  #pot-strip { height: 28px; padding: 0 16px; }
+  .gsb-col { line-height: 1.15; }
+  .gsb-lbl { font-size: 10px; }
+  .gsb-total, .gsb-phase { font-size: 11px; }
+  .gsb-left .gsb-row:last-child .gsb-lbl,
+  .gsb-gh .gsb-lbl, .gsb-val, .gsb-bets { font-size: 9px; }
 }
 /* Compteur "blinds" cliquable à côté du n° de main dans le bandeau du pot. */
 .blinds-next {
@@ -2097,10 +2124,7 @@ body {
   .header .btn-sm { height: 30px !important; font-size: 0.82rem !important; padding: 0 13px !important; }
   .header .btn-icon { width: 34px !important; padding: 0 !important; }
 
-  /* ── Barre du pot ── */
-  #pot-strip { min-height: 32px !important; }
-  .pot-side   { font-size: 0.9rem !important; }
-  .pot-center { font-size: 1.05rem !important; }
+  /* ── Barre d'état de jeu : tailles QML fixes (13/11 px), pas d'override ── */
 
   /* ── Menu ••• ── */
   #g-overflow-menu, #l-overflow-menu { width: 264px !important; }
@@ -2570,13 +2594,8 @@ body {
      tablette et login — base topBar QML 2.1.3. Padding vertical 4 px
      (boutons 30 px + 4+4 = 38). L'ancien 48 px mobile est retire. */
   #s-game .header { padding-top: 4px; padding-bottom: 4px; min-height: var(--header-h, 38px); }
-  #pot-strip { padding-top: 5px; padding-bottom: 5px; min-height: 30px; }
-  /* Toutes les écritures de la barre du pot, plus grandes sur mobile
-     (demande narmod) : n° de main + tour (.pot-side), montant (.pot-center),
-     compteur de blinds (.blinds-next). #pot-strip en prefixe pour battre
-     les clamp de base sans !important. */
-  #pot-strip .pot-side    { font-size: 0.72rem; }
-  #pot-strip .pot-center  { font-size: 0.84rem; }
+  /* Barre d'état : hauteur/tailles QML identiques au desktop (40 px, 13/11) —
+     le mode landscapeCompact (28 px) est géré par sa propre media query. */
   #pot-strip .blinds-next { font-size: 0.68rem; }
 
   /* ── Lobby header on narrow phones ──
@@ -7587,19 +7606,6 @@ html.reduce-fx *, html.reduce-fx *::before, html.reduce-fx *::after {
 .avgal-item img {
   width: 100%; aspect-ratio: 1; display: block;
   border-radius: 7px; object-fit: cover;
-}
-
-/* ── Mises de la street : 2e ligne dédiée dans la strip (sous le pot),
-   compacte et atténuée — plus de retour à la ligne moche au milieu. ── */
-.pot-center { line-height: 1.12; }
-#g-pot .pot-bets, #g-potbar .pot-bets {
-  display: block;
-  font-size: 0.74em;
-  font-weight: 600;
-  letter-spacing: 0.06em;
-  opacity: 0.72;
-  line-height: 1.05;
-  white-space: nowrap;
 }
 
 /* ── Picker emoji complet : panneau plus haut + titres de sections ── */

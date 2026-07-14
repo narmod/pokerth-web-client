@@ -10,6 +10,8 @@ export const meta = {
 };
 
 export const strings = {
+    // GameStatusBar (bandeau d'info de jeu, parité QML §7)
+    gsbTotal:'Celkem:', gsbBets:'Sázky:', gsbGame:'Hra:', gsbHand:'Rozdání:',
   seatPokerthPortrait: "PokerTH Na výšku", seatPokerthLandscape: "PokerTH Na šířku",
   advUiGeneral:'Obecné', advUiNetwork:'Síť', advShowTooltips:'Zobrazit popisky', advDisableSplash:'Zakázat úvodní obrazovku při spuštění', advDontTranslatePoker:'Nepřekládat pokerové výrazy (Check, Call, Raise)', advNA:'web', advLanguage:'Jazyk', advDefCommunity:'Výchozí komunita', advSecReactions:'Reakce', advDisableReactions:'Zakázat emoji reakce', advNetStateColor:'Zobrazit barvu stavu sítě v rohu avatara',
   showPlayers: `Zobrazit hráče`,

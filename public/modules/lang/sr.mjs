@@ -10,6 +10,8 @@ export const meta = {
 };
 
 export const strings = {
+    // GameStatusBar (bandeau d'info de jeu, parité QML §7)
+    gsbTotal:'Ukupno:', gsbBets:'Ulozi:', gsbGame:'Igra:', gsbHand:'Ruka:',
   seatPokerthPortrait: "PokerTH Портрет", seatPokerthLandscape: "PokerTH Пејзаж",
   advUiGeneral:'Опште', advUiNetwork:'Мрежа', advShowTooltips:'Прикажи описе', advDisableSplash:'Онемогући почетни екран при покретању', advDontTranslatePoker:'Не преводи покер изразе (Check, Call, Raise)', advNA:'web', advLanguage:'Језик', advDefCommunity:'Подразумевана заједница', advSecReactions:'Реакције', advDisableReactions:'Онемогући емоџи реакције', advNetStateColor:'Прикажи боју стања мреже у углу аватара',
   showPlayers: `Прикажи играче`,

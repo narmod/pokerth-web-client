@@ -9,6 +9,8 @@ export const meta = {
 };
 
 export const strings = {
+    // GameStatusBar (bandeau d'info de jeu, parité QML §7)
+    gsbTotal:'合計:', gsbBets:'ベット:', gsbGame:'ゲーム:', gsbHand:'ハンド:',
   seatPokerthPortrait: "PokerTH 縦向き", seatPokerthLandscape: "PokerTH 横向き",
   advUiGeneral:'一般', advUiNetwork:'ネットワーク', advShowTooltips:'ツールチップを表示', advDisableSplash:'起動時のスプラッシュ画面を無効にする', advDontTranslatePoker:'ポーカー用語を翻訳しない（Check、Call、Raise）', advNA:'web', advLanguage:'言語', advDefCommunity:'デフォルトのコミュニティ', advSecReactions:'リアクション', advDisableReactions:'絵文字リアクションを無効にする', advNetStateColor:'アバターの隅にネットワーク状態の色を表示',
   showPlayers: `プレイヤーを表示`,

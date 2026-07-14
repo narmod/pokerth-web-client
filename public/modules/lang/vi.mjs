@@ -10,6 +10,8 @@ export const meta = {
 };
 
 export const strings = {
+    // GameStatusBar (bandeau d'info de jeu, parité QML §7)
+    gsbTotal:'Tổng:', gsbBets:'Cược:', gsbGame:'Trò chơi:', gsbHand:'Ván bài:',
   seatPokerthPortrait: "PokerTH Dọc", seatPokerthLandscape: "PokerTH Ngang",
   advUiGeneral:'Chung', advUiNetwork:'Mạng', advShowTooltips:'Hiển thị chú giải công cụ', advDisableSplash:'Tắt màn hình chờ khi khởi động', advDontTranslatePoker:'Không dịch các thuật ngữ poker (Check, Call, Raise)', advNA:'web', advLanguage:'Ngôn ngữ', advDefCommunity:'Cộng đồng mặc định', advSecReactions:'Phản ứng', advDisableReactions:'Tắt phản ứng biểu tượng cảm xúc', advNetStateColor:'Hiển thị màu trạng thái mạng ở góc ảnh đại diện',
   showPlayers: `Xem người chơi`,

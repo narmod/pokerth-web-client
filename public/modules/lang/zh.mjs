@@ -11,6 +11,8 @@ export const meta = {
 };
 
 export const strings = {
+    // GameStatusBar (bandeau d'info de jeu, parité QML §7)
+    gsbTotal:'总计:', gsbBets:'下注:', gsbGame:'游戏:', gsbHand:'手数:',
   seatPokerthPortrait: "PokerTH 竖向", seatPokerthLandscape: "PokerTH 横向",
   advUiGeneral:'常规', advUiNetwork:'网络', advShowTooltips:'显示工具提示', advDisableSplash:'启动时禁用启动画面', advDontTranslatePoker:'不翻译扑克术语（Check、Call、Raise）', advNA:'web', advLanguage:'语言', advDefCommunity:'默认社区', advSecReactions:'表情反应', advDisableReactions:'禁用表情反应', advNetStateColor:'在头像角落显示网络状态颜色',
   showPlayers: `显示玩家`,

@@ -16,6 +16,8 @@ export const meta = {
 };
 
 export const strings = {
+    // GameStatusBar (bandeau d'info de jeu, parité QML §7)
+    gsbTotal:'Total:', gsbBets:'Apuestas:', gsbGame:'Partida:', gsbHand:'Mano:',
   seatPokerthPortrait: "PokerTH Vertical", seatPokerthLandscape: "PokerTH Horizontal",
   advUiGeneral:'General', advUiNetwork:'Red', advShowTooltips:'Mostrar información sobre herramientas', advDisableSplash:'Desactivar la pantalla de bienvenida al iniciar', advDontTranslatePoker:'No traducir los términos de póquer (Check, Call, Raise)', advNA:'web', advLanguage:'Idioma', advDefCommunity:'Comunidad predeterminada', advSecReactions:'Reacciones', advDisableReactions:'Desactivar las reacciones emoji', advNetStateColor:'Mostrar el color del estado de red en la esquina del avatar',
   showPlayers: `Ver jugadores`,

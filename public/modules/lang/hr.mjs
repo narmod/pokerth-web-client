@@ -10,6 +10,8 @@ export const meta = {
 };
 
 export const strings = {
+    // GameStatusBar (bandeau d'info de jeu, parité QML §7)
+    gsbTotal:'Ukupno:', gsbBets:'Ulozi:', gsbGame:'Igra:', gsbHand:'Ruka:',
   seatPokerthPortrait: "PokerTH Okomito", seatPokerthLandscape: "PokerTH Vodoravno",
   advUiGeneral:'Općenito', advUiNetwork:'Mreža', advShowTooltips:'Prikaži opise', advDisableSplash:'Onemogući početni zaslon pri pokretanju', advDontTranslatePoker:'Ne prevodi pokerske izraze (Check, Call, Raise)', advNA:'web', advLanguage:'Jezik', advDefCommunity:'Zadana zajednica', advSecReactions:'Reakcije', advDisableReactions:'Onemogući emoji reakcije', advNetStateColor:'Prikaži boju stanja mreže u kutu avatara',
   showPlayers: `Prikaži igrače`,

@@ -14,6 +14,8 @@ export const meta = {
 };
 
 export const strings = {
+    // GameStatusBar (bandeau d'info de jeu, parité QML §7)
+    gsbTotal:'कुल:', gsbBets:'दांव:', gsbGame:'खेल:', gsbHand:'हाथ:',
   seatPokerthPortrait: "PokerTH पोर्ट्रेट", seatPokerthLandscape: "PokerTH लैंडस्केप",
   advUiGeneral:'सामान्य', advUiNetwork:'नेटवर्क', advShowTooltips:'टूलटिप दिखाएँ', advDisableSplash:'स्टार्टअप पर स्प्लैश स्क्रीन अक्षम करें', advDontTranslatePoker:'पोकर शब्दों का अनुवाद न करें (Check, Call, Raise)', advNA:'web', advLanguage:'भाषा', advDefCommunity:'डिफ़ॉल्ट समुदाय', advSecReactions:'प्रतिक्रियाएँ', advDisableReactions:'इमोजी प्रतिक्रियाएँ अक्षम करें', advNetStateColor:'अवतार कोने में नेटवर्क स्थिति का रंग दिखाएँ',
   showPlayers: `खिलाड़ी दिखाएँ`,
