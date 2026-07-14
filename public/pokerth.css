@@ -4432,17 +4432,17 @@ body:not(.in-game) .my-zone {
    redimensionne au fil du resize Safari/Chrome comme le client QML. Les
    blocs mobiles (portrait/paysage) surchargent avec leurs valeurs QML
    fixes et ne sont pas affectes. */
-.act-buttons-row .btn-action { flex: 1; min-width: 0; padding: calc(10px * var(--bar-k, 1)) calc(12px * var(--bar-k, 1)); min-height: calc(54px * var(--bar-k, 1)); border-radius: 9px; font-size: calc(0.9rem * var(--bar-k, 1)); }
+.act-buttons-row .btn-action { flex: 1; min-width: 0; padding: calc(10px * var(--bar-k, 1)) calc(12px * var(--bar-k, 1)); min-height: calc(54px * var(--bar-k, 1)); border-radius: 9px; font-size: calc(0.9rem * var(--bar-kf, 1)); }
 /* Haut : champ montant editable + slider */
 .bet-row { display: flex; gap: 8px; align-items: center; }
 .bet-row .raise-slider { flex: 1; }
 .raise-amt-field {
-  flex: 0 0 auto; width: calc(78px * var(--bar-k, 1));
+  flex: 0 0 auto; width: 78px; /* largeur QML fixe, conservee aussi en paysage -> continuite */
   background: var(--field-bg);
   border: 2px solid var(--btn-raise-bg, #4CAF50);
   border-radius: 7px;
   color: var(--btn-raise-bg, #4CAF50);
-  padding: calc(8px * var(--bar-k, 1)) calc(6px * var(--bar-k, 1)); font-family: var(--ff-mono); font-size: calc(0.81rem * var(--bar-k, 1));
+  padding: calc(8px * var(--bar-k, 1)) calc(6px * var(--bar-k, 1)); font-family: var(--ff-mono); font-size: calc(0.81rem * var(--bar-kf, 1));
   font-weight: 700; text-align: center; outline: none;
 }
 .raise-amt-field:focus { border-color: var(--gold); }
@@ -4452,7 +4452,7 @@ body:not(.in-game) .my-zone {
 .mid-row .pct-row { flex: 1 1 auto; width: auto; }
 .mid-row .btn-allin { flex: 0 0 auto; min-width: 0; white-space: nowrap; }
 .mode-sel-wrap { flex: 0 0 auto; }
-.mid-row .mode-sel-wrap { flex: 0 1 calc(132px * var(--bar-k, 1)); }
+.mid-row .mode-sel-wrap { flex: 0 1 calc(132px * var(--bar-kf, 1)); }
 /* First two buttons side by side */
 .action-top-row {
   display: flex; gap: 6px;
@@ -4469,7 +4469,7 @@ body:not(.in-game) .my-zone {
   color: var(--gold); padding: calc(7px * var(--bar-k, 1)) calc(4px * var(--bar-k, 1)); min-height: calc(38px * var(--bar-k, 1)); border-radius: 7px; cursor: pointer;
   font-family: var(--ff-mono); text-align: center;
 }
-.btn-pct .pct-p { font-size: calc(0.74rem * var(--bar-k, 1)); font-weight: 700; color: var(--gold); }
+.btn-pct .pct-p { font-size: calc(0.74rem * var(--bar-kf, 1)); font-weight: 700; color: var(--gold); }
 .btn-pct .pct-amt { font-size: 0.6rem; font-weight: 400; color: var(--text); }
 .btn-pct:hover { background: rgba(var(--gold-rgb), 0.22); }
 /* Bets rapides : vert QML (comme le client officiel) UNIQUEMENT sur les tapis
@@ -7676,7 +7676,7 @@ html[data-buttons="pokerth"] .btn-action {
   border-radius: 9px;
   font-weight: 700;
   letter-spacing: 0.5px;
-  font-size: calc(15px * var(--bar-k, 1));
+  font-size: calc(15px * var(--bar-kf, 1));
   color: #fff;
   min-height: calc(54px * var(--bar-k, 1));
   border-width: 1px;
