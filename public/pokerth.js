@@ -8889,7 +8889,10 @@ const App = (() => {
       raw.push({ x: zW * (0.5 + gF.radiusX * v0[0]), y: zH * (gF.centerY + gF.radiusY * v0[1]) });
     }
     return { s: sFin, slots: slots, raw: raw,
-             selfX: zW * 0.5, selfY: gF.selfTop + gF.selfVisualH / 2 };
+             // Ancre QML de la selfBox : anchors.bottomMargin = 12 en paysage
+             // (wide) — la réserve interne de la bisection garde -4 (identique
+             // au QML), seule la POSITION visuelle de la perle est à 12.
+             selfX: zW * 0.5, selfY: zH - 12 - gF.selfVisualH / 2 };
   }
   window._qmlLandscapeLayout = _qmlLandscapeLayout;
   // ── QML_LANDSCAPE_LAYOUT_END ──
@@ -9011,16 +9014,18 @@ const App = (() => {
     var _seatBoxScale = 1;
     try { var _sbw = window.innerWidth, _sbh = window.innerHeight; if (Math.min(_sbw, _sbh) < 540) { var _opp = Math.max(0, rotated.length - 1); _seatBoxScale = (_sbh > _sbw) ? Math.max(0.72, 0.90 - Math.max(0, _opp - 4) * 0.026) : Math.max(0.80, 0.98 - Math.max(0, _opp - 4) * 0.022); } } catch (e) {}
     // Self-box PLUS GROSSE que les adversaires, comme le client officiel,
-    // avec le ratio QML PAR APPAREIL (delta 2.1.3 §4.2) :
+    // avec le ratio QML PAR APPAREIL (delta 2.1.3 §4.2 — selfBaseHeight /
+    // oppBaseHeight) :
     //   portrait 82/71 = 1.155 · desktop/tablette wide 96/84 = 1.143 ·
-    //   landscapeCompact 94/71 = 1.32.
+    //   landscapeCompact 94/84 = 1.119 (la tableZone est « wide » en paysage
+    //   compact → opp = 84, PAS 71 ; l'ancien 1.32 surdimensionnait la self).
     // C'est l'agrandissement de BASE (zoom 0) ; le cycle de zoom des cartes
     // (#g-cardzoom) reste independant et s'ajoute par-dessus.
     var SELF_BOX_MUL = 1.143;
     try {
       var _smw = window.innerWidth, _smh = window.innerHeight;
       if (_smh > _smw) SELF_BOX_MUL = 1.155;
-      else if (_smh < 600) SELF_BOX_MUL = 1.32;
+      else if (_smh < 600) SELF_BOX_MUL = 1.119;
     } catch (e) {}
     // Placement des sièges : 'classic' (ellipse maison, défaut) ou 'official'
     // (slots fixes du client PokerTH : grille périmètre en paysage façon client
@@ -9558,12 +9563,17 @@ const App = (() => {
         // de zoom, contrairement a getBoundingClientRect) -> clamp stable a tout zoom.
         var _bh2 = _meEl.offsetHeight * _seatBoxScale * SELF_BOX_MUL;
         var _bt2 = parseFloat(_meEl.dataset.baseTop) || 0;
-        var _floor2 = zone.clientHeight - 4 - _bh2 / 2;
+        // Marge basse QML : anchors.bottomMargin = wide ? 12 : 4.
+        var _fm2 = _selfAtPearl ? 12 : 4;
+        var _floor2 = zone.clientHeight - _fm2 - _bh2 / 2;
+        // Portrait + pack pokerth : la self est ANCRÉE bas-centre comme le QML
+        // (pas seulement une garde anti-débordement). Custom respecté.
+        var _selfPinPortrait = _pkStyleNow && _forceSeatPortrait && !_selfHasCustom;
         // Mode "perle" (paysage officiel, pas de player-bar) : on ÉPINGLE la
         // self au sol de la zone par MESURE réelle à chaque rendu — garantit le
         // point bas de l'ellipse quels que soient le boxScale et le style.
         // Sinon : simple garde anti-débordement (remonte si le bas dépasse).
-        if (_selfAtPearl || _bt2 > _floor2) {
+        if (_selfAtPearl || _selfPinPortrait || _bt2 > _floor2) {
           _meEl.dataset.baseTop = _floor2.toFixed(1);
           _meEl.style.top = _floor2.toFixed(1) + 'px';
           if (pixPos[0]) pixPos[0].top = _floor2;
@@ -14388,7 +14398,7 @@ function renderPlayersList() {
   body.innerHTML = _shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>';
 }
 
-;(function(){ window.BUILD_VERSION='0.3.485-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.486-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
