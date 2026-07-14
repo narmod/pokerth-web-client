@@ -9246,7 +9246,12 @@ const App = (() => {
       var _betSideCls = '';
       if (_pkHole) {
         var _bdx = px.left - oCX, _bdy = px.top - oCY, _bs;
-        if (_seatStyleV === 'pokerth-portrait') {
+        // Cote INTERIEUR des jetons/pucks des que la DISPOSITION est la
+        // grille portrait (et plus seulement quand le STYLE portrait est
+        // choisi) : colonnes collees aux bords d'ecran -> mises et pucks
+        // vers le feutre, jamais hors ecran (demande narmod, parite QML
+        // betSide).
+        if (_forceSeatPortrait) {
           var _idx = -_bdx, _idy = -_bdy;
           _bs = (Math.abs(_idx) >= Math.abs(_idy)) ? (_idx > 0 ? 'r' : 'l') : (_idy > 0 ? 'b' : 't');
         } else {
@@ -14238,7 +14243,7 @@ function renderPlayersList() {
   body.innerHTML = _shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>';
 }
 
-;(function(){ window.BUILD_VERSION='0.3.466-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.467-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
