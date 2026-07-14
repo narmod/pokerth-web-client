@@ -6009,6 +6009,21 @@ html[data-table="pokerth-live"] .raise-slider { accent-color: #4CAF50; }
 .cf-preset .cfp-n { font-family: var(--ff-display); font-size: 0.86rem; font-weight: 600; }
 .cf-preset .cfp-d { font-size: 0.56rem; color: var(--gold-dim); }
 
+/* ── Rangée Style de partie : grille fixe 3 colonnes (2 rangées logiques :
+   rythmes libres / formats pokerth.net), cartes allégées — esprit QML :
+   plat, radius 9, bordures discrètes. ⭐ Perso devient une barre fine
+   horizontale sous la grille (action de chargement, pas un style). ── */
+.cf-presets-style { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); margin-bottom: 8px; }
+.cf-presets-style .cf-preset { padding: 8px 4px; gap: 2px; }
+.cf-presets-style .cf-preset .cfp-ico { font-size: 1.2rem; }
+.cf-presets-style .cf-preset .cfp-n { font-size: 0.8rem; }
+.cf-presets-style .cf-preset .cfp-d { font-size: 0.54rem; }
+.cf-preset.cfp-bar { flex-direction: row; align-items: center; justify-content: center; width: 100%; padding: 8px 10px; gap: 8px; margin-bottom: 16px; }
+.cf-preset.cfp-bar .cfp-ico { font-size: 1.05rem; line-height: 1; }
+.cf-preset.cfp-bar .cfp-n { font-size: 0.82rem; }
+.cf-preset.cfp-bar .cfp-d { font-size: 0.62rem; }
+.cf-preset.cfp-bar .cfp-d::before { content: '— '; }
+
 /* Curseurs (sliders) Joueurs max / Stack */
 .cf-sliders { display: grid; gap: 14px; margin-top: 14px; }
 .cf-slider label { display: flex; justify-content: space-between; align-items: baseline; font-size: 0.6rem; color: var(--gold-dim); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 8px; }
