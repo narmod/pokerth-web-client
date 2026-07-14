@@ -300,6 +300,7 @@ export const strings = {
     presetNormalName:'Normal', presetNormalDesc:'balanced',
     presetFastName:'Fast', presetFastDesc:'fast-paced!',
     presetPersoName:'My prefs', presetPersoDesc:'my settings',
+    guestNeedAccount:'Account required', guestJoinBlocked:'Guests can only join normal games — sign in with a registered pokerth.net account to play this table.',
     presetRankingName:'Ranking', presetRankingDesc:'official pace', presetWecupName:'WeCup', presetWecupDesc:'balanced tournament', presetBbcName:'BBC', presetBbcDesc:'time-based blinds',
     presetSaveName:'My prefs', presetSaveDesc:'save these settings',
     proxyConnectedWait:'Proxy connected \u2014 waiting for PokerTH server\u2026',

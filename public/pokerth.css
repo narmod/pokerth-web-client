@@ -3368,6 +3368,7 @@ body {
   flex-shrink: 0;
 }
 .btn-join:hover { background: #384252; }
+.gl-guestlock { align-self: center; font-size: 0.64rem; color: var(--text); opacity: 0.55; white-space: nowrap; padding: 3px 6px; border: 1px dashed var(--border); border-radius: 6px; }
 .game-row { cursor: pointer; }
 
 /* ═══ MOBILE: compact buttons in the available-tables list ═══

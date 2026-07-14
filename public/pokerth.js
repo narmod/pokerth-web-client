@@ -7800,6 +7800,14 @@ const App = (() => {
   // Affiche/masque le bouton « Rejoindre » du bas selon la partie sélectionnée :
   // visible seulement pour une partie OUVERTE (mode 1) et si je ne suis pas déjà
   // en partie (le footer montre alors les options d'attente). Parité LobbyPage QML.
+  // pokerth.net : un joueur invité (guest) ne peut rejoindre que les parties
+  // de type « Normal » (1) — le serveur refuse registered-only (2),
+  // invite-only (3) et ranking (4). On masque/bloque côté client pour
+  // éviter un rejet serveur cryptique.
+  function _guestJoinBlocked(g) {
+    return _currentLoginMode === 'guest' && !!g && g.type != null && g.type !== 1;
+  }
+
   function _updateFootJoin() {
     var g = (_selectedGame != null && typeof games !== 'undefined') ? games[_selectedGame] : null;
     var bj = document.getElementById('lobby-foot-join');
@@ -7808,7 +7816,7 @@ const App = (() => {
     // ne propose ni Rejoindre ni Spectateur — seules Démarrer/Quitter restent.
     // gId!=0 couvre l'attente (amInGame est encore faux avant le démarrage).
     var busy = amInGame || (typeof gId !== 'undefined' && gId !== 0);
-    var joinable  = !!(g && g.mode === 1) && !busy;   // partie ouverte
+    var joinable  = !!(g && g.mode === 1) && !busy && !_guestJoinBlocked(g);   // partie ouverte (et autorisée pour un invité)
     var watchable = !!(g && g.mode === 2) && !busy;   // partie en cours
     if (bj) bj.style.display = joinable  ? '' : 'none';
     if (bs) bs.style.display = watchable ? '' : 'none';
@@ -7909,9 +7917,12 @@ const App = (() => {
       const watchBtn = (g.mode === 2 && !isMyTable)
         ? '<button class="btn-join btn-spectate" title="' + t('watchTitle') + '" onclick="event.stopPropagation();App.spectateGame(' + gid + ')">👁 ' + t('spectatorBtn') + '</button>'
         : '';
-      const joinBtn = (g.mode === 1 && !isMyTable)
+      const guestBlocked = _guestJoinBlocked(g);
+      const joinBtn = (g.mode === 1 && !isMyTable && !guestBlocked)
         ? '<button class="btn-join" onclick="event.stopPropagation();App.joinGame(' + parseInt(gid) + ')">' + joinLabel + '</button>'
-        : '';
+        : (g.mode === 1 && !isMyTable && guestBlocked)
+          ? '<span class="gl-guestlock" title="' + t('guestJoinBlocked') + '">👤 ' + t('guestNeedAccount') + '</span>'
+          : '';
       // Meta façon officiel : X/max · Temps : Xs/Ys · Publique/Privée · Classement.
       // (cash, blindes, hausse et points de sièges sont désormais dans le panneau Infos.)
       var metaBits = [];
@@ -12659,6 +12670,7 @@ function _maybeShowNextHandBtn() {
       const g = games[gameId];
       if (!g) return;
       if (g.mode === 3) { addChat(null, 'Table closed.', 'sys'); return; }
+      if (_guestJoinBlocked(g)) { setStatus(t('guestJoinBlocked') || 'Guests can only join normal games.', 'err'); return; }
       if (g.priv || g.type === 3) {
         if (g.type === 3 && !g.priv) { setStatus(typeof t==='function'?t('errNotInvited')||'Invite-only table':'Invite-only table', 'err'); return; }
         const pp = document.getElementById('password-prompt');
@@ -14906,7 +14918,7 @@ function renderPlayersList() {
   body.innerHTML = _shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>';
 }
 
-;(function(){ window.BUILD_VERSION='0.3.517-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.518-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
