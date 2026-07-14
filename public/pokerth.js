@@ -8785,31 +8785,18 @@ const App = (() => {
       };
       var seqP = SEQ_P[M];
       if (!seqP) return null;
-      var outP = [null]; // index 0 = self -> position classique
-      // Repartir chaque colonne UNIFORMEMENT le long du feutre + TC au-dessus, sur TOUS
-      // les ecrans. _slotRx borne (zW/2-66) pour garder les box dans l'ecran (pas de coupe
-      // sur les bords). Espacement vertical borne (barre Pot en haut / zone d'action en bas).
-      var _slotRx = Math.min(oRect.width / 2 + Math.max(75, oRect.width * 0.12), zW / 2 - (58 * (boxScale || 1) + 8));
-      var _halfH = oRect.height / 2;
-      var lanes = { L: [], R: [], T: [] };
+      // CALQUE 1:1 du QML officiel (slotForSeat) : position = FRACTIONS de la
+      // tableZone (x*zW, y*zH), plus le nudge vertical px du build 28/06 :
+      // +14 px pour L/R_lower et L/R_bottom, -4 px pour TL/TR et L/R_upper,
+      // TC sans nudge. Plus aucune redistribution maison le long du feutre —
+      // les sieges tombent exactement ou le client QML les met en portrait.
+      var NUDGE_P = { L_bottom:14, R_bottom:14, L_lower:14, R_lower:14,
+                      TL:-4, TR:-4, L_upper:-4, R_upper:-4, TC:0 };
+      var outP = [null]; // index 0 = self -> position classique (bas-centre)
       for (var i = 0; i < seqP.length; i++) {
         var nm = seqP[i];
-        var lane = (nm === 'TC') ? 'T' : ((nm.charAt(0) === 'L' || nm === 'TL') ? 'L' : 'R');
-        lanes[lane].push({ idx: i + 1, vy: SLOTS_P[nm][1] });
-        outP.push(null);
+        outP.push({ left: SLOTS_P[nm][0] * zW, top: SLOTS_P[nm][1] * zH + (NUDGE_P[nm] || 0) });
       }
-      var vRange = Math.min(oCY - 96, (zH - oCY) - 110);
-      if (vRange < 70) vRange = 70;
-      var sides = ['L', 'R'];
-      for (var si = 0; si < 2; si++) {
-        var arr = lanes[sides[si]];
-        arr.sort(function(a, b){ return a.vy - b.vy; });
-        var k = arr.length, lx = oCX + (sides[si] === 'L' ? -_slotRx : _slotRx);
-        var sp = (k <= 1) ? 0 : Math.min(_small ? Math.round(96 * boxScale + 12) : 175, (2 * vRange) / (k - 1));
-        var y0 = oCY - sp * (k - 1) / 2;
-        for (var j = 0; j < k; j++) outP[arr[j].idx] = { top: y0 + j * sp, left: lx };
-      }
-      if (lanes.T.length) outP[lanes.T[0].idx] = { top: oCY - (_halfH + (_small ? Math.round(48 * boxScale + 12) : 84)), left: oCX };
       return outP;
     }
     // ── PAYSAGE : ellipse officielle — DÉLÉGUÉE au port 1:1 du QML ──
@@ -14087,7 +14074,7 @@ function renderPlayersList() {
   body.innerHTML = _shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>';
 }
 
-;(function(){ window.BUILD_VERSION='0.3.439-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.440-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
