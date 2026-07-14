@@ -9284,9 +9284,17 @@ const App = (() => {
       else if (isBB) blindBadge = chipSvg('BB','#b71c1c','#fff','#6d0c0c');
       const timerSvg = isActive ? (_pkHole ? '' : _timerSvg(_timerSec, _timerTot)) : '';
       const avatarCls = 'seat-avatar' + (isActive ? ' timing' : '') + avatarType;
-      const dealerChip = isDealer ? dealerChipSvg() : '';
-      // Packs PokerTH : pucks D/SB/BB posés sur le CÔTÉ de la boîte (comme
-      // l'officiel), pas sur l'avatar -> on les sort de l'avatar ici.
+      let dealerChip = isDealer ? dealerChipSvg() : '';
+      // Packs PokerTH : pucks = disques crème OFFICIELS (table par défaut QML :
+      // tableDealerPuck/SmallBlind/BigBlind ~ /pucks/*.svg) au lieu des chips
+      // dessinés (D sombre doré, SB bleu, BB rouge) qui ne correspondent pas.
+      // Un puck de thème explicite (_pthPuck) reste prioritaire.
+      if (_pkHole) {
+        if (isDealer) dealerChip = '<img class="dealer-chip" src="' + (_pthPuck('--puck-dealer') || '/pucks/dealer.svg') + '" alt="D" width="20" height="20">';
+        if (isSB)      blindBadge = '<img class="blind-chip" src="' + (_pthPuck('--puck-sb') || '/pucks/sb.svg') + '" alt="SB" width="20" height="20">';
+        else if (isBB) blindBadge = '<img class="blind-chip" src="' + (_pthPuck('--puck-bb') || '/pucks/bb.svg') + '" alt="BB" width="20" height="20">';
+      }
+      // Packs PokerTH : pucks posés sur le CÔTÉ de la boîte -> hors de l'avatar.
       var _avPucks = _pkHole ? '' : (blindBadge + dealerChip);
       // Drapeau du pays sur l'avatar (coin bas-droite, comme un badge).
       // Vide si pays inconnu → rien affiché.
@@ -14229,7 +14237,7 @@ function renderPlayersList() {
   body.innerHTML = _shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>';
 }
 
-;(function(){ window.BUILD_VERSION='0.3.463-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.464-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
