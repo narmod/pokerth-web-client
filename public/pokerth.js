@@ -7813,7 +7813,11 @@ const App = (() => {
     d.className = 'msg ' + cls;
     const emT = function (s) { var h = esc(s); if (!_noEmo && typeof window.applyChatEmoteShortcuts === 'function') { try { h = window.applyChatEmoteShortcuts(h); } catch (_e) {} } if (typeof window._linkifyChatHtml === 'function') { try { h = window._linkifyChatHtml(h); } catch (_e2) {} } return h; };
     if (sender) {
-      d.innerHTML = `<span class="msg-time">${_chatTs()}</span> <span class="who">${esc(sender)}</span>: <span class="txt">${emT(text)}</span>`;
+      d.innerHTML = `<span class="msg-time">${_chatTs()}</span> <span class="who">${esc(sender)}</span>: <span class="txt">${emT(text)}</span>`
+        // Bouton de traduction aussi dans le chat LOBBY (meme mecanique que
+        // le chat de partie ; visible seulement si body.chat-tr-on).
+        + (cls !== 'mine' ? '<button class="chat-tr-btn" title="Traduire" onclick="window._chatTranslate(this)" aria-label="Translate">\u{1F310}</button>' : '');
+      try { d.dataset.orig = text; } catch (_e) {}
     } else {
       d.innerHTML = `<span class="txt">${esc(text)}</span>`;
     }
@@ -14324,7 +14328,7 @@ function renderPlayersList() {
   body.innerHTML = _shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>';
 }
 
-;(function(){ window.BUILD_VERSION='0.3.475-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.476-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
