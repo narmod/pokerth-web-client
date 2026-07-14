@@ -6530,25 +6530,27 @@ html[data-seat^="pokerth"] .seat-narrow .seat-money { font-size: 0.64rem; }
   html[data-seat^="pokerth"] .seat-bet   { font-size: 0.66rem !important; }
   html[data-seat^="pokerth"] .seat-action-label { font-size: 0.64rem !important; }
 }
-/* Joueur au tour : boîte « soulevée » scale 1.04 (playerBox.scale QML) + glow or. */
+/* Joueur au tour : boîte « soulevée » scale 1.04 (playerBox.scale QML). Le
+   cadre or est porté par ::after (PlayerTurnGlow) — la bordure blanche 6 % de
+   la boîte reste visible dessous, comme dans le client officiel. */
 html[data-seat^="pokerth"] .seat.active .seat-plate {
   transform: scale(1.04);
-  border-color: var(--gold);
-  box-shadow: 0 0 0 1px var(--gold), 0 0 16px rgba(var(--gold-rgb), 0.45);
   opacity: 1;
 }
-/* Self au tour : cadre or PULSÉ (PlayerTurnGlow du GamePlayerSelfBox officiel).
-   Box-shadow statique héritée de .seat.active ci-dessus + ::before qui pulse en
-   OPACITÉ uniquement (iOS-safe ; pas d'anim de box-shadow). ::before et non
-   ::after (mémo sièges). Boîte/taille/layout restent identiques aux adversaires ;
-   seule la pulsation distingue le self au tour. Vaut pour les deux packs
-   (pokerth landscape + portrait). .seat-plate est déjà position:relative. */
-html[data-seat^="pokerth"] .seat.me.active .seat-plate::before {
-  content: ""; position: absolute; inset: 0; border-radius: inherit;
-  pointer-events: none; z-index: -1; will-change: opacity;
-  box-shadow: 0 0 0 2px #ffe066, 0 0 24px 4px rgba(var(--gold-rgb), 0.7);
-  animation: glowPulseFade 1.5s ease-in-out infinite;
+/* PlayerTurnGlow QML, pour TOUTES les boîtes au tour (self inclus — le QML
+   partage le même composant) : cadre or #FFD54A 1 px à −2 px du bord
+   (anchors.margins -2, radius 6) + halo doux, pulsation 0.65↔1.0 en 1.5 s.
+   iOS-safe : box-shadow STATIQUE sur le pseudo-élément, seule l'OPACITÉ est
+   animée (mémo thermique). Tokens surchargeables par thème :
+   --turn-glow (cadre) et --turn-glow-halo (halo). */
+html[data-seat^="pokerth"] .seat.active .seat-plate::after {
+  content: ""; position: absolute; inset: -2px; border-radius: 8px;
+  border: 1px solid var(--turn-glow, #FFD54A);
+  box-shadow: 0 0 14px 2px var(--turn-glow-halo, rgba(255, 213, 74, 0.55));
+  pointer-events: none; z-index: 10; will-change: opacity;
+  animation: turnGlowPulse 1.5s ease-in-out infinite;
 }
+@keyframes turnGlowPulse { 0%, 100% { opacity: 0.65; } 50% { opacity: 1; } }
 /* Couché : 0.72 ; éliminé : la base gère déjà l'estompe (transition QML 250ms). */
 html[data-seat^="pokerth"] .seat { transition: opacity 0.25s ease-out; }
 html[data-seat^="pokerth"] .seat.folded { opacity: 0.72; }
