@@ -6559,7 +6559,6 @@ html[data-seat^="pokerth"] .seat-narrow .seat-money { font-size: 12px !important
 @media (min-width: 900px) and (hover: hover) and (pointer: fine) {
   /* Nom/tapis : tailles QML fixes (15/12 px) définies dans la base — plus
      d'override desktop, le boxScale de l'ellipse fait la mise à l'échelle. */
-  html[data-seat^="pokerth"] .seat-bet   { font-size: 0.66rem !important; }
   html[data-seat^="pokerth"] .seat-action-label { font-size: 0.64rem !important; }
 }
 /* Joueur au tour : boîte « soulevée » scale 1.04 (playerBox.scale QML). Le
@@ -6589,28 +6588,32 @@ html[data-seat^="pokerth"] .seat.folded { opacity: 0.72; }
 /* Mise (pack PokerTH) : icône jeton à gauche du montant, comme le BetChip du
    client officiel (chipStack.svg). On garde la pastille de base (fond sombre,
    montant crème) et on préfixe juste le jeton PokerTH. */
+/* BetChip QML : icône chipStack.svg 20×20 + « $X » 14px bold #f0f0f0,
+   espacement 2, SANS pastille de fond (le composant officiel n'en a pas).
+   Pop 0.5→1.15→1.0 via la propriété `scale` (indépendante du transform de
+   positionnement betside-*). Icône surchargeable par thème (--bet-chip-img). */
 html[data-seat^="pokerth"] .seat-bet {
-  display: inline-flex; align-items: center; gap: 3px;
-  padding: 1px 6px 1px 3px; background: rgba(0,0,0,0.42); border: none;
-  color: #fff; font-family: var(--ff-display); font-weight: 700;
+  display: inline-flex; align-items: center; gap: 2px;
+  padding: 0; background: none; border: none;
+  color: #f0f0f0; font-family: var(--ff-display);
+  font-size: 14px !important; font-weight: 700;
+  animation: betChipPop 0.24s ease-out;
 }
-/* Chip DORÉ (BetChip officiel) dessiné en CSS : centre clair -> or -> bord or
-   sombre. Remplace l'ancien favicon rouge, peu lisible et non fidèle. */
 html[data-seat^="pokerth"] .seat-bet::before {
-  content: ""; width: 11px; height: 11px; flex: none; border-radius: 50%;
-  background: radial-gradient(circle at 50% 42%, #ffe680 0 36%, #E3C800 36% 60%, #a8850a 60% 100%);
-  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.35), 0 0 0 0.5px rgba(0,0,0,0.45);
+  content: ""; width: 20px; height: 20px; flex: none;
+  background: var(--bet-chip-img, url('/pucks/chipStack.svg')) center / contain no-repeat;
 }
+@keyframes betChipPop { 0% { scale: 0.5; } 46% { scale: 1.15; } 100% { scale: 1; } }
 /* Mise HORS de la boîte (packs PokerTH) : la pastille jeton+montant est posée
    sur le côté de la box, côté calculé en JS (classe betside-* sur .seat).
    .seat-bet devient absolu (ancré à .seat = la box), sorti du flux colonne. */
 html[data-seat^="pokerth"] .seat[class*="betside-"] .seat-bet {
   position: absolute; z-index: 6; margin: 0;
 }
-html[data-seat^="pokerth"] .seat.betside-r .seat-bet { left: calc(100% + 5px); top: 42%; }
-html[data-seat^="pokerth"] .seat.betside-l .seat-bet { right: calc(100% + 5px); top: 42%; }
-html[data-seat^="pokerth"] .seat.betside-t .seat-bet { bottom: calc(100% + 5px); left: 50%; transform: translateX(-50%); }
-html[data-seat^="pokerth"] .seat.betside-b .seat-bet { top: calc(100% + 5px); left: 50%; transform: translateX(-50%); }
+html[data-seat^="pokerth"] .seat.betside-r .seat-bet { left: calc(100% + 8px); top: 50%; transform: translateY(-50%); }
+html[data-seat^="pokerth"] .seat.betside-l .seat-bet { right: calc(100% + 8px); top: 50%; transform: translateY(-50%); }
+html[data-seat^="pokerth"] .seat.betside-t .seat-bet { bottom: calc(100% + 7px); left: 50%; transform: translateX(-50%); }
+html[data-seat^="pokerth"] .seat.betside-b .seat-bet { top: calc(100% + 7px); left: 50%; transform: translateX(-50%); }
 /* Self : sa mise est dans la barre d'action -> pas de jeton de siège (officiel). */
 html[data-seat^="pokerth"] .seat.me .seat-bet { display: none; }
 
@@ -6626,12 +6629,15 @@ html[data-seat^="pokerth"] .seat-pucks .dealer-chip,
 html[data-seat^="pokerth"] .seat-pucks .blind-chip {
   position: static !important; top: auto !important; right: auto !important;
   bottom: auto !important; left: auto !important; margin: 0 !important;
-  width: 17px !important; height: 17px !important;
+  width: 32px !important; height: 32px !important;   /* BlindButtonImage QML 32×32 */
 }
-html[data-seat^="pokerth"] .seat.betside-r .seat-pucks { left: calc(100% + 4px); bottom: 4%; }
-html[data-seat^="pokerth"] .seat.betside-l .seat-pucks { right: calc(100% + 4px); bottom: 4%; }
-html[data-seat^="pokerth"] .seat.betside-t .seat-pucks { bottom: calc(100% + 4px); left: 68%; }
-html[data-seat^="pokerth"] .seat.betside-b .seat-pucks { top: calc(100% + 4px); left: 68%; }
+/* Côtés (betSide left/right) : puck SOUS la mise, à 5/6 de la hauteur (QML). */
+html[data-seat^="pokerth"] .seat.betside-r .seat-pucks { left: calc(100% + 8px); top: 83.33%; transform: translateY(-50%); }
+html[data-seat^="pokerth"] .seat.betside-l .seat-pucks { right: calc(100% + 8px); top: 83.33%; transform: translateY(-50%); }
+/* Haut/bas : puck aligné à DROITE, 6px du bord de la boîte (QML), même bande
+   verticale que la mise (centre puck 32 ≈ centre mise 20 posée à 7px). */
+html[data-seat^="pokerth"] .seat.betside-t .seat-pucks { bottom: calc(100% + 1px); right: 6px; left: auto; }
+html[data-seat^="pokerth"] .seat.betside-b .seat-pucks { top: calc(100% + 1px); right: 6px; left: auto; }
 html[data-seat^="pokerth"] .seat-timer-badge { display: none; }
 /* Countdown RECTANGULAIRE (style pokerth) : cadre depletif autour de la boite,
    remplace l'anneau rond .seat-timer. Couleurs officielles 2.1.1. */
