@@ -8811,7 +8811,13 @@ const App = (() => {
     // deux règles : couvre téléphones ET fenêtres desktop très aplaties.
     var _wH = (typeof window !== 'undefined') ? window.innerHeight : zH;
     var _wW = (typeof window !== 'undefined') ? window.innerWidth  : zW;
-    var compact = _wH < 600 || (_wW / Math.max(_wH, 1) > 2.1 && _wH < 1300);
+    // Adaptation WEB du landscapeCompact desktop : le QML utilise
+    // ratio>2.1 && h<1300 en mesurant SA fenetre ; dans un navigateur la
+    // chrome + barres systeme mangent la hauteur et gonflent le ratio ->
+    // une fenetre desktop banale (ex. 1920x950, ratio 2.02-2.2) passait
+    // compact a tort et ecrasait les paires de sieges laterales. On exige
+    // une fenetre REELLEMENT aplatie : h < 800.
+    var compact = _wH < 600 || (_wW / Math.max(_wH, 1) > 2.1 && _wH < 800);
     var lay = _qmlLandscapeLayout(M, zW, zH, compact);
     var out = [null]; // index 0 = self -> perle du bas de l'ellipse (voir _self)
     for (var ke = 0; ke < M; ke++) out.push({ top: lay.slots[ke].y, left: lay.slots[ke].x });
@@ -14074,7 +14080,7 @@ function renderPlayersList() {
   body.innerHTML = _shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>';
 }
 
-;(function(){ window.BUILD_VERSION='0.3.440-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.441-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

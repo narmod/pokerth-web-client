@@ -1359,7 +1359,7 @@ body {
    desktop, mobile portrait, paysage, connexion) -> plus aucune divergence. */
 :root { --header-h: 38px; }
 @media (orientation: landscape) and (max-height: 600px),
-       (min-aspect-ratio: 210/100) and (max-height: 1299px) {
+       (min-aspect-ratio: 210/100) and (max-height: 799px) {
   :root { --header-h: 30px; }
 }
 .header {
@@ -7640,7 +7640,7 @@ html[data-buttons="pokerth"] .btn-action[disabled] { filter: grayscale(0.55) bri
    Mobile = paysage h<600 ; desktop = ratio>2.1 && h<1300 (un 16:9 MAXIMISE,
    ratio ~1.91, reste non-compact — aligne sur le client officiel 2.1.1). */
 @media (orientation: landscape) and (max-height: 600px),
-       (min-aspect-ratio: 210/100) and (max-height: 1299px) {
+       (min-aspect-ratio: 210/100) and (max-height: 799px) {
   html[data-buttons="pokerth"] .btn-action { min-height: 40px; font-size: 12px; padding-top: 6px; padding-bottom: 6px; }
 }
 
