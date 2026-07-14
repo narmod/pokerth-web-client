@@ -2321,20 +2321,26 @@ body {
      c'est elle qui rendait la barre geante en paysage). Meme organisation
      que le portrait/QML : quick-bets compacts a gauche, Tapis, mode a
      droite. */
-  .my-zone .action-grid { gap: 4px; width: 100%; max-width: 100%; }
+  /* DEUX rangees seulement (layout aplati QML landscapeCompact) :
+     rangee 1 = [montant | slider | 1/3 1/2 Pot | Tapis | mode],
+     rangee 2 = [Fold | Call | Raise] (40 px). La grille passe en flex-row
+     wrap : bet-row et mid-row partagent la rangee 1, act-buttons-row prend
+     100% -> rangee 2. Total ~80 px au lieu de 3 rangees empilees. */
+  .my-zone .action-grid { flex-direction: row; flex-wrap: wrap; gap: 4px; width: 100%; max-width: 100%; align-items: center; }
   .my-zone .action-grid > * { min-width: 0; }
-  .my-zone .bet-row { gap: 6px; }
+  .my-zone .bet-row { flex: 1 1 230px; gap: 5px; }
   /* Champ montant : 78 px (spec QML §5.2, conservee en compact). */
   .my-zone .bet-row .raise-amt-field { width: 78px; flex: 0 0 auto; padding: 4px 5px; font-size: 0.75rem; }
   .my-zone .bet-row .raise-slider { flex: 1 1 auto; min-width: 60px; }
-  .my-zone .mid-row { gap: 4px; align-items: center; }
+  .my-zone .mid-row { flex: 0 1 auto; gap: 4px; align-items: center; margin-left: auto; }
   .my-zone .mid-row .pct-row { flex: 0 0 auto; gap: 3px; }
   .my-zone .mid-row .mode-sel-wrap { flex: 0 1 110px; min-width: 0; height: 30px; margin-left: auto; }
+  .my-zone .act-buttons-row { flex: 1 1 100%; }
   /* Tapis : l'image du theme (--btn-allin-img) en fond etire au lieu du
      border-image 9-slice, qui se dechirait sur ce bouton etroit. Reste
      l'image DU THEME (pas une couleur en dur) -> chaque theme garde son Tapis. */
   .my-zone .mid-row .btn-allin {
-    flex: 0 0 auto; white-space: nowrap; min-width: 48px; height: 30px; font-size: 0.6rem;
+    flex: 0 0 auto; white-space: nowrap; min-width: 48px; height: 30px; min-height: 30px; font-size: 0.6rem;
     border-image: none !important;
     border: 1px solid #ef5350 !important;
     background: linear-gradient(180deg, #9e2a2a, #5c1111) !important;
@@ -8125,7 +8131,7 @@ html[data-box-accent][data-seat="bar"] .seat-plate { border-color: var(--box-acc
   .my-zone .action-wrap { max-width: 100%; min-width: 0; width: 100%; }
   .my-zone #g-actions { min-width: 0; max-width: 100%; width: 100%; }
   .my-zone .mid-row .btn-allin {
-    flex: 0 0 auto; white-space: nowrap; min-width: 52px; height: 38px; font-size: 0.72rem;
+    flex: 0 0 auto; white-space: nowrap; min-width: 52px; height: 38px; min-height: 38px; font-size: 0.72rem;
     border-image: none !important;
     border: 1px solid #ef5350 !important;
     background: linear-gradient(180deg, #9e2a2a, #5c1111) !important;
