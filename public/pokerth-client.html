@@ -1927,28 +1927,28 @@ if ('serviceWorker' in navigator) {
       <div class="adv-sec" data-i18n="advSecBet">Betting &amp; turn</div>
       <label class="adv-row"><input type="checkbox" id="adv-autobtn" onchange="setAutoBtn(this.checked)"><span data-i18n="autoBtnLabel">Auto mode selector</span></label>
       <label class="adv-row"><input type="checkbox" id="adv-quickbet" onchange="setQuickBet(this.checked)"><span data-i18n="quickBetLabel">Quick-bet buttons</span></label>
-      <label class="adv-row"><input type="checkbox" id="adv-voice" onchange="setVoice(this.checked)"><span data-i18n="voiceLabel">Voice announcements</span></label>
-      <label class="adv-row"><input type="checkbox" id="adv-haptic" onchange="setHaptic(this.checked)"><span data-i18n="hapticLabel">Vibration</span></label>
-      <label class="adv-row"><input type="checkbox" id="adv-displaybb" onchange="setDisplayBB(this.checked)"><span data-i18n="advDisplayBB">Show amounts in big blinds</span></label>
+      <label class="adv-row"><input type="checkbox" id="adv-voice" onchange="setVoice(this.checked)"><span data-i18n="voiceLabel">Voice announcements</span><em class="adv-webtag">web</em></label>
+      <label class="adv-row"><input type="checkbox" id="adv-haptic" onchange="setHaptic(this.checked)"><span data-i18n="hapticLabel">Vibration</span><em class="adv-webtag">web</em></label>
+      <label class="adv-row"><input type="checkbox" id="adv-displaybb" onchange="setDisplayBB(this.checked)"><span data-i18n="advDisplayBB">Show amounts in big blinds</span><em class="adv-webtag">web</em></label>
 
       <div class="adv-sec" data-i18n="advSecTable">Table</div>
       <label class="adv-row"><input type="checkbox" id="adv-blinds" onchange="setAdvOpt('show_blinds',this.checked)"><span data-i18n="advShowBlinds">Show dealer / blind buttons</span></label>
-      <label class="adv-row"><input type="checkbox" id="adv-hidepbar" onchange="setAdvOpt('hide_pbar',this.checked)"><span data-i18n="advHidePbar">PokerTH mode (player bar hidden)</span></label>
-      <label class="adv-row"><input type="checkbox" id="adv-4color" onchange="setAdvOpt('four_color',this.checked)"><span data-i18n="advFourColor">4-color deck (♦ blue, ♣ green)</span></label>
+      <label class="adv-row"><input type="checkbox" id="adv-hidepbar" onchange="setAdvOpt('hide_pbar',this.checked)"><span data-i18n="advHidePbar">PokerTH mode (player bar hidden)</span><em class="adv-webtag">web</em></label>
+      <label class="adv-row"><input type="checkbox" id="adv-4color" onchange="setAdvOpt('four_color',this.checked)"><span data-i18n="advFourColor">4-color deck (♦ blue, ♣ green)</span><em class="adv-webtag">web</em></label>
       <label class="adv-row"><input type="checkbox" id="adv-zoomfollow" onchange="setAdvOpt('zoom_follow',this.checked)"><span data-i18n="advZoomFollow">Zoom follows the active seat (overview at showdown)</span></label>
       <label class="adv-row"><input type="checkbox" id="adv-reducefx" onchange="setAdvOpt('reduce_fx',this.checked);document.documentElement.classList.toggle('reduce-fx',this.checked)"><span data-i18n="advReduceFx">Reduce graphic effects (shadows/glow) — for low-end devices</span></label>
       <label class="adv-row"><input type="checkbox" id="adv-statusbar" onchange="setAdvOpt('status_bar',this.checked);var _ps=document.getElementById('pot-strip');if(_ps)_ps.style.display=this.checked?'':'none'"><span data-i18n="advStatusBar">Game status bar (hand #, pot, bets, phase)</span></label>
-      <label class="adv-row"><input type="checkbox" id="adv-winnerpopup" onchange="setAdvOpt('winner_popup',this.checked)"><span data-i18n="advWinnerPopup">Winner window at end of hand</span></label>
-      <label class="adv-row"><input type="checkbox" id="adv-removegone" onchange="setAdvOpt('remove_gone',this.checked);try{renderSeats()}catch(e){}"><span data-i18n="advRemoveGone">Remove departed players and re-seat the table</span></label>
+      <label class="adv-row"><input type="checkbox" id="adv-winnerpopup" onchange="setAdvOpt('winner_popup',this.checked)"><span data-i18n="advWinnerPopup">Winner window at end of hand</span><em class="adv-webtag">web</em></label>
+      <label class="adv-row"><input type="checkbox" id="adv-removegone" onchange="setAdvOpt('remove_gone',this.checked);try{renderSeats()}catch(e){}"><span data-i18n="advRemoveGone">Remove departed players and re-seat the table</span><em class="adv-webtag">web</em></label>
       <label class="adv-row"><input type="checkbox" id="adv-autoleave" onchange="setAdvOpt('auto_leave',this.checked)"><span data-i18n="advAutoLeave">Auto-return to lobby when the game ends</span></label>
 
       <div class="adv-sec" data-i18n="advSecSeats">Seats</div>
-      <div class="adv-row"><span data-i18n="advSeatLayout">Seat placement</span><div class="sel-wrap adv-sel"><select id="adv-seatlayout" onchange="setSeatLayout(this.value)"><option value="auto" data-i18n="seatLayoutAuto">Automatic</option><option value="pokerth-official" data-i18n="seatLayoutOfficial">Portrait</option><option value="pokerth-ellipse" data-i18n="seatLayoutEllipse">Landscape</option><option value="custom" data-i18n="seatLayoutCustom">Custom</option></select><span class="sel-arr">▾</span></div></div>
-      <label class="adv-row"><input type="checkbox" id="adv-seatsync" onchange="setSeatSync(this.checked)"><span data-i18n="advSeatSync">Sync seats with orientation (PokerTH portrait/landscape)</span></label>
+      <div class="adv-row"><span data-i18n="advSeatLayout">Seat placement</span><em class="adv-webtag">web</em><div class="sel-wrap adv-sel"><select id="adv-seatlayout" onchange="setSeatLayout(this.value)"><option value="auto" data-i18n="seatLayoutAuto">Automatic</option><option value="pokerth-official" data-i18n="seatLayoutOfficial">Portrait</option><option value="pokerth-ellipse" data-i18n="seatLayoutEllipse">Landscape</option><option value="custom" data-i18n="seatLayoutCustom">Custom</option></select><span class="sel-arr">▾</span></div></div>
+      <label class="adv-row"><input type="checkbox" id="adv-seatsync" onchange="setSeatSync(this.checked)"><span data-i18n="advSeatSync">Sync seats with orientation (PokerTH portrait/landscape)</span><em class="adv-webtag">web</em></label>
 
       <div class="adv-sec" data-i18n="advSecChat">Chat</div>
-      <label class="adv-row"><input type="checkbox" id="adv-noemoji" onchange="setAdvOpt('chat_noemoji',this.checked)"><span data-i18n="advNoChatEmoji">Disable emojis in chat</span></label>
-      <label class="adv-row"><input type="checkbox" id="adv-chattranslate" onchange="setChatTranslate(this.checked)"><span data-i18n="advChatTranslate">Chat translation (browser API, per-message button)</span></label>
+      <label class="adv-row"><input type="checkbox" id="adv-noemoji" onchange="setAdvOpt('chat_noemoji',this.checked)"><span data-i18n="advNoChatEmoji">Disable emojis in chat</span><em class="adv-webtag">web</em></label>
+      <label class="adv-row"><input type="checkbox" id="adv-chattranslate" onchange="setChatTranslate(this.checked)"><span data-i18n="advChatTranslate">Chat translation (browser API, per-message button)</span><em class="adv-webtag">web</em></label>
 
       <div class="adv-sec" data-i18n="advSecCommunity">Community</div>
       <label class="adv-row"><input type="checkbox" id="adv-community" onchange="setAdvOpt('show_community',this.checked)"><span data-i18n="advShowCommunity">Show Ranking entry</span></label>
@@ -1959,7 +1959,7 @@ if ('serviceWorker' in navigator) {
       <label class="adv-row"><input type="checkbox" id="adv-nohideignored" onchange="setAdvOpt('no_hide_ignored',this.checked)"><span data-i18n="advNoHideIgnored">Don't hide ignored players' avatars</span></label>
 
       <div class="adv-sec" data-i18n="advSecHelp">Assistance</div>
-      <label class="adv-row"><input type="checkbox" id="adv-assist" onchange="setAssist(this.checked)"><span data-i18n="assist">Assistance</span></label>
+      <label class="adv-row"><input type="checkbox" id="adv-assist" onchange="setAssist(this.checked)"><span data-i18n="assist">Assistance</span><em class="adv-webtag">web</em></label>
       <label class="adv-row"><input type="checkbox" id="adv-odds" onchange="setAdvOpt('odds_monitor',this.checked)"><span data-i18n="advOddsMonitor">Hand odds monitor</span></label>
 
       <div class="adv-sec" data-i18n="advSecKeys">Keyboard shortcuts</div>
@@ -1973,7 +1973,7 @@ if ('serviceWorker' in navigator) {
         <div class="adv-keyrow" data-act="bet3"><span>Bet Pot</span><button type="button" class="kb-btn" onclick="rebindKey('bet3')">3</button></div>
         <label class="adv-row"><input type="checkbox" id="adv-fkeysalt" onchange="setAdvOpt('fkeys_alt',this.checked)"><span data-i18n="advFkeysAlt">Reverse F1–F4 order (F1 = All-In)</span></label>
         <div class="adv-keyhint"><span data-i18n="kbHintF">Official PokerTH keys also work: F1–F4 = Fold · Check/Call · Bet/Raise · All-In, F6/F7/F8 = Manual / Auto Check-Fold / Auto Check-Call, Alt+M/K/F = modes, Alt+C chat, Alt+L log, Alt+I odds.</span></div>
-        <div class="adv-keyhint"><span data-i18n="kbHint">Tap a key, then press the new key. Space = Call, Enter = confirm raise.</span><button type="button" class="kb-reset" onclick="resetKeys()" data-i18n="kbReset">Reset</button></div>
+        <div class="adv-keyhint"><em class="adv-webtag">web</em> <span data-i18n="kbHint">Tap a key, then press the new key. Space = Call, Enter = confirm raise.</span><button type="button" class="kb-reset" onclick="resetKeys()" data-i18n="kbReset">Reset</button></div>
       </div>
       </div>
       <div class="adv-body adv-uipanel" data-uitab="network">
