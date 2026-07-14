@@ -8919,8 +8919,13 @@ const App = (() => {
     // ── 4 rendus VISIBLEMENT distincts (surtout en portrait, ou auto/official/
     //    ellipse etaient auparavant identiques) ──
     if (_seatModeV === 'pokerth-official') {
-      // Slots QML officiels forces PARTOUT (colonnes G/D + rangee haute en portrait).
-      _applyOfficial = true; _forceSeatPortrait = true;
+      // Mode officiel QML 2.1.3 (bible §3) : les slots se choisissent selon
+      // le RATIO de la tableZone — zone haute = slots portrait, zone large =
+      // ellipse officielle. Avant : slots portrait forces partout -> sur
+      // desktop, la grille portrait (paires 0.135 / trou 0.305) donnait des
+      // ecarts inegaux entre groupes de 2. Le ratio est evalue plus bas, une
+      // fois zRect mesure.
+      _applyOfficial = true; _forceSeatPortrait = true; // affine via zRect ci-dessous
     } else if (_seatModeV === 'pokerth-ellipse') {
       // Ellipse « collier » officielle dans LES DEUX orientations (arc ouvert vers
       // le haut, self = perle du bas). En portrait -> ovale vertical, distinct des slots.
@@ -8936,6 +8941,8 @@ const App = (() => {
     }
     const oRect = oval.getBoundingClientRect();
     const zRect = zone.getBoundingClientRect();
+    // Mode 'pokerth-official' : choix des slots par RATIO de zone (QML §3).
+    if (_seatModeV === 'pokerth-official') _forceSeatPortrait = zRect.height >= zRect.width;
     const oCX  = oRect.left - zRect.left + oRect.width  / 2;
     const oCY  = oRect.top  - zRect.top  + oRect.height / 2;
     const isMob = window.innerWidth < 640;       // phone (kept for reference)
@@ -14147,7 +14154,7 @@ function renderPlayersList() {
   body.innerHTML = _shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>';
 }
 
-;(function(){ window.BUILD_VERSION='0.3.444-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.445-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
