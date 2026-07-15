@@ -12950,6 +12950,12 @@ function _maybeShowNextHandBtn() {
       if (acbm) acbm.style.display = 'none';
       var badge = document.getElementById('g-admin-badge');
       if (badge) badge.style.display = 'none';
+      // Mode entraînement : retour direct à la page de création de partie
+      // (le lobby offline n'a pas d'intérêt). Exception : le replay auto
+      // (offlineReplay) recrée la table immédiatement après — on garde alors
+      // le passage lobby pour ne pas ré-initialiser le formulaire
+      // (openCreatePage ré-applique le preset persisté).
+      if (window._offlineMode && !window._offlineAutoReplay) { this.openCreatePage(); return; }
       show('s-lobby');  // back to lobby, stay connected
     },
 
@@ -15727,7 +15733,7 @@ function renderPlayersList() {
   body.innerHTML = _shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>';
 }
 
-;(function(){ window.BUILD_VERSION='0.3.581-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.582-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
