@@ -8546,8 +8546,21 @@ body.chat-tr-on .msg .chat-tr-btn { display: inline; }
 @media (min-width: 900px) and (min-height: 600px) {
   /* Les effets « mon tour » (cadre/glow dorés) sont CONSERVÉS — retrait
      annulé à la demande de narmod (0.3.544). */
-  /* Quick-bets 1/3 · 1/2 · Pot · Tapis : compacts (rangée intermédiaire QML). */
+  /* Rangée intermédiaire QML (raiseRowHeight 26) : 1/3 · 1/2 · Pot · TAPIS
+     sont tous des pilules de 26 px — côté web, Tapis portait la classe des
+     GROS boutons d'action (~37 px) et gonflait toute la rangée : c'était la
+     principale disparité perçue avec le QML. Le dropdown se raccorde à la
+     même hauteur. */
   body.adv-hide-pbar .my-zone .pct-row .btn-pct { padding: 4px 4px; font-size: 0.7rem; }
+  body.adv-hide-pbar .my-zone .mid-row > .btn-action.btn-allin {
+    height: 26px; min-height: 26px;
+    padding: 0 10px !important;
+    font-size: 0.72rem !important;
+    letter-spacing: 0.3px;
+    flex: 0 0 auto;
+  }
+  body.adv-hide-pbar .my-zone .mid-row .mode-sel-wrap,
+  body.adv-hide-pbar .my-zone .mid-row .mode-sel-wrap select { height: 26px; }
   /* Dropdown de mode : 132 px comme le QML, hauteur raccordée à la rangée. */
   body.adv-hide-pbar .my-zone .mid-row .mode-sel-wrap { flex: 0 0 132px; }
   body.adv-hide-pbar .my-zone .mid-row .mode-sel-wrap select {
