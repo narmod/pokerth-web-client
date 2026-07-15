@@ -9907,7 +9907,14 @@ const App = (() => {
           // hauteur d'écran est minuscule, les boîtes pleines paraissaient
           // énormes et se touchaient ; demande narmod). Le zoom + repart de
           // cette base réduite.
-          _seatBoxScale = _forceSeatPortrait ? _offPos._boxScale : _offPos._boxScale * (compact ? 1 : 0.9);
+          // BUGFIX 0.3.559 : `compact` n'était PAS déclaré dans cette portée →
+          // ReferenceError avalée par le try : l'échelle bisectée n'était JAMAIS
+          // appliquée (sièges sur l'ancienne heuristique, plus petits que le QML)
+          // et le commScale continu ne tournait jamais (barre étroite). Cause
+          // unique des deux symptômes remontés par narmod.
+          var _cmpV = false;
+          try { _cmpV = window.innerWidth > window.innerHeight && window.innerHeight < 600; } catch (eC) {}
+          _seatBoxScale = _forceSeatPortrait ? _offPos._boxScale : _offPos._boxScale * (_cmpV ? 1 : 0.9);
           // Rabot anti-chevauchement MESURÉ (voir garde post-rendu) : corrige
           // sur écran ce que la bisection théorique aurait laissé passer.
           _seatBoxScale *= (window._seatFitShave || 1);
@@ -15581,7 +15588,7 @@ function renderPlayersList() {
   body.innerHTML = _shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>';
 }
 
-;(function(){ window.BUILD_VERSION='0.3.558-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.559-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
