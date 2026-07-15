@@ -650,6 +650,13 @@ export const strings = {
     modeManual:'Handmatig',
     plIgnore:'Negeren', plStats:'Spelersstatistieken', plNotPlaying:'Speelt momenteel niet', plSortAlpha:'Alfabetisch sorteren', plShowIdle:'Inactieve spelers tonen', plHideIdle:'Inactieve spelers verbergen', gameTimeLabel:'Tijd', visRanked:'Ranglijst', infoBlindsUp:'Blinds verhogen',
     spectatorBtn:'Toeschouwer',
+    // v0.3.522–528 : blinds manuelles · dialogue de réglages · config.xml · sync compte
+    blindsOrderLbl:'Volgorde van blindsverhoging', blindsAlwaysDouble:'blinds altijd verdubbelen', blindsManualOrder:'handmatige blindsvolgorde', blindsAddBtn:'+ Toevoegen', blindsRemoveTip:'Deze blind verwijderen', blindsAfterLbl:'Daarna:', blindsAfterDouble:'blinds verdubbelen', blindsAfterRaiseBy:'blinds verhogen met', blindsAfterKeep:'laatste blind behouden', infoBlindsManual:'Handmatige blinds',
+    advCreateDialog:'Instellingenscherm tonen bij elk nieuw spel (uit: direct starten met de opgeslagen instellingen)',
+    advCfgXmlSec:'PokerTH config.xml', advCfgExport:'config.xml exporteren', advCfgImport:'config.xml importeren',
+    advCfgXmlDesc:'Wissel je instellingen uit met de desktop- en QML-clients van PokerTH (hun bestand ~/.pokerth/config.xml). Exporteren schrijft de gedeelde instellingen (naam, weergave, geluiden, tafelvoorkeuren, blinds, stijlen); importeren past ze hier toe. Instellingen die de webclient niet kent, blijven in het bestand staan en worden bij de volgende export ongewijzigd teruggeschreven.',
+    cfgXmlExported:'config.xml geëxporteerd — plaats het in ~/.pokerth/ van de desktopclient', cfgXmlImported:'config.xml geïmporteerd — gedeelde instellingen toegepast', cfgXmlImportErr:'Importeren mislukt — geen geldige PokerTH config.xml', cfgXmlReload:'Nu herladen om alles toe te passen (thema\'s, decks, namen)?',
+    advCfgSync:'Deze instellingen automatisch synchroniseren met mijn account (alleen geregistreerde login — opgeslagen op deze server, opt-in)', cfgSyncApplied:'Instellingen gesynchroniseerd vanaf je account',
 };
 
 export default { meta, strings };

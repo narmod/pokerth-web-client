@@ -647,6 +647,13 @@ export const strings = {
     modeManual:'Handmatig',
     plIgnore:'Ignoreer', plStats:'Speler-statistieke', plNotPlaying:'Speel nie tans nie', plSortAlpha:'Sorteer alfabeties', plShowIdle:'Wys ledige spelers', plHideIdle:'Versteek ledige spelers', gameTimeLabel:'Tyd', visRanked:'Ranglys', infoBlindsUp:'Blinds verhoog',
     spectatorBtn:'Kyk',
+    // v0.3.522–528 : blinds manuelles · dialogue de réglages · config.xml · sync compte
+    blindsOrderLbl:'Volgorde van blindsverhoging', blindsAlwaysDouble:'verdubbel blinds altyd', blindsManualOrder:'handmatige blindsvolgorde', blindsAddBtn:'+ Voeg by', blindsRemoveTip:'Verwyder hierdie blind', blindsAfterLbl:'Daarna:', blindsAfterDouble:'verdubbel blinds', blindsAfterRaiseBy:'verhoog blinds met', blindsAfterKeep:'behou laaste blind', infoBlindsManual:'Handmatige blinds',
+    advCreateDialog:'Wys die instellingskerm by elke nuwe spel (af: begin dadelik met die gestoorde instellings)',
+    advCfgXmlSec:'PokerTH config.xml', advCfgExport:'Voer config.xml uit', advCfgImport:'Voer config.xml in',
+    advCfgXmlDesc:'Ruil jou instellings uit met die PokerTH-lessenaar- en QML-kliënte (hul lêer ~/.pokerth/config.xml). Uitvoer skryf die gedeelde instellings (naam, vertoon, klanke, tafelvoorkeure, blinds, style); invoer pas hulle hier toe. Instellings wat die webkliënt nie ken nie, bly in die lêer en word onveranderd teruggeskryf by die volgende uitvoer.',
+    cfgXmlExported:'config.xml uitgevoer — plaas dit in ~/.pokerth/ van die lessenaarkliënt', cfgXmlImported:'config.xml ingevoer — gedeelde instellings toegepas', cfgXmlImportErr:'Invoer het misluk — ongeldige PokerTH config.xml', cfgXmlReload:'Herlaai nou om alles toe te pas (temas, kaartstelle, name)?',
+    advCfgSync:'Sinchroniseer hierdie instellings outomaties met my rekening (slegs geregistreerde aanmelding — gestoor op hierdie bediener, opsioneel)', cfgSyncApplied:'Instellings gesinchroniseer vanaf jou rekening',
 };
 
 export default { meta, strings };

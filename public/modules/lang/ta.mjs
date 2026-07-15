@@ -648,6 +648,13 @@ export const strings = {
     modeManual:'கைமுறை',
     plIgnore:'புறக்கணி', plStats:'வீரர் புள்ளிவிவரங்கள்', plNotPlaying:'தற்போது விளையாடவில்லை', plSortAlpha:'அகர வரிசையில் வரிசைப்படுத்து', plShowIdle:'செயலற்ற வீரர்களைக் காட்டு', plHideIdle:'செயலற்ற வீரர்களை மறை', gameTimeLabel:'நேரம்', visRanked:'தரவரிசை', infoBlindsUp:'பிளைண்ட்ஸ் உயர்வு',
     spectatorBtn:'பார்வையாளர்',
+    // v0.3.522–528 : blinds manuelles · dialogue de réglages · config.xml · sync compte
+    blindsOrderLbl:'பிளைண்ட்ஸ் உயர்த்தும் வரிசை', blindsAlwaysDouble:'பிளைண்ட்ஸை எப்போதும் இரட்டிப்பாக்கு', blindsManualOrder:'கைமுறை பிளைண்ட்ஸ் வரிசை', blindsAddBtn:'+ சேர்', blindsRemoveTip:'இந்த பிளைண்டை நீக்கு', blindsAfterLbl:'அதன் பிறகு:', blindsAfterDouble:'பிளைண்ட்ஸை இரட்டிப்பாக்கு', blindsAfterRaiseBy:'பிளைண்ட்ஸை இவ்வளவு உயர்த்து', blindsAfterKeep:'கடைசி பிளைண்டை வைத்திரு', infoBlindsManual:'கைமுறை பிளைண்ட்ஸ்',
+    advCreateDialog:'ஒவ்வொரு புதிய ஆட்டத்திலும் அமைப்புகள் திரையைக் காட்டு (அணைத்தால்: சேமித்த அமைப்புகளுடன் நேரடியாகத் தொடங்கு)',
+    advCfgXmlSec:'PokerTH config.xml', advCfgExport:'config.xml ஏற்றுமதி', advCfgImport:'config.xml இறக்குமதி',
+    advCfgXmlDesc:'உங்கள் அமைப்புகளை PokerTH டெஸ்க்டாப் மற்றும் QML கிளையன்ட்களுடன் பரிமாறவும் (அவற்றின் ~/.pokerth/config.xml கோப்பு). ஏற்றுமதி பகிரப்பட்ட அமைப்புகளை எழுதும் (பெயர், காட்சி, ஒலிகள், மேசை விருப்பங்கள், பிளைண்ட்ஸ், பாணிகள்); இறக்குமதி அவற்றை இங்கே பயன்படுத்தும். வலை கிளையன்டுக்குத் தெரியாத அமைப்புகள் கோப்பில் அப்படியே இருந்து அடுத்த ஏற்றுமதியில் மாறாமல் எழுதப்படும்.',
+    cfgXmlExported:'config.xml ஏற்றுமதியானது — டெஸ்க்டாப் கிளையன்டின் ~/.pokerth/ இல் வைக்கவும்', cfgXmlImported:'config.xml இறக்குமதியானது — பகிரப்பட்ட அமைப்புகள் பயன்படுத்தப்பட்டன', cfgXmlImportErr:'இறக்குமதி தோல்வி — செல்லாத PokerTH config.xml', cfgXmlReload:'எல்லாவற்றையும் பயன்படுத்த இப்போது மீண்டும் ஏற்றவா (தீம்கள், அட்டைத் தொகுப்புகள், பெயர்கள்)?',
+    advCfgSync:'இந்த அமைப்புகளை என் கணக்குடன் தானாக ஒத்திசை (பதிவுசெய்த உள்நுழைவு மட்டும் — இந்த சேவையகத்தில் சேமிக்கப்படும், விருப்பத்தேர்வு)', cfgSyncApplied:'உங்கள் கணக்கிலிருந்து அமைப்புகள் ஒத்திசைக்கப்பட்டன',
 };
 
 export default { meta, strings };

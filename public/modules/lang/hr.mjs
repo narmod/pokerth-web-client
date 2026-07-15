@@ -647,6 +647,13 @@ export const strings = {
     modeManual:'Ručno',
     plIgnore:'Zanemari', plStats:'Statistika igrača', plNotPlaying:'Trenutno ne igra', plSortAlpha:'Poredaj abecedno', plShowIdle:'Prikaži neaktivne igrače', plHideIdle:'Sakrij neaktivne igrače', gameTimeLabel:'Vrijeme', visRanked:'Poredak', infoBlindsUp:'Povećanje blindova',
     spectatorBtn:'Gledaj',
+    // v0.3.522–528 : blinds manuelles · dialogue de réglages · config.xml · sync compte
+    blindsOrderLbl:'Redoslijed povećanja blindova', blindsAlwaysDouble:'uvijek udvostruči blindove', blindsManualOrder:'ručni redoslijed blindova', blindsAddBtn:'+ Dodaj', blindsRemoveTip:'Ukloni ovaj blind', blindsAfterLbl:'Zatim:', blindsAfterDouble:'udvostruči blindove', blindsAfterRaiseBy:'povećaj blindove za', blindsAfterKeep:'zadrži zadnji blind', infoBlindsManual:'Ručni blindovi',
+    advCreateDialog:'Prikaži zaslon postavki pri svakoj novoj igri (isključeno: kreni odmah sa spremljenim postavkama)',
+    advCfgXmlSec:'PokerTH config.xml', advCfgExport:'Izvezi config.xml', advCfgImport:'Uvezi config.xml',
+    advCfgXmlDesc:'Razmjenjujte postavke s desktop i QML klijentima PokerTH-a (njihova datoteka ~/.pokerth/config.xml). Izvoz zapisuje zajedničke postavke (ime, prikaz, zvukovi, postavke stola, blindovi, stilovi); uvoz ih primjenjuje ovdje. Postavke nepoznate web klijentu ostaju u datoteci i pri sljedećem izvozu zapisuju se nepromijenjene.',
+    cfgXmlExported:'config.xml izvezen — stavite ga u ~/.pokerth/ desktop klijenta', cfgXmlImported:'config.xml uvezen — zajedničke postavke primijenjene', cfgXmlImportErr:'Uvoz nije uspio — nevažeći PokerTH config.xml', cfgXmlReload:'Ponovno učitati sada da se sve primijeni (teme, špilovi, imena)?',
+    advCfgSync:'Automatski sinkroniziraj ove postavke s mojim računom (samo registrirana prijava — pohranjene na ovom poslužitelju, po izboru)', cfgSyncApplied:'Postavke sinkronizirane s vašeg računa',
 };
 
 export default { meta, strings };

@@ -647,6 +647,13 @@ export const strings = {
     modeManual:'Thủ công',
     plIgnore:'Bỏ qua', plStats:'Thống kê người chơi', plNotPlaying:'Hiện không chơi', plSortAlpha:'Sắp xếp theo bảng chữ cái', plShowIdle:'Hiển thị người chơi rảnh', plHideIdle:'Ẩn người chơi rảnh', gameTimeLabel:'Thời gian', visRanked:'Xếp hạng', infoBlindsUp:'Tăng tiền mù',
     spectatorBtn:'Xem',
+    // v0.3.522–528 : blinds manuelles · dialogue de réglages · config.xml · sync compte
+    blindsOrderLbl:'Thứ tự tăng tiền mù', blindsAlwaysDouble:'luôn nhân đôi tiền mù', blindsManualOrder:'thứ tự tiền mù thủ công', blindsAddBtn:'+ Thêm', blindsRemoveTip:'Xóa mức mù này', blindsAfterLbl:'Sau đó:', blindsAfterDouble:'nhân đôi tiền mù', blindsAfterRaiseBy:'tăng tiền mù thêm', blindsAfterKeep:'giữ mức mù cuối', infoBlindsManual:'Tiền mù thủ công',
+    advCreateDialog:'Hiện màn hình cài đặt ở mỗi ván mới (tắt: bắt đầu ngay với cài đặt đã lưu)',
+    advCfgXmlSec:'PokerTH config.xml', advCfgExport:'Xuất config.xml', advCfgImport:'Nhập config.xml',
+    advCfgXmlDesc:'Trao đổi cài đặt của bạn với các ứng dụng PokerTH trên máy tính và QML (tệp ~/.pokerth/config.xml của chúng). Xuất sẽ ghi các cài đặt dùng chung (tên, hiển thị, âm thanh, tùy chọn bàn, tiền mù, kiểu dáng); nhập sẽ áp dụng chúng tại đây. Các cài đặt mà bản web không biết sẽ được giữ nguyên trong tệp và ghi lại không đổi ở lần xuất tiếp theo.',
+    cfgXmlExported:'Đã xuất config.xml — đặt vào ~/.pokerth/ của ứng dụng máy tính', cfgXmlImported:'Đã nhập config.xml — cài đặt dùng chung đã được áp dụng', cfgXmlImportErr:'Nhập thất bại — config.xml PokerTH không hợp lệ', cfgXmlReload:'Tải lại ngay để áp dụng tất cả (chủ đề, bộ bài, tên)?',
+    advCfgSync:'Tự động đồng bộ các cài đặt này với tài khoản của tôi (chỉ đăng nhập đã đăng ký — lưu trên máy chủ này, tùy chọn)', cfgSyncApplied:'Đã đồng bộ cài đặt từ tài khoản của bạn',
 };
 
 export default { meta, strings };

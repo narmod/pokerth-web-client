@@ -647,6 +647,13 @@ export const strings = {
     modeManual:'Ручно',
     plIgnore:'Игнориши', plStats:'Статистика играча', plNotPlaying:'Тренутно не игра', plSortAlpha:'Сортирај по азбуци', plShowIdle:'Прикажи неактивне играче', plHideIdle:'Сакриј неактивне играче', gameTimeLabel:'Време', visRanked:'Ранг-листа', infoBlindsUp:'Повећање блиндова',
     spectatorBtn:'Гледај',
+    // v0.3.522–528 : blinds manuelles · dialogue de réglages · config.xml · sync compte
+    blindsOrderLbl:'Редослед повећања блиндова', blindsAlwaysDouble:'увек удвостручи блиндове', blindsManualOrder:'ручни редослед блиндова', blindsAddBtn:'+ Додај', blindsRemoveTip:'Уклони овај блинд', blindsAfterLbl:'Затим:', blindsAfterDouble:'удвостручи блиндове', blindsAfterRaiseBy:'повећај блиндове за', blindsAfterKeep:'задржи последњи блинд', infoBlindsManual:'Ручни блиндови',
+    advCreateDialog:'Прикажи екран подешавања при свакој новој игри (искључено: крени одмах са сачуваним подешавањима)',
+    advCfgXmlSec:'PokerTH config.xml', advCfgExport:'Извези config.xml', advCfgImport:'Увези config.xml',
+    advCfgXmlDesc:'Размењујте подешавања са десктоп и QML клијентима PokerTH-а (њихова датотека ~/.pokerth/config.xml). Извоз записује заједничка подешавања (име, приказ, звукови, подешавања стола, блиндови, стилови); увоз их примењује овде. Подешавања непозната веб клијенту остају у датотеци и при следећем извозу записују се непромењена.',
+    cfgXmlExported:'config.xml извезен — ставите га у ~/.pokerth/ десктоп клијента', cfgXmlImported:'config.xml увезен — заједничка подешавања примењена', cfgXmlImportErr:'Увоз није успео — неважећи PokerTH config.xml', cfgXmlReload:'Поново учитати сада да се све примени (теме, шпилови, имена)?',
+    advCfgSync:'Аутоматски синхронизуј ова подешавања са мојим налогом (само регистрована пријава — чувају се на овом серверу, по избору)', cfgSyncApplied:'Подешавања синхронизована са вашег налога',
 };
 
 export default { meta, strings };

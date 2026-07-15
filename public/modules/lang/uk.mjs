@@ -646,6 +646,13 @@ export const strings = {
     modeManual:'Вручну',
     plIgnore:'Ігнорувати', plStats:'Статистика гравця', plNotPlaying:'Зараз не грає', plSortAlpha:'Сортувати за абеткою', plShowIdle:'Показати неактивних гравців', plHideIdle:'Сховати неактивних гравців', gameTimeLabel:'Час', visRanked:'Рейтинг', infoBlindsUp:'Підвищення блайндів',
     spectatorBtn:'Спостерігати',
+    // v0.3.522–528 : blinds manuelles · dialogue de réglages · config.xml · sync compte
+    blindsOrderLbl:'Порядок підвищення блайндів', blindsAlwaysDouble:'завжди подвоювати блайнди', blindsManualOrder:'ручний порядок блайндів', blindsAddBtn:'+ Додати', blindsRemoveTip:'Видалити цей блайнд', blindsAfterLbl:'Потім:', blindsAfterDouble:'подвоювати блайнди', blindsAfterRaiseBy:'підвищувати блайнди на', blindsAfterKeep:'зберігати останній блайнд', infoBlindsManual:'Ручні блайнди',
+    advCreateDialog:'Показувати екран налаштувань при новій грі (вимк.: одразу починати зі збереженими налаштуваннями)',
+    advCfgXmlSec:'PokerTH config.xml', advCfgExport:'Експортувати config.xml', advCfgImport:'Імпортувати config.xml',
+    advCfgXmlDesc:'Обмінюйтеся налаштуваннями з настільним та QML-клієнтами PokerTH (їхній файл ~/.pokerth/config.xml). Експорт записує спільні налаштування (ім\'я, відображення, звуки, налаштування столу, блайнди, стилі); імпорт застосовує їх тут. Налаштування, невідомі веб-клієнту, зберігаються у файлі й записуються без змін під час наступного експорту.',
+    cfgXmlExported:'config.xml експортовано — покладіть його в ~/.pokerth/ настільного клієнта', cfgXmlImported:'config.xml імпортовано — спільні налаштування застосовано', cfgXmlImportErr:'Помилка імпорту — недійсний config.xml PokerTH', cfgXmlReload:'Перезавантажити зараз, щоб застосувати все (теми, колоди, імена)?',
+    advCfgSync:'Автоматично синхронізувати ці налаштування з моїм обліковим записом (лише зареєстрований вхід — зберігаються на цьому сервері, за бажанням)', cfgSyncApplied:'Налаштування синхронізовано з вашого облікового запису',
 };
 
 export default { meta, strings };

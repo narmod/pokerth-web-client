@@ -650,6 +650,13 @@ export const strings = {
     modeManual:'Manuell',
     plIgnore:'Ignorieren', plStats:'Spielerstatistik', plNotPlaying:'Spielt gerade nicht', plSortAlpha:'Alphabetisch sortieren', plShowIdle:'Inaktive Spieler anzeigen', plHideIdle:'Inaktive Spieler ausblenden', gameTimeLabel:'Zeit', visRanked:'Rangliste', infoBlindsUp:'Blinds-Erhöhung',
     spectatorBtn:'Zuschauen',
+    // v0.3.522–528 : blinds manuelles · dialogue de réglages · config.xml · sync compte
+    blindsOrderLbl:'Blind-Erhöhungsreihenfolge', blindsAlwaysDouble:'Blinds immer verdoppeln', blindsManualOrder:'Manuelle Blind-Reihenfolge', blindsAddBtn:'+ Hinzufügen', blindsRemoveTip:'Diesen Blind entfernen', blindsAfterLbl:'Danach:', blindsAfterDouble:'Blinds verdoppeln', blindsAfterRaiseBy:'Blinds erhöhen um', blindsAfterKeep:'letzten Blind beibehalten', infoBlindsManual:'Manuelle Blinds',
+    advCreateDialog:'Spiel-Einstellungsdialog bei neuem Spiel anzeigen (aus: sofort mit den gespeicherten Einstellungen starten)',
+    advCfgXmlSec:'PokerTH config.xml', advCfgExport:'config.xml exportieren', advCfgImport:'config.xml importieren',
+    advCfgXmlDesc:'Tauschen Sie Ihre Einstellungen mit den Desktop- und QML-Clients von PokerTH aus (Datei ~/.pokerth/config.xml). Der Export schreibt die gemeinsamen Einstellungen (Name, Anzeige, Sounds, Tischvorgaben, Blinds, Stile); der Import wendet sie hier an. Dem Web-Client unbekannte Einstellungen bleiben in der Datei erhalten und werden beim nächsten Export unverändert zurückgeschrieben.',
+    cfgXmlExported:'config.xml exportiert — in ~/.pokerth/ des Desktop-Clients ablegen', cfgXmlImported:'config.xml importiert — gemeinsame Einstellungen übernommen', cfgXmlImportErr:'Import fehlgeschlagen — keine gültige PokerTH config.xml', cfgXmlReload:'Jetzt neu laden, um alles zu übernehmen (Stile, Decks, Namen)?',
+    advCfgSync:'Diese Einstellungen automatisch mit meinem Konto synchronisieren (nur registrierte Anmeldung — auf diesem Server gespeichert, Opt-in)', cfgSyncApplied:'Einstellungen von Ihrem Konto synchronisiert',
 };
 
 export default { meta, strings };

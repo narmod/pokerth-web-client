@@ -649,6 +649,13 @@ export const strings = {
     modeManual:'Вручную',
     plIgnore:'Игнорировать', plStats:'Статистика игрока', plNotPlaying:'Сейчас не играет', plSortAlpha:'Сортировать по алфавиту', plShowIdle:'Показать неактивных игроков', plHideIdle:'Скрыть неактивных игроков', gameTimeLabel:'Время', visRanked:'Рейтинг', infoBlindsUp:'Повышение блайндов',
     spectatorBtn:'Наблюдать',
+    // v0.3.522–528 : blinds manuelles · dialogue de réglages · config.xml · sync compte
+    blindsOrderLbl:'Порядок повышения блайндов', blindsAlwaysDouble:'всегда удваивать блайнды', blindsManualOrder:'ручной порядок блайндов', blindsAddBtn:'+ Добавить', blindsRemoveTip:'Удалить этот блайнд', blindsAfterLbl:'Затем:', blindsAfterDouble:'удваивать блайнды', blindsAfterRaiseBy:'повышать блайнды на', blindsAfterKeep:'сохранять последний блайнд', infoBlindsManual:'Ручные блайнды',
+    advCreateDialog:'Показывать экран настроек при новой игре (выкл.: сразу начинать с сохранёнными настройками)',
+    advCfgXmlSec:'PokerTH config.xml', advCfgExport:'Экспортировать config.xml', advCfgImport:'Импортировать config.xml',
+    advCfgXmlDesc:'Обменивайтесь настройками с настольным и QML-клиентами PokerTH (их файл ~/.pokerth/config.xml). Экспорт записывает общие настройки (имя, отображение, звуки, настройки стола, блайнды, стили); импорт применяет их здесь. Настройки, неизвестные веб-клиенту, сохраняются в файле и записываются без изменений при следующем экспорте.',
+    cfgXmlExported:'config.xml экспортирован — поместите его в ~/.pokerth/ настольного клиента', cfgXmlImported:'config.xml импортирован — общие настройки применены', cfgXmlImportErr:'Ошибка импорта — недопустимый config.xml PokerTH', cfgXmlReload:'Перезагрузить сейчас, чтобы применить всё (темы, колоды, имена)?',
+    advCfgSync:'Автоматически синхронизировать эти настройки с моей учётной записью (только зарегистрированный вход — хранятся на этом сервере, по желанию)', cfgSyncApplied:'Настройки синхронизированы с вашей учётной записи',
 };
 
 export default { meta, strings };

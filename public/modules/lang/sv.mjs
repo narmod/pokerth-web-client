@@ -646,6 +646,13 @@ export const strings = {
     modeManual:'Manuell',
     plIgnore:'Ignorera', plStats:'Spelarstatistik', plNotPlaying:'Spelar inte just nu', plSortAlpha:'Sortera alfabetiskt', plShowIdle:'Visa inaktiva spelare', plHideIdle:'Dölj inaktiva spelare', gameTimeLabel:'Tid', visRanked:'Ranking', infoBlindsUp:'Höjning av blinds',
     spectatorBtn:'Åskådare',
+    // v0.3.522–528 : blinds manuelles · dialogue de réglages · config.xml · sync compte
+    blindsOrderLbl:'Ordning för blindshöjning', blindsAlwaysDouble:'dubbla alltid blinds', blindsManualOrder:'manuell blindsordning', blindsAddBtn:'+ Lägg till', blindsRemoveTip:'Ta bort denna blind', blindsAfterLbl:'Därefter:', blindsAfterDouble:'dubbla blinds', blindsAfterRaiseBy:'höj blinds med', blindsAfterKeep:'behåll sista blinden', infoBlindsManual:'Manuella blinds',
+    advCreateDialog:'Visa inställningsskärmen vid varje nytt spel (av: starta direkt med sparade inställningar)',
+    advCfgXmlSec:'PokerTH config.xml', advCfgExport:'Exportera config.xml', advCfgImport:'Importera config.xml',
+    advCfgXmlDesc:'Utbyt dina inställningar med PokerTH:s skrivbords- och QML-klienter (deras fil ~/.pokerth/config.xml). Export skriver de delade inställningarna (namn, visning, ljud, bordsinställningar, blinds, stilar); import tillämpar dem här. Inställningar som webbklienten inte känner till behålls i filen och skrivs tillbaka oförändrade vid nästa export.',
+    cfgXmlExported:'config.xml exporterad — lägg den i ~/.pokerth/ i skrivbordsklienten', cfgXmlImported:'config.xml importerad — delade inställningar tillämpade', cfgXmlImportErr:'Importen misslyckades — ogiltig PokerTH config.xml', cfgXmlReload:'Ladda om nu för att tillämpa allt (teman, kortlekar, namn)?',
+    advCfgSync:'Synkronisera dessa inställningar automatiskt med mitt konto (endast registrerad inloggning — sparas på denna server, opt-in)', cfgSyncApplied:'Inställningar synkroniserade från ditt konto',
 };
 
 export default { meta, strings };

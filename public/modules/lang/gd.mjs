@@ -648,6 +648,13 @@ export const strings = {
     modeManual:'Le làimh',
     plIgnore:'Leig seachad', plStats:'Stàitistig a\' chluicheadair', plNotPlaying:'Chan eil e a\' cluich an-dràsta', plSortAlpha:'Seòrsaich a-rèir na h-aibidil', plShowIdle:'Seall cluicheadairean nan tàmh', plHideIdle:'Falaich cluicheadairean nan tàmh', gameTimeLabel:'Ùine', visRanked:'Rangachadh', infoBlindsUp:'Àrdachadh nan dall',
     spectatorBtn:'Coimhead',
+    // v0.3.522–528 : blinds manuelles · dialogue de réglages · config.xml · sync compte
+    blindsOrderLbl:'Òrdugh àrdachadh nan dall', blindsAlwaysDouble:'dùblaich na daill an-còmhnaidh', blindsManualOrder:'òrdugh nan dall le làimh', blindsAddBtn:'+ Cuir ris', blindsRemoveTip:'Thoir air falbh an dall seo', blindsAfterLbl:'An dèidh sin:', blindsAfterDouble:'dùblaich na daill', blindsAfterRaiseBy:'àrdaich na daill le', blindsAfterKeep:'cùm an dall mu dheireadh', infoBlindsManual:'Daill le làimh',
+    advCreateDialog:'Seall sgrìn nan roghainnean aig gach geama ùr (dheth: tòisich sa bhad leis na roghainnean air an sàbhaladh)',
+    advCfgXmlSec:'PokerTH config.xml', advCfgExport:'Às-mhalairt config.xml', advCfgImport:'In-mhalairt config.xml',
+    advCfgXmlDesc:'Iomlaidich do roghainnean le cliantan deasg is QML PokerTH (am faidhle aca ~/.pokerth/config.xml). Sgrìobhaidh an t-às-mhalairt na roghainnean co-roinnte (ainm, sealladh, fuaimean, roghainnean a\' bhùird, daill, stoidhlichean); cuiridh an t-in-mhalairt an sàs an-seo iad. Fanaidh roghainnean nach aithne dhan chliant-lìn san fhaidhle agus thèid an sgrìobhadh gun atharrachadh aig an ath às-mhalairt.',
+    cfgXmlExported:'Chaidh config.xml às-mhalairt — cuir e ann an ~/.pokerth/ a\' chliant deasg', cfgXmlImported:'Chaidh config.xml in-mhalairt — roghainnean co-roinnte an sàs', cfgXmlImportErr:'Dh\'fhàillig an in-mhalairt — config.xml PokerTH mì-dhligheach', cfgXmlReload:'Ath-luchdaich an-dràsta gus a h-uile càil a chur an sàs (ùrlaran, pacaidean, ainmean)?',
+    advCfgSync:'Sionc na roghainnean seo gu fèin-obrachail leis a\' chunntas agam (clàradh a-steach clàraichte a-mhàin — air an stòradh air an fhrithealaiche seo, roghainneil)', cfgSyncApplied:'Roghainnean air an sioncachadh on chunntas agad',
 };
 
 export default { meta, strings };

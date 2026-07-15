@@ -647,6 +647,13 @@ export const strings = {
     modeManual:'Ръчно',
     plIgnore:'Игнориране', plStats:'Статистика на играча', plNotPlaying:'Не играе в момента', plSortAlpha:'Подреждане по азбучен ред', plShowIdle:'Показване на неактивните играчи', plHideIdle:'Скриване на неактивните играчи', gameTimeLabel:'Време', visRanked:'Класиране', infoBlindsUp:'Повишаване на блайндовете',
     spectatorBtn:'Наблюдавай',
+    // v0.3.522–528 : blinds manuelles · dialogue de réglages · config.xml · sync compte
+    blindsOrderLbl:'Ред на повишаване на блайндовете', blindsAlwaysDouble:'винаги удвоявай блайндовете', blindsManualOrder:'ръчен ред на блайндовете', blindsAddBtn:'+ Добави', blindsRemoveTip:'Премахни този блайнд', blindsAfterLbl:'След това:', blindsAfterDouble:'удвоявай блайндовете', blindsAfterRaiseBy:'повишавай блайндовете с', blindsAfterKeep:'запази последния блайнд', infoBlindsManual:'Ръчни блайндове',
+    advCreateDialog:'Показвай екрана с настройки при всяка нова игра (изключено: старт направо със запазените настройки)',
+    advCfgXmlSec:'PokerTH config.xml', advCfgExport:'Експортирай config.xml', advCfgImport:'Импортирай config.xml',
+    advCfgXmlDesc:'Обменяйте настройките си с настолния и QML клиентите на PokerTH (техният файл ~/.pokerth/config.xml). Експортът записва общите настройки (име, изглед, звуци, настройки на масата, блайндове, стилове); импортът ги прилага тук. Настройки, непознати за уеб клиента, се запазват във файла и се записват непроменени при следващия експорт.',
+    cfgXmlExported:'config.xml е експортиран — поставете го в ~/.pokerth/ на настолния клиент', cfgXmlImported:'config.xml е импортиран — общите настройки са приложени', cfgXmlImportErr:'Неуспешен импорт — невалиден config.xml на PokerTH', cfgXmlReload:'Да се презареди ли сега, за да се приложи всичко (теми, тестета, имена)?',
+    advCfgSync:'Автоматично синхронизирай тези настройки с моя акаунт (само регистриран вход — съхраняват се на този сървър, по избор)', cfgSyncApplied:'Настройките са синхронизирани от вашия акаунт',
 };
 
 export default { meta, strings };

@@ -648,6 +648,13 @@ export const strings = {
     modeManual:'手动',
     plIgnore:'忽略', plStats:'玩家统计', plNotPlaying:'当前未在游戏中', plSortAlpha:'按字母排序', plShowIdle:'显示空闲玩家', plHideIdle:'隐藏空闲玩家', gameTimeLabel:'时间', visRanked:'排名', infoBlindsUp:'盲注提高',
     spectatorBtn:'观战',
+    // v0.3.522–528 : blinds manuelles · dialogue de réglages · config.xml · sync compte
+    blindsOrderLbl:'盲注提升顺序', blindsAlwaysDouble:'始终加倍盲注', blindsManualOrder:'手动盲注顺序', blindsAddBtn:'+ 添加', blindsRemoveTip:'移除此盲注', blindsAfterLbl:'之后：', blindsAfterDouble:'加倍盲注', blindsAfterRaiseBy:'盲注每次增加', blindsAfterKeep:'保持最后盲注', infoBlindsManual:'手动盲注',
+    advCreateDialog:'每次新游戏时显示设置界面（关闭：直接使用已保存的设置开始）',
+    advCfgXmlSec:'PokerTH config.xml', advCfgExport:'导出 config.xml', advCfgImport:'导入 config.xml',
+    advCfgXmlDesc:'与 PokerTH 桌面版和 QML 客户端交换设置（它们的 ~/.pokerth/config.xml 文件）。导出会写入共享设置（名称、显示、声音、牌桌偏好、盲注、样式）；导入会在此应用这些设置。网页客户端不认识的设置会保留在文件中，并在下次导出时原样写回。',
+    cfgXmlExported:'config.xml 已导出 — 请放入桌面客户端的 ~/.pokerth/ 目录', cfgXmlImported:'config.xml 已导入 — 共享设置已应用', cfgXmlImportErr:'导入失败 — 无效的 PokerTH config.xml', cfgXmlReload:'现在重新加载以应用全部内容（主题、牌组、名称）？',
+    advCfgSync:'自动将这些设置与我的账户同步（仅限注册登录 — 存储在此服务器上，可选）', cfgSyncApplied:'已从您的账户同步设置',
 };
 
 export default { meta, strings };

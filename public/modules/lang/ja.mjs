@@ -646,6 +646,13 @@ export const strings = {
     modeManual:'手動',
     plIgnore:'無視', plStats:'プレイヤー統計', plNotPlaying:'現在プレイしていません', plSortAlpha:'アルファベット順に並べ替え', plShowIdle:'待機中のプレイヤーを表示', plHideIdle:'待機中のプレイヤーを非表示', gameTimeLabel:'時間', visRanked:'ランキング', infoBlindsUp:'ブラインドの上昇',
     spectatorBtn:'観戦',
+    // v0.3.522–528 : blinds manuelles · dialogue de réglages · config.xml · sync compte
+    blindsOrderLbl:'ブラインド上昇の順序', blindsAlwaysDouble:'常にブラインドを倍にする', blindsManualOrder:'手動ブラインド順序', blindsAddBtn:'+ 追加', blindsRemoveTip:'このブラインドを削除', blindsAfterLbl:'その後：', blindsAfterDouble:'ブラインドを倍にする', blindsAfterRaiseBy:'ブラインドの増加額', blindsAfterKeep:'最後のブラインドを維持', infoBlindsManual:'手動ブラインド',
+    advCreateDialog:'新しいゲームごとに設定画面を表示（オフ：保存済みの設定ですぐに開始）',
+    advCfgXmlSec:'PokerTH config.xml', advCfgExport:'config.xml をエクスポート', advCfgImport:'config.xml をインポート',
+    advCfgXmlDesc:'PokerTH のデスクトップ版・QML クライアントと設定を交換します（~/.pokerth/config.xml ファイル）。エクスポートは共有設定（名前、表示、サウンド、テーブル設定、ブラインド、スタイル）を書き出し、インポートはここに適用します。ウェブ版が知らない設定はファイル内に保持され、次回エクスポート時にそのまま書き戻されます。',
+    cfgXmlExported:'config.xml をエクスポートしました — デスクトップ版の ~/.pokerth/ に置いてください', cfgXmlImported:'config.xml をインポートしました — 共有設定を適用', cfgXmlImportErr:'インポート失敗 — 無効な PokerTH config.xml', cfgXmlReload:'すべて（テーマ、デッキ、名前）を適用するために今すぐ再読み込みしますか？',
+    advCfgSync:'これらの設定をアカウントと自動同期する（登録ログインのみ — このサーバーに保存、オプトイン）', cfgSyncApplied:'アカウントから設定を同期しました',
 };
 
 export default { meta, strings };

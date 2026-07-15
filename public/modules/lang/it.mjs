@@ -650,6 +650,13 @@ export const strings = {
     modeManual:'Manuale',
     plIgnore:'Ignora', plStats:'Statistiche del giocatore', plNotPlaying:'Non sta giocando', plSortAlpha:'Ordina alfabeticamente', plShowIdle:'Mostra giocatori inattivi', plHideIdle:'Nascondi giocatori inattivi', gameTimeLabel:'Tempo', visRanked:'Classifica', infoBlindsUp:'Aumento dei bui',
     spectatorBtn:'Spettatore',
+    // v0.3.522–528 : blinds manuelles · dialogue de réglages · config.xml · sync compte
+    blindsOrderLbl:'Ordine di aumento dei bui', blindsAlwaysDouble:'raddoppia sempre i bui', blindsManualOrder:'ordine manuale dei bui', blindsAddBtn:'+ Aggiungi', blindsRemoveTip:'Rimuovi questo buio', blindsAfterLbl:'Dopo:', blindsAfterDouble:'raddoppia i bui', blindsAfterRaiseBy:'aumenta i bui di', blindsAfterKeep:'mantieni l\'ultimo buio', infoBlindsManual:'Bui manuali',
+    advCreateDialog:'Mostra la schermata delle impostazioni a ogni nuova partita (disattivato: avvio diretto con le impostazioni salvate)',
+    advCfgXmlSec:'PokerTH config.xml', advCfgExport:'Esporta config.xml', advCfgImport:'Importa config.xml',
+    advCfgXmlDesc:'Scambia le tue impostazioni con i client desktop e QML di PokerTH (il loro file ~/.pokerth/config.xml). L\'esportazione scrive le impostazioni condivise (nome, schermo, suoni, preferenze del tavolo, bui, stili); l\'importazione le applica qui. Le impostazioni sconosciute al client web restano nel file e vengono riscritte intatte alla prossima esportazione.',
+    cfgXmlExported:'config.xml esportato — copialo in ~/.pokerth/ del client desktop', cfgXmlImported:'config.xml importato — impostazioni condivise applicate', cfgXmlImportErr:'Importazione non riuscita — config.xml PokerTH non valido', cfgXmlReload:'Ricaricare ora per applicare tutto (temi, mazzi, nomi)?',
+    advCfgSync:'Sincronizza automaticamente queste impostazioni con il mio account (solo accesso registrato — salvate su questo server, opzionale)', cfgSyncApplied:'Impostazioni sincronizzate dal tuo account',
 };
 
 export default { meta, strings };

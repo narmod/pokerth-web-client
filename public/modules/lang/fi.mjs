@@ -646,6 +646,13 @@ export const strings = {
     modeManual:'Manuaalinen',
     plIgnore:'Ohita', plStats:'Pelaajan tilastot', plNotPlaying:'Ei pelaa juuri nyt', plSortAlpha:'Järjestä aakkosjärjestykseen', plShowIdle:'Näytä joutilaat pelaajat', plHideIdle:'Piilota joutilaat pelaajat', gameTimeLabel:'Aika', visRanked:'Sijoituslista', infoBlindsUp:'Blindien nosto',
     spectatorBtn:'Katso',
+    // v0.3.522–528 : blinds manuelles · dialogue de réglages · config.xml · sync compte
+    blindsOrderLbl:'Blindien korotusjärjestys', blindsAlwaysDouble:'tuplaa blindit aina', blindsManualOrder:'manuaalinen blindijärjestys', blindsAddBtn:'+ Lisää', blindsRemoveTip:'Poista tämä blindi', blindsAfterLbl:'Sen jälkeen:', blindsAfterDouble:'tuplaa blindit', blindsAfterRaiseBy:'korota blindejä määrällä', blindsAfterKeep:'säilytä viimeinen blindi', infoBlindsManual:'Manuaaliset blindit',
+    advCreateDialog:'Näytä asetusnäyttö jokaisen uuden pelin alussa (pois: aloita heti tallennetuilla asetuksilla)',
+    advCfgXmlSec:'PokerTH config.xml', advCfgExport:'Vie config.xml', advCfgImport:'Tuo config.xml',
+    advCfgXmlDesc:'Vaihda asetuksiasi PokerTH:n työpöytä- ja QML-asiakkaiden kanssa (niiden tiedosto ~/.pokerth/config.xml). Vienti kirjoittaa jaetut asetukset (nimi, näyttö, äänet, pöytäasetukset, blindit, tyylit); tuonti ottaa ne käyttöön täällä. Web-asiakkaalle tuntemattomat asetukset säilyvät tiedostossa ja kirjoitetaan muuttumattomina seuraavassa viennissä.',
+    cfgXmlExported:'config.xml viety — sijoita se työpöytäasiakkaan ~/.pokerth/-kansioon', cfgXmlImported:'config.xml tuotu — jaetut asetukset käytössä', cfgXmlImportErr:'Tuonti epäonnistui — virheellinen PokerTH config.xml', cfgXmlReload:'Ladataanko uudelleen nyt kaiken käyttöönottamiseksi (teemat, pakat, nimet)?',
+    advCfgSync:'Synkronoi nämä asetukset automaattisesti tilini kanssa (vain rekisteröity kirjautuminen — tallennetaan tälle palvelimelle, valinnainen)', cfgSyncApplied:'Asetukset synkronoitu tililtäsi',
 };
 
 export default { meta, strings };

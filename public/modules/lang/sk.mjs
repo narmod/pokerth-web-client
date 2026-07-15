@@ -647,6 +647,13 @@ export const strings = {
     modeManual:'Ručne',
     plIgnore:'Ignorovať', plStats:'Štatistiky hráča', plNotPlaying:'Momentálne nehrá', plSortAlpha:'Zoradiť podľa abecedy', plShowIdle:'Zobraziť neaktívnych hráčov', plHideIdle:'Skryť neaktívnych hráčov', gameTimeLabel:'Čas', visRanked:'Rebríček', infoBlindsUp:'Zvýšenie blindov',
     spectatorBtn:'Sledovať',
+    // v0.3.522–528 : blinds manuelles · dialogue de réglages · config.xml · sync compte
+    blindsOrderLbl:'Poradie zvyšovania blindov', blindsAlwaysDouble:'vždy zdvojnásobiť blindy', blindsManualOrder:'ručné poradie blindov', blindsAddBtn:'+ Pridať', blindsRemoveTip:'Odstrániť tento blind', blindsAfterLbl:'Potom:', blindsAfterDouble:'zdvojnásobiť blindy', blindsAfterRaiseBy:'zvýšiť blindy o', blindsAfterKeep:'ponechať posledný blind', infoBlindsManual:'Ručné blindy',
+    advCreateDialog:'Zobraziť obrazovku nastavení pri každej novej hre (vypnuté: začať hneď s uloženými nastaveniami)',
+    advCfgXmlSec:'PokerTH config.xml', advCfgExport:'Exportovať config.xml', advCfgImport:'Importovať config.xml',
+    advCfgXmlDesc:'Vymieňajte si nastavenia s desktopovým a QML klientom PokerTH (ich súbor ~/.pokerth/config.xml). Export zapíše zdieľané nastavenia (meno, zobrazenie, zvuky, predvoľby stola, blindy, štýly); import ich použije tu. Nastavenia neznáme webovému klientovi ostávajú v súbore a pri ďalšom exporte sa zapíšu bez zmeny.',
+    cfgXmlExported:'config.xml exportovaný — vložte ho do ~/.pokerth/ desktopového klienta', cfgXmlImported:'config.xml importovaný — zdieľané nastavenia použité', cfgXmlImportErr:'Import zlyhal — neplatný config.xml PokerTH', cfgXmlReload:'Načítať znova a použiť všetko (motívy, balíčky, mená)?',
+    advCfgSync:'Automaticky synchronizovať tieto nastavenia s mojím účtom (iba registrované prihlásenie — uložené na tomto serveri, voliteľné)', cfgSyncApplied:'Nastavenia synchronizované z vášho účtu',
 };
 
 export default { meta, strings };

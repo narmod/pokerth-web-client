@@ -647,6 +647,13 @@ export const strings = {
     modeManual:'Χειροκίνητο',
     plIgnore:'Αγνόηση', plStats:'Στατιστικά παίκτη', plNotPlaying:'Δεν παίζει αυτή τη στιγμή', plSortAlpha:'Ταξινόμηση αλφαβητικά', plShowIdle:'Εμφάνιση ανενεργών παικτών', plHideIdle:'Απόκρυψη ανενεργών παικτών', gameTimeLabel:'Χρόνος', visRanked:'Κατάταξη', infoBlindsUp:'Αύξηση τυφλών',
     spectatorBtn:'Παρακολούθηση',
+    // v0.3.522–528 : blinds manuelles · dialogue de réglages · config.xml · sync compte
+    blindsOrderLbl:'Σειρά αύξησης των τυφλών', blindsAlwaysDouble:'πάντα διπλασιασμός των τυφλών', blindsManualOrder:'χειροκίνητη σειρά τυφλών', blindsAddBtn:'+ Προσθήκη', blindsRemoveTip:'Αφαίρεση αυτής της τυφλής', blindsAfterLbl:'Έπειτα:', blindsAfterDouble:'διπλασιασμός των τυφλών', blindsAfterRaiseBy:'αύξηση των τυφλών κατά', blindsAfterKeep:'διατήρηση της τελευταίας τυφλής', infoBlindsManual:'Χειροκίνητες τυφλές',
+    advCreateDialog:'Εμφάνιση της οθόνης ρυθμίσεων σε κάθε νέο παιχνίδι (ανενεργό: άμεση έναρξη με τις αποθηκευμένες ρυθμίσεις)',
+    advCfgXmlSec:'PokerTH config.xml', advCfgExport:'Εξαγωγή config.xml', advCfgImport:'Εισαγωγή config.xml',
+    advCfgXmlDesc:'Ανταλλάξτε τις ρυθμίσεις σας με τους πελάτες desktop και QML του PokerTH (το αρχείο τους ~/.pokerth/config.xml). Η εξαγωγή γράφει τις κοινές ρυθμίσεις (όνομα, εμφάνιση, ήχοι, προτιμήσεις τραπεζιού, τυφλές, στυλ)· η εισαγωγή τις εφαρμόζει εδώ. Ρυθμίσεις άγνωστες στον πελάτη web διατηρούνται στο αρχείο και ξαναγράφονται ανέπαφες στην επόμενη εξαγωγή.',
+    cfgXmlExported:'Το config.xml εξήχθη — τοποθετήστε το στο ~/.pokerth/ του πελάτη desktop', cfgXmlImported:'Το config.xml εισήχθη — οι κοινές ρυθμίσεις εφαρμόστηκαν', cfgXmlImportErr:'Αποτυχία εισαγωγής — μη έγκυρο config.xml PokerTH', cfgXmlReload:'Επαναφόρτωση τώρα για να εφαρμοστούν όλα (θέματα, τράπουλες, ονόματα);',
+    advCfgSync:'Αυτόματος συγχρονισμός αυτών των ρυθμίσεων με τον λογαριασμό μου (μόνο εγγεγραμμένη σύνδεση — αποθηκεύονται σε αυτόν τον διακομιστή, προαιρετικό)', cfgSyncApplied:'Οι ρυθμίσεις συγχρονίστηκαν από τον λογαριασμό σας',
 };
 
 export default { meta, strings };

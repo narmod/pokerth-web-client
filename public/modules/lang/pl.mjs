@@ -650,6 +650,13 @@ export const strings = {
     modeManual:'Ręcznie',
     plIgnore:'Ignoruj', plStats:'Statystyki gracza', plNotPlaying:'Obecnie nie gra', plSortAlpha:'Sortuj alfabetycznie', plShowIdle:'Pokaż nieaktywnych graczy', plHideIdle:'Ukryj nieaktywnych graczy', gameTimeLabel:'Czas', visRanked:'Ranking', infoBlindsUp:'Wzrost ciemnych',
     spectatorBtn:'Obserwuj',
+    // v0.3.522–528 : blinds manuelles · dialogue de réglages · config.xml · sync compte
+    blindsOrderLbl:'Kolejność podnoszenia ciemnych', blindsAlwaysDouble:'zawsze podwajaj ciemne', blindsManualOrder:'ręczna kolejność ciemnych', blindsAddBtn:'+ Dodaj', blindsRemoveTip:'Usuń tę ciemną', blindsAfterLbl:'Następnie:', blindsAfterDouble:'podwajaj ciemne', blindsAfterRaiseBy:'podnoś ciemne o', blindsAfterKeep:'zachowaj ostatnią ciemną', infoBlindsManual:'Ciemne ręczne',
+    advCreateDialog:'Pokazuj ekran ustawień przy każdej nowej grze (wyłączone: start od razu z zapisanymi ustawieniami)',
+    advCfgXmlSec:'PokerTH config.xml', advCfgExport:'Eksportuj config.xml', advCfgImport:'Importuj config.xml',
+    advCfgXmlDesc:'Wymieniaj ustawienia z klientami desktopowym i QML PokerTH (ich plik ~/.pokerth/config.xml). Eksport zapisuje wspólne ustawienia (nazwa, wyświetlanie, dźwięki, preferencje stołu, ciemne, style); import stosuje je tutaj. Ustawienia nieznane klientowi webowemu pozostają w pliku i są zapisywane bez zmian przy następnym eksporcie.',
+    cfgXmlExported:'config.xml wyeksportowany — umieść go w ~/.pokerth/ klienta desktopowego', cfgXmlImported:'config.xml zaimportowany — wspólne ustawienia zastosowane', cfgXmlImportErr:'Import nieudany — nieprawidłowy config.xml PokerTH', cfgXmlReload:'Przeładować teraz, aby zastosować wszystko (motywy, talie, nazwy)?',
+    advCfgSync:'Automatycznie synchronizuj te ustawienia z moim kontem (tylko zarejestrowane logowanie — zapisywane na tym serwerze, opcjonalne)', cfgSyncApplied:'Ustawienia zsynchronizowane z Twojego konta',
 };
 
 export default { meta, strings };

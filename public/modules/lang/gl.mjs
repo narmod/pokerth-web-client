@@ -647,6 +647,13 @@ export const strings = {
     modeManual:'Manual',
     plIgnore:'Ignorar', plStats:'Estatísticas do xogador', plNotPlaying:'Non está xogando', plSortAlpha:'Ordenar alfabeticamente', plShowIdle:'Amosar xogadores inactivos', plHideIdle:'Agochar xogadores inactivos', gameTimeLabel:'Tempo', visRanked:'Clasificación', infoBlindsUp:'Suba das cegas',
     spectatorBtn:'Espectador',
+    // v0.3.522–528 : blinds manuelles · dialogue de réglages · config.xml · sync compte
+    blindsOrderLbl:'Orde de suba das cegas', blindsAlwaysDouble:'dobrar sempre as cegas', blindsManualOrder:'orde manual das cegas', blindsAddBtn:'+ Engadir', blindsRemoveTip:'Quitar esta cega', blindsAfterLbl:'Despois:', blindsAfterDouble:'dobrar as cegas', blindsAfterRaiseBy:'aumentar as cegas en', blindsAfterKeep:'manter a última cega', infoBlindsManual:'Cegas manuais',
+    advCreateDialog:'Mostrar a pantalla de axustes en cada partida nova (desactivado: comezar directamente cos axustes gardados)',
+    advCfgXmlSec:'PokerTH config.xml', advCfgExport:'Exportar config.xml', advCfgImport:'Importar config.xml',
+    advCfgXmlDesc:'Intercambia os teus axustes cos clientes de escritorio e QML de PokerTH (o seu ficheiro ~/.pokerth/config.xml). A exportación escribe os axustes compartidos (nome, pantalla, sons, preferencias de mesa, cegas, estilos); a importación aplícaos aquí. Os axustes descoñecidos para o cliente web consérvanse no ficheiro e reescríbense intactos na seguinte exportación.',
+    cfgXmlExported:'config.xml exportado — colócao en ~/.pokerth/ do cliente de escritorio', cfgXmlImported:'config.xml importado — axustes compartidos aplicados', cfgXmlImportErr:'Fallou a importación — config.xml de PokerTH non válido', cfgXmlReload:'Recargar agora para aplicalo todo (temas, barallas, nomes)?',
+    advCfgSync:'Sincronizar automaticamente estes axustes coa miña conta (só sesión rexistrada — gárdanse neste servidor, opcional)', cfgSyncApplied:'Axustes sincronizados desde a túa conta',
 };
 
 export default { meta, strings };

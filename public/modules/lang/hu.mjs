@@ -647,6 +647,13 @@ export const strings = {
     modeManual:'Kézi',
     plIgnore:'Mellőzés', plStats:'Játékos statisztikái', plNotPlaying:'Jelenleg nem játszik', plSortAlpha:'Rendezés ábécésorrendbe', plShowIdle:'Inaktív játékosok megjelenítése', plHideIdle:'Inaktív játékosok elrejtése', gameTimeLabel:'Idő', visRanked:'Ranglista', infoBlindsUp:'Vakok emelése',
     spectatorBtn:'Néző',
+    // v0.3.522–528 : blinds manuelles · dialogue de réglages · config.xml · sync compte
+    blindsOrderLbl:'Vakok emelési sorrendje', blindsAlwaysDouble:'mindig duplázza a vakokat', blindsManualOrder:'kézi vaksorrend', blindsAddBtn:'+ Hozzáadás', blindsRemoveTip:'E vak eltávolítása', blindsAfterLbl:'Ezután:', blindsAfterDouble:'vakok duplázása', blindsAfterRaiseBy:'vakok emelése ennyivel', blindsAfterKeep:'utolsó vak megtartása', infoBlindsManual:'Kézi vakok',
+    advCreateDialog:'Beállítások képernyő megjelenítése minden új játéknál (kikapcsolva: azonnali indítás a mentett beállításokkal)',
+    advCfgXmlSec:'PokerTH config.xml', advCfgExport:'config.xml exportálása', advCfgImport:'config.xml importálása',
+    advCfgXmlDesc:'Cserélje beállításait a PokerTH asztali és QML klienseivel (az ő ~/.pokerth/config.xml fájljuk). Az exportálás a közös beállításokat írja ki (név, megjelenítés, hangok, asztalbeállítások, vakok, stílusok); az importálás itt alkalmazza őket. A webes kliens által nem ismert beállítások a fájlban maradnak, és a következő exportáláskor változatlanul íródnak vissza.',
+    cfgXmlExported:'config.xml exportálva — helyezze az asztali kliens ~/.pokerth/ mappájába', cfgXmlImported:'config.xml importálva — közös beállítások alkalmazva', cfgXmlImportErr:'Sikertelen importálás — érvénytelen PokerTH config.xml', cfgXmlReload:'Újratölti most, hogy minden érvénybe lépjen (témák, paklik, nevek)?',
+    advCfgSync:'E beállítások automatikus szinkronizálása a fiókommal (csak regisztrált bejelentkezés — ezen a szerveren tárolva, opcionális)', cfgSyncApplied:'Beállítások szinkronizálva a fiókjából',
 };
 
 export default { meta, strings };

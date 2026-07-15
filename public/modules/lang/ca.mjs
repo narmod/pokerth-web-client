@@ -647,6 +647,13 @@ export const strings = {
     modeManual:'Manual',
     plIgnore:'Ignora', plStats:'Estadístiques del jugador', plNotPlaying:'No està jugant', plSortAlpha:'Ordena alfabèticament', plShowIdle:'Mostra els jugadors inactius', plHideIdle:'Amaga els jugadors inactius', gameTimeLabel:'Temps', visRanked:'Classificació', infoBlindsUp:'Pujada de cegues',
     spectatorBtn:'Espectador',
+    // v0.3.522–528 : blinds manuelles · dialogue de réglages · config.xml · sync compte
+    blindsOrderLbl:'Ordre de pujada de cegues', blindsAlwaysDouble:'dobla sempre les cegues', blindsManualOrder:'ordre manual de cegues', blindsAddBtn:'+ Afegeix', blindsRemoveTip:'Treu aquesta cega', blindsAfterLbl:'Després:', blindsAfterDouble:'dobla les cegues', blindsAfterRaiseBy:'augmenta les cegues en', blindsAfterKeep:'mantén l\'última cega', infoBlindsManual:'Cegues manuals',
+    advCreateDialog:'Mostra la pantalla d\'ajustos a cada partida nova (desactivat: comença directament amb els ajustos desats)',
+    advCfgXmlSec:'PokerTH config.xml', advCfgExport:'Exporta config.xml', advCfgImport:'Importa config.xml',
+    advCfgXmlDesc:'Intercanvia els teus ajustos amb els clients d\'escriptori i QML de PokerTH (el seu fitxer ~/.pokerth/config.xml). L\'exportació escriu els ajustos compartits (nom, pantalla, sons, preferències de taula, cegues, estils); la importació els aplica aquí. Els ajustos desconeguts pel client web es conserven al fitxer i es reescriuen intactes a la propera exportació.',
+    cfgXmlExported:'config.xml exportat — posa\'l a ~/.pokerth/ del client d\'escriptori', cfgXmlImported:'config.xml importat — ajustos compartits aplicats', cfgXmlImportErr:'Ha fallat la importació — config.xml de PokerTH no vàlid', cfgXmlReload:'Vols recarregar ara per aplicar-ho tot (temes, baralles, noms)?',
+    advCfgSync:'Sincronitza automàticament aquests ajustos amb el meu compte (només sessió registrada — desats en aquest servidor, opcional)', cfgSyncApplied:'Ajustos sincronitzats des del teu compte',
 };
 
 export default { meta, strings };

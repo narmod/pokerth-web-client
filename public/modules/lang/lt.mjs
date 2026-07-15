@@ -647,6 +647,13 @@ export const strings = {
     modeManual:'Rankinis',
     plIgnore:'Ignoruoti', plStats:'Žaidėjo statistika', plNotPlaying:'Šiuo metu nežaidžia', plSortAlpha:'Rikiuoti pagal abėcėlę', plShowIdle:'Rodyti neaktyvius žaidėjus', plHideIdle:'Slėpti neaktyvius žaidėjus', gameTimeLabel:'Laikas', visRanked:'Reitingas', infoBlindsUp:'Blaindų didinimas',
     spectatorBtn:'Stebėti',
+    // v0.3.522–528 : blinds manuelles · dialogue de réglages · config.xml · sync compte
+    blindsOrderLbl:'Blaindų didinimo tvarka', blindsAlwaysDouble:'visada dvigubinti blaindus', blindsManualOrder:'rankinė blaindų tvarka', blindsAddBtn:'+ Pridėti', blindsRemoveTip:'Pašalinti šį blaindą', blindsAfterLbl:'Po to:', blindsAfterDouble:'dvigubinti blaindus', blindsAfterRaiseBy:'didinti blaindus po', blindsAfterKeep:'išlaikyti paskutinį blaindą', infoBlindsManual:'Rankiniai blaindai',
+    advCreateDialog:'Rodyti nustatymų ekraną kiekvieno naujo žaidimo metu (išjungta: pradėti iš karto su išsaugotais nustatymais)',
+    advCfgXmlSec:'PokerTH config.xml', advCfgExport:'Eksportuoti config.xml', advCfgImport:'Importuoti config.xml',
+    advCfgXmlDesc:'Keiskitės nustatymais su PokerTH darbalaukio ir QML klientais (jų failas ~/.pokerth/config.xml). Eksportas įrašo bendrus nustatymus (vardas, rodymas, garsai, stalo nuostatos, blaindai, stiliai); importas juos pritaiko čia. Žiniatinklio klientui nežinomi nustatymai lieka faile ir kito eksporto metu perrašomi nepakeisti.',
+    cfgXmlExported:'config.xml eksportuotas — įdėkite jį į darbalaukio kliento ~/.pokerth/', cfgXmlImported:'config.xml importuotas — bendri nustatymai pritaikyti', cfgXmlImportErr:'Importas nepavyko — netinkamas PokerTH config.xml', cfgXmlReload:'Įkelti iš naujo dabar, kad viskas būtų pritaikyta (temos, kaladės, vardai)?',
+    advCfgSync:'Automatiškai sinchronizuoti šiuos nustatymus su mano paskyra (tik registruotas prisijungimas — saugomi šiame serveryje, pasirinktinai)', cfgSyncApplied:'Nustatymai sinchronizuoti iš jūsų paskyros',
 };
 
 export default { meta, strings };

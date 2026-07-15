@@ -647,6 +647,13 @@ export const strings = {
     modeManual:'Manual',
     plIgnore:'Ignorar', plStats:'Estatísticas do jogador', plNotPlaying:'Não está a jogar', plSortAlpha:'Ordenar alfabeticamente', plShowIdle:'Mostrar jogadores inativos', plHideIdle:'Ocultar jogadores inativos', gameTimeLabel:'Tempo', visRanked:'Classificação', infoBlindsUp:'Aumento das blinds',
     spectatorBtn:'Espectador',
+    // v0.3.522–528 : blinds manuelles · dialogue de réglages · config.xml · sync compte
+    blindsOrderLbl:'Ordem de aumento das blinds', blindsAlwaysDouble:'dobrar sempre as blinds', blindsManualOrder:'ordem manual das blinds', blindsAddBtn:'+ Adicionar', blindsRemoveTip:'Remover esta blind', blindsAfterLbl:'Depois:', blindsAfterDouble:'dobrar as blinds', blindsAfterRaiseBy:'aumentar as blinds em', blindsAfterKeep:'manter a última blind', infoBlindsManual:'Blinds manuais',
+    advCreateDialog:'Mostrar o ecrã de definições em cada novo jogo (desativado: começar logo com as definições guardadas)',
+    advCfgXmlSec:'PokerTH config.xml', advCfgExport:'Exportar config.xml', advCfgImport:'Importar config.xml',
+    advCfgXmlDesc:'Troque as suas definições com os clientes de secretária e QML do PokerTH (o ficheiro ~/.pokerth/config.xml). A exportação escreve as definições partilhadas (nome, ecrã, sons, preferências de mesa, blinds, estilos); a importação aplica-as aqui. As definições desconhecidas do cliente web mantêm-se no ficheiro e são reescritas intactas na próxima exportação.',
+    cfgXmlExported:'config.xml exportado — coloque-o em ~/.pokerth/ do cliente de secretária', cfgXmlImported:'config.xml importado — definições partilhadas aplicadas', cfgXmlImportErr:'Falha na importação — config.xml do PokerTH inválido', cfgXmlReload:'Recarregar agora para aplicar tudo (temas, baralhos, nomes)?',
+    advCfgSync:'Sincronizar automaticamente estas definições com a minha conta (apenas sessão registada — guardadas neste servidor, opcional)', cfgSyncApplied:'Definições sincronizadas a partir da sua conta',
 };
 
 export default { meta, strings };

@@ -649,6 +649,13 @@ export const strings = {
     modeManual:'Manuel',
     plIgnore:'Yoksay', plStats:'Oyuncu istatistikleri', plNotPlaying:'Şu anda oynamıyor', plSortAlpha:'Alfabetik sırala', plShowIdle:'Boşta oyuncuları göster', plHideIdle:'Boşta oyuncuları gizle', gameTimeLabel:'Süre', visRanked:'Sıralama', infoBlindsUp:'Blind artışı',
     spectatorBtn:'İzleyici',
+    // v0.3.522–528 : blinds manuelles · dialogue de réglages · config.xml · sync compte
+    blindsOrderLbl:'Blind artırma sırası', blindsAlwaysDouble:'blindleri her zaman ikiye katla', blindsManualOrder:'manuel blind sırası', blindsAddBtn:'+ Ekle', blindsRemoveTip:'Bu blindi kaldır', blindsAfterLbl:'Sonrasında:', blindsAfterDouble:'blindleri ikiye katla', blindsAfterRaiseBy:'blindleri şu kadar artır', blindsAfterKeep:'son blindi koru', infoBlindsManual:'Manuel blindler',
+    advCreateDialog:'Her yeni oyunda ayarlar ekranını göster (kapalı: kayıtlı ayarlarla doğrudan başla)',
+    advCfgXmlSec:'PokerTH config.xml', advCfgExport:'config.xml dışa aktar', advCfgImport:'config.xml içe aktar',
+    advCfgXmlDesc:'Ayarlarınızı PokerTH masaüstü ve QML istemcileriyle paylaşın (onların ~/.pokerth/config.xml dosyası). Dışa aktarma ortak ayarları yazar (ad, görüntü, sesler, masa tercihleri, blindler, stiller); içe aktarma bunları burada uygular. Web istemcisinin bilmediği ayarlar dosyada korunur ve bir sonraki dışa aktarmada değişmeden yeniden yazılır.',
+    cfgXmlExported:'config.xml dışa aktarıldı — masaüstü istemcinin ~/.pokerth/ klasörüne koyun', cfgXmlImported:'config.xml içe aktarıldı — ortak ayarlar uygulandı', cfgXmlImportErr:'İçe aktarma başarısız — geçersiz PokerTH config.xml', cfgXmlReload:'Her şeyi uygulamak için şimdi yeniden yüklensin mi (temalar, desteler, adlar)?',
+    advCfgSync:'Bu ayarları hesabımla otomatik senkronize et (yalnızca kayıtlı oturum — bu sunucuda saklanır, isteğe bağlı)', cfgSyncApplied:'Ayarlar hesabınızdan senkronize edildi',
 };
 
 export default { meta, strings };

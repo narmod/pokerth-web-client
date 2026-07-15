@@ -457,6 +457,13 @@ export const strings = {
     modeManual:'수동',
     plIgnore:'무시', plStats:'플레이어 통계', plNotPlaying:'현재 플레이 중이 아님', plSortAlpha:'알파벳순 정렬', plShowIdle:'대기 중인 플레이어 표시', plHideIdle:'대기 중인 플레이어 숨기기', gameTimeLabel:'시간', visRanked:'랭킹', infoBlindsUp:'블라인드 상승',
     spectatorBtn:'관전',
+    // v0.3.522–528 : blinds manuelles · dialogue de réglages · config.xml · sync compte
+    blindsOrderLbl:'블라인드 인상 순서', blindsAlwaysDouble:'항상 블라인드 2배', blindsManualOrder:'수동 블라인드 순서', blindsAddBtn:'+ 추가', blindsRemoveTip:'이 블라인드 제거', blindsAfterLbl:'그 후:', blindsAfterDouble:'블라인드 2배', blindsAfterRaiseBy:'블라인드 인상액', blindsAfterKeep:'마지막 블라인드 유지', infoBlindsManual:'수동 블라인드',
+    advCreateDialog:'새 게임마다 설정 화면 표시(끄면 저장된 설정으로 바로 시작)',
+    advCfgXmlSec:'PokerTH config.xml', advCfgExport:'config.xml 내보내기', advCfgImport:'config.xml 가져오기',
+    advCfgXmlDesc:'PokerTH 데스크톱 및 QML 클라이언트와 설정을 교환합니다(~/.pokerth/config.xml 파일). 내보내기는 공유 설정(이름, 표시, 소리, 테이블 설정, 블라인드, 스타일)을 기록하고, 가져오기는 여기에 적용합니다. 웹 클라이언트가 모르는 설정은 파일에 그대로 남아 다음 내보내기 때 변경 없이 다시 기록됩니다.',
+    cfgXmlExported:'config.xml 내보냄 — 데스크톱 클라이언트의 ~/.pokerth/에 넣으세요', cfgXmlImported:'config.xml 가져옴 — 공유 설정 적용됨', cfgXmlImportErr:'가져오기 실패 — 잘못된 PokerTH config.xml', cfgXmlReload:'모든 항목(테마, 덱, 이름)을 적용하도록 지금 새로 고칠까요?',
+    advCfgSync:'이 설정을 내 계정과 자동 동기화(등록된 로그인만 — 이 서버에 저장, 선택 사항)', cfgSyncApplied:'계정에서 설정을 동기화했습니다',
 };
 
 export default { meta, strings };

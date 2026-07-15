@@ -648,6 +648,13 @@ export const strings = {
     modeManual:'手動',
     plIgnore:'忽略', plStats:'玩家統計', plNotPlaying:'目前未在遊戲中', plSortAlpha:'按字母排序', plShowIdle:'顯示閒置玩家', plHideIdle:'隱藏閒置玩家', gameTimeLabel:'時間', visRanked:'排名', infoBlindsUp:'盲注提高',
     spectatorBtn:'觀戰',
+    // v0.3.522–528 : blinds manuelles · dialogue de réglages · config.xml · sync compte
+    blindsOrderLbl:'盲注提升順序', blindsAlwaysDouble:'始終加倍盲注', blindsManualOrder:'手動盲注順序', blindsAddBtn:'+ 新增', blindsRemoveTip:'移除此盲注', blindsAfterLbl:'之後：', blindsAfterDouble:'加倍盲注', blindsAfterRaiseBy:'盲注每次增加', blindsAfterKeep:'保持最後盲注', infoBlindsManual:'手動盲注',
+    advCreateDialog:'每次新遊戲時顯示設定畫面（關閉：直接以已儲存的設定開始）',
+    advCfgXmlSec:'PokerTH config.xml', advCfgExport:'匯出 config.xml', advCfgImport:'匯入 config.xml',
+    advCfgXmlDesc:'與 PokerTH 桌面版和 QML 用戶端交換設定（它們的 ~/.pokerth/config.xml 檔案）。匯出會寫入共享設定（名稱、顯示、音效、牌桌偏好、盲注、樣式）；匯入會在此套用這些設定。網頁用戶端不認識的設定會保留在檔案中，並在下次匯出時原樣寫回。',
+    cfgXmlExported:'config.xml 已匯出 — 請放入桌面用戶端的 ~/.pokerth/ 目錄', cfgXmlImported:'config.xml 已匯入 — 共享設定已套用', cfgXmlImportErr:'匯入失敗 — 無效的 PokerTH config.xml', cfgXmlReload:'現在重新載入以套用全部內容（主題、牌組、名稱）？',
+    advCfgSync:'自動將這些設定與我的帳戶同步（僅限註冊登入 — 儲存在此伺服器上，可選）', cfgSyncApplied:'已從您的帳戶同步設定',
 };
 
 export default { meta, strings };
