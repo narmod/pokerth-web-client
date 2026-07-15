@@ -9886,6 +9886,14 @@ const App = (() => {
       try {
         var _layoutZoom = 1;   // la bisection travaille TOUJOURS à zoom 1
         var _offPos = _officialSeatPix(rotated.length, _forceSeatPortrait, zRect.width, zRect.height, oCX, oCY, oRect, _seatBoxScale, _layoutZoom);
+        // Diagnostic INCONDITIONNEL (le bloc interne peut être sauté si
+        // _boxScale est NaN/absent — on veut voir pourquoi).
+        try {
+          window._seatDbg.zone = Math.round(zRect.width) + 'x' + Math.round(zRect.height);
+          window._seatDbg.offPos = _offPos ? (_offPos._boxScale != null && _offPos._boxScale === _offPos._boxScale ? 'ok' : 'boxScale=' + _offPos._boxScale) : 'null';
+          window._seatDbg.rawBoxScale = _offPos ? _offPos._boxScale : null;
+          window._seatDbg.dims = window._seatDimsMeasured ? JSON.parse(JSON.stringify(window._seatDimsMeasured)) : null;
+        } catch (eD) {}
         // Assis (myIdx>=0) : la self (slot 0) est gérée séparément (perle) ;
         // on ne remplace que les adversaires (1+). Spectateur (myIdx<0) : pas de
         // self -> on place TOUS les slots (0 inclus) pour que l'officiel s'applique.
@@ -10360,7 +10368,7 @@ const App = (() => {
         window._commScalePending = false;
         document.documentElement.style.removeProperty('--comm-scale');
       }
-    } catch (e) {}
+    } catch (e) { try { window._seatDbg.commErr = String(e); } catch (e2) {} }
     // Self-box : remonter si son bas depasse la zone (tapis coupe en plein
     // ecran avec le boxScale de l'ellipse). Mesure reelle -> valable pour
     // tous les styles et tous les niveaux de zoom des cartes.
@@ -15573,7 +15581,7 @@ function renderPlayersList() {
   body.innerHTML = _shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>';
 }
 
-;(function(){ window.BUILD_VERSION='0.3.557-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.558-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
