@@ -6293,7 +6293,10 @@ html[data-table="pokerth-live"] .raise-slider { accent-color: #4CAF50; }
    may draw under the system status bar. These insets keep the game & lobby
    headers clear of the notch and landscape camera cut-outs. Appended last so
    the longhand padding-* wins over the mobile shorthand `padding:` rules. */
-@media (display-mode: fullscreen) {
+@media (display-mode: fullscreen), (display-mode: standalone) {
+  /* standalone ajoute : iOS PWA (apple-mobile-web-app-status-bar-style
+     black-translucent) dessine SOUS la barre d'etat -> memes insets.
+     Android standalone sans notch : env() = 0, no-op. */
   #s-game .header,
   #s-lobby .header {
     padding-top: max(4px, env(safe-area-inset-top));
