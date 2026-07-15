@@ -9908,6 +9908,14 @@ const App = (() => {
             window._seatDbg.boxScale = _seatBoxScale;
             window._seatDbg.zone = Math.round(zRect.width) + 'x' + Math.round(zRect.height);
           } catch (e) {}
+          // ── communityScale CONTINU (parité QML GamePage) : la rivière/pot
+          // remplit la lacune verticale mesurée entre la rangée du haut et la
+          // self (paysage : avail/84, compact 66, plafond 0.70·W/264) ; en
+          // portrait 0.15·H − boîte/2 − 6 sur 62, plafond (W−16)/264. Bornes
+          // 0.55–1.8. Injecté dans --comm-scale (:root, inline) → il REMPLACE
+          // les paliers média : rivière, pot et largeur de la barre d'action
+          // grossissent avec la fenêtre comme le client QML. ──
+          try { window._commScalePending = true; } catch (e) {}
         }
         // Point bas exact de l'ellipse pour la self (quand l'officiel est actif).
         // L'ÉPINGLAGE mesuré au rendu (plus bas) reste la garantie finale, même
@@ -10315,6 +10323,39 @@ const App = (() => {
           setTimeout(function () { window._seatFitBusy = false; try { renderSeats(); } catch (e) {} }, 30);
         }
         try { if (window._seatDbg) { window._seatDbg.fitShave = window._seatFitShave || 1; window._seatDbg.fitBad = _badFit; } } catch (e) {}
+      }
+    } catch (e) {}
+    // ── communityScale continu (voir bloc _commScalePending) ──
+    try {
+      if (window._commScalePending && _applyOfficial) {
+        window._commScalePending = false;
+        var _csComm, _zW3 = zRect.width, _zH3 = zRect.height;
+        if (_forceSeatPortrait) {
+          var _oppH3 = (window._seatDimsMeasured && window._seatDimsMeasured.h > 30) ? window._seatDimsMeasured.h : 71;
+          var _vHalf = 0.15 * _zH3 - _oppH3 * _seatBoxScale / 2 - 6;
+          _csComm = Math.max(0.55, Math.min(1.8, (_vHalf > 0 ? _vHalf / 62 : 0.55), Math.max(0, _zW3 - 16) / 264));
+        } else {
+          var _zr3 = zone.getBoundingClientRect();
+          var _selfPl3 = el.querySelector('.seat.me .seat-plate');
+          var _selfTop3 = _selfPl3 ? (_selfPl3.getBoundingClientRect().top - _zr3.top) : (_zH3 - 100);
+          var _topB3 = 0;
+          el.querySelectorAll('.seat:not(.me):not(.seat-ghost) .seat-plate').forEach(function (pl3) {
+            var rr3 = pl3.getBoundingClientRect();
+            var _t3 = rr3.top - _zr3.top, _b3 = rr3.bottom - _zr3.top;
+            if (_t3 < _zH3 * 0.4 && _b3 > _topB3) _topB3 = _b3;   // arc haut
+          });
+          var _isCmp3 = _zH3 < 520 || window.innerHeight < 600;
+          var _commC3 = (_topB3 + _selfTop3) / 2;
+          var _avail3 = Math.min(_commC3 - (_topB3 + (_isCmp3 ? 39 : 26) * _seatBoxScale) - 6,
+                                 _selfTop3 - _commC3 - 6);
+          var _gapF3 = _avail3 > 0 ? _avail3 / (_isCmp3 ? 66 : 84) : 0;
+          _csComm = Math.max(0.55, Math.min(1.8, _gapF3, (0.70 * _zW3) / 264));
+        }
+        document.documentElement.style.setProperty('--comm-scale', _csComm.toFixed(3));
+        try { window._seatDbg.commScale = _csComm; } catch (e3) {}
+      } else if (window._commScalePending) {
+        window._commScalePending = false;
+        document.documentElement.style.removeProperty('--comm-scale');
       }
     } catch (e) {}
     // Self-box : remonter si son bas depasse la zone (tapis coupe en plein
@@ -15525,7 +15566,7 @@ function renderPlayersList() {
   body.innerHTML = _shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>';
 }
 
-;(function(){ window.BUILD_VERSION='0.3.546-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.547-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
