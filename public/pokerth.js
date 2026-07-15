@@ -10030,9 +10030,11 @@ const App = (() => {
           // appliquée (sièges sur l'ancienne heuristique, plus petits que le QML)
           // et le commScale continu ne tournait jamais (barre étroite). Cause
           // unique des deux symptômes remontés par narmod.
-          var _cmpV = false;
-          try { _cmpV = window.innerWidth > window.innerHeight && window.innerHeight < 600; } catch (eC) {}
-          _seatBoxScale = _forceSeatPortrait ? _offPos._boxScale : _offPos._boxScale * (_cmpV ? 1 : 0.9);
+          // STRICT QML : l'échelle appliquée EST la bisection (scale:
+          // tableZone.oppScale) — l'ancien −10 % desktop (ajustement web)
+          // faisait des boxes plus petites que le client officiel
+          // (rawBoxScale 1.41 → 1.27 constaté chez narmod, 2026-07-15).
+          _seatBoxScale = _offPos._boxScale;
           // Rabot anti-chevauchement MESURÉ (voir garde post-rendu) : corrige
           // sur écran ce que la bisection théorique aurait laissé passer.
           _seatBoxScale *= (window._seatFitShave || 1);
@@ -10516,6 +10518,18 @@ const App = (() => {
         // thèmes align:center (pos 'center') en mode fullscreen ; les autres
         // gardent le cover ancré bas. ──
         try { _applyQmlBgCenter(zRect, _commTargetY); } catch (eBg) {}
+        // ── Largeur du panneau d'action (parité GameActionBar.panelWidth) :
+        // paysage = min(barre, max(largeur VISUELLE des cartes communes, 380)),
+        // centré ; portrait = pleine largeur. --abar-w consommé par le CSS. ──
+        try {
+          if (!_forceSeatPortrait) {
+            var _cmEl2 = document.getElementById('g-comm');
+            var _cw2 = _cmEl2 ? _cmEl2.getBoundingClientRect().width : 0;
+            document.documentElement.style.setProperty('--abar-w', Math.round(Math.max(_cw2 || 0, 380)) + 'px');
+          } else {
+            document.documentElement.style.removeProperty('--abar-w');
+          }
+        } catch (eW) {}
         // ── Position verticale (parité anchors QML) : la rangée .comm-row est
         // ancrée à 50% du feutre ; on la décale de (cible − centre naturel du
         // feutre), converti en px LOCAUX du scaler (le transform d'autofit/zoom
@@ -10545,6 +10559,7 @@ const App = (() => {
         document.documentElement.style.removeProperty('--comm-shift-y');
         document.documentElement.style.removeProperty('--wallpaper-dyn-size');
         document.documentElement.style.removeProperty('--wallpaper-dyn-pos');
+        document.documentElement.style.removeProperty('--abar-w');
       }
     } catch (e) { try { window._seatDbg.commErr = String(e); } catch (e2) {} }
     // Self-box : remonter si son bas depasse la zone (tapis coupe en plein
@@ -15882,7 +15897,7 @@ function renderPlayersList() {
   body.innerHTML = _shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>';
 }
 
-;(function(){ window.BUILD_VERSION='0.3.593-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.594-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

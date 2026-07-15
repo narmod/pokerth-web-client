@@ -4555,6 +4555,11 @@ body:not(.in-game) .my-zone {
 .raise-amt-field:focus { border-color: var(--gold); }
 .raise-amt-field:disabled { opacity: 0.3; cursor: not-allowed; filter: grayscale(0.6); }
 /* Milieu : 1/3 1/2 Pot | All-In | mode */
+/* Parité GameActionBar.panelWidth (QML) : en paysage le panneau d'action est
+   CENTRÉ, large de max(largeur visuelle des cartes communes, 380 px) — posé
+   par renderSeats dans --abar-w. Portrait / hors placement officiel : la
+   variable est absente -> pleine largeur (comportement historique). */
+.my-zone .action-grid { max-width: var(--abar-w, none); margin-left: auto; margin-right: auto; }
 .mid-row { display: flex; gap: 6px; align-items: stretch; }
 /* Parite QML GameActionBar : quick-bets a taille fixe, All-In colle juste
    apres Pot, seul le dropdown de mode est pousse a droite (margin-left auto).
