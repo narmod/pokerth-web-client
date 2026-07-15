@@ -10,8 +10,6 @@ export const meta = {
 };
 
 export const strings = {
-    gipTabLog:"Historie",
-    gipTabOdds:"Šance",
     advRemoveGone:"Odebrat odešlé hráče a přeuspořádat stůl",
     advWinnerPopup:"Okno vítěze na konci rozdání",
     // PlayerWinnerOverlay (badge gagnant sur la boîte, parité QML)
@@ -656,6 +654,9 @@ export const strings = {
     advCfgXmlDesc:'Vyměňujte si nastavení s desktopovým a QML klientem PokerTH (jejich soubor ~/.pokerth/config.xml). Export zapíše sdílená nastavení (jméno, zobrazení, zvuky, předvolby stolu, blindy, styly); import je použije zde. Nastavení neznámá webovému klientovi zůstávají v souboru a při dalším exportu se zapíší beze změny.',
     cfgXmlExported:'config.xml exportován — vložte jej do ~/.pokerth/ desktopového klienta', cfgXmlImported:'config.xml importován — sdílená nastavení použita', cfgXmlImportErr:'Import se nezdařil — neplatný config.xml PokerTH', cfgXmlReload:'Načíst znovu a použít vše (motivy, balíčky, jména)?',
     advCfgSync:'Automaticky synchronizovat tato nastavení s mým účtem (pouze registrované přihlášení — uložena na tomto serveru, volitelné)', cfgSyncApplied:'Nastavení synchronizována z vašeho účtu',
+    // v0.3.533 : case « ne pas traduire les termes de poker » (parité officielle)
+    advPokerTerms:'Nepřekládat mezinárodní pokerové výrazy (Check, Call, Raise)',
+    pokerFold:'Fold', pokerCheck:'Check', pokerCall:'Call', pokerBet:'Bet', pokerRaise:'Raise', pokerAllin:'All-In',
 };
 
 export default { meta, strings };

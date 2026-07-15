@@ -10,8 +10,6 @@ export const meta = {
 };
 
 export const strings = {
-    gipTabLog:"Lịch sử",
-    gipTabOdds:"Cơ hội",
     advRemoveGone:"Xóa người chơi đã rời đi và sắp xếp lại bàn",
     advWinnerPopup:"Cửa sổ người thắng khi kết thúc ván bài",
     // PlayerWinnerOverlay (badge gagnant sur la boîte, parité QML)
@@ -656,6 +654,9 @@ export const strings = {
     advCfgXmlDesc:'Trao đổi cài đặt của bạn với các ứng dụng PokerTH trên máy tính và QML (tệp ~/.pokerth/config.xml của chúng). Xuất sẽ ghi các cài đặt dùng chung (tên, hiển thị, âm thanh, tùy chọn bàn, tiền mù, kiểu dáng); nhập sẽ áp dụng chúng tại đây. Các cài đặt mà bản web không biết sẽ được giữ nguyên trong tệp và ghi lại không đổi ở lần xuất tiếp theo.',
     cfgXmlExported:'Đã xuất config.xml — đặt vào ~/.pokerth/ của ứng dụng máy tính', cfgXmlImported:'Đã nhập config.xml — cài đặt dùng chung đã được áp dụng', cfgXmlImportErr:'Nhập thất bại — config.xml PokerTH không hợp lệ', cfgXmlReload:'Tải lại ngay để áp dụng tất cả (chủ đề, bộ bài, tên)?',
     advCfgSync:'Tự động đồng bộ các cài đặt này với tài khoản của tôi (chỉ đăng nhập đã đăng ký — lưu trên máy chủ này, tùy chọn)', cfgSyncApplied:'Đã đồng bộ cài đặt từ tài khoản của bạn',
+    // v0.3.533 : case « ne pas traduire les termes de poker » (parité officielle)
+    advPokerTerms:'Không dịch các thuật ngữ poker quốc tế (Check, Call, Raise)',
+    pokerFold:'Bỏ bài', pokerCheck:'Xem bài', pokerCall:'Theo', pokerBet:'Cược', pokerRaise:'Tố', pokerAllin:'Tất tay',
 };
 
 export default { meta, strings };

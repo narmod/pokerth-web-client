@@ -9,8 +9,6 @@ export const meta = {
 };
 
 export const strings = {
-    gipTabLog:"Historik",
-    gipTabOdds:"Chanser",
     advRemoveGone:"Ta bort spelare som lämnat och placera om bordet",
     advWinnerPopup:"Vinnarfönster vid handens slut",
     // PlayerWinnerOverlay (badge gagnant sur la boîte, parité QML)
@@ -655,6 +653,9 @@ export const strings = {
     advCfgXmlDesc:'Utbyt dina inställningar med PokerTH:s skrivbords- och QML-klienter (deras fil ~/.pokerth/config.xml). Export skriver de delade inställningarna (namn, visning, ljud, bordsinställningar, blinds, stilar); import tillämpar dem här. Inställningar som webbklienten inte känner till behålls i filen och skrivs tillbaka oförändrade vid nästa export.',
     cfgXmlExported:'config.xml exporterad — lägg den i ~/.pokerth/ i skrivbordsklienten', cfgXmlImported:'config.xml importerad — delade inställningar tillämpade', cfgXmlImportErr:'Importen misslyckades — ogiltig PokerTH config.xml', cfgXmlReload:'Ladda om nu för att tillämpa allt (teman, kortlekar, namn)?',
     advCfgSync:'Synkronisera dessa inställningar automatiskt med mitt konto (endast registrerad inloggning — sparas på denna server, opt-in)', cfgSyncApplied:'Inställningar synkroniserade från ditt konto',
+    // v0.3.533 : case « ne pas traduire les termes de poker » (parité officielle)
+    advPokerTerms:'Översätt inte internationella pokertermer (Check, Call, Raise)',
+    pokerFold:'Fold', pokerCheck:'Check', pokerCall:'Call', pokerBet:'Bet', pokerRaise:'Raise', pokerAllin:'All-In',
 };
 
 export default { meta, strings };

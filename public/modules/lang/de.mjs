@@ -659,6 +659,9 @@ export const strings = {
     advCfgXmlDesc:'Tauschen Sie Ihre Einstellungen mit den Desktop- und QML-Clients von PokerTH aus (Datei ~/.pokerth/config.xml). Der Export schreibt die gemeinsamen Einstellungen (Name, Anzeige, Sounds, Tischvorgaben, Blinds, Stile); der Import wendet sie hier an. Dem Web-Client unbekannte Einstellungen bleiben in der Datei erhalten und werden beim nächsten Export unverändert zurückgeschrieben.',
     cfgXmlExported:'config.xml exportiert — in ~/.pokerth/ des Desktop-Clients ablegen', cfgXmlImported:'config.xml importiert — gemeinsame Einstellungen übernommen', cfgXmlImportErr:'Import fehlgeschlagen — keine gültige PokerTH config.xml', cfgXmlReload:'Jetzt neu laden, um alles zu übernehmen (Stile, Decks, Namen)?',
     advCfgSync:'Diese Einstellungen automatisch mit meinem Konto synchronisieren (nur registrierte Anmeldung — auf diesem Server gespeichert, Opt-in)', cfgSyncApplied:'Einstellungen von Ihrem Konto synchronisiert',
+    // v0.3.533 : case « ne pas traduire les termes de poker » (parité officielle)
+    advPokerTerms:'Internationale Pokerausdrücke (Check, Call, Raise) nicht übersetzen',
+    pokerFold:'Fold', pokerCheck:'Check', pokerCall:'Call', pokerBet:'Bet', pokerRaise:'Raise', pokerAllin:'All-In',
 };
 
 export default { meta, strings };

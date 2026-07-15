@@ -10,8 +10,6 @@ export const meta = {
 };
 
 export const strings = {
-    gipTabLog:"Geskiedenis",
-    gipTabOdds:"Kanse",
     advRemoveGone:"Verwyder vertrekte spelers en herrangskik die tafel",
     advWinnerPopup:"Wennervenster aan die einde van die hand",
     // PlayerWinnerOverlay (badge gagnant sur la boîte, parité QML)
@@ -656,6 +654,9 @@ export const strings = {
     advCfgXmlDesc:'Ruil jou instellings uit met die PokerTH-lessenaar- en QML-kliënte (hul lêer ~/.pokerth/config.xml). Uitvoer skryf die gedeelde instellings (naam, vertoon, klanke, tafelvoorkeure, blinds, style); invoer pas hulle hier toe. Instellings wat die webkliënt nie ken nie, bly in die lêer en word onveranderd teruggeskryf by die volgende uitvoer.',
     cfgXmlExported:'config.xml uitgevoer — plaas dit in ~/.pokerth/ van die lessenaarkliënt', cfgXmlImported:'config.xml ingevoer — gedeelde instellings toegepas', cfgXmlImportErr:'Invoer het misluk — ongeldige PokerTH config.xml', cfgXmlReload:'Herlaai nou om alles toe te pas (temas, kaartstelle, name)?',
     advCfgSync:'Sinchroniseer hierdie instellings outomaties met my rekening (slegs geregistreerde aanmelding — gestoor op hierdie bediener, opsioneel)', cfgSyncApplied:'Instellings gesinchroniseer vanaf jou rekening',
+    // v0.3.533 : case « ne pas traduire les termes de poker » (parité officielle)
+    advPokerTerms:'Moenie internasionale pokerterme vertaal nie (Check, Call, Raise)',
+    pokerFold:'Fold', pokerCheck:'Check', pokerCall:'Call', pokerBet:'Bet', pokerRaise:'Raise', pokerAllin:'All-In',
 };
 
 export default { meta, strings };

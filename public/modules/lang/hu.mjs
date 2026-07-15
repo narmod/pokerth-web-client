@@ -10,8 +10,6 @@ export const meta = {
 };
 
 export const strings = {
-    gipTabLog:"Előzmények",
-    gipTabOdds:"Esélyek",
     advRemoveGone:"Távozó játékosok eltávolítása és az asztal újrarendezése",
     advWinnerPopup:"Győztes ablak a leosztás végén",
     // PlayerWinnerOverlay (badge gagnant sur la boîte, parité QML)
@@ -656,6 +654,9 @@ export const strings = {
     advCfgXmlDesc:'Cserélje beállításait a PokerTH asztali és QML klienseivel (az ő ~/.pokerth/config.xml fájljuk). Az exportálás a közös beállításokat írja ki (név, megjelenítés, hangok, asztalbeállítások, vakok, stílusok); az importálás itt alkalmazza őket. A webes kliens által nem ismert beállítások a fájlban maradnak, és a következő exportáláskor változatlanul íródnak vissza.',
     cfgXmlExported:'config.xml exportálva — helyezze az asztali kliens ~/.pokerth/ mappájába', cfgXmlImported:'config.xml importálva — közös beállítások alkalmazva', cfgXmlImportErr:'Sikertelen importálás — érvénytelen PokerTH config.xml', cfgXmlReload:'Újratölti most, hogy minden érvénybe lépjen (témák, paklik, nevek)?',
     advCfgSync:'E beállítások automatikus szinkronizálása a fiókommal (csak regisztrált bejelentkezés — ezen a szerveren tárolva, opcionális)', cfgSyncApplied:'Beállítások szinkronizálva a fiókjából',
+    // v0.3.533 : case « ne pas traduire les termes de poker » (parité officielle)
+    advPokerTerms:'Ne fordítsa le a nemzetközi pókerkifejezéseket (Check, Call, Raise)',
+    pokerFold:'Fold', pokerCheck:'Check', pokerCall:'Call', pokerBet:'Bet', pokerRaise:'Raise', pokerAllin:'All-In',
 };
 
 export default { meta, strings };

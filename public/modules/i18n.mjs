@@ -346,7 +346,21 @@ let _lang = (function(){
 // language gets the same substitution logic for free:
 //     t('voiceWins', { name: 'Ada', n: 500 })  ->  "Ada wins 500"
 // Resolution order: active language → English fallback → raw key.
+// Termes de poker internationaux — parité avec la case officielle
+// DontTranslateInternationalPokerStringsFromStyle (cochée par défaut) :
+// Fold/Check/Call/Bet/Raise/All-In restent en anglais. Si l'option est
+// décochée (pth_poker_en === '0'), les 6 clés d'action sont redirigées vers
+// leurs équivalents localisés pokerFold… (même repli langue → anglais).
+var POKER_TERM_KEYS = { fold:'pokerFold', check:'pokerCheck', call:'pokerCall',
+                        bet:'pokerBet', raise:'pokerRaise', allin:'pokerAllin' };
 function t(k, params) {
+    try {
+        if (POKER_TERM_KEYS[k] && localStorage.getItem('pth_poker_en') === '0') {
+            var pk = POKER_TERM_KEYS[k];
+            var pd = LANG[_lang] || LANG.en;
+            if (pd[pk] != null || LANG.en[pk] != null) k = pk;
+        }
+    } catch (e) {}
     var dict = LANG[_lang] || LANG.en;
     var s = dict[k];
     if (s == null) {

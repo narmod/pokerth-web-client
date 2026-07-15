@@ -568,6 +568,7 @@ function openAdvancedOptions() {
   sync('adv-pausehands', 'pause_hands', false);
   sync('adv-createdialog', 'create_dialog', true);
   sync('adv-cfgsync', 'cfg_sync', false);
+  sync('adv-pokeren', 'poker_en', true);
   try { renderIgnoredList(); } catch (e) {}
   sync('adv-logon', 'log_on', true);
   try { var _li = document.getElementById('adv-loginterval'); if (_li) _li.value = _getLogInterval(); } catch (e) {}
@@ -770,7 +771,7 @@ function resetAdvDefaults() {
     anim_cards: true, show_blinds: true, hide_pbar: true, show_community: true, four_color: false,
     focus_bet: false, chat_noemoji: false, fade_losers: true, show_flag: true,
     own_click: false, guard_call: false, odds_monitor: false, no_hide_ignored: false,
-    fkeys_alt: false, zoom_follow: false, table_zoom: true, lobby_chat: true, log_on: true, pause_hands: false, create_dialog: true, cfg_sync: false,
+    fkeys_alt: false, zoom_follow: false, table_zoom: true, lobby_chat: true, log_on: true, pause_hands: false, create_dialog: true, cfg_sync: false, poker_en: true,
     snd_actions: true, snd_lobby: true, snd_net: true, snd_blinds: true,
     reduce_fx: false, status_bar: true, ping_avatar: false, auto_leave: false
   };
@@ -869,7 +870,7 @@ function _cfgCollectWebSettings() {
   out.QmlReduceEffects          = B('reduce_fx', false);
   out.NetAutoLeaveGameAfterFinish = B('auto_leave', false);
   out.PauseBetweenHands         = B('pause_hands', false);
-  out.DontTranslateInternationalPokerStringsFromStyle = 1;  // convention web : termes poker en anglais
+  out.DontTranslateInternationalPokerStringsFromStyle = B('poker_en', true);  // case « ne pas traduire » (parité)
   // Sons (catégories officielles)
   out.PlayGameActions             = B('snd_actions', true);
   out.PlayLobbyChatNotification   = B('snd_lobby', true);
@@ -997,6 +998,7 @@ function _cfgApplyImported(cfg) {
   setB('reduce_fx', 'QmlReduceEffects');
   setB('auto_leave', 'NetAutoLeaveGameAfterFinish');
   setB('pause_hands', 'PauseBetweenHands');
+  setB('poker_en', 'DontTranslateInternationalPokerStringsFromStyle');
   setB('snd_actions', 'PlayGameActions');
   setB('snd_lobby', 'PlayLobbyChatNotification');
   setB('snd_net', 'PlayNetworkGameNotification');
@@ -15526,7 +15528,7 @@ function renderPlayersList() {
   body.innerHTML = _shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>';
 }
 
-;(function(){ window.BUILD_VERSION='0.3.533-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.534-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

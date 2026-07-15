@@ -10,8 +10,6 @@ export const meta = {
 };
 
 export const strings = {
-    gipTabLog:"Istorija",
-    gipTabOdds:"Šansai",
     advRemoveGone:"Pašalinti išėjusius žaidėjus ir perstatyti stalą",
     advWinnerPopup:"Nugalėtojo langas rankos pabaigoje",
     // PlayerWinnerOverlay (badge gagnant sur la boîte, parité QML)
@@ -656,6 +654,9 @@ export const strings = {
     advCfgXmlDesc:'Keiskitės nustatymais su PokerTH darbalaukio ir QML klientais (jų failas ~/.pokerth/config.xml). Eksportas įrašo bendrus nustatymus (vardas, rodymas, garsai, stalo nuostatos, blaindai, stiliai); importas juos pritaiko čia. Žiniatinklio klientui nežinomi nustatymai lieka faile ir kito eksporto metu perrašomi nepakeisti.',
     cfgXmlExported:'config.xml eksportuotas — įdėkite jį į darbalaukio kliento ~/.pokerth/', cfgXmlImported:'config.xml importuotas — bendri nustatymai pritaikyti', cfgXmlImportErr:'Importas nepavyko — netinkamas PokerTH config.xml', cfgXmlReload:'Įkelti iš naujo dabar, kad viskas būtų pritaikyta (temos, kaladės, vardai)?',
     advCfgSync:'Automatiškai sinchronizuoti šiuos nustatymus su mano paskyra (tik registruotas prisijungimas — saugomi šiame serveryje, pasirinktinai)', cfgSyncApplied:'Nustatymai sinchronizuoti iš jūsų paskyros',
+    // v0.3.533 : case « ne pas traduire les termes de poker » (parité officielle)
+    advPokerTerms:'Neversti tarptautinių pokerio terminų (Check, Call, Raise)',
+    pokerFold:'Fold', pokerCheck:'Check', pokerCall:'Call', pokerBet:'Bet', pokerRaise:'Raise', pokerAllin:'All-In',
 };
 
 export default { meta, strings };

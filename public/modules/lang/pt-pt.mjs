@@ -656,6 +656,9 @@ export const strings = {
     advCfgXmlDesc:'Troque as suas definições com os clientes de secretária e QML do PokerTH (o ficheiro ~/.pokerth/config.xml). A exportação escreve as definições partilhadas (nome, ecrã, sons, preferências de mesa, blinds, estilos); a importação aplica-as aqui. As definições desconhecidas do cliente web mantêm-se no ficheiro e são reescritas intactas na próxima exportação.',
     cfgXmlExported:'config.xml exportado — coloque-o em ~/.pokerth/ do cliente de secretária', cfgXmlImported:'config.xml importado — definições partilhadas aplicadas', cfgXmlImportErr:'Falha na importação — config.xml do PokerTH inválido', cfgXmlReload:'Recarregar agora para aplicar tudo (temas, baralhos, nomes)?',
     advCfgSync:'Sincronizar automaticamente estas definições com a minha conta (apenas sessão registada — guardadas neste servidor, opcional)', cfgSyncApplied:'Definições sincronizadas a partir da sua conta',
+    // v0.3.533 : case « ne pas traduire les termes de poker » (parité officielle)
+    advPokerTerms:'Não traduzir termos internacionais de póquer (Check, Call, Raise)',
+    pokerFold:'Fold', pokerCheck:'Check', pokerCall:'Call', pokerBet:'Bet', pokerRaise:'Raise', pokerAllin:'All-In',
 };
 
 export default { meta, strings };

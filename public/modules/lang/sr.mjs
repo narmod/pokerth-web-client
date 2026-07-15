@@ -10,8 +10,6 @@ export const meta = {
 };
 
 export const strings = {
-    gipTabLog:"Istorija",
-    gipTabOdds:"Šanse",
     advRemoveGone:"Ukloni otišle igrače i preraspodeli sto",
     advWinnerPopup:"Prozor pobednika na kraju ruke",
     // PlayerWinnerOverlay (badge gagnant sur la boîte, parité QML)
@@ -656,6 +654,9 @@ export const strings = {
     advCfgXmlDesc:'Размењујте подешавања са десктоп и QML клијентима PokerTH-а (њихова датотека ~/.pokerth/config.xml). Извоз записује заједничка подешавања (име, приказ, звукови, подешавања стола, блиндови, стилови); увоз их примењује овде. Подешавања непозната веб клијенту остају у датотеци и при следећем извозу записују се непромењена.',
     cfgXmlExported:'config.xml извезен — ставите га у ~/.pokerth/ десктоп клијента', cfgXmlImported:'config.xml увезен — заједничка подешавања примењена', cfgXmlImportErr:'Увоз није успео — неважећи PokerTH config.xml', cfgXmlReload:'Поново учитати сада да се све примени (теме, шпилови, имена)?',
     advCfgSync:'Аутоматски синхронизуј ова подешавања са мојим налогом (само регистрована пријава — чувају се на овом серверу, по избору)', cfgSyncApplied:'Подешавања синхронизована са вашег налога',
+    // v0.3.533 : case « ne pas traduire les termes de poker » (parité officielle)
+    advPokerTerms:'Не преводи међународне покерашке изразе (Check, Call, Raise)',
+    pokerFold:'Фолд', pokerCheck:'Чек', pokerCall:'Кол', pokerBet:'Бет', pokerRaise:'Рејз', pokerAllin:'Ол-ин',
 };
 
 export default { meta, strings };

@@ -15,8 +15,6 @@ export const meta = {
 };
 
 export const strings = {
-    gipTabLog:"История",
-    gipTabOdds:"Шансы",
     advRemoveGone:"Убирать ушедших игроков и рассаживать стол заново",
     advWinnerPopup:"Окно победителя в конце раздачи",
     // PlayerWinnerOverlay (badge gagnant sur la boîte, parité QML)
@@ -658,6 +656,9 @@ export const strings = {
     advCfgXmlDesc:'Обменивайтесь настройками с настольным и QML-клиентами PokerTH (их файл ~/.pokerth/config.xml). Экспорт записывает общие настройки (имя, отображение, звуки, настройки стола, блайнды, стили); импорт применяет их здесь. Настройки, неизвестные веб-клиенту, сохраняются в файле и записываются без изменений при следующем экспорте.',
     cfgXmlExported:'config.xml экспортирован — поместите его в ~/.pokerth/ настольного клиента', cfgXmlImported:'config.xml импортирован — общие настройки применены', cfgXmlImportErr:'Ошибка импорта — недопустимый config.xml PokerTH', cfgXmlReload:'Перезагрузить сейчас, чтобы применить всё (темы, колоды, имена)?',
     advCfgSync:'Автоматически синхронизировать эти настройки с моей учётной записью (только зарегистрированный вход — хранятся на этом сервере, по желанию)', cfgSyncApplied:'Настройки синхронизированы с вашей учётной записи',
+    // v0.3.533 : case « ne pas traduire les termes de poker » (parité officielle)
+    advPokerTerms:'Не переводить международные покерные термины (Check, Call, Raise)',
+    pokerFold:'Фолд', pokerCheck:'Чек', pokerCall:'Колл', pokerBet:'Бет', pokerRaise:'Рейз', pokerAllin:'Олл-ин',
 };
 
 export default { meta, strings };

@@ -11,8 +11,6 @@ export const meta = {
 };
 
 export const strings = {
-    gipTabLog:"Eachdraidh",
-    gipTabOdds:"Cothroman",
     advRemoveGone:"Thoir air falbh cluicheadairean a dh'fhalbh agus suidhich am bòrd às ùr",
     advWinnerPopup:"Uinneag buannaiche aig deireadh na làimhe",
     // PlayerWinnerOverlay (badge gagnant sur la boîte, parité QML)
@@ -657,6 +655,9 @@ export const strings = {
     advCfgXmlDesc:'Iomlaidich do roghainnean le cliantan deasg is QML PokerTH (am faidhle aca ~/.pokerth/config.xml). Sgrìobhaidh an t-às-mhalairt na roghainnean co-roinnte (ainm, sealladh, fuaimean, roghainnean a\' bhùird, daill, stoidhlichean); cuiridh an t-in-mhalairt an sàs an-seo iad. Fanaidh roghainnean nach aithne dhan chliant-lìn san fhaidhle agus thèid an sgrìobhadh gun atharrachadh aig an ath às-mhalairt.',
     cfgXmlExported:'Chaidh config.xml às-mhalairt — cuir e ann an ~/.pokerth/ a\' chliant deasg', cfgXmlImported:'Chaidh config.xml in-mhalairt — roghainnean co-roinnte an sàs', cfgXmlImportErr:'Dh\'fhàillig an in-mhalairt — config.xml PokerTH mì-dhligheach', cfgXmlReload:'Ath-luchdaich an-dràsta gus a h-uile càil a chur an sàs (ùrlaran, pacaidean, ainmean)?',
     advCfgSync:'Sionc na roghainnean seo gu fèin-obrachail leis a\' chunntas agam (clàradh a-steach clàraichte a-mhàin — air an stòradh air an fhrithealaiche seo, roghainneil)', cfgSyncApplied:'Roghainnean air an sioncachadh on chunntas agad',
+    // v0.3.533 : case « ne pas traduire les termes de poker » (parité officielle)
+    advPokerTerms:'Na eadar-theangaich briathran eadar-nàiseanta a’ phòcair (Check, Call, Raise)',
+    pokerFold:'Fold', pokerCheck:'Check', pokerCall:'Call', pokerBet:'Bet', pokerRaise:'Raise', pokerAllin:'All-In',
 };
 
 export default { meta, strings };

@@ -13,8 +13,6 @@ export const meta = {
 };
 
 export const strings = {
-    gipTabLog:"기록",
-    gipTabOdds:"확률",
     advRemoveGone:"떠난 플레이어를 제거하고 테이블 재배치",
     advWinnerPopup:"핸드 종료 시 승자 창",
     // PlayerWinnerOverlay (badge gagnant sur la boîte, parité QML)
@@ -466,6 +464,9 @@ export const strings = {
     advCfgXmlDesc:'PokerTH 데스크톱 및 QML 클라이언트와 설정을 교환합니다(~/.pokerth/config.xml 파일). 내보내기는 공유 설정(이름, 표시, 소리, 테이블 설정, 블라인드, 스타일)을 기록하고, 가져오기는 여기에 적용합니다. 웹 클라이언트가 모르는 설정은 파일에 그대로 남아 다음 내보내기 때 변경 없이 다시 기록됩니다.',
     cfgXmlExported:'config.xml 내보냄 — 데스크톱 클라이언트의 ~/.pokerth/에 넣으세요', cfgXmlImported:'config.xml 가져옴 — 공유 설정 적용됨', cfgXmlImportErr:'가져오기 실패 — 잘못된 PokerTH config.xml', cfgXmlReload:'모든 항목(테마, 덱, 이름)을 적용하도록 지금 새로 고칠까요?',
     advCfgSync:'이 설정을 내 계정과 자동 동기화(등록된 로그인만 — 이 서버에 저장, 선택 사항)', cfgSyncApplied:'계정에서 설정을 동기화했습니다',
+    // v0.3.533 : case « ne pas traduire les termes de poker » (parité officielle)
+    advPokerTerms:'국제 포커 용어를 번역하지 않음 (Check, Call, Raise)',
+    pokerFold:'폴드', pokerCheck:'체크', pokerCall:'콜', pokerBet:'벳', pokerRaise:'레이즈', pokerAllin:'올인',
 };
 
 export default { meta, strings };

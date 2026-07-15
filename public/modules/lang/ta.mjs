@@ -11,8 +11,6 @@ export const meta = {
 };
 
 export const strings = {
-    gipTabLog:"வரலாறு",
-    gipTabOdds:"வாய்ப்புகள்",
     advRemoveGone:"வெளியேறிய வீரர்களை நீக்கி மேசையை மறுஅமைவு செய்",
     advWinnerPopup:"கை முடிவில் வெற்றியாளர் சாளரம்",
     // PlayerWinnerOverlay (badge gagnant sur la boîte, parité QML)
@@ -657,6 +655,9 @@ export const strings = {
     advCfgXmlDesc:'உங்கள் அமைப்புகளை PokerTH டெஸ்க்டாப் மற்றும் QML கிளையன்ட்களுடன் பரிமாறவும் (அவற்றின் ~/.pokerth/config.xml கோப்பு). ஏற்றுமதி பகிரப்பட்ட அமைப்புகளை எழுதும் (பெயர், காட்சி, ஒலிகள், மேசை விருப்பங்கள், பிளைண்ட்ஸ், பாணிகள்); இறக்குமதி அவற்றை இங்கே பயன்படுத்தும். வலை கிளையன்டுக்குத் தெரியாத அமைப்புகள் கோப்பில் அப்படியே இருந்து அடுத்த ஏற்றுமதியில் மாறாமல் எழுதப்படும்.',
     cfgXmlExported:'config.xml ஏற்றுமதியானது — டெஸ்க்டாப் கிளையன்டின் ~/.pokerth/ இல் வைக்கவும்', cfgXmlImported:'config.xml இறக்குமதியானது — பகிரப்பட்ட அமைப்புகள் பயன்படுத்தப்பட்டன', cfgXmlImportErr:'இறக்குமதி தோல்வி — செல்லாத PokerTH config.xml', cfgXmlReload:'எல்லாவற்றையும் பயன்படுத்த இப்போது மீண்டும் ஏற்றவா (தீம்கள், அட்டைத் தொகுப்புகள், பெயர்கள்)?',
     advCfgSync:'இந்த அமைப்புகளை என் கணக்குடன் தானாக ஒத்திசை (பதிவுசெய்த உள்நுழைவு மட்டும் — இந்த சேவையகத்தில் சேமிக்கப்படும், விருப்பத்தேர்வு)', cfgSyncApplied:'உங்கள் கணக்கிலிருந்து அமைப்புகள் ஒத்திசைக்கப்பட்டன',
+    // v0.3.533 : case « ne pas traduire les termes de poker » (parité officielle)
+    advPokerTerms:'சர்வதேச போக்கர் சொற்களை மொழிபெயர்க்க வேண்டாம் (Check, Call, Raise)',
+    pokerFold:'ஃபோல்ட்', pokerCheck:'செக்', pokerCall:'கால்', pokerBet:'பெட்', pokerRaise:'ரெய்ஸ்', pokerAllin:'ஆல்-இன்',
 };
 
 export default { meta, strings };

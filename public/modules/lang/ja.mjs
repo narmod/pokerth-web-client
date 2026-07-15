@@ -9,8 +9,6 @@ export const meta = {
 };
 
 export const strings = {
-    gipTabLog:"履歴",
-    gipTabOdds:"確率",
     advRemoveGone:"退出したプレイヤーを外してテーブルを再配置",
     advWinnerPopup:"ハンド終了時の勝者ウィンドウ",
     // PlayerWinnerOverlay (badge gagnant sur la boîte, parité QML)
@@ -655,6 +653,9 @@ export const strings = {
     advCfgXmlDesc:'PokerTH のデスクトップ版・QML クライアントと設定を交換します（~/.pokerth/config.xml ファイル）。エクスポートは共有設定（名前、表示、サウンド、テーブル設定、ブラインド、スタイル）を書き出し、インポートはここに適用します。ウェブ版が知らない設定はファイル内に保持され、次回エクスポート時にそのまま書き戻されます。',
     cfgXmlExported:'config.xml をエクスポートしました — デスクトップ版の ~/.pokerth/ に置いてください', cfgXmlImported:'config.xml をインポートしました — 共有設定を適用', cfgXmlImportErr:'インポート失敗 — 無効な PokerTH config.xml', cfgXmlReload:'すべて（テーマ、デッキ、名前）を適用するために今すぐ再読み込みしますか？',
     advCfgSync:'これらの設定をアカウントと自動同期する（登録ログインのみ — このサーバーに保存、オプトイン）', cfgSyncApplied:'アカウントから設定を同期しました',
+    // v0.3.533 : case « ne pas traduire les termes de poker » (parité officielle)
+    advPokerTerms:'国際的なポーカー用語を翻訳しない（Check、Call、Raise）',
+    pokerFold:'フォールド', pokerCheck:'チェック', pokerCall:'コール', pokerBet:'ベット', pokerRaise:'レイズ', pokerAllin:'オールイン',
 };
 
 export default { meta, strings };

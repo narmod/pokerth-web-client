@@ -10,8 +10,6 @@ export const meta = {
 };
 
 export const strings = {
-    gipTabLog:"Historial",
-    gipTabOdds:"Probabilidades",
     advRemoveGone:"Eliminar os xogadores que marchan e recolocar a mesa",
     advWinnerPopup:"Ventá do gañador ao final da man",
     // PlayerWinnerOverlay (badge gagnant sur la boîte, parité QML)
@@ -656,6 +654,9 @@ export const strings = {
     advCfgXmlDesc:'Intercambia os teus axustes cos clientes de escritorio e QML de PokerTH (o seu ficheiro ~/.pokerth/config.xml). A exportación escribe os axustes compartidos (nome, pantalla, sons, preferencias de mesa, cegas, estilos); a importación aplícaos aquí. Os axustes descoñecidos para o cliente web consérvanse no ficheiro e reescríbense intactos na seguinte exportación.',
     cfgXmlExported:'config.xml exportado — colócao en ~/.pokerth/ do cliente de escritorio', cfgXmlImported:'config.xml importado — axustes compartidos aplicados', cfgXmlImportErr:'Fallou a importación — config.xml de PokerTH non válido', cfgXmlReload:'Recargar agora para aplicalo todo (temas, barallas, nomes)?',
     advCfgSync:'Sincronizar automaticamente estes axustes coa miña conta (só sesión rexistrada — gárdanse neste servidor, opcional)', cfgSyncApplied:'Axustes sincronizados desde a túa conta',
+    // v0.3.533 : case « ne pas traduire les termes de poker » (parité officielle)
+    advPokerTerms:'Non traducir os termos internacionais do póker (Check, Call, Raise)',
+    pokerFold:'Fold', pokerCheck:'Check', pokerCall:'Call', pokerBet:'Bet', pokerRaise:'Raise', pokerAllin:'All-In',
 };
 
 export default { meta, strings };

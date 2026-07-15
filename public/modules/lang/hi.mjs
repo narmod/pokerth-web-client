@@ -14,8 +14,6 @@ export const meta = {
 };
 
 export const strings = {
-    gipTabLog:"इतिहास",
-    gipTabOdds:"संभावनाएँ",
     advRemoveGone:"जाने वाले खिलाड़ियों को हटाएं और टेबल को पुनर्व्यवस्थित करें",
     advWinnerPopup:"हाथ के अंत में विजेता विंडो",
     // PlayerWinnerOverlay (badge gagnant sur la boîte, parité QML)
@@ -467,6 +465,9 @@ export const strings = {
     advCfgXmlDesc:'अपनी सेटिंग्स PokerTH के डेस्कटॉप और QML क्लाइंट के साथ साझा करें (उनकी फ़ाइल ~/.pokerth/config.xml)। निर्यात साझा सेटिंग्स लिखता है (नाम, प्रदर्शन, ध्वनियाँ, टेबल प्राथमिकताएँ, ब्लाइंड्स, शैलियाँ); आयात उन्हें यहाँ लागू करता है। वेब क्लाइंट के लिए अज्ञात सेटिंग्स फ़ाइल में बनी रहती हैं और अगले निर्यात में अपरिवर्तित लिखी जाती हैं।',
     cfgXmlExported:'config.xml निर्यात हुआ — इसे डेस्कटॉप क्लाइंट के ~/.pokerth/ में रखें', cfgXmlImported:'config.xml आयात हुआ — साझा सेटिंग्स लागू', cfgXmlImportErr:'आयात विफल — अमान्य PokerTH config.xml', cfgXmlReload:'सब कुछ लागू करने के लिए अभी पुनः लोड करें (थीम, डेक, नाम)?',
     advCfgSync:'इन सेटिंग्स को मेरे खाते से स्वतः सिंक करें (केवल पंजीकृत लॉगिन — इस सर्वर पर संग्रहीत, वैकल्पिक)', cfgSyncApplied:'आपके खाते से सेटिंग्स सिंक हो गईं',
+    // v0.3.533 : case « ne pas traduire les termes de poker » (parité officielle)
+    advPokerTerms:'अंतरराष्ट्रीय पोकर शब्दों का अनुवाद न करें (Check, Call, Raise)',
+    pokerFold:'फ़ोल्ड', pokerCheck:'चेक', pokerCall:'कॉल', pokerBet:'बेट', pokerRaise:'रेज़', pokerAllin:'ऑल-इन',
 };
 
 export default { meta, strings };

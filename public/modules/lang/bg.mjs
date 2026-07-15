@@ -10,8 +10,6 @@ export const meta = {
 };
 
 export const strings = {
-    gipTabLog:"История",
-    gipTabOdds:"Шансове",
     advRemoveGone:"Премахване на напусналите играчи и пренареждане на масата",
     advWinnerPopup:"Прозорец на победителя в края на ръката",
     // PlayerWinnerOverlay (badge gagnant sur la boîte, parité QML)
@@ -656,6 +654,9 @@ export const strings = {
     advCfgXmlDesc:'Обменяйте настройките си с настолния и QML клиентите на PokerTH (техният файл ~/.pokerth/config.xml). Експортът записва общите настройки (име, изглед, звуци, настройки на масата, блайндове, стилове); импортът ги прилага тук. Настройки, непознати за уеб клиента, се запазват във файла и се записват непроменени при следващия експорт.',
     cfgXmlExported:'config.xml е експортиран — поставете го в ~/.pokerth/ на настолния клиент', cfgXmlImported:'config.xml е импортиран — общите настройки са приложени', cfgXmlImportErr:'Неуспешен импорт — невалиден config.xml на PokerTH', cfgXmlReload:'Да се презареди ли сега, за да се приложи всичко (теми, тестета, имена)?',
     advCfgSync:'Автоматично синхронизирай тези настройки с моя акаунт (само регистриран вход — съхраняват се на този сървър, по избор)', cfgSyncApplied:'Настройките са синхронизирани от вашия акаунт',
+    // v0.3.533 : case « ne pas traduire les termes de poker » (parité officielle)
+    advPokerTerms:'Не превеждай международните покер термини (Check, Call, Raise)',
+    pokerFold:'Фолд', pokerCheck:'Чек', pokerCall:'Кол', pokerBet:'Бет', pokerRaise:'Рейз', pokerAllin:'Ол-ин',
 };
 
 export default { meta, strings };

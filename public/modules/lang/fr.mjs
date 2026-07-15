@@ -386,6 +386,9 @@ export const strings = {
     plNotPlaying:'Ne joue pas actuellement',
     gameTimeLabel:'Temps', visRanked:'Classement', infoBlindsUp:'Hausse des blindes',
     spectatorBtn:'Spectateur',
+    // v0.3.533 : case « ne pas traduire les termes de poker » (parité officielle)
+    advPokerTerms:'Ne pas traduire les termes internationaux du poker (Check, Call, Raise)',
+    pokerFold:'Se coucher', pokerCheck:'Check', pokerCall:'Suivre', pokerBet:'Miser', pokerRaise:'Relancer', pokerAllin:'Tapis',
 };
 
 export default { meta, strings };

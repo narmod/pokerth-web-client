@@ -16,8 +16,6 @@ export const meta = {
 };
 
 export const strings = {
-    gipTabLog:"History",
-    gipTabOdds:"Odds",
     advRemoveGone:"Remove departed players and re-seat the table",
     advWinnerPopup:"Winner window at end of hand",
     // PlayerWinnerOverlay (badge gagnant sur la boîte, parité QML)
@@ -386,6 +384,9 @@ export const strings = {
     plNotPlaying:'Not playing',
     gameTimeLabel:'Time', visRanked:'Ranked', infoBlindsUp:'Blinds up',
     spectatorBtn:'Spectate',
+    // v0.3.533 : case « ne pas traduire les termes de poker » (parité officielle)
+    advPokerTerms:'Do not translate international poker terms (Check, Call, Raise)',
+    pokerFold:'Fold', pokerCheck:'Check', pokerCall:'Call', pokerBet:'Bet', pokerRaise:'Raise', pokerAllin:'All-In',
 };
 
 export default { meta, strings };

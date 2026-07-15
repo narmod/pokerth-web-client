@@ -9,8 +9,6 @@ export const meta = {
 };
 
 export const strings = {
-    gipTabLog:"Historia",
-    gipTabOdds:"Mahdollisuudet",
     advRemoveGone:"Poista poistuneet pelaajat ja järjestä pöytä uudelleen",
     advWinnerPopup:"Voittajaikkuna käden lopussa",
     // PlayerWinnerOverlay (badge gagnant sur la boîte, parité QML)
@@ -655,6 +653,9 @@ export const strings = {
     advCfgXmlDesc:'Vaihda asetuksiasi PokerTH:n työpöytä- ja QML-asiakkaiden kanssa (niiden tiedosto ~/.pokerth/config.xml). Vienti kirjoittaa jaetut asetukset (nimi, näyttö, äänet, pöytäasetukset, blindit, tyylit); tuonti ottaa ne käyttöön täällä. Web-asiakkaalle tuntemattomat asetukset säilyvät tiedostossa ja kirjoitetaan muuttumattomina seuraavassa viennissä.',
     cfgXmlExported:'config.xml viety — sijoita se työpöytäasiakkaan ~/.pokerth/-kansioon', cfgXmlImported:'config.xml tuotu — jaetut asetukset käytössä', cfgXmlImportErr:'Tuonti epäonnistui — virheellinen PokerTH config.xml', cfgXmlReload:'Ladataanko uudelleen nyt kaiken käyttöönottamiseksi (teemat, pakat, nimet)?',
     advCfgSync:'Synkronoi nämä asetukset automaattisesti tilini kanssa (vain rekisteröity kirjautuminen — tallennetaan tälle palvelimelle, valinnainen)', cfgSyncApplied:'Asetukset synkronoitu tililtäsi',
+    // v0.3.533 : case « ne pas traduire les termes de poker » (parité officielle)
+    advPokerTerms:'Älä käännä kansainvälisiä pokeritermejä (Check, Call, Raise)',
+    pokerFold:'Fold', pokerCheck:'Check', pokerCall:'Call', pokerBet:'Bet', pokerRaise:'Raise', pokerAllin:'All-In',
 };
 
 export default { meta, strings };

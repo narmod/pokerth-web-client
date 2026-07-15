@@ -11,8 +11,6 @@ export const meta = {
 };
 
 export const strings = {
-    gipTabLog:"歷史",
-    gipTabOdds:"機率",
     advRemoveGone:"移除離開的玩家並重新排座",
     advWinnerPopup:"每手結束時的獲勝者視窗",
     // PlayerWinnerOverlay (badge gagnant sur la boîte, parité QML)
@@ -657,6 +655,9 @@ export const strings = {
     advCfgXmlDesc:'與 PokerTH 桌面版和 QML 用戶端交換設定（它們的 ~/.pokerth/config.xml 檔案）。匯出會寫入共享設定（名稱、顯示、音效、牌桌偏好、盲注、樣式）；匯入會在此套用這些設定。網頁用戶端不認識的設定會保留在檔案中，並在下次匯出時原樣寫回。',
     cfgXmlExported:'config.xml 已匯出 — 請放入桌面用戶端的 ~/.pokerth/ 目錄', cfgXmlImported:'config.xml 已匯入 — 共享設定已套用', cfgXmlImportErr:'匯入失敗 — 無效的 PokerTH config.xml', cfgXmlReload:'現在重新載入以套用全部內容（主題、牌組、名稱）？',
     advCfgSync:'自動將這些設定與我的帳戶同步（僅限註冊登入 — 儲存在此伺服器上，可選）', cfgSyncApplied:'已從您的帳戶同步設定',
+    // v0.3.533 : case « ne pas traduire les termes de poker » (parité officielle)
+    advPokerTerms:'不翻譯國際撲克術語（Check、Call、Raise）',
+    pokerFold:'棄牌', pokerCheck:'過牌', pokerCall:'跟注', pokerBet:'下注', pokerRaise:'加注', pokerAllin:'全下',
 };
 
 export default { meta, strings };
