@@ -9516,6 +9516,24 @@ const App = (() => {
       var v0 = slotVec(gF, dK, false);
       raw.push({ x: zW * (0.5 + gF.radiusX * v0[0]), y: zH * (gF.centerY + gF.radiusY * v0[1]) });
     }
+    // ── flankWide (QML seatNudge/slotForSeat, 2.1.3 vérifié dans le source
+    // extrait) : en paysage NON-compact, les 2 sièges FLANQUANT la self
+    // (premier et dernier de l'ordre) situés en moitié basse descendent de
+    // 0.6·hauteur de box (ils mordent la bande self, coins libres) et sont
+    // tirés horizontalement contre elle : centre ± (selfW/2 + 40 + oppW/2)·s
+    // + 18. Appliqué au RENDU seulement (comme pairSpread), hors bisection. ──
+    if (!compact && oppCnt >= 1) {
+      var _fkIdx = oppCnt >= 2 ? [0, oppCnt - 1] : [0];
+      for (var _fi2 = 0; _fi2 < _fkIdx.length; _fi2++) {
+        var _sl = slots[_fkIdx[_fi2]];
+        if (!_sl || _sl.y <= 0.5 * zH) continue;
+        _sl.y += oppBaseH * sFin * 0.6;
+        var _dir = _sl.x < 0.5 * zW ? -1 : 1;
+        var _wantC = zW / 2 + _dir * (selfBaseW * sFin / 2 + 40 * sFin + oppBaseW * sFin / 2 + 18);
+        var _dX = _wantC - _sl.x;
+        _sl.x += (_dir < 0 ? Math.min(0, _dX) : Math.max(0, _dX));
+      }
+    }
     return { s: sFin, slots: slots, raw: raw,
              // Ancre QML de la selfBox : anchors.bottomMargin = 12 en paysage
              // (wide) — la réserve interne de la bisection garde -4 (identique
@@ -15883,7 +15901,7 @@ function renderPlayersList() {
   body.innerHTML = _shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>';
 }
 
-;(function(){ window.BUILD_VERSION='0.3.597-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.598-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
