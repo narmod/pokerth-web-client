@@ -1454,6 +1454,7 @@ function onAvatarImageChosen(input) {
   <div id="g-log-panel" style="display:none;flex-direction:column">
     <div class="g-chat-panel-header"><span class="gip-grip" aria-hidden="true" title="Déplacer">⠿</span><span class="gip-tabs"><button type="button" id="gip-tab-log" class="gip-tab gip-on" onclick="gipShowTab('log')" data-i18n="gipTabLog">Historique</button><button type="button" id="gip-tab-odds" class="gip-tab" onclick="gipShowTab('odds')" data-i18n="gipTabOdds">Chances</button></span><span style="display:flex;gap:2px;align-items:center"><button onclick="exportLog()" data-i18n-title="logExportTitle" title="Exporter le journal" style="background:none;border:none;color:var(--gold-dim);cursor:pointer;font-size:0.9rem;padding:0 4px">📤</button><button onclick="toggleLog()" style="background:none;border:none;color:var(--text);cursor:pointer;font-size:0.85rem;padding:0 4px">✕</button></span></div>
     <div class="log-msgs" id="g-log-body" style="flex:1;min-height:60px;overflow-y:auto;padding:6px 12px;background:var(--chatlog-bg, var(--field-bg))"></div>
+    <div id="gip-assist" style="display:none"><div class="odds-hd" data-i18n="assist">Assistance</div><span class="hs-lbl" id="hs-lbl"><span class="hs-txt"></span></span><div id="hand-strength"><span class="hs-track"><i class="hs-fill"></i></span></div></div>
     <div class="log-msgs" id="g-odds-body" style="display:none;flex:1;min-height:60px;overflow-y:auto;padding:6px 12px;background:var(--chatlog-bg, var(--field-bg))"></div>
   </div>
   <!-- Chat dropdown (below header) -->
@@ -1582,7 +1583,6 @@ function onAvatarImageChosen(input) {
         <div class="pb-right-zone"><div class="pb-act-row"><div class="pb-action" id="g-myseat-action"></div><div id="pb-timer" style="font-size:0.72rem;color:var(--gold);font-family:var(--ff-mono);font-weight:700;min-width:28px;text-align:right"></div></div></div>
       </div>
     </div>
-    <div id="assist-win" style="display:none"><button class="win-x" type="button" onclick="closeAssistWin()" title="Fermer" data-i18n-title="closeTooltip" aria-label="Fermer">✕</button><div class="hsw-hd" data-i18n="assist">Assistance</div><span class="hs-lbl" id="hs-lbl"><span class="hs-txt"></span></span><div id="hand-strength"><span class="hs-track"><i class="hs-fill"></i></span></div></div>
     <!-- MY ZONE -->
     <div class="my-zone">
       <div class="action-wrap"><div id="g-actions" class="action-bar"></div>

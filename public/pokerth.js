@@ -8966,17 +8966,33 @@ const App = (() => {
     if (fill) { fill.style.width = p + '%'; if (col) fill.style.background = col; }
     var lbl = document.getElementById('hs-lbl');
     if (lbl) { var txt = lbl.querySelector('.hs-txt') || lbl; txt.textContent = text; if (col) txt.style.color = col; lbl.style.display = ''; }
-    // Fenetre flottante de l'assistance (meme modele que #odds-monitor) : drag + show.
-    var aw = document.getElementById('assist-win');
-    if (aw) { aw.style.display = ''; if (!aw._drag && typeof _attachPanelDrag === 'function') { _attachPanelDrag(aw, 'pth_assist_pos', 'hsw-drag'); aw._drag = true; } }
+    // L'assistance vit dans l'onglet « Chances » du panneau info : on met juste
+    // a jour le contenu ; la visibilite du bloc est geree par _gipAssistSync.
+    _gipAssistSync();
   }
   function _hsHide(el) {
     if (el) el.style.display = 'none';
     var lbl = document.getElementById('hs-lbl');
     if (lbl) { lbl.style.display = 'none'; var txt = lbl.querySelector('.hs-txt'); if (txt) txt.textContent = ''; }
-    var aw = document.getElementById('assist-win');
-    if (aw) aw.style.display = 'none';
+    _gipAssistSync();
   }
+  // Visibilite du bloc d'assistance en tete de l'onglet « Chances » : la force de
+  // la main ne s'affiche que si le panneau info est ouvert sur l'onglet Chances,
+  // que l'assistance est active et qu'un resultat est disponible.
+  function _gipAssistSync() {
+    var box = document.getElementById('gip-assist');
+    if (!box) return;
+    var lbl = document.getElementById('hs-lbl');
+    var txt = lbl && lbl.querySelector('.hs-txt');
+    var hasContent = !!(lbl && lbl.style.display !== 'none' && txt && txt.textContent);
+    var panel = document.getElementById('g-log-panel');
+    var open = !!(panel && panel.style.display !== 'none');
+    var oddsTab = false;
+    try { oddsTab = localStorage.getItem('pth_gip_tab') === 'odds'; } catch (e) {}
+    box.style.display = (_assistOn && open && oddsTab && hasContent) ? '' : 'none';
+  }
+  window._gipAssistSync = _gipAssistSync;
+
   function renderPreFlopStrength() {
     var el = document.getElementById('hand-strength');
     if (!el) return;
@@ -15732,6 +15748,7 @@ function gipShowTab(tab) {
   if (to) to.classList.toggle('gip-on', odds);
   try { localStorage.setItem('pth_gip_tab', odds ? 'odds' : 'log'); } catch (e) {}
   if (odds) { try { if (typeof window._renderOdds === 'function') window._renderOdds(); } catch (e) {} }
+  try { if (typeof window._gipAssistSync === 'function') window._gipAssistSync(); } catch (e) {}
 }
 window.gipShowTab = gipShowTab;
 // Ouvre le panneau sur un onglet précis (Alt+L → Historique, Alt+I → Chances) :
@@ -16011,7 +16028,7 @@ function renderPlayersList() {
   body.innerHTML = _shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>';
 }
 
-;(function(){ window.BUILD_VERSION='0.3.601-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.602-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
