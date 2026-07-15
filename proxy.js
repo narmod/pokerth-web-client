@@ -342,6 +342,7 @@ function _syncTokenName(tok) {
   const e = _syncTokens.get(String(tok || ''));
   if (!e) return null;
   if (e.exp < Date.now()) { _syncTokens.delete(String(tok)); return null; }
+  e.exp = Date.now() + 24 * 3600 * 1000;   // expiration GLISSANTE : chaque usage prolonge de 24 h
   return e.name;
 }
 setInterval(function () {   // purge périodique des jetons expirés
