@@ -7031,11 +7031,17 @@ body.has-keyboard .act-key { display: inline-block; }
 .g-felt-btn.muted { opacity:0.4; filter:grayscale(1); }
 /* Le zoom passe SOUS le journal (haut-droite) pour ne pas le chevaucher */
 .zoom-ctrl { top:50px; }
-/* Toggle du zoom : masqué en desktop, visible en mobile */
-/* Zoom repliable à TOUS les écrans : la touche 🔍 déploie les boutons. */
+/* Zoom repliable en MOBILE : la touche 🔍 déploie les boutons.
+   En desktop/tablette (>= 900x600), les boutons +/↺/− restent TOUJOURS
+   visibles sur le tapis, sans 🔍 (retour du comportement historique —
+   demande narmod). */
 .zoom-toggle { display:flex; }
 .zoom-ctrl .zoom-btn:not(.zoom-toggle) { display:none; }
 .zoom-ctrl.open .zoom-btn { display:flex; }
+@media (min-width: 900px) and (min-height: 600px) {
+  .zoom-toggle { display:none; }
+  .zoom-ctrl .zoom-btn:not(.zoom-toggle) { display:flex; }
+}
 .zoom-btn.active { background: var(--accent, #E3C800); color: #1a1205; border-color: var(--accent, #E3C800); }
 
 /* -- Bouton "editer le placement" (mode custom) + edition glisser-deposer -- */
