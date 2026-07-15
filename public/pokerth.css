@@ -8544,3 +8544,29 @@ body.chat-tr-on .msg .chat-tr-btn { display: inline; }
     padding-top: 4px; padding-bottom: 4px; font-size: 0.74rem;
   }
 }
+
+
+/* ── Zoom des cartes du joueur RETIRÉ (demande narmod) : dans les packs
+   pokerth les cartes self sont à taille QML fixe, le bouton n'a plus d'objet ;
+   il est masqué partout pour une UI identique sur tous les écrans. ── */
+#g-cardzoom { display: none !important; }
+
+/* ── Barre d'action QML — dernière passe (mode panneau desktop/tablette) ── */
+@media (min-width: 900px) and (min-height: 600px) {
+  /* Pastilles de raccourci [F]/[C]/[R] : extension web absente du QML. */
+  body.adv-hide-pbar .my-zone .act-key { display: none !important; }
+  /* Boutons d'action : typo QML exacte — 15px bold, letterSpacing 0.5,
+     radius 9 (GameActionBar §5.5). */
+  body.adv-hide-pbar .my-zone .btn-action {
+    padding: 9px 10px !important;
+    font-size: 15px !important;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    border-radius: 9px;
+  }
+  /* Panneau : aucun liseré — juste l'ombre douce du QML. */
+  body.adv-hide-pbar .my-zone {
+    border: none !important;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+  }
+}
