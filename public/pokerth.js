@@ -556,6 +556,7 @@ function openAdvancedOptions() {
   sync('adv-ownclick', 'own_click', false);
   sync('adv-guardcall', 'guard_call', false);
   sync('adv-assist', 'assist', true);
+  sync('adv-showodds', 'show_odds', true);
   sync('adv-autobtn', 'show_auto', true);
   sync('adv-quickbet', 'show_pct', true);
   sync('adv-voice', 'voice', false);
@@ -11385,7 +11386,13 @@ const App = (() => {
     var el = document.getElementById('g-odds-body');
     if (!el) return;
     var panel = document.getElementById('g-log-panel');
-    if (!panel || panel.style.display === 'none' || el.style.display === 'none') return; // onglet non affiché : rien à calculer
+    var _open = !!(panel && panel.style.display !== 'none');
+    var _oddsTab = false; try { _oddsTab = localStorage.getItem('pth_gip_tab') === 'odds'; } catch (e) {}
+    if (!_open || !_oddsTab) return; // onglet Chances non affiché : rien à calculer
+    // Option « Afficher les cotes » (defaut ON) : masque la liste des cotes sans
+    // toucher au bloc d'assistance, qui a sa propre option.
+    if (!_advGet('show_odds', true)) { el.innerHTML = ''; el._built = false; el.style.display = 'none'; return; }
+    el.style.display = '';
     if (myCards[0] == null || myCards[1] == null) { el.innerHTML = '<div class="odds-body odds-wait">…</div>'; el._built = false; return; }
     if (!el._built) { el.innerHTML = '<div class="odds-hd">' + esc(t('oddsTitle')) + '</div><div class="odds-body odds-wait">…</div>'; el._built = true; }
     var seq = ++_oddsSeq;
@@ -16034,7 +16041,7 @@ function renderPlayersList() {
   body.innerHTML = _shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>';
 }
 
-;(function(){ window.BUILD_VERSION='0.3.603-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.604-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
