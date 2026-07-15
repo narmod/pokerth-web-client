@@ -9324,7 +9324,10 @@ const App = (() => {
     } catch (e) {}
     var opponentGapBase = 10, selfBadgeGapBase = 8, sideBadgeGapBase = 48;
     var gap = 12;
-    var selfWeight = 0.5;   // 2.1.3 : arc de la perle self identique en wide et compact
+    // 2.1.3 (buildLandscapeSlots) : selfWeight 0.3 en wide (l'anneau se
+    // resserre autour de la self, TL/TR tombent a ~230/310 au lieu de
+    // 240/300) ; le landscapeCompact GARDE 0.5 (layout separe, inchange).
+    var selfWeight = compact ? 0.5 : 0.3;
     var stepDeg = oppCnt >= 1 ? 360 / (oppCnt + selfWeight) : 360;
     var firstAngle = 90 + (selfWeight * stepDeg + stepDeg) / 2;
 
@@ -9362,6 +9365,10 @@ const App = (() => {
 
     var lowerSquash = compact ? 0.2 : 1.0;
     var sideGravity = 0.25, topCosSquash = 1.4;
+    // 2.1.3 : fenetre quasi carree (aspect -> 1.0) — les sieges lateraux
+    // hauts sont souleves AU-DESSUS de la community (sinon overlap avec la
+    // rangee de cartes). Pondere par |cos| ; nul sur fenetres larges.
+    var sqLift = Math.max(0, Math.min(1, (1.6 - zW / Math.max(zH, 1)) / 0.6));
     var gravityUpperOnly = compact;
     var lowerGravity = compact ? 0.0 : 0.15;
 
@@ -9382,8 +9389,16 @@ const App = (() => {
       }
       if (vFactor > 1.0) vFactor = 1.0;
       if (vFactor < -1.0) vFactor = -1.0;
+      // 2.1.3 : arc superieur aplati en wide — sieges du haut tires de 18 %
+      // vers le centre (top-bogen flacher, plus d'air sous la status bar).
+      if (!compact && vFactor < 0) vFactor *= 0.82;
       if (compact && sinV > 0 && Math.abs(g.radiusX * cosV) > g.selfClearX && g.vMaxLower > vFactor)
         vFactor = vFactor + (g.vMaxLower - vFactor) * sinOrig;
+      // 2.1.3 : sqLift (fenetres quasi carrees) — cote haut seulement.
+      if (!compact && sinV < 0 && sqLift > 0) {
+        vFactor -= 0.3 * sqLift * Math.abs(cosV);
+        if (vFactor < -1.0) vFactor = -1.0;
+      }
       return [cosV, vFactor];
     }
 
@@ -10785,9 +10800,14 @@ const App = (() => {
       // fenêtres où le QML en affiche 54 — demande narmod 15/07.)
       // compactActions QML = landscapeCompact && isMobile : le desktop
       // ultrawide GARDE 54 px (« Auf dem Desktop bleiben die Buttons groß »).
-      // Approximation web d'isMobile : paysage avec hauteur < 600.
-      var _lcB = _bw > _bh && _bh < 600;
-      var _bk = _lcB ? 0.741 : (_bw < 600 ? 1.037 : 1);
+      // isMobile web = pointer:coarse (une fenetre desktop basse restait
+      // faussement « mobile » avec le seul critere h<600 -> boutons 40 px
+      // la ou le QML en met 54). Theme.compact desktop = largeur < 900
+      // (threeColumnMinWidth, bible §2) -> 56 px aussi entre 600 et 900.
+      var _coarse = false;
+      try { _coarse = window.matchMedia('(pointer: coarse)').matches; } catch (e2) {}
+      var _lcB = _bw > _bh && _bh < 600 && _coarse;
+      var _bk = _lcB ? 0.741 : (_bw < 900 ? 1.037 : 1);
       var _bkf = _lcB ? 0.8 : 1;
       if (window.__barK !== _bk) {
         window.__barK = _bk;
@@ -15617,7 +15637,7 @@ function renderPlayersList() {
   body.innerHTML = _shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>';
 }
 
-;(function(){ window.BUILD_VERSION='0.3.566-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.567-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
