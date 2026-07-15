@@ -12969,6 +12969,40 @@ function _maybeShowNextHandBtn() {
       if (!text || !ws) return;
       input.value = '';
       _lastMsgWasReaction = false;
+      // ── /seatdbg : diagnostic LOCAL des sieges (rien n'est envoye) ──
+      // Affiche dans le chat les mesures qui pilotent la bisection QML :
+      // zone (tableZone px), boxScale applique, rawBoxScale (avant rabot),
+      // dims mesurees (w/h adversaire, sh self), fenetre et reserves. Sert
+      // au debug iPhone (pas de console) : tailles de sieges, self-box.
+      if (text === '/seatdbg') {
+        try {
+          var _d = window._seatDbg || {};
+          var _ga = document.querySelector('.game-area');
+          var _mz = document.querySelector('.my-zone');
+          var _hd = document.querySelector('#s-game .header');
+          var _zn = document.getElementById('g-table-zone');
+          var _zr = _zn ? _zn.getBoundingClientRect() : null;
+          var _info = {
+            win: window.innerWidth + 'x' + window.innerHeight,
+            zone: _d.zone || (_zr ? Math.round(_zr.width) + 'x' + Math.round(_zr.height) : '?'),
+            boxScale: _d.boxScale != null ? +(+_d.boxScale).toFixed(3) : null,
+            rawBoxScale: _d.rawBoxScale != null ? +(+_d.rawBoxScale).toFixed(3) : null,
+            fitShave: +((window._seatFitShave || 1)).toFixed(3),
+            dims: _d.dims || window._seatDimsMeasured || null,
+            commScale: _d.commScale != null ? +(+_d.commScale).toFixed(3) : null,
+            headerH: _hd ? _hd.offsetHeight : null,
+            barH: _mz ? _mz.offsetHeight : null,
+            gaPadB: _ga ? (_ga.style.paddingBottom || getComputedStyle(_ga).paddingBottom) : null,
+            seat: document.documentElement.getAttribute('data-seat') || '',
+            layout: document.documentElement.getAttribute('data-seat-layout') || 'auto',
+            players: (typeof seats !== 'undefined' && seats) ? seats.length : 0
+          };
+          // cls 'mine' (et pas 'sys' : les messages systeme sont filtres
+          // d'addGameChat) — affichage local uniquement, rien n'est envoye.
+          addGameChat('seatdbg', JSON.stringify(_info), 'mine');
+        } catch (eDbg) { try { addGameChat('seatdbg', 'erreur: ' + eDbg, 'mine'); } catch (e2) {} }
+        return;
+      }
       try { if (window._chatPushHist) window._chatPushHist(text); } catch (e) {}
       send(gId ? MSG.buildGameChat(gId, text) : MSG.buildChat(text));
       addGameChat(myName, text, 'mine');
@@ -15671,7 +15705,7 @@ function renderPlayersList() {
   body.innerHTML = _shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>';
 }
 
-;(function(){ window.BUILD_VERSION='0.3.575-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.576-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
