@@ -6496,7 +6496,7 @@ html[data-seat^="pokerth"] .seat-plate {
   display: grid; grid-template-columns: auto auto;
   align-items: center; justify-content: center;
   column-gap: 4px; row-gap: 3px; position: relative;
-  padding: 4px 4px 5px; border-radius: 6px;
+  padding: 4px; border-radius: 6px;   /* 4px symétrique : budget hauteur QML */
   /* Degrade EXACT du QML (GamePlayerBox : col600 #394150 eclairci x1.18
      -> col700 #1d222b), FIXE — la plaque ne suit pas le --panel du theme
      de table (le client officiel garde sa plaque ardoise sur tous les
@@ -6563,9 +6563,10 @@ html[data-seat^="pokerth"] .seat-name {
   max-width: 106px; text-align: left;
   font-size: 15px !important;               /* QML wide : 15px DemiBold */
   font-weight: 600; letter-spacing: 0.3px;
+  line-height: 16px;   /* serré : hauteur de boîte QML (wide 84) */
   color: #eff1f5; /* col100 QML */
 }
-html[data-seat^="pokerth"] .seat-money { text-align: right; font-size: 15px !important; font-weight: 700; color: #E3C800; font-family: var(--ff-display); } /* accent or QML, 15px bold */
+html[data-seat^="pokerth"] .seat-money { text-align: right; font-size: 15px !important; font-weight: 700; line-height: 16px; color: #E3C800; font-family: var(--ff-display); } /* accent or QML, 15px bold */
 /* Wide (infoBar QML) : ligne 2 = drapeau 22×15 en bas-GAUCHE + stack à droite. */
 html[data-seat^="pokerth"] .seat-info-row2 {
   display: flex; align-items: flex-end; gap: 6px; min-width: 0;
@@ -6577,8 +6578,8 @@ html[data-seat^="pokerth"] .seat-info-row2 .seat-flag {
 html[data-seat^="pokerth"] .seat-info-row2 .seat-flag .cc-flag { width: 22px !important; height: 15px !important; }
 /* Non-wide (hauteur scalée < 76 ou portrait) : « nom · tapis » sur UNE ligne. */
 html[data-seat^="pokerth"] .seat-narrow .seat-info { flex-direction: row; align-items: baseline; justify-content: space-between; gap: 6px; }
-html[data-seat^="pokerth"] .seat-narrow .seat-name { max-width: 62px; font-size: 12px !important; }
-html[data-seat^="pokerth"] .seat-narrow .seat-money { font-size: 12px !important; }
+html[data-seat^="pokerth"] .seat-narrow .seat-name { max-width: 62px; font-size: 12px !important; line-height: 13px; }
+html[data-seat^="pokerth"] .seat-narrow .seat-money { font-size: 12px !important; line-height: 13px; }
 /* Desktop : texte des sieges un peu plus discret (les boites sont deja scalees par boxScale). */
 @media (min-width: 900px) and (hover: hover) and (pointer: fine) {
   /* Nom/tapis : tailles QML fixes (15/12 px) définies dans la base — plus

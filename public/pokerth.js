@@ -10424,7 +10424,13 @@ const App = (() => {
           var kid = seatEl.children[ci];
           var kc = kid.className || '';
           if (typeof kc !== 'string') kc = '';
-          if (kc.indexOf('seat-action-badge') !== -1 || kc.indexOf('seat-action-label') !== -1 || kc.indexOf('seat-timer-badge') !== -1) continue;
+          // Exclusions = tout ce qui vit HORS de la boîte QML (121×71/84 = la
+          // box SEULE) : pucks D/SB/BB, strip self, badge winner. Le layout
+          // les budgète déjà (sideBadgeGapBase 48 / selfBadgeGapBase 8 /
+          // topBadgeExt 39) — les compter ici les budgétait DEUX fois
+          // (dims 164×101 au lieu de ~116×85 → commScale au plancher).
+          if (kc.indexOf('seat-action-badge') !== -1 || kc.indexOf('seat-action-label') !== -1 || kc.indexOf('seat-timer-badge') !== -1
+              || kc.indexOf('seat-pucks') !== -1 || kc.indexOf('seat-self-strip') !== -1 || kc.indexOf('seat-winner-badge') !== -1) continue;
           var kr = kid.getBoundingClientRect();
           if (!kr.width && !kr.height) continue;
           found = true;
@@ -15588,7 +15594,7 @@ function renderPlayersList() {
   body.innerHTML = _shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>';
 }
 
-;(function(){ window.BUILD_VERSION='0.3.559-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.560-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
