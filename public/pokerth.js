@@ -14312,6 +14312,12 @@ window.addEventListener('resize', function() {
   if (typeof updateBottomLayout === 'function') updateBottomLayout();
   if (typeof window._applySeatSync === 'function') window._applySeatSync();
   autoScaleTable();
+  // Re-rendu PENDANT le drag de redimensionnement (parité QML : le layout
+  // suit la fenêtre en continu, pas d'états intermédiaires faux). renderSeats
+  // est déjà throttlé à la frame (garde rAF _seatsRenderPending) — l'appel
+  // direct coûte au plus un rendu par frame. Le passage différé (100 ms)
+  // reste pour l'état final une fois la fenêtre posée.
+  try { if (typeof renderSeats === 'function' && typeof seats !== 'undefined' && seats.length) renderSeats(); } catch (e) {}
   setTimeout(function(){ if(typeof renderSeats==='function' && typeof seats!=='undefined' && seats.length) renderSeats(); }, 100);
 });
 window.addEventListener('orientationchange', function() {
@@ -16028,7 +16034,7 @@ function renderPlayersList() {
   body.innerHTML = _shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>';
 }
 
-;(function(){ window.BUILD_VERSION='0.3.602-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.603-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
