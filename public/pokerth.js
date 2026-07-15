@@ -1454,8 +1454,7 @@ document.addEventListener('keydown', function(e) {
     } else if (e.key === 'F5') {
       // F5 officiel = « Show » — intercepté SEULEMENT quand le bouton est
       // visible (fenêtre post-main) ; sinon F5 garde son rôle navigateur.
-      var _sb5 = document.getElementById('g-show-btn');
-      if (_sb5 && _sb5.style.display !== 'none') {
+      if (window._canShowCards) {
         e.preventDefault();
         try { if (window.App && App.showMyCards) App.showMyCards(); } catch (_e) {}
       }
@@ -8267,8 +8266,12 @@ const App = (() => {
   // jusqu'au HandStart suivant. One-shot. ──
   function _setCanShow(on) {
     window._canShowCards = !!on;
+    // Parité QML : plus de bouton flottant au-dessus des cartes — le All-In
+    // de la barre devient « Show » (voir renderMyTurnActions). Le bouton
+    // legacy reste masqué (F5 route via window._canShowCards).
     var b = document.getElementById('g-show-btn');
-    if (b) b.style.display = on ? '' : 'none';
+    if (b) b.style.display = 'none';
+    try { renderMyTurnActions(true); } catch (e) {}
   }
 
   // ── « Joueurs restants » : ni parti (gone) ni éliminé (money connu ≤ 0).
@@ -11278,7 +11281,11 @@ const App = (() => {
       +     '<button class="btn-pct"' + da + ' onclick="setPct(' + p50  + ')"><span class="pct-p">1/2</span><span class="act-key">' + KB.bet2.toUpperCase() + '</span></button>'
       +     '<button class="btn-pct"' + da + ' onclick="setPct(' + p100 + ')"><span class="pct-p">Pot</span><span class="act-key">' + KB.bet3.toUpperCase() + '</span></button>'
       +   '</div>'
-      +   '<button class="btn-action btn-allin' + _preCls('allin') + '" onclick="' + _preClk('allin', 'App.doAction(6,' + myMoney + ')') + '" title="All-In (A)">' + t('allin') + '<span class="act-key">' + KB.allin.toUpperCase() + '</span></button>'
+      +   (window._canShowCards
+             // Parité QML GameActionBar §5.1 : post-river, le bouton All-In
+             // devient « Show » (canShowCards) — jamais pré-armable.
+             ? '<button class="btn-action btn-allin" onclick="event.stopPropagation();App.showMyCards&&App.showMyCards()" title="Show (F5)">' + t('showCards') + ' \ud83d\udc41</button>'
+             : '<button class="btn-action btn-allin' + _preCls('allin') + '" onclick="' + _preClk('allin', 'App.doAction(6,' + myMoney + ')') + '" title="All-In (A)">' + t('allin') + '<span class="act-key">' + KB.allin.toUpperCase() + '</span></button>')
       +   modeSel
       + '</div>'
       + '<div class="act-buttons-row">'
@@ -15566,7 +15573,7 @@ function renderPlayersList() {
   body.innerHTML = _shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>';
 }
 
-;(function(){ window.BUILD_VERSION='0.3.547-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.548-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
