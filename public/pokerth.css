@@ -8574,6 +8574,18 @@ body.chat-tr-on .msg .chat-tr-btn { display: inline; }
   /* Derniers gabarits QML (GameActionBar) : largeurs fixes et polices. */
   body.adv-hide-pbar .my-zone .pct-row .btn-pct { flex: 0 0 38px; width: 38px; padding: 0 2px; font-size: 11px; }
   body.adv-hide-pbar .my-zone .mid-row > .btn-action.btn-allin { flex: 0 0 52px; width: 52px; padding: 0 2px !important; font-size: 12px !important; }
+  /* Thèmes à SVG de boutons (data-btn-img) : à 52×26 le 9-slice border-image
+     se déchire (bords 9px > moitié de la hauteur — leçon connue). On passe le
+     petit Tapis en background-image étiré 100%/100%, comme le QML qui étire
+     son SVG (Image.Stretch). */
+  :root[data-btn-img] body.adv-hide-pbar .my-zone .mid-row > .btn-action.btn-allin {
+    border: none !important;
+    border-image: none !important;
+    background-image: var(--btn-allin-img);
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    border-radius: 6px;
+  }
   body.adv-hide-pbar .my-zone .mid-row .mode-sel-wrap select { font-size: 11px; }
   /* Slider QML : rail 4 px, poignée 18×18 ronde. */
   body.adv-hide-pbar .my-zone .bet-row input[type="range"] {
