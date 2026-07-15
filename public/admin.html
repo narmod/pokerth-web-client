@@ -328,6 +328,13 @@
         <div style="margin-top:8px"><button id="saveIdent" class="use">Save</button></div>
         <div id="identMsg" class="msg"></div>
       </div>
+      <div class="card">
+        <h2>Discord chat relay</h2>
+        <p class="muted" style="margin:0 0 8px">Official-server parity (<code>DiscordChatWebhookUrl</code>): lobby chat messages sent by players through this proxy are forwarded to a Discord channel as <b>Player:</b> message. Game chat and private messages are never relayed. Leave blank to disable. One post per message — no duplicates however many clients are connected.</p>
+        <div class="defrow" style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin:5px 0"><span style="white-space:nowrap">Webhook URL</span><input id="discordHook" maxlength="200" placeholder="https://discord.com/api/webhooks/…" autocomplete="off" style="flex:1;min-width:0"></div>
+        <div style="margin-top:8px"><button id="saveDiscord" class="use">Save</button></div>
+        <div id="discordMsg" class="msg"></div>
+      </div>
     </div>
     <div id="panel-keys" style="display:none">
       <div class="card">
@@ -870,6 +877,7 @@
         if(d.tableNames && typeof d.tableNames==='object'){ var TN=d.tableNames; [['tnNetMode','tnNetName','pokerthnet'],['tnLanMode','tnLanName','lan'],['tnOffMode','tnOffName','offline']].forEach(function(t){ var sel=$(t[0]), inp=$(t[1]), v=TN[t[2]], has=(typeof v==='string'&&v.trim()); if(sel) sel.value=has?'custom':'auto'; if(inp){ inp.value=has?v:''; inp.style.display=has?'':'none'; } }); }
         if($('srvName') && typeof d.serverName==='string') $('srvName').value=d.serverName;
         if($('srvTagline') && typeof d.serverTagline==='string') $('srvTagline').value=d.serverTagline;
+        if($('discordHook') && typeof d.discordChatWebhookUrl==='string') $('discordHook').value=d.discordChatWebhookUrl;
         if(d.proxyCfg && typeof d.proxyCfg==='object'){ var P=d.proxyCfg; if($('pxHosts'))$('pxHosts').value=(Array.isArray(P.allowedHosts)?P.allowedHosts.join('\n'):''); if($('pxGrace'))$('pxGrace').value=(typeof P.graceSec==='number'?P.graceSec:''); if($('pxGap'))$('pxGap').value=(typeof P.connGapMs==='number'?P.connGapMs:''); if($('pxPorts'))$('pxPorts').value=(Array.isArray(P.allowedPorts)?P.allowedPorts.join('\n'):''); }
       }
       var sn=$('schedNow'), sc=$('schedCancel');
@@ -1059,6 +1067,12 @@
         .catch(function(){ m.textContent='Network error.'; m.className='msg err'; });
     });
   })();
+  (function(){ var sd=$('saveDiscord'); if(!sd) return; sd.addEventListener('click', function(){
+    var m=$('discordMsg');
+    api('/admin/config',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({discordChatWebhookUrl:($('discordHook')?$('discordHook').value:''),token:tok()})})
+      .then(function(r){return r.json();}).then(function(d){ if(d&&d.ok){ m.textContent='Saved. Applies immediately (no restart needed).'; m.className='msg ok'; } else { m.textContent='Failed: '+((d&&d.error)||'error'); m.className='msg err'; } })
+      .catch(function(){ m.textContent='Network error.'; m.className='msg err'; });
+  }); })();
   (function(){ var si=$('saveIdent'); if(!si) return; si.addEventListener('click', function(){
     var m=$('identMsg');
     api('/admin/config',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({serverName:($('srvName')?$('srvName').value:''),serverTagline:($('srvTagline')?$('srvTagline').value:''),token:tok()})})

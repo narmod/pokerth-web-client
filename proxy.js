@@ -255,6 +255,76 @@ const ADMIN_CONFIG_FILE = process.env.ADMIN_CONFIG_FILE || path.join(__dirname, 
 let _adminConfig = {};
 try { _adminConfig = JSON.parse(fs.readFileSync(ADMIN_CONFIG_FILE, 'utf8')) || {}; } catch (e) { _adminConfig = {}; }
 function saveAdminConfig() { try { fs.writeFileSync(ADMIN_CONFIG_FILE, JSON.stringify(_adminConfig)); } catch (e) { console.error('[admin] config write failed:', e.message); } }
+
+// ── Relais Discord du chat lobby ─────────────────────────────────────────────
+// Parité avec le serveur officiel (ServerLobbyThread + DiscordWebhookSender,
+// clé DiscordChatWebhookUrl) : les messages de chat LOBBY sont relayés vers un
+// webhook Discord au format « **Joueur:** message ». Ici le relais vit dans le
+// proxy et intercepte les ChatRequest au fil C→S : un message tapé = un POST,
+// quel que soit le nombre de clients connectés (aucun doublon possible).
+// URL configurée depuis la page admin (/admin/config) ; vide = désactivé.
+const DISCORD_WEBHOOK_RE = /^https:\/\/(canary\.|ptb\.)?discord(app)?\.com\/api\/webhooks\/[0-9]+\/[A-Za-z0-9_\-]+$/;
+function _discordChatUrl() {
+  var u = _adminConfig && _adminConfig.discordChatWebhookUrl;
+  u = String(u || '').trim();
+  return DISCORD_WEBHOOK_RE.test(u) ? u : '';
+}
+// Garde-fou local : la limite des webhooks Discord est ~30 requêtes/min ;
+// au-delà de 25 posts sur 60 s glissantes on jette (fire-and-forget, comme
+// l'officiel qui n'a aucune file d'attente).
+let _discordPostTimes = [];
+function _postDiscordChat(name, text) {
+  const url = _discordChatUrl(); if (!url) return;
+  const now = Date.now();
+  _discordPostTimes = _discordPostTimes.filter(function (t) { return now - t < 60000; });
+  if (_discordPostTimes.length >= 25) return;
+  _discordPostTimes.push(now);
+  // allowed_mentions vide : le texte des joueurs ne peut pas pinger
+  // @everyone/@here ni des rôles côté Discord (prudence absente de
+  // l'officiel mais sans effet visible sur le rendu du message).
+  const body = JSON.stringify({
+    content: '**' + String(name || 'Player').slice(0, 32) + ':** ' + String(text || '').slice(0, 1500),
+    allowed_mentions: { parse: [] },
+  });
+  try {
+    const u = new URL(url);
+    const rq = https.request(
+      { hostname: u.hostname, path: u.pathname + u.search, method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Content-Length': Buffer.byteLength(body) } },
+      function (res) { res.resume(); if (res.statusCode >= 300) console.error('[discord] webhook HTTP ' + res.statusCode); }
+    );
+    rq.on('error', function (e) { console.error('[discord] webhook failed: ' + e.message); });
+    rq.setTimeout(10000, function () { try { rq.destroy(); } catch (_) {} });
+    rq.end(body);
+  } catch (e) { console.error('[discord] webhook error: ' + e.message); }
+}
+// Espionne le flux client→serveur : retient le nom de session à l'Init
+// (nickName champ 6 pour guest/unauth, ou « n=<user> » du SCRAM client-first
+// champ 7 pour les comptes), puis relaie les ChatRequest SANS cible (= lobby ;
+// le chat de partie et les messages privés ne sont jamais relayés, comme
+// l'officiel).
+function _discordTapC2S(S, payload) {
+  if (!_discordChatUrl()) return;
+  try {
+    const outer = pbDecode(payload);
+    const mt = outer[1] ? outer[1][0] : null;
+    if (mt === 2 && outer[3] && outer[3][0]) {                 // InitMessage (champ envelope 3)
+      const init = pbDecode(outer[3][0]);
+      let nick = null;
+      if (init[6] && init[6][0]) nick = init[6][0].toString('utf8');
+      else if (init[7] && init[7][0]) {
+        const m = init[7][0].toString('utf8').match(/(?:^|,)n=([^,]+)/);
+        if (m) nick = m[1].replace(/=2C/g, ',').replace(/=3D/g, '=');  // unescape saslname SCRAM
+      }
+      if (nick) S.chatNick = nick.slice(0, 32);
+    } else if (mt === 63 && outer[64] && outer[64][0]) {       // ChatRequestMessage (champ 64)
+      const cr = pbDecode(outer[64][0]);
+      if (!cr[1] && !cr[2] && cr[3] && cr[3][0]) {             // ni targetGameId ni targetPlayerId = lobby
+        _postDiscordChat(S.chatNick, cr[3][0].toString('utf8'));
+      }
+    }
+  } catch (e) {}
+}
 // ── PokerTH game-server registry (admin Layer A) — see /admin/servers ──
 // Entries: { id, name, host, port, tls }. A saved server is auto-added to the
 // dial allowlist via isHostAllowed / isPortAllowed. The proxy remains a pure
@@ -1391,7 +1461,7 @@ function handleAdmin(req, res, reqPathOnly, query) {
   if (reqPathOnly === '/admin/config') {
     if (req.method === 'GET') {
       if (!adminAuthed(query)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
-      return adminJson(res, 200, { ok: true, resetPeriod: STATS_RESET_PERIOD, modes: appModes(), welcome: _welcomeAdmin(), defaultTheme: _adminConfig.defaultTheme || '', defaults: _adminConfig.defaults || {}, loginDefaults: _adminConfig.loginDefaults || {}, proxyCfg: _adminConfig.proxyCfg || {}, tableDefaults: _adminConfig.tableDefaults || {}, tableNames: _adminConfig.tableNames || {}, serverName: _adminConfig.serverName || '', serverTagline: _adminConfig.serverTagline || '' });
+      return adminJson(res, 200, { ok: true, resetPeriod: STATS_RESET_PERIOD, modes: appModes(), welcome: _welcomeAdmin(), defaultTheme: _adminConfig.defaultTheme || '', defaults: _adminConfig.defaults || {}, loginDefaults: _adminConfig.loginDefaults || {}, proxyCfg: _adminConfig.proxyCfg || {}, tableDefaults: _adminConfig.tableDefaults || {}, tableNames: _adminConfig.tableNames || {}, serverName: _adminConfig.serverName || '', serverTagline: _adminConfig.serverTagline || '', discordChatWebhookUrl: _adminConfig.discordChatWebhookUrl || '' });
     }
     if (req.method === 'POST') {
       return readJsonBody(req, function (d) {
@@ -1475,10 +1545,15 @@ function handleAdmin(req, res, reqPathOnly, query) {
           });
           _adminConfig.tableNames = tnout;
         }
+        if (typeof d.discordChatWebhookUrl === 'string') {
+          var dw = d.discordChatWebhookUrl.trim().slice(0, 200);
+          if (dw && !DISCORD_WEBHOOK_RE.test(dw)) return adminJson(res, 400, { ok: false, error: 'invalid Discord webhook URL (expected https://discord.com/api/webhooks/…)' });
+          _adminConfig.discordChatWebhookUrl = dw;   // vide = relais désactivé
+        }
         if (typeof d.serverName === 'string')    _adminConfig.serverName    = d.serverName.trim().slice(0, 40);
         if (typeof d.serverTagline === 'string') _adminConfig.serverTagline = d.serverTagline.trim().slice(0, 60);
         saveAdminConfig();
-        return adminJson(res, 200, { ok: true, resetPeriod: STATS_RESET_PERIOD, modes: appModes(), welcome: _welcomeAdmin(), defaultTheme: _adminConfig.defaultTheme || '', defaults: _adminConfig.defaults || {}, loginDefaults: _adminConfig.loginDefaults || {}, proxyCfg: _adminConfig.proxyCfg || {}, tableDefaults: _adminConfig.tableDefaults || {}, tableNames: _adminConfig.tableNames || {}, serverName: _adminConfig.serverName || '', serverTagline: _adminConfig.serverTagline || '' });
+        return adminJson(res, 200, { ok: true, resetPeriod: STATS_RESET_PERIOD, modes: appModes(), welcome: _welcomeAdmin(), defaultTheme: _adminConfig.defaultTheme || '', defaults: _adminConfig.defaults || {}, loginDefaults: _adminConfig.loginDefaults || {}, proxyCfg: _adminConfig.proxyCfg || {}, tableDefaults: _adminConfig.tableDefaults || {}, tableNames: _adminConfig.tableNames || {}, serverName: _adminConfig.serverName || '', serverTagline: _adminConfig.serverTagline || '', discordChatWebhookUrl: _adminConfig.discordChatWebhookUrl || '' });
       });
     }
     res.writeHead(405); res.end('Method not allowed'); return;
@@ -2888,9 +2963,11 @@ function _attachWs(S, ws) {
     if (!S.connected || !S.sock || !S.sock.writable) return;
     const buf = Buffer.from(isBinary ? data : data.toString());
     if (buf.length >= 4) {
-      const d = describeMsg(buf.slice(4, 4 + buf.readUInt32BE(0)));
+      const _pl = buf.slice(4, 4 + buf.readUInt32BE(0));
+      const d = describeMsg(_pl);
       console.log('[C→S] ' + d.name + ' (' + buf.readUInt32BE(0) + 'b)');
       if (buf.readUInt32BE(0) <= 32) console.log('      hex: ' + buf.slice(4).toString('hex'));
+      _discordTapC2S(S, _pl);   // relais Discord du chat lobby (no-op si non configuré)
     }
     S.sock.write(buf);
   });
