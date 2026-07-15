@@ -4550,10 +4550,14 @@ body:not(.in-game) .my-zone {
 .raise-amt-field:disabled { opacity: 0.3; cursor: not-allowed; filter: grayscale(0.6); }
 /* Milieu : 1/3 1/2 Pot | All-In | mode */
 .mid-row { display: flex; gap: 6px; align-items: stretch; }
-.mid-row .pct-row { flex: 1 1 auto; width: auto; }
+/* Parite QML GameActionBar : quick-bets a taille fixe, All-In colle juste
+   apres Pot, seul le dropdown de mode est pousse a droite (margin-left auto).
+   Avant, pct-row s'etirait (flex 1 1 auto) et poussait Tapis contre le
+   dropdown dans les fenetres 740-900 px. */
+.mid-row .pct-row { flex: 0 0 auto; width: auto; }
 .mid-row .btn-allin { flex: 0 0 auto; min-width: 0; white-space: nowrap; }
 .mode-sel-wrap { flex: 0 0 auto; }
-.mid-row .mode-sel-wrap { flex: 0 1 calc(132px * var(--bar-kf, 1)); }
+.mid-row .mode-sel-wrap { flex: 0 1 calc(132px * var(--bar-kf, 1)); margin-left: auto; }
 /* First two buttons side by side */
 .action-top-row {
   display: flex; gap: 6px;
