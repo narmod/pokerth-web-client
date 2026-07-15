@@ -5504,7 +5504,6 @@ html[data-table="pokerth-live"] .raise-slider { accent-color: #4CAF50; }
 }
 #s-lobby .header #ranking-btn-lobby{ color:#E3C800; }
 /* Page « Créer une partie » : flèche retour + roue crantée neutres, globe or. */
-#s-create .cp-header .cp-back,
 #s-create .cp-header #cr-overflow-btn{ color:#c3ccda; }
 #s-create .cp-header #ranking-btn-create{ color:#E3C800; }
 #s-lobby .header #lobby-chat-btn{ color:#c3ccda; }
