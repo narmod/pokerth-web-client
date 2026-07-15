@@ -9873,18 +9873,15 @@ const App = (() => {
       forcePortrait: _forceSeatPortrait, pkStyle: _pkStyleNow,
       hidePbar: _advGet('hide_pbar', true), selfHasCustom: _selfHasCustom,
       selfAtPearl: _selfAtPearl }; } catch (e) {}
-    window._zoomInLayout = false;   // vrai quand le +/− est consommé par la bisection
-    // Zoom-layout sur TOUS les écrans (demande narmod) : en placement OFFICIEL,
-    // le +/− est consommé par la bisection — les sièges grossissent/rétrécissent
-    // sans sortir du tapis, se toucher ni recouvrir la rivière. La régression
-    // desktop de 0.3.497-500 venait de la garde mesurée appliquée aux placements
-    // classic/custom (qui collent aux bords par design) : elle est désormais
-    // limitée au placement officiel, voir la garde post-rendu. En classic/custom
-    // le +/− reste la loupe uniforme (parité QML zoomLayer).
+    window._zoomInLayout = false;
+    // Sémantique QML définitive (demande narmod) : le placement de BASE est la
+    // bisection QML fidèle (zoom 1, jamais altérée par le réglage de zoom), et
+    // le +/− est une LOUPE uniforme PAR-DESSUS (parité zoomLayer du client
+    // officiel), sur tous les écrans. _zoomInLayout reste false : c'est
+    // _applyZoomTransforms qui porte la loupe.
     if (_applyOfficial) {
       try {
-        var _layoutZoom = 1;
-        try { if (typeof _getTableZoom === 'function') _layoutZoom = _getTableZoom(); } catch (e) {}
+        var _layoutZoom = 1;   // la bisection travaille TOUJOURS à zoom 1
         var _offPos = _officialSeatPix(rotated.length, _forceSeatPortrait, zRect.width, zRect.height, oCX, oCY, oRect, _seatBoxScale, _layoutZoom);
         // Assis (myIdx>=0) : la self (slot 0) est gérée séparément (perle) ;
         // on ne remplace que les adversaires (1+). Spectateur (myIdx<0) : pas de
@@ -9903,14 +9900,7 @@ const App = (() => {
           // Rabot anti-chevauchement MESURÉ (voir garde post-rendu) : corrige
           // sur écran ce que la bisection théorique aurait laissé passer.
           _seatBoxScale *= (window._seatFitShave || 1);
-          window._zoomInLayout = true;   // le zoom est DANS l'échelle : pas de loupe par-dessus
-          // Bouton + grisé quand le plafond de faisabilité est atteint (plus
-          // aucune marge au cran suivant) ou au max du réglage.
-          window._tableZoomMaxed = !_offPos._zoomHeadroom;
-          try {
-            var _bin = document.getElementById('g-zoom-in');
-            if (_bin) _bin.disabled = window._tableZoomMaxed || (_layoutZoom >= TABLE_ZOOM_MAX - 0.001);
-          } catch (e) {}
+          window._tableZoomMaxed = false;   // loupe : le plafond est géré par applyTableZoom (maxFit)
         }
         // Point bas exact de l'ellipse pour la self (quand l'officiel est actif).
         // L'ÉPINGLAGE mesuré au rendu (plus bas) reste la garantie finale, même
@@ -10277,7 +10267,10 @@ const App = (() => {
     try {
       var _fitKey = rotated.length + ':' + Math.round(zRect.width) + 'x' + Math.round(zRect.height) + ':' + (_forceSeatPortrait ? 'p' : 'l');
       if (window._seatFitKey !== _fitKey) { window._seatFitKey = _fitKey; window._seatFitShave = 1; }
+      var _zoomNow1 = true;
+      try { if (typeof _getTableZoom === 'function') _zoomNow1 = _getTableZoom() <= 1.001; } catch (e) {}
       if (!_applyOfficial) { window._seatFitShave = 1; }   // classic/custom : jamais de rabot (bords voulus)
+      else if (!_zoomNow1) { /* loupe active : rects déplacés à l'écran, on ne rabote pas */ }
       else if (!window._seatFitBusy) {
         var _zrG = zone.getBoundingClientRect();
         var _prs = [];
@@ -13941,24 +13934,18 @@ function _tableZoomGate() {
   // a 1 via _getTableZoom, sans effacer la valeur memorisee.
   try { return _advGet('table_zoom', true); } catch (e) { return true; }
 }
-// Zoom mémorisé PAR ORIENTATION (portrait / paysage séparés) — l'ancien
-// réglage unique pth_table_zoom sert de repli de migration.
+// Zoom mémorisé PAR ORIENTATION (portrait / paysage séparés). Clés NEUVES
+// pth_tz2_* : les anciennes valeurs (pth_table_zoom*) ne sont volontairement
+// PAS migrées — elles ont été semées par les sémantiques précédentes du zoom
+// et faussaient la taille de base. Tout le monde repart à 1.
 function _tableZoomKey() {
-  try { return (window.innerHeight > window.innerWidth) ? 'pth_table_zoom_p' : 'pth_table_zoom_l'; }
-  catch (e) { return 'pth_table_zoom_l'; }
+  try { return (window.innerHeight > window.innerWidth) ? 'pth_tz2_p' : 'pth_tz2_l'; }
+  catch (e) { return 'pth_tz2_l'; }
 }
 function _getTableZoom() {
   try { if (!_tableZoomGate()) return TABLE_ZOOM_DEFAULT; } catch (e) {}
   var z = NaN;
-  try {
-    z = parseFloat(localStorage.getItem(_tableZoomKey()));
-    if (isNaN(z)) {
-      // Migration : l'ancien réglage unique n'est repris que s'il est <= 1 —
-      // un zoom-loupe > 1 hérité gonflerait le layout au-delà du faisable.
-      var _lz = parseFloat(localStorage.getItem('pth_table_zoom'));
-      if (!isNaN(_lz) && _lz <= 1) z = _lz;
-    }
-  } catch (e) {}
+  try { z = parseFloat(localStorage.getItem(_tableZoomKey())); } catch (e) {}
   if (isNaN(z)) z = TABLE_ZOOM_DEFAULT;
   return Math.max(TABLE_ZOOM_MIN, Math.min(TABLE_ZOOM_MAX, z));
 }
@@ -15528,7 +15515,7 @@ function renderPlayersList() {
   body.innerHTML = _shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>';
 }
 
-;(function(){ window.BUILD_VERSION='0.3.536-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.537-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
