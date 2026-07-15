@@ -7436,20 +7436,25 @@ const App = (() => {
           }
           else _nextSB = sb * 2;                                                         // auto : doubler
 
+          // Blinds actuelles (small/big) : affichées DANS la pastille du
+          // bandeau (demande narmod 2026-07-15) en plus du compteur de montée.
+          var _curStr  = grp(sb) + '/' + grp(sb * 2);
+
           // Le "quand" + la pastille compacte selon le mode d'intervalle.
-          var _whenTxt = '', _chip = '';
+          // Pastille = blinds actuelles + éventuel compteur de montée ;
+          // blinds fixes (aucune montée) → blinds seules, sans flèche.
+          var _whenTxt = '', _chip = _curStr;
           if (_raiseMode === 1 && _raiseEvery > 0) {
             var _left = _raiseEvery - ((handNum - 1) % _raiseEvery);
             _whenTxt = t('blindsNextTip', { n: _left });
-            _chip = '↑\u202F' + _left;
+            _chip = _curStr + ' ↑\u202F' + _left;
           } else if (_raiseMode === 2 && _raiseEvery > 0) {
             _whenTxt = t('blindsEveryMin', { n: _raiseEvery });
-            _chip = '↑';
+            _chip = _curStr + ' ↑';
           }
 
           // Texte d'explication (affiché au tap et lors de la montée).
           // Ex : "Blinds 1600/3200 → 3200/6400 · dans 1 main".
-          var _curStr  = grp(sb) + '/' + grp(sb * 2);
           var _nextStr = (_nextSB != null) ? (grp(_nextSB) + '/' + grp(_nextSB * 2)) : null;
           window._blindsInfoHtml =
             '<span class="bu-icon">↑</span>'
@@ -15906,7 +15911,7 @@ function renderPlayersList() {
   body.innerHTML = _shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>';
 }
 
-;(function(){ window.BUILD_VERSION='0.3.599-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.600-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
