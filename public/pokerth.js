@@ -13473,6 +13473,10 @@ function _maybeShowNextHandBtn() {
       show('s-create');
     },
     closeCreatePage() {
+      // Mode entraînement : la page de création EST l'écran d'accueil après
+      // connexion (pas de lobby offline) → Annuler/Retour ramène au login
+      // via la déconnexion propre existante (teardown du FakeServer inclus).
+      if (window._offlineMode) { this.disconnect(); return; }
       show('s-lobby');
     },
     // Développer / réduire les pastilles de style de partie (la barre « Perso »
@@ -15667,7 +15671,7 @@ function renderPlayersList() {
   body.innerHTML = _shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>';
 }
 
-;(function(){ window.BUILD_VERSION='0.3.574-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.575-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
