@@ -8551,7 +8551,16 @@ body.chat-tr-on .msg .chat-tr-btn { display: inline; }
      GROS boutons d'action (~37 px) et gonflait toute la rangée : c'était la
      principale disparité perçue avec le QML. Le dropdown se raccorde à la
      même hauteur. */
-  body.adv-hide-pbar .my-zone .pct-row .btn-pct { padding: 4px 4px; font-size: 0.7rem; }
+  /* Toute la rangée intermédiaire à 26 px EXACTEMENT (raiseRowHeight QML) :
+     1/3 · 1/2 · Pot avaient un padding sans plafond de hauteur → plus hauts
+     que Tapis (26 px explicites). Harmonisation. */
+  body.adv-hide-pbar .my-zone .pct-row .btn-pct {
+    height: 26px; min-height: 26px;
+    padding: 0 8px;
+    font-size: 0.7rem;
+    line-height: 1;
+    display: inline-flex; align-items: center; justify-content: center;
+  }
   body.adv-hide-pbar .my-zone .mid-row > .btn-action.btn-allin {
     height: 26px; min-height: 26px;
     padding: 0 10px !important;
