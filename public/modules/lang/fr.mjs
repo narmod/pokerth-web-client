@@ -386,6 +386,7 @@ export const strings = {
     infoTypeLabel:'Type', infoCapitalLabel:'Capital', infoPlayersInGame:'Joueurs dans la partie', plIgnore:'Ignorer', plStats:'Statistiques du joueur',
     plSortAlpha:'Trier par ordre alphabétique', plShowIdle:'Afficher les joueurs inactifs', plHideIdle:'Masquer les joueurs inactifs',
     plNotPlaying:'Ne joue pas actuellement',
+    plColumns:'Colonnes', plColAvatar:'Avatar', plColStatus:'En jeu', plColCountry:'Pays', plColMe:'Moi', plColActions:'Actions',
     gameTimeLabel:'Temps', visRanked:'Classement', infoBlindsUp:'Hausse des blindes',
     spectatorBtn:'Spectateur',
     // v0.3.533 : case « ne pas traduire les termes de poker » (parité officielle)

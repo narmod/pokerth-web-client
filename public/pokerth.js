@@ -15951,6 +15951,52 @@ window._plToggleIgnore = function(pid){
   } catch(e){}
 };
 
+// ── Colonnes masquables de la liste « Joueurs en ligne » ───────────────
+// Le Nom est verrouillé (toujours visible) ; les autres colonnes sont
+// activables/désactivables depuis l'en-tête (#pl-colhead). Choix persisté
+// dans localStorage 'pth_pl_cols' = liste des colonnes MASQUÉES (une
+// nouvelle colonne future est donc visible par défaut).
+var _PL_TRACK = { av:'22px', name:'minmax(0,1fr)', status:'22px', flag:'48px', star:'16px', acts:'auto' };
+var _PL_COL_ORDER   = ['av','name','status','flag','star','acts'];
+var _PL_TOGGLE_COLS = ['av','status','flag','star','acts']; // 'name' exclu
+function _plColsHidden() {
+  try { return new Set((localStorage.getItem('pth_pl_cols') || '').split(',').filter(Boolean)); }
+  catch (e) { return new Set(); }
+}
+function _plColVisible(k) { return k === 'name' || !_plColsHidden().has(k); }
+function _plVisibleCols() { return _PL_COL_ORDER.filter(_plColVisible); }
+window._plToggleCol = function (k) {
+  if (_PL_TOGGLE_COLS.indexOf(k) === -1) return;
+  try {
+    var h = _plColsHidden();
+    if (h.has(k)) h.delete(k); else h.add(k);
+    localStorage.setItem('pth_pl_cols', Array.from(h).join(','));
+  } catch (e) {}
+  try { renderPlayersList(); } catch (e) {}
+};
+// Icônes de l'en-tête colonnes (monochromes, suivent le thème via currentColor).
+var _PL_PERSON_SVG = '<svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" aria-hidden="true"><path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm0 1.6c-4 0-7.2 2-7.2 4.6V20h14.4v-1.8c0-2.6-3.2-4.6-7.2-4.6Z"/></svg>';
+var _PL_FLAG_SVG   = '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" aria-hidden="true"><path d="M6 21V4h11l-2.2 4L17 12H6"/></svg>';
+// En-tête : une pastille-toggle par colonne masquable (icône + libellé en info-bulle).
+function _plColHeadHtml() {
+  var _tt = function (k, fb) { return (typeof t === 'function' && t(k) !== k) ? t(k) : fb; };
+  var defs = [
+    { key:'av',     icon:_PL_PERSON_SVG,                        label:_tt('plColAvatar','Avatar') },
+    { key:'status', icon:_PL_PAD_SVG,                           label:_tt('plColStatus','In game') },
+    { key:'flag',   icon:_PL_FLAG_SVG,                          label:_tt('plColCountry','Country') },
+    { key:'star',   icon:'<span class="pl-colh-star">\u2605</span>', label:_tt('plColMe','Me') },
+    { key:'acts',   icon:_PL_BAR_SVG,                           label:_tt('plColActions','Actions') }
+  ];
+  var chips = defs.map(function (d) {
+    var on = _plColVisible(d.key);
+    return '<button type="button" class="pl-colh-chip' + (on ? ' on' : '') + '"'
+      + ' title="' + d.label + '" aria-label="' + d.label + '" aria-pressed="' + on + '"'
+      + ' onclick="window._plToggleCol(\'' + d.key + '\')">' + d.icon + '</button>';
+  }).join('');
+  return '<span class="pl-colh-cap">' + _tt('plColumns','Columns') + '</span>'
+       + '<span class="pl-colh-chips">' + chips + '</span>';
+}
+
 function renderPlayersList() {
   var body = document.getElementById('players-list-body');
   var countEl = document.getElementById('players-panel-count');
@@ -15964,6 +16010,17 @@ function renderPlayersList() {
     titleEl.innerHTML = '👥 ' + lbl + ' — <span id="players-panel-count">0</span>';
     countEl = document.getElementById('players-panel-count'); // re-resolve after innerHTML
   }
+  // ── En-tête colonnes + gabarit de grille ──
+  // Le même jeu de colonnes visibles pilote l'en-tête (pastilles-toggle) et
+  // les lignes : --pl-cols (posé sur la liste) est lu par chaque .pl-row, et
+  // rowHtml n'émet que les cellules visibles → alignement 1:1, pas de piste
+  // vide. Calculé avant tout return (liste vide incluse) pour rester stable.
+  var _visCols = _plVisibleCols();
+  try {
+    var _colHeadEl = document.getElementById('pl-colhead');
+    if (_colHeadEl) _colHeadEl.innerHTML = _plColHeadHtml();
+    body.style.setProperty('--pl-cols', _visCols.map(function (k) { return _PL_TRACK[k]; }).join(' '));
+  } catch (e) {}
   // Build the list of {pid, name} from _lobbyPids (defined inside
   // the IIFE; we read it via window-level references).
   var pids = window._readLobbyPids ? window._readLobbyPids() : [];
@@ -16051,14 +16108,18 @@ function renderPlayersList() {
       + '<button type="button" class="pl-act pl-act-ban' + (_ign ? ' on' : '') + '" title="' + _tt('plIgnore','Ignore') + '" data-i18n-title="plIgnore" aria-label="' + _tt('plIgnore','Ignore') + '" onclick="event.stopPropagation();window._plToggleIgnore(' + r.pid + ')">' + _PL_BAN_SVG + '</button>'
       + '<button type="button" class="pl-act pl-act-stats" title="' + _tt('plStats','Stats') + '" data-i18n-title="plStats" aria-label="' + _tt('plStats','Stats') + '" onclick="event.stopPropagation();window.openPlayerInfoPopup(' + _ppArg + ')">' + _PL_BAR_SVG + '</button>'
       + '</span>';
-    return '<div class="pl-row' + (r.isMe ? ' pl-me' : '') + '">' +
-             avChip +
-             '<span class="pl-name">' + nameHtml + '</span>' +
-             _status +
-             '<span class="pl-flag">' + flag + (cc ? '<span class="pl-cc">' + cc + '</span>' : '') + '</span>' +
-             '<span class="pl-star">' + (r.isMe ? '★' : '') + '</span>' +
-             _acts +
-           '</div>';
+    var _plCell = function (k) {
+      switch (k) {
+        case 'av':     return avChip;
+        case 'name':   return '<span class="pl-name">' + nameHtml + '</span>';
+        case 'status': return _status;
+        case 'flag':   return '<span class="pl-flag">' + flag + (cc ? '<span class="pl-cc">' + cc + '</span>' : '') + '</span>';
+        case 'star':   return '<span class="pl-star">' + (r.isMe ? '★' : '') + '</span>';
+        case 'acts':   return _acts;
+      }
+      return '';
+    };
+    return '<div class="pl-row' + (r.isMe ? ' pl-me' : '') + '">' + _visCols.map(_plCell).join('') + '</div>';
   };
   var _tt = function(k, fb) { return (typeof t === 'function' && t(k) !== k) ? t(k) : fb; };
   // Synchronise la valeur du déroulant sur le mode courant.
@@ -16072,7 +16133,7 @@ function renderPlayersList() {
   body.innerHTML = _shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>';
 }
 
-;(function(){ window.BUILD_VERSION='0.3.606-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.607-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
