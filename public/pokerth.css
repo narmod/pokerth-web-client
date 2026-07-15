@@ -7031,11 +7031,13 @@ body.has-keyboard .act-key { display: inline-block; }
 .g-felt-btn.muted { opacity:0.4; filter:grayscale(1); }
 /* Le zoom passe SOUS le journal (haut-droite) pour ne pas le chevaucher */
 .zoom-ctrl { top:50px; }
-/* Zoom repliable sur TOUS les écrans, à l'identique : la touche 🔍 déploie
-   les boutons +/↺/− (demande narmod — aucune différence desktop/mobile). */
-.zoom-toggle { display:flex; }
-.zoom-ctrl .zoom-btn:not(.zoom-toggle) { display:none; }
-.zoom-ctrl.open .zoom-btn { display:flex; }
+/* Zoom de table RETIRÉ (demande narmod) : rendu incohérent selon
+   navigateur/OS — le placement redevient strictement QML partout.
+   🔍/+/↺/− masqués ; ✎ (édition custom, régi par ses propres règles #id)
+   et le zoom de cartes restent visibles en permanence. */
+.zoom-toggle { display:none !important; }
+#g-zoom-in, #g-zoom-reset, #g-zoom-out { display:none !important; }
+.zoom-ctrl .zoom-btn:not(.zoom-toggle) { display:flex; }
 .zoom-btn.active { background: var(--accent, #E3C800); color: #1a1205; border-color: var(--accent, #E3C800); }
 
 /* -- Bouton "editer le placement" (mode custom) + edition glisser-deposer -- */

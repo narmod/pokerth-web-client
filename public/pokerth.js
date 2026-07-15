@@ -10267,10 +10267,11 @@ const App = (() => {
     try {
       var _fitKey = rotated.length + ':' + Math.round(zRect.width) + 'x' + Math.round(zRect.height) + ':' + (_forceSeatPortrait ? 'p' : 'l');
       if (window._seatFitKey !== _fitKey) { window._seatFitKey = _fitKey; window._seatFitShave = 1; }
-      var _zoomNow1 = true;
-      try { if (typeof _getTableZoom === 'function') _zoomNow1 = _getTableZoom() <= 1.001; } catch (e) {}
-      if (!_applyOfficial) { window._seatFitShave = 1; }   // classic/custom : jamais de rabot (bords voulus)
-      else if (!_zoomNow1) { /* loupe active : rects déplacés à l'écran, on ne rabote pas */ }
+      // Garde MOBILE uniquement : sur desktop (Linux notamment) elle rabotait
+      // à tort — le placement QML pur y est la seule vérité.
+      var _fitMob = false;
+      try { _fitMob = Math.min(window.innerWidth, window.innerHeight) < 600; } catch (e) {}
+      if (!_applyOfficial || !_fitMob) { window._seatFitShave = 1; }
       else if (!window._seatFitBusy) {
         var _zrG = zone.getBoundingClientRect();
         var _prs = [];
@@ -13943,11 +13944,13 @@ function _tableZoomKey() {
   catch (e) { return 'pth_tz2_l'; }
 }
 function _getTableZoom() {
-  try { if (!_tableZoomGate()) return TABLE_ZOOM_DEFAULT; } catch (e) {}
-  var z = NaN;
-  try { z = parseFloat(localStorage.getItem(_tableZoomKey())); } catch (e) {}
-  if (isNaN(z)) z = TABLE_ZOOM_DEFAULT;
-  return Math.max(TABLE_ZOOM_MIN, Math.min(TABLE_ZOOM_MAX, z));
+  // Zoom de table RETIRÉ (demande narmod, 0.3.539) : le rendu variait selon
+  // le navigateur/OS. Le placement reste STRICTEMENT celui du client QML sur
+  // tous les écrans ; les valeurs mémorisées sont ignorées. Les boutons +/↺/−
+  // et la loupe sont masqués côté CSS ; ✎ (édition) et le zoom de cartes
+  // restent. Réintroduction éventuelle plus tard = loupe compact-only comme
+  // le QML (Bible §3.4).
+  return TABLE_ZOOM_DEFAULT;
 }
 function applyTableZoom() {
   // Le zoom n'est PAS un transform sur #g-table-zone : renderSeats mesure
@@ -15515,7 +15518,7 @@ function renderPlayersList() {
   body.innerHTML = _shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>';
 }
 
-;(function(){ window.BUILD_VERSION='0.3.538-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.539-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
