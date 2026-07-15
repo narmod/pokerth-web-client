@@ -8517,10 +8517,10 @@ body.chat-tr-on .msg .chat-tr-btn { display: inline; }
   body.adv-hide-pbar .my-zone {
     left: 50%; right: auto;
     transform: translateX(-50%);
-    /* Plancher 380px = min QML exact. (Le plancher provisoire de 500px pour
-       le débordement du dropdown n'a plus lieu d'être : la rangée mid est aux
-       largeurs fixes QML — 3×38 + 52 + 132 + gaps ≈ 330px tiennent.) */
-    width: clamp(380px, calc(242px * var(--comm-scale, 1) + 32px), 96vw);
+    /* QML exact : panelWidth = max(communityVisualWidth, 380) avec
+       communityVisualWidth = 264 × communityScale (et non 242+32 : la barre
+       était plus étroite que le QML — retour narmod). */
+    width: clamp(380px, calc(264px * var(--comm-scale, 1)), 96vw);
     bottom: 8px;
     background: transparent !important;
     border: none !important;
@@ -8640,7 +8640,13 @@ body.chat-tr-on .msg .chat-tr-btn { display: inline; }
     font-weight: 700;
     letter-spacing: 0.5px;
     border-radius: 9px;
-    line-height: 0.95;
+    line-height: 1.05;
+  }
+  /* Montant sur une DEUXIÈME ligne (« Suivre / $40 »), comme le QML. */
+  body.adv-hide-pbar .my-zone .act-buttons-row .btn-action > b,
+  body.adv-hide-pbar .my-zone .act-buttons-row .btn-action .raise-btn-amt {
+    display: block;
+    line-height: 1.05;
   }
   body.adv-hide-pbar .my-zone .action-grid { gap: 4px; }
   body.adv-hide-pbar .my-zone .mid-row { gap: 4px; }
