@@ -333,6 +333,20 @@ function _advGet(key, defOn) {
     return v === '1';
   } catch (e) { return !!defOn; }
 }
+// ── Termes de poker (Fold/Check/Call/Bet/Raise/All-In) ───────────────────────
+//    Option « ne pas traduire les termes de poker » (poker_en, cochée par
+//    défaut = parité officielle PokerTH : DontTranslateInternationalPokerStrings).
+//    Cochée  → terme anglais canonique. Décochée → traduction de la langue
+//    active (transKey, comportement historique inchangé). base ∈
+//    fold|check|call|bet|raise|allin.
+var _POKER_EN_TERMS = { fold: 'Fold', check: 'Check', call: 'Call', bet: 'Bet', raise: 'Raise', allin: 'All-In' };
+function pkTerm(base, transKey) {
+  try {
+    if (_advGet('poker_en', true)) return _POKER_EN_TERMS[base] || t(transKey || base);
+    return t(transKey || base);
+  } catch (e) { return t(transKey || base); }
+}
+window.pkTerm = pkTerm;
 // ── Joueurs ignorés (préférence locale, par nom). Le chat du joueur est masqué
 //    et son avatar anonymisé (sauf si « ne pas masquer les avatars ignorés »
 //    est activée). Voir _ignHide (sièges), addChat/addGameChat (filtre) et
@@ -10364,8 +10378,9 @@ const App = (() => {
       var _acCode = ({'Fold':1,'Check':2,'Call':3,'Bet':4,'Raise':5,'All-in':6})[sd.action] || 0;
       var _acBadge = '', _acInCards = false;
       if (_acCode) {
+        var _acBase = ['','fold','check','call','bet','raise','allin'][_acCode];
         var _acKey = ['','actBadgeFold','actBadgeCheck','actBadgeCall','actBadgeBet','actBadgeRaise','actBadgeAllin'][_acCode];
-        _acBadge = '<div class="seat-action-badge act-c' + _acCode + '">' + esc(t(_acKey)) + '</div>';
+        _acBadge = '<div class="seat-action-badge act-c' + _acCode + '">' + esc(pkTerm(_acBase, _acKey)) + '</div>';
       }
       if ((_pkHole || _selfBig) && !isGone && !isOut) {
         var _ownHide = isMe && _ownCardsHidden();
@@ -11502,15 +11517,15 @@ const App = (() => {
     // Le label affiche le montant disponible avec un indicateur "(All-In)".
     let callLabel, callAction, callClass;
     if (canCheck) {
-      callLabel  = t('check');
+      callLabel  = pkTerm('check');
       callAction = 'App.doAction(2,0)';
       callClass  = 'btn-check';
     } else if (toCall >= myMoney) {
-      callLabel  = t('call') + ' <b>' + fmtChips(myMoney) + '</b> <span style="font-size:0.75em;opacity:0.85">(' + t('allin') + ')</span>';
+      callLabel  = pkTerm('call') + ' <b>' + fmtChips(myMoney) + '</b> <span style="font-size:0.75em;opacity:0.85">(' + pkTerm('allin') + ')</span>';
       callAction = 'App.doAction(6,' + myMoney + ')';
       callClass  = 'btn-call';
     } else {
-      callLabel  = t('call') + ' <b>' + fmtChips(toCall) + '</b>';
+      callLabel  = pkTerm('call') + ' <b>' + fmtChips(toCall) + '</b>';
       callAction = 'App.doAction(3,' + toCall + ')';
       callClass  = 'btn-call';
     }
@@ -11520,7 +11535,7 @@ const App = (() => {
       var _camt = (toCall >= myMoney) ? myMoney : toCall;
       callAction = 'App.confirmCall(' + _ca + ',' + _camt + ')';
     }
-    const raiseLabel = highestBet > 0 ? t('raise') : t('bet');
+    const raiseLabel = highestBet > 0 ? pkTerm('raise') : pkTerm('bet');
 
     // Peut relancer : doit avoir plus que le montant du call ET >= mise min
     const canRaise = myMoney > toCall && myMoney >= minBet;
@@ -11562,11 +11577,11 @@ const App = (() => {
              // Parité QML GameActionBar §5.1 : post-river, le bouton All-In
              // devient « Show » (canShowCards) — jamais pré-armable.
              ? '<button class="btn-action btn-allin" onclick="event.stopPropagation();App.showMyCards&&App.showMyCards()" title="Show (F5)">' + t('showCards') + ' \ud83d\udc41</button>'
-             : '<button class="btn-action btn-allin' + _preCls('allin') + '" onclick="' + _preClk('allin', 'App.doAction(6,' + myMoney + ')') + '" title="All-In (A)">' + t('allin') + '<span class="act-key">' + KB.allin.toUpperCase() + '</span></button>')
+             : '<button class="btn-action btn-allin' + _preCls('allin') + '" onclick="' + _preClk('allin', 'App.doAction(6,' + myMoney + ')') + '" title="All-In (A)">' + pkTerm('allin') + '<span class="act-key">' + KB.allin.toUpperCase() + '</span></button>')
       +   modeSel
       + '</div>'
       + '<div class="act-buttons-row">'
-      +   '<button class="btn-action btn-fold' + _preCls('fold') + '" onclick="' + _preClk('fold', 'App.doAction(1,0)') + '" title="Fold (F)">' + t('fold') + '<span class="act-key">' + KB.fold.toUpperCase() + '</span></button>'
+      +   '<button class="btn-action btn-fold' + _preCls('fold') + '" onclick="' + _preClk('fold', 'App.doAction(1,0)') + '" title="Fold (F)">' + pkTerm('fold') + '<span class="act-key">' + KB.fold.toUpperCase() + '</span></button>'
       +   '<button class="btn-action ' + callClass + _preCls('call') + '" onclick="' + _preClk('call', callAction) + '" title="Call/Check (C)">' + callLabel + '<span class="act-key">' + KB.call.toUpperCase() + '</span></button>'
       +   '<button class="btn-action btn-raise raise-btn' + _preCls('raise') + '"' + da + ' onclick="' + _preClk('raise', 'App.doRaise()') + '" title="Raise (R)">' + raiseLabel + (canRaise ? ' <b class="raise-btn-amt">' + fmtChips(minBet) + '</b>' : '') + '<span class="act-key">' + KB.raise.toUpperCase() + '</span></button>'
       + '</div>'
@@ -16136,7 +16151,7 @@ function renderPlayersList() {
   body.innerHTML = _headHtml + (_shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>');
 }
 
-;(function(){ window.BUILD_VERSION='0.3.611-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.612-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
