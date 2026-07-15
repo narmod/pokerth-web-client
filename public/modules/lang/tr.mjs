@@ -12,6 +12,8 @@ export const meta = {
 };
 
 export const strings = {
+    buttonsAuto:"Auto (table)",
+    buttonsFlat:"Flat",
     advRemoveGone:"Ayrılan oyuncuları kaldır ve masayı yeniden yerleştir",
     advWinnerPopup:"El sonunda kazanan penceresi",
     // PlayerWinnerOverlay (badge gagnant sur la boîte, parité QML)

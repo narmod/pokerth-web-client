@@ -15,6 +15,8 @@ export const meta = {
 };
 
 export const strings = {
+    buttonsAuto:"Auto (table)",
+    buttonsFlat:"Vlak",
     advRemoveGone:"Vertrokken spelers verwijderen en de tafel herindelen",
     advWinnerPopup:"Winnaarvenster aan het einde van de hand",
     // PlayerWinnerOverlay (badge gagnant sur la boîte, parité QML)

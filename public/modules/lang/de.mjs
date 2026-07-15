@@ -15,6 +15,8 @@ export const meta = {
 };
 
 export const strings = {
+    buttonsAuto:"Auto (table)",
+    buttonsFlat:"Flach",
     gipTabLog:"Verlauf",
     gipTabOdds:"Chancen",
     advRemoveGone:"Gegangene Spieler entfernen und den Tisch neu setzen",

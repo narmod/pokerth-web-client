@@ -11,6 +11,8 @@ export const meta = {
 };
 
 export const strings = {
+    buttonsAuto:"Auto (table)",
+    buttonsFlat:"Flat",
     advRemoveGone:"Thoir air falbh cluicheadairean a dh'fhalbh agus suidhich am bòrd às ùr",
     advWinnerPopup:"Uinneag buannaiche aig deireadh na làimhe",
     // PlayerWinnerOverlay (badge gagnant sur la boîte, parité QML)

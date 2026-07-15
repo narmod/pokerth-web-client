@@ -9,6 +9,8 @@ export const meta = {
 };
 
 export const strings = {
+    buttonsAuto:"Auto (table)",
+    buttonsFlat:"Flat",
     advRemoveGone:"Fjern spillere som har gått, og omplasser bordet",
     advWinnerPopup:"Vinnervindu ved slutten av hånden",
     // PlayerWinnerOverlay (badge gagnant sur la boîte, parité QML)

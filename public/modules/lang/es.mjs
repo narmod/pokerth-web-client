@@ -16,6 +16,8 @@ export const meta = {
 };
 
 export const strings = {
+    buttonsAuto:"Auto (table)",
+    buttonsFlat:"Plano",
     gipTabLog:"Historial",
     gipTabOdds:"Probabilidades",
     advRemoveGone:"Eliminar a los jugadores que se van y recolocar la mesa",

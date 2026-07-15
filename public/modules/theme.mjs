@@ -107,7 +107,7 @@ var PUCK_SET = { dealer:'url(/pucks/dealer.svg)', sb:'url(/pucks/sb.svg)', bb:'u
 // portes par le style de table plutot que par des axes separes.
 var CASINO_PUCKS = { dealer:'url(/themes/casino-vert/dealer.svg)', sb:'url(/themes/casino-vert/sb.svg)', bb:'url(/themes/casino-vert/bb.svg)' };
 var CASINO_BTN = { images:{ fold:'url(/themes/casino-vert/btn-fold.svg)', check:'url(/themes/casino-vert/btn-check.svg)', call:'url(/themes/casino-vert/btn-call.svg)', raise:'url(/themes/casino-vert/btn-raise.svg)', allin:'url(/themes/casino-vert/btn-allin.svg)' }, colors:{ 'btn-fold-fg':'#ffd0d0','btn-check-fg':'#c0ffc0','btn-call-fg':'#c0d8ff','btn-raise-fg':'#110900','btn-allin-fg':'#e88a8a','btn-allin-fg-b':'#f4b0b0' } };
-var BUTTONS_ITEMS = [ {id:'',key:'buttonsDefault',fallback:'Flat',swatch:'#6b2020'}, {id:'glossy',key:'buttonsGlossy',fallback:'Glossy',swatch:'#c81818'}, {id:'pokerth',key:'buttonsPokerth',fallback:'PokerTH',swatch:'#4080d8'} ];
+var BUTTONS_ITEMS = [ {id:'',key:'buttonsAuto',fallback:'Auto (table)',swatch:'#4080d8'}, {id:'flat',key:'buttonsFlat',fallback:'Flat',swatch:'#6b2020'}, {id:'glossy',key:'buttonsGlossy',fallback:'Glossy',swatch:'#c81818'}, {id:'pokerth',key:'buttonsPokerth',fallback:'PokerTH',swatch:'#4080d8'} ];
 var PUCKS_ITEMS   = [ {id:'',key:'pucksAuto',fallback:'Auto (table)',swatch:'#3a78d8',preview:'/pucks/dealer.svg'}, {id:'pokerth',key:'pucksPokerth',fallback:'PokerTH',swatch:'#3a78d8',preview:'/pucks/dealer.svg'}, {id:'casino',key:'pucksCasino',fallback:'Casino',swatch:'#caa64a',preview:'/themes/casino-vert/dealer.svg'} ];
 // Seats axis: seat "packs" (layout + graphics), like decks/tables. A pack is a
 // CSS block keyed on html[data-seat="<id>"] (seat DOM stays neutral via
@@ -799,7 +799,8 @@ buttons.apply = function(id){ _btnApply(id); try{
   // = palette Glossy mais en aplat (BUTTON_FLAT). Tous les autres (glossy, PokerTH new,
   // Sleek) -> degrades Glossy.
   if (id==='casino-vert') { var pk=_buttonPkgById('casino-vert'); _injectButtons(pk?{images:pk.images,colors:pk.colors}:{colors:BUTTON_GLOSSY}); }
-  else if (!id) _injectButtons({colors:BUTTON_FLAT});
+  else if (!id) { try{ table.apply(table.get()); }catch(e2){} }   // Auto : les boutons suivent le STYLE DE TABLE (parité QML — un seul pipeline, uniforme sur toutes les tables)
+  else if (id==='flat') _injectButtons({colors:BUTTON_FLAT});
   else _injectButtons({colors:BUTTON_GLOSSY});
 }catch(e){} };
 buttons.set = buttons.apply;

@@ -9,6 +9,8 @@ export const meta = {
 };
 
 export const strings = {
+    buttonsAuto:"Auto (table)",
+    buttonsFlat:"Plano",
     gipTabLog:"Histórico",
     gipTabOdds:"Probabilidades",
     advRemoveGone:"Remover jogadores que saíram e reposicionar a mesa",

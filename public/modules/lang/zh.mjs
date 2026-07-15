@@ -11,6 +11,8 @@ export const meta = {
 };
 
 export const strings = {
+    buttonsAuto:"Auto (table)",
+    buttonsFlat:"Flat",
     advRemoveGone:"移除离开的玩家并重新排座",
     advWinnerPopup:"每手结束时的获胜者窗口",
     // PlayerWinnerOverlay (badge gagnant sur la boîte, parité QML)

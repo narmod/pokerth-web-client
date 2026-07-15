@@ -10,6 +10,8 @@ export const meta = {
 };
 
 export const strings = {
+    buttonsAuto:"Auto (table)",
+    buttonsFlat:"Flat",
     advRemoveGone:"Αφαίρεση παικτών που έφυγαν και ανακατανομή του τραπεζιού",
     advWinnerPopup:"Παράθυρο νικητή στο τέλος του χεριού",
     // PlayerWinnerOverlay (badge gagnant sur la boîte, parité QML)

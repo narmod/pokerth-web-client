@@ -10,6 +10,8 @@ export const meta = {
 };
 
 export const strings = {
+    buttonsAuto:"Auto (table)",
+    buttonsFlat:"Flat",
     advRemoveGone:"Odstrániť odídených hráčov a preusporiadať stôl",
     advWinnerPopup:"Okno víťaza na konci rozdania",
     // PlayerWinnerOverlay (badge gagnant sur la boîte, parité QML)

@@ -10,6 +10,8 @@ export const meta = {
 };
 
 export const strings = {
+    buttonsAuto:"Auto (table)",
+    buttonsFlat:"Plat",
     advRemoveGone:"Elimină jucătorii plecați și rearanjează masa",
     advWinnerPopup:"Fereastra câștigătorului la finalul mâinii",
     // PlayerWinnerOverlay (badge gagnant sur la boîte, parité QML)

@@ -10,6 +10,8 @@ export const meta = {
 };
 
 export const strings = {
+    buttonsAuto:"Auto (table)",
+    buttonsFlat:"Flat",
     advRemoveGone:"Pašalinti išėjusius žaidėjus ir perstatyti stalą",
     advWinnerPopup:"Nugalėtojo langas rankos pabaigoje",
     // PlayerWinnerOverlay (badge gagnant sur la boîte, parité QML)

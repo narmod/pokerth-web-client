@@ -15,6 +15,8 @@ export const meta = {
 };
 
 export const strings = {
+    buttonsAuto:"Auto (table)",
+    buttonsFlat:"Flat",
     advRemoveGone:"Убирать ушедших игроков и рассаживать стол заново",
     advWinnerPopup:"Окно победителя в конце раздачи",
     // PlayerWinnerOverlay (badge gagnant sur la boîte, parité QML)
