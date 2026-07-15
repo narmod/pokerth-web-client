@@ -10601,7 +10601,13 @@ const App = (() => {
           // topBadgeExt 39) — les compter ici les budgétait DEUX fois
           // (dims 164×101 au lieu de ~116×85 → commScale au plancher).
           if (kc.indexOf('seat-action-badge') !== -1 || kc.indexOf('seat-action-label') !== -1 || kc.indexOf('seat-timer-badge') !== -1
-              || kc.indexOf('seat-pucks') !== -1 || kc.indexOf('seat-self-strip') !== -1 || kc.indexOf('seat-winner-badge') !== -1) continue;
+              || kc.indexOf('seat-pucks') !== -1 || kc.indexOf('seat-self-strip') !== -1 || kc.indexOf('seat-winner-badge') !== -1
+              // Jeton de mise (.seat-bet dans .seat-foot) : surplomb LATÉRAL
+              // absolu (~40 px) budgété par la bisection via sideBadgeGapBase
+              // (48, xNeeded STRICT QML). Le mesurer le comptait DEUX fois →
+              // dims ~150-160 dès qu'une mise est posée → boxes rapetissées
+              // et échelle qui varie selon la street.
+              || kc.indexOf('seat-foot') !== -1 || kc.indexOf('seat-bet') !== -1) continue;
           var kr = kid.getBoundingClientRect();
           if (!kr.width && !kr.height) continue;
           found = true;
@@ -15876,7 +15882,7 @@ function renderPlayersList() {
   body.innerHTML = _shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>';
 }
 
-;(function(){ window.BUILD_VERSION='0.3.592-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.593-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
