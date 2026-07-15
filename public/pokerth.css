@@ -397,6 +397,8 @@ body {
 }
 .cp-back:hover { border-color: var(--gold-dim); }
 .cp-back-ico { font-size: 1.05rem; line-height: 1; }
+/* Pousse le globe + roue crantée à droite (parité header lobby). */
+.cp-head-spacer { flex: 1; }
 .cp-title {
   font-family: var(--ff-display);
   font-size: 1.15rem;
@@ -1473,7 +1475,8 @@ body {
 .btn-sm:hover { border-color: var(--border-hi); color: var(--text-hi); }
 
 /* Uniformisation hauteur des boutons dans tous les headers */
-.header .btn-sm {
+.header .btn-sm,
+.cp-header .btn-sm {
   height: 30px;
   min-width: 30px;
   padding: 0 13px;
@@ -1486,7 +1489,8 @@ body {
   color: var(--text-hi);
 }
 /* Bouton carré (icône seule) — un peu plus large pour respirer */
-.header .btn-icon {
+.header .btn-icon,
+.cp-header .btn-icon {
   width: 34px;
   padding: 0;
   background: var(--inset);
@@ -2158,8 +2162,8 @@ body {
   /* ── Barre d'état de jeu : tailles QML fixes (13/11 px), pas d'override ── */
 
   /* ── Menu ••• ── */
-  #g-overflow-menu, #l-overflow-menu { width: 264px !important; }
-  #g-overflow-menu .btn-sm, #l-overflow-menu .btn-sm { font-size: 0.94rem !important; padding: 9px 32px 9px 14px !important; }
+  #g-overflow-menu, #l-overflow-menu, #cr-overflow-menu { width: 264px !important; }
+  #g-overflow-menu .btn-sm, #l-overflow-menu .btn-sm, #cr-overflow-menu .btn-sm { font-size: 0.94rem !important; padding: 9px 32px 9px 14px !important; }
 
   /* ══ Fenetres d'informations ══ */
   .winner-card { max-width: min(640px, 86vw) !important; padding: 24px 28px !important; }
@@ -2475,7 +2479,8 @@ body {
    lobby was missing position:relative here, so its menu was escaping
    to the viewport and rendering off-screen. Same chrome for both now. */
 #s-game .header,
-#s-lobby .header {
+#s-lobby .header,
+#s-create .cp-header {
   position: relative;
   flex-wrap: nowrap;
   align-items: center;
@@ -2505,7 +2510,8 @@ body {
 /* Menu déroulant */
 #g-overflow-menu,
 #l-overflow-menu,
-#connect-overflow-menu {
+#connect-overflow-menu,
+#cr-overflow-menu {
   display: none;
   position: absolute;
   top: calc(100% + 6px);
@@ -2525,10 +2531,12 @@ body {
 }
 #g-overflow-menu.open,
 #l-overflow-menu.open,
-#connect-overflow-menu.open { display: flex; }
+#connect-overflow-menu.open,
+#cr-overflow-menu.open { display: flex; }
 #g-overflow-menu .btn-sm,
 #l-overflow-menu .btn-sm,
-#connect-overflow-menu .btn-sm {
+#connect-overflow-menu .btn-sm,
+#cr-overflow-menu .btn-sm {
   width: 100%;
   box-sizing: border-box;
   text-align: left;
@@ -2561,7 +2569,8 @@ body {
 }
 #g-overflow-menu .btn-sm:hover,
 #l-overflow-menu .btn-sm:hover,
-#connect-overflow-menu .btn-sm:hover {
+#connect-overflow-menu .btn-sm:hover,
+#cr-overflow-menu .btn-sm:hover {
   background: var(--panel-hi);
   border-color: var(--border-hi);
 }

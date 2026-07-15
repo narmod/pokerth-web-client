@@ -15089,6 +15089,18 @@ function closeConnectOverflow() {
   var m = document.getElementById('connect-overflow-menu');
   if (m) m.classList.remove('open');
 }
+// Jumeau « Créer une partie » : même roue crantée + globe que le lobby
+// (demande narmod : header uniforme sur la page de création).
+function toggleCreateOverflow(e) {
+  if (e) e.stopPropagation();
+  var m = document.getElementById('cr-overflow-menu');
+  if (!m) return;
+  m.classList.toggle('open');
+}
+function closeCreateOverflow() {
+  var m = document.getElementById('cr-overflow-menu');
+  if (m) m.classList.remove('open');
+}
 // Lobby brand: tap the ♠ to slide the POKERTH word in/out. Only matters on
 // narrow screens (CSS keeps the word always visible on wide ones). Auto-folds
 // again after a few seconds so it doesn't permanently re-crowd the header.
@@ -15120,6 +15132,11 @@ document.addEventListener('click', function(e) {
   var cmenu = document.getElementById('connect-overflow-menu');
   if (cmenu && cbtn && !cbtn.contains(e.target) && !cmenu.contains(e.target)) {
     cmenu.classList.remove('open');
+  }
+  var crbtn = document.getElementById('cr-overflow-btn');
+  var crmenu = document.getElementById('cr-overflow-menu');
+  if (crmenu && crbtn && !crbtn.contains(e.target) && !crmenu.contains(e.target)) {
+    crmenu.classList.remove('open');
   }
 });
 
@@ -15733,7 +15750,7 @@ function renderPlayersList() {
   body.innerHTML = _shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>';
 }
 
-;(function(){ window.BUILD_VERSION='0.3.582-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.583-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
