@@ -128,10 +128,11 @@ const table   = makeAxis({ storeKey: 'pth_table', attr: 'data-table', items: TAB
 const deck    = makeAxis({ storeKey: 'pth_deck',  attr: 'data-deck',  def: 'pokerth-new',  items: DECKS,    titleKey: 'sectionDeck',    titleFallback: 'Cards' });
 const buttons = makeAxis({ storeKey: 'pth_buttons', attr: 'data-buttons', def: 'glossy', items: BUTTONS_ITEMS, titleKey: 'sectionButtons', titleFallback: 'Buttons' });
 const pucks   = makeAxis({ storeKey: 'pth_pucks',   attr: 'data-pucks',   def: '',           items: PUCKS_ITEMS,   titleKey: 'sectionPucks',   titleFallback: 'Pucks' });
-// Defaut dependant du viewport : Classic sur mobile, PokerTH sur tablette/desktop. Evalue
-// une fois au chargement ; un choix enregistre prime toujours.
+// Defaut : packs PokerTH orientes (portrait/paysage) sur TOUS les appareils,
+// mobile compris (demande narmod 15/07) — la sync d'orientation (pth_seat_sync,
+// ON par defaut) maintient ensuite le bon pack. Un choix enregistre prime.
 var _seatDef = 'pokerth';
-try { if (typeof window !== 'undefined' && window.innerWidth < 640) _seatDef = ''; } catch (e) {}
+try { if (typeof window !== 'undefined' && window.innerHeight > window.innerWidth) _seatDef = 'pokerth-portrait'; } catch (e) {}
 const seat    = makeAxis({ storeKey: 'pth_seat',    attr: 'data-seat',    def: _seatDef,      items: SEATS,         titleKey: 'sectionSeat',    titleFallback: 'Seats' });
 const AXES = [table, deck, seat];
 

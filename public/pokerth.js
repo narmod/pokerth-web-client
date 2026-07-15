@@ -593,7 +593,7 @@ function openAdvancedOptions() {
   // le CSS coupe ombres / glow / backdrop-filter.
   try { document.documentElement.classList.toggle('reduce-fx', _advGet('reduce_fx', false)); } catch (e) {}
   try { var _sl = document.getElementById('adv-seatlayout'); if (_sl) { var _slv = localStorage.getItem('pth_seat_layout'); _sl.value = (_slv === 'pokerth-official' || _slv === 'pokerth-ellipse' || _slv === 'custom') ? _slv : 'auto'; } } catch (e) {}
-  try { var _ssy = document.getElementById('adv-seatsync'); if (_ssy) _ssy.checked = (localStorage.getItem('pth_seat_sync') === '1'); } catch (e) {}
+  try { var _ssy = document.getElementById('adv-seatsync'); if (_ssy) _ssy.checked = (localStorage.getItem('pth_seat_sync') !== '0'); } catch (e) {}
   try { var _ctr = document.getElementById('adv-chattranslate'); if (_ctr) { _ctr.checked = (localStorage.getItem('pth_chat_translate') !== '0'); if (!window._chatTrSupported) { var _ctl = _ctr.closest('label'); if (_ctl) _ctl.style.opacity = '0.55'; } } } catch (e) {}
   try { _rebindAction = null; _renderKeyButtons(); } catch (e) {}
   sync('adv-tooltips', 'tooltips', true);
@@ -1197,7 +1197,9 @@ window.setSeatLayout = setSeatLayout;
 // resize et au changement d'orientation.
 function _applySeatSync() {
   try {
-    if (localStorage.getItem('pth_seat_sync') !== '1') return;
+    // ON par defaut depuis 0.3.571 (packs PokerTH portrait/paysage partout,
+    // mobile compris) ; opt-out explicite via la case des Options avancees.
+    if (localStorage.getItem('pth_seat_sync') === '0') return;
     var want = (window.innerHeight > window.innerWidth) ? 'pokerth-portrait' : 'pokerth';
     if ((document.documentElement.getAttribute('data-seat') || '') === want) return;
     if (typeof window._setSeatPack === 'function') window._setSeatPack(want);
@@ -6238,7 +6240,10 @@ const App = (() => {
         }
         updateLobbyPill();
         App._resetGameState();   // ensure a clean lobby baseline (no-op on first connect)
-        show('s-lobby');
+        // Entrainement : pas d'etape lobby — le formulaire « Creer une table »
+        // s'ouvre directement (le lobby reste accessible via Annuler/retour).
+        if (window._offlineMode) { try { App.openCreatePage(); } catch (eOc) { show('s-lobby'); } }
+        else show('s-lobby');
         // Demander la permission pour les notifications
         if ('Notification' in window && Notification.permission === 'default') {
           Notification.requestPermission().catch(function(){});
@@ -13441,6 +13446,8 @@ function _maybeShowNextHandBtn() {
       // des préférences existent pour le MODE COURANT (pastille 💾 ou Options
       // avancées), avec l'ancien pth_create_prefs en repli.
       try { var _pp = document.getElementById('cf-preset-perso'); if (_pp) _pp.style.display = this.hasCreatePrefs() ? '' : 'none'; } catch (e) {}
+      // Bloc « Style de partie » : replie par defaut, etat memorise.
+      try { this.toggleStyleGrid(localStorage.getItem('pth_create_style_open') === '1'); } catch (e) {}
       // Mode entraînement : le style de partie mémorisé (« normal » par
       // défaut) est présélectionné à l'ouverture — valeurs ET surbrillance,
       // comme le niveau de bots (mixte) juste au-dessus.
@@ -13464,6 +13471,22 @@ function _maybeShowNextHandBtn() {
     },
     closeCreatePage() {
       show('s-lobby');
+    },
+    // Développer / réduire les pastilles de style de partie (la barre « Perso »
+    // reste toujours visible). État persisté ; replié par défaut.
+    toggleStyleGrid(force) {
+      var g = document.getElementById('cf-style-grid'), b = document.getElementById('cf-style-toggle');
+      if (!g) return;
+      var open = (force != null) ? !!force : (g.style.display === 'none');
+      g.style.display = open ? '' : 'none';
+      if (b) {
+        b.setAttribute('aria-expanded', open ? 'true' : 'false');
+        var tx = b.querySelector('.cfs-tx');
+        if (tx) { tx.setAttribute('data-i18n', open ? 'styleCollapse' : 'styleExpand'); tx.textContent = t(open ? 'styleCollapse' : 'styleExpand'); }
+        var ar = b.querySelector('.cfs-arr');
+        if (ar) ar.textContent = open ? '\u25b4' : '\u25be';
+      }
+      try { localStorage.setItem('pth_create_style_open', open ? '1' : '0'); } catch (e) {}
     },
     // Stepper +/- (page « Créer une partie ») : incrémente/décrémente un champ
     // numérique selon son step/min/max. Réutilise les IDs existants.
@@ -13883,6 +13906,10 @@ function _maybeShowNextHandBtn() {
         password:        tablePass,
       };
       send(MSG.buildCreateGame(name, nplayers, blind, stack, timeout, opts));
+      // Entrainement : « Creer une table » lance directement la partie —
+      // startWithBots() est declenche par le hook JoinGameAck des que gId
+      // est connu (window._offlineAutoReplay, deja utilise par le replay).
+      if (window._offlineMode) window._offlineAutoReplay = true;
       // Remember these settings so the next time the create form opens it
       // starts from what the user actually used last (not just the per-mode
       // default). Display-only convenience; the name itself is intentionally
@@ -15637,7 +15664,7 @@ function renderPlayersList() {
   body.innerHTML = _shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>';
 }
 
-;(function(){ window.BUILD_VERSION='0.3.570-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.571-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

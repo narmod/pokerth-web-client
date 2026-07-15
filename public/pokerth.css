@@ -6037,6 +6037,20 @@ html[data-table="pokerth-live"] .raise-slider { accent-color: #4CAF50; }
 
 /* Préréglages */
 .cf-presets-label { font-size: 0.6rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--gold-dim); font-weight: 600; margin: 0 2px 8px; }
+/* Rangée label + bouton Développer/Réduire du bloc « Style de partie ». */
+.cf-style-label-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.cf-style-toggle {
+  display: inline-flex; align-items: center; gap: 5px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--gold-dim);
+  font-family: inherit; font-size: 0.6rem; font-weight: 600;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  padding: 3px 8px; cursor: pointer;
+}
+.cf-style-toggle:hover { border-color: var(--gold-dim); color: var(--gold); }
+.cf-style-toggle .cfs-arr { font-size: 0.7rem; line-height: 1; }
 .cf-presets { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
 .cf-preset {
   flex: 1 1 104px; border: 1.5px solid var(--border); border-radius: 9px; background: var(--inset);
