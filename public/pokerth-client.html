@@ -1976,7 +1976,6 @@ if ('serviceWorker' in navigator) {
       <div class="adv-row"><span data-i18n="advLanguage">Language</span><div class="sel-wrap adv-sel"><button type="button" id="adv-lang-btn" class="adv-lang-btn" onclick="openLangMenu(event)" aria-haspopup="menu" aria-label="Switch language" data-i18n-title="langTooltip"></button><span class="sel-arr">▾</span></div></div>
       <label class="adv-row"><input type="checkbox" id="adv-tooltips" onchange="setTooltips(this.checked)"><span data-i18n="advShowTooltips">Show tooltips</span></label>
       <label class="adv-row adv-soon"><input type="checkbox" disabled><span data-i18n="advDisableSplash">Disable the splash screen on startup</span><em data-i18n="advNA">n/a</em></label>
-      <label class="adv-row adv-soon"><input type="checkbox" disabled><span data-i18n="advDontTranslatePoker">Don't translate poker terms (Check, Call, Raise)</span><em data-i18n="advNA">n/a</em></label>
       <div class="adv-sec" data-i18n="advSecCards">Cards</div>
       <label class="adv-row"><input type="checkbox" id="adv-anim" onchange="setAdvOpt('anim_cards',this.checked)"><span data-i18n="advAnimCards">Card animations</span></label>
       <label class="adv-row"><input type="checkbox" id="adv-fadelosers" onchange="setAdvOpt('fade_losers',this.checked)"><span data-i18n="advFadeLosers">Fade losing cards at showdown</span></label>
@@ -2007,7 +2006,7 @@ if ('serviceWorker' in navigator) {
       <label class="adv-row"><input type="checkbox" id="adv-seatsync" onchange="setSeatSync(this.checked)"><span data-i18n="advSeatSync">Sync seats with orientation (PokerTH portrait/landscape)</span><em class="adv-webtag">web</em></label>
 
       <div class="adv-sec" data-i18n="advSecChat">Chat</div>
-      <label class="adv-row"><input type="checkbox" id="adv-noemoji" onchange="setAdvOpt('chat_noemoji',this.checked)"><span data-i18n="advNoChatEmoji">Disable emojis in chat</span><em class="adv-webtag">web</em></label>
+      <label class="adv-row"><input type="checkbox" id="adv-noemoji" onchange="setAdvOpt('chat_noemoji',this.checked)"><span data-i18n="advNoChatEmoji">Disable emojis in chat</span></label>
       <label class="adv-row"><input type="checkbox" id="adv-chattranslate" onchange="setChatTranslate(this.checked)"><span data-i18n="advChatTranslate">Chat translation (browser API, per-message button)</span><em class="adv-webtag">web</em></label>
 
       <div class="adv-sec" data-i18n="advSecCommunity">Community</div>
@@ -2020,7 +2019,7 @@ if ('serviceWorker' in navigator) {
 
       <div class="adv-sec" data-i18n="advSecHelp">Assistance</div>
       <label class="adv-row"><input type="checkbox" id="adv-assist" onchange="setAssist(this.checked)"><span data-i18n="assist">Assistance</span><em class="adv-webtag">web</em></label>
-      <label class="adv-row"><input type="checkbox" id="adv-showodds" onchange="setAdvOpt('show_odds',this.checked)"><span data-i18n="advShowOdds">Show odds in the Chances panel</span><em class="adv-webtag">web</em></label>
+      <label class="adv-row"><input type="checkbox" id="adv-showodds" onchange="setAdvOpt('show_odds',this.checked)"><span data-i18n="advShowOdds">Show odds in the Chances panel</span></label>
 
       <div class="adv-sec" data-i18n="advSecKeys">Keyboard shortcuts</div>
       <div class="adv-keys" id="adv-keys">
