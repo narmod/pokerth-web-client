@@ -9336,7 +9336,9 @@ const App = (() => {
   // comme dans le QML (sinon la bisection remplirait l'écart créé).
   // Fonction PURE (aucun DOM) → testée en Node (window._qmlLandscapeLayout).
   function _qmlLandscapeLayout(oppCnt, zW, zH, compact, zoomMul) {
-    var oppBaseW = 114, oppBaseH = 84, selfBaseW = 114, selfBaseH = 96; // self 96 (QML 2.1.3 §4.2), opp 84
+    var oppBaseW = 114, oppBaseH = 84, selfBaseH = compact ? 94 : 96; // QML 2.1.3 §4.2
+    // selfBaseWidth QML : 2*4 + min(cH,60) + 4 + 2*round(cH*120/168) + 4, cH = selfH-12-32 (paysage)
+    var _scH = selfBaseH - 44, selfBaseW = 8 + Math.min(_scH, 60) + 4 + 2 * Math.round(_scH * 120 / 168) + 4;
     // MESURE REELLE des boxes (posee par renderSeats apres chaque rendu) :
     // les constantes ci-dessus sous-estiment les boxes DOM (nom + cash +
     // cartes + badges), donc la bisection de faisabilite laissait des
@@ -9351,7 +9353,7 @@ const App = (() => {
       }
     } catch (e) {}
     var opponentGapBase = 10, selfBadgeGapBase = 8, sideBadgeGapBase = 48;
-    var gap = compact ? 6 : 12;   // compact : densité téléphone (sièges plus gros), normal : 12
+    var gap = 4;   // STRICT QML : slack de paire de la bisection (gap = 4, les deux modes)
     // 2.1.3 (buildLandscapeSlots) : selfWeight 0.3 en wide (l'anneau se
     // resserre autour de la self, TL/TR tombent a ~230/310 au lieu de
     // 240/300) ; le landscapeCompact GARDE 0.5 (layout separe, inchange).
@@ -9371,17 +9373,17 @@ const App = (() => {
     }
 
     // Géométrie s-dépendante (mêmes formules pour la bisection ET les slots).
-    function geom(s) {
+    function geom(s, feas) {
       var visualW = oppBaseW * s, visualH = oppBaseH * s, selfVisualH = selfBaseH * s;
       var sideMargin = Math.max(18, zW * 0.025) + sideBadgeGapBase * s;
       var selfGapY = compact ? Math.max(8, selfBadgeGapBase * s * 0.5) : selfBadgeGapBase * s;
       var sideX = (sideMargin + visualW / 2) / Math.max(zW, 1);
       var radiusX = Math.min(0.36, Math.max(0.22, 0.5 - sideX));
-      // Compact : réserve haute réduite 39 → 24 (le surplomb badge réel est
-      // ~15·s ; le forfait 39 mangeait la bande verticale déjà minuscule des
-      // téléphones en paysage — demande narmod 2026-07-15 : sièges plus gros).
-      var topBadgeExt = compact ? 24 : 0;
-      var topY = ((compact ? 0 : 28) + visualH / 2 + topBadgeExt * s) / Math.max(zH, 1);
+      // STRICT QML : la BISECTION (feasibleAt) réserve le surplomb badge haut
+      // (topBadgeExt 39·s en compact), mais buildLandscapeSlots trace les
+      // slots SANS cette réserve (deux ellipses distinctes, comme le source).
+      var topBadgeExt = compact ? 39 : 0;
+      var topY = ((compact ? 0 : 12) + visualH / 2 + (feas ? topBadgeExt * s : 0)) / Math.max(zH, 1);
       var selfTop = zH - 4 - selfVisualH;
       var bottomY = (selfTop - selfGapY - visualH / 2) / Math.max(zH, 1);
       var centerY = (topY + bottomY) / 2;
@@ -9435,7 +9437,7 @@ const App = (() => {
 
     function feasibleAt(s) {
       if (oppCnt < 2) return true;
-      var g = geom(s);
+      var g = geom(s, true);
       if (g.radiusY <= 0 || g.radiusX <= 0) return false;
       var radiusXpix = g.radiusX * zW, radiusYpix = g.radiusY * zH;
       var centerYpix = g.centerY * zH;
@@ -9450,29 +9452,18 @@ const App = (() => {
                 + (Math.abs(vC[0]) < 0.25 ? s * 25 : 0);
           if (b > topOppBottom) topOppBottom = b;
         }
-        // PARITÉ QML (portage C) : la bisection officielle ne réserve PAS la
-        // community proportionnellement à s — commScale (continu, plancher
-        // 0.55) s'adapte APRÈS dans la lacune restante. On garde une réserve
-        // PLANCHER fixe (rangée à ~0.58 + badge pot ≈ 96 px) pour que la
-        // rivière reste lisible ; l'ancien 0.95·s·124+28 couplait cartes et
-        // boxes et bridait fortement s sur fenêtres basses.
+        // STRICT QML : réserve community proportionnelle à s (rangée 64 +
+        // badge pot 40 + winner 20 = 124, à 0.72·s, + pad 28) — verbatim
+        // GamePage.qml feasibleAt.
         if (topOppBottom > -1e9
-            && (zH - 12 - g.selfVisualH) - topOppBottom < 96)
+            && (zH - 12 - g.selfVisualH) - topOppBottom < 0.72 * s * 124 + 28)
           return false;
       }
-      // Contrainte paires voisines : séparées horizontalement OU verticalement.
-      // PARITÉ QML 2.1.3 (portage C) : la bisection officielle ne teste que les
-      // RECTS des boxes — les jetons de mise (BetChip, en surplomb latéral) ne
-      // réservent PAS d'espace et peuvent effleurer la box voisine comme dans
-      // le client officiel. L'ancien +sideBadgeGapBase (48 px) gonflait le
-      // besoin horizontal de ~40 % et rapetissait toutes les boxes.
-      var xNeeded = s * oppBaseW + gap;
-      // Budget vertical badge d'action ("Se coucher"...) : surplomb ~15 px
-      // intrinsèques au-dessus de chaque box (top:-5px, ~20px de haut), EXCLU
-      // de la mesure des boxes. PROPORTIONNEL au scale (le badge est un enfant
-      // du siège, il grandit avec lui) — l'ancien forfait +26 sur-protégeait
-      // aux petites échelles et bridait la bisection (portage C).
-      var yNeeded = s * (oppBaseH + (compact ? 8 : 15)) + gap;
+      // STRICT QML (feasibleAt verbatim) : les bet-badges latéraux SONT
+      // budgétés horizontalement (+sideBadgeGapBase) ; verticalement, la
+      // hauteur de box seule suffit.
+      var xNeeded = s * (oppBaseW + sideBadgeGapBase) + gap;
+      var yNeeded = s * oppBaseH + gap;
       for (var iPair = 1; iPair < oppCnt; iPair++) {
         var v1 = slotVec(g, firstAngle + (iPair - 1) * stepDeg, false);
         var v2 = slotVec(g, firstAngle + iPair * stepDeg, false);
@@ -9489,8 +9480,8 @@ const App = (() => {
       var visualH = oppBaseH * s, selfVisualH = selfBaseH * s;
       var topYband = (compact ? 0 : 4) + visualH / 2;
       var topOppBottom = topYband + visualH / 2 + s * 25;
-      // Réserve community PLANCHER fixe, cohérente avec feasibleAt (portage C).
-      return (zH - 12 - selfVisualH) - topOppBottom >= 96;
+      // STRICT QML (feasibleHeadsUp verbatim) : réserve proportionnelle à s.
+      return (zH - 12 - selfVisualH) - topOppBottom >= 0.72 * s * 124 + 28;
     }
 
     // Zoom « dans le layout » : sémantique s = base × zoom, bornée par la
@@ -9521,7 +9512,7 @@ const App = (() => {
     if (_zm <= 1.001) sFin = Math.max(0.55, s1 * _zm);
     else sFin = Math.max(s1, Math.min(s1 * _zm, sMaxZ));
     // Slots finaux aux rayons du s retenu (pairSpread actif, comme le QML).
-    var gF = geom(sFin);
+    var gF = geom(sFin, false);
     var slots = [], raw = [];
     for (var k = 0; k < oppCnt; k++) {
       var dK = firstAngle + k * stepDeg;
@@ -9763,7 +9754,15 @@ const App = (() => {
     try {
       var _smw = window.innerWidth, _smh = window.innerHeight;
       if (_smh > _smw) SELF_BOX_MUL = 1.155;
-      else if (_smh < 600) SELF_BOX_MUL = 1.15;  // paysage mobile : 1.3 → 1.15 (demande narmod 2026-07-15 : sièges plus gros, self « à peine » — la réservation self libérée profite à la bisection) ; la garde mesurée protège la rivière
+      else if (_smh < 600) SELF_BOX_MUL = 1.15;
+      // STRICT QML (packs pokerth) : GamePlayerSelfBox est scalée par
+      // boxScale COMME les adversaires (scale: tableZone.boxScale) — sa
+      // proéminence vient de ses dimensions de BASE (avatar 52, cartes
+      // 37×52, déjà dans le CSS des packs). Le multiplicateur émulait ce
+      // ratio quand la self partageait le CSS des adversaires ; le garder
+      // ferait un double boost (+14 %) et sur-réserverait la bisection.
+      // Les packs non-pokerth (plate/card/bar, CSS partagé) le conservent.
+      if ((document.documentElement.getAttribute('data-seat') || '').indexOf('pokerth') === 0) SELF_BOX_MUL = 1;
     } catch (e) {}
     // Placement des sièges : 'classic' (ellipse maison, défaut) ou 'official'
     // (slots fixes du client PokerTH : grille périmètre en paysage façon client
@@ -15816,7 +15815,7 @@ function renderPlayersList() {
   body.innerHTML = _shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>';
 }
 
-;(function(){ window.BUILD_VERSION='0.3.590-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.591-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
