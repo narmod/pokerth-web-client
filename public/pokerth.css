@@ -4559,7 +4559,10 @@ body:not(.in-game) .my-zone {
    CENTRÉ, large de max(largeur visuelle des cartes communes, 380 px) — posé
    par renderSeats dans --abar-w. Portrait / hors placement officiel : la
    variable est absente -> pleine largeur (comportement historique). */
-.my-zone .action-grid { max-width: var(--abar-w, none); margin-left: auto; margin-right: auto; }
+/* !important : les blocs média portrait/paysage plus bas posent max-width:100%
+   et gagneraient la cascade ; --abar-w n'est posée QUE quand la règle QML
+   s'applique (paysage officiel), sinon repli none = aucun effet. */
+.my-zone .action-grid { max-width: var(--abar-w, none) !important; margin-left: auto; margin-right: auto; }
 .mid-row { display: flex; gap: 6px; align-items: stretch; }
 /* Parite QML GameActionBar : quick-bets a taille fixe, All-In colle juste
    apres Pot, seul le dropdown de mode est pousse a droite (margin-left auto).

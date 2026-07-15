@@ -9339,19 +9339,12 @@ const App = (() => {
     var oppBaseW = 114, oppBaseH = 84, selfBaseH = compact ? 94 : 96; // QML 2.1.3 §4.2
     // selfBaseWidth QML : 2*4 + min(cH,60) + 4 + 2*round(cH*120/168) + 4, cH = selfH-12-32 (paysage)
     var _scH = selfBaseH - 44, selfBaseW = 8 + Math.min(_scH, 60) + 4 + 2 * Math.round(_scH * 120 / 168) + 4;
-    // MESURE REELLE des boxes (posee par renderSeats apres chaque rendu) :
-    // les constantes ci-dessus sous-estiment les boxes DOM (nom + cash +
-    // cartes + badges), donc la bisection de faisabilite laissait des
-    // chevauchements a l'ecran. offsetWidth/Height ignorent les transforms
-    // -> tailles intrinseques, la bisection reduit s jusqu'au vrai non-
-    // chevauchement (compact comme normal).
-    try {
-      var _md = window._seatDimsMeasured;
-      if (_md && _md.w > 40 && _md.h > 30) {
-        oppBaseW = _md.w; oppBaseH = _md.h; selfBaseW = _md.w;
-        if (_md.sh > 40) selfBaseH = _md.sh;
-      }
-    } catch (e) {}
+    // STRICT QML : la géométrie (radiusX/Y, bande verticale, selfClearX)
+    // utilise les BASES du client officiel, jamais les dimensions DOM
+    // mesurées — sinon la FORME de l'ellipse diverge (constaté chez narmod :
+    // dims 94×77 → rayons différents à bisection égale). Le CSS des packs
+    // pokerth tient les plaques au gabarit ~114×84/96 ; un léger écart de
+    // contenu est accepté, comme dans le client officiel.
     var opponentGapBase = 10, selfBadgeGapBase = 8, sideBadgeGapBase = 48;
     var gap = 4;   // STRICT QML : slack de paire de la bisection (gap = 4, les deux modes)
     // 2.1.3 (buildLandscapeSlots) : selfWeight 0.3 en wide (l'anneau se
@@ -9547,11 +9540,7 @@ const App = (() => {
   // (voisins de slotSeqPortrait : dx OU dy >= boîte·s + 8). Plafond fillCap(1.85),
   // plancher 0.55, 14 itérations. Fonction PURE (window._qmlPortraitScale).
   function _qmlPortraitScale(oppCnt, zW, zH, zoomMul) {
-    var oppW = 121, oppH = 71, selfH = 82;   // bases QML 2.1.3 (portrait)
-    try {
-      var _md = window._seatDimsMeasured;
-      if (_md && _md.w > 40 && _md.h > 30) { oppW = _md.w; oppH = _md.h; if (_md.sh > 40) selfH = _md.sh; }
-    } catch (e) {}
+    var oppW = 121, oppH = 71, selfH = 82;   // bases QML 2.1.3 (portrait) — STRICT : jamais les dims mesurées
     var SLOTS = { L_bottom:[0.15,0.785], L_lower:[0.15,0.65], L_upper:[0.15,0.345],
                   TL:[0.15,0.21], TC:[0.50,0.075], TR:[0.85,0.21],
                   R_upper:[0.85,0.345], R_lower:[0.85,0.65], R_bottom:[0.85,0.785] };
@@ -15897,7 +15886,7 @@ function renderPlayersList() {
   body.innerHTML = _shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>';
 }
 
-;(function(){ window.BUILD_VERSION='0.3.594-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.595-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
