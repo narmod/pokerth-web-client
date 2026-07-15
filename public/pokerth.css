@@ -472,6 +472,14 @@ body {
     url("/img/pokerth-login-bg.webp") center / cover no-repeat;
 }
 
+/* Chrome Android : les items flex de la carte login (select de mode, input
+   pseudo/host) ont min-width:auto = leur largeur intrinsèque et ne peuvent
+   pas rétrécir → la rangée déborde de la carte et le bouton avatar sort de
+   l'écran. min-width:0 rend les rangées compressibles ; les boutons 🐼/⚙
+   gardent leur taille (flex-shrink:0). Même leçon que la barre d'action. */
+.card .sel-wrap { min-width: 0; }
+.card .f input { min-width: 0; }
+
 .form-card, .card {
   background: var(--modal-bg);
   border: 1px solid var(--border-hi);
