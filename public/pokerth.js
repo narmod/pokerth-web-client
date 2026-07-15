@@ -10783,7 +10783,10 @@ const App = (() => {
       // kf = 12/15 = 0.8 en landscapeCompact, 1 sinon. (Remplace le rétreint
       // continu min(W/1300, H/900) qui faisait des boutons de 45 px sur des
       // fenêtres où le QML en affiche 54 — demande narmod 15/07.)
-      var _lcB = _bh < 600 || (_bw / Math.max(_bh, 1) > 2.1 && _bh < 800);
+      // compactActions QML = landscapeCompact && isMobile : le desktop
+      // ultrawide GARDE 54 px (« Auf dem Desktop bleiben die Buttons groß »).
+      // Approximation web d'isMobile : paysage avec hauteur < 600.
+      var _lcB = _bw > _bh && _bh < 600;
       var _bk = _lcB ? 0.741 : (_bw < 600 ? 1.037 : 1);
       var _bkf = _lcB ? 0.8 : 1;
       if (window.__barK !== _bk) {
@@ -15612,7 +15615,7 @@ function renderPlayersList() {
   body.innerHTML = _shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>';
 }
 
-;(function(){ window.BUILD_VERSION='0.3.562-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.563-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

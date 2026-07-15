@@ -2278,10 +2278,35 @@ body {
   .pb-info { min-width: 60px; }
 
   /* table padding via scaler */
-  /* Actions */
-  .btn-action { padding: 8px 10px; font-size: 0.76rem; }
-  .pct-row .btn-pct { flex: 1; padding: 7px 4px; font-size: 0.76rem; }
-  .raise-row .raise-input { flex: 1; padding: 10px 6px; font-size: 0.84rem; }
+  /* ── Gabarit PORTRAIT téléphone : valeurs QML Theme.compact (GameActionBar
+     2.1.3) — rangée d'action 56 px police 15, rangée de relance 26 px :
+     montant 78 (police 13), quick-bets 38, Tapis 52, dropdown 132 à droite.
+     Préfixe .my-zone : les anciennes règles nues (.btn-action…) étaient
+     MORTES, battues par les règles de base plus bas dans le fichier (une
+     @media n'augmente pas la spécificité — même leçon que le bloc paysage). */
+  .my-zone .act-buttons-row .btn-action { min-height: 56px; padding: 0 8px; font-size: 15px; letter-spacing: 0.5px; border-radius: 9px; min-width: 0; }
+  .my-zone .bet-row { gap: 6px; }
+  .my-zone .bet-row .raise-amt-field { width: 78px; flex: 0 0 auto; height: 26px; min-height: 26px; padding: 1px 6px; font-size: 13px; }
+  .my-zone .bet-row .raise-slider { flex: 1 1 auto; min-width: 60px; }
+  .my-zone .mid-row { gap: 4px; align-items: center; }
+  .my-zone .mid-row .pct-row { flex: 0 0 auto; width: auto; gap: 4px; }
+  .my-zone .mid-row .btn-pct { flex: 0 0 38px; width: 38px; min-width: 38px; height: 26px; min-height: 26px; padding: 0 2px; border-radius: 5px; font-size: 11px; font-weight: 700; }
+  .my-zone .mid-row .btn-pct .pct-amt { display: none; }
+  .my-zone .mid-row .btn-allin { flex: 0 0 52px; width: 52px; min-width: 52px; height: 26px; min-height: 26px; font-size: 12px; padding: 0 2px !important; white-space: nowrap; }
+  .my-zone .mid-row .mode-sel-wrap { flex: 0 1 132px; min-width: 0; height: 26px; margin-left: auto; }
+  .my-zone .mid-row .mode-sel-wrap select { height: 100%; padding-top: 0; padding-bottom: 0; line-height: 1.1; }
+  /* Thème à SVG : Tapis 52×26 en image étirée (le 9-slice se déchire à cette
+     taille — même solution que paysage/desktop). !important : bat le border
+     9px transparent + padding de :root[data-btn-img] .btn-action (règle de
+     base, plus bas dans le fichier). */
+  :root[data-btn-img] .my-zone .mid-row .btn-allin {
+    border: none !important;
+    background: transparent !important;
+    background-image: var(--btn-allin-img) !important;
+    background-size: 100% 100% !important;
+    background-repeat: no-repeat !important;
+    border-radius: 6px;
+  }
   .my-zone { padding: 5px 8px; }
   .pot-bar { font-size: 0.7rem; }
 
