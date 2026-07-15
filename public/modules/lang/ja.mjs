@@ -135,7 +135,7 @@ export const strings = {
 
     guestHint:'🌐 pokerth.net にゲストで参加 — アカウント不要。',
     srvOffline:'🏋️ 練習モード', offlineHint:'🤖 ボットと対戦 — 接続不要。',
-    srvPokerthNet:'🌐 インターネット / PokerTH.net',
+    srvPokerthNet:'🌐 インターネット',
     preActionTitle:'アクションのプレビュー', preActionHint:'カードをタップして閉じる',
     blindsNextTip:'あと{n}ハンド', blindsEveryMin:'{n}分ごと',
     connect: '接続',

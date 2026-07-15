@@ -136,7 +136,7 @@ export const strings = {
 
     guestHint:'🌐 Hra jako host na pokerth.net — bez účtu.',
     srvOffline:'🏋️ Tréninkový režim', offlineHint:'🤖 Hra proti botům — bez připojení.',
-    srvPokerthNet:'🌐 Internet / PokerTH.net',
+    srvPokerthNet:'🌐 Internet',
     preActionTitle:'Náhled akcí', preActionHint:'klepni na karty pro zavření',
     blindsNextTip:'za {n} her', blindsEveryMin:'každých {n} min',
     connect: 'Připojit',

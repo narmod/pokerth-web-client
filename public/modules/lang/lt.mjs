@@ -136,7 +136,7 @@ export const strings = {
 
     guestHint:'🌐 Žaidimas kaip svečias pokerth.net — be paskyros.',
     srvOffline:'🏋️ Treniruočių režimas', offlineHint:'🤖 Žaidimas prieš botus — ryšio nereikia.',
-    srvPokerthNet:'🌐 Internetas / PokerTH.net',
+    srvPokerthNet:'🌐 Internetas',
     preActionTitle:'Veiksmų peržiūra', preActionHint:'palieskite kortas, kad uždarytumėte',
     blindsNextTip:'po {n} rankų', blindsEveryMin:'kas {n} min',
     connect: 'Prisijungti',

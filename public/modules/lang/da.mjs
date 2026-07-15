@@ -135,7 +135,7 @@ export const strings = {
 
     guestHint:'🌐 Gæstespil på pokerth.net — ingen konto nødvendig.',
     srvOffline:'🏋️ Træningstilstand', offlineHint:'🤖 Spil mod bots — ingen forbindelse nødvendig.',
-    srvPokerthNet:'🌐 Internet / PokerTH.net',
+    srvPokerthNet:'🌐 Internet',
     preActionTitle:'Forhåndsvisning af handlinger', preActionHint:'tryk på kortene for at lukke',
     blindsNextTip:'om {n} hænder', blindsEveryMin:'hver {n}. min',
     connect: 'Tilslut',

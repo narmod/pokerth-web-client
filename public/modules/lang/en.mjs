@@ -43,7 +43,7 @@ export const strings = {
   sectionSeat: 'Seats', seatClassic: 'Classic', seatPlate: 'Plate',
     guestHint:'🌐 Guest play on pokerth.net — no account needed.',
     srvOffline:'🏋️ Training mode', offlineHint:'🤖 Play against bots — no connection needed.',
-    srvPokerthNet:'🌐 Internet / PokerTH.net',
+    srvPokerthNet:'🌐 Internet',
     botDifficulty:'Bot difficulty', botEasy:'Easy', botMixed:'Mixed', botNormal:'Normal', botHard:'Hard',
     blindsNextTip:'in {n} hand(s)', blindsEveryMin:'every {n} min', blindsUpHands:'{n} hands', blindsUpMins:'{n} min',
     connect:'Connect', disconnect:'✕ Disconnect', connecting:'Connecting…',

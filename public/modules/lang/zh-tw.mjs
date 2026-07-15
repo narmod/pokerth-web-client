@@ -137,7 +137,7 @@ export const strings = {
 
     guestHint:'🌐 在 pokerth.net 以訪客身分遊戲 — 無需帳號。',
     srvOffline:'🏋️ 訓練模式', offlineHint:'🤖 與機器人對戰 — 無需連線。',
-    srvPokerthNet:'🌐 網際網路 / PokerTH.net',
+    srvPokerthNet:'🌐 網際網路',
     preActionTitle:'操作預覽', preActionHint:'點選手牌關閉',
     blindsNextTip:'{n} 手後', blindsEveryMin:'每 {n} 分鐘',
     connect: '連線',

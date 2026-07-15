@@ -141,7 +141,7 @@ export const strings = {
 
     guestHint:'🌐 Spelen als gast op pokerth.net — geen account nodig.',
     srvOffline:'🏋️ Oefenmodus', offlineHint:'🤖 Solo tegen bots — geen verbinding nodig.',
-    srvPokerthNet:'🌐 Internet / PokerTH.net',
+    srvPokerthNet:'🌐 Internet',
     preActionTitle:'Actievoorbeeld', preActionHint:'tik op kaarten om te sluiten',
     blindsNextTip:'over {n} hand(en)', blindsEveryMin:'elke {n} min',
     connect: 'Verbinden',
