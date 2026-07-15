@@ -4567,6 +4567,15 @@ body:not(.in-game) .my-zone {
    (2) le bloc média fs+hide-pbar portrait pose margin:0. Les auto-margins
    ne décalent rien quand max-width vaut none (grille pleine largeur). */
 .my-zone .action-grid { max-width: var(--abar-w, none) !important; margin-left: auto !important; margin-right: auto !important; }
+/* ── Zone PORTRAIT (placement officiel, data-abar posé par renderSeats) :
+   budget vertical de GameActionBar QML — raiseSection topPadding 4 /
+   leftPadding-rightPadding 8 / bottomPadding 2, spacing 3 ; rangée de
+   boutons : marges internes 5 (haut, via gap+2) et 6 (bas). L'enrobage web
+   (my-zone 5px, panneau 8/10, gaps 6) coûtait ~25 px de tableZone → cartes
+   plus petites que le client officiel à fenêtre égale. ── */
+html[data-abar="portrait"] .my-zone { padding-top: 0 !important; padding-bottom: 0 !important; }
+html[data-abar="portrait"] .my-zone .action-grid { padding: 4px 8px 2px !important; gap: 3px !important; }
+html[data-abar="portrait"] .my-zone .act-buttons-row { margin-top: 2px; margin-bottom: 6px; gap: 8px; }
 .mid-row { display: flex; gap: 6px; align-items: stretch; }
 /* Parite QML GameActionBar : quick-bets a taille fixe, All-In colle juste
    apres Pot, seul le dropdown de mode est pousse a droite (margin-left auto).

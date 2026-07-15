@@ -10530,8 +10530,12 @@ const App = (() => {
             var _cmEl2 = document.getElementById('g-comm');
             var _cw2 = _cmEl2 ? _cmEl2.getBoundingClientRect().width : 0;
             document.documentElement.style.setProperty('--abar-w', Math.round(Math.max(_cw2 || 0, 380)) + 'px');
+            document.documentElement.removeAttribute('data-abar');
           } else {
             document.documentElement.style.removeProperty('--abar-w');
+            // Zone portrait : paddings/gaps QML compacts sur la barre
+            // (raiseSection 4/8/2, spacing 3) — récupère ~25 px de zone.
+            document.documentElement.setAttribute('data-abar', 'portrait');
           }
         } catch (eW) {}
         // ── Position verticale (parité anchors QML) : la rangée .comm-row est
@@ -10564,6 +10568,7 @@ const App = (() => {
         document.documentElement.style.removeProperty('--wallpaper-dyn-size');
         document.documentElement.style.removeProperty('--wallpaper-dyn-pos');
         document.documentElement.style.removeProperty('--abar-w');
+        document.documentElement.removeAttribute('data-abar');
       }
     } catch (e) { try { window._seatDbg.commErr = String(e); } catch (e2) {} }
     // Self-box : remonter si son bas depasse la zone (tapis coupe en plein
@@ -15901,7 +15906,7 @@ function renderPlayersList() {
   body.innerHTML = _shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>';
 }
 
-;(function(){ window.BUILD_VERSION='0.3.598-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.599-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
