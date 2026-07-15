@@ -9424,20 +9424,29 @@ const App = (() => {
                 + (Math.abs(vC[0]) < 0.25 ? s * 25 : 0);
           if (b > topOppBottom) topOppBottom = b;
         }
+        // PARITÉ QML (portage C) : la bisection officielle ne réserve PAS la
+        // community proportionnellement à s — commScale (continu, plancher
+        // 0.55) s'adapte APRÈS dans la lacune restante. On garde une réserve
+        // PLANCHER fixe (rangée à ~0.58 + badge pot ≈ 96 px) pour que la
+        // rivière reste lisible ; l'ancien 0.95·s·124+28 couplait cartes et
+        // boxes et bridait fortement s sur fenêtres basses.
         if (topOppBottom > -1e9
-            && (zH - 12 - g.selfVisualH) - topOppBottom < 0.95 * s * 124 + 28)
+            && (zH - 12 - g.selfVisualH) - topOppBottom < 96)
           return false;
       }
-      // Contrainte paires voisines : séparées horizontalement OU verticalement
-      // (badges de mise inclus côté X).
-      var xNeeded = s * (oppBaseW + sideBadgeGapBase) + gap;
-      // Budget vertical : +26px pour le badge d'action ("Se coucher"...),
-      // pose en surplomb au-dessus de chaque box (top:-5px, ~20px de haut)
-      // et volontairement EXCLU de la mesure des boxes (il apparait/
-      // disparait). Sans ce budget, deux voisins verticaux convergent au
-      // gap minimal et le badge du bas touche la box du haut (visible hors
-      // fullscreen, ou la bisection n'a pas de marge naturelle).
-      var yNeeded = s * oppBaseH + gap + 26;
+      // Contrainte paires voisines : séparées horizontalement OU verticalement.
+      // PARITÉ QML 2.1.3 (portage C) : la bisection officielle ne teste que les
+      // RECTS des boxes — les jetons de mise (BetChip, en surplomb latéral) ne
+      // réservent PAS d'espace et peuvent effleurer la box voisine comme dans
+      // le client officiel. L'ancien +sideBadgeGapBase (48 px) gonflait le
+      // besoin horizontal de ~40 % et rapetissait toutes les boxes.
+      var xNeeded = s * oppBaseW + gap;
+      // Budget vertical badge d'action ("Se coucher"...) : surplomb ~15 px
+      // intrinsèques au-dessus de chaque box (top:-5px, ~20px de haut), EXCLU
+      // de la mesure des boxes. PROPORTIONNEL au scale (le badge est un enfant
+      // du siège, il grandit avec lui) — l'ancien forfait +26 sur-protégeait
+      // aux petites échelles et bridait la bisection (portage C).
+      var yNeeded = s * (oppBaseH + 15) + gap;
       for (var iPair = 1; iPair < oppCnt; iPair++) {
         var v1 = slotVec(g, firstAngle + (iPair - 1) * stepDeg, false);
         var v2 = slotVec(g, firstAngle + iPair * stepDeg, false);
@@ -9454,7 +9463,8 @@ const App = (() => {
       var visualH = oppBaseH * s, selfVisualH = selfBaseH * s;
       var topYband = (compact ? 0 : 4) + visualH / 2;
       var topOppBottom = topYband + visualH / 2 + s * 25;
-      return (zH - 12 - selfVisualH) - topOppBottom >= 0.95 * s * 124 + 28;
+      // Réserve community PLANCHER fixe, cohérente avec feasibleAt (portage C).
+      return (zH - 12 - selfVisualH) - topOppBottom >= 96;
     }
 
     // Zoom « dans le layout » : sémantique s = base × zoom, bornée par la
@@ -15714,7 +15724,7 @@ function renderPlayersList() {
   body.innerHTML = _shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>';
 }
 
-;(function(){ window.BUILD_VERSION='0.3.579-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.580-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
