@@ -9901,6 +9901,13 @@ const App = (() => {
           // sur écran ce que la bisection théorique aurait laissé passer.
           _seatBoxScale *= (window._seatFitShave || 1);
           window._tableZoomMaxed = false;   // loupe : le plafond est géré par applyTableZoom (maxFit)
+          // Diagnostic croissance-fenêtre : échelle bisectée réellement
+          // appliquée + zone mesurée (comparaison entre navigateurs/tailles).
+          try {
+            window._seatDbg = window._seatDbg || {};
+            window._seatDbg.boxScale = _seatBoxScale;
+            window._seatDbg.zone = Math.round(zRect.width) + 'x' + Math.round(zRect.height);
+          } catch (e) {}
         }
         // Point bas exact de l'ellipse pour la self (quand l'officiel est actif).
         // L'ÉPINGLAGE mesuré au rendu (plus bas) reste la garantie finale, même
@@ -15518,7 +15525,7 @@ function renderPlayersList() {
   body.innerHTML = _shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>';
 }
 
-;(function(){ window.BUILD_VERSION='0.3.545-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.546-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
