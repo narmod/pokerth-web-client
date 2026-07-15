@@ -4670,6 +4670,18 @@ html[data-table="pokerth-live"] .raise-slider { accent-color: #4CAF50; }
 }
 .raise-row-mobile .btn-raise { flex: 0 0 auto; padding: 10px 20px; }
 
+/* Case « Ne plus afficher cette fenêtre » de l'overlay winner : discrète,
+   centrée au-dessus du bouton Continuer ; pilote l'option avancée
+   winner_popup (même clé que la case des Options avancées). */
+.wc-hide-opt {
+  display: flex; align-items: center; justify-content: center; gap: 7px;
+  margin: 6px 0 2px;
+  font-size: 0.7rem; color: var(--gold-dim);
+  cursor: pointer; user-select: none;
+}
+.wc-hide-opt input { accent-color: var(--gold, rgb(var(--gold-rgb))); cursor: pointer; }
+.wc-hide-opt:hover { color: var(--gold); }
+
 /* ══ Combinaison gagnante dans l'overlay winner ═════════════ */
 .wc-best-hand {
   text-align: center;

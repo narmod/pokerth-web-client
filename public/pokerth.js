@@ -11718,6 +11718,9 @@ function showWinnerOverlay(winners) {
   });
 
   html += '</div>';
+  // Option visuelle « Ne plus afficher » : bascule la meme option avancee
+  // winner_popup (adv-winnerpopup) — re-activable depuis les Options avancees.
+  html += '<label class="wc-hide-opt"><input type="checkbox" onchange="setAdvOpt(\'winner_popup\', !this.checked)"><span>' + t('wcHideOpt') + '</span></label>';
   html += '<button class="winner-dismiss" onclick="App.dismissWinner()">' + t('continue') + '</button>';
   html += '</div>';
 
@@ -15664,7 +15667,7 @@ function renderPlayersList() {
   body.innerHTML = _shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>';
 }
 
-;(function(){ window.BUILD_VERSION='0.3.573-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.574-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
