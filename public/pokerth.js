@@ -9874,17 +9874,17 @@ const App = (() => {
       hidePbar: _advGet('hide_pbar', true), selfHasCustom: _selfHasCustom,
       selfAtPearl: _selfAtPearl }; } catch (e) {}
     window._zoomInLayout = false;   // vrai quand le +/− est consommé par la bisection
-    // Périmètre MOBILE des mécanismes de fit (garde mesurée + zoom-layout) :
-    // ils ont dégradé desktop/tablette en 0.3.497-500 (sièges rabotés au
-    // plancher par la garde qui prenait les bords de zone pour des violations,
-    // loupe QML remplacée par le zoom-layout). Hors mobile : comportement
-    // historique — loupe uniforme, pas de rabot.
-    var _fitMobileV = false;
-    try { _fitMobileV = Math.min(window.innerWidth, window.innerHeight) < 600; } catch (e) {}
+    // Zoom-layout sur TOUS les écrans (demande narmod) : en placement OFFICIEL,
+    // le +/− est consommé par la bisection — les sièges grossissent/rétrécissent
+    // sans sortir du tapis, se toucher ni recouvrir la rivière. La régression
+    // desktop de 0.3.497-500 venait de la garde mesurée appliquée aux placements
+    // classic/custom (qui collent aux bords par design) : elle est désormais
+    // limitée au placement officiel, voir la garde post-rendu. En classic/custom
+    // le +/− reste la loupe uniforme (parité QML zoomLayer).
     if (_applyOfficial) {
       try {
         var _layoutZoom = 1;
-        try { if (_fitMobileV && typeof _getTableZoom === 'function') _layoutZoom = _getTableZoom(); } catch (e) {}
+        try { if (typeof _getTableZoom === 'function') _layoutZoom = _getTableZoom(); } catch (e) {}
         var _offPos = _officialSeatPix(rotated.length, _forceSeatPortrait, zRect.width, zRect.height, oCX, oCY, oRect, _seatBoxScale, _layoutZoom);
         // Assis (myIdx>=0) : la self (slot 0) est gérée séparément (perle) ;
         // on ne remplace que les adversaires (1+). Spectateur (myIdx<0) : pas de
@@ -9903,7 +9903,7 @@ const App = (() => {
           // Rabot anti-chevauchement MESURÉ (voir garde post-rendu) : corrige
           // sur écran ce que la bisection théorique aurait laissé passer.
           _seatBoxScale *= (window._seatFitShave || 1);
-          window._zoomInLayout = _fitMobileV;   // mobile : zoom DANS l'échelle ; desktop/tablette : loupe QML
+          window._zoomInLayout = true;   // le zoom est DANS l'échelle : pas de loupe par-dessus
           // Bouton + grisé quand le plafond de faisabilité est atteint (plus
           // aucune marge au cran suivant) ou au max du réglage.
           window._tableZoomMaxed = !_offPos._zoomHeadroom;
@@ -10277,7 +10277,7 @@ const App = (() => {
     try {
       var _fitKey = rotated.length + ':' + Math.round(zRect.width) + 'x' + Math.round(zRect.height) + ':' + (_forceSeatPortrait ? 'p' : 'l');
       if (window._seatFitKey !== _fitKey) { window._seatFitKey = _fitKey; window._seatFitShave = 1; }
-      if (!_fitMobileV) { window._seatFitShave = 1; }
+      if (!_applyOfficial) { window._seatFitShave = 1; }   // classic/custom : jamais de rabot (bords voulus)
       else if (!window._seatFitBusy) {
         var _zrG = zone.getBoundingClientRect();
         var _prs = [];
@@ -15528,7 +15528,7 @@ function renderPlayersList() {
   body.innerHTML = _shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>';
 }
 
-;(function(){ window.BUILD_VERSION='0.3.535-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.536-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
