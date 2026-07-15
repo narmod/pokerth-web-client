@@ -1537,7 +1537,7 @@ function onAvatarImageChosen(input) {
     </div>
     <!-- Zoom table : bouton repliable en mobile (une touche qui déploie les autres) -->
     <div id="g-zoom-ctrl" class="zoom-ctrl">
-      <button class="zoom-btn zoom-toggle" id="g-zoom-toggle" onclick="toggleZoomCtrl()" title="Zoom" aria-label="Zoom" aria-expanded="false">🔍</button>
+      <button class="zoom-btn zoom-toggle" id="g-zoom-toggle" onclick="toggleLoupe()" title="Loupe ×2 (QML)" aria-label="Loupe" aria-pressed="false">🔍</button>
       <button class="zoom-btn" id="g-zoom-in" onclick="tableZoomStep(1)" title="Agrandir la table" data-i18n-title="zoomIn" aria-label="Agrandir la table">+</button>
       <button class="zoom-btn" id="g-zoom-reset" onclick="tableZoomReset()" title="Réinitialiser la vue" data-i18n-title="zoomReset" aria-label="Réinitialiser la vue">↺</button>
       <button class="zoom-btn" id="g-seat-edit" onclick="toggleSeatEdit()" title="Éditer le placement des sièges" data-i18n-title="seatEditToggle" aria-label="Éditer le placement des sièges">✎</button>
@@ -1546,6 +1546,10 @@ function onAvatarImageChosen(input) {
     </div>
     <!-- TABLE -->
     <div class="table-zone" id="g-table-zone">
+      <!-- Loupe QML (zoomLayer 2.1.3) : couche adversaires + community zoomable
+           ×2 + pan ; self/action bar/fond restent hors couche visuellement
+           (la self est dedans mais re-cadrée par le pan, comme le QML 2.1.3). -->
+      <div id="g-zoom-layer">
       <div class="table-scaler" id="g-table-scaler">
         <div class="felt-oval">
           <!-- Badge pot au-dessus des cartes (tablette/desktop) — alimenté par setPot -->
@@ -1557,6 +1561,7 @@ function onAvatarImageChosen(input) {
       </div>
       <!-- Seats overlay: full zone, pixel-positioned by JS -->
       <div id="g-seats" style="position:absolute;inset:0;pointer-events:none;overflow:visible;z-index:5"></div>
+      </div><!-- /g-zoom-layer -->
     </div>
     <!-- MY SEAT ROW -->
     <!-- PLAYER BAR -->

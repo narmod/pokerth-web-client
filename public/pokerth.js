@@ -10418,6 +10418,13 @@ const App = (() => {
       h += '</div>'; // ferme .seat
     });
     el.innerHTML = h;
+    // Loupe QML : suivi différé du siège actif + suspension showdown.
+    try {
+      if (typeof window._loupeOnRender === 'function') {
+        var _actEl0 = el.querySelector('.seat.active:not(.me)');
+        window._loupeOnRender(_actEl0, !!(_sdWinners && _sdWinners.size), (typeof _timerTot !== 'undefined' ? _timerTot : 30));
+      }
+    } catch (eLp) {}
     // ── Garde anti-chevauchement MESURÉE (placement officiel) : après CHAQUE
     // rendu, on vérifie les rects RÉELS des plates — débordement de la zone,
     // recouvrement entre sièges (> 4 px sur les 2 axes) ou siège sur la bande
@@ -10476,7 +10483,11 @@ const App = (() => {
     } catch (e) {}
     // ── communityScale continu (voir bloc _commScalePending) ──
     try {
-      if (window._commScalePending && _applyOfficial) {
+      if (window._loupeK > 1) {
+        // Loupe active : rects transformés ×2 — on FIGE commScale/shift/fond
+        // (le QML calcule sa communityScale hors zoom, le zoom est au-dessus).
+        window._commScalePending = false;
+      } else if (window._commScalePending && _applyOfficial) {
         window._commScalePending = false;
         var _csComm, _zW3 = zRect.width, _zH3 = zRect.height;
         var _commTargetY = null; // centre Y cible (px zone) — parité anchors QML
@@ -10648,7 +10659,7 @@ const App = (() => {
         if (!found) return null;
         return { w: Math.round((maxX - minX) / div), h: Math.round((maxY - minY) / div) };
       };
-      var _s0m = el.querySelector('.seat:not(.me)');
+      var _s0m = (window._loupeK > 1) ? null : el.querySelector('.seat:not(.me)'); // loupe : mesure figée
       var _m0m = el.querySelector('.seat.me');
       var _dims = _s0m ? _unionSeat(_s0m, _seatBoxScale) : null;
       if (_dims && _dims.w > 40 && _dims.h > 30) {
@@ -14448,6 +14459,95 @@ function _applyZoomTransforms() {
   _applySelfZoomCounter();
 }
 // Zoom repliable en mobile : une touche 🔍 qui déploie les boutons de zoom.
+// ── Loupe QML (port de tableZone.zoomActive / zoomContent, source 2.1.3) ──
+// Facteur fixe ×2.0 sur #g-zoom-layer (transformOrigin 0,0 ; x/y =
+// (1−k)·zone/2 + pan) ; clip de la zone quand actif ; pan au pointeur ;
+// transition 220 ms OutCubic hors drag. Self/action bar/fond : hors effet.
+var _loupe = { on:false, k:2.0, panX:0, panY:0, susp:false, drag:false,
+               followSeat:null, followTmr:null };
+window._loupeK = 1;
+function _loupeZone() { return document.getElementById('g-table-zone'); }
+function _loupeClamp() {
+  var z = _loupeZone(); if (!z) return;
+  var k = _loupe.k, mX = (k - 1) / 2 * z.clientWidth, mY = (k - 1) / 2 * z.clientHeight;
+  if (_loupe.panX >  mX) _loupe.panX =  mX;
+  if (_loupe.panX < -mX) _loupe.panX = -mX;
+  if (_loupe.panY >  mY) _loupe.panY =  mY;
+  if (_loupe.panY < -mY) _loupe.panY = -mY;
+}
+function _loupeApply(anim) {
+  var el = document.getElementById('g-zoom-layer'), z = _loupeZone();
+  if (!el || !z) return;
+  var act = _loupe.on && !_loupe.susp, k = act ? _loupe.k : 1;
+  window._loupeK = k;
+  el.style.transition = (anim === false || _loupe.drag) ? 'none'
+    : 'transform 220ms cubic-bezier(0.215, 0.61, 0.355, 1)';
+  el.style.transformOrigin = '0 0';
+  el.style.transform = act
+    ? 'translate(' + ((1 - k) * z.clientWidth / 2 + _loupe.panX) + 'px,'
+                   + ((1 - k) * z.clientHeight / 2 + _loupe.panY) + 'px) scale(' + k + ')'
+    : '';
+  z.style.overflow = act ? 'hidden' : '';   // clip: tableZone.zoomActive
+  var b = document.getElementById('g-zoom-toggle');
+  if (b) { b.setAttribute('aria-pressed', _loupe.on ? 'true' : 'false');
+           b.classList.toggle('active', _loupe.on); }
+}
+function toggleLoupe() {
+  _loupe.on = !_loupe.on;
+  if (!_loupe.on) { _loupe.panX = _loupe.panY = 0; _loupe.susp = false;
+                    if (_loupe.followTmr) { clearTimeout(_loupe.followTmr); _loupe.followTmr = null; }
+                    _loupe.followSeat = null; }
+  _loupeClamp(); _loupeApply();
+}
+window.toggleLoupe = toggleLoupe;
+// Pan au pointeur (souris/tactile). Sièges et boutons restent cliquables :
+// le drag ne démarre pas dessus (comme le DragHandler QML sous les items).
+(function () {
+  var sx = 0, sy = 0, px = 0, py = 0;
+  document.addEventListener('pointerdown', function (e) {
+    if (!(_loupe.on && !_loupe.susp)) return;
+    var z = _loupeZone(); if (!z || !z.contains(e.target)) return;
+    if (e.target.closest && (e.target.closest('.seat') || e.target.closest('button') || e.target.closest('select'))) return;
+    _loupe.drag = true; sx = e.clientX; sy = e.clientY; px = _loupe.panX; py = _loupe.panY;
+  }, true);
+  document.addEventListener('pointermove', function (e) {
+    if (!_loupe.drag) return;
+    _loupe.panX = px + (e.clientX - sx); _loupe.panY = py + (e.clientY - sy);
+    _loupeClamp(); _loupeApply(false);
+  });
+  document.addEventListener('pointerup', function () {
+    if (_loupe.drag) { _loupe.drag = false; _loupeApply(); }
+  });
+})();
+// Hook appelé par renderSeats : suivi différé du siège actif + suspension au
+// showdown (parité _scheduleFollow/_doFollow + _zoomSuspendedByShowdown).
+window._loupeOnRender = function (activeEl, showdown, timerTot) {
+  if (!_loupe.on) return;
+  var z = _loupeZone(); if (!z) return;
+  if (showdown) {   // dézoom pour la vue d'ensemble, réactivé main suivante
+    if (!_loupe.susp) { _loupe.susp = true; _loupeApply(); }
+    return;
+  }
+  if (_loupe.susp) { _loupe.susp = false; _loupeApply(); }
+  var key = activeEl ? (activeEl.getAttribute('data-pid') || 'x') : null;
+  if (!key || key === _loupe.followSeat) return;
+  _loupe.followSeat = key;
+  if (_loupe.followTmr) clearTimeout(_loupe.followTmr);
+  var ms = Math.max(800, (timerTot || 30) * 250);
+  _loupe.followTmr = setTimeout(function () {
+    _loupe.followTmr = null;
+    if (!_loupe.on || _loupe.susp || _loupe.drag) return;
+    var el = document.querySelector('#g-seats .seat.active:not(.me)');
+    var z2 = _loupeZone(); if (!el || !z2) return;
+    // Coordonnées zone (style left/top posés par renderSeats, non transformés).
+    var pxT = parseFloat(el.style.left) || 0, pyT = parseFloat(el.style.top) || 0;
+    _loupe.panX = _loupe.k * (z2.clientWidth / 2 - pxT);
+    _loupe.panY = _loupe.k * (z2.clientHeight / 2 - pyT);
+    _loupeClamp(); _loupeApply();
+  }, ms);
+};
+window.addEventListener('resize', function () { _loupeClamp(); _loupeApply(false); });
+
 function toggleZoomCtrl() {
   var el = document.getElementById('g-zoom-ctrl');
   if (!el) return;
@@ -15911,7 +16011,7 @@ function renderPlayersList() {
   body.innerHTML = _shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>';
 }
 
-;(function(){ window.BUILD_VERSION='0.3.600-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.601-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

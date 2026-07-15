@@ -7155,8 +7155,14 @@ body.has-keyboard .act-key { display: inline-block; }
    navigateur/OS — le placement redevient strictement QML partout.
    🔍/+/↺/− masqués ; ✎ (édition custom, régi par ses propres règles #id)
    et le zoom de cartes restent visibles en permanence. */
-.zoom-toggle { display:none !important; }
+/* 🔍 réactivé : c'est désormais la LOUPE QML (zoomLayer ×2, pan, follow).
+   +/↺/− (ancien zoom de layout) restent retirés. */
 #g-zoom-in, #g-zoom-reset, #g-zoom-out { display:none !important; }
+/* Couche zoomable (parité zoomLayer QML) : mêmes règles de centrage que
+   .table-zone ; le transform est posé par _loupeApply (transition 220ms
+   OutCubic hors drag). */
+#g-zoom-layer { position:absolute; inset:0; display:flex; align-items:center;
+  justify-content:center; overflow:visible; will-change:transform; }
 .zoom-ctrl .zoom-btn:not(.zoom-toggle) { display:flex; }
 .zoom-btn.active { background: var(--accent, #E3C800); color: #1a1205; border-color: var(--accent, #E3C800); }
 
