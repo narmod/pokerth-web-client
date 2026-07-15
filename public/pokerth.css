@@ -7638,9 +7638,14 @@ html:not([data-seat^="pokerth"]) body.adv-hide-pbar .seat.me .seat-info {
    display-only (pointer-events:none -> ne bloque pas les sièges derrière). */
 /* ── Panneau info unifié : onglets Historique/Chances (QML GameInfoPanel) ── */
 .gip-tabs { display:flex; flex:1; margin-right:6px; min-width:0; }
-.gip-tab { flex:1; background:transparent; border:none; border-bottom:2px solid transparent;
+/* Poignée de déplacement dédiée : les onglets couvrent presque toute la barre,
+   le ⠿ garantit une prise visible (les onglets se traînent aussi, au seuil). */
+.gip-grip { flex:0 0 auto; color:var(--text-dim,#9aa3b5); font-size:0.72rem;
+  padding:0 6px 0 2px; cursor:move; user-select:none; }
+.gip-tab { flex:0 1 auto; background:transparent; border:none; border-bottom:2px solid transparent;
   color:var(--text-dim, #9aa3b5); font-size:0.65rem; letter-spacing:0.12em; text-transform:uppercase;
-  padding:3px 6px 4px; cursor:pointer; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  padding:3px 12px 4px; cursor:pointer; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+  touch-action:none; }
 .gip-tab.gip-on { color:var(--gold); border-bottom-color:var(--gold-dim); font-weight:700; }
 .gip-tab:hover { color:var(--gold); }
 /* Onglet Chances : mêmes classes que l'ancien moniteur, tailles panneau. */

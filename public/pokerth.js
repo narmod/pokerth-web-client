@@ -14449,23 +14449,38 @@ function makeWinDraggable(panel, handle, key){
   handle.style.cursor='move'; handle.style.touchAction='none';
   if(panel._winDragWired) return;            // une seule fois par element
   panel._winDragWired=true;
-  var sx=0, sy=0, sl=0, st=0, drag=false;
+  var sx=0, sy=0, sl=0, st=0, drag=false, pend=false, sup=false;
   handle.addEventListener('pointerdown', function(e){
     if(panel._winDrag===false) return;       // inerte hors mode flottant
-    if(e.target.closest && e.target.closest('button')) return; // boutons d'en-tete
+    var _b = e.target.closest && e.target.closest('button');
+    // Boutons d'en-tete : pas de drag — SAUF les onglets .gip-tab, qui se
+    // traînent « au seuil » (bougé > 7px = déplacement, tap simple = clic).
+    if(_b && !(_b.classList && _b.classList.contains('gip-tab'))) return;
+    var r=panel.getBoundingClientRect();
+    sx=e.clientX; sy=e.clientY; sl=r.left; st=r.top; sup=false;
+    if(_b){ pend=true; return; }             // pas de preventDefault : le clic d'onglet reste possible
     _ensureFloating(panel, e);
     drag=true;
-    var r=panel.getBoundingClientRect();
-    sx=e.clientX; sy=e.clientY; sl=r.left; st=r.top;
     handle.classList.add('win-dragging');
     try{ handle.setPointerCapture(e.pointerId); }catch(_){}
     e.preventDefault();
   });
   handle.addEventListener('pointermove', function(e){
+    if(pend && !drag){
+      if(Math.abs(e.clientX-sx)+Math.abs(e.clientY-sy) <= 7) return;
+      _ensureFloating(panel, e);
+      var r2=panel.getBoundingClientRect(); sl=r2.left; st=r2.top;
+      drag=true; sup=true; pend=false;
+      handle.classList.add('win-dragging');
+      try{ handle.setPointerCapture(e.pointerId); }catch(_){}
+    }
     if(!drag) return;
     _placeWin(panel, sl+(e.clientX-sx), st+(e.clientY-sy));
   });
+  // Un drag parti d'un onglet ne doit pas déclencher le changement d'onglet.
+  handle.addEventListener('click', function(e){ if(sup){ sup=false; e.stopPropagation(); e.preventDefault(); } }, true);
   function end(e){
+    pend=false;
     if(!drag) return; drag=false;
     handle.classList.remove('win-dragging');
     try{ handle.releasePointerCapture(e.pointerId); }catch(_){}
@@ -15511,7 +15526,7 @@ function renderPlayersList() {
   body.innerHTML = _shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>';
 }
 
-;(function(){ window.BUILD_VERSION='0.3.532-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.533-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
