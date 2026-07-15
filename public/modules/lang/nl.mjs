@@ -15,6 +15,8 @@ export const meta = {
 };
 
 export const strings = {
+    gipTabLog:"Geschiedenis",
+    gipTabOdds:"Kansen",
     advRemoveGone:"Vertrokken spelers verwijderen en de tafel herindelen",
     advWinnerPopup:"Winnaarvenster aan het einde van de hand",
     // PlayerWinnerOverlay (badge gagnant sur la boîte, parité QML)

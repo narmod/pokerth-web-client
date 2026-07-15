@@ -9,6 +9,8 @@ export const meta = {
 };
 
 export const strings = {
+    gipTabLog:"Historik",
+    gipTabOdds:"Chanser",
     advRemoveGone:"Ta bort spelare som lämnat och placera om bordet",
     advWinnerPopup:"Vinnarfönster vid handens slut",
     // PlayerWinnerOverlay (badge gagnant sur la boîte, parité QML)

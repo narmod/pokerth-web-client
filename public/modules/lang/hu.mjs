@@ -10,6 +10,8 @@ export const meta = {
 };
 
 export const strings = {
+    gipTabLog:"Előzmények",
+    gipTabOdds:"Esélyek",
     advRemoveGone:"Távozó játékosok eltávolítása és az asztal újrarendezése",
     advWinnerPopup:"Győztes ablak a leosztás végén",
     // PlayerWinnerOverlay (badge gagnant sur la boîte, parité QML)

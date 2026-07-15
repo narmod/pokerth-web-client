@@ -16,6 +16,8 @@ export const meta = {
 };
 
 export const strings = {
+    gipTabLog:"History",
+    gipTabOdds:"Odds",
     advRemoveGone:"Remove departed players and re-seat the table",
     advWinnerPopup:"Winner window at end of hand",
     // PlayerWinnerOverlay (badge gagnant sur la boîte, parité QML)

@@ -11,6 +11,8 @@ export const meta = {
 };
 
 export const strings = {
+    gipTabLog:"歷史",
+    gipTabOdds:"機率",
     advRemoveGone:"移除離開的玩家並重新排座",
     advWinnerPopup:"每手結束時的獲勝者視窗",
     // PlayerWinnerOverlay (badge gagnant sur la boîte, parité QML)

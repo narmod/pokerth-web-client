@@ -448,8 +448,9 @@ window.setLogInterval = function (v) {
 };
 // Croix de fermeture des fenetres flottantes : coupe l'option et masque.
 window.closeOddsWin = function () {
-  try { setAdvOpt('odds_monitor', false); } catch (e) {}
-  var cb = document.getElementById('adv-odds'); if (cb) cb.checked = false;
+  // Héritage : l'ancienne fenêtre flottante d'odds est devenue l'onglet
+  // « Chances » du panneau info unifié — on ferme simplement le panneau.
+  try { var p = document.getElementById('g-log-panel'); if (p && p.style.display !== 'none') toggleLog(); } catch (e) {}
 };
 window.closeAssistWin = function () {
   try { if (typeof window.setAssist === 'function') window.setAssist(false); } catch (e) {}
@@ -555,7 +556,6 @@ function openAdvancedOptions() {
   sync('adv-ownclick', 'own_click', false);
   sync('adv-guardcall', 'guard_call', false);
   sync('adv-assist', 'assist', true);
-  sync('adv-odds', 'odds_monitor', false);
   sync('adv-autobtn', 'show_auto', true);
   sync('adv-quickbet', 'show_pct', true);
   sync('adv-voice', 'voice', false);
@@ -1445,16 +1445,10 @@ document.addEventListener('keydown', function(e) {
       var _mode = ak === 'm' ? 0 : ak === 'k' ? 1 : ak === 'f' ? 2 : -1;
       if (_mode >= 0) { e.preventDefault(); try { if (window.App && App.setPlayingMode) App.setPlayingMode(_mode); } catch (_e) {} return; }
       if (ak === 'c') { e.preventDefault(); try { toggleGameChat(); } catch (_e) {} return; }
-      if (ak === 'l') { e.preventDefault(); try { toggleLog(); } catch (_e) {} return; }
-      if (ak === 'i') {
-        e.preventDefault();
-        try {
-          var _on = !_advGet('odds_monitor', false);
-          setAdvOpt('odds_monitor', _on);
-          var _cb = document.getElementById('adv-odds'); if (_cb) _cb.checked = _on;
-        } catch (_e) {}
-        return;
-      }
+      // Panneau info unifié (QML GameInfoPanel) : Alt+L → onglet Historique,
+      // Alt+I → onglet Chances.
+      if (ak === 'l') { e.preventDefault(); try { gipOpenTab('log'); } catch (_e) {} return; }
+      if (ak === 'i') { e.preventDefault(); try { gipOpenTab('odds'); } catch (_e) {} return; }
     } else if (e.key === 'F5') {
       // F5 officiel = « Show » — intercepté SEULEMENT quand le bouton est
       // visible (fenêtre post-main) ; sinon F5 garde son rôle navigateur.
@@ -11072,19 +11066,19 @@ const App = (() => {
   }
 
   function renderOddsMonitor() {
-    var el = document.getElementById('odds-monitor');
+    // Onglet « Chances » du panneau info unifié (parité QML GameInfoPanel).
+    var el = document.getElementById('g-odds-body');
     if (!el) return;
-    var on = false; try { on = (localStorage.getItem('pth_odds_monitor') === '1'); } catch (e) {}
-    if (!on || myCards[0] == null || myCards[1] == null) { el.style.display = 'none'; el.innerHTML = ''; el._built = false; return; }
-    el.style.display = '';
-    if (!el._drag) { _attachPanelDrag(el, 'pth_odds_pos', 'odds-drag'); el._drag = true; }
-    if (!el._built) { el.innerHTML = '<button class="win-x" type="button" onclick="closeOddsWin()" title="' + esc(t('closeTooltip')) + '" aria-label="X">\u2715</button>' + '<div class="odds-hd">' + esc(t('oddsTitle')) + '</div><div class="odds-body odds-wait">…</div>'; el._built = true; }
+    var panel = document.getElementById('g-log-panel');
+    if (!panel || panel.style.display === 'none' || el.style.display === 'none') return; // onglet non affiché : rien à calculer
+    if (myCards[0] == null || myCards[1] == null) { el.innerHTML = '<div class="odds-body odds-wait">…</div>'; el._built = false; return; }
+    if (!el._built) { el.innerHTML = '<div class="odds-hd">' + esc(t('oddsTitle')) + '</div><div class="odds-body odds-wait">…</div>'; el._built = true; }
     var seq = ++_oddsSeq;
     var hole = [myCards[0], myCards[1]];
     var board = commCards.slice();
     _oddsCompute(hole, board, function (r) {
       if (seq !== _oddsSeq) return;
-      if (!r) { el.style.display = 'none'; el.innerHTML = ''; el._built = false; return; }
+      if (!r) { el.innerHTML = ''; el._built = false; return; }
       // Icônes SVG officielles des 10 mains (resources/hands/ du client QML)
       var CATS = [
         [9, t('oddsRoyal'), 'royalflush'], [8, t('oddsSF'), 'straightflush'],
@@ -11103,7 +11097,7 @@ const App = (() => {
           + '</span><span class="odds-bar"><i style="width:' + pw.toFixed(1) + '%"></i></span>'
           + '<span class="odds-pct">' + ptxt + '</span></div>';
       }
-      el.innerHTML = '<button class="win-x" type="button" onclick="closeOddsWin()" title="' + esc(t('closeTooltip')) + '" aria-label="X">\u2715</button>' + '<div class="odds-hd">' + esc(t('oddsTitle')) + (r.exact ? '' : ' <span class="odds-approx">≈</span>')
+      el.innerHTML = '<div class="odds-hd">' + esc(t('oddsTitle')) + (r.exact ? '' : ' <span class="odds-approx">≈</span>')
         + '</div><div class="odds-body">' + rows + '</div>';
       el._built = true;
     }, function () { return seq !== _oddsSeq; });
@@ -15226,6 +15220,34 @@ function toggleReactionPanel() {
   }, 80);
 }
 
+// ── Panneau info unifié (parité QML GameInfoPanel) : le journal et le
+// moniteur d'odds partagent UNE fenêtre à deux onglets Historique/Chances. ──
+function gipShowTab(tab) {
+  var odds = tab === 'odds';
+  var lb = document.getElementById('g-log-body'), ob = document.getElementById('g-odds-body');
+  var tl = document.getElementById('gip-tab-log'), to = document.getElementById('gip-tab-odds');
+  if (lb) lb.style.display = odds ? 'none' : '';
+  if (ob) ob.style.display = odds ? '' : 'none';
+  if (tl) tl.classList.toggle('gip-on', !odds);
+  if (to) to.classList.toggle('gip-on', odds);
+  try { localStorage.setItem('pth_gip_tab', odds ? 'odds' : 'log'); } catch (e) {}
+  if (odds) { try { if (typeof window._renderOdds === 'function') window._renderOdds(); } catch (e) {} }
+}
+window.gipShowTab = gipShowTab;
+// Ouvre le panneau sur un onglet précis (Alt+L → Historique, Alt+I → Chances) :
+// fermé → ouvre sur l'onglet ; ouvert sur l'autre onglet → bascule ;
+// ouvert sur le même onglet → ferme (comportement toggle du QML).
+function gipOpenTab(tab) {
+  var panel = document.getElementById('g-log-panel');
+  if (!panel) return;
+  var cur = 'log';
+  try { cur = localStorage.getItem('pth_gip_tab') === 'odds' ? 'odds' : 'log'; } catch (e) {}
+  if (panel.style.display === 'none') { toggleLog(); gipShowTab(tab); }
+  else if (cur !== tab) gipShowTab(tab);
+  else toggleLog();
+}
+window.gipOpenTab = gipOpenTab;
+
 function toggleLog() {
   var panel = document.getElementById('g-log-panel');
   var btn   = document.getElementById('log-toggle-btn');
@@ -15240,6 +15262,8 @@ function toggleLog() {
     _openFloatingNearBtn(panel, btn, { key:'pth_winpos_log2', handle: panel.querySelector('.g-chat-panel-header'), resizable:true, minW:240, minH:140, defW: window.innerWidth >= 1400 ? 340 : 300, defH:300 }, 'right');
     var lb = document.getElementById('g-log-body');
     if (lb) lb.scrollTop = 0; // le plus récent est en haut (liste inversée)
+    // Restaurer le dernier onglet consulté (Historique par défaut).
+    try { gipShowTab(localStorage.getItem('pth_gip_tab') === 'odds' ? 'odds' : 'log'); } catch (e) {}
   }
 }
 
@@ -15487,7 +15511,7 @@ function renderPlayersList() {
   body.innerHTML = _shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>';
 }
 
-;(function(){ window.BUILD_VERSION='0.3.530-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.531-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

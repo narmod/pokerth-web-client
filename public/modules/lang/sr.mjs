@@ -10,6 +10,8 @@ export const meta = {
 };
 
 export const strings = {
+    gipTabLog:"Istorija",
+    gipTabOdds:"Šanse",
     advRemoveGone:"Ukloni otišle igrače i preraspodeli sto",
     advWinnerPopup:"Prozor pobednika na kraju ruke",
     // PlayerWinnerOverlay (badge gagnant sur la boîte, parité QML)

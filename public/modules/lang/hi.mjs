@@ -14,6 +14,8 @@ export const meta = {
 };
 
 export const strings = {
+    gipTabLog:"इतिहास",
+    gipTabOdds:"संभावनाएँ",
     advRemoveGone:"जाने वाले खिलाड़ियों को हटाएं और टेबल को पुनर्व्यवस्थित करें",
     advWinnerPopup:"हाथ के अंत में विजेता विंडो",
     // PlayerWinnerOverlay (badge gagnant sur la boîte, parité QML)

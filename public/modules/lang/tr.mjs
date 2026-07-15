@@ -12,6 +12,8 @@ export const meta = {
 };
 
 export const strings = {
+    gipTabLog:"Geçmiş",
+    gipTabOdds:"Olasılıklar",
     advRemoveGone:"Ayrılan oyuncuları kaldır ve masayı yeniden yerleştir",
     advWinnerPopup:"El sonunda kazanan penceresi",
     // PlayerWinnerOverlay (badge gagnant sur la boîte, parité QML)

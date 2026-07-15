@@ -10,6 +10,8 @@ export const meta = {
 };
 
 export const strings = {
+    gipTabLog:"Ιστορικό",
+    gipTabOdds:"Πιθανότητες",
     advRemoveGone:"Αφαίρεση παικτών που έφυγαν και ανακατανομή του τραπεζιού",
     advWinnerPopup:"Παράθυρο νικητή στο τέλος του χεριού",
     // PlayerWinnerOverlay (badge gagnant sur la boîte, parité QML)

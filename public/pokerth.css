@@ -7636,6 +7636,26 @@ html:not([data-seat^="pokerth"]) body.adv-hide-pbar .seat.me .seat-info {
 @keyframes callConfirmPulse{0%,100%{box-shadow:0 0 0 2px #ffd24d,0 0 12px rgba(240,160,32,.55)}50%{box-shadow:0 0 0 2px #ffd24d,0 0 19px rgba(240,160,32,.9)}}
 /* Moniteur d'odds (option) : panneau compact en haut-gauche, semi-transparent,
    display-only (pointer-events:none -> ne bloque pas les sièges derrière). */
+/* ── Panneau info unifié : onglets Historique/Chances (QML GameInfoPanel) ── */
+.gip-tabs { display:flex; flex:1; margin-right:6px; min-width:0; }
+.gip-tab { flex:1; background:transparent; border:none; border-bottom:2px solid transparent;
+  color:var(--text-dim, #9aa3b5); font-size:0.65rem; letter-spacing:0.12em; text-transform:uppercase;
+  padding:3px 6px 4px; cursor:pointer; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.gip-tab.gip-on { color:var(--gold); border-bottom-color:var(--gold-dim); font-weight:700; }
+.gip-tab:hover { color:var(--gold); }
+/* Onglet Chances : mêmes classes que l'ancien moniteur, tailles panneau. */
+#g-odds-body .odds-hd{font-weight:700;font-size:12px;color:var(--gold);margin:2px 0 5px;letter-spacing:.3px}
+#g-odds-body .odds-approx{opacity:.65;font-weight:400}
+#g-odds-body .odds-wait{opacity:.6;padding:4px 0;font-size:12px}
+#g-odds-body .odds-row{display:flex;align-items:center;gap:6px;height:22px;font-size:12px}
+#g-odds-body .odds-ico{width:26px;height:17px;object-fit:contain;flex:0 0 auto}
+#g-odds-body .odds-cat{flex:0 0 44%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;opacity:.9}
+#g-odds-body .odds-bar{flex:1;height:7px;background:rgba(var(--gold-rgb),.14);border-radius:3px;overflow:hidden}
+#g-odds-body .odds-bar>i{display:block;height:100%;width:0;background:linear-gradient(90deg,#8a93a6,#5a6478);border-radius:3px}
+#g-odds-body .odds-pct{flex:0 0 34px;text-align:right;font-variant-numeric:tabular-nums;opacity:.92}
+#g-odds-body .odds-row.warm .odds-bar>i{background:linear-gradient(90deg,#f0a020,#b36b00)}
+#g-odds-body .odds-row.hot .odds-bar>i{background:linear-gradient(90deg,#50c878,#1e8c4e)}
+#g-odds-body .odds-row.hot .odds-pct{color:#7ce0a0;font-weight:700}
 #odds-monitor{--ws:1;position:fixed;top:54px;left:8px;z-index:42;width:132px;padding:calc(5px*var(--ws)) calc(7px*var(--ws)) calc(6px*var(--ws));background:var(--panel);border:1px solid var(--border);border-radius:calc(9px*var(--ws));box-shadow:0 4px 14px rgba(0,0,0,.42);font-size:calc(10px*var(--ws));line-height:1.25;color:var(--text);pointer-events:auto;user-select:none;cursor:move;touch-action:none}
 #odds-monitor.odds-drag{opacity:.96;box-shadow:0 8px 24px rgba(0,0,0,.58);border-color:var(--border-hi)}
 #odds-monitor .odds-hd{font-weight:700;font-size:calc(10.5px*var(--ws));color:var(--gold);margin-bottom:calc(3px*var(--ws));letter-spacing:.3px;padding-right:calc(14px*var(--ws))}

@@ -16,6 +16,8 @@ export const meta = {
 };
 
 export const strings = {
+    gipTabLog:"Historique",
+    gipTabOdds:"Chances",
     advRemoveGone:"Retirer les joueurs partis et replacer la table",
     advWinnerPopup:"Fenêtre du gagnant en fin de main",
     // PlayerWinnerOverlay (badge gagnant sur la boîte, parité QML)

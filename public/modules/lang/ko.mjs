@@ -13,6 +13,8 @@ export const meta = {
 };
 
 export const strings = {
+    gipTabLog:"기록",
+    gipTabOdds:"확률",
     advRemoveGone:"떠난 플레이어를 제거하고 테이블 재배치",
     advWinnerPopup:"핸드 종료 시 승자 창",
     // PlayerWinnerOverlay (badge gagnant sur la boîte, parité QML)

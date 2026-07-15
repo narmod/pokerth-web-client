@@ -9,6 +9,8 @@ export const meta = {
 };
 
 export const strings = {
+    gipTabLog:"履歴",
+    gipTabOdds:"確率",
     advRemoveGone:"退出したプレイヤーを外してテーブルを再配置",
     advWinnerPopup:"ハンド終了時の勝者ウィンドウ",
     // PlayerWinnerOverlay (badge gagnant sur la boîte, parité QML)

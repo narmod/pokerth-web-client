@@ -11,6 +11,8 @@ export const meta = {
 };
 
 export const strings = {
+    gipTabLog:"வரலாறு",
+    gipTabOdds:"வாய்ப்புகள்",
     advRemoveGone:"வெளியேறிய வீரர்களை நீக்கி மேசையை மறுஅமைவு செய்",
     advWinnerPopup:"கை முடிவில் வெற்றியாளர் சாளரம்",
     // PlayerWinnerOverlay (badge gagnant sur la boîte, parité QML)
