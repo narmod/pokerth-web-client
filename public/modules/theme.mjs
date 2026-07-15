@@ -535,8 +535,43 @@ function _injectButtons(spec){
     var M=[['fold','--btn-fold-img'],['check','--btn-check-img'],['call','--btn-call-img'],['raise','--btn-raise-img'],['allin','--btn-allin-img']];
     for (var m2=0;m2<M.length;m2++){ var u=spec.images[M[m2][0]]; if(u){ el.style.setProperty(M[m2][1],u); css+=M[m2][1]+':'+u+';'; } }
     el.setAttribute('data-btn-img','1'); css+='data-btn-img:1;';
+    // 2.1.3 Image.Stretch : le Tapis 52x26 est dessine en background-image
+    // etire 100%/100%, mais Chromium (Edge/desktop) letterboxe un SVG selon
+    // son preserveAspectRatio interne (WebKit/iOS etire, lui) -> Tapis
+    // retreci sur ordinateur. Correctif fidele au QML : re-ecrire le SVG
+    // avec preserveAspectRatio="none" et republier la variable en data-URL.
+    if (spec.images.allin) _stretchAllInSvg(spec.images.allin, el);
   }
   try{ if(css) localStorage.setItem('pth_buttons_css',css); else localStorage.removeItem('pth_buttons_css'); }catch(e){}
+}
+// Jeton anti-course : un changement de theme pendant le fetch invalide le patch.
+var _allInStretchSeq=0;
+function _stretchAllInSvg(cssUrl, el){
+  var seq=++_allInStretchSeq;
+  try{
+    var s=String(cssUrl||''), p=s.indexOf('url(');
+    if(p>=0){ s=s.slice(p+4); var q=s.lastIndexOf(')'); if(q>=0) s=s.slice(0,q); }
+    s=s.replace(/^\s*["']|["']\s*$/g,'').trim();
+    if(!s) return;
+    var done=function(txt){
+      if(seq!==_allInStretchSeq) return;                 // theme change entre-temps
+      if(!/<svg[\s>]/i.test(txt)) return;                // pas un SVG (PNG...) -> rien a faire
+      if(/preserveAspectRatio\s*=/i.test(txt)) txt=txt.replace(/preserveAspectRatio\s*=\s*"[^"]*"/i,'preserveAspectRatio="none"');
+      else txt=txt.replace(/<svg/i,'<svg preserveAspectRatio="none"');
+      var u2='url("data:image/svg+xml;base64,'+btoa(unescape(encodeURIComponent(txt)))+'")';
+      el.style.setProperty('--btn-allin-img',u2);
+      // Persistance : la restauration au boot passe par style.cssText (les
+      // guillemets protegent les ';' du data-URL) -> le Tapis est deja
+      // corrige au premier rendu, sans re-fetch.
+      try{ var c=localStorage.getItem('pth_buttons_css'); if(c) localStorage.setItem('pth_buttons_css', c.replace(/--btn-allin-img:(?:url\("[^"]*"\)|[^;])*;/,'--btn-allin-img:'+u2+';')); }catch(e){}
+    };
+    if(/^data:image\/svg\+xml/i.test(s)){
+      var h=s.indexOf(','), head=s.slice(0,h), body=s.slice(h+1);
+      done(/;base64/i.test(head)?atob(body):decodeURIComponent(body));
+    } else {
+      fetch(s).then(function(r){ return r.ok?r.text():''; }).then(function(t){ if(t) done(t); }).catch(function(){});
+    }
+  }catch(e){}
 }
 function _injectPucks(set){
   var el=document.documentElement, css='', M=[['dealer','--puck-dealer'],['sb','--puck-sb'],['bb','--puck-bb']];
