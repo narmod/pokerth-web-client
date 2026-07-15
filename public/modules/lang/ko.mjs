@@ -44,7 +44,6 @@ export const strings = {
   advHidePbar:'PokerTH 모드 (플레이어 바 숨김)',
   deckSvg: "PokerTH",
   pucksPokerth: "PokerTH",
-  seatPokerth: "PokerTH",
   tablePokerthOfficial: "PokerTH",
   presetPokerthOfficial: "PokerTH Dark",
   themePokerthOfficial: "PokerTH Dark",
@@ -469,6 +468,20 @@ export const strings = {
     // v0.3.533 : case « ne pas traduire les termes de poker » (parité officielle)
     advPokerTerms:'국제 포커 용어를 번역하지 않음 (Check, Call, Raise)',
     pokerFold:'폴드', pokerCheck:'체크', pokerCall:'콜', pokerBet:'벳', pokerRaise:'레이즈', pokerAllin:'올인',
+    // v0.3.579 : passe native complete — 105 cles en repli anglais traduites + cles err*/affichage (noms propres et termes de tables conserves)
+    actBadgeCheck:'Check', unitMinutes:'minutes', presetWecupName:'WeCup', presetBbcName:'BBC', tablePokerthLive:'Spectator Tools', tableDanuxi:'Danuxi Blue', tableMute:'Mute', tableMute2:'Mute 02', tableTeal:'Teal', tableLemming:'Lemming',
+    tableMatrix:'Matrix', tableStarTrek:'Star Trek', tableTripSixes:'TripSixes', tableWanted:'Wanted', tableXanax:'Xanax', pucksAuto:'Auto (table)', pucksCasino:'Casino', infoTypeLabel:'Type', infoCapitalLabel:'Capital', wpWaitingPlayers:'플레이어 대기 중 …',
+    wpFillBots:'컴퓨터 플레이어로 채우기', wpStartGame:'게임 시작', wpLeaveGame:'게임 나가기', advFourColor:'4색 덱 (♦ 파랑, ♣ 초록)', cardZoomToggle:'내 카드 확대', actBadgeFold:'폴드', actBadgeCall:'콜', actBadgeBet:'벳', actBadgeRaise:'레이즈', actBadgeAllin:'올인', cancelBtn:'취소',
+    navBack:'뒤로', gameNameLabel:'게임 이름', passwordLabel:'비밀번호', startCash:'시작 자본', blindsSettings:'블라인드 설정', firstSmallBlind:'첫 스몰 블라인드', blindInterval:'블라인드 인상 간격', unitHands:'핸드', timeLimits:'시간 제한', actionTimeout:'행동당 시간', pauseBetweenHands:'핸드 사이 일시정지',
+    guestNeedAccount:'계정 필요', guestJoinBlocked:'게스트는 일반 게임에만 참여할 수 있습니다 — 이 테이블에서 플레이하려면 등록된 pokerth.net 계정으로 로그인하세요.', presetRankingName:'랭킹', presetRankingDesc:'공식 페이스', presetWecupDesc:'균형 잡힌 토너먼트', presetBbcDesc:'시간 기반 블라인드', advSecLocalGame:'연습 게임',
+    advPauseHands:'핸드 사이 일시정지 (승자 창에서 계속)', nextHandBtn:'다음 핸드', advSecTablePrefs:'테이블 기본 설정', advTablePrefsDesc:'이 모드에서 만드는 테이블의 기본값 — 양식의 ⭐ 버튼으로 불러옵니다.', advRaiseEveryHands:'N 핸드마다 블라인드 인상', advGameSpeed:'게임 속도 (1–11)', advSecLogSettings:'로그 설정',
+    advLogOn:'로그 활성화', advLogInterval:'로그 간격', advLogEveryAction:'모든 행동', advLogEveryHand:'모든 핸드', advSecIgnored:'무시한 플레이어', advIgnoredDesc:'무시 목록의 플레이어는 채팅에서 숨겨집니다.', advIgnoredEmpty:'(무시한 플레이어 없음)', advIgnoredRemove:'제거', advLobbyChat:'로비 채팅 표시',
+    advTableZoom:'테이블 줌 활성화 (돋보기 버튼)', advSeatSync:'좌석을 화면 방향과 동기화 (PokerTH 세로/가로)', advChatTranslate:'채팅 번역 (브라우저 API, 메시지별 버튼)', chatTranslateUnsupported:'이 브라우저는 번역을 지원하지 않습니다 (최신 Chrome/Edge 필요).', chatTranslateFailed:'번역 실패',
+    wcHideOpt:'이 창을 다시 표시하지 않음', styleExpand:'펼치기', styleCollapse:'접기', themeLight:'라이트', modeAuto:'자동', modeLight:'라이트', modeDark:'다크', styleBy:'제작:', styleSelected:'선택됨', importTable:'테이블 가져오기 (.zip)', importDeck:'덱 가져오기 (.zip)', importError:'가져오기 실패',
+    confirmDeleteStyle:'가져온 이 스타일을 삭제할까요?', delete:'삭제', advSecAppearance:'모양', advDarkMode:'다크 모드', tableGreenFelt:'그린 테이블', tableCasino:'그린 카지노', themeExport:'테마 내보내기 (.zip)', sectionAdvanced:'고급', rankingSeasonStats:'시즌 통계', rankingShare:'점유율',
+    rankingResults:'결과', rankingToggleChart:'막대 / 원형 전환', footPlayer:'플레이어', footCreate:'＋ 테이블 만들기', gameInfoTitle:'게임 정보', gameInfoEmpty:'테이블을 선택하세요', gfNone:'목록 필터 없음', gfOpen:'모집 중인 게임 표시', gfOpenNF:'모집 중이고 가득 차지 않은 게임', gfOpenNFNP:'모집 중·비만석·비공개 아님 게임',
+    gfOpenNFP:'모집 중·비만석·비공개 게임', gfOpenNFR:'모집 중·비만석 랭킹 게임', infoPlayersInGame:'게임 중인 플레이어', displayBB:'금액을 빅 블라인드로 표시', displayChips:'금액을 칩으로 표시', errGameFull:'게임이 가득 찼습니다', errBadGameName:'잘못된 게임 이름', errInvalidSettings:'잘못된 게임 설정',
+    errBlocked:'IP 주소가 차단되었습니다', errRejoinFailed:'재참여 실패', errNoSpectators:'관전자는 허용되지 않습니다', serverPassword:'서버 비밀번호 (선택)', userPassword:'사용자 비밀번호 (선택)', avatarImageTooltip:'사용자 지정 이미지 선택', gipTabLog:'로그', gipTabOdds:'확률',
 };
 
 export default { meta, strings };

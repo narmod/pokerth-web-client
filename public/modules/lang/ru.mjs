@@ -46,7 +46,6 @@ export const strings = {
   advHidePbar:'Режим PokerTH (панель игрока скрыта)',
   deckSvg: "PokerTH",
   pucksPokerth: "PokerTH",
-  seatPokerth: "PokerTH",
   tablePokerthOfficial: "PokerTH",
   presetPokerthOfficial: "PokerTH Dark",
   themePokerthOfficial: "PokerTH Dark",
@@ -661,6 +660,24 @@ export const strings = {
     // v0.3.533 : case « ne pas traduire les termes de poker » (parité officielle)
     advPokerTerms:'Не переводить международные покерные термины (Check, Call, Raise)',
     pokerFold:'Фолд', pokerCheck:'Чек', pokerCall:'Колл', pokerBet:'Бет', pokerRaise:'Рейз', pokerAllin:'Олл-ин',
+    // v0.3.579 : passe native complete — 105 cles en repli anglais traduites + cles err*/affichage (noms propres et termes de tables conserves)
+    actBadgeCheck:'Check', unitMinutes:'minutes', presetWecupName:'WeCup', presetBbcName:'BBC', tablePokerthLive:'Spectator Tools', tableDanuxi:'Danuxi Blue', tableMute:'Mute', tableMute2:'Mute 02', tableTeal:'Teal', tableLemming:'Lemming',
+    tableMatrix:'Matrix', tableStarTrek:'Star Trek', tableTripSixes:'TripSixes', tableWanted:'Wanted', tableXanax:'Xanax', pucksAuto:'Auto (table)', pucksCasino:'Casino', infoTypeLabel:'Type', infoCapitalLabel:'Capital', wpWaitingPlayers:'Ожидание игроков …',
+    wpFillBots:'Дополнить компьютерными игроками', wpStartGame:'Начать игру', wpLeaveGame:'Покинуть игру', advFourColor:'Колода 4 цветов (♦ синие, ♣ зелёные)', cardZoomToggle:'Увеличить мои карты', actBadgeFold:'Пас', actBadgeCall:'Колл',
+    actBadgeBet:'Ставка', actBadgeRaise:'Рейз', actBadgeAllin:'Олл-ин', cancelBtn:'Отмена', navBack:'Назад', gameNameLabel:'Название игры', passwordLabel:'Пароль', startCash:'Стартовый капитал', blindsSettings:'Настройки блайндов', firstSmallBlind:'Первый малый блайнд',
+    blindInterval:'Интервал повышения блайндов', unitHands:'раздач', timeLimits:'Ограничения по времени', actionTimeout:'Время на действие', pauseBetweenHands:'Пауза между раздачами', guestNeedAccount:'Требуется учётная запись', guestJoinBlocked:'Гости могут присоединяться только к обычным играм — войдите с зарегистрированной учётной записью pokerth.net, чтобы играть за этим столом.',
+    presetRankingName:'Рейтинг', presetRankingDesc:'официальный темп', presetWecupDesc:'сбалансированный турнир', presetBbcDesc:'блайнды по времени', advSecLocalGame:'Тренировочная игра', advPauseHands:'Пауза между раздачами (продолжение через окно победителя)',
+    nextHandBtn:'Следующая раздача', advSecTablePrefs:'Настройки стола', advTablePrefsDesc:'Значения по умолчанию для столов, создаваемых в этом режиме — кнопка ⭐ в форме загружает их.', advRaiseEveryHands:'Повышать блайнды каждые N раздач',
+    advGameSpeed:'Скорость игры (1–11)', advSecLogSettings:'Настройки журнала', advLogOn:'Включить журнал', advLogInterval:'Интервал журнала', advLogEveryAction:'Каждое действие', advLogEveryHand:'Каждая раздача', advSecIgnored:'Игнорируемые игроки',
+    advIgnoredDesc:'Игроки из списка игнорируемых скрыты в чате.', advIgnoredEmpty:'(нет игнорируемых игроков)', advIgnoredRemove:'Убрать', advLobbyChat:'Показывать чат лобби', advTableZoom:'Включить зум стола (кнопки лупы)', advSeatSync:'Синхронизировать места с ориентацией (PokerTH портрет/альбом)',
+    advChatTranslate:'Перевод чата (API браузера, кнопка у сообщения)', chatTranslateUnsupported:'Перевод не поддерживается этим браузером (нужен свежий Chrome/Edge).', chatTranslateFailed:'Ошибка перевода', wcHideOpt:'Больше не показывать это окно',
+    styleExpand:'Развернуть', styleCollapse:'Свернуть', themeLight:'Светлая', modeAuto:'Автоматически', modeLight:'Светлая', modeDark:'Тёмная', styleBy:'от', styleSelected:'Выбрано', importTable:'Импортировать стол (.zip)', importDeck:'Импортировать колоду (.zip)',
+    importError:'Ошибка импорта', confirmDeleteStyle:'Удалить этот импортированный стиль?', delete:'Удалить', advSecAppearance:'Оформление', advDarkMode:'Тёмный режим', tableGreenFelt:'Зелёный стол', tableCasino:'Зелёное казино', themeExport:'Экспортировать тему (.zip)',
+    sectionAdvanced:'Дополнительно', rankingSeasonStats:'Статистика сезона', rankingShare:'Доля', rankingResults:'Результаты', rankingToggleChart:'Столбцы / круговая', footPlayer:'Игрок', footCreate:'＋ Создать стол', gameInfoTitle:'Об игре',
+    gameInfoEmpty:'Выберите стол', gfNone:'Без фильтра списка', gfOpen:'Показывать открытые игры', gfOpenNF:'Открытые и неполные игры', gfOpenNFNP:'Открытые, неполные, неприватные игры', gfOpenNFP:'Открытые, неполные, приватные игры',
+    gfOpenNFR:'Открытые, неполные рейтинговые игры', infoPlayersInGame:'Игроков в игре', displayBB:'Суммы в больших блайндах', displayChips:'Суммы в фишках', errGameFull:'Игра заполнена', errBadGameName:'Недопустимое название игры',
+    errInvalidSettings:'Недопустимые настройки игры', errBlocked:'IP-адрес заблокирован', errRejoinFailed:'Не удалось переподключиться', errNoSpectators:'Зрители не допускаются', serverPassword:'Пароль сервера (необязательно)', userPassword:'Пароль пользователя (необязательно)',
+    avatarImageTooltip:'Выбрать своё изображение', gipTabLog:'Журнал', gipTabOdds:'Шансы',
 };
 
 export default { meta, strings };

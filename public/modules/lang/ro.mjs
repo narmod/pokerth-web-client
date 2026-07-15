@@ -41,7 +41,6 @@ export const strings = {
   advHidePbar:'Mod PokerTH (bara de jucător ascunsă)',
   deckSvg: "PokerTH",
   pucksPokerth: "PokerTH",
-  seatPokerth: "PokerTH",
   tablePokerthOfficial: "PokerTH",
   presetPokerthOfficial: "PokerTH Dark",
   themePokerthOfficial: "PokerTH Dark",
@@ -659,6 +658,24 @@ export const strings = {
     // v0.3.533 : case « ne pas traduire les termes de poker » (parité officielle)
     advPokerTerms:'Nu traduce termenii internaționali de poker (Check, Call, Raise)',
     pokerFold:'Fold', pokerCheck:'Check', pokerCall:'Call', pokerBet:'Bet', pokerRaise:'Raise', pokerAllin:'All-In',
+    // v0.3.579 : passe native complete — 105 cles en repli anglais traduites + cles err*/affichage (noms propres et termes de tables conserves)
+    actBadgeCheck:'Check', unitMinutes:'minutes', presetWecupName:'WeCup', presetBbcName:'BBC', tablePokerthLive:'Spectator Tools', tableDanuxi:'Danuxi Blue', tableMute:'Mute', tableMute2:'Mute 02', tableTeal:'Teal', tableLemming:'Lemming',
+    tableMatrix:'Matrix', tableStarTrek:'Star Trek', tableTripSixes:'TripSixes', tableWanted:'Wanted', tableXanax:'Xanax', pucksAuto:'Auto (table)', pucksCasino:'Casino', infoTypeLabel:'Type', infoCapitalLabel:'Capital', wpWaitingPlayers:'Se așteaptă jucători …',
+    wpFillBots:'Completează cu jucători computer', wpStartGame:'Pornește jocul', wpLeaveGame:'Părăsește jocul', advFourColor:'Pachet în 4 culori (♦ albastru, ♣ verde)', cardZoomToggle:'Mărește cărțile mele', actBadgeFold:'Fold', actBadgeCall:'Plătește',
+    actBadgeBet:'Pariază', actBadgeRaise:'Mărește', actBadgeAllin:'All-In', cancelBtn:'Anulează', navBack:'Înapoi', gameNameLabel:'Numele jocului', passwordLabel:'Parolă', startCash:'Capital de pornire', blindsSettings:'Setări blind-uri',
+    firstSmallBlind:'Primul small blind', blindInterval:'Interval de creștere a blind-urilor', unitHands:'mâini', timeLimits:'Limite de timp', actionTimeout:'Timp pe acțiune', pauseBetweenHands:'Pauză între mâini', guestNeedAccount:'Cont necesar',
+    guestJoinBlocked:'Oaspeții se pot alătura doar jocurilor normale — conectează-te cu un cont pokerth.net înregistrat pentru a juca la această masă.', presetRankingName:'Clasament', presetRankingDesc:'ritm oficial', presetWecupDesc:'turneu echilibrat',
+    presetBbcDesc:'blind-uri pe timp', advSecLocalGame:'Joc de antrenament', advPauseHands:'Pauză între mâini (continuare din fereastra câștigătorului)', nextHandBtn:'Mâna următoare', advSecTablePrefs:'Preferințe de masă', advTablePrefsDesc:'Valorile implicite ale meselor create în acest mod — butonul ⭐ din formular le încarcă.',
+    advRaiseEveryHands:'Crește blind-urile la fiecare N mâini', advGameSpeed:'Viteza jocului (1–11)', advSecLogSettings:'Setări jurnal', advLogOn:'Activează jurnalizarea', advLogInterval:'Interval jurnal', advLogEveryAction:'Fiecare acțiune',
+    advLogEveryHand:'Fiecare mână', advSecIgnored:'Jucători ignorați', advIgnoredDesc:'Jucătorii din lista de ignorați sunt ascunși din chat.', advIgnoredEmpty:'(niciun jucător ignorat)', advIgnoredRemove:'Elimină', advLobbyChat:'Afișează chatul din lobby',
+    advTableZoom:'Activează zoomul mesei (butoane lupă)', advSeatSync:'Sincronizează locurile cu orientarea (PokerTH portret/peisaj)', advChatTranslate:'Traducerea chatului (API-ul browserului, buton per mesaj)', chatTranslateUnsupported:'Acest browser nu acceptă traducerea (necesită Chrome/Edge recent).',
+    chatTranslateFailed:'Traducerea a eșuat', wcHideOpt:'Nu mai afișa această fereastră', styleExpand:'Extinde', styleCollapse:'Restrânge', themeLight:'Luminos', modeAuto:'Automat', modeLight:'Luminos', modeDark:'Întunecat', styleBy:'de',
+    styleSelected:'Selectat', importTable:'Importă o masă (.zip)', importDeck:'Importă un pachet (.zip)', importError:'Importul a eșuat', confirmDeleteStyle:'Ștergi acest stil importat?', delete:'Șterge', advSecAppearance:'Aspect',
+    advDarkMode:'Mod întunecat', tableGreenFelt:'Masă verde', tableCasino:'Cazinou verde', themeExport:'Exportă tema (.zip)', sectionAdvanced:'Avansat', rankingSeasonStats:'Statistici de sezon', rankingShare:'Cotă', rankingResults:'Rezultate',
+    rankingToggleChart:'Comută bare / plăcintă', footPlayer:'Jucător', footCreate:'＋ Creează o masă', gameInfoTitle:'Info joc', gameInfoEmpty:'Selectează o masă', gfNone:'Fără filtru de listă', gfOpen:'Afișează jocurile deschise', gfOpenNF:'Jocuri deschise și incomplete',
+    gfOpenNFNP:'Jocuri deschise, incomplete, ne-private', gfOpenNFP:'Jocuri deschise, incomplete, private', gfOpenNFR:'Jocuri deschise, incomplete, de clasament', infoPlayersInGame:'Jucători în joc', displayBB:'Sume în big blind-uri',
+    displayChips:'Sume în jetoane', errGameFull:'Jocul este plin', errBadGameName:'Nume de joc nevalid', errInvalidSettings:'Setări de joc nevalide', errBlocked:'Adresă IP blocată', errRejoinFailed:'Realăturarea a eșuat', errNoSpectators:'Spectatorii nu sunt permiși',
+    serverPassword:'Parola serverului (opțional)', userPassword:'Parola utilizatorului (opțional)', avatarImageTooltip:'Alege o imagine personalizată', gipTabLog:'Jurnal', gipTabOdds:'Șanse',
 };
 
 export default { meta, strings };

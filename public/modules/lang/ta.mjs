@@ -42,7 +42,6 @@ export const strings = {
   advHidePbar:'PokerTH பயன்முறை (வீரர் பட்டி மறைக்கப்பட்டது)',
   deckSvg: "PokerTH",
   pucksPokerth: "PokerTH",
-  seatPokerth: "PokerTH",
   tablePokerthOfficial: "PokerTH",
   presetPokerthOfficial: "PokerTH Dark",
   themePokerthOfficial: "PokerTH Dark",
@@ -660,6 +659,26 @@ export const strings = {
     // v0.3.533 : case « ne pas traduire les termes de poker » (parité officielle)
     advPokerTerms:'சர்வதேச போக்கர் சொற்களை மொழிபெயர்க்க வேண்டாம் (Check, Call, Raise)',
     pokerFold:'ஃபோல்ட்', pokerCheck:'செக்', pokerCall:'கால்', pokerBet:'பெட்', pokerRaise:'ரெய்ஸ்', pokerAllin:'ஆல்-இன்',
+    // v0.3.579 : passe native complete — 105 cles en repli anglais traduites + cles err*/affichage (noms propres et termes de tables conserves)
+    actBadgeCheck:'Check', unitMinutes:'minutes', presetWecupName:'WeCup', presetBbcName:'BBC', tablePokerthLive:'Spectator Tools', tableDanuxi:'Danuxi Blue', tableMute:'Mute', tableMute2:'Mute 02', tableTeal:'Teal', tableLemming:'Lemming',
+    tableMatrix:'Matrix', tableStarTrek:'Star Trek', tableTripSixes:'TripSixes', tableWanted:'Wanted', tableXanax:'Xanax', pucksAuto:'Auto (table)', pucksCasino:'Casino', infoTypeLabel:'Type', infoCapitalLabel:'Capital', wpWaitingPlayers:'வீரர்களுக்காக காத்திருக்கிறது …',
+    wpFillBots:'கணினி வீரர்களால் நிரப்பு', wpStartGame:'ஆட்டத்தைத் தொடங்கு', wpLeaveGame:'ஆட்டத்தை விட்டு வெளியேறு', advFourColor:'4-நிற சீட்டுக்கட்டு (♦ நீலம், ♣ பச்சை)', cardZoomToggle:'என் சீட்டுகளைப் பெரிதாக்கு', actBadgeFold:'ஃபோல்ட்',
+    actBadgeCall:'கால்', actBadgeBet:'பெட்', actBadgeRaise:'ரெய்ஸ்', actBadgeAllin:'ஆல்-இன்', cancelBtn:'ரத்துசெய்', navBack:'பின்செல்', gameNameLabel:'ஆட்டத்தின் பெயர்', passwordLabel:'கடவுச்சொல்', startCash:'தொடக்க மூலதனம்', blindsSettings:'பிளைண்ட் அமைப்புகள்',
+    firstSmallBlind:'முதல் ஸ்மால் பிளைண்ட்', blindInterval:'பிளைண்ட் உயர்வு இடைவெளி', unitHands:'கைகள்', timeLimits:'நேர வரம்புகள்', actionTimeout:'ஒவ்வொரு நடவடிக்கைக்கும் நேரம்', pauseBetweenHands:'கைகளுக்கு இடையே இடைநிறுத்தம்', guestNeedAccount:'கணக்கு தேவை',
+    guestJoinBlocked:'விருந்தினர்கள் சாதாரண ஆட்டங்களில் மட்டுமே சேர முடியும் — இந்த மேசையில் விளையாட பதிவுசெய்த pokerth.net கணக்கில் உள்நுழையவும்.', presetRankingName:'தரவரிசை', presetRankingDesc:'அதிகாரப்பூர்வ வேகம்', presetWecupDesc:'சமநிலையான போட்டி',
+    presetBbcDesc:'நேர அடிப்படையிலான பிளைண்ட்கள்', advSecLocalGame:'பயிற்சி ஆட்டம்', advPauseHands:'கைகளுக்கு இடையே இடைநிறுத்தம் (வெற்றியாளர் சாளரம் வழியாகத் தொடரவும்)', nextHandBtn:'அடுத்த கை', advSecTablePrefs:'மேசை விருப்பங்கள்',
+    advTablePrefsDesc:'இந்த பயன்முறையில் நீங்கள் உருவாக்கும் மேசைகளின் இயல்புநிலை மதிப்புகள் — படிவத்தின் ⭐ பொத்தான் அவற்றை ஏற்றுகிறது.', advRaiseEveryHands:'ஒவ்வொரு N கைகளுக்கும் பிளைண்ட்களை உயர்த்து', advGameSpeed:'ஆட்ட வேகம் (1–11)',
+    advSecLogSettings:'பதிவு அமைப்புகள்', advLogOn:'பதிவை இயக்கு', advLogInterval:'பதிவு இடைவெளி', advLogEveryAction:'ஒவ்வொரு நடவடிக்கையும்', advLogEveryHand:'ஒவ்வொரு கையும்', advSecIgnored:'புறக்கணிக்கப்பட்ட வீரர்கள்', advIgnoredDesc:'புறக்கணிப்புப் பட்டியலில் உள்ள வீரர்கள் அரட்டையில் மறைக்கப்படுகிறார்கள்.',
+    advIgnoredEmpty:'(புறக்கணிக்கப்பட்ட வீரர்கள் இல்லை)', advIgnoredRemove:'நீக்கு', advLobbyChat:'லாபி அரட்டையைக் காட்டு', advTableZoom:'மேசை பெரிதாக்கலை இயக்கு (பூதக்கண்ணாடி பொத்தான்கள்)', advSeatSync:'இருக்கைகளைத் திசையுடன் ஒத்திசை (PokerTH நெடுவசம்/குறுக்குவசம்)',
+    advChatTranslate:'அரட்டை மொழிபெயர்ப்பு (உலாவி API, ஒவ்வொரு செய்திக்கும் பொத்தான்)', chatTranslateUnsupported:'இந்த உலாவி மொழிபெயர்ப்பை ஆதரிக்கவில்லை (புதிய Chrome/Edge தேவை).', chatTranslateFailed:'மொழிபெயர்ப்பு தோல்வியடைந்தது',
+    wcHideOpt:'இந்த சாளரத்தை மீண்டும் காட்டாதே', styleExpand:'விரிவாக்கு', styleCollapse:'சுருக்கு', themeLight:'வெளிர்', modeAuto:'தானியங்கி', modeLight:'வெளிர்', modeDark:'இருண்ட', styleBy:'உருவாக்கியவர்', styleSelected:'தேர்ந்தெடுக்கப்பட்டது',
+    importTable:'மேசையை இறக்குமதி செய் (.zip)', importDeck:'சீட்டுக்கட்டை இறக்குமதி செய் (.zip)', importError:'இறக்குமதி தோல்வியடைந்தது', confirmDeleteStyle:'இந்த இறக்குமதி செய்யப்பட்ட பாணியை நீக்கவா?', delete:'நீக்கு', advSecAppearance:'தோற்றம்',
+    advDarkMode:'இருண்ட பயன்முறை', tableGreenFelt:'பச்சை மேசை', tableCasino:'பச்சை கேசினோ', themeExport:'தீமை ஏற்றுமதி செய் (.zip)', sectionAdvanced:'மேம்பட்டவை', rankingSeasonStats:'பருவ புள்ளிவிவரங்கள்', rankingShare:'பங்கு', rankingResults:'முடிவுகள்',
+    rankingToggleChart:'பட்டை / வட்டம் மாற்று', footPlayer:'வீரர்', footCreate:'＋ மேசையை உருவாக்கு', gameInfoTitle:'ஆட்டத் தகவல்', gameInfoEmpty:'ஒரு மேசையைத் தேர்ந்தெடுக்கவும்', gfNone:'பட்டியல் வடிகட்டி இல்லை', gfOpen:'திறந்த ஆட்டங்களைக் காட்டு',
+    gfOpenNF:'திறந்த & நிரம்பாத ஆட்டங்கள்', gfOpenNFNP:'திறந்த, நிரம்பாத, தனிப்பட்டவை அல்லாத ஆட்டங்கள்', gfOpenNFP:'திறந்த, நிரம்பாத, தனிப்பட்ட ஆட்டங்கள்', gfOpenNFR:'திறந்த, நிரம்பாத தரவரிசை ஆட்டங்கள்', infoPlayersInGame:'ஆட்டத்தில் உள்ள வீரர்கள்',
+    displayBB:'தொகைகள் பிக் பிளைண்டில்', displayChips:'தொகைகள் சிப்களில்', errGameFull:'ஆட்டம் நிரம்பிவிட்டது', errBadGameName:'தவறான ஆட்டப் பெயர்', errInvalidSettings:'தவறான ஆட்ட அமைப்புகள்', errBlocked:'IP முகவரி தடுக்கப்பட்டது',
+    errRejoinFailed:'மீண்டும் சேர்வது தோல்வியடைந்தது', errNoSpectators:'பார்வையாளர்கள் அனுமதிக்கப்படவில்லை', serverPassword:'சேவையக கடவுச்சொல் (விருப்பத்தேர்வு)', userPassword:'பயனர் கடவுச்சொல் (விருப்பத்தேர்வு)', avatarImageTooltip:'சொந்தப் படத்தைத் தேர்ந்தெடு',
+    gipTabLog:'பதிவு', gipTabOdds:'வாய்ப்புகள்',
 };
 
 export default { meta, strings };

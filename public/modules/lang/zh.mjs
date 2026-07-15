@@ -42,7 +42,6 @@ export const strings = {
   advHidePbar:'PokerTH 模式（玩家栏隐藏）',
   deckSvg: "PokerTH",
   pucksPokerth: "PokerTH",
-  seatPokerth: "PokerTH",
   tablePokerthOfficial: "PokerTH",
   presetPokerthOfficial: "PokerTH Dark",
   themePokerthOfficial: "PokerTH Dark",
@@ -660,6 +659,19 @@ export const strings = {
     // v0.3.533 : case « ne pas traduire les termes de poker » (parité officielle)
     advPokerTerms:'不翻译国际扑克术语（Check、Call、Raise）',
     pokerFold:'弃牌', pokerCheck:'过牌', pokerCall:'跟注', pokerBet:'下注', pokerRaise:'加注', pokerAllin:'全下',
+    // v0.3.579 : passe native complete — 105 cles en repli anglais traduites + cles err*/affichage (noms propres et termes de tables conserves)
+    actBadgeCheck:'Check', unitMinutes:'minutes', presetWecupName:'WeCup', presetBbcName:'BBC', tablePokerthLive:'Spectator Tools', tableDanuxi:'Danuxi Blue', tableMute:'Mute', tableMute2:'Mute 02', tableTeal:'Teal', tableLemming:'Lemming',
+    tableMatrix:'Matrix', tableStarTrek:'Star Trek', tableTripSixes:'TripSixes', tableWanted:'Wanted', tableXanax:'Xanax', pucksAuto:'Auto (table)', pucksCasino:'Casino', infoTypeLabel:'Type', infoCapitalLabel:'Capital', wpWaitingPlayers:'等待玩家中……',
+    wpFillBots:'用电脑玩家补齐', wpStartGame:'开始游戏', wpLeaveGame:'离开游戏', advFourColor:'四色牌组（♦ 蓝，♣ 绿）', cardZoomToggle:'放大我的手牌', actBadgeFold:'弃牌', actBadgeCall:'跟注', actBadgeBet:'下注', actBadgeRaise:'加注', actBadgeAllin:'全下', cancelBtn:'取消', navBack:'返回',
+    gameNameLabel:'游戏名称', passwordLabel:'密码', startCash:'起始筹码', blindsSettings:'盲注设置', firstSmallBlind:'首个小盲注', blindInterval:'盲注上涨间隔', unitHands:'手', timeLimits:'时间限制', actionTimeout:'每次行动时间', pauseBetweenHands:'每手牌之间暂停', guestNeedAccount:'需要账号',
+    guestJoinBlocked:'访客只能加入普通游戏 — 请用已注册的 pokerth.net 账号登录才能在此桌游玩。', presetRankingName:'排名', presetRankingDesc:'官方节奏', presetWecupDesc:'均衡锦标赛', presetBbcDesc:'按时间涨盲', advSecLocalGame:'训练游戏', advPauseHands:'每手牌之间暂停（通过赢家窗口继续）', nextHandBtn:'下一手',
+    advSecTablePrefs:'牌桌偏好', advTablePrefsDesc:'此模式下创建牌桌的默认值 — 表单中的 ⭐ 按钮会加载它们。', advRaiseEveryHands:'每 N 手涨盲', advGameSpeed:'游戏速度（1–11）', advSecLogSettings:'日志设置', advLogOn:'启用日志', advLogInterval:'日志间隔', advLogEveryAction:'每个动作', advLogEveryHand:'每手牌',
+    advSecIgnored:'已忽略的玩家', advIgnoredDesc:'忽略列表中的玩家在聊天中被隐藏。', advIgnoredEmpty:'（没有已忽略的玩家）', advIgnoredRemove:'移除', advLobbyChat:'显示大厅聊天', advTableZoom:'启用牌桌缩放（放大镜按钮）', advSeatSync:'座位随屏幕方向同步（PokerTH 竖屏/横屏）', advChatTranslate:'聊天翻译（浏览器 API，每条消息一个按钮）',
+    chatTranslateUnsupported:'此浏览器不支持翻译（需要较新的 Chrome/Edge）。', chatTranslateFailed:'翻译失败', wcHideOpt:'不再显示此窗口', styleExpand:'展开', styleCollapse:'收起', themeLight:'浅色', modeAuto:'自动', modeLight:'浅色', modeDark:'深色', styleBy:'作者:', styleSelected:'已选择',
+    importTable:'导入牌桌（.zip）', importDeck:'导入牌组（.zip）', importError:'导入失败', confirmDeleteStyle:'删除这个导入的样式？', delete:'删除', advSecAppearance:'外观', advDarkMode:'深色模式', tableGreenFelt:'绿色牌桌', tableCasino:'绿色赌场', themeExport:'导出主题（.zip）', sectionAdvanced:'高级',
+    rankingSeasonStats:'赛季统计', rankingShare:'份额', rankingResults:'结果', rankingToggleChart:'切换柱状 / 饼图', footPlayer:'玩家', footCreate:'＋ 创建牌桌', gameInfoTitle:'游戏信息', gameInfoEmpty:'请选择一张牌桌', gfNone:'无列表筛选', gfOpen:'显示开放的游戏', gfOpenNF:'开放且未满的游戏',
+    gfOpenNFNP:'开放、未满、非私密的游戏', gfOpenNFP:'开放、未满、私密的游戏', gfOpenNFR:'开放、未满的排名游戏', infoPlayersInGame:'游戏中的玩家', displayBB:'金额以大盲显示', displayChips:'金额以筹码显示', errGameFull:'游戏已满', errBadGameName:'游戏名称无效', errInvalidSettings:'游戏设置无效', errBlocked:'IP 地址已被封禁',
+    errRejoinFailed:'重新加入失败', errNoSpectators:'不允许观战', serverPassword:'服务器密码（可选）', userPassword:'用户密码（可选）', avatarImageTooltip:'选择自定义图片', gipTabLog:'日志', gipTabOdds:'胜率',
 };
 
 export default { meta, strings };

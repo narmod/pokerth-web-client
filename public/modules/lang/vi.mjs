@@ -41,7 +41,6 @@ export const strings = {
   advHidePbar:'Chế độ PokerTH (thanh người chơi ẩn)',
   deckSvg: "PokerTH",
   pucksPokerth: "PokerTH",
-  seatPokerth: "PokerTH",
   tablePokerthOfficial: "PokerTH",
   presetPokerthOfficial: "PokerTH Dark",
   themePokerthOfficial: "PokerTH Dark",
@@ -659,6 +658,24 @@ export const strings = {
     // v0.3.533 : case « ne pas traduire les termes de poker » (parité officielle)
     advPokerTerms:'Không dịch các thuật ngữ poker quốc tế (Check, Call, Raise)',
     pokerFold:'Bỏ bài', pokerCheck:'Xem bài', pokerCall:'Theo', pokerBet:'Cược', pokerRaise:'Tố', pokerAllin:'Tất tay',
+    // v0.3.579 : passe native complete — 105 cles en repli anglais traduites + cles err*/affichage (noms propres et termes de tables conserves)
+    actBadgeCheck:'Check', unitMinutes:'minutes', presetWecupName:'WeCup', presetBbcName:'BBC', tablePokerthLive:'Spectator Tools', tableDanuxi:'Danuxi Blue', tableMute:'Mute', tableMute2:'Mute 02', tableTeal:'Teal', tableLemming:'Lemming',
+    tableMatrix:'Matrix', tableStarTrek:'Star Trek', tableTripSixes:'TripSixes', tableWanted:'Wanted', tableXanax:'Xanax', pucksAuto:'Auto (table)', pucksCasino:'Casino', infoTypeLabel:'Type', infoCapitalLabel:'Capital', wpWaitingPlayers:'Đang chờ người chơi …',
+    wpFillBots:'Bổ sung người chơi máy tính', wpStartGame:'Bắt đầu ván', wpLeaveGame:'Rời ván', advFourColor:'Bộ bài 4 màu (♦ xanh dương, ♣ xanh lá)', cardZoomToggle:'Phóng to bài của tôi', actBadgeFold:'Bỏ bài', actBadgeCall:'Theo',
+    actBadgeBet:'Cược', actBadgeRaise:'Tố', actBadgeAllin:'Tất tay', cancelBtn:'Hủy', navBack:'Quay lại', gameNameLabel:'Tên ván', passwordLabel:'Mật khẩu', startCash:'Vốn khởi đầu', blindsSettings:'Cài đặt blind', firstSmallBlind:'Small blind đầu tiên',
+    blindInterval:'Khoảng thời gian tăng blind', unitHands:'ván bài', timeLimits:'Giới hạn thời gian', actionTimeout:'Thời gian mỗi lượt', pauseBetweenHands:'Tạm dừng giữa các ván bài', guestNeedAccount:'Cần tài khoản', guestJoinBlocked:'Khách chỉ có thể tham gia ván thường — đăng nhập bằng tài khoản pokerth.net đã đăng ký để chơi ở bàn này.',
+    presetRankingName:'Xếp hạng', presetRankingDesc:'nhịp độ chính thức', presetWecupDesc:'giải đấu cân bằng', presetBbcDesc:'blind theo thời gian', advSecLocalGame:'Ván luyện tập', advPauseHands:'Tạm dừng giữa các ván bài (tiếp tục qua cửa sổ người thắng)',
+    nextHandBtn:'Ván bài tiếp theo', advSecTablePrefs:'Tùy chọn bàn', advTablePrefsDesc:'Giá trị mặc định cho các bàn bạn tạo ở chế độ này — nút ⭐ trong biểu mẫu sẽ tải chúng.', advRaiseEveryHands:'Tăng blind sau mỗi N ván bài',
+    advGameSpeed:'Tốc độ ván (1–11)', advSecLogSettings:'Cài đặt nhật ký', advLogOn:'Bật ghi nhật ký', advLogInterval:'Khoảng ghi nhật ký', advLogEveryAction:'Mỗi hành động', advLogEveryHand:'Mỗi ván bài', advSecIgnored:'Người chơi bị bỏ qua',
+    advIgnoredDesc:'Người chơi trong danh sách bỏ qua bị ẩn khỏi trò chuyện.', advIgnoredEmpty:'(không có người chơi bị bỏ qua)', advIgnoredRemove:'Gỡ bỏ', advLobbyChat:'Hiện trò chuyện sảnh', advTableZoom:'Bật thu phóng bàn (nút kính lúp)',
+    advSeatSync:'Đồng bộ chỗ ngồi theo hướng màn hình (PokerTH dọc/ngang)', advChatTranslate:'Dịch trò chuyện (API trình duyệt, nút theo từng tin nhắn)', chatTranslateUnsupported:'Trình duyệt này không hỗ trợ dịch (cần Chrome/Edge mới).',
+    chatTranslateFailed:'Dịch thất bại', wcHideOpt:'Không hiển thị cửa sổ này nữa', styleExpand:'Mở rộng', styleCollapse:'Thu gọn', themeLight:'Sáng', modeAuto:'Tự động', modeLight:'Sáng', modeDark:'Tối', styleBy:'bởi', styleSelected:'Đã chọn',
+    importTable:'Nhập bàn (.zip)', importDeck:'Nhập bộ bài (.zip)', importError:'Nhập thất bại', confirmDeleteStyle:'Xóa kiểu đã nhập này?', delete:'Xóa', advSecAppearance:'Giao diện', advDarkMode:'Chế độ tối', tableGreenFelt:'Bàn xanh',
+    tableCasino:'Sòng bài xanh', themeExport:'Xuất chủ đề (.zip)', sectionAdvanced:'Nâng cao', rankingSeasonStats:'Thống kê mùa giải', rankingShare:'Tỷ lệ', rankingResults:'Kết quả', rankingToggleChart:'Chuyển cột / tròn', footPlayer:'Người chơi',
+    footCreate:'＋ Tạo bàn', gameInfoTitle:'Thông tin ván', gameInfoEmpty:'Chọn một bàn', gfNone:'Không lọc danh sách', gfOpen:'Hiện các ván đang mở', gfOpenNF:'Ván đang mở & chưa đầy', gfOpenNFNP:'Ván đang mở, chưa đầy, không riêng tư',
+    gfOpenNFP:'Ván đang mở, chưa đầy, riêng tư', gfOpenNFR:'Ván đang mở, chưa đầy, xếp hạng', infoPlayersInGame:'Người chơi trong ván', displayBB:'Số tiền theo big blind', displayChips:'Số tiền theo chip', errGameFull:'Ván đã đầy',
+    errBadGameName:'Tên ván không hợp lệ', errInvalidSettings:'Cài đặt ván không hợp lệ', errBlocked:'Địa chỉ IP bị chặn', errRejoinFailed:'Tham gia lại thất bại', errNoSpectators:'Không cho phép khán giả', serverPassword:'Mật khẩu máy chủ (tùy chọn)',
+    userPassword:'Mật khẩu người dùng (tùy chọn)', avatarImageTooltip:'Chọn ảnh tùy chỉnh', gipTabLog:'Nhật ký', gipTabOdds:'Tỷ lệ thắng',
 };
 
 export default { meta, strings };

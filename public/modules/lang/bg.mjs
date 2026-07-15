@@ -41,7 +41,6 @@ export const strings = {
   advHidePbar:'Режим PokerTH (лентата на играча е скрита)',
   deckSvg: "PokerTH",
   pucksPokerth: "PokerTH",
-  seatPokerth: "PokerTH",
   tablePokerthOfficial: "PokerTH",
   presetPokerthOfficial: "PokerTH Dark",
   themePokerthOfficial: "PokerTH Dark",
@@ -659,6 +658,24 @@ export const strings = {
     // v0.3.533 : case « ne pas traduire les termes de poker » (parité officielle)
     advPokerTerms:'Не превеждай международните покер термини (Check, Call, Raise)',
     pokerFold:'Фолд', pokerCheck:'Чек', pokerCall:'Кол', pokerBet:'Бет', pokerRaise:'Рейз', pokerAllin:'Ол-ин',
+    // v0.3.579 : passe native complete — 105 cles en repli anglais traduites + cles err*/affichage (noms propres et termes de tables conserves)
+    actBadgeCheck:'Check', unitMinutes:'minutes', presetWecupName:'WeCup', presetBbcName:'BBC', tablePokerthLive:'Spectator Tools', tableDanuxi:'Danuxi Blue', tableMute:'Mute', tableMute2:'Mute 02', tableTeal:'Teal', tableLemming:'Lemming',
+    tableMatrix:'Matrix', tableStarTrek:'Star Trek', tableTripSixes:'TripSixes', tableWanted:'Wanted', tableXanax:'Xanax', pucksAuto:'Auto (table)', pucksCasino:'Casino', infoTypeLabel:'Type', infoCapitalLabel:'Capital', wpWaitingPlayers:'Изчакване на играчи …',
+    wpFillBots:'Допълване с компютърни играчи', wpStartGame:'Започни играта', wpLeaveGame:'Напусни играта', advFourColor:'Тесте с 4 цвята (♦ сини, ♣ зелени)', cardZoomToggle:'Увеличи картите ми', actBadgeFold:'Пас', actBadgeCall:'Плащане',
+    actBadgeBet:'Залог', actBadgeRaise:'Вдигане', actBadgeAllin:'Ол-ин', cancelBtn:'Отказ', navBack:'Назад', gameNameLabel:'Име на играта', passwordLabel:'Парола', startCash:'Начален капитал', blindsSettings:'Настройки на блайндовете',
+    firstSmallBlind:'Първи малък блайнд', blindInterval:'Интервал на вдигане на блайндовете', unitHands:'ръце', timeLimits:'Времеви ограничения', actionTimeout:'Време за действие', pauseBetweenHands:'Пауза между ръцете', guestNeedAccount:'Изисква се акаунт',
+    guestJoinBlocked:'Гостите могат да се присъединяват само към обикновени игри — влезте с регистриран акаунт в pokerth.net, за да играете на тази маса.', presetRankingName:'Класиране', presetRankingDesc:'официално темпо', presetWecupDesc:'балансиран турнир',
+    presetBbcDesc:'блайндове по време', advSecLocalGame:'Тренировъчна игра', advPauseHands:'Пауза между ръцете (продължение през прозореца на победителя)', nextHandBtn:'Следваща ръка', advSecTablePrefs:'Предпочитания за масата', advTablePrefsDesc:'Стойности по подразбиране за масите, които създавате в този режим — бутонът ⭐ във формуляра ги зарежда.',
+    advRaiseEveryHands:'Вдигане на блайндовете на всеки N ръце', advGameSpeed:'Скорост на играта (1–11)', advSecLogSettings:'Настройки на дневника', advLogOn:'Активиране на дневника', advLogInterval:'Интервал на дневника', advLogEveryAction:'Всяко действие',
+    advLogEveryHand:'Всяка ръка', advSecIgnored:'Игнорирани играчи', advIgnoredDesc:'Играчите от списъка с игнорирани са скрити в чата.', advIgnoredEmpty:'(няма игнорирани играчи)', advIgnoredRemove:'Премахни', advLobbyChat:'Показвай чата на лобито',
+    advTableZoom:'Активирай мащабиране на масата (бутони лупа)', advSeatSync:'Синхронизирай местата с ориентацията (PokerTH портрет/пейзаж)', advChatTranslate:'Превод на чата (API на браузъра, бутон за съобщение)', chatTranslateUnsupported:'Този браузър не поддържа превод (нужен е скорошен Chrome/Edge).',
+    chatTranslateFailed:'Преводът се провали', wcHideOpt:'Не показвай повече този прозорец', styleExpand:'Разгъни', styleCollapse:'Свий', themeLight:'Светла', modeAuto:'Автоматично', modeLight:'Светла', modeDark:'Тъмна', styleBy:'от',
+    styleSelected:'Избрано', importTable:'Импортирай маса (.zip)', importDeck:'Импортирай тесте (.zip)', importError:'Импортът се провали', confirmDeleteStyle:'Да се изтрие ли този импортиран стил?', delete:'Изтрий', advSecAppearance:'Външен вид',
+    advDarkMode:'Тъмен режим', tableGreenFelt:'Зелена маса', tableCasino:'Зелено казино', themeExport:'Експортирай тема (.zip)', sectionAdvanced:'Разширени', rankingSeasonStats:'Статистика за сезона', rankingShare:'Дял', rankingResults:'Резултати',
+    rankingToggleChart:'Смени стълбове / кръг', footPlayer:'Играч', footCreate:'＋ Създай маса', gameInfoTitle:'Инфо за играта', gameInfoEmpty:'Изберете маса', gfNone:'Без филтър на списъка', gfOpen:'Покажи отворените игри', gfOpenNF:'Отворени и непълни игри',
+    gfOpenNFNP:'Отворени, непълни, не-частни игри', gfOpenNFP:'Отворени, непълни, частни игри', gfOpenNFR:'Отворени, непълни игри за класиране', infoPlayersInGame:'Играчи в играта', displayBB:'Суми в големи блайндове', displayChips:'Суми в чипове',
+    errGameFull:'Играта е пълна', errBadGameName:'Невалидно име на игра', errInvalidSettings:'Невалидни настройки на играта', errBlocked:'IP адресът е блокиран', errRejoinFailed:'Повторното присъединяване се провали', errNoSpectators:'Зрители не се допускат',
+    serverPassword:'Парола на сървъра (по избор)', userPassword:'Потребителска парола (по избор)', avatarImageTooltip:'Избери собствено изображение', gipTabLog:'Дневник', gipTabOdds:'Шансове',
 };
 
 export default { meta, strings };

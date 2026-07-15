@@ -40,7 +40,6 @@ export const strings = {
   advHidePbar:'PokerTH モード（プレイヤーバー非表示）',
   deckSvg: "PokerTH",
   pucksPokerth: "PokerTH",
-  seatPokerth: "PokerTH",
   tablePokerthOfficial: "PokerTH",
   presetPokerthOfficial: "PokerTH Dark",
   themePokerthOfficial: "PokerTH Dark",
@@ -658,6 +657,21 @@ export const strings = {
     // v0.3.533 : case « ne pas traduire les termes de poker » (parité officielle)
     advPokerTerms:'国際的なポーカー用語を翻訳しない（Check、Call、Raise）',
     pokerFold:'フォールド', pokerCheck:'チェック', pokerCall:'コール', pokerBet:'ベット', pokerRaise:'レイズ', pokerAllin:'オールイン',
+    // v0.3.579 : passe native complete — 105 cles en repli anglais traduites + cles err*/affichage (noms propres et termes de tables conserves)
+    actBadgeCheck:'Check', unitMinutes:'minutes', presetWecupName:'WeCup', presetBbcName:'BBC', tablePokerthLive:'Spectator Tools', tableDanuxi:'Danuxi Blue', tableMute:'Mute', tableMute2:'Mute 02', tableTeal:'Teal', tableLemming:'Lemming',
+    tableMatrix:'Matrix', tableStarTrek:'Star Trek', tableTripSixes:'TripSixes', tableWanted:'Wanted', tableXanax:'Xanax', pucksAuto:'Auto (table)', pucksCasino:'Casino', infoTypeLabel:'Type', infoCapitalLabel:'Capital', wpWaitingPlayers:'プレイヤーを待っています…',
+    wpFillBots:'コンピュータープレイヤーで埋める', wpStartGame:'ゲーム開始', wpLeaveGame:'ゲームを退出', advFourColor:'4色デッキ（♦ 青、♣ 緑）', cardZoomToggle:'自分のカードを拡大', actBadgeFold:'フォールド', actBadgeCall:'コール', actBadgeBet:'ベット', actBadgeRaise:'レイズ', actBadgeAllin:'オールイン',
+    cancelBtn:'キャンセル', navBack:'戻る', gameNameLabel:'ゲーム名', passwordLabel:'パスワード', startCash:'開始チップ', blindsSettings:'ブラインド設定', firstSmallBlind:'最初のスモールブラインド', blindInterval:'ブラインド上昇の間隔', unitHands:'ハンド', timeLimits:'時間制限', actionTimeout:'アクションごとの時間',
+    pauseBetweenHands:'ハンド間の一時停止', guestNeedAccount:'アカウントが必要です', guestJoinBlocked:'ゲストは通常のゲームにのみ参加できます — このテーブルでプレイするには登録済みの pokerth.net アカウントでログインしてください。', presetRankingName:'ランキング', presetRankingDesc:'公式ペース', presetWecupDesc:'バランスの取れたトーナメント',
+    presetBbcDesc:'時間ベースのブラインド', advSecLocalGame:'トレーニングゲーム', advPauseHands:'ハンド間の一時停止（勝者ウィンドウから続行）', nextHandBtn:'次のハンド', advSecTablePrefs:'テーブル設定', advTablePrefsDesc:'このモードで作成するテーブルの既定値 — フォームの ⭐ ボタンで読み込みます。', advRaiseEveryHands:'N ハンドごとにブラインドを上げる',
+    advGameSpeed:'ゲーム速度（1–11）', advSecLogSettings:'ログ設定', advLogOn:'ログを有効化', advLogInterval:'ログ間隔', advLogEveryAction:'すべてのアクション', advLogEveryHand:'すべてのハンド', advSecIgnored:'無視したプレイヤー', advIgnoredDesc:'無視リストのプレイヤーはチャットで非表示になります。', advIgnoredEmpty:'（無視したプレイヤーはいません）',
+    advIgnoredRemove:'削除', advLobbyChat:'ロビーチャットを表示', advTableZoom:'テーブルズームを有効化（拡大鏡ボタン）', advSeatSync:'座席を画面の向きと同期（PokerTH 縦/横）', advChatTranslate:'チャット翻訳（ブラウザ API、メッセージごとのボタン）', chatTranslateUnsupported:'このブラウザは翻訳に対応していません（最新の Chrome/Edge が必要）。',
+    chatTranslateFailed:'翻訳に失敗しました', wcHideOpt:'このウィンドウを今後表示しない', styleExpand:'展開', styleCollapse:'折りたたむ', themeLight:'ライト', modeAuto:'自動', modeLight:'ライト', modeDark:'ダーク', styleBy:'作者:', styleSelected:'選択中', importTable:'テーブルをインポート（.zip）',
+    importDeck:'デッキをインポート（.zip）', importError:'インポートに失敗しました', confirmDeleteStyle:'このインポートしたスタイルを削除しますか？', delete:'削除', advSecAppearance:'外観', advDarkMode:'ダークモード', tableGreenFelt:'グリーンテーブル', tableCasino:'グリーンカジノ', themeExport:'テーマをエクスポート（.zip）',
+    sectionAdvanced:'詳細設定', rankingSeasonStats:'シーズン統計', rankingShare:'シェア', rankingResults:'結果', rankingToggleChart:'棒 / 円グラフ切替', footPlayer:'プレイヤー', footCreate:'＋ テーブルを作成', gameInfoTitle:'ゲーム情報', gameInfoEmpty:'テーブルを選択', gfNone:'リストフィルターなし',
+    gfOpen:'募集中のゲームを表示', gfOpenNF:'募集中で満員でないゲーム', gfOpenNFNP:'募集中・満員でない・非プライベートのゲーム', gfOpenNFP:'募集中・満員でない・プライベートのゲーム', gfOpenNFR:'募集中・満員でないランキングゲーム', infoPlayersInGame:'ゲーム中のプレイヤー', displayBB:'金額をビッグブラインドで表示', displayChips:'金額をチップで表示',
+    errGameFull:'ゲームは満員です', errBadGameName:'無効なゲーム名', errInvalidSettings:'無効なゲーム設定', errBlocked:'IP アドレスがブロックされています', errRejoinFailed:'再参加に失敗しました', errNoSpectators:'観戦者は許可されていません', serverPassword:'サーバーパスワード（任意）', userPassword:'ユーザーパスワード（任意）',
+    avatarImageTooltip:'カスタム画像を選択', gipTabLog:'ログ', gipTabOdds:'オッズ',
 };
 
 export default { meta, strings };

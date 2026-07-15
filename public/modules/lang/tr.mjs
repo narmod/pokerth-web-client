@@ -43,7 +43,6 @@ export const strings = {
   advHidePbar:'PokerTH modu (oyuncu çubuğu gizli)',
   deckSvg: "PokerTH",
   pucksPokerth: "PokerTH",
-  seatPokerth: "PokerTH",
   tablePokerthOfficial: "PokerTH",
   presetPokerthOfficial: "PokerTH Dark",
   themePokerthOfficial: "PokerTH Dark",
@@ -661,6 +660,24 @@ export const strings = {
     // v0.3.533 : case « ne pas traduire les termes de poker » (parité officielle)
     advPokerTerms:'Uluslararası poker terimlerini çevirme (Check, Call, Raise)',
     pokerFold:'Fold', pokerCheck:'Check', pokerCall:'Call', pokerBet:'Bet', pokerRaise:'Raise', pokerAllin:'All-In',
+    // v0.3.579 : passe native complete — 105 cles en repli anglais traduites + cles err*/affichage (noms propres et termes de tables conserves)
+    actBadgeCheck:'Check', unitMinutes:'minutes', presetWecupName:'WeCup', presetBbcName:'BBC', tablePokerthLive:'Spectator Tools', tableDanuxi:'Danuxi Blue', tableMute:'Mute', tableMute2:'Mute 02', tableTeal:'Teal', tableLemming:'Lemming',
+    tableMatrix:'Matrix', tableStarTrek:'Star Trek', tableTripSixes:'TripSixes', tableWanted:'Wanted', tableXanax:'Xanax', pucksAuto:'Auto (table)', pucksCasino:'Casino', infoTypeLabel:'Type', infoCapitalLabel:'Capital', wpWaitingPlayers:'Oyuncular bekleniyor …',
+    wpFillBots:'Bilgisayar oyuncularıyla doldur', wpStartGame:'Oyunu başlat', wpLeaveGame:'Oyundan ayrıl', advFourColor:'4 renkli deste (♦ mavi, ♣ yeşil)', cardZoomToggle:'Kartlarımı büyüt', actBadgeFold:'Pas', actBadgeCall:'Gör', actBadgeBet:'Bahis',
+    actBadgeRaise:'Yükselt', actBadgeAllin:'Rest', cancelBtn:'İptal', navBack:'Geri', gameNameLabel:'Oyun adı', passwordLabel:'Parola', startCash:'Başlangıç sermayesi', blindsSettings:'Blind ayarları', firstSmallBlind:'İlk small blind',
+    blindInterval:'Blind artırma aralığı', unitHands:'el', timeLimits:'Zaman sınırları', actionTimeout:'İşlem başına süre', pauseBetweenHands:'Eller arasında duraklat', guestNeedAccount:'Hesap gerekli', guestJoinBlocked:'Misafirler yalnızca normal oyunlara katılabilir — bu masada oynamak için kayıtlı bir pokerth.net hesabıyla giriş yapın.',
+    presetRankingName:'Sıralama', presetRankingDesc:'resmi tempo', presetWecupDesc:'dengeli turnuva', presetBbcDesc:'zamana dayalı blindler', advSecLocalGame:'Antrenman oyunu', advPauseHands:'Eller arasında duraklat (kazanan penceresinden devam)',
+    nextHandBtn:'Sonraki el', advSecTablePrefs:'Masa tercihleri', advTablePrefsDesc:'Bu modda oluşturduğun masaların varsayılan değerleri — formdaki ⭐ düğmesi bunları yükler.', advRaiseEveryHands:'Her N elde blindleri yükselt', advGameSpeed:'Oyun hızı (1–11)',
+    advSecLogSettings:'Günlük ayarları', advLogOn:'Günlüğü etkinleştir', advLogInterval:'Günlük aralığı', advLogEveryAction:'Her işlem', advLogEveryHand:'Her el', advSecIgnored:'Yok sayılan oyuncular', advIgnoredDesc:'Yok sayma listesindeki oyuncular sohbette gizlenir.',
+    advIgnoredEmpty:'(yok sayılan oyuncu yok)', advIgnoredRemove:'Kaldır', advLobbyChat:'Lobi sohbetini göster', advTableZoom:'Masa yakınlaştırmayı etkinleştir (büyüteç düğmeleri)', advSeatSync:'Koltukları yönle eşitle (PokerTH dikey/yatay)',
+    advChatTranslate:'Sohbet çevirisi (tarayıcı API\'si, mesaj başına düğme)', chatTranslateUnsupported:'Bu tarayıcı çeviriyi desteklemiyor (güncel Chrome/Edge gerekli).', chatTranslateFailed:'Çeviri başarısız oldu', wcHideOpt:'Bu pencereyi bir daha gösterme',
+    styleExpand:'Genişlet', styleCollapse:'Daralt', themeLight:'Açık', modeAuto:'Otomatik', modeLight:'Açık', modeDark:'Koyu', styleBy:'yapan:', styleSelected:'Seçili', importTable:'Masa içe aktar (.zip)', importDeck:'Deste içe aktar (.zip)',
+    importError:'İçe aktarma başarısız', confirmDeleteStyle:'Bu içe aktarılan stil silinsin mi?', delete:'Sil', advSecAppearance:'Görünüm', advDarkMode:'Koyu mod', tableGreenFelt:'Yeşil masa', tableCasino:'Yeşil kumarhane', themeExport:'Temayı dışa aktar (.zip)',
+    sectionAdvanced:'Gelişmiş', rankingSeasonStats:'Sezon istatistikleri', rankingShare:'Pay', rankingResults:'Sonuçlar', rankingToggleChart:'Çubuk / pasta değiştir', footPlayer:'Oyuncu', footCreate:'＋ Masa oluştur', gameInfoTitle:'Oyun bilgisi',
+    gameInfoEmpty:'Bir masa seç', gfNone:'Liste filtresi yok', gfOpen:'Açık oyunları göster', gfOpenNF:'Açık ve dolu olmayan oyunlar', gfOpenNFNP:'Açık, dolu olmayan, özel olmayan oyunlar', gfOpenNFP:'Açık, dolu olmayan, özel oyunlar',
+    gfOpenNFR:'Açık, dolu olmayan sıralama oyunları', infoPlayersInGame:'Oyundaki oyuncular', displayBB:'Tutarlar big blind cinsinden', displayChips:'Tutarlar fiş cinsinden', errGameFull:'Oyun dolu', errBadGameName:'Geçersiz oyun adı',
+    errInvalidSettings:'Geçersiz oyun ayarları', errBlocked:'IP adresi engellendi', errRejoinFailed:'Yeniden katılma başarısız', errNoSpectators:'İzleyicilere izin verilmiyor', serverPassword:'Sunucu parolası (isteğe bağlı)', userPassword:'Kullanıcı parolası (isteğe bağlı)',
+    avatarImageTooltip:'Özel bir görsel seç', gipTabLog:'Günlük', gipTabOdds:'Olasılıklar',
 };
 
 export default { meta, strings };

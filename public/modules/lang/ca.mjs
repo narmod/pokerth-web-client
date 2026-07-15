@@ -41,7 +41,6 @@ export const strings = {
   advHidePbar:'Mode PokerTH (barra de jugador amagada)',
   deckSvg: "PokerTH",
   pucksPokerth: "PokerTH",
-  seatPokerth: "PokerTH",
   tablePokerthOfficial: "PokerTH",
   presetPokerthOfficial: "PokerTH Dark",
   themePokerthOfficial: "PokerTH Dark",
@@ -659,6 +658,25 @@ export const strings = {
     // v0.3.533 : case « ne pas traduire les termes de poker » (parité officielle)
     advPokerTerms:'No tradueixis els termes internacionals del pòquer (Check, Call, Raise)',
     pokerFold:'Fold', pokerCheck:'Check', pokerCall:'Call', pokerBet:'Bet', pokerRaise:'Raise', pokerAllin:'All-In',
+    // v0.3.579 : passe native complete — 105 cles en repli anglais traduites + cles err*/affichage (noms propres et termes de tables conserves)
+    actBadgeCheck:'Check', unitMinutes:'minutes', presetWecupName:'WeCup', presetBbcName:'BBC', tablePokerthLive:'Spectator Tools', tableDanuxi:'Danuxi Blue', tableMute:'Mute', tableMute2:'Mute 02', tableTeal:'Teal', tableLemming:'Lemming',
+    tableMatrix:'Matrix', tableStarTrek:'Star Trek', tableTripSixes:'TripSixes', tableWanted:'Wanted', tableXanax:'Xanax', pucksAuto:'Auto (table)', pucksCasino:'Casino', infoTypeLabel:'Type', infoCapitalLabel:'Capital', wpWaitingPlayers:'Esperant jugadors …',
+    wpFillBots:'Completar amb jugadors d\'ordinador', wpStartGame:'Inicia la partida', wpLeaveGame:'Abandona la partida', advFourColor:'Baralla de 4 colors (♦ blau, ♣ verd)', cardZoomToggle:'Amplia les meves cartes', actBadgeFold:'Retirar-se',
+    actBadgeCall:'Igualar', actBadgeBet:'Apostar', actBadgeRaise:'Pujar', actBadgeAllin:'All-In', cancelBtn:'Cancel·la', navBack:'Enrere', gameNameLabel:'Nom de la partida', passwordLabel:'Contrasenya', startCash:'Capital inicial', blindsSettings:'Configuració de cegues',
+    firstSmallBlind:'Primera cega petita', blindInterval:'Interval de pujada de cegues', unitHands:'mans', timeLimits:'Límits de temps', actionTimeout:'Temps per acció', pauseBetweenHands:'Pausa entre mans', guestNeedAccount:'Cal un compte',
+    guestJoinBlocked:'Els convidats només poden unir-se a partides normals — inicia sessió amb un compte registrat de pokerth.net per jugar en aquesta taula.', presetRankingName:'Ranking', presetRankingDesc:'ritme oficial', presetWecupDesc:'torneig equilibrat',
+    presetBbcDesc:'cegues per temps', advSecLocalGame:'Partida d\'entrenament', advPauseHands:'Pausa entre mans (continua des de la finestra del guanyador)', nextHandBtn:'Mà següent', advSecTablePrefs:'Preferències de taula', advTablePrefsDesc:'Valors per defecte de les taules que crees en aquest mode — el botó ⭐ del formulari els carrega.',
+    advRaiseEveryHands:'Puja les cegues cada N mans', advGameSpeed:'Velocitat de joc (1–11)', advSecLogSettings:'Configuració del registre', advLogOn:'Activa el registre', advLogInterval:'Interval del registre', advLogEveryAction:'Cada acció',
+    advLogEveryHand:'Cada mà', advSecIgnored:'Jugadors ignorats', advIgnoredDesc:'Els jugadors de la llista d\'ignorats s\'amaguen del xat.', advIgnoredEmpty:'(cap jugador ignorat)', advIgnoredRemove:'Treu', advLobbyChat:'Mostra el xat del lobby',
+    advTableZoom:'Activa el zoom de la taula (botons lupa)', advSeatSync:'Sincronitza els seients amb l\'orientació (PokerTH vertical/horitzontal)', advChatTranslate:'Traducció del xat (API del navegador, botó per missatge)', chatTranslateUnsupported:'Aquest navegador no admet la traducció (cal Chrome/Edge recent).',
+    chatTranslateFailed:'Ha fallat la traducció', wcHideOpt:'No tornis a mostrar aquesta finestra', styleExpand:'Desplega', styleCollapse:'Redueix', themeLight:'Clar', modeAuto:'Automàtic', modeLight:'Clar', modeDark:'Fosc', styleBy:'de',
+    styleSelected:'Seleccionat', importTable:'Importa una taula (.zip)', importDeck:'Importa una baralla (.zip)', importError:'Ha fallat la importació', confirmDeleteStyle:'Vols suprimir aquest estil importat?', delete:'Suprimeix',
+    advSecAppearance:'Aparença', advDarkMode:'Mode fosc', tableGreenFelt:'Taula verda', tableCasino:'Casino verd', themeExport:'Exporta el tema (.zip)', sectionAdvanced:'Avançat', rankingSeasonStats:'Estadístiques de temporada', rankingShare:'Quota',
+    rankingResults:'Resultats', rankingToggleChart:'Canvia barres / pastís', footPlayer:'Jugador', footCreate:'＋ Crea una taula', gameInfoTitle:'Info de la partida', gameInfoEmpty:'Selecciona una taula', gfNone:'Sense filtre de llista',
+    gfOpen:'Mostra partides obertes', gfOpenNF:'Partides obertes i no plenes', gfOpenNFNP:'Partides obertes, no plenes i no privades', gfOpenNFP:'Partides obertes, no plenes i privades', gfOpenNFR:'Partides obertes, no plenes i de ranking',
+    infoPlayersInGame:'Jugadors a la partida', displayBB:'Imports en cegues grans', displayChips:'Imports en fitxes', errGameFull:'La partida és plena', errBadGameName:'Nom de partida no vàlid', errInvalidSettings:'Configuració de partida no vàlida',
+    errBlocked:'Adreça IP bloquejada', errRejoinFailed:'No s\'ha pogut tornar a entrar', errNoSpectators:'No s\'admeten espectadors', serverPassword:'Contrasenya del servidor (opcional)', userPassword:'Contrasenya d\'usuari (opcional)',
+    avatarImageTooltip:'Tria una imatge personalitzada', gipTabLog:'Historial', gipTabOdds:'Probabilitats',
 };
 
 export default { meta, strings };

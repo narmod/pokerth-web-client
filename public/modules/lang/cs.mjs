@@ -41,7 +41,6 @@ export const strings = {
   advHidePbar:'Režim PokerTH (panel hráče skrytý)',
   deckSvg: "PokerTH",
   pucksPokerth: "PokerTH",
-  seatPokerth: "PokerTH",
   tablePokerthOfficial: "PokerTH",
   presetPokerthOfficial: "PokerTH Dark",
   themePokerthOfficial: "PokerTH Dark",
@@ -659,6 +658,24 @@ export const strings = {
     // v0.3.533 : case « ne pas traduire les termes de poker » (parité officielle)
     advPokerTerms:'Nepřekládat mezinárodní pokerové výrazy (Check, Call, Raise)',
     pokerFold:'Fold', pokerCheck:'Check', pokerCall:'Call', pokerBet:'Bet', pokerRaise:'Raise', pokerAllin:'All-In',
+    // v0.3.579 : passe native complete — 105 cles en repli anglais traduites + cles err*/affichage (noms propres et termes de tables conserves)
+    actBadgeCheck:'Check', unitMinutes:'minutes', presetWecupName:'WeCup', presetBbcName:'BBC', tablePokerthLive:'Spectator Tools', tableDanuxi:'Danuxi Blue', tableMute:'Mute', tableMute2:'Mute 02', tableTeal:'Teal', tableLemming:'Lemming',
+    tableMatrix:'Matrix', tableStarTrek:'Star Trek', tableTripSixes:'TripSixes', tableWanted:'Wanted', tableXanax:'Xanax', pucksAuto:'Auto (table)', pucksCasino:'Casino', infoTypeLabel:'Type', infoCapitalLabel:'Capital', wpWaitingPlayers:'Čekání na hráče …',
+    wpFillBots:'Doplnit počítačovými hráči', wpStartGame:'Spustit hru', wpLeaveGame:'Opustit hru', advFourColor:'Čtyřbarevný balíček (♦ modré, ♣ zelené)', cardZoomToggle:'Zvětšit moje karty', actBadgeFold:'Složit', actBadgeCall:'Dorovnat',
+    actBadgeBet:'Vsadit', actBadgeRaise:'Navýšit', actBadgeAllin:'All-In', cancelBtn:'Zrušit', navBack:'Zpět', gameNameLabel:'Název hry', passwordLabel:'Heslo', startCash:'Počáteční kapitál', blindsSettings:'Nastavení blindů', firstSmallBlind:'První small blind',
+    blindInterval:'Interval zvyšování blindů', unitHands:'rukou', timeLimits:'Časové limity', actionTimeout:'Čas na akci', pauseBetweenHands:'Pauza mezi rukama', guestNeedAccount:'Vyžadován účet', guestJoinBlocked:'Hosté se mohou připojit jen k běžným hrám — přihlaste se registrovaným účtem pokerth.net, abyste mohli hrát u tohoto stolu.',
+    presetRankingName:'Žebříček', presetRankingDesc:'oficiální tempo', presetWecupDesc:'vyvážený turnaj', presetBbcDesc:'blindy podle času', advSecLocalGame:'Tréninková hra', advPauseHands:'Pauza mezi rukama (pokračování přes okno vítěze)',
+    nextHandBtn:'Další ruka', advSecTablePrefs:'Předvolby stolu', advTablePrefsDesc:'Výchozí hodnoty stolů, které v tomto režimu vytváříte — tlačítko ⭐ ve formuláři je načte.', advRaiseEveryHands:'Zvyšovat blindy každých N rukou',
+    advGameSpeed:'Rychlost hry (1–11)', advSecLogSettings:'Nastavení protokolu', advLogOn:'Zapnout protokolování', advLogInterval:'Interval protokolu', advLogEveryAction:'Každá akce', advLogEveryHand:'Každá ruka', advSecIgnored:'Ignorovaní hráči',
+    advIgnoredDesc:'Hráči na seznamu ignorovaných jsou v chatu skryti.', advIgnoredEmpty:'(žádní ignorovaní hráči)', advIgnoredRemove:'Odebrat', advLobbyChat:'Zobrazit chat lobby', advTableZoom:'Povolit zoom stolu (tlačítka lupy)',
+    advSeatSync:'Synchronizovat místa s orientací (PokerTH na výšku/na šířku)', advChatTranslate:'Překlad chatu (API prohlížeče, tlačítko u zprávy)', chatTranslateUnsupported:'Tento prohlížeč překlad nepodporuje (vyžadován novější Chrome/Edge).',
+    chatTranslateFailed:'Překlad se nezdařil', wcHideOpt:'Toto okno již nezobrazovat', styleExpand:'Rozbalit', styleCollapse:'Sbalit', themeLight:'Světlý', modeAuto:'Automaticky', modeLight:'Světlý', modeDark:'Tmavý', styleBy:'od', styleSelected:'Vybráno',
+    importTable:'Importovat stůl (.zip)', importDeck:'Importovat balíček (.zip)', importError:'Import se nezdařil', confirmDeleteStyle:'Smazat tento importovaný styl?', delete:'Smazat', advSecAppearance:'Vzhled', advDarkMode:'Tmavý režim',
+    tableGreenFelt:'Zelený stůl', tableCasino:'Zelené kasino', themeExport:'Exportovat motiv (.zip)', sectionAdvanced:'Pokročilé', rankingSeasonStats:'Statistiky sezóny', rankingShare:'Podíl', rankingResults:'Výsledky', rankingToggleChart:'Přepnout sloupce / koláč',
+    footPlayer:'Hráč', footCreate:'＋ Vytvořit stůl', gameInfoTitle:'Info o hře', gameInfoEmpty:'Vyberte stůl', gfNone:'Bez filtru seznamu', gfOpen:'Zobrazit otevřené hry', gfOpenNF:'Otevřené a nezaplněné hry', gfOpenNFNP:'Otevřené, nezaplněné, nesoukromé hry',
+    gfOpenNFP:'Otevřené, nezaplněné, soukromé hry', gfOpenNFR:'Otevřené, nezaplněné žebříčkové hry', infoPlayersInGame:'Hráči ve hře', displayBB:'Částky ve velkých blindech', displayChips:'Částky v žetonech', errGameFull:'Hra je plná',
+    errBadGameName:'Neplatný název hry', errInvalidSettings:'Neplatné nastavení hry', errBlocked:'IP adresa je blokována', errRejoinFailed:'Opětovné připojení se nezdařilo', errNoSpectators:'Diváci nejsou povoleni', serverPassword:'Heslo serveru (volitelné)',
+    userPassword:'Heslo uživatele (volitelné)', avatarImageTooltip:'Vybrat vlastní obrázek', gipTabLog:'Protokol', gipTabOdds:'Šance',
 };
 
 export default { meta, strings };

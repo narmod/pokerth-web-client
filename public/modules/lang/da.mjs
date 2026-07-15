@@ -40,7 +40,6 @@ export const strings = {
   advHidePbar:'PokerTH-tilstand (spillerbjælke skjult)',
   deckSvg: "PokerTH",
   pucksPokerth: "PokerTH",
-  seatPokerth: "PokerTH",
   tablePokerthOfficial: "PokerTH",
   presetPokerthOfficial: "PokerTH Dark",
   themePokerthOfficial: "PokerTH Dark",
@@ -658,6 +657,24 @@ export const strings = {
     // v0.3.533 : case « ne pas traduire les termes de poker » (parité officielle)
     advPokerTerms:'Oversæt ikke internationale pokertermer (Check, Call, Raise)',
     pokerFold:'Fold', pokerCheck:'Check', pokerCall:'Call', pokerBet:'Bet', pokerRaise:'Raise', pokerAllin:'All-In',
+    // v0.3.579 : passe native complete — 105 cles en repli anglais traduites + cles err*/affichage (noms propres et termes de tables conserves)
+    actBadgeCheck:'Check', unitMinutes:'minutes', presetWecupName:'WeCup', presetBbcName:'BBC', tablePokerthLive:'Spectator Tools', tableDanuxi:'Danuxi Blue', tableMute:'Mute', tableMute2:'Mute 02', tableTeal:'Teal', tableLemming:'Lemming',
+    tableMatrix:'Matrix', tableStarTrek:'Star Trek', tableTripSixes:'TripSixes', tableWanted:'Wanted', tableXanax:'Xanax', pucksAuto:'Auto (table)', pucksCasino:'Casino', infoTypeLabel:'Type', infoCapitalLabel:'Capital', wpWaitingPlayers:'Venter på spillere …',
+    wpFillBots:'Fyld op med computerspillere', wpStartGame:'Start spillet', wpLeaveGame:'Forlad spillet', advFourColor:'4-farvet kortspil (♦ blå, ♣ grøn)', cardZoomToggle:'Forstør mine kort', actBadgeFold:'Fold', actBadgeCall:'Call',
+    actBadgeBet:'Bet', actBadgeRaise:'Raise', actBadgeAllin:'All-In', cancelBtn:'Annullér', navBack:'Tilbage', gameNameLabel:'Spillets navn', passwordLabel:'Adgangskode', startCash:'Startkapital', blindsSettings:'Blind-indstillinger',
+    firstSmallBlind:'Første small blind', blindInterval:'Interval for blindforhøjelse', unitHands:'hænder', timeLimits:'Tidsgrænser', actionTimeout:'Tid pr. handling', pauseBetweenHands:'Pause mellem hænder', guestNeedAccount:'Konto påkrævet',
+    guestJoinBlocked:'Gæster kan kun deltage i normale spil — log ind med en registreret pokerth.net-konto for at spille ved dette bord.', presetRankingName:'Ranking', presetRankingDesc:'officielt tempo', presetWecupDesc:'balanceret turnering',
+    presetBbcDesc:'tidsbaserede blinds', advSecLocalGame:'Træningsspil', advPauseHands:'Pause mellem hænder (fortsæt via vinduet med vinderen)', nextHandBtn:'Næste hånd', advSecTablePrefs:'Bordindstillinger', advTablePrefsDesc:'Standardværdier for de borde, du opretter i denne tilstand — ⭐-knappen i formularen indlæser dem.',
+    advRaiseEveryHands:'Forhøj blinds hver N. hånd', advGameSpeed:'Spilhastighed (1–11)', advSecLogSettings:'Log-indstillinger', advLogOn:'Aktivér logning', advLogInterval:'Log-interval', advLogEveryAction:'Hver handling', advLogEveryHand:'Hver hånd',
+    advSecIgnored:'Ignorerede spillere', advIgnoredDesc:'Spillere på ignoreringslisten er skjult i chatten.', advIgnoredEmpty:'(ingen ignorerede spillere)', advIgnoredRemove:'Fjern', advLobbyChat:'Vis lobby-chatten', advTableZoom:'Aktivér bordzoom (lup-knapper)',
+    advSeatSync:'Synkronisér sæder med orientering (PokerTH portræt/landskab)', advChatTranslate:'Chat-oversættelse (browser-API, knap pr. besked)', chatTranslateUnsupported:'Oversættelse understøttes ikke af denne browser (nyere Chrome/Edge kræves).',
+    chatTranslateFailed:'Oversættelse mislykkedes', wcHideOpt:'Vis ikke dette vindue igen', styleExpand:'Udvid', styleCollapse:'Skjul', themeLight:'Lys', modeAuto:'Automatisk', modeLight:'Lys', modeDark:'Mørk', styleBy:'af', styleSelected:'Valgt',
+    importTable:'Importér et bord (.zip)', importDeck:'Importér et kortspil (.zip)', importError:'Import mislykkedes', confirmDeleteStyle:'Slet denne importerede stil?', delete:'Slet', advSecAppearance:'Udseende', advDarkMode:'Mørk tilstand',
+    tableGreenFelt:'Grønt bord', tableCasino:'Grønt casino', themeExport:'Eksportér tema (.zip)', sectionAdvanced:'Avanceret', rankingSeasonStats:'Sæsonstatistik', rankingShare:'Andel', rankingResults:'Resultater', rankingToggleChart:'Skift søjle / lagkage',
+    footPlayer:'Spiller', footCreate:'＋ Opret et bord', gameInfoTitle:'Spilinfo', gameInfoEmpty:'Vælg et bord', gfNone:'Intet listefilter', gfOpen:'Vis åbne spil', gfOpenNF:'Åbne & ikke-fulde spil', gfOpenNFNP:'Åbne, ikke-fulde, ikke-private spil',
+    gfOpenNFP:'Åbne, ikke-fulde, private spil', gfOpenNFR:'Åbne, ikke-fulde ranking-spil', infoPlayersInGame:'Spillere i spillet', displayBB:'Beløb i big blinds', displayChips:'Beløb i chips', errGameFull:'Spillet er fuldt', errBadGameName:'Ugyldigt spilnavn',
+    errInvalidSettings:'Ugyldige spilindstillinger', errBlocked:'IP-adresse blokeret', errRejoinFailed:'Gentilslutning mislykkedes', errNoSpectators:'Tilskuere er ikke tilladt', serverPassword:'Serveradgangskode (valgfri)', userPassword:'Brugeradgangskode (valgfri)',
+    avatarImageTooltip:'Vælg et eget billede', gipTabLog:'Log', gipTabOdds:'Odds',
 };
 
 export default { meta, strings };

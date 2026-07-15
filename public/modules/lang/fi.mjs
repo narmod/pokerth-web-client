@@ -40,7 +40,6 @@ export const strings = {
   advHidePbar:'PokerTH-tila (pelaajapalkki piilotettu)',
   deckSvg: "PokerTH",
   pucksPokerth: "PokerTH",
-  seatPokerth: "PokerTH",
   tablePokerthOfficial: "PokerTH",
   presetPokerthOfficial: "PokerTH Dark",
   themePokerthOfficial: "PokerTH Dark",
@@ -658,6 +657,24 @@ export const strings = {
     // v0.3.533 : case « ne pas traduire les termes de poker » (parité officielle)
     advPokerTerms:'Älä käännä kansainvälisiä pokeritermejä (Check, Call, Raise)',
     pokerFold:'Fold', pokerCheck:'Check', pokerCall:'Call', pokerBet:'Bet', pokerRaise:'Raise', pokerAllin:'All-In',
+    // v0.3.579 : passe native complete — 105 cles en repli anglais traduites + cles err*/affichage (noms propres et termes de tables conserves)
+    actBadgeCheck:'Check', unitMinutes:'minutes', presetWecupName:'WeCup', presetBbcName:'BBC', tablePokerthLive:'Spectator Tools', tableDanuxi:'Danuxi Blue', tableMute:'Mute', tableMute2:'Mute 02', tableTeal:'Teal', tableLemming:'Lemming',
+    tableMatrix:'Matrix', tableStarTrek:'Star Trek', tableTripSixes:'TripSixes', tableWanted:'Wanted', tableXanax:'Xanax', pucksAuto:'Auto (table)', pucksCasino:'Casino', infoTypeLabel:'Type', infoCapitalLabel:'Capital', wpWaitingPlayers:'Odotetaan pelaajia …',
+    wpFillBots:'Täytä tietokonepelaajilla', wpStartGame:'Aloita peli', wpLeaveGame:'Poistu pelistä', advFourColor:'4-värinen pakka (♦ sininen, ♣ vihreä)', cardZoomToggle:'Suurenna korttini', actBadgeFold:'Kippaa', actBadgeCall:'Maksa',
+    actBadgeBet:'Panosta', actBadgeRaise:'Korota', actBadgeAllin:'All-In', cancelBtn:'Peruuta', navBack:'Takaisin', gameNameLabel:'Pelin nimi', passwordLabel:'Salasana', startCash:'Aloituspääoma', blindsSettings:'Blindien asetukset',
+    firstSmallBlind:'Ensimmäinen small blind', blindInterval:'Blindien korotusväli', unitHands:'kättä', timeLimits:'Aikarajat', actionTimeout:'Aika per toiminto', pauseBetweenHands:'Tauko kättä välillä', guestNeedAccount:'Tili vaaditaan',
+    guestJoinBlocked:'Vieraat voivat liittyä vain tavallisiin peleihin — kirjaudu rekisteröidyllä pokerth.net-tilillä pelataksesi tässä pöydässä.', presetRankingName:'Ranking', presetRankingDesc:'virallinen tahti', presetWecupDesc:'tasapainoinen turnaus',
+    presetBbcDesc:'aikaperusteiset blindit', advSecLocalGame:'Harjoituspeli', advPauseHands:'Tauko kättä välillä (jatka voittajaikkunasta)', nextHandBtn:'Seuraava käsi', advSecTablePrefs:'Pöytäasetukset', advTablePrefsDesc:'Tässä tilassa luomiesi pöytien oletusarvot — lomakkeen ⭐-painike lataa ne.',
+    advRaiseEveryHands:'Korota blindejä joka N. käsi', advGameSpeed:'Pelinopeus (1–11)', advSecLogSettings:'Lokiasetukset', advLogOn:'Ota loki käyttöön', advLogInterval:'Lokiväli', advLogEveryAction:'Jokainen toiminto', advLogEveryHand:'Jokainen käsi',
+    advSecIgnored:'Ohitetut pelaajat', advIgnoredDesc:'Ohituslistan pelaajat piilotetaan chatista.', advIgnoredEmpty:'(ei ohitettuja pelaajia)', advIgnoredRemove:'Poista', advLobbyChat:'Näytä aulan chat', advTableZoom:'Ota pöydän zoomaus käyttöön (suurennuslasipainikkeet)',
+    advSeatSync:'Synkronoi paikat suunnan mukaan (PokerTH pysty/vaaka)', advChatTranslate:'Chatin käännös (selaimen API, painike viestikohtaisesti)', chatTranslateUnsupported:'Tämä selain ei tue kääntämistä (vaatii uuden Chromen/Edgen).',
+    chatTranslateFailed:'Käännös epäonnistui', wcHideOpt:'Älä näytä tätä ikkunaa uudelleen', styleExpand:'Laajenna', styleCollapse:'Supista', themeLight:'Vaalea', modeAuto:'Automaattinen', modeLight:'Vaalea', modeDark:'Tumma', styleBy:'tekijä',
+    styleSelected:'Valittu', importTable:'Tuo pöytä (.zip)', importDeck:'Tuo pakka (.zip)', importError:'Tuonti epäonnistui', confirmDeleteStyle:'Poistetaanko tämä tuotu tyyli?', delete:'Poista', advSecAppearance:'Ulkoasu', advDarkMode:'Tumma tila',
+    tableGreenFelt:'Vihreä pöytä', tableCasino:'Vihreä kasino', themeExport:'Vie teema (.zip)', sectionAdvanced:'Lisäasetukset', rankingSeasonStats:'Kauden tilastot', rankingShare:'Osuus', rankingResults:'Tulokset', rankingToggleChart:'Vaihda pylväät / piirakka',
+    footPlayer:'Pelaaja', footCreate:'＋ Luo pöytä', gameInfoTitle:'Pelin tiedot', gameInfoEmpty:'Valitse pöytä', gfNone:'Ei listasuodatinta', gfOpen:'Näytä avoimet pelit', gfOpenNF:'Avoimet ja ei-täydet pelit', gfOpenNFNP:'Avoimet, ei-täydet, ei-yksityiset pelit',
+    gfOpenNFP:'Avoimet, ei-täydet, yksityiset pelit', gfOpenNFR:'Avoimet, ei-täydet ranking-pelit', infoPlayersInGame:'Pelaajia pelissä', displayBB:'Summat big blindeinä', displayChips:'Summat pelimerkkeinä', errGameFull:'Peli on täynnä',
+    errBadGameName:'Virheellinen pelin nimi', errInvalidSettings:'Virheelliset peliasetukset', errBlocked:'IP-osoite estetty', errRejoinFailed:'Uudelleenliittyminen epäonnistui', errNoSpectators:'Katsojia ei sallita', serverPassword:'Palvelimen salasana (valinnainen)',
+    userPassword:'Käyttäjän salasana (valinnainen)', avatarImageTooltip:'Valitse oma kuva', gipTabLog:'Loki', gipTabOdds:'Todennäköisyydet',
 };
 
 export default { meta, strings };

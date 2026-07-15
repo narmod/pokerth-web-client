@@ -42,7 +42,6 @@ export const strings = {
   advHidePbar:'Modh PokerTH (bàr-cluicheadair falaichte)',
   deckSvg: "PokerTH",
   pucksPokerth: "PokerTH",
-  seatPokerth: "PokerTH",
   tablePokerthOfficial: "PokerTH",
   presetPokerthOfficial: "PokerTH Dark",
   themePokerthOfficial: "PokerTH Dark",
@@ -660,6 +659,26 @@ export const strings = {
     // v0.3.533 : case « ne pas traduire les termes de poker » (parité officielle)
     advPokerTerms:'Na eadar-theangaich briathran eadar-nàiseanta a’ phòcair (Check, Call, Raise)',
     pokerFold:'Fold', pokerCheck:'Check', pokerCall:'Call', pokerBet:'Bet', pokerRaise:'Raise', pokerAllin:'All-In',
+    // v0.3.579 : passe native complete — 105 cles en repli anglais traduites + cles err*/affichage (noms propres et termes de tables conserves)
+    actBadgeCheck:'Check', unitMinutes:'minutes', presetWecupName:'WeCup', presetBbcName:'BBC', tablePokerthLive:'Spectator Tools', tableDanuxi:'Danuxi Blue', tableMute:'Mute', tableMute2:'Mute 02', tableTeal:'Teal', tableLemming:'Lemming',
+    tableMatrix:'Matrix', tableStarTrek:'Star Trek', tableTripSixes:'TripSixes', tableWanted:'Wanted', tableXanax:'Xanax', pucksAuto:'Auto (table)', pucksCasino:'Casino', infoTypeLabel:'Type', infoCapitalLabel:'Capital', wpWaitingPlayers:'A\' feitheamh ri cluicheadairean …',
+    wpFillBots:'Lìon le cluicheadairean coimpiutair', wpStartGame:'Tòisich an geama', wpLeaveGame:'Fàg an geama', advFourColor:'Paca 4 dathan (♦ gorm, ♣ uaine)', cardZoomToggle:'Meudaich mo chairtean', actBadgeFold:'Fold', actBadgeCall:'Call',
+    actBadgeBet:'Bet', actBadgeRaise:'Raise', actBadgeAllin:'All-In', cancelBtn:'Sguir dheth', navBack:'Air ais', gameNameLabel:'Ainm a\' gheama', passwordLabel:'Facal-faire', startCash:'Calpa tòiseachaidh', blindsSettings:'Roghainnean nan dall',
+    firstSmallBlind:'A\' chiad small blind', blindInterval:'Eadaramh àrdachadh nan dall', unitHands:'làmhan', timeLimits:'Crìochan ùine', actionTimeout:'Ùine gach gnìomh', pauseBetweenHands:'Stad eadar làmhan', guestNeedAccount:'Tha feum air cunntas',
+    guestJoinBlocked:'Chan urrainn do dh\'aoighean ach geamannan àbhaisteach a chluich — clàraich a-steach le cunntas pokerth.net clàraichte gus cluich aig a\' bhòrd seo.', presetRankingName:'Rangachadh', presetRankingDesc:'astar oifigeil',
+    presetWecupDesc:'farpais chothromach', presetBbcDesc:'dallan stèidhichte air ùine', advSecLocalGame:'Geama trèanaidh', advPauseHands:'Stad eadar làmhan (lean air adhart tron uinneag buannaiche)', nextHandBtn:'An ath làmh', advSecTablePrefs:'Roghainnean a\' bhùird',
+    advTablePrefsDesc:'Luachan bunaiteach nam bòrd a chruthaicheas tu sa mhodh seo — luchdaichidh am putan ⭐ san fhoirm iad.', advRaiseEveryHands:'Àrdaich na dallan gach N làmhan', advGameSpeed:'Astar a\' gheama (1–11)', advSecLogSettings:'Roghainnean an loga',
+    advLogOn:'Cuir an loga an comas', advLogInterval:'Eadaramh an loga', advLogEveryAction:'Gach gnìomh', advLogEveryHand:'Gach làmh', advSecIgnored:'Cluicheadairean air an leigeil seachad', advIgnoredDesc:'Tha cluicheadairean air an liosta leigeil seachad falaichte sa chabadaich.',
+    advIgnoredEmpty:'(chan eil cluicheadair sam bith air a leigeil seachad)', advIgnoredRemove:'Thoir air falbh', advLobbyChat:'Seall cabadaich an lobaidh', advTableZoom:'Cuir sùm a\' bhùird an comas (putanan glainne-meudachaidh)',
+    advSeatSync:'Sioncronaich na suidheachain leis a\' chomhair (PokerTH portraid/dreach-tìre)', advChatTranslate:'Eadar-theangachadh na cabadaich (API a\' bhrabhsair, putan gach teachdaireachd)', chatTranslateUnsupported:'Chan eil am brabhsair seo a\' cur taic ri eadar-theangachadh (tha feum air Chrome/Edge ùr).',
+    chatTranslateFailed:'Dh\'fhàillig an t-eadar-theangachadh', wcHideOpt:'Na seall an uinneag seo a-rithist', styleExpand:'Leudaich', styleCollapse:'Co-theannaich', themeLight:'Soilleir', modeAuto:'Fèin-obrachail', modeLight:'Soilleir',
+    modeDark:'Dorcha', styleBy:'le', styleSelected:'Air a thaghadh', importTable:'Ion-phortaich bòrd (.zip)', importDeck:'Ion-phortaich paca (.zip)', importError:'Dh\'fhàillig an t-ion-phortadh', confirmDeleteStyle:'A bheil thu airson an stoidhle ion-phortaichte seo a sguabadh às?',
+    delete:'Sguab às', advSecAppearance:'Coltas', advDarkMode:'Modh dorcha', tableGreenFelt:'Bòrd uaine', tableCasino:'Casino uaine', themeExport:'Às-phortaich an t-ùrlar (.zip)', sectionAdvanced:'Adhartach', rankingSeasonStats:'Stadastaireachd an t-seusain',
+    rankingShare:'Cuid', rankingResults:'Toraidhean', rankingToggleChart:'Atharraich bàraichean / cearcall', footPlayer:'Cluicheadair', footCreate:'＋ Cruthaich bòrd', gameInfoTitle:'Fiosrachadh a\' gheama', gameInfoEmpty:'Tagh bòrd',
+    gfNone:'Gun chriathrag liosta', gfOpen:'Seall geamannan fosgailte', gfOpenNF:'Geamannan fosgailte is neo-làn', gfOpenNFNP:'Geamannan fosgailte, neo-làn, neo-phrìobhaideach', gfOpenNFP:'Geamannan fosgailte, neo-làn, prìobhaideach',
+    gfOpenNFR:'Geamannan rangachaidh fosgailte is neo-làn', infoPlayersInGame:'Cluicheadairean sa gheama', displayBB:'Suimean ann am big blinds', displayChips:'Suimean ann an sgonnagan', errGameFull:'Tha an geama làn', errBadGameName:'Ainm geama mì-dhligheach',
+    errInvalidSettings:'Roghainnean geama mì-dhligheach', errBlocked:'Chaidh an seòladh IP a bhacadh', errRejoinFailed:'Dh\'fhàillig ath-cheangal', errNoSpectators:'Chan eil luchd-amhairc ceadaichte', serverPassword:'Facal-faire an fhrithealaiche (roghainneil)',
+    userPassword:'Facal-faire a\' chleachdaiche (roghainneil)', avatarImageTooltip:'Tagh dealbh agad fhèin', gipTabLog:'Loga', gipTabOdds:'Seansan',
 };
 
 export default { meta, strings };

@@ -41,7 +41,6 @@ export const strings = {
   advHidePbar:'PokerTH način (traka igrača skrivena)',
   deckSvg: "PokerTH",
   pucksPokerth: "PokerTH",
-  seatPokerth: "PokerTH",
   tablePokerthOfficial: "PokerTH",
   presetPokerthOfficial: "PokerTH Dark",
   themePokerthOfficial: "PokerTH Dark",
@@ -659,6 +658,24 @@ export const strings = {
     // v0.3.533 : case « ne pas traduire les termes de poker » (parité officielle)
     advPokerTerms:'Ne prevodi međunarodne pokeraške izraze (Check, Call, Raise)',
     pokerFold:'Fold', pokerCheck:'Check', pokerCall:'Call', pokerBet:'Bet', pokerRaise:'Raise', pokerAllin:'All-In',
+    // v0.3.579 : passe native complete — 105 cles en repli anglais traduites + cles err*/affichage (noms propres et termes de tables conserves)
+    actBadgeCheck:'Check', unitMinutes:'minutes', presetWecupName:'WeCup', presetBbcName:'BBC', tablePokerthLive:'Spectator Tools', tableDanuxi:'Danuxi Blue', tableMute:'Mute', tableMute2:'Mute 02', tableTeal:'Teal', tableLemming:'Lemming',
+    tableMatrix:'Matrix', tableStarTrek:'Star Trek', tableTripSixes:'TripSixes', tableWanted:'Wanted', tableXanax:'Xanax', pucksAuto:'Auto (table)', pucksCasino:'Casino', infoTypeLabel:'Type', infoCapitalLabel:'Capital', wpWaitingPlayers:'Čekanje igrača …',
+    wpFillBots:'Popuni računalnim igračima', wpStartGame:'Pokreni igru', wpLeaveGame:'Napusti igru', advFourColor:'Špil u 4 boje (♦ plavi, ♣ zeleni)', cardZoomToggle:'Povećaj moje karte', actBadgeFold:'Odustani', actBadgeCall:'Prati',
+    actBadgeBet:'Uloži', actBadgeRaise:'Povisi', actBadgeAllin:'All-In', cancelBtn:'Odustani', navBack:'Natrag', gameNameLabel:'Naziv igre', passwordLabel:'Lozinka', startCash:'Početni kapital', blindsSettings:'Postavke blindova', firstSmallBlind:'Prvi small blind',
+    blindInterval:'Interval povećanja blindova', unitHands:'ruku', timeLimits:'Vremenska ograničenja', actionTimeout:'Vrijeme po akciji', pauseBetweenHands:'Pauza između ruku', guestNeedAccount:'Potreban je račun', guestJoinBlocked:'Gosti se mogu pridružiti samo običnim igrama — prijavite se registriranim pokerth.net računom za igru za ovim stolom.',
+    presetRankingName:'Rang-lista', presetRankingDesc:'službeni tempo', presetWecupDesc:'uravnotežen turnir', presetBbcDesc:'blindovi po vremenu', advSecLocalGame:'Trening igra', advPauseHands:'Pauza između ruku (nastavak kroz prozor pobjednika)',
+    nextHandBtn:'Sljedeća ruka', advSecTablePrefs:'Postavke stola', advTablePrefsDesc:'Zadane vrijednosti stolova koje stvarate u ovom načinu — gumb ⭐ u obrascu ih učitava.', advRaiseEveryHands:'Povisuj blindove svakih N ruku', advGameSpeed:'Brzina igre (1–11)',
+    advSecLogSettings:'Postavke zapisnika', advLogOn:'Uključi bilježenje', advLogInterval:'Interval zapisnika', advLogEveryAction:'Svaka akcija', advLogEveryHand:'Svaka ruka', advSecIgnored:'Ignorirani igrači', advIgnoredDesc:'Igrači s popisa ignoriranih skriveni su u chatu.',
+    advIgnoredEmpty:'(nema ignoriranih igrača)', advIgnoredRemove:'Ukloni', advLobbyChat:'Prikaži chat predvorja', advTableZoom:'Uključi zumiranje stola (gumbi povećala)', advSeatSync:'Sinkroniziraj mjesta s orijentacijom (PokerTH portret/pejzaž)',
+    advChatTranslate:'Prijevod chata (API preglednika, gumb po poruci)', chatTranslateUnsupported:'Ovaj preglednik ne podržava prijevod (potreban je noviji Chrome/Edge).', chatTranslateFailed:'Prijevod nije uspio', wcHideOpt:'Ne prikazuj više ovaj prozor',
+    styleExpand:'Proširi', styleCollapse:'Sažmi', themeLight:'Svijetla', modeAuto:'Automatski', modeLight:'Svijetla', modeDark:'Tamna', styleBy:'od', styleSelected:'Odabrano', importTable:'Uvezi stol (.zip)', importDeck:'Uvezi špil (.zip)',
+    importError:'Uvoz nije uspio', confirmDeleteStyle:'Izbrisati ovaj uvezeni stil?', delete:'Izbriši', advSecAppearance:'Izgled', advDarkMode:'Tamni način', tableGreenFelt:'Zeleni stol', tableCasino:'Zeleni casino', themeExport:'Izvezi temu (.zip)',
+    sectionAdvanced:'Napredno', rankingSeasonStats:'Statistika sezone', rankingShare:'Udio', rankingResults:'Rezultati', rankingToggleChart:'Prebaci stupci / torta', footPlayer:'Igrač', footCreate:'＋ Stvori stol', gameInfoTitle:'Info o igri',
+    gameInfoEmpty:'Odaberite stol', gfNone:'Bez filtra popisa', gfOpen:'Prikaži otvorene igre', gfOpenNF:'Otvorene i nepopunjene igre', gfOpenNFNP:'Otvorene, nepopunjene, ne-privatne igre', gfOpenNFP:'Otvorene, nepopunjene, privatne igre',
+    gfOpenNFR:'Otvorene, nepopunjene rang igre', infoPlayersInGame:'Igrači u igri', displayBB:'Iznosi u big blindovima', displayChips:'Iznosi u žetonima', errGameFull:'Igra je puna', errBadGameName:'Nevažeći naziv igre', errInvalidSettings:'Nevažeće postavke igre',
+    errBlocked:'IP adresa je blokirana', errRejoinFailed:'Ponovno pridruživanje nije uspjelo', errNoSpectators:'Gledatelji nisu dopušteni', serverPassword:'Lozinka poslužitelja (neobavezno)', userPassword:'Korisnička lozinka (neobavezno)',
+    avatarImageTooltip:'Odaberi vlastitu sliku', gipTabLog:'Zapisnik', gipTabOdds:'Izgledi',
 };
 
 export default { meta, strings };

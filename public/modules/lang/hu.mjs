@@ -41,7 +41,6 @@ export const strings = {
   advHidePbar:'PokerTH mód (játékossáv elrejtve)',
   deckSvg: "PokerTH",
   pucksPokerth: "PokerTH",
-  seatPokerth: "PokerTH",
   tablePokerthOfficial: "PokerTH",
   presetPokerthOfficial: "PokerTH Dark",
   themePokerthOfficial: "PokerTH Dark",
@@ -659,6 +658,24 @@ export const strings = {
     // v0.3.533 : case « ne pas traduire les termes de poker » (parité officielle)
     advPokerTerms:'Ne fordítsa le a nemzetközi pókerkifejezéseket (Check, Call, Raise)',
     pokerFold:'Fold', pokerCheck:'Check', pokerCall:'Call', pokerBet:'Bet', pokerRaise:'Raise', pokerAllin:'All-In',
+    // v0.3.579 : passe native complete — 105 cles en repli anglais traduites + cles err*/affichage (noms propres et termes de tables conserves)
+    actBadgeCheck:'Check', unitMinutes:'minutes', presetWecupName:'WeCup', presetBbcName:'BBC', tablePokerthLive:'Spectator Tools', tableDanuxi:'Danuxi Blue', tableMute:'Mute', tableMute2:'Mute 02', tableTeal:'Teal', tableLemming:'Lemming',
+    tableMatrix:'Matrix', tableStarTrek:'Star Trek', tableTripSixes:'TripSixes', tableWanted:'Wanted', tableXanax:'Xanax', pucksAuto:'Auto (table)', pucksCasino:'Casino', infoTypeLabel:'Type', infoCapitalLabel:'Capital', wpWaitingPlayers:'Várakozás játékosokra …',
+    wpFillBots:'Feltöltés számítógépes játékosokkal', wpStartGame:'Játék indítása', wpLeaveGame:'Kilépés a játékból', advFourColor:'4 színű pakli (♦ kék, ♣ zöld)', cardZoomToggle:'Kártyáim nagyítása', actBadgeFold:'Dobás', actBadgeCall:'Megadás',
+    actBadgeBet:'Tét', actBadgeRaise:'Emelés', actBadgeAllin:'All-In', cancelBtn:'Mégse', navBack:'Vissza', gameNameLabel:'Játék neve', passwordLabel:'Jelszó', startCash:'Kezdőtőke', blindsSettings:'Vakok beállításai', firstSmallBlind:'Első kisvak',
+    blindInterval:'Vakemelés időköze', unitHands:'leosztás', timeLimits:'Időkorlátok', actionTimeout:'Idő műveletenként', pauseBetweenHands:'Szünet a leosztások között', guestNeedAccount:'Fiók szükséges', guestJoinBlocked:'A vendégek csak normál játékokhoz csatlakozhatnak — jelentkezz be regisztrált pokerth.net fiókkal, hogy ennél az asztalnál játszhass.',
+    presetRankingName:'Ranglista', presetRankingDesc:'hivatalos tempó', presetWecupDesc:'kiegyensúlyozott verseny', presetBbcDesc:'időalapú vakok', advSecLocalGame:'Gyakorlójáték', advPauseHands:'Szünet a leosztások között (folytatás a győztes ablakából)',
+    nextHandBtn:'Következő leosztás', advSecTablePrefs:'Asztalbeállítások', advTablePrefsDesc:'Az ebben a módban létrehozott asztalok alapértékei — az űrlap ⭐ gombja betölti őket.', advRaiseEveryHands:'Vakemelés minden N. leosztásnál',
+    advGameSpeed:'Játéksebesség (1–11)', advSecLogSettings:'Naplóbeállítások', advLogOn:'Naplózás bekapcsolása', advLogInterval:'Naplózási időköz', advLogEveryAction:'Minden művelet', advLogEveryHand:'Minden leosztás', advSecIgnored:'Mellőzött játékosok',
+    advIgnoredDesc:'A mellőzési listán lévő játékosok rejtve vannak a csevegésben.', advIgnoredEmpty:'(nincs mellőzött játékos)', advIgnoredRemove:'Eltávolítás', advLobbyChat:'Lobbicsevegés megjelenítése', advTableZoom:'Asztalnagyítás engedélyezése (nagyító gombok)',
+    advSeatSync:'Ülések szinkronizálása a tájolással (PokerTH álló/fekvő)', advChatTranslate:'Csevegésfordítás (böngésző API, gomb üzenetenként)', chatTranslateUnsupported:'Ez a böngésző nem támogatja a fordítást (friss Chrome/Edge szükséges).',
+    chatTranslateFailed:'A fordítás nem sikerült', wcHideOpt:'Ne jelenjen meg többé ez az ablak', styleExpand:'Kibontás', styleCollapse:'Összecsukás', themeLight:'Világos', modeAuto:'Automatikus', modeLight:'Világos', modeDark:'Sötét',
+    styleBy:'készítő:', styleSelected:'Kiválasztva', importTable:'Asztal importálása (.zip)', importDeck:'Pakli importálása (.zip)', importError:'Az importálás nem sikerült', confirmDeleteStyle:'Törlöd ezt az importált stílust?', delete:'Törlés',
+    advSecAppearance:'Megjelenés', advDarkMode:'Sötét mód', tableGreenFelt:'Zöld asztal', tableCasino:'Zöld kaszinó', themeExport:'Téma exportálása (.zip)', sectionAdvanced:'Haladó', rankingSeasonStats:'Szezonstatisztika', rankingShare:'Részesedés',
+    rankingResults:'Eredmények', rankingToggleChart:'Oszlop / torta váltása', footPlayer:'Játékos', footCreate:'＋ Asztal létrehozása', gameInfoTitle:'Játékinfó', gameInfoEmpty:'Válassz asztalt', gfNone:'Nincs listaszűrő', gfOpen:'Nyitott játékok mutatása',
+    gfOpenNF:'Nyitott és nem teli játékok', gfOpenNFNP:'Nyitott, nem teli, nem privát játékok', gfOpenNFP:'Nyitott, nem teli, privát játékok', gfOpenNFR:'Nyitott, nem teli ranglistás játékok', infoPlayersInGame:'Játékosok a játékban',
+    displayBB:'Összegek nagyvakban', displayChips:'Összegek zsetonban', errGameFull:'A játék megtelt', errBadGameName:'Érvénytelen játéknév', errInvalidSettings:'Érvénytelen játékbeállítások', errBlocked:'IP-cím letiltva', errRejoinFailed:'Az újracsatlakozás nem sikerült',
+    errNoSpectators:'Nézők nem engedélyezettek', serverPassword:'Szerverjelszó (opcionális)', userPassword:'Felhasználói jelszó (opcionális)', avatarImageTooltip:'Saját kép kiválasztása', gipTabLog:'Napló', gipTabOdds:'Esélyek',
 };
 
 export default { meta, strings };

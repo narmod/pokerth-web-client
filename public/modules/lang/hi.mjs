@@ -45,7 +45,6 @@ export const strings = {
   advHidePbar:'PokerTH मोड (प्लेयर बार छिपी हुई)',
   deckSvg: "PokerTH",
   pucksPokerth: "PokerTH",
-  seatPokerth: "PokerTH",
   tablePokerthOfficial: "PokerTH",
   presetPokerthOfficial: "PokerTH Dark",
   themePokerthOfficial: "PokerTH Dark",
@@ -470,6 +469,23 @@ export const strings = {
     // v0.3.533 : case « ne pas traduire les termes de poker » (parité officielle)
     advPokerTerms:'अंतरराष्ट्रीय पोकर शब्दों का अनुवाद न करें (Check, Call, Raise)',
     pokerFold:'फ़ोल्ड', pokerCheck:'चेक', pokerCall:'कॉल', pokerBet:'बेट', pokerRaise:'रेज़', pokerAllin:'ऑल-इन',
+    // v0.3.579 : passe native complete — 105 cles en repli anglais traduites + cles err*/affichage (noms propres et termes de tables conserves)
+    actBadgeCheck:'Check', unitMinutes:'minutes', presetWecupName:'WeCup', presetBbcName:'BBC', tablePokerthLive:'Spectator Tools', tableDanuxi:'Danuxi Blue', tableMute:'Mute', tableMute2:'Mute 02', tableTeal:'Teal', tableLemming:'Lemming',
+    tableMatrix:'Matrix', tableStarTrek:'Star Trek', tableTripSixes:'TripSixes', tableWanted:'Wanted', tableXanax:'Xanax', pucksAuto:'Auto (table)', pucksCasino:'Casino', infoTypeLabel:'Type', infoCapitalLabel:'Capital', wpWaitingPlayers:'खिलाड़ियों की प्रतीक्षा …',
+    wpFillBots:'कंप्यूटर खिलाड़ियों से भरें', wpStartGame:'खेल शुरू करें', wpLeaveGame:'खेल छोड़ें', advFourColor:'4-रंग की गड्डी (♦ नीला, ♣ हरा)', cardZoomToggle:'मेरे पत्ते बड़े करें', actBadgeFold:'फ़ोल्ड', actBadgeCall:'कॉल', actBadgeBet:'बेट',
+    actBadgeRaise:'रेज़', actBadgeAllin:'ऑल-इन', cancelBtn:'रद्द करें', navBack:'वापस', gameNameLabel:'खेल का नाम', passwordLabel:'पासवर्ड', startCash:'प्रारंभिक पूंजी', blindsSettings:'ब्लाइंड सेटिंग्स', firstSmallBlind:'पहला स्मॉल ब्लाइंड',
+    blindInterval:'ब्लाइंड बढ़ाने का अंतराल', unitHands:'हाथ', timeLimits:'समय सीमाएँ', actionTimeout:'प्रति कार्रवाई समय', pauseBetweenHands:'हाथों के बीच विराम', guestNeedAccount:'खाता आवश्यक', guestJoinBlocked:'अतिथि केवल सामान्य खेलों में शामिल हो सकते हैं — इस मेज़ पर खेलने के लिए पंजीकृत pokerth.net खाते से साइन इन करें।',
+    presetRankingName:'रैंकिंग', presetRankingDesc:'आधिकारिक गति', presetWecupDesc:'संतुलित टूर्नामेंट', presetBbcDesc:'समय-आधारित ब्लाइंड', advSecLocalGame:'अभ्यास खेल', advPauseHands:'हाथों के बीच विराम (विजेता विंडो से जारी रखें)',
+    nextHandBtn:'अगला हाथ', advSecTablePrefs:'मेज़ की प्राथमिकताएँ', advTablePrefsDesc:'इस मोड में आपके बनाए मेज़ों के डिफ़ॉल्ट मान — फ़ॉर्म का ⭐ बटन उन्हें लोड करता है।', advRaiseEveryHands:'हर N हाथ पर ब्लाइंड बढ़ाएँ', advGameSpeed:'खेल की गति (1–11)',
+    advSecLogSettings:'लॉग सेटिंग्स', advLogOn:'लॉगिंग चालू करें', advLogInterval:'लॉग अंतराल', advLogEveryAction:'हर कार्रवाई', advLogEveryHand:'हर हाथ', advSecIgnored:'अनदेखे खिलाड़ी', advIgnoredDesc:'अनदेखी सूची के खिलाड़ी चैट में छिपे रहते हैं।',
+    advIgnoredEmpty:'(कोई अनदेखा खिलाड़ी नहीं)', advIgnoredRemove:'हटाएँ', advLobbyChat:'लॉबी चैट दिखाएँ', advTableZoom:'मेज़ का ज़ूम चालू करें (आवर्धक बटन)', advSeatSync:'सीटों को स्क्रीन दिशा से समन्वयित करें (PokerTH पोर्ट्रेट/लैंडस्केप)',
+    advChatTranslate:'चैट अनुवाद (ब्राउज़र API, प्रति संदेश बटन)', chatTranslateUnsupported:'यह ब्राउज़र अनुवाद का समर्थन नहीं करता (नया Chrome/Edge चाहिए)।', chatTranslateFailed:'अनुवाद विफल', wcHideOpt:'यह विंडो फिर न दिखाएँ',
+    styleExpand:'विस्तार करें', styleCollapse:'समेटें', themeLight:'हल्का', modeAuto:'स्वचालित', modeLight:'हल्का', modeDark:'गहरा', styleBy:'द्वारा', styleSelected:'चयनित', importTable:'मेज़ आयात करें (.zip)', importDeck:'गड्डी आयात करें (.zip)',
+    importError:'आयात विफल', confirmDeleteStyle:'यह आयातित शैली हटाएँ?', delete:'हटाएँ', advSecAppearance:'रूप', advDarkMode:'डार्क मोड', tableGreenFelt:'हरी मेज़', tableCasino:'हरा कैसीनो', themeExport:'थीम निर्यात करें (.zip)', sectionAdvanced:'उन्नत',
+    rankingSeasonStats:'सीज़न आँकड़े', rankingShare:'हिस्सा', rankingResults:'परिणाम', rankingToggleChart:'बार / पाई बदलें', footPlayer:'खिलाड़ी', footCreate:'＋ मेज़ बनाएँ', gameInfoTitle:'खेल की जानकारी', gameInfoEmpty:'एक मेज़ चुनें',
+    gfNone:'कोई सूची फ़िल्टर नहीं', gfOpen:'खुले खेल दिखाएँ', gfOpenNF:'खुले और अपूर्ण खेल', gfOpenNFNP:'खुले, अपूर्ण, गैर-निजी खेल', gfOpenNFP:'खुले, अपूर्ण, निजी खेल', gfOpenNFR:'खुले, अपूर्ण रैंकिंग खेल', infoPlayersInGame:'खेल में खिलाड़ी',
+    displayBB:'राशियाँ बिग ब्लाइंड में', displayChips:'राशियाँ चिप्स में', errGameFull:'खेल भर गया है', errBadGameName:'अमान्य खेल नाम', errInvalidSettings:'अमान्य खेल सेटिंग्स', errBlocked:'IP पता अवरुद्ध', errRejoinFailed:'पुनः शामिल होना विफल',
+    errNoSpectators:'दर्शकों की अनुमति नहीं है', serverPassword:'सर्वर पासवर्ड (वैकल्पिक)', userPassword:'उपयोगकर्ता पासवर्ड (वैकल्पिक)', avatarImageTooltip:'अपनी छवि चुनें', gipTabLog:'लॉग', gipTabOdds:'संभावनाएँ',
 };
 
 export default { meta, strings };

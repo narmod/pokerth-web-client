@@ -42,7 +42,6 @@ export const strings = {
   advHidePbar:'Modo PokerTH (barra de jogador oculta)',
   deckSvg: "PokerTH",
   pucksPokerth: "PokerTH",
-  seatPokerth: "PokerTH",
   tablePokerthOfficial: "PokerTH",
   presetPokerthOfficial: "PokerTH Dark",
   themePokerthOfficial: "PokerTH Dark",
@@ -661,6 +660,25 @@ export const strings = {
     // v0.3.533 : case « ne pas traduire les termes de poker » (parité officielle)
     advPokerTerms:'Não traduzir termos internacionais de póquer (Check, Call, Raise)',
     pokerFold:'Fold', pokerCheck:'Check', pokerCall:'Call', pokerBet:'Bet', pokerRaise:'Raise', pokerAllin:'All-In',
+    // v0.3.579 : passe native complete — 105 cles en repli anglais traduites + cles err*/affichage (noms propres et termes de tables conserves)
+    actBadgeCheck:'Check', unitMinutes:'minutes', presetWecupName:'WeCup', presetBbcName:'BBC', tablePokerthLive:'Spectator Tools', tableDanuxi:'Danuxi Blue', tableMute:'Mute', tableMute2:'Mute 02', tableTeal:'Teal', tableLemming:'Lemming',
+    tableMatrix:'Matrix', tableStarTrek:'Star Trek', tableTripSixes:'TripSixes', tableWanted:'Wanted', tableXanax:'Xanax', pucksAuto:'Auto (table)', pucksCasino:'Casino', infoTypeLabel:'Type', infoCapitalLabel:'Capital', wpWaitingPlayers:'A aguardar jogadores …',
+    wpFillBots:'Completar com jogadores de computador', wpStartGame:'Iniciar partida', wpLeaveGame:'Sair da partida', advFourColor:'Baralho de 4 cores (♦ azul, ♣ verde)', cardZoomToggle:'Ampliar as minhas cartas', actBadgeFold:'Desistir',
+    actBadgeCall:'Igualar', actBadgeBet:'Apostar', actBadgeRaise:'Aumentar', actBadgeAllin:'All-In', cancelBtn:'Cancelar', navBack:'Voltar', gameNameLabel:'Nome da partida', passwordLabel:'Palavra-passe', startCash:'Capital inicial',
+    blindsSettings:'Definições de blinds', firstSmallBlind:'Primeiro small blind', blindInterval:'Intervalo de aumento dos blinds', unitHands:'mãos', timeLimits:'Limites de tempo', actionTimeout:'Tempo por ação', pauseBetweenHands:'Pausa entre mãos',
+    guestNeedAccount:'Conta necessária', guestJoinBlocked:'Os convidados só podem entrar em partidas normais — inicie sessão com uma conta registada do pokerth.net para jogar nesta mesa.', presetRankingName:'Ranking', presetRankingDesc:'ritmo oficial',
+    presetWecupDesc:'torneio equilibrado', presetBbcDesc:'blinds por tempo', advSecLocalGame:'Partida de treino', advPauseHands:'Pausa entre mãos (continuar pela janela do vencedor)', nextHandBtn:'Próxima mão', advSecTablePrefs:'Preferências de mesa',
+    advTablePrefsDesc:'Valores por omissão das mesas que crias neste modo — o botão ⭐ do formulário carrega-os.', advRaiseEveryHands:'Aumentar blinds a cada N mãos', advGameSpeed:'Velocidade do jogo (1–11)', advSecLogSettings:'Definições do registo',
+    advLogOn:'Ativar registo', advLogInterval:'Intervalo do registo', advLogEveryAction:'Cada ação', advLogEveryHand:'Cada mão', advSecIgnored:'Jogadores ignorados', advIgnoredDesc:'Os jogadores na lista de ignorados ficam ocultos no chat.',
+    advIgnoredEmpty:'(nenhum jogador ignorado)', advIgnoredRemove:'Remover', advLobbyChat:'Mostrar o chat do lobby', advTableZoom:'Ativar zoom da mesa (botões de lupa)', advSeatSync:'Sincronizar lugares com a orientação (PokerTH retrato/paisagem)',
+    advChatTranslate:'Tradução do chat (API do navegador, botão por mensagem)', chatTranslateUnsupported:'Este navegador não suporta tradução (requer Chrome/Edge recente).', chatTranslateFailed:'Falha na tradução', wcHideOpt:'Não voltar a mostrar esta janela',
+    styleExpand:'Expandir', styleCollapse:'Recolher', themeLight:'Claro', modeAuto:'Automático', modeLight:'Claro', modeDark:'Escuro', styleBy:'de', styleSelected:'Selecionado', importTable:'Importar uma mesa (.zip)', importDeck:'Importar um baralho (.zip)',
+    importError:'Falha na importação', confirmDeleteStyle:'Eliminar este estilo importado?', delete:'Eliminar', advSecAppearance:'Aspeto', advDarkMode:'Modo escuro', tableGreenFelt:'Mesa verde', tableCasino:'Casino verde', themeExport:'Exportar tema (.zip)',
+    sectionAdvanced:'Avançado', rankingSeasonStats:'Estatísticas da época', rankingShare:'Quota', rankingResults:'Resultados', rankingToggleChart:'Alternar barras / circular', footPlayer:'Jogador', footCreate:'＋ Criar uma mesa', gameInfoTitle:'Informações da partida',
+    gameInfoEmpty:'Seleciona uma mesa', gfNone:'Sem filtro de lista', gfOpen:'Mostrar partidas abertas', gfOpenNF:'Partidas abertas e não cheias', gfOpenNFNP:'Partidas abertas, não cheias e não privadas', gfOpenNFP:'Partidas abertas, não cheias e privadas',
+    gfOpenNFR:'Partidas abertas, não cheias e de ranking', infoPlayersInGame:'Jogadores na partida', displayBB:'Montantes em big blinds', displayChips:'Montantes em fichas', errGameFull:'A partida está cheia', errBadGameName:'Nome de partida inválido',
+    errInvalidSettings:'Definições de partida inválidas', errBlocked:'Endereço IP bloqueado', errRejoinFailed:'Falha ao voltar a entrar', errNoSpectators:'Não são permitidos espetadores', serverPassword:'Palavra-passe do servidor (opcional)',
+    userPassword:'Palavra-passe do utilizador (opcional)', avatarImageTooltip:'Escolher uma imagem personalizada',
 };
 
 export default { meta, strings };

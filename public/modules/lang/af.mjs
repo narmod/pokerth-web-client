@@ -41,7 +41,6 @@ export const strings = {
   advHidePbar:'PokerTH-modus (spelerbalk versteek)',
   deckSvg: "PokerTH",
   pucksPokerth: "PokerTH",
-  seatPokerth: "PokerTH",
   tablePokerthOfficial: "PokerTH",
   presetPokerthOfficial: "PokerTH Dark",
   themePokerthOfficial: "PokerTH Dark",
@@ -659,6 +658,24 @@ export const strings = {
     // v0.3.533 : case « ne pas traduire les termes de poker » (parité officielle)
     advPokerTerms:'Moenie internasionale pokerterme vertaal nie (Check, Call, Raise)',
     pokerFold:'Fold', pokerCheck:'Check', pokerCall:'Call', pokerBet:'Bet', pokerRaise:'Raise', pokerAllin:'All-In',
+    // v0.3.579 : passe native complete — 105 cles en repli anglais traduites + cles err*/affichage (noms propres et termes de tables conserves)
+    actBadgeCheck:'Check', unitMinutes:'minutes', presetWecupName:'WeCup', presetBbcName:'BBC', tablePokerthLive:'Spectator Tools', tableDanuxi:'Danuxi Blue', tableMute:'Mute', tableMute2:'Mute 02', tableTeal:'Teal', tableLemming:'Lemming',
+    tableMatrix:'Matrix', tableStarTrek:'Star Trek', tableTripSixes:'TripSixes', tableWanted:'Wanted', tableXanax:'Xanax', pucksAuto:'Auto (table)', pucksCasino:'Casino', infoTypeLabel:'Type', infoCapitalLabel:'Capital', wpWaitingPlayers:'Wag vir spelers …',
+    wpFillBots:'Vul aan met rekenaarspelers', wpStartGame:'Begin spel', wpLeaveGame:'Verlaat spel', advFourColor:'4-kleur-kaartstel (♦ blou, ♣ groen)', cardZoomToggle:'Vergroot my kaarte', actBadgeFold:'Fold', actBadgeCall:'Call', actBadgeBet:'Bet',
+    actBadgeRaise:'Raise', actBadgeAllin:'All-In', cancelBtn:'Kanselleer', navBack:'Terug', gameNameLabel:'Naam van die spel', passwordLabel:'Wagwoord', startCash:'Beginkapitaal', blindsSettings:'Blind-instellings', firstSmallBlind:'Eerste small blind',
+    blindInterval:'Interval van blindverhoging', unitHands:'hande', timeLimits:'Tydsbeperkings', actionTimeout:'Tyd per aksie', pauseBetweenHands:'Pouse tussen hande', guestNeedAccount:'Rekening benodig', guestJoinBlocked:'Gaste kan slegs by gewone speletjies aansluit — meld aan met \'n geregistreerde pokerth.net-rekening om by hierdie tafel te speel.',
+    presetRankingName:'Ranking', presetRankingDesc:'amptelike tempo', presetWecupDesc:'gebalanseerde toernooi', presetBbcDesc:'tydgebaseerde blinds', advSecLocalGame:'Oefenspel', advPauseHands:'Pouse tussen hande (gaan voort via die wenner-venster)',
+    nextHandBtn:'Volgende hand', advSecTablePrefs:'Tafelvoorkeure', advTablePrefsDesc:'Verstekwaardes vir die tafels wat jy in hierdie modus skep — die ⭐-knoppie op die vorm laai hulle.', advRaiseEveryHands:'Verhoog blinds elke N hande',
+    advGameSpeed:'Spelspoed (1–11)', advSecLogSettings:'Log-instellings', advLogOn:'Aktiveer logboek', advLogInterval:'Log-interval', advLogEveryAction:'Elke aksie', advLogEveryHand:'Elke hand', advSecIgnored:'Geïgnoreerde spelers',
+    advIgnoredDesc:'Spelers op die ignoreerlys word in die klets versteek.', advIgnoredEmpty:'(geen geïgnoreerde spelers nie)', advIgnoredRemove:'Verwyder', advLobbyChat:'Wys die voorportaal-klets', advTableZoom:'Aktiveer tafelzoem (vergrootglas-knoppies)',
+    advSeatSync:'Sinkroniseer sitplekke met oriëntasie (PokerTH portret/landskap)', advChatTranslate:'Kletsvertaling (blaaier-API, knoppie per boodskap)', chatTranslateUnsupported:'Hierdie blaaier ondersteun nie vertaling nie (onlangse Chrome/Edge benodig).',
+    chatTranslateFailed:'Vertaling het misluk', wcHideOpt:'Moenie hierdie venster weer wys nie', styleExpand:'Vou oop', styleCollapse:'Vou toe', themeLight:'Lig', modeAuto:'Outomaties', modeLight:'Lig', modeDark:'Donker', styleBy:'deur',
+    styleSelected:'Gekies', importTable:'Voer \'n tafel in (.zip)', importDeck:'Voer \'n kaartstel in (.zip)', importError:'Invoer het misluk', confirmDeleteStyle:'Vee hierdie ingevoerde styl uit?', delete:'Vee uit', advSecAppearance:'Voorkoms',
+    advDarkMode:'Donker modus', tableGreenFelt:'Groen tafel', tableCasino:'Groen casino', themeExport:'Voer tema uit (.zip)', sectionAdvanced:'Gevorderd', rankingSeasonStats:'Seisoenstatistiek', rankingShare:'Aandeel', rankingResults:'Resultate',
+    rankingToggleChart:'Wissel staaf / sirkel', footPlayer:'Speler', footCreate:'＋ Skep \'n tafel', gameInfoTitle:'Spelinligting', gameInfoEmpty:'Kies \'n tafel', gfNone:'Geen lysfilter nie', gfOpen:'Wys oop speletjies', gfOpenNF:'Oop & nie-vol speletjies',
+    gfOpenNFNP:'Oop, nie-vol, nie-privaat speletjies', gfOpenNFP:'Oop, nie-vol, privaat speletjies', gfOpenNFR:'Oop, nie-vol ranking-speletjies', infoPlayersInGame:'Spelers in die spel', displayBB:'Bedrae in big blinds', displayChips:'Bedrae in skyfies',
+    errGameFull:'Die spel is vol', errBadGameName:'Ongeldige spelnaam', errInvalidSettings:'Ongeldige spelinstellings', errBlocked:'IP-adres geblokkeer', errRejoinFailed:'Heraansluiting het misluk', errNoSpectators:'Toeskouers word nie toegelaat nie',
+    serverPassword:'Bedienerwagwoord (opsioneel)', userPassword:'Gebruikerwagwoord (opsioneel)', avatarImageTooltip:'Kies jou eie prent', gipTabLog:'Logboek', gipTabOdds:'Kanse',
 };
 
 export default { meta, strings };

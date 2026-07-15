@@ -391,6 +391,9 @@ export const strings = {
     // v0.3.533 : case « ne pas traduire les termes de poker » (parité officielle)
     advPokerTerms:'Ne pas traduire les termes internationaux du poker (Check, Call, Raise)',
     pokerFold:'Se coucher', pokerCheck:'Check', pokerCall:'Suivre', pokerBet:'Miser', pokerRaise:'Relancer', pokerAllin:'Tapis',
+    // v0.3.579 : cles err*/affichage manquantes (utilisees dans le code)
+    displayBB:'Montants en grosses blindes', displayChips:'Montants en jetons', errGameFull:'La partie est complète', errBadGameName:'Nom de partie invalide', errInvalidSettings:'Réglages de partie invalides', errBlocked:'Adresse IP bloquée',
+    errRejoinFailed:'Échec de la reconnexion à la partie', errNoSpectators:'Les spectateurs ne sont pas autorisés', serverPassword:'Mot de passe du serveur (optionnel)', userPassword:'Mot de passe utilisateur (optionnel)', avatarImageTooltip:'Choisir une image personnalisée',
 };
 
 export default { meta, strings };

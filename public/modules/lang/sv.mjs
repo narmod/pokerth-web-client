@@ -40,7 +40,6 @@ export const strings = {
   advHidePbar:'PokerTH-läge (spelarfält dolt)',
   deckSvg: "PokerTH",
   pucksPokerth: "PokerTH",
-  seatPokerth: "PokerTH",
   tablePokerthOfficial: "PokerTH",
   presetPokerthOfficial: "PokerTH Dark",
   themePokerthOfficial: "PokerTH Dark",
@@ -658,6 +657,24 @@ export const strings = {
     // v0.3.533 : case « ne pas traduire les termes de poker » (parité officielle)
     advPokerTerms:'Översätt inte internationella pokertermer (Check, Call, Raise)',
     pokerFold:'Fold', pokerCheck:'Check', pokerCall:'Call', pokerBet:'Bet', pokerRaise:'Raise', pokerAllin:'All-In',
+    // v0.3.579 : passe native complete — 105 cles en repli anglais traduites + cles err*/affichage (noms propres et termes de tables conserves)
+    actBadgeCheck:'Check', unitMinutes:'minutes', presetWecupName:'WeCup', presetBbcName:'BBC', tablePokerthLive:'Spectator Tools', tableDanuxi:'Danuxi Blue', tableMute:'Mute', tableMute2:'Mute 02', tableTeal:'Teal', tableLemming:'Lemming',
+    tableMatrix:'Matrix', tableStarTrek:'Star Trek', tableTripSixes:'TripSixes', tableWanted:'Wanted', tableXanax:'Xanax', pucksAuto:'Auto (table)', pucksCasino:'Casino', infoTypeLabel:'Type', infoCapitalLabel:'Capital', wpWaitingPlayers:'Väntar på spelare …',
+    wpFillBots:'Fyll upp med datorspelare', wpStartGame:'Starta spelet', wpLeaveGame:'Lämna spelet', advFourColor:'4-färgslek (♦ blå, ♣ grön)', cardZoomToggle:'Förstora mina kort', actBadgeFold:'Fold', actBadgeCall:'Call', actBadgeBet:'Bet',
+    actBadgeRaise:'Raise', actBadgeAllin:'All-In', cancelBtn:'Avbryt', navBack:'Tillbaka', gameNameLabel:'Spelets namn', passwordLabel:'Lösenord', startCash:'Startkapital', blindsSettings:'Blindinställningar', firstSmallBlind:'Första small blind',
+    blindInterval:'Intervall för blindhöjning', unitHands:'händer', timeLimits:'Tidsgränser', actionTimeout:'Tid per handling', pauseBetweenHands:'Paus mellan händer', guestNeedAccount:'Konto krävs', guestJoinBlocked:'Gäster kan bara gå med i vanliga spel — logga in med ett registrerat pokerth.net-konto för att spela vid det här bordet.',
+    presetRankingName:'Ranking', presetRankingDesc:'officiellt tempo', presetWecupDesc:'balanserad turnering', presetBbcDesc:'tidsbaserade blinds', advSecLocalGame:'Träningsspel', advPauseHands:'Paus mellan händer (fortsätt via vinnarfönstret)',
+    nextHandBtn:'Nästa hand', advSecTablePrefs:'Bordsinställningar', advTablePrefsDesc:'Standardvärden för borden du skapar i detta läge — ⭐-knappen i formuläret laddar dem.', advRaiseEveryHands:'Höj blinds var N:e hand', advGameSpeed:'Spelhastighet (1–11)',
+    advSecLogSettings:'Logginställningar', advLogOn:'Aktivera loggning', advLogInterval:'Loggintervall', advLogEveryAction:'Varje handling', advLogEveryHand:'Varje hand', advSecIgnored:'Ignorerade spelare', advIgnoredDesc:'Spelare på ignoreringslistan döljs i chatten.',
+    advIgnoredEmpty:'(inga ignorerade spelare)', advIgnoredRemove:'Ta bort', advLobbyChat:'Visa lobbychatten', advTableZoom:'Aktivera bordszoom (luppknappar)', advSeatSync:'Synkronisera platser med orientering (PokerTH porträtt/landskap)',
+    advChatTranslate:'Chattöversättning (webbläsar-API, knapp per meddelande)', chatTranslateUnsupported:'Översättning stöds inte av den här webbläsaren (nyare Chrome/Edge krävs).', chatTranslateFailed:'Översättningen misslyckades',
+    wcHideOpt:'Visa inte det här fönstret igen', styleExpand:'Expandera', styleCollapse:'Fäll ihop', themeLight:'Ljust', modeAuto:'Automatiskt', modeLight:'Ljust', modeDark:'Mörkt', styleBy:'av', styleSelected:'Vald', importTable:'Importera ett bord (.zip)',
+    importDeck:'Importera en kortlek (.zip)', importError:'Importen misslyckades', confirmDeleteStyle:'Ta bort den här importerade stilen?', delete:'Ta bort', advSecAppearance:'Utseende', advDarkMode:'Mörkt läge', tableGreenFelt:'Grönt bord',
+    tableCasino:'Grönt casino', themeExport:'Exportera tema (.zip)', sectionAdvanced:'Avancerat', rankingSeasonStats:'Säsongsstatistik', rankingShare:'Andel', rankingResults:'Resultat', rankingToggleChart:'Växla stapel / paj', footPlayer:'Spelare',
+    footCreate:'＋ Skapa ett bord', gameInfoTitle:'Spelinfo', gameInfoEmpty:'Välj ett bord', gfNone:'Inget listfilter', gfOpen:'Visa öppna spel', gfOpenNF:'Öppna & ej fulla spel', gfOpenNFNP:'Öppna, ej fulla, ej privata spel', gfOpenNFP:'Öppna, ej fulla, privata spel',
+    gfOpenNFR:'Öppna, ej fulla rankingspel', infoPlayersInGame:'Spelare i spelet', displayBB:'Belopp i big blinds', displayChips:'Belopp i marker', errGameFull:'Spelet är fullt', errBadGameName:'Ogiltigt spelnamn', errInvalidSettings:'Ogiltiga spelinställningar',
+    errBlocked:'IP-adressen är blockerad', errRejoinFailed:'Återanslutning misslyckades', errNoSpectators:'Åskådare är inte tillåtna', serverPassword:'Serverlösenord (valfritt)', userPassword:'Användarlösenord (valfritt)', avatarImageTooltip:'Välj en egen bild',
+    gipTabLog:'Logg', gipTabOdds:'Odds',
 };
 
 export default { meta, strings };

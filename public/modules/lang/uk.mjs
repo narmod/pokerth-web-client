@@ -40,7 +40,6 @@ export const strings = {
   advHidePbar:'Режим PokerTH (панель гравця прихована)',
   deckSvg: "PokerTH",
   pucksPokerth: "PokerTH",
-  seatPokerth: "PokerTH",
   tablePokerthOfficial: "PokerTH",
   presetPokerthOfficial: "PokerTH Dark",
   themePokerthOfficial: "PokerTH Dark",
@@ -658,6 +657,24 @@ export const strings = {
     // v0.3.533 : case « ne pas traduire les termes de poker » (parité officielle)
     advPokerTerms:'Не перекладати міжнародні покерні терміни (Check, Call, Raise)',
     pokerFold:'Фолд', pokerCheck:'Чек', pokerCall:'Кол', pokerBet:'Бет', pokerRaise:'Рейз', pokerAllin:'Ол-ін',
+    // v0.3.579 : passe native complete — 105 cles en repli anglais traduites + cles err*/affichage (noms propres et termes de tables conserves)
+    actBadgeCheck:'Check', unitMinutes:'minutes', presetWecupName:'WeCup', presetBbcName:'BBC', tablePokerthLive:'Spectator Tools', tableDanuxi:'Danuxi Blue', tableMute:'Mute', tableMute2:'Mute 02', tableTeal:'Teal', tableLemming:'Lemming',
+    tableMatrix:'Matrix', tableStarTrek:'Star Trek', tableTripSixes:'TripSixes', tableWanted:'Wanted', tableXanax:'Xanax', pucksAuto:'Auto (table)', pucksCasino:'Casino', infoTypeLabel:'Type', infoCapitalLabel:'Capital', wpWaitingPlayers:'Очікування гравців …',
+    wpFillBots:'Доповнити комп\'ютерними гравцями', wpStartGame:'Почати гру', wpLeaveGame:'Покинути гру', advFourColor:'Колода 4 кольорів (♦ сині, ♣ зелені)', cardZoomToggle:'Збільшити мої карти', actBadgeFold:'Пас', actBadgeCall:'Кол',
+    actBadgeBet:'Ставка', actBadgeRaise:'Рейз', actBadgeAllin:'Ол-ін', cancelBtn:'Скасувати', navBack:'Назад', gameNameLabel:'Назва гри', passwordLabel:'Пароль', startCash:'Початковий капітал', blindsSettings:'Налаштування блайндів',
+    firstSmallBlind:'Перший малий блайнд', blindInterval:'Інтервал підвищення блайндів', unitHands:'роздач', timeLimits:'Обмеження часу', actionTimeout:'Час на дію', pauseBetweenHands:'Пауза між роздачами', guestNeedAccount:'Потрібен обліковий запис',
+    guestJoinBlocked:'Гості можуть приєднуватися лише до звичайних ігор — увійдіть із зареєстрованим обліковим записом pokerth.net, щоб грати за цим столом.', presetRankingName:'Рейтинг', presetRankingDesc:'офіційний темп', presetWecupDesc:'збалансований турнір',
+    presetBbcDesc:'блайнди за часом', advSecLocalGame:'Тренувальна гра', advPauseHands:'Пауза між роздачами (продовження через вікно переможця)', nextHandBtn:'Наступна роздача', advSecTablePrefs:'Налаштування столу', advTablePrefsDesc:'Значення за замовчуванням для столів, які ви створюєте в цьому режимі — кнопка ⭐ у формі завантажує їх.',
+    advRaiseEveryHands:'Підвищувати блайнди кожні N роздач', advGameSpeed:'Швидкість гри (1–11)', advSecLogSettings:'Налаштування журналу', advLogOn:'Увімкнути журнал', advLogInterval:'Інтервал журналу', advLogEveryAction:'Кожна дія',
+    advLogEveryHand:'Кожна роздача', advSecIgnored:'Ігноровані гравці', advIgnoredDesc:'Гравці зі списку ігнорованих приховані в чаті.', advIgnoredEmpty:'(немає ігнорованих гравців)', advIgnoredRemove:'Прибрати', advLobbyChat:'Показувати чат лобі',
+    advTableZoom:'Увімкнути зум столу (кнопки лупи)', advSeatSync:'Синхронізувати місця з орієнтацією (PokerTH портрет/альбом)', advChatTranslate:'Переклад чату (API браузера, кнопка біля повідомлення)', chatTranslateUnsupported:'Переклад не підтримується цим браузером (потрібен свіжий Chrome/Edge).',
+    chatTranslateFailed:'Помилка перекладу', wcHideOpt:'Більше не показувати це вікно', styleExpand:'Розгорнути', styleCollapse:'Згорнути', themeLight:'Світла', modeAuto:'Автоматично', modeLight:'Світла', modeDark:'Темна', styleBy:'від',
+    styleSelected:'Вибрано', importTable:'Імпортувати стіл (.zip)', importDeck:'Імпортувати колоду (.zip)', importError:'Помилка імпорту', confirmDeleteStyle:'Видалити цей імпортований стиль?', delete:'Видалити', advSecAppearance:'Оформлення',
+    advDarkMode:'Темний режим', tableGreenFelt:'Зелений стіл', tableCasino:'Зелене казино', themeExport:'Експортувати тему (.zip)', sectionAdvanced:'Додатково', rankingSeasonStats:'Статистика сезону', rankingShare:'Частка', rankingResults:'Результати',
+    rankingToggleChart:'Стовпці / кругова', footPlayer:'Гравець', footCreate:'＋ Створити стіл', gameInfoTitle:'Про гру', gameInfoEmpty:'Виберіть стіл', gfNone:'Без фільтра списку', gfOpen:'Показувати відкриті ігри', gfOpenNF:'Відкриті та неповні ігри',
+    gfOpenNFNP:'Відкриті, неповні, неприватні ігри', gfOpenNFP:'Відкриті, неповні, приватні ігри', gfOpenNFR:'Відкриті, неповні рейтингові ігри', infoPlayersInGame:'Гравців у грі', displayBB:'Суми у великих блайндах', displayChips:'Суми у фішках',
+    errGameFull:'Гра заповнена', errBadGameName:'Неприпустима назва гри', errInvalidSettings:'Неприпустимі налаштування гри', errBlocked:'IP-адресу заблоковано', errRejoinFailed:'Не вдалося повторно приєднатися', errNoSpectators:'Глядачі не допускаються',
+    serverPassword:'Пароль сервера (необов\'язково)', userPassword:'Пароль користувача (необов\'язково)', avatarImageTooltip:'Вибрати власне зображення', gipTabLog:'Журнал', gipTabOdds:'Шанси',
 };
 
 export default { meta, strings };

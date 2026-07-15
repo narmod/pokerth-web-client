@@ -41,7 +41,6 @@ export const strings = {
   advHidePbar:'PokerTH režimas (žaidėjo juosta paslėpta)',
   deckSvg: "PokerTH",
   pucksPokerth: "PokerTH",
-  seatPokerth: "PokerTH",
   tablePokerthOfficial: "PokerTH",
   presetPokerthOfficial: "PokerTH Dark",
   themePokerthOfficial: "PokerTH Dark",
@@ -659,6 +658,25 @@ export const strings = {
     // v0.3.533 : case « ne pas traduire les termes de poker » (parité officielle)
     advPokerTerms:'Neversti tarptautinių pokerio terminų (Check, Call, Raise)',
     pokerFold:'Fold', pokerCheck:'Check', pokerCall:'Call', pokerBet:'Bet', pokerRaise:'Raise', pokerAllin:'All-In',
+    // v0.3.579 : passe native complete — 105 cles en repli anglais traduites + cles err*/affichage (noms propres et termes de tables conserves)
+    actBadgeCheck:'Check', unitMinutes:'minutes', presetWecupName:'WeCup', presetBbcName:'BBC', tablePokerthLive:'Spectator Tools', tableDanuxi:'Danuxi Blue', tableMute:'Mute', tableMute2:'Mute 02', tableTeal:'Teal', tableLemming:'Lemming',
+    tableMatrix:'Matrix', tableStarTrek:'Star Trek', tableTripSixes:'TripSixes', tableWanted:'Wanted', tableXanax:'Xanax', pucksAuto:'Auto (table)', pucksCasino:'Casino', infoTypeLabel:'Type', infoCapitalLabel:'Capital', wpWaitingPlayers:'Laukiama žaidėjų …',
+    wpFillBots:'Papildyti kompiuteriniais žaidėjais', wpStartGame:'Pradėti žaidimą', wpLeaveGame:'Palikti žaidimą', advFourColor:'4 spalvų kaladė (♦ mėlyna, ♣ žalia)', cardZoomToggle:'Padidinti mano kortas', actBadgeFold:'Pasuoti',
+    actBadgeCall:'Atsakyti', actBadgeBet:'Statyti', actBadgeRaise:'Kelti', actBadgeAllin:'All-In', cancelBtn:'Atšaukti', navBack:'Atgal', gameNameLabel:'Žaidimo pavadinimas', passwordLabel:'Slaptažodis', startCash:'Pradinis kapitalas',
+    blindsSettings:'Blindų nustatymai', firstSmallBlind:'Pirmasis mažasis blindas', blindInterval:'Blindų didinimo intervalas', unitHands:'rankų', timeLimits:'Laiko limitai', actionTimeout:'Laikas veiksmui', pauseBetweenHands:'Pauzė tarp rankų',
+    guestNeedAccount:'Reikalinga paskyra', guestJoinBlocked:'Svečiai gali prisijungti tik prie įprastų žaidimų — prisijunkite su registruota pokerth.net paskyra, kad žaistumėte prie šio stalo.', presetRankingName:'Reitingas', presetRankingDesc:'oficialus tempas',
+    presetWecupDesc:'subalansuotas turnyras', presetBbcDesc:'blindai pagal laiką', advSecLocalGame:'Treniruotės žaidimas', advPauseHands:'Pauzė tarp rankų (tęsti per laimėtojo langą)', nextHandBtn:'Kita ranka', advSecTablePrefs:'Stalo nuostatos',
+    advTablePrefsDesc:'Numatytosios šiame režime kuriamų stalų reikšmės — formos mygtukas ⭐ jas įkelia.', advRaiseEveryHands:'Didinti blindus kas N rankų', advGameSpeed:'Žaidimo greitis (1–11)', advSecLogSettings:'Žurnalo nustatymai',
+    advLogOn:'Įjungti žurnalą', advLogInterval:'Žurnalo intervalas', advLogEveryAction:'Kiekvienas veiksmas', advLogEveryHand:'Kiekviena ranka', advSecIgnored:'Ignoruojami žaidėjai', advIgnoredDesc:'Ignoruojamų sąrašo žaidėjai paslėpti pokalbyje.',
+    advIgnoredEmpty:'(nėra ignoruojamų žaidėjų)', advIgnoredRemove:'Pašalinti', advLobbyChat:'Rodyti fojė pokalbį', advTableZoom:'Įjungti stalo mastelį (lupos mygtukai)', advSeatSync:'Sinchronizuoti vietas su orientacija (PokerTH portretas/peizažas)',
+    advChatTranslate:'Pokalbio vertimas (naršyklės API, mygtukas prie žinutės)', chatTranslateUnsupported:'Ši naršyklė vertimo nepalaiko (reikia naujesnės Chrome/Edge).', chatTranslateFailed:'Vertimas nepavyko', wcHideOpt:'Daugiau nerodyti šio lango',
+    styleExpand:'Išskleisti', styleCollapse:'Suskleisti', themeLight:'Šviesi', modeAuto:'Automatinis', modeLight:'Šviesi', modeDark:'Tamsi', styleBy:'autorius', styleSelected:'Pasirinkta', importTable:'Importuoti stalą (.zip)', importDeck:'Importuoti kaladę (.zip)',
+    importError:'Importas nepavyko', confirmDeleteStyle:'Ištrinti šį importuotą stilių?', delete:'Ištrinti', advSecAppearance:'Išvaizda', advDarkMode:'Tamsusis režimas', tableGreenFelt:'Žalias stalas', tableCasino:'Žalias kazino', themeExport:'Eksportuoti temą (.zip)',
+    sectionAdvanced:'Išplėstiniai', rankingSeasonStats:'Sezono statistika', rankingShare:'Dalis', rankingResults:'Rezultatai', rankingToggleChart:'Perjungti stulpelius / skritulį', footPlayer:'Žaidėjas', footCreate:'＋ Sukurti stalą',
+    gameInfoTitle:'Žaidimo informacija', gameInfoEmpty:'Pasirinkite stalą', gfNone:'Be sąrašo filtro', gfOpen:'Rodyti atvirus žaidimus', gfOpenNF:'Atviri ir nepilni žaidimai', gfOpenNFNP:'Atviri, nepilni, ne privatūs žaidimai', gfOpenNFP:'Atviri, nepilni, privatūs žaidimai',
+    gfOpenNFR:'Atviri, nepilni reitingo žaidimai', infoPlayersInGame:'Žaidėjai žaidime', displayBB:'Sumos didžiaisiais blindais', displayChips:'Sumos žetonais', errGameFull:'Žaidimas pilnas', errBadGameName:'Netinkamas žaidimo pavadinimas',
+    errInvalidSettings:'Netinkami žaidimo nustatymai', errBlocked:'IP adresas užblokuotas', errRejoinFailed:'Nepavyko prisijungti iš naujo', errNoSpectators:'Žiūrovai neleidžiami', serverPassword:'Serverio slaptažodis (nebūtinas)',
+    userPassword:'Naudotojo slaptažodis (nebūtinas)', avatarImageTooltip:'Pasirinkti savo paveikslėlį', gipTabLog:'Žurnalas', gipTabOdds:'Šansai',
 };
 
 export default { meta, strings };

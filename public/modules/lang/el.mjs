@@ -41,7 +41,6 @@ export const strings = {
   advHidePbar:'Λειτουργία PokerTH (μπάρα παίκτη κρυμμένη)',
   deckSvg: "PokerTH",
   pucksPokerth: "PokerTH",
-  seatPokerth: "PokerTH",
   tablePokerthOfficial: "PokerTH",
   presetPokerthOfficial: "PokerTH Dark",
   themePokerthOfficial: "PokerTH Dark",
@@ -659,6 +658,25 @@ export const strings = {
     // v0.3.533 : case « ne pas traduire les termes de poker » (parité officielle)
     advPokerTerms:'Να μη μεταφράζονται οι διεθνείς όροι του πόκερ (Check, Call, Raise)',
     pokerFold:'Φόλντ', pokerCheck:'Τσεκ', pokerCall:'Κολ', pokerBet:'Μπετ', pokerRaise:'Ρέιζ', pokerAllin:'Ολ-ιν',
+    // v0.3.579 : passe native complete — 105 cles en repli anglais traduites + cles err*/affichage (noms propres et termes de tables conserves)
+    actBadgeCheck:'Check', unitMinutes:'minutes', presetWecupName:'WeCup', presetBbcName:'BBC', tablePokerthLive:'Spectator Tools', tableDanuxi:'Danuxi Blue', tableMute:'Mute', tableMute2:'Mute 02', tableTeal:'Teal', tableLemming:'Lemming',
+    tableMatrix:'Matrix', tableStarTrek:'Star Trek', tableTripSixes:'TripSixes', tableWanted:'Wanted', tableXanax:'Xanax', pucksAuto:'Auto (table)', pucksCasino:'Casino', infoTypeLabel:'Type', infoCapitalLabel:'Capital', wpWaitingPlayers:'Αναμονή για παίκτες …',
+    wpFillBots:'Συμπλήρωση με παίκτες υπολογιστή', wpStartGame:'Έναρξη παιχνιδιού', wpLeaveGame:'Έξοδος από το παιχνίδι', advFourColor:'Τράπουλα 4 χρωμάτων (♦ μπλε, ♣ πράσινο)', cardZoomToggle:'Μεγέθυνση των φύλλων μου', actBadgeFold:'Πάσο',
+    actBadgeCall:'Τα βλέπω', actBadgeBet:'Ποντάρισμα', actBadgeRaise:'Ρελάνς', actBadgeAllin:'Όλα μέσα', cancelBtn:'Άκυρο', navBack:'Πίσω', gameNameLabel:'Όνομα παιχνιδιού', passwordLabel:'Κωδικός', startCash:'Αρχικό κεφάλαιο', blindsSettings:'Ρυθμίσεις blinds',
+    firstSmallBlind:'Πρώτο small blind', blindInterval:'Διάστημα αύξησης των blinds', unitHands:'χέρια', timeLimits:'Χρονικά όρια', actionTimeout:'Χρόνος ανά ενέργεια', pauseBetweenHands:'Παύση μεταξύ των χεριών', guestNeedAccount:'Απαιτείται λογαριασμός',
+    guestJoinBlocked:'Οι επισκέπτες μπορούν να μπουν μόνο σε κανονικά παιχνίδια — συνδεθείτε με εγγεγραμμένο λογαριασμό pokerth.net για να παίξετε σε αυτό το τραπέζι.', presetRankingName:'Κατάταξη', presetRankingDesc:'επίσημος ρυθμός',
+    presetWecupDesc:'ισορροπημένο τουρνουά', presetBbcDesc:'blinds με βάση τον χρόνο', advSecLocalGame:'Παιχνίδι εξάσκησης', advPauseHands:'Παύση μεταξύ των χεριών (συνέχεια από το παράθυρο του νικητή)', nextHandBtn:'Επόμενο χέρι',
+    advSecTablePrefs:'Προτιμήσεις τραπεζιού', advTablePrefsDesc:'Προεπιλογές για τα τραπέζια που δημιουργείτε σε αυτή τη λειτουργία — το κουμπί ⭐ της φόρμας τις φορτώνει.', advRaiseEveryHands:'Αύξηση blinds κάθε N χέρια', advGameSpeed:'Ταχύτητα παιχνιδιού (1–11)',
+    advSecLogSettings:'Ρυθμίσεις καταγραφής', advLogOn:'Ενεργοποίηση καταγραφής', advLogInterval:'Διάστημα καταγραφής', advLogEveryAction:'Κάθε ενέργεια', advLogEveryHand:'Κάθε χέρι', advSecIgnored:'Αγνοημένοι παίκτες', advIgnoredDesc:'Οι παίκτες στη λίστα αγνόησης κρύβονται από τη συνομιλία.',
+    advIgnoredEmpty:'(κανένας αγνοημένος παίκτης)', advIgnoredRemove:'Αφαίρεση', advLobbyChat:'Εμφάνιση συνομιλίας λόμπι', advTableZoom:'Ενεργοποίηση ζουμ τραπεζιού (κουμπιά μεγεθυντικού φακού)', advSeatSync:'Συγχρονισμός θέσεων με τον προσανατολισμό (PokerTH κατακόρυφα/οριζόντια)',
+    advChatTranslate:'Μετάφραση συνομιλίας (API προγράμματος περιήγησης, κουμπί ανά μήνυμα)', chatTranslateUnsupported:'Αυτό το πρόγραμμα περιήγησης δεν υποστηρίζει μετάφραση (απαιτείται πρόσφατο Chrome/Edge).', chatTranslateFailed:'Η μετάφραση απέτυχε',
+    wcHideOpt:'Να μην εμφανιστεί ξανά αυτό το παράθυρο', styleExpand:'Ανάπτυξη', styleCollapse:'Σύμπτυξη', themeLight:'Φωτεινό', modeAuto:'Αυτόματο', modeLight:'Φωτεινό', modeDark:'Σκούρο', styleBy:'από', styleSelected:'Επιλεγμένο', importTable:'Εισαγωγή τραπεζιού (.zip)',
+    importDeck:'Εισαγωγή τράπουλας (.zip)', importError:'Η εισαγωγή απέτυχε', confirmDeleteStyle:'Διαγραφή αυτού του εισαγμένου στυλ;', delete:'Διαγραφή', advSecAppearance:'Εμφάνιση', advDarkMode:'Σκούρα λειτουργία', tableGreenFelt:'Πράσινο τραπέζι',
+    tableCasino:'Πράσινο καζίνο', themeExport:'Εξαγωγή θέματος (.zip)', sectionAdvanced:'Για προχωρημένους', rankingSeasonStats:'Στατιστικά σεζόν', rankingShare:'Μερίδιο', rankingResults:'Αποτελέσματα', rankingToggleChart:'Εναλλαγή ράβδων / πίτας',
+    footPlayer:'Παίκτης', footCreate:'＋ Δημιουργία τραπεζιού', gameInfoTitle:'Πληροφορίες παιχνιδιού', gameInfoEmpty:'Επιλέξτε τραπέζι', gfNone:'Χωρίς φίλτρο λίστας', gfOpen:'Εμφάνιση ανοιχτών παιχνιδιών', gfOpenNF:'Ανοιχτά και μη γεμάτα παιχνίδια',
+    gfOpenNFNP:'Ανοιχτά, μη γεμάτα, μη ιδιωτικά παιχνίδια', gfOpenNFP:'Ανοιχτά, μη γεμάτα, ιδιωτικά παιχνίδια', gfOpenNFR:'Ανοιχτά, μη γεμάτα παιχνίδια κατάταξης', infoPlayersInGame:'Παίκτες στο παιχνίδι', displayBB:'Ποσά σε big blinds',
+    displayChips:'Ποσά σε μάρκες', errGameFull:'Το παιχνίδι είναι γεμάτο', errBadGameName:'Μη έγκυρο όνομα παιχνιδιού', errInvalidSettings:'Μη έγκυρες ρυθμίσεις παιχνιδιού', errBlocked:'Η διεύθυνση IP αποκλείστηκε', errRejoinFailed:'Η επανασύνδεση απέτυχε',
+    errNoSpectators:'Δεν επιτρέπονται θεατές', serverPassword:'Κωδικός διακομιστή (προαιρετικός)', userPassword:'Κωδικός χρήστη (προαιρετικός)', avatarImageTooltip:'Επιλέξτε δική σας εικόνα', gipTabLog:'Καταγραφή', gipTabOdds:'Πιθανότητες',
 };
 
 export default { meta, strings };

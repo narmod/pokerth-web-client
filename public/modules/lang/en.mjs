@@ -389,6 +389,9 @@ export const strings = {
     // v0.3.533 : case « ne pas traduire les termes de poker » (parité officielle)
     advPokerTerms:'Do not translate international poker terms (Check, Call, Raise)',
     pokerFold:'Fold', pokerCheck:'Check', pokerCall:'Call', pokerBet:'Bet', pokerRaise:'Raise', pokerAllin:'All-In',
+    // v0.3.579 : cles utilisees dans le code mais absentes du catalogue (err* de JoinGameFailed, affichage BB/jetons, mots de passe, onglets info)
+    displayBB:'Amounts shown in big blinds', displayChips:'Amounts shown in chips', errGameFull:'Game is full', errBadGameName:'Bad game name', errInvalidSettings:'Invalid game settings', errBlocked:'IP address blocked', errRejoinFailed:'Rejoin failed',
+    errNoSpectators:'Spectators are not allowed', serverPassword:'Server password (optional)', userPassword:'User password (optional)', avatarImageTooltip:'Choose a custom image', gipTabLog:'Log', gipTabOdds:'Odds',
 };
 
 export default { meta, strings };
