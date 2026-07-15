@@ -1195,12 +1195,35 @@ window.setSeatLayout = setSeatLayout;
 // landscape ». Force le pack (le choix manuel du panneau Style est
 // remplace tant que l'option est active). Applique au demarrage, au
 // resize et au changement d'orientation.
+// Bascule portrait/paysage UNIQUE (parité GamePage.qml:453 `wide: width >=
+// height` sur la tableZone). tableZone web = #g-table-zone + player-bar
+// visible (le QML inclut la self-box dans sa zone). Repli : orientation
+// fenêtre (zone absente/cachée, ex. lobby au démarrage).
+function _tableZonePortrait() {
+  try {
+    var z = document.getElementById('g-table-zone');
+    var r = z ? z.getBoundingClientRect() : null;
+    if (r && r.width > 0) {
+      var h = r.height;
+      var pb = document.querySelector('.player-bar');
+      if (pb && pb.offsetParent !== null) h += pb.getBoundingClientRect().height;
+      return h > r.width;
+    }
+  } catch (e) {}
+  return window.innerHeight > window.innerWidth;
+}
+window._tableZonePortrait = _tableZonePortrait;
+
 function _applySeatSync() {
   try {
     // ON par defaut depuis 0.3.571 (packs PokerTH portrait/paysage partout,
     // mobile compris) ; opt-out explicite via la case des Options avancees.
     if (localStorage.getItem('pth_seat_sync') === '0') return;
-    var want = (window.innerHeight > window.innerWidth) ? 'pokerth-portrait' : 'pokerth';
+    // Parité QML GamePlayerBox.wideLayout (height >= 76 sur la hauteur de
+    // BASE : 84 en zone wide, 71 en zone haute) : le pack suit le ratio de
+    // la TABLEZONE, pas la fenêtre — sinon une fenêtre 573x600 (portrait)
+    // affichait des boîtes 1 ligne là où le QML affiche les 2 lignes wide.
+    var want = _tableZonePortrait() ? 'pokerth-portrait' : 'pokerth';
     if ((document.documentElement.getAttribute('data-seat') || '') === want) return;
     if (typeof window._setSeatPack === 'function') window._setSeatPack(want);
     else {
@@ -9756,17 +9779,13 @@ const App = (() => {
     // Avant : window.innerHeight > innerWidth -> une fenetre 573x600
     // (portrait) prenait les slots colonnes alors que le QML, dont la
     // tableZone est large (573x~410), prend l'ellipse.
-    var _seatPortrait = (window.innerHeight > window.innerWidth); // repli
-    try {
-      var _zEl = document.getElementById('g-table-zone');
-      var _zr = _zEl ? _zEl.getBoundingClientRect() : null;
-      if (_zr && _zr.width > 0) {
-        var _effH = _zr.height;
-        var _pb = document.querySelector('.player-bar');
-        if (_pb && _pb.offsetParent !== null) _effH += _pb.getBoundingClientRect().height;
-        _seatPortrait = _effH > _zr.width; // QML: wide = width >= height
-      }
-    } catch (e) {}
+    // Pack (pokerth / pokerth-portrait) resynchronisé dans la MÊME passe que
+    // la disposition : les deux suivent _tableZonePortrait (auto-garde : ne
+    // fait rien si le pack est déjà le bon).
+    try { if (typeof window._applySeatSync === 'function') window._applySeatSync(); } catch (e) {}
+    var _seatPortrait = (typeof window._tableZonePortrait === 'function')
+      ? window._tableZonePortrait()
+      : (window.innerHeight > window.innerWidth);
     var _isPhone = Math.min(window.innerWidth, window.innerHeight) < 540;
     // auto : bascule entre les deux modes officiels selon l'orientation
     //   (portrait = slots officiels, paysage = ellipse officielle 2.1.1).
@@ -15797,7 +15816,7 @@ function renderPlayersList() {
   body.innerHTML = _shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>';
 }
 
-;(function(){ window.BUILD_VERSION='0.3.589-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.590-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
