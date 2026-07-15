@@ -68,8 +68,14 @@ export class OfflineTable {
     this.baseSB = opts.smallBlind || 10;
     this.raiseEvery = opts.raiseEvery || 7;       // every N hands (mode 1) or N minutes (mode 2)
     this.raiseMode    = opts.raiseMode    || 1;   // 1 = every N hands, 2 = every N minutes
-    this.endRaiseMode = opts.endRaiseMode || 1;   // 1 = double, 2 = raise up to value, 3 = keep last (constant)
-    this.endRaiseValue= opts.endRaiseValue|| 0;   // target small blind for mode 2
+    this.endRaiseMode = opts.endRaiseMode || 1;   // AFTER manual list: 1 = double, 2 = +endRaiseValue, 3 = keep last
+    this.endRaiseValue= opts.endRaiseValue|| 0;   // increment for mode 2
+    // Manual blinds order (official parity, Game::raiseBlinds): sorted list of
+    // small-blind values consumed one per level AFTER the first small blind;
+    // once exhausted, endRaiseMode decides. Empty list = automatic doubling.
+    this.manualBlinds = (opts.manualBlinds || []).filter(n => Number.isInteger(n) && n > 0)
+                                                 .sort((a, b) => a - b)
+                                                 .filter((n, i, a) => a.indexOf(n) === i);
     this.now = opts.now || (()=>Date.now());      // injectable clock (minutes mode / tests)
     this.t0 = 0;
     this.onEvent = opts.onEvent || (()=>{});
@@ -83,10 +89,26 @@ export class OfflineTable {
 
   start(){ this.onEvent({type:'gameStart', players:this.players.map(p=>({id:p.id,name:p.name,stack:p.stack,isBot:p.isBot}))}); this.t0=this.now(); this.nextHand(); }
 
-  // Small blind for a given (0-based) level, honouring endRaiseMode:
-  //   1 = double each level · 2 = double but capped at endRaiseValue · 3 = constant.
+  // Small blind for a given (0-based) level — official Game::raiseBlinds parity:
+  //   · manual list present: level 0 = baseSB, levels 1..N walk the list, then
+  //     the "after" mode applies (1 = keep doubling, 2 = +endRaiseValue per
+  //     level, 3 = stay at the last listed blind).
+  //   · no list (automatic): blinds double every level. NOTE: the official
+  //     engine ignores endRaiseMode in automatic mode; the legacy web
+  //     behaviours (cap at endRaiseValue / constant) are kept for
+  //     backward-compat since saved prefs may still carry endRaiseMode 2/3.
   _sbForLevel(level){
     const base = this.baseSB;
+    const list = this.manualBlinds;
+    if (list && list.length){
+      if (level <= 0) return base;
+      if (level <= list.length) return list[level - 1];
+      const last  = list[list.length - 1];
+      const extra = level - list.length;
+      if (this.endRaiseMode === 2 && this.endRaiseValue > 0) return last + extra * this.endRaiseValue;
+      if (this.endRaiseMode === 3) return last;
+      return Math.round(last * Math.pow(2, Math.min(extra, 30)));
+    }
     if (this.endRaiseMode === 3) return base;                 // keep last -> never escalate
     let sb = Math.round(base * Math.pow(2, Math.min(level, 30)));
     if (this.endRaiseMode === 2 && this.endRaiseValue > 0) sb = Math.min(sb, this.endRaiseValue);

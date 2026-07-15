@@ -46,7 +46,7 @@ export class FakeServer {
     // partie). Quand elle rend vrai, nextHand attend resumeNextHand().
     this.pauseGate = (typeof opts.pauseGate === 'function') ? opts.pauseGate : null;
     this._pendingNext = null;
-    this.cfg = Object.assign({ startMoney:3000, smallBlind:10, raiseEvery:8, maxPlayers:6, timeout:30, gameName:'Offline', raiseMode:1, endRaiseMode:1, endRaiseValue:0, guiSpeed:5, delayHands:2 }, opts.config||{});
+    this.cfg = Object.assign({ startMoney:3000, smallBlind:10, raiseEvery:8, maxPlayers:6, timeout:30, gameName:'Offline', raiseMode:1, endRaiseMode:1, endRaiseValue:0, manualBlinds:[], guiSpeed:5, delayHands:2 }, opts.config||{});
     this.meId = 1; this.gameId = 1;
     this.players = [{ id:1, name:(opts.me&&opts.me.name)||'You', isBot:false }];
     this.botCfg = {}; this._used = new Set();
@@ -64,8 +64,14 @@ export class FakeServer {
   ver(maj,min){ return encode([[1,0,maj],[2,0,min]]); }
   gameInfo(){
     const c=this.cfg;
-    return encode([[1,2,c.gameName],[2,0,1],[3,0,c.maxPlayers],[4,0,1],[5,0,c.raiseEvery],
-      [7,0,1],[9,0,5],[10,0,0],[11,0,c.timeout],[12,0,c.smallBlind],[13,0,c.startMoney],[15,0,1]]);
+    const f=[[1,2,c.gameName],[2,0,1],[3,0,c.maxPlayers],[4,0,c.raiseMode||1],
+      [(c.raiseMode===2)?6:5,0,c.raiseEvery],
+      [7,0,c.endRaiseMode||1]];
+    if((c.endRaiseMode||1)===2 && c.endRaiseValue>0) f.push([8,0,c.endRaiseValue]);
+    f.push([9,0,5],[10,0,0],[11,0,c.timeout],[12,0,c.smallBlind],[13,0,c.startMoney]);
+    if(c.manualBlinds && c.manualBlinds.length) f.push([14,2,packed(c.manualBlinds)]);
+    f.push([15,0,1]);
+    return encode(f);
   }
   _applyGameInfo(gi){
     const f=readFields(gi); const n=(k,d)=> (f[k]&&f[k][0]!=null)?f[k][0]:d;
@@ -80,6 +86,16 @@ export class FakeServer {
     this.cfg.timeout    = n(11, this.cfg.timeout);
     this.cfg.smallBlind = n(12, this.cfg.smallBlind);
     this.cfg.startMoney = n(13, this.cfg.startMoney);
+    // manualBlinds (champ 14, repeated packed uint32) : accepter packed
+    // (Uint8Array de varints) ET repeated (une valeur par occurrence).
+    const mb=[];
+    if (f[14]) for (const e of f[14]) {
+      if (typeof e === 'number') mb.push(e);
+      else if (e && e.length !== undefined) {
+        let i=0; while(i<e.length){ let s=0,r=0,b; do{ b=e[i++]; r+=(b&0x7f)*Math.pow(2,s); s+=7; }while(b&0x80); mb.push(r); }
+      }
+    }
+    this.cfg.manualBlinds = mb.filter(v=>Number.isInteger(v)&&v>0).sort((a,b)=>a-b);
   }
 
   begin(){ this._send('Announce', [[1,2,this.ver(5,1)],[2,2,this.ver(2,0)],[3,0,0],[4,0,0],[5,0,1]]); }
@@ -233,6 +249,7 @@ export class FakeServer {
     const ps = this.players.map(p=>({ id:p.id, name:p.name, isBot:p.isBot, stack:this.cfg.startMoney }));
     this.table = new OfflineTable({ players:ps, smallBlind:this.cfg.smallBlind, raiseEvery:this.cfg.raiseEvery,
       raiseMode:this.cfg.raiseMode, endRaiseMode:this.cfg.endRaiseMode, endRaiseValue:this.cfg.endRaiseValue,
+      manualBlinds:this.cfg.manualBlinds,
       rng:this.rng, gameId:this.gameId, onEvent:(ev)=>this._onEngine(ev) });
     this.pace(()=>this.table.start(), 300);
   }

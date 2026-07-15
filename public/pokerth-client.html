@@ -1236,6 +1236,39 @@ function onAvatarImageChosen(input) {
           <input type="hidden" id="cf-raise-mode" value="1">
         </div>
 
+        <!-- Ordre d'augmentation des blindes (parité QML : toujours doubler / liste manuelle,
+             NetGameInfo champ 14 ; « Ensuite » = endRaiseMode champs 7/8) -->
+        <div class="cf-row cf-row-col">
+          <label class="cf-lbl" data-i18n="blindsOrderLbl">Ordre d'augmentation des blindes</label>
+          <div class="cf-interval">
+            <label class="cf-radio"><input type="radio" name="cf-mb" id="cf-mb0" checked onchange="App.setManualBlindsMode(false)"> <span data-i18n="blindsAlwaysDouble">toujours doubler</span></label>
+            <label class="cf-radio"><input type="radio" name="cf-mb" id="cf-mb1" onchange="App.setManualBlindsMode(true)"> <span data-i18n="blindsManualOrder">liste manuelle</span></label>
+          </div>
+          <div id="cf-mb-editor" style="display:none;margin-top:6px">
+            <div class="cf-presets" id="cf-mb-list" style="margin-bottom:6px"></div>
+            <div class="cf-interval">
+              <div class="cf-step cf-step-money">
+                <button type="button" class="cf-step-btn" onclick="App.stepField('cf-mb-val',-1)">&minus;</button>
+                <input id="cf-mb-val" class="cf-step-num" type="number" min="2" max="9999999" step="1" value="20" onchange="App.clampNum(this)">
+                <button type="button" class="cf-step-btn" onclick="App.stepField('cf-mb-val',1)">+</button>
+              </div>
+              <button type="button" class="btn-cf-reset" onclick="App.addManualBlind()"><span class="cf-reset-lbl" data-i18n="blindsAddBtn">+ Ajouter</span></button>
+            </div>
+            <label class="cf-lbl" style="margin-top:8px;display:block" data-i18n="blindsAfterLbl">Ensuite :</label>
+            <div class="cf-interval" style="flex-wrap:wrap">
+              <label class="cf-radio"><input type="radio" name="cf-amb" id="cf-amb1" checked onchange="App.setAfterMB(1)"> <span data-i18n="blindsAfterDouble">doubler les blindes</span></label>
+              <label class="cf-radio"><input type="radio" name="cf-amb" id="cf-amb2" onchange="App.setAfterMB(2)"> <span data-i18n="blindsAfterRaiseBy">augmenter de</span></label>
+              <div class="cf-step cf-step-money" id="cf-amb2-step" style="display:none">
+                <button type="button" class="cf-step-btn" onclick="App.stepField('cf-end-raise-val',-1)">&minus;</button>
+                <input id="cf-end-raise-val" class="cf-step-num" type="number" min="1" max="9999999" step="1" value="200" onchange="App.clampNum(this)">
+                <button type="button" class="cf-step-btn" onclick="App.stepField('cf-end-raise-val',1)">+</button>
+              </div>
+              <label class="cf-radio"><input type="radio" name="cf-amb" id="cf-amb3" onchange="App.setAfterMB(3)"> <span data-i18n="blindsAfterKeep">garder la dernière blinde</span></label>
+            </div>
+          </div>
+          <input type="hidden" id="cf-manual-blinds" value="">
+        </div>
+
         <!-- Limites de temps -->
         <div class="cf-sec" data-i18n="timeLimits">Limites de temps</div>
         <div class="cf-row">
@@ -1268,7 +1301,6 @@ function onAvatarImageChosen(input) {
 
         <!-- Champs avancés conservés (non affichés par l'officiel) -->
         <input type="hidden" id="cf-end-raise" value="1">
-        <input type="hidden" id="cf-end-raise-val" value="200">
         <input type="hidden" id="cf-gui-speed" value="5">
 
         <div class="cf-actions">

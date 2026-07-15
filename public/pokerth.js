@@ -3408,6 +3408,16 @@ const MSG = (() => {
     const allowSpec    = (typeof opts.allowSpectators === 'boolean')
                          ? (opts.allowSpectators ? 1 : 0)
                          : null;
+    // manualBlinds : proto champ 14, repeated uint32 [packed = true] →
+    // wire type 2 (length-delimited) contenant les varints concaténés.
+    // Sémantique serveur (netpacket.cpp) : liste non vide = MANUAL_BLINDS_ORDER,
+    // et endRaiseMode (champ 7) devient le comportement APRÈS la liste.
+    let manualBlindsBytes = null;
+    if (opts.manualBlinds && opts.manualBlinds.length) {
+      const mb = [];
+      for (const v of opts.manualBlinds) mb.push(...Proto.encodeVarint(v >>> 0));
+      manualBlindsBytes = new Uint8Array(mb);
+    }
     const gameInfo = Proto.encode([
       [1,  2, name || 'WebGame'],
       [2,  0, gameType],
@@ -3421,6 +3431,7 @@ const MSG = (() => {
       [11, 0, timeout||30],
       [12, 0, smallBlind||10],
       [13, 0, startMoney||3000],
+      ...(manualBlindsBytes ? [[14, 2, manualBlindsBytes]] : []),
       ...(allowSpec !== null ? [[15, 0, allowSpec]] : []),
     ]);
     const joinFields = [[1, 2, gameInfo]];
@@ -3529,6 +3540,7 @@ const App = (() => {
   // Sert à prédire la PROCHAINE valeur de blind affichée dans l'explication.
   let _endRaiseMode = 1;
   let _endRaiseValue = 0;
+  let _manualBlinds = [];   // liste manuelle (NetGameInfo champ 14) de la partie en cours
 
   // ── Chip display mode: absolute value ($) or big blinds (BB) ──
   // Pure display feature, no protocol impact. Toggled from the in-game
@@ -6242,10 +6254,24 @@ const App = (() => {
         var _gerval  = Proto.u32(gi, 8) || 0;  // endRaiseSmallBlindValue
         var _gsb     = Proto.u32(gi, 12) || 0; // NetGameInfo.firstSmallBlind (field 12)
         var _gdelay  = Proto.u32(gi, 10) || 0; // NetGameInfo.delayBetweenHands (field 10) → 2e « Temps »
+        // NetGameInfo.manualBlinds (champ 14, repeated packed uint32) : comme
+        // pour les playerIds (champ 4 plus haut), on gère les deux encodages
+        // packed (un buffer de varints) et repeated (une valeur par entrée).
+        var _gmb = [];
+        if (gi[14]) {
+          for (var _im = 0; _im < gi[14].length; _im++) {
+            var _em = gi[14][_im];
+            if (typeof _em === 'number') { _gmb.push(_em); }
+            else if (_em && _em.length !== undefined) {
+              var _pm = 0;
+              while (_pm < _em.length) { var _rm = Proto.decodeVarint(_em, _pm); _pm = _rm.pos; _gmb.push(_rm.value); }
+            }
+          }
+        }
         games[id] = { name, mode, players:pc, seats:_seats, maxPlayers:maxp, type:gtype, priv:!!priv,
                       timeout: _gto || 15, startMoney: _gsm || 3000, delay: _gdelay,
                       raiseMode: _grmode, raiseHands: _grhands, raiseMins: _grmins, smallBlind: _gsb,
-                      endRaiseMode: _germode, endRaiseValue: _gerval };
+                      endRaiseMode: _germode, endRaiseValue: _gerval, manualBlinds: _gmb };
         if (!loaded) { loaded = true; }
         renderGames();
         // ── Auto-join from a share link ──
@@ -6464,6 +6490,7 @@ const App = (() => {
         _raiseEvery = (games[gId] && (_raiseMode === 2 ? games[gId].raiseMins : games[gId].raiseHands)) || 0;
         _endRaiseMode  = (games[gId] && games[gId].endRaiseMode)  || 1;
         _endRaiseValue = (games[gId] && games[gId].endRaiseValue) || 0;
+        _manualBlinds  = (games[gId] && games[gId].manualBlinds) || [];
         _lastBlindsUpHand = 0;
         amGameAdmin = !!isAdmin;
         // Replay hors-ligne en un tap : une fois recréée la table (on est admin),
@@ -6989,11 +7016,26 @@ const App = (() => {
         // (cliquable) et le texte d'explication détaillé stocké pour le tap.
         try {
           var grp = (typeof _groupThousands === 'function') ? _groupThousands : function(n){ return String(n); };
-          // Prochaine valeur de small blind selon le mode de fin de montée.
+          // Prochaine valeur de small blind — sémantique officielle
+          // (Game::raiseBlinds) : avec une liste manuelle, la prochaine SB est
+          // la première valeur de la liste > SB courante ; liste épuisée →
+          // endRaiseMode (1=doubler, 2=+valeur, 3=garder). Sans liste (mode
+          // auto), les blinds doublent toujours — endRaiseMode ne s'applique
+          // qu'après une liste manuelle côté serveur.
           var _nextSB = null;
-          if (_endRaiseMode === 2 && _endRaiseValue > 0) _nextSB = sb + _endRaiseValue; // +valeur
-          else if (_endRaiseMode === 3) _nextSB = null;                                 // garde la dernière
-          else _nextSB = sb * 2;                                                         // doubler (défaut)
+          var _mbNext = null;
+          if (_manualBlinds && _manualBlinds.length) {
+            for (var _bi = 0; _bi < _manualBlinds.length; _bi++) {
+              if (_manualBlinds[_bi] > sb) { _mbNext = _manualBlinds[_bi]; break; }
+            }
+          }
+          if (_mbNext != null) _nextSB = _mbNext;                                        // liste manuelle
+          else if (_manualBlinds && _manualBlinds.length) {                              // liste épuisée → Ensuite
+            if (_endRaiseMode === 2 && _endRaiseValue > 0) _nextSB = sb + _endRaiseValue;
+            else if (_endRaiseMode === 3) _nextSB = null;
+            else _nextSB = sb * 2;
+          }
+          else _nextSB = sb * 2;                                                         // auto : doubler
 
           // Le "quand" + la pastille compacte selon le mode d'intervalle.
           var _whenTxt = '', _chip = '';
@@ -7722,6 +7764,13 @@ const App = (() => {
     var _count  = _pids.length;
     var _rows   = _mine ? _renderInfoRowsFromPids(_pids) : _renderInfoPlayerRows(gid);
     var _blUp = (g.raiseMode === 2) ? (g.raiseMins > 0 ? t('blindsUpMins', { n: g.raiseMins }) : '') : (g.raiseHands > 0 ? t('blindsUpHands', { n: g.raiseHands }) : '');
+    // Ordre manuel des blinds (NetGameInfo champ 14) : afficher la structure
+    // complète, comme le Game Info du client officiel.
+    var _mbRow = '';
+    if (g.manualBlinds && g.manualBlinds.length) {
+      _mbRow = '<div class="lgi-row"><span data-i18n="infoBlindsManual">' + t('infoBlindsManual') + '</span> : '
+             + esc(g.manualBlinds.map(function(v){ return _groupThousands(v); }).join(' \u2192 ')) + '</div>';
+    }
     var _dly  = g.delay || 0;
 
     el.innerHTML =
@@ -7736,6 +7785,7 @@ const App = (() => {
         + '<div class="lgi-row lgi-blinds">SB : ' + _groupThousands(g.smallBlind || 0)
           + ' | <span data-i18n="infoCapitalLabel">' + t('infoCapitalLabel') + '</span> : ' + _groupThousands(g.startMoney || 0) + '</div>'
         + (_blUp ? '<div class="lgi-row"><span data-i18n="infoBlindsUp">' + t('infoBlindsUp') + '</span> : ' + _blUp + '</div>' : '')
+        + _mbRow
         + '<div class="lgi-row"><span data-i18n="gameTimeLabel">' + t('gameTimeLabel') + '</span> : ' + (g.timeout || 0) + 's' + (_dly ? '/' + _dly + 's' : '') + '</div>'
         + '<div class="lgi-ptitle"><span data-i18n="infoPlayersInGame">' + t('infoPlayersInGame') + '</span> (' + _count + ')</div>'
         + '<div class="lgi-players">' + _rows + '</div>'
@@ -11639,7 +11689,7 @@ function _maybeShowNextHandBtn() {
         _playerCountries = {};
         _playerRights = {};
         _raiseMode = 1; _raiseEvery = 0; _lastBlindsUpHand = 0;
-        _endRaiseMode = 1; _endRaiseValue = 0;
+        _endRaiseMode = 1; _endRaiseValue = 0; _manualBlinds = [];
         // Avatars : indexés par pid (stables tant que la session lobby dure) ou
         // par hash (cache réutilisable). Donc même cycle de vie que 'players' :
         // on ne les vide qu'à la déconnexion complète, pas en quittant une partie
@@ -12822,6 +12872,10 @@ function _maybeShowNextHandBtn() {
       if (d.raiseMode     != null) set('cf-raise-mode',   d.raiseMode);
       if (d.endRaiseMode  != null) set('cf-end-raise',    d.endRaiseMode);
       if (d.endRaiseValue != null) set('cf-end-raise-val',d.endRaiseValue);
+      // Ordre manuel des blindes : restaurer liste + flag, puis resynchroniser
+      // toute l'UI (radios auto/manuel, pastilles, radios « Ensuite »).
+      if (d.manualBlinds  != null) set('cf-manual-blinds', d.manualBlinds);
+      this._syncBlindsOrderUI(d.manualOrder != null ? !!d.manualOrder : null);
       if (d.gameType      != null) set('cf-game-type',    d.gameType);
       if (d.allowSpectators != null) {
         var asEl = document.getElementById('cf-allow-spectators');
@@ -12914,6 +12968,79 @@ function _maybeShowNextHandBtn() {
     // caché cf-raise-mode (1 = mains, 2 = minutes) lu par createGame().
     setRaiseMode(n) {
       var el = document.getElementById('cf-raise-mode'); if (el) el.value = n;
+    },
+    // ── Ordre manuel des blindes (parité QML LocalGameSettings/NetworkGameSettings) ──
+    // La liste vit dans le champ caché cf-manual-blinds (CSV trié croissant) : c'est
+    // la source lue par createGame(), _readCreateForm() et le rendu des pastilles.
+    // Sémantique officielle (netpacket.cpp) : mode manuel = liste non vide dans
+    // NetGameInfo champ 14 ; « Ensuite » (cf-end-raise 1/2/3) = APRÈS épuisement.
+    _getManualBlinds() {
+      var el = document.getElementById('cf-manual-blinds');
+      if (!el || !el.value) return [];
+      return el.value.split(',').map(function(s){ return parseInt(s, 10); })
+        .filter(function(n){ return !isNaN(n) && n > 0; });
+    },
+    _setManualBlinds(arr) {
+      arr = (arr || []).filter(function(n){ return Number.isInteger(n) && n > 0; });
+      arr.sort(function(a, b){ return a - b; });
+      // Dédoublonnage (le QML refuse les doublons dans addBlind)
+      arr = arr.filter(function(n, i){ return arr.indexOf(n) === i; });
+      var el = document.getElementById('cf-manual-blinds');
+      if (el) el.value = arr.join(',');
+      this._renderManualBlinds();
+      return arr;
+    },
+    _renderManualBlinds() {
+      var box = document.getElementById('cf-mb-list'); if (!box) return;
+      var list = this._getManualBlinds();
+      var h = '';
+      for (var i = 0; i < list.length; i++) {
+        h += '<button type="button" class="cf-preset" title="' + (t('blindsRemoveTip') || 'Remove') + '"'
+           + ' onclick="App.removeManualBlind(' + list[i] + ')">'
+           + '<span class="cfp-n">$' + list[i] + ' \u00d7</span></button>';
+      }
+      box.innerHTML = h;
+      box.style.display = list.length ? '' : 'none';
+    },
+    setManualBlindsMode(on) {
+      var ed = document.getElementById('cf-mb-editor');
+      if (ed) ed.style.display = on ? '' : 'none';
+      var r = document.getElementById(on ? 'cf-mb1' : 'cf-mb0'); if (r) r.checked = true;
+      if (on) this._renderManualBlinds();
+    },
+    addManualBlind() {
+      var inp = document.getElementById('cf-mb-val');
+      var v = inp ? parseInt(inp.value, 10) : NaN;
+      if (isNaN(v) || v <= 0) return;
+      var list = this._getManualBlinds();
+      list.push(v);
+      list = this._setManualBlinds(list);
+      // Confort : pré-remplir la prochaine valeur (double de la dernière),
+      // comme point de départ raisonnable pour une structure de tournoi.
+      if (inp && list.length) inp.value = Math.min(9999999, list[list.length - 1] * 2);
+    },
+    removeManualBlind(v) {
+      this._setManualBlinds(this._getManualBlinds().filter(function(n){ return n !== v; }));
+    },
+    // « Ensuite : » — pilote le champ caché cf-end-raise (endRaiseMode 1/2/3,
+    // NetGameInfo champ 7) ; le stepper de valeur n'apparaît qu'en mode 2.
+    setAfterMB(mode) {
+      var el = document.getElementById('cf-end-raise'); if (el) el.value = String(mode);
+      var st = document.getElementById('cf-amb2-step'); if (st) st.style.display = (mode === 2) ? '' : 'none';
+      var r = document.getElementById('cf-amb' + mode); if (r) r.checked = true;
+    },
+    // Resynchronise l'UI « ordre des blindes » depuis les champs cachés
+    // (cf-manual-blinds, cf-end-raise) après une écriture programmatique
+    // (defaults, préférences, reset). manualOn : true/false = imposé,
+    // null = déduit (mode manuel si le radio l'était déjà OU liste non vide).
+    _syncBlindsOrderUI(manualOn) {
+      if (manualOn == null) {
+        var r1 = document.getElementById('cf-mb1');
+        manualOn = (r1 && r1.checked) || this._getManualBlinds().length > 0;
+      }
+      this.setManualBlindsMode(!!manualOn);
+      var m = parseInt((document.getElementById('cf-end-raise') || {}).value, 10);
+      this.setAfterMB(m >= 1 && m <= 3 ? m : 1);
     },
     // Quick-style presets: fill the create-form numeric fields in one tap.
     // The full form stays fully editable afterwards — presets are just a
@@ -13042,6 +13169,8 @@ function _maybeShowNextHandBtn() {
         raiseEvery:      iv('cf-raise-every', 7),
         endRaiseMode:    svv('cf-end-raise', '1'),
         endRaiseValue:   iv('cf-end-raise-val', 200),
+        manualOrder:     !!(g('cf-mb1') && g('cf-mb1').checked),
+        manualBlinds:    svv('cf-manual-blinds', ''),
         guiSpeed:        iv('cf-gui-speed', 5),
         delayHands:      iv('cf-delay', 7),
         gameType:        svv('cf-game-type', '1'),
@@ -13076,6 +13205,8 @@ function _maybeShowNextHandBtn() {
       set('cf-raise-every',   d.raiseEvery);
       set('cf-end-raise',     d.endRaiseMode);
       set('cf-end-raise-val', d.endRaiseValue);
+      set('cf-manual-blinds', d.manualBlinds != null ? d.manualBlinds : '');
+      this._syncBlindsOrderUI(d.manualOrder != null ? !!d.manualOrder : null);
       set('cf-gui-speed',     d.guiSpeed);
       set('cf-delay',         d.delayHands);
       set('cf-game-type',     d.gameType);
@@ -13119,6 +13250,8 @@ function _maybeShowNextHandBtn() {
       setVal('cf-raise-mode',       '1');
       setVal('cf-end-raise',        '1');
       setVal('cf-end-raise-val',    '200');
+      setVal('cf-manual-blinds',    '');
+      this._syncBlindsOrderUI(false);   // retour à « toujours doubler »
       setVal('cf-game-type',        '1');
       setVal('cf-allow-spectators', '1');
       // Password section back to off / empty / hidden.
@@ -13219,11 +13352,17 @@ function _maybeShowNextHandBtn() {
       const allowSpec = allowSpecRaw
         ? (allowSpecRaw.type === 'checkbox' ? allowSpecRaw.checked : allowSpecRaw.value !== '0')
         : true;
+      // Ordre manuel des blindes : liste envoyée SEULEMENT si le radio
+      // « liste manuelle » est coché (sémantique officielle : liste non vide
+      // = mode manuel côté serveur, netpacket.cpp).
+      const manualOn = !!(g('cf-mb1') && g('cf-mb1').checked);
+      const manualBlinds = manualOn ? this._getManualBlinds() : [];
       const opts = {
         raiseMode:       sv('cf-raise-mode',    1),
         raiseEvery:      iv('cf-raise-every',   7),
         endRaiseMode:    sv('cf-end-raise',     1),
         endRaiseValue:   iv('cf-end-raise-val', 200),
+        manualBlinds:    manualBlinds,
         guiSpeed:        iv('cf-gui-speed',     5),
         delayHands:      iv('cf-delay',         7),
         gameType:        (_currentLoginMode === 'guest') ? 1 : sv('cf-game-type', 1),   // invité : Normal imposé
@@ -13243,6 +13382,7 @@ function _maybeShowNextHandBtn() {
           raiseMode: opts.raiseMode, endRaiseMode: opts.endRaiseMode,
           endRaiseValue: opts.endRaiseValue, gameType: opts.gameType,
           allowSpectators: opts.allowSpectators,
+          manualOrder: manualOn, manualBlinds: manualBlinds.join(','),
         }));
       } catch (e) {}
       var f = document.getElementById('create-form');
@@ -14943,7 +15083,7 @@ function renderPlayersList() {
   body.innerHTML = _shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>';
 }
 
-;(function(){ window.BUILD_VERSION='0.3.521-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.522-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
