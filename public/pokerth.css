@@ -3569,7 +3569,9 @@ body {
 @media (orientation: landscape) and (max-height: 600px) { :root { --comm-scale: 0.62; } }
 .comm-row {
   position: absolute;
-  top: 50%; left: 50%;
+  /* --comm-shift-y : décalage vertical piloté par renderSeats (parité QML
+     communityArea — barycentre des boxes en paysage, ~centre en portrait). */
+  top: calc(50% + var(--comm-shift-y, 0px)); left: 50%;
   transform: translate(-50%, -50%);
   display: flex;
   gap: calc(3px * var(--comm-scale, 1));
@@ -3594,7 +3596,7 @@ body {
   display: none;
   position: absolute;
   left: 50%;
-  top: 50%;
+  top: calc(50% + var(--comm-shift-y, 0px)); /* suit la rangée de cartes */
   /* Ancrage QML : bottom du badge = top des cartes communes + marge 8px,
      le tout suivant communityScale (--comm-scale). Demi-hauteur de carte
      32px + marge 8px = 40px x echelle -> position ET taille identiques au

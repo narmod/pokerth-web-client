@@ -10398,10 +10398,14 @@ const App = (() => {
       if (window._commScalePending && _applyOfficial) {
         window._commScalePending = false;
         var _csComm, _zW3 = zRect.width, _zH3 = zRect.height;
+        var _commTargetY = null; // centre Y cible (px zone) — parité anchors QML
         if (_forceSeatPortrait) {
           var _oppH3 = (window._seatDimsMeasured && window._seatDimsMeasured.h > 30) ? window._seatDimsMeasured.h : 71;
           var _vHalf = 0.15 * _zH3 - _oppH3 * _seatBoxScale / 2 - 6;
           _csComm = Math.max(0.55, Math.min(1.8, (_vHalf > 0 ? _vHalf / 62 : 0.55), Math.max(0, _zW3 - 16) / 264));
+          // QML (GamePage communityArea, branche portrait) :
+          // verticalCenterOffset = -height*0.0025 + 5 par rapport au centre.
+          _commTargetY = _zH3 / 2 - 0.0025 * _zH3 + 5;
         } else {
           // Port EXACT de GamePage.qml communityScale (branche wide) — audit
           // 2026-07-15 contre pokerth/pokerth qt6-qml. Trois corrections vs
@@ -10430,12 +10434,38 @@ const App = (() => {
           var _cap3 = Math.min(_isCmp3 ? 2.6 : 1.8, _seatBoxScale * 2.0, (0.70 * _zW3) / 264);
           var _floor3 = _seatBoxScale * (_isCmp3 ? 1.1 : 0.72);
           _csComm = Math.max(0.55, Math.min(_cap3, Math.max(_floor3, _gapF3)));
+          // QML (communityArea, branche wide) : verticalCenterOffset =
+          // communityCenterY - height/2 -> centre de la rangee = barycentre.
+          _commTargetY = _commC3;
         }
         document.documentElement.style.setProperty('--comm-scale', _csComm.toFixed(3));
+        // ── Position verticale (parité anchors QML) : la rangée .comm-row est
+        // ancrée à 50% du feutre ; on la décale de (cible − centre naturel du
+        // feutre), converti en px LOCAUX du scaler (le transform d'autofit/zoom
+        // multiplie tout décalage posé à l'intérieur). Clamp ±40% de la zone. ──
+        try {
+          var _fEl3 = document.querySelector('.felt-oval');
+          if (_commTargetY !== null && _fEl3 && _fEl3.offsetHeight > 0) {
+            var _fr3 = _fEl3.getBoundingClientRect();
+            var _natC3 = _fr3.top - zRect.top + _fr3.height / 2;
+            var _eff3 = _fr3.height / _fEl3.offsetHeight;
+            if (!(_eff3 > 0.05)) _eff3 = 1;
+            var _shift3 = (_commTargetY - _natC3) / _eff3;
+            var _clamp3 = 0.40 * _zH3 / _eff3;
+            if (_shift3 > _clamp3) _shift3 = _clamp3;
+            if (_shift3 < -_clamp3) _shift3 = -_clamp3;
+            if (Math.abs(_shift3) < 2) _shift3 = 0;
+            document.documentElement.style.setProperty('--comm-shift-y', _shift3.toFixed(1) + 'px');
+            try { window._seatDbg.commShiftY = Math.round(_shift3); } catch (e4) {}
+          } else {
+            document.documentElement.style.removeProperty('--comm-shift-y');
+          }
+        } catch (e5) { try { document.documentElement.style.removeProperty('--comm-shift-y'); } catch (e6) {} }
         try { window._seatDbg.commScale = _csComm; } catch (e3) {}
       } else if (window._commScalePending) {
         window._commScalePending = false;
         document.documentElement.style.removeProperty('--comm-scale');
+        document.documentElement.style.removeProperty('--comm-shift-y');
       }
     } catch (e) { try { window._seatDbg.commErr = String(e); } catch (e2) {} }
     // Self-box : remonter si son bas depasse la zone (tapis coupe en plein
@@ -15767,7 +15797,7 @@ function renderPlayersList() {
   body.innerHTML = _shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>';
 }
 
-;(function(){ window.BUILD_VERSION='0.3.588-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.589-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
