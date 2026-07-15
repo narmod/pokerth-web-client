@@ -10353,21 +10353,33 @@ const App = (() => {
           var _vHalf = 0.15 * _zH3 - _oppH3 * _seatBoxScale / 2 - 6;
           _csComm = Math.max(0.55, Math.min(1.8, (_vHalf > 0 ? _vHalf / 62 : 0.55), Math.max(0, _zW3 - 16) / 264));
         } else {
+          // Port EXACT de GamePage.qml communityScale (branche wide) — audit
+          // 2026-07-15 contre pokerth/pokerth qt6-qml. Trois corrections vs
+          // l'ancien port : (1) topB = bas de la box la plus HAUTE (QML :
+          // min slot y + oppH/2), pas le bas maximal de l'arc haut ; (2)
+          // centre = BARYCENTRE vertical de toutes les boxes self incluse
+          // (le QML a abandonné le milieu (topB+selfTop)/2) ; (3) plancher
+          // boxScale·0.72 (compact 1.1) et cap boxScale·2.0 (compact 2.6).
           var _zr3 = zone.getBoundingClientRect();
           var _selfPl3 = el.querySelector('.seat.me .seat-plate');
-          var _selfTop3 = _selfPl3 ? (_selfPl3.getBoundingClientRect().top - _zr3.top) : (_zH3 - 100);
-          var _topB3 = 0;
+          var _selfR3 = _selfPl3 ? _selfPl3.getBoundingClientRect() : null;
+          var _selfTop3 = _selfR3 ? (_selfR3.top - _zr3.top) : (_zH3 - 100);
+          var _sumY3 = _selfR3 ? (_selfR3.top + _selfR3.height / 2 - _zr3.top) : (_zH3 - 100);
+          var _n3 = 1, _minB3 = Infinity;
           el.querySelectorAll('.seat:not(.me):not(.seat-ghost) .seat-plate').forEach(function (pl3) {
             var rr3 = pl3.getBoundingClientRect();
-            var _t3 = rr3.top - _zr3.top, _b3 = rr3.bottom - _zr3.top;
-            if (_t3 < _zH3 * 0.4 && _b3 > _topB3) _topB3 = _b3;   // arc haut
+            var _b3 = rr3.bottom - _zr3.top;
+            if (_b3 < _minB3) _minB3 = _b3;                       // box la plus haute
+            _sumY3 += rr3.top + rr3.height / 2 - _zr3.top; _n3++; // barycentre
           });
           var _isCmp3 = _zH3 < 520 || window.innerHeight < 600;
-          var _commC3 = (_topB3 + _selfTop3) / 2;
-          var _avail3 = Math.min(_commC3 - (_topB3 + (_isCmp3 ? 39 : 26) * _seatBoxScale) - 6,
-                                 _selfTop3 - _commC3 - 6);
+          var _commC3 = _sumY3 / _n3;
+          var _topB3 = (_minB3 < Infinity ? _minB3 : 0) + (_isCmp3 ? 39 : 26) * _seatBoxScale;
+          var _avail3 = Math.min(_commC3 - _topB3 - 6, _selfTop3 - _commC3 - 6);
           var _gapF3 = _avail3 > 0 ? _avail3 / (_isCmp3 ? 66 : 84) : 0;
-          _csComm = Math.max(0.55, Math.min(1.8, _gapF3, (0.70 * _zW3) / 264));
+          var _cap3 = Math.min(_isCmp3 ? 2.6 : 1.8, _seatBoxScale * 2.0, (0.70 * _zW3) / 264);
+          var _floor3 = _seatBoxScale * (_isCmp3 ? 1.1 : 0.72);
+          _csComm = Math.max(0.55, Math.min(_cap3, Math.max(_floor3, _gapF3)));
         }
         document.documentElement.style.setProperty('--comm-scale', _csComm.toFixed(3));
         try { window._seatDbg.commScale = _csComm; } catch (e3) {}
@@ -15594,7 +15606,7 @@ function renderPlayersList() {
   body.innerHTML = _shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>';
 }
 
-;(function(){ window.BUILD_VERSION='0.3.560-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.561-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
