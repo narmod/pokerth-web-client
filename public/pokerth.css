@@ -8513,12 +8513,14 @@ body.chat-tr-on .msg .chat-tr-btn { display: inline; }
   body.adv-hide-pbar .my-zone {
     left: 50%; right: auto;
     transform: translateX(-50%);
-    width: clamp(380px, calc(242px * var(--comm-scale, 1) + 32px), 96vw);
+    /* Plancher 500px : à 380px (min QML) le dropdown Manuel débordait sur la
+       rangée des quick-bets — le web a une rangée mid plus chargée. */
+    width: clamp(500px, calc(242px * var(--comm-scale, 1) + 32px), 96vw);
     bottom: 8px;
     background: rgba(0, 0, 0, 0.82);
     border: none;
     border-radius: 10px;
-    padding: 4px 8px 6px;
+    padding: 4px 10px 6px;
   }
   /* Rangée montant/slider QML : champ 78×26, police 13. */
   body.adv-hide-pbar .my-zone .bet-row .raise-amt-field {
@@ -8529,13 +8531,8 @@ body.chat-tr-on .msg .chat-tr-btn { display: inline; }
 
 /* ── Barre d'action QML — finitions desktop/tablette (suite 0.3.541) ── */
 @media (min-width: 900px) and (min-height: 600px) {
-  /* QML : AUCUN halo sur le panneau à mon tour — seul le bouton Bet/Raise est
-     l'action primaire mise en avant. Cadre + glow dorés neutralisés en mode
-     panneau (ils restent sur mobile et avec la barre joueur affichée). */
-  body.adv-hide-pbar .my-zone.my-turn-active .action-grid {
-    border-color: transparent; box-shadow: none; animation: none;
-  }
-  body.adv-hide-pbar .my-zone.my-turn-active .action-grid::after { display: none; }
+  /* Les effets « mon tour » (cadre/glow dorés) sont CONSERVÉS — retrait
+     annulé à la demande de narmod (0.3.544). */
   /* Quick-bets 1/3 · 1/2 · Pot · Tapis : compacts (rangée intermédiaire QML). */
   body.adv-hide-pbar .my-zone .pct-row .btn-pct { padding: 4px 4px; font-size: 0.7rem; }
   /* Dropdown de mode : 132 px comme le QML, hauteur raccordée à la rangée. */
@@ -8558,12 +8555,14 @@ body.chat-tr-on .msg .chat-tr-btn { display: inline; }
   /* Boutons d'action : typo QML exacte — 15px bold, letterSpacing 0.5,
      radius 9 (GameActionBar §5.5). */
   body.adv-hide-pbar .my-zone .btn-action {
-    padding: 9px 10px !important;
-    font-size: 15px !important;
+    padding: 8px 10px !important;
+    font-size: 14px !important;
     font-weight: 700;
     letter-spacing: 0.5px;
     border-radius: 9px;
   }
+  body.adv-hide-pbar .my-zone .action-grid { gap: 4px; }
+  body.adv-hide-pbar .my-zone .mid-row { gap: 4px; }
   /* Panneau : aucun liseré — juste l'ombre douce du QML. */
   body.adv-hide-pbar .my-zone {
     border: none !important;
