@@ -9690,6 +9690,56 @@ const App = (() => {
     return out;
   }
 
+  // Port de GamePage.qml tableBackgroundImage (mode center) : taille et
+  // position du fond calculées pour couvrir la bande tableZone(+action bar en
+  // wide) en étant centré sur (zoneW/2, communityCenterY), × zoom du style.
+  // Pose --wallpaper-dyn-size/pos (prioritaires sur --wallpaper-size/pos).
+  function _applyQmlBgCenter(zRect, cY) {
+    var de = document.documentElement;
+    function _clr() { de.style.removeProperty('--wallpaper-dyn-size'); de.style.removeProperty('--wallpaper-dyn-pos'); }
+    if (de.getAttribute('data-table-fs') !== '1' || cY == null) { _clr(); return; }
+    var cs = getComputedStyle(de);
+    var pos = (cs.getPropertyValue('--wallpaper-pos') || '').trim();
+    if (pos && pos !== 'center') { _clr(); return; }   // seuls les styles align:center
+    var wp = (cs.getPropertyValue('--wallpaper') || '').trim();
+    var m = wp.match(/url\((['"]?)([^'")]+)\1\)/);
+    if (!m) { _clr(); return; }
+    var url = m[2];
+    var zsRaw = (cs.getPropertyValue('--wallpaper-size') || '').trim();
+    var zoom = 1, zm = zsRaw.match(/^([\d.]+)%$/);
+    if (zm) zoom = Math.max(1, parseFloat(zm[1]) / 100);   // TableBackgroundZoom
+    window._bgNatCache = window._bgNatCache || {};
+    var nat = window._bgNatCache[url];
+    if (!nat) {
+      if (!window._bgNatLoading) window._bgNatLoading = {};
+      if (!window._bgNatLoading[url]) {
+        window._bgNatLoading[url] = true;
+        var im = new Image();
+        im.onload = function () {
+          window._bgNatCache[url] = { w: im.naturalWidth || 1, h: im.naturalHeight || 1 };
+          try { if (typeof window._renderSeats === 'function') window._renderSeats(); } catch (e) {}
+        };
+        im.src = url;
+      }
+      return; // taille inconnue pour l'instant : cover existant en attendant
+    }
+    var sg = document.getElementById('s-game');
+    if (!sg) { _clr(); return; }
+    var sgr = sg.getBoundingClientRect();
+    var wide = !(typeof window._tableZonePortrait === 'function' && window._tableZonePortrait());
+    var myz = document.querySelector('.my-zone');
+    var coverExtra = (wide && myz) ? myz.getBoundingClientRect().height : 0;
+    // fillScale QML : couvre — centré sur (zonemitte, communityCenterY) —
+    // TOUTE la bande (zone + derrière l'action bar en wide).
+    var reqH = 2 * Math.max(cY, zRect.height + coverExtra - cY);
+    var fs = Math.max(zRect.width / nat.w, reqH / nat.h) * zoom;
+    var w = Math.round(nat.w * fs), h = Math.round(nat.h * fs);
+    var x = Math.round(zRect.left - sgr.left + zRect.width / 2 - w / 2);
+    var y = Math.round(zRect.top - sgr.top + cY - h / 2);
+    de.style.setProperty('--wallpaper-dyn-size', w + 'px ' + h + 'px');
+    de.style.setProperty('--wallpaper-dyn-pos', x + 'px ' + y + 'px');
+  }
+
   function renderSeatsImmediate() {
     if (window._seatEditMode) { if (document.documentElement.getAttribute('data-seat-layout') === 'custom') return; window._seatEditMode = false; }   // gel pendant l'edition (custom seul) ; auto-degele si le mode a change
     const el = $('g-seats');
@@ -10368,10 +10418,12 @@ const App = (() => {
     try {
       var _fitKey = rotated.length + ':' + Math.round(zRect.width) + 'x' + Math.round(zRect.height) + ':' + (_forceSeatPortrait ? 'p' : 'l');
       if (window._seatFitKey !== _fitKey) { window._seatFitKey = _fitKey; window._seatFitShave = 1; }
-      // Garde MOBILE uniquement : sur desktop (Linux notamment) elle rabotait
-      // à tort — le placement QML pur y est la seule vérité.
+      // STRICT QML : AUCUN rabot post-bisection en placement officiel — la
+      // bisection (verbatim GamePage.qml, équivalence Node prouvée) est la
+      // seule garantie, comme le client officiel. L'ancienne garde mobile
+      // (<600 px de côté min) attrapait aussi les fenêtres desktop à mi-écran
+      // et spiralait vers 0.5 dès que la community effleurait une plaque.
       var _fitMob = false;
-      try { _fitMob = Math.min(window.innerWidth, window.innerHeight) < 600; } catch (e) {}
       if (!_applyOfficial || !_fitMob) { window._seatFitShave = 1; }
       else if (!window._seatFitBusy) {
         var _zrG = zone.getBoundingClientRect();
@@ -10457,6 +10509,13 @@ const App = (() => {
           _commTargetY = _commC3;
         }
         document.documentElement.style.setProperty('--comm-scale', _csComm.toFixed(3));
+        // ── Fond de table « center » (parité QML tableBackgroundImage) : image
+        // agrandie pour couvrir, CENTRÉE sur (milieu zone, communityCenterY),
+        // × TableBackgroundZoom — le tapis du visuel tombe au centre de
+        // l'ellipse comme dans le client officiel. Ne s'applique qu'aux
+        // thèmes align:center (pos 'center') en mode fullscreen ; les autres
+        // gardent le cover ancré bas. ──
+        try { _applyQmlBgCenter(zRect, _commTargetY); } catch (eBg) {}
         // ── Position verticale (parité anchors QML) : la rangée .comm-row est
         // ancrée à 50% du feutre ; on la décale de (cible − centre naturel du
         // feutre), converti en px LOCAUX du scaler (le transform d'autofit/zoom
@@ -10484,6 +10543,8 @@ const App = (() => {
         window._commScalePending = false;
         document.documentElement.style.removeProperty('--comm-scale');
         document.documentElement.style.removeProperty('--comm-shift-y');
+        document.documentElement.style.removeProperty('--wallpaper-dyn-size');
+        document.documentElement.style.removeProperty('--wallpaper-dyn-pos');
       }
     } catch (e) { try { window._seatDbg.commErr = String(e); } catch (e2) {} }
     // Self-box : remonter si son bas depasse la zone (tapis coupe en plein
@@ -15815,7 +15876,7 @@ function renderPlayersList() {
   body.innerHTML = _shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>';
 }
 
-;(function(){ window.BUILD_VERSION='0.3.591-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.592-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
