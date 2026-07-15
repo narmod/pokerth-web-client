@@ -10332,16 +10332,22 @@ const App = (() => {
         var _hcBigCls = _selfBig ? (' shc-big' + (_ownLvl >= 1 && _ownLvl <= 3 ? ' shc-l' + _ownLvl : '')) : '';  // 0 = base QML (85% riviere) ; 1-3 croissants, plafond riviere
         var _hcCls = 'seat-holecards' + _hcBigCls;
         var _hcSz  = _selfBig ? '' : 'xsm';
-        var _hcBadge = (_pkHole && _acBadge && !isMe) ? _acBadge : '';   // self : badge dans le topStrip
+        // Parité QML 2.1.3 (référence narmod) : le badge d'action de la SELF
+        // est centré sur ses hole-cards COMME les adversaires. (Le strip
+        // au-dessus de la box est un ajout postérieur du HEAD qt6-qml ;
+        // demande narmod 2026-07-15 : badge + décompte dans les cartes.)
+        var _hcBadge = (_pkHole && _acBadge && !(_sdWinners && _sdWinners.has(pid))) ? _acBadge : ''; // visible: actionText && !isWinner (QML, self ET adversaires)
         if (_hcBadge) _acInCards = true;
         // Bloc F — PlayerTimeoutBar QML (44×9) : centrée sur les cartes tant que
         // le siège est au tour SANS badge d'action ni état gagnant. S'AJOUTE au
         // cadre rectangulaire décomptant (conservé, demande narmod). La largeur
         // du remplissage est tenue à jour chaque seconde par _updateTimer.
         var _tbar = '';
-        if (_pkHole && isActive && !isMe && !_acBadge && !(_sdWinners && _sdWinners.has(pid))) {
+        if (_pkHole && isActive && !_acBadge && !(_sdWinners && _sdWinners.has(pid))) {
           var _tfrac = Math.max(0, Math.min(1, _timerSec / (_timerTot || 30)));
-          _tbar = '<div class="seat-timeout-bar"><div class="stb-fill" style="width:' + (_tfrac * 100).toFixed(1) + '%"></div></div>';
+          // Self : même barre, couleur claire QML (#6E9CEC) via la classe .me —
+          // centrée sur les cartes comme PlayerTimeoutBar (parité 2.1.3).
+          _tbar = '<div class="seat-timeout-bar' + (isMe ? ' me' : '') + '"><div class="stb-fill" style="width:' + (_tfrac * 100).toFixed(1) + '%"></div></div>';
         }
         h += '<div class="' + _hcCls + '">' + cardHtml(_phc1,_hcSz) + cardHtml(_phc2,_hcSz) + _hcBadge + _tbar + '</div>';
       }
@@ -10363,23 +10369,14 @@ const App = (() => {
       if (_pkHole && _sdWinners && _sdWinners.has(pid)) {
         h += '<div class="seat-winner-badge">' + esc(t('winnerBadge')) + '</div>';
       }
-      // ── Bandeau self QML (GamePlayerSelfBox.topStrip) : strip de 18 px à 6 px
-      // AU-DESSUS de la self-box — badge d'action à droite (ou barre de timeout
-      // 56×7 centrée), mise à gauche de l'indicateur. Les hole-cards ne sont
-      // plus couvertes (raison du strip côté officiel).
+      // ── Strip self : NE PORTE PLUS que la mise (BetChip). Badge d'action et
+      // barre de décompte sont centrés SUR les hole-cards comme les
+      // adversaires (parité QML 2.1.3 — demande narmod 2026-07-15 ; le strip
+      // badge/barre du HEAD qt6-qml n'est pas la référence).
       if (_pkHole && isMe) {
-        var _isSelfWin = _sdWinners && _sdWinners.has(pid);
-        var _stripBadge = (_acBadge && !_isSelfWin) ? _acBadge : '';
-        var _stripBar = '';
-        if (isActive && !_stripBadge && !_isSelfWin) {
-          var _tf2 = Math.max(0, Math.min(1, _timerSec / (_timerTot || 30)));
-          _stripBar = '<div class="seat-timeout-bar me"><div class="stb-fill" style="width:' + (_tf2 * 100).toFixed(1) + '%"></div></div>';
-        }
         var _stripBet = (sd.bet > 0) ? '<div class="seat-bet strip-bet">' + fmtChips(sd.bet) + '</div>' : '';
-        if (_stripBadge) _acInCards = true;   // pas de doublon dans le pied
-        if (_stripBadge || _stripBar || _stripBet) {
-          h += '<div class="seat-self-strip' + (_stripBar ? ' has-tb' : '') + '">'
-             + _stripBet + _stripBadge + _stripBar + '</div>';
+        if (_stripBet) {
+          h += '<div class="seat-self-strip">' + _stripBet + '</div>';
         }
       }
       if (_pkHole && (blindBadge || dealerChip)) h += '<div class="seat-pucks">' + blindBadge + dealerChip + '</div>';
@@ -15886,7 +15883,7 @@ function renderPlayersList() {
   body.innerHTML = _shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>';
 }
 
-;(function(){ window.BUILD_VERSION='0.3.596-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.597-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
