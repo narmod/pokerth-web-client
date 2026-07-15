@@ -1752,20 +1752,17 @@ body {
 /* Centre (badge blinds + spectateur) : position ABSOLUE à 33 % — décalé à
    gauche du centre et surtout FIXE, indépendant de la largeur des montants
    Total/Mises (demande narmod). Hors flux → gauche/droite restent 1:1 QML. */
+/* Pastille blinds CENTRÉE au vrai milieu de la barre (demande narmod
+   2026-07-15) : même règle mobile ET desktop → affichage identique partout.
+   Remplace l'ancien décalage 33% (mobile) / 230px (desktop). */
 .gsb-mid {
   position: absolute;
-  left: 33%;
+  left: 50%;
   top: 50%;
-  transform: translateY(-50%);
+  transform: translate(-50%, -50%);
   display: flex;
   align-items: center;
   gap: 6px;
-}
-/* Desktop & tablette : 33% de la barre tombe trop au milieu — le badge se
-   cale a distance FIXE du bord gauche, juste apres le bloc Total/Mises
-   (demande narmod). Le mobile (< 768px) garde 33%. */
-@media (min-width: 768px) {
-  .gsb-mid { left: 230px; }
 }
 .gsb-row { display: inline-flex; align-items: baseline; gap: 5px; }
 .gsb-lbl { color: #9e9e9e; font-size: 13px; }
