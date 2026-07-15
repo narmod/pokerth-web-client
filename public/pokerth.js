@@ -783,6 +783,294 @@ function resetAdvDefaults() {
   try { openAdvancedOptions(); } catch (e) {}   // re-sync des cases + retour onglet Interface
 }
 window.resetAdvDefaults = resetAdvDefaults;
+
+// ── Import / Export « config.xml » PokerTH (interop clients Qt-Widgets & QML) ──
+// Format (configfile.cpp, writeBuffer) :
+//   <?xml version="1.0" encoding='utf-8'?>
+//   <PokerTH><Configuration><Clé value="…"/><Liste type="list"><Sous value="…"/>…
+// Politique : on n'écrit que les clés MAPPÉES + celles préservées d'un import
+// précédent (round-trip, clé localStorage pth_qml_config_xml). Un fichier
+// partiel est valide côté officiel : ConfigFile comble les absentes avec ses
+// défauts et son writeBuffer() fusionne sans perdre les clés inconnues.
+// Exclues (spécifiques machine) : AppDataDir, LogDir, UserDataDir, CacheDir,
+// MyAvatar. Non mappée volontairement : Language (index Qt interne ≠ codes
+// ISO du web) — préservée telle quelle par le round-trip.
+var PTH_CFG_XML_KEY = 'pth_qml_config_xml';
+var PTH_CFG_MACHINE_KEYS = { AppDataDir: 1, LogDir: 1, UserDataDir: 1, CacheDir: 1, MyAvatar: 1 };
+
+function _cfgXmlEsc(s) {
+  return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+function _cfgReadPrefs(storageKey) {
+  var d = null;
+  try { d = JSON.parse(localStorage.getItem(storageKey) || 'null'); } catch (e) {}
+  if (!d) { try { d = JSON.parse(localStorage.getItem('pth_last_create') || 'null'); } catch (e) {} }
+  return (d && typeof d === 'object') ? d : {};
+}
+function _cfgLs(key) { try { return localStorage.getItem(key); } catch (e) { return null; } }
+// Traduit un objet de préférences de table web (players/stack/blind/raiseMode/
+// raiseEvery/manualOrder/manualBlinds/endRaiseMode/endRaiseValue) vers les clés
+// officielles, avec le préfixe '' (locale) ou 'Net' (réseau/Internet).
+function _cfgBlindsKeys(p, net, out, lists) {
+  var P = net ? 'Net' : '';
+  if (p.players != null) out[P + 'NumberOfPlayers'] = parseInt(p.players, 10) || 10;
+  if (p.stack   != null) out[P + 'StartCash']       = parseInt(p.stack, 10) || 3000;
+  if (p.blind   != null) out[P + 'FirstSmallBlind'] = parseInt(p.blind, 10) || 10;
+  if (p.raiseMode != null) {
+    var byMin = String(p.raiseMode) === '2';
+    out[P + 'RaiseBlindsAtHands']   = byMin ? 0 : 1;
+    out[P + 'RaiseBlindsAtMinutes'] = byMin ? 1 : 0;
+    if (p.raiseEvery != null) out[P + (byMin ? 'RaiseSmallBlindEveryMinutes' : 'RaiseSmallBlindEveryHands')] = parseInt(p.raiseEvery, 10) || 8;
+  }
+  if (p.manualOrder != null) {
+    out[P + 'AlwaysDoubleBlinds'] = p.manualOrder ? 0 : 1;
+    out[P + 'ManualBlindsOrder']  = p.manualOrder ? 1 : 0;
+  }
+  if (p.manualBlinds != null && String(p.manualBlinds) !== '') {
+    var vals = String(p.manualBlinds).split(',').map(function (s) { return parseInt(s, 10); })
+      .filter(function (n) { return Number.isInteger(n) && n > 0; });
+    if (vals.length) lists[P + 'ManualBlindsList'] = { sub: P ? 'NetBlind' : 'Blind', values: vals };
+  }
+  if (p.endRaiseMode != null) {
+    var m = parseInt(p.endRaiseMode, 10) || 1;
+    out[P + 'AfterMBAlwaysDoubleBlinds'] = m === 1 ? 1 : 0;
+    out[P + 'AfterMBAlwaysRaiseAbout']   = m === 2 ? 1 : 0;
+    out[P + 'AfterMBStayAtLastBlind']    = m === 3 ? 1 : 0;
+    if (m === 2 && p.endRaiseValue != null) out[P + 'AfterMBAlwaysRaiseValue'] = parseInt(p.endRaiseValue, 10) || 0;
+  }
+}
+// Construit { scalars: {clé: valeur}, lists: {clé: {sub, values[]}} } depuis
+// l'état web courant — la table de vérité du mapping web → officiel.
+function _cfgCollectWebSettings() {
+  var out = {}, lists = {};
+  var B = function (advKey, def) { return _advGet(advKey, def) ? 1 : 0; };
+  // Identité & connexion
+  var nick = _cfgLs('pth_offline_nick') || _cfgLs('pth_lan_nick');
+  if (nick) out.MyName = nick;
+  var host = _cfgLs('pth_host'); if (host) out.InternetServerAddress = host;
+  var port = parseInt(_cfgLs('pth_port') || '', 10); if (port) out.InternetServerPort = port;
+  // Interface (défauts = ceux du web, mêmes que resetAdvDefaults)
+  out.ShowFadeOutCardsAnimation = B('fade_losers', true);
+  out.ShowFlipCardsAnimation    = B('anim_cards', true);
+  out.AlternateFKeysUserActionMode = B('fkeys_alt', false);
+  out.ShowBlindButtons          = B('show_blinds', true);
+  out.ShowPotPercentButtons     = B('show_pct', true);
+  out.AntiPeekMode              = B('own_click', false);
+  out.AccidentallyCallBlocker   = B('guard_call', false);
+  out.EnableBetInputFocusSwitch = B('focus_bet', false);
+  out.ShowCountryFlagInAvatar   = B('show_flag', true);
+  out.ShowPingStateInAvatar     = B('ping_avatar', false);
+  out.DontHideAvatarsOfIgnored  = B('no_hide_ignored', false);
+  out.UseLobbyChat              = B('lobby_chat', true);
+  out.DisableEmojiReactions     = B('react_muted', false);
+  out.QmlReduceEffects          = B('reduce_fx', false);
+  out.NetAutoLeaveGameAfterFinish = B('auto_leave', false);
+  out.PauseBetweenHands         = B('pause_hands', false);
+  out.DontTranslateInternationalPokerStringsFromStyle = 1;  // convention web : termes poker en anglais
+  // Sons (catégories officielles)
+  out.PlayGameActions             = B('snd_actions', true);
+  out.PlayLobbyChatNotification   = B('snd_lobby', true);
+  out.PlayNetworkGameNotification = B('snd_net', true);
+  out.PlayBlindRaiseNotification  = B('snd_blinds', true);
+  out.PlaySoundEffects = (out.PlayGameActions || out.PlayLobbyChatNotification || out.PlayNetworkGameNotification || out.PlayBlindRaiseNotification) ? 1 : 0;
+  // Styles (noms transportés tels quels — pas forcément identiques entre clients)
+  var tbl = _cfgLs('pth_table');    if (tbl) out.QmlGameTableStyle = tbl;
+  var dck = _cfgLs('pth_deck');     if (dck) out.QmlCardDeckStyle  = dck;
+  var cbk = _cfgLs('pth_cardback'); if (cbk) out.QmlCardBackStyle  = cbk;
+  // Préférences de table : locale + réseau/Internet
+  var pl = _cfgReadPrefs('pth_prefs_local');
+  _cfgBlindsKeys(pl, false, out, lists);
+  if (pl.guiSpeed != null) out.GameSpeed = parseInt(pl.guiSpeed, 10) || 4;
+  var pn = _cfgReadPrefs('pth_prefs_internet');
+  _cfgBlindsKeys(pn, true, out, lists);
+  if (pn.guiSpeed   != null) out.NetGameSpeed          = parseInt(pn.guiSpeed, 10) || 4;
+  if (pn.timeout    != null) out.NetTimeOutPlayerAction = parseInt(pn.timeout, 10) || 20;
+  if (pn.delayHands != null) out.NetDelayBetweenHands   = parseInt(pn.delayHands, 10) || 7;
+  if (pn.name)               out.InternetGameName       = String(pn.name).slice(0, 60);
+  if (pn.gameType   != null) out.InternetGameType       = parseInt(pn.gameType, 10) || 1;
+  if (pn.allowSpectators != null) out.InternetGameAllowSpectators = pn.allowSpectators ? 1 : 0;
+  if (pn.usePassword != null) out.UseInternetGamePassword = pn.usePassword ? 1 : 0;
+  if (pn.usePassword && pn.password) out.InternetGamePassword = String(pn.password);
+  return { scalars: out, lists: lists };
+}
+// Parse un config.xml (DOMParser) → { scalars, lists, order[] } ; jette si invalide.
+function _cfgParseXml(text) {
+  var doc = new DOMParser().parseFromString(text, 'text/xml');
+  if (doc.getElementsByTagName('parsererror').length) throw new Error('invalid XML');
+  var root = doc.documentElement;
+  if (!root || root.tagName !== 'PokerTH') throw new Error('not a PokerTH config');
+  var conf = root.getElementsByTagName('Configuration')[0];
+  if (!conf) throw new Error('missing <Configuration>');
+  var scalars = {}, lists = {}, order = [];
+  for (var el = conf.firstElementChild; el; el = el.nextElementSibling) {
+    var name = el.tagName;
+    order.push(name);
+    if (el.getAttribute('type') === 'list') {
+      var values = [], sub = null;
+      for (var c = el.firstElementChild; c; c = c.nextElementSibling) {
+        if (sub === null) sub = c.tagName;
+        values.push(c.getAttribute('value') || '');
+      }
+      lists[name] = { sub: sub || el.getAttribute('value') || 'Entry', values: values };
+    } else {
+      scalars[name] = el.getAttribute('value') || '';
+    }
+  }
+  return { scalars: scalars, lists: lists, order: order };
+}
+// Export : round-trip (XML importé précédemment) fusionné avec l'état web
+// courant (le web gagne sur les clés mappées), sérialisé au format officiel.
+function exportPokerthConfig() {
+  var web = _cfgCollectWebSettings();
+  var base = { scalars: {}, lists: {}, order: [] };
+  var stored = _cfgLs(PTH_CFG_XML_KEY);
+  if (stored) { try { base = _cfgParseXml(stored); } catch (e) { base = { scalars: {}, lists: {}, order: [] }; } }
+  Object.keys(web.scalars).forEach(function (k) { base.scalars[k] = web.scalars[k]; });
+  Object.keys(web.lists).forEach(function (k) { base.lists[k] = web.lists[k]; });
+  if (base.scalars.ConfigRevision == null) base.scalars.ConfigRevision = 108;  // configfile.cpp actuel
+  // Ordre : celui du fichier importé d'abord (diff lisible côté Qt), puis les nouvelles clés.
+  var seen = {}, names = [];
+  base.order.forEach(function (k) { if (!seen[k] && (k in base.scalars || k in base.lists)) { seen[k] = 1; names.push(k); } });
+  Object.keys(base.scalars).concat(Object.keys(base.lists)).forEach(function (k) { if (!seen[k]) { seen[k] = 1; names.push(k); } });
+  var xml = "<?xml version=\"1.0\" encoding='utf-8'?>\n<PokerTH>\n <Configuration>\n";
+  names.forEach(function (k) {
+    if (k in base.lists) {
+      var L = base.lists[k];
+      xml += '  <' + k + ' type="list" value="' + _cfgXmlEsc(L.sub) + '">\n';
+      L.values.forEach(function (v) { xml += '   <' + L.sub + ' value="' + _cfgXmlEsc(v) + '"/>\n'; });
+      xml += '  </' + k + '>\n';
+    } else {
+      xml += '  <' + k + ' value="' + _cfgXmlEsc(base.scalars[k]) + '"/>\n';
+    }
+  });
+  xml += ' </Configuration>\n</PokerTH>\n';
+  try {
+    var blob = new Blob([xml], { type: 'application/xml' });
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'config.xml';                     // nom attendu dans ~/.pokerth/
+    document.body.appendChild(a); a.click();
+    setTimeout(function () { try { URL.revokeObjectURL(a.href); a.remove(); } catch (e) {} }, 2000);
+  } catch (e) {
+    if (typeof showToast === 'function') showToast('Export failed: ' + e.message, { tone: 'error' });
+    return;
+  }
+  if (typeof showToast === 'function') showToast(t('cfgXmlExported') || 'config.xml exported');
+}
+window.exportPokerthConfig = exportPokerthConfig;
+// Import : applique les clés mappées à l'état web, conserve le XML complet
+// pour le round-trip, puis propose de recharger (comme le redémarrage demandé
+// par l'officiel après un reset).
+function _cfgApplyImported(cfg) {
+  var S = cfg.scalars, L = cfg.lists;
+  var num = function (k) { var v = parseInt(S[k], 10); return isNaN(v) ? null : v; };
+  var setB = function (advKey, cfgKey) { if (S[cfgKey] != null) setAdvOpt(advKey, num(cfgKey) !== 0); };
+  if (S.MyName) {
+    try { localStorage.setItem('pth_offline_nick', S.MyName); localStorage.setItem('pth_lan_nick', S.MyName); } catch (e) {}
+  }
+  if (S.InternetServerAddress) { try { localStorage.setItem('pth_host', S.InternetServerAddress); } catch (e) {} }
+  if (num('InternetServerPort')) { try { localStorage.setItem('pth_port', String(num('InternetServerPort'))); } catch (e) {} }
+  setB('fade_losers', 'ShowFadeOutCardsAnimation');
+  setB('anim_cards', 'ShowFlipCardsAnimation');
+  setB('fkeys_alt', 'AlternateFKeysUserActionMode');
+  setB('show_blinds', 'ShowBlindButtons');
+  setB('show_pct', 'ShowPotPercentButtons');
+  setB('own_click', 'AntiPeekMode');
+  setB('guard_call', 'AccidentallyCallBlocker');
+  setB('focus_bet', 'EnableBetInputFocusSwitch');
+  setB('show_flag', 'ShowCountryFlagInAvatar');
+  setB('ping_avatar', 'ShowPingStateInAvatar');
+  setB('no_hide_ignored', 'DontHideAvatarsOfIgnored');
+  setB('lobby_chat', 'UseLobbyChat');
+  setB('react_muted', 'DisableEmojiReactions');
+  setB('reduce_fx', 'QmlReduceEffects');
+  setB('auto_leave', 'NetAutoLeaveGameAfterFinish');
+  setB('pause_hands', 'PauseBetweenHands');
+  setB('snd_actions', 'PlayGameActions');
+  setB('snd_lobby', 'PlayLobbyChatNotification');
+  setB('snd_net', 'PlayNetworkGameNotification');
+  setB('snd_blinds', 'PlayBlindRaiseNotification');
+  // Styles : appliqués seulement si le nom existe côté web (sinon ignorés
+  // silencieusement — les catalogues diffèrent entre clients).
+  ['QmlGameTableStyle:pth_table', 'QmlCardDeckStyle:pth_deck', 'QmlCardBackStyle:pth_cardback'].forEach(function (pair) {
+    var ck = pair.split(':')[0], lk = pair.split(':')[1];
+    if (S[ck]) { try { localStorage.setItem(lk, S[ck]); } catch (e) {} }
+  });
+  // Préférences de table : fusion champ à champ dans les prefs web.
+  var mergePrefs = function (storageKey, net) {
+    var P = net ? 'Net' : '';
+    var d = {};
+    try { d = JSON.parse(localStorage.getItem(storageKey) || 'null') || {}; } catch (e) { d = {}; }
+    var n = function (k) { var v = parseInt(S[P + k], 10); return isNaN(v) ? null : v; };
+    if (n('NumberOfPlayers') != null) d.players = n('NumberOfPlayers');
+    if (n('StartCash')       != null) d.stack   = n('StartCash');
+    if (n('FirstSmallBlind') != null) d.blind   = n('FirstSmallBlind');
+    if (S[P + 'RaiseBlindsAtMinutes'] != null || S[P + 'RaiseBlindsAtHands'] != null) {
+      var byMin = n('RaiseBlindsAtMinutes') === 1;
+      d.raiseMode = byMin ? '2' : '1';
+      var ev = byMin ? n('RaiseSmallBlindEveryMinutes') : n('RaiseSmallBlindEveryHands');
+      if (ev != null) d.raiseEvery = ev;
+    }
+    if (S[P + 'ManualBlindsOrder'] != null) d.manualOrder = n('ManualBlindsOrder') === 1;
+    var ml = L[P + 'ManualBlindsList'];
+    if (ml) d.manualBlinds = ml.values.map(function (v) { return parseInt(v, 10); })
+      .filter(function (x) { return Number.isInteger(x) && x > 0; }).sort(function (a, b) { return a - b; }).join(',');
+    if (S[P + 'AfterMBAlwaysRaiseAbout'] === '1')      d.endRaiseMode = '2';
+    else if (S[P + 'AfterMBStayAtLastBlind'] === '1')  d.endRaiseMode = '3';
+    else if (S[P + 'AfterMBAlwaysDoubleBlinds'] != null) d.endRaiseMode = '1';
+    if (n('AfterMBAlwaysRaiseValue') != null) d.endRaiseValue = n('AfterMBAlwaysRaiseValue');
+    if (net) {
+      if (n('NetGameSpeed')           != null) d.guiSpeed   = n('NetGameSpeed');
+      if (n('NetTimeOutPlayerAction') != null) d.timeout    = n('NetTimeOutPlayerAction');
+      if (n('NetDelayBetweenHands')   != null) d.delayHands = n('NetDelayBetweenHands');
+      if (S.InternetGameName)                  d.name       = String(S.InternetGameName).slice(0, 60);
+      if (S.InternetGameType != null)          d.gameType   = String(parseInt(S.InternetGameType, 10) || 1);
+      if (S.InternetGameAllowSpectators != null) d.allowSpectators = S.InternetGameAllowSpectators !== '0';
+      if (S.UseInternetGamePassword != null)   d.usePassword = S.UseInternetGamePassword === '1';
+      if (S.InternetGamePassword)              d.password    = String(S.InternetGamePassword);
+    } else {
+      if (n('GameSpeed') != null) d.guiSpeed = n('GameSpeed');
+    }
+    try { localStorage.setItem(storageKey, JSON.stringify(d)); } catch (e) {}
+  };
+  mergePrefs('pth_prefs_local', false);
+  mergePrefs('pth_prefs_internet', true);
+}
+function importPokerthConfigPick() {
+  var inp = document.getElementById('adv-cfgxml-file');
+  if (!inp) return;
+  inp.value = '';
+  inp.onchange = function () {
+    var f = inp.files && inp.files[0];
+    if (!f) return;
+    if (f.size > 512 * 1024) { if (typeof showToast === 'function') showToast(t('cfgXmlImportErr') || 'Import failed', { tone: 'error' }); return; }
+    var r = new FileReader();
+    r.onload = function () {
+      try {
+        var text = String(r.result || '');
+        var cfg = _cfgParseXml(text);
+        // Round-trip : garder le fichier ENTIER, machine-keys comprises (elles
+        // seront réécrites telles quelles ; l'officiel corrige AppDataDir seul).
+        try { localStorage.setItem(PTH_CFG_XML_KEY, text.slice(0, 400000)); } catch (e) {}
+        Object.keys(PTH_CFG_MACHINE_KEYS).forEach(function (k) { delete cfg.scalars[k]; });
+        _cfgApplyImported(cfg);
+        var msg = t('cfgXmlImported') || 'config.xml imported';
+        if (typeof showToast === 'function') showToast(msg);
+        // Comme le « redémarre PokerTH » de l'officiel : proposer un rechargement
+        // pour appliquer thèmes/decks et resynchroniser toute l'UI.
+        setTimeout(function () {
+          var q = t('cfgXmlReload') || 'Reload now to apply everything?';
+          if (window.confirm(msg + '\n\n' + q)) { try { location.reload(); } catch (e) {} }
+        }, 150);
+      } catch (e) {
+        if (typeof showToast === 'function') showToast((t('cfgXmlImportErr') || 'Import failed') + ' — ' + e.message, { tone: 'error' });
+      }
+    };
+    r.readAsText(f);
+  };
+  inp.click();
+}
+window.importPokerthConfigPick = importPokerthConfigPick;
 // Placement des sièges (Options avancées) : 'auto' | 'pokerth-official' | 'pokerth-ellipse'. Persiste +
 // re-rend les sièges via le hook global window._renderSeats.
 function setSeatLayout(v) {
@@ -15106,7 +15394,7 @@ function renderPlayersList() {
   body.innerHTML = _shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>';
 }
 
-;(function(){ window.BUILD_VERSION='0.3.526-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.527-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
