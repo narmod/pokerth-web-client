@@ -1974,7 +1974,7 @@ if ('serviceWorker' in navigator) {
       <div class="adv-sec" data-i18n="advSecAppearance">Appearance</div>
       <div class="adv-row"><span data-i18n="advDarkMode">Dark mode</span><div class="sel-wrap adv-sel"><select id="adv-darkmode" onchange="if(window.setTheme)window.setTheme(this.value)"><option value="auto" data-i18n="modeAuto">Automatic</option><option value="pokerth-light" data-i18n="modeLight">Light</option><option value="pokerth" data-i18n="modeDark">Dark</option></select><span class="sel-arr">▾</span></div></div>
       <div class="adv-row"><span data-i18n="advLanguage">Language</span><div class="sel-wrap adv-sel"><button type="button" id="adv-lang-btn" class="adv-lang-btn" onclick="openLangMenu(event)" aria-haspopup="menu" aria-label="Switch language" data-i18n-title="langTooltip"></button><span class="sel-arr">▾</span></div></div>
-      <label class="adv-row"><input type="checkbox" id="adv-tooltips" onchange="setTooltips(this.checked)"><span data-i18n="advShowTooltips">Show tooltips</span></label>
+      <label class="adv-row"><input type="checkbox" id="adv-tooltips" onchange="setTooltips(this.checked)"><span data-i18n="advShowTooltips">Show tooltips</span><em class="adv-webtag">web</em></label>
       <label class="adv-row adv-soon"><input type="checkbox" disabled><span data-i18n="advDisableSplash">Disable the splash screen on startup</span><em data-i18n="advNA">n/a</em></label>
       <div class="adv-sec" data-i18n="advSecCards">Cards</div>
       <label class="adv-row"><input type="checkbox" id="adv-anim" onchange="setAdvOpt('anim_cards',this.checked)"><span data-i18n="advAnimCards">Card animations</span></label>
@@ -1982,7 +1982,7 @@ if ('serviceWorker' in navigator) {
       <label class="adv-row"><input type="checkbox" id="adv-ownclick" onchange="setAdvOpt('own_click',this.checked)"><span data-i18n="advOwnClick">Reveal my cards on tap</span></label>
 
       <div class="adv-sec" data-i18n="advSecBet">Betting &amp; turn</div>
-      <label class="adv-row"><input type="checkbox" id="adv-autobtn" onchange="setAutoBtn(this.checked)"><span data-i18n="autoBtnLabel">Auto mode selector</span></label>
+      <label class="adv-row"><input type="checkbox" id="adv-autobtn" onchange="setAutoBtn(this.checked)"><span data-i18n="autoBtnLabel">Auto mode selector</span><em class="adv-webtag">web</em></label>
       <label class="adv-row"><input type="checkbox" id="adv-quickbet" onchange="setQuickBet(this.checked)"><span data-i18n="quickBetLabel">Quick-bet buttons</span></label>
       <label class="adv-row"><input type="checkbox" id="adv-voice" onchange="setVoice(this.checked)"><span data-i18n="voiceLabel">Voice announcements</span><em class="adv-webtag">web</em></label>
       <label class="adv-row"><input type="checkbox" id="adv-haptic" onchange="setHaptic(this.checked)"><span data-i18n="hapticLabel">Vibration</span><em class="adv-webtag">web</em></label>
@@ -1995,7 +1995,7 @@ if ('serviceWorker' in navigator) {
       <label class="adv-row"><input type="checkbox" id="adv-tablezoom" onchange="setAdvOpt('table_zoom',this.checked)"><span data-i18n="advTableZoom">Enable table zoom (magnifier buttons)</span></label>
       <label class="adv-row"><input type="checkbox" id="adv-zoomfollow" onchange="setAdvOpt('zoom_follow',this.checked)"><span data-i18n="advZoomFollow">Zoom follows the active seat (overview at showdown)</span></label>
       <label class="adv-row"><input type="checkbox" id="adv-reducefx" onchange="setAdvOpt('reduce_fx',this.checked);document.documentElement.classList.toggle('reduce-fx',this.checked)"><span data-i18n="advReduceFx">Reduce graphic effects (shadows/glow) — for low-end devices</span></label>
-      <label class="adv-row"><input type="checkbox" id="adv-statusbar" onchange="setAdvOpt('status_bar',this.checked);var _ps=document.getElementById('pot-strip');if(_ps)_ps.style.display=this.checked?'':'none'"><span data-i18n="advStatusBar">Game status bar (hand #, pot, bets, phase)</span></label>
+      <label class="adv-row"><input type="checkbox" id="adv-statusbar" onchange="setAdvOpt('status_bar',this.checked);var _ps=document.getElementById('pot-strip');if(_ps)_ps.style.display=this.checked?'':'none'"><span data-i18n="advStatusBar">Game status bar (hand #, pot, bets, phase)</span><em class="adv-webtag">web</em></label>
       <label class="adv-row"><input type="checkbox" id="adv-blindsbadge" onchange="setAdvOpt('blinds_badge',this.checked)"><span data-i18n="advBlindsBadge">Blinds badge in the status bar</span><em class="adv-webtag">web</em></label>
       <label class="adv-row"><input type="checkbox" id="adv-winnerpopup" onchange="setAdvOpt('winner_popup',this.checked)"><span data-i18n="advWinnerPopup">Winner window at end of hand</span><em class="adv-webtag">web</em></label>
       <label class="adv-row"><input type="checkbox" id="adv-removegone" onchange="setAdvOpt('remove_gone',this.checked);try{renderSeats()}catch(e){}"><span data-i18n="advRemoveGone">Remove departed players and re-seat the table</span><em class="adv-webtag">web</em></label>
@@ -2156,7 +2156,7 @@ if ('serviceWorker' in navigator) {
               <button type="button" class="adv-link-btn" onclick="importPokerthConfigPick()"><span data-i18n="advCfgImport">Import config.xml</span></button>
             </div>
             <input type="file" id="adv-cfgxml-file" accept=".xml,text/xml" style="display:none">
-            <label class="adv-row"><input type="checkbox" id="adv-cfgsync" onchange="cfgSyncToggle(this)"><span data-i18n="advCfgSync">Auto-sync these settings with my account (registered login only — stored on this server, opt-in)</span></label>
+            <label class="adv-row"><input type="checkbox" id="adv-cfgsync" onchange="cfgSyncToggle(this)"><span data-i18n="advCfgSync">Auto-sync these settings with my account (registered login only — stored on this server, opt-in)</span><em class="adv-webtag">web</em></label>
           </div>
         </section>
       </div>
