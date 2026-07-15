@@ -9328,7 +9328,7 @@ const App = (() => {
       }
     } catch (e) {}
     var opponentGapBase = 10, selfBadgeGapBase = 8, sideBadgeGapBase = 48;
-    var gap = 12;
+    var gap = compact ? 6 : 12;   // compact : densité téléphone (sièges plus gros), normal : 12
     // 2.1.3 (buildLandscapeSlots) : selfWeight 0.3 en wide (l'anneau se
     // resserre autour de la self, TL/TR tombent a ~230/310 au lieu de
     // 240/300) ; le landscapeCompact GARDE 0.5 (layout separe, inchange).
@@ -9354,7 +9354,10 @@ const App = (() => {
       var selfGapY = compact ? Math.max(8, selfBadgeGapBase * s * 0.5) : selfBadgeGapBase * s;
       var sideX = (sideMargin + visualW / 2) / Math.max(zW, 1);
       var radiusX = Math.min(0.36, Math.max(0.22, 0.5 - sideX));
-      var topBadgeExt = compact ? 39 : 0;
+      // Compact : réserve haute réduite 39 → 24 (le surplomb badge réel est
+      // ~15·s ; le forfait 39 mangeait la bande verticale déjà minuscule des
+      // téléphones en paysage — demande narmod 2026-07-15 : sièges plus gros).
+      var topBadgeExt = compact ? 24 : 0;
       var topY = ((compact ? 0 : 28) + visualH / 2 + topBadgeExt * s) / Math.max(zH, 1);
       var selfTop = zH - 4 - selfVisualH;
       var bottomY = (selfTop - selfGapY - visualH / 2) / Math.max(zH, 1);
@@ -9446,7 +9449,7 @@ const App = (() => {
       // de la mesure des boxes. PROPORTIONNEL au scale (le badge est un enfant
       // du siège, il grandit avec lui) — l'ancien forfait +26 sur-protégeait
       // aux petites échelles et bridait la bisection (portage C).
-      var yNeeded = s * (oppBaseH + 15) + gap;
+      var yNeeded = s * (oppBaseH + (compact ? 8 : 15)) + gap;
       for (var iPair = 1; iPair < oppCnt; iPair++) {
         var v1 = slotVec(g, firstAngle + (iPair - 1) * stepDeg, false);
         var v2 = slotVec(g, firstAngle + iPair * stepDeg, false);
@@ -9737,7 +9740,7 @@ const App = (() => {
     try {
       var _smw = window.innerWidth, _smh = window.innerHeight;
       if (_smh > _smw) SELF_BOX_MUL = 1.155;
-      else if (_smh < 600) SELF_BOX_MUL = 1.3;   // paysage mobile : self volontairement plus grosse que le ratio QML 1.119 (demande narmod ; la garde mesurée protège la rivière)
+      else if (_smh < 600) SELF_BOX_MUL = 1.15;  // paysage mobile : 1.3 → 1.15 (demande narmod 2026-07-15 : sièges plus gros, self « à peine » — la réservation self libérée profite à la bisection) ; la garde mesurée protège la rivière
     } catch (e) {}
     // Placement des sièges : 'classic' (ellipse maison, défaut) ou 'official'
     // (slots fixes du client PokerTH : grille périmètre en paysage façon client
@@ -15724,7 +15727,7 @@ function renderPlayersList() {
   body.innerHTML = _shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>';
 }
 
-;(function(){ window.BUILD_VERSION='0.3.580-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.581-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
