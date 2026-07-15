@@ -398,6 +398,7 @@ window.applyAdvOpts = applyAdvOpts;
 function setAdvOpt(key, on) {
   try { localStorage.setItem('pth_' + key, on ? '1' : '0'); } catch (e) {}
   applyAdvOpts();
+  try { _cfgSyncMark(key); } catch (e) {}   // sync compte (no-op si désactivée)
 }
 window.setAdvOpt = setAdvOpt;
 // Options avancees : infobulles natives (title). Off => on retire les title
@@ -566,6 +567,7 @@ function openAdvancedOptions() {
   sync('adv-lobbychat', 'lobby_chat', true);
   sync('adv-pausehands', 'pause_hands', false);
   sync('adv-createdialog', 'create_dialog', true);
+  sync('adv-cfgsync', 'cfg_sync', false);
   try { renderIgnoredList(); } catch (e) {}
   sync('adv-logon', 'log_on', true);
   try { var _li = document.getElementById('adv-loginterval'); if (_li) _li.value = _getLogInterval(); } catch (e) {}
@@ -695,6 +697,7 @@ function advPrefSet(mode, field, el) {
   if (!d || typeof d !== 'object') d = _advPrefsRead(mode);
   d[field] = v;
   try { localStorage.setItem(key, JSON.stringify(d)); } catch (e) {}
+  try { _cfgSyncMark(field); } catch (e) {}   // sync compte (no-op si désactivée)
 }
 window.advPrefSet = advPrefSet;
 function _advSyncPrefs() {
@@ -767,7 +770,7 @@ function resetAdvDefaults() {
     anim_cards: true, show_blinds: true, hide_pbar: true, show_community: true, four_color: false,
     focus_bet: false, chat_noemoji: false, fade_losers: true, show_flag: true,
     own_click: false, guard_call: false, odds_monitor: false, no_hide_ignored: false,
-    fkeys_alt: false, zoom_follow: false, table_zoom: true, lobby_chat: true, log_on: true, pause_hands: false, create_dialog: true,
+    fkeys_alt: false, zoom_follow: false, table_zoom: true, lobby_chat: true, log_on: true, pause_hands: false, create_dialog: true, cfg_sync: false,
     snd_actions: true, snd_lobby: true, snd_net: true, snd_blinds: true,
     reduce_fx: false, status_bar: true, ping_avatar: false, auto_leave: false
   };
@@ -920,7 +923,7 @@ function _cfgParseXml(text) {
 }
 // Export : round-trip (XML importé précédemment) fusionné avec l'état web
 // courant (le web gagne sur les clés mappées), sérialisé au format officiel.
-function exportPokerthConfig() {
+function _cfgBuildXml() {
   var web = _cfgCollectWebSettings();
   var base = { scalars: {}, lists: {}, order: [] };
   var stored = _cfgLs(PTH_CFG_XML_KEY);
@@ -944,6 +947,14 @@ function exportPokerthConfig() {
     }
   });
   xml += ' </Configuration>\n</PokerTH>\n';
+  return xml;
+}
+function exportPokerthConfig() {
+  var xml;
+  try { xml = _cfgBuildXml(); } catch (e) {
+    if (typeof showToast === 'function') showToast('Export failed: ' + e.message, { tone: 'error' });
+    return;
+  }
   try {
     var blob = new Blob([xml], { type: 'application/xml' });
     var a = document.createElement('a');
@@ -1071,6 +1082,82 @@ function importPokerthConfigPick() {
   inp.click();
 }
 window.importPokerthConfigPick = importPokerthConfigPick;
+
+// ── Phase 2 : synchronisation du config.xml liée au COMPTE (opt-in) ─────────
+// Réservée aux logins AUTHENTIFIÉS (compte pokerth enregistré) : le proxy
+// n'émet un jeton de session (trame texte SYNCTOK:) qu'après l'InitAck d'un
+// login SCRAM vérifié par le serveur. Invités / LAN non authentifiés : jamais
+// de jeton, donc jamais de sync. Le blob synchronisé = exactement le même
+// config.xml que l'export manuel (round-trip compris).
+// Réconciliation : pth_cfg_sync_ts = updatedAt serveur du dernier état commun ;
+// serveur plus récent → on applique ; local modifié (drapeau dirty posé par
+// les hooks setAdvOpt/advPrefSet/saveCreatePrefs) → on pousse (debounce 5 s,
+// et au pagehide en best-effort keepalive).
+var _cfgSyncToken = null;
+var _cfgSyncPushTimer = null;
+function _cfgSyncEnabled() { return _advGet('cfg_sync', false); }
+function _cfgSyncMark(key) {
+  if (key === 'cfg_sync') return;                 // (dé)cocher la sync n'est pas une donnée à pousser
+  try { localStorage.setItem('pth_cfg_sync_dirty', '1'); } catch (e) {}
+  _cfgSyncPushSoon();
+}
+function _cfgSyncPushSoon(ms) {
+  if (!_cfgSyncToken || !_cfgSyncEnabled()) return;
+  clearTimeout(_cfgSyncPushTimer);
+  _cfgSyncPushTimer = setTimeout(function () { _cfgSyncPushNow(); }, ms == null ? 5000 : ms);
+}
+function _cfgSyncPushNow(keepalive) {
+  if (!_cfgSyncToken || !_cfgSyncEnabled()) return;
+  var xml; try { xml = _cfgBuildXml(); } catch (e) { return; }
+  fetch('/prefs?token=' + encodeURIComponent(_cfgSyncToken),
+        { method: 'PUT', headers: { 'Content-Type': 'application/xml' }, body: xml, keepalive: !!keepalive })
+    .then(function (r) { return r.json(); })
+    .then(function (d) {
+      if (d && d.ok) {
+        try { localStorage.setItem('pth_cfg_sync_ts', String(d.updatedAt || Date.now())); } catch (e) {}
+        try { localStorage.removeItem('pth_cfg_sync_dirty'); } catch (e) {}
+      }
+    }).catch(function () {});
+}
+function _cfgSyncPull() {
+  if (!_cfgSyncToken || !_cfgSyncEnabled()) return;
+  fetch('/prefs?token=' + encodeURIComponent(_cfgSyncToken))
+    .then(function (r) { return r.json(); })
+    .then(function (d) {
+      if (!d || !d.ok) return;
+      var localTs = parseInt(_cfgLs('pth_cfg_sync_ts') || '0', 10) || 0;
+      var dirty = _cfgLs('pth_cfg_sync_dirty') === '1';
+      if (d.xml && (d.updatedAt || 0) > localTs) {
+        // Le serveur a plus récent → appliquer ici (silencieux, pas de reload forcé).
+        try {
+          var cfg = _cfgParseXml(d.xml);
+          try { localStorage.setItem(PTH_CFG_XML_KEY, String(d.xml).slice(0, 400000)); } catch (e) {}
+          Object.keys(PTH_CFG_MACHINE_KEYS).forEach(function (k) { delete cfg.scalars[k]; });
+          _cfgApplyImported(cfg);
+          try { localStorage.setItem('pth_cfg_sync_ts', String(d.updatedAt)); } catch (e) {}
+          try { localStorage.removeItem('pth_cfg_sync_dirty'); } catch (e) {}
+          if (typeof showToast === 'function') showToast(t('cfgSyncApplied') || 'Settings synced from your account');
+        } catch (e) {}
+      } else if (!d.xml || dirty) {
+        _cfgSyncPushSoon(500);                    // 1er appareil, ou modifs locales hors-ligne
+      }
+    }).catch(function () {});
+}
+// Jeton reçu du proxy (trame SYNCTOK:) — appelé par le handler WS.
+window._cfgSyncOnToken = function (tok) {
+  _cfgSyncToken = String(tok || '') || null;
+  if (_cfgSyncToken) _cfgSyncPull();
+};
+// Case à cocher : activer = tirer d'abord (l'état du compte gagne sur un
+// appareil qui vient d'activer) ; _cfgSyncPull() pousse s'il n'y a rien côté serveur.
+window.cfgSyncToggle = function (el) {
+  setAdvOpt('cfg_sync', !!(el && el.checked));
+  if (el && el.checked) _cfgSyncPull();
+};
+// Dernière chance avant fermeture/onglet caché : push best-effort.
+window.addEventListener('pagehide', function () {
+  try { if (_cfgLs('pth_cfg_sync_dirty') === '1') _cfgSyncPushNow(true); } catch (e) {}
+});
 // Placement des sièges (Options avancées) : 'auto' | 'pokerth-official' | 'pokerth-ellipse'. Persiste +
 // re-rend les sièges via le hook global window._renderSeats.
 function setSeatLayout(v) {
@@ -12094,6 +12181,11 @@ function _maybeShowNextHandBtn() {
         if (typeof e.data === 'string') {
           // Message texte = protocole proxy (réactions)
           if (_handleCtrlFrame(e.data)) return;
+          // Jeton de sync des préférences (émis à l'InitAck d'un login authentifié)
+          if (e.data.startsWith('SYNCTOK:')) {
+            try { if (window._cfgSyncOnToken) window._cfgSyncOnToken(e.data.slice(8)); } catch (_e) {}
+            return;
+          }
           // Avatar IMAGE perso diffusé via le proxy. Le data URL contient
           // des ':' -> on découpe uniquement sur le 1er séparateur après le pid.
           if (e.data.startsWith('AVATARIMG:')) {
@@ -13494,6 +13586,7 @@ function _maybeShowNextHandBtn() {
     },
     saveCreatePrefs() {
       try { localStorage.setItem(this._createPrefsKey(), JSON.stringify(this._readCreateForm())); } catch (e) {}
+      try { _cfgSyncMark('create_prefs'); } catch (e) {}
       try { var _pp = document.getElementById('cf-preset-perso'); if (_pp) _pp.style.display = ''; } catch (e) {}
       if (typeof showToast === 'function') showToast(t('createPrefsSaved') || 'Preferences saved');
     },
@@ -15394,7 +15487,7 @@ function renderPlayersList() {
   body.innerHTML = _shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>';
 }
 
-;(function(){ window.BUILD_VERSION='0.3.527-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.528-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

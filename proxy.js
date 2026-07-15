@@ -304,11 +304,12 @@ function _postDiscordChat(name, text) {
 // le chat de partie et les messages privés ne sont jamais relayés, comme
 // l'officiel).
 function _discordTapC2S(S, payload) {
-  if (!_discordChatUrl()) return;
   try {
     const outer = pbDecode(payload);
     const mt = outer[1] ? outer[1][0] : null;
     if (mt === 2 && outer[3] && outer[3][0]) {                 // InitMessage (champ envelope 3)
+      // Toujours parsé (pas seulement pour Discord) : le nom + le type de
+      // login servent aussi à la synchronisation des préférences (phase 2).
       const init = pbDecode(outer[3][0]);
       let nick = null;
       if (init[6] && init[6][0]) nick = init[6][0].toString('utf8');
@@ -317,13 +318,47 @@ function _discordTapC2S(S, payload) {
         if (m) nick = m[1].replace(/=2C/g, ',').replace(/=3D/g, '=');  // unescape saslname SCRAM
       }
       if (nick) S.chatNick = nick.slice(0, 32);
+      // InitMessage.login (champ 5) : 0=guest, 1=authenticated, 2=unauthenticated.
+      // Seul le login AUTHENTIFIÉ (compte enregistré, vérifié par le serveur
+      // via SCRAM) ouvre droit à la sync des préférences.
+      S.isAuthLogin = !!(init[5] && init[5][0] === 1);
     } else if (mt === 63 && outer[64] && outer[64][0]) {       // ChatRequestMessage (champ 64)
+      if (!_discordChatUrl()) return;
       const cr = pbDecode(outer[64][0]);
       if (!cr[1] && !cr[2] && cr[3] && cr[3][0]) {             // ni targetGameId ni targetPlayerId = lobby
         _postDiscordChat(S.chatNick, cr[3][0].toString('utf8'));
       }
     }
   } catch (e) {}
+}
+
+// ── Sync des préférences liée au compte (phase 2, opt-in côté client) ──
+// Un jeton de session n'est émis QUE lorsque le serveur PokerTH a accepté un
+// login AUTHENTIFIÉ (InitAck après un Init de type authenticatedLogin) : le
+// SCRAM a été vérifié par le vrai serveur, le proxy n'a fait qu'observer.
+// Invités et logins non authentifiés n'obtiennent jamais de jeton.
+const _syncTokens = new Map();   // token -> { name, exp }
+function _syncTokenName(tok) {
+  const e = _syncTokens.get(String(tok || ''));
+  if (!e) return null;
+  if (e.exp < Date.now()) { _syncTokens.delete(String(tok)); return null; }
+  return e.name;
+}
+setInterval(function () {   // purge périodique des jetons expirés
+  const now = Date.now();
+  _syncTokens.forEach(function (v, k) { if (v.exp < now) _syncTokens.delete(k); });
+}, 3600 * 1000).unref();
+const PREFS_DIR = process.env.PREFS_DIR || path.join(__dirname, 'prefs');
+function _prefsFile(name) {
+  return path.join(PREFS_DIR, crypto.createHash('sha1').update(String(name).toLowerCase()).digest('hex') + '.json');
+}
+function _issueSyncToken(S) {
+  if (S.syncToken) return;
+  S.syncToken = crypto.randomBytes(16).toString('hex');
+  _syncTokens.set(S.syncToken, { name: S.chatNick, exp: Date.now() + 24 * 3600 * 1000 });
+  const frame = 'SYNCTOK:' + S.syncToken;
+  if (S.ws && S.ws.readyState === 1) { try { S.ws.send(frame); } catch (e) {} }
+  else S.pendingTok = frame;
 }
 // ── PokerTH game-server registry (admin Layer A) — see /admin/servers ──
 // Entries: { id, name, host, port, tls }. A saved server is auto-added to the
@@ -1457,6 +1492,35 @@ function handleAdmin(req, res, reqPathOnly, query) {
   if (reqPathOnly === '/admin/logs') {
     if (!adminAuthed(query)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
     return adminJson(res, 200, { ok: true, lines: LOG_RING.slice(-300) });
+  }
+  // ── Préférences liées au compte (sync opt-in du config.xml, phase 2) ──
+  // Auth par jeton de session émis à l'InitAck d'un login authentifié (voir
+  // _issueSyncToken). GET = lire le blob du compte ; PUT/POST = l'écrire.
+  if (reqPathOnly === '/prefs') {
+    const acct = _syncTokenName(query.token);
+    if (!acct) return adminJson(res, 403, { ok: false, error: 'not authenticated (registered account required)' });
+    if (req.method === 'GET') {
+      try {
+        const d = JSON.parse(fs.readFileSync(_prefsFile(acct), 'utf8'));
+        return adminJson(res, 200, { ok: true, xml: d.xml || null, updatedAt: d.updatedAt || 0 });
+      } catch (e) {
+        return adminJson(res, 200, { ok: true, xml: null, updatedAt: 0 });
+      }
+    }
+    if (req.method === 'PUT' || req.method === 'POST') {
+      let body = '';
+      req.on('data', function (c) { body += c; if (body.length > 400 * 1024) req.destroy(); });
+      req.on('end', function () {
+        if (body.indexOf('<PokerTH') < 0) return adminJson(res, 400, { ok: false, error: 'not a PokerTH config.xml' });
+        const rec = { name: acct, updatedAt: Date.now(), xml: body };
+        try { fs.mkdirSync(PREFS_DIR, { recursive: true }); fs.writeFileSync(_prefsFile(acct), JSON.stringify(rec)); }
+        catch (e) { return adminJson(res, 500, { ok: false, error: 'write failed' }); }
+        return adminJson(res, 200, { ok: true, updatedAt: rec.updatedAt });
+      });
+      req.on('error', function () {});
+      return;
+    }
+    res.writeHead(405); res.end('Method not allowed'); return;
   }
   if (reqPathOnly === '/admin/config') {
     if (req.method === 'GET') {
@@ -2901,6 +2965,7 @@ function _openUpstream(S) {
           S.n++;
           const d = describeMsg(payload);
           console.log('[S→C] #' + S.n + ' ' + d.name + ' (' + msgLen + 'b)' + d.extra);
+          if (d.name === 'InitAck' && S.isAuthLogin && S.chatNick) _issueSyncToken(S);
           if (msgLen <= 64 || d.name.includes('Error') || d.name === '?' || d.name.includes('Flop') || d.name.includes('Turn') || d.name.includes('River') || d.name.includes('Hand'))
             console.log('      hex: ' + payload.toString('hex'));
           // Navigateur attaché → envoyer ; sinon (session en attente) → tamponner.
@@ -2944,6 +3009,10 @@ function _attachWs(S, ws) {
   _allClients.add(ws);
   // If a restart is currently scheduled, tell this freshly-attached client too.
   if (_restartAt > Date.now() && _restartNotice) { try { ws.send(_restartNotice); } catch (e) {} }
+  // Sync des préférences : (re)livrer le jeton de session au navigateur
+  // (utile après un rebranchement WS — le jeton reste lié à la session TCP).
+  if (S.syncToken) { try { ws.send('SYNCTOK:' + S.syncToken); } catch (e) {} S.pendingTok = null; }
+  else if (S.pendingTok) { try { ws.send(S.pendingTok); } catch (e) {} S.pendingTok = null; }
 
   ws.on('message', (data, isBinary) => {
     if (!isBinary) {

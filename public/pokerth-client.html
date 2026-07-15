@@ -2135,6 +2135,7 @@ if ('serviceWorker' in navigator) {
               <button type="button" class="adv-link-btn" onclick="importPokerthConfigPick()"><span data-i18n="advCfgImport">Import config.xml</span></button>
             </div>
             <input type="file" id="adv-cfgxml-file" accept=".xml,text/xml" style="display:none">
+            <label class="adv-row"><input type="checkbox" id="adv-cfgsync" onchange="cfgSyncToggle(this)"><span data-i18n="advCfgSync">Auto-sync these settings with my account (registered login only — stored on this server, opt-in)</span></label>
           </div>
         </section>
       </div>
