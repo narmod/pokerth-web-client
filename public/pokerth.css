@@ -8690,3 +8690,16 @@ body.chat-tr-on .msg .chat-tr-btn { display: inline; }
   body.adv-hide-pbar .my-zone .mid-row { gap: 4px; }
   /* (liseré/ombre gérés sur .action-grid ci-dessus) */
 }
+
+
+/* ── Parité QML : plate pokerth amincie vers GamePlayerBox 2.1.3 (opp base
+   ≈121×71/84 vs nos 164×101 mesurés) — des boîtes intrinsèques plus petites
+   agrandissent la lacune verticale → commScale/rivière/barre remontent au
+   niveau QML sans toucher aux formules (calibration narmod). ── */
+html[data-seat^="pokerth"] .seat-plate { padding: 3px 5px !important; gap: 2px !important; }
+html[data-seat^="pokerth"] .seat:not(.me) .seat-avatar { width: 34px !important; height: 34px !important; }
+html[data-seat^="pokerth"] .seat:not(.me) .seat-holecards .pk { width: 25px; height: 34px; font-size: 0.52rem; }
+html[data-seat^="pokerth"] .seat:not(.me) .seat-name { font-size: 0.6rem; line-height: 1.1; }
+html[data-seat^="pokerth"] .seat:not(.me) .seat-money { font-size: 0.66rem; line-height: 1.1; }
+html[data-seat^="pokerth"] .seat:not(.me) .seat-narrow .seat-avatar { width: 36px !important; height: 36px !important; }
+html[data-seat^="pokerth"] .seat:not(.me) .seat-narrow .seat-holecards .pk { width: 26px; height: 36px; }
