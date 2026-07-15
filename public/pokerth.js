@@ -14529,6 +14529,36 @@ function toggleLoupe() {
   _loupeClamp(); _loupeApply();
 }
 window.toggleLoupe = toggleLoupe;
+// ── Visibilité STRICTE QML (GamePage 2.1.3:2291) :
+//   visible = mobile (pointeur tactile) && Responsive.compact && tableZoomEnabled.
+// Position : pastille 36 px en BAS-DROITE — paysage 8 px du bord, portrait
+// 8 px AU-DESSUS de la barre d'action. Bouton caché => zoom coupé + pan reset
+// (onVisibleChanged QML). Option : localStorage pth_table_zoom ('0' = off,
+// défaut activé — parité Config.Parameters.tableZoomEnabled).
+function _loupeBtnSync() {
+  var b = document.getElementById('g-zoom-toggle'); if (!b) return;
+  var coarse = false;
+  try { coarse = !!(window.matchMedia && window.matchMedia('(pointer: coarse)').matches); } catch (e) {}
+  var w = window.innerWidth, h = window.innerHeight;
+  var compact = w < 600 || (w >= h && h < 600);   // Responsive.compact (mobile)
+  var enabled = true;
+  try { enabled = localStorage.getItem('pth_table_zoom') !== '0'; } catch (e) {}
+  var vis = coarse && compact && enabled;
+  b.classList.toggle('loupe-avail', vis);
+  if (!vis && (_loupe.on || _loupe.susp)) {
+    _loupe.on = false; _loupe.susp = false; _loupe.panX = _loupe.panY = 0;
+    if (_loupe.followTmr) { clearTimeout(_loupe.followTmr); _loupe.followTmr = null; }
+    _loupe.followSeat = null;
+    _loupeApply(false);
+  }
+  if (vis) {
+    var portrait = (typeof _tableZonePortrait === 'function') ? _tableZonePortrait() : (h > w);
+    var mz = document.querySelector('.my-zone');
+    b.style.bottom = (!portrait ? 8 : 8 + (mz ? Math.round(mz.getBoundingClientRect().height) : 0)) + 'px';
+  }
+}
+window._loupeBtnSync = _loupeBtnSync;
+setTimeout(_loupeBtnSync, 900);
 // Pan au pointeur (souris/tactile). Sièges et boutons restent cliquables :
 // le drag ne démarre pas dessus (comme le DragHandler QML sous les items).
 (function () {
@@ -14551,6 +14581,7 @@ window.toggleLoupe = toggleLoupe;
 // Hook appelé par renderSeats : suivi différé du siège actif + suspension au
 // showdown (parité _scheduleFollow/_doFollow + _zoomSuspendedByShowdown).
 window._loupeOnRender = function (activeEl, showdown, timerTot) {
+  _loupeBtnSync();   // visibilité/position réévaluées à chaque rendu de table
   if (!_loupe.on) return;
   var z = _loupeZone(); if (!z) return;
   if (showdown) {   // dézoom pour la vue d'ensemble, réactivé main suivante
@@ -14575,7 +14606,7 @@ window._loupeOnRender = function (activeEl, showdown, timerTot) {
     _loupeClamp(); _loupeApply();
   }, ms);
 };
-window.addEventListener('resize', function () { _loupeClamp(); _loupeApply(false); });
+window.addEventListener('resize', function () { _loupeClamp(); _loupeApply(false); _loupeBtnSync(); });
 
 function toggleZoomCtrl() {
   var el = document.getElementById('g-zoom-ctrl');
@@ -16041,7 +16072,7 @@ function renderPlayersList() {
   body.innerHTML = _shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>';
 }
 
-;(function(){ window.BUILD_VERSION='0.3.604-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.605-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
