@@ -8570,6 +8570,30 @@ body.chat-tr-on .msg .chat-tr-btn { display: inline; }
   }
   body.adv-hide-pbar .my-zone .mid-row .mode-sel-wrap,
   body.adv-hide-pbar .my-zone .mid-row .mode-sel-wrap select { height: 26px; }
+  /* Derniers gabarits QML (GameActionBar) : largeurs fixes et polices. */
+  body.adv-hide-pbar .my-zone .pct-row .btn-pct { flex: 0 0 38px; width: 38px; padding: 0 2px; font-size: 11px; }
+  body.adv-hide-pbar .my-zone .mid-row > .btn-action.btn-allin { flex: 0 0 52px; width: 52px; padding: 0 2px !important; font-size: 12px !important; }
+  body.adv-hide-pbar .my-zone .mid-row .mode-sel-wrap select { font-size: 11px; }
+  /* Slider QML : rail 4 px, poignée 18×18 ronde. */
+  body.adv-hide-pbar .my-zone .bet-row input[type="range"] {
+    -webkit-appearance: none; appearance: none;
+    height: 4px; border-radius: 2px;
+    background: rgba(255, 255, 255, 0.22);
+  }
+  body.adv-hide-pbar .my-zone .bet-row input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none; appearance: none;
+    width: 18px; height: 18px; border-radius: 9px;
+    background: #4CAF50; border: 1px solid rgba(255, 255, 255, 0.5);
+    cursor: pointer;
+  }
+  body.adv-hide-pbar .my-zone .bet-row input[type="range"]::-moz-range-track {
+    height: 4px; border-radius: 2px; background: rgba(255, 255, 255, 0.22);
+  }
+  body.adv-hide-pbar .my-zone .bet-row input[type="range"]::-moz-range-thumb {
+    width: 18px; height: 18px; border-radius: 9px;
+    background: #4CAF50; border: 1px solid rgba(255, 255, 255, 0.5);
+    cursor: pointer;
+  }
   /* Dropdown de mode : 132 px comme le QML, hauteur raccordée à la rangée. */
   body.adv-hide-pbar .my-zone .mid-row .mode-sel-wrap { flex: 0 0 132px; }
   body.adv-hide-pbar .my-zone .mid-row .mode-sel-wrap select {
