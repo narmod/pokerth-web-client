@@ -4557,18 +4557,15 @@ body:not(.in-game) .my-zone {
 .btn-pct .pct-p { font-size: calc(0.74rem * var(--bar-kf, 1)); font-weight: 700; color: var(--gold); }
 .btn-pct .pct-amt { font-size: calc(0.6rem * var(--bar-kf, 1)); font-weight: 400; color: var(--text); }
 .btn-pct:hover { background: rgba(var(--gold-rgb), 0.22); }
-/* Bets rapides : vert QML (comme le client officiel) UNIQUEMENT sur les tapis
-   maison PokerTH (pas d'attribut data-table) et Spectator (data-table=pokerth-live).
-   Les tapis QML importes (data-table=danuxi...) et Casino gardent la teinte du theme. */
-html:not([data-table]) .btn-pct,
-html[data-table=""] .btn-pct,
-html[data-table="pokerth-live"] .btn-pct { background: #1b5e20; border-color: #4CAF50; color: #fff; }
-html:not([data-table]) .btn-pct .pct-p,
-html[data-table=""] .btn-pct .pct-p,
-html[data-table="pokerth-live"] .btn-pct .pct-p { color: #fff; }
-html:not([data-table]) .btn-pct:hover,
-html[data-table=""] .btn-pct:hover,
-html[data-table="pokerth-live"] .btn-pct:hover { background: #388e3c; }
+/* Bets rapides : vert QML sur TOUTES les tables (GameActionBar 2.1.3 les code
+   EN DUR — #1b5e20 / bord #4CAF50 / hover #388e3c / press #2e7d32 — ils ne
+   sont PAS themables via StyleProvider : meme un tapis importe les affiche
+   verts dans le client officiel). L'ancienne restriction aux tapis maison
+   faisait diverger le web des tables importees (retour narmod 15/07). */
+.btn-pct { background: #1b5e20; border-color: #4CAF50; color: #fff; }
+.btn-pct .pct-p { color: #fff; }
+.btn-pct:hover { background: #388e3c; }
+.btn-pct:active { background: #2e7d32; }
 .btn-pct:disabled,
 .btn-action:disabled {
   opacity: 0.28;
@@ -8583,7 +8580,8 @@ body.chat-tr-on .msg .chat-tr-btn { display: inline; }
     padding: 4px 8px 2px;
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
   }
-  /* Rangée montant/slider QML : champ 78×26, police 13. */
+  /* Rangée montant/slider QML : champ 78×26, police 13, spacing 6. */
+  body.adv-hide-pbar .my-zone .bet-row { gap: 6px; }
   body.adv-hide-pbar .my-zone .bet-row .raise-amt-field {
     width: 78px; height: 26px; min-height: 26px; font-size: 13px; flex: 0 0 auto;
   }
@@ -8619,20 +8617,21 @@ body.chat-tr-on .msg .chat-tr-btn { display: inline; }
   body.adv-hide-pbar .my-zone .mid-row .mode-sel-wrap,
   body.adv-hide-pbar .my-zone .mid-row .mode-sel-wrap select { height: 26px; }
   /* Derniers gabarits QML (GameActionBar) : largeurs fixes et polices. */
-  body.adv-hide-pbar .my-zone .pct-row .btn-pct { flex: 0 0 38px; width: 38px; padding: 0 2px; font-size: 11px; }
+  body.adv-hide-pbar .my-zone .pct-row .btn-pct { flex: 0 0 38px; width: 38px !important; min-width: 38px !important; padding: 0 2px !important; font-size: 11px; }
+  body.adv-hide-pbar .my-zone .pct-row .btn-pct .pct-p { font-size: 11px; }
   body.adv-hide-pbar .my-zone .mid-row > .btn-action.btn-allin { flex: 0 0 52px; width: 52px; padding: 0 2px !important; font-size: 12px !important; }
-  /* Thèmes à SVG de boutons (data-btn-img) : à 52×26 le 9-slice border-image
-     se déchire (bords 9px > moitié de la hauteur — leçon connue). On passe le
-     petit Tapis en background-image étiré 100%/100%, comme le QML qui étire
-     son SVG (Image.Stretch). */
-  /* Linux/Chrome letterboxe background-size 100%/100% selon le
-     preserveAspectRatio du SVG (OK sur iOS) — repli universel : 9-slice a
-     bords 6px, sans dechirure a 26px de haut. */
+  /* Thèmes à SVG de boutons (data-btn-img) : Tapis 52×26 en image du thème
+     ÉTIRÉE 100%/100% comme le QML (Image.Stretch) — identique au mode
+     portrait/iOS. Le repli 9-slice à bords 6px se déchirait sur Edge/desktop
+     (retour narmod 15/07) ; si un letterboxing SVG réapparaît sur Linux, le
+     corriger dans le SVG (preserveAspectRatio) et non ici. */
   :root[data-btn-img] body.adv-hide-pbar .my-zone .mid-row > .btn-action.btn-allin {
-    background: transparent;
-    border: 6px solid transparent !important;
-    border-image: var(--btn-allin-img) 9 fill / 6px / 0 stretch !important;
-    border-radius: 0;
+    border: none !important;
+    background: transparent !important;
+    background-image: var(--btn-allin-img) !important;
+    background-size: 100% 100% !important;
+    background-repeat: no-repeat !important;
+    border-radius: 6px;
     padding: 0 !important;
   }
   body.adv-hide-pbar .my-zone .mid-row .mode-sel-wrap select { font-size: 11px; }
