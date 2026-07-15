@@ -381,6 +381,7 @@ function applyAdvOpts() {
     var b = document.body;
     b.classList.toggle('adv-no-cardanim', !_advGet('anim_cards', true));
     b.classList.toggle('adv-no-blinds', !_advGet('show_blinds', true));
+    b.classList.toggle('adv-no-blindsbadge', !_advGet('blinds_badge', true)); // pastille blinds du bandeau (extension web)
     b.classList.toggle('adv-no-community', !_advGet('show_community', true));
     b.classList.toggle('adv-no-flag', !_advGet('show_flag', true));
     b.classList.toggle('adv-hide-pbar', _advGet('hide_pbar', true));
@@ -580,6 +581,7 @@ function openAdvancedOptions() {
   sync('adv-snd-blinds', 'snd_blinds', true);
   sync('adv-reducefx', 'reduce_fx', false);
   sync('adv-statusbar', 'status_bar', true);
+  sync('adv-blindsbadge', 'blinds_badge', true);
   sync('adv-winnerpopup', 'winner_popup', true);
   sync('adv-removegone', 'remove_gone', false);
   try { var _dm = document.getElementById('adv-darkmode'); if (_dm && window.getTheme) _dm.value = window.getTheme() || 'auto'; } catch (e) {}
@@ -774,7 +776,7 @@ function resetAdvDefaults() {
     own_click: false, guard_call: false, odds_monitor: false, no_hide_ignored: false,
     fkeys_alt: false, zoom_follow: false, table_zoom: true, lobby_chat: true, log_on: true, pause_hands: false, create_dialog: true, cfg_sync: false, poker_en: true,
     snd_actions: true, snd_lobby: true, snd_net: true, snd_blinds: true,
-    reduce_fx: false, status_bar: true, ping_avatar: false, auto_leave: false
+    reduce_fx: false, status_bar: true, ping_avatar: false, auto_leave: false, blinds_badge: true
   };
   try { for (var k in defs) setAdvOpt(k, defs[k]); } catch (e) {}
   try { setSeatLayout('official'); } catch (e) {}
@@ -16134,7 +16136,7 @@ function renderPlayersList() {
   body.innerHTML = _headHtml + (_shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>');
 }
 
-;(function(){ window.BUILD_VERSION='0.3.609-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.610-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
