@@ -380,23 +380,6 @@ body {
   background: var(--panel);
   flex-shrink: 0;
 }
-.cp-back {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  height: 30px;
-  padding: 0 13px;
-  box-sizing: border-box;
-  background: var(--field-bg);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  color: var(--text);
-  font-family: var(--ff-display);
-  font-size: 0.9rem;
-  cursor: pointer;
-}
-.cp-back:hover { border-color: var(--gold-dim); }
-.cp-back-ico { font-size: 1.05rem; line-height: 1; }
 /* Pousse le globe + roue crantée à droite (parité header lobby). */
 .cp-head-spacer { flex: 1; }
 .cp-title {
@@ -5483,13 +5466,15 @@ html[data-table="pokerth-live"] .raise-slider { accent-color: #4CAF50; }
    Icônes pleines (sans encadré) + couleurs. Frameless scopé aux .btn-icon
    pour ne pas toucher aux boutons-texte admin (Start/Close/Kick). */
 #s-lobby .header .btn-icon,
-#s-game .header .btn-icon{
+#s-game .header .btn-icon,
+#s-create .cp-header .btn-icon{
   background:transparent;
   border-color:transparent;
   box-shadow:none;
 }
 #s-lobby .header .btn-icon:hover,
-#s-game .header .btn-icon:hover{
+#s-game .header .btn-icon:hover,
+#s-create .cp-header .btn-icon:hover{
   background:rgba(255,255,255,0.07);
   border-color:transparent;
 }
@@ -5503,17 +5488,25 @@ html[data-table="pokerth-live"] .raise-slider { accent-color: #4CAF50; }
 #s-connect .connect-header #cl-links-connect > summary:focus-visible,
 #s-lobby .header .btn-icon,
 #s-game .header .btn-icon,
+#s-create .cp-header .btn-icon,
 #s-lobby .header .btn-icon:focus,
 #s-game .header .btn-icon:focus,
+#s-create .cp-header .btn-icon:focus,
 #s-lobby .header .btn-icon:focus-visible,
 #s-game .header .btn-icon:focus-visible,
+#s-create .cp-header .btn-icon:focus-visible,
 #s-lobby .header .btn-icon:active,
-#s-game .header .btn-icon:active{
+#s-game .header .btn-icon:active,
+#s-create .cp-header .btn-icon:active{
   outline:none;
   border-color:transparent;
   box-shadow:none;
 }
 #s-lobby .header #ranking-btn-lobby{ color:#E3C800; }
+/* Page « Créer une partie » : flèche retour + roue crantée neutres, globe or. */
+#s-create .cp-header .cp-back,
+#s-create .cp-header #cr-overflow-btn{ color:#c3ccda; }
+#s-create .cp-header #ranking-btn-create{ color:#E3C800; }
 #s-lobby .header #lobby-chat-btn{ color:#c3ccda; }
 #s-lobby .header #l-overflow-btn{ color:#c3ccda; }
 #s-game .header #sound-toggle-btn{ color:#c3ccda; }
