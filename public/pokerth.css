@@ -7601,6 +7601,37 @@ body.adv-hide-pbar .my-zone{bottom:0 !important;padding-bottom:max(8px,env(safe-
     font-size: calc(1.02rem * var(--comm-scale, 1) / var(--sscale, 1)) !important;
   }
 }
+/* ── Packs pokerth : self-box à la STRUCTURE QML exacte (GamePlayerSelfBox).
+   Dans le QML, les cartes du self dérivent de la hauteur de la BOX
+   (selfBaseHeight 96/94/82 → cardsH = H−12−barre → cartes ≈ 37×52, 36×50 en
+   landscapeCompact ; avatar = min(cardsH, 60/54)). Côté web elles étaient
+   couplées à la taille des cartes COMMUNES (--comm-scale), qui grossit avec
+   la fenêtre — cause de la self énorme qui chevauchait ses voisins sur
+   desktop. Ici : tailles fixes QML (échelle du siège appliquée par le
+   transform, comme les adversaires) ; tous les paliers du bouton de zoom de
+   cartes sont au même point (plateau) — en fidélité QML la taille des cartes
+   self est fixe. Les packs non-pokerth gardent le couplage rivière. */
+html[data-seat^="pokerth"] .seat.me .seat-holecards.shc-big .pk,
+html[data-seat^="pokerth"] .seat.me .seat-holecards.shc-l1 .pk,
+html[data-seat^="pokerth"] .seat.me .seat-holecards.shc-l2 .pk,
+html[data-seat^="pokerth"] .seat.me .seat-holecards.shc-l3 .pk {
+  width: 37px !important; height: 52px !important;
+  font-size: 0.8rem !important; border-radius: 3px !important;
+}
+html[data-seat^="pokerth"] .seat.me .seat-avatar {
+  width: 52px !important; height: 52px !important;
+}
+@media (orientation: landscape) and (max-height: 600px) {
+  html[data-seat^="pokerth"] .seat.me .seat-holecards.shc-big .pk,
+  html[data-seat^="pokerth"] .seat.me .seat-holecards.shc-l1 .pk,
+  html[data-seat^="pokerth"] .seat.me .seat-holecards.shc-l2 .pk,
+  html[data-seat^="pokerth"] .seat.me .seat-holecards.shc-l3 .pk {
+    width: 36px !important; height: 50px !important; font-size: 0.78rem !important;
+  }
+  html[data-seat^="pokerth"] .seat.me .seat-avatar {
+    width: 50px !important; height: 50px !important;
+  }
+}
 /* Pastille de niveau (1/2/3/4/5) sur le bouton. */
 #g-cardzoom { position: relative; }
 #g-cardzoom[data-lvl="1"]::after, #g-cardzoom[data-lvl="2"]::after, #g-cardzoom[data-lvl="3"]::after {
