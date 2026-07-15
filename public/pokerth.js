@@ -565,6 +565,7 @@ function openAdvancedOptions() {
   sync('adv-tablezoom', 'table_zoom', true);
   sync('adv-lobbychat', 'lobby_chat', true);
   sync('adv-pausehands', 'pause_hands', false);
+  sync('adv-createdialog', 'create_dialog', true);
   try { renderIgnoredList(); } catch (e) {}
   sync('adv-logon', 'log_on', true);
   try { var _li = document.getElementById('adv-loginterval'); if (_li) _li.value = _getLogInterval(); } catch (e) {}
@@ -766,7 +767,7 @@ function resetAdvDefaults() {
     anim_cards: true, show_blinds: true, hide_pbar: true, show_community: true, four_color: false,
     focus_bet: false, chat_noemoji: false, fade_losers: true, show_flag: true,
     own_click: false, guard_call: false, odds_monitor: false, no_hide_ignored: false,
-    fkeys_alt: false, zoom_follow: false, table_zoom: true, lobby_chat: true, log_on: true, pause_hands: false,
+    fkeys_alt: false, zoom_follow: false, table_zoom: true, lobby_chat: true, log_on: true, pause_hands: false, create_dialog: true,
     snd_actions: true, snd_lobby: true, snd_net: true, snd_blinds: true,
     reduce_fx: false, status_bar: true, ping_avatar: false, auto_leave: false
   };
@@ -12928,6 +12929,20 @@ function _maybeShowNextHandBtn() {
     // (#create-form, tous ses champs/handlers) est déplacé une seule fois dans
     // la page, ce qui préserve toute la logique de createGame().
     openCreatePage() {
+      // Parité officielle ShowGameSettingsDialogOnNewGame (startwindowimpl.cpp,
+      // callNewGameDialog) : en mode entraînement, si l'option « afficher les
+      // réglages à chaque nouvelle partie » est décochée, on saute l'écran de
+      // création et on démarre immédiatement avec les derniers réglages
+      // sauvegardés (« sonst mit gespeicherten Werten starten »), bots inclus
+      // via le hook _offlineAutoReplay → startWithBots() au JoinGameAck.
+      if (window._offlineMode && !_advGet('create_dialog', true)) {
+        try {
+          this._applyCreateFormDefaults(true);   // baseline + derniers réglages utilisés
+          window._offlineAutoReplay = true;
+          this.createGame();
+          return;
+        } catch (e) { window._offlineAutoReplay = false; }
+      }
       var form = document.getElementById('create-form');
       var body = document.getElementById('create-page-body');
       if (form && body && form.parentNode !== body) body.appendChild(form);
@@ -15091,7 +15106,7 @@ function renderPlayersList() {
   body.innerHTML = _shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>';
 }
 
-;(function(){ window.BUILD_VERSION='0.3.524-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.525-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

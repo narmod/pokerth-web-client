@@ -2054,6 +2054,7 @@ if ('serviceWorker' in navigator) {
           <div class="adv-body">
             <div class="adv-sec" data-i18n="advSecLocalGame">Training game</div>
             <label class="adv-row"><input type="checkbox" id="adv-pausehands" onchange="setAdvOpt('pause_hands',this.checked)"><span data-i18n="advPauseHands">Pause between hands (continue with the winner window)</span></label>
+            <label class="adv-row"><input type="checkbox" id="adv-createdialog" onchange="setAdvOpt('create_dialog',this.checked)"><span data-i18n="advCreateDialog">Show the game settings screen on new game (off: start straight away with the saved settings)</span></label>
             <div class="adv-sec" data-i18n="advSecTablePrefs">Table preferences</div>
             <div class="adv-ign-desc" data-i18n="advTablePrefsDesc">Defaults for the tables you create in this mode — the ⭐ pill on the create form loads them.</div>
             <div class="adv-row"><span data-i18n="maxPlayers">Max players</span><input type="number" class="adv-numin" id="advp-local-players" min="2" max="10" step="1" onchange="advPrefSet('local','players',this)"></div>
