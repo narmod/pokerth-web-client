@@ -8525,3 +8525,22 @@ body.chat-tr-on .msg .chat-tr-btn { display: inline; }
     width: 78px; height: 26px; min-height: 26px; font-size: 13px; flex: 0 0 auto;
   }
 }
+
+
+/* ── Barre d'action QML — finitions desktop/tablette (suite 0.3.541) ── */
+@media (min-width: 900px) and (min-height: 600px) {
+  /* QML : AUCUN halo sur le panneau à mon tour — seul le bouton Bet/Raise est
+     l'action primaire mise en avant. Cadre + glow dorés neutralisés en mode
+     panneau (ils restent sur mobile et avec la barre joueur affichée). */
+  body.adv-hide-pbar .my-zone.my-turn-active .action-grid {
+    border-color: transparent; box-shadow: none; animation: none;
+  }
+  body.adv-hide-pbar .my-zone.my-turn-active .action-grid::after { display: none; }
+  /* Quick-bets 1/3 · 1/2 · Pot · Tapis : compacts (rangée intermédiaire QML). */
+  body.adv-hide-pbar .my-zone .pct-row .btn-pct { padding: 4px 4px; font-size: 0.7rem; }
+  /* Dropdown de mode : 132 px comme le QML, hauteur raccordée à la rangée. */
+  body.adv-hide-pbar .my-zone .mid-row .mode-sel-wrap { flex: 0 0 132px; }
+  body.adv-hide-pbar .my-zone .mid-row .mode-sel-wrap select {
+    padding-top: 4px; padding-bottom: 4px; font-size: 0.74rem;
+  }
+}
