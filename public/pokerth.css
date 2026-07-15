@@ -2284,7 +2284,7 @@ body {
      Préfixe .my-zone : les anciennes règles nues (.btn-action…) étaient
      MORTES, battues par les règles de base plus bas dans le fichier (une
      @media n'augmente pas la spécificité — même leçon que le bloc paysage). */
-  .my-zone .act-buttons-row .btn-action { min-height: 56px; padding: 0 8px; font-size: 15px; letter-spacing: 0.5px; border-radius: var(--act-btn-radius, 9px); min-width: 0; }
+  .my-zone .act-buttons-row .btn-action { min-height: 45px; padding: 0 8px; font-size: 15px; letter-spacing: 0.5px; border-radius: var(--act-btn-radius, 9px); min-width: 0; }
   .my-zone .bet-row { gap: 6px; }
   .my-zone .bet-row .raise-amt-field { width: 78px; flex: 0 0 auto; height: 26px; min-height: 26px; padding: 1px 6px; font-size: 13px; }
   .my-zone .bet-row .raise-slider { flex: 1 1 auto; min-width: 60px; }
@@ -4517,7 +4517,7 @@ body:not(.in-game) .my-zone {
    redimensionne au fil du resize Safari/Chrome comme le client QML. Les
    blocs mobiles (portrait/paysage) surchargent avec leurs valeurs QML
    fixes et ne sont pas affectes. */
-.act-buttons-row .btn-action { flex: 1; min-width: 0; padding: calc(10px * var(--bar-k, 1)) calc(12px * var(--bar-k, 1)); min-height: calc(54px * var(--bar-k, 1)); border-radius: var(--act-btn-radius, 9px); font-size: calc(0.9rem * var(--bar-kf, 1)); }
+.act-buttons-row .btn-action { flex: 1; min-width: 0; padding: calc(10px * var(--bar-k, 1)) calc(12px * var(--bar-k, 1)); min-height: calc(54px * var(--bar-k, 1) - 10px); border-radius: var(--act-btn-radius, 9px); font-size: calc(0.9rem * var(--bar-kf, 1)); }
 /* Haut : champ montant editable + slider */
 .bet-row { display: flex; gap: 8px; align-items: center; }
 .bet-row .raise-slider { flex: 1; }
@@ -8504,10 +8504,10 @@ html[data-box-accent][data-seat="bar"] .seat-plate { border-color: var(--box-acc
   .my-zone .mid-row .pct-row { flex: 0 0 auto; gap: 4px; min-width: 0; }
   .my-zone .mid-row .mode-sel-wrap { flex: 0 1 132px; min-width: 0; height: 26px; margin-left: auto; }
   .my-zone .mid-row .mode-sel-wrap select { height: 100%; padding-top: 0; padding-bottom: 0; line-height: 1.1; }
-  .my-zone .act-buttons-row { gap: 5px; }
-  /* Rangee Fold / Suivre / Relancer : 56 px de haut (Theme.compact QML),
-     police 15 px bold, letterSpacing 0.5, radius 9 — tailles officielles. */
-  .my-zone .act-buttons-row .btn-action { min-width: 0; min-height: 56px; font-size: 0.9375rem; letter-spacing: 0.5px; border-radius: var(--act-btn-radius, 9px); padding: 6px 8px; }
+  .my-zone .act-buttons-row { gap: 8px; }
+  /* Rangee Fold / Suivre / Relancer : rangee 56 px (Theme.compact QML) MAIS
+     bouton visible 45 px (marges internes QML 5+6) — source 2.1.3. */
+  .my-zone .act-buttons-row .btn-action { min-width: 0; min-height: 45px; font-size: 0.9375rem; letter-spacing: 0.5px; border-radius: var(--act-btn-radius, 9px); padding: 0 8px; }
   .my-zone .mid-row .btn-pct { flex: 0 0 38px; width: 38px; min-width: 38px; height: 26px; min-height: 26px; padding: 0 2px; border-radius: 5px; font-size: 11px; font-weight: 700; }
   /* Pas de badges de touches clavier sur mobile (le QML n'en affiche aucun). */
   .my-zone .act-key { display: none !important; }
@@ -8578,7 +8578,9 @@ body.chat-tr-on .msg .chat-tr-btn { display: inline; }
     max-width: none; width: 100%;
     background: rgba(0, 0, 0, 0.82);
     border-radius: 10px;
-    padding: 6px 10px 8px;
+    /* Paddings QML exacts (raiseSection top 4 / cotes 8 / bas 2 ; la rangee
+       d'action porte ses propres marges verticales 5/5 en dessous). */
+    padding: 4px 8px 2px;
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
   }
   /* Rangée montant/slider QML : champ 78×26, police 13. */
@@ -8681,9 +8683,14 @@ body.chat-tr-on .msg .chat-tr-btn { display: inline; }
   /* Hauteur pilotée par le régime QML discret (--bar-k, updateBottomLayout) :
      54 desktop (≥900) · 56 Theme.compact (600–900) — plus de 54 en dur, la
      fenêtre étroite retombe sur la bonne valeur au lieu d'une zone morte. */
-  body.adv-hide-pbar .my-zone .act-buttons-row { height: calc(54px * var(--bar-k, 1)); gap: 8px; align-items: stretch; }
+  /* La RANGEE fait 54 (56 compact) mais le RowLayout QML des boutons a des
+     marges internes top 5 / bottom 5 (6 compact) -> le BOUTON visible fait
+     rangee - 10 (44 desktop, ~45 compact). C'etait l'erreur de la passe
+     0.3.541 (« pas d'air interne ») : les boutons web etaient 10 px trop
+     hauts par rapport au client officiel. */
+  body.adv-hide-pbar .my-zone .act-buttons-row { height: calc(54px * var(--bar-k, 1)); box-sizing: border-box; padding: 5px 0; gap: 8px; align-items: stretch; }
   body.adv-hide-pbar .my-zone .act-buttons-row .btn-action {
-    height: calc(54px * var(--bar-k, 1)) !important; min-height: 0 !important; max-height: calc(54px * var(--bar-k, 1)) !important;
+    height: calc(54px * var(--bar-k, 1) - 10px) !important; min-height: 0 !important; max-height: calc(54px * var(--bar-k, 1) - 10px) !important;
     flex: 1 1 0;
     padding: 0 10px !important;
     font-size: calc(15px * var(--bar-kf, 1)) !important;
@@ -8698,7 +8705,7 @@ body.chat-tr-on .msg .chat-tr-btn { display: inline; }
     display: block;
     line-height: 1.05;
   }
-  body.adv-hide-pbar .my-zone .action-grid { gap: 4px; }
+  body.adv-hide-pbar .my-zone .action-grid { gap: 3px; }
   body.adv-hide-pbar .my-zone .mid-row { gap: 4px; }
   /* (liseré/ombre gérés sur .action-grid ci-dessus) */
 }
