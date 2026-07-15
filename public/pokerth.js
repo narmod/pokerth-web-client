@@ -12982,9 +12982,18 @@ function _maybeShowNextHandBtn() {
           var _hd = document.querySelector('#s-game .header');
           var _zn = document.getElementById('g-table-zone');
           var _zr = _zn ? _zn.getBoundingClientRect() : null;
+          var _ga2 = _ga ? _ga.getBoundingClientRect() : null;
+          var _me = document.querySelector('#g-seats .seat.me');
+          var _mer = _me ? _me.getBoundingClientRect() : null;
+          var _zoomV = 1;
+          try { if (typeof _getTableZoom === 'function') _zoomV = _getTableZoom(); } catch (eZ) {}
           var _info = {
             win: window.innerWidth + 'x' + window.innerHeight,
             zone: _d.zone || (_zr ? Math.round(_zr.width) + 'x' + Math.round(_zr.height) : '?'),
+            zoneLive: _zr ? Math.round(_zr.width) + 'x' + Math.round(_zr.height) + '@y' + Math.round(_zr.top) : null,
+            gaRect: _ga2 ? Math.round(_ga2.width) + 'x' + Math.round(_ga2.height) + '@y' + Math.round(_ga2.top) : null,
+            zoom: +(+_zoomV).toFixed(3),
+            selfRect: _mer ? Math.round(_mer.width) + 'x' + Math.round(_mer.height) + '@y' + Math.round(_mer.top) : null,
             boxScale: _d.boxScale != null ? +(+_d.boxScale).toFixed(3) : null,
             rawBoxScale: _d.rawBoxScale != null ? +(+_d.rawBoxScale).toFixed(3) : null,
             fitShave: +((window._seatFitShave || 1)).toFixed(3),
@@ -15705,7 +15714,7 @@ function renderPlayersList() {
   body.innerHTML = _shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>';
 }
 
-;(function(){ window.BUILD_VERSION='0.3.576-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.577-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
