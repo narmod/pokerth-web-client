@@ -389,6 +389,22 @@ body {
   color: var(--text);
   letter-spacing: 0.02em;
 }
+/* Titre centré dans le header (entre la porte à gauche et globe/roue à
+   droite) : positionnement absolu au centre du .cp-header — insensible aux
+   largeurs inégales des deux groupes d'icônes. max-width borné pour ne
+   jamais chevaucher les icônes ; pointer-events off (label non cliquable). */
+#s-create .cp-title {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  max-width: 60%;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  pointer-events: none;
+}
 .cp-scroll { flex: 1; overflow-y: auto; padding: 20px 18px 40px; }
 .cp-body { max-width: 720px; margin: 0 auto; }
 .cp-body #create-form { display: block; }
