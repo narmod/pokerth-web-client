@@ -5347,7 +5347,7 @@ html[data-table="pokerth-live"] .raise-slider { accent-color: #4CAF50; }
 }
 .players-list .pl-row {
   display: grid;
-  grid-template-columns: var(--pl-cols, 22px minmax(0,1fr) 22px 48px 16px auto);
+  grid-template-columns: var(--pl-cols, 22px minmax(0,1fr) 22px 48px 16px 48px);
   align-items: center;
   gap: 8px;
   padding: 4px 0;          /* container provides the 12px lateral padding now */
@@ -8474,12 +8474,25 @@ html[data-buttons="pokerth"] .btn-action[disabled] { filter: grayscale(0.55) bri
 .pl-sortbar .sel-wrap { width:100%; }
 
 /* En-tête colonnes (afficher/masquer) de la liste « Joueurs en ligne ».
-   Bande de pastilles-toggle au-dessus de la liste ; le Nom est verrouillé
-   (pas de pastille). Une pastille éteinte = colonne masquée dans les lignes. */
-.pl-colhead { flex:0 0 auto; display:flex; align-items:center; gap:8px; padding:5px 12px; border-bottom:1px solid var(--border); background:var(--chrome-tint,var(--panel)); }
-.pl-colh-cap { font-size:0.58rem; letter-spacing:0.12em; text-transform:uppercase; color:var(--gold-dim); white-space:nowrap; }
-.pl-colh-chips { display:flex; align-items:center; gap:4px; margin-left:auto; }
-.pl-colh-chip { display:inline-flex; align-items:center; justify-content:center; background:none; border:1px solid transparent; border-radius:5px; padding:3px 5px; cursor:pointer; line-height:0; color:var(--gold-dim); opacity:0.5; }
+   Rendu comme 1er enfant STICKY du corps scrollable → partage la largeur et la
+   gouttière de scroll des lignes. Grille alignée sur les .pl-row : mêmes pistes
+   (gabarit complet posé en inline) + même gap 8px + padding latéral 0 (le 12px
+   latéral vient du padding du conteneur). Chaque pastille remplit sa cellule
+   (width:100%) → elle s'élargit avec la colonne. Le Nom = cellule vide. */
+.pl-colhead {
+  position:sticky; top:0; z-index:2;
+  display:grid; align-items:center; gap:8px;
+  padding:4px 0 6px; margin-bottom:2px;
+  background:var(--panel); border-bottom:1px solid var(--border);
+}
+.pl-colh-spacer { min-width:0; }
+.pl-colh-chip {
+  box-sizing:border-box; width:100%;
+  display:inline-flex; align-items:center; justify-content:center;
+  background:none; border:1px solid transparent; border-radius:5px;
+  padding:3px 0; cursor:pointer; line-height:0;
+  color:var(--gold-dim); opacity:0.5;
+}
 .pl-colh-chip:hover { background:rgba(var(--gold-rgb),0.12); }
 .pl-colh-chip.on { color:var(--gold); opacity:1; border-color:rgba(var(--gold-rgb),0.35); background:rgba(var(--gold-rgb),0.10); }
 .pl-colh-star { font-size:0.85rem; line-height:1; }

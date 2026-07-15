@@ -15956,7 +15956,7 @@ window._plToggleIgnore = function(pid){
 // activables/désactivables depuis l'en-tête (#pl-colhead). Choix persisté
 // dans localStorage 'pth_pl_cols' = liste des colonnes MASQUÉES (une
 // nouvelle colonne future est donc visible par défaut).
-var _PL_TRACK = { av:'22px', name:'minmax(0,1fr)', status:'22px', flag:'48px', star:'16px', acts:'auto' };
+var _PL_TRACK = { av:'22px', name:'minmax(0,1fr)', status:'22px', flag:'48px', star:'16px', acts:'48px' };
 var _PL_COL_ORDER   = ['av','name','status','flag','star','acts'];
 var _PL_TOGGLE_COLS = ['av','status','flag','star','acts']; // 'name' exclu
 function _plColsHidden() {
@@ -15978,23 +15978,23 @@ window._plToggleCol = function (k) {
 var _PL_PERSON_SVG = '<svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" aria-hidden="true"><path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm0 1.6c-4 0-7.2 2-7.2 4.6V20h14.4v-1.8c0-2.6-3.2-4.6-7.2-4.6Z"/></svg>';
 var _PL_FLAG_SVG   = '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" aria-hidden="true"><path d="M6 21V4h11l-2.2 4L17 12H6"/></svg>';
 // En-tête : une pastille-toggle par colonne masquable (icône + libellé en info-bulle).
+// En-tête aligné sur les colonnes : une cellule par colonne (dans l'ordre de
+// _PL_COL_ORDER), gabarit = gabarit COMPLET (toutes les colonnes masquables
+// toujours présentes → les pastilles restent cliquables même une fois la
+// colonne masquée). Le Nom = cellule vide (verrouillé, pas de pastille). Les
+// pastilles remplissent leur cellule (width:100%) donc s'élargissent avec la
+// colonne. En tout-visible, ce gabarit = --pl-cols des lignes → alignement 1:1.
 function _plColHeadHtml() {
   var _tt = function (k, fb) { return (typeof t === 'function' && t(k) !== k) ? t(k) : fb; };
-  var defs = [
-    { key:'av',     icon:_PL_PERSON_SVG,                        label:_tt('plColAvatar','Avatar') },
-    { key:'status', icon:_PL_PAD_SVG,                           label:_tt('plColStatus','In game') },
-    { key:'flag',   icon:_PL_FLAG_SVG,                          label:_tt('plColCountry','Country') },
-    { key:'star',   icon:'<span class="pl-colh-star">\u2605</span>', label:_tt('plColMe','Me') },
-    { key:'acts',   icon:_PL_BAR_SVG,                           label:_tt('plColActions','Actions') }
-  ];
-  var chips = defs.map(function (d) {
-    var on = _plColVisible(d.key);
+  var ICON  = { av:_PL_PERSON_SVG, status:_PL_PAD_SVG, flag:_PL_FLAG_SVG, star:'<span class="pl-colh-star">\u2605</span>', acts:_PL_BAR_SVG };
+  var LABEL = { av:_tt('plColAvatar','Avatar'), status:_tt('plColStatus','In game'), flag:_tt('plColCountry','Country'), star:_tt('plColMe','Me'), acts:_tt('plColActions','Actions') };
+  return _PL_COL_ORDER.map(function (k) {
+    if (k === 'name') return '<span class="pl-colh-spacer"></span>';
+    var on = _plColVisible(k);
     return '<button type="button" class="pl-colh-chip' + (on ? ' on' : '') + '"'
-      + ' title="' + d.label + '" aria-label="' + d.label + '" aria-pressed="' + on + '"'
-      + ' onclick="window._plToggleCol(\'' + d.key + '\')">' + d.icon + '</button>';
+      + ' title="' + LABEL[k] + '" aria-label="' + LABEL[k] + '" aria-pressed="' + on + '"'
+      + ' onclick="window._plToggleCol(\'' + k + '\')">' + ICON[k] + '</button>';
   }).join('');
-  return '<span class="pl-colh-cap">' + _tt('plColumns','Columns') + '</span>'
-       + '<span class="pl-colh-chips">' + chips + '</span>';
 }
 
 function renderPlayersList() {
@@ -16011,16 +16011,17 @@ function renderPlayersList() {
     countEl = document.getElementById('players-panel-count'); // re-resolve after innerHTML
   }
   // ── En-tête colonnes + gabarit de grille ──
-  // Le même jeu de colonnes visibles pilote l'en-tête (pastilles-toggle) et
-  // les lignes : --pl-cols (posé sur la liste) est lu par chaque .pl-row, et
-  // rowHtml n'émet que les cellules visibles → alignement 1:1, pas de piste
-  // vide. Calculé avant tout return (liste vide incluse) pour rester stable.
+  // rowHtml n'émet que les cellules visibles ; --pl-cols (posé sur la liste)
+  // donne aux .pl-row le gabarit réduit correspondant → pas de piste vide.
+  // L'en-tête (sticky, dans le corps scrollable pour partager exactement la
+  // même largeur/gouttière que les lignes) utilise le gabarit COMPLET afin de
+  // rester cliquable colonne masquée ou non ; en tout-visible les deux
+  // gabarits coïncident → pastilles alignées 1:1 sur les colonnes.
   var _visCols = _plVisibleCols();
-  try {
-    var _colHeadEl = document.getElementById('pl-colhead');
-    if (_colHeadEl) _colHeadEl.innerHTML = _plColHeadHtml();
-    body.style.setProperty('--pl-cols', _visCols.map(function (k) { return _PL_TRACK[k]; }).join(' '));
-  } catch (e) {}
+  var _fullTmpl = _PL_COL_ORDER.map(function (k) { return _PL_TRACK[k]; }).join(' ');
+  var _headHtml = '<div class="pl-colhead" style="grid-template-columns:' + _fullTmpl + '">'
+                + _plColHeadHtml() + '</div>';
+  try { body.style.setProperty('--pl-cols', _visCols.map(function (k) { return _PL_TRACK[k]; }).join(' ')); } catch (e) {}
   // Build the list of {pid, name} from _lobbyPids (defined inside
   // the IIFE; we read it via window-level references).
   var pids = window._readLobbyPids ? window._readLobbyPids() : [];
@@ -16065,7 +16066,7 @@ function renderPlayersList() {
   } catch (e) {}
   if (countEl) countEl.textContent = pids.length;
   if (rows.length === 0) {
-    body.innerHTML = '<div class="pl-empty">' + (q ? '— ' : '—') + '</div>';
+    body.innerHTML = _headHtml + '<div class="pl-empty">' + (q ? '— ' : '—') + '</div>';
     return;
   }
   // ── Variante A : sections « En partie / Au lobby » (choix utilisateur
@@ -16130,10 +16131,10 @@ function renderPlayersList() {
   // Liste À PLAT (parité officielle). Mode 'idle' → n'affiche QUE les joueurs
   // inactifs (hors partie) ; sinon tous les joueurs, dans l'ordre de tri.
   var _shown = (_plMode === 'idle') ? rows.filter(function(r){ return !r.act; }) : rows;
-  body.innerHTML = _shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>';
+  body.innerHTML = _headHtml + (_shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>');
 }
 
-;(function(){ window.BUILD_VERSION='0.3.608-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.609-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
