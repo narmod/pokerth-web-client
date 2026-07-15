@@ -4562,7 +4562,11 @@ body:not(.in-game) .my-zone {
 /* !important : les blocs média portrait/paysage plus bas posent max-width:100%
    et gagneraient la cascade ; --abar-w n'est posée QUE quand la règle QML
    s'applique (paysage officiel), sinon repli none = aucun effet. */
-.my-zone .action-grid { max-width: var(--abar-w, none) !important; margin-left: auto; margin-right: auto; }
+/* margins auto en !important : (1) #g-actions est un flex justify-content:
+   flex-end -> sans auto-margins la grille clampée partait à droite ;
+   (2) le bloc média fs+hide-pbar portrait pose margin:0. Les auto-margins
+   ne décalent rien quand max-width vaut none (grille pleine largeur). */
+.my-zone .action-grid { max-width: var(--abar-w, none) !important; margin-left: auto !important; margin-right: auto !important; }
 .mid-row { display: flex; gap: 6px; align-items: stretch; }
 /* Parite QML GameActionBar : quick-bets a taille fixe, All-In colle juste
    apres Pot, seul le dropdown de mode est pousse a droite (margin-left auto).
