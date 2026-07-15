@@ -8517,9 +8517,10 @@ body.chat-tr-on .msg .chat-tr-btn { display: inline; }
   body.adv-hide-pbar .my-zone {
     left: 50%; right: auto;
     transform: translateX(-50%);
-    /* Plancher 500px : à 380px (min QML) le dropdown Manuel débordait sur la
-       rangée des quick-bets — le web a une rangée mid plus chargée. */
-    width: clamp(500px, calc(242px * var(--comm-scale, 1) + 32px), 96vw);
+    /* Plancher 380px = min QML exact. (Le plancher provisoire de 500px pour
+       le débordement du dropdown n'a plus lieu d'être : la rangée mid est aux
+       largeurs fixes QML — 3×38 + 52 + 132 + gaps ≈ 330px tiennent.) */
+    width: clamp(380px, calc(242px * var(--comm-scale, 1) + 32px), 96vw);
     bottom: 8px;
     background: transparent !important;
     border: none !important;
@@ -8620,7 +8621,7 @@ body.chat-tr-on .msg .chat-tr-btn { display: inline; }
      interne). Police 15 bold ls 0.5 lineHeight 0.95, radius 9. */
   body.adv-hide-pbar .my-zone .act-buttons-row { height: 54px; gap: 8px; align-items: stretch; }
   body.adv-hide-pbar .my-zone .act-buttons-row .btn-action {
-    height: 54px;
+    height: 54px !important; min-height: 0 !important; max-height: 54px !important;
     flex: 1 1 0;
     padding: 0 10px !important;
     font-size: 15px !important;
