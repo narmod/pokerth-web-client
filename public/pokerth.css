@@ -8510,6 +8510,10 @@ body.chat-tr-on .msg .chat-tr-btn { display: inline; }
    Scopé à body.adv-hide-pbar (barre joueur masquée, le défaut) : si la barre
    joueur est réaffichée, l'ancienne implantation pleine largeur reste. */
 @media (min-width: 900px) and (min-height: 600px) {
+  /* .my-zone = POSITIONNEMENT SEUL (transparent, sans ombre) : en mode
+     plein-tapis elle est déjà transparente !important et c'est .action-grid
+     qui porte le panneau — une ombre posée ici dessinait un contour fantôme
+     autour d'une boîte invisible. */
   body.adv-hide-pbar .my-zone {
     left: 50%; right: auto;
     transform: translateX(-50%);
@@ -8517,10 +8521,19 @@ body.chat-tr-on .msg .chat-tr-btn { display: inline; }
        rangée des quick-bets — le web a une rangée mid plus chargée. */
     width: clamp(500px, calc(242px * var(--comm-scale, 1) + 32px), 96vw);
     bottom: 8px;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none;
+    padding: 0;
+  }
+  /* Le PANNEAU visuel QML vit sur .action-grid (fs et non-fs identiques) :
+     fond rgba(0,0,0,0.82), radius 10, ombre douce, pleine largeur du bloc. */
+  body.adv-hide-pbar .my-zone .action-grid {
+    max-width: none; width: 100%;
     background: rgba(0, 0, 0, 0.82);
-    border: none;
     border-radius: 10px;
-    padding: 4px 10px 6px;
+    padding: 6px 10px 8px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
   }
   /* Rangée montant/slider QML : champ 78×26, police 13. */
   body.adv-hide-pbar .my-zone .bet-row .raise-amt-field {
@@ -8563,9 +8576,5 @@ body.chat-tr-on .msg .chat-tr-btn { display: inline; }
   }
   body.adv-hide-pbar .my-zone .action-grid { gap: 4px; }
   body.adv-hide-pbar .my-zone .mid-row { gap: 4px; }
-  /* Panneau : aucun liseré — juste l'ombre douce du QML. */
-  body.adv-hide-pbar .my-zone {
-    border: none !important;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
-  }
+  /* (liseré/ombre gérés sur .action-grid ci-dessus) */
 }
