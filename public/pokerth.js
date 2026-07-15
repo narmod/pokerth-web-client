@@ -11940,7 +11940,9 @@ function _maybeShowNextHandBtn() {
         if (_onk) {
           _onk.removeAttribute('readonly');
           _onk.placeholder = t('nickPlaceholder');
-          _onk.value = (lsGet('pth_offline_nick') || '');   // pseudo entraînement INDÉPENDANT (aucun repli sur le pseudo LAN)
+          // BUGFIX : lsGet est local à une autre branche (ReferenceError au
+          // changement de mode serveur/invité — console narmod). Lecture directe.
+          try { _onk.value = localStorage.getItem('pth_offline_nick') || ''; } catch (eN) { _onk.value = ''; }
         }
         var _onl = $('nick-label'); if (_onl) _onl.textContent = t('enterNickFree');
         if (typeof _stopIpBlockCountdown === 'function') _stopIpBlockCountdown();
@@ -15615,7 +15617,7 @@ function renderPlayersList() {
   body.innerHTML = _shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>';
 }
 
-;(function(){ window.BUILD_VERSION='0.3.565-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.566-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
