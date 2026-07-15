@@ -10777,9 +10777,15 @@ const App = (() => {
     // blocs medias surchargent avec leurs valeurs fixes, sans effet.
     try {
       var _bw = window.innerWidth, _bh = window.innerHeight;
-      var _bk = Math.max(0.55, Math.min(1, Math.min(_bw / 1300, _bh / 900)));
-      _bk = Math.round(_bk * 1000) / 1000;
-      var _bkf = Math.round((0.55 + 0.45 * _bk) * 1000) / 1000;
+      // Échelle QML DISCRÈTE (GameActionBar 2.1.3) : le client officiel n'a
+      // AUCUNE échelle continue — rangée 54 px constante, 56 si Theme.compact
+      // (largeur < 600), 40 en landscapeCompact. k = rowHeight/54, police
+      // kf = 12/15 = 0.8 en landscapeCompact, 1 sinon. (Remplace le rétreint
+      // continu min(W/1300, H/900) qui faisait des boutons de 45 px sur des
+      // fenêtres où le QML en affiche 54 — demande narmod 15/07.)
+      var _lcB = _bh < 600 || (_bw / Math.max(_bh, 1) > 2.1 && _bh < 800);
+      var _bk = _lcB ? 0.741 : (_bw < 600 ? 1.037 : 1);
+      var _bkf = _lcB ? 0.8 : 1;
       if (window.__barK !== _bk) {
         window.__barK = _bk;
         document.documentElement.style.setProperty('--bar-k', _bk);
@@ -15606,7 +15612,7 @@ function renderPlayersList() {
   body.innerHTML = _shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>';
 }
 
-;(function(){ window.BUILD_VERSION='0.3.561-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.562-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

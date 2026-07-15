@@ -2393,6 +2393,18 @@ body {
     padding: 0 10px !important;
     border-radius: 9px;
   }
+  /* Thème à SVG de boutons : le Tapis mobile garde l'image DU THÈME, étirée
+     comme le QML (le hardcode ci-dessus n'est plus que le REPLI sans pack —
+     il écrasait le thème, bug de la passe 405-416). !important requis pour
+     battre le border !important du repli ; spécificité supérieure → gagne. */
+  :root[data-btn-img] .my-zone .mid-row .btn-allin {
+    border: none !important;
+    background: transparent !important;
+    background-image: var(--btn-allin-img) !important;
+    background-size: 100% 100% !important;
+    background-repeat: no-repeat !important;
+    border-radius: 6px;
+  }
   .my-zone .act-buttons-row { gap: 4px; }
   .my-zone .act-buttons-row .btn-action { min-height: 30px; padding: 0 8px; font-size: 0.72rem; letter-spacing: 0.5px; border-radius: 9px; min-width: 0; }
   .my-zone .mid-row .btn-pct { flex: 0 0 auto; min-width: 40px; height: 24px; min-height: 24px; padding: 0 8px; border-radius: 9px; font-size: 0.58rem; font-weight: 700; border-width: 1px; }
