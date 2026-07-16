@@ -418,6 +418,12 @@ export const strings = {
     abLicense2:'The full license texts are available with the source code:',
     abLibsIntro:'This web client builds on the following free software projects:',
     abLibFont:'typeface', abLibProxy:'WebSocket proxy',
+    abAuthors:'Authors:',
+    abAuthRole1:'initial idea, basic architecture, GUI implementation, GUI graphics editing, Linux packages',
+    abAuthRole2:'initial idea, basic architecture, engine development',
+    abAuthRole3:'basic architecture, network development, Windows package, MacOS package',
+    abAuthRole4:'initial GUI graphics design',
+    abAuthRole5:'code modernization, QML layout',
 };
 
 export default { meta, strings };

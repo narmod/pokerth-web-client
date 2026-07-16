@@ -420,6 +420,12 @@ export const strings = {
     abLicense2:'Le texte complet des licences est disponible avec le code source :',
     abLibsIntro:"Ce client web s'appuie sur les projets libres suivants :",
     abLibFont:'police de caractères', abLibProxy:'proxy WebSocket',
+    abAuthors:'Auteurs :',
+    abAuthRole1:"idée initiale, architecture de base, implémentation de l'interface graphique, édition des graphismes de l'interface graphique, paquets Linux",
+    abAuthRole2:'idée initiale, architecture de base, développement du moteur',
+    abAuthRole3:'architecture de base, développement réseau, paquet Windows, paquet MacOS',
+    abAuthRole4:"design initial du graphisme de l'interface graphique",
+    abAuthRole5:'modernisation du code, mise en page QML',
 };
 
 export default { meta, strings };
