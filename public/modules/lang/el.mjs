@@ -57,7 +57,7 @@ export const strings = {
   advSecChat: "Συνομιλία",
   advSecCommunity: "Κοινότητα",
   advSecAvatars: "Άβαταρ",
-  advSecHelp: "Βοήθεια",
+  advSecHelp: "Βοήθεια", advHandsBtn: "Εμφάνιση εικονιδίου συνδυασμών πόκερ στο τραπέζι",
   advSecSeats: "Θέσεις",
   advSecKeys: "Συντομεύσεις πληκτρολογίου",
   advAnimCards: "Κινούμενα φύλλα",

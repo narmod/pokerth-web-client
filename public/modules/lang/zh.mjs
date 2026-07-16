@@ -58,7 +58,7 @@ export const strings = {
   advSecChat: "聊天",
   advSecCommunity: "社区",
   advSecAvatars: "头像",
-  advSecHelp: "帮助",
+  advSecHelp: "帮助", advHandsBtn: "在牌桌上显示扑克牌型图标",
   advSecSeats: "座位",
   advSecKeys: "键盘快捷键",
   advAnimCards: "发牌动画",

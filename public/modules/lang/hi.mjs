@@ -61,7 +61,7 @@ export const strings = {
   advSecChat: "चैट",
   advSecCommunity: "समुदाय",
   advSecAvatars: "अवतार",
-  advSecHelp: "सहायता",
+  advSecHelp: "सहायता", advHandsBtn: "टेबल पर पोकर हैंड आइकन दिखाएँ",
   advSecSeats: "सीटें",
   advSecKeys: "कीबोर्ड शॉर्टकट",
   advAnimCards: "पत्तों के एनिमेशन",

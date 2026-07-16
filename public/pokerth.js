@@ -402,6 +402,7 @@ function applyAdvOpts() {
     b.classList.toggle('adv-4color', _advGet('four_color', false)); // deck 4 couleurs (glyphes)
     b.classList.toggle('adv-no-tablezoom', !_advGet('table_zoom', true)); // interrupteur zoom (parite QML tableZoomEnabled)
     b.classList.toggle('adv-no-lobbychat', !_advGet('lobby_chat', true)); // chat du lobby (parite QML UseLobbyChat)
+    b.classList.toggle('adv-no-handsbtn', !_advGet('hands_btn', true)); // icone combinaisons de poker sur le tapis (extension web)
     try { if (typeof window.applyTableZoom === 'function') window.applyTableZoom(); } catch (e) {}
     try { var _slm = localStorage.getItem('pth_seat_layout'); _slm = (_slm === 'pokerth-official' || _slm === 'pokerth-ellipse' || _slm === 'custom') ? _slm : 'auto'; document.documentElement.setAttribute('data-seat-layout', _slm); } catch (e) {}
     try { if (typeof window._refreshOwnCards === 'function') window._refreshOwnCards(); } catch (e) {}
@@ -572,6 +573,7 @@ function openAdvancedOptions() {
   sync('adv-guardcall', 'guard_call', false);
   sync('adv-assist', 'assist', true);
   sync('adv-showodds', 'show_odds', true);
+  sync('adv-handsbtn', 'hands_btn', true);
   sync('adv-autobtn', 'show_auto', true);
   sync('adv-quickbet', 'show_pct', true);
   sync('adv-voice', 'voice', false);
@@ -787,7 +789,7 @@ function resetAdvDefaults() {
   var defs = {
     anim_cards: true, show_blinds: true, hide_pbar: true, show_community: true, four_color: false,
     focus_bet: false, chat_noemoji: false, fade_losers: true, show_flag: true,
-    own_click: false, guard_call: false, odds_monitor: false, no_hide_ignored: false,
+    own_click: false, guard_call: false, odds_monitor: false, no_hide_ignored: false, hands_btn: true,
     fkeys_alt: false, zoom_follow: false, table_zoom: true, lobby_chat: true, log_on: true, pause_hands: false, create_dialog: true, cfg_sync: false, poker_en: true,
     snd_actions: true, snd_lobby: true, snd_net: true, snd_blinds: true,
     reduce_fx: false, status_bar: true, ping_avatar: false, auto_leave: false, blinds_badge: true
@@ -16315,7 +16317,7 @@ function renderPlayersList() {
   });
 })();
 
-;(function(){ window.BUILD_VERSION='0.3.655-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.656-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

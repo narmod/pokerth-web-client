@@ -62,7 +62,7 @@ export const strings = {
   advSecChat: "Chat",
   advSecCommunity: "Community",
   advSecAvatars: "Avatars",
-  advSecHelp: "Help",
+  advSecHelp: "Help", advHandsBtn: "Pictogram met pokerhanden op tafel tonen",
   advSecSeats: "Plaatsen",
   advSecKeys: "Sneltoetsen",
   advAnimCards: "Kaartanimaties",

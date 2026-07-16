@@ -57,7 +57,7 @@ export const strings = {
   advSecChat: "Chat",
   advSecCommunity: "Zajednica",
   advSecAvatars: "Avatari",
-  advSecHelp: "Pomoć",
+  advSecHelp: "Pomoć", advHandsBtn: "Prikaži ikonu poker kombinacija na stolu",
   advSecSeats: "Mjesta",
   advSecKeys: "Tipkovni prečaci",
   advAnimCards: "Animacije karata",

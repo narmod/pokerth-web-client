@@ -58,7 +58,7 @@ export const strings = {
   advSecChat: "அரட்டை",
   advSecCommunity: "சமூகம்",
   advSecAvatars: "அவதாரங்கள்",
-  advSecHelp: "உதவி",
+  advSecHelp: "உதவி", advHandsBtn: "மேசையில் போக்கர் கை ஐகானைக் காட்டு",
   advSecSeats: "இருக்கைகள்",
   advSecKeys: "விசைப்பலகை குறுக்குவழிகள்",
   advAnimCards: "சீட்டு அசைவூட்டங்கள்",

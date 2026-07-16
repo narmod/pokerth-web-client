@@ -58,7 +58,7 @@ export const strings = {
   advSecChat: "Cabadaich",
   advSecCommunity: "Coimhearsnachd",
   advSecAvatars: "Avatars",
-  advSecHelp: "Cobhair",
+  advSecHelp: "Cobhair", advHandsBtn: "Seall ìomhaigheag làmhan a' phòcair air a' bhòrd",
   advSecSeats: "Suidheachain",
   advSecKeys: "Ath-ghoiridean meur-chlàir",
   advAnimCards: "Beòthachadh chairtean",

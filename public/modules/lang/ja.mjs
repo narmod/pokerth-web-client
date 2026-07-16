@@ -56,7 +56,7 @@ export const strings = {
   advSecChat: "チャット",
   advSecCommunity: "コミュニティ",
   advSecAvatars: "アバター",
-  advSecHelp: "ヘルプ",
+  advSecHelp: "ヘルプ", advHandsBtn: "テーブルにポーカー役アイコンを表示",
   advSecSeats: "席",
   advSecKeys: "キーボードショートカット",
   advAnimCards: "カードアニメーション",

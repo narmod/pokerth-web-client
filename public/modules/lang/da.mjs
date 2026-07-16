@@ -56,7 +56,7 @@ export const strings = {
   advSecChat: "Chat",
   advSecCommunity: "Fællesskab",
   advSecAvatars: "Avatarer",
-  advSecHelp: "Hjælp",
+  advSecHelp: "Hjælp", advHandsBtn: "Vis ikonet med pokerhænder på bordet",
   advSecSeats: "Pladser",
   advSecKeys: "Tastaturgenveje",
   advAnimCards: "Kortanimationer",

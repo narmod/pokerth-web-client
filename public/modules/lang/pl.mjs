@@ -63,7 +63,7 @@ export const strings = {
   advSecChat: "Czat",
   advSecCommunity: "Społeczność",
   advSecAvatars: "Awatary",
-  advSecHelp: "Pomoc",
+  advSecHelp: "Pomoc", advHandsBtn: "Pokaż ikonę układów pokerowych na stole",
   advSecSeats: "Miejsca",
   advSecKeys: "Skróty klawiszowe",
   advAnimCards: "Animacje kart",

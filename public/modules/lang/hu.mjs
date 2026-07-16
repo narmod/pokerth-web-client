@@ -57,7 +57,7 @@ export const strings = {
   advSecChat: "Csevegés",
   advSecCommunity: "Közösség",
   advSecAvatars: "Avatárok",
-  advSecHelp: "Súgó",
+  advSecHelp: "Súgó", advHandsBtn: "Póker kéz-kombinációk ikonjának megjelenítése az asztalon",
   advSecSeats: "Helyek",
   advSecKeys: "Billentyűparancsok",
   advAnimCards: "Lapanimációk",

@@ -58,7 +58,7 @@ export const strings = {
   advSecChat: "Chat",
   advSecCommunity: "Comunidade",
   advSecAvatars: "Avatares",
-  advSecHelp: "Ajuda",
+  advSecHelp: "Ajuda", advHandsBtn: "Mostrar o ícone das mãos de pôquer",
   advSecSeats: "Lugares",
   advSecKeys: "Atalhos de teclado",
   advAnimCards: "Animações das cartas",

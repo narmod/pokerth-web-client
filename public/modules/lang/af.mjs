@@ -57,7 +57,7 @@ export const strings = {
   advSecChat: "Klets",
   advSecCommunity: "Gemeenskap",
   advSecAvatars: "Avatars",
-  advSecHelp: "Hulp",
+  advSecHelp: "Hulp", advHandsBtn: "Wys die pokerhande-ikoon op die tafel",
   advSecSeats: "Sitplekke",
   advSecKeys: "Sleutelbordkortpaaie",
   advAnimCards: "Kaartanimasies",
