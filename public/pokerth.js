@@ -1130,9 +1130,14 @@ function _cfgSyncPushSoon(ms) {
 function _cfgSyncPushNow(keepalive) {
   if (!_cfgSyncToken || !_cfgSyncEnabled()) return;
   var xml; try { xml = _cfgBuildXml(); } catch (e) { return; }
-  fetch('/prefs?token=' + encodeURIComponent(_cfgSyncToken),
-        { method: 'PUT', headers: { 'Content-Type': 'application/xml' }, body: xml, keepalive: !!keepalive })
-    .then(function (r) { return r.json(); })
+  fetch('/prefs',
+        { method: 'PUT', headers: { 'Content-Type': 'application/xml', 'Authorization': 'Bearer ' + _cfgSyncToken }, body: xml, keepalive: !!keepalive })
+    .then(function (r) {
+      // 429 = rate-limit serveur (1 écriture/5 s par compte) : le drapeau dirty
+      // reste posé, on re-tente un peu plus tard (pas au pagehide).
+      if (r.status === 429) { if (!keepalive) _cfgSyncPushSoon(6000); return null; }
+      return r.json();
+    })
     .then(function (d) {
       if (d && d.ok) {
         try { localStorage.setItem('pth_cfg_sync_ts', String(d.updatedAt || Date.now())); } catch (e) {}
@@ -1142,7 +1147,7 @@ function _cfgSyncPushNow(keepalive) {
 }
 function _cfgSyncPull() {
   if (!_cfgSyncToken || !_cfgSyncEnabled()) return;
-  fetch('/prefs?token=' + encodeURIComponent(_cfgSyncToken))
+  fetch('/prefs', { headers: { 'Authorization': 'Bearer ' + _cfgSyncToken } })
     .then(function (r) { return r.json(); })
     .then(function (d) {
       if (!d || !d.ok) return;
@@ -16769,7 +16774,7 @@ function renderPlayersList() {
   });
 })();
 
-;(function(){ window.BUILD_VERSION='0.3.670-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.671-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

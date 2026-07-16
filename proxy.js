@@ -345,9 +345,11 @@ function _syncTokenName(tok) {
   e.exp = Date.now() + 24 * 3600 * 1000;   // expiration GLISSANTE : chaque usage prolonge de 24 h
   return e.name;
 }
-setInterval(function () {   // purge périodique des jetons expirés
+const _prefsLastWrite = new Map();   // compte -> ts dernière écriture (rate-limit PUT /prefs)
+setInterval(function () {   // purge périodique des jetons expirés + entrées de rate-limit
   const now = Date.now();
   _syncTokens.forEach(function (v, k) { if (v.exp < now) _syncTokens.delete(k); });
+  _prefsLastWrite.forEach(function (ts, k) { if (now - ts > 3600 * 1000) _prefsLastWrite.delete(k); });
 }, 3600 * 1000).unref();
 const PREFS_DIR = process.env.PREFS_DIR || path.join(__dirname, 'prefs');
 function _prefsFile(name) {
@@ -1498,7 +1500,10 @@ function handleAdmin(req, res, reqPathOnly, query) {
   // Auth par jeton de session émis à l'InitAck d'un login authentifié (voir
   // _issueSyncToken). GET = lire le blob du compte ; PUT/POST = l'écrire.
   if (reqPathOnly === '/prefs') {
-    const acct = _syncTokenName(query.token);
+    // Jeton attendu en header Authorization: Bearer <tok> (n'apparaît pas dans
+    // les logs d'accès HTTP) ; repli sur ?token= pour les anciens clients en cache.
+    const _authTok = String(req.headers['authorization'] || '').replace(/^Bearer\s+/i, '').trim();
+    const acct = _syncTokenName(_authTok || query.token);
     if (!acct) return adminJson(res, 403, { ok: false, error: 'not authenticated (registered account required)' });
     if (req.method === 'GET') {
       try {
@@ -1513,8 +1518,20 @@ function handleAdmin(req, res, reqPathOnly, query) {
       req.on('data', function (c) { body += c; if (body.length > 400 * 1024) req.destroy(); });
       req.on('end', function () {
         if (body.indexOf('<PokerTH') < 0) return adminJson(res, 400, { ok: false, error: 'not a PokerTH config.xml' });
+        // Rate-limit : 1 écriture / 5 s par compte (le client debounce déjà à 5 s
+        // et re-tente sur 429) — protège le disque d'un client hostile à jeton valide.
+        const _lw = _prefsLastWrite.get(acct) || 0;
+        if (Date.now() - _lw < 5000) return adminJson(res, 429, { ok: false, error: 'rate limited' });
+        _prefsLastWrite.set(acct, Date.now());
         const rec = { name: acct, updatedAt: Date.now(), xml: body };
-        try { fs.mkdirSync(PREFS_DIR, { recursive: true }); fs.writeFileSync(_prefsFile(acct), JSON.stringify(rec)); }
+        // Écriture atomique : tmp puis rename — un crash mi-écriture ne peut pas
+        // corrompre le fichier final (rename POSIX atomique sur le même FS).
+        try {
+          fs.mkdirSync(PREFS_DIR, { recursive: true });
+          const _fp = _prefsFile(acct), _tmp = _fp + '.tmp';
+          fs.writeFileSync(_tmp, JSON.stringify(rec));
+          fs.renameSync(_tmp, _fp);
+        }
         catch (e) { return adminJson(res, 500, { ok: false, error: 'write failed' }); }
         return adminJson(res, 200, { ok: true, updatedAt: rec.updatedAt });
       });
