@@ -8067,6 +8067,8 @@ html.reduce-fx *, html.reduce-fx *::before, html.reduce-fx *::after {
 }
 .lobby-statsbar a { color: var(--gold-dim, #9a824a); text-decoration: none; }
 .lobby-statsbar a:hover { text-decoration: underline; }
+/* Palettes officielles : pas de trait au-dessus de la statsbar (parite QML). */
+:root[data-theme^="pokerth"] .lobby-statsbar { border-top: none; }
 
 /* ── Galerie d'avatars d'exemple (client Qt-Widgets officiel) ── */
 .avgal-overlay {
@@ -8283,7 +8285,7 @@ html[data-buttons="pokerth"] .btn-action[disabled] { filter: grayscale(0.55) bri
 .lobby-footbar { display:flex; align-items:center; gap:12px; padding:8px 14px;
   border-top:1px solid var(--border); background:var(--panel); flex-shrink:0;
   position:sticky; bottom:0; z-index:20; }
-.lobby-footbar .lfb-name { color:var(--text); font-size:0.82rem; white-space:nowrap; }
+.lobby-footbar .lfb-name { color:var(--text-hi); font-weight:700; font-size:0.82rem; white-space:nowrap; }
 .lobby-footbar .lfb-name b { color:var(--gold); }
 /* Boutons de la barre du bas. Forme commune : largeurs ÉGALES et adaptatives —
    « Joueur : … » (nowrap) garde sa place et les boutons rétrécissent quand le
