@@ -8514,7 +8514,7 @@ html[data-buttons="pokerth"] .btn-action[disabled] { filter: grayscale(0.55) bri
 .pl-colhead {
   position:sticky; top:0; z-index:2;
   display:grid; align-items:center; gap:8px;
-  padding:4px 0 6px; margin-bottom:2px;
+  padding:4px 12px 6px; margin:0 -12px 2px;
   background:linear-gradient(var(--chrome-tint),var(--chrome-tint)),var(--panel); border-bottom:1px solid var(--border);
 }
 .pl-colh-spacer { min-width:0; }
