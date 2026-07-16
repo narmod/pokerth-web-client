@@ -108,6 +108,8 @@ So I sat down and built one.
 
 It started as a very simple interface — just enough to deal a hand around the table. But every family game brought new feedback ("I can't tell the suits apart on my phone", "whose turn is it?", "can we have avatars?"), and little by little those suggestions grew the bare-bones prototype into the much more complete client it is today.
 
+Then something wonderful happened: I showed the project to the PokerTH team — they liked the idea, and I was welcomed into the project so that this client can become an **official PokerTH client**. The layout is now based on the team's next-generation **QML client**, and the goal is a faithful web clone of that app: same seat placement, same action bar, same colors, same behaviour — kept in sync as the official client evolves.
+
 This project is a **web frontend** that connects to any PokerTH server directly from the browser, with no app installation needed. It is designed to work great on phones and tablets so that family poker nights are just a URL away.
 
 ---
