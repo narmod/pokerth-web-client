@@ -401,6 +401,25 @@ export const strings = {
     // v0.3.579 : cles err*/affichage manquantes (utilisees dans le code)
     displayBB:'Montants en grosses blindes', displayChips:'Montants en jetons', errGameFull:'La partie est complète', errBadGameName:'Nom de partie invalide', errInvalidSettings:'Réglages de partie invalides', errBlocked:'Adresse IP bloquée',
     errRejoinFailed:'Échec de la reconnexion à la partie', errNoSpectators:'Les spectateurs ne sont pas autorisés', serverPassword:'Mot de passe du serveur (optionnel)', userPassword:'Mot de passe utilisateur (optionnel)', avatarImageTooltip:'Choisir une image personnalisée',
+    // Page « À propos de PokerTH » (parité AboutPage QML)
+    aboutMenu:'À propos de PokerTH', abTitle:'À propos de PokerTH',
+    abTabAbout:'A propos de', abTabProject:'Projet', abTabThanks:'Remerciements à', abTabLicense:'Licence', abTabLibs:'Bibliothèques tierces',
+    abFeat1:'Le jeu de Poker Texas Holdem par excellence',
+    abFeat2:"Partie solo avec possibilité de jouer jusqu'à 9 adversaires contrôlés par l'ordinateur",
+    abFeat3:'Parties sur Internet et sur serveur privé',
+    abFeat4:'Mode entraînement hors ligne contre les bots',
+    abFeat5:"Possibilité de changer l'aspect du jeu avec des styles de cartes et de tables",
+    abFeat6:'Certaines parties sont enregistrées et vous pouvez consulter le classement des meilleurs joueurs en ligne',
+    abCopy:'(c) 2006\u20132026, Felix Hammer, Florian Thauer, Lothar May',
+    abWebBy:'Client web : narmod, en collaboration avec le projet PokerTH.',
+    abProject1:"PokerTH est un jeu de poker Texas Hold'em libre et open source, développé depuis 2006. Ce client web en est le portage navigateur, développé en collaboration avec le projet PokerTH.",
+    abProject2:'Le code source est librement disponible :', abProjectWeb:'Client web',
+    abThanks1:"Merci à l'équipe PokerTH \u2014 Felix Hammer, Florian Thauer, Lothar May \u2014 ainsi qu'à tous les contributeurs du projet depuis 2006.",
+    abThanks2:'Merci également à la communauté PokerTH.net, aux traducteurs et aux testeurs, et aux mainteneurs actuels pour l\'accompagnement de ce client web.',
+    abLicense1:'Le client web PokerTH est publié sous licence GNU AGPL v3. PokerTH est publié sous licence GNU GPL.',
+    abLicense2:'Le texte complet des licences est disponible avec le code source :',
+    abLibsIntro:"Ce client web s'appuie sur les projets libres suivants :",
+    abLibFont:'police de caractères', abLibProxy:'proxy WebSocket',
 };
 
 export default { meta, strings };

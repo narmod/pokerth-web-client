@@ -538,6 +538,7 @@ function onAvatarImageChosen(input) {
       <a class="btn-sm" href="https://discord.gg/QU3nu2MqvB" target="_blank" rel="noopener noreferrer" onclick="this.closest('details').open=false"><span class="cl-ico"><svg viewBox="0 0 24 24" style="display:block;width:18px;height:18px" fill="#5865F2" aria-hidden="true"><path d="M20.317 4.3698a19.7913 19.7913 0 00-4.8851-1.5152.0741.0741 0 00-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6177-1.2495a.077.077 0 00-.0785-.037 19.7363 19.7363 0 00-4.8852 1.515.0699.0699 0 00-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 00.0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.0777.0777 0 00.0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 00-.0416-.1057c-.6528-.2476-1.2743-.5495-1.8722-.8923a.077.077 0 01-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 01.0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 01.0785.0095c.1202.099.246.1981.3728.2924a.077.077 0 01-.0066.1276 12.2986 12.2986 0 01-1.873.8914.0766.0766 0 00-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 00.0842.0286c1.961-.6067 3.9495-1.5219 6.0023-3.0294a.077.077 0 00.0313-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6604a.061.061 0 00-.0312-.0286zM8.02 15.3312c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9555-2.4189 2.157-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.9555 2.4189-2.1569 2.4189zm7.9748 0c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9554-2.4189 2.1569-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.946 2.4189-2.1568 2.4189Z"/></svg></span>Discord</a>
       <a class="btn-sm" href="https://bbc.pokerth.net/shoutbox" target="_blank" rel="noopener noreferrer" onclick="this.closest('details').open=false"><span class="cl-ico"><img src="/bbc-icon.png" alt="" onerror="this.onerror=null;this.replaceWith('🌐')"></span>Best Brainies Cup</a>
       <a class="btn-sm" href="https://wec.pokerth.net/" target="_blank" rel="noopener noreferrer" onclick="this.closest('details').open=false"><span class="cl-ico"><img src="/wec-icon.png" alt="" onerror="this.onerror=null;this.replaceWith('🃏')"></span>WeCup</a>
+      <button class="btn-sm" type="button" onclick="this.closest('details').open=false;window.openAboutPage()"><span class="cl-ico"><svg viewBox="0 0 24 24" style="display:block;width:18px;height:18px" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><line x1="12" y1="11" x2="12" y2="16.5"/><circle cx="12" cy="7.6" r="0.6" fill="currentColor"/></svg></span><span data-i18n="aboutMenu">À propos de PokerTH</span></button>
       </div>
       </details>
     </div>
@@ -1778,6 +1779,74 @@ function onAvatarImageChosen(input) {
 <!-- ╚═══════════════╝ -->
 <button id="gchat-fab" onclick="toggleGameChat()" title="Chat" data-i18n-title="chatTooltip">💬</button>
 <button id="g-next-hand-btn" style="display:none" onclick="App.dismissWinner()">▶ <span data-i18n="nextHandBtn">Next hand</span></button>
+
+<!-- ╔═══════════════════════════╗ -->
+<!-- ║  À PROPOS DE POKERTH      ║ -->
+<!-- ╚═══════════════════════════╝ -->
+<!-- Parité AboutPage QML 2.1.3 : bouton retour, titre, 5 onglets pleine
+     largeur (À propos / Projet / Remerciements / Licence / Bibliothèques). -->
+<div id="about-page" style="display:none">
+  <div class="ab-head">
+    <button class="ab-back" type="button" onclick="window.closeAboutPage()" title="Retour" data-i18n-title="backTooltip" aria-label="Retour">&#8249;</button>
+  </div>
+  <div class="ab-title" data-i18n="abTitle">À propos de PokerTH</div>
+  <div class="ab-tabs" role="tablist">
+    <button class="ab-tab active" id="ab-tab-0" type="button" role="tab" onclick="window.abShowTab(0)" data-i18n="abTabAbout">A propos de</button>
+    <button class="ab-tab" id="ab-tab-1" type="button" role="tab" onclick="window.abShowTab(1)" data-i18n="abTabProject">Projet</button>
+    <button class="ab-tab" id="ab-tab-2" type="button" role="tab" onclick="window.abShowTab(2)" data-i18n="abTabThanks">Remerciements à</button>
+    <button class="ab-tab" id="ab-tab-3" type="button" role="tab" onclick="window.abShowTab(3)" data-i18n="abTabLicense">Licence</button>
+    <button class="ab-tab" id="ab-tab-4" type="button" role="tab" onclick="window.abShowTab(4)" data-i18n="abTabLibs">Bibliothèques tierces</button>
+  </div>
+  <div class="ab-body">
+    <div class="ab-pane" id="ab-pane-0">
+      <div class="ab-logo">
+        <img src="/favicon.svg" alt="PokerTH" width="110" height="110">
+        <div class="ab-suits"><span>♠</span> <span class="r">♥</span> <span class="r">♦</span> <span>♣</span></div>
+        <div class="ab-vername" id="ab-version">PokerTH Web Client</div>
+      </div>
+      <div class="ab-feats">
+        <div>– <span data-i18n="abFeat1">Le jeu de Poker Texas Holdem par excellence</span></div>
+        <div>– <span data-i18n="abFeat2">Partie solo avec possibilité de jouer jusqu'à 9 adversaires contrôlés par l'ordinateur</span></div>
+        <div>– <span data-i18n="abFeat3">Parties sur Internet et sur serveur privé</span></div>
+        <div>– <span data-i18n="abFeat4">Mode entraînement hors ligne contre les bots</span></div>
+        <div>– <span data-i18n="abFeat5">Possibilité de changer l'aspect du jeu avec des styles de cartes et de tables</span></div>
+        <div>– <span data-i18n="abFeat6">Certaines parties sont enregistrées et vous pouvez consulter le classement des meilleurs joueurs en ligne</span></div>
+      </div>
+      <div class="ab-copy" data-i18n="abCopy">(c) 2006–2026, Felix Hammer, Florian Thauer, Lothar May</div>
+      <div class="ab-copy" data-i18n="abWebBy">Client web : narmod, en collaboration avec le projet PokerTH.</div>
+      <div class="ab-net"><a href="https://www.pokerth.net" target="_blank" rel="noopener noreferrer">https://www.pokerth.net</a></div>
+    </div>
+    <div class="ab-pane" id="ab-pane-1" style="display:none">
+      <p data-i18n="abProject1">PokerTH est un jeu de poker Texas Hold'em libre et open source, développé depuis 2006. Ce client web en est le portage navigateur, développé en collaboration avec le projet PokerTH.</p>
+      <p data-i18n="abProject2">Le code source est librement disponible :</p>
+      <ul>
+        <li>PokerTH — <a href="https://github.com/pokerth/pokerth" target="_blank" rel="noopener noreferrer">github.com/pokerth/pokerth</a></li>
+        <li><span data-i18n="abProjectWeb">Client web</span> — <a href="https://github.com/narmod/pokerth-web-client" target="_blank" rel="noopener noreferrer">github.com/narmod/pokerth-web-client</a></li>
+      </ul>
+    </div>
+    <div class="ab-pane" id="ab-pane-2" style="display:none">
+      <p data-i18n="abThanks1">Merci à l'équipe PokerTH — Felix Hammer, Florian Thauer, Lothar May — ainsi qu'à tous les contributeurs du projet depuis 2006.</p>
+      <p data-i18n="abThanks2">Merci également à la communauté PokerTH.net, aux traducteurs et aux testeurs, et aux mainteneurs actuels pour l'accompagnement de ce client web.</p>
+    </div>
+    <div class="ab-pane" id="ab-pane-3" style="display:none">
+      <p data-i18n="abLicense1">Le client web PokerTH est publié sous licence GNU AGPL v3. PokerTH est publié sous licence GNU GPL.</p>
+      <p data-i18n="abLicense2">Le texte complet des licences est disponible avec le code source :</p>
+      <ul>
+        <li><a href="https://github.com/narmod/pokerth-web-client/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">AGPL-3.0 — pokerth-web-client</a></li>
+        <li><a href="https://www.gnu.org/licenses/" target="_blank" rel="noopener noreferrer">gnu.org/licenses</a></li>
+      </ul>
+    </div>
+    <div class="ab-pane" id="ab-pane-4" style="display:none">
+      <p data-i18n="abLibsIntro">Ce client web s'appuie sur les projets libres suivants :</p>
+      <ul>
+        <li>Inter — <span data-i18n="abLibFont">police de caractères</span> (SIL OFL)</li>
+        <li>Noto Color Emoji (SIL OFL)</li>
+        <li>flag-icons (MIT)</li>
+        <li>Node.js &amp; ws — <span data-i18n="abLibProxy">proxy WebSocket</span> (MIT)</li>
+      </ul>
+    </div>
+  </div>
+</div>
 
 <!-- Password prompt modal -->
 <div id="password-prompt" style="display:none">

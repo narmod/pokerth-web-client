@@ -16229,7 +16229,30 @@ function renderPlayersList() {
   body.innerHTML = _headHtml + (_shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>');
 }
 
-;(function(){ window.BUILD_VERSION='0.3.646-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+/* ── Page « À propos de PokerTH » (parité AboutPage QML) ── */
+;(function(){
+  function $(id){ return document.getElementById(id); }
+  window.openAboutPage = function(){
+    var p = $('about-page'); if (!p) return;
+    p.style.display = 'flex';
+    var v = $('ab-version');
+    if (v) v.textContent = 'PokerTH Web Client ' + (window.BUILD_VERSION || '');
+    window.abShowTab(0);
+  };
+  window.closeAboutPage = function(){ var p = $('about-page'); if (p) p.style.display = 'none'; };
+  window.abShowTab = function(i){
+    for (var k = 0; k < 5; k++) {
+      var tb = $('ab-tab-' + k), pn = $('ab-pane-' + k);
+      if (tb) tb.classList.toggle('active', k === i);
+      if (pn) pn.style.display = (k === i) ? 'block' : 'none';
+    }
+  };
+  document.addEventListener('keydown', function(e){
+    if (e.key === 'Escape') { var p = $('about-page'); if (p && p.style.display !== 'none' && p.style.display !== '') window.closeAboutPage(); }
+  });
+})();
+
+;(function(){ window.BUILD_VERSION='0.3.647-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

@@ -399,6 +399,25 @@ export const strings = {
     // v0.3.579 : cles utilisees dans le code mais absentes du catalogue (err* de JoinGameFailed, affichage BB/jetons, mots de passe, onglets info)
     displayBB:'Amounts shown in big blinds', displayChips:'Amounts shown in chips', errGameFull:'Game is full', errBadGameName:'Bad game name', errInvalidSettings:'Invalid game settings', errBlocked:'IP address blocked', errRejoinFailed:'Rejoin failed',
     errNoSpectators:'Spectators are not allowed', serverPassword:'Server password (optional)', userPassword:'User password (optional)', avatarImageTooltip:'Choose a custom image', gipTabLog:'Log', gipTabOdds:'Odds',
+    // Page « À propos de PokerTH » (parité AboutPage QML)
+    aboutMenu:'About PokerTH', abTitle:'About PokerTH',
+    abTabAbout:'About', abTabProject:'Project', abTabThanks:'Thanks to', abTabLicense:'License', abTabLibs:'Third-party libraries',
+    abFeat1:"The Texas Hold'em poker game par excellence",
+    abFeat2:'Solo play against up to 9 computer-controlled opponents',
+    abFeat3:'Internet and private-server games',
+    abFeat4:'Offline training mode against the bots',
+    abFeat5:'Customize the look of the game with card decks and table styles',
+    abFeat6:'Some games are recorded and you can browse the online leaderboard of the best players',
+    abCopy:'(c) 2006\u20132026, Felix Hammer, Florian Thauer, Lothar May',
+    abWebBy:'Web client: narmod, in collaboration with the PokerTH project.',
+    abProject1:"PokerTH is a free and open source Texas Hold'em poker game, developed since 2006. This web client is its browser port, developed in collaboration with the PokerTH project.",
+    abProject2:'The source code is freely available:', abProjectWeb:'Web client',
+    abThanks1:'Thanks to the PokerTH team \u2014 Felix Hammer, Florian Thauer, Lothar May \u2014 and to all project contributors since 2006.',
+    abThanks2:'Thanks also to the PokerTH.net community, the translators and testers, and the current maintainers for supporting this web client.',
+    abLicense1:'The PokerTH web client is released under the GNU AGPL v3 license. PokerTH is released under the GNU GPL license.',
+    abLicense2:'The full license texts are available with the source code:',
+    abLibsIntro:'This web client builds on the following free software projects:',
+    abLibFont:'typeface', abLibProxy:'WebSocket proxy',
 };
 
 export default { meta, strings };
