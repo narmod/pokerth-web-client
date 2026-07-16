@@ -409,7 +409,7 @@ export const strings = {
     abFeat5:'Customize the look of the game with card decks and table styles',
     abFeat6:'Some games are recorded and you can browse the online leaderboard of the best players',
     abCopy:'(c) 2006\u20132026, Felix Hammer, Florian Thauer, Lothar May',
-    abWebBy:'Web client: narmod, in collaboration with the PokerTH project.',
+    abWebBy:'Web client: Arnaud Obscur (narmod), in collaboration with the PokerTH project.',
     abProject1:"PokerTH is a free and open source Texas Hold'em poker game, developed since 2006. This web client is its browser port, developed in collaboration with the PokerTH project.",
     abProject2:'The source code is freely available:', abProjectWeb:'Web client',
     abThanks1:'Thanks to the PokerTH team \u2014 Felix Hammer, Florian Thauer, Lothar May \u2014 and to all project contributors since 2006.',
