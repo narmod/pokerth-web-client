@@ -492,7 +492,7 @@ body {
   /* PokerTH official login backdrop (flames) — login screen only, theme-agnostic.
      Dark veil keeps the centered .card readable over the bright artwork. */
   background:
-    linear-gradient(rgba(8,10,14,0.55), rgba(8,10,14,0.68)),
+    linear-gradient(rgba(8,10,14,0.10), rgba(8,10,14,0.15)),
     url("/img/pokerth-login-bg.webp") center / cover no-repeat;
 }
 
