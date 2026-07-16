@@ -8421,6 +8421,7 @@ const App = (() => {
       // (cash, blindes, hausse et points de sièges sont désormais dans le panneau Infos.)
       var metaBits = [];
       metaBits.push('<span>👥 ' + g.players + '/' + (g.maxPlayers || 10) + '</span>');
+      metaBits.push('<span class="game-badge ' + badgeCls + '">' + label + '</span>');
       var _dly = g.delay || 0;
       metaBits.push('<span>' + t('gameTimeLabel') + ' : ' + (g.timeout || 0) + 's' + (_dly ? '/' + _dly + 's' : '') + '</span>');
       metaBits.push('<span>' + ((g.priv || g.type === 3) ? t('piPrivate') : t('piPublic')) + '</span>');
@@ -8430,8 +8431,7 @@ const App = (() => {
       var caret = '<button class="gcard-caret" onclick="event.stopPropagation();App.toggleTablePlayers(' + parseInt(gid) + ')" title="' + t('showPlayers') + '" aria-label="' + t('showPlayers') + '" aria-expanded="' + (_open?'true':'false') + '">' + (_open ? '\u25B4' : '\u25BE') + '</button>';
       return '<div class="game-row gcard' + _sel + (_open ? ' gc-open' : '') + '" onclick="App.selectGame(' + parseInt(gid) + ')">'
         + '<div class="gcard-main">'
-        + '<div class="game-name">' + lock + esc(g.name)
-        + ' <span class="game-badge ' + badgeCls + '">' + label + '</span></div>'
+        + '<div class="game-name">' + lock + esc(g.name) + '</div>'
         + '<div class="game-meta">' + metaBits.join('') + '</div>'
         + '</div>'
         + '<div class="gcard-btns">' + joinBtn + watchBtn + caret + '</div>'
@@ -16196,7 +16196,7 @@ function renderPlayersList() {
   body.innerHTML = _headHtml + (_shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>');
 }
 
-;(function(){ window.BUILD_VERSION='0.3.636-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.637-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
@@ -16348,7 +16348,8 @@ function renderPlayersList() {
     var stats=document.getElementById('lobby-statsbar');
     if(!fb) return;
     if(W()){
-      if(games && fb.parentNode!==games) games.appendChild(fb);
+      var grid=document.querySelector('#s-lobby .lobby-grid');
+      if(grid && fb.parentNode!==grid) grid.appendChild(fb);
     } else {
       if(lb && fb.parentNode!==lb){
         if(stats && stats.parentNode===lb) lb.insertBefore(fb, stats);

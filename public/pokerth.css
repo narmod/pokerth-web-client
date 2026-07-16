@@ -156,12 +156,12 @@ html { touch-action: manipulation; -webkit-text-size-adjust: 100%; text-size-adj
 :root[data-theme="pokerth-light"] {
   --ff-display: 'Inter', system-ui, sans-serif;
   --ff-mono:    'Inter', system-ui, sans-serif;
-  --felt:       #eef1f6;
-  --felt-mid:   #e4e9f1;
-  --felt-hi:    #d9e0ea;
-  --modal-bg:   linear-gradient(160deg, #f6f8fb 0%, #e9edf4 50%, #f2f5f9 100%);
-  --panel:      rgba(248,250,253,0.94);
-  --panel-hi:   rgba(255,255,255,0.96);
+  --felt:       #f0f3f8;
+  --felt-mid:   #e6ebf3;
+  --felt-hi:    #dce2ec;
+  --modal-bg:   linear-gradient(160deg, #f0f3f8 0%, #e2e8f1 50%, #eef1f7 100%);
+  --panel:      #dce2ec;
+  --panel-hi:   #e7ebf2;
   --gold:       #1d222b;
   --gold-rgb:   29,34,43;
   --gold-hi:    #000000;
@@ -323,6 +323,8 @@ body {
     repeating-linear-gradient(45deg, transparent, transparent 3px,
       rgba(0,0,0,0.04) 3px, rgba(0,0,0,0.04) 6px);
 }
+/* Palette PokerTH claire : fond plat #f0f3f8 (QML col700 light), sans rayures. */
+:root[data-theme="pokerth-light"] body { background-image: none; }
 
 /* Fond « Fullscreen » : l'image (--wallpaper) est posee sur la ZONE DE TABLE
    (au-dessus de la barre d'action) et non sur tout le body -> le bas de l'image
@@ -6246,6 +6248,18 @@ html[data-table="pokerth-live"] .raise-slider { accent-color: #4CAF50; }
 .game-badge.live   { color: var(--red,#e05050); background: rgba(var(--red-rgb), 0.14); border: 1px solid rgba(var(--red-rgb), 0.4); }
 .game-badge.wait   { color: var(--green); background: rgba(var(--green-rgb), 0.15); border: 1px solid rgba(var(--green-rgb), 0.4); }
 .game-badge.closed { color: #999; background: var(--inset); border: 1px solid var(--border); }
+/* Palettes PokerTH officielles : etat en texte simple colore, dans la ligne meta
+   (parite QML — pas de pilule) : running #FF6D00/#BF360C · open #4CAF50/#2E7D32. */
+:root[data-theme^="pokerth"] .game-badge {
+  background:none; border:none; padding:0; border-radius:0;
+  font-size:inherit; text-transform:none; letter-spacing:0; font-weight:600;
+}
+:root[data-theme="pokerth"] .game-badge.live { color:#FF6D00; }
+:root[data-theme="pokerth"] .game-badge.wait { color:#4CAF50; }
+:root[data-theme="pokerth"] .game-badge.closed { color:#EF5350; }
+:root[data-theme="pokerth-light"] .game-badge.live { color:#BF360C; }
+:root[data-theme="pokerth-light"] .game-badge.wait { color:#2E7D32; }
+:root[data-theme="pokerth-light"] .game-badge.closed { color:#C62828; }
 .game-seats { display: flex; gap: 3px; margin-top: 8px; flex-wrap: wrap; }
 .seat-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--inset); border: 1px solid var(--border); }
 .seat-dot.on { background: var(--gold); border-color: var(--gold); box-shadow: 0 0 5px rgba(var(--gold-rgb), 0.5); }
@@ -8254,6 +8268,9 @@ html[data-buttons="pokerth"] .btn-action[disabled] { filter: grayscale(0.55) bri
 /* Créer : palette QML (or/neutre) */
 .lobby-footbar .lfb-create { border-color:transparent; background:#2b3444; color:#ffffff; }
 .lobby-footbar .lfb-create:hover { background:#384252; }
+/* Palette claire : bouton gris neutre (col500 light), texte sombre (parite QML). */
+:root[data-theme="pokerth-light"] .lobby-footbar .lfb-create { background:#a0acc4; color:#1d222b; }
+:root[data-theme="pokerth-light"] .lobby-footbar .lfb-create:hover { background:#8f9cb8; }
 /* Rejoindre : vert (identique au bouton Rejoindre des lignes) */
 .lobby-footbar .lfb-join { border-color:var(--green); background:rgba(var(--green-rgb),0.12); color:var(--green); }
 .lobby-footbar .lfb-join:hover { background:rgba(var(--green-rgb),0.28); }
@@ -8313,12 +8330,19 @@ html[data-buttons="pokerth"] .btn-action[disabled] { filter: grayscale(0.55) bri
   #s-lobby .lobby-grid {
     position:relative; flex:1 1 auto; min-height:0; gap:0; display:grid;
     grid-template-columns: var(--lc-l,240px) 12px minmax(0,1fr) 12px var(--lc-r,300px);
-    grid-template-rows: var(--lc-info,220px) 12px minmax(120px,1fr);
+    grid-template-rows: var(--lc-info,220px) 12px minmax(120px,1fr) auto;
     grid-template-areas:
       "players hl games hr info"
       "players hl games hr hv"
-      "players hl games hr chat";
+      "players hl games hr chat"
+      "players hl foot  hr chat";
     align-items:stretch;
+  }
+  /* Barre du bas (Joueur + Créer) : rangée dédiée SOUS la colonne Parties,
+     hors du cadre du panneau (parité QML : la barre est posée sur le fond). */
+  #s-lobby .lobby-grid > .lobby-footbar {
+    grid-area:foot; position:static; z-index:auto;
+    background:transparent; border-top:none; padding:10px 0 0;
   }
   .lob-h { display:block; }
 
@@ -8333,7 +8357,8 @@ html[data-buttons="pokerth"] .btn-action[disabled] { filter: grayscale(0.55) bri
     grid-template-areas:
       "players hl info hr games"
       "players hl hv   hr games"
-      "players hl chat hr games";
+      "players hl chat hr games"
+      "players hl foot hr games";
   }
 
   /* Panneaux : sortis du mode overlay → posés statiquement dans leur colonne */
@@ -8491,6 +8516,11 @@ html[data-buttons="pokerth"] .btn-action[disabled] { filter: grayscale(0.55) bri
 
 /* Ligne de partie sélectionnée */
 .game-row.gcard.sel { border-color:var(--gold); box-shadow:0 0 0 1px var(--gold) inset; background:rgba(var(--gold-rgb),0.06); }
+/* Palette claire : selection = fond kaki plein (accent or #E3C800 sur col600),
+   sans liseré or sombre (parite QML). */
+:root[data-theme="pokerth-light"] .game-row.gcard.sel {
+  border-color:transparent; box-shadow:none; background:rgba(227,200,0,0.28);
+}
 
 /* Heure des messages de chat [HH:MM:SS] — gris discret, monospace (parité officielle) */
 .msg .msg-time { color: var(--text-dim, #8b93a7); font-family: var(--ff-mono, monospace); font-size: 0.88em; margin-right: 2px; }
