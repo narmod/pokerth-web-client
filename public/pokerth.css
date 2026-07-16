@@ -5232,8 +5232,19 @@ html[data-table="pokerth-live"] .raise-slider { accent-color: #4CAF50; }
   50%     { opacity: 1;   transform: scale(1.12); }
 }
 @media (max-width: 640px) {
-  #g-spec-badge { padding: 1px 7px; }
-  #g-spec-count, #g-spec-badge { margin-right: 6px; }
+  /* Mobile : la pastille texte « Spectating » est redondante avec l'oeil
+     juste a cote et mange ~100px du bandeau -> masquee. Quand JE regarde
+     (.me pose par updateSpectatorStrip), l'OEIL herite du contour jaune de
+     la pastille : l'info reste, en ~30px. */
+  #g-spec-badge.on { display: none; }
+  #g-spec-count { margin-right: 6px; }
+  #g-spec-count.me {
+    height: 18px; box-sizing: border-box; padding: 0 7px;
+    border-radius: 999px;
+    border: 1px solid var(--sel, #E3C800);
+    background: rgba(var(--sel-rgb, 227,200,0), 0.22);
+    color: var(--sel, #E3C800);
+  }
 }
 
 /* Replacement message that occupies the action area when the user

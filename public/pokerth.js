@@ -5258,6 +5258,9 @@ const App = (() => {
       var cnt   = document.getElementById('g-spec-count');
       var num   = document.getElementById('g-spec-n');
       if (badge) badge.classList.toggle('on', !!_amSpectator);
+      // Mobile (<640px, CSS) : la pastille texte est masquee et c'est l'oeil
+      // qui prend le contour jaune quand JE regarde -> classe .me.
+      if (cnt) cnt.classList.toggle('me', !!_amSpectator);
       var n = (_specPids ? _specPids.size : 0) + (_amSpectator ? 1 : 0);
       if (num) num.textContent = n;
       if (cnt) {
@@ -9587,6 +9590,12 @@ const App = (() => {
     var s1 = Math.min(sMaxZ, _capBase);
     if (_zm <= 1.001) sFin = Math.max(0.55, s1 * _zm);
     else sFin = Math.max(s1, Math.min(s1 * _zm, sMaxZ));
+    // Rabot WEB (demande narmod 2026-07-16) : en paysage compact SPECTATEUR,
+    // l'ellipse recupere toute la hauteur (pas de self-box) et la bisection
+    // monte plus haut qu'en mode assis -> boites trop grosses sur telephone.
+    // -15 % sur le resultat, spectateur compact UNIQUEMENT (assis et desktop
+    // restent strict QML). Les slots sont traces au s reduit (coherents).
+    if (spectating && compact) sFin = Math.max(0.55, sFin * 0.85);
     // Slots finaux aux rayons du s retenu (pairSpread actif, comme le QML).
     var gF = geom(sFin, false);
     var slots = [], raw = [];
@@ -16306,7 +16315,7 @@ function renderPlayersList() {
   });
 })();
 
-;(function(){ window.BUILD_VERSION='0.3.654-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.655-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
