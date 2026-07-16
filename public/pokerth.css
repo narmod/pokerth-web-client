@@ -160,8 +160,8 @@ html { touch-action: manipulation; -webkit-text-size-adjust: 100%; text-size-adj
   --felt-mid:   #e6ebf3;
   --felt-hi:    #dce2ec;
   --modal-bg:   linear-gradient(160deg, #f0f3f8 0%, #e2e8f1 50%, #eef1f7 100%);
-  --panel:      #dce2ec;
-  --panel-hi:   #e7ebf2;
+  --panel:      #c8cacf;
+  --panel-hi:   #d3d5da;
   --gold:       #1d222b;
   --gold-rgb:   29,34,43;
   --gold-hi:    #000000;
@@ -1718,6 +1718,16 @@ body {
   transition: background 0.15s;
 }
 .chat-send:hover { background: var(--gold-hi); }
+/* Palette claire : corps des listes du lobby (joueurs, chat, tri) posés sur le
+   gris du panneau comme le QML — leurs styles inline mettent --field-bg blanc. */
+:root[data-theme="pokerth-light"] #players-list-body,
+:root[data-theme="pokerth-light"] #lobby-chat-panel .chat-msgs { background:transparent !important; }
+:root[data-theme="pokerth-light"] .pl-sortbar .sel-wrap select { background:#dedfe2; border-color:transparent; border-radius:6px; color:#1d222b; }
+/* Champ Message du chat lobby : gris-bleu clair arrondi (pixel QML #d4d9e1). */
+:root[data-theme="pokerth-light"] #lobby-chat-panel .chat-input input {
+  background:#d4d9e1; border-color:transparent; border-radius:6px; color:#1d222b;
+}
+:root[data-theme="pokerth-light"] #lobby-chat-panel .chat-input input::placeholder { color:#687285; }
 /* Chat du LOBBY : icônes façon QML — envoi = avion en papier vert (chat send
    #4ade80 sombre / #16a34a clair), emoji = smiley nu ; aucun chrome de bouton. */
 #lobby-chat-panel .chat-send {
@@ -5385,10 +5395,10 @@ html[data-table="pokerth-live"] .raise-slider { accent-color: #4CAF50; }
 /* Palette claire : champ de recherche gris plein arrondi, sans bordure,
    placeholder col300 (parite QML Universal light). */
 :root[data-theme="pokerth-light"] .players-search input {
-  background:#c3cbda; border-color:transparent; border-radius:6px; color:#1d222b;
+  background:#b9bbbf; border-color:transparent; border-radius:6px; color:#1d222b;
 }
-:root[data-theme="pokerth-light"] .players-search input::placeholder { color:#576378; }
-:root[data-theme="pokerth-light"] .players-search input:focus { border-color:#a0acc4; }
+:root[data-theme="pokerth-light"] .players-search input::placeholder { color:#687285; }
+:root[data-theme="pokerth-light"] .players-search input:focus { border-color:#9a9ca1; }
 /* Body container — the inline style on the element sets flex/min-height/
    overflow/padding/background to match the chat panel pattern exactly.
    This rule keeps only the bits inline styles don't cover. */
@@ -8290,8 +8300,8 @@ html[data-buttons="pokerth"] .btn-action[disabled] { filter: grayscale(0.55) bri
 .lobby-footbar .lfb-create { border-color:transparent; background:#2b3444; color:#ffffff; }
 .lobby-footbar .lfb-create:hover { background:#384252; }
 /* Palette claire : bouton gris neutre (col500 light), texte sombre (parite QML). */
-:root[data-theme="pokerth-light"] .lobby-footbar .lfb-create { background:#a0acc4; color:#1d222b; }
-:root[data-theme="pokerth-light"] .lobby-footbar .lfb-create:hover { background:#8f9cb8; }
+:root[data-theme="pokerth-light"] .lobby-footbar .lfb-create { background:#c0c2c6; color:#1d222b; }
+:root[data-theme="pokerth-light"] .lobby-footbar .lfb-create:hover { background:#b2b4b9; }
 /* Rejoindre : vert (identique au bouton Rejoindre des lignes) */
 .lobby-footbar .lfb-join { border-color:var(--green); background:rgba(var(--green-rgb),0.12); color:var(--green); }
 .lobby-footbar .lfb-join:hover { background:rgba(var(--green-rgb),0.28); }
