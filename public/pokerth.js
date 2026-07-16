@@ -585,7 +585,7 @@ function openAdvancedOptions() {
   sync('adv-lobbychat', 'lobby_chat', true);
   sync('adv-pausehands', 'pause_hands', false);
   sync('adv-createdialog', 'create_dialog', true);
-  sync('adv-cfgsync', 'cfg_sync', false);
+  sync('adv-cfgsync', 'cfg_sync', true);
   sync('adv-pokeren', 'poker_en', true);
   try { renderIgnoredList(); } catch (e) {}
   sync('adv-logon', 'log_on', true);
@@ -790,7 +790,7 @@ function resetAdvDefaults() {
     anim_cards: true, show_blinds: true, hide_pbar: true, show_community: true, four_color: false,
     focus_bet: false, chat_noemoji: false, fade_losers: true, show_flag: true,
     own_click: false, guard_call: false, odds_monitor: false, no_hide_ignored: false, hands_btn: true,
-    fkeys_alt: false, zoom_follow: false, table_zoom: true, lobby_chat: true, log_on: true, pause_hands: false, create_dialog: true, cfg_sync: false, poker_en: true,
+    fkeys_alt: false, zoom_follow: false, table_zoom: true, lobby_chat: true, log_on: true, pause_hands: false, create_dialog: true, cfg_sync: true, poker_en: true,
     snd_actions: true, snd_lobby: true, snd_net: true, snd_blinds: true,
     reduce_fx: false, status_bar: true, ping_avatar: false, auto_leave: false, blinds_badge: true
   };
@@ -1116,7 +1116,7 @@ window.importPokerthConfigPick = importPokerthConfigPick;
 // et au pagehide en best-effort keepalive).
 var _cfgSyncToken = null;
 var _cfgSyncPushTimer = null;
-function _cfgSyncEnabled() { return _advGet('cfg_sync', false); }
+function _cfgSyncEnabled() { return _advGet('cfg_sync', true); }
 function _cfgSyncMark(key) {
   if (key === 'cfg_sync') return;                 // (dé)cocher la sync n'est pas une donnée à pousser
   try { localStorage.setItem('pth_cfg_sync_dirty', '1'); } catch (e) {}
@@ -16769,7 +16769,7 @@ function renderPlayersList() {
   });
 })();
 
-;(function(){ window.BUILD_VERSION='0.3.669-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.670-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
