@@ -8565,9 +8565,13 @@ const App = (() => {
   function cardToHtml(n, sm, isComm, extraCls) {
     extraCls = extraCls || '';
     const sz = sm ? ' sm' : '';
-    if (n === null || n === undefined) return '<div class="pk' + sz + ' back' + extraCls + '"></div>';
+    // Cartes communes : slot vide = placeholder QML (rectangle noir 30 % +
+    // bord blanc 38 %, Bible §9) au lieu d'un dos de carte. Les dos restent
+    // pour les cartes adverses (isComm=false).
+    const emptyCls = isComm ? ' comm-slot' : ' back';
+    if (n === null || n === undefined) return '<div class="pk' + sz + emptyCls + extraCls + '"></div>';
     if (!Number.isInteger(n) || n < 0 || n > 51) {
-      return '<div class="pk' + sz + ' back' + extraCls + '"></div>';
+      return '<div class="pk' + sz + emptyCls + extraCls + '"></div>';
     }
     var si = Math.floor(n / 13);
     var ri = n % 13;
@@ -16252,7 +16256,7 @@ function renderPlayersList() {
   });
 })();
 
-;(function(){ window.BUILD_VERSION='0.3.651-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.652-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

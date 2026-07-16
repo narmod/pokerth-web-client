@@ -3995,6 +3995,16 @@ body.adv-4color .pk:not(.red):not(.spade):not(.back) { color: #1e8c3a; }
   color: transparent; font-size: 0;
 }
 .pk.back::after { content: none; }
+/* ── Slot vide des community cards : placeholder QML officiel (Bible §9) ──
+   Rectangle noir 30 % + bord blanc 38 %, PAS de dos de carte ni d'ombre 3D.
+   La carte n'apparaît que lors de la révélation (flip inchangé). */
+.pk.comm-slot {
+  background: rgba(0,0,0,0.30);
+  border: 1px solid rgba(255,255,255,0.38);
+  box-shadow: none;
+  color: transparent; font-size: 0;
+}
+.pk.comm-slot::after { content: none; }
 
 /* ── Jeu de cartes : deck SVG (axe "Cartes", data-deck="svg") ──
    Defaut = glyphes (.c-rank/.c-suit). Avec data-deck="svg", chaque face .pk
@@ -4002,15 +4012,15 @@ body.adv-4color .pk:not(.red):not(.spade):not(.back) { color: #1e8c3a; }
    et les glyphes sont masques ; le dos (et les fly-cards de distribution)
    passent par --card-back surcharge ci-dessous. Switch 100% CSS, instantane,
    sans re-render. Assets : /cards/svg/*.svg (PokerTH, AGPL-3.0). */
-:root[data-deck] .pk:not(.back) {
+:root[data-deck] .pk:not(.back):not(.comm-slot) {
   background-image: var(--cf, none);
   background-size: 100% 100%;
   background-repeat: no-repeat;
   background-position: center;
   background-color: transparent;
 }
-:root[data-deck] .pk:not(.back) .c-rank,
-:root[data-deck] .pk:not(.back) .c-suit { display: none; }
+:root[data-deck] .pk:not(.back):not(.comm-slot) .c-rank,
+:root[data-deck] .pk:not(.back):not(.comm-slot) .c-suit { display: none; }
 /* Dos : --card-back est pose en inline sur <html> par le boot + _refreshDeck
    (deck-aware), pour .pk.back ET .fly-card, quel que soit le deck. */
 .pk.sm { width: 32px; height: 46px; font-size: 0.76rem; font-weight: 700; }
