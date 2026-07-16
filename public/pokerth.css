@@ -5517,10 +5517,10 @@ html[data-table="pokerth-live"] .raise-slider { accent-color: #4CAF50; }
 }
 /* Couleurs des icônes (Option B) : ☰ + trophée dorés, install vert,
    engrenage acier. Les SVG utilisent currentColor -> on colore le bouton. */
-#s-connect .connect-header #cl-links-connect > summary{ color:#c3ccda; }
+#s-connect .connect-header #cl-links-connect > summary{ color:var(--text-hi); }
 #s-connect .connect-header #ranking-btn-connect{ color:#E3C800; }
 #s-connect .connect-header #install-btn{ color:#3ba55d; }
-#s-connect .connect-header #connect-overflow-btn{ color:#c3ccda; }
+#s-connect .connect-header #connect-overflow-btn{ color:var(--text-hi); }
 
 /* ═══ Headers lobby + jeu : même traitement que connexion ═══════════════
    Icônes pleines (sans encadré) + couleurs. Frameless scopé aux .btn-icon
@@ -5564,13 +5564,13 @@ html[data-table="pokerth-live"] .raise-slider { accent-color: #4CAF50; }
 }
 #s-lobby .header #ranking-btn-lobby{ color:#E3C800; }
 /* Page « Créer une partie » : flèche retour + roue crantée neutres, globe or. */
-#s-create .cp-header #cr-overflow-btn{ color:#c3ccda; }
+#s-create .cp-header #cr-overflow-btn{ color:var(--text-hi); }
 #s-create .cp-header #ranking-btn-create{ color:#E3C800; }
-#s-lobby .header #lobby-chat-btn{ color:#c3ccda; }
-#s-lobby .header #l-overflow-btn{ color:#c3ccda; }
-#s-game .header #sound-toggle-btn{ color:#c3ccda; }
+#s-lobby .header #lobby-chat-btn{ color:var(--text-hi); }
+#s-lobby .header #l-overflow-btn{ color:var(--text-hi); }
+#s-game .header #sound-toggle-btn{ color:var(--text-hi); }
 #s-game .header #ranking-btn-game{ color:#E3C800; }
-#s-game .header #g-overflow-btn{ color:#c3ccda; }
+#s-game .header #g-overflow-btn{ color:var(--text-hi); }
 
 /* Mode clair : les icônes acier #c3ccda deviennent quasi invisibles sur la
    barre claire -> on les fonce (près du noir) pour un contraste marqué. */
