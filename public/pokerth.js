@@ -4311,7 +4311,7 @@ const App = (() => {
   // Player-info modal -- shows the local player's avatar + name,
   // plus a 'Change avatar' button that opens the avatar picker.
   // ──────────────────────────────────────────────────────────────
-  function openPlayerInfoPopup(pid) {
+  function openPlayerInfoPopup(pid, autoStats) {
     var modal = document.getElementById('player-info-modal');
     if (!modal) return;
     // pid omis (ou === moi) → MON profil (comportement historique : stats +
@@ -4415,9 +4415,19 @@ const App = (() => {
         } catch(e) {}
       }
     }
+    // Ouverture directe sur les stats (bouton 📊 de la liste) : charge le
+    // profil de saison du joueur (memes stats que « Voir les coupes »), sans
+    // clic supplémentaire. Sans effet pour moi / joueur sans profil réseau.
+    if (autoStats && !isSelf) { try { _pimLoadCups(targetPid); } catch (e) {} }
     modal.style.display = 'flex';
   }
   window.openPlayerInfoPopup = openPlayerInfoPopup;
+  // Bouton 📊 de la liste : ouvre le popup et charge directement les stats
+  // de saison. Sans pid -> mon profil (deja en mode stats).
+  window._plOpenStats = function (pid) {
+    if (pid == null || pid === '') { openPlayerInfoPopup(); return; }
+    openPlayerInfoPopup(pid, true);
+  };
   // Basculer l'ignorance d'un joueur (par nom) puis rafraîchir sièges + popup.
   window._toggleIgnore = function(pid){
     var nm = (typeof getPlayerName === 'function') ? getPlayerName(pid) : null;
@@ -16159,7 +16169,7 @@ function renderPlayersList() {
     var _ign  = _isIgnored(r.name);
     var _acts = '<span class="pl-acts">'
       + '<button type="button" class="pl-act pl-act-ban' + (_ign ? ' on' : '') + '" title="' + _tt('plIgnore','Ignore') + '" data-i18n-title="plIgnore" aria-label="' + _tt('plIgnore','Ignore') + '" onclick="event.stopPropagation();window._plToggleIgnore(' + r.pid + ')">' + _PL_BAN_SVG + '</button>'
-      + '<button type="button" class="pl-act pl-act-stats" title="' + _tt('plStats','Stats') + '" data-i18n-title="plStats" aria-label="' + _tt('plStats','Stats') + '" onclick="event.stopPropagation();window.openPlayerInfoPopup(' + _ppArg + ')">' + _PL_BAR_SVG + '</button>'
+      + '<button type="button" class="pl-act pl-act-stats" title="' + _tt('plStats','Stats') + '" data-i18n-title="plStats" aria-label="' + _tt('plStats','Stats') + '" onclick="event.stopPropagation();window._plOpenStats(' + _ppArg + ')">' + _PL_BAR_SVG + '</button>'
       + '</span>';
     var _plCell = function (k) {
       switch (k) {
@@ -16186,7 +16196,7 @@ function renderPlayersList() {
   body.innerHTML = _headHtml + (_shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>');
 }
 
-;(function(){ window.BUILD_VERSION='0.3.630-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.631-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
