@@ -976,6 +976,7 @@ A few things worth knowing if you plan to hack on this:
 Something looks wrong (cards not showing, connection stuck, wrong version)? The client ships built-in diagnostics — see **[docs/DIAGNOSTIC.md](docs/DIAGNOSTIC.md)** for the full guide. In short:
 
 - Open the browser console (F12 on desktop) and type `pthDiag()` — it prints a JSON snapshot (build, connection, game state, hole-card pipeline) you can paste into a bug report.
+- No console (phone)? Type **`/diag`** in the lobby or game chat — the same snapshot is shown locally in your chat (nothing is sent to the server).
 - After each hand, `window._pthCardDiag` holds a trace of the hole-card decryption path (plain vs. encrypted, key present, decrypt result).
 - On mobile (no console), anomalies in the card pipeline are surfaced as a red status line during the first two affected hands.
 

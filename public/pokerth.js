@@ -13452,6 +13452,13 @@ function _maybeShowNextHandBtn() {
         } catch (eDbg) { try { addGameChat('seatdbg', 'erreur: ' + eDbg, 'mine'); } catch (e2) {} }
         return;
       }
+      // ── /diag : LOCAL pthDiag snapshot shown in the chat (nothing is sent).
+      // Handy on phones (no console). See docs/DIAGNOSTIC.md.
+      if (text === '/diag') {
+        try { addGameChat('diag', JSON.stringify(window.pthDiag ? window.pthDiag() : {}), 'mine'); }
+        catch (eDg) { try { addGameChat('diag', 'error: ' + eDg, 'mine'); } catch (e2) {} }
+        return;
+      }
       try { if (window._chatPushHist) window._chatPushHist(text); } catch (e) {}
       send(gId ? MSG.buildGameChat(gId, text) : MSG.buildChat(text));
       addGameChat(myName, text, 'mine');
@@ -13468,6 +13475,12 @@ function _maybeShowNextHandBtn() {
       const text  = input.value.trim();
       if (!text || !ws) return;
       input.value = '';
+      // ── /diag : LOCAL pthDiag snapshot shown in the chat (nothing is sent).
+      if (text === '/diag') {
+        try { addChat('diag', JSON.stringify(window.pthDiag ? window.pthDiag() : {}), 'mine'); }
+        catch (eDg) { try { addChat('diag', 'error: ' + eDg, 'mine'); } catch (e2) {} }
+        return;
+      }
       try { if (window._chatPushHist) window._chatPushHist(text); } catch (e) {}
       send(MSG.buildChat(text, 0));
       // Affichage optimiste
@@ -16473,7 +16486,7 @@ function renderPlayersList() {
   });
 })();
 
-;(function(){ window.BUILD_VERSION='0.3.664-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.665-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

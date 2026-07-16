@@ -55,6 +55,13 @@ window._pthCardDiag
 Typical cases: `key:false` → password not captured at login;
 `dec:false` → decryption failed; `cleared:true` → stack badly initialized.
 
+### `/diag` — chat command (works on mobile)
+
+Type `/diag` in the lobby or game chat: the `pthDiag()` snapshot is displayed
+**locally in your chat** (nothing is sent to the server or other players).
+This is the easiest way to collect diagnostics on a phone, where no console
+is available — long-press the message to copy it.
+
 ### Visible diagnostics without a console (mobile)
 
 If your hole cards stay hidden even though the server sent card data, a red
