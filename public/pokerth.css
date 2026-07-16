@@ -711,9 +711,9 @@ body {
    taille pleine du nom de table. Ici : texte = 0.45em du nom de table. */
 .header-brand--game .g-brand-click .g-status-badge { font-size: 0.45em; }
 .g-status-admin {
-  color: var(--gold);
-  background: rgba(var(--gold-rgb), 0.12);
-  border: 1px solid rgba(var(--gold-rgb), 0.35);
+  color: var(--sel, var(--gold));
+  background: rgba(var(--sel-rgb, var(--gold-rgb)), 0.12);
+  border: 1px solid rgba(var(--sel-rgb, var(--gold-rgb)), 0.35);
 }
 .g-status-public {
   color: rgb(var(--blue-rgb));
