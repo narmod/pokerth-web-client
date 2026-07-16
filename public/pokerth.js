@@ -1310,19 +1310,32 @@ window._chatTranslate = function (btn) {
       var src = null;
       try {
         if (typeof LanguageDetector !== 'undefined' && LanguageDetector.create) {
-          if (!window._chatTrDetector) window._chatTrDetector = await LanguageDetector.create();
-          var det = await window._chatTrDetector.detect(orig);
+          // Cache de PROMESSE (pas d'instance) : deux taps rapides ne creent
+          // qu'un seul detecteur (les modeles built-in sont couteux et sans destroy() ils fuient).
+          if (!window._chatTrDetector) window._chatTrDetector = LanguageDetector.create();
+          var det = await (await window._chatTrDetector).detect(orig);
           if (det && det[0] && det[0].detectedLanguage && det[0].detectedLanguage !== 'und') src = det[0].detectedLanguage.split('-')[0];
         }
-      } catch (e) {}
+      } catch (e) { window._chatTrDetector = null; }
       if (!src) src = 'en';
       if (src === tgt) { // deja dans la langue du client
         btn.disabled = false; btn.classList.remove('tr-busy'); btn.classList.add('tr-same');
         return;
       }
       var key = src + '>' + tgt;
-      if (!window._chatTrPairs[key]) window._chatTrPairs[key] = await Translator.create({ sourceLanguage: src, targetLanguage: tgt });
-      var out = await window._chatTrPairs[key].translate(orig);
+      // Cache de PROMESSE par paire : pendant le telechargement du modele, les
+      // taps suivants reutilisent la meme creation au lieu d'empiler des instances.
+      if (!window._chatTrPairs[key]) window._chatTrPairs[key] = Translator.create({ sourceLanguage: src, targetLanguage: tgt });
+      var out;
+      try {
+        out = await (await window._chatTrPairs[key]).translate(orig);
+      } catch (e2) {
+        // Instance morte (quota, GPU perdu, onglet gele) : la detruire et la
+        // purger du cache pour repartir propre au prochain tap.
+        try { var dead = await window._chatTrPairs[key]; if (dead && dead.destroy) dead.destroy(); } catch (_e2) {}
+        delete window._chatTrPairs[key];
+        throw e2;
+      }
       if (out && out.trim()) {
         msg.dataset.trText = out;
         if (!msg.dataset.origHtml) msg.dataset.origHtml = span.innerHTML;
@@ -16373,7 +16386,7 @@ function renderPlayersList() {
   });
 })();
 
-;(function(){ window.BUILD_VERSION='0.3.659-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.660-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
