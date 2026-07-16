@@ -397,7 +397,7 @@ body {
   font-family: var(--ff-display);
   font-size: 1.15rem;
   font-weight: 700;
-  color: var(--text);
+  color: var(--text-hi);
   letter-spacing: 0.02em;
 }
 /* Titre centré dans le header (entre la porte à gauche et globe/roue à
