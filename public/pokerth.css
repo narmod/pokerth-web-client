@@ -347,6 +347,18 @@ body {
   background-position: var(--wallpaper-dyn-pos, var(--wallpaper-pos, center bottom));
   background-repeat: no-repeat;
 }
+/* Portrait (iPhone) : garantir un fond PLEIN ÉCRAN même quand le cadrage
+   dynamique (--wallpaper-dyn-*) n'est pas encore posé (image en cours de
+   chargement) ou indisponible. Sinon le repli --wallpaper-size (ex. 130%,
+   TableBackgroundZoom) = 130% de la LARGEUR, hauteur proportionnelle → une
+   bande courte sur écran étroit. Ici le repli devient 'cover' = plein écran.
+   Le dynamique, quand présent, reste prioritaire (crop centré × zoom). */
+@media (orientation: portrait) {
+  :root[data-table-fs="1"] #s-game {
+    background-size: var(--wallpaper-dyn-size, cover);
+    background-position: var(--wallpaper-dyn-pos, center);
+  }
+}
 :root[data-table-fs="1"] .table-zone { background-image: none; }
 :root[data-table-fs="1"] .my-zone,
 :root[data-table-fs="1"] .player-bar { background: transparent !important; border-top: 0 !important; }
