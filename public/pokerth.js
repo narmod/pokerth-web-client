@@ -5851,6 +5851,145 @@ const App = (() => {
     return d;
   };
 
+  // ── Local chat commands (nothing is ever sent to the server) ────────────
+  // Shared by the lobby chat and the game chat. echo(name, text) renders the
+  // reply locally in the caller's chat panel. Returns true when handled.
+  // See docs/DIAGNOSTIC.md.
+  function _chatLocalCmd(text, echo) {
+    var parts = text.split(/\s+/);
+    var cmd = (parts[0] || '').toLowerCase();
+    var arg = (parts[1] || '').trim();
+    if (cmd === '/help') {
+      echo('help',
+        '/diag — client state snapshot · ' +
+        '/update — check for a new version and refresh · ' +
+        '/netdbg — transport, ping, reconnects, message stats · ' +
+        '/carddbg — hole-card pipeline of the last hands · ' +
+        '/msglog — last 30 protocol messages received · ' +
+        '/fps — 5-second FPS meter · ' +
+        '/lang <code> — switch language (e.g. /lang fr) · ' +
+        '/sound on|off — toggle game sounds · ' +
+        '/seatdbg — seat layout metrics (game chat only). ' +
+        'All replies are shown only to you, nothing is sent.');
+      return true;
+    }
+    if (cmd === '/diag') {
+      try { echo('diag', JSON.stringify(window.pthDiag ? window.pthDiag() : {})); }
+      catch (e) { echo('diag', 'error: ' + e); }
+      return true;
+    }
+    if (cmd === '/update') {
+      var cur = window.BUILD_VERSION || '?';
+      echo('update', 'current build: ' + cur + ' — checking server…');
+      fetch('/sw.js?d=' + Date.now(), { cache: 'no-store' })
+        .then(function (r) { return r.text(); })
+        .then(function (body) {
+          var m = body.match(/pokerth-v([0-9A-Za-z.\-]+)/);
+          var srv = m ? m[1] : null;
+          if (!srv) { echo('update', 'server version not readable'); return; }
+          if (srv === cur) { echo('update', 'up to date (' + cur + ')'); return; }
+          echo('update', 'version ' + srv + ' available — clearing cache and reloading…');
+          var done = function () { setTimeout(function () { try { location.reload(); } catch (e) {} }, 500); };
+          try {
+            var p = [];
+            if (window.caches && caches.keys) p.push(caches.keys().then(function (ks) { return Promise.all(ks.map(function (k) { return caches.delete(k); })); }));
+            if (navigator.serviceWorker && navigator.serviceWorker.getRegistrations) p.push(navigator.serviceWorker.getRegistrations().then(function (rs) { return Promise.all(rs.map(function (r2) { return r2.update(); })); }));
+            Promise.all(p).then(done, done);
+          } catch (e) { done(); }
+        })
+        .catch(function () { echo('update', 'check failed (offline?)'); });
+      return true;
+    }
+    if (cmd === '/netdbg') {
+      try {
+        var ms0 = window._pthMsgStats || { total: 0, ring: [] };
+        var now = Date.now();
+        var last10 = 0;
+        for (var i = 0; i < ms0.ring.length; i++) if (now - ms0.ring[i].ts < 10000) last10++;
+        echo('netdbg', JSON.stringify({
+          transport: ws ? ((window._directWS ? 'direct' : 'proxy') + ' ' + (ws.url && ws.url.indexOf('wss:') === 0 ? 'wss' : 'ws')) : null,
+          wsState: ws ? (['CONNECTING','OPEN','CLOSING','CLOSED'][ws.readyState] || ws.readyState) : null,
+          online: navigator.onLine,
+          reconnects: _reconnectAttempts,
+          msgsTotal: ms0.total,
+          msgsLast10s: last10
+        }));
+        var t0 = performance.now();
+        fetch('/__ver?ping=' + Date.now(), { cache: 'no-store' })
+          .then(function () { echo('netdbg', 'http rtt: ' + Math.round(performance.now() - t0) + ' ms'); })
+          .catch(function () { echo('netdbg', 'http rtt: failed'); });
+      } catch (e) { echo('netdbg', 'error: ' + e); }
+      return true;
+    }
+    if (cmd === '/carddbg') {
+      var h = window._pthCardDiagHist || [];
+      echo('carddbg', h.length ? JSON.stringify(h.slice(-10)) : 'no hand played yet this session');
+      return true;
+    }
+    if (cmd === '/msglog') {
+      try {
+        var ms1 = window._pthMsgStats || { total: 0, ring: [] };
+        var names = {};
+        try { var TT = MSG.T; for (var k in TT) names[TT[k]] = k; } catch (e) {}
+        var lst = '';
+        for (var j = 0; j < ms1.ring.length; j++) lst += (j ? ' ' : '') + (names[ms1.ring[j].t] || ms1.ring[j].t);
+        echo('msglog', lst || 'no message received yet');
+      } catch (e) { echo('msglog', 'error: ' + e); }
+      return true;
+    }
+    if (cmd === '/fps') {
+      try {
+        if (window._pthFpsRun) { echo('fps', 'already running'); return true; }
+        window._pthFpsRun = true;
+        var ov = document.createElement('div');
+        ov.style.cssText = 'position:fixed;top:8px;left:8px;z-index:99999;background:rgba(0,0,0,.75);color:#50c878;font:bold 14px monospace;padding:4px 8px;border-radius:6px;pointer-events:none';
+        ov.textContent = 'FPS…';
+        document.body.appendChild(ov);
+        var frames = 0, t0f = performance.now(), lastF = t0f, mn = Infinity;
+        var tick = function (tNow) {
+          frames++;
+          var dt = tNow - lastF; lastF = tNow;
+          if (dt > 0) { var inst = 1000 / dt; if (inst < mn) mn = inst; }
+          var el = tNow - t0f;
+          if (el > 0) ov.textContent = Math.round(frames / (el / 1000)) + ' fps';
+          if (el < 5000) { requestAnimationFrame(tick); }
+          else {
+            echo('fps', 'avg ' + Math.round(frames / (el / 1000)) + ' fps · min ' + (mn === Infinity ? '?' : Math.round(mn)) + ' fps over 5 s');
+            try { document.body.removeChild(ov); } catch (e) {}
+            window._pthFpsRun = false;
+          }
+        };
+        requestAnimationFrame(tick);
+      } catch (e) { echo('fps', 'error: ' + e); window._pthFpsRun = false; }
+      return true;
+    }
+    if (cmd === '/lang') {
+      try {
+        var codes = window.LANG ? Object.keys(window.LANG) : [];
+        var found = null;
+        for (var c = 0; c < codes.length; c++) if (codes[c].toLowerCase() === arg.toLowerCase()) { found = codes[c]; break; }
+        if (!found) { echo('lang', 'usage: /lang <code> — available: ' + codes.join(' ')); return true; }
+        if (window.setLang) { window.setLang(found); echo('lang', 'language switched to ' + found); }
+      } catch (e) { echo('lang', 'error: ' + e); }
+      return true;
+    }
+    if (cmd === '/sound') {
+      try {
+        var on = window.isSoundEnabled ? !!window.isSoundEnabled() : null;
+        if (on === null) { echo('sound', 'sound module unavailable'); return true; }
+        var want;
+        if (arg === 'on') want = true;
+        else if (arg === 'off') want = false;
+        else if (!arg) want = !on;
+        else { echo('sound', 'usage: /sound on|off'); return true; }
+        if (want !== on && window.toggleSound) window.toggleSound();
+        echo('sound', 'sounds ' + (want ? 'on' : 'off'));
+      } catch (e) { echo('sound', 'error: ' + e); }
+      return true;
+    }
+    return false;
+  }
+
   var _statusKey = null;
   function setStatus(txt, cls='', key) {
     // Mémorise la clé i18n du message courant (null pour les messages
@@ -6213,6 +6352,13 @@ const App = (() => {
   function handleMsg(buf) {
     const { type, sub } = MSG.parse(buf);
     const T = MSG.T;
+    // ── /msglog & /netdbg: lightweight stats (total + ring of last 30 types) ──
+    try {
+      var _ms = window._pthMsgStats || (window._pthMsgStats = { total: 0, ring: [] });
+      _ms.total++;
+      _ms.ring.push({ t: type, ts: Date.now() });
+      if (_ms.ring.length > 30) _ms.ring.shift();
+    } catch (_eMs) {}
 
     switch (type) {
 
@@ -7526,6 +7672,8 @@ const App = (() => {
         try {
           _cd.money = seatData[myId] ? seatData[myId].money : undefined;
           window._pthCardDiag = _cd;
+          var _cdh = window._pthCardDiagHist || (window._pthCardDiagHist = []);
+          _cdh.push(_cd); if (_cdh.length > 20) _cdh.shift();
           console.log('[cards-diag]', JSON.stringify(_cd));
           // Anomalie = cartes toujours nulles alors qu'on est assis avec des
           // données serveur (plain ou enc). Statut visible sur mobile.
@@ -13452,13 +13600,9 @@ function _maybeShowNextHandBtn() {
         } catch (eDbg) { try { addGameChat('seatdbg', 'erreur: ' + eDbg, 'mine'); } catch (e2) {} }
         return;
       }
-      // ── /diag : LOCAL pthDiag snapshot shown in the chat (nothing is sent).
-      // Handy on phones (no console). See docs/DIAGNOSTIC.md.
-      if (text === '/diag') {
-        try { addGameChat('diag', JSON.stringify(window.pthDiag ? window.pthDiag() : {}), 'mine'); }
-        catch (eDg) { try { addGameChat('diag', 'error: ' + eDg, 'mine'); } catch (e2) {} }
-        return;
-      }
+      // ── Local diagnostic/setting commands (/help /diag /update …) — nothing
+      // is sent to the server. See _chatLocalCmd and docs/DIAGNOSTIC.md.
+      if (text.charAt(0) === '/' && _chatLocalCmd(text, function (n, s2) { addGameChat(n, s2, 'mine'); })) return;
       try { if (window._chatPushHist) window._chatPushHist(text); } catch (e) {}
       send(gId ? MSG.buildGameChat(gId, text) : MSG.buildChat(text));
       addGameChat(myName, text, 'mine');
@@ -13475,12 +13619,9 @@ function _maybeShowNextHandBtn() {
       const text  = input.value.trim();
       if (!text || !ws) return;
       input.value = '';
-      // ── /diag : LOCAL pthDiag snapshot shown in the chat (nothing is sent).
-      if (text === '/diag') {
-        try { addChat('diag', JSON.stringify(window.pthDiag ? window.pthDiag() : {}), 'mine'); }
-        catch (eDg) { try { addChat('diag', 'error: ' + eDg, 'mine'); } catch (e2) {} }
-        return;
-      }
+      // ── Local diagnostic/setting commands (/help /diag /update …) — nothing
+      // is sent to the server. See _chatLocalCmd and docs/DIAGNOSTIC.md.
+      if (text.charAt(0) === '/' && _chatLocalCmd(text, function (n, s2) { addChat(n, s2, 'mine'); })) return;
       try { if (window._chatPushHist) window._chatPushHist(text); } catch (e) {}
       send(MSG.buildChat(text, 0));
       // Affichage optimiste
@@ -16486,7 +16627,7 @@ function renderPlayersList() {
   });
 })();
 
-;(function(){ window.BUILD_VERSION='0.3.665-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.666-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

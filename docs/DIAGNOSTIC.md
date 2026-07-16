@@ -55,12 +55,28 @@ window._pthCardDiag
 Typical cases: `key:false` → password not captured at login;
 `dec:false` → decryption failed; `cleared:true` → stack badly initialized.
 
-### `/diag` — chat command (works on mobile)
+### Chat commands (work on mobile)
 
-Type `/diag` in the lobby or game chat: the `pthDiag()` snapshot is displayed
-**locally in your chat** (nothing is sent to the server or other players).
-This is the easiest way to collect diagnostics on a phone, where no console
-is available — long-press the message to copy it.
+All commands below can be typed in the lobby or game chat. Replies are shown
+**locally in your chat only** — nothing is sent to the server or other
+players. This is the easiest way to collect diagnostics on a phone, where no
+console is available: long-press a reply to copy it.
+
+| Command | What it does |
+|---|---|
+| `/help` | Lists all local commands |
+| `/diag` | `pthDiag()` snapshot (build, connection, game state, card pipeline) |
+| `/update` | Compares your build to the server's; if newer, clears the cache and reloads |
+| `/netdbg` | Transport (direct/proxy, ws/wss), WebSocket state, reconnect count, protocol messages/10 s, then HTTP round-trip time |
+| `/carddbg` | Hole-card pipeline trace of the last 10 hands (see field table above) |
+| `/msglog` | Names of the last 30 protocol messages received |
+| `/fps` | On-screen FPS meter for 5 seconds, then average/minimum in the chat |
+| `/lang <code>` | Switches the UI language (e.g. `/lang fr`); without a code, lists available codes |
+| `/sound on\|off` | Toggles game sounds |
+| `/seatdbg` | Seat-layout metrics (game chat only) |
+
+Unknown `/commands` are sent as normal chat (so server-side commands like
+`/me` or `/emoji` still work).
 
 ### Visible diagnostics without a console (mobile)
 
