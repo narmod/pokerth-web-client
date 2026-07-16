@@ -16065,12 +16065,21 @@ function renderPlayersList() {
   var rows = pids.map(function(pid) {
     return { pid: pid, name: nameMap[pid] || ('#' + pid), isMe: pid === myId };
   });
+  // Déduplication de MON pseudo : le serveur peut lister plusieurs pids en
+  // ligne portant exactement mon nom (fantôme d'une session précédente pas
+  // encore purgée). On ne garde que MA session (marquée isMe / ★) et on retire
+  // les homonymes. N'affecte pas les autres joueurs entre eux.
+  (function(){
+    var _mine = (myId && nameMap[myId] && String(nameMap[myId]).charAt(0) !== '#') ? nameMap[myId] : null;
+    if (_mine) rows = rows.filter(function(r){ return r.isMe || r.name !== _mine; });
+  })();
   // Filter by search input
   var q = (document.getElementById('players-search-in') || {}).value || '';
   q = q.toLowerCase().trim();
   if (q) rows = rows.filter(function(r) { return r.name.toLowerCase().includes(q); });
-  // Tri : moi d'abord, puis A–Z ou par pays (parité tri joueurs QML,
-  // bible §16). Choix persistant (pth_pl_sort) ; les sans-pays en dernier.
+  // Tri : A–Z ou par pays (parité tri joueurs QML, bible §16) — je me
+  // classe comme tout le monde selon le filtre actif (plus d'épinglage en
+  // tête ; ★ suffit à me repérer). Persistant (pth_pl_sort) ; sans-pays en dernier.
   // Mode unique (single-select, parité officielle) : 'az' (alpha, tous) ·
   // 'cc' (par pays, tous) · 'idle' (n'affiche QUE les joueurs inactifs).
   var _plMode = 'az';
@@ -16078,8 +16087,6 @@ function renderPlayersList() {
   if (['az','cc','idle'].indexOf(_plMode) === -1) _plMode = 'az';
   var _plSort = (_plMode === 'cc') ? 'cc' : 'az';
   rows.sort(function(a, b) {
-    if (a.isMe && !b.isMe) return -1;
-    if (b.isMe && !a.isMe) return 1;
     if (_plSort === 'cc') {
       // Codes pays via le pont App.getLobbyState().countries (la variable
       // _playerCountries vit dans l'IIFE App, inaccessible d'ici).
@@ -16165,7 +16172,7 @@ function renderPlayersList() {
   body.innerHTML = _headHtml + (_shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>');
 }
 
-;(function(){ window.BUILD_VERSION='0.3.626-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.627-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
