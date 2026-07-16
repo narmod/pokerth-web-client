@@ -4182,7 +4182,8 @@ const App = (() => {
   //      placeholder /favicon.svg
   //   3. Emoji (mine from localStorage, others' from _playerAvatars)
   //   4. Bot fallback -> 🤖
-  //   5. Final fallback -> first letter of the pseudo
+  //   5. Mode internet (pokerth.net) sans avatar -> logo PokerTH /favicon.svg
+  //   6. Final fallback (LAN / entrainement) -> first letter of the pseudo
   //
   // Args:
   //   pid        : player id (number)
@@ -4227,7 +4228,15 @@ const App = (() => {
     if (isBot(pid)) {
       return '<span class="' + chipClass + ' emoji-av">🤖</span>';
     }
-    // 5) initial-letter fallback
+    // 5) Mode internet (pokerth.net) : joueur sans avatar -> logo PokerTH,
+    // comme le siege de jeu. Les autres modes (LAN, entrainement) gardent
+    // l'initiale.
+    if (!window._offlineMode && (_currentLoginMode === 'guest' || _currentLoginMode === 'auth')) {
+      return '<span class="' + chipClass + ' has-pth-avatar">'
+           + '<img class="chip-pth-img" src="/favicon.svg" alt="" draggable="false">'
+           + '</span>';
+    }
+    // 6) initial-letter fallback (LAN / entrainement)
     var letter = ((nick && nick[0]) || '?').toUpperCase();
     return '<span class="' + chipClass + ' letter">' + esc(letter) + '</span>';
   }
@@ -16177,7 +16186,7 @@ function renderPlayersList() {
   body.innerHTML = _headHtml + (_shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>');
 }
 
-;(function(){ window.BUILD_VERSION='0.3.629-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.630-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
