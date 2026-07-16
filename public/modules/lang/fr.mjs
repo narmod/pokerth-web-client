@@ -16,6 +16,12 @@ export const meta = {
 };
 
 export const strings = {
+    // Boot splash (écran de chargement initial — parité login QML)
+    bootLoading:"Chargement…",
+    bootReady:"Prêt.",
+    bootRetry:"Réessayer",
+    bootErrorMsg:"Connexion instable — certains éléments n’ont pas pu être chargés.",
+    bootMissing:"Éléments manquants : {n}",
     buttonsAuto:"Auto (table)",
     buttonsFlat:"Aplat",
     gipTabLog:"Historique",

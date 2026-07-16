@@ -56,6 +56,40 @@ try{var _d=document.documentElement,_p=localStorage.getItem('pth_theme'),_tb=loc
 <link rel="stylesheet" href="fonts/fonts.css">
 <link rel="manifest" href="manifest.json">
   <link rel="stylesheet" href="pokerth.css">
+<style id="boot-splash-css">
+/* Splash de démarrage — habillage identique à la card du login (#s-connect).
+   Couleurs prises sur les variables de thème posées par le script anti-flash
+   du <head> (data-theme) → suit sombre / clair / QML sans flash. Les valeurs
+   de repli ne servent que si pokerth.css n'a pas (encore) chargé — le cas même
+   que ce splash existe pour couvrir. Le fond flammes + voile est theme-agnostic,
+   comme sur le login. */
+#boot-splash{position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;
+  font-family:var(--ff-display,'Cinzel',Georgia,serif);color:var(--text-hi,#eff1f5);
+  background:linear-gradient(rgba(8,10,14,.55),rgba(8,10,14,.68)),url("/img/pokerth-login-bg.webp") center / cover no-repeat;
+  opacity:1;transition:opacity .42s ease}
+#boot-splash.bs-hide{opacity:0;pointer-events:none}
+#boot-splash .bs-card{background:var(--modal-bg,linear-gradient(160deg,#12161d 0%,#1d222b 50%,#0e1218 100%));
+  border:1px solid var(--border-hi,rgba(227,200,0,.6));border-radius:4px;padding:26px 30px 22px;
+  width:min(340px,calc(100vw - 40px));text-align:center;box-shadow:0 12px 40px rgba(0,0,0,.8)}
+#boot-splash .bs-chip{width:82px;height:82px;display:block;margin:0 auto 12px;filter:drop-shadow(0 4px 12px rgba(0,0,0,.55))}
+#boot-splash .bs-title{font-size:1.9rem;font-weight:700;letter-spacing:.16em;line-height:1;margin:0;color:var(--text-hi,#eff1f5)}
+#boot-splash .bs-suits{font-size:1.05rem;letter-spacing:.28em;opacity:.72;margin:9px 0 0}
+#boot-splash .bs-suits .r{color:var(--red,#c0392b)}
+#boot-splash .bs-sub{font-family:Georgia,serif;font-size:.6rem;letter-spacing:.4em;text-transform:uppercase;color:var(--text,#a0acc4);margin:8px 0 0}
+#boot-splash .bs-hr{height:1px;background:var(--border,rgba(227,200,0,.22));margin:18px 0 16px}
+#boot-splash .bs-track{height:4px;border-radius:2px;background:rgba(127,127,127,.22);overflow:hidden}
+#boot-splash .bs-fill{height:100%;width:0;border-radius:2px;box-shadow:0 0 8px rgba(227,200,0,.55);transition:width .28s ease;
+  background:linear-gradient(90deg,var(--gold-dim,#b09a00),var(--gold,#E3C800),var(--gold-hi,#f2dc4d))}
+#boot-splash .bs-status{font-family:Georgia,serif;font-size:.72rem;letter-spacing:.03em;color:var(--text,#a0acc4);margin:11px 0 0;min-height:1em}
+#boot-splash .bs-error{display:none;margin-top:14px}
+#boot-splash .bs-error-msg{font-family:Georgia,serif;font-size:.74rem;color:var(--red,#e87070);margin-bottom:10px}
+#boot-splash .bs-retry{font-family:Georgia,serif;cursor:pointer;color:#fff;font-weight:700;border-radius:9px;padding:9px 22px;
+  font-size:.82rem;letter-spacing:.03em;background:linear-gradient(#50b840,#1e6614);border:1px solid #7ad06a}
+#boot-splash .bs-card.err .bs-fill{background:var(--red,#c0392b);box-shadow:none}
+#boot-splash .bs-card.err .bs-error{display:block}
+:root.reduce-fx #boot-splash,:root.reduce-fx #boot-splash .bs-fill{transition:none}
+@media (max-height:640px){#boot-splash .bs-chip{width:54px;height:54px}#boot-splash .bs-title{font-size:1.5rem}#boot-splash .bs-suits{display:none}}
+</style>
 <script>
 function toggleStats() {
   if (typeof window._toggleStats === "function") window._toggleStats();
@@ -339,6 +373,138 @@ function onAvatarImageChosen(input) {
 
 </head>
 <body>
+<!-- ╔════════════════════╗ -->
+<!-- ║  BOOT SPLASH       ║ -->
+<!-- ╚════════════════════╝ -->
+<!-- Écran de chargement initial (parité login QML). Reste affiché jusqu'à ce
+     que l'app soit prête (window.App) ; en cas de fichier non chargé, propose
+     « Réessayer ». Couleurs = thème actif (data-theme). Voir #boot-splash-css. -->
+<div id="boot-splash" role="status" aria-live="polite">
+  <div class="bs-card" id="bs-card">
+    <img class="bs-chip" src="/favicon.svg" alt="PokerTH" width="82" height="82">
+    <h1 class="bs-title">PokerTH</h1>
+    <div class="bs-suits"><span>♠</span> <span class="r">♥</span> <span class="r">♦</span> <span>♣</span></div>
+    <div class="bs-sub">Web Client</div>
+    <div class="bs-hr"></div>
+    <div class="bs-track"><div class="bs-fill" id="bs-fill"></div></div>
+    <div class="bs-status" id="bs-status">Loading…</div>
+    <div class="bs-error" id="bs-error">
+      <div class="bs-error-msg" id="bs-error-msg">Unstable connection — some files could not be loaded.</div>
+      <button type="button" class="bs-retry" id="bs-retry">Retry</button>
+    </div>
+  </div>
+</div>
+<script>
+/* ── Boot gate ────────────────────────────────────────────────────────────
+   Précharge les briques critiques avec réessai (réchauffe le cache), remplit
+   la barre, puis ne révèle l'app que lorsque window.App est défini. Si l'app
+   n'apparaît pas (un fichier n'a pas chargé), affiche « Réessayer » (reload) —
+   le cache SW étant durci, le reload aboutit même en réseau instable.
+   Autonome : ne dépend ni de pokerth.js, ni de pokerth.css, ni de i18n.mjs. */
+(function () {
+  var splash = document.getElementById('boot-splash');
+  if (!splash) return;
+  var fill = document.getElementById('bs-fill'),
+      statusEl = document.getElementById('bs-status'),
+      card = document.getElementById('bs-card'),
+      errMsg = document.getElementById('bs-error-msg'),
+      retryBtn = document.getElementById('bs-retry');
+
+  /* Dico inline (en + fr) : affichage immédiat avant que t() soit prêt, et
+     repli si i18n échoue. Dès que window.t existe, on repasse sur les 36
+     langues via relabel(). */
+  var I = {
+    en: { load:'Loading…', ready:'Ready.', retry:'Retry',
+          err:'Unstable connection — some files could not be loaded.',
+          miss:'Missing files: {n}' },
+    fr: { load:'Chargement…', ready:'Prêt.', retry:'Réessayer',
+          err:'Connexion instable — certains éléments n’ont pas pu être chargés.',
+          miss:'Éléments manquants : {n}' } };
+  function pick() {
+    try {
+      var s = (localStorage.getItem('pth_lang') || '').toLowerCase();
+      if (s.indexOf('fr') === 0) return 'fr';
+      if (s) return 'en';
+      if ((navigator.language || '').toLowerCase().indexOf('fr') === 0) return 'fr';
+    } catch (e) {}
+    return 'en';
+  }
+  var L = I[pick()] || I.en;
+  function relabel() {
+    if (typeof window.t !== 'function') return;
+    function g(k, fb) { try { var v = window.t(k); return (v && v !== k) ? v : fb; } catch (e) { return fb; } }
+    L = { load:g('bootLoading', L.load), ready:g('bootReady', L.ready),
+          retry:g('bootRetry', L.retry), err:g('bootErrorMsg', L.err),
+          miss:g('bootMissing', L.miss) };
+    if (retryBtn) retryBtn.textContent = L.retry;
+    if (card.classList.contains('err') && errMsg) errMsg.textContent = L.err;
+  }
+
+  var CRIT = ['/pokerth.css', '/chat-emotes.js', '/pokerth.js',
+    '/modules/i18n.mjs', '/modules/theme.mjs', '/modules/sounds.mjs',
+    '/modules/music.mjs', '/modules/lang/en.mjs', '/fonts/fonts.css'];
+  try {
+    var lg = (localStorage.getItem('pth_lang') || '').toLowerCase().split('-')[0];
+    var m = { fr:'fr', de:'de', es:'es', it:'it', nl:'nl', pl:'pl', ru:'ru', pt:'pt-br' };
+    if (m[lg]) CRIT.push('/modules/lang/' + m[lg] + '.mjs');
+  } catch (e) {}
+
+  var done = 0, missCount = 0, total = CRIT.length, gone = false;
+  if (retryBtn) retryBtn.textContent = L.retry;
+  if (statusEl) statusEl.textContent = L.load + ' 0 / ' + total;
+  function bump(ok) {
+    done++; if (!ok) missCount++;
+    if (fill) fill.style.width = Math.round(done / total * 100) + '%';
+    if (statusEl && !card.classList.contains('err')) statusEl.textContent = L.load + ' ' + done + ' / ' + total;
+  }
+  function fetchRetry(u, n) {
+    n = n || 3;
+    return (function attempt(i) {
+      return fetch(u, { cache: 'reload' })
+        .then(function (r) { if (r && r.ok) return true; throw 0; })
+        .catch(function () {
+          if (i < n) return new Promise(function (res) { setTimeout(res, 400 * i); }).then(function () { return attempt(i + 1); });
+          return false;
+        });
+    })(1);
+  }
+  CRIT.forEach(function (u) { fetchRetry(u).then(function (ok) { bump(ok); }); });
+
+  function reveal() {
+    if (gone) return; gone = true;
+    if (statusEl) statusEl.textContent = L.ready;
+    splash.classList.add('bs-hide');
+    setTimeout(function () { if (splash.parentNode) splash.parentNode.removeChild(splash); }, 480);
+  }
+  function fail() {
+    if (gone || card.classList.contains('err')) return;
+    card.classList.add('err');
+    if (errMsg) errMsg.textContent = L.err;
+    if (statusEl) statusEl.textContent = missCount ? L.miss.replace('{n}', missCount) : '';
+  }
+  if (retryBtn) retryBtn.onclick = function () { location.reload(); };
+
+  /* Révèle dès que l'app est là. Continue de guetter même après un échec :
+     si l'app finit par charger, on révèle et on retire l'écran d'erreur. */
+  var ticks = 0;
+  var poll = setInterval(function () {
+    ticks++;
+    relabel();
+    if (window.App) { clearInterval(poll); reveal(); return; }
+    if (ticks === 240) fail();     // ~12 s : montre l'erreur, garde la surveillance
+    if (ticks > 1200) clearInterval(poll);   // abandon ~60 s
+  }, 50);
+  /* Filet : au 'load' tous les scripts defer ont fini de s'exécuter. */
+  window.addEventListener('load', function () {
+    setTimeout(function () {
+      relabel();
+      if (window.App) { clearInterval(poll); reveal(); }
+      else fail();
+    }, 80);
+  });
+})();
+</script>
+
 
 
 <!-- ╔════════════════════╗ -->

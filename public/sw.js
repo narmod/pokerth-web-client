@@ -23,7 +23,7 @@
  *                 Cross-origin requests and WS upgrades are left untouched.
  *                 (Fonts are now self-hosted and handled by SWR above.)
  */
-const CACHE_VERSION = 'pokerth-v0.3.614-beta';
+const CACHE_VERSION = 'pokerth-v0.3.615-beta';
 
 // Where navigations fall back to when the network is unavailable.
 const NAV_FALLBACK = '/pokerth-client.html';
@@ -130,12 +130,37 @@ const ASSETS = [
   '/icon-maskable-512.png'
 ];
 
-// ── Install : precache the app shell ──
+// Precache one asset with a couple of retries so a single flaky request
+// doesn't leave a hole. addAll() is all-or-nothing (one failure rejects the
+// whole batch) and its rejection used to be swallowed, so a hiccup during
+// install could leave the cache empty without any signal. Per-asset with
+// allSettled below means a miss is isolated, retried, and logged.
+function precacheOne(cache, url, tries) {
+  tries = tries || 3;
+  return (async function () {
+    for (var i = 0; i < tries; i++) {
+      try {
+        var res = await fetch(new Request(url, { cache: 'reload' }));
+        if (res && res.status === 200) { await cache.put(url, res.clone()); return true; }
+      } catch (e) { /* retry */ }
+      await new Promise(function (r) { setTimeout(r, 400 * (i + 1)); });
+    }
+    console.warn('[SW] precache miss:', url);
+    return false;
+  })();
+}
+
+// ── Install : precache the app shell (per-asset, resilient) ──
 self.addEventListener('install', function(e) {
   e.waitUntil(
-    caches.open(CACHE_VERSION)
-      .then(function(c) { return c.addAll(ASSETS.map(function(u){ return new Request(u, { cache: 'reload' }); })); })
-      .catch(function() { /* offline during install — skip */ })
+    caches.open(CACHE_VERSION).then(function (c) {
+      return Promise.allSettled(ASSETS.map(function (u) { return precacheOne(c, u); }))
+        .then(function (results) {
+          var miss = results.filter(function (r) { return r.status === 'fulfilled' && r.value === false; }).length;
+          if (miss) console.warn('[SW] precache incomplete:', miss, 'of', ASSETS.length, 'asset(s) missing');
+          else console.log('[SW] precache complete:', ASSETS.length, 'assets');
+        });
+    })
   );
   // NOTE: skipWaiting() is deliberately NOT called here. A freshly installed SW
   // must WAIT until the user applies the update via the /__ver banner (which

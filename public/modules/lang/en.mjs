@@ -16,6 +16,12 @@ export const meta = {
 };
 
 export const strings = {
+    // Boot splash (écran de chargement initial — parité login QML)
+    bootLoading:"Loading…",
+    bootReady:"Ready.",
+    bootRetry:"Retry",
+    bootErrorMsg:"Unstable connection — some files could not be loaded.",
+    bootMissing:"Missing files: {n}",
     buttonsAuto:"Auto (table)",
     buttonsFlat:"Flat",
     advRemoveGone:"Remove departed players and re-seat the table",
