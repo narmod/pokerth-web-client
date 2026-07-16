@@ -5819,34 +5819,34 @@ const App = (() => {
     if (Date.now() - _lastRxTime > _thr) _forceReconnect();
   }, 5000);
 
-  // ── Diagnostic utilisateur : taper pthDiag() dans la console ────────────
-  // Renvoie (et loggue) un instantané JSON de l'état client, à coller dans
-  // un rapport de bug. Voir docs/DIAGNOSTIC.md.
+  // ── User diagnostics: type pthDiag() in the console ─────────────────────
+  // Returns (and logs) a JSON snapshot of the client state, to paste into
+  // a bug report. See docs/DIAGNOSTIC.md.
   window.pthDiag = function () {
     var d = {};
     try {
       d.build   = window.BUILD_VERSION || null;
       d.date    = new Date().toISOString();
       d.ua      = navigator.userAgent;
-      d.ecran   = window.innerWidth + 'x' + window.innerHeight +
-                  ((window.matchMedia && window.matchMedia('(orientation: portrait)').matches) ? ' portrait' : ' paysage');
-      try { d.langue = localStorage.getItem('pth_lang') || navigator.language; } catch (e) { d.langue = navigator.language; }
+      d.screen  = window.innerWidth + 'x' + window.innerHeight +
+                  ((window.matchMedia && window.matchMedia('(orientation: portrait)').matches) ? ' portrait' : ' landscape');
+      try { d.lang = localStorage.getItem('pth_lang') || navigator.language; } catch (e) { d.lang = navigator.language; }
       d.sw      = !!(navigator.serviceWorker && navigator.serviceWorker.controller);
-      d.enLigne = navigator.onLine;
-      d.offline = !!window._offlineMode;
-      d.mode    = _currentLoginMode;
+      d.online  = navigator.onLine;
+      d.offlineMode = !!window._offlineMode;
+      d.loginMode = _currentLoginMode;
       d.ws      = ws ? (['CONNECTING','OPEN','CLOSING','CLOSED'][ws.readyState] || ws.readyState) : null;
-      d.pseudo  = myName || null;
-      d.joueurId = myId || 0;
-      d.partie  = gId || 0;
-      d.main    = handNum;
+      d.nick    = myName || null;
+      d.playerId = myId || 0;
+      d.gameId  = gId || 0;
+      d.hand    = handNum;
       d.phase   = gameState;
       d.sb      = smallBlind;
-      d.sieges  = seats.length;
-      d.mesCartes = [myCards[0] != null, myCards[1] != null];
-      d.cleCartes = !!_cardKey;
-      d.diagCartes = window._pthCardDiag || null;
-    } catch (e) { d.erreur = String(e); }
+      d.seats   = seats.length;
+      d.myCards = [myCards[0] != null, myCards[1] != null];
+      d.cardKey = !!_cardKey;
+      d.cardDiag = window._pthCardDiag || null;
+    } catch (e) { d.error = String(e); }
     try { console.log('[pthDiag]', JSON.stringify(d, null, 1)); } catch (e) {}
     return d;
   };
@@ -7532,8 +7532,8 @@ const App = (() => {
           if (myCards[0] == null && myCards[1] == null && (_cd.plain || _cd.enc >= 0)) {
             window._pthCardDiagN = (window._pthCardDiagN || 0) + 1;
             if (window._pthCardDiagN <= 2) {
-              setStatus('diag cartes: plain=' + _cd.plain + ' enc=' + _cd.enc +
-                        ' u8=' + _cd.encU8 + ' cle=' + _cd.key + ' dec=' + _cd.dec +
+              setStatus('cards diag: plain=' + _cd.plain + ' enc=' + _cd.enc +
+                        ' u8=' + _cd.encU8 + ' key=' + _cd.key + ' dec=' + _cd.dec +
                         ' clr=' + _cd.cleared + ' $=' + _cd.money, 'err');
             }
           }
@@ -16473,7 +16473,7 @@ function renderPlayersList() {
   });
 })();
 
-;(function(){ window.BUILD_VERSION='0.3.663-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.664-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
