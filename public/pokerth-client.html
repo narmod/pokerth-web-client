@@ -484,13 +484,22 @@ function onAvatarImageChosen(input) {
   }
   if (retryBtn) retryBtn.onclick = function () { location.reload(); };
 
+  /* pokerth.js expose l'app comme `const App` global (pas window.App) ;
+     un const global n'apparaît pas sur window. On le résout donc via le
+     scope global, avec try/catch pour la zone morte temporelle (TDZ) le
+     temps que pokerth.js finisse de s'exécuter. */
+  function appReady() {
+    if (typeof window !== 'undefined' && window.App) return true;
+    try { return typeof App !== 'undefined' && !!App; } catch (e) { return false; }
+  }
+
   /* Révèle dès que l'app est là. Continue de guetter même après un échec :
      si l'app finit par charger, on révèle et on retire l'écran d'erreur. */
   var ticks = 0;
   var poll = setInterval(function () {
     ticks++;
     relabel();
-    if (window.App) { clearInterval(poll); reveal(); return; }
+    if (appReady()) { clearInterval(poll); reveal(); return; }
     if (ticks === 240) fail();     // ~12 s : montre l'erreur, garde la surveillance
     if (ticks > 1200) clearInterval(poll);   // abandon ~60 s
   }, 50);
@@ -498,7 +507,7 @@ function onAvatarImageChosen(input) {
   window.addEventListener('load', function () {
     setTimeout(function () {
       relabel();
-      if (window.App) { clearInterval(poll); reveal(); }
+      if (appReady()) { clearInterval(poll); reveal(); }
       else fail();
     }, 80);
   });
