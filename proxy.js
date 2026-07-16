@@ -345,15 +345,22 @@ function _syncTokenName(tok) {
   e.exp = Date.now() + 24 * 3600 * 1000;   // expiration GLISSANTE : chaque usage prolonge de 24 h
   return e.name;
 }
-const _prefsLastWrite = new Map();   // compte -> ts dernière écriture (rate-limit PUT /prefs)
+const _prefsLastWrite = new Map();      // compte -> ts dernière écriture (rate-limit PUT /prefs)
+const _prefsWebLastWrite = new Map();   // compte -> ts dernière écriture (rate-limit PUT /prefs-web)
 setInterval(function () {   // purge périodique des jetons expirés + entrées de rate-limit
   const now = Date.now();
   _syncTokens.forEach(function (v, k) { if (v.exp < now) _syncTokens.delete(k); });
   _prefsLastWrite.forEach(function (ts, k) { if (now - ts > 3600 * 1000) _prefsLastWrite.delete(k); });
+  _prefsWebLastWrite.forEach(function (ts, k) { if (now - ts > 3600 * 1000) _prefsWebLastWrite.delete(k); });
 }, 3600 * 1000).unref();
 const PREFS_DIR = process.env.PREFS_DIR || path.join(__dirname, 'prefs');
 function _prefsFile(name) {
   return path.join(PREFS_DIR, crypto.createHash('sha1').update(String(name).toLowerCase()).digest('hex') + '.json');
+}
+// Blob « web-only » (réglages sans clé officielle) : fichier SÉPARÉ du config.xml
+// pour que /prefs et /prefs-web n'écrivent jamais le même fichier (pas de course).
+function _prefsWebFile(name) {
+  return path.join(PREFS_DIR, crypto.createHash('sha1').update(String(name).toLowerCase()).digest('hex') + '.web.json');
 }
 function _issueSyncToken(S) {
   if (S.syncToken) return;
@@ -1506,11 +1513,13 @@ function handleAdmin(req, res, reqPathOnly, query) {
     const acct = _syncTokenName(_authTok || query.token);
     if (!acct) return adminJson(res, 403, { ok: false, error: 'not authenticated (registered account required)' });
     if (req.method === 'GET') {
+      let web = null, webUpdatedAt = 0;
+      try { const w = JSON.parse(fs.readFileSync(_prefsWebFile(acct), 'utf8')); web = w.web || null; webUpdatedAt = w.updatedAt || 0; } catch (e) {}
       try {
         const d = JSON.parse(fs.readFileSync(_prefsFile(acct), 'utf8'));
-        return adminJson(res, 200, { ok: true, xml: d.xml || null, updatedAt: d.updatedAt || 0 });
+        return adminJson(res, 200, { ok: true, xml: d.xml || null, updatedAt: d.updatedAt || 0, web: web, webUpdatedAt: webUpdatedAt });
       } catch (e) {
-        return adminJson(res, 200, { ok: true, xml: null, updatedAt: 0 });
+        return adminJson(res, 200, { ok: true, xml: null, updatedAt: 0, web: web, webUpdatedAt: webUpdatedAt });
       }
     }
     if (req.method === 'PUT' || req.method === 'POST') {
@@ -1529,6 +1538,42 @@ function handleAdmin(req, res, reqPathOnly, query) {
         try {
           fs.mkdirSync(PREFS_DIR, { recursive: true });
           const _fp = _prefsFile(acct), _tmp = _fp + '.tmp';
+          fs.writeFileSync(_tmp, JSON.stringify(rec));
+          fs.renameSync(_tmp, _fp);
+        }
+        catch (e) { return adminJson(res, 500, { ok: false, error: 'write failed' }); }
+        return adminJson(res, 200, { ok: true, updatedAt: rec.updatedAt });
+      });
+      req.on('error', function () {});
+      return;
+    }
+    res.writeHead(405); res.end('Method not allowed'); return;
+  }
+  // ── Blob « web-only » lié au compte (réglages du client web sans clé dans le
+  // config.xml officiel : thème, sièges, raccourcis, voix, etc.). JSON plat
+  // { pth_xxx: "valeur" } ; lecture via GET /prefs (champs web/webUpdatedAt).
+  if (reqPathOnly === '/prefs-web') {
+    const _authTokW = String(req.headers['authorization'] || '').replace(/^Bearer\s+/i, '').trim();
+    const acctW = _syncTokenName(_authTokW || query.token);
+    if (!acctW) return adminJson(res, 403, { ok: false, error: 'not authenticated (registered account required)' });
+    if (req.method === 'PUT' || req.method === 'POST') {
+      let body = '';
+      req.on('data', function (c) { body += c; if (body.length > 64 * 1024) req.destroy(); });
+      req.on('end', function () {
+        let obj = null;
+        try { obj = JSON.parse(body); } catch (e) {}
+        if (!obj || typeof obj !== 'object' || Array.isArray(obj)) return adminJson(res, 400, { ok: false, error: 'not a JSON object' });
+        const clean = {};
+        Object.keys(obj).slice(0, 200).forEach(function (k) {
+          if (/^pth_[a-z0-9_]{1,40}$/.test(k) && typeof obj[k] === 'string' && obj[k].length <= 20000) clean[k] = obj[k];
+        });
+        const _lw = _prefsWebLastWrite.get(acctW) || 0;
+        if (Date.now() - _lw < 5000) return adminJson(res, 429, { ok: false, error: 'rate limited' });
+        _prefsWebLastWrite.set(acctW, Date.now());
+        const rec = { name: acctW, updatedAt: Date.now(), web: clean };
+        try {
+          fs.mkdirSync(PREFS_DIR, { recursive: true });
+          const _fp = _prefsWebFile(acctW), _tmp = _fp + '.tmp';
           fs.writeFileSync(_tmp, JSON.stringify(rec));
           fs.renameSync(_tmp, _fp);
         }

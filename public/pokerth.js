@@ -1117,6 +1117,74 @@ window.importPokerthConfigPick = importPokerthConfigPick;
 var _cfgSyncToken = null;
 var _cfgSyncPushTimer = null;
 function _cfgSyncEnabled() { return _advGet('cfg_sync', true); }
+// ── Blob « web-only » : réglages SANS clé dans le config.xml officiel, poussés
+// en JSON séparé (/prefs-web) pour couvrir 100 % des options sans jamais
+// polluer le XML interopérable. Whitelist explicite (jamais de clés machine
+// type pth_cfg_sync_ts, jetons, caches).
+var _CFG_WEB_SYNC_KEYS = [
+  // Toggles web-only (via setAdvOpt → pth_<clé>)
+  'pth_hide_pbar', 'pth_four_color', 'pth_show_community', 'pth_chat_noemoji',
+  'pth_assist', 'pth_show_odds', 'pth_hands_btn', 'pth_show_auto', 'pth_voice',
+  'pth_haptic', 'pth_display_bb', 'pth_table_zoom', 'pth_zoom_follow',
+  'pth_log_on', 'pth_create_dialog', 'pth_status_bar', 'pth_blinds_badge',
+  'pth_winner_popup', 'pth_remove_gone', 'pth_tooltips', 'pth_big_own_cards',
+  'pth_chat_translate', 'pth_pin_actionbar', 'pth_seat_sync',
+  // Valeurs (thème web, sièges, clavier, langue, divers)
+  'pth_theme', 'pth_buttons', 'pth_pucks', 'pth_seat', 'pth_seat_layout',
+  'pth_seat_custom', 'pth_keys', 'pth_lang', 'pth_offline_skill',
+  'pth_log_interval', 'pth_avatar', 'pth_ignored', 'pth_prefs_lan'
+];
+function _cfgWebCollect() {
+  var o = {};
+  _CFG_WEB_SYNC_KEYS.forEach(function (k) {
+    var v = _cfgLs(k);
+    if (v != null && v.length <= 20000) o[k] = v;   // skippe les valeurs énormes (ex. avatar image)
+  });
+  return o;
+}
+function _cfgWebDirty() {
+  try { return JSON.stringify(_cfgWebCollect()) !== (_cfgLs('pth_cfg_sync_weblast') || ''); }
+  catch (e) { return false; }
+}
+function _cfgWebPushNow(keepalive) {
+  if (!_cfgSyncToken || !_cfgSyncEnabled()) return;
+  var body; try { body = JSON.stringify(_cfgWebCollect()); } catch (e) { return; }
+  if (body === (_cfgLs('pth_cfg_sync_weblast') || '')) return;   // rien de neuf
+  fetch('/prefs-web',
+        { method: 'PUT', headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + _cfgSyncToken }, body: body, keepalive: !!keepalive })
+    .then(function (r) {
+      if (r.status === 429) { if (!keepalive) _cfgSyncPushSoon(6000); return null; }
+      return r.json();
+    })
+    .then(function (d) {
+      if (d && d.ok) {
+        try { localStorage.setItem('pth_cfg_sync_weblast', body); } catch (e) {}
+        try { localStorage.setItem('pth_cfg_sync_webts', String(d.updatedAt || Date.now())); } catch (e) {}
+      }
+    }).catch(function () {});
+}
+// Application silencieuse du blob reçu (mêmes chemins que les setters : les
+// toggles avancés sont ré-appliqués live ; thème/langue prennent effet au
+// prochain chargement, comme l'import de config.xml).
+function _cfgWebApply(o) {
+  if (!o || typeof o !== 'object') return;
+  var changed = false;
+  _CFG_WEB_SYNC_KEYS.forEach(function (k) {
+    if (typeof o[k] === 'string' && o[k].length <= 20000) {
+      try {
+        if (localStorage.getItem(k) !== o[k]) { localStorage.setItem(k, o[k]); changed = true; }
+      } catch (e) {}
+    }
+  });
+  if (!changed) return;
+  try { applyAdvOpts(); } catch (e) {}
+  try { if (typeof applyTooltips === 'function') applyTooltips(); } catch (e) {}
+  try {
+    var sl = _cfgLs('pth_seat_layout'); if (sl) document.documentElement.setAttribute('data-seat-layout', sl);
+    if (typeof window._renderSeatsNow === 'function') window._renderSeatsNow();
+    else if (typeof window._renderSeats === 'function') window._renderSeats();
+  } catch (e) {}
+}
 function _cfgSyncMark(key) {
   if (key === 'cfg_sync') return;                 // (dé)cocher la sync n'est pas une donnée à pousser
   try { localStorage.setItem('pth_cfg_sync_dirty', '1'); } catch (e) {}
@@ -1144,6 +1212,7 @@ function _cfgSyncPushNow(keepalive) {
         try { localStorage.removeItem('pth_cfg_sync_dirty'); } catch (e) {}
       }
     }).catch(function () {});
+  _cfgWebPushNow(keepalive);
 }
 function _cfgSyncPull() {
   if (!_cfgSyncToken || !_cfgSyncEnabled()) return;
@@ -1167,6 +1236,17 @@ function _cfgSyncPull() {
       } else if (!d.xml || dirty) {
         _cfgSyncPushSoon(500);                    // 1er appareil, ou modifs locales hors-ligne
       }
+      // Blob web-only : même réconciliation, horodatage séparé.
+      var webTs = parseInt(_cfgLs('pth_cfg_sync_webts') || '0', 10) || 0;
+      if (d.web && typeof d.web === 'object' && (d.webUpdatedAt || 0) > webTs) {
+        try {
+          _cfgWebApply(d.web);
+          localStorage.setItem('pth_cfg_sync_webts', String(d.webUpdatedAt));
+          localStorage.setItem('pth_cfg_sync_weblast', JSON.stringify(_cfgWebCollect()));
+        } catch (e) {}
+      } else if (_cfgWebDirty()) {
+        _cfgSyncPushSoon(500);
+      }
     }).catch(function () {});
 }
 // Jeton reçu du proxy (trame SYNCTOK:) — appelé par le handler WS.
@@ -1182,7 +1262,7 @@ window.cfgSyncToggle = function (el) {
 };
 // Dernière chance avant fermeture/onglet caché : push best-effort.
 window.addEventListener('pagehide', function () {
-  try { if (_cfgLs('pth_cfg_sync_dirty') === '1') _cfgSyncPushNow(true); } catch (e) {}
+  try { if (_cfgLs('pth_cfg_sync_dirty') === '1' || _cfgWebDirty()) _cfgSyncPushNow(true); } catch (e) {}
 });
 // Placement des sièges (Options avancées) : 'auto' | 'pokerth-official' | 'pokerth-ellipse'. Persiste +
 // re-rend les sièges via le hook global window._renderSeats.
@@ -16774,7 +16854,7 @@ function renderPlayersList() {
   });
 })();
 
-;(function(){ window.BUILD_VERSION='0.3.671-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.672-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
