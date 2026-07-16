@@ -8615,6 +8615,13 @@ html[data-buttons="pokerth"] .btn-action[disabled] { filter: grayscale(0.55) bri
 .lgi-prow { display:flex; align-items:center; gap:8px; padding:6px 8px; border-radius:6px; background:var(--inset); border:1px solid var(--border); }
 .lgi-pname { flex:1 1 auto; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-size:0.82rem; color:var(--text); }
 .lgi-prow.lgi-pending { opacity:0.6; }
+/* Ligne joueur cliquable (popup joueur, comme la liste « Joueurs en ligne ») :
+   curseur main, AUCUN soulignement/ligne, juste le pseudo qui passe or au survol. */
+.lgi-prow.lgi-click { cursor:pointer; -webkit-tap-highlight-color:transparent; }
+.lgi-prow.lgi-click, .lgi-prow.lgi-click .lgi-pname { text-decoration:none; }
+.lgi-prow.lgi-click:hover .lgi-pname, .lgi-prow.lgi-click:active .lgi-pname { color:var(--gold-hi); }
+.lgi-prow.lgi-click:focus { outline:none; }
+.lgi-prow.lgi-click:focus-visible { border-color:var(--gold-hi); }
 .lgi-pempty { color:var(--text-dim,#8b93a7); font-size:0.78rem; padding:8px; }
 
 /* Ligne de partie sélectionnée */

@@ -8151,7 +8151,10 @@ const App = (() => {
       var flag  = _ccToFlag(_playerCountries[pid], 'gp-flag');
       var label = nm ? esc(nm) : '#' + pid;
       var av    = _avatarChipHtml(pid, label, 'gp-av');
-      return '<div class="lgi-prow' + (nm ? '' : ' lgi-pending') + '">' + av + flag + '<span class="lgi-pname">' + label + '</span></div>';
+      return '<div class="lgi-prow lgi-click' + (nm ? '' : ' lgi-pending') + '" role="button" tabindex="0"'
+           + ' onclick="window.openPlayerInfoPopup(' + pid + ')"'
+           + ' onkeydown="if(event.key===\'Enter\')window.openPlayerInfoPopup(' + pid + ')">'
+           + av + flag + '<span class="lgi-pname">' + label + '</span></div>';
     }).join('');
   }
   // pids présents à MA table pendant l'attente : seatData non 'gone' + moi si
@@ -8175,7 +8178,10 @@ const App = (() => {
       var flag  = _ccToFlag(_playerCountries[pid], 'gp-flag');
       var label = nm ? esc(nm) : '#' + pid;
       var av    = _avatarChipHtml(pid, label, 'gp-av');
-      return '<div class="lgi-prow' + (nm ? '' : ' lgi-pending') + '">' + av + flag + '<span class="lgi-pname">' + label + '</span></div>';
+      return '<div class="lgi-prow lgi-click' + (nm ? '' : ' lgi-pending') + '" role="button" tabindex="0"'
+           + ' onclick="window.openPlayerInfoPopup(' + pid + ')"'
+           + ' onkeydown="if(event.key===\'Enter\')window.openPlayerInfoPopup(' + pid + ')">'
+           + av + flag + '<span class="lgi-pname">' + label + '</span></div>';
     }).join('');
   }
   function renderGameInfoPanel(gid) {
@@ -16367,7 +16373,7 @@ function renderPlayersList() {
   });
 })();
 
-;(function(){ window.BUILD_VERSION='0.3.658-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.659-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
