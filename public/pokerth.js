@@ -3969,6 +3969,30 @@ const App = (() => {
   let _endRaiseMode = 1;
   let _endRaiseValue = 0;
   let _manualBlinds = [];   // liste manuelle (NetGameInfo champ 14) de la partie en cours
+  // ── Minuteur de montée des blinds (mode « toutes les N minutes ») ──
+  // _blindsClockStart : timestamp (ms) du début du niveau de blinds courant.
+  // Ancré au 1er HandStart, ré-ancré à chaque montée de SB. Meilleure
+  // estimation côté client : le serveur vérifie l'intervalle au début de
+  // chaque main, donc le compte peut rester à 0:00 jusqu'à la main suivante.
+  let _blindsClockStart = 0;
+  let _blindsCdTimer = null;
+  function _stopBlindsCountdown() {
+    if (_blindsCdTimer) { clearInterval(_blindsCdTimer); _blindsCdTimer = null; }
+  }
+  function _fmtBlindsCountdown() {
+    var ms = _blindsClockStart + _raiseEvery * 60000 - Date.now();
+    var sec = Math.max(0, Math.round(ms / 1000));
+    var m = Math.floor(sec / 60), r = sec % 60;
+    return m + ':' + (r < 10 ? '0' : '') + r;
+  }
+  function _startBlindsCountdown() {
+    _stopBlindsCountdown();
+    _blindsCdTimer = setInterval(function () {
+      var el = document.getElementById('blinds-cd');
+      if (!el) { _stopBlindsCountdown(); return; }   // pastille retirée → stop
+      el.textContent = _fmtBlindsCountdown();
+    }, 1000);
+  }
 
   // ── Chip display mode: absolute value ($) or big blinds (BB) ──
   // Pure display feature, no protocol impact. Toggled from the in-game
@@ -7503,8 +7527,13 @@ const App = (() => {
             _whenTxt = t('blindsNextTip', { n: _left });
             _chip = _curStr + ' ↑\u202F' + _left;
           } else if (_raiseMode === 2 && _raiseEvery > 0) {
+            // Ancre du niveau courant : 1re main (ou rejoint en cours) et à
+            // chaque montée effective du small blind.
+            if (!_blindsClockStart || handNum <= 1) _blindsClockStart = Date.now();
+            else if (_prevSB > 0 && sb > _prevSB) _blindsClockStart = Date.now();
             _whenTxt = t('blindsEveryMin', { n: _raiseEvery });
-            _chip = _curStr + ' ↑';
+            _chip = _curStr + ' ↑ <span id="blinds-cd" style="font-variant-numeric:tabular-nums">'
+              + _fmtBlindsCountdown() + '</span>';
           }
 
           // Texte d'explication (affiché au tap et lors de la montée).
@@ -7524,6 +7553,8 @@ const App = (() => {
               '<span class="blinds-next" role="button" tabindex="0" title="' + _tip + '"'
               + ' onclick="window.showBlindsInfo&&window.showBlindsInfo()">' + _chip + '</span>';
           }
+          if (_raiseMode === 2 && _raiseEvery > 0) _startBlindsCountdown();
+          else _stopBlindsCountdown();
         } catch (e) {}
         // Fin de la fenêtre « Show » de la main précédente
         try { _setCanShow(false); } catch (e) {}
@@ -12536,6 +12567,7 @@ function _maybeShowNextHandBtn() {
         _playerCountries = {};
         _playerRights = {};
         _raiseMode = 1; _raiseEvery = 0; _lastBlindsUpHand = 0;
+        _blindsClockStart = 0; _stopBlindsCountdown();
         _endRaiseMode = 1; _endRaiseValue = 0; _manualBlinds = [];
         // Avatars : indexés par pid (stables tant que la session lobby dure) ou
         // par hash (cache réutilisable). Donc même cycle de vie que 'players' :
@@ -16386,7 +16418,7 @@ function renderPlayersList() {
   });
 })();
 
-;(function(){ window.BUILD_VERSION='0.3.660-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.661-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
