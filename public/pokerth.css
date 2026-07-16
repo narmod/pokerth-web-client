@@ -5387,8 +5387,8 @@ html[data-table="pokerth-live"] .raise-slider { accent-color: #4CAF50; }
 .players-list .pl-row:last-child { border-bottom: none; }
 .players-list .pl-row:hover { background: rgba(var(--gold-rgb), 0.08); }
 .players-list .pl-name { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.players-list .pl-name-link { color: inherit; text-decoration: underline; text-decoration-color: var(--gold-dim); text-decoration-thickness: 1px; text-underline-offset: 2px; }
-.players-list .pl-name-link:hover, .players-list .pl-name-link:active { color: var(--gold-hi); text-decoration-color: var(--gold-hi); }
+.players-list .pl-name-link { color: inherit; text-decoration: none; cursor: pointer; }
+.players-list .pl-name-link:hover, .players-list .pl-name-link:active { color: var(--gold-hi); }
 .players-list .pl-flag { flex: none; display: inline-flex; align-items: center; justify-content: flex-end; gap: 4px; font-size: 0.95rem; line-height: 1; }
 .players-list .pl-cc { font-size: 0.6rem; color: var(--gold-dim); font-family: var(--ff-mono); letter-spacing: 0.04em; white-space: nowrap; }
 .players-list .pl-flag .cc-flag { width: 20px; height: 15px; }
@@ -7516,7 +7516,7 @@ html[data-seat-edit="1"] #g-seats .seat.seat-ghost { outline: none; cursor: defa
 
 /* ── Player profile (clicking a name in the ranking) ─────────────────────── */
 .rk-name { background: none; border: none; padding: 0; margin: 0; font: inherit; letter-spacing: inherit; color: var(--gold-hi); cursor: pointer; }
-.rk-name:hover { color: var(--gold); text-decoration: underline; }
+.rk-name:hover { color: var(--gold); }
 #rk-profile { flex: 1; min-height: 120px; overflow-y: auto; }
 .rk-back { background: var(--inset); color: var(--text); border: 1px solid var(--border); border-radius: 3px; width: 32px; height: 28px; line-height: 1; font-size: 1.05rem; cursor: pointer; margin-bottom: 12px; transition: border-color 0.15s, color 0.15s; }
 .rk-back:hover { border-color: var(--gold); color: var(--gold-hi); }
@@ -8536,8 +8536,8 @@ html[data-buttons="pokerth"] .btn-action[disabled] { filter: grayscale(0.55) bri
 .players-list .pl-row .pl-status.on { color:var(--green,#50c878); }
 
 /* Nom du joueur dans la barre du bas : cliquable → ouvre le profil */
-.lobby-footbar .lfb-name-link { cursor:pointer; text-decoration:underline; text-decoration-color:var(--gold-dim); text-underline-offset:2px; }
-.lobby-footbar .lfb-name-link:hover { color:var(--gold-hi,var(--gold)); text-decoration-color:var(--gold-hi,var(--gold)); }
+.lobby-footbar .lfb-name-link { cursor:pointer; text-decoration:none; }
+.lobby-footbar .lfb-name-link:hover { color:var(--gold-hi,var(--gold)); }
 
 
 /* Voile derrière les slide-in Joueurs/Infos en compact (assombrit le fond,
