@@ -83,8 +83,14 @@ try{var _d=document.documentElement,_p=localStorage.getItem('pth_theme'),_tb=loc
 #boot-splash .bs-status{font-family:Georgia,serif;font-size:.72rem;letter-spacing:.03em;color:var(--text,#a0acc4);margin:11px 0 0;min-height:1em}
 #boot-splash .bs-error{display:none;margin-top:14px}
 #boot-splash .bs-error-msg{font-family:Georgia,serif;font-size:.74rem;color:var(--red,#e87070);margin-bottom:10px}
-#boot-splash .bs-retry{font-family:Georgia,serif;cursor:pointer;color:#fff;font-weight:700;border-radius:9px;padding:9px 22px;
-  font-size:.82rem;letter-spacing:.03em;background:linear-gradient(#50b840,#1e6614);border:1px solid #7ad06a}
+#boot-splash .bs-retry{background:#2b3444;color:#fff;border:none;padding:12px 22px;
+  font-family:var(--ff-display,'Cinzel',Georgia,serif);font-size:.82rem;font-weight:700;letter-spacing:.15em;
+  cursor:pointer;border-radius:2px;box-shadow:0 4px 16px rgba(0,0,0,.28);transition:background .15s,transform .1s,box-shadow .15s}
+#boot-splash .bs-retry:hover{background:#384252;box-shadow:0 6px 24px rgba(0,0,0,.4)}
+#boot-splash .bs-retry:active{transform:scale(.98)}
+/* Mode clair : bouton clair encré (le bouton Connect étant ardoise fixe, on le décline ici pour rester lisible/harmonieux sur la card claire) */
+:root[data-theme="pokerth-light"] #boot-splash .bs-retry{background:#eaeef4;color:#1d222b;border:1px solid rgba(60,72,90,.22);box-shadow:0 3px 12px rgba(0,0,0,.12)}
+:root[data-theme="pokerth-light"] #boot-splash .bs-retry:hover{background:#dde3ec;box-shadow:0 5px 18px rgba(0,0,0,.16)}
 #boot-splash .bs-card.err .bs-fill{background:var(--red,#c0392b);box-shadow:none}
 #boot-splash .bs-card.err .bs-error{display:block}
 :root.reduce-fx #boot-splash,:root.reduce-fx #boot-splash .bs-fill{transition:none}
