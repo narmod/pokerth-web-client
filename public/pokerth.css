@@ -8515,13 +8515,13 @@ html[data-buttons="pokerth"] .btn-action[disabled] { filter: grayscale(0.55) bri
   position:sticky; top:0; z-index:2;
   display:grid; align-items:center; gap:8px;
   padding:4px 0 6px; margin-bottom:2px;
-  background:var(--panel); border-bottom:1px solid var(--border);
+  background:linear-gradient(var(--chrome-tint),var(--chrome-tint)),var(--panel); border-bottom:1px solid var(--border);
 }
 .pl-colh-spacer { min-width:0; }
 .pl-colh-chip {
   box-sizing:border-box; width:100%;
   display:inline-flex; align-items:center; justify-content:center;
-  background:var(--chrome-tint); border:1px solid var(--border); border-radius:3px;
+  background:var(--field-bg); border:1px solid var(--border); border-radius:3px;
   padding:3px 0; cursor:pointer; line-height:0;
   color:var(--gold-dim); opacity:0.7;
 }
