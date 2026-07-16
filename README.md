@@ -76,6 +76,7 @@
   - [Resetting the family leaderboard](#leaderboard-reset)
 - [Development (running from source)](#development) &nbsp;📂
 - [Protocol notes](#protocol-notes)
+- [🩺 Diagnosing a problem](#diagnosing)
 - [Known limitations](#known-limitations)
 - [Roadmap / Suggested next steps](#roadmap)
 - [License](#license)
@@ -966,6 +967,19 @@ A few things worth knowing if you plan to hack on this:
 
 - The proxy logs every parsed message in hex with a short description, which makes protocol debugging straightforward (`pm2 logs pokerth-web` if you run under PM2).
 - Wire-type field numbers used by this client are documented inline in `public/pokerth.js` next to each `Proto.encode([...])` call, with references to `pokerth.proto` in the upstream repository.
+
+---
+
+<a id="diagnosing"></a>
+## 🩺 Diagnosing a problem
+
+Something looks wrong (cards not showing, connection stuck, wrong version)? The client ships built-in diagnostics — see **[docs/DIAGNOSTIC.md](docs/DIAGNOSTIC.md)** for the full guide. In short:
+
+- Open the browser console (F12 on desktop) and type `pthDiag()` — it prints a JSON snapshot (build, connection, game state, hole-card pipeline) you can paste into a bug report.
+- After each hand, `window._pthCardDiag` holds a trace of the hole-card decryption path (plain vs. encrypted, key present, decrypt result).
+- On mobile (no console), anomalies in the card pipeline are surfaced as a red status line during the first two affected hands.
+
+Please include the `pthDiag()` output, your browser/OS and the displayed build number when opening an issue.
 
 ---
 

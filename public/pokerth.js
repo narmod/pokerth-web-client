@@ -5819,6 +5819,38 @@ const App = (() => {
     if (Date.now() - _lastRxTime > _thr) _forceReconnect();
   }, 5000);
 
+  // ── Diagnostic utilisateur : taper pthDiag() dans la console ────────────
+  // Renvoie (et loggue) un instantané JSON de l'état client, à coller dans
+  // un rapport de bug. Voir docs/DIAGNOSTIC.md.
+  window.pthDiag = function () {
+    var d = {};
+    try {
+      d.build   = window.BUILD_VERSION || null;
+      d.date    = new Date().toISOString();
+      d.ua      = navigator.userAgent;
+      d.ecran   = window.innerWidth + 'x' + window.innerHeight +
+                  ((window.matchMedia && window.matchMedia('(orientation: portrait)').matches) ? ' portrait' : ' paysage');
+      try { d.langue = localStorage.getItem('pth_lang') || navigator.language; } catch (e) { d.langue = navigator.language; }
+      d.sw      = !!(navigator.serviceWorker && navigator.serviceWorker.controller);
+      d.enLigne = navigator.onLine;
+      d.offline = !!window._offlineMode;
+      d.mode    = _currentLoginMode;
+      d.ws      = ws ? (['CONNECTING','OPEN','CLOSING','CLOSED'][ws.readyState] || ws.readyState) : null;
+      d.pseudo  = myName || null;
+      d.joueurId = myId || 0;
+      d.partie  = gId || 0;
+      d.main    = handNum;
+      d.phase   = gameState;
+      d.sb      = smallBlind;
+      d.sieges  = seats.length;
+      d.mesCartes = [myCards[0] != null, myCards[1] != null];
+      d.cleCartes = !!_cardKey;
+      d.diagCartes = window._pthCardDiag || null;
+    } catch (e) { d.erreur = String(e); }
+    try { console.log('[pthDiag]', JSON.stringify(d, null, 1)); } catch (e) {}
+    return d;
+  };
+
   var _statusKey = null;
   function setStatus(txt, cls='', key) {
     // Mémorise la clé i18n du message courant (null pour les messages
@@ -16441,7 +16473,7 @@ function renderPlayersList() {
   });
 })();
 
-;(function(){ window.BUILD_VERSION='0.3.662-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.663-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
