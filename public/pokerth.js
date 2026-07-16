@@ -15988,7 +15988,7 @@ window._plToggleIgnore = function(pid){
 // dans localStorage 'pth_pl_cols' = liste des colonnes MASQUÉES (une
 // nouvelle colonne future est donc visible par défaut).
 var _PL_TRACK = { av:'22px', name:'minmax(0,1fr)', status:'22px', flag:'48px', star:'16px', acts:'48px' };
-var _PL_COL_ORDER   = ['av','name','status','flag','star','acts'];
+var _PL_COL_ORDER   = ['av','name','star','status','flag','acts'];
 var _PL_TOGGLE_COLS = ['av','status','flag','star','acts']; // 'name' exclu
 function _plColsHidden() {
   try { return new Set((localStorage.getItem('pth_pl_cols') || '').split(',').filter(Boolean)); }
@@ -16017,10 +16017,15 @@ var _PL_FLAG_SVG   = '<svg viewBox="0 0 24 24" width="14" height="14" fill="none
 // colonne. En tout-visible, ce gabarit = --pl-cols des lignes → alignement 1:1.
 function _plColHeadHtml() {
   var _tt = function (k, fb) { return (typeof t === 'function' && t(k) !== k) ? t(k) : fb; };
-  var ICON  = { av:_PL_PERSON_SVG, status:_PL_PAD_SVG, flag:_PL_FLAG_SVG, star:'<span class="pl-colh-star">\u2605</span>', acts:_PL_BAR_SVG };
-  var LABEL = { av:_tt('plColAvatar','Avatar'), status:_tt('plColStatus','In game'), flag:_tt('plColCountry','Country'), star:_tt('plColMe','Me'), acts:_tt('plColActions','Actions') };
+  var NAME_SVG = '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><line x1="5" y1="8" x2="19" y2="8"/><line x1="5" y1="12" x2="15" y2="12"/><line x1="5" y1="16" x2="17" y2="16"/></svg>';
+  var ICON  = { av:_PL_PERSON_SVG, name:NAME_SVG, status:_PL_PAD_SVG, flag:_PL_FLAG_SVG, star:'<span class="pl-colh-star">\u2605</span>', acts:_PL_BAR_SVG };
+  var LABEL = { av:_tt('plColAvatar','Avatar'), name:_tt('plColName','Name'), status:_tt('plColStatus','In game'), flag:_tt('plColCountry','Country'), star:_tt('plColMe','Me'), acts:_tt('plColActions','Actions') };
   return _PL_COL_ORDER.map(function (k) {
-    if (k === 'name') return '<span class="pl-colh-spacer"></span>';
+    if (k === 'name') {
+      // Fausse pastille : colonne Nom toujours visible (non togglable),
+      // même apparence carrée en état "on" mais non cliquable.
+      return '<span class="pl-colh-chip on pl-colh-lock" title="' + LABEL[k] + '" aria-label="' + LABEL[k] + '">' + ICON[k] + '</span>';
+    }
     var on = _plColVisible(k);
     return '<button type="button" class="pl-colh-chip' + (on ? ' on' : '') + '"'
       + ' title="' + LABEL[k] + '" aria-label="' + LABEL[k] + '" aria-pressed="' + on + '"'
@@ -16172,7 +16177,7 @@ function renderPlayersList() {
   body.innerHTML = _headHtml + (_shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>');
 }
 
-;(function(){ window.BUILD_VERSION='0.3.627-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.628-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

@@ -5375,7 +5375,7 @@ html[data-table="pokerth-live"] .raise-slider { accent-color: #4CAF50; }
 }
 .players-list .pl-row {
   display: grid;
-  grid-template-columns: var(--pl-cols, 22px minmax(0,1fr) 22px 48px 16px 48px);
+  grid-template-columns: var(--pl-cols, 22px minmax(0,1fr) 16px 22px 48px 48px);
   align-items: center;
   gap: 8px;
   padding: 4px 0;          /* container provides the 12px lateral padding now */
@@ -8521,12 +8521,14 @@ html[data-buttons="pokerth"] .btn-action[disabled] { filter: grayscale(0.55) bri
 .pl-colh-chip {
   box-sizing:border-box; width:100%;
   display:inline-flex; align-items:center; justify-content:center;
-  background:none; border:1px solid transparent; border-radius:5px;
+  background:rgba(var(--gold-rgb),0.03); border:1px solid var(--border); border-radius:2px;
   padding:3px 0; cursor:pointer; line-height:0;
-  color:var(--gold-dim); opacity:0.5;
+  color:var(--gold-dim); opacity:0.55;
 }
 .pl-colh-chip:hover { background:rgba(var(--gold-rgb),0.12); }
 .pl-colh-chip.on { color:var(--gold); opacity:1; border-color:rgba(var(--gold-rgb),0.35); background:rgba(var(--gold-rgb),0.10); }
+.pl-colh-lock { cursor:default; }
+.pl-colh-lock:hover { background:rgba(var(--gold-rgb),0.10); }
 .pl-colh-star { font-size:0.85rem; line-height:1; }
 
 /* Colonne statut « en partie » : manette allumée (vert) si le joueur joue, éteinte sinon */

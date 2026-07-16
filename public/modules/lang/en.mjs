@@ -390,7 +390,7 @@ export const strings = {
     infoTypeLabel:'Type', infoCapitalLabel:'Capital', infoPlayersInGame:'Players in game', plIgnore:'Ignore', plStats:'Player stats',
     plSortAlpha:'Sort alphabetically', plShowIdle:'Display idle players', plHideIdle:'Hide idle players',
     plNotPlaying:'Not playing',
-    plColumns:'Columns', plColAvatar:'Avatar', plColStatus:'In game', plColCountry:'Country', plColMe:'Me', plColActions:'Actions',
+    plColumns:'Columns', plColAvatar:'Avatar', plColName:'Name', plColStatus:'In game', plColCountry:'Country', plColMe:'Me', plColActions:'Actions',
     gameTimeLabel:'Time', visRanked:'Ranked', infoBlindsUp:'Blinds up',
     spectatorBtn:'Spectate',
     // v0.3.533 : case « ne pas traduire les termes de poker » (parité officielle)
