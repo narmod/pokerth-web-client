@@ -7471,9 +7471,16 @@ const App = (() => {
         // les cartes arrivent dans encryptedCards (champ 3), chiffrées AES-128
         // avec une clé dérivée du mot de passe. On les déchiffre ici. Le
         // déchiffrement est synchrone (clé/IV déjà dérivés à l'Init).
+        // ── DIAG temporaire (bug « cartes invisibles en mode auth ») ──
+        // Trace chaque étape de la voie encryptedCards ; retirer une fois le
+        // bug identifié. Visible : console + setStatus (2 premières mains).
+        var _cd = { hand: handNum, plain: !!sub[2], enc: sub[3] ? (sub[3][0] && sub[3][0].length) : -1,
+                    encU8: !!(sub[3] && sub[3][0] instanceof Uint8Array),
+                    key: !!(_cardKey && _cardIV), dec: null, cleared: false };
         if ((myCards[0] == null || myCards[1] == null) && sub[3] && _cardKey && _cardIV) {
           const cipher = (sub[3][0] instanceof Uint8Array) ? sub[3][0] : null;
           const dec = cipher ? PTHCrypto.decryptCards(cipher, _cardKey, _cardIV) : null;
+          _cd.dec = !!dec;
           if (dec) myCards = [dec[0], dec[1]];
         }
         // If I'm bust (lost my whole stack last hand), the server may
@@ -7481,8 +7488,24 @@ const App = (() => {
         // hand. Force-clear so the player bar shows card backs and
         // matches the eliminated state shown on my seat.
         if (seatData[myId] && seatData[myId].money <= 0 && !seatData[myId].gone) {
+          if (myCards[0] != null || myCards[1] != null) _cd.cleared = true;
           myCards = [null, null];
         }
+        try {
+          _cd.money = seatData[myId] ? seatData[myId].money : undefined;
+          window._pthCardDiag = _cd;
+          console.log('[cards-diag]', JSON.stringify(_cd));
+          // Anomalie = cartes toujours nulles alors qu'on est assis avec des
+          // données serveur (plain ou enc). Statut visible sur mobile.
+          if (myCards[0] == null && myCards[1] == null && (_cd.plain || _cd.enc >= 0)) {
+            window._pthCardDiagN = (window._pthCardDiagN || 0) + 1;
+            if (window._pthCardDiagN <= 2) {
+              setStatus('diag cartes: plain=' + _cd.plain + ' enc=' + _cd.enc +
+                        ' u8=' + _cd.encU8 + ' cle=' + _cd.key + ' dec=' + _cd.dec +
+                        ' clr=' + _cd.cleared + ' $=' + _cd.money, 'err');
+            }
+          }
+        } catch (_de) {}
         const hsFields = Object.keys(sub).sort((a,b)=>+a-+b).map(f=>f+':'+Proto.u32(sub,+f)).join(' ');
 
         const sb = Proto.u32(sub, 4);
@@ -16418,7 +16441,7 @@ function renderPlayersList() {
   });
 })();
 
-;(function(){ window.BUILD_VERSION='0.3.661-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.662-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
