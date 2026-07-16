@@ -8577,6 +8577,10 @@ html[data-buttons="pokerth"] .btn-action[disabled] { filter: grayscale(0.55) bri
 /* Icônes d'action par joueur (colonne Joueurs connectés) : ⊘ ignorer + 📊 stats */
 .players-list .pl-row .pl-acts { display:inline-flex; align-items:center; gap:2px; justify-self:end; margin-left:0; }
 .pl-act { background:none; border:none; padding:3px; cursor:pointer; color:var(--gold-dim,#9a824a); display:inline-flex; align-items:center; border-radius:4px; line-height:0; }
+/* Colonne « Inviter » (page d'attente) : icône verte, état envoyé estompé. */
+.pl-act-inv { color:var(--green); }
+.pl-act-inv:hover { background:var(--inset-hi); }
+.pl-act-inv.sent { opacity:.45; cursor:default; }
 .pl-act:hover { color:var(--gold); background:rgba(var(--gold-rgb),0.12); }
 .pl-act.pl-act-ban.on { color:var(--red,#e05050); }
 

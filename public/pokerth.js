@@ -8250,7 +8250,11 @@ const App = (() => {
     // Mode « ma partie en attente » : la liste passe à droite et mes infos +
     // le chat au centre (parité client officiel) — piloté par une classe CSS.
     var _sl = document.getElementById('s-lobby');
+    var _wasWaiting = _sl ? _sl.classList.contains('lobby-waiting') : false;
     if (_sl) _sl.classList.toggle('lobby-waiting', mine);
+    // Colonne « Inviter » de la liste Joueurs : ajoutée/retirée au changement
+    // de mode -> re-render immédiat (sinon elle n'apparaît qu'au prochain event lobby).
+    if (_sl && _wasWaiting !== mine) { try { if (typeof renderPlayersList === 'function') renderPlayersList(); } catch(e) {} }
     if (!mine) {
       bar.style.display = 'none'; bar.innerHTML = '';
       if (create) create.style.display = '';
@@ -12898,6 +12902,7 @@ function _maybeShowNextHandBtn() {
                '</div>';
       }).join('');
     },
+    inviteSentTo(pid) { return !!_invSent[pid]; },
     sendInvite(pid) {
       if (window._offlineMode || !gId || pid === myId) return;
       try { send(MSG.buildInvitePlayer(gId, pid)); } catch(e) {}
@@ -16006,9 +16011,20 @@ window._plToggleIgnore = function(pid){
 // activables/désactivables depuis l'en-tête (#pl-colhead). Choix persisté
 // dans localStorage 'pth_pl_cols' = liste des colonnes MASQUÉES (une
 // nouvelle colonne future est donc visible par défaut).
-var _PL_TRACK = { av:'22px', name:'minmax(0,1fr)', status:'22px', flag:'48px', star:'16px', acts:'48px' };
-var _PL_COL_ORDER   = ['av','name','star','status','flag','acts'];
-var _PL_TOGGLE_COLS = ['av','status','flag','star','acts']; // 'name' exclu
+var _PL_TRACK = { av:'22px', name:'minmax(0,1fr)', status:'22px', flag:'48px', star:'16px', inv:'26px', acts:'48px' };
+var _PL_COL_ORDER   = ['av','name','star','status','flag','inv','acts'];
+var _PL_TOGGLE_COLS = ['av','status','flag','star','acts']; // 'name' et 'inv' exclus
+// Colonne « Inviter à la partie » (parité PlayerListItem QML) : présente
+// UNIQUEMENT sur la page d'attente de démarrage (s-lobby.lobby-waiting).
+// Réutilise la mécanique du modal d'invitation : App._inviteEligiblePids()
+// pour l'éligibilité et App.sendInvite(pid) pour l'envoi.
+var _PL_INVITE_SVG = '<svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" aria-hidden="true"><path d="M15 12a4 4 0 1 0-4-4 4 4 0 0 0 4 4Zm0 1.8c-3.5 0-6.3 1.8-6.3 4V19h12.6v-1.2c0-2.2-2.8-4-6.3-4ZM6 9V6.6H4.4V9H2v1.6h2.4V13H6v-2.4h2.4V9H6Z"/></svg>';
+function _plWaitingMode() { var s = document.getElementById('s-lobby'); return !!(s && s.classList.contains('lobby-waiting')); }
+function _plColOrder() { return _plWaitingMode() ? _PL_COL_ORDER : _PL_COL_ORDER.filter(function(k){ return k !== 'inv'; }); }
+window._plInvite = function(pid){
+  try { if (typeof App !== 'undefined' && App.sendInvite) App.sendInvite(pid); } catch(e) {}
+  try { renderPlayersList(); } catch(e) {}
+};
 function _plColsHidden() {
   try { return new Set((localStorage.getItem('pth_pl_cols') || '').split(',').filter(Boolean)); }
   catch (e) { return new Set(); }
@@ -16037,10 +16053,10 @@ var _PL_FLAG_SVG   = '<svg viewBox="0 0 24 24" width="14" height="14" fill="none
 function _plColHeadHtml() {
   var _tt = function (k, fb) { return (typeof t === 'function' && t(k) !== k) ? t(k) : fb; };
   var NAME_SVG = '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><line x1="5" y1="8" x2="19" y2="8"/><line x1="5" y1="12" x2="15" y2="12"/><line x1="5" y1="16" x2="17" y2="16"/></svg>';
-  var ICON  = { av:_PL_PERSON_SVG, name:NAME_SVG, status:_PL_PAD_SVG, flag:_PL_FLAG_SVG, star:'<span class="pl-colh-star">\u2605</span>', acts:_PL_BAR_SVG };
-  var LABEL = { av:_tt('plColAvatar','Avatar'), name:_tt('plColName','Name'), status:_tt('plColStatus','In game'), flag:_tt('plColCountry','Country'), star:_tt('plColMe','Me'), acts:_tt('plColActions','Actions') };
-  return _PL_COL_ORDER.map(function (k) {
-    if (k === 'name') {
+  var ICON  = { av:_PL_PERSON_SVG, name:NAME_SVG, status:_PL_PAD_SVG, flag:_PL_FLAG_SVG, star:'<span class="pl-colh-star">\u2605</span>', inv:_PL_INVITE_SVG, acts:_PL_BAR_SVG };
+  var LABEL = { av:_tt('plColAvatar','Avatar'), name:_tt('plColName','Name'), status:_tt('plColStatus','In game'), flag:_tt('plColCountry','Country'), star:_tt('plColMe','Me'), inv:_tt('inviteBtn','Invite'), acts:_tt('plColActions','Actions') };
+  return _plColOrder().map(function (k) {
+    if (k === 'name' || k === 'inv') {
       // Fausse pastille : colonne Nom toujours visible (non togglable),
       // même apparence carrée en état "on" mais non cliquable.
       return '<span class="pl-colh-chip on pl-colh-lock" title="' + LABEL[k] + '" aria-label="' + LABEL[k] + '">' + ICON[k] + '</span>';
@@ -16073,7 +16089,7 @@ function renderPlayersList() {
   // rester cliquable colonne masquée ou non ; en tout-visible les deux
   // gabarits coïncident → pastilles alignées 1:1 sur les colonnes.
   var _visCols = _plVisibleCols();
-  var _fullTmpl = _PL_COL_ORDER.map(function (k) { return _PL_TRACK[k]; }).join(' ');
+  var _fullTmpl = _plColOrder().map(function (k) { return _PL_TRACK[k]; }).join(' ');
   var _headHtml = '<div class="pl-colhead" style="grid-template-columns:' + _fullTmpl + '">'
                 + _plColHeadHtml() + '</div>';
   try { body.style.setProperty('--pl-cols', _fullTmpl); } catch (e) {}
@@ -16141,6 +16157,11 @@ function renderPlayersList() {
   });
   var _inGame = rows.filter(function(r) { return r.act; });
   var _atLobby = rows.filter(function(r) { return !r.act; });
+  // Éligibilité d'invitation (page d'attente uniquement) : même source que le
+  // modal (App._inviteEligiblePids) -> exclut moi et les joueurs déjà à ma table.
+  var _invMode = _plWaitingMode() && (typeof App !== 'undefined') && App._inviteEligiblePids;
+  var _invElig = {};
+  if (_invMode) { try { App._inviteEligiblePids().forEach(function(p){ _invElig[p] = 1; }); } catch(e) { _invMode = false; } }
   var rowHtml = function(r) {
     var esc = function(s) { return String(s).replace(/[<>&"]/g, function(c){return {'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;'}[c];}); };
     // Avatar chip via the unified helper (same priority order as
@@ -16178,6 +16199,13 @@ function renderPlayersList() {
         case 'status': return _status;
         case 'flag':   return '<span class="pl-flag">' + flag + (cc ? '<span class="pl-cc">' + cc + '</span>' : '') + '</span>';
         case 'star':   return '<span class="pl-star">' + (r.isMe ? '★' : '') + '</span>';
+        case 'inv': {
+          if (!_invMode || !_invElig[r.pid]) return '<span class="pl-cell-off"></span>';
+          var _sent = (typeof App.inviteSentTo === 'function') && App.inviteSentTo(r.pid);
+          return _sent
+            ? '<span class="pl-act pl-act-inv sent" title="' + _tt('inviteSent','Invited') + '">' + _PL_INVITE_SVG + '</span>'
+            : '<button type="button" class="pl-act pl-act-inv" title="' + _tt('inviteBtn','Invite') + '" aria-label="' + _tt('inviteBtn','Invite') + '" onclick="event.stopPropagation();window._plInvite(' + r.pid + ')">' + _PL_INVITE_SVG + '</button>';
+        }
         case 'acts':   return _acts;
       }
       return '';
@@ -16186,7 +16214,7 @@ function renderPlayersList() {
     // retirée → les colonnes restent alignées sous leurs pastilles quel que
     // soit l'état des toggles (l'en-tête utilise aussi le gabarit complet).
     return '<div class="pl-row' + (r.isMe ? ' pl-me' : '') + '">'
-      + _PL_COL_ORDER.map(function (k) { return _plColVisible(k) ? _plCell(k) : '<span class="pl-cell-off"></span>'; }).join('')
+      + _plColOrder().map(function (k) { return _plColVisible(k) ? _plCell(k) : '<span class="pl-cell-off"></span>'; }).join('')
       + '</div>';
   };
   var _tt = function(k, fb) { return (typeof t === 'function' && t(k) !== k) ? t(k) : fb; };
@@ -16201,7 +16229,7 @@ function renderPlayersList() {
   body.innerHTML = _headHtml + (_shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>');
 }
 
-;(function(){ window.BUILD_VERSION='0.3.645-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.646-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
