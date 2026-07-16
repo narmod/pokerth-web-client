@@ -10625,14 +10625,26 @@ const App = (() => {
           var _selfTop3 = _selfR3 ? (_selfR3.top - _zr3.top) : (_zH3 - 100);
           var _sumY3 = _selfR3 ? (_selfR3.top + _selfR3.height / 2 - _zr3.top) : (_zH3 - 100);
           var _n3 = 1, _minB3 = Infinity;
+          var _botTop3 = -Infinity, _botC3 = -Infinity; // siege du BAS de l'anneau (spectateur)
           el.querySelectorAll('.seat:not(.me):not(.seat-ghost) .seat-plate').forEach(function (pl3) {
             var rr3 = pl3.getBoundingClientRect();
             var _b3 = rr3.bottom - _zr3.top;
             if (_b3 < _minB3) _minB3 = _b3;                       // box la plus haute
-            _sumY3 += rr3.top + rr3.height / 2 - _zr3.top; _n3++; // barycentre
+            var _t3 = rr3.top - _zr3.top, _c3 = _t3 + rr3.height / 2;
+            if (_c3 > _botC3) { _botC3 = _c3; _botTop3 = _t3; }   // box la plus basse
+            _sumY3 += _c3; _n3++;                                 // barycentre
           });
           var _isCmp3 = _zH3 < 520 || window.innerHeight < 600;
           var _commC3 = _sumY3 / _n3;
+          // Zuschauer (QML communityCenterY) : sans self-box l'anneau est
+          // symetrique autour du centre de zone -> les cartes vont au MILIEU
+          // de l'anneau libre, (topOpponentBottomY + selfVisualTopY)/2, ou
+          // selfVisualTopY = HAUT du siege du bas de l'anneau (opp0). Le
+          // barycentre ne sert qu'au mode assis (self-box incluse).
+          if (myIdx < 0 && _botTop3 > -Infinity && _minB3 < Infinity) {
+            _selfTop3 = _botTop3;
+            _commC3 = (_minB3 + _selfTop3) / 2;
+          }
           var _topB3 = (_minB3 < Infinity ? _minB3 : 0) + (_isCmp3 ? 39 : 26) * _seatBoxScale;
           var _avail3 = Math.min(_commC3 - _topB3 - 6, _selfTop3 - _commC3 - 6);
           var _gapF3 = _avail3 > 0 ? _avail3 / (_isCmp3 ? 66 : 84) : 0;
@@ -16294,7 +16306,7 @@ function renderPlayersList() {
   });
 })();
 
-;(function(){ window.BUILD_VERSION='0.3.653-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.654-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
