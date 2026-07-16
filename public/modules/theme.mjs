@@ -79,7 +79,7 @@ const DECKS = [
   { id: 'casino-vert', key: 'deckCasinoVert', fallback: 'Green Casino', swatch: '#1e6b1e', ext: 'svg' },
   { id: 'pokerth', key: 'deckPokerth', fallback: 'PokerTH', swatch: '#1d6b30', ext: 'png' },
   { id: 'pokerth-1-0', key: 'deckPokerth10', fallback: 'PokerTH 1.0', swatch: '#1d6b30', ext: 'png' },
-  { id: 'pokerth-new', key: 'deckPokerthNew', fallback: 'PokerTH new', swatch: '#a52a2a', ext: 'svg' },
+  { id: 'pokerth-new', key: 'deckPokerthNew', fallback: 'PokerTH Royal Classic', by: 'PokerTH Development Team', swatch: '#a52a2a', ext: 'svg' },
 ];
 
 // Buttons axis: a built-in "Glossy" scheme (PokerTH colour-coding, kept so
@@ -1250,7 +1250,7 @@ function _tabItems(id){
 }
 function _styleAuthor(kind, item){
   if (kind==='table') return TABLE_AUTHORS[item.id] || item.by || null;
-  if (kind==='deck'){ for (var i=0;i<DECKS.length;i++) if (DECKS[i].id===item.id) return 'PokerTH'; return item.by || null; }
+  if (kind==='deck'){ if (item && item.by) return item.by; for (var i=0;i<DECKS.length;i++) if (DECKS[i].id===item.id) return 'PokerTH'; return null; }
   return item.by || null;
 }
 function _styleRow(kind, item, name, author, active, onClick){
