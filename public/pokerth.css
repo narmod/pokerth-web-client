@@ -1732,8 +1732,13 @@ body {
    #4ade80 sombre / #16a34a clair), emoji = smiley nu ; aucun chrome de bouton. */
 #lobby-chat-panel .chat-send {
   background:none; border:none; padding:0 8px; color:var(--green);
-  display:flex; align-items:center; border-radius:6px;
+  display:flex; align-items:center; border-radius:6px; flex:0 0 auto;
 }
+/* L'input du chat doit pouvoir rétrécir, sinon il pousse le bouton d'envoi
+   hors du cadre quand la colonne est étroite. */
+.chat-input { min-width:0; }
+.chat-input input { min-width:0; }
+.chat-input .chat-emoji-toggle, .chat-input .chat-send { flex:0 0 auto; }
 #lobby-chat-panel .chat-send:hover { background:var(--inset-hi); }
 :root[data-theme="pokerth"] #lobby-chat-panel .chat-send { color:#4ade80; }
 :root[data-theme="pokerth-light"] #lobby-chat-panel .chat-send { color:#16a34a; }
@@ -8304,6 +8309,11 @@ html[data-buttons="pokerth"] .btn-action[disabled] { filter: grayscale(0.55) bri
 /* Palette claire : bouton gris neutre (col500 light), texte sombre (parite QML). */
 :root[data-theme="pokerth-light"] .lobby-footbar .lfb-create { background:#c0c2c6; color:#1d222b; }
 :root[data-theme="pokerth-light"] .lobby-footbar .lfb-create:hover { background:#b2b4b9; }
+/* Portrait/compact (palette claire) : barre posée sur le fond blanc QML #f0f3f8,
+   sans trait -> plus de cadre visible autour de « Joueur / Créer une partie ». */
+@media (max-width: 899.98px) {
+  :root[data-theme="pokerth-light"] .lobby-footbar { background:#f0f3f8; border-top:none; }
+}
 /* Rejoindre : vert (identique au bouton Rejoindre des lignes) */
 .lobby-footbar .lfb-join { border-color:var(--green); background:rgba(var(--green-rgb),0.12); color:var(--green); }
 .lobby-footbar .lfb-join:hover { background:rgba(var(--green-rgb),0.28); }
@@ -8446,18 +8456,18 @@ html[data-buttons="pokerth"] .btn-action[disabled] { filter: grayscale(0.55) bri
     position:fixed !important; top:var(--ovl-top,48px); bottom:0; left:0; right:auto !important;
     width:min(320px,84vw); max-height:none !important; display:flex !important;
     transform:translateX(-100%); transition:transform .22s ease; z-index:99; border-radius:0;
-    box-shadow:2px 0 22px rgba(0,0,0,0.55); background:var(--panel);
+    box-shadow:none; background:var(--panel);
   }
-  #s-lobby.pl-open .lobby-grid > #players-panel { transform:translateX(0); }
+  #s-lobby.pl-open .lobby-grid > #players-panel { transform:translateX(0); box-shadow:2px 0 22px rgba(0,0,0,0.55); }
 
   /* Infos : slide-in depuis la droite (contenu Phase 2) */
   #s-lobby .lobby-grid > #lobby-gameinfo {
     position:fixed !important; top:var(--ovl-top,48px); bottom:0; right:0; left:auto;
     width:min(340px,88vw); display:flex !important; max-height:none !important; border-radius:0;
     transform:translateX(100%); transition:transform .22s ease; z-index:99;
-    box-shadow:-2px 0 22px rgba(0,0,0,0.55); border-left:1px solid var(--border); background:var(--panel);
+    box-shadow:none; border-left:1px solid var(--border); background:var(--panel);
   }
-  #s-lobby.gi-open .lobby-grid > #lobby-gameinfo { transform:translateX(0); }
+  #s-lobby.gi-open .lobby-grid > #lobby-gameinfo { transform:translateX(0); box-shadow:-2px 0 22px rgba(0,0,0,0.55); }
 }
 
 /* Barre de stats : tout en bas, pleine largeur (déplacée hors de la colonne Parties) */
