@@ -41,7 +41,7 @@
 <p align="center">
   <img src="docs/screenshots/08-desktop-game-light.png" alt="In-game desktop view — full table, live theming, reactions, chat, action bar and hand log" width="860"/>
   <br/>
-  <em>The web client in action — full table with the live appearance panel (deck, palette, felt, buttons, pucks, seats), emoji reactions, in-game chat with its emoji picker, the action bar with keyboard hints, and the hand log</em>
+  <em>The web client in action — full table with the emoji reactions picker, in-game chat, the action bar with quick-bets and auto-modes, and the hand log</em>
 </p>
 
 <!-- 🎞️ HERO GIF SLOT — once docs/screenshots/00-hero.gif is recorded, add it just above the screenshot above:
@@ -150,6 +150,18 @@ This project is a **web frontend** that connects to any PokerTH server directly 
 </table>
 
 </div>
+
+<p align="center">
+  <img src="docs/screenshots/09-desktop-game-dark.png" alt="In-game desktop view — dark theme, full table against nine bots" width="860"/>
+  <br/>
+  <em>A full 10-seat table in the dark theme — training mode against nine bots, glossy action buttons and quick-bets</em>
+</p>
+
+<p align="center">
+  <img src="docs/screenshots/10-connect-desktop.png" alt="Connect screen on desktop" width="860"/>
+  <br/>
+  <em>The connect screen on desktop — pick a login mode, type a nickname and you're in</em>
+</p>
 
 ---
 
