@@ -7922,16 +7922,16 @@ html:not([data-seat^="pokerth"]) body.adv-hide-pbar .seat.me .seat-info {
 .gip-tabs { display:flex; flex:1; margin-right:6px; min-width:0; }
 /* Poignée de déplacement dédiée : les onglets couvrent presque toute la barre,
    le ⠿ garantit une prise visible (les onglets se traînent aussi, au seuil). */
-.gip-grip { flex:0 0 auto; color:var(--text-dim,#9aa3b5); font-size:0.72rem;
+.gip-grip { flex:0 0 auto; color:var(--chatlog-muted, var(--text-dim,#9aa3b5)); font-size:0.72rem;
   padding:0 6px 0 2px; cursor:move; user-select:none; }
 .gip-tab { flex:0 1 auto; background:transparent; border:none; border-bottom:2px solid transparent;
-  color:var(--text-dim, #9aa3b5); font-size:0.65rem; letter-spacing:0.12em; text-transform:uppercase;
+  color:var(--chatlog-muted, var(--text-dim, #9aa3b5)); font-size:0.65rem; letter-spacing:0.12em; text-transform:uppercase;
   padding:3px 12px 4px; cursor:pointer; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
   touch-action:none; }
-.gip-tab.gip-on { color:var(--gold); border-bottom-color:var(--gold-dim); font-weight:700; }
-.gip-tab:hover { color:var(--gold); }
+.gip-tab.gip-on { color:var(--chatlog-text, var(--gold)); border-bottom-color:var(--box-accent, var(--chatlog-muted, var(--gold-dim))); font-weight:700; }
+.gip-tab:hover { color:var(--chatlog-text, var(--gold)); }
 /* Onglet Chances : mêmes classes que l'ancien moniteur, tailles panneau. */
-#g-odds-body .odds-hd{font-weight:700;font-size:12px;color:var(--gold);margin:2px 0 5px;letter-spacing:.3px}
+#g-odds-body .odds-hd{font-weight:700;font-size:12px;color:var(--box-accent, var(--chatlog-text, var(--gold)));margin:2px 0 5px;letter-spacing:.3px}
 #g-odds-body .odds-approx{opacity:.65;font-weight:400}
 #g-odds-body .odds-wait{opacity:.6;padding:4px 0;font-size:12px}
 #g-odds-body .odds-row{display:flex;align-items:center;gap:6px;height:22px;font-size:12px}
@@ -7972,7 +7972,7 @@ html:not([data-seat^="pokerth"]) body.adv-hide-pbar .seat.me .seat-info {
 /* Assistance (force de la main) integree en tete de l'onglet « Chances » du
    panneau info unifie : meme rendu que l'ancienne fenetre flottante, mais en flux. */
 #gip-assist{padding:6px 12px 7px;border-bottom:1px solid var(--chatlog-border,var(--border))}
-#gip-assist .odds-hd{font-weight:700;font-size:12px;color:var(--gold);margin:0 0 5px;letter-spacing:.3px}
+#gip-assist .odds-hd{font-weight:700;font-size:12px;color:var(--box-accent, var(--chatlog-text, var(--gold)));margin:0 0 5px;letter-spacing:.3px}
 #gip-assist .hs-lbl{display:block;background:transparent;border:0;padding:0;max-width:none;overflow:hidden}
 #gip-assist .hs-txt{display:block;font-size:12px !important;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-shadow:none}
 #gip-assist #hand-strength{position:static;left:auto;right:auto;top:auto;height:auto;pointer-events:none;margin-top:6px}
