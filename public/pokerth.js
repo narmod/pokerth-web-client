@@ -16076,7 +16076,7 @@ function renderPlayersList() {
   var _fullTmpl = _PL_COL_ORDER.map(function (k) { return _PL_TRACK[k]; }).join(' ');
   var _headHtml = '<div class="pl-colhead" style="grid-template-columns:' + _fullTmpl + '">'
                 + _plColHeadHtml() + '</div>';
-  try { body.style.setProperty('--pl-cols', _visCols.map(function (k) { return _PL_TRACK[k]; }).join(' ')); } catch (e) {}
+  try { body.style.setProperty('--pl-cols', _fullTmpl); } catch (e) {}
   // Build the list of {pid, name} from _lobbyPids (defined inside
   // the IIFE; we read it via window-level references).
   var pids = window._readLobbyPids ? window._readLobbyPids() : [];
@@ -16182,7 +16182,12 @@ function renderPlayersList() {
       }
       return '';
     };
-    return '<div class="pl-row' + (r.isMe ? ' pl-me' : '') + '">' + _visCols.map(_plCell).join('') + '</div>';
+    // Colonnes masquées : cellule VIDE (la piste reste présente) plutôt que
+    // retirée → les colonnes restent alignées sous leurs pastilles quel que
+    // soit l'état des toggles (l'en-tête utilise aussi le gabarit complet).
+    return '<div class="pl-row' + (r.isMe ? ' pl-me' : '') + '">'
+      + _PL_COL_ORDER.map(function (k) { return _plColVisible(k) ? _plCell(k) : '<span class="pl-cell-off"></span>'; }).join('')
+      + '</div>';
   };
   var _tt = function(k, fb) { return (typeof t === 'function' && t(k) !== k) ? t(k) : fb; };
   // Synchronise la valeur du déroulant sur le mode courant.
@@ -16196,7 +16201,7 @@ function renderPlayersList() {
   body.innerHTML = _headHtml + (_shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>');
 }
 
-;(function(){ window.BUILD_VERSION='0.3.638-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.639-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
