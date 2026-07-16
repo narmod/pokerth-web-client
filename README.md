@@ -281,9 +281,11 @@ the work since has been fidelity tuning against the newer **2.1.3** build:
   - Seat geometry tuned to 2.1.3 (self-weight 0.5, fill-cap 1.9 / 2.3)
 
 ### PWA
-- `manifest.json` + Service Worker (`sw.js`) with versioned **network-first** cache
+- `manifest.json` + Service Worker (`sw.js`) with a versioned **network-first** cache; the app shell is **precached asset by asset (with retries)** on install, so a network hiccup can't leave the offline cache incomplete
+- **Startup loading screen** matching the login look (theme-aware, 36 languages) that preloads the critical assets, retries on a flaky connection, and offers a **Retry** button instead of silently loading a broken UI
 - New-version notification: the page tells the user when an updated service worker is ready and applies the update on the next reload
 - Installable on mobile and desktop ("Add to Home Screen")
+- ⚠️ **Offline needs HTTPS.** A Service Worker — and therefore the offline cache — only registers over **HTTPS** or `localhost`. On a plain `http://` server the game still works online, but there is **no offline cache** (an installed PWA then shows the browser's "no internet" error offline). Serve the app over `https://` to play Training mode with no connection
 
 ---
 
@@ -294,7 +296,7 @@ The client works equally with the public **pokerth.net** server and with **LAN /
 
 | Server choice | Guest mode | Login type | Transport | Notes |
 |---|---|---|---|---|
-| **🏋️ Training mode** | — | none — local engine | none — runs in the browser | **100% offline** solo play against bots; no server, proxy, or connection needed (works even as an installed PWA with no internet) |
+| **🏋️ Training mode** | — | none — local engine | none — runs in the browser | **100% offline** solo play against bots; no server, proxy, or connection needed (works even as an installed PWA with no internet, **when the app is served over HTTPS**) |
 | **LAN / Dedicated server** | off *(default)* | Internet guest (`unauth`, type 2) | proxy → TCP or TLS (your choice) | Default for self-hosted setups; in-game chat & reactions **enabled** |
 | **LAN / Dedicated server** | on | Pure LAN (`lan`, type 0) | proxy → TCP raw | The server **refuses** in-game chat/reactions (reactions stay LAN-local) |
 | **pokerth.net** | on | Guest (`guest`, type 2) | direct TLS WebSocket | Throwaway guest on the public server |
@@ -780,7 +782,7 @@ Then pin it like a native app:
 - **Android (Chrome / Edge / Brave):** browser menu → **Install app** / **Add to Home screen**.
 - **iPhone / iPad:** in **Safari**, tap **Share → Add to Home Screen → Add**. (iOS installs PWAs from Safari only; since iOS 17, Chrome and Edge also offer it via their Share button.)
 
-The in-app **📲 Install** hint appears automatically when your browser supports installation. Once installed, **Training mode** runs with no internet at all; online play (LAN, your dedicated server, or pokerth.net) just needs to reach the chosen server.
+The in-app **📲 Install** hint appears automatically when your browser supports installation. Once installed **from an HTTPS address**, **Training mode** runs with no internet at all; online play (LAN, your dedicated server, or pokerth.net) just needs to reach the chosen server.
 
 ---
 

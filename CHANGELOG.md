@@ -24,11 +24,15 @@ client, now tracking the **2.1.3** build.
   expandable per-table player list), and in-game chat, emoji, the hand log and a
   new hand-odds window now open as compact, movable floating windows on the felt
   instead of taking over the screen.
+- **Resilient offline cache.** The Service Worker now precaches the app shell **asset by asset (with retries)** instead of one all-or-nothing batch whose failure was silently swallowed, so a network hiccup during install can no longer leave the cache incomplete.
 
 ### Added
+- **Startup loading screen.** A boot splash matching the login look (theme-aware colours, labels in 36 languages) covers startup until the app is ready, preloading the critical assets with automatic retry and offering a **Retry** button if the connection drops mid-load — so a flaky network no longer leaves a half-loaded UI.
 - **Seven official PokerTH card decks** in the deck gallery, plus one-click import
   of a table, card deck or card-back from a `.zip`.
 - **A dedicated Music player panel** (game-sound settings moved to Advanced options).
+
+> **Offline needs HTTPS.** A Service Worker — and therefore the whole offline cache — only registers over **HTTPS** (or `localhost`). On a plain `http://` server the game still works online, but there is **no offline cache**, so an installed PWA can't launch (not even Training mode) without a connection. Serve the app over `https://` for offline play.
 
 ## 0.3 line — public beta (2026)
 
