@@ -62,12 +62,8 @@ html { touch-action: manipulation; -webkit-text-size-adjust: 100%; text-size-adj
   --ld-quit-fg: #fad6d0;
   --ld-create-fg: #d6f5dc;
   /* Confirm-dialog buttons — couleurs QML constantes sur tous les themes.
-     Choix produit : Annuler = rouge QML (All-In), action destructive =
-     neutre (bouton contour, comme le dialogue officiel), Create = Raise. */
-  --qml-red-grad:    linear-gradient(180deg, #9e2a2a, #5c1111);
-  --qml-red-grad-hi: linear-gradient(180deg, #b23636, #6e1616);
-  --qml-red-edge:    #ef5350;
-  --qml-red-fg:      #fbe9e7;
+     Dialogues quit/disconnect : les deux boutons sont neutres (contour),
+     fideles au dialogue officiel. Seul Create (quick-create) = Raise vert. */
   --qml-pos-grad:       linear-gradient(180deg, #50b840, #1e6614);
   --qml-pos-grad-hi:    linear-gradient(180deg, #5ec84c, #248019);
   --qml-pos-edge:       #7ad06a;
@@ -5262,11 +5258,11 @@ html[data-table="pokerth-live"] .raise-slider { accent-color: #4CAF50; }
 .ld-btn.ld-quit:hover  { background: var(--inset); }
 .ld-btn.ld-quit:active { transform: scale(0.98); }
 .ld-btn.ld-cancel {
-  background: var(--qml-red-grad);
-  border: 1px solid var(--qml-red-edge);
-  color: var(--qml-red-fg); font-weight: 600;
+  background: transparent;
+  border: 1px solid var(--border-hi);
+  color: var(--cream);
 }
-.ld-btn.ld-cancel:hover  { background: var(--qml-red-grad-hi); }
+.ld-btn.ld-cancel:hover  { background: var(--inset); }
 .ld-btn.ld-cancel:active { transform: scale(0.98); }
 @media (max-width: 640px) {
   .ld-card { padding: 16px 18px; }
@@ -5844,12 +5840,11 @@ html[data-table="pokerth-live"] .raise-slider { accent-color: #4CAF50; }
   transition: background 0.15s, border-color 0.15s, transform 0.1s;
 }
 .kcm-cancel {
-  background: var(--qml-red-grad);
-  border: 1px solid var(--qml-red-edge);
-  color: var(--qml-red-fg);
-  font-weight: 600;
+  background: transparent;
+  border: 1px solid var(--border-hi);
+  color: var(--cream);
 }
-.kcm-cancel:hover  { background: var(--qml-red-grad-hi); }
+.kcm-cancel:hover  { background: var(--inset); }
 .kcm-cancel:active { transform: scale(0.98); }
 .kcm-confirm {
   background: transparent;
