@@ -9772,15 +9772,29 @@ const App = (() => {
     if (!sg) { _clr(); return; }
     var sgr = sg.getBoundingClientRect();
     var wide = !(typeof window._tableZonePortrait === 'function' && window._tableZonePortrait());
-    var myz = document.querySelector('.my-zone');
-    var coverExtra = (wide && myz) ? myz.getBoundingClientRect().height : 0;
-    // fillScale QML : couvre — centré sur (zonemitte, communityCenterY) —
-    // TOUTE la bande (zone + derrière l'action bar en wide).
-    var reqH = 2 * Math.max(cY, zRect.height + coverExtra - cY);
-    var fs = Math.max(zRect.width / nat.w, reqH / nat.h) * zoom;
-    var w = Math.round(nat.w * fs), h = Math.round(nat.h * fs);
-    var x = Math.round(zRect.left - sgr.left + zRect.width / 2 - w / 2);
-    var y = Math.round(zRect.top - sgr.top + cY - h / 2);
+    var w, h, fs, x, y;
+    if (wide) {
+      // Paysage : couvre la bande tableZone (+ derrière l'action bar), centré
+      // sur (milieu zone, communityCenterY). Comportement historique inchangé.
+      var myz = document.querySelector('.my-zone');
+      var coverExtra = myz ? myz.getBoundingClientRect().height : 0;
+      var reqH = 2 * Math.max(cY, zRect.height + coverExtra - cY);
+      fs = Math.max(zRect.width / nat.w, reqH / nat.h) * zoom;
+      w = Math.round(nat.w * fs); h = Math.round(nat.h * fs);
+      x = Math.round(zRect.left - sgr.left + zRect.width / 2 - w / 2);
+      y = Math.round(zRect.top - sgr.top + cY - h / 2);
+    } else {
+      // Portrait : PreserveAspectCrop PLEIN ÉCRAN (#s-game entier) — comme le
+      // gameBackground QML. La bande tableZone ne couvrait qu'un ruban central
+      // (haut/bas laissaient voir le fond de repli). Centré horizontalement +
+      // sur communityCenterY, × TableBackgroundZoom.
+      var cYsg = (zRect.top - sgr.top) + cY;
+      var reqHfull = 2 * Math.max(cYsg, sgr.height - cYsg);
+      fs = Math.max(sgr.width / nat.w, reqHfull / nat.h) * zoom;
+      w = Math.round(nat.w * fs); h = Math.round(nat.h * fs);
+      x = Math.round(sgr.width / 2 - w / 2);
+      y = Math.round(cYsg - h / 2);
+    }
     de.style.setProperty('--wallpaper-dyn-size', w + 'px ' + h + 'px');
     de.style.setProperty('--wallpaper-dyn-pos', x + 'px ' + y + 'px');
   }
@@ -16151,7 +16165,7 @@ function renderPlayersList() {
   body.innerHTML = _headHtml + (_shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>');
 }
 
-;(function(){ window.BUILD_VERSION='0.3.623-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.624-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
