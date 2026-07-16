@@ -426,6 +426,16 @@ export const strings = {
     abAuthRole3:'architecture de base, développement réseau, paquet Windows, paquet MacOS',
     abAuthRole4:"design initial du graphisme de l'interface graphique",
     abAuthRole5:'modernisation du code, mise en page QML',
+    abCred1:'Wikimedia Commons : pour leurs différents avatars populaires',
+    abCred2:'Benedikt, Erhard, Felix, Florian, Linus, Lothar, Steffi, Caro : pour les avatars/visages de joueurs',
+    abCred3:'ZeiZei : pour divers avatars',
+    abCred4:'pour les différents sons sous licence GPL',
+    abCred5:"doc_dos : pour les sons qu'il a enregistrés lui-même",
+    abCred6:'thiger, dunkanx, BerndA, coldz : pour leurs différents patches',
+    abCred7:"kraut : pour l'hébergement du serveur de parties internet et l'administration",
+    abCred8:"danuxi : pour le fond de l'écran de démarrage gfx et le fond de la table danuxi1",
+    abCred9:'heyn : pour la modération sur le forum et l\'organisation du système de suivi des bogues et des fonctionnalités',
+    abCred10:'texas_outlaw : pour les nouveaux effets sonores',
 };
 
 export default { meta, strings };

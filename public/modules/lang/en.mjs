@@ -424,6 +424,16 @@ export const strings = {
     abAuthRole3:'basic architecture, network development, Windows package, MacOS package',
     abAuthRole4:'initial GUI graphics design',
     abAuthRole5:'code modernization, QML layout',
+    abCred1:'Wikimedia Commons: for their various popular avatars',
+    abCred2:'Benedikt, Erhard, Felix, Florian, Linus, Lothar, Steffi, Caro: for the player avatars/faces',
+    abCred3:'ZeiZei: for various avatars',
+    abCred4:'for the various GPL-licensed sounds',
+    abCred5:'doc_dos: for the sounds he recorded himself',
+    abCred6:'thiger, dunkanx, BerndA, coldz: for their various patches',
+    abCred7:'kraut: for hosting and administrating the internet game server',
+    abCred8:'danuxi: for the start-screen background gfx and the danuxi1 table background',
+    abCred9:'heyn: for forum moderation and organizing the bug and feature tracking system',
+    abCred10:'texas_outlaw: for the new sound effects',
 };
 
 export default { meta, strings };
