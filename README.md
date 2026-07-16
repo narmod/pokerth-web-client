@@ -34,6 +34,7 @@
 - 🔌 **Any PokerTH server** — including the public **pokerth.net**
 - 🃏 **Full Texas Hold'em** — flying card deals, sliding chips, 3D card flips, emoji reactions, in-game chat and a hand log
 - 🎨 **Deep theming** — mix palette × felt × deck × buttons × pucks × seats
+- ☁️ **Settings that follow you** — sign in with a registered account and every option syncs automatically across your devices (stored on your server as a standard PokerTH `config.xml`; on by default, one tap to turn off)
 - 🌍 **36 languages**
 - 🤝 **Tracks the official QML client** — F-key shortcuts, admin tools, sounds, full chat and more, kept in sync as the official client evolves (currently the 2.1.3 build)
 
@@ -199,6 +200,8 @@ Per-player toggles, remembered in `localStorage` and applied instantly:
 - **Voice announcements** — spoken turn and action callouts (Web Speech API)
 - **Vibration** — haptic feedback on your turn (where supported)
 - **Sound on/off** (🔊) — mute or unmute all sound effects
+
+**Account sync** ☁️ — with a **registered login**, all your settings (options, keyboard shortcuts, theme choices, table-creation defaults) automatically sync to your account and follow you across devices. The synced blob is the exact same `config.xml` as the manual export/import (interoperable with the official clients), stored on the proxy server only after the PokerTH server has verified your SCRAM login — guests never sync. Enabled by default; opt out anytime in the options.
 
 ### Themes & customization
 A full appearance system, reached from the **Theme** button — pick a one-tap preset or fine-tune every axis yourself:
