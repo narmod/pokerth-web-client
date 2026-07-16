@@ -1312,9 +1312,9 @@ function onAvatarImageChosen(input) {
     <div class="chat-msgs" id="chat" style="flex:1;min-height:50px;max-height:120px;overflow-y:auto;padding:5px 10px;background:var(--field-bg)"></div>
     <div id="l-chat-emoji-panel" class="chat-emoji-panel" style="display:none"></div>
     <div class="chat-input" style="border-top:1px solid var(--border);flex-shrink:0">
-      <button type="button" class="chat-emoji-toggle" id="l-chat-emoji-toggle" onclick="toggleChatEmojiPicker(this)" data-panel="l-chat-emoji-panel" data-input="chat-in" title="Insérer un emoji" data-i18n-title="emojiPickerTitle" aria-label="Insérer un emoji">😊</button>
+      <button type="button" class="chat-emoji-toggle" id="l-chat-emoji-toggle" onclick="toggleChatEmojiPicker(this)" data-panel="l-chat-emoji-panel" data-input="chat-in" title="Insérer un emoji" data-i18n-title="emojiPickerTitle" aria-label="Insérer un emoji">🙂</button>
       <input id="chat-in" maxlength="128" placeholder="Message…" data-i18n-placeholder="chatPlaceholder" onkeydown="if(event.key==='Enter') App.sendChat()">
-      <button class="chat-send" onclick="App.sendChat()">▶</button>
+      <button class="chat-send" onclick="App.sendChat()" aria-label="Envoyer" title="Envoyer"><svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg></button>
     </div>
     <!-- Options d'attente (case bots + Démarrer/Quitter) intégrées au bas du
          panneau central quand je suis dans ma partie non démarrée — parité

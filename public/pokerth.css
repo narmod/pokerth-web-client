@@ -1718,6 +1718,20 @@ body {
   transition: background 0.15s;
 }
 .chat-send:hover { background: var(--gold-hi); }
+/* Chat du LOBBY : icônes façon QML — envoi = avion en papier vert (chat send
+   #4ade80 sombre / #16a34a clair), emoji = smiley nu ; aucun chrome de bouton. */
+#lobby-chat-panel .chat-send {
+  background:none; border:none; padding:0 8px; color:var(--green);
+  display:flex; align-items:center; border-radius:6px;
+}
+#lobby-chat-panel .chat-send:hover { background:var(--inset-hi); }
+:root[data-theme="pokerth"] #lobby-chat-panel .chat-send { color:#4ade80; }
+:root[data-theme="pokerth-light"] #lobby-chat-panel .chat-send { color:#16a34a; }
+#lobby-chat-panel .chat-emoji-toggle {
+  background:none; border:none; padding:0 6px; font-size:1.15rem; border-radius:6px;
+}
+#lobby-chat-panel .chat-emoji-toggle:hover,
+#lobby-chat-panel .chat-emoji-toggle.active { background:var(--inset-hi); border:none; }
 
 /* Lobby chat panel — fond unifié + bordure basse nette + ombre, pour que le
    bas de la zone message soit clairement délimité du reste du lobby. */
@@ -5368,6 +5382,13 @@ html[data-table="pokerth-live"] .raise-slider { accent-color: #4CAF50; }
   box-sizing: border-box;
 }
 .players-search input:focus { border-color: var(--gold); }
+/* Palette claire : champ de recherche gris plein arrondi, sans bordure,
+   placeholder col300 (parite QML Universal light). */
+:root[data-theme="pokerth-light"] .players-search input {
+  background:#c3cbda; border-color:transparent; border-radius:6px; color:#1d222b;
+}
+:root[data-theme="pokerth-light"] .players-search input::placeholder { color:#576378; }
+:root[data-theme="pokerth-light"] .players-search input:focus { border-color:#a0acc4; }
 /* Body container — the inline style on the element sets flex/min-height/
    overflow/padding/background to match the chat panel pattern exactly.
    This rule keeps only the bits inline styles don't cover. */
