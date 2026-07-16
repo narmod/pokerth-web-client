@@ -34,7 +34,7 @@
 - 🔌 **Any PokerTH server** — including the public **pokerth.net**
 - 🃏 **Full Texas Hold'em** — flying card deals, sliding chips, 3D card flips, emoji reactions, in-game chat and a hand log
 - 🎨 **Deep theming** — mix palette × felt × deck × buttons × pucks × seats
-- ☁️ **Settings that follow you** — sign in with a registered account and every option syncs automatically across your devices (stored on your server as a standard PokerTH `config.xml`; on by default, one tap to turn off)
+- ☁️ **Settings that follow you** — sign in with a registered account and **every** option syncs automatically across your devices: the official settings travel as a standard PokerTH `config.xml`, and the web-only extras (theme, seats, keyboard, voice…) as a separate blob — on by default, one tap to turn off
 - 🌍 **36 languages**
 - 🤝 **Tracks the official QML client** — F-key shortcuts, admin tools, sounds, full chat and more, kept in sync as the official client evolves (currently the 2.1.3 build)
 
@@ -179,10 +179,11 @@ This project is a **web frontend** that connects to any PokerTH server directly 
 
 ### Lobby
 - Real-time table list with player counts, status badges, and each table's blind level and raise schedule
-- Table filters: **All / 🟢 Open / 🔓 No password / 👁 Watchable** (remembered across sessions)
+- Table filters: **All / 🟢 Open / 🔓 No password / 👁 Live / Ranked** (remembered across sessions)
 - **⚡ Join or Create** — one-tap auto-join or table creation
-- Advanced table creation: blinds, timeout (default 15 s), max players (default 5), **bot difficulty** (Easy / Mixed / Normal / Hard), **game-style presets** (🐢 Relaxed / ⚖️ Normal / ⚡ Fast), **blind-increase schedule** (every N hands or N minutes) with a raise mode (double / to a target / keep last), table speed (1–10), deal delay, **game type** (Normal / Registered-only / Invite-only), ranking on/off, spectators allowed/blocked, bots fill (with a min-humans-before-bots threshold), and an optional password
+- Advanced table creation: blinds, action timeout, max players, **bot difficulty** (Easy / Mixed / Normal / Hard), **game-style presets** (🐢 Relaxed / ⚖️ Normal / ⚡ Fast, tournament presets **Ranking / WeCup / BBC**, plus a **My prefs** slot that saves your own mix), **blind-increase schedule** (every N hands or N minutes) with a raise mode (double / to a target / keep last), table speed (1–10), deal delay, **game type** (Normal / Registered-only / Invite-only), ranking on/off, spectators allowed/blocked, bots fill (with a min-humans-before-bots threshold), and an optional password
 - Spectator mode (👁 Watch)
+- Players list with **A–Z / by-country sorting** and live search
 - Lobby chat
 - **Waiting room** — while a table fills up, your details and chat sit centre-stage with the game list beside them on desktop, an animated "waiting for players" status, and a tap-to-expand accordion listing each table's seated players
 - **🏆 Ranking** — a leaderboard modal (🏆 button on the connect screen and in the lobby) covering **PokerTH, BBC and WEC** rankings, with a season picker, an All-Time toggle, and — on the PokerTH source — live search and pagination; results are cached briefly client-side. Tapping a player opens their **profile card** (member since, last login, current-season rank/score, last 5 games) fetched live from the same relay
@@ -215,13 +216,15 @@ Per-player toggles, remembered in `localStorage` and applied instantly:
 - **Vibration** — haptic feedback on your turn (where supported)
 - **Sound on/off** (🔊) — mute or unmute all sound effects
 
-**Account sync** ☁️ — with a **registered login**, all your settings (options, keyboard shortcuts, theme choices, table-creation defaults) automatically sync to your account and follow you across devices. The synced blob is the exact same `config.xml` as the manual export/import (interoperable with the official clients), stored on the proxy server only after the PokerTH server has verified your SCRAM login — guests never sync. Enabled by default; opt out anytime in the options.
+Plus a full **Advanced options** panel (sectioned: cards, betting, table, seats, chat, avatars, sounds, keyboard) with, among others: **chat translation** (a per-message 🌐 button using the browser's translation API), the **winner window** at end of hand, **remove departed players & re-seat the table**, **pause between hands** (continue from the winner window), **keep the action bar open** (pin), an **enlarge-my-cards** control (several zoom levels), the **hand-odds panel** toggles, **game logging** (on/off + interval), the **Game Settings dialog** on new game, and the account-sync switch below.
+
+**Account sync** ☁️ — with a **registered login**, all your settings automatically sync to your account and follow you across devices. Two blobs travel together: every option with an official PokerTH key syncs as the exact same `config.xml` as the manual export/import (fully interoperable with the official clients), while the web-only settings — web theme, action-button / puck / seat styles, custom seat placement, keyboard shortcuts, language, voice & vibration, assistance, BB display, offline bot level, ignore list and more — sync as a separate JSON blob that never touches the official file. Both are stored on the proxy server only after the PokerTH server has verified your SCRAM login — guests never sync. Writes are debounced, deduplicated, rate-limited and atomic. Enabled by default; opt out anytime in the options.
 
 ### Themes & customization
 A full appearance system, reached from the **Theme** button — pick a one-tap preset or fine-tune every axis yourself:
 - **Presets** (one tap): **PokerTH Dark** (the default, reproducing the official client's look), **PokerTH Light**, and **Green Casino** — plus gallery themes (Midnight Blue, Graphite, Royal Purple, Sleek)
-- **Customize** — six independent axes, each remembered in `localStorage`: UI **palette**, **table felt** (a dozen styles: PokerTH, Spectator Tools, Green Casino, Danuxi Blue, Matrix, Star Trek, TripSixes, Wanted, Xanax…), **card deck** (four built-in — PokerTH, PokerTH 1.0, PokerTH new, Green Casino — plus seven official PokerTH decks in the gallery: Bella Union, Nobus Classic, Stardust (light & dark), Star Trek, Lemming, Xanax), **action buttons** (Flat / Glossy), **chip pucks**, and **seat style**
-- **Seat styles** — six theme-aware seat "packs", switchable like decks: **Classic** (the historical render), **Chip**, **Plate**, **Card**, **Compact**, and **Bar**. Pack names stay in English across all languages (like the poker terms). The default adapts to the device — **Compact on phones**, **Plate on tablet & desktop** — and any explicit choice is saved in `localStorage` and always wins
+- **Customize** — six independent axes, each remembered in `localStorage`: UI **palette** (Dark / Light), **table felt** (a dozen styles: PokerTH, Spectator Tools, Green Casino, Danuxi Blue, Mute, Mute 02, Teal, Lemming, Matrix, TripSixes, Wanted, Xanax — each carrying its own pucks and button skins, like the official `StyleProvider`), **card deck** (four built-in — PokerTH, PokerTH 1.0, PokerTH new (the default), Green Casino — plus the official PokerTH decks in the gallery), **action buttons** (Auto / Flat / Glossy / PokerTH), **chip pucks** (Auto / PokerTH / Casino), and **seat style**
+- **Seat styles** — eight theme-aware seat "packs", switchable like decks: **PokerTH landscape** and **PokerTH portrait** (faithful renders of the official QML player boxes), **Classic** (the historical render), **Chip**, **Plate**, **Card**, **Compact**, and **Bar**. Pack names stay in English across all languages (like the poker terms). The default is the PokerTH pack matching the screen orientation, and an **orientation-sync option** (on by default) swaps portrait ↔ landscape automatically as you rotate; any explicit choice is saved in `localStorage` and always wins
 - **Light & dark aware**: every theme carries its own `color-scheme`, and the browser status-bar `theme-color` follows the active theme
 - **Glossy coloured action buttons** (Fold red / Check-Call blue / Raise green / All-In orange) and a live preview of each card deck right in the panel
 - Fully **localized in all 36 languages** and switchable instantly, with no reload
@@ -252,7 +255,7 @@ A full appearance system, reached from the **Theme** button — pick a one-tap p
 ### Comfort features
 - Browser notifications when it is your turn (background tab)
 - Tab title flashes: ⚡ YOUR TURN — PokerTH
-- Keyboard shortcuts: **F** = Fold, **C** / Space = Call, **R** = Raise, **A** = All-in, plus **1 / 2 / 3** to arm a ⅓ / ½ / pot bet (then **R** to confirm) — the bet buttons show these keycaps on desktop
+- Keyboard shortcuts: **F** = Fold, **C** / Space = Call, **R** = Raise, **A** = All-in, plus **1 / 2 / 3** to arm a ⅓ / ½ / pot bet (then **R** to confirm) — the bet buttons show these keycaps on desktop. Every letter is **re-bindable** (Advanced options → Keyboard: tap a key, press the new one, Reset to restore), and the **official PokerTH keys work too**: F1–F4 actions (with the reverse-order option), F5 = Show, F6/F7/F8 playing modes, Alt+M/K/F, Alt+C chat, Alt+L log, Alt+I odds
 - Sound effects: distinct sounds for fold / check / call / raise / all-in / shuffle / drumroll / bad-beat / win fanfare, plus urgent-timer warning
 - **Background music player** — a built-in MP3 player with its own track list (curated by the operator in the admin panel): pick a track and loop it, loop the whole playlist, or play it once
 - **Separate volume for sound effects and music** — adjust each independently *(on iOS the music volume can't be changed — a WebKit limitation — though the game sound effects still can)*
@@ -427,6 +430,8 @@ pokerth-web-client/
 | `GET` | `/api/ranking` | Same-origin relay for the PokerTH / BBC / WEC ranking leaderboards (params: `src`, `season`, `q`, `page`) |
 | `GET` | `/api/player` | Same-origin relay for a single player's profile card (params: `src`, `nick`) |
 | `GET` / `POST` | `/stats` | `GET` reads the shared leaderboard; `POST` submits a result (and — with the master token or a **leaderboard**-scoped key — resets the board or removes a player) |
+| `GET` / `PUT` | `/prefs` | Account settings sync — official `config.xml` blob (`GET` also returns the web-only blob). Requires the per-session sync token (`Authorization: Bearer`) issued after a server-verified registered login |
+| `PUT` | `/prefs-web` | Account settings sync — web-only settings blob (JSON). Same token; writes are rate-limited (1 / 5 s) and atomic |
 | `POST` | `/__visit` | Records one anonymous visit (privacy-friendly analytics) |
 
 **Admin** — every route needs an `Authorization: Bearer <token>` header, and the whole tree returns a plain `404` when the panel is disabled. Grouped by area:
