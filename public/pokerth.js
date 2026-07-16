@@ -9400,7 +9400,7 @@ const App = (() => {
   // selfClearX). pairSpread est DÉLIBÉRÉMENT absent de feasibleAt(),
   // comme dans le QML (sinon la bisection remplirait l'écart créé).
   // Fonction PURE (aucun DOM) → testée en Node (window._qmlLandscapeLayout).
-  function _qmlLandscapeLayout(oppCnt, zW, zH, compact, zoomMul) {
+  function _qmlLandscapeLayout(oppCnt, zW, zH, compact, zoomMul, spectating) {
     var oppBaseW = 114, oppBaseH = 84, selfBaseH = compact ? 94 : 96; // QML 2.1.3 §4.2
     // selfBaseWidth QML : 2*4 + min(cH,60) + 4 + 2*round(cH*120/168) + 4, cH = selfH-12-32 (paysage)
     var _scH = selfBaseH - 44, selfBaseW = 8 + Math.min(_scH, 60) + 4 + 2 * Math.round(_scH * 120 / 168) + 4;
@@ -9415,9 +9415,16 @@ const App = (() => {
     // 2.1.3 (buildLandscapeSlots) : selfWeight 0.3 en wide (l'anneau se
     // resserre autour de la self, TL/TR tombent a ~230/310 au lieu de
     // 240/300) ; le landscapeCompact GARDE 0.5 (layout separe, inchange).
-    var selfWeight = compact ? 0.5 : 0.3;
+    // Zuschauer (QML 2.1.3) : Sitz 0 est une perle NORMALE (poids 1.0) ->
+    // anneau uniforme de N sieges, sitz 0 exactement au point bas (90 deg).
+    var selfWeight = spectating ? 1.0 : (compact ? 0.5 : 0.3);
     var stepDeg = oppCnt >= 1 ? 360 / (oppCnt + selfWeight) : 360;
     var firstAngle = 90 + (selfWeight * stepDeg + stepDeg) / 2;
+    // Paires de l'anneau (feasibleAt QML) : en spectateur l'anneau commence au
+    // siege du bas (90 deg) et compte oppCnt+1 sieges -> la paire opp0<->opp1
+    // est verifiee (le wrap oppN<->opp0 est symetrique, donc couvert).
+    var ringFirst = spectating ? 90 : firstAngle;
+    var ringSeats = spectating ? oppCnt + 1 : oppCnt;
 
     // Plafond dépendant du nombre de joueurs + croissance plein écran
     // (√(w·h)) + rétreint dense sur fenêtres très larges — port exact.
@@ -9432,9 +9439,13 @@ const App = (() => {
 
     // Géométrie s-dépendante (mêmes formules pour la bisection ET les slots).
     function geom(s, feas) {
-      var visualW = oppBaseW * s, visualH = oppBaseH * s, selfVisualH = selfBaseH * s;
+      var visualW = oppBaseW * s, visualH = oppBaseH * s;
+      // Zuschauer : pas de self-box sous l'ellipse -- son point bas EST le
+      // centre du siege du bas (selfVisualH = 0, selfGapY = 0, QML verbatim).
+      var selfVisualH = spectating ? 0 : selfBaseH * s;
       var sideMargin = Math.max(18, zW * 0.025) + sideBadgeGapBase * s;
-      var selfGapY = compact ? Math.max(8, selfBadgeGapBase * s * 0.5) : selfBadgeGapBase * s;
+      var selfGapY = spectating ? 0
+          : (compact ? Math.max(8, selfBadgeGapBase * s * 0.5) : selfBadgeGapBase * s);
       var sideX = (sideMargin + visualW / 2) / Math.max(zW, 1);
       var radiusX = Math.min(0.36, Math.max(0.22, 0.5 - sideX));
       // STRICT QML : la BISECTION (feasibleAt) réserve le surplomb badge haut
@@ -9483,7 +9494,7 @@ const App = (() => {
       // 2.1.3 : arc superieur aplati en wide — sieges du haut tires de 18 %
       // vers le centre (top-bogen flacher, plus d'air sous la status bar).
       if (!compact && vFactor < 0) vFactor *= 0.82;
-      if (compact && sinV > 0 && Math.abs(g.radiusX * cosV) > g.selfClearX && g.vMaxLower > vFactor)
+      if (compact && !spectating && sinV > 0 && Math.abs(g.radiusX * cosV) > g.selfClearX && g.vMaxLower > vFactor)
         vFactor = vFactor + (g.vMaxLower - vFactor) * sinOrig;
       // 2.1.3 : sqLift (fenetres quasi carrees) — cote haut seulement.
       if (!compact && sinV < 0 && sqLift > 0) {
@@ -9513,8 +9524,13 @@ const App = (() => {
         // STRICT QML : réserve community proportionnelle à s (rangée 64 +
         // badge pot 40 + winner 20 = 124, à 0.72·s, + pad 28) — verbatim
         // GamePage.qml feasibleAt.
+        // Oberkante du contenu du bas : self-box, ou -- en spectateur -- le
+        // siege du bas de l'anneau lui-meme (QML : bottomYpix - visualH/2).
+        var bottomContentTop = spectating
+            ? (g.centerY + g.radiusY) * zH - g.visualH / 2
+            : (zH - 12 - g.selfVisualH);
         if (topOppBottom > -1e9
-            && (zH - 12 - g.selfVisualH) - topOppBottom < 0.72 * s * 124 + 28)
+            && bottomContentTop - topOppBottom < 0.72 * s * 124 + 28)
           return false;
       }
       // STRICT QML (feasibleAt verbatim) : les bet-badges latéraux SONT
@@ -9522,9 +9538,9 @@ const App = (() => {
       // hauteur de box seule suffit.
       var xNeeded = s * (oppBaseW + sideBadgeGapBase) + gap;
       var yNeeded = s * oppBaseH + gap;
-      for (var iPair = 1; iPair < oppCnt; iPair++) {
-        var v1 = slotVec(g, firstAngle + (iPair - 1) * stepDeg, false);
-        var v2 = slotVec(g, firstAngle + iPair * stepDeg, false);
+      for (var iPair = 1; iPair < ringSeats; iPair++) {
+        var v1 = slotVec(g, ringFirst + (iPair - 1) * stepDeg, false);
+        var v2 = slotVec(g, ringFirst + iPair * stepDeg, false);
         if (Math.abs(v1[0] - v2[0]) * radiusXpix < xNeeded
             && Math.abs(v1[1] - v2[1]) * radiusYpix < yNeeded)
           return false;
@@ -9539,7 +9555,9 @@ const App = (() => {
       var topYband = (compact ? 0 : 4) + visualH / 2;
       var topOppBottom = topYband + visualH / 2 + s * 25;
       // STRICT QML (feasibleHeadsUp verbatim) : réserve proportionnelle à s.
-      return (zH - 12 - selfVisualH) - topOppBottom >= 0.72 * s * 124 + 28;
+      // Spectateur : le contenu du bas est le siege du bas (zH - 4 - visualH).
+      var bottomContentTop = spectating ? (zH - 4 - visualH) : (zH - 12 - selfVisualH);
+      return bottomContentTop - topOppBottom >= 0.72 * s * 124 + 28;
     }
 
     // Zoom « dans le layout » : sémantique s = base × zoom, bornée par la
@@ -9572,6 +9590,13 @@ const App = (() => {
     // Slots finaux aux rayons du s retenu (pairSpread actif, comme le QML).
     var gF = geom(sFin, false);
     var slots = [], raw = [];
+    // Zuschauer : sitz 0 = point(90), exactement au point bas de l'ellipse
+    // (slots["opp0"] du QML). Expose via seat0 ; selfX/selfY inutilises.
+    var seat0 = null;
+    if (spectating) {
+      var v90 = slotVec(gF, 90, true);
+      seat0 = { x: zW * (0.5 + gF.radiusX * v90[0]), y: zH * (gF.centerY + gF.radiusY * v90[1]) };
+    }
     for (var k = 0; k < oppCnt; k++) {
       var dK = firstAngle + k * stepDeg;
       var v = slotVec(gF, dK, true);
@@ -9587,7 +9612,7 @@ const App = (() => {
     // 0.6·hauteur de box (ils mordent la bande self, coins libres) et sont
     // tirés horizontalement contre elle : centre ± (selfW/2 + 40 + oppW/2)·s
     // + 18. Appliqué au RENDU seulement (comme pairSpread), hors bisection. ──
-    if (!compact && oppCnt >= 1) {
+    if (!compact && !spectating && oppCnt >= 1) {   // flankWide : jamais en spectateur (QML slotForSeat)
       var _fkIdx = oppCnt >= 2 ? [0, oppCnt - 1] : [0];
       for (var _fi2 = 0; _fi2 < _fkIdx.length; _fi2++) {
         var _sl = slots[_fkIdx[_fi2]];
@@ -9599,7 +9624,7 @@ const App = (() => {
         _sl.x += (_dir < 0 ? Math.min(0, _dX) : Math.max(0, _dX));
       }
     }
-    return { s: sFin, slots: slots, raw: raw,
+    return { s: sFin, slots: slots, raw: raw, seat0: seat0,
              // Ancre QML de la selfBox : anchors.bottomMargin = 12 en paysage
              // (wide) — la réserve interne de la bisection garde -4 (identique
              // au QML), seule la POSITION visuelle de la perle est à 12.
@@ -9622,11 +9647,12 @@ const App = (() => {
   // bottom (opp >= 8, nudge +14 intégré : 0.215·H − 26), séparation de paires
   // (voisins de slotSeqPortrait : dx OU dy >= boîte·s + 8). Plafond fillCap(1.85),
   // plancher 0.55, 14 itérations. Fonction PURE (window._qmlPortraitScale).
-  function _qmlPortraitScale(oppCnt, zW, zH, zoomMul) {
+  function _qmlPortraitScale(oppCnt, zW, zH, zoomMul, spectating) {
     var oppW = 121, oppH = 71, selfH = 82;   // bases QML 2.1.3 (portrait) — STRICT : jamais les dims mesurées
     var SLOTS = { L_bottom:[0.15,0.785], L_lower:[0.15,0.65], L_upper:[0.15,0.345],
                   TL:[0.15,0.21], TC:[0.50,0.075], TR:[0.85,0.21],
-                  R_upper:[0.85,0.345], R_lower:[0.85,0.65], R_bottom:[0.85,0.785] };
+                  R_upper:[0.85,0.345], R_lower:[0.85,0.65], R_bottom:[0.85,0.785],
+                  BC:[0.50,0.90] };   // BC : uniquement en spectateur (QML 2.1.3)
     var SEQ = {
       1:['TC'], 2:['TL','TR'], 3:['TL','TC','TR'],
       4:['L_upper','TL','TR','R_upper'], 5:['L_upper','TL','TC','TR','R_upper'],
@@ -9636,6 +9662,9 @@ const App = (() => {
       9:['L_bottom','L_lower','L_upper','TL','TC','TR','R_upper','R_lower','R_bottom']
     };
     var seq = SEQ[oppCnt] || [];
+    // Zuschauer (slotSeqSpectate QML) : sitz 0 prend BC (0.50, 0.90) et les
+    // oppCnt suivants la sequence portrait normale -> anneau de oppCnt+1.
+    if (spectating) seq = ['BC'].concat(seq);
     var gapP = 8;
     var _zm = Math.max(0.3, Math.min(2, zoomMul || 1));
     // zoomed = bisection du ZOOM AVANT : les marges de confort tombent —
@@ -9650,7 +9679,11 @@ const App = (() => {
       var gapC  = zoomed ? 2 : gapP;
       if (vW > 2 * (0.15 * zW - wallM)) return false;
       if (vH > 2 * (0.075 * zH - wallM)) return false;
-      if (oppCnt >= 8 && 0.215 * zH - (zoomed ? 16 : 26) - sH - vH / 2 < gapC) return false;
+      if (spectating) {
+        // Mur bas : le siege BC (y=0.90) ne doit pas toucher le bord bas ;
+        // pas de self-box a proteger (QML feasibleAtP verbatim).
+        if (0.90 * zH + vH / 2 > zH - wallM) return false;
+      } else if (oppCnt >= 8 && 0.215 * zH - (zoomed ? 16 : 26) - sH - vH / 2 < gapC) return false;
       if (zoomed && (0.65 - 0.345) * zH - vH < 88) return false;
       var xN = vW + gapC, yN = vH + gapC;
       for (var i = 0; i < seq.length - 1; i++) {
@@ -9685,7 +9718,7 @@ const App = (() => {
   }
   window._qmlPortraitScale = _qmlPortraitScale;
 
-  function _officialSeatPix(n, isPortrait, zW, zH, oCX, oCY, oRect, boxScale, zoomMul) {
+  function _officialSeatPix(n, isPortrait, zW, zH, oCX, oCY, oRect, boxScale, zoomMul, spectating) {
     var M = n - 1; // adversaires
     if (M < 1) return null;
     var _small = (boxScale || 1) < 0.99; // petit ecran : resserrer l'anneau vers le feutre
@@ -9715,18 +9748,21 @@ const App = (() => {
       // les sieges tombent exactement ou le client QML les met en portrait.
       var NUDGE_P = { L_bottom:14, R_bottom:14, L_lower:14, R_lower:14,
                       TL:-4, TR:-4, L_upper:-4, R_upper:-4, TC:0 };
-      var outP = [null]; // index 0 = self -> position classique (bas-centre)
+      // Spectateur (slotSeqSpectate QML) : le joueur d'index 0 prend le slot
+      // BC (0.50, 0.90, nudge 0) -- il n'y a pas de self-box -- et les M
+      // suivants gardent la sequence portrait normale.
+      var outP = [ spectating ? { left: 0.50 * zW, top: 0.90 * zH } : null ];
       for (var i = 0; i < seqP.length; i++) {
         var nm = seqP[i];
         outP.push({ left: SLOTS_P[nm][0] * zW, top: SLOTS_P[nm][1] * zH + (NUDGE_P[nm] || 0) });
       }
       // Échelle bisectée QML (Hochformat) : les slots sont fixes, seule
       // l'échelle empêche les chevauchements — comme le client officiel.
-      outP._boxScale = _qmlPortraitScale(M, zW, zH, zoomMul);
+      outP._boxScale = _qmlPortraitScale(M, zW, zH, zoomMul, spectating);
       // Marge de zoom restante (grise le bouton + au plafond de faisabilité) :
       // l'échelle bouge-t-elle encore au cran de zoom suivant ?
       var _znP = Math.min(2, (zoomMul || 1) + 0.1);
-      outP._zoomHeadroom = _qmlPortraitScale(M, zW, zH, _znP) > outP._boxScale + 0.004;
+      outP._zoomHeadroom = _qmlPortraitScale(M, zW, zH, _znP, spectating) > outP._boxScale + 0.004;
       return outP;
     }
     // ── PAYSAGE : ellipse officielle — DÉLÉGUÉE au port 1:1 du QML ──
@@ -9748,13 +9784,15 @@ const App = (() => {
     // compact a tort et ecrasait les paires de sieges laterales. On exige
     // une fenetre REELLEMENT aplatie : h < 800.
     var compact = _wH < 600 || (_wW / Math.max(_wH, 1) > 2.1 && _wH < 800);
-    var lay = _qmlLandscapeLayout(M, zW, zH, compact, zoomMul);
-    var out = [null]; // index 0 = self -> perle du bas de l'ellipse (voir _self)
+    var lay = _qmlLandscapeLayout(M, zW, zH, compact, zoomMul, spectating);
+    // Spectateur : le joueur d'index 0 est une perle normale au point bas de
+    // l'ellipse (opp0 = point(90) du QML) ; sinon null (self geree a part).
+    var out = [ (spectating && lay.seat0) ? { top: lay.seat0.y, left: lay.seat0.x } : null ];
     for (var ke = 0; ke < M; ke++) out.push({ top: lay.slots[ke].y, left: lay.slots[ke].x });
     out._boxScale = lay.s;
     // Marge de zoom restante (bouton +) au cran suivant — bisection pure, ~gratuit.
     var _znL = Math.min(2, (zoomMul || 1) + 0.1);
-    out._zoomHeadroom = _qmlLandscapeLayout(M, zW, zH, compact, _znL).s > lay.s + 0.004;
+    out._zoomHeadroom = _qmlLandscapeLayout(M, zW, zH, compact, _znL, spectating).s > lay.s + 0.004;
     // Position officielle de la self = "grosse perle" au point bas de l'ellipse
     // (appliquée par l'appelant quand la player-bar est masquée). out[0] reste
     // null pour ne pas perturber le cas spectateur.
@@ -10089,7 +10127,7 @@ const App = (() => {
     if (_applyOfficial) {
       try {
         var _layoutZoom = 1;   // la bisection travaille TOUJOURS à zoom 1
-        var _offPos = _officialSeatPix(rotated.length, _forceSeatPortrait, zRect.width, zRect.height, oCX, oCY, oRect, _seatBoxScale, _layoutZoom);
+        var _offPos = _officialSeatPix(rotated.length, _forceSeatPortrait, zRect.width, zRect.height, oCX, oCY, oRect, _seatBoxScale, _layoutZoom, myIdx < 0);
         // Diagnostic INCONDITIONNEL (le bloc interne peut être sauté si
         // _boxScale est NaN/absent — on veut voir pourquoi).
         try {
@@ -16256,7 +16294,7 @@ function renderPlayersList() {
   });
 })();
 
-;(function(){ window.BUILD_VERSION='0.3.652-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.653-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
