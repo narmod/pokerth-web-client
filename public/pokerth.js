@@ -15528,10 +15528,11 @@ function makeWinDraggable(panel, handle, key){
   handle.addEventListener('pointerup', end);
   handle.addEventListener('pointercancel', end);
 }
-function makeWinResizable(panel, key, minW, minH){
+function makeWinResizable(panel, key, minW, minH, maxW, maxH){
   if(!panel || panel._winRszWired) return;
   panel._winRszWired=true;
   minW=minW||240; minH=minH||140;
+  // maxW/maxH optionnels : bornes hautes de la fenetre (0/undefined = illimite).
   ['n','s','e','w','ne','nw','se','sw'].forEach(function(dir){
     var h=document.createElement('div');
     h.className='win-rsz win-rsz-'+dir;
@@ -15555,6 +15556,8 @@ function makeWinResizable(panel, key, minW, minH){
       if(dir.indexOf('n')>=0){ nh=sh-dy; nt=st+dy; }
       if(nw<minW){ if(dir.indexOf('w')>=0) nl-=(minW-nw); nw=minW; }
       if(nh<minH){ if(dir.indexOf('n')>=0) nt-=(minH-nh); nh=minH; }
+      if(maxW && nw>maxW){ if(dir.indexOf('w')>=0) nl+=(nw-maxW); nw=maxW; }
+      if(maxH && nh>maxH){ if(dir.indexOf('n')>=0) nt+=(nh-maxH); nh=maxH; }
       var vw=window.innerWidth, vh=window.innerHeight;
       // Borne la TAILLE pour garder le bord opposé au coin tiré dans l'écran,
       // sans repousser le coin ancré (sinon la fenêtre « recule » en s'agrandissant).
@@ -15563,6 +15566,7 @@ function makeWinResizable(panel, key, minW, minH){
       if(dir.indexOf('w')>=0 && nl<6){ nw-=(6-nl); nl=6; }
       if(dir.indexOf('n')>=0 && nt<6){ nh-=(6-nt); nt=6; }
       nw=Math.max(minW, Math.min(nw, vw-12)); nh=Math.max(minH, Math.min(nh, vh-12));
+      if(maxW) nw=Math.min(nw, maxW); if(maxH) nh=Math.min(nh, maxH);
       panel.style.width=nw+'px'; panel.style.height=nh+'px';
       panel.style.right='auto'; panel.style.bottom='auto';
       panel.style.left=nl+'px'; panel.style.top=nt+'px';
@@ -15583,6 +15587,11 @@ function _enableFloating(panel, opt){
   panel._winDrag=true; panel._winResizable=!!opt.resizable;
   panel.style.setProperty('max-height','none','important');
   var restored=_restoreWin(panel, opt.key);
+  if(restored){
+    // Taille memorisee avant l'introduction des bornes maxi : on la re-borne.
+    if(opt.maxW && panel.offsetWidth >opt.maxW) panel.style.width =opt.maxW+'px';
+    if(opt.maxH && panel.offsetHeight>opt.maxH) panel.style.height=opt.maxH+'px';
+  }
   if(!restored){
     if(opt.resizable){
       if(!panel.style.width) panel.style.width=(opt.defW||340)+'px';
@@ -15591,7 +15600,7 @@ function _enableFloating(panel, opt){
     _placeWin(panel, (opt.defLeft!=null?opt.defLeft:16), (opt.defTop!=null?opt.defTop:56));
   }
   if(opt.handle) makeWinDraggable(panel, opt.handle, opt.key);
-  if(opt.resizable) makeWinResizable(panel, opt.key, opt.minW, opt.minH);
+  if(opt.resizable) makeWinResizable(panel, opt.key, opt.minW, opt.minH, opt.maxW, opt.maxH);
 }
 function _disableFloating(panel){
   if(!panel || !panel.classList.contains('floating-win')) return;
@@ -15633,10 +15642,12 @@ function _ensureFloating(panel, dragEv){
     left=Math.round(dragEv.clientX - relX*dw);
     newW=dw; newH=dh;
   }
+  if(opt.maxW) newW=Math.min(newW, opt.maxW);
+  if(opt.maxH) newH=Math.min(newH, opt.maxH);
   panel.style.width=newW+'px';
   panel.style.height=newH+'px';
   _placeWin(panel, left, top);
-  if (opt.resizable) makeWinResizable(panel, opt.key, opt.minW, opt.minH);
+  if (opt.resizable) makeWinResizable(panel, opt.key, opt.minW, opt.minH, opt.maxW, opt.maxH);
   _saveWin(panel, opt.key);
 }
 function _attachFloatControls(panel, opt){
@@ -15650,7 +15661,7 @@ function _attachFloatControls(panel, opt){
   if (hasSaved){ _enableFloating(panel, opt); return; }
   panel._winDrag=true;
   if (opt.handle) makeWinDraggable(panel, opt.handle, opt.key);
-  if (opt.resizable) makeWinResizable(panel, opt.key, opt.minW, opt.minH);
+  if (opt.resizable) makeWinResizable(panel, opt.key, opt.minW, opt.minH, opt.maxW, opt.maxH);
 }
 function _makeHandsDraggable(card){
   // Carte des combinaisons (memo des mains) : deplacable via son titre. Le
@@ -16322,7 +16333,7 @@ function toggleReactionPanel() {
   if (open) {
     // minW/minH relevés : au minimum de fenêtre, les 30 émojis tiennent encore
     // à la borne basse de case (32 px) sans défilement.
-    _openFloatingNearBtn(panel, btn, { key:'pth_winpos_react', handle: panel.querySelector('.react-panel-title'), resizable:true, minW:280, minH:230, defW:330, defH:340 }, 'left');
+    _openFloatingNearBtn(panel, btn, { key:'pth_winpos_react', handle: panel.querySelector('.react-panel-title'), resizable:true, minW:280, minH:230, maxW:760, maxH:520, defW:330, defH:340 }, 'left');
     if (!panel._reactFitRO && typeof ResizeObserver !== 'undefined'){
       panel._reactFitRO = new ResizeObserver(function(){ _fitReactGrid(panel); });
       panel._reactFitRO.observe(panel);
@@ -16758,7 +16769,7 @@ function renderPlayersList() {
   });
 })();
 
-;(function(){ window.BUILD_VERSION='0.3.668-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.669-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
