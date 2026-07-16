@@ -73,6 +73,13 @@ console is available: long-press a reply to copy it.
 | `/fps` | On-screen FPS meter for 5 seconds, then average/minimum in the chat |
 | `/lang <code>` | Switches the UI language (e.g. `/lang fr`); without a code, lists available codes |
 | `/sound on\|off` | Toggles game sounds |
+| `/audiodbg` | Audio engine state: enabled, volume, AudioContext state (handy for iOS sound-after-sleep issues), music volume |
+| `/table` | Current game info: id, hand, phase, blinds, pot, timeout, start cash, players with stacks |
+| `/storage` | Your `pth_*` local-settings keys with value sizes and total storage used (values are never shown) |
+| `/logdump` | Verbose protocol capture: first call turns it ON, next call dumps the last 50 messages (name, size, fields), `/logdump off` stops and clears |
+| `/clear` | Clears the chat locally (yours only) |
+| `/copy` | Copies the last diagnostic reply to the clipboard (more reliable than long-press on iOS) |
+| `/zoom` | Toggles the table magnifier |
 | `/seatdbg` | Seat-layout metrics (game chat only) |
 
 Unknown `/commands` are sent as normal chat (so server-side commands like

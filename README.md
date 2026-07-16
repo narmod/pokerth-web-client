@@ -242,6 +242,7 @@ A full appearance system, reached from the **Theme** button — pick a one-tap p
 - **Full i18n in 36 languages**, switchable on the fly and auto-detected from the browser locale — the complete official PokerTH language set plus community additions (Ukrainian, Romanian, Croatian, Serbian and more), with Brazilian and European Portuguese shipped as separate catalogues (pt-BR / pt-PT)
 - Fullscreen mode on all screens
 - **On-felt panels** — chat, emoji, hand log and a new **Hand-odds (Combinaisons)** window open as compact, movable and resizable floating windows anchored under their round on-felt button (on every device, instead of taking over the screen); a **↺** button in the header snaps every panel back to its docked spot, and the table zoom is collapsible everywhere. Window positions are remembered. On phone portrait the action bar hugs the bottom edge for a full-screen table.
+- **Built-in diagnostics via chat commands** — type `/help` in any chat for local commands (`/diag`, `/update`, `/netdbg`, `/fps`, `/table`, `/lang`, `/sound`…); replies are shown only to you (see [docs/DIAGNOSTIC.md](docs/DIAGNOSTIC.md))
 - Poker hand reference overlay (? button)
 - Exponential-backoff auto-reconnect with live countdown
 

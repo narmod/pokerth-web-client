@@ -5859,6 +5859,11 @@ const App = (() => {
     var parts = text.split(/\s+/);
     var cmd = (parts[0] || '').toLowerCase();
     var arg = (parts[1] || '').trim();
+    // /copy grabs the latest reply of any other local command.
+    if (cmd !== '/copy') {
+      var _echoRaw = echo;
+      echo = function (n2, s2) { try { window._pthLastDiag = s2; } catch (e) {} _echoRaw(n2, s2); };
+    }
     if (cmd === '/help') {
       echo('help',
         '/diag — client state snapshot · ' +
@@ -5869,6 +5874,13 @@ const App = (() => {
         '/fps — 5-second FPS meter · ' +
         '/lang <code> — switch language (e.g. /lang fr) · ' +
         '/sound on|off — toggle game sounds · ' +
+        '/audiodbg — audio engine state · ' +
+        '/table — current game info (blinds, players, stacks) · ' +
+        '/storage — local settings keys and sizes · ' +
+        '/logdump — verbose protocol capture (again to dump, off to stop) · ' +
+        '/clear — clear the chat locally · ' +
+        '/copy — copy the last reply to the clipboard · ' +
+        '/zoom — toggle the table magnifier · ' +
         '/seatdbg — seat layout metrics (game chat only). ' +
         'All replies are shown only to you, nothing is sent.');
       return true;
@@ -5985,6 +5997,119 @@ const App = (() => {
         if (want !== on && window.toggleSound) window.toggleSound();
         echo('sound', 'sounds ' + (want ? 'on' : 'off'));
       } catch (e) { echo('sound', 'error: ' + e); }
+      return true;
+    }
+    if (cmd === '/audiodbg') {
+      try {
+        var ctx = window.getAudioCtx ? window.getAudioCtx() : null;
+        echo('audiodbg', JSON.stringify({
+          enabled: window.isSoundEnabled ? !!window.isSoundEnabled() : null,
+          volume: window.getSoundVolume ? Math.round(window.getSoundVolume() * 100) : null,
+          ctx: ctx ? ctx.state : 'unavailable',
+          sampleRate: ctx ? ctx.sampleRate : null,
+          musicVolume: (window.Music && window.Music.getVolume) ? Math.round((window.Music.getVolume() || 0) * 100) : null
+        }));
+      } catch (e) { echo('audiodbg', 'error: ' + e); }
+      return true;
+    }
+    if (cmd === '/table') {
+      try {
+        if (!gId) { echo('table', 'not at a table'); return true; }
+        var pl = [];
+        for (var si = 0; si < seats.length; si++) {
+          var pid2 = seats[si], sd2 = seatData[pid2] || {};
+          pl.push((players[pid2] || ('#' + pid2)) + (pid2 === myId ? '*' : '') + ':$' + (sd2.money != null ? sd2.money : '?') +
+                  (sd2.folded ? ' folded' : '') + (sd2.gone ? ' out' : ''));
+        }
+        echo('table', JSON.stringify({
+          gameId: gId, hand: handNum,
+          phase: ['preflop','flop','turn','river'][gameState] || gameState,
+          blinds: smallBlind + '/' + (smallBlind * 2),
+          pot: pot, timeout: gameTimeout + 's', startCash: gameStartMoney,
+          players: pl
+        }));
+      } catch (e) { echo('table', 'error: ' + e); }
+      return true;
+    }
+    if (cmd === '/storage') {
+      try {
+        var keys = [], total = 0;
+        for (var ki = 0; ki < localStorage.length; ki++) {
+          var kk = localStorage.key(ki);
+          var vlen = (localStorage.getItem(kk) || '').length;
+          total += kk.length + vlen;
+          if (kk.indexOf('pth_') === 0) keys.push(kk + '(' + vlen + ')');
+        }
+        keys.sort();
+        echo('storage', keys.length + ' pth_* keys, ~' + Math.round(total / 1024) + ' KB total used: ' + keys.join(' '));
+      } catch (e) { echo('storage', 'error: ' + e); }
+      return true;
+    }
+    if (cmd === '/logdump') {
+      try {
+        if (arg === 'off') {
+          window._pthMsgVerbose = false; window._pthMsgVerboseRing = [];
+          echo('logdump', 'capture stopped and cleared');
+          return true;
+        }
+        if (!window._pthMsgVerbose) {
+          window._pthMsgVerbose = true; window._pthMsgVerboseRing = [];
+          echo('logdump', 'verbose capture ON — play a bit, then type /logdump again to dump (or /logdump off to stop)');
+          return true;
+        }
+        var vr = window._pthMsgVerboseRing || [];
+        var names2 = {};
+        try { var TT2 = MSG.T; for (var k2 in TT2) names2[TT2[k2]] = k2; } catch (e) {}
+        var lines = [];
+        for (var vi = 0; vi < vr.length; vi++) {
+          var v = vr[vi];
+          lines.push((names2[v.t] || v.t) + '[' + v.len + 'B f:' + v.f + ']');
+        }
+        echo('logdump', lines.length ? lines.join(' · ') : 'nothing captured yet');
+      } catch (e) { echo('logdump', 'error: ' + e); }
+      return true;
+    }
+    if (cmd === '/clear') {
+      try {
+        var c1 = document.getElementById('g-chat-msgs'); if (c1) c1.innerHTML = '';
+        var c2 = document.getElementById('chat'); if (c2) c2.innerHTML = '';
+        echo('clear', 'chat cleared (locally)');
+      } catch (e) { echo('clear', 'error: ' + e); }
+      return true;
+    }
+    if (cmd === '/copy') {
+      var txt = window._pthLastDiag || '';
+      if (!txt) { echo('copy', 'nothing to copy yet — run a diagnostic command first'); return true; }
+      var okMsg = function () { echo('copy', 'copied (' + txt.length + ' chars)'); };
+      var koMsg = function () { echo('copy', 'clipboard unavailable — long-press the message instead'); };
+      try {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(txt).then(okMsg, function () {
+            try {
+              var ta = document.createElement('textarea');
+              ta.value = txt; ta.style.cssText = 'position:fixed;opacity:0';
+              document.body.appendChild(ta); ta.select();
+              var ok2 = document.execCommand('copy');
+              document.body.removeChild(ta);
+              ok2 ? okMsg() : koMsg();
+            } catch (e) { koMsg(); }
+          });
+        } else {
+          var ta2 = document.createElement('textarea');
+          ta2.value = txt; ta2.style.cssText = 'position:fixed;opacity:0';
+          document.body.appendChild(ta2); ta2.select();
+          var ok3 = document.execCommand('copy');
+          document.body.removeChild(ta2);
+          ok3 ? okMsg() : koMsg();
+        }
+      } catch (e) { koMsg(); }
+      return true;
+    }
+    if (cmd === '/zoom') {
+      try {
+        if (window.toggleLoupe) { window.toggleLoupe(); echo('zoom', 'table zoom toggled'); }
+        else echo('zoom', 'zoom unavailable here');
+      } catch (e) { echo('zoom', 'error: ' + e); }
       return true;
     }
     return false;
@@ -6358,6 +6483,12 @@ const App = (() => {
       _ms.total++;
       _ms.ring.push({ t: type, ts: Date.now() });
       if (_ms.ring.length > 30) _ms.ring.shift();
+      // /logdump: optional verbose capture (type + size + field numbers present)
+      if (window._pthMsgVerbose) {
+        var _vr = window._pthMsgVerboseRing || (window._pthMsgVerboseRing = []);
+        _vr.push({ t: type, ts: Date.now(), len: buf.length, f: Object.keys(sub).join(',') });
+        if (_vr.length > 50) _vr.shift();
+      }
     } catch (_eMs) {}
 
     switch (type) {
@@ -16627,7 +16758,7 @@ function renderPlayersList() {
   });
 })();
 
-;(function(){ window.BUILD_VERSION='0.3.666-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.667-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
