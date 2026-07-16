@@ -15877,6 +15877,47 @@ function toggleMusicPanel() {
 }
 window.toggleMusicPanel = toggleMusicPanel;
 
+// ── Grille de réactions auto-adaptative (fenêtre flottante) ──
+// Les 30 émojis restent TOUS visibles : à chaque redimensionnement on choisit
+// le découpage colonnes × lignes qui maximise la taille de case carrée, puis
+// on borne la case entre 32 px (en dessous → la grille défile, très petites
+// fenêtres) et 84 px (au-delà → cases plafonnées et grille centrée). La taille
+// des émojis suit la case via la variable CSS --react-cell.
+function _fitReactGrid(panel){
+  panel = panel || document.getElementById('g-reaction-panel');
+  if (!panel) return;
+  var grid = panel.querySelector('.react-grid');
+  if (!grid) return;
+  if (!panel.classList.contains('floating-win')){
+    // Retour bandeau (resetWindows) : rendre la main aux règles CSS.
+    grid.style.gridTemplateColumns=''; grid.style.gridAutoRows='';
+    grid.style.gap=''; grid.style.justifyContent=''; grid.style.alignContent='';
+    grid.style.removeProperty('--react-cell');
+    return;
+  }
+  if (panel.style.display === 'none') return;
+  var n = grid.querySelectorAll('.react-btn').length;
+  if (!n) return;
+  var GAP = 4, MIN = 32, MAX = 84;
+  var W = grid.clientWidth, H = grid.clientHeight;
+  if (W < MIN || H < MIN) return;
+  var bestCols = 1, bestCell = 0;
+  for (var cols = 1; cols <= n; cols++){
+    var rows = Math.ceil(n / cols);
+    var cell = Math.min((W - GAP*(cols-1))/cols, (H - GAP*(rows-1))/rows);
+    if (cell > bestCell){ bestCell = cell; bestCols = cols; }
+  }
+  var cell = Math.floor(Math.max(MIN, Math.min(MAX, bestCell)));
+  var rows = Math.ceil(n / bestCols);
+  grid.style.gridTemplateColumns = 'repeat(' + bestCols + ', ' + cell + 'px)';
+  grid.style.gridAutoRows = cell + 'px';
+  grid.style.gap = GAP + 'px';
+  grid.style.justifyContent = 'center';
+  // Centré verticalement quand tout tient ; ancré en haut si ça défile.
+  grid.style.alignContent = (rows*(cell+GAP)-GAP > H) ? 'start' : 'center';
+  grid.style.setProperty('--react-cell', cell + 'px');
+}
+
 function toggleReactionPanel() {
   // Réactions actives partout, y compris pokerth.net : sendReaction() relaie
   // via la commande /emoji dans le chat de partie (interop web <-> Qt/QML).
@@ -15887,7 +15928,16 @@ function toggleReactionPanel() {
   var open = panel.style.display === 'none' || panel.style.display === '';
   panel.style.display = open ? 'flex' : 'none';
   if (open) _applyReactMuteUI();
-  if (open) { _openFloatingNearBtn(panel, btn, { key:'pth_winpos_react', handle: panel.querySelector('.react-panel-title'), resizable:true, minW:240, minH:160, defW:330, defH:340 }, 'left'); }
+  if (open) {
+    // minW/minH relevés : au minimum de fenêtre, les 30 émojis tiennent encore
+    // à la borne basse de case (32 px) sans défilement.
+    _openFloatingNearBtn(panel, btn, { key:'pth_winpos_react', handle: panel.querySelector('.react-panel-title'), resizable:true, minW:280, minH:230, defW:330, defH:340 }, 'left');
+    if (!panel._reactFitRO && typeof ResizeObserver !== 'undefined'){
+      panel._reactFitRO = new ResizeObserver(function(){ _fitReactGrid(panel); });
+      panel._reactFitRO.observe(panel);
+    }
+    _fitReactGrid(panel);
+  }
   if (btn) {
     btn.style.background  = open ? 'rgba(var(--gold-rgb),0.2)' : '';
     btn.style.borderColor = open ? 'var(--gold-dim)' : '';
@@ -16317,7 +16367,7 @@ function renderPlayersList() {
   });
 })();
 
-;(function(){ window.BUILD_VERSION='0.3.656-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.657-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

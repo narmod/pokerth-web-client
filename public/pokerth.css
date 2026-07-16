@@ -7104,6 +7104,15 @@ html[data-seat-img-self] .player-bar {
      défile normalement (comme desktop/tablette où ce plafond n'existe pas). */
   max-height: none;
 }
+/* Taille des émojis (et du compteur) pilotée par la case calculée en JS
+   (_fitReactGrid, variable --react-cell) : les glyphes grossissent/rétrécissent
+   avec la fenêtre. Repli 44px si la variable n'est pas encore posée. */
+#g-reaction-panel.floating-win .react-grid .react-btn {
+  font-size: calc(var(--react-cell, 44px) * 0.55);
+}
+#g-reaction-panel.floating-win .react-grid .react-btn .rc {
+  font-size: calc(var(--react-cell, 44px) * 0.17);
+}
 /* 8 poignees de redimensionnement (bords + coins), injectees en JS.
    Transparentes : seul le curseur signale la zone. Placees sur les bords
    interieurs car le panneau est en overflow:hidden. */
