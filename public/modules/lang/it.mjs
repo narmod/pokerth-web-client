@@ -514,6 +514,7 @@ export const strings = {
     endGameBackToLobby: 'Torna alla lobby',
     gameRanking:'Valida per la classifica',
     gameNameRequired:'Inserisci un nome per la partita.', guestGameName:'Partita di {name}',
+    communityPreset:'Modello della community', ownSettings:'Impostazioni personalizzate',
     allowSpectators: 'Spettatori',
     allowOn: 'Consentiti',
     allowOff: 'Bloccati',

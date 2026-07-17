@@ -252,6 +252,7 @@ export const strings = {
     endGameReplay:'Rejouer',
     gameRanking:'Partie classée',
     gameNameRequired:'Veuillez saisir un nom de partie.', guestGameName:'Partie de {name}',
+    communityPreset:'Modèle communautaire', ownSettings:'Paramètres personnalisés',
     allowSpectators:'Spectateurs',
     allowOn:'Autorisés',
     allowOff:'Interdits',

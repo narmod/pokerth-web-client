@@ -1385,6 +1385,23 @@ function onAvatarImageChosen(input) {
           </div>
         </div>
 
+        <!-- Modèle communautaire (parité QML : tournois officiels pokerth.net,
+             visible seulement pour « Joueurs invités uniquement ») -->
+        <div class="cf-row cf-row-col" id="cf-vorlage-row" style="display:none">
+          <label class="cf-lbl" data-i18n="communityPreset">Community template</label>
+          <div class="sel-wrap"><select id="cf-vorlage" class="cf-select" onchange="App.applyVorlage()">
+            <option value="0" data-i18n-opt="ownSettings">Custom settings</option>
+            <option value="1">BBC Step 1</option>
+            <option value="2">BBC Step 2</option>
+            <option value="3">BBC Step 3</option>
+            <option value="4">BBC Step 4</option>
+            <option value="5">Monthly Cup</option>
+            <option value="6">Monthly Cup Final</option>
+            <option value="7">WEC</option>
+            <option value="8">WEC Grand Final</option>
+          </select><span class="sel-arr">▾</span></div>
+        </div>
+
         <!-- Mot de passe (toggle) -->
         <div class="cf-row">
           <label class="cf-lbl" data-i18n="passwordLabel">Mot de passe</label>

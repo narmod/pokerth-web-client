@@ -250,6 +250,7 @@ export const strings = {
     endGameReplay:'Play again',
     gameRanking:'Ranking game',
     gameNameRequired:"Please enter a game name.", guestGameName:"{name}'s game",
+    communityPreset:'Community template', ownSettings:'Custom settings',
     allowSpectators:'Spectators',
     allowOn:'Allowed',
     allowOff:'Blocked',

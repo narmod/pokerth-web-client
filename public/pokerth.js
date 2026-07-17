@@ -14262,7 +14262,9 @@ function _maybeShowNextHandBtn() {
       var body = document.getElementById('create-page-body');
       if (form && body && form.parentNode !== body) body.appendChild(form);
       if (form) { form.style.display = 'block'; form.classList.add('open'); }
-      this._rankSnap = null;   // jamais de restauration trans-session
+      this._rankSnap = null;      // jamais de restauration trans-session
+      this._vorlageSnap = null;   // idem pour le modèle communautaire (non persisté, comme le QML)
+      try { var _vs = document.getElementById('cf-vorlage'); if (_vs) _vs.value = '0'; } catch (e) {}
       try { this._applyCreateFormDefaults(false); } catch (e) {}
       // Pastille « Perso » (charger mes préférences) : visible seulement si
       // des préférences existent pour le MODE COURANT (pastille 💾 ou Options
@@ -14419,6 +14421,115 @@ function _maybeShowNextHandBtn() {
       if (sel) sel.classList.add('active');
     },
 
+    // ── Vorlagen communautaires (parité QML communityPresets, verbatim) ──
+    // Réglages officiels des tournois pokerth.net. Visibles seulement pour
+    // « Joueurs invités uniquement » ; remplissent ET verrouillent le
+    // formulaire (nom compris) ; « Paramètres personnalisés » restaure les
+    // valeurs d'avant. Les BBC Steps imposent une liste fixe de 30 paliers
+    // de blinds (hausse au temps, toutes les 5 min) ; MC/WEC doublent après
+    // N mains. delayBetweenHands = 7 pour toutes (comme le QML).
+    _communityVorlagen: [
+      { name: 'BBC Step 1', startCash: 3000, firstSmallBlind: 15,
+        raiseOnHands: false, raiseEveryHands: 11, raiseEveryMinutes: 5, playerActionTimeout: 10,
+        blinds: [20, 25, 30, 40, 50, 60, 80, 100, 120, 150, 200, 250, 300, 400, 500,
+                 600, 800, 1000, 1200, 1500, 2000, 2500, 3000, 4000, 5000, 6000, 8000,
+                 10000, 12000, 15000] },
+      { name: 'BBC Step 2', startCash: 4000, firstSmallBlind: 20,
+        raiseOnHands: false, raiseEveryHands: 11, raiseEveryMinutes: 5, playerActionTimeout: 10,
+        blinds: [25, 30, 40, 50, 60, 80, 100, 120, 150, 200, 250, 300, 400, 500, 600,
+                 800, 1000, 1200, 1500, 2000, 2500, 3000, 4000, 5000, 6000, 8000, 10000,
+                 12000, 15000, 20000] },
+      { name: 'BBC Step 3', startCash: 5000, firstSmallBlind: 25,
+        raiseOnHands: false, raiseEveryHands: 11, raiseEveryMinutes: 5, playerActionTimeout: 10,
+        blinds: [30, 40, 50, 60, 80, 100, 120, 150, 200, 250, 300, 400, 500, 600, 800,
+                 1000, 1200, 1500, 2000, 2500, 3000, 4000, 5000, 6000, 8000, 10000,
+                 12000, 15000, 20000, 25000] },
+      { name: 'BBC Step 4', startCash: 10000, firstSmallBlind: 50,
+        raiseOnHands: false, raiseEveryHands: 11, raiseEveryMinutes: 5, playerActionTimeout: 10,
+        blinds: [60, 80, 100, 120, 150, 200, 250, 300, 400, 500, 600, 800, 1000, 1200,
+                 1500, 2000, 2500, 3000, 4000, 5000, 6000, 8000, 10000, 12000, 15000,
+                 20000, 25000, 30000, 40000, 50000] },
+      { name: 'Monthly Cup', startCash: 10000, firstSmallBlind: 50,
+        raiseOnHands: true, raiseEveryHands: 16, raiseEveryMinutes: 5, playerActionTimeout: 10,
+        blinds: [] },
+      { name: 'Monthly Cup Final', startCash: 10000, firstSmallBlind: 50,
+        raiseOnHands: true, raiseEveryHands: 22, raiseEveryMinutes: 5, playerActionTimeout: 12,
+        blinds: [] },
+      { name: 'WEC', startCash: 10000, firstSmallBlind: 50,
+        raiseOnHands: true, raiseEveryHands: 22, raiseEveryMinutes: 5, playerActionTimeout: 12,
+        blinds: [] },
+      { name: 'WEC Grand Final', startCash: 10000, firstSmallBlind: 50,
+        raiseOnHands: true, raiseEveryHands: 35, raiseEveryMinutes: 5, playerActionTimeout: 25,
+        blinds: [] }
+    ],
+    // Handler du combo « Modèle communautaire ». idx 0 = Paramètres
+    // personnalisés (restauration) ; 1..8 = vorlage (remplit + verrouille).
+    applyVorlage() {
+      var g = function(id){ return document.getElementById(id); };
+      var sel = g('cf-vorlage'); if (!sel) return;
+      var idx = parseInt(sel.value, 10) || 0;
+      var setv = function(id, v){ var e = g(id); if (e) { e.value = v; e.dispatchEvent(new Event('input')); } };
+      if (idx <= 0 || !this._communityVorlagen[idx - 1]) {
+        this._restoreVorlage();
+        this._syncGameTypeConstraints();
+        return;
+      }
+      // Snapshot des valeurs d'avant la première vorlage (une seule fois,
+      // comme le verrou classé) — restauré par « Paramètres personnalisés »
+      // ou en quittant le type invitation.
+      if (!this._vorlageSnap) {
+        this._vorlageSnap = {
+          name:       g('cf-name')        ? g('cf-name').value        : '',
+          players:    g('cf-players')     ? g('cf-players').value     : 10,
+          stack:      g('cf-stack')       ? g('cf-stack').value       : 3000,
+          blind:      g('cf-blind')       ? g('cf-blind').value       : 10,
+          raiseEvery: g('cf-raise-every') ? g('cf-raise-every').value : 8,
+          raiseMode:  (g('cf-rm2') && g('cf-rm2').checked) ? 2 : 1,
+          timeout:    g('cf-timeout')     ? g('cf-timeout').value     : 20,
+          delay:      g('cf-delay')       ? g('cf-delay').value       : 7,
+          manual:     !!(g('cf-mb1') && g('cf-mb1').checked),
+          manualStr:  g('cf-manual-blinds') ? g('cf-manual-blinds').value : ''
+        };
+      }
+      var p = this._communityVorlagen[idx - 1];
+      var nm = g('cf-name'); if (nm) nm.value = p.name;
+      var ne = g('cf-name-err'); if (ne) ne.style.display = 'none';
+      setv('cf-players', 10);
+      setv('cf-stack',   p.startCash);
+      setv('cf-blind',   p.firstSmallBlind);
+      var rmode = p.raiseOnHands ? 1 : 2;
+      this.setRaiseMode(rmode);
+      var rr = g(rmode === 2 ? 'cf-rm2' : 'cf-rm1'); if (rr) rr.checked = true;
+      setv('cf-raise-every', p.raiseOnHands ? p.raiseEveryHands : p.raiseEveryMinutes);
+      setv('cf-timeout', p.playerActionTimeout);
+      setv('cf-delay',   7);   // toutes les vorlagen : DelayBetweenHands = 7
+      if (p.blinds.length) {
+        this._setManualBlinds(p.blinds.slice());
+        this.setManualBlindsMode(true);
+      } else {
+        setv('cf-manual-blinds', '');
+        this.setManualBlindsMode(false);
+        this._renderManualBlinds();
+      }
+      this._syncGameTypeConstraints();
+    },
+    // Restauration des valeurs d'avant vorlage (sans resynchroniser — les
+    // appelants s'en chargent pour éviter toute récursion).
+    _restoreVorlage() {
+      if (!this._vorlageSnap) return;
+      var g = function(id){ return document.getElementById(id); };
+      var setv = function(id, v){ var e = g(id); if (e) { e.value = v; e.dispatchEvent(new Event('input')); } };
+      var snap = this._vorlageSnap; this._vorlageSnap = null;
+      var nm = g('cf-name'); if (nm) nm.value = snap.name;
+      setv('cf-players', snap.players); setv('cf-stack', snap.stack);
+      setv('cf-blind', snap.blind); setv('cf-raise-every', snap.raiseEvery);
+      this.setRaiseMode(snap.raiseMode);
+      var rr = g(snap.raiseMode === 2 ? 'cf-rm2' : 'cf-rm1'); if (rr) rr.checked = true;
+      setv('cf-timeout', snap.timeout); setv('cf-delay', snap.delay);
+      setv('cf-manual-blinds', snap.manualStr);
+      this.setManualBlindsMode(snap.manual);
+      this._renderManualBlinds();
+    },
     // ── Parité QML LobbyCreateGamePage (2.1.3) : contraintes selon le type ──
     // passwordAllowed = Normal/Enregistrés seulement ; « Partie classée »
     // verrouille et force les constantes serveur (RANKING_GAME_*) ; invité =
@@ -14432,7 +14543,20 @@ function _maybeShowNextHandBtn() {
       var isGuest = (_currentLoginMode === 'guest');
       var type = parseInt(sel.value, 10) || 1;
       var isRanking = (type === 4);
+      var isInvite  = (type === 3);
       var pwAllowed = (type === 1 || type === 2);
+      // Modèle communautaire : visible seulement en invitation (parité QML) ;
+      // quitter le type invitation remet la vorlage à zéro et restaure.
+      var vSel = g('cf-vorlage');
+      var vRow = g('cf-vorlage-row');
+      if (vRow) vRow.style.display = isInvite ? '' : 'none';
+      if (vSel && !isInvite && (parseInt(vSel.value, 10) || 0) > 0) {
+        vSel.value = '0';
+        this._restoreVorlage();
+      }
+      var vorlageActive = !!(isInvite && vSel && (parseInt(vSel.value, 10) || 0) > 0);
+      // fieldsLocked (parité QML) : classé OU vorlage active.
+      var fieldsLocked = isRanking || vorlageActive;
       var lockRow = function(id, lock) {
         var el = g(id); if (!el) return;
         var row = el.closest('.cf-row') || el.parentNode;
@@ -14452,7 +14576,7 @@ function _maybeShowNextHandBtn() {
       // convention QML « %1's game ») + champ nom et choix du type désactivés.
       var nameEl = g('cf-name');
       if (nameEl) {
-        nameEl.disabled = isGuest;
+        nameEl.disabled = isGuest || vorlageActive;
         if (isGuest) {
           var tpl = (typeof t === 'function' && t('guestGameName') !== 'guestGameName')
             ? t('guestGameName') : "{name}'s game";
@@ -14488,18 +14612,24 @@ function _maybeShowNextHandBtn() {
         var mbr = g(snap.manual ? 'cf-mb1' : 'cf-mb0'); if (mbr) mbr.checked = true;
         this.setManualBlindsMode(snap.manual);
       }
-      ['cf-players','cf-stack','cf-blind','cf-allow-spectators'].forEach(function(id){ lockRow(id, isRanking); });
+      ['cf-players','cf-stack','cf-blind'].forEach(function(id){ lockRow(id, fieldsLocked); });
+      // Spectateurs : verrouillés par le classé seulement (QML enabled: !isRanking).
+      lockRow('cf-allow-spectators', isRanking);
       var rm1 = g('cf-rm1');
-      if (rm1) { var rmRow = rm1.closest('.cf-row-col'); if (rmRow) rmRow.classList.toggle('cf-locked', isRanking); }
+      if (rm1) { var rmRow = rm1.closest('.cf-row-col'); if (rmRow) rmRow.classList.toggle('cf-locked', fieldsLocked); }
       var mb0b = g('cf-mb0');
-      if (mb0b) { var mbRow = mb0b.closest('.cf-row-col'); if (mbRow) mbRow.classList.toggle('cf-locked', isRanking); }
+      if (mb0b) { var mbRow = mb0b.closest('.cf-row-col'); if (mbRow) mbRow.classList.toggle('cf-locked', fieldsLocked); }
+      // Timeout et délai entre mains : imposés par la vorlage seulement
+      // (QML enabled: !presetActive — le classé les laisse libres).
+      lockRow('cf-timeout', vorlageActive);
+      lockRow('cf-delay',   vorlageActive);
       // Pastilles de STYLE (data-preset, « Perso » inclus) : inertes tant que
-      // le classé force les valeurs — les pastilles de bots (data-skill) et
-      // les chips de blinds ne sont pas concernées.
+      // le classé ou une vorlage force les valeurs — les pastilles de bots
+      // (data-skill) et les chips de blinds ne sont pas concernées.
       var pills = document.querySelectorAll('.cf-preset[data-preset]');
       for (var i = 0; i < pills.length; i++) {
-        pills[i].disabled = isRanking;
-        pills[i].classList.toggle('cf-locked', isRanking);
+        pills[i].disabled = fieldsLocked;
+        pills[i].classList.toggle('cf-locked', fieldsLocked);
       }
     },
     applyPreset(name, btn) {
@@ -14691,6 +14821,8 @@ function _maybeShowNextHandBtn() {
       // les valeurs réinitialisées (le setVal cf-game-type → '1' plus bas
       // déclenche _syncGameTypeConstraints via l'événement input).
       this._rankSnap = null;
+      this._vorlageSnap = null;
+      var _vsr = document.getElementById('cf-vorlage'); if (_vsr) _vsr.value = '0';
       // Core + numeric fields (and their linked range sliders, via the
       // 'input' event dispatched inside _applyCreateFormDefaults).
       this._applyCreateFormDefaults(true, true);
@@ -17023,7 +17155,7 @@ function renderPlayersList() {
   });
 })();
 
-;(function(){ window.BUILD_VERSION='0.3.683-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.684-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

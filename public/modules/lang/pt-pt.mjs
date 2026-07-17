@@ -508,6 +508,7 @@ export const strings = {
     endGameBackToLobby: 'Voltar ao átrio',
     gameRanking:'Jogo de Classificação',
     gameNameRequired:'Introduz um nome para o jogo.', guestGameName:'Jogo de {name}',
+    communityPreset:'Modelo da Comunidade', ownSettings:'Definições Personalizadas',
     allowSpectators: 'Espetadores',
     allowOn: 'Permitidos',
     allowOff: 'Bloqueados',
