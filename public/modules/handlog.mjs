@@ -9,8 +9,21 @@
 // window._handlog*(...). Si ce module n'est pas chargé, les hooks sont absents
 // et le jeu tourne exactement comme avant (aucune régression possible).
 //
+// Activation : option avancée pth_stats_track (ON par défaut). Désactivée →
+// aucune capture (les hooks sortent immédiatement).
+//
 // Encodage cartes : entiers bruts 0..51 (identiques protocole + log officiel).
 // Aucune conversion.
+
+// Lecture de l'option d'activation (ON par défaut). Relue à chaque événement
+// pour réagir immédiatement à un changement dans les options avancées.
+function _trackingEnabled() {
+  try {
+    if (typeof localStorage === 'undefined') return true;
+    const v = localStorage.getItem('pth_stats_track');
+    return v === null ? true : v === '1';
+  } catch (_e) { return true; }
+}
 
 // ── Constantes alignées sur le moteur/officiel ────────────────────────────
 // BeRo : 0=preflop 1=flop 2=turn 3=river 4=showdown (= notre gameState + le
@@ -83,6 +96,7 @@ class HandRecorder {
   // ── Nouvelle partie ──────────────────────────────────────────────────────
   // seatMap : Array de { pid, seat(1..10), name } pour les joueurs actifs.
   onGameStart({ gameID, startMoney, startSb, dealerSeat, seatMap }) {
+    if (!_trackingEnabled()) { this._curGame = null; this._curHand = null; return; }
     this._uniqueGameID += 1;
     const ug = this._uniqueGameID;
     this._curGame = {
@@ -113,7 +127,7 @@ class HandRecorder {
   // stacks : { seat(1..10) → cash de début de main } (NULL pour siège inactif).
   // sbSeat/bbSeat/dealerSeat en base 1.
   onHandStart({ handID, dealerSeat, sbSeat, sbAmount, bbSeat, bbAmount, stacks }) {
-    if (!this._curGame) return;
+    if (!this._curGame || !_trackingEnabled()) return;
     this._round = BERO.preflop;
     this._revealed = {};
     this._streetBetOf = {};
@@ -835,8 +849,34 @@ function _fmt(key, v) {
   return v + '%';
 }
 
+// Option d'activation du tracking (ON par défaut) — pilote capture ET onglet.
+function _statsEnabled() {
+  try {
+    if (typeof localStorage === 'undefined') return true;
+    const v = localStorage.getItem('pth_stats_track');
+    return v === null ? true : v === '1';
+  } catch (_e) { return true; }
+}
+
+// Affiche/masque le bouton d'onglet Stats selon l'option. Si masqué et que
+// l'onglet courant était 'stats', on bascule sur l'Historique.
+function syncStatsTab() {
+  if (typeof document === 'undefined') return;
+  const btn = document.getElementById('gip-tab-stats');
+  const on = _statsEnabled();
+  if (btn) btn.style.display = on ? '' : 'none';
+  if (!on) {
+    let tab = 'log'; try { tab = localStorage.getItem('pth_gip_tab') || 'log'; } catch (_e) {}
+    if (tab === 'stats') { try { if (typeof window.gipShowTab === 'function') window.gipShowTab('log'); } catch (_e) {} }
+    const body = document.getElementById('g-stats-body');
+    if (body) { body.style.display = 'none'; body.innerHTML = ''; body._built = false; }
+  }
+}
+if (typeof window !== 'undefined') window._syncStatsTab = syncStatsTab;
+
 // Rendu principal — exposé en window._renderStats().
 async function renderStatsPanel() {
+  if (!_statsEnabled()) { syncStatsTab(); return; }
   const el = (typeof document !== 'undefined') ? document.getElementById('g-stats-body') : null;
   if (!el) return;
   // N'agir que si le panneau est ouvert sur l'onglet stats.
@@ -916,7 +956,6 @@ if (typeof window !== 'undefined') window._renderStats = renderStatsPanel;
       onGamePersist: function (session, game, players) { store.putSession(rec.sessionId, session); store.putGame(rec.sessionId, game); store.putPlayers(rec.sessionId, players); },
       onHandPersist: function (hand, actions) {
         store.putHandBundle(rec.sessionId, hand, actions);
-        // Rafraîchir le panneau stats s'il est ouvert.
         try { if (typeof window._renderStats === 'function') window._renderStats(); } catch (_e) {}
       }
     });

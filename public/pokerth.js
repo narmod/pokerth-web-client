@@ -400,6 +400,7 @@ function applyAdvOpts() {
     b.classList.toggle('adv-no-blindsbadge', !_advGet('blinds_badge', true)); // pastille blinds du bandeau (extension web)
     b.classList.toggle('adv-no-community', !_advGet('show_community', true));
     b.classList.toggle('adv-no-flag', !_advGet('show_flag', true));
+    try { if (typeof window._syncStatsTab === 'function') window._syncStatsTab(); } catch (e) {}
     b.classList.add('adv-hide-pbar'); // mode PokerTH permanent — option « barre joueur masquée » retirée (narmod 2026-07-17), le CSS reste keyé sur la classe
     b.classList.toggle('adv-no-tablezoom', !_advGet('table_zoom', true)); // interrupteur zoom (parite QML tableZoomEnabled)
     b.classList.toggle('adv-no-lobbychat', !_advGet('lobby_chat', true)); // chat du lobby (parite QML UseLobbyChat)
@@ -590,6 +591,7 @@ function openAdvancedOptions() {
   sync('adv-pokeren', 'poker_en', true);
   try { renderIgnoredList(); } catch (e) {}
   sync('adv-logon', 'log_on', true);
+  sync('adv-statstrack', 'stats_track', true);
   try { var _li = document.getElementById('adv-loginterval'); if (_li) _li.value = _getLogInterval(); } catch (e) {}
   sync('adv-zoomfollow', 'zoom_follow', true); // défaut QML : suivi actif quand le zoom l'est
   sync('adv-snd-actions', 'snd_actions', true);
@@ -17306,7 +17308,7 @@ function renderPlayersList() {
   });
 })();
 
-;(function(){ window.BUILD_VERSION='0.3.736-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.737-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

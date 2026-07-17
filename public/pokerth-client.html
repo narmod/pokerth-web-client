@@ -2514,6 +2514,7 @@ if ('serviceWorker' in navigator) {
           <div class="adv-body">
             <div class="adv-sec" data-i18n="advSecLogSettings">Log settings</div>
             <label class="adv-row"><input type="checkbox" id="adv-logon" onchange="setAdvOpt('log_on',this.checked)"><span data-i18n="advLogOn">Enable logging</span></label>
+            <label class="adv-row"><input type="checkbox" id="adv-statstrack" onchange="setAdvOpt('stats_track',this.checked)"><span data-i18n="advStatsTrack">Record hand statistics</span><em class="adv-webtag">web</em></label>
             <div class="adv-row"><span data-i18n="advLogInterval">Log interval</span><div class="sel-wrap adv-sel"><select id="adv-loginterval" onchange="setLogInterval(this.value)"><option value="action" data-i18n-opt="advLogEveryAction">Every action</option><option value="hand" data-i18n-opt="advLogEveryHand">Every hand</option></select><span class="sel-arr">▾</span></div></div>
           </div>
         </section>
