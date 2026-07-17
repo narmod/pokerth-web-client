@@ -406,6 +406,7 @@ pokerth-web-client/
 │   ├── pokerth-client.html  # HTML shell + inline head scripts
 │   ├── admin.html           # Maintainer console (served at /admin)
 │   ├── privacy.html         # Privacy page (served at /privacy)
+│   ├── studio.html          # Style studio — design tool for decks, tables, themes and seat packs
 │   ├── pokerth.js           # Full application logic
 │   ├── pokerth.css          # Styles
 │   ├── manifest.json        # PWA manifest
@@ -413,13 +414,15 @@ pokerth-web-client/
 │   ├── modules/             # ES modules
 │   │   ├── i18n.mjs         #   internationalisation (36 languages)
 │   │   ├── sounds.mjs       #   sound effects
-│   │   ├── theme.mjs        #   theming engine (palettes, decks, seats, presets)
+│   │   ├── theme.mjs        #   theming engine (tables, decks, card backs, seats)
+│   │   ├── music.mjs        #   background-music player
 │   │   ├── lang/            #   36 language catalogues
 │   │   └── offline/         #   local game engine + bots (Training mode)
 │   ├── proto/               # Protobuf bundle & helpers
 │   ├── cards/  table/  themes/  music/   # Deck / felt / theme / music asset packs
 │   └── favicon-*.png        # PWA icons
 ├── docs/
+│   ├── DIAGNOSTIC.md
 │   ├── PROJECT.md
 │   ├── ROADMAP.md
 │   ├── SECURITY.md
@@ -429,6 +432,9 @@ pokerth-web-client/
 │   ├── *-manifest.mjs       # Generate deck / table / theme / seat manifests
 │   └── reset-stats.mjs      # Clears the family leaderboard (npm run stats:reset)
 ├── install.sh               # Installer / updater / uninstaller (one-liner)
+├── CHANGELOG.md             # Player/operator-facing change summary
+├── CONTRIBUTING.md · CODE_OF_CONDUCT.md
+├── .env.example             # Environment-variable template
 ├── Dockerfile               # Multi-arch image (node:20-alpine base)
 ├── docker-compose.yml       # One-shot self-host config
 ├── package.json
