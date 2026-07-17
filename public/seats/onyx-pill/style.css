@@ -13,7 +13,7 @@ html[data-seat-struct="qml"] .seat-plate {
   display: flex; flex-direction: column; align-items: center; justify-content: center;
   gap: 0; position: relative;
   width: 112px; height: 44px; min-height: 0; box-sizing: border-box;
-  padding: 3px 30px 4px 10px;              /* aile droite réservée à l'avatar */
+  padding: 3px 28px 4px 10px !important;   /* réserve avatar : JAMAIS écrasée */
   background: linear-gradient(180deg, #3d3d3f 0%, #232324 55%, #101011 100%);
   border: 1.5px solid #6f6f72;
   border-radius: 999px;
@@ -25,7 +25,7 @@ html[data-seat-struct="qml"] .seat-plate {
       rendu pose position:relative en style inline) ─────────────────────── */
 html[data-seat-struct="qml"] .seat-avatar {
   position: absolute !important;
-  right: -10px !important; left: auto !important;
+  right: -20px !important; left: auto !important;  /* moitié hors pilule : occlusion minimale */
   top: 50% !important; transform: translateY(-50%) !important;
   width: 44px !important; height: 44px !important;
   border: 2px solid #8a8a8e !important; border-radius: 50% !important;
@@ -48,17 +48,20 @@ html[data-seat-struct="qml"] .seat-holecards .pk {
 
 /* ── Nom / tapis : deux lignes centrées, fin séparateur ────────────────── */
 html[data-seat-struct="qml"] .seat-info {
-  display: flex; flex-direction: column; align-items: center; gap: 0; min-width: 0;
+  display: flex; flex-direction: column; align-items: center; gap: 0;
+  min-width: 0; width: 100%;               /* borné au contenu : jamais sous l'avatar */
 }
 html[data-seat-struct="qml"] .seat-name {
   color: #ffffff; font-weight: 700; font-size: 12px !important; line-height: 14px;
-  max-width: 74px; text-align: center;
+  max-width: 100% !important; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  text-align: center;
   border-bottom: 1px solid rgba(255, 255, 255, 0.16); padding-bottom: 1px;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
 }
 html[data-seat-struct="qml"] .seat-money {
   color: #E3C800; /* or PokerTH (accent QML), comme le pack PokerTH */
   font-weight: 700; font-size: 12px !important; line-height: 15px;
+  max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
   text-align: center; font-family: inherit;
 }
 
@@ -74,7 +77,7 @@ html[data-seat-struct="qml"] .seat.folded .seat-holecards { opacity: 0.45; }
 /* ── SELF : pilule un peu plus large, MES CARTES grandes, AU-DESSUS et
       DEVANT l'avatar (z-index 3 > avatar 2) — jamais cachées ────────────── */
 html[data-seat-struct="qml"] .seat.me .seat-plate {
-  width: 148px; height: 52px; padding-right: 36px;
+  width: 148px; height: 52px; padding-right: 34px !important;
   border-color: #9a9a9e;
 }
 html[data-seat-struct="qml"] .seat.me .seat-avatar {

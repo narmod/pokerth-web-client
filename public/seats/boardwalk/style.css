@@ -22,7 +22,7 @@ html[data-seat-struct="qml"] .seat-plate {
   display: flex; flex-direction: column; align-items: center; justify-content: center;
   gap: 0; position: relative;
   width: 116px; height: 40px; min-height: 0; box-sizing: border-box;
-  padding: 3px 8px; margin-top: 30px;          /* place pour l'avatar au-dessus */
+  padding: 3px 8px !important; margin-top: 56px;   /* avatar/cartes ENTIÈREMENT au-dessus */
   background: linear-gradient(180deg, #24262b 0%, #17181c 100%);
   border: 1px solid rgba(0, 0, 0, 0.55);
   border-radius: 5px;
@@ -33,7 +33,7 @@ html[data-seat-struct="qml"] .seat-plate {
 /* ── Avatar-personnage au-dessus, mordant sur la barre ─────────────────── */
 html[data-seat-struct="qml"] .seat-avatar {
   position: absolute !important;
-  bottom: calc(100% - 8px) !important; top: auto !important;
+  bottom: calc(100% + 2px) !important; top: auto !important;  /* AUCUNE morsure sur la barre */
   left: 2px !important; right: auto !important;      /* avatar à GAUCHE */
   transform: none !important;
   width: 50px !important; height: 50px !important;
@@ -46,8 +46,8 @@ html[data-seat-struct="qml"] .seat-avatar {
 /* ── Cartes en éventail à droite de l'avatar ───────────────────────────── */
 html[data-seat-struct="qml"] .seat-holecards {
   position: absolute !important;
-  bottom: calc(100% - 8px); top: auto !important;
-  left: 64px !important; transform: rotate(9deg) !important;  /* à droite de l'avatar */
+  bottom: calc(100% + 3px); top: auto !important;   /* au-dessus de la barre, jamais dessus */
+  left: 60px !important; transform: rotate(9deg) !important;  /* à droite de l'avatar */
   display: flex !important; z-index: 1;
   grid-column: auto !important; grid-row: auto !important;
 }
@@ -61,16 +61,19 @@ html[data-seat-struct="qml"] .seat-holecards .pk + .pk {
 
 /* ── Nom / tapis dans la barre ─────────────────────────────────────────── */
 html[data-seat-struct="qml"] .seat-info {
-  display: flex; flex-direction: column; align-items: center; gap: 0; min-width: 0;
+  display: flex; flex-direction: column; align-items: center; gap: 0;
+  min-width: 0; width: 100%;
 }
 html[data-seat-struct="qml"] .seat-name {
   color: #ffffff; font-weight: 600; font-size: 11px !important; line-height: 13px;
-  max-width: 98px; text-align: center;
+  max-width: 100% !important; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  text-align: center;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
 }
 html[data-seat-struct="qml"] .seat-money {
   color: #E3C800; /* or PokerTH */
   font-weight: 700; font-size: 12px !important; line-height: 14px;
+  max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
   text-align: center; font-family: inherit;
 }
 
@@ -107,16 +110,16 @@ html[data-seat-struct="qml"] .seat.folded .seat-avatar { opacity: 0.5; }
 
 /* ── SELF : barre plus large, MES cartes grandes en éventail à droite ──── */
 html[data-seat-struct="qml"] .seat.me .seat-plate {
-  width: 150px; height: 42px; margin-top: 34px;
+  width: 150px; height: 42px; margin-top: 64px;   /* avatar self 58px au-dessus */
 }
 html[data-seat-struct="qml"] .seat.me .seat-avatar {
   width: 58px !important; height: 58px !important;
-  bottom: calc(100% - 10px) !important;
+  bottom: calc(100% + 2px) !important;
   left: 2px !important;
 }
 html[data-seat-struct="qml"] .seat.me .seat-holecards,
 html[data-seat-struct="qml"] .seat.me .seat-holecards.shc-big {
-  bottom: calc(100% - 10px); left: 72px !important;
+  bottom: calc(100% + 3px); left: 68px !important;
   transform: rotate(7deg) !important; z-index: 3;
 }
 html[data-seat-struct="qml"] .seat.me .seat-holecards .pk,
