@@ -7743,6 +7743,18 @@ const App = (() => {
           renderSeats();
         }
         _prevDealerPid = dealerPid;
+        try {
+          if (window._handlog && isFirstDeal) {
+            var _hlSeatMap = seats.map(function(pid, i){
+              return { pid: pid, seat: i + 1, name: getPlayerName(pid) };
+            });
+            window._handlog.onGameStart({
+              gameID: gId, startMoney: gameStartMoney || 0,
+              startSb: smallBlind || 0, dealerSeat: (seats.indexOf(dealerPid) + 1) || 0,
+              seatMap: _hlSeatMap
+            });
+          }
+        } catch (_e) {}
         break;
       }
 
@@ -7807,6 +7819,39 @@ const App = (() => {
           if (seatData[_sp2] && seatData[_sp2].money != null) _seatStackAtHandStart[_sp2] = seatData[_sp2].money;
         }
         _myStackAtHandStart = (_seatStackAtHandStart[myId] != null) ? _seatStackAtHandStart[myId] : null;
+        try {
+          if (window._handlog) {
+            // Sièges (base 1) via l'ordre figé seats[]. Dealer/SB/BB dérivés
+            // de la rotation des sièges ACTIFS, comme le client officiel.
+            var _hlSeatOf = function(pid){ var i = seats.indexOf(pid); return i >= 0 ? i + 1 : 0; };
+            var _hlActive = function(pid){ var d = seatData[pid]; return d && !d.gone && d.active !== false && !(d.money != null && d.money <= 0); };
+            var _hlDealerIdx = seats.indexOf(dealerPid);
+            var _hlNextActive = function(fromIdx, step){
+              var stepped = 0;
+              for (var k = 1; k <= seats.length; k++) {
+                var idx = (fromIdx + k) % seats.length;
+                if (_hlActive(seats[idx])) { stepped++; if (stepped === step) return seats[idx]; }
+              }
+              return -1;
+            };
+            var _hlSbPid, _hlBbPid;
+            var _hlActiveCount = seats.filter(_hlActive).length;
+            if (_hlActiveCount === 2) { _hlSbPid = dealerPid; _hlBbPid = _hlNextActive(_hlDealerIdx, 1); }
+            else { _hlSbPid = _hlNextActive(_hlDealerIdx, 1); _hlBbPid = _hlNextActive(_hlDealerIdx, 2); }
+            var _hlStacks = {};
+            for (var _sp3 = 0; _sp3 < seats.length; _sp3++) {
+              var _pid3 = seats[_sp3];
+              if (_hlActive(_pid3) && _seatStackAtHandStart[_pid3] != null) _hlStacks[_sp3 + 1] = _seatStackAtHandStart[_pid3];
+            }
+            window._handlog.onHandStart({
+              handID: handNum,
+              dealerSeat: _hlSeatOf(dealerPid),
+              sbSeat: _hlSeatOf(_hlSbPid), sbAmount: smallBlind || 0,
+              bbSeat: _hlSeatOf(_hlBbPid), bbAmount: (smallBlind || 0) * 2,
+              stacks: _hlStacks
+            });
+          }
+        } catch (_e) {}
         // N° de main seul : le Game ID vit dans le popup d'info de table
         // (titre « … · #id ») — retiré de la strip (feedback : trop chargée).
         // GameStatusBar : « Partie : <gId> · Main : <n> » (droite du bandeau)
@@ -8085,6 +8130,9 @@ const App = (() => {
         minRaise     = Proto.u32(sub, 8);
         // Zoom-follow : le joueur a agi → pan en attente exécuté tout de suite
         try { if (window._zoomFollowActed) window._zoomFollowActed(); } catch (_e) {}
+        try {
+          if (window._handlog) window._handlog.onAction({ pid: pid, actionCode: action, totalBet: bet });
+        } catch (_e) {}
         const aLabels = ['','Fold','Check','Call','Bet','Raise','All-in'];
         const aLabel  = aLabels[action] || '?';
         if (seatData[pid]) {
@@ -8149,6 +8197,7 @@ const App = (() => {
         commCards = allValid(fA) ? fA : (allValid(fB) ? fB : fA);
         const dbg = 'FLOP sub:'+allVals+' →['+commCards.join(',')+']';
         if ($('g-debug')) $('g-debug').textContent = dbg;
+        try { if (window._handlog) window._handlog.onFlop(commCards.slice(0, 3)); } catch (_e) {}
         $('g-round').textContent = t('flop');
         gameState = 1;
         // Collect preflop bets into pot
@@ -8179,6 +8228,7 @@ const App = (() => {
         // Fix : utiliser sub[2] pour détecter la présence du champ
         const tv = sub[2] !== undefined ? Proto.u32(sub, 2) : Proto.u32(sub, 1);
         commCards.push(tv);
+        try { if (window._handlog) window._handlog.onTurn(tv); } catch (_e) {}
         $('g-round').textContent = t('turn');
         gameState = 2;
         let turnBets = 0;
@@ -8205,6 +8255,7 @@ const App = (() => {
         // rv || fallback est FAUX pour rv=0 (carte 2♦)
         const rv = sub[2] !== undefined ? Proto.u32(sub, 2) : Proto.u32(sub, 1);
         commCards.push(rv);
+        try { if (window._handlog) window._handlog.onRiver(rv); } catch (_e) {}
         $('g-round').textContent = t('river');
         gameState = 3;
         let rvBets = 0;
@@ -8238,6 +8289,7 @@ const App = (() => {
           const c1  = Proto.u32orNull(a, 2);
           const c2  = Proto.u32orNull(a, 3);
           if (seatData[pid]) { seatData[pid].card1 = c1; seatData[pid].card2 = c2; }
+          try { if (window._handlog) window._handlog.onRevealCards([{ pid: pid, card1: c1, card2: c2 }]); } catch (_e) {}
         }
         renderSeats();
         break;
@@ -8322,6 +8374,26 @@ const App = (() => {
         } catch (e) {}
         // PlayerWinnerOverlay QML : marquer les sièges gagnants jusqu'à la main suivante.
         try { _sdWinners = new Set(winners.map(function (w) { return w.pid; })); } catch (e) {}
+        try {
+          if (window._handlog) {
+            var _bdSD = commCards.slice();
+            var _hlResults = [];
+            for (var _ri = 0; _ri < results.length; _ri++) {
+              var _rr = Proto.decode(results[_ri]);
+              var _rpid = Proto.u32(_rr, 1);
+              var _rc1 = Proto.u32orNull(_rr, 2);
+              var _rc2 = Proto.u32orNull(_rr, 3);
+              var _rwon = Proto.u32(_rr, 6);
+              var _htext = null, _hint = null;
+              if (_rc1 != null && _rc2 != null && typeof evaluateBestHand === 'function') {
+                var _ev = evaluateBestHand([_rc1, _rc2], _bdSD);
+                if (_ev) { _htext = _ev.label || null; }
+              }
+              _hlResults.push({ pid: _rpid, card1: _rc1, card2: _rc2, won: _rwon, handText: _htext, handInt: _hint });
+            }
+            window._handlog.onShowdown(_hlResults);
+          }
+        } catch (_e) {}
         pot = 0; setPot(0);
         renderSeats();
         // Animations de fin de main
@@ -8359,6 +8431,7 @@ const App = (() => {
         const cash = Proto.u32(sub, 4);
         if (seatData[pid]) { seatData[pid].money = cash; if(won) seatData[pid].action = '+'+won; }
         if (won > 0) logAction('🏆 ' + getPlayerName(pid) + ' +' + _groupThousands(won));
+        try { if (window._handlog) window._handlog.onHandHideEnd({ pid: pid, won: won, round: (typeof gameState === 'number' ? gameState : undefined) }); } catch (_e) {}
         try { _sdWinners = won > 0 ? new Set([pid]) : new Set(); } catch (e) {}
         // Enregistrer le résultat de la main pour moi (fin sans abattage).
         var myHideMon = (seatData[myId] || {}).money;
@@ -17218,7 +17291,7 @@ function renderPlayersList() {
   });
 })();
 
-;(function(){ window.BUILD_VERSION='0.3.734-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.735-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

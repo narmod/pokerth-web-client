@@ -468,6 +468,7 @@ function onAvatarImageChosen(input) {
 
   var CRIT = ['/pokerth.css', '/chat-emotes.js', '/pokerth.js',
     '/modules/i18n.mjs', '/modules/theme.mjs', '/modules/sounds.mjs',
+    '/modules/handlog.mjs',
     '/modules/music.mjs', '/modules/lang/en.mjs', '/fonts/fonts.css'];
   try {
     var lg = (localStorage.getItem('pth_lang') || '').toLowerCase().split('-')[0];
@@ -2017,6 +2018,7 @@ function onAvatarImageChosen(input) {
 <script type="module" src="modules/theme.mjs"></script>
 <script type="module" src="modules/sounds.mjs"></script>
 <script type="module" src="modules/music.mjs"></script>
+<script type="module" src="modules/handlog.mjs"></script>
 <!-- Quit-game confirmation dialog: 2 buttons (Quit / Cancel).
      Shown when the user clicks the ✕ button in the header from inside
      a game. Driven by App.confirmLeaveGame() (open) and
