@@ -1287,8 +1287,8 @@ async function _computeStats() {
   _statsCache = new StatsCalculator(data).calculateAllPlayersStats();
 }
 
-// Construit/mets à jour une boîte HUD pour un siège donné.
-function _buildBox(pid, name, seatEl, layer) {
+// Écrit le CONTENU d'une boîte (sans la positionner).
+function _buildBox(pid, name, layer) {
   const s = _statsCache[name];
   const id = 'hud-box-' + pid;
   let box = document.getElementById(id);
@@ -1310,47 +1310,80 @@ function _buildBox(pid, name, seatEl, layer) {
   box.innerHTML = '<div class="hud-head"><span class="hud-name">' + _hudEsc(name) + '</span>'
     + '<span class="hud-hands">' + handsTxt + '</span></div>'
     + '<div class="hud-grid">' + rows + '</div>';
+  return box;
+}
 
-  // Positionnement adaptatif : la boîte se place au-dessus du siège pour les
-  // sièges de la moitié basse de la table, en dessous pour ceux de la moitié
-  // haute — ainsi elle ne recouvre jamais le siège voisin dans le ring. Le
-  // décalage horizontal est borné pour rester dans la couche visible.
-  const layerRect = layer.getBoundingClientRect();
+// Positionne une boîte RADIALEMENT vers l'extérieur du siège (comme le QML) :
+// siège en haut → boîte au-dessus, en bas → dessous, à gauche → à gauche, à
+// droite → à droite. Ancré au bord du siège, borné à la couche. Suit le siège
+// à chaque appel (donc au redimensionnement/zoom).
+function _positionBox(box, seatEl, layer) {
+  const lr = layer.getBoundingClientRect();
   const r = seatEl.getBoundingClientRect();
-  // Mesure de la boîte (le contenu est déjà écrit).
   const bw = box.offsetWidth || 108;
   const bh = box.offsetHeight || 48;
-  const gap = 6;
-  const seatCx = r.left + r.width / 2 - layerRect.left;
-  const seatMidY = (r.top + r.height / 2 - layerRect.top);
-  const above = seatMidY > layerRect.height / 2; // siège en bas → boîte au-dessus
+  const gap = 7;
+  // Position relative du siège dans la couche (0..1 sur chaque axe).
+  const sxC = (r.left + r.width / 2 - lr.left);
+  const syC = (r.top + r.height / 2 - lr.top);
+  const fx = sxC / Math.max(lr.width, 1);
+  const fy = syC / Math.max(lr.height, 1);
 
-  let left = seatCx - bw / 2;
-  left = Math.max(2, Math.min(left, layerRect.width - bw - 2)); // borne horizontale
-  let top = above
-    ? (r.top - layerRect.top) - bh - gap        // au-dessus du siège
-    : (r.bottom - layerRect.top) + gap;         // en dessous du siège
-  top = Math.max(2, Math.min(top, layerRect.height - bh - 2)); // borne verticale
-
+  // Axe dominant : si le siège est nettement à gauche/droite → placement
+  // latéral ; sinon vertical (haut/bas). Seuils calés sur l'anneau QML.
+  let left, top;
+  const horizontalZone = (fx < 0.30 || fx > 0.70);
+  if (horizontalZone) {
+    // Latéral : boîte du côté extérieur (gauche si siège à gauche).
+    if (fx < 0.5) left = (r.left - lr.left) - bw - gap;      // à gauche du siège
+    else left = (r.right - lr.left) + gap;                    // à droite du siège
+    top = syC - bh / 2;                                        // centré vertical
+  } else {
+    // Vertical : au-dessus si siège en haut de table, dessous sinon.
+    left = sxC - bw / 2;
+    if (fy < 0.5) top = (r.bottom - lr.top) + gap;            // siège haut → dessous
+    else top = (r.top - lr.top) - bh - gap;                   // siège bas → dessus
+  }
+  // Bornes dans la couche visible.
+  left = Math.max(2, Math.min(left, lr.width - bw - 2));
+  top = Math.max(2, Math.min(top, lr.height - bh - 2));
   box.style.left = left + 'px';
   box.style.top = top + 'px';
 }
 
 function _hudEsc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])); }
 
-// Couche d'ancrage du HUD (au-dessus de la table, sous les modales).
+// Couche d'ancrage : DANS #g-seats pour partager son repère (zoom/transform).
 function _ensureLayer() {
   let layer = document.getElementById('hud-layer');
+  const host = document.getElementById('g-seats') || document.getElementById('g-table') || document.body;
   if (!layer) {
-    const table = document.getElementById('g-table') || document.getElementById('g-seats') || document.body;
     layer = document.createElement('div');
     layer.id = 'hud-layer';
-    (table.parentNode || document.body).appendChild(layer);
+    host.appendChild(layer);
+  } else if (layer.parentNode !== host) {
+    host.appendChild(layer); // re-parenter si la table a été re-montée
   }
   return layer;
 }
 
-// Rendu principal : place une boîte par siège occupé. Exposé window._hudRender.
+// Repositionne toutes les boîtes existantes selon les sièges actuels (léger).
+// Exposé window._hudReposition — appelé sur resize / rAF post-rendu.
+function repositionHud() {
+  if (typeof document === 'undefined' || !_hudOn()) return;
+  const layer = document.getElementById('hud-layer');
+  if (!layer) return;
+  Array.from(layer.children).forEach((box) => {
+    const pid = box.id.replace('hud-box-', '');
+    const seatEl = document.querySelector('#g-seats [data-pid="' + pid + '"]');
+    if (seatEl) _positionBox(box, seatEl, layer);
+    else box.style.display = 'none';
+  });
+}
+if (typeof window !== 'undefined') window._hudReposition = repositionHud;
+
+// Rendu principal : (re)construit le contenu des boîtes, puis les positionne
+// à la frame suivante (une fois les sièges effectivement dans le DOM).
 function renderHud() {
   if (typeof document === 'undefined') return;
   const layer = document.getElementById('hud-layer');
@@ -1361,15 +1394,41 @@ function renderHud() {
   try { if (typeof window._statsTablePlayers === 'function') tablePlayers = window._statsTablePlayers() || []; } catch (_e) {}
   const seen = new Set();
   tablePlayers.forEach((p) => {
-    const seatEl = document.querySelector('#g-seats [data-pid="' + p.pid + '"]');
-    if (!seatEl) return;
     seen.add('hud-box-' + p.pid);
-    _buildBox(p.pid, p.name, seatEl, lay);
+    _buildBox(p.pid, p.name, lay);
   });
-  // Retirer les boîtes de sièges disparus.
   Array.from(lay.children).forEach((c) => { if (!seen.has(c.id)) lay.removeChild(c); });
+  // Positionner après le rendu des sièges (renderSeats est throttlé à la frame).
+  _scheduleReposition();
+  _ensureHudObservers();
 }
 if (typeof window !== 'undefined') window._hudRender = renderHud;
+
+// Planifie un repositionnement sur 2 frames (couvre le rAF de renderSeats).
+let _repoScheduled = false;
+function _scheduleReposition() {
+  if (_repoScheduled || typeof requestAnimationFrame === 'undefined') { repositionHud(); return; }
+  _repoScheduled = true;
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => { _repoScheduled = false; repositionHud(); });
+  });
+}
+
+// Observers/listeners installés une seule fois : resize fenêtre + ResizeObserver
+// sur #g-seats (couvre zoom table, changement de disposition, etc.).
+let _hudObs = false;
+function _ensureHudObservers() {
+  if (_hudObs || typeof window === 'undefined') return;
+  _hudObs = true;
+  try { window.addEventListener('resize', () => _scheduleReposition()); } catch (_e) {}
+  try {
+    const host = document.getElementById('g-seats');
+    if (host && typeof ResizeObserver === 'function') {
+      const ro = new ResizeObserver(() => _scheduleReposition());
+      ro.observe(host);
+    }
+  } catch (_e) {}
+}
 
 // Recalcule les stats puis re-rend (appelé à chaque fin de main).
 async function refreshHud() {

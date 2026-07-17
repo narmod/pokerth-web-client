@@ -9092,7 +9092,7 @@ html[data-seat-struct="qml"] .seat:not(.me) .seat-money { font-size: 0.66rem; li
 html[data-seat-struct="qml"] .seat:not(.me) .seat-narrow .seat-avatar { width: 36px !important; height: 36px !important; }
 html[data-seat-struct="qml"] .seat:not(.me) .seat-narrow .seat-holecards .pk { width: 26px; height: 36px; }
 /* ── HUD par siège + grille de range (thème client) ─────────────────────── */
-#hud-layer{position:absolute;inset:0;pointer-events:none;z-index:38}
+#hud-layer{position:absolute;inset:0;pointer-events:none;z-index:6;overflow:visible}
 .hud-box{position:absolute;pointer-events:auto;cursor:pointer;
   min-width:104px;background:var(--panel);border:1px solid var(--border);border-radius:8px;
   padding:3px 6px 4px;box-shadow:0 3px 10px rgba(0,0,0,.42);backdrop-filter:blur(3px);
