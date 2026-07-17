@@ -10081,10 +10081,12 @@ const App = (() => {
       }
     }
     return { s: sFin, slots: slots, raw: raw, seat0: seat0,
-             // Ancre QML de la selfBox : anchors.bottomMargin = 12 en paysage
-             // (wide) — la réserve interne de la bisection garde -4 (identique
-             // au QML), seule la POSITION visuelle de la perle est à 12.
-             selfX: zW * 0.5, selfY: zH - 12 - gF.selfVisualH / 2 };
+             // Ancre de la selfBox : QML = anchors.bottomMargin 12 en paysage
+             // (wide) ; ajustement WEB (demande narmod 2026-07-17) : marge
+             // visuelle 24 pour décoller la self de la barre d'action flottante
+             // (le panneau web monte plus haut que la barre QML). La réserve
+             // interne de la bisection garde -4 (identique au QML).
+             selfX: zW * 0.5, selfY: zH - 24 - gF.selfVisualH / 2 };
   }
   window._qmlLandscapeLayout = _qmlLandscapeLayout;
   // ── QML_LANDSCAPE_LAYOUT_END ──
@@ -11196,8 +11198,10 @@ const App = (() => {
         // de zoom, contrairement a getBoundingClientRect) -> clamp stable a tout zoom.
         var _bh2 = _meEl.offsetHeight * _seatBoxScale * SELF_BOX_MUL;
         var _bt2 = parseFloat(_meEl.dataset.baseTop) || 0;
-        // Marge basse QML : anchors.bottomMargin = wide ? 12 : 4.
-        var _fm2 = _selfAtPearl ? 12 : 4;
+        // Marge basse : QML = wide ? 12 : 4 ; en mode perle (paysage) la
+        // marge web passe à 24 (même valeur que selfY de _qmlLandscapeLayout)
+        // pour décoller la self du panneau d'action flottant (narmod 17/07).
+        var _fm2 = _selfAtPearl ? 24 : 4;
         var _floor2 = zone.clientHeight - _fm2 - _bh2 / 2;
         // Portrait + pack pokerth : la self est ANCRÉE bas-centre comme le QML
         // (pas seulement une garde anti-débordement). Custom respecté.
@@ -17228,7 +17232,7 @@ function renderPlayersList() {
   });
 })();
 
-;(function(){ window.BUILD_VERSION='0.3.729-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.730-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
