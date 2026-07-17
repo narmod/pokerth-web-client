@@ -129,10 +129,7 @@ export const strings = {
     musicPlayer:'Cluicheadair',
     soundVolume:'Fuaimean geama',
     musicTooltip:'Fuaim & Ceòl', musicPanelTitle:'Cluicheadair ciùil', musicNowPlaying:'A\' cluich an-dràsta', musicNoTracks:'Chan eil traca sam bith ann', musicVolume:'Àirde na fuaime', musicPlay:'Cluich', musicPause:'Cuir \'na stad', musicStop:'Sguir', musicNext:'Air adhart', musicPrev:'Air ais', musicTrack:'Traca', musicRepeat:'Ath-chluich', musicRepeatOne:'Ath-chluich an traca', musicRepeatAll:'Ath-chluich an liosta', musicRepeatOff:'Cluich aon turas',
-  seatCard: 'Card', seatCompact: 'Compact', seatBar: 'Bar',
-  seatChip: 'Chip',
-  sectionSeat: 'Suidheachain', seatClassic: 'Classic', seatPlate: 'Plate',
-    botDifficulty:'Duilgheadas nam botaichean', botEasy:'Furasta', botMixed:'Measgaichte', botNormal:'Àbhaisteach', botHard:'Doirbh',
+  sectionSeat: 'Suidheachain',    botDifficulty:'Duilgheadas nam botaichean', botEasy:'Furasta', botMixed:'Measgaichte', botNormal:'Àbhaisteach', botHard:'Doirbh',
 
     guestHint:'🌐 Cluich mar aoigh air pokerth.net — gun chunntas.',
     srvOffline:'🏋️ Modh trèanaidh', offlineHint:'🤖 Cluich an aghaidh bhotaichean — gun cheangal.',

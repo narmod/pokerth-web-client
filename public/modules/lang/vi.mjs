@@ -128,10 +128,7 @@ export const strings = {
     musicPlayer:'Trình phát',
     soundVolume:'Âm thanh trò chơi',
     musicTooltip:'Âm thanh & Nhạc', musicPanelTitle:'Trình phát nhạc', musicNowPlaying:'Đang phát', musicNoTracks:'Không có bản nhạc nào', musicVolume:'Âm lượng', musicPlay:'Phát', musicPause:'Tạm dừng', musicStop:'Dừng', musicNext:'Tiếp theo', musicPrev:'Trước', musicTrack:'Bản nhạc', musicRepeat:'Lặp lại', musicRepeatOne:'Lặp lại một bài', musicRepeatAll:'Lặp lại danh sách', musicRepeatOff:'Phát một lần',
-  seatCard: 'Card', seatCompact: 'Compact', seatBar: 'Bar',
-  seatChip: 'Chip',
-  sectionSeat: 'Chỗ ngồi', seatClassic: 'Classic', seatPlate: 'Plate',
-    botDifficulty:'Độ khó của bot', botEasy:'Dễ', botMixed:'Hỗn hợp', botNormal:'Bình thường', botHard:'Khó',
+  sectionSeat: 'Chỗ ngồi',    botDifficulty:'Độ khó của bot', botEasy:'Dễ', botMixed:'Hỗn hợp', botNormal:'Bình thường', botHard:'Khó',
 
     guestHint:'🌐 Chơi với tư cách khách trên pokerth.net — không cần tài khoản.',
     srvOffline:'🏋️ Chế độ luyện tập', offlineHint:'🤖 Chơi với bot — không cần kết nối.',

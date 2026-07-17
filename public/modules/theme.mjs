@@ -134,20 +134,12 @@ var PUCKS_ITEMS   = [ {id:'',key:'pucksAuto',fallback:'Auto (table)',swatch:'#3a
 const SEAT_TRAIT_KEYS = ['holePlate','betOut','pucksSide','flagInfo','timerRect','winnerBadge','selfStrip','selfBigCards','badgeOnCards','qmlSelf','narrowByOrient','qmlStruct'];
 const SEAT_TRAITS_QML = { holePlate:true, betOut:true, pucksSide:true, flagInfo:true, timerRect:true, winnerBadge:true, selfStrip:true, selfBigCards:true, badgeOnCards:true, qmlSelf:true, narrowByOrient:true, qmlStruct:true };
 const SEAT_TRAIT_DEFAULTS = SEAT_TRAITS_QML; // packs importés / inconnus = structure commune
-// Packs web (Classic, Chip, Plate, Card, Compact, Bar) : GÉOMÉTRIE commune
-// (placement, tailles, self-box → qmlSelf + gabarit CSS héritage borné) mais
-// HABILLAGE et comportements propres conservés (mise au pied, pucks sur
-// l'avatar, timer anneau, pas de cartes dans la boîte) — demande narmod
-// 17/07 : « garder surtout les placements et la taille des sièges/self-box ».
-const SEAT_TRAITS_WEB = { holePlate:false, betOut:false, pucksSide:false, flagInfo:false, timerRect:false, winnerBadge:false, selfStrip:false, selfBigCards:false, badgeOnCards:false, qmlSelf:true, narrowByOrient:true, qmlStruct:false };
+// Page blanche (demande narmod 17/07) : seul le pack « PokerTH » reste
+// intégré ; les anciens packs web (Classic, Chip, Plate, Card, Compact, Bar)
+// sont retirés — les prochains sièges naîtront en packs importés (style.css
+// libre + traits) sur le cadre virtuel QML.
 const SEATS = [
-  { id: '',      key: 'seatClassic', fallback: 'Classic', swatch: '#1e3820', traits: SEAT_TRAITS_WEB },
   { id: 'pokerth', key: 'seatPokerth', fallback: 'PokerTH', swatch: '#1d222b', traits: SEAT_TRAITS_QML },
-  { id: 'chip',  key: 'seatChip',    fallback: 'Chip',    swatch: '#caa64a', traits: SEAT_TRAITS_WEB },
-  { id: 'plate', key: 'seatPlate',   fallback: 'Plate',   swatch: '#1d222b', traits: SEAT_TRAITS_WEB },
-  { id: 'card',    key: 'seatCard',    fallback: 'Card',    swatch: '#394150', traits: SEAT_TRAITS_WEB },
-  { id: 'compact', key: 'seatCompact', fallback: 'Compact', swatch: '#1e3820', traits: SEAT_TRAITS_WEB },
-  { id: 'bar',     key: 'seatBar',     fallback: 'Bar',     swatch: '#2a2f38', traits: SEAT_TRAITS_WEB },
 ];
 const palette = makeAxis({ storeKey: 'pth_theme', attr: 'data-theme', items: PALETTES, def: 'auto',    titleKey: 'sectionPalette', titleFallback: 'Palette' });
 const table   = makeAxis({ storeKey: 'pth_table', attr: 'data-table', items: TABLES, def: '', titleKey: 'sectionTable',   titleFallback: 'Table' });
@@ -236,7 +228,7 @@ try { if (!localStorage.getItem('pth_pucksC_mig')) { localStorage.removeItem('pt
 try { if (localStorage.getItem('pth_table') === 'green') { localStorage.removeItem('pth_table'); localStorage.removeItem('pth_table_css'); localStorage.removeItem('pth_table_fs'); localStorage.removeItem('pth_table_full'); } } catch (e) {}
 
 // Apply saved values on load (idempotent with the <head> boot snippet).
-try { if (localStorage.getItem('pth_seat') === 'pokerth-portrait') localStorage.setItem('pth_seat', 'pokerth'); } catch (e) {} // migration 0.3.691 : fusion pokerth-portrait -> pokerth
+try { var _lgc = localStorage.getItem('pth_seat'); if (_lgc === 'pokerth-portrait' || { '': 1, chip: 1, plate: 1, card: 1, compact: 1, bar: 1 }[_lgc] === 1) localStorage.setItem('pth_seat', 'pokerth'); } catch (e) {} // migrations : 0.3.691 fusion pokerth-portrait ; 0.3.698 retrait des packs web
 try { if (!localStorage.getItem('pth_seat_dmig')) { if (localStorage.getItem('pth_seat') === '') localStorage.removeItem('pth_seat'); localStorage.setItem('pth_seat_dmig', '1'); } } catch (e) {}
 AXES.forEach(function (ax) { try { if (ax === seat) { var _sv = ax.get(); if (_sv) document.documentElement.setAttribute(ax.attr, _sv); else document.documentElement.removeAttribute(ax.attr); } else { ax.apply(ax.get()); } } catch (e) {} });
 try { var _cd = deck.get(); if (_cd) document.documentElement.setAttribute('data-deck-ext', _deckExt(_cd)); else document.documentElement.removeAttribute('data-deck-ext'); } catch (e) {}

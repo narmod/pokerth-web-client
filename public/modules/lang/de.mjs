@@ -135,10 +135,7 @@ export const strings = {
     musicPlayer:'Spieler',
     soundVolume:'Spielsounds',
     musicTooltip:'Sound & Musik', musicPanelTitle:'Musikplayer', musicNowPlaying:'Wird abgespielt', musicNoTracks:'Keine Titel verfügbar', musicVolume:'Lautstärke', musicPlay:'Wiedergabe', musicPause:'Pause', musicStop:'Stopp', musicNext:'Weiter', musicPrev:'Zurück', musicTrack:'Titel', musicRepeat:'Wiederholen', musicRepeatOne:'Titel wiederholen', musicRepeatAll:'Playlist wiederholen', musicRepeatOff:'Einmal abspielen',
-  seatCard: 'Card', seatCompact: 'Compact', seatBar: 'Bar',
-  seatChip: 'Chip',
-  sectionSeat: 'Sitze', seatClassic: 'Classic', seatPlate: 'Plate',
-    botDifficulty:'Bot-Schwierigkeit', botEasy:'Einfach', botMixed:'Gemischt', botNormal:'Normal', botHard:'Schwer',
+  sectionSeat: 'Sitze',    botDifficulty:'Bot-Schwierigkeit', botEasy:'Einfach', botMixed:'Gemischt', botNormal:'Normal', botHard:'Schwer',
 
     guestHint:'🌐 Gastzugang auf pokerth.net – kein Konto nötig.',
     srvOffline:'🏋️ Trainingsmodus', offlineHint:'🤖 Solo gegen Bots – keine Verbindung nötig.',

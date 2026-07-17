@@ -133,10 +133,7 @@ export const strings = {
     musicPlayer:'Плеер',
     soundVolume:'Звуки игры',
     musicTooltip:'Звук & Музыка', musicPanelTitle:'Музыкальный плеер', musicNowPlaying:'Сейчас играет', musicNoTracks:'Нет доступных треков', musicVolume:'Громкость', musicPlay:'Воспроизвести', musicPause:'Пауза', musicStop:'Стоп', musicNext:'Следующий', musicPrev:'Предыдущий', musicTrack:'Трек', musicRepeat:'Повтор', musicRepeatOne:'Повтор трека', musicRepeatAll:'Повтор плейлиста', musicRepeatOff:'Воспроизвести один раз',
-  seatCard: 'Card', seatCompact: 'Compact', seatBar: 'Bar',
-  seatChip: 'Chip',
-  sectionSeat: 'Места', seatClassic: 'Classic', seatPlate: 'Plate',
-    botDifficulty:'Сложность ботов', botEasy:'Лёгкий', botMixed:'Смешанный', botNormal:'Обычный', botHard:'Сложный',
+  sectionSeat: 'Места',    botDifficulty:'Сложность ботов', botEasy:'Лёгкий', botMixed:'Смешанный', botNormal:'Обычный', botHard:'Сложный',
 
     guestHint:'🌐 Гостевая игра на pokerth.net — без аккаунта.',
     srvOffline:'🏋️ Тренировка', offlineHint:'🤖 Игра против ботов — подключение не нужно.',

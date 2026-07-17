@@ -132,10 +132,7 @@ export const strings = {
     musicPlayer:'प्लेयर',
     soundVolume:'गेम ध्वनियाँ',
     musicTooltip:'ध्वनि & संगीत', musicPanelTitle:'संगीत प्लेयर', musicNowPlaying:'अभी चल रहा है', musicNoTracks:'कोई ट्रैक उपलब्ध नहीं', musicVolume:'वॉल्यूम', musicPlay:'चलाएँ', musicPause:'रोकें', musicStop:'बंद करें', musicNext:'अगला', musicPrev:'पिछला', musicTrack:'ट्रैक', musicRepeat:'दोहराएँ', musicRepeatOne:'एक ट्रैक दोहराएँ', musicRepeatAll:'प्लेलिस्ट दोहराएँ', musicRepeatOff:'एक बार चलाएँ',
-  seatCard: 'Card', seatCompact: 'Compact', seatBar: 'Bar',
-  seatChip: 'Chip',
-  sectionSeat: 'सीटें', seatClassic: 'Classic', seatPlate: 'Plate',
-    botDifficulty:'बॉट कठिनाई', botEasy:'आसान', botMixed:'मिश्रित', botNormal:'सामान्य', botHard:'कठिन',
+  sectionSeat: 'सीटें',    botDifficulty:'बॉट कठिनाई', botEasy:'आसान', botMixed:'मिश्रित', botNormal:'सामान्य', botHard:'कठिन',
 
     guestHint:'🌐 pokerth.net पर अतिथि के रूप में खेलें — खाते की ज़रूरत नहीं।',
     srvOffline:'🏋️ अभ्यास मोड', offlineHint:'🤖 बॉट्स के विरुद्ध खेलें — किसी कनेक्शन की ज़रूरत नहीं।',

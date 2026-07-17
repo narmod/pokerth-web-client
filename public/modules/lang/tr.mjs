@@ -130,10 +130,7 @@ export const strings = {
     musicPlayer:'Oynatıcı',
     soundVolume:'Oyun sesleri',
     musicTooltip:'Ses & Müzik', musicPanelTitle:'Müzik çalar', musicNowPlaying:'Şimdi çalıyor', musicNoTracks:'Parça yok', musicVolume:'Ses', musicPlay:'Oynat', musicPause:'Duraklat', musicStop:'Durdur', musicNext:'Sonraki', musicPrev:'Önceki', musicTrack:'Parça', musicRepeat:'Tekrarla', musicRepeatOne:'Parçayı tekrarla', musicRepeatAll:'Listeyi tekrarla', musicRepeatOff:'Bir kez çal',
-  seatCard: 'Card', seatCompact: 'Compact', seatBar: 'Bar',
-  seatChip: 'Chip',
-  sectionSeat: 'Koltuklar', seatClassic: 'Classic', seatPlate: 'Plate',
-    botDifficulty:'Bot zorluğu', botEasy:'Kolay', botMixed:'Karışık', botNormal:'Normal', botHard:'Zor',
+  sectionSeat: 'Koltuklar',    botDifficulty:'Bot zorluğu', botEasy:'Kolay', botMixed:'Karışık', botNormal:'Normal', botHard:'Zor',
 
     guestHint:'🌐 pokerth.net\'te misafir oyun — hesap gerekmez.',
     srvOffline:'🏋️ Antrenman modu', offlineHint:'🤖 Botlara karşı oyna — bağlantı gerekmez.',

@@ -133,10 +133,7 @@ export const strings = {
     musicPlayer:'Speler',
     soundVolume:'Spelgeluiden',
     musicTooltip:'Geluid & Muziek', musicPanelTitle:'Muziekspeler', musicNowPlaying:'Speelt nu', musicNoTracks:'Geen nummers beschikbaar', musicVolume:'Volume', musicPlay:'Afspelen', musicPause:'Pauze', musicStop:'Stoppen', musicNext:'Volgende', musicPrev:'Vorige', musicTrack:'Nummer', musicRepeat:'Herhalen', musicRepeatOne:'Nummer herhalen', musicRepeatAll:'Afspeellijst herhalen', musicRepeatOff:'Eén keer afspelen',
-  seatCard: 'Card', seatCompact: 'Compact', seatBar: 'Bar',
-  seatChip: 'Chip',
-  sectionSeat: 'Plaatsen', seatClassic: 'Classic', seatPlate: 'Plate',
-    botDifficulty:'Botmoeilijkheid', botEasy:'Makkelijk', botMixed:'Gemengd', botNormal:'Normaal', botHard:'Moeilijk',
+  sectionSeat: 'Plaatsen',    botDifficulty:'Botmoeilijkheid', botEasy:'Makkelijk', botMixed:'Gemengd', botNormal:'Normaal', botHard:'Moeilijk',
 
     guestHint:'🌐 Spelen als gast op pokerth.net — geen account nodig.',
     srvOffline:'🏋️ Oefenmodus', offlineHint:'🤖 Solo tegen bots — geen verbinding nodig.',

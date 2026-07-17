@@ -128,10 +128,7 @@ export const strings = {
     musicPlayer:'Přehrávač',
     soundVolume:'Zvuky hry',
     musicTooltip:'Zvuky & Hudba', musicPanelTitle:'Přehrávač hudby', musicNowPlaying:'Právě hraje', musicNoTracks:'Žádné skladby k dispozici', musicVolume:'Hlasitost', musicPlay:'Přehrát', musicPause:'Pozastavit', musicStop:'Zastavit', musicNext:'Další', musicPrev:'Předchozí', musicTrack:'Skladba', musicRepeat:'Opakovat', musicRepeatOne:'Opakovat skladbu', musicRepeatAll:'Opakovat playlist', musicRepeatOff:'Přehrát jednou',
-  seatCard: 'Card', seatCompact: 'Compact', seatBar: 'Bar',
-  seatChip: 'Chip',
-  sectionSeat: 'Místa', seatClassic: 'Classic', seatPlate: 'Plate',
-    botDifficulty:'Obtížnost botů', botEasy:'Snadná', botMixed:'Smíšená', botNormal:'Normální', botHard:'Těžká',
+  sectionSeat: 'Místa',    botDifficulty:'Obtížnost botů', botEasy:'Snadná', botMixed:'Smíšená', botNormal:'Normální', botHard:'Těžká',
 
     guestHint:'🌐 Hra jako host na pokerth.net — bez účtu.',
     srvOffline:'🏋️ Tréninkový režim', offlineHint:'🤖 Hra proti botům — bez připojení.',

@@ -129,10 +129,7 @@ export const strings = {
     musicPlayer:'播放器',
     soundVolume:'游戏音效',
     musicTooltip:'音效 & 音乐', musicPanelTitle:'音乐播放器', musicNowPlaying:'正在播放', musicNoTracks:'没有可用曲目', musicVolume:'音量', musicPlay:'播放', musicPause:'暂停', musicStop:'停止', musicNext:'下一首', musicPrev:'上一首', musicTrack:'曲目', musicRepeat:'重复', musicRepeatOne:'单曲循环', musicRepeatAll:'列表循环', musicRepeatOff:'播放一次',
-  seatCard: 'Card', seatCompact: 'Compact', seatBar: 'Bar',
-  seatChip: 'Chip',
-  sectionSeat: '座位', seatClassic: 'Classic', seatPlate: 'Plate',
-    botDifficulty:'机器人难度', botEasy:'简单', botMixed:'混合', botNormal:'普通', botHard:'困难',
+  sectionSeat: '座位',    botDifficulty:'机器人难度', botEasy:'简单', botMixed:'混合', botNormal:'普通', botHard:'困难',
 
     guestHint:'🌐 在 pokerth.net 以访客身份游戏 — 无需账号。',
     srvOffline:'🏋️ 训练模式', offlineHint:'🤖 与机器人对战 — 无需联网。',

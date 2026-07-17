@@ -128,10 +128,7 @@ export const strings = {
     musicPlayer:'Плейър',
     soundVolume:'Звуци на играта',
     musicTooltip:'Звук & Музика', musicPanelTitle:'Музикален плейър', musicNowPlaying:'Сега се изпълнява', musicNoTracks:'Няма налични песни', musicVolume:'Сила на звука', musicPlay:'Възпроизвеждане', musicPause:'Пауза', musicStop:'Спиране', musicNext:'Следваща', musicPrev:'Предишна', musicTrack:'Песен', musicRepeat:'Повтаряне', musicRepeatOne:'Повтори песента', musicRepeatAll:'Повтори плейлиста', musicRepeatOff:'Възпроизведи веднъж',
-  seatCard: 'Card', seatCompact: 'Compact', seatBar: 'Bar',
-  seatChip: 'Chip',
-  sectionSeat: 'Места', seatClassic: 'Classic', seatPlate: 'Plate',
-    botDifficulty:'Трудност на ботовете', botEasy:'Лесно', botMixed:'Смесено', botNormal:'Нормално', botHard:'Трудно',
+  sectionSeat: 'Места',    botDifficulty:'Трудност на ботовете', botEasy:'Лесно', botMixed:'Смесено', botNormal:'Нормално', botHard:'Трудно',
 
     guestHint:'🌐 Гост на pokerth.net — без акаунт.',
     srvOffline:'🏋️ Тренировъчен режим', offlineHint:'🤖 Игра срещу ботове — без връзка.',

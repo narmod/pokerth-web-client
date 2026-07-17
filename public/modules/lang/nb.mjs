@@ -127,10 +127,7 @@ export const strings = {
     musicPlayer:'Avspiller',
     soundVolume:'Spillyder',
     musicTooltip:'Lyd & Musikk', musicPanelTitle:'Musikkspiller', musicNowPlaying:'Spilles nå', musicNoTracks:'Ingen spor tilgjengelig', musicVolume:'Volum', musicPlay:'Spill', musicPause:'Pause', musicStop:'Stopp', musicNext:'Neste', musicPrev:'Forrige', musicTrack:'Spor', musicRepeat:'Gjenta', musicRepeatOne:'Gjenta spor', musicRepeatAll:'Gjenta spilleliste', musicRepeatOff:'Spill én gang',
-  seatCard: 'Card', seatCompact: 'Compact', seatBar: 'Bar',
-  seatChip: 'Chip',
-  sectionSeat: 'Plasser', seatClassic: 'Classic', seatPlate: 'Plate',
-    botDifficulty:'Bot-vanskelighet', botEasy:'Lett', botMixed:'Blandet', botNormal:'Normal', botHard:'Vanskelig',
+  sectionSeat: 'Plasser',    botDifficulty:'Bot-vanskelighet', botEasy:'Lett', botMixed:'Blandet', botNormal:'Normal', botHard:'Vanskelig',
 
     guestHint:'🌐 Gjestespill på pokerth.net – ingen konto nødvendig.',
     srvOffline:'🏋️ Treningsmodus', offlineHint:'🤖 Spill mot bots – ingen tilkobling nødvendig.',

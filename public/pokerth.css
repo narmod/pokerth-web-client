@@ -6673,101 +6673,13 @@ html[data-table="pokerth-live"] .raise-slider { accent-color: #4CAF50; }
 }
 
 
-/* ===== Sieges : pack Plaque (axe data-seat="plate") ======================
-   DOM neutre + display:contents -> ce pack n'est QUE du CSS. data-seat absent
-   = Classique (rendu historique inchange). >=600px : plaque ; <600px : repli
-   siege classique. Futur pack = un bloc html[data-seat="<id>"] comme celui-ci. */
+/* ===== Sieges : base neutre =============================================
+   DOM neutre (display:contents) = repli « classique » quand aucun pack
+   structurel ne s'applique (pack importé avec qmlStruct:false). */
 .seat-plate, .seat-info, .seat-foot { display: contents; }
 
-html[data-seat="plate"] .seat { max-width: none; }
-html[data-seat="plate"] .seat-plate {
-  display: flex; align-items: center; gap: 8px; position: relative;
-  background: var(--panel, rgba(0,0,0,0.55));
-  border: 1px solid var(--border);
-  border-radius: 11px; padding: 5px 10px 6px 5px;
-  box-shadow: 0 3px 12px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.05);
-}
-html[data-seat="plate"] .seat-info {
-  display: flex; flex-direction: column; align-items: flex-start; gap: 1px; min-width: 0;
-}
-html[data-seat="plate"] .seat-name { text-align: left; max-width: 88px; }
-html[data-seat="plate"] .seat-foot {
-  display: flex; align-items: center; justify-content: center; gap: 6px; flex-wrap: wrap; margin-top: 3px;
-}
-html[data-seat="plate"] .seat.active .seat-plate {
-  border-color: var(--gold);
-  box-shadow: 0 0 0 1px var(--gold), 0 0 16px rgba(var(--gold-rgb), 0.45);
-}
-html[data-seat="plate"] .seat-timer-badge { display: none; }
-
-/* Portrait : la plaque RESTE une plaque (meme design horizontal), juste plus
-   compacte pour tenir autour de la table sans chevauchement. Avatar + anneau
-   de temps inchanges (28px) ; on reduit surtout la largeur du nom -- .seat-info
-   reste en COLONNE (nom au-dessus du tapis), ce qui garde la plaque etroite. */
-@media (max-width: 600px) {
-  html[data-seat="plate"] .seat-plate { gap: 5px; padding: 3px 7px 4px 3px; border-radius: 10px; }
-  html[data-seat="plate"] .seat-name { max-width: 46px; font-size: 0.6rem; }
-  html[data-seat="plate"] .seat-money { font-size: 0.62rem; }
-  html[data-seat="plate"] .seat-foot { gap: 4px; margin-top: 2px; }
-}
-
-
-/* Pack « Jeton » (data-seat="chip") : avatar stylise en jeton de poker
-   (double lisere creme + anneau dore). Layout classique vertical -> tient en
-   portrait. Contenu / anneau de temps / drapeau / jetons inchanges. */
-/* Bord de jeton (encoches creme) en SURCOUCHE par-dessus la couleur d'avatar
-   du joueur (posee en inline) -> visible pour tous, en dark comme en light.
-   Le corps garde la couleur du joueur (comme le classique). Les encoches sont
-   a l'extreme bord (au-dela du rayon de l'anneau de temps) pour ne pas le gener. */
-html[data-seat="chip"] .seat-avatar { font-weight: 800; }
-html[data-seat="chip"] .seat-avatar::after {
-  content: "";
-  position: absolute;
-  inset: -3px;
-  border-radius: 50%;
-  background: repeating-conic-gradient(from 9deg, #f7f3ea 0 11deg, transparent 11deg 45deg);
-  -webkit-mask: radial-gradient(circle, transparent calc(50% - 3.5px), #000 calc(50% - 3.5px));
-          mask: radial-gradient(circle, transparent calc(50% - 3.5px), #000 calc(50% - 3.5px));
-  pointer-events: none;
-  z-index: 1;
-}
-
-
-/* Pack « Carte » (data-seat="card") : siege vertical en boite (avatar au-dessus
-   du nom/tapis). Vertical -> tient en portrait. */
-html[data-seat="card"] .seat, html[data-seat="bar"] .seat { max-width: none; }
-html[data-seat="card"] .seat-plate {
-  display: flex; flex-direction: column; align-items: center; gap: 3px;
-  padding: 6px 8px 7px; border-radius: 12px;
-  background: var(--panel, rgba(0,0,0,0.55));
-  border: 1px solid var(--border);
-  box-shadow: 0 3px 12px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.05);
-}
-html[data-seat="card"] .seat-info { display: flex; flex-direction: column; align-items: center; gap: 1px; }
-html[data-seat="card"] .seat-name { max-width: 72px; }
-html[data-seat="card"] .seat.active .seat-plate {
-  border-color: var(--gold);
-  box-shadow: 0 0 0 1px var(--gold), 0 0 16px rgba(var(--gold-rgb), 0.45);
-}
-html[data-seat="card"] .seat-timer-badge { display: none; }
-
-/* Pack « Compact » (data-seat="compact") : avatar + tapis seulement. */
-html[data-seat="compact"] .seat-name { display: none; }
-html[data-seat="compact"] .seat-money { font-size: 0.62rem; }
-
-/* Pack « Barre » (data-seat="bar") : avatar rond au-dessus d'une barre nom+tapis. */
-html[data-seat="bar"] .seat-plate { display: flex; flex-direction: column; align-items: center; gap: 3px; }
-html[data-seat="bar"] .seat-info {
-  display: flex; flex-direction: row; align-items: baseline; gap: 5px;
-  padding: 2px 8px; border-radius: 999px;
-  background: var(--panel, rgba(0,0,0,0.55));
-  border: 1px solid var(--border);
-}
-html[data-seat="bar"] .seat-name { max-width: 56px; }
-html[data-seat="bar"] .seat.active .seat-info {
-  border-color: var(--gold); box-shadow: 0 0 10px rgba(var(--gold-rgb), 0.45);
-}
-html[data-seat="bar"] .seat-timer-badge { display: none; }
+/* (packs web Classic/Chip/Plate/Card/Compact/Bar retirés en 0.3.698 —
+   page blanche : les prochains sièges = packs importés style.css + traits.) */
 
 
 /* ===== Sieges : STRUCTURE COMMUNE QML (html[data-seat-struct="qml"]) ======
@@ -8814,10 +8726,7 @@ html[data-buttons="pokerth"] .btn-action[disabled] { filter: grayscale(0.55) bri
 #g-chat-msgs .msg.sys { color: var(--chatlog-text2, var(--chatlog-text, var(--text))); }
 #g-chat-msgs .msg .who { color: var(--box-accent, var(--gold)); }
 #g-chat-msgs .msg .msg-time { color: var(--chatlog-muted, var(--text-dim, #8b93a7)); }
-html[data-box-accent][data-seat-struct="qml"] .seat-plate,
-html[data-box-accent][data-seat="plate"] .seat-plate,
-html[data-box-accent][data-seat="card"] .seat-plate,
-html[data-box-accent][data-seat="bar"] .seat-plate { border-color: var(--box-accent); }
+html[data-box-accent][data-seat-struct="qml"] .seat-plate { border-color: var(--box-accent); }
 
 /* ═══════════════════════════════════════════════════════════════════════════
    PERF iOS — Glows composités GPU (remplace les pulses box-shadow)

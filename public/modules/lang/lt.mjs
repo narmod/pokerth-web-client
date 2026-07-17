@@ -128,10 +128,7 @@ export const strings = {
     musicPlayer:'Grotuvas',
     soundVolume:'Žaidimo garsai',
     musicTooltip:'Garsai & Muzika', musicPanelTitle:'Muzikos grotuvas', musicNowPlaying:'Dabar groja', musicNoTracks:'Nėra takelių', musicVolume:'Garsumas', musicPlay:'Groti', musicPause:'Pristabdyti', musicStop:'Stabdyti', musicNext:'Kitas', musicPrev:'Ankstesnis', musicTrack:'Takelis', musicRepeat:'Kartoti', musicRepeatOne:'Kartoti takelį', musicRepeatAll:'Kartoti grojaraštį', musicRepeatOff:'Groti vieną kartą',
-  seatCard: 'Card', seatCompact: 'Compact', seatBar: 'Bar',
-  seatChip: 'Chip',
-  sectionSeat: 'Vietos', seatClassic: 'Classic', seatPlate: 'Plate',
-    botDifficulty:'Botų sudėtingumas', botEasy:'Lengvas', botMixed:'Mišrus', botNormal:'Normalus', botHard:'Sunkus',
+  sectionSeat: 'Vietos',    botDifficulty:'Botų sudėtingumas', botEasy:'Lengvas', botMixed:'Mišrus', botNormal:'Normalus', botHard:'Sunkus',
 
     guestHint:'🌐 Žaidimas kaip svečias pokerth.net — be paskyros.',
     srvOffline:'🏋️ Treniruočių režimas', offlineHint:'🤖 Žaidimas prieš botus — ryšio nereikia.',

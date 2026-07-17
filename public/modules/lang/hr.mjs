@@ -128,10 +128,7 @@ export const strings = {
     musicPlayer:'Reproduktor',
     soundVolume:'Zvukovi igre',
     musicTooltip:'Zvuk & Glazba', musicPanelTitle:'Glazbeni reproduktor', musicNowPlaying:'Sada svira', musicNoTracks:'Nema dostupnih pjesama', musicVolume:'Glasnoća', musicPlay:'Reproduciraj', musicPause:'Pauza', musicStop:'Zaustavi', musicNext:'Sljedeća', musicPrev:'Prethodna', musicTrack:'Pjesma', musicRepeat:'Ponavljanje', musicRepeatOne:'Ponovi pjesmu', musicRepeatAll:'Ponovi popis', musicRepeatOff:'Reproduciraj jednom',
-  seatCard: 'Card', seatCompact: 'Compact', seatBar: 'Bar',
-  seatChip: 'Chip',
-  sectionSeat: 'Mjesta', seatClassic: 'Classic', seatPlate: 'Plate',
-    botDifficulty:'Težina botova', botEasy:'Lako', botMixed:'Mješovito', botNormal:'Normalno', botHard:'Teško',
+  sectionSeat: 'Mjesta',    botDifficulty:'Težina botova', botEasy:'Lako', botMixed:'Mješovito', botNormal:'Normalno', botHard:'Teško',
 
     guestHint:'🌐 Igra kao gost na pokerth.net — bez računa.',
     srvOffline:'🏋️ Način vježbanja', offlineHint:'🤖 Igra protiv botova — bez veze.',

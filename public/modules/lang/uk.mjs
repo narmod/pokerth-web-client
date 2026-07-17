@@ -127,10 +127,7 @@ export const strings = {
     musicPlayer:'Програвач',
     soundVolume:'Звуки гри',
     musicTooltip:'Звук & Музика', musicPanelTitle:'Музичний плеєр', musicNowPlaying:'Зараз грає', musicNoTracks:'Немає доступних треків', musicVolume:'Гучність', musicPlay:'Відтворити', musicPause:'Пауза', musicStop:'Стоп', musicNext:'Наступний', musicPrev:'Попередній', musicTrack:'Трек', musicRepeat:'Повтор', musicRepeatOne:'Повтор треку', musicRepeatAll:'Повтор плейлиста', musicRepeatOff:'Відтворити один раз',
-  seatCard: 'Card', seatCompact: 'Compact', seatBar: 'Bar',
-  seatChip: 'Chip',
-  sectionSeat: 'Місця', seatClassic: 'Classic', seatPlate: 'Plate',
-    botDifficulty:'Складність ботів', botEasy:'Легкий', botMixed:'Змішаний', botNormal:'Звичайний', botHard:'Складний',
+  sectionSeat: 'Місця',    botDifficulty:'Складність ботів', botEasy:'Легкий', botMixed:'Змішаний', botNormal:'Звичайний', botHard:'Складний',
 
     guestHint:'🌐 Гостьова гра на pokerth.net — без облікового запису.',
     srvOffline:'🏋️ Тренування', offlineHint:'🤖 Гра проти ботів — підключення не потрібне.',

@@ -127,10 +127,7 @@ export const strings = {
     musicPlayer:'プレーヤー',
     soundVolume:'ゲーム音',
     musicTooltip:'サウンド & 音楽', musicPanelTitle:'音楽プレーヤー', musicNowPlaying:'再生中', musicNoTracks:'利用可能な曲がありません', musicVolume:'音量', musicPlay:'再生', musicPause:'一時停止', musicStop:'停止', musicNext:'次へ', musicPrev:'前へ', musicTrack:'トラック', musicRepeat:'リピート', musicRepeatOne:'1曲リピート', musicRepeatAll:'プレイリストをリピート', musicRepeatOff:'一度だけ再生',
-  seatCard: 'Card', seatCompact: 'Compact', seatBar: 'Bar',
-  seatChip: 'Chip',
-  sectionSeat: '座席', seatClassic: 'Classic', seatPlate: 'Plate',
-    botDifficulty:'ボットの難易度', botEasy:'やさしい', botMixed:'ミックス', botNormal:'ふつう', botHard:'むずかしい',
+  sectionSeat: '座席',    botDifficulty:'ボットの難易度', botEasy:'やさしい', botMixed:'ミックス', botNormal:'ふつう', botHard:'むずかしい',
 
     guestHint:'🌐 pokerth.net にゲストで参加 — アカウント不要。',
     srvOffline:'🏋️ 練習モード', offlineHint:'🤖 ボットと対戦 — 接続不要。',

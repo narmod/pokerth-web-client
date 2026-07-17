@@ -129,10 +129,7 @@ export const strings = {
     musicPlayer:'பிளேயர்',
     soundVolume:'விளையாட்டு ஒலிகள்',
     musicTooltip:'ஒலி & இசை', musicPanelTitle:'இசை பிளேயர்', musicNowPlaying:'இப்போது இயங்குகிறது', musicNoTracks:'பாடல்கள் எதுவும் இல்லை', musicVolume:'ஒலி அளவு', musicPlay:'இயக்கு', musicPause:'இடைநிறுத்து', musicStop:'நிறுத்து', musicNext:'அடுத்து', musicPrev:'முந்தைய', musicTrack:'பாடல்', musicRepeat:'மீண்டும்', musicRepeatOne:'ஒரு பாடலை மீண்டும்', musicRepeatAll:'பட்டியலை மீண்டும்', musicRepeatOff:'ஒருமுறை இயக்கு',
-  seatCard: 'Card', seatCompact: 'Compact', seatBar: 'Bar',
-  seatChip: 'Chip',
-  sectionSeat: 'இருக்கைகள்', seatClassic: 'Classic', seatPlate: 'Plate',
-    botDifficulty:'பாட் சிரமம்', botEasy:'எளிது', botMixed:'கலப்பு', botNormal:'சாதாரண', botHard:'கடினம்',
+  sectionSeat: 'இருக்கைகள்',    botDifficulty:'பாட் சிரமம்', botEasy:'எளிது', botMixed:'கலப்பு', botNormal:'சாதாரண', botHard:'கடினம்',
 
     guestHint:'🌐 pokerth.net இல் விருந்தினராக விளையாடுங்கள் — கணக்கு தேவையில்லை.',
     srvOffline:'🏋️ பயிற்சி பயன்முறை', offlineHint:'🤖 பாட்களுடன் விளையாடுங்கள் — இணைப்பு தேவையில்லை.',

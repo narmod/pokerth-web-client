@@ -131,10 +131,7 @@ export const strings = {
     musicPlayer:'플레이어',
     soundVolume:'게임 사운드',
     musicTooltip:'사운드 & 음악', musicPanelTitle:'음악 플레이어', musicNowPlaying:'재생 중', musicNoTracks:'사용 가능한 트랙 없음', musicVolume:'볼륨', musicPlay:'재생', musicPause:'일시정지', musicStop:'정지', musicNext:'다음', musicPrev:'이전', musicTrack:'트랙', musicRepeat:'반복', musicRepeatOne:'한 곡 반복', musicRepeatAll:'전체 반복', musicRepeatOff:'한 번 재생',
-  seatCard: 'Card', seatCompact: 'Compact', seatBar: 'Bar',
-  seatChip: 'Chip',
-  sectionSeat: '좌석', seatClassic: 'Classic', seatPlate: 'Plate',
-    botDifficulty:'봇 난이도', botEasy:'쉬움', botMixed:'혼합', botNormal:'보통', botHard:'어려움',
+  sectionSeat: '좌석',    botDifficulty:'봇 난이도', botEasy:'쉬움', botMixed:'혼합', botNormal:'보통', botHard:'어려움',
 
     guestHint:'🌐 pokerth.net 게스트 플레이 — 계정 불필요.',
     srvOffline:'🏋️ 연습 모드', offlineHint:'🤖 봇과 대전 — 연결이 필요 없습니다.',
