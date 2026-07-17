@@ -1344,19 +1344,22 @@ function importPackage(kind, idHint, zipBuf, cb) {
     try { listed = JSON.parse(fs.readFileSync(path.join(PUBLIC_DIR, 'themes', 'themes.json'), 'utf8')).some(function (x) { return x && x.id === id; }); } catch (e) {}
     if (!listed) { try { fs.rmSync(dest, { recursive: true, force: true }); } catch (e) {} return done('theme has no usable content (need palette, table, felt, buttons, buttonImages or pucks — and any referenced image file must be in the zip)'); }
   } else if (kind === 'seat') {
-    // Seat pack = a 9-slice plate image (border-image `fill` paints the box too),
-    // optionally a self.* frame for the hero bar, preview.* and seat.json metadata.
+    // Seat pack = a 9-slice plate image (border-image `fill` paints the box too)
+    // AND/OR a free stylesheet style.css (full custom design inside the QML
+    // virtual frame). Optional: self.* frame for the hero bar, preview.*,
+    // seat.json metadata (name, by, traits, ...).
     const plate = ['plate.png', 'plate.svg', 'plate.webp', 'plate.jpg', 'plate.jpeg'].find(has);
-    if (!plate) return done('not a seat pack (plate.png / plate.svg missing)');
+    const packCss = has('style.css');
+    if (!plate && !packCss) return done('not a seat pack (plate.png / plate.svg or style.css missing)');
     if (!id) id = 'seat-' + Date.now();
     if (['', 'pokerth', 'chip', 'plate', 'card', 'compact', 'bar'].indexOf(id) >= 0) id = 'seat-' + id;   // never clobber a built-in seat id
     const dest = path.join(PUBLIC_DIR, 'seats', id);
     try { fs.rmSync(dest, { recursive: true, force: true }); fs.mkdirSync(dest, { recursive: true }); } catch (e) { return done('dest failed'); }
-    try { fs.readdirSync(exDir).forEach(function (f) { if (/^(plate|self|preview)\.(png|svg|webp|jpe?g)$/i.test(f) || f === 'seat.json') cp(f, path.join(dest, f)); }); } catch (e) {}
+    try { fs.readdirSync(exDir).forEach(function (f) { if (/^(plate|self|preview|bg|frame|img[0-9]?)\.(png|svg|webp|jpe?g)$/i.test(f) || f === 'seat.json' || f === 'style.css') cp(f, path.join(dest, f)); }); } catch (e) {}
     regenManifest('seat');
     let listed = false;
     try { listed = JSON.parse(fs.readFileSync(path.join(PUBLIC_DIR, 'seats', 'seats.json'), 'utf8')).some(function (x) { return x && x.id === id; }); } catch (e) {}
-    if (!listed) { try { fs.rmSync(dest, { recursive: true, force: true }); } catch (e) {} return done('seat pack has no usable plate image'); }
+    if (!listed) { try { fs.rmSync(dest, { recursive: true, force: true }); } catch (e) {} return done('seat pack has no usable plate image or style.css'); }
   } else return done('unknown kind');
 
   let nm = id;

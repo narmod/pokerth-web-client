@@ -282,10 +282,10 @@ function _loadGallerySeats() {
       .then(function (r) { return r.ok ? r.json() : []; })
       .then(function (list) {
         if (!Array.isArray(list)) return;
-        _gallerySeats = list.filter(function (s) { return s && s.id && s.plateUrl; }).map(function (s) {
+        _gallerySeats = list.filter(function (s) { return s && s.id && (s.plateUrl || s.cssUrl); }).map(function (s) {
           var slice = (s.slice != null ? s.slice : 34), width = (s.width != null ? s.width : 15), pad = s.pad || '6px 12px';
           return { id: String(s.id), name: s.name || String(s.id), by: (s.by ? String(s.by) : null), traits: (s.traits && typeof s.traits === 'object') ? s.traits : null, swatch: s.swatch || '#394150', preview: s.preview || null,
-                   plateUrl: s.plateUrl, selfUrl: s.selfUrl || null,
+                   plateUrl: s.plateUrl || null, cssUrl: s.cssUrl || null, selfUrl: s.selfUrl || null,
                    slice: slice, width: width, pad: pad,
                    selfSlice: (s.selfSlice != null ? s.selfSlice : slice), selfWidth: (s.selfWidth != null ? s.selfWidth : width), selfPad: s.selfPad || pad };
         }).filter(function (s) { return !_isBuiltinSeat(s.id); });
@@ -301,7 +301,23 @@ function _loadGallerySeats() {
 function _injectSeatPkg(s) {
   var el = document.documentElement, css = '';
   function setv(k, v) { el.style.setProperty(k, v); css += k + ':' + v + ';'; }
-  if (s) {
+  // Feuille de style LIBRE du pack (style.css) : <link> injecté tant que le
+  // pack est actif, retiré au changement — le design du pack ne fuit jamais
+  // sur les autres. Restauration zéro-flash par le snippet <head>
+  // (pth_seat_css_url). Ajouté en FIN de <head> -> prime sur pokerth.css à
+  // spécificité égale.
+  try {
+    var lk = document.getElementById('seat-pack-style');
+    if (s && s.cssUrl) {
+      if (!lk) { lk = document.createElement('link'); lk.rel = 'stylesheet'; lk.id = 'seat-pack-style'; document.head.appendChild(lk); }
+      if (lk.getAttribute('href') !== s.cssUrl) lk.setAttribute('href', s.cssUrl);
+      localStorage.setItem('pth_seat_css_url', s.cssUrl);
+    } else {
+      if (lk) lk.remove();
+      localStorage.removeItem('pth_seat_css_url');
+    }
+  } catch (e) {}
+  if (s && s.plateUrl) {
     setv('--seat-pkg-img', 'url(' + s.plateUrl + ')');
     setv('--seat-pkg-slice', s.slice + '%');
     setv('--seat-pkg-width', s.width + 'px');

@@ -5,8 +5,11 @@
 // to populate Theme → Seats (gallery packs, beside the built-in CSS packs).
 //
 // A seat pack = a sub-folder with plate.(png|svg|webp|jpg) — the 9-slice frame
-// drawn behind a seat; the CSS border-image `fill` keyword makes that same image
-// paint the box background too. Optional extras in the folder:
+// drawn behind a seat (border-image `fill` paints the box background too) —
+// AND/OR style.css, a free stylesheet giving the pack a fully custom design
+// inside the QML virtual frame (114x84 opponents / ~150x96 self). The sheet is
+// injected as a <link> while the pack is active and removed on switch.
+// Optional extras in the folder:
 //   • self.(png|svg|…)     a distinct frame for the hero player-bar
 //   • preview.(png|svg|…)  the selector thumbnail
 //   • seat.json            { name, by, slice, width, pad, swatch, self:{slice,width,pad},
@@ -42,7 +45,8 @@ for (const name of names) {
   let st; try { st = statSync(p); } catch { continue; }
   if (!st.isDirectory()) continue;          // skip loose files / seats.json itself
   const plate = plateFile(p);
-  if (!plate) continue;                     // a seat pack must carry a plate image
+  const packCss = existsSync(join(p, 'style.css')) ? 'style.css' : null;
+  if (!plate && !packCss) continue;         // a seat pack = plate image and/or style.css
   const base = '/seats/' + name + '/';
   let cfg = {};
   try { if (existsSync(join(p, 'seat.json'))) cfg = JSON.parse(readFileSync(join(p, 'seat.json'), 'utf8')) || {}; } catch { cfg = {}; }
@@ -54,7 +58,8 @@ for (const name of names) {
     name: (cfg.name && String(cfg.name).trim()) || name,
     by: (cfg.by && String(cfg.by).trim()) || null,
     traits: (cfg.traits && typeof cfg.traits === 'object') ? cfg.traits : null,
-    plateUrl: base + plate,
+    plateUrl: plate ? base + plate : null,
+    cssUrl: packCss ? base + packCss : null,
     selfUrl: self ? base + self : null,
     preview: prev ? base + prev : null,
     slice: slice,
