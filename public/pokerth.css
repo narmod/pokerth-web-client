@@ -418,7 +418,8 @@ body {
    droite) : positionnement absolu au centre du .cp-header — insensible aux
    largeurs inégales des deux groupes d'icônes. max-width borné pour ne
    jamais chevaucher les icônes ; pointer-events off (label non cliquable). */
-#s-create .cp-title {
+#s-create .cp-title,
+#privacy-page .cp-title {
   position: absolute;
   left: 50%;
   top: 50%;
@@ -2552,7 +2553,8 @@ body {
    to the viewport and rendering off-screen. Same chrome for both now. */
 #s-game .header,
 #s-lobby .header,
-#s-create .cp-header {
+#s-create .cp-header,
+#privacy-page .cp-header {
   position: relative;
   flex-wrap: nowrap;
   align-items: center;
@@ -5619,14 +5621,16 @@ html[data-table="pokerth-live"] .raise-slider { accent-color: #4CAF50; }
    pour ne pas toucher aux boutons-texte admin (Start/Close/Kick). */
 #s-lobby .header .btn-icon,
 #s-game .header .btn-icon,
-#s-create .cp-header .btn-icon{
+#s-create .cp-header .btn-icon,
+#privacy-page .cp-header .btn-icon{
   background:transparent;
   border-color:transparent;
   box-shadow:none;
 }
 #s-lobby .header .btn-icon:hover,
 #s-game .header .btn-icon:hover,
-#s-create .cp-header .btn-icon:hover{
+#s-create .cp-header .btn-icon:hover,
+#privacy-page .cp-header .btn-icon:hover{
   background:rgba(255,255,255,0.07);
   border-color:transparent;
 }
@@ -5649,7 +5653,11 @@ html[data-table="pokerth-live"] .raise-slider { accent-color: #4CAF50; }
 #s-create .cp-header .btn-icon:focus-visible,
 #s-lobby .header .btn-icon:active,
 #s-game .header .btn-icon:active,
-#s-create .cp-header .btn-icon:active{
+#s-create .cp-header .btn-icon:active,
+#privacy-page .cp-header .btn-icon,
+#privacy-page .cp-header .btn-icon:focus,
+#privacy-page .cp-header .btn-icon:focus-visible,
+#privacy-page .cp-header .btn-icon:active{
   outline:none;
   border-color:transparent;
   box-shadow:none;
@@ -5657,6 +5665,7 @@ html[data-table="pokerth-live"] .raise-slider { accent-color: #4CAF50; }
 #s-lobby .header #ranking-btn-lobby{ color:#E3C800; }
 /* Page « Créer une partie » : flèche retour + roue crantée neutres, globe or. */
 #s-create .cp-header #cr-overflow-btn{ color:var(--text-hi); }
+#privacy-page .cp-header #pv-overflow-btn{ color:var(--text-hi); }
 #s-create .cp-header #ranking-btn-create{ color:#E3C800; }
 #s-lobby .header #lobby-chat-btn{ color:var(--text-hi); }
 #s-lobby .header #l-overflow-btn{ color:var(--text-hi); }
