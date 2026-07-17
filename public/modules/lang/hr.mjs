@@ -18,7 +18,7 @@ export const strings = {
     winnerBadge:'POBJEDNIK',
     // GameStatusBar (bandeau d'info de jeu, parité QML §7)
     gsbTotal:'Ukupno:', gsbBets:'Ulozi:', gsbGame:'Igra:', gsbHand:'Ruka:',
-  seatPokerthPortrait: "PokerTH Okomito", seatPokerthLandscape: "PokerTH Vodoravno",
+  seatPokerth: 'PokerTH',
   advUiGeneral:'Općenito', advUiNetwork:'Mreža', advShowTooltips:'Prikaži opise', advDisableSplash:'Onemogući početni zaslon pri pokretanju', advDontTranslatePoker:'Ne prevodi pokerske izraze (Check, Call, Raise)', advNA:'web', advLanguage:'Jezik', advDefCommunity:'Zadana zajednica', advSecReactions:'Reakcije', advDisableReactions:'Onemogući emoji reakcije', advNetStateColor:'Prikaži boju stanja mreže u kutu avatara',
   showPlayers: `Prikaži igrače`,
   footJoin: `Uđi`,
@@ -667,8 +667,7 @@ export const strings = {
     presetRankingName:'Rang-lista', presetRankingDesc:'službeni tempo', presetWecupDesc:'uravnotežen turnir', presetBbcDesc:'blindovi po vremenu', advSecLocalGame:'Trening igra', advPauseHands:'Pauza između ruku (nastavak kroz prozor pobjednika)',
     nextHandBtn:'Sljedeća ruka', advSecTablePrefs:'Postavke stola', advTablePrefsDesc:'Zadane vrijednosti stolova koje stvarate u ovom načinu — gumb ⭐ u obrascu ih učitava.', advRaiseEveryHands:'Povisuj blindove svakih N ruku', advGameSpeed:'Brzina igre (1–11)',
     advSecLogSettings:'Postavke zapisnika', advLogOn:'Uključi bilježenje', advLogInterval:'Interval zapisnika', advLogEveryAction:'Svaka akcija', advLogEveryHand:'Svaka ruka', advSecIgnored:'Ignorirani igrači', advIgnoredDesc:'Igrači s popisa ignoriranih skriveni su u chatu.',
-    advIgnoredEmpty:'(nema ignoriranih igrača)', advIgnoredRemove:'Ukloni', advLobbyChat:'Prikaži chat predvorja', advTableZoom:'Uključi zumiranje stola (gumbi povećala)', advSeatSync:'Sinkroniziraj mjesta s orijentacijom (PokerTH portret/pejzaž)',
-    advChatTranslate:'Prijevod chata (API preglednika, gumb po poruci)', chatTranslateUnsupported:'Ovaj preglednik ne podržava prijevod (potreban je noviji Chrome/Edge).', chatTranslateFailed:'Prijevod nije uspio', wcHideOpt:'Ne prikazuj više ovaj prozor',
+    advIgnoredEmpty:'(nema ignoriranih igrača)', advIgnoredRemove:'Ukloni', advLobbyChat:'Prikaži chat predvorja', advTableZoom:'Uključi zumiranje stola (gumbi povećala)',    advChatTranslate:'Prijevod chata (API preglednika, gumb po poruci)', chatTranslateUnsupported:'Ovaj preglednik ne podržava prijevod (potreban je noviji Chrome/Edge).', chatTranslateFailed:'Prijevod nije uspio', wcHideOpt:'Ne prikazuj više ovaj prozor',
     styleExpand:'Proširi', styleCollapse:'Sažmi', themeLight:'Svijetla', modeAuto:'Automatski', modeLight:'Svijetla', modeDark:'Tamna', styleBy:'od', styleSelected:'Odabrano', importTable:'Uvezi stol (.zip)', importDeck:'Uvezi špil (.zip)',
     importError:'Uvoz nije uspio', confirmDeleteStyle:'Izbrisati ovaj uvezeni stil?', delete:'Izbriši', advSecAppearance:'Izgled', advDarkMode:'Tamni način', tableGreenFelt:'Zeleni stol', tableCasino:'Zeleni casino', themeExport:'Izvezi temu (.zip)',
     sectionAdvanced:'Napredno', rankingSeasonStats:'Statistika sezone', rankingShare:'Udio', rankingResults:'Rezultati', rankingToggleChart:'Prebaci stupci / torta', footPlayer:'Igrač', footCreate:'＋ Stvori stol', gameInfoTitle:'Info o igri',

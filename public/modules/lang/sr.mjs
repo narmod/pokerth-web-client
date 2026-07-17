@@ -18,7 +18,7 @@ export const strings = {
     winnerBadge:'POBEDNIK',
     // GameStatusBar (bandeau d'info de jeu, parité QML §7)
     gsbTotal:'Ukupno:', gsbBets:'Ulozi:', gsbGame:'Igra:', gsbHand:'Ruka:',
-  seatPokerthPortrait: "PokerTH Портрет", seatPokerthLandscape: "PokerTH Пејзаж",
+  seatPokerth: 'PokerTH',
   advUiGeneral:'Опште', advUiNetwork:'Мрежа', advShowTooltips:'Прикажи описе', advDisableSplash:'Онемогући почетни екран при покретању', advDontTranslatePoker:'Не преводи покер изразе (Check, Call, Raise)', advNA:'web', advLanguage:'Језик', advDefCommunity:'Подразумевана заједница', advSecReactions:'Реакције', advDisableReactions:'Онемогући емоџи реакције', advNetStateColor:'Прикажи боју стања мреже у углу аватара',
   showPlayers: `Прикажи играче`,
   footJoin: `Uđi`,
@@ -668,7 +668,7 @@ export const strings = {
     nextHandBtn:'Следећа рука', advSecTablePrefs:'Подешавања стола', advTablePrefsDesc:'Подразумеване вредности столова које правите у овом режиму — дугме ⭐ у обрасцу их учитава.', advRaiseEveryHands:'Повећавај блиндове сваких N руку',
     advGameSpeed:'Брзина игре (1–11)', advSecLogSettings:'Подешавања дневника', advLogOn:'Укључи бележење', advLogInterval:'Интервал дневника', advLogEveryAction:'Свака акција', advLogEveryHand:'Свака рука', advSecIgnored:'Игнорисани играчи',
     advIgnoredDesc:'Играчи са листе игнорисаних су скривени у ћаскању.', advIgnoredEmpty:'(нема игнорисаних играча)', advIgnoredRemove:'Уклони', advLobbyChat:'Прикажи ћаскање лобија', advTableZoom:'Укључи зумирање стола (дугмад лупе)',
-    advSeatSync:'Синхронизуј места са оријентацијом (PokerTH портрет/пејзаж)', advChatTranslate:'Превод ћаскања (API прегледача, дугме по поруци)', chatTranslateUnsupported:'Овај прегледач не подржава превод (потребан је новији Chrome/Edge).',
+    advChatTranslate:'Превод ћаскања (API прегледача, дугме по поруци)', chatTranslateUnsupported:'Овај прегледач не подржава превод (потребан је новији Chrome/Edge).',
     chatTranslateFailed:'Превод није успео', wcHideOpt:'Не приказуј више овај прозор', styleExpand:'Прошири', styleCollapse:'Скупи', themeLight:'Светла', modeAuto:'Аутоматски', modeLight:'Светла', modeDark:'Тамна', styleBy:'од', styleSelected:'Изабрано',
     importTable:'Увези сто (.zip)', importDeck:'Увези шпил (.zip)', importError:'Увоз није успео', confirmDeleteStyle:'Избрисати овај увезени стил?', delete:'Избриши', advSecAppearance:'Изглед', advDarkMode:'Тамни режим', tableGreenFelt:'Зелени сто',
     tableCasino:'Зелени казино', themeExport:'Извези тему (.zip)', sectionAdvanced:'Напредно', rankingSeasonStats:'Статистика сезоне', rankingShare:'Удео', rankingResults:'Резултати', rankingToggleChart:'Пребаци стубови / пита', footPlayer:'Играч',

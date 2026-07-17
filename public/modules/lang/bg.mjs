@@ -18,7 +18,7 @@ export const strings = {
     winnerBadge:'ПОБЕДИТЕЛ',
     // GameStatusBar (bandeau d'info de jeu, parité QML §7)
     gsbTotal:'Общо:', gsbBets:'Залози:', gsbGame:'Игра:', gsbHand:'Ръка:',
-  seatPokerthPortrait: "PokerTH Портрет", seatPokerthLandscape: "PokerTH Пейзаж",
+  seatPokerth: 'PokerTH',
   advUiGeneral:'Общи', advUiNetwork:'Мрежа', advShowTooltips:'Показване на подсказки', advDisableSplash:'Изключване на началния екран при стартиране', advDontTranslatePoker:'Без превод на покер термините (Check, Call, Raise)', advNA:'web', advLanguage:'Език', advDefCommunity:'Общност по подразбиране', advSecReactions:'Реакции', advDisableReactions:'Изключване на емоджи реакциите', advNetStateColor:'Показване на цвета на състоянието на мрежата в ъгъла на аватара',
   showPlayers: `Показване на играчите`,
   footJoin: `Влез`,
@@ -668,7 +668,7 @@ export const strings = {
     presetBbcDesc:'блайндове по време', advSecLocalGame:'Тренировъчна игра', advPauseHands:'Пауза между ръцете (продължение през прозореца на победителя)', nextHandBtn:'Следваща ръка', advSecTablePrefs:'Предпочитания за масата', advTablePrefsDesc:'Стойности по подразбиране за масите, които създавате в този режим — бутонът ⭐ във формуляра ги зарежда.',
     advRaiseEveryHands:'Вдигане на блайндовете на всеки N ръце', advGameSpeed:'Скорост на играта (1–11)', advSecLogSettings:'Настройки на дневника', advLogOn:'Активиране на дневника', advLogInterval:'Интервал на дневника', advLogEveryAction:'Всяко действие',
     advLogEveryHand:'Всяка ръка', advSecIgnored:'Игнорирани играчи', advIgnoredDesc:'Играчите от списъка с игнорирани са скрити в чата.', advIgnoredEmpty:'(няма игнорирани играчи)', advIgnoredRemove:'Премахни', advLobbyChat:'Показвай чата на лобито',
-    advTableZoom:'Активирай мащабиране на масата (бутони лупа)', advSeatSync:'Синхронизирай местата с ориентацията (PokerTH портрет/пейзаж)', advChatTranslate:'Превод на чата (API на браузъра, бутон за съобщение)', chatTranslateUnsupported:'Този браузър не поддържа превод (нужен е скорошен Chrome/Edge).',
+    advTableZoom:'Активирай мащабиране на масата (бутони лупа)', advChatTranslate:'Превод на чата (API на браузъра, бутон за съобщение)', chatTranslateUnsupported:'Този браузър не поддържа превод (нужен е скорошен Chrome/Edge).',
     chatTranslateFailed:'Преводът се провали', wcHideOpt:'Не показвай повече този прозорец', styleExpand:'Разгъни', styleCollapse:'Свий', themeLight:'Светла', modeAuto:'Автоматично', modeLight:'Светла', modeDark:'Тъмна', styleBy:'от',
     styleSelected:'Избрано', importTable:'Импортирай маса (.zip)', importDeck:'Импортирай тесте (.zip)', importError:'Импортът се провали', confirmDeleteStyle:'Да се изтрие ли този импортиран стил?', delete:'Изтрий', advSecAppearance:'Външен вид',
     advDarkMode:'Тъмен режим', tableGreenFelt:'Зелена маса', tableCasino:'Зелено казино', themeExport:'Експортирай тема (.zip)', sectionAdvanced:'Разширени', rankingSeasonStats:'Статистика за сезона', rankingShare:'Дял', rankingResults:'Резултати',

@@ -17,7 +17,7 @@ export const strings = {
     winnerBadge:'VOITTAJA',
     // GameStatusBar (bandeau d'info de jeu, parité QML §7)
     gsbTotal:'Yhteensä:', gsbBets:'Panokset:', gsbGame:'Peli:', gsbHand:'Käsi:',
-  seatPokerthPortrait: "PokerTH Pysty", seatPokerthLandscape: "PokerTH Vaaka",
+  seatPokerth: 'PokerTH',
   advUiGeneral:'Yleiset', advUiNetwork:'Verkko', advShowTooltips:'Näytä työkaluvihjeet', advDisableSplash:'Poista aloitusnäyttö käytöstä käynnistyksessä', advDontTranslatePoker:'Älä käännä pokeritermejä (Check, Call, Raise)', advNA:'web', advLanguage:'Kieli', advDefCommunity:'Oletusyhteisö', advSecReactions:'Reaktiot', advDisableReactions:'Poista emoji-reaktiot käytöstä', advNetStateColor:'Näytä verkon tilan väri avatarin kulmassa',
   showPlayers: `Näytä pelaajat`,
   footJoin: `Liity`,
@@ -667,7 +667,7 @@ export const strings = {
     presetBbcDesc:'aikaperusteiset blindit', advSecLocalGame:'Harjoituspeli', advPauseHands:'Tauko kättä välillä (jatka voittajaikkunasta)', nextHandBtn:'Seuraava käsi', advSecTablePrefs:'Pöytäasetukset', advTablePrefsDesc:'Tässä tilassa luomiesi pöytien oletusarvot — lomakkeen ⭐-painike lataa ne.',
     advRaiseEveryHands:'Korota blindejä joka N. käsi', advGameSpeed:'Pelinopeus (1–11)', advSecLogSettings:'Lokiasetukset', advLogOn:'Ota loki käyttöön', advLogInterval:'Lokiväli', advLogEveryAction:'Jokainen toiminto', advLogEveryHand:'Jokainen käsi',
     advSecIgnored:'Ohitetut pelaajat', advIgnoredDesc:'Ohituslistan pelaajat piilotetaan chatista.', advIgnoredEmpty:'(ei ohitettuja pelaajia)', advIgnoredRemove:'Poista', advLobbyChat:'Näytä aulan chat', advTableZoom:'Ota pöydän zoomaus käyttöön (suurennuslasipainikkeet)',
-    advSeatSync:'Synkronoi paikat suunnan mukaan (PokerTH pysty/vaaka)', advChatTranslate:'Chatin käännös (selaimen API, painike viestikohtaisesti)', chatTranslateUnsupported:'Tämä selain ei tue kääntämistä (vaatii uuden Chromen/Edgen).',
+    advChatTranslate:'Chatin käännös (selaimen API, painike viestikohtaisesti)', chatTranslateUnsupported:'Tämä selain ei tue kääntämistä (vaatii uuden Chromen/Edgen).',
     chatTranslateFailed:'Käännös epäonnistui', wcHideOpt:'Älä näytä tätä ikkunaa uudelleen', styleExpand:'Laajenna', styleCollapse:'Supista', themeLight:'Vaalea', modeAuto:'Automaattinen', modeLight:'Vaalea', modeDark:'Tumma', styleBy:'tekijä',
     styleSelected:'Valittu', importTable:'Tuo pöytä (.zip)', importDeck:'Tuo pakka (.zip)', importError:'Tuonti epäonnistui', confirmDeleteStyle:'Poistetaanko tämä tuotu tyyli?', delete:'Poista', advSecAppearance:'Ulkoasu', advDarkMode:'Tumma tila',
     tableGreenFelt:'Vihreä pöytä', tableCasino:'Vihreä kasino', themeExport:'Vie teema (.zip)', sectionAdvanced:'Lisäasetukset', rankingSeasonStats:'Kauden tilastot', rankingShare:'Osuus', rankingResults:'Tulokset', rankingToggleChart:'Vaihda pylväät / piirakka',

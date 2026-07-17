@@ -24,7 +24,7 @@ export const strings = {
     winnerBadge:'ZWYCIĘZCA',
     // GameStatusBar (bandeau d'info de jeu, parité QML §7)
     gsbTotal:'Razem:', gsbBets:'Zakłady:', gsbGame:'Gra:', gsbHand:'Rozdanie:',
-  seatPokerthPortrait: "PokerTH Pionowo", seatPokerthLandscape: "PokerTH Poziomo",
+  seatPokerth: 'PokerTH',
   advUiGeneral:'Ogólne', advUiNetwork:'Sieć', advShowTooltips:'Pokaż podpowiedzi', advDisableSplash:'Wyłącz ekran powitalny przy uruchamianiu', advDontTranslatePoker:'Nie tłumacz terminów pokerowych (Check, Call, Raise)', advNA:'web', advLanguage:'Język', advDefCommunity:'Domyślna społeczność', advSecReactions:'Reakcje', advDisableReactions:'Wyłącz reakcje emoji', advNetStateColor:'Pokaż kolor stanu sieci w rogu awatara',
   showPlayers: `Pokaż graczy`,
   footJoin: `Dołącz`,
@@ -670,8 +670,7 @@ export const strings = {
     presetRankingName:'Ranking', presetRankingDesc:'oficjalne tempo', presetWecupDesc:'zrównoważony turniej', presetBbcDesc:'blindy czasowe', advSecLocalGame:'Gra treningowa', advPauseHands:'Pauza między rozdaniami (kontynuacja przez okno zwycięzcy)',
     nextHandBtn:'Następne rozdanie', advSecTablePrefs:'Preferencje stołu', advTablePrefsDesc:'Wartości domyślne stołów tworzonych w tym trybie — przycisk ⭐ w formularzu je wczytuje.', advRaiseEveryHands:'Podnoś blindy co N rozdań',
     advGameSpeed:'Szybkość gry (1–11)', advSecLogSettings:'Ustawienia dziennika', advLogOn:'Włącz rejestrowanie', advLogInterval:'Interwał dziennika', advLogEveryAction:'Każda akcja', advLogEveryHand:'Każde rozdanie', advSecIgnored:'Ignorowani gracze',
-    advIgnoredDesc:'Gracze z listy ignorowanych są ukryci na czacie.', advIgnoredEmpty:'(brak ignorowanych graczy)', advIgnoredRemove:'Usuń', advLobbyChat:'Pokaż czat lobby', advTableZoom:'Włącz zoom stołu (przyciski lupy)', advSeatSync:'Synchronizuj miejsca z orientacją (PokerTH pion/poziom)',
-    advChatTranslate:'Tłumaczenie czatu (API przeglądarki, przycisk przy wiadomości)', chatTranslateUnsupported:'Ta przeglądarka nie obsługuje tłumaczenia (wymagany nowy Chrome/Edge).', chatTranslateFailed:'Tłumaczenie nie powiodło się',
+    advIgnoredDesc:'Gracze z listy ignorowanych są ukryci na czacie.', advIgnoredEmpty:'(brak ignorowanych graczy)', advIgnoredRemove:'Usuń', advLobbyChat:'Pokaż czat lobby', advTableZoom:'Włącz zoom stołu (przyciski lupy)',    advChatTranslate:'Tłumaczenie czatu (API przeglądarki, przycisk przy wiadomości)', chatTranslateUnsupported:'Ta przeglądarka nie obsługuje tłumaczenia (wymagany nowy Chrome/Edge).', chatTranslateFailed:'Tłumaczenie nie powiodło się',
     wcHideOpt:'Nie pokazuj więcej tego okna', styleExpand:'Rozwiń', styleCollapse:'Zwiń', themeLight:'Jasny', modeAuto:'Automatyczny', modeLight:'Jasny', modeDark:'Ciemny', styleBy:'od', styleSelected:'Wybrano', importTable:'Importuj stół (.zip)',
     importDeck:'Importuj talię (.zip)', importError:'Import nie powiódł się', confirmDeleteStyle:'Usunąć ten zaimportowany styl?', delete:'Usuń', advSecAppearance:'Wygląd', advDarkMode:'Tryb ciemny', tableGreenFelt:'Zielony stół', tableCasino:'Zielone kasyno',
     themeExport:'Eksportuj motyw (.zip)', sectionAdvanced:'Zaawansowane', rankingSeasonStats:'Statystyki sezonu', rankingShare:'Udział', rankingResults:'Wyniki', rankingToggleChart:'Przełącz słupki / kołowy', footPlayer:'Gracz', footCreate:'＋ Utwórz stół',

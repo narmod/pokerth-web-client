@@ -22,7 +22,7 @@ export const strings = {
     winnerBadge:'विजेता',
     // GameStatusBar (bandeau d'info de jeu, parité QML §7)
     gsbTotal:'कुल:', gsbBets:'दांव:', gsbGame:'खेल:', gsbHand:'हाथ:',
-  seatPokerthPortrait: "PokerTH पोर्ट्रेट", seatPokerthLandscape: "PokerTH लैंडस्केप",
+  seatPokerth: 'PokerTH',
   advUiGeneral:'सामान्य', advUiNetwork:'नेटवर्क', advShowTooltips:'टूलटिप दिखाएँ', advDisableSplash:'स्टार्टअप पर स्प्लैश स्क्रीन अक्षम करें', advDontTranslatePoker:'पोकर शब्दों का अनुवाद न करें (Check, Call, Raise)', advNA:'web', advLanguage:'भाषा', advDefCommunity:'डिफ़ॉल्ट समुदाय', advSecReactions:'प्रतिक्रियाएँ', advDisableReactions:'इमोजी प्रतिक्रियाएँ अक्षम करें', advNetStateColor:'अवतार कोने में नेटवर्क स्थिति का रंग दिखाएँ',
   showPlayers: `खिलाड़ी दिखाएँ`,
   footJoin: `शामिल हों`,
@@ -478,8 +478,7 @@ export const strings = {
     presetRankingName:'रैंकिंग', presetRankingDesc:'आधिकारिक गति', presetWecupDesc:'संतुलित टूर्नामेंट', presetBbcDesc:'समय-आधारित ब्लाइंड', advSecLocalGame:'अभ्यास खेल', advPauseHands:'हाथों के बीच विराम (विजेता विंडो से जारी रखें)',
     nextHandBtn:'अगला हाथ', advSecTablePrefs:'मेज़ की प्राथमिकताएँ', advTablePrefsDesc:'इस मोड में आपके बनाए मेज़ों के डिफ़ॉल्ट मान — फ़ॉर्म का ⭐ बटन उन्हें लोड करता है।', advRaiseEveryHands:'हर N हाथ पर ब्लाइंड बढ़ाएँ', advGameSpeed:'खेल की गति (1–11)',
     advSecLogSettings:'लॉग सेटिंग्स', advLogOn:'लॉगिंग चालू करें', advLogInterval:'लॉग अंतराल', advLogEveryAction:'हर कार्रवाई', advLogEveryHand:'हर हाथ', advSecIgnored:'अनदेखे खिलाड़ी', advIgnoredDesc:'अनदेखी सूची के खिलाड़ी चैट में छिपे रहते हैं।',
-    advIgnoredEmpty:'(कोई अनदेखा खिलाड़ी नहीं)', advIgnoredRemove:'हटाएँ', advLobbyChat:'लॉबी चैट दिखाएँ', advTableZoom:'मेज़ का ज़ूम चालू करें (आवर्धक बटन)', advSeatSync:'सीटों को स्क्रीन दिशा से समन्वयित करें (PokerTH पोर्ट्रेट/लैंडस्केप)',
-    advChatTranslate:'चैट अनुवाद (ब्राउज़र API, प्रति संदेश बटन)', chatTranslateUnsupported:'यह ब्राउज़र अनुवाद का समर्थन नहीं करता (नया Chrome/Edge चाहिए)।', chatTranslateFailed:'अनुवाद विफल', wcHideOpt:'यह विंडो फिर न दिखाएँ',
+    advIgnoredEmpty:'(कोई अनदेखा खिलाड़ी नहीं)', advIgnoredRemove:'हटाएँ', advLobbyChat:'लॉबी चैट दिखाएँ', advTableZoom:'मेज़ का ज़ूम चालू करें (आवर्धक बटन)',    advChatTranslate:'चैट अनुवाद (ब्राउज़र API, प्रति संदेश बटन)', chatTranslateUnsupported:'यह ब्राउज़र अनुवाद का समर्थन नहीं करता (नया Chrome/Edge चाहिए)।', chatTranslateFailed:'अनुवाद विफल', wcHideOpt:'यह विंडो फिर न दिखाएँ',
     styleExpand:'विस्तार करें', styleCollapse:'समेटें', themeLight:'हल्का', modeAuto:'स्वचालित', modeLight:'हल्का', modeDark:'गहरा', styleBy:'द्वारा', styleSelected:'चयनित', importTable:'मेज़ आयात करें (.zip)', importDeck:'गड्डी आयात करें (.zip)',
     importError:'आयात विफल', confirmDeleteStyle:'यह आयातित शैली हटाएँ?', delete:'हटाएँ', advSecAppearance:'रूप', advDarkMode:'डार्क मोड', tableGreenFelt:'हरी मेज़', tableCasino:'हरा कैसीनो', themeExport:'थीम निर्यात करें (.zip)', sectionAdvanced:'उन्नत',
     rankingSeasonStats:'सीज़न आँकड़े', rankingShare:'हिस्सा', rankingResults:'परिणाम', rankingToggleChart:'बार / पाई बदलें', footPlayer:'खिलाड़ी', footCreate:'＋ मेज़ बनाएँ', gameInfoTitle:'खेल की जानकारी', gameInfoEmpty:'एक मेज़ चुनें',

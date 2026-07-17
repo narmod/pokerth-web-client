@@ -19,7 +19,7 @@ export const strings = {
     winnerBadge:'BUANNAICHE',
     // GameStatusBar (bandeau d'info de jeu, parité QML §7)
     gsbTotal:'Iomlan:', gsbBets:'Geallan:', gsbGame:'Geama:', gsbHand:'Làmh:',
-  seatPokerthPortrait: "PokerTH Portraid", seatPokerthLandscape: "PokerTH Dreach-tìre",
+  seatPokerth: 'PokerTH',
   advUiGeneral:'Coitcheann', advUiNetwork:'Lìonra', advShowTooltips:'Seall gliocasan-inneil', advDisableSplash:'Cuir à comas an sgrìn-fhàilte aig an tòiseachadh', advDontTranslatePoker:'Na eadar-theangaich briathran poker (Check, Call, Raise)', advNA:'web', advLanguage:'Cànan', advDefCommunity:'Coimhearsnachd bhunaiteach', advSecReactions:'Freagairtean', advDisableReactions:'Cuir à comas freagairtean emoji', advNetStateColor:'Seall dath staid an lìonraidh ann an oisean an avatar',
   showPlayers: `Seall cluicheadairean`,
   footJoin: `Gabh pàirt`,
@@ -670,7 +670,7 @@ export const strings = {
     advTablePrefsDesc:'Luachan bunaiteach nam bòrd a chruthaicheas tu sa mhodh seo — luchdaichidh am putan ⭐ san fhoirm iad.', advRaiseEveryHands:'Àrdaich na dallan gach N làmhan', advGameSpeed:'Astar a\' gheama (1–11)', advSecLogSettings:'Roghainnean an loga',
     advLogOn:'Cuir an loga an comas', advLogInterval:'Eadaramh an loga', advLogEveryAction:'Gach gnìomh', advLogEveryHand:'Gach làmh', advSecIgnored:'Cluicheadairean air an leigeil seachad', advIgnoredDesc:'Tha cluicheadairean air an liosta leigeil seachad falaichte sa chabadaich.',
     advIgnoredEmpty:'(chan eil cluicheadair sam bith air a leigeil seachad)', advIgnoredRemove:'Thoir air falbh', advLobbyChat:'Seall cabadaich an lobaidh', advTableZoom:'Cuir sùm a\' bhùird an comas (putanan glainne-meudachaidh)',
-    advSeatSync:'Sioncronaich na suidheachain leis a\' chomhair (PokerTH portraid/dreach-tìre)', advChatTranslate:'Eadar-theangachadh na cabadaich (API a\' bhrabhsair, putan gach teachdaireachd)', chatTranslateUnsupported:'Chan eil am brabhsair seo a\' cur taic ri eadar-theangachadh (tha feum air Chrome/Edge ùr).',
+    advChatTranslate:'Eadar-theangachadh na cabadaich (API a\' bhrabhsair, putan gach teachdaireachd)', chatTranslateUnsupported:'Chan eil am brabhsair seo a\' cur taic ri eadar-theangachadh (tha feum air Chrome/Edge ùr).',
     chatTranslateFailed:'Dh\'fhàillig an t-eadar-theangachadh', wcHideOpt:'Na seall an uinneag seo a-rithist', styleExpand:'Leudaich', styleCollapse:'Co-theannaich', themeLight:'Soilleir', modeAuto:'Fèin-obrachail', modeLight:'Soilleir',
     modeDark:'Dorcha', styleBy:'le', styleSelected:'Air a thaghadh', importTable:'Ion-phortaich bòrd (.zip)', importDeck:'Ion-phortaich paca (.zip)', importError:'Dh\'fhàillig an t-ion-phortadh', confirmDeleteStyle:'A bheil thu airson an stoidhle ion-phortaichte seo a sguabadh às?',
     delete:'Sguab às', advSecAppearance:'Coltas', advDarkMode:'Modh dorcha', tableGreenFelt:'Bòrd uaine', tableCasino:'Casino uaine', themeExport:'Às-phortaich an t-ùrlar (.zip)', sectionAdvanced:'Adhartach', rankingSeasonStats:'Stadastaireachd an t-seusain',

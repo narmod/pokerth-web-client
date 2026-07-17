@@ -19,7 +19,7 @@ export const strings = {
     winnerBadge:'获胜者',
     // GameStatusBar (bandeau d'info de jeu, parité QML §7)
     gsbTotal:'总计:', gsbBets:'下注:', gsbGame:'游戏:', gsbHand:'手数:',
-  seatPokerthPortrait: "PokerTH 竖向", seatPokerthLandscape: "PokerTH 横向",
+  seatPokerth: 'PokerTH',
   advUiGeneral:'常规', advUiNetwork:'网络', advShowTooltips:'显示工具提示', advDisableSplash:'启动时禁用启动画面', advDontTranslatePoker:'不翻译扑克术语（Check、Call、Raise）', advNA:'web', advLanguage:'语言', advDefCommunity:'默认社区', advSecReactions:'表情反应', advDisableReactions:'禁用表情反应', advNetStateColor:'在头像角落显示网络状态颜色',
   showPlayers: `显示玩家`,
   footJoin: `加入`,
@@ -666,7 +666,7 @@ export const strings = {
     gameNameLabel:'游戏名称', passwordLabel:'密码', startCash:'起始筹码', blindsSettings:'盲注设置', firstSmallBlind:'首个小盲注', blindInterval:'盲注上涨间隔', unitHands:'手', timeLimits:'时间限制', actionTimeout:'每次行动时间', pauseBetweenHands:'每手牌之间暂停', guestNeedAccount:'需要账号',
     guestJoinBlocked:'访客只能加入普通游戏 — 请用已注册的 pokerth.net 账号登录才能在此桌游玩。', presetRankingName:'排名', presetRankingDesc:'官方节奏', presetWecupDesc:'均衡锦标赛', presetBbcDesc:'按时间涨盲', advSecLocalGame:'训练游戏', advPauseHands:'每手牌之间暂停（通过赢家窗口继续）', nextHandBtn:'下一手',
     advSecTablePrefs:'牌桌偏好', advTablePrefsDesc:'此模式下创建牌桌的默认值 — 表单中的 ⭐ 按钮会加载它们。', advRaiseEveryHands:'每 N 手涨盲', advGameSpeed:'游戏速度（1–11）', advSecLogSettings:'日志设置', advLogOn:'启用日志', advLogInterval:'日志间隔', advLogEveryAction:'每个动作', advLogEveryHand:'每手牌',
-    advSecIgnored:'已忽略的玩家', advIgnoredDesc:'忽略列表中的玩家在聊天中被隐藏。', advIgnoredEmpty:'（没有已忽略的玩家）', advIgnoredRemove:'移除', advLobbyChat:'显示大厅聊天', advTableZoom:'启用牌桌缩放（放大镜按钮）', advSeatSync:'座位随屏幕方向同步（PokerTH 竖屏/横屏）', advChatTranslate:'聊天翻译（浏览器 API，每条消息一个按钮）',
+    advSecIgnored:'已忽略的玩家', advIgnoredDesc:'忽略列表中的玩家在聊天中被隐藏。', advIgnoredEmpty:'（没有已忽略的玩家）', advIgnoredRemove:'移除', advLobbyChat:'显示大厅聊天', advTableZoom:'启用牌桌缩放（放大镜按钮）', advChatTranslate:'聊天翻译（浏览器 API，每条消息一个按钮）',
     chatTranslateUnsupported:'此浏览器不支持翻译（需要较新的 Chrome/Edge）。', chatTranslateFailed:'翻译失败', wcHideOpt:'不再显示此窗口', styleExpand:'展开', styleCollapse:'收起', themeLight:'浅色', modeAuto:'自动', modeLight:'浅色', modeDark:'深色', styleBy:'作者:', styleSelected:'已选择',
     importTable:'导入牌桌（.zip）', importDeck:'导入牌组（.zip）', importError:'导入失败', confirmDeleteStyle:'删除这个导入的样式？', delete:'删除', advSecAppearance:'外观', advDarkMode:'深色模式', tableGreenFelt:'绿色牌桌', tableCasino:'绿色赌场', themeExport:'导出主题（.zip）', sectionAdvanced:'高级',
     rankingSeasonStats:'赛季统计', rankingShare:'份额', rankingResults:'结果', rankingToggleChart:'切换柱状 / 饼图', footPlayer:'玩家', footCreate:'＋ 创建牌桌', gameInfoTitle:'游戏信息', gameInfoEmpty:'请选择一张牌桌', gfNone:'无列表筛选', gfOpen:'显示开放的游戏', gfOpenNF:'开放且未满的游戏',

@@ -23,7 +23,7 @@ export const strings = {
     winnerBadge:'ПОБЕДИТЕЛЬ',
     // GameStatusBar (bandeau d'info de jeu, parité QML §7)
     gsbTotal:'Всего:', gsbBets:'Ставки:', gsbGame:'Игра:', gsbHand:'Раздача:',
-  seatPokerthPortrait: "PokerTH Портрет", seatPokerthLandscape: "PokerTH Альбом",
+  seatPokerth: 'PokerTH',
   advUiGeneral:'Общие', advUiNetwork:'Сеть', advShowTooltips:'Показывать подсказки', advDisableSplash:'Отключить заставку при запуске', advDontTranslatePoker:'Не переводить покерные термины (Check, Call, Raise)', advNA:'web', advLanguage:'Язык', advDefCommunity:'Сообщество по умолчанию', advSecReactions:'Реакции', advDisableReactions:'Отключить эмодзи-реакции', advNetStateColor:'Показывать цвет состояния сети в углу аватара',
   showPlayers: `Показать игроков`,
   footJoin: `Войти`,
@@ -669,8 +669,7 @@ export const strings = {
     presetRankingName:'Рейтинг', presetRankingDesc:'официальный темп', presetWecupDesc:'сбалансированный турнир', presetBbcDesc:'блайнды по времени', advSecLocalGame:'Тренировочная игра', advPauseHands:'Пауза между раздачами (продолжение через окно победителя)',
     nextHandBtn:'Следующая раздача', advSecTablePrefs:'Настройки стола', advTablePrefsDesc:'Значения по умолчанию для столов, создаваемых в этом режиме — кнопка ⭐ в форме загружает их.', advRaiseEveryHands:'Повышать блайнды каждые N раздач',
     advGameSpeed:'Скорость игры (1–11)', advSecLogSettings:'Настройки журнала', advLogOn:'Включить журнал', advLogInterval:'Интервал журнала', advLogEveryAction:'Каждое действие', advLogEveryHand:'Каждая раздача', advSecIgnored:'Игнорируемые игроки',
-    advIgnoredDesc:'Игроки из списка игнорируемых скрыты в чате.', advIgnoredEmpty:'(нет игнорируемых игроков)', advIgnoredRemove:'Убрать', advLobbyChat:'Показывать чат лобби', advTableZoom:'Включить зум стола (кнопки лупы)', advSeatSync:'Синхронизировать места с ориентацией (PokerTH портрет/альбом)',
-    advChatTranslate:'Перевод чата (API браузера, кнопка у сообщения)', chatTranslateUnsupported:'Перевод не поддерживается этим браузером (нужен свежий Chrome/Edge).', chatTranslateFailed:'Ошибка перевода', wcHideOpt:'Больше не показывать это окно',
+    advIgnoredDesc:'Игроки из списка игнорируемых скрыты в чате.', advIgnoredEmpty:'(нет игнорируемых игроков)', advIgnoredRemove:'Убрать', advLobbyChat:'Показывать чат лобби', advTableZoom:'Включить зум стола (кнопки лупы)',    advChatTranslate:'Перевод чата (API браузера, кнопка у сообщения)', chatTranslateUnsupported:'Перевод не поддерживается этим браузером (нужен свежий Chrome/Edge).', chatTranslateFailed:'Ошибка перевода', wcHideOpt:'Больше не показывать это окно',
     styleExpand:'Развернуть', styleCollapse:'Свернуть', themeLight:'Светлая', modeAuto:'Автоматически', modeLight:'Светлая', modeDark:'Тёмная', styleBy:'от', styleSelected:'Выбрано', importTable:'Импортировать стол (.zip)', importDeck:'Импортировать колоду (.zip)',
     importError:'Ошибка импорта', confirmDeleteStyle:'Удалить этот импортированный стиль?', delete:'Удалить', advSecAppearance:'Оформление', advDarkMode:'Тёмный режим', tableGreenFelt:'Зелёный стол', tableCasino:'Зелёное казино', themeExport:'Экспортировать тему (.zip)',
     sectionAdvanced:'Дополнительно', rankingSeasonStats:'Статистика сезона', rankingShare:'Доля', rankingResults:'Результаты', rankingToggleChart:'Столбцы / круговая', footPlayer:'Игрок', footCreate:'＋ Создать стол', gameInfoTitle:'Об игре',

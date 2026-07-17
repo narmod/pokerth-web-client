@@ -17,7 +17,7 @@ export const strings = {
     winnerBadge:'勝者',
     // GameStatusBar (bandeau d'info de jeu, parité QML §7)
     gsbTotal:'合計:', gsbBets:'ベット:', gsbGame:'ゲーム:', gsbHand:'ハンド:',
-  seatPokerthPortrait: "PokerTH 縦向き", seatPokerthLandscape: "PokerTH 横向き",
+  seatPokerth: 'PokerTH',
   advUiGeneral:'一般', advUiNetwork:'ネットワーク', advShowTooltips:'ツールチップを表示', advDisableSplash:'起動時のスプラッシュ画面を無効にする', advDontTranslatePoker:'ポーカー用語を翻訳しない（Check、Call、Raise）', advNA:'web', advLanguage:'言語', advDefCommunity:'デフォルトのコミュニティ', advSecReactions:'リアクション', advDisableReactions:'絵文字リアクションを無効にする', advNetStateColor:'アバターの隅にネットワーク状態の色を表示',
   showPlayers: `プレイヤーを表示`,
   footJoin: `参加`,
@@ -665,7 +665,7 @@ export const strings = {
     pauseBetweenHands:'ハンド間の一時停止', guestNeedAccount:'アカウントが必要です', guestJoinBlocked:'ゲストは通常のゲームにのみ参加できます — このテーブルでプレイするには登録済みの pokerth.net アカウントでログインしてください。', presetRankingName:'ランキング', presetRankingDesc:'公式ペース', presetWecupDesc:'バランスの取れたトーナメント',
     presetBbcDesc:'時間ベースのブラインド', advSecLocalGame:'トレーニングゲーム', advPauseHands:'ハンド間の一時停止（勝者ウィンドウから続行）', nextHandBtn:'次のハンド', advSecTablePrefs:'テーブル設定', advTablePrefsDesc:'このモードで作成するテーブルの既定値 — フォームの ⭐ ボタンで読み込みます。', advRaiseEveryHands:'N ハンドごとにブラインドを上げる',
     advGameSpeed:'ゲーム速度（1–11）', advSecLogSettings:'ログ設定', advLogOn:'ログを有効化', advLogInterval:'ログ間隔', advLogEveryAction:'すべてのアクション', advLogEveryHand:'すべてのハンド', advSecIgnored:'無視したプレイヤー', advIgnoredDesc:'無視リストのプレイヤーはチャットで非表示になります。', advIgnoredEmpty:'（無視したプレイヤーはいません）',
-    advIgnoredRemove:'削除', advLobbyChat:'ロビーチャットを表示', advTableZoom:'テーブルズームを有効化（拡大鏡ボタン）', advSeatSync:'座席を画面の向きと同期（PokerTH 縦/横）', advChatTranslate:'チャット翻訳（ブラウザ API、メッセージごとのボタン）', chatTranslateUnsupported:'このブラウザは翻訳に対応していません（最新の Chrome/Edge が必要）。',
+    advIgnoredRemove:'削除', advLobbyChat:'ロビーチャットを表示', advTableZoom:'テーブルズームを有効化（拡大鏡ボタン）', advChatTranslate:'チャット翻訳（ブラウザ API、メッセージごとのボタン）', chatTranslateUnsupported:'このブラウザは翻訳に対応していません（最新の Chrome/Edge が必要）。',
     chatTranslateFailed:'翻訳に失敗しました', wcHideOpt:'このウィンドウを今後表示しない', styleExpand:'展開', styleCollapse:'折りたたむ', themeLight:'ライト', modeAuto:'自動', modeLight:'ライト', modeDark:'ダーク', styleBy:'作者:', styleSelected:'選択中', importTable:'テーブルをインポート（.zip）',
     importDeck:'デッキをインポート（.zip）', importError:'インポートに失敗しました', confirmDeleteStyle:'このインポートしたスタイルを削除しますか？', delete:'削除', advSecAppearance:'外観', advDarkMode:'ダークモード', tableGreenFelt:'グリーンテーブル', tableCasino:'グリーンカジノ', themeExport:'テーマをエクスポート（.zip）',
     sectionAdvanced:'詳細設定', rankingSeasonStats:'シーズン統計', rankingShare:'シェア', rankingResults:'結果', rankingToggleChart:'棒 / 円グラフ切替', footPlayer:'プレイヤー', footCreate:'＋ テーブルを作成', gameInfoTitle:'ゲーム情報', gameInfoEmpty:'テーブルを選択', gfNone:'リストフィルターなし',

@@ -115,8 +115,7 @@ var PUCKS_ITEMS   = [ {id:'',key:'pucksAuto',fallback:'Auto (table)',swatch:'#3a
 // Classic (historical render). Add a pack = one item here; panel lists it auto.
 const SEATS = [
   { id: '',      key: 'seatClassic', fallback: 'Classic', swatch: '#1e3820' },
-  { id: 'pokerth', key: 'seatPokerthLandscape', fallback: 'PokerTH landscape', swatch: '#1d222b' },
-  { id: 'pokerth-portrait', key: 'seatPokerthPortrait', fallback: 'PokerTH portrait', swatch: '#1d222b' },
+  { id: 'pokerth', key: 'seatPokerth', fallback: 'PokerTH', swatch: '#1d222b' },
   { id: 'chip',  key: 'seatChip',    fallback: 'Chip',    swatch: '#caa64a' },
   { id: 'plate', key: 'seatPlate',   fallback: 'Plate',   swatch: '#1d222b' },
   { id: 'card',    key: 'seatCard',    fallback: 'Card',    swatch: '#394150' },
@@ -128,11 +127,10 @@ const table   = makeAxis({ storeKey: 'pth_table', attr: 'data-table', items: TAB
 const deck    = makeAxis({ storeKey: 'pth_deck',  attr: 'data-deck',  def: 'pokerth-new',  items: DECKS,    titleKey: 'sectionDeck',    titleFallback: 'Cards' });
 const buttons = makeAxis({ storeKey: 'pth_buttons', attr: 'data-buttons', def: 'glossy', items: BUTTONS_ITEMS, titleKey: 'sectionButtons', titleFallback: 'Buttons' });
 const pucks   = makeAxis({ storeKey: 'pth_pucks',   attr: 'data-pucks',   def: '',           items: PUCKS_ITEMS,   titleKey: 'sectionPucks',   titleFallback: 'Pucks' });
-// Defaut : packs PokerTH orientes (portrait/paysage) sur TOUS les appareils,
-// mobile compris (demande narmod 15/07) — la sync d'orientation (pth_seat_sync,
-// ON par defaut) maintient ensuite le bon pack. Un choix enregistre prime.
+// Defaut : pack unique « PokerTH » (fusion paysage/portrait 0.3.691) sur TOUS
+// les appareils ; la variante suit html[data-seat-orient] (posé par pokerth.js
+// selon la disposition réellement retenue). Un choix enregistré prime.
 var _seatDef = 'pokerth';
-try { if (typeof window !== 'undefined' && window.innerHeight > window.innerWidth) _seatDef = 'pokerth-portrait'; } catch (e) {}
 const seat    = makeAxis({ storeKey: 'pth_seat',    attr: 'data-seat',    def: _seatDef,      items: SEATS,         titleKey: 'sectionSeat',    titleFallback: 'Seats' });
 const AXES = [table, deck, seat];
 
@@ -211,6 +209,7 @@ try { if (!localStorage.getItem('pth_pucksC_mig')) { localStorage.removeItem('pt
 try { if (localStorage.getItem('pth_table') === 'green') { localStorage.removeItem('pth_table'); localStorage.removeItem('pth_table_css'); localStorage.removeItem('pth_table_fs'); localStorage.removeItem('pth_table_full'); } } catch (e) {}
 
 // Apply saved values on load (idempotent with the <head> boot snippet).
+try { if (localStorage.getItem('pth_seat') === 'pokerth-portrait') localStorage.setItem('pth_seat', 'pokerth'); } catch (e) {} // migration 0.3.691 : fusion pokerth-portrait -> pokerth
 try { if (!localStorage.getItem('pth_seat_dmig')) { if (localStorage.getItem('pth_seat') === '') localStorage.removeItem('pth_seat'); localStorage.setItem('pth_seat_dmig', '1'); } } catch (e) {}
 AXES.forEach(function (ax) { try { if (ax === seat) { var _sv = ax.get(); if (_sv) document.documentElement.setAttribute(ax.attr, _sv); else document.documentElement.removeAttribute(ax.attr); } else { ax.apply(ax.get()); } } catch (e) {} });
 try { var _cd = deck.get(); if (_cd) document.documentElement.setAttribute('data-deck-ext', _deckExt(_cd)); else document.documentElement.removeAttribute('data-deck-ext'); } catch (e) {}

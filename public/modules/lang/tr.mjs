@@ -20,7 +20,7 @@ export const strings = {
     winnerBadge:'KAZANAN',
     // GameStatusBar (bandeau d'info de jeu, parité QML §7)
     gsbTotal:'Toplam:', gsbBets:'Bahisler:', gsbGame:'Oyun:', gsbHand:'El:',
-  seatPokerthPortrait: "PokerTH Dikey", seatPokerthLandscape: "PokerTH Yatay",
+  seatPokerth: 'PokerTH',
   advUiGeneral:'Genel', advUiNetwork:'Ağ', advShowTooltips:'İpuçlarını göster', advDisableSplash:'Başlangıçta açılış ekranını devre dışı bırak', advDontTranslatePoker:'Poker terimlerini çevirme (Check, Call, Raise)', advNA:'web', advLanguage:'Dil', advDefCommunity:'Varsayılan topluluk', advSecReactions:'Tepkiler', advDisableReactions:'Emoji tepkilerini devre dışı bırak', advNetStateColor:'Avatar köşesinde ağ durumu rengini göster',
   showPlayers: `Oyuncuları göster`,
   footJoin: `Katıl`,
@@ -669,8 +669,7 @@ export const strings = {
     presetRankingName:'Sıralama', presetRankingDesc:'resmi tempo', presetWecupDesc:'dengeli turnuva', presetBbcDesc:'zamana dayalı blindler', advSecLocalGame:'Antrenman oyunu', advPauseHands:'Eller arasında duraklat (kazanan penceresinden devam)',
     nextHandBtn:'Sonraki el', advSecTablePrefs:'Masa tercihleri', advTablePrefsDesc:'Bu modda oluşturduğun masaların varsayılan değerleri — formdaki ⭐ düğmesi bunları yükler.', advRaiseEveryHands:'Her N elde blindleri yükselt', advGameSpeed:'Oyun hızı (1–11)',
     advSecLogSettings:'Günlük ayarları', advLogOn:'Günlüğü etkinleştir', advLogInterval:'Günlük aralığı', advLogEveryAction:'Her işlem', advLogEveryHand:'Her el', advSecIgnored:'Yok sayılan oyuncular', advIgnoredDesc:'Yok sayma listesindeki oyuncular sohbette gizlenir.',
-    advIgnoredEmpty:'(yok sayılan oyuncu yok)', advIgnoredRemove:'Kaldır', advLobbyChat:'Lobi sohbetini göster', advTableZoom:'Masa yakınlaştırmayı etkinleştir (büyüteç düğmeleri)', advSeatSync:'Koltukları yönle eşitle (PokerTH dikey/yatay)',
-    advChatTranslate:'Sohbet çevirisi (tarayıcı API\'si, mesaj başına düğme)', chatTranslateUnsupported:'Bu tarayıcı çeviriyi desteklemiyor (güncel Chrome/Edge gerekli).', chatTranslateFailed:'Çeviri başarısız oldu', wcHideOpt:'Bu pencereyi bir daha gösterme',
+    advIgnoredEmpty:'(yok sayılan oyuncu yok)', advIgnoredRemove:'Kaldır', advLobbyChat:'Lobi sohbetini göster', advTableZoom:'Masa yakınlaştırmayı etkinleştir (büyüteç düğmeleri)',    advChatTranslate:'Sohbet çevirisi (tarayıcı API\'si, mesaj başına düğme)', chatTranslateUnsupported:'Bu tarayıcı çeviriyi desteklemiyor (güncel Chrome/Edge gerekli).', chatTranslateFailed:'Çeviri başarısız oldu', wcHideOpt:'Bu pencereyi bir daha gösterme',
     styleExpand:'Genişlet', styleCollapse:'Daralt', themeLight:'Açık', modeAuto:'Otomatik', modeLight:'Açık', modeDark:'Koyu', styleBy:'yapan:', styleSelected:'Seçili', importTable:'Masa içe aktar (.zip)', importDeck:'Deste içe aktar (.zip)',
     importError:'İçe aktarma başarısız', confirmDeleteStyle:'Bu içe aktarılan stil silinsin mi?', delete:'Sil', advSecAppearance:'Görünüm', advDarkMode:'Koyu mod', tableGreenFelt:'Yeşil masa', tableCasino:'Yeşil kumarhane', themeExport:'Temayı dışa aktar (.zip)',
     sectionAdvanced:'Gelişmiş', rankingSeasonStats:'Sezon istatistikleri', rankingShare:'Pay', rankingResults:'Sonuçlar', rankingToggleChart:'Çubuk / pasta değiştir', footPlayer:'Oyuncu', footCreate:'＋ Masa oluştur', gameInfoTitle:'Oyun bilgisi',

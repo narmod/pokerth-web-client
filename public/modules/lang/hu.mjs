@@ -18,7 +18,7 @@ export const strings = {
     winnerBadge:'GYŐZTES',
     // GameStatusBar (bandeau d'info de jeu, parité QML §7)
     gsbTotal:'Összesen:', gsbBets:'Tétek:', gsbGame:'Játék:', gsbHand:'Leosztás:',
-  seatPokerthPortrait: "PokerTH Álló", seatPokerthLandscape: "PokerTH Fekvő",
+  seatPokerth: 'PokerTH',
   advUiGeneral:'Általános', advUiNetwork:'Hálózat', advShowTooltips:'Elemleírások megjelenítése', advDisableSplash:'Nyitóképernyő letiltása indításkor', advDontTranslatePoker:'Ne fordítsa a pókerkifejezéseket (Check, Call, Raise)', advNA:'web', advLanguage:'Nyelv', advDefCommunity:'Alapértelmezett közösség', advSecReactions:'Reakciók', advDisableReactions:'Emoji-reakciók letiltása', advNetStateColor:'Hálózati állapot színének megjelenítése az avatar sarkában',
   showPlayers: `Játékosok megjelenítése`,
   footJoin: `Csatlakozás`,
@@ -668,7 +668,7 @@ export const strings = {
     nextHandBtn:'Következő leosztás', advSecTablePrefs:'Asztalbeállítások', advTablePrefsDesc:'Az ebben a módban létrehozott asztalok alapértékei — az űrlap ⭐ gombja betölti őket.', advRaiseEveryHands:'Vakemelés minden N. leosztásnál',
     advGameSpeed:'Játéksebesség (1–11)', advSecLogSettings:'Naplóbeállítások', advLogOn:'Naplózás bekapcsolása', advLogInterval:'Naplózási időköz', advLogEveryAction:'Minden művelet', advLogEveryHand:'Minden leosztás', advSecIgnored:'Mellőzött játékosok',
     advIgnoredDesc:'A mellőzési listán lévő játékosok rejtve vannak a csevegésben.', advIgnoredEmpty:'(nincs mellőzött játékos)', advIgnoredRemove:'Eltávolítás', advLobbyChat:'Lobbicsevegés megjelenítése', advTableZoom:'Asztalnagyítás engedélyezése (nagyító gombok)',
-    advSeatSync:'Ülések szinkronizálása a tájolással (PokerTH álló/fekvő)', advChatTranslate:'Csevegésfordítás (böngésző API, gomb üzenetenként)', chatTranslateUnsupported:'Ez a böngésző nem támogatja a fordítást (friss Chrome/Edge szükséges).',
+    advChatTranslate:'Csevegésfordítás (böngésző API, gomb üzenetenként)', chatTranslateUnsupported:'Ez a böngésző nem támogatja a fordítást (friss Chrome/Edge szükséges).',
     chatTranslateFailed:'A fordítás nem sikerült', wcHideOpt:'Ne jelenjen meg többé ez az ablak', styleExpand:'Kibontás', styleCollapse:'Összecsukás', themeLight:'Világos', modeAuto:'Automatikus', modeLight:'Világos', modeDark:'Sötét',
     styleBy:'készítő:', styleSelected:'Kiválasztva', importTable:'Asztal importálása (.zip)', importDeck:'Pakli importálása (.zip)', importError:'Az importálás nem sikerült', confirmDeleteStyle:'Törlöd ezt az importált stílust?', delete:'Törlés',
     advSecAppearance:'Megjelenés', advDarkMode:'Sötét mód', tableGreenFelt:'Zöld asztal', tableCasino:'Zöld kaszinó', themeExport:'Téma exportálása (.zip)', sectionAdvanced:'Haladó', rankingSeasonStats:'Szezonstatisztika', rankingShare:'Részesedés',

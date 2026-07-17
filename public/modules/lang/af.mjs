@@ -18,7 +18,7 @@ export const strings = {
     winnerBadge:'WENNER',
     // GameStatusBar (bandeau d'info de jeu, parité QML §7)
     gsbTotal:'Totaal:', gsbBets:'Weddenskappe:', gsbGame:'Spel:', gsbHand:'Hand:',
-  seatPokerthPortrait: "PokerTH Portret", seatPokerthLandscape: "PokerTH Landskap",
+  seatPokerth: 'PokerTH',
   advUiGeneral:'Algemeen', advUiNetwork:'Netwerk', advShowTooltips:'Wys nutswenke', advDisableSplash:'Deaktiveer die aanvangskerm met opstart', advDontTranslatePoker:'Moenie pokerterme vertaal nie (Check, Call, Raise)', advNA:'web', advLanguage:'Taal', advDefCommunity:'Verstekgemeenskap', advSecReactions:'Reaksies', advDisableReactions:'Deaktiveer emoji-reaksies', advNetStateColor:'Wys netwerkstatuskleur in die avatar-hoek',
   showPlayers: `Wys spelers`,
   footJoin: `Sluit aan`,
@@ -668,7 +668,7 @@ export const strings = {
     nextHandBtn:'Volgende hand', advSecTablePrefs:'Tafelvoorkeure', advTablePrefsDesc:'Verstekwaardes vir die tafels wat jy in hierdie modus skep — die ⭐-knoppie op die vorm laai hulle.', advRaiseEveryHands:'Verhoog blinds elke N hande',
     advGameSpeed:'Spelspoed (1–11)', advSecLogSettings:'Log-instellings', advLogOn:'Aktiveer logboek', advLogInterval:'Log-interval', advLogEveryAction:'Elke aksie', advLogEveryHand:'Elke hand', advSecIgnored:'Geïgnoreerde spelers',
     advIgnoredDesc:'Spelers op die ignoreerlys word in die klets versteek.', advIgnoredEmpty:'(geen geïgnoreerde spelers nie)', advIgnoredRemove:'Verwyder', advLobbyChat:'Wys die voorportaal-klets', advTableZoom:'Aktiveer tafelzoem (vergrootglas-knoppies)',
-    advSeatSync:'Sinkroniseer sitplekke met oriëntasie (PokerTH portret/landskap)', advChatTranslate:'Kletsvertaling (blaaier-API, knoppie per boodskap)', chatTranslateUnsupported:'Hierdie blaaier ondersteun nie vertaling nie (onlangse Chrome/Edge benodig).',
+    advChatTranslate:'Kletsvertaling (blaaier-API, knoppie per boodskap)', chatTranslateUnsupported:'Hierdie blaaier ondersteun nie vertaling nie (onlangse Chrome/Edge benodig).',
     chatTranslateFailed:'Vertaling het misluk', wcHideOpt:'Moenie hierdie venster weer wys nie', styleExpand:'Vou oop', styleCollapse:'Vou toe', themeLight:'Lig', modeAuto:'Outomaties', modeLight:'Lig', modeDark:'Donker', styleBy:'deur',
     styleSelected:'Gekies', importTable:'Voer \'n tafel in (.zip)', importDeck:'Voer \'n kaartstel in (.zip)', importError:'Invoer het misluk', confirmDeleteStyle:'Vee hierdie ingevoerde styl uit?', delete:'Vee uit', advSecAppearance:'Voorkoms',
     advDarkMode:'Donker modus', tableGreenFelt:'Groen tafel', tableCasino:'Groen casino', themeExport:'Voer tema uit (.zip)', sectionAdvanced:'Gevorderd', rankingSeasonStats:'Seisoenstatistiek', rankingShare:'Aandeel', rankingResults:'Resultate',

@@ -18,7 +18,7 @@ export const strings = {
     winnerBadge:'GAÑADOR',
     // GameStatusBar (bandeau d'info de jeu, parité QML §7)
     gsbTotal:'Total:', gsbBets:'Apostas:', gsbGame:'Partida:', gsbHand:'Man:',
-  seatPokerthPortrait: "PokerTH Vertical", seatPokerthLandscape: "PokerTH Horizontal",
+  seatPokerth: 'PokerTH',
   advUiGeneral:'Xeral', advUiNetwork:'Rede', advShowTooltips:'Amosar os consellos', advDisableSplash:'Desactivar a pantalla de benvida no inicio', advDontTranslatePoker:'Non traducir os termos de póker (Check, Call, Raise)', advNA:'web', advLanguage:'Idioma', advDefCommunity:'Comunidade predeterminada', advSecReactions:'Reaccións', advDisableReactions:'Desactivar as reaccións emoji', advNetStateColor:'Amosar a cor do estado da rede na esquina do avatar',
   showPlayers: `Ver xogadores`,
   footJoin: `Entrar`,
@@ -668,7 +668,7 @@ export const strings = {
     presetBbcDesc:'cegas por tempo', advSecLocalGame:'Partida de adestramento', advPauseHands:'Pausa entre mans (continuar desde a xanela do gañador)', nextHandBtn:'Seguinte man', advSecTablePrefs:'Preferencias de mesa', advTablePrefsDesc:'Valores por defecto das mesas que creas neste modo — o botón ⭐ do formulario cárgaos.',
     advRaiseEveryHands:'Subir as cegas cada N mans', advGameSpeed:'Velocidade de xogo (1–11)', advSecLogSettings:'Axustes do rexistro', advLogOn:'Activar o rexistro', advLogInterval:'Intervalo do rexistro', advLogEveryAction:'Cada acción',
     advLogEveryHand:'Cada man', advSecIgnored:'Xogadores ignorados', advIgnoredDesc:'Os xogadores da lista de ignorados agóchanse do chat.', advIgnoredEmpty:'(ningún xogador ignorado)', advIgnoredRemove:'Quitar', advLobbyChat:'Mostrar o chat do lobby',
-    advTableZoom:'Activar o zoom da mesa (botóns lupa)', advSeatSync:'Sincronizar os asentos coa orientación (PokerTH vertical/horizontal)', advChatTranslate:'Tradución do chat (API do navegador, botón por mensaxe)', chatTranslateUnsupported:'Este navegador non admite a tradución (precísase Chrome/Edge recente).',
+    advTableZoom:'Activar o zoom da mesa (botóns lupa)', advChatTranslate:'Tradución do chat (API do navegador, botón por mensaxe)', chatTranslateUnsupported:'Este navegador non admite a tradución (precísase Chrome/Edge recente).',
     chatTranslateFailed:'Fallou a tradución', wcHideOpt:'Non volver mostrar esta xanela', styleExpand:'Despregar', styleCollapse:'Pregar', themeLight:'Claro', modeAuto:'Automático', modeLight:'Claro', modeDark:'Escuro', styleBy:'de',
     styleSelected:'Seleccionado', importTable:'Importar unha mesa (.zip)', importDeck:'Importar unha baralla (.zip)', importError:'Fallou a importación', confirmDeleteStyle:'Eliminar este estilo importado?', delete:'Eliminar', advSecAppearance:'Aparencia',
     advDarkMode:'Modo escuro', tableGreenFelt:'Mesa verde', tableCasino:'Casino verde', themeExport:'Exportar tema (.zip)', sectionAdvanced:'Avanzado', rankingSeasonStats:'Estatísticas da tempada', rankingShare:'Cota', rankingResults:'Resultados',

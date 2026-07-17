@@ -25,7 +25,7 @@ export const strings = {
     winnerBadge:'GEWINNER',
     // GameStatusBar (bandeau d'info de jeu, parité QML §7)
     gsbTotal:'Gesamt:', gsbBets:'Einsätze:', gsbGame:'Spiel:', gsbHand:'Hand:',
-  seatPokerthPortrait: "PokerTH Hochformat", seatPokerthLandscape: "PokerTH Querformat",
+  seatPokerth: 'PokerTH',
   advUiGeneral:'Allgemein', advUiNetwork:'Netzwerk', advShowTooltips:'Tooltips anzeigen', advDisableSplash:'Begrüßungsbildschirm beim Start deaktivieren', advDontTranslatePoker:'Poker-Begriffe nicht übersetzen (Check, Call, Raise)', advNA:'web', advLanguage:'Sprache', advDefCommunity:'Standard-Community', advSecReactions:'Reaktionen', advDisableReactions:'Emoji-Reaktionen deaktivieren', advNetStateColor:'Netzwerkstatus-Farbe in der Avatar-Ecke anzeigen',
   showPlayers: `Spieler anzeigen`,
   footJoin: `Beitreten`,
@@ -675,7 +675,7 @@ export const strings = {
     nextHandBtn:'Nächste Hand', advSecTablePrefs:'Tisch-Voreinstellungen', advTablePrefsDesc:'Standardwerte für die Tische, die du in diesem Modus erstellst — die ⭐-Schaltfläche im Formular lädt sie.', advRaiseEveryHands:'Blinds alle N Hände erhöhen',
     advGameSpeed:'Spielgeschwindigkeit (1–11)', advSecLogSettings:'Log-Einstellungen', advLogOn:'Protokollierung aktivieren', advLogInterval:'Log-Intervall', advLogEveryAction:'Jede Aktion', advLogEveryHand:'Jede Hand', advSecIgnored:'Ignorierte Spieler',
     advIgnoredDesc:'Spieler auf der Ignorierliste werden im Chat ausgeblendet.', advIgnoredEmpty:'(keine ignorierten Spieler)', advIgnoredRemove:'Entfernen', advLobbyChat:'Lobby-Chat anzeigen', advTableZoom:'Tisch-Zoom aktivieren (Lupen-Buttons)',
-    advSeatSync:'Sitze mit der Ausrichtung synchronisieren (PokerTH Hoch-/Querformat)', advChatTranslate:'Chat-Übersetzung (Browser-API, Button pro Nachricht)', chatTranslateUnsupported:'Übersetzung wird von diesem Browser nicht unterstützt (aktuelles Chrome/Edge nötig).',
+    advChatTranslate:'Chat-Übersetzung (Browser-API, Button pro Nachricht)', chatTranslateUnsupported:'Übersetzung wird von diesem Browser nicht unterstützt (aktuelles Chrome/Edge nötig).',
     chatTranslateFailed:'Übersetzung fehlgeschlagen', wcHideOpt:'Dieses Fenster nicht mehr anzeigen', styleExpand:'Aufklappen', styleCollapse:'Einklappen', themeLight:'Hell', modeAuto:'Automatisch', modeLight:'Hell', modeDark:'Dunkel',
     styleBy:'von', styleSelected:'Ausgewählt', importTable:'Tisch importieren (.zip)', importDeck:'Kartendeck importieren (.zip)', importError:'Import fehlgeschlagen', confirmDeleteStyle:'Diesen importierten Stil löschen?', delete:'Löschen',
     advSecAppearance:'Darstellung', advDarkMode:'Dunkler Modus', tableGreenFelt:'Grüner Tisch', tableCasino:'Grünes Casino', themeExport:'Thema exportieren (.zip)', sectionAdvanced:'Erweitert', rankingSeasonStats:'Saison-Statistiken',

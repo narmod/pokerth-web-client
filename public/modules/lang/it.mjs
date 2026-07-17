@@ -25,7 +25,7 @@ export const strings = {
     winnerBadge:'VINCITORE',
     // GameStatusBar (bandeau d'info de jeu, parité QML §7)
     gsbTotal:'Totale:', gsbBets:'Puntate:', gsbGame:'Partita:', gsbHand:'Mano:',
-  seatPokerthPortrait: "PokerTH Verticale", seatPokerthLandscape: "PokerTH Orizzontale",
+  seatPokerth: 'PokerTH',
   advUiGeneral:'Generale', advUiNetwork:'Rete', advShowTooltips:'Mostra i suggerimenti', advDisableSplash:'Disabilita la schermata iniziale all\'avvio', advDontTranslatePoker:'Non tradurre i termini del poker (Check, Call, Raise)', advNA:'web', advLanguage:'Lingua', advDefCommunity:'Community predefinita', advSecReactions:'Reazioni', advDisableReactions:'Disabilita le reazioni con emoji', advNetStateColor:'Mostra il colore dello stato di rete nell\'angolo dell\'avatar',
   showPlayers: `Mostra giocatori`,
   footJoin: `Entra`,
@@ -675,7 +675,7 @@ export const strings = {
     presetBbcDesc:'bui a tempo', advSecLocalGame:'Partita di allenamento', advPauseHands:'Pausa tra le mani (continua dalla finestra del vincitore)', nextHandBtn:'Mano successiva', advSecTablePrefs:'Preferenze del tavolo', advTablePrefsDesc:'Valori predefiniti dei tavoli che crei in questa modalità — il pulsante ⭐ del modulo li carica.',
     advRaiseEveryHands:'Aumenta i bui ogni N mani', advGameSpeed:'Velocità di gioco (1–11)', advSecLogSettings:'Impostazioni del log', advLogOn:'Attiva la registrazione', advLogInterval:'Intervallo del log', advLogEveryAction:'Ogni azione',
     advLogEveryHand:'Ogni mano', advSecIgnored:'Giocatori ignorati', advIgnoredDesc:'I giocatori nella lista degli ignorati sono nascosti dalla chat.', advIgnoredEmpty:'(nessun giocatore ignorato)', advIgnoredRemove:'Rimuovi', advLobbyChat:'Mostra la chat della lobby',
-    advTableZoom:'Attiva lo zoom del tavolo (pulsanti lente)', advSeatSync:'Sincronizza i posti con l\'orientamento (PokerTH verticale/orizzontale)', advChatTranslate:'Traduzione della chat (API del browser, pulsante per messaggio)',
+    advTableZoom:'Attiva lo zoom del tavolo (pulsanti lente)', advChatTranslate:'Traduzione della chat (API del browser, pulsante per messaggio)',
     chatTranslateUnsupported:'Questo browser non supporta la traduzione (richiede Chrome/Edge recente).', chatTranslateFailed:'Traduzione non riuscita', wcHideOpt:'Non mostrare più questa finestra', styleExpand:'Espandi', styleCollapse:'Riduci',
     themeLight:'Chiaro', modeAuto:'Automatico', modeLight:'Chiaro', modeDark:'Scuro', styleBy:'di', styleSelected:'Selezionato', importTable:'Importa un tavolo (.zip)', importDeck:'Importa un mazzo (.zip)', importError:'Importazione non riuscita',
     confirmDeleteStyle:'Eliminare questo stile importato?', delete:'Elimina', advSecAppearance:'Aspetto', advDarkMode:'Modalità scura', tableGreenFelt:'Tavolo verde', tableCasino:'Casinò verde', themeExport:'Esporta tema (.zip)', sectionAdvanced:'Avanzate',

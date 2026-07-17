@@ -19,7 +19,7 @@ export const strings = {
     winnerBadge:'獲勝者',
     // GameStatusBar (bandeau d'info de jeu, parité QML §7)
     gsbTotal:'總計:', gsbBets:'下注:', gsbGame:'遊戲:', gsbHand:'手數:',
-  seatPokerthPortrait: "PokerTH 直向", seatPokerthLandscape: "PokerTH 橫向",
+  seatPokerth: 'PokerTH',
   advUiGeneral:'一般', advUiNetwork:'網路', advShowTooltips:'顯示工具提示', advDisableSplash:'啟動時停用啟動畫面', advDontTranslatePoker:'不翻譯撲克術語（Check、Call、Raise）', advNA:'web', advLanguage:'語言', advDefCommunity:'預設社群', advSecReactions:'表情反應', advDisableReactions:'停用表情符號反應', advNetStateColor:'在頭像角落顯示網路狀態顏色',
   showPlayers: `顯示玩家`,
   footJoin: `加入`,
@@ -666,7 +666,7 @@ export const strings = {
     gameNameLabel:'遊戲名稱', passwordLabel:'密碼', startCash:'起始籌碼', blindsSettings:'盲注設定', firstSmallBlind:'第一個小盲注', blindInterval:'盲注調升間隔', unitHands:'手', timeLimits:'時間限制', actionTimeout:'每次行動時間', pauseBetweenHands:'每手牌之間暫停', guestNeedAccount:'需要帳號',
     guestJoinBlocked:'訪客只能加入一般遊戲 — 請用已註冊的 pokerth.net 帳號登入才能在此桌遊玩。', presetRankingName:'排名', presetRankingDesc:'官方節奏', presetWecupDesc:'均衡錦標賽', presetBbcDesc:'依時間調升盲注', advSecLocalGame:'訓練遊戲', advPauseHands:'每手牌之間暫停（透過贏家視窗繼續）', nextHandBtn:'下一手',
     advSecTablePrefs:'牌桌偏好', advTablePrefsDesc:'此模式下建立牌桌的預設值 — 表單中的 ⭐ 按鈕會載入它們。', advRaiseEveryHands:'每 N 手調升盲注', advGameSpeed:'遊戲速度（1–11）', advSecLogSettings:'日誌設定', advLogOn:'啟用日誌', advLogInterval:'日誌間隔', advLogEveryAction:'每個動作', advLogEveryHand:'每手牌',
-    advSecIgnored:'已忽略的玩家', advIgnoredDesc:'忽略清單中的玩家在聊天室中被隱藏。', advIgnoredEmpty:'（沒有已忽略的玩家）', advIgnoredRemove:'移除', advLobbyChat:'顯示大廳聊天室', advTableZoom:'啟用牌桌縮放（放大鏡按鈕）', advSeatSync:'座位隨螢幕方向同步（PokerTH 直向/橫向）', advChatTranslate:'聊天翻譯（瀏覽器 API，每則訊息一個按鈕）',
+    advSecIgnored:'已忽略的玩家', advIgnoredDesc:'忽略清單中的玩家在聊天室中被隱藏。', advIgnoredEmpty:'（沒有已忽略的玩家）', advIgnoredRemove:'移除', advLobbyChat:'顯示大廳聊天室', advTableZoom:'啟用牌桌縮放（放大鏡按鈕）', advChatTranslate:'聊天翻譯（瀏覽器 API，每則訊息一個按鈕）',
     chatTranslateUnsupported:'此瀏覽器不支援翻譯（需要較新的 Chrome/Edge）。', chatTranslateFailed:'翻譯失敗', wcHideOpt:'不再顯示此視窗', styleExpand:'展開', styleCollapse:'收合', themeLight:'淺色', modeAuto:'自動', modeLight:'淺色', modeDark:'深色', styleBy:'作者:', styleSelected:'已選擇',
     importTable:'匯入牌桌（.zip）', importDeck:'匯入牌組（.zip）', importError:'匯入失敗', confirmDeleteStyle:'刪除這個匯入的樣式？', delete:'刪除', advSecAppearance:'外觀', advDarkMode:'深色模式', tableGreenFelt:'綠色牌桌', tableCasino:'綠色賭場', themeExport:'匯出主題（.zip）', sectionAdvanced:'進階',
     rankingSeasonStats:'賽季統計', rankingShare:'占比', rankingResults:'結果', rankingToggleChart:'切換長條 / 圓餅', footPlayer:'玩家', footCreate:'＋ 建立牌桌', gameInfoTitle:'遊戲資訊', gameInfoEmpty:'請選擇一張牌桌', gfNone:'無清單篩選', gfOpen:'顯示開放的遊戲', gfOpenNF:'開放且未滿的遊戲',

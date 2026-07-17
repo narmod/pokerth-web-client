@@ -23,7 +23,7 @@ export const strings = {
     winnerBadge:'WINNAAR',
     // GameStatusBar (bandeau d'info de jeu, parité QML §7)
     gsbTotal:'Totaal:', gsbBets:'Inzetten:', gsbGame:'Spel:', gsbHand:'Hand:',
-  seatPokerthPortrait: "PokerTH Staand", seatPokerthLandscape: "PokerTH Liggend",
+  seatPokerth: 'PokerTH',
   advUiGeneral:'Algemeen', advUiNetwork:'Netwerk', advShowTooltips:'Tooltips tonen', advDisableSplash:'Het opstartscherm uitschakelen', advDontTranslatePoker:'Pokertermen niet vertalen (Check, Call, Raise)', advNA:'web', advLanguage:'Taal', advDefCommunity:'Standaardcommunity', advSecReactions:'Reacties', advDisableReactions:'Emoji-reacties uitschakelen', advNetStateColor:'Netwerkstatuskleur in de avatarhoek tonen',
   showPlayers: `Spelers tonen`,
   footJoin: `Meedoen`,
@@ -671,7 +671,7 @@ export const strings = {
     presetBbcDesc:'blinds op tijd', advSecLocalGame:'Oefenspel', advPauseHands:'Pauze tussen handen (verder via het winnaarsvenster)', nextHandBtn:'Volgende hand', advSecTablePrefs:'Tafelvoorkeuren', advTablePrefsDesc:'Standaardwaarden voor de tafels die je in deze modus maakt — de ⭐-knop in het formulier laadt ze.',
     advRaiseEveryHands:'Blinds elke N handen verhogen', advGameSpeed:'Spelsnelheid (1–11)', advSecLogSettings:'Loginstellingen', advLogOn:'Logboek inschakelen', advLogInterval:'Loginterval', advLogEveryAction:'Elke actie', advLogEveryHand:'Elke hand',
     advSecIgnored:'Genegeerde spelers', advIgnoredDesc:'Spelers op de negeerlijst zijn verborgen in de chat.', advIgnoredEmpty:'(geen genegeerde spelers)', advIgnoredRemove:'Verwijderen', advLobbyChat:'Lobbychat tonen', advTableZoom:'Tafelzoom inschakelen (loepknoppen)',
-    advSeatSync:'Zitplaatsen synchroniseren met oriëntatie (PokerTH portret/landschap)', advChatTranslate:'Chatvertaling (browser-API, knop per bericht)', chatTranslateUnsupported:'Vertaling wordt niet ondersteund door deze browser (recente Chrome/Edge vereist).',
+    advChatTranslate:'Chatvertaling (browser-API, knop per bericht)', chatTranslateUnsupported:'Vertaling wordt niet ondersteund door deze browser (recente Chrome/Edge vereist).',
     chatTranslateFailed:'Vertaling mislukt', wcHideOpt:'Dit venster niet meer tonen', styleExpand:'Uitklappen', styleCollapse:'Inklappen', themeLight:'Licht', modeAuto:'Automatisch', modeLight:'Licht', modeDark:'Donker', styleBy:'van',
     styleSelected:'Geselecteerd', importTable:'Tafel importeren (.zip)', importDeck:'Kaartspel importeren (.zip)', importError:'Import mislukt', confirmDeleteStyle:'Deze geïmporteerde stijl verwijderen?', delete:'Verwijderen', advSecAppearance:'Weergave',
     advDarkMode:'Donkere modus', tableGreenFelt:'Groene tafel', tableCasino:'Groen casino', themeExport:'Thema exporteren (.zip)', sectionAdvanced:'Geavanceerd', rankingSeasonStats:'Seizoensstatistieken', rankingShare:'Aandeel', rankingResults:'Resultaten',

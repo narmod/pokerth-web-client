@@ -17,7 +17,7 @@ export const strings = {
     winnerBadge:'VINDER',
     // GameStatusBar (bandeau d'info de jeu, parité QML §7)
     gsbTotal:'Total:', gsbBets:'Indsatser:', gsbGame:'Spil:', gsbHand:'Hånd:',
-  seatPokerthPortrait: "PokerTH Stående", seatPokerthLandscape: "PokerTH Liggende",
+  seatPokerth: 'PokerTH',
   advUiGeneral:'Generelt', advUiNetwork:'Netværk', advShowTooltips:'Vis værktøjstips', advDisableSplash:'Deaktivér velkomstskærmen ved opstart', advDontTranslatePoker:'Oversæt ikke pokerudtryk (Check, Call, Raise)', advNA:'web', advLanguage:'Sprog', advDefCommunity:'Standardfællesskab', advSecReactions:'Reaktioner', advDisableReactions:'Deaktivér emoji-reaktioner', advNetStateColor:'Vis netværksstatusfarve i avatarens hjørne',
   showPlayers: `Vis spillere`,
   footJoin: `Deltag`,
@@ -667,7 +667,7 @@ export const strings = {
     presetBbcDesc:'tidsbaserede blinds', advSecLocalGame:'Træningsspil', advPauseHands:'Pause mellem hænder (fortsæt via vinduet med vinderen)', nextHandBtn:'Næste hånd', advSecTablePrefs:'Bordindstillinger', advTablePrefsDesc:'Standardværdier for de borde, du opretter i denne tilstand — ⭐-knappen i formularen indlæser dem.',
     advRaiseEveryHands:'Forhøj blinds hver N. hånd', advGameSpeed:'Spilhastighed (1–11)', advSecLogSettings:'Log-indstillinger', advLogOn:'Aktivér logning', advLogInterval:'Log-interval', advLogEveryAction:'Hver handling', advLogEveryHand:'Hver hånd',
     advSecIgnored:'Ignorerede spillere', advIgnoredDesc:'Spillere på ignoreringslisten er skjult i chatten.', advIgnoredEmpty:'(ingen ignorerede spillere)', advIgnoredRemove:'Fjern', advLobbyChat:'Vis lobby-chatten', advTableZoom:'Aktivér bordzoom (lup-knapper)',
-    advSeatSync:'Synkronisér sæder med orientering (PokerTH portræt/landskab)', advChatTranslate:'Chat-oversættelse (browser-API, knap pr. besked)', chatTranslateUnsupported:'Oversættelse understøttes ikke af denne browser (nyere Chrome/Edge kræves).',
+    advChatTranslate:'Chat-oversættelse (browser-API, knap pr. besked)', chatTranslateUnsupported:'Oversættelse understøttes ikke af denne browser (nyere Chrome/Edge kræves).',
     chatTranslateFailed:'Oversættelse mislykkedes', wcHideOpt:'Vis ikke dette vindue igen', styleExpand:'Udvid', styleCollapse:'Skjul', themeLight:'Lys', modeAuto:'Automatisk', modeLight:'Lys', modeDark:'Mørk', styleBy:'af', styleSelected:'Valgt',
     importTable:'Importér et bord (.zip)', importDeck:'Importér et kortspil (.zip)', importError:'Import mislykkedes', confirmDeleteStyle:'Slet denne importerede stil?', delete:'Slet', advSecAppearance:'Udseende', advDarkMode:'Mørk tilstand',
     tableGreenFelt:'Grønt bord', tableCasino:'Grønt casino', themeExport:'Eksportér tema (.zip)', sectionAdvanced:'Avanceret', rankingSeasonStats:'Sæsonstatistik', rankingShare:'Andel', rankingResults:'Resultater', rankingToggleChart:'Skift søjle / lagkage',

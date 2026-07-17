@@ -18,7 +18,7 @@ export const strings = {
     winnerBadge:'NGƯỜI THẮNG',
     // GameStatusBar (bandeau d'info de jeu, parité QML §7)
     gsbTotal:'Tổng:', gsbBets:'Cược:', gsbGame:'Trò chơi:', gsbHand:'Ván bài:',
-  seatPokerthPortrait: "PokerTH Dọc", seatPokerthLandscape: "PokerTH Ngang",
+  seatPokerth: 'PokerTH',
   advUiGeneral:'Chung', advUiNetwork:'Mạng', advShowTooltips:'Hiển thị chú giải công cụ', advDisableSplash:'Tắt màn hình chờ khi khởi động', advDontTranslatePoker:'Không dịch các thuật ngữ poker (Check, Call, Raise)', advNA:'web', advLanguage:'Ngôn ngữ', advDefCommunity:'Cộng đồng mặc định', advSecReactions:'Phản ứng', advDisableReactions:'Tắt phản ứng biểu tượng cảm xúc', advNetStateColor:'Hiển thị màu trạng thái mạng ở góc ảnh đại diện',
   showPlayers: `Xem người chơi`,
   footJoin: `Vào`,
@@ -668,7 +668,7 @@ export const strings = {
     nextHandBtn:'Ván bài tiếp theo', advSecTablePrefs:'Tùy chọn bàn', advTablePrefsDesc:'Giá trị mặc định cho các bàn bạn tạo ở chế độ này — nút ⭐ trong biểu mẫu sẽ tải chúng.', advRaiseEveryHands:'Tăng blind sau mỗi N ván bài',
     advGameSpeed:'Tốc độ ván (1–11)', advSecLogSettings:'Cài đặt nhật ký', advLogOn:'Bật ghi nhật ký', advLogInterval:'Khoảng ghi nhật ký', advLogEveryAction:'Mỗi hành động', advLogEveryHand:'Mỗi ván bài', advSecIgnored:'Người chơi bị bỏ qua',
     advIgnoredDesc:'Người chơi trong danh sách bỏ qua bị ẩn khỏi trò chuyện.', advIgnoredEmpty:'(không có người chơi bị bỏ qua)', advIgnoredRemove:'Gỡ bỏ', advLobbyChat:'Hiện trò chuyện sảnh', advTableZoom:'Bật thu phóng bàn (nút kính lúp)',
-    advSeatSync:'Đồng bộ chỗ ngồi theo hướng màn hình (PokerTH dọc/ngang)', advChatTranslate:'Dịch trò chuyện (API trình duyệt, nút theo từng tin nhắn)', chatTranslateUnsupported:'Trình duyệt này không hỗ trợ dịch (cần Chrome/Edge mới).',
+    advChatTranslate:'Dịch trò chuyện (API trình duyệt, nút theo từng tin nhắn)', chatTranslateUnsupported:'Trình duyệt này không hỗ trợ dịch (cần Chrome/Edge mới).',
     chatTranslateFailed:'Dịch thất bại', wcHideOpt:'Không hiển thị cửa sổ này nữa', styleExpand:'Mở rộng', styleCollapse:'Thu gọn', themeLight:'Sáng', modeAuto:'Tự động', modeLight:'Sáng', modeDark:'Tối', styleBy:'bởi', styleSelected:'Đã chọn',
     importTable:'Nhập bàn (.zip)', importDeck:'Nhập bộ bài (.zip)', importError:'Nhập thất bại', confirmDeleteStyle:'Xóa kiểu đã nhập này?', delete:'Xóa', advSecAppearance:'Giao diện', advDarkMode:'Chế độ tối', tableGreenFelt:'Bàn xanh',
     tableCasino:'Sòng bài xanh', themeExport:'Xuất chủ đề (.zip)', sectionAdvanced:'Nâng cao', rankingSeasonStats:'Thống kê mùa giải', rankingShare:'Tỷ lệ', rankingResults:'Kết quả', rankingToggleChart:'Chuyển cột / tròn', footPlayer:'Người chơi',

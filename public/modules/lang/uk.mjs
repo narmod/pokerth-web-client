@@ -17,7 +17,7 @@ export const strings = {
     winnerBadge:'ПЕРЕМОЖЕЦЬ',
     // GameStatusBar (bandeau d'info de jeu, parité QML §7)
     gsbTotal:'Всього:', gsbBets:'Ставки:', gsbGame:'Гра:', gsbHand:'Роздача:',
-  seatPokerthPortrait: "PokerTH Портрет", seatPokerthLandscape: "PokerTH Альбом",
+  seatPokerth: 'PokerTH',
   advUiGeneral:'Загальні', advUiNetwork:'Мережа', advShowTooltips:'Показувати підказки', advDisableSplash:'Вимкнути заставку під час запуску', advDontTranslatePoker:'Не перекладати покерні терміни (Check, Call, Raise)', advNA:'web', advLanguage:'Мова', advDefCommunity:'Спільнота за замовчуванням', advSecReactions:'Реакції', advDisableReactions:'Вимкнути емодзі-реакції', advNetStateColor:'Показувати колір стану мережі в кутку аватара',
   showPlayers: `Показати гравців`,
   footJoin: `Приєднатися`,
@@ -667,7 +667,7 @@ export const strings = {
     presetBbcDesc:'блайнди за часом', advSecLocalGame:'Тренувальна гра', advPauseHands:'Пауза між роздачами (продовження через вікно переможця)', nextHandBtn:'Наступна роздача', advSecTablePrefs:'Налаштування столу', advTablePrefsDesc:'Значення за замовчуванням для столів, які ви створюєте в цьому режимі — кнопка ⭐ у формі завантажує їх.',
     advRaiseEveryHands:'Підвищувати блайнди кожні N роздач', advGameSpeed:'Швидкість гри (1–11)', advSecLogSettings:'Налаштування журналу', advLogOn:'Увімкнути журнал', advLogInterval:'Інтервал журналу', advLogEveryAction:'Кожна дія',
     advLogEveryHand:'Кожна роздача', advSecIgnored:'Ігноровані гравці', advIgnoredDesc:'Гравці зі списку ігнорованих приховані в чаті.', advIgnoredEmpty:'(немає ігнорованих гравців)', advIgnoredRemove:'Прибрати', advLobbyChat:'Показувати чат лобі',
-    advTableZoom:'Увімкнути зум столу (кнопки лупи)', advSeatSync:'Синхронізувати місця з орієнтацією (PokerTH портрет/альбом)', advChatTranslate:'Переклад чату (API браузера, кнопка біля повідомлення)', chatTranslateUnsupported:'Переклад не підтримується цим браузером (потрібен свіжий Chrome/Edge).',
+    advTableZoom:'Увімкнути зум столу (кнопки лупи)', advChatTranslate:'Переклад чату (API браузера, кнопка біля повідомлення)', chatTranslateUnsupported:'Переклад не підтримується цим браузером (потрібен свіжий Chrome/Edge).',
     chatTranslateFailed:'Помилка перекладу', wcHideOpt:'Більше не показувати це вікно', styleExpand:'Розгорнути', styleCollapse:'Згорнути', themeLight:'Світла', modeAuto:'Автоматично', modeLight:'Світла', modeDark:'Темна', styleBy:'від',
     styleSelected:'Вибрано', importTable:'Імпортувати стіл (.zip)', importDeck:'Імпортувати колоду (.zip)', importError:'Помилка імпорту', confirmDeleteStyle:'Видалити цей імпортований стиль?', delete:'Видалити', advSecAppearance:'Оформлення',
     advDarkMode:'Темний режим', tableGreenFelt:'Зелений стіл', tableCasino:'Зелене казино', themeExport:'Експортувати тему (.zip)', sectionAdvanced:'Додатково', rankingSeasonStats:'Статистика сезону', rankingShare:'Частка', rankingResults:'Результати',

@@ -18,7 +18,7 @@ export const strings = {
     winnerBadge:'GUANYADOR',
     // GameStatusBar (bandeau d'info de jeu, parité QML §7)
     gsbTotal:'Total:', gsbBets:'Apostes:', gsbGame:'Partida:', gsbHand:'Mà:',
-  seatPokerthPortrait: "PokerTH Vertical", seatPokerthLandscape: "PokerTH Apaïsat",
+  seatPokerth: 'PokerTH',
   advUiGeneral:'General', advUiNetwork:'Xarxa', advShowTooltips:'Mostra els consells', advDisableSplash:'Desactiva la pantalla de benvinguda a l\'inici', advDontTranslatePoker:'No tradueixis els termes de pòquer (Check, Call, Raise)', advNA:'web', advLanguage:'Idioma', advDefCommunity:'Comunitat predeterminada', advSecReactions:'Reaccions', advDisableReactions:'Desactiva les reaccions emoji', advNetStateColor:'Mostra el color de l\'estat de la xarxa a la cantonada de l\'avatar',
   showPlayers: `Mostra els jugadors`,
   footJoin: `Entra`,
@@ -668,7 +668,7 @@ export const strings = {
     presetBbcDesc:'cegues per temps', advSecLocalGame:'Partida d\'entrenament', advPauseHands:'Pausa entre mans (continua des de la finestra del guanyador)', nextHandBtn:'Mà següent', advSecTablePrefs:'Preferències de taula', advTablePrefsDesc:'Valors per defecte de les taules que crees en aquest mode — el botó ⭐ del formulari els carrega.',
     advRaiseEveryHands:'Puja les cegues cada N mans', advGameSpeed:'Velocitat de joc (1–11)', advSecLogSettings:'Configuració del registre', advLogOn:'Activa el registre', advLogInterval:'Interval del registre', advLogEveryAction:'Cada acció',
     advLogEveryHand:'Cada mà', advSecIgnored:'Jugadors ignorats', advIgnoredDesc:'Els jugadors de la llista d\'ignorats s\'amaguen del xat.', advIgnoredEmpty:'(cap jugador ignorat)', advIgnoredRemove:'Treu', advLobbyChat:'Mostra el xat del lobby',
-    advTableZoom:'Activa el zoom de la taula (botons lupa)', advSeatSync:'Sincronitza els seients amb l\'orientació (PokerTH vertical/horitzontal)', advChatTranslate:'Traducció del xat (API del navegador, botó per missatge)', chatTranslateUnsupported:'Aquest navegador no admet la traducció (cal Chrome/Edge recent).',
+    advTableZoom:'Activa el zoom de la taula (botons lupa)', advChatTranslate:'Traducció del xat (API del navegador, botó per missatge)', chatTranslateUnsupported:'Aquest navegador no admet la traducció (cal Chrome/Edge recent).',
     chatTranslateFailed:'Ha fallat la traducció', wcHideOpt:'No tornis a mostrar aquesta finestra', styleExpand:'Desplega', styleCollapse:'Redueix', themeLight:'Clar', modeAuto:'Automàtic', modeLight:'Clar', modeDark:'Fosc', styleBy:'de',
     styleSelected:'Seleccionat', importTable:'Importa una taula (.zip)', importDeck:'Importa una baralla (.zip)', importError:'Ha fallat la importació', confirmDeleteStyle:'Vols suprimir aquest estil importat?', delete:'Suprimeix',
     advSecAppearance:'Aparença', advDarkMode:'Mode fosc', tableGreenFelt:'Taula verda', tableCasino:'Casino verd', themeExport:'Exporta el tema (.zip)', sectionAdvanced:'Avançat', rankingSeasonStats:'Estadístiques de temporada', rankingShare:'Quota',

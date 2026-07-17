@@ -18,7 +18,7 @@ export const strings = {
     winnerBadge:'VÍŤAZ',
     // GameStatusBar (bandeau d'info de jeu, parité QML §7)
     gsbTotal:'Spolu:', gsbBets:'Stávky:', gsbGame:'Hra:', gsbHand:'Rozdanie:',
-  seatPokerthPortrait: "PokerTH Na výšku", seatPokerthLandscape: "PokerTH Na šírku",
+  seatPokerth: 'PokerTH',
   advUiGeneral:'Všeobecné', advUiNetwork:'Sieť', advShowTooltips:'Zobraziť popisy', advDisableSplash:'Zakázať úvodnú obrazovku pri spustení', advDontTranslatePoker:'Neprekladať pokerové výrazy (Check, Call, Raise)', advNA:'web', advLanguage:'Jazyk', advDefCommunity:'Predvolená komunita', advSecReactions:'Reakcie', advDisableReactions:'Zakázať emoji reakcie', advNetStateColor:'Zobraziť farbu stavu siete v rohu avatara',
   showPlayers: `Zobraziť hráčov`,
   footJoin: `Pripojiť sa`,
@@ -668,7 +668,7 @@ export const strings = {
     nextHandBtn:'Ďalšia ruka', advSecTablePrefs:'Predvoľby stola', advTablePrefsDesc:'Predvolené hodnoty stolov, ktoré v tomto režime vytvárate — tlačidlo ⭐ vo formulári ich načíta.', advRaiseEveryHands:'Zvyšovať blindy každých N rúk',
     advGameSpeed:'Rýchlosť hry (1–11)', advSecLogSettings:'Nastavenia protokolu', advLogOn:'Zapnúť protokolovanie', advLogInterval:'Interval protokolu', advLogEveryAction:'Každá akcia', advLogEveryHand:'Každá ruka', advSecIgnored:'Ignorovaní hráči',
     advIgnoredDesc:'Hráči na zozname ignorovaných sú v chate skrytí.', advIgnoredEmpty:'(žiadni ignorovaní hráči)', advIgnoredRemove:'Odstrániť', advLobbyChat:'Zobraziť chat lobby', advTableZoom:'Povoliť zoom stola (tlačidlá lupy)',
-    advSeatSync:'Synchronizovať miesta s orientáciou (PokerTH na výšku/na šírku)', advChatTranslate:'Preklad chatu (API prehliadača, tlačidlo pri správe)', chatTranslateUnsupported:'Tento prehliadač preklad nepodporuje (vyžaduje sa novší Chrome/Edge).',
+    advChatTranslate:'Preklad chatu (API prehliadača, tlačidlo pri správe)', chatTranslateUnsupported:'Tento prehliadač preklad nepodporuje (vyžaduje sa novší Chrome/Edge).',
     chatTranslateFailed:'Preklad zlyhal', wcHideOpt:'Toto okno už nezobrazovať', styleExpand:'Rozbaliť', styleCollapse:'Zbaliť', themeLight:'Svetlý', modeAuto:'Automaticky', modeLight:'Svetlý', modeDark:'Tmavý', styleBy:'od', styleSelected:'Vybrané',
     importTable:'Importovať stôl (.zip)', importDeck:'Importovať balíček (.zip)', importError:'Import zlyhal', confirmDeleteStyle:'Zmazať tento importovaný štýl?', delete:'Zmazať', advSecAppearance:'Vzhľad', advDarkMode:'Tmavý režim',
     tableGreenFelt:'Zelený stôl', tableCasino:'Zelené kasíno', themeExport:'Exportovať tému (.zip)', sectionAdvanced:'Rozšírené', rankingSeasonStats:'Štatistiky sezóny', rankingShare:'Podiel', rankingResults:'Výsledky', rankingToggleChart:'Prepnúť stĺpce / koláč',

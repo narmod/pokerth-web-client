@@ -18,7 +18,7 @@ export const strings = {
     winnerBadge:'ΝΙΚΗΤΗΣ',
     // GameStatusBar (bandeau d'info de jeu, parité QML §7)
     gsbTotal:'Σύνολο:', gsbBets:'Πονταρίσματα:', gsbGame:'Παιχνίδι:', gsbHand:'Χέρι:',
-  seatPokerthPortrait: "PokerTH Κατακόρυφα", seatPokerthLandscape: "PokerTH Οριζόντια",
+  seatPokerth: 'PokerTH',
   advUiGeneral:'Γενικά', advUiNetwork:'Δίκτυο', advShowTooltips:'Εμφάνιση υποδείξεων', advDisableSplash:'Απενεργοποίηση οθόνης εκκίνησης', advDontTranslatePoker:'Να μη μεταφράζονται οι όροι πόκερ (Check, Call, Raise)', advNA:'web', advLanguage:'Γλώσσα', advDefCommunity:'Προεπιλεγμένη κοινότητα', advSecReactions:'Αντιδράσεις', advDisableReactions:'Απενεργοποίηση αντιδράσεων emoji', advNetStateColor:'Εμφάνιση χρώματος κατάστασης δικτύου στη γωνία του άβαταρ',
   showPlayers: `Εμφάνιση παικτών`,
   footJoin: `Είσοδος`,
@@ -668,8 +668,7 @@ export const strings = {
     presetWecupDesc:'ισορροπημένο τουρνουά', presetBbcDesc:'blinds με βάση τον χρόνο', advSecLocalGame:'Παιχνίδι εξάσκησης', advPauseHands:'Παύση μεταξύ των χεριών (συνέχεια από το παράθυρο του νικητή)', nextHandBtn:'Επόμενο χέρι',
     advSecTablePrefs:'Προτιμήσεις τραπεζιού', advTablePrefsDesc:'Προεπιλογές για τα τραπέζια που δημιουργείτε σε αυτή τη λειτουργία — το κουμπί ⭐ της φόρμας τις φορτώνει.', advRaiseEveryHands:'Αύξηση blinds κάθε N χέρια', advGameSpeed:'Ταχύτητα παιχνιδιού (1–11)',
     advSecLogSettings:'Ρυθμίσεις καταγραφής', advLogOn:'Ενεργοποίηση καταγραφής', advLogInterval:'Διάστημα καταγραφής', advLogEveryAction:'Κάθε ενέργεια', advLogEveryHand:'Κάθε χέρι', advSecIgnored:'Αγνοημένοι παίκτες', advIgnoredDesc:'Οι παίκτες στη λίστα αγνόησης κρύβονται από τη συνομιλία.',
-    advIgnoredEmpty:'(κανένας αγνοημένος παίκτης)', advIgnoredRemove:'Αφαίρεση', advLobbyChat:'Εμφάνιση συνομιλίας λόμπι', advTableZoom:'Ενεργοποίηση ζουμ τραπεζιού (κουμπιά μεγεθυντικού φακού)', advSeatSync:'Συγχρονισμός θέσεων με τον προσανατολισμό (PokerTH κατακόρυφα/οριζόντια)',
-    advChatTranslate:'Μετάφραση συνομιλίας (API προγράμματος περιήγησης, κουμπί ανά μήνυμα)', chatTranslateUnsupported:'Αυτό το πρόγραμμα περιήγησης δεν υποστηρίζει μετάφραση (απαιτείται πρόσφατο Chrome/Edge).', chatTranslateFailed:'Η μετάφραση απέτυχε',
+    advIgnoredEmpty:'(κανένας αγνοημένος παίκτης)', advIgnoredRemove:'Αφαίρεση', advLobbyChat:'Εμφάνιση συνομιλίας λόμπι', advTableZoom:'Ενεργοποίηση ζουμ τραπεζιού (κουμπιά μεγεθυντικού φακού)',    advChatTranslate:'Μετάφραση συνομιλίας (API προγράμματος περιήγησης, κουμπί ανά μήνυμα)', chatTranslateUnsupported:'Αυτό το πρόγραμμα περιήγησης δεν υποστηρίζει μετάφραση (απαιτείται πρόσφατο Chrome/Edge).', chatTranslateFailed:'Η μετάφραση απέτυχε',
     wcHideOpt:'Να μην εμφανιστεί ξανά αυτό το παράθυρο', styleExpand:'Ανάπτυξη', styleCollapse:'Σύμπτυξη', themeLight:'Φωτεινό', modeAuto:'Αυτόματο', modeLight:'Φωτεινό', modeDark:'Σκούρο', styleBy:'από', styleSelected:'Επιλεγμένο', importTable:'Εισαγωγή τραπεζιού (.zip)',
     importDeck:'Εισαγωγή τράπουλας (.zip)', importError:'Η εισαγωγή απέτυχε', confirmDeleteStyle:'Διαγραφή αυτού του εισαγμένου στυλ;', delete:'Διαγραφή', advSecAppearance:'Εμφάνιση', advDarkMode:'Σκούρα λειτουργία', tableGreenFelt:'Πράσινο τραπέζι',
     tableCasino:'Πράσινο καζίνο', themeExport:'Εξαγωγή θέματος (.zip)', sectionAdvanced:'Για προχωρημένους', rankingSeasonStats:'Στατιστικά σεζόν', rankingShare:'Μερίδιο', rankingResults:'Αποτελέσματα', rankingToggleChart:'Εναλλαγή ράβδων / πίτας',

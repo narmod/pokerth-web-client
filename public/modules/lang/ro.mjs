@@ -18,7 +18,7 @@ export const strings = {
     winnerBadge:'CÂȘTIGĂTOR',
     // GameStatusBar (bandeau d'info de jeu, parité QML §7)
     gsbTotal:'Total:', gsbBets:'Pariuri:', gsbGame:'Joc:', gsbHand:'Mână:',
-  seatPokerthPortrait: "PokerTH Portret", seatPokerthLandscape: "PokerTH Peisaj",
+  seatPokerth: 'PokerTH',
   advUiGeneral:'General', advUiNetwork:'Rețea', advShowTooltips:'Afișează sfaturile', advDisableSplash:'Dezactivează ecranul de pornire la lansare', advDontTranslatePoker:'Nu traduce termenii de poker (Check, Call, Raise)', advNA:'web', advLanguage:'Limbă', advDefCommunity:'Comunitate implicită', advSecReactions:'Reacții', advDisableReactions:'Dezactivează reacțiile emoji', advNetStateColor:'Afișează culoarea stării rețelei în colțul avatarului',
   showPlayers: `Afișează jucătorii`,
   footJoin: `Intră`,
@@ -668,7 +668,7 @@ export const strings = {
     presetBbcDesc:'blind-uri pe timp', advSecLocalGame:'Joc de antrenament', advPauseHands:'Pauză între mâini (continuare din fereastra câștigătorului)', nextHandBtn:'Mâna următoare', advSecTablePrefs:'Preferințe de masă', advTablePrefsDesc:'Valorile implicite ale meselor create în acest mod — butonul ⭐ din formular le încarcă.',
     advRaiseEveryHands:'Crește blind-urile la fiecare N mâini', advGameSpeed:'Viteza jocului (1–11)', advSecLogSettings:'Setări jurnal', advLogOn:'Activează jurnalizarea', advLogInterval:'Interval jurnal', advLogEveryAction:'Fiecare acțiune',
     advLogEveryHand:'Fiecare mână', advSecIgnored:'Jucători ignorați', advIgnoredDesc:'Jucătorii din lista de ignorați sunt ascunși din chat.', advIgnoredEmpty:'(niciun jucător ignorat)', advIgnoredRemove:'Elimină', advLobbyChat:'Afișează chatul din lobby',
-    advTableZoom:'Activează zoomul mesei (butoane lupă)', advSeatSync:'Sincronizează locurile cu orientarea (PokerTH portret/peisaj)', advChatTranslate:'Traducerea chatului (API-ul browserului, buton per mesaj)', chatTranslateUnsupported:'Acest browser nu acceptă traducerea (necesită Chrome/Edge recent).',
+    advTableZoom:'Activează zoomul mesei (butoane lupă)', advChatTranslate:'Traducerea chatului (API-ul browserului, buton per mesaj)', chatTranslateUnsupported:'Acest browser nu acceptă traducerea (necesită Chrome/Edge recent).',
     chatTranslateFailed:'Traducerea a eșuat', wcHideOpt:'Nu mai afișa această fereastră', styleExpand:'Extinde', styleCollapse:'Restrânge', themeLight:'Luminos', modeAuto:'Automat', modeLight:'Luminos', modeDark:'Întunecat', styleBy:'de',
     styleSelected:'Selectat', importTable:'Importă o masă (.zip)', importDeck:'Importă un pachet (.zip)', importError:'Importul a eșuat', confirmDeleteStyle:'Ștergi acest stil importat?', delete:'Șterge', advSecAppearance:'Aspect',
     advDarkMode:'Mod întunecat', tableGreenFelt:'Masă verde', tableCasino:'Cazinou verde', themeExport:'Exportă tema (.zip)', sectionAdvanced:'Avansat', rankingSeasonStats:'Statistici de sezon', rankingShare:'Cotă', rankingResults:'Rezultate',

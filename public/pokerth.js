@@ -615,7 +615,6 @@ function openAdvancedOptions() {
   try { document.documentElement.classList.toggle('reduce-fx', _advGet('reduce_fx', false)); } catch (e) {}
   try { var _sv = document.getElementById('adv-sndvol'); if (_sv && window.getSoundVolume) _sv.value = Math.round(window.getSoundVolume() * 10); } catch (e) {}
   try { var _sl = document.getElementById('adv-seatlayout'); if (_sl) { var _slv = localStorage.getItem('pth_seat_layout'); _sl.value = (_slv === 'pokerth-official' || _slv === 'pokerth-ellipse' || _slv === 'custom') ? _slv : 'auto'; } } catch (e) {}
-  try { var _ssy = document.getElementById('adv-seatsync'); if (_ssy) _ssy.checked = (localStorage.getItem('pth_seat_sync') !== '0'); } catch (e) {}
   try { var _ctr = document.getElementById('adv-chattranslate'); if (_ctr) { _ctr.checked = (localStorage.getItem('pth_chat_translate') !== '0'); if (!window._chatTrSupported) { var _ctl = _ctr.closest('label'); if (_ctl) _ctl.style.opacity = '0.55'; } } } catch (e) {}
   try { _rebindAction = null; _renderKeyButtons(); } catch (e) {}
   sync('adv-tooltips', 'tooltips', true);
@@ -1133,7 +1132,7 @@ var _CFG_WEB_SYNC_KEYS = [
   'pth_community_content', 'pth_sound_vol',
   'pth_log_on', 'pth_create_dialog', 'pth_status_bar', 'pth_blinds_badge',
   'pth_winner_popup', 'pth_remove_gone', 'pth_tooltips', 'pth_big_own_cards',
-  'pth_chat_translate', 'pth_pin_actionbar', 'pth_seat_sync',
+  'pth_chat_translate', 'pth_pin_actionbar',
   // Valeurs (thème web, sièges, clavier, langue, divers)
   'pth_theme', 'pth_buttons', 'pth_pucks', 'pth_seat', 'pth_seat_layout',
   'pth_seat_custom', 'pth_keys', 'pth_lang', 'pth_offline_skill',
@@ -1323,32 +1322,20 @@ function _tableZonePortrait() {
 }
 window._tableZonePortrait = _tableZonePortrait;
 
-function _applySeatSync() {
+function _applySeatOrient(portrait) {
   try {
-    // ON par defaut depuis 0.3.571 (packs PokerTH portrait/paysage partout,
-    // mobile compris) ; opt-out explicite via la case des Options avancees.
-    if (localStorage.getItem('pth_seat_sync') === '0') return;
-    // Parité QML GamePlayerBox.wideLayout (height >= 76 sur la hauteur de
-    // BASE : 84 en zone wide, 71 en zone haute) : le pack suit le ratio de
-    // la TABLEZONE, pas la fenêtre — sinon une fenêtre 573x600 (portrait)
-    // affichait des boîtes 1 ligne là où le QML affiche les 2 lignes wide.
-    var want = _tableZonePortrait() ? 'pokerth-portrait' : 'pokerth';
-    if ((document.documentElement.getAttribute('data-seat') || '') === want) return;
-    if (typeof window._setSeatPack === 'function') window._setSeatPack(want);
-    else {
-      // Module theme pas encore charge : application directe (meme effet,
-      // les deux packs pokerth sont purement CSS).
-      document.documentElement.setAttribute('data-seat', want);
-      try { localStorage.setItem('pth_seat', want); } catch (e) {}
-    }
-    try { if (typeof window._renderSeats === 'function') window._renderSeats(); } catch (e) {}
+    // Orientation générique des sièges (fusion des packs pokerth /
+    // pokerth-portrait, 0.3.691) : html[data-seat-orient="portrait|landscape"],
+    // que TOUT pack peut cibler en CSS. Suit la DISPOSITION réellement retenue
+    // quand renderSeats la connaît (_forceSeatPortrait passé en argument),
+    // sinon le ratio de la tableZone (parité QML : GamePlayerBox.wideLayout
+    // décide sur la tableZone, pas la fenêtre).
+    var p = (typeof portrait === 'boolean') ? portrait : _tableZonePortrait();
+    var want = p ? 'portrait' : 'landscape';
+    if (document.documentElement.getAttribute('data-seat-orient') !== want)
+      document.documentElement.setAttribute('data-seat-orient', want);
   } catch (e) {}
 }
-function setSeatSync(on) {
-  try { localStorage.setItem('pth_seat_sync', on ? '1' : '0'); } catch (e) {}
-  if (on) _applySeatSync();
-}
-window.setSeatSync = setSeatSync;
 // ── Traduction du chat par l'API du NAVIGATEUR (Translator/LanguageDetector,
 // Chrome/Edge recents ; sur l'appareil, rien ne sort). Opt-in via Options
 // avancees (pth_chat_translate). Bouton 🌐 par message recu : 1er tap =
@@ -1440,8 +1427,8 @@ window._chatTranslate = function (btn) {
   })();
 };
 try { _applyChatTranslateFlag(); } catch (e) {}
-window._applySeatSync = _applySeatSync;
-setTimeout(function () { try { _applySeatSync(); } catch (e) {} }, 800);
+window._applySeatOrient = _applySeatOrient;
+setTimeout(function () { try { _applySeatOrient(); } catch (e) {} }, 800);
 // Appliquer les classes body dès l'init (les prefs sont reflétées au chargement).
 try {
   if (document.readyState === 'loading')
@@ -10406,10 +10393,9 @@ const App = (() => {
     // Avant : window.innerHeight > innerWidth -> une fenetre 573x600
     // (portrait) prenait les slots colonnes alors que le QML, dont la
     // tableZone est large (573x~410), prend l'ellipse.
-    // Pack (pokerth / pokerth-portrait) resynchronisé dans la MÊME passe que
-    // la disposition : les deux suivent _tableZonePortrait (auto-garde : ne
-    // fait rien si le pack est déjà le bon).
-    try { if (typeof window._applySeatSync === 'function') window._applySeatSync(); } catch (e) {}
+    // data-seat-orient posé dans la MÊME passe que la disposition ; raffiné
+    // juste après, une fois _forceSeatPortrait connu (_applySeatOrient).
+    try { if (typeof window._applySeatOrient === 'function') window._applySeatOrient(); } catch (e) {}
     var _seatPortrait = (typeof window._tableZonePortrait === 'function')
       ? window._tableZonePortrait()
       : (window.innerHeight > window.innerWidth);
@@ -10443,6 +10429,9 @@ const App = (() => {
       if (_seatPortrait) { _applyOfficial = true; _forceSeatPortrait = true; }
       else               { _applyOfficial = true; _forceSeatPortrait = false; }
     }
+    // La disposition retenue fait foi pour l'orientation des packs de sièges
+    // (pokerth-official force la grille portrait même fenêtre en paysage).
+    try { if (typeof window._applySeatOrient === 'function') window._applySeatOrient(_forceSeatPortrait); } catch (e) {}
     const oRect = oval.getBoundingClientRect();
     const zRect = zone.getBoundingClientRect();
     const oCX  = oRect.left - zRect.left + oRect.width  / 2;
@@ -10734,7 +10723,7 @@ const App = (() => {
     }
 
     var _seatStyleV = document.documentElement.getAttribute('data-seat') || '';
-    var _pkHole = (_seatStyleV.indexOf('pokerth') === 0); // pokerth (landscape) + pokerth-portrait
+    var _pkHole = (_seatStyleV.indexOf('pokerth') === 0); // pack PokerTH (fusionné 0.3.691)
     var _maskMode = _advGet('hide_pbar', true); // mode masqué : self-box = siège
     var _ownLvl = 0; try { _ownLvl = Math.min(3, Math.max(0, parseInt(localStorage.getItem('pth_big_own_cards'), 10) || 0)); } catch (e) {} // niveau "agrandir mes cartes" 0-3 (plafond = riviere)
     let h = '';
@@ -10750,17 +10739,13 @@ const App = (() => {
       // the minimal-visibility .seat-ghost class instead of .seat-out.
       // The two are mutually exclusive (gone implies active=false), but
       // we still gate the seat-out class on !isGone to be explicit.
-      // Parité GamePlayerBox QML : wideLayout = hauteur SCALÉE >= 76
-      // (84·s < 76 <=> s < 0.905) -> texte 1 ligne « nom · $tapis » ; le
-      // portrait (oppBaseHeight 71) est TOUJOURS non-wide dans le QML.
-      // Le STYLE de siege choisi fait TOUJOURS foi (demande narmod) :
-      // « PokerTH portrait » = box 1 ligne (nom · cash), « PokerTH
-      // landscape » = box wide 2 lignes (nom / cash) — quel que soit le
-      // placement. L'automatisation passe par l'option dediee
-      // « Synchroniser les sieges avec l'orientation » (pth_seat_sync),
-      // qui change le PACK lui-meme. L'ancien couplage implicite au
-      // placement (v0.3.450) rendait le selecteur de sieges inoperant.
-      var _seatNarrow = (_seatStyleV === 'pokerth-portrait');
+      // Parité GamePlayerBox QML : le portrait (oppBaseHeight 71) est
+      // TOUJOURS non-wide (1 ligne « nom · $tapis »), le paysage est wide
+      // (2 lignes). Depuis la fusion des packs (0.3.691), le pack unique
+      // « PokerTH » suit la DISPOSITION retenue : grille portrait -> box
+      // narrow, ellipse paysage -> box wide (_forceSeatPortrait, même
+      // source que html[data-seat-orient]).
+      var _seatNarrow = _forceSeatPortrait;
       // ── Mise « hors boîte » (packs PokerTH), placement fidèle au client
       //    officiel. Landscape : le jeton est TOUJOURS sur un côté HORIZONTAL
       //    (extérieur) — 'l' pour les sièges nettement à gauche du centre, 'r'
@@ -15153,7 +15138,7 @@ window._retranslateSysChat = function() {
 
 window.addEventListener('resize', function() {
   if (typeof updateBottomLayout === 'function') updateBottomLayout();
-  if (typeof window._applySeatSync === 'function') window._applySeatSync();
+  if (typeof window._applySeatOrient === 'function') window._applySeatOrient();
   autoScaleTable();
   // Re-rendu PENDANT le drag de redimensionnement (parité QML : le layout
   // suit la fenêtre en continu, pas d'états intermédiaires faux). renderSeats
@@ -15164,7 +15149,7 @@ window.addEventListener('resize', function() {
   setTimeout(function(){ if(typeof renderSeats==='function' && typeof seats!=='undefined' && seats.length) renderSeats(); }, 100);
 });
 window.addEventListener('orientationchange', function() {
-  setTimeout(function(){ if (typeof window._applySeatSync === 'function') window._applySeatSync(); autoScaleTable(); if(typeof renderSeats==='function' && typeof seats!=='undefined' && seats.length) renderSeats();
+  setTimeout(function(){ if (typeof window._applySeatOrient === 'function') window._applySeatOrient(); autoScaleTable(); if(typeof renderSeats==='function' && typeof seats!=='undefined' && seats.length) renderSeats();
     // Zoom par orientation : appliquer la valeur mémorisée pour la nouvelle
     // orientation + rafraîchir l'état des boutons +/−/↺.
     try { if (typeof applyTableZoom === 'function') applyTableZoom(); } catch (e) {} }, 300);
@@ -17187,7 +17172,7 @@ function renderPlayersList() {
   });
 })();
 
-;(function(){ window.BUILD_VERSION='0.3.690-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.691-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

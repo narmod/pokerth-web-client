@@ -17,7 +17,7 @@ export const strings = {
     winnerBadge:'VINNARE',
     // GameStatusBar (bandeau d'info de jeu, parité QML §7)
     gsbTotal:'Totalt:', gsbBets:'Insatser:', gsbGame:'Spel:', gsbHand:'Hand:',
-  seatPokerthPortrait: "PokerTH Stående", seatPokerthLandscape: "PokerTH Liggande",
+  seatPokerth: 'PokerTH',
   advUiGeneral:'Allmänt', advUiNetwork:'Nätverk', advShowTooltips:'Visa verktygstips', advDisableSplash:'Inaktivera startskärmen vid uppstart', advDontTranslatePoker:'Översätt inte pokertermer (Check, Call, Raise)', advNA:'web', advLanguage:'Språk', advDefCommunity:'Standardgemenskap', advSecReactions:'Reaktioner', advDisableReactions:'Inaktivera emoji-reaktioner', advNetStateColor:'Visa nätverksstatusfärg i avatarens hörn',
   showPlayers: `Visa spelare`,
   footJoin: `Gå med`,
@@ -666,8 +666,7 @@ export const strings = {
     presetRankingName:'Ranking', presetRankingDesc:'officiellt tempo', presetWecupDesc:'balanserad turnering', presetBbcDesc:'tidsbaserade blinds', advSecLocalGame:'Träningsspel', advPauseHands:'Paus mellan händer (fortsätt via vinnarfönstret)',
     nextHandBtn:'Nästa hand', advSecTablePrefs:'Bordsinställningar', advTablePrefsDesc:'Standardvärden för borden du skapar i detta läge — ⭐-knappen i formuläret laddar dem.', advRaiseEveryHands:'Höj blinds var N:e hand', advGameSpeed:'Spelhastighet (1–11)',
     advSecLogSettings:'Logginställningar', advLogOn:'Aktivera loggning', advLogInterval:'Loggintervall', advLogEveryAction:'Varje handling', advLogEveryHand:'Varje hand', advSecIgnored:'Ignorerade spelare', advIgnoredDesc:'Spelare på ignoreringslistan döljs i chatten.',
-    advIgnoredEmpty:'(inga ignorerade spelare)', advIgnoredRemove:'Ta bort', advLobbyChat:'Visa lobbychatten', advTableZoom:'Aktivera bordszoom (luppknappar)', advSeatSync:'Synkronisera platser med orientering (PokerTH porträtt/landskap)',
-    advChatTranslate:'Chattöversättning (webbläsar-API, knapp per meddelande)', chatTranslateUnsupported:'Översättning stöds inte av den här webbläsaren (nyare Chrome/Edge krävs).', chatTranslateFailed:'Översättningen misslyckades',
+    advIgnoredEmpty:'(inga ignorerade spelare)', advIgnoredRemove:'Ta bort', advLobbyChat:'Visa lobbychatten', advTableZoom:'Aktivera bordszoom (luppknappar)',    advChatTranslate:'Chattöversättning (webbläsar-API, knapp per meddelande)', chatTranslateUnsupported:'Översättning stöds inte av den här webbläsaren (nyare Chrome/Edge krävs).', chatTranslateFailed:'Översättningen misslyckades',
     wcHideOpt:'Visa inte det här fönstret igen', styleExpand:'Expandera', styleCollapse:'Fäll ihop', themeLight:'Ljust', modeAuto:'Automatiskt', modeLight:'Ljust', modeDark:'Mörkt', styleBy:'av', styleSelected:'Vald', importTable:'Importera ett bord (.zip)',
     importDeck:'Importera en kortlek (.zip)', importError:'Importen misslyckades', confirmDeleteStyle:'Ta bort den här importerade stilen?', delete:'Ta bort', advSecAppearance:'Utseende', advDarkMode:'Mörkt läge', tableGreenFelt:'Grönt bord',
     tableCasino:'Grönt casino', themeExport:'Exportera tema (.zip)', sectionAdvanced:'Avancerat', rankingSeasonStats:'Säsongsstatistik', rankingShare:'Andel', rankingResults:'Resultat', rankingToggleChart:'Växla stapel / paj', footPlayer:'Spelare',

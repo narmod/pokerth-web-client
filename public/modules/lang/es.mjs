@@ -26,7 +26,7 @@ export const strings = {
     winnerBadge:'GANADOR',
     // GameStatusBar (bandeau d'info de jeu, parité QML §7)
     gsbTotal:'Total:', gsbBets:'Apuestas:', gsbGame:'Partida:', gsbHand:'Mano:',
-  seatPokerthPortrait: "PokerTH Vertical", seatPokerthLandscape: "PokerTH Horizontal",
+  seatPokerth: 'PokerTH',
   advUiGeneral:'General', advUiNetwork:'Red', advShowTooltips:'Mostrar descripciones emergentes', advDisableSplash:'Desactivar la pantalla de bienvenida al iniciar', advDontTranslatePoker:'No traducir los términos de póquer (Check, Call, Raise)', advNA:'web', advLanguage:'Idioma', advDefCommunity:'Comunidad predeterminada', advSecReactions:'Reacciones', advDisableReactions:'Desactivar las reacciones con emojis', advNetStateColor:'Mostrar el color del estado de red en la esquina del avatar',
   showPlayers: `Ver jugadores`,
   footJoin: `Unirse`,
@@ -676,8 +676,7 @@ export const strings = {
     presetBbcDesc:'ciegas por tiempo', advSecLocalGame:'Partida de entrenamiento', advPauseHands:'Pausa entre manos (continuar desde la ventana del ganador)', nextHandBtn:'Siguiente mano', advSecTablePrefs:'Preferencias de mesa',
     advTablePrefsDesc:'Valores por defecto de las mesas que creas en este modo — el botón ⭐ del formulario los carga.', advRaiseEveryHands:'Subir ciegas cada N manos', advGameSpeed:'Velocidad de juego (1–11)', advSecLogSettings:'Ajustes del registro',
     advLogOn:'Activar el registro', advLogInterval:'Intervalo de registro', advLogEveryAction:'Cada acción', advLogEveryHand:'Cada mano', advSecIgnored:'Jugadores ignorados', advIgnoredDesc:'Los jugadores de la lista de ignorados se ocultan del chat.',
-    advIgnoredEmpty:'(ningún jugador ignorado)', advIgnoredRemove:'Quitar', advLobbyChat:'Mostrar el chat del lobby', advTableZoom:'Activar el zoom de la mesa (botones lupa)', advSeatSync:'Sincronizar asientos con la orientación (PokerTH vertical/horizontal)',
-    advChatTranslate:'Traducción del chat (API del navegador, botón por mensaje)', chatTranslateUnsupported:'Este navegador no admite la traducción (se requiere Chrome/Edge reciente).', chatTranslateFailed:'Error de traducción',
+    advIgnoredEmpty:'(ningún jugador ignorado)', advIgnoredRemove:'Quitar', advLobbyChat:'Mostrar el chat del lobby', advTableZoom:'Activar el zoom de la mesa (botones lupa)',    advChatTranslate:'Traducción del chat (API del navegador, botón por mensaje)', chatTranslateUnsupported:'Este navegador no admite la traducción (se requiere Chrome/Edge reciente).', chatTranslateFailed:'Error de traducción',
     wcHideOpt:'No volver a mostrar esta ventana', styleExpand:'Desplegar', styleCollapse:'Plegar', themeLight:'Claro', modeAuto:'Automático', modeLight:'Claro', modeDark:'Oscuro', styleBy:'de', styleSelected:'Seleccionado', importTable:'Importar una mesa (.zip)',
     importDeck:'Importar una baraja (.zip)', importError:'Error de importación', confirmDeleteStyle:'¿Eliminar este estilo importado?', delete:'Eliminar', advSecAppearance:'Apariencia', advDarkMode:'Modo oscuro', tableGreenFelt:'Mesa verde',
     tableCasino:'Casino verde', themeExport:'Exportar tema (.zip)', sectionAdvanced:'Avanzado', rankingSeasonStats:'Estadísticas de temporada', rankingShare:'Cuota', rankingResults:'Resultados', rankingToggleChart:'Alternar barras / tarta',
