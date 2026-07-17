@@ -519,28 +519,6 @@ body {
   box-shadow: 0 12px 40px rgba(0,0,0,0.8);
 }
 
-/* Pill Discord centré sous la card de login (écran connect uniquement).
-   Couleur de marque Discord assumée ; libellé complet dans le title (i18n). */
-.discord-pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  background: #5865F2;
-  border: 1px solid rgba(255,255,255,0.18);
-  border-radius: 999px;
-  padding: 8px 18px;
-  margin-top: 12px;
-  box-shadow: 0 6px 24px rgba(0,0,0,0.55);
-  color: #fff;
-  font-size: 0.8rem;
-  font-weight: 700;
-  letter-spacing: 0.03em;
-  text-decoration: none;
-  cursor: pointer;
-}
-.discord-pill:hover { background: #6a76f5; }
-.discord-pill:active { transform: scale(0.97); }
-
 .card-title {
   font-family: var(--ff-display);
   font-size: 0.7rem;
