@@ -300,13 +300,19 @@ function _injectSeatPkg(s) {
   // spécificité égale.
   try {
     var lk = document.getElementById('seat-pack-style');
-    if (s && s.cssUrl) {
+    if (s && s._cssText) {              // pack importé LOCALEMENT : <style> texte
+      if (lk && lk.tagName !== 'STYLE') { lk.remove(); lk = null; }
+      if (!lk) { lk = document.createElement('style'); lk.id = 'seat-pack-style'; document.head.appendChild(lk); }
+      if (lk.textContent !== s._cssText) lk.textContent = s._cssText;
+      localStorage.setItem('pth_seat_css_txt', s._cssText); localStorage.removeItem('pth_seat_css_url');
+    } else if (s && s.cssUrl) {         // pack serveur (galerie) : <link>
+      if (lk && lk.tagName !== 'LINK') { lk.remove(); lk = null; }
       if (!lk) { lk = document.createElement('link'); lk.rel = 'stylesheet'; lk.id = 'seat-pack-style'; document.head.appendChild(lk); }
       if (lk.getAttribute('href') !== s.cssUrl) lk.setAttribute('href', s.cssUrl);
-      localStorage.setItem('pth_seat_css_url', s.cssUrl);
+      localStorage.setItem('pth_seat_css_url', s.cssUrl); localStorage.removeItem('pth_seat_css_txt');
     } else {
       if (lk) lk.remove();
-      localStorage.removeItem('pth_seat_css_url');
+      localStorage.removeItem('pth_seat_css_url'); localStorage.removeItem('pth_seat_css_txt');
     }
   } catch (e) {}
   if (s && s.plateUrl) {
@@ -341,6 +347,56 @@ seat.set = seat.apply;
 // pth_seat + nettoyage des packs d'images importes).
 try { window._setSeatPack = seat.set; } catch (e) {}
 _loadGallerySeats();
+
+// ── Import IN-APP d'un pack de sièges (.zip) — miroir des decks/tables :
+// stocké en IndexedDB (pth_imports), restitué en blob URLs au chargement.
+// style.css est injecté en <style> TEXTE (persisté dans pth_seat_css_txt
+// pour le zéro-flash) ; les url() relatives ne sont PAS résolues en import
+// local — utiliser des data-URI dans le CSS, ou l'import serveur (admin).
+function _importedSeatToGallery(rec){
+  function url(fn){ try{ return (fn && rec.assets && rec.assets[fn]) ? URL.createObjectURL(rec.assets[fn]) : null; }catch(e){ return null; } }
+  function num(v,d){ var n=Number(v); return (isFinite(n)&&n>0)?n:d; }
+  var cfg=(rec.meta&&rec.meta.cfg)||{}, sc=(cfg.self&&typeof cfg.self==='object')?cfg.self:{};
+  var slice=num(cfg.slice,34), width=num(cfg.width,15);
+  return { id:rec.id, name:rec.name, by:(cfg.by?String(cfg.by):null),
+           traits:(cfg.traits&&typeof cfg.traits==='object')?cfg.traits:null,
+           swatch:(cfg.swatch&&String(cfg.swatch))||'#394150',
+           preview:url(rec.meta.preview), plateUrl:url(rec.meta.plate), selfUrl:url(rec.meta.self),
+           cssUrl:null, _cssText:(rec.meta.cssText||null),
+           slice:slice, width:width, pad:(cfg.pad&&String(cfg.pad))||'6px 12px',
+           selfSlice:num(sc.slice,slice), selfWidth:num(sc.width,width),
+           selfPad:(sc.pad&&String(sc.pad))||(cfg.pad&&String(cfg.pad))||'6px 12px',
+           _imported:true, _type:'seat' };
+}
+function _importSeatPackage(file){
+  return file.arrayBuffer().then(_unzip).then(function(files){
+    var cssText = files['style.css'] ? new TextDecoder().decode(files['style.css']) : null;
+    var cfg = {};
+    if (files['seat.json']) { try { cfg = JSON.parse(new TextDecoder().decode(files['seat.json'])) || {}; } catch(e){ cfg = {}; } }
+    function pick(names){ for (var i=0;i<names.length;i++) if (files[names[i]]) return names[i]; return null; }
+    var plate=pick(['plate.png','plate.svg','plate.webp','plate.jpg','plate.jpeg']);
+    var self =pick(['self.png','self.svg','self.webp','self.jpg','self.jpeg']);
+    var prev =pick(['preview.png','preview.svg','preview.webp','preview.jpg']);
+    if(!cssText && !plate) return Promise.reject(new Error('style.css ou plate.* requis'));
+    var assets={}; [plate,self,prev].forEach(function(fn){ if(fn) assets[fn]=new Blob([files[fn]],{type:_mimeOf(fn)}); });
+    var rec={ id:'imp-s-'+_uid(), type:'seat',
+              name:(cfg.name&&String(cfg.name).trim())||String(file.name||'Imported seat').replace(/\.zip$/i,''),
+              meta:{ cfg:cfg, cssText:cssText, plate:plate, self:self, preview:prev }, assets:assets };
+    return _idbPut(rec).then(function(){ _gallerySeats.push(_importedSeatToGallery(rec)); try{ seat.apply(rec.id); }catch(e){} try{ if(_body) _render(); }catch(e){} return rec; });
+  });
+}
+function _loadImportedSeats(){
+  return _idbAll().then(function(recs){
+    (recs||[]).filter(function(r){ return r && r.type==='seat'; }).forEach(function(rec){ if(!_gallerySeatById(rec.id)){ try{ _gallerySeats.push(_importedSeatToGallery(rec)); }catch(e){} } });
+    try{ var cur=seat.get(); if(cur && /^imp-s-/.test(cur) && _gallerySeatById(cur)) seat.apply(cur); }catch(e){}   // ré-injecte css/vars du pack actif (blob URLs neuves)
+    try{ if(_body) _render(); }catch(e){}
+  }).catch(function(){});
+}
+function _pickSeatImport(){
+  var inp=document.createElement('input'); inp.type='file'; inp.accept='.zip,application/zip';
+  inp.onchange=function(){ var f=inp.files&&inp.files[0]; if(f){ _importSeatPackage(f).catch(function(err){ try{ alert((_t('importError','Import failed'))+' : '+((err&&err.message)||err)); }catch(e){} }); } };
+  inp.click();
+}
 
 // Deck changes need the monolith to re-point card faces + back (no re-render).
 var _impDeck = {};   // deckId importe -> { faces:{n:blobUrl}, back:blobUrl }
@@ -830,6 +886,7 @@ function _deleteImported(id){
   _idbDel(id).then(function(){
     for(var i=0;i<_galleryTables.length;i++) if(_galleryTables[i].id===id){ _galleryTables.splice(i,1); try{ if(table.get()===id) table.apply(''); }catch(e){} break; }
     for(var j=0;j<_galleryDecks.length;j++) if(_galleryDecks[j].id===id){ _galleryDecks.splice(j,1); delete _impDeck[id]; try{ if(deck.get()===id) deck.apply(''); }catch(e){} break; }
+    for(var k2=0;k2<_gallerySeats.length;k2++) if(_gallerySeats[k2].id===id && _gallerySeats[k2]._imported){ _gallerySeats.splice(k2,1); try{ if(seat.get()===id) seat.apply('pokerth'); }catch(e){} break; }
     try{ if(_body) _render(); }catch(e){}
   }).catch(function(){});
 }
@@ -838,7 +895,7 @@ function _pickTableImport(){
   inp.onchange=function(){ var f=inp.files&&inp.files[0]; if(f){ _importTablePackage(f).catch(function(err){ try{ alert((_t('importError','Import failed'))+' : '+((err&&err.message)||err)); }catch(e){} }); } };
   inp.click();
 }
-try { _loadImportedTables(); _loadImportedDecks(); } catch (e) {}
+try { _loadImportedTables(); _loadImportedDecks(); _loadImportedSeats(); } catch (e) {}
 table.apply = function(id){
   _tblApply(id);   // pose data-table + persiste pth_table
   try {
@@ -1350,12 +1407,12 @@ function _render(){
     var row = _styleRow(tab.kind, it, name, author, active, (function(id){ return function(){ var keep = info.pick(id); if (!keep) _render(); }; })(it.id));
     list.appendChild(row);
   });
-  if (_activeTab === 'table' || _activeTab === 'deck') {
-    var _isT=_activeTab==='table';
+  if (_activeTab === 'table' || _activeTab === 'deck' || _activeTab === 'seat') {
+    var _ik=_activeTab;
     var imp=document.createElement('button'); imp.type='button';
-    imp.textContent='\u2795 '+(_isT?_t('importTable','Import a table (.zip)'):_t('importDeck','Import a deck (.zip)'));
+    imp.textContent='\u2795 '+(_ik==='table'?_t('importTable','Import a table (.zip)'):_ik==='deck'?_t('importDeck','Import a deck (.zip)'):_t('importSeat','Import a seat pack (.zip)'));
     imp.style.cssText='margin-top:5px;padding:10px;border:1px dashed var(--border,rgba(200,168,74,0.4));border-radius:9px;background:none;color:var(--gold,#c8a84a);cursor:pointer;font-size:0.82rem;font-weight:600;text-align:center';
-    imp.addEventListener('click', function(e){ e.stopPropagation(); if(_isT) _pickTableImport(); else _pickDeckImport(); });
+    imp.addEventListener('click', function(e){ e.stopPropagation(); if(_ik==='table') _pickTableImport(); else if(_ik==='deck') _pickDeckImport(); else _pickSeatImport(); });
     list.appendChild(imp);
   }
   _body.appendChild(list);
@@ -1479,7 +1536,7 @@ window.renderThemeInto = function(host){
   if(!host) return;
   _body = host; _activeTab = 'table';
   try { _render(); } catch(e){}
-  try { _loadGalleryDecks(); _loadGalleryTables(); _loadThemes(); _loadGallerySeats(); _loadImportedTables(); _loadImportedDecks(); } catch(e){}
+  try { _loadGalleryDecks(); _loadGalleryTables(); _loadThemes(); _loadGallerySeats(); _loadImportedTables(); _loadImportedDecks(); _loadImportedSeats(); } catch(e){}
 };
 window._refreshThemePanel = function () { try { _render(); } catch (e) {} };
 window.closeThemePanel = closeThemePanel;
