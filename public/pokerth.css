@@ -8089,6 +8089,16 @@ html.reduce-fx *, html.reduce-fx *::before, html.reduce-fx *::after {
   backdrop-filter: none !important;
   -webkit-backdrop-filter: none !important;
 }
+/* Effets réduits : coupe AUSSI les animations « pop » des pucks
+   (Dealer/SB/BB, drapeau — chipPop) et des badges d'action
+   (seatBadgePop/stripPop) — demande sp0ck 2026-07-17. Les éléments
+   apparaissent alors sans animation, à leur état final. */
+html.reduce-fx .dealer-chip,
+html.reduce-fx .blind-chip,
+html.reduce-fx .seat-flag,
+html.reduce-fx .seat-action-badge {
+  animation: none !important;
+}
 
 /* ── Icônes des 10 mains dans le moniteur d'odds (resources/hands/ QML) ── */
 #odds-monitor .odds-ico {
