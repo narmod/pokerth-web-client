@@ -98,7 +98,8 @@ html[data-seat-struct="qml"] .seat-foot .seat-action-badge.act-c6 { background: 
 /* Self : le bandeau sous la barre serait caché par la barre d'action du jeu
    -> il se superpose au BAS de la barre du héros (toujours visible). */
 html[data-seat-struct="qml"] .seat.me .seat-foot .seat-action-badge {
-  top: auto; bottom: 0; border-radius: 0 0 5px 5px; z-index: 6;
+  top: auto; bottom: 0; height: 16px; line-height: 13px;
+  border-radius: 0 0 5px 5px; z-index: 6;
 }
 
 /* ── États ─────────────────────────────────────────────────────────────── */
@@ -116,7 +117,7 @@ html[data-seat-struct="qml"] .seat.folded .seat-avatar { opacity: 0.5; }
 
 /* ── SELF : barre plus large, MES cartes grandes en éventail à droite ──── */
 html[data-seat-struct="qml"] .seat.me .seat-plate {
-  width: 150px; height: 42px; margin-top: 64px;   /* avatar self 58px au-dessus */
+  width: 150px; height: 58px; padding-bottom: 19px !important; margin-top: 64px;   /* bas réservé au bandeau d'action : nom + argent toujours visibles */
 }
 html[data-seat-struct="qml"] .seat.me .seat-avatar {
   width: 58px !important; height: 58px !important;
