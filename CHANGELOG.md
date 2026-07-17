@@ -26,6 +26,12 @@ client, now tracking the **2.1.3** build.
   instead of taking over the screen.
 - **Resilient offline cache.** The Service Worker now precaches the app shell **asset by asset (with retries)** instead of one all-or-nothing batch whose failure was silently swallowed, so a network hiccup during install can no longer leave the cache incomplete.
 
+### Removed
+- The **Auto-mode selector**, **Quick-bet buttons** and **4-color deck** settings.
+  The auto-mode selector and the 1/3 / 1/2 / Pot quick-bets are now always shown
+  in the action bar (as in the official client); the web-only 4-color deck option
+  is gone — cards use the standard two suit colours.
+
 ### Added
 - **Startup loading screen.** A boot splash matching the login look (theme-aware colours, labels in 36 languages) covers startup until the app is ready, preloading the critical assets with automatic retry and offering a **Retry** button if the connection drops mid-load — so a flaky network no longer leaves a half-loaded UI.
 - **Seven official PokerTH card decks** in the deck gallery, plus one-click import
