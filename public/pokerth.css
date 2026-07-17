@@ -6975,8 +6975,8 @@ html[data-seat-struct="qml"] .seat-pucks .blind-chip {
   width: 32px !important; height: 32px !important;   /* BlindButtonImage QML 32×32 */
 }
 /* Côtés (betSide left/right) : puck SOUS la mise, à 5/6 de la hauteur (QML). */
-html[data-seat-struct="qml"] .seat.betside-r .seat-pucks { left: calc(100% + var(--seat-bet-gap-r, 8px)); top: 83.33%; transform: translateY(-50%); }
-html[data-seat-struct="qml"] .seat.betside-l .seat-pucks { right: calc(100% + var(--seat-bet-gap-l, 8px)); top: 83.33%; transform: translateY(-50%); }
+html[data-seat-struct="qml"] .seat.betside-r .seat-pucks { left: calc(100% + var(--seat-bet-gap-r, 8px)); top: var(--seat-pucks-top, 83.33%); transform: translateY(-50%); }
+html[data-seat-struct="qml"] .seat.betside-l .seat-pucks { right: calc(100% + var(--seat-bet-gap-l, 8px)); top: var(--seat-pucks-top, 83.33%); transform: translateY(-50%); }
 /* Haut/bas : puck aligné à DROITE, 6px du bord de la boîte (QML), même bande
    verticale que la mise (centre puck 32 ≈ centre mise 20 posée à 7px). */
 html[data-seat-struct="qml"] .seat.betside-t .seat-pucks { bottom: calc(100% + 1px); right: 6px; left: auto; }
