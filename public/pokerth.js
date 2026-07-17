@@ -14205,6 +14205,9 @@ function _maybeShowNextHandBtn() {
           else asEl.value = d.allowSpectators ? '1' : '0';
         }
       }
+      // Bornes QML : re-clampe les valeurs restaurées depuis une sauvegarde
+      // antérieure aux nouvelles bornes (ex. délai 3 < min 5).
+      var _dl = document.getElementById('cf-delay'); if (_dl) this.clampNum(_dl);
       // Sync the "min humans before bots" row visibility with the checkbox.
       var mhRow = document.getElementById('cf-min-humans-row');
       if (mhRow) mhRow.style.display = d.bots ? 'flex' : 'none';
@@ -14517,7 +14520,7 @@ function _maybeShowNextHandBtn() {
       var P = {
         tranquille: { stack:5000,  blind:10, timeout:30, raiseEvery:15, delay:10 },
         normal:     { stack:3000,  blind:10, timeout:20, raiseEvery:8,  delay:7  },
-        rapide:     { stack:1500,  blind:25, timeout:7,  raiseEvery:4,  delay:3  },
+        rapide:     { stack:1500,  blind:25, timeout:7,  raiseEvery:4,  delay:5  },   // délai min 5 (borne QML 5–20)
         ranking:    { stack:10000, blind:50, timeout:5,  raiseEvery:11, delay:5  },
         wecup:      { stack:10000, blind:50, timeout:15, raiseEvery:25, delay:7  },
         bbc:        { stack:10000, blind:25, timeout:10, raiseEvery:5,  delay:5, raiseMode:2 }
@@ -17020,7 +17023,7 @@ function renderPlayersList() {
   });
 })();
 
-;(function(){ window.BUILD_VERSION='0.3.682-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.683-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

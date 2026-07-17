@@ -1492,7 +1492,7 @@ function onAvatarImageChosen(input) {
           <label class="cf-lbl" data-i18n="pauseBetweenHands">Pause entre les mains</label>
           <div class="cf-step cf-step-sec">
             <button type="button" class="cf-step-btn" onclick="App.stepField('cf-delay',-1)">&minus;</button>
-            <input id="cf-delay" class="cf-step-num" type="number" min="0" max="20" step="1" value="7" onchange="App.clampNum(this)">
+            <input id="cf-delay" class="cf-step-num" type="number" min="5" max="20" step="1" value="7" onchange="App.clampNum(this)">
             <button type="button" class="cf-step-btn" onclick="App.stepField('cf-delay',1)">+</button>
           </div>
         </div>
