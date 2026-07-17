@@ -9129,21 +9129,25 @@ html[data-seat-struct="qml"] .seat:not(.me) .seat-narrow .seat-holecards .pk { w
 .range-grid td.filled{font-weight:700}
 .range-grid .rc-combo{display:block;font-size:9.5px}
 .range-grid .rc-count{display:block;font-size:8px;opacity:.85;font-variant-numeric:tabular-nums}
-/* Mobile : HUD nettement plus compact (portrait 9-max très contraint). */
+/* Mobile : HUD très compact — une seule ligne VPIP/PFR/AF (les 3 dernières
+   stats sont masquées pour réduire l'encombrement en portrait 9-max). */
 @media (max-width:640px){
   .range-grid td{width:26px;height:26px;font-size:7.5px}
   .range-grid .rc-combo{font-size:8px}
-  .hud-box{min-width:0;width:auto;max-width:132px;font-size:8px;padding:2px 4px 3px;border-radius:6px;line-height:1.15}
-  .hud-head{gap:4px;margin-bottom:1px}
-  .hud-name{font-size:8.5px;max-width:78px}
-  .hud-hands{font-size:7px}
-  .hud-grid{grid-template-columns:repeat(3,auto);gap:0 5px;justify-content:start}
-  .hud-lbl{font-size:6.5px}
-  .hud-val{font-size:8px}
+  .hud-box{min-width:0;width:auto;max-width:104px;font-size:7.5px;padding:2px 4px;border-radius:6px;line-height:1.12}
+  .hud-head{gap:3px;margin-bottom:1px}
+  .hud-name{font-size:8px;max-width:66px}
+  .hud-hands{font-size:6.5px}
+  .hud-grid{grid-template-columns:repeat(3,auto);gap:0 6px;justify-content:start}
+  .hud-grid .hud-stat:nth-child(n+4){display:none}
+  .hud-lbl{font-size:6px}
+  .hud-val{font-size:7.5px}
 }
 /* Très petits écrans (portrait étroit) : encore plus dense. */
 @media (max-width:400px){
-  .hud-box{max-width:118px;font-size:7.5px}
-  .hud-name{max-width:66px;font-size:8px}
-  .hud-grid{gap:0 4px}
+  .hud-box{max-width:96px;font-size:7px;padding:1px 3px}
+  .hud-name{max-width:58px;font-size:7.5px}
+  .hud-grid{gap:0 5px}
+  .hud-lbl{font-size:5.5px}
+  .hud-val{font-size:7px}
 }
