@@ -1362,12 +1362,26 @@ function onAvatarImageChosen(input) {
         <!-- Type de partie (masqué pour un invité pokerth.net : seul Normal est permis) -->
         <div class="cf-row cf-row-col" id="cf-gtype-row">
           <label class="cf-lbl" data-i18n="gameType">Type de partie</label>
-          <div class="sel-wrap"><select id="cf-game-type" class="cf-select">
-            <option value="1" data-i18n-opt="gameNormal">Normal</option>
-            <option value="2" data-i18n-opt="gameRegistered">Registered only</option>
-            <option value="3" data-i18n-opt="gameInvite">Invite only</option>
-            <option value="4" data-i18n-opt="gameRanking">Ranking</option>
-          </select><span class="sel-arr">▾</span></div>
+          <div class="gt-dd" id="cf-gtype-dd">
+            <!-- Select natif conservé (caché) : source de vérité pour tout le JS existant -->
+            <select id="cf-game-type" class="cf-select gt-dd-native" tabindex="-1" aria-hidden="true">
+              <option value="1" data-i18n-opt="gameNormal">Normal</option>
+              <option value="2" data-i18n-opt="gameRegistered">Registered players only</option>
+              <option value="3" data-i18n-opt="gameInvite">Invited players only</option>
+              <option value="4" data-i18n-opt="gameRanking">Ranking game</option>
+            </select>
+            <button type="button" class="gt-dd-btn" id="cf-gtype-btn" aria-haspopup="listbox" aria-expanded="false">
+              <span class="gt-dd-ico gt-ico-1" id="cf-gtype-ico"></span>
+              <span class="gt-dd-lbl" id="cf-gtype-lbl" data-i18n="gameNormal">Normal</span>
+              <span class="sel-arr">▾</span>
+            </button>
+            <div class="gt-dd-list" id="cf-gtype-list" role="listbox" hidden>
+              <div class="gt-dd-item" role="option" data-val="1"><span class="gt-dd-ico gt-ico-1"></span><span data-i18n="gameNormal">Normal</span></div>
+              <div class="gt-dd-item" role="option" data-val="2"><span class="gt-dd-ico gt-ico-2"></span><span data-i18n="gameRegistered">Registered players only</span></div>
+              <div class="gt-dd-item" role="option" data-val="3"><span class="gt-dd-ico gt-ico-3"></span><span data-i18n="gameInvite">Invited players only</span></div>
+              <div class="gt-dd-item" role="option" data-val="4"><span class="gt-dd-ico gt-ico-4"></span><span data-i18n="gameRanking">Ranking game</span></div>
+            </div>
+          </div>
         </div>
 
         <!-- Mot de passe (toggle) -->

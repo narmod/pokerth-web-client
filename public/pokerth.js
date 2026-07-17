@@ -14284,6 +14284,7 @@ function _maybeShowNextHandBtn() {
         var _gtr = document.getElementById('cf-gtype-row');
         if (_gtr) _gtr.style.display = _isGuest ? 'none' : '';
         if (_isGuest) { var _gts = document.getElementById('cf-game-type'); if (_gts) _gts.value = '1'; }
+        if (window._gtypeDdRefresh) window._gtypeDdRefresh();
       } catch (e) {}
       show('s-create');
     },
@@ -16843,7 +16844,63 @@ function renderPlayersList() {
   });
 })();
 
-;(function(){ window.BUILD_VERSION='0.3.680-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+// ── Dropdown custom « Type de partie » (parité QML StyledCombo) ──────────────
+// Le <select id="cf-game-type"> natif reste la source de vérité (caché) : tous
+// les lecteurs/écrivains existants (sv/svv/set/setVal) continuent de marcher.
+// Ce bloc ne fait que refléter sa valeur dans une UI à icônes (champ + liste).
+;(function(){
+  var sel  = document.getElementById('cf-game-type');
+  var btn  = document.getElementById('cf-gtype-btn');
+  var ico  = document.getElementById('cf-gtype-ico');
+  var lbl  = document.getElementById('cf-gtype-lbl');
+  var list = document.getElementById('cf-gtype-list');
+  if (!sel || !btn || !ico || !lbl || !list) return;
+  var KEY = { '1':'gameNormal', '2':'gameRegistered', '3':'gameInvite', '4':'gameRanking' };
+  function refresh() {
+    var v = String(sel.value || '1');
+    if (!KEY[v]) v = '1';
+    ico.className = 'gt-dd-ico gt-ico-' + v;
+    lbl.setAttribute('data-i18n', KEY[v]);
+    // Libellé : t() si dispo, sinon le texte de l'option native (déjà
+    // traduite par la passe data-i18n-opt, ou l'anglais par défaut).
+    var opt = sel.querySelector('option[value="' + v + '"]');
+    lbl.textContent = (typeof window.t === 'function' && window.t(KEY[v]) !== KEY[v])
+      ? window.t(KEY[v])
+      : (opt ? opt.textContent : v);
+    var items = list.children;
+    for (var i = 0; i < items.length; i++)
+      items[i].classList.toggle('sel', items[i].getAttribute('data-val') === v);
+  }
+  function close() { list.hidden = true; btn.setAttribute('aria-expanded', 'false'); }
+  btn.addEventListener('click', function(e) {
+    e.stopPropagation();
+    var open = list.hidden;
+    list.hidden = !open;
+    btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    if (open) refresh();
+  });
+  list.addEventListener('click', function(e) {
+    var it = e.target.closest('.gt-dd-item');
+    if (!it) return;
+    sel.value = it.getAttribute('data-val');
+    sel.dispatchEvent(new Event('input'));
+    sel.dispatchEvent(new Event('change'));
+    refresh(); close();
+  });
+  document.addEventListener('click', function(e) {
+    if (!list.hidden && !e.target.closest('#cf-gtype-dd')) close();
+  });
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape' && !list.hidden) close();
+  });
+  // set()/setVal() dispatchent 'input' sur le select → on suit.
+  sel.addEventListener('input', refresh);
+  sel.addEventListener('change', refresh);
+  window._gtypeDdRefresh = refresh;
+  refresh();
+})();
+
+;(function(){ window.BUILD_VERSION='0.3.681-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
