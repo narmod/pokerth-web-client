@@ -1431,15 +1431,17 @@ window._applySeatOrient = _applySeatOrient;
 // ── Descripteur de pack de sièges (étape 3) ────────────────────────────────
 // Traits comportementaux du pack actif, résolus par le module theme
 // (window._seatPackTraits : packs intégrés + "traits" du seat.json des packs
-// importés). Repli avant chargement du module : traits QML complets — depuis
-// 0.3.695 la structure QML est la norme pour TOUS les packs.
+// importés). Repli avant chargement du module : packs web intégrés = habillage
+// héritage (géométrie commune via qmlSelf) ; tout le reste = traits QML
+// complets (structure commune, norme des packs importés/nouveaux).
 function _seatTraitsNow() {
   var id = '';
   try { id = document.documentElement.getAttribute('data-seat') || ''; } catch (e) {}
   try { if (typeof window._seatPackTraits === 'function') { var t = window._seatPackTraits(id); if (t) return t; } } catch (e) {}
-  return { holePlate: true, betOut: true, pucksSide: true, flagInfo: true, timerRect: true,
-           winnerBadge: true, selfStrip: true, selfBigCards: true, badgeOnCards: true,
-           qmlSelf: true, narrowByOrient: true, qmlStruct: true };
+  var web = { '': 1, chip: 1, plate: 1, card: 1, compact: 1, bar: 1 }[id] === 1;
+  return { holePlate: !web, betOut: !web, pucksSide: !web, flagInfo: !web, timerRect: !web,
+           winnerBadge: !web, selfStrip: !web, selfBigCards: !web, badgeOnCards: !web,
+           qmlSelf: true, narrowByOrient: true, qmlStruct: !web };
 }
 setTimeout(function () { try { _applySeatOrient(); } catch (e) {} }, 800);
 // Appliquer les classes body dès l'init (les prefs sont reflétées au chargement).
@@ -17187,7 +17189,7 @@ function renderPlayersList() {
   });
 })();
 
-;(function(){ window.BUILD_VERSION='0.3.695-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.696-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

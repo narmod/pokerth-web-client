@@ -133,11 +133,13 @@ var PUCKS_ITEMS   = [ {id:'',key:'pucksAuto',fallback:'Auto (table)',swatch:'#3a
 //   qmlStruct      structure/gabarit CSS QML (html[data-seat-struct="qml"])
 const SEAT_TRAIT_KEYS = ['holePlate','betOut','pucksSide','flagInfo','timerRect','winnerBadge','selfStrip','selfBigCards','badgeOnCards','qmlSelf','narrowByOrient','qmlStruct'];
 const SEAT_TRAITS_QML = { holePlate:true, betOut:true, pucksSide:true, flagInfo:true, timerRect:true, winnerBadge:true, selfStrip:true, selfBigCards:true, badgeOnCards:true, qmlSelf:true, narrowByOrient:true, qmlStruct:true };
-const SEAT_TRAIT_DEFAULTS = SEAT_TRAITS_QML;
-// Packs web (Classic, Chip, Plate, Card, Compact, Bar) : MÊME structure et
-// mêmes comportements que le pack PokerTH (demande narmod 17/07 — placement,
-// tailles, self-box unifiés) ; seul l'habillage CSS de chaque pack diffère.
-const SEAT_TRAITS_WEB = SEAT_TRAITS_QML;
+const SEAT_TRAIT_DEFAULTS = SEAT_TRAITS_QML; // packs importés / inconnus = structure commune
+// Packs web (Classic, Chip, Plate, Card, Compact, Bar) : GÉOMÉTRIE commune
+// (placement, tailles, self-box → qmlSelf + gabarit CSS héritage borné) mais
+// HABILLAGE et comportements propres conservés (mise au pied, pucks sur
+// l'avatar, timer anneau, pas de cartes dans la boîte) — demande narmod
+// 17/07 : « garder surtout les placements et la taille des sièges/self-box ».
+const SEAT_TRAITS_WEB = { holePlate:false, betOut:false, pucksSide:false, flagInfo:false, timerRect:false, winnerBadge:false, selfStrip:false, selfBigCards:false, badgeOnCards:false, qmlSelf:true, narrowByOrient:true, qmlStruct:false };
 const SEATS = [
   { id: '',      key: 'seatClassic', fallback: 'Classic', swatch: '#1e3820', traits: SEAT_TRAITS_WEB },
   { id: 'pokerth', key: 'seatPokerth', fallback: 'PokerTH', swatch: '#1d222b', traits: SEAT_TRAITS_QML },

@@ -7968,9 +7968,9 @@ html[data-seat-struct="qml"] .seat.me .seat-avatar {
 }
 
 /* Layout flex : styles NON-pokerth UNIQUEMENT (le pokerth garde sa grille native). */
-html:not([data-seat-struct="qml"]) body.adv-hide-pbar .seat.me { max-width: none !important; min-width: 0 !important; }
+html:not([data-seat-struct="qml"]) body.adv-hide-pbar .seat.me { max-width: 190px !important; min-width: 0 !important; }
 html:not([data-seat-struct="qml"]) body.adv-hide-pbar .seat.me .seat-plate {
-  display: flex !important; flex-wrap: wrap; max-width: none !important;
+  display: flex !important; flex-wrap: wrap; max-width: 190px !important;
   align-items: center; justify-content: center; gap: 6px;
 }
 html:not([data-seat-struct="qml"]) body.adv-hide-pbar .seat.me .seat-avatar { order: 1; flex: none; }
@@ -7981,6 +7981,14 @@ html:not([data-seat-struct="qml"]) body.adv-hide-pbar .seat.me .seat-info {
   order: 3; flex-basis: 100%;
   display: flex; flex-direction: column; align-items: center; gap: 0;
 }
+/* ── Packs héritage (sans structure QML) : EMPREINTE bornée au gabarit de la
+   bisection (114×84 adversaires, self ~150×96) — même placement et mêmes
+   tailles que le pack PokerTH, habillage du pack conservé (0.3.696). ── */
+html:not([data-seat-struct="qml"]) .seat:not(.me) { max-width: 114px !important; gap: 1px; }
+html:not([data-seat-struct="qml"]) .seat:not(.me) .seat-avatar { width: 40px !important; height: 40px !important; font-size: 0.92rem !important; }
+html:not([data-seat-struct="qml"]) .seat:not(.me) .seat-name { font-size: 0.7rem !important; line-height: 1.15; max-width: 106px !important; }
+html:not([data-seat-struct="qml"]) .seat:not(.me) .seat-money { font-size: 0.72rem !important; line-height: 1.15; }
+html:not([data-seat-struct="qml"]) .seat:not(.me) .seat-foot { margin-top: 1px; gap: 4px; }
 /* Selecteur "Placement des sieges" dans Options avancees. */
 .adv-row .adv-sel{flex:0 0 auto;min-width:132px}
 .adv-lang-btn{-webkit-appearance:none;appearance:none;width:100%;display:flex;align-items:center;gap:8px;background:var(--field-bg);border:1px solid var(--border);border-radius:2px;color:var(--cream);padding:8px 32px 8px 11px;font-family:var(--ff-mono);font-size:0.88rem;text-align:left;outline:none;cursor:pointer}
