@@ -132,14 +132,19 @@ var PUCKS_ITEMS   = [ {id:'',key:'pucksAuto',fallback:'Auto (table)',swatch:'#3a
 const SEAT_TRAIT_KEYS = ['holePlate','betOut','pucksSide','flagInfo','timerRect','winnerBadge','selfStrip','selfBigCards','badgeOnCards','qmlSelf','narrowByOrient'];
 const SEAT_TRAIT_DEFAULTS = { holePlate:false, betOut:false, pucksSide:false, flagInfo:false, timerRect:false, winnerBadge:false, selfStrip:false, selfBigCards:false, badgeOnCards:false, qmlSelf:false, narrowByOrient:true };
 const SEAT_TRAITS_QML = { holePlate:true, betOut:true, pucksSide:true, flagInfo:true, timerRect:true, winnerBadge:true, selfStrip:true, selfBigCards:true, badgeOnCards:true, qmlSelf:true, narrowByOrient:true };
+// Packs web historiques (Classic, Chip, Plate, Card, Compact, Bar) : traits
+// explicites = les défauts (mise/pucks sur l'avatar, timer anneau, drapeau
+// au coin, self dans la player-bar). Alias nommé pour la lisibilité — chaque
+// pack peut diverger plus tard en remplaçant l'alias par son propre objet.
+const SEAT_TRAITS_WEB = SEAT_TRAIT_DEFAULTS;
 const SEATS = [
-  { id: '',      key: 'seatClassic', fallback: 'Classic', swatch: '#1e3820' },
+  { id: '',      key: 'seatClassic', fallback: 'Classic', swatch: '#1e3820', traits: SEAT_TRAITS_WEB },
   { id: 'pokerth', key: 'seatPokerth', fallback: 'PokerTH', swatch: '#1d222b', traits: SEAT_TRAITS_QML },
-  { id: 'chip',  key: 'seatChip',    fallback: 'Chip',    swatch: '#caa64a' },
-  { id: 'plate', key: 'seatPlate',   fallback: 'Plate',   swatch: '#1d222b' },
-  { id: 'card',    key: 'seatCard',    fallback: 'Card',    swatch: '#394150' },
-  { id: 'compact', key: 'seatCompact', fallback: 'Compact', swatch: '#1e3820' },
-  { id: 'bar',     key: 'seatBar',     fallback: 'Bar',     swatch: '#2a2f38' },
+  { id: 'chip',  key: 'seatChip',    fallback: 'Chip',    swatch: '#caa64a', traits: SEAT_TRAITS_WEB },
+  { id: 'plate', key: 'seatPlate',   fallback: 'Plate',   swatch: '#1d222b', traits: SEAT_TRAITS_WEB },
+  { id: 'card',    key: 'seatCard',    fallback: 'Card',    swatch: '#394150', traits: SEAT_TRAITS_WEB },
+  { id: 'compact', key: 'seatCompact', fallback: 'Compact', swatch: '#1e3820', traits: SEAT_TRAITS_WEB },
+  { id: 'bar',     key: 'seatBar',     fallback: 'Bar',     swatch: '#2a2f38', traits: SEAT_TRAITS_WEB },
 ];
 const palette = makeAxis({ storeKey: 'pth_theme', attr: 'data-theme', items: PALETTES, def: 'auto',    titleKey: 'sectionPalette', titleFallback: 'Palette' });
 const table   = makeAxis({ storeKey: 'pth_table', attr: 'data-table', items: TABLES, def: '', titleKey: 'sectionTable',   titleFallback: 'Table' });
