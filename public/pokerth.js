@@ -400,7 +400,7 @@ function applyAdvOpts() {
     b.classList.toggle('adv-no-blindsbadge', !_advGet('blinds_badge', true)); // pastille blinds du bandeau (extension web)
     b.classList.toggle('adv-no-community', !_advGet('show_community', true));
     b.classList.toggle('adv-no-flag', !_advGet('show_flag', true));
-    b.classList.toggle('adv-hide-pbar', _advGet('hide_pbar', true));
+    b.classList.add('adv-hide-pbar'); // mode PokerTH permanent — option « barre joueur masquée » retirée (narmod 2026-07-17), le CSS reste keyé sur la classe
     b.classList.toggle('adv-no-tablezoom', !_advGet('table_zoom', true)); // interrupteur zoom (parite QML tableZoomEnabled)
     b.classList.toggle('adv-no-lobbychat', !_advGet('lobby_chat', true)); // chat du lobby (parite QML UseLobbyChat)
     b.classList.toggle('adv-no-handsbtn', !_advGet('hands_btn', true)); // icone combinaisons de poker sur le tapis (extension web)
@@ -567,7 +567,6 @@ function openAdvancedOptions() {
   sync('adv-potbtns', 'pot_btns', true);
   sync('adv-communitycontent', 'community_content', true);
   sync('adv-splash', 'splash', true);          // parité QML : DisableSplashScreenOnStartup=0
-  sync('adv-hidepbar', 'hide_pbar', true);
   sync('adv-community', 'show_community', true);
   sync('adv-focusbet', 'focus_bet', false);
   sync('adv-noemoji', 'chat_noemoji', false);
@@ -789,7 +788,7 @@ function resetAdvDefaults() {
     : 'Reset all options and keyboard shortcuts to their defaults?';
   if (!window.confirm(msg)) return;
   var defs = {
-    anim_cards: true, show_blinds: true, hide_pbar: true, show_community: true,
+    anim_cards: true, show_blinds: true, show_community: true,
     focus_bet: false, chat_noemoji: false, fade_losers: true, show_flag: true,
     own_click: false, guard_call: true, odds_monitor: false, no_hide_ignored: false, hands_btn: true,
     fkeys_alt: false, zoom_follow: true, table_zoom: true, lobby_chat: true, log_on: true, pause_hands: false, create_dialog: true, cfg_sync: true, poker_en: true,
@@ -1126,7 +1125,7 @@ function _cfgSyncEnabled() { return _advGet('cfg_sync', true); }
 // type pth_cfg_sync_ts, jetons, caches).
 var _CFG_WEB_SYNC_KEYS = [
   // Toggles web-only (via setAdvOpt → pth_<clé>)
-  'pth_hide_pbar', 'pth_show_community', 'pth_chat_noemoji',
+  'pth_show_community', 'pth_chat_noemoji',
   'pth_assist', 'pth_show_odds', 'pth_hands_btn', 'pth_voice',
   'pth_haptic', 'pth_display_bb', 'pth_table_zoom', 'pth_zoom_follow',
   'pth_community_content', 'pth_sound_vol',
@@ -10482,7 +10481,7 @@ const App = (() => {
     // For all other top-half seats (sinAng > -0.95), we keep yMulTop so the
     // lateral pairs don't drift horizontally toward each other.
     const yMulTopC  = isSmall ? 0.14 : 0.18;
-    const yMulMe    = isSmall ? 0.16 : (_advGet('hide_pbar', true) ? 0.06 : 0.22); // player-bar masquee -> self pres du rebord (0.22 = air pour la barre)
+    const yMulMe    = isSmall ? 0.16 : 0.06; // barre joueur toujours masquee (option retiree) -> self pres du rebord
     const ryBotRaw  = oRect.height / 2 + borderClear + oRect.height * yMulBot;
     const ryTopRaw  = oRect.height / 2 + borderClear + oRect.height * yMulTop;
     const ryTopCRaw = oRect.height / 2 + borderClear + oRect.height * yMulTopC;
@@ -10571,13 +10570,12 @@ const App = (() => {
       try { var _cSelf = (typeof window._seatCustomGet === 'function') ? window._seatCustomGet(rotated.length) : null;
             _selfHasCustom = !!(_cSelf && _cSelf[0] && typeof _cSelf[0].fy === 'number'); } catch (e) {}
     }
-    var _selfAtPearl = (myIdx >= 0 && !_forceSeatPortrait && !_selfHasCustom
-                        && (_advGet('hide_pbar', true) || _pkStyleNow));
+    var _selfAtPearl = (myIdx >= 0 && !_forceSeatPortrait && !_selfHasCustom);
     // Diagnostic : dans la console, tape  _seatDbg  pour voir le build réellement
     // servi + le mode de placement + si la self est bien épinglée au point bas.
     try { window._seatDbg = { build: window.BUILD_VERSION, mode: _seatModeV,
       forcePortrait: _forceSeatPortrait, pkStyle: _pkStyleNow,
-      hidePbar: _advGet('hide_pbar', true), selfHasCustom: _selfHasCustom,
+      selfHasCustom: _selfHasCustom,
       selfAtPearl: _selfAtPearl }; } catch (e) {}
     window._zoomInLayout = false;
     // Sémantique QML définitive (demande narmod) : le placement de BASE est la
@@ -10742,7 +10740,7 @@ const App = (() => {
 
     var _seatStyleV = document.documentElement.getAttribute('data-seat') || '';
     var _pkHole = !!_seatTr.holePlate; // cartes dans la boîte (trait du pack)
-    var _maskMode = _advGet('hide_pbar', true); // mode masqué : self-box = siège
+    var _maskMode = true; // mode masqué permanent (option retirée) : self-box = siège
     var _ownLvl = 0; try { _ownLvl = Math.min(3, Math.max(0, parseInt(localStorage.getItem('pth_big_own_cards'), 10) || 0)); } catch (e) {} // niveau "agrandir mes cartes" 0-3 (plafond = riviere)
     let h = '';
     var _apNew = {}; // signatures pucks/drapeau/action du rendu courant (anti-replay)
@@ -11352,7 +11350,7 @@ const App = (() => {
     //    doit alors remplacer le message, pas l'inverse.
     var _liveTurn = false;
     try { var _mzL = document.querySelector('.my-zone'); _liveTurn = !!(_mzL && _mzL.classList.contains('my-turn-active')); } catch (e) {}
-    var _pinShow = (_actionBarPinned || _advGet('hide_pbar', true)) && !_amSpectator && _gameStarted;
+    var _pinShow = !_amSpectator && _gameStarted; // barre toujours affichée (mode masqué permanent)
     if ((_preActionOpen || _pinShow) && !(turnPid === myId && _liveTurn)) { _renderPreActionPanel(); updateBottomLayout(); return; }
     // isHtml=true : msg contient du HTML interne sûr (généré par notre code)
     $('g-actions').innerHTML = '<div class="waiting-msg">' + (isHtml ? msg : esc(msg)) + '</div>';
@@ -11369,23 +11367,11 @@ const App = (() => {
   }
 
   function _updatePinBtn() {
+    // Mode masqué permanent (option « barre joueur masquée » retirée) : la
+    // barre d'action est affichée en permanence -> le bouton épingle est
+    // définitivement inutile, on le cache.
     var b = document.getElementById('g-pin-btn'); if (!b) return;
-    var ga = document.getElementById('g-actions');
-    // Resynchronise la visibilite a chaque changement de contenu de #g-actions
-    // (attente / demarrage / showdown / barre d'action...). Pose une seule fois.
-    if (ga && !ga._pinObs) { ga._pinObs = 1; try { new MutationObserver(_updatePinBtn).observe(ga, { childList: true }); } catch(e){} }
-    // L'epingle n'apparait QUE quand les touches d'action sont affichees (live ou apercu).
-    var hasActions = !!(ga && ga.querySelector('.action-grid'));
-    // Mode masqué : la barre d'action est deja affichee en permanence par l'option
-    // (independamment du pin) -> le bouton pin devient inutile, on le cache.
-    var _maskMode = _advGet('hide_pbar', true);
-    b.style.display = (hasActions && !_maskMode) ? 'flex' : 'none';
-    if (!hasActions || _maskMode) return;
-    var on = _actionBarPinned || _advGet('hide_pbar', true);
-    b.setAttribute('aria-pressed', on ? 'true' : 'false');
-    b.style.opacity = on ? '1' : '0.5';
-    b.style.borderColor = on ? 'var(--gold)' : 'var(--border)';
-    b.style.boxShadow = on ? '0 0 8px var(--border-hi)' : '0 1px 4px rgba(0,0,0,0.28)';
+    b.style.display = 'none';
   }
 
   function _renderPreActionPanel() {
@@ -12199,7 +12185,7 @@ const App = (() => {
       // normalement affiché À LA PLACE de l'aperçu, est ré-injecté AU-DESSUS
       // des boutons pour conserver l'info "à qui le tour".
       var _narr = '';
-      if (_advGet('hide_pbar', true) && turnPid && turnPid !== myId && seatData[turnPid]) {
+      if (turnPid && turnPid !== myId && seatData[turnPid]) {
         _narr = '<div class="act-narrator"><span style="font-family:inherit">'
               + esc(getPlayerName(turnPid)) + '</span>'
               + '<span class="thinking-dots"><span></span><span></span><span></span></span></div>';
@@ -17242,7 +17228,7 @@ function renderPlayersList() {
   });
 })();
 
-;(function(){ window.BUILD_VERSION='0.3.727-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.728-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
