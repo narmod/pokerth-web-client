@@ -34,11 +34,13 @@ use too. Items are grouped by status rather than fixed phases.
 - Post-flop aggression: continuation bets by the pre-flop aggressor and semi-bluffs on strong draws.
 
 **Appearance & theming**
-- Multi-axis customisation, each axis independently selectable: UI palette, table felt,
-  card deck, action-button style, chip pucks, and seat style.
-- One-click presets — PokerTH Dark (the default, reproducing the official client's look),
-  PokerTH Light, and Green Casino — plus gallery themes (Midnight Blue, Graphite,
-  Royal Purple, Sleek).
+- A QML-style styles window with four tabs — Table · Cards · Card back · Seats — each
+  choice saved independently. 13 table styles (PokerTH, Spectator Tools, Green Casino,
+  Danuxi Blue, Mute, Mute 02, Teal, Lemming, Matrix, Star Trek, TripSixes, Wanted, Xanax),
+  listed with a large preview, name and author like the official picker; as in the official
+  `StyleProvider`, each table style carries its own felt, pucks and action-button skins.
+- UI palette (Dark / Light / Auto) follows the official *Dark Mode* setting in the
+  Advanced options, matching the QML client.
 - Light/dark aware: per-theme `color-scheme` and a dynamic browser `theme-color` that
   follows the active theme.
 - Theme panel fully localised in all 36 languages, with live switching and a live preview
@@ -48,13 +50,14 @@ use too. Items are grouped by status rather than fixed phases.
   button, chip denominations, win bursts).
 - Official card decks: seven more official PokerTH decks (Bella Union, Nobus Classic,
   Stardust, Star Trek, Lemming, Xanax) added to the deck gallery, each with a live preview.
-- Style import: install a table/deck/back from a `.zip`, parsing the four 2.1.3 style keys.
+- Style import: install a table or card deck from a `.zip` (parsing the four 2.1.3 style keys), or a custom card-back image.
 - Coloured glossy action buttons (Fold red / Check-Call blue / Raise green / All-In orange)
   and an animated flaming-chip emblem on the login screen (respects reduced-motion).
-- Six theme-aware seat "packs" (Classic, Chip, Plate, Card, Compact, Bar), switchable like
-  decks and adapting to dark/light; pack names kept in English across all languages. The
-  default adapts to the device (Compact on phones, Plate on tablet/desktop); an explicit
-  choice is saved and always wins.
+- Eight theme-aware seat "packs", switchable like decks: PokerTH landscape and PokerTH
+  portrait (faithful renders of the official QML player boxes), Classic, Chip, Plate,
+  Card, Compact, and Bar; pack names kept in English across all languages. The default is
+  the PokerTH pack matching the screen orientation, with an orientation-sync option (on by
+  default); an explicit choice is saved and always wins.
 - Responsive seat layout: on phones and tablets the seats tighten around the felt so players
   stay close to the table; desktop keeps the wider layout.
 
@@ -140,7 +143,7 @@ use too. Items are grouped by status rather than fixed phases.
   - Game status bar: hand number, game ID, total pot with the current round's bets on
     their own line, and a live players-remaining count.
   - Winning-hand badge under the community cards at showdown.
-  - Zoom-follow (opt-in, mobile): the table view auto-pans to the active seat and steps
+  - Zoom-follow (mobile, on by default — official `tableZoomEnabled` switch): the table view auto-pans to the active seat and steps
     back out to the full table at showdown.
   - Full chat: Tab nickname-completion with cycling, ↑ / ↓ message history, and a
     1,000+ emoji picker (frequent + full grid) alongside the original 30 reactions.
@@ -160,8 +163,7 @@ use too. Items are grouped by status rather than fixed phases.
     card ratio, and a crisp pulsed gold turn-glow.
   - Pre-selection preview desaturated uniformly when it is not your turn.
   - App header height matched to the official topBar (38 px, 30 px in landscape-compact).
-  - Seat geometry tuned to 2.1.3: self-weight 0.5 and fill-cap 1.9 / 2.3 (landscape /
-    compact).
+  - Seat geometry tuned to 2.1.3: self-weight 0.3 wide / 0.5 compact and fill-cap 1.9 / 2.3.
 - Follow-up fixes from official-client community feedback: chat length capped to match
   the server limit, a player's current table shown in the lobby players list, and the
   players-remaining counter above.
@@ -174,8 +176,9 @@ use too. Items are grouped by status rather than fixed phases.
 
 ## 🔨 Now (in progress)
 
-- **Registered-account authentication** — refining the pokerth.net login flow; this is the
-  current focus, with the Code-health work below up next.
+- **Official QML client fidelity** — ongoing pixel-and-behaviour alignment of the in-game
+  screen with the official 2.1.3 QML client (action bar, mobile layouts, seat geometry);
+  this is the current focus, with the Code-health work below up next.
 
 ## ⏭️ Next
 
@@ -193,7 +196,6 @@ use too. Items are grouped by status rather than fixed phases.
 - **Voice chat** at the table (WebRTC).
 - Alternative table shapes (e.g. a D-shaped / trapezoidal table).
 - Persistent hand history and export (beyond the current last-5-hands view).
-- In-game invitations.
 - Tournaments / multi-table.
 - Native translation passes for languages currently falling back to English.
 - Continued polish toward a wider community release (regular tagged releases).
