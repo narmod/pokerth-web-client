@@ -251,6 +251,7 @@ export const strings = {
     endGamePlace:'{n}ᵉ place',
     endGameReplay:'Rejouer',
     gameRanking:'Partie classée',
+    gameNameRequired:'Veuillez saisir un nom de partie.', guestGameName:'Partie de {name}',
     allowSpectators:'Spectateurs',
     allowOn:'Autorisés',
     allowOff:'Interdits',

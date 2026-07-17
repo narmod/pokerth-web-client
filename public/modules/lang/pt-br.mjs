@@ -507,6 +507,7 @@ export const strings = {
     endGameClose: 'Fechar',
     endGameBackToLobby: 'Voltar ao lobby',
     gameRanking:'Jogo ranqueado',
+    gameNameRequired:'Por favor, insira um nome para o jogo.', guestGameName:'Jogo de {name}',
     allowSpectators: 'Espectadores',
     allowOn: 'Permitidos',
     allowOff: 'Bloqueados',

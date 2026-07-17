@@ -513,6 +513,7 @@ export const strings = {
     endGameClose: 'Chiudi',
     endGameBackToLobby: 'Torna alla lobby',
     gameRanking:'Valida per la classifica',
+    gameNameRequired:'Inserisci un nome per la partita.', guestGameName:'Partita di {name}',
     allowSpectators: 'Spettatori',
     allowOn: 'Consentiti',
     allowOff: 'Bloccati',

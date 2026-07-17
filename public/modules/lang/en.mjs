@@ -249,6 +249,7 @@ export const strings = {
     endGamePlace:'Place #{n}',
     endGameReplay:'Play again',
     gameRanking:'Ranking game',
+    gameNameRequired:"Please enter a game name.", guestGameName:"{name}'s game",
     allowSpectators:'Spectators',
     allowOn:'Allowed',
     allowOff:'Blocked',

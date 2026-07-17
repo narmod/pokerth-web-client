@@ -651,6 +651,12 @@ body {
 :root[data-theme="pokerth-light"] .gt-dd-item:hover,
 :root[data-theme="pokerth-light"] .gt-dd-item.sel { background: rgba(0,0,0,0.07); }
 
+/* Verrous du formulaire de création (parité QML : classé / invité) */
+.cf-locked { opacity: 0.55; pointer-events: none; }
+.gt-dd-btn:disabled { opacity: 0.55; cursor: default; pointer-events: none; }
+#cf-name:disabled { opacity: 0.7; }
+.cf-name-err { color: #ef4444; font-size: 0.8rem; margin-top: 4px; }
+
 .avatar-picker {
   display: grid;
   grid-template-columns: repeat(5, 1fr);

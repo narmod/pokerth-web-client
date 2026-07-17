@@ -1357,6 +1357,7 @@ function onAvatarImageChosen(input) {
         <div class="cf-row cf-row-col">
           <label class="cf-lbl" data-i18n="gameNameLabel">Nom de la partie</label>
           <input id="cf-name" class="cf-input" placeholder="Table..." data-i18n-placeholder="tableNamePh">
+          <div id="cf-name-err" class="cf-name-err" style="display:none" data-i18n="gameNameRequired">Please enter a game name.</div>
         </div>
 
         <!-- Type de partie (masqué pour un invité pokerth.net : seul Normal est permis) -->
@@ -1415,7 +1416,7 @@ function onAvatarImageChosen(input) {
           <label class="cf-lbl" data-i18n="startCash">Capital de départ</label>
           <div class="cf-step cf-step-money">
             <button type="button" class="cf-step-btn" onclick="App.stepField('cf-stack',-1)">&minus;</button>
-            <input id="cf-stack" class="cf-step-num" type="number" min="500" max="1000000" step="500" value="3000" onchange="App.clampNum(this)">
+            <input id="cf-stack" class="cf-step-num" type="number" min="1000" max="1000000" step="500" value="3000" onchange="App.clampNum(this)">
             <button type="button" class="cf-step-btn" onclick="App.stepField('cf-stack',1)">+</button>
           </div>
         </div>
@@ -1426,7 +1427,7 @@ function onAvatarImageChosen(input) {
           <label class="cf-lbl" data-i18n="firstSmallBlind">Première petite blinde</label>
           <div class="cf-step cf-step-money">
             <button type="button" class="cf-step-btn" onclick="App.stepField('cf-blind',-1)">&minus;</button>
-            <input id="cf-blind" class="cf-step-num" type="number" min="1" max="1000000" step="1" value="10" onchange="App.clampNum(this)">
+            <input id="cf-blind" class="cf-step-num" type="number" min="5" max="20000" step="1" value="10" onchange="App.clampNum(this)">
             <button type="button" class="cf-step-btn" onclick="App.stepField('cf-blind',1)">+</button>
           </div>
         </div>
@@ -1437,7 +1438,7 @@ function onAvatarImageChosen(input) {
             <label class="cf-radio"><input type="radio" name="cf-rm" id="cf-rm2" onchange="App.setRaiseMode(2)"> <span data-i18n="unitMinutes">minutes</span></label>
             <div class="cf-step cf-step-sm">
               <button type="button" class="cf-step-btn" onclick="App.stepField('cf-raise-every',-1)">&minus;</button>
-              <input id="cf-raise-every" class="cf-step-num" type="number" min="1" max="180" step="1" value="8" onchange="App.clampNum(this)">
+              <input id="cf-raise-every" class="cf-step-num" type="number" min="1" max="999" step="1" value="8" onchange="App.clampNum(this)">
               <button type="button" class="cf-step-btn" onclick="App.stepField('cf-raise-every',1)">+</button>
             </div>
           </div>
@@ -1483,7 +1484,7 @@ function onAvatarImageChosen(input) {
           <label class="cf-lbl" data-i18n="actionTimeout">Limite de temps par action</label>
           <div class="cf-step cf-step-sec">
             <button type="button" class="cf-step-btn" onclick="App.stepField('cf-timeout',-1)">&minus;</button>
-            <input id="cf-timeout" class="cf-step-num" type="number" min="5" max="120" step="1" value="20" onchange="App.clampNum(this)">
+            <input id="cf-timeout" class="cf-step-num" type="number" min="5" max="60" step="1" value="20" onchange="App.clampNum(this)">
             <button type="button" class="cf-step-btn" onclick="App.stepField('cf-timeout',1)">+</button>
           </div>
         </div>

@@ -14259,6 +14259,7 @@ function _maybeShowNextHandBtn() {
       var body = document.getElementById('create-page-body');
       if (form && body && form.parentNode !== body) body.appendChild(form);
       if (form) { form.style.display = 'block'; form.classList.add('open'); }
+      this._rankSnap = null;   // jamais de restauration trans-session
       try { this._applyCreateFormDefaults(false); } catch (e) {}
       // Pastille « Perso » (charger mes préférences) : visible seulement si
       // des préférences existent pour le MODE COURANT (pastille 💾 ou Options
@@ -14278,13 +14279,16 @@ function _maybeShowNextHandBtn() {
         }
       } catch (e) {}
       // Invité pokerth.net : seule la création de parties « Normal » est
-      // permise par le serveur — on masque le choix du type et on force 1.
+      // permise par le serveur — type forcé à 1, ligne visible mais
+      // désactivée (parité QML enabled: !isGuest), nom imposé par
+      // _syncGameTypeConstraints. Les verrous classé/mot de passe sont
+      // resynchronisés dans la foulée.
       try {
-        var _isGuest = (_currentLoginMode === 'guest');
         var _gtr = document.getElementById('cf-gtype-row');
-        if (_gtr) _gtr.style.display = _isGuest ? 'none' : '';
-        if (_isGuest) { var _gts = document.getElementById('cf-game-type'); if (_gts) _gts.value = '1'; }
+        if (_gtr) _gtr.style.display = '';
+        if (_currentLoginMode === 'guest') { var _gts = document.getElementById('cf-game-type'); if (_gts) _gts.value = '1'; }
         if (window._gtypeDdRefresh) window._gtypeDdRefresh();
+        this._syncGameTypeConstraints();
       } catch (e) {}
       show('s-create');
     },
@@ -14412,6 +14416,89 @@ function _maybeShowNextHandBtn() {
       if (sel) sel.classList.add('active');
     },
 
+    // ── Parité QML LobbyCreateGamePage (2.1.3) : contraintes selon le type ──
+    // passwordAllowed = Normal/Enregistrés seulement ; « Partie classée »
+    // verrouille et force les constantes serveur (RANKING_GAME_*) ; invité =
+    // nom imposé « Partie de %1 » + type figé (ligne visible mais désactivée,
+    // comme le QML). Le mécanisme de sauvegarde (pastilles de style, 💾,
+    // réinitialisation) n'est PAS modifié : le verrou n'agit que tant que le
+    // type classé est sélectionné, avec restauration des valeurs à la sortie.
+    _syncGameTypeConstraints() {
+      var g = function(id){ return document.getElementById(id); };
+      var sel = g('cf-game-type'); if (!sel) return;
+      var isGuest = (_currentLoginMode === 'guest');
+      var type = parseInt(sel.value, 10) || 1;
+      var isRanking = (type === 4);
+      var pwAllowed = (type === 1 || type === 2);
+      var lockRow = function(id, lock) {
+        var el = g(id); if (!el) return;
+        var row = el.closest('.cf-row') || el.parentNode;
+        if (row) row.classList.toggle('cf-locked', !!lock);
+        if ('disabled' in el) el.disabled = !!lock;
+      };
+      // Mot de passe : interdit en classé (serveur) et en invitation (accès
+      // via l'invitation) — décoché automatiquement, comme applyGameType().
+      var pwT = g('cf-use-password');
+      if (pwT) {
+        if (!pwAllowed && pwT.checked) pwT.checked = false;
+        lockRow('cf-use-password', !pwAllowed);
+        var pwRow = g('cf-password-row');
+        if (pwRow) pwRow.style.display = (pwAllowed && pwT.checked) ? 'flex' : 'none';
+      }
+      // Invité : nom imposé (nom admin du mode s'il existe, sinon la
+      // convention QML « %1's game ») + champ nom et choix du type désactivés.
+      var nameEl = g('cf-name');
+      if (nameEl) {
+        nameEl.disabled = isGuest;
+        if (isGuest) {
+          var tpl = (typeof t === 'function' && t('guestGameName') !== 'guestGameName')
+            ? t('guestGameName') : "{name}'s game";
+          nameEl.value = _adminNameForMode() || tpl.replace('{name}', myName || 'PokerTH');
+        }
+      }
+      var ddBtn = g('cf-gtype-btn'); if (ddBtn) ddBtn.disabled = isGuest;
+      // Classé : snapshot des valeurs courantes puis forçage des constantes
+      // serveur ; restauration à la sortie du type classé.
+      var setv = function(id, v){ var e = g(id); if (e) { e.value = v; e.dispatchEvent(new Event('input')); } };
+      if (isRanking && !this._rankSnap) {
+        this._rankSnap = {
+          players:    g('cf-players')     ? g('cf-players').value     : 10,
+          stack:      g('cf-stack')       ? g('cf-stack').value       : 3000,
+          blind:      g('cf-blind')       ? g('cf-blind').value       : 10,
+          raiseEvery: g('cf-raise-every') ? g('cf-raise-every').value : 8,
+          raiseMode:  (g('cf-rm2') && g('cf-rm2').checked) ? 2 : 1,
+          spect:      g('cf-allow-spectators') ? g('cf-allow-spectators').checked : true,
+          manual:     !!(g('cf-mb1') && g('cf-mb1').checked)
+        };
+        setv('cf-players', 10); setv('cf-stack', 10000); setv('cf-blind', 50); setv('cf-raise-every', 11);
+        this.setRaiseMode(1); var r1 = g('cf-rm1'); if (r1) r1.checked = true;
+        var sp = g('cf-allow-spectators'); if (sp) sp.checked = true;
+        var mb0 = g('cf-mb0'); if (mb0) mb0.checked = true;
+        this.setManualBlindsMode(false);
+      } else if (!isRanking && this._rankSnap) {
+        var snap = this._rankSnap; this._rankSnap = null;
+        setv('cf-players', snap.players); setv('cf-stack', snap.stack);
+        setv('cf-blind', snap.blind); setv('cf-raise-every', snap.raiseEvery);
+        this.setRaiseMode(snap.raiseMode);
+        var rr = g(snap.raiseMode === 2 ? 'cf-rm2' : 'cf-rm1'); if (rr) rr.checked = true;
+        var sp2 = g('cf-allow-spectators'); if (sp2) sp2.checked = snap.spect;
+        var mbr = g(snap.manual ? 'cf-mb1' : 'cf-mb0'); if (mbr) mbr.checked = true;
+        this.setManualBlindsMode(snap.manual);
+      }
+      ['cf-players','cf-stack','cf-blind','cf-allow-spectators'].forEach(function(id){ lockRow(id, isRanking); });
+      var rm1 = g('cf-rm1');
+      if (rm1) { var rmRow = rm1.closest('.cf-row-col'); if (rmRow) rmRow.classList.toggle('cf-locked', isRanking); }
+      var mb0b = g('cf-mb0');
+      if (mb0b) { var mbRow = mb0b.closest('.cf-row-col'); if (mbRow) mbRow.classList.toggle('cf-locked', isRanking); }
+      // Pastilles de STYLE (data-preset, « Perso » inclus) : inertes tant que
+      // le classé force les valeurs — les pastilles de bots (data-skill) et
+      // les chips de blinds ne sont pas concernées.
+      var pills = document.querySelectorAll('.cf-preset[data-preset]');
+      for (var i = 0; i < pills.length; i++) {
+        pills[i].disabled = isRanking;
+        pills[i].classList.toggle('cf-locked', isRanking);
+      }
+    },
     applyPreset(name, btn) {
       // Rythme seulement : les styles ne touchent pas au nombre de joueurs
       // (choix indépendant du tempo, demande d'Arnaud v0.3.515).
@@ -14597,6 +14684,10 @@ function _maybeShowNextHandBtn() {
     // visible and hidden — plus the collapsible panels, presets and password
     // section, then confirms with a toast styled like the header ••• menu.
     resetCreateForm() {
+      // Le verrou « classé » ne doit pas restaurer son snapshot par-dessus
+      // les valeurs réinitialisées (le setVal cf-game-type → '1' plus bas
+      // déclenche _syncGameTypeConstraints via l'événement input).
+      this._rankSnap = null;
       // Core + numeric fields (and their linked range sliders, via the
       // 'input' event dispatched inside _applyCreateFormDefaults).
       this._applyCreateFormDefaults(true, true);
@@ -14687,10 +14778,26 @@ function _maybeShowNextHandBtn() {
         }
         return;
       }
+      // Parité QML : nom vide → erreur inline et création bloquée, mais
+      // seulement quand le formulaire est ouvert. Les chemins automatiques
+      // (entraînement sans dialogue de création) gardent le nom par défaut.
+      const _formOpen = !!document.querySelector('#create-form.open');
+      if (!rawName && _formOpen) {
+        var _ne = g('cf-name-err'); if (_ne) _ne.style.display = '';
+        var _nf = g('cf-name'); if (_nf) _nf.focus();
+        return;
+      }
+      // Type effectif (invité : Normal imposé par le serveur) et constantes
+      // des parties classées, re-forcées à l'envoi comme le QML même si l'UI
+      // a déjà verrouillé les champs (RANKING_GAME_NUMBER_OF_PLAYERS/START_
+      // CASH/START_SBLIND/RAISE_EVERY_HAND, spectateurs oui, pas de mdp,
+      // blindes toujours doublées).
+      const _gtypeSel = (_currentLoginMode === 'guest') ? 1 : sv('cf-game-type', 1);
+      const _isRank   = (_gtypeSel === 4);
       const name    = _safeGameName(rawName || _defaultNameForMode());
-      const nplayers= iv('cf-players', 2);
-      const blind   = iv('cf-blind',   10);
-      const stack   = iv('cf-stack',   3000);
+      const nplayers= _isRank ? 10    : iv('cf-players', 2);
+      const blind   = _isRank ? 50    : iv('cf-blind',   10);
+      const stack   = _isRank ? 10000 : iv('cf-stack',   3000);
       const timeout = iv('cf-timeout', 30);
       const bots    = g('cf-bots')?.checked || false;
       const minHuman= iv('cf-min-humans', 1);
@@ -14703,28 +14810,31 @@ function _maybeShowNextHandBtn() {
                                // this back, but writing it here ensures
                                // it's available immediately for our own
                                // JoinGameAck → GameStartInitial pipeline.
-      const tablePass = (document.getElementById('cf-use-password')?.checked) ? (document.getElementById('cf-password')?.value || '') : '';
+      // Mot de passe : Normal/Enregistrés seulement (QML passwordAllowed) —
+      // jamais en classé (interdit serveur) ni en invitation.
+      const _pwAllowed = (_gtypeSel === 1 || _gtypeSel === 2);
+      const tablePass = (_pwAllowed && document.getElementById('cf-use-password')?.checked) ? (document.getElementById('cf-password')?.value || '') : '';
       // Spectators are allowed by default (true) when the field is missing
       // (older clients, or when the form hasn't been opened) — matches the
       // proto's default. The UI dropdown sends '1' = allowed, '0' = blocked.
       const allowSpecRaw = document.getElementById('cf-allow-spectators');
-      const allowSpec = allowSpecRaw
+      const allowSpec = _isRank ? true : (allowSpecRaw
         ? (allowSpecRaw.type === 'checkbox' ? allowSpecRaw.checked : allowSpecRaw.value !== '0')
-        : true;
+        : true);
       // Ordre manuel des blindes : liste envoyée SEULEMENT si le radio
       // « liste manuelle » est coché (sémantique officielle : liste non vide
       // = mode manuel côté serveur, netpacket.cpp).
-      const manualOn = !!(g('cf-mb1') && g('cf-mb1').checked);
+      const manualOn = !_isRank && !!(g('cf-mb1') && g('cf-mb1').checked);
       const manualBlinds = manualOn ? this._getManualBlinds() : [];
       const opts = {
-        raiseMode:       sv('cf-raise-mode',    1),
-        raiseEvery:      iv('cf-raise-every',   7),
+        raiseMode:       _isRank ? 1  : sv('cf-raise-mode',    1),
+        raiseEvery:      _isRank ? 11 : iv('cf-raise-every',   7),
         endRaiseMode:    sv('cf-end-raise',     1),
         endRaiseValue:   iv('cf-end-raise-val', 200),
         manualBlinds:    manualBlinds,
         guiSpeed:        iv('cf-gui-speed',     5),
         delayHands:      iv('cf-delay',         7),
-        gameType:        (_currentLoginMode === 'guest') ? 1 : sv('cf-game-type', 1),   // invité : Normal imposé
+        gameType:        _gtypeSel,
         allowSpectators: allowSpec,
         password:        tablePass,
       };
@@ -16893,14 +17003,24 @@ function renderPlayersList() {
   document.addEventListener('keydown', function(e) {
     if (e.key === 'Escape' && !list.hidden) close();
   });
-  // set()/setVal() dispatchent 'input' sur le select → on suit.
-  sel.addEventListener('input', refresh);
-  sel.addEventListener('change', refresh);
+  // set()/setVal() dispatchent 'input' sur le select → on suit, et on
+  // resynchronise les contraintes QML (verrous classé, mot de passe…).
+  function syncConstraints() {
+    try { if (typeof App !== 'undefined' && App._syncGameTypeConstraints) App._syncGameTypeConstraints(); } catch (e) {}
+  }
+  sel.addEventListener('input',  function() { refresh(); syncConstraints(); });
+  sel.addEventListener('change', function() { refresh(); syncConstraints(); });
   window._gtypeDdRefresh = refresh;
   refresh();
+  // Erreur « nom requis » (parité QML nameError) : effacée dès la saisie.
+  var nameEl = document.getElementById('cf-name');
+  var nameErr = document.getElementById('cf-name-err');
+  if (nameEl && nameErr) nameEl.addEventListener('input', function() {
+    if (nameEl.value.trim().length > 0) nameErr.style.display = 'none';
+  });
 })();
 
-;(function(){ window.BUILD_VERSION='0.3.681-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.682-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
