@@ -904,8 +904,28 @@ function playerVpipCombos(data, name) {
   return out;
 }
 
-// Grille 13×13 : ordre des rangs (haut → bas / gauche → droite).
-const GRID_RANKS = ['A', 'K', 'Q', 'J', 'T', '9', '8', '7', '6', '5', '4', '3', '2'];
+// Couleur continue d'une stat selon sa valeur (dégradé vert→jaune→rouge).
+// Chaque stat a sa plage [lo, hi] : sous lo = vert (bas), au-dessus hi = rouge
+// (haut). Échelle visuelle par magnitude, cohérente entre HUD et panneau.
+// Renvoie une couleur CSS (hsl) lisible sur thèmes sombres et clair, ou '' si
+// non colorable (hands, valeur absente).
+const _STAT_RANGES = {
+  vpip: [12, 45], pfr: [5, 28], af: [0.5, 3.5], three_bet: [1.5, 10],
+  cbet: [35, 80], fold_to_3bet: [30, 70], fold_to_cbet: [35, 75],
+  wtsd: [20, 40], wsd: [42, 58],
+};
+function statColor(id, v) {
+  if (v == null || id === 'hands') return '';
+  const r = _STAT_RANGES[id];
+  if (!r) return '';
+  let n;
+  if (v === 'inf' || v === Infinity) n = Infinity;
+  else { n = (typeof v === 'number') ? v : parseFloat(v); if (isNaN(n)) return ''; }
+  let t = (n === Infinity) ? 1 : (n - r[0]) / (r[1] - r[0]);
+  t = Math.max(0, Math.min(1, t));
+  const hue = Math.round(130 * (1 - t)); // 130 = vert → 0 = rouge (jaune ~65)
+  return 'hsl(' + hue + ',64%,58%)';
+}
 
 // Combo d'une cellule (row,col) : diagonale = paires, haut-droite = suited,
 // bas-gauche = offsuit.
@@ -1046,7 +1066,11 @@ async function renderStatsPanel() {
   for (const name of rowsFor) {
     const s = statsByName[name];
     body += '<tr><td class="stats-name" title="' + _esc(name) + '">' + _esc(name) + '</td>';
-    for (const [key] of COLS) body += '<td>' + (s ? _esc(_fmt(key, s[key])) : '–') + '</td>';
+    for (const [key] of COLS) {
+      if (!s) { body += '<td>–</td>'; continue; }
+      const col = statColor(key, s[key]);
+      body += '<td' + (col ? ' style="color:' + col + '"' : '') + '>' + _esc(_fmt(key, s[key])) + '</td>';
+    }
     body += '</tr>';
   }
   if (!body) body = '<tr><td class="stats-empty" colspan="' + (COLS.length + 1) + '">Aucune donnée pour le moment.</td></tr>';
@@ -1243,16 +1267,6 @@ const HUD_ROWS = [
   ['three_bet', '3B'], ['cbet', 'CB'], ['fold_to_3bet', 'F3B'],
 ];
 
-// Couleur sémantique d'une stat selon sa valeur (convention poker) : on colore
-// VPIP/PFR (tight = froid/vert, loose = chaud/rouge) ; les autres restent neutres.
-function _statClass(id, v) {
-  if (v == null || v === 'inf') return '';
-  const n = typeof v === 'number' ? v : parseFloat(v);
-  if (id === 'vpip') { if (n >= 40) return 'hud-hot'; if (n >= 24) return 'hud-warm'; return 'hud-cool'; }
-  if (id === 'pfr') { if (n >= 25) return 'hud-hot'; if (n >= 12) return 'hud-warm'; return 'hud-cool'; }
-  return '';
-}
-
 function _hudFmt(id, v) {
   if (v == null) return '–';
   if (id === 'af') return v === 'inf' ? '∞' : String(v);
@@ -1289,8 +1303,9 @@ function _buildBox(pid, name, seatEl, layer) {
   let rows = '';
   for (const [sid, lbl] of HUD_ROWS) {
     const val = s ? _hudFmt(sid, s[sid]) : '–';
+    const col = s ? statColor(sid, s[sid]) : '';
     rows += '<span class="hud-stat"><i class="hud-lbl">' + lbl + '</i>'
-      + '<b class="hud-val ' + (s ? _statClass(sid, s[sid]) : '') + '">' + val + '</b></span>';
+      + '<b class="hud-val"' + (col ? ' style="color:' + col + '"' : '') + '>' + val + '</b></span>';
   }
   box.innerHTML = '<div class="hud-head"><span class="hud-name">' + _hudEsc(name) + '</span>'
     + '<span class="hud-hands">' + handsTxt + '</span></div>'

@@ -9106,9 +9106,6 @@ html[data-seat-struct="qml"] .seat:not(.me) .seat-narrow .seat-holecards .pk { w
 .hud-stat{display:flex;align-items:baseline;justify-content:space-between;gap:3px}
 .hud-lbl{color:var(--text);font-style:normal;font-size:8.5px;letter-spacing:.03em;opacity:.75}
 .hud-val{color:var(--text-hi);font-weight:600;font-variant-numeric:tabular-nums}
-.hud-val.hud-hot{color:#e56b6b}
-.hud-val.hud-warm{color:#e0b24d}
-.hud-val.hud-cool{color:#5fbf7a}
 
 /* Grille de range (modale centrée) */
 #range-modal{position:fixed;inset:0;z-index:60;display:none;align-items:center;justify-content:center;
