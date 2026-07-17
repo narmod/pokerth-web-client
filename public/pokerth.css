@@ -7760,6 +7760,7 @@ html[data-seat-edit="1"] #g-seats .seat.seat-ghost { outline: none; cursor: defa
 .adv-row .adv-textin{flex:0 0 auto;width:150px;background:transparent;color:var(--text);border:1px solid var(--border);border-radius:8px;padding:5px 8px;font:inherit;font-size:0.82rem}
 .adv-row em{font-size:0.58rem;font-style:normal;letter-spacing:0.08em;text-transform:uppercase;color:var(--gold-dim);border:1px solid var(--border);border-radius:10px;padding:1px 7px;opacity:0.85}
 .adv-webtag{font-size:0.58rem;font-style:normal;letter-spacing:0.08em;text-transform:uppercase;color:var(--green);border:1px solid rgba(var(--green-rgb),0.45);border-radius:10px;padding:1px 7px;opacity:0.9;flex-shrink:0}
+.adv-betatag{font-size:0.58rem;font-style:normal;letter-spacing:0.08em;text-transform:uppercase;color:var(--gold);border:1px solid rgba(var(--gold-rgb),0.5);border-radius:10px;padding:1px 7px;opacity:0.92;flex-shrink:0;margin-right:5px}
 .adv-row.adv-soon{opacity:0.5;cursor:default}
 body.adv-no-cardanim .seat-holecards *,body.adv-no-cardanim .hand-cards *,body.adv-no-cardanim #g-myseat-cards *{transition:none !important;animation:none !important}
 body.adv-no-blinds .blind-chip,body.adv-no-blinds .dealer-chip{display:none !important}
@@ -9128,8 +9129,21 @@ html[data-seat-struct="qml"] .seat:not(.me) .seat-narrow .seat-holecards .pk { w
 .range-grid td.filled{font-weight:700}
 .range-grid .rc-combo{display:block;font-size:9.5px}
 .range-grid .rc-count{display:block;font-size:8px;opacity:.85;font-variant-numeric:tabular-nums}
+/* Mobile : HUD nettement plus compact (portrait 9-max très contraint). */
 @media (max-width:640px){
   .range-grid td{width:26px;height:26px;font-size:7.5px}
   .range-grid .rc-combo{font-size:8px}
-  .hud-box{min-width:92px;font-size:9px}
+  .hud-box{min-width:0;width:auto;max-width:132px;font-size:8px;padding:2px 4px 3px;border-radius:6px;line-height:1.15}
+  .hud-head{gap:4px;margin-bottom:1px}
+  .hud-name{font-size:8.5px;max-width:78px}
+  .hud-hands{font-size:7px}
+  .hud-grid{grid-template-columns:repeat(3,auto);gap:0 5px;justify-content:start}
+  .hud-lbl{font-size:6.5px}
+  .hud-val{font-size:8px}
+}
+/* Très petits écrans (portrait étroit) : encore plus dense. */
+@media (max-width:400px){
+  .hud-box{max-width:118px;font-size:7.5px}
+  .hud-name{max-width:66px;font-size:8px}
+  .hud-grid{gap:0 4px}
 }

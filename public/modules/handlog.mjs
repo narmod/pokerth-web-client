@@ -1277,7 +1277,8 @@ function _hudFmt(id, v) {
 // Cache stats/combos calculés (recalcul à chaque main via _hudRefresh).
 let _statsCache = {};
 let _dataCache = null;
-let _statsComputedOnce = false;
+let _lastComputeAt = 0;
+let _computing = false;
 
 async function _computeStats() {
   const store = (typeof window !== 'undefined') ? window._handlogStore : null;
@@ -1406,11 +1407,14 @@ function renderHud() {
   // Positionner après le rendu des sièges (renderSeats est throttlé à la frame).
   _scheduleReposition();
   _ensureHudObservers();
-  // Premier affichage : si aucune stat en cache, calculer une fois puis re-rendre
-  // (évite d'attendre la fin de la première main pour voir des chiffres).
-  if (!_statsComputedOnce) {
-    _statsComputedOnce = true;
-    _computeStats().then(() => { if (_hudOn()) renderHud(); }).catch(() => {});
+  // Affichage dès l'activation / début de partie : si les stats sont périmées
+  // (ou jamais calculées), on recalcule une fois puis on re-rend. Temporisé
+  // pour ne pas recalculer à chaque action.
+  if (!_computing && (Date.now() - _lastComputeAt > 2500)) {
+    _computing = true;
+    _computeStats()
+      .then(() => { _computing = false; _lastComputeAt = Date.now(); if (_hudOn()) renderHud(); })
+      .catch(() => { _computing = false; });
   }
 }
 if (typeof window !== 'undefined') window._hudRender = renderHud;
@@ -1444,7 +1448,8 @@ function _ensureHudObservers() {
 // Recalcule les stats puis re-rend (appelé à chaque fin de main).
 async function refreshHud() {
   if (!_hudOn()) return;
-  await _computeStats();
+  _computing = true;
+  try { await _computeStats(); _lastComputeAt = Date.now(); } finally { _computing = false; }
   renderHud();
 }
 if (typeof window !== 'undefined') window._hudRefresh = refreshHud;
