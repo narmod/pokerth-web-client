@@ -47,7 +47,7 @@ html[data-seat-struct="qml"] .seat-avatar {
 html[data-seat-struct="qml"] .seat-holecards {
   position: absolute !important;
   bottom: calc(100% - 8px); top: auto !important;
-  left: 46px !important; transform: rotate(9deg) !important;  /* collées à l'avatar */
+  left: 64px !important; transform: rotate(9deg) !important;  /* à droite de l'avatar */
   display: flex !important; z-index: 1;
   grid-column: auto !important; grid-row: auto !important;
 }
@@ -116,7 +116,7 @@ html[data-seat-struct="qml"] .seat.me .seat-avatar {
 }
 html[data-seat-struct="qml"] .seat.me .seat-holecards,
 html[data-seat-struct="qml"] .seat.me .seat-holecards.shc-big {
-  bottom: calc(100% - 10px); left: 54px !important;
+  bottom: calc(100% - 10px); left: 72px !important;
   transform: rotate(7deg) !important; z-index: 3;
 }
 html[data-seat-struct="qml"] .seat.me .seat-holecards .pk,
