@@ -2336,8 +2336,10 @@ if ('serviceWorker' in navigator) {
 
       <div class="adv-sec" data-i18n="advSecTable">Table</div>
       <label class="adv-row"><input type="checkbox" id="adv-blinds" onchange="setAdvOpt('show_blinds',this.checked)"><span data-i18n="advShowBlinds">Show dealer / blind buttons</span></label>
+      <label class="adv-row"><input type="checkbox" id="adv-potbtns" onchange="setAdvOpt('pot_btns',this.checked)"><span data-i18n="advPotBtns">Show pot percentage buttons (1/3 · 1/2 · Pot)</span></label>
       <label class="adv-row"><input type="checkbox" id="adv-hidepbar" onchange="setAdvOpt('hide_pbar',this.checked)"><span data-i18n="advHidePbar">PokerTH mode (player bar hidden)</span><em class="adv-webtag">web</em></label>
       <label class="adv-row"><input type="checkbox" id="adv-tablezoom" onchange="setAdvOpt('table_zoom',this.checked)"><span data-i18n="advTableZoom">Enable table zoom (magnifier buttons)</span></label>
+      <label class="adv-row"><input type="checkbox" id="adv-communitycontent" onchange="setAdvOpt('community_content',this.checked)"><span data-i18n="advCommunityContent">Show community content (BBC / WEC)</span></label>
       <label class="adv-row"><input type="checkbox" id="adv-zoomfollow" onchange="setAdvOpt('zoom_follow',this.checked)"><span data-i18n="advZoomFollow">Zoom follows the active seat (overview at showdown)</span></label>
       <label class="adv-row"><input type="checkbox" id="adv-reducefx" onchange="setAdvOpt('reduce_fx',this.checked);document.documentElement.classList.toggle('reduce-fx',this.checked)"><span data-i18n="advReduceFx">Reduce graphic effects (shadows/glow) — for low-end devices</span></label>
       <label class="adv-row"><input type="checkbox" id="adv-statusbar" onchange="setAdvOpt('status_bar',this.checked);var _ps=document.getElementById('pot-strip');if(_ps)_ps.style.display=this.checked?'':'none'"><span data-i18n="advStatusBar">Game status bar (hand #, pot, bets, phase)</span><em class="adv-webtag">web</em></label>
@@ -2407,6 +2409,7 @@ if ('serviceWorker' in navigator) {
           </div>
           <div class="adv-body">
           <div class="adv-sec" data-i18n="advSecSndCats">Sound categories</div>
+          <div class="adv-row"><span data-i18n="advSndVolume">Volume</span><input type="range" id="adv-sndvol" min="1" max="10" step="1" style="flex:1;min-width:120px" oninput="if(window.setSoundVolume)window.setSoundVolume(this.value/10)"></div>
           <label class="adv-row"><input type="checkbox" id="adv-snd-actions" onchange="setAdvOpt('snd_actions',this.checked)"><span data-i18n="advSndActions">Game action sounds (Check, Call, Raise…)</span></label>
           <label class="adv-row"><input type="checkbox" id="adv-snd-lobby" onchange="setAdvOpt('snd_lobby',this.checked)"><span data-i18n="advSndLobby">Lobby chat notification</span></label>
           <label class="adv-row"><input type="checkbox" id="adv-snd-net" onchange="setAdvOpt('snd_net',this.checked)"><span data-i18n="advSndNet">Network game notifications (player joined, game ready)</span></label>

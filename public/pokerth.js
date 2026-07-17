@@ -108,7 +108,7 @@ function _pingColor(ms) { return ms < 120 ? '#50c878' : ms < 300 ? '#FFC107' : '
 function _pingDotHide() { var d = document.getElementById('g-ping-dot'); if (d) d.style.display = 'none'; }
 function _pingTick() {
   try {
-    if (!_advGet('ping_avatar', false) || document.hidden || window._offlineMode) { _pingDotHide(); return; }
+    if (!_advGet('ping_avatar', true) || document.hidden || window._offlineMode) { _pingDotHide(); return; }
     var sg = document.getElementById('s-game');
     if (!sg || !sg.classList.contains('active')) { _pingDotHide(); return; }
     var t0 = performance.now();
@@ -395,6 +395,8 @@ function applyAdvOpts() {
     var b = document.body;
     b.classList.toggle('adv-no-cardanim', !_advGet('anim_cards', true));
     b.classList.toggle('adv-no-blinds', !_advGet('show_blinds', true));
+    b.classList.toggle('adv-no-potbtns', !_advGet('pot_btns', true)); // quick-bets 1/3·1/2·Pot (parite ShowPotPercentButtons)
+    b.classList.toggle('adv-no-communitycontent', !_advGet('community_content', true)); // contenus communaute (parite showCommunityContent)
     b.classList.toggle('adv-no-blindsbadge', !_advGet('blinds_badge', true)); // pastille blinds du bandeau (extension web)
     b.classList.toggle('adv-no-community', !_advGet('show_community', true));
     b.classList.toggle('adv-no-flag', !_advGet('show_flag', true));
@@ -454,8 +456,9 @@ window.setDefaultCommunity = setDefaultCommunity;
 // ou 'hand' (une entree par etape de main seulement). Persiste ; lu en direct
 // par logAction via _getLogInterval.
 function _getLogInterval() {
-  try { var v = localStorage.getItem('pth_log_interval'); return (v === 'hand') ? 'hand' : 'action'; }
-  catch (e) { return 'action'; }
+  // Défaut « par main » (parité QML : LogInterval=1, log.cpp 0=action/1=main).
+  try { var v = localStorage.getItem('pth_log_interval'); return (v === 'action') ? 'action' : 'hand'; }
+  catch (e) { return 'hand'; }
 }
 window._getLogInterval = _getLogInterval;
 window.setLogInterval = function (v) {
@@ -561,6 +564,8 @@ function openAdvancedOptions() {
   };
   sync('adv-anim', 'anim_cards', true);
   sync('adv-blinds', 'show_blinds', true);
+  sync('adv-potbtns', 'pot_btns', true);
+  sync('adv-communitycontent', 'community_content', true);
   sync('adv-hidepbar', 'hide_pbar', true);
   sync('adv-community', 'show_community', true);
   sync('adv-focusbet', 'focus_bet', false);
@@ -568,7 +573,7 @@ function openAdvancedOptions() {
   sync('adv-fadelosers', 'fade_losers', true);
   sync('adv-flag', 'show_flag', true);
   sync('adv-ownclick', 'own_click', false);
-  sync('adv-guardcall', 'guard_call', false);
+  sync('adv-guardcall', 'guard_call', true);   // défaut QML : AccidentallyCallBlocker=1
   sync('adv-assist', 'assist', true);
   sync('adv-showodds', 'show_odds', true);
   sync('adv-handsbtn', 'hands_btn', true);
@@ -586,7 +591,7 @@ function openAdvancedOptions() {
   try { renderIgnoredList(); } catch (e) {}
   sync('adv-logon', 'log_on', true);
   try { var _li = document.getElementById('adv-loginterval'); if (_li) _li.value = _getLogInterval(); } catch (e) {}
-  sync('adv-zoomfollow', 'zoom_follow', false);
+  sync('adv-zoomfollow', 'zoom_follow', true); // défaut QML : suivi actif quand le zoom l'est
   sync('adv-snd-actions', 'snd_actions', true);
   sync('adv-snd-lobby', 'snd_lobby', true);
   sync('adv-snd-net', 'snd_net', true);
@@ -597,7 +602,7 @@ function openAdvancedOptions() {
   sync('adv-winnerpopup', 'winner_popup', true);
   sync('adv-removegone', 'remove_gone', false);
   try { var _dm = document.getElementById('adv-darkmode'); if (_dm && window.getTheme) _dm.value = window.getTheme() || 'auto'; } catch (e) {}
-  sync('adv-pingavatar', 'ping_avatar', false);
+  sync('adv-pingavatar', 'ping_avatar', true); // défaut QML : ShowPingStateInAvatar=1
   sync('adv-autoleave', 'auto_leave', false);
   // Barre d'état de jeu (pot-strip : H#/G#, pot+bets, phase) masquable
   try {
@@ -607,6 +612,7 @@ function openAdvancedOptions() {
   // Mode « effets réduits » (parité QmlReduceEffects) : classe sur <html>,
   // le CSS coupe ombres / glow / backdrop-filter.
   try { document.documentElement.classList.toggle('reduce-fx', _advGet('reduce_fx', false)); } catch (e) {}
+  try { var _sv = document.getElementById('adv-sndvol'); if (_sv && window.getSoundVolume) _sv.value = Math.round(window.getSoundVolume() * 10); } catch (e) {}
   try { var _sl = document.getElementById('adv-seatlayout'); if (_sl) { var _slv = localStorage.getItem('pth_seat_layout'); _sl.value = (_slv === 'pokerth-official' || _slv === 'pokerth-ellipse' || _slv === 'custom') ? _slv : 'auto'; } } catch (e) {}
   try { var _ssy = document.getElementById('adv-seatsync'); if (_ssy) _ssy.checked = (localStorage.getItem('pth_seat_sync') !== '0'); } catch (e) {}
   try { var _ctr = document.getElementById('adv-chattranslate'); if (_ctr) { _ctr.checked = (localStorage.getItem('pth_chat_translate') !== '0'); if (!window._chatTrSupported) { var _ctl = _ctr.closest('label'); if (_ctl) _ctl.style.opacity = '0.55'; } } } catch (e) {}
@@ -785,17 +791,18 @@ function resetAdvDefaults() {
   var defs = {
     anim_cards: true, show_blinds: true, hide_pbar: true, show_community: true,
     focus_bet: false, chat_noemoji: false, fade_losers: true, show_flag: true,
-    own_click: false, guard_call: false, odds_monitor: false, no_hide_ignored: false, hands_btn: true,
-    fkeys_alt: false, zoom_follow: false, table_zoom: true, lobby_chat: true, log_on: true, pause_hands: false, create_dialog: true, cfg_sync: true, poker_en: true,
+    own_click: false, guard_call: true, odds_monitor: false, no_hide_ignored: false, hands_btn: true,
+    fkeys_alt: false, zoom_follow: true, table_zoom: true, lobby_chat: true, log_on: true, pause_hands: false, create_dialog: true, cfg_sync: true, poker_en: true,
+    pot_btns: true, community_content: true,
     snd_actions: true, snd_lobby: true, snd_net: true, snd_blinds: true,
-    reduce_fx: false, status_bar: true, ping_avatar: false, auto_leave: false, blinds_badge: true
+    reduce_fx: false, status_bar: true, ping_avatar: true, auto_leave: false, blinds_badge: true
   };
   try { for (var k in defs) setAdvOpt(k, defs[k]); } catch (e) {}
   try { setSeatLayout('official'); } catch (e) {}
   try { if (typeof window.setTooltips === 'function') window.setTooltips(true); } catch (e) {}
   try { if (typeof window.setReactMuted === 'function') window.setReactMuted(false); } catch (e) {}
   try { if (typeof window.setDefaultCommunity === 'function') window.setDefaultCommunity('pth'); } catch (e) {}
-  try { if (typeof window.setLogInterval === 'function') window.setLogInterval('action'); } catch (e) {}
+  try { if (typeof window.setLogInterval === 'function') window.setLogInterval('hand'); } catch (e) {}
   try { resetKeys(); } catch (e) {}
   try { openAdvancedOptions(); } catch (e) {}   // re-sync des cases + retour onglet Interface
 }
@@ -871,12 +878,12 @@ function _cfgCollectWebSettings() {
   out.ShowFlipCardsAnimation    = B('anim_cards', true);
   out.AlternateFKeysUserActionMode = B('fkeys_alt', false);
   out.ShowBlindButtons          = B('show_blinds', true);
-  out.ShowPotPercentButtons     = true; // quick-bets toujours affichés côté web
+  out.ShowPotPercentButtons     = B('pot_btns', true);
   out.AntiPeekMode              = B('own_click', false);
-  out.AccidentallyCallBlocker   = B('guard_call', false);
+  out.AccidentallyCallBlocker   = B('guard_call', true);
   out.EnableBetInputFocusSwitch = B('focus_bet', false);
   out.ShowCountryFlagInAvatar   = B('show_flag', true);
-  out.ShowPingStateInAvatar     = B('ping_avatar', false);
+  out.ShowPingStateInAvatar     = B('ping_avatar', true);
   out.DontHideAvatarsOfIgnored  = B('no_hide_ignored', false);
   out.UseLobbyChat              = B('lobby_chat', true);
   out.DisableEmojiReactions     = B('react_muted', false);
@@ -1003,6 +1010,7 @@ function _cfgApplyImported(cfg) {
   setB('guard_call', 'AccidentallyCallBlocker');
   setB('focus_bet', 'EnableBetInputFocusSwitch');
   setB('show_flag', 'ShowCountryFlagInAvatar');
+  setB('pot_btns', 'ShowPotPercentButtons');
   setB('ping_avatar', 'ShowPingStateInAvatar');
   setB('no_hide_ignored', 'DontHideAvatarsOfIgnored');
   setB('lobby_chat', 'UseLobbyChat');
@@ -1119,6 +1127,7 @@ var _CFG_WEB_SYNC_KEYS = [
   'pth_hide_pbar', 'pth_show_community', 'pth_chat_noemoji',
   'pth_assist', 'pth_show_odds', 'pth_hands_btn', 'pth_voice',
   'pth_haptic', 'pth_display_bb', 'pth_table_zoom', 'pth_zoom_follow',
+  'pth_community_content', 'pth_sound_vol',
   'pth_log_on', 'pth_create_dialog', 'pth_status_bar', 'pth_blinds_badge',
   'pth_winner_popup', 'pth_remove_gone', 'pth_tooltips', 'pth_big_own_cards',
   'pth_chat_translate', 'pth_pin_actionbar', 'pth_seat_sync',
@@ -12027,7 +12036,8 @@ const App = (() => {
     // cartes du board). Si vrai, le clic Call passera par App.confirmCall (2e tap).
     var _bigRaise = false;
     if (!preview) {
-      var _gc = false; try { _gc = (localStorage.getItem('pth_guard_call') === '1'); } catch (e) {}
+      // Anti-call accidentel : ACTIF par défaut (parité QML AccidentallyCallBlocker=1).
+      var _gc = true; try { _gc = (localStorage.getItem('pth_guard_call') !== '0'); } catch (e) {}
       var _ncomm = (commCards || []).filter(function (c) { return c != null; }).length;
       if (_ncomm !== _lastBoardCount) { _lastCallSeen = -1; _lastBoardCount = _ncomm; }
       if (_gc && !canCheck && toCall > 0) {
@@ -14566,12 +14576,13 @@ function _maybeShowNextHandBtn() {
       // quitter le type invitation remet la vorlage à zéro et restaure.
       var vSel = g('cf-vorlage');
       var vRow = g('cf-vorlage-row');
-      if (vRow) vRow.style.display = isInvite ? '' : 'none';
-      if (vSel && !isInvite && (parseInt(vSel.value, 10) || 0) > 0) {
+      var communityOn = _advGet('community_content', true);
+      if (vRow) vRow.style.display = (isInvite && communityOn) ? '' : 'none';
+      if (vSel && (!isInvite || !communityOn) && (parseInt(vSel.value, 10) || 0) > 0) {
         vSel.value = '0';
         this._restoreVorlage();
       }
-      var vorlageActive = !!(isInvite && vSel && (parseInt(vSel.value, 10) || 0) > 0);
+      var vorlageActive = !!(isInvite && communityOn && vSel && (parseInt(vSel.value, 10) || 0) > 0);
       // fieldsLocked (parité QML) : classé OU vorlage active.
       var fieldsLocked = isRanking || vorlageActive;
       var lockRow = function(id, lock) {
@@ -15466,7 +15477,7 @@ var _zoomPendingPid = -1, _zoomFollowedPid = -1;
 var _zoomPreShowdown = null; // valeur de zoom sauvée pendant la suspension
 function _zoomFollowOn() {
   return (window._tableZoomEff || _getTableZoom()) > 1.001 && !window._seatEditMode
-    && _advGet('zoom_follow', false);  // opt-in : Options avancées → Tapis
+    && _advGet('zoom_follow', true);   // actif par défaut (parité QML zoom-follow)
 }
 function _zoomPanToSeat(pid) {
   var zone = document.getElementById('g-table-zone');
@@ -15521,7 +15532,7 @@ window._zoomFollowTurn = function (pid, sec) {
 window._zoomFollowActed = function () { if (_zoomPendingPid > 0) _zoomDoFollow(); };
 // Showdown → dézoom d'ensemble (zoom sauvé, restauré à la main suivante).
 window._zoomShowdownSuspend = function () {
-  if (!_advGet('zoom_follow', false)) return;  // option coupée (défaut) → zoom intact au showdown
+  if (!_advGet('zoom_follow', true)) return;   // option coupée → zoom intact au showdown
   if (_zoomFollowTimer) { clearTimeout(_zoomFollowTimer); _zoomFollowTimer = null; }
   _zoomPendingPid = -1; _zoomFollowedPid = -1;
   var z = _getTableZoom();
@@ -17173,7 +17184,7 @@ function renderPlayersList() {
   });
 })();
 
-;(function(){ window.BUILD_VERSION='0.3.686-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.687-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

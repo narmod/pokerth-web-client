@@ -651,6 +651,13 @@ body {
 :root[data-theme="pokerth-light"] .gt-dd-item:hover,
 :root[data-theme="pokerth-light"] .gt-dd-item.sel { background: rgba(0,0,0,0.07); }
 
+/* Quick-bets 1/3·1/2·Pot masquables (parité QML ShowPotPercentButtons) */
+body.adv-no-potbtns .pct-row { display: none !important; }
+/* Contenus communauté masquables (parité QML showCommunityContent) */
+body.adv-no-communitycontent #ranking-modal .rk-tab[data-src="bbc"],
+body.adv-no-communitycontent #ranking-modal .rk-tab[data-src="wec"] { display: none !important; }
+body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !important; }
+
 /* Verrous du formulaire de création (parité QML : classé / invité) */
 .cf-locked { opacity: 0.55; pointer-events: none; }
 .gt-dd-btn:disabled { opacity: 0.55; cursor: default; pointer-events: none; }

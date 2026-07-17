@@ -45,11 +45,12 @@ function getAudioCtx() {
 // loudness inchangée). Le mute reste géré séparément par 'pth_sound'.
 var _master = null;
 function getSoundVolume() {
-  try { var v = parseFloat(localStorage.getItem('pth_sound_vol')); return isNaN(v) ? 1 : Math.max(0, Math.min(1, v)); }
-  catch(e) { return 1; }
+  // Défaut 0.8 = SoundVolume 8/10 du client QML (configfile.cpp).
+  try { var v = parseFloat(localStorage.getItem('pth_sound_vol')); return isNaN(v) ? 0.8 : Math.max(0, Math.min(1, v)); }
+  catch(e) { return 0.8; }
 }
 function setSoundVolume(v) {
-  v = parseFloat(v); if (isNaN(v)) v = 1; v = Math.max(0, Math.min(1, v));
+  v = parseFloat(v); if (isNaN(v)) v = 0.8; v = Math.max(0, Math.min(1, v));
   try { localStorage.setItem('pth_sound_vol', String(v)); } catch(e) {}
 }
 
