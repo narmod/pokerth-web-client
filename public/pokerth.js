@@ -1335,14 +1335,15 @@ function _applySeatOrient(portrait) {
       document.documentElement.setAttribute('data-seat-orient', want);
   } catch (e) {}
 }
-// ── Traduction du chat par l'API du NAVIGATEUR (Translator/LanguageDetector,
-// Chrome/Edge recents ; sur l'appareil, rien ne sort). Opt-in via Options
-// avancees (pth_chat_translate). Bouton 🌐 par message recu : 1er tap =
-// traduire vers la langue du client (telechargement du modele autorise par
-// le geste utilisateur), 2e tap = revenir a l'original. Cache de traducteurs
-// par paire de langues.
+// ── Traduction du chat par l'endpoint Google gtx (même méthode que le client
+// QML de sp0ck : fetch direct depuis le navigateur → l'IP du joueur porte le
+// quota, rien à installer côté serveur). Opt-in via Options avancées
+// (pth_chat_translate). Bouton 🌐 par message reçu : 1er tap = traduire vers
+// la langue du client, 2e tap = revenir à l'original. Cache par message
+// (dataset.trText). Hors-ligne ou endpoint indisponible : le tap échoue
+// proprement (tr-err), le reste de l'app reste jouable.
 window._chatTrSupported = (function () {
-  try { return typeof Translator !== 'undefined' && typeof Translator.create === 'function'; } catch (e) { return false; }
+  try { return typeof fetch === 'function'; } catch (e) { return false; }
 })();
 function _chatTrTarget() {
   try { var l = localStorage.getItem('pth_lang'); if (l) return l.split('-')[0]; } catch (e) {}
@@ -1357,10 +1358,8 @@ function _applyChatTranslateFlag() {
 function setChatTranslate(on) {
   try { localStorage.setItem('pth_chat_translate', on ? '1' : '0'); } catch (e) {}
   _applyChatTranslateFlag();
-  if (on && !window._chatTrSupported) { try { alert(t('chatTranslateUnsupported')); } catch (e) {} }
 }
 window.setChatTranslate = setChatTranslate;
-window._chatTrPairs = {};
 window._chatTranslate = function (btn) {
   var msg = btn && btn.closest ? btn.closest('.msg') : null;
   var span = msg ? msg.querySelector('.txt') : null;
@@ -1381,49 +1380,36 @@ window._chatTranslate = function (btn) {
   if (!orig.trim() || !window._chatTrSupported) return;
   btn.disabled = true; btn.classList.add('tr-busy');
   var tgt = _chatTrTarget();
-  (async function () {
-    try {
-      var src = null;
-      try {
-        if (typeof LanguageDetector !== 'undefined' && LanguageDetector.create) {
-          // Cache de PROMESSE (pas d'instance) : deux taps rapides ne creent
-          // qu'un seul detecteur (les modeles built-in sont couteux et sans destroy() ils fuient).
-          if (!window._chatTrDetector) window._chatTrDetector = LanguageDetector.create();
-          var det = await (await window._chatTrDetector).detect(orig);
-          if (det && det[0] && det[0].detectedLanguage && det[0].detectedLanguage !== 'und') src = det[0].detectedLanguage.split('-')[0];
-        }
-      } catch (e) { window._chatTrDetector = null; }
-      if (!src) src = 'en';
-      if (src === tgt) { // deja dans la langue du client
-        btn.disabled = false; btn.classList.remove('tr-busy'); btn.classList.add('tr-same');
-        return;
-      }
-      var key = src + '>' + tgt;
-      // Cache de PROMESSE par paire : pendant le telechargement du modele, les
-      // taps suivants reutilisent la meme creation au lieu d'empiler des instances.
-      if (!window._chatTrPairs[key]) window._chatTrPairs[key] = Translator.create({ sourceLanguage: src, targetLanguage: tgt });
-      var out;
-      try {
-        out = await (await window._chatTrPairs[key]).translate(orig);
-      } catch (e2) {
-        // Instance morte (quota, GPU perdu, onglet gele) : la detruire et la
-        // purger du cache pour repartir propre au prochain tap.
-        try { var dead = await window._chatTrPairs[key]; if (dead && dead.destroy) dead.destroy(); } catch (_e2) {}
-        delete window._chatTrPairs[key];
-        throw e2;
-      }
-      if (out && out.trim()) {
-        msg.dataset.trText = out;
-        if (!msg.dataset.origHtml) msg.dataset.origHtml = span.innerHTML;
-        span.textContent = out;
-        msg.dataset.trShown = '1'; btn.classList.add('tr-active');
-      }
-    } catch (e) {
-      btn.classList.add('tr-err');
-      try { btn.title = t('chatTranslateFailed'); } catch (_e) {}
+  var url = 'https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=' +
+    encodeURIComponent(tgt) + '&dt=t&q=' + encodeURIComponent(orig);
+  fetch(url).then(function (r) {
+    if (!r.ok) throw new Error('http ' + r.status);
+    return r.json();
+  }).then(function (data) {
+    // Réponse gtx : [ [[traduit, original, ...], ...], null, langueDétectée, ... ]
+    var src = (data && typeof data[2] === 'string') ? data[2].split('-')[0] : '';
+    if (src && src === tgt) { // deja dans la langue du client
+      btn.classList.add('tr-same');
+      return;
     }
+    var out = '';
+    if (data && data[0] && data[0].length) {
+      for (var i = 0; i < data[0].length; i++) {
+        if (data[0][i] && typeof data[0][i][0] === 'string') out += data[0][i][0];
+      }
+    }
+    if (out && out.trim()) {
+      msg.dataset.trText = out;
+      if (!msg.dataset.origHtml) msg.dataset.origHtml = span.innerHTML;
+      span.textContent = out;
+      msg.dataset.trShown = '1'; btn.classList.add('tr-active');
+    }
+  }).catch(function (e) {
+    btn.classList.add('tr-err');
+    try { btn.title = t('chatTranslateFailed'); } catch (_e) {}
+  }).finally(function () {
     btn.disabled = false; btn.classList.remove('tr-busy');
-  })();
+  });
 };
 try { _applyChatTranslateFlag(); } catch (e) {}
 window._applySeatOrient = _applySeatOrient;
@@ -17232,7 +17218,7 @@ function renderPlayersList() {
   });
 })();
 
-;(function(){ window.BUILD_VERSION='0.3.730-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.731-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
