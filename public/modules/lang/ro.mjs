@@ -710,6 +710,7 @@ export const strings = {
     abAuthRole6:'dezvoltarea clientului web',
     // v0.3.675 : carte Discord compacte sous la card de login
     discordCardText:'Alătură-te comunității pe Discord',
+    privacyTitle:'Confidențialitate',
     abCred1:"Wikimedia Commons: pentru diversele lor avataruri populare",
     abCred2:"Benedikt, Erhard, Felix, Florian, Linus, Lothar, Steffi, Caro: pentru avatarurile/fețele jucătorilor",
     abCred3:"ZeiZei: pentru diverse avataruri",

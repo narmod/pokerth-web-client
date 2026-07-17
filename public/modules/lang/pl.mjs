@@ -713,6 +713,7 @@ export const strings = {
     abAuthRole6:'rozwój klienta webowego',
     // v0.3.675 : carte Discord compacte sous la card de login
     discordCardText:'Dołącz do społeczności na Discordzie',
+    privacyTitle:'Prywatność',
     abCred1:"Wikimedia Commons: za różne popularne awatary",
     abCred2:"Benedikt, Erhard, Felix, Florian, Linus, Lothar, Steffi, Caro: za awatary/twarze graczy",
     abCred3:"ZeiZei: za różne awatary",

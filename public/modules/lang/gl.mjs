@@ -711,6 +711,7 @@ export const strings = {
     abAuthRole6:'desenvolvemento do cliente web',
     // v0.3.675 : carte Discord compacte sous la card de login
     discordCardText:'Únete á comunidade en Discord',
+    privacyTitle:'Privacidade',
     abCred1:"Wikimedia Commons: polos seus diversos avatares populares",
     abCred2:"Benedikt, Erhard, Felix, Florian, Linus, Lothar, Steffi, Caro: polos avatares/rostros de xogadores",
     abCred3:"ZeiZei: por diversos avatares",

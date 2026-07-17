@@ -709,6 +709,7 @@ export const strings = {
     abAuthRole6:'verkkoasiakasohjelman kehitys',
     // v0.3.675 : carte Discord compacte sous la card de login
     discordCardText:'Liity yhteisöön Discordissa',
+    privacyTitle:'Tietosuoja',
     abCred1:"Wikimedia Commons: erilaisista suosituista avatareista",
     abCred2:"Benedikt, Erhard, Felix, Florian, Linus, Lothar, Steffi, Caro: pelaajien avatareista/kasvoista",
     abCred3:"ZeiZei: erilaisista avatareista",

@@ -712,6 +712,7 @@ export const strings = {
     abAuthRole6:'разработка веб-клиента',
     // v0.3.675 : carte Discord compacte sous la card de login
     discordCardText:'Присоединяйтесь к сообществу в Discord',
+    privacyTitle:'Конфиденциальность',
     abCred1:"Wikimedia Commons: за различные популярные аватары",
     abCred2:"Benedikt, Erhard, Felix, Florian, Linus, Lothar, Steffi, Caro: за аватары/лица игроков",
     abCred3:"ZeiZei: за различные аватары",

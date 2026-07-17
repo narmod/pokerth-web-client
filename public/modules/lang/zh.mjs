@@ -706,6 +706,7 @@ export const strings = {
     abAuthRole6:'网页客户端开发',
     // v0.3.675 : carte Discord compacte sous la card de login
     discordCardText:'加入 Discord 社区',
+    privacyTitle:'隐私',
     abCred1:"Wikimedia Commons：提供各种流行头像",
     abCred2:"Benedikt、Erhard、Felix、Florian、Linus、Lothar、Steffi、Caro：提供玩家头像/面孔",
     abCred3:"ZeiZei：提供各种头像",

@@ -2234,8 +2234,8 @@ body {
   /* ── Barre d'état de jeu : tailles QML fixes (13/11 px), pas d'override ── */
 
   /* ── Menu ••• ── */
-  #g-overflow-menu, #l-overflow-menu, #cr-overflow-menu { width: 264px !important; }
-  #g-overflow-menu .btn-sm, #l-overflow-menu .btn-sm, #cr-overflow-menu .btn-sm { font-size: 0.94rem !important; padding: 9px 32px 9px 14px !important; }
+  #g-overflow-menu, #l-overflow-menu, #cr-overflow-menu, #pv-overflow-menu { width: 264px !important; }
+  #g-overflow-menu .btn-sm, #l-overflow-menu .btn-sm, #cr-overflow-menu .btn-sm, #pv-overflow-menu .btn-sm { font-size: 0.94rem !important; padding: 9px 32px 9px 14px !important; }
 
   /* ══ Fenetres d'informations ══ */
   .winner-card { max-width: min(640px, 86vw) !important; padding: 24px 28px !important; }
@@ -2583,7 +2583,8 @@ body {
 #g-overflow-menu,
 #l-overflow-menu,
 #connect-overflow-menu,
-#cr-overflow-menu {
+#cr-overflow-menu,
+#pv-overflow-menu {
   display: none;
   position: absolute;
   top: calc(100% + 6px);
@@ -2604,11 +2605,13 @@ body {
 #g-overflow-menu.open,
 #l-overflow-menu.open,
 #connect-overflow-menu.open,
-#cr-overflow-menu.open { display: flex; }
+#cr-overflow-menu.open,
+#pv-overflow-menu.open { display: flex; }
 #g-overflow-menu .btn-sm,
 #l-overflow-menu .btn-sm,
 #connect-overflow-menu .btn-sm,
-#cr-overflow-menu .btn-sm {
+#cr-overflow-menu .btn-sm,
+#pv-overflow-menu .btn-sm {
   width: 100%;
   box-sizing: border-box;
   text-align: left;
@@ -2642,7 +2645,8 @@ body {
 #g-overflow-menu .btn-sm:hover,
 #l-overflow-menu .btn-sm:hover,
 #connect-overflow-menu .btn-sm:hover,
-#cr-overflow-menu .btn-sm:hover {
+#cr-overflow-menu .btn-sm:hover,
+#pv-overflow-menu .btn-sm:hover {
   background: var(--panel-hi);
   border-color: var(--border-hi);
 }
@@ -8125,6 +8129,18 @@ html.reduce-fx *, html.reduce-fx *::before, html.reduce-fx *::after {
 
 /* ── Page « À propos de PokerTH » (parité AboutPage QML 2.1.3) ── */
 #about-page { position:fixed; inset:0; z-index:120; display:none; flex-direction:column; background:var(--felt); overflow-y:auto; }
+
+/* ── Page Privacy in-app : même entête cp-header que « Créer une partie ». ── */
+#privacy-page { position:fixed; inset:0; z-index:120; display:none; flex-direction:column; background:var(--felt); }
+.pv-scroll { flex:1; overflow-y:auto; }
+.pv-body { max-width:720px; margin:0 auto; padding:10px 18px 48px; color:var(--text); font-size:0.95rem; line-height:1.65; }
+.pv-updated { color:var(--text-dim); font-size:0.82rem; margin:4px 0 14px; }
+.pv-body h2 { color:var(--text-hi); font-size:1.02rem; margin:22px 0 8px; padding-top:16px; border-top:1px solid var(--border-hi); }
+.pv-body h2:first-of-type { border-top:0; padding-top:0; }
+.pv-body a { color:var(--gold); }
+.pv-body strong { color:var(--text-hi); font-weight:600; }
+.pv-body ul { padding-left:20px; }
+.pv-body li { margin:5px 0; }
 .ab-head { display:flex; align-items:center; padding:10px 10px 0; flex-shrink:0; }
 .ab-back { background:none; border:none; cursor:pointer; color:var(--text-hi); font-size:1.7rem; line-height:1; padding:2px 12px; border-radius:8px; }
 .ab-back:hover { background:var(--inset-hi); }

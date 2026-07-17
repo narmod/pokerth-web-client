@@ -712,6 +712,7 @@ export const strings = {
     abAuthRole6:'web istemcisi geliştirme',
     // v0.3.675 : carte Discord compacte sous la card de login
     discordCardText:'Discord\'da topluluğa katıl',
+    privacyTitle:'Gizlilik',
     abCred1:"Wikimedia Commons: çeşitli popüler avatarları için",
     abCred2:"Benedikt, Erhard, Felix, Florian, Linus, Lothar, Steffi, Caro: oyuncu avatarları/yüzleri için",
     abCred3:"ZeiZei: çeşitli avatarlar için",

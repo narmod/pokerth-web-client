@@ -715,6 +715,7 @@ export const strings = {
     abAuthRole6:'Entwicklung des Web-Clients',
     // v0.3.675 : carte Discord compacte sous la card de login
     discordCardText:'Tritt der Community auf Discord bei',
+    privacyTitle:'Datenschutz',
     abCred1:"Wikimedia Commons: für ihre verschiedenen populären Avatare",
     abCred2:"Benedikt, Erhard, Felix, Florian, Linus, Lothar, Steffi, Caro: für die Spieler-Avatare/Gesichter",
     abCred3:"ZeiZei: für diverse Avatare",

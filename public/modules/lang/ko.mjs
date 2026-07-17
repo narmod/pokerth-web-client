@@ -516,6 +516,7 @@ export const strings = {
     abAuthRole6:'웹 클라이언트 개발',
     // v0.3.675 : carte Discord compacte sous la card de login
     discordCardText:'Discord 커뮤니티에 참여하세요',
+    privacyTitle:'개인정보 보호',
     abCred1:"Wikimedia Commons: 다양한 인기 아바타 제공",
     abCred2:"Benedikt, Erhard, Felix, Florian, Linus, Lothar, Steffi, Caro: 플레이어 아바타/얼굴 제공",
     abCred3:"ZeiZei: 다양한 아바타 제공",

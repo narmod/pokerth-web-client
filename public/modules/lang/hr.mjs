@@ -710,6 +710,7 @@ export const strings = {
     abAuthRole6:'razvoj web klijenta',
     // v0.3.675 : carte Discord compacte sous la card de login
     discordCardText:'Pridružite se zajednici na Discordu',
+    privacyTitle:'Privatnost',
     abCred1:"Wikimedia Commons: za njihove razne popularne avatare",
     abCred2:"Benedikt, Erhard, Felix, Florian, Linus, Lothar, Steffi, Caro: za avatare/lica igrača",
     abCred3:"ZeiZei: za razne avatare",

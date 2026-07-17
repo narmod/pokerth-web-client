@@ -711,6 +711,7 @@ export const strings = {
     abAuthRole6:'žiniatinklio kliento kūrimas',
     // v0.3.675 : carte Discord compacte sous la card de login
     discordCardText:'Prisijunkite prie bendruomenės „Discord“',
+    privacyTitle:'Privatumas',
     abCred1:"Wikimedia Commons: už įvairius populiarius avatarus",
     abCred2:"Benedikt, Erhard, Felix, Florian, Linus, Lothar, Steffi, Caro: už žaidėjų avatarus/veidus",
     abCred3:"ZeiZei: už įvairius avatarus",

@@ -16793,6 +16793,33 @@ function renderPlayersList() {
   body.innerHTML = _headHtml + (_shown.length ? _shown.map(rowHtml).join('') : '<div class="pl-empty">—</div>');
 }
 
+/* ── Page Privacy in-app (même entête cp-header que les autres écrans) ── */
+;(function(){
+  function $(id){ return document.getElementById(id); }
+  window.openPrivacyPage = function(){
+    var p = $('privacy-page'); if (!p) return;
+    p.style.display = 'flex';
+  };
+  window.closePrivacyPage = function(){
+    window.closePrivacyOverflow();
+    var p = $('privacy-page'); if (p) p.style.display = 'none';
+  };
+  window.togglePrivacyOverflow = function(e){
+    if (e) e.stopPropagation();
+    var m = $('pv-overflow-menu'); if (m) m.classList.toggle('open');
+  };
+  window.closePrivacyOverflow = function(){
+    var m = $('pv-overflow-menu'); if (m) m.classList.remove('open');
+  };
+  document.addEventListener('click', function(e){
+    var m = $('pv-overflow-menu'), b = $('pv-overflow-btn');
+    if (m && m.classList.contains('open') && !m.contains(e.target) && e.target !== b && !(b && b.contains(e.target))) m.classList.remove('open');
+  });
+  document.addEventListener('keydown', function(e){
+    if (e.key === 'Escape') { var p = $('privacy-page'); if (p && p.style.display === 'flex') window.closePrivacyPage(); }
+  });
+})();
+
 /* ── Page « À propos de PokerTH » (parité AboutPage QML) ── */
 ;(function(){
   function $(id){ return document.getElementById(id); }
@@ -16816,7 +16843,7 @@ function renderPlayersList() {
   });
 })();
 
-;(function(){ window.BUILD_VERSION='0.3.677-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.678-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

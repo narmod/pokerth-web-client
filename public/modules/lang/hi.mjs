@@ -520,6 +520,7 @@ export const strings = {
     abAuthRole6:'वेब क्लाइंट का विकास',
     // v0.3.675 : carte Discord compacte sous la card de login
     discordCardText:'Discord पर समुदाय से जुड़ें',
+    privacyTitle:'गोपनीयता',
     abCred1:"Wikimedia Commons: उनके विभिन्न लोकप्रिय अवतारों के लिए",
     abCred2:"Benedikt, Erhard, Felix, Florian, Linus, Lothar, Steffi, Caro: खिलाड़ियों के अवतारों/चेहरों के लिए",
     abCred3:"ZeiZei: विभिन्न अवतारों के लिए",

@@ -710,6 +710,7 @@ export const strings = {
     abAuthRole6:'phát triển ứng dụng web',
     // v0.3.675 : carte Discord compacte sous la card de login
     discordCardText:'Tham gia cộng đồng trên Discord',
+    privacyTitle:'Quyền riêng tư',
     abCred1:"Wikimedia Commons: vì các avatar phổ biến của họ",
     abCred2:"Benedikt, Erhard, Felix, Florian, Linus, Lothar, Steffi, Caro: vì các avatar/khuôn mặt người chơi",
     abCred3:"ZeiZei: vì nhiều avatar khác nhau",

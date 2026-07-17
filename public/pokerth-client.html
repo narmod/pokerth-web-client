@@ -1260,7 +1260,7 @@ function onAvatarImageChosen(input) {
        lobby & game so it doesn't eat playable space). -->
   <div class="connect-footer">
     <div class="connect-footer-line">
-      <span>♠ PokerTH Web Client · AGPL-3.0<span id="cf-build" style="opacity:0.6;margin-left:4px"></span> · <a href="/privacy" target="_blank" rel="noopener" style="color:inherit;opacity:0.6">Privacy</a></span>
+      <span>♠ PokerTH Web Client · AGPL-3.0<span id="cf-build" style="opacity:0.6;margin-left:4px"></span> · <a href="/privacy" onclick="window.openPrivacyPage();return false" style="color:inherit;opacity:0.6" data-i18n="privacyTitle">Privacy</a></span>
     </div>
     <div class="connect-footer-line">
       Source:
@@ -1868,6 +1868,51 @@ function onAvatarImageChosen(input) {
         <li>flag-icons (MIT)</li>
         <li>Node.js &amp; ws — <span data-i18n="abLibProxy">proxy WebSocket</span> (MIT)</li>
       </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ╔═══════════════════════════╗ -->
+<!-- ║  PRIVACY (page in-app)    ║ -->
+<!-- ╚═══════════════════════════╝ -->
+<!-- Même entête que les autres écrans (cp-header : retour · titre · roue
+     crantée ••• ). Le contenu reflète public/privacy.html (repli deep-link). -->
+<div id="privacy-page" style="display:none">
+  <div class="cp-header">
+    <button class="btn-sm btn-icon" type="button" onclick="window.closePrivacyPage()" title="Retour" data-i18n-title="navBack" aria-label="Retour"><svg viewBox="0 0 24 24" style="display:block;width:22px;height:22px" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg></button>
+    <span class="cp-title" data-i18n="privacyTitle">Privacy</span>
+    <span class="cp-head-spacer" aria-hidden="true"></span>
+    <span class="hdr-ovf-wrap"><button class="btn-sm btn-icon" id="pv-overflow-btn" onclick="window.togglePrivacyOverflow(event)" title="Plus" data-i18n-title="moreTooltip"><svg viewBox="0 0 24 24" style="display:block;width:22px;height:22px" fill="currentColor" aria-hidden="true"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58a.49.49 0 0 0 .12-.61l-1.92-3.32a.488.488 0 0 0-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54a.484.484 0 0 0-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58a.49.49 0 0 0-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg></button>
+    <div id="pv-overflow-menu">
+      <button class="btn-sm" onclick="toggleFullscreen();window.closePrivacyOverflow()"><span style="margin-right:7px">⛶</span><span data-i18n="fullscreenTooltip">Fullscreen</span></button>
+      <button class="btn-sm" onclick="window.closePrivacyOverflow();openAdvancedOptions()" style="font-size:0.85rem"><span style="margin-right:7px">⚙️</span><span data-i18n="advTitle">Advanced options</span></button>
+    </div></span>
+  </div>
+  <div class="pv-scroll">
+    <div class="pv-body">
+      <p class="pv-updated">Last updated: July 17, 2026</p>
+      <h2>Who runs this</h2>
+      <p>The PokerTH Web Client is a <strong>free and open-source hobby project</strong>, maintained by an individual &mdash; Arnaud Obscur (&ldquo;narmod&rdquo;) &mdash; in collaboration with the <a href="https://www.pokerth.net" target="_blank" rel="noopener noreferrer">PokerTH project</a>. It is not a company and has no commercial purpose: no ads, no sale of data, no advertising profiling, no third-party trackers.</p>
+      <h2>What stays in your browser</h2>
+      <p>Your settings (theme, language, table styles, sound options&hellip;) are stored <strong>locally in your browser</strong> and never leave your device. You can clear them at any time from your browser settings.</p>
+      <h2>What the server sees</h2>
+      <ul>
+        <li><strong>Anonymous visit counters.</strong> A random identifier stored in your browser is used to count distinct devices and visits. These statistics contain <strong>no name and no IP address</strong> and are deleted after about 13 months.</li>
+        <li><strong>Technical connection data.</strong> Like any web server, this one receives the connection data (including your IP address) needed to deliver and protect the service. It is used for nothing else.</li>
+        <li><strong>Game data.</strong> If you play on a ranked server, the nickname you choose and your game results are recorded to display the leaderboard.</li>
+      </ul>
+      <h2>Third-party services</h2>
+      <p>When you connect to <strong>pokerth.net</strong> (or any other game server), you are using a service operated independently of this web client, with its own rules. This page only covers the web client and the server that hosts it.</p>
+      <h2>Free software &mdash; AGPL-3.0</h2>
+      <p>The entire client is free software, released under the <strong>GNU AGPL v3</strong> license. You can read the source code, verify what it does, host your own copy, and modify it:</p>
+      <ul>
+        <li>Source code &mdash; <a href="https://github.com/narmod/pokerth-web-client" target="_blank" rel="noopener noreferrer">github.com/narmod/pokerth-web-client</a></li>
+        <li>License &mdash; <a href="https://github.com/narmod/pokerth-web-client/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">AGPL-3.0 &mdash; pokerth-web-client</a></li>
+        <li>GNU licenses &mdash; <a href="https://www.gnu.org/licenses/" target="_blank" rel="noopener noreferrer">gnu.org/licenses</a></li>
+      </ul>
+      <p>PokerTH itself is released under the GNU GPL license.</p>
+      <h2>Your rights &amp; contact</h2>
+      <p>Under the GDPR you may request access to, correction of, or deletion of data concerning you (for example a leaderboard entry). As this is a community project, the simplest way to reach the maintainer is to open an issue on <a href="https://github.com/narmod/pokerth-web-client/issues" target="_blank" rel="noopener noreferrer">GitHub</a>.</p>
     </div>
   </div>
 </div>
