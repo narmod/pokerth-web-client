@@ -842,6 +842,80 @@ class StatsCalculator {
   }
 }
 
+// ── Range showdown (combos VPIP visibles) — port de range_window.py ─────────
+const _CARD_RANKS = ['2', '3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q', 'K', 'A'];
+const _POSITION_NAMES = {
+  2: ['BTN', 'BB'],
+  3: ['BTN', 'SB', 'BB'],
+  4: ['BTN', 'SB', 'BB', 'UTG'],
+  5: ['BTN', 'SB', 'BB', 'UTG', 'CO'],
+  6: ['BTN', 'SB', 'BB', 'UTG', 'HJ', 'CO'],
+  7: ['BTN', 'SB', 'BB', 'UTG', 'UTG+1', 'HJ', 'CO'],
+  8: ['BTN', 'SB', 'BB', 'UTG', 'UTG+1', 'MP', 'HJ', 'CO'],
+  9: ['BTN', 'SB', 'BB', 'UTG', 'UTG+1', 'UTG+2', 'MP', 'HJ', 'CO'],
+  10: ['BTN', 'SB', 'BB', 'UTG', 'UTG+1', 'UTG+2', 'MP', 'MP+1', 'HJ', 'CO'],
+};
+
+// Deux cartes brutes 0..51 → nom de combo (ex. 'AKs', 'TT', '76o').
+function cardsToCombo(card1, card2) {
+  let v1 = card1 % 13, s1 = Math.floor(card1 / 13);
+  let v2 = card2 % 13, s2 = Math.floor(card2 / 13);
+  if (v1 < v2) { const tv = v1; v1 = v2; v2 = tv; const ts = s1; s1 = s2; s2 = ts; }
+  const r1 = _CARD_RANKS[v1], r2 = _CARD_RANKS[v2];
+  if (v1 === v2) return r1 + r2;
+  return r1 + r2 + (s1 === s2 ? 's' : 'o');
+}
+
+// Combos VPIP visibles au showdown d'un joueur → [{combo, position, nPlayers}].
+function playerVpipCombos(data, name) {
+  const seats = data.getPlayerSeats(name);
+  if (seats.size === 0) return [];
+  // mains où le joueur a VPIP preflop (call/bet/allin), à son siège
+  const vpipHands = new Set();
+  for (const a of data._actions) {
+    if (a.beRo !== 0) continue;
+    if (a.seat !== seats.get(a.uniqueGameID)) continue;
+    if (a.action === 'calls' || a.action === 'bets' || a.action === 'is all in with') {
+      vpipHands.add(a.uniqueGameID + ':' + a.handID);
+    }
+  }
+  if (vpipHands.size === 0) return [];
+  const out = [];
+  for (const h of data.hands) {
+    const key = h.uniqueGameID + ':' + h.handID;
+    if (!vpipHands.has(key)) continue;
+    const seat = seats.get(h.uniqueGameID);
+    if (seat == null) continue;
+    const c1 = h['Seat_' + seat + '_Card_1'], c2 = h['Seat_' + seat + '_Card_2'];
+    if (c1 == null || c2 == null) continue;
+    const occupied = [];
+    for (let s = 1; s <= 10; s++) if (h['Seat_' + s + '_Cash'] != null) occupied.push(s);
+    const nPlayers = occupied.length;
+    const dealer = h.dealerSeat;
+    let position = '?';
+    if (occupied.indexOf(dealer) >= 0 && occupied.indexOf(seat) >= 0) {
+      const di = occupied.indexOf(dealer), pi = occupied.indexOf(seat);
+      const offset = ((pi - di) % nPlayers + nPlayers) % nPlayers;
+      const names = _POSITION_NAMES[nPlayers];
+      position = names ? names[offset] : ('P' + offset);
+    }
+    out.push({ combo: cardsToCombo(c1, c2), position, nPlayers });
+  }
+  return out;
+}
+
+// Grille 13×13 : ordre des rangs (haut → bas / gauche → droite).
+const GRID_RANKS = ['A', 'K', 'Q', 'J', 'T', '9', '8', '7', '6', '5', '4', '3', '2'];
+
+// Combo d'une cellule (row,col) : diagonale = paires, haut-droite = suited,
+// bas-gauche = offsuit.
+function cellCombo(row, col) {
+  const r1 = GRID_RANKS[row], r2 = GRID_RANKS[col];
+  if (row === col) return r1 + r2;
+  if (row < col) return r1 + r2 + 's';
+  return r2 + r1 + 'o';
+}
+
 
 // PokerTH web client — Onglet Stats du panneau info (GameInfoPanel).
 //
@@ -1147,8 +1221,217 @@ async function exportPdb(scope) {
 if (typeof window !== 'undefined') window._exportPdb = exportPdb;
 
 
+// PokerTH web client — HUD par siège + grille de range (showdown).
+//
+// HUD : une boîte compacte de stats ancrée près de chaque siège (comme un HUD
+// de tracker), au thème du client. Désactivé par défaut (option pth_hud_on).
+// Un clic sur une boîte ouvre la grille de range 13×13 du joueur.
+//
+// Données : StatsCalculator / playerVpipCombos (stats.mjs), lues depuis
+// window._handlogStore. Positions : ancrées aux éléments .seat[data-pid].
+//
+// Dépend de : window._handlogStore, window._statsTablePlayers (glue client),
+// StatsData/StatsCalculator/playerVpipCombos/cellCombo/GRID_RANKS (assemblés).
 
-// ── Bootstrap : installe window._handlog (recorder + persistance IndexedDB) ──
+function _hudOn() {
+  try { return localStorage.getItem('pth_hud_on') === '1'; } catch (_e) { return false; }
+}
+
+// Stats affichées dans chaque boîte (id → libellé court).
+const HUD_ROWS = [
+  ['vpip', 'VPIP'], ['pfr', 'PFR'], ['af', 'AF'],
+  ['three_bet', '3B'], ['cbet', 'CB'], ['fold_to_3bet', 'F3B'],
+];
+
+// Couleur sémantique d'une stat selon sa valeur (convention poker) : on colore
+// VPIP/PFR (tight = froid/vert, loose = chaud/rouge) ; les autres restent neutres.
+function _statClass(id, v) {
+  if (v == null || v === 'inf') return '';
+  const n = typeof v === 'number' ? v : parseFloat(v);
+  if (id === 'vpip') { if (n >= 40) return 'hud-hot'; if (n >= 24) return 'hud-warm'; return 'hud-cool'; }
+  if (id === 'pfr') { if (n >= 25) return 'hud-hot'; if (n >= 12) return 'hud-warm'; return 'hud-cool'; }
+  return '';
+}
+
+function _hudFmt(id, v) {
+  if (v == null) return '–';
+  if (id === 'af') return v === 'inf' ? '∞' : String(v);
+  if (id === 'hands') return String(v);
+  return v + '%';
+}
+
+// Cache stats/combos calculés (recalcul à chaque main via _hudRefresh).
+let _statsCache = {};
+let _dataCache = null;
+
+async function _computeStats() {
+  const store = (typeof window !== 'undefined') ? window._handlogStore : null;
+  if (!store) return;
+  const all = await store.loadAll();
+  const data = new StatsData({ games: all.games, players: all.players, hands: all.hands, actions: all.actions });
+  _dataCache = data;
+  _statsCache = new StatsCalculator(data).calculateAllPlayersStats();
+}
+
+// Construit/mets à jour une boîte HUD pour un siège donné.
+function _buildBox(pid, name, seatEl, layer) {
+  const s = _statsCache[name];
+  const id = 'hud-box-' + pid;
+  let box = document.getElementById(id);
+  if (!box) {
+    box = document.createElement('div');
+    box.id = id;
+    box.className = 'hud-box';
+    box.addEventListener('click', (e) => { e.stopPropagation(); openRangeGrid(name); });
+    layer.appendChild(box);
+  }
+  const handsTxt = s ? _hudFmt('hands', s.hands) : '0';
+  let rows = '';
+  for (const [sid, lbl] of HUD_ROWS) {
+    const val = s ? _hudFmt(sid, s[sid]) : '–';
+    rows += '<span class="hud-stat"><i class="hud-lbl">' + lbl + '</i>'
+      + '<b class="hud-val ' + (s ? _statClass(sid, s[sid]) : '') + '">' + val + '</b></span>';
+  }
+  box.innerHTML = '<div class="hud-head"><span class="hud-name">' + _hudEsc(name) + '</span>'
+    + '<span class="hud-hands">' + handsTxt + '</span></div>'
+    + '<div class="hud-grid">' + rows + '</div>';
+
+  // Positionner au-dessus du siège (ancré au centre-haut du .seat).
+  const layerRect = layer.getBoundingClientRect();
+  const r = seatEl.getBoundingClientRect();
+  const cx = r.left + r.width / 2 - layerRect.left;
+  const top = r.top - layerRect.top;
+  box.style.left = cx + 'px';
+  box.style.top = top + 'px';
+}
+
+function _hudEsc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])); }
+
+// Couche d'ancrage du HUD (au-dessus de la table, sous les modales).
+function _ensureLayer() {
+  let layer = document.getElementById('hud-layer');
+  if (!layer) {
+    const table = document.getElementById('g-table') || document.getElementById('g-seats') || document.body;
+    layer = document.createElement('div');
+    layer.id = 'hud-layer';
+    (table.parentNode || document.body).appendChild(layer);
+  }
+  return layer;
+}
+
+// Rendu principal : place une boîte par siège occupé. Exposé window._hudRender.
+function renderHud() {
+  if (typeof document === 'undefined') return;
+  const layer = document.getElementById('hud-layer');
+  if (!_hudOn()) { if (layer) { layer.innerHTML = ''; layer.style.display = 'none'; } return; }
+  const lay = _ensureLayer();
+  lay.style.display = '';
+  let tablePlayers = [];
+  try { if (typeof window._statsTablePlayers === 'function') tablePlayers = window._statsTablePlayers() || []; } catch (_e) {}
+  const seen = new Set();
+  tablePlayers.forEach((p) => {
+    const seatEl = document.querySelector('#g-seats [data-pid="' + p.pid + '"]');
+    if (!seatEl) return;
+    seen.add('hud-box-' + p.pid);
+    _buildBox(p.pid, p.name, seatEl, lay);
+  });
+  // Retirer les boîtes de sièges disparus.
+  Array.from(lay.children).forEach((c) => { if (!seen.has(c.id)) lay.removeChild(c); });
+}
+if (typeof window !== 'undefined') window._hudRender = renderHud;
+
+// Recalcule les stats puis re-rend (appelé à chaque fin de main).
+async function refreshHud() {
+  if (!_hudOn()) return;
+  await _computeStats();
+  renderHud();
+}
+if (typeof window !== 'undefined') window._hudRefresh = refreshHud;
+
+// ── Grille de range 13×13 ───────────────────────────────────────────────────
+function openRangeGrid(name, posFilter, playersFilter) {
+  if (typeof document === 'undefined' || !_dataCache) return;
+  let modal = document.getElementById('range-modal');
+  if (!modal) {
+    modal = document.createElement('div');
+    modal.id = 'range-modal';
+    modal.innerHTML = '<div class="range-card"><div class="range-head">'
+      + '<span class="range-title"></span>'
+      + '<span class="range-filters"></span>'
+      + '<button type="button" class="range-close" title="Fermer">✕</button></div>'
+      + '<div class="range-body"></div>'
+      + '<div class="range-legend">Diagonale = paires · haut-droite = suited · bas-gauche = offsuit</div></div>';
+    document.body.appendChild(modal);
+    modal.addEventListener('click', (e) => { if (e.target === modal) modal.style.display = 'none'; });
+    modal.querySelector('.range-close').addEventListener('click', () => { modal.style.display = 'none'; });
+  }
+  modal.style.display = 'flex';
+  modal._player = name;
+  modal._pos = posFilter || 'all';
+  modal._pf = playersFilter || 'all';
+  _renderRange(modal);
+}
+if (typeof window !== 'undefined') window._openRange = openRangeGrid;
+
+function _renderRange(modal) {
+  const name = modal._player;
+  const combos = playerVpipCombos(_dataCache, name);
+  // Options de filtre disponibles.
+  const positions = Array.from(new Set(combos.map((c) => c.position))).filter((p) => p !== '?');
+  const posOrder = ['BTN', 'SB', 'BB', 'UTG', 'UTG+1', 'UTG+2', 'MP', 'MP+1', 'HJ', 'CO'];
+  positions.sort((a, b) => posOrder.indexOf(a) - posOrder.indexOf(b));
+  const playerCounts = Array.from(new Set(combos.map((c) => c.nPlayers))).sort((a, b) => a - b);
+
+  // Filtrage.
+  const filtered = combos.filter((c) =>
+    (modal._pos === 'all' || c.position === modal._pos)
+    && (modal._pf === 'all' || c.nPlayers === +modal._pf));
+
+  const counts = {};
+  filtered.forEach((c) => { counts[c.combo] = (counts[c.combo] || 0) + 1; });
+  const total = filtered.length;
+  const maxCount = Math.max(1, ...Object.values(counts));
+
+  modal.querySelector('.range-title').textContent = 'Range showdown — ' + name + '  ·  ' + total + ' main' + (total === 1 ? '' : 's');
+
+  // Filtres (position + nb joueurs).
+  let posSel = '<label>Position <select class="range-pos"><option value="all">Toutes</option>';
+  positions.forEach((p) => { posSel += '<option value="' + p + '"' + (modal._pos === p ? ' selected' : '') + '>' + p + '</option>'; });
+  posSel += '</select></label>';
+  let pfSel = '<label>Joueurs <select class="range-pf"><option value="all">Tous</option>';
+  playerCounts.forEach((n) => { pfSel += '<option value="' + n + '"' + (modal._pf === String(n) ? ' selected' : '') + '>' + n + '</option>'; });
+  pfSel += '</select></label>';
+  const filt = modal.querySelector('.range-filters');
+  filt.innerHTML = posSel + pfSel;
+  filt.querySelector('.range-pos').onchange = (e) => { modal._pos = e.target.value; _renderRange(modal); };
+  filt.querySelector('.range-pf').onchange = (e) => { modal._pf = e.target.value; _renderRange(modal); };
+
+  // Grille 13×13.
+  let html = '<table class="range-grid"><tbody>';
+  for (let row = 0; row < 13; row++) {
+    html += '<tr>';
+    for (let col = 0; col < 13; col++) {
+      const combo = cellCombo(row, col);
+      const count = counts[combo] || 0;
+      let cls = 'range-cell';
+      let style = '';
+      if (count > 0) {
+        const ratio = count / maxCount;
+        const hue = Math.round(120 * (1 - ratio)); // vert→jaune→rouge
+        style = 'background:hsl(' + hue + ',62%,46%);color:#0b0b0b';
+        cls += ' filled';
+      }
+      html += '<td class="' + cls + '" style="' + style + '"><span class="rc-combo">' + combo + '</span>'
+        + (count > 0 ? '<span class="rc-count">' + count + '</span>' : '') + '</td>';
+    }
+    html += '</tr>';
+  }
+  html += '</tbody></table>';
+  modal.querySelector('.range-body').innerHTML = html;
+}
+
+
+
 (function () {
   try {
     var store = new HandStore();
@@ -1158,6 +1441,7 @@ if (typeof window !== 'undefined') window._exportPdb = exportPdb;
       onHandPersist: function (hand, actions) {
         store.putHandBundle(rec.sessionId, hand, actions);
         try { if (typeof window._renderStats === 'function') window._renderStats(); } catch (_e) {}
+        try { if (typeof window._hudRefresh === 'function') window._hudRefresh(); } catch (_e) {}
       }
     });
     if (typeof window !== 'undefined') { window._handlog = rec; window._handlogStore = store; }

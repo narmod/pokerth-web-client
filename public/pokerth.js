@@ -401,6 +401,7 @@ function applyAdvOpts() {
     b.classList.toggle('adv-no-community', !_advGet('show_community', true));
     b.classList.toggle('adv-no-flag', !_advGet('show_flag', true));
     try { if (typeof window._syncStatsTab === 'function') window._syncStatsTab(); } catch (e) {}
+    try { if (typeof window._hudRefresh === 'function' && localStorage.getItem('pth_hud_on') === '1') window._hudRefresh(); else if (typeof window._hudRender === 'function') window._hudRender(); } catch (e) {}
     try {
       var _ex = document.querySelectorAll('.adv-export-btn');
       var _on = _advGet('stats_track', true);
@@ -597,6 +598,7 @@ function openAdvancedOptions() {
   try { renderIgnoredList(); } catch (e) {}
   sync('adv-logon', 'log_on', true);
   sync('adv-statstrack', 'stats_track', true);
+  sync('adv-hudon', 'hud_on', false);
   try { var _li = document.getElementById('adv-loginterval'); if (_li) _li.value = _getLogInterval(); } catch (e) {}
   sync('adv-zoomfollow', 'zoom_follow', true); // défaut QML : suivi actif quand le zoom l'est
   sync('adv-snd-actions', 'snd_actions', true);
@@ -8399,6 +8401,7 @@ const App = (() => {
               _hlResults.push({ pid: _rpid, card1: _rc1, card2: _rc2, won: _rwon, handText: _htext, handInt: _hint });
             }
             window._handlog.onShowdown(_hlResults, _hlEliminatedPids(), null);
+            try { if (typeof window._hudRefresh === 'function') window._hudRefresh(); } catch (_e) {}
           }
         } catch (_e) {}
         pot = 0; setPot(0);
@@ -8439,6 +8442,7 @@ const App = (() => {
         if (seatData[pid]) { seatData[pid].money = cash; if(won) seatData[pid].action = '+'+won; }
         if (won > 0) logAction('🏆 ' + getPlayerName(pid) + ' +' + _groupThousands(won));
         try { if (window._handlog) window._handlog.onHandHideEnd({ pid: pid, won: won, round: (typeof gameState === 'number' ? gameState : undefined), eliminated: _hlEliminatedPids(), gameOverPid: null }); } catch (_e) {}
+        try { if (typeof window._hudRefresh === 'function') window._hudRefresh(); } catch (_e) {}
         try { _sdWinners = won > 0 ? new Set([pid]) : new Set(); } catch (e) {}
         // Enregistrer le résultat de la main pour moi (fin sans abattage).
         var myHideMon = (seatData[myId] || {}).money;
@@ -11866,10 +11870,10 @@ const App = (() => {
     if (window.refreshAppBadge) window.refreshAppBadge();
   }
 
-  window._renderSeats = function() { if (seats.length) renderSeats(); };
+  window._renderSeats = function() { if (seats.length) renderSeats(); try { if (typeof window._hudRender === 'function') window._hudRender(); } catch (e) {} };
   // Variante SYNCHRONE (sans requestAnimationFrame) : rend immediatement, utilisee
   // par setSeatLayout sur iOS ou le rAF peut etre gele apres le selecteur natif.
-  window._renderSeatsNow = function() { if (seats.length) { try { renderSeatsImmediate(); } catch (e) {} } };
+  window._renderSeatsNow = function() { if (seats.length) { try { renderSeatsImmediate(); } catch (e) {} } try { if (typeof window._hudRender === 'function') window._hudRender(); } catch (e) {} };
   // Pseudos pour la complétion Tab du chat (parité ChatBox QML, bible §11) :
   // en jeu = les joueurs de la table ; au lobby = tous les joueurs connus.
   // Activité d'un joueur pour le panneau « Joueurs » (parité tooltip QML
@@ -17337,7 +17341,7 @@ function renderPlayersList() {
   });
 })();
 
-;(function(){ window.BUILD_VERSION='0.3.738-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.739-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
