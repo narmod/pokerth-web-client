@@ -14487,8 +14487,9 @@ function _maybeShowNextHandBtn() {
     // ── Vorlagen communautaires (parité QML communityPresets, verbatim) ──
     // Réglages officiels des tournois pokerth.net. Visibles seulement pour
     // « Joueurs invités uniquement » ; remplissent ET verrouillent le
-    // formulaire (nom compris) ; « Paramètres personnalisés » restaure les
-    // valeurs d'avant. Les BBC Steps imposent une liste fixe de 30 paliers
+    // formulaire — SAUF le nom : pré-rempli mais éditable (suffixe d'heure
+    // possible, ex. « BBC Step 1 23:15 ») ; « Paramètres personnalisés »
+    // restaure les valeurs d'avant. Les BBC Steps imposent une liste fixe de 30 paliers
     // de blinds (hausse au temps, toutes les 5 min) ; MC/WEC doublent après
     // N mains. delayBetweenHands = 7 pour toutes (comme le QML).
     _communityVorlagen: [
@@ -14640,7 +14641,10 @@ function _maybeShowNextHandBtn() {
       // convention QML « %1's game ») + champ nom et choix du type désactivés.
       var nameEl = g('cf-name');
       if (nameEl) {
-        nameEl.disabled = isGuest || vorlageActive;
+        // Vorlage : le nom est PRÉ-REMPLI (applyVorlage) mais reste ÉDITABLE —
+        // divergence assumée vs QML (qui verrouille) : on veut pouvoir suffixer
+        // « BBC Step 1 » en « BBC Step 1 23:15 » (demande narmod 2026-07-17).
+        nameEl.disabled = isGuest;
         if (isGuest) {
           var tpl = (typeof t === 'function' && t('guestGameName') !== 'guestGameName')
             ? t('guestGameName') : "{name}'s game";
@@ -17220,7 +17224,7 @@ function renderPlayersList() {
   });
 })();
 
-;(function(){ window.BUILD_VERSION='0.3.722-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.723-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
