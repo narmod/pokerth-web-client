@@ -1277,6 +1277,7 @@ function _hudFmt(id, v) {
 // Cache stats/combos calculés (recalcul à chaque main via _hudRefresh).
 let _statsCache = {};
 let _dataCache = null;
+let _statsComputedOnce = false;
 
 async function _computeStats() {
   const store = (typeof window !== 'undefined') ? window._handlogStore : null;
@@ -1353,16 +1354,20 @@ function _positionBox(box, seatEl, layer) {
 
 function _hudEsc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])); }
 
-// Couche d'ancrage : DANS #g-seats pour partager son repère (zoom/transform).
+// Couche d'ancrage : dans #g-table-zone (parent de #g-seats, JAMAIS écrasé par
+// renderSeats qui remplace #g-seats.innerHTML). #g-seats étant inset:0 dans
+// #g-table-zone, la couche partage exactement le même repère que les sièges.
 function _ensureLayer() {
   let layer = document.getElementById('hud-layer');
-  const host = document.getElementById('g-seats') || document.getElementById('g-table') || document.body;
+  const host = document.getElementById('g-table-zone')
+    || (document.getElementById('g-seats') && document.getElementById('g-seats').parentNode)
+    || document.body;
   if (!layer) {
     layer = document.createElement('div');
     layer.id = 'hud-layer';
     host.appendChild(layer);
   } else if (layer.parentNode !== host) {
-    host.appendChild(layer); // re-parenter si la table a été re-montée
+    host.appendChild(layer);
   }
   return layer;
 }
@@ -1401,6 +1406,12 @@ function renderHud() {
   // Positionner après le rendu des sièges (renderSeats est throttlé à la frame).
   _scheduleReposition();
   _ensureHudObservers();
+  // Premier affichage : si aucune stat en cache, calculer une fois puis re-rendre
+  // (évite d'attendre la fin de la première main pour voir des chiffres).
+  if (!_statsComputedOnce) {
+    _statsComputedOnce = true;
+    _computeStats().then(() => { if (_hudOn()) renderHud(); }).catch(() => {});
+  }
 }
 if (typeof window !== 'undefined') window._hudRender = renderHud;
 
