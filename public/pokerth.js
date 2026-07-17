@@ -10978,7 +10978,11 @@ const App = (() => {
       // lisibles). La barre de décompte reste centrée sur les cartes.
       if (_seatTr.selfStrip && isMe) {
         var _stripBet = (sd.bet > 0) ? '<div class="seat-bet strip-bet">' + fmtChips(sd.bet) + '</div>' : '';
-        var _stripBadge = (_acBadge && !(_sdWinners && _sdWinners.has(pid))) ? _acBadge : '';
+        // UNIQUEMENT pour les packs à structure pokerth/QML (badgeOnCards) :
+        // c'est le badge qui était sur les cartes que sp0ck a déplacé vers le
+        // strip. Les autres packs gardent leur badge dans le pied du siège
+        // (correction narmod 2026-07-17 : la migration ne les concerne pas).
+        var _stripBadge = (_seatTr.badgeOnCards && _acBadge && !(_sdWinners && _sdWinners.has(pid))) ? _acBadge : '';
         if (_stripBadge) _acInCards = true; // évite le doublon dans le pied
         if (_stripBet || _stripBadge) {
           h += '<div class="seat-self-strip">' + _stripBet + _stripBadge + '</div>';
@@ -17216,7 +17220,7 @@ function renderPlayersList() {
   });
 })();
 
-;(function(){ window.BUILD_VERSION='0.3.721-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.722-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
