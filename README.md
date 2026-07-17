@@ -166,12 +166,18 @@ This project is a **web frontend** that connects to any PokerTH server directly 
     <td align="center"><img src="docs/screenshots/17-game-chat.png" alt="In-game chat panel on mobile" width="240"/></td>
   </tr>
   <tr>
-    <td align="center"><strong>Table menu &amp; options</strong></td>
-    <td align="center"><strong>Avatar picker</strong></td>
+    <td align="center"><strong>Avatar gallery — light</strong></td>
+    <td align="center"><strong>Avatar gallery — dark</strong></td>
   </tr>
   <tr>
-    <td align="center"><img src="docs/screenshots/06-menu.png" alt="Table menu and options" width="240"/></td>
-    <td align="center"><img src="docs/screenshots/07-avatar-picker.png" alt="Avatar picker" width="240"/></td>
+    <td align="center"><img src="docs/screenshots/07-avatar-picker.png" alt="Avatar gallery (light theme) — official PokerTH avatars and emoji categories" width="240"/></td>
+    <td align="center"><img src="docs/screenshots/19-avatar-picker-dark.png" alt="Avatar gallery (dark theme) — official PokerTH avatars and emoji categories" width="240"/></td>
+  </tr>
+  <tr>
+    <td align="center" colspan="2"><strong>Table menu &amp; options</strong></td>
+  </tr>
+  <tr>
+    <td align="center" colspan="2"><img src="docs/screenshots/06-menu.png" alt="Table menu and options" width="240"/></td>
   </tr>
 </table>
 
