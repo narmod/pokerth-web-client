@@ -518,27 +518,27 @@ body {
   box-shadow: 0 12px 40px rgba(0,0,0,0.8);
 }
 
-/* Carte Discord compacte sous la card de login (écran connect uniquement).
-   Même habillage que .card mais sur une ligne ; bord accent Discord au survol. */
-.discord-card {
-  display: flex;
+/* Pill Discord centré sous la card de login (écran connect uniquement).
+   Couleur de marque Discord assumée ; libellé complet dans le title (i18n). */
+.discord-pill {
+  display: inline-flex;
   align-items: center;
-  gap: 10px;
-  background: var(--modal-bg);
-  border: 1px solid var(--border-hi);
-  border-radius: 4px;
-  padding: 10px 14px;
-  width: min(380px, calc(100vw - 32px));
-  margin-top: 10px;
-  box-shadow: 0 12px 40px rgba(0,0,0,0.8);
-  color: var(--text-hi);
+  gap: 8px;
+  background: #5865F2;
+  border: 1px solid rgba(255,255,255,0.18);
+  border-radius: 999px;
+  padding: 8px 18px;
+  margin-top: 12px;
+  box-shadow: 0 6px 24px rgba(0,0,0,0.55);
+  color: #fff;
   font-size: 0.8rem;
-  font-weight: 600;
+  font-weight: 700;
+  letter-spacing: 0.03em;
   text-decoration: none;
   cursor: pointer;
 }
-.discord-card:hover { border-color: #5865F2; }
-.discord-card .dc-chev { margin-left: auto; opacity: 0.6; font-size: 1.05rem; line-height: 1; }
+.discord-pill:hover { background: #6a76f5; }
+.discord-pill:active { transform: scale(0.97); }
 
 .card-title {
   font-family: var(--ff-display);
