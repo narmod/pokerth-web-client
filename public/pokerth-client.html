@@ -57,44 +57,47 @@ try{var _d=document.documentElement,_p=localStorage.getItem('pth_theme'),_tb=loc
 <link rel="manifest" href="manifest.json">
   <link rel="stylesheet" href="pokerth.css">
 <style id="boot-splash-css">
-/* Splash de démarrage — habillage identique à la card du login (#s-connect).
-   Couleurs prises sur les variables de thème posées par le script anti-flash
-   du <head> (data-theme) → suit sombre / clair / QML sans flash. Les valeurs
-   de repli ne servent que si pokerth.css n'a pas (encore) chargé — le cas même
-   que ce splash existe pour couvrir. Le fond flammes + voile est theme-agnostic,
-   comme sur le login. */
+/* Splash de démarrage — habillage 1:1 du PreLoader.qml officiel : fond
+   startWindowBackground (flammes) FLOUTÉ (MultiEffect blur 0.3×64 ≈ 19px),
+   boîte centrale col700 opacité 0.8 radius 5 avec logo 96, barre, et rangée
+   terminal + message tournant. Couleurs via variables de thème (data-theme).
+   Conservé en plus du QML : compteur de modules et erreur → « Réessayer ». */
 #boot-splash{position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;
-  font-family:var(--ff-display,'Cinzel',Georgia,serif);color:var(--text-hi,#eff1f5);
-  background:linear-gradient(rgba(8,10,14,.10),rgba(8,10,14,.15)),url("/img/pokerth-login-bg.webp") center / cover no-repeat;
+  color:var(--text-hi,#eff1f5);background:#10141c;overflow:hidden;
   opacity:1;transition:opacity .42s ease}
+#boot-splash::before{content:"";position:absolute;inset:-28px;
+  background:url("/img/pokerth-login-bg.webp") center / cover no-repeat;
+  filter:blur(10px);transform:scale(1.05)}
+:root.reduce-fx #boot-splash::before{filter:none;transform:none;inset:0}
 #boot-splash.bs-hide{opacity:0;pointer-events:none}
-#boot-splash .bs-card{background:var(--modal-bg,linear-gradient(160deg,#12161d 0%,#1d222b 50%,#0e1218 100%));
-  border:1px solid var(--border-hi,rgba(227,200,0,.6));border-radius:4px;padding:26px 30px 22px;
-  width:min(340px,calc(100vw - 40px));text-align:center;box-shadow:0 12px 40px rgba(0,0,0,.8)}
-#boot-splash .bs-chip{width:82px;height:82px;display:block;margin:0 auto 12px;filter:drop-shadow(0 4px 12px rgba(0,0,0,.55))}
-#boot-splash .bs-title{font-size:1.9rem;font-weight:700;letter-spacing:.16em;line-height:1;margin:0;color:var(--text-hi,#eff1f5)}
-#boot-splash .bs-suits{font-size:1.05rem;letter-spacing:.28em;opacity:.72;margin:9px 0 0}
-#boot-splash .bs-suits .r{color:var(--red,#c0392b)}
-#boot-splash .bs-sub{font-family:Georgia,serif;font-size:.6rem;letter-spacing:.4em;text-transform:uppercase;color:var(--text,#a0acc4);margin:8px 0 0}
-#boot-splash .bs-hr{height:1px;background:var(--border,rgba(227,200,0,.22));margin:18px 0 16px}
-#boot-splash .bs-track{height:4px;border-radius:2px;background:rgba(127,127,127,.22);overflow:hidden}
-#boot-splash .bs-fill{height:100%;width:0;border-radius:2px;box-shadow:0 0 8px rgba(227,200,0,.55);transition:width .28s ease;
-  background:linear-gradient(90deg,var(--gold-dim,#b09a00),var(--gold,#E3C800),var(--gold-hi,#f2dc4d))}
-#boot-splash .bs-status{font-family:Georgia,serif;font-size:.72rem;letter-spacing:.03em;color:var(--text,#a0acc4);margin:11px 0 0;min-height:1em}
-#boot-splash .bs-error{display:none;margin-top:14px}
+#boot-splash.bs-invisible{opacity:0;pointer-events:none;transition:none}
+#boot-splash .bs-card{position:relative;background:var(--modal-bg,#1d222b);opacity:.86;border-radius:5px;
+  padding:12px 18px 10px;width:min(280px,calc(100vw - 40px));min-height:180px;box-sizing:border-box;
+  display:flex;flex-direction:column;align-items:center;justify-content:space-between;gap:10px;
+  text-align:center;box-shadow:0 12px 40px rgba(0,0,0,.5)}
+#boot-splash .bs-chip{width:96px;height:96px;display:block;margin:2px auto 0;filter:drop-shadow(0 4px 12px rgba(0,0,0,.45))}
+#boot-splash .bs-track{height:5px;border-radius:3px;background:rgba(127,127,127,.28);overflow:hidden;width:66%}
+#boot-splash .bs-fill{height:100%;width:0;border-radius:3px;transition:width .28s ease;
+  background:var(--text,#cdd3e0)}
+#boot-splash .bs-info{display:flex;align-items:center;gap:8px;align-self:flex-start;margin:0 0 0 2px}
+#boot-splash .bs-term{width:20px;height:20px;opacity:.9}
+:root[data-theme="pokerth-light"] #boot-splash .bs-term{filter:invert(.72)}
+#boot-splash .bs-msg{font-family:Georgia,serif;font-size:.8rem;color:var(--text,#cdd3e0)}
+#boot-splash .bs-status{font-family:Georgia,serif;font-size:.68rem;letter-spacing:.03em;color:var(--text,#a0acc4);min-height:1em;align-self:flex-end}
+#boot-splash .bs-error{display:none;margin-top:2px}
 #boot-splash .bs-error-msg{font-family:Georgia,serif;font-size:.74rem;color:var(--red,#e87070);margin-bottom:10px}
 #boot-splash .bs-retry{background:#2b3444;color:#fff;border:none;padding:12px 22px;
   font-family:var(--ff-display,'Cinzel',Georgia,serif);font-size:.82rem;font-weight:700;letter-spacing:.15em;
   cursor:pointer;border-radius:2px;box-shadow:0 4px 16px rgba(0,0,0,.28);transition:background .15s,transform .1s,box-shadow .15s}
 #boot-splash .bs-retry:hover{background:#384252;box-shadow:0 6px 24px rgba(0,0,0,.4)}
 #boot-splash .bs-retry:active{transform:scale(.98)}
-/* Mode clair : bouton clair encré (le bouton Connect étant ardoise fixe, on le décline ici pour rester lisible/harmonieux sur la card claire) */
 :root[data-theme="pokerth-light"] #boot-splash .bs-retry{background:#eaeef4;color:#1d222b;border:1px solid rgba(60,72,90,.22);box-shadow:0 3px 12px rgba(0,0,0,.12)}
 :root[data-theme="pokerth-light"] #boot-splash .bs-retry:hover{background:#dde3ec;box-shadow:0 5px 18px rgba(0,0,0,.16)}
-#boot-splash .bs-card.err .bs-fill{background:var(--red,#c0392b);box-shadow:none}
+#boot-splash .bs-card.err{min-height:0}
+#boot-splash .bs-card.err .bs-fill{background:var(--red,#c0392b)}
 #boot-splash .bs-card.err .bs-error{display:block}
 :root.reduce-fx #boot-splash,:root.reduce-fx #boot-splash .bs-fill{transition:none}
-@media (max-height:640px){#boot-splash .bs-chip{width:54px;height:54px}#boot-splash .bs-title{font-size:1.5rem}#boot-splash .bs-suits{display:none}}
+@media (max-height:640px){#boot-splash .bs-chip{width:64px;height:64px}}
 </style>
 <script>
 function toggleStats() {
@@ -379,29 +382,6 @@ function onAvatarImageChosen(input) {
 
 </head>
 <body>
-<!-- Écran de démarrage (parité QML : startWindow splash, désactivable via
-     DisableSplashScreenOnStartup ↔ option « splash »). Inline et autonome :
-     affiché AVANT le chargement de pokerth.js, masqué par lui une fois prêt
-     (minimum ~0,8 s pour éviter un flash). -->
-<div id="pth-splash" aria-hidden="true">
-  <img class="pth-splash-logo" src="/logo-chip.png" alt="">
-  <div class="pth-splash-title">PokerTH</div>
-</div>
-<script>
-try {
-  if (localStorage.getItem('pth_splash') === '0') {
-    var _spEl = document.getElementById('pth-splash');
-    if (_spEl) _spEl.parentNode.removeChild(_spEl);
-  } else {
-    window._splashT0 = Date.now();
-    // Filet de sécurité : jamais bloqué sur le splash si le JS échoue.
-    setTimeout(function () {
-      var el = document.getElementById('pth-splash');
-      if (el) { el.classList.add('splash-hide'); setTimeout(function(){ try { el.parentNode.removeChild(el); } catch (e) {} }, 450); }
-    }, 6000);
-  }
-} catch (e) {}
-</script>
 <!-- ╔════════════════════╗ -->
 <!-- ║  BOOT SPLASH       ║ -->
 <!-- ╚════════════════════╝ -->
@@ -409,13 +389,13 @@ try {
      que l'app soit prête (window.App) ; en cas de fichier non chargé, propose
      « Réessayer ». Couleurs = thème actif (data-theme). Voir #boot-splash-css. -->
 <div id="boot-splash" role="status" aria-live="polite">
+  <!-- Carte = PreLoader.qml officiel : boîte 270×180 col700 opacité 0.8 radius 5,
+       logo pokerth 96, barre de progression, rangée terminal + message tournant.
+       En plus du QML (conservé) : compteur de modules N/M + erreur/Réessayer. -->
   <div class="bs-card" id="bs-card">
-    <img class="bs-chip" src="/favicon.svg" alt="PokerTH" width="82" height="82">
-    <h1 class="bs-title">PokerTH</h1>
-    <div class="bs-suits"><span>♠</span> <span class="r">♥</span> <span class="r">♦</span> <span>♣</span></div>
-    <div class="bs-sub">Web Client</div>
-    <div class="bs-hr"></div>
+    <img class="bs-chip" src="/favicon.svg" alt="PokerTH" width="96" height="96">
     <div class="bs-track"><div class="bs-fill" id="bs-fill"></div></div>
+    <div class="bs-info"><img class="bs-term" src="/img/terminal.svg" alt="" width="20" height="20"><span class="bs-msg" id="bs-msg">Shuffling the Decks ...</span></div>
     <div class="bs-status" id="bs-status">Loading…</div>
     <div class="bs-error" id="bs-error">
       <div class="bs-error-msg" id="bs-error-msg">Unstable connection — some files could not be loaded.</div>
@@ -438,6 +418,23 @@ try {
       card = document.getElementById('bs-card'),
       errMsg = document.getElementById('bs-error-msg'),
       retryBtn = document.getElementById('bs-retry');
+  /* Option « splash » (parité DisableSplashScreenOnStartup) : décochée →
+     splash invisible mais le gate continue de tourner ; en cas d'échec de
+     chargement il redevient visible pour proposer « Réessayer ». */
+  var splashOff = false;
+  try { splashOff = (localStorage.getItem('pth_splash') === '0'); } catch (e) {}
+  if (splashOff) splash.classList.add('bs-invisible');
+  /* Messages tournants du PreLoader.qml officiel (anglais dans toutes les
+     langues, comme l'officiel — aucune traduction .ts). */
+  var MSGS = ['Shuffling the Decks ...', 'Bribing the Dealer ...',
+    'Manipulating the RNG ...', 'Taking a break at the Bar ...',
+    'Practicing Poker-Faces ...', 'Going All-In ...', 'Folding AAAA ...',
+    'Raising Big Blind ...', 'Stacking Chips ...'];
+  var msgEl = document.getElementById('bs-msg');
+  if (msgEl) msgEl.textContent = MSGS[Math.floor(Math.random() * MSGS.length)];
+  var msgTimer = setInterval(function () {
+    if (msgEl) msgEl.textContent = MSGS[Math.floor(Math.random() * MSGS.length)];
+  }, 1500);
 
   /* Dico inline (en + fr) : affichage immédiat avant que t() soit prêt, et
      repli si i18n échoue. Dès que window.t existe, on repasse sur les 36
@@ -501,12 +498,15 @@ try {
 
   function reveal() {
     if (gone) return; gone = true;
+    try { clearInterval(msgTimer); } catch (e) {}
     if (statusEl) statusEl.textContent = L.ready;
     splash.classList.add('bs-hide');
     setTimeout(function () { if (splash.parentNode) splash.parentNode.removeChild(splash); }, 480);
   }
   function fail() {
     if (gone || card.classList.contains('err')) return;
+    splash.classList.remove('bs-invisible');   // option splash coupée : on réapparaît pour « Réessayer »
+    try { clearInterval(msgTimer); } catch (e) {}
     card.classList.add('err');
     if (errMsg) errMsg.textContent = L.err;
     if (statusEl) statusEl.textContent = missCount ? L.miss.replace('{n}', missCount) : '';

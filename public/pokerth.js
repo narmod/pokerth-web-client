@@ -17121,20 +17121,6 @@ function renderPlayersList() {
   });
 })();
 
-// ── Écran de démarrage : masqué une fois l'app chargée (min ~0,8 s pour
-// éviter un flash quand tout sort du cache Service Worker). Parité QML :
-// le splash couvre l'écran pendant le chargement puis laisse place au login.
-;(function(){
-  var sp = document.getElementById('pth-splash');
-  if (!sp) return;
-  var t0 = window._splashT0 || Date.now();
-  var wait = Math.max(0, 800 - (Date.now() - t0));
-  setTimeout(function () {
-    sp.classList.add('splash-hide');
-    setTimeout(function () { try { sp.parentNode.removeChild(sp); } catch (e) {} }, 450);
-  }, wait);
-})();
-
 // ── Dropdown custom « Type de partie » (parité QML StyledCombo) ──────────────
 // Le <select id="cf-game-type"> natif reste la source de vérité (caché) : tous
 // les lecteurs/écrivains existants (sv/svv/set/setVal) continuent de marcher.
@@ -17201,7 +17187,7 @@ function renderPlayersList() {
   });
 })();
 
-;(function(){ window.BUILD_VERSION='0.3.689-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.690-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
