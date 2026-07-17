@@ -1386,7 +1386,11 @@ function _render(){
   _body.innerHTML = '';
   // Barre d'onglets (Table de jeu · Jeu de cartes · Dos de carte · Sieges).
   var tabbar = document.createElement('div');
-  tabbar.style.cssText = 'display:flex;gap:2px;margin:0 0 11px;border-bottom:1px solid var(--border,rgba(200,168,74,0.18))';
+  // Sticky (demande narmod 2026-07-17) : la barre d'onglets reste visible
+  // pendant le scroll de la liste (le conteneur scrollant est .adv-panels).
+  // Fond opaque = fond du modal, sinon les lignes transparaissent dessous.
+  tabbar.style.cssText = 'display:flex;gap:2px;margin:0 0 11px;border-bottom:1px solid var(--border,rgba(200,168,74,0.18));'
+    + 'position:sticky;top:0;z-index:5;background:var(--modal-bg,#1d222b)';
   _TABS.forEach(function(tb){
     var act = _activeTab === tb.id;
     var b = document.createElement('button'); b.type='button'; b.textContent = _t(tb.titleKey, tb.fallback);
