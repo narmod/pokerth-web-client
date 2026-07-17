@@ -6811,12 +6811,17 @@ html[data-seat-struct="qml"] .seat.active .seat-plate {
    animée (mémo thermique). Tokens surchargeables par thème :
    --turn-glow (cadre) et --turn-glow-halo (halo). */
 html[data-seat-struct="qml"] .seat.active .seat-plate::after {
-  /* border-radius: inherit -> le cadre épouse AUTOMATIQUEMENT la forme de la
-     plate du pack actif (pilule 999px, rectangle 6px, etc.) */
-  content: ""; position: absolute; inset: -2px; border-radius: inherit;
+  /* FORMULE de surbrillance adaptative : le cadre suit la FORME de la plate
+     du pack actif (border-radius: inherit) et chaque pack peut ajuster
+     l'écart (--turn-glow-inset), le rayon (--turn-glow-radius) et le plan
+     (--turn-glow-z : passer sous un avatar débordant, qui porte alors son
+     propre anneau). Défauts = comportement QML historique. */
+  content: ""; position: absolute;
+  inset: var(--turn-glow-inset, -2px);
+  border-radius: var(--turn-glow-radius, inherit);
   border: 1px solid var(--turn-glow, #FFD54A);
   box-shadow: 0 0 14px 2px var(--turn-glow-halo, rgba(255, 213, 74, 0.55));
-  pointer-events: none; z-index: 10; will-change: opacity;
+  pointer-events: none; z-index: var(--turn-glow-z, 10); will-change: opacity;
   animation: turnGlowPulse 1.5s ease-in-out infinite;
 }
 @keyframes turnGlowPulse { 0%, 100% { opacity: 0.65; } 50% { opacity: 1; } }
@@ -6828,10 +6833,12 @@ html[data-seat-struct="qml"] .seat.active .seat-plate::after {
    ::after. Tokens thème : --winner-frame / --winner-halo / --winner-badge-bg. */
 html[data-seat-struct="qml"] .seat.winner .seat-plate { opacity: 1; }
 html[data-seat-struct="qml"] .seat.winner .seat-plate::after {
-  content: ""; position: absolute; inset: -2px; border-radius: inherit; /* forme du pack */
+  content: ""; position: absolute;
+  inset: var(--winner-frame-inset, var(--turn-glow-inset, -2px));
+  border-radius: var(--winner-frame-radius, inherit); /* forme du pack */
   border: 3px solid var(--winner-frame, #FFD700);
   box-shadow: 0 0 16px 2px var(--winner-halo, rgba(255, 215, 0, 0.6));
-  pointer-events: none; z-index: 19;
+  pointer-events: none; z-index: var(--winner-frame-z, 19);
   animation: none; opacity: 1;
 }
 html[data-seat-struct="qml"] .seat-winner-badge {
@@ -6946,10 +6953,10 @@ html[data-seat-struct="qml"] .seat-bet::before {
 html[data-seat-struct="qml"] .seat[class*="betside-"] .seat-bet {
   position: absolute; z-index: 6; margin: 0;
 }
-html[data-seat-struct="qml"] .seat.betside-r .seat-bet { left: calc(100% + 8px); top: 50%; transform: translateY(-50%); }
-html[data-seat-struct="qml"] .seat.betside-l .seat-bet { right: calc(100% + 8px); top: 50%; transform: translateY(-50%); }
-html[data-seat-struct="qml"] .seat.betside-t .seat-bet { bottom: calc(100% + 7px); left: 50%; transform: translateX(-50%); }
-html[data-seat-struct="qml"] .seat.betside-b .seat-bet { top: calc(100% + 7px); left: 50%; transform: translateX(-50%); }
+html[data-seat-struct="qml"] .seat.betside-r .seat-bet { left: calc(100% + var(--seat-bet-gap-r, 8px)); top: 50%; transform: translateY(-50%); }
+html[data-seat-struct="qml"] .seat.betside-l .seat-bet { right: calc(100% + var(--seat-bet-gap-l, 8px)); top: 50%; transform: translateY(-50%); }
+html[data-seat-struct="qml"] .seat.betside-t .seat-bet { bottom: calc(100% + var(--seat-bet-gap-t, 7px)); left: 50%; transform: translateX(-50%); }
+html[data-seat-struct="qml"] .seat.betside-b .seat-bet { top: calc(100% + var(--seat-bet-gap-b, 7px)); left: 50%; transform: translateX(-50%); }
 /* Self : sa mise est dans la barre d'action -> pas de jeton de siège (officiel). */
 html[data-seat-struct="qml"] .seat.me .seat-bet { display: none; }
 
@@ -6968,8 +6975,8 @@ html[data-seat-struct="qml"] .seat-pucks .blind-chip {
   width: 32px !important; height: 32px !important;   /* BlindButtonImage QML 32×32 */
 }
 /* Côtés (betSide left/right) : puck SOUS la mise, à 5/6 de la hauteur (QML). */
-html[data-seat-struct="qml"] .seat.betside-r .seat-pucks { left: calc(100% + 8px); top: 83.33%; transform: translateY(-50%); }
-html[data-seat-struct="qml"] .seat.betside-l .seat-pucks { right: calc(100% + 8px); top: 83.33%; transform: translateY(-50%); }
+html[data-seat-struct="qml"] .seat.betside-r .seat-pucks { left: calc(100% + var(--seat-bet-gap-r, 8px)); top: 83.33%; transform: translateY(-50%); }
+html[data-seat-struct="qml"] .seat.betside-l .seat-pucks { right: calc(100% + var(--seat-bet-gap-l, 8px)); top: 83.33%; transform: translateY(-50%); }
 /* Haut/bas : puck aligné à DROITE, 6px du bord de la boîte (QML), même bande
    verticale que la mise (centre puck 32 ≈ centre mise 20 posée à 7px). */
 html[data-seat-struct="qml"] .seat.betside-t .seat-pucks { bottom: calc(100% + 1px); right: 6px; left: auto; }
