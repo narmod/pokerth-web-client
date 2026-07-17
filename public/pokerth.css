@@ -5733,6 +5733,16 @@ html[data-table="pokerth-live"] .raise-slider { accent-color: #4CAF50; }
   pointer-events: auto;
   z-index: 1;
 }
+/* Icône Discord au-dessus de la ligne de crédits (pied de page classique). */
+.cf-discord {
+  display: inline-flex;
+  color: var(--text-hi);
+  opacity: 0.7;
+  margin-bottom: 4px;
+  transition: opacity 0.2s, color 0.2s;
+}
+.cf-discord:hover { opacity: 1; color: #5865F2; }
+
 .connect-footer-line {
   margin: 1px 0;
 }
