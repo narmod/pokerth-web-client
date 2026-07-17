@@ -10743,6 +10743,7 @@ const App = (() => {
     var _maskMode = _advGet('hide_pbar', true); // mode masqué : self-box = siège
     var _ownLvl = 0; try { _ownLvl = Math.min(3, Math.max(0, parseInt(localStorage.getItem('pth_big_own_cards'), 10) || 0)); } catch (e) {} // niveau "agrandir mes cartes" 0-3 (plafond = riviere)
     let h = '';
+    var _apNew = {}; // signatures pucks/drapeau/action du rendu courant (anti-replay)
     rotated.forEach((pid, i) => {
       const px = pixPos[i];
       const isMe = pid === myId;
@@ -10833,12 +10834,23 @@ const App = (() => {
         // qu'au dealer. Un puck de thème explicite reste prioritaire.
         if (isDealer) dealerChip = '<img class="dealer-chip" src="' + (_pthPuck('--puck-dealer') || '/pucks/dealer.svg') + '" alt="D" width="20" height="20">';
       }
+      // ── Anti-replay des pops (sp0ck 2026-07-17 : « petit flicker ») :
+      // renderSeats reconstruit l'innerHTML à chaque update d'état, ce qui
+      // rejouait chipPop/seatBadgePop même quand RIEN n'avait changé pour ce
+      // siège. On mémorise la signature (pucks / drapeau / action) du rendu
+      // précédent par pid ; si identique → classe .no-pop (animation: none).
+      var _apPrev = (window._seatAnimPrev && window._seatAnimPrev.g === gId) ? window._seatAnimPrev.m[pid] : null;
+      var _puckSig = (isDealer ? 'D' : '') + (isSB ? 'S' : (isBB ? 'B' : ''));
+      if (_apPrev && _apPrev.p === _puckSig) {
+        if (dealerChip) dealerChip = dealerChip.replace('dealer-chip', 'dealer-chip no-pop');
+        if (blindBadge) blindBadge = blindBadge.replace('blind-chip', 'blind-chip no-pop');
+      }
       // Packs PokerTH : pucks posés sur le CÔTÉ de la boîte -> hors de l'avatar.
       var _avPucks = _seatTr.pucksSide ? '' : (blindBadge + dealerChip);
       // Drapeau du pays sur l'avatar (coin bas-droite, comme un badge).
       // Vide si pays inconnu → rien affiché.
       const seatFlag = _ccToFlag(_playerCountries[pid]);
-      const flagBadge = seatFlag ? '<span class="seat-flag">' + seatFlag + '</span>' : '';
+      const flagBadge = seatFlag ? '<span class="seat-flag' + (_apPrev && _apPrev.f ? ' no-pop' : '') + '">' + seatFlag + '</span>' : '';
       // ── Step 3 display: if we have a downloaded PokerTH avatar for
       // this pid, slot it in as <img> on top of the initial/emoji.
       // Q1=A: official PokerTH avatar takes precedence over emoji custom
@@ -10914,8 +10926,9 @@ const App = (() => {
       if (_acCode) {
         var _acBase = ['','fold','check','call','bet','raise','allin'][_acCode];
         var _acKey = ['','actBadgeFold','actBadgeCheck','actBadgeCall','actBadgeBet','actBadgeRaise','actBadgeAllin'][_acCode];
-        _acBadge = '<div class="seat-action-badge act-c' + _acCode + '">' + esc(pkTerm(_acBase, _acKey)) + '</div>';
+        _acBadge = '<div class="seat-action-badge' + (_apPrev && _apPrev.a === _acCode ? ' no-pop' : '') + ' act-c' + _acCode + '">' + esc(pkTerm(_acBase, _acKey)) + '</div>';
       }
+      _apNew[pid] = { p: _puckSig, f: !!seatFlag, a: _acCode }; // signature du rendu courant
       if ((_pkHole || _selfBig) && !isGone && !isOut) {
         var _ownHide = isMe && _ownCardsHidden();
         var _phc1 = isMe ? (_ownHide ? null : myCards[0]) : sd.card1;
@@ -10987,6 +11000,7 @@ const App = (() => {
       h += '</div>'; // ferme .seat
     });
     el.innerHTML = h;
+    window._seatAnimPrev = { g: gId, m: _apNew }; // anti-replay : signatures de CE rendu
     // Loupe QML : suivi différé du siège actif + suspension showdown.
     try {
       if (typeof window._loupeOnRender === 'function') {
@@ -11231,10 +11245,18 @@ const App = (() => {
               || kc.indexOf('seat-foot') !== -1 || kc.indexOf('seat-bet') !== -1) continue;
           var kr = kid.getBoundingClientRect();
           if (!kr.width && !kr.height) continue;
-          found = true;
-          if (kr.left < minX) minX = kr.left;
+          // .seat-info (nom + stack) : largeur VARIABLE — le montant change à
+          // chaque action → la mesure jitterait → re-render + nouveau boxScale
+          // = « flicker » de re-scale de la table (sp0ck 2026-07-17). Comme en
+          // QML (box de taille fixe, le texte n'élargit jamais le layout), la
+          // rangée texte ne compte que VERTICALEMENT.
+          var _vOnly = kc.indexOf('seat-info') !== -1;
+          if (!_vOnly) {
+            found = true;
+            if (kr.left < minX) minX = kr.left;
+            if (kr.right > maxX) maxX = kr.right;
+          }
           if (kr.top < minY) minY = kr.top;
-          if (kr.right > maxX) maxX = kr.right;
           if (kr.bottom > maxY) maxY = kr.bottom;
         }
         if (!found) return null;
@@ -17194,7 +17216,7 @@ function renderPlayersList() {
   });
 })();
 
-;(function(){ window.BUILD_VERSION='0.3.720-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.721-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
