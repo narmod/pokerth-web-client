@@ -14111,20 +14111,39 @@ function _maybeShowNextHandBtn() {
         if (a && typeof a === 'object') ['players', 'blind', 'stack', 'timeout'].forEach(function (k) { if (a[k] != null && a[k] !== '') base[k] = a[k]; });
         return base;
       };
+      // Mode entraînement : défauts du jeu LOCAL officiel (configfile.cpp
+      // qt6-qml : StartCash 5000, GameSpeed 4, hausse toutes les 8 mains,
+      // NetTimeOutPlayerAction 20). Aligné QML v0.3.686 (demande Arnaud).
+      if (window._offlineMode) {
+        var baseOffline = {
+          name: _defaultNameForMode(),
+          players: 10,
+          blind: 10,
+          stack: 5000,
+          timeout: 20,
+          raiseEvery: 8,
+          guiSpeed: 4,
+          delayHands: 7,
+          bots: true,
+          minHumans: 2,
+          tag: 'offline',
+        };
+        return skipSaved ? withAdmin(baseOffline) : withSaved(withAdmin(baseOffline));
+      }
       if (isPublic) {
-        // Defaults for pokerth.net (guest + registered). 10 max players
-        // and 3000-stack/blind-10/raise-every-7 follow the desktop
-        // client recommendation, BUT narmod requested a SHORT 5s
-        // turn timer on pokerth.net so public games keep moving (real
-        // strangers, can't afford long thinking turns).
+        // Defaults for pokerth.net (guest + registered) — alignés 1:1 sur le
+        // client QML (configfile.cpp : NetStartCash 3000, NetFirstSmallBlind
+        // 10, NetRaiseSmallBlindEveryHands 8, NetTimeOutPlayerAction 20,
+        // NetDelayBetweenHands 7). Les anciens timeouts courts (5 s public /
+        // 15 s LAN) sont remplacés par le défaut officiel 20 s (v0.3.686).
         var basePublic = {
           name: _defaultNameForMode(),
           players: 10,
           blind: 10,
           stack: 3000,
-          timeout: 5,
-          raiseEvery: 7,
-          guiSpeed: 5,
+          timeout: 20,
+          raiseEvery: 8,
+          guiSpeed: 4,
           delayHands: 7,
           bots: false,
           minHumans: 5,
@@ -14133,19 +14152,17 @@ function _maybeShowNextHandBtn() {
         return skipSaved ? withAdmin(basePublic) : withSaved(withAdmin(basePublic));
       }
       // LAN / private-server profile (covers both the 'lan' login mode
-      // and the 'unauth' private-server-guest mode). 10 max players
-      // like everywhere, but a more relaxed 15s turn timer than the
-      // pokerth.net public profile — narmod wants more thinking time
-      // when playing among friends. Bots default ON so a small group
-      // can start a hand fast.
+      // and the 'unauth' private-server-guest mode). Défauts réseau QML
+      // officiels (3000 / SB 10 / hausse 8 mains / 20 s / délai 7).
+      // Bots default ON so a small group can start a hand fast.
       var baseLan = {
         name: _defaultNameForMode(),
         players: 10,
         blind: 10,
         stack: 3000,
-        timeout: 15,
-        raiseEvery: 7,
-        guiSpeed: 5,
+        timeout: 20,
+        raiseEvery: 8,
+        guiSpeed: 4,
         delayHands: 7,
         bots: true,
         minHumans: 2,
@@ -17156,7 +17173,7 @@ function renderPlayersList() {
   });
 })();
 
-;(function(){ window.BUILD_VERSION='0.3.685-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.686-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
