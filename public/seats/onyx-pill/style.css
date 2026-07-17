@@ -94,7 +94,6 @@ html[data-seat-struct="qml"] .seat-plate {
   --turn-glow-z: 1;          /* le cadre passe SOUS l'avatar débordant */
   --winner-frame-z: 1;
   --seat-bet-gap-r: 32px;    /* la mise s'écarte de l'avatar (droite) */
-  --seat-pucks-top: 135%;    /* pucks SOUS la pilule : jamais sur la mise */
 }
 /* L'avatar complète le contour : anneau or quand au tour / gagnant. */
 html[data-seat-struct="qml"] .seat.active .seat-avatar {
