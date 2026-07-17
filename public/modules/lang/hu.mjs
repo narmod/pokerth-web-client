@@ -708,6 +708,8 @@ export const strings = {
     abAuthRole4:"a felület grafikáinak eredeti tervezése",
     abAuthRole5:"kódmodernizálás, QML-elrendezés",
     abAuthRole6:'a webes kliens fejlesztése',
+    // v0.3.675 : carte Discord compacte sous la card de login
+    discordCardText:'Csatlakozz a közösséghez a Discordon',
     abCred1:"Wikimedia Commons: a különféle népszerű avatarokért",
     abCred2:"Benedikt, Erhard, Felix, Florian, Linus, Lothar, Steffi, Caro: a játékos-avatarokért/arcokért",
     abCred3:"ZeiZei: különféle avatarokért",

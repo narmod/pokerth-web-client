@@ -715,6 +715,8 @@ export const strings = {
     abAuthRole4:"diseño inicial de los gráficos de la interfaz",
     abAuthRole5:"modernización del código, maquetación QML",
     abAuthRole6:'desarrollo del cliente web',
+    // v0.3.675 : carte Discord compacte sous la card de login
+    discordCardText:'Únete a la comunidad en Discord',
     abCred1:"Wikimedia Commons: por sus diversos avatares populares",
     abCred2:"Benedikt, Erhard, Felix, Florian, Linus, Lothar, Steffi, Caro: por los avatares/rostros de jugadores",
     abCred3:"ZeiZei: por diversos avatares",

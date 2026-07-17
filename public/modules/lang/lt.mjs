@@ -709,6 +709,8 @@ export const strings = {
     abAuthRole4:"pradinis sąsajos grafikos dizainas",
     abAuthRole5:"kodo modernizavimas, QML išdėstymas",
     abAuthRole6:'žiniatinklio kliento kūrimas',
+    // v0.3.675 : carte Discord compacte sous la card de login
+    discordCardText:'Prisijunkite prie bendruomenės „Discord“',
     abCred1:"Wikimedia Commons: už įvairius populiarius avatarus",
     abCred2:"Benedikt, Erhard, Felix, Florian, Linus, Lothar, Steffi, Caro: už žaidėjų avatarus/veidus",
     abCred3:"ZeiZei: už įvairius avatarus",

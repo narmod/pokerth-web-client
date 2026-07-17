@@ -707,6 +707,8 @@ export const strings = {
     abAuthRole4:"oprindeligt design af GUI-grafikken",
     abAuthRole5:"kodemodernisering, QML-layout",
     abAuthRole6:'udvikling af webklienten',
+    // v0.3.675 : carte Discord compacte sous la card de login
+    discordCardText:'Bliv en del af fællesskabet på Discord',
     abCred1:"Wikimedia Commons: for deres forskellige populære avatarer",
     abCred2:"Benedikt, Erhard, Felix, Florian, Linus, Lothar, Steffi, Caro: for spilleravatarerne/-ansigterne",
     abCred3:"ZeiZei: for diverse avatarer",

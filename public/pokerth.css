@@ -518,6 +518,28 @@ body {
   box-shadow: 0 12px 40px rgba(0,0,0,0.8);
 }
 
+/* Carte Discord compacte sous la card de login (écran connect uniquement).
+   Même habillage que .card mais sur une ligne ; bord accent Discord au survol. */
+.discord-card {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--modal-bg);
+  border: 1px solid var(--border-hi);
+  border-radius: 4px;
+  padding: 10px 14px;
+  width: min(380px, calc(100vw - 32px));
+  margin-top: 10px;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.8);
+  color: var(--text-hi);
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+}
+.discord-card:hover { border-color: #5865F2; }
+.discord-card .dc-chev { margin-left: auto; opacity: 0.6; font-size: 1.05rem; line-height: 1; }
+
 .card-title {
   font-family: var(--ff-display);
   font-size: 0.7rem;

@@ -711,6 +711,8 @@ export const strings = {
     abAuthRole4:"dealbhadh tùsail grafaigean na h-eadar-aghaidh",
     abAuthRole5:"ùrachadh a' chòd, co-dhealbhachd QML",
     abAuthRole6:'leasachadh a\' chliant-lìn',
+    // v0.3.675 : carte Discord compacte sous la card de login
+    discordCardText:'Gabh pàirt sa choimhearsnachd air Discord',
     abCred1:"Wikimedia Commons: airson nan avataran mòr-chòrdte aca",
     abCred2:"Benedikt, Erhard, Felix, Florian, Linus, Lothar, Steffi, Caro: airson avataran/aodainn nan cluicheadairean",
     abCred3:"ZeiZei: airson caochladh avataran",

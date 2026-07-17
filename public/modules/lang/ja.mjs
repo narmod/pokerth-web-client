@@ -704,6 +704,8 @@ export const strings = {
     abAuthRole4:"GUIグラフィックの初期デザイン",
     abAuthRole5:"コードの近代化、QMLレイアウト",
     abAuthRole6:'ウェブクライアントの開発',
+    // v0.3.675 : carte Discord compacte sous la card de login
+    discordCardText:'Discordコミュニティに参加しよう',
     abCred1:"Wikimedia Commons：人気のある様々なアバターの提供",
     abCred2:"Benedikt、Erhard、Felix、Florian、Linus、Lothar、Steffi、Caro：プレイヤーのアバター/顔の提供",
     abCred3:"ZeiZei：様々なアバターの提供",

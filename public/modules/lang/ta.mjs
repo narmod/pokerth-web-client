@@ -711,6 +711,8 @@ export const strings = {
     abAuthRole4:"இடைமுக வரைகலையின் ஆரம்ப வடிவமைப்பு",
     abAuthRole5:"குறியீடு நவீனமயமாக்கல், QML அமைப்பு",
     abAuthRole6:'வலை கிளையன்ட் மேம்பாடு',
+    // v0.3.675 : carte Discord compacte sous la card de login
+    discordCardText:'Discord-ல் சமூகத்தில் இணையுங்கள்',
     abCred1:"Wikimedia Commons: அவர்களின் பல்வேறு பிரபலமான அவதாரங்களுக்காக",
     abCred2:"Benedikt, Erhard, Felix, Florian, Linus, Lothar, Steffi, Caro: வீரர் அவதாரங்கள்/முகங்களுக்காக",
     abCred3:"ZeiZei: பல்வேறு அவதாரங்களுக்காக",

@@ -704,6 +704,8 @@ export const strings = {
     abAuthRole4:"界面图形的最初设计",
     abAuthRole5:"代码现代化、QML 布局",
     abAuthRole6:'网页客户端开发',
+    // v0.3.675 : carte Discord compacte sous la card de login
+    discordCardText:'加入 Discord 社区',
     abCred1:"Wikimedia Commons：提供各种流行头像",
     abCred2:"Benedikt、Erhard、Felix、Florian、Linus、Lothar、Steffi、Caro：提供玩家头像/面孔",
     abCred3:"ZeiZei：提供各种头像",

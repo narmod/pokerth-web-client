@@ -708,6 +708,8 @@ export const strings = {
     abAuthRole4:"почетни дизајн графике интерфејса",
     abAuthRole5:"модернизација кода, QML распоред",
     abAuthRole6:'развој веб клијента',
+    // v0.3.675 : carte Discord compacte sous la card de login
+    discordCardText:'Придружите се заједници на Discord-у',
     abCred1:"Wikimedia Commons: за њихове разне популарне аватаре",
     abCred2:"Benedikt, Erhard, Felix, Florian, Linus, Lothar, Steffi, Caro: за аватаре/лица играча",
     abCred3:"ZeiZei: за разне аватаре",
