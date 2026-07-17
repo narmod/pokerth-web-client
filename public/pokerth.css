@@ -9123,24 +9123,22 @@ html[data-seat-struct="qml"] .seat:not(.me) .seat-narrow .seat-holecards .pk { w
 #range-modal .range-close:hover{color:var(--gold)}
 #range-modal .range-body{overflow:auto;padding:10px 12px}
 #range-modal .range-legend{padding:6px 12px 9px;color:var(--text);opacity:.7;font-size:0.62rem;border-top:1px solid var(--border)}
-/* Panneau détaillé d'un joueur (tap sur une boîte HUD). */
-#hud-detail-modal{position:fixed;inset:0;z-index:62;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.6);padding:16px}
-#hud-detail-modal .hud-detail-card{background:var(--panel-hi);border:1px solid var(--border);border-radius:12px;box-shadow:0 12px 40px rgba(0,0,0,.55);width:min(92vw,320px);max-height:90vh;display:flex;flex-direction:column;overflow:hidden}
-#hud-detail-modal .hud-detail-head{display:flex;align-items:center;gap:10px;padding:10px 13px 4px}
-#hud-detail-modal .hud-detail-name{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--gold);font-weight:700;font-size:1rem}
-#hud-detail-modal .hud-detail-close{background:none;border:none;color:var(--text);cursor:pointer;font-size:1rem;padding:0 4px}
-#hud-detail-modal .hud-detail-close:hover{color:var(--gold)}
-#hud-detail-modal .hud-detail-sub{padding:0 13px 8px;color:var(--text);font-size:0.68rem;opacity:.8;border-bottom:1px solid var(--border)}
-#hud-detail-modal .hud-detail-body{padding:8px 13px;overflow:auto;display:grid;grid-template-columns:1fr 1fr;gap:3px 16px}
-#hud-detail-modal .hud-detail-row{display:flex;align-items:baseline;justify-content:space-between;gap:8px;padding:3px 0;border-bottom:1px solid rgba(255,255,255,.05)}
-#hud-detail-modal .hud-detail-lbl{color:var(--text);font-size:0.72rem}
-#hud-detail-modal .hud-detail-val{color:var(--text-hi);font-weight:700;font-variant-numeric:tabular-nums;font-size:0.82rem}
-#hud-detail-modal .hud-detail-foot{padding:9px 13px 12px;border-top:1px solid var(--border);display:flex;justify-content:flex-end}
-#hud-detail-modal .hud-detail-range{background:rgba(var(--gold-rgb),.14);border:1px solid var(--border-hi);color:var(--gold);font-size:0.72rem;letter-spacing:.03em;padding:5px 12px;border-radius:7px;cursor:pointer}
-#hud-detail-modal .hud-detail-range:hover{background:rgba(var(--gold-rgb),.22)}
-@media (max-width:400px){
-  #hud-detail-modal .hud-detail-body{grid-template-columns:1fr}
-}
+/* Panneau détaillé d'un joueur : prolongement de la boîte HUD (popover ancré,
+   dans #hud-layer). S'ouvre au-dessus/en dessous selon la position du siège. */
+#hud-detail{position:absolute;z-index:9;pointer-events:auto;width:190px;max-width:72vw;
+  background:var(--panel-hi);border:1px solid var(--border-hi);border-radius:9px;
+  box-shadow:0 8px 26px rgba(0,0,0,.55);backdrop-filter:blur(4px);padding:6px 8px 7px;
+  font-size:11px;line-height:1.3;animation:hud-d-in .12s ease-out}
+@keyframes hud-d-in{from{opacity:0;transform:translateY(-3px)}to{opacity:1;transform:none}}
+#hud-detail .hud-d-head{display:flex;align-items:baseline;gap:8px;margin-bottom:4px;padding-bottom:4px;border-bottom:1px solid var(--border)}
+#hud-detail .hud-d-name{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--gold);font-weight:700;font-size:0.82rem}
+#hud-detail .hud-d-hands{color:var(--text);font-size:0.62rem;opacity:.8;font-variant-numeric:tabular-nums;flex-shrink:0}
+#hud-detail .hud-d-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px 12px}
+#hud-detail .hud-d-row{display:flex;align-items:baseline;justify-content:space-between;gap:6px;padding:1px 0}
+#hud-detail .hud-d-lbl{color:var(--text);font-size:0.68rem;opacity:.85}
+#hud-detail .hud-d-val{color:var(--text-hi);font-weight:700;font-variant-numeric:tabular-nums;font-size:0.72rem}
+#hud-detail .hud-d-range{margin-top:6px;width:100%;background:rgba(var(--gold-rgb),.14);border:1px solid var(--border-hi);color:var(--gold);font-size:0.68rem;letter-spacing:.03em;padding:4px 8px;border-radius:6px;cursor:pointer}
+#hud-detail .hud-d-range:hover{background:rgba(var(--gold-rgb),.22)}
 .range-grid{border-collapse:separate;border-spacing:2px;margin:0 auto}
 .range-grid td{width:38px;height:34px;text-align:center;vertical-align:middle;border-radius:4px;
   background:var(--field-bg);color:var(--text);font-size:9px;line-height:1.05;position:relative}

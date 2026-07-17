@@ -1298,7 +1298,7 @@ function _buildBox(pid, name, layer) {
     box = document.createElement('div');
     box.id = id;
     box.className = 'hud-box';
-    box.addEventListener('click', (e) => { e.stopPropagation(); openHudDetail(name); });
+    box.addEventListener('click', (e) => { e.stopPropagation(); openHudDetail(name, box); });
     layer.appendChild(box);
   }
   const handsTxt = s ? _hudFmt('hands', s.hands) : '0';
@@ -1400,11 +1400,15 @@ function repositionHud() {
   const layer = document.getElementById('hud-layer');
   if (!layer) return;
   Array.from(layer.children).forEach((box) => {
+    if (box.id === 'hud-detail') return; // le popover est repositionné à part
     const pid = box.id.replace('hud-box-', '');
     const seatEl = document.querySelector('#g-seats [data-pid="' + pid + '"]');
     if (seatEl) _positionBox(box, seatEl, layer);
     else box.style.display = 'none';
   });
+  // Faire suivre le popover détaillé s'il est ouvert.
+  const pop = document.getElementById('hud-detail');
+  if (pop && pop.style.display !== 'none' && pop._forBox) _positionDetail(pop);
 }
 if (typeof window !== 'undefined') window._hudReposition = repositionHud;
 
@@ -1423,7 +1427,7 @@ function renderHud() {
     seen.add('hud-box-' + p.pid);
     _buildBox(p.pid, p.name, lay);
   });
-  Array.from(lay.children).forEach((c) => { if (!seen.has(c.id)) lay.removeChild(c); });
+  Array.from(lay.children).forEach((c) => { if (c.id !== 'hud-detail' && !seen.has(c.id)) lay.removeChild(c); });
   // Positionner après le rendu des sièges (renderSeats est throttlé à la frame).
   _scheduleReposition();
   _ensureHudObservers();
@@ -1475,16 +1479,17 @@ async function refreshHud() {
 if (typeof window !== 'undefined') window._hudRefresh = refreshHud;
 
 // ── Panneau détaillé d'un joueur (tap sur une boîte HUD) ────────────────────
-// Toutes les stats colorées + bouton vers la grille de range. Fonctionne sur
-// tous les écrans (modale centrée, thème client).
+// Se déroule comme un PROLONGEMENT de la boîte : ancré à celle-ci, il s'ouvre
+// EN DESSOUS pour les joueurs du haut, AU-DESSUS pour ceux du bas (selon la
+// position du siège) → jamais hors écran. Toutes les stats colorées + range.
 const _DETAIL_ROWS = [
   ['vpip', 'VPIP', 'Voluntarily Put $ In Pot'],
   ['pfr', 'PFR', 'Pre-Flop Raise'],
   ['af', 'AF', 'Aggression Factor'],
   ['three_bet', '3-Bet', '3-Bet %'],
   ['cbet', 'C-Bet', 'Continuation Bet %'],
-  ['fold_to_3bet', 'Fold to 3B', 'Fold to 3-Bet %'],
-  ['fold_to_cbet', 'Fold to CB', 'Fold to C-Bet %'],
+  ['fold_to_3bet', 'Fold 3B', 'Fold to 3-Bet %'],
+  ['fold_to_cbet', 'Fold CB', 'Fold to C-Bet %'],
   ['wtsd', 'WTSD', 'Went To Showdown %'],
   ['wsd', 'W$SD', 'Won $ at Showdown %'],
 ];
@@ -1493,42 +1498,77 @@ function _detailFmt(id, v) {
   if (id === 'af') return v === 'inf' ? '∞' : String(v);
   return v + '%';
 }
-function openHudDetail(name) {
-  if (typeof document === 'undefined') return;
-  let modal = document.getElementById('hud-detail-modal');
-  if (!modal) {
-    modal = document.createElement('div');
-    modal.id = 'hud-detail-modal';
-    modal.innerHTML = '<div class="hud-detail-card"><div class="hud-detail-head">'
-      + '<span class="hud-detail-name"></span>'
-      + '<button type="button" class="hud-detail-close" title="Fermer">✕</button></div>'
-      + '<div class="hud-detail-sub"></div>'
-      + '<div class="hud-detail-body"></div>'
-      + '<div class="hud-detail-foot"><button type="button" class="hud-detail-range">Voir la range ▸</button></div></div>';
-    document.body.appendChild(modal);
-    modal.addEventListener('click', (e) => { if (e.target === modal) modal.style.display = 'none'; });
-    modal.querySelector('.hud-detail-close').addEventListener('click', () => { modal.style.display = 'none'; });
-    modal.querySelector('.hud-detail-range').addEventListener('click', () => {
-      modal.style.display = 'none';
-      openRangeGrid(modal._player);
-    });
-  }
-  modal._player = name;
+function _ensureDetail() {
+  let pop = document.getElementById('hud-detail');
+  const layer = _ensureLayer();
+  if (!pop) {
+    pop = document.createElement('div');
+    pop.id = 'hud-detail';
+    pop.style.display = 'none';
+    layer.appendChild(pop);
+    // Fermeture au tap en dehors (boîtes ont stopPropagation, donc un tap
+    // ailleurs ferme ; un tap sur une autre boîte ré-ouvre pour elle).
+    if (typeof document !== 'undefined' && !_detailOutsideBound) {
+      _detailOutsideBound = true;
+      document.addEventListener('click', (e) => {
+        const p = document.getElementById('hud-detail');
+        if (p && p.style.display !== 'none' && !p.contains(e.target)) _closeDetail();
+      });
+    }
+  } else if (pop.parentNode !== layer) layer.appendChild(pop);
+  return pop;
+}
+let _detailOutsideBound = false;
+function _closeDetail() { const p = document.getElementById('hud-detail'); if (p) { p.style.display = 'none'; p._forBox = null; } }
+
+function openHudDetail(name, boxEl) {
+  if (typeof document === 'undefined' || !boxEl) return;
+  const pop = _ensureDetail();
+  // Toggle : re-tap sur la même boîte → ferme.
+  if (pop.style.display !== 'none' && pop._forBox === boxEl) { _closeDetail(); return; }
+  pop._forBox = boxEl;
+  pop._player = name;
   const s = _statsCache[name];
-  modal.querySelector('.hud-detail-name').textContent = name;
-  modal.querySelector('.hud-detail-sub').textContent = s ? (s.hands + ' main' + (s.hands === 1 ? '' : 's')) : 'aucune donnée';
   let rows = '';
   for (const [id, lbl, title] of _DETAIL_ROWS) {
     const val = s ? _detailFmt(id, s[id]) : '–';
     const col = s ? statColor(id, s[id]) : '';
-    rows += '<div class="hud-detail-row" title="' + _hudEsc(title) + '">'
-      + '<span class="hud-detail-lbl">' + lbl + '</span>'
-      + '<span class="hud-detail-val"' + (col ? ' style="color:' + col + '"' : '') + '>' + val + '</span></div>';
+    rows += '<div class="hud-d-row" title="' + _hudEsc(title) + '">'
+      + '<span class="hud-d-lbl">' + lbl + '</span>'
+      + '<span class="hud-d-val"' + (col ? ' style="color:' + col + '"' : '') + '>' + val + '</span></div>';
   }
-  modal.querySelector('.hud-detail-body').innerHTML = rows;
-  modal.style.display = 'flex';
+  pop.innerHTML = '<div class="hud-d-head"><span class="hud-d-name">' + _hudEsc(name) + '</span>'
+    + '<span class="hud-d-hands">' + (s ? (s.hands + ' main' + (s.hands === 1 ? '' : 's')) : '—') + '</span></div>'
+    + '<div class="hud-d-grid">' + rows + '</div>'
+    + '<button type="button" class="hud-d-range">Voir la range ▸</button>';
+  pop.querySelector('.hud-d-range').addEventListener('click', (e) => {
+    e.stopPropagation(); const p = pop._player; _closeDetail(); openRangeGrid(p);
+  });
+  pop.style.display = 'block';
+  _positionDetail(pop);
 }
 if (typeof window !== 'undefined') window._openHudDetail = openHudDetail;
+
+// Positionne le popover comme un prolongement de la boîte : sous la boîte si le
+// siège est dans la moitié haute de la table, au-dessus sinon.
+function _positionDetail(pop) {
+  const layer = document.getElementById('hud-layer');
+  const box = pop && pop._forBox;
+  if (!layer || !box) return;
+  const lr = layer.getBoundingClientRect();
+  const br = box.getBoundingClientRect();
+  const bx = br.left - lr.left, by = br.top - lr.top;
+  const pw = pop.offsetWidth || 190, ph = pop.offsetHeight || 150;
+  const gap = 3;
+  const boxMidY = by + br.height / 2;
+  const below = boxMidY < lr.height / 2; // boîte en haut → dérouler en dessous
+  let left = bx + br.width / 2 - pw / 2;
+  left = Math.max(2, Math.min(left, lr.width - pw - 2));
+  let top = below ? (by + br.height + gap) : (by - ph - gap);
+  top = Math.max(2, Math.min(top, lr.height - ph - 2));
+  pop.style.left = left + 'px';
+  pop.style.top = top + 'px';
+}
 
 // ── Grille de range 13×13 ───────────────────────────────────────────────────
 function openRangeGrid(name, posFilter, playersFilter) {
