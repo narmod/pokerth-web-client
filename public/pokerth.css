@@ -5736,12 +5736,13 @@ html[data-table="pokerth-live"] .raise-slider { accent-color: #4CAF50; }
 /* Icône Discord au-dessus de la ligne de crédits (pied de page classique). */
 .cf-discord {
   display: inline-flex;
-  color: var(--text-hi);
-  opacity: 0.7;
+  color: #5865F2; /* blurple officiel Discord */
+  opacity: 0.9;
   margin-bottom: 4px;
+  filter: drop-shadow(0 1px 3px rgba(0,0,0,0.8));
   transition: opacity 0.2s, color 0.2s;
 }
-.cf-discord:hover { opacity: 1; color: #5865F2; }
+.cf-discord:hover { opacity: 1; color: #6a76f5; }
 
 .connect-footer-line {
   margin: 1px 0;
