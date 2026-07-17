@@ -1,0 +1,19 @@
+{
+  "name": "Boardwalk",
+  "by": "PokerTH Development Team",
+  "swatch": "#191b1e",
+  "traits": {
+    "holePlate": true,
+    "betOut": true,
+    "pucksSide": true,
+    "flagInfo": false,
+    "timerRect": false,
+    "winnerBadge": true,
+    "selfStrip": true,
+    "selfBigCards": true,
+    "badgeOnCards": false,
+    "qmlSelf": true,
+    "narrowByOrient": true,
+    "qmlStruct": true
+  }
+}
