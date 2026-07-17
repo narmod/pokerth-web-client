@@ -37,6 +37,7 @@ html[data-seat-struct="qml"] .seat-avatar {
   left: 2px !important; right: auto !important;      /* avatar à GAUCHE */
   transform: none !important;
   width: 50px !important; height: 50px !important;
+  max-width: 50px !important; max-height: 50px !important;
   border: 2px solid #0d0d0f !important; border-radius: 50%;
   background: #101114;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.6);
@@ -94,6 +95,11 @@ html[data-seat-struct="qml"] .seat-foot .seat-action-badge.act-c3 { background: 
 html[data-seat-struct="qml"] .seat-foot .seat-action-badge.act-c4,
 html[data-seat-struct="qml"] .seat-foot .seat-action-badge.act-c5 { background: #fb8c00; } /* Bet / Raise  */
 html[data-seat-struct="qml"] .seat-foot .seat-action-badge.act-c6 { background: #e53935; } /* All-In */
+/* Self : le bandeau sous la barre serait caché par la barre d'action du jeu
+   -> il se superpose au BAS de la barre du héros (toujours visible). */
+html[data-seat-struct="qml"] .seat.me .seat-foot .seat-action-badge {
+  top: auto; bottom: 0; border-radius: 0 0 5px 5px; z-index: 6;
+}
 
 /* ── États ─────────────────────────────────────────────────────────────── */
 html[data-seat-struct="qml"] .seat.active .seat-avatar {
@@ -114,16 +120,17 @@ html[data-seat-struct="qml"] .seat.me .seat-plate {
 }
 html[data-seat-struct="qml"] .seat.me .seat-avatar {
   width: 58px !important; height: 58px !important;
+  max-width: 58px !important; max-height: 58px !important;
   bottom: calc(100% + 2px) !important;
-  left: 2px !important;
+  left: 2px !important; z-index: 2;
 }
 html[data-seat-struct="qml"] .seat.me .seat-holecards,
 html[data-seat-struct="qml"] .seat.me .seat-holecards.shc-big {
-  bottom: calc(100% + 3px); left: 68px !important;
+  bottom: calc(100% + 3px); left: 80px !important;   /* bien dégagées de l'avatar */
   transform: rotate(7deg) !important; z-index: 3;
 }
 html[data-seat-struct="qml"] .seat.me .seat-holecards .pk,
 html[data-seat-struct="qml"] .seat.me .seat-holecards.shc-big .pk {
-  width: 40px !important; height: 56px !important; font-size: 0.86rem;
+  width: 38px !important; height: 53px !important; font-size: 0.84rem;
 }
 html[data-seat-struct="qml"] .seat.me .seat-holecards .pk + .pk { margin-left: -14px; }
