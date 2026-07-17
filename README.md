@@ -33,7 +33,7 @@
 - 🏋️ **Offline training vs bots** — no server, proxy or connection required
 - 🔌 **Any PokerTH server** — including the public **pokerth.net**
 - 🃏 **Full Texas Hold'em** — flying card deals, sliding chips, 3D card flips, emoji reactions, in-game chat and a hand log
-- 🎨 **Deep theming** — mix palette × felt × deck × buttons × pucks × seats
+- 🎨 **Deep theming** — a QML-style styles window: table felt × card deck × card back × seats (buttons & pucks follow the table style)
 - ☁️ **Settings that follow you** — sign in with a registered account on your dedicated server and **every** option syncs automatically across your devices: the official settings travel as a standard PokerTH `config.xml`, and the web-only extras (theme, seats, keyboard, voice…) as a separate blob — on by default, one tap to turn off
 - 🌍 **36 languages**
 - 🤝 **Tracks the official QML client** — F-key shortcuts, admin tools, sounds, full chat and more, kept in sync as the official client evolves (currently the 2.1.3 build)
@@ -217,8 +217,8 @@ This project is a **web frontend** that connects to any PokerTH server directly 
 
 ### Poker table
 - Seats positioned according to server order, **locked after the first deal** (no mid-game layout jumps)
-- **Responsive seat layout** — on phones and tablets the seats tighten around the felt so players stay close to the table; desktop keeps the wider layout. Portrait offers four seat renderings — automatic ring, official fixed slots, elliptical "necklace", and a free drag-and-drop custom layout — with seat geometry tuned to the official 2.1.3 client (self-weight 0.5, fill-cap 1.9 / 2.3)
-- **Table zoom** (desktop) — **+ / −** buttons by the table shrink the felt, community cards and opponents together (down to 60 %) or restore them up to the current size, while your own player bar and the action bar stay fixed; the level is remembered
+- **Responsive seat layout** — on phones and tablets the seats tighten around the felt so players stay close to the table; desktop keeps the wider layout. Portrait offers four seat renderings — automatic ring, official fixed slots, elliptical "necklace", and a free drag-and-drop custom layout — with seat geometry tuned to the official 2.1.3 client (self-weight 0.3 wide / 0.5 compact, fill-cap 1.9 / 2.3)
+- **Table zoom** — the base layout is always the faithful QML bisection (zoom 1); zoom is a uniform magnifier layered on top. On desktop, **+ / −** buttons enlarge or shrink the felt, community cards and opponents together (your own bar and the action bar stay put, the level is remembered, and the maximum is capped so the whole table stays on screen). On touch phones a **loupe button** toggles the official ×2 magnifier (QML `zoomLayer` parity): pan with a finger, auto-follow of the active seat, and automatic zoom-out at showdown
 - Casino-style chip tokens: SB 🔵, BB 🔴, Dealer ⚫ gold — with `chipPop` animation
 - SVG arc timer around the active player's avatar + seconds badge below
 - **Card deal animation**: cards fly from the centre to each seat at the start of every hand
@@ -243,15 +243,17 @@ Plus a full **Advanced options** panel (sectioned: cards, betting, table, seats,
 **Account sync** ☁️ — with a **registered login**, all your settings automatically sync to your account and follow you across devices. Two blobs travel together: every option with an official PokerTH key syncs as the exact same `config.xml` as the manual export/import (fully interoperable with the official clients), while the web-only settings — web theme, action-button / puck / seat styles, custom seat placement, keyboard shortcuts, language, voice & vibration, assistance, BB display, offline bot level, ignore list and more — sync as a separate JSON blob that never touches the official file. Both are stored on the proxy server only after the PokerTH server has verified your SCRAM login — guests never sync. **Scope:** sync works for registered accounts on servers reached *through the proxy* (your dedicated / self-hosted server). The **🌐 Internet** choice connects straight to `wss://www.pokerth.net` and bypasses the proxy entirely, so pokerth.net accounts don't sync — by design, your pokerth.net password and traffic never touch the proxy. Simultaneous logins are not a concern either: the PokerTH server itself refuses a second connection with a name already in use. Writes are debounced, deduplicated, rate-limited and atomic. Enabled by default; opt out anytime in the options.
 
 ### Themes & customization
-A full appearance system, reached from the **Theme** button — pick a one-tap preset or fine-tune every axis yourself:
-- **Presets** (one tap): **PokerTH Dark** (the default, reproducing the official client's look), **PokerTH Light**, and **Green Casino** — plus any gallery themes installed by the operator
-- **Customize** — six independent axes, each remembered in `localStorage`: UI **palette** (Dark / Light), **table felt** (a dozen styles: PokerTH, Spectator Tools, Green Casino, Danuxi Blue, Mute, Mute 02, Teal, Lemming, Matrix, TripSixes, Wanted, Xanax — each carrying its own pucks and button skins, like the official `StyleProvider`), **card deck** (four built-in — PokerTH, PokerTH 1.0, **PokerTH Royal Classic** (the default — the official QML client's own deck), Green Casino — plus the official PokerTH decks in the gallery), **action buttons** (Auto / Flat / Glossy / PokerTH), **chip pucks** (Auto / PokerTH / Casino), and **seat style**
+A full appearance system, reached from the **Theme** button — a styles window modelled on the official client's *Style* settings, with four tabs (each choice remembered in `localStorage`):
+- **Table** — 13 table styles listed with a large preview, name and author, exactly like the official QML style picker: PokerTH (default), Spectator Tools, Green Casino, Danuxi Blue, Mute, Mute 02, Teal, Lemming, Matrix, Star Trek, TripSixes, Wanted, Xanax. Like the official `StyleProvider`, each table style carries its own felt, pucks and action-button skins — buttons and pucks are no longer separate axes
+- **Cards** — four built-in decks (PokerTH, PokerTH 1.0, **PokerTH Royal Classic** — the default, the official QML client's own deck — and Green Casino) plus the official PokerTH decks in the gallery
+- **Card back** — its own axis, independent from the deck, with an *Import an image…* option
+- **UI palette** (Dark / Light / Auto) follows the official *Dark Mode* setting in the Advanced options, matching the QML client
 - **Seat styles** — eight theme-aware seat "packs", switchable like decks: **PokerTH landscape** and **PokerTH portrait** (faithful renders of the official QML player boxes), **Classic** (the historical render), **Chip**, **Plate**, **Card**, **Compact**, and **Bar**. Pack names stay in English across all languages (like the poker terms). The default is the PokerTH pack matching the screen orientation, and an **orientation-sync option** (on by default) swaps portrait ↔ landscape automatically as you rotate; any explicit choice is saved in `localStorage` and always wins
 - **Light & dark aware**: every theme carries its own `color-scheme`, and the browser status-bar `theme-color` follows the active theme
 - **Glossy coloured action buttons** (Fold red / Check-Call blue / Raise green / All-In orange) and a live preview of each card deck right in the panel
 - Fully **localized in all 36 languages** and switchable instantly, with no reload
 - **Official accent** — gold uses PokerTH's QML accent `#E3C800`, kept only for deliberate game assets (dealer button, chip denominations, win bursts)
-- **Import a style** — add a table, card deck or card-back from a `.zip` or URL (parses the four 2.1.3 style keys)
+- **Import a style** — add a table or card deck from a local `.zip` (parses the official 2.1.3 style keys), or a custom card-back image
 - Operators can set a **default theme** for first-time visitors (see [the admin panel](#admin-panel))
 
 ### Player experience
@@ -299,7 +301,7 @@ the work since has been fidelity tuning against the newer **2.1.3** build:
 - **Game status bar**: hand number, game ID, total pot with the current round's bets on
   their own line, and a live players-remaining count
 - **Winning-hand badge** under the community cards at showdown, and **zoom-follow**
-  (opt-in, mobile) — the table view auto-pans to the active seat and steps back out to
+  (mobile, on by default — official `tableZoomEnabled` switch) — the table view auto-pans to the active seat and steps back out to
   the full table at showdown
 - **Full chat**: Tab nickname-completion with cycling, ↑ / ↓ message history, and a
   1,000+ emoji picker (frequent + full grid) alongside the original 30 reaction emoji
@@ -322,7 +324,7 @@ the work since has been fidelity tuning against the newer **2.1.3** build:
   - App chrome matched to the official client — a unified header banner across the connect,
     lobby and in-game screens (topBar height 38 px, 30 px in landscape-compact) with
     frameless monochrome SVG icons and floating drop-down menus
-  - Seat geometry tuned to 2.1.3 (self-weight 0.5, fill-cap 1.9 / 2.3)
+  - Seat geometry tuned to 2.1.3 (self-weight 0.3 wide / 0.5 compact, fill-cap 1.9 / 2.3)
 
 ### PWA
 - `manifest.json` + Service Worker (`sw.js`) with a versioned **network-first** cache; the app shell is **precached asset by asset (with retries)** on install, so a network hiccup can't leave the offline cache incomplete
