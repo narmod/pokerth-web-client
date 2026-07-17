@@ -3,53 +3,77 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Privacy Policy — PokerTH Web Client</title>
+<title>Privacy — PokerTH Web Client</title>
 <style>
-  :root { color-scheme: dark; }
-  body { margin:0; background:#1d222b; color:#cdd3e0; font:16px/1.6 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif; }
-  .wrap { max-width:760px; margin:0 auto; padding:32px 20px 64px; }
-  h1 { color:#eff1f5; font-size:1.6rem; margin:0 0 4px; }
-  h2 { color:#eff1f5; font-size:1.1rem; margin:28px 0 8px; }
-  a { color:#E3C800; }
-  .muted { color:#a0acc4; font-size:.9rem; }
-  .note { background:rgba(227,200,0,.08); border:1px solid rgba(227,200,0,.3); border-radius:8px; padding:12px 14px; margin:20px 0; font-size:.9rem; color:#eff1f5; }
-  ul { padding-left:20px; } li { margin:4px 0; }
-  .back { display:inline-block; margin-top:28px; }
+  /* Palette QML officielle (config/Theme.qml, mode sombre) */
+  :root {
+    color-scheme: dark;
+    --col700:#1d222b; --col600:#394150; --col500:#576378;
+    --col300:#a0acc4; --col200:#cdd3e0; --col100:#eff1f5;
+    --accent:#E3C800; --accent-dim:#b09a00; --red:#c0392b;
+  }
+  body { margin:0; background:var(--col700); color:var(--col200);
+         font:16px/1.65 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif; }
+  .wrap { max-width:720px; margin:0 auto; padding:28px 18px 56px; }
+  header { text-align:center; margin-bottom:26px; }
+  header img { width:64px; height:64px; }
+  .title { color:var(--col100); font-size:1.5rem; font-weight:700;
+           letter-spacing:0.14em; margin-top:8px; }
+  .suits { font-size:0.95rem; letter-spacing:0.3em; margin-top:6px; color:var(--col200); }
+  .suits .r { color:var(--red); }
+  .sub { color:var(--col300); font-size:0.68rem; letter-spacing:0.32em;
+         text-transform:uppercase; margin-top:6px; }
+  .updated { color:var(--col300); font-size:0.85rem; text-align:center; margin:0 0 24px; }
+  h2 { color:var(--col100); font-size:1.05rem; margin:26px 0 8px;
+       padding-top:18px; border-top:1px solid var(--col500); }
+  h2:first-of-type { border-top:0; padding-top:0; }
+  a { color:var(--accent); }
+  a:hover { color:var(--accent-dim); }
+  ul { padding-left:20px; } li { margin:5px 0; }
+  strong { color:var(--col100); font-weight:600; }
+  .back { display:inline-block; margin-top:30px; color:var(--accent);
+          text-decoration:none; font-weight:600; }
 </style>
 </head>
 <body>
 <div class="wrap">
-  <h1>Privacy Policy</h1>
-  <p class="muted">PokerTH Web Client — last updated [DATE]</p>
+  <header>
+    <img src="/favicon.svg" alt="PokerTH">
+    <div class="title">PokerTH</div>
+    <div class="suits"><span>&spades;</span> <span class="r">&hearts;</span> <span class="r">&diams;</span> <span>&clubs;</span></div>
+    <div class="sub">Web Client &mdash; Privacy</div>
+  </header>
+  <p class="updated">Last updated: July 17, 2026</p>
 
-  <div class="note"><strong>Template to complete.</strong> Replace the bracketed placeholders ([OPERATOR], [CONTACT], [DATE], [JURISDICTION]) and have it reviewed before publishing. This is not legal advice.</div>
+  <h2>Who runs this</h2>
+  <p>The PokerTH Web Client is a <strong>free and open-source hobby project</strong>, maintained by an individual &mdash; Arnaud Obscur (&ldquo;narmod&rdquo;) &mdash; in collaboration with the <a href="https://www.pokerth.net" target="_blank" rel="noopener noreferrer">PokerTH project</a>. It is not a company and has no commercial purpose: no ads, no sale of data, no advertising profiling, no third-party trackers.</p>
 
-  <p>This policy explains what data the PokerTH Web Client (the &ldquo;App&rdquo;), operated by [OPERATOR], collects and why. The App lets you play PokerTH in your browser. We aim to collect as little as possible.</p>
+  <h2>What stays in your browser</h2>
+  <p>Your settings (theme, language, table styles, sound options&hellip;) are stored <strong>locally in your browser</strong> and never leave your device. You can clear them at any time from your browser settings.</p>
 
-  <h2>What we collect</h2>
+  <h2>What the server sees</h2>
   <ul>
-    <li><strong>Anonymous usage statistics.</strong> We count page visits and store a random identifier in your browser to count distinct devices, connections per server, and whether a visit comes from a new or returning device. These statistics contain <strong>no name and no IP address</strong>.</li>
-    <li><strong>Local preferences.</strong> Your settings (theme, language, options) and the anonymous identifier are stored in your browser&rsquo;s local storage. Only the anonymous identifier leaves your device, solely to produce the anonymous counts above.</li>
-    <li><strong>Leaderboard.</strong> If you play on a ranked server, the nickname you choose and your game results are recorded to display rankings.</li>
-    <li><strong>Technical data.</strong> Like any web service, our server receives connection data (including your IP address) needed to deliver and secure the App. It is used only to operate and protect the service, never to build advertising profiles.</li>
+    <li><strong>Anonymous visit counters.</strong> A random identifier stored in your browser is used to count distinct devices and visits. These statistics contain <strong>no name and no IP address</strong> and are deleted after about 13 months.</li>
+    <li><strong>Technical connection data.</strong> Like any web server, this one receives the connection data (including your IP address) needed to deliver and protect the service. It is used for nothing else.</li>
+    <li><strong>Game data.</strong> If you play on a ranked server, the nickname you choose and your game results are recorded to display the leaderboard.</li>
   </ul>
 
-  <h2>Why we use it (legal basis)</h2>
-  <p>We process this data under our <strong>legitimate interest</strong> in operating, securing and improving the App and in showing game rankings. The usage statistics are anonymous and aggregated.</p>
+  <h2>Third-party services</h2>
+  <p>When you connect to <strong>pokerth.net</strong> (or any other game server), you are using a service operated independently of this web client, with its own rules. This page only covers the web client and the server that hosts it.</p>
 
-  <h2>Sharing</h2>
-  <p>We do <strong>not</strong> show ads, sell your data, or use third-party advertising trackers. When you connect to <strong>pokerth.net</strong>, you also use the official PokerTH service, which is operated independently and has its own terms.</p>
+  <h2>Free software &mdash; AGPL-3.0</h2>
+  <p>The entire client is free software, released under the <strong>GNU AGPL v3</strong> license. You can read the source code, verify what it does, host your own copy, and modify it:</p>
+  <ul>
+    <li>Source code &mdash; <a href="https://github.com/narmod/pokerth-web-client" target="_blank" rel="noopener noreferrer">github.com/narmod/pokerth-web-client</a></li>
+    <li>License &mdash; <a href="https://github.com/narmod/pokerth-web-client/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">AGPL-3.0 &mdash; pokerth-web-client</a></li>
+    <li>GNU licenses &mdash; <a href="https://www.gnu.org/licenses/" target="_blank" rel="noopener noreferrer">gnu.org/licenses</a></li>
+  </ul>
+  <p>PokerTH itself is released under the GNU GPL license.</p>
 
-  <h2>Retention</h2>
-  <p>Anonymous statistics are kept for about 13 months and then removed. You can clear the locally stored data at any time from your browser settings.</p>
+  <h2>Your rights &amp; contact</h2>
+  <p>Under the GDPR you may request access to, correction of, or deletion of data concerning you (for example a leaderboard entry). As this is a community project, the simplest way to reach the maintainer is to open an issue on <a href="https://github.com/narmod/pokerth-web-client/issues" target="_blank" rel="noopener noreferrer">GitHub</a>.</p>
 
-  <h2>Your rights</h2>
-  <p>Under the GDPR you may request access to, correction of, or deletion of your personal data (for example your leaderboard entry), and you may object to its processing. To make a request, contact <a href="mailto:[CONTACT]">[CONTACT]</a>.</p>
-
-  <h2>Contact</h2>
-  <p>[OPERATOR] &mdash; <a href="mailto:[CONTACT]">[CONTACT]</a>. Governing law: [JURISDICTION].</p>
-
-  <a class="back" href="/">&larr; Back to the App</a>
+  <a class="back" href="/">&larr; Back to the game</a>
 </div>
 </body>
 </html>
