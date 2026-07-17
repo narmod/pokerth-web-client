@@ -239,7 +239,9 @@ class HandRecorder {
   // results : Array de { pid, card1, card2, won(cash gagné), handText?, handInt? }
   // Le protocole ne fournit pas handText/handInt : on peut les remplir via
   // evaluateBestHand côté appelant si souhaité (facultatif — NULL sinon).
-  onShowdown(results) {
+  // eliminated : Array de pid dont le stack final = 0 (nouvellement éliminés).
+  // gameOverPid : pid du gagnant de la partie si elle se termine (sinon null).
+  onShowdown(results, eliminated, gameOverPid) {
     if (!this._curHand) return;
     this._round = BERO.showdown;
 
@@ -259,48 +261,74 @@ class HandRecorder {
       }
     });
 
-    // Gagnants en BeRo=4. Le client officiel logge les side pots d'abord
-    // (`wins (side pot)`) puis le pot PRINCIPAL en dernier (`wins`) — et les
-    // outils de stats prennent la 1re ligne `wins` comme gagnant du showdown.
-    // Le protocole web ne distingue pas main/side pot : on reproduit la règle
-    // en traitant le plus gros gain comme le pot principal, le reste en side.
+    this._emitWinners(results);
+    this._emitEndOfHand(eliminated, gameOverPid);
+    this._closeHand();
+  }
+
+  // Gagnants en BeRo=4. Le client officiel logge les side pots d'abord
+  // (`wins (side pot)`) puis le pot PRINCIPAL en dernier (`wins`) — les outils
+  // de stats prennent la 1re ligne `wins` comme gagnant du showdown. Le
+  // protocole web ne distingue pas main/side pot : on traite le plus gros
+  // gain comme le pot principal, le reste en side.
+  _emitWinners(results) {
     const winners = (results || [])
       .filter((r) => r.won > 0 && this._seatOfPid[r.pid] != null)
       .map((r) => ({ seat: this._seatOfPid[r.pid], won: r.won | 0 }));
     if (winners.length === 1) {
       this._pushAction(winners[0].seat, 'wins', winners[0].won);
     } else if (winners.length > 1) {
-      // Gain max = pot principal (émis en dernier avec 'wins').
       let mainIdx = 0;
       for (let i = 1; i < winners.length; i++) if (winners[i].won > winners[mainIdx].won) mainIdx = i;
       winners.forEach((w, i) => { if (i !== mainIdx) this._pushAction(w.seat, 'wins (side pot)', w.won); });
       this._pushAction(winners[mainIdx].seat, 'wins', winners[mainIdx].won);
     }
+  }
 
-    this._closeHand();
+  // sits out (éliminés, dédupliqué par partie) puis wins game (dernier
+  // survivant) — après le `wins`, en BeRo courant (showdown). Ordre officiel.
+  _emitEndOfHand(eliminated, gameOverPid) {
+    this._sitOut = this._sitOut || new Set();
+    (eliminated || []).forEach((pid) => {
+      const seat = this._seatOfPid[pid];
+      if (seat == null) return;
+      const key = this._curGame.uniqueGameID + ':' + seat;
+      if (this._sitOut.has(key)) return;
+      this._sitOut.add(key);
+      this._pushAction(seat, 'sits out', null);
+    });
+    if (gameOverPid != null) {
+      this._gameOverDone = this._gameOverDone || new Set();
+      const gk = this._curGame.uniqueGameID;
+      if (!this._gameOverDone.has(gk)) {
+        const seat = this._seatOfPid[gameOverPid];
+        if (seat != null) { this._gameOverDone.add(gk); this._pushAction(seat, 'wins game', null); }
+      }
+    }
   }
 
   // Fin de main sans abattage (tout le monde s'est couché).
   // Le client officiel logge le `wins` au BeRo de la street atteinte. On accepte
   // un `round` explicite (gameState courant du client) ; sinon on garde
   // this._round, tenu à jour par les événements de board.
-  onHandHideEnd({ pid, won, round }) {
+  onHandHideEnd({ pid, won, round, eliminated, gameOverPid }) {
     if (!this._curHand) return;
     if (round != null && round >= 0 && round <= 4) this._round = round;
     if (won > 0) {
       const seat = this._seatOfPid[pid];
       if (seat != null) this._pushAction(seat, 'wins', won | 0);
     }
+    this._emitEndOfHand(eliminated, gameOverPid);
     this._closeHand();
   }
 
   _closeHand() {
-    // 'sits out' pour les stacks tombés à 0 est géré par onEliminated (dédup).
+    // 'sits out'/'wins game' sont émis dans _emitEndOfHand avant la fermeture.
     const hand = this._curHand;
+    this._closedHand = hand;                 // pour un éventuel onGameOver tardif
+    this._closedHandStart = this._handActionStart;
     if (hand && this.onHandPersist) {
       try {
-        // Actions de cette main = toutes celles ajoutées depuis onHandStart,
-        // plus d'éventuels 'sits out' qui référencent ce handID.
         const handActions = this.actions.slice(this._handActionStart);
         this.onHandPersist(hand, handActions);
       } catch (_e) {}
@@ -309,16 +337,38 @@ class HandRecorder {
     this._round = BERO.preflop;
   }
 
-  // Élimination (stack 0) : 'sits out' une seule fois par (game, seat).
-  onEliminated(pid) {
+  // Fin de partie signalée tardivement (message EndOfGame séparé) : rattache
+  // `wins game` à la dernière main jouée, en BeRo=4, et re-persiste cette main.
+  // Idempotent : ne réémet pas si déjà fait pour cette partie.
+  onGameOver(pid) {
+    if (!this._curGame || !this._closedHand) return;
+    this._gameOverDone = this._gameOverDone || new Set();
+    const gk = this._curGame.uniqueGameID;
+    if (this._gameOverDone.has(gk)) return;
     const seat = this._seatOfPid[pid];
-    if (seat == null || !this._curGame) return;
-    const key = this._curGame.uniqueGameID + ':' + seat;
-    this._sitOut = this._sitOut || new Set();
-    if (this._sitOut.has(key)) return;
-    this._sitOut.add(key);
-    // BeRo courant au moment de l'élimination (souvent showdown).
-    this._pushAction(seat, 'sits out', null, this._curHand ? this._curHand.handID : (this._lastHandID || 0));
+    if (seat == null) return;
+    this._gameOverDone.add(gk);
+    // Émettre en BeRo=4, rattaché au handID de la dernière main.
+    const savedRound = this._round;
+    this._round = BERO.showdown;
+    this._actionID += 1;
+    this.actions.push({
+      actionID: this._actionID,
+      handID: this._closedHand.handID,
+      uniqueGameID: gk,
+      beRo: BERO.showdown,
+      seat: seat | 0,
+      action: 'wins game',
+      amount: null,
+    });
+    this._round = savedRound;
+    // Re-persister la dernière main avec la ligne ajoutée.
+    if (this.onHandPersist) {
+      try {
+        const handActions = this.actions.filter((a) => a.uniqueGameID === gk && a.handID === this._closedHand.handID);
+        this.onHandPersist(this._closedHand, handActions);
+      } catch (_e) {}
+    }
   }
 
   // ── Bas niveau ───────────────────────────────────────────────────────────
@@ -891,11 +941,12 @@ async function renderStatsPanel() {
   try { if (typeof window._statsTablePlayers === 'function') tablePlayers = window._statsTablePlayers() || []; } catch (_e) {}
   const tableNames = new Set(tablePlayers.map((p) => p.name));
 
-  // En-tête : bascule de portée.
+  // En-tête : bascule de portée + export.
   const scopeBtns =
     '<div class="stats-scope">'
     + '<button type="button" class="stats-scope-btn' + (_statsScope === 'session' ? ' on' : '') + '" data-scope="session">Session</button>'
     + '<button type="button" class="stats-scope-btn' + (_statsScope === 'all' ? ' on' : '') + '" data-scope="all">Historique</button>'
+    + '<button type="button" class="stats-export-btn" data-export="1" title="Exporter en .pdb (importable dans PokerTH Tracker)">⤓ .pdb</button>'
     + '</div>';
 
   if (!el._built) { el.innerHTML = '<div class="odds-hd">Stats</div>' + scopeBtns + '<div class="stats-wait">…</div>'; el._built = true; }
@@ -941,9 +992,159 @@ async function renderStatsPanel() {
       }
     };
   });
+  // Bouton d'export .pdb (exporte selon la portée affichée).
+  const exp = el.querySelector('.stats-export-btn');
+  if (exp) exp.onclick = async () => {
+    exp.disabled = true; const old = exp.textContent; exp.textContent = '…';
+    try { if (typeof window._exportPdb === 'function') await window._exportPdb(_statsScope); }
+    catch (_e) {}
+    finally { exp.disabled = false; exp.textContent = old; }
+  };
 }
 
 if (typeof window !== 'undefined') window._renderStats = renderStatsPanel;
+
+
+// PokerTH web client — Export .pdb (log SQLite au format du client officiel).
+//
+// Prend les tables du store (modèle recorder) et produit un fichier .pdb
+// SQLite byte-lisible par le client Qt et par pokerth-tracker (Ollika).
+// Schéma exact : voir SPEC_PDB_LOG.md (LogVersion 1, 5 tables).
+//
+// sql.js (wasm) est chargé paresseusement au premier export (via
+// window._sqlJsUrl / _sqlJsWasmUrl, fournis par le glue du client).
+
+let _SQL = null;
+
+async function _loadSqlJs() {
+  if (_SQL) return _SQL;
+  if (typeof window === 'undefined') throw new Error('no-window');
+  const jsUrl = window._sqlJsUrl || '/vendor/sql-wasm.js';
+  const wasmUrl = window._sqlJsWasmUrl || '/vendor/sql-wasm.wasm';
+  // initSqlJs est exposé en global par sql-wasm.js (chargé en <script>).
+  if (typeof window.initSqlJs !== 'function') {
+    await new Promise((resolve, reject) => {
+      const s = document.createElement('script');
+      s.src = jsUrl; s.onload = resolve; s.onerror = () => reject(new Error('sqljs-load-failed'));
+      document.head.appendChild(s);
+    });
+  }
+  _SQL = await window.initSqlJs({ locateFile: () => wasmUrl });
+  return _SQL;
+}
+
+// Colonnes de la table Hand (identiques au client officiel).
+function _handColumns() {
+  const cols = ['HandID', 'UniqueGameID', 'Dealer_Seat', 'Sb_Amount', 'Sb_Seat', 'Bb_Amount', 'Bb_Seat'];
+  for (let i = 1; i <= 10; i++) cols.push('Seat_' + i + '_Cash', 'Seat_' + i + '_Card_1', 'Seat_' + i + '_Card_2', 'Seat_' + i + '_Hand_text', 'Seat_' + i + '_Hand_int');
+  for (let i = 1; i <= 5; i++) cols.push('BoardCard_' + i);
+  return cols;
+}
+
+// Construit un .pdb (Uint8Array) depuis des tables au modèle recorder.
+// tables : { session|metas, games, players, hands, actions }.
+async function buildPdb(tables) {
+  const SQL = await _loadSqlJs();
+  const db = new SQL.Database();
+
+  db.run('CREATE TABLE Session (PokerTH_Version TEXT NOT NULL, Date TEXT NOT NULL, Time TEXT NOT NULL, LogVersion INTEGER NOT NULL, PRIMARY KEY(Date,Time));');
+  db.run('CREATE TABLE Game (UniqueGameID INTEGER PRIMARY KEY, GameID INTEGER NOT NULL, Startmoney INTEGER NOT NULL, StartSb INTEGER NOT NULL, DealerPos INTEGER NOT NULL, Winner_Seat INTEGER);');
+  db.run('CREATE TABLE Player (UniqueGameID INTEGER NOT NULL, Seat INTEGER NOT NULL, Player TEXT NOT NULL, PRIMARY KEY(UniqueGameID,Seat));');
+  const handCols = _handColumns();
+  const handDefs = handCols.map((c) => {
+    if (c === 'HandID' || c === 'UniqueGameID') return c + ' INTEGER NOT NULL';
+    if (c === 'Sb_Amount' || c === 'Sb_Seat' || c === 'Bb_Amount' || c === 'Bb_Seat') return c + ' INTEGER NOT NULL';
+    if (/_Hand_text$/.test(c)) return c + ' TEXT';
+    return c + ' INTEGER';
+  });
+  db.run('CREATE TABLE Hand (' + handDefs.join(', ') + ', PRIMARY KEY(HandID,UniqueGameID));');
+  db.run('CREATE TABLE Action (ActionID INTEGER PRIMARY KEY AUTOINCREMENT, HandID INTEGER NOT NULL, UniqueGameID INTEGER NOT NULL, BeRo INTEGER NOT NULL, Player INTEGER NOT NULL, Action TEXT NOT NULL, Amount INTEGER);');
+
+  db.run('BEGIN;');
+
+  // Session (une ligne : la plus ancienne meta, ou fallback).
+  const sess = (tables.session) || (tables.metas && tables.metas[0] && tables.metas[0].session) || { pokerthVersion: 'web', date: '', time: '', logVersion: 1 };
+  db.run('INSERT INTO Session VALUES (?,?,?,?);', [sess.pokerthVersion || 'web', sess.date || '', sess.time || '', sess.logVersion == null ? 1 : sess.logVersion]);
+
+  const gStmt = db.prepare('INSERT INTO Game VALUES (?,?,?,?,?,?);');
+  for (const g of tables.games || []) gStmt.run([g.uniqueGameID, g.gameID | 0, g.startMoney | 0, g.startSb | 0, g.dealerPos | 0, g.winnerSeat == null ? null : g.winnerSeat | 0]);
+  gStmt.free();
+
+  const pStmt = db.prepare('INSERT INTO Player VALUES (?,?,?);');
+  for (const p of tables.players || []) pStmt.run([p.uniqueGameID, p.seat | 0, String(p.player == null ? '' : p.player)]);
+  pStmt.free();
+
+  const hStmt = db.prepare('INSERT INTO Hand (' + handCols.join(',') + ') VALUES (' + handCols.map(() => '?').join(',') + ');');
+  for (const h of tables.hands || []) {
+    const row = handCols.map((c) => {
+      if (c === 'HandID') return h.handID | 0;
+      if (c === 'UniqueGameID') return h.uniqueGameID | 0;
+      if (c === 'Dealer_Seat') return h.dealerSeat == null ? null : h.dealerSeat | 0;
+      if (c === 'Sb_Amount') return h.sbAmount | 0;
+      if (c === 'Sb_Seat') return h.sbSeat | 0;
+      if (c === 'Bb_Amount') return h.bbAmount | 0;
+      if (c === 'Bb_Seat') return h.bbSeat | 0;
+      const bm = c.match(/^BoardCard_(\d)$/);
+      if (bm) { const v = (h.board || [])[+bm[1] - 1]; return v == null ? null : v | 0; }
+      const v = h[c];
+      if (v == null) return null;
+      return /_Hand_text$/.test(c) ? String(v) : (v | 0);
+    });
+    hStmt.run(row);
+  }
+  hStmt.free();
+
+  // Actions : on préserve l'ActionID d'origine (ordre chronologique fiable).
+  const aStmt = db.prepare('INSERT INTO Action (ActionID,HandID,UniqueGameID,BeRo,Player,Action,Amount) VALUES (?,?,?,?,?,?,?);');
+  const acts = (tables.actions || []).slice().sort((a, b) => (a.actionID | 0) - (b.actionID | 0));
+  for (const a of acts) aStmt.run([a.actionID | 0, a.handID | 0, a.uniqueGameID | 0, a.beRo | 0, a.seat | 0, String(a.action || ''), a.amount == null ? null : (a.amount | 0)]);
+  aStmt.free();
+
+  db.run('COMMIT;');
+  const bytes = db.export();
+  db.close();
+  return bytes; // Uint8Array
+}
+
+// Nom de fichier au format officiel.
+function pdbFilename(sess) {
+  const s = sess || {};
+  const date = (s.date || '').replace(/[^0-9-]/g, '') || 'export';
+  const time = (s.time || '').replace(/:/g, '') || '000000';
+  return 'pokerth-log-' + date + '_' + time + '.pdb';
+}
+
+// Déclenche le téléchargement d'un .pdb depuis le store.
+// scope : 'session' | 'all'.
+async function exportPdb(scope) {
+  const store = (typeof window !== 'undefined') ? window._handlogStore : null;
+  if (!store) throw new Error('no-store');
+  const all = await store.loadAll();
+  let { metas, games, players, hands, actions } = all;
+  let sess = (metas && metas[0] && metas[0].session) || null;
+
+  if (scope === 'session') {
+    const sid = (window._handlog && window._handlog.sessionId) || null;
+    if (sid) {
+      const keep = (r) => r.sessionId === sid;
+      games = games.filter(keep); players = players.filter(keep);
+      hands = hands.filter(keep); actions = actions.filter(keep);
+      const meta = metas.find((m) => m.sessionId === sid);
+      if (meta) sess = meta.session;
+    }
+  }
+
+  const bytes = await buildPdb({ session: sess, games, players, hands, actions });
+  const blob = new Blob([bytes], { type: 'application/x-sqlite3' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = pdbFilename(sess);
+  document.body.appendChild(a); a.click();
+  setTimeout(() => { try { document.body.removeChild(a); URL.revokeObjectURL(url); } catch (_e) {} }, 100);
+  return true;
+}
+
+if (typeof window !== 'undefined') window._exportPdb = exportPdb;
 
 
 

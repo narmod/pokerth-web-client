@@ -23,7 +23,7 @@
  *                 Cross-origin requests and WS upgrades are left untouched.
  *                 (Fonts are now self-hosted and handled by SWR above.)
  */
-const CACHE_VERSION = 'pokerth-v0.3.737-beta';
+const CACHE_VERSION = 'pokerth-v0.3.738-beta';
 
 // Where navigations fall back to when the network is unavailable.
 const NAV_FALLBACK = '/pokerth-client.html';
@@ -56,6 +56,8 @@ const ASSETS = [
   '/manifest.json',
   '/modules/i18n.mjs',
   '/modules/handlog.mjs',
+  '/vendor/sql-wasm.js',
+  '/vendor/sql-wasm.wasm',
   '/modules/theme.mjs',
   // Offline (vs bots) mode modules
   '/modules/offline/engine.mjs',

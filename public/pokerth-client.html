@@ -2019,6 +2019,7 @@ function onAvatarImageChosen(input) {
 <script type="module" src="modules/theme.mjs"></script>
 <script type="module" src="modules/sounds.mjs"></script>
 <script type="module" src="modules/music.mjs"></script>
+<script defer src="vendor/sql-wasm.js"></script>
 <script type="module" src="modules/handlog.mjs"></script>
 <!-- Quit-game confirmation dialog: 2 buttons (Quit / Cancel).
      Shown when the user clicks the ✕ button in the header from inside
@@ -2516,6 +2517,12 @@ if ('serviceWorker' in navigator) {
             <label class="adv-row"><input type="checkbox" id="adv-logon" onchange="setAdvOpt('log_on',this.checked)"><span data-i18n="advLogOn">Enable logging</span></label>
             <label class="adv-row"><input type="checkbox" id="adv-statstrack" onchange="setAdvOpt('stats_track',this.checked)"><span data-i18n="advStatsTrack">Record hand statistics</span><em class="adv-webtag">web</em></label>
             <div class="adv-row"><span data-i18n="advLogInterval">Log interval</span><div class="sel-wrap adv-sel"><select id="adv-loginterval" onchange="setLogInterval(this.value)"><option value="action" data-i18n-opt="advLogEveryAction">Every action</option><option value="hand" data-i18n-opt="advLogEveryHand">Every hand</option></select><span class="sel-arr">▾</span></div></div>
+            <div class="adv-sec" data-i18n="advSecStatsExport">Statistics export</div>
+            <div class="adv-link-desc" data-i18n="advStatsExportDesc">Export recorded hands as a .pdb file, importable in PokerTH Tracker.</div>
+            <div class="adv-row adv-export-row">
+              <button type="button" class="btn-sm adv-export-btn" onclick="_advExportPdb('session',this)"><span data-i18n="advStatsExportSession">Export session</span></button>
+              <button type="button" class="btn-sm adv-export-btn" onclick="_advExportPdb('all',this)"><span data-i18n="advStatsExportAll">Export all history</span></button>
+            </div>
           </div>
         </section>
         <section class="adv-panel" data-cat="reset" id="adv-panel-reset" role="tabpanel" aria-labelledby="adv-cat-reset">

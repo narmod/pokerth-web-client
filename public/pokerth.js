@@ -401,6 +401,11 @@ function applyAdvOpts() {
     b.classList.toggle('adv-no-community', !_advGet('show_community', true));
     b.classList.toggle('adv-no-flag', !_advGet('show_flag', true));
     try { if (typeof window._syncStatsTab === 'function') window._syncStatsTab(); } catch (e) {}
+    try {
+      var _ex = document.querySelectorAll('.adv-export-btn');
+      var _on = _advGet('stats_track', true);
+      for (var _k = 0; _k < _ex.length; _k++) _ex[_k].disabled = !_on;
+    } catch (e) {}
     b.classList.add('adv-hide-pbar'); // mode PokerTH permanent — option « barre joueur masquée » retirée (narmod 2026-07-17), le CSS reste keyé sur la classe
     b.classList.toggle('adv-no-tablezoom', !_advGet('table_zoom', true)); // interrupteur zoom (parite QML tableZoomEnabled)
     b.classList.toggle('adv-no-lobbychat', !_advGet('lobby_chat', true)); // chat du lobby (parite QML UseLobbyChat)
@@ -8393,7 +8398,7 @@ const App = (() => {
               }
               _hlResults.push({ pid: _rpid, card1: _rc1, card2: _rc2, won: _rwon, handText: _htext, handInt: _hint });
             }
-            window._handlog.onShowdown(_hlResults);
+            window._handlog.onShowdown(_hlResults, _hlEliminatedPids(), null);
           }
         } catch (_e) {}
         pot = 0; setPot(0);
@@ -8433,7 +8438,7 @@ const App = (() => {
         const cash = Proto.u32(sub, 4);
         if (seatData[pid]) { seatData[pid].money = cash; if(won) seatData[pid].action = '+'+won; }
         if (won > 0) logAction('🏆 ' + getPlayerName(pid) + ' +' + _groupThousands(won));
-        try { if (window._handlog) window._handlog.onHandHideEnd({ pid: pid, won: won, round: (typeof gameState === 'number' ? gameState : undefined) }); } catch (_e) {}
+        try { if (window._handlog) window._handlog.onHandHideEnd({ pid: pid, won: won, round: (typeof gameState === 'number' ? gameState : undefined), eliminated: _hlEliminatedPids(), gameOverPid: null }); } catch (_e) {}
         try { _sdWinners = won > 0 ? new Set([pid]) : new Set(); } catch (e) {}
         // Enregistrer le résultat de la main pour moi (fin sans abattage).
         var myHideMon = (seatData[myId] || {}).money;
@@ -8555,6 +8560,7 @@ const App = (() => {
         dismissWinner();
         try { _setCanShow(false); } catch (_e) {}
         showEndGameOverlay(winnerPid, { eliminated: _egElim, place: _egPlace });
+        try { if (window._handlog) window._handlog.onGameOver(winnerPid); } catch (_e) {}
         // Retour automatique au lobby (parité NetAutoLeaveGameAfterFinish,
         // bible §15) — OPT-IN, parties réseau seulement. 12 s pour laisser
         // lire l'écran de fin ; annulé si l'utilisateur quitte avant
@@ -9760,11 +9766,34 @@ const App = (() => {
   };
 
   function getPlayerName(pid) { return players[pid] || (pid === myId ? myName : '#'+pid); }
+  // Sièges dont le stack est tombé à 0 (éliminés) — pour handlog 'sits out'.
+  function _hlEliminatedPids() {
+    var out = [];
+    try {
+      for (var _i = 0; _i < seats.length; _i++) {
+        var _p = seats[_i], _sd = seatData[_p];
+        if (_sd && !_sd.gone && _sd.money === 0) out.push(_p);
+      }
+    } catch (_e) {}
+    return out;
+  }
   // Liste des joueurs actuellement à la table (pour le panneau stats).
   window._statsTablePlayers = function () {
     try {
       return (seats || []).map(function (pid) { return { pid: pid, name: getPlayerName(pid) }; });
     } catch (_e) { return []; }
+  };
+  // URLs du moteur SQLite vendored (pour l'export .pdb).
+  window._sqlJsUrl = '/vendor/sql-wasm.js';
+  window._sqlJsWasmUrl = '/vendor/sql-wasm.wasm';
+  // Export .pdb depuis les options avancées (bouton).
+  window._advExportPdb = function (scope, btn) {
+    if (typeof window._exportPdb !== 'function') return;
+    var old = btn ? btn.innerHTML : null;
+    if (btn) { btn.disabled = true; btn.innerHTML = '…'; }
+    Promise.resolve(window._exportPdb(scope)).catch(function () {}).then(function () {
+      if (btn) { btn.disabled = false; btn.innerHTML = old; }
+    });
   };
 
   // ══ TURN TIMER ══
@@ -17308,7 +17337,7 @@ function renderPlayersList() {
   });
 })();
 
-;(function(){ window.BUILD_VERSION='0.3.737-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.738-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
