@@ -287,8 +287,6 @@
         <div class="defrow" style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin:5px 0"><span>Vibration</span><select id="defHaptic"><option value="">App default (on)</option><option value="1">On</option><option value="0">Off</option></select></div>
         <div class="defrow" style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin:5px 0"><span>Voice announce</span><select id="defVoice"><option value="">App default (off)</option><option value="1">On</option><option value="0">Off</option></select></div>
         <div class="defrow" style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin:5px 0"><span>Assistance (hand strength)</span><select id="defAssist"><option value="">App default (on)</option><option value="1">On</option><option value="0">Off</option></select></div>
-        <div class="defrow" style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin:5px 0"><span>Auto-fold button</span><select id="defAuto"><option value="">App default (hidden)</option><option value="1">Shown</option><option value="0">Hidden</option></select></div>
-        <div class="defrow" style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin:5px 0"><span>Quick-bet buttons</span><select id="defQuick"><option value="">App default (hidden)</option><option value="1">Shown</option><option value="0">Hidden</option></select></div>
         <div class="defrow" style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin:5px 0"><span>Chip display</span><select id="defBB"><option value="">App default (¥)</option><option value="1">BB</option><option value="0">¥</option></select></div>
         <div style="margin-top:8px"><button id="saveDefaults" class="use">Save</button></div>
         <div id="defaultsMsg" class="msg"></div>
@@ -871,7 +869,7 @@
         if(d.resetPeriod) $('period').value=d.resetPeriod;
         if(d.modes){ modesState=Object.assign({offline:true,lan:true,pokerthnet:true},d.modes); renderModes(); }
         if($('defTheme') && typeof d.defaultTheme==='string'){ window._defThemeVal=d.defaultTheme; $('defTheme').value=d.defaultTheme; }
-        if(d.defaults && typeof d.defaults==='object'){ var _DM={defHaptic:'haptic',defVoice:'voice',defAssist:'assist',defAuto:'autobtn',defQuick:'quickbet',defBB:'displaybb'}; Object.keys(_DM).forEach(function(id){ var el=$(id); if(el){ var dv=d.defaults[_DM[id]]; el.value=(dv==='0'||dv==='1')?dv:''; } }); }
+        if(d.defaults && typeof d.defaults==='object'){ var _DM={defHaptic:'haptic',defVoice:'voice',defAssist:'assist',defBB:'displaybb'}; Object.keys(_DM).forEach(function(id){ var el=$(id); if(el){ var dv=d.defaults[_DM[id]]; el.value=(dv==='0'||dv==='1')?dv:''; } }); }
         if(d.loginDefaults && typeof d.loginDefaults==='object'){ var L=d.loginDefaults; if($('defMode'))$('defMode').value=(['offline','lan-dedi','pokerthnet'].indexOf(L.mode)>=0)?L.mode:''; if($('defHost'))$('defHost').value=L.host||''; }
         if(d.tableDefaults && typeof d.tableDefaults==='object'){ var T=d.tableDefaults; var _tm={tdPlayers:'players',tdBlind:'blind',tdStack:'stack',tdTimeout:'timeout'}; Object.keys(_tm).forEach(function(id){ var el=$(id); if(el){ var v=T[_tm[id]]; el.value=(v==null)?'':v; } }); }
         if(d.tableNames && typeof d.tableNames==='object'){ var TN=d.tableNames; [['tnNetMode','tnNetName','pokerthnet'],['tnLanMode','tnLanName','lan'],['tnOffMode','tnOffName','offline']].forEach(function(t){ var sel=$(t[0]), inp=$(t[1]), v=TN[t[2]], has=(typeof v==='string'&&v.trim()); if(sel) sel.value=has?'custom':'auto'; if(inp){ inp.value=has?v:''; inp.style.display=has?'':'none'; } }); }
@@ -1025,7 +1023,7 @@
       .catch(function(){ m.textContent='Network error.'; m.className='msg err'; });
   }); })();
   (function(){ var sb=$('saveDefaults'); if(!sb) return; sb.addEventListener('click', function(){
-    var DM={defHaptic:'haptic',defVoice:'voice',defAssist:'assist',defAuto:'autobtn',defQuick:'quickbet',defBB:'displaybb'};
+    var DM={defHaptic:'haptic',defVoice:'voice',defAssist:'assist',defBB:'displaybb'};
     var defs={}; Object.keys(DM).forEach(function(id){ var el=$(id); if(el && (el.value==='0'||el.value==='1')) defs[DM[id]]=el.value; });
     var m=$('defaultsMsg');
     api('/admin/config',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({defaults:defs,token:tok()})})

@@ -399,7 +399,6 @@ function applyAdvOpts() {
     b.classList.toggle('adv-no-community', !_advGet('show_community', true));
     b.classList.toggle('adv-no-flag', !_advGet('show_flag', true));
     b.classList.toggle('adv-hide-pbar', _advGet('hide_pbar', true));
-    b.classList.toggle('adv-4color', _advGet('four_color', false)); // deck 4 couleurs (glyphes)
     b.classList.toggle('adv-no-tablezoom', !_advGet('table_zoom', true)); // interrupteur zoom (parite QML tableZoomEnabled)
     b.classList.toggle('adv-no-lobbychat', !_advGet('lobby_chat', true)); // chat du lobby (parite QML UseLobbyChat)
     b.classList.toggle('adv-no-handsbtn', !_advGet('hands_btn', true)); // icone combinaisons de poker sur le tapis (extension web)
@@ -563,7 +562,6 @@ function openAdvancedOptions() {
   sync('adv-anim', 'anim_cards', true);
   sync('adv-blinds', 'show_blinds', true);
   sync('adv-hidepbar', 'hide_pbar', true);
-  sync('adv-4color', 'four_color', false);
   sync('adv-community', 'show_community', true);
   sync('adv-focusbet', 'focus_bet', false);
   sync('adv-noemoji', 'chat_noemoji', false);
@@ -574,8 +572,6 @@ function openAdvancedOptions() {
   sync('adv-assist', 'assist', true);
   sync('adv-showodds', 'show_odds', true);
   sync('adv-handsbtn', 'hands_btn', true);
-  sync('adv-autobtn', 'show_auto', true);
-  sync('adv-quickbet', 'show_pct', true);
   sync('adv-voice', 'voice', false);
   sync('adv-haptic', 'haptic', true);
   sync('adv-displaybb', 'display_bb', false);
@@ -787,7 +783,7 @@ function resetAdvDefaults() {
     : 'Reset all options and keyboard shortcuts to their defaults?';
   if (!window.confirm(msg)) return;
   var defs = {
-    anim_cards: true, show_blinds: true, hide_pbar: true, show_community: true, four_color: false,
+    anim_cards: true, show_blinds: true, hide_pbar: true, show_community: true,
     focus_bet: false, chat_noemoji: false, fade_losers: true, show_flag: true,
     own_click: false, guard_call: false, odds_monitor: false, no_hide_ignored: false, hands_btn: true,
     fkeys_alt: false, zoom_follow: false, table_zoom: true, lobby_chat: true, log_on: true, pause_hands: false, create_dialog: true, cfg_sync: true, poker_en: true,
@@ -796,8 +792,6 @@ function resetAdvDefaults() {
   };
   try { for (var k in defs) setAdvOpt(k, defs[k]); } catch (e) {}
   try { setSeatLayout('official'); } catch (e) {}
-  try { if (typeof window.setAutoBtn === 'function') window.setAutoBtn(true); } catch (e) {}
-  try { if (typeof window.setQuickBet === 'function') window.setQuickBet(true); } catch (e) {}
   try { if (typeof window.setTooltips === 'function') window.setTooltips(true); } catch (e) {}
   try { if (typeof window.setReactMuted === 'function') window.setReactMuted(false); } catch (e) {}
   try { if (typeof window.setDefaultCommunity === 'function') window.setDefaultCommunity('pth'); } catch (e) {}
@@ -877,7 +871,7 @@ function _cfgCollectWebSettings() {
   out.ShowFlipCardsAnimation    = B('anim_cards', true);
   out.AlternateFKeysUserActionMode = B('fkeys_alt', false);
   out.ShowBlindButtons          = B('show_blinds', true);
-  out.ShowPotPercentButtons     = B('show_pct', true);
+  out.ShowPotPercentButtons     = true; // quick-bets toujours affichés côté web
   out.AntiPeekMode              = B('own_click', false);
   out.AccidentallyCallBlocker   = B('guard_call', false);
   out.EnableBetInputFocusSwitch = B('focus_bet', false);
@@ -1005,7 +999,6 @@ function _cfgApplyImported(cfg) {
   setB('anim_cards', 'ShowFlipCardsAnimation');
   setB('fkeys_alt', 'AlternateFKeysUserActionMode');
   setB('show_blinds', 'ShowBlindButtons');
-  setB('show_pct', 'ShowPotPercentButtons');
   setB('own_click', 'AntiPeekMode');
   setB('guard_call', 'AccidentallyCallBlocker');
   setB('focus_bet', 'EnableBetInputFocusSwitch');
@@ -1123,8 +1116,8 @@ function _cfgSyncEnabled() { return _advGet('cfg_sync', true); }
 // type pth_cfg_sync_ts, jetons, caches).
 var _CFG_WEB_SYNC_KEYS = [
   // Toggles web-only (via setAdvOpt → pth_<clé>)
-  'pth_hide_pbar', 'pth_four_color', 'pth_show_community', 'pth_chat_noemoji',
-  'pth_assist', 'pth_show_odds', 'pth_hands_btn', 'pth_show_auto', 'pth_voice',
+  'pth_hide_pbar', 'pth_show_community', 'pth_chat_noemoji',
+  'pth_assist', 'pth_show_odds', 'pth_hands_btn', 'pth_voice',
   'pth_haptic', 'pth_display_bb', 'pth_table_zoom', 'pth_zoom_follow',
   'pth_log_on', 'pth_create_dialog', 'pth_status_bar', 'pth_blinds_badge',
   'pth_winner_popup', 'pth_remove_gone', 'pth_tooltips', 'pth_big_own_cards',
@@ -3156,7 +3149,7 @@ document.addEventListener("DOMContentLoaded", function() {
     // at load, so on a brand-new browser those two settle on the next reload.
     function _applyDefaultSettings(defaults) {
       if (!defaults || typeof defaults !== 'object') return;
-      var MAP = { haptic: 'pth_haptic', voice: 'pth_voice', assist: 'pth_assist', autobtn: 'pth_show_auto', quickbet: 'pth_show_pct', displaybb: 'pth_display_bb' };
+      var MAP = { haptic: 'pth_haptic', voice: 'pth_voice', assist: 'pth_assist', displaybb: 'pth_display_bb' };
       Object.keys(MAP).forEach(function (k) {
         var v = defaults[k];
         if (v !== '0' && v !== '1') return;
@@ -5591,45 +5584,14 @@ const App = (() => {
   // (au lieu de retaper ses cartes a chaque main). Memorise entre sessions.
   let _actionBarPinned = (function(){ try { return localStorage.getItem('pth_pin_actionbar') === '1'; } catch(e){ return false; } })();
   let _lastWaitingMsg = '', _lastWaitingIsHtml = false;
-  // User preference: show the compact auto check/fold button in the action
-  // bar. OFF by default (some players — e.g. kids — found it confusing).
-  // Toggled from the header ••• menu and remembered in localStorage. The
-  // button is always rendered but hidden via a <body> class when off, so the
-  // toggle takes effect instantly without re-rendering the action bar.
-  let _showAutoBtn = true;
-  try { _showAutoBtn = localStorage.getItem('pth_show_auto') !== '0'; } catch (e) {}
-  try { document.body.classList.toggle('hide-auto-btn', !_showAutoBtn); } catch (e) {}
-  function toggleAutoBtnPref() {
-    _showAutoBtn = !_showAutoBtn;
-    try { localStorage.setItem('pth_show_auto', _showAutoBtn ? '1' : '0'); } catch (e) {}
-    if (!_showAutoBtn) _playingMode = 0; // repasse en Manuel si l'UI auto est masquée
-    try { document.body.classList.toggle('hide-auto-btn', !_showAutoBtn); } catch (e) {}
-    if (typeof showKeyHint === 'function') showKeyHint(t('autoBtnLabel') + (_showAutoBtn ? ' \u2713' : ''));
-    return _showAutoBtn;
-  }
-  window.toggleAutoBtnPref = toggleAutoBtnPref;
-  // User preference: show the 33% / 50% / 100% quick-bet buttons in the
-  // action bar. OFF by default (like the auto button); players who want them
-  // enable it from the ••• menu and the choice is remembered in localStorage.
-  // The row is always rendered and hidden via a <body> class so the toggle
-  // applies instantly without re-rendering the action bar.
-  let _showPctBtns = true;
-  try { _showPctBtns = localStorage.getItem('pth_show_pct') !== '0'; } catch (e) {}
-  try { document.body.classList.toggle('hide-pct-btns', !_showPctBtns); } catch (e) {}
-  function toggleQuickBetPref() {
-    _showPctBtns = !_showPctBtns;
-    try { localStorage.setItem('pth_show_pct', _showPctBtns ? '1' : '0'); } catch (e) {}
-    try { document.body.classList.toggle('hide-pct-btns', !_showPctBtns); } catch (e) {}
-    if (typeof showKeyHint === 'function') showKeyHint(t('quickBetLabel') + (_showPctBtns ? ' \u2713' : ''));
-    return _showPctBtns;
-  }
-  window.toggleQuickBetPref = toggleQuickBetPref;
+  // Sélecteur de mode auto & boutons quick-bet : toujours affichés dans la
+  // barre d'action (les options de masquage ont été retirées des réglages).
+  // On nettoie les classes héritées au cas où un ancien CSS serait encore en cache.
+  try { document.body.classList.remove('hide-auto-btn', 'hide-pct-btns'); } catch (e) {}
   // Setters (etat precis) pour les cases des Options avancees : bascule le toggle
   // existant seulement si l'etat courant differe de la valeur voulue, ce qui
   // reutilise toute la logique d'application + retour visuel des toggles.
   window.setVoice = function (on) { if (!!on !== _voiceEnabled) toggleVoice(); };
-  window.setAutoBtn = function (on) { if (!!on !== _showAutoBtn) toggleAutoBtnPref(); };
-  window.setQuickBet = function (on) { if (!!on !== _showPctBtns) toggleQuickBetPref(); };
   window.setDisplayBB = function (on) { if (!!on !== _displayBB) toggleDisplayBB(); };
   window.setHaptic = function (on) { if (!!on !== _hapticEnabled) toggleHaptic(); };
   let _lastConnectParams = null;
@@ -16854,7 +16816,7 @@ function renderPlayersList() {
   });
 })();
 
-;(function(){ window.BUILD_VERSION='0.3.672-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.673-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

@@ -3985,8 +3985,6 @@ body {
 .pk.diamond { color: #e85a2c; }
 /* Deck 4 couleurs (parite 2.1.2 nobus_4c_classic) : ♦ bleu, ♣ vert ;
    ♥ rouge et ♠ noir inchanges. Glyphes seulement (un deck d'images prime). */
-body.adv-4color .pk.diamond { color: #1a6fd4; }
-body.adv-4color .pk:not(.red):not(.spade):not(.back) { color: #1e8c3a; }
 /* Dos de carte « Medaillon + Treillis » (theme feutre/or) : SVG vectoriel
    net et scalable a toutes les tailles, rasterise une fois, zero cout runtime.
    Defini une seule fois dans --card-back, partage avec .fly-card. */
@@ -4194,9 +4192,6 @@ body.adv-4color .pk:not(.red):not(.spade):not(.back) { color: #1e8c3a; }
   box-shadow: 0 0 4px rgba(255,215,0,0.9);
 }
 /* Hidden by default; shown only when the user enables it from the ••• menu. */
-body.hide-auto-btn .btn-auto,
-body.hide-auto-btn .mode-sel-wrap { display: none; }
-body.hide-pct-btns .pct-row { display: none; }
 /* All-In : bouton orange compact dans la ligne 1/3-1/2-Pot (layout officiel).
    Les themes a images de boutons (data-btn-img) repeignent via border-image. */
 .btn-allin {
