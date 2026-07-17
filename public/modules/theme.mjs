@@ -1353,7 +1353,7 @@ function _tabItems(id){
 function _styleAuthor(kind, item){
   if (kind==='table') return TABLE_AUTHORS[item.id] || item.by || null;
   if (kind==='deck'){ if (item && item.by) return item.by; for (var i=0;i<DECKS.length;i++) if (DECKS[i].id===item.id) return 'PokerTH'; return null; }
-  if (kind==='seat'){ if (item && item.by) return item.by; if (_isBuiltinSeat(item.id)) return 'PokerTH Development Team'; return null; }
+  if (kind==='seat'){ return (item && item.by) || 'PokerTH Development Team'; } // demande narmod : crédit PokerTH Development Team par défaut, packs importés inclus
   return item.by || null;
 }
 function _styleRow(kind, item, name, author, active, onClick){
