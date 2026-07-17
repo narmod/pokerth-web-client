@@ -439,6 +439,7 @@ export const strings = {
     pvSrv3:'Game data: if you play on a ranked server, the nickname you choose and your game results are recorded to display the leaderboard.',
     pvThirdH:'Third-party services',
     pvThird:'When you connect to pokerth.net (or any other game server), you are using a service operated independently of this web client, with its own rules. This page only covers the web client and the server that hosts it.',
+    pvThirdTr:'Chat translation: if you tap the translate button (🌐) on a chat message, the text of that message is sent to Google\'s translation service (Google Translate) so it can be translated into your language. Nothing is sent unless you tap the button, and the feature can be turned off in Advanced options.',
     pvLicH:'Free software - AGPL-3.0',
     pvLic1:'The entire client is free software, released under the GNU AGPL v3 license. You can read the source code, verify what it does, host your own copy, and modify it:',
     pvLicSrc:'Source code',

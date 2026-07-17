@@ -275,6 +275,7 @@ A full appearance system, reached from the **Theme** button — a styles window 
 - **Ignore a player** — a 🔕 button in any player's card mutes them: their chat messages stop appearing, persisted across sessions by nickname; an advanced toggle chooses whether their avatar stays visible or is hidden too
 - **Mute reactions** — a toggle in the reactions panel silences incoming reactions locally (no animation, badge or sound) without affecting anyone else; remembered across sessions
 - **Disable emojis in chat** — an advanced option that strips emojis from received chat messages (mirrors the official client's setting)
+- **Chat message translation** — a 🌐 button on every received chat message translates it into your interface language via **Google Translate** (tap again to switch back to the original). Enabled by default, can be turned off in Advanced options. The message text is sent to Google's translation service only when you tap the button — see the privacy page.
 
 ### Comfort features
 - Browser notifications when it is your turn (background tab)

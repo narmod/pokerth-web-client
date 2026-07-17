@@ -441,6 +441,7 @@ export const strings = {
     pvSrv3:'Données de jeu : si vous jouez sur un serveur classé, le pseudo que vous choisissez et vos résultats sont enregistrés pour afficher le classement.',
     pvThirdH:'Services tiers',
     pvThird:'Quand vous vous connectez à pokerth.net (ou à tout autre serveur de jeu), vous utilisez un service exploité indépendamment de ce client web, avec ses propres règles. Cette page ne couvre que le client web et le serveur qui l\'héberge.',
+    pvThirdTr:'Traduction du chat : si vous touchez le bouton de traduction (🌐) d\'un message, le texte de ce message est envoyé au service de traduction de Google (Google Translate) pour être traduit dans votre langue. Rien n\'est envoyé sans votre geste, et la fonction peut être désactivée dans les Options avancées.',
     pvLicH:'Logiciel libre - AGPL-3.0',
     pvLic1:'L\'intégralité du client est un logiciel libre, publié sous licence GNU AGPL v3. Vous pouvez lire le code source, vérifier ce qu\'il fait, héberger votre propre copie et le modifier :',
     pvLicSrc:'Code source',
