@@ -566,6 +566,7 @@ function openAdvancedOptions() {
   sync('adv-blinds', 'show_blinds', true);
   sync('adv-potbtns', 'pot_btns', true);
   sync('adv-communitycontent', 'community_content', true);
+  sync('adv-splash', 'splash', true);          // parité QML : DisableSplashScreenOnStartup=0
   sync('adv-hidepbar', 'hide_pbar', true);
   sync('adv-community', 'show_community', true);
   sync('adv-focusbet', 'focus_bet', false);
@@ -793,7 +794,7 @@ function resetAdvDefaults() {
     focus_bet: false, chat_noemoji: false, fade_losers: true, show_flag: true,
     own_click: false, guard_call: true, odds_monitor: false, no_hide_ignored: false, hands_btn: true,
     fkeys_alt: false, zoom_follow: true, table_zoom: true, lobby_chat: true, log_on: true, pause_hands: false, create_dialog: true, cfg_sync: true, poker_en: true,
-    pot_btns: true, community_content: true,
+    pot_btns: true, community_content: true, splash: true,
     snd_actions: true, snd_lobby: true, snd_net: true, snd_blinds: true,
     reduce_fx: false, status_bar: true, ping_avatar: true, auto_leave: false, blinds_badge: true
   };
@@ -891,6 +892,7 @@ function _cfgCollectWebSettings() {
   out.NetAutoLeaveGameAfterFinish = B('auto_leave', false);
   out.PauseBetweenHands         = B('pause_hands', false);
   out.DontTranslateInternationalPokerStringsFromStyle = B('poker_en', true);  // case « ne pas traduire » (parité)
+  out.DisableSplashScreenOnStartup = B('splash', true) ? 0 : 1;  // clé officielle inversée (1 = pas de splash)
   // Sons (catégories officielles)
   out.PlayGameActions             = B('snd_actions', true);
   out.PlayLobbyChatNotification   = B('snd_lobby', true);
@@ -1019,6 +1021,7 @@ function _cfgApplyImported(cfg) {
   setB('auto_leave', 'NetAutoLeaveGameAfterFinish');
   setB('pause_hands', 'PauseBetweenHands');
   setB('poker_en', 'DontTranslateInternationalPokerStringsFromStyle');
+  if (S.DisableSplashScreenOnStartup != null) setAdvOpt('splash', num('DisableSplashScreenOnStartup') === 0);  // inversée
   setB('snd_actions', 'PlayGameActions');
   setB('snd_lobby', 'PlayLobbyChatNotification');
   setB('snd_net', 'PlayNetworkGameNotification');
@@ -17118,6 +17121,20 @@ function renderPlayersList() {
   });
 })();
 
+// ── Écran de démarrage : masqué une fois l'app chargée (min ~0,8 s pour
+// éviter un flash quand tout sort du cache Service Worker). Parité QML :
+// le splash couvre l'écran pendant le chargement puis laisse place au login.
+;(function(){
+  var sp = document.getElementById('pth-splash');
+  if (!sp) return;
+  var t0 = window._splashT0 || Date.now();
+  var wait = Math.max(0, 800 - (Date.now() - t0));
+  setTimeout(function () {
+    sp.classList.add('splash-hide');
+    setTimeout(function () { try { sp.parentNode.removeChild(sp); } catch (e) {} }, 450);
+  }, wait);
+})();
+
 // ── Dropdown custom « Type de partie » (parité QML StyledCombo) ──────────────
 // Le <select id="cf-game-type"> natif reste la source de vérité (caché) : tous
 // les lecteurs/écrivains existants (sv/svv/set/setVal) continuent de marcher.
@@ -17184,7 +17201,7 @@ function renderPlayersList() {
   });
 })();
 
-;(function(){ window.BUILD_VERSION='0.3.687-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.688-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

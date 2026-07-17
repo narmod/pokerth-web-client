@@ -254,6 +254,7 @@ export const strings = {
     gameNameRequired:'Veuillez saisir un nom de partie.', guestGameName:'Partie de {name}',
     communityPreset:'Modèle communautaire', ownSettings:'Paramètres personnalisés',
     advPotBtns:'Afficher les boutons Pot-% (1/3 · 1/2 · Pot)', advCommunityContent:'Afficher les contenus communauté (BBC / WEC)', advSndVolume:'Volume',
+    advSplash:'Écran de démarrage au lancement',
     allowSpectators:'Spectateurs',
     allowOn:'Autorisés',
     allowOff:'Interdits',

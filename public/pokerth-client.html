@@ -379,6 +379,29 @@ function onAvatarImageChosen(input) {
 
 </head>
 <body>
+<!-- Écran de démarrage (parité QML : startWindow splash, désactivable via
+     DisableSplashScreenOnStartup ↔ option « splash »). Inline et autonome :
+     affiché AVANT le chargement de pokerth.js, masqué par lui une fois prêt
+     (minimum ~0,8 s pour éviter un flash). -->
+<div id="pth-splash" aria-hidden="true">
+  <img class="pth-splash-logo" src="img/logo-chip.png" alt="">
+  <div class="pth-splash-title">PokerTH</div>
+</div>
+<script>
+try {
+  if (localStorage.getItem('pth_splash') === '0') {
+    var _spEl = document.getElementById('pth-splash');
+    if (_spEl) _spEl.parentNode.removeChild(_spEl);
+  } else {
+    window._splashT0 = Date.now();
+    // Filet de sécurité : jamais bloqué sur le splash si le JS échoue.
+    setTimeout(function () {
+      var el = document.getElementById('pth-splash');
+      if (el) { el.classList.add('splash-hide'); setTimeout(function(){ try { el.parentNode.removeChild(el); } catch (e) {} }, 450); }
+    }, 6000);
+  }
+} catch (e) {}
+</script>
 <!-- ╔════════════════════╗ -->
 <!-- ║  BOOT SPLASH       ║ -->
 <!-- ╚════════════════════╝ -->
@@ -2340,6 +2363,7 @@ if ('serviceWorker' in navigator) {
       <label class="adv-row"><input type="checkbox" id="adv-hidepbar" onchange="setAdvOpt('hide_pbar',this.checked)"><span data-i18n="advHidePbar">PokerTH mode (player bar hidden)</span><em class="adv-webtag">web</em></label>
       <label class="adv-row"><input type="checkbox" id="adv-tablezoom" onchange="setAdvOpt('table_zoom',this.checked)"><span data-i18n="advTableZoom">Enable table zoom (magnifier buttons)</span></label>
       <label class="adv-row"><input type="checkbox" id="adv-communitycontent" onchange="setAdvOpt('community_content',this.checked)"><span data-i18n="advCommunityContent">Show community content (BBC / WEC)</span></label>
+      <label class="adv-row"><input type="checkbox" id="adv-splash" onchange="setAdvOpt('splash',this.checked)"><span data-i18n="advSplash">Show splash screen on startup</span></label>
       <label class="adv-row"><input type="checkbox" id="adv-zoomfollow" onchange="setAdvOpt('zoom_follow',this.checked)"><span data-i18n="advZoomFollow">Zoom follows the active seat (overview at showdown)</span></label>
       <label class="adv-row"><input type="checkbox" id="adv-reducefx" onchange="setAdvOpt('reduce_fx',this.checked);document.documentElement.classList.toggle('reduce-fx',this.checked)"><span data-i18n="advReduceFx">Reduce graphic effects (shadows/glow) — for low-end devices</span></label>
       <label class="adv-row"><input type="checkbox" id="adv-statusbar" onchange="setAdvOpt('status_bar',this.checked);var _ps=document.getElementById('pot-strip');if(_ps)_ps.style.display=this.checked?'':'none'"><span data-i18n="advStatusBar">Game status bar (hand #, pot, bets, phase)</span><em class="adv-webtag">web</em></label>

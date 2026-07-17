@@ -651,6 +651,19 @@ body {
 :root[data-theme="pokerth-light"] .gt-dd-item:hover,
 :root[data-theme="pokerth-light"] .gt-dd-item.sel { background: rgba(0,0,0,0.07); }
 
+/* Écran de démarrage (parité QML startWindow : fond officiel + logo) */
+#pth-splash {
+  position: fixed; inset: 0; z-index: 100000;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px;
+  background: linear-gradient(rgba(8,10,14,.35), rgba(8,10,14,.55)),
+              url("/img/pokerth-login-bg.webp") center / cover no-repeat, #10141c;
+  opacity: 1; transition: opacity 0.4s ease;
+}
+#pth-splash.splash-hide { opacity: 0; pointer-events: none; }
+.pth-splash-logo { width: 96px; height: 96px; animation: pth-splash-pulse 1.4s ease-in-out infinite; }
+.pth-splash-title { color: #eff1f5; font-size: 1.35rem; font-weight: 700; letter-spacing: 0.06em; text-shadow: 0 2px 10px rgba(0,0,0,0.6); }
+@keyframes pth-splash-pulse { 0%,100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.06); opacity: 0.85; } }
+
 /* Quick-bets 1/3·1/2·Pot masquables (parité QML ShowPotPercentButtons) */
 body.adv-no-potbtns .pct-row { display: none !important; }
 /* Contenus communauté masquables (parité QML showCommunityContent) */

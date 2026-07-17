@@ -252,6 +252,7 @@ export const strings = {
     gameNameRequired:"Please enter a game name.", guestGameName:"{name}'s game",
     communityPreset:'Community template', ownSettings:'Custom settings',
     advPotBtns:'Show pot percentage buttons (1/3 · 1/2 · Pot)', advCommunityContent:'Show community content (BBC / WEC)', advSndVolume:'Volume',
+    advSplash:'Show splash screen on startup',
     allowSpectators:'Spectators',
     allowOn:'Allowed',
     allowOff:'Blocked',
