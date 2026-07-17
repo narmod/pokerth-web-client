@@ -50,6 +50,7 @@ for (const name of names) {
   out.push({
     id: name,
     name: (cfg.name && String(cfg.name).trim()) || name,
+    by: (cfg.by && String(cfg.by).trim()) || null,
     plateUrl: base + plate,
     selfUrl: self ? base + self : null,
     preview: prev ? base + prev : null,

@@ -248,7 +248,7 @@ function _loadGallerySeats() {
         if (!Array.isArray(list)) return;
         _gallerySeats = list.filter(function (s) { return s && s.id && s.plateUrl; }).map(function (s) {
           var slice = (s.slice != null ? s.slice : 34), width = (s.width != null ? s.width : 15), pad = s.pad || '6px 12px';
-          return { id: String(s.id), name: s.name || String(s.id), swatch: s.swatch || '#394150', preview: s.preview || null,
+          return { id: String(s.id), name: s.name || String(s.id), by: (s.by ? String(s.by) : null), swatch: s.swatch || '#394150', preview: s.preview || null,
                    plateUrl: s.plateUrl, selfUrl: s.selfUrl || null,
                    slice: slice, width: width, pad: pad,
                    selfSlice: (s.selfSlice != null ? s.selfSlice : slice), selfWidth: (s.selfWidth != null ? s.selfWidth : width), selfPad: s.selfPad || pad };
@@ -1250,6 +1250,7 @@ function _tabItems(id){
 function _styleAuthor(kind, item){
   if (kind==='table') return TABLE_AUTHORS[item.id] || item.by || null;
   if (kind==='deck'){ if (item && item.by) return item.by; for (var i=0;i<DECKS.length;i++) if (DECKS[i].id===item.id) return 'PokerTH'; return null; }
+  if (kind==='seat'){ if (item && item.by) return item.by; if (_isBuiltinSeat(item.id)) return 'PokerTH Development Team'; return null; }
   return item.by || null;
 }
 function _styleRow(kind, item, name, author, active, onClick){
