@@ -1298,7 +1298,7 @@ function _buildBox(pid, name, layer) {
     box = document.createElement('div');
     box.id = id;
     box.className = 'hud-box';
-    box.addEventListener('click', (e) => { e.stopPropagation(); openRangeGrid(name); });
+    box.addEventListener('click', (e) => { e.stopPropagation(); openHudDetail(name); });
     layer.appendChild(box);
   }
   const handsTxt = s ? _hudFmt('hands', s.hands) : '0';
@@ -1322,35 +1322,55 @@ function _buildBox(pid, name, layer) {
 function _positionBox(box, seatEl, layer) {
   const lr = layer.getBoundingClientRect();
   const r = seatEl.getBoundingClientRect();
-  const bw = box.offsetWidth || 108;
-  const bh = box.offsetHeight || 48;
-  const gap = 7;
-  // Position relative du siège dans la couche (0..1 sur chaque axe).
+  const bw = box.offsetWidth || 100;
+  const bh = box.offsetHeight || 40;
+  const gap = 8;
   const sxC = (r.left + r.width / 2 - lr.left);
   const syC = (r.top + r.height / 2 - lr.top);
   const fx = sxC / Math.max(lr.width, 1);
   const fy = syC / Math.max(lr.height, 1);
+  const portrait = lr.height >= lr.width;
 
-  // Axe dominant : si le siège est nettement à gauche/droite → placement
-  // latéral ; sinon vertical (haut/bas). Seuils calés sur l'anneau QML.
+  // Placement RADIAL vers l'extérieur (loin du centre de la table) : la boîte
+  // s'écarte du siège du côté opposé au feutre → ne recouvre ni le siège ni ses
+  // voisins de l'anneau. En paysage l'ellipse est large → on privilégie le
+  // placement latéral ; en portrait, vertical pour les sièges haut/bas.
+  // Seuil de "zone latérale" adapté à l'orientation.
+  const sideThresh = portrait ? 0.28 : 0.34;
+  const sideZone = (fx < sideThresh || fx > (1 - sideThresh));
   let left, top;
-  const horizontalZone = (fx < 0.30 || fx > 0.70);
-  if (horizontalZone) {
-    // Latéral : boîte du côté extérieur (gauche si siège à gauche).
-    if (fx < 0.5) left = (r.left - lr.left) - bw - gap;      // à gauche du siège
-    else left = (r.right - lr.left) + gap;                    // à droite du siège
-    top = syC - bh / 2;                                        // centré vertical
+  if (sideZone) {
+    // Extérieur horizontal : siège à gauche → boîte à gauche, etc.
+    if (fx < 0.5) left = (r.left - lr.left) - bw - gap;
+    else left = (r.right - lr.left) + gap;
+    top = syC - bh / 2;
   } else {
-    // Vertical : au-dessus si siège en haut de table, dessous sinon.
+    // Extérieur vertical : siège en haut → boîte AU-DESSUS (vers le bord haut),
+    // siège en bas → EN DESSOUS. (Auparavant l'inverse, d'où le recouvrement.)
     left = sxC - bw / 2;
-    if (fy < 0.5) top = (r.bottom - lr.top) + gap;            // siège haut → dessous
-    else top = (r.top - lr.top) - bh - gap;                   // siège bas → dessus
+    if (fy < 0.5) top = (r.top - lr.top) - bh - gap;    // haut → au-dessus
+    else top = (r.bottom - lr.top) + gap;               // bas → en dessous
   }
-  // Bornes dans la couche visible.
-  left = Math.max(2, Math.min(left, lr.width - bw - 2));
-  top = Math.max(2, Math.min(top, lr.height - bh - 2));
-  box.style.left = left + 'px';
-  box.style.top = top + 'px';
+  // Bornes : rester dans la couche. Si le placement extérieur clampe SUR le
+  // siège (siège collé au bord), basculer de l'autre côté.
+  const clL = Math.max(2, Math.min(left, lr.width - bw - 2));
+  const clT = Math.max(2, Math.min(top, lr.height - bh - 2));
+  // Détection de recouvrement résiduel avec le siège → tenter le côté opposé.
+  const overlaps = (L, T) => !(L + bw < (r.left - lr.left) || L > (r.right - lr.left)
+    || T + bh < (r.top - lr.top) || T > (r.bottom - lr.top));
+  let fL = clL, fT = clT;
+  if (overlaps(fL, fT)) {
+    if (sideZone) {
+      // essayer l'autre côté horizontal
+      const alt = (fx < 0.5) ? (r.right - lr.left) + gap : (r.left - lr.left) - bw - gap;
+      fL = Math.max(2, Math.min(alt, lr.width - bw - 2));
+    } else {
+      const alt = (fy < 0.5) ? (r.bottom - lr.top) + gap : (r.top - lr.top) - bh - gap;
+      fT = Math.max(2, Math.min(alt, lr.height - bh - 2));
+    }
+  }
+  box.style.left = fL + 'px';
+  box.style.top = fT + 'px';
 }
 
 function _hudEsc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])); }
@@ -1453,6 +1473,62 @@ async function refreshHud() {
   renderHud();
 }
 if (typeof window !== 'undefined') window._hudRefresh = refreshHud;
+
+// ── Panneau détaillé d'un joueur (tap sur une boîte HUD) ────────────────────
+// Toutes les stats colorées + bouton vers la grille de range. Fonctionne sur
+// tous les écrans (modale centrée, thème client).
+const _DETAIL_ROWS = [
+  ['vpip', 'VPIP', 'Voluntarily Put $ In Pot'],
+  ['pfr', 'PFR', 'Pre-Flop Raise'],
+  ['af', 'AF', 'Aggression Factor'],
+  ['three_bet', '3-Bet', '3-Bet %'],
+  ['cbet', 'C-Bet', 'Continuation Bet %'],
+  ['fold_to_3bet', 'Fold to 3B', 'Fold to 3-Bet %'],
+  ['fold_to_cbet', 'Fold to CB', 'Fold to C-Bet %'],
+  ['wtsd', 'WTSD', 'Went To Showdown %'],
+  ['wsd', 'W$SD', 'Won $ at Showdown %'],
+];
+function _detailFmt(id, v) {
+  if (v == null) return '–';
+  if (id === 'af') return v === 'inf' ? '∞' : String(v);
+  return v + '%';
+}
+function openHudDetail(name) {
+  if (typeof document === 'undefined') return;
+  let modal = document.getElementById('hud-detail-modal');
+  if (!modal) {
+    modal = document.createElement('div');
+    modal.id = 'hud-detail-modal';
+    modal.innerHTML = '<div class="hud-detail-card"><div class="hud-detail-head">'
+      + '<span class="hud-detail-name"></span>'
+      + '<button type="button" class="hud-detail-close" title="Fermer">✕</button></div>'
+      + '<div class="hud-detail-sub"></div>'
+      + '<div class="hud-detail-body"></div>'
+      + '<div class="hud-detail-foot"><button type="button" class="hud-detail-range">Voir la range ▸</button></div></div>';
+    document.body.appendChild(modal);
+    modal.addEventListener('click', (e) => { if (e.target === modal) modal.style.display = 'none'; });
+    modal.querySelector('.hud-detail-close').addEventListener('click', () => { modal.style.display = 'none'; });
+    modal.querySelector('.hud-detail-range').addEventListener('click', () => {
+      modal.style.display = 'none';
+      openRangeGrid(modal._player);
+    });
+  }
+  modal._player = name;
+  const s = _statsCache[name];
+  modal.querySelector('.hud-detail-name').textContent = name;
+  modal.querySelector('.hud-detail-sub').textContent = s ? (s.hands + ' main' + (s.hands === 1 ? '' : 's')) : 'aucune donnée';
+  let rows = '';
+  for (const [id, lbl, title] of _DETAIL_ROWS) {
+    const val = s ? _detailFmt(id, s[id]) : '–';
+    const col = s ? statColor(id, s[id]) : '';
+    rows += '<div class="hud-detail-row" title="' + _hudEsc(title) + '">'
+      + '<span class="hud-detail-lbl">' + lbl + '</span>'
+      + '<span class="hud-detail-val"' + (col ? ' style="color:' + col + '"' : '') + '>' + val + '</span></div>';
+  }
+  modal.querySelector('.hud-detail-body').innerHTML = rows;
+  modal.style.display = 'flex';
+}
+if (typeof window !== 'undefined') window._openHudDetail = openHudDetail;
 
 // ── Grille de range 13×13 ───────────────────────────────────────────────────
 function openRangeGrid(name, posFilter, playersFilter) {
