@@ -419,6 +419,7 @@ export const strings = {
     abLicense2:'Le texte complet des licences est disponible avec le code source :',
     abLibsIntro:"Ce client web s'appuie sur les projets libres suivants :",
     abLibFont:'police de caractères', abLibProxy:'proxy WebSocket',
+    abLibChatTr:'traduction du chat (service en ligne de Google)',
     abAuthors:'Auteurs :',
     abAuthRole1:"idée initiale, architecture de base, implémentation de l'interface graphique, édition des graphismes de l'interface graphique, paquets Linux",
     abAuthRole2:'idée initiale, architecture de base, développement du moteur',

@@ -1069,3 +1069,5 @@ A huge thank you to the entire **PokerTH team** for creating and maintaining suc
 For compatibility, the in-game table — its layout, colours and poker terms — deliberately tracks PokerTH's official **QML client**, so the web client stays visually and behaviourally aligned with it.
 
 This project is developed in ongoing collaboration with the PokerTH maintainer, with the goal of becoming one of the project's official clients.
+
+In-game chat translation is powered by **Google Translate** — messages are sent to Google's translation service directly from the player's browser, only when the player taps the translate button.

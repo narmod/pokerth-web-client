@@ -417,6 +417,7 @@ export const strings = {
     abLicense2:'The full license texts are available with the source code:',
     abLibsIntro:'This web client builds on the following free software projects:',
     abLibFont:'typeface', abLibProxy:'WebSocket proxy',
+    abLibChatTr:'chat translation (Google online service)',
     abAuthors:'Authors:',
     abAuthRole1:'initial idea, basic architecture, GUI implementation, GUI graphics editing, Linux packages',
     abAuthRole2:'initial idea, basic architecture, engine development',
