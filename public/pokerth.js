@@ -9758,6 +9758,12 @@ const App = (() => {
   };
 
   function getPlayerName(pid) { return players[pid] || (pid === myId ? myName : '#'+pid); }
+  // Liste des joueurs actuellement à la table (pour le panneau stats).
+  window._statsTablePlayers = function () {
+    try {
+      return (seats || []).map(function (pid) { return { pid: pid, name: getPlayerName(pid) }; });
+    } catch (_e) { return []; }
+  };
 
   // ══ TURN TIMER ══
   function _timerSvg(secs, total) {
@@ -16784,15 +16790,24 @@ function toggleReactionPanel() {
 // ── Panneau info unifié (parité QML GameInfoPanel) : le journal et le
 // moniteur d'odds partagent UNE fenêtre à deux onglets Historique/Chances. ──
 function gipShowTab(tab) {
-  var odds = tab === 'odds';
-  var lb = document.getElementById('g-log-body'), ob = document.getElementById('g-odds-body');
-  var tl = document.getElementById('gip-tab-log'), to = document.getElementById('gip-tab-odds');
-  if (lb) lb.style.display = odds ? 'none' : '';
-  if (ob) ob.style.display = odds ? '' : 'none';
-  if (tl) tl.classList.toggle('gip-on', !odds);
-  if (to) to.classList.toggle('gip-on', odds);
-  try { localStorage.setItem('pth_gip_tab', odds ? 'odds' : 'log'); } catch (e) {}
-  if (odds) { try { if (typeof window._renderOdds === 'function') window._renderOdds(); } catch (e) {} }
+  if (tab !== 'log' && tab !== 'odds' && tab !== 'stats') tab = 'log';
+  var lb = document.getElementById('g-log-body'),
+      ob = document.getElementById('g-odds-body'),
+      sb = document.getElementById('g-stats-body');
+  var tl = document.getElementById('gip-tab-log'),
+      to = document.getElementById('gip-tab-odds'),
+      ts = document.getElementById('gip-tab-stats');
+  if (lb) lb.style.display = tab === 'log' ? '' : 'none';
+  if (ob) ob.style.display = tab === 'odds' ? '' : 'none';
+  if (sb) sb.style.display = tab === 'stats' ? '' : 'none';
+  if (tl) tl.classList.toggle('gip-on', tab === 'log');
+  if (to) to.classList.toggle('gip-on', tab === 'odds');
+  if (ts) ts.classList.toggle('gip-on', tab === 'stats');
+  // L'assistance (hand-strength) n'a de sens que sur l'onglet Historique.
+  var asg = document.getElementById('gip-assist');
+  try { localStorage.setItem('pth_gip_tab', tab); } catch (e) {}
+  if (tab === 'odds') { try { if (typeof window._renderOdds === 'function') window._renderOdds(); } catch (e) {} }
+  if (tab === 'stats') { try { if (typeof window._renderStats === 'function') window._renderStats(); } catch (e) {} }
   try { if (typeof window._gipAssistSync === 'function') window._gipAssistSync(); } catch (e) {}
 }
 window.gipShowTab = gipShowTab;
@@ -16825,7 +16840,7 @@ function toggleLog() {
     var lb = document.getElementById('g-log-body');
     if (lb) lb.scrollTop = 0; // le plus récent est en haut (liste inversée)
     // Restaurer le dernier onglet consulté (Historique par défaut).
-    try { gipShowTab(localStorage.getItem('pth_gip_tab') === 'odds' ? 'odds' : 'log'); } catch (e) {}
+    try { gipShowTab((function(){try{var _t=localStorage.getItem('pth_gip_tab');return (_t==='odds'||_t==='stats')?_t:'log';}catch(_e){return 'log';}})()); } catch (e) {}
   }
 }
 
@@ -17291,7 +17306,7 @@ function renderPlayersList() {
   });
 })();
 
-;(function(){ window.BUILD_VERSION='0.3.735-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.736-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

@@ -397,7 +397,7 @@ export const strings = {
     pokerFold:'Fold', pokerCheck:'Check', pokerCall:'Call', pokerBet:'Bet', pokerRaise:'Raise', pokerAllin:'All-In',
     // v0.3.579 : cles utilisees dans le code mais absentes du catalogue (err* de JoinGameFailed, affichage BB/jetons, mots de passe, onglets info)
     displayBB:'Amounts shown in big blinds', displayChips:'Amounts shown in chips', errGameFull:'Game is full', errBadGameName:'Bad game name', errInvalidSettings:'Invalid game settings', errBlocked:'IP address blocked', errRejoinFailed:'Rejoin failed',
-    errNoSpectators:'Spectators are not allowed', serverPassword:'Server password (optional)', userPassword:'User password (optional)', avatarImageTooltip:'Choose a custom image', gipTabLog:'Log', gipTabOdds:'Odds',
+    errNoSpectators:'Spectators are not allowed', serverPassword:'Server password (optional)', userPassword:'User password (optional)', avatarImageTooltip:'Choose a custom image', gipTabLog:'Log', gipTabOdds:'Odds', gipTabStats:'Stats',
     // Page « À propos de PokerTH » (parité AboutPage QML)
     aboutMenu:'About PokerTH', abTitle:'About PokerTH',
     abTabAbout:'About', abTabProject:'Project', abTabThanks:'Thanks to', abTabLicense:'License', abTabLibs:'Third-party libraries',

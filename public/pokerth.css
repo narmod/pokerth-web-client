@@ -7951,6 +7951,21 @@ html:not([data-seat-struct="qml"]) .seat:not(.me) .seat-foot { margin-top: 1px; 
 #g-odds-body .odds-row.warm .odds-bar>i{background:linear-gradient(90deg,#f0a020,#b36b00)}
 #g-odds-body .odds-row.hot .odds-bar>i{background:linear-gradient(90deg,#50c878,#1e8c4e)}
 #g-odds-body .odds-row.hot .odds-pct{color:#7ce0a0;font-weight:700}
+
+/* Onglet Stats (panneau info) : tableau VPIP/PFR/AF... des joueurs de la table. */
+#g-stats-body .odds-hd{font-weight:700;font-size:12px;color:var(--box-accent, var(--chatlog-text, var(--gold)));margin:2px 0 5px;letter-spacing:.3px}
+#g-stats-body .stats-wait{opacity:.6;padding:4px 0;font-size:12px}
+#g-stats-body .stats-scope{display:flex;gap:4px;margin:0 0 6px}
+#g-stats-body .stats-scope-btn{flex:0 0 auto;background:transparent;border:1px solid var(--border, rgba(255,255,255,.15));color:var(--chatlog-muted, var(--text-dim,#9aa3b5));font-size:0.6rem;letter-spacing:.1em;text-transform:uppercase;padding:2px 9px;border-radius:6px;cursor:pointer}
+#g-stats-body .stats-scope-btn.on{color:var(--chatlog-text, var(--gold));border-color:var(--box-accent, var(--gold-dim));background:rgba(var(--gold-rgb),.12);font-weight:700}
+#g-stats-body .stats-scroll{overflow-x:auto}
+#g-stats-body .stats-table{border-collapse:collapse;width:100%;font-size:11px;font-variant-numeric:tabular-nums}
+#g-stats-body .stats-table th{color:var(--chatlog-muted, var(--text-dim,#9aa3b5));font-weight:700;text-align:right;padding:2px 5px;border-bottom:1px solid var(--border, rgba(255,255,255,.12));white-space:nowrap;cursor:help}
+#g-stats-body .stats-table td{text-align:right;padding:2px 5px;border-bottom:1px solid rgba(255,255,255,.05);white-space:nowrap}
+#g-stats-body .stats-table .stats-name{text-align:left;max-width:96px;overflow:hidden;text-overflow:ellipsis;color:var(--chatlog-text, var(--text));font-weight:600}
+#g-stats-body .stats-table tbody tr:hover td{background:rgba(var(--gold-rgb),.06)}
+#g-stats-body .stats-empty{text-align:center;opacity:.6;padding:10px 0}
+
 #odds-monitor{--ws:1;position:fixed;top:54px;left:8px;z-index:42;width:132px;padding:calc(5px*var(--ws)) calc(7px*var(--ws)) calc(6px*var(--ws));background:var(--panel);border:1px solid var(--border);border-radius:calc(9px*var(--ws));box-shadow:0 4px 14px rgba(0,0,0,.42);font-size:calc(10px*var(--ws));line-height:1.25;color:var(--text);pointer-events:auto;user-select:none;cursor:move;touch-action:none}
 #odds-monitor.odds-drag{opacity:.96;box-shadow:0 8px 24px rgba(0,0,0,.58);border-color:var(--border-hi)}
 #odds-monitor .odds-hd{font-weight:700;font-size:calc(10.5px*var(--ws));color:var(--gold);margin-bottom:calc(3px*var(--ws));letter-spacing:.3px;padding-right:calc(14px*var(--ws))}

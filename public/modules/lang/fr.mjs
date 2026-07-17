@@ -26,6 +26,7 @@ export const strings = {
     buttonsFlat:"Aplat",
     gipTabLog:"Historique",
     gipTabOdds:"Chances",
+    gipTabStats:"Stats",
     advRemoveGone:"Retirer les joueurs partis et replacer la table",
     advWinnerPopup:"Fenêtre du gagnant en fin de main",
     // PlayerWinnerOverlay (badge gagnant sur la boîte, parité QML)

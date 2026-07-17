@@ -443,14 +443,482 @@ class HandStore {
 }
 
 
+// PokerTH web client — Calculateur de statistiques (port du tracker MCNCHEESYF
+// v1.1.4, GPL-3.0, accord d'Ollika). Port fidèle ligne-à-ligne de
+// src/stats/calculator.py + models.py. Voir SPEC_STATS.md.
+//
+// Entrée : tables au modèle .pdb (games/players/hands/actions) telles que
+// produites par le recorder (handlog.mjs) et relues d'IndexedDB.
+// Sortie : { playerName -> statsDict } identique à PlayerStats.to_dict().
+//
+// Aucune dépendance. Utilisable dans le navigateur ou en Node (tests).
 
+const VPIP_ACTIONS = ['calls', 'bets', 'is all in with'];
+const PFR_ACTIONS = ['bets', 'is all in with'];
+const AGGRESSIVE_ACTIONS = ['bets', 'is all in with'];
+const PASSIVE_ACTIONS = ['calls'];
+const RAISE_ACTIONS = ['bets', 'is all in with'];
+const FOLD_ACTIONS = ['folds'];
+const SKIP_PATTERNS = ['blind', 'starts as dealer', 'shows', 'wins'];
+
+const containsAny = (str, list) => { const l = (str || '').toLowerCase(); return list.some((x) => l.indexOf(x) !== -1); };
+const isSkip = (str) => { const l = (str || '').toLowerCase(); return SKIP_PATTERNS.some((s) => l.indexOf(s) !== -1); };
+// Python round() = banker's rounding (arrondi au pair) sur 1 décimale.
+// Nécessaire pour parité exacte avec l'oracle (ex. 0.25 → 0.2, pas 0.3).
+const round1 = (n) => {
+  if (!isFinite(n)) return n;
+  const x = n * 10;
+  const floor = Math.floor(x);
+  const diff = x - floor;
+  let r;
+  const EPS = 1e-9;
+  if (Math.abs(diff - 0.5) < EPS) {
+    r = (floor % 2 === 0) ? floor : floor + 1; // vers le pair
+  } else {
+    r = Math.round(x);
+  }
+  return r / 10;
+};
+
+// ── Index des données (équivalent du LogParser) ────────────────────────────
+class StatsData {
+  // tables : { games:[], players:[], hands:[], actions:[] } au modèle .pdb.
+  constructor(tables) {
+    this.games = tables.games || [];
+    this.players = tables.players || [];
+    this.hands = tables.hands || [];
+    this.actions = tables.actions || [];
+
+    // actions triées par actionID (ordre chronologique fiable)
+    this._actions = this.actions.slice().sort((a, b) => (a.actionID | 0) - (b.actionID | 0));
+
+    // index actions par (ug,hand,beRo) et par (ug,hand)
+    this._byGHB = new Map();
+    this._byGH = new Map();
+    for (const a of this._actions) {
+      const ug = a.uniqueGameID, h = a.handID, r = a.beRo;
+      const kGH = ug + ':' + h;
+      const kGHB = kGH + ':' + r;
+      (this._byGHB.get(kGHB) || this._byGHB.set(kGHB, []).get(kGHB)).push(a);
+      (this._byGH.get(kGH) || this._byGH.set(kGH, []).get(kGH)).push(a);
+    }
+
+    // Player → { game → seat }
+    this._seatsOf = new Map();
+    for (const p of this.players) {
+      let m = this._seatsOf.get(p.player); if (!m) { m = new Map(); this._seatsOf.set(p.player, m); }
+      m.set(p.uniqueGameID, p.seat);
+    }
+
+    // Hand → stacks (Seat_i_Cash) index
+    this._handByGH = new Map();
+    for (const h of this.hands) this._handByGH.set(h.uniqueGameID + ':' + h.handID, h);
+  }
+
+  getPlayers() { return Array.from(this._seatsOf.keys()); }
+  getPlayerSeats(name) { return this._seatsOf.get(name) || new Map(); }
+
+  getActions(ug, hand, beRo) {
+    if (beRo != null) return this._byGHB.get(ug + ':' + hand + ':' + beRo) || [];
+    return this._byGH.get(ug + ':' + hand) || [];
+  }
+
+  // Mains où le joueur a AGI (via table Action, siège du joueur dans la partie).
+  getHandsPlayedByPlayer(name) {
+    const seats = this.getPlayerSeats(name);
+    const out = [];
+    const seen = new Set();
+    for (const a of this._actions) {
+      const seat = seats.get(a.uniqueGameID);
+      if (seat == null || a.seat !== seat) continue;
+      const k = a.uniqueGameID + ':' + a.handID;
+      if (seen.has(k)) continue;
+      seen.add(k);
+      out.push([a.uniqueGameID, a.handID]);
+    }
+    return out;
+  }
+
+  // Stack de début de main pour le joueur : {"ug:hand" -> cash}.
+  getPlayerHandStacks(name) {
+    const seats = this.getPlayerSeats(name);
+    const res = new Map();
+    for (const h of this.hands) {
+      const seat = seats.get(h.uniqueGameID);
+      if (seat == null) continue;
+      const cash = h['Seat_' + seat + '_Cash'];
+      if (cash != null) res.set(h.uniqueGameID + ':' + h.handID, cash);
+    }
+    return res;
+  }
+
+  handHasShowdown(ug, hand) { return this.getActions(ug, hand, 4).length > 0; }
+
+  getShowdownWinner(ug, hand) {
+    const b4 = this.getActions(ug, hand, 4);
+    for (const a of b4) if (a.action === 'wins') return a.seat;
+    return null;
+  }
+
+  // Toutes les actions preflop (tous joueurs) pour une main.
+  allPreflopActions(ug, hand) { return this.getActions(ug, hand, 0); }
+
+  // Actions preflop du joueur.
+  preflopActionsOfPlayer(name) {
+    const seats = this.getPlayerSeats(name);
+    return this._actions.filter((a) => a.beRo === 0 && a.seat === seats.get(a.uniqueGameID));
+  }
+
+  allActionsOfPlayer(name) {
+    const seats = this.getPlayerSeats(name);
+    return this._actions.filter((a) => a.seat === seats.get(a.uniqueGameID));
+  }
+}
+
+// ── Calculateur ────────────────────────────────────────────────────────────
+class StatsCalculator {
+  constructor(data) { this.d = data; }
+
+  calculatePlayerStats(name) {
+    const d = this.d;
+    const S = {
+      name, total_hands: 0,
+      vpip_hands: 0, pfr_hands: 0,
+      total_bets: 0, total_calls: 0,
+      three_bet_made: 0, three_bet_opportunities: 0,
+      cbet_made: 0, cbet_opportunities: 0,
+      fold_to_3bet_made: 0, fold_to_3bet_opportunities: 0,
+      fold_to_cbet_made: 0, fold_to_cbet_opportunities: 0,
+      hands_saw_flop: 0, hands_went_to_showdown: 0, showdowns_won: 0,
+    };
+
+    const handsPlayed = d.getHandsPlayedByPlayer(name);
+    S.total_hands = handsPlayed.length;
+    if (S.total_hands === 0) return this._finalize(S);
+
+    const playerSeats = d.getPlayerSeats(name);
+    const playerHandStacks = d.getPlayerHandStacks(name);
+
+    // preflop du joueur groupé par main
+    const preflopByHand = new Map();
+    for (const a of d.preflopActionsOfPlayer(name)) {
+      const k = a.uniqueGameID + ':' + a.handID;
+      (preflopByHand.get(k) || preflopByHand.set(k, []).get(k)).push(a);
+    }
+
+    const pfrHands = [];
+
+    for (const [k, actions] of preflopByHand) {
+      let hasVpip = false, hasPfr = false;
+      for (const a of actions) {
+        const at = (a.action || '').toLowerCase();
+        if (at.indexOf('blind') !== -1) continue;
+        if (containsAny(at, VPIP_ACTIONS)) hasVpip = true;
+        if (containsAny(at, PFR_ACTIONS)) hasPfr = true;
+      }
+      if (hasVpip) S.vpip_hands += 1;
+      if (hasPfr) { S.pfr_hands += 1; pfrHands.push(k); }
+
+      const [ug, hand] = k.split(':').map(Number);
+      const seat = playerSeats.get(ug);
+      if (seat != null) {
+        const allPre = d.allPreflopActions(ug, hand);
+        if (allPre.length) {
+          const stack = playerHandStacks.has(k) ? playerHandStacks.get(k) : null;
+          const tb = this._analyzeThreeBet(allPre, seat, stack);
+          if (tb.opportunity) { S.three_bet_opportunities += 1; if (tb.made) S.three_bet_made += 1; }
+        }
+      }
+    }
+
+    // C-Bet + Fold to 3-Bet : sur les mains où le joueur a raise preflop
+    for (const k of pfrHands) {
+      const [ug, hand] = k.split(':').map(Number);
+      const seat = playerSeats.get(ug);
+      if (seat == null) continue;
+      const cb = this._analyzeCbet(ug, hand, seat);
+      if (cb.opportunity) { S.cbet_opportunities += 1; if (cb.made) S.cbet_made += 1; }
+      const f3 = this._analyzeFoldTo3bet(d.allPreflopActions(ug, hand), seat);
+      if (f3.opportunity) { S.fold_to_3bet_opportunities += 1; if (f3.folded) S.fold_to_3bet_made += 1; }
+    }
+
+    // Fold to C-Bet, WTSD, W$SD
+    for (const [ug, hand] of handsPlayed) {
+      const seat = playerSeats.get(ug);
+      if (seat == null) continue;
+      const flop = d.getActions(ug, hand, 1);
+      const sawFlop = flop.some((a) => a.seat === seat);
+      if (!sawFlop) continue;
+      S.hands_saw_flop += 1;
+
+      const fcb = this._analyzeFoldToCbet(ug, hand, seat, d.allPreflopActions(ug, hand));
+      if (fcb.opportunity) { S.fold_to_cbet_opportunities += 1; if (fcb.folded) S.fold_to_cbet_made += 1; }
+
+      if (d.handHasShowdown(ug, hand)) {
+        const sd = d.getActions(ug, hand, 4);
+        const atSd = sd.some((a) => a.seat === seat);
+        if (atSd) {
+          S.hands_went_to_showdown += 1;
+          if (d.getShowdownWinner(ug, hand) === seat) S.showdowns_won += 1;
+        }
+      }
+    }
+
+    // AF : toutes les actions du joueur hors showdown
+    for (const a of d.allActionsOfPlayer(name)) {
+      if (a.beRo === 4) continue;
+      const at = (a.action || '').toLowerCase();
+      if (containsAny(at, AGGRESSIVE_ACTIONS)) S.total_bets += 1;
+      if (containsAny(at, PASSIVE_ACTIONS)) S.total_calls += 1;
+    }
+
+    return this._finalize(S);
+  }
+
+  _analyzeThreeBet(allPre, playerSeat, playerStack) {
+    const res = { opportunity: false, made: false };
+    let lastIdx = -1, lastAmt = 0;
+    for (let i = 0; i < allPre.length; i++) {
+      const a = allPre[i];
+      if (a.seat === playerSeat || isSkip(a.action)) continue;
+      const at = (a.action || '').toLowerCase();
+      if (!containsAny(at, RAISE_ACTIONS)) continue;
+      const amt = a.amount || 0;
+      const hasResp = allPre.slice(i + 1).some((x) => x.seat === playerSeat && !isSkip(x.action));
+      if (!hasResp) continue;
+      if (at.indexOf('is all in with') !== -1) {
+        if (playerStack != null && playerStack <= amt) continue;
+        const allinSeat = a.seat;
+        const othersCan = allPre.slice(i + 1).some((x) => x.seat !== playerSeat && x.seat !== allinSeat && !isSkip(x.action));
+        if (!othersCan) continue;
+      }
+      lastIdx = i; lastAmt = amt;
+    }
+    if (lastIdx === -1) return res;
+    res.opportunity = true;
+    for (const a of allPre.slice(lastIdx + 1)) {
+      if (a.seat !== playerSeat || isSkip(a.action)) continue;
+      if (containsAny((a.action || '').toLowerCase(), RAISE_ACTIONS)) {
+        if ((a.amount || 0) > lastAmt) res.made = true;
+      }
+      break; // une seule action compte
+    }
+    return res;
+  }
+
+  _analyzeCbet(ug, hand, playerSeat) {
+    const res = { opportunity: false, made: false };
+    const flop = this.d.getActions(ug, hand, 1);
+    if (!flop.length) return res;
+    res.opportunity = true;
+    for (const a of flop) {
+      if (a.seat === playerSeat && containsAny((a.action || '').toLowerCase(), RAISE_ACTIONS)) { res.made = true; break; }
+    }
+    return res;
+  }
+
+  _analyzeFoldTo3bet(allPre, playerSeat) {
+    const res = { opportunity: false, folded: false };
+    let playerRaised = false, threeBet = false;
+    for (const a of allPre) {
+      const at = (a.action || '').toLowerCase();
+      if (a.seat === playerSeat) {
+        if (containsAny(at, RAISE_ACTIONS)) playerRaised = true;
+        else if (playerRaised && threeBet && containsAny(at, FOLD_ACTIONS)) { res.folded = true; break; }
+      } else if (playerRaised && containsAny(at, RAISE_ACTIONS)) {
+        threeBet = true; res.opportunity = true;
+      }
+    }
+    return res;
+  }
+
+  _analyzeFoldToCbet(ug, hand, playerSeat, allPre) {
+    const res = { opportunity: false, folded: false };
+    let raiserSeat = null;
+    for (const a of allPre) {
+      if (a.seat !== playerSeat && containsAny((a.action || '').toLowerCase(), RAISE_ACTIONS)) raiserSeat = a.seat;
+    }
+    if (raiserSeat == null) return res;
+    const flop = this.d.getActions(ug, hand, 1);
+    let cbet = false;
+    for (const a of flop) {
+      const at = (a.action || '').toLowerCase();
+      if (a.seat === raiserSeat) { if (containsAny(at, RAISE_ACTIONS)) cbet = true; }
+      else if (a.seat === playerSeat && cbet) {
+        res.opportunity = true;
+        if (containsAny(at, FOLD_ACTIONS)) res.folded = true;
+        break;
+      }
+    }
+    return res;
+  }
+
+  _finalize(S) {
+    const pct = (n, d) => (d === 0 ? 0 : (n / d) * 100);
+    const af = S.total_calls === 0 ? (S.total_bets > 0 ? Infinity : 0) : S.total_bets / S.total_calls;
+    return {
+      name: S.name,
+      hands: S.total_hands,
+      vpip: round1(pct(S.vpip_hands, S.total_hands)),
+      pfr: round1(pct(S.pfr_hands, S.total_hands)),
+      af: af === Infinity ? 'inf' : round1(af),
+      three_bet: round1(pct(S.three_bet_made, S.three_bet_opportunities)),
+      cbet: round1(pct(S.cbet_made, S.cbet_opportunities)),
+      fold_to_3bet: round1(pct(S.fold_to_3bet_made, S.fold_to_3bet_opportunities)),
+      fold_to_cbet: round1(pct(S.fold_to_cbet_made, S.fold_to_cbet_opportunities)),
+      wtsd: round1(pct(S.hands_went_to_showdown, S.hands_saw_flop)),
+      wsd: round1(pct(S.showdowns_won, S.hands_went_to_showdown)),
+    };
+  }
+
+  calculateAllPlayersStats() {
+    const out = {};
+    for (const name of this.d.getPlayers()) out[name] = this.calculatePlayerStats(name);
+    return out;
+  }
+}
+
+
+// PokerTH web client — Onglet Stats du panneau info (GameInfoPanel).
+//
+// Affiche les stats (VPIP/PFR/AF/3Bet/CBet/F3B/FCB/WTSD/W$SD) de tous les
+// joueurs de la table, avec bascule Session courante / Historique cumulé.
+// Lit les mains persistées via window._handlogStore et calcule via
+// StatsCalculator (stats.mjs). Ne modifie pas le jeu.
+//
+// Dépend de : window._handlogStore (handlog.mjs), StatsData/StatsCalculator
+// (assemblés dans le même module), et des globales du client exposées :
+//   window._statsTablePlayers() → [{name}] joueurs de la table (fourni par le glue).
+
+// Rendu paresseux : ne calcule que si l'onglet Stats est visible.
+let _statsScope = 'session'; // 'session' | 'all'
+try { const v = localStorage.getItem('pth_stats_scope'); if (v === 'all' || v === 'session') _statsScope = v; } catch (_e) {}
+
+const _esc = (s) => String(s == null ? '' : s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+
+// Construit les tables .pdb (modèle recorder) à partir du store, filtrées par
+// portée. En session : uniquement la session courante du recorder.
+async function _loadTables(scope) {
+  const store = (typeof window !== 'undefined') ? window._handlogStore : null;
+  if (!store) return { games: [], players: [], hands: [], actions: [] };
+  const all = await store.loadAll();
+  let games = all.games, players = all.players, hands = all.hands, actions = all.actions;
+  if (scope === 'session') {
+    const sid = (window._handlog && window._handlog.sessionId) || null;
+    if (sid) {
+      const keep = (r) => r.sessionId === sid;
+      games = games.filter(keep); players = players.filter(keep);
+      hands = hands.filter(keep); actions = actions.filter(keep);
+    }
+  }
+  return { games, players, hands, actions };
+}
+
+// Colonnes du tableau (clé de stat, libellé court, titre).
+const COLS = [
+  ['hands', 'N', 'Mains jouées'],
+  ['vpip', 'VPIP', 'Voluntarily Put $ In Pot'],
+  ['pfr', 'PFR', 'Pre-Flop Raise'],
+  ['af', 'AF', 'Aggression Factor'],
+  ['three_bet', '3B', '3-Bet %'],
+  ['cbet', 'CB', 'Continuation Bet %'],
+  ['fold_to_3bet', 'F3B', 'Fold to 3-Bet %'],
+  ['fold_to_cbet', 'FCB', 'Fold to C-Bet %'],
+  ['wtsd', 'WTSD', 'Went To Showdown %'],
+  ['wsd', 'W$SD', 'Won $ at Showdown %'],
+];
+
+function _fmt(key, v) {
+  if (v == null) return '–';
+  if (key === 'hands') return String(v);
+  if (key === 'af') return v === 'inf' ? '∞' : String(v);
+  return v + '%';
+}
+
+// Rendu principal — exposé en window._renderStats().
+async function renderStatsPanel() {
+  const el = (typeof document !== 'undefined') ? document.getElementById('g-stats-body') : null;
+  if (!el) return;
+  // N'agir que si le panneau est ouvert sur l'onglet stats.
+  const panel = document.getElementById('g-log-panel');
+  const open = !!(panel && panel.style.display !== 'none');
+  let tab = 'log'; try { tab = localStorage.getItem('pth_gip_tab') || 'log'; } catch (_e) {}
+  if (!open || tab !== 'stats') return;
+  el.style.display = '';
+
+  // Joueurs de la table (fournis par le glue du client).
+  let tablePlayers = [];
+  try { if (typeof window._statsTablePlayers === 'function') tablePlayers = window._statsTablePlayers() || []; } catch (_e) {}
+  const tableNames = new Set(tablePlayers.map((p) => p.name));
+
+  // En-tête : bascule de portée.
+  const scopeBtns =
+    '<div class="stats-scope">'
+    + '<button type="button" class="stats-scope-btn' + (_statsScope === 'session' ? ' on' : '') + '" data-scope="session">Session</button>'
+    + '<button type="button" class="stats-scope-btn' + (_statsScope === 'all' ? ' on' : '') + '" data-scope="all">Historique</button>'
+    + '</div>';
+
+  if (!el._built) { el.innerHTML = '<div class="odds-hd">Stats</div>' + scopeBtns + '<div class="stats-wait">…</div>'; el._built = true; }
+
+  const tables = await _loadTables(_statsScope);
+  let statsByName = {};
+  try {
+    const data = new StatsData(tables);
+    const calc = new StatsCalculator(data);
+    statsByName = calc.calculateAllPlayersStats();
+  } catch (_e) { statsByName = {}; }
+
+  // Lignes : joueurs de la table d'abord (ordre de la table), puis rien d'autre.
+  const rowsFor = tablePlayers.length
+    ? tablePlayers.map((p) => p.name)
+    : Object.keys(statsByName);
+
+  let head = '<tr><th class="stats-name"></th>';
+  for (const [, lbl, title] of COLS) head += '<th title="' + _esc(title) + '">' + _esc(lbl) + '</th>';
+  head += '</tr>';
+
+  let body = '';
+  for (const name of rowsFor) {
+    const s = statsByName[name];
+    body += '<tr><td class="stats-name" title="' + _esc(name) + '">' + _esc(name) + '</td>';
+    for (const [key] of COLS) body += '<td>' + (s ? _esc(_fmt(key, s[key])) : '–') + '</td>';
+    body += '</tr>';
+  }
+  if (!body) body = '<tr><td class="stats-empty" colspan="' + (COLS.length + 1) + '">Aucune donnée pour le moment.</td></tr>';
+
+  el.innerHTML = '<div class="odds-hd">Stats</div>' + scopeBtns
+    + '<div class="stats-scroll"><table class="stats-table"><thead>' + head + '</thead><tbody>' + body + '</tbody></table></div>';
+
+  // Brancher les boutons de portée.
+  const btns = el.querySelectorAll('.stats-scope-btn');
+  btns.forEach((b) => {
+    b.onclick = () => {
+      const sc = b.getAttribute('data-scope');
+      if (sc && sc !== _statsScope) {
+        _statsScope = sc;
+        try { localStorage.setItem('pth_stats_scope', sc); } catch (_e) {}
+        renderStatsPanel();
+      }
+    };
+  });
+}
+
+if (typeof window !== 'undefined') window._renderStats = renderStatsPanel;
+
+
+
+// ── Bootstrap : installe window._handlog (recorder + persistance IndexedDB) ──
 (function () {
   try {
     var store = new HandStore();
     var rec = new HandRecorder({
       version: (typeof window !== 'undefined' && window.BUILD_VERSION) ? ('web-' + window.BUILD_VERSION) : 'web',
       onGamePersist: function (session, game, players) { store.putSession(rec.sessionId, session); store.putGame(rec.sessionId, game); store.putPlayers(rec.sessionId, players); },
-      onHandPersist: function (hand, actions) { store.putHandBundle(rec.sessionId, hand, actions); }
+      onHandPersist: function (hand, actions) {
+        store.putHandBundle(rec.sessionId, hand, actions);
+        // Rafraîchir le panneau stats s'il est ouvert.
+        try { if (typeof window._renderStats === 'function') window._renderStats(); } catch (_e) {}
+      }
     });
     if (typeof window !== 'undefined') { window._handlog = rec; window._handlogStore = store; }
   } catch (_e) {}
