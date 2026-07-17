@@ -14640,20 +14640,21 @@ function _maybeShowNextHandBtn() {
       //   Normal     = défauts du client PokerTH desktop (150 BB, hausse/8 mains)
       //   Rapide     = turbo (30 BB, blindes rapides, timer court)
       // raiseEvery est en MAINS : le preset rebascule l'intervalle sur « mains ».
-      // Formats pokerth.net documentés sur le forum officiel (v0.3.517) :
-      //   Ranking = réglages exacts des parties classées (10k / SB 50 /
-      //             double toutes les 11 mains / 5 s) — hyper-turbo assumé.
-      //   WeCup   = réglages des finales mensuelles WEC (double/25 mains,
-      //             15 s, délai 7 s) — le format « équilibré » communautaire.
-      //   BBC     = hausse AU TEMPS façon tournois BBC (toutes les 5 min).
+      // Formats pokerth.net alignés sur la source QML 2.1.3 (v0.3.685) —
+      // vorlagen communityPresets extraites de LobbyCreateGamePage :
+      //   Ranking = constantes serveur des parties classées (10k / SB 50 /
+      //             double toutes les 11 mains) + 5 s — hyper-turbo assumé.
+      //   WeCup   = format WEC officiel (double/22 mains, 12 s, délai 7 s).
+      //   BBC     = BBC Step 3 officiel (5000 / SB 25, hausse AU TEMPS
+      //             toutes les 5 min, 10 s, délai 7 s).
       // raiseMode : 1 = mains (défaut), 2 = minutes.
       var P = {
         tranquille: { stack:5000,  blind:10, timeout:30, raiseEvery:15, delay:10 },
         normal:     { stack:3000,  blind:10, timeout:20, raiseEvery:8,  delay:7  },
         rapide:     { stack:1500,  blind:25, timeout:7,  raiseEvery:4,  delay:5  },   // délai min 5 (borne QML 5–20)
         ranking:    { stack:10000, blind:50, timeout:5,  raiseEvery:11, delay:5  },
-        wecup:      { stack:10000, blind:50, timeout:15, raiseEvery:25, delay:7  },
-        bbc:        { stack:10000, blind:25, timeout:10, raiseEvery:5,  delay:5, raiseMode:2 }
+        wecup:      { stack:10000, blind:50, timeout:12, raiseEvery:22, delay:7  },
+        bbc:        { stack:5000,  blind:25, timeout:10, raiseEvery:5,  delay:7, raiseMode:2 }
       };
       var v = P[name];
       if (!v) return;
@@ -17155,7 +17156,7 @@ function renderPlayersList() {
   });
 })();
 
-;(function(){ window.BUILD_VERSION='0.3.684-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.685-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
