@@ -5733,16 +5733,24 @@ html[data-table="pokerth-live"] .raise-slider { accent-color: #4CAF50; }
   pointer-events: auto;
   z-index: 1;
 }
-/* Icône Discord au-dessus de la ligne de crédits (pied de page classique). */
-.cf-discord {
+/* Icône Discord au-dessus de la ligne de crédits (pied de page classique).
+   Pastille ronde blurple officielle + logo blanc, comme les icônes sociales
+   d'un footer de site. Sélecteur .connect-footer .cf-discord pour battre la
+   règle générique .connect-footer a (couleur or + soulignement pointillé). */
+.connect-footer .cf-discord {
   display: inline-flex;
-  color: #5865F2; /* blurple officiel Discord */
-  opacity: 0.9;
-  margin-bottom: 4px;
-  filter: drop-shadow(0 1px 3px rgba(0,0,0,0.8));
-  transition: opacity 0.2s, color 0.2s;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: #5865F2; /* blurple officiel Discord */
+  border-bottom: none;
+  margin-bottom: 5px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.6);
+  transition: background 0.2s, transform 0.2s;
 }
-.cf-discord:hover { opacity: 1; color: #6a76f5; }
+.connect-footer .cf-discord:hover { background: #6a76f5; transform: scale(1.08); }
 
 .connect-footer-line {
   margin: 1px 0;
