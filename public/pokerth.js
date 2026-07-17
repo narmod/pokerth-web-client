@@ -5573,7 +5573,9 @@ const App = (() => {
     var canCheck0 = toCall0 === 0;
     var act = canCheck0 ? 2 : (_playingMode === 1 ? 3 : 1); // 2=check, 3=call, 1=fold
     var amt = (act === 3) ? toCall0 : 0;
-    renderGameWaiting('\u23e9 ' + t(act === 2 ? 'autoChecked' : act === 3 ? 'autoCalled' : 'autoFolded'));
+    // Toast en position fixe (aucun impact layout) : l'ancien
+    // renderGameWaiting effondrait la barre 60 ms avant le doAction.
+    try { showKeyHint('\u23e9 ' + t(act === 2 ? 'autoChecked' : act === 3 ? 'autoCalled' : 'autoFolded')); } catch (e) {}
     setMyTurnActive(true);
     setTimeout(function () { doAction(act, amt); }, 60);
     return true;
@@ -12229,7 +12231,13 @@ const App = (() => {
     }
     setMyTurnActive(false);
     send(MSG.buildMyAction(gId, handNum, gameState, action, bet));
-    $('g-actions').innerHTML = '<div class="waiting-msg">' + t('actionSent') + '</div>';
+    // Barre d'action TOUJOURS présente (demande narmod 2026-07-17) : le
+    // remplacement de la grille par « Action envoyée » effondrait la hauteur
+    // de #g-actions → re-layout de la table = zoom/dézoom désagréable. On
+    // garde le panneau en mode APERÇU (boutons inertes à notre tour —
+    // armPreAction no-op) ; le prochain état serveur re-rend la zone.
+    try { renderMyTurnActions(true); }
+    catch (e) { $('g-actions').innerHTML = '<div class="waiting-msg">' + t('actionSent') + '</div>'; }
     stopTurnTimer();
   }
   // Anti-Call accidentel : 1er tap arme la confirmation (le bouton Call devient
@@ -17224,7 +17232,7 @@ function renderPlayersList() {
   });
 })();
 
-;(function(){ window.BUILD_VERSION='0.3.724-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.725-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
