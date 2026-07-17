@@ -123,7 +123,8 @@ var PUCKS_ITEMS   = [ {id:'',key:'pucksAuto',fallback:'Auto (table)',swatch:'#3a
 //   betOut         jeton de mise HORS boîte (politique betside QML)
 //   pucksSide      pucks D/SB/BB sur le côté de la boîte (dealer officiel)
 //   flagInfo       drapeau dans la rangée info wide (sinon coin d'avatar)
-//   timerRect      décompte = cadre rect + barre sur les cartes (sinon anneau)
+//   timerRect      décompte = cadre rect autour de la boîte (sinon anneau avatar)
+//   timerBar       barre de décompte fine (PlayerTimeoutBar) sur les cartes
 //   winnerBadge    pastille WINNER au showdown
 //   selfStrip      strip de mise sous la self-box
 //   selfBigCards   cartes self grandes dans la boîte
@@ -131,8 +132,8 @@ var PUCKS_ITEMS   = [ {id:'',key:'pucksAuto',fallback:'Auto (table)',swatch:'#3a
 //   qmlSelf        géométrie self QML (self = perle, pas de multiplicateur)
 //   narrowByOrient boîte narrow quand la disposition est portrait
 //   qmlStruct      structure/gabarit CSS QML (html[data-seat-struct="qml"])
-const SEAT_TRAIT_KEYS = ['holePlate','betOut','pucksSide','flagInfo','timerRect','winnerBadge','selfStrip','selfBigCards','badgeOnCards','qmlSelf','narrowByOrient','qmlStruct'];
-const SEAT_TRAITS_QML = { holePlate:true, betOut:true, pucksSide:true, flagInfo:true, timerRect:true, winnerBadge:true, selfStrip:true, selfBigCards:true, badgeOnCards:true, qmlSelf:true, narrowByOrient:true, qmlStruct:true };
+const SEAT_TRAIT_KEYS = ['holePlate','betOut','pucksSide','flagInfo','timerRect','timerBar','winnerBadge','selfStrip','selfBigCards','badgeOnCards','qmlSelf','narrowByOrient','qmlStruct'];
+const SEAT_TRAITS_QML = { holePlate:true, betOut:true, pucksSide:true, flagInfo:true, timerRect:true, timerBar:true, winnerBadge:true, selfStrip:true, selfBigCards:true, badgeOnCards:true, qmlSelf:true, narrowByOrient:true, qmlStruct:true };
 const SEAT_TRAIT_DEFAULTS = SEAT_TRAITS_QML; // packs importés / inconnus = structure commune
 // Page blanche (demande narmod 17/07) : seul le pack « PokerTH » reste
 // intégré ; les anciens packs web (Classic, Chip, Plate, Card, Compact, Bar)

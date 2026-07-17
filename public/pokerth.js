@@ -1439,8 +1439,8 @@ function _seatTraitsNow() {
   try { id = document.documentElement.getAttribute('data-seat') || ''; } catch (e) {}
   try { if (typeof window._seatPackTraits === 'function') { var t = window._seatPackTraits(id); if (t) return t; } } catch (e) {}
   return { holePlate: true, betOut: true, pucksSide: true, flagInfo: true, timerRect: true,
-           winnerBadge: true, selfStrip: true, selfBigCards: true, badgeOnCards: true,
-           qmlSelf: true, narrowByOrient: true, qmlStruct: true };
+           timerBar: true, winnerBadge: true, selfStrip: true, selfBigCards: true,
+           badgeOnCards: true, qmlSelf: true, narrowByOrient: true, qmlStruct: true };
 }
 setTimeout(function () { try { _applySeatOrient(); } catch (e) {} }, 800);
 // Appliquer les classes body dès l'init (les prefs sont reflétées au chargement).
@@ -10934,7 +10934,7 @@ const App = (() => {
         // cadre rectangulaire décomptant (conservé, demande narmod). La largeur
         // du remplissage est tenue à jour chaque seconde par _updateTimer.
         var _tbar = '';
-        if (_seatTr.timerRect && isActive && !_acBadge && !(_sdWinners && _sdWinners.has(pid))) {
+        if ((_seatTr.timerBar || _seatTr.timerRect) && isActive && !_acBadge && !(_sdWinners && _sdWinners.has(pid))) {
           var _tfrac = Math.max(0, Math.min(1, _timerSec / (_timerTot || 30)));
           // Self : même barre, couleur claire QML (#6E9CEC) via la classe .me —
           // centrée sur les cartes comme PlayerTimeoutBar (parité 2.1.3).
@@ -17188,7 +17188,7 @@ function renderPlayersList() {
   });
 })();
 
-;(function(){ window.BUILD_VERSION='0.3.710-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.711-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

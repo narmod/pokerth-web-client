@@ -8,6 +8,7 @@
     "pucksSide": true,
     "flagInfo": false,
     "timerRect": false,
+    "timerBar": true,
     "winnerBadge": true,
     "selfStrip": true,
     "selfBigCards": true,
