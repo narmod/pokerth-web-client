@@ -1311,12 +1311,28 @@ function _buildBox(pid, name, seatEl, layer) {
     + '<span class="hud-hands">' + handsTxt + '</span></div>'
     + '<div class="hud-grid">' + rows + '</div>';
 
-  // Positionner au-dessus du siège (ancré au centre-haut du .seat).
+  // Positionnement adaptatif : la boîte se place au-dessus du siège pour les
+  // sièges de la moitié basse de la table, en dessous pour ceux de la moitié
+  // haute — ainsi elle ne recouvre jamais le siège voisin dans le ring. Le
+  // décalage horizontal est borné pour rester dans la couche visible.
   const layerRect = layer.getBoundingClientRect();
   const r = seatEl.getBoundingClientRect();
-  const cx = r.left + r.width / 2 - layerRect.left;
-  const top = r.top - layerRect.top;
-  box.style.left = cx + 'px';
+  // Mesure de la boîte (le contenu est déjà écrit).
+  const bw = box.offsetWidth || 108;
+  const bh = box.offsetHeight || 48;
+  const gap = 6;
+  const seatCx = r.left + r.width / 2 - layerRect.left;
+  const seatMidY = (r.top + r.height / 2 - layerRect.top);
+  const above = seatMidY > layerRect.height / 2; // siège en bas → boîte au-dessus
+
+  let left = seatCx - bw / 2;
+  left = Math.max(2, Math.min(left, layerRect.width - bw - 2)); // borne horizontale
+  let top = above
+    ? (r.top - layerRect.top) - bh - gap        // au-dessus du siège
+    : (r.bottom - layerRect.top) + gap;         // en dessous du siège
+  top = Math.max(2, Math.min(top, layerRect.height - bh - 2)); // borne verticale
+
+  box.style.left = left + 'px';
   box.style.top = top + 'px';
 }
 
