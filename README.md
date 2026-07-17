@@ -117,36 +117,60 @@ This project is a **web frontend** that connects to any PokerTH server directly 
 ## Screenshots
 
 <p align="center">
-  <img src="docs/screenshots/01-connect-dark.png" alt="Connect screen (dark theme)" width="260"/>
+  <img src="docs/screenshots/18-mobile-game.png" alt="In-game on a phone — full 10-seat table in portrait, official QML layout" width="260"/>
   <br/>
-  <em>Connect screen — pick a login mode and join in seconds (light &amp; dark themes included)</em>
+  <em>A full 10-seat table on a phone — official QML seat layout, dealer &amp; blind pucks, game status bar, pot badge and the official action bar</em>
 </p>
 
 <div align="center">
 
 <table>
   <tr>
-    <td align="center"><strong>Create a table — light</strong></td>
-    <td align="center"><strong>Create a table — dark</strong></td>
+    <td align="center"><strong>Create a table — game style</strong></td>
+    <td align="center"><strong>Create a table — blinds &amp; bots</strong></td>
   </tr>
   <tr>
-    <td align="center"><img src="docs/screenshots/04-create-light.png" alt="Create a table (light theme)" width="240"/></td>
-    <td align="center"><img src="docs/screenshots/05-create-dark.png" alt="Create a table (dark theme)" width="240"/></td>
+    <td align="center"><img src="docs/screenshots/11-create-style.png" alt="Create a table — game-style and tournament presets" width="240"/></td>
+    <td align="center"><img src="docs/screenshots/12-create-blinds.png" alt="Create a table — blind settings, time limits and bot difficulty" width="240"/></td>
   </tr>
   <tr>
-    <td align="center"><strong>Connect — light theme</strong></td>
-    <td align="center"><strong>Table menu &amp; options</strong></td>
+    <td align="center"><strong>Connect — dark</strong></td>
+    <td align="center"><strong>Connect — light</strong></td>
   </tr>
   <tr>
+    <td align="center"><img src="docs/screenshots/01-connect-dark.png" alt="Connect screen (dark theme)" width="240"/></td>
     <td align="center"><img src="docs/screenshots/02-connect-light.png" alt="Connect screen (light theme)" width="240"/></td>
-    <td align="center"><img src="docs/screenshots/06-menu.png" alt="Table menu and options" width="240"/></td>
   </tr>
   <tr>
     <td align="center"><strong>Lobby &amp; chat</strong></td>
-    <td align="center"><strong>Avatar picker</strong></td>
+    <td align="center"><strong>Waiting room</strong></td>
   </tr>
   <tr>
     <td align="center"><img src="docs/screenshots/03-lobby-chat.png" alt="Lobby and chat" width="240"/></td>
+    <td align="center"><img src="docs/screenshots/13-waiting-room.png" alt="Waiting room — table info, chat and bot fill-up" width="240"/></td>
+  </tr>
+  <tr>
+    <td align="center"><strong>Winner window</strong></td>
+    <td align="center"><strong>Emoji reactions</strong></td>
+  </tr>
+  <tr>
+    <td align="center"><img src="docs/screenshots/15-winner.png" alt="Winner window — hand results, community cards and winning hand" width="240"/></td>
+    <td align="center"><img src="docs/screenshots/16-reactions.png" alt="Emoji reactions picker in game" width="240"/></td>
+  </tr>
+  <tr>
+    <td align="center"><strong>Ranking — PokerTH · BBC · WEC</strong></td>
+    <td align="center"><strong>In-game chat</strong></td>
+  </tr>
+  <tr>
+    <td align="center"><img src="docs/screenshots/14-ranking.png" alt="Ranking leaderboard — PokerTH, BBC and WEC with season picker and search" width="240"/></td>
+    <td align="center"><img src="docs/screenshots/17-game-chat.png" alt="In-game chat panel on mobile" width="240"/></td>
+  </tr>
+  <tr>
+    <td align="center"><strong>Table menu &amp; options</strong></td>
+    <td align="center"><strong>Avatar picker</strong></td>
+  </tr>
+  <tr>
+    <td align="center"><img src="docs/screenshots/06-menu.png" alt="Table menu and options" width="240"/></td>
     <td align="center"><img src="docs/screenshots/07-avatar-picker.png" alt="Avatar picker" width="240"/></td>
   </tr>
 </table>
