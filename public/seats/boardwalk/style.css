@@ -34,8 +34,8 @@ html[data-seat-struct="qml"] .seat-plate {
 html[data-seat-struct="qml"] .seat-avatar {
   position: absolute !important;
   bottom: calc(100% - 8px) !important; top: auto !important;
-  left: 50% !important; right: auto !important;
-  transform: translateX(-50%) !important;
+  left: 2px !important; right: auto !important;      /* avatar à GAUCHE */
+  transform: none !important;
   width: 50px !important; height: 50px !important;
   border: 2px solid #0d0d0f !important; border-radius: 50%;
   background: #101114;
@@ -47,7 +47,7 @@ html[data-seat-struct="qml"] .seat-avatar {
 html[data-seat-struct="qml"] .seat-holecards {
   position: absolute !important;
   bottom: calc(100% - 8px); top: auto !important;
-  left: calc(50% + 16px) !important; transform: rotate(9deg) !important;
+  left: 46px !important; transform: rotate(9deg) !important;  /* collées à l'avatar */
   display: flex !important; z-index: 1;
   grid-column: auto !important; grid-row: auto !important;
 }
@@ -112,10 +112,11 @@ html[data-seat-struct="qml"] .seat.me .seat-plate {
 html[data-seat-struct="qml"] .seat.me .seat-avatar {
   width: 58px !important; height: 58px !important;
   bottom: calc(100% - 10px) !important;
+  left: 2px !important;
 }
 html[data-seat-struct="qml"] .seat.me .seat-holecards,
 html[data-seat-struct="qml"] .seat.me .seat-holecards.shc-big {
-  bottom: calc(100% - 10px); left: calc(50% + 22px) !important;
+  bottom: calc(100% - 10px); left: 54px !important;
   transform: rotate(7deg) !important; z-index: 3;
 }
 html[data-seat-struct="qml"] .seat.me .seat-holecards .pk,
