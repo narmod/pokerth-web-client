@@ -115,9 +115,10 @@ var PUCKS_ITEMS   = [ {id:'',key:'pucksAuto',fallback:'Auto (table)',swatch:'#3a
 // Classic (historical render). Add a pack = one item here; panel lists it auto.
 // ── Descripteur de pack de sièges (étape 3) ────────────────────────────────
 // Traits comportementaux lus par renderSeats (pokerth.js) via
-// window._seatPackTraits(id). Défauts = packs web historiques ; le pack
-// « PokerTH » (réplique QML) active tout. Un pack importé peut surcharger
-// n'importe quel trait via l'objet "traits" de son seat.json :
+// window._seatPackTraits(id). Depuis 0.3.695, la STRUCTURE QML est la norme :
+// défauts = traits QML complets pour TOUS les packs (intégrés et importés) ;
+// un pack peut surcharger n'importe quel trait via l'objet "traits" de son
+// seat.json (qmlStruct:false = opt-out complet de la structure commune) :
 //   holePlate      cartes dans la boîte (dos adversaires / faces self)
 //   betOut         jeton de mise HORS boîte (politique betside QML)
 //   pucksSide      pucks D/SB/BB sur le côté de la boîte (dealer officiel)
@@ -129,14 +130,14 @@ var PUCKS_ITEMS   = [ {id:'',key:'pucksAuto',fallback:'Auto (table)',swatch:'#3a
 //   badgeOnCards   badge d'action centré sur les hole-cards
 //   qmlSelf        géométrie self QML (self = perle, pas de multiplicateur)
 //   narrowByOrient boîte narrow quand la disposition est portrait
-const SEAT_TRAIT_KEYS = ['holePlate','betOut','pucksSide','flagInfo','timerRect','winnerBadge','selfStrip','selfBigCards','badgeOnCards','qmlSelf','narrowByOrient'];
-const SEAT_TRAIT_DEFAULTS = { holePlate:false, betOut:false, pucksSide:false, flagInfo:false, timerRect:false, winnerBadge:false, selfStrip:false, selfBigCards:false, badgeOnCards:false, qmlSelf:false, narrowByOrient:true };
-const SEAT_TRAITS_QML = { holePlate:true, betOut:true, pucksSide:true, flagInfo:true, timerRect:true, winnerBadge:true, selfStrip:true, selfBigCards:true, badgeOnCards:true, qmlSelf:true, narrowByOrient:true };
-// Packs web historiques (Classic, Chip, Plate, Card, Compact, Bar) : traits
-// explicites = les défauts (mise/pucks sur l'avatar, timer anneau, drapeau
-// au coin, self dans la player-bar). Alias nommé pour la lisibilité — chaque
-// pack peut diverger plus tard en remplaçant l'alias par son propre objet.
-const SEAT_TRAITS_WEB = SEAT_TRAIT_DEFAULTS;
+//   qmlStruct      structure/gabarit CSS QML (html[data-seat-struct="qml"])
+const SEAT_TRAIT_KEYS = ['holePlate','betOut','pucksSide','flagInfo','timerRect','winnerBadge','selfStrip','selfBigCards','badgeOnCards','qmlSelf','narrowByOrient','qmlStruct'];
+const SEAT_TRAITS_QML = { holePlate:true, betOut:true, pucksSide:true, flagInfo:true, timerRect:true, winnerBadge:true, selfStrip:true, selfBigCards:true, badgeOnCards:true, qmlSelf:true, narrowByOrient:true, qmlStruct:true };
+const SEAT_TRAIT_DEFAULTS = SEAT_TRAITS_QML;
+// Packs web (Classic, Chip, Plate, Card, Compact, Bar) : MÊME structure et
+// mêmes comportements que le pack PokerTH (demande narmod 17/07 — placement,
+// tailles, self-box unifiés) ; seul l'habillage CSS de chaque pack diffère.
+const SEAT_TRAITS_WEB = SEAT_TRAITS_QML;
 const SEATS = [
   { id: '',      key: 'seatClassic', fallback: 'Classic', swatch: '#1e3820', traits: SEAT_TRAITS_WEB },
   { id: 'pokerth', key: 'seatPokerth', fallback: 'PokerTH', swatch: '#1d222b', traits: SEAT_TRAITS_QML },
@@ -321,6 +322,8 @@ var _seatApply = seat.apply;
 seat.apply = function (id) {
   _seatApply(id);                                  // sets data-seat + persists pth_seat
   try { _injectSeatPkg(_gallerySeatById(id) || null); } catch (e) {}
+  // Structure commune QML : attribut CSS piloté par le trait qmlStruct.
+  try { if (_seatPackTraits(id).qmlStruct) document.documentElement.setAttribute('data-seat-struct', 'qml'); else document.documentElement.removeAttribute('data-seat-struct'); } catch (e) {}
 };
 seat.set = seat.apply;
 // Setter public pour le monolithe (option « Synchroniser les sieges » des
