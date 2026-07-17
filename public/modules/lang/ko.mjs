@@ -513,6 +513,7 @@ export const strings = {
     abAuthRole3:"기본 아키텍처, 네트워크 개발, Windows 패키지, MacOS 패키지",
     abAuthRole4:"GUI 그래픽의 초기 디자인",
     abAuthRole5:"코드 현대화, QML 레이아웃",
+    abAuthRole6:'웹 클라이언트 개발',
     abCred1:"Wikimedia Commons: 다양한 인기 아바타 제공",
     abCred2:"Benedikt, Erhard, Felix, Florian, Linus, Lothar, Steffi, Caro: 플레이어 아바타/얼굴 제공",
     abCred3:"ZeiZei: 다양한 아바타 제공",

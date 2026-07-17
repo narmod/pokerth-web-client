@@ -710,6 +710,7 @@ export const strings = {
     abAuthRole3:"அடிப்படை கட்டமைப்பு, பிணைய மேம்பாடு, Windows தொகுப்பு, MacOS தொகுப்பு",
     abAuthRole4:"இடைமுக வரைகலையின் ஆரம்ப வடிவமைப்பு",
     abAuthRole5:"குறியீடு நவீனமயமாக்கல், QML அமைப்பு",
+    abAuthRole6:'வலை கிளையன்ட் மேம்பாடு',
     abCred1:"Wikimedia Commons: அவர்களின் பல்வேறு பிரபலமான அவதாரங்களுக்காக",
     abCred2:"Benedikt, Erhard, Felix, Florian, Linus, Lothar, Steffi, Caro: வீரர் அவதாரங்கள்/முகங்களுக்காக",
     abCred3:"ZeiZei: பல்வேறு அவதாரங்களுக்காக",

@@ -517,6 +517,7 @@ export const strings = {
     abAuthRole3:"मूल आर्किटेक्चर, नेटवर्क विकास, Windows पैकेज, MacOS पैकेज",
     abAuthRole4:"इंटरफ़ेस ग्राफ़िक्स का प्रारंभिक डिज़ाइन",
     abAuthRole5:"कोड आधुनिकीकरण, QML लेआउट",
+    abAuthRole6:'वेब क्लाइंट का विकास',
     abCred1:"Wikimedia Commons: उनके विभिन्न लोकप्रिय अवतारों के लिए",
     abCred2:"Benedikt, Erhard, Felix, Florian, Linus, Lothar, Steffi, Caro: खिलाड़ियों के अवतारों/चेहरों के लिए",
     abCred3:"ZeiZei: विभिन्न अवतारों के लिए",

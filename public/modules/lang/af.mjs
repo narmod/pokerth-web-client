@@ -707,6 +707,7 @@ export const strings = {
     abAuthRole3:"basiese argitektuur, netwerkontwikkeling, Windows-pakket, MacOS-pakket",
     abAuthRole4:"aanvanklike ontwerp van die GUI-grafika",
     abAuthRole5:"kodemodernisering, QML-uitleg",
+    abAuthRole6:'ontwikkeling van die webkliënt',
     abCred1:"Wikimedia Commons: vir hul verskeie gewilde avatars",
     abCred2:"Benedikt, Erhard, Felix, Florian, Linus, Lothar, Steffi, Caro: vir die speler-avatars/-gesigte",
     abCred3:"ZeiZei: vir verskeie avatars",

@@ -707,6 +707,7 @@ export const strings = {
     abAuthRole3:"основна архитектура, мрежни развој, Windows пакет, MacOS пакет",
     abAuthRole4:"почетни дизајн графике интерфејса",
     abAuthRole5:"модернизација кода, QML распоред",
+    abAuthRole6:'развој веб клијента',
     abCred1:"Wikimedia Commons: за њихове разне популарне аватаре",
     abCred2:"Benedikt, Erhard, Felix, Florian, Linus, Lothar, Steffi, Caro: за аватаре/лица играча",
     abCred3:"ZeiZei: за разне аватаре",

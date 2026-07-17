@@ -707,6 +707,7 @@ export const strings = {
     abAuthRole3:"základná architektúra, sieťový vývoj, balíček pre Windows, balíček pre MacOS",
     abAuthRole4:"pôvodný návrh grafiky rozhrania",
     abAuthRole5:"modernizácia kódu, rozloženie QML",
+    abAuthRole6:'vývoj webového klienta',
     abCred1:"Wikimedia Commons: za rôzne populárne avatary",
     abCred2:"Benedikt, Erhard, Felix, Florian, Linus, Lothar, Steffi, Caro: za avatary/tváre hráčov",
     abCred3:"ZeiZei: za rôzne avatary",

@@ -703,6 +703,7 @@ export const strings = {
     abAuthRole3:"基本アーキテクチャ、ネットワーク開発、Windowsパッケージ、MacOSパッケージ",
     abAuthRole4:"GUIグラフィックの初期デザイン",
     abAuthRole5:"コードの近代化、QMLレイアウト",
+    abAuthRole6:'ウェブクライアントの開発',
     abCred1:"Wikimedia Commons：人気のある様々なアバターの提供",
     abCred2:"Benedikt、Erhard、Felix、Florian、Linus、Lothar、Steffi、Caro：プレイヤーのアバター/顔の提供",
     abCred3:"ZeiZei：様々なアバターの提供",

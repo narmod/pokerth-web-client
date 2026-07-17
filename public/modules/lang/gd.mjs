@@ -710,6 +710,7 @@ export const strings = {
     abAuthRole3:"ailtireachd bhunaiteach, leasachadh lìonraidh, pacaid Windows, pacaid MacOS",
     abAuthRole4:"dealbhadh tùsail grafaigean na h-eadar-aghaidh",
     abAuthRole5:"ùrachadh a' chòd, co-dhealbhachd QML",
+    abAuthRole6:'leasachadh a\' chliant-lìn',
     abCred1:"Wikimedia Commons: airson nan avataran mòr-chòrdte aca",
     abCred2:"Benedikt, Erhard, Felix, Florian, Linus, Lothar, Steffi, Caro: airson avataran/aodainn nan cluicheadairean",
     abCred3:"ZeiZei: airson caochladh avataran",

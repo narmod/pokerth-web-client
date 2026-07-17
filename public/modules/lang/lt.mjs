@@ -708,6 +708,7 @@ export const strings = {
     abAuthRole3:"bazinė architektūra, tinklo kūrimas, Windows paketas, MacOS paketas",
     abAuthRole4:"pradinis sąsajos grafikos dizainas",
     abAuthRole5:"kodo modernizavimas, QML išdėstymas",
+    abAuthRole6:'žiniatinklio kliento kūrimas',
     abCred1:"Wikimedia Commons: už įvairius populiarius avatarus",
     abCred2:"Benedikt, Erhard, Felix, Florian, Linus, Lothar, Steffi, Caro: už žaidėjų avatarus/veidus",
     abCred3:"ZeiZei: už įvairius avatarus",

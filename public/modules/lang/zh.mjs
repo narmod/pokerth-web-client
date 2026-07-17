@@ -703,6 +703,7 @@ export const strings = {
     abAuthRole3:"基础架构、网络开发、Windows 软件包、MacOS 软件包",
     abAuthRole4:"界面图形的最初设计",
     abAuthRole5:"代码现代化、QML 布局",
+    abAuthRole6:'网页客户端开发',
     abCred1:"Wikimedia Commons：提供各种流行头像",
     abCred2:"Benedikt、Erhard、Felix、Florian、Linus、Lothar、Steffi、Caro：提供玩家头像/面孔",
     abCred3:"ZeiZei：提供各种头像",

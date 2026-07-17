@@ -707,6 +707,7 @@ export const strings = {
     abAuthRole3:"kiến trúc cơ bản, phát triển mạng, gói Windows, gói MacOS",
     abAuthRole4:"thiết kế ban đầu của đồ họa giao diện",
     abAuthRole5:"hiện đại hóa mã nguồn, bố cục QML",
+    abAuthRole6:'phát triển ứng dụng web',
     abCred1:"Wikimedia Commons: vì các avatar phổ biến của họ",
     abCred2:"Benedikt, Erhard, Felix, Florian, Linus, Lothar, Steffi, Caro: vì các avatar/khuôn mặt người chơi",
     abCred3:"ZeiZei: vì nhiều avatar khác nhau",

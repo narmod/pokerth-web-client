@@ -709,6 +709,7 @@ export const strings = {
     abAuthRole3:"temel mimari, ağ geliştirme, Windows paketi, MacOS paketi",
     abAuthRole4:"arayüz grafiklerinin ilk tasarımı",
     abAuthRole5:"kod modernizasyonu, QML düzeni",
+    abAuthRole6:'web istemcisi geliştirme',
     abCred1:"Wikimedia Commons: çeşitli popüler avatarları için",
     abCred2:"Benedikt, Erhard, Felix, Florian, Linus, Lothar, Steffi, Caro: oyuncu avatarları/yüzleri için",
     abCred3:"ZeiZei: çeşitli avatarlar için",

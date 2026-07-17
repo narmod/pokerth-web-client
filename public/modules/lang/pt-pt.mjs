@@ -710,6 +710,7 @@ export const strings = {
     abAuthRole3:"arquitetura base, desenvolvimento de rede, pacote Windows, pacote MacOS",
     abAuthRole4:"design inicial dos gráficos da interface",
     abAuthRole5:"modernização do código, layout QML",
+    abAuthRole6:'desenvolvimento do cliente web',
     abCred1:"Wikimedia Commons: pelos seus diversos avatares populares",
     abCred2:"Benedikt, Erhard, Felix, Florian, Linus, Lothar, Steffi, Caro: pelos avatares/rostos de jogadores",
     abCred3:"ZeiZei: por diversos avatares",

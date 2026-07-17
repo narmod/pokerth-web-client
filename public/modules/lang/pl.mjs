@@ -710,6 +710,7 @@ export const strings = {
     abAuthRole3:"architektura podstawowa, rozwój sieci, pakiet Windows, pakiet MacOS",
     abAuthRole4:"początkowy projekt grafik interfejsu",
     abAuthRole5:"modernizacja kodu, układ QML",
+    abAuthRole6:'rozwój klienta webowego',
     abCred1:"Wikimedia Commons: za różne popularne awatary",
     abCred2:"Benedikt, Erhard, Felix, Florian, Linus, Lothar, Steffi, Caro: za awatary/twarze graczy",
     abCred3:"ZeiZei: za różne awatary",

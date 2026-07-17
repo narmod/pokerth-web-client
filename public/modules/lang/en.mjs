@@ -424,6 +424,7 @@ export const strings = {
     abAuthRole3:'basic architecture, network development, Windows package, MacOS package',
     abAuthRole4:'initial GUI graphics design',
     abAuthRole5:'code modernization, QML layout',
+    abAuthRole6:'web client development',
     abCred1:'Wikimedia Commons: for their various popular avatars',
     abCred2:'Benedikt, Erhard, Felix, Florian, Linus, Lothar, Steffi, Caro: for the player avatars/faces',
     abCred3:'ZeiZei: for various avatars',
