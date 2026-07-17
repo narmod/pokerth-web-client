@@ -90,7 +90,7 @@
 
 **Try it now: [https://pokerth.ddns.net/](https://pokerth.ddns.net/)**
 
-Play right away — no account needed, no install. Pick **pokerth.net** to join the public, official PokerTH server (as a guest, or with your registered account), or **LAN / Dedicated server** to play on the demo's own PokerTH server, hosted on a small VPS — choose any nickname (Guest mode off), create a table, and invite friends.
+Play right away — no account needed, no install. Pick **🌐 Internet** to join the public, official pokerth.net server (as a guest, or with your registered account), or **LAN / Dedicated server** to play on the demo's own PokerTH server, hosted on a small VPS — choose any nickname (Guest mode off), create a table, and invite friends.
 
 Want to try with **no server or connection at all**? Pick **🏋️ Training mode** and play instantly against bots — fully offline.
 
@@ -170,10 +170,10 @@ This project is a **web frontend** that connects to any PokerTH server directly 
 ## Features
 
 ### Connection
-- **3 server choices + a Guest-mode toggle**: pick **LAN / Dedicated server**, **pokerth.net**, or **🏋️ Training mode** (offline solo play against bots), then use the **Guest mode** checkbox (just above the Connect button, off by default) to switch the guest/registered variant of the two online choices. Internally the online choices still map to the four PokerTH login types; **Training mode runs entirely in the browser with no server, proxy, or connection**.
+- **3 server choices + a Guest-mode toggle**: pick **🖥️ LAN / Dedicated server**, **🌐 Internet** (the public pokerth.net server), or **🏋️ Training mode** (offline solo play against bots), then use the **Guest mode** checkbox (just above the Connect button, off by default) to switch the guest/registered variant of the two online choices. Internally the online choices still map to the four PokerTH login types; **Training mode runs entirely in the browser with no server, proxy, or connection**.
 - Optional authenticated login over TLS
-- TLS support (required for pokerth.net, optional for LAN). The TLS box auto-checks itself when you turn **Guest mode** off on pokerth.net (registered-account login).
-- Auto-fill of `host = pokerth.net` and `port = 7234` when **pokerth.net** is selected — the dedicated-server choice keeps the auto-detected hostname
+- TLS support (required for pokerth.net, optional for LAN). The TLS box auto-checks itself when you turn **Guest mode** off on the Internet choice (registered-account login).
+- Auto-fill of `host = pokerth.net` and `port = 7234` when **🌐 Internet** is selected — the dedicated-server choice keeps the auto-detected hostname
 - Remember nickname / credentials via `localStorage`
 - Refresh button and fullscreen toggle on every screen
 
@@ -222,8 +222,8 @@ Plus a full **Advanced options** panel (sectioned: cards, betting, table, seats,
 
 ### Themes & customization
 A full appearance system, reached from the **Theme** button — pick a one-tap preset or fine-tune every axis yourself:
-- **Presets** (one tap): **PokerTH Dark** (the default, reproducing the official client's look), **PokerTH Light**, and **Green Casino** — plus gallery themes (Midnight Blue, Graphite, Royal Purple, Sleek)
-- **Customize** — six independent axes, each remembered in `localStorage`: UI **palette** (Dark / Light), **table felt** (a dozen styles: PokerTH, Spectator Tools, Green Casino, Danuxi Blue, Mute, Mute 02, Teal, Lemming, Matrix, TripSixes, Wanted, Xanax — each carrying its own pucks and button skins, like the official `StyleProvider`), **card deck** (four built-in — PokerTH, PokerTH 1.0, PokerTH new (the default), Green Casino — plus the official PokerTH decks in the gallery), **action buttons** (Auto / Flat / Glossy / PokerTH), **chip pucks** (Auto / PokerTH / Casino), and **seat style**
+- **Presets** (one tap): **PokerTH Dark** (the default, reproducing the official client's look), **PokerTH Light**, and **Green Casino** — plus any gallery themes installed by the operator
+- **Customize** — six independent axes, each remembered in `localStorage`: UI **palette** (Dark / Light), **table felt** (a dozen styles: PokerTH, Spectator Tools, Green Casino, Danuxi Blue, Mute, Mute 02, Teal, Lemming, Matrix, TripSixes, Wanted, Xanax — each carrying its own pucks and button skins, like the official `StyleProvider`), **card deck** (four built-in — PokerTH, PokerTH 1.0, **PokerTH Royal Classic** (the default — the official QML client's own deck), Green Casino — plus the official PokerTH decks in the gallery), **action buttons** (Auto / Flat / Glossy / PokerTH), **chip pucks** (Auto / PokerTH / Casino), and **seat style**
 - **Seat styles** — eight theme-aware seat "packs", switchable like decks: **PokerTH landscape** and **PokerTH portrait** (faithful renders of the official QML player boxes), **Classic** (the historical render), **Chip**, **Plate**, **Card**, **Compact**, and **Bar**. Pack names stay in English across all languages (like the poker terms). The default is the PokerTH pack matching the screen orientation, and an **orientation-sync option** (on by default) swaps portrait ↔ landscape automatically as you rotate; any explicit choice is saved in `localStorage` and always wins
 - **Light & dark aware**: every theme carries its own `color-scheme`, and the browser status-bar `theme-color` follows the active theme
 - **Glossy coloured action buttons** (Fold red / Check-Call blue / Raise green / All-In orange) and a live preview of each card deck right in the panel
@@ -262,7 +262,7 @@ A full appearance system, reached from the **Theme** button — pick a one-tap p
 - **Full i18n in 36 languages**, switchable on the fly and auto-detected from the browser locale — the complete official PokerTH language set plus community additions (Ukrainian, Romanian, Croatian, Serbian and more), with Brazilian and European Portuguese shipped as separate catalogues (pt-BR / pt-PT)
 - Fullscreen mode on all screens
 - **On-felt panels** — chat, emoji, hand log and a new **Hand-odds (Combinaisons)** window open as compact, movable and resizable floating windows anchored under their round on-felt button (on every device, instead of taking over the screen); a **↺** button in the header snaps every panel back to its docked spot, and the table zoom is collapsible everywhere. Window positions are remembered. On phone portrait the action bar hugs the bottom edge for a full-screen table.
-- **Built-in diagnostics via chat commands** — type `/help` in any chat for local commands (`/diag`, `/update`, `/netdbg`, `/fps`, `/table`, `/lang`, `/sound`…); replies are shown only to you (see [docs/DIAGNOSTIC.md](docs/DIAGNOSTIC.md))
+- **Built-in diagnostics via chat commands** — type `/help` in any chat for local commands (`/diag`, `/update`, `/netdbg`, `/carddbg`, `/msglog`, `/audiodbg`, `/storage`, `/logdump`, `/fps`, `/table`, `/lang`, `/sound`, `/zoom`, `/copy`, `/clear`…); replies are shown only to you (see [docs/DIAGNOSTIC.md](docs/DIAGNOSTIC.md))
 - Poker hand reference overlay (? button)
 - Exponential-backoff auto-reconnect with live countdown
 
@@ -321,10 +321,10 @@ The client works equally with the public **pokerth.net** server and with **LAN /
 | **🏋️ Training mode** | — | none — local engine | none — runs in the browser | **100% offline** solo play against bots; no server, proxy, or connection needed (works even as an installed PWA with no internet, **when the app is served over HTTPS**) |
 | **LAN / Dedicated server** | off *(default)* | Internet guest (`unauth`, type 2) | proxy → TCP or TLS (your choice) | Default for self-hosted setups; in-game chat & reactions **enabled** |
 | **LAN / Dedicated server** | on | Pure LAN (`lan`, type 0) | proxy → TCP raw | The server **refuses** in-game chat/reactions (reactions stay LAN-local) |
-| **pokerth.net** | on | Guest (`guest`, type 2) | direct TLS WebSocket | Throwaway guest on the public server |
-| **pokerth.net** | off | Registered account (`auth`, type 1) | direct TLS WebSocket | Login + password; TLS auto-enabled |
+| **🌐 Internet** (pokerth.net) | on | Guest (`guest`, type 2) | direct TLS WebSocket | Throwaway guest on the public server |
+| **🌐 Internet** (pokerth.net) | off | Registered account (`auth`, type 1) | direct TLS WebSocket | Login + password; TLS auto-enabled |
 
-The pokerth.net rows connect **directly over a TLS WebSocket, bypassing the proxy**. Please play fairly on the public server — it is shared by the whole community.
+The Internet rows connect **directly over a TLS WebSocket, bypassing the proxy**. Please play fairly on the public server — it is shared by the whole community.
 
 ---
 
