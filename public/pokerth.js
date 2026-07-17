@@ -14081,9 +14081,14 @@ function _maybeShowNextHandBtn() {
       renderGames();
     },
     dismissWinner() { dismissWinner(); },
-    doAction(action, bet) { doAction(action, bet); },
-    confirmCall(action, amount) { confirmCall(action, amount); },
-    doRaise() { doRaise(); },
+    // Un clic MANUEL sur un bouton d'action (ou son raccourci clavier, qui
+    // passe par btn.click()) repasse le mode a Manuel, comme le client
+    // officiel (QML/Qt-Widgets, bible §5.2 ; demande sp0ck 2026-07-17).
+    // Le mode auto (_playAutoMode) et la pre-action appellent le doAction
+    // INTERNE et ne repassent donc pas le mode.
+    doAction(action, bet) { if (_playingMode !== 0) this.setPlayingMode(0); doAction(action, bet); },
+    confirmCall(action, amount) { if (_playingMode !== 0) this.setPlayingMode(0); confirmCall(action, amount); },
+    doRaise() { if (_playingMode !== 0) this.setPlayingMode(0); doRaise(); },
 
     // ── Per-login-mode CreateGame defaults ───────────────────────────────
     //
@@ -17189,7 +17194,7 @@ function renderPlayersList() {
   });
 })();
 
-;(function(){ window.BUILD_VERSION='0.3.718-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.719-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
