@@ -11342,8 +11342,18 @@ const App = (() => {
     // affiche le panneau au lieu du message d'attente (et on le garde sticky
     // face aux mises à jour serveur — tour d'un autre joueur, etc.).
     _lastWaitingMsg = msg; _lastWaitingIsHtml = !!isHtml;
-    var _pinShow = (_actionBarPinned || _advGet('hide_pbar', true)) && !_amSpectator && _gameStarted && !(myCards[0] == null && myCards[1] == null);
-    if ((_preActionOpen || _pinShow) && turnPid !== myId) { _renderPreActionPanel(); updateBottomLayout(); return; }
+    // Barre TOUJOURS présente pendant la partie (demande narmod 2026-07-17) :
+    //  - plus de condition sur myCards : au showdown / entre les mains les
+    //    cartes sont nulles mais la barre doit rester (boutons inertes) pour
+    //    ne pas effondrer #g-actions → re-layout de la table (zoom/dézoom) ;
+    //  - le garde « pas à notre tour » devient « pas notre tour LIVE » : en
+    //    fin de main turnPid peut rester sur nous (dernier acteur) alors que
+    //    setMyTurnActive(false) a déjà éteint le tour — la barre d'aperçu
+    //    doit alors remplacer le message, pas l'inverse.
+    var _liveTurn = false;
+    try { var _mzL = document.querySelector('.my-zone'); _liveTurn = !!(_mzL && _mzL.classList.contains('my-turn-active')); } catch (e) {}
+    var _pinShow = (_actionBarPinned || _advGet('hide_pbar', true)) && !_amSpectator && _gameStarted;
+    if ((_preActionOpen || _pinShow) && !(turnPid === myId && _liveTurn)) { _renderPreActionPanel(); updateBottomLayout(); return; }
     // isHtml=true : msg contient du HTML interne sûr (généré par notre code)
     $('g-actions').innerHTML = '<div class="waiting-msg">' + (isHtml ? msg : esc(msg)) + '</div>';
     updateBottomLayout();
@@ -17232,7 +17242,7 @@ function renderPlayersList() {
   });
 })();
 
-;(function(){ window.BUILD_VERSION='0.3.726-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.727-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
