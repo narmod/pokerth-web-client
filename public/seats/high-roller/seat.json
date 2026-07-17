@@ -1,0 +1,20 @@
+{
+  "name": "High Roller",
+  "by": "PokerTH Development Team",
+  "swatch": "#14161c",
+  "traits": {
+    "holePlate": true,
+    "betOut": true,
+    "pucksSide": true,
+    "flagInfo": false,
+    "timerRect": false,
+    "timerBar": true,
+    "winnerBadge": true,
+    "selfStrip": true,
+    "selfBigCards": true,
+    "badgeOnCards": false,
+    "qmlSelf": true,
+    "narrowByOrient": false,
+    "qmlStruct": true
+  }
+}

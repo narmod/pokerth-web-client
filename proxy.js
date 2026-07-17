@@ -1352,7 +1352,7 @@ function importPackage(kind, idHint, zipBuf, cb) {
     const packCss = has('style.css');
     if (!plate && !packCss) return done('not a seat pack (plate.png / plate.svg or style.css missing)');
     if (!id) id = 'seat-' + Date.now();
-    if (['', 'pokerth', 'chip', 'plate', 'card', 'compact', 'bar', 'onyx-pill', 'boardwalk'].indexOf(id) >= 0) id = 'seat-' + id;   // never clobber a built-in / official seat id
+    if (['', 'pokerth', 'chip', 'plate', 'card', 'compact', 'bar', 'onyx-pill', 'boardwalk', 'high-roller'].indexOf(id) >= 0) id = 'seat-' + id;   // never clobber a built-in / official seat id
     const dest = path.join(PUBLIC_DIR, 'seats', id);
     try { fs.rmSync(dest, { recursive: true, force: true }); fs.mkdirSync(dest, { recursive: true }); } catch (e) { return done('dest failed'); }
     try { fs.readdirSync(exDir).forEach(function (f) { if (/^(plate|self|preview|bg|frame|img[0-9]?)\.(png|svg|webp|jpe?g)$/i.test(f) || f === 'seat.json' || f === 'style.css') cp(f, path.join(dest, f)); }); } catch (e) {}
@@ -1795,7 +1795,7 @@ function handleAdmin(req, res, reqPathOnly, query) {
       const kind = (d && d.kind === 'deck') ? 'deck' : ((d && d.kind === 'table') ? 'table' : ((d && d.kind === 'theme') ? 'theme' : ((d && d.kind === 'seat') ? 'seat' : null)));
       const id = slugId(d && d.id);
       if (!kind || !id) return adminJson(res, 400, { ok: false, error: 'kind + id required' });
-      if (kind === 'seat' && ['', 'pokerth', 'chip', 'plate', 'card', 'compact', 'bar', 'onyx-pill', 'boardwalk'].indexOf(id) >= 0) return adminJson(res, 400, { ok: false, error: 'built-in seat cannot be removed' });
+      if (kind === 'seat' && ['', 'pokerth', 'chip', 'plate', 'card', 'compact', 'bar', 'onyx-pill', 'boardwalk', 'high-roller'].indexOf(id) >= 0) return adminJson(res, 400, { ok: false, error: 'built-in seat cannot be removed' });
       if (kind === 'table' && ['green', 'blue', 'bordeaux', 'slate', 'photo'].indexOf(id) >= 0) return adminJson(res, 400, { ok: false, error: 'built-in table cannot be removed' });
       if (kind === 'deck' && ['svg', 'classic'].indexOf(id) >= 0) return adminJson(res, 400, { ok: false, error: 'built-in deck cannot be removed' });
       if (kind === 'theme' && BUILTIN_THEMES.indexOf(id) >= 0) return adminJson(res, 400, { ok: false, error: 'built-in theme cannot be removed (you can hide it instead)' });

@@ -1,0 +1,128 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   Pack « High Roller » (officiel) — style casino mobile (WSOP-like) :
+   avatar rond cerclé d'argent mordant le bord GAUCHE d'une barre sombre,
+   nom fin + tapis en gros et gras, cartes en éventail au-dessus de
+   l'avatar, pastille d'action flottante (Call bleue, Raise orange,
+   All-In rouge), halo VERT lime au tour.
+   Convention : préfixe html[data-seat-struct="qml"] ; positions de
+   l'avatar en !important (style inline position:relative du rendu).
+   Cadre virtuel QML : 114×84 (adversaires), ~150×96 (self).
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* ── Leviers de la structure ───────────────────────────────────────────── */
+html[data-seat-struct="qml"] .seat-plate {
+  --turn-glow: #8BC34A;                        /* halo vert lime au tour */
+  --turn-glow-halo: rgba(139, 195, 74, 0.55);
+  --turn-glow-z: 1;                            /* cadre SOUS avatar/cartes */
+  --winner-frame-z: 1;
+  --seat-bet-gap-l: 26px;                      /* mise écartée de l'avatar (gauche) */
+}
+
+/* ── La barre sombre ───────────────────────────────────────────────────── */
+html[data-seat-struct="qml"] .seat-plate {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 0; position: relative;
+  width: 118px; height: 42px; min-height: 0; box-sizing: border-box;
+  padding: 3px 8px 3px 34px !important;        /* aile gauche réservée à l'avatar */
+  background: linear-gradient(180deg, #2c313d 0%, #191c24 55%, #101218 100%);
+  border: 1px solid #0a0b0e;
+  border-radius: 10px;
+  box-shadow: 0 3px 9px rgba(0, 0, 0, 0.55);
+  overflow: visible;
+}
+
+/* ── Avatar rond cerclé d'argent, mordant le bord gauche ───────────────── */
+html[data-seat-struct="qml"] .seat-avatar {
+  position: absolute !important;
+  left: -20px !important; right: auto !important;
+  top: 50% !important; transform: translateY(-50%) !important;
+  width: 46px !important; height: 46px !important;
+  max-width: 46px !important; max-height: 46px !important;
+  border: 2px solid #d9dce3 !important; border-radius: 50% !important;
+  background: #101218;
+  box-shadow: 0 2px 7px rgba(0, 0, 0, 0.65);
+  z-index: 2;
+}
+
+/* ── Cartes en éventail au-dessus de l'avatar ──────────────────────────── */
+html[data-seat-struct="qml"] .seat-holecards {
+  position: absolute !important;
+  bottom: calc(100% + 2px); top: auto !important;
+  left: -8px !important; transform: rotate(-8deg) !important;
+  display: flex !important; z-index: 1;
+  grid-column: auto !important; grid-row: auto !important;
+}
+html[data-seat-struct="qml"] .seat-holecards .pk {
+  width: 26px; height: 36px; font-size: 0.56rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+}
+html[data-seat-struct="qml"] .seat-holecards .pk + .pk {
+  margin-left: -9px; transform: rotate(12deg); transform-origin: bottom left;
+}
+
+/* ── Nom fin / tapis gras (codes WSOP) ─────────────────────────────────── */
+html[data-seat-struct="qml"] .seat-info {
+  display: flex; flex-direction: column; align-items: center; gap: 0;
+  min-width: 0; width: 100%;
+}
+html[data-seat-struct="qml"] .seat-name {
+  color: #c9ced8; font-weight: 500; font-size: 10px !important; line-height: 12px;
+  max-width: 100% !important; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  text-align: center; letter-spacing: 0.2px;
+}
+html[data-seat-struct="qml"] .seat-money {
+  color: #ffffff; font-weight: 800; font-size: 13px !important; line-height: 15px;
+  max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  text-align: center; font-family: inherit; text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+/* ── Pastille d'action flottante (haut-droite de la barre) ─────────────── */
+html[data-seat-struct="qml"] .seat-foot .seat-action-badge {
+  position: absolute; top: -9px; right: -6px; left: auto; transform: none;
+  margin: 0; padding: 1px 9px 2px; border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 999px;
+  font-size: 10px; font-weight: 800; letter-spacing: 0.4px;
+  color: #ffffff; text-shadow: 0 1px 1px rgba(0, 0, 0, 0.45);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.45);
+  z-index: 5;
+}
+html[data-seat-struct="qml"] .seat-foot .seat-action-badge.act-c1 { background: #6f7378; } /* Fold  */
+html[data-seat-struct="qml"] .seat-foot .seat-action-badge.act-c2,
+html[data-seat-struct="qml"] .seat-foot .seat-action-badge.act-c3 { background: #2f7fd6; } /* Check / Call */
+html[data-seat-struct="qml"] .seat-foot .seat-action-badge.act-c4,
+html[data-seat-struct="qml"] .seat-foot .seat-action-badge.act-c5 { background: #fb8c00; } /* Bet / Raise  */
+html[data-seat-struct="qml"] .seat-foot .seat-action-badge.act-c6 { background: #e53935; } /* All-In */
+
+/* ── États ─────────────────────────────────────────────────────────────── */
+html[data-seat-struct="qml"] .seat.active .seat-avatar {
+  border-color: #8BC34A !important;
+  box-shadow: 0 0 0 2px #8BC34A, 0 0 12px rgba(139, 195, 74, 0.55) !important;
+}
+html[data-seat-struct="qml"] .seat.winner .seat-avatar {
+  border-color: #FFD700 !important;
+  box-shadow: 0 0 0 2px #FFD700, 0 0 14px rgba(255, 215, 0, 0.55) !important;
+}
+html[data-seat-struct="qml"] .seat.folded .seat-plate { opacity: 0.55; }
+html[data-seat-struct="qml"] .seat.folded .seat-holecards,
+html[data-seat-struct="qml"] .seat.folded .seat-avatar { opacity: 0.5; }
+
+/* ── SELF : avatar 56, barre large, MES cartes grandes en éventail à
+      droite de l'avatar, jamais dessus ───────────────────────────────────── */
+html[data-seat-struct="qml"] .seat.me .seat-plate {
+  width: 152px; height: 46px; padding-left: 40px !important;
+}
+html[data-seat-struct="qml"] .seat.me .seat-avatar {
+  width: 56px !important; height: 56px !important;
+  max-width: 56px !important; max-height: 56px !important;
+  left: -24px !important;
+}
+html[data-seat-struct="qml"] .seat.me .seat-holecards,
+html[data-seat-struct="qml"] .seat.me .seat-holecards.shc-big {
+  bottom: calc(100% + 2px); left: 34px !important;
+  transform: rotate(-6deg) !important; z-index: 3;
+}
+html[data-seat-struct="qml"] .seat.me .seat-holecards .pk,
+html[data-seat-struct="qml"] .seat.me .seat-holecards.shc-big .pk {
+  width: 38px !important; height: 53px !important; font-size: 0.84rem;
+}
+html[data-seat-struct="qml"] .seat.me .seat-holecards .pk + .pk { margin-left: -12px; }
