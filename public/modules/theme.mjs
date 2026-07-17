@@ -113,9 +113,28 @@ var PUCKS_ITEMS   = [ {id:'',key:'pucksAuto',fallback:'Auto (table)',swatch:'#3a
 // CSS block keyed on html[data-seat="<id>"] (seat DOM stays neutral via
 // display:contents -> CSS-only) + optional assets under /seats/<id>/. id '' =
 // Classic (historical render). Add a pack = one item here; panel lists it auto.
+// ── Descripteur de pack de sièges (étape 3) ────────────────────────────────
+// Traits comportementaux lus par renderSeats (pokerth.js) via
+// window._seatPackTraits(id). Défauts = packs web historiques ; le pack
+// « PokerTH » (réplique QML) active tout. Un pack importé peut surcharger
+// n'importe quel trait via l'objet "traits" de son seat.json :
+//   holePlate      cartes dans la boîte (dos adversaires / faces self)
+//   betOut         jeton de mise HORS boîte (politique betside QML)
+//   pucksSide      pucks D/SB/BB sur le côté de la boîte (dealer officiel)
+//   flagInfo       drapeau dans la rangée info wide (sinon coin d'avatar)
+//   timerRect      décompte = cadre rect + barre sur les cartes (sinon anneau)
+//   winnerBadge    pastille WINNER au showdown
+//   selfStrip      strip de mise sous la self-box
+//   selfBigCards   cartes self grandes dans la boîte
+//   badgeOnCards   badge d'action centré sur les hole-cards
+//   qmlSelf        géométrie self QML (self = perle, pas de multiplicateur)
+//   narrowByOrient boîte narrow quand la disposition est portrait
+const SEAT_TRAIT_KEYS = ['holePlate','betOut','pucksSide','flagInfo','timerRect','winnerBadge','selfStrip','selfBigCards','badgeOnCards','qmlSelf','narrowByOrient'];
+const SEAT_TRAIT_DEFAULTS = { holePlate:false, betOut:false, pucksSide:false, flagInfo:false, timerRect:false, winnerBadge:false, selfStrip:false, selfBigCards:false, badgeOnCards:false, qmlSelf:false, narrowByOrient:true };
+const SEAT_TRAITS_QML = { holePlate:true, betOut:true, pucksSide:true, flagInfo:true, timerRect:true, winnerBadge:true, selfStrip:true, selfBigCards:true, badgeOnCards:true, qmlSelf:true, narrowByOrient:true };
 const SEATS = [
   { id: '',      key: 'seatClassic', fallback: 'Classic', swatch: '#1e3820' },
-  { id: 'pokerth', key: 'seatPokerth', fallback: 'PokerTH', swatch: '#1d222b' },
+  { id: 'pokerth', key: 'seatPokerth', fallback: 'PokerTH', swatch: '#1d222b', traits: SEAT_TRAITS_QML },
   { id: 'chip',  key: 'seatChip',    fallback: 'Chip',    swatch: '#caa64a' },
   { id: 'plate', key: 'seatPlate',   fallback: 'Plate',   swatch: '#1d222b' },
   { id: 'card',    key: 'seatCard',    fallback: 'Card',    swatch: '#394150' },
@@ -240,6 +259,15 @@ _loadGalleryDecks();
 var _gallerySeats = [];
 function _gallerySeatById(id) { for (var i = 0; i < _gallerySeats.length; i++) if (_gallerySeats[i].id === id) return _gallerySeats[i]; return null; }
 function _isBuiltinSeat(id) { for (var i = 0; i < SEATS.length; i++) if (SEATS[i].id === id) return true; return false; }
+function _seatPackTraits(id) {
+  var out = {}; for (var k in SEAT_TRAIT_DEFAULTS) out[k] = SEAT_TRAIT_DEFAULTS[k];
+  var rec = null;
+  for (var i = 0; i < SEATS.length; i++) if (SEATS[i].id === (id || '')) { rec = SEATS[i]; break; }
+  if (!rec) rec = _gallerySeatById(id || '');
+  if (rec && rec.traits) for (var j = 0; j < SEAT_TRAIT_KEYS.length; j++) { var key = SEAT_TRAIT_KEYS[j]; if (key in rec.traits) out[key] = !!rec.traits[key]; }
+  return out;
+}
+try { window._seatPackTraits = _seatPackTraits; } catch (e) {}
 function _loadGallerySeats() {
   try {
     fetch('/seats/seats.json', { cache: 'no-store' })
@@ -248,7 +276,7 @@ function _loadGallerySeats() {
         if (!Array.isArray(list)) return;
         _gallerySeats = list.filter(function (s) { return s && s.id && s.plateUrl; }).map(function (s) {
           var slice = (s.slice != null ? s.slice : 34), width = (s.width != null ? s.width : 15), pad = s.pad || '6px 12px';
-          return { id: String(s.id), name: s.name || String(s.id), by: (s.by ? String(s.by) : null), swatch: s.swatch || '#394150', preview: s.preview || null,
+          return { id: String(s.id), name: s.name || String(s.id), by: (s.by ? String(s.by) : null), traits: (s.traits && typeof s.traits === 'object') ? s.traits : null, swatch: s.swatch || '#394150', preview: s.preview || null,
                    plateUrl: s.plateUrl, selfUrl: s.selfUrl || null,
                    slice: slice, width: width, pad: pad,
                    selfSlice: (s.selfSlice != null ? s.selfSlice : slice), selfWidth: (s.selfWidth != null ? s.selfWidth : width), selfPad: s.selfPad || pad };

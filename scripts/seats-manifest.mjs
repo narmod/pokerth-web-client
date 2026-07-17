@@ -9,7 +9,9 @@
 // paint the box background too. Optional extras in the folder:
 //   • self.(png|svg|…)     a distinct frame for the hero player-bar
 //   • preview.(png|svg|…)  the selector thumbnail
-//   • seat.json            { name, slice, width, pad, swatch, self:{slice,width,pad} }
+//   • seat.json            { name, by, slice, width, pad, swatch, self:{slice,width,pad},
+//                            traits:{...} — traits comportementaux (voir theme.mjs
+//                            SEAT_TRAIT_KEYS : holePlate, betOut, pucksSide, …) }
 //
 // slice = border-image-slice as a percentage of the source image (default 34),
 // width = rendered frame thickness in px (default 15), pad = inner padding.
@@ -51,6 +53,7 @@ for (const name of names) {
     id: name,
     name: (cfg.name && String(cfg.name).trim()) || name,
     by: (cfg.by && String(cfg.by).trim()) || null,
+    traits: (cfg.traits && typeof cfg.traits === 'object') ? cfg.traits : null,
     plateUrl: base + plate,
     selfUrl: self ? base + self : null,
     preview: prev ? base + prev : null,

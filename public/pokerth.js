@@ -1428,6 +1428,20 @@ window._chatTranslate = function (btn) {
 };
 try { _applyChatTranslateFlag(); } catch (e) {}
 window._applySeatOrient = _applySeatOrient;
+// ── Descripteur de pack de sièges (étape 3) ────────────────────────────────
+// Traits comportementaux du pack actif, résolus par le module theme
+// (window._seatPackTraits : packs intégrés + "traits" du seat.json des packs
+// importés). Repli avant chargement du module : traits QML par préfixe
+// d'id « pokerth » (identique au comportement historique).
+function _seatTraitsNow() {
+  var id = '';
+  try { id = document.documentElement.getAttribute('data-seat') || ''; } catch (e) {}
+  try { if (typeof window._seatPackTraits === 'function') { var t = window._seatPackTraits(id); if (t) return t; } } catch (e) {}
+  var pk = id.indexOf('pokerth') === 0;
+  return { holePlate: pk, betOut: pk, pucksSide: pk, flagInfo: pk, timerRect: pk,
+           winnerBadge: pk, selfStrip: pk, selfBigCards: pk, badgeOnCards: pk,
+           qmlSelf: pk, narrowByOrient: true };
+}
 setTimeout(function () { try { _applySeatOrient(); } catch (e) {} }, 800);
 // Appliquer les classes body dès l'init (les prefs sont reflétées au chargement).
 try {
@@ -10346,6 +10360,9 @@ const App = (() => {
     const oval = document.querySelector('.felt-oval');
     const zone = document.getElementById('g-table-zone');
     if (!oval || !zone) return;
+    // Traits du pack de sièges actif (descripteur de pack, étape 3) —
+    // résolus UNE fois par rendu ; remplacent les tests en dur sur l'id.
+    var _seatTr = _seatTraitsNow();
     // Echelle de zoom courante (tablette/desktop) : chaque siege est reduit du
     // meme facteur que le feutre -> zoom uniforme. Mobile / zoom 1 -> 1 (no-op).
     var _seatZoom = 1;
@@ -10377,7 +10394,7 @@ const App = (() => {
       // ratio quand la self partageait le CSS des adversaires ; le garder
       // ferait un double boost (+14 %) et sur-réserverait la bisection.
       // Les packs non-pokerth (plate/card/bar, CSS partagé) le conservent.
-      if ((document.documentElement.getAttribute('data-seat') || '').indexOf('pokerth') === 0) SELF_BOX_MUL = 1;
+      if (_seatTr.qmlSelf) SELF_BOX_MUL = 1;
     } catch (e) {}
     // Placement des sièges : 'classic' (ellipse maison, défaut) ou 'official'
     // (slots fixes du client PokerTH : grille périmètre en paysage façon client
@@ -10546,8 +10563,7 @@ const App = (() => {
     // EST un siège). INDÉPENDANT du mode de placement : vaut pour auto /
     // officiel / ellipse ET custom sans position self sauvée. On respecte une
     // self posée à la main (custom) et la player-bar réellement affichée.
-    var _pkStyleNow = false;
-    try { _pkStyleNow = ((document.documentElement.getAttribute('data-seat') || '').indexOf('pokerth') === 0); } catch (e) {}
+    var _pkStyleNow = !!_seatTr.qmlSelf; // géométrie self QML (trait du pack)
     var _selfHasCustom = false;
     if (_seatModeV === 'custom' && myIdx >= 0) {
       try { var _cSelf = (typeof window._seatCustomGet === 'function') ? window._seatCustomGet(rotated.length) : null;
@@ -10723,7 +10739,7 @@ const App = (() => {
     }
 
     var _seatStyleV = document.documentElement.getAttribute('data-seat') || '';
-    var _pkHole = (_seatStyleV.indexOf('pokerth') === 0); // pack PokerTH (fusionné 0.3.691)
+    var _pkHole = !!_seatTr.holePlate; // cartes dans la boîte (trait du pack)
     var _maskMode = _advGet('hide_pbar', true); // mode masqué : self-box = siège
     var _ownLvl = 0; try { _ownLvl = Math.min(3, Math.max(0, parseInt(localStorage.getItem('pth_big_own_cards'), 10) || 0)); } catch (e) {} // niveau "agrandir mes cartes" 0-3 (plafond = riviere)
     let h = '';
@@ -10744,8 +10760,8 @@ const App = (() => {
       // (2 lignes). Depuis la fusion des packs (0.3.691), le pack unique
       // « PokerTH » suit la DISPOSITION retenue : grille portrait -> box
       // narrow, ellipse paysage -> box wide (_forceSeatPortrait, même
-      // source que html[data-seat-orient]).
-      var _seatNarrow = _forceSeatPortrait;
+      // source que html[data-seat-orient]). Gardé par le trait narrowByOrient.
+      var _seatNarrow = _seatTr.narrowByOrient ? _forceSeatPortrait : false;
       // ── Mise « hors boîte » (packs PokerTH), placement fidèle au client
       //    officiel. Landscape : le jeton est TOUJOURS sur un côté HORIZONTAL
       //    (extérieur) — 'l' pour les sièges nettement à gauche du centre, 'r'
@@ -10755,7 +10771,7 @@ const App = (() => {
       //    Classe betside-* sur .seat ; le CSS positionne .seat-bet en absolu.
       //    Self exclue (sa mise est dans la barre d'action). ──
       var _betSideCls = '';
-      if (_pkHole) {
+      if (_seatTr.betOut) {
         var _bdx = px.left - oCX, _bdy = px.top - oCY, _bs;
         // Cote INTERIEUR des jetons/pucks des que la DISPOSITION est la
         // grille portrait (et plus seulement quand le STYLE portrait est
@@ -10804,21 +10820,21 @@ const App = (() => {
       let blindBadge = '';
       if (isSB) blindBadge = chipSvg('SB','#1565c0','#fff','#0a3d7a');
       else if (isBB) blindBadge = chipSvg('BB','#b71c1c','#fff','#6d0c0c');
-      const timerSvg = isActive ? (_pkHole ? '' : _timerSvg(_timerSec, _timerTot)) : '';
+      const timerSvg = isActive ? (_seatTr.timerRect ? '' : _timerSvg(_timerSec, _timerTot)) : '';
       const avatarCls = 'seat-avatar' + (isActive ? ' timing' : '') + avatarType;
       let dealerChip = isDealer ? dealerChipSvg() : '';
       // Packs PokerTH : pucks = disques crème OFFICIELS (table par défaut QML :
       // tableDealerPuck/SmallBlind/BigBlind ~ /pucks/*.svg) au lieu des chips
       // dessinés (D sombre doré, SB bleu, BB rouge) qui ne correspondent pas.
       // Un puck de thème explicite (_pthPuck) reste prioritaire.
-      if (_pkHole) {
+      if (_seatTr.pucksSide) {
         // Fidélité table par défaut QML : Dealer = disque crème officiel ;
         // SB reste BLEU et BB reste ROUGE (chipSvg ci-dessus) -> on ne touche
         // qu'au dealer. Un puck de thème explicite reste prioritaire.
         if (isDealer) dealerChip = '<img class="dealer-chip" src="' + (_pthPuck('--puck-dealer') || '/pucks/dealer.svg') + '" alt="D" width="20" height="20">';
       }
       // Packs PokerTH : pucks posés sur le CÔTÉ de la boîte -> hors de l'avatar.
-      var _avPucks = _pkHole ? '' : (blindBadge + dealerChip);
+      var _avPucks = _seatTr.pucksSide ? '' : (blindBadge + dealerChip);
       // Drapeau du pays sur l'avatar (coin bas-droite, comme un badge).
       // Vide si pays inconnu → rien affiché.
       const seatFlag = _ccToFlag(_playerCountries[pid]);
@@ -10872,7 +10888,7 @@ const App = (() => {
       const avCls2 = avatarCls + (pthAvUrl ? ' has-pth-avatar' : '');
       h += '<div class="seat-plate">'; // pack siege : avatar + (nom/tapis) -- display:contents en classique
       // Countdown rectangulaire (style pokerth) : cadre autour de la boite.
-      if (isActive && _pkHole) h += _timerRectSvg(_timerSec, _timerTot, isMe);
+      if (isActive && _seatTr.timerRect) h += _timerRectSvg(_timerSec, _timerTot, isMe);
       // Packs pokerth : drapeau retiré du coin d'avatar — le QML l'affiche
       // 22×15 en bas-gauche de la zone info (wide) et pas du tout en portrait.
       h += '<div class="' + avCls2 + '" style="' + avatarStyle + '">'
@@ -10880,7 +10896,7 @@ const App = (() => {
         + '<span class="seat-initial">' + initial + '</span>'
         + timerSvg
         + _avPucks
-        + (_pkHole ? '' : flagBadge)
+        + (_seatTr.flagInfo ? '' : flagBadge)
         + typeBadge
         + '</div>';
       // Cartes self GRANDES PAR DEFAUT (niveau 0 = taille de base QML :
@@ -10888,7 +10904,7 @@ const App = (() => {
       // #g-cardzoom (1-5) reste un reglage utilisateur par-dessus
       // (l1/l2 plus petites, l3/l4 plus grandes). Hors style pokerth,
       // les cartes self n'apparaissent dans le siege qu'en mode masque.
-      var _selfBig = isMe && !isGone && !isOut && (_pkHole || _maskMode);
+      var _selfBig = isMe && !isGone && !isOut && (_seatTr.selfBigCards || _maskMode);
       // ── Badge d'action (PlayerActionBadge QML) : construit AVANT les cartes
       // pour pouvoir être centré SUR la rangée de hole-cards dans les packs
       // pokerth (x/y = cardsCenter, comme le client officiel). Hors pokerth,
@@ -10911,14 +10927,14 @@ const App = (() => {
         // est centré sur ses hole-cards COMME les adversaires. (Le strip
         // au-dessus de la box est un ajout postérieur du HEAD qt6-qml ;
         // demande narmod 2026-07-15 : badge + décompte dans les cartes.)
-        var _hcBadge = (_pkHole && _acBadge && !(_sdWinners && _sdWinners.has(pid))) ? _acBadge : ''; // visible: actionText && !isWinner (QML, self ET adversaires)
+        var _hcBadge = (_seatTr.badgeOnCards && _acBadge && !(_sdWinners && _sdWinners.has(pid))) ? _acBadge : ''; // visible: actionText && !isWinner (QML, self ET adversaires)
         if (_hcBadge) _acInCards = true;
         // Bloc F — PlayerTimeoutBar QML (44×9) : centrée sur les cartes tant que
         // le siège est au tour SANS badge d'action ni état gagnant. S'AJOUTE au
         // cadre rectangulaire décomptant (conservé, demande narmod). La largeur
         // du remplissage est tenue à jour chaque seconde par _updateTimer.
         var _tbar = '';
-        if (_pkHole && isActive && !_acBadge && !(_sdWinners && _sdWinners.has(pid))) {
+        if (_seatTr.timerRect && isActive && !_acBadge && !(_sdWinners && _sdWinners.has(pid))) {
           var _tfrac = Math.max(0, Math.min(1, _timerSec / (_timerTot || 30)));
           // Self : même barre, couleur claire QML (#6E9CEC) via la classe .me —
           // centrée sur les cartes comme PlayerTimeoutBar (parité 2.1.3).
@@ -10931,7 +10947,7 @@ const App = (() => {
         + ((_timerSec > 0) ? _timerSec + 's' : '') + '</div>';
       h += '<div class="seat-info">';
       h += '<div class="seat-name">' + esc(isMe ? myName : getPlayerName(pid)) + '</div>';
-      if (_pkHole && !_seatNarrow) {
+      if (_seatTr.flagInfo && !_seatNarrow) {
         // infoBar QML (wideLayout) : drapeau 22×15 en bas-gauche + stack or à droite.
         h += '<div class="seat-info-row2">' + flagBadge + '<div class="seat-money">' + moneyStr + '</div></div>';
       } else {
@@ -10941,20 +10957,20 @@ const App = (() => {
       h += '</div>';   // ferme .seat-plate
       // PlayerWinnerOverlay QML : badge « WINNER » (pilule or/vert sombre) ancré
       // au-dessus de la boîte (au-dessous via .winner-below pour la plus haute).
-      if (_pkHole && _sdWinners && _sdWinners.has(pid)) {
+      if (_seatTr.winnerBadge && _sdWinners && _sdWinners.has(pid)) {
         h += '<div class="seat-winner-badge">' + esc(t('winnerBadge')) + '</div>';
       }
       // ── Strip self : NE PORTE PLUS que la mise (BetChip). Badge d'action et
       // barre de décompte sont centrés SUR les hole-cards comme les
       // adversaires (parité QML 2.1.3 — demande narmod 2026-07-15 ; le strip
       // badge/barre du HEAD qt6-qml n'est pas la référence).
-      if (_pkHole && isMe) {
+      if (_seatTr.selfStrip && isMe) {
         var _stripBet = (sd.bet > 0) ? '<div class="seat-bet strip-bet">' + fmtChips(sd.bet) + '</div>' : '';
         if (_stripBet) {
           h += '<div class="seat-self-strip">' + _stripBet + '</div>';
         }
       }
-      if (_pkHole && (blindBadge || dealerChip)) h += '<div class="seat-pucks">' + blindBadge + dealerChip + '</div>';
+      if (_seatTr.pucksSide && (blindBadge || dealerChip)) h += '<div class="seat-pucks">' + blindBadge + dealerChip + '</div>';
       h += '<div class="seat-foot">'; // pied : mise / action / cartes
       if (sd.bet) h += '<div class="seat-bet">' + fmtChips(sd.bet) + '</div>';
       // Action → badge préparé plus haut (posé sur les cartes en pack pokerth,
@@ -17172,7 +17188,7 @@ function renderPlayersList() {
   });
 })();
 
-;(function(){ window.BUILD_VERSION='0.3.692-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.693-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
