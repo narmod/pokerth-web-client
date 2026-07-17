@@ -10923,11 +10923,11 @@ const App = (() => {
         var _hcBigCls = _selfBig ? (' shc-big' + (_ownLvl >= 1 && _ownLvl <= 3 ? ' shc-l' + _ownLvl : '')) : '';  // 0 = base QML (85% riviere) ; 1-3 croissants, plafond riviere
         var _hcCls = 'seat-holecards' + _hcBigCls;
         var _hcSz  = _selfBig ? '' : 'xsm';
-        // Parité QML 2.1.3 (référence narmod) : le badge d'action de la SELF
-        // est centré sur ses hole-cards COMME les adversaires. (Le strip
-        // au-dessus de la box est un ajout postérieur du HEAD qt6-qml ;
-        // demande narmod 2026-07-15 : badge + décompte dans les cartes.)
-        var _hcBadge = (_seatTr.badgeOnCards && _acBadge && !(_sdWinners && _sdWinners.has(pid))) ? _acBadge : ''; // visible: actionText && !isWinner (QML, self ET adversaires)
+        // Adversaires : badge centré sur les hole-cards (PlayerActionBadge QML).
+        // SELF : depuis sp0ck 2026-07-17 (QML 2.1.4), le badge va AU-DESSUS de
+        // la box (strip) pour ne pas masquer ses propres cartes — le self est
+        // donc exclu ici quand le pack a un strip (repli cartes sinon).
+        var _hcBadge = (_seatTr.badgeOnCards && _acBadge && !(isMe && _seatTr.selfStrip) && !(_sdWinners && _sdWinners.has(pid))) ? _acBadge : ''; // visible: actionText && !isWinner (QML)
         if (_hcBadge) _acInCards = true;
         // Bloc F — PlayerTimeoutBar QML (44×9) : centrée sur les cartes tant que
         // le siège est au tour SANS badge d'action ni état gagnant. S'AJOUTE au
@@ -10960,14 +10960,15 @@ const App = (() => {
       if (_seatTr.winnerBadge && _sdWinners && _sdWinners.has(pid)) {
         h += '<div class="seat-winner-badge">' + esc(t('winnerBadge')) + '</div>';
       }
-      // ── Strip self : NE PORTE PLUS que la mise (BetChip). Badge d'action et
-      // barre de décompte sont centrés SUR les hole-cards comme les
-      // adversaires (parité QML 2.1.3 — demande narmod 2026-07-15 ; le strip
-      // badge/barre du HEAD qt6-qml n'est pas la référence).
+      // ── Strip self : mise (BetChip) + badge d'action au-dessus de la box
+      // (sp0ck 2026-07-17, aligné QML 2.1.4 : les cartes propres restent
+      // lisibles). La barre de décompte reste centrée sur les cartes.
       if (_seatTr.selfStrip && isMe) {
         var _stripBet = (sd.bet > 0) ? '<div class="seat-bet strip-bet">' + fmtChips(sd.bet) + '</div>' : '';
-        if (_stripBet) {
-          h += '<div class="seat-self-strip">' + _stripBet + '</div>';
+        var _stripBadge = (_acBadge && !(_sdWinners && _sdWinners.has(pid))) ? _acBadge : '';
+        if (_stripBadge) _acInCards = true; // évite le doublon dans le pied
+        if (_stripBet || _stripBadge) {
+          h += '<div class="seat-self-strip">' + _stripBet + _stripBadge + '</div>';
         }
       }
       if (_seatTr.pucksSide && (blindBadge || dealerChip)) h += '<div class="seat-pucks">' + blindBadge + dealerChip + '</div>';
@@ -17188,7 +17189,7 @@ function renderPlayersList() {
   });
 })();
 
-;(function(){ window.BUILD_VERSION='0.3.717-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.718-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
