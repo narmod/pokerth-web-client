@@ -13,7 +13,7 @@
     "selfBigCards": true,
     "badgeOnCards": false,
     "qmlSelf": true,
-    "narrowByOrient": true,
+    "narrowByOrient": false,
     "qmlStruct": true
   }
 }
