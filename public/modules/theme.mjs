@@ -140,7 +140,7 @@ const SEAT_TRAIT_DEFAULTS = SEAT_TRAITS_QML; // packs importés / inconnus = str
 // sont retirés — les prochains sièges naîtront en packs importés (style.css
 // libre + traits) sur le cadre virtuel QML.
 const SEATS = [
-  { id: 'pokerth', key: 'seatPokerth', fallback: 'PokerTH', swatch: '#1d222b', traits: SEAT_TRAITS_QML },
+  { id: 'pokerth', key: 'seatPokerth', fallback: 'PokerTH', swatch: '#1d222b', traits: Object.assign({}, SEAT_TRAITS_QML, { timerRect: false }) }, // pokerth : pas de cadre rect de décompte — barre fine seule (narmod 2026-07-18)
 ];
 const palette = makeAxis({ storeKey: 'pth_theme', attr: 'data-theme', items: PALETTES, def: 'auto',    titleKey: 'sectionPalette', titleFallback: 'Palette' });
 const table   = makeAxis({ storeKey: 'pth_table', attr: 'data-table', items: TABLES, def: '', titleKey: 'sectionTable',   titleFallback: 'Table' });

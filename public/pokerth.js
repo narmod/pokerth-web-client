@@ -1443,7 +1443,7 @@ function _seatTraitsNow() {
   var id = '';
   try { id = document.documentElement.getAttribute('data-seat') || ''; } catch (e) {}
   try { if (typeof window._seatPackTraits === 'function') { var t = window._seatPackTraits(id); if (t) return t; } } catch (e) {}
-  return { holePlate: true, betOut: true, pucksSide: true, flagInfo: true, timerRect: true,
+  return { holePlate: true, betOut: true, pucksSide: true, flagInfo: true, timerRect: false,
            timerBar: true, winnerBadge: true, selfStrip: true, selfBigCards: true,
            badgeOnCards: true, qmlSelf: true, narrowByOrient: true, qmlStruct: true };
 }
@@ -5578,9 +5578,8 @@ const App = (() => {
     var canCheck0 = toCall0 === 0;
     var act = canCheck0 ? 2 : (_playingMode === 1 ? 3 : 1); // 2=check, 3=call, 1=fold
     var amt = (act === 3) ? toCall0 : 0;
-    // Toast en position fixe (aucun impact layout) : l'ancien
-    // renderGameWaiting effondrait la barre 60 ms avant le doAction.
-    try { showKeyHint('\u23e9 ' + t(act === 2 ? 'autoChecked' : act === 3 ? 'autoCalled' : 'autoFolded')); } catch (e) {}
+    // Plus de toast (demande narmod 2026-07-18) : l'indicateur visuel du mode
+    // auto est le dropdown de mode encadré d'or (.mode-sel-wrap.mode-auto).
     setMyTurnActive(true);
     setTimeout(function () { doAction(act, amt); }, 60);
     return true;
@@ -10946,7 +10945,7 @@ const App = (() => {
       let blindBadge = '';
       if (isSB) blindBadge = chipSvg('SB','#1565c0','#fff','#0a3d7a');
       else if (isBB) blindBadge = chipSvg('BB','#b71c1c','#fff','#6d0c0c');
-      const timerSvg = isActive ? (_seatTr.timerRect ? '' : _timerSvg(_timerSec, _timerTot)) : '';
+      const timerSvg = isActive ? ((_seatTr.timerRect || _seatTr.timerBar) ? '' : _timerSvg(_timerSec, _timerTot)) : ''; // anneau avatar : seulement pour les packs SANS cadre rect NI barre fine
       const avatarCls = 'seat-avatar' + (isActive ? ' timing' : '') + avatarType;
       let dealerChip = isDealer ? dealerChipSvg() : '';
       // Packs PokerTH : pucks = disques crème OFFICIELS (table par défaut QML :
@@ -11060,6 +11059,17 @@ const App = (() => {
         _acBadge = '<div class="seat-action-badge' + (_apPrev && _apPrev.a === _acCode ? ' no-pop' : '') + ' act-c' + _acCode + '">' + esc(pkTerm(_acBase, _acKey)) + '</div>';
       }
       _apNew[pid] = { p: _puckSig, f: !!seatFlag, a: _acCode }; // signature du rendu courant
+      // Bloc F — PlayerTimeoutBar QML : visible tant que le siège est au tour
+      // SANS badge d'action ni état gagnant. Adversaires : centrée sur les
+      // cartes. SELF avec strip (pack pokerth) : dans le bandeau AU-DESSUS de
+      // la box, comme le QML 2.1.3 (demande narmod 2026-07-18). La largeur du
+      // remplissage est tenue à jour chaque seconde par _updateTimer.
+      var _tbar = '';
+      if ((_seatTr.timerBar || _seatTr.timerRect) && isActive && !_acBadge && !(_sdWinners && _sdWinners.has(pid))) {
+        var _tfrac = Math.max(0, Math.min(1, _timerSec / (_timerTot || 30)));
+        _tbar = '<div class="seat-timeout-bar' + (isMe ? ' me' : '') + '"><div class="stb-fill" style="width:' + (_tfrac * 100).toFixed(1) + '%"></div></div>';
+      }
+      var _tbarInStrip = !!_tbar && isMe && _seatTr.selfStrip; // self pokerth : barre hors box
       if ((_pkHole || _selfBig) && !isGone && !isOut) {
         var _ownHide = isMe && _ownCardsHidden();
         var _phc1 = isMe ? (_ownHide ? null : myCards[0]) : sd.card1;
@@ -11073,18 +11083,7 @@ const App = (() => {
         // donc exclu ici quand le pack a un strip (repli cartes sinon).
         var _hcBadge = (_seatTr.badgeOnCards && _acBadge && !(isMe && _seatTr.selfStrip) && !(_sdWinners && _sdWinners.has(pid))) ? _acBadge : ''; // visible: actionText && !isWinner (QML)
         if (_hcBadge) _acInCards = true;
-        // Bloc F — PlayerTimeoutBar QML (44×9) : centrée sur les cartes tant que
-        // le siège est au tour SANS badge d'action ni état gagnant. S'AJOUTE au
-        // cadre rectangulaire décomptant (conservé, demande narmod). La largeur
-        // du remplissage est tenue à jour chaque seconde par _updateTimer.
-        var _tbar = '';
-        if ((_seatTr.timerBar || _seatTr.timerRect) && isActive && !_acBadge && !(_sdWinners && _sdWinners.has(pid))) {
-          var _tfrac = Math.max(0, Math.min(1, _timerSec / (_timerTot || 30)));
-          // Self : même barre, couleur claire QML (#6E9CEC) via la classe .me —
-          // centrée sur les cartes comme PlayerTimeoutBar (parité 2.1.3).
-          _tbar = '<div class="seat-timeout-bar' + (isMe ? ' me' : '') + '"><div class="stb-fill" style="width:' + (_tfrac * 100).toFixed(1) + '%"></div></div>';
-        }
-        h += '<div class="' + _hcCls + '">' + cardHtml(_phc1,_hcSz) + cardHtml(_phc2,_hcSz) + _hcBadge + _tbar + '</div>';
+        h += '<div class="' + _hcCls + '">' + cardHtml(_phc1,_hcSz) + cardHtml(_phc2,_hcSz) + _hcBadge + (_tbarInStrip ? '' : _tbar) + '</div>';
       }
       // Badge timer sous l'avatar (visible et non confondu avec l'emoji)
       if (isActive) h += '<div class="seat-timer-badge" id="stb-'+pid+'">'
@@ -11115,8 +11114,9 @@ const App = (() => {
         // (correction narmod 2026-07-17 : la migration ne les concerne pas).
         var _stripBadge = (_seatTr.badgeOnCards && _acBadge && !(_sdWinners && _sdWinners.has(pid))) ? _acBadge : '';
         if (_stripBadge) _acInCards = true; // évite le doublon dans le pied
-        if (_stripBet || _stripBadge) {
-          h += '<div class="seat-self-strip">' + _stripBet + _stripBadge + '</div>';
+        var _stripTb = _tbarInStrip ? _tbar : ''; // barre de décompte AU-DESSUS de la box (QML 2.1.3)
+        if (_stripBet || _stripBadge || _stripTb) {
+          h += '<div class="seat-self-strip' + (_stripTb ? ' has-tb' : '') + '">' + _stripBet + _stripBadge + _stripTb + '</div>';
         }
       }
       if (_seatTr.pucksSide && (blindBadge || dealerChip)) h += '<div class="seat-pucks">' + blindBadge + dealerChip + '</div>';
@@ -12257,7 +12257,7 @@ const App = (() => {
 
     // Sélecteur de mode PERSISTANT (remplace l'ancien bouton AUTO, même emplacement) :
     // Manuel / Auto Check-Call / Auto Check-Fold. Piloté par App.setPlayingMode.
-    const modeSel = '<div class="sel-wrap mode-sel-wrap">'
+    const modeSel = '<div class="sel-wrap mode-sel-wrap' + (_playingMode !== 0 ? ' mode-auto' : '') + '">'
       + '<select id="mode-sel" autocomplete="off" onfocus="App._modeSelHold(true)" onblur="App._modeSelHold(false)" onchange="App.setPlayingMode(this.selectedIndex)">'
       +   '<option' + (_playingMode === 0 ? ' selected' : '') + '>' + t('modeManual') + '</option>'
       +   '<option' + (_playingMode === 1 ? ' selected' : '') + '>' + t('modeAutoCheckCall') + '</option>'
@@ -13771,6 +13771,8 @@ function _maybeShowNextHandBtn() {
       _playingMode = n;
       var sel = document.getElementById('mode-sel');
       if (sel && sel.selectedIndex !== n) sel.selectedIndex = n;
+      // Cadre or immédiat sur le dropdown quand un mode auto est actif (QML).
+      try { var _msw = sel && sel.closest ? sel.closest('.mode-sel-wrap') : null; if (_msw) _msw.classList.toggle('mode-auto', n !== 0); } catch (e) {}
       if (n !== 0 && turnPid === myId) _playAutoMode();
     },
 
@@ -17496,7 +17498,7 @@ function renderPlayersList() {
   });
 })();
 
-;(function(){ window.BUILD_VERSION='0.3.759-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.760-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

@@ -4766,6 +4766,13 @@ html[data-abar="portrait"] .my-zone .act-buttons-row { margin-top: 2px; margin-b
 .raise-row .btn-raise { flex: 2; }
 /* Sélecteur de mode (remplace l'ancien bouton AUTO dans la rangée d'action) */
 .mode-sel-wrap select { font-size: 0.76rem; padding: 6px 22px 6px 8px; height: 100%; }
+/* Mode auto actif (Auto Check/Call ou Auto Check/Fold) : le dropdown est
+   encadré d'or — même or de pré-sélection que le QML (#FFD700). Remplace
+   l'ancien toast « Auto checked/called » (demande narmod 2026-07-18). */
+.mode-sel-wrap.mode-auto select {
+  border-color: #FFD700 !important;
+  box-shadow: 0 0 0 1px #FFD700, 0 0 10px rgba(255, 215, 0, 0.45);
+}
 .mode-sel-wrap .sel-arr { right: 7px; font-size: 0.7rem; }
 
 /* Action log */
