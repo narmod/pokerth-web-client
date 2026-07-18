@@ -559,6 +559,8 @@ body {
    card so it fits without scrolling. The header block (chip, title, suits,
    subtitle) is the biggest space user, so it shrinks the most. !important
    overrides the inline sizing set in the markup. */
+/* Paliers progressifs de réduction de la carte de connexion (760/640) :
+   raffinements fluides pour écrans peu hauts, pas des frontières de classe. */
 @media (max-height: 760px) {
   #s-connect { padding: 8px 14px; }
   .card { gap: 8px; padding: 14px 18px; }
@@ -2009,6 +2011,8 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
 @media (max-width: 900px)   { :root { --oval-w: 320px; --oval-h: 132px; } }
 @media (max-width: 700px)   { :root { --oval-w: 240px; --oval-h: 100px; } }
 @media (max-width: 740px) and (orientation: portrait)  { :root { --oval-w: min(58vw,240px); --oval-h: min(24vw,100px); } }
+/* Palier « extra-compact » (h<500 = téléphones en paysage), raffinement INTERNE au
+   landscapeCompact canonique h<600 — intentionnel, ne pas fusionner avec 600. */
 @media (max-height: 500px) and (orientation: landscape){ :root { --oval-w: min(40vw,240px); --oval-h: min(18vh,88px); } }
 
    RESPONSIVE — orientation-aware
@@ -2481,6 +2485,8 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
 #g-blind { display: none; }
 
 /* ── Phone LANDSCAPE (wide, short) ── */
+/* Palier « extra-compact » du chrome de jeu (h<500 = téléphones en paysage) —
+   raffinement interne au landscapeCompact canonique h<600, intentionnel. */
 @media (max-height: 500px) and (orientation: landscape) {
   /* Header aplati facon landscapeCompact du QML officiel : 30 px, marges reduites. */
   .header { min-height: var(--header-h, 30px) !important; padding: 2px 6px !important; }
@@ -5853,7 +5859,7 @@ html[data-table="pokerth-live"] .raise-slider { accent-color: #4CAF50; }
 }
 /* On very short screens (e.g. landscape mobile) hide the footer so
    the login card has more room. */
-@media (max-height: 540px) {
+@media (max-height: 599.98px) {
   .connect-footer { display: none; }
 }
 
