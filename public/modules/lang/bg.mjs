@@ -273,6 +273,7 @@ export const strings = {
     hsTwoPair: '🔵 Два чифта {a}/{b}',
     hsPair: '⚪ Чифт {r}',
     hsHigh: '— Висока карта {r}',
+    whHigh: 'Висока карта {r}', whPair: 'Чифт {r}', whTwoPair: 'Два чифта, {a} и {b}', whThree: 'Тройка {r}', whStraight: 'Стрейт до {r}', whFlush: 'Флъш, {r} висока', whFull: 'Фул хаус, {a} над {b}', whFour: 'Каре {r}', whSF: 'Стрейт флъш до {r}', whRoyal: 'Роял флъш',
     pfPremium: 'Премиум ръка',
     pfAKs: 'AKs премиум',
     pfAKo: 'AKo премиум',

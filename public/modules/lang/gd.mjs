@@ -274,6 +274,7 @@ export const strings = {
     hsTwoPair: '🔵 Dà phaidhir {a}/{b}',
     hsPair: '⚪ Paidhir {r}',
     hsHigh: '— Cairt àrd {r}',
+    whHigh: 'Cairt àrd {r}', whPair: 'Paidhir {r}', whTwoPair: 'Dà phaidhir, {a} agus {b}', whThree: 'Trì co-ionann, {r}', whStraight: 'Sreath gu {r}', whFlush: 'Aon dath, {r} àrd', whFull: 'Taigh làn, {a} thar {b}', whFour: 'Ceithir co-ionann, {r}', whSF: 'Sreath dhatha gu {r}', whRoyal: 'Sreath rìoghail',
     pfPremium: 'Làmh phrìomh',
     pfAKs: 'AKs prìomh',
     pfAKo: 'AKo prìomh',

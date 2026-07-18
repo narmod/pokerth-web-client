@@ -275,6 +275,7 @@ export const strings = {
     hsTwoPair: '🔵 İki Çift {a}/{b}',
     hsPair: '⚪ Çift {r}',
     hsHigh: '— Yüksek Kart {r}',
+    whHigh: 'Yüksek kart {r}', whPair: 'Çift {r}', whTwoPair: 'İki çift, {a} ve {b}', whThree: 'Üçlü {r}', whStraight: 'Kent, en yüksek {r}', whFlush: 'Floş, en yüksek {r}', whFull: 'Full, {a} ve {b}', whFour: 'Kare {r}', whSF: 'Sıralı floş, en yüksek {r}', whRoyal: 'Floş royal',
     pfPremium: 'Premium el',
     pfAKs: 'AKs Premium',
     pfAKo: 'AKo Premium',

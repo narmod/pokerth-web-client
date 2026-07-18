@@ -279,6 +279,7 @@ export const strings = {
     hsTwoPair: '🔵 Dwie pary {a}/{b}',
     hsPair: '⚪ Para {r}',
     hsHigh: '— Wysoka karta {r}',
+    whHigh: 'Wysoka karta {r}', whPair: 'Para {r}', whTwoPair: 'Dwie pary, {a} i {b}', whThree: 'Trójka {r}', whStraight: 'Strit do {r}', whFlush: 'Kolor, {r} wysoki', whFull: 'Full, {a} na {b}', whFour: 'Kareta {r}', whSF: 'Strit fleszowy do {r}', whRoyal: 'Poker królewski',
     pfPremium: 'Układ premium',
     pfAKs: 'AKs Premium',
     pfAKo: 'AKo Premium',

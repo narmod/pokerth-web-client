@@ -272,6 +272,7 @@ export const strings = {
     hsTwoPair: '🔵 ツーペア {a}/{b}',
     hsPair: '⚪ ワンペア {r}',
     hsHigh: '— ハイカード {r}',
+    whHigh: 'ハイカード {r}', whPair: 'ワンペア {r}', whTwoPair: 'ツーペア {a}と{b}', whThree: 'スリーカード {r}', whStraight: 'ストレート {r}ハイ', whFlush: 'フラッシュ {r}ハイ', whFull: 'フルハウス {a}と{b}', whFour: 'フォーカード {r}', whSF: 'ストレートフラッシュ {r}ハイ', whRoyal: 'ロイヤルフラッシュ',
     pfPremium: 'プレミアムハンド',
     pfAKs: 'AKs プレミアム',
     pfAKo: 'AKo プレミアム',

@@ -272,6 +272,7 @@ export const strings = {
     hsTwoPair: '🔵 To par {a}/{b}',
     hsPair: '⚪ Par {r}',
     hsHigh: '— Højt kort {r}',
+    whHigh: 'Højt kort {r}', whPair: 'Et par, {r}', whTwoPair: 'To par, {a} og {b}', whThree: 'Tre ens, {r}', whStraight: 'Straight, {r} høj', whFlush: 'Flush, {r} høj', whFull: 'Fuldt hus, {a} over {b}', whFour: 'Fire ens, {r}', whSF: 'Straight flush, {r} høj', whRoyal: 'Royal flush',
     pfPremium: 'Premiumhånd',
     pfAKs: 'AKs Premium',
     pfAKo: 'AKo Premium',

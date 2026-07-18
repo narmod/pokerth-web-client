@@ -280,6 +280,7 @@ export const strings = {
     hsTwoPair: '🔵 Zwei Paare {a}/{b}',
     hsPair: '⚪ Paar {r}',
     hsHigh: '— Höchste Karte {r}',
+    whHigh: 'Höchste Karte {r}', whPair: 'Ein Paar, {r}', whTwoPair: 'Zwei Paare, {a} und {b}', whThree: 'Drilling, {r}', whStraight: 'Straße, {r} hoch', whFlush: 'Flush, {r} hoch', whFull: 'Full House, {a} über {b}', whFour: 'Vierling, {r}', whSF: 'Straight Flush, {r} hoch', whRoyal: 'Royal Flush',
     pfPremium: 'Premium-Hand',
     pfAKs: 'AKs Premium',
     pfAKo: 'AKo Premium',

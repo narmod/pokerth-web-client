@@ -2405,22 +2405,24 @@ function _cmpHand(a, b) {
 // « Two Pair, Aces and Queens », « Full House, Aces full of Kings »,
 // « Straight, King high »… Prend le résultat de _evalFive/_evaluateBestHand.
 function _qmlWinningHandText(res) {
+  // Multilingue (demande narmod 2026-07-18) : clés wh* traduites dans les 36
+  // langues (format QML, rangs en lettres universelles A/K/Q/J/10…, comme les
+  // faces des cartes). Repli t() : langue active → anglais → clé brute.
   if (!res) return '';
-  var PL = ['Deuces','Threes','Fours','Fives','Sixes','Sevens','Eights','Nines','Tens','Jacks','Queens','Kings','Aces'];
-  var HI = ['Deuce high','Three high','Four high','Five high','Six high','Seven high','Eight high','Nine high','Ten high','Jack high','Queen high','King high','Ace high'];
+  var RN = ['2','3','4','5','6','7','8','9','10','J','Q','K','A'];
   var tb = res.tb || [];
-  var a = tb[0] != null ? tb[0] : 12, b = tb[1] != null ? tb[1] : 0;
+  var a = RN[tb[0] != null ? tb[0] : 12], b = RN[tb[1] != null ? tb[1] : 0];
   switch (res.r) {
-    case 0: return 'High Card, ' + HI[a];
-    case 1: return 'One Pair, ' + PL[a];
-    case 2: return 'Two Pair, ' + PL[a] + ' and ' + PL[b];
-    case 3: return 'Three of a Kind, ' + PL[a];
-    case 4: return 'Straight, ' + HI[a];
-    case 5: return 'Flush, ' + HI[a];
-    case 6: return 'Full House, ' + PL[a] + ' full of ' + PL[b];
-    case 7: return 'Four of a Kind, ' + PL[a];
-    case 8: return 'Straight Flush, ' + HI[a];
-    case 9: return 'Straight Flush, Ace high'; // Qt-Widgets : la royale = quinte flush à l'As
+    case 0: return t('whHigh', { r: a });
+    case 1: return t('whPair', { r: a });
+    case 2: return t('whTwoPair', { a: a, b: b });
+    case 3: return t('whThree', { r: a });
+    case 4: return t('whStraight', { r: a });
+    case 5: return t('whFlush', { r: a });
+    case 6: return t('whFull', { a: a, b: b });
+    case 7: return t('whFour', { r: a });
+    case 8: return t('whSF', { r: a });
+    case 9: return t('whRoyal');
   }
   return '';
 }
@@ -17573,7 +17575,7 @@ function renderPlayersList() {
   });
 })();
 
-;(function(){ window.BUILD_VERSION='0.3.763-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.764-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

@@ -207,6 +207,7 @@ export const strings = {
     hsRoyal:'⭐ 로열 플러시', hsSF:'🃏 스트레이트 플러시 {r}', hsFour:'🟥 포카드 {r}',
     hsFull:'🔴 풀하우스 {a}/{b}', hsFlush:'🟠 플러시', hsStraight:'🟡 스트레이트 {r}',
     hsThree:'🟢 트리플 {r}', hsTwoPair:'🔵 투페어 {a}/{b}', hsPair:'⚪ {r} 페어', hsHigh:'하이 카드 {r}',
+    whHigh: '하이 카드 {r}', whPair: '원 페어 {r}', whTwoPair: '투 페어 {a}와 {b}', whThree: '트리플 {r}', whStraight: '스트레이트 {r} 하이', whFlush: '플러시 {r} 하이', whFull: '풀하우스 {a}와 {b}', whFour: '포카드 {r}', whSF: '스트레이트 플러시 {r} 하이', whRoyal: '로열 플러시',
     pfPremium:'프리미엄 핸드', pfAKs:'AKs 프리미엄', pfAKo:'AKo 프리미엄', pfMidPair:'중간 페어',
     pfStrongAceS:'강한 수티드 에이스', pfStrongAce:'강한 에이스', pfKQs:'KQs', pfKQo:'KQo',
     pfSmallPair:'작은 페어', pfSuitedConn:'수티드 커넥터', pfSuitedBroad:'수티드 브로드웨이',

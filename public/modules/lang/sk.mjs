@@ -273,6 +273,7 @@ export const strings = {
     hsTwoPair: '🔵 Dve dvojice {a}/{b}',
     hsPair: '⚪ Pár {r}',
     hsHigh: '— Vysoká karta {r}',
+    whHigh: 'Vysoká karta {r}', whPair: 'Pár {r}', whTwoPair: 'Dve dvojice, {a} a {b}', whThree: 'Trojica {r}', whStraight: 'Postupka do {r}', whFlush: 'Farba, {r} vysoká', whFull: 'Full house, {a} cez {b}', whFour: 'Štvorica {r}', whSF: 'Farebná postupka do {r}', whRoyal: 'Kráľovská postupka',
     pfPremium: 'Prémiová ruka',
     pfAKs: 'AKs prémium',
     pfAKo: 'AKo prémium',

@@ -278,6 +278,7 @@ export const strings = {
     hsTwoPair: '🔵 Две пары {a}/{b}',
     hsPair: '⚪ Пара {r}',
     hsHigh: '— Старшая карта {r}',
+    whHigh: 'Старшая карта {r}', whPair: 'Пара {r}', whTwoPair: 'Две пары, {a} и {b}', whThree: 'Тройка {r}', whStraight: 'Стрит до {r}', whFlush: 'Флеш, {r} старшая', whFull: 'Фулл-хаус, {a} на {b}', whFour: 'Каре {r}', whSF: 'Стрит-флеш до {r}', whRoyal: 'Флеш-рояль',
     pfPremium: 'Премиум-рука',
     pfAKs: 'AKs Премиум',
     pfAKo: 'AKo Премиум',

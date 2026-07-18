@@ -273,6 +273,7 @@ export const strings = {
     hsTwoPair: '🔵 Dvi poros {a}/{b}',
     hsPair: '⚪ Pora {r}',
     hsHigh: '— Aukščiausia korta {r}',
+    whHigh: 'Aukščiausia korta {r}', whPair: 'Pora {r}', whTwoPair: 'Dvi poros, {a} ir {b}', whThree: 'Trejetas {r}', whStraight: 'Eilė iki {r}', whFlush: 'Spalva, {r} aukšta', whFull: 'Pilnas namas, {a} virš {b}', whFour: 'Ketvertas {r}', whSF: 'Spalvota eilė iki {r}', whRoyal: 'Karališkoji eilė',
     pfPremium: 'Stiprus derinys',
     pfAKs: 'AKs aukščiausias',
     pfAKo: 'AKo aukščiausias',

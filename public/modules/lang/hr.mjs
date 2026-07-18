@@ -273,6 +273,7 @@ export const strings = {
     hsTwoPair: '🔵 Dva para {a}/{b}',
     hsPair: '⚪ Par {r}',
     hsHigh: '— Visoka karta {r}',
+    whHigh: 'Visoka karta {r}', whPair: 'Par {r}', whTwoPair: 'Dva para, {a} i {b}', whThree: 'Trojka {r}', whStraight: 'Skala do {r}', whFlush: 'Boja, {r} visoka', whFull: 'Full house, {a} preko {b}', whFour: 'Četvorka {r}', whSF: 'Skala u boji do {r}', whRoyal: 'Royal flush',
     pfPremium: 'Premium ruka',
     pfAKs: 'AKs premium',
     pfAKo: 'AKo premium',

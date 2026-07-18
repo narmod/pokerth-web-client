@@ -273,6 +273,7 @@ export const strings = {
     hsTwoPair: '🔵 Dobles parelles {a}/{b}',
     hsPair: '⚪ Parella {r}',
     hsHigh: '— Carta alta {r}',
+    whHigh: 'Carta alta {r}', whPair: 'Parella de {r}', whTwoPair: 'Dobles parelles, {a} i {b}', whThree: 'Trio de {r}', whStraight: 'Escala al {r}', whFlush: 'Color al {r}', whFull: 'Full de {a} i {b}', whFour: 'Pòquer de {r}', whSF: 'Escala de color al {r}', whRoyal: 'Escala reial',
     pfPremium: 'Mà prèmium',
     pfAKs: 'AKs prèmium',
     pfAKo: 'AKo prèmium',

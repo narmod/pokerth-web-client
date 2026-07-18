@@ -280,6 +280,7 @@ export const strings = {
     hsTwoPair: '🔵 Doppia Coppia {a}/{b}',
     hsPair: '⚪ Coppia di {r}',
     hsHigh: '— Carta Alta {r}',
+    whHigh: 'Carta alta {r}', whPair: 'Coppia di {r}', whTwoPair: 'Doppia coppia, {a} e {b}', whThree: 'Tris di {r}', whStraight: 'Scala al {r}', whFlush: 'Colore al {r}', whFull: 'Full di {a} e {b}', whFour: 'Poker di {r}', whSF: 'Scala a colore al {r}', whRoyal: 'Scala reale',
     pfPremium: 'Mano premium',
     pfAKs: 'AKs Premium',
     pfAKo: 'AKo Premium',

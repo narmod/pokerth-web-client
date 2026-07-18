@@ -274,6 +274,7 @@ export const strings = {
     hsTwoPair: '🔵 இரட்டை ஜோடி {a}/{b}',
     hsPair: '⚪ ஜோடி {r}',
     hsHigh: '— உயர் சீட்டு {r}',
+    whHigh: 'உயர் சீட்டு {r}', whPair: 'ஜோடி {r}', whTwoPair: 'இரட்டை ஜோடி, {a} மற்றும் {b}', whThree: 'மும்மை {r}', whStraight: 'வரிசை {r} வரை', whFlush: 'ஒரே நிறம், {r} உயர்', whFull: 'முழு வீடு, {a} மற்றும் {b}', whFour: 'நான்மை {r}', whSF: 'ஒரே நிற வரிசை {r} வரை', whRoyal: 'அரச வரிசை',
     pfPremium: 'சிறந்த கை',
     pfAKs: 'AKs சிறந்தது',
     pfAKo: 'AKo சிறந்தது',

@@ -120,6 +120,7 @@ export const strings = {
     hsRoyal:'⭐ Quinte Flush Royale', hsSF:'🃏 Quinte Flush {r}', hsFour:'🟥 Carré {r}',
     hsFull:'🔴 Full {a}/{b}', hsFlush:'🟠 Couleur', hsStraight:'🟡 Suite {r}',
     hsThree:'🟢 Brelan {r}', hsTwoPair:'🔵 Deux paires {a}/{b}', hsPair:'⚪ Paire {r}', hsHigh:'Carte haute {r}',
+    whHigh: 'Carte haute {r}', whPair: 'Paire de {r}', whTwoPair: 'Deux paires, {a} et {b}', whThree: 'Brelan de {r}', whStraight: 'Suite, hauteur {r}', whFlush: 'Couleur, hauteur {r}', whFull: 'Full, {a} par les {b}', whFour: 'Carré de {r}', whSF: 'Quinte flush, hauteur {r}', whRoyal: 'Quinte flush royale',
     // ── Force de main : pré-flop ──
     pfPremium:'Main premium', pfAKs:'AK couleur ★★★', pfAKo:'AK bicolore ★★★', pfMidPair:'Paire intermédiaire',
     pfStrongAceS:'As couleur fort', pfStrongAce:'As fort', pfKQs:'KQ couleur', pfKQo:'KQ',

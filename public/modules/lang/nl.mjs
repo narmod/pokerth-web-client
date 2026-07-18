@@ -278,6 +278,7 @@ export const strings = {
     hsTwoPair: '🔵 Twee Paar {a}/{b}',
     hsPair: '⚪ Paar {r}',
     hsHigh: '— Hoge Kaart {r}',
+    whHigh: 'Hoge kaart {r}', whPair: 'Een paar, {r}', whTwoPair: 'Twee paar, {a} en {b}', whThree: 'Drieling, {r}', whStraight: 'Straat, {r} hoog', whFlush: 'Flush, {r} hoog', whFull: 'Full house, {a} over {b}', whFour: 'Vierling, {r}', whSF: 'Straight flush, {r} hoog', whRoyal: 'Royal flush',
     pfPremium: 'Premiumhand',
     pfAKs: 'AKs Premium',
     pfAKo: 'AKo Premium',

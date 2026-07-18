@@ -273,6 +273,7 @@ export const strings = {
     hsTwoPair: '🔵 Hai đôi {a}/{b}',
     hsPair: '⚪ Đôi {r}',
     hsHigh: '— Mậu thầu {r}',
+    whHigh: 'Mậu thầu {r}', whPair: 'Đôi {r}', whTwoPair: 'Hai đôi, {a} và {b}', whThree: 'Sám cô {r}', whStraight: 'Sảnh đến {r}', whFlush: 'Thùng, {r} cao', whFull: 'Cù lũ, {a} đè {b}', whFour: 'Tứ quý {r}', whSF: 'Thùng phá sảnh đến {r}', whRoyal: 'Thùng phá sảnh rồng',
     pfPremium: 'Bài mạnh',
     pfAKs: 'AKs cao cấp',
     pfAKo: 'AKo cao cấp',

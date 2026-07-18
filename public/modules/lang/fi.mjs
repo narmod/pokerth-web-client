@@ -272,6 +272,7 @@ export const strings = {
     hsTwoPair: '🔵 Kaksi paria {a}/{b}',
     hsPair: '⚪ Pari {r}',
     hsHigh: '— Korkein kortti {r}',
+    whHigh: 'Korkein kortti {r}', whPair: 'Pari, {r}', whTwoPair: 'Kaksi paria, {a} ja {b}', whThree: 'Kolmoset, {r}', whStraight: 'Suora, {r} korkein', whFlush: 'Väri, {r} korkein', whFull: 'Täyskäsi, {a} ja {b}', whFour: 'Neloset, {r}', whSF: 'Värisuora, {r} korkein', whRoyal: 'Värisuora ässästä',
     pfPremium: 'Premium-käsi',
     pfAKs: 'AKs premium',
     pfAKo: 'AKo premium',

@@ -273,6 +273,7 @@ export const strings = {
     hsTwoPair: '🔵 Δύο ζευγάρια {a}/{b}',
     hsPair: '⚪ Ζευγάρι {r}',
     hsHigh: '— Υψηλό φύλλο {r}',
+    whHigh: 'Υψηλό φύλλο {r}', whPair: 'Ζευγάρι {r}', whTwoPair: 'Δύο ζευγάρια, {a} και {b}', whThree: 'Τριάδα {r}', whStraight: 'Κέντα έως {r}', whFlush: 'Φλος, {r} ψηλό', whFull: 'Φουλ, {a} με {b}', whFour: 'Καρέ {r}', whSF: 'Κέντα φλος έως {r}', whRoyal: 'Ρουαγιάλ φλος',
     pfPremium: 'Πρίμιουμ χέρι',
     pfAKs: 'AKs πρίμιουμ',
     pfAKo: 'AKo πρίμιουμ',

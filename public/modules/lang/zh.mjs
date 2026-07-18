@@ -274,6 +274,7 @@ export const strings = {
     hsTwoPair: '🔵 两对 {a}/{b}',
     hsPair: '⚪ 一对 {r}',
     hsHigh: '— 高牌 {r}',
+    whHigh: '高牌 {r}', whPair: '一对 {r}', whTwoPair: '两对 {a}和{b}', whThree: '三条 {r}', whStraight: '顺子 {r}高', whFlush: '同花 {r}高', whFull: '葫芦 {a}带{b}', whFour: '四条 {r}', whSF: '同花顺 {r}高', whRoyal: '皇家同花顺',
     pfPremium: '顶级起手牌',
     pfAKs: 'AKs 顶级',
     pfAKo: 'AKo 顶级',

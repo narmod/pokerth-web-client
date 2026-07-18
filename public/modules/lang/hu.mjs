@@ -273,6 +273,7 @@ export const strings = {
     hsTwoPair: '🔵 Két pár {a}/{b}',
     hsPair: '⚪ Pár {r}',
     hsHigh: '— Magas lap {r}',
+    whHigh: 'Magas lap {r}', whPair: 'Pár, {r}', whTwoPair: 'Két pár, {a} és {b}', whThree: 'Drill, {r}', whStraight: 'Sor, {r} magas', whFlush: 'Szín, {r} magas', whFull: 'Full, {a} a {b} felett', whFour: 'Póker, {r}', whSF: 'Színsor, {r} magas', whRoyal: 'Royal flush',
     pfPremium: 'Prémium kéz',
     pfAKs: 'AKs prémium',
     pfAKo: 'AKo prémium',

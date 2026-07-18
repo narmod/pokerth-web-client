@@ -273,6 +273,7 @@ export const strings = {
     hsTwoPair: '🔵 Două perechi {a}/{b}',
     hsPair: '⚪ Pereche {r}',
     hsHigh: '— Carte mare {r}',
+    whHigh: 'Carte mare {r}', whPair: 'Pereche de {r}', whTwoPair: 'Două perechi, {a} și {b}', whThree: 'Trei de {r}', whStraight: 'Chintă până la {r}', whFlush: 'Culoare, {r} mare', whFull: 'Full house, {a} cu {b}', whFour: 'Careu de {r}', whSF: 'Chintă de culoare până la {r}', whRoyal: 'Chintă roială',
     pfPremium: 'Mână premium',
     pfAKs: 'AKs Premium',
     pfAKo: 'AKo Premium',
