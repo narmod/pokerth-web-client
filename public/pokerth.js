@@ -808,25 +808,31 @@ function _advSyncContext() {
 function resetAdvDefaults() {
   var msg = (typeof window.t === 'function' && window.t('advResetConfirm') !== 'advResetConfirm')
     ? window.t('advResetConfirm')
-    : 'Reset all options and keyboard shortcuts to their defaults?';
+    : 'Restore everything to factory defaults (options, styles, shortcuts, stats)? Nickname, avatar and account are kept. The app will reload.';
   if (!window.confirm(msg)) return;
-  var defs = {
-    anim_cards: true, show_blinds: true, show_community: true,
-    focus_bet: false, chat_noemoji: false, fade_losers: true, show_flag: true,
-    own_click: false, guard_call: true, odds_monitor: false, no_hide_ignored: false, hands_btn: true,
-    fkeys_alt: false, zoom_follow: true, table_zoom: true, lobby_chat: true, log_on: true, pause_hands: false, create_dialog: true, cfg_sync: true, poker_en: true,
-    pot_btns: true, community_content: true, splash: true,
-    snd_actions: true, snd_lobby: true, snd_net: true, snd_blinds: true,
-    reduce_fx: false, status_bar: true, ping_avatar: true, auto_leave: false, blinds_badge: true
+  // ── Réinitialisation USINE (demande narmod 2026-07-18) ──
+  // On efface TOUTES les préférences locales (préfixe pth_) : options,
+  // styles/thèmes/tapis/decks/sièges, raccourcis, positions et tailles de
+  // fenêtres, filtres, stats, journal, ignorés, config.xml importée… — comme
+  // pour un NOUVEL utilisateur. Sont préservés UNIQUEMENT l'identité et la
+  // connexion : pseudo(s), avatar, compte, serveur, session/reprise en cours.
+  // Puis rechargement complet : tout se réinitialise proprement au boot
+  // (styles injectés au chargement, modules, mémoires en RAM).
+  var KEEP = {
+    pth_auth_login: 1, pth_pass: 1, pth_sid: 1, pth_vid: 1, pth_resume: 1,
+    pth_host: 1, pth_port: 1, pth_proxy: 1, pth_server_mode: 1, pth_login_mode: 1,
+    pth_lan_nick: 1, pth_lan_port: 1, pth_unauth_nick: 1, pth_offline_nick: 1,
+    pth_avatar: 1, pth_avatar_img: 1
   };
-  try { for (var k in defs) setAdvOpt(k, defs[k]); } catch (e) {}
-  try { setSeatLayout('official'); } catch (e) {}
-  try { if (typeof window.setTooltips === 'function') window.setTooltips(true); } catch (e) {}
-  try { if (typeof window.setReactMuted === 'function') window.setReactMuted(false); } catch (e) {}
-  try { if (typeof window.setDefaultCommunity === 'function') window.setDefaultCommunity('pth'); } catch (e) {}
-  try { if (typeof window.setLogInterval === 'function') window.setLogInterval('hand'); } catch (e) {}
-  try { resetKeys(); } catch (e) {}
-  try { openAdvancedOptions(); } catch (e) {}   // re-sync des cases (réouvre sur la dernière catégorie visitée)
+  try {
+    var doomed = [];
+    for (var i = 0; i < localStorage.length; i++) {
+      var k = localStorage.key(i);
+      if (k && k.indexOf('pth_') === 0 && !KEEP[k]) doomed.push(k);
+    }
+    for (var j = 0; j < doomed.length; j++) { try { localStorage.removeItem(doomed[j]); } catch (e2) {} }
+  } catch (e) {}
+  try { location.reload(); } catch (e) {}
 }
 window.resetAdvDefaults = resetAdvDefaults;
 
@@ -17589,7 +17595,7 @@ function renderPlayersList() {
   });
 })();
 
-;(function(){ window.BUILD_VERSION='0.3.765-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.766-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
