@@ -522,6 +522,23 @@ function _advAttachDrag(card) {
   card.addEventListener('pointerup', end);
   card.addEventListener('pointercancel', end);
 }
+// Zoom du modal Options avancées : contenu (texte compris) proportionnel à la
+// taille de la carte (base CSS 620×640) × facteur global d'app. Voir
+// _applyWinZoom pour le mécanisme (propriété CSS zoom sur les enfants).
+function _advApplyZoom() {
+  var card = document.querySelector('#adv-modal .adv-card');
+  if (!card) return;
+  var canResize = false;
+  try { canResize = window.matchMedia('(min-width:641px)').matches; } catch (e) {}
+  if (!canResize || !card.offsetWidth) {
+    card.classList.remove('win-zoom'); card.style.removeProperty('--wz');
+    return;
+  }
+  var z = Math.min(card.offsetWidth / 620, card.offsetHeight / 640);
+  z = Math.max(0.85, Math.min(1.9, z)) * _appWinZoom();
+  card.style.setProperty('--wz', z.toFixed(3));
+  card.classList.add('win-zoom');
+}
 function _advSetupResize() {
   var card = document.querySelector('#adv-modal .adv-card');
   if (!card) return;
@@ -530,6 +547,7 @@ function _advSetupResize() {
   if (!canResize) {
     card.style.position = ''; card.style.left = ''; card.style.top = '';
     card.style.width = ''; card.style.height = '';
+    card.classList.remove('win-zoom'); card.style.removeProperty('--wz');
     return;
   }
   try {
@@ -548,11 +566,13 @@ function _advSetupResize() {
   T = Math.max(8, Math.min(T, Math.max(8, window.innerHeight - h)));
   card.style.left = L + 'px';
   card.style.top = T + 'px';
+  try { _advApplyZoom(); } catch (e) {}
   _advAttachDrag(card);
   if (!card._advRO && typeof ResizeObserver === 'function') {
     var _t = null;
     card._advRO = new ResizeObserver(function () {
       if (!card.offsetWidth) return;
+      try { _advApplyZoom(); } catch (e) {}   // le contenu suit en direct
       clearTimeout(_t);
       _t = setTimeout(function () {
         if (!card.offsetWidth) return;
@@ -16154,6 +16174,29 @@ function makeWinDraggable(panel, handle, key){
   handle.addEventListener('pointerup', end);
   handle.addEventListener('pointercancel', end);
 }
+// ── Zoom de fenêtre (demande narmod 2026-07-18) : le CONTENU (texte,
+// contrôles, espacements) suit l'agrandissement/rétrécissement de la fenêtre.
+// z = taille courante / taille par défaut (borné), multiplié par un facteur
+// global d'app dérivé du viewport — les fenêtres/popups s'adaptent aussi à la
+// taille de la fenêtre de l'app. Rendu via la propriété CSS `zoom`
+// (standardisée) posée sur les enfants directs : le layout interne se fait en
+// coordonnées locales puis est mis à l'échelle (flex/scroll restent corrects).
+function _appWinZoom(){
+  var z = Math.min(window.innerWidth / 1440, window.innerHeight / 900);
+  return Math.max(0.9, Math.min(1.25, z));
+}
+function _applyWinZoom(panel){
+  if (!panel || !panel._winOpt || !panel._winOpt.zoom) return;
+  try {
+    var o = panel._winOpt;
+    var w = panel.offsetWidth  || o.defW || 340;
+    var h = panel.offsetHeight || o.defH || 300;
+    var z = Math.min(w / (o.defW || 340), h / (o.defH || 300));
+    z = Math.max(0.8, Math.min(1.8, z)) * _appWinZoom();
+    panel.style.setProperty('--wz', z.toFixed(3));
+    panel.classList.add('win-zoom');
+  } catch (e) {}
+}
 function makeWinResizable(panel, key, minW, minH, maxW, maxH){
   if(!panel || panel._winRszWired) return;
   panel._winRszWired=true;
@@ -16196,6 +16239,7 @@ function makeWinResizable(panel, key, minW, minH, maxW, maxH){
       panel.style.width=nw+'px'; panel.style.height=nh+'px';
       panel.style.right='auto'; panel.style.bottom='auto';
       panel.style.left=nl+'px'; panel.style.top=nt+'px';
+      _applyWinZoom(panel);
     });
     function end(e){
       if(!on) return; on=false;
@@ -16227,10 +16271,14 @@ function _enableFloating(panel, opt){
   }
   if(opt.handle) makeWinDraggable(panel, opt.handle, opt.key);
   if(opt.resizable) makeWinResizable(panel, opt.key, opt.minW, opt.minH, opt.maxW, opt.maxH);
+  panel._winOpt = panel._winOpt || opt;
+  _applyWinZoom(panel);
 }
 function _disableFloating(panel){
   if(!panel || !panel.classList.contains('floating-win')) return;
   panel.classList.remove('floating-win');
+  panel.classList.remove('win-zoom');
+  panel.style.removeProperty('--wz');
   panel._winDrag=false; panel._winResizable=false;
   panel.style.removeProperty('max-height');
   ['left','top','right','bottom','width','height'].forEach(function(p){ panel.style[p]=''; });
@@ -16239,12 +16287,14 @@ function _disableFloating(panel){
   panel._winRszWired=false;   // re-injectable si on repasse en flottant
 }
 window.addEventListener('resize', function(){
-  ['g-chat-panel','lobby-chat-panel','g-log-panel','g-reaction-panel'].forEach(function(id){
+  ['g-chat-panel','lobby-chat-panel','g-log-panel','g-reaction-panel','music-panel','hands-card-inner'].forEach(function(id){
     var p=document.getElementById(id);
     if(p && p.classList.contains('floating-win') && p.style.display!=='none'){
       var r=p.getBoundingClientRect(); _placeWin(p, r.left, r.top);
+      _applyWinZoom(p);   // le facteur global d'app (viewport) a pu changer
     }
   });
+  try { _advApplyZoom(); } catch (e) {}
 });
 
 function _ensureFloating(panel, dragEv){
@@ -16274,6 +16324,7 @@ function _ensureFloating(panel, dragEv){
   panel.style.height=newH+'px';
   _placeWin(panel, left, top);
   if (opt.resizable) makeWinResizable(panel, opt.key, opt.minW, opt.minH, opt.maxW, opt.maxH);
+  _applyWinZoom(panel);
   _saveWin(panel, opt.key);
 }
 function _attachFloatControls(panel, opt){
@@ -16428,7 +16479,7 @@ function toggleLobbyChat() {
       // Desktop souris : fenetre flottante (drag + resize + detachement), comme le
       // chat en jeu. Pas de reservation d'espace : elle flotte au-dessus des tables.
       if (_lb) _lb.style.paddingTop = '';
-      _attachFloatControls(panel, { key:'pth_winpos_lobbychat', handle: panel.querySelector('.g-chat-panel-header'), resizable:true, minW:240, minH:160 });
+      _attachFloatControls(panel, { key:'pth_winpos_lobbychat', handle: panel.querySelector('.g-chat-panel-header'), resizable:true, minW:240, minH:160, defW:300, defH:280, zoom:true });
       if (typeof clearUnreadChat === 'function') clearUnreadChat();
       if (_chat) _chat.scrollTop = _chat.scrollHeight;
       setTimeout(function(){ var ci = document.getElementById('chat-in'); if(ci) ci.focus(); }, 80);
@@ -16620,7 +16671,7 @@ function toggleHandsHelp() {
     card._winRszWired = false;   // innerHTML reconstruit -> re-injecter les poignees
     var btn = document.getElementById('hands-toggle-btn');
     // Même système de fenêtre que chat/journal/réactions (déplaçable + redimensionnable partout).
-    _openFloatingNearBtn(card, btn, { key:'pth_winpos_hands', handle: card.querySelector('.g-chat-panel-header'), resizable:true, minW:280, minH:220, defW:380, defH:440 }, 'right');
+    _openFloatingNearBtn(card, btn, { key:'pth_winpos_hands', handle: card.querySelector('.g-chat-panel-header'), resizable:true, minW:280, minH:220, defW:380, defH:440, zoom:true }, 'right');
     // Mode compact selon la largeur réelle de la fenêtre (ResizeObserver).
     if (!card._cmpObs && typeof ResizeObserver !== 'undefined') {
       card._cmpObs = new ResizeObserver(function(){
@@ -16971,7 +17022,7 @@ function toggleGameChat() {
     btn.style.color       = open ? 'var(--gold)' : '';
   }
   if (open) {
-    _openFloatingNearBtn(panel, btn, { key:'pth_winpos_chat', handle: panel.querySelector('.g-chat-panel-header'), resizable:true, minW:240, minH:160, defW:300, defH:280 }, 'left');
+    _openFloatingNearBtn(panel, btn, { key:'pth_winpos_chat', handle: panel.querySelector('.g-chat-panel-header'), resizable:true, minW:240, minH:160, defW:300, defH:280, zoom:true }, 'left');
     if (typeof clearUnreadChat === 'function') clearUnreadChat();
     var m = document.getElementById('g-chat-msgs');
     if (m) m.scrollTop = m.scrollHeight;
@@ -17004,7 +17055,7 @@ function toggleMusicPanel() {
     // Draggable + resizable on desktop/tablet; fixed bottom-sheet on phones —
     // same window system as the chat / log / reaction panels.
     if (_winGate()) {
-      _attachFloatControls(panel, { key: 'pth_winpos_music', handle: panel.querySelector('.music-panel-title'), resizable: true, minW: 260, minH: 200 });
+      _attachFloatControls(panel, { key: 'pth_winpos_music', handle: panel.querySelector('.music-panel-title'), resizable: true, minW: 260, minH: 200, defW: 320, defH: 300, zoom: true });
     } else {
       _disableFloating(panel);
     }
@@ -17142,7 +17193,7 @@ function toggleLog() {
   if (btn) btn.style.color       = isHidden ? 'var(--gold)' : '';
   if (isHidden) {
     // Poignée de redimensionnement, identique au chat (glisser pour étendre).
-    _openFloatingNearBtn(panel, btn, { key:'pth_winpos_log2', handle: panel.querySelector('.g-chat-panel-header'), resizable:true, minW:240, minH:140, defW: window.innerWidth >= 1400 ? 340 : 300, defH:300 }, 'right');
+    _openFloatingNearBtn(panel, btn, { key:'pth_winpos_log2', handle: panel.querySelector('.g-chat-panel-header'), resizable:true, minW:240, minH:140, defW: window.innerWidth >= 1400 ? 340 : 300, defH:300, zoom:true }, 'right');
     var lb = document.getElementById('g-log-body');
     if (lb) lb.scrollTop = 0; // le plus récent est en haut (liste inversée)
     // Restaurer le dernier onglet consulté (Historique par défaut).
@@ -17612,7 +17663,7 @@ function renderPlayersList() {
   });
 })();
 
-;(function(){ window.BUILD_VERSION='0.3.768-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.769-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

@@ -9261,3 +9261,14 @@ html[data-seat-struct="qml"] .seat:not(.me) .seat-narrow .seat-holecards .pk { w
   .hud-lbl{font-size:6.5px}
   .hud-val{font-size:8px}
 }
+
+/* ── Zoom de fenêtre (demande narmod 2026-07-18) : le contenu (texte,
+   contrôles, espacements) suit la taille de la fenêtre — propriété CSS `zoom`
+   (standardisée) sur les enfants directs : le layout interne se calcule en
+   coordonnées locales puis est mis à l'échelle, flex et scroll restent
+   corrects. Les poignées de redimensionnement (.win-rsz) gardent leur taille
+   réelle pour rester faciles à attraper. --wz est posé en JS
+   (_applyWinZoom / _advApplyZoom) = taille fenêtre / taille par défaut ×
+   facteur global du viewport de l'app. ── */
+.floating-win.win-zoom > :not(.win-rsz) { zoom: var(--wz, 1); }
+.adv-card.win-zoom > * { zoom: var(--wz, 1); }
