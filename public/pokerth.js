@@ -9542,7 +9542,7 @@ const App = (() => {
     var fill = el.querySelector('.hs-fill');
     if (fill) { fill.style.width = p + '%'; if (col) fill.style.background = col; }
     var lbl = document.getElementById('hs-lbl');
-    if (lbl) { var txt = lbl.querySelector('.hs-txt') || lbl; txt.textContent = text; if (col) txt.style.color = col; lbl.style.display = ''; }
+    if (lbl) { var txt = lbl.querySelector('.hs-txt') || lbl; txt.textContent = text; txt.style.color = ''; lbl.style.display = ''; }
     // L'assistance vit dans l'onglet « Chances » du panneau info : on met juste
     // a jour le contenu ; la visibilite du bloc est geree par _gipAssistSync.
     _gipAssistSync();
@@ -9559,9 +9559,6 @@ const App = (() => {
   function _gipAssistSync() {
     var box = document.getElementById('gip-assist');
     if (!box) return;
-    // Track de la barre : blanc translucide invisible sur panneau clair -> la
-    // classe bascule le CSS vers un noir translucide (palette QML claire incluse).
-    try { box.classList.toggle('hs-on-light', _hsPanelIsLight()); } catch (e) {}
     var lbl = document.getElementById('hs-lbl');
     var txt = lbl && lbl.querySelector('.hs-txt');
     var hasContent = !!(lbl && lbl.style.display !== 'none' && txt && txt.textContent);
@@ -17356,7 +17353,7 @@ function renderPlayersList() {
   });
 })();
 
-;(function(){ window.BUILD_VERSION='0.3.751-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.752-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
