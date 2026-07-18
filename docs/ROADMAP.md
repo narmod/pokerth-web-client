@@ -147,6 +147,12 @@ use too. Items are grouped by status rather than fixed phases.
     back out to the full table at showdown.
   - Full chat: Tab nickname-completion with cycling, ↑ / ↓ message history, and a
     1,000+ emoji picker (frequent + full grid) alongside the original 30 reactions.
+  - Emote shortcodes, 1:1 with the official client's `chat_emote_shortcuts.h`: the full
+    GitHub/Discord set (1,913 codes + aliases, `:fire:` → 🔥) plus the ASCII emoticons
+    (`:-)`, `<3`, `xD`…) are converted in displayed messages (URLs and HTML entities
+    protected, same order as upstream), and typing `:` + 2 letters in either chat opens
+    the QML-style suggestion popup — prefix matches first, ↑ / ↓ to cycle, Tab / Enter
+    inserts the emoji itself, Esc hides it until the next keystroke.
   - Admin "Kickban" button in the player card.
   - Sound categories (actions / blind raises / lobby chat / network events), each
     independently toggleable, plus three additional official sound samples.
