@@ -1400,6 +1400,17 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
   background: rgba(var(--gold-rgb), 0.05);
 }
 
+/* Champ pseudo VERROUILLÉ (mode invité pokerth.net) : fond sombre façon
+   client QML (col700 #1d222b, texte atténué col300 #a0acc4) pour signaler
+   que le GuestXXXXX n'est pas modifiable. Prime sur :focus. */
+.f input[readonly],
+.f input[readonly]:focus {
+  background: #1d222b;
+  color: #a0acc4;
+  border-color: rgba(255,255,255,0.10);
+  cursor: default;
+}
+
 .btn-primary {
   background: #2b3444;
   color: #ffffff;

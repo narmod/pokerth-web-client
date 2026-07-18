@@ -821,7 +821,7 @@ function resetAdvDefaults() {
   var KEEP = {
     pth_auth_login: 1, pth_pass: 1, pth_sid: 1, pth_vid: 1, pth_resume: 1,
     pth_host: 1, pth_port: 1, pth_proxy: 1, pth_server_mode: 1, pth_login_mode: 1,
-    pth_lan_nick: 1, pth_lan_port: 1, pth_unauth_nick: 1, pth_offline_nick: 1,
+    pth_nick: 1, pth_lan_nick: 1, pth_lan_port: 1, pth_unauth_nick: 1, pth_offline_nick: 1,
     pth_avatar: 1, pth_avatar_img: 1
   };
   try {
@@ -897,7 +897,7 @@ function _cfgCollectWebSettings() {
   var out = {}, lists = {};
   var B = function (advKey, def) { return _advGet(advKey, def) ? 1 : 0; };
   // Identité & connexion
-  var nick = _cfgLs('pth_offline_nick') || _cfgLs('pth_lan_nick');
+  var nick = _cfgLs('pth_nick') || _cfgLs('pth_offline_nick') || _cfgLs('pth_lan_nick');
   if (nick) out.MyName = nick;
   var host = _cfgLs('pth_host'); if (host) out.InternetServerAddress = host;
   var port = parseInt(_cfgLs('pth_port') || '', 10); if (port) out.InternetServerPort = port;
@@ -1027,7 +1027,7 @@ function _cfgApplyImported(cfg) {
   var num = function (k) { var v = parseInt(S[k], 10); return isNaN(v) ? null : v; };
   var setB = function (advKey, cfgKey) { if (S[cfgKey] != null) setAdvOpt(advKey, num(cfgKey) !== 0); };
   if (S.MyName) {
-    try { localStorage.setItem('pth_offline_nick', S.MyName); localStorage.setItem('pth_lan_nick', S.MyName); } catch (e) {}
+    try { localStorage.setItem('pth_nick', S.MyName); } catch (e) {}
   }
   if (S.InternetServerAddress) { try { localStorage.setItem('pth_host', S.InternetServerAddress); } catch (e) {} }
   if (num('InternetServerPort')) { try { localStorage.setItem('pth_port', String(num('InternetServerPort'))); } catch (e) {} }
@@ -3025,6 +3025,28 @@ document.addEventListener("DOMContentLoaded", function() {
    * Falls through to a fresh random name if localStorage is unavailable
    * (private mode under some browsers, disabled storage policy, etc.).
    */
+  /* ── Pseudo PARTAGÉ entre modes (demande narmod 2026-07-18) ──
+   * Un seul pseudo (clé pth_nick) synchronisé entre entraînement, LAN,
+   * dédié et compte pokerth.net. Seul l'invité pokerth.net garde sa
+   * propre règle (GuestXXXXX via pth_guest_name, champ verrouillé).
+   * Migration : repli sur les anciennes clés par mode. */
+  window._pthNick = {
+    get: function () {
+      try {
+        return localStorage.getItem('pth_nick')
+            || localStorage.getItem('pth_offline_nick')
+            || localStorage.getItem('pth_lan_nick')
+            || localStorage.getItem('pth_unauth_nick')
+            || localStorage.getItem('pth_auth_login')
+            || '';
+      } catch (e) { return ''; }
+    },
+    set: function (v) {
+      if (!v) return;
+      try { localStorage.setItem('pth_nick', v); } catch (e) {}
+    }
+  };
+
   window.getOrCreateGuestName = function() {
     try {
       var k = 'pth_guest_name';
@@ -3337,7 +3359,7 @@ document.addEventListener("DOMContentLoaded", function() {
         var _lblf = document.getElementById('nick-label');
         try { if (_lblf && window.I18N && window.I18N.t) _lblf.textContent = window.I18N.t('enterNickFree'); } catch (e) {}
         var _nf = document.getElementById('nick');
-        var _w = ''; try { _w = localStorage.getItem('pth_offline_nick') || ''; } catch (e) {}
+        var _w = window._pthNick.get();
         if (_nf && document.activeElement !== _nf && _nf.value !== _w) _nf.value = _w;
         // The hint (#cstatus) isn't reasserted above, so a network-mode hint that
         // leaked in from a previous mode ('Chat… serveur privé', 'Entrez vos
@@ -3360,14 +3382,14 @@ document.addEventListener("DOMContentLoaded", function() {
     }, 800);
   })();
 
-  // Keep the training pseudo fully isolated from the LAN / pokerth.net nicknames:
-  // persist it on every keystroke while in offline mode. Combined with reading
-  // pth_offline_nick only (no LAN fallback), the training name never mirrors nor
-  // gets overwritten by a network nick, and survives mode switches reliably.
+  // Pseudo PARTAGÉ : persisté à chaque frappe dans tous les modes éditables
+  // (entraînement, LAN, dédié, compte pokerth.net). Le champ invité est
+  // readonly → aucun événement 'input', le GuestXXXXX ne peut donc jamais
+  // fuiter dans pth_nick.
   (function () {
     var _nk = document.getElementById('nick');
     if (_nk) _nk.addEventListener('input', function () {
-      if (window._offlineMode) { try { localStorage.setItem('pth_offline_nick', _nk.value.trim()); } catch (e) {} }
+      if (!_nk.hasAttribute('readonly')) window._pthNick.set(_nk.value.trim());
     });
   })();
 
@@ -12864,12 +12886,13 @@ function _maybeShowNextHandBtn() {
         try { return localStorage.getItem(k); } catch(e) { return null; }
       };
 
-      // Nick field state machine. Per the user spec:
-      //   LAN     → editable, prefilled from pth_lan_nick (per-mode key)
-      //   unauth  → editable, prefilled from pth_unauth_nick (per-mode key)
-      //   guest   → READONLY, always set to the persistent GuestXXXXX
-      //   auth    → editable, prefilled from pth_auth_login (login only,
-      //             never the password — browser keychain handles that)
+      // Nick field state machine (spec narmod 2026-07-18) :
+      //   lan / unauth / auth → éditables, préremplis depuis le pseudo
+      //     PARTAGÉ pth_nick (un seul nom pour tous les modes ; en auth
+      //     seul le login est stocké, jamais le mot de passe — le
+      //     trousseau du navigateur s'en charge)
+      //   guest → READONLY, toujours le GuestXXXXX persistant (règle à
+      //     part, jamais synchronisé avec pth_nick)
       var nickEl = $('nick');
       // Always reset the readonly flag first; only Guest re-applies it.
       if (nickEl) nickEl.removeAttribute('readonly');
@@ -12879,7 +12902,7 @@ function _maybeShowNextHandBtn() {
         $('nick').placeholder = t('nickPlaceholder');
         // Restore the per-mode saved pseudo (overrides whatever was
         // typed under another mode — same UX as switching profiles).
-        if (nickEl) nickEl.value = lsGet('pth_lan_nick') || '';
+        if (nickEl) nickEl.value = window._pthNick.get();
         $('use-tls').checked = false;
         if (proxyInput) proxyInput.value = proto + '//' + (autoHost||'localhost') + ':' + port;
         if (hostInput && autoHost) hostInput.value = autoHost;
@@ -12888,7 +12911,7 @@ function _maybeShowNextHandBtn() {
       } else if (mode === 'unauth') {
         $('nick-label').textContent = t('enterNickFree');
         $('nick').placeholder = t('nickPlaceholder');
-        if (nickEl) nickEl.value = lsGet('pth_unauth_nick') || '';
+        if (nickEl) nickEl.value = window._pthNick.get();
         $('use-tls').checked = false;
         if (proxyInput) proxyInput.value = proto + '//' + (autoHost||'localhost') + ':' + port;
         if (hostInput && autoHost) hostInput.value = autoHost;
@@ -12922,7 +12945,7 @@ function _maybeShowNextHandBtn() {
         // Prefill the login if we saved one previously. The password
         // is NEVER persisted in localStorage — that's what the browser
         // keychain (via autocomplete='current-password') is for.
-        if (nickEl) nickEl.value = lsGet('pth_auth_login') || '';
+        if (nickEl) nickEl.value = window._pthNick.get();
         // Internet / PokerTH.net target: admin-selected server (from /app-config)
         // or the built-in pokerth.net:7234 default. Credentialed login always TLS.
         var _ps2 = window._pthNetServer;
@@ -12986,16 +13009,14 @@ function _maybeShowNextHandBtn() {
           var _el = document.getElementById(_connDetailIds[_i]);
           if (_el) _el.style.display = 'none';
         }
-        // Offline keeps its OWN nickname (pth_offline_nick), isolated from the
-        // network modes — editing a pokerth.net login / LAN pseudo never leaks
-        // into it, and vice-versa. Seed once from a network nick if unset.
+        // Le mode entraînement utilise le pseudo PARTAGÉ pth_nick, comme
+        // tous les modes réseau (sauf invité pokerth.net). Sync narmod
+        // 2026-07-18 — l'ancienne isolation pth_offline_nick est retirée.
         var _onk = $('nick');
         if (_onk) {
           _onk.removeAttribute('readonly');
           _onk.placeholder = t('nickPlaceholder');
-          // BUGFIX : lsGet est local à une autre branche (ReferenceError au
-          // changement de mode serveur/invité — console narmod). Lecture directe.
-          try { _onk.value = localStorage.getItem('pth_offline_nick') || ''; } catch (eN) { _onk.value = ''; }
+          _onk.value = window._pthNick.get();
         }
         var _onl = $('nick-label'); if (_onl) _onl.textContent = t('enterNickFree');
         if (typeof _stopIpBlockCountdown === 'function') _stopIpBlockCountdown();
@@ -13158,15 +13179,11 @@ function _maybeShowNextHandBtn() {
         var nickVal = ($('nick') && $('nick').value || '').trim();
         if (nickVal) {
           var _smEl = $('server-mode');
-          if (_smEl && _smEl.value === 'offline') {
-            // Offline nickname lives under its own key — never touches the
-            // LAN / unauth / auth pseudos.
-            localStorage.setItem('pth_offline_nick', nickVal);
-          } else if (lm2) {
-            var mv = lm2.value;
-            if      (mv === 'lan')    localStorage.setItem('pth_lan_nick',    nickVal);
-            else if (mv === 'unauth') localStorage.setItem('pth_unauth_nick', nickVal);
-            else if (mv === 'auth')   localStorage.setItem('pth_auth_login',  nickVal);
+          var _isOff2 = !!(_smEl && _smEl.value === 'offline');
+          // Pseudo PARTAGÉ (pth_nick) pour tous les modes SAUF l'invité
+          // pokerth.net, qui garde sa clé pth_guest_name dédiée.
+          if ((_isOff2 || (lm2 && lm2.value !== 'guest')) && window._pthNick) {
+            window._pthNick.set(nickVal);
           }
         }
       } catch(e) {}
@@ -17595,7 +17612,7 @@ function renderPlayersList() {
   });
 })();
 
-;(function(){ window.BUILD_VERSION='0.3.767-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.768-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
