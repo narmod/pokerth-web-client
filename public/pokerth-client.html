@@ -469,6 +469,7 @@ function onAvatarImageChosen(input) {
   var CRIT = ['/pokerth.css', '/chat-emotes.js', '/pokerth.js',
     '/modules/i18n.mjs', '/modules/theme.mjs', '/modules/sounds.mjs',
     '/modules/handlog.mjs',
+    '/modules/journal.mjs',
     '/modules/music.mjs', '/modules/lang/en.mjs', '/fonts/fonts.css'];
   try {
     var lg = (localStorage.getItem('pth_lang') || '').toLowerCase().split('-')[0];
@@ -2022,6 +2023,7 @@ function onAvatarImageChosen(input) {
 <script type="module" src="modules/music.mjs"></script>
 <script defer src="vendor/sql-wasm.js"></script>
 <script type="module" src="modules/handlog.mjs"></script>
+<script type="module" src="modules/journal.mjs"></script>
 <!-- Quit-game confirmation dialog: 2 buttons (Quit / Cancel).
      Shown when the user clicks the ✕ button in the header from inside
      a game. Driven by App.confirmLeaveGame() (open) and
@@ -2513,6 +2515,7 @@ if ('serviceWorker' in navigator) {
           <div class="adv-link">
             <div class="adv-link-desc" data-i18n="advLogDesc">In-game log and chat overlay.</div>
             <button type="button" class="adv-link-btn" onclick="closeAdvancedOptions();toggleLog()"><span data-i18n="advLogOpen">Open the log</span></button>
+            <button type="button" class="adv-link-btn" onclick="closeAdvancedOptions();if(window._openJournal)window._openJournal()"><span data-i18n="advJournalOpen">Manage logs…</span></button>
           </div>
           <div class="adv-body">
             <div class="adv-sec" data-i18n="advSecLogSettings">Log settings</div>
