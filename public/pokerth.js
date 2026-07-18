@@ -11047,6 +11047,12 @@ const App = (() => {
       // pokerth (x/y = cardsCenter, comme le client officiel). Hors pokerth,
       // il reste rendu dans le pied du siège (comportement historique).
       var _acCode = ({'Fold':1,'Check':2,'Call':3,'Bet':4,'Raise':5,'All-in':6})[sd.action] || 0;
+      // Au tour (isActive) : l'action de la street/du tour PRECEDENT ne doit
+      // pas rester affichee sur les cartes — c'est la barre/cadre de decompte
+      // qui prend la place (demande narmod 2026-07-18). Le badge reapparait
+      // (avec pop) des que le joueur agit, le siege n'etant alors plus actif.
+      var _acStale = isActive && _acCode;   // action perimee masquee au tour
+      if (_acStale) _acCode = 0;
       var _acBadge = '', _acInCards = false;
       if (_acCode) {
         var _acBase = ['','fold','check','call','bet','raise','allin'][_acCode];
@@ -11121,7 +11127,7 @@ const App = (() => {
       // '+X'/'🏆') garde le libellé simple.
       if (_acCode) {
         if (!_acInCards) h += _acBadge;
-      } else if (sd.action) {
+      } else if (sd.action && !_acStale) {
         h += '<div class="seat-action-label">' + esc(sd.action) + '</div>';
       }
       h += cardStr;
@@ -17490,7 +17496,7 @@ function renderPlayersList() {
   });
 })();
 
-;(function(){ window.BUILD_VERSION='0.3.758-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.759-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
