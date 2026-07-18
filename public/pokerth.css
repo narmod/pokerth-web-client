@@ -2356,7 +2356,7 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
   .hand-ico { font-size: 1.15rem !important; }
   .hands-legend { font-size: 0.74rem !important; }
 
-  .km-card:not(.adv-card) { width: min(460px, 100%) !important; max-height: min(82vh, 680px) !important; }
+  .km-card:not(.adv-card):not(.jr-card) { width: min(460px, 100%) !important; max-height: min(82vh, 680px) !important; }
   .km-title { font-size: 1.35rem !important; }
   .km-subtitle { font-size: 0.88rem !important; }
   .km-row .km-av { width: 40px !important; height: 40px !important; font-size: 1.7rem !important; }
