@@ -353,21 +353,21 @@ const CSS = `
 #jr-modal.jr-float .jr-card{pointer-events:auto;position:fixed;margin:0;max-width:none !important;max-height:none !important}
 #jr-modal .jr-card{width:min(880px,96vw);max-height:min(88vh,700px);display:flex;flex-direction:column}
 #jr-modal .jr-top{display:flex;align-items:center;gap:8px;margin:2px 0 8px}
-#jr-modal .jr-main{display:flex;gap:10px;flex:1;min-height:0}
-#jr-modal .jr-list{width:220px;min-width:140px;overflow:auto;border:1px solid var(--border,#39415066);border-radius:6px;padding:3px}
+#jr-modal .jr-main{display:flex;gap:10px;flex:1;min-height:0;overflow:hidden}
+#jr-modal .jr-list{flex:0 0 220px;min-width:140px;overflow:auto;border:1px solid var(--border,#39415066);border-radius:6px;padding:3px}
 #jr-modal .jr-item{display:block;width:100%;text-align:left;padding:6px 8px;border:0;background:transparent;color:var(--text,#cdd3e0);font:inherit;font-size:.82rem;border-radius:4px;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 #jr-modal .jr-item.sel{background:#8b1a1a;color:#fff}
 #jr-modal .jr-item .jr-cur{opacity:.75;font-size:.72rem;margin-left:4px}
-#jr-modal .jr-right{flex:1;display:flex;flex-direction:column;min-width:0}
+#jr-modal .jr-right{flex:1;display:flex;flex-direction:column;min-width:0;min-height:0}
 #jr-modal .jr-prevlbl{font-size:.82rem;opacity:.8;margin-bottom:4px}
-#jr-modal .jr-prev{flex:1;overflow:auto;border:1px solid var(--border,#39415066);border-radius:6px;padding:8px 10px;background:var(--panel-bg,rgba(0,0,0,.14));font-size:.82rem;line-height:1.45;min-height:120px}
+#jr-modal .jr-prev{flex:1;overflow:auto;border:1px solid var(--border,#39415066);border-radius:6px;padding:8px 10px;background:var(--panel-bg,rgba(0,0,0,.14));font-size:.82rem;line-height:1.45;min-height:0}
 #jr-modal .jr-prev mark{background:#E3C800;color:#1d222b;border-radius:2px}
 #jr-modal .jr-btns{display:flex;flex-wrap:wrap;gap:7px;margin-top:10px;align-items:center}
 #jr-modal .jr-spacer{flex:1}
 #jr-modal .jr-foot{display:flex;flex-wrap:wrap;gap:7px;margin-top:8px;align-items:center;font-size:.8rem;opacity:.9}
 #jr-modal .jr-an-nav{display:flex;gap:6px;align-items:center;margin-bottom:6px;flex-wrap:wrap}
 #jr-modal .jr-search{min-width:110px;flex:0 1 170px}
-@media (max-width:640px){#jr-modal .jr-main{flex-direction:column}#jr-modal .jr-list{width:auto;max-height:130px}}
+@media (max-width:640px){#jr-modal .jr-main{flex-direction:column}#jr-modal .jr-list{flex:0 0 auto;width:auto;max-height:26vh}#jr-modal .jr-card{max-height:none;height:100%}}
 `;
 
 function _ensureModal() {
