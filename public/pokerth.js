@@ -628,10 +628,22 @@ function openAdvancedOptions() {
   sync('adv-tooltips', 'tooltips', true);
   try { var _nr = document.getElementById('adv-noreact'); if (_nr) _nr.checked = (localStorage.getItem('pth_react_muted') === '1'); } catch (e) {}
   try { var _dc = document.getElementById('adv-defcommunity'); if (_dc) _dc.value = (localStorage.getItem('pth_rank_src') || 'pth'); } catch (e) {}
-  try { advUiTab('general'); } catch (e) {}
-  try { advSelectCat('ui'); } catch (e) {}
   try { _advSyncPrefs(); } catch (e) {}
   try { _advSyncContext(); } catch (e) {}
+  // Réouverture sur la DERNIÈRE catégorie visitée (demande narmod 2026-07-18) —
+  // avant : retour systématique sur « Interface utilisateur ». Restauré APRÈS
+  // _advSyncContext pour connaître les catégories grisées ; repli 'ui' si la
+  // catégorie mémorisée est sans objet dans le contexte courant (lobby/partie).
+  try {
+    var _advCat = '';
+    try { _advCat = localStorage.getItem('pth_adv_cat') || ''; } catch (e2) {}
+    var _advBtn = _advCat ? m.querySelector('.adv-cat[data-cat="' + _advCat + '"]') : null;
+    if (!_advBtn || _advBtn.hasAttribute('disabled')) _advCat = 'ui';
+    advSelectCat(_advCat);
+    var _advTab = '';
+    try { _advTab = localStorage.getItem('pth_adv_uitab') || ''; } catch (e2) {}
+    advUiTab(_advTab === 'network' ? 'network' : 'general');
+  } catch (e) { try { advSelectCat('ui'); advUiTab('general'); } catch (e2) {} }
   m.style.display = '';
   try { _advSetupResize(); } catch (e) {}
 }
@@ -665,6 +677,7 @@ function advSelectCat(cat) {
   }
   try { var pn = modal.querySelector('.adv-panels'); if (pn) pn.scrollTop = 0; } catch (e) {}
   try { if (cat === 'style' && window.renderThemeInto) window.renderThemeInto(document.getElementById('adv-theme-host')); } catch (e) {}
+  try { localStorage.setItem('pth_adv_cat', cat); } catch (e) {}  // réouverture au même endroit
 }
 window.advSelectCat = advSelectCat;
 
@@ -683,6 +696,7 @@ function advUiTab(name) {
   for (var j = 0; j < ps.length; j++) {
     ps[j].classList.toggle('is-active', ps[j].getAttribute('data-uitab') === name);
   }
+  try { localStorage.setItem('pth_adv_uitab', name); } catch (e) {}  // réouverture au même endroit
 }
 window.advUiTab = advUiTab;
 
@@ -812,7 +826,7 @@ function resetAdvDefaults() {
   try { if (typeof window.setDefaultCommunity === 'function') window.setDefaultCommunity('pth'); } catch (e) {}
   try { if (typeof window.setLogInterval === 'function') window.setLogInterval('hand'); } catch (e) {}
   try { resetKeys(); } catch (e) {}
-  try { openAdvancedOptions(); } catch (e) {}   // re-sync des cases + retour onglet Interface
+  try { openAdvancedOptions(); } catch (e) {}   // re-sync des cases (réouvre sur la dernière catégorie visitée)
 }
 window.resetAdvDefaults = resetAdvDefaults;
 
@@ -17575,7 +17589,7 @@ function renderPlayersList() {
   });
 })();
 
-;(function(){ window.BUILD_VERSION='0.3.764-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.765-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
