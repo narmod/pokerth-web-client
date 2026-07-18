@@ -9099,6 +9099,8 @@ html[data-seat-struct="qml"] .seat:not(.me) .seat-narrow .seat-holecards .pk { w
   padding:3px 6px 4px;box-shadow:0 3px 10px rgba(0,0,0,.42);backdrop-filter:blur(3px);
   font-size:10px;line-height:1.25;user-select:none;transition:border-color .15s}
 .hud-box:hover{border-color:var(--border-hi)}
+.hud-box{cursor:grab;touch-action:none}
+.hud-box.hud-dragging{cursor:grabbing;opacity:.92;z-index:11;box-shadow:0 6px 18px rgba(0,0,0,.6);transition:none}
 .hud-head{display:flex;align-items:baseline;gap:6px;margin-bottom:2px}
 .hud-name{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
   color:var(--gold);font-weight:700;letter-spacing:.02em;font-size:10.5px}

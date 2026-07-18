@@ -1290,6 +1290,78 @@ async function _computeStats() {
 }
 
 // Écrit le CONTENU d'une boîte (sans la positionner).
+// Offsets de déplacement manuel des boîtes (par siège), persistés. Permet à
+// l'utilisateur de réarranger les boîtes ; l'offset est un delta appliqué à la
+// position auto (donc la boîte suit le siège tout en gardant l'emplacement
+// choisi). Clé = pid.
+let _manualOffsets = null;
+function _offsets() {
+  if (_manualOffsets) return _manualOffsets;
+  _manualOffsets = {};
+  try { const j = localStorage.getItem('pth_hud_off'); if (j) _manualOffsets = JSON.parse(j) || {}; } catch (_e) {}
+  return _manualOffsets;
+}
+function _saveOffsets() { try { localStorage.setItem('pth_hud_off', JSON.stringify(_offsets())); } catch (_e) {} }
+
+// Drag + tap : un déplacement > seuil = glisser (réarrange) ; sinon = tap
+// (ouvre le détail). Utilise les Pointer Events (souris + tactile).
+function _bindBoxDrag(box, name) {
+  let startX = 0, startY = 0, baseL = 0, baseT = 0, moved = false, dragging = false, pid = box._pid;
+  const onDown = (e) => {
+    if (e.button != null && e.button !== 0) return;
+    dragging = true; moved = false;
+    const p = (e.touches && e.touches[0]) || e;
+    startX = p.clientX; startY = p.clientY;
+    baseL = parseFloat(box.style.left) || 0; baseT = parseFloat(box.style.top) || 0;
+    box.classList.add('hud-dragging');
+    try { box.setPointerCapture && e.pointerId != null && box.setPointerCapture(e.pointerId); } catch (_e) {}
+  };
+  const onMove = (e) => {
+    if (!dragging) return;
+    const p = (e.touches && e.touches[0]) || e;
+    const dx = p.clientX - startX, dy = p.clientY - startY;
+    if (!moved && (Math.abs(dx) > 4 || Math.abs(dy) > 4)) moved = true;
+    if (moved) {
+      e.preventDefault();
+      const layer = document.getElementById('hud-layer');
+      const lr = layer ? layer.getBoundingClientRect() : { width: 9999, height: 9999 };
+      let nl = Math.max(2, Math.min(baseL + dx, lr.width - box.offsetWidth - 2));
+      let nt = Math.max(2, Math.min(baseT + dy, lr.height - box.offsetHeight - 2));
+      box.style.left = nl + 'px'; box.style.top = nt + 'px';
+    }
+  };
+  const onUp = () => {
+    if (!dragging) return;
+    dragging = false;
+    box.classList.remove('hud-dragging');
+    if (moved) {
+      // Enregistrer l'offset = position actuelle − position auto (sans offset).
+      const auto = _autoPosFor(pid);
+      if (auto) {
+        const cl = parseFloat(box.style.left) || 0, ct = parseFloat(box.style.top) || 0;
+        _offsets()[pid] = [Math.round(cl - auto.left), Math.round(ct - auto.top)];
+        _saveOffsets();
+      }
+    } else {
+      // Simple tap → détail.
+      openHudDetail(box._name || name, box);
+    }
+  };
+  box.addEventListener('pointerdown', onDown);
+  box.addEventListener('pointermove', onMove);
+  box.addEventListener('pointerup', onUp);
+  box.addEventListener('pointercancel', onUp);
+}
+
+// Position auto (sans offset manuel) d'un siège donné, pour calculer le delta.
+function _autoPosFor(pid) {
+  const layer = document.getElementById('hud-layer');
+  const box = document.getElementById('hud-box-' + pid);
+  const seatEl = document.querySelector('#g-seats [data-pid="' + pid + '"]');
+  if (!layer || !box || !seatEl) return null;
+  return _computeAutoPos(box, seatEl, layer);
+}
+
 function _buildBox(pid, name, layer) {
   const s = _statsCache[name];
   const id = 'hud-box-' + pid;
@@ -1298,9 +1370,11 @@ function _buildBox(pid, name, layer) {
     box = document.createElement('div');
     box.id = id;
     box.className = 'hud-box';
-    box.addEventListener('click', (e) => { e.stopPropagation(); openHudDetail(name, box); });
+    box._pid = pid;
+    _bindBoxDrag(box, name);
     layer.appendChild(box);
   }
+  box._name = name;
   const handsTxt = s ? _hudFmt('hands', s.hands) : '0';
   let rows = '';
   for (const [sid, lbl] of HUD_ROWS) {
@@ -1319,7 +1393,9 @@ function _buildBox(pid, name, layer) {
 // siège en haut → boîte au-dessus, en bas → dessous, à gauche → à gauche, à
 // droite → à droite. Ancré au bord du siège, borné à la couche. Suit le siège
 // à chaque appel (donc au redimensionnement/zoom).
-function _positionBox(box, seatEl, layer) {
+// Calcule la position AUTO d'une boîte (radial extérieur, avec repli qui évite
+// le centre en portrait). Ne applique PAS l'offset manuel.
+function _computeAutoPos(box, seatEl, layer) {
   const lr = layer.getBoundingClientRect();
   const r = seatEl.getBoundingClientRect();
   const bw = box.offsetWidth || 100;
@@ -1330,47 +1406,50 @@ function _positionBox(box, seatEl, layer) {
   const fx = sxC / Math.max(lr.width, 1);
   const fy = syC / Math.max(lr.height, 1);
   const portrait = lr.height >= lr.width;
+  const seatL = r.left - lr.left, seatR = r.right - lr.left, seatT = r.top - lr.top, seatB = r.bottom - lr.top;
+  const clampL = (v) => Math.max(2, Math.min(v, lr.width - bw - 2));
+  const clampT = (v) => Math.max(2, Math.min(v, lr.height - bh - 2));
+  const overlaps = (L, T) => !(L + bw < seatL || L > seatR || T + bh < seatT || T > seatB);
 
-  // Placement RADIAL vers l'extérieur (loin du centre de la table) : la boîte
-  // s'écarte du siège du côté opposé au feutre → ne recouvre ni le siège ni ses
-  // voisins de l'anneau. En paysage l'ellipse est large → on privilégie le
-  // placement latéral ; en portrait, vertical pour les sièges haut/bas.
-  // Seuil de "zone latérale" adapté à l'orientation.
+  // Candidats de placement, dans l'ordre de préférence selon la zone.
+  const posOutLeft  = { left: clampL(seatL - bw - gap), top: clampT(syC - bh / 2) };
+  const posOutRight = { left: clampL(seatR + gap),      top: clampT(syC - bh / 2) };
+  const posAbove    = { left: clampL(sxC - bw / 2),     top: clampT(seatT - bh - gap) };
+  const posBelow    = { left: clampL(sxC - bw / 2),     top: clampT(seatB + gap) };
+
   const sideThresh = portrait ? 0.28 : 0.34;
   const sideZone = (fx < sideThresh || fx > (1 - sideThresh));
-  let left, top;
+
+  let order;
   if (sideZone) {
-    // Extérieur horizontal : siège à gauche → boîte à gauche, etc.
-    if (fx < 0.5) left = (r.left - lr.left) - bw - gap;
-    else left = (r.right - lr.left) + gap;
-    top = syC - bh / 2;
+    // Sièges de colonne (gauche/droite) : extérieur horizontal d'abord ; si ça
+    // ne tient pas (bord d'écran), on passe en VERTICAL (au-dessus/en dessous)
+    // pour NE PAS aller vers le centre (jetons/pucks). Le repli vers le côté
+    // opposé (centre) est le dernier recours seulement.
+    if (fx < 0.5) order = [posOutLeft, (fy < 0.5 ? posBelow : posAbove), (fy < 0.5 ? posAbove : posBelow), posOutRight];
+    else order = [posOutRight, (fy < 0.5 ? posBelow : posAbove), (fy < 0.5 ? posAbove : posBelow), posOutLeft];
   } else {
-    // Extérieur vertical : siège en haut → boîte AU-DESSUS (vers le bord haut),
-    // siège en bas → EN DESSOUS. (Auparavant l'inverse, d'où le recouvrement.)
-    left = sxC - bw / 2;
-    if (fy < 0.5) top = (r.top - lr.top) - bh - gap;    // haut → au-dessus
-    else top = (r.bottom - lr.top) + gap;               // bas → en dessous
+    // Sièges haut/bas : extérieur vertical d'abord, puis latéral extérieur.
+    if (fy < 0.5) order = [posAbove, posBelow, (fx < 0.5 ? posOutLeft : posOutRight)];
+    else order = [posBelow, posAbove, (fx < 0.5 ? posOutLeft : posOutRight)];
   }
-  // Bornes : rester dans la couche. Si le placement extérieur clampe SUR le
-  // siège (siège collé au bord), basculer de l'autre côté.
-  const clL = Math.max(2, Math.min(left, lr.width - bw - 2));
-  const clT = Math.max(2, Math.min(top, lr.height - bh - 2));
-  // Détection de recouvrement résiduel avec le siège → tenter le côté opposé.
-  const overlaps = (L, T) => !(L + bw < (r.left - lr.left) || L > (r.right - lr.left)
-    || T + bh < (r.top - lr.top) || T > (r.bottom - lr.top));
-  let fL = clL, fT = clT;
-  if (overlaps(fL, fT)) {
-    if (sideZone) {
-      // essayer l'autre côté horizontal
-      const alt = (fx < 0.5) ? (r.right - lr.left) + gap : (r.left - lr.left) - bw - gap;
-      fL = Math.max(2, Math.min(alt, lr.width - bw - 2));
-    } else {
-      const alt = (fy < 0.5) ? (r.bottom - lr.top) + gap : (r.top - lr.top) - bh - gap;
-      fT = Math.max(2, Math.min(alt, lr.height - bh - 2));
-    }
+  // Premier candidat sans recouvrement du siège ; sinon le premier tout court.
+  for (const c of order) { if (!overlaps(c.left, c.top)) return c; }
+  return order[0];
+}
+
+function _positionBox(box, seatEl, layer) {
+  const auto = _computeAutoPos(box, seatEl, layer);
+  let left = auto.left, top = auto.top;
+  // Offset manuel éventuel (déplacement utilisateur), borné à la couche.
+  const off = _offsets()[box._pid];
+  if (off) {
+    const lr = layer.getBoundingClientRect();
+    left = Math.max(2, Math.min(auto.left + off[0], lr.width - box.offsetWidth - 2));
+    top = Math.max(2, Math.min(auto.top + off[1], lr.height - box.offsetHeight - 2));
   }
-  box.style.left = fL + 'px';
-  box.style.top = fT + 'px';
+  box.style.left = left + 'px';
+  box.style.top = top + 'px';
 }
 
 function _hudEsc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])); }
