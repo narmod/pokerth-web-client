@@ -8136,12 +8136,21 @@ html:not([data-seat-struct="qml"]) .seat:not(.me) .seat-foot { margin-top: 1px; 
   background: rgba(13, 61, 13, 0.92);
   border: 1px solid #FFD700;
   box-shadow: 0 0 10px rgba(255, 215, 0, 0.45);
-  color: #ffe98a;
-  font-size: 0.72rem;
+  color: #FFD700;              /* AppText QML : or #FFD700, 12 px bold */
+  font-size: 12px;
   font-weight: 700;
   letter-spacing: 0.04em;
   white-space: nowrap;
   pointer-events: none;
+}
+/* Pop d'apparition (winHandPop QML : scale 1→1.18 en 110 ms OutQuad puis
+   retour 1.0 en 170 ms OutBack — léger passage sous 1.0 avant stabilisation). */
+.win-hand-badge.win-pop { animation: winHandPop 0.28s ease-out; }
+@keyframes winHandPop {
+  0% { scale: 1; }
+  39% { scale: 1.18; }
+  82% { scale: 0.985; }
+  100% { scale: 1; }
 }
 
 /* ── Mode « effets réduits » (parité QmlReduceEffects, bible §1) : coupe les

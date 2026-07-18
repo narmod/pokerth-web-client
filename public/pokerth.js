@@ -2400,6 +2400,31 @@ function _cmpHand(a, b) {
   return 0;
 }
 
+// ── winningHandText QML (GameHandler C++, chaînes extraites du binaire
+// 2.1.3) : libellé anglais de la main gagnante, format Qt-Widgets 1:1 —
+// « Two Pair, Aces and Queens », « Full House, Aces full of Kings »,
+// « Straight, King high »… Prend le résultat de _evalFive/_evaluateBestHand.
+function _qmlWinningHandText(res) {
+  if (!res) return '';
+  var PL = ['Deuces','Threes','Fours','Fives','Sixes','Sevens','Eights','Nines','Tens','Jacks','Queens','Kings','Aces'];
+  var HI = ['Deuce high','Three high','Four high','Five high','Six high','Seven high','Eight high','Nine high','Ten high','Jack high','Queen high','King high','Ace high'];
+  var tb = res.tb || [];
+  var a = tb[0] != null ? tb[0] : 12, b = tb[1] != null ? tb[1] : 0;
+  switch (res.r) {
+    case 0: return 'High Card, ' + HI[a];
+    case 1: return 'One Pair, ' + PL[a];
+    case 2: return 'Two Pair, ' + PL[a] + ' and ' + PL[b];
+    case 3: return 'Three of a Kind, ' + PL[a];
+    case 4: return 'Straight, ' + HI[a];
+    case 5: return 'Flush, ' + HI[a];
+    case 6: return 'Full House, ' + PL[a] + ' full of ' + PL[b];
+    case 7: return 'Four of a Kind, ' + PL[a];
+    case 8: return 'Straight Flush, ' + HI[a];
+    case 9: return 'Straight Flush, Ace high'; // Qt-Widgets : la royale = quinte flush à l'As
+  }
+  return '';
+}
+
 // Encodage PokerTH UNIQUE pour toutes les cartes (0-indexé, 0..51) :
 //   suit=['♦','♥','♠','♣'] → ♦=0, ♥=1, ♠=2, ♣=3
 //   rank=['2','3',…,'K','A'] → 0..12
@@ -8393,6 +8418,24 @@ const App = (() => {
         } catch (e) {}
         // PlayerWinnerOverlay QML : marquer les sièges gagnants jusqu'à la main suivante.
         try { _sdWinners = new Set(winners.map(function (w) { return w.pid; })); } catch (e) {}
+        // WinningHandBadge QML (bible §9) : libellé de la main gagnante sous
+        // les community cards pendant TOUT le showdown, au format Qt-Widgets
+        // anglais (winningHandText). Indépendant de la fenêtre du gagnant
+        // (option winner_popup) — comme le client officiel.
+        try {
+          var _whBd = commCards.filter(function (n) { return n != null; });
+          var _whLabel = '';
+          if (_whBd.length >= 3) {
+            for (var _whI = 0; _whI < winners.length && !_whLabel; _whI++) {
+              var _whW = winners[_whI];
+              if (_whW.c1 != null && _whW.c2 != null) {
+                var _whEv = evaluateBestHand([_whW.c1, _whW.c2], _whBd);
+                if (_whEv) _whLabel = _qmlWinningHandText(_whEv);
+              }
+            }
+          }
+          if (_whLabel) showWinHandBadge(_whLabel);
+        } catch (e) {}
         try {
           if (window._handlog) {
             var _bdSD = commCards.slice();
@@ -12461,10 +12504,15 @@ function showWinHandBadge(label) {
   if (!label) { b.style.display = 'none'; return; }
   var comm = document.getElementById('g-comm');
   var oval = document.querySelector('.felt-oval');
-  b.textContent = label;   // textContent : libellé traduit, jamais du HTML
+  b.textContent = label;   // textContent : libellé simple, jamais du HTML
+  // Écart QML : 6 px en portrait, 8 px en paysage (WinningHandBadge.qml).
+  var _whGap = 8;
+  try { if (document.documentElement.getAttribute('data-seat-orient') === 'portrait') _whGap = 6; } catch (e) {}
   if (comm && oval)
-    b.style.top = Math.round(oval.clientHeight / 2 + comm.offsetHeight / 2 + 8) + 'px';
+    b.style.top = Math.round(oval.clientHeight / 2 + comm.offsetHeight / 2 + _whGap) + 'px';
   b.style.display = '';
+  // Pop d'apparition (winHandPop QML : 1→1.18 en 110 ms, retour OutBack 170 ms).
+  b.classList.remove('win-pop'); void b.offsetWidth; b.classList.add('win-pop');
 }
 window._hideWinHandBadge = function () {
   var b = document.getElementById('g-win-hand');
@@ -12559,8 +12607,9 @@ function showWinnerOverlay(winners) {
     if (bestHandLabel) {
       html += '<div class="wc-best-hand">' + bestHandLabel + '</div>';
     }
-    // Badge sous les community cards, pour toute la durée du showdown
-    try { showWinHandBadge(bestHandLabel); } catch (e) {}
+    // Le badge sous les community cards est désormais piloté par le handler
+    // EndOfHand showdown (texte QML winningHandText), indépendamment de cette
+    // fenêtre — plus d'appel ici pour ne pas écraser son libellé.
   }
 
   // ── Players results ──
@@ -17498,7 +17547,7 @@ function renderPlayersList() {
   });
 })();
 
-;(function(){ window.BUILD_VERSION='0.3.760-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.761-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
