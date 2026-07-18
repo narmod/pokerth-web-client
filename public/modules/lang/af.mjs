@@ -252,7 +252,7 @@ export const strings = {
     timerHurry: '⏰ Tyd: {s} s — speel vinnig!',
     chatRefusedReason: '⚠ Klets geweier: {r}',
     reactionsLanLocal: 'Reaksies (plaaslik — LAN-modus)',
-    reactionsLabel: 'Reaksies', reactionsMuteTitle: 'Aktiveer / deaktiveer reaksies',
+    reactionsLabel: 'Reaksies', reactionsMuteTitle: 'Aktiveer / deaktiveer reaksies', reactionsPinTitle: 'Vasspeld: hou die venster oop ná ’n reaksie',
     gameOverMsg: 'Spel verby!',
     tableClosedMsg: '🔒 Tafel gesluit.',
     noHandsPlayed: 'Nog geen hande gespeel nie',

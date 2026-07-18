@@ -251,7 +251,7 @@ export const strings = {
     timerHurry: '⏰ Tid: {s}s — spil hurtigt!',
     chatRefusedReason: '⚠ Chat afvist: {r}',
     reactionsLanLocal: 'Reaktioner (lokale — LAN-tilstand)',
-    reactionsLabel: 'Reaktioner', reactionsMuteTitle: 'Aktivér / deaktivér reaktioner',
+    reactionsLabel: 'Reaktioner', reactionsMuteTitle: 'Aktivér / deaktivér reaktioner', reactionsPinTitle: 'Fastgør: hold vinduet åbent efter en reaktion',
     gameOverMsg: 'Spillet er slut!',
     tableClosedMsg: '🔒 Bordet er lukket.',
     noHandsPlayed: 'Ingen hænder spillet endnu',

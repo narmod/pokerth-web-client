@@ -252,7 +252,7 @@ export const strings = {
     timerHurry: '⏰ Χρόνος: {s} δ — παίξτε γρήγορα!',
     chatRefusedReason: '⚠ Η συνομιλία απορρίφθηκε: {r}',
     reactionsLanLocal: 'Αντιδράσεις (τοπικές — λειτουργία LAN)',
-    reactionsLabel: 'Αντιδράσεις', reactionsMuteTitle: 'Ενεργοποίηση / απενεργοποίηση αντιδράσεων',
+    reactionsLabel: 'Αντιδράσεις', reactionsMuteTitle: 'Ενεργοποίηση / απενεργοποίηση αντιδράσεων', reactionsPinTitle: 'Καρφίτσωμα: το παράθυρο μένει ανοιχτό μετά από αντίδραση',
     gameOverMsg: 'Τέλος παιχνιδιού!',
     tableClosedMsg: '🔒 Το τραπέζι έκλεισε.',
     noHandsPlayed: 'Δεν παίχτηκε ακόμα κανένα χέρι',

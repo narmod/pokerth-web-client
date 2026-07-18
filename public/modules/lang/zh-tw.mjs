@@ -253,7 +253,7 @@ export const strings = {
     timerHurry: '⏰ 時間：{s} 秒 — 請儘快行動！',
     chatRefusedReason: '⚠ 聊天被拒絕：{r}',
     reactionsLanLocal: '表情（本地 — 區域網模式）',
-    reactionsLabel: '表情', reactionsMuteTitle: '開啟／關閉表情',
+    reactionsLabel: '表情', reactionsMuteTitle: '開啟／關閉表情', reactionsPinTitle: '釘選：傳送表情後保持視窗開啟',
     gameOverMsg: '遊戲結束！',
     tableClosedMsg: '🔒 牌桌已關閉。',
     noHandsPlayed: '還沒有玩過任何一手',

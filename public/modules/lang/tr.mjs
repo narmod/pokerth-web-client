@@ -254,7 +254,7 @@ export const strings = {
     timerHurry: '⏰ Süre: {s} sn — hızlı oyna!',
     chatRefusedReason: '⚠ Sohbet reddedildi: {r}',
     reactionsLanLocal: 'Tepkiler (yerel — LAN modu)',
-    reactionsLabel: 'Tepkiler', reactionsMuteTitle: 'Tepkileri aç / kapat',
+    reactionsLabel: 'Tepkiler', reactionsMuteTitle: 'Tepkileri aç / kapat', reactionsPinTitle: 'Sabitle: tepkiden sonra pencereyi açık tut',
     gameOverMsg: 'Oyun bitti!',
     tableClosedMsg: '🔒 Masa kapatıldı.',
     noHandsPlayed: 'Henüz el oynanmadı',

@@ -197,7 +197,7 @@ export const strings = {
     sharedTableJoining:'🔗 साझा टेबल मिली — शामिल हो रहे हैं…',
     timerHurry:'⏰ समय: {s}से. — जल्दी खेलें!',
     chatRefusedReason:'⚠ चैट अस्वीकृत: {r}',
-    reactionsLanLocal:'प्रतिक्रियाएँ (लोकल — LAN मोड)', reactionsLabel:'प्रतिक्रियाएँ', reactionsMuteTitle: 'प्रतिक्रियाएँ चालू / बंद करें',
+    reactionsLanLocal:'प्रतिक्रियाएँ (लोकल — LAN मोड)', reactionsLabel:'प्रतिक्रियाएँ', reactionsMuteTitle: 'प्रतिक्रियाएँ चालू / बंद करें', reactionsPinTitle: 'पिन करें: प्रतिक्रिया के बाद विंडो खुली रखें',
     gameOverMsg:'खेल समाप्त!',
     tableClosedMsg:'🔒 टेबल बंद।',
     noHandsPlayed:'अभी तक कोई हाथ नहीं खेला',

@@ -252,7 +252,7 @@ export const strings = {
     timerHurry: '⏰ Timp: {s}s — joacă repede!',
     chatRefusedReason: '⚠ Chat refuzat: {r}',
     reactionsLanLocal: 'Reacții (locale — mod LAN)',
-    reactionsLabel: 'Reacții', reactionsMuteTitle: 'Activează / dezactivează reacțiile',
+    reactionsLabel: 'Reacții', reactionsMuteTitle: 'Activează / dezactivează reacțiile', reactionsPinTitle: 'Fixează: fereastra rămâne deschisă după o reacție',
     gameOverMsg: 'Joc terminat!',
     tableClosedMsg: '🔒 Masă închisă.',
     noHandsPlayed: 'Nicio mână jucată încă',

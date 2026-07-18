@@ -196,7 +196,7 @@ export const strings = {
     sharedTableJoining:'🔗 공유 테이블 발견 — 참가 중…',
     timerHurry:'⏰ 시간: {s}초 — 서두르세요!',
     chatRefusedReason:'⚠ 채팅 거부됨: {r}',
-    reactionsLanLocal:'리액션 (로컬 — LAN 모드)', reactionsLabel:'리액션', reactionsMuteTitle: '리액션 켜기/끄기',
+    reactionsLanLocal:'리액션 (로컬 — LAN 모드)', reactionsLabel:'리액션', reactionsMuteTitle: '리액션 켜기/끄기', reactionsPinTitle: '고정: 리액션 후에도 창을 열어 두기',
     gameOverMsg:'게임 종료!',
     tableClosedMsg:'🔒 테이블이 닫혔습니다.',
     noHandsPlayed:'아직 플레이한 핸드 없음',

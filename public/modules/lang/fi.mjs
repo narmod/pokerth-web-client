@@ -251,7 +251,7 @@ export const strings = {
     timerHurry: '⏰ Aika: {s} s — pelaa nopeasti!',
     chatRefusedReason: '⚠ Chat hylätty: {r}',
     reactionsLanLocal: 'Reaktiot (paikalliset — LAN-tila)',
-    reactionsLabel: 'Reaktiot', reactionsMuteTitle: 'Ota reaktiot käyttöön / poista käytöstä',
+    reactionsLabel: 'Reaktiot', reactionsMuteTitle: 'Ota reaktiot käyttöön / poista käytöstä', reactionsPinTitle: 'Kiinnitä: pidä ikkuna auki reaktion jälkeen',
     gameOverMsg: 'Peli päättyi!',
     tableClosedMsg: '🔒 Pöytä suljettu.',
     noHandsPlayed: 'Ei vielä pelattuja käsiä',

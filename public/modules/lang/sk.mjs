@@ -252,7 +252,7 @@ export const strings = {
     timerHurry: '⏰ Čas: {s} s — hrajte rýchlo!',
     chatRefusedReason: '⚠ Chat odmietnutý: {r}',
     reactionsLanLocal: 'Reakcie (miestne — režim LAN)',
-    reactionsLabel: 'Reakcie', reactionsMuteTitle: 'Zapnúť / vypnúť reakcie',
+    reactionsLabel: 'Reakcie', reactionsMuteTitle: 'Zapnúť / vypnúť reakcie', reactionsPinTitle: 'Pripnúť: okno zostane po reakcii otvorené',
     gameOverMsg: 'Koniec hry!',
     tableClosedMsg: '🔒 Stôl zatvorený.',
     noHandsPlayed: 'Zatiaľ neboli odohrané žiadne rozdania',

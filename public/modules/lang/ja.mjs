@@ -251,7 +251,7 @@ export const strings = {
     timerHurry: '⏰ 時間：{s}秒 — 急いでプレイ！',
     chatRefusedReason: '⚠ チャットが拒否されました：{r}',
     reactionsLanLocal: 'リアクション（ローカル — LANモード）',
-    reactionsLabel: 'リアクション', reactionsMuteTitle: 'リアクションのオン／オフ',
+    reactionsLabel: 'リアクション', reactionsMuteTitle: 'リアクションのオン／オフ', reactionsPinTitle: 'ピン留め：リアクション後もウィンドウを開いたままにする',
     gameOverMsg: 'ゲーム終了！',
     tableClosedMsg: '🔒 テーブルが閉じられました。',
     noHandsPlayed: 'まだハンドをプレイしていません',

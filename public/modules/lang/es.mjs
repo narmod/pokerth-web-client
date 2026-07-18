@@ -260,7 +260,7 @@ export const strings = {
     timerHurry: '⏰ Tiempo: {s}s — ¡juega rápido!',
     chatRefusedReason: '⚠ Chat rechazado: {r}',
     reactionsLanLocal: 'Reacciones (local — modo LAN)',
-    reactionsLabel: 'Reacciones', reactionsMuteTitle: 'Activar / desactivar reacciones',
+    reactionsLabel: 'Reacciones', reactionsMuteTitle: 'Activar / desactivar reacciones', reactionsPinTitle: 'Fijar: mantener la ventana abierta tras una reacción',
     gameOverMsg: '¡Fin de la partida!',
     tableClosedMsg: '🔒 Mesa cerrada.',
     noHandsPlayed: 'Aún no se han jugado manos',

@@ -252,7 +252,7 @@ export const strings = {
     timerHurry: '⏰ Idő: {s} mp — játssz gyorsan!',
     chatRefusedReason: '⚠ Chat elutasítva: {r}',
     reactionsLanLocal: 'Reakciók (helyi — LAN mód)',
-    reactionsLabel: 'Reakciók', reactionsMuteTitle: 'Reakciók be- / kikapcsolása',
+    reactionsLabel: 'Reakciók', reactionsMuteTitle: 'Reakciók be- / kikapcsolása', reactionsPinTitle: 'Rögzítés: az ablak nyitva marad a reakció után',
     gameOverMsg: 'Vége a játéknak!',
     tableClosedMsg: '🔒 Asztal bezárva.',
     noHandsPlayed: 'Még nem játszottál leosztást',

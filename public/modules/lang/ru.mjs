@@ -257,7 +257,7 @@ export const strings = {
     timerHurry: '⏰ Время: {s}с — играйте быстрее!',
     chatRefusedReason: '⚠ Чат отклонён: {r}',
     reactionsLanLocal: 'Реакции (локально — режим LAN)',
-    reactionsLabel: 'Реакции', reactionsMuteTitle: 'Включить / выключить реакции',
+    reactionsLabel: 'Реакции', reactionsMuteTitle: 'Включить / выключить реакции', reactionsPinTitle: 'Закрепить: окно остаётся открытым после реакции',
     gameOverMsg: 'Игра окончена!',
     tableClosedMsg: '🔒 Стол закрыт.',
     noHandsPlayed: 'Ещё не сыграно ни одной раздачи',

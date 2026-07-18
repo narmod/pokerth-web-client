@@ -253,7 +253,7 @@ export const strings = {
     timerHurry: '⏰ நேரம்: {s} வி — வேகமாக விளையாடு!',
     chatRefusedReason: '⚠ அரட்டை மறுக்கப்பட்டது: {r}',
     reactionsLanLocal: 'எதிர்வினைகள் (உள்ளூர் — LAN முறை)',
-    reactionsLabel: 'எதிர்வினைகள்', reactionsMuteTitle: 'எதிர்வினைகளை இயக்கு / முடக்கு',
+    reactionsLabel: 'எதிர்வினைகள்', reactionsMuteTitle: 'எதிர்வினைகளை இயக்கு / முடக்கு', reactionsPinTitle: 'பொருத்து: எதிர்வினைக்குப் பிறகு சாளரத்தைத் திறந்தே வைத்திரு',
     gameOverMsg: 'விளையாட்டு முடிந்தது!',
     tableClosedMsg: '🔒 மேசை மூடப்பட்டது.',
     noHandsPlayed: 'இன்னும் எந்த கையும் விளையாடப்படவில்லை',
