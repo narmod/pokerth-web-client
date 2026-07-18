@@ -5498,7 +5498,7 @@ html[data-table="pokerth-live"] .raise-slider { accent-color: #4CAF50; }
   color: var(--qml-pos-fg); font-weight: 600;
 }
 .ld-btn.ld-create:hover { background: var(--qml-pos-grad-hi); }
-@media (max-width: 640px) {
+@media (max-width: 599.98px) {
   .qc-control { gap: 8px; }
   .qc-control input[type="number"] { font-size: 1rem; width: 60px; padding: 6px 8px; }
 }
@@ -6551,7 +6551,7 @@ html[data-table="pokerth-live"] .raise-slider { accent-color: #4CAF50; }
 .game-row.gcard .btn-watch:hover { border-color: var(--gold-dim); color: var(--gold); background: var(--inset-hi); }
 
 /* Mobile (cards stacked): make the Rejoindre / Regarder buttons shorter. */
-@media (max-width: 639px) {
+@media (max-width: 599.98px) {
   .game-row.gcard .btn-join  { padding: 5px 10px; font-size: 0.8rem; }
   .game-row.gcard .btn-watch { padding: 5px 12px; font-size: 0.95rem; }
 }
@@ -6559,7 +6559,7 @@ html[data-table="pokerth-live"] .raise-slider { accent-color: #4CAF50; }
 /* ── Téléphone (base) : boutons SOUS la carte, texte lisible ──
    ── Tablette (≥640) : boutons sur le FLANC DROIT, texte un cran plus grand ──
    ── Ordinateur (≥1024) : texte plus grand encore ── */
-@media (min-width: 640px) {
+@media (min-width: 600px) {
   .game-row.gcard { flex-direction: row; align-items: center; gap: 14px; }
   .gcard-main { flex: 1 1 auto; }
   .gcard-btns { flex: 0 0 auto; align-self: center; }
@@ -6568,7 +6568,7 @@ html[data-table="pokerth-live"] .raise-slider { accent-color: #4CAF50; }
   .game-row.gcard .game-meta { font-size: 0.78rem; }
   .create-toggle { font-size: 1.15rem; }
 }
-@media (min-width: 1024px) {
+@media (min-width: 900px) {
   .game-row.gcard .game-name { font-size: 1.16rem; }
   .game-row.gcard .game-meta { font-size: 0.88rem; }
   .game-badge { font-size: 0.66rem; }
@@ -6646,11 +6646,11 @@ html[data-table="pokerth-live"] .raise-slider { accent-color: #4CAF50; }
 /* Créer — couleur identique au bouton Créer du lobby (.lfb-create : or/neutre teinté), un peu plus large */
 .cf-actions .cf-create-btn { flex-grow: 1.6; background: #2b3444; color: #ffffff; border-color: transparent; }
 .cf-actions .cf-create-btn:hover { background: #384252; }
-/* Mobile (<640px) : la barre passe sur deux lignes. Reset (icône) + Annuler
+/* Mobile (<600px, canon QML) : la barre passe sur deux lignes. Reset (icône) + Annuler
    restent en haut ; « Créer » — l'action primaire — descend pleine largeur sur
    sa propre ligne, donc jamais tronquée quelle que soit la langue (fr « ＋ Créer
    cette table », de…), et devient une plus grande cible tactile. */
-@media (max-width: 639px) {
+@media (max-width: 599.98px) {
   .cf-actions { flex-wrap: wrap; }
   .cf-actions .cf-create-btn { flex: 1 0 100%; }
 }
@@ -6685,11 +6685,11 @@ html[data-table="pokerth-live"] .raise-slider { accent-color: #4CAF50; }
 .app-toast-tick { color: #3fb950; font-weight: 700; }
 
 /* Reset button: full "↺ Réinitialiser" label on tablet/desktop, icon-only on
-   phones (<640px, the app's phone/tablet boundary) to leave room for Create.
+   phones (<600px, the QML-canon phone/tablet boundary) to leave room for Create.
    The label stays in the DOM (visually hidden) so it remains translated and
    reachable by screen readers; the standalone ↺ is aria-hidden. */
 .btn-cf-reset .cf-reset-ico { display: none; }
-@media (max-width: 639px) {
+@media (max-width: 599.98px) {
   .btn-cf-reset { padding: 10px 13px; }
   .btn-cf-reset .cf-reset-ico { display: inline; font-size: 1.05rem; line-height: 1; }
   .btn-cf-reset .cf-reset-lbl {
@@ -8524,7 +8524,7 @@ html[data-buttons="pokerth"] .btn-action[disabled] { filter: grayscale(0.55) bri
 /* Mobile (téléphone) : le pseudo passe sur sa propre ligne et les boutons
    Rejoindre/Spectateur/Créer se placent EN DESSOUS, côte à côte à parts égales
    (sinon 3 éléments sur une ligne étroite tronquent les libellés). */
-@media (max-width: 640px) {
+@media (max-width: 599.98px) {
   .lobby-footbar { flex-wrap:wrap; }
   .lobby-footbar .lfb-name { flex:1 1 100%; }
   /* Mobile : Rejoindre/Spectateur uniquement sur les cartes de table.
@@ -8533,10 +8533,10 @@ html[data-buttons="pokerth"] .btn-action[disabled] { filter: grayscale(0.55) bri
   .lobby-footbar .lfb-spectate { display: none; }
 }
 
-/* Desktop / tablette (> 640) : Rejoindre/Spectateur uniquement via la barre du
+/* Desktop / tablette (largeur >= 600, canon QML) : Rejoindre/Spectateur uniquement via la barre du
    bas (sur la table selectionnee). On retire leurs doublons sur chaque carte —
    la ligne reste cliquable pour selectionner la table. */
-@media (min-width: 641px) {
+@media (min-width: 600px) {
   #s-lobby .game-row.gcard .btn-join { display: none; }
 }
 
