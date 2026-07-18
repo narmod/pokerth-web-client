@@ -5129,7 +5129,7 @@ html[data-table="pokerth-live"] .raise-slider { accent-color: #4CAF50; }
 }
 
 /* On mobile, keep things compact */
-@media (max-width: 640px) {
+@media (max-width: 599.98px) {
   .waiting-panel { padding: 8px 10px; gap: 5px; }
   .wp-ready-row { padding: 8px 10px; gap: 5px; }
   .wp-ready-label { font-size: 0.72rem; }
@@ -5258,7 +5258,7 @@ html[data-table="pokerth-live"] .raise-slider { accent-color: #4CAF50; }
 .eg-btn.primary:hover {
   background: linear-gradient(180deg, rgba(var(--gold-rgb), 0.4), rgba(var(--gold-rgb), 0.2));
 }
-@media (max-width: 640px) {
+@media (max-width: 599.98px) {
   .endgame-card { padding: 16px 18px; gap: 10px; }
   .eg-trophy { font-size: 2.4rem; }
   .eg-title { font-size: 1rem; letter-spacing: 0.14em; }
@@ -5296,7 +5296,7 @@ html[data-table="pokerth-live"] .raise-slider { accent-color: #4CAF50; }
   background: var(--cream); border-radius: 50%; transition: 0.2s; }
 .auto-switch input:checked + .auto-switch-track { background: rgba(var(--green-rgb), 0.5); border-color: var(--green); }
 .auto-switch input:checked + .auto-switch-track::before { transform: translateX(17px); background: var(--on-green); }
-@media (max-width: 640px) {
+@media (max-width: 599.98px) {
   .auto-cf-row { padding: 6px 9px; margin-bottom: 5px; gap: 8px; }
   .auto-cf-label { font-size: 0.68rem; }
   .auto-cf-hint { font-size: 0.54rem; }
@@ -5353,7 +5353,7 @@ html[data-table="pokerth-live"] .raise-slider { accent-color: #4CAF50; }
   0%,100% { opacity: 0.7; transform: scale(1); }
   50%     { opacity: 1;   transform: scale(1.12); }
 }
-@media (max-width: 640px) {
+@media (max-width: 599.98px) {
   /* Mobile : la pastille texte « Spectating » est redondante avec l'oeil
      juste a cote et mange ~100px du bandeau -> masquee. Quand JE regarde
      (.me pose par updateSpectatorStrip), l'OEIL herite du contour jaune de
@@ -5450,7 +5450,7 @@ html[data-table="pokerth-live"] .raise-slider { accent-color: #4CAF50; }
 }
 .ld-btn.ld-cancel:hover  { background: var(--inset); }
 .ld-btn.ld-cancel:active { transform: scale(0.98); }
-@media (max-width: 640px) {
+@media (max-width: 599.98px) {
   .ld-card { padding: 16px 18px; }
   .ld-title { font-size: 0.9rem; }
   .ld-body { font-size: 0.78rem; }
@@ -9233,7 +9233,7 @@ html[data-seat-struct="qml"] .seat:not(.me) .seat-narrow .seat-holecards .pk { w
 .range-grid .rc-count{display:block;font-size:8px;opacity:.85;font-variant-numeric:tabular-nums}
 /* Mobile : HUD très compact — une seule ligne VPIP/PFR/AF (les 3 dernières
    stats sont masquées pour réduire l'encombrement en portrait 9-max). */
-@media (max-width:640px){
+@media (max-width:599.98px){
   .range-grid td{width:26px;height:26px;font-size:7.5px}
   .range-grid .rc-combo{font-size:8px}
   .hud-box{min-width:0;width:auto;max-width:104px;font-size:7.5px;padding:2px 4px;border-radius:6px;line-height:1.12}

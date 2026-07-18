@@ -367,7 +367,7 @@ const CSS = `
 #jr-modal .jr-foot{display:flex;flex-wrap:wrap;gap:7px;margin-top:8px;align-items:center;font-size:.8rem;opacity:.9}
 #jr-modal .jr-an-nav{display:flex;gap:6px;align-items:center;margin-bottom:6px;flex-wrap:wrap}
 #jr-modal .jr-search{min-width:110px;flex:0 1 170px}
-@media (max-width:640px){#jr-modal .jr-main{flex-direction:column}#jr-modal .jr-list{flex:0 0 auto;width:auto;max-height:26vh}#jr-modal .jr-card{max-height:none;height:100%}}
+@media (max-width:599.98px){#jr-modal .jr-main{flex-direction:column}#jr-modal .jr-list{flex:0 0 auto;width:auto;max-height:26vh}#jr-modal .jr-card{max-height:none;height:100%}}
 `;
 
 function _ensureModal() {
