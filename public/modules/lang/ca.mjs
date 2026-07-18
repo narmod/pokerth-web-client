@@ -10,6 +10,27 @@ export const meta = {
 };
 
 export const strings = {
+    // ── Stats / HUD / range (session) ──
+    gipTabStats:"Stats",
+    advStatsTrack:"Registra les estadístiques de mans",
+    advHudOn:"Mostra el HUD d'estadístiques als seients",
+    advSecStatsExport:"Exportació d'estadístiques",
+    advStatsExportDesc:"Exporta les mans registrades com a fitxer .pdb, importable a PokerTH Tracker.",
+    advStatsExportSession:"Exporta la sessió",
+    advStatsExportAll:"Exporta tot l'historial",
+    hlSession:"Sessió",
+    hlHistory:"Historial",
+    hlExportPdbTip:"Exporta com a .pdb (importable a PokerTH Tracker)",
+    hlNoData:"Encara no hi ha dades.",
+    hlSeeRange:"Mostra el rang ▸",
+    hlRangeLegend:"Diagonal = parelles · dalt dreta = suited · baix esquerra = offsuit",
+    hlRangeShowdown:"Rang al showdown",
+    hlPosition:"Posició",
+    hlPlayers:"Jugadors",
+    hlAllF:"Totes",
+    hlAllM:"Tots",
+    hlHandSing:"mà",
+    hlHandPlur:"mans",
     buttonsAuto:"Auto (table)",
     buttonsFlat:"Pla",
     advRemoveGone:"Elimina els jugadors que marxen i recol·loca la taula",

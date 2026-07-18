@@ -12,6 +12,27 @@ export const meta = {
 };
 
 export const strings = {
+    // ── Stats / HUD / range (session) ──
+    gipTabStats:"Stats",
+    advStatsTrack:"El istatistiklerini kaydet",
+    advHudOn:"Koltuklarda istatistik HUD'unu göster",
+    advSecStatsExport:"İstatistik dışa aktarımı",
+    advStatsExportDesc:"Kaydedilen elleri .pdb dosyası olarak dışa aktarır, PokerTH Tracker'a aktarılabilir.",
+    advStatsExportSession:"Oturumu dışa aktar",
+    advStatsExportAll:"Tüm geçmişi dışa aktar",
+    hlSession:"Oturum",
+    hlHistory:"Geçmiş",
+    hlExportPdbTip:".pdb olarak dışa aktar (PokerTH Tracker'a aktarılabilir)",
+    hlNoData:"Henüz veri yok.",
+    hlSeeRange:"Aralığı gör ▸",
+    hlRangeLegend:"Köşegen = çiftler · sağ üst = suited · sol alt = offsuit",
+    hlRangeShowdown:"Showdown aralığı",
+    hlPosition:"Pozisyon",
+    hlPlayers:"Oyuncular",
+    hlAllF:"Tümü",
+    hlAllM:"Tümü",
+    hlHandSing:"el",
+    hlHandPlur:"el",
     buttonsAuto:"Auto (table)",
     buttonsFlat:"Flat",
     advRemoveGone:"Ayrılan oyuncuları kaldır ve masayı yeniden yerleştir",

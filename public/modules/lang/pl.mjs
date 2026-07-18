@@ -16,6 +16,27 @@ export const meta = {
 };
 
 export const strings = {
+    // ── Stats / HUD / range (session) ──
+    gipTabStats:"Stats",
+    advStatsTrack:"Zapisuj statystyki rąk",
+    advHudOn:"Pokaż HUD statystyk na miejscach",
+    advSecStatsExport:"Eksport statystyk",
+    advStatsExportDesc:"Eksportuj zapisane ręce jako plik .pdb, importowalny w PokerTH Tracker.",
+    advStatsExportSession:"Eksportuj sesję",
+    advStatsExportAll:"Eksportuj całą historię",
+    hlSession:"Sesja",
+    hlHistory:"Historia",
+    hlExportPdbTip:"Eksportuj jako .pdb (importowalny w PokerTH Tracker)",
+    hlNoData:"Brak danych.",
+    hlSeeRange:"Zobacz zakres ▸",
+    hlRangeLegend:"Przekątna = pary · prawy górny = suited · lewy dolny = offsuit",
+    hlRangeShowdown:"Zakres na showdown",
+    hlPosition:"Pozycja",
+    hlPlayers:"Gracze",
+    hlAllF:"Wszystkie",
+    hlAllM:"Wszyscy",
+    hlHandSing:"ręka",
+    hlHandPlur:"rąk",
     buttonsAuto:"Auto (table)",
     buttonsFlat:"Flat",
     advRemoveGone:"Usuń graczy, którzy odeszli, i rozmieść stół na nowo",

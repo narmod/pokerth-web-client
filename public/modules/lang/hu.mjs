@@ -10,6 +10,27 @@ export const meta = {
 };
 
 export const strings = {
+    // ── Stats / HUD / range (session) ──
+    gipTabStats:"Stats",
+    advStatsTrack:"Kézstatisztikák rögzítése",
+    advHudOn:"Statisztikai HUD megjelenítése a helyeken",
+    advSecStatsExport:"Statisztika exportálása",
+    advStatsExportDesc:"A rögzített kezek exportálása .pdb fájlba, PokerTH Trackerbe importálható.",
+    advStatsExportSession:"Munkamenet exportálása",
+    advStatsExportAll:"Teljes előzmény exportálása",
+    hlSession:"Munkamenet",
+    hlHistory:"Előzmények",
+    hlExportPdbTip:"Exportálás .pdb formátumban (PokerTH Trackerbe importálható)",
+    hlNoData:"Még nincs adat.",
+    hlSeeRange:"Tartomány megtekintése ▸",
+    hlRangeLegend:"Átló = párok · jobb fent = suited · bal lent = offsuit",
+    hlRangeShowdown:"Showdown tartomány",
+    hlPosition:"Pozíció",
+    hlPlayers:"Játékosok",
+    hlAllF:"Mind",
+    hlAllM:"Mind",
+    hlHandSing:"kéz",
+    hlHandPlur:"kéz",
     buttonsAuto:"Auto (table)",
     buttonsFlat:"Flat",
     advRemoveGone:"Távozó játékosok eltávolítása és az asztal újrarendezése",

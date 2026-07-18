@@ -11,6 +11,27 @@ export const meta = {
 };
 
 export const strings = {
+    // ── Stats / HUD / range (session) ──
+    gipTabStats:"Stats",
+    advStatsTrack:"Clàraich staitistig làmhan",
+    advHudOn:"Seall an HUD staitistig air na suìdheachain",
+    advSecStatsExport:"Às-phortadh staitistig",
+    advStatsExportDesc:"Às-phortaich làmhan clàraichte mar fhaidhle .pdb, a ghabhas ion-phortadh do PokerTH Tracker.",
+    advStatsExportSession:"Às-phortaich an seisean",
+    advStatsExportAll:"Às-phortaich an eachdraidh gu lèir",
+    hlSession:"Seisean",
+    hlHistory:"Eachdraidh",
+    hlExportPdbTip:"Às-phortaich mar .pdb (a ghabhas ion-phortadh do PokerTH Tracker)",
+    hlNoData:"Chan eil dàta ann fhathast.",
+    hlSeeRange:"Seall an raon ▸",
+    hlRangeLegend:"Trastan = paidhrichean · gu h-àrd deas = suited · gu h-ìosal clì = offsuit",
+    hlRangeShowdown:"Raon showdown",
+    hlPosition:"Suìdheachadh",
+    hlPlayers:"Cluicheadairean",
+    hlAllF:"Na h-uile",
+    hlAllM:"Na h-uile",
+    hlHandSing:"làmh",
+    hlHandPlur:"làmhan",
     buttonsAuto:"Auto (table)",
     buttonsFlat:"Flat",
     advRemoveGone:"Thoir air falbh cluicheadairean a dh'fhalbh agus suidhich am bòrd às ùr",

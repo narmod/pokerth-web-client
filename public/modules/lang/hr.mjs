@@ -10,6 +10,27 @@ export const meta = {
 };
 
 export const strings = {
+    // ── Stats / HUD / range (session) ──
+    gipTabStats:"Stats",
+    advStatsTrack:"Bilježi statistiku ruku",
+    advHudOn:"Prikaži statistički HUD na sjedalima",
+    advSecStatsExport:"Izvoz statistike",
+    advStatsExportDesc:"Izvozi zabilježene ruke kao .pdb datoteku, uvozivo u PokerTH Tracker.",
+    advStatsExportSession:"Izvezi sesiju",
+    advStatsExportAll:"Izvezi cijelu povijest",
+    hlSession:"Sesija",
+    hlHistory:"Povijest",
+    hlExportPdbTip:"Izvezi kao .pdb (uvozivo u PokerTH Tracker)",
+    hlNoData:"Još nema podataka.",
+    hlSeeRange:"Prikaži raspon ▸",
+    hlRangeLegend:"Dijagonala = parovi · gore desno = suited · dolje lijevo = offsuit",
+    hlRangeShowdown:"Raspon na showdownu",
+    hlPosition:"Pozicija",
+    hlPlayers:"Igrači",
+    hlAllF:"Sve",
+    hlAllM:"Svi",
+    hlHandSing:"ruka",
+    hlHandPlur:"ruku",
     buttonsAuto:"Auto (table)",
     buttonsFlat:"Flat",
     advRemoveGone:"Ukloni otišle igrače i preraspodijeli stol",

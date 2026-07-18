@@ -9,6 +9,27 @@ export const meta = {
 };
 
 export const strings = {
+    // ── Stats / HUD / range (session) ──
+    gipTabStats:"Stats",
+    advStatsTrack:"Tallenna käsitilastot",
+    advHudOn:"Näytä tilasto-HUD paikoilla",
+    advSecStatsExport:"Tilastojen vienti",
+    advStatsExportDesc:"Vie tallennetut kädet .pdb-tiedostona, tuotavissa PokerTH Trackeriin.",
+    advStatsExportSession:"Vie istunto",
+    advStatsExportAll:"Vie koko historia",
+    hlSession:"Istunto",
+    hlHistory:"Historia",
+    hlExportPdbTip:"Vie muodossa .pdb (tuotavissa PokerTH Trackeriin)",
+    hlNoData:"Ei vielä tietoja.",
+    hlSeeRange:"Näytä range ▸",
+    hlRangeLegend:"Lävistäjä = parit · oikea ylä = suited · vasen ala = offsuit",
+    hlRangeShowdown:"Showdown-range",
+    hlPosition:"Positio",
+    hlPlayers:"Pelaajat",
+    hlAllF:"Kaikki",
+    hlAllM:"Kaikki",
+    hlHandSing:"käsi",
+    hlHandPlur:"kättä",
     buttonsAuto:"Auto (table)",
     buttonsFlat:"Flat",
     advRemoveGone:"Poista poistuneet pelaajat ja järjestä pöytä uudelleen",

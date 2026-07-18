@@ -9,6 +9,27 @@ export const meta = {
 };
 
 export const strings = {
+    // ── Stats / HUD / range (session) ──
+    gipTabStats:"Stats",
+    advStatsTrack:"Registrer håndstatistikk",
+    advHudOn:"Vis stats-HUD på plassene",
+    advSecStatsExport:"Eksporter statistikk",
+    advStatsExportDesc:"Eksporter registrerte hånder som .pdb-fil, kan importeres i PokerTH Tracker.",
+    advStatsExportSession:"Eksporter økt",
+    advStatsExportAll:"Eksporter hele historikken",
+    hlSession:"Økt",
+    hlHistory:"Historikk",
+    hlExportPdbTip:"Eksporter som .pdb (kan importeres i PokerTH Tracker)",
+    hlNoData:"Ingen data ennå.",
+    hlSeeRange:"Se range ▸",
+    hlRangeLegend:"Diagonal = par · øverst th = suited · nederst tv = offsuit",
+    hlRangeShowdown:"Showdown-range",
+    hlPosition:"Posisjon",
+    hlPlayers:"Spillere",
+    hlAllF:"Alle",
+    hlAllM:"Alle",
+    hlHandSing:"hånd",
+    hlHandPlur:"hånder",
     buttonsAuto:"Auto (table)",
     buttonsFlat:"Flat",
     advRemoveGone:"Fjern spillere som har gått, og omplasser bordet",

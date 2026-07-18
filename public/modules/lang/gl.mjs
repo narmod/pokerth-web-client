@@ -10,6 +10,27 @@ export const meta = {
 };
 
 export const strings = {
+    // ── Stats / HUD / range (session) ──
+    gipTabStats:"Stats",
+    advStatsTrack:"Rexistrar as estatísticas das mans",
+    advHudOn:"Amosar o HUD de estatísticas nos asentos",
+    advSecStatsExport:"Exportación de estatísticas",
+    advStatsExportDesc:"Exporta as mans rexistradas como ficheiro .pdb, importable en PokerTH Tracker.",
+    advStatsExportSession:"Exportar a sesión",
+    advStatsExportAll:"Exportar todo o historial",
+    hlSession:"Sesión",
+    hlHistory:"Historial",
+    hlExportPdbTip:"Exportar como .pdb (importable en PokerTH Tracker)",
+    hlNoData:"Aínda non hai datos.",
+    hlSeeRange:"Ver o rango ▸",
+    hlRangeLegend:"Diagonal = pares · arriba dta = suited · abaixo esq = offsuit",
+    hlRangeShowdown:"Rango no showdown",
+    hlPosition:"Posición",
+    hlPlayers:"Xogadores",
+    hlAllF:"Todas",
+    hlAllM:"Todos",
+    hlHandSing:"man",
+    hlHandPlur:"mans",
     buttonsAuto:"Auto (table)",
     buttonsFlat:"Plano",
     advRemoveGone:"Eliminar os xogadores que marchan e recolocar a mesa",

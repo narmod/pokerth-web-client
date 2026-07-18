@@ -11,6 +11,27 @@ export const meta = {
 };
 
 export const strings = {
+    // ── Stats / HUD / range (session) ──
+    gipTabStats:"Stats",
+    advStatsTrack:"கை புள்ளிவிவரங்களைப் பதிவு செய்க",
+    advHudOn:"இருக்கைகளில் புள்ளிவிவர HUD காட்டு",
+    advSecStatsExport:"புள்ளிவிவர ஏற்றுமதி",
+    advStatsExportDesc:"பதிவுசெய்யப்பட்ட கைகளை .pdb கோப்பாக ஏற்றுமதி செய்க, PokerTH Trackerஇல் இறக்குமதி செய்யலாம்.",
+    advStatsExportSession:"அமர்வை ஏற்றுமதி",
+    advStatsExportAll:"முழு வரலாற்றையும் ஏற்றுமதி",
+    hlSession:"அமர்வு",
+    hlHistory:"வரலாறு",
+    hlExportPdbTip:".pdb ஆக ஏற்றுமதி (PokerTH Trackerஇல் இறக்கலாம்)",
+    hlNoData:"இன்னும் தரவு இல்லை.",
+    hlSeeRange:"வரம்பைக் காண்க ▸",
+    hlRangeLegend:"மூலைவிட்டம் = ஜோடிகள் · மேல் வலம் = suited · கீழ் இடம் = offsuit",
+    hlRangeShowdown:"ஷோட௎ன் வரம்பு",
+    hlPosition:"இடம்",
+    hlPlayers:"விளையாட்டாளர்கள்",
+    hlAllF:"அனைத்தும்",
+    hlAllM:"அனைத்தும்",
+    hlHandSing:"கை",
+    hlHandPlur:"கைகள்",
     buttonsAuto:"Auto (table)",
     buttonsFlat:"Flat",
     advRemoveGone:"வெளியேறிய வீரர்களை நீக்கி மேசையை மறுஅமைவு செய்",

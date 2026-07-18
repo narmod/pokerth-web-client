@@ -14,6 +14,27 @@ export const meta = {
 };
 
 export const strings = {
+    // ── Stats / HUD / range (session) ──
+    gipTabStats:"Stats",
+    advStatsTrack:"हैंड आँकड़े रिकॉर्ड करें",
+    advHudOn:"सीटों पर आँकड़ा HUD दिखाएँ",
+    advSecStatsExport:"आँकड़ा निर्यात",
+    advStatsExportDesc:"रिकॉर्ड की गई हैंड्स को .pdb फ़ाइल के रूप में निर्यात करें, PokerTH Tracker में आयात करने योग्य।",
+    advStatsExportSession:"सत्र निर्यात करें",
+    advStatsExportAll:"पूरा इतिहास निर्यात करें",
+    hlSession:"सत्र",
+    hlHistory:"इतिहास",
+    hlExportPdbTip:".pdb के रूप में निर्यात करें (PokerTH Tracker में आयात योग्य)",
+    hlNoData:"अभी कोई डेटा नहीं।",
+    hlSeeRange:"रेंज देखें ▸",
+    hlRangeLegend:"विकर्ण = जोड़े · ऊपर दाएँ = suited · नीचे बाएँ = offsuit",
+    hlRangeShowdown:"शोडाउन रेंज",
+    hlPosition:"स्थिति",
+    hlPlayers:"खिलाड़ी",
+    hlAllF:"सभी",
+    hlAllM:"सभी",
+    hlHandSing:"हैंड",
+    hlHandPlur:"हैंड्स",
     buttonsAuto:"Auto (table)",
     buttonsFlat:"Flat",
     advRemoveGone:"जाने वाले खिलाड़ियों को हटाएं और टेबल को पुनर्व्यवस्थित करें",

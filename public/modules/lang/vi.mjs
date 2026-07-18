@@ -10,6 +10,27 @@ export const meta = {
 };
 
 export const strings = {
+    // ── Stats / HUD / range (session) ──
+    gipTabStats:"Stats",
+    advStatsTrack:"Ghi lại thống kê các ván bài",
+    advHudOn:"Hiển thị HUD thống kê trên ghế",
+    advSecStatsExport:"Xuất thống kê",
+    advStatsExportDesc:"Xuất các ván đã ghi dưới dạng tệp .pdb, có thể nhập vào PokerTH Tracker.",
+    advStatsExportSession:"Xuất phiên",
+    advStatsExportAll:"Xuất toàn bộ lịch sử",
+    hlSession:"Phiên",
+    hlHistory:"Lịch sử",
+    hlExportPdbTip:"Xuất dưới dạng .pdb (có thể nhập vào PokerTH Tracker)",
+    hlNoData:"Chưa có dữ liệu.",
+    hlSeeRange:"Xem range ▸",
+    hlRangeLegend:"Đường chéo = đôi · trên phải = suited · dưới trái = offsuit",
+    hlRangeShowdown:"Range khi lật bài",
+    hlPosition:"Vị trí",
+    hlPlayers:"Người chơi",
+    hlAllF:"Tất cả",
+    hlAllM:"Tất cả",
+    hlHandSing:"ván",
+    hlHandPlur:"ván",
     buttonsAuto:"Auto (table)",
     buttonsFlat:"Flat",
     advRemoveGone:"Xóa người chơi đã rời đi và sắp xếp lại bàn",

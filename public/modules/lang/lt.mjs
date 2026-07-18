@@ -10,6 +10,27 @@ export const meta = {
 };
 
 export const strings = {
+    // ── Stats / HUD / range (session) ──
+    gipTabStats:"Stats",
+    advStatsTrack:"Įrašyti rankuų statistiką",
+    advHudOn:"Rodyti statistikos HUD ties vietomis",
+    advSecStatsExport:"Statistikos eksportas",
+    advStatsExportDesc:"Eksportuoja įrašytas rankas kaip .pdb failą, importuojamą į PokerTH Tracker.",
+    advStatsExportSession:"Eksportuoti sesiją",
+    advStatsExportAll:"Eksportuoti visą istoriją",
+    hlSession:"Sesija",
+    hlHistory:"Istorija",
+    hlExportPdbTip:"Eksportuoti kaip .pdb (importuojama į PokerTH Tracker)",
+    hlNoData:"Kol kas duomenų nėra.",
+    hlSeeRange:"Rodyti diapazoną ▸",
+    hlRangeLegend:"Įstriźinė = poros · viršuje dešinėje = suited · apačioje kairėje = offsuit",
+    hlRangeShowdown:"Showdown diapazonas",
+    hlPosition:"Pozicija",
+    hlPlayers:"Žaidėjai",
+    hlAllF:"Visos",
+    hlAllM:"Visi",
+    hlHandSing:"ranka",
+    hlHandPlur:"rankos",
     buttonsAuto:"Auto (table)",
     buttonsFlat:"Flat",
     advRemoveGone:"Pašalinti išėjusius žaidėjus ir perstatyti stalą",

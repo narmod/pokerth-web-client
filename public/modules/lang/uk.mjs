@@ -9,6 +9,27 @@ export const meta = {
 };
 
 export const strings = {
+    // ── Stats / HUD / range (session) ──
+    gipTabStats:"Stats",
+    advStatsTrack:"Записувати статистику рук",
+    advHudOn:"Показувати HUD статистики на місцях",
+    advSecStatsExport:"Експорт статистики",
+    advStatsExportDesc:"Експорт записаних рук як файл .pdb, імпортовний у PokerTH Tracker.",
+    advStatsExportSession:"Експорт сесії",
+    advStatsExportAll:"Експорт усієї історії",
+    hlSession:"Сесія",
+    hlHistory:"Історія",
+    hlExportPdbTip:"Експорт як .pdb (імпорт у PokerTH Tracker)",
+    hlNoData:"Ще немає даних.",
+    hlSeeRange:"Переглянути рендж ▸",
+    hlRangeLegend:"Діагональ = пари · вгорі праворуч = suited · внизу ліворуч = offsuit",
+    hlRangeShowdown:"Рендж на шоудауні",
+    hlPosition:"Позиція",
+    hlPlayers:"Гравці",
+    hlAllF:"Усі",
+    hlAllM:"Усі",
+    hlHandSing:"рука",
+    hlHandPlur:"рук",
     buttonsAuto:"Auto (table)",
     buttonsFlat:"Flat",
     advRemoveGone:"Прибирати гравців, що пішли, і розсаджувати стіл заново",

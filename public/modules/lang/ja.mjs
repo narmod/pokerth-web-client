@@ -9,6 +9,27 @@ export const meta = {
 };
 
 export const strings = {
+    // ── Stats / HUD / range (session) ──
+    gipTabStats:"Stats",
+    advStatsTrack:"ハンド統計を記録",
+    advHudOn:"座席に統計HUDを表示",
+    advSecStatsExport:"統計のエクスポート",
+    advStatsExportDesc:"記録したハンドを .pdb ファイルとしてエクスポート（PokerTH Tracker にインポート可）。",
+    advStatsExportSession:"セッションをエクスポート",
+    advStatsExportAll:"全履歴をエクスポート",
+    hlSession:"セッション",
+    hlHistory:"履歴",
+    hlExportPdbTip:".pdb でエクスポート（PokerTH Tracker にインポート可）",
+    hlNoData:"まだデータがありません。",
+    hlSeeRange:"レンジを見る ▸",
+    hlRangeLegend:"対角線 = ペア · 右上 = スーテッド · 左下 = オフスート",
+    hlRangeShowdown:"ショーダウンのレンジ",
+    hlPosition:"ポジション",
+    hlPlayers:"プレイヤー",
+    hlAllF:"すべて",
+    hlAllM:"すべて",
+    hlHandSing:"ハンド",
+    hlHandPlur:"ハンド",
     buttonsAuto:"Auto (table)",
     buttonsFlat:"Flat",
     advRemoveGone:"退出したプレイヤーを外してテーブルを再配置",

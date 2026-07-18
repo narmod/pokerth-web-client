@@ -15,6 +15,27 @@ export const meta = {
 };
 
 export const strings = {
+    // ── Stats / HUD / range (session) ──
+    gipTabStats:"Stats",
+    advStatsTrack:"Записывать статистику рук",
+    advHudOn:"Показывать HUD статистики на местах",
+    advSecStatsExport:"Экспорт статистики",
+    advStatsExportDesc:"Экспорт записанных рук в файл .pdb, импортируемый в PokerTH Tracker.",
+    advStatsExportSession:"Экспорт сессии",
+    advStatsExportAll:"Экспорт всей истории",
+    hlSession:"Сессия",
+    hlHistory:"История",
+    hlExportPdbTip:"Экспорт в .pdb (импорт в PokerTH Tracker)",
+    hlNoData:"Пока нет данных.",
+    hlSeeRange:"Показать рендж ▸",
+    hlRangeLegend:"Диагональ = пары · вверху справа = suited · внизу слева = offsuit",
+    hlRangeShowdown:"Рендж на шоудауне",
+    hlPosition:"Позиция",
+    hlPlayers:"Игроки",
+    hlAllF:"Все",
+    hlAllM:"Все",
+    hlHandSing:"рука",
+    hlHandPlur:"рук",
     buttonsAuto:"Auto (table)",
     buttonsFlat:"Flat",
     advRemoveGone:"Убирать ушедших игроков и рассаживать стол заново",

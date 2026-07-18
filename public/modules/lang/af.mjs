@@ -10,6 +10,27 @@ export const meta = {
 };
 
 export const strings = {
+    // ── Stats / HUD / range (session) ──
+    gipTabStats:"Stats",
+    advStatsTrack:"Teken handstatistiek aan",
+    advHudOn:"Wys die stats-HUD op die sitplekke",
+    advSecStatsExport:"Statistiek-uitvoer",
+    advStatsExportDesc:"Voer aangetekende hande uit as ’n .pdb-lêer, invoerbaar in PokerTH Tracker.",
+    advStatsExportSession:"Voer sessie uit",
+    advStatsExportAll:"Voer volledige geskiedenis uit",
+    hlSession:"Sessie",
+    hlHistory:"Geskiedenis",
+    hlExportPdbTip:"Voer uit as .pdb (invoerbaar in PokerTH Tracker)",
+    hlNoData:"Nog geen data nie.",
+    hlSeeRange:"Sien reeks ▸",
+    hlRangeLegend:"Diagonaal = pare · regs bo = suited · links onder = offsuit",
+    hlRangeShowdown:"Showdown-reeks",
+    hlPosition:"Posisie",
+    hlPlayers:"Spelers",
+    hlAllF:"Almal",
+    hlAllM:"Almal",
+    hlHandSing:"hand",
+    hlHandPlur:"hande",
     buttonsAuto:"Auto (table)",
     buttonsFlat:"Flat",
     advRemoveGone:"Verwyder vertrekte spelers en herrangskik die tafel",

@@ -13,6 +13,27 @@ export const meta = {
 };
 
 export const strings = {
+    // ── Stats / HUD / range (session) ──
+    gipTabStats:"Stats",
+    advStatsTrack:"핸드 통계 기록",
+    advHudOn:"좌석에 통계 HUD 표시",
+    advSecStatsExport:"통계 내보내기",
+    advStatsExportDesc:"기록된 핸드를 .pdb 파일로 내보냅니다. PokerTH Tracker에서 가져올 수 있습니다.",
+    advStatsExportSession:"세션 내보내기",
+    advStatsExportAll:"전체 기록 내보내기",
+    hlSession:"세션",
+    hlHistory:"기록",
+    hlExportPdbTip:".pdb로 내보내기 (PokerTH Tracker에서 가져오기 가능)",
+    hlNoData:"아직 데이터가 없습니다.",
+    hlSeeRange:"레인지 보기 ▸",
+    hlRangeLegend:"대각선 = 페어 · 오른쪽 위 = 수티드 · 왼쪽 아래 = 오프수트",
+    hlRangeShowdown:"쇼다운 레인지",
+    hlPosition:"포지션",
+    hlPlayers:"플레이어",
+    hlAllF:"전체",
+    hlAllM:"전체",
+    hlHandSing:"핸드",
+    hlHandPlur:"핸드",
     buttonsAuto:"Auto (table)",
     buttonsFlat:"Flat",
     advRemoveGone:"떠난 플레이어를 제거하고 테이블 재배치",

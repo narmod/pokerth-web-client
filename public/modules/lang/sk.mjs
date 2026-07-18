@@ -10,6 +10,27 @@ export const meta = {
 };
 
 export const strings = {
+    // ── Stats / HUD / range (session) ──
+    gipTabStats:"Stats",
+    advStatsTrack:"Zaznamenávať štatistiky rúk",
+    advHudOn:"Zobraziť štatistické HUD na sedadlách",
+    advSecStatsExport:"Export štatistík",
+    advStatsExportDesc:"Exportuje zaznamenané ruky ako súbor .pdb, importovateľný do PokerTH Tracker.",
+    advStatsExportSession:"Exportovať reláciu",
+    advStatsExportAll:"Exportovať celú históriu",
+    hlSession:"Relácia",
+    hlHistory:"História",
+    hlExportPdbTip:"Exportovať ako .pdb (importovateľný do PokerTH Tracker)",
+    hlNoData:"Zatiaľ žiadne údaje.",
+    hlSeeRange:"Zobraziť rozsah ▸",
+    hlRangeLegend:"Diagonála = páry · vpravo hore = suited · vľavo dole = offsuit",
+    hlRangeShowdown:"Rozsah na showdowne",
+    hlPosition:"Pozícia",
+    hlPlayers:"Hráči",
+    hlAllF:"Všetky",
+    hlAllM:"Všetci",
+    hlHandSing:"ruka",
+    hlHandPlur:"rák",
     buttonsAuto:"Auto (table)",
     buttonsFlat:"Flat",
     advRemoveGone:"Odstrániť odídených hráčov a preusporiadať stôl",

@@ -11,6 +11,27 @@ export const meta = {
 };
 
 export const strings = {
+    // ── Stats / HUD / range (session) ──
+    gipTabStats:"Stats",
+    advStatsTrack:"记录手牌统计",
+    advHudOn:"在座位上显示统计 HUD",
+    advSecStatsExport:"统计导出",
+    advStatsExportDesc:"将已记录的手牌导出为 .pdb 文件，可导入 PokerTH Tracker。",
+    advStatsExportSession:"导出本场",
+    advStatsExportAll:"导出全部历史",
+    hlSession:"本场",
+    hlHistory:"历史",
+    hlExportPdbTip:"导出为 .pdb（可导入 PokerTH Tracker）",
+    hlNoData:"暂无数据。",
+    hlSeeRange:"查看范围 ▸",
+    hlRangeLegend:"对角线 = 对子 · 右上 = 同花 · 左下 = 不同花",
+    hlRangeShowdown:"摄牌范围",
+    hlPosition:"位置",
+    hlPlayers:"人数",
+    hlAllF:"全部",
+    hlAllM:"全部",
+    hlHandSing:"手",
+    hlHandPlur:"手",
     buttonsAuto:"Auto (table)",
     buttonsFlat:"Flat",
     advRemoveGone:"移除离开的玩家并重新排座",

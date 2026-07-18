@@ -10,6 +10,27 @@ export const meta = {
 };
 
 export const strings = {
+    // ── Stats / HUD / range (session) ──
+    gipTabStats:"Stats",
+    advStatsTrack:"Înregistrează statisticile mâinilor",
+    advHudOn:"Afișează HUD-ul de statistici pe locuri",
+    advSecStatsExport:"Export statistici",
+    advStatsExportDesc:"Exportă mâinile înregistrate ca fișier .pdb, importabil în PokerTH Tracker.",
+    advStatsExportSession:"Exportă sesiunea",
+    advStatsExportAll:"Exportă tot istoricul",
+    hlSession:"Sesiune",
+    hlHistory:"Istoric",
+    hlExportPdbTip:"Exportă ca .pdb (importabil în PokerTH Tracker)",
+    hlNoData:"Încă nu există date.",
+    hlSeeRange:"Vezi range ▸",
+    hlRangeLegend:"Diagonală = perechi · dreapta sus = suited · stânga jos = offsuit",
+    hlRangeShowdown:"Range la showdown",
+    hlPosition:"Poziție",
+    hlPlayers:"Jucători",
+    hlAllF:"Toate",
+    hlAllM:"Toți",
+    hlHandSing:"mână",
+    hlHandPlur:"mâini",
     buttonsAuto:"Auto (table)",
     buttonsFlat:"Plat",
     advRemoveGone:"Elimină jucătorii plecați și rearanjează masa",

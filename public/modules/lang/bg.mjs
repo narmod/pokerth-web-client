@@ -10,6 +10,27 @@ export const meta = {
 };
 
 export const strings = {
+    // ── Stats / HUD / range (session) ──
+    gipTabStats:"Stats",
+    advStatsTrack:"Записване на статистика на ръцете",
+    advHudOn:"Показване на HUD със статистика на местата",
+    advSecStatsExport:"Експорт на статистика",
+    advStatsExportDesc:"Експорт на записаните ръце като файл .pdb, вносим в PokerTH Tracker.",
+    advStatsExportSession:"Експорт на сесията",
+    advStatsExportAll:"Експорт на цялата история",
+    hlSession:"Сесия",
+    hlHistory:"История",
+    hlExportPdbTip:"Експорт като .pdb (вносим в PokerTH Tracker)",
+    hlNoData:"Още няма данни.",
+    hlSeeRange:"Виж рейндж ▸",
+    hlRangeLegend:"Диагонал = чифтове · горе дясно = suited · долу ляво = offsuit",
+    hlRangeShowdown:"Рейндж на шоудаун",
+    hlPosition:"Позиция",
+    hlPlayers:"Играчи",
+    hlAllF:"Всички",
+    hlAllM:"Всички",
+    hlHandSing:"ръка",
+    hlHandPlur:"ръце",
     buttonsAuto:"Auto (table)",
     buttonsFlat:"Flat",
     advRemoveGone:"Премахване на напусналите играчи и пренареждане на масата",

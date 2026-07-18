@@ -527,6 +527,18 @@ const SKIP_PATTERNS = ['blind', 'starts as dealer', 'shows', 'wins'];
 
 const containsAny = (str, list) => { const l = (str || '').toLowerCase(); return list.some((x) => l.indexOf(x) !== -1); };
 const isSkip = (str) => { const l = (str || '').toLowerCase(); return SKIP_PATTERNS.some((s) => l.indexOf(s) !== -1); };
+
+// Helper de traduction : passe par window.t (i18n du client) avec repli anglais.
+// Utilisé par le panneau stats, le HUD, la grille de range et le détail.
+function _ht(key, fallback) {
+  try {
+    if (typeof window !== 'undefined' && typeof window.t === 'function') {
+      const v = window.t(key);
+      if (v && v !== key) return v;
+    }
+  } catch (_e) {}
+  return fallback;
+}
 // Python round() = banker's rounding (arrondi au pair) sur 1 décimale.
 // Nécessaire pour parité exacte avec l'oracle (ex. 0.25 → 0.2, pas 0.3).
 const round1 = (n) => {
@@ -1038,12 +1050,12 @@ async function renderStatsPanel() {
   // En-tête : bascule de portée + export.
   const scopeBtns =
     '<div class="stats-scope">'
-    + '<button type="button" class="stats-scope-btn' + (_statsScope === 'session' ? ' on' : '') + '" data-scope="session">Session</button>'
-    + '<button type="button" class="stats-scope-btn' + (_statsScope === 'all' ? ' on' : '') + '" data-scope="all">Historique</button>'
-    + '<button type="button" class="stats-export-btn" data-export="1" title="Exporter en .pdb (importable dans PokerTH Tracker)">⤓ .pdb</button>'
+    + '<button type="button" class="stats-scope-btn' + (_statsScope === 'session' ? ' on' : '') + '" data-scope="session">' + _ht('hlSession','Session') + '</button>'
+    + '<button type="button" class="stats-scope-btn' + (_statsScope === 'all' ? ' on' : '') + '" data-scope="all">' + _ht('hlHistory','History') + '</button>'
+    + '<button type="button" class="stats-export-btn" data-export="1" title="' + _ht('hlExportPdbTip','Export as .pdb (importable in PokerTH Tracker)') + '">⤓ .pdb</button>'
     + '</div>';
 
-  if (!el._built) { el.innerHTML = '<div class="odds-hd">Stats</div>' + scopeBtns + '<div class="stats-wait">…</div>'; el._built = true; }
+  if (!el._built) { el.innerHTML = '<div class="odds-hd">' + _ht('gipTabStats','Stats') + '</div>' + scopeBtns + '<div class="stats-wait">…</div>'; el._built = true; }
 
   const tables = await _loadTables(_statsScope);
   let statsByName = {};
@@ -1073,9 +1085,9 @@ async function renderStatsPanel() {
     }
     body += '</tr>';
   }
-  if (!body) body = '<tr><td class="stats-empty" colspan="' + (COLS.length + 1) + '">Aucune donnée pour le moment.</td></tr>';
+  if (!body) body = '<tr><td class="stats-empty" colspan="' + (COLS.length + 1) + '">' + _ht('hlNoData','No data yet.') + '</td></tr>';
 
-  el.innerHTML = '<div class="odds-hd">Stats</div>' + scopeBtns
+  el.innerHTML = '<div class="odds-hd">' + _ht('gipTabStats','Stats') + '</div>' + scopeBtns
     + '<div class="stats-scroll"><table class="stats-table"><thead>' + head + '</thead><tbody>' + body + '</tbody></table></div>';
 
   // Brancher les boutons de portée.
@@ -1621,9 +1633,9 @@ function openHudDetail(name, boxEl) {
       + '<span class="hud-d-val"' + (col ? ' style="color:' + col + '"' : '') + '>' + val + '</span></div>';
   }
   pop.innerHTML = '<div class="hud-d-head"><span class="hud-d-name">' + _hudEsc(name) + '</span>'
-    + '<span class="hud-d-hands">' + (s ? (s.hands + ' main' + (s.hands === 1 ? '' : 's')) : '—') + '</span></div>'
+    + '<span class="hud-d-hands">' + (s ? (s.hands + ' ' + _ht(s.hands === 1 ? 'hlHandSing' : 'hlHandPlur', s.hands === 1 ? 'hand' : 'hands')) : '—') + '</span></div>'
     + '<div class="hud-d-grid">' + rows + '</div>'
-    + '<button type="button" class="hud-d-range">Voir la range ▸</button>';
+    + '<button type="button" class="hud-d-range">' + _ht('hlSeeRange','See range ▸') + '</button>';
   pop.querySelector('.hud-d-range').addEventListener('click', (e) => {
     e.stopPropagation(); const p = pop._player; _closeDetail(); openRangeGrid(p);
   });
@@ -1665,7 +1677,7 @@ function openRangeGrid(name, posFilter, playersFilter) {
       + '<span class="range-filters"></span>'
       + '<button type="button" class="range-close" title="Fermer">✕</button></div>'
       + '<div class="range-body"></div>'
-      + '<div class="range-legend">Diagonale = paires · haut-droite = suited · bas-gauche = offsuit</div></div>';
+      + '<div class="range-legend">' + _ht('hlRangeLegend','Diagonal = pairs · top-right = suited · bottom-left = offsuit') + '</div></div>';
     document.body.appendChild(modal);
     modal.addEventListener('click', (e) => { if (e.target === modal) modal.style.display = 'none'; });
     modal.querySelector('.range-close').addEventListener('click', () => { modal.style.display = 'none'; });
@@ -1697,13 +1709,13 @@ function _renderRange(modal) {
   const total = filtered.length;
   const maxCount = Math.max(1, ...Object.values(counts));
 
-  modal.querySelector('.range-title').textContent = 'Range showdown — ' + name + '  ·  ' + total + ' main' + (total === 1 ? '' : 's');
+  modal.querySelector('.range-title').textContent = _ht('hlRangeShowdown','Showdown range') + ' — ' + name + '  ·  ' + total + ' ' + _ht(total === 1 ? 'hlHandSing' : 'hlHandPlur', total === 1 ? 'hand' : 'hands');
 
   // Filtres (position + nb joueurs).
-  let posSel = '<label>Position <select class="range-pos"><option value="all">Toutes</option>';
+  let posSel = '<label>' + _ht('hlPosition','Position') + ' <select class="range-pos"><option value="all">' + _ht('hlAllF','All') + '</option>';
   positions.forEach((p) => { posSel += '<option value="' + p + '"' + (modal._pos === p ? ' selected' : '') + '>' + p + '</option>'; });
   posSel += '</select></label>';
-  let pfSel = '<label>Joueurs <select class="range-pf"><option value="all">Tous</option>';
+  let pfSel = '<label>' + _ht('hlPlayers','Players') + ' <select class="range-pf"><option value="all">' + _ht('hlAllM','All') + '</option>';
   playerCounts.forEach((n) => { pfSel += '<option value="' + n + '"' + (modal._pf === String(n) ? ' selected' : '') + '>' + n + '</option>'; });
   pfSel += '</select></label>';
   const filt = modal.querySelector('.range-filters');

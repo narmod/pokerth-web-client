@@ -10,6 +10,27 @@ export const meta = {
 };
 
 export const strings = {
+    // ── Stats / HUD / range (session) ──
+    gipTabStats:"Stats",
+    advStatsTrack:"Καταγραφή στατιστικών χεριών",
+    advHudOn:"Εμφάνιση HUD στατιστικών στις θέσεις",
+    advSecStatsExport:"Εξαγωγή στατιστικών",
+    advStatsExportDesc:"Εξαγωγή των καταγεγραμμένων χεριών ως αρχείο .pdb, εισαγώγιμο στο PokerTH Tracker.",
+    advStatsExportSession:"Εξαγωγή συνεδρίας",
+    advStatsExportAll:"Εξαγωγή όλου του ιστορικού",
+    hlSession:"Συνεδρία",
+    hlHistory:"Ιστορικό",
+    hlExportPdbTip:"Εξαγωγή ως .pdb (εισαγώγιμο στο PokerTH Tracker)",
+    hlNoData:"Δεν υπάρχουν ακόμη δεδομένα.",
+    hlSeeRange:"Δείτε το range ▸",
+    hlRangeLegend:"Διαγώνιος = ζευγάρια · επάνω δεξιά = suited · κάτω αριστερά = offsuit",
+    hlRangeShowdown:"Range στο showdown",
+    hlPosition:"Θέση",
+    hlPlayers:"Παίκτες",
+    hlAllF:"Όλα",
+    hlAllM:"Όλοι",
+    hlHandSing:"χέρι",
+    hlHandPlur:"χέρια",
     buttonsAuto:"Auto (table)",
     buttonsFlat:"Flat",
     advRemoveGone:"Αφαίρεση παικτών που έφυγαν και ανακατανομή του τραπεζιού",
