@@ -1355,8 +1355,19 @@ window._chatTrSupported = (function () {
   try { return typeof fetch === 'function'; } catch (e) { return false; }
 })();
 function _chatTrTarget() {
-  try { var l = localStorage.getItem('pth_lang'); if (l) return l.split('-')[0]; } catch (e) {}
-  try { return (document.documentElement.lang || navigator.language || 'en').split('-')[0]; } catch (e) { return 'en'; }
+  // Langue cible = langue VIVANTE de l'i18n (window._lang), qui vaut aussi en
+  // mode auto-détection. pth_lang n'existe que si l'utilisateur a choisi
+  // manuellement une langue — s'y fier seul envoyait tl=en par défaut et
+  // traduisait en anglais des messages déjà dans la langue du joueur.
+  var l = '';
+  try { l = String(window._lang || ''); } catch (e) {}
+  if (!l) { try { l = localStorage.getItem('pth_lang') || ''; } catch (e) {} }
+  if (!l) { try { l = document.documentElement.lang || navigator.language || 'en'; } catch (e) { l = 'en'; } }
+  var low = l.toLowerCase();
+  if (low === 'zh-tw') return 'zh-TW'; // gtx distingue trad./simplifié
+  if (low === 'zh') return 'zh-CN';
+  if (low === 'pt-pt') return 'pt-PT'; // gtx : pt = pt-BR
+  return low.split('-')[0];
 }
 function _applyChatTranslateFlag() {
   // ACTIVE par defaut (demande narmod) : seul un '0' explicite desactive.
@@ -17479,7 +17490,7 @@ function renderPlayersList() {
   });
 })();
 
-;(function(){ window.BUILD_VERSION='0.3.756-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.757-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
