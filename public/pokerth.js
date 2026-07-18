@@ -2440,6 +2440,17 @@ var _reactionTimers = {}; // timers de reset des compteurs
 var _reactSeen = {};      // { 'pid|emoji': {t, via} } -- de-dup d'une reaction recue par 2 canaux (REACT: + /emoji)
 // Mute local des reactions (preference utilisateur, persistee). ON => rien envoye ni recu, grille grisee.
 var _reactMuted = (function(){ try { return localStorage.getItem('pth_react_muted') === '1'; } catch(e){ return false; } })();
+// Épingle du panneau réactions (demande narmod 2026-07-18) : par défaut la
+// fenêtre se FERME après chaque réaction envoyée, comme le ReactionPicker du
+// client QML. Épinglée (📌 or), elle reste ouverte.
+var _reactPinned = (function(){ try { return localStorage.getItem('pth_react_pin') === '1'; } catch(e){ return false; } })();
+function _applyReactPinUI() {
+  var btn = document.getElementById('react-pin-toggle');
+  if (btn) {
+    btn.classList.toggle('pinned', _reactPinned);
+    btn.setAttribute('aria-pressed', _reactPinned ? 'true' : 'false');
+  }
+}
 
 // ── Catalogue des effets animés par réaction ──
 // a = animation de l'emoji ; p = particules (objet, ou preset 'sparkle'/'shock'/'confetti')
@@ -13959,6 +13970,13 @@ function _maybeShowNextHandBtn() {
       // tous les clients (convention sp0ck, facon /me) -> interop web <-> Qt/QML (dont pokerth.net).
       // Régulé via une file (anti-flood chat serveur) : voir _queueReactEmoji.
       _queueReactEmoji(emoji);
+      // Parité QML (ReactionPicker) : la fenêtre se ferme après la réaction,
+      // sauf si elle est épinglée (📌 dans la barre de titre).
+      try {
+        var _rp = document.getElementById('g-reaction-panel');
+        if (!_reactPinned && _rp && _rp.style.display !== 'none' && _rp.style.display !== '')
+          toggleReactionPanel();
+      } catch (e) {}
     },
 
     // Bascule le mute local des reactions (bouton barre dans le panneau).
@@ -13966,6 +13984,14 @@ function _maybeShowNextHandBtn() {
       _reactMuted = !_reactMuted;
       try { localStorage.setItem('pth_react_muted', _reactMuted ? '1' : '0'); } catch (e) {}
       _applyReactMuteUI();
+    },
+
+    // Épingle la fenêtre de réactions : épinglée = ne se ferme plus après
+    // l'envoi d'une réaction (le défaut suit le QML : fermeture immédiate).
+    toggleReactionsPin() {
+      _reactPinned = !_reactPinned;
+      try { localStorage.setItem('pth_react_pin', _reactPinned ? '1' : '0'); } catch (e) {}
+      _applyReactPinUI();
     },
 
     sendGameChat() {
@@ -17005,7 +17031,7 @@ function toggleReactionPanel() {
   if (!panel) return;
   var open = panel.style.display === 'none' || panel.style.display === '';
   panel.style.display = open ? 'flex' : 'none';
-  if (open) _applyReactMuteUI();
+  if (open) { _applyReactMuteUI(); try { _applyReactPinUI(); } catch (e) {} }
   if (open) {
     // minW/minH relevés : au minimum de fenêtre, les 30 émojis tiennent encore
     // à la borne basse de case (32 px) sans défilement.
@@ -17547,7 +17573,7 @@ function renderPlayersList() {
   });
 })();
 
-;(function(){ window.BUILD_VERSION='0.3.761-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.762-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

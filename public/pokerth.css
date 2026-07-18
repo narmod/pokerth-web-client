@@ -3098,6 +3098,28 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
   transition: background 0.15s, border-color 0.15s;
 }
 .react-mute-btn:hover { background: rgba(var(--gold-rgb), 0.15); border-color: var(--gold-dim); }
+/* Épingle du panneau réactions : même gabarit que le bouton mute. Non épinglé
+   (défaut) = la fenêtre se ferme après chaque réaction (parité QML) ; épinglé
+   = bord + fond or, la fenêtre reste ouverte. */
+.react-pin-btn {
+  position: relative;
+  width: 26px; height: 26px;
+  display: inline-flex; align-items: center; justify-content: center;
+  background: var(--inset);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-size: 0.85rem; line-height: 1;
+  padding: 0; cursor: pointer;
+  filter: grayscale(1); opacity: 0.6;
+  transition: background 0.15s, border-color 0.15s, filter 0.15s, opacity 0.15s;
+}
+.react-pin-btn:hover { background: rgba(var(--gold-rgb), 0.15); border-color: var(--gold-dim); }
+.react-pin-btn:active { transform: scale(0.92); }
+.react-pin-btn.pinned {
+  filter: none; opacity: 1;
+  border-color: var(--gold-dim);
+  background: rgba(var(--gold-rgb), 0.2);
+}
 .react-mute-btn:active { transform: scale(0.92); }
 .react-mute-btn .rm-emo { transition: filter 0.15s, opacity 0.15s; pointer-events: none; }
 .react-mute-btn.muted { border-color: rgba(var(--red-rgb), 0.55); }
