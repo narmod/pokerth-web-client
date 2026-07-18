@@ -1332,6 +1332,16 @@ function _scrollOpenIntoView() {
 
 // ── Fenetre style QML : onglets + liste verticale (grande vignette + nom + auteur). ──
 var _activeTab = 'table';
+// Onglet d'axe mémorisé (demande narmod 2026-07-18) : la fenêtre Style
+// réouvre sur le dernier onglet visité (Tapis/Cartes/Dos/Sièges) au lieu de
+// retomber systématiquement sur « Tapis ».
+function _savedStyleTab() {
+  try {
+    var v = localStorage.getItem('pth_style_tab');
+    for (var i = 0; i < _TABS.length; i++) if (_TABS[i].id === v) return v;
+  } catch (e) {}
+  return 'table';
+}
 var TABLE_AUTHORS = {
   '':'PokerTH', 'pokerth-live':'PokerTH', 'green':'PokerTH', 'casino':'PokerTH',
   danuxi:'Daniel Hammer', mute:'mute design', mute2:'mute design', teal:'Pinboc', lemming:'lemming',
@@ -1394,10 +1404,19 @@ function _render(){
   _TABS.forEach(function(tb){
     var act = _activeTab === tb.id;
     var b = document.createElement('button'); b.type='button'; b.textContent = _t(tb.titleKey, tb.fallback);
+    // Badge « beta » sur l'entête Sièges (demande narmod 2026-07-18) : les
+    // packs de sièges sont encore en rodage sur le cadre virtuel QML.
+    if (tb.id === 'seat') {
+      var bb = document.createElement('span'); bb.textContent = 'beta';
+      bb.style.cssText = 'margin-left:4px;padding:1px 5px;border-radius:7px;font-size:0.55rem;font-weight:700;'
+        + 'letter-spacing:0.04em;text-transform:uppercase;vertical-align:2px;'
+        + 'color:#E3C800;border:1px solid rgba(227,200,0,0.55);background:rgba(227,200,0,0.12)';
+      b.appendChild(bb);
+    }
     b.style.cssText = 'flex:1;min-width:0;padding:8px 4px;cursor:pointer;font-size:0.75rem;font-weight:600;background:none;border:0;'
       + 'border-bottom:2px solid ' + (act ? 'var(--sel,#E3C800)' : 'transparent') + ';color:' + (act ? 'var(--cream,#f0e6d2)' : 'var(--text,#9aaa92)')
       + ';white-space:nowrap;overflow:hidden;text-overflow:ellipsis';
-    b.addEventListener('click', function(e){ e.stopPropagation(); _activeTab = tb.id; _render(); });
+    b.addEventListener('click', function(e){ e.stopPropagation(); _activeTab = tb.id; try { localStorage.setItem('pth_style_tab', tb.id); } catch (err) {} _render(); });
     tabbar.appendChild(b);
   });
   _body.appendChild(tabbar);
@@ -1489,7 +1508,7 @@ function openThemePanel(ev) {
   _body = document.createElement('div');
   _body.style.cssText = 'flex:1 1 auto;min-height:0;overflow-y:auto;overflow-x:hidden;padding:11px 13px 13px';
   panel.appendChild(_body);
-  _activeTab = 'table';
+  _activeTab = _savedStyleTab();
   _render();
   // Re-pull the runtime galleries each time the panel opens, so packages just
   // imported in the admin show up without reloading the app. Each loader calls
@@ -1539,7 +1558,7 @@ window.openThemePanel = openThemePanel;
 // facon QML : on reutilise le meme _render (onglets + listes) en ciblant le host.
 window.renderThemeInto = function(host){
   if(!host) return;
-  _body = host; _activeTab = 'table';
+  _body = host; _activeTab = _savedStyleTab();
   try { _render(); } catch(e){}
   try { _loadGalleryDecks(); _loadGalleryTables(); _loadThemes(); _loadGallerySeats(); _loadImportedTables(); _loadImportedDecks(); _loadImportedSeats(); } catch(e){}
 };
