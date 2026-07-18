@@ -3225,7 +3225,7 @@ document.addEventListener("DOMContentLoaded", function() {
     function go() {
       fetch('/app-config', { cache: 'no-store' })
         .then(function (r) { return r.json(); })
-        .then(function (c) { if (c) { window._pthNetServer = (c.pokerthnetServer && c.pokerthnetServer.host) ? c.pokerthnetServer : null; window._pthNetSource = (c.pokerthnetSource === 'auto') ? 'auto' : 'manual'; } if (c && c.modes) applyModes(c.modes); if (c && c.loginDefaults) _applyLoginDefaults(c.loginDefaults); if (c && c.welcome && c.welcome.enabled && typeof window.maybeShowWelcome === 'function') window.maybeShowWelcome(c.welcome); if (c && typeof c.defaultTheme === 'string') _applyDefaultTheme(c.defaultTheme); if (c && c.defaults) _applyDefaultSettings(c.defaults); _applyBranding(c); try { if (!window._shareLinkActive && window.App && App.onServerOrGuestChange) App.onServerOrGuestChange(); } catch (e) {} })
+        .then(function (c) { if (c) { window._pthNetServer = (c.pokerthnetServer && c.pokerthnetServer.host) ? c.pokerthnetServer : null; window._pthNetSource = (c.pokerthnetSource === 'auto') ? 'auto' : 'manual'; window._pthNetTransport = (c.internetTransport === 'proxy') ? 'proxy' : 'direct'; } if (c && c.modes) applyModes(c.modes); if (c && c.loginDefaults) _applyLoginDefaults(c.loginDefaults); if (c && c.welcome && c.welcome.enabled && typeof window.maybeShowWelcome === 'function') window.maybeShowWelcome(c.welcome); if (c && typeof c.defaultTheme === 'string') _applyDefaultTheme(c.defaultTheme); if (c && c.defaults) _applyDefaultSettings(c.defaults); _applyBranding(c); try { if (!window._shareLinkActive && window.App && App.onServerOrGuestChange) App.onServerOrGuestChange(); } catch (e) {} })
         .catch(function () {});
     }
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', go); else go();
@@ -12827,7 +12827,14 @@ function _maybeShowNextHandBtn() {
         // Internet / PokerTH.net target: admin-selected server (from /app-config)
         // or the built-in pokerth.net:7234 default. Credentialed login always TLS.
         var _ps2 = window._pthNetServer;
-        $('use-tls').checked = true;   // TLS is mandatory for credentialed login
+        // TLS : en direct WS le flag est sans objet (wss:// de toute façon) et
+        // on le laisse coché. Via le proxy (transport admin 'proxy' OU cible
+        // hors pokerth.net, ex. loopback co-hébergé), suivre le flag TLS du
+        // serveur actif : un serveur local sans TLS doit rester joignable — le
+        // tronçon navigateur→proxy est déjà chiffré (WSS) et SCRAM protège le
+        // mot de passe de bout en bout.
+        var _viaProxy2 = (window._pthNetTransport === 'proxy') || (_ps2 && String(_ps2.host).indexOf('pokerth.net') < 0);
+        $('use-tls').checked = _viaProxy2 ? (_ps2 ? !!_ps2.tls : true) : true;
         if (proxyInput) proxyInput.value = proto + '//' + (autoHost||'localhost') + ':' + port;
         if (hostInput) hostInput.value = _ps2 ? _ps2.host : 'pokerth.net';
         if ($('port')) $('port').value = String(_ps2 ? _ps2.port : 7234);
@@ -13135,7 +13142,11 @@ function _maybeShowNextHandBtn() {
       // in clientUserData.
       const isPokerThDirect = (loginMode === 'guest' || loginMode === 'auth');
       const targetIsPokerTH = host.includes('pokerth.net');
-      directWS = isPokerThDirect && targetIsPokerTH;
+      // Admin transport switch (/app-config.internetTransport) : 'proxy' routes
+      // the Internet mode through our proxy (session grace on wifi drops,
+      // buffered reconnect) even when the target is pokerth.net itself.
+      // 'direct' (default) keeps the historical hostname-based behavior.
+      directWS = isPokerThDirect && targetIsPokerTH && (window._pthNetTransport !== 'proxy');
       const finalUrl = directWS
         ? 'wss://www.pokerth.net:443/pthlive'
         : proxyUrl + '?host=' + encodeURIComponent(host) + '&port=' + encodeURIComponent(port) + '&tls=' + tlsParam + '&sid=' + encodeURIComponent(_getSessionId());
@@ -17468,7 +17479,7 @@ function renderPlayersList() {
   });
 })();
 
-;(function(){ window.BUILD_VERSION='0.3.755-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.756-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

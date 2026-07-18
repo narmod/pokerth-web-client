@@ -411,6 +411,11 @@ var SERVERLIST_MAX_INFLATED = 1024 * 1024;       // inflated cap (anti-bomb)
 var _serverlistCache = { server: null, fetchedAt: 0, fetching: false, error: '' };
 
 function _pokerthnetSource() { var s = _adminConfig && _adminConfig.pokerthnetSource; return s === 'manual' ? 'manual' : 'auto'; }
+// Transport of the Internet / PokerTH.net entry mode: 'direct' (browser dials
+// wss://www.pokerth.net/pthlive itself — historical behavior, no session grace)
+// or 'proxy' (bridge through this proxy — session persistence, buffered
+// reconnect). Default 'direct' so existing installs keep their behavior.
+function _internetTransport() { var t = _adminConfig && _adminConfig.internetTransport; return t === 'proxy' ? 'proxy' : 'direct'; }
 function _serverlistUrl() { var u = _adminConfig && _adminConfig.serverlistUrl; u = String(u || '').trim(); return u || DEFAULT_SERVERLIST_URL; }
 
 function _parseServerlist(xml) {
@@ -1700,7 +1705,7 @@ function handleAdmin(req, res, reqPathOnly, query) {
       _serversList().forEach(function (s) { if (_hosts.indexOf(s.host) < 0) _hosts.push(s.host); if (_ports.indexOf(s.port) < 0) _ports.push(s.port); });
       var _autoSrv = _serverlistCache.server;
       if (_autoSrv) { if (_hosts.indexOf(_autoSrv.host) < 0) _hosts.push(_autoSrv.host); if (_ports.indexOf(_autoSrv.port) < 0) _ports.push(_autoSrv.port); }
-      return adminJson(res, 200, { ok: true, servers: _serversList(), activeServerId: (_adminConfig.activeServerId || ''), source: _pokerthnetSource(), serverlistUrl: _serverlistUrl(), serverlist: { server: _serverlistCache.server, fetchedAt: _serverlistCache.fetchedAt, error: _serverlistCache.error }, allowlist: { hosts: _hosts, ports: _ports } });
+      return adminJson(res, 200, { ok: true, servers: _serversList(), activeServerId: (_adminConfig.activeServerId || ''), source: _pokerthnetSource(), transport: _internetTransport(), serverlistUrl: _serverlistUrl(), serverlist: { server: _serverlistCache.server, fetchedAt: _serverlistCache.fetchedAt, error: _serverlistCache.error }, allowlist: { hosts: _hosts, ports: _ports } });
     }
     return readJsonBody(req, function (d) {
       if (!adminAuthed(query, d && d.token)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
@@ -1724,6 +1729,10 @@ function handleAdmin(req, res, reqPathOnly, query) {
         _adminConfig.pokerthnetSource = _src;
         if (_src === 'auto' && !_wasAuto) { _serverlistCache.fetchedAt = 0; setTimeout(maybeRefreshServerlist, 0); }
       }
+      // Transport of the Internet / PokerTH.net mode: 'direct' or 'proxy'.
+      if (typeof d.transport !== 'undefined') {
+        _adminConfig.internetTransport = (String(d.transport || '') === 'proxy') ? 'proxy' : 'direct';
+      }
       if (typeof d.serverlistUrl !== 'undefined') {
         var _u = String(d.serverlistUrl || '').trim().slice(0, 300);
         var _changed = _u !== (_adminConfig.serverlistUrl || '');
@@ -1731,7 +1740,7 @@ function handleAdmin(req, res, reqPathOnly, query) {
         if (_changed && _pokerthnetSource() === 'auto') { _serverlistCache.fetchedAt = 0; setTimeout(maybeRefreshServerlist, 0); }
       }
       saveAdminConfig();
-      return adminJson(res, 200, { ok: true, servers: out, activeServerId: (_adminConfig.activeServerId || ''), source: _pokerthnetSource(), serverlistUrl: _serverlistUrl() });
+      return adminJson(res, 200, { ok: true, servers: out, activeServerId: (_adminConfig.activeServerId || ''), source: _pokerthnetSource(), transport: _internetTransport(), serverlistUrl: _serverlistUrl() });
     });
   }
   if (reqPathOnly === '/admin/servers/serverlist' && req.method === 'POST') {
@@ -2798,7 +2807,7 @@ const httpServer = http.createServer((req, res) => {
   // Public app config the client reads on load: which entry "modes" are enabled.
   if (reqPathOnly === '/app-config') {
     res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' });
-    res.end(JSON.stringify({ ok: true, modes: appModes(), welcome: _welcomePublic(), defaultTheme: _adminConfig.defaultTheme || '', defaults: _adminConfig.defaults || {}, loginDefaults: _adminConfig.loginDefaults || {}, tableDefaults: _adminConfig.tableDefaults || {}, tableNames: _adminConfig.tableNames || {}, serverName: _adminConfig.serverName || '', serverTagline: _adminConfig.serverTagline || '', pokerthnetServer: _activePokerthnetServer(), pokerthnetSource: _pokerthnetSource() }));
+    res.end(JSON.stringify({ ok: true, modes: appModes(), welcome: _welcomePublic(), defaultTheme: _adminConfig.defaultTheme || '', defaults: _adminConfig.defaults || {}, loginDefaults: _adminConfig.loginDefaults || {}, tableDefaults: _adminConfig.tableDefaults || {}, tableNames: _adminConfig.tableNames || {}, serverName: _adminConfig.serverName || '', serverTagline: _adminConfig.serverTagline || '', pokerthnetServer: _activePokerthnetServer(), pokerthnetSource: _pokerthnetSource(), internetTransport: _internetTransport() }));
     return;
   }
 

@@ -495,6 +495,9 @@
             <div class="periodrow" style="margin:4px 0"><button id="srvSlCheck" class="use" type="button">Check serverlist</button></div>
             <div id="srvSlStat" class="msg" style="margin:4px 0 0"></div>
           </div>
+          <div style="margin:10px 0 6px"><b>Internet / PokerTH.net — transport</b></div>
+          <label class="muted" style="display:block;margin:3px 0"><input type="radio" name="srvTransport" class="trDirect"> <b>Direct WS</b> — browser dials wss://www.pokerth.net/pthlive itself (historical; no reconnect grace)</label>
+          <label class="muted" style="display:block;margin:3px 0"><input type="radio" name="srvTransport" class="trProxy"> <b>Via proxy</b> — bridge through this proxy (session kept alive on wifi drops, buffered reconnect)</label>
         </div>
         <div id="srvRows"><div class="empty">Loading…</div></div>
         <div class="periodrow" style="margin-top:10px"><button id="srvSaveBtn" class="use">Save all</button></div>
@@ -522,6 +525,7 @@
   var _srv = [];
   var _activeSrv = '';
   var _srcMode = 'auto';
+  var _transport = 'direct';
   var _slUrl = '';
   function srvEsc(s){ return String(s==null?'':s).replace(/[&<>"]/g,function(c){return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'})[c];}); }
   function srvSyncRow(row,i){ if(!_srv[i]) return; _srv[i].name=row.querySelector('.srvN').value.trim(); _srv[i].host=row.querySelector('.srvH').value.trim(); _srv[i].port=parseInt(row.querySelector('.srvP').value,10)||7234; _srv[i].tls=!!row.querySelector('.srvT').checked; }
@@ -563,15 +567,15 @@
       if(!d||!d.ok){ if(box) box.innerHTML='<div class="empty">'+srvEsc((d&&d.error)||'Error')+'</div>'; return; }
       _srv=(d.servers||[]).map(function(s){return {id:s.id,name:s.name||'',host:s.host||'',port:parseInt(s.port,10)||7234,tls:!!s.tls};});
       _activeSrv=d.activeServerId||'';
-      _srcMode=(d.source==='auto')?'auto':'manual'; _slUrl=d.serverlistUrl||'';
-      applySourceUI(d.serverlist||null);
+      _srcMode=(d.source==='auto')?'auto':'manual'; _transport=(d.transport==='proxy')?'proxy':'direct'; _slUrl=d.serverlistUrl||'';
+      applySourceUI(d.serverlist||null); applyTransportUI();
       renderServers();
       var al=$('srvAllow'); if(al){ var hosts=(d.allowlist&&d.allowlist.hosts)||[], ports=(d.allowlist&&d.allowlist.ports)||[]; al.innerHTML='<b>Hosts:</b> '+srvEsc(hosts.join(', ')||'—')+'<br><b>Ports:</b> '+srvEsc(ports.join(', ')||'—'); }
     }).catch(function(){ if(box) box.innerHTML='<div class="empty">Network error</div>'; });
   }
   function saveServers(){
     srvSyncAll(); var st=$('srvState'); if(st){ st.textContent='Saving…'; st.className='msg'; }
-    api('/admin/servers',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({servers:_srv,activeServerId:_activeSrv,source:_srcMode,serverlistUrl:($('srvSlUrl')?$('srvSlUrl').value.trim():_slUrl)})}).then(function(r){return r.json();}).then(function(d){
+    api('/admin/servers',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({servers:_srv,activeServerId:_activeSrv,source:_srcMode,transport:_transport,serverlistUrl:($('srvSlUrl')?$('srvSlUrl').value.trim():_slUrl)})}).then(function(r){return r.json();}).then(function(d){
       if(!st) return;
       if(!d||!d.ok){ st.textContent='✗ '+srvEsc((d&&d.error)||'error'); st.className='msg err'; return; }
       loadServers(); st.textContent='✓ Saved'; st.className='msg ok';
@@ -590,6 +594,16 @@
       else { st.textContent=''; st.className='msg'; }
     } }
   }
+  function applyTransportUI(){
+    var td=document.querySelector('.trDirect'), tp=document.querySelector('.trProxy');
+    if(td) td.checked=(_transport!=='proxy'); if(tp) tp.checked=(_transport==='proxy');
+  }
+  function _bindTransport(){
+    var td=document.querySelector('.trDirect'), tp=document.querySelector('.trProxy');
+    if(td) td.addEventListener('change',function(){ if(td.checked) _transport='direct'; });
+    if(tp) tp.addEventListener('change',function(){ if(tp.checked) _transport='proxy'; });
+  }
+  _bindTransport();
   function _bindSource(){
     var rm=document.querySelector('.srcManual'), ra=document.querySelector('.srcAuto'), cb=$('srvSlCheck');
     if(rm) rm.addEventListener('change',function(){ if(rm.checked){ _srcMode='manual'; applySourceUI(); } });
