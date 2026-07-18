@@ -347,6 +347,9 @@ let _anHand = 0;        // handID courant en analyse
 
 const CSS = `
 #jr-modal{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;padding:16px}
+#jr-modal.jr-float{pointer-events:none}
+#jr-modal.jr-float .km-backdrop{display:none}
+#jr-modal.jr-float .jr-card{pointer-events:auto;position:fixed;margin:0;max-width:none !important;max-height:none !important}
 #jr-modal .jr-card{width:min(880px,96vw);max-height:min(88vh,700px);display:flex;flex-direction:column}
 #jr-modal .jr-top{display:flex;align-items:center;gap:8px;margin:2px 0 8px}
 #jr-modal .jr-main{display:flex;gap:10px;flex:1;min-height:0}
@@ -659,6 +662,37 @@ export async function openJournal() {
   await purgeOldSessions();
   await _reload();
   m.style.display = '';
+  _syncFloat(m);
+}
+
+// Fenêtre flottante (desktop) : déplaçable par le titre, redimensionnable,
+// contenu zoomé avec la taille — via le système générique de pokerth.js
+// (_enableFloating / _disableFloating, comme chat, log et options avancées).
+// Sur mobile / petit écran on garde le modal centré.
+function _syncFloat(m) {
+  const card = m.querySelector('.jr-card');
+  if (!card) return;
+  let wide = false;
+  try { wide = window.matchMedia('(min-width:900px) and (min-height:600px)').matches; } catch (_e) {}
+  const canFloat = wide && typeof window._enableFloating === 'function';
+  if (canFloat) {
+    m.classList.add('jr-float');
+    const defW = Math.min(860, window.innerWidth - 40);
+    const defH = Math.min(600, window.innerHeight - 60);
+    window._enableFloating(card, {
+      key: 'pth_win_jr',
+      handle: document.getElementById('jr-title'),
+      resizable: true,
+      zoom: true,
+      defW, defH,
+      minW: 430, minH: 340,
+      defLeft: Math.max(8, Math.round((window.innerWidth - defW) / 2)),
+      defTop: Math.max(8, Math.round((window.innerHeight - defH) / 2)),
+    });
+  } else {
+    m.classList.remove('jr-float');
+    if (typeof window._disableFloating === 'function') window._disableFloating(card);
+  }
 }
 
 export function closeJournal() {
