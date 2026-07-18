@@ -16609,7 +16609,114 @@ function _attachChatKeys(id, gameScope) {
   var tabMatches = null, tabIdx = 0, tabStart = 0, tabTail = '';
   var histIdx = -1, draft = '';
   function caretEnd() { try { inp.setSelectionRange(inp.value.length, inp.value.length); } catch (e) {} }
+  // L'envoi sur Entrée était câblé en attribut inline (onkeydown) : on le
+  // reprend ici pour pouvoir intercepter Entrée quand le popup d'emotes est
+  // ouvert (accepter la suggestion au lieu d'envoyer), comme le QML.
+  var sendOnEnter = inp.onkeydown;
+  inp.onkeydown = null;
+
+  // ── Popup de suggestion d'emotes (":smi…" → 😄) — parité ChatBox QML ──
+  // Codes = window.chatEmoteShortcodes() (chat-emotes.js), EXACTEMENT ce que
+  // applyChatEmoteShortcuts remplace à l'affichage. Déclencheur : ":" (début
+  // ou après espace) + ≥2 caractères [a-z0-9_+-] avant le curseur — le ":"
+  // fermant fait disparaître le popup de lui-même. Préfixes d'abord, puis
+  // sous-chaînes. Esc masque jusqu'à la prochaine frappe.
+  var esMatches = [], esIdx = 0, esTokenStart = -1, esSuppressed = false;
+  var esBox = null;
+  function esEnsureBox() {
+    if (esBox) return esBox;
+    esBox = document.createElement('div');
+    esBox.className = 'emote-suggest';
+    (inp.parentElement || document.body).appendChild(esBox);
+    return esBox;
+  }
+  function esOpen() { return esMatches.length > 0 && !esSuppressed && document.activeElement === inp; }
+  function esRender() {
+    var box = esEnsureBox();
+    if (!esOpen()) { box.classList.remove('open'); return; }
+    box.innerHTML = '';
+    for (var i = 0; i < esMatches.length; i++) (function (i) {
+      var row = document.createElement('div');
+      row.className = 'es-row' + (i === esIdx ? ' sel' : '');
+      var em = document.createElement('span'); em.className = 'es-emoji'; em.textContent = esMatches[i].emoji;
+      var cd = document.createElement('span'); cd.className = 'es-code';  cd.textContent = ':' + esMatches[i].code + ':';
+      row.appendChild(em); row.appendChild(cd);
+      // mousedown neutralisé : le clic ne vole pas le focus du champ (parité TapHandler QML)
+      row.addEventListener('mousedown', function (e) { e.preventDefault(); });
+      row.addEventListener('mouseenter', function () { if (esIdx !== i) { esIdx = i; esRender(); } });
+      row.addEventListener('click', function () { esIdx = i; esAccept(); inp.focus(); });
+      box.appendChild(row);
+    })(i);
+    box.classList.add('open');
+    var sel = box.children[esIdx];
+    if (sel && sel.scrollIntoView) sel.scrollIntoView({ block: 'nearest' });
+  }
+  function esUpdate() {
+    var pos = (inp.selectionStart != null) ? inp.selectionStart : inp.value.length;
+    var upto = inp.value.slice(0, pos);
+    var m = upto.match(/(?:^|\s):([a-z0-9_+-]{2,})$/);
+    if (!m || typeof window.chatEmoteShortcodes !== 'function') {
+      if (esMatches.length) { esMatches = []; esRender(); }
+      return;
+    }
+    var typed = m[1];
+    esTokenStart = upto.length - typed.length - 1;
+    var list = window.chatEmoteShortcodes();
+    var pre = [], sub = [];
+    for (var i = 0; i < list.length; i++) {
+      var idx = list[i].code.indexOf(typed);
+      if (idx === 0) pre.push(list[i]);
+      else if (idx > 0) sub.push(list[i]);
+    }
+    esMatches = pre.concat(sub);
+    esIdx = 0;
+    esRender();
+  }
+  // Remplace le token tapé (":smi") par l'EMOJI du choix — WYSIWYG et moins
+  // d'octets dans la limite serveur de 128, exactement comme le QML.
+  function esAccept() {
+    if (!esMatches.length) return;
+    var e = esMatches[Math.min(esIdx, esMatches.length - 1)];
+    var pos = (inp.selectionStart != null) ? inp.selectionStart : inp.value.length;
+    inp.value = inp.value.slice(0, esTokenStart) + e.emoji + inp.value.slice(pos);
+    var np = esTokenStart + e.emoji.length;
+    try { inp.setSelectionRange(np, np); } catch (err) {}
+    esMatches = [];
+    esRender();
+  }
+  inp.addEventListener('input', function () { esSuppressed = false; esUpdate(); });
+  inp.addEventListener('click', esUpdate);
+  inp.addEventListener('focus', esUpdate);
+  inp.addEventListener('blur', function () { esRender(); });
+  inp.addEventListener('keyup', function (e) {
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowRight' || e.key === 'Home' || e.key === 'End') esUpdate();
+  });
+
   inp.addEventListener('keydown', function (e) {
+    // ── Popup d'emotes ouvert : ↑/↓ = sélection (circulaire), Tab/Enter =
+    // accepter, Esc = masquer jusqu'à la prochaine frappe ──
+    if (esOpen()) {
+      if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        esIdx = (esIdx + esMatches.length - 1) % esMatches.length;
+        esRender();
+        return;
+      } else if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        esIdx = (esIdx + 1) % esMatches.length;
+        esRender();
+        return;
+      } else if ((e.key === 'Tab' && !e.shiftKey && !e.ctrlKey && !e.metaKey && !e.altKey) || e.key === 'Enter') {
+        e.preventDefault();
+        esAccept();
+        return;
+      } else if (e.key === 'Escape') {
+        e.preventDefault();
+        esSuppressed = true;
+        esRender();
+        return;
+      }
+    }
     // ── Tab : complète un pseudo, re-Tab itère sur les correspondances ──
     if (e.key === 'Tab' && !e.shiftKey && !e.ctrlKey && !e.metaKey && !e.altKey) {
       if (tabMatches && tabMatches.length) {
@@ -16644,6 +16751,9 @@ function _attachChatKeys(id, gameScope) {
       if (!_chatHist.length) return;
       e.preventDefault();
       tabMatches = null;
+      // Un token qui matche par hasard en fin d'entrée d'historique ne doit
+      // pas ouvrir le popup d'emotes (parité QML).
+      esSuppressed = true; esRender();
       if (e.key === 'ArrowUp') {
         if (histIdx === -1) { draft = inp.value; histIdx = _chatHist.length - 1; }
         else if (histIdx > 0) histIdx--;
@@ -16660,6 +16770,11 @@ function _attachChatKeys(id, gameScope) {
     // Toute autre frappe réinitialise Tab et la navigation d'historique
     tabMatches = null;
     histIdx = -1;
+    // ── Entrée (popup fermé) : envoi — reprise du handler inline d'origine ──
+    if (e.key === 'Enter' && typeof sendOnEnter === 'function') {
+      sendOnEnter.call(inp, e);
+      esMatches = []; esRender();
+    }
   });
 }
 (function () {
@@ -17353,7 +17468,7 @@ function renderPlayersList() {
   });
 })();
 
-;(function(){ window.BUILD_VERSION='0.3.754-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.755-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

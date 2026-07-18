@@ -66,4 +66,17 @@
   }
 
   window.applyChatEmoteShortcuts = applyChatEmoteShortcuts;
+
+  // Liste triée {code, emoji} pour l'autocomplétion du chat — parité
+  // LobbyHandler::chatEmoteShortcodes() : alphabétique, construite une fois,
+  // EXACTEMENT les codes que applyChatEmoteShortcuts remplace.
+  var _codesList = null;
+  window.chatEmoteShortcodes = function () {
+    if (!_codesList) {
+      var keys = Object.keys(SC).sort();
+      _codesList = new Array(keys.length);
+      for (var i = 0; i < keys.length; i++) _codesList[i] = { code: keys[i], emoji: SC[keys[i]] };
+    }
+    return _codesList;
+  };
 })();
