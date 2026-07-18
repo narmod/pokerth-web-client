@@ -6704,7 +6704,7 @@ const App = (() => {
         // que le fantôme tombe, réessaie le même pseudo) au lieu de renommer.
         // Couvre le rechargement complet ; la coupure transitoire est déjà
         // couverte par _armRejoin().
-        if (!_pendingRejoin) {
+        if (!_pendingRejoin && !window._offlineMode) {
           try {
             var _rs0 = JSON.parse(localStorage.getItem('pth_resume') || 'null');
             if (_rs0 && _rs0.n === myName && (Date.now() - _rs0.t) < 5 * 60 * 1000) _pendingRejoin = _rs0.g;
@@ -6741,6 +6741,12 @@ const App = (() => {
         // flag (transient drop) or a recent persisted marker (full reload).
         // Same nickname required so we don't hijack another player's seat.
         var _rt = _pendingRejoin;
+        if (window._offlineMode) {
+          // Entraînement : aucune partie ne survit au rechargement — on ignore et
+          // on purge tout marqueur de reprise (y compris hérité d'avant correctif).
+          _rt = 0; _pendingRejoin = 0;
+          try { localStorage.removeItem('pth_resume'); } catch (e) {}
+        }
         if (!_rt) {
           try {
             var _rs = JSON.parse(localStorage.getItem('pth_resume') || 'null');
@@ -7361,7 +7367,12 @@ const App = (() => {
         // coupure transitoire (l'écran de jeu reste affiché), c'est _armRejoin()
         // qui réarme _pendingRejoin au moment de la reconnexion.
         _pendingRejoin = 0; _rejoinNickRetries = 0;
-        try { localStorage.setItem('pth_resume', JSON.stringify({ n: myName, g: gId, t: Date.now() })); } catch(e) {}
+        // Jamais en entraînement : le FakeServer est recréé à chaque chargement,
+        // un rejoin vers son ancienne partie resterait sans réponse (type 23
+        // ignoré) et bloquerait la connexion sur « Reprise en cours… ».
+        if (!window._offlineMode) {
+          try { localStorage.setItem('pth_resume', JSON.stringify({ n: myName, g: gId, t: Date.now() })); } catch(e) {}
+        }
         _hideBanner();
         // Fresh game = empty spectator set. The server will replay
         // GameSpectatorJoined for each existing spectator so we'll
@@ -17620,7 +17631,7 @@ function renderPlayersList() {
   });
 })();
 
-;(function(){ window.BUILD_VERSION='0.3.784-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.785-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

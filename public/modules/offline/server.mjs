@@ -112,6 +112,7 @@ export class FakeServer {
       case TYPE.PlayerInfoRequest:return this._onInfoReq(m.fields);
       case TYPE.LeaveGame:        return this._onLeave();
       case 30 /*KickPlayer req*/: return this._onKick(m.fields);
+      case 23 /*RejoinExistingGame*/: return this._onRejoin(m.fields);
       default: return;
     }
   }
@@ -240,6 +241,15 @@ export class FakeServer {
     this._send('PlayerInfoReply',[[1,0,id],[2,2,data]]);
   }
   _onInfoReq(f){ (f[1]||[]).forEach(id=>this._info(id)); }
+
+  // Reprise d'une partie d'avant rechargement : impossible ici (le FakeServer est
+  // recréé à chaque chargement), donc on refuse PROPREMENT (JoinGameFailed) au lieu
+  // d'ignorer le message — sinon le client resterait bloqué sur « Reprise en
+  // cours… ». Code 4 = invalid game (repli lobby côté client).
+  _onRejoin(f){
+    const gid = (f && f[1] && Number.isInteger(f[1][0])) ? f[1][0] : 1;
+    this._send('JoinGameFailed', [[1,0,gid],[2,0,4]]);
+  }
 
   _onStartAck(){
     if(this.started) return; this.started=true;
