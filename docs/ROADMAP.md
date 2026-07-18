@@ -113,6 +113,15 @@ use too. Items are grouped by status rather than fixed phases.
 - Redesigned waiting room: your details and chat sit centre-stage with the game list beside
   them on desktop, an animated "waiting for players" status, and a tap-to-expand accordion
   listing each table's seated players.
+- Responsive breakpoints rationalised onto the QML canon: **600** (phone/compact) /
+  **900** (tablet) / **1400** (desktop) plus landscape-compact `height < 600`, applied
+  across lobby, game popups, HUD, headers, widgets and JS gates in screen-verified
+  batches. Two documented exceptions: the game screen keeps its 740/768 portrait
+  thresholds (phone layout deliberately extends to small tablets in portrait, mirroring
+  QML's ratio-based slot selection), and sub-phone refinements (380/400/480, extra-compact
+  `height < 500` landscape) stay as intentional tiers. Declared minimum supported size:
+  **390×600** on desktop (parity with the Qt/QML client's minimum window), **≥ 360 px
+  wide** on phones.
 - In-game panels open as compact floating windows anchored under their round on-felt button
   (chat, emoji, hand log) instead of taking over the screen — each movable, resizable and
   snap-back-able. All floating windows (including Advanced options and the Logs window)
@@ -197,12 +206,6 @@ use too. Items are grouped by status rather than fixed phases.
   - Split the large `pokerth.js` into focused modules (network, protocol, state, UI). The
     modularisation is mapped out; the main blocker is the many inline `onclick=` handlers in
     the HTML.
-  - Rationalise the CSS breakpoints onto the QML canon (600 / 900 / 1400, plus
-    landscape-compact `height < 600`). The JS gates are already unified (600 for
-    floating/resizable widgets, 900×600 for full floating windows); the remaining
-    one-off CSS thresholds (560, 639, 640, 740, 899.98…) will be migrated in small,
-    screen-verified batches. Declared minimum supported size: **390×600** on desktop
-    (parity with the Qt/QML client's minimum window) and **≥ 360 px wide** on phones.
   - Add linting, formatting, and a small automated test suite.
   - Move hand-written Protobuf handling toward generated classes + encode/decode tests.
 

@@ -2005,7 +2005,12 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
   opacity: 0.85;
 }
 
-/* ══ RESPONSIVE OVAL SIZE via CSS custom props ══ */
+/* ══ RESPONSIVE OVAL SIZE via CSS custom props ══
+   Échelle continue propre à l'écran de jeu (1100/900/700/740-portrait/500-paysage).
+   Exception au canon 600 (décision B) : l'écran de jeu garde 740/768 en portrait —
+   le layout téléphone s'étend volontairement aux petites tablettes portrait, comme
+   le QML qui choisit ses slots au RATIO de la tableZone et non à la largeur.
+   ══ */
 :root { --oval-w: 440px; --oval-h: 180px; }
 @media (min-width: 1100px)  { :root { --oval-w: 520px; --oval-h: 210px; } }
 @media (max-width: 900px)   { :root { --oval-w: 320px; --oval-h: 132px; } }
@@ -2378,6 +2383,7 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
 }
 
 /* Tablet */
+/* Exception canon (décision B) — écran de jeu, voir §RESPONSIVE OVAL SIZE. */
 @media (max-width: 768px) {
   .blind-chip  { width: 19px !important; height: 19px !important; top: -11px !important; left: -11px !important; }
   .dealer-chip { width: 19px !important; height: 19px !important; top: -11px !important; right: -11px !important; }
@@ -2395,6 +2401,7 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
   /* Oval moins large : libère de l'espace pour les joueurs sur les côtés */
   .felt-oval { width: min(400px, 72vw) !important; }
 }
+/* Exception canon (décision B) — table de jeu portrait, voir §RESPONSIVE OVAL SIZE. */
 @media (max-width: 740px) and (orientation: portrait) {
   /* Oval: compact to fit 10 seats */
   .felt-oval::before {
@@ -2760,6 +2767,7 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
 
 /* Mobile-only sizing tweaks (the ••• show / secondary-hide rules are now
    global, applied above for all screen sizes). */
+/* Exception canon (décision B) — chrome du header de jeu, voir §RESPONSIVE OVAL SIZE. */
 @media (max-width: 740px) {
   /* Hauteur uniforme pour tous les btn-sm du header jeu */
   #s-game .header .btn-sm {
@@ -3616,7 +3624,7 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
    labels are tighter, and use shorter padding. The .game-info
    container already has flex:1 + min-width:0 (line 438), so any
    space freed here is automatically given to the name. */
-@media (max-width: 740px) {
+@media (max-width: 599.98px) {
   .game-row { gap: 8px; padding: 10px 12px; }
   .game-name { font-size: 0.82rem; }
   .game-meta { font-size: 0.66rem; gap: 6px; }
@@ -3742,6 +3750,7 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
    phone portrait 1.15 (≈53x74) · paysage compact 0.62 (≈29x40). */
 :root { --comm-scale: 1; }
 @media (min-width: 900px) and (min-height: 600px) { :root { --comm-scale: 1.35; } }
+/* Exception canon (décision B) — voir §RESPONSIVE OVAL SIZE. */
 @media (max-width: 740px) and (orientation: portrait) { :root { --comm-scale: 1.15; } }
 @media (orientation: landscape) and (max-height: 600px) { :root { --comm-scale: 0.62; } }
 .comm-row {
@@ -8945,6 +8954,7 @@ html[data-box-accent][data-seat-struct="qml"] .seat-plate { border-color: var(--
    et debordait de l'ecran a droite/gauche. On reproduit ici les memes
    contraintes + le Tapis a fond plat (le border-image 9-slice du skin se
    dechire sur ce petit bouton). */
+/* Exception canon (décision B) — barre d'action portrait, voir §RESPONSIVE OVAL SIZE. */
 @media (max-width: 740px) and (orientation: portrait) {
   .my-zone .action-grid { width: 100%; max-width: 100%; min-width: 0; box-sizing: border-box; gap: 5px; }
   .my-zone .action-grid > * { min-width: 0; }
