@@ -559,6 +559,7 @@ export const strings = {
     pvLic2:'PokerTH स्वयं GNU GPL लाइसेंस के तहत जारी है।',
     pvRightsH:'आपके अधिकार और संपर्क',
     pvRights:'GDPR के अंतर्गत आप अपने से संबंधित डेटा (जैसे लीडरबोर्ड प्रविष्टि) तक पहुँच, सुधार या हटाने का अनुरोध कर सकते हैं। चूँकि यह एक सामुदायिक परियोजना है, अनुरक्षक से संपर्क करने का सबसे आसान तरीका GitHub पर issue खोलना है:',
+    abCredTracker:"pokerth-tracker के लिए, जिसने आँकड़ा HUD, रेंज ग्रिड और .pdb निर्यात को प्रेरित किया",
     abCred1:"Wikimedia Commons: उनके विभिन्न लोकप्रिय अवतारों के लिए",
     abCred2:"Benedikt, Erhard, Felix, Florian, Linus, Lothar, Steffi, Caro: खिलाड़ियों के अवतारों/चेहरों के लिए",
     abCred3:"ZeiZei: विभिन्न अवतारों के लिए",

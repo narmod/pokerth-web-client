@@ -751,6 +751,7 @@ export const strings = {
     pvLic2:'O propio PokerTH publícase baixo a licenza GNU GPL.',
     pvRightsH:'Os teus dereitos e contacto',
     pvRights:'Segundo o RXPD podes solicitar o acceso, a corrección ou a eliminación dos datos que che atinxen (por exemplo, unha entrada da clasificación). Ao ser un proxecto comunitario, o xeito máis sinxelo de contactar co mantedor é abrir unha issue en GitHub:',
+    abCredTracker:"por pokerth-tracker, que inspirou o HUD de estatísticas, a grella de rango e a exportación .pdb",
     abCred1:"Wikimedia Commons: polos seus diversos avatares populares",
     abCred2:"Benedikt, Erhard, Felix, Florian, Linus, Lothar, Steffi, Caro: polos avatares/rostros de xogadores",
     abCred3:"ZeiZei: por diversos avatares",

@@ -749,6 +749,7 @@ export const strings = {
     pvLic2:'PokerTH selv er udgivet under GNU GPL-licensen.',
     pvRightsH:'Dine rettigheder og kontakt',
     pvRights:'I henhold til GDPR kan du anmode om indsigt i, rettelse af eller sletning af data om dig (for eksempel en ranglistepost). Da dette er et fællesskabsprojekt, når du nemmest vedligeholderen ved at åbne et issue på GitHub:',
+    abCredTracker:"for pokerth-tracker, der inspirerede stats-HUD, range-gitteret og .pdb-eksporten",
     abCred1:"Wikimedia Commons: for deres forskellige populære avatarer",
     abCred2:"Benedikt, Erhard, Felix, Florian, Linus, Lothar, Steffi, Caro: for spilleravatarerne/-ansigterne",
     abCred3:"ZeiZei: for diverse avatarer",

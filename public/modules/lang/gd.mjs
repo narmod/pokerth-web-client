@@ -753,6 +753,7 @@ export const strings = {
     pvLic2:'Tha PokerTH fhèin air fhoillseachadh fo cheadachas GNU GPL.',
     pvRightsH:'Do chòraichean is fios thugainn',
     pvRights:'Fon GDPR faodaidh tu iarraidh cothrom fhaighinn air dàta mu do dheidhinn, a cheartachadh no a sguabadh às (mar eisimpleir clàradh sa chlàr-rangachaidh). Leis gur e pròiseact coimhearsnachd a th\' ann, \'s e an dòigh as fhasa fios a chur chun neach-glèidhidh issue fhosgladh air GitHub:',
+    abCredTracker:"airson pokerth-tracker, a bhrosnaich an HUD staitistig, an cliath raoin agus às-phortadh .pdb",
     abCred1:"Wikimedia Commons: airson nan avataran mòr-chòrdte aca",
     abCred2:"Benedikt, Erhard, Felix, Florian, Linus, Lothar, Steffi, Caro: airson avataran/aodainn nan cluicheadairean",
     abCred3:"ZeiZei: airson caochladh avataran",

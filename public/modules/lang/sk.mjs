@@ -750,6 +750,7 @@ export const strings = {
     pvLic2:'Samotný PokerTH je vydaný pod licenciou GNU GPL.',
     pvRightsH:'Vaše práva a kontakt',
     pvRights:'Podľa GDPR môžete požiadať o prístup k údajom, ktoré sa vás týkajú, ich opravu alebo vymazanie (napríklad záznam v rebríčku). Keďže ide o komunitný projekt, správcu najľahšie zastihnete otvorením issue na GitHube:',
+    abCredTracker:"za pokerth-tracker, ktorý inšpiroval štatistický HUD, mriežku range a export .pdb",
     abCred1:"Wikimedia Commons: za rôzne populárne avatary",
     abCred2:"Benedikt, Erhard, Felix, Florian, Linus, Lothar, Steffi, Caro: za avatary/tváre hráčov",
     abCred3:"ZeiZei: za rôzne avatary",

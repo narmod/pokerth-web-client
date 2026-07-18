@@ -556,6 +556,7 @@ export const strings = {
     pvLic2:'PokerTH 자체는 GNU GPL 라이선스로 배포됩니다.',
     pvRightsH:'권리 및 연락처',
     pvRights:'GDPR에 따라 본인에 관한 데이터(예: 순위표 기록)의 열람, 정정, 삭제를 요청할 수 있습니다. 커뮤니티 프로젝트이므로 유지 관리자에게 연락하는 가장 쉬운 방법은 GitHub에서 issue를 여는 것입니다:',
+    abCredTracker:"통계 HUD, 레인지 그리드, .pdb 내보내기에 영감을 준 pokerth-tracker에 감사드립니다",
     abCred1:"Wikimedia Commons: 다양한 인기 아바타 제공",
     abCred2:"Benedikt, Erhard, Felix, Florian, Linus, Lothar, Steffi, Caro: 플레이어 아바타/얼굴 제공",
     abCred3:"ZeiZei: 다양한 아바타 제공",

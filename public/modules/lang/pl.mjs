@@ -752,6 +752,7 @@ export const strings = {
     pvLic2:'Sam PokerTH jest wydany na licencji GNU GPL.',
     pvRightsH:'Twoje prawa i kontakt',
     pvRights:'Zgodnie z RODO możesz zażądać dostępu do danych, które Cię dotyczą, ich poprawienia lub usunięcia (na przykład wpisu w rankingu). Ponieważ to projekt społecznościowy, najprościej skontaktować się z opiekunem, otwierając issue na GitHubie:',
+    abCredTracker:"za pokerth-tracker, który zainspirował HUD statystyk, siatkę range i eksport .pdb",
     abCred1:"Wikimedia Commons: za różne popularne awatary",
     abCred2:"Benedikt, Erhard, Felix, Florian, Linus, Lothar, Steffi, Caro: za awatary/twarze graczy",
     abCred3:"ZeiZei: za różne awatary",

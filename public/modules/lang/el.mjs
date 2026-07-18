@@ -750,6 +750,7 @@ export const strings = {
     pvLic2:'Το ίδιο το PokerTH κυκλοφορεί υπό την άδεια GNU GPL.',
     pvRightsH:'Τα δικαιώματά σας και επικοινωνία',
     pvRights:'Βάσει του GDPR μπορείτε να ζητήσετε πρόσβαση, διόρθωση ή διαγραφή των δεδομένων που σας αφορούν (για παράδειγμα μια εγγραφή κατάταξης). Καθώς πρόκειται για κοινοτικό έργο, ο απλούστερος τρόπος επικοινωνίας με τον συντηρητή είναι να ανοίξετε ένα issue στο GitHub:',
+    abCredTracker:"για το pokerth-tracker, που ενέπνευσε το HUD στατιστικών, το πλέγμα range και την εξαγωγή .pdb",
     abCred1:"Wikimedia Commons: για τα διάφορα δημοφιλή avatar τους",
     abCred2:"Benedikt, Erhard, Felix, Florian, Linus, Lothar, Steffi, Caro: για τα avatar/πρόσωπα των παικτών",
     abCred3:"ZeiZei: για διάφορα avatar",

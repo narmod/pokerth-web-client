@@ -746,6 +746,7 @@ export const strings = {
     pvLic2:'PokerTH 本身以 GNU GPL 授權條款發布。',
     pvRightsH:'您的權利與聯絡方式',
     pvRights:'根據 GDPR，您可以請求存取、更正或刪除與您有關的資料（例如排行榜記錄）。由於這是社群專案，聯絡維護者最簡單的方式是在 GitHub 上開一個 issue：',
+    abCredTracker:"感謝 pokerth-tracker，啟發了統計 HUD、範圍網格與 .pdb 匯出",
     abCred1:"Wikimedia Commons：提供各種流行頭像",
     abCred2:"Benedikt、Erhard、Felix、Florian、Linus、Lothar、Steffi、Caro：提供玩家頭像/面孔",
     abCred3:"ZeiZei：提供各種頭像",

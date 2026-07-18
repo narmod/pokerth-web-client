@@ -750,6 +750,7 @@ export const strings = {
     pvLic2:'Pats „PokerTH“ išleistas pagal GNU GPL licenciją.',
     pvRightsH:'Jūsų teisės ir kontaktai',
     pvRights:'Pagal BDAR galite prašyti prieigos prie su jumis susijusių duomenų, jų ištaisymo ar ištrynimo (pavyzdžiui, lyderių lentelės įrašo). Kadangi tai bendruomenės projektas, paprasčiausias būdas susisiekti su prižiūrėtoju – atidaryti „issue“ „GitHub“:',
+    abCredTracker:"už pokerth-tracker, kuris įkvėpė statistikos HUD, diapazono tinklelį ir .pdb eksportą",
     abCred1:"Wikimedia Commons: už įvairius populiarius avatarus",
     abCred2:"Benedikt, Erhard, Felix, Florian, Linus, Lothar, Steffi, Caro: už žaidėjų avatarus/veidus",
     abCred3:"ZeiZei: už įvairius avatarus",

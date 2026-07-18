@@ -750,6 +750,7 @@ export const strings = {
     pvLic2:'Maga a PokerTH a GNU GPL licenc alatt jelent meg.',
     pvRightsH:'Jogaid és kapcsolat',
     pvRights:'A GDPR értelmében kérheted a rád vonatkozó adatokhoz való hozzáférést, azok helyesbítését vagy törlését (például egy ranglistabejegyzést). Mivel ez közösségi projekt, a karbantartót legegyszerűbben egy GitHub-issue megnyitásával érheted el:',
+    abCredTracker:"a pokerth-trackerért, amely a statisztikai HUD-ot, a range-rácsot és a .pdb-exportot ihlette",
     abCred1:"Wikimedia Commons: a különféle népszerű avatarokért",
     abCred2:"Benedikt, Erhard, Felix, Florian, Linus, Lothar, Steffi, Caro: a játékos-avatarokért/arcokért",
     abCred3:"ZeiZei: különféle avatarokért",

@@ -746,6 +746,7 @@ export const strings = {
     pvLic2:'PokerTH 本体は GNU GPL ライセンスで公開されています。',
     pvRightsH:'あなたの権利と連絡先',
     pvRights:'GDPR に基づき、ご自身に関するデータ（例: ランキングの記録）へのアクセス、訂正、削除を請求できます。コミュニティプロジェクトのため、メンテナーへの連絡は GitHub で issue を開くのが最も簡単です:',
+    abCredTracker:"pokerth-tracker に感謝します。統計HUD、レンジグリッド、.pdb エクスポートの着想元です",
     abCred1:"Wikimedia Commons：人気のある様々なアバターの提供",
     abCred2:"Benedikt、Erhard、Felix、Florian、Linus、Lothar、Steffi、Caro：プレイヤーのアバター/顔の提供",
     abCred3:"ZeiZei：様々なアバターの提供",
