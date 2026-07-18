@@ -552,7 +552,12 @@ function _advSetupResize() {
   }
   try {
     var sz = JSON.parse(localStorage.getItem('pth_adv_size') || 'null');
-    if (sz && sz.w) { card.style.width = sz.w + 'px'; if (sz.h) card.style.height = sz.h + 'px'; }
+    if (sz && sz.w) {
+      // Borner la taille memorisee au viewport courant (ecran plus petit).
+      var _mw = Math.max(320, window.innerWidth - 16), _mh = Math.max(280, window.innerHeight - 16);
+      card.style.width = Math.min(sz.w, _mw) + 'px';
+      if (sz.h) card.style.height = Math.min(sz.h, _mh) + 'px';
+    }
   } catch (e) {}
   card.style.position = 'absolute';
   var w = card.offsetWidth, h = card.offsetHeight;
@@ -16251,6 +16256,33 @@ function makeWinResizable(panel, key, minW, minH, maxW, maxH){
     h.addEventListener('pointercancel', end);
   });
 }
+function _clampWinToViewport(panel){
+  // Borne la taille (si redimensionnable) puis la position d'une fenetre
+  // flottante au viewport courant : taille memorisee sur un ecran plus
+  // grand, ou navigateur retreci apres coup.
+  try{
+    var o=panel._winOpt||{};
+    if(panel._winResizable){
+      var mw=Math.max(o.minW||240, window.innerWidth-8);
+      var mh=Math.max(o.minH||140, window.innerHeight-8);
+      if(panel.offsetWidth >mw) panel.style.width =mw+'px';
+      if(panel.offsetHeight>mh) panel.style.height=mh+'px';
+    }
+    var r=panel.getBoundingClientRect();
+    _placeWin(panel, r.left, r.top);
+  }catch(e){}
+}
+function _advClampToViewport(){
+  // Meme regle pour la carte Options avancees (systeme de fenetre separe).
+  var card=document.querySelector('#adv-modal .adv-card');
+  if(!card || !card.offsetWidth || card.style.position!=='absolute') return;
+  var mw=Math.max(320, window.innerWidth-16), mh=Math.max(280, window.innerHeight-16);
+  if(card.offsetWidth >mw) card.style.width =mw+'px';
+  if(card.offsetHeight>mh) card.style.height=mh+'px';
+  var L=Math.max(8, Math.min(card.getBoundingClientRect().left, Math.max(8, window.innerWidth -card.offsetWidth)));
+  var T=Math.max(8, Math.min(card.getBoundingClientRect().top,  Math.max(8, window.innerHeight-card.offsetHeight)));
+  card.style.left=L+'px'; card.style.top=T+'px';
+}
 function _enableFloating(panel, opt){
   if(!panel) return; opt=opt||{};
   panel.classList.add('floating-win');
@@ -16272,6 +16304,7 @@ function _enableFloating(panel, opt){
   if(opt.handle) makeWinDraggable(panel, opt.handle, opt.key);
   if(opt.resizable) makeWinResizable(panel, opt.key, opt.minW, opt.minH, opt.maxW, opt.maxH);
   panel._winOpt = panel._winOpt || opt;
+  _clampWinToViewport(panel);
   _applyWinZoom(panel);
 }
 function _disableFloating(panel){
@@ -16287,13 +16320,16 @@ function _disableFloating(panel){
   panel._winRszWired=false;   // re-injectable si on repasse en flottant
 }
 window.addEventListener('resize', function(){
-  ['g-chat-panel','lobby-chat-panel','g-log-panel','g-reaction-panel','music-panel','hands-card-inner'].forEach(function(id){
-    var p=document.getElementById(id);
-    if(p && p.classList.contains('floating-win') && p.style.display!=='none'){
-      var r=p.getBoundingClientRect(); _placeWin(p, r.left, r.top);
-      _applyWinZoom(p);   // le facteur global d'app (viewport) a pu changer
-    }
-  });
+  // TOUTES les fenetres flottantes (chat, log, reactions, musique, mains,
+  // journaux, ...) : re-bornees en taille ET en position au viewport.
+  var ps=document.querySelectorAll('.floating-win');
+  for(var i=0;i<ps.length;i++){
+    var p=ps[i];
+    if(p.style.display==='none' || !p.offsetWidth) continue;
+    _clampWinToViewport(p);
+    _applyWinZoom(p);   // le facteur global d'app (viewport) a pu changer
+  }
+  try { _advClampToViewport(); } catch (e) {}
   try { _advApplyZoom(); } catch (e) {}
 });
 
@@ -17663,7 +17699,7 @@ function renderPlayersList() {
   });
 })();
 
-;(function(){ window.BUILD_VERSION='0.3.776-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.777-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
