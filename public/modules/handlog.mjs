@@ -1591,7 +1591,11 @@ function _ensureDetail() {
       _detailOutsideBound = true;
       document.addEventListener('click', (e) => {
         const p = document.getElementById('hud-detail');
-        if (p && p.style.display !== 'none' && !p.contains(e.target)) _closeDetail();
+        if (!p || p.style.display === 'none') return;
+        // Ignorer les clics sur une boîte HUD (gérés par la boîte elle-même :
+        // tap = ouvrir/basculer le détail) et à l'intérieur du popover.
+        const onBox = e.target && e.target.closest && e.target.closest('.hud-box');
+        if (!onBox && !p.contains(e.target)) _closeDetail();
       });
     }
   } else if (pop.parentNode !== layer) layer.appendChild(pop);
