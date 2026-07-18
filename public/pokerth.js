@@ -482,8 +482,9 @@ window.closeAssistWin = function () {
   var cb = document.getElementById('adv-assist'); if (cb) cb.checked = false;
 };
 // Options avancees : fenetre flottante via le SYSTEME GENERIQUE
-// (_enableFloating — meme patron que chat, log, journaux). Desktop + tablette
-// (>640px) : deplacable par la barre de titre, redimensionnable (poignees
+// (_enableFloating — meme patron que chat, log, journaux). Largeur >= 600 px
+// (seuil canonique QML : « compact » = largeur < 600) : deplacable par la barre
+// de titre, redimensionnable (poignees
 // .win-rsz), contenu zoome avec la taille (base 620x640), position/taille
 // memorisees sous pth_win_adv. Sur mobile : modal centre flex, aucun resize.
 // Remplace l'ancien systeme dedie (_advAttachDrag/_advApplyZoom/
@@ -492,7 +493,7 @@ function _advSetupFloat() {
   var card = document.querySelector('#adv-modal .adv-card');
   if (!card) return;
   var wide = false;
-  try { wide = window.matchMedia('(min-width:641px)').matches; } catch (e) {}
+  try { wide = window.matchMedia('(min-width:600px)').matches; } catch (e) {}
   if (!wide) { try { _disableFloating(card); } catch (e) {} return; }
   // Migration one-shot des anciennes cles vers la cle unique du systeme.
   try {
@@ -12104,7 +12105,7 @@ const App = (() => {
     var drag = null;
     var BASE_W = (el.id === 'odds-monitor') ? 132 : 150;
     var SZKEY = posKey.replace('_pos', '_w');
-    function _canResize() { try { return window.matchMedia('(min-width:561px)').matches; } catch (e) { return false; } }
+    function _canResize() { try { return window.matchMedia('(min-width:600px)').matches; } catch (e) { return false; } }
     function applyWs() {
       if (!_canResize()) { el.style.removeProperty('--ws'); el.style.removeProperty('width'); return; }
       var w = el.offsetWidth || BASE_W;
@@ -17619,7 +17620,7 @@ function renderPlayersList() {
   });
 })();
 
-;(function(){ window.BUILD_VERSION='0.3.778-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.779-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
