@@ -306,6 +306,10 @@ the work since has been fidelity tuning against the newer **2.1.3** build:
   the full table at showdown
 - **Full chat**: Tab nickname-completion with cycling, ↑ / ↓ message history, and a
   1,000+ emoji picker (frequent + full grid) alongside the original 30 reaction emoji
+- **Emote shortcodes**, 1:1 with the official client's table: the full GitHub/Discord
+  set (1,913 codes, `:fire:` → 🔥) plus the classic ASCII emoticons (`:-)`, `<3`, `xD`…)
+  are converted in displayed messages, and typing `:` + 2 letters in either chat opens
+  the QML-style suggestion popup — ↑ / ↓ to cycle, Tab / Enter inserts the emoji, Esc hides it
 - **Admin tools**: a "Kickban" button in the player card for server admins
 - **Sound categories** — independent toggles for actions, blind raises, lobby chat, and
   network events (player joined, game ready) — plus three additional official sound samples
