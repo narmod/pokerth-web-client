@@ -9509,10 +9509,22 @@ const App = (() => {
   // fond sombre) et deviennent illisibles sur le panneau quasi-blanc. On les
   // fonce a luminance ~0.30 en conservant la teinte (texte + barre). Autres
   // themes (sombres) : inchange.
+  // Fond REEL du panneau info : chatlog-bg d'un style/palette importee, sinon
+  // --panel du theme. La palette QML claire rend le panneau clair SANS changer
+  // data-theme -> on mesure la couleur calculee au lieu de deviner par le theme.
+  function _hsPanelIsLight() {
+    try {
+      var panel = document.getElementById('g-log-panel');
+      var bg = panel ? getComputedStyle(panel).backgroundColor : '';
+      var m = /rgba?\((\d+)[,\s]+(\d+)[,\s]+(\d+)(?:[,\s\/]+([\d.]+))?\)/.exec(bg || '');
+      if (m && (m[4] == null || parseFloat(m[4]) > 0.5)) {
+        return (0.299 * +m[1] + 0.587 * +m[2] + 0.114 * +m[3]) > 140;
+      }
+    } catch (e) {}
+    try { return document.documentElement.getAttribute('data-theme') === 'pokerth-light'; } catch (e) { return false; }
+  }
   function _hsContrastCol(col) {
-    var isLight = false;
-    try { isLight = (document.documentElement.getAttribute('data-theme') === 'pokerth-light'); } catch (e) {}
-    if (!isLight) return col;
+    if (!_hsPanelIsLight()) return col;
     var m = /^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/.exec(col || '');
     if (!m) return col;
     var hx = m[1];
@@ -9547,6 +9559,9 @@ const App = (() => {
   function _gipAssistSync() {
     var box = document.getElementById('gip-assist');
     if (!box) return;
+    // Track de la barre : blanc translucide invisible sur panneau clair -> la
+    // classe bascule le CSS vers un noir translucide (palette QML claire incluse).
+    try { box.classList.toggle('hs-on-light', _hsPanelIsLight()); } catch (e) {}
     var lbl = document.getElementById('hs-lbl');
     var txt = lbl && lbl.querySelector('.hs-txt');
     var hasContent = !!(lbl && lbl.style.display !== 'none' && txt && txt.textContent);
@@ -17341,7 +17356,7 @@ function renderPlayersList() {
   });
 })();
 
-;(function(){ window.BUILD_VERSION='0.3.749-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.750-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

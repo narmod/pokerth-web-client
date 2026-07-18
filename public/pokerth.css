@@ -8011,6 +8011,7 @@ html:not([data-seat-struct="qml"]) .seat:not(.me) .seat-foot { margin-top: 1px; 
 #gip-assist .hs-txt{display:block;font-size:12px !important;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-shadow:none}
 #gip-assist #hand-strength{position:static;left:auto;right:auto;top:auto;height:auto;pointer-events:none;margin-top:6px}
 #gip-assist .hs-track{display:block;position:static;left:auto;right:auto;top:auto;height:6px;border-radius:3px;background:rgba(255,255,255,.12)}
+#gip-assist.hs-on-light .hs-track{background:rgba(0,0,0,.15)}
 #gip-assist .hs-fill{border-radius:3px}
 /* Croix de fermeture des fenetres flottantes (odds + assistance). Suit --ws + le theme. */
 .win-x{position:absolute;top:calc(2px*var(--ws,1));right:calc(3px*var(--ws,1));width:calc(15px*var(--ws,1));height:calc(15px*var(--ws,1));line-height:calc(14px*var(--ws,1));text-align:center;border:0;background:transparent;color:var(--text);opacity:.5;font-size:calc(12px*var(--ws,1));cursor:pointer;padding:0;border-radius:calc(4px*var(--ws,1));z-index:3;font-family:inherit}
