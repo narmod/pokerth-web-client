@@ -1306,13 +1306,31 @@ async function _computeStats() {
 // l'utilisateur de réarranger les boîtes ; l'offset est un delta appliqué à la
 // position auto (donc la boîte suit le siège tout en gardant l'emplacement
 // choisi). Clé = pid.
+// Offsets de déplacement manuel, SÉPARÉS par orientation : la disposition de la
+// table diffère totalement entre portrait et paysage, donc un déplacement fait
+// en portrait ne doit pas s'appliquer en paysage (et inversement). Structure
+// persistée : { p: {pid:[dx,dy]}, l: {pid:[dx,dy]} }.
 let _manualOffsets = null;
+function _orient() {
+  try {
+    const w = window.innerWidth || 0, h = window.innerHeight || 0;
+    return (h >= w) ? 'p' : 'l';
+  } catch (_e) { return 'p'; }
+}
 function _offsets() {
   if (_manualOffsets) return _manualOffsets;
-  _manualOffsets = {};
-  try { const j = localStorage.getItem('pth_hud_off'); if (j) _manualOffsets = JSON.parse(j) || {}; } catch (_e) {}
+  _manualOffsets = { p: {}, l: {} };
+  try {
+    const j = localStorage.getItem('pth_hud_off');
+    if (j) {
+      const o = JSON.parse(j) || {};
+      // Rétro-compat : ancien format plat {pid:[dx,dy]} → ignoré (réinitialise).
+      if (o && (o.p || o.l)) _manualOffsets = { p: o.p || {}, l: o.l || {} };
+    }
+  } catch (_e) {}
   return _manualOffsets;
 }
+function _offBucket() { const o = _offsets(); const k = _orient(); if (!o[k]) o[k] = {}; return o[k]; }
 function _saveOffsets() { try { localStorage.setItem('pth_hud_off', JSON.stringify(_offsets())); } catch (_e) {} }
 
 // Drag + tap : un déplacement > seuil = glisser (réarrange) ; sinon = tap
@@ -1351,7 +1369,7 @@ function _bindBoxDrag(box, name) {
       const auto = _autoPosFor(pid);
       if (auto) {
         const cl = parseFloat(box.style.left) || 0, ct = parseFloat(box.style.top) || 0;
-        _offsets()[pid] = [Math.round(cl - auto.left), Math.round(ct - auto.top)];
+        _offBucket()[pid] = [Math.round(cl - auto.left), Math.round(ct - auto.top)];
         _saveOffsets();
       }
     } else {
@@ -1454,7 +1472,7 @@ function _positionBox(box, seatEl, layer) {
   const auto = _computeAutoPos(box, seatEl, layer);
   let left = auto.left, top = auto.top;
   // Offset manuel éventuel (déplacement utilisateur), borné à la couche.
-  const off = _offsets()[box._pid];
+  const off = _offBucket()[box._pid];
   if (off) {
     const lr = layer.getBoundingClientRect();
     left = Math.max(2, Math.min(auto.left + off[0], lr.width - box.offsetWidth - 2));
@@ -1551,6 +1569,7 @@ function _ensureHudObservers() {
   if (_hudObs || typeof window === 'undefined') return;
   _hudObs = true;
   try { window.addEventListener('resize', () => _scheduleReposition()); } catch (_e) {}
+  try { window.addEventListener('orientationchange', () => _scheduleReposition()); } catch (_e) {}
   try {
     const host = document.getElementById('g-seats');
     if (host && typeof ResizeObserver === 'function') {
