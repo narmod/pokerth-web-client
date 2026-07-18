@@ -791,7 +791,7 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
   border: 1px solid var(--border);
 }
 /* Petits écrans : on resserre pour ne pas mordre sur les boutons du header. */
-@media (max-width: 560px) {
+@media (max-width: 599.98px) {
   .header-brand--game { max-width: 82vw; }
   /* Emoji seul (le libelle deborde sur petit ecran). */
   .header-brand--game .gsb-label { display: none; }
@@ -842,7 +842,7 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
   0%, 100% { opacity: 0.25; }
   30%      { opacity: 1; }
 }
-@media (max-width: 560px) {
+@media (max-width: 599.98px) {
   .lobby-wait-status { max-width: 62vw; font-size: 0.72rem; gap: 5px; }
 }
 @media (prefers-reduced-motion: reduce) {
@@ -8065,7 +8065,7 @@ html:not([data-seat-struct="qml"]) .seat:not(.me) .seat-foot { margin-top: 1px; 
 #odds-monitor .odds-row.hot .odds-bar>i{background:linear-gradient(90deg,#50c878,#1e8c4e)}
 #odds-monitor .odds-row.hot .odds-pct{color:#7ce0a0;font-weight:700}
 @media (min-width:600px){#odds-monitor{resize:horizontal;overflow:hidden;min-width:104px;max-width:340px}}
-@media (max-width:560px){#odds-monitor{--ws:.95;width:120px;top:48px}}
+@media (max-width:599.98px){#odds-monitor{--ws:.95;width:120px;top:48px}}
 /* Fenetre flottante "Assistance" (force de la main) -- meme modele que #odds-monitor. */
 #assist-win{--ws:1;position:fixed;top:54px;right:8px;z-index:42;width:150px;min-width:110px;max-width:210px;padding:calc(5px*var(--ws)) calc(8px*var(--ws)) calc(7px*var(--ws));background:var(--panel);border:1px solid var(--border);border-radius:calc(9px*var(--ws));box-shadow:0 4px 14px rgba(0,0,0,.42);color:var(--text);pointer-events:auto;user-select:none;cursor:move;touch-action:none}
 #assist-win.hsw-drag{opacity:.96;box-shadow:0 8px 24px rgba(0,0,0,.58);border-color:var(--border-hi)}
@@ -8076,7 +8076,7 @@ html:not([data-seat-struct="qml"]) .seat:not(.me) .seat-foot { margin-top: 1px; 
 #assist-win .hs-track{display:block;position:static;left:auto;right:auto;top:auto;height:calc(6px*var(--ws));border-radius:calc(3px*var(--ws))}
 #assist-win .hs-fill{border-radius:calc(3px*var(--ws))}
 @media (min-width:600px){#assist-win{resize:horizontal;overflow:hidden;max-width:340px}}
-@media (max-width:560px){#assist-win{--ws:.96;width:auto;min-width:110px;top:48px}}
+@media (max-width:599.98px){#assist-win{--ws:.96;width:auto;min-width:110px;top:48px}}
 /* Assistance (force de la main) integree en tete de l'onglet « Chances » du
    panneau info unifie : meme rendu que l'ancienne fenetre flottante, mais en flux. */
 #gip-assist{padding:6px 12px 7px;border-bottom:1px solid var(--chatlog-border,var(--border));background:var(--chatlog-bg, var(--field-bg))}
