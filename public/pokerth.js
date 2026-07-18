@@ -481,111 +481,44 @@ window.closeAssistWin = function () {
   try { if (typeof window.setAssist === 'function') window.setAssist(false); } catch (e) {}
   var cb = document.getElementById('adv-assist'); if (cb) cb.checked = false;
 };
-// Options avancees : sur desktop + tablette (>640px) la carte devient
-// redimensionnable (resize:both cote CSS). Un modal centre en flexbox "fuit" la
-// poignee ; on ancre donc la carte en absolu et on la centre a l'ouverture pour
-// un redimensionnement 1:1 stable. Taille memorisee (pth_adv_size). Sur mobile :
-// centrage flex natif, aucun resize.
-// Options avancees deplacables (desktop + tablette uniquement) : drag depuis la
-// barre de titre seulement, pour ne pas gener les controles du formulaire ni la
-// poignee de resize. Position memorisee (pth_adv_pos), bornee a l'ecran.
-function _advAttachDrag(card) {
-  if (card._advDrag) return;
-  card._advDrag = true;
-  var drag = null;
-  function apply(left, top) {
-    var w = card.offsetWidth, h = card.offsetHeight;
-    var maxL = Math.max(8, window.innerWidth - w), maxT = Math.max(8, window.innerHeight - h);
-    card.style.left = Math.max(8, Math.min(left, maxL)) + 'px';
-    card.style.top = Math.max(8, Math.min(top, maxT)) + 'px';
-  }
-  card.addEventListener('pointerdown', function (e) {
-    var ok = false; try { ok = window.matchMedia('(min-width:641px)').matches; } catch (ex) {}
-    if (!ok) return;
-    var t = e.target;
-    if (!t || !t.closest || !t.closest('.km-title')) return;
-    var r = card.getBoundingClientRect();
-    drag = { dx: e.clientX - r.left, dy: e.clientY - r.top };
-    try { card.setPointerCapture(e.pointerId); } catch (_) {}
-    card.classList.add('adv-dragging');
-    e.preventDefault();
-  });
-  card.addEventListener('pointermove', function (e) {
-    if (!drag) return; e.preventDefault();
-    apply(e.clientX - drag.dx, e.clientY - drag.dy);
-  });
-  function end(e) {
-    if (!drag) return; drag = null; card.classList.remove('adv-dragging');
-    try { card.releasePointerCapture(e.pointerId); } catch (_) {}
-    try { var r = card.getBoundingClientRect(); localStorage.setItem('pth_adv_pos', JSON.stringify({ left: Math.round(r.left), top: Math.round(r.top) })); } catch (_) {}
-  }
-  card.addEventListener('pointerup', end);
-  card.addEventListener('pointercancel', end);
-}
-// Zoom du modal Options avancées : contenu (texte compris) proportionnel à la
-// taille de la carte (base CSS 620×640) × facteur global d'app. Voir
-// _applyWinZoom pour le mécanisme (propriété CSS zoom sur les enfants).
-function _advApplyZoom() {
+// Options avancees : fenetre flottante via le SYSTEME GENERIQUE
+// (_enableFloating — meme patron que chat, log, journaux). Desktop + tablette
+// (>640px) : deplacable par la barre de titre, redimensionnable (poignees
+// .win-rsz), contenu zoome avec la taille (base 620x640), position/taille
+// memorisees sous pth_win_adv. Sur mobile : modal centre flex, aucun resize.
+// Remplace l'ancien systeme dedie (_advAttachDrag/_advApplyZoom/
+// _advSetupResize, cles pth_adv_pos/pth_adv_size — migrees ci-dessous).
+function _advSetupFloat() {
   var card = document.querySelector('#adv-modal .adv-card');
   if (!card) return;
-  var canResize = false;
-  try { canResize = window.matchMedia('(min-width:641px)').matches; } catch (e) {}
-  if (!canResize || !card.offsetWidth) {
-    card.classList.remove('win-zoom'); card.style.removeProperty('--wz');
-    return;
-  }
-  var z = Math.min(card.offsetWidth / 620, card.offsetHeight / 640);
-  z = Math.max(0.85, Math.min(1.9, z)) * _appWinZoom();
-  card.style.setProperty('--wz', z.toFixed(3));
-  card.classList.add('win-zoom');
-}
-function _advSetupResize() {
-  var card = document.querySelector('#adv-modal .adv-card');
-  if (!card) return;
-  var canResize = false;
-  try { canResize = window.matchMedia('(min-width:641px)').matches; } catch (e) {}
-  if (!canResize) {
-    card.style.position = ''; card.style.left = ''; card.style.top = '';
-    card.style.width = ''; card.style.height = '';
-    card.classList.remove('win-zoom'); card.style.removeProperty('--wz');
-    return;
-  }
+  var wide = false;
+  try { wide = window.matchMedia('(min-width:641px)').matches; } catch (e) {}
+  if (!wide) { try { _disableFloating(card); } catch (e) {} return; }
+  // Migration one-shot des anciennes cles vers la cle unique du systeme.
   try {
-    var sz = JSON.parse(localStorage.getItem('pth_adv_size') || 'null');
-    if (sz && sz.w) {
-      // Borner la taille memorisee au viewport courant (ecran plus petit).
-      var _mw = Math.max(320, window.innerWidth - 16), _mh = Math.max(280, window.innerHeight - 16);
-      card.style.width = Math.min(sz.w, _mw) + 'px';
-      if (sz.h) card.style.height = Math.min(sz.h, _mh) + 'px';
+    if (!localStorage.getItem('pth_win_adv')) {
+      var op = JSON.parse(localStorage.getItem('pth_adv_pos') || 'null');
+      var os = JSON.parse(localStorage.getItem('pth_adv_size') || 'null');
+      if ((op && typeof op.left === 'number') || (os && os.w)) {
+        var d = { left: (op && op.left) || 16, top: (op && op.top) || 56 };
+        if (os && os.w) { d.width = os.w; d.height = os.h || 640; }
+        localStorage.setItem('pth_win_adv', JSON.stringify(d));
+      }
     }
+    localStorage.removeItem('pth_adv_pos'); localStorage.removeItem('pth_adv_size');
   } catch (e) {}
-  card.style.position = 'absolute';
-  var w = card.offsetWidth, h = card.offsetHeight;
-  // Position : restaurer celle memorisee (apres deplacement), sinon centrer.
-  // Toujours bornee a l'ecran au cas ou le viewport aurait change.
-  var L, T, sp = null;
-  try { sp = JSON.parse(localStorage.getItem('pth_adv_pos') || 'null'); } catch (e) {}
-  if (sp && typeof sp.left === 'number') { L = sp.left; T = sp.top; }
-  else { L = Math.round((window.innerWidth - w) / 2); T = Math.round((window.innerHeight - h) / 2); }
-  L = Math.max(8, Math.min(L, Math.max(8, window.innerWidth - w)));
-  T = Math.max(8, Math.min(T, Math.max(8, window.innerHeight - h)));
-  card.style.left = L + 'px';
-  card.style.top = T + 'px';
-  try { _advApplyZoom(); } catch (e) {}
-  _advAttachDrag(card);
-  if (!card._advRO && typeof ResizeObserver === 'function') {
-    var _t = null;
-    card._advRO = new ResizeObserver(function () {
-      if (!card.offsetWidth) return;
-      try { _advApplyZoom(); } catch (e) {}   // le contenu suit en direct
-      clearTimeout(_t);
-      _t = setTimeout(function () {
-        if (!card.offsetWidth) return;
-        try { localStorage.setItem('pth_adv_size', JSON.stringify({ w: Math.round(card.offsetWidth), h: Math.round(card.offsetHeight) })); } catch (e) {}
-      }, 250);
-    });
-    try { card._advRO.observe(card); } catch (e) {}
-  }
+  var defW = Math.min(620, window.innerWidth - 16);
+  var defH = Math.min(640, window.innerHeight - 16);
+  _enableFloating(card, {
+    key: 'pth_win_adv',
+    handle: card.querySelector('.km-title'),
+    resizable: true,
+    zoom: true,
+    defW: 620, defH: 640,          // base du zoom (inchangee vs _advApplyZoom)
+    minW: 524, minH: 360,
+    defLeft: Math.max(8, Math.round((window.innerWidth - defW) / 2)),
+    defTop: Math.max(8, Math.round((window.innerHeight - defH) / 2)),
+  });
 }
 function openAdvancedOptions() {
   var m = document.getElementById('adv-modal');
@@ -670,7 +603,7 @@ function openAdvancedOptions() {
     advUiTab(_advTab === 'network' ? 'network' : 'general');
   } catch (e) { try { advSelectCat('ui'); advUiTab('general'); } catch (e2) {} }
   m.style.display = '';
-  try { _advSetupResize(); } catch (e) {}
+  try { _advSetupFloat(); } catch (e) {}
 }
 window.openAdvancedOptions = openAdvancedOptions;
 function closeAdvancedOptions() {
@@ -16272,17 +16205,6 @@ function _clampWinToViewport(panel){
     _placeWin(panel, r.left, r.top);
   }catch(e){}
 }
-function _advClampToViewport(){
-  // Meme regle pour la carte Options avancees (systeme de fenetre separe).
-  var card=document.querySelector('#adv-modal .adv-card');
-  if(!card || !card.offsetWidth || card.style.position!=='absolute') return;
-  var mw=Math.max(320, window.innerWidth-16), mh=Math.max(280, window.innerHeight-16);
-  if(card.offsetWidth >mw) card.style.width =mw+'px';
-  if(card.offsetHeight>mh) card.style.height=mh+'px';
-  var L=Math.max(8, Math.min(card.getBoundingClientRect().left, Math.max(8, window.innerWidth -card.offsetWidth)));
-  var T=Math.max(8, Math.min(card.getBoundingClientRect().top,  Math.max(8, window.innerHeight-card.offsetHeight)));
-  card.style.left=L+'px'; card.style.top=T+'px';
-}
 function _enableFloating(panel, opt){
   if(!panel) return; opt=opt||{};
   panel.classList.add('floating-win');
@@ -16329,8 +16251,6 @@ window.addEventListener('resize', function(){
     _clampWinToViewport(p);
     _applyWinZoom(p);   // le facteur global d'app (viewport) a pu changer
   }
-  try { _advClampToViewport(); } catch (e) {}
-  try { _advApplyZoom(); } catch (e) {}
 });
 
 function _ensureFloating(panel, dragEv){
@@ -16408,7 +16328,7 @@ function resetWindows(){
   // Bouton reset du header (≥900px) : efface TOUTES les positions/tailles
   // memorisees et remet chaque fenetre a son etat par defaut (bandeau, ou
   // position CSS d'origine pour les fenetres flottantes).
-  ['pth_winpos_chat','pth_winpos_lobbychat','pth_winpos_log2','pth_winpos_react','pth_winpos_theme','pth_winpos_hands','pth_winpos_music','pth_odds_pos','pth_odds_w','pth_assist_pos','pth_assist_w','pth_adv_pos','pth_adv_size'].forEach(function(k){ try{ localStorage.removeItem(k); }catch(e){} });
+  ['pth_winpos_chat','pth_winpos_lobbychat','pth_winpos_log2','pth_winpos_react','pth_winpos_theme','pth_winpos_hands','pth_winpos_music','pth_odds_pos','pth_odds_w','pth_assist_pos','pth_assist_w','pth_win_adv'].forEach(function(k){ try{ localStorage.removeItem(k); }catch(e){} });
   ['g-chat-panel','lobby-chat-panel','g-log-panel','g-reaction-panel','music-panel'].forEach(function(id){ var p=document.getElementById(id); if(p) _disableFloating(p); });
   // Fenetres flottantes odds/assist : retire les styles inline -> retour aux defauts CSS.
   ['odds-monitor','assist-win'].forEach(function(id){ var el=document.getElementById(id); if(el){ ['left','top','right','bottom','width'].forEach(function(pr){ el.style[pr]=''; }); el.style.removeProperty('--ws'); } });
@@ -17699,7 +17619,7 @@ function renderPlayersList() {
   });
 })();
 
-;(function(){ window.BUILD_VERSION='0.3.777-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.778-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

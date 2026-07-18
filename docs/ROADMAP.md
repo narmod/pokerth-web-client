@@ -115,7 +115,12 @@ use too. Items are grouped by status rather than fixed phases.
   listing each table's seated players.
 - In-game panels open as compact floating windows anchored under their round on-felt button
   (chat, emoji, hand log) instead of taking over the screen — each movable, resizable and
-  snap-back-able. A new draggable **Hand-odds (Combinaisons)** window joins them, and the
+  snap-back-able. All floating windows (including Advanced options and the Logs window)
+  now share one engine (`_enableFloating`): drag by title bar, eight resize handles,
+  content that zooms with the window, position/size remembered per window, and size &
+  position always clamped to the current viewport (on open and on browser resize).
+  Advanced options was migrated off its bespoke drag/resize/zoom code onto this shared
+  system (old saved keys migrate automatically). A new draggable **Hand-odds (Combinaisons)** window joins them, and the
   table zoom is collapsible everywhere. On phone portrait the action bar hugs the bottom
   edge for a full-screen table.
 - Music and sound split: a dedicated **Music player** panel (with game-sound settings moved
