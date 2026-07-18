@@ -347,6 +347,7 @@ let _anHand = 0;        // handID courant en analyse
 
 const CSS = `
 #jr-modal{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;padding:16px}
+#jr-modal .km-backdrop{background:transparent;backdrop-filter:none;-webkit-backdrop-filter:none}
 #jr-modal.jr-float{pointer-events:none}
 #jr-modal.jr-float .km-backdrop{display:none}
 #jr-modal.jr-float .jr-card{pointer-events:auto;position:fixed;margin:0;max-width:none !important;max-height:none !important}
