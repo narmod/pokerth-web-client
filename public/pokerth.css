@@ -8103,7 +8103,7 @@ html:not([data-seat-struct="qml"]) .seat:not(.me) .seat-foot { margin-top: 1px; 
 /* Tablette/desktop : sidebar icône+texte à gauche. Téléphone : barre d'icônes seules en haut. */
 .adv-card{max-width:620px}
 .adv-layout{display:flex;gap:14px;margin-top:10px;align-items:stretch}
-.adv-nav{flex:0 0 168px;display:flex;flex-direction:column;gap:2px;border-right:1px solid var(--border);padding-right:10px;overflow-y:auto;max-height:62vh}
+.adv-nav{flex:0 0 212px;display:flex;flex-direction:column;gap:2px;border-right:1px solid var(--border);padding-right:10px;overflow-y:auto;max-height:62vh} /* 168→212 px : libellés de catégories entiers (« Paramètres par défaut »…) — demande narmod 2026-07-18 */
 .adv-cat{display:flex;align-items:center;gap:10px;width:100%;padding:8px 9px;border:0;border-radius:8px;background:transparent;color:var(--text);font-size:.82rem;font-weight:600;text-align:left;cursor:pointer;transition:background .12s,color .12s}
 .adv-cat:hover:not(:disabled):not(.is-active){background:rgba(var(--sel-rgb,var(--gold-rgb)),.08)}
 .adv-cat .adv-cat-ic{flex:0 0 auto;width:19px;height:19px;display:inline-flex;align-items:center;justify-content:center;opacity:.85}
@@ -8147,7 +8147,7 @@ html:not([data-seat-struct="qml"]) .seat:not(.me) .seat-foot { margin-top: 1px; 
 /* Options avancees redimensionnables sur desktop + tablette (>640px), pas sur mobile.
    La carte est ancree/centree en JS pour une poignee 1:1 (cf. _advSetupResize). */
 @media (min-width:641px){
-  .adv-card{resize:both;overflow:hidden;width:620px;height:min(82vh,640px);min-width:480px;min-height:360px;max-width:94vw;max-height:92vh}
+  .adv-card{resize:both;overflow:hidden;width:620px;height:min(82vh,640px);min-width:524px;min-height:360px;max-width:94vw;max-height:92vh} /* min-width 480→524 : compense la sidebar élargie (212 px) */
   .adv-card .adv-layout{flex:1 1 auto;min-height:0}
   .adv-card .adv-nav{max-height:none;min-height:0}
   .adv-card .adv-panels{max-height:none;min-height:0}
