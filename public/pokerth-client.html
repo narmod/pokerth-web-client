@@ -502,8 +502,15 @@ function onAvatarImageChosen(input) {
     if (gone) return; gone = true;
     try { clearInterval(msgTimer); } catch (e) {}
     if (statusEl) statusEl.textContent = L.ready;
-    splash.classList.add('bs-hide');
-    setTimeout(function () { if (splash.parentNode) splash.parentNode.removeChild(splash); }, 480);
+    if (fill) fill.style.width = '100%';
+    /* Petit temps de pause a la reussite (demande narmod 2026-07-19) : on
+       laisse « Pret » + barre pleine visibles ~550 ms avant le fondu, au lieu
+       de couper net. Splash desactive (bs-invisible) : aucune attente. */
+    var dwell = splash.classList.contains('bs-invisible') ? 0 : 550;
+    setTimeout(function () {
+      splash.classList.add('bs-hide');
+      setTimeout(function () { if (splash.parentNode) splash.parentNode.removeChild(splash); }, 480);
+    }, dwell);
   }
   function fail() {
     if (gone || card.classList.contains('err')) return;

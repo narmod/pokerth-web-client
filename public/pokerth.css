@@ -8187,7 +8187,7 @@ html:not([data-seat-struct="qml"]) .seat:not(.me) .seat-foot { margin-top: 1px; 
    NB : l'ancienne approche height:56dvh sur .adv-panels était inopérante —
    flex:1 (= flex-basis:0%) écrase height sur l'axe principal d'une colonne. */
 @media (max-width:599.98px) and (orientation:portrait){
-  #adv-modal .adv-card{position:fixed;left:10px;right:10px;top:max(14px, env(safe-area-inset-top));bottom:max(14px, env(safe-area-inset-bottom));width:auto;max-width:none;margin:0;display:flex;flex-direction:column;overflow:hidden}
+  #adv-modal .adv-card{position:fixed;left:10px;right:10px;top:max(14px, env(safe-area-inset-top), env(safe-area-inset-bottom));bottom:max(14px, env(safe-area-inset-top), env(safe-area-inset-bottom));width:auto;max-width:none;margin:0;display:flex;flex-direction:column;overflow:hidden} /* marges haut/bas = MEME valeur (max des deux safe-areas) -> feuille recentree (demande narmod 2026-07-19) */
   #adv-modal .adv-card .adv-layout{flex:1 1 auto;min-height:0}
   #adv-modal .adv-card .adv-nav{flex:0 0 auto}
   #adv-modal .adv-card .adv-panels{flex:1 1 auto;min-height:0;height:auto}
