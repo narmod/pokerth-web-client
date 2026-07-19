@@ -67,7 +67,20 @@ for (const v of [...srv.options].map(o => o.value)) {
   ok(!err && srv.value === v, 'mode ' + v + ' : handler OK et le select tient'
      + (err ? ' — ' + err.message : (srv.value !== v ? ' — FLIP vers ' + srv.value : '')));
 }
-// 5) Le garde de restauration (polling) ne rebascule pas
+// 5) Tick « Mode invité » désynchronisé entre pokerth.net et LAN (2026-07-19)
+const gc = w.document.getElementById('guest-mode-cb');
+if (gc) {
+  const setSrv = async (v) => { srv.value = v; vm.runInContext('App.onServerOrGuestChange()', ctx); await new Promise(r => setTimeout(r, 30)); };
+  const setTick = async (on) => { gc.checked = on; vm.runInContext('App.onServerOrGuestChange()', ctx); await new Promise(r => setTimeout(r, 30)); };
+  await setSrv('pokerthnet'); await setTick(true);   // Internet : invité coché
+  await setSrv('lan-dedi');   await setTick(false);  // LAN : invité décoché
+  await setSrv('pokerthnet');
+  ok(gc.checked === true, 'tick invité : Internet garde SON état (coché)');
+  await setSrv('lan-dedi');
+  ok(gc.checked === false, 'tick invité : LAN garde SON état (décoché)');
+} else ok(false, '#guest-mode-cb introuvable');
+
+// 6) Le garde de restauration (polling) ne rebascule pas
 await new Promise(r => setTimeout(r, 700));
 const last = [...srv.options].map(o => o.value).pop();
 ok(srv.value === last, 'après 700 ms le select tient toujours (' + srv.value + ')');

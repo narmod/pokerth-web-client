@@ -5963,6 +5963,9 @@ const App = (() => {
       // Offline (vs bots) mode: no network. Drive a local fake server.
       var off = !!(srvEl && srvEl.value === 'offline');
       window._offlineMode = off;
+      // [tick invité par mode] mode serveur précédent, AVANT écrasement.
+      var _prevSrv = '';
+      try { _prevSrv = localStorage.getItem('pth_server_mode') || ''; } catch (e) {}
       try { if (srvEl) localStorage.setItem('pth_server_mode', srvEl.value); } catch (e) {}
       // Connection-detail fields that only make sense for a real network
       // connection. In offline mode none of them apply, so hide them all
@@ -6001,6 +6004,25 @@ const App = (() => {
       // from the mode + gear state by onLoginModeChange() just below.
       var _gearOn = $('conn-adv-btn'); if (_gearOn) _gearOn.style.display = '';
       var _guestRow = $('guest-mode-row'); if (_guestRow) _guestRow.style.display = '';
+      // [tick invité par mode] La case « Mode invité » est mémorisée PAR mode
+      // serveur (pth_guest_inet / pth_guest_lan) : cocher en Internet ne
+      // coche plus en LAN, et inversement (demande narmod 2026-07-19).
+      //  • serveur inchangé → le déclencheur est la case : on sauvegarde ;
+      //  • serveur changé   → on restaure le tick propre au nouveau mode
+      //    (1re bascule sans valeur : l'état courant devient la préférence
+      //    initiale du mode, puis les deux vivent indépendamment).
+      if (srvEl && gcEl) {
+        var _gk = 'pth_guest_' + (srvEl.value === 'pokerthnet' ? 'inet' : 'lan');
+        if (_prevSrv && srvEl.value !== _prevSrv) {
+          // changement de serveur (offline compris) → tick du nouveau mode
+          var _sv = null; try { _sv = localStorage.getItem(_gk); } catch (e) {}
+          if (_sv !== null) gcEl.checked = (_sv === '1');
+          else { try { localStorage.setItem(_gk, gcEl.checked ? '1' : '0'); } catch (e) {} }
+        } else {
+          // même serveur (ou 1re visite) → le déclencheur est la case
+          try { localStorage.setItem(_gk, gcEl.checked ? '1' : '0'); } catch (e) {}
+        }
+      }
       if (srvEl && gcEl && lmEl) {
         var guest = gcEl.checked;
         lmEl.value = (srvEl.value === 'pokerthnet')
@@ -10441,7 +10463,7 @@ function renderPlayersList() {
   });
 })();
 
-;(function(){ window.BUILD_VERSION='0.3.859-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.860-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
