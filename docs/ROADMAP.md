@@ -13,7 +13,7 @@ use too. Items are grouped by status rather than fixed phases.
 
 **Core gameplay**
 - Full flow: lobby, table creation, joining, betting, showdown.
-- Three connection choices (LAN / Dedicated, pokerth.net, Training) + Guest-mode toggle.
+- Three connection choices (LAN / Dedicated, pokerth.net, Local / Training) + Guest-mode toggle.
 - Registered-account login on pokerth.net (account password sent over TLS), alongside guest and LAN.
 - TLS support (required for pokerth.net, optional for LAN) with smart auto-toggle.
 - Exponential-backoff auto-reconnect with live countdown, plus seamless reconnect across
@@ -38,10 +38,11 @@ use too. Items are grouped by status rather than fixed phases.
 
 **Appearance & theming**
 - A QML-style styles window with four tabs — Table · Cards · Card back · Seats — each
-  choice saved independently. 13 table styles (PokerTH, Spectator Tools, Green Casino,
-  Danuxi Blue, Mute, Mute 02, Teal, Lemming, Matrix, Star Trek, TripSixes, Wanted, Xanax),
-  listed with a large preview, name and author like the official picker; as in the official
-  `StyleProvider`, each table style carries its own felt, pucks and action-button skins.
+  choice saved independently. 12 table styles (PokerTH default QML table style,
+  Green Casino, Danuxi Blue, Mute, Mute 02, Teal, Lemming, Matrix, Star Trek, TripSixes,
+  Wanted, Xanax), listed with a large preview, name and author ("PokerTH Development Team"
+  for the official styles) like the official picker; as in the official `StyleProvider`,
+  each table style carries its own felt, pucks and action-button skins.
 - UI palette (Dark / Light / Auto) follows the official *Dark Mode* setting in the
   Advanced options, matching the QML client.
 - Light/dark aware: per-theme `color-scheme` and a dynamic browser `theme-color` that
@@ -187,6 +188,21 @@ use too. Items are grouped by status rather than fixed phases.
   - Pre-selection preview desaturated uniformly when it is not your turn.
   - App header height matched to the official topBar (38 px, 30 px in landscape-compact).
   - Seat geometry tuned to 2.1.3: self-weight 0.3 wide / 0.5 compact and fill-cap 1.9 / 2.3.
+  - Landscape community row no longer overlapped by side seats: a horizontal cap on
+    `communityScale` (accounting for the table scaler's effective zoom) keeps the card row
+    within the free corridor between the flanking plates.
+  - Winning-hand badge no longer hidden between tightly-packed side seats (pair spacing now
+    budgets the badge height); the badge overlays the cards in mobile landscape where there
+    is no room below the row.
+  - Self-box lifted 24 px off the floating action panel in both orientations (the web panel
+    sits higher than the QML top-bar), and anchored bottom-centre for every seat pack in
+    portrait, not only the PokerTH packs.
+  - Bet-chip animations now fly to the pot badge above the cards rather than the centre of
+    the community row.
+  - Default dealer / small-blind / big-blind pucks re-synced to the official 2.1.3 assets.
+  - Login logo sized to the official `brandLogoSize` (up to 126 px desktop / 100 px phone),
+    the \"PokerTH\" title hidden by default with a show/hide toggle in Advanced options, and
+    header menu labels + icons made resolution-responsive like the rest of the app.
 - Follow-up fixes from official-client community feedback: chat length capped to match
   the server limit, a player's current table shown in the lobby players list, and the
   players-remaining counter above.
