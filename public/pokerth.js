@@ -2692,10 +2692,40 @@ function evaluateBestHand(holeCards, commCards) {
   return best;
 }
 
+// ── phe (évaluateur vendoré, public/vendor/phe.mjs) ──
+// Chargé paresseusement (dynamic import) ; s'il est indisponible (très vieux
+// navigateur, échec réseau au premier chargement), _phe reste null et le
+// moniteur d'odds retombe sur l'évaluateur historique _evalFive — mêmes
+// résultats, juste plus lent. _pheMap[n] = code phe de la carte PokerTH n
+// (0..12=♦, 13..25=♥, 26..38=♠, 39..51=♣ ; valeur = n % 13, 0=2 … 12=A).
+var _phe = null, _pheLoad = null, _pheMap = null;
+function _ensurePhe() {
+  if (_phe || _pheLoad) return _pheLoad;
+  _pheLoad = import('/vendor/phe.mjs').then(function (m) {
+    var suits = ['d', 'h', 's', 'c'];
+    var rk = ['2', '3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q', 'K', 'A'];
+    var map = new Array(52);
+    for (var n = 0; n < 52; n++) map[n] = m.cardCode(rk[n % 13], suits[(n / 13) | 0]);  // signature (rank, suit)
+    _pheMap = map; _phe = m;
+    return m;
+  }).catch(function () { _pheLoad = null; return null; });
+  return _pheLoad;
+}
+// Catégorie 0..9 (0=Höchste Karte … 8=Straight Flush, 9=Royal) pour 5 à 7
+// cartes PokerTH — même échelle que _evalFive().r et GameTable.cardsChance QML.
+function _pheCat(cards) {
+  var codes = [];
+  for (var i = 0; i < cards.length; i++) codes.push(_pheMap[cards[i]]);
+  var st = _phe.evaluateCardCodes(codes);
+  return st === 1 ? 9 : 8 - _phe.handRank(st);
+}
+
 // Distribution d'équité : probabilité d'obtenir chaque catégorie de main (rang
 // 0..9) au showdown, à partir de mes 2 cartes + le board connu (0 à 5 cartes).
 // Énumère EXACTEMENT quand il reste <= 2 cartes (flop : C(47,2)=1081 ; turn : 46 ;
-// river : 1), sinon Monte-Carlo (préflop). Calcul DÉCOUPÉ en tranches ~10 ms via
+// river : 1), sinon Monte-Carlo préflop (10000 tirages avec phe, 1500 en repli
+// _evalFive). L'évaluation par échantillon passe par phe (7 cartes directes,
+// ~20× plus rapide que les 21 combos de _evalFive) quand le module est chargé. Calcul DÉCOUPÉ en tranches ~10 ms via
 // setTimeout pour ne jamais geler l'UI ; onDone({pct:[p0..p9], exact}) ou null.
 // isStale() (optionnel) : si vrai entre deux tranches, on abandonne sans callback.
 function _oddsCompute(hole, board, onDone, isStale) {
@@ -2707,16 +2737,23 @@ function _oddsCompute(hole, board, onDone, isStale) {
   var deck = []; for (var c = 0; c < 52; c++) if (!seen[c]) deck.push(c);
   var need = 5 - b.length; if (need < 0) need = 0;
   var hole2 = [hole[0], hole[1]];
+  _ensurePhe();                       // charge phe en arrière-plan pour les prochains appels
+  var usePhe = !!(_phe && _pheMap);   // choix figé pour TOUTE cette passe (pas de mix)
+  function catOf(all) {               // all = [hole0, hole1, ...board] -> catégorie 0..9
+    if (usePhe) return _pheCat(all);
+    var res = evaluateBestHand([all[0], all[1]], all.slice(2));
+    return res ? res.r : null;
+  }
   var counts = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], total = 0;
   if (need === 0) {
-    var r0 = evaluateBestHand(hole2, b);
-    if (r0) { counts[r0.r]++; total = 1; }
+    var c0 = catOf(hole2.concat(b));
+    if (c0 != null) { counts[c0]++; total = 1; }
     done(total ? { pct: counts.map(function (c) { return c / total; }), exact: true } : null);
     return;
   }
   var exact = (need <= 2);
   var combos = exact ? _getCombos(deck, need) : null;
-  var TRIALS = exact ? combos.length : 1500;
+  var TRIALS = exact ? combos.length : (usePhe ? 10000 : 1500);
   var n = deck.length, idx = 0;
   function now() { return (typeof performance !== 'undefined' && performance.now) ? performance.now() : Date.now(); }
   function chunk() {
@@ -2726,8 +2763,8 @@ function _oddsCompute(hole, board, onDone, isStale) {
       var extra;
       if (exact) { extra = combos[idx]; }
       else { var picked = [], used = {}; while (picked.length < need) { var ri = (Math.random() * n) | 0; if (!used[ri]) { used[ri] = true; picked.push(deck[ri]); } } extra = picked; }
-      var res = evaluateBestHand(hole2, b.concat(extra));
-      if (res) { counts[res.r]++; total++; }
+      var cat = catOf(hole2.concat(b, extra));
+      if (cat != null) { counts[cat]++; total++; }
       idx++;
       if ((idx & 31) === 0 && (now() - start) > 10) break; // rendre la main toutes les ~10 ms
     }
@@ -17641,7 +17678,7 @@ function renderPlayersList() {
   });
 })();
 
-;(function(){ window.BUILD_VERSION='0.3.805-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.806-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
