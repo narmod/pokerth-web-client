@@ -7842,6 +7842,13 @@ html[data-seat-edit="1"] #g-seats .seat.seat-ghost { outline: none; cursor: defa
 .adv-body{max-height:62vh;overflow:auto;margin-top:8px;padding-right:2px}
 .adv-sec{font-size:0.62rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--gold-dim);margin:13px 0 4px;font-weight:700}
 .adv-sec:first-child{margin-top:4px}
+/* Sections repliables de l'onglet Interface (demande narmod 2026-07-19) :
+   <details class="adv-fold"> natif, plie par defaut, chevron anime. */
+details.adv-fold>summary.adv-sec{cursor:pointer;list-style:none;display:flex;align-items:center;gap:7px;user-select:none;-webkit-tap-highlight-color:transparent;padding:3px 0}
+details.adv-fold>summary.adv-sec::-webkit-details-marker{display:none}
+details.adv-fold>summary.adv-sec::before{content:'\25B8';font-size:0.95em;color:var(--gold-dim);transition:transform .15s ease;flex:0 0 auto}
+details.adv-fold[open]>summary.adv-sec::before{transform:rotate(90deg)}
+details.adv-fold:first-child>summary.adv-sec{margin-top:4px}
 .adv-row{display:flex;align-items:center;gap:9px;padding:6px 2px;font-size:0.82rem;color:var(--text);cursor:pointer}
 .adv-row input[type=checkbox]{accent-color:var(--gold);flex-shrink:0;width:16px;height:16px}
 .adv-row > span{flex:1}
@@ -8161,7 +8168,7 @@ html:not([data-seat-struct="qml"]) .seat:not(.me) .seat-foot { margin-top: 1px; 
   .adv-cat{flex:0 0 auto;width:auto;padding:7px 10px;border-radius:9px;justify-content:center}
   .adv-cat .adv-cat-lbl{display:none}
   .adv-cat.is-active{background:rgba(var(--sel-rgb,var(--gold-rgb)),.16);box-shadow:inset 0 -2px 0 0 var(--sel,var(--gold))}
-  .adv-panels{max-height:56vh}
+  .adv-panels{height:56vh;height:56dvh;max-height:none} /* hauteur FIXE : le modal ne « respire » plus en changeant de categorie (demande narmod 2026-07-19) */
 }
 /* Options avancees en fenetre flottante (largeur >= 600, canon QML), pas sur mobile.
    Drag/resize/zoom via le systeme generique (cf. _advSetupFloat / _enableFloating). */
