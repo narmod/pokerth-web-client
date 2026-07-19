@@ -389,7 +389,7 @@ function _render() {
     '<div class="music-lcd">' +
       '<div class="music-lcd-top">' +
         '<span class="music-time music-cur" data-mact="lcd" role="button" tabindex="0" title="' + _esc(_t('musicNowPlaying', 'Now playing')) + '">' + _curLabel(_cur, _dur, _canSeek) + '</span>' +
-        (_vuDead ? '' : '<span class="music-vu" aria-hidden="true">' + vuBars + '</span>') +
+        ((_vuDead || !playing) ? '' : '<span class="music-vu" aria-hidden="true">' + vuBars + '</span>') +
       '</div>' +
       '<div class="music-marquee"><span class="music-marquee-txt">' + (nowTxt || _esc(_t('musicNoTracks', 'No tracks available'))) + '</span></div>' +
     '</div>' +
@@ -400,14 +400,17 @@ function _render() {
     '</div>' +
     // ── transport ──
     '<div class="music-transport">' +
+      '<div class="music-trow">' +
       '<button type="button" class="music-tbtn" data-mact="prev"' + (multi ? '' : ' disabled') + ' title="' + _esc(_t('musicPrev', 'Previous')) + '" data-i18n-title="musicPrev">' + _icon('prev') + '</button>' +
       '<button type="button" class="music-tbtn music-tbtn-main" data-mact="toggle" title="' + _esc(_t(ppKey, playing ? 'Pause' : 'Play')) + '" data-i18n-title="' + ppKey + '">' + ppIcon + '</button>' +
       '<button type="button" class="music-tbtn" data-mact="next"' + (multi ? '' : ' disabled') + ' title="' + _esc(_t('musicNext', 'Next')) + '" data-i18n-title="musicNext">' + _icon('next') + '</button>' +
       '<button type="button" class="music-tbtn" data-mact="stop" title="' + _esc(_t('musicStop', 'Stop')) + '" data-i18n-title="musicStop">' + _icon('stop') + '</button>' +
-      '<span class="music-div"></span>' +
+      '</div>' +
+      '<div class="music-trow">' +
       '<button type="button" class="music-tbtn music-rpt' + (_shuffle ? ' is-active' : '') + '" data-mact="shuffle" aria-pressed="' + _shuffle + '" title="' + _esc(_t('musicShuffle', 'Shuffle')) + '" data-i18n-title="musicShuffle">' + _icon('shuffle') + '</button>' +
       '<button type="button" class="music-tbtn music-rpt' + (_repeat === 'one' ? ' is-active' : '') + '" data-mact="rep-one" aria-pressed="' + (_repeat === 'one') + '" title="' + _esc(_t('musicRepeatOne', 'Repeat one')) + '" data-i18n-title="musicRepeatOne">' + _icon('rep-one') + '</button>' +
       '<button type="button" class="music-tbtn music-rpt' + (_repeat === 'all' ? ' is-active' : '') + '" data-mact="rep-all" aria-pressed="' + (_repeat === 'all') + '" title="' + _esc(_t('musicRepeatAll', 'Repeat playlist')) + '" data-i18n-title="musicRepeatAll">' + _icon('rep-all') + '</button>' +
+      '</div>' +
     '</div>' +
     // ── volume ──
     '<div class="music-vol">' +

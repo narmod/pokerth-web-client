@@ -7539,7 +7539,8 @@ html[data-seat-edit="1"] #g-seats .seat.seat-ghost { outline: none; cursor: defa
 .music-now { display: flex; flex-direction: column; gap: 2px; }
 .music-now-label { font-size: 0.52rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--gold-dim); }
 .music-now-title { font-size: 0.95rem; color: var(--text); font-weight: 600; }
-.music-transport { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; }
+.music-transport { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+.music-trow { display: flex; align-items: center; justify-content: center; gap: 10px; }
 .music-tbtn {
   flex: 0 0 auto;
   width: 40px; height: 40px;
@@ -7712,7 +7713,7 @@ html[data-seat-edit="1"] #g-seats .seat.seat-ghost { outline: none; cursor: defa
 .floating-win .music-panel-title { cursor: move; touch-action: none; }
 .floating-win .music-panel-title.win-dragging { cursor: grabbing; }
 /* En mode flottant, la fenetre pilote sa hauteur (resize) : on libere le plafond. */
-#music-panel.floating-win { max-height: none; }
+#music-panel.floating-win { max-height: none; width: min(340px, 92vw) !important; height: auto !important; }
 /* Telephone / petit ecran : feuille fixe en bas, non deplacable. Le JS
    (_winGate=false) n'ajoute jamais .floating-win ici et nettoie les inline. */
 @media (max-width: 899px), (max-height: 599px) {

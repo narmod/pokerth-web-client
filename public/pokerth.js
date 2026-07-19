@@ -7882,7 +7882,7 @@ function toggleMusicPanel() {
     // Draggable + resizable on desktop/tablet; fixed bottom-sheet on phones —
     // same window system as the chat / log / reaction panels.
     if (_winGate()) {
-      _attachFloatControls(panel, { key: 'pth_winpos_music', handle: panel.querySelector('.music-panel-title'), resizable: true, minW: 260, minH: 200, defW: 320, defH: 300, zoom: true });
+      _attachFloatControls(panel, { key: 'pth_winpos_music', handle: panel.querySelector('.music-panel-title'), resizable: false, defW: 340, zoom: true });
     } else {
       _disableFloating(panel);
     }
@@ -8534,7 +8534,7 @@ window.togglePlayersPanel = togglePlayersPanel;
 window.toggleReactionPanel = toggleReactionPanel;
 window.App = App;
 
-window.BUILD_VERSION='0.3.898-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='0.3.899-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
