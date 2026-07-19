@@ -2625,42 +2625,8 @@ const App = (() => {
   // Group a whole number with thousands separators following the active
   // language: French (and most others) use a thin/regular space — 1 000 000;
   // English uses a comma — 1,000,000. Improves readability of big stacks/pots.
-  function _groupThousands(n) {
-    var neg = n < 0;
-    var s = String(Math.abs(Math.round(n)));
-    var sep = (typeof _lang !== 'undefined' && _lang === 'en') ? ',' : '\u202F'; // narrow no-break space
-    s = s.replace(/\B(?=(\d{3})+(?!\d))/g, sep);
-    return (neg ? '-' : '') + s;
-  }
-  function fmtChips(amount) {
-    var v = (typeof amount === 'number') ? amount : parseInt(amount, 10) || 0;
-    if (!S._displayBB) return '$' + _groupThousands(v);
-    var bb = (S.smallBlind || 0) * 2;
-    if (!bb) return '$' + _groupThousands(v);
-    var n = v / bb;
-    // Round to 1 decimal, drop a trailing .0
-    var r = Math.round(n * 10) / 10;
-    var s = (Math.abs(r % 1) < 1e-9) ? String(Math.round(r)) : r.toFixed(1);
-    // Localised decimal separator: comma for every language except English.
-    if (typeof _lang !== 'undefined' && _lang !== 'en') s = s.replace('.', ',');
-    return s + ' BB';
-  }
-  // Amount formatted for SPEECH. Mirrors fmtChips' BB mode (already TTS-clean,
-  // e.g. "12,5 BB"), but in chip mode returns the bare integer WITHOUT the
-  // thousands separator: the narrow no-break space in _groupThousands makes
-  // engines read "12 345" as two numbers. No $ glyph (its reading varies).
-  function fmtChipsVoice(amount) {
-    var v = (typeof amount === 'number') ? amount : parseInt(amount, 10) || 0;
-    var bb = (S.smallBlind || 0) * 2;
-    if (S._displayBB && bb) {
-      var n = v / bb;
-      var r = Math.round(n * 10) / 10;
-      var s = (Math.abs(r % 1) < 1e-9) ? String(Math.round(r)) : r.toFixed(1);
-      if (typeof _lang !== 'undefined' && _lang !== 'en') s = s.replace('.', ',');
-      return s + ' BB';
-    }
-    return String(v);
-  }
+  // [9f-1] _groupThousands / fmtChips / fmtChipsVoice déplacés dans
+  // public/modules/ui/fmt.mjs (toujours globaux via window.*).
 
   // Assistance (aide « force de la main » affichée au-dessus des actions) :
   // activée par défaut, mémorisée localement. '0' = désactivée.
@@ -14826,7 +14792,7 @@ function renderPlayersList() {
   });
 })();
 
-;(function(){ window.BUILD_VERSION='0.3.836-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.837-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

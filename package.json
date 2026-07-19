@@ -1,6 +1,6 @@
 {
   "name": "pokerth-web-client",
-  "version": "0.3.836-beta",
+  "version": "0.3.837-beta",
   "description": "Experimental modern web client for PokerTH using a WebSocket-to-TCP proxy.",
   "main": "proxy.js",
   "private": false,
@@ -24,7 +24,8 @@
     "test:deck": "node scripts/test-deck.mjs",
     "test:avatar-cache": "node scripts/test-avatar-cache.mjs",
     "test:misc": "node scripts/test-misc.mjs",
-    "test:state": "node scripts/test-state.mjs"
+    "test:state": "node scripts/test-state.mjs",
+    "test:fmt": "node scripts/test-fmt.mjs"
   },
   "keywords": [
     "pokerth",
