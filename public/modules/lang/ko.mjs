@@ -155,7 +155,7 @@ export const strings = {
   sectionSeat: '좌석',    botDifficulty:'봇 난이도', botEasy:'쉬움', botMixed:'혼합', botNormal:'보통', botHard:'어려움',
 
     guestHint:'🌐 pokerth.net 게스트 플레이 — 계정 불필요.',
-    srvOffline:'🏋️ 연습 모드', offlineHint:'🤖 봇과 대전 — 연결이 필요 없습니다.',
+    srvOffline:'🏋️ 로컬 / 연습', offlineHint:'🤖 봇과 대전 — 연결이 필요 없습니다.',
     srvPokerthNet:'🌐 인터넷',
     blindsNextTip:'{n}핸드 후', blindsEveryMin:'{n}분마다',
     connect:'접속', disconnect:'✕ 접속 해제', connecting:'접속 중…',

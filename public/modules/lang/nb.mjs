@@ -151,7 +151,7 @@ export const strings = {
   sectionSeat: 'Plasser',    botDifficulty:'Bot-vanskelighet', botEasy:'Lett', botMixed:'Blandet', botNormal:'Normal', botHard:'Vanskelig',
 
     guestHint:'🌐 Gjestespill på pokerth.net – ingen konto nødvendig.',
-    srvOffline:'🏋️ Treningsmodus', offlineHint:'🤖 Spill mot bots – ingen tilkobling nødvendig.',
+    srvOffline:'🏋️ Lokal / trening', offlineHint:'🤖 Spill mot bots – ingen tilkobling nødvendig.',
     srvPokerthNet:'🌐 Internett',
     preActionTitle:'Forhåndsvisning av handlinger', preActionHint:'trykk på kortene for å lukke',
     blindsNextTip:'om {n} hender', blindsEveryMin:'hvert {n}. min',

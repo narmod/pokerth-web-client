@@ -152,7 +152,7 @@ export const strings = {
   sectionSeat: 'Miesta',    botDifficulty:'Obtiažnosť botov', botEasy:'Ľahká', botMixed:'Zmiešaná', botNormal:'Normálna', botHard:'Ťažká',
 
     guestHint:'🌐 Hra ako hosť na pokerth.net — bez účtu.',
-    srvOffline:'🏋️ Tréningový režim', offlineHint:'🤖 Hra proti botom — bez pripojenia.',
+    srvOffline:'🏋️ Lokálne / tréning', offlineHint:'🤖 Hra proti botom — bez pripojenia.',
     srvPokerthNet:'🌐 Internet',
     preActionTitle:'Náhľad akcií', preActionHint:'ťuknite na karty pre zatvorenie',
     blindsNextTip:'o {n} hier', blindsEveryMin:'každých {n} min',

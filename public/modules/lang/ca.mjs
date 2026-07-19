@@ -152,7 +152,7 @@ export const strings = {
   sectionSeat: 'Seients',    botDifficulty:'Dificultat dels bots', botEasy:'Fàcil', botMixed:'Mixt', botNormal:'Normal', botHard:'Difícil',
 
     guestHint:'🌐 Joc com a convidat a pokerth.net — sense compte.',
-    srvOffline:'🏋️ Mode d\'entrenament', offlineHint:'🤖 Joc en solitari contra bots — sense connexió.',
+    srvOffline:'🏋️ Local / entrenament', offlineHint:'🤖 Joc en solitari contra bots — sense connexió.',
     srvPokerthNet:'🌐 Internet',
     preActionTitle:'Vista prèvia d\'accions', preActionHint:'toca les cartes per tancar',
     blindsNextTip:'en {n} mans', blindsEveryMin:'cada {n} min',

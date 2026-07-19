@@ -154,7 +154,7 @@ export const strings = {
   sectionSeat: 'Koltuklar',    botDifficulty:'Bot zorluğu', botEasy:'Kolay', botMixed:'Karışık', botNormal:'Normal', botHard:'Zor',
 
     guestHint:'🌐 pokerth.net\'te misafir oyun — hesap gerekmez.',
-    srvOffline:'🏋️ Antrenman modu', offlineHint:'🤖 Botlara karşı oyna — bağlantı gerekmez.',
+    srvOffline:'🏋️ Yerel / antrenman', offlineHint:'🤖 Botlara karşı oyna — bağlantı gerekmez.',
     srvPokerthNet:'🌐 İnternet',
     preActionTitle:'Eylem önizlemesi', preActionHint:'kapatmak için kartlara dokun',
     blindsNextTip:'{n} el sonra', blindsEveryMin:'her {n} dk',

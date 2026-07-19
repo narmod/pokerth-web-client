@@ -152,7 +152,7 @@ export const strings = {
   sectionSeat: 'Asentos',    botDifficulty:'Dificultade dos bots', botEasy:'Doado', botMixed:'Mixta', botNormal:'Normal', botHard:'Difícil',
 
     guestHint:'🌐 Xogo como convidado en pokerth.net — sen conta.',
-    srvOffline:'🏋️ Modo de adestramento', offlineHint:'🤖 Xogo en solitario contra bots — sen conexión.',
+    srvOffline:'🏋️ Local / adestramento', offlineHint:'🤖 Xogo en solitario contra bots — sen conexión.',
     srvPokerthNet:'🌐 Internet',
     preActionTitle:'Vista previa de accións', preActionHint:'toca as cartas para pechar',
     blindsNextTip:'en {n} mans', blindsEveryMin:'cada {n} min',

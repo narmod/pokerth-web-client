@@ -151,7 +151,7 @@ export const strings = {
   sectionSeat: 'Місця',    botDifficulty:'Складність ботів', botEasy:'Легкий', botMixed:'Змішаний', botNormal:'Звичайний', botHard:'Складний',
 
     guestHint:'🌐 Гостьова гра на pokerth.net — без облікового запису.',
-    srvOffline:'🏋️ Тренування', offlineHint:'🤖 Гра проти ботів — підключення не потрібне.',
+    srvOffline:'🏋️ Локальна / тренування', offlineHint:'🤖 Гра проти ботів — підключення не потрібне.',
     srvPokerthNet:'🌐 Інтернет',
     preActionTitle:'Попередній перегляд дій', preActionHint:'торкніться карт, щоб закрити',
     blindsNextTip:'через {n} роздач', blindsEveryMin:'кожні {n} хв',

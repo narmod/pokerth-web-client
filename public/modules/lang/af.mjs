@@ -152,7 +152,7 @@ export const strings = {
   sectionSeat: 'Sitplekke',    botDifficulty:'Bot-moeilikheid', botEasy:'Maklik', botMixed:'Gemeng', botNormal:'Normaal', botHard:'Moeilik',
 
     guestHint:'🌐 Speel as gas op pokerth.net — geen rekening nodig.',
-    srvOffline:'🏋️ Oefenmodus', offlineHint:'🤖 Speel teen bots — geen verbinding nodig.',
+    srvOffline:'🏋️ Plaaslik / oefening', offlineHint:'🤖 Speel teen bots — geen verbinding nodig.',
     srvPokerthNet:'🌐 Internet',
     preActionTitle:'Aksievoorskou', preActionHint:'tik op kaarte om te sluit',
     blindsNextTip:'oor {n} hand(e)', blindsEveryMin:'elke {n} min',

@@ -152,7 +152,7 @@ export const strings = {
   sectionSeat: 'Locuri',    botDifficulty:'Dificultatea boților', botEasy:'Ușor', botMixed:'Mixt', botNormal:'Normal', botHard:'Greu',
 
     guestHint:'🌐 Joc ca invitat pe pokerth.net — fără cont.',
-    srvOffline:'🏋️ Mod antrenament', offlineHint:'🤖 Joc împotriva boților — fără conexiune.',
+    srvOffline:'🏋️ Local / antrenament', offlineHint:'🤖 Joc împotriva boților — fără conexiune.',
     srvPokerthNet:'🌐 Internet',
     preActionTitle:'Previzualizare acțiuni', preActionHint:'atinge cărțile pentru a închide',
     blindsNextTip:'în {n} mâini', blindsEveryMin:'la fiecare {n} min',

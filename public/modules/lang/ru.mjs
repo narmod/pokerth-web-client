@@ -157,7 +157,7 @@ export const strings = {
   sectionSeat: 'Места',    botDifficulty:'Сложность ботов', botEasy:'Лёгкий', botMixed:'Смешанный', botNormal:'Обычный', botHard:'Сложный',
 
     guestHint:'🌐 Гостевая игра на pokerth.net — без аккаунта.',
-    srvOffline:'🏋️ Тренировка', offlineHint:'🤖 Игра против ботов — подключение не нужно.',
+    srvOffline:'🏋️ Локальная / тренировка', offlineHint:'🤖 Игра против ботов — подключение не нужно.',
     srvPokerthNet:'🌐 Интернет',
     preActionTitle:'Предпросмотр действий', preActionHint:'коснитесь карт, чтобы закрыть',
     blindsNextTip:'через {n} раздач', blindsEveryMin:'каждые {n} мин',

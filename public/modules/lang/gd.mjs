@@ -153,7 +153,7 @@ export const strings = {
   sectionSeat: 'Suidheachain',    botDifficulty:'Duilgheadas nam botaichean', botEasy:'Furasta', botMixed:'Measgaichte', botNormal:'Àbhaisteach', botHard:'Doirbh',
 
     guestHint:'🌐 Cluich mar aoigh air pokerth.net — gun chunntas.',
-    srvOffline:'🏋️ Modh trèanaidh', offlineHint:'🤖 Cluich an aghaidh bhotaichean — gun cheangal.',
+    srvOffline:'🏋️ Ionadail / trèanadh', offlineHint:'🤖 Cluich an aghaidh bhotaichean — gun cheangal.',
     srvPokerthNet:'🌐 Eadar-lìon',
     preActionTitle:'Ro-shealladh gnìomh', preActionHint:'thoir gnogadh air na cairtean gus dùnadh',
     blindsNextTip:'an ceann {n} làmh', blindsEveryMin:'gach {n} mion',

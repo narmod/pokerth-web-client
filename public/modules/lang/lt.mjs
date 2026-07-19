@@ -152,7 +152,7 @@ export const strings = {
   sectionSeat: 'Vietos',    botDifficulty:'Botų sudėtingumas', botEasy:'Lengvas', botMixed:'Mišrus', botNormal:'Normalus', botHard:'Sunkus',
 
     guestHint:'🌐 Žaidimas kaip svečias pokerth.net — be paskyros.',
-    srvOffline:'🏋️ Treniruočių režimas', offlineHint:'🤖 Žaidimas prieš botus — ryšio nereikia.',
+    srvOffline:'🏋️ Vietinis / treniruotė', offlineHint:'🤖 Žaidimas prieš botus — ryšio nereikia.',
     srvPokerthNet:'🌐 Internetas',
     preActionTitle:'Veiksmų peržiūra', preActionHint:'palieskite kortas, kad uždarytumėte',
     blindsNextTip:'po {n} rankų', blindsEveryMin:'kas {n} min',

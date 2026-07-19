@@ -153,7 +153,7 @@ export const strings = {
   sectionSeat: '座位',    botDifficulty:'機器人難度', botEasy:'簡單', botMixed:'混合', botNormal:'普通', botHard:'困難',
 
     guestHint:'🌐 在 pokerth.net 以訪客身分遊戲 — 無需帳號。',
-    srvOffline:'🏋️ 訓練模式', offlineHint:'🤖 與機器人對戰 — 無需連線。',
+    srvOffline:'🏋️ 本機 / 練習', offlineHint:'🤖 與機器人對戰 — 無需連線。',
     srvPokerthNet:'🌐 網際網路',
     preActionTitle:'操作預覽', preActionHint:'點選手牌關閉',
     blindsNextTip:'{n} 手後', blindsEveryMin:'每 {n} 分鐘',

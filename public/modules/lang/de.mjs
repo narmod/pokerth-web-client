@@ -159,7 +159,7 @@ export const strings = {
   sectionSeat: 'Sitze',    botDifficulty:'Bot-Schwierigkeit', botEasy:'Einfach', botMixed:'Gemischt', botNormal:'Normal', botHard:'Schwer',
 
     guestHint:'🌐 Gastzugang auf pokerth.net – kein Konto nötig.',
-    srvOffline:'🏋️ Trainingsmodus', offlineHint:'🤖 Solo gegen Bots – keine Verbindung nötig.',
+    srvOffline:'🏋️ Lokal / Training', offlineHint:'🤖 Solo gegen Bots – keine Verbindung nötig.',
     srvPokerthNet:'🌐 Internet',
     preActionTitle:'Aktionsvorschau', preActionHint:'Karten antippen zum Schließen',
     blindsNextTip:'in {n} Händen', blindsEveryMin:'alle {n} Min',

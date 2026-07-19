@@ -151,7 +151,7 @@ export const strings = {
   sectionSeat: 'Paikat',    botDifficulty:'Bottien vaikeus', botEasy:'Helppo', botMixed:'Sekoitettu', botNormal:'Normaali', botHard:'Vaikea',
 
     guestHint:'🌐 Vieraspeli pokerth.net-palvelimella — ei tiliä.',
-    srvOffline:'🏋️ Harjoittelutila', offlineHint:'🤖 Peli botteja vastaan — ei yhteyttä tarvita.',
+    srvOffline:'🏋️ Paikallinen / harjoittelu', offlineHint:'🤖 Peli botteja vastaan — ei yhteyttä tarvita.',
     srvPokerthNet:'🌐 Internet',
     preActionTitle:'Toimintojen esikatselu', preActionHint:'sulje napauttamalla kortteja',
     blindsNextTip:'{n} käden päästä', blindsEveryMin:'joka {n} min',

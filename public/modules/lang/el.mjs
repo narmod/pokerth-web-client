@@ -152,7 +152,7 @@ export const strings = {
   sectionSeat: 'Θέσεις',    botDifficulty:'Δυσκολία bot', botEasy:'Εύκολο', botMixed:'Μικτό', botNormal:'Κανονικό', botHard:'Δύσκολο',
 
     guestHint:'🌐 Παιχνίδι ως επισκέπτης στο pokerth.net — χωρίς λογαριασμό.',
-    srvOffline:'🏋️ Λειτουργία εξάσκησης', offlineHint:'🤖 Παιχνίδι εναντίον bots — χωρίς σύνδεση.',
+    srvOffline:'🏋️ Τοπικό / εξάσκηση', offlineHint:'🤖 Παιχνίδι εναντίον bots — χωρίς σύνδεση.',
     srvPokerthNet:'🌐 Internet',
     preActionTitle:'Προεπισκόπηση ενεργειών', preActionHint:'πάτα τα φύλλα για κλείσιμο',
     blindsNextTip:'σε {n} χέρια', blindsEveryMin:'κάθε {n} λεπτά',

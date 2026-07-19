@@ -153,7 +153,7 @@ export const strings = {
   sectionSeat: '座位',    botDifficulty:'机器人难度', botEasy:'简单', botMixed:'混合', botNormal:'普通', botHard:'困难',
 
     guestHint:'🌐 在 pokerth.net 以访客身份游戏 — 无需账号。',
-    srvOffline:'🏋️ 训练模式', offlineHint:'🤖 与机器人对战 — 无需联网。',
+    srvOffline:'🏋️ 本地 / 训练', offlineHint:'🤖 与机器人对战 — 无需联网。',
     srvPokerthNet:'🌐 互联网',
     preActionTitle:'操作预览', preActionHint:'点击手牌关闭',
     blindsNextTip:'{n} 手后', blindsEveryMin:'每 {n} 分钟',

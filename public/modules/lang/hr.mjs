@@ -152,7 +152,7 @@ export const strings = {
   sectionSeat: 'Mjesta',    botDifficulty:'Težina botova', botEasy:'Lako', botMixed:'Mješovito', botNormal:'Normalno', botHard:'Teško',
 
     guestHint:'🌐 Igra kao gost na pokerth.net — bez računa.',
-    srvOffline:'🏋️ Način vježbanja', offlineHint:'🤖 Igra protiv botova — bez veze.',
+    srvOffline:'🏋️ Lokalno / trening', offlineHint:'🤖 Igra protiv botova — bez veze.',
     srvPokerthNet:'🌐 Internet',
     preActionTitle:'Pregled poteza', preActionHint:'dodirni karte za zatvaranje',
     blindsNextTip:'za {n} ruku', blindsEveryMin:'svakih {n} min',

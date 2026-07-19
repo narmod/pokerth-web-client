@@ -151,7 +151,7 @@ export const strings = {
   sectionSeat: '座席',    botDifficulty:'ボットの難易度', botEasy:'やさしい', botMixed:'ミックス', botNormal:'ふつう', botHard:'むずかしい',
 
     guestHint:'🌐 pokerth.net にゲストで参加 — アカウント不要。',
-    srvOffline:'🏋️ 練習モード', offlineHint:'🤖 ボットと対戦 — 接続不要。',
+    srvOffline:'🏋️ ローカル / 練習', offlineHint:'🤖 ボットと対戦 — 接続不要。',
     srvPokerthNet:'🌐 インターネット',
     preActionTitle:'アクションのプレビュー', preActionHint:'カードをタップして閉じる',
     blindsNextTip:'あと{n}ハンド', blindsEveryMin:'{n}分ごと',

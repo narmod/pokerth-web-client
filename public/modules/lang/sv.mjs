@@ -151,7 +151,7 @@ export const strings = {
   sectionSeat: 'Platser',    botDifficulty:'Bot-svårighet', botEasy:'Lätt', botMixed:'Blandad', botNormal:'Normal', botHard:'Svår',
 
     guestHint:'🌐 Gästspel på pokerth.net — inget konto behövs.',
-    srvOffline:'🏋️ Träningsläge', offlineHint:'🤖 Spela mot bottar — ingen anslutning behövs.',
+    srvOffline:'🏋️ Lokal / träning', offlineHint:'🤖 Spela mot bottar — ingen anslutning behövs.',
     srvPokerthNet:'🌐 Internet',
     preActionTitle:'Förhandsvisning av åtgärder', preActionHint:'tryck på korten för att stänga',
     blindsNextTip:'om {n} händer', blindsEveryMin:'var {n}:e min',

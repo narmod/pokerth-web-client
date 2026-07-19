@@ -156,7 +156,7 @@ export const strings = {
   sectionSeat: 'सीटें',    botDifficulty:'बॉट कठिनाई', botEasy:'आसान', botMixed:'मिश्रित', botNormal:'सामान्य', botHard:'कठिन',
 
     guestHint:'🌐 pokerth.net पर अतिथि के रूप में खेलें — खाते की ज़रूरत नहीं।',
-    srvOffline:'🏋️ अभ्यास मोड', offlineHint:'🤖 बॉट्स के विरुद्ध खेलें — किसी कनेक्शन की ज़रूरत नहीं।',
+    srvOffline:'🏋️ लोकल / अभ्यास', offlineHint:'🤖 बॉट्स के विरुद्ध खेलें — किसी कनेक्शन की ज़रूरत नहीं।',
     srvPokerthNet:'🌐 इंटरनेट',
     blindsNextTip:'{n} हाथ में', blindsEveryMin:'हर {n} मिनट',
     connect:'कनेक्ट करें', disconnect:'✕ डिस्कनेक्ट', connecting:'कनेक्ट हो रहा है…',

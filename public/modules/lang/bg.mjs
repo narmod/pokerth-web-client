@@ -152,7 +152,7 @@ export const strings = {
   sectionSeat: 'Места',    botDifficulty:'Трудност на ботовете', botEasy:'Лесно', botMixed:'Смесено', botNormal:'Нормално', botHard:'Трудно',
 
     guestHint:'🌐 Гост на pokerth.net — без акаунт.',
-    srvOffline:'🏋️ Тренировъчен режим', offlineHint:'🤖 Игра срещу ботове — без връзка.',
+    srvOffline:'🏋️ Локална / тренировка', offlineHint:'🤖 Игра срещу ботове — без връзка.',
     srvPokerthNet:'🌐 Интернет',
     preActionTitle:'Преглед на действията', preActionHint:'докосни картите за затваряне',
     blindsNextTip:'след {n} ръце', blindsEveryMin:'на всеки {n} мин',
