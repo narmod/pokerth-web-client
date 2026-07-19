@@ -113,3 +113,4 @@ en `type=module` et remplacer les ponts `window.*` par de vrais imports.
 | 2026-07-19 | 0.3.809-beta | #2 net/proto.mjs (codec protobuf) — 22 tests | 944 → 941 Ko |
 | 2026-07-19 | 0.3.810-beta | #3 net/crypto.mjs (PTHCrypto AES/SHA-1) — 14 tests croisés node:crypto | 941 → 933 Ko |
 | 2026-07-19 | 0.3.811-beta | #4 net/messages.mjs (MSG + SCRAM, import Proto explicite) — 18 tests | 933 → 912 Ko |
+| 2026-07-19 | 0.3.812-beta | #5 ui/shortcuts.mjs (clavier + rebind, pont defineProperty _rebindAction) — 14 tests (stubs DOM) | 912 → 902 Ko |
