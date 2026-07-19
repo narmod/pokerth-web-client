@@ -145,6 +145,39 @@ rebranchés sur `S` dans le MÊME push que leur var. V7–V9 : test manuel
 reconnexion/rejoin en ligne obligatoire. Rollback = revert du commit entier,
 jamais de rustine sur un renommage partiel.
 
+## #9f — Libération des fonctions (plan court, scan 2026-07-19 à v0.3.836)
+
+175 fonctions top-level dans l'IIFE : 77 feuilles (1 067 l, zéro dépendance
+interne), 85 à faible couplage (1 638 l, 1-3 dép), 13 fortement couplées
+(3 821 l — `handleMsg` 2 080 l, `renderSeatsImmediate` 999 l). L'état étant
+dans `S`, une libération = déplacer un CLUSTER de fonctions (dépendances
+internes closes sur le cluster) vers un module, gabarit i18n.mjs.
+
+Mécanique par cluster : copier les fonctions → module ; `window.nom = nom`
+pour chacune (les appels dans l'IIFE résolvent la chaîne de portées jusqu'à
+window, zéro site d'appel modifié) ; réécrire `$(` → `document.getElementById(`
+dans le code déplacé ; `import { S } from '../game/state.mjs'` remplace le
+`window.PthState` ; câblage HTML + CRIT + sw.js ; test node du module ;
+équivalence prouvée (corps de fonctions normalisé). Un cluster = un push.
+
+| Vague | Module | Cluster (≈lignes) |
+|---|---|---|
+| 9f-1 | `ui/fmt.mjs` | _groupThousands · fmtChips · fmtChipsVoice (~60) — débloque presque tous les autres |
+| 9f-2 | `ui/media.mjs` | voix (speak/_speakNext/_pickVoice/_voiceLangTag/_voiceUtterance/_loadVoices/voiceActionPhrase/toggleVoice) + haptique (hapticBuzz/toggleHaptic) + _syncMediaToggleButtons (~180) |
+| 9f-3 | `game/turn-timer.mjs` | _updateTimer · startTurnTimer · stopTurnTimer · _timerRectSvg (~90) |
+| 9f-4 | `game/stats.mjs` | famille _life* · _pushStats · _stats*/renderStats · _board*/renderBoard · toggleStats/initStats/recordHand (~350) |
+| 9f-5 | `net/petitions.mjs` | _pet* (kick-petitions) + _inv* (invitations) (~250) |
+| 9f-6 | `ui/chat.mjs` | addChat · _chatLocalCmd (~300) |
+| 9f-7 | `ui/player-popup.mjs` | openPlayerInfoPopup · _otherPlayerInfoHtml · _pim* · picker avatar lobby · _avatarChipHtml · _pthAvatarFor · _myAvatarDisplay/ToBroadcast · _ccToFlag (~450) |
+| 9f-8 | `ui/lobby.mjs` | renderGames · renderTablePlayers · _renderInfo* · renderGameInfoPanel · _renderLobbyWaitActions · updateLobbyStatsBar · _tableMatches/_refreshFilterChips · MODE_LABEL/GTYPE (~400) |
+| 9f-9 | `game/showdown.mjs` | _snapshotHandResults · showWinHandBadge · showWinnerOverlay/dismissWinner/_maybeShowNextHandBtn · showEndGameOverlay (~400) |
+| 9f-10 | `net/session.mjs` | show · _armRejoin · _maybeReconnectOnResume · _forceReconnect · _begin/_endConnecting/_connectBtnEl · setStatus · send (~250 ; onRawData reste avec handleMsg) |
+
+Reste après 9f-10 : le noyau (~3 600 l — handleMsg, renderSeatsImmediate,
+renderMyTurnActions, doAction/doRaise/confirmCall, renderSeats, renderComm…)
+= l'orchestrateur assumé de pokerth.js ; son éclatement éventuel fera l'objet
+d'un plan dédié (#9g) une fois les 10 vagues livrées et stabilisées.
+
 ## Protocole par extraction (checklist à suivre à CHAQUE fois)
 
 1. Re-fetch pokerth.js à HEAD ; délimiter le bloc exact (marqueurs ══).
@@ -202,3 +235,4 @@ jamais de rustine sur un renommage partiel.
 | 2026-07-19 | 0.3.834-beta | 9e-V9.2 état cartes/mises/phases → S (13 vars, 230 renommages AST ; 2 shadowings locaux renommés _potVal/_potNow, équivalence prouvée) — test-state 64 ✓ | 822 Ko (stable) |
 | 2026-07-19 | 0.3.835-beta | 9e-V9.3 état sièges/verrous → S (8 vars, 338 renommages AST ; outil v3 = fix shorthand {myName} détecté par node --check ; 2 locaux _gseats renommés ; ponts window seats/seatData rebranchés ; équivalence prouvée) — test-state 67 ✓ | 822 Ko (stable) |
 | 2026-07-19 | 0.3.836-beta | 9e-V10 état UI divers + myId → S (10 vars, 153 renommages AST, dernier pont window.myId rebranché) — test-state 73 ✓ · **#9e TERMINÉ : les seules déclarations du corps de l'IIFE sont `S` et `$` (vérifié AST) ; 153 clés dans state.mjs ; prochaine étape #9f = re-scan de mobilité + vagues de libération de fonctions** | 822 Ko (stable) |
+| 2026-07-19 | — | #9f : scan de mobilité (77 feuilles/85 faibles/13 fortes) + plan des 10 vagues de libération (docs seulement) | 822 Ko |
