@@ -410,6 +410,7 @@ function applyAdvOpts() {
     b.classList.add('adv-hide-pbar'); // mode PokerTH permanent — option « barre joueur masquée » retirée (narmod 2026-07-17), le CSS reste keyé sur la classe
     b.classList.toggle('adv-no-tablezoom', !_advGet('table_zoom', true)); // interrupteur zoom (parite QML tableZoomEnabled)
     b.classList.toggle('adv-no-lobbychat', !_advGet('lobby_chat', true)); // chat du lobby (parite QML UseLobbyChat)
+    b.classList.toggle('adv-no-chatts', !_advGet('chat_ts', true)); // heure [HH:MM:SS] devant les messages de chat (demande forum, extension web)
     b.classList.toggle('adv-no-handsbtn', !_advGet('hands_btn', true)); // icone combinaisons de poker sur le tapis (extension web)
     try { if (typeof window.applyTableZoom === 'function') window.applyTableZoom(); } catch (e) {}
     try { var _slm = localStorage.getItem('pth_seat_layout'); _slm = (_slm === 'pokerth-official' || _slm === 'pokerth-ellipse' || _slm === 'custom') ? _slm : 'auto'; document.documentElement.setAttribute('data-seat-layout', _slm); } catch (e) {}
@@ -536,6 +537,7 @@ function openAdvancedOptions() {
   sync('adv-community', 'show_community', true);
   sync('adv-focusbet', 'focus_bet', false);
   sync('adv-noemoji', 'chat_noemoji', false);
+  sync('adv-chatts', 'chat_ts', true);   // heure dans le chat, active par defaut (comportement historique)
   sync('adv-fadelosers', 'fade_losers', true);
   sync('adv-flag', 'show_flag', true);
   sync('adv-ownclick', 'own_click', false);
@@ -1113,7 +1115,7 @@ function _cfgSyncEnabled() { return _advGet('cfg_sync', true); }
 // type pth_cfg_sync_ts, jetons, caches).
 var _CFG_WEB_SYNC_KEYS = [
   // Toggles web-only (via setAdvOpt → pth_<clé>)
-  'pth_show_community', 'pth_chat_noemoji',
+  'pth_show_community', 'pth_chat_noemoji', 'pth_chat_ts',
   'pth_assist', 'pth_show_odds', 'pth_hands_btn', 'pth_voice',
   'pth_haptic', 'pth_display_bb', 'pth_table_zoom', 'pth_zoom_follow',
   'pth_community_content', 'pth_sound_vol',
@@ -17631,7 +17633,7 @@ function renderPlayersList() {
   });
 })();
 
-;(function(){ window.BUILD_VERSION='0.3.785-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.786-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

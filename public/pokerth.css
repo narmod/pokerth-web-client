@@ -8795,6 +8795,7 @@ html[data-buttons="pokerth"] .btn-action[disabled] { filter: grayscale(0.55) bri
 
 /* Heure des messages de chat [HH:MM:SS] — gris discret, monospace (parité officielle) */
 .msg .msg-time { color: var(--text-dim, #8b93a7); font-family: var(--ff-mono, monospace); font-size: 0.88em; margin-right: 2px; }
+.adv-no-chatts .msg .msg-time { display: none; } /* option « heure dans le chat » decochee */
 
 /* Icônes d'action par joueur (colonne Joueurs connectés) : ⊘ ignorer + 📊 stats */
 .players-list .pl-row .pl-acts { display:inline-flex; align-items:center; gap:2px; justify-self:end; margin-left:0; }
