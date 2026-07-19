@@ -1404,14 +1404,17 @@ function _render(){
   _TABS.forEach(function(tb){
     var act = _activeTab === tb.id;
     var b = document.createElement('button'); b.type='button'; b.textContent = _t(tb.titleKey, tb.fallback);
-    // Badge « beta » sur l'entête Sièges (demande narmod 2026-07-18) : les
-    // packs de sièges sont encore en rodage sur le cadre virtuel QML.
+    // Badge « bêta » sur l'entête Sièges (les packs de sièges sont encore en
+    // rodage sur le cadre virtuel QML). Micro-pilule « β » or (variante B,
+    // choix narmod 2026-07-19) : un seul caractère -> ne tronque jamais
+    // l'onglet sur mobile (l'ancien « beta » rouge en toutes lettres se
+    // coupait en « B… » sur iPhone portrait). Or palette QML (#E3C800/#b09a00).
     if (tb.id === 'seat') {
-      var bb = document.createElement('span'); bb.textContent = 'beta';
-      // Rouge palette QML (colorDanger #e05050) — demande narmod 2026-07-18.
-      bb.style.cssText = 'margin-left:4px;padding:1px 5px;border-radius:7px;font-size:0.55rem;font-weight:700;'
-        + 'letter-spacing:0.04em;text-transform:uppercase;vertical-align:2px;'
-        + 'color:#e05050;border:1px solid rgba(224,80,80,0.55);background:rgba(224,80,80,0.12)';
+      var bb = document.createElement('span'); bb.textContent = '\u03b2';
+      bb.title = 'beta';
+      bb.style.cssText = 'margin-left:4px;padding:0 4px;border-radius:999px;font-size:0.6rem;font-weight:700;'
+        + 'vertical-align:2px;'
+        + 'color:#b09a00;border:1px solid rgba(227,200,0,0.55);background:rgba(227,200,0,0.14)';
       b.appendChild(bb);
     }
     b.style.cssText = 'flex:1;min-width:0;padding:8px 4px;cursor:pointer;font-size:0.75rem;font-weight:600;background:none;border:0;'
