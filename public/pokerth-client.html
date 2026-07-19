@@ -506,7 +506,7 @@ function onAvatarImageChosen(input) {
     /* Petit temps de pause a la reussite (demande narmod 2026-07-19) : on
        laisse « Pret » + barre pleine visibles ~550 ms avant le fondu, au lieu
        de couper net. Splash desactive (bs-invisible) : aucune attente. */
-    var dwell = splash.classList.contains('bs-invisible') ? 0 : 550;
+    var dwell = splash.classList.contains('bs-invisible') ? 0 : 1200;   // 550 -> 1200 ms (narmod : « un peu plus longtemps encore »)
     setTimeout(function () {
       splash.classList.add('bs-hide');
       setTimeout(function () { if (splash.parentNode) splash.parentNode.removeChild(splash); }, 480);
