@@ -9341,3 +9341,19 @@ html[data-seat-struct="qml"] .seat:not(.me) .seat-narrow .seat-holecards .pk { w
    (_applyWinZoom / _advApplyZoom) = taille fenêtre / taille par défaut ×
    facteur global du viewport de l'app. ── */
 .floating-win.win-zoom > :not(.win-rsz) { zoom: var(--wz, 1); }
+
+/* ── Défilement STRICTEMENT vertical partout (demande narmod 2026-07-19) ──
+   overflow-y:auto seul laisse overflow-x se calculer en auto : n'importe quel
+   contenu trop large fait alors panner le panneau latéralement (constaté sur
+   la catégorie Internet des options avancées). On verrouille l'axe X de TOUS
+   les conteneurs à défilement vertical de l'app d'un bloc, ici en fin de
+   feuille pour gagner la cascade. Exceptions volontairement ABSENTES de cette
+   liste (défilement horizontal légitime) : .avp-cats, .rk-awards, .rk-ps-tw,
+   .rk-pr-tw, #g-stats-body .stats-scroll, .adv-nav (mobile), .st-tabbar,
+   #range-modal .range-body (grille 2D). */
+.cp-scroll, #s-connect, .gim-card, .pim-card, .avp-grid, #s-lobby,
+.games-scroll, .chat-msgs, .emote-suggest, .react-grid, .hands-card,
+#stats-overlay, .log-panel-body, .wc-players, .game-log, .wait-page,
+.km-card, .lobby-body, .chat-emoji-panel, .music-body, .rk-body,
+#rk-profile, .adv-body, #about-page, .pv-scroll, .avgal-body, .lgi-scroll
+{ overflow-x: hidden; }
