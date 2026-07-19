@@ -61,11 +61,13 @@ Browser  ⇄  in-memory FakeServer + local engine + bots   (Training mode: no pr
 
 ## Core components
 
-- **Web client** (`public/`) — Vanilla JavaScript, no framework. `pokerth.js`
-  holds the bulk of the logic (lobby, table, cards, betting, chat, animations,
-  reactions, stats), supported by ES modules under `public/modules/`: `i18n`
-  (36 languages), `theme` (multi-axis theming + presets), `sounds`, `music`, and
-  the offline engine.
+- **Web client** (`public/`) — Vanilla JavaScript, no framework. The application
+  logic is split into focused ES modules under `public/modules/` — `net`
+  (protocol, session, message handlers), `game` (state, seat rendering, hand
+  flow, showdown), `ui` (action bar, chat, panels), `i18n` (36 languages),
+  `theme` (multi-axis theming + presets), `sounds`, `music`, and the offline
+  engine + bots — with `pokerth.js` reduced to a thin orchestrator loaded as a
+  native `type="module"`.
 - **Proxy / server** (`proxy.js`) — Node + `ws`. WebSocket↔TCP/TLS bridge,
   static HTTP server, JSON API, and the admin backend: live status, self-update,
   package management, broadcasts, leaderboard, traffic analytics, and an optional
@@ -110,9 +112,11 @@ the admin console are all shipped.
 Current focus and what's next (see [ROADMAP.md](ROADMAP.md) for detail):
 
 - **Now:** refining the registered-account login flow on `pokerth.net`.
-- **Next — code health:** split `pokerth.js` into focused modules, add linting,
-  formatting, and an automated test suite, and move the hand-written Protobuf
-  paths toward generated classes with encode/decode tests.
+- **Next — code health:** add linting and formatting, replace the remaining
+  `window.*` bridges between the orchestrator and the modules with direct ES
+  imports, and move the hand-written Protobuf paths toward generated classes
+  with encode/decode tests. (The module split and a deterministic test suite are
+  already done.)
 - **Later:** local multiplayer over WebRTC, voice chat, alternative table shapes,
   persistent hand history, and regular tagged releases.
 

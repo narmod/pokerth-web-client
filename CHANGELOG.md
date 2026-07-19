@@ -12,6 +12,19 @@ Fidelity and interface work bringing the client closer to PokerTH's official QML
 client, now tracking the **2.1.3** build.
 
 ### Changed
+- **Smarter training bots — multi-street aggression.** Bots no longer play each
+  street in isolation. When a bot was the last to bet and gets checked to on the
+  turn or river, it now keeps *telling the story*: it barrels made hands for
+  value, semi-bluffs strong draws on the turn, and on the river polarises into
+  value bets, bluffs with busted draws (a draw it chased that missed), and
+  checks medium hands down for a free showdown instead of spewing. How often —
+  and how far — a bot barrels is tuned by its difficulty and archetype (a
+  Calling-station never barrels; a Maniac fires relentlessly), so play feels
+  more varied and less predictable than the old "bet once, then give up".
+- **Independent Guest-mode toggle per server.** The **Guest mode** checkbox on
+  the login screen is now remembered *separately* for the Internet and
+  LAN / Dedicated choices — ticking it for one no longer changes the other, and
+  each server remembers your last preference across reloads.
 - **Closer to the official 2.1.3 client.** The in-game action bar now matches the
   official layout -- localised "Suivre \$X / Relancer \$X" labels, a compact
   All-In / "Tapis" button, and 1/3 / 1/2 / Pot quick-bets in the official green --

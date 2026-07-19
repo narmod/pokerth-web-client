@@ -412,7 +412,7 @@ pokerth-web-client/
 │   ├── admin.html           # Maintainer console (served at /admin)
 │   ├── privacy.html         # Privacy page (served at /privacy)
 │   ├── studio.html          # Style studio — design tool for decks, tables, themes and seat packs
-│   ├── pokerth.js           # Full application logic
+│   ├── pokerth.js           # App orchestrator (loaded as an ES module)
 │   ├── pokerth.css          # Styles
 │   ├── manifest.json        # PWA manifest
 │   ├── sw.js                # Service Worker (versioned cache)
@@ -421,6 +421,9 @@ pokerth-web-client/
 │   │   ├── sounds.mjs       #   sound effects
 │   │   ├── theme.mjs        #   theming engine (tables, decks, card backs, seats)
 │   │   ├── music.mjs        #   background-music player
+│   │   ├── net/             #   protocol, session, message handlers
+│   │   ├── game/            #   state, seat rendering, hand flow, showdown
+│   │   ├── ui/              #   action bar, chat, panels, player popups
 │   │   ├── lang/            #   36 language catalogues
 │   │   └── offline/         #   local game engine + bots (Training mode)
 │   ├── proto/               # Protobuf bundle & helpers
@@ -1048,7 +1051,7 @@ Please include the `pthDiag()` output, your browser/OS and the displayed build n
 - The bulk of the logic still lives in a single `pokerth.js` file, though i18n, sounds and the protocol layer have already been extracted into ES modules. Further splitting would help.
 - More automated protocol tests are needed before calling the client production-ready.
 - Spectator mode works but lacks a few quality-of-life touches (e.g. you cannot see other players' cards at showdown the same way the native client does).
-- **Training-mode bots are a solid practice opponent, not a top pro.** They use Monte-Carlo equity against the real number of opponents, play five distinct archetypes (Rock, TAG, LAG, Calling-station, Maniac), and add position-aware pre-flop play plus continuation bets and semi-bluffs — great for learning the flow, practising the interface, or playing offline with no server, but they still won’t read and adapt to you like a strong human.
+- **Training-mode bots are a solid practice opponent, not a top pro.** They use Monte-Carlo equity against the real number of opponents, play five distinct archetypes (Rock, TAG, LAG, Calling-station, Maniac), and add position-aware pre-flop play plus multi-street aggression — continuation bets, semi-bluffs, and turn/river barrelling that value-bets, bluffs busted draws and checks medium hands down, tuned by difficulty and archetype — great for learning the flow, practising the interface, or playing offline with no server, but they still won’t read and adapt to you like a strong human.
 - **PWA features (install to home screen, offline Service Worker, background notifications) require a *secure context*** — i.e. HTTPS, or `localhost`. Over plain `http://` on a LAN IP (e.g. `192.168.1.10:8080`) the game plays perfectly, but the browser disables those three features by design. To get them on a LAN, serve the client over HTTPS — e.g. [`mkcert`](https://github.com/FiloSottile/mkcert) for a locally-trusted certificate, a self-signed cert, a real domain with Let's Encrypt, or a tunnel such as Cloudflare Tunnel / Tailscale.
 - **Translations are not yet natively reviewed.** The 36 language catalogues were produced with care but are largely machine-assisted, so some wordings — especially poker-specific terms — may be imperfect, the less common languages (e.g. Scottish Gaelic, Tamil) most of all. Corrections via issue or pull request are very welcome.
 

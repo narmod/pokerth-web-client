@@ -31,7 +31,10 @@ use too. Items are grouped by status rather than fixed phases.
   pre-flop range, raising tendency, calling threshold and bluff rate, orthogonal to
   difficulty, and with bot names that match their play-style.
 - Position-aware pre-flop play: steal wider from the button/cutoff, tighten under the gun.
-- Post-flop aggression: continuation bets by the pre-flop aggressor and semi-bluffs on strong draws.
+- Multi-street post-flop aggression: continuation bets by the pre-flop aggressor, semi-bluffs
+  on strong draws, and barrelling that carries the story across streets — value bets on made
+  hands, busted-draw bluffs and medium-hand check-downs on the river — with barrel frequency
+  and give-up tuned by difficulty and archetype.
 
 **Appearance & theming**
 - A QML-style styles window with four tabs — Table · Cards · Card back · Seats — each
@@ -194,6 +197,14 @@ use too. Items are grouped by status rather than fixed phases.
 - Versioned, network-first Service Worker with a "new version" banner.
 - Docker image (multi-arch) + one-liner installer / updater / uninstaller.
 
+**Code & architecture**
+- Modularised the former single-file client: the application logic is now split into
+  focused ES modules (network, protocol, state, game, UI, offline engine + bots), with
+  `pokerth.js` reduced to a thin orchestrator loaded as a native `type="module"`. The
+  large `handleMsg` dispatcher was broken out into per-domain message handlers.
+- A deterministic automated test suite (dozens of Node scripts) covers i18n, the offline
+  engine and bot brain, message handlers, and app boot — run in CI-style before every deploy.
+
 ## 🔨 Now (in progress)
 
 - **Official QML client fidelity** — ongoing pixel-and-behaviour alignment of the in-game
@@ -203,10 +214,10 @@ use too. Items are grouped by status rather than fixed phases.
 ## ⏭️ Next
 
 - **Code health**
-  - Split the large `pokerth.js` into focused modules (network, protocol, state, UI). The
-    modularisation is mapped out; the main blocker is the many inline `onclick=` handlers in
-    the HTML.
-  - Add linting, formatting, and a small automated test suite.
+  - Add linting and formatting (the module split and an automated test suite are done — see
+    *Code & architecture* under Shipped).
+  - Replace the remaining `window.*` bridges between the orchestrator and the modules with
+    direct ES imports, opportunistically as files are touched.
   - Move hand-written Protobuf handling toward generated classes + encode/decode tests.
 
 ## 🌅 Later / Ideas
