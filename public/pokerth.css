@@ -8153,7 +8153,7 @@ html:not([data-seat-struct="qml"]) .seat:not(.me) .seat-foot { margin-top: 1px; 
 .adv-cat.is-active{background:rgba(var(--sel-rgb,var(--gold-rgb)),.13);color:var(--sel,var(--gold));box-shadow:inset 2px 0 0 0 var(--sel,var(--gold))}
 .adv-cat.is-active .adv-cat-ic{opacity:1}
 .adv-cat:disabled,.adv-cat[disabled]{opacity:.38;cursor:default}
-.adv-panels{flex:1;min-width:0;max-height:62vh;overflow:auto;padding-right:2px}
+.adv-panels{flex:1;min-width:0;max-height:62vh;overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;padding-right:2px} /* overflow-x:hidden : un contenu trop large (selects/inputs de la categorie Internet) faisait panner toute la fenetre lateralement au lieu de ne defiler qu'en vertical (constate narmod 2026-07-19) */
 .adv-panel{display:none}
 .adv-panel.is-active{display:block}
 .adv-subtabs{display:flex;gap:6px;margin:0 0 10px}
