@@ -988,9 +988,11 @@ function renderSeatsImmediate() {
       // bisections reste à -4 (identique au QML), comme en paysage.
       var _fm2 = _selfHasCustom ? 4 : 24;
       var _floor2 = zone.clientHeight - _fm2 - _bh2 / 2;
-      // Portrait + pack pokerth : la self est ANCRÉE bas-centre comme le QML
-      // (pas seulement une garde anti-débordement). Custom respecté.
-      var _selfPinPortrait = _pkStyleNow && _forceSeatPortrait && !_selfHasCustom;
+      // Portrait : la self est ANCRÉE bas-centre comme le QML (pas seulement
+      // une garde anti-débordement) — pour TOUS les styles de sièges, plus
+      // seulement les packs pokerth (demande narmod 19/07 ; la player-bar
+      // étant toujours masquée, aucun conflit). Custom respecté.
+      var _selfPinPortrait = _forceSeatPortrait && !_selfHasCustom;
       // Mode "perle" (paysage officiel, pas de player-bar) : on ÉPINGLE la
       // self au sol de la zone par MESURE réelle à chaque rendu — garantit le
       // point bas de l'ellipse quels que soient le boxScale et le style.
