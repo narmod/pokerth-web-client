@@ -33,6 +33,16 @@ const RX_ENVY    = ['👀','😤','😒','🫡'];   // un gros coup du joueur hu
 const RX_STEAL   = ['😎','😏','🫡','😈'];   // vol de pot sans abattage
 const RX_THINK   = ['🤔','👀','😬','🫤'];   // gros call difficile / face à une grosse mise
 const RX_LAYDOWN = ['😒','😤','🫤','🙄','😑']; // fold face à une vraie mise
+// Chit-chat d'ambiance : emoji neutres, sans lien avec l'action, joués très
+// rarement en début de main pour donner de la vie à la table (narmod 19/07).
+// Par archétype, pour rester cohérent avec la personnalité.
+const RX_AMBIENT = {
+  rock:    ['😐','🙂','☕','🥱','🧐'],
+  tag:     ['😎','🙂','🤝','🧐','☕'],
+  lag:     ['😏','😈','🤙','😜','🔥'],
+  station: ['🙂','🍀','🤷','😌','🫖'],
+  maniac:  ['😜','🤪','🔥','🎲','🤠'],
+};
 
 export class FakeServer {
   constructor(opts){
@@ -243,6 +253,13 @@ export class FakeServer {
 
   _info(id){
     const p=this.players.find(x=>x.id===id); if(!p) return;
+    // Mode local : exposer l'avatar emoji du bot au rendu des sièges via une
+    // map globale (le protocole PlayerInfoReply ne transporte que les avatars
+    // image pokerth.net). Le client l'affiche à la place du jeton par défaut
+    // pour donner un visage distinct à chaque bot (narmod 19/07).
+    if (p.isBot && p.avatar && typeof window !== 'undefined') {
+      try { (window._offlineBotAv || (window._offlineBotAv = {}))[id] = p.avatar; } catch(e){}
+    }
     const data = encode([[1,2,p.name],[2,0,p.isBot?0:1],[3,0,p.isBot?2:1]]);
     this._send('PlayerInfoReply',[[1,0,id],[2,2,data]]);
   }
@@ -300,7 +317,7 @@ export class FakeServer {
   _react(botId, kind, baseProb, base, extra){
     if(this.stopped || botId===this.meId || botId==null) return;
     if(this._reactedHand.has(botId)) return;
-    if(this._reactN >= 2) return;
+    if(this._reactN >= (this._reactCap||2)) return;
     const arch=(this.botCfg[botId] && this.botCfg[botId].arch) || 'tag';
     const cfg=ARCH_REACT[arch] || ARCH_REACT.tag;
     if(this._rrng() >= Math.min(0.95, baseProb*cfg.freq)) return;
@@ -312,6 +329,31 @@ export class FakeServer {
     this._lastEmoji = emoji;
     this._reactedHand.add(botId); this._reactN++;
     this._botReact(botId, emoji, base||0, extra);
+  }
+  // ── Chit-chat d'ambiance ────────────────────────────────────────────────
+  // Au tout début d'une main, TRÈS rarement, un seul bot lâche un emoji
+  // d'ambiance neutre (sans lien avec l'action) pour donner de la vie à la
+  // table. Discret : ~8 % de chance qu'un bot parmi tous prenne la parole,
+  // jamais plus d'un par main, calé sur la personnalité de l'archétype, et
+  // il compte dans le plafond/anti-spam de la main. rng dédié uniquement.
+  _reactAmbient(){
+    if(this.stopped) return;
+    if(this._reactN >= (this._reactCap||2)) return;
+    // Liste des bots encore en vie à la table.
+    const bots = (this.players||[]).filter(p=>p.isBot && p.id!==this.meId
+      && !(this._kickPending && this._kickPending.has(p.id)));
+    if(!bots.length) return;
+    if(this._rrng() >= 0.08) return;   // ~8 % : un « blanc social » par-ci par-là
+    const bot = bots[Math.floor(this._rrng()*bots.length)];
+    if(this._reactedHand.has(bot.id)) return;
+    const arch=(this.botCfg[bot.id] && this.botCfg[bot.id].arch) || 'tag';
+    const pool = RX_AMBIENT[arch] || RX_AMBIENT.tag;
+    let emoji = pool[Math.floor(this._rrng()*pool.length)];
+    if(emoji===this._lastEmoji && pool.length>1) emoji = pool[Math.floor(this._rrng()*pool.length)];
+    this._lastEmoji = emoji;
+    this._reactedHand.add(bot.id); this._reactN++;
+    // Délai un peu plus long qu'une réaction d'action : après la distribution.
+    this._botReact(bot.id, emoji, 0, 900);
   }
   // Réaction d'un bot pendant son propre tour, d'après la décision calculée
   // (n'utilise QUE le rng dédié — pas de consommation du rng de jeu).
@@ -334,15 +376,26 @@ export class FakeServer {
     let pot=0; (results||[]).forEach(r=>pot+=(r.won||0));
     const big = pot >= 14*bb;
     const catOf=(r)=> (r && r.cards && r.cards.length>=2) ? ((bestHand(r.cards.concat(board||[]))||[0])[0]) : 0;
+    // Réactions en chaîne : au showdown le plafond de réactions/main est
+    // relevé (4 au lieu de 2) et un ÉCHELONNEMENT est ajouté pour que
+    // plusieurs bots puissent enchaîner sans se superposer (narmod 19/07).
+    this._reactN = 0; this._reactCap = 4;   // le showdown ouvre une nouvelle « fenêtre » de réactions (chaîne, plafond relevé)
+    let _chain = 0;
+    const _step = ()=> (base||0) + (_chain++ * 260);   // 0,26 s entre chaque maillon
     for(const r of (results||[])){
       if(r.playerId===this.meId){
-        // gros coup du joueur humain -> un bot perdant, jaloux
-        if(r.won>0 && big){ const loser=(results.find(x=>x.playerId!==this.meId && x.won===0)||{}).playerId; if(loser!=null) this._react(loser,'envy',0.6,base); }
+        // Gros coup du joueur humain -> plusieurs bots perdants réagissent
+        // (envie/respect), en chaîne, au lieu d'un seul.
+        if(r.won>0 && big){
+          const losers=results.filter(x=>x.playerId!==this.meId && x.won===0);
+          const n=Math.min(3, losers.length);
+          for(let i=0;i<n;i++) this._react(losers[i].playerId,'envy',0.6,_step(),0);
+        }
         continue;
       }
-      if(r.won>0){ this._react(r.playerId, (big || catOf(r)>=6) ? 'big' : 'happy', 0.5, base); }
-      else if(catOf(r)>=4){ this._react(r.playerId, 'bad', 0.6, base); }  // bad beat : grosse main battue
-      else { this._react(r.playerId, 'sad', 0.18, base); }
+      if(r.won>0){ this._react(r.playerId, (big || catOf(r)>=6) ? 'big' : 'happy', 0.5, _step(),0); }
+      else if(catOf(r)>=4){ this._react(r.playerId, 'bad', 0.6, _step(),0); }  // bad beat : grosse main battue
+      else { this._react(r.playerId, 'sad', 0.18, _step(),0); }
     }
   }
   _onMyAction(f){
@@ -374,9 +427,10 @@ export class FakeServer {
     switch(ev.type){
       case 'handStart': {
         this._roAcc = 0;   // nouvelle main : repartir d'un accumulateur vierge
-        this._reactedHand = new Set(); this._reactN = 0;
+        this._reactedHand = new Set(); this._reactN = 0; this._reactCap = 2;
         // Reset de l'état de barrel par-main pour chaque bot (compteur + street).
         for (const _id in this.botCfg){ const _c = this.botCfg[_id]; if (_c){ _c._barrels = 0; _c._barrelStreet = null; _c._hadDraw = false; } }
+        this._reactAmbient();   // chit-chat d'ambiance (rare, cosmétique)
         const hole = ev.holeByPlayer[this.meId] || [0,0];
         const spec=[[1,0,G],[2,2, encode([[1,0,hole[0]],[2,0,hole[1]]])],[4,0,ev.sb]];
         ev.seats.forEach(()=>spec.push([5,0,0]));

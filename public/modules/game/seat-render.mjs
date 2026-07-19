@@ -47,7 +47,12 @@ function getPlayerInitial(pid) {
     if (S._myAvatarCache && S._myAvatarCache !== '__pth__' && S._myAvatarCache !== '__img__') return S._myAvatarCache;
     return S.myName ? S.myName.charAt(0).toUpperCase() : '?';
   }
-  if (isBot(pid)) return '🤖';
+  if (isBot(pid)) {
+    // Mode local : chaque bot a son emoji thématique (BOT_POOL), exposé par
+    // le serveur offline. Repli sur 🤖 pour un bot sans emoji connu.
+    try { var _bav = window._offlineBotAv && window._offlineBotAv[pid]; if (_bav) return _bav; } catch (e) {}
+    return '🤖';
+  }
   // Avatar reçu des autres joueurs via proxy
   if (S._playerAvatars[pid]) return S._playerAvatars[pid];
   var name = S.players[pid] || '';
@@ -538,9 +543,11 @@ function renderSeatsImmediate() {
     var _ignHide = !isMe && window._isIgnored(getPlayerName(pid)) && !window._advGet('no_hide_ignored', false);
     const initial    = _ignHide ? ((getPlayerName(pid) || '?').charAt(0).toUpperCase() || '?') : getPlayerInitial(pid);
     const typeBadge  = getPlayerTypeBadge(pid);
+    var _offBotAv = false;
+    try { _offBotAv = !isMe && isBot(pid) && !_ignHide && !!(window._offlineBotAv && window._offlineBotAv[pid]); } catch (e) {}
     var _hasEmojiAv = isMe
       ? (function(){ try { var av = localStorage.getItem('pth_avatar'); return !!av && av !== '__pth__' && av !== '__img__'; } catch(e){ return false; } })()
-      : (_ignHide ? false : !!S._playerAvatars[pid]);
+      : (_ignHide ? false : (!!S._playerAvatars[pid] || _offBotAv));
     const avatarType = isMe
       ? (_hasEmojiAv ? ' emoji-av' : '')
       : (isBot(pid) && !_ignHide ? ' is-bot emoji-av' : (_hasEmojiAv ? ' emoji-av is-human' : ' is-human'));
