@@ -64,7 +64,7 @@ export const strings = {
   cardZoomToggle:'Enlarge my cards',
   seatPokerth: 'PokerTH',
   sectionSeat: 'Seats',    guestHint:'🌐 Guest play on pokerth.net — no account needed.',
-    srvOffline:'🏋️ Training mode', offlineHint:'🤖 Play against bots — no connection needed.',
+    srvOffline:'🏋️ Local / training', offlineHint:'🤖 Play against bots — no connection needed.',
     srvPokerthNet:'🌐 Internet',
     botDifficulty:'Bot difficulty', botEasy:'Easy', botMixed:'Mixed', botNormal:'Normal', botHard:'Hard',
     blindsNextTip:'in {n} hand(s)', blindsEveryMin:'every {n} min', blindsUpHands:'{n} hands', blindsUpMins:'{n} min',
