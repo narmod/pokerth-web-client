@@ -7660,6 +7660,18 @@ html[data-seat-edit="1"] #g-seats .seat.seat-ghost { outline: none; cursor: defa
 .music-bal { display: flex; align-items: center; gap: 8px; }
 .music-bal-end { flex: 0 0 auto; font-size: 0.68rem; color: var(--gold-dim); width: 12px; text-align: center; font-weight: 700; }
 .music-bal-range { flex: 1 1 auto; min-width: 0; accent-color: var(--gold); cursor: pointer; }
+/* Mode compact « windowshade » */
+.music-shade-row { display: none; }
+#music-panel.music-shade .music-player-box { display: none; }
+#music-panel.music-shade .music-shade-row { display: flex; align-items: center; gap: 8px; padding: 2px 0; }
+.music-shade-row .music-tbtn { width: 34px; height: 34px; }
+.music-shade-row .music-tbtn svg { width: 17px; height: 17px; }
+.music-shade-row .music-tbtn-main { width: 40px; height: 40px; }
+.music-shade-row .music-tbtn-main svg { width: 21px; height: 21px; }
+.music-shade-row .music-marquee { flex: 1 1 auto; min-width: 0; }
+.music-shade-btn { background: none; border: none; color: var(--text); cursor: pointer; padding: 0 2px; display: inline-flex; align-items: center; line-height: 1; }
+.music-shade-btn:hover { color: var(--gold); }
+.music-shade-btn svg { width: 16px; height: 16px; display: block; }
 
 /* ── Popover de réglage du son (bouton son du header) ── */
 .sound-pop {

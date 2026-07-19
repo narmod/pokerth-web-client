@@ -59,6 +59,7 @@ let _lcdRemain = false; // LCD time display: false = elapsed, true = remaining (
 let _ctx = null, _srcNode = null, _gain = null, _waReady = false, _waFailed = false;
 let _panner = null, _analyser = null, _vuData = null, _vuRAF = 0, _vuDead = false, _vuZeroFrames = 0;
 let _msReady = false;
+let _shade = false;   // mode compact « windowshade »
 // StereoPannerNode support, probed WITHOUT creating an AudioContext (iOS-safe).
 const _hasPan = (function () { var AC = window.AudioContext || window.webkitAudioContext; return !!(AC && AC.prototype && AC.prototype.createStereoPanner); })();
 
@@ -325,6 +326,7 @@ function _renderProgress() {
 function mount(bodyEl) {
   if (bodyEl) _bodyEl = bodyEl;
   _render();          // immediate skeleton from whatever we already have
+  _ensureShadeBtn();  // bouton de repli dans la barre de titre du panneau
   return refresh();   // force-refresh the manifest + re-render (auto-updating list)
 }
 
@@ -346,6 +348,8 @@ function _icon(name) {
     shuffle: '<g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h4l8 10h3"/><path d="M16 4l3 3-3 3"/><path d="M4 17h4l2.6-3.25"/><path d="M13.4 9.25L16 7h3"/><path d="M16 20l3-3-3-3"/></g>',
     'rep-all': '<g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3l3 3-3 3"/><path d="M20 6H8a4 4 0 0 0-4 4v1"/><path d="M7 21l-3-3 3-3"/><path d="M4 18h12a4 4 0 0 0 4-4v-1"/></g>',
     'rep-one': '<g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3l3 3-3 3"/><path d="M20 6H8a4 4 0 0 0-4 4v1"/><path d="M7 21l-3-3 3-3"/><path d="M4 18h12a4 4 0 0 0 4-4v-1"/></g><path d="M11.4 10.6l1.4-.9V15" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>',
+    shade:  '<path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>',
+    expand: '<path d="M6 15l6-6 6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>',
     volume: '<path d="M4 9v6h4l5 4V5L8 9z"/><path d="M16.5 8.8a4.5 4.5 0 0 1 0 6.4" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>'
   };
   return '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false">' + (P[name] || '') + '</svg>';
@@ -386,6 +390,12 @@ function _render() {
     : '';
 
   _bodyEl.innerHTML =
+    '<div class="music-shade-row">' +
+      '<button type="button" class="music-tbtn" data-mact="prev"' + (multi ? '' : ' disabled') + ' aria-label="' + _esc(_t('musicPrev', 'Previous')) + '">' + _icon('prev') + '</button>' +
+      '<button type="button" class="music-tbtn music-tbtn-main" data-mact="toggle" aria-label="' + _esc(_t(ppKey, playing ? 'Pause' : 'Play')) + '">' + ppIcon + '</button>' +
+      '<button type="button" class="music-tbtn" data-mact="next"' + (multi ? '' : ' disabled') + ' aria-label="' + _esc(_t('musicNext', 'Next')) + '">' + _icon('next') + '</button>' +
+      '<div class="music-marquee music-shade-mq"><span class="music-marquee-txt">' + (nowTxt || _esc(_t('musicNoTracks', 'No tracks available'))) + '</span></div>' +
+    '</div>' +
     '<div class="music-player-box">' +
     // ── LCD : temps (cliquable écoulé/restant) + VU + titre défilant ──
     '<div class="music-lcd">' +
@@ -508,18 +518,21 @@ function _togglePlaylist() {
 // (transform-based scroll = GPU-composited, cheap on iOS — unlike box-shadow).
 function _updateMarquee() {
   if (!_bodyEl) return;
-  var wrap = _bodyEl.querySelector('.music-marquee');
-  var txt = _bodyEl.querySelector('.music-marquee-txt');
-  if (!wrap || !txt) return;
+  var wraps = _bodyEl.querySelectorAll('.music-marquee');
+  if (!wraps.length) return;
   requestAnimationFrame(function () {
-    var overflow = txt.scrollWidth - wrap.clientWidth;
-    if (overflow > 4) {
-      txt.style.setProperty('--mq-shift', '-' + overflow + 'px');
-      wrap.classList.add('is-scroll');
-    } else {
-      wrap.classList.remove('is-scroll');
-      txt.style.removeProperty('--mq-shift');
-    }
+    wraps.forEach(function (wrap) {
+      var txt = wrap.querySelector('.music-marquee-txt');
+      if (!txt) return;
+      var overflow = txt.scrollWidth - wrap.clientWidth;
+      if (overflow > 4) {
+        txt.style.setProperty('--mq-shift', '-' + overflow + 'px');
+        wrap.classList.add('is-scroll');
+      } else {
+        wrap.classList.remove('is-scroll');
+        txt.style.removeProperty('--mq-shift');
+      }
+    });
   });
 }
 
@@ -572,6 +585,40 @@ function _stopVU()  { if (_vuRAF) { cancelAnimationFrame(_vuRAF); _vuRAF = 0; } 
 // Pause/resume the VU with tab visibility (belt-and-braces; _vuActive re-checks anyway).
 try { document.addEventListener('visibilitychange', function () { if (document.hidden) _stopVU(); else _startVU(); }); } catch (e) {}
 
+// ── Mode compact « windowshade » : replie le panneau en une barre fine ──
+function _ensureShadeBtn() {
+  var panel = document.getElementById('music-panel');
+  if (!panel) return;
+  var title = panel.querySelector('.music-panel-title');
+  if (!title) return;
+  var b = title.querySelector('.music-shade-btn');
+  if (!b) {
+    b = document.createElement('button');
+    b.type = 'button'; b.className = 'music-shade-btn';
+    b.addEventListener('click', _toggleShade);
+    var close = title.querySelector('.music-panel-close');
+    if (close) title.insertBefore(b, close); else title.appendChild(b);
+  }
+  _applyShade();
+}
+function _toggleShade() {
+  _shade = !_shade;
+  try { localStorage.setItem('pth_music_shade', _shade ? '1' : '0'); } catch (e) {}
+  _applyShade();
+}
+function _applyShade() {
+  var panel = document.getElementById('music-panel');
+  if (!panel) return;
+  panel.classList.toggle('music-shade', _shade);
+  var b = panel.querySelector('.music-shade-btn');
+  if (b) {
+    b.innerHTML = _shade ? _icon('expand') : _icon('shade');
+    var lbl = _t(_shade ? 'musicExpand' : 'musicCompact', _shade ? 'Expand' : 'Compact');
+    b.setAttribute('aria-label', lbl); b.title = lbl;
+  }
+  if (_shade) _updateMarquee();
+}
+
 // ── Media Session : contrôles OS (écran verrouillé, notification, touches média) ──
 function _setupMediaSession() {
   if (_msReady || !('mediaSession' in navigator)) return;
@@ -616,6 +663,7 @@ function _updateMediaSessionPos() {
 try { _curId = localStorage.getItem(LS_TRACK) || null; } catch (e) {}
 try { var _rm = localStorage.getItem(LS_REPEAT); if (_rm === 'one' || _rm === 'all' || _rm === 'off') _repeat = _rm; } catch (e) {}
 try { _shuffle = (localStorage.getItem(LS_SHUFFLE) === '1'); } catch (e) {}
+try { _shade = (localStorage.getItem('pth_music_shade') === '1'); } catch (e) {}
 
 const Music = {
   loadManifest: loadManifest,
