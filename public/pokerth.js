@@ -4046,7 +4046,12 @@ const App = (() => {
   // désarmer, et l'action s'exécute quand notre tour arrive. Invalidée si la
   // mise à suivre change, reset à chaque nouvelle main.
   var _preAction = '';        // '' | 'fold' | 'call' | 'raise' | 'allin'
-  var _preActionHighest = 0;  // highestBet mémorisé à l'armement (invalidation)
+  var _preActionToCall = -1;  // « à suivre » POUR MOI (highestBet - ma mise) mémorisé
+                              // à l'armement. Invalidation alignée sur l'officiel
+                              // (onCallAmountChanged) : comparer le montant QUE JE DOIS,
+                              // pas highestBet brut — sinon la pose des blinds ou ma
+                              // propre mise comptabilisée désarmaient silencieusement la
+                              // pré-action (bug « je dois re-sélectionner à mon tour »).
   // Verrou anti-fermeture du picker natif (iOS) du selecteur de mode : tant
   // que l'utilisateur manipule #mode-sel, on differe les reconstructions
   // d'apercu (renderMyTurnActions(true)) pour ne pas detruire le <select> ouvert.
@@ -9805,7 +9810,8 @@ const App = (() => {
     // Invalidation d'une pré-action call/raise si la mise à suivre a changé
     // depuis l'armement (comme l'officiel : onCallAmountChanged). Fold/All-In
     // restent valides (pas de dépendance au montant).
-    if (_preAction && (_preAction === 'call' || _preAction === 'raise') && highestBet !== _preActionHighest) {
+    var _paCurToCall = Math.max(0, highestBet - ((seatData[myId] || {}).bet || 0));
+    if (_preAction && (_preAction === 'call' || _preAction === 'raise') && _paCurToCall !== _preActionToCall) {
       _preAction = '';
     }
     const myMoney = (seatData[myId] || {}).money || 0;
@@ -11417,7 +11423,7 @@ function _maybeShowNextHandBtn() {
       if (_amSpectator || !_gameStarted) return;
       if (myCards[0] == null && myCards[1] == null) return; // pas de cartes
       _preAction = (_preAction === name) ? '' : name;      // toggle
-      _preActionHighest = highestBet;                       // mémorise le contexte de mise
+      _preActionToCall = Math.max(0, highestBet - ((seatData[myId] || {}).bet || 0)); // onCallAmountChanged : MON à-suivre
       renderMyTurnActions(true);                            // re-render pour le surlignage or
     },
 
@@ -14989,7 +14995,7 @@ function renderPlayersList() {
   });
 })();
 
-;(function(){ window.BUILD_VERSION='0.3.819-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.820-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
