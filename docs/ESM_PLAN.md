@@ -238,3 +238,4 @@ d'un plan dédié (#9g) une fois les 10 vagues livrées et stabilisées.
 | 2026-07-19 | — | #9f : scan de mobilité (77 feuilles/85 faibles/13 fortes) + plan des 10 vagues de libération (docs seulement) | 822 Ko |
 | 2026-07-19 | 0.3.837-beta | 9f-1 ui/fmt.mjs (_groupThousands/fmtChips/fmtChipsVoice ; _lang lu via window._lang, seule adaptation) — 11 tests | 822 → 820 Ko |
 | 2026-07-19 | 0.3.838-beta | 9f-2 ui/media.mjs (voix TTS + haptique, 11 fonctions ; adaptations window._lang/showKeyHint/getPlayerName + pont getPlayerName ajouté ; corps identiques vérifiés) — 12 tests | 820 → 815 Ko |
+| 2026-07-19 | 0.3.839-beta | 9f-3 game/turn-timer.mjs (4 fonctions ; adaptations window.setUrgentMode/notifyTick*/renderSeats + pont renderSeats ajouté ; corps identiques) — 13 tests | 815 → 811 Ko |
