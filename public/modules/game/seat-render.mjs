@@ -47,12 +47,12 @@ function getPlayerInitial(pid) {
     if (S._myAvatarCache && S._myAvatarCache !== '__pth__' && S._myAvatarCache !== '__img__') return S._myAvatarCache;
     return S.myName ? S.myName.charAt(0).toUpperCase() : '?';
   }
-  if (isBot(pid)) {
-    // Mode local : chaque bot a son emoji thématique (BOT_POOL), exposé par
-    // le serveur offline. Repli sur 🤖 pour un bot sans emoji connu.
-    try { var _bav = window._offlineBotAv && window._offlineBotAv[pid]; if (_bav) return _bav; } catch (e) {}
-    return '🤖';
-  }
+  // Mode local : un bot offline est identifié par la présence de son emoji
+  // dans window._offlineBotAv (rempli par le serveur offline). NE PAS se
+  // fier à isBot() ici : les bots offline ont des noms « humains » (The Rock,
+  // Shark…) qui ne commencent pas par « bot »/« computer ».
+  try { var _bavI = (pid !== S.myId) && window._offlineBotAv && window._offlineBotAv[pid]; if (_bavI) return _bavI; } catch (e) {}
+  if (isBot(pid)) return '🤖';
   // Avatar reçu des autres joueurs via proxy
   if (S._playerAvatars[pid]) return S._playerAvatars[pid];
   var name = S.players[pid] || '';
@@ -544,13 +544,13 @@ function renderSeatsImmediate() {
     const initial    = _ignHide ? ((getPlayerName(pid) || '?').charAt(0).toUpperCase() || '?') : getPlayerInitial(pid);
     const typeBadge  = getPlayerTypeBadge(pid);
     var _offBotAv = false;
-    try { _offBotAv = !isMe && isBot(pid) && !_ignHide && !!(window._offlineBotAv && window._offlineBotAv[pid]); } catch (e) {}
+    try { _offBotAv = !isMe && !_ignHide && !!(window._offlineBotAv && window._offlineBotAv[pid]); } catch (e) {}
     var _hasEmojiAv = isMe
       ? (function(){ try { var av = localStorage.getItem('pth_avatar'); return !!av && av !== '__pth__' && av !== '__img__'; } catch(e){ return false; } })()
       : (_ignHide ? false : (!!S._playerAvatars[pid] || _offBotAv));
     const avatarType = isMe
       ? (_hasEmojiAv ? ' emoji-av' : '')
-      : (isBot(pid) && !_ignHide ? ' is-bot emoji-av' : (_hasEmojiAv ? ' emoji-av is-human' : ' is-human'));
+      : ((isBot(pid) || _offBotAv) && !_ignHide ? ' is-bot emoji-av' : (_hasEmojiAv ? ' emoji-av is-human' : ' is-human'));
     const moneyStr = sd.money != null && sd.money >= 0 ? fmtChips(sd.money) : '—';
     // Cartes sous le siège : uniquement les adversaires au showdown
     // (mes propres cartes sont déjà visibles dans la player-bar en bas)
