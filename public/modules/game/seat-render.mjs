@@ -980,10 +980,13 @@ function renderSeatsImmediate() {
       // de zoom, contrairement a getBoundingClientRect) -> clamp stable a tout zoom.
       var _bh2 = _meEl.offsetHeight * _seatBoxScale * SELF_BOX_MUL;
       var _bt2 = parseFloat(_meEl.dataset.baseTop) || 0;
-      // Marge basse : QML = wide ? 12 : 4 ; en mode perle (paysage) la
-      // marge web passe à 24 (même valeur que selfY de _qmlLandscapeLayout)
-      // pour décoller la self du panneau d'action flottant (narmod 17/07).
-      var _fm2 = _selfAtPearl ? 24 : 4;
+      // Marge basse : QML = wide ? 12 : 4 ; DÉROGATION WEB (narmod 17/07
+      // paysage, 19/07 portrait) : 24 px dans les DEUX orientations pour
+      // décoller la self du panneau d'action flottant (plus haut que la
+      // barre QML affleurante). Une self placée à la main (custom) garde la
+      // simple garde anti-débordement QML à 4 px. La réserve interne des
+      // bisections reste à -4 (identique au QML), comme en paysage.
+      var _fm2 = _selfHasCustom ? 4 : 24;
       var _floor2 = zone.clientHeight - _fm2 - _bh2 / 2;
       // Portrait + pack pokerth : la self est ANCRÉE bas-centre comme le QML
       // (pas seulement une garde anti-débordement). Custom respecté.
