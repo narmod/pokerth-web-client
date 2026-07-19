@@ -2580,11 +2580,8 @@ document.addEventListener("DOMContentLoaded", function() {
 // ═══════════════════════════════════════════════════════════
 const App = (() => {
   const S = window.PthState; // état partagé — modules/game/state.mjs (ESM #9e)
-  let ws        = null;
-  let rxBuf     = new Uint8Array(0);
   let myId      = 0;
   // ── Game state ──
-  let lastMajor = 5, lastMinor = 1, lastLoginType = 0; // for name-retry
 
   // ── Blind-raise schedule (forum: "better notification of blind increases") ──
   // Captured from NetGameInfo at JoinGameAck. _raiseMode: 1=every N hands,
@@ -2797,7 +2794,7 @@ const App = (() => {
     // 5) Mode internet (pokerth.net) : joueur sans avatar -> logo PokerTH,
     // comme le siege de jeu. Les autres modes (LAN, entrainement) gardent
     // l'initiale.
-    if (!window._offlineMode && (_currentLoginMode === 'guest' || _currentLoginMode === 'auth')) {
+    if (!window._offlineMode && (S._currentLoginMode === 'guest' || S._currentLoginMode === 'auth')) {
       return '<span class="' + chipClass + ' has-pth-avatar">'
            + '<img class="chip-pth-img" src="/favicon.svg" alt="" draggable="false">'
            + '</span>';
@@ -3638,7 +3635,7 @@ const App = (() => {
     var a = window._adminTableNames;
     if (!a || typeof a !== 'object') return null;
     var key = window._offlineMode ? 'offline'
-            : (_currentLoginMode === 'guest' || _currentLoginMode === 'auth') ? 'pokerthnet'
+            : (S._currentLoginMode === 'guest' || S._currentLoginMode === 'auth') ? 'pokerthnet'
             : 'lan';
     var v = a[key];
     return (typeof v === 'string' && v.trim()) ? v.trim() : null;
@@ -3956,7 +3953,7 @@ const App = (() => {
   // Retourne true si une action auto a ete declenchee.
   function _playAutoMode() {
     if (_playingMode === 0 || turnPid !== myId) return false;
-    if (!ws || ws.readyState !== WebSocket.OPEN) return false;
+    if (!S.ws || S.ws.readyState !== WebSocket.OPEN) return false;
     var myBet0    = (seatData[myId] || {}).bet || 0;
     var toCall0   = Math.max(0, highestBet - myBet0);
     var canCheck0 = toCall0 === 0;
@@ -4002,64 +3999,45 @@ const App = (() => {
   window.setVoice = function (on) { if (!!on !== S._voiceEnabled) toggleVoice(); };
   window.setDisplayBB = function (on) { if (!!on !== S._displayBB) toggleDisplayBB(); };
   window.setHaptic = function (on) { if (!!on !== S._hapticEnabled) toggleHaptic(); };
-  let _lastConnectParams = null;
   // Track mode + name of last Init sent so we can detect 'rapid mode swap'
   // patterns that the PokerTH server's anti-brute-force flags as
   // suspicious. When the user switches between login modes (guest /
   // unauth / auth / LAN) without enough time between Init messages, the
   // server temporarily blocks the IP. We enforce a minimum gap if the
   // mode or nickname changes between two connect() calls.
-  let _lastInitMode = null;     // string: 'lan' / 'unauth' / 'guest' / 'auth'
-  let _lastInitNick = null;     // user-typed nickname at time of last Init
-  let _lastInitTime = 0;        // timestamp of last Init sent
-  let _connectingNow = false;   // re-entrancy guard to ignore double-clicks
-  let _connectTimeout = null;   // safety net so the connect button never stays stuck
-  let _connectBtnLabel = null;  // saved label restored on _endConnecting
   function _connectBtnEl(){ return document.querySelector('#s-connect .btn-primary'); }
   function _beginConnecting(){
     // Lock the WHOLE connection attempt (click → success OR failure), not just
     // the short pre-flight waits. Otherwise a re-click DURING the slow auth
     // handshake tears down the in-flight socket and reopens a fresh one — a
     // connect/close storm that makes the PokerTH server block the IP (err 7).
-    _connectingNow = true;
+    S._connectingNow = true;
     var _fr = (typeof _lang === 'undefined' || _lang !== 'en');
     var b = _connectBtnEl();
     if (b) {
-      if (_connectBtnLabel === null) _connectBtnLabel = b.textContent;
+      if (S._connectBtnLabel === null) S._connectBtnLabel = b.textContent;
       b.disabled = true;
       b.textContent = _fr ? '⏳ Connexion…' : '⏳ Connecting…';
     }
-    if (_connectTimeout) clearTimeout(_connectTimeout);
-    _connectTimeout = setTimeout(function(){
+    if (S._connectTimeout) clearTimeout(S._connectTimeout);
+    S._connectTimeout = setTimeout(function(){
       // If auth never resolves, free the button so the user isn't stuck. We do
       // NOT close the socket: it may still complete, and a manual re-click will
       // now cleanly close+reopen (single cycle) via the lingering-WS path.
-      if (!_connectingNow) return;
+      if (!S._connectingNow) return;
       _endConnecting();
       try { setStatus(_fr ? 'La connexion prend du temps… réessaie si besoin.' : 'Connection is taking a while… retry if needed.', 'err'); } catch(e) {}
     }, 20000);
   }
   function _endConnecting(){
-    _connectingNow = false;
-    if (_connectTimeout) { clearTimeout(_connectTimeout); _connectTimeout = null; }
+    S._connectingNow = false;
+    if (S._connectTimeout) { clearTimeout(S._connectTimeout); S._connectTimeout = null; }
     var b = _connectBtnEl();
     if (b) {
       b.disabled = false;
-      if (_connectBtnLabel !== null) { b.textContent = _connectBtnLabel; _connectBtnLabel = null; }
+      if (S._connectBtnLabel !== null) { b.textContent = S._connectBtnLabel; S._connectBtnLabel = null; }
     }
   }
-  const MODE_SWAP_MIN_GAP = 3000;  // ms — server blocks below ~2s in tests
-  let _currentLoginMode = 'lan';
-  let _reconnectAttempts = 0;
-  let _lastRxTime = Date.now();  // horodatage du dernier message reçu (watchdog liveness)
-  let _intentionalDisconnect = false;
-  let _pendingRejoin = 0;        // gameId to auto-rejoin after reconnect (0 = none)
-  let _rejoinNickRetries = 0;    // retries waiting for our ghost's nick to free up
-  let _wasAuthenticated = false; // true seulement après InitAck réussi
-  let _lastConnectTime = 0;      // timestamp de la dernière tentative
-  let _lastConnectFailed = false; // true si la dernière tentative a échoué
-  let _ipBlockUntil = 0;         // timestamp de fin de blocage IP
-  const MIN_CONNECT_INTERVAL = 1500; // 1.5s minimum (anti double-clic) — espacer via proxy
 
   // ── DOM ──
   const $ = id => document.getElementById(id);
@@ -4109,15 +4087,15 @@ const App = (() => {
   // [Phase 2 / 9d] _sidStore/_getSessionId déplacées dans public/modules/ui/misc.mjs.
 
   function _armRejoin() {
-    if (_intentionalDisconnect) return;
+    if (S._intentionalDisconnect) return;
     var sgEl = document.getElementById('s-game');
-    if (S.gId && sgEl && sgEl.classList.contains('active')) _pendingRejoin = S.gId;
+    if (S.gId && sgEl && sgEl.classList.contains('active')) S._pendingRejoin = S.gId;
   }
 
   function _maybeReconnectOnResume() {
-    if (_intentionalDisconnect) return;
-    if (!_lastConnectParams) return;                      // jamais connecté cette session
-    if (ws && ws.readyState === WebSocket.OPEN) return;   // socket encore vivant
+    if (S._intentionalDisconnect) return;
+    if (!S._lastConnectParams) return;                      // jamais connecté cette session
+    if (S.ws && S.ws.readyState === WebSocket.OPEN) return;   // socket encore vivant
     var sg = document.getElementById('s-game');
     var sl = document.getElementById('s-lobby');
     var inSession = (sg && sg.classList.contains('active'))
@@ -4127,11 +4105,11 @@ const App = (() => {
     // Annuler tout backoff déjà programmé par un onclose.
     clearTimeout(window._reconnectTimer);
     clearInterval(window._reconnectCountdown);
-    _reconnectAttempts = 0;
+    S._reconnectAttempts = 0;
     // Refermer proprement un éventuel socket zombie avant de rouvrir.
-    if (ws && ws.readyState !== WebSocket.CLOSED) {
-      try { ws.onclose = null; ws.onerror = null; ws.onmessage = null; ws.close(); } catch(e) {}
-      ws = null;
+    if (S.ws && S.ws.readyState !== WebSocket.CLOSED) {
+      try { S.ws.onclose = null; S.ws.onerror = null; S.ws.onmessage = null; S.ws.close(); } catch(e) {}
+      S.ws = null;
     }
     try { _showBanner(t('reconnInProgress')); } catch(e) {}
     // preserve:true → on garde l'état de la table ; le proxy rebranche le
@@ -4159,19 +4137,19 @@ const App = (() => {
   // socket quel que soit son état, puis on relance une connexion propre
   // (même chemin que la reconnexion auto → même re-join de table).
   function _forceReconnect() {
-    if (_intentionalDisconnect || !_lastConnectParams) return;
+    if (S._intentionalDisconnect || !S._lastConnectParams) return;
     var sg = document.getElementById('s-game');
     var sl = document.getElementById('s-lobby');
     if (!((sg && sg.classList.contains('active')) || (sl && sl.classList.contains('active')))) return;
     _armRejoin();
     clearTimeout(window._reconnectTimer);
     clearInterval(window._reconnectCountdown);
-    _reconnectAttempts = 0;
-    if (ws) {
-      try { ws.onclose = null; ws.onerror = null; ws.onmessage = null; ws.onopen = null; ws.close(); } catch(e) {}
-      ws = null;
+    S._reconnectAttempts = 0;
+    if (S.ws) {
+      try { S.ws.onclose = null; S.ws.onerror = null; S.ws.onmessage = null; S.ws.onopen = null; S.ws.close(); } catch(e) {}
+      S.ws = null;
     }
-    _lastRxTime = Date.now(); // éviter que le watchdog ne re-déclenche aussitôt
+    S._lastRxTime = Date.now(); // éviter que le watchdog ne re-déclenche aussitôt
     try { _showBanner(t('reconnInProgress')); } catch(e) {}
     try { App.connect({ preserve: true }); } catch(e) {}
   }
@@ -4182,7 +4160,7 @@ const App = (() => {
   // 'offline' : on prévient l'utilisateur ; la reconnexion se fera au retour du
   // réseau ('online') ou via le watchdog ci-dessous.
   window.addEventListener('offline', function () {
-    if (_intentionalDisconnect || !_lastConnectParams) return;
+    if (S._intentionalDisconnect || !S._lastConnectParams) return;
     var sg = document.getElementById('s-game');
     var sl = document.getElementById('s-lobby');
     if (!((sg && sg.classList.contains('active')) || (sl && sl.classList.contains('active')))) return;
@@ -4199,17 +4177,16 @@ const App = (() => {
   // est renseigné depuis NetGameInfo au JoinGameAck (défaut 15 s). C'est un
   // filet de sécurité ; les vrais déclencheurs rapides sont
   // online/focus/visibilitychange (et le rebranchement proxy est transparent).
-  var _RX_WATCHDOG_MIN_MS = 45000;
   setInterval(function () {
-    if (_intentionalDisconnect || !_lastConnectParams) return;
+    if (S._intentionalDisconnect || !S._lastConnectParams) return;
     if (document.hidden) return;                                            // arrière-plan : timers gelés
     if (typeof navigator.onLine === 'boolean' && !navigator.onLine) return; // hors-ligne géré ailleurs
     var sg = document.getElementById('s-game');
     if (!(sg && sg.classList.contains('active'))) return;                   // seulement à une table
-    if (!ws || ws.readyState !== WebSocket.OPEN) return;                    // sinon déjà géré
+    if (!S.ws || S.ws.readyState !== WebSocket.OPEN) return;                    // sinon déjà géré
     var _tt  = (typeof S.gameTimeout === 'number' && S.gameTimeout > 0) ? S.gameTimeout : 15;
-    var _thr = Math.max(_RX_WATCHDOG_MIN_MS, (_tt + 20) * 1000);            // > timeout d'action de la table
-    if (Date.now() - _lastRxTime > _thr) _forceReconnect();
+    var _thr = Math.max(S._RX_WATCHDOG_MIN_MS, (_tt + 20) * 1000);            // > timeout d'action de la table
+    if (Date.now() - S._lastRxTime > _thr) _forceReconnect();
   }, 5000);
 
   // ── User diagnostics: type pthDiag() in the console ─────────────────────
@@ -4227,8 +4204,8 @@ const App = (() => {
       d.sw      = !!(navigator.serviceWorker && navigator.serviceWorker.controller);
       d.online  = navigator.onLine;
       d.offlineMode = !!window._offlineMode;
-      d.loginMode = _currentLoginMode;
-      d.ws      = ws ? (['CONNECTING','OPEN','CLOSING','CLOSED'][ws.readyState] || ws.readyState) : null;
+      d.loginMode = S._currentLoginMode;
+      d.ws      = S.ws ? (['CONNECTING','OPEN','CLOSING','CLOSED'][S.ws.readyState] || S.ws.readyState) : null;
       d.nick    = myName || null;
       d.playerId = myId || 0;
       d.gameId  = S.gId || 0;
@@ -4312,10 +4289,10 @@ const App = (() => {
         var last10 = 0;
         for (var i = 0; i < ms0.ring.length; i++) if (now - ms0.ring[i].ts < 10000) last10++;
         echo('netdbg', JSON.stringify({
-          transport: ws ? ((window._directWS ? 'direct' : 'proxy') + ' ' + (ws.url && ws.url.indexOf('wss:') === 0 ? 'wss' : 'ws')) : null,
-          wsState: ws ? (['CONNECTING','OPEN','CLOSING','CLOSED'][ws.readyState] || ws.readyState) : null,
+          transport: S.ws ? ((window._directWS ? 'direct' : 'proxy') + ' ' + (S.ws.url && S.ws.url.indexOf('wss:') === 0 ? 'wss' : 'ws')) : null,
+          wsState: S.ws ? (['CONNECTING','OPEN','CLOSING','CLOSED'][S.ws.readyState] || S.ws.readyState) : null,
           online: navigator.onLine,
-          reconnects: _reconnectAttempts,
+          reconnects: S._reconnectAttempts,
           msgsTotal: ms0.total,
           msgsLast10s: last10
         }));
@@ -4551,7 +4528,7 @@ const App = (() => {
   function _flushReactEmoji() {
     S._reactEmojiTimer = null;
     if (!S._reactEmojiQueue.length) return;
-    if (!ws || !S.gId || ws.readyState !== WebSocket.OPEN) { S._reactEmojiQueue.length = 0; return; }
+    if (!S.ws || !S.gId || S.ws.readyState !== WebSocket.OPEN) { S._reactEmojiQueue.length = 0; return; }
     const now = Date.now();
     const wait = S.REACT_EMOJI_MIN_GAP - (now - S._reactEmojiLastSent);
     if (wait > 0) { S._reactEmojiTimer = setTimeout(_flushReactEmoji, wait); return; }
@@ -4576,51 +4553,50 @@ const App = (() => {
   // peut pas l'atteindre. On ouvre un second WebSocket minimal vers le proxy
   // (?notify=1) qui ne transporte QUE les trames texte NOTICE:/INFO:.
   // Reconnexion silencieuse (15 s) tant que le canal est demandé.
-  let _notifyWS = null, _notifyUrl = '', _notifyTimer = null;
   function _closeNotifyWS() {
-    _notifyUrl = '';
-    if (_notifyTimer) { clearTimeout(_notifyTimer); _notifyTimer = null; }
-    if (_notifyWS) { try { _notifyWS.onclose = null; _notifyWS.close(); } catch (e) {} _notifyWS = null; }
+    S._notifyUrl = '';
+    if (S._notifyTimer) { clearTimeout(S._notifyTimer); S._notifyTimer = null; }
+    if (S._notifyWS) { try { S._notifyWS.onclose = null; S._notifyWS.close(); } catch (e) {} S._notifyWS = null; }
   }
   function _openNotifyWS(baseUrl, mode) {
     if (!baseUrl) return;
     const u = baseUrl + (baseUrl.indexOf('?') >= 0 ? '&' : '?') + 'notify=1&mode=' + (mode === 'offline' ? 'offline' : 'pthnet');
-    if (_notifyWS && _notifyUrl === u) return; // déjà ouvert sur la bonne URL
+    if (S._notifyWS && S._notifyUrl === u) return; // déjà ouvert sur la bonne URL
     _closeNotifyWS();
-    _notifyUrl = u;
+    S._notifyUrl = u;
     (function dial() {
-      if (!_notifyUrl) return;
+      if (!S._notifyUrl) return;
       var sck = null;
-      try { sck = new WebSocket(_notifyUrl); } catch (e) {}
-      if (!sck) { _notifyTimer = setTimeout(dial, 30000); return; }
-      _notifyWS = sck;
+      try { sck = new WebSocket(S._notifyUrl); } catch (e) {}
+      if (!sck) { S._notifyTimer = setTimeout(dial, 30000); return; }
+      S._notifyWS = sck;
       sck.onmessage = function (e) { if (typeof e.data === 'string') _handleCtrlFrame(e.data); };
       sck.onerror = function () { try { sck.close(); } catch (e) {} };
       sck.onclose = function () {
-        if (sck !== _notifyWS) return;
-        _notifyWS = null;
-        if (_notifyUrl) _notifyTimer = setTimeout(dial, 15000);
+        if (sck !== S._notifyWS) return;
+        S._notifyWS = null;
+        if (S._notifyUrl) S._notifyTimer = setTimeout(dial, 15000);
       };
     })();
   }
 
   // ── RÉSEAU ──
   function send(data) {
-    if (!ws || ws.readyState !== WebSocket.OPEN) return;
+    if (!S.ws || S.ws.readyState !== WebSocket.OPEN) return;
     if (directWS) {
       // Direct WSS to pokerth.net: raw protobuf, no length prefix
-      ws.send(data);
+      S.ws.send(data);
       return;
     }
     // Proxy mode: 4-byte big-endian length prefix + data
     const frame = new ArrayBuffer(4 + data.byteLength);
     new DataView(frame).setUint32(0, data.byteLength, false);
     new Uint8Array(frame).set(data, 4);
-    ws.send(frame);
+    S.ws.send(frame);
   }
 
   function onRawData(chunk) {
-    _lastRxTime = Date.now();              // liveness : un message reçu = socket vivant
+    S._lastRxTime = Date.now();              // liveness : un message reçu = socket vivant
     // Données qui arrivent = lien rétabli. Sur un rebranchement transparent
     // (le proxy a gardé la session PokerTH vivante), il n'y a NI Announce NI
     // InitAck → aucun handler ne masquerait la bannière « reconnexion ». On la
@@ -4635,16 +4611,16 @@ const App = (() => {
       handleMsg(new Uint8Array(chunk));
       return;
     }
-    const tmp = new Uint8Array(rxBuf.length + chunk.byteLength);
-    tmp.set(rxBuf);
-    tmp.set(new Uint8Array(chunk), rxBuf.length);
-    rxBuf = tmp;
+    const tmp = new Uint8Array(S.rxBuf.length + chunk.byteLength);
+    tmp.set(S.rxBuf);
+    tmp.set(new Uint8Array(chunk), S.rxBuf.length);
+    S.rxBuf = tmp;
 
-    while (rxBuf.length >= 4) {
-      const len = new DataView(rxBuf.buffer, rxBuf.byteOffset).getUint32(0, false);
-      if (rxBuf.length < 4 + len) break;
-      handleMsg(rxBuf.slice(4, 4 + len));
-      rxBuf = rxBuf.slice(4 + len);
+    while (S.rxBuf.length >= 4) {
+      const len = new DataView(S.rxBuf.buffer, S.rxBuf.byteOffset).getUint32(0, false);
+      if (S.rxBuf.length < 4 + len) break;
+      handleMsg(S.rxBuf.slice(4, 4 + len));
+      S.rxBuf = S.rxBuf.slice(4 + len);
     }
   }
 
@@ -4901,8 +4877,8 @@ const App = (() => {
         const useAcctAuth = !!userAcctPass;
         if (stype === 2 && loginMode !== 'guest' && loginMode !== 'auth' && !useAcctAuth) {
           setStatus(t('serverRequiresAuth'), 'err');
-          _intentionalDisconnect = true; // fatal config error — don't auto-retry
-          ws.close(); return;
+          S._intentionalDisconnect = true; // fatal config error — don't auto-retry
+          S.ws.close(); return;
         }
         let loginType;
         if (loginMode === 'unauth' || loginMode === 'guest') loginType = 2;
@@ -4923,7 +4899,7 @@ const App = (() => {
         if (S._boardEligible) _lifeSeedFromServer();
         const typeLabel = ['LAN','Internet (no-auth)','Internet (auth)'][stype] || 'Serveur';
         setStatus(t('connectingPlayers', { type: typeLabel, ver: pMaj + '.' + pMin, n: np }));
-        lastMajor = pMaj; lastMinor = pMin; lastLoginType = loginType;
+        S.lastMajor = pMaj; S.lastMinor = pMin; S.lastLoginType = loginType;
         const authPass = (loginType === 1)
           ? (useAcctAuth ? userAcctPass : ($('pass') ? $('pass').value : ''))
           : null;
@@ -4946,10 +4922,10 @@ const App = (() => {
         // que le fantôme tombe, réessaie le même pseudo) au lieu de renommer.
         // Couvre le rechargement complet ; la coupure transitoire est déjà
         // couverte par _armRejoin().
-        if (!_pendingRejoin && !window._offlineMode) {
+        if (!S._pendingRejoin && !window._offlineMode) {
           try {
             var _rs0 = JSON.parse(localStorage.getItem('pth_resume') || 'null');
-            if (_rs0 && _rs0.n === myName && (Date.now() - _rs0.t) < 5 * 60 * 1000) _pendingRejoin = _rs0.g;
+            if (_rs0 && _rs0.n === myName && (Date.now() - _rs0.t) < 5 * 60 * 1000) S._pendingRejoin = _rs0.g;
           } catch (e) {}
         }
         // Mot de passe serveur (optionnel, masqué sous « plus d'options »).
@@ -4962,12 +4938,12 @@ const App = (() => {
 
       // Connexion acceptée
       case T.InitAck: {
-        _wasAuthenticated = true;
-        _lastConnectFailed = false; // connexion réussie
+        S._wasAuthenticated = true;
+        S._lastConnectFailed = false; // connexion réussie
         _endConnecting();           // login OK → unlock the connect button
-        _reconnectAttempts = 0;
+        S._reconnectAttempts = 0;
         myId = Proto.u32(sub, 2);
-        _rejoinNickRetries = 0;
+        S._rejoinNickRetries = 0;
         // Demander NOTRE PROPRE PlayerInfo : le serveur n'écho pas toujours
         // notre arrivée dans PlayerList, donc sans ça on n'apprend jamais le
         // hash de notre avatar pokerth.net. Le handler PlayerInfoReply
@@ -4982,11 +4958,11 @@ const App = (() => {
         // Auto-rejoin the table we dropped from, if any. Source: the in-memory
         // flag (transient drop) or a recent persisted marker (full reload).
         // Same nickname required so we don't hijack another player's seat.
-        var _rt = _pendingRejoin;
+        var _rt = S._pendingRejoin;
         if (window._offlineMode) {
           // Entraînement : aucune partie ne survit au rechargement — on ignore et
           // on purge tout marqueur de reprise (y compris hérité d'avant correctif).
-          _rt = 0; _pendingRejoin = 0;
+          _rt = 0; S._pendingRejoin = 0;
           try { localStorage.removeItem('pth_resume'); } catch (e) {}
         }
         if (!_rt) {
@@ -4996,7 +4972,7 @@ const App = (() => {
           } catch (e) {}
         }
         if (_rt) {
-          _pendingRejoin = _rt;
+          S._pendingRejoin = _rt;
           _showBanner(t('rejoinInProgress'));
           try { send(MSG.buildRejoinGame(_rt)); } catch (e) {}
           break;   // JoinGameAck → game screen; JoinGameFailed → lobby fallback
@@ -5057,21 +5033,21 @@ const App = (() => {
 
       case T.Error: {
         _endConnecting();   // server rejected → free the button now
-        _lastConnectFailed = true;
+        S._lastConnectFailed = true;
         const codes = {1:t('connErrVersion'),2:t('connErrFull'),3:t('connErrAuth'),
           4:t('connErrNickTaken'),5:t('connErrNickInvalid'),6:t('connErrMaintenance'),7:t('connErrBlocked')};
         const r = Proto.u32(sub, 1);
         if (r === 3) {
           // initAuthFailure: login/password rejected by server
           setStatus(t('errBadCreds'), 'err');
-          _intentionalDisconnect = true; // bad credentials — retrying won't help
-          ws.close(); return;
+          S._intentionalDisconnect = true; // bad credentials — retrying won't help
+          S.ws.close(); return;
         }
         if (r === 7) {
-          _intentionalDisconnect = true;
-          _wasAuthenticated = false;
+          S._intentionalDisconnect = true;
+          S._wasAuthenticated = false;
           _hideBanner();
-          _ipBlockUntil = Date.now() + 1 * 60 * 1000; // 1 minute (was 5 — server usually clears earlier)
+          S._ipBlockUntil = Date.now() + 1 * 60 * 1000; // 1 minute (was 5 — server usually clears earlier)
           _startIpBlockCountdown();
           setStatus(t('ipBlockedRetry'), 'err'); return;
         }
@@ -5084,9 +5060,9 @@ const App = (() => {
           // session précédente expire (~2 min, grâce proxy) ou choisit un autre
           // pseudo, puis se reconnecte manuellement. (En multi-onglets, chaque
           // onglet doit utiliser un pseudo distinct — ce message le rappelle.)
-          _pendingRejoin = 0; _rejoinNickRetries = 0;
-          _wasAuthenticated = false;
-          _intentionalDisconnect = true;             // stoppe toute reconnexion auto
+          S._pendingRejoin = 0; S._rejoinNickRetries = 0;
+          S._wasAuthenticated = false;
+          S._intentionalDisconnect = true;             // stoppe toute reconnexion auto
           try { localStorage.removeItem('pth_resume'); } catch (e) {}
           _hideBanner();
           var _fr = (typeof _lang === 'undefined' || _lang !== 'en');
@@ -5578,7 +5554,7 @@ const App = (() => {
             if (rb) {
               var note = document.createElement('div');
               note.style.cssText = 'font-size:0.52rem;color:var(--orange);text-align:center;width:100%;margin-top:2px;font-style:italic';
-              note.textContent = _currentLoginMode === 'lan'
+              note.textContent = S._currentLoginMode === 'lan'
                 ? t('reactLanLocalNote')
                 : t('reactLocalOnlyNote');
               rb.appendChild(note);
@@ -5590,7 +5566,7 @@ const App = (() => {
           if (!amInGame) addChat(null, t('chatRefusedReason', { r: rejText }), 'sys', { key: 'chatRefusedReason', params: { r: rejText } });
           else if (!S._chatRejectShown) {
             S._chatRejectShown = true;
-            if (_currentLoginMode === 'lan') {
+            if (S._currentLoginMode === 'lan') {
               addGameChat(null, t('chatLanDisabled'), 'sys', { key: 'chatLanDisabled' });
             } else {
               addGameChat(null, t('chatServerRefused'), 'sys', { key: 'chatServerRefused' });
@@ -5608,7 +5584,7 @@ const App = (() => {
         // suivie d'un rechargement complet (page rechargée → DOM neuf). Pour une
         // coupure transitoire (l'écran de jeu reste affiché), c'est _armRejoin()
         // qui réarme _pendingRejoin au moment de la reconnexion.
-        _pendingRejoin = 0; _rejoinNickRetries = 0;
+        S._pendingRejoin = 0; S._rejoinNickRetries = 0;
         // Jamais en entraînement : le FakeServer est recréé à chaque chargement,
         // un rejoin vers son ancienne partie resterait sans réponse (type 23
         // ignoré) et bloquerait la connexion sur « Reprise en cours… ».
@@ -5748,7 +5724,7 @@ const App = (() => {
         // Mettre à jour le label de la barre de réactions selon le mode
         var rbl = document.getElementById('reaction-bar-label');
         if (rbl) {
-          if (_currentLoginMode === 'lan') {
+          if (S._currentLoginMode === 'lan') {
             rbl.textContent = t('reactionsLanLocal');
             rbl.style.color = 'var(--orange)';
           } else {
@@ -5774,12 +5750,12 @@ const App = (() => {
       case T.JoinGameFailed: {
         const failedGameId = Proto.u32(sub, 1);
         const failCode = Proto.u32(sub, 2);
-        if (_pendingRejoin) {
+        if (S._pendingRejoin) {
           // We were reclaiming our seat but it's gone (grace window elapsed)
           // or the rejoin was refused — drop cleanly to the lobby. Clear the
           // in-game/admin state too, otherwise the client still thinks it's
           // in (and admin of) the dead table, which blocks creating a new one.
-          _pendingRejoin = 0; _rejoinNickRetries = 0;
+          S._pendingRejoin = 0; S._rejoinNickRetries = 0;
           try { localStorage.removeItem('pth_resume'); } catch(e) {}
           App._resetGameState();
           _hideBanner();
@@ -5900,7 +5876,7 @@ const App = (() => {
 
       case T.RemovedFromGame: { S._gameMeta = null;
         addChat(null, t('youWereRemoved'), 'sys', { key: 'youWereRemoved' });
-        _pendingRejoin = 0; try { localStorage.removeItem('pth_resume'); } catch(e) {}
+        S._pendingRejoin = 0; try { localStorage.removeItem('pth_resume'); } catch(e) {}
         App._resetGameState();
         show('s-lobby');
         break;
@@ -7140,7 +7116,7 @@ const App = (() => {
   // invite-only (3) et ranking (4). On masque/bloque côté client pour
   // éviter un rejet serveur cryptique.
   function _guestJoinBlocked(g) {
-    return _currentLoginMode === 'guest' && !!g && g.type != null && g.type !== 1;
+    return S._currentLoginMode === 'guest' && !!g && g.type != null && g.type !== 1;
   }
 
   function _updateFootJoin() {
@@ -9457,8 +9433,8 @@ const App = (() => {
   Object.defineProperty(window, 'myId',        {get: function(){ return myId; }});
   Object.defineProperty(window, 'players',     {get: function(){ return S.players; }});
   Object.defineProperty(window, '_ipBlockUntil',{
-    get: function(){ return _ipBlockUntil; },
-    set: function(v){ _ipBlockUntil = v; }
+    get: function(){ return S._ipBlockUntil; },
+    set: function(v){ S._ipBlockUntil = v; }
   });
   // Exposer pour les fonctions globales (avatar, etc.)
   // ── Notification + titre dynamique quand c'est mon tour ──
@@ -9575,16 +9551,16 @@ const App = (() => {
   window._toggleStats = toggleStats;
   window._broadcastMyAvatar = function(emoji) {
     S._myAvatarCache = (emoji && emoji !== '__img__' && emoji !== '__pth__') ? emoji : '';
-    if (ws && ws.readyState === WebSocket.OPEN && !directWS && myId) {
+    if (S.ws && S.ws.readyState === WebSocket.OPEN && !directWS && myId) {
       if (emoji === '__img__') {
         // Diffuser l'image perso (data URL) aux autres clients du proxy.
         var img = ''; try { img = localStorage.getItem('pth_avatar_img') || ''; } catch(e) {}
-        if (img) ws.send('AVATARIMG:' + myId + ':' + img);
+        if (img) S.ws.send('AVATARIMG:' + myId + ':' + img);
       } else {
         // Emoji / initiale : diffuser l'emoji ET purger toute image perso
         // précédemment diffusée chez les autres (sinon elle resterait affichée).
-        ws.send('AVATAR:' + myId + ':' + (_myAvatarToBroadcast()));
-        ws.send('AVATARIMG:' + myId + ':');
+        S.ws.send('AVATAR:' + myId + ':' + (_myAvatarToBroadcast()));
+        S.ws.send('AVATARIMG:' + myId + ':');
       }
     }
     // Lobby pill is now an avatar+name combo (clickable, opens the
@@ -9598,13 +9574,13 @@ const App = (() => {
   // image / emoji / initiale courant.
   function _rebroadcastAvatar() {
     try {
-      if (!(ws && ws.readyState === WebSocket.OPEN && !directWS && myId)) return;
+      if (!(S.ws && S.ws.readyState === WebSocket.OPEN && !directWS && myId)) return;
       var choice = ''; try { choice = localStorage.getItem('pth_avatar') || ''; } catch(e) {}
       if (choice === '__img__') {
         var img = ''; try { img = localStorage.getItem('pth_avatar_img') || ''; } catch(e) {}
-        if (img) ws.send('AVATARIMG:' + myId + ':' + img);
+        if (img) S.ws.send('AVATARIMG:' + myId + ':' + img);
       } else {
-        ws.send('AVATAR:' + myId + ':' + _myAvatarToBroadcast());
+        S.ws.send('AVATAR:' + myId + ':' + _myAvatarToBroadcast());
       }
     } catch(e) {}
   }
@@ -9897,7 +9873,7 @@ const App = (() => {
     // est silencieux si le WS n'est pas OPEN — on évitait donc d'envoyer
     // sans le savoir, puis on stoppait le timer et l'UI affichait
     // "Action envoyée" alors que rien n'avait quitté la machine.
-    if (!ws || ws.readyState !== WebSocket.OPEN) {
+    if (!S.ws || S.ws.readyState !== WebSocket.OPEN) {
       $('g-actions').innerHTML = '<div class="waiting-msg" style="color:#e74c3c">⚠ '
         + t('wsLostAction')
         + '</div>';
@@ -10493,7 +10469,7 @@ function _maybeShowNextHandBtn() {
       // Disable double-clicks: if a connect() is already in progress
       // (either waiting on SW, waiting on previous WS to close, or
       // waiting for mode-swap gap), ignore the new click.
-      if (_connectingNow) {
+      if (S._connectingNow) {
         return;
       }
       // ── SW-ready gate (one-shot per page lifetime) ──
@@ -10528,15 +10504,15 @@ function _maybeShowNextHandBtn() {
       // so we can decide whether this call needs the extra mode-swap delay.
       const _curMode = $('login-mode') ? $('login-mode').value : 'guest';
       const _curNick = ($('nick') ? $('nick').value.trim() : '');
-      const _modeChanged = (_lastInitMode !== null) &&
-                           (_curMode !== _lastInitMode || _curNick !== _lastInitNick);
-      const _gapNow = Date.now() - _lastInitTime;
-      if (_modeChanged && _gapNow < MODE_SWAP_MIN_GAP) {
-        const wait_ms = MODE_SWAP_MIN_GAP - _gapNow;
+      const _modeChanged = (S._lastInitMode !== null) &&
+                           (_curMode !== S._lastInitMode || _curNick !== S._lastInitNick);
+      const _gapNow = Date.now() - S._lastInitTime;
+      if (_modeChanged && _gapNow < S.MODE_SWAP_MIN_GAP) {
+        const wait_ms = S.MODE_SWAP_MIN_GAP - _gapNow;
         const wait_s = Math.ceil(wait_ms / 1000);
         const that = this;
         // Disable the connect button so the user can't pile clicks
-        _connectingNow = true;
+        S._connectingNow = true;
         var btn = document.querySelector('#s-connect .btn-primary');
         if (btn) btn.disabled = true;
         // Live countdown so the user understands what's happening
@@ -10549,7 +10525,7 @@ function _maybeShowNextHandBtn() {
         setTimeout(function() {
           clearInterval(iv);
           if (btn) btn.disabled = false;
-          _connectingNow = false;
+          S._connectingNow = false;
           that.connect();
         }, wait_ms);
         return;
@@ -10563,23 +10539,23 @@ function _maybeShowNextHandBtn() {
       // connections from the same IP, which can also trigger initBlocked.
       // Defer the rest of connect() until the old WS reaches CLOSED, with
       // a 500ms hard cap so we never hang.
-      if (ws && ws.readyState !== WebSocket.CLOSED) {
-        _connectingNow = true;
+      if (S.ws && S.ws.readyState !== WebSocket.CLOSED) {
+        S._connectingNow = true;
         var that2 = this;
         var btn2 = document.querySelector('#s-connect .btn-primary');
         if (btn2) btn2.disabled = true;
         setStatus('⏳ ' + (t('closingPrevious') || 'Fermeture de la connexion précédente…'));
         // Detach the old onclose to avoid the disconnect handler kicking in
-        var prevWs = ws;
+        var prevWs = S.ws;
         prevWs.onclose = null;
         prevWs.onerror = null;
         try { prevWs.close(); } catch(e) {}
-        ws = null;
+        S.ws = null;
         var done = false;
         var resume = function() {
           if (done) return; done = true;
           if (btn2) btn2.disabled = false;
-          _connectingNow = false;
+          S._connectingNow = false;
           that2.connect();
         };
         // The CLOSING → CLOSED transition is typically <50ms. We poll for
@@ -10597,20 +10573,20 @@ function _maybeShowNextHandBtn() {
       // ── Rate limiter : éviter le spam qui provoque le blocage IP ──
       const now = Date.now();
       var _gateOffline = !!(window._offlineMode || ($('server-mode') && $('server-mode').value === 'offline'));
-      if (!_gateOffline && _ipBlockUntil > now) {
-        const remaining = Math.ceil((_ipBlockUntil - now) / 1000);
+      if (!_gateOffline && S._ipBlockUntil > now) {
+        const remaining = Math.ceil((S._ipBlockUntil - now) / 1000);
         const mins = Math.floor(remaining / 60), secs = remaining % 60;
         setStatus(t('ipBlockedWaitPrefix') + (mins > 0 ? mins + 'min ' : '') + secs + 's', 'err');
         _startIpBlockCountdown();
         return;
       }
       // Rate limiter seulement après un échec (pas après une déco normale)
-      if (_lastConnectFailed && now - _lastConnectTime < MIN_CONNECT_INTERVAL) {
-        const wait = Math.ceil((MIN_CONNECT_INTERVAL - (now - _lastConnectTime)) / 1000);
+      if (S._lastConnectFailed && now - S._lastConnectTime < S.MIN_CONNECT_INTERVAL) {
+        const wait = Math.ceil((S.MIN_CONNECT_INTERVAL - (now - S._lastConnectTime)) / 1000);
         setStatus(t('waitBeforeRetry', { n: wait }), 'err');
         return;
       }
-      _lastConnectTime = now;
+      S._lastConnectTime = now;
       // Sauvegarder le serveur préféré
       try {
         var lm2 = $('login-mode'); var hv = $('host'); var pv = $('port'); var xv = $('proxy');
@@ -10662,12 +10638,12 @@ function _maybeShowNextHandBtn() {
       const useTls   = $('use-tls').checked;
       const tlsParam = useTls ? '1' : '0';
       // Close any existing connection first
-      if (ws && ws.readyState !== WebSocket.CLOSED) {
-        ws.onclose = null; // don't trigger the disconnect handler
-        ws.close();
-        ws = null;
+      if (S.ws && S.ws.readyState !== WebSocket.CLOSED) {
+        S.ws.onclose = null; // don't trigger the disconnect handler
+        S.ws.close();
+        S.ws = null;
       }
-      rxBuf   = new Uint8Array(0);
+      S.rxBuf   = new Uint8Array(0);
       // En reconnexion « preserve » (bascule réseau), on NE vide PAS l'état de
       // la table / du lobby : le proxy rebranche le WebSocket sur la session
       // PokerTH déjà en cours (pas de nouvel Announce/Init), donc le serveur ne
@@ -10744,15 +10720,15 @@ function _maybeShowNextHandBtn() {
       // Sauvegarder les paramètres pour la reconnexion auto
       // Record this Init's identity so the NEXT connect() can compare
       // and apply the mode-swap delay if needed.
-      _lastInitMode = loginMode;
-      _lastInitNick = myName;
-      _lastInitTime = Date.now();
-      _lastConnectParams = { host, port, loginMode, finalUrl, myName,
+      S._lastInitMode = loginMode;
+      S._lastInitNick = myName;
+      S._lastInitTime = Date.now();
+      S._lastConnectParams = { host, port, loginMode, finalUrl, myName,
         pass: $('pass') ? $('pass').value : '' };
-      _reconnectAttempts = 0;
-      _intentionalDisconnect = false;
-      _wasAuthenticated = false;
-      _currentLoginMode = loginMode; // sauvegarder pour ChatReject
+      S._reconnectAttempts = 0;
+      S._intentionalDisconnect = false;
+      S._wasAuthenticated = false;
+      S._currentLoginMode = loginMode; // sauvegarder pour ChatReject
       // The CreateGame form defaults depend on this mode. Refresh them
       // now so the values are correct the first time the user opens it.
       try { App._applyCreateFormDefaults(true); } catch (e) {}
@@ -10767,7 +10743,7 @@ function _maybeShowNextHandBtn() {
           return;
         }
         try {
-          ws = window.PokerOffline.createSocket({ nick: myName,
+          S.ws = window.PokerOffline.createSocket({ nick: myName,
             botSkill: (function(){ try { return localStorage.getItem('pth_offline_skill') || 'mixed'; } catch (e) { return 'mixed'; } })(),
             // Pause entre les mains (parité QML PauseBetweenHands) : lue en
             // direct pour être basculable en cours de partie.
@@ -10778,7 +10754,7 @@ function _maybeShowNextHandBtn() {
         }
       } else {
         try {
-          ws = new WebSocket(finalUrl);
+          S.ws = new WebSocket(finalUrl);
         } catch (e) {
           setStatus(t('invalidUrl', { msg: e.message }), 'err');
           return;
@@ -10786,10 +10762,10 @@ function _maybeShowNextHandBtn() {
       }
 
       _beginConnecting();   // lock button for the whole attempt (anti IP-block)
-      ws.binaryType = 'arraybuffer';
-      ws.onopen    = () => { _lastRxTime = Date.now(); setStatus(t('proxyConnectedWait')); try { window._pthCountConnect && window._pthCountConnect(directWS ? 'pokerthnet' : ((window._offlineMode || ($('server-mode') && $('server-mode').value === 'offline')) ? 'offline' : 'lan')); } catch (e) {} };
-      ws.onerror   = () => { _lastConnectFailed = true; _endConnecting(); setStatus(t('wsError'), 'err'); };
-      ws.onmessage = function(e) {
+      S.ws.binaryType = 'arraybuffer';
+      S.ws.onopen    = () => { S._lastRxTime = Date.now(); setStatus(t('proxyConnectedWait')); try { window._pthCountConnect && window._pthCountConnect(directWS ? 'pokerthnet' : ((window._offlineMode || ($('server-mode') && $('server-mode').value === 'offline')) ? 'offline' : 'lan')); } catch (e) {} };
+      S.ws.onerror   = () => { S._lastConnectFailed = true; _endConnecting(); setStatus(t('wsError'), 'err'); };
+      S.ws.onmessage = function(e) {
         if (typeof e.data === 'string') {
           // Message texte = protocole proxy (réactions)
           if (_handleCtrlFrame(e.data)) return;
@@ -10837,9 +10813,9 @@ function _maybeShowNextHandBtn() {
         }
         onRawData(e.data);
       };
-      ws.onclose = function(e) {
+      S.ws.onclose = function(e) {
         _endConnecting();   // free the connect button on any close
-        ws = null;
+        S.ws = null;
         clearTimeout(window._reconnectTimer);
         clearInterval(window._reconnectCountdown);
         _hideBanner();
@@ -10848,7 +10824,7 @@ function _maybeShowNextHandBtn() {
         // Without this guard, ws.close() from disconnect() falls through to the
         // reconnect scheduler below and drops the user back into the lobby a few
         // seconds after they returned to the home screen.
-        if (_intentionalDisconnect) {
+        if (S._intentionalDisconnect) {
           _closeNotifyWS();
           return;
         }
@@ -10858,46 +10834,46 @@ function _maybeShowNextHandBtn() {
         _armRejoin();
 
         // --- RECONNEXION AUTO (limitée pour éviter le blocage IP) ---
-        _reconnectAttempts++;
+        S._reconnectAttempts++;
         var maxAttempts = 3; // max 3 tentatives pour éviter le blocage IP
-        if (_reconnectAttempts > maxAttempts) {
+        if (S._reconnectAttempts > maxAttempts) {
           _hideBanner();
-          _wasAuthenticated = false;
+          S._wasAuthenticated = false;
           show('s-connect');
           setStatus(t('reconnFailed', { n: maxAttempts }), 'err');
           return;
         }
         // Délai croissant : 5s, 15s, 30s — assez long pour ne pas spammer
-        var delay = [5000, 15000, 30000][_reconnectAttempts - 1] || 30000;
+        var delay = [5000, 15000, 30000][S._reconnectAttempts - 1] || 30000;
         var secs = Math.round(delay/1000);
-        _showBanner(t('reconnIn') + secs + 's… (' + _reconnectAttempts + '/' + maxAttempts + ')');
+        _showBanner(t('reconnIn') + secs + 's… (' + S._reconnectAttempts + '/' + maxAttempts + ')');
         window._reconnectTimer = setTimeout(function() {
-          if (ws) return; // déjà reconnecté
+          if (S.ws) return; // déjà reconnecté
           _showBanner(t('reconnInProgress'));
           try {
-            ws = new WebSocket(_lastConnectParams.finalUrl);
-            ws.binaryType = 'arraybuffer';
-            ws.onopen = function() {
+            S.ws = new WebSocket(S._lastConnectParams.finalUrl);
+            S.ws.binaryType = 'arraybuffer';
+            S.ws.onopen = function() {
               _showBanner(t('reauthBanner'));
             };
-            ws.onerror = function() {
-              ws = null;
+            S.ws.onerror = function() {
+              S.ws = null;
               // Déclencher onclose pour retenter
               var fakeClose = new Event('close');
-              ws && ws.dispatchEvent(fakeClose);
+              S.ws && S.ws.dispatchEvent(fakeClose);
             };
-            ws.onmessage = function(e) {
+            S.ws.onmessage = function(e) {
               onRawData(e.data);
               // Si on reçoit des données, la connexion est OK
-              if (_reconnectAttempts > 0) {
-                _reconnectAttempts = 0;
+              if (S._reconnectAttempts > 0) {
+                S._reconnectAttempts = 0;
                 setTimeout(_hideBanner, 1500);
               }
             };
-            ws.onclose = arguments.callee.caller || function(){};
+            S.ws.onclose = arguments.callee.caller || function(){};
             // Réutiliser le même handler onclose pour les tentatives suivantes
-            ws.onclose = function() {
-              ws = null;
+            S.ws.onclose = function() {
+              S.ws = null;
               clearTimeout(window._reconnectTimer);
               // Relancer le processus de reconnexion
               App && App.connect && App._reconnectContinue && App._reconnectContinue();
@@ -10911,24 +10887,24 @@ function _maybeShowNextHandBtn() {
 
     _reconnectContinue() {
       // Relancer le processus de reconnexion — backoff exponentiel
-      if (!_lastConnectParams || _intentionalDisconnect) return;
-      _reconnectAttempts++;
+      if (!S._lastConnectParams || S._intentionalDisconnect) return;
+      S._reconnectAttempts++;
       var maxAttempts = 6;
-      if (_reconnectAttempts > maxAttempts) {
+      if (S._reconnectAttempts > maxAttempts) {
         _hideBanner();
         show('s-connect');
         setStatus(t('reconnFailed', { n: maxAttempts }), 'err');
         return;
       }
       // Exponentiel : 3s → 6s → 12s → 24s → 30s → 30s
-      var delay = Math.min(3000 * Math.pow(2, _reconnectAttempts - 1), 30000);
+      var delay = Math.min(3000 * Math.pow(2, S._reconnectAttempts - 1), 30000);
       var secsTotal = Math.round(delay / 1000);
       // Countdown live dans le banner
       clearInterval(window._reconnectCountdown);
       var secsLeft = secsTotal;
       function _updateBannerCountdown() {
         var pfx = t('reconnIn');
-        var sfx = ' ('+_reconnectAttempts+'/'+maxAttempts+')';
+        var sfx = ' ('+S._reconnectAttempts+'/'+maxAttempts+')';
         _showBanner(pfx + secsLeft + 's' + sfx);
         if (secsLeft > 0) secsLeft--;
       }
@@ -10972,18 +10948,18 @@ function _maybeShowNextHandBtn() {
     // session alive via grace + sid rebind.
     teardownForReload() {
       try {
-        if (ws) {
-          ws.onclose = null; ws.onerror = null; ws.onmessage = null; ws.onopen = null;
-          ws.close(4001, 'reload');
-          ws = null;
+        if (S.ws) {
+          S.ws.onclose = null; S.ws.onerror = null; S.ws.onmessage = null; S.ws.onopen = null;
+          S.ws.close(4001, 'reload');
+          S.ws = null;
         }
       } catch (e) {}
     },
     disconnect() {
-      _intentionalDisconnect = true;
+      S._intentionalDisconnect = true;
       _closeNotifyWS();
-      _wasAuthenticated = false;
-      _lastConnectFailed = false; // déco propre → pas de rate limit
+      S._wasAuthenticated = false;
+      S._lastConnectFailed = false; // déco propre → pas de rate limit
       // Déconnexion volontaire → faire tourner le sid : la prochaine connexion
       // doit créer une session PokerTH NEUVE (pseudo éventuellement changé), et
       // non se rebrancher sur l'ancienne que le proxy garde ~2 min. On vide les
@@ -10997,18 +10973,18 @@ function _maybeShowNextHandBtn() {
       // scheduled, so it can't fire after we're back on the home screen.
       clearTimeout(window._reconnectTimer);
       clearInterval(window._reconnectCountdown);
-      _reconnectAttempts = 0;
-      if (ws) {
+      S._reconnectAttempts = 0;
+      if (S.ws) {
         // Detach handlers BEFORE closing: ws.close() triggers onclose
         // synchronously-ish, and we don't want the reconnect scheduler to run.
-        ws.onclose = null;
-        ws.onerror = null;
-        ws.onmessage = null;
-        ws.onopen = null;
+        S.ws.onclose = null;
+        S.ws.onerror = null;
+        S.ws.onmessage = null;
+        S.ws.onopen = null;
         // Intentional disconnect → close with code 4001 so the proxy frees the
         // PokerTH player immediately (no 2-min reconnect grace → no zombie).
-        try { ws.close(4001, 'user disconnect'); } catch (e) {}
-        ws = null;
+        try { S.ws.close(4001, 'user disconnect'); } catch (e) {}
+        S.ws = null;
       }
       S.games = {};
       // Reset lobby counters so the next connect starts at 0 instead
@@ -11231,8 +11207,8 @@ function _maybeShowNextHandBtn() {
 
     closeTable() {
       // Admin closes table: send leave, server closes game for all
-      if (ws && S.gId) { try { send(MSG.buildLeaveGame(S.gId)); } catch(e) {} }
-      _pendingRejoin = 0; _rejoinNickRetries = 0;
+      if (S.ws && S.gId) { try { send(MSG.buildLeaveGame(S.gId)); } catch(e) {} }
+      S._pendingRejoin = 0; S._rejoinNickRetries = 0;
       try { localStorage.removeItem('pth_resume'); } catch(e) {}
       amInGame = false; S.amGameAdmin = false; _gameStarted = false; _seatsFrozen = false; _amSpectator = false;
       S.gId = 0; seats = []; seatData = {}; S._specPids = new Set(); updateSpectatorStrip();
@@ -11415,10 +11391,10 @@ function _maybeShowNextHandBtn() {
       // server closes the current game (GameListUpdate=closed) on leave, so the
       // lobby ends up clean and the user can create another table.
       // Send proper leave request then stay connected (return to lobby)
-      if (ws && S.gId) { try { send(MSG.buildLeaveGame(S.gId)); } catch(e) {} }
+      if (S.ws && S.gId) { try { send(MSG.buildLeaveGame(S.gId)); } catch(e) {} }
       // Départ volontaire : oublier le marqueur de reprise (sinon on serait
       // ré-aspiré dans la table à la prochaine reconnexion/réouverture).
-      _pendingRejoin = 0; _rejoinNickRetries = 0;
+      S._pendingRejoin = 0; S._rejoinNickRetries = 0;
       try { localStorage.removeItem('pth_resume'); } catch(e) {}
       amInGame = false; S.amGameAdmin = false; _gameStarted = false; _seatsFrozen = false; _amSpectator = false;
       S.gId = 0; seats = []; seatData = {}; S._specPids = new Set(); updateSpectatorStrip();
@@ -11448,12 +11424,12 @@ function _maybeShowNextHandBtn() {
 
     sendReaction(emoji) {
       if (_reactMuted) return;                    // reactions coupees : on n'envoie rien
-      if (!ws || !S.gId) return;
+      if (!S.ws || !S.gId) return;
       // Affichage immediat pour moi.
       handleIncomingReaction(myId, emoji, 'self');
       // Canal rapide web<->web via le proxy (trame texte, contourne le throttle chat serveur).
-      if (!directWS && ws.readyState === WebSocket.OPEN) {
-        try { ws.send('REACT:' + myId + ':' + emoji); } catch (e) {}
+      if (!directWS && S.ws.readyState === WebSocket.OPEN) {
+        try { S.ws.send('REACT:' + myId + ':' + emoji); } catch (e) {}
       }
       // Canal partage cross-client : commande /emoji interpretee comme une reaction par
       // tous les clients (convention sp0ck, facon /me) -> interop web <-> Qt/QML (dont pokerth.net).
@@ -11487,7 +11463,7 @@ function _maybeShowNextHandBtn() {
       var input = document.getElementById('g-chat-in');
       if (!input) return;
       var text = input.value.trim();
-      if (!text || !ws) return;
+      if (!text || !S.ws) return;
       input.value = '';
       S._lastMsgWasReaction = false;
       // ── /seatdbg : diagnostic LOCAL des sieges (rien n'est envoye) ──
@@ -11543,14 +11519,14 @@ function _maybeShowNextHandBtn() {
     // « Show » : envoie ShowMyCardsRequest (type 51, corps vide) pendant la
     // fenêtre d'attente ; la rediffusion AfterHandShowCards rendra les cartes.
     showMyCards() {
-      if (!window._canShowCards || !ws || !S.gId) return;
+      if (!window._canShowCards || !S.ws || !S.gId) return;
       try { send(MSG.buildShowMyCards()); } catch (e) {}
       _setCanShow(false);
     },
     sendChat() {
       const input = $('chat-in');
       const text  = input.value.trim();
-      if (!text || !ws) return;
+      if (!text || !S.ws) return;
       input.value = '';
       // ── Local diagnostic/setting commands (/help /diag /update …) — nothing
       // is sent to the server. See _chatLocalCmd and docs/DIAGNOSTIC.md.
@@ -11846,7 +11822,7 @@ function _maybeShowNextHandBtn() {
     // the 'cf-' prefix). _applyCreateFormDefaults() walks this object and
     // writes each value into the corresponding input.
     _getCreateDefaults(skipSaved) {
-      var mode = _currentLoginMode || 'unauth';
+      var mode = S._currentLoginMode || 'unauth';
       var isPublic = (mode === 'guest' || mode === 'auth');
       // Last-used settings (saved by createGame) take priority over the
       // per-mode baseline, so the form re-opens with what the user actually
@@ -12068,7 +12044,7 @@ function _maybeShowNextHandBtn() {
       try {
         var _gtr = document.getElementById('cf-gtype-row');
         if (_gtr) _gtr.style.display = '';
-        if (_currentLoginMode === 'guest') { var _gts = document.getElementById('cf-game-type'); if (_gts) _gts.value = '1'; }
+        if (S._currentLoginMode === 'guest') { var _gts = document.getElementById('cf-game-type'); if (_gts) _gts.value = '1'; }
         if (window._gtypeDdRefresh) window._gtypeDdRefresh();
         this._syncGameTypeConstraints();
       } catch (e) {}
@@ -12318,7 +12294,7 @@ function _maybeShowNextHandBtn() {
     _syncGameTypeConstraints() {
       var g = function(id){ return document.getElementById(id); };
       var sel = g('cf-game-type'); if (!sel) return;
-      var isGuest = (_currentLoginMode === 'guest');
+      var isGuest = (S._currentLoginMode === 'guest');
       var type = parseInt(sel.value, 10) || 1;
       var isRanking = (type === 4);
       var isInvite  = (type === 3);
@@ -12507,7 +12483,7 @@ function _maybeShowNextHandBtn() {
     //    L'ancien instantané unique pth_create_prefs reste un repli en lecture. ──
     _createPrefsKey() {
       if (window._offlineMode) return 'pth_prefs_local';
-      var m = _currentLoginMode || 'lan';
+      var m = S._currentLoginMode || 'lan';
       return (m === 'guest' || m === 'auth') ? 'pth_prefs_internet' : 'pth_prefs_lan';
     },
     _readCreatePrefsRaw() {
@@ -12710,7 +12686,7 @@ function _maybeShowNextHandBtn() {
       // a déjà verrouillé les champs (RANKING_GAME_NUMBER_OF_PLAYERS/START_
       // CASH/START_SBLIND/RAISE_EVERY_HAND, spectateurs oui, pas de mdp,
       // blindes toujours doublées).
-      const _gtypeSel = (_currentLoginMode === 'guest') ? 1 : sv('cf-game-type', 1);
+      const _gtypeSel = (S._currentLoginMode === 'guest') ? 1 : sv('cf-game-type', 1);
       const _isRank   = (_gtypeSel === 4);
       const name    = _safeGameName(rawName || _defaultNameForMode());
       const nplayers= _isRank ? 10    : iv('cf-players', 2);
@@ -14917,7 +14893,7 @@ function renderPlayersList() {
   });
 })();
 
-;(function(){ window.BUILD_VERSION='0.3.830-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.831-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

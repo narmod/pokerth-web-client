@@ -196,3 +196,4 @@ jamais de rustine sur un renommage partiel.
 | 2026-07-19 | 0.3.828-beta | 9e hotfix : S._myAvatarCache hors IIFE (L1626) → window._myAvatarCache (global implicite d'origine) ; règle « renommage borné à l'IIFE » | régression V4 avatar LAN corrigée |
 | 2026-07-19 | 0.3.829-beta | 9e-V5 état lobby → S (15 vars, 204 renommages AST, pont window.players rebranché) — test-state 36 ✓ | 822 Ko (stable) |
 | 2026-07-19 | 0.3.830-beta | 9e-V6 état config partie/blinds → S (17 vars, 250 renommages AST) — test-state 42 ✓ | 822 Ko (stable) |
+| 2026-07-19 | 0.3.831-beta | 9e-V7 état connexion → S (28 vars, 257 renommages AST, pont _ipBlockUntil rebranché) — test-state 52 ✓ · ⚠ test manuel reconnexion/rejoin requis après déploiement | 822 Ko (stable) |

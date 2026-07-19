@@ -108,6 +108,32 @@ export const S = {
   _gameMeta: null,
   amGameAdmin: false,      // true if we created this game
   MAX_GAME_NAME: 48,
+
+  // ── V7 · Connexion / reconnexion (domaine A) ──
+  ws: null,
+  rxBuf: new Uint8Array(0),
+  lastMajor: 5, lastMinor: 1, lastLoginType: 0,   // for name-retry
+  _lastConnectParams: null,
+  _lastInitMode: null,     // 'lan' / 'unauth' / 'guest' / 'auth'
+  _lastInitNick: null,     // pseudo saisi au dernier Init
+  _lastInitTime: 0,
+  _connectingNow: false,   // anti double-clic (ré-entrance)
+  _connectTimeout: null,   // filet : le bouton Connexion ne reste jamais bloqué
+  _connectBtnLabel: null,
+  _currentLoginMode: 'lan',
+  _reconnectAttempts: 0,
+  _lastRxTime: Date.now(), // watchdog liveness (dernier message reçu)
+  _intentionalDisconnect: false,
+  _pendingRejoin: 0,       // gameId à rejoindre après reconnexion (0 = aucun)
+  _rejoinNickRetries: 0,
+  _wasAuthenticated: false, // true seulement après InitAck réussi
+  _lastConnectTime: 0,
+  _lastConnectFailed: false,
+  _ipBlockUntil: 0,
+  _notifyWS: null, _notifyUrl: '', _notifyTimer: null,
+  MIN_CONNECT_INTERVAL: 1500,
+  MODE_SWAP_MIN_GAP: 3000,
+  _RX_WATCHDOG_MIN_MS: 45000,
 };
 
 // Pont legacy : pokerth.js (script classique) fait `const S = window.PthState;`

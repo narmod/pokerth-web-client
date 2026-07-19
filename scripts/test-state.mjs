@@ -18,7 +18,7 @@ const { S } = await import('../public/modules/game/state.mjs');
 let n = 0, fail = 0;
 function ok(cond, msg) { n++; if (!cond) { fail++; console.error('  ✗', msg); } else console.log('  ✓', msg); }
 
-console.log('state.mjs — V0 (timer) + V1 (voix/haptique) + V2 (stats) + V3 (pet/inv/chat/titre) + V4 (avatars) + V5 (lobby) + V6 (config partie)');
+console.log('state.mjs — V0 (timer) + V1 (voix/haptique) + V2 (stats) + V3 (pet/inv/chat/titre) + V4 (avatars) + V5 (lobby) + V6 (config partie) + V7 (connexion)');
 ok(typeof S === 'object' && S !== null, 'S est un objet');
 ok(window.PthState === S, 'pont window.PthState === S (même référence)');
 
@@ -96,6 +96,23 @@ ok(S._blindsClockStart === 0 && S._blindsCdTimer === null && S._displayBB === fa
 ok(S.gameTimeout === 15 && S.gameStartMoney === 3000, 'timeout 15 / stack 3000 par défaut');
 ok(S._gameMeta === null && S.amGameAdmin === false && S.MAX_GAME_NAME === 48, 'méta partie init');
 
+// V7 — Connexion / reconnexion
+ok(S.ws === null && S.rxBuf instanceof Uint8Array && S.rxBuf.length === 0, 'ws / rxBuf init');
+ok(S.lastMajor === 5 && S.lastMinor === 1 && S.lastLoginType === 0, 'version login init 5.1/0');
+ok(S._lastConnectParams === null && S._lastInitMode === null && S._lastInitNick === null
+   && S._lastInitTime === 0, 'derniers params de connexion init');
+ok(S._connectingNow === false && S._connectTimeout === null && S._connectBtnLabel === null,
+   'garde de connexion init');
+ok(S._currentLoginMode === 'lan' && S._reconnectAttempts === 0
+   && S._intentionalDisconnect === false && S._wasAuthenticated === false, 'drapeaux session init');
+ok(typeof S._lastRxTime === 'number' && S._lastRxTime > 0, '_lastRxTime horodaté');
+ok(S._pendingRejoin === 0 && S._rejoinNickRetries === 0, 'rejoin init');
+ok(S._lastConnectTime === 0 && S._lastConnectFailed === false && S._ipBlockUntil === 0,
+   'anti-flood connexion init');
+ok(S._notifyWS === null && S._notifyUrl === '' && S._notifyTimer === null, 'canal notify init');
+ok(S.MIN_CONNECT_INTERVAL === 1500 && S.MODE_SWAP_MIN_GAP === 3000
+   && S._RX_WATCHDOG_MIN_MS === 45000, 'constantes réseau');
+
 // Périmètre exact des vagues migrées (pas de fuite d'autres clés)
 const keys = Object.keys(S).sort();
 ok(JSON.stringify(keys) === JSON.stringify(['REACT_EMOJI_MIN_GAP', 'REACT_EMOJI_QUEUE_MAX',
@@ -116,8 +133,15 @@ ok(JSON.stringify(keys) === JSON.stringify(['REACT_EMOJI_MIN_GAP', 'REACT_EMOJI_
    'gId', 'smallBlind', 'handNum', '_raiseMode', '_raiseEvery', '_lastBlindsUpHand',
    '_endRaiseMode', '_endRaiseValue', '_manualBlinds', '_blindsClockStart',
    '_blindsCdTimer', '_displayBB', 'gameTimeout', 'gameStartMoney', '_gameMeta',
-   'amGameAdmin', 'MAX_GAME_NAME'].sort()),
-   'périmètre V0..V6 exact : ' + keys.join(', '));
+   'amGameAdmin', 'MAX_GAME_NAME',
+   'ws', 'rxBuf', 'lastMajor', 'lastMinor', 'lastLoginType', '_lastConnectParams',
+   '_lastInitMode', '_lastInitNick', '_lastInitTime', '_connectingNow',
+   '_connectTimeout', '_connectBtnLabel', '_currentLoginMode', '_reconnectAttempts',
+   '_lastRxTime', '_intentionalDisconnect', '_pendingRejoin', '_rejoinNickRetries',
+   '_wasAuthenticated', '_lastConnectTime', '_lastConnectFailed', '_ipBlockUntil',
+   '_notifyWS', '_notifyUrl', '_notifyTimer', 'MIN_CONNECT_INTERVAL',
+   'MODE_SWAP_MIN_GAP', '_RX_WATCHDOG_MIN_MS'].sort()),
+   'périmètre V0..V7 exact : ' + keys.join(', '));
 
 console.log(fail ? `FAIL ${fail}/${n}` : `PASS ${n}/${n}`);
 process.exit(fail ? 1 : 0);
