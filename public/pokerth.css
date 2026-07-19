@@ -7576,6 +7576,78 @@ html[data-seat-edit="1"] #g-seats .seat.seat-ghost { outline: none; cursor: defa
 .music-player-box { border: 1px solid var(--border-hi); background: rgba(var(--gold-rgb),0.06); border-radius: 10px; padding: 8px 10px 10px; display: flex; flex-direction: column; gap: 10px; }
 .music-player-hd { display: flex; align-items: center; gap: 6px; font-size: 0.58rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold-dim); }
 .music-player-ic { font-size: 0.85rem; }
+
+/* ══ Lecteur « esprit Winamp » — LCD, VU, marquee, playlist (palette de thème) ══ */
+.music-lcd {
+  border: 1px solid var(--border-hi);
+  background: var(--field-bg);
+  border-radius: 8px;
+  padding: 7px 10px 8px;
+  box-shadow: inset 0 1px 3px rgba(0,0,0,0.22);
+  display: flex; flex-direction: column; gap: 4px;
+}
+.music-lcd-top { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.music-lcd .music-cur {
+  font-size: 1.15rem; font-weight: 700; color: var(--gold);
+  cursor: pointer; text-align: left; min-width: 0; line-height: 1;
+  font-variant-numeric: tabular-nums; letter-spacing: 0.02em;
+}
+.music-lcd .music-cur:hover { color: var(--sel, var(--gold)); }
+.music-vu { display: inline-flex; align-items: flex-end; gap: 2px; height: 16px; flex: 0 0 auto; }
+.music-vu-bar {
+  width: 3px; height: 3px; border-radius: 1px;
+  background: var(--gold);
+  transform-origin: bottom;
+  transition: height 90ms linear;
+}
+.music-marquee { overflow: hidden; white-space: nowrap; }
+.music-marquee-txt {
+  display: inline-block; font-size: 0.9rem; color: var(--text); font-weight: 600;
+  will-change: transform;
+}
+.music-marquee.is-scroll .music-marquee-txt { animation: music-mq 9s ease-in-out infinite; }
+@keyframes music-mq {
+  0%, 12%   { transform: translateX(0); }
+  50%, 62%  { transform: translateX(var(--mq-shift, 0)); }
+  100%      { transform: translateX(0); }
+}
+/* Playlist dépliable */
+.music-pl-toggle {
+  display: flex; align-items: center; gap: 8px; width: 100%;
+  background: var(--field-bg); color: var(--text);
+  border: 1px solid var(--border); border-radius: 9px;
+  padding: 7px 10px; font-size: 0.82rem; cursor: pointer; text-align: left;
+}
+.music-pl-toggle:hover { border-color: var(--gold-dim); }
+.music-pl-caret { flex: 0 0 auto; color: var(--gold-dim); font-size: 0.7rem; }
+.music-pl-toggle > span[data-i18n] { flex: 1 1 auto; }
+.music-pl-count {
+  flex: 0 0 auto; font-size: 0.7rem; color: var(--gold-dim);
+  border: 1px solid var(--border); border-radius: 999px; padding: 1px 7px;
+  font-variant-numeric: tabular-nums;
+}
+.music-pl {
+  list-style: none; margin: 0; padding: 4px;
+  border: 1px solid var(--border); border-radius: 9px;
+  max-height: 168px; overflow-y: auto;
+  display: flex; flex-direction: column; gap: 2px;
+}
+.music-pl-item {
+  display: flex; align-items: center; gap: 8px;
+  padding: 6px 8px; border-radius: 7px; cursor: pointer;
+  color: var(--text); font-size: 0.85rem;
+}
+.music-pl-item:hover { background: rgba(var(--gold-rgb), 0.10); }
+.music-pl-item.is-cur {
+  background: rgba(var(--sel-rgb, var(--gold-rgb)), 0.16);
+  color: var(--sel, var(--gold));
+}
+.music-pl-num { flex: 0 0 auto; width: 1.4em; text-align: right; color: var(--gold-dim); font-variant-numeric: tabular-nums; font-size: 0.75rem; }
+.music-pl-ttl { flex: 1 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.music-pl-eq { flex: 0 0 auto; color: var(--sel, var(--gold)); font-size: 0.8rem; }
+.music-credit { font-size: 0.68rem; color: var(--gold-dim); text-align: center; }
+.music-credit a { color: var(--gold-dim); }
+
 /* ── Popover de réglage du son (bouton son du header) ── */
 .sound-pop {
   position: fixed; z-index: 1200;

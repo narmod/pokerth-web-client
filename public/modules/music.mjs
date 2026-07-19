@@ -34,6 +34,7 @@ const MANIFEST_URL = '/music/tracks.json';
 const LS_TRACK  = 'pth_music_track';
 const LS_VOL    = 'pth_music_vol';
 const LS_REPEAT = 'pth_music_repeat';
+const LS_SHUFFLE = 'pth_music_shuffle';
 
 let _tracks = [];
 let _audio  = null;
@@ -44,6 +45,8 @@ let _repeat = 'all';   // défaut: boucle playlist | 'one' = loop track | 'off' 
 let _seeking = false;  // true while the user drags the seek bar (don't let timeupdate fight the thumb)
 let _durProbed = false; // true once this track's total duration is resolved (see _probeDuration)
 let _probedDur = 0;     // duration resolved off a detached probe element (when the live one says Infinity)
+let _shuffle = false;   // random-order playback (orthogonal to repeat mode)
+let _lcdRemain = false; // LCD time display: false = elapsed, true = remaining (-M:SS)
 
 // Web Audio routing. On iOS/WebKit, HTMLMediaElement.volume is read-only, so
 // `audio.volume = x` is silently ignored (volume is hardware-only there). Routing
@@ -73,6 +76,20 @@ function setVolume(v) {
   _render();
 }
 
+function getShuffle() { return _shuffle; }
+function setShuffle(on) {
+  _shuffle = !!on;
+  try { localStorage.setItem(LS_SHUFFLE, _shuffle ? '1' : '0'); } catch (e) {}
+  _render();
+}
+// Pick a random track index different from the current one (no immediate repeat
+// unless there is only a single track). Used by next()/prev() when shuffle is on.
+function _randIndex() {
+  if (_tracks.length < 2) return 0;
+  var cur = _index(_curId), j;
+  do { j = Math.floor(Math.random() * _tracks.length); } while (j === cur);
+  return j;
+}
 function getRepeat() { return _repeat; }
 function setRepeat(m) {
   if (m !== 'one' && m !== 'all' && m !== 'off') return;
@@ -179,8 +196,8 @@ function toggleTrack(id) {
   if (isPlaying()) { pause(); return Promise.resolve(); }
   return play(id);
 }
-function next() { if (_tracks.length < 2) return play(_curId); var i = _index(_curId); if (i < 0) i = 0; return play(_tracks[(i + 1) % _tracks.length].id); }
-function prev() { if (_tracks.length < 2) return play(_curId); var i = _index(_curId); if (i < 0) i = 0; return play(_tracks[(i - 1 + _tracks.length) % _tracks.length].id); }
+function next() { if (_tracks.length < 2) return play(_curId); if (_shuffle) return play(_tracks[_randIndex()].id); var i = _index(_curId); if (i < 0) i = 0; return play(_tracks[(i + 1) % _tracks.length].id); }
+function prev() { if (_tracks.length < 2) return play(_curId); if (_shuffle) return play(_tracks[_randIndex()].id); var i = _index(_curId); if (i < 0) i = 0; return play(_tracks[(i - 1 + _tracks.length) % _tracks.length].id); }
 
 // ── Playback position / seeking ──
 // VBR / streamed MP3s advertise duration=Infinity until the browser scans the
@@ -252,6 +269,10 @@ function seek(t) {
   try { _audio.currentTime = t; } catch (e) {}
   _renderProgress();
 }
+// LCD time label honouring the elapsed/remaining toggle (_lcdRemain).
+function _curLabel(c, d, canSeek) {
+  return (_lcdRemain && canSeek) ? '-' + _fmtTime(Math.max(0, d - c)) : _fmtTime(c);
+}
 function _fmtTime(s) {
   s = Math.floor(s || 0); if (!isFinite(s) || s < 0) s = 0;
   var h = Math.floor(s / 3600), m = Math.floor((s % 3600) / 60), ss = s % 60;
@@ -271,7 +292,7 @@ function _renderProgress() {
   if (canSeek && c > d) c = d;                 // never display/seek beyond the track
   if (!canSeek && c > 86400) c = 0;            // guard against a probe leaving a huge currentTime
   if (durEl) durEl.textContent = canSeek ? _fmtTime(d) : '0:00';
-  if (!_seeking && curEl) curEl.textContent = _fmtTime(c);
+  if (!_seeking && curEl) curEl.textContent = _curLabel(c, d, canSeek);
   if (seekEl) {
     seekEl.disabled = !canSeek;
     if (!_seeking) seekEl.value = canSeek ? Math.round(c / d * 1000) : 0;
@@ -308,9 +329,18 @@ function _render() {
   var ppKey = playing ? 'musicPause' : 'musicPlay';
   var ppIcon = playing ? '\u23F8' : '\u25B6';
 
-  var options = _tracks.map(function (t) {
-    return '<option value="' + _esc(t.id) + '"' + (t.id === _curId ? ' selected' : '') + '>' +
-           _esc(t.title || t.id) + (t.artist ? ' \u2014 ' + _esc(t.artist) : '') + '</option>';
+  var nowTxt = cur ? (_esc(cur.title || cur.id) + (cur.artist ? ' \u2014 ' + _esc(cur.artist) : '')) : '';
+
+  var vuBars = '';
+  for (var b = 0; b < 7; b++) vuBars += '<span class="music-vu-bar"></span>';
+
+  var plItems = _tracks.map(function (t, i) {
+    return '<li class="music-pl-item' + (t.id === _curId ? ' is-cur' : '') + '" role="option" tabindex="0"' +
+           ' aria-selected="' + (t.id === _curId) + '" data-track-id="' + _esc(t.id) + '">' +
+           '<span class="music-pl-num">' + (i + 1) + '</span>' +
+           '<span class="music-pl-ttl">' + _esc(t.title || t.id) + (t.artist ? ' \u2014 ' + _esc(t.artist) : '') + '</span>' +
+           (t.id === _curId ? '<span class="music-pl-eq">' + (playing ? '\u25B8' : '\u2016') + '</span>' : '') +
+           '</li>';
   }).join('');
 
   var credit = (cur && cur.credit)
@@ -321,31 +351,43 @@ function _render() {
 
   _bodyEl.innerHTML =
     '<div class="music-player-box">' +
-    '<div class="music-player-hd"><span class="music-player-ic">\uD83C\uDFA7</span><span data-i18n="musicPlayer">' + _esc(_t('musicPlayer', 'Player')) + '</span></div>' +
+    // ── LCD : temps (cliquable écoulé/restant) + VU + titre défilant ──
+    '<div class="music-lcd">' +
+      '<div class="music-lcd-top">' +
+        '<span class="music-time music-cur" data-mact="lcd" role="button" tabindex="0" title="' + _esc(_t('musicNowPlaying', 'Now playing')) + '">' + _curLabel(_cur, _dur, _canSeek) + '</span>' +
+        '<span class="music-vu" aria-hidden="true">' + vuBars + '</span>' +
+      '</div>' +
+      '<div class="music-marquee"><span class="music-marquee-txt">' + (nowTxt || _esc(_t('musicNoTracks', 'No tracks available'))) + '</span></div>' +
+    '</div>' +
+    // ── barre de position ──
+    '<div class="music-seek-row">' +
+      '<input type="range" class="music-seek" min="0" max="1000" step="1" value="' + _pos + '"' + (_canSeek ? '' : ' disabled') + ' aria-label="' + _esc(_t('musicNowPlaying', 'Now playing')) + '">' +
+      '<span class="music-time music-dur">' + (_canSeek ? _fmtTime(_dur) : '0:00') + '</span>' +
+    '</div>' +
+    // ── transport ──
     '<div class="music-transport">' +
       '<button type="button" class="music-tbtn" data-mact="prev"' + (multi ? '' : ' disabled') + ' title="' + _esc(_t('musicPrev', 'Previous')) + '" data-i18n-title="musicPrev">\u23EE</button>' +
       '<button type="button" class="music-tbtn music-tbtn-main" data-mact="toggle" title="' + _esc(_t(ppKey, playing ? 'Pause' : 'Play')) + '" data-i18n-title="' + ppKey + '">' + ppIcon + '</button>' +
       '<button type="button" class="music-tbtn" data-mact="next"' + (multi ? '' : ' disabled') + ' title="' + _esc(_t('musicNext', 'Next')) + '" data-i18n-title="musicNext">\u23ED</button>' +
       '<button type="button" class="music-tbtn" data-mact="stop" title="' + _esc(_t('musicStop', 'Stop')) + '" data-i18n-title="musicStop">\u23F9</button>' +
       '<span class="music-div"></span>' +
+      '<button type="button" class="music-tbtn music-rpt' + (_shuffle ? ' is-active' : '') + '" data-mact="shuffle" aria-pressed="' + _shuffle + '" title="' + _esc(_t('musicShuffle', 'Shuffle')) + '" data-i18n-title="musicShuffle">\uD83D\uDD00</button>' +
       '<button type="button" class="music-tbtn music-rpt' + (_repeat === 'one' ? ' is-active' : '') + '" data-mact="rep-one" aria-pressed="' + (_repeat === 'one') + '" title="' + _esc(_t('musicRepeatOne', 'Repeat one')) + '" data-i18n-title="musicRepeatOne">\uD83D\uDD02</button>' +
       '<button type="button" class="music-tbtn music-rpt' + (_repeat === 'all' ? ' is-active' : '') + '" data-mact="rep-all" aria-pressed="' + (_repeat === 'all') + '" title="' + _esc(_t('musicRepeatAll', 'Repeat playlist')) + '" data-i18n-title="musicRepeatAll">\uD83D\uDD01</button>' +
     '</div>' +
-    '<div class="music-seek-row">' +
-      '<span class="music-time music-cur">' + _fmtTime(_cur) + '</span>' +
-      '<input type="range" class="music-seek" min="0" max="1000" step="1" value="' + _pos + '"' + (_canSeek ? '' : ' disabled') + ' aria-label="' + _esc(_t('musicNowPlaying', 'Now playing')) + '">' +
-      '<span class="music-time music-dur">' + (_canSeek ? _fmtTime(_dur) : '0:00') + '</span>' +
-    '</div>' +
+    // ── volume ──
     '<div class="music-vol">' +
       '<span class="music-vol-ic">\uD83D\uDD0A</span>' +
       '<input type="range" class="music-vol-range" min="0" max="100" value="' + vol + '" title="' + _esc(_t('musicVolume', 'Volume')) + '" data-i18n-title="musicVolume" aria-label="' + _esc(_t('musicVolume', 'Volume')) + '">' +
       '<span class="music-vol-val">' + vol + '%</span>' +
     '</div>' +
-    '<label class="music-sel-label" data-i18n="musicTrack">' + _esc(_t('musicTrack', 'Track')) + '</label>' +
-    '<div class="sel-wrap music-sel-wrap">' +
-      '<select id="music-sel" autocomplete="off" aria-label="' + _esc(_t('musicTrack', 'Track')) + '">' + options + '</select>' +
-      '<span class="sel-arr">\u25BE</span>' +
-    '</div>' +
+    // ── playlist dépliable ──
+    '<button type="button" class="music-pl-toggle" data-mact="pl" aria-expanded="false">' +
+      '<span class="music-pl-caret">\u25B8</span>' +
+      '<span data-i18n="musicPlaylist">' + _esc(_t('musicPlaylist', 'Playlist')) + '</span>' +
+      '<span class="music-pl-count">' + _tracks.length + '</span>' +
+    '</button>' +
+    '<ul class="music-pl" role="listbox" hidden>' + plItems + '</ul>' +
     credit +
     '</div>';
 
@@ -354,26 +396,26 @@ function _render() {
 
 function _wire() {
   if (!_bodyEl) return;
-  var sel = _bodyEl.querySelector('#music-sel');
-  if (sel) {
-    sel.addEventListener('change', function () {
-      _unlockAudio();
-      var id = sel.value;
-      if (isPlaying()) { play(id); }     // switch track, keep playing (change = user gesture)
-      else { _curId = id; _render(); }   // just arm the selection
-    });
-  }
   _bodyEl.querySelectorAll('[data-mact]').forEach(function (btn) {
     btn.addEventListener('click', function () {
-      _unlockAudio();                      // iOS: create/resume the AudioContext inside the gesture
       var a = btn.getAttribute('data-mact');
+      if (a === 'lcd') { _lcdRemain = !_lcdRemain; _renderProgress(); return; }   // no gesture needed
+      if (a === 'pl')  { _togglePlaylist(); return; }
+      _unlockAudio();                      // iOS: create/resume the AudioContext inside the gesture
       if (a === 'toggle') toggleTrack();
       else if (a === 'next') next();
       else if (a === 'prev') prev();
       else if (a === 'stop') stop();
+      else if (a === 'shuffle') setShuffle(!_shuffle);
       else if (a === 'rep-one') setRepeat(_repeat === 'one' ? 'off' : 'one');
       else if (a === 'rep-all') setRepeat(_repeat === 'all' ? 'off' : 'all');
     });
+  });
+  // Playlist rows: click (or Enter/Space) to play that track.
+  _bodyEl.querySelectorAll('.music-pl-item').forEach(function (li) {
+    var go = function () { _unlockAudio(); play(li.getAttribute('data-track-id')); };
+    li.addEventListener('click', go);
+    li.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); go(); } });
   });
   var rng = _bodyEl.querySelector('.music-vol-range');
   if (rng) {
@@ -389,17 +431,52 @@ function _wire() {
     var doSeek = function () {
       var d = getDuration(); if (!d) return;
       var t = (parseInt(seekEl.value, 10) || 0) / 1000 * d;
-      var curEl = _bodyEl.querySelector('.music-cur'); if (curEl) curEl.textContent = _fmtTime(t);
+      var curEl = _bodyEl.querySelector('.music-cur'); if (curEl) curEl.textContent = _curLabel(t, d, true);
       seek(t);
     };
     seekEl.addEventListener('input',  function () { _seeking = true; doSeek(); });
     seekEl.addEventListener('change', function () { doSeek(); _seeking = false; });
   }
+  _updateMarquee();
+}
+
+// Expand/collapse the playlist and flip the caret. Kept off the render path so
+// toggling never rebuilds the panel (preserves scroll + focus).
+function _togglePlaylist() {
+  if (!_bodyEl) return;
+  var ul = _bodyEl.querySelector('.music-pl');
+  var tg = _bodyEl.querySelector('.music-pl-toggle');
+  var cr = _bodyEl.querySelector('.music-pl-caret');
+  if (!ul || !tg) return;
+  var open = ul.hasAttribute('hidden');
+  if (open) ul.removeAttribute('hidden'); else ul.setAttribute('hidden', '');
+  tg.setAttribute('aria-expanded', String(open));
+  if (cr) cr.textContent = open ? '\u25BE' : '\u25B8';
+}
+
+// Start the title marquee only when the text actually overflows its LCD width
+// (transform-based scroll = GPU-composited, cheap on iOS — unlike box-shadow).
+function _updateMarquee() {
+  if (!_bodyEl) return;
+  var wrap = _bodyEl.querySelector('.music-marquee');
+  var txt = _bodyEl.querySelector('.music-marquee-txt');
+  if (!wrap || !txt) return;
+  requestAnimationFrame(function () {
+    var overflow = txt.scrollWidth - wrap.clientWidth;
+    if (overflow > 4) {
+      txt.style.setProperty('--mq-shift', '-' + overflow + 'px');
+      wrap.classList.add('is-scroll');
+    } else {
+      wrap.classList.remove('is-scroll');
+      txt.style.removeProperty('--mq-shift');
+    }
+  });
 }
 
 // Restore the last-selected track id + repeat mode at load (no playback).
 try { _curId = localStorage.getItem(LS_TRACK) || null; } catch (e) {}
 try { var _rm = localStorage.getItem(LS_REPEAT); if (_rm === 'one' || _rm === 'all' || _rm === 'off') _repeat = _rm; } catch (e) {}
+try { _shuffle = (localStorage.getItem(LS_SHUFFLE) === '1'); } catch (e) {}
 
 const Music = {
   loadManifest: loadManifest,
@@ -417,6 +494,8 @@ const Music = {
   setVolume: setVolume,
   getRepeat: getRepeat,
   setRepeat: setRepeat,
+  getShuffle: getShuffle,
+  setShuffle: setShuffle,
   getDuration: getDuration,
   getCurrentTime: getCurrentTime,
   seek: seek,
