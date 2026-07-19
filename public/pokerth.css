@@ -7217,10 +7217,10 @@ html[data-seat-img-self] .player-bar {
    diagonales classiques dans un triangle, or discret, plus frappe au survol.
    La zone SE passe de 13 a 18 px (plus facile a attraper). Les autres bords
    restent des zones invisibles (comportement OS standard). */
-.win-rsz-se::after { content: ''; position: absolute; right: 4px; bottom: 4px; width: 11px; height: 11px;
-  background: repeating-linear-gradient(-45deg, transparent 0 3px, var(--gold-dim, #b09a00) 3px 4.6px);
+.win-rsz-se::after { content: ''; position: absolute; right: 3px; bottom: 3px; width: 13px; height: 13px;
+  background: repeating-linear-gradient(-45deg, transparent 0 3px, var(--gold-dim, #b09a00) 3px 5px);
   clip-path: polygon(100% 0, 100% 100%, 0 100%);
-  opacity: .55; pointer-events: none; transition: opacity .12s; }
+  opacity: .8; pointer-events: none; transition: opacity .12s; } /* .55->.8 + 11->13 px : plus lisible sur fond clair (demande narmod 2026-07-19) */
 .win-rsz-se:hover::after, .win-rsz-se:active::after { opacity: 1; }
 .win-rsz-sw { bottom: 0; left: 0; width: 13px; height: 13px; cursor: nwse-resize; }
 .win-resizing, .win-resizing * { -webkit-user-select: none; user-select: none; }
@@ -7855,6 +7855,8 @@ html[data-seat-edit="1"] #g-seats .seat.seat-ghost { outline: none; cursor: defa
    <details class="adv-fold"> natif, plie par defaut, chevron anime. */
 details.adv-fold>summary.adv-sec{cursor:pointer;list-style:none;display:flex;align-items:center;gap:7px;user-select:none;-webkit-tap-highlight-color:transparent;padding:3px 0}
 details.adv-fold>summary.adv-sec::-webkit-details-marker{display:none}
+summary.adv-sec .adv-sec-ic{flex:0 0 auto;width:15px;height:15px;display:inline-flex;align-items:center;justify-content:center;opacity:.85}
+summary.adv-sec .adv-sec-ic svg{width:15px;height:15px;display:block}
 details.adv-fold>summary.adv-sec::before{content:'\25B8';font-size:0.95em;color:var(--gold-dim);transition:transform .15s ease;flex:0 0 auto}
 details.adv-fold[open]>summary.adv-sec::before{transform:rotate(90deg)}
 details.adv-fold:first-child>summary.adv-sec{margin-top:4px}

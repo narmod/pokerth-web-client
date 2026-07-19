@@ -2349,13 +2349,13 @@ if ('serviceWorker' in navigator) {
         <button type="button" class="adv-subtab" data-uitab="network" role="tab" aria-selected="false" onclick="advUiTab('network')" data-i18n="advUiNetwork">Network</button>
       </div>
       <div class="adv-body adv-uipanel is-active" data-uitab="general">
-      <details class="adv-fold"><summary class="adv-sec" data-i18n="advSecAppearance">Appearance</summary>
+      <details class="adv-fold"><summary class="adv-sec"><span class="adv-sec-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13A8 8 0 1 1 11 4a6.5 6.5 0 0 0 9 9z"/></svg></span><span data-i18n="advSecAppearance">Appearance</span></summary>
       <div class="adv-row"><span data-i18n="advDarkMode">Dark mode</span><div class="sel-wrap adv-sel"><select id="adv-darkmode" onchange="if(window.setTheme)window.setTheme(this.value)"><option value="auto" data-i18n="modeAuto">Automatic</option><option value="pokerth-light" data-i18n="modeLight">Light</option><option value="pokerth" data-i18n="modeDark">Dark</option></select><span class="sel-arr">▾</span></div></div>
       <div class="adv-row"><span data-i18n="advLanguage">Language</span><div class="sel-wrap adv-sel"><button type="button" id="adv-lang-btn" class="adv-lang-btn" onclick="openLangMenu(event)" aria-haspopup="menu" aria-label="Switch language" data-i18n-title="langTooltip"></button><span class="sel-arr">▾</span></div></div>
       <label class="adv-row"><input type="checkbox" id="adv-tooltips" onchange="setTooltips(this.checked)"><span data-i18n="advShowTooltips">Show tooltips</span><em class="adv-webtag">web</em></label>
       <label class="adv-row adv-soon"><input type="checkbox" disabled><span data-i18n="advDisableSplash">Disable the splash screen on startup</span><em data-i18n="advNA">n/a</em></label>
       </details>
-      <details class="adv-fold"><summary class="adv-sec" data-i18n="advSecTable">Table</summary>
+      <details class="adv-fold"><summary class="adv-sec"><span class="adv-sec-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="12" rx="8.5" ry="5.5"/><ellipse cx="12" cy="12" rx="4.8" ry="2.7"/></svg></span><span data-i18n="advSecTable">Table</span></summary>
       <label class="adv-row"><input type="checkbox" id="adv-blinds" onchange="setAdvOpt('show_blinds',this.checked)"><span data-i18n="advShowBlinds">Show dealer / blind buttons</span></label>
       <label class="adv-row"><input type="checkbox" id="adv-potbtns" onchange="setAdvOpt('pot_btns',this.checked)"><span data-i18n="advPotBtns">Show pot percentage buttons (1/3 · 1/2 · Pot)</span></label>
       <label class="adv-row"><input type="checkbox" id="adv-tablezoom" onchange="setAdvOpt('table_zoom',this.checked)"><span data-i18n="advTableZoom">Enable table zoom (magnifier buttons)</span></label>
@@ -2369,39 +2369,39 @@ if ('serviceWorker' in navigator) {
       <label class="adv-row"><input type="checkbox" id="adv-removegone" onchange="setAdvOpt('remove_gone',this.checked);try{renderSeats()}catch(e){}"><span data-i18n="advRemoveGone">Remove departed players and re-seat the table</span><em class="adv-webtag">web</em></label>
       <label class="adv-row"><input type="checkbox" id="adv-autoleave" onchange="setAdvOpt('auto_leave',this.checked)"><span data-i18n="advAutoLeave">Auto-return to lobby when the game ends</span></label>
       </details>
-      <details class="adv-fold"><summary class="adv-sec" data-i18n="advSecSeats">Seats</summary>
+      <details class="adv-fold"><summary class="adv-sec"><span class="adv-sec-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.2"/><path d="M6 20a6 6 0 0 1 12 0"/></svg></span><span data-i18n="advSecSeats">Seats</span></summary>
       <div class="adv-row"><span data-i18n="advSeatLayout">Seat placement</span><em class="adv-webtag">web</em><div class="sel-wrap adv-sel"><select id="adv-seatlayout" onchange="setSeatLayout(this.value)"><option value="auto" data-i18n="seatLayoutAuto">Automatic</option><option value="pokerth-official" data-i18n="seatLayoutOfficial">Portrait</option><option value="pokerth-ellipse" data-i18n="seatLayoutEllipse">Landscape</option><option value="custom" data-i18n="seatLayoutCustom">Custom</option></select><span class="sel-arr">▾</span></div></div>
       </details>
-      <details class="adv-fold"><summary class="adv-sec" data-i18n="advSecCards">Cards</summary>
+      <details class="adv-fold"><summary class="adv-sec"><span class="adv-sec-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="6" width="8" height="11" rx="1.5"/><path d="M12 4.5l6 1.6-2.8 10.6-3.2-.9"/></svg></span><span data-i18n="advSecCards">Cards</span></summary>
       <label class="adv-row"><input type="checkbox" id="adv-anim" onchange="setAdvOpt('anim_cards',this.checked)"><span data-i18n="advAnimCards">Card animations</span></label>
       <label class="adv-row"><input type="checkbox" id="adv-fadelosers" onchange="setAdvOpt('fade_losers',this.checked)"><span data-i18n="advFadeLosers">Fade losing cards at showdown</span></label>
       <label class="adv-row"><input type="checkbox" id="adv-ownclick" onchange="setAdvOpt('own_click',this.checked)"><span data-i18n="advOwnClick">Reveal my cards on tap</span></label>
       </details>
-      <details class="adv-fold"><summary class="adv-sec" data-i18n="advSecBet">Betting &amp; turn</summary>
+      <details class="adv-fold"><summary class="adv-sec"><span class="adv-sec-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3.4"/><path d="M12 4v3M12 17v3M4 12h3M17 12h3"/></svg></span><span data-i18n="advSecBet">Betting &amp; turn</span></summary>
       <label class="adv-row"><input type="checkbox" id="adv-voice" onchange="setVoice(this.checked)"><span data-i18n="voiceLabel">Voice announcements</span><em class="adv-webtag">web</em></label>
       <label class="adv-row"><input type="checkbox" id="adv-haptic" onchange="setHaptic(this.checked)"><span data-i18n="hapticLabel">Vibration</span><em class="adv-webtag">web</em></label>
       <label class="adv-row"><input type="checkbox" id="adv-displaybb" onchange="setDisplayBB(this.checked)"><span data-i18n="advDisplayBB">Show amounts in big blinds</span><em class="adv-webtag">web</em></label>
       </details>
-      <details class="adv-fold"><summary class="adv-sec" data-i18n="advSecChat">Chat</summary>
+      <details class="adv-fold"><summary class="adv-sec"><span class="adv-sec-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14a2 2 0 0 1-2 2H8l-4 4V6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2z"/></svg></span><span data-i18n="advSecChat">Chat</span></summary>
       <label class="adv-row"><input type="checkbox" id="adv-noemoji" onchange="setAdvOpt('chat_noemoji',this.checked)"><span data-i18n="advNoChatEmoji">Disable emojis in chat</span></label>
       <label class="adv-row"><input type="checkbox" id="adv-chatts" onchange="setAdvOpt('chat_ts',this.checked)"><span data-i18n="advChatTimestamps">Show time in chat messages</span><em class="adv-webtag">web</em></label>
       <label class="adv-row"><input type="checkbox" id="adv-chattranslate" onchange="setChatTranslate(this.checked)"><span data-i18n="advChatTranslate">Chat translation (Google Translate, per-message button)</span><em class="adv-webtag">web</em></label>
       </details>
-      <details class="adv-fold"><summary class="adv-sec" data-i18n="advSecAvatars">Avatars</summary>
+      <details class="adv-fold"><summary class="adv-sec"><span class="adv-sec-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="3.5" width="17" height="17" rx="3"/><circle cx="12" cy="10" r="2.8"/><path d="M6.8 18a5.2 5.2 0 0 1 10.4 0"/></svg></span><span data-i18n="advSecAvatars">Avatars</span></summary>
       <label class="adv-row"><input type="checkbox" id="adv-flag" onchange="setAdvOpt('show_flag',this.checked)"><span data-i18n="advFlagAvatar">Country flag on avatar</span></label>
       <label class="adv-row"><input type="checkbox" id="adv-nohideignored" onchange="setAdvOpt('no_hide_ignored',this.checked)"><span data-i18n="advNoHideIgnored">Don't hide ignored players' avatars</span></label>
       </details>
-      <details class="adv-fold"><summary class="adv-sec" data-i18n="advSecHelp">Assistance</summary>
+      <details class="adv-fold"><summary class="adv-sec"><span class="adv-sec-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.4 2.3c-.8.3-.9 1-.9 1.7M12 16.6h.01"/></svg></span><span data-i18n="advSecHelp">Assistance</span></summary>
       <label class="adv-row"><input type="checkbox" id="adv-assist" onchange="setAssist(this.checked)"><span data-i18n="assist">Assistance</span><em class="adv-webtag">web</em></label>
       <label class="adv-row"><input type="checkbox" id="adv-showodds" onchange="setAdvOpt('show_odds',this.checked)"><span data-i18n="advShowOdds">Show odds in the Chances panel</span></label>
       <label class="adv-row"><input type="checkbox" id="adv-handsbtn" onchange="setAdvOpt('hands_btn',this.checked)"><span data-i18n="advHandsBtn">Show the poker hands icon on the table</span><em class="adv-webtag">web</em></label>
       <label class="adv-row"><input type="checkbox" id="adv-hudon" onchange="setAdvOpt('hud_on',this.checked)"><span data-i18n="advHudOn">Show the stats HUD on player seats</span><em class="adv-betatag">beta</em><em class="adv-webtag">web</em></label>
       </details>
-      <details class="adv-fold"><summary class="adv-sec" data-i18n="advSecCommunity">Community</summary>
+      <details class="adv-fold"><summary class="adv-sec"><span class="adv-sec-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="9" r="3"/><path d="M3.5 19a5.5 5.5 0 0 1 11 0"/><path d="M15.5 6.5a3 3 0 0 1 0 5.4M17 13.6a5.5 5.5 0 0 1 3.5 5.4"/></svg></span><span data-i18n="advSecCommunity">Community</span></summary>
       <label class="adv-row"><input type="checkbox" id="adv-community" onchange="setAdvOpt('show_community',this.checked)"><span data-i18n="advShowCommunity">Show Ranking entry</span></label>
       <div class="adv-row"><span data-i18n="advDefCommunity">Default community</span><div class="sel-wrap adv-sel"><select id="adv-defcommunity" onchange="setDefaultCommunity(this.value)"><option value="pth">PokerTH</option><option value="bbc">BBC</option><option value="wec">WEC</option></select><span class="sel-arr">▾</span></div></div>
       </details>
-      <details class="adv-fold"><summary class="adv-sec" data-i18n="advSecKeys">Keyboard shortcuts</summary>
+      <details class="adv-fold"><summary class="adv-sec"><span class="adv-sec-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="18" height="10" rx="2"/><path d="M7 10.5h.01M11 10.5h.01M15 10.5h.01M7 13.5h10"/></svg></span><span data-i18n="advSecKeys">Keyboard shortcuts</span></summary>
       <div class="adv-keys" id="adv-keys">
         <div class="adv-keyrow" data-act="fold"><span>Fold</span><button type="button" class="kb-btn" onclick="rebindKey('fold')">F</button></div>
         <div class="adv-keyrow" data-act="call"><span>Check / Call</span><button type="button" class="kb-btn" onclick="rebindKey('call')">C</button></div>
@@ -2418,17 +2418,17 @@ if ('serviceWorker' in navigator) {
       </details>
       </div>
       <div class="adv-body adv-uipanel" data-uitab="network">
-      <details class="adv-fold"><summary class="adv-sec" data-i18n="advSecAvatars">Avatars</summary>
+      <details class="adv-fold"><summary class="adv-sec"><span class="adv-sec-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="3.5" width="17" height="17" rx="3"/><circle cx="12" cy="10" r="2.8"/><path d="M6.8 18a5.2 5.2 0 0 1 10.4 0"/></svg></span><span data-i18n="advSecAvatars">Avatars</span></summary>
       <label class="adv-row"><input type="checkbox" id="adv-pingavatar" onchange="setAdvOpt('ping_avatar',this.checked);try{window._pingTick&&window._pingTick()}catch(e){}"><span data-i18n="advNetStateColor">Show network status colour in the avatar corner</span></label>
       </details>
-      <details class="adv-fold"><summary class="adv-sec" data-i18n="advSecBet">Betting &amp; turn</summary>
+      <details class="adv-fold"><summary class="adv-sec"><span class="adv-sec-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3.4"/><path d="M12 4v3M12 17v3M4 12h3M17 12h3"/></svg></span><span data-i18n="advSecBet">Betting &amp; turn</span></summary>
       <label class="adv-row"><input type="checkbox" id="adv-focusbet" onchange="setAdvOpt('focus_bet',this.checked)"><span data-i18n="advFocusBet">Focus bet field on my turn</span></label>
       <label class="adv-row"><input type="checkbox" id="adv-guardcall" onchange="setAdvOpt('guard_call',this.checked)"><span data-i18n="advGuardCall">Prevent accidental Call after a big raise</span></label>
       </details>
-      <details class="adv-fold"><summary class="adv-sec" data-i18n="advSecChat">Chat</summary>
+      <details class="adv-fold"><summary class="adv-sec"><span class="adv-sec-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14a2 2 0 0 1-2 2H8l-4 4V6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2z"/></svg></span><span data-i18n="advSecChat">Chat</span></summary>
       <label class="adv-row"><input type="checkbox" id="adv-lobbychat" onchange="setAdvOpt('lobby_chat',this.checked)"><span data-i18n="advLobbyChat">Show the lobby chat</span></label>
       </details>
-      <details class="adv-fold"><summary class="adv-sec" data-i18n="advSecReactions">Reactions</summary>
+      <details class="adv-fold"><summary class="adv-sec"><span class="adv-sec-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><path d="M9 10h.01M15 10h.01M8.5 14a4.5 4.5 0 0 0 7 0"/></svg></span><span data-i18n="advSecReactions">Reactions</span></summary>
       <label class="adv-row"><input type="checkbox" id="adv-noreact" onchange="setReactMuted(this.checked)"><span data-i18n="advDisableReactions">Disable emoji reactions</span></label>
       </details>
       </div>
