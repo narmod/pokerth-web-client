@@ -26,6 +26,21 @@ export const S = {
   _speaking: false,  // an utterance is currently playing
   _curU: null,       // the live utterance (identity guard)
   _SPEAK_MAX: 4,     // cap the backlog so the voice can't lag far behind play
+
+  // ── V2 · Stats / board / profil (domaine H) ──
+  _stats: { handsPlayed: 0, handsWon: 0, startMoney: 0, peakMoney: 0, totalGain: 0,
+            bigWin: 0, bigLoss: 0, history: [] },
+  _statsInited: false,
+  _statsEligible: false,   // record lifetime stats at all (training OR private/LAN)
+  _boardEligible: false,   // shared family leaderboard + /stats push (private/LAN only)
+  _statsOffline: false,    // training (vs bots) → isolated lifetime store, no board
+  _gameCounted: false,     // guard: count each finished game once
+  _lifePushTimer: null,
+  _statsOpen: false,
+  _statsTab: 'session',
+  _boardSort: 'net',
+  _pimTab: 'session',
+  _pimPid: 0,              // pid affiché dans le popup profil (0 / myId = mon profil)
 };
 
 // Pont legacy : pokerth.js (script classique) fait `const S = window.PthState;`

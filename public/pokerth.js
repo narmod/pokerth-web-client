@@ -2906,7 +2906,7 @@ const App = (() => {
     // changer d'avatar). Sinon → profil en LECTURE d'un adversaire.
     var targetPid = (pid == null) ? myId : pid;
     var isSelf = (targetPid === myId);
-    _pimPid = targetPid;
+    S._pimPid = targetPid;
     var avEl    = document.getElementById('pim-avatar');
     var nameEl  = document.getElementById('pim-name');
     var statsEl = document.getElementById('pim-stats');
@@ -2977,7 +2977,7 @@ const App = (() => {
       // Mon profil : onglets stats (l'avatar du popup est cliquable pour le changer).
       if (infoEl)    { infoEl.style.display = 'none'; infoEl.innerHTML = ''; }
       if (statsEl)   statsEl.style.display = '';
-      _pimTab = 'session';
+      S._pimTab = 'session';
       _renderProfileStats();
     } else {
       // Adversaire : rôle + infos en jeu, pas de stats ni de bouton avatar.
@@ -3113,34 +3113,32 @@ const App = (() => {
   // Bloc stats du popup de profil — mêmes onglets que le panneau en jeu :
   // SESSION (toujours) / TOTAL (à vie, + bouton reset) / CLASSEMENT (proxy).
   // Les onglets TOTAL et CLASSEMENT n'apparaissent qu'en mode réseau (LAN +
-  // serveur privé, _statsEligible) : sur pokerth.net direct, seul SESSION.
+  // serveur privé, S._statsEligible) : sur pokerth.net direct, seul SESSION.
   // Réutilise _statsBodySession / _statsBodyLife / renderBoard pour rester
   // strictement identique au jeu (y compris le reset).
-  var _pimTab = 'session';
-  var _pimPid = 0; // pid actuellement affiché dans le popup (0 / myId = mon profil)
-  function _pimSetTab(tab) { _pimTab = tab; _renderProfileStats(); }
+  function _pimSetTab(tab) { S._pimTab = tab; _renderProfileStats(); }
   window._pimSetTab = _pimSetTab;
 
   function _renderProfileStats() {
     var box = document.getElementById('pim-stats');
     if (!box) return;
-    var eligible = _statsEligible;
-    var board    = _boardEligible;
-    if (!eligible && _pimTab !== 'session') _pimTab = 'session';
-    if (!board && _pimTab === 'board') _pimTab = 'session';
+    var eligible = S._statsEligible;
+    var board    = S._boardEligible;
+    if (!eligible && S._pimTab !== 'session') S._pimTab = 'session';
+    if (!board && S._pimTab === 'board') S._pimTab = 'session';
     function tb(id, label) {
-      return '<button class="stats-tab'+(_pimTab===id?' active':'')+'" onclick="window._pimSetTab(\''+id+'\')">'+label+'</button>';
+      return '<button class="stats-tab'+(S._pimTab===id?' active':'')+'" onclick="window._pimSetTab(\''+id+'\')">'+label+'</button>';
     }
     var tabs = eligible
       ? '<div class="stats-tabs">'+tb('session',t('statTabSession'))+tb('life',t('statTabLife'))
         + (board ? tb('board',t('statTabBoard')) : '') + '</div>'
       : '';
     var body;
-    if (_pimTab === 'life')       body = _statsBodyLife();
-    else if (_pimTab === 'board') body = '<div id="pim-board-body" class="stats-body"><div class="stat-empty">…</div></div>';
+    if (S._pimTab === 'life')       body = _statsBodyLife();
+    else if (S._pimTab === 'board') body = '<div id="pim-board-body" class="stats-body"><div class="stat-empty">…</div></div>';
     else                          body = _statsBodySession();
     box.innerHTML = tabs + body;
-    if (_pimTab === 'board') renderBoard('pim-board-body');
+    if (S._pimTab === 'board') renderBoard('pim-board-body');
   }
 
   function closePlayerInfoPopup() {
@@ -3556,30 +3554,22 @@ const App = (() => {
   let gameStartMoney = 3000;
 
   // ── Statistiques de session ──
-  var _stats = { handsPlayed:0, handsWon:0, startMoney:0, peakMoney:0, totalGain:0,
-                 bigWin:0, bigLoss:0, history:[] };
-  var _statsInited = false;
 
   // ── Lifetime stats + family leaderboard ───────────────────────────────
   // Persisted per nickname in localStorage; pushed to the proxy (/stats) so
   // every device sees the same board. Recorded ONLY on private-server / LAN
   // connections (set true at connect) — pokerth.net modes are never tracked.
-  var _statsEligible = false;        // record lifetime stats at all (training OR private/LAN)
-  var _boardEligible = false;        // shared family leaderboard + /stats push (private/LAN only)
-  var _statsOffline  = false;        // training (vs bots) → isolated lifetime store, no board
-  var _gameCounted = false;          // guard: count each finished game once
   // Training (vs bots) keeps its OWN persistent lifetime store, isolated from the
   // real private-server / LAN stats — they must never mix nor leak to the board.
-  function _lifeKey()       { return _statsOffline ? 'pth_life_offline' : 'pth_life'; }
+  function _lifeKey()       { return S._statsOffline ? 'pth_life_offline' : 'pth_life'; }
   function _lifeAll()       { try { return JSON.parse(localStorage.getItem(_lifeKey()) || '{}') || {}; } catch(e) { return {}; } }
   function _lifeSaveAll(o)  { try { localStorage.setItem(_lifeKey(), JSON.stringify(o)); } catch(e) {} }
   function _lifeBlank()     { return { handsPlayed:0, handsWon:0, net:0, bigWin:0, bigLoss:0, gamesPlayed:0, gamesWon:0, bestStreak:0, streak:0 }; }
   function _lifeGet(name)   { var a=_lifeAll(); return a[name] || _lifeBlank(); }
-  var _lifePushTimer = null;
   function _pushStats() {
-    if (!_boardEligible || !myName) return;   // training never touches the family board
-    if (_lifePushTimer) clearTimeout(_lifePushTimer);
-    _lifePushTimer = setTimeout(function() {
+    if (!S._boardEligible || !myName) return;   // training never touches the family board
+    if (S._lifePushTimer) clearTimeout(S._lifePushTimer);
+    S._lifePushTimer = setTimeout(function() {
       var s = _lifeGet(myName);
       var av = ''; try { av = localStorage.getItem('pth_avatar') || ''; } catch(e) {}
       if (av === '__pth__' || av === '__img__') av = ''; // ne pas envoyer le sentinelle
@@ -3591,7 +3581,7 @@ const App = (() => {
     }, 1500);
   }
   function _lifeRecordHand(won, delta) {
-    if (!_statsEligible || !myName) return;
+    if (!S._statsEligible || !myName) return;
     var a = _lifeAll(); var s = a[myName] || _lifeBlank();
     s.handsPlayed++;
     if (won) { s.handsWon++; s.streak = (s.streak||0)+1; if (s.streak > s.bestStreak) s.bestStreak = s.streak; }
@@ -3602,7 +3592,7 @@ const App = (() => {
     a[myName] = s; _lifeSaveAll(a); _pushStats();
   }
   function _lifeRecordGame(won) {
-    if (!_statsEligible || !myName) return;
+    if (!S._statsEligible || !myName) return;
     var a = _lifeAll(); var s = a[myName] || _lifeBlank();
     s.gamesPlayed++; if (won) s.gamesWon++;
     a[myName] = s; _lifeSaveAll(a); _pushStats();
@@ -3610,7 +3600,7 @@ const App = (() => {
   function _lifeReset() {
     if (!myName) return;
     var a = _lifeAll(); delete a[myName]; _lifeSaveAll(a);
-    if (_boardEligible) {
+    if (S._boardEligible) {
       try { fetch('/stats', { method:'POST', headers:{'Content-Type':'application/json'},
         body: JSON.stringify({ name:myName, _delete:true }) }).catch(function(){}); } catch(e) {}
     }
@@ -3638,7 +3628,7 @@ const App = (() => {
   // would reject the regression anyway, but reseeding also fixes the TOTAL tab
   // display on the new device. Runs once per connect when eligible.
   function _lifeSeedFromServer() {
-    if (!_boardEligible || !myName) return;
+    if (!S._boardEligible || !myName) return;
     fetch('/stats', { cache:'no-store' })
       .then(function(r){ return r.ok ? r.json() : null; })
       .then(function(data){
@@ -3646,7 +3636,7 @@ const App = (() => {
         var a = _lifeAll();
         a[myName] = _lifeMerge(a[myName] || _lifeBlank(), data[myName]);
         _lifeSaveAll(a);
-        if (_statsOpen) renderStats();
+        if (S._statsOpen) renderStats();
       }).catch(function(){});
   }
   var _myStackAtHandStart = null;    // mon stack réel au début de la main (avant blinds)
@@ -4982,10 +4972,10 @@ const App = (() => {
         //    NEVER pushed to the shared family leaderboard;
         //  • private server / LAN → shared leaderboard (push + seed) as before;
         //  • pokerth.net direct → session only.
-        _statsOffline  = !!window._offlineMode;
-        _boardEligible = !_statsOffline && (loginMode === 'unauth' || loginMode === 'lan');
-        _statsEligible = _statsOffline || _boardEligible;
-        if (_boardEligible) _lifeSeedFromServer();
+        S._statsOffline  = !!window._offlineMode;
+        S._boardEligible = !S._statsOffline && (loginMode === 'unauth' || loginMode === 'lan');
+        S._statsEligible = S._statsOffline || S._boardEligible;
+        if (S._boardEligible) _lifeSeedFromServer();
         const typeLabel = ['LAN','Internet (no-auth)','Internet (auth)'][stype] || 'Serveur';
         setStatus(t('connectingPlayers', { type: typeLabel, ver: pMaj + '.' + pMin, n: np }));
         lastMajor = pMaj; lastMinor = pMin; lastLoginType = loginType;
@@ -6049,13 +6039,13 @@ const App = (() => {
           // Nouvelle table → repartir de zéro pour les stats de session
           // (sinon le stack de départ et l'historique de la table précédente
           // persistent et faussent le « gain net »).
-          _stats.handsPlayed = 0; _stats.handsWon = 0; _stats.startMoney = 0;
-          _stats.peakMoney = 0; _stats.totalGain = 0; _stats.bigWin = 0;
-          _stats.bigLoss = 0; _stats.history = [];
-          _statsInited = false;
-          _gameCounted = false;
+          S._stats.handsPlayed = 0; S._stats.handsWon = 0; S._stats.startMoney = 0;
+          S._stats.peakMoney = 0; S._stats.totalGain = 0; S._stats.bigWin = 0;
+          S._stats.bigLoss = 0; S._stats.history = [];
+          S._statsInited = false;
+          S._gameCounted = false;
           _myStackAtHandStart = null; _seatStackAtHandStart = {};
-          if (_statsOpen) renderStats();
+          if (S._statsOpen) renderStats();
           const scEl = document.getElementById('g-myseat-cards');
           if (scEl) scEl.innerHTML = '<div class="pk sm back"></div><div class="pk sm back"></div>';
         }
@@ -6414,7 +6404,7 @@ const App = (() => {
         setTimeout(renderOddsMonitor, 400); // moniteur d'odds (préflop)
         // Init stats
         var startMon = (seatData[myId]||{}).money || 0;
-        if (!_statsInited && startMon > 0) initStats(startMon);
+        if (!S._statsInited && startMon > 0) initStats(startMon);
         // Sons + animations deal
         setTimeout(function(){
           notifyCard();
@@ -6714,7 +6704,7 @@ const App = (() => {
             if (pid === myId) {
               // Gain NET de la main = stack final − stack au début de la main
               // (et NON le pot brut « won », qui inclut ma propre mise).
-              var myStartHand = (_myStackAtHandStart != null) ? _myStackAtHandStart : ((_stats.startMoney || 0) + _stats.totalGain);
+              var myStartHand = (_myStackAtHandStart != null) ? _myStackAtHandStart : ((S._stats.startMoney || 0) + S._stats.totalGain);
               var netWin = cash - myStartHand;
               var myPair2 = myCards.map && myCards.map(function(c){ return { r: cardName(c,false).slice(0,-1), s: cardName(c,false).slice(-1), red: ['♥','♦'].indexOf(cardName(c,false).slice(-1))>=0 }; });
               recordHand(true, netWin, myPair2);
@@ -6728,7 +6718,7 @@ const App = (() => {
         if (!winners.some(function(w){ return w.pid === myId; })) {
           var myEndMon = (seatData[myId] || {}).money;
           if (myEndMon != null) {
-            var myStartMon = (_myStackAtHandStart != null) ? _myStackAtHandStart : ((_stats.startMoney || 0) + _stats.totalGain);
+            var myStartMon = (_myStackAtHandStart != null) ? _myStackAtHandStart : ((S._stats.startMoney || 0) + S._stats.totalGain);
             var myLoss = myEndMon - myStartMon;
             var myPairLoss = myCards.map && myCards.map(function(c){
               return { r: cardName(c,false).slice(0,-1), s: cardName(c,false).slice(-1), red: ['♥','♦'].indexOf(cardName(c,false).slice(-1))>=0 };
@@ -6834,7 +6824,7 @@ const App = (() => {
         // Enregistrer le résultat de la main pour moi (fin sans abattage).
         var myHideMon = (seatData[myId] || {}).money;
         if (myHideMon != null) {
-          var myHideStart = (_myStackAtHandStart != null) ? _myStackAtHandStart : ((_stats.startMoney || 0) + _stats.totalGain);
+          var myHideStart = (_myStackAtHandStart != null) ? _myStackAtHandStart : ((S._stats.startMoney || 0) + S._stats.totalGain);
           var myHideNet   = myHideMon - myHideStart;
           var myPairHide  = myCards.map && myCards.map(function(c){
             return { r: cardName(c,false).slice(0,-1), s: cardName(c,false).slice(-1), red: ['♥','♦'].indexOf(cardName(c,false).slice(-1))>=0 };
@@ -7496,21 +7486,19 @@ const App = (() => {
   // [Phase 2 / 9b] flipCommCards déplacée dans public/modules/ui/deck.mjs.
 
   // ── Panneau statistiques ──
-  var _statsOpen = false;
   function toggleStats() {
-    _statsOpen = !_statsOpen;
+    S._statsOpen = !S._statsOpen;
     var el = document.getElementById('stats-overlay');
     if (!el) {
       el = document.createElement('div');
       el.id = 'stats-overlay';
       document.body.appendChild(el);
     }
-    el.style.display = _statsOpen ? '' : 'none';
-    if (_statsOpen) renderStats();
+    el.style.display = S._statsOpen ? '' : 'none';
+    if (S._statsOpen) renderStats();
   }
 
-  var _statsTab = 'session';
-  function _statsSetTab(tab) { _statsTab = tab; renderStats(); }
+  function _statsSetTab(tab) { S._statsTab = tab; renderStats(); }
   window._statsSetTab = _statsSetTab;
 
   function _statsRow(label, val, cls) {
@@ -7523,13 +7511,13 @@ const App = (() => {
     // Onglets TOTAL (à vie) et CLASSEMENT (proxy) seulement dans les deux modes
     // réseau (LAN + serveur privé) : sur pokerth.net direct il n'y a ni stats
     // persistantes ni proxy de classement → seul SESSION a du sens.
-    var eligible = _statsEligible;       // SESSION + TOTAL available
-    var board    = _boardEligible;       // CLASSEMENT (proxy) available — private/LAN only
-    if (!eligible && _statsTab !== 'session') _statsTab = 'session';
-    if (!board && _statsTab === 'board') _statsTab = 'session';
+    var eligible = S._statsEligible;       // SESSION + TOTAL available
+    var board    = S._boardEligible;       // CLASSEMENT (proxy) available — private/LAN only
+    if (!eligible && S._statsTab !== 'session') S._statsTab = 'session';
+    if (!board && S._statsTab === 'board') S._statsTab = 'session';
     var titles = { session: t('statSession'), life: t('statTabLife'), board: t('statTabBoard') };
     function tb(id, label) {
-      return '<button class="stats-tab'+(_statsTab===id?' active':'')+'" onclick="window._statsSetTab(\''+id+'\')">'+label+'</button>';
+      return '<button class="stats-tab'+(S._statsTab===id?' active':'')+'" onclick="window._statsSetTab(\''+id+'\')">'+label+'</button>';
     }
     // pokerth.net direct (not eligible) → no tab bar (session only). Training shows
     // SESSION + TOTAL but no CLASSEMENT. Private/LAN shows all three.
@@ -7538,17 +7526,17 @@ const App = (() => {
         + (board ? tb('board',t('statTabBoard')) : '') + '</div>'
       : '';
     var body;
-    if (_statsTab === 'life')       body = _statsBodyLife();
-    else if (_statsTab === 'board') body = '<div id="stats-board-body" class="stats-body"><div class="stat-empty">…</div></div>';
+    if (S._statsTab === 'life')       body = _statsBodyLife();
+    else if (S._statsTab === 'board') body = '<div id="stats-board-body" class="stats-body"><div class="stat-empty">…</div></div>';
     else                            body = _statsBodySession();
-    el.innerHTML = '<div class="stats-header"><span>📊 '+titles[_statsTab]+'</span>'
+    el.innerHTML = '<div class="stats-header"><span>📊 '+titles[S._statsTab]+'</span>'
       + '<button onclick="toggleStats()" style="background:none;border:none;color:var(--text);cursor:pointer;font-size:0.9rem">✕</button>'
       + '</div>' + tabs + body;
-    if (_statsTab === 'board') renderBoard();
+    if (S._statsTab === 'board') renderBoard();
   }
 
   function _statsBodySession() {
-    var s = _stats;
+    var s = S._stats;
     var gain = s.totalGain;
     var gainCls = gain > 0 ? 'pos' : gain < 0 ? 'neg' : '';
     var wr = s.handsPlayed > 0 ? Math.round(s.handsWon/s.handsPlayed*100) : 0;
@@ -7584,9 +7572,9 @@ const App = (() => {
     var gain = s.net;
     var gainCls = gain > 0 ? 'pos' : gain < 0 ? 'neg' : '';
     var wr = s.handsPlayed > 0 ? Math.round(s.handsWon/s.handsPlayed*100) : 0;
-    var note = _statsOffline
+    var note = S._statsOffline
       ? '<div class="stat-note">'+t('statLifeTraining')+'</div>'
-      : (_statsEligible ? '' : '<div class="stat-note">'+t('statLifeOnlyPrivate')+'</div>');
+      : (S._statsEligible ? '' : '<div class="stat-note">'+t('statLifeOnlyPrivate')+'</div>');
     return '<div class="stats-body">'
       + note
       + _statsRow(t('statGamesPlayed'), s.gamesPlayed)
@@ -7618,8 +7606,7 @@ const App = (() => {
   window._statsReset = _statsReset;
 
   // Ranking criterion (persisted). net | per100 | winrate | games | streak.
-  var _boardSort = 'net';
-  try { _boardSort = localStorage.getItem('pth_board_sort') || 'net'; } catch(e) {}
+  try { S._boardSort = localStorage.getItem('pth_board_sort') || 'net'; } catch(e) {}
   function _boardPer100(p) { return (p.handsPlayed>0) ? (p.net||0)*100/p.handsPlayed : 0; }
   function _boardWinRate(p){ return (p.handsPlayed>0) ? (p.handsWon||0)/p.handsPlayed : 0; }
   function _boardCmp(key) {
@@ -7630,7 +7617,7 @@ const App = (() => {
     return function(a,b){ return (b.net||0)-(a.net||0); };
   }
   function _boardSetSort(k) {
-    _boardSort = k;
+    S._boardSort = k;
     try { localStorage.setItem('pth_board_sort', k); } catch(e) {}
     if (document.getElementById('stats-board-body')) renderBoard('stats-board-body');
     if (document.getElementById('pim-board-body'))   renderBoard('pim-board-body');
@@ -7645,9 +7632,9 @@ const App = (() => {
         var box = document.getElementById(boxId);
         if (!box) return;
         var arr = Object.keys(data || {}).map(function(name){ var v = data[name] || {}; v.name = name; return v; });
-        arr.sort(_boardCmp(_boardSort));
+        arr.sort(_boardCmp(S._boardSort));
         // Sort selector (↕). Labels reuse existing stat keys; only net/100 is new.
-        var opt = function(id, lbl){ return '<option value="'+id+'"'+(_boardSort===id?' selected':'')+'>'+esc(lbl)+'</option>'; };
+        var opt = function(id, lbl){ return '<option value="'+id+'"'+(S._boardSort===id?' selected':'')+'>'+esc(lbl)+'</option>'; };
         var sortUI = '<div class="board-sort"><span>↕</span><select onchange="window._boardSetSort(this.value)">'
           + opt('net', t('statNet'))
           + opt('per100', t('boardPer100'))
@@ -7671,9 +7658,9 @@ const App = (() => {
           var wrp  = hp>0 ? Math.round((p.handsWon||0)/hp*100) : 0;
           // Secondary line adapts to the active criterion so the ranked value is visible.
           var sub;
-          if (_boardSort==='per100')       sub = (p100>0?'+':'')+'$'+_groupThousands(p100)+'/100 · '+hp;
-          else if (_boardSort==='winrate') sub = wrp+'% · '+hp;
-          else if (_boardSort==='streak')  sub = '🔥 '+(p.bestStreak||0);
+          if (S._boardSort==='per100')       sub = (p100>0?'+':'')+'$'+_groupThousands(p100)+'/100 · '+hp;
+          else if (S._boardSort==='winrate') sub = wrp+'% · '+hp;
+          else if (S._boardSort==='streak')  sub = '🔥 '+(p.bestStreak||0);
           else                             sub = '🏆'+(p.gamesWon||0)+' · '+(p.handsWon||0);
           return '<div class="board-row'+mine+'">'
             + '<span class="board-rank">'+medal+'</span>'
@@ -7693,24 +7680,24 @@ const App = (() => {
 
   // Initialiser les stats au début d'une partie
   function initStats(startMoney) {
-    if (_statsInited) return;
-    _stats.startMoney = startMoney;
-    _stats.peakMoney  = startMoney;
-    _statsInited = true;
+    if (S._statsInited) return;
+    S._stats.startMoney = startMoney;
+    S._stats.peakMoney  = startMoney;
+    S._statsInited = true;
   }
 
   // Enregistrer le résultat d'une main
   function recordHand(won, delta, myCardsPair) {
-    _stats.handsPlayed++;
-    if (won) _stats.handsWon++;
-    _stats.totalGain += delta;
-    if (delta > _stats.bigWin) _stats.bigWin = delta;
-    if (delta < _stats.bigLoss) _stats.bigLoss = delta;
-    _stats.history.push({ num: handNum, delta: delta, won: won,
+    S._stats.handsPlayed++;
+    if (won) S._stats.handsWon++;
+    S._stats.totalGain += delta;
+    if (delta > S._stats.bigWin) S._stats.bigWin = delta;
+    if (delta < S._stats.bigLoss) S._stats.bigLoss = delta;
+    S._stats.history.push({ num: handNum, delta: delta, won: won,
       cards: myCardsPair });
-    if (_stats.history.length > 20) _stats.history.shift();
+    if (S._stats.history.length > 20) S._stats.history.shift();
     _lifeRecordHand(won, delta);
-    if (_statsOpen) renderStats();
+    if (S._statsOpen) renderStats();
   }
 
   // ── Probabilité de gain (Monte Carlo simplifié) ──
@@ -9308,7 +9295,7 @@ const App = (() => {
     const eliminated = !!opts.eliminated;
     const place = opts.place || 0;
     const isMyWin = (winnerPid === myId) && !eliminated;
-    if (!_gameCounted) { _gameCounted = true; _lifeRecordGame(isMyWin); }
+    if (!S._gameCounted) { S._gameCounted = true; _lifeRecordGame(isMyWin); }
     const winnerName = players[winnerPid] || (isMyWin
       ? (document.getElementById('nick') ? document.getElementById('nick').value : 'You')
       : ('#' + winnerPid));
@@ -9322,8 +9309,8 @@ const App = (() => {
     const winnerNameDisp = eliminated ? (place ? t('endGamePlace', { n: place }) : '')
                       : esc(winnerName);
 
-    // Stats — reuse the _stats object that was already being maintained
-    const s = _stats || { handsPlayed:0, handsWon:0, totalGain:0, bigWin:0, bigLoss:0, startMoney:0 };
+    // Stats — reuse the S._stats object that was already being maintained
+    const s = S._stats || { handsPlayed:0, handsWon:0, totalGain:0, bigWin:0, bigLoss:0, startMoney:0 };
     const wr = s.handsPlayed > 0 ? Math.round(s.handsWon / s.handsPlayed * 100) : 0;
     const _realStk = (seatData[myId] && seatData[myId].money != null) ? seatData[myId].money : null;
     const finalStack = (_realStk != null) ? _realStk : ((s.startMoney || 0) + (s.totalGain || 0));
@@ -9625,7 +9612,7 @@ const App = (() => {
   // setLang() (i18n.mjs). Chaque bloc est gardé : on ne re-rend que si ouvert.
   window._refreshOpenPanels = function() {
     // Panneau statistiques de session
-    try { if (_statsOpen && typeof renderStats === 'function') renderStats(); } catch (e) {}
+    try { if (S._statsOpen && typeof renderStats === 'function') renderStats(); } catch (e) {}
     // Liste des joueurs en ligne (lobby)
     try {
       var pp = document.getElementById('players-panel');
@@ -9639,7 +9626,7 @@ const App = (() => {
     // Profil / avatar
     try {
       var pim = document.getElementById('player-info-modal');
-      if (pim && pim.style.display !== 'none' && typeof openPlayerInfoPopup === 'function') openPlayerInfoPopup(_pimPid);
+      if (pim && pim.style.display !== 'none' && typeof openPlayerInfoPopup === 'function') openPlayerInfoPopup(S._pimPid);
     } catch (e) {}
   };
   window.renderGames = renderGames;
@@ -14989,7 +14976,7 @@ function renderPlayersList() {
   });
 })();
 
-;(function(){ window.BUILD_VERSION='0.3.824-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.825-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
