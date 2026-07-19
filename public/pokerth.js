@@ -4904,13 +4904,11 @@ const App = (() => {
     // comme le client officiel. Reclic sur la même = désarmement. Le bouton armé
     // est surligné en or ; l'action s'exécute quand notre tour arrive.
     armPreAction(name) {
-      if (S.turnPid === S.myId) { console.log('[prearm] clic ignoré (mon tour) name=' + name); return; }  // à notre tour : inchangé (les boutons agissent)
-      console.log('[prearm] armPreAction turnPid=' + S.turnPid + ' myId=' + S.myId);
+      if (S.turnPid === S.myId) return;  // à notre tour : inchangé (les boutons agissent)
       if (S._amSpectator || !S._gameStarted) return;
       if (S.myCards[0] == null && S.myCards[1] == null) return; // pas de cartes
       S._preAction = (S._preAction === name) ? '' : name;      // toggle
       S._preActionToCall = Math.max(0, S.highestBet - ((S.seatData[S.myId] || {}).bet || 0)); // onCallAmountChanged : MON à-suivre
-      console.log('[prearm] ' + (S._preAction ? 'armé' : 'désarmé') + ' name=' + name + ' toCallMémo=' + S._preActionToCall + ' highestBet=' + S.highestBet + ' maMise=' + (((S.seatData[S.myId] || {}).bet) || 0));
       renderMyTurnActions(true);                            // re-render pour le surlignage or
     },
 
@@ -8522,7 +8520,7 @@ window.togglePlayersPanel = togglePlayersPanel;
 window.toggleReactionPanel = toggleReactionPanel;
 window.App = App;
 
-window.BUILD_VERSION='0.3.866-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='0.3.867-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

@@ -210,7 +210,6 @@ function onHandStart(sub) {
     // pas de reset par main. Le joueur le change via le dropdown ou un
     // clic manuel sur une action.
     S._preActionOpen = false; // referme tout panneau "aperçu" à chaque main
-    if (S._preAction) console.log('[prearm] reset nouvelle main (était: ' + S._preAction + ')');
     S._preAction = '';        // désarme toute pré-action à chaque nouvelle main
     // Zoom-follow : reset du suivi + restauration d'un zoom suspendu au showdown
     try { if (window._zoomHandStart) window._zoomHandStart(); } catch (_e) {}
@@ -343,7 +342,6 @@ function onHandStart(sub) {
       window._pthCardDiag = _cd;
       var _cdh = window._pthCardDiagHist || (window._pthCardDiagHist = []);
       _cdh.push(_cd); if (_cdh.length > 20) _cdh.shift();
-      console.log('[cards-diag]', JSON.stringify(_cd));
       // Anomalie = cartes toujours nulles alors qu'on est assis avec des
       // données serveur (plain ou enc). Statut visible sur mobile.
       if (S.myCards[0] == null && S.myCards[1] == null && (_cd.plain || _cd.enc >= 0)) {
@@ -540,8 +538,7 @@ function onPlayersTurn(sub) {
       // Pré-action armée (comme l'officiel) : si une action a été armée avant
       // notre tour et qu'elle est encore valide, on la joue directement sans
       // afficher les boutons live.
-      console.log('[prearm] MON TOUR — préAction=' + (S._preAction || '(vide)') + ' gameState=' + S.gameState);
-      if (S._preAction) { var _pdid = _runPreAction(); console.log('[prearm] _runPreAction → ' + _pdid); S._preAction = ''; if (_pdid) return; }
+      if (S._preAction) { var _pdid = _runPreAction(); S._preAction = ''; if (_pdid) return; }
       // Mode auto PERSISTANT (Manuel/Auto Check-Call/Auto Check-Fold) :
       // si un mode auto est actif, jouer l'action sans afficher les boutons.
       // Le mode reste actif (pas de désarmement), comme le client officiel.

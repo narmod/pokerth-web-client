@@ -152,7 +152,7 @@ window.setAssist = function(on) {
 // Recalcule le contexte au moment de l'exécution. Un Fold pré-armé devient
 // Check si le check est gratuit. Retourne true si une action a été jouée.
 function _runPreAction() {
-  if (!S._preAction || S._amSpectator) { console.log('[prearm] run: refus (préAction=' + S._preAction + ' spectateur=' + S._amSpectator + ')'); return false; }
+  if (!S._preAction || S._amSpectator) return false;
   var pa = S._preAction;
   var myMoney = (S.seatData[S.myId] || {}).money || 0;
   var myBet   = (S.seatData[S.myId] || {}).bet   || 0;
@@ -163,8 +163,7 @@ function _runPreAction() {
   if (pa === 'fold')  { if (canCheck) doAction(2, 0); else doAction(1, 0); return true; }
   if (pa === 'call')  { if (canCheck) doAction(2, 0); else if (toCall >= myMoney) doAction(6, myMoney); else doAction(3, toCall); return true; }
   if (pa === 'allin') { doAction(6, myMoney); return true; }
-  if (pa === 'raise') { if (!canRaise) { console.log('[prearm] run: raise impossible (tapis=' + myMoney + ' toCall=' + toCall + ' minBet=' + minBet + ')'); return false; } if (minBet >= myMoney) doAction(6, myMoney); else doAction(5, minBet); return true; }
-  console.log('[prearm] run: action inconnue ' + pa);
+  if (pa === 'raise') { if (!canRaise) return false; if (minBet >= myMoney) doAction(6, myMoney); else doAction(5, minBet); return true; }
   return false;
 }
 
@@ -189,7 +188,6 @@ function renderMyTurnActions(preview) {
   // restent valides (pas de dépendance au montant).
   var _paCurToCall = Math.max(0, S.highestBet - ((S.seatData[S.myId] || {}).bet || 0));
   if (S._preAction && (S._preAction === 'call' || S._preAction === 'raise') && _paCurToCall !== S._preActionToCall) {
-    console.log('[prearm] INVALIDÉ (' + S._preAction + ') toCallCourant=' + _paCurToCall + ' ≠ mémo=' + S._preActionToCall + ' (preview=' + !!preview + ')');
     S._preAction = '';
   }
   const myMoney = (S.seatData[S.myId] || {}).money || 0;
@@ -272,7 +270,6 @@ function renderMyTurnActions(preview) {
   // lieu d'agir ; le bouton armé reçoit la classe .prearmed (bord or).
   var _pv = !!preview;
   function _preClk(name, live) { return _pv ? "App.armPreAction('" + name + "')" : live; }
-  if (_pv) { try { var _mzD = document.querySelector('.my-zone'); console.log('[prearm] rendu APERÇU — turnPid=' + S.turnPid + ' myId=' + S.myId + ' classeMonTour=' + !!(_mzD && _mzD.classList.contains('my-turn-active'))); } catch (e) {} }
   function _preCls(name) { return (_pv && S._preAction === name) ? ' prearmed' : ''; }
 
   const h = '<div class="action-grid">'
