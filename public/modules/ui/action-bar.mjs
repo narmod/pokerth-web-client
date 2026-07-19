@@ -13,11 +13,9 @@
 // et les vars top-level _lastCallSeen/_lastBoardCount/
 // _callConfirmArmed/_callConfirmTimer ; 5× $( réécrits. Les closures
 // window.toggleAssist/setAssist déménagent avec _applyAssistUI.
-// ⚠ BUG LATENT CONSERVÉ À L'IDENTIQUE (présent dans le monolithe) :
-// confirmCall référence `KB` (local de renderMyTurnActions) →
-// ReferenceError au 1er tap, le libellé « Confirm $X ? » ne s'affiche
-// jamais (le 2e tap fonctionne car _callConfirmArmed est posé avant).
-// Fix prévu dans un push séparé (règle : extraction ≠ correction).
+// FIX 9g-B4b (0.3.855) : le bug latent `KB` de confirmCall (local de
+// renderMyTurnActions → ReferenceError, relabel jamais affiché) est
+// corrigé — les bindings sont relus via window._keyBindings().
 // ═══════════════════════════════════════════════════════════════════
 import { S } from '../game/state.mjs';
 import { t } from '../i18n.mjs';
@@ -386,7 +384,8 @@ function confirmCall(action, amount) {
     if (btn) {
       if (btn._origCall == null) btn._origCall = btn.innerHTML;
       btn.classList.add('confirm-call');
-      btn.innerHTML = t('confirmCall') + ' <b>' + fmtChips(amount) + '</b> ?<span class="act-key">' + KB.call.toUpperCase() + '</span>';
+      var _kb = window._keyBindings(); // FIX 9g-B4b : `KB` était un local de renderMyTurnActions → ReferenceError, le relabel ne s'affichait jamais
+        btn.innerHTML = t('confirmCall') + ' <b>' + fmtChips(amount) + '</b> ?<span class="act-key">' + _kb.call.toUpperCase() + '</span>';
     }
     try { if (navigator.vibrate) navigator.vibrate(18); } catch (e) {}
     if (window._callConfirmTimer) clearTimeout(window._callConfirmTimer);

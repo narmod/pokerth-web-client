@@ -120,13 +120,17 @@ els['raise-amt'].value = '99999';
 A.doRaise();
 ok(sent3.length === 2, 'doRaise : montant > stack → All-In envoyé');
 
-// confirmCall : 1er tap arme (bug latent KB documenté : le relabel jette,
-// mais _callConfirmArmed est posé avant) ; 2e tap envoie l'action
+// confirmCall : 1er tap arme ET re-libelle le bouton « Confirm $X ? »
+// (fix 9g-B4b : les bindings sont relus via window._keyBindings())
 window._callConfirmArmed = false;
-globalThis.document.querySelector = () => null; // pas de bouton → pas de relabel (et pas de KB)
+const callBtn = makeEl();
+globalThis.document.querySelector = (sel) => (sel.includes('btn-call') ? callBtn : null);
 const sent4 = []; S.ws.send = (d) => sent4.push(d);
 A.confirmCall(3, 500);
 ok(window._callConfirmArmed === true && sent4.length === 0, 'confirmCall : 1er tap arme sans envoyer');
+ok(callBtn.innerHTML.includes('500') && callBtn.innerHTML.includes('?'),
+   'confirmCall : bouton re-libellé « Confirm $500 ? » (fix KB)');
+globalThis.document.querySelector = () => null;
 A.confirmCall(3, 500);
 ok(sent4.length === 1 && window._callConfirmArmed === false, 'confirmCall : 2e tap envoie');
 if (window._callConfirmTimer) clearTimeout(window._callConfirmTimer);
