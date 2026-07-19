@@ -7212,7 +7212,16 @@ html[data-seat-img-self] .player-bar {
 .win-rsz-w  { left: 0; top: 12px; bottom: 12px; width: 6px;  cursor: ew-resize; }
 .win-rsz-ne { top: 0; right: 0; width: 13px; height: 13px; cursor: nesw-resize; }
 .win-rsz-nw { top: 0; left: 0; width: 13px; height: 13px; cursor: nwse-resize; }
-.win-rsz-se { bottom: 0; right: 0; width: 13px; height: 13px; cursor: nwse-resize; }
+.win-rsz-se { bottom: 0; right: 0; width: 18px; height: 18px; cursor: nwse-resize; }
+/* Grip visible du coin bas-droit (demande narmod 2026-07-19) : hachures
+   diagonales classiques dans un triangle, or discret, plus frappe au survol.
+   La zone SE passe de 13 a 18 px (plus facile a attraper). Les autres bords
+   restent des zones invisibles (comportement OS standard). */
+.win-rsz-se::after { content: ''; position: absolute; right: 4px; bottom: 4px; width: 11px; height: 11px;
+  background: repeating-linear-gradient(-45deg, transparent 0 3px, var(--gold-dim, #b09a00) 3px 4.6px);
+  clip-path: polygon(100% 0, 100% 100%, 0 100%);
+  opacity: .55; pointer-events: none; transition: opacity .12s; }
+.win-rsz-se:hover::after, .win-rsz-se:active::after { opacity: 1; }
 .win-rsz-sw { bottom: 0; left: 0; width: 13px; height: 13px; cursor: nwse-resize; }
 .win-resizing, .win-resizing * { -webkit-user-select: none; user-select: none; }
 
