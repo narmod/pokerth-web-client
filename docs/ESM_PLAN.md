@@ -242,3 +242,4 @@ d'un plan dédié (#9g) une fois les 10 vagues livrées et stabilisées.
 | 2026-07-19 | 0.3.840-beta | 9f-4 game/stats.mjs (25 fonctions : _life*, _pushStats, panneau/board/session ; imports t/fmt/esc, pont _renderProfileStats ; corps identiques) — 16 tests | 811 → 799 Ko |
 | 2026-07-19 | 0.3.841-beta | 9f-5 net/petitions.mjs (14 fonctions vote-kick + invitations ; imports t/esc/MSG, ponts send & addChat ajoutés ; corps identiques) — 11 tests | 799 → 791 Ko |
 | 2026-07-19 | 0.3.842-beta | 9f-6 ui/chat.mjs (addChat + _chatLocalCmd ; imports t/esc/MSG, globaux script via window.*, garde typeof adaptée, 1× $( réécrit ; corps identiques) — 10 tests | 791 → 778 Ko |
+| 2026-07-19 | 0.3.843-beta | 9f-7 ui/player-popup.mjs (13 fonctions popup joueur + avatars + drapeaux ; ponts isBot/updateLobbyPill ajoutés, wrapper _renderProfileStats 9f-4 retiré, balayage par occurrence adopté ; corps identiques) — 11 tests | 778 → 764 Ko |
