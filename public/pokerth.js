@@ -2663,7 +2663,6 @@ const App = (() => {
     return String(v);
   }
 
-  let gameState = 0;   // preflop/flop/turn/river
   // Assistance (aide « force de la main » affichée au-dessus des actions) :
   // activée par défaut, mémorisée localement. '0' = désactivée.
   let _assistOn = true;
@@ -3044,12 +3043,12 @@ const App = (() => {
       if (sd.folded) st = tt('piStatusFolded', 'Folded');
       else if (sd.active === false) st = (sd.money != null && sd.money <= 0) ? tt('piStatusEliminated', 'Eliminated') : tt('piStatusSittingOut', 'Sitting out');
       else if (sd.money === 0) st = tt('piStatusAllIn', 'All-in');
-      else if (pid === turnPid) st = tt('piStatusToAct', 'To act');
+      else if (pid === S.turnPid) st = tt('piStatusToAct', 'To act');
       // Position : pastilles universelles D / SB / BB (pas de traduction).
       var pos = '';
-      if (pid === dealerPid)  pos += '<span class="pim-pos pim-pos-d">D</span>';
-      if (pid === _lastSbPid) pos += '<span class="pim-pos pim-pos-sb">SB</span>';
-      if (pid === _lastBbPid) pos += '<span class="pim-pos pim-pos-bb">BB</span>';
+      if (pid === S.dealerPid)  pos += '<span class="pim-pos pim-pos-d">D</span>';
+      if (pid === S._lastSbPid) pos += '<span class="pim-pos pim-pos-sb">SB</span>';
+      if (pid === S._lastBbPid) pos += '<span class="pim-pos pim-pos-bb">BB</span>';
       var foot = '';
       if (st)  foot += '<span class="pim-status">' + esc(st) + '</span>';
       if (pos) foot += '<span class="pim-pos-wrap">' + pos + '</span>';
@@ -3324,7 +3323,7 @@ const App = (() => {
     // Body: 3 sections of label/value rows.
     // Pot total mémorisé par setPot (le bandeau affiche désormais le pot
     // collecté séparé des mises → plus de parsing DOM possible).
-    var pot = (typeof window._lastPotTotal === 'number') ? window._lastPotTotal : 0;
+    var _potNow = (typeof window._lastPotTotal === 'number') ? window._lastPotTotal : 0;
     var round = '—';
     var roundEl = document.getElementById('g-round');
     if (roundEl) round = (roundEl.textContent || '—').trim();
@@ -3379,7 +3378,7 @@ const App = (() => {
         [t('piHandNo'),
             (S.handNum > 0) ? ('H#' + S.handNum) : t('piNotStarted')],
         [t('piPot'),
-            '$' + _groupThousands(pot)],
+            '$' + _groupThousands(_potNow)],
         [t('piPhase'),
             round],
       ],
@@ -3499,22 +3498,10 @@ const App = (() => {
   };
   let seats     = [];  // player IDs in seat order (from GameStartInitial) — figé après 1ère main
   let seatData  = {};  // {pid: {money, bet, action, active, folded}}
-  let myCards   = [null, null];
-  let commCards = [];
   // Clé/IV AES dérivés du mot de passe pour déchiffrer les cartes envoyées
   // chiffrées par pokerth.net aux comptes authentifiés (encryptedCards,
   // HandStart champ 3). Renseignés au moment de l'Init (mode 'auth'),
   // nuls sinon (LAN / invité → plainCards en clair).
-  let _cardKey  = null;
-  let _cardIV   = null;
-  let highestBet= 0;
-  let minRaise  = 0;
-  let pot          = 0;
-  let collectedPot = 0;  // bets accumulated from previous rounds
-  let dealerPid = 0;
-  let turnPid   = 0;
-  let _lastSbPid = 0;   // SB/BB du dernier rendu, lus par le popup d'info joueur
-  let _lastBbPid = 0;
   // Starting stack for this table. Pulled from NetGameInfo.startMoney
   // (field 13, written by buildCreateGame) or set directly by the table
   // creator. Used as the default money value when GameStartInitial
@@ -3743,15 +3730,15 @@ const App = (() => {
   // Re-render the pot label from the last known pot value, in the current
   // mode. We keep the last numeric pot in _lastPotValue (set by setPot) so a
   // mode switch can repaint without a server message.
-  function setPot(pot) {
+  function setPot(_potVal) {
     var _prevPot = (typeof S._lastPotValue === 'number') ? S._lastPotValue : 0;
-    S._lastPotValue = (typeof pot === 'number') ? pot : (parseInt(pot, 10) || 0);
+    S._lastPotValue = (typeof _potVal === 'number') ? _potVal : (parseInt(_potVal, 10) || 0);
     window._lastPotTotal = S._lastPotValue;   // pot total (lu par le popup d'info)
     // Parité GameStatusBar QML §7 : « Total » = pot collecté des streets
     // précédentes (collectedPot), « Bets/Mises » = mises de la street en
     // cours (= totalPot − collecté). Le badge au-dessus des cartes
     // (#g-potbar) garde le pot TOTAL, comme le pot badge QML.
-    var _cp    = (typeof collectedPot === 'number') ? Math.min(collectedPot, S._lastPotValue) : S._lastPotValue;
+    var _cp    = (typeof S.collectedPot === 'number') ? Math.min(S.collectedPot, S._lastPotValue) : S._lastPotValue;
     var _bets  = Math.max(0, S._lastPotValue - _cp);
     var _potAmt = esc(fmtChips(S._lastPotValue));
     var a  = document.getElementById('g-pot');
@@ -3944,10 +3931,10 @@ const App = (() => {
   // Joue l'action du mode auto courant a NOTRE tour (sans afficher les boutons).
   // Retourne true si une action auto a ete declenchee.
   function _playAutoMode() {
-    if (S._playingMode === 0 || turnPid !== myId) return false;
+    if (S._playingMode === 0 || S.turnPid !== myId) return false;
     if (!S.ws || S.ws.readyState !== WebSocket.OPEN) return false;
     var myBet0    = (seatData[myId] || {}).bet || 0;
-    var toCall0   = Math.max(0, highestBet - myBet0);
+    var toCall0   = Math.max(0, S.highestBet - myBet0);
     var canCheck0 = toCall0 === 0;
     var act = canCheck0 ? 2 : (S._playingMode === 1 ? 3 : 1); // 2=check, 3=call, 1=fold
     var amt = (act === 3) ? toCall0 : 0;
@@ -4197,11 +4184,11 @@ const App = (() => {
       d.playerId = myId || 0;
       d.gameId  = S.gId || 0;
       d.hand    = S.handNum;
-      d.phase   = gameState;
+      d.phase   = S.gameState;
       d.sb      = S.smallBlind;
       d.seats   = seats.length;
-      d.myCards = [myCards[0] != null, myCards[1] != null];
-      d.cardKey = !!_cardKey;
+      d.myCards = [S.myCards[0] != null, S.myCards[1] != null];
+      d.cardKey = !!S._cardKey;
       d.cardDiag = window._pthCardDiag || null;
     } catch (e) { d.error = String(e); }
     try { console.log('[pthDiag]', JSON.stringify(d, null, 1)); } catch (e) {}
@@ -4380,9 +4367,9 @@ const App = (() => {
         }
         echo('table', JSON.stringify({
           gameId: S.gId, hand: S.handNum,
-          phase: ['preflop','flop','turn','river'][gameState] || gameState,
+          phase: ['preflop','flop','turn','river'][S.gameState] || S.gameState,
           blinds: S.smallBlind + '/' + (S.smallBlind * 2),
-          pot: pot, timeout: S.gameTimeout + 's', startCash: S.gameStartMoney,
+          pot: S.pot, timeout: S.gameTimeout + 's', startCash: S.gameStartMoney,
           players: pl
         }));
       } catch (e) { echo('table', 'error: ' + e); }
@@ -4896,12 +4883,12 @@ const App = (() => {
         // HandStart (plus de course async) et fonctionnelle même hors contexte
         // sécurisé (http local). Sinon on efface toute clé résiduelle
         // (passage auth → invité sans recharger la page).
-        _cardKey = null; _cardIV = null;
+        S._cardKey = null; S._cardIV = null;
         if (loginType === 1 && authPass) {
           try {
             const _kv = PTHCrypto.deriveKeyIv(new TextEncoder().encode(authPass));
-            _cardKey = _kv.key; _cardIV = _kv.iv;
-          } catch (e) { _cardKey = null; _cardIV = null; }
+            S._cardKey = _kv.key; S._cardIV = _kv.iv;
+          } catch (e) { S._cardKey = null; S._cardIV = null; }
         }
         // Pré-armer le rejoin AVANT d'envoyer Init : si une partie récente est
         // mémorisée (pth_resume, même pseudo, < 5 min), on note _pendingRejoin
@@ -5675,9 +5662,9 @@ const App = (() => {
         // so starting from a clean felt is always correct (and a harmless
         // no-op when joining a genuinely fresh table).
         try {
-          pot = 0; collectedPot = 0;
+          S.pot = 0; S.collectedPot = 0;
           setPot(0);
-          commCards = [];
+          S.commCards = [];
           var _czComm  = document.getElementById('g-comm');  if (_czComm)  _czComm.innerHTML  = '';
           var _czSeats = document.getElementById('g-seats'); if (_czSeats) _czSeats.innerHTML = '';
         } catch(e) {}
@@ -5908,7 +5895,7 @@ const App = (() => {
         });
         // GameStartInitialMessage: gameId=1, startDealerPlayerId=2, playerSeats=3 (packed uint32)
         S.gId       = Proto.u32(sub, 1);
-        dealerPid = Proto.u32(sub, 2);
+        S.dealerPid = Proto.u32(sub, 2);
 
         // Décoder la liste de sièges envoyée par le serveur
         const newSeats = [];
@@ -5990,7 +5977,7 @@ const App = (() => {
         }
         S._myStackAtHandStart = (S._seatStackAtHandStart[myId] != null) ? S._seatStackAtHandStart[myId] : null;
 
-        commCards = [null, null, null, null, null];
+        S.commCards = [null, null, null, null, null];
         amInGame  = true;
         $('g-round').textContent = t('gameStart');
 
@@ -6010,13 +5997,13 @@ const App = (() => {
           renderGameWaiting(t('gameStartedWaitHand'));
         } else {
           // Animer le déplacement du dealer + fade des actions
-          if (_prevDealerPid >= 0 && _prevDealerPid !== dealerPid) {
-            setTimeout(function(){ animateDealerMove(_prevDealerPid, dealerPid); }, 200);
+          if (_prevDealerPid >= 0 && _prevDealerPid !== S.dealerPid) {
+            setTimeout(function(){ animateDealerMove(_prevDealerPid, S.dealerPid); }, 200);
           }
           fadeOutAllActions();
           renderSeats();
         }
-        _prevDealerPid = dealerPid;
+        _prevDealerPid = S.dealerPid;
         try {
           if (window._handlog && isFirstDeal) {
             var _hlSeatMap = seats.map(function(pid, i){
@@ -6024,7 +6011,7 @@ const App = (() => {
             });
             window._handlog.onGameStart({
               gameID: S.gId, startMoney: S.gameStartMoney || 0,
-              startSb: S.smallBlind || 0, dealerSeat: (seats.indexOf(dealerPid) + 1) || 0,
+              startSb: S.smallBlind || 0, dealerSeat: (seats.indexOf(S.dealerPid) + 1) || 0,
               seatMap: _hlSeatMap
             });
           }
@@ -6100,7 +6087,7 @@ const App = (() => {
             // de la rotation des sièges ACTIFS, comme le client officiel.
             var _hlSeatOf = function(pid){ var i = seats.indexOf(pid); return i >= 0 ? i + 1 : 0; };
             var _hlActive = function(pid){ var d = seatData[pid]; return d && !d.gone && d.active !== false && !(d.money != null && d.money <= 0); };
-            var _hlDealerIdx = seats.indexOf(dealerPid);
+            var _hlDealerIdx = seats.indexOf(S.dealerPid);
             var _hlNextActive = function(fromIdx, step){
               var stepped = 0;
               for (var k = 1; k <= seats.length; k++) {
@@ -6111,7 +6098,7 @@ const App = (() => {
             };
             var _hlSbPid, _hlBbPid;
             var _hlActiveCount = seats.filter(_hlActive).length;
-            if (_hlActiveCount === 2) { _hlSbPid = dealerPid; _hlBbPid = _hlNextActive(_hlDealerIdx, 1); }
+            if (_hlActiveCount === 2) { _hlSbPid = S.dealerPid; _hlBbPid = _hlNextActive(_hlDealerIdx, 1); }
             else { _hlSbPid = _hlNextActive(_hlDealerIdx, 1); _hlBbPid = _hlNextActive(_hlDealerIdx, 2); }
             var _hlStacks = {};
             for (var _sp3 = 0; _sp3 < seats.length; _sp3++) {
@@ -6120,7 +6107,7 @@ const App = (() => {
             }
             window._handlog.onHandStart({
               handID: S.handNum,
-              dealerSeat: _hlSeatOf(dealerPid),
+              dealerSeat: _hlSeatOf(S.dealerPid),
               sbSeat: _hlSeatOf(_hlSbPid), sbAmount: S.smallBlind || 0,
               bbSeat: _hlSeatOf(_hlBbPid), bbAmount: (S.smallBlind || 0) * 2,
               stacks: _hlStacks
@@ -6134,15 +6121,15 @@ const App = (() => {
         var _ggi = document.getElementById('g-gameid'); if (_ggi) _ggi.textContent = S.gId || '\u2013';
         var _gbs = document.getElementById('g-blinds-slot'); if (_gbs) _gbs.innerHTML = '';
         $('g-round').textContent = t('preflop');
-        gameState = 0; // preflop
-        commCards = [null, null, null, null, null];
-        pot = 0; collectedPot = 0; highestBet = 0; minRaise = 0;
+        S.gameState = 0; // preflop
+        S.commCards = [null, null, null, null, null];
+        S.pot = 0; S.collectedPot = 0; S.highestBet = 0; S.minRaise = 0;
 
         // My cards (plainCards sub-message at field 2)
         // FIX : pour un SPECTATEUR le serveur peut envoyer plainCards vide ou sans les champs 1/2.
         // u32orNull distingue "champ absent" (null → carte cachée) de "valeur 0" (carte 2♣ valide).
         const pc = sub[2] ? Proto.decode(sub[2][0]) : {};
-        myCards = [Proto.u32orNull(pc, 1), Proto.u32orNull(pc, 2)];
+        S.myCards = [Proto.u32orNull(pc, 1), Proto.u32orNull(pc, 2)];
         // Comptes pokerth.net authentifiés : pas de plainCards (champ 2),
         // les cartes arrivent dans encryptedCards (champ 3), chiffrées AES-128
         // avec une clé dérivée du mot de passe. On les déchiffre ici. Le
@@ -6152,20 +6139,20 @@ const App = (() => {
         // bug identifié. Visible : console + setStatus (2 premières mains).
         var _cd = { hand: S.handNum, plain: !!sub[2], enc: sub[3] ? (sub[3][0] && sub[3][0].length) : -1,
                     encU8: !!(sub[3] && sub[3][0] instanceof Uint8Array),
-                    key: !!(_cardKey && _cardIV), dec: null, cleared: false };
-        if ((myCards[0] == null || myCards[1] == null) && sub[3] && _cardKey && _cardIV) {
+                    key: !!(S._cardKey && S._cardIV), dec: null, cleared: false };
+        if ((S.myCards[0] == null || S.myCards[1] == null) && sub[3] && S._cardKey && S._cardIV) {
           const cipher = (sub[3][0] instanceof Uint8Array) ? sub[3][0] : null;
-          const dec = cipher ? PTHCrypto.decryptCards(cipher, _cardKey, _cardIV) : null;
+          const dec = cipher ? PTHCrypto.decryptCards(cipher, S._cardKey, S._cardIV) : null;
           _cd.dec = !!dec;
-          if (dec) myCards = [dec[0], dec[1]];
+          if (dec) S.myCards = [dec[0], dec[1]];
         }
         // If I'm bust (lost my whole stack last hand), the server may
         // still echo cards for the deal but I'm not actually in the
         // hand. Force-clear so the player bar shows card backs and
         // matches the eliminated state shown on my seat.
         if (seatData[myId] && seatData[myId].money <= 0 && !seatData[myId].gone) {
-          if (myCards[0] != null || myCards[1] != null) _cd.cleared = true;
-          myCards = [null, null];
+          if (S.myCards[0] != null || S.myCards[1] != null) _cd.cleared = true;
+          S.myCards = [null, null];
         }
         try {
           _cd.money = seatData[myId] ? seatData[myId].money : undefined;
@@ -6175,7 +6162,7 @@ const App = (() => {
           console.log('[cards-diag]', JSON.stringify(_cd));
           // Anomalie = cartes toujours nulles alors qu'on est assis avec des
           // données serveur (plain ou enc). Statut visible sur mobile.
-          if (myCards[0] == null && myCards[1] == null && (_cd.plain || _cd.enc >= 0)) {
+          if (S.myCards[0] == null && S.myCards[1] == null && (_cd.plain || _cd.enc >= 0)) {
             window._pthCardDiagN = (window._pthCardDiagN || 0) + 1;
             if (window._pthCardDiagN <= 2) {
               setStatus('cards diag: plain=' + _cd.plain + ' enc=' + _cd.enc +
@@ -6266,7 +6253,7 @@ const App = (() => {
           S._lastBlindsUpHand = S.handNum;
           if (typeof _showBlindsToast === 'function') _showBlindsToast(window._blindsInfoHtml, true);
         }
-        dealerPid = Proto.u32(sub, 6) || dealerPid;
+        S.dealerPid = Proto.u32(sub, 6) || S.dealerPid;
 
         // Reset seat data for new hand. IMPORTANT exclusions:
         //  - .gone pids (player left voluntarily, GamePlayerLeft set
@@ -6325,13 +6312,13 @@ const App = (() => {
         const _lhN = S.handNum, _lhSB = sb;
         logAction(function(){ return '══ ' + t('handOf') + ' ' + _lhN + ' — ' + t('blinds') + ' ' + _lhSB + '/' + (_lhSB*2) + ' ══'; });
         // Donneur (bouton) de la main — dealerPid déjà résolu plus haut (champ 6).
-        if (dealerPid && getPlayerName(dealerPid)) {
-          const _lhD = dealerPid;
+        if (S.dealerPid && getPlayerName(S.dealerPid)) {
+          const _lhD = S.dealerPid;
           logAction(function(){ return '\uD83D\uDD18 ' + t('logDealer', { name: getPlayerName(_lhD) }); });
         }
         // Show my hole cards in log
-        if (myCards[0] != null && myCards[1] != null) {
-          const _lhMy0 = myCards[0], _lhMy1 = myCards[1];
+        if (S.myCards[0] != null && S.myCards[1] != null) {
+          const _lhMy0 = S.myCards[0], _lhMy1 = S.myCards[1];
           logAction(function(){ return t('myCards') + ' ' + cardName(_lhMy0, false) + ' ' + cardName(_lhMy1, false); });
         }
         break;
@@ -6339,8 +6326,8 @@ const App = (() => {
 
       case T.PlayersTurn: {
         // PlayersTurnMessage: gameId=1, playerId=2, gameState=3
-        turnPid   = Proto.u32(sub, 2);
-        gameState = Proto.u32(sub, 3);
+        S.turnPid   = Proto.u32(sub, 2);
+        S.gameState = Proto.u32(sub, 3);
         // Defensive guard: if the server (older PokerTH versions, e.g.
         // the Debian 1.1.2-2 package) mistakenly sends PlayersTurn for
         // a player who has already left the table, ignore it. The
@@ -6348,26 +6335,26 @@ const App = (() => {
         // the next live one. We still set turnPid above (for any UI
         // consistency code that may inspect it) but bail out of the
         // turn-handling logic so we don't render a ghost as active.
-        if (turnPid && seatData[turnPid] && seatData[turnPid].gone) {
-          console.warn('[PlayersTurn] server assigned turn to a gone pid', turnPid, '— ignoring');
+        if (S.turnPid && seatData[S.turnPid] && seatData[S.turnPid].gone) {
+          console.warn('[PlayersTurn] server assigned turn to a gone pid', S.turnPid, '— ignoring');
           renderSeats();
           break;
         }
         // A seat whose turn the server just assigned is by definition
         // in the hand — force active=true. Safety net for spectators
         // who joined mid-hand and missed the HandStart reset.
-        if (turnPid && seatData[turnPid]) seatData[turnPid].active = true;
+        if (S.turnPid && seatData[S.turnPid]) seatData[S.turnPid].active = true;
         const rounds = [t('preflop'),t('flop'),t('turn'),t('river'),t('preflop')+' (SB)',t('preflop')+' (BB)'];
-        $('g-round').textContent = rounds[gameState] || t('preflop');
+        $('g-round').textContent = rounds[S.gameState] || t('preflop');
         startTurnTimer();
-        if (turnPid === myId) {
+        if (S.turnPid === myId) {
           // C'est notre tour : on referme tout panneau "aperçu" pour ne pas
           // interférer avec la barre d'actions normale (et tous ses effets).
           S._preActionOpen = false;
           // Pré-action armée (comme l'officiel) : si une action a été armée avant
           // notre tour et qu'elle est encore valide, on la joue directement sans
           // afficher les boutons live.
-          console.log('[prearm] MON TOUR — préAction=' + (S._preAction || '(vide)') + ' gameState=' + gameState);
+          console.log('[prearm] MON TOUR — préAction=' + (S._preAction || '(vide)') + ' gameState=' + S.gameState);
           if (S._preAction) { var _pdid = _runPreAction(); console.log('[prearm] _runPreAction → ' + _pdid); S._preAction = ''; if (_pdid) break; }
           // Mode auto PERSISTANT (Manuel/Auto Check-Call/Auto Check-Fold) :
           // si un mode auto est actif, jouer l'action sans afficher les boutons.
@@ -6386,10 +6373,10 @@ const App = (() => {
           clearTurnNotif();
           setMyTurnActive(false);
           // Zoom-follow : planifie le cadrage du siège actif (parité QML §3.4)
-          try { if (window._zoomFollowTurn) window._zoomFollowTurn(turnPid, S.gameTimeout); } catch (_e) {}
+          try { if (window._zoomFollowTurn) window._zoomFollowTurn(S.turnPid, S.gameTimeout); } catch (_e) {}
           // isHtml=true : HTML interne sûr, pas du contenu utilisateur
           renderGameWaiting(
-            '<span style="font-family:inherit">' + esc(getPlayerName(turnPid)) + '</span>'
+            '<span style="font-family:inherit">' + esc(getPlayerName(S.turnPid)) + '</span>'
             + '<span class="thinking-dots"><span></span><span></span><span></span></span>',
             true);
         }
@@ -6402,8 +6389,8 @@ const App = (() => {
         const action = Proto.u32(sub, 4);
         const bet    = Proto.u32(sub, 5);
         const money  = Proto.u32(sub, 6);
-        highestBet   = Proto.u32(sub, 7);
-        minRaise     = Proto.u32(sub, 8);
+        S.highestBet   = Proto.u32(sub, 7);
+        S.minRaise     = Proto.u32(sub, 8);
         // Zoom-follow : le joueur a agi → pan en attente exécuté tout de suite
         try { if (window._zoomFollowActed) window._zoomFollowActed(); } catch (_e) {}
         try {
@@ -6417,9 +6404,9 @@ const App = (() => {
           seatData[pid].folded = action === 1;
           seatData[pid].action = aLabel;
         }
-        pot = collectedPot;
-        for (const p of seats) if (seatData[p]) pot += seatData[p].bet;
-        setPot(pot);
+        S.pot = S.collectedPot;
+        for (const p of seats) if (seatData[p]) S.pot += seatData[p].bet;
+        setPot(S.pot);
         logAction(getPlayerName(pid) + ': ' + aLabel + (bet ? ' ' + bet : ''), true);
         speak(voiceActionPhrase(action, pid, bet));
         if (pid === myId) {
@@ -6449,8 +6436,8 @@ const App = (() => {
           // chip arrives — looks coherent without the long lag that
           // made rapid bot turns feel choppy.
           setTimeout(function(){
-            animatePot(pot);
-            updatePotSize(pot);
+            animatePot(S.pot);
+            updatePotSize(S.pot);
           }, 200);
         }
         break;
@@ -6470,31 +6457,31 @@ const App = (() => {
         const isValidCard = n => n !== null && n >= 0 && n <= 51;
         const allValid = a => a.every(isValidCard);
         // Préférer fA (format officiel) ; basculer sur fB si fA incomplet ; sinon garder fA tel quel (cardToHtml affichera des dos)
-        commCards = allValid(fA) ? fA : (allValid(fB) ? fB : fA);
-        const dbg = 'FLOP sub:'+allVals+' →['+commCards.join(',')+']';
+        S.commCards = allValid(fA) ? fA : (allValid(fB) ? fB : fA);
+        const dbg = 'FLOP sub:'+allVals+' →['+S.commCards.join(',')+']';
         if ($('g-debug')) $('g-debug').textContent = dbg;
-        try { if (window._handlog) window._handlog.onFlop(commCards.slice(0, 3)); } catch (_e) {}
+        try { if (window._handlog) window._handlog.onFlop(S.commCards.slice(0, 3)); } catch (_e) {}
         $('g-round').textContent = t('flop');
-        gameState = 1;
+        S.gameState = 1;
         // Collect preflop bets into pot
         let flopBets = 0;
         for (const p of seats) if (seatData[p] && seatData[p].bet) { flopBets += seatData[p].bet; seatData[p].bet = 0; }
-        collectedPot += flopBets;
-        pot = collectedPot;
+        S.collectedPot += flopBets;
+        S.pot = S.collectedPot;
         // FIX 2024-XX : reset des stats par round.
         // Sans ce reset, le premier joueur à parler au flop voyait son
         // bouton afficher "Call X" (X étant la mise du round précédent)
         // alors que personne n'avait encore misé → le serveur rejetait
         // (rejectedActionNotAllowed) et le joueur restait coincé.
-        highestBet = 0;
-        minRaise   = 0;
-        setPot(pot);
-        const flopStr = commCards.filter(n=>n!=null).map(n=>cardName(n,true)).join(', ');
+        S.highestBet = 0;
+        S.minRaise   = 0;
+        setPot(S.pot);
+        const flopStr = S.commCards.filter(n=>n!=null).map(n=>cardName(n,true)).join(', ');
         renderComm(true); // flip animation
         renderSeats();
         setTimeout(renderHandStrength, 150); // force de la main au flop (was 500ms)
         setTimeout(renderOddsMonitor, 220); // moniteur d'odds (flop)
-        const _lhPotF = pot;
+        const _lhPotF = S.pot;
         logAction(function(){ return '--- ' + t('flop') + ' [' + flopStr + '] · ' + t('pot') + ' ' + _groupThousands(_lhPotF) + ' ---'; });
         notifyCard(); notifyCard(); notifyCard();
         break;
@@ -6503,21 +6490,21 @@ const App = (() => {
       case T.DealTurn: {
         // Fix : utiliser sub[2] pour détecter la présence du champ
         const tv = sub[2] !== undefined ? Proto.u32(sub, 2) : Proto.u32(sub, 1);
-        commCards.push(tv);
+        S.commCards.push(tv);
         try { if (window._handlog) window._handlog.onTurn(tv); } catch (_e) {}
         $('g-round').textContent = t('turn');
-        gameState = 2;
+        S.gameState = 2;
         let turnBets = 0;
         for (const p of seats) if (seatData[p] && seatData[p].bet) { turnBets += seatData[p].bet; seatData[p].bet = 0; }
-        collectedPot += turnBets;
-        pot = collectedPot;
+        S.collectedPot += turnBets;
+        S.pot = S.collectedPot;
         // Voir DealFlop pour le commentaire — reset des stats par round
         // pour éviter que le bouton Call affiche un montant périmé.
-        highestBet = 0;
-        minRaise   = 0;
-        setPot(pot);
-        const tvCard = commCards[3]; const tvName = tvCard != null ? cardName(tvCard, true) : '?';
-        const _lhPotT = pot;
+        S.highestBet = 0;
+        S.minRaise   = 0;
+        setPot(S.pot);
+        const tvCard = S.commCards[3]; const tvName = tvCard != null ? cardName(tvCard, true) : '?';
+        const _lhPotT = S.pot;
         logAction(function(){ return '--- ' + t('turn') + ' [' + tvName + '] · ' + t('pot') + ' ' + _groupThousands(_lhPotT) + ' ---'; });
         renderComm(true); // flip animation
         setTimeout(renderHandStrength, 150); // force de la main au turn (was 500ms)
@@ -6530,21 +6517,21 @@ const App = (() => {
         // Fix : sub[2] présent ? utiliser field 2 ; sinon field 1
         // rv || fallback est FAUX pour rv=0 (carte 2♦)
         const rv = sub[2] !== undefined ? Proto.u32(sub, 2) : Proto.u32(sub, 1);
-        commCards.push(rv);
+        S.commCards.push(rv);
         try { if (window._handlog) window._handlog.onRiver(rv); } catch (_e) {}
         $('g-round').textContent = t('river');
-        gameState = 3;
+        S.gameState = 3;
         let rvBets = 0;
         for (const p of seats) if (seatData[p] && seatData[p].bet) { rvBets += seatData[p].bet; seatData[p].bet = 0; }
-        collectedPot += rvBets;
-        pot = collectedPot;
+        S.collectedPot += rvBets;
+        S.pot = S.collectedPot;
         // Voir DealFlop pour le commentaire — reset des stats par round
         // pour éviter que le bouton Call affiche un montant périmé.
-        highestBet = 0;
-        minRaise   = 0;
-        setPot(pot);
-        const rvCard = commCards[4]; const rvName = rvCard != null ? cardName(rvCard, true) : '?';
-        const _lhPotR = pot;
+        S.highestBet = 0;
+        S.minRaise   = 0;
+        setPot(S.pot);
+        const rvCard = S.commCards[4]; const rvName = rvCard != null ? cardName(rvCard, true) : '?';
+        const _lhPotR = S.pot;
         logAction(function(){ return '--- ' + t('river') + ' [' + rvName + '] · ' + t('pot') + ' ' + _groupThousands(_lhPotR) + ' ---'; });
         renderComm(true, true); // flip animation + dramatic river
         setTimeout(renderHandStrength, 200); // force de la main à la river (was 600ms)
@@ -6596,7 +6583,7 @@ const App = (() => {
           // de evaluateBestHand (clés hs* déjà traduites dans les 36 langues).
           // Joueurs couchés avant l'abattage : c1/c2 == null → pas de ligne.
           if (c1 != null && c2 != null) {
-            const _bd = commCards.slice(); // fige le board de CETTE main
+            const _bd = S.commCards.slice(); // fige le board de CETTE main
             logAction(function(){
               var ev = (typeof evaluateBestHand === 'function') ? evaluateBestHand([c1, c2], _bd) : null;
               return t('logShowdown', {
@@ -6614,7 +6601,7 @@ const App = (() => {
               // (et NON le pot brut « won », qui inclut ma propre mise).
               var myStartHand = (S._myStackAtHandStart != null) ? S._myStackAtHandStart : ((S._stats.startMoney || 0) + S._stats.totalGain);
               var netWin = cash - myStartHand;
-              var myPair2 = myCards.map && myCards.map(function(c){ return { r: cardName(c,false).slice(0,-1), s: cardName(c,false).slice(-1), red: ['♥','♦'].indexOf(cardName(c,false).slice(-1))>=0 }; });
+              var myPair2 = S.myCards.map && S.myCards.map(function(c){ return { r: cardName(c,false).slice(0,-1), s: cardName(c,false).slice(-1), red: ['♥','♦'].indexOf(cardName(c,false).slice(-1))>=0 }; });
               recordHand(true, netWin, myPair2);
             }
             // Gain affiché dans le Journal 📋 (pas dans le chat, pour ne pas le noyer)
@@ -6628,7 +6615,7 @@ const App = (() => {
           if (myEndMon != null) {
             var myStartMon = (S._myStackAtHandStart != null) ? S._myStackAtHandStart : ((S._stats.startMoney || 0) + S._stats.totalGain);
             var myLoss = myEndMon - myStartMon;
-            var myPairLoss = myCards.map && myCards.map(function(c){
+            var myPairLoss = S.myCards.map && S.myCards.map(function(c){
               return { r: cardName(c,false).slice(0,-1), s: cardName(c,false).slice(-1), red: ['♥','♦'].indexOf(cardName(c,false).slice(-1))>=0 };
             });
             recordHand(false, myLoss, myPairLoss);
@@ -6655,7 +6642,7 @@ const App = (() => {
         // anglais (winningHandText). Indépendant de la fenêtre du gagnant
         // (option winner_popup) — comme le client officiel.
         try {
-          var _whBd = commCards.filter(function (n) { return n != null; });
+          var _whBd = S.commCards.filter(function (n) { return n != null; });
           var _whLabel = '';
           if (_whBd.length >= 3) {
             for (var _whI = 0; _whI < winners.length && !_whLabel; _whI++) {
@@ -6670,7 +6657,7 @@ const App = (() => {
         } catch (e) {}
         try {
           if (window._handlog) {
-            var _bdSD = commCards.slice();
+            var _bdSD = S.commCards.slice();
             var _hlResults = [];
             for (var _ri = 0; _ri < results.length; _ri++) {
               var _rr = Proto.decode(results[_ri]);
@@ -6689,7 +6676,7 @@ const App = (() => {
             try { if (typeof window._hudRefresh === 'function') window._hudRefresh(); } catch (_e) {}
           }
         } catch (_e) {}
-        pot = 0; setPot(0);
+        S.pot = 0; setPot(0);
         renderSeats();
         // Animations de fin de main
         var iWon = winners.some(function(w){ return w.pid === myId; });
@@ -6726,7 +6713,7 @@ const App = (() => {
         const cash = Proto.u32(sub, 4);
         if (seatData[pid]) { seatData[pid].money = cash; if(won) seatData[pid].action = '+'+won; }
         if (won > 0) logAction('🏆 ' + getPlayerName(pid) + ' +' + _groupThousands(won));
-        try { if (window._handlog) window._handlog.onHandHideEnd({ pid: pid, won: won, round: (typeof gameState === 'number' ? gameState : undefined), eliminated: _hlEliminatedPids(), gameOverPid: null }); } catch (_e) {}
+        try { if (window._handlog) window._handlog.onHandHideEnd({ pid: pid, won: won, round: (typeof S.gameState === 'number' ? S.gameState : undefined), eliminated: _hlEliminatedPids(), gameOverPid: null }); } catch (_e) {}
         try { if (typeof window._hudRefresh === 'function') window._hudRefresh(); } catch (_e) {}
         try { _sdWinners = won > 0 ? new Set([pid]) : new Set(); } catch (e) {}
         // Enregistrer le résultat de la main pour moi (fin sans abattage).
@@ -6734,7 +6721,7 @@ const App = (() => {
         if (myHideMon != null) {
           var myHideStart = (S._myStackAtHandStart != null) ? S._myStackAtHandStart : ((S._stats.startMoney || 0) + S._stats.totalGain);
           var myHideNet   = myHideMon - myHideStart;
-          var myPairHide  = myCards.map && myCards.map(function(c){
+          var myPairHide  = S.myCards.map && S.myCards.map(function(c){
             return { r: cardName(c,false).slice(0,-1), s: cardName(c,false).slice(-1), red: ['♥','♦'].indexOf(cardName(c,false).slice(-1))>=0 };
           });
           if (pid === myId) {
@@ -6745,7 +6732,7 @@ const App = (() => {
             recordHand(false, myHideNet, myPairHide);
           }
         }
-        pot = 0; setPot(0);
+        S.pot = 0; setPot(0);
         renderSeats();
         // Détection élimination (stack à 0)
         for (var _ep of seats) {
@@ -6758,7 +6745,7 @@ const App = (() => {
         // « Show » volontaire : main terminée SANS abattage → mes cartes
         // n'ont pas été révélées. Réseau seulement (le FakeServer offline
         // ignore le type 51) et jamais en spectateur.
-        if (!_amSpectator && !window._offlineMode && myCards[0] != null) _setCanShow(true);
+        if (!_amSpectator && !window._offlineMode && S.myCards[0] != null) _setCanShow(true);
         break;
       }
 
@@ -6803,7 +6790,7 @@ const App = (() => {
         // buttons so the user can retry. The local turn timer was already
         // stopped by doAction; restart it so the user has the full delay
         // again instead of a stale countdown.
-        if (turnPid === myId && !_amSpectator) {
+        if (S.turnPid === myId && !_amSpectator) {
           renderMyTurnActions();
           startTurnTimer();
         }
@@ -6824,7 +6811,7 @@ const App = (() => {
           if (seatData[_sPid]) { seatData[_sPid].card1 = _sC1; seatData[_sPid].card2 = _sC2; }
           if (_sPid === myId) { _ownReveal = true; try { renderMyCards(); } catch (e) {} _setCanShow(false); }
           try { renderSeats(); } catch (e) {}
-          const _sBd = commCards.slice();
+          const _sBd = S.commCards.slice();
           logAction(function () {
             var ev = (typeof evaluateBestHand === 'function') ? evaluateBestHand([_sC1, _sC2], _sBd) : null;
             return t('logShowdown', {
@@ -7300,8 +7287,8 @@ const App = (() => {
     if (!pb) return;
     var optOn = false; try { optOn = (localStorage.getItem('pth_own_click') === '1'); } catch (e) {}
     var hide = optOn && !_ownReveal;
-    const c1 = hide ? null : (myCards[0] != null ? myCards[0] : null);
-    const c2 = hide ? null : (myCards[1] != null ? myCards[1] : null);
+    const c1 = hide ? null : (S.myCards[0] != null ? S.myCards[0] : null);
+    const c2 = hide ? null : (S.myCards[1] != null ? S.myCards[1] : null);
     pb.innerHTML = cardHtml(c1, 'md') + cardHtml(c2, 'md');
     pb.classList.toggle('own-peek', hide);
     pb.style.cursor = optOn ? 'pointer' : '';
@@ -7608,11 +7595,11 @@ const App = (() => {
 
   // ── Probabilité de gain (Monte Carlo simplifié) ──
   function calcWinProb() {
-    if (myCards[0] == null || myCards[1] == null) return -1;
-    var comm = commCards.filter(function(c){ return c != null; });
+    if (S.myCards[0] == null || S.myCards[1] == null) return -1;
+    var comm = S.commCards.filter(function(c){ return c != null; });
     if (comm.length < 3) return -1; // seulement après le flop
     // Normaliser mes hole cards vers comm encoding (même échelle que commCards)
-    var myNorm = [myCards[0], myCards[1]].map(normalizeHoleCard).filter(function(c){ return c != null; });
+    var myNorm = [S.myCards[0], S.myCards[1]].map(normalizeHoleCard).filter(function(c){ return c != null; });
     if (myNorm.length < 2) return -1;
     // Le deck est en comm encoding (0-51). On exclut mes cartes normalisées + comm cards.
     var known = myNorm.concat(comm);
@@ -7722,9 +7709,9 @@ const App = (() => {
     var el = document.getElementById('hand-strength');
     if (!el) return;
     if (!_assistOn) { _hsHide(el); return; } // assistance désactivée
-    if (commCards.filter(function(c){ return c!=null; }).length > 0) return;
-    if (myCards[0] == null || myCards[1] == null) { _hsHide(el); return; }
-    var res = evaluatePreFlopHand(myCards[0], myCards[1]);
+    if (S.commCards.filter(function(c){ return c!=null; }).length > 0) return;
+    if (S.myCards[0] == null || S.myCards[1] == null) { _hsHide(el); return; }
+    var res = evaluatePreFlopHand(S.myCards[0], S.myCards[1]);
     if (!res) { _hsHide(el); return; }
     var label = res.label;
     var stars = res.stars >= 0
@@ -7741,10 +7728,10 @@ const App = (() => {
     var el = document.getElementById('hand-strength');
     if (!el) return;
     if (!_assistOn) { _hsHide(el); return; } // assistance désactivée
-    var validComm = commCards.filter(function(c){ return c != null; });
-    if (myCards[0] == null || myCards[1] == null || validComm.length === 0) { _hsHide(el); return; }
+    var validComm = S.commCards.filter(function(c){ return c != null; });
+    if (S.myCards[0] == null || S.myCards[1] == null || validComm.length === 0) { _hsHide(el); return; }
     // Normaliser les hole cards (1-indexed) vers l'encodage canonique (0-indexed)
-    var holeNorm = [myCards[0], myCards[1]]
+    var holeNorm = [S.myCards[0], S.myCards[1]]
       .filter(function(c){ return c != null; })
       .map(normalizeHoleCard)
       .filter(function(c){ return c != null; });
@@ -7759,10 +7746,10 @@ const App = (() => {
     // Monte Carlo win% seulement si >= 3 cartes communes
     if (validComm.length >= 3) {
       var _captureComm = validComm.slice();
-      var _captureHole = [myCards[0], myCards[1]];
+      var _captureHole = [S.myCards[0], S.myCards[1]];
       setTimeout(function() {
         // Vérifier que le contexte n'a pas changé (nouvelle main, fold…)
-        var currComm = commCards.filter(function(c){ return c != null; });
+        var currComm = S.commCards.filter(function(c){ return c != null; });
         if (currComm.length !== _captureComm.length) return;
         var pct = calcWinProb();
         if (pct < 0) return;
@@ -7780,7 +7767,7 @@ const App = (() => {
     const el = $('g-comm');
     let h = '';
     for (let i=0; i<5; i++) {
-      const v = commCards[i];
+      const v = S.commCards[i];
       let cls = (animate && v != null) ? ' pk-flip' : '';
       // River (i=4) — révélation plus lente et dramatique
       if (isRiver && i === 4 && v != null) cls = ' pk-flip pk-river';
@@ -7946,23 +7933,23 @@ const App = (() => {
     // No <text> inside .seat-timer — the countdown number is rendered in the
     // seat badge (stb-*) and the player-bar below, not in the SVG.
     // Badge timer sous chaque siège
-    var stb = document.getElementById('stb-' + turnPid);
+    var stb = document.getElementById('stb-' + S.turnPid);
     if (stb) { stb.textContent = S._timerSec > 0 ? S._timerSec + 's' : ''; stb.style.color = col; }
     // Player bar counter
     var pb = document.getElementById('pb-timer');
-    if (pb && turnPid === myId) {
+    if (pb && S.turnPid === myId) {
       pb.textContent = S._timerSec > 0 ? S._timerSec + 's' : '';
       pb.style.color = col;
     }
     // Flash my-zone border
     var mz = document.querySelector('.my-zone');
-    if (mz && turnPid === myId) mz.style.borderTopColor = urgent ? '#e74c3c' : '';
-    setUrgentMode(urgent && turnPid === myId);
+    if (mz && S.turnPid === myId) mz.style.borderTopColor = urgent ? '#e74c3c' : '';
+    setUrgentMode(urgent && S.turnPid === myId);
     // Alerte sonore du décompte — uniquement MON tour, et seulement si le
     // timeout de la table laisse de la marge (>= 10 s) pour ne pas harceler
     // sur les parties très rapides. Le mute global est respecté par playTone().
     // Tic léger à 5-4-3-2, bip marqué sur la dernière seconde.
-    if (turnPid === myId && S.gameTimeout >= 10) {
+    if (S.turnPid === myId && S.gameTimeout >= 10) {
       if (S._timerSec >= 2 && S._timerSec <= 5) {
         if (typeof notifyTick === 'function') notifyTick();
       } else if (S._timerSec === 1) {
@@ -8357,7 +8344,7 @@ const App = (() => {
     // the SB/BB chips get assigned to a ghost seat that hides all
     // its badges via CSS, leaving the table with no visible blinds.
     // Walk around the table until we find a non-gone seat.
-    const dealerIdx = seats.indexOf(dealerPid);
+    const dealerIdx = seats.indexOf(S.dealerPid);
     function nextActiveSeat(fromIdx, offset) {
       if (fromIdx < 0 || !seats.length) return -1;
       var n = seats.length;
@@ -8387,7 +8374,7 @@ const App = (() => {
       ? nextActiveSeat(dealerIdx, 2)
       : (seats.length === 2 ? seats[dealerIdx] : -1); // heads-up: dealer = SB
     // Mémorise SB/BB pour le popup d'info joueur (lu hors de renderSeats).
-    _lastSbPid = sbPid; _lastBbPid = bbPid;
+    S._lastSbPid = sbPid; S._lastBbPid = bbPid;
 
     // Update player-bar
     const mySd = seatData[myId] || {};
@@ -8410,7 +8397,7 @@ const App = (() => {
       ? chipSvg('SB','#1565c0','#fff','#0a3d7a')
       : (myId === bbPid ? chipSvg('BB','#b71c1c','#fff','#6d0c0c') : '');
     var _barPuckStyle = 'style="display:inline-block;width:18px;height:18px;vertical-align:middle;flex:none;filter:drop-shadow(0 1px 3px rgba(0,0,0,0.45))"';
-    const myDealerBadge = myId === dealerPid
+    const myDealerBadge = myId === S.dealerPid
       ? dealerChipSvg().replace('class="dealer-chip"', _barPuckStyle).replace("window._pthChip('", "window._pthBarChip('")
       : '';
     const myBlindBadge = myBlindChip
@@ -8442,7 +8429,7 @@ const App = (() => {
     }
     if (pbAct)  pbAct.textContent  = mySd.action || '';
     if (pbBar)  {
-      pbBar.classList.toggle('pb-active', myId === turnPid);
+      pbBar.classList.toggle('pb-active', myId === S.turnPid);
       pbBar.classList.toggle('pb-out', __amOut);
     }
 
@@ -8456,8 +8443,8 @@ const App = (() => {
       const px = pixPos[i];
       const isMe = pid === myId;
       const sd = seatData[pid] || {};
-      const isDealer = pid === dealerPid;
-      const isActive = pid === turnPid;
+      const isDealer = pid === S.dealerPid;
+      const isActive = pid === S.turnPid;
       const isOut  = sd.active === false; // eliminated or sitting out this hand
       const isGone = !!sd.gone; // player left the table — ghost seat
       // Ghost seats take precedence over eliminated: a gone player gets
@@ -8656,8 +8643,8 @@ const App = (() => {
       var _tbarInStrip = !!_tbar && isMe && _seatTr.selfStrip; // self pokerth : barre hors box
       if ((_pkHole || _selfBig) && !isGone && !isOut) {
         var _ownHide = isMe && _ownCardsHidden();
-        var _phc1 = isMe ? (_ownHide ? null : myCards[0]) : sd.card1;
-        var _phc2 = isMe ? (_ownHide ? null : myCards[1]) : sd.card2;
+        var _phc1 = isMe ? (_ownHide ? null : S.myCards[0]) : sd.card1;
+        var _phc2 = isMe ? (_ownHide ? null : S.myCards[1]) : sd.card2;
         var _hcBigCls = _selfBig ? (' shc-big' + (_ownLvl >= 1 && _ownLvl <= 3 ? ' shc-l' + _ownLvl : '')) : '';  // 0 = base QML (85% riviere) ; 1-3 croissants, plafond riviere
         var _hcCls = 'seat-holecards' + _hcBigCls;
         var _hcSz  = _selfBig ? '' : 'xsm';
@@ -9068,7 +9055,7 @@ const App = (() => {
     var _liveTurn = false;
     try { var _mzL = document.querySelector('.my-zone'); _liveTurn = !!(_mzL && _mzL.classList.contains('my-turn-active')); } catch (e) {}
     var _pinShow = !_amSpectator && _gameStarted; // barre toujours affichée (mode masqué permanent)
-    if ((S._preActionOpen || _pinShow) && !(turnPid === myId && _liveTurn)) { _renderPreActionPanel(); updateBottomLayout(); return; }
+    if ((S._preActionOpen || _pinShow) && !(S.turnPid === myId && _liveTurn)) { _renderPreActionPanel(); updateBottomLayout(); return; }
     // isHtml=true : msg contient du HTML interne sûr (généré par notre code)
     $('g-actions').innerHTML = '<div class="waiting-msg">' + (isHtml ? msg : esc(msg)) + '</div>';
     updateBottomLayout();
@@ -9080,7 +9067,7 @@ const App = (() => {
   function _flushPreviewIfPending() {
     if (!S._modeSelPendingPreview) return;
     S._modeSelPendingPreview = false;
-    if (S._preActionOpen && turnPid !== myId) renderMyTurnActions(true);
+    if (S._preActionOpen && S.turnPid !== myId) renderMyTurnActions(true);
   }
 
   function _updatePinBtn() {
@@ -9102,9 +9089,9 @@ const App = (() => {
   // Ferme le panneau et restaure le message d'attente du tour courant.
   function _closePreActionPanel() {
     S._preActionOpen = false;
-    if (turnPid && turnPid !== myId && seatData[turnPid]) {
+    if (S.turnPid && S.turnPid !== myId && seatData[S.turnPid]) {
       renderGameWaiting(
-        '<span style="font-family:inherit">' + esc(getPlayerName(turnPid)) + '</span>'
+        '<span style="font-family:inherit">' + esc(getPlayerName(S.turnPid)) + '</span>'
         + '<span class="thinking-dots"><span></span><span></span><span></span></span>', true);
     } else {
       $('g-actions').innerHTML = '';
@@ -9586,7 +9573,7 @@ const App = (() => {
       if (hs) _hsHide(hs);
     } else {
       // Réafficher l'aide adaptée à la phase courante.
-      var nComm = (commCards || []).filter(function(c){ return c != null; }).length;
+      var nComm = (S.commCards || []).filter(function(c){ return c != null; }).length;
       if (nComm > 0) renderHandStrength(); else renderPreFlopStrength();
     }
   }
@@ -9619,11 +9606,11 @@ const App = (() => {
     // toucher au bloc d'assistance, qui a sa propre option.
     if (!_advGet('show_odds', true)) { el.innerHTML = ''; el._built = false; el.style.display = 'none'; return; }
     el.style.display = '';
-    if (myCards[0] == null || myCards[1] == null) { el.innerHTML = '<div class="odds-body odds-wait">…</div>'; el._built = false; return; }
+    if (S.myCards[0] == null || S.myCards[1] == null) { el.innerHTML = '<div class="odds-body odds-wait">…</div>'; el._built = false; return; }
     if (!el._built) { el.innerHTML = '<div class="odds-hd">' + esc(t('oddsTitle')) + '</div><div class="odds-body odds-wait">…</div>'; el._built = true; }
     var seq = ++_oddsSeq;
-    var hole = [myCards[0], myCards[1]];
-    var board = commCards.slice();
+    var hole = [S.myCards[0], S.myCards[1]];
+    var board = S.commCards.slice();
     _oddsCompute(hole, board, function (r) {
       if (seq !== _oddsSeq) return;
       if (!r) { el.innerHTML = ''; el._built = false; return; }
@@ -9660,9 +9647,9 @@ const App = (() => {
     var pa = S._preAction;
     var myMoney = (seatData[myId] || {}).money || 0;
     var myBet   = (seatData[myId] || {}).bet   || 0;
-    var toCall  = Math.max(0, highestBet - myBet);
+    var toCall  = Math.max(0, S.highestBet - myBet);
     var canCheck = toCall === 0;
-    var minBet = minRaise > 0 ? minRaise : Math.max(highestBet > 0 ? highestBet : S.smallBlind * 2, S.smallBlind * 2);
+    var minBet = S.minRaise > 0 ? S.minRaise : Math.max(S.highestBet > 0 ? S.highestBet : S.smallBlind * 2, S.smallBlind * 2);
     var canRaise = myMoney > toCall && myMoney >= minBet;
     if (pa === 'fold')  { if (canCheck) doAction(2, 0); else doAction(1, 0); return true; }
     if (pa === 'call')  { if (canCheck) doAction(2, 0); else if (toCall >= myMoney) doAction(6, myMoney); else doAction(3, toCall); return true; }
@@ -9691,14 +9678,14 @@ const App = (() => {
     // Invalidation d'une pré-action call/raise si la mise à suivre a changé
     // depuis l'armement (comme l'officiel : onCallAmountChanged). Fold/All-In
     // restent valides (pas de dépendance au montant).
-    var _paCurToCall = Math.max(0, highestBet - ((seatData[myId] || {}).bet || 0));
+    var _paCurToCall = Math.max(0, S.highestBet - ((seatData[myId] || {}).bet || 0));
     if (S._preAction && (S._preAction === 'call' || S._preAction === 'raise') && _paCurToCall !== S._preActionToCall) {
       console.log('[prearm] INVALIDÉ (' + S._preAction + ') toCallCourant=' + _paCurToCall + ' ≠ mémo=' + S._preActionToCall + ' (preview=' + !!preview + ')');
       S._preAction = '';
     }
     const myMoney = (seatData[myId] || {}).money || 0;
     const myBet   = (seatData[myId] || {}).bet || 0;
-    const toCall  = Math.max(0, highestBet - myBet);
+    const toCall  = Math.max(0, S.highestBet - myBet);
     const canCheck = toCall === 0;
     // ── Anti-Call accidentel : grosse relance ? ──
     // Vrai si "à suivre" a au moins DOUBLÉ et bondi de >= 2 BB depuis ma dernière
@@ -9708,7 +9695,7 @@ const App = (() => {
     if (!preview) {
       // Anti-call accidentel : ACTIF par défaut (parité QML AccidentallyCallBlocker=1).
       var _gc = true; try { _gc = (localStorage.getItem('pth_guard_call') !== '0'); } catch (e) {}
-      var _ncomm = (commCards || []).filter(function (c) { return c != null; }).length;
+      var _ncomm = (S.commCards || []).filter(function (c) { return c != null; }).length;
       if (_ncomm !== _lastBoardCount) { _lastCallSeen = -1; _lastBoardCount = _ncomm; }
       if (_gc && !canCheck && toCall > 0) {
         var _bb = Math.max(1, S.smallBlind * 2);
@@ -9718,10 +9705,10 @@ const App = (() => {
       _lastCallSeen = toCall;
       _callConfirmArmed = false; // panneau frais : aucune confirmation en attente
     }
-    const minBet  = minRaise > 0 ? minRaise : Math.max(highestBet > 0 ? highestBet : S.smallBlind * 2, S.smallBlind * 2);
-    const p33  = Math.min(myMoney, Math.max(minBet, Math.round(pot * 0.33)));
-    const p50  = Math.min(myMoney, Math.max(minBet, Math.round(pot * 0.5)));
-    const p100 = Math.min(myMoney, Math.max(minBet, pot));
+    const minBet  = S.minRaise > 0 ? S.minRaise : Math.max(S.highestBet > 0 ? S.highestBet : S.smallBlind * 2, S.smallBlind * 2);
+    const p33  = Math.min(myMoney, Math.max(minBet, Math.round(S.pot * 0.33)));
+    const p50  = Math.min(myMoney, Math.max(minBet, Math.round(S.pot * 0.5)));
+    const p100 = Math.min(myMoney, Math.max(minBet, S.pot));
     // (Pot odds « (X%) » retire du bouton Suivre : parite GameActionBar QML
     //  qui n'affiche que « Call $X ».)
     // Si toCall >= myMoney, le call consommerait tout le stack — c'est
@@ -9748,7 +9735,7 @@ const App = (() => {
       var _camt = (toCall >= myMoney) ? myMoney : toCall;
       callAction = 'App.confirmCall(' + _ca + ',' + _camt + ')';
     }
-    const raiseLabel = highestBet > 0 ? pkTerm('raise') : pkTerm('bet');
+    const raiseLabel = S.highestBet > 0 ? pkTerm('raise') : pkTerm('bet');
 
     // Peut relancer : doit avoir plus que le montant du call ET >= mise min
     const canRaise = myMoney > toCall && myMoney >= minBet;
@@ -9776,7 +9763,7 @@ const App = (() => {
     // lieu d'agir ; le bouton armé reçoit la classe .prearmed (bord or).
     var _pv = !!preview;
     function _preClk(name, live) { return _pv ? "App.armPreAction('" + name + "')" : live; }
-    if (_pv) { try { var _mzD = document.querySelector('.my-zone'); console.log('[prearm] rendu APERÇU — turnPid=' + turnPid + ' myId=' + myId + ' classeMonTour=' + !!(_mzD && _mzD.classList.contains('my-turn-active'))); } catch (e) {} }
+    if (_pv) { try { var _mzD = document.querySelector('.my-zone'); console.log('[prearm] rendu APERÇU — turnPid=' + S.turnPid + ' myId=' + myId + ' classeMonTour=' + !!(_mzD && _mzD.classList.contains('my-turn-active'))); } catch (e) {} }
     function _preCls(name) { return (_pv && S._preAction === name) ? ' prearmed' : ''; }
 
     const h = '<div class="action-grid">'
@@ -9827,9 +9814,9 @@ const App = (() => {
       // normalement affiché À LA PLACE de l'aperçu, est ré-injecté AU-DESSUS
       // des boutons pour conserver l'info "à qui le tour".
       var _narr = '';
-      if (turnPid && turnPid !== myId && seatData[turnPid]) {
+      if (S.turnPid && S.turnPid !== myId && seatData[S.turnPid]) {
         _narr = '<div class="act-narrator"><span style="font-family:inherit">'
-              + esc(getPlayerName(turnPid)) + '</span>'
+              + esc(getPlayerName(S.turnPid)) + '</span>'
               + '<span class="thinking-dots"><span></span><span></span><span></span></span></div>';
       }
       $('g-actions').innerHTML = _narr +
@@ -9868,7 +9855,7 @@ const App = (() => {
       return;
     }
     setMyTurnActive(false);
-    send(MSG.buildMyAction(S.gId, S.handNum, gameState, action, bet));
+    send(MSG.buildMyAction(S.gId, S.handNum, S.gameState, action, bet));
     // Barre d'action TOUJOURS présente (demande narmod 2026-07-17) : le
     // remplacement de la grille par « Action envoyée » effondrait la hauteur
     // de #g-actions → re-layout de la table = zoom/dézoom désagréable. On
@@ -9911,9 +9898,9 @@ const App = (() => {
     // la soumission programmatique.
     const myMoney = (seatData[myId] || {}).money || 0;
     const myBet   = (seatData[myId] || {}).bet   || 0;
-    const minBet  = minRaise > 0
-      ? minRaise
-      : Math.max(highestBet > 0 ? highestBet : S.smallBlind * 2, S.smallBlind * 2);
+    const minBet  = S.minRaise > 0
+      ? S.minRaise
+      : Math.max(S.highestBet > 0 ? S.highestBet : S.smallBlind * 2, S.smallBlind * 2);
     let amt = parseInt((document.getElementById('raise-amt')||{}).value, 10);
     if (!Number.isFinite(amt) || amt <= 0) amt = minBet;
     // Clamp dans [minBet, myMoney]. Si le résultat atteint le stack,
@@ -9923,7 +9910,7 @@ const App = (() => {
     if (amt >= myMoney) {
       doAction(6, myMoney);
     } else {
-      doAction(highestBet > 0 ? 5 : 4, amt);
+      doAction(S.highestBet > 0 ? 5 : 4, amt);
     }
   }
 
@@ -10045,7 +10032,7 @@ function showWinnerOverlay(winners) {
   html += '</div>';
 
   // ── Board (community cards) ──
-  var comm = commCards.filter(function(n){ return n != null; });
+  var comm = S.commCards.filter(function(n){ return n != null; });
   if (comm.length) {
     html += '<div class="wc-section">' + t('commCards') + '</div>';
     html += '<div class="wc-cards-row">';
@@ -10060,8 +10047,8 @@ function showWinnerOverlay(winners) {
     for (var _wi = 0; _wi < winners.length && !bestHandLabel; _wi++) {
       var _wpid = winners[_wi].pid;
       var _wsd  = seatData[_wpid] || {};
-      var _hc1  = (_wpid === myId) ? myCards[0] : _wsd.card1;
-      var _hc2  = (_wpid === myId) ? myCards[1] : _wsd.card2;
+      var _hc1  = (_wpid === myId) ? S.myCards[0] : _wsd.card1;
+      var _hc2  = (_wpid === myId) ? S.myCards[1] : _wsd.card2;
       if (_hc1 != null && _hc2 != null) {
         var _holeNorm = [_hc1, _hc2].map(normalizeHoleCard).filter(function(c){ return c != null; });
         if (_holeNorm.length === 2) {
@@ -10156,8 +10143,8 @@ function showWinnerOverlay(winners) {
     html += '<div class="wc-player-cards">';
     if (_c1 != null || _c2 != null) { // FIX: || test falsy ratait les cartes à valeur 0
       html += cardHtml(_c1 != null ? _c1 : null,"xsm",false) + cardHtml(_c2 != null ? _c2 : null,"xsm",false);
-    } else if (isMe && myCards[0] != null) { // FIX: idem, valeur 0 = falsy
-      html += cardHtml(myCards[0],"xsm",false) + cardHtml(myCards[1],"xsm",false);
+    } else if (isMe && S.myCards[0] != null) { // FIX: idem, valeur 0 = falsy
+      html += cardHtml(S.myCards[0],"xsm",false) + cardHtml(S.myCards[1],"xsm",false);
     } else {
       // Joueur couché / cartes non révélées : 2 dos estompés, juste pour
       // réserver la largeur de la colonne et garder l'alignement.
@@ -11203,7 +11190,7 @@ function _maybeShowNextHandBtn() {
       if (_ego) _ego.style.display = 'none';
       try { _wpHide(); } catch(e) {}
       S._selectedGame = null; try { renderGameInfoPanel(null); } catch(e) {}
-      myCards = [null,null]; commCards = [];
+      S.myCards = [null,null]; S.commCards = [];
       stopTurnTimer();
       dismissWinner();
       S._chatRejectShown = false;
@@ -11272,7 +11259,7 @@ function _maybeShowNextHandBtn() {
       try { localStorage.setItem('pth_pin_actionbar', S._actionBarPinned ? '1' : '0'); } catch(e){}
       _updatePinBtn();
       // rafraichit immediatement l'UI hors-tour pour refleter le nouvel etat
-      if (turnPid !== myId && _gameStarted) renderGameWaiting(_lastWaitingMsg, _lastWaitingIsHtml);
+      if (S.turnPid !== myId && _gameStarted) renderGameWaiting(_lastWaitingMsg, _lastWaitingIsHtml);
     },
 
     setPlayingMode(idx) {
@@ -11283,16 +11270,16 @@ function _maybeShowNextHandBtn() {
       if (sel && sel.selectedIndex !== n) sel.selectedIndex = n;
       // Cadre or immédiat sur le dropdown quand un mode auto est actif (QML).
       try { var _msw = sel && sel.closest ? sel.closest('.mode-sel-wrap') : null; if (_msw) _msw.classList.toggle('mode-auto', n !== 0); } catch (e) {}
-      if (n !== 0 && turnPid === myId) _playAutoMode();
+      if (n !== 0 && S.turnPid === myId) _playAutoMode();
     },
 
     // Ouvre/ferme le panneau "aperçu" en tapant ses cartes. Volontairement
     // sans effet à NOTRE tour (on ne change rien au fonctionnement actuel) ;
     // requiert une main en cours avec des cartes, hors mode spectateur.
     togglePreActionPanel() {
-      if (turnPid === myId) return;                 // à notre tour : inchangé
+      if (S.turnPid === myId) return;                 // à notre tour : inchangé
       if (_amSpectator || !_gameStarted) return;
-      if (myCards[0] == null && myCards[1] == null) return; // pas de cartes
+      if (S.myCards[0] == null && S.myCards[1] == null) return; // pas de cartes
       S._preActionOpen = !S._preActionOpen;
       if (S._preActionOpen) _renderPreActionPanel();
       else _closePreActionPanel();
@@ -11302,13 +11289,13 @@ function _maybeShowNextHandBtn() {
     // comme le client officiel. Reclic sur la même = désarmement. Le bouton armé
     // est surligné en or ; l'action s'exécute quand notre tour arrive.
     armPreAction(name) {
-      if (turnPid === myId) { console.log('[prearm] clic ignoré (mon tour) name=' + name); return; }  // à notre tour : inchangé (les boutons agissent)
-      console.log('[prearm] armPreAction turnPid=' + turnPid + ' myId=' + myId);
+      if (S.turnPid === myId) { console.log('[prearm] clic ignoré (mon tour) name=' + name); return; }  // à notre tour : inchangé (les boutons agissent)
+      console.log('[prearm] armPreAction turnPid=' + S.turnPid + ' myId=' + myId);
       if (_amSpectator || !_gameStarted) return;
-      if (myCards[0] == null && myCards[1] == null) return; // pas de cartes
+      if (S.myCards[0] == null && S.myCards[1] == null) return; // pas de cartes
       S._preAction = (S._preAction === name) ? '' : name;      // toggle
-      S._preActionToCall = Math.max(0, highestBet - ((seatData[myId] || {}).bet || 0)); // onCallAmountChanged : MON à-suivre
-      console.log('[prearm] ' + (S._preAction ? 'armé' : 'désarmé') + ' name=' + name + ' toCallMémo=' + S._preActionToCall + ' highestBet=' + highestBet + ' maMise=' + (((seatData[myId] || {}).bet) || 0));
+      S._preActionToCall = Math.max(0, S.highestBet - ((seatData[myId] || {}).bet || 0)); // onCallAmountChanged : MON à-suivre
+      console.log('[prearm] ' + (S._preAction ? 'armé' : 'désarmé') + ' name=' + name + ' toCallMémo=' + S._preActionToCall + ' highestBet=' + S.highestBet + ' maMise=' + (((seatData[myId] || {}).bet) || 0));
       renderMyTurnActions(true);                            // re-render pour le surlignage or
     },
 
@@ -11389,7 +11376,7 @@ function _maybeShowNextHandBtn() {
       if (_ego) _ego.style.display = 'none';
       try { _wpHide(); } catch(e) {}
       S._selectedGame = null; try { renderGameInfoPanel(null); } catch(e) {}
-      myCards = [null,null]; commCards = [];
+      S.myCards = [null,null]; S.commCards = [];
       stopTurnTimer();
       dismissWinner();
       closeHeaderOverflow();
@@ -14880,7 +14867,7 @@ function renderPlayersList() {
   });
 })();
 
-;(function(){ window.BUILD_VERSION='0.3.833-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.834-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

@@ -153,6 +153,21 @@ export const S = {
   _lastPixPos: [],            // [{top, left}] dans l'ordre de rotated
   _potCenter: { x: 0, y: 0 }, // centre du pot à l'écran
   _lastPotValue: null,
+
+  // ── V9.2 · Cœur de main : cartes / mises / phases (domaine E, 2/3) ──
+  myCards: [null, null],
+  commCards: [],
+  _cardKey: null,          // clé AES des cartes chiffrées
+  _cardIV: null,
+  highestBet: 0,
+  minRaise: 0,
+  pot: 0,
+  collectedPot: 0,         // mises accumulées des streets précédentes
+  gameState: 0,            // preflop/flop/turn/river
+  dealerPid: 0,
+  turnPid: 0,
+  _lastSbPid: 0,           // SB/BB du dernier rendu (popup d'info joueur)
+  _lastBbPid: 0,
 };
 
 // Pont legacy : pokerth.js (script classique) fait `const S = window.PthState;`

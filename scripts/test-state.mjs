@@ -18,7 +18,7 @@ const { S } = await import('../public/modules/game/state.mjs');
 let n = 0, fail = 0;
 function ok(cond, msg) { n++; if (!cond) { fail++; console.error('  ✗', msg); } else console.log('  ✓', msg); }
 
-console.log('state.mjs — V0 (timer) + V1 (voix/haptique) + V2 (stats) + V3 (pet/inv/chat/titre) + V4 (avatars) + V5 (lobby) + V6 (config partie) + V7 (connexion) + V8 (action bar) + V9.1 (snapshots)');
+console.log('state.mjs — V0 (timer) + V1 (voix/haptique) + V2 (stats) + V3 (pet/inv/chat/titre) + V4 (avatars) + V5 (lobby) + V6 (config partie) + V7 (connexion) + V8 (action bar) + V9.1 (snapshots) + V9.2 (cartes/mises)');
 ok(typeof S === 'object' && S !== null, 'S est un objet');
 ok(window.PthState === S, 'pont window.PthState === S (même référence)');
 
@@ -129,6 +129,14 @@ ok(S._myStackAtHandStart === null && S._lastPotValue === null, 'stacks/pot mémo
 ok(Array.isArray(S._lastPixPos) && S._lastPixPos.length === 0
    && S._potCenter.x === 0 && S._potCenter.y === 0, 'géométrie pot/sièges init');
 
+// V9.2 — Cartes / mises / phases
+ok(Array.isArray(S.myCards) && S.myCards.length === 2 && S.myCards[0] === null
+   && Array.isArray(S.commCards) && S.commCards.length === 0, 'cartes init');
+ok(S._cardKey === null && S._cardIV === null, 'crypto cartes init = null');
+ok(S.highestBet === 0 && S.minRaise === 0 && S.pot === 0 && S.collectedPot === 0, 'mises init = 0');
+ok(S.gameState === 0 && S.dealerPid === 0 && S.turnPid === 0
+   && S._lastSbPid === 0 && S._lastBbPid === 0, 'phase/positions init = 0');
+
 // Périmètre exact des vagues migrées (pas de fuite d'autres clés)
 const keys = Object.keys(S).sort();
 ok(JSON.stringify(keys) === JSON.stringify(['REACT_EMOJI_MIN_GAP', 'REACT_EMOJI_QUEUE_MAX',
@@ -161,8 +169,11 @@ ok(JSON.stringify(keys) === JSON.stringify(['REACT_EMOJI_MIN_GAP', 'REACT_EMOJI_
    '_modeSelBusy', '_modeSelPendingPreview', '_modeSelHoldTimer',
    '_actionBarPinned', 'FEATURE_AUTO_CHECK_FOLD',
    '_handResultSnapshot', '_seatStackAtHandStart', '_myStackAtHandStart',
-   '_lastPixPos', '_potCenter', '_lastPotValue'].sort()),
-   'périmètre V0..V9.1 exact : ' + keys.join(', '));
+   '_lastPixPos', '_potCenter', '_lastPotValue',
+   'myCards', 'commCards', '_cardKey', '_cardIV', 'highestBet', 'minRaise',
+   'pot', 'collectedPot', 'gameState', 'dealerPid', 'turnPid',
+   '_lastSbPid', '_lastBbPid'].sort()),
+   'périmètre V0..V9.2 exact : ' + keys.join(', '));
 
 console.log(fail ? `FAIL ${fail}/${n}` : `PASS ${n}/${n}`);
 process.exit(fail ? 1 : 0);
