@@ -107,6 +107,38 @@ suffisent, aucun changement des sites d'appel.
 Après 9a-9d : re-scanner (les fonctions devenues sans dépendance interne
 peuvent se libérer par vagues). Le monolithe devrait passer sous ~830 Ko.
 
+## #9e — Module d'état partagé `game/state.mjs` (option A, plan validé 2026-07-19)
+
+Ré-audit à v0.3.822 : IIFE = L2581–12888, ~154 vars top-level. Une var de closure
+ne s'aliase pas → migration = **renommage mécanique** `nom` → `S.nom` (nommage
+plat 1:1, préfixe `_` conservé), **atomique par nom**, par vagues de domaines.
+`const S = window.PthState;` en tête de l'IIFE (jamais de nom `S` local dans
+l'IIFE — vérifié). La libération des fonctions (déménagement en modules) vient
+APRÈS les vagues d'état, en pushes séparés (#9f).
+
+| Vague | Domaine | Vars | Risque |
+|---|---|---|---|
+| V0 | Timer de tour (+ création state.mjs, câblage HTML/CRIT/sw) | 3 | pilote |
+| V1 | Voix / haptique | 7 | faible |
+| V2 | Stats / board / profil | 12 | faible |
+| V3 | Pétitions/invitations + chat/notifs/titre | 13 | faible |
+| V4 | Avatars | 12 | faible |
+| V5 | Lobby (`players` 159 occ. + pont window) | 15 | moyen |
+| V6 | Config partie / blinds | 17 | moyen |
+| V7 | Connexion (`ws` 112 occ., pont `_ipBlockUntil`, watchdog) | 28 | moyen+ |
+| V8 | Action bar / pré-action | 9 | moyen+ |
+| V9 | Cœur de main, 3 sous-vagues : snapshots → cartes/mises → sièges/latches (`seats seatData` + ponts window) | 27 | élevé |
+| V10 | UI divers + `myId` (145 occ., pont window) | 10 | moyen |
+
+Mécanique par vague : script Python, comptage attendu par nom + `assert`,
+classification des exclusions (`.nom`, `nom:` littéral, chaînes, shadowing
+local), re-grep résiduel = zéro nom nu, `node --check`. Noms courants (`pot
+players games seats seatData myId ws myName loaded`) : diff intégral relu.
+Ponts `defineProperty` (L~9540 : seats/seatData/myId/players/_ipBlockUntil) :
+rebranchés sur `S` dans le MÊME push que leur var. V7–V9 : test manuel
+reconnexion/rejoin en ligne obligatoire. Rollback = revert du commit entier,
+jamais de rustine sur un renommage partiel.
+
 ## Protocole par extraction (checklist à suivre à CHAQUE fois)
 
 1. Re-fetch pokerth.js à HEAD ; délimiter le bloc exact (marqueurs ══).
@@ -150,3 +182,4 @@ peuvent se libérer par vagues). Le monolithe devrait passer sous ~830 Ko.
 | 2026-07-19 | 0.3.817-beta | 9b ui/deck.mjs (cardName/cardHtml, decks, pucks SVG, timer — encodage 0..51 verrouillé, 22 tests) | 844 → 833 Ko |
 | 2026-07-19 | 0.3.818-beta | 9c net/avatar-cache.mjs (LRU 200, quota-retry, assemble data:URL — 16 tests) | 833 → 830 Ko |
 | 2026-07-19 | 0.3.819-beta | 9d ui/misc.mjs (esc, session/onglet, wake lock, trames ctrl, setPct, drag — 17 tests ; show/confirmCall/addChat exclus, life/pet reporté) | 830 → 825 Ko |
+| 2026-07-19 | 0.3.823-beta | 9e-V0 game/state.mjs (store S + pilote timer : 3 vars, 38 renommages) — 7 tests | 822 → 822 Ko |

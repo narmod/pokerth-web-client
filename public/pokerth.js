@@ -2579,6 +2579,7 @@ document.addEventListener("DOMContentLoaded", function() {
 //  APPLICATION
 // ═══════════════════════════════════════════════════════════
 const App = (() => {
+  const S = window.PthState; // état partagé — modules/game/state.mjs (ESM #9e)
   let ws        = null;
   let rxBuf     = new Uint8Array(0);
   let myId      = 0;
@@ -3546,9 +3547,6 @@ const App = (() => {
   let turnPid   = 0;
   let _lastSbPid = 0;   // SB/BB du dernier rendu, lus par le popup d'info joueur
   let _lastBbPid = 0;
-  let _timerID  = null;   // setInterval handle
-  let _timerSec = 0;      // seconds remaining
-  let _timerTot = 30;     // total seconds
   let gameTimeout = 15;   // timeout par joueur (depuis les settings de la partie)
   // Starting stack for this table. Pulled from NetGameInfo.startMoney
   // (field 13, written by buildCreateGame) or set directly by the table
@@ -5634,9 +5632,9 @@ const App = (() => {
       }
       case T.TimeoutWarning: {
         const sec = Proto.u32(sub, 2);
-        _timerSec = sec; // Sync avec le serveur
+        S._timerSec = sec; // Sync avec le serveur
         // Si le serveur donne plus de temps que prévu, ajuster le total
-        if (sec > _timerTot) _timerTot = sec;
+        if (sec > S._timerTot) S._timerTot = sec;
         addChat(null, t('timerHurry', { s: sec }), 'sys', { key: 'timerHurry', params: { s: sec } });
         // Auto-reset timeout
         const rtm = Proto.encode([[1,0,68],[69,2,new Uint8Array(0)]]);
@@ -8040,26 +8038,26 @@ const App = (() => {
   }
 
   function _updateTimer() {
-    _timerSec = Math.max(0, _timerSec - 1);
+    S._timerSec = Math.max(0, S._timerSec - 1);
     // Update SVG arcs in place — no full re-render
-    var urgent = _timerSec <= 8;
+    var urgent = S._timerSec <= 8;
     var col = urgent ? 'var(--timer-urgent, #e74c3c)' : 'var(--timer-normal, #f0c040)';
     // Radius MUST match _timerSvg() (r=20): dashoffset is computed against the
     // same circumference as the stroke-dasharray drawn there, otherwise the
     // ring depletes on a different circle and empties ~1s early.
     var r = 20, circ = 2 * Math.PI * r;
-    var offset = (circ * (1 - _timerSec / (_timerTot || 30))).toFixed(1);
+    var offset = (circ * (1 - S._timerSec / (S._timerTot || 30))).toFixed(1);
     document.querySelectorAll('.seat-timer .arc').forEach(function(el) {
       el.style.stroke = col;
       el.setAttribute('stroke-dashoffset', offset);
     });
     // Countdown rectangulaire (style pokerth) : depletion sur pathLength=100.
-    var _roff = (100 * (1 - _timerSec / (_timerTot || 30))).toFixed(1);
+    var _roff = (100 * (1 - S._timerSec / (S._timerTot || 30))).toFixed(1);
     document.querySelectorAll('.seat-timer-rect .rt-arc').forEach(function(el) {
       el.setAttribute('stroke-dashoffset', _roff);
     });
     // Barre de timeout QML (bloc F) : remplissage décompté linéairement.
-    var _tw = (100 * Math.max(0, _timerSec / (_timerTot || 30))).toFixed(1) + '%';
+    var _tw = (100 * Math.max(0, S._timerSec / (S._timerTot || 30))).toFixed(1) + '%';
     document.querySelectorAll('.seat-timeout-bar .stb-fill').forEach(function(el) {
       el.style.width = _tw;
     });
@@ -8067,11 +8065,11 @@ const App = (() => {
     // seat badge (stb-*) and the player-bar below, not in the SVG.
     // Badge timer sous chaque siège
     var stb = document.getElementById('stb-' + turnPid);
-    if (stb) { stb.textContent = _timerSec > 0 ? _timerSec + 's' : ''; stb.style.color = col; }
+    if (stb) { stb.textContent = S._timerSec > 0 ? S._timerSec + 's' : ''; stb.style.color = col; }
     // Player bar counter
     var pb = document.getElementById('pb-timer');
     if (pb && turnPid === myId) {
-      pb.textContent = _timerSec > 0 ? _timerSec + 's' : '';
+      pb.textContent = S._timerSec > 0 ? S._timerSec + 's' : '';
       pb.style.color = col;
     }
     // Flash my-zone border
@@ -8083,26 +8081,26 @@ const App = (() => {
     // sur les parties très rapides. Le mute global est respecté par playTone().
     // Tic léger à 5-4-3-2, bip marqué sur la dernière seconde.
     if (turnPid === myId && gameTimeout >= 10) {
-      if (_timerSec >= 2 && _timerSec <= 5) {
+      if (S._timerSec >= 2 && S._timerSec <= 5) {
         if (typeof notifyTick === 'function') notifyTick();
-      } else if (_timerSec === 1) {
+      } else if (S._timerSec === 1) {
         if (typeof notifyTickFinal === 'function') notifyTickFinal();
       }
     }
-    if (_timerSec <= 0) { clearInterval(_timerID); setUrgentMode(false); }
+    if (S._timerSec <= 0) { clearInterval(S._timerID); setUrgentMode(false); }
   }
 
   function startTurnTimer() {
-    clearInterval(_timerID);
-    _timerSec = _timerTot = (gameTimeout > 0 ? gameTimeout : 15);
+    clearInterval(S._timerID);
+    S._timerSec = S._timerTot = (gameTimeout > 0 ? gameTimeout : 15);
     renderSeats();  // Draws the SVG
-    _timerID = setInterval(_updateTimer, 1000);
+    S._timerID = setInterval(_updateTimer, 1000);
   }
 
   function stopTurnTimer() {
-    clearInterval(_timerID);
-    _timerID = null;
-    _timerSec = 0;
+    clearInterval(S._timerID);
+    S._timerID = null;
+    S._timerSec = 0;
     // Clear timers from DOM
     document.querySelectorAll('.seat-timer, .seat-timer-rect').forEach(function(el){ el.remove(); });
     var pb = document.getElementById('pb-timer');
@@ -8649,7 +8647,7 @@ const App = (() => {
       let blindBadge = '';
       if (isSB) blindBadge = chipSvg('SB','#1565c0','#fff','#0a3d7a');
       else if (isBB) blindBadge = chipSvg('BB','#b71c1c','#fff','#6d0c0c');
-      const timerSvg = isActive ? ((_seatTr.timerRect || _seatTr.timerBar) ? '' : _timerSvg(_timerSec, _timerTot)) : ''; // anneau avatar : seulement pour les packs SANS cadre rect NI barre fine
+      const timerSvg = isActive ? ((_seatTr.timerRect || _seatTr.timerBar) ? '' : _timerSvg(S._timerSec, S._timerTot)) : ''; // anneau avatar : seulement pour les packs SANS cadre rect NI barre fine
       const avatarCls = 'seat-avatar' + (isActive ? ' timing' : '') + avatarType;
       let dealerChip = isDealer ? dealerChipSvg() : '';
       // Packs PokerTH : pucks = disques crème OFFICIELS (table par défaut QML :
@@ -8728,7 +8726,7 @@ const App = (() => {
       const avCls2 = avatarCls + (pthAvUrl ? ' has-pth-avatar' : '');
       h += '<div class="seat-plate">'; // pack siege : avatar + (nom/tapis) -- display:contents en classique
       // Countdown rectangulaire (style pokerth) : cadre autour de la boite.
-      if (isActive && _seatTr.timerRect) h += _timerRectSvg(_timerSec, _timerTot, isMe);
+      if (isActive && _seatTr.timerRect) h += _timerRectSvg(S._timerSec, S._timerTot, isMe);
       // Packs pokerth : drapeau retiré du coin d'avatar — le QML l'affiche
       // 22×15 en bas-gauche de la zone info (wide) et pas du tout en portrait.
       h += '<div class="' + avCls2 + '" style="' + avatarStyle + '">'
@@ -8770,7 +8768,7 @@ const App = (() => {
       // remplissage est tenue à jour chaque seconde par _updateTimer.
       var _tbar = '';
       if ((_seatTr.timerBar || _seatTr.timerRect) && isActive && !_acBadge && !(_sdWinners && _sdWinners.has(pid))) {
-        var _tfrac = Math.max(0, Math.min(1, _timerSec / (_timerTot || 30)));
+        var _tfrac = Math.max(0, Math.min(1, S._timerSec / (S._timerTot || 30)));
         _tbar = '<div class="seat-timeout-bar' + (isMe ? ' me' : '') + '"><div class="stb-fill" style="width:' + (_tfrac * 100).toFixed(1) + '%"></div></div>';
       }
       var _tbarInStrip = !!_tbar && isMe && _seatTr.selfStrip; // self pokerth : barre hors box
@@ -8791,7 +8789,7 @@ const App = (() => {
       }
       // Badge timer sous l'avatar (visible et non confondu avec l'emoji)
       if (isActive) h += '<div class="seat-timer-badge" id="stb-'+pid+'">'
-        + ((_timerSec > 0) ? _timerSec + 's' : '') + '</div>';
+        + ((S._timerSec > 0) ? S._timerSec + 's' : '') + '</div>';
       h += '<div class="seat-info">';
       h += '<div class="seat-name">' + esc(isMe ? myName : getPlayerName(pid)) + '</div>';
       if (_seatTr.flagInfo && !_seatNarrow) {
@@ -8844,7 +8842,7 @@ const App = (() => {
     try {
       if (typeof window._loupeOnRender === 'function') {
         var _actEl0 = el.querySelector('.seat.active:not(.me)');
-        window._loupeOnRender(_actEl0, !!(_sdWinners && _sdWinners.size), (typeof _timerTot !== 'undefined' ? _timerTot : 30));
+        window._loupeOnRender(_actEl0, !!(_sdWinners && _sdWinners.size), (typeof S._timerTot !== 'undefined' ? S._timerTot : 30));
       }
     } catch (eLp) {}
     // ── Garde anti-chevauchement MESURÉE (placement officiel) : après CHAQUE
@@ -15002,7 +15000,7 @@ function renderPlayersList() {
   });
 })();
 
-;(function(){ window.BUILD_VERSION='0.3.822-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.823-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
