@@ -145,15 +145,19 @@ function _ensureWebAudio() {
     _srcNode = _ctx.createMediaElementSource(_audio);   // once per element only
     _gain = _ctx.createGain();
     _gain.gain.value = getVolume();
+    // Analyser placed IN SERIES (pass-through) so it actually receives samples
+    // on iOS/Safari, where an analyser not routed toward destination stays silent.
+    try { _analyser = _ctx.createAnalyser(); _analyser.fftSize = 64; _analyser.smoothingTimeConstant = 0.8; } catch (e) { _analyser = null; }
+    _srcNode.connect(_gain);
+    var _tail = _gain;
+    if (_analyser) { _tail.connect(_analyser); _tail = _analyser; }   // series tap
     if (_ctx.createStereoPanner) {
       _panner = _ctx.createStereoPanner();
       try { _panner.pan.value = getBalance(); } catch (e) {}
-      _srcNode.connect(_gain); _gain.connect(_panner); _panner.connect(_ctx.destination);
+      _tail.connect(_panner); _panner.connect(_ctx.destination);
     } else {
-      _srcNode.connect(_gain); _gain.connect(_ctx.destination);
+      _tail.connect(_ctx.destination);
     }
-    // VU tap: analyser hangs off the gain, NOT routed to destination (read-only).
-    try { _analyser = _ctx.createAnalyser(); _analyser.fftSize = 64; _analyser.smoothingTimeConstant = 0.8; _gain.connect(_analyser); } catch (e) { _analyser = null; }
     try { _audio.volume = 1; } catch (e) {}   // element at unity; the gain attenuates (works on iOS)
     _waReady = true;
     return true;
