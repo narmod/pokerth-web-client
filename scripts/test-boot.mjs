@@ -42,11 +42,13 @@ const ctx = dom.getInternalVMContext();
 let bootErr = null;
 try {
   vm.runInContext(readFileSync('public/chat-emotes.js', 'utf8'), ctx, { filename: 'chat-emotes.js' });
-  vm.runInContext(readFileSync('public/pokerth.js', 'utf8'), ctx, { filename: 'pokerth.js' });
+  // [9g-A2] pokerth.js est un module en prod : simulation des sémantiques
+  // module (strict + déclarations top-level NON globales) par IIFE stricte.
+  vm.runInContext("(function(){'use strict';\n" + readFileSync('public/pokerth.js', 'utf8') + "\n})();", ctx, { filename: 'pokerth.js' });
 } catch (e) { bootErr = e; }
 ok(!bootErr, 'pokerth.js évalué sans exception' + (bootErr ? ' — ' + bootErr.message : ''));
-ok(vm.runInContext('typeof App', ctx) === 'object' || vm.runInContext('typeof App', ctx) === 'string'
-   ? vm.runInContext("typeof App === 'object' && App !== null", ctx) : false, 'App défini (objet)');
+ok(vm.runInContext("typeof window.App === 'object' && window.App !== null", ctx),
+   'window.App défini (pont 9g-A1 — les handlers inline le résolvent via window)');
 
 // 3) Cycle de vie DOM
 try {

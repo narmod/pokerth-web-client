@@ -4,7 +4,7 @@
 // — chantier ESM #9f-10 (dernière vague du plan).
 // Fonctions déplacées telles quelles depuis l'IIFE App. Adaptations :
 // t (i18n.mjs), acquireWakeLock/releaseWakeLock (misc.mjs) importés ;
-// _showBanner / _lang via window.* ; `App` et `directWS` restent nus
+// _showBanner / _lang via window.* ; `App` reste nu ; directWS via window (9g-A2)
 // (résolus par l'environnement global, comme dans le script classique) ;
 // $( réécrit en document.getElementById(.
 // ═══════════════════════════════════════════════════════════════════
@@ -180,7 +180,7 @@ function setStatus(txt, cls='', key) {
 // ── RÉSEAU ──
 function send(data) {
   if (!S.ws || S.ws.readyState !== WebSocket.OPEN) return;
-  if (directWS) {
+  if (window.directWS) {
     // Direct WSS to pokerth.net: raw protobuf, no length prefix
     S.ws.send(data);
     return;

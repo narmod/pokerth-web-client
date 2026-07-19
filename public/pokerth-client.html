@@ -2147,7 +2147,7 @@ function onAvatarImageChosen(input) {
   </div>
 </div>
 <script src="chat-emotes.js" defer></script>
-<script src="pokerth.js" defer></script>
+<script type="module" src="pokerth.js"></script> <!-- [9g-A2] module : ordre inchangé (défèrement identique, dernier du document) -->
 <script>
 if ('serviceWorker' in navigator) {
   // updateViaCache:'none' => the browser always fetches sw.js fresh, so a

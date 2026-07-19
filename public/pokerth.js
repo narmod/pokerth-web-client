@@ -12,7 +12,7 @@ function _startIpBlockCountdown() {
   _ipBlockInterval = setInterval(function() {
     // Le mode entraînement n'a pas de réseau → aucun blocage IP ne s'y applique.
     if (window._offlineMode) { _stopIpBlockCountdown(); return; }
-    var rem = Math.max(0, Math.ceil((_ipBlockUntil - Date.now()) / 1000));
+    var rem = Math.max(0, Math.ceil((window._ipBlockUntil - Date.now()) / 1000));
     var mins = Math.floor(rem / 60), secs = rem % 60;
     var txt = t('ipBlockedPrefix') + (mins > 0 ? mins + 'min ' : '') + secs + 's';
     // Mettre à jour seulement si on est sur l'écran de connexion
@@ -20,7 +20,7 @@ function _startIpBlockCountdown() {
     if (cs) cs.textContent = rem > 0 ? txt : t('canReconnect');
     if (rem <= 0) {
       _stopIpBlockCountdown();
-      _ipBlockUntil = 0;
+      window._ipBlockUntil = 0;
       var cs2 = document.getElementById('cstatus');
       if (cs2) { cs2.textContent = t('canReconnect'); cs2.className = 'status ok'; }
     }
@@ -88,6 +88,7 @@ setTimeout(_pingTick, 3000);
 // Les lignes grisées « bientôt » dépendent d'un travail backend/moteur à venir.
 // Sièges « perdants » au showdown (pids) → cartes estompées (fadeOutLosingCards).
 // Rempli dans EndOfHandShow (si pth_fade_losers != '0'), vidé à HandStart.
+window.directWS = false; // [9g-A2] jamais déclaré → propriété window explicite
 window._sdLosers = new Set();
 window._sdWinners = new Set();   // sièges gagnants du showdown (PlayerWinnerOverlay QML)
 // Option "révéler mes cartes au tap" (pth_own_click) : quand activée, mes cartes
@@ -367,7 +368,7 @@ function openAdvancedOptions() {
   try { var _sv = document.getElementById('adv-sndvol'); if (_sv && window.getSoundVolume) _sv.value = Math.round(window.getSoundVolume() * 10); } catch (e) {}
   try { var _sl = document.getElementById('adv-seatlayout'); if (_sl) { var _slv = localStorage.getItem('pth_seat_layout'); _sl.value = (_slv === 'pokerth-official' || _slv === 'pokerth-ellipse' || _slv === 'custom') ? _slv : 'auto'; } } catch (e) {}
   try { var _ctr = document.getElementById('adv-chattranslate'); if (_ctr) { _ctr.checked = (localStorage.getItem('pth_chat_translate') !== '0'); if (!window._chatTrSupported) { var _ctl = _ctr.closest('label'); if (_ctl) _ctl.style.opacity = '0.55'; } } } catch (e) {}
-  try { _rebindAction = null; _renderKeyButtons(); } catch (e) {}
+  try { window._rebindAction = null; _renderKeyButtons(); } catch (e) {}
   sync('adv-tooltips', 'tooltips', true);
   try { var _nr = document.getElementById('adv-noreact'); if (_nr) _nr.checked = (localStorage.getItem('pth_react_muted') === '1'); } catch (e) {}
   try { var _dc = document.getElementById('adv-defcommunity'); if (_dc) _dc.value = (localStorage.getItem('pth_rank_src') || 'pth'); } catch (e) {}
@@ -394,7 +395,7 @@ window.openAdvancedOptions = openAdvancedOptions;
 function closeAdvancedOptions() {
   var m = document.getElementById('adv-modal');
   if (m) m.style.display = 'none';
-  _rebindAction = null;
+  window._rebindAction = null;
 }
 window.closeAdvancedOptions = closeAdvancedOptions;
 // Options avancées : navigation par catégories (parité du dialogue officiel
@@ -3090,7 +3091,7 @@ const App = (() => {
       if (_rb && _rb.classList.contains('visible')) _hideBanner();
     } catch (e) {}
     if (typeof chunk === 'string') return; // ignore text frames
-    if (directWS) {
+    if (window.directWS) {
       // Direct WSS: each WS message is one complete protobuf (no length prefix)
       handleMsg(new Uint8Array(chunk));
       return;
@@ -3719,7 +3720,7 @@ const App = (() => {
   window._toggleStats = toggleStats;
   window._broadcastMyAvatar = function(emoji) {
     S._myAvatarCache = (emoji && emoji !== '__img__' && emoji !== '__pth__') ? emoji : '';
-    if (S.ws && S.ws.readyState === WebSocket.OPEN && !directWS && S.myId) {
+    if (S.ws && S.ws.readyState === WebSocket.OPEN && !window.directWS && S.myId) {
       if (emoji === '__img__') {
         // Diffuser l'image perso (data URL) aux autres clients du proxy.
         var img = ''; try { img = localStorage.getItem('pth_avatar_img') || ''; } catch(e) {}
@@ -3742,7 +3743,7 @@ const App = (() => {
   // image / emoji / initiale courant.
   function _rebroadcastAvatar() {
     try {
-      if (!(S.ws && S.ws.readyState === WebSocket.OPEN && !directWS && S.myId)) return;
+      if (!(S.ws && S.ws.readyState === WebSocket.OPEN && !window.directWS && S.myId)) return;
       var choice = ''; try { choice = localStorage.getItem('pth_avatar') || ''; } catch(e) {}
       if (choice === '__img__') {
         var img = ''; try { img = localStorage.getItem('pth_avatar_img') || ''; } catch(e) {}
@@ -4274,26 +4275,26 @@ const App = (() => {
       // the Internet mode through our proxy (session grace on wifi drops,
       // buffered reconnect) even when the target is pokerth.net itself.
       // 'direct' (default) keeps the historical hostname-based behavior.
-      directWS = isPokerThDirect && targetIsPokerTH && (window._pthNetTransport !== 'proxy');
-      const finalUrl = directWS
+      window.directWS = isPokerThDirect && targetIsPokerTH && (window._pthNetTransport !== 'proxy');
+      const finalUrl = window.directWS
         ? 'wss://www.pokerth.net:443/pthlive'
         : proxyUrl + '?host=' + encodeURIComponent(host) + '&port=' + encodeURIComponent(port) + '&tls=' + tlsParam + '&sid=' + encodeURIComponent(_getSessionId());
 
-      setStatus(directWS ? t('connDirect') : t('connProxy'));
+      setStatus(window.directWS ? t('connDirect') : t('connProxy'));
 
       // Réactions emoji : relayées partout via la convention /emoji dans le chat
       // de partie (interop web <-> Qt/QML, y compris pokerth.net). Le bouton
       // reste donc toujours visible quel que soit le mode de connexion.
-      window._directWS = directWS;
+      window._directWS = window.directWS;
       // Marqueur de mode pour le CSS : drapeaux agrandis uniquement sur pokerth.net.
-      try { document.body.classList.toggle('pth-net', !!directWS); } catch (e) {}
+      try { document.body.classList.toggle('pth-net', !!window.directWS); } catch (e) {}
       // Diffusions admin : quand la socket de jeu ne passe pas par le proxy
       // (direct pokerth.net OU entraînement offline), ouvrir le canal
       // notify-only. En mode proxy la socket principale les reçoit déjà.
       // Repli d'URL en offline (champ proxy potentiellement vide) : le site
       // qui sert l'app héberge aussi le proxy → dériver de location.
       try {
-        if (directWS || _off) {
+        if (window.directWS || _off) {
           var _nBase = proxyUrl || ((location.protocol === 'https:' ? 'wss://' : 'ws://') + location.host);
           _openNotifyWS(_nBase, _off ? 'offline' : 'pthnet');
         } else {
@@ -4322,7 +4323,7 @@ const App = (() => {
       try { App._applyCreateFormDefaults(true); } catch (e) {}
       if ($('server-mode') && $('server-mode').value === 'offline') {
         // ── OFFLINE vs BOTS ── swap the transport for a local fake server.
-        directWS = false;
+        window.directWS = false;
         if (!(window.PokerOffline && window.PokerOffline.createSocket)) {
           setStatus('Chargement du mode hors-ligne…');
           import('/modules/offline/index.mjs')
@@ -4351,7 +4352,7 @@ const App = (() => {
 
       _beginConnecting();   // lock button for the whole attempt (anti IP-block)
       S.ws.binaryType = 'arraybuffer';
-      S.ws.onopen    = () => { S._lastRxTime = Date.now(); setStatus(t('proxyConnectedWait')); try { window._pthCountConnect && window._pthCountConnect(directWS ? 'pokerthnet' : ((window._offlineMode || ($('server-mode') && $('server-mode').value === 'offline')) ? 'offline' : 'lan')); } catch (e) {} };
+      S.ws.onopen    = () => { S._lastRxTime = Date.now(); setStatus(t('proxyConnectedWait')); try { window._pthCountConnect && window._pthCountConnect(window.directWS ? 'pokerthnet' : ((window._offlineMode || ($('server-mode') && $('server-mode').value === 'offline')) ? 'offline' : 'lan')); } catch (e) {} };
       S.ws.onerror   = () => { S._lastConnectFailed = true; _endConnecting(); setStatus(t('wsError'), 'err'); };
       S.ws.onmessage = function(e) {
         if (typeof e.data === 'string') {
@@ -5011,12 +5012,12 @@ const App = (() => {
     },
 
     sendReaction(emoji) {
-      if (_reactMuted) return;                    // reactions coupees : on n'envoie rien
+      if (window._reactMuted) return;                    // reactions coupees : on n'envoie rien
       if (!S.ws || !S.gId) return;
       // Affichage immediat pour moi.
       handleIncomingReaction(S.myId, emoji, 'self');
       // Canal rapide web<->web via le proxy (trame texte, contourne le throttle chat serveur).
-      if (!directWS && S.ws.readyState === WebSocket.OPEN) {
+      if (!window.directWS && S.ws.readyState === WebSocket.OPEN) {
         try { S.ws.send('REACT:' + S.myId + ':' + emoji); } catch (e) {}
       }
       // Canal partage cross-client : commande /emoji interpretee comme une reaction par
@@ -5027,23 +5028,23 @@ const App = (() => {
       // sauf si elle est épinglée (📌 dans la barre de titre).
       try {
         var _rp = document.getElementById('g-reaction-panel');
-        if (!_reactPinned && _rp && _rp.style.display !== 'none' && _rp.style.display !== '')
+        if (!window._reactPinned && _rp && _rp.style.display !== 'none' && _rp.style.display !== '')
           toggleReactionPanel();
       } catch (e) {}
     },
 
     // Bascule le mute local des reactions (bouton barre dans le panneau).
     toggleReactionsMute() {
-      _reactMuted = !_reactMuted;
-      try { localStorage.setItem('pth_react_muted', _reactMuted ? '1' : '0'); } catch (e) {}
+      window._reactMuted = !window._reactMuted;
+      try { localStorage.setItem('pth_react_muted', window._reactMuted ? '1' : '0'); } catch (e) {}
       _applyReactMuteUI();
     },
 
     // Épingle la fenêtre de réactions : épinglée = ne se ferme plus après
     // l'envoi d'une réaction (le défaut suit le QML : fermeture immédiate).
     toggleReactionsPin() {
-      _reactPinned = !_reactPinned;
-      try { localStorage.setItem('pth_react_pin', _reactPinned ? '1' : '0'); } catch (e) {}
+      window._reactPinned = !window._reactPinned;
+      try { localStorage.setItem('pth_react_pin', window._reactPinned ? '1' : '0'); } catch (e) {}
       _applyReactPinUI();
     },
 
@@ -8521,7 +8522,7 @@ window.togglePlayersPanel = togglePlayersPanel;
 window.toggleReactionPanel = toggleReactionPanel;
 window.App = App;
 
-window.BUILD_VERSION='0.3.865-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='0.3.866-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
