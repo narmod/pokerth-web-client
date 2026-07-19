@@ -333,7 +333,7 @@ function openAdvancedOptions() {
   sync('adv-fadelosers', 'fade_losers', true);
   sync('adv-flag', 'show_flag', true);
   sync('adv-ownclick', 'own_click', false);
-  sync('adv-guardcall', 'guard_call', true);   // défaut QML : AccidentallyCallBlocker=1
+  sync('adv-guardcall', 'guard_call', false);  // défaut web : anti-call accidentel désactivé
   sync('adv-assist', 'assist', true);
   sync('adv-showodds', 'show_odds', true);
   sync('adv-handsbtn', 'hands_btn', true);
@@ -662,7 +662,7 @@ function _cfgCollectWebSettings() {
   out.ShowBlindButtons          = B('show_blinds', true);
   out.ShowPotPercentButtons     = B('pot_btns', true);
   out.AntiPeekMode              = B('own_click', false);
-  out.AccidentallyCallBlocker   = B('guard_call', true);
+  out.AccidentallyCallBlocker   = B('guard_call', false);
   out.EnableBetInputFocusSwitch = B('focus_bet', false);
   out.ShowCountryFlagInAvatar   = B('show_flag', true);
   out.ShowPingStateInAvatar     = B('ping_avatar', true);
@@ -8539,7 +8539,7 @@ window.togglePlayersPanel = togglePlayersPanel;
 window.toggleReactionPanel = toggleReactionPanel;
 window.App = App;
 
-window.BUILD_VERSION='0.3.902-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='0.3.903-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

@@ -200,8 +200,8 @@ function renderMyTurnActions(preview) {
   // cartes du board). Si vrai, le clic Call passera par App.confirmCall (2e tap).
   var _bigRaise = false;
   if (!preview) {
-    // Anti-call accidentel : ACTIF par défaut (parité QML AccidentallyCallBlocker=1).
-    var _gc = true; try { _gc = (localStorage.getItem('pth_guard_call') !== '0'); } catch (e) {}
+    // Anti-call accidentel : INACTIF par défaut (choix web) ; actif seulement si coché.
+    var _gc = false; try { _gc = (localStorage.getItem('pth_guard_call') === '1'); } catch (e) {}
     var _ncomm = (S.commCards || []).filter(function (c) { return c != null; }).length;
     if (_ncomm !== window._lastBoardCount) { window._lastCallSeen = -1; window._lastBoardCount = _ncomm; }
     if (_gc && !canCheck && toCall > 0) {
