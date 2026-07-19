@@ -146,3 +146,4 @@ peuvent se libérer par vagues). Le monolithe devrait passer sous ~830 Ko.
 | 2026-07-19 | 0.3.813-beta | #6 ui/reactions.mjs (/emoji, dédup sp0ck, mute/pin pontés) — 12 tests (stubs DOM) | 902 → 891 Ko |
 | 2026-07-19 | 0.3.814-beta | #7 ui/anim.mjs (15 animations, 3 plages ; ping/prefs/état showdown restés monolithe) — 11 tests | 891 → 882 Ko |
 | 2026-07-19 | 0.3.815-beta | #8 game/seats.mjs (placement custom + édition + autoScaleTable ; état déjà via window.*) — 13 tests | 882 → 872 Ko |
+| 2026-07-19 | 0.3.816-beta | 9a game/layout.mjs (géométrie QML : slots portrait, bisections, ellipse — verrouillée par 34 tests Bible/DELTA) | 872 → 844 Ko |
