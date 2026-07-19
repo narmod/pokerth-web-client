@@ -8179,7 +8179,18 @@ html:not([data-seat-struct="qml"]) .seat:not(.me) .seat-foot { margin-top: 1px; 
   .adv-cat{flex:0 0 auto;width:auto;padding:7px 10px;border-radius:9px;justify-content:center}
   .adv-cat .adv-cat-lbl{display:none}
   .adv-cat.is-active{background:rgba(var(--sel-rgb,var(--gold-rgb)),.16);box-shadow:inset 0 -2px 0 0 var(--sel,var(--gold))}
-  .adv-panels{height:56vh;height:56dvh;max-height:none} /* hauteur FIXE : le modal ne « respire » plus en changeant de categorie (demande narmod 2026-07-19) */
+  .adv-panels{max-height:none;min-height:0} /* la hauteur vient de la carte épinglée ci-dessous */
+}
+/* Portrait mobile : carte ÉPINGLÉE haut et bas (feuille plein écran à marges,
+   demande narmod 2026-07-19). Plus aucun saut de taille entre catégories :
+   la hauteur est fixée par les ancres top/bottom, le contenu défile dedans.
+   NB : l'ancienne approche height:56dvh sur .adv-panels était inopérante —
+   flex:1 (= flex-basis:0%) écrase height sur l'axe principal d'une colonne. */
+@media (max-width:599.98px) and (orientation:portrait){
+  #adv-modal .adv-card{position:fixed;left:10px;right:10px;top:max(14px, env(safe-area-inset-top));bottom:max(14px, env(safe-area-inset-bottom));width:auto;max-width:none;margin:0;display:flex;flex-direction:column;overflow:hidden}
+  #adv-modal .adv-card .adv-layout{flex:1 1 auto;min-height:0}
+  #adv-modal .adv-card .adv-nav{flex:0 0 auto}
+  #adv-modal .adv-card .adv-panels{flex:1 1 auto;min-height:0;height:auto}
 }
 /* Options avancees en fenetre flottante (largeur >= 600, canon QML), pas sur mobile.
    Drag/resize/zoom via le systeme generique (cf. _advSetupFloat / _enableFloating). */
