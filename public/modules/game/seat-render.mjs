@@ -883,7 +883,19 @@ function renderSeatsImmediate() {
         // corridor est assez large (fenêtres 16:9 desktop : cs inchangé —
         // vérifié : 476/15008 configs touchées, −15 % en moyenne). ──
         try {
-          var _bandT3 = _commC3 - 32 * _csComm - 8, _bandB3 = _commC3 + 32 * _csComm + 8;
+          // ÉCHELLE EFFECTIVE du scaler : #g-comm vit DANS #g-table-scaler
+          // (transform scale(autofit·zoom)) alors que les plates sont hors
+          // scaler — la largeur VISUELLE de la rangée est 242·cs·eff, pas
+          // 242·cs (constaté chez narmod : 1110×968 M=8, autofit ≈ 1.3,
+          // cs cappé mais rangée encore sur Aggro Ace). Mesure identique
+          // au bloc shift : rect réel / offsetHeight de .felt-oval.
+          var _fEffH = 1, _fElH = document.querySelector('.felt-oval');
+          if (_fElH && _fElH.offsetHeight > 0) {
+            var _frH = _fElH.getBoundingClientRect();
+            var _eH = _frH.height / _fElH.offsetHeight;
+            if (_eH > 0.05) _fEffH = _eH;
+          }
+          var _bandT3 = _commC3 - 32 * _csComm * _fEffH - 8, _bandB3 = _commC3 + 32 * _csComm * _fEffH + 8;
           var _freeL3 = 0, _freeR3 = _zW3;
           for (var _hc = 0; _hc < _rects3.length; _hc++) {
             var _rh = _rects3[_hc];
@@ -893,8 +905,9 @@ function renderSeatsImmediate() {
             }
           }
           var _freeH3 = Math.min(_zW3 / 2 - _freeL3, _freeR3 - _zW3 / 2) - 8;
-          if (_freeH3 > 0 && _freeH3 / 121 < _csComm) _csComm = Math.max(0.55, _freeH3 / 121);
-          try { window._seatDbg.commCapH = +(_freeH3 / 121).toFixed(3); } catch (eDbg) {}
+          var _csMaxH3 = _freeH3 / (121 * _fEffH);
+          if (_freeH3 > 0 && _csMaxH3 < _csComm) _csComm = Math.max(0.55, _csMaxH3);
+          try { window._seatDbg.commCapH = +_csMaxH3.toFixed(3); window._seatDbg.commEff = +_fEffH.toFixed(3); } catch (eDbg) {}
         } catch (eHc) {}
         // QML (communityArea, branche wide) : verticalCenterOffset =
         // communityCenterY - height/2 -> centre de la rangee = barycentre.
