@@ -6,16 +6,17 @@
 // (net/proto.mjs), _ccToFlag/_avatarChipHtml (player-popup.mjs)
 // importés ; send / renderPlayersList / _lang via window.* ;
 // $( réécrit en document.getElementById(.
-// NOTE parité : le `T.PlayerInfoRequest` nu (renderTablePlayers,
-// _renderInfoPlayerRows) est un bug latent PRÉEXISTANT — la
-// ReferenceError est avalée par le try/catch, la requête ne part
-// jamais. Conservé à l'identique ; fix proposé séparément (MSG.T).
+// Fix 0.3.845/846 : `T.PlayerInfoRequest` nu (×3 — renderTablePlayers,
+// _renderInfoPlayerRows, _renderInfoRowsFromPids) était un bug latent
+// préexistant : la ReferenceError était avalée par le try/catch et la
+// demande de pseudo ne partait jamais → MSG.T.PlayerInfoRequest.
 // ═══════════════════════════════════════════════════════════════════
 import { S } from '../game/state.mjs';
 import { t } from '../i18n.mjs';
 import { esc } from './misc.mjs';
 import { _groupThousands } from './fmt.mjs';
 import { Proto } from '../net/proto.mjs';
+import { MSG } from '../net/messages.mjs';
 import { _ccToFlag, _avatarChipHtml } from './player-popup.mjs';
 
 // ──────────────────────────────────────────────────────────────
@@ -126,7 +127,7 @@ function renderTablePlayers(gid) {
     const nm = S.players[pid];
     if (!nm && !S._pendingNameRequests.has(pid)) {
       S._pendingNameRequests.add(pid);
-      try { window.send(Proto.encode([[1,0,T.PlayerInfoRequest],[19,2,Proto.encode([[1,0,pid]])]])); } catch(e) {}
+      try { window.send(Proto.encode([[1,0,MSG.T.PlayerInfoRequest],[19,2,Proto.encode([[1,0,pid]])]])); } catch(e) {}
     }
     const flag = _ccToFlag(S._playerCountries[pid], 'gp-flag');
     const label = nm ? esc(nm) : '#' + pid;
@@ -146,7 +147,7 @@ function _renderInfoPlayerRows(gid) {
     var nm = S.players[pid];
     if (!nm && !S._pendingNameRequests.has(pid)) {
       S._pendingNameRequests.add(pid);
-      try { window.send(Proto.encode([[1,0,T.PlayerInfoRequest],[19,2,Proto.encode([[1,0,pid]])]])); } catch(e) {}
+      try { window.send(Proto.encode([[1,0,MSG.T.PlayerInfoRequest],[19,2,Proto.encode([[1,0,pid]])]])); } catch(e) {}
     }
     var flag  = _ccToFlag(S._playerCountries[pid], 'gp-flag');
     var label = nm ? esc(nm) : '#' + pid;
@@ -173,7 +174,7 @@ function _renderInfoRowsFromPids(pids) {
     if (!nm && pid === S.myId) nm = (document.getElementById('nick') ? document.getElementById('nick').value : '') || S.myName;
     if (!nm && !S._pendingNameRequests.has(pid)) {
       S._pendingNameRequests.add(pid);
-      try { window.send(Proto.encode([[1,0,T.PlayerInfoRequest],[19,2,Proto.encode([[1,0,pid]])]])); } catch(e) {}
+      try { window.send(Proto.encode([[1,0,MSG.T.PlayerInfoRequest],[19,2,Proto.encode([[1,0,pid]])]])); } catch(e) {}
     }
     var flag  = _ccToFlag(S._playerCountries[pid], 'gp-flag');
     var label = nm ? esc(nm) : '#' + pid;
