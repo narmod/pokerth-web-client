@@ -35,6 +35,7 @@ const LS_TRACK  = 'pth_music_track';
 const LS_VOL    = 'pth_music_vol';
 const LS_REPEAT = 'pth_music_repeat';
 const LS_SHUFFLE = 'pth_music_shuffle';
+const LS_BALANCE = 'pth_music_balance';
 
 let _tracks = [];
 let _audio  = null;
@@ -56,6 +57,9 @@ let _lcdRemain = false; // LCD time display: false = elapsed, true = remaining (
 // from inside a real interaction. If Web Audio is unavailable we fall back to the
 // element's own volume (the pre-existing behaviour, fine off iOS).
 let _ctx = null, _srcNode = null, _gain = null, _waReady = false, _waFailed = false;
+let _panner = null, _analyser = null, _vuData = null, _vuRAF = 0;
+// StereoPannerNode support, probed WITHOUT creating an AudioContext (iOS-safe).
+const _hasPan = (function () { var AC = window.AudioContext || window.webkitAudioContext; return !!(AC && AC.prototype && AC.prototype.createStereoPanner); })();
 
 function _t(key, fallback) {
   try { if (typeof window.t === 'function') { var s = window.t(key); if (s && s !== key) return s; } } catch (e) {}
@@ -76,6 +80,10 @@ function setVolume(v) {
   _render();
 }
 
+function _clampBal(v) { v = parseFloat(v); if (isNaN(v)) return 0; return Math.max(-1, Math.min(1, v)); }
+function getBalance() { try { var v = localStorage.getItem(LS_BALANCE); return v == null ? 0 : _clampBal(v); } catch (e) { return 0; } }
+function _applyBalance(x) { if (_panner) { try { _panner.pan.value = x; } catch (e) {} } }
+function setBalance(x) { x = _clampBal(x); try { localStorage.setItem(LS_BALANCE, String(x)); } catch (e) {} _applyBalance(x); }
 function getShuffle() { return _shuffle; }
 function setShuffle(on) {
   _shuffle = !!on;
@@ -137,7 +145,15 @@ function _ensureWebAudio() {
     _srcNode = _ctx.createMediaElementSource(_audio);   // once per element only
     _gain = _ctx.createGain();
     _gain.gain.value = getVolume();
-    _srcNode.connect(_gain); _gain.connect(_ctx.destination);
+    if (_ctx.createStereoPanner) {
+      _panner = _ctx.createStereoPanner();
+      try { _panner.pan.value = getBalance(); } catch (e) {}
+      _srcNode.connect(_gain); _gain.connect(_panner); _panner.connect(_ctx.destination);
+    } else {
+      _srcNode.connect(_gain); _gain.connect(_ctx.destination);
+    }
+    // VU tap: analyser hangs off the gain, NOT routed to destination (read-only).
+    try { _analyser = _ctx.createAnalyser(); _analyser.fftSize = 64; _analyser.smoothingTimeConstant = 0.8; _gain.connect(_analyser); } catch (e) { _analyser = null; }
     try { _audio.volume = 1; } catch (e) {}   // element at unity; the gain attenuates (works on iOS)
     _waReady = true;
     return true;
@@ -381,6 +397,13 @@ function _render() {
       '<input type="range" class="music-vol-range" min="0" max="100" value="' + vol + '" title="' + _esc(_t('musicVolume', 'Volume')) + '" data-i18n-title="musicVolume" aria-label="' + _esc(_t('musicVolume', 'Volume')) + '">' +
       '<span class="music-vol-val">' + vol + '%</span>' +
     '</div>' +
+    // ── balance G/D (si StereoPanner supporté) ──
+    (_hasPan ?
+      '<div class="music-bal">' +
+        '<span class="music-bal-end">L</span>' +
+        '<input type="range" class="music-bal-range" min="-100" max="100" value="' + Math.round(getBalance() * 100) + '" title="' + _esc(_t('musicBalance', 'Balance')) + '" data-i18n-title="musicBalance" aria-label="' + _esc(_t('musicBalance', 'Balance')) + '">' +
+        '<span class="music-bal-end">R</span>' +
+      '</div>' : '') +
     // ── playlist dépliable ──
     '<button type="button" class="music-pl-toggle" data-mact="pl" aria-expanded="false">' +
       '<span class="music-pl-caret">\u25B8</span>' +
@@ -437,7 +460,10 @@ function _wire() {
     seekEl.addEventListener('input',  function () { _seeking = true; doSeek(); });
     seekEl.addEventListener('change', function () { doSeek(); _seeking = false; });
   }
+  var bal = _bodyEl.querySelector('.music-bal-range');
+  if (bal) { bal.addEventListener('input', function () { setBalance((parseInt(bal.value, 10) || 0) / 100); }); }
   _updateMarquee();
+  if (isPlaying()) _startVU();
 }
 
 // Expand/collapse the playlist and flip the caret. Kept off the render path so
@@ -473,6 +499,43 @@ function _updateMarquee() {
   });
 }
 
+// ── VU-mètre : lit l'AnalyserNode et pilote la hauteur des barres. La boucle
+// rAF ne tourne QUE si le graphe existe, qu'on lit, ET que le panneau est
+// visible (onglet + display) — sinon elle s'auto-arrête (économie CPU/thermique iOS).
+function _vuActive() {
+  if (!_analyser || !isPlaying() || !_bodyEl) return false;
+  if (document.hidden) return false;
+  var p = document.getElementById('music-panel');
+  if (!p || getComputedStyle(p).display === 'none') return false;
+  return true;
+}
+function _vuReset() {
+  if (!_bodyEl) return;
+  _bodyEl.querySelectorAll('.music-vu-bar').forEach(function (b) { b.style.height = '3px'; });
+}
+function _drawVU() {
+  if (!_vuActive()) { _vuRAF = 0; _vuReset(); return; }
+  var bins = _analyser.frequencyBinCount;
+  if (!_vuData || _vuData.length !== bins) _vuData = new Uint8Array(bins);
+  _analyser.getByteFrequencyData(_vuData);
+  var bars = _bodyEl.querySelectorAll('.music-vu-bar');
+  var n = bars.length;
+  if (n) {
+    var usable = Math.max(1, Math.floor(bins * 0.7));   // upper spectrum is usually empty
+    var per = Math.max(1, Math.floor(usable / n));
+    for (var i = 0; i < n; i++) {
+      var sum = 0; for (var j = 0; j < per; j++) sum += _vuData[i * per + j] || 0;
+      var v = sum / per / 255;
+      bars[i].style.height = (3 + Math.round(v * 13)) + 'px';
+    }
+  }
+  _vuRAF = requestAnimationFrame(_drawVU);
+}
+function _startVU() { if (!_vuRAF && _vuActive()) _vuRAF = requestAnimationFrame(_drawVU); }
+function _stopVU()  { if (_vuRAF) { cancelAnimationFrame(_vuRAF); _vuRAF = 0; } _vuReset(); }
+// Pause/resume the VU with tab visibility (belt-and-braces; _vuActive re-checks anyway).
+try { document.addEventListener('visibilitychange', function () { if (document.hidden) _stopVU(); else _startVU(); }); } catch (e) {}
+
 // Restore the last-selected track id + repeat mode at load (no playback).
 try { _curId = localStorage.getItem(LS_TRACK) || null; } catch (e) {}
 try { var _rm = localStorage.getItem(LS_REPEAT); if (_rm === 'one' || _rm === 'all' || _rm === 'off') _repeat = _rm; } catch (e) {}
@@ -496,6 +559,8 @@ const Music = {
   setRepeat: setRepeat,
   getShuffle: getShuffle,
   setShuffle: setShuffle,
+  getBalance: getBalance,
+  setBalance: setBalance,
   getDuration: getDuration,
   getCurrentTime: getCurrentTime,
   seek: seek,

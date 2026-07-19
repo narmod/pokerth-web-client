@@ -7648,6 +7648,11 @@ html[data-seat-edit="1"] #g-seats .seat.seat-ghost { outline: none; cursor: defa
 .music-credit { font-size: 0.68rem; color: var(--gold-dim); text-align: center; }
 .music-credit a { color: var(--gold-dim); }
 
+/* Balance G/D (lot 2) */
+.music-bal { display: flex; align-items: center; gap: 8px; }
+.music-bal-end { flex: 0 0 auto; font-size: 0.68rem; color: var(--gold-dim); width: 12px; text-align: center; font-weight: 700; }
+.music-bal-range { flex: 1 1 auto; min-width: 0; accent-color: var(--gold); cursor: pointer; }
+
 /* ── Popover de réglage du son (bouton son du header) ── */
 .sound-pop {
   position: fixed; z-index: 1200;
