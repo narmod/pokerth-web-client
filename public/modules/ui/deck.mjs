@@ -69,10 +69,12 @@ function _deckBack() {
       return '/cards/' + _ov + '/flipside.' + _oe + '?v=' + (window.BUILD_VERSION || '0');
     }
   } catch (e) {}
-  var d = document.documentElement.getAttribute('data-deck') || '';
-  if (!d) return '';
+  // Repli robuste : si data-deck est absent (boot inline échoué), retomber
+  // sur le deck par défaut plutôt que de laisser --card-back vide (ce qui
+  // afficherait le dos SVG vert de secours de :root). (narmod 19/07)
+  var d = document.documentElement.getAttribute('data-deck') || 'pokerth-new';
   try { var _impb = window._deckCardUrl && window._deckCardUrl(d, 'flipside'); if (_impb) return _impb; } catch (e) {}
-  var ext = document.documentElement.getAttribute('data-deck-ext') || 'png';
+  var ext = document.documentElement.getAttribute('data-deck-ext') || (d === 'pokerth-new' ? 'svg' : 'png');
   // Le dos est servi en stale-while-revalidate par le SW (sans cache:'reload'),
   // donc sans suffixe un flipside.svg modifie ne s'affiche qu'au chargement
   // suivant. Le ?v=<build> force une URL neuve a chaque deploiement.

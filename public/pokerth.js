@@ -3511,6 +3511,11 @@ const App = (() => {
     var el = document.getElementById('g-wait-page');
     if (el) { el.style.display = 'none'; el.innerHTML = ''; }
     try { _updateLobbyWaitStatus(); } catch (e) {}
+    // Garantit que le dos de carte (--card-back) est posé quand on entre en
+    // jeu : le boot inline peut échouer sur certaines sessions (nouvel
+    // utilisateur, cache), laissant le dos SVG vert de secours de :root.
+    // _refreshDeck relit data-deck et réapplique le vrai flipside. (narmod 19/07)
+    try { if (typeof window._refreshDeck === 'function') window._refreshDeck(); } catch (e) {}
   }
   window._wpHide = _wpHide;
   window._renderWaitingPanel = renderWaitingPanel;
@@ -8529,7 +8534,7 @@ window.togglePlayersPanel = togglePlayersPanel;
 window.toggleReactionPanel = toggleReactionPanel;
 window.App = App;
 
-window.BUILD_VERSION='0.3.891-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='0.3.892-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
