@@ -48,6 +48,9 @@ ASSUME_YES="${ASSUME_YES:-}"
 STATS_RESET_PERIOD="${STATS_RESET_PERIOD:-}"
 STATS_ADMIN_TOKEN="${STATS_ADMIN_TOKEN:-}"
 ADMIN_ENABLED="${ADMIN_ENABLED:-}"
+PROXY_LOG_LEVEL="${PROXY_LOG_LEVEL:-}"
+PROXY_MAX_CLIENTS="${PROXY_MAX_CLIENTS:-}"
+NOFILE_LIMIT="${NOFILE_LIMIT:-65536}"
 DEFAULT_APP_NAME="pokerth-web"
 CONF="/etc/pokerth-web.conf"
 CREATED_USER=""
@@ -125,6 +128,8 @@ load_state() {
     [ -n "$STATS_RESET_PERIOD" ] || STATS_RESET_PERIOD="$(conf_get STATS_RESET_PERIOD)"
     [ -n "$STATS_ADMIN_TOKEN" ]  || STATS_ADMIN_TOKEN="$(conf_get STATS_ADMIN_TOKEN)"
     [ -n "$ADMIN_ENABLED" ]      || ADMIN_ENABLED="$(conf_get ADMIN_ENABLED)"
+    [ -n "$PROXY_LOG_LEVEL" ]    || PROXY_LOG_LEVEL="$(conf_get PROXY_LOG_LEVEL)"
+    [ -n "$PROXY_MAX_CLIENTS" ]  || PROXY_MAX_CLIENTS="$(conf_get PROXY_MAX_CLIENTS)"
   fi
   APP_NAME="${APP_NAME:-$DEFAULT_APP_NAME}"
 }
@@ -140,6 +145,8 @@ CREATED_USER=$CREATED_USER
 STATS_RESET_PERIOD=$STATS_RESET_PERIOD
 STATS_ADMIN_TOKEN=$STATS_ADMIN_TOKEN
 ADMIN_ENABLED=$ADMIN_ENABLED
+PROXY_LOG_LEVEL=$PROXY_LOG_LEVEL
+PROXY_MAX_CLIENTS=$PROXY_MAX_CLIENTS
 EOF
 }
 
@@ -168,6 +175,8 @@ app_restart() {
   [ -n "$STATS_RESET_PERIOD" ] && envv+=("STATS_RESET_PERIOD=$STATS_RESET_PERIOD")
   [ -n "$STATS_ADMIN_TOKEN" ]  && envv+=("STATS_ADMIN_TOKEN=$STATS_ADMIN_TOKEN")
   [ -n "$ADMIN_ENABLED" ]      && envv+=("ADMIN_ENABLED=$ADMIN_ENABLED")
+  [ -n "$PROXY_LOG_LEVEL" ]    && envv+=("PROXY_LOG_LEVEL=$PROXY_LOG_LEVEL")
+  [ -n "$PROXY_MAX_CLIENTS" ]  && envv+=("PROXY_MAX_CLIENTS=$PROXY_MAX_CLIENTS")
   if run_as pm2 describe "$APP_NAME" >/dev/null 2>&1; then
     run_as env "${envv[@]}" pm2 restart "$APP_NAME" --update-env
   else
@@ -317,6 +326,8 @@ SUMMARY
   [ -n "$STATS_RESET_PERIOD" ] && envv+=("STATS_RESET_PERIOD=$STATS_RESET_PERIOD")
   [ -n "$STATS_ADMIN_TOKEN" ]  && envv+=("STATS_ADMIN_TOKEN=$STATS_ADMIN_TOKEN")
   [ -n "$ADMIN_ENABLED" ]      && envv+=("ADMIN_ENABLED=$ADMIN_ENABLED")
+  [ -n "$PROXY_LOG_LEVEL" ]    && envv+=("PROXY_LOG_LEVEL=$PROXY_LOG_LEVEL")
+  [ -n "$PROXY_MAX_CLIENTS" ]  && envv+=("PROXY_MAX_CLIENTS=$PROXY_MAX_CLIENTS")
   local pm2_args=("proxy.js" --name "$APP_NAME" -- "$PORT")
   [ -n "$NO_TLS" ] && pm2_args+=("--notls")
   ( cd "$INSTALL_DIR" && run_as env "${envv[@]}" pm2 start "${pm2_args[@]}" )
@@ -334,6 +345,14 @@ SUMMARY
     fi
   else
     warn "systemd not detected — skipping boot persistence."
+  fi
+
+  step "Raising the file-descriptor limit (RLIMIT_NOFILE=$NOFILE_LIMIT)"
+  if ensure_nofile_limit "$NOFILE_LIMIT"; then
+    as_root systemctl restart "pm2-$RUN_USER.service" >/dev/null 2>&1 || true
+    ok "File-descriptor limit raised (each player uses ~2 descriptors)."
+  else
+    warn "Could not raise the FD limit automatically — run 'pokerth-web fd-limit' once boot persistence is set."
   fi
 
   if [ -n "$SETUP_FIREWALL" ] && command -v ufw >/dev/null 2>&1; then
@@ -523,6 +542,80 @@ do_set_period() {
   info "Applying and restarting"
   app_restart
   ok "Leaderboard reset period is now '$val'."
+}
+
+# ── SET LOG VERBOSITY ─────────────────────────────────────────────────────────
+# quiet   → connexions/déconnexions/erreurs seulement (le plus léger en charge)
+# normal  → + une ligne par message (défaut)
+# verbose → + dump hexadécimal (debug)
+# NB : un réglage défini dans le panneau admin (proxyCfg.logLevel) est prioritaire.
+do_log_level() {
+  local val="${1:-}"
+  case "$val" in
+    quiet|normal|verbose) ;;
+    *) errln "Usage: pokerth-web log-level <quiet|normal|verbose>"; exit 1 ;;
+  esac
+  load_state
+  [ -n "$RUN_USER" ] || RUN_USER="$(id -un)"
+  [ -n "$INSTALL_DIR" ] || { errln "No install found (missing $CONF). Install first."; exit 1; }
+  step "PokerTH Web Client — log verbosity: $val"
+  PROXY_LOG_LEVEL="$val"
+  write_state
+  info "Applying and restarting"
+  app_restart
+  ok "Log verbosity is now '$val'."
+}
+
+# ── SET MAX CONCURRENT CLIENTS ────────────────────────────────────────────────
+# Plafond de ponts de jeu simultanés (soupape). 0 = illimité.
+# NB : un réglage défini dans le panneau admin (proxyCfg.maxClients) est prioritaire.
+do_max_clients() {
+  local val="${1:-}"
+  case "$val" in
+    ''|*[!0-9]*) errln "Usage: pokerth-web max-clients <N>   (0 = unlimited)"; exit 1 ;;
+  esac
+  load_state
+  [ -n "$RUN_USER" ] || RUN_USER="$(id -un)"
+  [ -n "$INSTALL_DIR" ] || { errln "No install found (missing $CONF). Install first."; exit 1; }
+  step "PokerTH Web Client — max concurrent clients: $val"
+  PROXY_MAX_CLIENTS="$val"
+  write_state
+  info "Applying and restarting"
+  app_restart
+  if [ "$val" -gt 0 ]; then ok "Server will accept at most $val concurrent game bridges."
+  else ok "Concurrent client cap disabled (unlimited)."; fi
+}
+
+# ── FILE-DESCRIPTOR LIMIT (RLIMIT_NOFILE) ─────────────────────────────────────
+# Chaque joueur = 2 sockets ; la limite douce par défaut (souvent 1024) plafonne
+# le proxy vers ~500 joueurs. On la relève via un drop-in systemd sur l'unité PM2
+# (pm2-<user>.service). Idempotent ; no-op si systemd ou l'unité sont absents.
+ensure_nofile_limit() {
+  local limit="${1:-$NOFILE_LIMIT}" user="${RUN_USER:-$(id -un)}"
+  command -v systemctl >/dev/null 2>&1 || { warn "systemd not detected — set RLIMIT_NOFILE for the PM2 process manually."; return 1; }
+  local unit="pm2-$user.service"
+  if [ ! -f "/etc/systemd/system/$unit" ] && ! systemctl cat "$unit" >/dev/null 2>&1; then
+    warn "PM2 systemd unit '$unit' not found — run 'pokerth-web install' (boot persistence) first, then 'pokerth-web fd-limit'."
+    return 1
+  fi
+  local dir="/etc/systemd/system/$unit.d"
+  as_root mkdir -p "$dir"
+  printf '[Service]\nLimitNOFILE=%s\n' "$limit" | as_root tee "$dir/nofile.conf" >/dev/null
+  as_root systemctl daemon-reload
+  ok "LimitNOFILE=$limit written for $unit."
+  return 0
+}
+do_fd_limit() {
+  local val="${1:-$NOFILE_LIMIT}"
+  case "$val" in ''|*[!0-9]*) errln "Usage: pokerth-web fd-limit [N]   (default $NOFILE_LIMIT)"; exit 1 ;; esac
+  load_state
+  [ -n "$RUN_USER" ] || RUN_USER="$(id -un)"
+  step "PokerTH Web Client — raise file-descriptor limit to $val"
+  if ensure_nofile_limit "$val"; then
+    info "Restarting the PM2 service so the new limit takes effect (brief reconnect)"
+    as_root systemctl restart "pm2-$RUN_USER.service" || warn "Could not restart pm2-$RUN_USER.service — restart it manually to apply."
+    ok "Done. The proxy prints its effective limit at startup on the '▶ FD' line."
+  fi
 }
 
 # ── SET ADMIN TOKEN ───────────────────────────────────────────────────────────
@@ -1035,6 +1128,9 @@ Commands:
   status      Show the current status
   reset-stats Reset the shared family leaderboard (stats.json)
   set-period  Set auto-reset period: off | daily | monthly | yearly
+  log-level   Set proxy log verbosity: quiet | normal | verbose
+  max-clients Set the max concurrent game bridges (0 = unlimited)
+  fd-limit    Raise the file-descriptor limit (default 65536; more players)
   set-token   Set (or clear) the admin token for the remote reset endpoint
   token       Manage delegate API keys: token add <name> <scopes> | list | rm <name>
   admin       Show or hide the admin panel: on | off
@@ -1070,6 +1166,9 @@ case "$CMD" in
   status)         do_status ;;
   reset-stats|stats-reset) do_reset_stats ;;
   set-period)     do_set_period "$2" ;;
+  log-level)      do_log_level "$2" ;;
+  max-clients)    do_max_clients "$2" ;;
+  fd-limit)       do_fd_limit "$2" ;;
   set-token)      do_set_token "$2" ;;
   token)          do_token "$2" "$3" "$4" ;;
   db-config|db-setup|set-mysql) do_db_config ;;

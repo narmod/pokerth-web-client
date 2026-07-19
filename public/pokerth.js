@@ -7172,6 +7172,24 @@ function _attachFloatControls(panel, opt){
   if (opt.handle) makeWinDraggable(panel, opt.handle, opt.key);
   if (opt.resizable) makeWinResizable(panel, opt.key, opt.minW, opt.minH, opt.maxW, opt.maxH);
 }
+// Mode « mini » (windowshade) du lecteur de musique. Sur telephone / petite
+// fenetre (hors _winGate) le panneau est normalement fige en bottom-sheet. Quand
+// l'utilisateur le REPLIE, on le detache en fenetre flottante DEPLACABLE (poignee
+// = barre de titre) ; a l'expansion on retablit l'ancrage fixe. Sur desktop /
+// tablette le panneau est deja flottant a l'ouverture -> no-op. Appele par
+// music.mjs (_applyShade) a chaque bascule ET au montage.
+function _musicShadeFloat(shaded){
+  var panel=document.getElementById('music-panel');
+  if(!panel) return;
+  if(_winGate()) return;                 // desktop/tablette : deja gere a l'ouverture
+  if(shaded){
+    if(!panel.classList.contains('floating-win'))
+      _enableFloating(panel, { key:'pth_winpos_music', handle: panel.querySelector('.music-panel-title'), resizable:false, defW:340, zoom:true });
+  } else {
+    _disableFloating(panel);
+  }
+}
+window.pthMusicShadeFloat = _musicShadeFloat;
 function _makeHandsDraggable(card){
   // Carte des combinaisons (memo des mains) : deplacable via son titre. Le
   // listener est pose sur la carte (persistante) car renderHandsHelp reconstruit
@@ -7879,18 +7897,18 @@ function toggleMusicPanel() {
   var open = panel.style.display === 'none' || panel.style.display === '';
   panel.style.display = open ? 'flex' : 'none';
   if (open) {
-    // (Re-)render the player and refresh the auto-updating track list on every
-    // open — tracks added later then appear without a reload.
-    try { if (window.Music && window.Music.mount) window.Music.mount(document.getElementById('music-body')); } catch (e) {}
-    // Reflet de l'etat vibration sur la case Vibration (deplacee ici depuis le
-    // menu crantee). Defaut ON : pth_haptic absent => coche.
     // Draggable + resizable on desktop/tablet; fixed bottom-sheet on phones —
-    // same window system as the chat / log / reaction panels.
+    // same window system as the chat / log / reaction panels. Fait AVANT le mount
+    // pour que le mode « mini = deplacable » (telephone) que _applyShade peut
+    // activer ne soit pas aussitot annule par le _disableFloating ci-dessous.
     if (_winGate()) {
       _attachFloatControls(panel, { key: 'pth_winpos_music', handle: panel.querySelector('.music-panel-title'), resizable: false, defW: 340, zoom: true });
     } else {
       _disableFloating(panel);
     }
+    // (Re-)render the player and refresh the auto-updating track list on every
+    // open — tracks added later then appear without a reload.
+    try { if (window.Music && window.Music.mount) window.Music.mount(document.getElementById('music-body')); } catch (e) {}
   }
   // Reflect open/closed state on the entry buttons (active = gold).
   ['music-btn-connect', 'music-toggle-lobby-mob', 'music-toggle-game-mob', 'music-toggle-connect-mob'].forEach(function (id) {
@@ -8539,7 +8557,7 @@ window.togglePlayersPanel = togglePlayersPanel;
 window.toggleReactionPanel = toggleReactionPanel;
 window.App = App;
 
-window.BUILD_VERSION='0.3.906-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='0.3.907-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

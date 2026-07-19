@@ -670,6 +670,9 @@ function _applyShade() {
     b.setAttribute('aria-label', lbl); b.title = lbl;
   }
   if (_shade) _updateMarquee();
+  // Sur telephone / petite fenetre, le mode reduit devient une fenetre flottante
+  // deplacable ; a l'expansion on retablit l'ancrage fixe (no-op sur desktop).
+  try { if (window.pthMusicShadeFloat) window.pthMusicShadeFloat(_shade); } catch (e) {}
 }
 
 // ── Media Session : contrôles OS (écran verrouillé, notification, touches média) ──

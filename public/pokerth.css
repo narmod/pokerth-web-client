@@ -7674,7 +7674,7 @@ html[data-seat-edit="1"] #g-seats .seat.seat-ghost { outline: none; cursor: defa
 .music-shade-row .music-tbtn-main { width: 40px; height: 40px; }
 .music-shade-row .music-tbtn-main svg { width: 21px; height: 21px; }
 .music-shade-row .music-marquee { flex: 1 1 auto; min-width: 0; }
-.music-shade-btn { background: none; border: none; color: var(--text); cursor: pointer; padding: 0 2px; display: inline-flex; align-items: center; line-height: 1; }
+.music-shade-btn { margin-left: auto; background: none; border: none; color: var(--text); cursor: pointer; padding: 0 2px; display: inline-flex; align-items: center; line-height: 1; }
 .music-shade-btn:hover { color: var(--gold); }
 .music-shade-btn svg { width: 16px; height: 16px; display: block; }
 

@@ -358,6 +358,8 @@
         <div style="margin:5px 0"><div style="margin-bottom:3px">Extra allowed ports <span class="muted">(one per line — 1–65535; 7234 is always allowed)</span></div><textarea id="pxPorts" rows="2" placeholder="7234" autocomplete="off" style="width:100%;box-sizing:border-box;resize:vertical"></textarea></div>
         <div class="defrow" style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin:5px 0"><span>Session grace <span class="muted">(seconds, 10–900)</span></span><input id="pxGrace" type="number" min="10" max="900" placeholder="120" style="width:110px"></div>
         <div class="defrow" style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin:5px 0"><span>Connection gap <span class="muted">(ms, 0–30000)</span></span><input id="pxGap" type="number" min="0" max="30000" placeholder="5000" style="width:110px"></div>
+        <div class="defrow" style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin:5px 0"><span>Log verbosity <span class="muted">(quiet = least CPU under load)</span></span><select id="pxLog" style="width:120px"><option value="">(default)</option><option value="quiet">quiet</option><option value="normal">normal</option><option value="verbose">verbose</option></select></div>
+        <div class="defrow" style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin:5px 0"><span>Max clients <span class="muted">(concurrent bridges, 0 = unlimited)</span></span><input id="pxMax" type="number" min="0" max="100000" placeholder="0" style="width:110px"></div>
         <div style="margin-top:8px"><button id="savePx" class="use">Save</button></div>
         <div id="pxMsg" class="msg"></div>
       </div>
@@ -890,7 +892,7 @@
         if($('srvName') && typeof d.serverName==='string') $('srvName').value=d.serverName;
         if($('srvTagline') && typeof d.serverTagline==='string') $('srvTagline').value=d.serverTagline;
         if($('discordHook') && typeof d.discordChatWebhookUrl==='string') $('discordHook').value=d.discordChatWebhookUrl;
-        if(d.proxyCfg && typeof d.proxyCfg==='object'){ var P=d.proxyCfg; if($('pxHosts'))$('pxHosts').value=(Array.isArray(P.allowedHosts)?P.allowedHosts.join('\n'):''); if($('pxGrace'))$('pxGrace').value=(typeof P.graceSec==='number'?P.graceSec:''); if($('pxGap'))$('pxGap').value=(typeof P.connGapMs==='number'?P.connGapMs:''); if($('pxPorts'))$('pxPorts').value=(Array.isArray(P.allowedPorts)?P.allowedPorts.join('\n'):''); }
+        if(d.proxyCfg && typeof d.proxyCfg==='object'){ var P=d.proxyCfg; if($('pxHosts'))$('pxHosts').value=(Array.isArray(P.allowedHosts)?P.allowedHosts.join('\n'):''); if($('pxGrace'))$('pxGrace').value=(typeof P.graceSec==='number'?P.graceSec:''); if($('pxGap'))$('pxGap').value=(typeof P.connGapMs==='number'?P.connGapMs:''); if($('pxPorts'))$('pxPorts').value=(Array.isArray(P.allowedPorts)?P.allowedPorts.join('\n'):''); if($('pxLog'))$('pxLog').value=(typeof P.logLevel==='string'?P.logLevel:''); if($('pxMax'))$('pxMax').value=(typeof P.maxClients==='number'?P.maxClients:''); }
       }
       var sn=$('schedNow'), sc=$('schedCancel');
       if(sn){ if(d.restartAt){ sn.textContent='Scheduled: '+(d.restartKind==='restart'?'restart only':'update + restart')+' at '+new Date(d.restartAt).toLocaleString(); if(sc) sc.style.display=''; } else { sn.textContent='Nothing scheduled.'; if(sc) sc.style.display='none'; } }
@@ -1054,7 +1056,7 @@
   (function(){ var sp=$('savePx'); if(!sp) return; sp.addEventListener('click', function(){
     var hosts=($('pxHosts')?$('pxHosts').value:'').split(/[\n,]/).map(function(s){return s.trim();}).filter(Boolean);
     var ports=($('pxPorts')?$('pxPorts').value:'').split(/[\n,]/).map(function(s){return s.trim();}).filter(Boolean);
-    var P={ allowedHosts:hosts, allowedPorts:ports, graceSec:($('pxGrace')?$('pxGrace').value.trim():''), connGapMs:($('pxGap')?$('pxGap').value.trim():'') };
+    var P={ allowedHosts:hosts, allowedPorts:ports, graceSec:($('pxGrace')?$('pxGrace').value.trim():''), connGapMs:($('pxGap')?$('pxGap').value.trim():''), logLevel:($('pxLog')?$('pxLog').value:''), maxClients:($('pxMax')?$('pxMax').value.trim():'') };
     var m=$('pxMsg');
     api('/admin/config',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({proxyCfg:P,token:tok()})})
       .then(function(r){return r.json();}).then(function(d){ if(d&&d.ok){ m.textContent='Saved.'; m.className='msg ok'; } else { m.textContent='Failed: '+((d&&d.error)||'error'); m.className='msg err'; } })

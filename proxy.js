@@ -277,6 +277,58 @@ let _adminConfig = {};
 try { _adminConfig = JSON.parse(fs.readFileSync(ADMIN_CONFIG_FILE, 'utf8')) || {}; } catch (e) { _adminConfig = {}; }
 function saveAdminConfig() { try { fs.writeFileSync(ADMIN_CONFIG_FILE, JSON.stringify(_adminConfig)); } catch (e) { console.error('[admin] config write failed:', e.message); } }
 
+// ── Verbosité des logs (quiet | normal | verbose) ──────────────────────────
+// Par défaut le proxy loggue CHAQUE message relayé ([S→C]/[C→S] + dump hex),
+// ce qui sature CPU/IO en forte charge. Ce réglage borne le volume :
+//   quiet   → connexions/déconnexions/erreurs seulement (aucune ligne/message)
+//   normal  → + 1 ligne/message (nom + taille), sans dump hex          [défaut]
+//   verbose → + dump hexadécimal (comportement historique, idéal debug)
+// Priorité : proxyCfg.logLevel (admin, à chaud) > env PROXY_LOG_LEVEL > 'normal'.
+const LOG_LEVELS = { quiet: 0, normal: 1, verbose: 2 };
+const _ENV_LOG_LEVEL = (function () {
+  var v = String(process.env.PROXY_LOG_LEVEL || '').trim().toLowerCase();
+  return (LOG_LEVELS[v] != null) ? v : null;
+})();
+function _logLevelName() {
+  var px = _adminConfig && _adminConfig.proxyCfg;
+  var v = px && px.logLevel;
+  if (typeof v === 'string' && LOG_LEVELS[v.toLowerCase()] != null) return v.toLowerCase();
+  if (_ENV_LOG_LEVEL) return _ENV_LOG_LEVEL;
+  return 'normal';
+}
+function _logLevel() { return LOG_LEVELS[_logLevelName()]; }
+
+// ── Plafond de connexions simultanées (soupape anti-surcharge) ─────────────
+// Refuse proprement (close 4503) tout NOUVEAU pont de jeu au-delà de N ponts
+// actifs. Les rebranchements de session et les canaux notify-only n'y arrivent
+// pas. 0 (ou absent) = illimité.
+// Priorité : proxyCfg.maxClients (admin, à chaud) > env PROXY_MAX_CLIENTS > 0.
+function _maxClients() {
+  var px = _adminConfig && _adminConfig.proxyCfg;
+  var v = px && px.maxClients;
+  var n = parseInt(v, 10);
+  if (Number.isInteger(n) && n >= 0) return n;        // 0 explicite = illimité
+  var e = parseInt(process.env.PROXY_MAX_CLIENTS || '', 10);
+  if (Number.isInteger(e) && e > 0) return e;
+  return 0;
+}
+
+// ── Limite de descripteurs de fichiers (Linux) ─────────────────────────────
+// Chaque joueur = 2 sockets (WebSocket navigateur + amont TCP/TLS). La limite
+// douce RLIMIT_NOFILE plafonne donc le nombre de joueurs simultanés. Lecture
+// best-effort de /proc/self/limits ; renvoie null hors Linux.
+function _fdInfo() {
+  try {
+    var txt = fs.readFileSync('/proc/self/limits', 'utf8');
+    var m = /Max open files\s+(\d+|unlimited)\s+(\d+|unlimited)/.exec(txt);
+    if (!m) return null;
+    var soft = m[1], hard = m[2];
+    var softN = (soft === 'unlimited') ? Infinity : parseInt(soft, 10);
+    var players = Number.isFinite(softN) ? Math.max(0, Math.floor((softN - 64) / 2)) : Infinity;
+    return { soft: soft, hard: hard, softN: Number.isFinite(softN) ? softN : null, approxPlayers: Number.isFinite(players) ? players : null };
+  } catch (e) { return null; }
+}
+
 // ── Relais Discord du chat lobby ─────────────────────────────────────────────
 // Parité avec le serveur officiel (ServerLobbyThread + DiscordWebhookSender,
 // clé DiscordChatWebhookUrl) : les messages de chat LOBBY sont relayés vers un
@@ -1518,7 +1570,7 @@ function handleAdmin(req, res, reqPathOnly, query) {
     let version = '';
     try { version = (JSON.parse(fs.readFileSync(path.join(__dirname, 'package.json'), 'utf8')).version) || ''; } catch (e) {}
     let sockets = null; try { sockets = wss.clients.size; } catch (e) {}
-    return adminJson(res, 200, { ok: true, version: version, node: process.version, uptimeSec: Math.floor(process.uptime()), sockets: sockets, players: Object.keys(statsStore).length, resetPeriod: STATS_RESET_PERIOD, modes: appModes(), defaultTheme: _adminConfig.defaultTheme || '', defaults: _adminConfig.defaults || {}, loginDefaults: _adminConfig.loginDefaults || {}, proxyCfg: _adminConfig.proxyCfg || {}, tableDefaults: _adminConfig.tableDefaults || {}, tableNames: _adminConfig.tableNames || {}, serverName: _adminConfig.serverName || '', serverTagline: _adminConfig.serverTagline || '', restartAt: (_restartAt > Date.now() ? _restartAt : null), restartKind: (_restartAt > Date.now() ? _restartKind : null) });
+    return adminJson(res, 200, { ok: true, version: version, node: process.version, uptimeSec: Math.floor(process.uptime()), sockets: sockets, players: Object.keys(statsStore).length, resetPeriod: STATS_RESET_PERIOD, modes: appModes(), defaultTheme: _adminConfig.defaultTheme || '', defaults: _adminConfig.defaults || {}, loginDefaults: _adminConfig.loginDefaults || {}, proxyCfg: _adminConfig.proxyCfg || {}, logLevel: _logLevelName(), maxClients: _maxClients(), fd: _fdInfo(), tableDefaults: _adminConfig.tableDefaults || {}, tableNames: _adminConfig.tableNames || {}, serverName: _adminConfig.serverName || '', serverTagline: _adminConfig.serverTagline || '', restartAt: (_restartAt > Date.now() ? _restartAt : null), restartKind: (_restartAt > Date.now() ? _restartKind : null) });
   }
   if (reqPathOnly === '/admin/visits/export') {
     if (!adminAuthed(query)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
@@ -1715,6 +1767,10 @@ function handleAdmin(req, res, reqPathOnly, query) {
           if (_gs != null && _gs >= 10 && _gs <= 900) pout.graceSec = _gs;
           var _cg = (pc.connGapMs == null || pc.connGapMs === '') ? null : parseInt(pc.connGapMs, 10);
           if (_cg != null && _cg >= 0 && _cg <= 30000) pout.connGapMs = _cg;
+          var _lv = (pc.logLevel == null ? '' : String(pc.logLevel)).trim().toLowerCase();
+          if (_lv === 'quiet' || _lv === 'normal' || _lv === 'verbose') pout.logLevel = _lv;
+          var _mx = (pc.maxClients == null || pc.maxClients === '') ? null : parseInt(pc.maxClients, 10);
+          if (_mx != null && _mx >= 0 && _mx <= 100000) pout.maxClients = _mx;
           _adminConfig.proxyCfg = pout;
         }
         if (d.tableDefaults && typeof d.tableDefaults === 'object') {
@@ -3002,6 +3058,14 @@ console.log('▶ TLS   : ' + (FORCE_NOTLS ? 'DISABLED (--notls)' : 'ENABLED by d
 console.log('▶ Certs : ' + (INSECURE_TLS ? 'verification DISABLED (--insecure)' : 'verification active'));
 console.log('▶ Allow : ' + ALLOWED_HOSTS.join(', '));
 console.log('▶ Ports : ' + ALLOWED_PORTS.join(', '));
+console.log('▶ Logs  : ' + _logLevelName() + '   ▶ Max clients : ' + (_maxClients() ? _maxClients() : 'illimité'));
+(function () {
+  var fd = _fdInfo();
+  if (!fd) return;
+  console.log('▶ FD    : limite douce ' + fd.soft + (fd.approxPlayers != null ? ' (~' + fd.approxPlayers + ' joueurs simultanés max)' : ' (illimité)'));
+  if (fd.softN != null && fd.softN < 4096)
+    console.warn('[!] Limite de descripteurs basse (' + fd.soft + '). Pour un serveur public, montez-la : pokerth-web fd-limit');
+})();
 console.log('\nTips:');
 console.log('  • LAN server without TLS → uncheck TLS in the browser');
 console.log('  • pokerth.net            → TLS checked, registered login needed');
@@ -3108,9 +3172,12 @@ function _openUpstream(S) {
           S.rxBuf = S.rxBuf.slice(4 + msgLen);
           S.n++;
           const d = describeMsg(payload);
-          console.log('[S→C] #' + S.n + ' ' + d.name + ' (' + msgLen + 'b)' + d.extra);
           if (d.name === 'InitAck' && S.isAuthLogin && S.chatNick) _issueSyncToken(S);
-          if (msgLen <= 64 || d.name.includes('Error') || d.name === '?' || d.name.includes('Flop') || d.name.includes('Turn') || d.name.includes('River') || d.name.includes('Hand'))
+          const _ll = _logLevel();
+          // quiet : rien par message, SAUF les trames d'erreur (toujours utiles).
+          if (_ll >= 1 || d.name.includes('Error'))
+            console.log('[S→C] #' + S.n + ' ' + d.name + ' (' + msgLen + 'b)' + d.extra);
+          if (_ll >= 2 && (msgLen <= 64 || d.name.includes('Error') || d.name === '?' || d.name.includes('Flop') || d.name.includes('Turn') || d.name.includes('River') || d.name.includes('Hand')))
             console.log('      hex: ' + payload.toString('hex'));
           // Navigateur attaché → envoyer ; sinon (session en attente) → tamponner.
           if (S.ws && S.ws.readyState === WebSocket.OPEN) {
@@ -3176,11 +3243,15 @@ function _attachWs(S, ws) {
     if (!S.connected || !S.sock || !S.sock.writable) return;
     const buf = Buffer.from(isBinary ? data : data.toString());
     if (buf.length >= 4) {
-      const _pl = buf.slice(4, 4 + buf.readUInt32BE(0));
-      const d = describeMsg(_pl);
-      console.log('[C→S] ' + d.name + ' (' + buf.readUInt32BE(0) + 'b)');
-      if (buf.readUInt32BE(0) <= 32) console.log('      hex: ' + buf.slice(4).toString('hex'));
-      _discordTapC2S(S, _pl);   // relais Discord du chat lobby (no-op si non configuré)
+      const _n  = buf.readUInt32BE(0);
+      const _pl = buf.slice(4, 4 + _n);
+      _discordTapC2S(S, _pl);   // relais Discord du chat lobby (no-op si non configuré) — JAMAIS gated
+      const _ll = _logLevel();
+      if (_ll >= 1) {
+        const d = describeMsg(_pl);
+        console.log('[C→S] ' + d.name + ' (' + _n + 'b)');
+        if (_ll >= 2 && _n <= 32) console.log('      hex: ' + buf.slice(4).toString('hex'));
+      }
     }
     S.sock.write(buf);
   });
@@ -3260,6 +3331,16 @@ wss.on('connection', (ws, req) => {
       return;
     }
     _sessions.delete(sid); // session morte → on ouvre une connexion neuve
+  }
+
+  // ── Plafond de connexions simultanées (soupape) ──
+  // Compté sur les ponts de jeu actifs (_allClients) ; ni les rebranchements
+  // (traités ci-dessus) ni les canaux notify-only (return plus haut) n'arrivent ici.
+  const _cap = _maxClients();
+  if (_cap > 0 && _allClients.size >= _cap) {
+    console.warn('[!] Plafond de connexions atteint (' + _allClients.size + '/' + _cap + ') — refus de ' + host + ':' + port);
+    try { ws.close(4503, 'Server at capacity'); } catch (_) {}
+    return;
   }
 
   // ── Nouvelle connexion amont ──
