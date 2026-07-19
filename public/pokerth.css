@@ -7859,6 +7859,11 @@ summary.adv-sec .adv-sec-ic{flex:0 0 auto;width:17px;height:17px;display:inline-
 summary.adv-sec .adv-sec-ic svg{width:17px;height:17px;display:block} /* 20->17 px : reste plus grande que le texte de categorie (~12.5 px) sans ecraser la ligne */
 details.adv-fold>summary.adv-sec::before{content:'\25B8';font-size:0.95em;color:var(--gold-dim);transition:transform .15s ease;flex:0 0 auto}
 details.adv-fold[open]>summary.adv-sec::before{transform:rotate(90deg)}
+/* Lisibilité (demande narmod 2026-07-19) : les options d'une section sont
+   INDENTÉES sous leur catégorie (alignées sous l'icône), et une section
+   ouverte est soulignée d'un fin séparateur sous son en-tête. */
+details.adv-fold>*:not(summary){margin-left:28px}
+details.adv-fold[open]>summary.adv-sec{border-bottom:1px solid var(--border);padding-bottom:7px;margin-bottom:6px}
 details.adv-fold:first-child>summary.adv-sec{margin-top:4px}
 .adv-row{display:flex;align-items:center;gap:9px;padding:6px 2px;font-size:0.82rem;color:var(--text);cursor:pointer}
 .adv-row input[type=checkbox]{accent-color:var(--gold);flex-shrink:0;width:16px;height:16px}
