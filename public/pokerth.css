@@ -7542,20 +7542,25 @@ html[data-seat-edit="1"] #g-seats .seat.seat-ghost { outline: none; cursor: defa
 .music-transport { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; }
 .music-tbtn {
   flex: 0 0 auto;
-  width: 38px; height: 38px;
+  width: 40px; height: 40px;
   display: inline-flex; align-items: center; justify-content: center;
-  font-size: 1rem; line-height: 1;
+  line-height: 1;
   background: var(--field-bg); color: var(--text);
-  border: 1px solid var(--border); border-radius: 9px;
+  border: 1px solid var(--border); border-radius: 50%;
   cursor: pointer;
+  transition: border-color 120ms ease, background 120ms ease, transform 90ms ease;
 }
+.music-tbtn:active:not([disabled]) { transform: scale(0.94); }
+.music-tbtn svg { width: 19px; height: 19px; display: block; pointer-events: none; }
 .music-tbtn:hover:not([disabled]) { border-color: var(--gold-dim); color: var(--gold); }
 .music-tbtn[disabled] { opacity: 0.4; cursor: default; }
-.music-tbtn-main { width: 46px; height: 46px; font-size: 1.2rem; color: var(--gold); border-color: var(--gold-dim); }
+.music-tbtn-main { width: 52px; height: 52px; color: var(--gold); border-color: var(--gold-dim); background: rgba(var(--gold-rgb),0.10); }
+.music-tbtn-main svg { width: 25px; height: 25px; }
 .music-tbtn.is-active { color: var(--sel,var(--gold)); border-color: var(--sel,var(--gold)); background: rgba(var(--sel-rgb,var(--gold-rgb)),0.16); }
 .music-div { width: 1px; align-self: stretch; background: var(--border); margin: 4px 2px; }
 .music-vol { display: flex; align-items: center; gap: 8px; }
-.music-vol-ic { flex: 0 0 auto; font-size: 0.95rem; }
+.music-vol-ic { flex: 0 0 auto; color: var(--gold-dim); display: inline-flex; }
+.music-vol-ic svg { width: 18px; height: 18px; display: block; }
 .music-vol-range { flex: 1 1 auto; min-width: 0; accent-color: var(--gold); }
 .music-vol-val { flex: 0 0 auto; font-size: 0.72rem; color: var(--gold-dim); min-width: 34px; text-align: right; }
 .music-seek-row { display: flex; align-items: center; gap: 8px; }

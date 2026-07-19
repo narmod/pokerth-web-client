@@ -57,7 +57,7 @@ let _lcdRemain = false; // LCD time display: false = elapsed, true = remaining (
 // from inside a real interaction. If Web Audio is unavailable we fall back to the
 // element's own volume (the pre-existing behaviour, fine off iOS).
 let _ctx = null, _srcNode = null, _gain = null, _waReady = false, _waFailed = false;
-let _panner = null, _analyser = null, _vuData = null, _vuRAF = 0;
+let _panner = null, _analyser = null, _vuData = null, _vuRAF = 0, _vuDead = false, _vuZeroFrames = 0;
 // StereoPannerNode support, probed WITHOUT creating an AudioContext (iOS-safe).
 const _hasPan = (function () { var AC = window.AudioContext || window.webkitAudioContext; return !!(AC && AC.prototype && AC.prototype.createStereoPanner); })();
 
@@ -334,6 +334,20 @@ async function refresh() {
   _render();
 }
 
+function _icon(name) {
+  var P = {
+    prev:  '<path d="M6 6v12h2V6z"/><path d="M20 6l-9 6 9 6z"/>',
+    next:  '<path d="M16 6v12h2V6z"/><path d="M4 6l9 6-9 6z"/>',
+    play:  '<path d="M8 5v14l11-7z"/>',
+    pause: '<path d="M6 5h4v14H6z"/><path d="M14 5h4v14h-4z"/>',
+    stop:  '<rect x="6" y="6" width="12" height="12" rx="1.6"/>',
+    shuffle: '<g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h4l8 10h3"/><path d="M16 4l3 3-3 3"/><path d="M4 17h4l2.6-3.25"/><path d="M13.4 9.25L16 7h3"/><path d="M16 20l3-3-3-3"/></g>',
+    'rep-all': '<g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3l3 3-3 3"/><path d="M20 6H8a4 4 0 0 0-4 4v1"/><path d="M7 21l-3-3 3-3"/><path d="M4 18h12a4 4 0 0 0 4-4v-1"/></g>',
+    'rep-one': '<g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3l3 3-3 3"/><path d="M20 6H8a4 4 0 0 0-4 4v1"/><path d="M7 21l-3-3 3-3"/><path d="M4 18h12a4 4 0 0 0 4-4v-1"/></g><path d="M11.4 10.6l1.4-.9V15" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>',
+    volume: '<path d="M4 9v6h4l5 4V5L8 9z"/><path d="M16.5 8.8a4.5 4.5 0 0 1 0 6.4" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>'
+  };
+  return '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false">' + (P[name] || '') + '</svg>';
+}
 function _render() {
   if (!_bodyEl) return;
   if (!_tracks.length) {
@@ -347,7 +361,7 @@ function _render() {
   var _pos = _canSeek ? Math.round(_cur / _dur * 1000) : 0;
   var multi = _tracks.length > 1;
   var ppKey = playing ? 'musicPause' : 'musicPlay';
-  var ppIcon = playing ? '\u23F8' : '\u25B6';
+  var ppIcon = _icon(playing ? 'pause' : 'play');
 
   var nowTxt = cur ? (_esc(cur.title || cur.id) + (cur.artist ? ' \u2014 ' + _esc(cur.artist) : '')) : '';
 
@@ -375,7 +389,7 @@ function _render() {
     '<div class="music-lcd">' +
       '<div class="music-lcd-top">' +
         '<span class="music-time music-cur" data-mact="lcd" role="button" tabindex="0" title="' + _esc(_t('musicNowPlaying', 'Now playing')) + '">' + _curLabel(_cur, _dur, _canSeek) + '</span>' +
-        '<span class="music-vu" aria-hidden="true">' + vuBars + '</span>' +
+        (_vuDead ? '' : '<span class="music-vu" aria-hidden="true">' + vuBars + '</span>') +
       '</div>' +
       '<div class="music-marquee"><span class="music-marquee-txt">' + (nowTxt || _esc(_t('musicNoTracks', 'No tracks available'))) + '</span></div>' +
     '</div>' +
@@ -386,18 +400,18 @@ function _render() {
     '</div>' +
     // ── transport ──
     '<div class="music-transport">' +
-      '<button type="button" class="music-tbtn" data-mact="prev"' + (multi ? '' : ' disabled') + ' title="' + _esc(_t('musicPrev', 'Previous')) + '" data-i18n-title="musicPrev">\u23EE</button>' +
+      '<button type="button" class="music-tbtn" data-mact="prev"' + (multi ? '' : ' disabled') + ' title="' + _esc(_t('musicPrev', 'Previous')) + '" data-i18n-title="musicPrev">' + _icon('prev') + '</button>' +
       '<button type="button" class="music-tbtn music-tbtn-main" data-mact="toggle" title="' + _esc(_t(ppKey, playing ? 'Pause' : 'Play')) + '" data-i18n-title="' + ppKey + '">' + ppIcon + '</button>' +
-      '<button type="button" class="music-tbtn" data-mact="next"' + (multi ? '' : ' disabled') + ' title="' + _esc(_t('musicNext', 'Next')) + '" data-i18n-title="musicNext">\u23ED</button>' +
-      '<button type="button" class="music-tbtn" data-mact="stop" title="' + _esc(_t('musicStop', 'Stop')) + '" data-i18n-title="musicStop">\u23F9</button>' +
+      '<button type="button" class="music-tbtn" data-mact="next"' + (multi ? '' : ' disabled') + ' title="' + _esc(_t('musicNext', 'Next')) + '" data-i18n-title="musicNext">' + _icon('next') + '</button>' +
+      '<button type="button" class="music-tbtn" data-mact="stop" title="' + _esc(_t('musicStop', 'Stop')) + '" data-i18n-title="musicStop">' + _icon('stop') + '</button>' +
       '<span class="music-div"></span>' +
-      '<button type="button" class="music-tbtn music-rpt' + (_shuffle ? ' is-active' : '') + '" data-mact="shuffle" aria-pressed="' + _shuffle + '" title="' + _esc(_t('musicShuffle', 'Shuffle')) + '" data-i18n-title="musicShuffle">\uD83D\uDD00</button>' +
-      '<button type="button" class="music-tbtn music-rpt' + (_repeat === 'one' ? ' is-active' : '') + '" data-mact="rep-one" aria-pressed="' + (_repeat === 'one') + '" title="' + _esc(_t('musicRepeatOne', 'Repeat one')) + '" data-i18n-title="musicRepeatOne">\uD83D\uDD02</button>' +
-      '<button type="button" class="music-tbtn music-rpt' + (_repeat === 'all' ? ' is-active' : '') + '" data-mact="rep-all" aria-pressed="' + (_repeat === 'all') + '" title="' + _esc(_t('musicRepeatAll', 'Repeat playlist')) + '" data-i18n-title="musicRepeatAll">\uD83D\uDD01</button>' +
+      '<button type="button" class="music-tbtn music-rpt' + (_shuffle ? ' is-active' : '') + '" data-mact="shuffle" aria-pressed="' + _shuffle + '" title="' + _esc(_t('musicShuffle', 'Shuffle')) + '" data-i18n-title="musicShuffle">' + _icon('shuffle') + '</button>' +
+      '<button type="button" class="music-tbtn music-rpt' + (_repeat === 'one' ? ' is-active' : '') + '" data-mact="rep-one" aria-pressed="' + (_repeat === 'one') + '" title="' + _esc(_t('musicRepeatOne', 'Repeat one')) + '" data-i18n-title="musicRepeatOne">' + _icon('rep-one') + '</button>' +
+      '<button type="button" class="music-tbtn music-rpt' + (_repeat === 'all' ? ' is-active' : '') + '" data-mact="rep-all" aria-pressed="' + (_repeat === 'all') + '" title="' + _esc(_t('musicRepeatAll', 'Repeat playlist')) + '" data-i18n-title="musicRepeatAll">' + _icon('rep-all') + '</button>' +
     '</div>' +
     // ── volume ──
     '<div class="music-vol">' +
-      '<span class="music-vol-ic">\uD83D\uDD0A</span>' +
+      '<span class="music-vol-ic">' + _icon('volume') + '</span>' +
       '<input type="range" class="music-vol-range" min="0" max="100" value="' + vol + '" title="' + _esc(_t('musicVolume', 'Volume')) + '" data-i18n-title="musicVolume" aria-label="' + _esc(_t('musicVolume', 'Volume')) + '">' +
       '<span class="music-vol-val">' + vol + '%</span>' +
     '</div>' +
@@ -507,6 +521,7 @@ function _updateMarquee() {
 // rAF ne tourne QUE si le graphe existe, qu'on lit, ET que le panneau est
 // visible (onglet + display) — sinon elle s'auto-arrête (économie CPU/thermique iOS).
 function _vuActive() {
+  if (_vuDead) return false;
   if (!_analyser || !isPlaying() || !_bodyEl) return false;
   if (document.hidden) return false;
   var p = document.getElementById('music-panel');
@@ -522,6 +537,12 @@ function _drawVU() {
   var bins = _analyser.frequencyBinCount;
   if (!_vuData || _vuData.length !== bins) _vuData = new Uint8Array(bins);
   _analyser.getByteFrequencyData(_vuData);
+  // iOS/Safari feeds an all-zero array for <audio> sources (long-standing WebKit
+  // bug). If the analyser stays silent during real playback, hide the VU rather
+  // than animate dead bars.
+  var total = 0; for (var k = 0; k < bins; k++) total += _vuData[k];
+  if (total === 0) { if (getCurrentTime() > 0.4 && ++_vuZeroFrames > 120) { _vuKill(); return; } }
+  else { _vuZeroFrames = 0; }
   var bars = _bodyEl.querySelectorAll('.music-vu-bar');
   var n = bars.length;
   if (n) {
@@ -534,6 +555,11 @@ function _drawVU() {
     }
   }
   _vuRAF = requestAnimationFrame(_drawVU);
+}
+function _vuKill() {
+  _vuDead = true;
+  if (_vuRAF) { cancelAnimationFrame(_vuRAF); _vuRAF = 0; }
+  if (_bodyEl) { var el = _bodyEl.querySelector('.music-vu'); if (el) el.style.display = 'none'; }
 }
 function _startVU() { if (!_vuRAF && _vuActive()) _vuRAF = requestAnimationFrame(_drawVU); }
 function _stopVU()  { if (_vuRAF) { cancelAnimationFrame(_vuRAF); _vuRAF = 0; } _vuReset(); }
