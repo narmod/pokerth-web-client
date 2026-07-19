@@ -2584,42 +2584,31 @@ const App = (() => {
   let rxBuf     = new Uint8Array(0);
   let myId      = 0;
   // ── Game state ──
-  let gId       = 0;   // current gameId
   let lastMajor = 5, lastMinor = 1, lastLoginType = 0; // for name-retry
-  let smallBlind = 10;  // small blind value
-  let handNum   = 0;   // hand counter
 
   // ── Blind-raise schedule (forum: "better notification of blind increases") ──
   // Captured from NetGameInfo at JoinGameAck. _raiseMode: 1=every N hands,
   // 2=every N minutes. _raiseEvery: N (hands or minutes per mode).
   // _lastBlindsUpHand dedupes the "blinds up" toast per hand.
-  let _raiseMode = 1;
-  let _raiseEvery = 0;
-  let _lastBlindsUpHand = 0;
   // endRaiseMode: 1=doubler, 2=ajouter _endRaiseValue, 3=garder la dernière.
   // Sert à prédire la PROCHAINE valeur de blind affichée dans l'explication.
-  let _endRaiseMode = 1;
-  let _endRaiseValue = 0;
-  let _manualBlinds = [];   // liste manuelle (NetGameInfo champ 14) de la partie en cours
   // ── Minuteur de montée des blinds (mode « toutes les N minutes ») ──
   // _blindsClockStart : timestamp (ms) du début du niveau de blinds courant.
   // Ancré au 1er HandStart, ré-ancré à chaque montée de SB. Meilleure
   // estimation côté client : le serveur vérifie l'intervalle au début de
   // chaque main, donc le compte peut rester à 0:00 jusqu'à la main suivante.
-  let _blindsClockStart = 0;
-  let _blindsCdTimer = null;
   function _stopBlindsCountdown() {
-    if (_blindsCdTimer) { clearInterval(_blindsCdTimer); _blindsCdTimer = null; }
+    if (S._blindsCdTimer) { clearInterval(S._blindsCdTimer); S._blindsCdTimer = null; }
   }
   function _fmtBlindsCountdown() {
-    var ms = _blindsClockStart + _raiseEvery * 60000 - Date.now();
+    var ms = S._blindsClockStart + S._raiseEvery * 60000 - Date.now();
     var sec = Math.max(0, Math.round(ms / 1000));
     var m = Math.floor(sec / 60), r = sec % 60;
     return m + ':' + (r < 10 ? '0' : '') + r;
   }
   function _startBlindsCountdown() {
     _stopBlindsCountdown();
-    _blindsCdTimer = setInterval(function () {
+    S._blindsCdTimer = setInterval(function () {
       var el = document.getElementById('blinds-cd');
       if (!el) { _stopBlindsCountdown(); return; }   // pastille retirée → stop
       el.textContent = _fmtBlindsCountdown();
@@ -2631,8 +2620,7 @@ const App = (() => {
   // overflow menu and persisted. fmtChips() is the single formatter used
   // everywhere a live game amount is shown (pot, stacks, bets, action
   // buttons) so the whole table switches consistently.
-  let _displayBB = false;
-  try { _displayBB = (localStorage.getItem('pth_display_bb') === '1'); } catch (e) {}
+  try { S._displayBB = (localStorage.getItem('pth_display_bb') === '1'); } catch (e) {}
   // Format a raw chip amount as either "$1234" or "61,7 BB" depending on
   // the current mode. The big blind is smallBlind*2; if it's not known yet
   // (0, before the first hand) we fall back to the raw value to avoid a
@@ -2650,8 +2638,8 @@ const App = (() => {
   }
   function fmtChips(amount) {
     var v = (typeof amount === 'number') ? amount : parseInt(amount, 10) || 0;
-    if (!_displayBB) return '$' + _groupThousands(v);
-    var bb = (smallBlind || 0) * 2;
+    if (!S._displayBB) return '$' + _groupThousands(v);
+    var bb = (S.smallBlind || 0) * 2;
     if (!bb) return '$' + _groupThousands(v);
     var n = v / bb;
     // Round to 1 decimal, drop a trailing .0
@@ -2667,8 +2655,8 @@ const App = (() => {
   // engines read "12 345" as two numbers. No $ glyph (its reading varies).
   function fmtChipsVoice(amount) {
     var v = (typeof amount === 'number') ? amount : parseInt(amount, 10) || 0;
-    var bb = (smallBlind || 0) * 2;
-    if (_displayBB && bb) {
+    var bb = (S.smallBlind || 0) * 2;
+    if (S._displayBB && bb) {
       var n = v / bb;
       var r = Math.round(n * 10) / 10;
       var s = (Math.abs(r % 1) < 1e-9) ? String(Math.round(r)) : r.toFixed(1);
@@ -2830,7 +2818,7 @@ const App = (() => {
   // admin button is hidden (we're not the admin) the function does
   // nothing — extra cheap-guard before counting.
   function refreshStartNoBotsVisibility() {
-    if (!amGameAdmin || _gameStarted) {
+    if (!S.amGameAdmin || _gameStarted) {
       // Hide explicitly once the game has started — the renderer's
       // early-return otherwise leaves the button stuck on screen.
       var b1 = document.getElementById('admin-startnobots-btn');
@@ -2979,7 +2967,7 @@ const App = (() => {
         // opponent, when we're seated and not the host (the host has the
         // direct kick). The server still arbitrates via AskKickDenied.
         try {
-          if (!window._offlineMode && gId && targetPid !== myId && !amGameAdmin &&
+          if (!window._offlineMode && S.gId && targetPid !== myId && !S.amGameAdmin &&
               !_amSpectator && seatData[targetPid] && !seatData[targetPid].gone) {
             var _vkBtn = document.createElement('button');
             _vkBtn.className = 'pim-votekick-btn';
@@ -3277,14 +3265,14 @@ const App = (() => {
   // ──────────────────────────────────────────────────────────────
   function _updateGameHeader() {
     var nameEl = document.getElementById('g-name');
-    if (nameEl && _gameMeta) {
-      nameEl.textContent = _gameMeta.name || ('#' + (_gameMeta.id || gId));
+    if (nameEl && S._gameMeta) {
+      nameEl.textContent = S._gameMeta.name || ('#' + (S._gameMeta.id || S.gId));
     }
     var adm = document.getElementById('g-admin-badge');
-    if (adm) adm.style.display = amGameAdmin ? '' : 'none';
+    if (adm) adm.style.display = S.amGameAdmin ? '' : 'none';
     var pub = document.getElementById('g-public-badge');
     if (pub) {
-      var priv = !!(_gameMeta && _gameMeta.priv);
+      var priv = !!(S._gameMeta && S._gameMeta.priv);
       pub.style.display = '';
       pub.classList.toggle('g-status-private', priv);
       pub.classList.toggle('g-status-public', !priv);
@@ -3317,16 +3305,16 @@ const App = (() => {
     if (!titleEl || !bodyEl) return;
 
     var fr   = (_lang === 'fr');
-    var meta = _gameMeta || {
-      id: gId, name: '—', type: 1, maxPlayers: 0,
-      priv: false, timeout: gameTimeout, startMoney: gameStartMoney,
+    var meta = S._gameMeta || {
+      id: S.gId, name: '—', type: 1, maxPlayers: 0,
+      priv: false, timeout: S.gameTimeout, startMoney: S.gameStartMoney,
     };
 
     titleEl.textContent = meta.name + ' · #' + meta.id;
 
     // Subtitle: row of badges (admin / private). Hidden if both false.
     var badges = [];
-    if (amGameAdmin) {
+    if (S.amGameAdmin) {
       badges.push('<span class="gim-badge">👑 ' + (fr ? 'Admin' : 'Admin') + '</span>');
     }
     if (meta.priv) {
@@ -3374,11 +3362,11 @@ const App = (() => {
       title: t('piConfiguration'),
       rows: [
         [t('blinds'),
-            '$' + (smallBlind || 0) + ' / $' + ((smallBlind || 0) * 2)],
+            '$' + (S.smallBlind || 0) + ' / $' + ((S.smallBlind || 0) * 2)],
         [t('piStartingStack'),
             '$' + _groupThousands(meta.startMoney || 0)],
         [t('piActionTimer'),
-            (meta.timeout || gameTimeout || 15) + ' s'],
+            (meta.timeout || S.gameTimeout || 15) + ' s'],
       ],
     });
 
@@ -3392,7 +3380,7 @@ const App = (() => {
         [t('plRemaining'),
             _gameStarted ? String(_remainCount()) : t('piNotStarted')],
         [t('piHandNo'),
-            (handNum > 0) ? ('H#' + handNum) : t('piNotStarted')],
+            (S.handNum > 0) ? ('H#' + S.handNum) : t('piNotStarted')],
         [t('piPot'),
             '$' + _groupThousands(pot)],
         [t('piPhase'),
@@ -3460,7 +3448,7 @@ const App = (() => {
     // A full-width button at the bottom of the modal that copies a
     // deep link to this table (server + port + tls + table id). See
     // App.copyTableLink(). Only shown while actually in a game.
-    if (gId) {
+    if (S.gId) {
       html += '<div class="gim-section gim-share-section">' +
                 '<button id="gim-copy-link-btn" class="gim-copy-link-btn" type="button" ' +
                   'onclick="App.copyTableLink()">' +
@@ -3502,8 +3490,8 @@ const App = (() => {
   //    connu sont omis (le serveur ignore de toute façon les nicks inconnus).
   //    null hors partie ou en mode entraînement (bots sans classement). ──
   window.getTableRankingCtx = function () {
-    if (window._offlineMode || !gId) return null;
-    var g = S.games[gId] || {};
+    if (window._offlineMode || !S.gId) return null;
+    var g = S.games[S.gId] || {};
     var order = (seats && seats.length) ? seats : (g.seats || []);
     var nicks = [];
     for (var i = 0; i < order.length && nicks.length < 10; i++) {
@@ -3530,13 +3518,11 @@ const App = (() => {
   let turnPid   = 0;
   let _lastSbPid = 0;   // SB/BB du dernier rendu, lus par le popup d'info joueur
   let _lastBbPid = 0;
-  let gameTimeout = 15;   // timeout par joueur (depuis les settings de la partie)
   // Starting stack for this table. Pulled from NetGameInfo.startMoney
   // (field 13, written by buildCreateGame) or set directly by the table
   // creator. Used as the default money value when GameStartInitial
   // initializes seatData — without this the stacks all start at 0 and the
   // Call button mis-fires as "Call 0 (All-In)" before any action lands.
-  let gameStartMoney = 3000;
 
   // ── Statistiques de session ──
 
@@ -3673,7 +3659,6 @@ const App = (() => {
   // Max game-name length accepted, aligned with the official PokerTH client
   // (createInternetGameDialog uses maxLength=48). The web client refuses to
   // create a table when the typed name exceeds it, with a translated message.
-  const MAX_GAME_NAME = 48;
   function _safeGameName(raw) {
     var s = (raw || '').trim();
     var leadOk = function(str) {
@@ -3704,14 +3689,12 @@ const App = (() => {
   // Table-list filter (design A chips): 'all' | 'open' | 'nopass' | 'live'.
   // Persisted so the choice survives reloads, like other lobby prefs.
   let autoAction = false;
-  let amGameAdmin = false;  // true if we created this game
 
   // Snapshot of the current table's settings, captured at JoinGameAck.
   // games[gId] is deleted from the lobby dict when the table closes
   // (GameListUpdate with mode === 3), so we keep our own copy. Used
   // by openGameInfoPopup() to populate the table-info modal even
   // after the table no longer appears in the lobby list.
-  let _gameMeta = null;
   let _gameStarted = false; // flips true on GameStartInitial; freezes waiting-panel updates
   let _seatsFrozen = false; // one-way latch: true once the original seating order is set, never unset until leave/closeTable
   let _amSpectator = false; // true when we joined via 'Regarder' / spectateGame() — disables actions, shows banner
@@ -3750,8 +3733,8 @@ const App = (() => {
 
   // ── Toggle chip display between absolute value ($) and big blinds (BB) ──
   function toggleDisplayBB() {
-    _displayBB = !_displayBB;
-    try { localStorage.setItem('pth_display_bb', _displayBB ? '1' : '0'); } catch (e) {}
+    S._displayBB = !S._displayBB;
+    try { localStorage.setItem('pth_display_bb', S._displayBB ? '1' : '0'); } catch (e) {}
     // Repaint everything that shows a live amount.
     try { if (typeof renderSeats === 'function' && seats.length) renderSeats(); } catch (e) {}
     // Re-render the action buttons only if they're currently showing (i.e.
@@ -3762,8 +3745,8 @@ const App = (() => {
           document.getElementById('raise-amt')) renderMyTurnActions();
     } catch (e) {}
     try { repaintPot(); } catch (e) {}
-    if (typeof showKeyHint === 'function') showKeyHint(_displayBB ? t('displayBB') : t('displayChips'));
-    return _displayBB;
+    if (typeof showKeyHint === 'function') showKeyHint(S._displayBB ? t('displayBB') : t('displayChips'));
+    return S._displayBB;
   }
   // Re-render the pot label from the last known pot value, in the current
   // mode. We keep the last numeric pot in _lastPotValue (set by setPot) so a
@@ -4017,7 +4000,7 @@ const App = (() => {
   // existant seulement si l'etat courant differe de la valeur voulue, ce qui
   // reutilise toute la logique d'application + retour visuel des toggles.
   window.setVoice = function (on) { if (!!on !== S._voiceEnabled) toggleVoice(); };
-  window.setDisplayBB = function (on) { if (!!on !== _displayBB) toggleDisplayBB(); };
+  window.setDisplayBB = function (on) { if (!!on !== S._displayBB) toggleDisplayBB(); };
   window.setHaptic = function (on) { if (!!on !== S._hapticEnabled) toggleHaptic(); };
   let _lastConnectParams = null;
   // Track mode + name of last Init sent so we can detect 'rapid mode swap'
@@ -4128,7 +4111,7 @@ const App = (() => {
   function _armRejoin() {
     if (_intentionalDisconnect) return;
     var sgEl = document.getElementById('s-game');
-    if (gId && sgEl && sgEl.classList.contains('active')) _pendingRejoin = gId;
+    if (S.gId && sgEl && sgEl.classList.contains('active')) _pendingRejoin = S.gId;
   }
 
   function _maybeReconnectOnResume() {
@@ -4224,7 +4207,7 @@ const App = (() => {
     var sg = document.getElementById('s-game');
     if (!(sg && sg.classList.contains('active'))) return;                   // seulement à une table
     if (!ws || ws.readyState !== WebSocket.OPEN) return;                    // sinon déjà géré
-    var _tt  = (typeof gameTimeout === 'number' && gameTimeout > 0) ? gameTimeout : 15;
+    var _tt  = (typeof S.gameTimeout === 'number' && S.gameTimeout > 0) ? S.gameTimeout : 15;
     var _thr = Math.max(_RX_WATCHDOG_MIN_MS, (_tt + 20) * 1000);            // > timeout d'action de la table
     if (Date.now() - _lastRxTime > _thr) _forceReconnect();
   }, 5000);
@@ -4248,10 +4231,10 @@ const App = (() => {
       d.ws      = ws ? (['CONNECTING','OPEN','CLOSING','CLOSED'][ws.readyState] || ws.readyState) : null;
       d.nick    = myName || null;
       d.playerId = myId || 0;
-      d.gameId  = gId || 0;
-      d.hand    = handNum;
+      d.gameId  = S.gId || 0;
+      d.hand    = S.handNum;
       d.phase   = gameState;
-      d.sb      = smallBlind;
+      d.sb      = S.smallBlind;
       d.seats   = seats.length;
       d.myCards = [myCards[0] != null, myCards[1] != null];
       d.cardKey = !!_cardKey;
@@ -4424,7 +4407,7 @@ const App = (() => {
     }
     if (cmd === '/table') {
       try {
-        if (!gId) { echo('table', 'not at a table'); return true; }
+        if (!S.gId) { echo('table', 'not at a table'); return true; }
         var pl = [];
         for (var si = 0; si < seats.length; si++) {
           var pid2 = seats[si], sd2 = seatData[pid2] || {};
@@ -4432,10 +4415,10 @@ const App = (() => {
                   (sd2.folded ? ' folded' : '') + (sd2.gone ? ' out' : ''));
         }
         echo('table', JSON.stringify({
-          gameId: gId, hand: handNum,
+          gameId: S.gId, hand: S.handNum,
           phase: ['preflop','flop','turn','river'][gameState] || gameState,
-          blinds: smallBlind + '/' + (smallBlind * 2),
-          pot: pot, timeout: gameTimeout + 's', startCash: gameStartMoney,
+          blinds: S.smallBlind + '/' + (S.smallBlind * 2),
+          pot: pot, timeout: S.gameTimeout + 's', startCash: S.gameStartMoney,
           players: pl
         }));
       } catch (e) { echo('table', 'error: ' + e); }
@@ -4568,14 +4551,14 @@ const App = (() => {
   function _flushReactEmoji() {
     S._reactEmojiTimer = null;
     if (!S._reactEmojiQueue.length) return;
-    if (!ws || !gId || ws.readyState !== WebSocket.OPEN) { S._reactEmojiQueue.length = 0; return; }
+    if (!ws || !S.gId || ws.readyState !== WebSocket.OPEN) { S._reactEmojiQueue.length = 0; return; }
     const now = Date.now();
     const wait = S.REACT_EMOJI_MIN_GAP - (now - S._reactEmojiLastSent);
     if (wait > 0) { S._reactEmojiTimer = setTimeout(_flushReactEmoji, wait); return; }
     const emoji = S._reactEmojiQueue.shift();
     S._reactEmojiLastSent = now;
     S._lastMsgWasReaction = true;
-    try { send(MSG.buildGameChat(gId, '/emoji ' + emoji)); } catch (e) {}
+    try { send(MSG.buildGameChat(S.gId, '/emoji ' + emoji)); } catch (e) {}
     if (S._reactEmojiQueue.length) S._reactEmojiTimer = setTimeout(_flushReactEmoji, S.REACT_EMOJI_MIN_GAP);
   }
 
@@ -4684,7 +4667,7 @@ const App = (() => {
   }
   function _petStart(o) {
     if (window._offlineMode) return;
-    if (gId && o.gameId && o.gameId !== gId) return;
+    if (S.gId && o.gameId && o.gameId !== S.gId) return;
     _petClear();
     var amTarget = (o.target === myId);
     S._pet = { petitionId: o.petitionId, target: o.target,
@@ -4723,7 +4706,7 @@ const App = (() => {
   }
   function _petTick() {
     if (!S._pet) return;
-    if (!gId) { _petClear(); return; } // left the table → dismiss
+    if (!S.gId) { _petClear(); return; } // left the table → dismiss
     var el = document.getElementById('kp-time');
     var left = Math.max(0, Math.round((S._pet.endsAt - Date.now()) / 1000));
     if (el) el.textContent = t('petitionTimeLeft', { s: left });
@@ -4741,7 +4724,7 @@ const App = (() => {
   }
   function _petVote(yes) {
     if (!S._pet || S._pet.voted) return;
-    try { send(MSG.buildVoteKick(gId, S._pet.petitionId, yes)); } catch(e) {}
+    try { send(MSG.buildVoteKick(S.gId, S._pet.petitionId, yes)); } catch(e) {}
     S._pet.voted = true;
     var y = document.getElementById('kp-yes'), n = document.getElementById('kp-no');
     if (y) y.disabled = true;
@@ -4774,8 +4757,8 @@ const App = (() => {
   }
   // Open a petition against an opponent (from the profile popup).
   function _petAsk(pid) {
-    if (window._offlineMode || !gId || pid === myId) return;
-    try { send(MSG.buildAskKickPlayer(gId, pid)); } catch(e) {}
+    if (window._offlineMode || !S.gId || pid === myId) return;
+    try { send(MSG.buildAskKickPlayer(S.gId, pid)); } catch(e) {}
     if (typeof closePlayerInfoPopup === 'function') closePlayerInfoPopup();
     if (typeof showToast === 'function') showToast(t('petitionStarted', { name: _petName(pid) }));
   }
@@ -5257,7 +5240,7 @@ const App = (() => {
         // If the waiting panel is visible, update it so the new pseudo
         // appears in place of the temporary '#<pid>' placeholder. On teste gId
         // (posé au JoinGameAck) et non amInGame (true seulement au démarrage).
-        if (!_gameStarted && gId) renderWaitingPanel();
+        if (!_gameStarted && S.gId) renderWaitingPanel();
         // Same idea for the lobby players panel.
         var _pp2 = document.getElementById('players-panel');
         if (_pp2 && _pp2.style.display !== 'none' && typeof renderPlayersList === 'function') renderPlayersList();
@@ -5618,7 +5601,7 @@ const App = (() => {
       }
 
       case T.JoinGameAck: {
-        gId = Proto.u32(sub, 1);
+        S.gId = Proto.u32(sub, 1);
         // Back at the table — clear the transient pending-rejoin flag and the
         // banner, mais ÉCRIRE un marqueur durable « je suis dans la partie gId »
         // (pth_resume) : il permet de réintégrer la table après une coupure
@@ -5630,7 +5613,7 @@ const App = (() => {
         // un rejoin vers son ancienne partie resterait sans réponse (type 23
         // ignoré) et bloquerait la connexion sur « Reprise en cours… ».
         if (!window._offlineMode) {
-          try { localStorage.setItem('pth_resume', JSON.stringify({ n: myName, g: gId, t: Date.now() })); } catch(e) {}
+          try { localStorage.setItem('pth_resume', JSON.stringify({ n: myName, g: S.gId, t: Date.now() })); } catch(e) {}
         }
         _hideBanner();
         // Fresh game = empty spectator set. The server will replay
@@ -5639,25 +5622,25 @@ const App = (() => {
         S._specPids = new Set();
         const isAdmin = Proto.u32(sub, 2);
         // Appliquer le timeout de la partie (depuis games[] si on rejoint, sinon celui créé)
-        if (S.games[gId] && S.games[gId].timeout) gameTimeout = S.games[gId].timeout;
+        if (S.games[S.gId] && S.games[S.gId].timeout) S.gameTimeout = S.games[S.gId].timeout;
         // Same for starting stack so the seat-data init (line ~1770) uses
         // the real configured value instead of 0. When *we* are the
         // creator, createGame() already wrote gameStartMoney directly —
         // this branch handles the case where we joined someone else's
         // table and discovered the settings via GameListNew.
-        if (S.games[gId] && S.games[gId].startMoney) gameStartMoney = S.games[gId].startMoney;
+        if (S.games[S.gId] && S.games[S.gId].startMoney) S.gameStartMoney = S.games[S.gId].startMoney;
         // Blind-raise schedule for the "blinds up" counter/alert.
-        _raiseMode  = (S.games[gId] && S.games[gId].raiseMode)  || 1;
-        _raiseEvery = (S.games[gId] && (_raiseMode === 2 ? S.games[gId].raiseMins : S.games[gId].raiseHands)) || 0;
-        _endRaiseMode  = (S.games[gId] && S.games[gId].endRaiseMode)  || 1;
-        _endRaiseValue = (S.games[gId] && S.games[gId].endRaiseValue) || 0;
-        _manualBlinds  = (S.games[gId] && S.games[gId].manualBlinds) || [];
-        _lastBlindsUpHand = 0;
-        amGameAdmin = !!isAdmin;
+        S._raiseMode  = (S.games[S.gId] && S.games[S.gId].raiseMode)  || 1;
+        S._raiseEvery = (S.games[S.gId] && (S._raiseMode === 2 ? S.games[S.gId].raiseMins : S.games[S.gId].raiseHands)) || 0;
+        S._endRaiseMode  = (S.games[S.gId] && S.games[S.gId].endRaiseMode)  || 1;
+        S._endRaiseValue = (S.games[S.gId] && S.games[S.gId].endRaiseValue) || 0;
+        S._manualBlinds  = (S.games[S.gId] && S.games[S.gId].manualBlinds) || [];
+        S._lastBlindsUpHand = 0;
+        S.amGameAdmin = !!isAdmin;
         // Replay hors-ligne en un tap : une fois recréée la table (on est admin),
         // enchaîner automatiquement le démarrage avec bots. Différé en microtâche
         // pour laisser ce handler finir son installation d'état.
-        if (window._offlineMode && window._offlineAutoReplay && amGameAdmin) {
+        if (window._offlineMode && window._offlineAutoReplay && S.amGameAdmin) {
           window._offlineAutoReplay = false;
           setTimeout(function(){ try { App.startWithBots(); } catch (e) {} }, 0);
         }
@@ -5665,15 +5648,15 @@ const App = (() => {
         // Fields we care about: name, type, maxPlayers, priv, timeout,
         // startMoney. All of these come from NetGameInfo when the table
         // was originally listed. Default the name to "#<gId>" if missing.
-        var _gm = (S.games[gId] || {});
-        _gameMeta = {
-          id:         gId,
-          name:       _gm.name || ('#' + gId),
+        var _gm = (S.games[S.gId] || {});
+        S._gameMeta = {
+          id:         S.gId,
+          name:       _gm.name || ('#' + S.gId),
           type:       _gm.type || 1,       // 1=NoLimit Hold'em (default)
           maxPlayers: _gm.maxPlayers || 0,
           priv:       !!_gm.priv,
-          timeout:    _gm.timeout || gameTimeout || 15,
-          startMoney: _gm.startMoney || gameStartMoney || 3000,
+          timeout:    _gm.timeout || S.gameTimeout || 15,
+          startMoney: _gm.startMoney || S.gameStartMoney || 3000,
         };
         // Le header affiche desormais le nom reel de la partie (centre) +
         // les badges de statut (Admin / Public-Prive), tout en restant
@@ -5681,19 +5664,19 @@ const App = (() => {
         // "..." cote CSS pour ne pas deborder sur mobile.
         try { _updateGameHeader(); } catch(e) {}
         var acb = document.getElementById('admin-close-btn');
-        if (acb) acb.style.display = amGameAdmin ? '' : 'none';
+        if (acb) acb.style.display = S.amGameAdmin ? '' : 'none';
         var asb = document.getElementById('admin-start-btn');
-        if (asb) asb.style.display = amGameAdmin ? '' : 'none';
+        if (asb) asb.style.display = S.amGameAdmin ? '' : 'none';
         var acbm = document.getElementById('admin-close-mob');
-        if (acbm) acbm.style.display = amGameAdmin ? '' : 'none';
+        if (acbm) acbm.style.display = S.amGameAdmin ? '' : 'none';
         // Kick button: shown only to admins (server ignores non-admin
         // KickPlayerRequest anyway, but exposing it would be confusing).
         var akb = document.getElementById('admin-kick-btn');
-        if (akb) akb.style.display = amGameAdmin ? '' : 'none';
+        if (akb) akb.style.display = S.amGameAdmin ? '' : 'none';
         var akbm = document.getElementById('admin-kick-mob');
-        if (akbm) akbm.style.display = amGameAdmin ? '' : 'none';
+        if (akbm) akbm.style.display = S.amGameAdmin ? '' : 'none';
         var asbm = document.getElementById('admin-start-mob');
-        if (asbm) asbm.style.display = amGameAdmin ? '' : 'none';
+        if (asbm) asbm.style.display = S.amGameAdmin ? '' : 'none';
         // Invite-players entry (menu ≡): any seated, non-spectator player
         // online may invite others; the server arbitrates. Hidden offline
         // and for spectators.
@@ -5711,8 +5694,8 @@ const App = (() => {
         if (_gameStarted) {
           show('s-game');
         } else {
-          S._selectedGame = gId;
-          try { renderGameInfoPanel(gId); } catch(e) {}
+          S._selectedGame = S.gId;
+          try { renderGameInfoPanel(S.gId); } catch(e) {}
           try { renderGames(); } catch(e) {}
           // Ne PAS ouvrir automatiquement le panneau « Infos de partie » ici :
           // sur mobile openInfo() fait coulisser un overlay par-dessus le lobby
@@ -5774,7 +5757,7 @@ const App = (() => {
           }
         }
         const admBadge = document.getElementById('g-admin-badge');
-        if (admBadge) admBadge.style.display = amGameAdmin ? '' : 'none';
+        if (admBadge) admBadge.style.display = S.amGameAdmin ? '' : 'none';
         try { _updateGameHeader(); } catch(e) {}
         setTimeout(function(){ autoScaleTable(); }, 200);
         renderWaitingPanel();
@@ -5915,7 +5898,7 @@ const App = (() => {
         break;
       }
 
-      case T.RemovedFromGame: { _gameMeta = null;
+      case T.RemovedFromGame: { S._gameMeta = null;
         addChat(null, t('youWereRemoved'), 'sys', { key: 'youWereRemoved' });
         _pendingRejoin = 0; try { localStorage.removeItem('pth_resume'); } catch(e) {}
         App._resetGameState();
@@ -5961,7 +5944,7 @@ const App = (() => {
           if (el) el.style.display = 'none';
         });
         // GameStartInitialMessage: gameId=1, startDealerPlayerId=2, playerSeats=3 (packed uint32)
-        gId       = Proto.u32(sub, 1);
+        S.gId       = Proto.u32(sub, 1);
         dealerPid = Proto.u32(sub, 2);
 
         // Décoder la liste de sièges envoyée par le serveur
@@ -5997,7 +5980,7 @@ const App = (() => {
         if (isFirstDeal) {
           seats  = newSeats.slice(); // copy, defensive
           _seatsFrozen = true;
-          handNum = 0;
+          S.handNum = 0;
           // Nouvelle table → repartir de zéro pour les stats de session
           // (sinon le stack de départ et l'historique de la table précédente
           // persistent et faussent le « gain net »).
@@ -6029,7 +6012,7 @@ const App = (() => {
             // which then makes the Call button mis-route to All-In once
             // toCall >= 0. Seeding with the real startMoney fixes that
             // misfire until PlayersActionDone corrects each seat's value.
-            Object.assign(seatData[pid], {money: gameStartMoney || 3000, bet:0, action:'', active:inGame, folded:false});
+            Object.assign(seatData[pid], {money: S.gameStartMoney || 3000, bet:0, action:'', active:inGame, folded:false});
           } else {
             // Conserver le stack, réinitialiser uniquement l'état de la main
             Object.assign(seatData[pid], {bet:0, action:'', active:inGame, folded:false});
@@ -6077,8 +6060,8 @@ const App = (() => {
               return { pid: pid, seat: i + 1, name: getPlayerName(pid) };
             });
             window._handlog.onGameStart({
-              gameID: gId, startMoney: gameStartMoney || 0,
-              startSb: smallBlind || 0, dealerSeat: (seats.indexOf(dealerPid) + 1) || 0,
+              gameID: S.gId, startMoney: S.gameStartMoney || 0,
+              startSb: S.smallBlind || 0, dealerSeat: (seats.indexOf(dealerPid) + 1) || 0,
               seatMap: _hlSeatMap
             });
           }
@@ -6088,7 +6071,7 @@ const App = (() => {
 
       case T.HandStart: {
         // HandStartMessage: gameId=1, plainCards=2 {card1:1, card2:2}, smallBlind=4, seatStates=5, dealerPlayerId=6
-        handNum++;
+        S.handNum++;
         // Mode de jeu PERSISTANT entre les mains (comme le client officiel) :
         // pas de reset par main. Le joueur le change via le dropdown ou un
         // clic manuel sur une action.
@@ -6173,10 +6156,10 @@ const App = (() => {
               if (_hlActive(_pid3) && _seatStackAtHandStart[_pid3] != null) _hlStacks[_sp3 + 1] = _seatStackAtHandStart[_pid3];
             }
             window._handlog.onHandStart({
-              handID: handNum,
+              handID: S.handNum,
               dealerSeat: _hlSeatOf(dealerPid),
-              sbSeat: _hlSeatOf(_hlSbPid), sbAmount: smallBlind || 0,
-              bbSeat: _hlSeatOf(_hlBbPid), bbAmount: (smallBlind || 0) * 2,
+              sbSeat: _hlSeatOf(_hlSbPid), sbAmount: S.smallBlind || 0,
+              bbSeat: _hlSeatOf(_hlBbPid), bbAmount: (S.smallBlind || 0) * 2,
               stacks: _hlStacks
             });
           }
@@ -6184,8 +6167,8 @@ const App = (() => {
         // N° de main seul : le Game ID vit dans le popup d'info de table
         // (titre « … · #id ») — retiré de la strip (feedback : trop chargée).
         // GameStatusBar : « Partie : <gId> · Main : <n> » (droite du bandeau)
-        var _ghn = document.getElementById('g-handn');  if (_ghn) _ghn.textContent = handNum;
-        var _ggi = document.getElementById('g-gameid'); if (_ggi) _ggi.textContent = gId || '\u2013';
+        var _ghn = document.getElementById('g-handn');  if (_ghn) _ghn.textContent = S.handNum;
+        var _ggi = document.getElementById('g-gameid'); if (_ggi) _ggi.textContent = S.gId || '\u2013';
         var _gbs = document.getElementById('g-blinds-slot'); if (_gbs) _gbs.innerHTML = '';
         $('g-round').textContent = t('preflop');
         gameState = 0; // preflop
@@ -6204,7 +6187,7 @@ const App = (() => {
         // ── DIAG temporaire (bug « cartes invisibles en mode auth ») ──
         // Trace chaque étape de la voie encryptedCards ; retirer une fois le
         // bug identifié. Visible : console + setStatus (2 premières mains).
-        var _cd = { hand: handNum, plain: !!sub[2], enc: sub[3] ? (sub[3][0] && sub[3][0].length) : -1,
+        var _cd = { hand: S.handNum, plain: !!sub[2], enc: sub[3] ? (sub[3][0] && sub[3][0].length) : -1,
                     encU8: !!(sub[3] && sub[3][0] instanceof Uint8Array),
                     key: !!(_cardKey && _cardIV), dec: null, cleared: false };
         if ((myCards[0] == null || myCards[1] == null) && sub[3] && _cardKey && _cardIV) {
@@ -6241,8 +6224,8 @@ const App = (() => {
         const hsFields = Object.keys(sub).sort((a,b)=>+a-+b).map(f=>f+':'+Proto.u32(sub,+f)).join(' ');
 
         const sb = Proto.u32(sub, 4);
-        var _prevSB = smallBlind;
-        smallBlind = sb;
+        var _prevSB = S.smallBlind;
+        S.smallBlind = sb;
         // ── Compteur + explication "blinds" ──
         // On (re)construit à chaque main : la pastille compacte du bandeau
         // (cliquable) et le texte d'explication détaillé stocké pour le tap.
@@ -6256,15 +6239,15 @@ const App = (() => {
           // qu'après une liste manuelle côté serveur.
           var _nextSB = null;
           var _mbNext = null;
-          if (_manualBlinds && _manualBlinds.length) {
-            for (var _bi = 0; _bi < _manualBlinds.length; _bi++) {
-              if (_manualBlinds[_bi] > sb) { _mbNext = _manualBlinds[_bi]; break; }
+          if (S._manualBlinds && S._manualBlinds.length) {
+            for (var _bi = 0; _bi < S._manualBlinds.length; _bi++) {
+              if (S._manualBlinds[_bi] > sb) { _mbNext = S._manualBlinds[_bi]; break; }
             }
           }
           if (_mbNext != null) _nextSB = _mbNext;                                        // liste manuelle
-          else if (_manualBlinds && _manualBlinds.length) {                              // liste épuisée → Ensuite
-            if (_endRaiseMode === 2 && _endRaiseValue > 0) _nextSB = sb + _endRaiseValue;
-            else if (_endRaiseMode === 3) _nextSB = null;
+          else if (S._manualBlinds && S._manualBlinds.length) {                              // liste épuisée → Ensuite
+            if (S._endRaiseMode === 2 && S._endRaiseValue > 0) _nextSB = sb + S._endRaiseValue;
+            else if (S._endRaiseMode === 3) _nextSB = null;
             else _nextSB = sb * 2;
           }
           else _nextSB = sb * 2;                                                         // auto : doubler
@@ -6277,16 +6260,16 @@ const App = (() => {
           // Pastille = blinds actuelles + éventuel compteur de montée ;
           // blinds fixes (aucune montée) → blinds seules, sans flèche.
           var _whenTxt = '', _chip = _curStr;
-          if (_raiseMode === 1 && _raiseEvery > 0) {
-            var _left = _raiseEvery - ((handNum - 1) % _raiseEvery);
+          if (S._raiseMode === 1 && S._raiseEvery > 0) {
+            var _left = S._raiseEvery - ((S.handNum - 1) % S._raiseEvery);
             _whenTxt = t('blindsNextTip', { n: _left });
             _chip = _curStr + ' ↑\u202F' + _left;
-          } else if (_raiseMode === 2 && _raiseEvery > 0) {
+          } else if (S._raiseMode === 2 && S._raiseEvery > 0) {
             // Ancre du niveau courant : 1re main (ou rejoint en cours) et à
             // chaque montée effective du small blind.
-            if (!_blindsClockStart || handNum <= 1) _blindsClockStart = Date.now();
-            else if (_prevSB > 0 && sb > _prevSB) _blindsClockStart = Date.now();
-            _whenTxt = t('blindsEveryMin', { n: _raiseEvery });
+            if (!S._blindsClockStart || S.handNum <= 1) S._blindsClockStart = Date.now();
+            else if (_prevSB > 0 && sb > _prevSB) S._blindsClockStart = Date.now();
+            _whenTxt = t('blindsEveryMin', { n: S._raiseEvery });
             _chip = _curStr + ' ↑ <span id="blinds-cd" style="font-variant-numeric:tabular-nums">'
               + _fmtBlindsCountdown() + '</span>';
           }
@@ -6308,7 +6291,7 @@ const App = (() => {
               '<span class="blinds-next" role="button" tabindex="0" title="' + _tip + '"'
               + ' onclick="window.showBlindsInfo&&window.showBlindsInfo()">' + _chip + '</span>';
           }
-          if (_raiseMode === 2 && _raiseEvery > 0) _startBlindsCountdown();
+          if (S._raiseMode === 2 && S._raiseEvery > 0) _startBlindsCountdown();
           else _stopBlindsCountdown();
         } catch (e) {}
         // Fin de la fenêtre « Show » de la main précédente
@@ -6316,8 +6299,8 @@ const App = (() => {
         // ── Alerte au moment de la montée (les 2 modes) ──
         // Si le small blind a augmenté (hors 1ʳᵉ main) : bandeau + son, en
         // réutilisant l'explication qu'on vient de préparer.
-        if (handNum > 1 && _prevSB > 0 && sb > _prevSB && _lastBlindsUpHand !== handNum) {
-          _lastBlindsUpHand = handNum;
+        if (S.handNum > 1 && _prevSB > 0 && sb > _prevSB && S._lastBlindsUpHand !== S.handNum) {
+          S._lastBlindsUpHand = S.handNum;
           if (typeof _showBlindsToast === 'function') _showBlindsToast(window._blindsInfoHtml, true);
         }
         dealerPid = Proto.u32(sub, 6) || dealerPid;
@@ -6375,8 +6358,8 @@ const App = (() => {
         }, 250);
         var hs = document.getElementById('hand-strength');
         if (hs) _hsHide(hs);
-        renderGameWaiting(t('handOf') + ' ' + handNum + ' — Blinds: ' + sb + '/' + (sb*2));
-        const _lhN = handNum, _lhSB = sb;
+        renderGameWaiting(t('handOf') + ' ' + S.handNum + ' — Blinds: ' + sb + '/' + (sb*2));
+        const _lhN = S.handNum, _lhSB = sb;
         logAction(function(){ return '══ ' + t('handOf') + ' ' + _lhN + ' — ' + t('blinds') + ' ' + _lhSB + '/' + (_lhSB*2) + ' ══'; });
         // Donneur (bouton) de la main — dealerPid déjà résolu plus haut (champ 6).
         if (dealerPid && getPlayerName(dealerPid)) {
@@ -6440,7 +6423,7 @@ const App = (() => {
           clearTurnNotif();
           setMyTurnActive(false);
           // Zoom-follow : planifie le cadrage du siège actif (parité QML §3.4)
-          try { if (window._zoomFollowTurn) window._zoomFollowTurn(turnPid, gameTimeout); } catch (_e) {}
+          try { if (window._zoomFollowTurn) window._zoomFollowTurn(turnPid, S.gameTimeout); } catch (_e) {}
           // isHtml=true : HTML interne sûr, pas du contenu utilisateur
           renderGameWaiting(
             '<span style="font-family:inherit">' + esc(getPlayerName(turnPid)) + '</span>'
@@ -6818,8 +6801,8 @@ const App = (() => {
 
       case T.GameAdminChanged: {
         const newAdminId = Proto.u32(sub, 2);
-        if (newAdminId !== myId) amGameAdmin = false;
-        else amGameAdmin = true;
+        if (newAdminId !== myId) S.amGameAdmin = false;
+        else S.amGameAdmin = true;
         try { _updateGameHeader(); } catch(e) {}
         break;
       }
@@ -7038,15 +7021,15 @@ const App = (() => {
     // On se base sur gId (posé dès JoinGameAck) et NON sur amInGame, qui n'est
     // mis à true qu'à GameStartInitial → sinon la barre d'options n'apparaît
     // jamais pendant l'attente.
-    var _mine = (gid != null && gId !== 0 && gid === gId && !_gameStarted);
+    var _mine = (gid != null && S.gId !== 0 && gid === S.gId && !_gameStarted);
     var g = (gid != null) ? S.games[gid] : null;
     // Créateur : games[gId] peut ne pas encore être peuplé (GameListNew arrive
     // juste après). On synthétise depuis _gameMeta + variables live.
-    if (!g && _mine && _gameMeta) {
-      g = { name:_gameMeta.name, type:_gameMeta.type, maxPlayers:_gameMeta.maxPlayers,
-            priv:_gameMeta.priv, timeout: gameTimeout || _gameMeta.timeout || 0,
-            startMoney: gameStartMoney || _gameMeta.startMoney || 0,
-            smallBlind: smallBlind || 0, seats: [], mode: 1 };
+    if (!g && _mine && S._gameMeta) {
+      g = { name:S._gameMeta.name, type:S._gameMeta.type, maxPlayers:S._gameMeta.maxPlayers,
+            priv:S._gameMeta.priv, timeout: S.gameTimeout || S._gameMeta.timeout || 0,
+            startMoney: S.gameStartMoney || S._gameMeta.startMoney || 0,
+            smallBlind: S.smallBlind || 0, seats: [], mode: 1 };
     }
     if (!g) {
       el.innerHTML = '<div class="g-chat-panel-header"><span class="lgi-htitle" data-i18n="gameInfoTitle">' + t('gameInfoTitle') + '</span></div>'
@@ -7104,7 +7087,7 @@ const App = (() => {
     var bar = document.getElementById('lobby-wait-actions');
     if (!bar) return;
     var create = document.querySelector('.lobby-footbar .lfb-create');
-    var mine = (gId !== 0 && !_gameStarted);
+    var mine = (S.gId !== 0 && !_gameStarted);
     // Mode « ma partie en attente » : la liste passe à droite et mes infos +
     // le chat au centre (parité client officiel) — piloté par une classe CSS.
     var _sl = document.getElementById('s-lobby');
@@ -7119,10 +7102,10 @@ const App = (() => {
       try { _updateFootJoin(); } catch(e){}
       return;
     }
-    var g        = S.games[gId] || {};
-    var maxP     = g.maxPlayers || (_gameMeta && _gameMeta.maxPlayers) || 10;
-    var isRank   = (g.type || (_gameMeta && _gameMeta.type) || 1) === 4;
-    var isHost   = !_amSpectator && amGameAdmin && !isRank;
+    var g        = S.games[S.gId] || {};
+    var maxP     = g.maxPlayers || (S._gameMeta && S._gameMeta.maxPlayers) || 10;
+    var isRank   = (g.type || (S._gameMeta && S._gameMeta.type) || 1) === 4;
+    var isHost   = !_amSpectator && S.amGameAdmin && !isRank;
     var count    = _gamePresentPids().length;
     // Mode entraînement (offline) : la case « Fill up with computer players »
     // est cochée par défaut. Sans effet sur les autres modes, et un (dé)cochage
@@ -7167,7 +7150,7 @@ const App = (() => {
     // Déjà dans une partie (assis, en attente de démarrage OU démarrée) : on
     // ne propose ni Rejoindre ni Spectateur — seules Démarrer/Quitter restent.
     // gId!=0 couvre l'attente (amInGame est encore faux avant le démarrage).
-    var busy = amInGame || (typeof gId !== 'undefined' && gId !== 0);
+    var busy = amInGame || (typeof S.gId !== 'undefined' && S.gId !== 0);
     var joinable  = !!(g && g.mode === 1) && !busy && !_guestJoinBlocked(g);   // partie ouverte (et autorisée pour un invité)
     var watchable = !!(g && g.mode === 2) && !busy;   // partie en cours
     if (bj) bj.style.display = joinable  ? '' : 'none';
@@ -7269,7 +7252,7 @@ const App = (() => {
         ? '🔒 ' + rawJoin.replace(/^\u25B6\s*/, '')
         : rawJoin.replace(/^\u25B6\s*/, '');
       // Pas de Rejoindre/Spectateur sur MA propre table (déjà assis) : gid === gId.
-      const isMyTable = (typeof gId !== 'undefined' && gId !== 0 && String(gid) === String(gId));
+      const isMyTable = (typeof S.gId !== 'undefined' && S.gId !== 0 && String(gid) === String(S.gId));
       const watchBtn = (g.mode === 2 && !isMyTable)
         ? '<button class="btn-join btn-spectate" title="' + t('watchTitle') + '" onclick="event.stopPropagation();App.spectateGame(' + gid + ')">👁 ' + t('spectatorBtn') + '</button>'
         : '';
@@ -7653,7 +7636,7 @@ const App = (() => {
     S._stats.totalGain += delta;
     if (delta > S._stats.bigWin) S._stats.bigWin = delta;
     if (delta < S._stats.bigLoss) S._stats.bigLoss = delta;
-    S._stats.history.push({ num: handNum, delta: delta, won: won,
+    S._stats.history.push({ num: S.handNum, delta: delta, won: won,
       cards: myCardsPair });
     if (S._stats.history.length > 20) S._stats.history.shift();
     _lifeRecordHand(won, delta);
@@ -8016,7 +7999,7 @@ const App = (() => {
     // timeout de la table laisse de la marge (>= 10 s) pour ne pas harceler
     // sur les parties très rapides. Le mute global est respecté par playTone().
     // Tic léger à 5-4-3-2, bip marqué sur la dernière seconde.
-    if (turnPid === myId && gameTimeout >= 10) {
+    if (turnPid === myId && S.gameTimeout >= 10) {
       if (S._timerSec >= 2 && S._timerSec <= 5) {
         if (typeof notifyTick === 'function') notifyTick();
       } else if (S._timerSec === 1) {
@@ -8028,7 +8011,7 @@ const App = (() => {
 
   function startTurnTimer() {
     clearInterval(S._timerID);
-    S._timerSec = S._timerTot = (gameTimeout > 0 ? gameTimeout : 15);
+    S._timerSec = S._timerTot = (S.gameTimeout > 0 ? S.gameTimeout : 15);
     renderSeats();  // Draws the SVG
     S._timerID = setInterval(_updateTimer, 1000);
   }
@@ -8601,7 +8584,7 @@ const App = (() => {
       // rejouait chipPop/seatBadgePop même quand RIEN n'avait changé pour ce
       // siège. On mémorise la signature (pucks / drapeau / action) du rendu
       // précédent par pid ; si identique → classe .no-pop (animation: none).
-      var _apPrev = (window._seatAnimPrev && window._seatAnimPrev.g === gId) ? window._seatAnimPrev.m[pid] : null;
+      var _apPrev = (window._seatAnimPrev && window._seatAnimPrev.g === S.gId) ? window._seatAnimPrev.m[pid] : null;
       var _puckSig = (isDealer ? 'D' : '') + (isSB ? 'S' : (isBB ? 'B' : ''));
       if (_apPrev && _apPrev.p === _puckSig) {
         if (dealerChip) dealerChip = dealerChip.replace('dealer-chip', 'dealer-chip no-pop');
@@ -8773,7 +8756,7 @@ const App = (() => {
       h += '</div>'; // ferme .seat
     });
     el.innerHTML = h;
-    window._seatAnimPrev = { g: gId, m: _apNew }; // anti-replay : signatures de CE rendu
+    window._seatAnimPrev = { g: S.gId, m: _apNew }; // anti-replay : signatures de CE rendu
     // Loupe QML : suivi différé du siège actif + suspension showdown.
     try {
       if (typeof window._loupeOnRender === 'function') {
@@ -9193,9 +9176,9 @@ const App = (() => {
     // Démarrer / Quitter, selon admin ou joueur simple). On rafraîchit donc
     // simplement ce panneau à chaque join / leave / PlayerInfoReply.
     try {
-      if (gId) {
-        if (S._selectedGame !== gId) S._selectedGame = gId;
-        renderGameInfoPanel(gId);
+      if (S.gId) {
+        if (S._selectedGame !== S.gId) S._selectedGame = S.gId;
+        renderGameInfoPanel(S.gId);
       }
     } catch (e) {}
     try { _updateLobbyWaitStatus(); } catch (e) {}
@@ -9210,7 +9193,7 @@ const App = (() => {
     // « En attente » = je suis dans une table rejointe/creee non demarree.
     // NB : amInGame ne passe a true qu'au debut de la 1re main (HandStart),
     // donc on s'appuie sur gId (table courante) + !_gameStarted uniquement.
-    var waiting = !!(gId && !_gameStarted);
+    var waiting = !!(S.gId && !_gameStarted);
     el.style.display = waiting ? '' : 'none';
     // Parite QML GameWaitPage : en spectateur, « Spectating — waiting for the
     // next hand » remplace « Waiting for players ». La cle data-i18n est
@@ -9716,7 +9699,7 @@ const App = (() => {
     var myBet   = (seatData[myId] || {}).bet   || 0;
     var toCall  = Math.max(0, highestBet - myBet);
     var canCheck = toCall === 0;
-    var minBet = minRaise > 0 ? minRaise : Math.max(highestBet > 0 ? highestBet : smallBlind * 2, smallBlind * 2);
+    var minBet = minRaise > 0 ? minRaise : Math.max(highestBet > 0 ? highestBet : S.smallBlind * 2, S.smallBlind * 2);
     var canRaise = myMoney > toCall && myMoney >= minBet;
     if (pa === 'fold')  { if (canCheck) doAction(2, 0); else doAction(1, 0); return true; }
     if (pa === 'call')  { if (canCheck) doAction(2, 0); else if (toCall >= myMoney) doAction(6, myMoney); else doAction(3, toCall); return true; }
@@ -9765,14 +9748,14 @@ const App = (() => {
       var _ncomm = (commCards || []).filter(function (c) { return c != null; }).length;
       if (_ncomm !== _lastBoardCount) { _lastCallSeen = -1; _lastBoardCount = _ncomm; }
       if (_gc && !canCheck && toCall > 0) {
-        var _bb = Math.max(1, smallBlind * 2);
+        var _bb = Math.max(1, S.smallBlind * 2);
         var _base = (_lastCallSeen >= 0) ? _lastCallSeen : _bb;
         if (toCall >= 2 * _base && (toCall - _base) >= 2 * _bb) _bigRaise = true;
       }
       _lastCallSeen = toCall;
       _callConfirmArmed = false; // panneau frais : aucune confirmation en attente
     }
-    const minBet  = minRaise > 0 ? minRaise : Math.max(highestBet > 0 ? highestBet : smallBlind * 2, smallBlind * 2);
+    const minBet  = minRaise > 0 ? minRaise : Math.max(highestBet > 0 ? highestBet : S.smallBlind * 2, S.smallBlind * 2);
     const p33  = Math.min(myMoney, Math.max(minBet, Math.round(pot * 0.33)));
     const p50  = Math.min(myMoney, Math.max(minBet, Math.round(pot * 0.5)));
     const p100 = Math.min(myMoney, Math.max(minBet, pot));
@@ -9922,7 +9905,7 @@ const App = (() => {
       return;
     }
     setMyTurnActive(false);
-    send(MSG.buildMyAction(gId, handNum, gameState, action, bet));
+    send(MSG.buildMyAction(S.gId, S.handNum, gameState, action, bet));
     // Barre d'action TOUJOURS présente (demande narmod 2026-07-17) : le
     // remplacement de la grille par « Action envoyée » effondrait la hauteur
     // de #g-actions → re-layout de la table = zoom/dézoom désagréable. On
@@ -9967,7 +9950,7 @@ const App = (() => {
     const myBet   = (seatData[myId] || {}).bet   || 0;
     const minBet  = minRaise > 0
       ? minRaise
-      : Math.max(highestBet > 0 ? highestBet : smallBlind * 2, smallBlind * 2);
+      : Math.max(highestBet > 0 ? highestBet : S.smallBlind * 2, S.smallBlind * 2);
     let amt = parseInt((document.getElementById('raise-amt')||{}).value, 10);
     if (!Number.isFinite(amt) || amt <= 0) amt = minBet;
     // Clamp dans [minBet, myMoney]. Si le résultat atteint le stack,
@@ -10052,7 +10035,7 @@ function showWinnerOverlay(winners) {
   // notifyBigWin isn't loaded for any reason (defensive against old SW
   // caches serving an older sounds.mjs).
   var _totalWon = winners.reduce(function(s,w){ return s + (w.won||0); }, 0);
-  var BIG_WIN_THRESHOLD = Math.max(300, smallBlind * 30);
+  var BIG_WIN_THRESHOLD = Math.max(300, S.smallBlind * 30);
   if (isMyWin && _totalWon >= BIG_WIN_THRESHOLD && typeof notifyBigWin === 'function') {
     notifyBigWin();
   } else if (typeof notifyWinner === 'function') {
@@ -10092,10 +10075,10 @@ function showWinnerOverlay(winners) {
 
   // ── Stats ──
   html += '<div class="wc-stats">';
-  html += '<div class="wc-stat"><div class="wc-stat-label">' + t('handOf') + '</div><div class="wc-stat-value">' + handNum + '</div></div>';
+  html += '<div class="wc-stat"><div class="wc-stat-label">' + t('handOf') + '</div><div class="wc-stat-value">' + S.handNum + '</div></div>';
   html += '<div class="wc-stat"><div class="wc-stat-label">' + t('totalPot') + '</div><div class="wc-stat-value">' + '$' + _groupThousands(totalWon)+'</div></div>';
   html += '<div class="wc-stat"><div class="wc-stat-label">' + t('players') + '</div><div class="wc-stat-value">' + _playersInHand + '</div></div>';
-  html += '<div class="wc-stat"><div class="wc-stat-label">' + t('blinds') + '</div><div class="wc-stat-value">' + smallBlind + '/' + (smallBlind*2) + '</div></div>';
+  html += '<div class="wc-stat"><div class="wc-stat-label">' + t('blinds') + '</div><div class="wc-stat-value">' + S.smallBlind + '/' + (S.smallBlind*2) + '</div></div>';
   html += '</div>';
 
   // ── Board (community cards) ──
@@ -10696,9 +10679,9 @@ function _maybeShowNextHandBtn() {
         S.players = {};
         S._playerCountries = {};
         S._playerRights = {};
-        _raiseMode = 1; _raiseEvery = 0; _lastBlindsUpHand = 0;
-        _blindsClockStart = 0; _stopBlindsCountdown();
-        _endRaiseMode = 1; _endRaiseValue = 0; _manualBlinds = [];
+        S._raiseMode = 1; S._raiseEvery = 0; S._lastBlindsUpHand = 0;
+        S._blindsClockStart = 0; _stopBlindsCountdown();
+        S._endRaiseMode = 1; S._endRaiseValue = 0; S._manualBlinds = [];
         // Avatars : indexés par pid (stables tant que la session lobby dure) ou
         // par hash (cache réutilisable). Donc même cycle de vie que 'players' :
         // on ne les vide qu'à la déconnexion complète, pas en quittant une partie
@@ -11046,7 +11029,7 @@ function _maybeShowNextHandBtn() {
     //   from seats[] on receipt, so the UI updates itself.
     // ──────────────────────────────────────────────────────────
     openKickModal() {
-      if (!amGameAdmin) return; // double-check; button shouldn't be visible
+      if (!S.amGameAdmin) return; // double-check; button shouldn't be visible
       var modal = document.getElementById('kick-modal');
       var list  = document.getElementById('km-list');
       if (!modal || !list) return;
@@ -11108,7 +11091,7 @@ function _maybeShowNextHandBtn() {
     // row sends an invite for the current gId. The recipient gets the
     // Accept/Decline banner (handled by InviteNotify on their side).
     openInviteModal() {
-      if (window._offlineMode || _amSpectator || !gId) return;
+      if (window._offlineMode || _amSpectator || !S.gId) return;
       var modal = document.getElementById('invite-modal');
       var list  = document.getElementById('im-list');
       if (!modal || !list) return;
@@ -11154,8 +11137,8 @@ function _maybeShowNextHandBtn() {
     },
     inviteSentTo(pid) { return !!S._invSent[pid]; },
     sendInvite(pid) {
-      if (window._offlineMode || !gId || pid === myId) return;
-      try { send(MSG.buildInvitePlayer(gId, pid)); } catch(e) {}
+      if (window._offlineMode || !S.gId || pid === myId) return;
+      try { send(MSG.buildInvitePlayer(S.gId, pid)); } catch(e) {}
       S._invSent[pid] = true;
       App._renderInviteList(App._inviteEligiblePids());
       if (typeof showToast === 'function') showToast(t('inviteSentToast', { name: S.players[pid] || ('#'+pid) }));
@@ -11166,7 +11149,7 @@ function _maybeShowNextHandBtn() {
     },
     // Step 2: ask confirmation before sending the kick.
     askConfirmKick(pid) {
-      if (!amGameAdmin) return;
+      if (!S.amGameAdmin) return;
       var name = S.players[pid] || ('#' + pid);
       var msgEl = document.getElementById('kcm-msg');
       var titleEl = document.getElementById('kcm-title');
@@ -11190,7 +11173,7 @@ function _maybeShowNextHandBtn() {
       var pid = window._pendingKickPid;
       var modal = document.getElementById('kick-confirm-modal');
       if (modal) modal.style.display = 'none';
-      if (!pid || !amGameAdmin || !gId) {
+      if (!pid || !S.amGameAdmin || !S.gId) {
         window._pendingKickPid = null;
         return;
       }
@@ -11207,8 +11190,8 @@ function _maybeShowNextHandBtn() {
       //      The server's admin bot / chatcleaner parses this.
       // Whichever the server supports, one of the two will work; the
       // other is a no-op (server ignores it).
-      try { send(MSG.buildKickPlayer(gId, pid)); } catch(e) {}
-      try { send(MSG.buildGameChat(gId, '/kick ' + name)); } catch(e) {}
+      try { send(MSG.buildKickPlayer(S.gId, pid)); } catch(e) {}
+      try { send(MSG.buildGameChat(S.gId, '/kick ' + name)); } catch(e) {}
       // Optimistic log so the admin gets immediate feedback even
       // before the server broadcasts GamePlayerLeft. Localised.
       var fr = (typeof _lang === 'undefined' || _lang !== 'en');
@@ -11224,13 +11207,13 @@ function _maybeShowNextHandBtn() {
       (function(targetPid, targetName, gameAtRequest) {
         setTimeout(function() {
           // Bail if we left the table / changed game in the meantime.
-          if (gId !== gameAtRequest) return;
+          if (S.gId !== gameAtRequest) return;
           // Player still present means the kick was not honoured.
           if (seatData[targetPid] && !seatData[targetPid].gone) {
             addGameChat(null, '⚠ ' + t('kickNotProcessed', { name: targetName }), 'sys', { prefix: '⚠ ', key: 'kickNotProcessed', params: { name: targetName } });
           }
         }, 3000);
-      })(pid, name, gId);
+      })(pid, name, S.gId);
       window._pendingKickPid = null;
       // Refresh the kick list so the row disappears once the server
       // confirms. We don't close the modal automatically: if the admin
@@ -11248,11 +11231,11 @@ function _maybeShowNextHandBtn() {
 
     closeTable() {
       // Admin closes table: send leave, server closes game for all
-      if (ws && gId) { try { send(MSG.buildLeaveGame(gId)); } catch(e) {} }
+      if (ws && S.gId) { try { send(MSG.buildLeaveGame(S.gId)); } catch(e) {} }
       _pendingRejoin = 0; _rejoinNickRetries = 0;
       try { localStorage.removeItem('pth_resume'); } catch(e) {}
-      amInGame = false; amGameAdmin = false; _gameStarted = false; _seatsFrozen = false; _amSpectator = false;
-      gId = 0; seats = []; seatData = {}; S._specPids = new Set(); updateSpectatorStrip();
+      amInGame = false; S.amGameAdmin = false; _gameStarted = false; _seatsFrozen = false; _amSpectator = false;
+      S.gId = 0; seats = []; seatData = {}; S._specPids = new Set(); updateSpectatorStrip();
       var _ego = document.getElementById('g-endgame-overlay');
       if (_ego) _ego.style.display = 'none';
       try { _wpHide(); } catch(e) {}
@@ -11405,9 +11388,9 @@ function _maybeShowNextHandBtn() {
     // a stale "still in my game / still admin" flag that blocks creating a
     // new table.
     _resetGameState() {
-      amInGame = false; amGameAdmin = false; _gameStarted = false;
+      amInGame = false; S.amGameAdmin = false; _gameStarted = false;
       _seatsFrozen = false; _amSpectator = false;
-      gId = 0; seats = []; seatData = {};
+      S.gId = 0; seats = []; seatData = {};
       try { stopTurnTimer(); } catch (e) {}
       try { dismissWinner(); } catch (e) {}
       try { if (typeof clearUnreadChat === 'function') clearUnreadChat(); } catch (e) {}
@@ -11432,13 +11415,13 @@ function _maybeShowNextHandBtn() {
       // server closes the current game (GameListUpdate=closed) on leave, so the
       // lobby ends up clean and the user can create another table.
       // Send proper leave request then stay connected (return to lobby)
-      if (ws && gId) { try { send(MSG.buildLeaveGame(gId)); } catch(e) {} }
+      if (ws && S.gId) { try { send(MSG.buildLeaveGame(S.gId)); } catch(e) {} }
       // Départ volontaire : oublier le marqueur de reprise (sinon on serait
       // ré-aspiré dans la table à la prochaine reconnexion/réouverture).
       _pendingRejoin = 0; _rejoinNickRetries = 0;
       try { localStorage.removeItem('pth_resume'); } catch(e) {}
-      amInGame = false; amGameAdmin = false; _gameStarted = false; _seatsFrozen = false; _amSpectator = false;
-      gId = 0; seats = []; seatData = {}; S._specPids = new Set(); updateSpectatorStrip();
+      amInGame = false; S.amGameAdmin = false; _gameStarted = false; _seatsFrozen = false; _amSpectator = false;
+      S.gId = 0; seats = []; seatData = {}; S._specPids = new Set(); updateSpectatorStrip();
       var _ego = document.getElementById('g-endgame-overlay');
       if (_ego) _ego.style.display = 'none';
       try { _wpHide(); } catch(e) {}
@@ -11465,7 +11448,7 @@ function _maybeShowNextHandBtn() {
 
     sendReaction(emoji) {
       if (_reactMuted) return;                    // reactions coupees : on n'envoie rien
-      if (!ws || !gId) return;
+      if (!ws || !S.gId) return;
       // Affichage immediat pour moi.
       handleIncomingReaction(myId, emoji, 'self');
       // Canal rapide web<->web via le proxy (trame texte, contourne le throttle chat serveur).
@@ -11554,13 +11537,13 @@ function _maybeShowNextHandBtn() {
       // is sent to the server. See _chatLocalCmd and docs/DIAGNOSTIC.md.
       if (text.charAt(0) === '/' && _chatLocalCmd(text, function (n, s2) { addGameChat(n, s2, 'mine'); })) return;
       try { if (window._chatPushHist) window._chatPushHist(text); } catch (e) {}
-      send(gId ? MSG.buildGameChat(gId, text) : MSG.buildChat(text));
+      send(S.gId ? MSG.buildGameChat(S.gId, text) : MSG.buildChat(text));
       addGameChat(myName, text, 'mine');
     },
     // « Show » : envoie ShowMyCardsRequest (type 51, corps vide) pendant la
     // fenêtre d'attente ; la rediffusion AfterHandShowCards rendra les cartes.
     showMyCards() {
-      if (!window._canShowCards || !ws || !gId) return;
+      if (!window._canShowCards || !ws || !S.gId) return;
       try { send(MSG.buildShowMyCards()); } catch (e) {}
       _setCanShow(false);
     },
@@ -11590,7 +11573,7 @@ function _maybeShowNextHandBtn() {
     // (non-HTTPS) contexts where navigator.clipboard is unavailable.
     copyTableLink() {
       var fr = (typeof _lang === 'undefined' || _lang !== 'en');
-      if (!gId) {
+      if (!S.gId) {
         if (typeof showKeyHint === 'function')
           showKeyHint(t('noActiveTable'));
         return;
@@ -11608,7 +11591,7 @@ function _maybeShowNextHandBtn() {
       var qs = 'host=' + encodeURIComponent(host) +
                '&port=' + encodeURIComponent(port) +
                '&tls=' + tls +
-               '&table=' + encodeURIComponent(gId);
+               '&table=' + encodeURIComponent(S.gId);
       var url = base + '?' + qs;
 
       // Copy with graceful fallbacks.
@@ -12656,8 +12639,8 @@ function _maybeShowNextHandBtn() {
       if (typeof showToast === 'function') showToast(t('fieldsReset') || 'Fields reset');
     },
     startWithBots() {
-      if (!gId) return;
-      send(MSG.buildStartWithBots(gId, true));
+      if (!S.gId) return;
+      send(MSG.buildStartWithBots(S.gId, true));
     },
     // Start the game with the humans currently at the table and NO
     // auto-filling with bots. Same StartEventMessage as startWithBots,
@@ -12669,7 +12652,7 @@ function _maybeShowNextHandBtn() {
     // We re-check the count here defensively because the visibility
     // is just UI gating, not enforcement.
     startNoBots() {
-      if (!gId) return;
+      if (!S.gId) return;
       // Same counting heuristic as refreshStartNoBotsVisibility() AND
       // renderWaitingPanel(): seatData pids with .gone falsy, PLUS myId
       // if missing (the server doesn't always echo GamePlayerJoined for
@@ -12690,7 +12673,7 @@ function _maybeShowNextHandBtn() {
         addGameChat(null, '⚠ ' + t('kickAtLeast2'), 'sys', { prefix: '⚠ ', key: 'kickAtLeast2' });
         return;
       }
-      send(MSG.buildStartWithBots(gId, false));
+      send(MSG.buildStartWithBots(S.gId, false));
     },
     // Bouton unique « Démarrer la partie » de la wait-page (parité QML :
     // Lobby.startGame(fillCpuCheck.checked)). La case « Compléter avec des
@@ -12707,9 +12690,9 @@ function _maybeShowNextHandBtn() {
       // create (with a clear, translated message) when the typed name is too
       // long, instead of letting the server reject it.
       const rawName = (g('cf-name')?.value || '').trim();
-      if (rawName.length > MAX_GAME_NAME) {
+      if (rawName.length > S.MAX_GAME_NAME) {
         if (typeof showToast === 'function') {
-          showToast(t('nameTooLong', { max: MAX_GAME_NAME }), { icon: '\u26A0', tone: 'error', duration: 3500 });
+          showToast(t('nameTooLong', { max: S.MAX_GAME_NAME }), { icon: '\u26A0', tone: 'error', duration: 3500 });
         }
         return;
       }
@@ -12739,8 +12722,8 @@ function _maybeShowNextHandBtn() {
       window._createWithBots  = bots;
       window._minHumansNeeded = bots ? minHuman : 0;
       window._humansJoined    = 1;
-      gameTimeout = timeout; // mémoriser le timeout pour le timer
-      gameStartMoney = stack;  // same idea for the starting stack: the
+      S.gameTimeout = timeout; // mémoriser le timeout pour le timer
+      S.gameStartMoney = stack;  // same idea for the starting stack: the
                                // GameListNew message will eventually echo
                                // this back, but writing it here ensures
                                // it's available immediately for our own
@@ -14934,7 +14917,7 @@ function renderPlayersList() {
   });
 })();
 
-;(function(){ window.BUILD_VERSION='0.3.829-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.830-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

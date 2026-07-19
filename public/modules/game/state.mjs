@@ -89,6 +89,25 @@ export const S = {
   _playerRights: {},
   MODE_DOT: { 1: 'dot-open', 2: 'dot-run', 3: 'dot-closed' },
   _GTYPE_KEY: { 1: 'gtypeNormal', 2: 'gtypeRegistered', 3: 'gtypeInvite', 4: 'gtypeRanked' },
+
+  // ── V6 · Config de partie / blinds (domaine D) ──
+  gId: 0,                  // current gameId
+  smallBlind: 10,
+  handNum: 0,              // hand counter
+  _raiseMode: 1,
+  _raiseEvery: 0,
+  _lastBlindsUpHand: 0,
+  _endRaiseMode: 1,
+  _endRaiseValue: 0,
+  _manualBlinds: [],       // liste manuelle (NetGameInfo champ 14) de la partie en cours
+  _blindsClockStart: 0,
+  _blindsCdTimer: null,
+  _displayBB: false,
+  gameTimeout: 15,         // timeout par joueur (depuis les settings de la partie)
+  gameStartMoney: 3000,
+  _gameMeta: null,
+  amGameAdmin: false,      // true if we created this game
+  MAX_GAME_NAME: 48,
 };
 
 // Pont legacy : pokerth.js (script classique) fait `const S = window.PthState;`

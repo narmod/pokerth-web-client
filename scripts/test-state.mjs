@@ -18,7 +18,7 @@ const { S } = await import('../public/modules/game/state.mjs');
 let n = 0, fail = 0;
 function ok(cond, msg) { n++; if (!cond) { fail++; console.error('  ✗', msg); } else console.log('  ✓', msg); }
 
-console.log('state.mjs — V0 (timer) + V1 (voix/haptique) + V2 (stats) + V3 (pet/inv/chat/titre) + V4 (avatars) + V5 (lobby)');
+console.log('state.mjs — V0 (timer) + V1 (voix/haptique) + V2 (stats) + V3 (pet/inv/chat/titre) + V4 (avatars) + V5 (lobby) + V6 (config partie)');
 ok(typeof S === 'object' && S !== null, 'S est un objet');
 ok(window.PthState === S, 'pont window.PthState === S (même référence)');
 
@@ -86,6 +86,16 @@ ok(Object.keys(S._playerCountries).length === 0 && Object.keys(S._playerRights).
    'caches pays/droits init = {}');
 ok(S.MODE_DOT[2] === 'dot-run' && S._GTYPE_KEY[4] === 'gtypeRanked', 'constantes lobby');
 
+// V6 — Config de partie / blinds
+ok(S.gId === 0 && S.handNum === 0 && S.smallBlind === 10, 'identité de partie init');
+ok(S._raiseMode === 1 && S._raiseEvery === 0 && S._lastBlindsUpHand === 0
+   && S._endRaiseMode === 1 && S._endRaiseValue === 0, 'modes de hausse des blinds init');
+ok(Array.isArray(S._manualBlinds) && S._manualBlinds.length === 0, '_manualBlinds init = []');
+ok(S._blindsClockStart === 0 && S._blindsCdTimer === null && S._displayBB === false,
+   'horloge blinds / affichage BB init');
+ok(S.gameTimeout === 15 && S.gameStartMoney === 3000, 'timeout 15 / stack 3000 par défaut');
+ok(S._gameMeta === null && S.amGameAdmin === false && S.MAX_GAME_NAME === 48, 'méta partie init');
+
 // Périmètre exact des vagues migrées (pas de fuite d'autres clés)
 const keys = Object.keys(S).sort();
 ok(JSON.stringify(keys) === JSON.stringify(['REACT_EMOJI_MIN_GAP', 'REACT_EMOJI_QUEUE_MAX',
@@ -102,8 +112,12 @@ ok(JSON.stringify(keys) === JSON.stringify(['REACT_EMOJI_MIN_GAP', 'REACT_EMOJI_
    'games', 'players', '_openTables', 'loaded', '_tableFilter', '_selectedGame',
    '_lobbyPids', '_lobbyPlayerCount', '_hasStatistics', '_specPids',
    '_pendingNameRequests', '_playerCountries', '_playerRights', 'MODE_DOT',
-   '_GTYPE_KEY'].sort()),
-   'périmètre V0..V5 exact : ' + keys.join(', '));
+   '_GTYPE_KEY',
+   'gId', 'smallBlind', 'handNum', '_raiseMode', '_raiseEvery', '_lastBlindsUpHand',
+   '_endRaiseMode', '_endRaiseValue', '_manualBlinds', '_blindsClockStart',
+   '_blindsCdTimer', '_displayBB', 'gameTimeout', 'gameStartMoney', '_gameMeta',
+   'amGameAdmin', 'MAX_GAME_NAME'].sort()),
+   'périmètre V0..V6 exact : ' + keys.join(', '));
 
 console.log(fail ? `FAIL ${fail}/${n}` : `PASS ${n}/${n}`);
 process.exit(fail ? 1 : 0);
