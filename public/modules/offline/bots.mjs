@@ -2,14 +2,35 @@
  *  Pure & deterministic given bot.rng.
  *
  *  Strength is a real win-probability (equity) estimated by Monte-Carlo rollout
- *  against the *actual number of opponents still in the hand*, reusing the
- *  engine's bestHand() evaluator — so draws, board texture and multiway spots
- *  are all valued correctly. On top of that:
+ *  against the *actual number of opponents still in the hand*, evaluated with
+ *  the vendored phe module (direct 5-7 card lookup, ~20x faster than the
+ *  engine's combinatorial bestHand()) — so draws, board texture and multiway
+ *  spots are all valued correctly, at much higher sample counts for the same
+ *  CPU budget. On top of that:
  *    • short stacks (<= ~8 BB-equiv) switch to correct shove-or-fold play;
  *    • a difficulty level (bot.skill) tunes MC precision, hand-reading noise,
  *      whether push/fold is used, and bluff frequency.
  */
-import { ACT, bestHand } from './engine.mjs';
+import { ACT } from './engine.mjs';
+import { evaluateCardCodes, cardCode } from '../../vendor/phe.mjs';
+
+// PokerTH index (0..12=diamonds, 13..25=hearts, 26..38=spades, 39..51=clubs;
+// value = n % 13, 0=deuce) -> phe card code. Built once at module load.
+// NOTE: phe cardCode takes TWO arguments (rank, suit) — the single-string
+// form silently returns 0 (see scripts/test-phe.mjs).
+const PHE_MAP = (() => {
+  const suits = ['d', 'h', 's', 'c'];
+  const rk = ['2', '3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q', 'K', 'A'];
+  const m = new Array(52);
+  for (let n = 0; n < 52; n++) m[n] = cardCode(rk[n % 13], suits[(n / 13) | 0]);
+  return m;
+})();
+// Hand strength for 5-7 PokerTH indices — phe scale: SMALLER = better.
+function pheStrength(cards){
+  const codes = new Array(cards.length);
+  for (let i = 0; i < cards.length; i++) codes[i] = PHE_MAP[cards[i]];
+  return evaluateCardCodes(codes);
+}
 
 // Small fast PRNG (mulberry32). Seeded once per decision from bot.rng so the
 // rollout is reproducible AND we touch the engine's shared rng only once,
@@ -23,8 +44,6 @@ function mulberry32(seed){
     return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
   };
 }
-
-function cmpScore(a,b){ for(let i=0;i<Math.max(a.length,b.length);i++){ const x=a[i]||0,y=b[i]||0; if(x!==y) return x-y; } return 0; }
 
 /**
  * Win probability of `hole` vs `opp` random opponents given `board`
@@ -48,13 +67,12 @@ export function equityMC(hole, board, opp, samples, rng){
     }
     const fullBoard = needBoard ? board.concat(d.slice(0, needBoard)) : board;
     let k = needBoard;
-    const my = bestHand(hole.concat(fullBoard));
+    const my = pheStrength(hole.concat(fullBoard));   // phe: smaller = better
     let beat = true, tied = 0;
     for(let o=0;o<opp;o++){
-      const os = bestHand([d[k++], d[k++]].concat(fullBoard));
-      const c = cmpScore(os, my);
-      if(c>0){ beat=false; break; }
-      if(c===0) tied++;
+      const os = pheStrength([d[k++], d[k++]].concat(fullBoard));
+      if(os < my){ beat=false; break; }
+      if(os === my) tied++;
     }
     if(beat) equity += tied>0 ? 1/(tied+1) : 1;   // split fairly on ties
   }
@@ -64,10 +82,12 @@ export function equityMC(hole, board, opp, samples, rng){
 // Difficulty presets. samples = MC precision; noise = hand-reading error
 // (beginner bots misjudge equity); pushfold = use correct short-stack play;
 // bluffMul = bluff-frequency multiplier.
+// Sample counts sized for the phe evaluator (each sample = 1+opp direct 7-card
+// lookups): even 'hard' costs only a few ms per decision on mobile.
 const SKILLS = {
-  easy:   { samples: 60,  noise: 0.20, pushfold: false, bluffMul: 0.5 },
-  normal: { samples: 260, noise: 0.06, pushfold: true,  bluffMul: 1.0 },
-  hard:   { samples: 650, noise: 0.00, pushfold: true,  bluffMul: 1.4 },
+  easy:   { samples: 100,  noise: 0.20, pushfold: false, bluffMul: 0.5 },
+  normal: { samples: 700,  noise: 0.06, pushfold: true,  bluffMul: 1.0 },
+  hard:   { samples: 2500, noise: 0.00, pushfold: true,  bluffMul: 1.4 },
 };
 export function skillOf(s){ return (s && SKILLS[s]) ? SKILLS[s] : SKILLS.normal; }
 
@@ -136,7 +156,7 @@ export function decide(ctx, bot){
 
   // equity vs `opp` opponents, with difficulty-scaled precision + misjudgement
   const eq = (opp)=>{
-    const n = Math.max(40, Math.round(sk.samples / Math.sqrt(Math.max(1,opp))));
+    const n = Math.max(100, Math.round(sk.samples / Math.sqrt(Math.max(1,opp))));
     let e = equityMC(ctx.hole, board, opp, n, mc);
     if (sk.noise > 0){ e += (mc()*2-1)*sk.noise; e = Math.max(0, Math.min(1, e)); }
     return e;
