@@ -7967,10 +7967,10 @@ html[data-seat-edit="1"] #g-seats .seat.seat-ghost { outline: none; cursor: defa
 .adv-sec:first-child{margin-top:4px}
 /* Sections repliables de l'onglet Interface (demande narmod 2026-07-19) :
    <details class="adv-fold"> natif, plie par defaut, chevron anime. */
-details.adv-fold>summary.adv-sec{cursor:pointer;list-style:none;display:flex;align-items:center;gap:8px;user-select:none;-webkit-tap-highlight-color:transparent;padding:5px 0;font-size:0.82rem;letter-spacing:0.07em} /* narmod 2026-07-19 : meme taille que les options (.adv-row 0.82rem), gras conserve (700 herite de .adv-sec) */
+details.adv-fold>summary.adv-sec{cursor:pointer;list-style:none;display:flex;align-items:center;gap:8px;user-select:none;-webkit-tap-highlight-color:transparent;padding:5px 0;font-size:0.7rem;letter-spacing:0.07em} /* narmod 2026-07-19 : en-tete de section discret (eyebrow), plus petit que les options .adv-row 0.82rem */
 details.adv-fold>summary.adv-sec::-webkit-details-marker{display:none}
-summary.adv-sec .adv-sec-ic{flex:0 0 auto;width:16px;height:16px;display:inline-flex;align-items:center;justify-content:center;opacity:.9}
-summary.adv-sec .adv-sec-ic svg{width:16px;height:16px;display:block} /* 16 px : meme gabarit que les cases a cocher des options (.adv-row input 16px) */
+summary.adv-sec .adv-sec-ic{flex:0 0 auto;width:14px;height:14px;display:inline-flex;align-items:center;justify-content:center;opacity:.9}
+summary.adv-sec .adv-sec-ic svg{width:14px;height:14px;display:block} /* 14 px : accorde a l'en-tete de section reduit */
 details.adv-fold>summary.adv-sec::before{content:'\25B8';font-size:0.95em;color:var(--gold-dim);transition:transform .15s ease;flex:0 0 auto}
 details.adv-fold[open]>summary.adv-sec::before{transform:rotate(90deg)}
 /* Lisibilité (demande narmod 2026-07-19) : les options d'une section sont
