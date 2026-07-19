@@ -149,3 +149,4 @@ peuvent se libérer par vagues). Le monolithe devrait passer sous ~830 Ko.
 | 2026-07-19 | 0.3.816-beta | 9a game/layout.mjs (géométrie QML : slots portrait, bisections, ellipse — verrouillée par 34 tests Bible/DELTA) | 872 → 844 Ko |
 | 2026-07-19 | 0.3.817-beta | 9b ui/deck.mjs (cardName/cardHtml, decks, pucks SVG, timer — encodage 0..51 verrouillé, 22 tests) | 844 → 833 Ko |
 | 2026-07-19 | 0.3.818-beta | 9c net/avatar-cache.mjs (LRU 200, quota-retry, assemble data:URL — 16 tests) | 833 → 830 Ko |
+| 2026-07-19 | 0.3.819-beta | 9d ui/misc.mjs (esc, session/onglet, wake lock, trames ctrl, setPct, drag — 17 tests ; show/confirmCall/addChat exclus, life/pet reporté) | 830 → 825 Ko |
