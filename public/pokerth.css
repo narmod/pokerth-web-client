@@ -551,8 +551,16 @@ body {
 .card-chip {
   display: block;
   margin: 0 auto;
-  width: 86px; height: 86px;
+  /* Parité client QML (Theme.brandLogoSize) : plafond 126 px desktop /
+     100 px phone, plancher 56 px, mise à l'échelle fluide (narmod 19/07).
+     Les media-queries max-height ci-dessous prennent le relais sur écrans
+     très courts, comme le compact QML. */
+  width: clamp(56px, 13vw, 126px);
+  height: clamp(56px, 13vw, 126px);
   filter: drop-shadow(0 4px 12px rgba(0,0,0,0.55));
+}
+@media (max-width: 600px) {
+  .card-chip { width: clamp(56px, 22vw, 100px); height: clamp(56px, 22vw, 100px); }  /* compact QML : plafond 100 */
 }
 
 /* Small / short screens (e.g. iPhone SE, landscape): compact the login
