@@ -2814,7 +2814,7 @@ const App = (() => {
   // admin button is hidden (we're not the admin) the function does
   // nothing — extra cheap-guard before counting.
   function refreshStartNoBotsVisibility() {
-    if (!S.amGameAdmin || _gameStarted) {
+    if (!S.amGameAdmin || S._gameStarted) {
       // Hide explicitly once the game has started — the renderer's
       // early-return otherwise leaves the button stuck on screen.
       var b1 = document.getElementById('admin-startnobots-btn');
@@ -2827,9 +2827,9 @@ const App = (() => {
     // seatData with .gone falsy, PLUS myId if missing (myId only
     // enters seatData via GamePlayerJoined for ourselves, which the
     // server sometimes elides — the renderer compensates the same way).
-    var pids = Object.keys(seatData)
+    var pids = Object.keys(S.seatData)
       .map(function(s){ return parseInt(s,10); })
-      .filter(function(p){ return seatData[p] && !seatData[p].gone; });
+      .filter(function(p){ return S.seatData[p] && !S.seatData[p].gone; });
     if (myId && pids.indexOf(myId) === -1) pids.push(myId);
     var showIt = pids.length >= 2;
     var btn  = document.getElementById('admin-startnobots-btn');
@@ -2846,12 +2846,12 @@ const App = (() => {
   function updateLobbyPill() {
     // #h-nick (pill profil) retiré du header ; on reste défensif s'il existe.
     var el = document.getElementById('h-nick');
-    if (el) el.innerHTML = myName ? esc(myName) : '—';
+    if (el) el.innerHTML = S.myName ? esc(S.myName) : '—';
     // Barre du bas : avatar AVANT le nom.
     var _fn = document.getElementById('lobby-foot-name');   // barre du bas (Phase 1b)
-    if (_fn) _fn.textContent = myName || '—';
+    if (_fn) _fn.textContent = S.myName || '—';
     var _fav = document.getElementById('lobby-foot-av');
-    if (_fav) _fav.innerHTML = myName ? _avatarChipHtml(myId, myName, 'pl-av') : '';
+    if (_fav) _fav.innerHTML = S.myName ? _avatarChipHtml(myId, S.myName, 'pl-av') : '';
   }
   window.updateLobbyPill = updateLobbyPill;
 
@@ -2913,7 +2913,7 @@ const App = (() => {
         avEl.textContent = emoji;
       } else {
         avEl.classList.add('is-letter');
-        var nm0 = isSelf ? myName : getPlayerName(targetPid);
+        var nm0 = isSelf ? S.myName : getPlayerName(targetPid);
         avEl.textContent = (nm0 && nm0[0] ? nm0[0] : '?').toUpperCase();
       }
       // Cliquable (→ sélecteur d'avatar) UNIQUEMENT pour mon propre profil.
@@ -2932,7 +2932,7 @@ const App = (() => {
         avEl.onclick = null; avEl.onkeydown = null;
       }
     }
-    if (nameEl) nameEl.textContent = (isSelf ? myName : getPlayerName(targetPid)) || '';
+    if (nameEl) nameEl.textContent = (isSelf ? S.myName : getPlayerName(targetPid)) || '';
     // Drapeau du pays (sous l'avatar) — code reçu via PlayerInfoReply.
     // Surtout présent sur pokerth.net ; masqué si inconnu.
     var flagEl = document.getElementById('pim-flag');
@@ -2964,7 +2964,7 @@ const App = (() => {
         // direct kick). The server still arbitrates via AskKickDenied.
         try {
           if (!window._offlineMode && S.gId && targetPid !== myId && !S.amGameAdmin &&
-              !_amSpectator && seatData[targetPid] && !seatData[targetPid].gone) {
+              !S._amSpectator && S.seatData[targetPid] && !S.seatData[targetPid].gone) {
             var _vkBtn = document.createElement('button');
             _vkBtn.className = 'pim-votekick-btn';
             _vkBtn.textContent = t('petitionAsk');
@@ -3029,7 +3029,7 @@ const App = (() => {
     }
     html += '<div class="pim-role">' + esc(roleTxt) + '</div>';
     // Infos en jeu (uniquement si le joueur est attablé / a des données siège).
-    var sd = seatData[pid];
+    var sd = S.seatData[pid];
     if (sd) {
       var rows = '';
       function row(k, v) {
@@ -3331,9 +3331,9 @@ const App = (() => {
     // Count current players from seatData / seats. Spectators don't
     // count, only seated players that the server told us about.
     var activeCount = 0;
-    if (Array.isArray(seats) && seats.length) {
-      seats.forEach(function(pid){
-        var sd = seatData[pid] || {};
+    if (Array.isArray(S.seats) && S.seats.length) {
+      S.seats.forEach(function(pid){
+        var sd = S.seatData[pid] || {};
         // Eliminated/sitting-out players still "exist" at the table but
         // are not actively playing this hand. We count them as joined
         // (they're at the table) but mark eliminated ones separately.
@@ -3341,7 +3341,7 @@ const App = (() => {
         else activeCount++; // count them anyway -- they're seated
       });
     }
-    if (!activeCount) activeCount = Object.keys(seatData || {}).length;
+    if (!activeCount) activeCount = Object.keys(S.seatData || {}).length;
 
     var sections = [];
 
@@ -3374,7 +3374,7 @@ const App = (() => {
             activeCount + ' / ' + (meta.maxPlayers || '?')],
         // Restants = ni partis ni éliminés (déplacé ici depuis la strip)
         [t('plRemaining'),
-            _gameStarted ? String(_remainCount()) : t('piNotStarted')],
+            S._gameStarted ? String(_remainCount()) : t('piNotStarted')],
         [t('piHandNo'),
             (S.handNum > 0) ? ('H#' + S.handNum) : t('piNotStarted')],
         [t('piPot'),
@@ -3393,9 +3393,9 @@ const App = (() => {
     // When the local user is themselves a spectator, we add a "(vous)"
     // entry up top so they see they're not invisible.
     var specRows = [];
-    if (_amSpectator && myId) {
+    if (S._amSpectator && myId) {
       // Show ourselves first, marked as such.
-      var meName = (myName || ('#' + myId)) + ' ' +
+      var meName = (S.myName || ('#' + myId)) + ' ' +
                    '<span class="gim-spec-me">' +
                    t('piYou') +
                    '</span>';
@@ -3488,7 +3488,7 @@ const App = (() => {
   window.getTableRankingCtx = function () {
     if (window._offlineMode || !S.gId) return null;
     var g = S.games[S.gId] || {};
-    var order = (seats && seats.length) ? seats : (g.seats || []);
+    var order = (S.seats && S.seats.length) ? S.seats : (g.seats || []);
     var nicks = [];
     for (var i = 0; i < order.length && nicks.length < 10; i++) {
       var nm = S.players[order[i]];
@@ -3496,8 +3496,6 @@ const App = (() => {
     }
     return { name: g.name || '', nicks: nicks };
   };
-  let seats     = [];  // player IDs in seat order (from GameStartInitial) — figé après 1ère main
-  let seatData  = {};  // {pid: {money, bet, action, active, folded}}
   // Clé/IV AES dérivés du mot de passe pour déchiffrer les cartes envoyées
   // chiffrées par pokerth.net aux comptes authentifiés (encryptedCards,
   // HandStart champ 3). Renseignés au moment de l'Init (mode 'auth'),
@@ -3522,42 +3520,42 @@ const App = (() => {
   function _lifeBlank()     { return { handsPlayed:0, handsWon:0, net:0, bigWin:0, bigLoss:0, gamesPlayed:0, gamesWon:0, bestStreak:0, streak:0 }; }
   function _lifeGet(name)   { var a=_lifeAll(); return a[name] || _lifeBlank(); }
   function _pushStats() {
-    if (!S._boardEligible || !myName) return;   // training never touches the family board
+    if (!S._boardEligible || !S.myName) return;   // training never touches the family board
     if (S._lifePushTimer) clearTimeout(S._lifePushTimer);
     S._lifePushTimer = setTimeout(function() {
-      var s = _lifeGet(myName);
+      var s = _lifeGet(S.myName);
       var av = ''; try { av = localStorage.getItem('pth_avatar') || ''; } catch(e) {}
       if (av === '__pth__' || av === '__img__') av = ''; // ne pas envoyer le sentinelle
       fetch('/stats', { method:'POST', headers:{'Content-Type':'application/json'},
-        body: JSON.stringify({ name:myName, avatar:av,
+        body: JSON.stringify({ name:S.myName, avatar:av,
           handsPlayed:s.handsPlayed, handsWon:s.handsWon, net:s.net, bigWin:s.bigWin,
           bigLoss:s.bigLoss, gamesPlayed:s.gamesPlayed, gamesWon:s.gamesWon, bestStreak:s.bestStreak })
       }).catch(function(){});
     }, 1500);
   }
   function _lifeRecordHand(won, delta) {
-    if (!S._statsEligible || !myName) return;
-    var a = _lifeAll(); var s = a[myName] || _lifeBlank();
+    if (!S._statsEligible || !S.myName) return;
+    var a = _lifeAll(); var s = a[S.myName] || _lifeBlank();
     s.handsPlayed++;
     if (won) { s.handsWon++; s.streak = (s.streak||0)+1; if (s.streak > s.bestStreak) s.bestStreak = s.streak; }
     else { s.streak = 0; }
     s.net += delta;
     if (delta > s.bigWin)  s.bigWin  = delta;
     if (delta < s.bigLoss) s.bigLoss = delta;
-    a[myName] = s; _lifeSaveAll(a); _pushStats();
+    a[S.myName] = s; _lifeSaveAll(a); _pushStats();
   }
   function _lifeRecordGame(won) {
-    if (!S._statsEligible || !myName) return;
-    var a = _lifeAll(); var s = a[myName] || _lifeBlank();
+    if (!S._statsEligible || !S.myName) return;
+    var a = _lifeAll(); var s = a[S.myName] || _lifeBlank();
     s.gamesPlayed++; if (won) s.gamesWon++;
-    a[myName] = s; _lifeSaveAll(a); _pushStats();
+    a[S.myName] = s; _lifeSaveAll(a); _pushStats();
   }
   function _lifeReset() {
-    if (!myName) return;
-    var a = _lifeAll(); delete a[myName]; _lifeSaveAll(a);
+    if (!S.myName) return;
+    var a = _lifeAll(); delete a[S.myName]; _lifeSaveAll(a);
     if (S._boardEligible) {
       try { fetch('/stats', { method:'POST', headers:{'Content-Type':'application/json'},
-        body: JSON.stringify({ name:myName, _delete:true }) }).catch(function(){}); } catch(e) {}
+        body: JSON.stringify({ name:S.myName, _delete:true }) }).catch(function(){}); } catch(e) {}
     }
   }
   // Merge two lifetime records keeping the better of each (mirrors the proxy's
@@ -3583,13 +3581,13 @@ const App = (() => {
   // would reject the regression anyway, but reseeding also fixes the TOTAL tab
   // display on the new device. Runs once per connect when eligible.
   function _lifeSeedFromServer() {
-    if (!S._boardEligible || !myName) return;
+    if (!S._boardEligible || !S.myName) return;
     fetch('/stats', { cache:'no-store' })
       .then(function(r){ return r.ok ? r.json() : null; })
       .then(function(data){
-        if (!data || !data[myName]) return;
+        if (!data || !data[S.myName]) return;
         var a = _lifeAll();
-        a[myName] = _lifeMerge(a[myName] || _lifeBlank(), data[myName]);
+        a[S.myName] = _lifeMerge(a[S.myName] || _lifeBlank(), data[S.myName]);
         _lifeSaveAll(a);
         if (S._statsOpen) renderStats();
       }).catch(function(){});
@@ -3600,13 +3598,11 @@ const App = (() => {
   // {pid: {money, net, card1, card2, folded, inHand}}
 
   // ── Positions des sièges (pour les animations) ──
-  let amInGame  = false;
-  let myName    = '';
 
   // Nom de table par défaut localisé (FR: "Table de X", EN: "X's table").
   function _localDefaultName() {
     var tpl = (typeof t === 'function' && t('tableNameDefault')) || 'Table {name}';
-    return tpl.replace('{name}', myName || 'PokerTH');
+    return tpl.replace('{name}', S.myName || 'PokerTH');
   }
   // Nom de table imposé par l'admin pour le mode de connexion courant
   // (admin -> /app-config.tableNames). Renvoie null si l'admin n'a rien fixé
@@ -3647,7 +3643,7 @@ const App = (() => {
     };
     if (leadOk(s)) return s;
     if (!s) {                              // empty after trim
-      var nm = (myName || '').trim();
+      var nm = (S.myName || '').trim();
       return leadOk(nm) ? nm : 'PokerTH';
     }
     return 'PokerTH - ' + s;               // keep the user's text, ASCII lead
@@ -3659,7 +3655,7 @@ const App = (() => {
     var el = document.getElementById('cf-name');
     if (!el) return;
     var cur = (el.value || '').trim();
-    var nm = myName || 'PokerTH';
+    var nm = S.myName || 'PokerTH';
     var known = ['Table de ' + nm, nm + "'s table", 'Table ' + nm, 'My table', ''];
     var adminN = _adminNameForMode();
     if (adminN) known.push(adminN);
@@ -3667,16 +3663,12 @@ const App = (() => {
   };
   // Table-list filter (design A chips): 'all' | 'open' | 'nopass' | 'live'.
   // Persisted so the choice survives reloads, like other lobby prefs.
-  let autoAction = false;
 
   // Snapshot of the current table's settings, captured at JoinGameAck.
   // games[gId] is deleted from the lobby dict when the table closes
   // (GameListUpdate with mode === 3), so we keep our own copy. Used
   // by openGameInfoPopup() to populate the table-info modal even
   // after the table no longer appears in the lobby list.
-  let _gameStarted = false; // flips true on GameStartInitial; freezes waiting-panel updates
-  let _seatsFrozen = false; // one-way latch: true once the original seating order is set, never unset until leave/closeTable
-  let _amSpectator = false; // true when we joined via 'Regarder' / spectateGame() — disables actions, shows banner
 
   // ── Haptic feedback (mobile) ──────────────────────────────────
   // Vibrates the device when it becomes the user's turn. Especially
@@ -3715,7 +3707,7 @@ const App = (() => {
     S._displayBB = !S._displayBB;
     try { localStorage.setItem('pth_display_bb', S._displayBB ? '1' : '0'); } catch (e) {}
     // Repaint everything that shows a live amount.
-    try { if (typeof renderSeats === 'function' && seats.length) renderSeats(); } catch (e) {}
+    try { if (typeof renderSeats === 'function' && S.seats.length) renderSeats(); } catch (e) {}
     // Re-render the action buttons only if they're currently showing (i.e.
     // it's our turn — the bar holds a raise input). Otherwise they'll be
     // rebuilt with the right unit on the next turn anyway.
@@ -3767,17 +3759,17 @@ const App = (() => {
       var badge = document.getElementById('g-spec-badge');
       var cnt   = document.getElementById('g-spec-count');
       var num   = document.getElementById('g-spec-n');
-      if (badge) badge.classList.toggle('on', !!_amSpectator);
+      if (badge) badge.classList.toggle('on', !!S._amSpectator);
       // Mobile (<640px, CSS) : la pastille texte est masquee et c'est l'oeil
       // qui prend le contour jaune quand JE regarde -> classe .me.
-      if (cnt) cnt.classList.toggle('me', !!_amSpectator);
-      var n = (S._specPids ? S._specPids.size : 0) + (_amSpectator ? 1 : 0);
+      if (cnt) cnt.classList.toggle('me', !!S._amSpectator);
+      var n = (S._specPids ? S._specPids.size : 0) + (S._amSpectator ? 1 : 0);
       if (num) num.textContent = n;
       if (cnt) {
         cnt.classList.toggle('on', n > 0);
         // Tooltip = noms des spectateurs (parité ToolTip QML spectatorNames)
         var names = [];
-        if (_amSpectator) names.push(t('piYou'));
+        if (S._amSpectator) names.push(t('piYou'));
         if (S._specPids) S._specPids.forEach(function(pid) {
           var nm = (typeof getPlayerName === 'function') ? getPlayerName(pid) : null;
           names.push(nm || ('#' + pid));
@@ -3933,7 +3925,7 @@ const App = (() => {
   function _playAutoMode() {
     if (S._playingMode === 0 || S.turnPid !== myId) return false;
     if (!S.ws || S.ws.readyState !== WebSocket.OPEN) return false;
-    var myBet0    = (seatData[myId] || {}).bet || 0;
+    var myBet0    = (S.seatData[myId] || {}).bet || 0;
     var toCall0   = Math.max(0, S.highestBet - myBet0);
     var canCheck0 = toCall0 === 0;
     var act = canCheck0 ? 2 : (S._playingMode === 1 ? 3 : 1); // 2=check, 3=call, 1=fold
@@ -4180,13 +4172,13 @@ const App = (() => {
       d.offlineMode = !!window._offlineMode;
       d.loginMode = S._currentLoginMode;
       d.ws      = S.ws ? (['CONNECTING','OPEN','CLOSING','CLOSED'][S.ws.readyState] || S.ws.readyState) : null;
-      d.nick    = myName || null;
+      d.nick    = S.myName || null;
       d.playerId = myId || 0;
       d.gameId  = S.gId || 0;
       d.hand    = S.handNum;
       d.phase   = S.gameState;
       d.sb      = S.smallBlind;
-      d.seats   = seats.length;
+      d.seats   = S.seats.length;
       d.myCards = [S.myCards[0] != null, S.myCards[1] != null];
       d.cardKey = !!S._cardKey;
       d.cardDiag = window._pthCardDiag || null;
@@ -4360,8 +4352,8 @@ const App = (() => {
       try {
         if (!S.gId) { echo('table', 'not at a table'); return true; }
         var pl = [];
-        for (var si = 0; si < seats.length; si++) {
-          var pid2 = seats[si], sd2 = seatData[pid2] || {};
+        for (var si = 0; si < S.seats.length; si++) {
+          var pid2 = S.seats[si], sd2 = S.seatData[pid2] || {};
           pl.push((S.players[pid2] || ('#' + pid2)) + (pid2 === myId ? '*' : '') + ':$' + (sd2.money != null ? sd2.money : '?') +
                   (sd2.folded ? ' folded' : '') + (sd2.gone ? ' out' : ''));
         }
@@ -4899,14 +4891,14 @@ const App = (() => {
         if (!S._pendingRejoin && !window._offlineMode) {
           try {
             var _rs0 = JSON.parse(localStorage.getItem('pth_resume') || 'null');
-            if (_rs0 && _rs0.n === myName && (Date.now() - _rs0.t) < 5 * 60 * 1000) S._pendingRejoin = _rs0.g;
+            if (_rs0 && _rs0.n === S.myName && (Date.now() - _rs0.t) < 5 * 60 * 1000) S._pendingRejoin = _rs0.g;
           } catch (e) {}
         }
         // Mot de passe serveur (optionnel, masqué sous « plus d'options »).
         // Trimmé ; vide → null donc omis de l'InitMessage. Lu directement ici
         // (comme authPass) pour couvrir aussi les reconnexions automatiques.
         const srvPass = ($('server-pass') ? $('server-pass').value.trim() : '') || null;
-        send(MSG.buildInit(myName, pMaj, pMin, loginType, authPass, srvPass));
+        send(MSG.buildInit(S.myName, pMaj, pMin, loginType, authPass, srvPass));
         break;
       }
 
@@ -4942,7 +4934,7 @@ const App = (() => {
         if (!_rt) {
           try {
             var _rs = JSON.parse(localStorage.getItem('pth_resume') || 'null');
-            if (_rs && _rs.n === myName && (Date.now() - _rs.t) < 5 * 60 * 1000) _rt = _rs.g;
+            if (_rs && _rs.n === S.myName && (Date.now() - _rs.t) < 5 * 60 * 1000) _rt = _rs.g;
           } catch (e) {}
         }
         if (_rt) {
@@ -5041,8 +5033,8 @@ const App = (() => {
           _hideBanner();
           var _fr = (typeof _lang === 'undefined' || _lang !== 'en');
           var _msg = _fr
-            ? '« ' + myName + ' » est déjà utilisé. Une session précédente est peut-être encore active : patiente ~2 min, ou choisis un autre pseudo, puis reconnecte.'
-            : '“' + myName + '” is already in use. A previous session may still be active: wait ~2 min, or pick another nickname, then reconnect.';
+            ? '« ' + S.myName + ' » est déjà utilisé. Une session précédente est peut-être encore active : patiente ~2 min, ou choisis un autre pseudo, puis reconnecte.'
+            : '“' + S.myName + '” is already in use. A previous session may still be active: wait ~2 min, or pick another nickname, then reconnect.';
           setStatus(_msg, 'err');
         } else {
           setStatus(t('errGeneric', { code: codes[r] || ('code ' + r) }), 'err');
@@ -5190,7 +5182,7 @@ const App = (() => {
         // If the waiting panel is visible, update it so the new pseudo
         // appears in place of the temporary '#<pid>' placeholder. On teste gId
         // (posé au JoinGameAck) et non amInGame (true seulement au démarrage).
-        if (!_gameStarted && S.gId) renderWaitingPanel();
+        if (!S._gameStarted && S.gId) renderWaitingPanel();
         // Same idea for the lobby players panel.
         var _pp2 = document.getElementById('players-panel');
         if (_pp2 && _pp2.style.display !== 'none' && typeof renderPlayersList === 'function') renderPlayersList();
@@ -5369,7 +5361,7 @@ const App = (() => {
         // us it exists). Clear the pending id so we only do it once.
         // window._pendingAutoJoin is set by parseShareLink() which
         // runs at global scope (outside this IIFE).
-        if (window._pendingAutoJoin && id === window._pendingAutoJoin && !amInGame) {
+        if (window._pendingAutoJoin && id === window._pendingAutoJoin && !S.amInGame) {
           var _aj = window._pendingAutoJoin;
           window._pendingAutoJoin = 0;
           var fr = (typeof _lang === 'undefined' || _lang !== 'en');
@@ -5537,7 +5529,7 @@ const App = (() => {
           }
         } else {
           S._lastMsgWasReaction = false;
-          if (!amInGame) addChat(null, t('chatRefusedReason', { r: rejText }), 'sys', { key: 'chatRefusedReason', params: { r: rejText } });
+          if (!S.amInGame) addChat(null, t('chatRefusedReason', { r: rejText }), 'sys', { key: 'chatRefusedReason', params: { r: rejText } });
           else if (!S._chatRejectShown) {
             S._chatRejectShown = true;
             if (S._currentLoginMode === 'lan') {
@@ -5563,7 +5555,7 @@ const App = (() => {
         // un rejoin vers son ancienne partie resterait sans réponse (type 23
         // ignoré) et bloquerait la connexion sur « Reprise en cours… ».
         if (!window._offlineMode) {
-          try { localStorage.setItem('pth_resume', JSON.stringify({ n: myName, g: S.gId, t: Date.now() })); } catch(e) {}
+          try { localStorage.setItem('pth_resume', JSON.stringify({ n: S.myName, g: S.gId, t: Date.now() })); } catch(e) {}
         }
         _hideBanner();
         // Fresh game = empty spectator set. The server will replay
@@ -5632,7 +5624,7 @@ const App = (() => {
         // and for spectators.
         var _imb = document.getElementById('invite-players-mob');
         var _ims = document.getElementById('invite-sep-mob');
-        var _canInv = !window._offlineMode && !_amSpectator;
+        var _canInv = !window._offlineMode && !S._amSpectator;
         if (_imb) _imb.style.display = _canInv ? '' : 'none';
         if (_ims) _ims.style.display = _canInv ? '' : 'none';
         // Ne plus basculer directement sur le feutre : tant que la partie n'a
@@ -5641,7 +5633,7 @@ const App = (() => {
         // options d'attente (case bots + Démarrer/Quitter selon le rôle). Le
         // gametable ne s'affiche qu'à GameStartInitial. On prépare quand même
         // le feutre (nettoyage ci-dessous) pour qu'il soit propre au démarrage.
-        if (_gameStarted) {
+        if (S._gameStarted) {
           show('s-game');
         } else {
           S._selectedGame = S.gId;
@@ -5673,7 +5665,7 @@ const App = (() => {
         // a 'You are watching' message in place of the action bar. Player
         // join paths leave _amSpectator untouched (still false) so this
         // branch is skipped and the regular waiting panel logic applies.
-        if (_amSpectator) {
+        if (S._amSpectator) {
           // Pas de barre d'action en mode spectateur (parité client QML officiel,
           // qui n'affiche rien à la place des boutons).
           clearSpectatorActions();
@@ -5691,7 +5683,7 @@ const App = (() => {
         [100, 300, 600, 1200].forEach(function(d){
           setTimeout(function(){
             autoScaleTable();
-            if (seats.length > 0) renderSeats();
+            if (S.seats.length > 0) renderSeats();
           }, d);
         });
         setTimeout(animateTableEnter, 100);
@@ -5716,7 +5708,7 @@ const App = (() => {
         // refreshes so the panel populates as those messages land,
         // and so PlayerInfoRequest replies catch up.
         [200, 600, 1200, 2500].forEach(function(d){
-          setTimeout(function(){ if (!_gameStarted) renderWaitingPanel(); }, d);
+          setTimeout(function(){ if (!S._gameStarted) renderWaitingPanel(); }, d);
         });
         break;
       }
@@ -5772,11 +5764,11 @@ const App = (() => {
 
       case T.GamePlayerJoined: {
         const pid = Proto.u32(sub, 2);
-        if (!seatData[pid]) seatData[pid] = {money:0,bet:0,action:'',active:false,folded:false};
+        if (!S.seatData[pid]) S.seatData[pid] = {money:0,bet:0,action:'',active:false,folded:false};
         // 'gone' means the player has been seen leaving (GamePlayerLeft).
         // We reset it to false here because the same pid can rejoin (rare,
         // but possible if the player closes and reopens the tab fast).
-        seatData[pid].gone = false;
+        S.seatData[pid].gone = false;
         // ── SPECTATOR LATE-ARRIVAL FIX ──
         // When the game has already started (HandStart was processed), we
         // append late-arriving pids straight to seats[] so they appear
@@ -5785,8 +5777,8 @@ const App = (() => {
         // GamePlayerJoined, and the includes() check skips the duplicate).
         // For spectator mode it's the only path that learns about
         // newcomers after our HandStart bootstrap.
-        if (_gameStarted && !seats.includes(pid)) {
-          seats.push(pid);
+        if (S._gameStarted && !S.seats.includes(pid)) {
+          S.seats.push(pid);
           renderSeats();
         }
         const name = S.players[pid] || '#'+pid;
@@ -5803,7 +5795,7 @@ const App = (() => {
           } catch(e) {}
         }
         // Refresh the waiting panel if the game hasn't started yet.
-        if (!_gameStarted) renderWaitingPanel();
+        if (!S._gameStarted) renderWaitingPanel();
         break;
       }
 
@@ -5811,10 +5803,10 @@ const App = (() => {
         const pid = Proto.u32(sub, 2);
         const name = S.players[pid] || '#'+pid;
         addChat(null, t('playerLeftTable', { name: name }), 'sys', { key: 'playerLeftTable', params: { name: name } });
-        if (seatData[pid]) { seatData[pid].active = false; seatData[pid].gone = true; }
+        if (S.seatData[pid]) { S.seatData[pid].active = false; S.seatData[pid].gone = true; }
         renderSeats();
         // Refresh the waiting panel if the game hasn't started yet.
-        if (!_gameStarted) renderWaitingPanel();
+        if (!S._gameStarted) renderWaitingPanel();
         // ── Detect "only one player left" and force end-of-game ──
         // PokerTH server 1.1.2-2 is known to OMIT EndOfGameMessage
         // when a player leaves voluntarily (vs being eliminated by
@@ -5825,9 +5817,9 @@ const App = (() => {
         // remaining pid as the winner. The eg-overlay handler itself
         // is idempotent — calling it again if EndOfGame eventually
         // arrives from the server is harmless.
-        if (_gameStarted) {
-          var stillIn = seats.filter(function(p) {
-            return seatData[p] && !seatData[p].gone;
+        if (S._gameStarted) {
+          var stillIn = S.seats.filter(function(p) {
+            return S.seatData[p] && !S.seatData[p].gone;
           });
           if (stillIn.length <= 1) {
             // Don't re-trigger if an end-game overlay is already up.
@@ -5869,7 +5861,7 @@ const App = (() => {
       }
 
       case T.GameStartInitial: {
-        _gameStarted = true;
+        S._gameStarted = true;
         try { _updateLobbyWaitStatus(); } catch(e) {}
         // La partie démarre → on quitte la wait-page du lobby et on bascule
         // sur le gametable (le feutre a été préparé au JoinGameAck).
@@ -5926,10 +5918,10 @@ const App = (() => {
         //
         // The new gate is a dedicated one-way flag `_seatsFrozen`, set to true
         // here and only reset by RemovedFromGame / leaveGame / closeTable.
-        const isFirstDeal = !_seatsFrozen;
+        const isFirstDeal = !S._seatsFrozen;
         if (isFirstDeal) {
-          seats  = newSeats.slice(); // copy, defensive
-          _seatsFrozen = true;
+          S.seats  = newSeats.slice(); // copy, defensive
+          S._seatsFrozen = true;
           S.handNum = 0;
           // Nouvelle table → repartir de zéro pour les stats de session
           // (sinon le stack de départ et l'historique de la table précédente
@@ -5946,14 +5938,14 @@ const App = (() => {
         }
         // Late joins : ajouter les nouveaux joueurs à la fin
         for (const pid of newSeats) {
-          if (!seats.includes(pid)) seats.push(pid);
+          if (!S.seats.includes(pid)) S.seats.push(pid);
         }
 
         // Mettre à jour seatData pour tous les joueurs
         // active = vrai UNIQUEMENT si le joueur est dans newSeats (cette main)
-        for (const pid of seats) {
+        for (const pid of S.seats) {
           const inGame = newSeats.includes(pid);
-          if (!seatData[pid]) seatData[pid] = {};
+          if (!S.seatData[pid]) S.seatData[pid] = {};
           if (isFirstDeal) {
             // Use the table's configured startMoney as the initial stack
             // for every seat. The server only sends per-player money in
@@ -5962,27 +5954,27 @@ const App = (() => {
             // which then makes the Call button mis-route to All-In once
             // toCall >= 0. Seeding with the real startMoney fixes that
             // misfire until PlayersActionDone corrects each seat's value.
-            Object.assign(seatData[pid], {money: S.gameStartMoney || 3000, bet:0, action:'', active:inGame, folded:false});
+            Object.assign(S.seatData[pid], {money: S.gameStartMoney || 3000, bet:0, action:'', active:inGame, folded:false});
           } else {
             // Conserver le stack, réinitialiser uniquement l'état de la main
-            Object.assign(seatData[pid], {bet:0, action:'', active:inGame, folded:false});
+            Object.assign(S.seatData[pid], {bet:0, action:'', active:inGame, folded:false});
           }
         }
 
         // Mémoriser le stack de chaque joueur AU DÉBUT de la main (avant blinds),
         // pour calculer le gain/perte NET exact (mien + bonus popup gagnant).
         S._seatStackAtHandStart = {};
-        for (const _sp of seats) {
-          if (seatData[_sp] && seatData[_sp].money != null) S._seatStackAtHandStart[_sp] = seatData[_sp].money;
+        for (const _sp of S.seats) {
+          if (S.seatData[_sp] && S.seatData[_sp].money != null) S._seatStackAtHandStart[_sp] = S.seatData[_sp].money;
         }
         S._myStackAtHandStart = (S._seatStackAtHandStart[myId] != null) ? S._seatStackAtHandStart[myId] : null;
 
         S.commCards = [null, null, null, null, null];
-        amInGame  = true;
+        S.amInGame  = true;
         $('g-round').textContent = t('gameStart');
 
         // Demander les infos des joueurs inconnus
-        for (const pid of seats) {
+        for (const pid of S.seats) {
           if (!S.players[pid]) {
             const req = Proto.encode([[1,0,pid]]);
             send(Proto.encode([[1,0,T.PlayerInfoRequest],[19,2,req]]));
@@ -6006,12 +5998,12 @@ const App = (() => {
         _prevDealerPid = S.dealerPid;
         try {
           if (window._handlog && isFirstDeal) {
-            var _hlSeatMap = seats.map(function(pid, i){
+            var _hlSeatMap = S.seats.map(function(pid, i){
               return { pid: pid, seat: i + 1, name: getPlayerName(pid) };
             });
             window._handlog.onGameStart({
               gameID: S.gId, startMoney: S.gameStartMoney || 0,
-              startSb: S.smallBlind || 0, dealerSeat: (seats.indexOf(S.dealerPid) + 1) || 0,
+              startSb: S.smallBlind || 0, dealerSeat: (S.seats.indexOf(S.dealerPid) + 1) || 0,
               seatMap: _hlSeatMap
             });
           }
@@ -6058,16 +6050,16 @@ const App = (() => {
         // For a normal player join this branch is a no-op: GameStartInitial
         // already flipped _gameStarted and populated seats[] before the
         // first HandStart fires, so the condition is false.
-        if (!_gameStarted) {
-          _gameStarted = true;
-          _seatsFrozen = true;
+        if (!S._gameStarted) {
+          S._gameStarted = true;
+          S._seatsFrozen = true;
           try { _wpHide(); } catch(e) {}
           try { show('s-game'); } catch(e) {}
         }
-        if (seats.length === 0) {
-          seats = Object.keys(seatData)
+        if (S.seats.length === 0) {
+          S.seats = Object.keys(S.seatData)
             .map(Number)
-            .filter(function(pid) { return !seatData[pid].gone; });
+            .filter(function(pid) { return !S.seatData[pid].gone; });
         }
         // Re-snapshot de chaque stack AU DÉBUT de cette main (avant blinds).
         // GameStartInitial le fait déjà sur le vrai serveur (il précède CHAQUE
@@ -6077,32 +6069,32 @@ const App = (() => {
         // session gonflé et « pire perte » jamais enregistrée. En ligne : idempotent
         // (seatData porte déjà la même valeur que celle figée par GameStartInitial).
         S._seatStackAtHandStart = {};
-        for (const _sp2 of seats) {
-          if (seatData[_sp2] && seatData[_sp2].money != null) S._seatStackAtHandStart[_sp2] = seatData[_sp2].money;
+        for (const _sp2 of S.seats) {
+          if (S.seatData[_sp2] && S.seatData[_sp2].money != null) S._seatStackAtHandStart[_sp2] = S.seatData[_sp2].money;
         }
         S._myStackAtHandStart = (S._seatStackAtHandStart[myId] != null) ? S._seatStackAtHandStart[myId] : null;
         try {
           if (window._handlog) {
             // Sièges (base 1) via l'ordre figé seats[]. Dealer/SB/BB dérivés
             // de la rotation des sièges ACTIFS, comme le client officiel.
-            var _hlSeatOf = function(pid){ var i = seats.indexOf(pid); return i >= 0 ? i + 1 : 0; };
-            var _hlActive = function(pid){ var d = seatData[pid]; return d && !d.gone && d.active !== false && !(d.money != null && d.money <= 0); };
-            var _hlDealerIdx = seats.indexOf(S.dealerPid);
+            var _hlSeatOf = function(pid){ var i = S.seats.indexOf(pid); return i >= 0 ? i + 1 : 0; };
+            var _hlActive = function(pid){ var d = S.seatData[pid]; return d && !d.gone && d.active !== false && !(d.money != null && d.money <= 0); };
+            var _hlDealerIdx = S.seats.indexOf(S.dealerPid);
             var _hlNextActive = function(fromIdx, step){
               var stepped = 0;
-              for (var k = 1; k <= seats.length; k++) {
-                var idx = (fromIdx + k) % seats.length;
-                if (_hlActive(seats[idx])) { stepped++; if (stepped === step) return seats[idx]; }
+              for (var k = 1; k <= S.seats.length; k++) {
+                var idx = (fromIdx + k) % S.seats.length;
+                if (_hlActive(S.seats[idx])) { stepped++; if (stepped === step) return S.seats[idx]; }
               }
               return -1;
             };
             var _hlSbPid, _hlBbPid;
-            var _hlActiveCount = seats.filter(_hlActive).length;
+            var _hlActiveCount = S.seats.filter(_hlActive).length;
             if (_hlActiveCount === 2) { _hlSbPid = S.dealerPid; _hlBbPid = _hlNextActive(_hlDealerIdx, 1); }
             else { _hlSbPid = _hlNextActive(_hlDealerIdx, 1); _hlBbPid = _hlNextActive(_hlDealerIdx, 2); }
             var _hlStacks = {};
-            for (var _sp3 = 0; _sp3 < seats.length; _sp3++) {
-              var _pid3 = seats[_sp3];
+            for (var _sp3 = 0; _sp3 < S.seats.length; _sp3++) {
+              var _pid3 = S.seats[_sp3];
               if (_hlActive(_pid3) && S._seatStackAtHandStart[_pid3] != null) _hlStacks[_sp3 + 1] = S._seatStackAtHandStart[_pid3];
             }
             window._handlog.onHandStart({
@@ -6150,12 +6142,12 @@ const App = (() => {
         // still echo cards for the deal but I'm not actually in the
         // hand. Force-clear so the player bar shows card backs and
         // matches the eliminated state shown on my seat.
-        if (seatData[myId] && seatData[myId].money <= 0 && !seatData[myId].gone) {
+        if (S.seatData[myId] && S.seatData[myId].money <= 0 && !S.seatData[myId].gone) {
           if (S.myCards[0] != null || S.myCards[1] != null) _cd.cleared = true;
           S.myCards = [null, null];
         }
         try {
-          _cd.money = seatData[myId] ? seatData[myId].money : undefined;
+          _cd.money = S.seatData[myId] ? S.seatData[myId].money : undefined;
           window._pthCardDiag = _cd;
           var _cdh = window._pthCardDiagHist || (window._pthCardDiagHist = []);
           _cdh.push(_cd); if (_cdh.length > 20) _cdh.shift();
@@ -6265,8 +6257,8 @@ const App = (() => {
         //    server doesn't deal them cards anyway; this just prevents
         //    the UI from showing them as live + clearing their stale
         //    cards from the previous hand.
-        for (const pid of seats) {
-          var __sd = seatData[pid];
+        for (const pid of S.seats) {
+          var __sd = S.seatData[pid];
           if (!__sd || __sd.gone) continue;
           __sd.bet    = 0;
           __sd.action = '';
@@ -6298,7 +6290,7 @@ const App = (() => {
         setTimeout(renderPreFlopStrength, 350);
         setTimeout(renderOddsMonitor, 400); // moniteur d'odds (préflop)
         // Init stats
-        var startMon = (seatData[myId]||{}).money || 0;
+        var startMon = (S.seatData[myId]||{}).money || 0;
         if (!S._statsInited && startMon > 0) initStats(startMon);
         // Sons + animations deal
         setTimeout(function(){
@@ -6335,7 +6327,7 @@ const App = (() => {
         // the next live one. We still set turnPid above (for any UI
         // consistency code that may inspect it) but bail out of the
         // turn-handling logic so we don't render a ghost as active.
-        if (S.turnPid && seatData[S.turnPid] && seatData[S.turnPid].gone) {
+        if (S.turnPid && S.seatData[S.turnPid] && S.seatData[S.turnPid].gone) {
           console.warn('[PlayersTurn] server assigned turn to a gone pid', S.turnPid, '— ignoring');
           renderSeats();
           break;
@@ -6343,7 +6335,7 @@ const App = (() => {
         // A seat whose turn the server just assigned is by definition
         // in the hand — force active=true. Safety net for spectators
         // who joined mid-hand and missed the HandStart reset.
-        if (S.turnPid && seatData[S.turnPid]) seatData[S.turnPid].active = true;
+        if (S.turnPid && S.seatData[S.turnPid]) S.seatData[S.turnPid].active = true;
         const rounds = [t('preflop'),t('flop'),t('turn'),t('river'),t('preflop')+' (SB)',t('preflop')+' (BB)'];
         $('g-round').textContent = rounds[S.gameState] || t('preflop');
         startTurnTimer();
@@ -6398,19 +6390,19 @@ const App = (() => {
         } catch (_e) {}
         const aLabels = ['','Fold','Check','Call','Bet','Raise','All-in'];
         const aLabel  = aLabels[action] || '?';
-        if (seatData[pid]) {
-          seatData[pid].bet    = bet;
-          seatData[pid].money  = money;
-          seatData[pid].folded = action === 1;
-          seatData[pid].action = aLabel;
+        if (S.seatData[pid]) {
+          S.seatData[pid].bet    = bet;
+          S.seatData[pid].money  = money;
+          S.seatData[pid].folded = action === 1;
+          S.seatData[pid].action = aLabel;
         }
         S.pot = S.collectedPot;
-        for (const p of seats) if (seatData[p]) S.pot += seatData[p].bet;
+        for (const p of S.seats) if (S.seatData[p]) S.pot += S.seatData[p].bet;
         setPot(S.pot);
         logAction(getPlayerName(pid) + ': ' + aLabel + (bet ? ' ' + bet : ''), true);
         speak(voiceActionPhrase(action, pid, bet));
         if (pid === myId) {
-          const myMon = (seatData[myId] || {}).money || 0;
+          const myMon = (S.seatData[myId] || {}).money || 0;
           if ($('g-mystack')) $('g-mystack').textContent = myMon > 0 ? fmtChips(myMon) : '';
         }
         renderSeats();
@@ -6465,7 +6457,7 @@ const App = (() => {
         S.gameState = 1;
         // Collect preflop bets into pot
         let flopBets = 0;
-        for (const p of seats) if (seatData[p] && seatData[p].bet) { flopBets += seatData[p].bet; seatData[p].bet = 0; }
+        for (const p of S.seats) if (S.seatData[p] && S.seatData[p].bet) { flopBets += S.seatData[p].bet; S.seatData[p].bet = 0; }
         S.collectedPot += flopBets;
         S.pot = S.collectedPot;
         // FIX 2024-XX : reset des stats par round.
@@ -6495,7 +6487,7 @@ const App = (() => {
         $('g-round').textContent = t('turn');
         S.gameState = 2;
         let turnBets = 0;
-        for (const p of seats) if (seatData[p] && seatData[p].bet) { turnBets += seatData[p].bet; seatData[p].bet = 0; }
+        for (const p of S.seats) if (S.seatData[p] && S.seatData[p].bet) { turnBets += S.seatData[p].bet; S.seatData[p].bet = 0; }
         S.collectedPot += turnBets;
         S.pot = S.collectedPot;
         // Voir DealFlop pour le commentaire — reset des stats par round
@@ -6522,7 +6514,7 @@ const App = (() => {
         $('g-round').textContent = t('river');
         S.gameState = 3;
         let rvBets = 0;
-        for (const p of seats) if (seatData[p] && seatData[p].bet) { rvBets += seatData[p].bet; seatData[p].bet = 0; }
+        for (const p of S.seats) if (S.seatData[p] && S.seatData[p].bet) { rvBets += S.seatData[p].bet; S.seatData[p].bet = 0; }
         S.collectedPot += rvBets;
         S.pot = S.collectedPot;
         // Voir DealFlop pour le commentaire — reset des stats par round
@@ -6551,7 +6543,7 @@ const App = (() => {
           // FIX : un joueur sans carte révélée → null (pas 0 qui serait le 2♣)
           const c1  = Proto.u32orNull(a, 2);
           const c2  = Proto.u32orNull(a, 3);
-          if (seatData[pid]) { seatData[pid].card1 = c1; seatData[pid].card2 = c2; }
+          if (S.seatData[pid]) { S.seatData[pid].card1 = c1; S.seatData[pid].card2 = c2; }
           try { if (window._handlog) window._handlog.onRevealCards([{ pid: pid, card1: c1, card2: c2 }]); } catch (_e) {}
         }
         renderSeats();
@@ -6573,11 +6565,11 @@ const App = (() => {
           const c2  = Proto.u32orNull(r, 3);
           const won = Proto.u32(r, 5);
           const cash= Proto.u32(r, 6);
-          if (seatData[pid]) {
-            seatData[pid].money  = cash;
-            seatData[pid].card1  = c1;
-            seatData[pid].card2  = c2;
-            seatData[pid].action = won ? '🏆 +' + won : '';
+          if (S.seatData[pid]) {
+            S.seatData[pid].money  = cash;
+            S.seatData[pid].card1  = c1;
+            S.seatData[pid].card2  = c2;
+            S.seatData[pid].action = won ? '🏆 +' + won : '';
           }
           // Abattage : cartes révélées + nom de la combinaison. Le label vient
           // de evaluateBestHand (clés hs* déjà traduites dans les 36 langues).
@@ -6611,7 +6603,7 @@ const App = (() => {
         }
         // Enregistrer la perte si je ne suis pas dans les gagnants
         if (!winners.some(function(w){ return w.pid === myId; })) {
-          var myEndMon = (seatData[myId] || {}).money;
+          var myEndMon = (S.seatData[myId] || {}).money;
           if (myEndMon != null) {
             var myStartMon = (S._myStackAtHandStart != null) ? S._myStackAtHandStart : ((S._stats.startMoney || 0) + S._stats.totalGain);
             var myLoss = myEndMon - myStartMon;
@@ -6628,8 +6620,8 @@ const App = (() => {
           if (localStorage.getItem('pth_fade_losers') !== '0') {
             var _winPids = {};
             winners.forEach(function (w) { _winPids[w.pid] = 1; });
-            for (var _lp in seatData) {
-              var _ls = seatData[_lp];
+            for (var _lp in S.seatData) {
+              var _ls = S.seatData[_lp];
               if (_ls && _ls.card1 != null && _ls.card2 != null && !_winPids[_lp])
                 _sdLosers.add(parseInt(_lp, 10));
             }
@@ -6711,13 +6703,13 @@ const App = (() => {
         const pid  = Proto.u32(sub, 2);
         const won  = Proto.u32(sub, 3);
         const cash = Proto.u32(sub, 4);
-        if (seatData[pid]) { seatData[pid].money = cash; if(won) seatData[pid].action = '+'+won; }
+        if (S.seatData[pid]) { S.seatData[pid].money = cash; if(won) S.seatData[pid].action = '+'+won; }
         if (won > 0) logAction('🏆 ' + getPlayerName(pid) + ' +' + _groupThousands(won));
         try { if (window._handlog) window._handlog.onHandHideEnd({ pid: pid, won: won, round: (typeof S.gameState === 'number' ? S.gameState : undefined), eliminated: _hlEliminatedPids(), gameOverPid: null }); } catch (_e) {}
         try { if (typeof window._hudRefresh === 'function') window._hudRefresh(); } catch (_e) {}
         try { _sdWinners = won > 0 ? new Set([pid]) : new Set(); } catch (e) {}
         // Enregistrer le résultat de la main pour moi (fin sans abattage).
-        var myHideMon = (seatData[myId] || {}).money;
+        var myHideMon = (S.seatData[myId] || {}).money;
         if (myHideMon != null) {
           var myHideStart = (S._myStackAtHandStart != null) ? S._myStackAtHandStart : ((S._stats.startMoney || 0) + S._stats.totalGain);
           var myHideNet   = myHideMon - myHideStart;
@@ -6735,8 +6727,8 @@ const App = (() => {
         S.pot = 0; setPot(0);
         renderSeats();
         // Détection élimination (stack à 0)
-        for (var _ep of seats) {
-          if (_ep !== myId && seatData[_ep] && seatData[_ep].money === 0) {
+        for (var _ep of S.seats) {
+          if (_ep !== myId && S.seatData[_ep] && S.seatData[_ep].money === 0) {
             setTimeout(function(p){ animatePlayerEliminated(p); }, 600, _ep);
           }
         }
@@ -6745,7 +6737,7 @@ const App = (() => {
         // « Show » volontaire : main terminée SANS abattage → mes cartes
         // n'ont pas été révélées. Réseau seulement (le FakeServer offline
         // ignore le type 51) et jamais en spectateur.
-        if (!_amSpectator && !window._offlineMode && S.myCards[0] != null) _setCanShow(true);
+        if (!S._amSpectator && !window._offlineMode && S.myCards[0] != null) _setCanShow(true);
         break;
       }
 
@@ -6790,7 +6782,7 @@ const App = (() => {
         // buttons so the user can retry. The local turn timer was already
         // stopped by doAction; restart it so the user has the full delay
         // again instead of a stale countdown.
-        if (S.turnPid === myId && !_amSpectator) {
+        if (S.turnPid === myId && !S._amSpectator) {
           renderMyTurnActions();
           startTurnTimer();
         }
@@ -6808,7 +6800,7 @@ const App = (() => {
         const _sC1  = Proto.u32orNull(_sPr, 2);
         const _sC2  = Proto.u32orNull(_sPr, 3);
         if (_sPid && _sC1 != null && _sC2 != null) {
-          if (seatData[_sPid]) { seatData[_sPid].card1 = _sC1; seatData[_sPid].card2 = _sC2; }
+          if (S.seatData[_sPid]) { S.seatData[_sPid].card1 = _sC1; S.seatData[_sPid].card2 = _sC2; }
           if (_sPid === myId) { _ownReveal = true; try { renderMyCards(); } catch (e) {} _setCanShow(false); }
           try { renderSeats(); } catch (e) {}
           const _sBd = S.commCards.slice();
@@ -6844,7 +6836,7 @@ const App = (() => {
         if (_advGet('auto_leave', false) && !window._offlineMode) {
           try { clearTimeout(window._autoLeaveTimer); } catch (_e) {}
           window._autoLeaveTimer = setTimeout(function () {
-            try { if (amInGame && window.App && App.leaveGame) App.leaveGame(); } catch (_e) {}
+            try { if (S.amInGame && window.App && App.leaveGame) App.leaveGame(); } catch (_e) {}
           }, 12000);
         }
         break;
@@ -6900,9 +6892,9 @@ const App = (() => {
   function renderTablePlayers(gid) {
     const g = S.games[gid];
     if (!g) return '';
-    const seats = (g.seats || []);
-    if (!seats.length) return '<div class="gp-empty">' + t('tablePlayersEmpty') + '</div>';
-    return seats.map(function(pid){
+    const _gseats = (g.seats || []);
+    if (!_gseats.length) return '<div class="gp-empty">' + t('tablePlayersEmpty') + '</div>';
+    return _gseats.map(function(pid){
       const nm = S.players[pid];
       if (!nm && !S._pendingNameRequests.has(pid)) {
         S._pendingNameRequests.add(pid);
@@ -6920,9 +6912,9 @@ const App = (() => {
   //    portent data-i18n → retraduits automatiquement par setLang. ──
   function _renderInfoPlayerRows(gid) {
     var g = S.games[gid]; if (!g) return '';
-    var seats = g.seats || [];
-    if (!seats.length) return '<div class="lgi-pempty">' + t('tablePlayersEmpty') + '</div>';
-    return seats.map(function(pid){
+    var _gseats = g.seats || [];
+    if (!_gseats.length) return '<div class="lgi-pempty">' + t('tablePlayersEmpty') + '</div>';
+    return _gseats.map(function(pid){
       var nm = S.players[pid];
       if (!nm && !S._pendingNameRequests.has(pid)) {
         S._pendingNameRequests.add(pid);
@@ -6940,8 +6932,8 @@ const App = (() => {
   // pids présents à MA table pendant l'attente : seatData non 'gone' + moi si
   // absent (le serveur n'écho pas toujours mon propre join, surtout créateur).
   function _gamePresentPids() {
-    var pids = Object.keys(seatData).map(Number).filter(function(pid){ return seatData[pid] && !seatData[pid].gone; });
-    if (!_amSpectator && myId && pids.indexOf(myId) === -1) pids.push(myId);
+    var pids = Object.keys(S.seatData).map(Number).filter(function(pid){ return S.seatData[pid] && !S.seatData[pid].gone; });
+    if (!S._amSpectator && myId && pids.indexOf(myId) === -1) pids.push(myId);
     return pids;
   }
   // Rendu des lignes joueurs depuis une liste de pids arbitraire (pour ma
@@ -6950,7 +6942,7 @@ const App = (() => {
     if (!pids || !pids.length) return '<div class="lgi-pempty">' + t('tablePlayersEmpty') + '</div>';
     return pids.map(function(pid){
       var nm = S.players[pid];
-      if (!nm && pid === myId) nm = (document.getElementById('nick') ? document.getElementById('nick').value : '') || myName;
+      if (!nm && pid === myId) nm = (document.getElementById('nick') ? document.getElementById('nick').value : '') || S.myName;
       if (!nm && !S._pendingNameRequests.has(pid)) {
         S._pendingNameRequests.add(pid);
         try { send(Proto.encode([[1,0,T.PlayerInfoRequest],[19,2,Proto.encode([[1,0,pid]])]])); } catch(e) {}
@@ -6971,7 +6963,7 @@ const App = (() => {
     // On se base sur gId (posé dès JoinGameAck) et NON sur amInGame, qui n'est
     // mis à true qu'à GameStartInitial → sinon la barre d'options n'apparaît
     // jamais pendant l'attente.
-    var _mine = (gid != null && S.gId !== 0 && gid === S.gId && !_gameStarted);
+    var _mine = (gid != null && S.gId !== 0 && gid === S.gId && !S._gameStarted);
     var g = (gid != null) ? S.games[gid] : null;
     // Créateur : games[gId] peut ne pas encore être peuplé (GameListNew arrive
     // juste après). On synthétise depuis _gameMeta + variables live.
@@ -7037,7 +7029,7 @@ const App = (() => {
     var bar = document.getElementById('lobby-wait-actions');
     if (!bar) return;
     var create = document.querySelector('.lobby-footbar .lfb-create');
-    var mine = (S.gId !== 0 && !_gameStarted);
+    var mine = (S.gId !== 0 && !S._gameStarted);
     // Mode « ma partie en attente » : la liste passe à droite et mes infos +
     // le chat au centre (parité client officiel) — piloté par une classe CSS.
     var _sl = document.getElementById('s-lobby');
@@ -7055,7 +7047,7 @@ const App = (() => {
     var g        = S.games[S.gId] || {};
     var maxP     = g.maxPlayers || (S._gameMeta && S._gameMeta.maxPlayers) || 10;
     var isRank   = (g.type || (S._gameMeta && S._gameMeta.type) || 1) === 4;
-    var isHost   = !_amSpectator && S.amGameAdmin && !isRank;
+    var isHost   = !S._amSpectator && S.amGameAdmin && !isRank;
     var count    = _gamePresentPids().length;
     // Mode entraînement (offline) : la case « Fill up with computer players »
     // est cochée par défaut. Sans effet sur les autres modes, et un (dé)cochage
@@ -7074,7 +7066,7 @@ const App = (() => {
     var startBtn = isHost
       ? '<button class="wp-btn wp-btn-start" onclick="App.startFromWait()"' + (canStart ? '' : ' disabled') + ' title="' + t('wpStartHumansTip') + '">' + t('wpStartGame') + '</button>'
       : '';
-    var hint = isHost ? '' : '<div class="lfb-waithint">' + t(_amSpectator ? 'waitingHintSpectator' : 'waitingHintGuest') + '</div>';
+    var hint = isHost ? '' : '<div class="lfb-waithint">' + t(S._amSpectator ? 'waitingHintSpectator' : 'waitingHintGuest') + '</div>';
     bar.innerHTML = fillRow + '<div class="wp-actions">' + leaveBtn + startBtn + '</div>' + hint;
     bar.style.display = 'flex';
     if (create) create.style.display = 'none';
@@ -7100,7 +7092,7 @@ const App = (() => {
     // Déjà dans une partie (assis, en attente de démarrage OU démarrée) : on
     // ne propose ni Rejoindre ni Spectateur — seules Démarrer/Quitter restent.
     // gId!=0 couvre l'attente (amInGame est encore faux avant le démarrage).
-    var busy = amInGame || (typeof S.gId !== 'undefined' && S.gId !== 0);
+    var busy = S.amInGame || (typeof S.gId !== 'undefined' && S.gId !== 0);
     var joinable  = !!(g && g.mode === 1) && !busy && !_guestJoinBlocked(g);   // partie ouverte (et autorisée pour un invité)
     var watchable = !!(g && g.mode === 2) && !busy;   // partie en cours
     if (bj) bj.style.display = joinable  ? '' : 'none';
@@ -7143,8 +7135,8 @@ const App = (() => {
   // chargée) — plus aucun rendu dans la pot-strip. ──
   function _remainCount() {
     try {
-      return seats.filter(function (p) {
-        var sd = seatData[p];
+      return S.seats.filter(function (p) {
+        var sd = S.seatData[p];
         return sd && !sd.gone && !(sd.money != null && sd.money <= 0 && sd.active === false);
       }).length;
     } catch (e) { return 0; }
@@ -7300,14 +7292,14 @@ const App = (() => {
         if (!on) return;
         _ownReveal = !_ownReveal;
         renderMyCards();
-        try { if (seats.length) renderSeats(); } catch (e) {}
+        try { if (S.seats.length) renderSeats(); } catch (e) {}
       });
     }
   }
   // Re-rendu des cartes propres (player-bar + sièges) après bascule de l'option.
   window._refreshOwnCards = function () {
     try { renderMyCards(); } catch (e) {}
-    try { if (seats.length) renderSeats(); } catch (e) {}
+    try { if (S.seats.length) renderSeats(); } catch (e) {}
   };
 
 
@@ -7354,8 +7346,8 @@ const App = (() => {
 
   // ── Jeton qui glisse vers le pot ──
   function animateChipToPot(pid, amount) {
-    var myIdx = seats.indexOf(myId);
-    var rotated2 = myIdx >= 0 ? seats.slice(myIdx).concat(seats.slice(0,myIdx)) : seats;
+    var myIdx = S.seats.indexOf(myId);
+    var rotated2 = myIdx >= 0 ? S.seats.slice(myIdx).concat(S.seats.slice(0,myIdx)) : S.seats;
     var seatIdx = rotated2.indexOf(pid);
     if (seatIdx < 0 || !S._lastPixPos[seatIdx]) return;
     var from = S._lastPixPos[seatIdx];
@@ -7461,7 +7453,7 @@ const App = (() => {
   }
 
   function _statsBodyLife() {
-    var s = _lifeGet(myName);
+    var s = _lifeGet(S.myName);
     var gain = s.net;
     var gainCls = gain > 0 ? 'pos' : gain < 0 ? 'neg' : '';
     var wr = s.handsPlayed > 0 ? Math.round(s.handsWon/s.handsPlayed*100) : 0;
@@ -7538,12 +7530,12 @@ const App = (() => {
         if (!arr.length) { box.innerHTML = sortUI + '<div class="stat-empty">'+t('boardEmpty')+'</div>'; return; }
         // My rank under the current criterion — shown even if far down the list.
         var myIdx = -1;
-        for (var k=0;k<arr.length;k++){ if (arr[k].name===myName){ myIdx=k; break; } }
+        for (var k=0;k<arr.length;k++){ if (arr[k].name===S.myName){ myIdx=k; break; } }
         var rankLine = (myIdx>=0)
           ? '<div class="board-myrank">'+t('boardYourRank', { n: myIdx+1, m: arr.length })+'</div>' : '';
         var rows = arr.map(function(p, i){
           var net = p.net||0, ncls = net>0?'pos':net<0?'neg':'';
-          var mine = (p.name === myName) ? ' me' : '';
+          var mine = (p.name === S.myName) ? ' me' : '';
           var av = p.avatar ? p.avatar : (p.name ? p.name.charAt(0).toUpperCase() : '?');
           var medal = i===0?'🥇':i===1?'🥈':i===2?'🥉':('#'+(i+1));
           var hp = p.handsPlayed||0;
@@ -7606,7 +7598,7 @@ const App = (() => {
     var deck = [];
     for (var i = 0; i < 52; i++) { if (known.indexOf(i) < 0) deck.push(i); }
     var needed = 5 - comm.length;
-    var nOpp = Math.max(1, seats.filter(function(p){ return p !== myId && seatData[p] && !seatData[p].folded; }).length);
+    var nOpp = Math.max(1, S.seats.filter(function(p){ return p !== myId && S.seatData[p] && !S.seatData[p].folded; }).length);
     var wins = 0, total = 200;
     for (var t = 0; t < total; t++) {
       // Shuffle deck (Fisher-Yates partiel)
@@ -7858,13 +7850,13 @@ const App = (() => {
         'style="display:inline-block;width:18px;height:18px;vertical-align:middle;flex:none;filter:drop-shadow(0 1px 3px rgba(0,0,0,.4))"');
   };
 
-  function getPlayerName(pid) { return S.players[pid] || (pid === myId ? myName : '#'+pid); }
+  function getPlayerName(pid) { return S.players[pid] || (pid === myId ? S.myName : '#'+pid); }
   // Sièges dont le stack est tombé à 0 (éliminés) — pour handlog 'sits out'.
   function _hlEliminatedPids() {
     var out = [];
     try {
-      for (var _i = 0; _i < seats.length; _i++) {
-        var _p = seats[_i], _sd = seatData[_p];
+      for (var _i = 0; _i < S.seats.length; _i++) {
+        var _p = S.seats[_i], _sd = S.seatData[_p];
         if (_sd && !_sd.gone && _sd.money === 0) out.push(_p);
       }
     } catch (_e) {}
@@ -7873,7 +7865,7 @@ const App = (() => {
   // Liste des joueurs actuellement à la table (pour le panneau stats).
   window._statsTablePlayers = function () {
     try {
-      return (seats || []).map(function (pid) { return { pid: pid, name: getPlayerName(pid) }; });
+      return (S.seats || []).map(function (pid) { return { pid: pid, name: getPlayerName(pid) }; });
     } catch (_e) { return []; }
   };
   // URLs du moteur SQLite vendored (pour l'export .pdb).
@@ -7998,7 +7990,7 @@ const App = (() => {
       // first letter is the right text fallback; the image (real or
       // placeholder logo) is layered on top by the renderer.
       if (S._myAvatarCache && S._myAvatarCache !== '__pth__' && S._myAvatarCache !== '__img__') return S._myAvatarCache;
-      return myName ? myName.charAt(0).toUpperCase() : '?';
+      return S.myName ? S.myName.charAt(0).toUpperCase() : '?';
     }
     if (isBot(pid)) return '🤖';
     // Avatar reçu des autres joueurs via proxy
@@ -8031,7 +8023,7 @@ const App = (() => {
         if (!isNaN(sp)) openPlayerInfoPopup(sp);
       });
     }
-    if (!seats.length) { el.innerHTML = ''; return; }
+    if (!S.seats.length) { el.innerHTML = ''; return; }
     // Keep ALL original seats when computing pixel positions. Previously
     // we filtered to active-only seats here, which caused the remaining
     // players to visually rotate / re-space themselves around the felt
@@ -8039,16 +8031,16 @@ const App = (() => {
     // "the players keep moving around between hands". Now we always
     // place against the original seating order and mark the eliminated
     // ones as .seat-out so they render visually faded but in place.
-    const n = seats.length;
-    const myIdx = seats.indexOf(myId);
-    let rotated = myIdx >= 0 ? [...seats.slice(myIdx), ...seats.slice(0, myIdx)] : seats;
+    const n = S.seats.length;
+    const myIdx = S.seats.indexOf(myId);
+    let rotated = myIdx >= 0 ? [...S.seats.slice(myIdx), ...S.seats.slice(0, myIdx)] : S.seats;
     // ── Option avancée « Retirer les joueurs partis » (défaut OFF : le siège
     // fantôme grisé reste, comportement historique). Activée : les partis
     // (.gone) sortent de la table et les joueurs restants sont REPLACÉS selon
     // la table de placement du nouveau compte (slots QML M→sièges + échelle
     // bisectée), exactement comme si la partie avait ce nombre de joueurs. ──
     if (_advGet('remove_gone', false)) {
-      var _kept = rotated.filter(function (p) { var _sg = seatData[p]; return !(_sg && _sg.gone); });
+      var _kept = rotated.filter(function (p) { var _sg = S.seatData[p]; return !(_sg && _sg.gone); });
       if (_kept.length) rotated = _kept;
     }
     try { window._seatCount = rotated.length; } catch (e) {}
@@ -8344,16 +8336,16 @@ const App = (() => {
     // the SB/BB chips get assigned to a ghost seat that hides all
     // its badges via CSS, leaving the table with no visible blinds.
     // Walk around the table until we find a non-gone seat.
-    const dealerIdx = seats.indexOf(S.dealerPid);
+    const dealerIdx = S.seats.indexOf(S.dealerPid);
     function nextActiveSeat(fromIdx, offset) {
-      if (fromIdx < 0 || !seats.length) return -1;
-      var n = seats.length;
+      if (fromIdx < 0 || !S.seats.length) return -1;
+      var n = S.seats.length;
       // At most n steps — if everyone is gone/out we give up gracefully.
       var idx = fromIdx;
       var stepped = 0;
       for (var k = 0; k < n; k++) {
         idx = (idx + 1) % n;
-        var __sd2 = seatData[seats[idx]];
+        var __sd2 = S.seatData[S.seats[idx]];
         // Skip seats that are either:
         //   - gone (player left voluntarily), or
         //   - eliminated (money <= 0 and not playing this hand,
@@ -8362,22 +8354,22 @@ const App = (() => {
         var __skip = !__sd2 || __sd2.gone || (__sd2.active === false) || (__sd2.money != null && __sd2.money <= 0);
         if (!__skip) {
           stepped++;
-          if (stepped === offset) return seats[idx];
+          if (stepped === offset) return S.seats[idx];
         }
       }
       return -1;
     }
-    const sbPid = dealerIdx >= 0 && seats.length > 1
+    const sbPid = dealerIdx >= 0 && S.seats.length > 1
       ? nextActiveSeat(dealerIdx, 1)
       : -1;
-    const bbPid = dealerIdx >= 0 && seats.length > 2
+    const bbPid = dealerIdx >= 0 && S.seats.length > 2
       ? nextActiveSeat(dealerIdx, 2)
-      : (seats.length === 2 ? seats[dealerIdx] : -1); // heads-up: dealer = SB
+      : (S.seats.length === 2 ? S.seats[dealerIdx] : -1); // heads-up: dealer = SB
     // Mémorise SB/BB pour le popup d'info joueur (lu hors de renderSeats).
     S._lastSbPid = sbPid; S._lastBbPid = bbPid;
 
     // Update player-bar
-    const mySd = seatData[myId] || {};
+    const mySd = S.seatData[myId] || {};
     const pbAv   = document.getElementById('g-myseat-av');
     const pbName = document.getElementById('g-myseat-name');
     const pbMon  = document.getElementById('g-myseat-money');
@@ -8404,11 +8396,11 @@ const App = (() => {
       ? myBlindChip.replace('class="blind-chip"', _barPuckStyle).replace("window._pthChip('", "window._pthBarChip('")
       : '';
     if (pbName) {
-      pbName.textContent = myName;
+      pbName.textContent = S.myName;
       // D + blind regroupés dans un seul conteneur inline-flex centré, pour
       // qu'ils soient parfaitement alignés entre eux (avant : deux <span> au
       // calage vertical différent — le jeton de blind avait un top:-1px).
-      pbName.innerHTML = myName
+      pbName.innerHTML = S.myName
         + ((myDealerBadge || myBlindBadge)
             ? '<span style="display:inline-flex;align-items:center;gap:4px;margin-left:6px;vertical-align:middle">'
               + myDealerBadge + myBlindBadge + '</span>'
@@ -8420,7 +8412,7 @@ const App = (() => {
     // PAS pendant l'all-in, on attend que la main soit résolue et que je sois
     // réellement éliminé. Cohérent avec le critère des autres sièges (seat-out).
     var __amOut = !!(mySd && mySd.money != null && mySd.money <= 0
-                     && mySd.active === false && !mySd.gone && !_amSpectator);
+                     && mySd.active === false && !mySd.gone && !S._amSpectator);
     if (pbMon) {
       pbMon.textContent = mySd.money != null ? fmtChips(mySd.money) : '—';
       if (__amOut) {
@@ -8442,7 +8434,7 @@ const App = (() => {
     rotated.forEach((pid, i) => {
       const px = pixPos[i];
       const isMe = pid === myId;
-      const sd = seatData[pid] || {};
+      const sd = S.seatData[pid] || {};
       const isDealer = pid === S.dealerPid;
       const isActive = pid === S.turnPid;
       const isOut  = sd.active === false; // eliminated or sitting out this hand
@@ -8660,7 +8652,7 @@ const App = (() => {
       if (isActive) h += '<div class="seat-timer-badge" id="stb-'+pid+'">'
         + ((S._timerSec > 0) ? S._timerSec + 's' : '') + '</div>';
       h += '<div class="seat-info">';
-      h += '<div class="seat-name">' + esc(isMe ? myName : getPlayerName(pid)) + '</div>';
+      h += '<div class="seat-name">' + esc(isMe ? S.myName : getPlayerName(pid)) + '</div>';
       if (_seatTr.flagInfo && !_seatNarrow) {
         // infoBar QML (wideLayout) : drapeau 22×15 en bas-gauche + stack or à droite.
         h += '<div class="seat-info-row2">' + flagBadge + '<div class="seat-money">' + moneyStr + '</div></div>';
@@ -9054,7 +9046,7 @@ const App = (() => {
     //    doit alors remplacer le message, pas l'inverse.
     var _liveTurn = false;
     try { var _mzL = document.querySelector('.my-zone'); _liveTurn = !!(_mzL && _mzL.classList.contains('my-turn-active')); } catch (e) {}
-    var _pinShow = !_amSpectator && _gameStarted; // barre toujours affichée (mode masqué permanent)
+    var _pinShow = !S._amSpectator && S._gameStarted; // barre toujours affichée (mode masqué permanent)
     if ((S._preActionOpen || _pinShow) && !(S.turnPid === myId && _liveTurn)) { _renderPreActionPanel(); updateBottomLayout(); return; }
     // isHtml=true : msg contient du HTML interne sûr (généré par notre code)
     $('g-actions').innerHTML = '<div class="waiting-msg">' + (isHtml ? msg : esc(msg)) + '</div>';
@@ -9089,7 +9081,7 @@ const App = (() => {
   // Ferme le panneau et restaure le message d'attente du tour courant.
   function _closePreActionPanel() {
     S._preActionOpen = false;
-    if (S.turnPid && S.turnPid !== myId && seatData[S.turnPid]) {
+    if (S.turnPid && S.turnPid !== myId && S.seatData[S.turnPid]) {
       renderGameWaiting(
         '<span style="font-family:inherit">' + esc(getPlayerName(S.turnPid)) + '</span>'
         + '<span class="thinking-dots"><span></span><span></span><span></span></span>', true);
@@ -9119,7 +9111,7 @@ const App = (() => {
   window._wpSetFillBots = function(v) { window._wpFillBots = !!v; window._wpFillBotsUserSet = true; try { if (window._renderLobbyWaitActions) window._renderLobbyWaitActions(); } catch (e) {} };
 
   function renderWaitingPanel() {
-    if (_gameStarted) return;
+    if (S._gameStarted) return;
     // Refonte « wait-page dans le lobby » : pendant l'attente on reste sur
     // s-lobby et c'est le panneau central #lobby-gameinfo qui porte les infos
     // de partie, la liste des joueurs et les options d'attente (case bots +
@@ -9143,14 +9135,14 @@ const App = (() => {
     // « En attente » = je suis dans une table rejointe/creee non demarree.
     // NB : amInGame ne passe a true qu'au debut de la 1re main (HandStart),
     // donc on s'appuie sur gId (table courante) + !_gameStarted uniquement.
-    var waiting = !!(S.gId && !_gameStarted);
+    var waiting = !!(S.gId && !S._gameStarted);
     el.style.display = waiting ? '' : 'none';
     // Parite QML GameWaitPage : en spectateur, « Spectating — waiting for the
     // next hand » remplace « Waiting for players ». La cle data-i18n est
     // permutee pour que setLang retraduise correctement a chaud.
     var txt = document.getElementById('lws-txt');
     if (txt) {
-      var key = _amSpectator ? 'hdrSpectatingWait' : 'hdrWaitingPlayers';
+      var key = S._amSpectator ? 'hdrSpectatingWait' : 'hdrWaitingPlayers';
       if (txt.getAttribute('data-i18n') !== key) {
         txt.setAttribute('data-i18n', key);
         try { txt.textContent = t(key); } catch (e) {}
@@ -9205,7 +9197,7 @@ const App = (() => {
     // Stats — reuse the S._stats object that was already being maintained
     const s = S._stats || { handsPlayed:0, handsWon:0, totalGain:0, bigWin:0, bigLoss:0, startMoney:0 };
     const wr = s.handsPlayed > 0 ? Math.round(s.handsWon / s.handsPlayed * 100) : 0;
-    const _realStk = (seatData[myId] && seatData[myId].money != null) ? seatData[myId].money : null;
+    const _realStk = (S.seatData[myId] && S.seatData[myId].money != null) ? S.seatData[myId].money : null;
     const finalStack = (_realStk != null) ? _realStk : ((s.startMoney || 0) + (s.totalGain || 0));
     const gainCls = (s.totalGain > 0) ? 'pos' : (s.totalGain < 0) ? 'neg' : '';
 
@@ -9342,7 +9334,7 @@ const App = (() => {
             ga.style.paddingBottom = _res + 'px';
             // La hauteur visible de la zone vient de changer : replacer les
             // sieges (guard _cur!==_res -> pas de boucle de re-rendu).
-            setTimeout(function () { try { if (typeof renderSeats === 'function' && typeof seats !== 'undefined' && seats.length) renderSeats(); } catch (e) {} }, 50);
+            setTimeout(function () { try { if (typeof renderSeats === 'function' && typeof S.seats !== 'undefined' && S.seats.length) renderSeats(); } catch (e) {} }, 50);
           }
         } else ga.style.removeProperty('padding-bottom');
       }
@@ -9389,9 +9381,9 @@ const App = (() => {
   // de chaque nouvelle partie (StartEvent).
   const _eliminatedLogged = new Set();
   function logEliminations() {
-    for (var _i = 0; _i < seats.length; _i++) {
-      var _ep = seats[_i];
-      var _sd = seatData[_ep];
+    for (var _i = 0; _i < S.seats.length; _i++) {
+      var _ep = S.seats[_i];
+      var _sd = S.seatData[_ep];
       if (_sd && !_sd.gone && _sd.money === 0 && !_eliminatedLogged.has(_ep)) {
         _eliminatedLogged.add(_ep);
         const _ce = _ep;
@@ -9402,8 +9394,8 @@ const App = (() => {
   // [Phase 2 / 9d] setPct déplacée dans public/modules/ui/misc.mjs.
   window.setPct = setPct;
   // Exposer pour les animations + fonctions globales
-  Object.defineProperty(window, 'seats',       {get: function(){ return seats; }});
-  Object.defineProperty(window, 'seatData',    {get: function(){ return seatData; }});
+  Object.defineProperty(window, 'seats',       {get: function(){ return S.seats; }});
+  Object.defineProperty(window, 'seatData',    {get: function(){ return S.seatData; }});
   Object.defineProperty(window, 'myId',        {get: function(){ return myId; }});
   Object.defineProperty(window, 'players',     {get: function(){ return S.players; }});
   Object.defineProperty(window, '_ipBlockUntil',{
@@ -9454,10 +9446,10 @@ const App = (() => {
     if (window.refreshAppBadge) window.refreshAppBadge();
   }
 
-  window._renderSeats = function() { if (seats.length) renderSeats(); try { if (typeof window._hudRender === 'function') window._hudRender(); } catch (e) {} };
+  window._renderSeats = function() { if (S.seats.length) renderSeats(); try { if (typeof window._hudRender === 'function') window._hudRender(); } catch (e) {} };
   // Variante SYNCHRONE (sans requestAnimationFrame) : rend immediatement, utilisee
   // par setSeatLayout sur iOS ou le rAF peut etre gele apres le selecteur natif.
-  window._renderSeatsNow = function() { if (seats.length) { try { renderSeatsImmediate(); } catch (e) {} } try { if (typeof window._hudRender === 'function') window._hudRender(); } catch (e) {} };
+  window._renderSeatsNow = function() { if (S.seats.length) { try { renderSeatsImmediate(); } catch (e) {} } try { if (typeof window._hudRender === 'function') window._hudRender(); } catch (e) {} };
   // Pseudos pour la complétion Tab du chat (parité ChatBox QML, bible §11) :
   // en jeu = les joueurs de la table ; au lobby = tous les joueurs connus.
   // Activité d'un joueur pour le panneau « Joueurs » (parité tooltip QML
@@ -9477,8 +9469,8 @@ const App = (() => {
   };
   window._chatNicks = function (gameScope) {
     try {
-      if (gameScope && seats.length) {
-        return seats.map(function (p) { return S.players[p] || ''; }).filter(Boolean);
+      if (gameScope && S.seats.length) {
+        return S.seats.map(function (p) { return S.players[p] || ''; }).filter(Boolean);
       }
       return Object.values(S.players || {}).filter(Boolean);
     } catch (e) { return []; }
@@ -9643,10 +9635,10 @@ const App = (() => {
   // Recalcule le contexte au moment de l'exécution. Un Fold pré-armé devient
   // Check si le check est gratuit. Retourne true si une action a été jouée.
   function _runPreAction() {
-    if (!S._preAction || _amSpectator) { console.log('[prearm] run: refus (préAction=' + S._preAction + ' spectateur=' + _amSpectator + ')'); return false; }
+    if (!S._preAction || S._amSpectator) { console.log('[prearm] run: refus (préAction=' + S._preAction + ' spectateur=' + S._amSpectator + ')'); return false; }
     var pa = S._preAction;
-    var myMoney = (seatData[myId] || {}).money || 0;
-    var myBet   = (seatData[myId] || {}).bet   || 0;
+    var myMoney = (S.seatData[myId] || {}).money || 0;
+    var myBet   = (S.seatData[myId] || {}).bet   || 0;
     var toCall  = Math.max(0, S.highestBet - myBet);
     var canCheck = toCall === 0;
     var minBet = S.minRaise > 0 ? S.minRaise : Math.max(S.highestBet > 0 ? S.highestBet : S.smallBlind * 2, S.smallBlind * 2);
@@ -9671,20 +9663,20 @@ const App = (() => {
     // server normally won't send PlayersTurn to spectators, but we
     // guard against it anyway so a stray message can't accidentally
     // give the user an action UI they shouldn't have.
-    if (_amSpectator) {
+    if (S._amSpectator) {
       clearSpectatorActions();
       return;
     }
     // Invalidation d'une pré-action call/raise si la mise à suivre a changé
     // depuis l'armement (comme l'officiel : onCallAmountChanged). Fold/All-In
     // restent valides (pas de dépendance au montant).
-    var _paCurToCall = Math.max(0, S.highestBet - ((seatData[myId] || {}).bet || 0));
+    var _paCurToCall = Math.max(0, S.highestBet - ((S.seatData[myId] || {}).bet || 0));
     if (S._preAction && (S._preAction === 'call' || S._preAction === 'raise') && _paCurToCall !== S._preActionToCall) {
       console.log('[prearm] INVALIDÉ (' + S._preAction + ') toCallCourant=' + _paCurToCall + ' ≠ mémo=' + S._preActionToCall + ' (preview=' + !!preview + ')');
       S._preAction = '';
     }
-    const myMoney = (seatData[myId] || {}).money || 0;
-    const myBet   = (seatData[myId] || {}).bet || 0;
+    const myMoney = (S.seatData[myId] || {}).money || 0;
+    const myBet   = (S.seatData[myId] || {}).bet || 0;
     const toCall  = Math.max(0, S.highestBet - myBet);
     const canCheck = toCall === 0;
     // ── Anti-Call accidentel : grosse relance ? ──
@@ -9814,7 +9806,7 @@ const App = (() => {
       // normalement affiché À LA PLACE de l'aperçu, est ré-injecté AU-DESSUS
       // des boutons pour conserver l'info "à qui le tour".
       var _narr = '';
-      if (S.turnPid && S.turnPid !== myId && seatData[S.turnPid]) {
+      if (S.turnPid && S.turnPid !== myId && S.seatData[S.turnPid]) {
         _narr = '<div class="act-narrator"><span style="font-family:inherit">'
               + esc(getPlayerName(S.turnPid)) + '</span>'
               + '<span class="thinking-dots"><span></span><span></span><span></span></span></div>';
@@ -9896,8 +9888,8 @@ const App = (() => {
     // numérique) provoquait un rejet serveur YourActionRejected. Les
     // attributs HTML min/max ne sont qu'indicatifs et ne bloquent pas
     // la soumission programmatique.
-    const myMoney = (seatData[myId] || {}).money || 0;
-    const myBet   = (seatData[myId] || {}).bet   || 0;
+    const myMoney = (S.seatData[myId] || {}).money || 0;
+    const myBet   = (S.seatData[myId] || {}).bet   || 0;
     const minBet  = S.minRaise > 0
       ? S.minRaise
       : Math.max(S.highestBet > 0 ? S.highestBet : S.smallBlind * 2, S.smallBlind * 2);
@@ -9922,9 +9914,9 @@ const App = (() => {
 // faussés. On garde les joueurs couchés ; on marque hors-jeu les éliminés.
 function _snapshotHandResults() {
   var snap = {};
-  var pids = seats.length ? seats.slice() : Object.keys(seatData).map(Number);
+  var pids = S.seats.length ? S.seats.slice() : Object.keys(S.seatData).map(Number);
   pids.forEach(function(pid) {
-    var sd    = seatData[pid] || {};
+    var sd    = S.seatData[pid] || {};
     var start = S._seatStackAtHandStart[pid];
     var net   = (start != null && sd.money != null) ? (sd.money - start) : null;
     // "Dans cette main" = avait des jetons au début de CE coup (start > 0),
@@ -10005,7 +9997,7 @@ function showWinnerOverlay(winners) {
   var _playersInHand = Object.keys(snap).filter(function(k){
     return (snap[k] && snap[k].inHand) || winnerPidsEarly.indexOf(Number(k)) >= 0;
   }).length;
-  if (!_playersInHand) _playersInHand = seats.length; // garde-fou si snapshot vide
+  if (!_playersInHand) _playersInHand = S.seats.length; // garde-fou si snapshot vide
 
   // Build header
   var winnerNames = winners.map(function(w){ return esc(getPlayerName(w.pid)); }).join(" & ");
@@ -10046,7 +10038,7 @@ function showWinnerOverlay(winners) {
     var bestHandLabel = '';
     for (var _wi = 0; _wi < winners.length && !bestHandLabel; _wi++) {
       var _wpid = winners[_wi].pid;
-      var _wsd  = seatData[_wpid] || {};
+      var _wsd  = S.seatData[_wpid] || {};
       var _hc1  = (_wpid === myId) ? S.myCards[0] : _wsd.card1;
       var _hc2  = (_wpid === myId) ? S.myCards[1] : _wsd.card2;
       if (_hc1 != null && _hc2 != null) {
@@ -10076,9 +10068,9 @@ function showWinnerOverlay(winners) {
   // after each showdown. The bug looked like 'seats randomly reordered
   // every few hands' and was masked by _seatsFrozen which only guarded
   // against GameStartInitial rewrites, not external mutations.
-  var allPids = seats.length ? seats.slice() : Object.keys(seatData).map(Number);
+  var allPids = S.seats.length ? S.seats.slice() : Object.keys(S.seatData).map(Number);
   var winnerPids = winners.map(function(w){ return w.pid; });
-  function _snapMoney(pid){ var s = snap[pid]; return (s && s.money != null) ? s.money : ((seatData[pid]||{}).money||0); }
+  function _snapMoney(pid){ var s = snap[pid]; return (s && s.money != null) ? s.money : ((S.seatData[pid]||{}).money||0); }
   allPids.sort(function(a,b){
     var aW = winnerPids.indexOf(a) >= 0 ? 1 : 0;
     var bW = winnerPids.indexOf(b) >= 0 ? 1 : 0;
@@ -10087,7 +10079,7 @@ function showWinnerOverlay(winners) {
   });
 
   allPids.forEach(function(pid) {
-    var sd    = seatData[pid] || {};
+    var sd    = S.seatData[pid] || {};
     var snp   = snap[pid] || null;
     var isW   = winnerPids.indexOf(pid) >= 0;
     var isMe  = pid === myId;
@@ -10590,18 +10582,18 @@ function _maybeShowNextHandBtn() {
       const port      = $('port').value.trim() || '7234';
       const loginMode = $('login-mode') ? $('login-mode').value : 'guest';
       const _off = !!($('server-mode') && $('server-mode').value === 'offline');
-      myName          = $('nick').value.trim();
+      S.myName          = $('nick').value.trim();
 
-      if (!myName && loginMode === 'guest') {
+      if (!S.myName && loginMode === 'guest') {
         // Persistent Guest name: re-use the same identifier across tabs
         // and reloads so the server doesn't see different pseudos flooding
         // from the same IP (a key trigger of the initBlocked behaviour).
-        myName = (window.getOrCreateGuestName && window.getOrCreateGuestName())
+        S.myName = (window.getOrCreateGuestName && window.getOrCreateGuestName())
                  || ('Guest' + String(Math.floor(10000 + Math.random()*90000)));
-        $('nick').value = myName;
+        $('nick').value = S.myName;
       }
-      if (!myName) { setStatus(t('enterNick'), 'err'); return; }
-      if (myName.length < 3) { setStatus(t('nickTooShort'), 'err'); return; }
+      if (!S.myName) { setStatus(t('enterNick'), 'err'); return; }
+      if (S.myName.length < 3) { setStatus(t('nickTooShort'), 'err'); return; }
       if (!_off && (!proxyUrl || !host)) { setStatus(t('fillFields'), 'err'); return; }
 
       if (!_off && loginMode === 'auth' && (!$('pass') || !$('pass').value.trim())) {
@@ -10695,9 +10687,9 @@ function _maybeShowNextHandBtn() {
       // Record this Init's identity so the NEXT connect() can compare
       // and apply the mode-swap delay if needed.
       S._lastInitMode = loginMode;
-      S._lastInitNick = myName;
+      S._lastInitNick = S.myName;
       S._lastInitTime = Date.now();
-      S._lastConnectParams = { host, port, loginMode, finalUrl, myName,
+      S._lastConnectParams = { host, port, loginMode, finalUrl, myName: S.myName,
         pass: $('pass') ? $('pass').value : '' };
       S._reconnectAttempts = 0;
       S._intentionalDisconnect = false;
@@ -10717,7 +10709,7 @@ function _maybeShowNextHandBtn() {
           return;
         }
         try {
-          S.ws = window.PokerOffline.createSocket({ nick: myName,
+          S.ws = window.PokerOffline.createSocket({ nick: S.myName,
             botSkill: (function(){ try { return localStorage.getItem('pth_offline_skill') || 'mixed'; } catch (e) { return 'mixed'; } })(),
             // Pause entre les mains (parité QML PauseBetweenHands) : lue en
             // direct pour être basculable en cours de partie.
@@ -10759,7 +10751,7 @@ function _maybeShowNextHandBtn() {
               if (imgPid && imgPid !== myId) {
                 if (imgUrl && imgUrl.slice(0, 5) === 'data:') S._playerImgAvatars[imgPid] = imgUrl;
                 else delete S._playerImgAvatars[imgPid]; // vide = effacer l'image
-                if (typeof renderSeats === 'function' && seats.length) renderSeats();
+                if (typeof renderSeats === 'function' && S.seats.length) renderSeats();
               }
             }
             return;
@@ -10770,7 +10762,7 @@ function _maybeShowNextHandBtn() {
             var avEmoji = avParts[2] || '';
             if (avPid && avPid !== myId) {
               S._playerAvatars[avPid] = avEmoji;
-              if (typeof renderSeats === 'function' && seats.length) renderSeats();
+              if (typeof renderSeats === 'function' && S.seats.length) renderSeats();
             }
             return;
           }
@@ -10986,8 +10978,8 @@ function _maybeShowNextHandBtn() {
       // Build the list from seatData (covers both pre-game and in-game
       // phases; GamePlayerJoined writes here on first sight). Filter out
       // pids the server has marked as gone, just in case.
-      var pids = Object.keys(seatData).map(function(s){ return parseInt(s,10); })
-                       .filter(function(p){ return !seatData[p].gone; });
+      var pids = Object.keys(S.seatData).map(function(s){ return parseInt(s,10); })
+                       .filter(function(p){ return !S.seatData[p].gone; });
       // Sort: me first, then alphabetical by name.
       pids.sort(function(a, b) {
         if (a === myId && b !== myId) return -1;
@@ -11001,7 +10993,7 @@ function _maybeShowNextHandBtn() {
       } else {
         var html = pids.map(function(pid) {
           var name = S.players[pid] || ('#' + pid);
-          var sd   = seatData[pid] || {};
+          var sd   = S.seatData[pid] || {};
           var stack= (typeof sd.money === 'number') ? fmtChips(sd.money) : '';
           var isMe = (pid === myId);
           var avChip = (typeof window._avatarChipHtml === 'function')
@@ -11041,7 +11033,7 @@ function _maybeShowNextHandBtn() {
     // row sends an invite for the current gId. The recipient gets the
     // Accept/Decline banner (handled by InviteNotify on their side).
     openInviteModal() {
-      if (window._offlineMode || _amSpectator || !S.gId) return;
+      if (window._offlineMode || S._amSpectator || !S.gId) return;
       var modal = document.getElementById('invite-modal');
       var list  = document.getElementById('im-list');
       if (!modal || !list) return;
@@ -11051,7 +11043,7 @@ function _maybeShowNextHandBtn() {
     },
     _inviteEligiblePids() {
       var seated = {};
-      Object.keys(seatData).forEach(function(s){ seated[parseInt(s,10)] = true; });
+      Object.keys(S.seatData).forEach(function(s){ seated[parseInt(s,10)] = true; });
       var pids = [];
       S._lobbyPids.forEach(function(p){ if (p !== myId && !seated[p]) pids.push(p); });
       pids.sort(function(a,b){
@@ -11159,7 +11151,7 @@ function _maybeShowNextHandBtn() {
           // Bail if we left the table / changed game in the meantime.
           if (S.gId !== gameAtRequest) return;
           // Player still present means the kick was not honoured.
-          if (seatData[targetPid] && !seatData[targetPid].gone) {
+          if (S.seatData[targetPid] && !S.seatData[targetPid].gone) {
             addGameChat(null, '⚠ ' + t('kickNotProcessed', { name: targetName }), 'sys', { prefix: '⚠ ', key: 'kickNotProcessed', params: { name: targetName } });
           }
         }, 3000);
@@ -11184,8 +11176,8 @@ function _maybeShowNextHandBtn() {
       if (S.ws && S.gId) { try { send(MSG.buildLeaveGame(S.gId)); } catch(e) {} }
       S._pendingRejoin = 0; S._rejoinNickRetries = 0;
       try { localStorage.removeItem('pth_resume'); } catch(e) {}
-      amInGame = false; S.amGameAdmin = false; _gameStarted = false; _seatsFrozen = false; _amSpectator = false;
-      S.gId = 0; seats = []; seatData = {}; S._specPids = new Set(); updateSpectatorStrip();
+      S.amInGame = false; S.amGameAdmin = false; S._gameStarted = false; S._seatsFrozen = false; S._amSpectator = false;
+      S.gId = 0; S.seats = []; S.seatData = {}; S._specPids = new Set(); updateSpectatorStrip();
       var _ego = document.getElementById('g-endgame-overlay');
       if (_ego) _ego.style.display = 'none';
       try { _wpHide(); } catch(e) {}
@@ -11259,7 +11251,7 @@ function _maybeShowNextHandBtn() {
       try { localStorage.setItem('pth_pin_actionbar', S._actionBarPinned ? '1' : '0'); } catch(e){}
       _updatePinBtn();
       // rafraichit immediatement l'UI hors-tour pour refleter le nouvel etat
-      if (S.turnPid !== myId && _gameStarted) renderGameWaiting(_lastWaitingMsg, _lastWaitingIsHtml);
+      if (S.turnPid !== myId && S._gameStarted) renderGameWaiting(_lastWaitingMsg, _lastWaitingIsHtml);
     },
 
     setPlayingMode(idx) {
@@ -11278,7 +11270,7 @@ function _maybeShowNextHandBtn() {
     // requiert une main en cours avec des cartes, hors mode spectateur.
     togglePreActionPanel() {
       if (S.turnPid === myId) return;                 // à notre tour : inchangé
-      if (_amSpectator || !_gameStarted) return;
+      if (S._amSpectator || !S._gameStarted) return;
       if (S.myCards[0] == null && S.myCards[1] == null) return; // pas de cartes
       S._preActionOpen = !S._preActionOpen;
       if (S._preActionOpen) _renderPreActionPanel();
@@ -11291,11 +11283,11 @@ function _maybeShowNextHandBtn() {
     armPreAction(name) {
       if (S.turnPid === myId) { console.log('[prearm] clic ignoré (mon tour) name=' + name); return; }  // à notre tour : inchangé (les boutons agissent)
       console.log('[prearm] armPreAction turnPid=' + S.turnPid + ' myId=' + myId);
-      if (_amSpectator || !_gameStarted) return;
+      if (S._amSpectator || !S._gameStarted) return;
       if (S.myCards[0] == null && S.myCards[1] == null) return; // pas de cartes
       S._preAction = (S._preAction === name) ? '' : name;      // toggle
-      S._preActionToCall = Math.max(0, S.highestBet - ((seatData[myId] || {}).bet || 0)); // onCallAmountChanged : MON à-suivre
-      console.log('[prearm] ' + (S._preAction ? 'armé' : 'désarmé') + ' name=' + name + ' toCallMémo=' + S._preActionToCall + ' highestBet=' + S.highestBet + ' maMise=' + (((seatData[myId] || {}).bet) || 0));
+      S._preActionToCall = Math.max(0, S.highestBet - ((S.seatData[myId] || {}).bet || 0)); // onCallAmountChanged : MON à-suivre
+      console.log('[prearm] ' + (S._preAction ? 'armé' : 'désarmé') + ' name=' + name + ' toCallMémo=' + S._preActionToCall + ' highestBet=' + S.highestBet + ' maMise=' + (((S.seatData[myId] || {}).bet) || 0));
       renderMyTurnActions(true);                            // re-render pour le surlignage or
     },
 
@@ -11338,9 +11330,9 @@ function _maybeShowNextHandBtn() {
     // a stale "still in my game / still admin" flag that blocks creating a
     // new table.
     _resetGameState() {
-      amInGame = false; S.amGameAdmin = false; _gameStarted = false;
-      _seatsFrozen = false; _amSpectator = false;
-      S.gId = 0; seats = []; seatData = {};
+      S.amInGame = false; S.amGameAdmin = false; S._gameStarted = false;
+      S._seatsFrozen = false; S._amSpectator = false;
+      S.gId = 0; S.seats = []; S.seatData = {};
       try { stopTurnTimer(); } catch (e) {}
       try { dismissWinner(); } catch (e) {}
       try { if (typeof clearUnreadChat === 'function') clearUnreadChat(); } catch (e) {}
@@ -11370,8 +11362,8 @@ function _maybeShowNextHandBtn() {
       // ré-aspiré dans la table à la prochaine reconnexion/réouverture).
       S._pendingRejoin = 0; S._rejoinNickRetries = 0;
       try { localStorage.removeItem('pth_resume'); } catch(e) {}
-      amInGame = false; S.amGameAdmin = false; _gameStarted = false; _seatsFrozen = false; _amSpectator = false;
-      S.gId = 0; seats = []; seatData = {}; S._specPids = new Set(); updateSpectatorStrip();
+      S.amInGame = false; S.amGameAdmin = false; S._gameStarted = false; S._seatsFrozen = false; S._amSpectator = false;
+      S.gId = 0; S.seats = []; S.seatData = {}; S._specPids = new Set(); updateSpectatorStrip();
       var _ego = document.getElementById('g-endgame-overlay');
       if (_ego) _ego.style.display = 'none';
       try { _wpHide(); } catch(e) {}
@@ -11475,7 +11467,7 @@ function _maybeShowNextHandBtn() {
             gaPadB: _ga ? (_ga.style.paddingBottom || getComputedStyle(_ga).paddingBottom) : null,
             seat: document.documentElement.getAttribute('data-seat') || '',
             layout: document.documentElement.getAttribute('data-seat-layout') || 'auto',
-            players: (typeof seats !== 'undefined' && seats) ? seats.length : 0
+            players: (typeof S.seats !== 'undefined' && S.seats) ? S.seats.length : 0
           };
           // cls 'mine' (et pas 'sys' : les messages systeme sont filtres
           // d'addGameChat) — affichage local uniquement, rien n'est envoye.
@@ -11488,7 +11480,7 @@ function _maybeShowNextHandBtn() {
       if (text.charAt(0) === '/' && _chatLocalCmd(text, function (n, s2) { addGameChat(n, s2, 'mine'); })) return;
       try { if (window._chatPushHist) window._chatPushHist(text); } catch (e) {}
       send(S.gId ? MSG.buildGameChat(S.gId, text) : MSG.buildChat(text));
-      addGameChat(myName, text, 'mine');
+      addGameChat(S.myName, text, 'mine');
     },
     // « Show » : envoie ShowMyCardsRequest (type 51, corps vide) pendant la
     // fenêtre d'attente ; la rediffusion AfterHandShowCards rendra les cartes.
@@ -11508,7 +11500,7 @@ function _maybeShowNextHandBtn() {
       try { if (window._chatPushHist) window._chatPushHist(text); } catch (e) {}
       send(MSG.buildChat(text, 0));
       // Affichage optimiste
-      addChat(myName, text, 'mine');
+      addChat(S.myName, text, 'mine');
     },
     // ── Copy a shareable link to the current table ──────────────
     // Produces a URL like:
@@ -11593,7 +11585,7 @@ function _maybeShowNextHandBtn() {
       // Remember that we joined as spectator. Used by JoinGameAck to flip
       // the UI into 'watch only' mode (banner up top, action area replaced
       // with a message instead of fold/call buttons).
-      _amSpectator = true; updateSpectatorStrip();
+      S._amSpectator = true; updateSpectatorStrip();
       addChat(null, '👁 ' + t('spectatingTable') + (g.name||('#'+gameId)) + '…', 'sys', { prefix: '👁 ', key: 'spectatingTable', suffix: (g.name||('#'+gameId)) + '…' });
       // Use the shared MSG.buildJoinGame helper which now correctly
       // encodes spectateOnly into field 4. The previous hand-rolled
@@ -11617,7 +11609,7 @@ function _maybeShowNextHandBtn() {
         if (g && !g.started && g.players < g.maxPlayers) { target = id; break; }
       }
       if (target) {
-        autoAction = true;
+        S.autoAction = true;
         const btn = document.getElementById('btn-autojoin');
         if (btn) { btn.textContent = '⏳...'; btn.disabled = true; }
         addChat(null, t('autoTableFound', { n: target }), 'sys', { key: 'autoTableFound', params: { n: target } });
@@ -11645,7 +11637,7 @@ function _maybeShowNextHandBtn() {
       if (n < 2) n = 2;
       if (n > 10) n = 10;
       if (qc) qc.style.display = 'none';
-      autoAction = true;
+      S.autoAction = true;
       const btn = document.getElementById('btn-autojoin');
       if (btn) { btn.textContent = '⏳...'; btn.disabled = true; }
       addChat(null, t('autoNoTable'), 'sys', { key: 'autoNoTable' });
@@ -11656,7 +11648,7 @@ function _maybeShowNextHandBtn() {
       // Suffixe court aléatoire : évite la collision avec une table du même nom
       // qui traînerait encore (session « fantôme » gardée par la grâce proxy),
       // ce qui ferait échouer/fermer la création côté serveur.
-      var _autoName = 'WebGame-' + myName + '-' + Math.random().toString(36).slice(2, 5);
+      var _autoName = 'WebGame-' + S.myName + '-' + Math.random().toString(36).slice(2, 5);
       send(MSG.buildCreateGame(_safeGameName(_autoName), n, d.blind, d.stack, d.timeout));
     },
 
@@ -12312,7 +12304,7 @@ function _maybeShowNextHandBtn() {
         if (isGuest) {
           var tpl = (typeof t === 'function' && t('guestGameName') !== 'guestGameName')
             ? t('guestGameName') : "{name}'s game";
-          nameEl.value = _adminNameForMode() || tpl.replace('{name}', myName || 'PokerTH');
+          nameEl.value = _adminNameForMode() || tpl.replace('{name}', S.myName || 'PokerTH');
         }
       }
       var ddBtn = g('cf-gtype-btn'); if (ddBtn) ddBtn.disabled = isGuest;
@@ -12611,9 +12603,9 @@ function _maybeShowNextHandBtn() {
       // BUG FIX: previously this counted only seatData and refused with
       // "At least 2 players are needed" even though the visible panel
       // showed "Joueurs: 2/5" (because the renderer DID inject myId).
-      var pids = Object.keys(seatData)
+      var pids = Object.keys(S.seatData)
         .map(function(s){ return parseInt(s,10); })
-        .filter(function(p){ return seatData[p] && !seatData[p].gone; });
+        .filter(function(p){ return S.seatData[p] && !S.seatData[p].gone; });
       if (myId && pids.indexOf(myId) === -1) pids.push(myId);
       if (pids.length < 2) {
         // Should never reach here because the button is hidden when
@@ -14867,7 +14859,7 @@ function renderPlayersList() {
   });
 })();
 
-;(function(){ window.BUILD_VERSION='0.3.834-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.835-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

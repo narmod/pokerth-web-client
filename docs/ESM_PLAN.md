@@ -200,3 +200,4 @@ jamais de rustine sur un renommage partiel.
 | 2026-07-19 | 0.3.832-beta | 9e-V8 état action bar/pré-action → S (9 vars, 55 renommages AST, équivalence prouvée) — test-state 57 ✓ | 822 Ko (stable) |
 | 2026-07-19 | 0.3.833-beta | 9e-V9.1 état snapshots showdown → S (6 vars, 49 renommages AST, équivalence prouvée) — test-state 60 ✓ | 822 Ko (stable) |
 | 2026-07-19 | 0.3.834-beta | 9e-V9.2 état cartes/mises/phases → S (13 vars, 230 renommages AST ; 2 shadowings locaux renommés _potVal/_potNow, équivalence prouvée) — test-state 64 ✓ | 822 Ko (stable) |
+| 2026-07-19 | 0.3.835-beta | 9e-V9.3 état sièges/verrous → S (8 vars, 338 renommages AST ; outil v3 = fix shorthand {myName} détecté par node --check ; 2 locaux _gseats renommés ; ponts window seats/seatData rebranchés ; équivalence prouvée) — test-state 67 ✓ | 822 Ko (stable) |

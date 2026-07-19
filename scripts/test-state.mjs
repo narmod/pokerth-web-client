@@ -18,7 +18,7 @@ const { S } = await import('../public/modules/game/state.mjs');
 let n = 0, fail = 0;
 function ok(cond, msg) { n++; if (!cond) { fail++; console.error('  ✗', msg); } else console.log('  ✓', msg); }
 
-console.log('state.mjs — V0 (timer) + V1 (voix/haptique) + V2 (stats) + V3 (pet/inv/chat/titre) + V4 (avatars) + V5 (lobby) + V6 (config partie) + V7 (connexion) + V8 (action bar) + V9.1 (snapshots) + V9.2 (cartes/mises)');
+console.log('state.mjs — V0 (timer) + V1 (voix/haptique) + V2 (stats) + V3 (pet/inv/chat/titre) + V4 (avatars) + V5 (lobby) + V6 (config partie) + V7 (connexion) + V8 (action bar) + V9.1 (snapshots) + V9.2 (cartes/mises) + V9.3 (sièges/verrous)');
 ok(typeof S === 'object' && S !== null, 'S est un objet');
 ok(window.PthState === S, 'pont window.PthState === S (même référence)');
 
@@ -137,6 +137,13 @@ ok(S.highestBet === 0 && S.minRaise === 0 && S.pot === 0 && S.collectedPot === 0
 ok(S.gameState === 0 && S.dealerPid === 0 && S.turnPid === 0
    && S._lastSbPid === 0 && S._lastBbPid === 0, 'phase/positions init = 0');
 
+// V9.3 — Identité / sièges / verrous
+ok(Array.isArray(S.seats) && S.seats.length === 0
+   && typeof S.seatData === 'object' && Object.keys(S.seatData).length === 0, 'seats/seatData init');
+ok(S.amInGame === false && S.myName === '', 'identité init');
+ok(S._gameStarted === false && S._seatsFrozen === false && S._amSpectator === false
+   && S.autoAction === false, 'verrous de partie init = false');
+
 // Périmètre exact des vagues migrées (pas de fuite d'autres clés)
 const keys = Object.keys(S).sort();
 ok(JSON.stringify(keys) === JSON.stringify(['REACT_EMOJI_MIN_GAP', 'REACT_EMOJI_QUEUE_MAX',
@@ -172,8 +179,10 @@ ok(JSON.stringify(keys) === JSON.stringify(['REACT_EMOJI_MIN_GAP', 'REACT_EMOJI_
    '_lastPixPos', '_potCenter', '_lastPotValue',
    'myCards', 'commCards', '_cardKey', '_cardIV', 'highestBet', 'minRaise',
    'pot', 'collectedPot', 'gameState', 'dealerPid', 'turnPid',
-   '_lastSbPid', '_lastBbPid'].sort()),
-   'périmètre V0..V9.2 exact : ' + keys.join(', '));
+   '_lastSbPid', '_lastBbPid',
+   'seats', 'seatData', 'amInGame', 'myName', '_gameStarted', '_seatsFrozen',
+   '_amSpectator', 'autoAction'].sort()),
+   'périmètre V0..V9.3 exact : ' + keys.join(', '));
 
 console.log(fail ? `FAIL ${fail}/${n}` : `PASS ${n}/${n}`);
 process.exit(fail ? 1 : 0);

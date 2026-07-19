@@ -168,6 +168,16 @@ export const S = {
   turnPid: 0,
   _lastSbPid: 0,           // SB/BB du dernier rendu (popup d'info joueur)
   _lastBbPid: 0,
+
+  // ── V9.3 · Cœur de main : identité / sièges / verrous (domaine E, 3/3) ──
+  seats: [],               // player IDs in seat order (GameStartInitial) — figé après 1ʳᵉ main
+  seatData: {},            // {pid: {money, bet, action, active, folded}}
+  amInGame: false,
+  myName: '',
+  _gameStarted: false,     // vrai au GameStartInitial ; gèle le panneau d'attente
+  _seatsFrozen: false,     // verrou one-way : ordre de sièges d'origine figé
+  _amSpectator: false,     // rejoint via « Regarder » — actions désactivées
+  autoAction: false,
 };
 
 // Pont legacy : pokerth.js (script classique) fait `const S = window.PthState;`
