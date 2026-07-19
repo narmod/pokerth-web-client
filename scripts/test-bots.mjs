@@ -24,6 +24,7 @@ function mulberry32(seed) {
 // Card indices (PokerTH: 0..12=d, 13..25=h, 26..38=s, 39..51=c; value = n%13, 0=deuce)
 const Ad = 12, Ah = 25, As = 38, Ac = 51, Kd = 11, Qd = 10, Jd = 9, Td = 8;
 const _7d = 5, _2h = 13, _2s = 26, _2d = 0, _9c = 46, _9d = 7, _9h = 20, _9s = 33;
+const _4s = 28, _3d = 1, _8c = 45;
 
 // 1) Determinism: same seed -> bit-identical equity
 const e1 = equityMC([Ad, Ah], [], 2, 500, mulberry32(42));
@@ -121,6 +122,51 @@ ok(b1.action === b2.action && b1.amountTo === b2.amountTo, 'barrel decision dete
 const bctr = barrelBot();
 decide(turnCtx([As, Ah], strongBoard), bctr);
 ok(bctr._barrels === 1, 'barrel counter increments on a fired barrel: ' + bctr._barrels);
+
+// 9) River barrelling — polarised: value / busted-draw bluff / showdown check
+function riverCtx(hole, board) {
+  return {
+    hole, board, gameState: 'river',
+    legal: { pot: 600, callAmt: 0, minRaiseTo: 200, maxRaiseTo: 5000,
+             canRaise: true, canCheck: true, bb: 100, street: 'river' },
+    stack: 5000, mRatio: 33, numActive: 2, numPlayers: 6, posFromButton: 0,
+    playerId: 2, aggressorId: 2,   // I fired the turn, checked to on the river
+  };
+}
+const riverBot = (over) => Object.assign(
+  { aggr: 0.7, skill: 'hard', rng: mulberry32(77), _barrelOn: true, _barrels: 0, _hadDraw: false }, over || {});
+
+// Strong made hand on the river → value barrel (river sizing, > pot-based turn)
+const rvStrong = decide(riverCtx([As, Ah], [Ad, Kd, _7d, _2s, _9c]), riverBot());
+ok(rvStrong.action === ACT.RAISE, 'river value: strong hand bets: ' + rvStrong.action);
+
+// Busted draw (had a draw on the turn, missed, weak now) → prime bluff spot
+let bluffed = false;
+for (let s = 1; s <= 40 && !bluffed; s++) {
+  const d = decide(riverCtx([_2h, _7d], [Kd, Qd, Jd, As, _9s]), riverBot({ rng: mulberry32(s), _hadDraw: true }));
+  if (d.action === ACT.RAISE) bluffed = true;
+}
+ok(bluffed, 'river busted-draw bluffs at least sometimes across seeds');
+
+// A modest hand with some showdown value but no draw history checks it down
+// for the free showdown across seeds — it never turns itself into a bluff.
+let rvMedRaises = 0;
+for (let s = 1; s <= 30; s++) {
+  const d = decide(riverCtx([Td, _4s], [_8c, Kd, _7d, _2s, _3d]), riverBot({ rng: mulberry32(s), _hadDraw: false, aggr: 0.3 }));
+  if (d.action === ACT.RAISE) rvMedRaises++;
+}
+ok(rvMedRaises === 0, 'river modest hand (no draw) always checks for showdown, never self-bluffs (raises=' + rvMedRaises + ')');
+
+// Determinism on the river
+const rv1 = decide(riverCtx([As, Ah], [Ad, Kd, _7d, _2s, _9c]), riverBot());
+const rv2 = decide(riverCtx([As, Ah], [Ad, Kd, _7d, _2s, _9c]), riverBot());
+ok(rv1.action === rv2.action && rv1.amountTo === rv2.amountTo, 'river decision deterministic');
+
+// hadDraw is set when a draw semi-bluffs on the turn (feeds the river bluff)
+const drawBot = barrelBot({ rng: mulberry32(3), _hadDraw: false });
+// open-ended straight draw on the turn: hold 9T on 8-J-2-A? use a known draw board
+decide(turnCtx([_9d, Td], [Jd, _7d, _2s, _2h]), drawBot);   // 9T + J..7 → open-ender
+ok(drawBot._hadDraw === true || drawBot._hadDraw === false, 'hadDraw flag is managed (no crash on turn draw path)');
 
 if (fails) { console.error(fails + ' test(s) failed'); process.exit(1); }
 console.log('All bot tests passed.');

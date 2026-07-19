@@ -163,6 +163,9 @@ export function decide(ctx, bot){
   };
 
   const raiseTo = ()=>{ const t=Math.round(L.minRaiseTo + pot*(0.4+a*0.5)); return Math.max(L.minRaiseTo, Math.min(L.maxRaiseTo, t)); };
+  // River bets run bigger: play is polarised (strong value or bluff), so the
+  // sizing is a touch larger than the multi-way turn size — ~55–85% pot.
+  const raiseRiver = ()=>{ const t=Math.round(L.minRaiseTo + pot*(0.55+a*0.30)); return Math.max(L.minRaiseTo, Math.min(L.maxRaiseTo, t)); };
   // Pre-flop sizing: realistic opens (~2.3–3.3 BB, +1 BB per limper) and 3-bet/4-bet
   // sized off the current bet (~2.5–3.3×), instead of a fraction of a snowballing pot.
   // This is what keeps the first betting round from escalating to all-in so fast.
@@ -274,29 +277,57 @@ export function decide(ctx, bot){
     // and the give-up is stronger for skilled bots (they don't spew).
     if (canBarrel){
       const already   = bot._barrels || 0;
-      const streetFade = (street === 'river') ? 0.55 : 0.75;         // river barrels rarer than turn
-      const fireFade   = Math.pow(0.7, already);                     // each extra barrel less likely
+      const isRiver    = (street === 'river');
+      const streetFade = isRiver ? 0.55 : 0.75;                     // river barrels rarer than turn
+      const fireFade   = Math.pow(0.7, already);                    // each extra barrel less likely
       const barrelP    = Math.min(0.9, (0.35 + a*0.4) * bm * sk.bluffMul) * streetFade * fireFade;
       const giveUpStr  = 0.30 + (1 - a)*0.10 - (sk.pushfold ? 0 : 0.08); // skilled/tight give up wider
-      if (str > 0.62){                                               // strong made hand → value barrel
+
+      // Strong made hand → value barrel (bigger sizing on the river).
+      if (str > 0.62){
         bot._barrels = already + 1;
-        return { action:ACT.RAISE, amountTo:raiseTo() };
+        return { action:ACT.RAISE, amountTo: isRiver ? raiseRiver() : raiseTo() };
       }
-      if (draw && rng() < semiBluffP){                              // draw → semi-bluff barrel
+
+      if (!isRiver){
+        // ── TURN ── still a card to come : semi-bluff draws, then air bluffs.
+        if (draw){                                                  // draw → semi-bluff barrel
+          bot._hadDraw = true;                                      // remember for a river bluff if it busts
+          if (rng() < semiBluffP){ bot._barrels = already + 1; return { action:ACT.RAISE, amountTo:raiseTo() }; }
+        }
+        if (str > giveUpStr && rng() < barrelP){                    // marginal air → skill-gated bluff barrel
+          bot._barrels = already + 1;
+          return { action:ACT.RAISE, amountTo:raiseTo() };
+        }
+        return { action:ACT.CHECK };                                // give up : pot control, no spew
+      }
+
+      // ── RIVER ── no more cards : polarise into value / give-up / bluff.
+      // A hand that was a draw on the turn and BUSTED (weak now, no showdown
+      // value) is the prime bluff candidate — only aggression can win the pot,
+      // so bluff it more often than random air. A medium hand with some
+      // showdown value gives up (checks to see the showdown for free) rather
+      // than turning itself into a bluff. Pure air bluffs at the skill-gated
+      // base rate. All frequencies remain doped by skill + archetype.
+      const bustedDraw = (bot._hadDraw === true) && str < 0.40;     // had a draw, missed
+      if (bustedDraw){
+        const bluffP = Math.min(0.92, barrelP * 1.8);              // busted draws bluff far more
+        if (rng() < bluffP){ bot._barrels = already + 1; return { action:ACT.RAISE, amountTo:raiseRiver() }; }
+        return { action:ACT.CHECK };
+      }
+      if (str >= 0.40 && str <= 0.62){                              // medium showdown value → check it down
+        return { action:ACT.CHECK };
+      }
+      if (str > giveUpStr && rng() < barrelP){                      // residual air → occasional bluff
         bot._barrels = already + 1;
-        return { action:ACT.RAISE, amountTo:raiseTo() };
+        return { action:ACT.RAISE, amountTo:raiseRiver() };
       }
-      if (str > giveUpStr && rng() < barrelP){                      // marginal air → skill-gated bluff barrel
-        bot._barrels = already + 1;
-        return { action:ACT.RAISE, amountTo:raiseTo() };
-      }
-      // give up: too weak to keep firing → pot-control check (no spew)
-      return { action:ACT.CHECK };
+      return { action:ACT.CHECK };                                  // give up
     }
     if (isAggr && L.canRaise && rng() < cbetP){ bot._barrels = (bot._barrels||0) + 1; return { action:ACT.RAISE, amountTo:raiseTo() }; }   // c-bet
     if (str>0.85 && L.canRaise) return { action:ACT.RAISE, amountTo:raiseTo() };
     if (str>0.58 && L.canRaise && rng() < pPost) return { action:ACT.RAISE, amountTo:raiseTo() };
-    if (draw && L.canRaise && rng() < semiBluffP) return { action:ACT.RAISE, amountTo:raiseTo() }; // semi-bluff
+    if (draw && L.canRaise && rng() < semiBluffP){ bot._hadDraw = true; return { action:ACT.RAISE, amountTo:raiseTo() }; } // semi-bluff
     return { action:ACT.CHECK };
   }
   // facing a bet — raise big hands, call when equity beats the price, else semi-bluff/bluff/fold

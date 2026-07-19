@@ -48,7 +48,7 @@ function playGame(seed, maxHands) {
     if (stop) return;
     if (ev.type === 'handStart') {
       hands++;
-      for (const id in cfg) { cfg[id]._barrels = 0; cfg[id]._barrelStreet = null; }
+      for (const id in cfg) { cfg[id]._barrels = 0; cfg[id]._barrelStreet = null; cfg[id]._hadDraw = false; }
       return;
     }
     if (ev.type === 'turn') {
