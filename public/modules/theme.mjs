@@ -1394,13 +1394,20 @@ function _styleRow(kind, item, name, author, active, onClick){
 function _render(){
   if (!_body) return;
   _body.innerHTML = '';
+  var _actTabBtn = null;
   // Barre d'onglets (Table de jeu · Jeu de cartes · Dos de carte · Sieges).
   var tabbar = document.createElement('div');
+  tabbar.className = 'st-tabbar';
   // Sticky (demande narmod 2026-07-17) : la barre d'onglets reste visible
   // pendant le scroll de la liste (le conteneur scrollant est .adv-panels).
   // Fond opaque = fond du modal, sinon les lignes transparaissent dessous.
+  // Coulissante (demande narmod 2026-07-19) : overflow-x + onglets a largeur
+  // naturelle -> libelles TOUJOURS en toutes lettres (« Dos de carte » se
+  // tronquait en « Dos de ca… » sur iPhone portrait) ; on glisse au doigt.
+  // Scrollbar masquee via .st-tabbar (pokerth.css).
   tabbar.style.cssText = 'display:flex;gap:2px;margin:0 0 11px;border-bottom:1px solid var(--border,rgba(200,168,74,0.18));'
-    + 'position:sticky;top:0;z-index:5;background:var(--modal-bg,#1d222b)';
+    + 'position:sticky;top:0;z-index:5;background:var(--modal-bg,#1d222b);'
+    + 'overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch';
   _TABS.forEach(function(tb){
     var act = _activeTab === tb.id;
     var b = document.createElement('button'); b.type='button'; b.textContent = _t(tb.titleKey, tb.fallback);
@@ -1417,13 +1424,17 @@ function _render(){
         + 'color:#b09a00;border:1px solid rgba(227,200,0,0.55);background:rgba(227,200,0,0.14)';
       b.appendChild(bb);
     }
-    b.style.cssText = 'flex:1;min-width:0;padding:8px 4px;cursor:pointer;font-size:0.75rem;font-weight:600;background:none;border:0;'
+    b.style.cssText = 'flex:1 0 auto;min-width:0;padding:8px 10px;cursor:pointer;font-size:0.75rem;font-weight:600;background:none;border:0;'
       + 'border-bottom:2px solid ' + (act ? 'var(--sel,#E3C800)' : 'transparent') + ';color:' + (act ? 'var(--cream,#f0e6d2)' : 'var(--text,#9aaa92)')
-      + ';white-space:nowrap;overflow:hidden;text-overflow:ellipsis';
+      + ';white-space:nowrap';
+    if (act) _actTabBtn = b;
     b.addEventListener('click', function(e){ e.stopPropagation(); _activeTab = tb.id; try { localStorage.setItem('pth_style_tab', tb.id); } catch (err) {} _render(); });
     tabbar.appendChild(b);
   });
   _body.appendChild(tabbar);
+  // Onglet actif amene dans la fenetre visible de la barre coulissante
+  // (inline:'nearest' : aucun scroll vertical parasite du modal).
+  if (_actTabBtn) { var _atb = _actTabBtn; requestAnimationFrame(function(){ try { _atb.scrollIntoView({ block: 'nearest', inline: 'nearest' }); } catch (e) {} }); }
   // Liste de l'onglet actif.
   var tab = _TABS[0]; for (var t=0;t<_TABS.length;t++) if (_TABS[t].id===_activeTab) tab=_TABS[t];
   var info = _tabItems(_activeTab);
