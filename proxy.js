@@ -27,19 +27,35 @@ const path = require('path');
 const zlib = require('zlib');
 const crypto = require('crypto');
 
+// ── Logging ──
+// Structured logs via pino when installed (optional dep, same graceful pattern
+// as dotenv): every console.log/warn/error becomes one JSON line on stdout
+// (level, time, pid) that pm2 captures — much easier to grep/parse when
+// diagnosing disconnections. PLAIN_LOGS=1 (or pino missing) keeps the classic
+// plain-text output. The in-memory ring buffer feeding /admin/logs is kept
+// unchanged in BOTH modes, so the admin panel log view works exactly as before.
+let _pino = null;
+if (!/^(1|true|on|yes)$/i.test(String(process.env.PLAIN_LOGS || ''))) {
+  try { _pino = require('pino')({ base: undefined, timestamp: require('pino').stdTimeFunctions.isoTime }); } catch (_) { /* not installed */ }
+}
+const _PINO_LEVEL = { log: 'info', warn: 'warn', error: 'error' };
+
 // In-memory ring buffer of recent log lines, exposed (token-gated) at /admin/logs.
 const LOG_RING = []; const LOG_MAX = 400;
 ['log', 'warn', 'error'].forEach(function (m) {
   const orig = console[m].bind(console);
   console[m] = function () {
+    let line = '';
     try {
       const parts = Array.prototype.map.call(arguments, function (a) {
         if (typeof a === 'string') return a;
         try { return JSON.stringify(a); } catch (e) { return String(a); }
       });
-      LOG_RING.push(new Date().toISOString() + ' [' + m + '] ' + parts.join(' '));
+      line = parts.join(' ');
+      LOG_RING.push(new Date().toISOString() + ' [' + m + '] ' + line);
       if (LOG_RING.length > LOG_MAX) LOG_RING.shift();
     } catch (e) {}
+    if (_pino) { try { _pino[_PINO_LEVEL[m]](line); return; } catch (e) {} }
     orig.apply(console, arguments);
   };
 });

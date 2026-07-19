@@ -1,6 +1,6 @@
 {
   "name": "pokerth-web-client",
-  "version": "0.3.803-beta",
+  "version": "0.3.804-beta",
   "description": "Experimental modern web client for PokerTH using a WebSocket-to-TCP proxy.",
   "main": "proxy.js",
   "private": false,
@@ -24,6 +24,7 @@
   "dependencies": {
     "dotenv": "^17.4.2",
     "mysql2": "^3.6.0",
+    "pino": "^10.3.1",
     "rate-limiter-flexible": "^11.2.0",
     "ws": "^8.21.0"
   },
