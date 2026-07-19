@@ -88,20 +88,20 @@ setTimeout(_pingTick, 3000);
 // Les lignes grisées « bientôt » dépendent d'un travail backend/moteur à venir.
 // Sièges « perdants » au showdown (pids) → cartes estompées (fadeOutLosingCards).
 // Rempli dans EndOfHandShow (si pth_fade_losers != '0'), vidé à HandStart.
-var _sdLosers = new Set();
-var _sdWinners = new Set();   // sièges gagnants du showdown (PlayerWinnerOverlay QML)
+window._sdLosers = new Set();
+window._sdWinners = new Set();   // sièges gagnants du showdown (PlayerWinnerOverlay QML)
 // Option "révéler mes cartes au tap" (pth_own_click) : quand activée, mes cartes
-// sont face cachée tant que _ownReveal est faux ; un tap sur la player-bar bascule.
+// sont face cachée tant que window._ownReveal est faux ; un tap sur la player-bar bascule.
 // Remis à faux à chaque nouvelle main (confidentialité), forcé à vrai au showdown.
-var _ownReveal = false;
+window._ownReveal = false;
 // Anti-Call accidentel (pth_guard_call) : suit le montant "à suivre" vu à ma
 // dernière décision sur la street courante (reset par street). Si une grosse
 // relance fait bondir ce montant, le bouton Call exige une confirmation (2e tap).
-var _lastCallSeen = -1;
-var _callConfirmArmed = false;
-var _callConfirmTimer = null;
-var _lastBoardCount = -1; // nb de cartes du board au dernier rendu (détecte la street)
-var _oddsSeq = 0; // jeton du moniteur d'odds : abandonne tout calcul périmé
+window._lastCallSeen = -1;
+window._callConfirmArmed = false;
+window._callConfirmTimer = null;
+window._lastBoardCount = -1; // nb de cartes du board au dernier rendu (détecte la street)
+window._oddsSeq = 0; // jeton du moniteur d'odds : abandonne tout calcul périmé
 function _advStripEmoji(s) {
   s = String(s == null ? '' : s);
   try { s = s.replace(/\p{Extended_Pictographic}/gu, ''); } catch (e) {}
@@ -8481,7 +8481,47 @@ function renderPlayersList() {
   });
 })();
 
-;(function(){ window.BUILD_VERSION='0.3.864-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ 
+// ═══ [9g-A1] Exposition explicite pour le passage en type=module ═══
+// En module, les fonctions/vars top-level ne créent PLUS de propriétés
+// window : tout ce que le HTML (handlers inline), chat-emotes.js ou les
+// modules consomment via le global doit être ponté explicitement.
+// Inventaire automatisé du 2026-07-19 (31 fonctions + App ; les 8 vars
+// mutables partagées sont devenues des propriétés window à la source).
+window._advGet = _advGet;
+window._advStripEmoji = _advStripEmoji;
+window._chatTs = _chatTs;
+window._disableFloating = _disableFloating;
+window._enableFloating = _enableFloating;
+window._getTableZoom = _getTableZoom;
+window._hideBanner = _hideBanner;
+window._isIgnored = _isIgnored;
+window._seatTraitsNow = _seatTraitsNow;
+window._showBanner = _showBanner;
+window._startIpBlockCountdown = _startIpBlockCountdown;
+window._tableZoomGate = _tableZoomGate;
+window.addGameChat = addGameChat;
+window.closeConnectOverflow = closeConnectOverflow;
+window.closeCreateOverflow = closeCreateOverflow;
+window.closeHeaderOverflow = closeHeaderOverflow;
+window.closeLobbyOverflow = closeLobbyOverflow;
+window.getAvatarColor = getAvatarColor;
+window.joinWithPassword = joinWithPassword;
+window.renderPlayersList = renderPlayersList;
+window.toggleConnectOverflow = toggleConnectOverflow;
+window.toggleCreateOverflow = toggleCreateOverflow;
+window.toggleFullscreen = toggleFullscreen;
+window.toggleGameChat = toggleGameChat;
+window.toggleHandsHelp = toggleHandsHelp;
+window.toggleHeaderOverflow = toggleHeaderOverflow;
+window.toggleLobbyChat = toggleLobbyChat;
+window.toggleLobbyOverflow = toggleLobbyOverflow;
+window.toggleLog = toggleLog;
+window.togglePlayersPanel = togglePlayersPanel;
+window.toggleReactionPanel = toggleReactionPanel;
+window.App = App;
+
+window.BUILD_VERSION='0.3.865-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
