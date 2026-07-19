@@ -244,3 +244,4 @@ d'un plan dédié (#9g) une fois les 10 vagues livrées et stabilisées.
 | 2026-07-19 | 0.3.842-beta | 9f-6 ui/chat.mjs (addChat + _chatLocalCmd ; imports t/esc/MSG, globaux script via window.*, garde typeof adaptée, 1× $( réécrit ; corps identiques) — 10 tests | 791 → 778 Ko |
 | 2026-07-19 | 0.3.843-beta | 9f-7 ui/player-popup.mjs (13 fonctions popup joueur + avatars + drapeaux ; ponts isBot/updateLobbyPill ajoutés, wrapper _renderProfileStats 9f-4 retiré, balayage par occurrence adopté ; corps identiques) — 11 tests | 778 → 764 Ko |
 | 2026-07-19 | 0.3.844-beta | 9f-8 ui/lobby.mjs (18 fonctions : filtres/liste des tables, panneau infos, wait-actions, en-tête ; 4 segments, bug latent T nu conservé à l’identique et documenté ; corps identiques) — 10 tests | 764 → 714 Ko |
+| 2026-07-19 | 0.3.845-beta | fix lobby : T nu → MSG.T.PlayerInfoRequest (×2) — la demande de pseudo des joueurs inconnus part désormais (bug latent préexistant) ; test-lobby 11 ✓ | 714 Ko |

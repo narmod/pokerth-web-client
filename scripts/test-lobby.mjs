@@ -10,7 +10,8 @@ const els = {};
 globalThis.document = { readyState: 'complete', addEventListener() {},
   querySelectorAll: () => [], querySelector: () => null,
   getElementById: (id) => (els[id] = els[id] || makeEl()), createElement: () => makeEl() };
-window.send = () => {};
+let sentReqs = 0;
+window.send = () => { sentReqs++; };
 window.renderPlayersList = () => {};
 window.isBot = () => false;
 window.getPlayerName = (pid) => null;
@@ -45,7 +46,8 @@ S._pthAvatarHashes = {}; S._pthDataUrls = {}; S.myId = 3; S.myName = 'Ana';
 const html = L.renderTablePlayers(8);
 ok(html.includes('Ana') && html.includes('#5'), 'renderTablePlayers rend pseudo + placeholder');
 ok(S._pendingNameRequests.has(5) && !S._pendingNameRequests.has(3),
-   'pseudo inconnu marqué pending (bug T préexistant : la requête réseau ne part pas — conservé)');
+   'pseudo inconnu marqué pending, connu non redemandé');
+ok(sentReqs === 1, 'fix 0.3.845 : la PlayerInfoRequest part réellement (MSG.T)');
 
 // _guestJoinBlocked : invité bloqué sur registered-only
 S._currentLoginMode = 'guest';
