@@ -18,7 +18,7 @@ const { S } = await import('../public/modules/game/state.mjs');
 let n = 0, fail = 0;
 function ok(cond, msg) { n++; if (!cond) { fail++; console.error('  ✗', msg); } else console.log('  ✓', msg); }
 
-console.log('state.mjs — V0 (timer) + V1 (voix/haptique) + V2 (stats) + V3 (pet/inv/chat/titre) + V4 (avatars) + V5 (lobby) + V6 (config partie) + V7 (connexion) + V8 (action bar) + V9.1 (snapshots) + V9.2 (cartes/mises) + V9.3 (sièges/verrous)');
+console.log('state.mjs — V0 (timer) + V1 (voix/haptique) + V2 (stats) + V3 (pet/inv/chat/titre) + V4 (avatars) + V5 (lobby) + V6 (config partie) + V7 (connexion) + V8 (action bar) + V9.1 (snapshots) + V9.2 (cartes/mises) + V9.3 (sièges/verrous) + V10 (UI/myId) — chantier complet');
 ok(typeof S === 'object' && S !== null, 'S est un objet');
 ok(window.PthState === S, 'pont window.PthState === S (même référence)');
 
@@ -144,6 +144,18 @@ ok(S.amInGame === false && S.myName === '', 'identité init');
 ok(S._gameStarted === false && S._seatsFrozen === false && S._amSpectator === false
    && S.autoAction === false, 'verrous de partie init = false');
 
+// V10 — UI divers + myId
+ok(S.myId === 0, 'myId init = 0');
+ok(S._assistOn === true, '_assistOn défaut = true');
+ok(S._lastWaitingMsg === '' && S._lastWaitingIsHtml === false && S._seatsRenderPending === false,
+   'drapeaux UI init');
+ok(Array.isArray(S.actionLog) && S.actionLog.length === 0
+   && S._eliminatedLogged instanceof Set && S._eliminatedLogged.size === 0, 'journaux init vides');
+ok(Array.isArray(S.SEAT_POS_10) && S.SEAT_POS_10.length === 10
+   && S.SEAT_POS_10[0][0] === 90 && S.SEAT_POS_10[0][1] === 47, 'SEAT_POS_10 intact');
+ok(S.SEAT_LAYOUTS_DESK[2].length === 2 && S.SEAT_LAYOUTS_MOB[2].length === 2,
+   'layouts sièges 2 joueurs intacts');
+
 // Périmètre exact des vagues migrées (pas de fuite d'autres clés)
 const keys = Object.keys(S).sort();
 ok(JSON.stringify(keys) === JSON.stringify(['REACT_EMOJI_MIN_GAP', 'REACT_EMOJI_QUEUE_MAX',
@@ -181,8 +193,11 @@ ok(JSON.stringify(keys) === JSON.stringify(['REACT_EMOJI_MIN_GAP', 'REACT_EMOJI_
    'pot', 'collectedPot', 'gameState', 'dealerPid', 'turnPid',
    '_lastSbPid', '_lastBbPid',
    'seats', 'seatData', 'amInGame', 'myName', '_gameStarted', '_seatsFrozen',
-   '_amSpectator', 'autoAction'].sort()),
-   'périmètre V0..V9.3 exact : ' + keys.join(', '));
+   '_amSpectator', 'autoAction',
+   'myId', '_assistOn', '_lastWaitingMsg', '_lastWaitingIsHtml',
+   '_seatsRenderPending', 'actionLog', '_eliminatedLogged',
+   'SEAT_POS_10', 'SEAT_LAYOUTS_DESK', 'SEAT_LAYOUTS_MOB'].sort()),
+   'périmètre V0..V10 COMPLET : ' + keys.join(', '));
 
 console.log(fail ? `FAIL ${fail}/${n}` : `PASS ${n}/${n}`);
 process.exit(fail ? 1 : 0);

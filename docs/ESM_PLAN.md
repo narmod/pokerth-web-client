@@ -107,7 +107,7 @@ suffisent, aucun changement des sites d'appel.
 Après 9a-9d : re-scanner (les fonctions devenues sans dépendance interne
 peuvent se libérer par vagues). Le monolithe devrait passer sous ~830 Ko.
 
-## #9e — Module d'état partagé `game/state.mjs` (option A, plan validé 2026-07-19)
+## #9e — Module d'état partagé `game/state.mjs` (option A) — ✅ TERMINÉ 2026-07-19 (V0→V10, 153 clés dans S)
 
 Ré-audit à v0.3.822 : IIFE = L2581–12888, ~154 vars top-level. Une var de closure
 ne s'aliase pas → migration = **renommage mécanique** `nom` → `S.nom` (nommage
@@ -201,3 +201,4 @@ jamais de rustine sur un renommage partiel.
 | 2026-07-19 | 0.3.833-beta | 9e-V9.1 état snapshots showdown → S (6 vars, 49 renommages AST, équivalence prouvée) — test-state 60 ✓ | 822 Ko (stable) |
 | 2026-07-19 | 0.3.834-beta | 9e-V9.2 état cartes/mises/phases → S (13 vars, 230 renommages AST ; 2 shadowings locaux renommés _potVal/_potNow, équivalence prouvée) — test-state 64 ✓ | 822 Ko (stable) |
 | 2026-07-19 | 0.3.835-beta | 9e-V9.3 état sièges/verrous → S (8 vars, 338 renommages AST ; outil v3 = fix shorthand {myName} détecté par node --check ; 2 locaux _gseats renommés ; ponts window seats/seatData rebranchés ; équivalence prouvée) — test-state 67 ✓ | 822 Ko (stable) |
+| 2026-07-19 | 0.3.836-beta | 9e-V10 état UI divers + myId → S (10 vars, 153 renommages AST, dernier pont window.myId rebranché) — test-state 73 ✓ · **#9e TERMINÉ : les seules déclarations du corps de l'IIFE sont `S` et `$` (vérifié AST) ; 153 clés dans state.mjs ; prochaine étape #9f = re-scan de mobilité + vagues de libération de fonctions** | 822 Ko (stable) |
