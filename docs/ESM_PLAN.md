@@ -178,6 +178,25 @@ renderMyTurnActions, doAction/doRaise/confirmCall, renderSeats, renderComm…)
 = l'orchestrateur assumé de pokerth.js ; son éclatement éventuel fera l'objet
 d'un plan dédié (#9g) une fois les 10 vagues livrées et stabilisées.
 
+## #9g — Noyau orchestrateur (décision 2026-07-19 : ordre B → C → A)
+
+Audit à v0.3.849 : IIFE = L2581–10242 (7 661 l), 69 fonctions (4 367 l).
+Géants : `handleMsg` (2 080 l, 32 dép. internes) · `renderSeatsImmediate`
+(999 l, 6 feuilles). Stratégie retenue avec Arnaud :
+
+- **B — vagues satellites** (mécanique 9f) : B1 popup info + blinds
+  countdown + pill/header (~250 l) · B2 panneau force de main / odds
+  (`calcWinProb`, `renderHandStrength`, `_hs*`, `_gipAssistSync`,
+  `renderOddsMonitor`, `renderPreFlopStrength`, ~180 l) · B3 rendu
+  cartes/comm (`renderMyCards`, `renderComm`, `animateCardDeal/ChipToPot`,
+  ~100 l) · B4 action bar (`doAction/doRaise/confirmCall`, `_runPreAction`,
+  `renderMyTurnActions`, `notifyMyTurnVisuals`…, ~280 l).
+- **C — les géants** : éclater `handleMsg` (handlers par type de message)
+  puis `renderSeatsImmediate` — plan détaillé + tests manuels en ligne
+  obligatoires avant chaque vague.
+- **A — jalon final** : `pokerth.js` en `type=module`, ponts `window.*`
+  remplacés par de vrais imports.
+
 ## Protocole par extraction (checklist à suivre à CHAQUE fois)
 
 1. Re-fetch pokerth.js à HEAD ; délimiter le bloc exact (marqueurs ══).
@@ -249,3 +268,4 @@ d'un plan dédié (#9g) une fois les 10 vagues livrées et stabilisées.
 | 2026-07-19 | 0.3.847-beta | 9f-9 game/showdown.mjs (7 fonctions : snapshot des nets, badge main gagnante, overlay vainqueur + auto-dismiss, fin de partie ; App.dismissWinner → appel direct ; corps identiques) — 10 tests | 714 → 695 Ko |
 | 2026-07-19 | 0.3.848-beta | 9f-10 net/session.mjs (9 fonctions : show, cycle connexion + wake lock, rejoin/reprise avec écouteurs pageshow/focus/visibilitychange, setStatus, send framing BE ; corps identiques) — 12 tests · **#9f TERMINÉ : 10 modules libérés (~135 fonctions), monolithe 954 → 684 Ko (−28 %) ; reste le noyau orchestrateur (~3 600 l : handleMsg, renderSeatsImmediate, renderMyTurnActions, doAction, renderSeats, renderComm, onRawData) — #9g éventuel sur plan dédié** | 692 → 684 Ko |
 | 2026-07-19 | 0.3.849-beta | HOTFIX régression 0.3.848 : le segment 9f-10 avait avalé `const $` (L3219, entre _endConnecting et show) → tous les handlers $() morts, select serveur qui rebascule, aucun mode accessible. $ restauré dans l’IIFE, ligne égarée retirée de session.mjs. **Nouveau filet : scripts/test-boot.mjs (jsdom, ordre navigateur réel, exerce onServerOrGuestChange par mode)** — 9 asserts ✓ | 684 Ko |
+| 2026-07-19 | 0.3.850-beta | 9g-B1 ui/game-info.mjs (9 fonctions : popup info de table, minuteur blinds, bouton Start sans bots, pill lobby, reset header ; adaptations t/esc/_groupThousands/_gameTypeLabel/_avatarChipHtml importés + 1× _lang→window._lang ; corps identiques prouvés) — 23 tests | 684 → 660 Ko |
