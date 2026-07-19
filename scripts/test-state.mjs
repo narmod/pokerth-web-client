@@ -18,7 +18,7 @@ const { S } = await import('../public/modules/game/state.mjs');
 let n = 0, fail = 0;
 function ok(cond, msg) { n++; if (!cond) { fail++; console.error('  ✗', msg); } else console.log('  ✓', msg); }
 
-console.log('state.mjs — V0 (timer) + V1 (voix/haptique) + V2 (stats) + V3 (pet/inv/chat/titre) + V4 (avatars)');
+console.log('state.mjs — V0 (timer) + V1 (voix/haptique) + V2 (stats) + V3 (pet/inv/chat/titre) + V4 (avatars) + V5 (lobby)');
 ok(typeof S === 'object' && S !== null, 'S est un objet');
 ok(window.PthState === S, 'pont window.PthState === S (même référence)');
 
@@ -73,6 +73,19 @@ ok(S._avatarPopupOrigParent === null && S._avatarPopupOrigNextSibling === null
    && S._avatarPickerBackdropHandler === null && S._avatarPickerBtnHandler === null,
    'refs DOM popup/picker init = null');
 
+// V5 — Lobby
+ok(typeof S.games === 'object' && Object.keys(S.games).length === 0
+   && typeof S.players === 'object' && Object.keys(S.players).length === 0, 'games / players init = {}');
+ok(S._openTables instanceof Set && S._openTables.size === 0
+   && S._lobbyPids instanceof Set && S._specPids instanceof Set
+   && S._pendingNameRequests instanceof Set, 'Sets lobby init vides');
+ok(S.loaded === false && S._selectedGame === null && S._lobbyPlayerCount === 0
+   && S._hasStatistics === false, 'drapeaux lobby init');
+ok(S._tableFilter === '0', '_tableFilter défaut = 0 (localStorage vide)');
+ok(Object.keys(S._playerCountries).length === 0 && Object.keys(S._playerRights).length === 0,
+   'caches pays/droits init = {}');
+ok(S.MODE_DOT[2] === 'dot-run' && S._GTYPE_KEY[4] === 'gtypeRanked', 'constantes lobby');
+
 // Périmètre exact des vagues migrées (pas de fuite d'autres clés)
 const keys = Object.keys(S).sort();
 ok(JSON.stringify(keys) === JSON.stringify(['REACT_EMOJI_MIN_GAP', 'REACT_EMOJI_QUEUE_MAX',
@@ -85,8 +98,12 @@ ok(JSON.stringify(keys) === JSON.stringify(['REACT_EMOJI_MIN_GAP', 'REACT_EMOJI_
    '_reactEmojiLastSent', '_reactEmojiQueue', '_reactEmojiTimer', '_speakQ', '_speaking',
    '_stats', '_statsEligible', '_statsInited', '_statsOffline', '_statsOpen', '_statsTab',
    '_statusKey', '_timerID', '_timerSec', '_timerTot', '_titleBlinkID', '_voiceEnabled',
-   '_voices']),
-   'périmètre V0..V4 exact : ' + keys.join(', '));
+   '_voices',
+   'games', 'players', '_openTables', 'loaded', '_tableFilter', '_selectedGame',
+   '_lobbyPids', '_lobbyPlayerCount', '_hasStatistics', '_specPids',
+   '_pendingNameRequests', '_playerCountries', '_playerRights', 'MODE_DOT',
+   '_GTYPE_KEY'].sort()),
+   'périmètre V0..V5 exact : ' + keys.join(', '));
 
 console.log(fail ? `FAIL ${fail}/${n}` : `PASS ${n}/${n}`);
 process.exit(fail ? 1 : 0);

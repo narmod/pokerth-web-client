@@ -133,7 +133,10 @@ APRÈS les vagues d'état, en pushes séparés (#9f).
 Mécanique par vague : renommage BORNÉ À LA PLAGE DE L'IIFE UNIQUEMENT
 (leçon V4 : un nom identique hors IIFE peut être un global implicite distinct
 — L1626 `_myAvatarCache` → ReferenceError sur `S.` hors portée, rebroadcast
-avatar LAN cassé). Script Python, comptage attendu par nom + `assert`,
+avatar LAN cassé). Depuis V5 : renommage par AST (acorn, local non commité) — nœuds Identifier
+libres uniquement (clés d'objet, propriétés membres et déclarations exclues
+par construction), anti-shadowing vérifié, plage IIFE bornée par le parseur.
+Avant V5 : script Python, comptage attendu par nom + `assert`,
 classification des exclusions (`.nom`, `nom:` littéral, chaînes, shadowing
 local), re-grep résiduel = zéro nom nu, `node --check`. Noms courants (`pot
 players games seats seatData myId ws myName loaded`) : diff intégral relu.
@@ -191,3 +194,4 @@ jamais de rustine sur un renommage partiel.
 | 2026-07-19 | 0.3.826-beta | 9e-V3 état pet/inv + chat/notifs/titre → S (13 vars, 74 renommages) — test-state 25 ✓ | 822 Ko (stable) |
 | 2026-07-19 | 0.3.827-beta | 9e-V4 état avatars → S (12 vars, 83 renommages) — test-state 30 ✓ | 822 Ko (stable) |
 | 2026-07-19 | 0.3.828-beta | 9e hotfix : S._myAvatarCache hors IIFE (L1626) → window._myAvatarCache (global implicite d'origine) ; règle « renommage borné à l'IIFE » | régression V4 avatar LAN corrigée |
+| 2026-07-19 | 0.3.829-beta | 9e-V5 état lobby → S (15 vars, 204 renommages AST, pont window.players rebranché) — test-state 36 ✓ | 822 Ko (stable) |

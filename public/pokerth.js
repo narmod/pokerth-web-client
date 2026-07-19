@@ -2692,9 +2692,7 @@ const App = (() => {
   //   hashHex: lower-case hex string (easy logging & future cache keys)
   // pid -> code pays ISO 3166-1 alpha-2 (ex. 'FR'), reçu via PlayerInfoReply
   // (champ 4). Vide sur LAN / serveur privé qui ne le renseignent pas.
-  let _playerCountries = {};
   // pid -> droits PokerTH (1=invité, 2=enregistré, 3=admin), via PlayerInfoReply.
-  let _playerRights = {};
   // Step 2: outgoing AvatarRequest tracking. Keyed by hashHex so the same
   // avatar shared by N players is downloaded ONCE (Q2=A, dedup by hash).
   //   S._pthAvatarsByHash[hex] = {
@@ -2955,7 +2953,7 @@ const App = (() => {
     // Surtout présent sur pokerth.net ; masqué si inconnu.
     var flagEl = document.getElementById('pim-flag');
     if (flagEl) {
-      var cc = _playerCountries[targetPid];
+      var cc = S._playerCountries[targetPid];
       var flagImg = _ccToFlag(cc, 'cc-flag-lg');
       if (flagImg) {
         flagEl.innerHTML = flagImg + '<span class="pim-flag-code">' + String(cc).toUpperCase() + '</span>';
@@ -3040,7 +3038,7 @@ const App = (() => {
     if (isBot(pid)) {
       roleTxt = '🤖 ' + tt('piRoleBot', 'Bot');
     } else {
-      var rg = _playerRights[pid] || 0;
+      var rg = S._playerRights[pid] || 0;
       roleTxt = (rg === 3) ? tt('piRoleAdmin', 'Admin')
               : (rg === 2) ? tt('piRoleRegistered', 'Registered')
               : tt('piRoleGuest', 'Guest');
@@ -3073,7 +3071,7 @@ const App = (() => {
       html += '<div class="pim-ig">' + rows + (foot ? ('<div class="pim-ig-foot">' + foot + '</div>') : '') + '</div>';
     }
     // Lien vers le profil pokerth.net (joueurs enregistrés, mode guest/auth).
-    var rg2 = _playerRights[pid] || 0;
+    var rg2 = S._playerRights[pid] || 0;
     var modeEl = document.getElementById('login-mode');
     var onNet = !!(modeEl && (modeEl.value === 'guest' || modeEl.value === 'auth'));
     if (!isBot(pid) && onNet && (rg2 === 2 || rg2 === 3)) {
@@ -3094,7 +3092,7 @@ const App = (() => {
     // Kickban total — visible UNIQUEMENT si JE suis admin pokerth.net
     // (playerRights=3), jamais sur soi ni sur un bot. Marteau (gavel), comme
     // le PlayerListItem du client QML officiel.
-    if (!isBot(pid) && pid !== myId && (_playerRights[myId] || 0) === 3) {
+    if (!isBot(pid) && pid !== myId && (S._playerRights[myId] || 0) === 3) {
       html += '<button type="button" class="pim-kickban-btn" onclick="window._adminBanPlayer(' + pid + ')" '
             + 'style="display:block;width:100%;margin-top:8px;padding:8px 0;border:1px solid var(--danger,#e05050);border-radius:8px;cursor:pointer;background:transparent;color:var(--danger,#e05050);font-weight:600">'
             + '🔨 ' + esc(tt('piKickban', 'Total kickban')) + '</button>';
@@ -3419,10 +3417,10 @@ const App = (() => {
                    '</span>';
       specRows.push({ pid: myId, html: meName });
     }
-    _specPids.forEach(function(sp) {
+    S._specPids.forEach(function(sp) {
       specRows.push({
         pid: sp,
-        html: players[sp] ? esc(players[sp]) : ('#' + sp),
+        html: S.players[sp] ? esc(S.players[sp]) : ('#' + sp),
       });
     });
 
@@ -3450,7 +3448,7 @@ const App = (() => {
       html += '<div class="gim-spec-list">';
       specRows.forEach(function(r) {
         var avChip = (typeof window._avatarChipHtml === 'function')
-          ? window._avatarChipHtml(r.pid, players[r.pid] || ('#' + r.pid), 'gim-spec-av')
+          ? window._avatarChipHtml(r.pid, S.players[r.pid] || ('#' + r.pid), 'gim-spec-av')
           : '<span class="gim-spec-av letter">?</span>';
         html += '<div class="gim-spec-row">' + avChip +
                 '<span class="gim-spec-name">' + r.html + '</span></div>';
@@ -3482,9 +3480,9 @@ const App = (() => {
     // one spectator (besides ourselves). Tiny detail but it makes
     // the spectator presence visible WITHOUT having to scroll the
     // modal — the badges are right under the title.
-    if (_specPids.size > 0) {
+    if (S._specPids.size > 0) {
       var specBadge = '<span class="gim-badge gim-badge-spec">👁 ' +
-                      _specPids.size + '</span>';
+                      S._specPids.size + '</span>';
       subEl.innerHTML = subEl.innerHTML + ' ' + specBadge;
     }
 
@@ -3505,11 +3503,11 @@ const App = (() => {
   //    null hors partie ou en mode entraînement (bots sans classement). ──
   window.getTableRankingCtx = function () {
     if (window._offlineMode || !gId) return null;
-    var g = games[gId] || {};
+    var g = S.games[gId] || {};
     var order = (seats && seats.length) ? seats : (g.seats || []);
     var nicks = [];
     for (var i = 0; i < order.length && nicks.length < 10; i++) {
-      var nm = players[order[i]];
+      var nm = S.players[order[i]];
       if (nm) nicks.push(nm);
     }
     return { name: g.name || '', nicks: nicks };
@@ -3703,16 +3701,8 @@ const App = (() => {
     if (adminN) known.push(adminN);
     if (known.indexOf(cur) >= 0) el.value = _defaultNameForMode();
   };
-  let games     = {};   // gameId → {name, mode, players, maxPlayers, type, priv}
-  let players   = {};   // playerId → name
-  let _openTables = new Set(); // gids whose lobby player-list panel is expanded
-  let loaded    = false;
   // Table-list filter (design A chips): 'all' | 'open' | 'nopass' | 'live'.
   // Persisted so the choice survives reloads, like other lobby prefs.
-  let _tableFilter = (function(){
-    try { var v = localStorage.getItem('pth_table_filter'); return (v && /^[0-5]$/.test(v)) ? v : '0'; } catch(e) { return '0'; }
-  })();
-  let _selectedGame = null;   // partie sélectionnée pour le panneau « Infos de partie »
   let autoAction = false;
   let amGameAdmin = false;  // true if we created this game
 
@@ -3820,14 +3810,14 @@ const App = (() => {
       // Mobile (<640px, CSS) : la pastille texte est masquee et c'est l'oeil
       // qui prend le contour jaune quand JE regarde -> classe .me.
       if (cnt) cnt.classList.toggle('me', !!_amSpectator);
-      var n = (_specPids ? _specPids.size : 0) + (_amSpectator ? 1 : 0);
+      var n = (S._specPids ? S._specPids.size : 0) + (_amSpectator ? 1 : 0);
       if (num) num.textContent = n;
       if (cnt) {
         cnt.classList.toggle('on', n > 0);
         // Tooltip = noms des spectateurs (parité ToolTip QML spectatorNames)
         var names = [];
         if (_amSpectator) names.push(t('piYou'));
-        if (_specPids) _specPids.forEach(function(pid) {
+        if (S._specPids) S._specPids.forEach(function(pid) {
           var nm = (typeof getPlayerName === 'function') ? getPlayerName(pid) : null;
           names.push(nm || ('#' + pid));
         });
@@ -3968,11 +3958,6 @@ const App = (() => {
   // GameSpectatorJoined messages from the server (one is sent per
   // existing spectator when we ourselves join, plus live updates
   // as people come and go). Reset on JoinGameAck / closeTable.
-  let _specPids = new Set();
-  let _lobbyPlayerCount = 0; // running tally of players online; updated by PlayerListMessage + StatisticsMessage
-  let _hasStatistics = false; // true once we've seen a StatisticsMessage; takes precedence over the PlayerList tally
-  let _lobbyPids = new Set(); // pids currently online in the lobby (driven by PlayerList add/remove events)
-  let _pendingNameRequests = new Set(); // pids we've already asked the server about, to avoid spamming PlayerInfoRequest
   // ── Feature flag: auto-check / auto-fold next-turn checkbox ────────
   // When true, the action bar shows a checkbox above the action buttons
   // that arms an automatic fold (or check, if currently free) for the
@@ -4443,7 +4428,7 @@ const App = (() => {
         var pl = [];
         for (var si = 0; si < seats.length; si++) {
           var pid2 = seats[si], sd2 = seatData[pid2] || {};
-          pl.push((players[pid2] || ('#' + pid2)) + (pid2 === myId ? '*' : '') + ':$' + (sd2.money != null ? sd2.money : '?') +
+          pl.push((S.players[pid2] || ('#' + pid2)) + (pid2 === myId ? '*' : '') + ':$' + (sd2.money != null ? sd2.money : '?') +
                   (sd2.folded ? ' folded' : '') + (sd2.gone ? ' out' : ''));
         }
         echo('table', JSON.stringify({
@@ -4690,7 +4675,7 @@ const App = (() => {
   //  the web client used to ignore the whole message family. Gated to live
   //  games (meaningless offline vs bots).
   // ══════════════════════════════════════════════════════════════════
-  function _petName(pid) { return players[pid] || ('#' + pid); }
+  function _petName(pid) { return S.players[pid] || ('#' + pid); }
   function _petClear() {
     if (S._pet && S._pet.timer) { try { clearInterval(S._pet.timer); } catch(e) {} }
     S._pet = null;
@@ -4815,7 +4800,7 @@ const App = (() => {
     _inviteClear();
     S._inv = { gameId: o.gameId };
     var host = _petName(o.byWhom);
-    var tbl  = (games[o.gameId] && games[o.gameId].name) || ('#' + o.gameId);
+    var tbl  = (S.games[o.gameId] && S.games[o.gameId].name) || ('#' + o.gameId);
     var b = document.createElement('div');
     b.id = 'game-invite-banner';
     b.style.cssText = 'position:fixed;left:50%;top:12px;transform:translateX(-50%);' +
@@ -5007,7 +4992,7 @@ const App = (() => {
         // confirme notre pseudo canonique). Inoffensif pour invité/LAN
         // (la réponse n'aura simplement pas de champ avatar).
         try {
-          _pendingNameRequests.add(myId);
+          S._pendingNameRequests.add(myId);
           const _selfReq = Proto.encode([[1, 0, myId]]);
           send(Proto.encode([[1, 0, T.PlayerInfoRequest], [19, 2, _selfReq]]));
         } catch (e) {}
@@ -5143,25 +5128,25 @@ const App = (() => {
         const _pid_pl = Proto.u32(sub, 1);
         const notif = Proto.u32(sub, 2);
         if (notif === 0) {
-          _lobbyPlayerCount++;
-          _lobbyPids.add(_pid_pl);
+          S._lobbyPlayerCount++;
+          S._lobbyPids.add(_pid_pl);
           // Fetch the player's name so the players-online panel can
           // show something better than '#42'. Skip if we already
           // know the name OR have already asked.
-          if (!players[_pid_pl] && !_pendingNameRequests.has(_pid_pl)) {
-            _pendingNameRequests.add(_pid_pl);
+          if (!S.players[_pid_pl] && !S._pendingNameRequests.has(_pid_pl)) {
+            S._pendingNameRequests.add(_pid_pl);
             try {
               const req = Proto.encode([[1,0,_pid_pl]]);
               send(Proto.encode([[1,0,T.PlayerInfoRequest],[19,2,req]]));
             } catch(e) {}
           }
         } else if (notif === 1) {
-          _lobbyPlayerCount = Math.max(0, _lobbyPlayerCount - 1);
-          _lobbyPids.delete(_pid_pl);
-          _pendingNameRequests.delete(_pid_pl);
+          S._lobbyPlayerCount = Math.max(0, S._lobbyPlayerCount - 1);
+          S._lobbyPids.delete(_pid_pl);
+          S._pendingNameRequests.delete(_pid_pl);
         }
-        if (!_hasStatistics) {
-          $('h-players').textContent = _lobbyPlayerCount + ' ' + t('playersOnline');
+        if (!S._hasStatistics) {
+          $('h-players').textContent = S._lobbyPlayerCount + ' ' + t('playersOnline');
         }
         // Refresh the panel if it's open.
         var _pp = document.getElementById('players-panel');
@@ -5177,9 +5162,9 @@ const App = (() => {
           if (Proto.u32(s,1) === 1) {
             // Server-authoritative count. Mark the flag so PlayerList
             // updates stop overriding the header pill from below.
-            _hasStatistics = true;
-            _lobbyPlayerCount = Proto.u32(s,2);
-            $('h-players').textContent = _lobbyPlayerCount + ' ' + t('playersOnline');
+            S._hasStatistics = true;
+            S._lobbyPlayerCount = Proto.u32(s,2);
+            $('h-players').textContent = S._lobbyPlayerCount + ' ' + t('playersOnline');
             updateLobbyStatsBar();
           }
         }
@@ -5191,25 +5176,25 @@ const App = (() => {
         const pid = Proto.u32(sub, 1);
         const info = Proto.sub(sub, 2);
         const name = Proto.str(info, 1);
-        if (name) players[pid] = name;
+        if (name) S.players[pid] = name;
         // Rafraîchir un panneau « joueurs à cette table » en attente de ce pseudo.
-        if (name && _openTables.size && _tableHasPid(pid)) renderGames();
+        if (name && S._openTables.size && _tableHasPid(pid)) renderGames();
         // Code pays (champ 4, optionnel) — présent surtout sur pokerth.net.
         var cc = Proto.str(info, 4);
-        if (cc) _playerCountries[pid] = cc.toUpperCase();
+        if (cc) S._playerCountries[pid] = cc.toUpperCase();
         // Panneau « Infos de partie » : rafraîchir si ce joueur appartient à la
         // partie sélectionnée (nom/drapeau qui arrivent en asynchrone).
-        if ((name || cc) && _selectedGame != null) {
-          var _selG = games[_selectedGame];
+        if ((name || cc) && S._selectedGame != null) {
+          var _selG = S.games[S._selectedGame];
           if (_selG && _selG.seats && _selG.seats.indexOf(pid) !== -1) {
-            try { renderGameInfoPanel(_selectedGame); } catch(e) {}
+            try { renderGameInfoPanel(S._selectedGame); } catch(e) {}
           }
         }
         // Droits (champ 3) : 1=invité, 2=enregistré, 3=admin. Sert à ne
         // rendre cliquables que les joueurs ayant un compte pokerth.net.
         var rights = Proto.u32(info, 3);
-        if (rights) _playerRights[pid] = rights;
-        _pendingNameRequests.delete(pid); // got the reply, free for retry if needed
+        if (rights) S._playerRights[pid] = rights;
+        S._pendingNameRequests.delete(pid); // got the reply, free for retry if needed
         // ── Step 1 (PokerTH avatar): peek for the optional AvatarData
         // sub-message (field 5). Present only for registered players who
         // uploaded an avatar on pokerth.net. We just log + memoize.
@@ -5243,7 +5228,7 @@ const App = (() => {
                 // Re-render so the seat picks up the image right away.
                 if (typeof window._renderSeats === 'function') window._renderSeats();
                 if (typeof window.refreshMyAvatar === 'function') window.refreshMyAvatar();
-                if (_openTables.size) renderGames();
+                if (S._openTables.size) renderGames();
               }
             }
             // ── Step 2: cache miss -> kick off an AvatarRequest. Dedup
@@ -5358,7 +5343,7 @@ const App = (() => {
         if (typeof window._renderSeats === 'function') window._renderSeats();
         if (typeof window.refreshMyAvatar === 'function') window.refreshMyAvatar();
         // Rafraîchir aussi un panneau « joueurs à cette table » ouvert.
-        if (_openTables.size) renderGames();
+        if (S._openTables.size) renderGames();
         if (hashHex) delete S._pthAvatarReqIdToHash[reqId];
         break;
       }
@@ -5439,11 +5424,11 @@ const App = (() => {
             }
           }
         }
-        games[id] = { name, mode, players:pc, seats:_seats, maxPlayers:maxp, type:gtype, priv:!!priv,
+        S.games[id] = { name, mode, players:pc, seats:_seats, maxPlayers:maxp, type:gtype, priv:!!priv,
                       timeout: _gto || 15, startMoney: _gsm || 3000, delay: _gdelay,
                       raiseMode: _grmode, raiseHands: _grhands, raiseMins: _grmins, smallBlind: _gsb,
                       endRaiseMode: _germode, endRaiseValue: _gerval, manualBlinds: _gmb };
-        if (!loaded) { loaded = true; }
+        if (!S.loaded) { S.loaded = true; }
         renderGames();
         // ── Auto-join from a share link ──
         // If we arrived via a "copy table link" URL and this is the
@@ -5469,9 +5454,9 @@ const App = (() => {
       case T.GameListUpdate: {
         const id   = Proto.u32(sub, 1);
         const mode = Proto.u32(sub, 2);
-        if (games[id]) {
-          if (mode === 3) delete games[id];
-          else games[id].mode = mode;
+        if (S.games[id]) {
+          if (mode === 3) delete S.games[id];
+          else S.games[id].mode = mode;
           renderGames();
         }
         break;
@@ -5481,12 +5466,12 @@ const App = (() => {
       case T.GameListPlayerJoined: {
         const id  = Proto.u32(sub, 1);
         const pid = Proto.u32(sub, 2);
-        if (games[id]) {
-          if (!games[id].seats) games[id].seats = [];
-          if (pid && games[id].seats.indexOf(pid) === -1) games[id].seats.push(pid);
-          games[id].players = games[id].seats.length;
-          if (pid && !players[pid] && _openTables.has(String(id)) && !_pendingNameRequests.has(pid)) {
-            _pendingNameRequests.add(pid);
+        if (S.games[id]) {
+          if (!S.games[id].seats) S.games[id].seats = [];
+          if (pid && S.games[id].seats.indexOf(pid) === -1) S.games[id].seats.push(pid);
+          S.games[id].players = S.games[id].seats.length;
+          if (pid && !S.players[pid] && S._openTables.has(String(id)) && !S._pendingNameRequests.has(pid)) {
+            S._pendingNameRequests.add(pid);
             try { send(Proto.encode([[1,0,T.PlayerInfoRequest],[19,2,Proto.encode([[1,0,pid]])]])); } catch(e) {}
           }
           renderGames();
@@ -5496,12 +5481,12 @@ const App = (() => {
       case T.GameListPlayerLeft: {
         const id  = Proto.u32(sub, 1);
         const pid = Proto.u32(sub, 2);
-        if (games[id]) {
-          if (games[id].seats) {
-            const _ix = games[id].seats.indexOf(pid);
-            if (_ix !== -1) games[id].seats.splice(_ix, 1);
-            games[id].players = games[id].seats.length;
-          } else if (games[id].players > 0) { games[id].players--; }
+        if (S.games[id]) {
+          if (S.games[id].seats) {
+            const _ix = S.games[id].seats.indexOf(pid);
+            if (_ix !== -1) S.games[id].seats.splice(_ix, 1);
+            S.games[id].players = S.games[id].seats.length;
+          } else if (S.games[id].players > 0) { S.games[id].players--; }
           renderGames();
         }
         break;
@@ -5522,13 +5507,13 @@ const App = (() => {
       case T.GameSpectatorJoined: {
         const spid = Proto.u32(sub, 2);
         if (spid && spid !== myId) {
-          _specPids.add(spid);
+          S._specPids.add(spid);
           updateSpectatorStrip();
           // Request the pseudo if we don't have it yet. PlayerInfoReply
           // will populate players[spid] and the modal renderer reads
           // straight from there, so the row updates next time the modal
           // is opened (or right now if it's already open).
-          if (!players[spid]) {
+          if (!S.players[spid]) {
             try {
               const req = Proto.encode([[1,0,spid]]);
               send(Proto.encode([[1,0,T.PlayerInfoRequest],[19,2,req]]));
@@ -5546,7 +5531,7 @@ const App = (() => {
       case T.GameSpectatorLeft: {
         const spid = Proto.u32(sub, 2);
         if (spid) {
-          _specPids.delete(spid);
+          S._specPids.delete(spid);
           updateSpectatorStrip();
           var _gim2 = document.getElementById('game-info-modal');
           if (_gim2 && _gim2.style.display === 'flex') {
@@ -5561,7 +5546,7 @@ const App = (() => {
         const pid  = Proto.u32(sub, 2);
         const ctype= Proto.u32(sub, 3);
         const text = Proto.str(sub, 4);
-        const who  = players[pid] || (pid ? `#${pid}` : null);
+        const who  = S.players[pid] || (pid ? `#${pid}` : null);
         const cls  = ctype === 3 ? 'bc' : pid === myId ? 'mine' : '';
         // Logging de tous les messages chat (debug réactions)
         // Intercepter les réactions (préfixe ASCII [R])
@@ -5651,22 +5636,22 @@ const App = (() => {
         // Fresh game = empty spectator set. The server will replay
         // GameSpectatorJoined for each existing spectator so we'll
         // rebuild the set within milliseconds.
-        _specPids = new Set();
+        S._specPids = new Set();
         const isAdmin = Proto.u32(sub, 2);
         // Appliquer le timeout de la partie (depuis games[] si on rejoint, sinon celui créé)
-        if (games[gId] && games[gId].timeout) gameTimeout = games[gId].timeout;
+        if (S.games[gId] && S.games[gId].timeout) gameTimeout = S.games[gId].timeout;
         // Same for starting stack so the seat-data init (line ~1770) uses
         // the real configured value instead of 0. When *we* are the
         // creator, createGame() already wrote gameStartMoney directly —
         // this branch handles the case where we joined someone else's
         // table and discovered the settings via GameListNew.
-        if (games[gId] && games[gId].startMoney) gameStartMoney = games[gId].startMoney;
+        if (S.games[gId] && S.games[gId].startMoney) gameStartMoney = S.games[gId].startMoney;
         // Blind-raise schedule for the "blinds up" counter/alert.
-        _raiseMode  = (games[gId] && games[gId].raiseMode)  || 1;
-        _raiseEvery = (games[gId] && (_raiseMode === 2 ? games[gId].raiseMins : games[gId].raiseHands)) || 0;
-        _endRaiseMode  = (games[gId] && games[gId].endRaiseMode)  || 1;
-        _endRaiseValue = (games[gId] && games[gId].endRaiseValue) || 0;
-        _manualBlinds  = (games[gId] && games[gId].manualBlinds) || [];
+        _raiseMode  = (S.games[gId] && S.games[gId].raiseMode)  || 1;
+        _raiseEvery = (S.games[gId] && (_raiseMode === 2 ? S.games[gId].raiseMins : S.games[gId].raiseHands)) || 0;
+        _endRaiseMode  = (S.games[gId] && S.games[gId].endRaiseMode)  || 1;
+        _endRaiseValue = (S.games[gId] && S.games[gId].endRaiseValue) || 0;
+        _manualBlinds  = (S.games[gId] && S.games[gId].manualBlinds) || [];
         _lastBlindsUpHand = 0;
         amGameAdmin = !!isAdmin;
         // Replay hors-ligne en un tap : une fois recréée la table (on est admin),
@@ -5680,7 +5665,7 @@ const App = (() => {
         // Fields we care about: name, type, maxPlayers, priv, timeout,
         // startMoney. All of these come from NetGameInfo when the table
         // was originally listed. Default the name to "#<gId>" if missing.
-        var _gm = (games[gId] || {});
+        var _gm = (S.games[gId] || {});
         _gameMeta = {
           id:         gId,
           name:       _gm.name || ('#' + gId),
@@ -5726,7 +5711,7 @@ const App = (() => {
         if (_gameStarted) {
           show('s-game');
         } else {
-          _selectedGame = gId;
+          S._selectedGame = gId;
           try { renderGameInfoPanel(gId); } catch(e) {}
           try { renderGames(); } catch(e) {}
           // Ne PAS ouvrir automatiquement le panneau « Infos de partie » ici :
@@ -5871,14 +5856,14 @@ const App = (() => {
           seats.push(pid);
           renderSeats();
         }
-        const name = players[pid] || '#'+pid;
+        const name = S.players[pid] || '#'+pid;
         // Son « joueur connecté » (playerconnected.wav) — parties réseau seulement
         if (pid !== myId && !window._offlineMode) {
           try { if (typeof notifyPlayerConnected === 'function') notifyPlayerConnected(); } catch (_e) {}
         }
         // Ask the server for this player's name if we don't have it yet,
         // so the waiting panel can display a real pseudo rather than '#42'.
-        if (!players[pid]) {
+        if (!S.players[pid]) {
           try {
             const req = Proto.encode([[1,0,pid]]);
             send(Proto.encode([[1,0,T.PlayerInfoRequest],[19,2,req]]));
@@ -5891,7 +5876,7 @@ const App = (() => {
 
       case T.GamePlayerLeft: {
         const pid = Proto.u32(sub, 2);
-        const name = players[pid] || '#'+pid;
+        const name = S.players[pid] || '#'+pid;
         addChat(null, t('playerLeftTable', { name: name }), 'sys', { key: 'playerLeftTable', params: { name: name } });
         if (seatData[pid]) { seatData[pid].active = false; seatData[pid].gone = true; }
         renderSeats();
@@ -6065,7 +6050,7 @@ const App = (() => {
 
         // Demander les infos des joueurs inconnus
         for (const pid of seats) {
-          if (!players[pid]) {
+          if (!S.players[pid]) {
             const req = Proto.encode([[1,0,pid]]);
             send(Proto.encode([[1,0,T.PlayerInfoRequest],[19,2,req]]));
           }
@@ -6935,7 +6920,6 @@ const App = (() => {
   }
 
   // ── AFFICHAGE DES TABLES ──
-  const MODE_DOT   = {1:'dot-open', 2:'dot-run', 3:'dot-closed'};
   // Resolve mode labels via t() at CALL time, not at module-init time —
   // when this file loads, the i18n table from modules/i18n.mjs hasn't
   // been attached to the closure yet (its <script type=module> defers
@@ -6972,7 +6956,7 @@ const App = (() => {
     // Menu déroulant (parité QML gameListFilter) : on synchronise juste la
     // valeur sélectionnée avec le filtre actif.
     var sel = document.getElementById('g-filter-select');
-    if (sel && sel.value !== String(_tableFilter)) sel.value = String(_tableFilter);
+    if (sel && sel.value !== String(S._tableFilter)) sel.value = String(S._tableFilter);
   }
 
   // ── Liste dépliable des joueurs par table (lobby) ─────────────
@@ -6981,17 +6965,17 @@ const App = (() => {
   // qui est présent et on demande à la volée les pseudos inconnus
   // (même déduplication que le roster des joueurs en ligne).
   function renderTablePlayers(gid) {
-    const g = games[gid];
+    const g = S.games[gid];
     if (!g) return '';
     const seats = (g.seats || []);
     if (!seats.length) return '<div class="gp-empty">' + t('tablePlayersEmpty') + '</div>';
     return seats.map(function(pid){
-      const nm = players[pid];
-      if (!nm && !_pendingNameRequests.has(pid)) {
-        _pendingNameRequests.add(pid);
+      const nm = S.players[pid];
+      if (!nm && !S._pendingNameRequests.has(pid)) {
+        S._pendingNameRequests.add(pid);
         try { send(Proto.encode([[1,0,T.PlayerInfoRequest],[19,2,Proto.encode([[1,0,pid]])]])); } catch(e) {}
       }
-      const flag = _ccToFlag(_playerCountries[pid], 'gp-flag');
+      const flag = _ccToFlag(S._playerCountries[pid], 'gp-flag');
       const label = nm ? esc(nm) : '#' + pid;
       const av = _avatarChipHtml(pid, label, 'gp-av');
       return '<span class="gp-player' + (nm ? '' : ' gp-pending') + '">' + av + '<span class="gp-name">' + label + '</span>' + flag + '</span>';
@@ -7001,18 +6985,17 @@ const App = (() => {
   // ── Panneau « Infos de partie » (parité officielle) : Type · SB/Capital ·
   //    Joueurs dans la partie. Alimenté au clic sur une ligne. Les libellés
   //    portent data-i18n → retraduits automatiquement par setLang. ──
-  var _GTYPE_KEY = { 1:'gtypeNormal', 2:'gtypeRegistered', 3:'gtypeInvite', 4:'gtypeRanked' };
   function _renderInfoPlayerRows(gid) {
-    var g = games[gid]; if (!g) return '';
+    var g = S.games[gid]; if (!g) return '';
     var seats = g.seats || [];
     if (!seats.length) return '<div class="lgi-pempty">' + t('tablePlayersEmpty') + '</div>';
     return seats.map(function(pid){
-      var nm = players[pid];
-      if (!nm && !_pendingNameRequests.has(pid)) {
-        _pendingNameRequests.add(pid);
+      var nm = S.players[pid];
+      if (!nm && !S._pendingNameRequests.has(pid)) {
+        S._pendingNameRequests.add(pid);
         try { send(Proto.encode([[1,0,T.PlayerInfoRequest],[19,2,Proto.encode([[1,0,pid]])]])); } catch(e) {}
       }
-      var flag  = _ccToFlag(_playerCountries[pid], 'gp-flag');
+      var flag  = _ccToFlag(S._playerCountries[pid], 'gp-flag');
       var label = nm ? esc(nm) : '#' + pid;
       var av    = _avatarChipHtml(pid, label, 'gp-av');
       return '<div class="lgi-prow lgi-click' + (nm ? '' : ' lgi-pending') + '" role="button" tabindex="0"'
@@ -7033,13 +7016,13 @@ const App = (() => {
   function _renderInfoRowsFromPids(pids) {
     if (!pids || !pids.length) return '<div class="lgi-pempty">' + t('tablePlayersEmpty') + '</div>';
     return pids.map(function(pid){
-      var nm = players[pid];
+      var nm = S.players[pid];
       if (!nm && pid === myId) nm = (document.getElementById('nick') ? document.getElementById('nick').value : '') || myName;
-      if (!nm && !_pendingNameRequests.has(pid)) {
-        _pendingNameRequests.add(pid);
+      if (!nm && !S._pendingNameRequests.has(pid)) {
+        S._pendingNameRequests.add(pid);
         try { send(Proto.encode([[1,0,T.PlayerInfoRequest],[19,2,Proto.encode([[1,0,pid]])]])); } catch(e) {}
       }
-      var flag  = _ccToFlag(_playerCountries[pid], 'gp-flag');
+      var flag  = _ccToFlag(S._playerCountries[pid], 'gp-flag');
       var label = nm ? esc(nm) : '#' + pid;
       var av    = _avatarChipHtml(pid, label, 'gp-av');
       return '<div class="lgi-prow lgi-click' + (nm ? '' : ' lgi-pending') + '" role="button" tabindex="0"'
@@ -7056,7 +7039,7 @@ const App = (() => {
     // mis à true qu'à GameStartInitial → sinon la barre d'options n'apparaît
     // jamais pendant l'attente.
     var _mine = (gid != null && gId !== 0 && gid === gId && !_gameStarted);
-    var g = (gid != null) ? games[gid] : null;
+    var g = (gid != null) ? S.games[gid] : null;
     // Créateur : games[gId] peut ne pas encore être peuplé (GameListNew arrive
     // juste après). On synthétise depuis _gameMeta + variables live.
     if (!g && _mine && _gameMeta) {
@@ -7071,7 +7054,7 @@ const App = (() => {
       try { _renderLobbyWaitActions(); } catch(e) {}
       return;
     }
-    var typeKey = _GTYPE_KEY[g.type];
+    var typeKey = S._GTYPE_KEY[g.type];
     var typeLbl = GTYPE(g.type) || '';
     // Liste + décompte des joueurs : pour MA partie, on prend les pids réels
     // (seatData) au lieu de g.seats qui peut être vide sur une table fraîche.
@@ -7136,7 +7119,7 @@ const App = (() => {
       try { _updateFootJoin(); } catch(e){}
       return;
     }
-    var g        = games[gId] || {};
+    var g        = S.games[gId] || {};
     var maxP     = g.maxPlayers || (_gameMeta && _gameMeta.maxPlayers) || 10;
     var isRank   = (g.type || (_gameMeta && _gameMeta.type) || 1) === 4;
     var isHost   = !_amSpectator && amGameAdmin && !isRank;
@@ -7178,7 +7161,7 @@ const App = (() => {
   }
 
   function _updateFootJoin() {
-    var g = (_selectedGame != null && typeof games !== 'undefined') ? games[_selectedGame] : null;
+    var g = (S._selectedGame != null && typeof S.games !== 'undefined') ? S.games[S._selectedGame] : null;
     var bj = document.getElementById('lobby-foot-join');
     var bs = document.getElementById('lobby-foot-spec');
     // Déjà dans une partie (assis, en attente de démarrage OU démarrée) : on
@@ -7193,16 +7176,16 @@ const App = (() => {
 
   function _refreshGameInfoPanel() {
     _updateFootJoin();
-    if (_selectedGame != null) {
-      if (games[_selectedGame]) renderGameInfoPanel(_selectedGame);
-      else { _selectedGame = null; renderGameInfoPanel(null); }
+    if (S._selectedGame != null) {
+      if (S.games[S._selectedGame]) renderGameInfoPanel(S._selectedGame);
+      else { S._selectedGame = null; renderGameInfoPanel(null); }
     }
   }
   window._refreshGameInfoPanel = _refreshGameInfoPanel;   // rappelé par setLang (i18n.mjs)
 
   function _tableHasPid(pid) {
-    for (const k of _openTables) {
-      const g = games[k];
+    for (const k of S._openTables) {
+      const g = S.games[k];
       if (g && g.seats && g.seats.indexOf(pid) !== -1) return true;
     }
     return false;
@@ -7241,18 +7224,18 @@ const App = (() => {
     if (!el) return;
     var open = 0, running = 0;
     try {
-      Object.values(games).forEach(function (g) {
+      Object.values(S.games).forEach(function (g) {
         if (g.mode === 2) running++;
         else if (g.mode === 1) open++;
       });
     } catch (e) {}
-    el.textContent = _lobbyPlayerCount + ' ' + t('playersOnline') + ' \u00b7 '
+    el.textContent = S._lobbyPlayerCount + ' ' + t('playersOnline') + ' \u00b7 '
       + running + ' ' + t('lsbRunning') + ' \u00b7 ' + open + ' ' + t('lsbOpen');
   }
 
   function renderGames() {
     // Utiliser entries() pour avoir l'id ET l'objet
-    const entries = Object.entries(games);
+    const entries = Object.entries(S.games);
     entries.sort(([,a],[,b]) => a.mode - b.mode);
 
     // Per-chip counts + active highlight (on the full set).
@@ -7261,14 +7244,14 @@ const App = (() => {
 
     if (entries.length === 0) {
       $('g-count').textContent = '0 table(s)';
-      $('g-list').innerHTML = loaded
+      $('g-list').innerHTML = S.loaded
         ? '<div class="empty">' + t('noTablesAvailable') + '</div>'
         : '<div class="empty">Chargement des tables<br><span class="ld"><span>●</span><span>●</span><span>●</span></span></div>';
       return;
     }
 
     // Apply the active filter.
-    const shown = entries.filter(function(e){ return _tableMatches(e[1], _tableFilter); });
+    const shown = entries.filter(function(e){ return _tableMatches(e[1], S._tableFilter); });
     $('g-count').textContent = shown.length + ' table(s)';
 
     if (shown.length === 0) {
@@ -7305,8 +7288,8 @@ const App = (() => {
       metaBits.push('<span>' + t('gameTimeLabel') + ' : ' + (g.timeout || 0) + 's' + (_dly ? '/' + _dly + 's' : '') + '</span>');
       metaBits.push('<span>' + ((g.priv || g.type === 3) ? t('piPrivate') : t('piPublic')) + '</span>');
       if (g.type === 4) metaBits.push('<span>' + t('visRanked') + '</span>');
-      var _sel = (String(gid) === String(_selectedGame)) ? ' sel' : '';
-      var _open = _openTables.has(String(gid));
+      var _sel = (String(gid) === String(S._selectedGame)) ? ' sel' : '';
+      var _open = S._openTables.has(String(gid));
       var caret = '<button class="gcard-caret" onclick="event.stopPropagation();App.toggleTablePlayers(' + parseInt(gid) + ')" title="' + t('showPlayers') + '" aria-label="' + t('showPlayers') + '" aria-expanded="' + (_open?'true':'false') + '">' + (_open ? '\u25B4' : '\u25BE') + '</button>';
       return '<div class="game-row gcard' + _sel + (_open ? ' gc-open' : '') + '" onclick="App.selectGame(' + parseInt(gid) + ')">'
         + '<div class="gcard-main">'
@@ -7942,7 +7925,7 @@ const App = (() => {
         'style="display:inline-block;width:18px;height:18px;vertical-align:middle;flex:none;filter:drop-shadow(0 1px 3px rgba(0,0,0,.4))"');
   };
 
-  function getPlayerName(pid) { return players[pid] || (pid === myId ? myName : '#'+pid); }
+  function getPlayerName(pid) { return S.players[pid] || (pid === myId ? myName : '#'+pid); }
   // Sièges dont le stack est tombé à 0 (éliminés) — pour handlog 'sits out'.
   function _hlEliminatedPids() {
     var out = [];
@@ -8065,7 +8048,7 @@ const App = (() => {
 
   // ── Détection bot vs humain (dans la closure = accès à players/myId/myName) ──
   function isBot(pid) {
-    var name = (players[pid] || '').toLowerCase();
+    var name = (S.players[pid] || '').toLowerCase();
     return name.startsWith('computer') || name.startsWith('bot') || name === 'bot';
   }
   function getPlayerInitial(pid) {
@@ -8087,7 +8070,7 @@ const App = (() => {
     if (isBot(pid)) return '🤖';
     // Avatar reçu des autres joueurs via proxy
     if (S._playerAvatars[pid]) return S._playerAvatars[pid];
-    var name = players[pid] || '';
+    var name = S.players[pid] || '';
     return name.charAt(0).toUpperCase() || '?';
   }
   function getPlayerTypeBadge(pid) {
@@ -8628,7 +8611,7 @@ const App = (() => {
       var _avPucks = _seatTr.pucksSide ? '' : (blindBadge + dealerChip);
       // Drapeau du pays sur l'avatar (coin bas-droite, comme un badge).
       // Vide si pays inconnu → rien affiché.
-      const seatFlag = _ccToFlag(_playerCountries[pid]);
+      const seatFlag = _ccToFlag(S._playerCountries[pid]);
       const flagBadge = seatFlag ? '<span class="seat-flag' + (_apPrev && _apPrev.f ? ' no-pop' : '') + '">' + seatFlag + '</span>' : '';
       // ── Step 3 display: if we have a downloaded PokerTH avatar for
       // this pid, slot it in as <img> on top of the initial/emoji.
@@ -9211,7 +9194,7 @@ const App = (() => {
     // simplement ce panneau à chaque join / leave / PlayerInfoReply.
     try {
       if (gId) {
-        if (_selectedGame !== gId) _selectedGame = gId;
+        if (S._selectedGame !== gId) S._selectedGame = gId;
         renderGameInfoPanel(gId);
       }
     } catch (e) {}
@@ -9273,7 +9256,7 @@ const App = (() => {
     const place = opts.place || 0;
     const isMyWin = (winnerPid === myId) && !eliminated;
     if (!S._gameCounted) { S._gameCounted = true; _lifeRecordGame(isMyWin); }
-    const winnerName = players[winnerPid] || (isMyWin
+    const winnerName = S.players[winnerPid] || (isMyWin
       ? (document.getElementById('nick') ? document.getElementById('nick').value : 'You')
       : ('#' + winnerPid));
     // Build winner avatar via the unified helper. Same priority order
@@ -9489,7 +9472,7 @@ const App = (() => {
   Object.defineProperty(window, 'seats',       {get: function(){ return seats; }});
   Object.defineProperty(window, 'seatData',    {get: function(){ return seatData; }});
   Object.defineProperty(window, 'myId',        {get: function(){ return myId; }});
-  Object.defineProperty(window, 'players',     {get: function(){ return players; }});
+  Object.defineProperty(window, 'players',     {get: function(){ return S.players; }});
   Object.defineProperty(window, '_ipBlockUntil',{
     get: function(){ return _ipBlockUntil; },
     set: function(v){ _ipBlockUntil = v; }
@@ -9550,8 +9533,8 @@ const App = (() => {
   // ou '' s'il est au lobby.
   window._playerActivity = function (pid) {
     try {
-      for (var id in games) {
-        var g = games[id];
+      for (var id in S.games) {
+        var g = S.games[id];
         if (g && g.mode !== 3 && g.seats && g.seats.indexOf(pid) !== -1) {
           return g.name || ('#' + id);
         }
@@ -9562,9 +9545,9 @@ const App = (() => {
   window._chatNicks = function (gameScope) {
     try {
       if (gameScope && seats.length) {
-        return seats.map(function (p) { return players[p] || ''; }).filter(Boolean);
+        return seats.map(function (p) { return S.players[p] || ''; }).filter(Boolean);
       }
-      return Object.values(players || {}).filter(Boolean);
+      return Object.values(S.players || {}).filter(Boolean);
     } catch (e) { return []; }
   };
   // Repeindre la pastille "N joueur(s)" du header lobby dans la langue
@@ -9576,7 +9559,7 @@ const App = (() => {
     try {
       var el = document.getElementById('h-players');
       if (el && el.textContent !== '—') {
-        el.textContent = _lobbyPlayerCount + ' ' + t('playersOnline');
+        el.textContent = S._lobbyPlayerCount + ' ' + t('playersOnline');
       }
     } catch (e) {}
   };
@@ -10709,10 +10692,10 @@ function _maybeShowNextHandBtn() {
       // pour ne pas afficher des sièges vides. Repli (session expirée) : on
       // recevra un Announce → le flux normal repeuplera tout.
       if (!_preserve) {
-        games   = {};
-        players = {};
-        _playerCountries = {};
-        _playerRights = {};
+        S.games   = {};
+        S.players = {};
+        S._playerCountries = {};
+        S._playerRights = {};
         _raiseMode = 1; _raiseEvery = 0; _lastBlindsUpHand = 0;
         _blindsClockStart = 0; _stopBlindsCountdown();
         _endRaiseMode = 1; _endRaiseValue = 0; _manualBlinds = [];
@@ -10723,7 +10706,7 @@ function _maybeShowNextHandBtn() {
         // ne sont re-reçus qu'une fois).
         S._playerAvatars = {}; S._playerImgAvatars = {};
         S._pthAvatarHashes = {}; S._pthAvatarsByHash = {}; S._pthAvatarReqIdToHash = {}; S._pthDataUrls = {};
-        loaded  = false;
+        S.loaded  = false;
         // Repeindre tout de suite la liste (désormais vide) : sinon, dans un
         // lobby calme/vide (ex. retour de l'entraînement vers un serveur en
         // ligne sans table), aucun GameListNew n'arrive pour déclencher un
@@ -11044,13 +11027,13 @@ function _maybeShowNextHandBtn() {
         try { ws.close(4001, 'user disconnect'); } catch (e) {}
         ws = null;
       }
-      games = {};
+      S.games = {};
       // Reset lobby counters so the next connect starts at 0 instead
       // of inheriting the previous session's tally.
-      _lobbyPlayerCount = 0;
-      _hasStatistics = false;
-      _lobbyPids.clear();
-      _pendingNameRequests.clear();
+      S._lobbyPlayerCount = 0;
+      S._hasStatistics = false;
+      S._lobbyPids.clear();
+      S._pendingNameRequests.clear();
       show('s-connect');
     },
 
@@ -11076,15 +11059,15 @@ function _maybeShowNextHandBtn() {
       pids.sort(function(a, b) {
         if (a === myId && b !== myId) return -1;
         if (b === myId && a !== myId) return 1;
-        var na = (players[a] || ('#' + a)).toLowerCase();
-        var nb = (players[b] || ('#' + b)).toLowerCase();
+        var na = (S.players[a] || ('#' + a)).toLowerCase();
+        var nb = (S.players[b] || ('#' + b)).toLowerCase();
         return na < nb ? -1 : na > nb ? 1 : 0;
       });
       if (!pids.length) {
         list.innerHTML = '<div class="km-empty">— ' + t('kickNoPlayers') + ' —</div>';
       } else {
         var html = pids.map(function(pid) {
-          var name = players[pid] || ('#' + pid);
+          var name = S.players[pid] || ('#' + pid);
           var sd   = seatData[pid] || {};
           var stack= (typeof sd.money === 'number') ? fmtChips(sd.money) : '';
           var isMe = (pid === myId);
@@ -11137,9 +11120,9 @@ function _maybeShowNextHandBtn() {
       var seated = {};
       Object.keys(seatData).forEach(function(s){ seated[parseInt(s,10)] = true; });
       var pids = [];
-      _lobbyPids.forEach(function(p){ if (p !== myId && !seated[p]) pids.push(p); });
+      S._lobbyPids.forEach(function(p){ if (p !== myId && !seated[p]) pids.push(p); });
       pids.sort(function(a,b){
-        var na=(players[a]||('#'+a)).toLowerCase(), nb=(players[b]||('#'+b)).toLowerCase();
+        var na=(S.players[a]||('#'+a)).toLowerCase(), nb=(S.players[b]||('#'+b)).toLowerCase();
         return na<nb?-1:na>nb?1:0;
       });
       return pids;
@@ -11152,7 +11135,7 @@ function _maybeShowNextHandBtn() {
         return;
       }
       list.innerHTML = pids.map(function(pid) {
-        var name = players[pid] || ('#' + pid);
+        var name = S.players[pid] || ('#' + pid);
         var avChip = (typeof window._avatarChipHtml === 'function')
           ? window._avatarChipHtml(pid, name, 'km-av')
           : '<span class="km-av letter">' + (name[0]||'?').toUpperCase() + '</span>';
@@ -11175,7 +11158,7 @@ function _maybeShowNextHandBtn() {
       try { send(MSG.buildInvitePlayer(gId, pid)); } catch(e) {}
       S._invSent[pid] = true;
       App._renderInviteList(App._inviteEligiblePids());
-      if (typeof showToast === 'function') showToast(t('inviteSentToast', { name: players[pid] || ('#'+pid) }));
+      if (typeof showToast === 'function') showToast(t('inviteSentToast', { name: S.players[pid] || ('#'+pid) }));
     },
     closeInviteModal() {
       var modal = document.getElementById('invite-modal');
@@ -11184,7 +11167,7 @@ function _maybeShowNextHandBtn() {
     // Step 2: ask confirmation before sending the kick.
     askConfirmKick(pid) {
       if (!amGameAdmin) return;
-      var name = players[pid] || ('#' + pid);
+      var name = S.players[pid] || ('#' + pid);
       var msgEl = document.getElementById('kcm-msg');
       var titleEl = document.getElementById('kcm-title');
       if (titleEl) {
@@ -11211,7 +11194,7 @@ function _maybeShowNextHandBtn() {
         window._pendingKickPid = null;
         return;
       }
-      var name = players[pid] || ('#' + pid);
+      var name = S.players[pid] || ('#' + pid);
       // Try BOTH paths so we work with both server implementations:
       //   1. KickPlayerRequestMessage (type 30) — the proto-level
       //      admin action. Some PokerTH servers honour this, others
@@ -11269,11 +11252,11 @@ function _maybeShowNextHandBtn() {
       _pendingRejoin = 0; _rejoinNickRetries = 0;
       try { localStorage.removeItem('pth_resume'); } catch(e) {}
       amInGame = false; amGameAdmin = false; _gameStarted = false; _seatsFrozen = false; _amSpectator = false;
-      gId = 0; seats = []; seatData = {}; _specPids = new Set(); updateSpectatorStrip();
+      gId = 0; seats = []; seatData = {}; S._specPids = new Set(); updateSpectatorStrip();
       var _ego = document.getElementById('g-endgame-overlay');
       if (_ego) _ego.style.display = 'none';
       try { _wpHide(); } catch(e) {}
-      _selectedGame = null; try { renderGameInfoPanel(null); } catch(e) {}
+      S._selectedGame = null; try { renderGameInfoPanel(null); } catch(e) {}
       myCards = [null,null]; commCards = [];
       stopTurnTimer();
       dismissWinner();
@@ -11455,11 +11438,11 @@ function _maybeShowNextHandBtn() {
       _pendingRejoin = 0; _rejoinNickRetries = 0;
       try { localStorage.removeItem('pth_resume'); } catch(e) {}
       amInGame = false; amGameAdmin = false; _gameStarted = false; _seatsFrozen = false; _amSpectator = false;
-      gId = 0; seats = []; seatData = {}; _specPids = new Set(); updateSpectatorStrip();
+      gId = 0; seats = []; seatData = {}; S._specPids = new Set(); updateSpectatorStrip();
       var _ego = document.getElementById('g-endgame-overlay');
       if (_ego) _ego.style.display = 'none';
       try { _wpHide(); } catch(e) {}
-      _selectedGame = null; try { renderGameInfoPanel(null); } catch(e) {}
+      S._selectedGame = null; try { renderGameInfoPanel(null); } catch(e) {}
       myCards = [null,null]; commCards = [];
       stopTurnTimer();
       dismissWinner();
@@ -11672,7 +11655,7 @@ function _maybeShowNextHandBtn() {
     },
 
     spectateGame(gameId) {
-      var g = games[gameId];
+      var g = S.games[gameId];
       if (!g) return;
       // Remember that we joined as spectator. Used by JoinGameAck to flip
       // the UI into 'watch only' mode (banner up top, action area replaced
@@ -11696,8 +11679,8 @@ function _maybeShowNextHandBtn() {
       //      the previous behaviour of silently creating a 2-player
       //      table (too restrictive on busy servers).
       let target = null;
-      for (const id of Object.keys(games)) {
-        const g = games[id];
+      for (const id of Object.keys(S.games)) {
+        const g = S.games[id];
         if (g && !g.started && g.players < g.maxPlayers) { target = id; break; }
       }
       if (target) {
@@ -11753,7 +11736,7 @@ function _maybeShowNextHandBtn() {
     },
 
     joinGameWithPassword(gameId, pass) {
-      var g = games[gameId];
+      var g = S.games[gameId];
       var gName = g ? g.name : '#' + gameId;
       addChat(null, 'Joining "' + esc(gName) + '"...', 'sys');
       // JoinExistingGameMessage: gameId=1, password=2
@@ -11764,18 +11747,18 @@ function _maybeShowNextHandBtn() {
     // (remplace l'ancienne liste dépliable sous la ligne).
     // Rejoindre la partie sélectionnée depuis le bouton du bas (parité QML).
     joinSelectedGame() {
-      if (_selectedGame == null || typeof games === 'undefined') return;
-      var g = games[_selectedGame];
-      if (g && g.mode === 1) this.joinGame(_selectedGame);
+      if (S._selectedGame == null || typeof S.games === 'undefined') return;
+      var g = S.games[S._selectedGame];
+      if (g && g.mode === 1) this.joinGame(S._selectedGame);
     },
     // Regarder (spectateur) la partie en cours sélectionnée depuis le bouton du bas.
     spectateSelectedGame() {
-      if (_selectedGame == null || typeof games === 'undefined') return;
-      var g = games[_selectedGame];
-      if (g && g.mode === 2) this.spectateGame(_selectedGame);
+      if (S._selectedGame == null || typeof S.games === 'undefined') return;
+      var g = S.games[S._selectedGame];
+      if (g && g.mode === 2) this.spectateGame(S._selectedGame);
     },
     selectGame(gid) {
-      _selectedGame = gid;
+      S._selectedGame = gid;
       renderGameInfoPanel(gid);
       renderGames();  // surbrillance de la ligne sélectionnée
       if (window._lobby3OpenInfo) window._lobby3OpenInfo();  // slide-in en compact
@@ -11784,13 +11767,13 @@ function _maybeShowNextHandBtn() {
     // Déplie/replie la liste des joueurs d'une table dans la liste (accordéon).
     toggleTablePlayers(gid) {
       var k = String(gid);
-      if (_openTables.has(k)) { _openTables.delete(k); }
+      if (S._openTables.has(k)) { S._openTables.delete(k); }
       else {
-        _openTables.add(k);
-        var g = games[gid];
+        S._openTables.add(k);
+        var g = S.games[gid];
         if (g && g.seats) g.seats.forEach(function(pid){
-          if (pid && !players[pid] && !_pendingNameRequests.has(pid)) {
-            _pendingNameRequests.add(pid);
+          if (pid && !S.players[pid] && !S._pendingNameRequests.has(pid)) {
+            S._pendingNameRequests.add(pid);
             try { send(Proto.encode([[1,0,T.PlayerInfoRequest],[19,2,Proto.encode([[1,0,pid]])]])); } catch(e){}
           }
         });
@@ -11800,7 +11783,7 @@ function _maybeShowNextHandBtn() {
 
     // ── Signaler le nom de la partie (parité officielle) ──
     reportGameName(gid) {
-      var g = games[gid]; if (!g) return;
+      var g = S.games[gid]; if (!g) return;
       this._reportGid = gid;
       var msg = document.getElementById('rcm-msg');
       if (msg) msg.textContent = t('reportGameMsg', { name: g.name || ('#' + gid) });
@@ -11827,7 +11810,7 @@ function _maybeShowNextHandBtn() {
       if (btn) { var o = btn.textContent; btn.textContent = '✅'; setTimeout(function(){ btn.textContent = o; }, 1800); }
     },
     joinGame(gameId) {
-      const g = games[gameId];
+      const g = S.games[gameId];
       if (!g) return;
       if (g.mode === 3) { addChat(null, 'Table closed.', 'sys'); return; }
       if (_guestJoinBlocked(g)) { setStatus(t('guestJoinBlocked') || 'Guests can only join normal games.', 'err'); return; }
@@ -11850,8 +11833,8 @@ function _maybeShowNextHandBtn() {
     },
     setTableFilter(f) {
       var n = parseInt(f, 10); if (isNaN(n) || n < 0 || n > 5) n = 0;
-      _tableFilter = String(n);
-      try { localStorage.setItem('pth_table_filter', _tableFilter); } catch(e) {}
+      S._tableFilter = String(n);
+      try { localStorage.setItem('pth_table_filter', S._tableFilter); } catch(e) {}
       renderGames();
     },
     dismissWinner() { dismissWinner(); },
@@ -12818,12 +12801,12 @@ function _maybeShowNextHandBtn() {
       // needs. Returning a fresh object each time so the consumer
       // can sort/filter freely without affecting our internal state.
       return {
-        pids:    Array.from(_lobbyPids),
-        players: players,
+        pids:    Array.from(S._lobbyPids),
+        players: S.players,
         myId:    myId,
-        countries: _playerCountries,
-        rights:    _playerRights,
-        flagOf:  function(pid) { return _ccToFlag(_playerCountries[pid]); },
+        countries: S._playerCountries,
+        rights:    S._playerRights,
+        flagOf:  function(pid) { return _ccToFlag(S._playerCountries[pid]); },
       };
     },
 
@@ -14951,7 +14934,7 @@ function renderPlayersList() {
   });
 })();
 
-;(function(){ window.BUILD_VERSION='0.3.828-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.829-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

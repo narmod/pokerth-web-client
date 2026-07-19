@@ -70,6 +70,25 @@ export const S = {
   _avatarPopupOrigNextSibling: null,
   _avatarPickerBackdropHandler: null,
   _avatarPickerBtnHandler: null,
+
+  // ── V5 · Lobby (domaine B) ──
+  games: {},               // gameId → {name, mode, players, maxPlayers, type, priv}
+  players: {},             // playerId → name
+  _openTables: new Set(),  // gids dont le panneau joueurs est déplié dans le lobby
+  loaded: false,
+  _tableFilter: (function () {
+    try { var v = localStorage.getItem('pth_table_filter'); return (v && /^[0-5]$/.test(v)) ? v : '0'; } catch (e) { return '0'; }
+  })(),
+  _selectedGame: null,     // partie sélectionnée pour le panneau « Infos de partie »
+  _lobbyPids: new Set(),   // pids en ligne dans le lobby
+  _lobbyPlayerCount: 0,
+  _hasStatistics: false,   // true dès qu'un StatisticsMessage a été vu
+  _specPids: new Set(),
+  _pendingNameRequests: new Set(),
+  _playerCountries: {},
+  _playerRights: {},
+  MODE_DOT: { 1: 'dot-open', 2: 'dot-run', 3: 'dot-closed' },
+  _GTYPE_KEY: { 1: 'gtypeNormal', 2: 'gtypeRegistered', 3: 'gtypeInvite', 4: 'gtypeRanked' },
 };
 
 // Pont legacy : pokerth.js (script classique) fait `const S = window.PthState;`
