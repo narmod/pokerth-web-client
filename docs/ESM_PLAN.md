@@ -186,3 +186,4 @@ jamais de rustine sur un renommage partiel.
 | 2026-07-19 | 0.3.824-beta | 9e-V1 état voix/haptique → S (7 vars, 53 renommages) — test-state 14 ✓ | 822 Ko (stable) |
 | 2026-07-19 | 0.3.825-beta | 9e-V2 état stats/board/profil → S (12 vars, 96 renommages) — test-state 19 ✓ | 822 Ko (stable) |
 | 2026-07-19 | 0.3.826-beta | 9e-V3 état pet/inv + chat/notifs/titre → S (13 vars, 74 renommages) — test-state 25 ✓ | 822 Ko (stable) |
+| 2026-07-19 | 0.3.827-beta | 9e-V4 état avatars → S (12 vars, 83 renommages) — test-state 30 ✓ | 822 Ko (stable) |

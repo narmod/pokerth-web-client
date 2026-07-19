@@ -1623,7 +1623,7 @@ window.refreshMyAvatar = function() {
   var usePth   = (stored === '__pth__') && !!pthUrl;
   var emojiAv  = (stored && stored !== '__pth__' && stored !== '__img__') ? stored : '';
   var av = emojiAv; // back-compat var name used in the rest of the function
-  _myAvatarCache = av;
+  S._myAvatarCache = av;
   var display = av || (typeof myName !== 'undefined' ? (myName||'').charAt(0).toUpperCase() : '?');
   // Player-bar
   var pbAv = document.getElementById('g-myseat-av');
@@ -2679,8 +2679,6 @@ const App = (() => {
   }
 
   let gameState = 0;   // preflop/flop/turn/river
-  let _playerAvatars = {}; // pid → emoji avatar (reçu des autres joueurs via proxy)
-  let _playerImgAvatars = {}; // pid → data URL (avatar image perso diffusé via proxy)
   // Assistance (aide « force de la main » affichée au-dessus des actions) :
   // activée par défaut, mémorisée localement. '0' = désactivée.
   let _assistOn = true;
@@ -2689,10 +2687,9 @@ const App = (() => {
   // arrives for a registered player who uploaded an avatar on pokerth.net,
   // it carries an AvatarData sub-message (field 5) with the hash + format.
   // We just record what we see here; downloading + displaying come later.
-  //   _pthAvatarHashes[pid] = { type: 1|2|3, hashHex: 'a3f5...' }
+  //   S._pthAvatarHashes[pid] = { type: 1|2|3, hashHex: 'a3f5...' }
   //   type: NetAvatarType from proto -- 1=PNG, 2=JPG, 3=GIF
   //   hashHex: lower-case hex string (easy logging & future cache keys)
-  let _pthAvatarHashes = {};
   // pid -> code pays ISO 3166-1 alpha-2 (ex. 'FR'), reçu via PlayerInfoReply
   // (champ 4). Vide sur LAN / serveur privé qui ne le renseignent pas.
   let _playerCountries = {};
@@ -2700,42 +2697,37 @@ const App = (() => {
   let _playerRights = {};
   // Step 2: outgoing AvatarRequest tracking. Keyed by hashHex so the same
   // avatar shared by N players is downloaded ONCE (Q2=A, dedup by hash).
-  //   _pthAvatarsByHash[hex] = {
+  //   S._pthAvatarsByHash[hex] = {
   //     status: 'pending' | 'done' | 'unknown' | 'error',
   //     type:   1|2|3,
   //     expectedSize: <bytes from AvatarHeader>,
   //     chunks: [Uint8Array, ...],   // not concatenated yet (step 3)
   //     received: <running total>,
   //   }
-  let _pthAvatarsByHash = {};
   // requestId -> hashHex, so AvatarHeader/Data/End handlers can map
   // their requestId back to the right entry (the server's reply does
   // NOT echo the hash, only the requestId we chose).
-  let _pthAvatarReqIdToHash = {};
   // Monotonic counter for AvatarRequest.requestId. Starts at 1 because
   // some servers refuse 0. Wraps around at 2^32 (we'll be long dead).
-  let _pthNextAvatarReqId = 1;
   // Step 3: assembled Data URLs keyed by hashHex (the actual displayable
   // image, e.g. 'data:image/png;base64,iVBORw0KG...'). Built from chunks
   // at AvatarEnd, or restored from localStorage cache on startup.
-  let _pthDataUrls = {};
 
   // [Phase 2 / 9c] Cache LRU d'avatars (PTH_AV_*, _pthLoadLruList,
   // _pthSaveLruList, _pthCacheGet, _pthCachePut, _pthAssembleDataUrl)
   // déplacé dans public/modules/net/avatar-cache.mjs (toujours global via
-  // window.*). L'état en mémoire (_pthAvatarsByHash…) et _pthAvatarFor
+  // window.*). L'état en mémoire (S._pthAvatarsByHash…) et _pthAvatarFor
   // restent ici (closure).
 
   // Public helper used by the renderer: returns a Data URL for the
   // player or null. Considers cache + freshly assembled images.
   function _pthAvatarFor(pid) {
-    const meta = _pthAvatarHashes[pid];
+    const meta = S._pthAvatarHashes[pid];
     if (!meta) return null;
-    return _pthDataUrls[meta.hashHex] || null;
+    return S._pthDataUrls[meta.hashHex] || null;
   }
   // Expose for refreshMyAvatar (defined at module top level)
   window._pthAvatarFor = _pthAvatarFor;
-  let _myAvatarCache  = ''; // cache de l'avatar local (évite les lectures localStorage répétées)
   // Avatar feature: returns the emoji to display for the local player,
   // or '' if there is none. Crucially treats the '__pth__' sentinel as
   // "no emoji" so the literal string never leaks into the UI as text.
@@ -2743,7 +2735,7 @@ const App = (() => {
   // fallback, waiting list, winner overlay, etc.) -- do NOT read
   // localStorage.pth_avatar directly for display purposes.
   function _myAvatarDisplay() {
-    var v = _myAvatarCache;
+    var v = S._myAvatarCache;
     if (!v) {
       try { v = localStorage.getItem('pth_avatar') || ''; } catch(e) { v = ''; }
     }
@@ -2768,7 +2760,7 @@ const App = (() => {
   //   1. Real PokerTH avatar image downloaded for this pid -> <img>
   //   2. For me + I chose '__pth__' but image not downloaded ->
   //      placeholder /favicon.svg
-  //   3. Emoji (mine from localStorage, others' from _playerAvatars)
+  //   3. Emoji (mine from localStorage, others' from S._playerAvatars)
   //   4. Bot fallback -> 🤖
   //   5. Mode internet (pokerth.net) sans avatar -> logo PokerTH /favicon.svg
   //   6. Final fallback (LAN / entrainement) -> first letter of the pseudo
@@ -2801,14 +2793,14 @@ const App = (() => {
       if (!pthUrl && myChoice2 === '__pth__') pthUrl = '/favicon.svg';
     }
     // Autres joueurs : image perso reçue via le proxy (prioritaire sur l'emoji).
-    if (!isMe && _playerImgAvatars[pid]) pthUrl = _playerImgAvatars[pid];
+    if (!isMe && S._playerImgAvatars[pid]) pthUrl = S._playerImgAvatars[pid];
     if (pthUrl) {
       return '<span class="' + chipClass + ' has-pth-avatar">'
            + '<img class="chip-pth-img" src="' + pthUrl + '" alt="" draggable="false">'
            + '</span>';
     }
-    // 3) emoji? (mine via the sentinel-aware helper, others via _playerAvatars)
-    var emoji = isMe ? _myAvatarDisplay() : (_playerAvatars[pid] || '');
+    // 3) emoji? (mine via the sentinel-aware helper, others via S._playerAvatars)
+    var emoji = isMe ? _myAvatarDisplay() : (S._playerAvatars[pid] || '');
     if (emoji) {
       return '<span class="' + chipClass + ' emoji-av">' + esc(emoji) + '</span>';
     }
@@ -2930,8 +2922,8 @@ const App = (() => {
         }
       } else {
         url = (typeof _pthAvatarFor === 'function') ? _pthAvatarFor(targetPid) : null;
-        if (_playerImgAvatars[targetPid]) url = _playerImgAvatars[targetPid];
-        if (!url) emoji = _playerAvatars[targetPid] || (isBot(targetPid) ? '🤖' : '');
+        if (S._playerImgAvatars[targetPid]) url = S._playerImgAvatars[targetPid];
+        if (!url) emoji = S._playerAvatars[targetPid] || (isBot(targetPid) ? '🤖' : '');
       }
       if (url) {
         avEl.innerHTML = '<img src="' + url + '" alt="" draggable="false">';
@@ -3173,19 +3165,15 @@ const App = (() => {
   // we open it from the lobby #s-connect is display:none which would
   // hide the popup along with all its other descendants. So we move
   // the popup to <body> while showing it as a modal, then move it back.
-  var _avatarPopupOrigParent = null;
-  var _avatarPopupOrigNextSibling = null;
-  var _avatarPickerBackdropHandler = null;
-  var _avatarPickerBtnHandler = null;
 
   function openAvatarPickerFromLobby() {
     var picker = document.getElementById('avatar-popup');
     if (!picker) return;
     // Remember the original location so closeAvatarPickerFromLobby
     // can put the popup back exactly where it was.
-    if (!_avatarPopupOrigParent) {
-      _avatarPopupOrigParent = picker.parentNode;
-      _avatarPopupOrigNextSibling = picker.nextSibling;
+    if (!S._avatarPopupOrigParent) {
+      S._avatarPopupOrigParent = picker.parentNode;
+      S._avatarPopupOrigNextSibling = picker.nextSibling;
     }
     // Detach + re-attach to body so the parent's display:none can't
     // hide us. We do this every open in case the DOM was changed by
@@ -3202,19 +3190,19 @@ const App = (() => {
     try { if (typeof avpApplyDefaultCat === 'function') avpApplyDefaultCat(); } catch(e) {}
     // Close-on-backdrop: a click on the popup background (NOT on any
     // child like the avatar buttons or the header) closes the picker.
-    _avatarPickerBackdropHandler = function(e) {
+    S._avatarPickerBackdropHandler = function(e) {
       if (e.target === picker) {
         closeAvatarPickerFromLobby();
       }
     };
-    picker.addEventListener('click', _avatarPickerBackdropHandler);
+    picker.addEventListener('click', S._avatarPickerBackdropHandler);
     // When the user picks an avatar, the existing selectAvatarPopup()
     // (attached as an inline onclick on each .avp-btn) sets the popup's
     // inline display:'none'. We piggy-back on that to also strip the
     // modal class and put the popup back in its original place. Using
     // capture phase + once:true so we run exactly once before the
     // onclick attribute fires (or right after, both are fine here).
-    _avatarPickerBtnHandler = function(e) {
+    S._avatarPickerBtnHandler = function(e) {
       var btn = e.target.closest('.avp-btn');
       if (!btn) return;
       // Let the inline onclick run first (it saves + closes), then
@@ -3225,7 +3213,7 @@ const App = (() => {
         updateLobbyPill();
       }, 0);
     };
-    picker.addEventListener('click', _avatarPickerBtnHandler, { once: true, capture: true });
+    picker.addEventListener('click', S._avatarPickerBtnHandler, { once: true, capture: true });
   }
   window.openAvatarPickerFromLobby = openAvatarPickerFromLobby;
 
@@ -3240,21 +3228,21 @@ const App = (() => {
     // would stack dangling capture handlers. Remove it here too (matching the
     // capture flag it was added with). removeEventListener is a no-op if it
     // already fired.
-    if (_avatarPickerBackdropHandler) {
-      picker.removeEventListener('click', _avatarPickerBackdropHandler);
-      _avatarPickerBackdropHandler = null;
+    if (S._avatarPickerBackdropHandler) {
+      picker.removeEventListener('click', S._avatarPickerBackdropHandler);
+      S._avatarPickerBackdropHandler = null;
     }
-    if (_avatarPickerBtnHandler) {
-      picker.removeEventListener('click', _avatarPickerBtnHandler, { capture: true });
-      _avatarPickerBtnHandler = null;
+    if (S._avatarPickerBtnHandler) {
+      picker.removeEventListener('click', S._avatarPickerBtnHandler, { capture: true });
+      S._avatarPickerBtnHandler = null;
     }
     // Put the popup back into its original parent so the connect
     // screen's static layout keeps working.
-    if (_avatarPopupOrigParent && picker.parentNode !== _avatarPopupOrigParent) {
-      if (_avatarPopupOrigNextSibling && _avatarPopupOrigNextSibling.parentNode === _avatarPopupOrigParent) {
-        _avatarPopupOrigParent.insertBefore(picker, _avatarPopupOrigNextSibling);
+    if (S._avatarPopupOrigParent && picker.parentNode !== S._avatarPopupOrigParent) {
+      if (S._avatarPopupOrigNextSibling && S._avatarPopupOrigNextSibling.parentNode === S._avatarPopupOrigParent) {
+        S._avatarPopupOrigParent.insertBefore(picker, S._avatarPopupOrigNextSibling);
       } else {
-        _avatarPopupOrigParent.appendChild(picker);
+        S._avatarPopupOrigParent.appendChild(picker);
       }
     }
   }
@@ -5239,19 +5227,19 @@ const App = (() => {
               const h = avHashBytes[i].toString(16);
               hashHex += (h.length === 1 ? '0' : '') + h;
             }
-            _pthAvatarHashes[pid] = { type: avType, hashHex: hashHex };
+            S._pthAvatarHashes[pid] = { type: avType, hashHex: hashHex };
             // ── Step 3: cache hit?
             // If the same hash has been downloaded in a previous session
             // and is still in localStorage, restore it immediately --
             // no network round-trip, no AvatarRequest, no waiting.
-            if (!_pthAvatarsByHash[hashHex] && !_pthDataUrls[hashHex]) {
+            if (!S._pthAvatarsByHash[hashHex] && !S._pthDataUrls[hashHex]) {
               const cached = _pthCacheGet(hashHex);
               if (cached) {
-                _pthAvatarsByHash[hashHex] = {
+                S._pthAvatarsByHash[hashHex] = {
                   status: 'done', type: cached.type, expectedSize: 0,
                   chunks: [], received: 0,
                 };
-                _pthDataUrls[hashHex] = cached.dataUrl;
+                S._pthDataUrls[hashHex] = cached.dataUrl;
                 // Re-render so the seat picks up the image right away.
                 if (typeof window._renderSeats === 'function') window._renderSeats();
                 if (typeof window.refreshMyAvatar === 'function') window.refreshMyAvatar();
@@ -5260,22 +5248,22 @@ const App = (() => {
             }
             // ── Step 2: cache miss -> kick off an AvatarRequest. Dedup
             // by hash so two players sharing an avatar download once.
-            if (!_pthAvatarsByHash[hashHex]) {
-              _pthAvatarsByHash[hashHex] = {
+            if (!S._pthAvatarsByHash[hashHex]) {
+              S._pthAvatarsByHash[hashHex] = {
                 status: 'pending', // 'pending' | 'done' | 'unknown' | 'error'
                 type:   avType,
                 expectedSize: 0,   // filled by AvatarHeader
                 chunks: [],        // Uint8Array[] -- joined at AvatarEnd
                 received: 0,       // running total bytes
               };
-              const reqId = _pthNextAvatarReqId++;
-              _pthAvatarReqIdToHash[reqId] = hashHex;
+              const reqId = S._pthNextAvatarReqId++;
+              S._pthAvatarReqIdToHash[reqId] = hashHex;
               const reqMsg = Proto.encode([
                 [1, 0, reqId],
                 [2, 2, avHashBytes],
               ]);
               send(Proto.encode([[1, 0, T.AvatarRequest], [8, 2, reqMsg]]));
-            } else if (_pthAvatarsByHash[hashHex].status === 'done') {
+            } else if (S._pthAvatarsByHash[hashHex].status === 'done') {
               // Already cached this session -- nothing to do, the
               // re-render path will pick it up.
             }
@@ -5326,8 +5314,8 @@ const App = (() => {
         const reqId = Proto.u32(sub, 1);
         const avType = Proto.u32(sub, 2);
         const size = Proto.u32(sub, 3);
-        const hashHex = _pthAvatarReqIdToHash[reqId];
-        const entry = hashHex ? _pthAvatarsByHash[hashHex] : null;
+        const hashHex = S._pthAvatarReqIdToHash[reqId];
+        const entry = hashHex ? S._pthAvatarsByHash[hashHex] : null;
         if (entry) {
           entry.expectedSize = size;
           // Server may correct the type vs what PlayerInfoReply said
@@ -5338,8 +5326,8 @@ const App = (() => {
       case T.AvatarData: {
         const reqId = Proto.u32(sub, 1);
         const block = Proto.raw(sub, 2); // Uint8Array of this chunk
-        const hashHex = _pthAvatarReqIdToHash[reqId];
-        const entry = hashHex ? _pthAvatarsByHash[hashHex] : null;
+        const hashHex = S._pthAvatarReqIdToHash[reqId];
+        const entry = hashHex ? S._pthAvatarsByHash[hashHex] : null;
         if (entry && block) {
           entry.chunks.push(block);
           entry.received += block.length;
@@ -5348,8 +5336,8 @@ const App = (() => {
       }
       case T.AvatarEnd: {
         const reqId = Proto.u32(sub, 1);
-        const hashHex = _pthAvatarReqIdToHash[reqId];
-        const entry = hashHex ? _pthAvatarsByHash[hashHex] : null;
+        const hashHex = S._pthAvatarReqIdToHash[reqId];
+        const entry = hashHex ? S._pthAvatarsByHash[hashHex] : null;
         if (entry) {
           entry.status = 'done';
           // ── Step 3: assemble chunks into a Data URL, cache it,
@@ -5357,7 +5345,7 @@ const App = (() => {
           // freshly arrived image appears at the table.
           try {
             const dataUrl = _pthAssembleDataUrl(entry.chunks, entry.type);
-            _pthDataUrls[hashHex] = dataUrl;
+            S._pthDataUrls[hashHex] = dataUrl;
             _pthCachePut(hashHex, entry.type, dataUrl);
             // Release chunk references so the GC can reclaim them.
             entry.chunks = [];
@@ -5371,17 +5359,17 @@ const App = (() => {
         if (typeof window.refreshMyAvatar === 'function') window.refreshMyAvatar();
         // Rafraîchir aussi un panneau « joueurs à cette table » ouvert.
         if (_openTables.size) renderGames();
-        if (hashHex) delete _pthAvatarReqIdToHash[reqId];
+        if (hashHex) delete S._pthAvatarReqIdToHash[reqId];
         break;
       }
       case T.UnknownAvatar: {
         const reqId = Proto.u32(sub, 1);
-        const hashHex = _pthAvatarReqIdToHash[reqId];
-        const entry = hashHex ? _pthAvatarsByHash[hashHex] : null;
+        const hashHex = S._pthAvatarReqIdToHash[reqId];
+        const entry = hashHex ? S._pthAvatarsByHash[hashHex] : null;
         if (entry) {
           entry.status = 'unknown';
         }
-        if (hashHex) delete _pthAvatarReqIdToHash[reqId];
+        if (hashHex) delete S._pthAvatarReqIdToHash[reqId];
         break;
       }
 
@@ -8083,8 +8071,8 @@ const App = (() => {
   function getPlayerInitial(pid) {
     if (pid === myId) {
       // Utiliser le cache ; recharger depuis localStorage si vide
-      if (!_myAvatarCache) {
-        try { _myAvatarCache = localStorage.getItem('pth_avatar') || ''; } catch(e) {}
+      if (!S._myAvatarCache) {
+        try { S._myAvatarCache = localStorage.getItem('pth_avatar') || ''; } catch(e) {}
       }
       // Never return the '__pth__' sentinel as an "initial". The seat
       // builder renders the result inside <span class="seat-initial">;
@@ -8093,12 +8081,12 @@ const App = (() => {
       // downloaded yet (LAN, guest, etc). Falling back to the name's
       // first letter is the right text fallback; the image (real or
       // placeholder logo) is layered on top by the renderer.
-      if (_myAvatarCache && _myAvatarCache !== '__pth__' && _myAvatarCache !== '__img__') return _myAvatarCache;
+      if (S._myAvatarCache && S._myAvatarCache !== '__pth__' && S._myAvatarCache !== '__img__') return S._myAvatarCache;
       return myName ? myName.charAt(0).toUpperCase() : '?';
     }
     if (isBot(pid)) return '🤖';
     // Avatar reçu des autres joueurs via proxy
-    if (_playerAvatars[pid]) return _playerAvatars[pid];
+    if (S._playerAvatars[pid]) return S._playerAvatars[pid];
     var name = players[pid] || '';
     return name.charAt(0).toUpperCase() || '?';
   }
@@ -8594,7 +8582,7 @@ const App = (() => {
       const typeBadge  = getPlayerTypeBadge(pid);
       var _hasEmojiAv = isMe
         ? (function(){ try { var av = localStorage.getItem('pth_avatar'); return !!av && av !== '__pth__' && av !== '__img__'; } catch(e){ return false; } })()
-        : (_ignHide ? false : !!_playerAvatars[pid]);
+        : (_ignHide ? false : !!S._playerAvatars[pid]);
       const avatarType = isMe
         ? (_hasEmojiAv ? ' emoji-av' : '')
         : (isBot(pid) && !_ignHide ? ' is-bot emoji-av' : (_hasEmojiAv ? ' emoji-av is-human' : ' is-human'));
@@ -8670,7 +8658,7 @@ const App = (() => {
         }
       }
       // Autres joueurs : image perso reçue via le proxy (prioritaire sur l'emoji).
-      if (!isMe && _playerImgAvatars[pid]) pthAvUrl = _playerImgAvatars[pid];
+      if (!isMe && S._playerImgAvatars[pid]) pthAvUrl = S._playerImgAvatars[pid];
       if (_ignHide) pthAvUrl = null;
       // ── Avatar par défaut = jeton PokerTH (fidélité client officiel) ──
       // Aucun avatar perso (image) NI emoji choisi → on affiche le
@@ -9089,13 +9077,13 @@ const App = (() => {
     // the user picked the PokerTH avatar -- in that case the renderer
     // already put an <img> in place and the .seat-initial is hidden
     // by .has-pth-avatar > .seat-initial { display:none } anyway.
-    if (_myAvatarCache && _myAvatarCache !== '__pth__' && _myAvatarCache !== '__img__') {
+    if (S._myAvatarCache && S._myAvatarCache !== '__pth__' && S._myAvatarCache !== '__img__') {
       requestAnimationFrame(function() {
         var mySeats = document.querySelectorAll('#g-seats .seat.me');
         mySeats.forEach(function(seat) {
           var ini = seat.querySelector('.seat-initial');
-          if (ini && ini.textContent !== _myAvatarCache) {
-            ini.textContent = _myAvatarCache;
+          if (ini && ini.textContent !== S._myAvatarCache) {
+            ini.textContent = S._myAvatarCache;
             var av2 = seat.querySelector('.seat-avatar');
             if (av2) av2.classList.add('emoji-av');
           }
@@ -9620,7 +9608,7 @@ const App = (() => {
   window.toggleStats  = toggleStats;
   window._toggleStats = toggleStats;
   window._broadcastMyAvatar = function(emoji) {
-    _myAvatarCache = (emoji && emoji !== '__img__' && emoji !== '__pth__') ? emoji : '';
+    S._myAvatarCache = (emoji && emoji !== '__img__' && emoji !== '__pth__') ? emoji : '';
     if (ws && ws.readyState === WebSocket.OPEN && !directWS && myId) {
       if (emoji === '__img__') {
         // Diffuser l'image perso (data URL) aux autres clients du proxy.
@@ -10733,8 +10721,8 @@ function _maybeShowNextHandBtn() {
         // on ne les vide qu'à la déconnexion complète, pas en quittant une partie
         // (sinon les avatars disparaissent au retour au lobby — les hashes/emojis
         // ne sont re-reçus qu'une fois).
-        _playerAvatars = {}; _playerImgAvatars = {};
-        _pthAvatarHashes = {}; _pthAvatarsByHash = {}; _pthAvatarReqIdToHash = {}; _pthDataUrls = {};
+        S._playerAvatars = {}; S._playerImgAvatars = {};
+        S._pthAvatarHashes = {}; S._pthAvatarsByHash = {}; S._pthAvatarReqIdToHash = {}; S._pthDataUrls = {};
         loaded  = false;
         // Repeindre tout de suite la liste (désormais vide) : sinon, dans un
         // lobby calme/vide (ex. retour de l'entraînement vers un serveur en
@@ -10853,8 +10841,8 @@ function _maybeShowNextHandBtn() {
               var imgPid = parseInt(imgRest.slice(0, imgSep), 10);
               var imgUrl = imgRest.slice(imgSep + 1);
               if (imgPid && imgPid !== myId) {
-                if (imgUrl && imgUrl.slice(0, 5) === 'data:') _playerImgAvatars[imgPid] = imgUrl;
-                else delete _playerImgAvatars[imgPid]; // vide = effacer l'image
+                if (imgUrl && imgUrl.slice(0, 5) === 'data:') S._playerImgAvatars[imgPid] = imgUrl;
+                else delete S._playerImgAvatars[imgPid]; // vide = effacer l'image
                 if (typeof renderSeats === 'function' && seats.length) renderSeats();
               }
             }
@@ -10865,7 +10853,7 @@ function _maybeShowNextHandBtn() {
             var avPid = parseInt(avParts[1]);
             var avEmoji = avParts[2] || '';
             if (avPid && avPid !== myId) {
-              _playerAvatars[avPid] = avEmoji;
+              S._playerAvatars[avPid] = avEmoji;
               if (typeof renderSeats === 'function' && seats.length) renderSeats();
             }
             return;
@@ -14963,7 +14951,7 @@ function renderPlayersList() {
   });
 })();
 
-;(function(){ window.BUILD_VERSION='0.3.826-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.827-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

@@ -18,7 +18,7 @@ const { S } = await import('../public/modules/game/state.mjs');
 let n = 0, fail = 0;
 function ok(cond, msg) { n++; if (!cond) { fail++; console.error('  ✗', msg); } else console.log('  ✓', msg); }
 
-console.log('state.mjs — V0 (timer) + V1 (voix/haptique) + V2 (stats) + V3 (pet/inv/chat/titre)');
+console.log('state.mjs — V0 (timer) + V1 (voix/haptique) + V2 (stats) + V3 (pet/inv/chat/titre) + V4 (avatars)');
 ok(typeof S === 'object' && S !== null, 'S est un objet');
 ok(window.PthState === S, 'pont window.PthState === S (même référence)');
 
@@ -61,16 +61,32 @@ ok(S.REACT_EMOJI_MIN_GAP === 1500 && S.REACT_EMOJI_QUEUE_MAX === 4, 'constantes 
 ok(S._statusKey === null && S._origTitle === 'PokerTH Web' && S._titleBlinkID === null,
    'status bar / titre init');
 
+// V4 — Avatars
+ok(Object.keys(S._playerAvatars).length === 0 && Object.keys(S._playerImgAvatars).length === 0,
+   'caches avatars proxy init = {}');
+ok(Object.keys(S._pthAvatarHashes).length === 0 && Object.keys(S._pthAvatarsByHash).length === 0
+   && Object.keys(S._pthAvatarReqIdToHash).length === 0 && Object.keys(S._pthDataUrls).length === 0,
+   'caches avatars pokerth.net init = {}');
+ok(S._pthNextAvatarReqId === 1, '_pthNextAvatarReqId init = 1');
+ok(S._myAvatarCache === '', '_myAvatarCache init = vide');
+ok(S._avatarPopupOrigParent === null && S._avatarPopupOrigNextSibling === null
+   && S._avatarPickerBackdropHandler === null && S._avatarPickerBtnHandler === null,
+   'refs DOM popup/picker init = null');
+
 // Périmètre exact des vagues migrées (pas de fuite d'autres clés)
 const keys = Object.keys(S).sort();
 ok(JSON.stringify(keys) === JSON.stringify(['REACT_EMOJI_MIN_GAP', 'REACT_EMOJI_QUEUE_MAX',
-   '_SPEAK_MAX', '_boardEligible', '_boardSort', '_chatRejectShown', '_curU', '_gameCounted',
-   '_hapticEnabled', '_inv', '_invSent', '_lastMsgWasReaction', '_lifePushTimer', '_origTitle',
-   '_pet', '_pimPid', '_pimTab', '_reactEmojiLastSent', '_reactEmojiQueue', '_reactEmojiTimer',
-   '_speakQ', '_speaking', '_stats', '_statsEligible', '_statsInited', '_statsOffline',
-   '_statsOpen', '_statsTab', '_statusKey', '_timerID', '_timerSec', '_timerTot',
-   '_titleBlinkID', '_voiceEnabled', '_voices']),
-   'périmètre V0..V3 exact : ' + keys.join(', '));
+   '_SPEAK_MAX', '_avatarPickerBackdropHandler', '_avatarPickerBtnHandler',
+   '_avatarPopupOrigNextSibling', '_avatarPopupOrigParent', '_boardEligible', '_boardSort',
+   '_chatRejectShown', '_curU', '_gameCounted', '_hapticEnabled', '_inv', '_invSent',
+   '_lastMsgWasReaction', '_lifePushTimer', '_myAvatarCache', '_origTitle', '_pet', '_pimPid',
+   '_pimTab', '_playerAvatars', '_playerImgAvatars', '_pthAvatarHashes',
+   '_pthAvatarReqIdToHash', '_pthAvatarsByHash', '_pthDataUrls', '_pthNextAvatarReqId',
+   '_reactEmojiLastSent', '_reactEmojiQueue', '_reactEmojiTimer', '_speakQ', '_speaking',
+   '_stats', '_statsEligible', '_statsInited', '_statsOffline', '_statsOpen', '_statsTab',
+   '_statusKey', '_timerID', '_timerSec', '_timerTot', '_titleBlinkID', '_voiceEnabled',
+   '_voices']),
+   'périmètre V0..V4 exact : ' + keys.join(', '));
 
 console.log(fail ? `FAIL ${fail}/${n}` : `PASS ${n}/${n}`);
 process.exit(fail ? 1 : 0);

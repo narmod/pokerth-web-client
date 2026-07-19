@@ -56,6 +56,20 @@ export const S = {
   _statusKey: null,
   _origTitle: 'PokerTH Web',
   _titleBlinkID: null,
+
+  // ── V4 · Avatars (domaine C) ──
+  _playerAvatars: {},      // pid → emoji avatar (reçu des autres joueurs via proxy)
+  _playerImgAvatars: {},   // pid → data URL (avatar image perso diffusé via proxy)
+  _pthAvatarHashes: {},
+  _pthAvatarsByHash: {},
+  _pthAvatarReqIdToHash: {},
+  _pthNextAvatarReqId: 1,
+  _pthDataUrls: {},
+  _myAvatarCache: '',      // cache de l'avatar local (évite les lectures localStorage répétées)
+  _avatarPopupOrigParent: null,
+  _avatarPopupOrigNextSibling: null,
+  _avatarPickerBackdropHandler: null,
+  _avatarPickerBtnHandler: null,
 };
 
 // Pont legacy : pokerth.js (script classique) fait `const S = window.PthState;`
