@@ -3528,7 +3528,6 @@ const App = (() => {
   };
   let seats     = [];  // player IDs in seat order (from GameStartInitial) — figé après 1ère main
   let seatData  = {};  // {pid: {money, bet, action, active, folded}}
-  let _invSent = {}; // pids invited during the current invite-modal session
   let myCards   = [null, null];
   let commCards = [];
   // Clé/IV AES dérivés du mot de passe pour déchiffrer les cartes envoyées
@@ -4095,8 +4094,6 @@ const App = (() => {
   }
   const MODE_SWAP_MIN_GAP = 3000;  // ms — server blocks below ~2s in tests
   let _currentLoginMode = 'lan';
-  let _lastMsgWasReaction = false; // true si le dernier chat envoyé était une réaction
-  let _chatRejectShown = false;    // n'afficher l'avertissement LAN qu'une seule fois // pour la reconnexion auto
   let _reconnectAttempts = 0;
   let _lastRxTime = Date.now();  // horodatage du dernier message reçu (watchdog liveness)
   let _intentionalDisconnect = false;
@@ -4555,12 +4552,11 @@ const App = (() => {
     return false;
   }
 
-  var _statusKey = null;
   function setStatus(txt, cls='', key) {
     // Mémorise la clé i18n du message courant (null pour les messages
     // transitoires : erreurs, « Initialisation… »), afin que _refreshConnectStatus
     // puisse le retraduire à la volée lors d'un changement de langue.
-    _statusKey = key || null;
+    S._statusKey = key || null;
     const el = $('cstatus');
     el.textContent = txt;
     el.className = 'status ' + cls;
@@ -4577,11 +4573,11 @@ const App = (() => {
   // transitoires (sans clé) ne sont jamais réécrasés. Appelé par setLang().
   window._refreshConnectStatus = function() {
     try {
-      if (!_statusKey) return;
+      if (!S._statusKey) return;
       var sc = document.getElementById('s-connect');
       if (!sc || !sc.classList.contains('active')) return;
       var el = document.getElementById('cstatus');
-      if (el) el.textContent = t(_statusKey);
+      if (el) el.textContent = t(S._statusKey);
     } catch (e) {}
   };
 
@@ -4594,31 +4590,26 @@ const App = (() => {
   // espace donc les envois /emoji via une petite file. Le badge local et le
   // canal proxy REACT (web↔web, qui contourne le throttle) restent immédiats —
   // seule la trame /emoji serveur est régulée. NB : doit vivre DANS l'IIFE App
-  // pour voir ws/gId/send/MSG/_lastMsgWasReaction (cf. avertissement en tête).
-  let _reactEmojiQueue = [];
-  let _reactEmojiTimer = null;
-  let _reactEmojiLastSent = 0;
-  const REACT_EMOJI_MIN_GAP = 1500;   // ms minimum entre deux /emoji (sous le seuil serveur)
-  const REACT_EMOJI_QUEUE_MAX = 4;    // file bornée : au-delà on abandonne l'envoi réseau (badge déjà montré)
+  // pour voir ws/gId/send/MSG/S._lastMsgWasReaction (cf. avertissement en tête).
 
   function _flushReactEmoji() {
-    _reactEmojiTimer = null;
-    if (!_reactEmojiQueue.length) return;
-    if (!ws || !gId || ws.readyState !== WebSocket.OPEN) { _reactEmojiQueue.length = 0; return; }
+    S._reactEmojiTimer = null;
+    if (!S._reactEmojiQueue.length) return;
+    if (!ws || !gId || ws.readyState !== WebSocket.OPEN) { S._reactEmojiQueue.length = 0; return; }
     const now = Date.now();
-    const wait = REACT_EMOJI_MIN_GAP - (now - _reactEmojiLastSent);
-    if (wait > 0) { _reactEmojiTimer = setTimeout(_flushReactEmoji, wait); return; }
-    const emoji = _reactEmojiQueue.shift();
-    _reactEmojiLastSent = now;
-    _lastMsgWasReaction = true;
+    const wait = S.REACT_EMOJI_MIN_GAP - (now - S._reactEmojiLastSent);
+    if (wait > 0) { S._reactEmojiTimer = setTimeout(_flushReactEmoji, wait); return; }
+    const emoji = S._reactEmojiQueue.shift();
+    S._reactEmojiLastSent = now;
+    S._lastMsgWasReaction = true;
     try { send(MSG.buildGameChat(gId, '/emoji ' + emoji)); } catch (e) {}
-    if (_reactEmojiQueue.length) _reactEmojiTimer = setTimeout(_flushReactEmoji, REACT_EMOJI_MIN_GAP);
+    if (S._reactEmojiQueue.length) S._reactEmojiTimer = setTimeout(_flushReactEmoji, S.REACT_EMOJI_MIN_GAP);
   }
 
   function _queueReactEmoji(emoji) {
-    _reactEmojiQueue.push(emoji);
-    while (_reactEmojiQueue.length > REACT_EMOJI_QUEUE_MAX) _reactEmojiQueue.shift(); // garde les plus récentes
-    if (!_reactEmojiTimer) _flushReactEmoji();
+    S._reactEmojiQueue.push(emoji);
+    while (S._reactEmojiQueue.length > S.REACT_EMOJI_QUEUE_MAX) S._reactEmojiQueue.shift(); // garde les plus récentes
+    if (!S._reactEmojiTimer) _flushReactEmoji();
   }
 
   // [Phase 2 / 9d] _handleCtrlFrame déplacée dans public/modules/ui/misc.mjs.
@@ -4711,11 +4702,10 @@ const App = (() => {
   //  the web client used to ignore the whole message family. Gated to live
   //  games (meaningless offline vs bots).
   // ══════════════════════════════════════════════════════════════════
-  var _pet = null; // { petitionId, target, endsAt, timer, voted } | null
   function _petName(pid) { return players[pid] || ('#' + pid); }
   function _petClear() {
-    if (_pet && _pet.timer) { try { clearInterval(_pet.timer); } catch(e) {} }
-    _pet = null;
+    if (S._pet && S._pet.timer) { try { clearInterval(S._pet.timer); } catch(e) {} }
+    S._pet = null;
     var b = document.getElementById('kick-petition-banner');
     if (b) b.remove();
   }
@@ -4724,7 +4714,7 @@ const App = (() => {
     if (gId && o.gameId && o.gameId !== gId) return;
     _petClear();
     var amTarget = (o.target === myId);
-    _pet = { petitionId: o.petitionId, target: o.target,
+    S._pet = { petitionId: o.petitionId, target: o.target,
              endsAt: Date.now() + (o.timeout > 0 ? o.timeout : 30) * 1000,
              timer: null, voted: amTarget };
     var b = document.createElement('div');
@@ -4756,30 +4746,30 @@ const App = (() => {
       if (n) n.addEventListener('click', function(){ _petVote(false); });
     }
     _petTick();
-    _pet.timer = setInterval(_petTick, 500);
+    S._pet.timer = setInterval(_petTick, 500);
   }
   function _petTick() {
-    if (!_pet) return;
+    if (!S._pet) return;
     if (!gId) { _petClear(); return; } // left the table → dismiss
     var el = document.getElementById('kp-time');
-    var left = Math.max(0, Math.round((_pet.endsAt - Date.now()) / 1000));
+    var left = Math.max(0, Math.round((S._pet.endsAt - Date.now()) / 1000));
     if (el) el.textContent = t('petitionTimeLeft', { s: left });
     if (left <= 0) {
       var y = document.getElementById('kp-yes'), n = document.getElementById('kp-no');
       if (y) y.disabled = true;
       if (n) n.disabled = true;
-      if (_pet.timer) { try { clearInterval(_pet.timer); } catch(e) {} _pet.timer = null; }
+      if (S._pet.timer) { try { clearInterval(S._pet.timer); } catch(e) {} S._pet.timer = null; }
     }
   }
   function _petUpdate(petitionId, against, inFavour, needed) {
-    if (!_pet || _pet.petitionId !== petitionId) return;
+    if (!S._pet || S._pet.petitionId !== petitionId) return;
     var el = document.getElementById('kp-tally');
     if (el) el.textContent = t('petitionTally', { y: inFavour, n: against, k: needed });
   }
   function _petVote(yes) {
-    if (!_pet || _pet.voted) return;
-    try { send(MSG.buildVoteKick(gId, _pet.petitionId, yes)); } catch(e) {}
-    _pet.voted = true;
+    if (!S._pet || S._pet.voted) return;
+    try { send(MSG.buildVoteKick(gId, S._pet.petitionId, yes)); } catch(e) {}
+    S._pet.voted = true;
     var y = document.getElementById('kp-yes'), n = document.getElementById('kp-no');
     if (y) y.disabled = true;
     if (n) n.disabled = true;
@@ -4790,9 +4780,9 @@ const App = (() => {
     if (replyType === 2 && typeof showToast === 'function') showToast(t('petitionAlreadyVoted'));
   }
   function _petEnd(petitionId, kicked, reason) {
-    if (!_pet || _pet.petitionId !== petitionId) return;
-    var target = _pet.target;
-    if (_pet.timer) { try { clearInterval(_pet.timer); } catch(e) {} _pet.timer = null; }
+    if (!S._pet || S._pet.petitionId !== petitionId) return;
+    var target = S._pet.target;
+    if (S._pet.timer) { try { clearInterval(S._pet.timer); } catch(e) {} S._pet.timer = null; }
     var msg;
     if (kicked) msg = t('petitionResultKicked', { name: _petName(target) });
     else if (reason === 3) msg = t('petitionEndTimeout');
@@ -4804,7 +4794,7 @@ const App = (() => {
       b.innerHTML = '<div style="font-weight:700">' + esc(msg) + '</div>';
       setTimeout(function(){ var x = document.getElementById('kick-petition-banner'); if (x) x.remove(); }, 3500);
     }
-    _pet = null;
+    S._pet = null;
   }
   function _petAskDenied(reason) {
     if (typeof showToast === 'function') showToast(t('petitionDenied'));
@@ -4825,18 +4815,17 @@ const App = (() => {
   //  mirroring the Qt client's invitation dialog. Accept = join the
   //  table exactly like a lobby click; Decline = RejectGameInvitation.
   // ─────────────────────────────────────────────────────────────
-  var _inv = null; // { gameId } | null
   function _inviteClear() {
-    _inv = null;
+    S._inv = null;
     var b = document.getElementById('game-invite-banner');
     if (b) b.remove();
   }
   function _inviteShow(o) {
     if (window._offlineMode) return;
     // Same invite already up → keep it (server may resend on reconnect).
-    if (_inv && _inv.gameId === o.gameId && document.getElementById('game-invite-banner')) return;
+    if (S._inv && S._inv.gameId === o.gameId && document.getElementById('game-invite-banner')) return;
     _inviteClear();
-    _inv = { gameId: o.gameId };
+    S._inv = { gameId: o.gameId };
     var host = _petName(o.byWhom);
     var tbl  = (games[o.gameId] && games[o.gameId].name) || ('#' + o.gameId);
     var b = document.createElement('div');
@@ -4863,15 +4852,15 @@ const App = (() => {
     if (n) n.addEventListener('click', _inviteDecline);
   }
   function _inviteAccept() {
-    if (!_inv) return;
-    var gid = _inv.gameId;
+    if (!S._inv) return;
+    var gid = S._inv.gameId;
     _inviteClear();
     try { send(MSG.buildJoinGame(gid, false)); } catch(e) {}
     if (typeof addChat === 'function') addChat(null, t('inviteAccepted'), 'sys', { key: 'inviteAccepted' });
   }
   function _inviteDecline() {
-    if (!_inv) return;
-    var gid = _inv.gameId;
+    if (!S._inv) return;
+    var gid = S._inv.gameId;
     _inviteClear();
     try { send(MSG.buildRejectInvite(gid, 0)); } catch(e) {}
   }
@@ -5623,11 +5612,11 @@ const App = (() => {
 
       case T.ChatReject: {
         const rejText = Proto.str(sub, 1);
-        if (_lastMsgWasReaction) {
+        if (S._lastMsgWasReaction) {
           // Réaction rejetée (mode LAN/invité) — afficher badge local uniquement
-          _lastMsgWasReaction = false;
-          if (!_chatRejectShown) {
-            _chatRejectShown = true;
+          S._lastMsgWasReaction = false;
+          if (!S._chatRejectShown) {
+            S._chatRejectShown = true;
             // Note discrète dans la barre de réactions
             var rb = document.getElementById('reaction-bar');
             if (rb) {
@@ -5641,10 +5630,10 @@ const App = (() => {
             }
           }
         } else {
-          _lastMsgWasReaction = false;
+          S._lastMsgWasReaction = false;
           if (!amInGame) addChat(null, t('chatRefusedReason', { r: rejText }), 'sys', { key: 'chatRefusedReason', params: { r: rejText } });
-          else if (!_chatRejectShown) {
-            _chatRejectShown = true;
+          else if (!S._chatRejectShown) {
+            S._chatRejectShown = true;
             if (_currentLoginMode === 'lan') {
               addGameChat(null, t('chatLanDisabled'), 'sys', { key: 'chatLanDisabled' });
             } else {
@@ -9519,8 +9508,6 @@ const App = (() => {
   });
   // Exposer pour les fonctions globales (avatar, etc.)
   // ── Notification + titre dynamique quand c'est mon tour ──
-  var _origTitle = 'PokerTH Web';
-  var _titleBlinkID = null;
 
   // BUG FIX: this function used to be named notifyMyTurn(), which
   // shadowed the sound-playing notifyMyTurn() exported by sounds.mjs onto
@@ -9539,26 +9526,26 @@ const App = (() => {
       try { new Notification(msg, { body: sub, icon: '/favicon.ico', tag: 'pokerth-turn', silent: false, vibrate: S._hapticEnabled ? [90, 50, 90] : [] }); } catch(e) {}
     }
     // Titre d'onglet dynamique + clignotement
-    clearInterval(_titleBlinkID);
+    clearInterval(S._titleBlinkID);
     var blink = true;
     document.title = msg + ' — PokerTH';
-    _titleBlinkID = setInterval(function() {
-      document.title = blink ? (msg + ' — PokerTH') : _origTitle;
+    S._titleBlinkID = setInterval(function() {
+      document.title = blink ? (msg + ' — PokerTH') : S._origTitle;
       blink = !blink;
     }, 900);
     // Arrêter quand l'onglet est de nouveau actif
     document.addEventListener('visibilitychange', function handler() {
       if (!document.hidden) {
-        clearInterval(_titleBlinkID);
-        document.title = _origTitle;
+        clearInterval(S._titleBlinkID);
+        document.title = S._origTitle;
         document.removeEventListener('visibilitychange', handler);
       }
     });
   }
 
   function clearTurnNotif() {
-    clearInterval(_titleBlinkID);
-    document.title = _origTitle;
+    clearInterval(S._titleBlinkID);
+    document.title = S._origTitle;
     window._badgeTurn = false;
     if (window.refreshAppBadge) window.refreshAppBadge();
   }
@@ -11154,7 +11141,7 @@ function _maybeShowNextHandBtn() {
       var modal = document.getElementById('invite-modal');
       var list  = document.getElementById('im-list');
       if (!modal || !list) return;
-      _invSent = {}; // fresh session
+      S._invSent = {}; // fresh session
       App._renderInviteList(App._inviteEligiblePids());
       modal.style.display = 'flex';
     },
@@ -11184,7 +11171,7 @@ function _maybeShowNextHandBtn() {
         var escName = String(name).replace(/[<>&"]/g, function(c){
           return {'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;'}[c];
         });
-        var btn = _invSent[pid]
+        var btn = S._invSent[pid]
           ? '<button class="im-invite" type="button" disabled style="opacity:.55;border:1px solid var(--border,#444);background:transparent;color:var(--text,#eff1f5);border-radius:8px;padding:6px 12px;font-weight:600">' + t('inviteSent') + '</button>'
           : '<button class="im-invite" type="button" onclick="App.sendInvite(' + pid + ')" style="border:1px solid var(--green,#3fae5a);background:transparent;color:var(--text,#eff1f5);border-radius:8px;padding:6px 12px;font-weight:600;cursor:pointer">' + t('inviteBtn') + '</button>';
         return '<div class="km-row">' +
@@ -11194,11 +11181,11 @@ function _maybeShowNextHandBtn() {
                '</div>';
       }).join('');
     },
-    inviteSentTo(pid) { return !!_invSent[pid]; },
+    inviteSentTo(pid) { return !!S._invSent[pid]; },
     sendInvite(pid) {
       if (window._offlineMode || !gId || pid === myId) return;
       try { send(MSG.buildInvitePlayer(gId, pid)); } catch(e) {}
-      _invSent[pid] = true;
+      S._invSent[pid] = true;
       App._renderInviteList(App._inviteEligiblePids());
       if (typeof showToast === 'function') showToast(t('inviteSentToast', { name: players[pid] || ('#'+pid) }));
     },
@@ -11302,8 +11289,8 @@ function _maybeShowNextHandBtn() {
       myCards = [null,null]; commCards = [];
       stopTurnTimer();
       dismissWinner();
-      _chatRejectShown = false;
-      _lastMsgWasReaction = false;
+      S._chatRejectShown = false;
+      S._lastMsgWasReaction = false;
       document.body.classList.remove('in-game');
       var acb = document.getElementById('admin-close-btn');
       if (acb) acb.style.display = 'none';
@@ -11548,7 +11535,7 @@ function _maybeShowNextHandBtn() {
       var text = input.value.trim();
       if (!text || !ws) return;
       input.value = '';
-      _lastMsgWasReaction = false;
+      S._lastMsgWasReaction = false;
       // ── /seatdbg : diagnostic LOCAL des sieges (rien n'est envoye) ──
       // Affiche dans le chat les mesures qui pilotent la bisection QML :
       // zone (tableZone px), boxScale applique, rawBoxScale (avant rabot),
@@ -14976,7 +14963,7 @@ function renderPlayersList() {
   });
 })();
 
-;(function(){ window.BUILD_VERSION='0.3.825-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.826-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

@@ -18,7 +18,7 @@ const { S } = await import('../public/modules/game/state.mjs');
 let n = 0, fail = 0;
 function ok(cond, msg) { n++; if (!cond) { fail++; console.error('  ✗', msg); } else console.log('  ✓', msg); }
 
-console.log('state.mjs — V0 (timer) + V1 (voix/haptique) + V2 (stats)');
+console.log('state.mjs — V0 (timer) + V1 (voix/haptique) + V2 (stats) + V3 (pet/inv/chat/titre)');
 ok(typeof S === 'object' && S !== null, 'S est un objet');
 ok(window.PthState === S, 'pont window.PthState === S (même référence)');
 
@@ -51,14 +51,26 @@ ok(S._statsOpen === false && S._statsTab === 'session' && S._boardSort === 'net'
    'panneau stats : fermé / onglet session / tri net');
 ok(S._pimTab === 'session' && S._pimPid === 0, 'popup profil : onglet session / pid 0');
 
+// V3 — Pétitions / invitations + chat / notifs / titre
+ok(S._pet === null && S._inv === null, '_pet / _inv init = null');
+ok(typeof S._invSent === 'object' && Object.keys(S._invSent).length === 0, '_invSent init = {}');
+ok(S._lastMsgWasReaction === false && S._chatRejectShown === false, 'drapeaux chat init = false');
+ok(Array.isArray(S._reactEmojiQueue) && S._reactEmojiQueue.length === 0
+   && S._reactEmojiTimer === null && S._reactEmojiLastSent === 0, 'file /emoji vierge');
+ok(S.REACT_EMOJI_MIN_GAP === 1500 && S.REACT_EMOJI_QUEUE_MAX === 4, 'constantes /emoji');
+ok(S._statusKey === null && S._origTitle === 'PokerTH Web' && S._titleBlinkID === null,
+   'status bar / titre init');
+
 // Périmètre exact des vagues migrées (pas de fuite d'autres clés)
 const keys = Object.keys(S).sort();
-ok(JSON.stringify(keys) === JSON.stringify(['_SPEAK_MAX', '_boardEligible', '_boardSort',
-   '_curU', '_gameCounted', '_hapticEnabled', '_lifePushTimer', '_pimPid', '_pimTab',
+ok(JSON.stringify(keys) === JSON.stringify(['REACT_EMOJI_MIN_GAP', 'REACT_EMOJI_QUEUE_MAX',
+   '_SPEAK_MAX', '_boardEligible', '_boardSort', '_chatRejectShown', '_curU', '_gameCounted',
+   '_hapticEnabled', '_inv', '_invSent', '_lastMsgWasReaction', '_lifePushTimer', '_origTitle',
+   '_pet', '_pimPid', '_pimTab', '_reactEmojiLastSent', '_reactEmojiQueue', '_reactEmojiTimer',
    '_speakQ', '_speaking', '_stats', '_statsEligible', '_statsInited', '_statsOffline',
-   '_statsOpen', '_statsTab', '_timerID', '_timerSec', '_timerTot', '_voiceEnabled',
-   '_voices']),
-   'périmètre V0+V1+V2 exact : ' + keys.join(', '));
+   '_statsOpen', '_statsTab', '_statusKey', '_timerID', '_timerSec', '_timerTot',
+   '_titleBlinkID', '_voiceEnabled', '_voices']),
+   'périmètre V0..V3 exact : ' + keys.join(', '));
 
 console.log(fail ? `FAIL ${fail}/${n}` : `PASS ${n}/${n}`);
 process.exit(fail ? 1 : 0);

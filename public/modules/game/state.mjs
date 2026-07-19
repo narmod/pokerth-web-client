@@ -41,6 +41,21 @@ export const S = {
   _boardSort: 'net',
   _pimTab: 'session',
   _pimPid: 0,              // pid affiché dans le popup profil (0 / myId = mon profil)
+
+  // ── V3 · Pétitions / invitations + chat / notifs / titre (domaines K + J) ──
+  _pet: null,              // { petitionId, target, endsAt, timer, voted } | null
+  _inv: null,              // { gameId } | null
+  _invSent: {},            // pids invited during the current invite-modal session
+  _lastMsgWasReaction: false, // true si le dernier chat envoyé était une réaction
+  _chatRejectShown: false,    // n'afficher l'avertissement LAN qu'une seule fois
+  _reactEmojiQueue: [],
+  _reactEmojiTimer: null,
+  _reactEmojiLastSent: 0,
+  REACT_EMOJI_MIN_GAP: 1500,  // ms minimum entre deux /emoji (sous le seuil serveur)
+  REACT_EMOJI_QUEUE_MAX: 4,   // file bornée : au-delà on abandonne l'envoi réseau
+  _statusKey: null,
+  _origTitle: 'PokerTH Web',
+  _titleBlinkID: null,
 };
 
 // Pont legacy : pokerth.js (script classique) fait `const S = window.PthState;`
