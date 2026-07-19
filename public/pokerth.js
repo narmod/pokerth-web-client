@@ -3756,11 +3756,8 @@ const App = (() => {
   // user can turn it off; defaults ON. navigator.vibrate is a no-op
   // / undefined on desktop browsers and iOS Safari (which doesn't
   // support the Vibration API), so we feature-detect every call.
-  let _hapticEnabled = (function() {
-    try { return localStorage.getItem('pth_haptic') !== '0'; } catch(e) { return true; }
-  })();
   function hapticBuzz(pattern) {
-    if (!_hapticEnabled) return;
+    if (!S._hapticEnabled) return;
     try {
       if (navigator && typeof navigator.vibrate === 'function') {
         navigator.vibrate(pattern || 60);
@@ -3768,19 +3765,19 @@ const App = (() => {
     } catch(e) {}
   }
   function toggleHaptic() {
-    _hapticEnabled = !_hapticEnabled;
-    try { localStorage.setItem('pth_haptic', _hapticEnabled ? '1' : '0'); } catch(e) {}
+    S._hapticEnabled = !S._hapticEnabled;
+    try { localStorage.setItem('pth_haptic', S._hapticEnabled ? '1' : '0'); } catch(e) {}
     // Give immediate tactile + textual confirmation.
-    if (_hapticEnabled) hapticBuzz(40);
+    if (S._hapticEnabled) hapticBuzz(40);
     else { try { if (navigator && typeof navigator.vibrate === 'function') navigator.vibrate(0); } catch(e) {} } // cancel any queued buzz
-    var label = _hapticEnabled
+    var label = S._hapticEnabled
       ? t('hapticOn')
       : t('hapticOff');
     if (typeof showKeyHint === 'function') showKeyHint(label);
     // Direct header twin (tablet/desktop): icon-only.
     var bd = document.getElementById('haptic-toggle-btn');
-    if (bd) bd.textContent = (_hapticEnabled ? '📳' : '📴');
-    return _hapticEnabled;
+    if (bd) bd.textContent = (S._hapticEnabled ? '📳' : '📴');
+    return S._hapticEnabled;
   }
   window.toggleHaptic = toggleHaptic;
 
@@ -3872,9 +3869,6 @@ const App = (() => {
   // Speaks game events (player actions, your turn, winner) in the active
   // language. Opt-in (default OFF), persisted, toggled from the ••• menu.
   // No-ops gracefully where speechSynthesis is unavailable.
-  let _voiceEnabled = (function() {
-    try { return localStorage.getItem('pth_voice') === '1'; } catch(e) { return false; }
-  })();
   // Maps a UI language code (i18n catalogue key, e.g. 'fr', 'pt-BR',
   // 'zh-TW') onto a BCP-47 tag for the speech engine, so each of the 36
   // languages is voiced in its own tongue rather than always fr-FR/en-US.
@@ -3897,8 +3891,7 @@ const App = (() => {
   // Voice list is async on Chrome (getVoices() is empty until 'voiceschanged'),
   // so cache it and refresh on that event — otherwise the first announcement
   // gets no matching voice and the engine falls back to a default.
-  var _voices = [];
-  function _loadVoices() { try { _voices = window.speechSynthesis.getVoices() || []; } catch(e) {} }
+  function _loadVoices() { try { S._voices = window.speechSynthesis.getVoices() || []; } catch(e) {} }
   if ('speechSynthesis' in window) {
     _loadVoices();
     try { window.speechSynthesis.addEventListener('voiceschanged', _loadVoices); }
@@ -3908,7 +3901,7 @@ const App = (() => {
   // voice for low latency and to keep the offline training mode working,
   // matching the exact region first, then the primary subtag.
   function _pickVoice(tag) {
-    var vs = _voices.length ? _voices : (function(){ try { return window.speechSynthesis.getVoices() || []; } catch(e) { return []; } })();
+    var vs = S._voices.length ? S._voices : (function(){ try { return window.speechSynthesis.getVoices() || []; } catch(e) { return []; } })();
     var lc = String(tag || '').toLowerCase(), prim = lc.split('-')[0];
     var exact = vs.filter(function(v){ return v.lang && v.lang.toLowerCase() === lc; });
     var prims = vs.filter(function(v){ return v.lang && v.lang.toLowerCase().split('-')[0] === prim; });
@@ -3929,39 +3922,35 @@ const App = (() => {
   }
   // Announcements play one after another instead of cutting each other off:
   // on a fast street (several quick folds) you now hear the sequence rather
-  // than only the last action. _curU tags the in-flight utterance so a stale
+  // than only the last action. S._curU tags the in-flight utterance so a stale
   // onend from a cancelled one can't advance the queue (Web Speech race).
-  var _speakQ = [];      // pending texts
-  var _speaking = false; // an utterance is currently playing
-  var _curU = null;      // the live utterance (identity guard)
-  var _SPEAK_MAX = 4;    // cap the backlog so the voice can't lag far behind play
   function _speakNext() {
-    if (!_voiceEnabled) { _speakQ = []; _curU = null; _speaking = false; return; }
-    if (_speaking || !_speakQ.length) return;
-    if (!('speechSynthesis' in window)) { _speakQ = []; return; }
-    var text = _speakQ.shift();
+    if (!S._voiceEnabled) { S._speakQ = []; S._curU = null; S._speaking = false; return; }
+    if (S._speaking || !S._speakQ.length) return;
+    if (!('speechSynthesis' in window)) { S._speakQ = []; return; }
+    var text = S._speakQ.shift();
     var u;
     try { u = _voiceUtterance(text); } catch(e) { _speakNext(); return; }
-    _curU = u; _speaking = true;
+    S._curU = u; S._speaking = true;
     u.onend = u.onerror = function() {
-      if (_curU !== u) return;            // stale handler (cancelled) — ignore
-      _curU = null; _speaking = false; _speakNext();
+      if (S._curU !== u) return;            // stale handler (cancelled) — ignore
+      S._curU = null; S._speaking = false; _speakNext();
     };
     try { window.speechSynthesis.speak(u); }
-    catch(e) { if (_curU === u) { _curU = null; _speaking = false; } _speakNext(); }
+    catch(e) { if (S._curU === u) { S._curU = null; S._speaking = false; } _speakNext(); }
   }
   // Queue an announcement. Pass { interrupt:true } for the urgent "your turn"
   // cue: it drops any backlog and cuts off the current line so the player
   // hears it promptly rather than after a queue of past actions.
   function speak(text, opts) {
-    if (!_voiceEnabled || !text) return;
+    if (!S._voiceEnabled || !text) return;
     if (!('speechSynthesis' in window)) return;
     if (opts && opts.interrupt) {
-      _speakQ = []; _curU = null; _speaking = false;
+      S._speakQ = []; S._curU = null; S._speaking = false;
       try { window.speechSynthesis.cancel(); } catch(e) {}
     }
-    _speakQ.push(String(text));
-    if (_speakQ.length > _SPEAK_MAX) _speakQ = _speakQ.slice(-_SPEAK_MAX);
+    S._speakQ.push(String(text));
+    if (S._speakQ.length > S._SPEAK_MAX) S._speakQ = S._speakQ.slice(-S._SPEAK_MAX);
     _speakNext();
   }
   // Localized verb for a server action code (1=Fold … 6=All-in).
@@ -3973,17 +3962,17 @@ const App = (() => {
     return getPlayerName(pid) + ' ' + verb + amt;
   }
   function toggleVoice() {
-    _voiceEnabled = !_voiceEnabled;
-    try { localStorage.setItem('pth_voice', _voiceEnabled ? '1' : '0'); } catch(e) {}
-    var label = _voiceEnabled ? t('voiceOn') : t('voiceOff');
+    S._voiceEnabled = !S._voiceEnabled;
+    try { localStorage.setItem('pth_voice', S._voiceEnabled ? '1' : '0'); } catch(e) {}
+    var label = S._voiceEnabled ? t('voiceOn') : t('voiceOff');
     if (typeof showKeyHint === 'function') showKeyHint(label);
     // Direct header twin (tablet/desktop): icon-only.
     var vd = document.getElementById('voice-toggle-btn');
-    if (vd) vd.textContent = (_voiceEnabled ? '🗣️' : '🤐');
+    if (vd) vd.textContent = (S._voiceEnabled ? '🗣️' : '🤐');
     // Spoken confirmation (also primes the engine on first user gesture).
-    if (_voiceEnabled) speak(t('voiceOn'));
-    else if ('speechSynthesis' in window) { _speakQ = []; _curU = null; _speaking = false; try { window.speechSynthesis.cancel(); } catch(e) {} }
-    return _voiceEnabled;
+    if (S._voiceEnabled) speak(t('voiceOn'));
+    else if ('speechSynthesis' in window) { S._speakQ = []; S._curU = null; S._speaking = false; try { window.speechSynthesis.cancel(); } catch(e) {} }
+    return S._voiceEnabled;
   }
   window.toggleVoice = toggleVoice;
   // Sync the direct (tablet/desktop) header toggle icons with the persisted
@@ -3991,9 +3980,9 @@ const App = (() => {
   function _syncMediaToggleButtons() {
     try {
       var hb = document.getElementById('haptic-toggle-btn');
-      if (hb) hb.textContent = (_hapticEnabled ? '📳' : '📴');
+      if (hb) hb.textContent = (S._hapticEnabled ? '📳' : '📴');
       var vb = document.getElementById('voice-toggle-btn');
-      if (vb) vb.textContent = (_voiceEnabled ? '🗣️' : '🤐');
+      if (vb) vb.textContent = (S._voiceEnabled ? '🗣️' : '🤐');
     } catch(e) {}
   }
   window._syncMediaToggleButtons = _syncMediaToggleButtons;
@@ -4065,9 +4054,9 @@ const App = (() => {
   // Setters (etat precis) pour les cases des Options avancees : bascule le toggle
   // existant seulement si l'etat courant differe de la valeur voulue, ce qui
   // reutilise toute la logique d'application + retour visuel des toggles.
-  window.setVoice = function (on) { if (!!on !== _voiceEnabled) toggleVoice(); };
+  window.setVoice = function (on) { if (!!on !== S._voiceEnabled) toggleVoice(); };
   window.setDisplayBB = function (on) { if (!!on !== _displayBB) toggleDisplayBB(); };
-  window.setHaptic = function (on) { if (!!on !== _hapticEnabled) toggleHaptic(); };
+  window.setHaptic = function (on) { if (!!on !== S._hapticEnabled) toggleHaptic(); };
   let _lastConnectParams = null;
   // Track mode + name of last Init sent so we can detect 'rapid mode swap'
   // patterns that the PokerTH server's anti-brute-force flags as
@@ -9560,7 +9549,7 @@ const App = (() => {
     if (window.refreshAppBadge) window.refreshAppBadge();
     // Notification navigateur (si onglet en arrière-plan)
     if (document.hidden && 'Notification' in window && Notification.permission === 'granted') {
-      try { new Notification(msg, { body: sub, icon: '/favicon.ico', tag: 'pokerth-turn', silent: false, vibrate: _hapticEnabled ? [90, 50, 90] : [] }); } catch(e) {}
+      try { new Notification(msg, { body: sub, icon: '/favicon.ico', tag: 'pokerth-turn', silent: false, vibrate: S._hapticEnabled ? [90, 50, 90] : [] }); } catch(e) {}
     }
     // Titre d'onglet dynamique + clignotement
     clearInterval(_titleBlinkID);
@@ -15000,7 +14989,7 @@ function renderPlayersList() {
   });
 })();
 
-;(function(){ window.BUILD_VERSION='0.3.823-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.824-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
