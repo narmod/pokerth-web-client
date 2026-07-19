@@ -33,7 +33,13 @@ pour les variables partagées (`_lang`) · un objet namespace propre
 (`window.I18N = {...}`). Auto-init sur `DOMContentLoaded` avec repli immédiat
 si le DOM est déjà parsé. Reproduire ces trois étages à chaque extraction.
 
-**3. Piège majeur : `const App`.** pokerth.js expose l'app comme `const App`
+**3. Piège `const App` — atténué (découverte #6).** L'IIFE App expose déjà
+`seats`, `seatData`, `myId`, `players` (getters) et `_ipBlockUntil` (get/set)
+via `Object.defineProperty(window, …)` (~L10664). Les modules peuvent donc
+référencer ces noms nus à runtime. Le piège reste entier pour tout AUTRE état
+interne de l'App.
+
+**3bis. Piège originel : `const App`.** pokerth.js expose l'app comme `const App`
 au scope du script — PAS `window.App` (commentaire HTML L525). Un module ES ne
 peut pas y accéder. Règle : ne jamais extraire du code qui référence `App` ;
 si inévitable, exposer d'abord `window.App = App` dans le monolithe (mini-push
@@ -114,3 +120,4 @@ en `type=module` et remplacer les ponts `window.*` par de vrais imports.
 | 2026-07-19 | 0.3.810-beta | #3 net/crypto.mjs (PTHCrypto AES/SHA-1) — 14 tests croisés node:crypto | 941 → 933 Ko |
 | 2026-07-19 | 0.3.811-beta | #4 net/messages.mjs (MSG + SCRAM, import Proto explicite) — 18 tests | 933 → 912 Ko |
 | 2026-07-19 | 0.3.812-beta | #5 ui/shortcuts.mjs (clavier + rebind, pont defineProperty _rebindAction) — 14 tests (stubs DOM) | 912 → 902 Ko |
+| 2026-07-19 | 0.3.813-beta | #6 ui/reactions.mjs (/emoji, dédup sp0ck, mute/pin pontés) — 12 tests (stubs DOM) | 902 → 891 Ko |

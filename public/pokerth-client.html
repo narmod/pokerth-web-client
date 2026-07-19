@@ -475,6 +475,7 @@ function onAvatarImageChosen(input) {
     '/modules/net/crypto.mjs',
     '/modules/net/messages.mjs',
     '/modules/ui/shortcuts.mjs',
+    '/modules/ui/reactions.mjs',
     '/modules/music.mjs', '/modules/lang/en.mjs', '/fonts/fonts.css'];
   try {
     var lg = (localStorage.getItem('pth_lang') || '').toLowerCase().split('-')[0];
@@ -2041,6 +2042,7 @@ function onAvatarImageChosen(input) {
 <script type="module" src="modules/net/crypto.mjs"></script>
 <script type="module" src="modules/net/messages.mjs"></script>
 <script type="module" src="modules/ui/shortcuts.mjs"></script>
+<script type="module" src="modules/ui/reactions.mjs"></script>
 <!-- Quit-game confirmation dialog: 2 buttons (Quit / Cancel).
      Shown when the user clicks the ✕ button in the header from inside
      a game. Driven by App.confirmLeaveGame() (open) and
