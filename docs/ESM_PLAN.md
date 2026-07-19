@@ -84,6 +84,29 @@ les usages `\b<nom>\b` du reste du fichier avant chaque extraction.
 Jalon final : quand pokerth.js ne contient plus que l'orchestrateur, le passer
 en `type=module` et remplacer les ponts `window.*` par de vrais imports.
 
+## #9 — Sous-plan orchestrateur App (audit du 2026-07-19, base 0.3.815-beta)
+
+L'IIFE App = L2581-13827, **11 246 lignes, 199 fonctions, 170 vars d'état de
+closure**. Audit automatique (identifiants libres ∩ état de closure) :
+**64 fonctions déménageables** (1 123 l, zéro var de closure — globaux/DOM
+seulement) et **135 immobilisées** (6 009 l), dont les deux géants
+`handleMsg` (2 078 l) et `renderSeatsImmediate` (999 l).
+
+Mécanique identique aux extractions #1-#8 : les appels nus internes à l'IIFE
+résolvent la chaîne de portées jusqu'au global → les ponts `window.*`
+suffisent, aucun changement des sites d'appel.
+
+| Étape | Module | Contenu (fonctions clés) | ~lignes | Intérêt |
+|---|---|---|---|---|
+| 9a | `game/layout.mjs` | `_qmlLandscapeLayout` · `_qmlPortraitScale` · `_officialSeatPix` · `_applyQmlBgCenter` | ~455 | Maths pures de l'ellipse/slots QML — **testables contre la Bible et DELTA_QML_2_1_3** (angles 230°/310°, bornes radiusX 0.22-0.36, morsure 55 %…) |
+| 9b | `ui/deck.mjs` | `cardToHtml/cardHtml/cardName` · `_deckFace/_deckBack/_refreshDeck` · `flipCommCards` · `chipSvg/dealerChipSvg/_pthPuck` · `_timerSvg` | ~200 | Rendu cartes/pucks, très sollicité, dépendances = DOM + StyleProvider-like globaux |
+| 9c | `net/avatar-cache.mjs` | famille `_pth*` (cache LRU avatars pokerth.net, assemblage data-url) | ~120 | Périmètre net clair |
+| 9d | `ui/misc.mjs` | `_attachPanelDrag` · wake lock (`show/acquire/release`) · `_getSessionId/_sidStore` · `setPct` · `confirmCall` (guard_call) · `_handleCtrlFrame` | ~250 | Reliquat déménageable, à découper si hétérogène |
+| 9e+ | — | Les 135 immobilisées : stratégie « module d'état » (extraire l'état de closure vers un objet partagé exporté) OU statu quo assumé — décision d'architecture À PRENDRE avec Arnaud avant tout code | 6 009 | `handleMsg` et `renderSeatsImmediate` sont le cœur fragile ; ne pas y toucher sans plan dédié |
+
+Après 9a-9d : re-scanner (les fonctions devenues sans dépendance interne
+peuvent se libérer par vagues). Le monolithe devrait passer sous ~830 Ko.
+
 ## Protocole par extraction (checklist à suivre à CHAQUE fois)
 
 1. Re-fetch pokerth.js à HEAD ; délimiter le bloc exact (marqueurs ══).
