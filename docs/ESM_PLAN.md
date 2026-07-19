@@ -111,3 +111,4 @@ en `type=module` et remplacer les ponts `window.*` par de vrais imports.
 | 2026-07-19 | — | Phase 0 (audit, docs seulement) | 954 Ko |
 | 2026-07-19 | 0.3.808-beta | #1 game/cards.mjs (évaluateur, pré-flop, odds+phe) — 19 tests | 954 → 944 Ko |
 | 2026-07-19 | 0.3.809-beta | #2 net/proto.mjs (codec protobuf) — 22 tests | 944 → 941 Ko |
+| 2026-07-19 | 0.3.810-beta | #3 net/crypto.mjs (PTHCrypto AES/SHA-1) — 14 tests croisés node:crypto | 941 → 933 Ko |
