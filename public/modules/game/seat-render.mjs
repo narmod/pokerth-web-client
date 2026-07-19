@@ -844,6 +844,7 @@ function renderSeatsImmediate() {
         var _sumY3 = _selfR3 ? (_selfR3.top + _selfR3.height / 2 - _zr3.top) : (_zH3 - 100);
         var _n3 = 1, _minB3 = Infinity;
         var _botTop3 = -Infinity, _botC3 = -Infinity; // siege du BAS de l'anneau (spectateur)
+        var _rects3 = []; // rects des plates (px zone) pour le cap horizontal community
         el.querySelectorAll('.seat:not(.me):not(.seat-ghost) .seat-plate').forEach(function (pl3) {
           var rr3 = pl3.getBoundingClientRect();
           var _b3 = rr3.bottom - _zr3.top;
@@ -851,6 +852,7 @@ function renderSeatsImmediate() {
           var _t3 = rr3.top - _zr3.top, _c3 = _t3 + rr3.height / 2;
           if (_c3 > _botC3) { _botC3 = _c3; _botTop3 = _t3; }   // box la plus basse
           _sumY3 += _c3; _n3++;                                 // barycentre
+          _rects3.push({ t: _t3, b: _b3, l: rr3.left - _zr3.left, r: rr3.right - _zr3.left });
         });
         var _isCmp3 = _zH3 < 520 || window.innerHeight < 600;
         var _commC3 = _sumY3 / _n3;
@@ -869,6 +871,31 @@ function renderSeatsImmediate() {
         var _cap3 = Math.min(_isCmp3 ? 2.6 : 1.8, _seatBoxScale * 2.0, (0.70 * _zW3) / 264);
         var _floor3 = _seatBoxScale * (_isCmp3 ? 1.1 : 0.72);
         _csComm = Math.max(0.55, Math.min(_cap3, Math.max(_floor3, _gapF3)));
+        // ── AJUSTEMENT WEB (narmod 2026-07-19) : CAP HORIZONTAL de la
+        // rangée community. Le QML ne borne la communityScale que par la
+        // hauteur libre et 0.70·largeur de ZONE — jamais par la largeur
+        // libre ENTRE les plates latérales. Sur fenêtres quasi carrées /
+        // compactes (scan Node : 682 configs, M=3–7, jusqu'à 112 px de
+        // recouvrement à 700×500 M=3), la rangée mord les sièges de côté.
+        // On mesure le corridor libre entre les plates qui coupent la bande
+        // verticale de la rangée (± 8 px) et on rabote _csComm pour que la
+        // demi-rangée (121·cs) + marge 8 px y tienne. Sans effet quand le
+        // corridor est assez large (fenêtres 16:9 desktop : cs inchangé —
+        // vérifié : 476/15008 configs touchées, −15 % en moyenne). ──
+        try {
+          var _bandT3 = _commC3 - 32 * _csComm - 8, _bandB3 = _commC3 + 32 * _csComm + 8;
+          var _freeL3 = 0, _freeR3 = _zW3;
+          for (var _hc = 0; _hc < _rects3.length; _hc++) {
+            var _rh = _rects3[_hc];
+            if (_rh.b > _bandT3 && _rh.t < _bandB3) {
+              if (_rh.r < _zW3 / 2 && _rh.r > _freeL3) _freeL3 = _rh.r;
+              if (_rh.l > _zW3 / 2 && _rh.l < _freeR3) _freeR3 = _rh.l;
+            }
+          }
+          var _freeH3 = Math.min(_zW3 / 2 - _freeL3, _freeR3 - _zW3 / 2) - 8;
+          if (_freeH3 > 0 && _freeH3 / 121 < _csComm) _csComm = Math.max(0.55, _freeH3 / 121);
+          try { window._seatDbg.commCapH = +(_freeH3 / 121).toFixed(3); } catch (eDbg) {}
+        } catch (eHc) {}
         // QML (communityArea, branche wide) : verticalCenterOffset =
         // communityCenterY - height/2 -> centre de la rangee = barycentre.
         _commTargetY = _commC3;
