@@ -298,10 +298,15 @@ function _advSetupFloat() {
   } catch (e) {}
   var defW = Math.min(620, window.innerWidth - 16);
   var defH = Math.min(640, window.innerHeight - 16);
+  // Plafond proportionne a l'ecran : la fenetre reste redimensionnable mais bornee
+  // (marges qui s'adaptent — petit ecran => plus petite, grand ecran => plafonne).
+  var maxW = Math.min(1010, Math.round(window.innerWidth * 0.92));
+  var maxH = Math.min(680, Math.round(window.innerHeight * 0.90));
   _enableFloating(card, {
     key: 'pth_win_adv',
     handle: card.querySelector('.km-title'),
     resizable: true,
+    maxW: maxW, maxH: maxH,   // plafond proportionne (fenetre bornee)
     zoom: true,
     defW: 620, defH: 640,          // base du zoom (inchangee vs _advApplyZoom)
     minW: 380, minH: 360,   // 524→380 : sous 600 px la sidebar devient barre d'icônes (container query), une fenêtre étroite « portrait » est légitime
@@ -8534,7 +8539,7 @@ window.togglePlayersPanel = togglePlayersPanel;
 window.toggleReactionPanel = toggleReactionPanel;
 window.App = App;
 
-window.BUILD_VERSION='0.3.899-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='0.3.900-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
