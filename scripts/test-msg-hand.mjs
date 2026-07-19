@@ -42,6 +42,19 @@ window.setUrgentMode = () => {};
 window._zoomHandStart = null; window._hideWinHandBadge = null;
 window.isBot = () => false;
 window.notifyBlindRaise = () => {};
+// Stubs C5b
+let potV = null; window.setPot = (v) => { potV = v; };
+window.playActionSound = () => {}; window.notifyAllIn = () => {}; window.notifyAction = () => {};
+window.playTone = () => {}; window.burstStars = () => {}; window.flashActionLabel = () => {};
+window.animateAllIn = () => {}; window.animatePot = () => {}; window.updatePotSize = () => {};
+window.launchConfetti = () => {}; window.animateShowdownCards = () => {};
+window.animatePlayerEliminated = () => {}; window.logEliminations = () => {};
+window._advGet = () => true; window.addGameChat = () => {};
+window.setMyTurnActive = (v) => { window.__turnActive = v; };
+window._isIgnored = () => false; window._chatTs = () => '[00:00:00]';
+window.pkTerm = (b) => b; window._keyBindings = () => ({ fold: 'f', call: 'c', raise: 'r', allin: 'a', bet1: '1', bet2: '2', bet3: '3' });
+window.updateBottomLayout = () => {}; window.clearSpectatorActions = () => {};
+window.notifyMyTurn = () => {};
 
 const { S } = await import('../public/modules/game/state.mjs');
 const { Proto } = await import('../public/modules/net/proto.mjs');
@@ -119,9 +132,41 @@ ok(S._gameStarted === true && S._seatsFrozen === true,
 ok(S.seats.includes(5) && S.seats.includes(9) && !S.seats.includes(11),
    'onHandStart (spectateur) : sièges reconstruits sans les partis');
 
+// ── C5b : mon tour → barre d'action + timer ; tour d'un autre → narrateur
+S.turnPid = 0; S._amSpectator = false; S._playingMode = 0; S._preAction = '';
+S.gameTimeout = 15; S.highestBet = 0;
+S.seatData[5].bet = 0; S.seatData[9].bet = 0;
+M.onPlayersTurn(subOf([[1, 0, 12], [2, 0, 5]]));
+ok(S.turnPid === 5, 'onPlayersTurn : mon tour appris');
+ok(window.__turnActive === true, 'onPlayersTurn : glow my-turn activé');
+
+// ── Action d'un joueur : mise enregistrée + pot + total
+S.pot = 0; S._totalPot = 0;
+// PlayersActionDone: gameId=1, playerId=2, gameState=3, action=4, totalBet=5, playerMoney=6, highestSet=7, minRaise=8
+M.onPlayersActionDone(subOf([[1, 0, 12], [2, 0, 9], [3, 0, 2], [4, 0, 3], [5, 0, 100], [6, 0, 2900], [7, 0, 100], [8, 0, 200]]));
+ok(S.seatData[9].bet === 100 && S.seatData[9].money === 2900,
+   'onPlayersActionDone : mise + stack du joueur 9');
+ok(S.highestBet === 100 && S.minRaise === 200, 'onPlayersActionDone : highestBet + minRaise');
+
+// ── Flop : 3 cartes + rendu comm
+S.commCards = [null, null, null, null, null];
+M.onDealFlop(subOf([[1, 0, 12], [2, 0, 10], [3, 0, 22], [4, 0, 35]]));
+ok(S.commCards[0] === 10 && S.commCards[1] === 22 && S.commCards[2] === 35,
+   'onDealFlop : 3 cartes communes posées');
+M.onDealTurn(subOf([[1, 0, 12], [2, 0, 48]]));
+ok(S.commCards[3] === 48, 'onDealTurn : 4e carte');
+M.onDealRiver(subOf([[1, 0, 12], [2, 0, 3]]));
+ok(S.commCards[4] === 3, 'onDealRiver : 5e carte');
+
+// ── YourActionRejected : journalisé sans crash
+logs.length = 0;
+M.onYourActionRejected(subOf([[1, 0, 12], [2, 0, 1], [3, 0, 5], [4, 0, 2]]));
+ok(logs.length >= 1, 'onYourActionRejected : entrée de log');
+
 // Ponts window
-ok(window.onGameStartInitial === M.onGameStartInitial && window.onHandStart === M.onHandStart,
-   'ponts window.* en place');
+ok(window.onGameStartInitial === M.onGameStartInitial && window.onHandStart === M.onHandStart &&
+   window.onPlayersTurn === M.onPlayersTurn && window.onEndOfHandShow === M.onEndOfHandShow &&
+   window.onDealFlop === M.onDealFlop, 'ponts window.* en place');
 
 console.log(fail ? `\n${fail}/${n} ÉCHECS` : `\n${n}/${n} OK`);
 process.exit(fail ? 1 : 0);

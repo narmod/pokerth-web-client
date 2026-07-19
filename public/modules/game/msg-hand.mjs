@@ -32,6 +32,19 @@ import { autoScaleTable } from '../game/seats.mjs';
 import { renderStats, initStats } from '../game/stats.mjs';
 import { _updateLobbyWaitStatus, _renderLobbyWaitActions } from '../ui/lobby.mjs';
 
+import { esc } from '../ui/misc.mjs';
+import { fmtChips, fmtChipsVoice } from '../ui/fmt.mjs';
+import { evaluateBestHand, _qmlWinningHandText } from '../game/cards.mjs';
+import { animateChipToPot } from '../ui/table-cards.mjs';
+import { renderHandStrength } from '../ui/odds-panel.mjs';
+import { startTurnTimer, stopTurnTimer } from '../game/turn-timer.mjs';
+import { renderMyTurnActions, _runPreAction, _playAutoMode, notifyMyTurnVisuals } from '../ui/action-bar.mjs';
+import { speak, hapticBuzz, voiceActionPhrase } from '../ui/media.mjs';
+import { recordHand } from '../game/stats.mjs';
+import { addChat } from '../ui/chat.mjs';
+import { _hlEliminatedPids, _snapshotHandResults, showWinnerOverlay, showWinHandBadge,
+         dismissWinner, showEndGameOverlay } from '../game/showdown.mjs';
+
 const T = MSG.T;
 
 function onGameStartInitial(sub) {
@@ -495,7 +508,528 @@ function onHandStart(sub) {
     return;
 }
 
-export { onGameStartInitial, onHandStart };
+// ── #9g-C5b : déroulé de main 2/2 (tours, actions, streets, showdown, fin) ──
 
-for (const [k, v] of Object.entries({ onGameStartInitial, onHandStart }))
+function onPlayersTurn(sub) {
+    // PlayersTurnMessage: gameId=1, playerId=2, gameState=3
+    S.turnPid   = Proto.u32(sub, 2);
+    S.gameState = Proto.u32(sub, 3);
+    // Defensive guard: if the server (older PokerTH versions, e.g.
+    // the Debian 1.1.2-2 package) mistakenly sends PlayersTurn for
+    // a player who has already left the table, ignore it. The
+    // server should normally skip gone pids and assign the turn to
+    // the next live one. We still set turnPid above (for any UI
+    // consistency code that may inspect it) but bail out of the
+    // turn-handling logic so we don't render a ghost as active.
+    if (S.turnPid && S.seatData[S.turnPid] && S.seatData[S.turnPid].gone) {
+      console.warn('[PlayersTurn] server assigned turn to a gone pid', S.turnPid, '— ignoring');
+      window.renderSeats();
+      return;
+    }
+    // A seat whose turn the server just assigned is by definition
+    // in the hand — force active=true. Safety net for spectators
+    // who joined mid-hand and missed the HandStart reset.
+    if (S.turnPid && S.seatData[S.turnPid]) S.seatData[S.turnPid].active = true;
+    const rounds = [t('preflop'),t('flop'),t('turn'),t('river'),t('preflop')+' (SB)',t('preflop')+' (BB)'];
+    document.getElementById('g-round').textContent = rounds[S.gameState] || t('preflop');
+    startTurnTimer();
+    if (S.turnPid === S.myId) {
+      // C'est notre tour : on referme tout panneau "aperçu" pour ne pas
+      // interférer avec la barre d'actions normale (et tous ses effets).
+      S._preActionOpen = false;
+      // Pré-action armée (comme l'officiel) : si une action a été armée avant
+      // notre tour et qu'elle est encore valide, on la joue directement sans
+      // afficher les boutons live.
+      console.log('[prearm] MON TOUR — préAction=' + (S._preAction || '(vide)') + ' gameState=' + S.gameState);
+      if (S._preAction) { var _pdid = _runPreAction(); console.log('[prearm] _runPreAction → ' + _pdid); S._preAction = ''; if (_pdid) return; }
+      // Mode auto PERSISTANT (Manuel/Auto Check-Call/Auto Check-Fold) :
+      // si un mode auto est actif, jouer l'action sans afficher les boutons.
+      // Le mode reste actif (pas de désarmement), comme le client officiel.
+      if (_playAutoMode()) return;
+      renderMyTurnActions();
+      window.setMyTurnActive(true);
+      // Play the audio ding-dong (from sounds.mjs, attached to window)
+      // AND trigger the visual cue (tab title blink, browser notification).
+      // These used to be one call but the visual function shadowed the
+      // audio one, silencing the chime entirely.
+      if (typeof window.notifyMyTurn === 'function') window.notifyMyTurn();
+      notifyMyTurnVisuals();
+      hapticBuzz([90, 50, 90]); // "your turn" double-buzz
+    } else {
+      clearTurnNotif();
+      window.setMyTurnActive(false);
+      // Zoom-follow : planifie le cadrage du siège actif (parité QML §3.4)
+      try { if (window._zoomFollowTurn) window._zoomFollowTurn(S.turnPid, S.gameTimeout); } catch (_e) {}
+      // isHtml=true : HTML interne sûr, pas du contenu utilisateur
+      window.renderGameWaiting(
+        '<span style="font-family:inherit">' + esc(window.getPlayerName(S.turnPid)) + '</span>'
+        + '<span class="thinking-dots"><span></span><span></span><span></span></span>',
+        true);
+    }
+    return;
+}
+
+function onPlayersActionDone(sub) {
+    // gameId=1, playerId=2, gameState=3, playerAction=4, totalPlayerBet=5, playerMoney=6, highestSet=7, minimumRaise=8
+    const pid    = Proto.u32(sub, 2);
+    const action = Proto.u32(sub, 4);
+    const bet    = Proto.u32(sub, 5);
+    const money  = Proto.u32(sub, 6);
+    S.highestBet   = Proto.u32(sub, 7);
+    S.minRaise     = Proto.u32(sub, 8);
+    // Zoom-follow : le joueur a agi → pan en attente exécuté tout de suite
+    try { if (window._zoomFollowActed) window._zoomFollowActed(); } catch (_e) {}
+    try {
+      if (window._handlog) window._handlog.onAction({ pid: pid, actionCode: action, totalBet: bet });
+    } catch (_e) {}
+    const aLabels = ['','Fold','Check','Call','Bet','Raise','All-in'];
+    const aLabel  = aLabels[action] || '?';
+    if (S.seatData[pid]) {
+      S.seatData[pid].bet    = bet;
+      S.seatData[pid].money  = money;
+      S.seatData[pid].folded = action === 1;
+      S.seatData[pid].action = aLabel;
+    }
+    S.pot = S.collectedPot;
+    for (const p of S.seats) if (S.seatData[p]) S.pot += S.seatData[p].bet;
+    window.setPot(S.pot);
+    window.logAction(window.getPlayerName(pid) + ': ' + aLabel + (bet ? ' ' + bet : ''), true);
+    speak(voiceActionPhrase(action, pid, bet));
+    if (pid === S.myId) {
+      const myMon = (S.seatData[S.myId] || {}).money || 0;
+      if (document.getElementById('g-mystack')) document.getElementById('g-mystack').textContent = myMon > 0 ? fmtChips(myMon) : '';
+    }
+    window.renderSeats();
+    // Sons d'action : 6 sons PokerTH distincts (fold/check/call/bet/raise/
+    // all-in) via window.playActionSound(), repli automatique sur les bips
+    // synthetises si un sample n'est pas charge. La pop visuelle
+    // window.animateAllIn() reste appairee a l'audio pour l'all-in.
+    if (typeof window.playActionSound === 'function') {
+      window.playActionSound(action);
+    } else if (action === 6) {
+      if (typeof window.notifyAllIn === 'function') window.notifyAllIn();
+    } else {
+      window.notifyAction();
+    }
+    window.flashActionLabel(pid);
+    if (action === 6) window.animateAllIn(pid); // All-in
+    if (bet > 0) {
+      // Fix #2: chip starts moving immediately (was 80ms) so the
+      // user's click → visual response loop feels instant.
+      animateChipToPot(pid, bet);
+      // Fix #1: pot updates 200ms after instead of 550ms. The chip
+      // animation lasts ~700ms so the pot grows roughly as the
+      // chip arrives — looks coherent without the long lag that
+      // made rapid bot turns feel choppy.
+      setTimeout(function(){
+        window.animatePot(S.pot);
+        window.updatePotSize(S.pot);
+      }, 200);
+    }
+    return;
+}
+
+function onDealFlop(sub) {
+    // DealFlopCardsMessage : deux formats possibles selon la version proto.
+    // Essai A : gameId=1, card1=2, card2=3, card3=4 (proto officiel actuel)
+    // Essai B : card1=1, card2=2, card3=3 (ancienne version, sans gameId)
+    // FIX bug rare : on utilise u32orNull pour DISTINGUER "champ absent" (null) de "valeur 0" (le 2♦).
+    // L'ancienne logique avec u32 (défaut 0) confondait les deux et pouvait accepter fA = [card2, card3, 0]
+    // dans le format ancien, traitant 0 comme une 3e carte valide (le 2♦) à tort.
+    const fA = [Proto.u32orNull(sub,2), Proto.u32orNull(sub,3), Proto.u32orNull(sub,4)];
+    const fB = [Proto.u32orNull(sub,1), Proto.u32orNull(sub,2), Proto.u32orNull(sub,3)];
+    const allFields = Object.keys(sub).sort((a,b)=>+a-+b);
+    const allVals = allFields.map(f => f+'='+Proto.u32(sub,+f)).join(' ');
+    // Une carte est valide si elle est PRÉSENTE (≠null) et dans la plage 0..51
+    const isValidCard = n => n !== null && n >= 0 && n <= 51;
+    const allValid = a => a.every(isValidCard);
+    // Préférer fA (format officiel) ; basculer sur fB si fA incomplet ; sinon garder fA tel quel (cardToHtml affichera des dos)
+    S.commCards = allValid(fA) ? fA : (allValid(fB) ? fB : fA);
+    const dbg = 'FLOP sub:'+allVals+' →['+S.commCards.join(',')+']';
+    if (document.getElementById('g-debug')) document.getElementById('g-debug').textContent = dbg;
+    try { if (window._handlog) window._handlog.onFlop(S.commCards.slice(0, 3)); } catch (_e) {}
+    document.getElementById('g-round').textContent = t('flop');
+    S.gameState = 1;
+    // Collect preflop bets into pot
+    let flopBets = 0;
+    for (const p of S.seats) if (S.seatData[p] && S.seatData[p].bet) { flopBets += S.seatData[p].bet; S.seatData[p].bet = 0; }
+    S.collectedPot += flopBets;
+    S.pot = S.collectedPot;
+    // FIX 2024-XX : reset des stats par round.
+    // Sans ce reset, le premier joueur à parler au flop voyait son
+    // bouton afficher "Call X" (X étant la mise du round précédent)
+    // alors que personne n'avait encore misé → le serveur rejetait
+    // (rejectedActionNotAllowed) et le joueur restait coincé.
+    S.highestBet = 0;
+    S.minRaise   = 0;
+    window.setPot(S.pot);
+    const flopStr = S.commCards.filter(n=>n!=null).map(n=>cardName(n,true)).join(', ');
+    renderComm(true); // flip animation
+    window.renderSeats();
+    setTimeout(renderHandStrength, 150); // force de la main au flop (was 500ms)
+    setTimeout(renderOddsMonitor, 220); // moniteur d'odds (flop)
+    const _lhPotF = S.pot;
+    window.logAction(function(){ return '--- ' + t('flop') + ' [' + flopStr + '] · ' + t('pot') + ' ' + _groupThousands(_lhPotF) + ' ---'; });
+    window.notifyCard(); window.notifyCard(); window.notifyCard();
+    return;
+}
+
+function onDealTurn(sub) {
+    // Fix : utiliser sub[2] pour détecter la présence du champ
+    const tv = sub[2] !== undefined ? Proto.u32(sub, 2) : Proto.u32(sub, 1);
+    S.commCards.push(tv);
+    try { if (window._handlog) window._handlog.onTurn(tv); } catch (_e) {}
+    document.getElementById('g-round').textContent = t('turn');
+    S.gameState = 2;
+    let turnBets = 0;
+    for (const p of S.seats) if (S.seatData[p] && S.seatData[p].bet) { turnBets += S.seatData[p].bet; S.seatData[p].bet = 0; }
+    S.collectedPot += turnBets;
+    S.pot = S.collectedPot;
+    // Voir DealFlop pour le commentaire — reset des stats par round
+    // pour éviter que le bouton Call affiche un montant périmé.
+    S.highestBet = 0;
+    S.minRaise   = 0;
+    window.setPot(S.pot);
+    const tvCard = S.commCards[3]; const tvName = tvCard != null ? cardName(tvCard, true) : '?';
+    const _lhPotT = S.pot;
+    window.logAction(function(){ return '--- ' + t('turn') + ' [' + tvName + '] · ' + t('pot') + ' ' + _groupThousands(_lhPotT) + ' ---'; });
+    renderComm(true); // flip animation
+    setTimeout(renderHandStrength, 150); // force de la main au turn (was 500ms)
+    setTimeout(renderOddsMonitor, 220); // moniteur d'odds (turn)
+    window.notifyCard();
+    return;
+}
+
+function onDealRiver(sub) {
+    // Fix : sub[2] présent ? utiliser field 2 ; sinon field 1
+    // rv || fallback est FAUX pour rv=0 (carte 2♦)
+    const rv = sub[2] !== undefined ? Proto.u32(sub, 2) : Proto.u32(sub, 1);
+    S.commCards.push(rv);
+    try { if (window._handlog) window._handlog.onRiver(rv); } catch (_e) {}
+    document.getElementById('g-round').textContent = t('river');
+    S.gameState = 3;
+    let rvBets = 0;
+    for (const p of S.seats) if (S.seatData[p] && S.seatData[p].bet) { rvBets += S.seatData[p].bet; S.seatData[p].bet = 0; }
+    S.collectedPot += rvBets;
+    S.pot = S.collectedPot;
+    // Voir DealFlop pour le commentaire — reset des stats par round
+    // pour éviter que le bouton Call affiche un montant périmé.
+    S.highestBet = 0;
+    S.minRaise   = 0;
+    window.setPot(S.pot);
+    const rvCard = S.commCards[4]; const rvName = rvCard != null ? cardName(rvCard, true) : '?';
+    const _lhPotR = S.pot;
+    window.logAction(function(){ return '--- ' + t('river') + ' [' + rvName + '] · ' + t('pot') + ' ' + _groupThousands(_lhPotR) + ' ---'; });
+    renderComm(true, true); // flip animation + dramatic river
+    setTimeout(renderHandStrength, 200); // force de la main à la river (was 600ms)
+    setTimeout(renderOddsMonitor, 240); // moniteur d'odds (river)
+    window.playTone(350, 0.08, 0.08); setTimeout(function(){ window.notifyCard(); }, 200);
+
+    return;
+}
+
+function onAllInShowCards(sub) {
+    // Show cards of all-in players during the hand
+    // AllInShowCardsMessage: gameId=1, playersAllIn=2 (repeated PlayerAllIn {playerId=1, allInCard1=2, allInCard2=3})
+    const allIns = sub[2] || [];
+    for (const ab of allIns) {
+      const a   = Proto.decode(ab);
+      const pid = Proto.u32(a, 1);
+      // FIX : un joueur sans carte révélée → null (pas 0 qui serait le 2♣)
+      const c1  = Proto.u32orNull(a, 2);
+      const c2  = Proto.u32orNull(a, 3);
+      if (S.seatData[pid]) { S.seatData[pid].card1 = c1; S.seatData[pid].card2 = c2; }
+      try { if (window._handlog) window._handlog.onRevealCards([{ pid: pid, card1: c1, card2: c2 }]); } catch (_e) {}
+    }
+    window.renderSeats();
+    return;
+}
+
+function onEndOfHandShow(sub) {
+    window._ownReveal = true; // showdown : mes cartes sont publiques, on les montre
+    // Zoom-follow : suspension du zoom pour la vue d'ensemble du showdown
+    try { if (window._zoomShowdownSuspend) window._zoomShowdownSuspend(); } catch (_e) {}
+    try { renderMyCards(); } catch (e) {}
+    const results = sub[2] || [];
+    const winners = [];
+    for (const rb of results) {
+      const r   = Proto.decode(rb);
+      const pid = Proto.u32(r, 1);
+      // FIX : joueur qui a foldé ne révèle pas ses cartes → null (pas 0 = 2♣ fantôme)
+      const c1  = Proto.u32orNull(r, 2);
+      const c2  = Proto.u32orNull(r, 3);
+      const won = Proto.u32(r, 5);
+      const cash= Proto.u32(r, 6);
+      if (S.seatData[pid]) {
+        S.seatData[pid].money  = cash;
+        S.seatData[pid].card1  = c1;
+        S.seatData[pid].card2  = c2;
+        S.seatData[pid].action = won ? '🏆 +' + won : '';
+      }
+      // Abattage : cartes révélées + nom de la combinaison. Le label vient
+      // de evaluateBestHand (clés hs* déjà traduites dans les 36 langues).
+      // Joueurs couchés avant l'abattage : c1/c2 == null → pas de ligne.
+      if (c1 != null && c2 != null) {
+        const _bd = S.commCards.slice(); // fige le board de CETTE main
+        window.logAction(function(){
+          var ev = (typeof evaluateBestHand === 'function') ? evaluateBestHand([c1, c2], _bd) : null;
+          return t('logShowdown', {
+            name:  window.getPlayerName(pid),
+            cards: cardName(c1, false) + ' ' + cardName(c2, false),
+            hand:  ev ? ev.label : ''
+          });
+        });
+      }
+      if (won > 0) {
+        winners.push({ pid, won, cash, c1, c2 });
+        // Stats si c'est moi
+        if (pid === S.myId) {
+          // Gain NET de la main = stack final − stack au début de la main
+          // (et NON le pot brut « won », qui inclut ma propre mise).
+          var myStartHand = (S._myStackAtHandStart != null) ? S._myStackAtHandStart : ((S._stats.startMoney || 0) + S._stats.totalGain);
+          var netWin = cash - myStartHand;
+          var myPair2 = S.myCards.map && S.myCards.map(function(c){ return { r: cardName(c,false).slice(0,-1), s: cardName(c,false).slice(-1), red: ['♥','♦'].indexOf(cardName(c,false).slice(-1))>=0 }; });
+          recordHand(true, netWin, myPair2);
+        }
+        // Gain affiché dans le Journal 📋 (pas dans le chat, pour ne pas le noyer)
+        window.logAction('🏆 ' + window.getPlayerName(pid) + ' +' + _groupThousands(won));
+    speak(t('voiceWins', { name: window.getPlayerName(pid), n: fmtChipsVoice(won) }));
+      }
+    }
+    // Enregistrer la perte si je ne suis pas dans les gagnants
+    if (!winners.some(function(w){ return w.pid === S.myId; })) {
+      var myEndMon = (S.seatData[S.myId] || {}).money;
+      if (myEndMon != null) {
+        var myStartMon = (S._myStackAtHandStart != null) ? S._myStackAtHandStart : ((S._stats.startMoney || 0) + S._stats.totalGain);
+        var myLoss = myEndMon - myStartMon;
+        var myPairLoss = S.myCards.map && S.myCards.map(function(c){
+          return { r: cardName(c,false).slice(0,-1), s: cardName(c,false).slice(-1), red: ['♥','♦'].indexOf(cardName(c,false).slice(-1))>=0 };
+        });
+        recordHand(false, myLoss, myPairLoss);
+      }
+    }
+    // Options avancées : marquer les perdants du showdown (cartes révélées
+    // mais pas gagnantes) pour estomper leurs cartes (fadeOutLosingCards, ON par défaut).
+    try {
+      window._sdLosers = new Set();
+      if (localStorage.getItem('pth_fade_losers') !== '0') {
+        var _winPids = {};
+        winners.forEach(function (w) { _winPids[w.pid] = 1; });
+        for (var _lp in S.seatData) {
+          var _ls = S.seatData[_lp];
+          if (_ls && _ls.card1 != null && _ls.card2 != null && !_winPids[_lp])
+            window._sdLosers.add(parseInt(_lp, 10));
+        }
+      }
+    } catch (e) {}
+    // PlayerWinnerOverlay QML : marquer les sièges gagnants jusqu'à la main suivante.
+    try { window._sdWinners = new Set(winners.map(function (w) { return w.pid; })); } catch (e) {}
+    // WinningHandBadge QML (bible §9) : libellé de la main gagnante sous
+    // les community cards pendant TOUT le showdown, au format Qt-Widgets
+    // anglais (winningHandText). Indépendant de la fenêtre du gagnant
+    // (option winner_popup) — comme le client officiel.
+    try {
+      var _whBd = S.commCards.filter(function (n) { return n != null; });
+      var _whLabel = '';
+      if (_whBd.length >= 3) {
+        for (var _whI = 0; _whI < winners.length && !_whLabel; _whI++) {
+          var _whW = winners[_whI];
+          if (_whW.c1 != null && _whW.c2 != null) {
+            var _whEv = evaluateBestHand([_whW.c1, _whW.c2], _whBd);
+            if (_whEv) _whLabel = _qmlWinningHandText(_whEv);
+          }
+        }
+      }
+      if (_whLabel) showWinHandBadge(_whLabel);
+    } catch (e) {}
+    try {
+      if (window._handlog) {
+        var _bdSD = S.commCards.slice();
+        var _hlResults = [];
+        for (var _ri = 0; _ri < results.length; _ri++) {
+          var _rr = Proto.decode(results[_ri]);
+          var _rpid = Proto.u32(_rr, 1);
+          var _rc1 = Proto.u32orNull(_rr, 2);
+          var _rc2 = Proto.u32orNull(_rr, 3);
+          var _rwon = Proto.u32(_rr, 6);
+          var _htext = null, _hint = null;
+          if (_rc1 != null && _rc2 != null && typeof evaluateBestHand === 'function') {
+            var _ev = evaluateBestHand([_rc1, _rc2], _bdSD);
+            if (_ev) { _htext = _ev.label || null; }
+          }
+          _hlResults.push({ pid: _rpid, card1: _rc1, card2: _rc2, won: _rwon, handText: _htext, handInt: _hint });
+        }
+        window._handlog.onShowdown(_hlResults, _hlEliminatedPids(), null);
+        try { if (typeof window._hudRefresh === 'function') window._hudRefresh(); } catch (_e) {}
+      }
+    } catch (_e) {}
+    S.pot = 0; window.setPot(0);
+    window.renderSeats();
+    // Animations de fin de main
+    var iWon = winners.some(function(w){ return w.pid === S.myId; });
+    var bigWin = winners.reduce(function(s,w){ return s + w.won; }, 0) > 500;
+    if (iWon) {
+      var ov = document.getElementById('g-winner-overlay');
+      var cx = ov ? ov.getBoundingClientRect().left + ov.offsetWidth/2 : window.innerWidth/2;
+      var cy = ov ? ov.getBoundingClientRect().top  + 80 : window.innerHeight * 0.3;
+      window.burstStars(cx, cy, 16);
+      setTimeout(function(){ window.burstStars(cx - 80, cy + 40, 8); }, 300);
+      setTimeout(function(){ window.burstStars(cx + 80, cy + 40, 8); }, 500);
+      if (bigWin) setTimeout(function(){ window.launchConfetti(70); }, 200);
+    }
+    // Showdown flip cartes adversaires
+    setTimeout(window.animateShowdownCards, 300);
+    // Reset glow pot
+    setTimeout(function(){
+      var p1 = document.getElementById('g-pot');
+      var p2 = document.getElementById('g-potbar');
+      if (p1) p1.classList.remove('pot-huge');
+      if (p2) p2.classList.remove('pot-huge');
+    }, 800);
+    window.logEliminations();
+    _snapshotHandResults();
+    showWinnerOverlay(winners);
+    window.renderGameWaiting('Prochaine main...');
+    return;
+}
+
+function onEndOfHandHide(sub) {
+    // playerId=2, moneyWon=3, playerMoney=4
+    const pid  = Proto.u32(sub, 2);
+    const won  = Proto.u32(sub, 3);
+    const cash = Proto.u32(sub, 4);
+    if (S.seatData[pid]) { S.seatData[pid].money = cash; if(won) S.seatData[pid].action = '+'+won; }
+    if (won > 0) window.logAction('🏆 ' + window.getPlayerName(pid) + ' +' + _groupThousands(won));
+    try { if (window._handlog) window._handlog.onHandHideEnd({ pid: pid, won: won, round: (typeof S.gameState === 'number' ? S.gameState : undefined), eliminated: _hlEliminatedPids(), gameOverPid: null }); } catch (_e) {}
+    try { if (typeof window._hudRefresh === 'function') window._hudRefresh(); } catch (_e) {}
+    try { window._sdWinners = won > 0 ? new Set([pid]) : new Set(); } catch (e) {}
+    // Enregistrer le résultat de la main pour moi (fin sans abattage).
+    var myHideMon = (S.seatData[S.myId] || {}).money;
+    if (myHideMon != null) {
+      var myHideStart = (S._myStackAtHandStart != null) ? S._myStackAtHandStart : ((S._stats.startMoney || 0) + S._stats.totalGain);
+      var myHideNet   = myHideMon - myHideStart;
+      var myPairHide  = S.myCards.map && S.myCards.map(function(c){
+        return { r: cardName(c,false).slice(0,-1), s: cardName(c,false).slice(-1), red: ['♥','♦'].indexOf(cardName(c,false).slice(-1))>=0 };
+      });
+      if (pid === S.myId) {
+        // J'ai gagné sans abattage (tout le monde s'est couché) → victoire comptée.
+        recordHand(true, myHideNet, myPairHide);
+      } else if (myHideNet < 0) {
+        // Quelqu'un d'autre a gagné et j'ai perdu des jetons (blinds/mise).
+        recordHand(false, myHideNet, myPairHide);
+      }
+    }
+    S.pot = 0; window.setPot(0);
+    window.renderSeats();
+    // Détection élimination (stack à 0)
+    for (var _ep of S.seats) {
+      if (_ep !== S.myId && S.seatData[_ep] && S.seatData[_ep].money === 0) {
+        setTimeout(function(p){ window.animatePlayerEliminated(p); }, 600, _ep);
+      }
+    }
+    window.logEliminations();
+    if (won > 0) { _snapshotHandResults(); showWinnerOverlay([{pid, won, cash, c1:null, c2:null}]); }
+    // « Show » volontaire : main terminée SANS abattage → mes cartes
+    // n'ont pas été révélées. Réseau seulement (le FakeServer offline
+    // ignore le type 51) et jamais en spectateur.
+    if (!S._amSpectator && !window._offlineMode && S.myCards[0] != null) _setCanShow(true);
+    return;
+}
+
+function onYourActionRejected(sub) {
+    // YourActionRejectedMessage: gameId=1, gameState=2, yourAction=3,
+    //   yourRelativeBet=4, rejectionReason=5
+    // Sent by the server when our MyActionRequest is invalid (game state
+    // drift, no longer our turn, or action not allowed). Without this
+    // handler the UI used to hang on "Action envoyée" and the server
+    // would silently time-out our turn → counted as Fold.
+    // Most common trigger: 4-player all-in cascades where local
+    // gameState lags the server's by one round.
+    const rejGameState = Proto.u32(sub, 2);
+    const rejAction    = Proto.u32(sub, 3);
+    const rejBet       = Proto.u32(sub, 4);
+    const reason       = Proto.u32(sub, 5);
+    const actNames     = ['','Fold','Check','Call','Bet','Raise','All-in'];
+    const reasonLabels = {
+      1: t('rejInvalidState'),
+      2: t('rejNotYourTurn'),
+      3: t('rejNotAllowed'),
+    };
+    const reasonStr = reasonLabels[reason] || ('code ' + reason);
+    const actStr    = actNames[rejAction] || ('?' + rejAction);
+    window.logAction(function(){
+      var rl = { 1: t('rejInvalidState'), 2: t('rejNotYourTurn'), 3: t('rejNotAllowed') };
+      var rs = rl[reason] || ('code ' + reason);
+      return '⚠ ' + actStr + (rejBet ? ' ' + rejBet : '') + ' — ' + rs;
+    });
+    window.addGameChat(null, '⚠ ' + t('actionRejected') +
+                      ' (' + actStr + ') — ' + reasonStr, 'sys', { prefix: '⚠ ', key: 'actionRejected', suffix: ' (' + actStr + ') — ' + reasonStr });
+    // If we're still the active player according to the local state,
+    // the server may give us a second chance — re-render the action
+    // buttons so the user can retry. The local turn timer was already
+    // stopped by doAction; restart it so the user has the full delay
+    // again instead of a stale countdown.
+    if (S.turnPid === S.myId && !S._amSpectator) {
+      renderMyTurnActions();
+      startTurnTimer();
+    }
+    return;
+}
+
+function onAfterHandShowCards(sub) {
+    // Show volontaire d'un joueur (rediffusion serveur du
+    // ShowMyCardsRequest). PlayerResult : playerId=1, resultCard1=2,
+    // resultCard2=3 (moneyWon/playerMoney ignorés : déjà appliqués par
+    // EndOfHand*). Même chemin de révélation que le showdown :
+    // seatData.card1/2 + window.renderSeats + ligne logShowdown.
+    const _sPr  = Proto.sub(sub, 1);
+    const _sPid = Proto.u32(_sPr, 1);
+    const _sC1  = Proto.u32orNull(_sPr, 2);
+    const _sC2  = Proto.u32orNull(_sPr, 3);
+    if (_sPid && _sC1 != null && _sC2 != null) {
+      if (S.seatData[_sPid]) { S.seatData[_sPid].card1 = _sC1; S.seatData[_sPid].card2 = _sC2; }
+      if (_sPid === S.myId) { window._ownReveal = true; try { renderMyCards(); } catch (e) {} _setCanShow(false); }
+      try { window.renderSeats(); } catch (e) {}
+      const _sBd = S.commCards.slice();
+      window.logAction(function () {
+        var ev = (typeof evaluateBestHand === 'function') ? evaluateBestHand([_sC1, _sC2], _sBd) : null;
+        return t('logShowdown', {
+          name:  window.getPlayerName(_sPid),
+          cards: cardName(_sC1, false) + ' ' + cardName(_sC2, false),
+          hand:  ev ? ev.label : ''
+        });
+      });
+    }
+    return;
+}
+
+function onEndOfGame(sub) {
+    const winnerPid = Proto.u32(sub, 2);
+    const _egPlace = Proto.u32(sub, 3);    // offline: classement à l'élimination (0 si absent)
+    const _egElim  = !!Proto.u32(sub, 4);  // offline: joueur humain éliminé
+    addChat(null, t('gameOverMsg'), 'sys', { key: 'gameOverMsg' });
+    // Keep amInGame true until the user dismisses the overlay, so the
+    // table screen stays visible behind it. Stop the turn timer and
+    // suppress any further winner pop-ups.
+    stopTurnTimer();
+    dismissWinner();
+    try { _setCanShow(false); } catch (_e) {}
+    showEndGameOverlay(winnerPid, { eliminated: _egElim, place: _egPlace });
+    try { if (window._handlog) window._handlog.onGameOver(winnerPid); } catch (_e) {}
+    // Retour automatique au lobby (parité NetAutoLeaveGameAfterFinish,
+    // bible §15) — OPT-IN, parties réseau seulement. 12 s pour laisser
+    // lire l'écran de fin ; annulé si l'utilisateur quitte avant
+    // (leaveGame purge le timer).
+    if (window._advGet('auto_leave', false) && !window._offlineMode) {
+      try { clearTimeout(window._autoLeaveTimer); } catch (_e) {}
+      window._autoLeaveTimer = setTimeout(function () {
+        try { if (S.amInGame && window.App && App.leaveGame) App.leaveGame(); } catch (_e) {}
+      }, 12000);
+    }
+    return;
+}
+
+export { onGameStartInitial, onHandStart, onPlayersTurn, onPlayersActionDone, onDealFlop, onDealTurn, onDealRiver, onAllInShowCards, onEndOfHandShow, onEndOfHandHide, onYourActionRejected, onAfterHandShowCards, onEndOfGame };
+
+for (const [k, v] of Object.entries({ onGameStartInitial, onHandStart, onPlayersTurn, onPlayersActionDone, onDealFlop, onDealTurn, onDealRiver, onAllInShowCards, onEndOfHandShow, onEndOfHandHide, onYourActionRejected, onAfterHandShowCards, onEndOfGame }))
   window[k] = v;
