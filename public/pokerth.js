@@ -3131,45 +3131,17 @@ const App = (() => {
 
       // Le serveur s'annonce → on envoie notre Init
       // ── Kick petitions / vote-kick ──
-      case T.StartKickPetition: {
-        _petStart({
-          gameId:     Proto.u32(sub, 1),
-          petitionId: Proto.u32(sub, 2),
-          proposer:   Proto.u32(sub, 3),
-          target:     Proto.u32(sub, 4),
-          timeout:    Proto.u32(sub, 5),
-          needed:     Proto.u32(sub, 6),
-        });
-        break;
-      }
-      case T.KickPetitionUpdate: {
-        _petUpdate(Proto.u32(sub, 2), Proto.u32(sub, 3), Proto.u32(sub, 4), Proto.u32(sub, 5));
-        break;
-      }
-      case T.VoteKickReply: {
-        _petVoteReply(Proto.u32(sub, 2), Proto.u32(sub, 3));
-        break;
-      }
-      case T.EndKickPetition: {
-        _petEnd(Proto.u32(sub, 2), Proto.u32(sub, 5), Proto.u32(sub, 6));
-        break;
-      }
-      case T.AskKickDenied: {
-        _petAskDenied(Proto.u32(sub, 3));
-        break;
-      }
+      case T.StartKickPetition: { onStartKickPetition(sub); break; } // [9g-C2] → net/msg-social.mjs
+      case T.KickPetitionUpdate: { onKickPetitionUpdate(sub); break; } // [9g-C2] → net/msg-social.mjs
+      case T.VoteKickReply: { onVoteKickReply(sub); break; } // [9g-C2] → net/msg-social.mjs
+      case T.EndKickPetition: { onEndKickPetition(sub); break; } // [9g-C2] → net/msg-social.mjs
+      case T.AskKickDenied: { onAskKickDenied(sub); break; } // [9g-C2] → net/msg-social.mjs
 
       // ── Game invitation: the host invited us to a table ──
-      case T.InviteNotify: {
-        // InviteNotify: gameId=1, playerIdWho=2 (invitee), playerIdByWhom=3 (host)
-        if (Proto.u32(sub, 2) === S.myId) {
-          _inviteShow({ gameId: Proto.u32(sub, 1), byWhom: Proto.u32(sub, 3) });
-        }
-        break;
-      }
+      case T.InviteNotify: { onInviteNotify(sub); break; } // [9g-C2] → net/msg-social.mjs
       // Someone declined an invite WE sent — outgoing invites not yet a
       // web feature, so nothing to surface; swallow to avoid the default.
-      case T.RejectInvNotify: { break; }
+      case T.RejectInvNotify: { onRejectInvNotify(sub); break; } // [9g-C2] → net/msg-social.mjs
 
       case T.Announce: {
         const pv    = Proto.sub(sub, 1); // protocolVersion (réseau, ex: 5.1)
@@ -3735,80 +3707,10 @@ const App = (() => {
       }
 
       // Message de chat
-      case T.Chat: {
-        const pid  = Proto.u32(sub, 2);
-        const ctype= Proto.u32(sub, 3);
-        const text = Proto.str(sub, 4);
-        const who  = S.players[pid] || (pid ? `#${pid}` : null);
-        const cls  = ctype === 3 ? 'bc' : pid === S.myId ? 'mine' : '';
-        // Logging de tous les messages chat (debug réactions)
-        // Intercepter les réactions (préfixe ASCII [R])
-        var _reEmoji = null;
-        if (text && text.startsWith('[R]') && text.length < 12) _reEmoji = text.slice(3);
-        else if (text && text.startsWith('/emoji ') && text.length < 18) _reEmoji = text.slice(7).trim();
-        if (_reEmoji) {
-          if (pid !== S.myId) {
-            handleIncomingReaction(pid, _reEmoji, 'chat');
-            // Pas d'affichage dans le chat — animation seule
-          }
-        } else if (!(pid === S.myId && ctype !== 3)) {
-          // Son de notification du chat LOBBY (lobbychatnotify.wav) —
-          // messages d'autrui uniquement (chatTypeLobby = 0)
-          if (ctype === 0 && pid && pid !== S.myId) {
-            try { if (typeof notifyLobbyChat === 'function') notifyLobbyChat(); } catch (_e) {}
-          }
-          // Mon propre message : déjà affiché en optimiste à l'envoi (classe 'mine').
-          // Le serveur le rediffuse à tous, expéditeur compris → on ignore l'écho
-          // pour ne pas afficher la ligne en double (broadcast ctype===3 conservé).
-          addChat(who, text, cls);
-        }
-        break;
-      }
-      case T.TimeoutWarning: {
-        const sec = Proto.u32(sub, 2);
-        S._timerSec = sec; // Sync avec le serveur
-        // Si le serveur donne plus de temps que prévu, ajuster le total
-        if (sec > S._timerTot) S._timerTot = sec;
-        addChat(null, t('timerHurry', { s: sec }), 'sys', { key: 'timerHurry', params: { s: sec } });
-        // Auto-reset timeout
-        const rtm = Proto.encode([[1,0,68],[69,2,new Uint8Array(0)]]);
-        send(rtm);
-        break;
-      }
+      case T.Chat: { onChat(sub); break; } // [9g-C2] → net/msg-social.mjs
+      case T.TimeoutWarning: { onTimeoutWarning(sub); break; } // [9g-C2] → net/msg-social.mjs
 
-      case T.ChatReject: {
-        const rejText = Proto.str(sub, 1);
-        if (S._lastMsgWasReaction) {
-          // Réaction rejetée (mode LAN/invité) — afficher badge local uniquement
-          S._lastMsgWasReaction = false;
-          if (!S._chatRejectShown) {
-            S._chatRejectShown = true;
-            // Note discrète dans la barre de réactions
-            var rb = document.getElementById('reaction-bar');
-            if (rb) {
-              var note = document.createElement('div');
-              note.style.cssText = 'font-size:0.52rem;color:var(--orange);text-align:center;width:100%;margin-top:2px;font-style:italic';
-              note.textContent = S._currentLoginMode === 'lan'
-                ? t('reactLanLocalNote')
-                : t('reactLocalOnlyNote');
-              rb.appendChild(note);
-              setTimeout(function(){ note.style.opacity='0'; note.style.transition='opacity 1s'; setTimeout(function(){ note.remove(); }, 1000); }, 5000);
-            }
-          }
-        } else {
-          S._lastMsgWasReaction = false;
-          if (!S.amInGame) addChat(null, t('chatRefusedReason', { r: rejText }), 'sys', { key: 'chatRefusedReason', params: { r: rejText } });
-          else if (!S._chatRejectShown) {
-            S._chatRejectShown = true;
-            if (S._currentLoginMode === 'lan') {
-              addGameChat(null, t('chatLanDisabled'), 'sys', { key: 'chatLanDisabled' });
-            } else {
-              addGameChat(null, t('chatServerRefused'), 'sys', { key: 'chatServerRefused' });
-            }
-          }
-        }
-        break;
-      }
+      case T.ChatReject: { onChatReject(sub); break; } // [9g-C2] → net/msg-social.mjs
 
       case T.JoinGameAck: {
         S.gId = Proto.u32(sub, 1);
@@ -11344,7 +11246,7 @@ function renderPlayersList() {
   });
 })();
 
-;(function(){ window.BUILD_VERSION='0.3.856-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.857-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
