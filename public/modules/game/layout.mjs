@@ -172,11 +172,16 @@ function _qmlLandscapeLayout(oppCnt, zW, zH, compact, zoomMul, spectating) {
     // que gap=4 px de jour vertical entre boxes voisines -> a s eleve
     // (fenetres larges, 8-9 adversaires) les paires laterales L_upper/
     // L_lower semblent fusionner (constate 1719x730 M=9 : 12 px de jour a
-    // s=1.651). Slack vertical PROPORTIONNEL (14 % de la hauteur de box,
-    // min 4 px) : ~25 px de jour dans ces cas pour ~6 % de taille en moins ;
-    // strictement sans effet quand la bisection n'est pas contrainte par
-    // les paires (compact, petites fenetres, M<=5 : memes s qu'avant).
-    var yNeeded = s * oppBaseH + Math.max(gap, 0.14 * s * oppBaseH);
+    // s=1.651). Slack vertical PROPORTIONNEL, min 4 px, strictement sans
+    // effet quand la bisection n'est pas contrainte par les paires
+    // (compact, petites fenetres, M<=5 : memes s qu'avant).
+    // 2e passe (narmod 19/07) : 0.14·boxH (~12·s) ne suffisait pas au
+    // BADGE GAGNANT (.seat-winner-badge : 16 px + offset 6, x s) — masque
+    // entre paires serrees (constate 1883x963 M=9). Budget = badge 16 +
+    // offset 6 + marge 4 = 26·s (~0.31·boxH), le badge du showdown tient
+    // desormais entre deux boxes voisines. ~7 % de taille en moins dans
+    // les configs denses concernees.
+    var yNeeded = s * oppBaseH + Math.max(gap, 26 * s);
     for (var iPair = 1; iPair < ringSeats; iPair++) {
       var v1 = slotVec(g, ringFirst + (iPair - 1) * stepDeg, false);
       var v2 = slotVec(g, ringFirst + iPair * stepDeg, false);
