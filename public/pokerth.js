@@ -3607,17 +3607,12 @@ const App = (() => {
         if (S._statsOpen) renderStats();
       }).catch(function(){});
   }
-  var _myStackAtHandStart = null;    // mon stack réel au début de la main (avant blinds)
-  var _seatStackAtHandStart = {};    // {pid: stack début de main} → net exact de chaque joueur
   // Snapshot des résultats figés à la FIN de la main (avant que la main
   // suivante ne réinitialise les stacks). Lu par showWinnerOverlay() pour
   // afficher des nets corrects, même si la donne suivante a déjà démarré.
   // {pid: {money, net, card1, card2, folded, inHand}}
-  var _handResultSnapshot = {};
 
   // ── Positions des sièges (pour les animations) ──
-  var _lastPixPos = [];  // [{top, left}] dans l'ordre de rotated
-  var _potCenter  = {x:0, y:0}; // centre du pot à l'écran
   let amInGame  = false;
   let myName    = '';
 
@@ -3748,27 +3743,26 @@ const App = (() => {
   // Re-render the pot label from the last known pot value, in the current
   // mode. We keep the last numeric pot in _lastPotValue (set by setPot) so a
   // mode switch can repaint without a server message.
-  var _lastPotValue = null;
   function setPot(pot) {
-    var _prevPot = (typeof _lastPotValue === 'number') ? _lastPotValue : 0;
-    _lastPotValue = (typeof pot === 'number') ? pot : (parseInt(pot, 10) || 0);
-    window._lastPotTotal = _lastPotValue;   // pot total (lu par le popup d'info)
+    var _prevPot = (typeof S._lastPotValue === 'number') ? S._lastPotValue : 0;
+    S._lastPotValue = (typeof pot === 'number') ? pot : (parseInt(pot, 10) || 0);
+    window._lastPotTotal = S._lastPotValue;   // pot total (lu par le popup d'info)
     // Parité GameStatusBar QML §7 : « Total » = pot collecté des streets
     // précédentes (collectedPot), « Bets/Mises » = mises de la street en
     // cours (= totalPot − collecté). Le badge au-dessus des cartes
     // (#g-potbar) garde le pot TOTAL, comme le pot badge QML.
-    var _cp    = (typeof collectedPot === 'number') ? Math.min(collectedPot, _lastPotValue) : _lastPotValue;
-    var _bets  = Math.max(0, _lastPotValue - _cp);
-    var _potAmt = esc(fmtChips(_lastPotValue));
+    var _cp    = (typeof collectedPot === 'number') ? Math.min(collectedPot, S._lastPotValue) : S._lastPotValue;
+    var _bets  = Math.max(0, S._lastPotValue - _cp);
+    var _potAmt = esc(fmtChips(S._lastPotValue));
     var a  = document.getElementById('g-pot');
     var eb = document.getElementById('g-bets');
     var b  = document.getElementById('g-potbar');
     if (a)  a.innerHTML  = esc(fmtChips(_cp));
     if (eb) eb.innerHTML = esc(fmtChips(_bets));
-    if (b) { b.innerHTML = _potAmt; b.classList.toggle('has-pot', _lastPotValue > 0); }
+    if (b) { b.innerHTML = _potAmt; b.classList.toggle('has-pot', S._lastPotValue > 0); }
     // « Pop » à chaque hausse du pot (parité pot badge QML, bible §9) —
     // relance de l'animation par reflow, pas de listener à nettoyer.
-    if (_lastPotValue > _prevPot) {
+    if (S._lastPotValue > _prevPot) {
       [a, b].forEach(function (el) {
         if (!el) return;
         el.classList.remove('pot-pop');
@@ -3808,8 +3802,8 @@ const App = (() => {
   window.updateSpectatorStrip = updateSpectatorStrip;
 
   function repaintPot() {
-    if (typeof _lastPotValue !== 'number') return;
-    setPot(_lastPotValue);
+    if (typeof S._lastPotValue !== 'number') return;
+    setPot(S._lastPotValue);
   }
   window.toggleDisplayBB = toggleDisplayBB;
 
@@ -5958,7 +5952,7 @@ const App = (() => {
           S._stats.bigLoss = 0; S._stats.history = [];
           S._statsInited = false;
           S._gameCounted = false;
-          _myStackAtHandStart = null; _seatStackAtHandStart = {};
+          S._myStackAtHandStart = null; S._seatStackAtHandStart = {};
           if (S._statsOpen) renderStats();
           const scEl = document.getElementById('g-myseat-cards');
           if (scEl) scEl.innerHTML = '<div class="pk sm back"></div><div class="pk sm back"></div>';
@@ -5990,11 +5984,11 @@ const App = (() => {
 
         // Mémoriser le stack de chaque joueur AU DÉBUT de la main (avant blinds),
         // pour calculer le gain/perte NET exact (mien + bonus popup gagnant).
-        _seatStackAtHandStart = {};
+        S._seatStackAtHandStart = {};
         for (const _sp of seats) {
-          if (seatData[_sp] && seatData[_sp].money != null) _seatStackAtHandStart[_sp] = seatData[_sp].money;
+          if (seatData[_sp] && seatData[_sp].money != null) S._seatStackAtHandStart[_sp] = seatData[_sp].money;
         }
-        _myStackAtHandStart = (_seatStackAtHandStart[myId] != null) ? _seatStackAtHandStart[myId] : null;
+        S._myStackAtHandStart = (S._seatStackAtHandStart[myId] != null) ? S._seatStackAtHandStart[myId] : null;
 
         commCards = [null, null, null, null, null];
         amInGame  = true;
@@ -6095,11 +6089,11 @@ const App = (() => {
         // _myStackAtHandStart restait figé au buy-in initial → « solde net » de
         // session gonflé et « pire perte » jamais enregistrée. En ligne : idempotent
         // (seatData porte déjà la même valeur que celle figée par GameStartInitial).
-        _seatStackAtHandStart = {};
+        S._seatStackAtHandStart = {};
         for (const _sp2 of seats) {
-          if (seatData[_sp2] && seatData[_sp2].money != null) _seatStackAtHandStart[_sp2] = seatData[_sp2].money;
+          if (seatData[_sp2] && seatData[_sp2].money != null) S._seatStackAtHandStart[_sp2] = seatData[_sp2].money;
         }
-        _myStackAtHandStart = (_seatStackAtHandStart[myId] != null) ? _seatStackAtHandStart[myId] : null;
+        S._myStackAtHandStart = (S._seatStackAtHandStart[myId] != null) ? S._seatStackAtHandStart[myId] : null;
         try {
           if (window._handlog) {
             // Sièges (base 1) via l'ordre figé seats[]. Dealer/SB/BB dérivés
@@ -6122,7 +6116,7 @@ const App = (() => {
             var _hlStacks = {};
             for (var _sp3 = 0; _sp3 < seats.length; _sp3++) {
               var _pid3 = seats[_sp3];
-              if (_hlActive(_pid3) && _seatStackAtHandStart[_pid3] != null) _hlStacks[_sp3 + 1] = _seatStackAtHandStart[_pid3];
+              if (_hlActive(_pid3) && S._seatStackAtHandStart[_pid3] != null) _hlStacks[_sp3 + 1] = S._seatStackAtHandStart[_pid3];
             }
             window._handlog.onHandStart({
               handID: S.handNum,
@@ -6618,7 +6612,7 @@ const App = (() => {
             if (pid === myId) {
               // Gain NET de la main = stack final − stack au début de la main
               // (et NON le pot brut « won », qui inclut ma propre mise).
-              var myStartHand = (_myStackAtHandStart != null) ? _myStackAtHandStart : ((S._stats.startMoney || 0) + S._stats.totalGain);
+              var myStartHand = (S._myStackAtHandStart != null) ? S._myStackAtHandStart : ((S._stats.startMoney || 0) + S._stats.totalGain);
               var netWin = cash - myStartHand;
               var myPair2 = myCards.map && myCards.map(function(c){ return { r: cardName(c,false).slice(0,-1), s: cardName(c,false).slice(-1), red: ['♥','♦'].indexOf(cardName(c,false).slice(-1))>=0 }; });
               recordHand(true, netWin, myPair2);
@@ -6632,7 +6626,7 @@ const App = (() => {
         if (!winners.some(function(w){ return w.pid === myId; })) {
           var myEndMon = (seatData[myId] || {}).money;
           if (myEndMon != null) {
-            var myStartMon = (_myStackAtHandStart != null) ? _myStackAtHandStart : ((S._stats.startMoney || 0) + S._stats.totalGain);
+            var myStartMon = (S._myStackAtHandStart != null) ? S._myStackAtHandStart : ((S._stats.startMoney || 0) + S._stats.totalGain);
             var myLoss = myEndMon - myStartMon;
             var myPairLoss = myCards.map && myCards.map(function(c){
               return { r: cardName(c,false).slice(0,-1), s: cardName(c,false).slice(-1), red: ['♥','♦'].indexOf(cardName(c,false).slice(-1))>=0 };
@@ -6738,7 +6732,7 @@ const App = (() => {
         // Enregistrer le résultat de la main pour moi (fin sans abattage).
         var myHideMon = (seatData[myId] || {}).money;
         if (myHideMon != null) {
-          var myHideStart = (_myStackAtHandStart != null) ? _myStackAtHandStart : ((S._stats.startMoney || 0) + S._stats.totalGain);
+          var myHideStart = (S._myStackAtHandStart != null) ? S._myStackAtHandStart : ((S._stats.startMoney || 0) + S._stats.totalGain);
           var myHideNet   = myHideMon - myHideStart;
           var myPairHide  = myCards.map && myCards.map(function(c){
             return { r: cardName(c,false).slice(0,-1), s: cardName(c,false).slice(-1), red: ['♥','♦'].indexOf(cardName(c,false).slice(-1))>=0 };
@@ -7337,10 +7331,10 @@ const App = (() => {
 
   // ── Distribution des cartes ──
   function animateCardDeal() {
-    if (!_lastPixPos.length) return;
-    var cx = _potCenter.x, cy = _potCenter.y;
+    if (!S._lastPixPos.length) return;
+    var cx = S._potCenter.x, cy = S._potCenter.y;
     if (!cx) return;
-    var n = _lastPixPos.length; // nombre de joueurs
+    var n = S._lastPixPos.length; // nombre de joueurs
     var delay = 0;
     var STEP = 180; // ms entre chaque carte
     // 2 cartes par joueur, dealer en premier
@@ -7365,7 +7359,7 @@ const App = (() => {
               setTimeout(function() { el.remove(); }, 200);
             }, 380);
           }, d);
-        })(_lastPixPos[i], delay, _lastPixPos[i] === _lastPixPos[0]);
+        })(S._lastPixPos[i], delay, S._lastPixPos[i] === S._lastPixPos[0]);
         delay += STEP;
       }
     }
@@ -7376,9 +7370,9 @@ const App = (() => {
     var myIdx = seats.indexOf(myId);
     var rotated2 = myIdx >= 0 ? seats.slice(myIdx).concat(seats.slice(0,myIdx)) : seats;
     var seatIdx = rotated2.indexOf(pid);
-    if (seatIdx < 0 || !_lastPixPos[seatIdx]) return;
-    var from = _lastPixPos[seatIdx];
-    var to   = _potCenter;
+    if (seatIdx < 0 || !S._lastPixPos[seatIdx]) return;
+    var from = S._lastPixPos[seatIdx];
+    var to   = S._potCenter;
     if (!to.x) return;
     var el = document.createElement('div');
     el.className = 'fly-chip';
@@ -9005,7 +8999,7 @@ const App = (() => {
         }
       }
     } catch (e) {}
-    _lastPixPos = pixPos;
+    S._lastPixPos = pixPos;
     // Patcher l'avatar du joueur local immédiatement après le rendu.
     // Anti-flicker safety net: re-applies the emoji to .seat-initial
     // after a renderSeats() in case it lost it. Skipped entirely when
@@ -9027,7 +9021,7 @@ const App = (() => {
     }
     var _ov2 = document.querySelector('.felt-oval');
     if (_ov2) { var _or2 = _ov2.getBoundingClientRect();
-      _potCenter = { x: _or2.left + _or2.width/2, y: _or2.top + _or2.height/2 }; }
+      S._potCenter = { x: _or2.left + _or2.width/2, y: _or2.top + _or2.height/2 }; }
     requestAnimationFrame(function() {
       autoScaleTable();
       setTimeout(autoScaleTable, 150);
@@ -9944,7 +9938,7 @@ function _snapshotHandResults() {
   var pids = seats.length ? seats.slice() : Object.keys(seatData).map(Number);
   pids.forEach(function(pid) {
     var sd    = seatData[pid] || {};
-    var start = _seatStackAtHandStart[pid];
+    var start = S._seatStackAtHandStart[pid];
     var net   = (start != null && sd.money != null) ? (sd.money - start) : null;
     // "Dans cette main" = avait des jetons au début de CE coup (start > 0),
     // donc a bel et bien été distribué. Conséquences voulues :
@@ -9962,7 +9956,7 @@ function _snapshotHandResults() {
       inHand: inHand
     };
   });
-  _handResultSnapshot = snap;
+  S._handResultSnapshot = snap;
 }
 
   // ── Winner overlay ──
@@ -10018,7 +10012,7 @@ function showWinnerOverlay(winners) {
   if (!_advGet('winner_popup', true)) { _maybeShowNextHandBtn(); return; }
 
   // Snapshot figé à la fin de la main (montants + qui était réellement engagé).
-  var snap = _handResultSnapshot || {};
+  var snap = S._handResultSnapshot || {};
   var winnerPidsEarly = winners.map(function(w){ return w.pid; });
   // Joueurs encore EN JEU dans cette main (couchés inclus, éliminés exclus).
   var _playersInHand = Object.keys(snap).filter(function(k){
@@ -10114,7 +10108,7 @@ function showWinnerOverlay(winners) {
     // les couchés (fold), mais on retire les joueurs éliminés/sortis lors d'une
     // main précédente (ils n'ont pas participé). Le(s) gagnant(s) restent
     // toujours, par sécurité.
-    var _inHand = snp ? snp.inHand : ((_seatStackAtHandStart[pid] || 0) > 0);
+    var _inHand = snp ? snp.inHand : ((S._seatStackAtHandStart[pid] || 0) > 0);
     if (!isW && !_inHand) return;
 
     var name  = getPlayerName(pid);
@@ -10126,7 +10120,7 @@ function showWinnerOverlay(winners) {
     if (snp) {
       _net = snp.net;
     } else {
-      var _startStk = _seatStackAtHandStart[pid];
+      var _startStk = S._seatStackAtHandStart[pid];
       _net = (_startStk != null && sd.money != null) ? (sd.money - _startStk) : null;
     }
     var _c1 = (snp && snp.card1 != null) ? snp.card1 : sd.card1;
@@ -14886,7 +14880,7 @@ function renderPlayersList() {
   });
 })();
 
-;(function(){ window.BUILD_VERSION='0.3.832-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.833-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

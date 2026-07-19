@@ -145,6 +145,14 @@ export const S = {
     try { return localStorage.getItem('pth_pin_actionbar') === '1'; } catch (e) { return false; }
   })(),
   FEATURE_AUTO_CHECK_FOLD: true,
+
+  // ── V9.1 · Cœur de main : snapshots showdown (domaine E, 1/3) ──
+  _handResultSnapshot: {},    // stack final + net exact par joueur en fin de main
+  _seatStackAtHandStart: {},  // {pid: stack au début de la main}
+  _myStackAtHandStart: null,  // mon stack réel au début de la main (avant blinds)
+  _lastPixPos: [],            // [{top, left}] dans l'ordre de rotated
+  _potCenter: { x: 0, y: 0 }, // centre du pot à l'écran
+  _lastPotValue: null,
 };
 
 // Pont legacy : pokerth.js (script classique) fait `const S = window.PthState;`

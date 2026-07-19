@@ -18,7 +18,7 @@ const { S } = await import('../public/modules/game/state.mjs');
 let n = 0, fail = 0;
 function ok(cond, msg) { n++; if (!cond) { fail++; console.error('  ✗', msg); } else console.log('  ✓', msg); }
 
-console.log('state.mjs — V0 (timer) + V1 (voix/haptique) + V2 (stats) + V3 (pet/inv/chat/titre) + V4 (avatars) + V5 (lobby) + V6 (config partie) + V7 (connexion) + V8 (action bar)');
+console.log('state.mjs — V0 (timer) + V1 (voix/haptique) + V2 (stats) + V3 (pet/inv/chat/titre) + V4 (avatars) + V5 (lobby) + V6 (config partie) + V7 (connexion) + V8 (action bar) + V9.1 (snapshots)');
 ok(typeof S === 'object' && S !== null, 'S est un objet');
 ok(window.PthState === S, 'pont window.PthState === S (même référence)');
 
@@ -122,6 +122,13 @@ ok(S._modeSelBusy === false && S._modeSelPendingPreview === false && S._modeSelH
 ok(S._actionBarPinned === false, '_actionBarPinned défaut = false (localStorage vide)');
 ok(S.FEATURE_AUTO_CHECK_FOLD === true, 'FEATURE_AUTO_CHECK_FOLD = true');
 
+// V9.1 — Snapshots showdown
+ok(Object.keys(S._handResultSnapshot).length === 0 && Object.keys(S._seatStackAtHandStart).length === 0,
+   'snapshots de main init = {}');
+ok(S._myStackAtHandStart === null && S._lastPotValue === null, 'stacks/pot mémorisés init = null');
+ok(Array.isArray(S._lastPixPos) && S._lastPixPos.length === 0
+   && S._potCenter.x === 0 && S._potCenter.y === 0, 'géométrie pot/sièges init');
+
 // Périmètre exact des vagues migrées (pas de fuite d'autres clés)
 const keys = Object.keys(S).sort();
 ok(JSON.stringify(keys) === JSON.stringify(['REACT_EMOJI_MIN_GAP', 'REACT_EMOJI_QUEUE_MAX',
@@ -152,8 +159,10 @@ ok(JSON.stringify(keys) === JSON.stringify(['REACT_EMOJI_MIN_GAP', 'REACT_EMOJI_
    'MODE_SWAP_MIN_GAP', '_RX_WATCHDOG_MIN_MS',
    '_playingMode', '_preAction', '_preActionToCall', '_preActionOpen',
    '_modeSelBusy', '_modeSelPendingPreview', '_modeSelHoldTimer',
-   '_actionBarPinned', 'FEATURE_AUTO_CHECK_FOLD'].sort()),
-   'périmètre V0..V8 exact : ' + keys.join(', '));
+   '_actionBarPinned', 'FEATURE_AUTO_CHECK_FOLD',
+   '_handResultSnapshot', '_seatStackAtHandStart', '_myStackAtHandStart',
+   '_lastPixPos', '_potCenter', '_lastPotValue'].sort()),
+   'périmètre V0..V9.1 exact : ' + keys.join(', '));
 
 console.log(fail ? `FAIL ${fail}/${n}` : `PASS ${n}/${n}`);
 process.exit(fail ? 1 : 0);

@@ -198,3 +198,4 @@ jamais de rustine sur un renommage partiel.
 | 2026-07-19 | 0.3.830-beta | 9e-V6 état config partie/blinds → S (17 vars, 250 renommages AST) — test-state 42 ✓ | 822 Ko (stable) |
 | 2026-07-19 | 0.3.831-beta | 9e-V7 état connexion → S (28 vars, 257 renommages AST, pont _ipBlockUntil rebranché) — test-state 52 ✓ · ⚠ test manuel reconnexion/rejoin requis après déploiement | 822 Ko (stable) |
 | 2026-07-19 | 0.3.832-beta | 9e-V8 état action bar/pré-action → S (9 vars, 55 renommages AST, équivalence prouvée) — test-state 57 ✓ | 822 Ko (stable) |
+| 2026-07-19 | 0.3.833-beta | 9e-V9.1 état snapshots showdown → S (6 vars, 49 renommages AST, équivalence prouvée) — test-state 60 ✓ | 822 Ko (stable) |
