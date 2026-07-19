@@ -6154,6 +6154,7 @@ const App = (() => {
         // pas de reset par main. Le joueur le change via le dropdown ou un
         // clic manuel sur une action.
         _preActionOpen = false; // referme tout panneau "aperçu" à chaque main
+        if (_preAction) console.log('[prearm] reset nouvelle main (était: ' + _preAction + ')');
         _preAction = '';        // désarme toute pré-action à chaque nouvelle main
         // Zoom-follow : reset du suivi + restauration d'un zoom suspendu au showdown
         try { if (window._zoomHandStart) window._zoomHandStart(); } catch (_e) {}
@@ -6481,7 +6482,8 @@ const App = (() => {
           // Pré-action armée (comme l'officiel) : si une action a été armée avant
           // notre tour et qu'elle est encore valide, on la joue directement sans
           // afficher les boutons live.
-          if (_preAction) { var _pdid = _runPreAction(); _preAction = ''; if (_pdid) break; }
+          console.log('[prearm] MON TOUR — préAction=' + (_preAction || '(vide)') + ' gameState=' + gameState);
+          if (_preAction) { var _pdid = _runPreAction(); console.log('[prearm] _runPreAction → ' + _pdid); _preAction = ''; if (_pdid) break; }
           // Mode auto PERSISTANT (Manuel/Auto Check-Call/Auto Check-Fold) :
           // si un mode auto est actif, jouer l'action sans afficher les boutons.
           // Le mode reste actif (pas de désarmement), comme le client officiel.
@@ -9776,7 +9778,7 @@ const App = (() => {
   // Recalcule le contexte au moment de l'exécution. Un Fold pré-armé devient
   // Check si le check est gratuit. Retourne true si une action a été jouée.
   function _runPreAction() {
-    if (!_preAction || _amSpectator) return false;
+    if (!_preAction || _amSpectator) { console.log('[prearm] run: refus (préAction=' + _preAction + ' spectateur=' + _amSpectator + ')'); return false; }
     var pa = _preAction;
     var myMoney = (seatData[myId] || {}).money || 0;
     var myBet   = (seatData[myId] || {}).bet   || 0;
@@ -9787,7 +9789,8 @@ const App = (() => {
     if (pa === 'fold')  { if (canCheck) doAction(2, 0); else doAction(1, 0); return true; }
     if (pa === 'call')  { if (canCheck) doAction(2, 0); else if (toCall >= myMoney) doAction(6, myMoney); else doAction(3, toCall); return true; }
     if (pa === 'allin') { doAction(6, myMoney); return true; }
-    if (pa === 'raise') { if (!canRaise) return false; if (minBet >= myMoney) doAction(6, myMoney); else doAction(5, minBet); return true; }
+    if (pa === 'raise') { if (!canRaise) { console.log('[prearm] run: raise impossible (tapis=' + myMoney + ' toCall=' + toCall + ' minBet=' + minBet + ')'); return false; } if (minBet >= myMoney) doAction(6, myMoney); else doAction(5, minBet); return true; }
+    console.log('[prearm] run: action inconnue ' + pa);
     return false;
   }
 
@@ -9812,6 +9815,7 @@ const App = (() => {
     // restent valides (pas de dépendance au montant).
     var _paCurToCall = Math.max(0, highestBet - ((seatData[myId] || {}).bet || 0));
     if (_preAction && (_preAction === 'call' || _preAction === 'raise') && _paCurToCall !== _preActionToCall) {
+      console.log('[prearm] INVALIDÉ (' + _preAction + ') toCallCourant=' + _paCurToCall + ' ≠ mémo=' + _preActionToCall + ' (preview=' + !!preview + ')');
       _preAction = '';
     }
     const myMoney = (seatData[myId] || {}).money || 0;
@@ -11424,6 +11428,7 @@ function _maybeShowNextHandBtn() {
       if (myCards[0] == null && myCards[1] == null) return; // pas de cartes
       _preAction = (_preAction === name) ? '' : name;      // toggle
       _preActionToCall = Math.max(0, highestBet - ((seatData[myId] || {}).bet || 0)); // onCallAmountChanged : MON à-suivre
+      console.log('[prearm] ' + (_preAction ? 'armé' : 'désarmé') + ' name=' + name + ' toCallMémo=' + _preActionToCall + ' highestBet=' + highestBet + ' maMise=' + (((seatData[myId] || {}).bet) || 0));
       renderMyTurnActions(true);                            // re-render pour le surlignage or
     },
 
@@ -14995,7 +15000,7 @@ function renderPlayersList() {
   });
 })();
 
-;(function(){ window.BUILD_VERSION='0.3.820-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.821-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
