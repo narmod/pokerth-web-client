@@ -237,3 +237,4 @@ d'un plan dédié (#9g) une fois les 10 vagues livrées et stabilisées.
 | 2026-07-19 | 0.3.836-beta | 9e-V10 état UI divers + myId → S (10 vars, 153 renommages AST, dernier pont window.myId rebranché) — test-state 73 ✓ · **#9e TERMINÉ : les seules déclarations du corps de l'IIFE sont `S` et `$` (vérifié AST) ; 153 clés dans state.mjs ; prochaine étape #9f = re-scan de mobilité + vagues de libération de fonctions** | 822 Ko (stable) |
 | 2026-07-19 | — | #9f : scan de mobilité (77 feuilles/85 faibles/13 fortes) + plan des 10 vagues de libération (docs seulement) | 822 Ko |
 | 2026-07-19 | 0.3.837-beta | 9f-1 ui/fmt.mjs (_groupThousands/fmtChips/fmtChipsVoice ; _lang lu via window._lang, seule adaptation) — 11 tests | 822 → 820 Ko |
+| 2026-07-19 | 0.3.838-beta | 9f-2 ui/media.mjs (voix TTS + haptique, 11 fonctions ; adaptations window._lang/showKeyHint/getPlayerName + pont getPlayerName ajouté ; corps identiques vérifiés) — 12 tests | 820 → 815 Ko |
