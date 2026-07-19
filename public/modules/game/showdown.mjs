@@ -186,10 +186,22 @@ function showWinHandBadge(label) {
   var oval = document.querySelector('.felt-oval');
   b.textContent = label;   // textContent : libellé simple, jamais du HTML
   // Écart QML : 6 px en portrait, 8 px en paysage (WinningHandBadge.qml).
-  var _whGap = 8;
-  try { if (document.documentElement.getAttribute('data-seat-orient') === 'portrait') _whGap = 6; } catch (e) {}
-  if (comm && oval)
-    b.style.top = Math.round(oval.clientHeight / 2 + comm.offsetHeight / 2 + _whGap) + 'px';
+  var _whGap = 8, _whPortrait = false;
+  try { _whPortrait = document.documentElement.getAttribute('data-seat-orient') === 'portrait'; } catch (e) {}
+  if (_whPortrait) _whGap = 6;
+  // Mobile PAYSAGE (landscapeCompact, fenêtre < 600 px de haut) : pas de
+  // place sous la rangée -> le badge se SUPERPOSE aux cartes, centré sur la
+  // rangée (demande narmod 19/07). Sinon : sous les cartes, comme le QML.
+  var _whOverlay = !_whPortrait && window.innerHeight < 600;
+  if (comm && oval) {
+    if (_whOverlay) {
+      b.style.top = Math.round(oval.clientHeight / 2) + 'px';
+      b.style.transform = 'translate(-50%, -50%)';
+    } else {
+      b.style.top = Math.round(oval.clientHeight / 2 + comm.offsetHeight / 2 + _whGap) + 'px';
+      b.style.transform = '';
+    }
+  }
   b.style.display = '';
   // Pop d'apparition (winHandPop QML : 1→1.18 en 110 ms, retour OutBack 170 ms).
   b.classList.remove('win-pop'); void b.offsetWidth; b.classList.add('win-pop');
