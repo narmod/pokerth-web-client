@@ -109,4 +109,4 @@ en `type=module` et remplacer les ponts `window.*` par de vrais imports.
 | Date | Version | Extraction | pokerth.js avant → après |
 |---|---|---|---|
 | 2026-07-19 | — | Phase 0 (audit, docs seulement) | 954 Ko |
-| — | — | (aucune extraction encore) | 954 Ko |
+| 2026-07-19 | 0.3.808-beta | #1 game/cards.mjs (évaluateur, pré-flop, odds+phe) — 19 tests | 954 → 944 Ko |
