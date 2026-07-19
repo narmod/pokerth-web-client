@@ -471,6 +471,7 @@ function onAvatarImageChosen(input) {
     '/modules/handlog.mjs',
     '/modules/journal.mjs',
     '/modules/game/cards.mjs',
+    '/modules/net/proto.mjs',
     '/modules/music.mjs', '/modules/lang/en.mjs', '/fonts/fonts.css'];
   try {
     var lg = (localStorage.getItem('pth_lang') || '').toLowerCase().split('-')[0];
@@ -2033,6 +2034,7 @@ function onAvatarImageChosen(input) {
 <script type="module" src="modules/handlog.mjs"></script>
 <script type="module" src="modules/journal.mjs"></script>
 <script type="module" src="modules/game/cards.mjs"></script>
+<script type="module" src="modules/net/proto.mjs"></script>
 <!-- Quit-game confirmation dialog: 2 buttons (Quit / Cancel).
      Shown when the user clicks the ✕ button in the header from inside
      a game. Driven by App.confirmLeaveGame() (open) and
