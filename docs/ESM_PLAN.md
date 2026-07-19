@@ -18,14 +18,48 @@ extrait un bloc à la fois, le monolithe rétrécit, l'app tourne à chaque comm
 - Chaque extraction = un push complet (3 versions bumpées, tests, déploiement),
   jamais deux extractions dans le même push.
 
-## Phase 0 — Audit du câblage (préalable, sans extraction)
+## Phase 0 — Audit du câblage — ✅ FAIT (2026-07-19, base v0.3.807-beta)
 
-1. Documenter comment `pokerth-client.html` charge `i18n.mjs` / `theme.mjs` /
-   `handlog.mjs` aujourd'hui (ordre, defer, readiness) — c'est le gabarit.
-2. Vérifier le point de synchronisation : que fait pokerth.js si `window.t`
-   n'est pas encore défini au premier appel ? Reproduire ce mécanisme pour
-   chaque nouveau module.
-3. Lister les globals produits/consommés par bloc (grep `window\.` par section).
+**1. Gabarit de chargement (pokerth-client.html L2023-2033 + L2084).**
+Les modules sont des `<script type="module" src="modules/x.mjs">` placés AVANT
+`<script src="pokerth.js" defer>`. Modules et defer partagent la même file
+différée exécutée dans l'ordre du document → quand pokerth.js démarre, les
+`window.*` des modules existent déjà. Aucun mécanisme d'attente nécessaire :
+l'ordre suffit. Tout nouveau module s'insère dans ce bloc, avant pokerth.js.
+
+**2. Gabarit interne (i18n.mjs).** Trois étages : exports ES nommés (pour les
+futurs imports) · alias legacy `window.t = t` etc. + `Object.defineProperty`
+pour les variables partagées (`_lang`) · un objet namespace propre
+(`window.I18N = {...}`). Auto-init sur `DOMContentLoaded` avec repli immédiat
+si le DOM est déjà parsé. Reproduire ces trois étages à chaque extraction.
+
+**3. Piège majeur : `const App`.** pokerth.js expose l'app comme `const App`
+au scope du script — PAS `window.App` (commentaire HTML L525). Un module ES ne
+peut pas y accéder. Règle : ne jamais extraire du code qui référence `App` ;
+si inévitable, exposer d'abord `window.App = App` dans le monolithe (mini-push
+préalable dédié).
+
+**4. Les marqueurs ══ de section MENTENT.** Le bloc « ANIMATIONS » (L44-1492)
+contient en réalité prefs, options avancées, HUD, rendu de sièges… (39 écritures
+`window.*` hétérogènes). L'extraction se délimite par SURFACE DE FONCTIONS
+(défs + usages externes, script d'audit ci-dessous), jamais par marqueur.
+
+**5. Deux listes de precache à tenir.** `sw.js` → `ASSETS`, ET le boot-loader
+autonome du HTML (L469, tableau `CRIT`) qui liste les assets critiques. Tout
+nouveau module doit figurer dans les deux.
+
+**6. Surfaces d'export mesurées (défs utilisées hors du bloc) :**
+- cards+odds (L2313-2825) : `evaluateBestHand`, `evaluatePreFlopHand`,
+  `normalizeHoleCard`, `_cmpHand`, `_oddsCompute`, `_qmlWinningHandText`
+  (le bloc contient aussi les réactions et `animateChipToPot` → à laisser
+  sur place, ils partiront avec leurs blocs respectifs #6/#7).
+- proto (L3446-3533) : objet unique `Proto`.
+- crypto (L3534-3711) : objet unique `PTHCrypto`.
+- messages (L3712-4121) : objet unique `MSG` (+ `window._pthScram`).
+→ #2 et #3 sont quasi mécaniques (un seul nom à ponter chacun).
+
+Audit reproductible : croiser `^(function|const|var|let)\s+(\w+)` du bloc avec
+les usages `\b<nom>\b` du reste du fichier avant chaque extraction.
 
 ## Ordre d'extraction (du plus autonome au plus intriqué)
 
@@ -74,4 +108,5 @@ en `type=module` et remplacer les ponts `window.*` par de vrais imports.
 
 | Date | Version | Extraction | pokerth.js avant → après |
 |---|---|---|---|
-| — | — | (aucune encore) | 954 Ko |
+| 2026-07-19 | — | Phase 0 (audit, docs seulement) | 954 Ko |
+| — | — | (aucune extraction encore) | 954 Ko |
