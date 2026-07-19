@@ -145,7 +145,7 @@ rebranchés sur `S` dans le MÊME push que leur var. V7–V9 : test manuel
 reconnexion/rejoin en ligne obligatoire. Rollback = revert du commit entier,
 jamais de rustine sur un renommage partiel.
 
-## #9f — Libération des fonctions (plan court, scan 2026-07-19 à v0.3.836)
+## #9f — Libération des fonctions — ✅ TERMINÉ 2026-07-19 (10 vagues, 0.3.837→0.3.848)
 
 175 fonctions top-level dans l'IIFE : 77 feuilles (1 067 l, zéro dépendance
 interne), 85 à faible couplage (1 638 l, 1-3 dép), 13 fortement couplées
@@ -247,3 +247,4 @@ d'un plan dédié (#9g) une fois les 10 vagues livrées et stabilisées.
 | 2026-07-19 | 0.3.845-beta | ⚠ commit incohérent (d5beaef) : assert count==2 avorté (3 occurrences réelles), fix ABSENT, versions restées 0.3.844 — réparé par 0.3.846 |  |
 | 2026-07-19 | 0.3.846-beta | fix lobby : T nu → MSG.T.PlayerInfoRequest (×3 : renderTablePlayers, _renderInfoPlayerRows, _renderInfoRowsFromPids) — la demande de pseudo part désormais ; test-lobby 11 ✓ · leçon : `set -e`/abort explicite après chaque bloc Python | 714 Ko |
 | 2026-07-19 | 0.3.847-beta | 9f-9 game/showdown.mjs (7 fonctions : snapshot des nets, badge main gagnante, overlay vainqueur + auto-dismiss, fin de partie ; App.dismissWinner → appel direct ; corps identiques) — 10 tests | 714 → 695 Ko |
+| 2026-07-19 | 0.3.848-beta | 9f-10 net/session.mjs (9 fonctions : show, cycle connexion + wake lock, rejoin/reprise avec écouteurs pageshow/focus/visibilitychange, setStatus, send framing BE ; corps identiques) — 12 tests · **#9f TERMINÉ : 10 modules libérés (~135 fonctions), monolithe 954 → 684 Ko (−28 %) ; reste le noyau orchestrateur (~3 600 l : handleMsg, renderSeatsImmediate, renderMyTurnActions, doAction, renderSeats, renderComm, onRawData) — #9g éventuel sur plan dédié** | 692 → 684 Ko |
