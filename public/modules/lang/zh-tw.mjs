@@ -63,7 +63,7 @@ export const strings = {
   advHidePbar:'PokerTH 模式（玩家列隱藏）',
   deckSvg: "PokerTH",
   pucksPokerth: "PokerTH",
-  tablePokerthOfficial: "PokerTH",
+  tablePokerthOfficial: "PokerTH default QML table style",
   presetPokerthOfficial: "PokerTH Dark",
   themePokerthOfficial: "PokerTH Dark",
   presetPokerthOfficialLight: "PokerTH Light",
@@ -679,7 +679,7 @@ export const strings = {
     advPokerTerms:'不翻譯國際撲克術語（Check、Call、Raise）',
     pokerFold:'棄牌', pokerCheck:'過牌', pokerCall:'跟注', pokerBet:'下注', pokerRaise:'加注', pokerAllin:'全下',
     // v0.3.579 : passe native complete — 105 cles en repli anglais traduites + cles err*/affichage (noms propres et termes de tables conserves)
-    actBadgeCheck:'Check', unitMinutes:'minutes', presetWecupName:'WeCup', presetBbcName:'BBC', tablePokerthLive:'Spectator Tools', tableDanuxi:'Danuxi Blue', tableMute:'Mute', tableMute2:'Mute 02', tableTeal:'Teal', tableLemming:'Lemming',
+    actBadgeCheck:'Check', unitMinutes:'minutes', presetWecupName:'WeCup', presetBbcName:'BBC', tableDanuxi:'Danuxi Blue', tableMute:'Mute', tableMute2:'Mute 02', tableTeal:'Teal', tableLemming:'Lemming',
     tableMatrix:'Matrix', tableStarTrek:'Star Trek', tableTripSixes:'TripSixes', tableWanted:'Wanted', tableXanax:'Xanax', pucksAuto:'Auto (table)', pucksCasino:'Casino', infoTypeLabel:'Type', infoCapitalLabel:'Capital', wpWaitingPlayers:'等待玩家中……',
     wpFillBots:'用電腦玩家補齊', wpStartGame:'開始遊戲', wpLeaveGame:'離開遊戲', advFourColor:'四色牌組（♦ 藍，♣ 綠）', cardZoomToggle:'放大我的手牌', actBadgeFold:'棄牌', actBadgeCall:'跟注', actBadgeBet:'下注', actBadgeRaise:'加注', actBadgeAllin:'全下', cancelBtn:'取消', navBack:'返回',
     gameNameLabel:'遊戲名稱', passwordLabel:'密碼', startCash:'起始籌碼', blindsSettings:'盲注設定', firstSmallBlind:'第一個小盲注', blindInterval:'盲注調升間隔', unitHands:'手', timeLimits:'時間限制', actionTimeout:'每次行動時間', pauseBetweenHands:'每手牌之間暫停', guestNeedAccount:'需要帳號',

@@ -62,7 +62,7 @@ export const strings = {
   advHidePbar:'PokerTH način (traka igrača skrivena)',
   deckSvg: "PokerTH",
   pucksPokerth: "PokerTH",
-  tablePokerthOfficial: "PokerTH",
+  tablePokerthOfficial: "PokerTH default QML table style",
   presetPokerthOfficial: "PokerTH Dark",
   themePokerthOfficial: "PokerTH Dark",
   presetPokerthOfficialLight: "PokerTH Light",
@@ -678,7 +678,7 @@ export const strings = {
     advPokerTerms:'Ne prevodi međunarodne pokeraške izraze (Check, Call, Raise)',
     pokerFold:'Fold', pokerCheck:'Check', pokerCall:'Call', pokerBet:'Bet', pokerRaise:'Raise', pokerAllin:'All-In',
     // v0.3.579 : passe native complete — 105 cles en repli anglais traduites + cles err*/affichage (noms propres et termes de tables conserves)
-    actBadgeCheck:'Check', unitMinutes:'minutes', presetWecupName:'WeCup', presetBbcName:'BBC', tablePokerthLive:'Spectator Tools', tableDanuxi:'Danuxi Blue', tableMute:'Mute', tableMute2:'Mute 02', tableTeal:'Teal', tableLemming:'Lemming',
+    actBadgeCheck:'Check', unitMinutes:'minutes', presetWecupName:'WeCup', presetBbcName:'BBC', tableDanuxi:'Danuxi Blue', tableMute:'Mute', tableMute2:'Mute 02', tableTeal:'Teal', tableLemming:'Lemming',
     tableMatrix:'Matrix', tableStarTrek:'Star Trek', tableTripSixes:'TripSixes', tableWanted:'Wanted', tableXanax:'Xanax', pucksAuto:'Auto (table)', pucksCasino:'Casino', infoTypeLabel:'Type', infoCapitalLabel:'Capital', wpWaitingPlayers:'Čekanje igrača …',
     wpFillBots:'Popuni računalnim igračima', wpStartGame:'Pokreni igru', wpLeaveGame:'Napusti igru', advFourColor:'Špil u 4 boje (♦ plavi, ♣ zeleni)', cardZoomToggle:'Povećaj moje karte', actBadgeFold:'Odustani', actBadgeCall:'Prati',
     actBadgeBet:'Uloži', actBadgeRaise:'Povisi', actBadgeAllin:'All-In', cancelBtn:'Odustani', navBack:'Natrag', gameNameLabel:'Naziv igre', passwordLabel:'Lozinka', startCash:'Početni kapital', blindsSettings:'Postavke blindova', firstSmallBlind:'Prvi small blind',

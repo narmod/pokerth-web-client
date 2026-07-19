@@ -62,7 +62,7 @@ export const strings = {
   advHidePbar:'PokerTH-modus (spelerbalk versteek)',
   deckSvg: "PokerTH",
   pucksPokerth: "PokerTH",
-  tablePokerthOfficial: "PokerTH",
+  tablePokerthOfficial: "PokerTH default QML table style",
   presetPokerthOfficial: "PokerTH Dark",
   themePokerthOfficial: "PokerTH Dark",
   presetPokerthOfficialLight: "PokerTH Light",
@@ -678,7 +678,7 @@ export const strings = {
     advPokerTerms:'Moenie internasionale pokerterme vertaal nie (Check, Call, Raise)',
     pokerFold:'Fold', pokerCheck:'Check', pokerCall:'Call', pokerBet:'Bet', pokerRaise:'Raise', pokerAllin:'All-In',
     // v0.3.579 : passe native complete — 105 cles en repli anglais traduites + cles err*/affichage (noms propres et termes de tables conserves)
-    actBadgeCheck:'Check', unitMinutes:'minutes', presetWecupName:'WeCup', presetBbcName:'BBC', tablePokerthLive:'Spectator Tools', tableDanuxi:'Danuxi Blue', tableMute:'Mute', tableMute2:'Mute 02', tableTeal:'Teal', tableLemming:'Lemming',
+    actBadgeCheck:'Check', unitMinutes:'minutes', presetWecupName:'WeCup', presetBbcName:'BBC', tableDanuxi:'Danuxi Blue', tableMute:'Mute', tableMute2:'Mute 02', tableTeal:'Teal', tableLemming:'Lemming',
     tableMatrix:'Matrix', tableStarTrek:'Star Trek', tableTripSixes:'TripSixes', tableWanted:'Wanted', tableXanax:'Xanax', pucksAuto:'Auto (table)', pucksCasino:'Casino', infoTypeLabel:'Type', infoCapitalLabel:'Capital', wpWaitingPlayers:'Wag vir spelers …',
     wpFillBots:'Vul aan met rekenaarspelers', wpStartGame:'Begin spel', wpLeaveGame:'Verlaat spel', advFourColor:'4-kleur-kaartstel (♦ blou, ♣ groen)', cardZoomToggle:'Vergroot my kaarte', actBadgeFold:'Fold', actBadgeCall:'Call', actBadgeBet:'Bet',
     actBadgeRaise:'Raise', actBadgeAllin:'All-In', cancelBtn:'Kanselleer', navBack:'Terug', gameNameLabel:'Naam van die spel', passwordLabel:'Wagwoord', startCash:'Beginkapitaal', blindsSettings:'Blind-instellings', firstSmallBlind:'Eerste small blind',

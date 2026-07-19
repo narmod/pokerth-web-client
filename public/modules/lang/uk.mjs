@@ -61,7 +61,7 @@ export const strings = {
   advHidePbar:'Режим PokerTH (панель гравця прихована)',
   deckSvg: "PokerTH",
   pucksPokerth: "PokerTH",
-  tablePokerthOfficial: "PokerTH",
+  tablePokerthOfficial: "PokerTH default QML table style",
   presetPokerthOfficial: "PokerTH Dark",
   themePokerthOfficial: "PokerTH Dark",
   presetPokerthOfficialLight: "PokerTH Light",
@@ -677,7 +677,7 @@ export const strings = {
     advPokerTerms:'Не перекладати міжнародні покерні терміни (Check, Call, Raise)',
     pokerFold:'Фолд', pokerCheck:'Чек', pokerCall:'Кол', pokerBet:'Бет', pokerRaise:'Рейз', pokerAllin:'Ол-ін',
     // v0.3.579 : passe native complete — 105 cles en repli anglais traduites + cles err*/affichage (noms propres et termes de tables conserves)
-    actBadgeCheck:'Check', unitMinutes:'minutes', presetWecupName:'WeCup', presetBbcName:'BBC', tablePokerthLive:'Spectator Tools', tableDanuxi:'Danuxi Blue', tableMute:'Mute', tableMute2:'Mute 02', tableTeal:'Teal', tableLemming:'Lemming',
+    actBadgeCheck:'Check', unitMinutes:'minutes', presetWecupName:'WeCup', presetBbcName:'BBC', tableDanuxi:'Danuxi Blue', tableMute:'Mute', tableMute2:'Mute 02', tableTeal:'Teal', tableLemming:'Lemming',
     tableMatrix:'Matrix', tableStarTrek:'Star Trek', tableTripSixes:'TripSixes', tableWanted:'Wanted', tableXanax:'Xanax', pucksAuto:'Auto (table)', pucksCasino:'Casino', infoTypeLabel:'Type', infoCapitalLabel:'Capital', wpWaitingPlayers:'Очікування гравців …',
     wpFillBots:'Доповнити комп\'ютерними гравцями', wpStartGame:'Почати гру', wpLeaveGame:'Покинути гру', advFourColor:'Колода 4 кольорів (♦ сині, ♣ зелені)', cardZoomToggle:'Збільшити мої карти', actBadgeFold:'Пас', actBadgeCall:'Кол',
     actBadgeBet:'Ставка', actBadgeRaise:'Рейз', actBadgeAllin:'Ол-ін', cancelBtn:'Скасувати', navBack:'Назад', gameNameLabel:'Назва гри', passwordLabel:'Пароль', startCash:'Початковий капітал', blindsSettings:'Налаштування блайндів',

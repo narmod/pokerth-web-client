@@ -61,7 +61,7 @@ export const strings = {
   advHidePbar:'PokerTH モード（プレイヤーバー非表示）',
   deckSvg: "PokerTH",
   pucksPokerth: "PokerTH",
-  tablePokerthOfficial: "PokerTH",
+  tablePokerthOfficial: "PokerTH default QML table style",
   presetPokerthOfficial: "PokerTH Dark",
   themePokerthOfficial: "PokerTH Dark",
   presetPokerthOfficialLight: "PokerTH Light",
@@ -677,7 +677,7 @@ export const strings = {
     advPokerTerms:'国際的なポーカー用語を翻訳しない（Check、Call、Raise）',
     pokerFold:'フォールド', pokerCheck:'チェック', pokerCall:'コール', pokerBet:'ベット', pokerRaise:'レイズ', pokerAllin:'オールイン',
     // v0.3.579 : passe native complete — 105 cles en repli anglais traduites + cles err*/affichage (noms propres et termes de tables conserves)
-    actBadgeCheck:'Check', unitMinutes:'minutes', presetWecupName:'WeCup', presetBbcName:'BBC', tablePokerthLive:'Spectator Tools', tableDanuxi:'Danuxi Blue', tableMute:'Mute', tableMute2:'Mute 02', tableTeal:'Teal', tableLemming:'Lemming',
+    actBadgeCheck:'Check', unitMinutes:'minutes', presetWecupName:'WeCup', presetBbcName:'BBC', tableDanuxi:'Danuxi Blue', tableMute:'Mute', tableMute2:'Mute 02', tableTeal:'Teal', tableLemming:'Lemming',
     tableMatrix:'Matrix', tableStarTrek:'Star Trek', tableTripSixes:'TripSixes', tableWanted:'Wanted', tableXanax:'Xanax', pucksAuto:'Auto (table)', pucksCasino:'Casino', infoTypeLabel:'Type', infoCapitalLabel:'Capital', wpWaitingPlayers:'プレイヤーを待っています…',
     wpFillBots:'コンピュータープレイヤーで埋める', wpStartGame:'ゲーム開始', wpLeaveGame:'ゲームを退出', advFourColor:'4色デッキ（♦ 青、♣ 緑）', cardZoomToggle:'自分のカードを拡大', actBadgeFold:'フォールド', actBadgeCall:'コール', actBadgeBet:'ベット', actBadgeRaise:'レイズ', actBadgeAllin:'オールイン',
     cancelBtn:'キャンセル', navBack:'戻る', gameNameLabel:'ゲーム名', passwordLabel:'パスワード', startCash:'開始チップ', blindsSettings:'ブラインド設定', firstSmallBlind:'最初のスモールブラインド', blindInterval:'ブラインド上昇の間隔', unitHands:'ハンド', timeLimits:'時間制限', actionTimeout:'アクションごとの時間',

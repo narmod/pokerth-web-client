@@ -61,7 +61,7 @@ export const strings = {
   advHidePbar:'PokerTH-tila (pelaajapalkki piilotettu)',
   deckSvg: "PokerTH",
   pucksPokerth: "PokerTH",
-  tablePokerthOfficial: "PokerTH",
+  tablePokerthOfficial: "PokerTH default QML table style",
   presetPokerthOfficial: "PokerTH Dark",
   themePokerthOfficial: "PokerTH Dark",
   presetPokerthOfficialLight: "PokerTH Light",
@@ -677,7 +677,7 @@ export const strings = {
     advPokerTerms:'Älä käännä kansainvälisiä pokeritermejä (Check, Call, Raise)',
     pokerFold:'Fold', pokerCheck:'Check', pokerCall:'Call', pokerBet:'Bet', pokerRaise:'Raise', pokerAllin:'All-In',
     // v0.3.579 : passe native complete — 105 cles en repli anglais traduites + cles err*/affichage (noms propres et termes de tables conserves)
-    actBadgeCheck:'Check', unitMinutes:'minutes', presetWecupName:'WeCup', presetBbcName:'BBC', tablePokerthLive:'Spectator Tools', tableDanuxi:'Danuxi Blue', tableMute:'Mute', tableMute2:'Mute 02', tableTeal:'Teal', tableLemming:'Lemming',
+    actBadgeCheck:'Check', unitMinutes:'minutes', presetWecupName:'WeCup', presetBbcName:'BBC', tableDanuxi:'Danuxi Blue', tableMute:'Mute', tableMute2:'Mute 02', tableTeal:'Teal', tableLemming:'Lemming',
     tableMatrix:'Matrix', tableStarTrek:'Star Trek', tableTripSixes:'TripSixes', tableWanted:'Wanted', tableXanax:'Xanax', pucksAuto:'Auto (table)', pucksCasino:'Casino', infoTypeLabel:'Type', infoCapitalLabel:'Capital', wpWaitingPlayers:'Odotetaan pelaajia …',
     wpFillBots:'Täytä tietokonepelaajilla', wpStartGame:'Aloita peli', wpLeaveGame:'Poistu pelistä', advFourColor:'4-värinen pakka (♦ sininen, ♣ vihreä)', cardZoomToggle:'Suurenna korttini', actBadgeFold:'Kippaa', actBadgeCall:'Maksa',
     actBadgeBet:'Panosta', actBadgeRaise:'Korota', actBadgeAllin:'All-In', cancelBtn:'Peruuta', navBack:'Takaisin', gameNameLabel:'Pelin nimi', passwordLabel:'Salasana', startCash:'Aloituspääoma', blindsSettings:'Blindien asetukset',

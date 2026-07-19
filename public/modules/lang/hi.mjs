@@ -66,7 +66,7 @@ export const strings = {
   advHidePbar:'PokerTH मोड (प्लेयर बार छिपी हुई)',
   deckSvg: "PokerTH",
   pucksPokerth: "PokerTH",
-  tablePokerthOfficial: "PokerTH",
+  tablePokerthOfficial: "PokerTH default QML table style",
   presetPokerthOfficial: "PokerTH Dark",
   themePokerthOfficial: "PokerTH Dark",
   presetPokerthOfficialLight: "PokerTH Light",
@@ -489,7 +489,7 @@ export const strings = {
     advPokerTerms:'अंतरराष्ट्रीय पोकर शब्दों का अनुवाद न करें (Check, Call, Raise)',
     pokerFold:'फ़ोल्ड', pokerCheck:'चेक', pokerCall:'कॉल', pokerBet:'बेट', pokerRaise:'रेज़', pokerAllin:'ऑल-इन',
     // v0.3.579 : passe native complete — 105 cles en repli anglais traduites + cles err*/affichage (noms propres et termes de tables conserves)
-    actBadgeCheck:'Check', unitMinutes:'minutes', presetWecupName:'WeCup', presetBbcName:'BBC', tablePokerthLive:'Spectator Tools', tableDanuxi:'Danuxi Blue', tableMute:'Mute', tableMute2:'Mute 02', tableTeal:'Teal', tableLemming:'Lemming',
+    actBadgeCheck:'Check', unitMinutes:'minutes', presetWecupName:'WeCup', presetBbcName:'BBC', tableDanuxi:'Danuxi Blue', tableMute:'Mute', tableMute2:'Mute 02', tableTeal:'Teal', tableLemming:'Lemming',
     tableMatrix:'Matrix', tableStarTrek:'Star Trek', tableTripSixes:'TripSixes', tableWanted:'Wanted', tableXanax:'Xanax', pucksAuto:'Auto (table)', pucksCasino:'Casino', infoTypeLabel:'Type', infoCapitalLabel:'Capital', wpWaitingPlayers:'खिलाड़ियों की प्रतीक्षा …',
     wpFillBots:'कंप्यूटर खिलाड़ियों से भरें', wpStartGame:'खेल शुरू करें', wpLeaveGame:'खेल छोड़ें', advFourColor:'4-रंग की गड्डी (♦ नीला, ♣ हरा)', cardZoomToggle:'मेरे पत्ते बड़े करें', actBadgeFold:'फ़ोल्ड', actBadgeCall:'कॉल', actBadgeBet:'बेट',
     actBadgeRaise:'रेज़', actBadgeAllin:'ऑल-इन', cancelBtn:'रद्द करें', navBack:'वापस', gameNameLabel:'खेल का नाम', passwordLabel:'पासवर्ड', startCash:'प्रारंभिक पूंजी', blindsSettings:'ब्लाइंड सेटिंग्स', firstSmallBlind:'पहला स्मॉल ब्लाइंड',

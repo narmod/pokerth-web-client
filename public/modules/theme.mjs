@@ -60,8 +60,7 @@ const PALETTES = [
 // (--wallpaper, ovale transparent) · 'full' = image dans l'ovale (--table-img) ·
 // 'felt' = feutre ovale (--felt-img). id '' = PokerTH officiel fullscreen (defaut).
 const TABLES = [
-  { id: '',             key: 'tablePokerthOfficial', fallback: 'PokerTH',      swatch: '#1d222b', feltUrl: '/table/pokerth-official-fs/felt.png', mode: 'fs',   puck: 'pokerth', btn: 'glossy' },
-  { id: 'pokerth-live', key: 'tablePokerthLive',     fallback: 'Spectator Tools', swatch: '#0e4a2a', feltUrl: '/table/pokerth-live/felt.png',        mode: 'full', puck: 'pokerth', btn: 'glossy' },
+  { id: '',             key: 'tablePokerthOfficial', fallback: 'PokerTH default QML table style',      swatch: '#1d222b', feltUrl: '/table/pokerth-official-fs/felt.png', mode: 'fs',   puck: 'pokerth', btn: 'glossy' },
   { id: 'casino',       key: 'tableCasino',          fallback: 'Green Casino', swatch: '#1e6b1e', feltUrl: '/table/casino/felt.png', preview: '/table/casino/preview.png', mode: 'fs', align: 'center', puck: 'casino',  btn: 'casino' },
   // Tapis par defaut du client QML (data/gfx/qml/table/*, AGPL-3.0) — plein ecran.
   { id: 'danuxi', key: 'tableDanuxi', fallback: "Danuxi Blue", swatch: '#1f3a5c', feltUrl: '/table/danuxi/felt.png', preview: '/table/danuxi/preview.png', mode: 'fs', skin: true, align: 'center', zoom: 1.3 },
@@ -162,8 +161,8 @@ const AXES = [table, deck, seat];
 // theme par defaut configurable cote admin (window.applyThemePreset). Boutons/pucks
 // ne sont plus des valeurs d'axe -> ils sont injectes par le style de table choisi.
 const PRESETS = [
-  { id: 'official',      key: 'presetPokerthOfficial',      fallback: 'PokerTH Dark',  swatch: '#1d222b', values: { theme: 'pokerth',       table: 'pokerth-live', deck: 'pokerth-new' } },
-  { id: 'officiallight', key: 'presetPokerthOfficialLight', fallback: 'PokerTH Light', swatch: '#dce2ec', values: { theme: 'pokerth-light', table: 'pokerth-live', deck: 'pokerth-new' } },
+  { id: 'official',      key: 'presetPokerthOfficial',      fallback: 'PokerTH Dark',  swatch: '#1d222b', values: { theme: 'pokerth',       table: '', deck: 'pokerth-new' } },
+  { id: 'officiallight', key: 'presetPokerthOfficialLight', fallback: 'PokerTH Light', swatch: '#dce2ec', values: { theme: 'pokerth-light', table: '', deck: 'pokerth-new' } },
   { id: 'casino',        key: 'presetCasino',               fallback: 'Green Casino',  swatch: '#1e6b1e', values: { table: 'casino',        deck: 'casino-vert' } },
 ];
 
@@ -194,6 +193,10 @@ function activePreset() {
 
 try { if (localStorage.getItem('pth_deck') === 'svg') { localStorage.setItem('pth_deck', 'pokerth-new'); localStorage.setItem('pth_deck_ext', 'svg'); } } catch (e) {}
 
+// Style « Spectator Tools » (pokerth-live) supprime (narmod 19/07) : toute
+// selection residuelle retombe sur le style de table par defaut.
+try { if (localStorage.getItem('pth_table') === 'pokerth-live') localStorage.removeItem('pth_table'); } catch (e) {}
+
 // Migration « structure officielle » (axes A). Palettes -> Dark/Light ; tables ->
 // styles officiels bundles (feutre+pucks+boutons). Anciennes valeurs hors-liste
 // remappees une seule fois. Boutons/pucks ne sont plus des axes : le style de table
@@ -204,7 +207,6 @@ try {
     if (_mTh && _mTh !== 'pokerth' && _mTh !== 'pokerth-light' && _mTh !== 'auto') { localStorage.setItem('pth_theme', 'pokerth'); localStorage.removeItem('pth_theme_css'); }
     var _mTb = localStorage.getItem('pth_table'), _mDk = localStorage.getItem('pth_deck'), _mNew;
     if (_mDk === 'casino-vert') _mNew = 'casino';
-    else if (_mTb === 'pokerth-live') _mNew = 'pokerth-live';
     else _mNew = '';   // PokerTH par defaut (couvre '', blue, bordeaux, slate, photo, pokerth)
     if (_mNew) localStorage.setItem('pth_table', _mNew); else localStorage.removeItem('pth_table');
     localStorage.removeItem('pth_table_css'); localStorage.removeItem('pth_table_full');
@@ -971,7 +973,7 @@ function _loadThemes(){
         _themePkgs=pkgs.map(function(p){ return {id:String(p.id),name:p.name||String(p.id),swatch:p.swatch||'#444'}; });
         _palettePkgs=pkgs.filter(function(p){return p.palette;}).map(function(p){ return {id:String(p.id),name:p.name||String(p.id),swatch:p.swatch||'#444',tokens:p.palette}; }).filter(function(p){ return !_isBuiltinPalette(p.id); });
         _tablePkgs=pkgs.filter(function(p){return p.table||p.felt;}).map(function(p){ return {id:String(p.id),name:p.name||String(p.id),swatch:p.swatch||'#444',tokens:p.table||{},felt:p.felt||null,full:!!p.full,fs:!!p.fullscreen}; }).filter(function(p){ return !_isBuiltinTable(p.id); });
-        _pkgPresets=pkgs.filter(function(p){return p.palette||p.table||p.felt;}).map(function(p){ var vals={theme:(p.palette?String(p.id):''),table:'pokerth-live',buttons:'glossy',pucks:'pokerth-new'}; if(p.deck) vals.deck=String(p.deck); return {id:'pkg-'+p.id,name:p.name||String(p.id),swatch:p.swatch||'#444',values:vals}; });
+        _pkgPresets=pkgs.filter(function(p){return p.palette||p.table||p.felt;}).map(function(p){ var vals={theme:(p.palette?String(p.id):''),table:'',buttons:'glossy',pucks:'pokerth-new'}; if(p.deck) vals.deck=String(p.deck); return {id:'pkg-'+p.id,name:p.name||String(p.id),swatch:p.swatch||'#444',values:vals}; });
         _puckPkgs=pkgs.filter(function(p){return p.pucks;}).map(function(p){ var set={},pv=p.pucks; ['dealer','sb','bb'].forEach(function(k){ if(pv[k]) set[k]='url(/themes/'+p.id+'/'+pv[k]+')'; }); return {id:String(p.id),name:p.name||String(p.id),swatch:p.swatch||'#444',set:set,preview:(pv.dealer?'/themes/'+p.id+'/'+pv.dealer:null)}; }).filter(function(p){ return p.id!=='pokerth'; });
         _buttonPkgs=pkgs.filter(function(p){return p.buttonImages||p.buttons;}).map(function(p){ var e={id:String(p.id),name:p.name||String(p.id),swatch:p.swatch||'#444'}; if(p.buttonImages){ e.images={}; ['fold','check','call','raise','allin'].forEach(function(k){ if(p.buttonImages[k]) e.images[k]='url(/themes/'+p.id+'/'+p.buttonImages[k]+')'; }); } if(p.buttons){ e.colors=p.buttons; } return e; }).filter(function(p){ return p.id!=='glossy'; });
         try{ var pp=_palettePkgById(palette.get()); if(pp) _injectPalette(pp); var tp=_tablePkgById(table.get()); if(tp) _injectTable(tp); }catch(e){}
@@ -1343,7 +1345,7 @@ function _savedStyleTab() {
   return 'table';
 }
 var TABLE_AUTHORS = {
-  '':'PokerTH', 'pokerth-live':'PokerTH', 'green':'PokerTH', 'casino':'PokerTH',
+  '':'PokerTH Development Team', 'green':'PokerTH Development Team', 'casino':'PokerTH Development Team',
   danuxi:'Daniel Hammer', mute:'mute design', mute2:'mute design', teal:'Pinboc', lemming:'lemming',
   matrix:'PokerTH Development Team', star_trek:'PokerTH Development Team', tripsixes:'TripSixes',
   wanted:'Etienne Graphic Designer', xanax:'Sebastien Kerguen'
@@ -1363,7 +1365,7 @@ function _tabItems(id){
 }
 function _styleAuthor(kind, item){
   if (kind==='table') return TABLE_AUTHORS[item.id] || item.by || null;
-  if (kind==='deck'){ if (item && item.by) return item.by; for (var i=0;i<DECKS.length;i++) if (DECKS[i].id===item.id) return 'PokerTH'; return null; }
+  if (kind==='deck'){ if (item && item.by) return item.by; for (var i=0;i<DECKS.length;i++) if (DECKS[i].id===item.id) return 'PokerTH Development Team'; return null; }
   if (kind==='seat'){ return (item && item.by) || 'PokerTH Development Team'; } // demande narmod : crédit PokerTH Development Team par défaut, packs importés inclus
   return item.by || null;
 }

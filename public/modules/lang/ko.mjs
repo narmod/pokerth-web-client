@@ -65,7 +65,7 @@ export const strings = {
   advHidePbar:'PokerTH 모드 (플레이어 바 숨김)',
   deckSvg: "PokerTH",
   pucksPokerth: "PokerTH",
-  tablePokerthOfficial: "PokerTH",
+  tablePokerthOfficial: "PokerTH default QML table style",
   presetPokerthOfficial: "PokerTH Dark",
   themePokerthOfficial: "PokerTH Dark",
   presetPokerthOfficialLight: "PokerTH Light",
@@ -488,7 +488,7 @@ export const strings = {
     advPokerTerms:'국제 포커 용어를 번역하지 않음 (Check, Call, Raise)',
     pokerFold:'폴드', pokerCheck:'체크', pokerCall:'콜', pokerBet:'벳', pokerRaise:'레이즈', pokerAllin:'올인',
     // v0.3.579 : passe native complete — 105 cles en repli anglais traduites + cles err*/affichage (noms propres et termes de tables conserves)
-    actBadgeCheck:'Check', unitMinutes:'minutes', presetWecupName:'WeCup', presetBbcName:'BBC', tablePokerthLive:'Spectator Tools', tableDanuxi:'Danuxi Blue', tableMute:'Mute', tableMute2:'Mute 02', tableTeal:'Teal', tableLemming:'Lemming',
+    actBadgeCheck:'Check', unitMinutes:'minutes', presetWecupName:'WeCup', presetBbcName:'BBC', tableDanuxi:'Danuxi Blue', tableMute:'Mute', tableMute2:'Mute 02', tableTeal:'Teal', tableLemming:'Lemming',
     tableMatrix:'Matrix', tableStarTrek:'Star Trek', tableTripSixes:'TripSixes', tableWanted:'Wanted', tableXanax:'Xanax', pucksAuto:'Auto (table)', pucksCasino:'Casino', infoTypeLabel:'Type', infoCapitalLabel:'Capital', wpWaitingPlayers:'플레이어 대기 중 …',
     wpFillBots:'컴퓨터 플레이어로 채우기', wpStartGame:'게임 시작', wpLeaveGame:'게임 나가기', advFourColor:'4색 덱 (♦ 파랑, ♣ 초록)', cardZoomToggle:'내 카드 확대', actBadgeFold:'폴드', actBadgeCall:'콜', actBadgeBet:'벳', actBadgeRaise:'레이즈', actBadgeAllin:'올인', cancelBtn:'취소',
     navBack:'뒤로', gameNameLabel:'게임 이름', passwordLabel:'비밀번호', startCash:'시작 자본', blindsSettings:'블라인드 설정', firstSmallBlind:'첫 스몰 블라인드', blindInterval:'블라인드 인상 간격', unitHands:'핸드', timeLimits:'시간 제한', actionTimeout:'행동당 시간', pauseBetweenHands:'핸드 사이 일시정지',

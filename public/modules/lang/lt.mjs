@@ -62,7 +62,7 @@ export const strings = {
   advHidePbar:'PokerTH režimas (žaidėjo juosta paslėpta)',
   deckSvg: "PokerTH",
   pucksPokerth: "PokerTH",
-  tablePokerthOfficial: "PokerTH",
+  tablePokerthOfficial: "PokerTH default QML table style",
   presetPokerthOfficial: "PokerTH Dark",
   themePokerthOfficial: "PokerTH Dark",
   presetPokerthOfficialLight: "PokerTH Light",
@@ -678,7 +678,7 @@ export const strings = {
     advPokerTerms:'Neversti tarptautinių pokerio terminų (Check, Call, Raise)',
     pokerFold:'Fold', pokerCheck:'Check', pokerCall:'Call', pokerBet:'Bet', pokerRaise:'Raise', pokerAllin:'All-In',
     // v0.3.579 : passe native complete — 105 cles en repli anglais traduites + cles err*/affichage (noms propres et termes de tables conserves)
-    actBadgeCheck:'Check', unitMinutes:'minutes', presetWecupName:'WeCup', presetBbcName:'BBC', tablePokerthLive:'Spectator Tools', tableDanuxi:'Danuxi Blue', tableMute:'Mute', tableMute2:'Mute 02', tableTeal:'Teal', tableLemming:'Lemming',
+    actBadgeCheck:'Check', unitMinutes:'minutes', presetWecupName:'WeCup', presetBbcName:'BBC', tableDanuxi:'Danuxi Blue', tableMute:'Mute', tableMute2:'Mute 02', tableTeal:'Teal', tableLemming:'Lemming',
     tableMatrix:'Matrix', tableStarTrek:'Star Trek', tableTripSixes:'TripSixes', tableWanted:'Wanted', tableXanax:'Xanax', pucksAuto:'Auto (table)', pucksCasino:'Casino', infoTypeLabel:'Type', infoCapitalLabel:'Capital', wpWaitingPlayers:'Laukiama žaidėjų …',
     wpFillBots:'Papildyti kompiuteriniais žaidėjais', wpStartGame:'Pradėti žaidimą', wpLeaveGame:'Palikti žaidimą', advFourColor:'4 spalvų kaladė (♦ mėlyna, ♣ žalia)', cardZoomToggle:'Padidinti mano kortas', actBadgeFold:'Pasuoti',
     actBadgeCall:'Atsakyti', actBadgeBet:'Statyti', actBadgeRaise:'Kelti', actBadgeAllin:'All-In', cancelBtn:'Atšaukti', navBack:'Atgal', gameNameLabel:'Žaidimo pavadinimas', passwordLabel:'Slaptažodis', startCash:'Pradinis kapitalas',

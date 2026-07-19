@@ -62,7 +62,7 @@ export const strings = {
   advHidePbar:'Chế độ PokerTH (thanh người chơi ẩn)',
   deckSvg: "PokerTH",
   pucksPokerth: "PokerTH",
-  tablePokerthOfficial: "PokerTH",
+  tablePokerthOfficial: "PokerTH default QML table style",
   presetPokerthOfficial: "PokerTH Dark",
   themePokerthOfficial: "PokerTH Dark",
   presetPokerthOfficialLight: "PokerTH Light",
@@ -678,7 +678,7 @@ export const strings = {
     advPokerTerms:'Không dịch các thuật ngữ poker quốc tế (Check, Call, Raise)',
     pokerFold:'Bỏ bài', pokerCheck:'Xem bài', pokerCall:'Theo', pokerBet:'Cược', pokerRaise:'Tố', pokerAllin:'Tất tay',
     // v0.3.579 : passe native complete — 105 cles en repli anglais traduites + cles err*/affichage (noms propres et termes de tables conserves)
-    actBadgeCheck:'Check', unitMinutes:'minutes', presetWecupName:'WeCup', presetBbcName:'BBC', tablePokerthLive:'Spectator Tools', tableDanuxi:'Danuxi Blue', tableMute:'Mute', tableMute2:'Mute 02', tableTeal:'Teal', tableLemming:'Lemming',
+    actBadgeCheck:'Check', unitMinutes:'minutes', presetWecupName:'WeCup', presetBbcName:'BBC', tableDanuxi:'Danuxi Blue', tableMute:'Mute', tableMute2:'Mute 02', tableTeal:'Teal', tableLemming:'Lemming',
     tableMatrix:'Matrix', tableStarTrek:'Star Trek', tableTripSixes:'TripSixes', tableWanted:'Wanted', tableXanax:'Xanax', pucksAuto:'Auto (table)', pucksCasino:'Casino', infoTypeLabel:'Type', infoCapitalLabel:'Capital', wpWaitingPlayers:'Đang chờ người chơi …',
     wpFillBots:'Bổ sung người chơi máy tính', wpStartGame:'Bắt đầu ván', wpLeaveGame:'Rời ván', advFourColor:'Bộ bài 4 màu (♦ xanh dương, ♣ xanh lá)', cardZoomToggle:'Phóng to bài của tôi', actBadgeFold:'Bỏ bài', actBadgeCall:'Theo',
     actBadgeBet:'Cược', actBadgeRaise:'Tố', actBadgeAllin:'Tất tay', cancelBtn:'Hủy', navBack:'Quay lại', gameNameLabel:'Tên ván', passwordLabel:'Mật khẩu', startCash:'Vốn khởi đầu', blindsSettings:'Cài đặt blind', firstSmallBlind:'Small blind đầu tiên',

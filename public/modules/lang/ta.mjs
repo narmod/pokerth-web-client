@@ -63,7 +63,7 @@ export const strings = {
   advHidePbar:'PokerTH பயன்முறை (வீரர் பட்டி மறைக்கப்பட்டது)',
   deckSvg: "PokerTH",
   pucksPokerth: "PokerTH",
-  tablePokerthOfficial: "PokerTH",
+  tablePokerthOfficial: "PokerTH default QML table style",
   presetPokerthOfficial: "PokerTH Dark",
   themePokerthOfficial: "PokerTH Dark",
   presetPokerthOfficialLight: "PokerTH Light",
@@ -679,7 +679,7 @@ export const strings = {
     advPokerTerms:'சர்வதேச போக்கர் சொற்களை மொழிபெயர்க்க வேண்டாம் (Check, Call, Raise)',
     pokerFold:'ஃபோல்ட்', pokerCheck:'செக்', pokerCall:'கால்', pokerBet:'பெட்', pokerRaise:'ரெய்ஸ்', pokerAllin:'ஆல்-இன்',
     // v0.3.579 : passe native complete — 105 cles en repli anglais traduites + cles err*/affichage (noms propres et termes de tables conserves)
-    actBadgeCheck:'Check', unitMinutes:'minutes', presetWecupName:'WeCup', presetBbcName:'BBC', tablePokerthLive:'Spectator Tools', tableDanuxi:'Danuxi Blue', tableMute:'Mute', tableMute2:'Mute 02', tableTeal:'Teal', tableLemming:'Lemming',
+    actBadgeCheck:'Check', unitMinutes:'minutes', presetWecupName:'WeCup', presetBbcName:'BBC', tableDanuxi:'Danuxi Blue', tableMute:'Mute', tableMute2:'Mute 02', tableTeal:'Teal', tableLemming:'Lemming',
     tableMatrix:'Matrix', tableStarTrek:'Star Trek', tableTripSixes:'TripSixes', tableWanted:'Wanted', tableXanax:'Xanax', pucksAuto:'Auto (table)', pucksCasino:'Casino', infoTypeLabel:'Type', infoCapitalLabel:'Capital', wpWaitingPlayers:'வீரர்களுக்காக காத்திருக்கிறது …',
     wpFillBots:'கணினி வீரர்களால் நிரப்பு', wpStartGame:'ஆட்டத்தைத் தொடங்கு', wpLeaveGame:'ஆட்டத்தை விட்டு வெளியேறு', advFourColor:'4-நிற சீட்டுக்கட்டு (♦ நீலம், ♣ பச்சை)', cardZoomToggle:'என் சீட்டுகளைப் பெரிதாக்கு', actBadgeFold:'ஃபோல்ட்',
     actBadgeCall:'கால்', actBadgeBet:'பெட்', actBadgeRaise:'ரெய்ஸ்', actBadgeAllin:'ஆல்-இன்', cancelBtn:'ரத்துசெய்', navBack:'பின்செல்', gameNameLabel:'ஆட்டத்தின் பெயர்', passwordLabel:'கடவுச்சொல்', startCash:'தொடக்க மூலதனம்', blindsSettings:'பிளைண்ட் அமைப்புகள்',
