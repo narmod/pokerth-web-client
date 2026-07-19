@@ -18,7 +18,7 @@ const { S } = await import('../public/modules/game/state.mjs');
 let n = 0, fail = 0;
 function ok(cond, msg) { n++; if (!cond) { fail++; console.error('  ✗', msg); } else console.log('  ✓', msg); }
 
-console.log('state.mjs — V0 (timer) + V1 (voix/haptique) + V2 (stats) + V3 (pet/inv/chat/titre) + V4 (avatars) + V5 (lobby) + V6 (config partie) + V7 (connexion)');
+console.log('state.mjs — V0 (timer) + V1 (voix/haptique) + V2 (stats) + V3 (pet/inv/chat/titre) + V4 (avatars) + V5 (lobby) + V6 (config partie) + V7 (connexion) + V8 (action bar)');
 ok(typeof S === 'object' && S !== null, 'S est un objet');
 ok(window.PthState === S, 'pont window.PthState === S (même référence)');
 
@@ -113,6 +113,15 @@ ok(S._notifyWS === null && S._notifyUrl === '' && S._notifyTimer === null, 'cana
 ok(S.MIN_CONNECT_INTERVAL === 1500 && S.MODE_SWAP_MIN_GAP === 3000
    && S._RX_WATCHDOG_MIN_MS === 45000, 'constantes réseau');
 
+// V8 — Barre d'action / pré-sélection
+ok(S._playingMode === 0, '_playingMode init = 0 (Manuel)');
+ok(S._preAction === '' && S._preActionToCall === -1 && S._preActionOpen === false,
+   'pré-sélection init vierge');
+ok(S._modeSelBusy === false && S._modeSelPendingPreview === false && S._modeSelHoldTimer === null,
+   'sélecteur de mode init');
+ok(S._actionBarPinned === false, '_actionBarPinned défaut = false (localStorage vide)');
+ok(S.FEATURE_AUTO_CHECK_FOLD === true, 'FEATURE_AUTO_CHECK_FOLD = true');
+
 // Périmètre exact des vagues migrées (pas de fuite d'autres clés)
 const keys = Object.keys(S).sort();
 ok(JSON.stringify(keys) === JSON.stringify(['REACT_EMOJI_MIN_GAP', 'REACT_EMOJI_QUEUE_MAX',
@@ -140,8 +149,11 @@ ok(JSON.stringify(keys) === JSON.stringify(['REACT_EMOJI_MIN_GAP', 'REACT_EMOJI_
    '_lastRxTime', '_intentionalDisconnect', '_pendingRejoin', '_rejoinNickRetries',
    '_wasAuthenticated', '_lastConnectTime', '_lastConnectFailed', '_ipBlockUntil',
    '_notifyWS', '_notifyUrl', '_notifyTimer', 'MIN_CONNECT_INTERVAL',
-   'MODE_SWAP_MIN_GAP', '_RX_WATCHDOG_MIN_MS'].sort()),
-   'périmètre V0..V7 exact : ' + keys.join(', '));
+   'MODE_SWAP_MIN_GAP', '_RX_WATCHDOG_MIN_MS',
+   '_playingMode', '_preAction', '_preActionToCall', '_preActionOpen',
+   '_modeSelBusy', '_modeSelPendingPreview', '_modeSelHoldTimer',
+   '_actionBarPinned', 'FEATURE_AUTO_CHECK_FOLD'].sort()),
+   'périmètre V0..V8 exact : ' + keys.join(', '));
 
 console.log(fail ? `FAIL ${fail}/${n}` : `PASS ${n}/${n}`);
 process.exit(fail ? 1 : 0);

@@ -3944,20 +3944,18 @@ const App = (() => {
   // user's next turn this hand. When false, the checkbox is not rendered
   // at all but the underlying logic stays intact — flipping this back to
   // `true` reinstates the feature without touching anything else.
-  const FEATURE_AUTO_CHECK_FOLD = true;
   // Mode de jeu PERSISTANT (comme le client officiel) : 0 = Manuel,
   // 1 = Auto Check/Call, 2 = Auto Check/Fold. Reste actif jusqu'a un clic
   // manuel sur une action ou un changement de dropdown (pas de reset par main).
-  let _playingMode = 0;
   // Joue l'action du mode auto courant a NOTRE tour (sans afficher les boutons).
   // Retourne true si une action auto a ete declenchee.
   function _playAutoMode() {
-    if (_playingMode === 0 || turnPid !== myId) return false;
+    if (S._playingMode === 0 || turnPid !== myId) return false;
     if (!S.ws || S.ws.readyState !== WebSocket.OPEN) return false;
     var myBet0    = (seatData[myId] || {}).bet || 0;
     var toCall0   = Math.max(0, highestBet - myBet0);
     var canCheck0 = toCall0 === 0;
-    var act = canCheck0 ? 2 : (_playingMode === 1 ? 3 : 1); // 2=check, 3=call, 1=fold
+    var act = canCheck0 ? 2 : (S._playingMode === 1 ? 3 : 1); // 2=check, 3=call, 1=fold
     var amt = (act === 3) ? toCall0 : 0;
     // Plus de toast (demande narmod 2026-07-18) : l'indicateur visuel du mode
     // auto est le dropdown de mode encadré d'or (.mode-sel-wrap.mode-auto).
@@ -3969,13 +3967,10 @@ const App = (() => {
   // Le sélecteur de mode (Manuel/Auto Check-Call/Auto Check-Fold) y reste
   // activable. Les boutons d'action y sont affichés en APERÇU seulement
   // (non cliquables). Se ferme automatiquement quand c'est notre tour.
-  let _preActionOpen = false;
   // Pré-sélection d'action (comme le client officiel, bible §5.3) : on peut
   // armer Fold/Call/Raise/All-In avant son tour (bord or), recliquer pour
   // désarmer, et l'action s'exécute quand notre tour arrive. Invalidée si la
   // mise à suivre change, reset à chaque nouvelle main.
-  var _preAction = '';        // '' | 'fold' | 'call' | 'raise' | 'allin'
-  var _preActionToCall = -1;  // « à suivre » POUR MOI (highestBet - ma mise) mémorisé
                               // à l'armement. Invalidation alignée sur l'officiel
                               // (onCallAmountChanged) : comparer le montant QUE JE DOIS,
                               // pas highestBet brut — sinon la pose des blinds ou ma
@@ -3984,10 +3979,8 @@ const App = (() => {
   // Verrou anti-fermeture du picker natif (iOS) du selecteur de mode : tant
   // que l'utilisateur manipule #mode-sel, on differe les reconstructions
   // d'apercu (renderMyTurnActions(true)) pour ne pas detruire le <select> ouvert.
-  let _modeSelBusy = false, _modeSelPendingPreview = false, _modeSelHoldTimer = null;
   // Epingle : garder le panneau d'apercu ouvert en permanence hors-tour
   // (au lieu de retaper ses cartes a chaque main). Memorise entre sessions.
-  let _actionBarPinned = (function(){ try { return localStorage.getItem('pth_pin_actionbar') === '1'; } catch(e){ return false; } })();
   let _lastWaitingMsg = '', _lastWaitingIsHtml = false;
   // Sélecteur de mode auto & boutons quick-bet : toujours affichés dans la
   // barre d'action (les options de masquage ont été retirées des réglages).
@@ -6051,9 +6044,9 @@ const App = (() => {
         // Mode de jeu PERSISTANT entre les mains (comme le client officiel) :
         // pas de reset par main. Le joueur le change via le dropdown ou un
         // clic manuel sur une action.
-        _preActionOpen = false; // referme tout panneau "aperçu" à chaque main
-        if (_preAction) console.log('[prearm] reset nouvelle main (était: ' + _preAction + ')');
-        _preAction = '';        // désarme toute pré-action à chaque nouvelle main
+        S._preActionOpen = false; // referme tout panneau "aperçu" à chaque main
+        if (S._preAction) console.log('[prearm] reset nouvelle main (était: ' + S._preAction + ')');
+        S._preAction = '';        // désarme toute pré-action à chaque nouvelle main
         // Zoom-follow : reset du suivi + restauration d'un zoom suspendu au showdown
         try { if (window._zoomHandStart) window._zoomHandStart(); } catch (_e) {}
         // Badge « main gagnante » : masqué dès la nouvelle main
@@ -6376,12 +6369,12 @@ const App = (() => {
         if (turnPid === myId) {
           // C'est notre tour : on referme tout panneau "aperçu" pour ne pas
           // interférer avec la barre d'actions normale (et tous ses effets).
-          _preActionOpen = false;
+          S._preActionOpen = false;
           // Pré-action armée (comme l'officiel) : si une action a été armée avant
           // notre tour et qu'elle est encore valide, on la joue directement sans
           // afficher les boutons live.
-          console.log('[prearm] MON TOUR — préAction=' + (_preAction || '(vide)') + ' gameState=' + gameState);
-          if (_preAction) { var _pdid = _runPreAction(); console.log('[prearm] _runPreAction → ' + _pdid); _preAction = ''; if (_pdid) break; }
+          console.log('[prearm] MON TOUR — préAction=' + (S._preAction || '(vide)') + ' gameState=' + gameState);
+          if (S._preAction) { var _pdid = _runPreAction(); console.log('[prearm] _runPreAction → ' + _pdid); S._preAction = ''; if (_pdid) break; }
           // Mode auto PERSISTANT (Manuel/Auto Check-Call/Auto Check-Fold) :
           // si un mode auto est actif, jouer l'action sans afficher les boutons.
           // Le mode reste actif (pas de désarmement), comme le client officiel.
@@ -9081,7 +9074,7 @@ const App = (() => {
     var _liveTurn = false;
     try { var _mzL = document.querySelector('.my-zone'); _liveTurn = !!(_mzL && _mzL.classList.contains('my-turn-active')); } catch (e) {}
     var _pinShow = !_amSpectator && _gameStarted; // barre toujours affichée (mode masqué permanent)
-    if ((_preActionOpen || _pinShow) && !(turnPid === myId && _liveTurn)) { _renderPreActionPanel(); updateBottomLayout(); return; }
+    if ((S._preActionOpen || _pinShow) && !(turnPid === myId && _liveTurn)) { _renderPreActionPanel(); updateBottomLayout(); return; }
     // isHtml=true : msg contient du HTML interne sûr (généré par notre code)
     $('g-actions').innerHTML = '<div class="waiting-msg">' + (isHtml ? msg : esc(msg)) + '</div>';
     updateBottomLayout();
@@ -9091,9 +9084,9 @@ const App = (() => {
   // Boutons d'action en APERÇU (désactivés) + le seul réglage activable :
   // l'auto-check/fold. Toujours rendu dans #g-actions.
   function _flushPreviewIfPending() {
-    if (!_modeSelPendingPreview) return;
-    _modeSelPendingPreview = false;
-    if (_preActionOpen && turnPid !== myId) renderMyTurnActions(true);
+    if (!S._modeSelPendingPreview) return;
+    S._modeSelPendingPreview = false;
+    if (S._preActionOpen && turnPid !== myId) renderMyTurnActions(true);
   }
 
   function _updatePinBtn() {
@@ -9114,7 +9107,7 @@ const App = (() => {
 
   // Ferme le panneau et restaure le message d'attente du tour courant.
   function _closePreActionPanel() {
-    _preActionOpen = false;
+    S._preActionOpen = false;
     if (turnPid && turnPid !== myId && seatData[turnPid]) {
       renderGameWaiting(
         '<span style="font-family:inherit">' + esc(getPlayerName(turnPid)) + '</span>'
@@ -9669,8 +9662,8 @@ const App = (() => {
   // Recalcule le contexte au moment de l'exécution. Un Fold pré-armé devient
   // Check si le check est gratuit. Retourne true si une action a été jouée.
   function _runPreAction() {
-    if (!_preAction || _amSpectator) { console.log('[prearm] run: refus (préAction=' + _preAction + ' spectateur=' + _amSpectator + ')'); return false; }
-    var pa = _preAction;
+    if (!S._preAction || _amSpectator) { console.log('[prearm] run: refus (préAction=' + S._preAction + ' spectateur=' + _amSpectator + ')'); return false; }
+    var pa = S._preAction;
     var myMoney = (seatData[myId] || {}).money || 0;
     var myBet   = (seatData[myId] || {}).bet   || 0;
     var toCall  = Math.max(0, highestBet - myBet);
@@ -9689,8 +9682,8 @@ const App = (() => {
     // iOS/Android : ne pas detruire #mode-sel pendant que l'utilisateur le
     // manipule (le picker natif se fermerait). On differe le rafraichissement
     // de l'apercu hors-tour jusqu'a la fin de l'interaction (voir _modeSelHold).
-    if (preview && _modeSelBusy && document.getElementById('mode-sel')) {
-      _modeSelPendingPreview = true;
+    if (preview && S._modeSelBusy && document.getElementById('mode-sel')) {
+      S._modeSelPendingPreview = true;
       return;
     }
     // Defensive: never render action buttons in spectator mode. The
@@ -9705,9 +9698,9 @@ const App = (() => {
     // depuis l'armement (comme l'officiel : onCallAmountChanged). Fold/All-In
     // restent valides (pas de dépendance au montant).
     var _paCurToCall = Math.max(0, highestBet - ((seatData[myId] || {}).bet || 0));
-    if (_preAction && (_preAction === 'call' || _preAction === 'raise') && _paCurToCall !== _preActionToCall) {
-      console.log('[prearm] INVALIDÉ (' + _preAction + ') toCallCourant=' + _paCurToCall + ' ≠ mémo=' + _preActionToCall + ' (preview=' + !!preview + ')');
-      _preAction = '';
+    if (S._preAction && (S._preAction === 'call' || S._preAction === 'raise') && _paCurToCall !== S._preActionToCall) {
+      console.log('[prearm] INVALIDÉ (' + S._preAction + ') toCallCourant=' + _paCurToCall + ' ≠ mémo=' + S._preActionToCall + ' (preview=' + !!preview + ')');
+      S._preAction = '';
     }
     const myMoney = (seatData[myId] || {}).money || 0;
     const myBet   = (seatData[myId] || {}).bet || 0;
@@ -9778,11 +9771,11 @@ const App = (() => {
 
     // Sélecteur de mode PERSISTANT (remplace l'ancien bouton AUTO, même emplacement) :
     // Manuel / Auto Check-Call / Auto Check-Fold. Piloté par App.setPlayingMode.
-    const modeSel = '<div class="sel-wrap mode-sel-wrap' + (_playingMode !== 0 ? ' mode-auto' : '') + '">'
+    const modeSel = '<div class="sel-wrap mode-sel-wrap' + (S._playingMode !== 0 ? ' mode-auto' : '') + '">'
       + '<select id="mode-sel" autocomplete="off" onfocus="App._modeSelHold(true)" onblur="App._modeSelHold(false)" onchange="App.setPlayingMode(this.selectedIndex)">'
-      +   '<option' + (_playingMode === 0 ? ' selected' : '') + '>' + t('modeManual') + '</option>'
-      +   '<option' + (_playingMode === 1 ? ' selected' : '') + '>' + t('modeAutoCheckCall') + '</option>'
-      +   '<option' + (_playingMode === 2 ? ' selected' : '') + '>' + t('modeAutoCheckFold') + '</option>'
+      +   '<option' + (S._playingMode === 0 ? ' selected' : '') + '>' + t('modeManual') + '</option>'
+      +   '<option' + (S._playingMode === 1 ? ' selected' : '') + '>' + t('modeAutoCheckCall') + '</option>'
+      +   '<option' + (S._playingMode === 2 ? ' selected' : '') + '>' + t('modeAutoCheckFold') + '</option>'
       + '</select><span class="sel-arr">▾</span></div>';
 
     // En aperçu (hors-tour), les 4 boutons d'action ARMENT une pré-action au
@@ -9790,7 +9783,7 @@ const App = (() => {
     var _pv = !!preview;
     function _preClk(name, live) { return _pv ? "App.armPreAction('" + name + "')" : live; }
     if (_pv) { try { var _mzD = document.querySelector('.my-zone'); console.log('[prearm] rendu APERÇU — turnPid=' + turnPid + ' myId=' + myId + ' classeMonTour=' + !!(_mzD && _mzD.classList.contains('my-turn-active'))); } catch (e) {} }
-    function _preCls(name) { return (_pv && _preAction === name) ? ' prearmed' : ''; }
+    function _preCls(name) { return (_pv && S._preAction === name) ? ' prearmed' : ''; }
 
     const h = '<div class="action-grid">'
       + betRowHtml
@@ -11274,15 +11267,15 @@ function _maybeShowNextHandBtn() {
     // que c'est déjà notre tour, l'action est jouée immédiatement.
     _modeSelHold(on){
       // Pose/leve le verrou anti-fermeture du picker de mode (#mode-sel).
-      _modeSelBusy = !!on;
-      clearTimeout(_modeSelHoldTimer); _modeSelHoldTimer = null;
-      if (on) _modeSelHoldTimer = setTimeout(function(){ _modeSelBusy = false; _flushPreviewIfPending(); }, 8000);
+      S._modeSelBusy = !!on;
+      clearTimeout(S._modeSelHoldTimer); S._modeSelHoldTimer = null;
+      if (on) S._modeSelHoldTimer = setTimeout(function(){ S._modeSelBusy = false; _flushPreviewIfPending(); }, 8000);
       else _flushPreviewIfPending();
     },
 
     toggleActionPin() {
-      _actionBarPinned = !_actionBarPinned;
-      try { localStorage.setItem('pth_pin_actionbar', _actionBarPinned ? '1' : '0'); } catch(e){}
+      S._actionBarPinned = !S._actionBarPinned;
+      try { localStorage.setItem('pth_pin_actionbar', S._actionBarPinned ? '1' : '0'); } catch(e){}
       _updatePinBtn();
       // rafraichit immediatement l'UI hors-tour pour refleter le nouvel etat
       if (turnPid !== myId && _gameStarted) renderGameWaiting(_lastWaitingMsg, _lastWaitingIsHtml);
@@ -11291,7 +11284,7 @@ function _maybeShowNextHandBtn() {
     setPlayingMode(idx) {
       var n = parseInt(idx, 10);
       if (!(n === 1 || n === 2)) n = 0;
-      _playingMode = n;
+      S._playingMode = n;
       var sel = document.getElementById('mode-sel');
       if (sel && sel.selectedIndex !== n) sel.selectedIndex = n;
       // Cadre or immédiat sur le dropdown quand un mode auto est actif (QML).
@@ -11306,8 +11299,8 @@ function _maybeShowNextHandBtn() {
       if (turnPid === myId) return;                 // à notre tour : inchangé
       if (_amSpectator || !_gameStarted) return;
       if (myCards[0] == null && myCards[1] == null) return; // pas de cartes
-      _preActionOpen = !_preActionOpen;
-      if (_preActionOpen) _renderPreActionPanel();
+      S._preActionOpen = !S._preActionOpen;
+      if (S._preActionOpen) _renderPreActionPanel();
       else _closePreActionPanel();
     },
 
@@ -11319,17 +11312,17 @@ function _maybeShowNextHandBtn() {
       console.log('[prearm] armPreAction turnPid=' + turnPid + ' myId=' + myId);
       if (_amSpectator || !_gameStarted) return;
       if (myCards[0] == null && myCards[1] == null) return; // pas de cartes
-      _preAction = (_preAction === name) ? '' : name;      // toggle
-      _preActionToCall = Math.max(0, highestBet - ((seatData[myId] || {}).bet || 0)); // onCallAmountChanged : MON à-suivre
-      console.log('[prearm] ' + (_preAction ? 'armé' : 'désarmé') + ' name=' + name + ' toCallMémo=' + _preActionToCall + ' highestBet=' + highestBet + ' maMise=' + (((seatData[myId] || {}).bet) || 0));
+      S._preAction = (S._preAction === name) ? '' : name;      // toggle
+      S._preActionToCall = Math.max(0, highestBet - ((seatData[myId] || {}).bet || 0)); // onCallAmountChanged : MON à-suivre
+      console.log('[prearm] ' + (S._preAction ? 'armé' : 'désarmé') + ' name=' + name + ' toCallMémo=' + S._preActionToCall + ' highestBet=' + highestBet + ' maMise=' + (((seatData[myId] || {}).bet) || 0));
       renderMyTurnActions(true);                            // re-render pour le surlignage or
     },
 
     // Bascule rapide du mode depuis le panneau aperçu : Manuel <-> Auto Check/Fold.
     // (Conservé pour compat ; le dropdown du panneau pilote App.setPlayingMode.)
     togglePreAuto() {
-      _playingMode = (_playingMode === 0) ? 2 : 0;
-      if (_preActionOpen) _renderPreActionPanel();
+      S._playingMode = (S._playingMode === 0) ? 2 : 0;
+      if (S._preActionOpen) _renderPreActionPanel();
     },
 
     confirmLeaveGame() {
@@ -11802,9 +11795,9 @@ function _maybeShowNextHandBtn() {
     // officiel (QML/Qt-Widgets, bible §5.2 ; demande sp0ck 2026-07-17).
     // Le mode auto (_playAutoMode) et la pre-action appellent le doAction
     // INTERNE et ne repassent donc pas le mode.
-    doAction(action, bet) { if (_playingMode !== 0) this.setPlayingMode(0); doAction(action, bet); },
-    confirmCall(action, amount) { if (_playingMode !== 0) this.setPlayingMode(0); confirmCall(action, amount); },
-    doRaise() { if (_playingMode !== 0) this.setPlayingMode(0); doRaise(); },
+    doAction(action, bet) { if (S._playingMode !== 0) this.setPlayingMode(0); doAction(action, bet); },
+    confirmCall(action, amount) { if (S._playingMode !== 0) this.setPlayingMode(0); confirmCall(action, amount); },
+    doRaise() { if (S._playingMode !== 0) this.setPlayingMode(0); doRaise(); },
 
     // ── Per-login-mode CreateGame defaults ───────────────────────────────
     //
@@ -14893,7 +14886,7 @@ function renderPlayersList() {
   });
 })();
 
-;(function(){ window.BUILD_VERSION='0.3.831-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.832-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

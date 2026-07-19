@@ -134,6 +134,17 @@ export const S = {
   MIN_CONNECT_INTERVAL: 1500,
   MODE_SWAP_MIN_GAP: 3000,
   _RX_WATCHDOG_MIN_MS: 45000,
+
+  // ── V8 · Barre d'action / pré-sélection (domaine G) ──
+  _playingMode: 0,         // 0 = Manuel · 1 = Auto Check/Call · 2 = Auto Check/Fold
+  _preAction: '',          // '' | 'fold' | 'call' | 'raise' | 'allin'
+  _preActionToCall: -1,    // « à suivre » POUR MOI mémorisé au pré-armement
+  _preActionOpen: false,
+  _modeSelBusy: false, _modeSelPendingPreview: false, _modeSelHoldTimer: null,
+  _actionBarPinned: (function () {
+    try { return localStorage.getItem('pth_pin_actionbar') === '1'; } catch (e) { return false; }
+  })(),
+  FEATURE_AUTO_CHECK_FOLD: true,
 };
 
 // Pont legacy : pokerth.js (script classique) fait `const S = window.PthState;`
