@@ -130,7 +130,10 @@ APRÈS les vagues d'état, en pushes séparés (#9f).
 | V9 | Cœur de main, 3 sous-vagues : snapshots → cartes/mises → sièges/latches (`seats seatData` + ponts window) | 27 | élevé |
 | V10 | UI divers + `myId` (145 occ., pont window) | 10 | moyen |
 
-Mécanique par vague : script Python, comptage attendu par nom + `assert`,
+Mécanique par vague : renommage BORNÉ À LA PLAGE DE L'IIFE UNIQUEMENT
+(leçon V4 : un nom identique hors IIFE peut être un global implicite distinct
+— L1626 `_myAvatarCache` → ReferenceError sur `S.` hors portée, rebroadcast
+avatar LAN cassé). Script Python, comptage attendu par nom + `assert`,
 classification des exclusions (`.nom`, `nom:` littéral, chaînes, shadowing
 local), re-grep résiduel = zéro nom nu, `node --check`. Noms courants (`pot
 players games seats seatData myId ws myName loaded`) : diff intégral relu.
@@ -187,3 +190,4 @@ jamais de rustine sur un renommage partiel.
 | 2026-07-19 | 0.3.825-beta | 9e-V2 état stats/board/profil → S (12 vars, 96 renommages) — test-state 19 ✓ | 822 Ko (stable) |
 | 2026-07-19 | 0.3.826-beta | 9e-V3 état pet/inv + chat/notifs/titre → S (13 vars, 74 renommages) — test-state 25 ✓ | 822 Ko (stable) |
 | 2026-07-19 | 0.3.827-beta | 9e-V4 état avatars → S (12 vars, 83 renommages) — test-state 30 ✓ | 822 Ko (stable) |
+| 2026-07-19 | 0.3.828-beta | 9e hotfix : S._myAvatarCache hors IIFE (L1626) → window._myAvatarCache (global implicite d'origine) ; règle « renommage borné à l'IIFE » | régression V4 avatar LAN corrigée |

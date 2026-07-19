@@ -1623,7 +1623,7 @@ window.refreshMyAvatar = function() {
   var usePth   = (stored === '__pth__') && !!pthUrl;
   var emojiAv  = (stored && stored !== '__pth__' && stored !== '__img__') ? stored : '';
   var av = emojiAv; // back-compat var name used in the rest of the function
-  S._myAvatarCache = av;
+  window._myAvatarCache = av; // global implicite historique (écrit-seul, ≠ cache S de l'IIFE — hors portée de S)
   var display = av || (typeof myName !== 'undefined' ? (myName||'').charAt(0).toUpperCase() : '?');
   // Player-bar
   var pbAv = document.getElementById('g-myseat-av');
@@ -14951,7 +14951,7 @@ function renderPlayersList() {
   });
 })();
 
-;(function(){ window.BUILD_VERSION='0.3.827-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.828-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
