@@ -9898,6 +9898,7 @@ const App = (() => {
     // lieu d'agir ; le bouton armé reçoit la classe .prearmed (bord or).
     var _pv = !!preview;
     function _preClk(name, live) { return _pv ? "App.armPreAction('" + name + "')" : live; }
+    if (_pv) { try { var _mzD = document.querySelector('.my-zone'); console.log('[prearm] rendu APERÇU — turnPid=' + turnPid + ' myId=' + myId + ' classeMonTour=' + !!(_mzD && _mzD.classList.contains('my-turn-active'))); } catch (e) {} }
     function _preCls(name) { return (_pv && _preAction === name) ? ' prearmed' : ''; }
 
     const h = '<div class="action-grid">'
@@ -11423,7 +11424,8 @@ function _maybeShowNextHandBtn() {
     // comme le client officiel. Reclic sur la même = désarmement. Le bouton armé
     // est surligné en or ; l'action s'exécute quand notre tour arrive.
     armPreAction(name) {
-      if (turnPid === myId) return;                       // à notre tour : inchangé (les boutons agissent)
+      if (turnPid === myId) { console.log('[prearm] clic ignoré (mon tour) name=' + name); return; }  // à notre tour : inchangé (les boutons agissent)
+      console.log('[prearm] armPreAction turnPid=' + turnPid + ' myId=' + myId);
       if (_amSpectator || !_gameStarted) return;
       if (myCards[0] == null && myCards[1] == null) return; // pas de cartes
       _preAction = (_preAction === name) ? '' : name;      // toggle
@@ -15000,7 +15002,7 @@ function renderPlayersList() {
   });
 })();
 
-;(function(){ window.BUILD_VERSION='0.3.821-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.822-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
