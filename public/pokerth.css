@@ -7853,10 +7853,10 @@ html[data-seat-edit="1"] #g-seats .seat.seat-ghost { outline: none; cursor: defa
 .adv-sec:first-child{margin-top:4px}
 /* Sections repliables de l'onglet Interface (demande narmod 2026-07-19) :
    <details class="adv-fold"> natif, plie par defaut, chevron anime. */
-details.adv-fold>summary.adv-sec{cursor:pointer;list-style:none;display:flex;align-items:center;gap:7px;user-select:none;-webkit-tap-highlight-color:transparent;padding:3px 0}
+details.adv-fold>summary.adv-sec{cursor:pointer;list-style:none;display:flex;align-items:center;gap:8px;user-select:none;-webkit-tap-highlight-color:transparent;padding:5px 0;font-size:0.9rem;letter-spacing:0.07em} /* 0.62->0.9rem : la categorie domine ses options (0.82rem) — demande narmod 2026-07-19 */
 details.adv-fold>summary.adv-sec::-webkit-details-marker{display:none}
-summary.adv-sec .adv-sec-ic{flex:0 0 auto;width:15px;height:15px;display:inline-flex;align-items:center;justify-content:center;opacity:.85}
-summary.adv-sec .adv-sec-ic svg{width:15px;height:15px;display:block}
+summary.adv-sec .adv-sec-ic{flex:0 0 auto;width:20px;height:20px;display:inline-flex;align-items:center;justify-content:center;opacity:.9}
+summary.adv-sec .adv-sec-ic svg{width:20px;height:20px;display:block} /* 15->20 px : l'icone domine le texte de categorie (~14.4 px) — demande narmod 2026-07-19 */
 details.adv-fold>summary.adv-sec::before{content:'\25B8';font-size:0.95em;color:var(--gold-dim);transition:transform .15s ease;flex:0 0 auto}
 details.adv-fold[open]>summary.adv-sec::before{transform:rotate(90deg)}
 details.adv-fold:first-child>summary.adv-sec{margin-top:4px}
