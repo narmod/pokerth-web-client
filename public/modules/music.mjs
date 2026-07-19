@@ -60,6 +60,8 @@ let _ctx = null, _srcNode = null, _gain = null, _waReady = false, _waFailed = fa
 let _panner = null, _analyser = null, _vuData = null, _vuRAF = 0, _vuDead = false, _vuZeroFrames = 0;
 let _msReady = false;
 let _shade = false;   // mode compact « windowshade »
+let _fadePauseTimer = null;
+const FADE = 0.45;   // durée du fondu (s)
 // StereoPannerNode support, probed WITHOUT creating an AudioContext (iOS-safe).
 const _hasPan = (function () { var AC = window.AudioContext || window.webkitAudioContext; return !!(AC && AC.prototype && AC.prototype.createStereoPanner); })();
 
@@ -183,6 +185,11 @@ async function loadManifest(force) {
     _tracks = arr
       .filter(function (t) { return t && t.file && t.active !== false; })
       .sort(function (a, b) { return (a.order || 0) - (b.order || 0); });
+    var _ord = null; try { _ord = JSON.parse(localStorage.getItem('pth_music_order') || 'null'); } catch (e) {}
+    if (Array.isArray(_ord) && _ord.length) {
+      var _pos = {}; _ord.forEach(function (id, k) { _pos[id] = k; });
+      _tracks.sort(function (a, b) { return ((a.id in _pos) ? _pos[a.id] : 1e9) - ((b.id in _pos) ? _pos[b.id] : 1e9); });
+    }
   } catch (e) { _tracks = []; }
   _loaded = true;
   return _tracks;
@@ -207,12 +214,26 @@ async function play(id) {
     try { localStorage.setItem(LS_TRACK, t.id); } catch (e) {}
   }
   _ensureWebAudio(); _resumeCtx();        // build/unlock the audio graph (covers programmatic play too)
-  _applyVol(getVolume());
+  if (_fadePauseTimer) { clearTimeout(_fadePauseTimer); _fadePauseTimer = null; }
+  // Fondu d'entrée : gain à 0 avant lecture, puis montée vers le volume.
+  if (_waReady && _gain && _ctx) { try { _gain.gain.cancelScheduledValues(_ctx.currentTime); _gain.gain.setValueAtTime(0, _ctx.currentTime); } catch (e) {} }
+  else { _applyVol(getVolume()); }
   try { await a.play(); } catch (e) { /* gesture/load issue — UI reflects paused */ }
+  if (!_fadeTo(getVolume(), FADE)) _applyVol(getVolume());
   _render();
 }
-function pause() { if (_audio) try { _audio.pause(); } catch (e) {} _render(); }
-function stop()  { if (_audio) { try { _audio.pause(); _audio.currentTime = 0; } catch (e) {} } _render(); }
+function pause() {
+  if (!_audio) { _render(); return; }
+  if (_waReady && _gain && _ctx && !_audio.paused) {
+    _fadeTo(0, 0.35);
+    if (_fadePauseTimer) clearTimeout(_fadePauseTimer);
+    _fadePauseTimer = setTimeout(function () { _fadePauseTimer = null; try { _audio.pause(); } catch (e) {} }, 360);
+    return;   // le 'pause' event rendra l'UI à l'arrêt réel
+  }
+  try { _audio.pause(); } catch (e) {}
+  _render();
+}
+function stop()  { if (_fadePauseTimer) { clearTimeout(_fadePauseTimer); _fadePauseTimer = null; } if (_audio) { try { _audio.pause(); _audio.currentTime = 0; } catch (e) {} } _render(); }
 function toggleTrack(id) {
   if (id && id !== _curId) return play(id);
   if (isPlaying()) { pause(); return Promise.resolve(); }
@@ -350,6 +371,8 @@ function _icon(name) {
     'rep-one': '<g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3l3 3-3 3"/><path d="M20 6H8a4 4 0 0 0-4 4v1"/><path d="M7 21l-3-3 3-3"/><path d="M4 18h12a4 4 0 0 0 4-4v-1"/></g><path d="M11.4 10.6l1.4-.9V15" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>',
     shade:  '<path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>',
     expand: '<path d="M6 15l6-6 6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>',
+    'mv-up':   '<path d="M7 14l5-5 5 5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>',
+    'mv-down': '<path d="M7 10l5 5 5-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>',
     volume: '<path d="M4 9v6h4l5 4V5L8 9z"/><path d="M16.5 8.8a4.5 4.5 0 0 1 0 6.4" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>'
   };
   return '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false">' + (P[name] || '') + '</svg>';
@@ -380,6 +403,10 @@ function _render() {
            '<span class="music-pl-num">' + (i + 1) + '</span>' +
            '<span class="music-pl-ttl">' + _esc(t.title || t.id) + (t.artist ? ' \u2014 ' + _esc(t.artist) : '') + '</span>' +
            (t.id === _curId ? '<span class="music-pl-eq">' + (playing ? '\u25B8' : '\u2016') + '</span>' : '') +
+           (multi ? '<span class="music-pl-move">' +
+             '<button type="button" class="music-pl-mv" data-plmove="up" data-plid="' + _esc(t.id) + '"' + (i === 0 ? ' disabled' : '') + ' aria-label="' + _esc(_t('musicMoveUp', 'Move up')) + '">' + _icon('mv-up') + '</button>' +
+             '<button type="button" class="music-pl-mv" data-plmove="down" data-plid="' + _esc(t.id) + '"' + (i === _tracks.length - 1 ? ' disabled' : '') + ' aria-label="' + _esc(_t('musicMoveDown', 'Move down')) + '">' + _icon('mv-down') + '</button>' +
+           '</span>' : '') +
            '</li>';
   }).join('');
 
@@ -473,6 +500,13 @@ function _wire() {
     var go = function () { _unlockAudio(); play(li.getAttribute('data-track-id')); };
     li.addEventListener('click', go);
     li.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); go(); } });
+  });
+  // Boutons ↑/↓ : stopPropagation pour ne pas déclencher le play de la ligne.
+  _bodyEl.querySelectorAll('[data-plmove]').forEach(function (btn) {
+    btn.addEventListener('click', function (e) {
+      e.stopPropagation();
+      _moveTrack(btn.getAttribute('data-plid'), btn.getAttribute('data-plmove') === 'up' ? -1 : 1);
+    });
   });
   var rng = _bodyEl.querySelector('.music-vol-range');
   if (rng) {
@@ -585,6 +619,25 @@ function _stopVU()  { if (_vuRAF) { cancelAnimationFrame(_vuRAF); _vuRAF = 0; } 
 // Pause/resume the VU with tab visibility (belt-and-braces; _vuActive re-checks anyway).
 try { document.addEventListener('visibilitychange', function () { if (document.hidden) _stopVU(); else _startVU(); }); } catch (e) {}
 
+// ── Fondu (WebAudio) : rampe douce du gain ; no-op hors graphe WebAudio ──
+function _fadeTo(target, dur) {
+  if (!_waReady || !_gain || !_ctx) return false;
+  try {
+    var now = _ctx.currentTime;
+    _gain.gain.cancelScheduledValues(now);
+    _gain.gain.setValueAtTime(_gain.gain.value, now);
+    _gain.gain.linearRampToValueAtTime(target, now + (dur || FADE));
+    return true;
+  } catch (e) { return false; }
+}
+// ── Réordonnancement de la playlist (ordre custom persisté pth_music_order) ──
+function _saveOrder() { try { localStorage.setItem('pth_music_order', JSON.stringify(_tracks.map(function (t) { return t.id; }))); } catch (e) {} }
+function _moveTrack(id, dir) {
+  var i = _index(id); if (i < 0) return;
+  var j = i + dir; if (j < 0 || j >= _tracks.length) return;
+  var tmp = _tracks[i]; _tracks[i] = _tracks[j]; _tracks[j] = tmp;
+  _saveOrder(); _render();
+}
 // ── Mode compact « windowshade » : replie le panneau en une barre fine ──
 function _ensureShadeBtn() {
   var panel = document.getElementById('music-panel');

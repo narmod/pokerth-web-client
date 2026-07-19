@@ -7653,6 +7653,11 @@ html[data-seat-edit="1"] #g-seats .seat.seat-ghost { outline: none; cursor: defa
 .music-pl-num { flex: 0 0 auto; width: 1.4em; text-align: right; color: var(--gold-dim); font-variant-numeric: tabular-nums; font-size: 0.75rem; }
 .music-pl-ttl { flex: 1 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .music-pl-eq { flex: 0 0 auto; color: var(--sel, var(--gold)); font-size: 0.8rem; }
+.music-pl-move { flex: 0 0 auto; display: inline-flex; flex-direction: column; margin-left: 2px; }
+.music-pl-mv { background: none; border: none; color: var(--gold-dim); cursor: pointer; padding: 0; display: inline-flex; line-height: 0.5; }
+.music-pl-mv:hover:not([disabled]) { color: var(--gold); }
+.music-pl-mv[disabled] { opacity: 0.25; cursor: default; }
+.music-pl-mv svg { width: 15px; height: 15px; display: block; }
 .music-credit { font-size: 0.68rem; color: var(--gold-dim); text-align: center; }
 .music-credit a { color: var(--gold-dim); }
 
