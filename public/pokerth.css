@@ -8126,7 +8126,7 @@ html:not([data-seat-struct="qml"]) .seat:not(.me) .seat-foot { margin-top: 1px; 
 
 /* ===== Options avancées : navigation par catégories (parité dialogue officiel PokerTH) ===== */
 /* Tablette/desktop : sidebar icône+texte à gauche. Téléphone : barre d'icônes seules en haut. */
-.adv-card{max-width:620px}
+.adv-card{max-width:620px;container-type:inline-size}
 .adv-layout{display:flex;gap:14px;margin-top:10px;align-items:stretch}
 .adv-nav{flex:0 0 212px;display:flex;flex-direction:column;gap:2px;border-right:1px solid var(--border);padding-right:10px;overflow-y:auto;max-height:62vh} /* 168→212 px : libellés de catégories entiers (« Paramètres par défaut »…) — demande narmod 2026-07-18 */
 .adv-cat{display:flex;align-items:center;gap:10px;width:100%;padding:8px 9px;border:0;border-radius:8px;background:transparent;color:var(--text);font-size:.82rem;font-weight:600;text-align:left;cursor:pointer;transition:background .12s,color .12s}
@@ -8173,12 +8173,26 @@ html:not([data-seat-struct="qml"]) .seat:not(.me) .seat-foot { margin-top: 1px; 
 /* Options avancees en fenetre flottante (largeur >= 600, canon QML), pas sur mobile.
    Drag/resize/zoom via le systeme generique (cf. _advSetupFloat / _enableFloating). */
 @media (min-width:600px){
-  .adv-card{overflow:hidden;width:620px;height:min(82vh,640px);min-width:524px;min-height:360px;max-width:94vw;max-height:92vh}
+  .adv-card{overflow:hidden;width:620px;height:min(82vh,640px);min-width:380px;min-height:360px;max-width:94vw;max-height:92vh} /* min-width 524→380 : aligné sur minW JS, la barre d'icônes (container query) légitime une fenêtre étroite */
   #adv-modal .adv-card.floating-win{position:fixed;margin:0;max-width:none;max-height:none} /* fenetre du systeme generique (_enableFloating) ; bornes gerees en JS (_clampWinToViewport) */ /* min-width 480→524 : compense la sidebar élargie (212 px) */
   .adv-card .adv-layout{flex:1 1 auto;min-height:0}
   .adv-card .adv-nav{max-height:none;min-height:0}
   .adv-card .adv-panels{max-height:none;min-height:0}
   .adv-card .km-title{cursor:move;user-select:none;touch-action:none}
+}
+/* Layout du dialogue piloté par la largeur de la FENÊTRE elle-même (container
+   query), plus seulement par le viewport (demande narmod 2026-07-19) : une
+   fenêtre flottante rétrécie sous 600 px passe en barre d'icônes (« portrait »),
+   ré-élargie elle repasse en sidebar (« landscape ») — même logique responsive
+   que le client QML applique à sa propre fenêtre, et même comportement que les
+   autres fenêtres flottantes. Les règles @media restent telles quelles en repli
+   (mobile + navigateurs sans container queries). Seuil 600 = canon QML. */
+@container (max-width:599.98px){
+  .adv-layout{flex-direction:column;gap:10px}
+  .adv-nav{flex:0 0 auto;flex-direction:row;gap:4px;border-right:0;border-bottom:1px solid var(--border);padding:0 0 8px;max-height:none;overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch}
+  .adv-cat{flex:0 0 auto;width:auto;padding:7px 10px;border-radius:9px;justify-content:center}
+  .adv-cat .adv-cat-lbl{display:none}
+  .adv-cat.is-active{background:rgba(var(--sel-rgb,var(--gold-rgb)),.16);box-shadow:inset 0 -2px 0 0 var(--sel,var(--gold))}
 }
 
 /* ── Badge « main gagnante » sous les community cards (parité QML WinningHandBadge,

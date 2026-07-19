@@ -517,7 +517,7 @@ function _advSetupFloat() {
     resizable: true,
     zoom: true,
     defW: 620, defH: 640,          // base du zoom (inchangee vs _advApplyZoom)
-    minW: 524, minH: 360,
+    minW: 380, minH: 360,   // 524→380 : sous 600 px la sidebar devient barre d'icônes (container query), une fenêtre étroite « portrait » est légitime
     defLeft: Math.max(8, Math.round((window.innerWidth - defW) / 2)),
     defTop: Math.max(8, Math.round((window.innerHeight - defH) / 2)),
   });
@@ -17641,7 +17641,7 @@ function renderPlayersList() {
   });
 })();
 
-;(function(){ window.BUILD_VERSION='0.3.790-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.791-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
