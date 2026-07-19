@@ -1221,7 +1221,40 @@ function hasScope(scope, query, bodyToken) {
   return false;
 }
 
+// ── Rate limiting (optional dep: rate-limiter-flexible) ──
+// Two guards, both per client IP, both in-memory (reset on restart):
+//   • _rlAdminFail — brute-force guard on the admin panel: only FAILED auth
+//     attempts (403 responses) consume points; 10 failures in 15 min block the
+//     IP for 15 min (429). Legitimate panel polling is never throttled.
+//   • _rlWs — WebSocket connection storm guard: 30 new upgrades per minute
+//     per IP (multiple tabs / quick reconnects fit comfortably).
+// Missing module → limiters silently disabled (same graceful pattern as dotenv).
+// RATE_LIMIT_DISABLED=1 turns both off explicitly.
+let _RateLimiterMemory = null;
+try { _RateLimiterMemory = require('rate-limiter-flexible').RateLimiterMemory; } catch (_) { /* not installed */ }
+const _RATE_LIMIT_OFF = /^(1|true|on|yes)$/i.test(String(process.env.RATE_LIMIT_DISABLED || ''));
+const _rlAdminFail = (_RateLimiterMemory && !_RATE_LIMIT_OFF)
+  ? new _RateLimiterMemory({ points: 10, duration: 900, blockDuration: 900 }) : null;
+const _rlWs = (_RateLimiterMemory && !_RATE_LIMIT_OFF)
+  ? new _RateLimiterMemory({ points: 30, duration: 60 }) : null;
+// Client IP: trust the first X-Forwarded-For entry ONLY when the direct peer is
+// loopback/private (i.e. a local reverse proxy such as nginx). A public peer
+// could forge the header, so in that case its socket address wins.
+function clientIp(req) {
+  const peer = String((req && req.socket && req.socket.remoteAddress) || '');
+  const localPeer = /^(::1$|::ffff:127\.|127\.|::ffff:10\.|10\.|::ffff:192\.168\.|192\.168\.|::ffff:172\.(1[6-9]|2\d|3[01])\.|172\.(1[6-9]|2\d|3[01])\.)/.test(peer);
+  const xff = req && req.headers && req.headers['x-forwarded-for'];
+  if (localPeer && xff) {
+    const first = String(xff).split(',')[0].trim();
+    if (first) return first;
+  }
+  return peer || 'unknown';
+}
+
 function adminJson(res, code, obj) {
+  // Penalize failed admin auth (brute-force guard). res._rlIp is attached by
+  // the /admin routing in the HTTP handler; consume() is fire-and-forget.
+  if (code === 403 && _rlAdminFail && res._rlIp) { _rlAdminFail.consume(res._rlIp).catch(function () {}); }
   res.writeHead(code, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' });
   res.end(JSON.stringify(obj));
 }
@@ -2723,7 +2756,17 @@ const httpServer = http.createServer((req, res) => {
   const reqPathOnly = req.url.split('?')[0];
   const query = url.parse(req.url, true).query;
   if (reqPathOnly === '/admin' || reqPathOnly === '/admin.html' || reqPathOnly.indexOf('/admin/') === 0) {
-    handleAdmin(req, res, reqPathOnly, url.parse(req.url, true).query);
+    const q = url.parse(req.url, true).query;
+    if (_rlAdminFail) {
+      const ip = clientIp(req);
+      res._rlIp = ip;
+      _rlAdminFail.get(ip).then(function (r) {
+        if (r && r.remainingPoints <= 0 && r.msBeforeNext > 0) {
+          res.writeHead(429, { 'Content-Type': 'application/json; charset=utf-8', 'Retry-After': String(Math.ceil(r.msBeforeNext / 1000)), 'Cache-Control': 'no-store' });
+          res.end(JSON.stringify({ ok: false, error: 'too many failed attempts, retry later' }));
+        } else handleAdmin(req, res, reqPathOnly, q);
+      }).catch(function () { handleAdmin(req, res, reqPathOnly, q); });
+    } else handleAdmin(req, res, reqPathOnly, q);
     return;
   }
   if (reqPathOnly === '/' || reqPathOnly === '/index.html') {
@@ -2928,7 +2971,12 @@ const httpServer = http.createServer((req, res) => {
   res.writeHead(404); res.end('Not found');
 });
 
-const wss = new WebSocket.Server({ server: httpServer });
+const wss = new WebSocket.Server({ server: httpServer, verifyClient: function (info, cb) {
+  // Connection-storm guard: reject the upgrade with 429 BEFORE any bridge is
+  // built. No limiter installed → always accept (unchanged behavior).
+  if (!_rlWs) return cb(true);
+  _rlWs.consume(clientIp(info.req)).then(function () { cb(true); }).catch(function () { cb(false, 429, 'Too Many Requests'); });
+} });
 
 console.log('\n╔═══════════════════════════════════════════════╗');
 console.log('║     PokerTH WebSocket Proxy v2.4              ║');
