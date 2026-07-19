@@ -300,6 +300,7 @@ SUMMARY
   if [ -d "$INSTALL_DIR/.git" ]; then
     info "Existing checkout — updating with git pull"
     run_as git -C "$INSTALL_DIR" checkout -- public/themes/themes.json 2>/dev/null || true
+    run_as git -C "$INSTALL_DIR" checkout -- public/seats/seats.json 2>/dev/null || true
     run_as git -C "$INSTALL_DIR" pull --ff-only
   else
     if [ -e "$INSTALL_DIR" ] && [ -n "$(ls -A "$INSTALL_DIR" 2>/dev/null)" ]; then
@@ -406,6 +407,7 @@ do_update() {
   # update -> arbre "sale" au pull suivant. On ecarte la copie locale juste avant
   # le pull pour que 'git pull --ff-only' ne soit jamais bloque (regeneree ensuite).
   run_as git -C "$INSTALL_DIR" checkout -- public/themes/themes.json 2>/dev/null || true
+  run_as git -C "$INSTALL_DIR" checkout -- public/seats/seats.json 2>/dev/null || true
   run_as git -C "$INSTALL_DIR" pull --ff-only
   info "npm install (runtime only)"
   ( cd "$INSTALL_DIR" && run_as npm install --omit=dev )
@@ -417,6 +419,7 @@ do_update() {
   regen_decks_manifest 2>/dev/null || true
   regen_themes_manifest 2>/dev/null || true
   regen_tables_manifest 2>/dev/null || true
+  regen_seats_manifest 2>/dev/null || true
   ok "Update complete. Current commit:"
   run_as git -C "$INSTALL_DIR" --no-pager log -1 --oneline || true
 }
@@ -810,6 +813,13 @@ regen_themes_manifest() {
   command -v node >/dev/null 2>&1 || { warn "node not found; skipping themes.json"; return 0; }
   [ -f "$INSTALL_DIR/scripts/themes-manifest.mjs" ] || return 0
   run_as node "$INSTALL_DIR/scripts/themes-manifest.mjs" || warn "themes.json generation failed"
+}
+regen_seats_manifest() {
+  local seats="$INSTALL_DIR/public/seats"
+  [ -d "$seats" ] || return 0
+  command -v node >/dev/null 2>&1 || { warn "node not found; skipping seats.json"; return 0; }
+  [ -f "$INSTALL_DIR/scripts/seats-manifest.mjs" ] || return 0
+  run_as node "$INSTALL_DIR/scripts/seats-manifest.mjs" || warn "seats.json generation failed"
 }
 
 do_deck_add() {
