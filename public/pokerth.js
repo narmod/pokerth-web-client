@@ -2580,6 +2580,7 @@ document.addEventListener("DOMContentLoaded", function() {
 // ═══════════════════════════════════════════════════════════
 const App = (() => {
   const S = window.PthState; // état partagé — modules/game/state.mjs (ESM #9e)
+  const $ = id => document.getElementById(id); // restauré (hotfix 0.3.849 — avalé par le segment 9f-10)
   // ── Game state ──
 
   // ── Blind-raise schedule (forum: "better notification of blind increases") ──
@@ -12355,7 +12356,7 @@ function renderPlayersList() {
   });
 })();
 
-;(function(){ window.BUILD_VERSION='0.3.848-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+;(function(){ window.BUILD_VERSION='0.3.849-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

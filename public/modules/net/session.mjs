@@ -53,7 +53,7 @@ function _endConnecting(){
 }
 
 // ── DOM ──
-const $ = id => document.getElementById(id);
+// (const $ retiré — ligne avalée par l'extraction 9f-10, restaurée dans l'IIFE ; hotfix 0.3.849)
 
 function show(id) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
