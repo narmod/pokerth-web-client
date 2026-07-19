@@ -1123,6 +1123,10 @@ function renderSeatsImmediate() {
   requestAnimationFrame(function() {
     autoScaleTable();
     setTimeout(autoScaleTable, 150);
+    // Le badge « main gagnante » (s'il est visible) suit le repositionnement
+    // des cartes communes recalculé ci-dessus (narmod 19/07).
+    try { if (window._repositionWinHandBadge) window._repositionWinHandBadge(); } catch (e) {}
+    setTimeout(function(){ try { if (window._repositionWinHandBadge) window._repositionWinHandBadge(); } catch (e) {} }, 160);
   });
 }
 

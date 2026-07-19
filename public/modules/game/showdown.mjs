@@ -181,7 +181,8 @@ function _snapshotHandResults() {
 function showWinHandBadge(label) {
   var b = document.getElementById('g-win-hand');
   if (!b) return;
-  if (!label) { b.style.display = 'none'; return; }
+  if (!label) { b.style.display = 'none'; window._winHandLabel = null; return; }
+  window._winHandLabel = label;   // mémorisé pour le repositionnement au relayout
   var comm = document.getElementById('g-comm');
   var oval = document.querySelector('.felt-oval');
   b.textContent = label;   // textContent : libellé simple, jamais du HTML
@@ -194,12 +195,25 @@ function showWinHandBadge(label) {
   // rangée (demande narmod 19/07). Sinon : sous les cartes, comme le QML.
   var _whOverlay = !_whPortrait && window.innerHeight < 600;
   if (comm && oval) {
+    // Mesure RÉELLE de la rangée de cartes : #g-comm est décalé par le
+    // repositionnement auto (paysage/portrait) et mis à l'échelle par
+    // --comm-scale. On lit sa position effective via getBoundingClientRect
+    // plutôt que de supposer un centrage sur l'ovale, pour que le badge
+    // suive toujours les cartes (narmod 19/07). Comme le scaler applique un
+    // transform:scale au conteneur, on reconvertit la mesure écran en
+    // coordonnées locales de .felt-oval (division par le scale effectif).
+    var _or = oval.getBoundingClientRect();
+    var _cr = comm.getBoundingClientRect();
+    var _sc = (oval.offsetHeight > 0 && _or.height > 0) ? (_or.height / oval.offsetHeight) : 1;
+    if (!_sc || !isFinite(_sc)) _sc = 1;
     if (_whOverlay) {
-      b.style.top = Math.round(oval.clientHeight / 2) + 'px';
+      // Centré verticalement sur la rangée réelle.
+      b.style.top = Math.round(((_cr.top + _cr.height / 2) - _or.top) / _sc) + 'px';
       b.style.transform = 'translate(-50%, -50%)';
     } else {
-      b.style.top = Math.round(oval.clientHeight / 2 + comm.offsetHeight / 2 + _whGap) + 'px';
-      b.style.transform = '';
+      // Juste sous le bas réel de la rangée + l'écart QML.
+      b.style.top = Math.round(((_cr.bottom - _or.top) / _sc) + _whGap) + 'px';
+      b.style.transform = 'translateX(-50%)';
     }
   }
   b.style.display = '';
@@ -209,6 +223,16 @@ function showWinHandBadge(label) {
 window._hideWinHandBadge = function () {
   var b = document.getElementById('g-win-hand');
   if (b) b.style.display = 'none';
+  window._winHandLabel = null;
+};
+// Repositionne le badge « main gagnante » sur les cartes si visible. Appelé
+// après renderSeats (qui recalcule --comm-scale / le placement des cartes) et
+// au resize, pour que le badge suive le repositionnement automatique.
+window._repositionWinHandBadge = function () {
+  try {
+    var b = document.getElementById('g-win-hand');
+    if (b && b.style.display !== 'none' && window._winHandLabel) showWinHandBadge(window._winHandLabel);
+  } catch (e) {}
 };
 
 function showWinnerOverlay(winners) {
