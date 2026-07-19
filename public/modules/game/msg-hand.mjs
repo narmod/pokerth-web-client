@@ -162,9 +162,14 @@ function onGameStartInitial(sub) {
       setTimeout(function(){ window.renderSeats(); }, 120);
       window.renderGameWaiting(t('gameStartedWaitHand'));
     } else {
-      // Animer le déplacement du dealer + fade des actions
+      // Animer le déplacement du dealer + fade des actions.
+      // FIX 9g-C5a-bis : capturer from/to AU MOMENT DE LA PLANIFICATION —
+      // l'ancienne closure relisait _prevDealerPid au déclenchement (200 ms
+      // plus tard), après son écrasement ci-dessous → anim(nouveau, nouveau),
+      // no-op silencieux depuis l'introduction de l'animation.
       if (window._prevDealerPid >= 0 && window._prevDealerPid !== S.dealerPid) {
-        setTimeout(function(){ window.animateDealerMove(window._prevDealerPid, S.dealerPid); }, 200);
+        var _dlFrom = window._prevDealerPid, _dlTo = S.dealerPid;
+        setTimeout(function(){ window.animateDealerMove(_dlFrom, _dlTo); }, 200);
       }
       window.fadeOutAllActions();
       window.renderSeats();

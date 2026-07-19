@@ -101,16 +101,14 @@ sub = subOf([[1, 0, 12],
 M.onHandStart(sub);
 ok(S.handNum === 2, 'onHandStart : main 2');
 
-// Dealer suivi par GameStartInitial. ⚠ COMPORTEMENT CONSERVÉ (bug latent
-// pré-existant) : la closure du setTimeout lit _prevDealerPid AU
-// DÉCLENCHEMENT, après son écrasement → animateDealerMove(nouveau,
-// nouveau). Le test fige ce comportement ; fix prévu en push séparé.
+// Dealer suivi par GameStartInitial (fix 9g-C5a-bis : from/to capturés
+// à la planification → l'animation reçoit enfin le vrai déplacement).
 window._prevDealerPid = 9; dealerMoved = null;
 M.onGameStartInitial(subOf([[1, 0, 12], [2, 0, 5]]));
 ok(window._prevDealerPid === 5, 'onGameStartInitial : _prevDealerPid suivi');
 await new Promise((r) => setTimeout(r, 260)); // l'animation part après 200 ms
-ok(dealerMoved && dealerMoved[0] === 5 && dealerMoved[1] === 5,
-   'onGameStartInitial : animation planifiée (from écrasé — bug latent conservé)');
+ok(dealerMoved && dealerMoved[0] === 9 && dealerMoved[1] === 5,
+   'onGameStartInitial : animation du dealer 9 → 5 (fix from capturé)');
 
 // Bootstrap spectateur : premier HandStart sans GameStartInitial
 S._gameStarted = false; S._seatsFrozen = false; S.seats = [];
