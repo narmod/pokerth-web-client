@@ -7918,6 +7918,11 @@ body.adv-no-lobbychat #lobby-chat-panel,body.adv-no-lobbychat #lobby-chat-btn{di
 .seat.loser-fade .pk{opacity:.4;filter:grayscale(.55);transition:opacity .45s ease,filter .45s ease}
 /* Drapeau pays sur l'avatar (showCountryFlagOnAvatar) — visibilite togglable. */
 body.adv-no-flag .seat-flag{display:none !important}
+/* Titre « PokerTH » de l'écran de connexion (.cl-app-title) : CACHÉ par
+   défaut (demande narmod 19/07). Rendu visible uniquement quand l'option
+   « Afficher le titre PokerTH » est activée (body.adv-show-title). */
+.cl-app-title{display:none}
+body.adv-show-title .cl-app-title{display:block}
 /* Player-bar masquée : tes cartes/infos s'affichent dans ta self-box (siège).
    La barre d'action descend tout en bas (pin forcé en JS -> visible en permanence). */
 body.adv-hide-pbar .player-bar{display:none !important}

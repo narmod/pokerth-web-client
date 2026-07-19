@@ -183,6 +183,10 @@ function applyAdvOpts() {
     b.classList.toggle('adv-no-blindsbadge', !_advGet('blinds_badge', true)); // pastille blinds du bandeau (extension web)
     b.classList.toggle('adv-no-community', !_advGet('show_community', true));
     b.classList.toggle('adv-no-flag', !_advGet('show_flag', true));
+    // Titre « PokerTH » de l'écran de connexion : caché par défaut (defOn
+    // = false). La classe n'est posée que si l'option est activée (narmod
+    // 19/07). Le CSS masque .cl-app-title sauf sous body.adv-show-title.
+    b.classList.toggle('adv-show-title', _advGet('show_app_title', false));
     try { if (typeof window._syncStatsTab === 'function') window._syncStatsTab(); } catch (e) {}
     try { if (typeof window._hudRefresh === 'function' && localStorage.getItem('pth_hud_on') === '1') window._hudRefresh(); else if (typeof window._hudRender === 'function') window._hudRender(); } catch (e) {}
     try {
@@ -353,6 +357,7 @@ function openAdvancedOptions() {
   sync('adv-statusbar', 'status_bar', true);
   sync('adv-blindsbadge', 'blinds_badge', true);
   sync('adv-winnerpopup', 'winner_popup', true);
+  sync('adv-apptitle', 'show_app_title', false);
   sync('adv-removegone', 'remove_gone', false);
   try { var _dm = document.getElementById('adv-darkmode'); if (_dm && window.getTheme) _dm.value = window.getTheme() || 'auto'; } catch (e) {}
   sync('adv-pingavatar', 'ping_avatar', true); // défaut QML : ShowPingStateInAvatar=1
@@ -8524,7 +8529,7 @@ window.togglePlayersPanel = togglePlayersPanel;
 window.toggleReactionPanel = toggleReactionPanel;
 window.App = App;
 
-window.BUILD_VERSION='0.3.885-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='0.3.886-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

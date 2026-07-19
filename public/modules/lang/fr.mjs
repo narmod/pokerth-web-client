@@ -53,7 +53,7 @@ export const strings = {
     winnerBadge:'GAGNANT',
     // GameStatusBar (bandeau d'info de jeu, parité QML §7)
     gsbTotal:'Total :', gsbBets:'Mises :', gsbGame:'Partie :', gsbHand:'Main :',
-  advUiGeneral:'Général', advUiNetwork:'Réseau', advShowTooltips:'Afficher les infobulles', advDisableSplash:'Désactiver l\'écran de démarrage', advDontTranslatePoker:'Ne pas traduire les termes de poker (Check, Call, Raise)', advNA:'web', advLanguage:'Langue', advDefCommunity:'Communauté par défaut', advSecReactions:'Réactions', advDisableReactions:'Désactiver les réactions emoji', advNetStateColor:'Couleur d\'état réseau dans le coin de l\'avatar',
+  advUiGeneral:'Général', advUiNetwork:'Réseau', advShowTooltips:'Afficher les infobulles', advShowAppTitle:'Afficher le titre PokerTH sur l\u2019\u00e9cran de connexion', advDisableSplash:'Désactiver l\'écran de démarrage', advDontTranslatePoker:'Ne pas traduire les termes de poker (Check, Call, Raise)', advNA:'web', advLanguage:'Langue', advDefCommunity:'Communauté par défaut', advSecReactions:'Réactions', advDisableReactions:'Désactiver les réactions emoji', advNetStateColor:'Couleur d\'état réseau dans le coin de l\'avatar',
   showPlayers: `Voir les joueurs`,
   footJoin: `Rejoindre`,
   spectatingBadge: `Spectateur`,

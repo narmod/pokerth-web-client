@@ -51,7 +51,7 @@ export const strings = {
     winnerBadge:'WINNER',
     // GameStatusBar (bandeau d'info de jeu, parité QML §7)
     gsbTotal:'Total:', gsbBets:'Bets:', gsbGame:'Game:', gsbHand:'Hand:',
-  advUiGeneral:'General', advUiNetwork:'Network', advShowTooltips:'Show tooltips', advDisableSplash:'Disable the splash screen on startup', advDontTranslatePoker:'Don\'t translate poker terms (Check, Call, Raise)', advNA:'web', advLanguage:'Language', advDefCommunity:'Default community', advSecReactions:'Reactions', advDisableReactions:'Disable emoji reactions', advNetStateColor:'Show network status colour in the avatar corner',
+  advUiGeneral:'General', advUiNetwork:'Network', advShowTooltips:'Show tooltips', advShowAppTitle:'Show the PokerTH title on the login screen', advDisableSplash:'Disable the splash screen on startup', advDontTranslatePoker:'Don\'t translate poker terms (Check, Call, Raise)', advNA:'web', advLanguage:'Language', advDefCommunity:'Default community', advSecReactions:'Reactions', advDisableReactions:'Disable emoji reactions', advNetStateColor:'Show network status colour in the avatar corner',
   showPlayers: `Show players`,
   footJoin: `Join`,
   spectatingBadge: `Spectating`,
