@@ -5826,20 +5826,38 @@ html[data-table="pokerth-live"] .raise-slider { accent-color: #4CAF50; }
    Pastille ronde blurple officielle + logo blanc, comme les icônes sociales
    d'un footer de site. Sélecteur .connect-footer .cf-discord pour battre la
    règle générique .connect-footer a (couleur or + soulignement pointillé). */
-.connect-footer .cf-discord {
+/* Rangée d'icônes sociales (Discord · GitHub · pokerth.net) : pastilles
+   translucides et discrètes au repos, pleine couleur de marque au survol. */
+.connect-footer .connect-social {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 6px;
+}
+.connect-footer .cf-social {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 34px;
-  height: 34px;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
-  background: #5865F2; /* blurple officiel Discord */
   border-bottom: none;
-  margin-bottom: 5px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.6);
-  transition: background 0.2s, transform 0.2s;
+  background: rgba(255,255,255,0.10);   /* translucide au repos */
+  box-shadow: none;
+  opacity: 0.55;                        /* discret */
+  transition: background 0.2s, transform 0.2s, opacity 0.2s, box-shadow 0.2s;
 }
-.connect-footer .cf-discord:hover { background: #6a76f5; transform: scale(1.08); }
+.connect-footer .cf-social svg { opacity: 0.9; }
+.connect-footer .cf-social:hover {
+  opacity: 1;
+  transform: scale(1.08);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.5);
+}
+/* Couleurs de marque révélées au survol uniquement. */
+.connect-footer .cf-discord:hover { background: #5865F2; }   /* blurple Discord */
+.connect-footer .cf-github:hover  { background: #24292e; }   /* gris GitHub */
+.connect-footer .cf-web:hover     { background: var(--gold-dim, #b09a00); }
 
 .connect-footer-line {
   margin: 1px 0;
