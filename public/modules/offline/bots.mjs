@@ -246,10 +246,54 @@ export function decide(ctx, bot){
     return { action:ACT.CALL };
   }
 
+  // ── Multi-street barrelling state (per hand, carried on the bot config) ───
+  // The engine keeps `aggressorId` = the LAST player to bet/raise, and never
+  // resets it between streets. So at the first decision of a new post-flop
+  // street, aggressorId === playerId means *I* fired the previous street and
+  // nobody has raised since → I'm the one who can barrel. We track how many
+  // barrels I've already fired this hand (bot._barrels) and on which street
+  // (bot._barrelStreet), both reset at handStart by the server. This adds NO
+  // extra rng draw on paths that didn't barrel before (the barrel rng() is
+  // pulled only inside the barrel guard, which is a brand-new branch).
+  const street = (L.street || ctx.gameState);
+  const iFiredPrev = (ctx.aggressorId != null && ctx.playerId != null && ctx.aggressorId === ctx.playerId);
+  // A barrel only makes sense on turn/river as the previous-street aggressor,
+  // facing a checked-to spot (canCheck), and not on the flop (that's the c-bet
+  // branch below, already handled by isAggr).
+  const canBarrel = (bot._barrelOn === true) && (street === 'turn' || street === 'river')
+                    && iFiredPrev && L.canCheck && L.canRaise;
+
   // Post-flop: continuation-bet as the pre-flop aggressor, value-bet made hands,
   // and semi-bluff strong draws; raise frequency scales with aggr.
   if (L.canCheck){
-    if (isAggr && L.canRaise && rng() < cbetP) return { action:ACT.RAISE, amountTo:raiseTo() };   // c-bet
+    // ── Barrel: keep telling the story on later streets ──────────────────
+    // Frequency decays per street and per barrel already fired, and scales
+    // with skill (a 'hard' bot barrels more credibly) and archetype aggression
+    // (aggr + bluffMul). Made hands barrel for VALUE regardless of frequency;
+    // air barrels as a skill-gated bluff; weak-no-draw hands GIVE UP (check),
+    // and the give-up is stronger for skilled bots (they don't spew).
+    if (canBarrel){
+      const already   = bot._barrels || 0;
+      const streetFade = (street === 'river') ? 0.55 : 0.75;         // river barrels rarer than turn
+      const fireFade   = Math.pow(0.7, already);                     // each extra barrel less likely
+      const barrelP    = Math.min(0.9, (0.35 + a*0.4) * bm * sk.bluffMul) * streetFade * fireFade;
+      const giveUpStr  = 0.30 + (1 - a)*0.10 - (sk.pushfold ? 0 : 0.08); // skilled/tight give up wider
+      if (str > 0.62){                                               // strong made hand → value barrel
+        bot._barrels = already + 1;
+        return { action:ACT.RAISE, amountTo:raiseTo() };
+      }
+      if (draw && rng() < semiBluffP){                              // draw → semi-bluff barrel
+        bot._barrels = already + 1;
+        return { action:ACT.RAISE, amountTo:raiseTo() };
+      }
+      if (str > giveUpStr && rng() < barrelP){                      // marginal air → skill-gated bluff barrel
+        bot._barrels = already + 1;
+        return { action:ACT.RAISE, amountTo:raiseTo() };
+      }
+      // give up: too weak to keep firing → pot-control check (no spew)
+      return { action:ACT.CHECK };
+    }
+    if (isAggr && L.canRaise && rng() < cbetP){ bot._barrels = (bot._barrels||0) + 1; return { action:ACT.RAISE, amountTo:raiseTo() }; }   // c-bet
     if (str>0.85 && L.canRaise) return { action:ACT.RAISE, amountTo:raiseTo() };
     if (str>0.58 && L.canRaise && rng() < pPost) return { action:ACT.RAISE, amountTo:raiseTo() };
     if (draw && L.canRaise && rng() < semiBluffP) return { action:ACT.RAISE, amountTo:raiseTo() }; // semi-bluff

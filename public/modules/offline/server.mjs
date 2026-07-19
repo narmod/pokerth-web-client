@@ -228,7 +228,13 @@ export class FakeServer {
     while(this.players.length < target){
       const b = this._pickBot();
       this.players.push(b);
-      this.botCfg[b.id] = { aggr:b.aggr, rng:this.rng, skill:b.skill, arch:b.arch, callMargin:b.callMargin, bluffMul:b.bluffMul, entryEq:b.entryEq, openMul:b.openMul };
+      // Barrel multi-street : activé pour les profils qui « racontent une
+      // histoire » — jamais les passifs (station), rare en easy (qui c-bet une
+      // fois puis renonce), systématique pour tag/lag/maniac dès normal/hard.
+      // Décidé une fois au fill (skill ET archétype connus ici) ; _barrels /
+      // _barrelStreet sont l'état par-main, remis à zéro au handStart.
+      const _barrelOn = (b.skill !== 'easy') && (b.arch !== 'station');
+      this.botCfg[b.id] = { aggr:b.aggr, rng:this.rng, skill:b.skill, arch:b.arch, callMargin:b.callMargin, bluffMul:b.bluffMul, entryEq:b.entryEq, openMul:b.openMul, _barrelOn, _barrels:0, _barrelStreet:null };
       this._send('GamePlayerJoined',[[1,0,this.gameId],[2,0,b.id],[3,0,0]]);
       this._info(b.id);
     }
@@ -369,6 +375,8 @@ export class FakeServer {
       case 'handStart': {
         this._roAcc = 0;   // nouvelle main : repartir d'un accumulateur vierge
         this._reactedHand = new Set(); this._reactN = 0;
+        // Reset de l'état de barrel par-main pour chaque bot (compteur + street).
+        for (const _id in this.botCfg){ const _c = this.botCfg[_id]; if (_c){ _c._barrels = 0; _c._barrelStreet = null; } }
         const hole = ev.holeByPlayer[this.meId] || [0,0];
         const spec=[[1,0,G],[2,2, encode([[1,0,hole[0]],[2,0,hole[1]]])],[4,0,ev.sb]];
         ev.seats.forEach(()=>spec.push([5,0,0]));

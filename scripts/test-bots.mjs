@@ -78,5 +78,49 @@ c2.legal.callAmt = 0; c2.legal.canCheck = true;
 const d3 = decide(c2, bot());
 ok(d3.action === ACT.CHECK || d3.action === ACT.RAISE, '72o with free check never folds: ' + d3.action);
 
+// 8) Barrelling (multi-street aggression) — turn, as previous-street aggressor
+// Context: I fired the flop (aggressorId === playerId), it's checked to me on
+// the turn (canCheck), I can raise. A barrel-enabled bot with a made hand
+// value-bets; a weak-no-draw hand gives up (checks).
+function turnCtx(hole, board) {
+  return {
+    hole, board, gameState: 'turn',
+    legal: { pot: 400, callAmt: 0, minRaiseTo: 200, maxRaiseTo: 5000,
+             canRaise: true, canCheck: true, bb: 100, street: 'turn' },
+    stack: 5000, mRatio: 33, numActive: 2, numPlayers: 6, posFromButton: 0,
+    playerId: 2, aggressorId: 2,   // I was the last aggressor
+  };
+}
+const barrelBot = (over) => Object.assign(
+  { aggr: 0.7, skill: 'hard', rng: mulberry32(55), _barrelOn: true, _barrels: 0 }, over || {});
+
+// Made hand (top set on a dry-ish board) → value barrel
+const strongBoard = [Ad, Kd, _7d, _2s];   // I hold AK → two pair / top pair+
+const dStrong = decide(turnCtx([As, Ah], strongBoard), barrelBot());
+ok(dStrong.action === ACT.RAISE, 'barrel: strong made hand fires the turn: ' + dStrong.action);
+
+// Air, weak, no draw, high skill → give up (check), never spew-fold on a free check
+const dAir = decide(turnCtx([_2h, _7d], [Kd, Qd, Jd, As]), barrelBot({ aggr: 0.2 }));
+ok(dAir.action === ACT.CHECK, 'barrel give-up: weak air checks back (no spew): ' + dAir.action);
+
+// Barrel disabled (station-like) → falls back to normal line, weak hand checks
+const dOff = decide(turnCtx([_2h, _7d], [Kd, Qd, Jd, As]), barrelBot({ _barrelOn: false }));
+ok(dOff.action === ACT.CHECK, 'barrel off: weak hand still checks: ' + dOff.action);
+
+// Not the previous aggressor → no barrel branch (aggressorId != me)
+const cNotAggr = turnCtx([As, Ah], strongBoard); cNotAggr.aggressorId = 5;
+const dNA = decide(cNotAggr, barrelBot());
+ok(dNA.action === ACT.RAISE || dNA.action === ACT.CHECK, 'non-aggressor turn: legal (value may still bet): ' + dNA.action);
+
+// Determinism: same seed + same state -> identical barrel decision
+const b1 = decide(turnCtx([As, Ah], strongBoard), barrelBot());
+const b2 = decide(turnCtx([As, Ah], strongBoard), barrelBot());
+ok(b1.action === b2.action && b1.amountTo === b2.amountTo, 'barrel decision deterministic');
+
+// Barrel counter increments when a barrel fires
+const bctr = barrelBot();
+decide(turnCtx([As, Ah], strongBoard), bctr);
+ok(bctr._barrels === 1, 'barrel counter increments on a fired barrel: ' + bctr._barrels);
+
 if (fails) { console.error(fails + ' test(s) failed'); process.exit(1); }
 console.log('All bot tests passed.');
