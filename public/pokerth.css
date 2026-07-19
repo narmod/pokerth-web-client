@@ -5849,7 +5849,8 @@ html[data-table="pokerth-live"] .raise-slider { accent-color: #4CAF50; }
   opacity: 1;
   transition: background 0.2s, transform 0.2s, opacity 0.2s, box-shadow 0.2s;
 }
-.connect-footer .cf-social svg { opacity: 1; filter: drop-shadow(0 1px 1px rgba(0,0,0,0.5)); }
+.connect-footer .cf-social svg,
+.connect-footer .cf-social img { opacity: 1; filter: drop-shadow(0 1px 1px rgba(0,0,0,0.5)); }
 .connect-footer .cf-social:hover {
   opacity: 1;
   transform: scale(1.08);
@@ -5858,7 +5859,7 @@ html[data-table="pokerth-live"] .raise-slider { accent-color: #4CAF50; }
 /* Couleurs de marque révélées au survol uniquement. */
 .connect-footer .cf-discord:hover { background: #5865F2; }   /* blurple Discord */
 .connect-footer .cf-github:hover  { background: #24292e; }   /* gris GitHub */
-.connect-footer .cf-web:hover     { background: var(--gold-dim, #b09a00); }
+.connect-footer .cf-web:hover     { background: rgba(40,46,60,0.75); }  /* logo coloré : pas de teinte or */
 
 .connect-footer-line {
   margin: 1px 0;
