@@ -1340,6 +1340,8 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
 .row2 { display: flex; gap: 12px; }
 .row2 .f:first-child { flex: 1; }
 .row2 .f-sm { width: 110px; }
+.row2 .f { min-width: 0; }        /* items flex compressibles (fix debordement Port en portrait iOS) */
+.row2 .f input { width: 100%; }   /* borne la largeur de l'input a son conteneur */
 
 /* Roue crantée « Plus d'options » à droite du sélecteur de mode : même langage
    visuel que le bouton avatar et la roue du lobby. Passe en or et l'icône pivote
