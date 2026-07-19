@@ -2679,12 +2679,13 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
   border: 1px solid var(--border-hi);
   border-radius: 10px;
   padding: 6px 5px;
-  /* Largeur FIXE : le menu ne doit plus s'élargir/rétrécir selon la
-     longueur du libellé (✓ présent ou non, FR/EN). */
-  width: 232px;
+  /* Largeur responsive : suit la fenêtre (min 232, plafond 300) au lieu
+     d'une valeur fixe — comme le reste de l'app (narmod 19/07). Reste
+     bornée pour ne pas s'élargir selon la longueur du libellé. */
+  width: clamp(232px, 46vw, 300px);
   box-sizing: border-box;
   flex-direction: column;
-  gap: 4px;
+  gap: clamp(4px, 1vw, 7px);
   box-shadow: 0 12px 32px rgba(0,0,0,0.7);
 }
 #g-overflow-menu.open,
@@ -2707,9 +2708,9 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
   box-shadow: none;
   /* padding-right généreux : on réserve la place du ✓ (positionné en
      absolu à droite) pour que le texte ne passe jamais dessous. */
-  padding: 7px 30px 7px 12px;
+  padding: clamp(7px, 1.4vw, 10px) clamp(30px, 5vw, 36px) clamp(7px, 1.4vw, 10px) clamp(12px, 2.2vw, 16px);
   border-radius: 4px;
-  font-size: 0.8rem;
+  font-size: clamp(0.8rem, 1.9vw, 0.95rem);
   position: relative;
   overflow: hidden;
   text-overflow: ellipsis;   /* libellé trop long (autre langue) => "…" au lieu d'élargir */
@@ -7804,11 +7805,11 @@ html[data-seat-edit="1"] #g-seats .seat.seat-ghost { outline: none; cursor: defa
   top: calc(100% + 6px);
   left: 0;
   z-index: 200;
-  width: 232px;
+  width: clamp(232px, 46vw, 300px);
   display: flex;
   flex-direction: column;
-  gap: 4px;
-  padding: 6px 5px;
+  gap: clamp(4px, 1vw, 7px);
+  padding: clamp(6px, 1.4vw, 9px) clamp(5px, 1.1vw, 8px);
   box-sizing: border-box;
   background: var(--modal-bg);
   border: 1px solid var(--border-hi);
@@ -7825,11 +7826,11 @@ html[data-seat-edit="1"] #g-seats .seat.seat-ghost { outline: none; cursor: defa
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  gap: 9px;
+  gap: clamp(9px, 1.8vw, 12px);
   text-align: left;
-  padding: 7px 12px;
+  padding: clamp(7px, 1.4vw, 10px) clamp(12px, 2.2vw, 16px);
   border-radius: 4px;
-  font-size: 0.8rem;
+  font-size: clamp(0.8rem, 1.9vw, 0.95rem);
   white-space: nowrap;
   text-decoration: none;
   background: transparent;
@@ -7844,19 +7845,19 @@ html[data-seat-edit="1"] #g-seats .seat.seat-ghost { outline: none; cursor: defa
 }
 #s-connect .connect-header .cl-menu .cl-ico {
   flex: none;
-  width: 18px;
-  height: 18px;
+  width: clamp(18px, 3.6vw, 24px);
+  height: clamp(18px, 3.6vw, 24px);
   display: inline-flex;
   align-items: center;
   justify-content: center;
 }
 #s-connect .connect-header .cl-menu .cl-ico img,
-#s-connect .connect-header .cl-menu .cl-ico svg { display: block; width: 18px; height: 18px; }
+#s-connect .connect-header .cl-menu .cl-ico svg { display: block; width: clamp(18px, 3.6vw, 24px); height: clamp(18px, 3.6vw, 24px); }
 #s-connect .connect-header .cl-menu .cl-ico-emo {
   flex: none;
-  width: 18px;
+  width: clamp(18px, 3.6vw, 24px);
   text-align: center;
-  font-size: 0.95rem;
+  font-size: clamp(0.95rem, 2.2vw, 1.2rem);
   line-height: 1;
 }
 
