@@ -5843,12 +5843,13 @@ html[data-table="pokerth-live"] .raise-slider { accent-color: #4CAF50; }
   height: 32px;
   border-radius: 50%;
   border-bottom: none;
-  background: rgba(255,255,255,0.22);   /* translucide mais visible */
-  box-shadow: none;
-  opacity: 0.8;                         /* discret sans être fantôme */
+  background: rgba(20,24,34,0.55);      /* pastille sombre : ressort sur le fond clair chargé */
+  border: 1px solid rgba(255,255,255,0.22);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.4);
+  opacity: 1;
   transition: background 0.2s, transform 0.2s, opacity 0.2s, box-shadow 0.2s;
 }
-.connect-footer .cf-social svg { opacity: 1; }
+.connect-footer .cf-social svg { opacity: 1; filter: drop-shadow(0 1px 1px rgba(0,0,0,0.5)); }
 .connect-footer .cf-social:hover {
   opacity: 1;
   transform: scale(1.08);
