@@ -7977,6 +7977,10 @@ function gipShowTab(tab) {
   if (tl) tl.classList.toggle('gip-on', tab === 'log');
   if (to) to.classList.toggle('gip-on', tab === 'odds');
   if (ts) ts.classList.toggle('gip-on', tab === 'stats');
+  // Le bouton « Exporter le journal » n'a de sens que sur l'onglet
+  // Historique — masqué sur Chances et Stats (demande narmod 19/07).
+  var xb = document.getElementById('gip-export');
+  if (xb) xb.style.display = tab === 'log' ? '' : 'none';
   // L'assistance (hand-strength) n'a de sens que sur l'onglet Historique.
   var asg = document.getElementById('gip-assist');
   try { localStorage.setItem('pth_gip_tab', tab); } catch (e) {}
@@ -8520,7 +8524,7 @@ window.togglePlayersPanel = togglePlayersPanel;
 window.toggleReactionPanel = toggleReactionPanel;
 window.App = App;
 
-window.BUILD_VERSION='0.3.877-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='0.3.878-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
