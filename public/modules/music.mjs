@@ -58,6 +58,7 @@ let _lcdRemain = false; // LCD time display: false = elapsed, true = remaining (
 // element's own volume (the pre-existing behaviour, fine off iOS).
 let _ctx = null, _srcNode = null, _gain = null, _waReady = false, _waFailed = false;
 let _panner = null, _analyser = null, _vuData = null, _vuRAF = 0, _vuDead = false, _vuZeroFrames = 0;
+let _msReady = false;
 // StereoPannerNode support, probed WITHOUT creating an AudioContext (iOS-safe).
 const _hasPan = (function () { var AC = window.AudioContext || window.webkitAudioContext; return !!(AC && AC.prototype && AC.prototype.createStereoPanner); })();
 
@@ -170,7 +171,7 @@ function _resumeCtx() {
 }
 // Create + unlock the audio graph synchronously inside a user gesture (iOS needs
 // the context created/resumed from a real interaction, before any await).
-function _unlockAudio() { _el(); _ensureWebAudio(); _resumeCtx(); }
+function _unlockAudio() { _el(); _ensureWebAudio(); _resumeCtx(); _setupMediaSession(); }
 
 async function loadManifest(force) {
   if (_loaded && !force) return _tracks;
@@ -317,6 +318,7 @@ function _renderProgress() {
     seekEl.disabled = !canSeek;
     if (!_seeking) seekEl.value = canSeek ? Math.round(c / d * 1000) : 0;
   }
+  _updateMediaSessionPos();
 }
 
 // ── UI ──
@@ -436,6 +438,7 @@ function _render() {
     '</div>';
 
   _wire();
+  _updateMediaSession();
 }
 
 function _wire() {
@@ -568,6 +571,46 @@ function _startVU() { if (!_vuRAF && _vuActive()) _vuRAF = requestAnimationFrame
 function _stopVU()  { if (_vuRAF) { cancelAnimationFrame(_vuRAF); _vuRAF = 0; } _vuReset(); }
 // Pause/resume the VU with tab visibility (belt-and-braces; _vuActive re-checks anyway).
 try { document.addEventListener('visibilitychange', function () { if (document.hidden) _stopVU(); else _startVU(); }); } catch (e) {}
+
+// ── Media Session : contrôles OS (écran verrouillé, notification, touches média) ──
+function _setupMediaSession() {
+  if (_msReady || !('mediaSession' in navigator)) return;
+  _msReady = true;
+  var ms = navigator.mediaSession;
+  function set(a, fn) { try { ms.setActionHandler(a, fn); } catch (e) {} }
+  set('play',          function () { _unlockAudio(); if (!isPlaying()) toggleTrack(); });
+  set('pause',         function () { if (isPlaying()) pause(); });
+  set('previoustrack', function () { _unlockAudio(); prev(); });
+  set('nexttrack',     function () { _unlockAudio(); next(); });
+  set('stop',          function () { stop(); });
+  set('seekto',        function (d) { if (d && typeof d.seekTime === 'number') seek(d.seekTime); });
+}
+function _updateMediaSession() {
+  if (!('mediaSession' in navigator)) return;
+  var ms = navigator.mediaSession, cur = _byId(_curId);
+  try {
+    if (cur && window.MediaMetadata) {
+      var art = cur.cover || '/favicon.svg';
+      ms.metadata = new MediaMetadata({
+        title:  cur.title || cur.id || 'PokerTH',
+        artist: cur.artist || 'PokerTH Radio',
+        album:  'PokerTH',
+        artwork: [{ src: art, sizes: '512x512', type: /\.svg($|\?)/.test(art) ? 'image/svg+xml' : 'image/png' }]
+      });
+    }
+    ms.playbackState = isPlaying() ? 'playing' : 'paused';
+  } catch (e) {}
+  _updateMediaSessionPos();
+}
+function _updateMediaSessionPos() {
+  if (!('mediaSession' in navigator)) return;
+  var ms = navigator.mediaSession;
+  if (!('setPositionState' in ms)) return;
+  try {
+    var d = getDuration(), c = getCurrentTime();
+    if (d > 0 && isFinite(d)) ms.setPositionState({ duration: d, position: Math.max(0, Math.min(c, d)), playbackRate: 1 });
+  } catch (e) {}
+}
 
 // Restore the last-selected track id + repeat mode at load (no playback).
 try { _curId = localStorage.getItem(LS_TRACK) || null; } catch (e) {}
