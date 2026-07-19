@@ -10,6 +10,11 @@
  *                     Example: ALLOWED_HOSTS="pokerth.net,www.pokerth.net,mybox.example.com,localhost,127.0.0.1"
  */
 
+// Load .env if present (optional dep): lets pm2 / bare `node proxy.js` read the
+// same .env file docker compose already uses. Never overrides real env vars.
+// Missing module or missing file are both fine — env vars keep working as before.
+try { require('dotenv').config(); } catch (_) { /* dotenv not installed */ }
+
 const WebSocket = require('ws');
 const net  = require('net');
 const tls  = require('tls');
