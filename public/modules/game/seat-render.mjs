@@ -1093,9 +1093,26 @@ function renderSeatsImmediate() {
       });
     });
   }
+  // ── Cible des animations de mise (jetons volants) : le POT BADGE
+  // (#g-potbar, au-dessus des cartes — parité QML) et non plus le centre
+  // du feutre, qui tombe au milieu de la rangée community (narmod 19/07 :
+  // « les animations de mise vont vers les cartes de la rivière pas vers
+  // le pot »). Replis : badge masqué (pot vide) → point juste au-dessus
+  // de la rangée de cartes ; sinon → centre du feutre (historique). ──
   var _ov2 = document.querySelector('.felt-oval');
-  if (_ov2) { var _or2 = _ov2.getBoundingClientRect();
-    S._potCenter = { x: _or2.left + _or2.width/2, y: _or2.top + _or2.height/2 }; }
+  var _pb2 = document.getElementById('g-potbar');
+  if (_pb2 && _pb2.offsetParent !== null) {
+    var _pbr2 = _pb2.getBoundingClientRect();
+    if (_pbr2.width > 4) S._potCenter = { x: _pbr2.left + _pbr2.width / 2, y: _pbr2.top + _pbr2.height / 2 };
+    else _pb2 = null;
+  } else _pb2 = null;
+  if (!_pb2) {
+    var _cm2 = document.getElementById('g-comm');
+    var _cmr2 = _cm2 ? _cm2.getBoundingClientRect() : null;
+    if (_cmr2 && _cmr2.width > 10) S._potCenter = { x: _cmr2.left + _cmr2.width / 2, y: _cmr2.top - 14 };
+    else if (_ov2) { var _or2 = _ov2.getBoundingClientRect();
+      S._potCenter = { x: _or2.left + _or2.width / 2, y: _or2.top + _or2.height / 2 }; }
+  }
   requestAnimationFrame(function() {
     autoScaleTable();
     setTimeout(autoScaleTable, 150);
