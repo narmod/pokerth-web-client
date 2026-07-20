@@ -1841,6 +1841,11 @@ function onAvatarImageChosen(input) {
           <div class="comm-row" id="g-comm"></div>
           <!-- Badge « main gagnante » du showdown (parité QML WinningHandBadge) -->
           <div class="win-hand-badge" id="g-win-hand" style="display:none"></div>
+          <!-- Pastille de connexion (reconnexion / essais) centrée sur les cartes
+               communes — remplace le bandeau plein écran quand la table est
+               affichée. Dans #g-table-scaler → suit l'échelle générique de la
+               table ; police asservie à --comm-scale (comme win-hand-badge). -->
+          <div class="conn-pill" id="g-conn-pill" style="display:none"><span class="rc-dot"></span><span id="g-conn-pill-msg"></span></div>
         </div>
       </div>
       <!-- Seats overlay: full zone, pixel-positioned by JS -->
@@ -2445,6 +2450,7 @@ if ('serviceWorker' in navigator) {
       <label class="adv-row"><input type="checkbox" id="adv-reducefx" onchange="setAdvOpt('reduce_fx',this.checked);document.documentElement.classList.toggle('reduce-fx',this.checked)"><span data-i18n="advReduceFx">Reduce graphic effects (shadows/glow) — for low-end devices</span></label>
       <label class="adv-row"><input type="checkbox" id="adv-statusbar" onchange="setAdvOpt('status_bar',this.checked);var _ps=document.getElementById('pot-strip');if(_ps)_ps.style.display=this.checked?'':'none'"><span data-i18n="advStatusBar">Game status bar (hand #, pot, bets, phase)</span><em class="adv-webtag">web</em></label>
       <label class="adv-row"><input type="checkbox" id="adv-blindsbadge" onchange="setAdvOpt('blinds_badge',this.checked)"><span data-i18n="advBlindsBadge">Blinds badge in the status bar</span><em class="adv-webtag">web</em></label>
+      <label class="adv-row"><input type="checkbox" id="adv-connpill" onchange="setAdvOpt('conn_pill',this.checked)"><span data-i18n="advConnPill">Connection status as a pill on the felt (instead of the top banner)</span><em class="adv-webtag">web</em></label>
       <label class="adv-row"><input type="checkbox" id="adv-winnerpopup" onchange="setAdvOpt('winner_popup',this.checked)"><span data-i18n="advWinnerPopup">Winner window at end of hand</span><em class="adv-webtag">web</em></label>
       <label class="adv-row"><input type="checkbox" id="adv-removegone" onchange="setAdvOpt('remove_gone',this.checked);try{renderSeats()}catch(e){}"><span data-i18n="advRemoveGone">Remove departed players and re-seat the table</span><em class="adv-webtag">web</em></label>
       <label class="adv-row"><input type="checkbox" id="adv-autoleave" onchange="setAdvOpt('auto_leave',this.checked)"><span data-i18n="advAutoLeave">Auto-return to lobby when the game ends</span></label>
