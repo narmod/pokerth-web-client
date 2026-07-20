@@ -89,6 +89,10 @@ function _ensureAssistPanel() {
   dock.type = 'button'; dock.className = 'gip-assist-dock';
   dock.setAttribute('data-i18n-title','assistDock'); dock.title = t('assistDock'); dock.textContent = '↩';
   dock.addEventListener('click', dockAssist);
+  // Garde-fou : double-clic sur l'en-tête (hors bouton) = recentrer la fenêtre
+  // (récupération si elle a été perdue hors écran).
+  hd.title = t('assistDock');
+  hd.addEventListener('dblclick', function(e){ if (e.target && e.target.closest && e.target.closest('button')) return; _recenterAssist(); });
   hd.appendChild(grip); hd.appendChild(title); hd.appendChild(dock);
   var host = document.createElement('div');
   host.id = 'g-assist-host';
@@ -98,6 +102,39 @@ function _ensureAssistPanel() {
   document.body.appendChild(ap);
   ap._hd = hd;
   return ap;
+}
+
+// ── Garde-fou : reborne la fenêtre détachée dans le viewport (jamais hors écran) ──
+function _ensureOnScreen(ap) {
+  if (!ap) return;
+  try {
+    var r = ap.getBoundingClientRect();
+    var w = r.width  || 240, h = r.height || 88;
+    var vw = window.innerWidth || 1024, vh = window.innerHeight || 768;
+    var left, top;
+    if (!r.width && !r.height) { left = 16; top = 56; }         // pas encore mesurable
+    else {
+      left = Math.min(Math.max(8, r.left), Math.max(8, vw - w - 8));
+      top  = Math.min(Math.max(8, r.top ), Math.max(8, vh - h - 8));
+    }
+    ap.style.position = 'fixed'; ap.style.right = 'auto'; ap.style.bottom = 'auto';
+    ap.style.left = left + 'px'; ap.style.top = top + 'px';
+  } catch (e) {}
+}
+
+// ── Recentrer la fenêtre à un emplacement visible par défaut (et persister) ──
+function _recenterAssist() {
+  var ap = document.getElementById('g-assist-panel');
+  if (!ap || ap.style.display === 'none') return;
+  ap.style.position = 'fixed'; ap.style.right = 'auto'; ap.style.bottom = 'auto';
+  ap.style.left = '16px'; ap.style.top = '56px';
+  _ensureOnScreen(ap);
+  try {
+    var r = ap.getBoundingClientRect();
+    var d = { left: Math.round(r.left) || 16, top: Math.round(r.top) || 56 };
+    if (ap._winResizable) { d.width = Math.round(r.width) || 240; d.height = Math.round(r.height) || 88; }
+    localStorage.setItem('pth_winpos_assist', JSON.stringify(d));
+  } catch (e) {}
 }
 
 // ── Détacher : déplace #gip-assist dans la fenêtre flottante ──
@@ -120,7 +157,12 @@ function detachAssist() {
     // tout espace blanc quand on agrandit. Largeur/position/hauteur mémorisées.
     window._enableFloating(ap, { key:'pth_winpos_assist', handle: ap._hd,
       resizable:true, minW:150, minH:64, defW:240, defH:88, zoom:true });
+  } else {
+    // Garde-fou : système de fenêtres pas encore prêt → position visible.
+    ap.style.position = 'fixed'; ap.style.right = 'auto'; ap.style.bottom = 'auto';
+    ap.style.left = '16px'; ap.style.top = '56px';
   }
+  _ensureOnScreen(ap);   // garde-fou : jamais hors écran
   try { if (typeof window._gipAssistSync === 'function') window._gipAssistSync(); } catch(e){}
 }
 
@@ -167,21 +209,43 @@ function _wireDetachBtn() {
   row.appendChild(btn);
 }
 
-function _initAssistPane() {
-  if (!document.getElementById('gip-assist')) return;
-  _wireDetachBtn();
-  _wireSplit();
-  _ensureAssistPanel();
+// La restauration de l'état détaché a besoin de window._enableFloating, défini
+// par le monolithe pokerth.js chargé APRÈS ce module (les deux sont des
+// <script type="module">, exécutés dans l'ordre du document). Attendre qu'il
+// soit prêt garantit le placement + le clamp au viewport → sinon la fenêtre
+// restaurée se retrouve hors écran (bug remonté). Repli après ~1 s.
+function _whenFloatingReady(cb, tries) {
+  tries = tries || 0;
+  if (typeof window._enableFloating === 'function' || tries > 60) { cb(); return; }
+  setTimeout(function(){ _whenFloatingReady(cb, tries + 1); }, 16);
+}
+function _restoreDetached() {
   if (_lsGet(LS_DET) === '1') detachAssist();   // restaurer l'état détaché mémorisé
   else _applyAssistHeight();
 }
+function _initAssistPane() {
+  if (!document.getElementById('gip-assist')) return;
+  _wireDetachBtn();          // câblage UI : ne dépend pas du système de fenêtres
+  _wireSplit();
+  _ensureAssistPanel();
+  _whenFloatingReady(_restoreDetached);
+}
 
-if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', _initAssistPane);
+if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', _initAssistPane, { once: true });
 else _initAssistPane();
+
+// Reborne la fenêtre détachée au changement de taille du viewport (le monolithe
+// le fait déjà pour toutes les .floating-win, mais ceci couvre aussi les cas où
+// _enableFloating n'a pas encore été appliqué).
+window.addEventListener('resize', function(){
+  var ap = document.getElementById('g-assist-panel');
+  if (ap && ap.style.display !== 'none') _ensureOnScreen(ap);
+});
 
 window._assistPaneSync = _assistPaneSync;
 window.toggleAssistDetach = toggleAssistDetach;
 window.detachAssist = detachAssist;
 window.dockAssist = dockAssist;
+window.recenterAssist = _recenterAssist;
 
-export { _assistPaneSync, toggleAssistDetach, detachAssist, dockAssist };
+export { _assistPaneSync, toggleAssistDetach, detachAssist, dockAssist, _recenterAssist };
