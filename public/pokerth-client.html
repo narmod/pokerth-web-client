@@ -712,7 +712,7 @@ function onAvatarImageChosen(input) {
                autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"
                onkeydown="if(event.key==='Enter') App.connect()" style="flex:1">
         <button type="button" id="av-trigger" onclick="toggleAvatarPopup()" title="Choose an avatar" data-i18n-title="chooseAvatar"
-                style="width:42px;height:42px;font-size:1.5rem;background:var(--inset);border:1px solid var(--border);border-radius:4px;cursor:pointer;flex-shrink:0;transition:border-color 0.2s">🎭</button>
+                style="width:64px;height:64px;font-size:2rem;background:var(--inset);border:1px solid var(--border);border-radius:8px;cursor:pointer;flex-shrink:0;overflow:hidden;transition:border-color 0.2s">🎭</button>
         <input type="file" id="avatar-file-input" accept="image/*" style="display:none" onchange="onAvatarImageChosen(this)">
       </div>
     </div>

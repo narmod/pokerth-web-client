@@ -580,7 +580,7 @@ body {
   .f { gap: 4px; }
   .f input { padding: 7px 10px; font-size: 0.85rem; }
   .sel-wrap select { padding: 7px 30px 7px 10px; }
-  #av-trigger { width: 38px !important; height: 38px !important; font-size: 1.2rem !important; }
+  #av-trigger { width: 52px !important; height: 52px !important; font-size: 1.6rem !important; }
   .btn-primary { padding: 10px; }
   .tls-row { font-size: 0.66rem; }
 }
@@ -1331,6 +1331,10 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
 .avp-pth:hover { background: rgba(var(--green-rgb), 0.22) !important; border-color: var(--green) !important; }
 .avp-pth.selected { background: rgba(var(--green-rgb), 0.3) !important; border-color: var(--green) !important; }
 #av-trigger.has-avatar { border-color: var(--gold-dim); background: rgba(var(--gold-rgb), 0.1); }
+/* L'image interne (avatar PokerTH, image perso, vignette galerie) remplit
+   le bouton agrandi ; object-fit hérité de l'inline (contain pour le logo
+   PokerTH, cover pour une photo) est préservé. */
+#av-trigger img { width: 100% !important; height: 100% !important; }
 
 /* Emoji avatar dans le siège */
 .seat-avatar.emoji-av .seat-initial { font-size: 1.1em; line-height: 1; }

@@ -408,7 +408,7 @@ window._pimLoadCups = _pimLoadCups;
 // hide the popup along with all its other descendants. So we move
 // the popup to <body> while showing it as a modal, then move it back.
 
-function openAvatarPickerFromLobby() {
+function openAvatarPickerFromLobby(opts) {
   var picker = document.getElementById('avatar-popup');
   if (!picker) return;
   // Remember the original location so closeAvatarPickerFromLobby
@@ -451,8 +451,10 @@ function openAvatarPickerFromLobby() {
     // we clean up and refresh on the next tick.
     setTimeout(function() {
       closeAvatarPickerFromLobby();
-      openPlayerInfoPopup();
-      window.updateLobbyPill();
+      // Depuis le lobby : rouvrir la fiche joueur + rafraîchir la pastille.
+      // Depuis le login (opts.onPicked fourni) : ne rien rouvrir de lobby.
+      if (opts && typeof opts.onPicked === 'function') { opts.onPicked(); }
+      else { openPlayerInfoPopup(); window.updateLobbyPill(); }
     }, 0);
   };
   picker.addEventListener('click', S._avatarPickerBtnHandler, { once: true, capture: true });

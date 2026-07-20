@@ -1922,8 +1922,21 @@ window.refreshMyAvatar = function() {
 window.toggleAvatarPopup = function() {
   var popup = document.getElementById('avatar-popup');
   if (!popup) return;
-  var open = popup.style.display === 'none' || popup.style.display === '';
-  popup.style.display = open ? 'block' : 'none';
+  var isOpen = popup.style.display && popup.style.display !== 'none';
+  if (isOpen) {
+    // Fermeture propre : retire la classe modale + réattache le popup à sa
+    // place d'origine dans le formulaire (no-op si jamais ouvert en modale).
+    if (typeof window.closeAvatarPickerFromLobby === 'function') window.closeAvatarPickerFromLobby();
+    else popup.style.display = 'none';
+  } else if (typeof window.openAvatarPickerFromLobby === 'function') {
+    // Ouverture en fenêtre flottante centrée (même mécanisme que depuis le
+    // lobby), mais sans les actions post-sélection propres au lobby.
+    window.openAvatarPickerFromLobby({ onPicked: function(){} });
+  } else {
+    // Repli si le module n'est pas encore chargé : ouverture en flux.
+    popup.style.display = 'block';
+    if (typeof window.avpApplyDefaultCat === 'function') window.avpApplyDefaultCat();
+  }
 };
 
 // selectAvatarPopup() lives in the <head> of pokerth-client.html. It
@@ -8635,7 +8648,7 @@ window.togglePlayersPanel = togglePlayersPanel;
 window.toggleReactionPanel = toggleReactionPanel;
 window.App = App;
 
-window.BUILD_VERSION='0.3.938-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='0.3.939-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
