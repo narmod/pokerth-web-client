@@ -378,7 +378,9 @@ function onRemovedFromGame(sub) {
     const key = _rk[reason] || 'youWereRemoved';
     try { console.log('[RemovedFromGame] reason=' + reason + ' (' + key + ')'); } catch (e) {}
     S._gameMeta = null;
-    addChat(null, t(key), 'sys', { key: key });
+    // force:true → passe le filtre anti-« sys » de addChat (le joueur DOIT voir
+    // la raison). Atterrit dans le chat lobby (#chat), non effacé au retour lobby.
+    addChat(null, t(key), 'sys', { key: key, force: true });
     S._pendingRejoin = 0; try { localStorage.removeItem('pth_resume'); } catch(e) {}
     App._resetGameState();
     show('s-lobby');

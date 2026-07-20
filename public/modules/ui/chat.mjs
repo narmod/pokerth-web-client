@@ -276,7 +276,10 @@ function _chatLocalCmd(text, echo) {
 
 // ── CHAT ──
 function addChat(sender, text, cls='', spec) {
-  if (cls === 'sys') return; // messages systeme retires du chat (demande narmod)
+  // Messages système retirés du chat (demande narmod) — SAUF ceux marqués
+  // spec.force (ex. raison d'éjection de table) : on veut absolument que le
+  // joueur sache pourquoi il a été retiré, et le chat est le bon endroit.
+  if (cls === 'sys' && !(spec && spec.force)) return;
   if (sender && cls !== 'mine' && window._isIgnored(sender)) return; // joueur ignoré : aucun rendu
   if (typeof window.addGameChat === 'function') window.addGameChat(sender, text, cls, spec);
   // Flash lobby chat button on new message
