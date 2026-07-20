@@ -707,7 +707,7 @@ function onAvatarImageChosen(input) {
     <form id="login-form" autocomplete="on" onsubmit="App.connect(); return false;">
     <div class="f" id="f-nick">
       <label id="nick-label">Nickname</label>
-      <div style="display:flex;gap:8px;align-items:center">
+      <div style="display:flex;gap:8px;align-items:flex-end">
         <input id="nick" value="" maxlength="64" placeholder="YourName" data-i18n-placeholder="nickPlaceholder"
                autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"
                onkeydown="if(event.key==='Enter') App.connect()" style="flex:1">
