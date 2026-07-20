@@ -3128,7 +3128,13 @@ const App = (() => {
     // masque donc dès la 1ʳᵉ frame reçue.
     try {
       var _rb = document.getElementById('reconnect-banner');
-      if (_rb && _rb.classList.contains('visible')) _hideBanner();
+      var _rp = document.getElementById('g-conn-pill');
+      // Depuis 0.3.928 l'indicateur à table est la pastille #g-conn-pill (le
+      // bandeau reste pour les autres écrans) : tester les DEUX, sinon après un
+      // rebranchement transparent la pastille restait affichée à vie (bug vu en
+      // LAN après mode avion). _hideBanner() masque bandeau + pastille.
+      if ((_rb && _rb.classList.contains('visible')) ||
+          (_rp && _rp.style.display !== 'none')) _hideBanner();
     } catch (e) {}
     if (typeof chunk === 'string') return; // ignore text frames
     if (window.directWS) {
@@ -8591,7 +8597,7 @@ window.togglePlayersPanel = togglePlayersPanel;
 window.toggleReactionPanel = toggleReactionPanel;
 window.App = App;
 
-window.BUILD_VERSION='0.3.929-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='0.3.930-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
