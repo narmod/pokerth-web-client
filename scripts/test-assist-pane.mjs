@@ -49,6 +49,8 @@ ok(enableCalls.length === 1 && enableCalls[0].id === 'g-assist-panel', 'détach 
 ok(enableCalls[0].opt.resizable === true && enableCalls[0].opt.key === 'pth_winpos_assist', 'détach : options resizable + clé de position');
 ok($('g-assist-panel').style.display === '' , 'détach : fenêtre affichée');
 ok($('gip-split').style.display === 'none', 'détach : poignée masquée (plus d\'onglet à séparer)');
+ok($('g-assist-panel').style.left === '16px' && $('g-assist-panel').style.top === '56px',
+   'garde-fou : _ensureOnScreen place la fenêtre dans l\'écran (jsdom → défaut 16/56)');
 
 // _gipAssistSync en mode détaché : suit S._assistOn
 S._assistOn = false; w._gipAssistSync();
@@ -70,6 +72,15 @@ AP.toggleAssistDetach();
 ok(S._assistDetached === true, 'toggle : rattaché → détaché');
 AP.toggleAssistDetach();
 ok(S._assistDetached === false, 'toggle : détaché → rattaché');
+
+// ── Garde-fou : recentrer une fenêtre détachée (récupération hors écran) ──
+AP.detachAssist();
+localStorage.removeItem('pth_winpos_assist');
+$('g-assist-panel').style.left = '9999px'; $('g-assist-panel').style.top = '9999px'; // simuler « perdue »
+AP._recenterAssist();
+ok($('g-assist-panel').style.left === '16px' && $('g-assist-panel').style.top === '56px', 'recentrer : position par défaut appliquée');
+ok(localStorage.getItem('pth_winpos_assist') != null, 'recentrer : position persistée');
+AP.dockAssist();   // revenir en mode attaché pour le test de hauteur
 
 // ── Hauteur mémorisée appliquée en mode attaché ──
 localStorage.setItem('pth_gip_assist_h', '120');
