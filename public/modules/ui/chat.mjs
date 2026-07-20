@@ -296,15 +296,20 @@ function addChat(sender, text, cls='', spec) {
   const el = document.getElementById('chat');
   const d  = document.createElement('div');
   d.className = 'msg ' + cls;
-  // Surlignage de mention (parité QML LobbyHandler::onLobbyChatMessage) : quand
-  // le corps d'un message d'autrui contient mon pseudo (insensible à la casse),
-  // tout le corps passe en or gras via la classe « mention ». Comportement natif
-  // du client officiel — pas d'interrupteur (le QML n'en propose pas non plus).
+  // Surlignage (parité QML LobbyHandler::onLobbyChatMessage). Priorité :
+  //  1) le (chat bot) qui m'adresse (message commençant par mon pseudo, sensible
+  //     à la casse) → rouge gras (classe « botwarn », colorDanger QML) ;
+  //  2) sinon mon pseudo cité n'importe où (insensible à la casse) → or gras.
+  // Comportement natif — pas d'interrupteur (le QML n'en propose pas non plus).
   try {
     const _mn = (S.myName || '').trim();
-    if (_mn && sender && cls !== 'mine'
-        && String(text).toLowerCase().indexOf(_mn.toLowerCase()) !== -1)
-      d.className += ' mention';
+    if (_mn && sender && cls !== 'mine') {
+      const _t = String(text);
+      if (sender === '(chat bot)' && _t.startsWith(_mn))
+        d.className += ' botwarn';
+      else if (_t.toLowerCase().indexOf(_mn.toLowerCase()) !== -1)
+        d.className += ' mention';
+    }
   } catch (_em) {}
   const emT = function (s) { var h = esc(s); if (!_noEmo && typeof window.applyChatEmoteShortcuts === 'function') { try { h = window.applyChatEmoteShortcuts(h); } catch (_e) {} } if (typeof window._linkifyChatHtml === 'function') { try { h = window._linkifyChatHtml(h); } catch (_e2) {} } return h; };
   if (sender) {

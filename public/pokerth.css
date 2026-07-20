@@ -1765,6 +1765,9 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
 .msg.mention .txt { color: var(--gold); font-weight: 700; }
 /* Action « /me … » : corps en italique, format « *Nom fait qqch* » (parité QML isAction). */
 .msg.action .txt { font-style: italic; }
+/* Le (chat bot) m'adresse directement → corps en rouge gras (parité QML colorDanger). */
+.msg.botwarn .txt { color: var(--red); font-weight: 700; }
+#g-chat-msgs .msg.botwarn .txt { color: var(--red); font-weight: 700; }
 
 .chat-input {
   padding: 8px 10px;

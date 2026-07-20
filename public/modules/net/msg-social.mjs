@@ -66,7 +66,9 @@ function onChat(sub) {
   const pid  = Proto.u32(sub, 2);
   const ctype= Proto.u32(sub, 3);
   const text = Proto.str(sub, 4);
-  const who  = S.players[pid] || (pid ? `#${pid}` : null);
+  // chatTypeBot (2) : le bot n'a pas de playerid → nom fixe « (chat bot) »
+  // (parité clientstate.cpp). Sinon nom du joueur, ou #pid si inconnu.
+  const who  = ctype === 2 ? '(chat bot)' : (S.players[pid] || (pid ? `#${pid}` : null));
   const cls  = ctype === 3 ? 'bc' : pid === S.myId ? 'mine' : '';
   // Logging de tous les messages chat (debug réactions)
   // Intercepter les réactions (préfixe ASCII [R])
