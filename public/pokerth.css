@@ -1942,21 +1942,27 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
   .gsb-total, .gsb-phase { font-size: 11px; }
   .gsb-left .gsb-row:last-child .gsb-lbl,
   .gsb-gh .gsb-lbl, .gsb-val, .gsb-bets { font-size: 9px; }
+  /* Barre 28 px : pas de marge pour grossir — badge blinds figé compact. */
+  #pot-strip .blinds-next { height: 18px; padding: 0 9px; font-size: 10px; }
 }
-/* Compteur "blinds" cliquable à côté du n° de main dans le bandeau du pot. */
+/* Compteur "blinds" cliquable à côté du n° de main dans le bandeau du pot.
+   Taille asservie au modèle générique --comm-scale (0.55–1.8, posé par
+   renderSeats) comme la pastille de connexion / win-hand-badge : le badge
+   grossit avec la résolution, borné par clamp() pour rester dans la barre
+   de 40 px (base ≈ tailles historiques à échelle 1 ; repli 1 hors table). */
 .blinds-next {
   display: inline-flex;
   align-items: center;
-  height: 18px;               /* même hauteur que #g-spec-badge (bandeau) */
+  height: clamp(18px, calc(19px * var(--comm-scale, 1)), 28px);
   box-sizing: border-box;
-  padding: 0 9px;
+  padding: 0 clamp(8px, calc(9px * var(--comm-scale, 1)), 14px);
   border-radius: 999px;
   background: rgba(227,200,0,0.14);          /* teinte accent or QML, stable clair/sombre */
   border: 1px solid rgba(227,200,0,0.55);
   color: var(--sel, #E3C800);
   font-family: var(--ff-mono);
   font-weight: 700;
-  font-size: 0.62rem;
+  font-size: clamp(10px, calc(11px * var(--comm-scale, 1)), 16px);
   letter-spacing: 0.04em;
   cursor: pointer;
   transition: background 0.15s, border-color 0.15s;
@@ -2839,7 +2845,9 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
   #s-game .header { padding-top: 4px; padding-bottom: 4px; min-height: var(--header-h, 38px); }
   /* Barre d'état : hauteur/tailles QML identiques au desktop (40 px, 13/11) —
      le mode landscapeCompact (28 px) est géré par sa propre media query. */
-  #pot-strip .blinds-next { font-size: 0.68rem; }
+  /* Mobile : même asservissement --comm-scale que la règle de base, base un
+     cran au-dessus (12 px ≈ l'ancien 0.68rem à échelle 1). */
+  #pot-strip .blinds-next { font-size: clamp(10px, calc(12px * var(--comm-scale, 1)), 16px); }
 
   /* ── Lobby header on narrow phones ──
      On small/large-font devices the "POKERTH" word + redundant buttons
