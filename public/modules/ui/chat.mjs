@@ -304,7 +304,11 @@ function addChat(sender, text, cls='', spec) {
       + (cls !== 'mine' ? '<button class="chat-tr-btn" title="Traduire" onclick="window._chatTranslate(this)" aria-label="Translate">\u{1F310}</button>' : '');
     try { d.dataset.orig = text; } catch (_e) {}
   } else {
-    d.innerHTML = `<span class="txt">${esc(text)}</span>`;
+    // Sans expéditeur = message serveur : broadcast (cls 'bc', ex. annonce
+    // « Signup for Monthly Cup … https://… ») → emT (émotes + liens cliquables,
+    // URLs protégées par applyChatEmoteShortcuts). Les messages 'sys' restent en
+    // esc : ils sont retraduits en textContent brut par _retranslateSysChat.
+    d.innerHTML = `<span class="txt">${cls === 'sys' ? esc(text) : emT(text)}</span>`;
   }
   if (spec && !sender) { try { d.dataset.sys = JSON.stringify(spec); } catch(e){} }
   el.appendChild(d);

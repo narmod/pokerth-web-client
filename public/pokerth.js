@@ -6440,7 +6440,11 @@ function addGameChat(sender, text, cls, spec) {
       + (cls !== 'mine' ? '<button class="chat-tr-btn" title="Traduire" onclick="window._chatTranslate(this)" aria-label="Translate">\u{1F310}</button>' : '');
     try { d.dataset.orig = text; } catch (_e) {}
   } else {
-    d.innerHTML = '<span class="txt">'+e(text)+'</span>';
+    // Sans expéditeur = message serveur : broadcast (cls 'bc', ex. annonce
+    // « Signup for Monthly Cup … https://… ») → emT (émotes + liens cliquables,
+    // URLs protégées par applyChatEmoteShortcuts). Les 'sys' restent en e() :
+    // retraduits en textContent brut par _retranslateSysChat.
+    d.innerHTML = '<span class="txt">'+(cls === 'sys' ? e(text) : emT(text))+'</span>';
   }
   if (spec && !sender) { try { d.dataset.sys = JSON.stringify(spec); } catch(_e){} }
   el.appendChild(d);
@@ -8557,7 +8561,7 @@ window.togglePlayersPanel = togglePlayersPanel;
 window.toggleReactionPanel = toggleReactionPanel;
 window.App = App;
 
-window.BUILD_VERSION='0.3.919-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='0.3.920-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
