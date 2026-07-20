@@ -628,7 +628,7 @@ These configure the **proxy** at runtime (read by `proxy.js`). They are separate
 | Variable | Default | Purpose |
 |---|---|---|
 | `PORT` | `8080` | HTTP / WebSocket port. |
-| `ALLOWED_HOSTS` | `pokerth.net,www.pokerth.net` | Comma-separated allowlist of upstream servers the proxy may dial (anti open-relay). **Add your own server.** |
+| `ALLOWED_HOSTS` | _(core hosts)_ | **Extra** upstream servers the proxy may dial, comma-separated. **Added to** the always-allowed core hosts (`pokerth.net`, `www.pokerth.net`, `pokerth.ddns.net`, `localhost`, `127.0.0.1`, `::1`) — it no longer replaces them. Set it only to **add your own server** (anti open-relay). |
 | `ALLOWED_PORTS` | `7234` | Comma-separated allowlist of upstream **ports** (anti-SSRF). Set only for a non-standard PokerTH port. |
 | `ADMIN_ENABLED` | _enabled_ | Serve the `/admin` console. Set to `0` / `false` / `off` / `no` to hide it (every `/admin/*` route returns `404`). The `pokerth-web admin on`/`off` command is the persistent way to set this. |
 | `STATS_RESET_PERIOD` | `monthly` | Leaderboard auto-reset: `off` / `daily` / `monthly` / `yearly`. |

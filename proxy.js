@@ -2,12 +2,15 @@
  * PokerTH WebSocket <-> TLS/TCP Proxy v2.4
  *
  * Environment variables:
- *   ALLOWED_HOSTS   — comma-separated allowlist of upstream hosts the proxy
- *                     is allowed to dial out to. If unset, falls back to a
- *                     sensible default that covers the public PokerTH server
- *                     and localhost. Any host outside the allowlist receives
- *                     a 4403 close code.
- *                     Example: ALLOWED_HOSTS="pokerth.net,www.pokerth.net,mybox.example.com,localhost,127.0.0.1"
+ *   ALLOWED_HOSTS   — comma-separated list of EXTRA upstream hosts the proxy
+ *                     may dial out to. These are ADDED to the built-in core
+ *                     hosts (public/demo PokerTH servers + loopback), which are
+ *                     ALWAYS allowed — setting ALLOWED_HOSTS no longer drops
+ *                     them (previously it replaced the defaults, which silently
+ *                     removed localhost / pokerth.ddns.net and broke LAN/demo).
+ *                     Any host outside the resulting allowlist receives a 4403
+ *                     close code. Port stays gated (see ALLOWED_PORTS, 7234).
+ *                     Example: ALLOWED_HOSTS="mybox.example.com,192.168.1.10"
  */
 
 // Load .env if present (optional dep): lets pm2 / bare `node proxy.js` read the
@@ -78,10 +81,19 @@ const DEFAULT_ALLOWED_HOSTS = [
   '127.0.0.1',
   '::1'
 ];
-const ALLOWED_HOSTS = (process.env.ALLOWED_HOSTS
+// Les hôtes « cœur » (DEFAULT_ALLOWED_HOSTS : loopback + serveurs PokerTH
+// officiels/démo) sont TOUJOURS autorisés. ALLOWED_HOSTS ne fait qu'AJOUTER des
+// hôtes — il ne REMPLACE plus les défauts. Avant, dès qu'un .env fixait
+// ALLOWED_HOSTS (ex. .env.example), localhost / 127.0.0.1 / ::1 / pokerth.ddns.net
+// disparaissaient de l'allowlist → LAN et serveur de démo cassés, alors que
+// /admin affiche « Always-allowed hosts: … » (désormais exact). Le port reste
+// borné (ALLOWED_PORTS, 7234) : always-allow loopback ne rouvre pas de SSRF.
+const _envAllowedHosts = process.env.ALLOWED_HOSTS
   ? process.env.ALLOWED_HOSTS.split(',').map(s => s.trim()).filter(Boolean)
-  : DEFAULT_ALLOWED_HOSTS
-).map(s => s.toLowerCase());
+  : [];
+const ALLOWED_HOSTS = Array.from(new Set(
+  DEFAULT_ALLOWED_HOSTS.concat(_envAllowedHosts).map(s => s.toLowerCase())
+));
 
 function isHostAllowed(h) {
   if (!h) return false;

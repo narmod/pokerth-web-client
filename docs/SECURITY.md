@@ -7,9 +7,11 @@ on the open Internet. The proxy is designed primarily for LAN / private use.
 ## What the proxy already enforces
 
 - **Upstream host allowlist (anti open-relay).** The proxy only dials servers on
-  a configured allowlist (`ALLOWED_HOSTS`, plus a small built-in default covering
-  `pokerth.net` and localhost). Any other destination is refused. Without this, a
-  public WebSocket would let anyone tunnel TCP to arbitrary hosts.
+  an allowlist: a small built-in set of core hosts (the public/demo PokerTH
+  servers and loopback) that is **always** allowed, plus anything in
+  `ALLOWED_HOSTS` (which **adds** to the core set, it does not replace it) and
+  hosts added live from `/admin`. Any other destination is refused. Without this,
+  a public WebSocket would let anyone tunnel TCP to arbitrary hosts.
 - **Upstream port allowlist (anti-SSRF).** Connections are also restricted to an
   allowed port list (`ALLOWED_PORTS`, default `7234`). Because localhost is in the
   host allowlist, this stops a request such as `host=127.0.0.1&port=22` from
