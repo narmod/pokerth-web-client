@@ -122,11 +122,21 @@ function _gipAssistSync() {
   var lbl = document.getElementById('hs-lbl');
   var txt = lbl && lbl.querySelector('.hs-txt');
   var hasContent = !!(lbl && lbl.style.display !== 'none' && txt && txt.textContent);
+  // Mode détaché : l'assistance vit dans sa propre fenêtre flottante et reste
+  // visible tant que l'assistance est active, indépendamment du panneau info.
+  if (S._assistDetached) {
+    box.style.display = S._assistOn ? '' : 'none';
+    var ap = document.getElementById('g-assist-panel');
+    if (ap) ap.style.display = S._assistOn ? '' : 'none';
+    try { if (typeof window._assistPaneSync === 'function') window._assistPaneSync(); } catch (e) {}
+    return;
+  }
   var panel = document.getElementById('g-log-panel');
   var open = !!(panel && panel.style.display !== 'none');
   var oddsTab = false;
   try { oddsTab = localStorage.getItem('pth_gip_tab') === 'odds'; } catch (e) {}
   box.style.display = (S._assistOn && open && oddsTab && hasContent) ? '' : 'none';
+  try { if (typeof window._assistPaneSync === 'function') window._assistPaneSync(); } catch (e) {}
 }
 
 function renderPreFlopStrength() {
