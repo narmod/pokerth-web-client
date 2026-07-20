@@ -125,6 +125,16 @@ function _maybeReconnectOnResume() {
     S._lastRxTime = Date.now();
     return;
   }
+  // Tentative DÉJÀ en cours : au retour d'app, visibilitychange PUIS focus
+  // (et pageshow) se déclenchent à quelques ms d'écart. Le 2e appel trouvait
+  // un socket encore CONNECTING (≠ OPEN), le démontait (« WebSocket is closed
+  // before the connection is established » en console) et rouvrait une session
+  // CONCURRENTE → deux Init du même pseudo en course côté serveur → le rejoin
+  // retombait en RemovedFromGame (onRequest puis running) = éjection au lobby
+  // (bug observé en partie BBC sur pokerth.net). On laisse une tentative
+  // récente (< 15 s) aboutir ; au-delà elle est réputée plantée → on repart.
+  if (S.ws && S.ws.readyState === WebSocket.CONNECTING &&
+      Date.now() - (S._lastConnectTime || 0) < 15000) return;
   var sg = document.getElementById('s-game');
   var sl = document.getElementById('s-lobby');
   var inSession = (sg && sg.classList.contains('active'))
@@ -173,6 +183,11 @@ function _forceReconnect() {
   // captif…) et le watchdog RX peuvent se déclencher n'importe quand → c'était
   // une cause d'éjection aléatoire en pleine partie. On ne touche à rien.
   if (window._offlineMode) return;
+  // Même garde anti-« tempête de connexions » que _maybeReconnectOnResume :
+  // l'event 'online' peut tirer en rafale — ne pas démonter une tentative
+  // CONNECTING récente, la laisser aboutir.
+  if (S.ws && S.ws.readyState === WebSocket.CONNECTING &&
+      Date.now() - (S._lastConnectTime || 0) < 15000) return;
   var sg = document.getElementById('s-game');
   var sl = document.getElementById('s-lobby');
   if (!((sg && sg.classList.contains('active')) || (sl && sl.classList.contains('active')))) return;
