@@ -442,16 +442,16 @@ body {
 .cf-block { margin-bottom: 14px; }
 .cf-row { display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 9px 0; }
 .cf-row-col { flex-direction: column; align-items: stretch; gap: 6px; }
-.cf-lbl { font-size: 0.9rem; color: var(--text); font-weight: 500; }
+.cf-lbl { font-size: var(--cf-fs-body); color: var(--text); font-weight: 500; }
 .cf-input, .cf-select {
   width: 100%; box-sizing: border-box;
   background: var(--field-bg); border: 1px solid var(--border); border-radius: 8px;
-  color: var(--text); padding: 9px 12px; font-size: 0.92rem; outline: none;
+  color: var(--text); padding: 9px 12px; font-size: var(--cf-fs-body); outline: none;
 }
 .cf-input:focus, .cf-select:focus { border-color: var(--gold-dim); }
 .cf-sec {
   margin: 16px 0 2px; padding-top: 14px;
-  font-size: 0.82rem; font-weight: 700; color: var(--text);
+  font-size: var(--cf-fs-body); font-weight: 700; color: var(--text);
   letter-spacing: 0.02em; text-transform: none;
   border-top: 1px solid var(--border);
 }
@@ -465,7 +465,7 @@ body {
 .cf-step-btn:hover { background: rgba(127,127,127,0.14); }
 .cf-step-num {
   width: 72px; border: none; background: transparent; color: var(--text);
-  text-align: center; font-size: 0.92rem; font-family: var(--ff-display);
+  text-align: center; font-size: var(--cf-fs-value); font-family: var(--ff-display);
   outline: none; -moz-appearance: textfield;
 }
 .cf-step-num::-webkit-inner-spin-button, .cf-step-num::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
@@ -482,7 +482,7 @@ body {
 .cf-switch input:checked + .cf-switch-tr::before { transform: translateX(20px); }
 /* Intervalle blindes : radios + stepper */
 .cf-interval { display: flex; align-items: center; flex-wrap: wrap; gap: 16px; }
-.cf-radio { display: inline-flex; align-items: center; gap: 6px; font-size: 0.9rem; color: var(--text); cursor: pointer; }
+.cf-radio { display: inline-flex; align-items: center; gap: 6px; font-size: var(--cf-fs-body); color: var(--text); cursor: pointer; }
 .cf-radio input { accent-color: #2f81f7; }
 .cf-create-btn { flex: 1; padding: 12px; }
 
@@ -653,7 +653,7 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
 .cf-locked { opacity: 0.55; pointer-events: none; }
 .gt-dd-btn:disabled { opacity: 0.55; cursor: default; pointer-events: none; }
 #cf-name:disabled { opacity: 0.7; }
-.cf-name-err { color: #ef4444; font-size: 0.8rem; margin-top: 4px; }
+.cf-name-err { color: #ef4444; font-size: var(--cf-fs-xs); margin-top: 4px; }
 
 .avatar-picker {
   display: grid;
@@ -6356,7 +6356,10 @@ html[data-table="pokerth-live"] .raise-slider { accent-color: #4CAF50; }
 .create-toggle.open { border-radius: 10px 10px 0 0; }
 .create-toggle.open .ct-arrow { transform: rotate(90deg); }
 
-#create-form { padding: 14px; background: rgba(8,18,10,0.6); border: 1px solid var(--border); border-top: none; border-radius: 0 0 10px 10px; }
+#create-form {
+  /* Échelle typographique du formulaire — harmonisée (police Inter/QML) */
+  --cf-fs-xs: .70rem; --cf-fs-body: .85rem; --cf-fs-value: .95rem; --cf-fs-ico: 1.35rem; --cf-fs-ico-sm: 1.05rem;
+  padding: 14px; background: rgba(8,18,10,0.6); border: 1px solid var(--border); border-top: none; border-radius: 0 0 10px 10px; }
 /* PokerTH clair : le fond du formulaire est code en dur (vert sombre translucide)
    et ne suit pas la palette -> en clair il vire au gris et masque le texte
    var(--text) (noms de presets non actifs, libelle mot de passe). Fond clair force. */
@@ -6385,7 +6388,7 @@ html[data-table="pokerth-live"] .raise-slider { accent-color: #4CAF50; }
 :root[data-theme="pokerth-light"] .seat.active .seat-money { opacity: 0.7; }
 
 /* Préréglages */
-.cf-presets-label { font-size: 0.6rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--gold-dim); font-weight: 600; margin: 0 2px 8px; }
+.cf-presets-label { font-size: var(--cf-fs-xs); letter-spacing: 0.18em; text-transform: uppercase; color: var(--gold-dim); font-weight: 600; margin: 0 2px 8px; }
 /* Rangée label + bouton Développer/Réduire du bloc « Style de partie ». */
 .cf-style-label-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
 .cf-style-toggle {
@@ -6399,7 +6402,7 @@ html[data-table="pokerth-live"] .raise-slider { accent-color: #4CAF50; }
   padding: 3px 8px; cursor: pointer;
 }
 .cf-style-toggle:hover { border-color: var(--gold-dim); color: var(--gold); }
-.cf-style-toggle .cfs-arr { font-size: 0.7rem; line-height: 1; }
+.cf-style-toggle .cfs-arr { font-size: var(--cf-fs-xs); line-height: 1; }
 .cf-presets { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
 .cf-preset {
   flex: 1 1 104px; border: 1.5px solid var(--border); border-radius: 9px; background: var(--inset);
@@ -6408,9 +6411,9 @@ html[data-table="pokerth-live"] .raise-slider { accent-color: #4CAF50; }
 }
 .cf-preset:hover { border-color: var(--gold-dim); }
 .cf-preset.active { border-color: var(--sel,var(--gold)); background: rgba(var(--sel-rgb,var(--gold-rgb)), 0.14); color: var(--cream); box-shadow: 0 0 12px rgba(var(--sel-rgb,var(--gold-rgb)), 0.18); }
-.cf-preset .cfp-ico { font-size: 1.5rem; line-height: 1.1; }
-.cf-preset .cfp-n { font-family: var(--ff-display); font-size: 0.86rem; font-weight: 600; }
-.cf-preset .cfp-d { font-size: 0.56rem; color: var(--gold-dim); }
+.cf-preset .cfp-ico { font-size: var(--cf-fs-ico); line-height: 1.1; }
+.cf-preset .cfp-n { font-family: var(--ff-display); font-size: var(--cf-fs-body); font-weight: 600; }
+.cf-preset .cfp-d { font-size: var(--cf-fs-xs); color: var(--gold-dim); }
 
 /* ── Rangée Style de partie : grille fixe 3 colonnes (2 rangées logiques :
    rythmes libres / formats pokerth.net), cartes allégées — esprit QML :
@@ -6418,19 +6421,19 @@ html[data-table="pokerth-live"] .raise-slider { accent-color: #4CAF50; }
    horizontale sous la grille (action de chargement, pas un style). ── */
 .cf-presets-style { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); margin-bottom: 8px; }
 .cf-presets-style .cf-preset { padding: 8px 4px; gap: 2px; }
-.cf-presets-style .cf-preset .cfp-ico { font-size: 1.2rem; }
-.cf-presets-style .cf-preset .cfp-n { font-size: 0.8rem; }
-.cf-presets-style .cf-preset .cfp-d { font-size: 0.54rem; }
+.cf-presets-style .cf-preset .cfp-ico { font-size: var(--cf-fs-ico); }
+.cf-presets-style .cf-preset .cfp-n { font-size: var(--cf-fs-body); }
+.cf-presets-style .cf-preset .cfp-d { font-size: var(--cf-fs-xs); }
 .cf-preset.cfp-bar { flex-direction: row; align-items: center; justify-content: center; width: 100%; padding: 8px 10px; gap: 8px; margin-bottom: 16px; }
-.cf-preset.cfp-bar .cfp-ico { font-size: 1.05rem; line-height: 1; }
-.cf-preset.cfp-bar .cfp-n { font-size: 0.82rem; }
-.cf-preset.cfp-bar .cfp-d { font-size: 0.62rem; }
+.cf-preset.cfp-bar .cfp-ico { font-size: var(--cf-fs-ico-sm); line-height: 1; }
+.cf-preset.cfp-bar .cfp-n { font-size: var(--cf-fs-body); }
+.cf-preset.cfp-bar .cfp-d { font-size: var(--cf-fs-xs); }
 .cf-preset.cfp-bar .cfp-d::before { content: '— '; }
 
 /* Curseurs (sliders) Joueurs max / Stack */
 .cf-sliders { display: grid; gap: 14px; margin-top: 14px; }
-.cf-slider label { display: flex; justify-content: space-between; align-items: baseline; font-size: 0.6rem; color: var(--gold-dim); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 8px; }
-.cf-range-val { font-family: var(--ff-mono); font-size: 1rem; font-weight: 700; color: var(--cream); letter-spacing: 0; }
+.cf-slider label { display: flex; justify-content: space-between; align-items: baseline; font-size: var(--cf-fs-xs); color: var(--gold-dim); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 8px; }
+.cf-range-val { font-family: var(--ff-mono); font-size: var(--cf-fs-value); font-weight: 700; color: var(--cream); letter-spacing: 0; }
 .cf-num-wrap { display: inline-flex; align-items: center; gap: 5px; }
 .cf-range-num {
   width: 6.5em; background: var(--field-bg); border: 1px solid var(--border); border-radius: 4px;
@@ -6442,9 +6445,9 @@ html[data-table="pokerth-live"] .raise-slider { accent-color: #4CAF50; }
 .cf-range-num:focus { border-color: var(--gold); }
 .cf-slider label .cf-range-num { width: 4em; }
 .cf-slider label .cf-num-wrap .cf-range-num { width: 6.5em; }
-.cf-money { color: var(--gold); font-size: 0.95rem; font-weight: 700; }
-.cf-unit { color: var(--gold-dim); font-size: 0.9rem; font-weight: 600; }
-.cf-unit-ico { font-size: 1.05rem; }
+.cf-money { color: var(--gold); font-size: var(--cf-fs-value); font-weight: 700; }
+.cf-unit { color: var(--gold-dim); font-size: var(--cf-fs-body); font-weight: 600; }
+.cf-unit-ico { font-size: var(--cf-fs-ico-sm); }
 #cf-players.cf-range-num { width: 4.2em; }
 .cf-range { -webkit-appearance: none; appearance: none; width: 100%; height: 6px; border-radius: 3px; background: var(--inset); outline: none; cursor: pointer; }
 .cf-range::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 20px; height: 20px; border-radius: 50%; background: var(--gold); border: 2px solid #1a1408; cursor: pointer; box-shadow: 0 0 7px rgba(var(--gold-rgb), 0.5); transition: transform 0.1s; }
@@ -6624,9 +6627,6 @@ html[data-table="pokerth-live"] .raise-slider { accent-color: #4CAF50; }
   .seat-dot { width: 10px; height: 10px; }
   #create-form .cf label { font-size: 0.62rem; }
   #create-form .cf input, #create-form .cf select { font-size: 0.9rem; padding: 7px 9px; }
-  .cf-preset .cfp-ico { font-size: 1.75rem; }
-  .cf-preset .cfp-n { font-size: 0.95rem; }
-  .cf-preset .cfp-d { font-size: 0.62rem; }
 }
 
 /* ── PWA edge-to-edge: respect notch / status-bar in fullscreen mode ──
@@ -6737,7 +6737,7 @@ html[data-table="pokerth-live"] .raise-slider { accent-color: #4CAF50; }
 .btn-cf-reset .cf-reset-ico { display: none; }
 @media (max-width: 599.98px) {
   .btn-cf-reset { padding: 10px 13px; }
-  .btn-cf-reset .cf-reset-ico { display: inline; font-size: 1.05rem; line-height: 1; }
+  .btn-cf-reset .cf-reset-ico { display: inline; font-size: var(--cf-fs-ico-sm); line-height: 1; }
   .btn-cf-reset .cf-reset-lbl {
     position: absolute; width: 1px; height: 1px;
     padding: 0; margin: -1px; overflow: hidden;
