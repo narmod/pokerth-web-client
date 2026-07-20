@@ -107,8 +107,18 @@ function _armRejoin() {
 
 function _maybeReconnectOnResume() {
   if (S._intentionalDisconnect) return;
+  if (window._offlineMode) return;                        // entraînement : aucun réseau à réparer
   if (!S._lastConnectParams) return;                      // jamais connecté cette session
-  if (S.ws && S.ws.readyState === WebSocket.OPEN) return;   // socket encore vivant
+  if (S.ws && S.ws.readyState === WebSocket.OPEN) {
+    // Socket encore vivant. Réarmer l'horloge du watchdog : en arrière-plan
+    // les timers sont gelés/throttlés → _lastRxTime est PÉRIMÉ au réveil, et
+    // sans ce reset le watchdog « présume mort » un socket sain dans les 5 s
+    // qui suivent le retour d'onglet → reconnexion forcée → éjection au lobby.
+    // Un socket réellement zombie sera quand même détecté : il restera muet
+    // pendant tout le seuil suivant (≥ 45 s) et le watchdog re-déclenchera.
+    S._lastRxTime = Date.now();
+    return;
+  }
   var sg = document.getElementById('s-game');
   var sl = document.getElementById('s-lobby');
   var inSession = (sg && sg.classList.contains('active'))
@@ -151,6 +161,12 @@ window.addEventListener('focus', _maybeReconnectOnResume);
 // (même chemin que la reconnexion auto → même re-join de table).
 function _forceReconnect() {
   if (S._intentionalDisconnect || !S._lastConnectParams) return;
+  // Entraînement (offline) : il n'y a AUCUN réseau — le FakeServer vit dans la
+  // page. « Reconnecter » ici détruit la partie en cours et rejoue Init/InitAck
+  // → retour lobby/page création. Or l'event 'online' (bascule wifi/VPN, portail
+  // captif…) et le watchdog RX peuvent se déclencher n'importe quand → c'était
+  // une cause d'éjection aléatoire en pleine partie. On ne touche à rien.
+  if (window._offlineMode) return;
   var sg = document.getElementById('s-game');
   var sl = document.getElementById('s-lobby');
   if (!((sg && sg.classList.contains('active')) || (sl && sl.classList.contains('active')))) return;
