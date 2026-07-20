@@ -125,6 +125,7 @@ export const S = {
   _lastRxTime: Date.now(), // watchdog liveness (dernier message reçu)
   _intentionalDisconnect: false,
   _pendingRejoin: 0,       // gameId à rejoindre après reconnexion (0 = aucun)
+  _pendingRejoinSpec: false, // true = on était SPECTATEUR → re-spectater (pas de siège à réclamer)
   _rejoinNickRetries: 0,
   _wasAuthenticated: false, // true seulement après InitAck réussi
   _lastConnectTime: 0,
