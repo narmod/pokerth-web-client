@@ -6477,10 +6477,18 @@ function addGameChat(sender, text, cls, spec) {
   // sauf en mode « chat sans emoji ». Le nom d'expéditeur n'est jamais converti.
   function emT(s) { var h = e(s); if (!_noEmo && typeof window.applyChatEmoteShortcuts === 'function') { try { h = window.applyChatEmoteShortcuts(h); } catch (_e) {} } if (typeof window._linkifyChatHtml === 'function') { try { h = window._linkifyChatHtml(h); } catch (_e2) {} } return h; }
   if (sender) {
-    d.innerHTML = '<span class="msg-time">'+_chatTs()+'</span> <span class="who">'+e(sender)+'</span>: <span class="txt">'+emT(text)+'</span>'
-      // Traduction par message (API navigateur, opt-in Options avancees) :
-      // bouton visible seulement si body.chat-tr-on (option + support).
-      + (cls !== 'mine' ? '<button class="chat-tr-btn" title="Traduire" onclick="window._chatTranslate(this)" aria-label="Translate">\u{1F310}</button>' : '');
+    // Traduction par message (API navigateur, opt-in Options avancees) :
+    // bouton visible seulement si body.chat-tr-on (option + support).
+    var _tr = (cls !== 'mine' ? '<button class="chat-tr-btn" title="Traduire" onclick="window._chatTranslate(this)" aria-label="Translate">\u{1F310}</button>' : '');
+    // Action « /me … » (parité QML) — miroir de addChat : « *Nom fait qqch* »
+    // en italique, sans « Nom: ». Le « /me » part au serveur et est reformaté
+    // à l'affichage par chaque client.
+    if (String(text).slice(0, 4) === '/me ') {
+      d.className += ' action';
+      d.innerHTML = '<span class="msg-time">'+_chatTs()+'</span> <span class="txt">*'+e(sender)+' '+emT(text.slice(4))+'*</span>' + _tr;
+    } else {
+      d.innerHTML = '<span class="msg-time">'+_chatTs()+'</span> <span class="who">'+e(sender)+'</span>: <span class="txt">'+emT(text)+'</span>' + _tr;
+    }
     try { d.dataset.orig = text; } catch (_e) {}
   } else {
     // Sans expéditeur = message serveur : broadcast (cls 'bc', ex. annonce
@@ -8604,7 +8612,7 @@ window.togglePlayersPanel = togglePlayersPanel;
 window.toggleReactionPanel = toggleReactionPanel;
 window.App = App;
 
-window.BUILD_VERSION='0.3.935-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='0.3.936-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

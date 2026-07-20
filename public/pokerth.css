@@ -1763,6 +1763,8 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
 /* Mention : mon pseudo cité dans un message d'autrui → corps en or gras
    (parité QML LobbyHandler, colorAccent = --gold). */
 .msg.mention .txt { color: var(--gold); font-weight: 700; }
+/* Action « /me … » : corps en italique, format « *Nom fait qqch* » (parité QML isAction). */
+.msg.action .txt { font-style: italic; }
 
 .chat-input {
   padding: 8px 10px;

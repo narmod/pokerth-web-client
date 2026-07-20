@@ -308,10 +308,18 @@ function addChat(sender, text, cls='', spec) {
   } catch (_em) {}
   const emT = function (s) { var h = esc(s); if (!_noEmo && typeof window.applyChatEmoteShortcuts === 'function') { try { h = window.applyChatEmoteShortcuts(h); } catch (_e) {} } if (typeof window._linkifyChatHtml === 'function') { try { h = window._linkifyChatHtml(h); } catch (_e2) {} } return h; };
   if (sender) {
-    d.innerHTML = `<span class="msg-time">${window._chatTs()}</span> <span class="who">${esc(sender)}</span>: <span class="txt">${emT(text)}</span>`
-      // Bouton de traduction aussi dans le chat LOBBY (meme mecanique que
-      // le chat de partie ; visible seulement si body.chat-tr-on).
-      + (cls !== 'mine' ? '<button class="chat-tr-btn" title="Traduire" onclick="window._chatTranslate(this)" aria-label="Translate">\u{1F310}</button>' : '');
+    // Bouton de traduction aussi dans le chat LOBBY (meme mecanique que
+    // le chat de partie ; visible seulement si body.chat-tr-on).
+    const _tr = (cls !== 'mine' ? '<button class="chat-tr-btn" title="Traduire" onclick="window._chatTranslate(this)" aria-label="Translate">\u{1F310}</button>' : '');
+    // Action « /me … » (parité QML LobbyHandler isAction) : « *Nom fait qqch* »
+    // en italique, sans « Nom: ». Le « /me » est envoyé tel quel au serveur puis
+    // reformaté à l'affichage par chaque client.
+    if (String(text).slice(0, 4) === '/me ') {
+      d.className += ' action';
+      d.innerHTML = `<span class="msg-time">${window._chatTs()}</span> <span class="txt">*${esc(sender)} ${emT(text.slice(4))}*</span>` + _tr;
+    } else {
+      d.innerHTML = `<span class="msg-time">${window._chatTs()}</span> <span class="who">${esc(sender)}</span>: <span class="txt">${emT(text)}</span>` + _tr;
+    }
     try { d.dataset.orig = text; } catch (_e) {}
   } else {
     // Sans expéditeur = message serveur : broadcast (cls 'bc', ex. annonce
