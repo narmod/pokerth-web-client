@@ -2965,6 +2965,11 @@ const App = (() => {
   // online/focus/visibilitychange (et le rebranchement proxy est transparent).
   setInterval(function () {
     if (S._intentionalDisconnect || !S._lastConnectParams) return;
+    // Entraînement (offline) : pas de socket réseau à surveiller. Le FakeServer
+    // peut rester muet légitimement (pause entre les mains, overlay de fin de
+    // partie, onglet revenu d'arrière-plan avec timers gelés) → le watchdog
+    // déclenchait _forceReconnect et ÉJECTAIT le joueur de sa partie locale.
+    if (window._offlineMode) return;
     if (document.hidden) return;                                            // arrière-plan : timers gelés
     if (typeof navigator.onLine === 'boolean' && !navigator.onLine) return; // hors-ligne géré ailleurs
     var sg = document.getElementById('s-game');
@@ -8570,7 +8575,7 @@ window.togglePlayersPanel = togglePlayersPanel;
 window.toggleReactionPanel = toggleReactionPanel;
 window.App = App;
 
-window.BUILD_VERSION='0.3.926-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='0.3.927-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
