@@ -3941,6 +3941,20 @@ const App = (() => {
         if (advBlock) advBlock.style.display = 'none';
       }
 
+      // Case « Mode invité » : en Internet (guest/auth) elle reste toujours
+      // visible (c'est le sélecteur invité/compte). En LAN / dédié c'est une
+      // option avancée : visible seulement quand la roue crantée est ouverte
+      // (demande narmod 2026-07-21).
+      var guestRow = document.getElementById('guest-mode-row');
+      if (guestRow) {
+        if (mode === 'lan' || mode === 'unauth') {
+          var advBtnG = document.getElementById('conn-adv-btn');
+          guestRow.style.display = (advBtnG && advBtnG.classList.contains('open')) ? '' : 'none';
+        } else {
+          guestRow.style.display = '';
+        }
+      }
+
       const hostInput  = $('host');
       const proxyInput = $('proxy');
       const autoHost   = hostInput ? (hostInput.dataset.autoHost || window.location.hostname) : '';
@@ -8648,7 +8662,7 @@ window.togglePlayersPanel = togglePlayersPanel;
 window.toggleReactionPanel = toggleReactionPanel;
 window.App = App;
 
-window.BUILD_VERSION='0.3.942-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='0.3.943-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

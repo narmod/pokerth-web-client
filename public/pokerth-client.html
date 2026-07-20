@@ -141,6 +141,10 @@ function toggleConnAdvanced() {
   if (mode === "lan" || mode === "unauth") {
     var userRow = document.getElementById("f-user-pass");
     if (userRow) userRow.style.display = open ? "" : "none";
+    // En LAN, la case « Mode invité » est une option avancée : elle suit
+    // l'état de la roue crantée (comme TLS et le mot de passe utilisateur).
+    var guestRow = document.getElementById("guest-mode-row");
+    if (guestRow) guestRow.style.display = open ? "" : "none";
   }
 }
 
