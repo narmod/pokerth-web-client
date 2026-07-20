@@ -102,7 +102,13 @@ function show(id) {
 function _armRejoin() {
   if (S._intentionalDisconnect) return;
   var sgEl = document.getElementById('s-game');
-  if (S.gId && sgEl && sgEl.classList.contains('active')) S._pendingRejoin = S.gId;
+  if (S.gId && sgEl && sgEl.classList.contains('active')) {
+    S._pendingRejoin = S.gId;
+    // Spectateur : pas de siège côté serveur → à la reconnexion il faudra
+    // re-SPECTATER (JoinExistingGame spectateOnly) et non RejoinExistingGame,
+    // sinon le serveur retire la session (RemovedFromGame onRequest) → lobby.
+    S._pendingRejoinSpec = !!S._amSpectator;
+  }
 }
 
 function _maybeReconnectOnResume() {
