@@ -18,6 +18,15 @@ use too. Items are grouped by status rather than fixed phases.
 - TLS support (required for pokerth.net, optional for LAN) with smart auto-toggle.
 - Exponential-backoff auto-reconnect with live countdown, plus seamless reconnect across
   Wi-Fi ↔ cellular switches (the proxy keeps the upstream alive for a 2-minute grace period).
+- Random mid-game ejections to the lobby fixed (0.3.927-beta): the liveness watchdog and
+  forced-reconnect paths are disabled in Training mode (no network to watch — they were
+  destroying the local game), and the watchdog clock re-arms when the tab returns to the
+  foreground so a healthy socket is no longer presumed dead after background throttling.
+- Connection status at the table shown as a red pill centred on the community cards
+  (0.3.928-beta) instead of the full-width top banner; it follows the table's generic
+  scaling model (`--comm-scale` + table scaler) so it sizes with the app's resolution.
+  The top banner remains outside the table (login / lobby), and an Advanced option
+  (`conn_pill`) restores the old banner behaviour.
 - Spectator mode.
 - Advanced table setup: blinds, timeout, max players, password, blind-increase schedule,
   game-style presets, and fill-with-bots.
