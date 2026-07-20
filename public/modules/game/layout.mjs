@@ -237,6 +237,14 @@ function _qmlLandscapeLayout(oppCnt, zW, zH, compact, zoomMul, spectating) {
   // -15 % sur le resultat, spectateur compact UNIQUEMENT (assis et desktop
   // restent strict QML). Les slots sont traces au s reduit (coherents).
   if (spectating && compact) sFin = Math.max(0.55, sFin * 0.85);
+  // Rabot WEB (narmod 2026-07-20) : en paysage compact ASSIS sur une zone
+  // tres plate (peu de joueurs), l'ellipse s'aplatit (radiusY -> 0) et laisse
+  // les boxes/self monter a ~taille pleine (constate 3-4 joueurs : boxScale
+  // ~0.99 sur zone 844x227). On plafonne pour que la self ne depasse pas 28 %
+  // de la hauteur de zone -> seats/self coherents a faible effectif, sans effet
+  // a fort effectif (deja bornes par le non-chevauchement) ni sur desktop /
+  // portrait / spectateur (strict QML conserve).
+  if (compact && !spectating) { var _hCap = 0.28 * zH / selfBaseH; if (sFin > _hCap) sFin = Math.max(0.55, _hCap); }
   // Slots finaux aux rayons du s retenu (pairSpread actif, comme le QML).
   var gF = geom(sFin, false);
   var slots = [], raw = [];

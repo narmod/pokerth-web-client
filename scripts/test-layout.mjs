@@ -103,6 +103,10 @@ ok(_qmlLandscapeLayout(5, lW, lH, false, 1, false).s === lay5.s, 'landscape dét
 // compact : la moitié basse est écrasée vers la self (lowerSquash)
 const layC = _qmlLandscapeLayout(5, lW, 480, true, 1, false);
 ok(layC && layC.s >= 0.55, 'landscape compact: bisection valide (' + layC.s.toFixed(3) + ')');
+// compact assis, zone tres plate (mobile landscape 844x227) : cap hauteur ->
+// la self ne remplit plus toute la hauteur a faible effectif (narmod 2026-07-20).
+const layFlat = _qmlLandscapeLayout(3, 844, 227, true, 1, false);
+ok(layFlat.s <= 0.28 * 227 / 94 + 1e-6, 'landscape compact plat: self plafonnee a 28% zH (' + layFlat.s.toFixed(3) + ')');
 
 // ── _officialSeatPix paysage publie _boxScale + _zoomHeadroom ──
 const lp = seat(6, false);
