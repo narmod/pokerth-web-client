@@ -1037,7 +1037,7 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
 .pim-avatar {
   width: 96px;
   height: 96px;
-  border-radius: 50%;
+  border-radius: 12px;
   background: rgba(0,0,0,0.5);
   border: 2px solid var(--gold);
   display: flex;
@@ -1052,7 +1052,7 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
   width: 100%;
   height: 100%;
   object-fit: cover;
-  border-radius: 50%;
+  border-radius: 10px;
   pointer-events: none;
   display: block;
 }
