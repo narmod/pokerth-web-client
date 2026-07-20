@@ -166,6 +166,11 @@
         <div class="trafgrid" id="trafCards"><div class="empty">Loading…</div></div>
       </div>
       <div class="card">
+        <h2 style="margin:0 0 8px">Exclure mes propres visites</h2>
+        <p class="muted" style="margin:2px 0 10px">Sur CE navigateur, empêche le client d'être compté dans les visites (pratique quand tu testes le site). Réglage local à cet appareil ; il n'affecte que ce navigateur.</p>
+        <button id="btnNoCount" class="use">Ne pas compter mes visites</button>
+      </div>
+      <div class="card">
         <h2 style="margin:0 0 8px">Last 14 days</h2>
         <div id="trafChart" class="trafchart"><div class="empty">Loading…</div></div>
       </div>
@@ -917,6 +922,11 @@
     }).catch(function(){ $('status').innerHTML='<div class="empty err">Could not load.</div>'; });
   }
   var _trafWired = false;
+  // Owner self-exclusion: pth_no_count lives in the SAME origin as the client,
+  // so pokerth.js reads it before firing the /__visit beacon. Per-device.
+  function _noCount(){ try{ return localStorage.getItem('pth_no_count')==='1'; }catch(e){ return false; } }
+  function _paintNoCount(){ var b=$('btnNoCount'); if(!b) return; var on=_noCount(); b.textContent=on?'Mes visites : ignorées ✓ (cliquer pour réactiver)':'Ne pas compter mes visites'; b.classList.toggle('on',on); }
+  function toggleNoCount(){ try{ if(_noCount()) localStorage.removeItem('pth_no_count'); else localStorage.setItem('pth_no_count','1'); }catch(e){} _paintNoCount(); }
   function loadTraffic(){
     if(!_trafWired){
       _trafWired = true;
@@ -926,7 +936,9 @@
       var jb=$('btnTrafJson'); if(jb) jb.addEventListener('click', function(){ exportTraffic('json'); });
       var dt=$('dbTestBtn'); if(dt) dt.addEventListener('click', dbTest);
       var ds=$('dbSaveBtn'); if(ds) ds.addEventListener('click', dbSave);
+      var nc=$('btnNoCount'); if(nc) nc.addEventListener('click', toggleNoCount);
     }
+    _paintNoCount();
     loadDbConfig();
     api('/admin/visits').then(function(r){return r.json();}).then(function(d){
       var g=$('trafCards');

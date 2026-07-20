@@ -8557,7 +8557,7 @@ window.togglePlayersPanel = togglePlayersPanel;
 window.toggleReactionPanel = toggleReactionPanel;
 window.App = App;
 
-window.BUILD_VERSION='0.3.912-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='0.3.913-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
@@ -8616,6 +8616,8 @@ window.BUILD_VERSION='0.3.912-beta'; try{ var b=document.getElementById('cf-buil
   // Fires once per browser session: total visits = sessions, unique visitors =
   // distinct persistent random ids. No IP, no PII. Aggregated server-side.
   try { if (sessionStorage.getItem('pth_visit_sent')) return; } catch (e) { return; }
+  // Owner self-exclusion (set from the admin panel): skip the counter entirely.
+  try { if (localStorage.getItem('pth_no_count') === '1') return; } catch (e) {}
   var fire = function () {
     try {
       try { sessionStorage.setItem('pth_visit_sent', '1'); } catch (e) {}
@@ -8648,6 +8650,7 @@ window.BUILD_VERSION='0.3.912-beta'; try{ var b=document.getElementById('cf-buil
   window._pthCountConnect = function (mode) {
     try {
       if (['pokerthnet', 'lan', 'offline'].indexOf(mode) < 0) return;
+      try { if (localStorage.getItem('pth_no_count') === '1') return; } catch (e) {}
       var k = 'pth_conn_' + mode;
       if (sessionStorage.getItem(k)) return;
       sessionStorage.setItem(k, '1');
