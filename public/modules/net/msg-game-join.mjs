@@ -79,7 +79,9 @@ function onJoinGameAck(sub) {
     // un rejoin vers son ancienne partie resterait sans réponse (type 23
     // ignoré) et bloquerait la connexion sur « Reprise en cours… ».
     if (!window._offlineMode) {
-      try { localStorage.setItem('pth_resume', JSON.stringify({ n: S.myName, g: S.gId, t: Date.now() })); } catch(e) {}
+      // s:1 = session spectateur → au resume on re-spectatera au lieu de
+      // réclamer un siège (voir onInitAck / _armRejoin).
+      try { localStorage.setItem('pth_resume', JSON.stringify({ n: S.myName, g: S.gId, t: Date.now(), s: S._amSpectator ? 1 : 0 })); } catch(e) {}
     }
     window._hideBanner();
     // Fresh game = empty spectator set. The server will replay
