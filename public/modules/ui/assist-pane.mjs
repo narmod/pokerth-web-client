@@ -114,12 +114,12 @@ function detachAssist() {
   S._assistDetached = true; _lsSet(LS_DET, '1');
   ap.style.display = '';
   if (typeof window._enableFloating === 'function') {
-    // zoom:false → texte à taille normale ; defH bas = simple repli. La hauteur
-    // réelle est forcée en « auto » ci-dessous pour épouser le contenu (pas de
-    // vide), tout en conservant largeur + position mémorisées.
+    // zoom:true → le contenu (texte + barre) suit la taille de la fenêtre via
+    // la propriété CSS `zoom: var(--wz)`. defW/defH ≈ taille réelle du contenu
+    // pour que le zoom parte de 1× ; le contenu remplit + centré (CSS) évite
+    // tout espace blanc quand on agrandit. Largeur/position/hauteur mémorisées.
     window._enableFloating(ap, { key:'pth_winpos_assist', handle: ap._hd,
-      resizable:true, minW:150, minH:70, defW:240, defH:110, zoom:false });
-    ap.style.height = 'auto';   // la fenêtre suit toujours la hauteur du contenu
+      resizable:true, minW:150, minH:64, defW:240, defH:88, zoom:true });
   }
   try { if (typeof window._gipAssistSync === 'function') window._gipAssistSync(); } catch(e){}
 }
