@@ -339,7 +339,7 @@ export const strings = {
     waitingNeedMore:'शुरू करने के लिए {n} और खिलाड़ी चाहिए',
     waitingHintAdmin:'आप एडमिन हैं — तैयार होने पर शुरू करें या बॉट्स से भरें',
     waitingHintGuest:'पर्याप्त खिलाड़ी तैयार होने पर एडमिन खेल शुरू करेगा',
-    waitingHintSpectator:'आप दर्शक के रूप में देख रहे हैं — एडमिन के शुरू करते ही खेल शुरू हो जाएगा',
+    waitingHintSpectator:'आप दर्शक के रूप में देख रहे हैं — खेल अगले हाथ से शुरू होगा',
     waitingYou:'आप',
     endGameTitleEnd:'टूर्नामेंट समाप्त',
     endGameTitleWin:'आपने टूर्नामेंट जीता!',

@@ -509,7 +509,7 @@ export const strings = {
     waitingNeedMore: 'Cần thêm {n} người chơi để bắt đầu',
     waitingHintAdmin: 'Bạn là quản trị viên — bắt đầu khi sẵn sàng hoặc thêm bot',
     waitingHintGuest: 'Quản trị viên sẽ bắt đầu ván khi đủ người chơi',
-    waitingHintSpectator: 'Bạn đang xem với tư cách người xem — ván sẽ bắt đầu khi quản trị viên bắt đầu',
+    waitingHintSpectator: 'Bạn đang xem với tư cách người xem — ván sẽ bắt đầu từ ván tiếp theo',
     waitingYou: 'Bạn',
     endGameTitleEnd: 'Giải đấu đã kết thúc',
     endGameTitleWin: 'Bạn đã thắng giải đấu!',

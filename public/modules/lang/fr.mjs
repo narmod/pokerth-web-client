@@ -249,7 +249,7 @@ export const strings = {
     waitingNeedMore:'Il manque {n} joueur(s) pour démarrer',
     waitingHintAdmin:'Vous êtes l\'admin — lancez la partie ou remplissez avec des bots',
     waitingHintGuest:'L\'admin lancera la partie quand il y aura assez de joueurs',
-    waitingHintSpectator:'Vous regardez en spectateur — la partie démarrera quand l\'admin la lancera',
+    waitingHintSpectator:'Vous regardez en spectateur — la partie démarrera à la prochaine main',
     waitingYou:'Vous',
     endGameTitleEnd:'Partie terminée',
     endGameTitleWin:'Vous avez gagné !',

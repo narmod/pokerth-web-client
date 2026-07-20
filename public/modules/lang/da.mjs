@@ -508,7 +508,7 @@ export const strings = {
     waitingNeedMore: 'Der mangler {n} spillere for at starte',
     waitingHintAdmin: 'Du er administrator — start når du er klar, eller udfyld med bots',
     waitingHintGuest: 'Administratoren starter spillet, når nok spillere er klar',
-    waitingHintSpectator: 'Du ser med som tilskuer — spillet starter, når administratoren starter det',
+    waitingHintSpectator: 'Du ser med som tilskuer — spillet starter ved næste hånd',
     waitingYou: 'Dig',
     endGameTitleEnd: 'Turneringen er slut',
     endGameTitleWin: 'Du vandt turneringen!',

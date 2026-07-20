@@ -508,7 +508,7 @@ export const strings = {
     waitingNeedMore: 'Потрібно ще {n} гравців для початку',
     waitingHintAdmin: 'Ви адміністратор — почніть, коли готові, або заповніть ботами',
     waitingHintGuest: 'Адміністратор почне гру, коли буде достатньо гравців',
-    waitingHintSpectator: 'Ви спостерігаєте як глядач — гра почнеться, коли її запустить адміністратор',
+    waitingHintSpectator: 'Ви спостерігаєте як глядач — гра почнеться з наступної роздачі',
     waitingYou: 'Ви',
     endGameTitleEnd: 'Турнір завершено',
     endGameTitleWin: 'Ви виграли турнір!',

@@ -509,7 +509,7 @@ export const strings = {
     waitingNeedMore: 'Pro start je potřeba ještě {n} hráčů',
     waitingHintAdmin: 'Jste správce — začněte, až budete připraveni, nebo doplňte boty',
     waitingHintGuest: 'Správce začne hru, až bude dost hráčů',
-    waitingHintSpectator: 'Sledujete jako divák — hra začne, až ji správce spustí',
+    waitingHintSpectator: 'Sledujete jako divák — hra začne od dalšího rozdání',
     waitingYou: 'Vy',
     endGameTitleEnd: 'Turnaj skončil',
     endGameTitleWin: 'Vyhráli jste turnaj!',

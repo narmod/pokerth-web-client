@@ -510,7 +510,7 @@ export const strings = {
     waitingNeedMore: 'Feumar {n} cluicheadairean a bharrachd gus tòiseachadh',
     waitingHintAdmin: '\'S tusa an rianadair — tòisich nuair a bhios tu deiseil no lìon le bots',
     waitingHintGuest: 'Tòisichidh an rianadair an geama nuair a bhios gu leòr chluicheadairean ann',
-    waitingHintSpectator: 'Tha thu a\' coimhead mar neach-amhairc — tòisichidh an geama nuair a thòisicheas an rianadair e',
+    waitingHintSpectator: 'Tha thu a\' coimhead mar neach-amhairc — tòisichidh an geama air an ath làimh',
     waitingYou: 'Thusa',
     endGameTitleEnd: 'Tha an co-fharpais seachad',
     endGameTitleWin: 'Bhuannaich thu an co-fharpais!',

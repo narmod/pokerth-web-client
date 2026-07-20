@@ -338,7 +338,7 @@ export const strings = {
     waitingNeedMore:'시작하려면 {n}명 더 필요',
     waitingHintAdmin:'당신이 관리자입니다 — 준비되면 시작하거나 봇으로 채우세요',
     waitingHintGuest:'플레이어가 충분히 모이면 관리자가 게임을 시작합니다',
-    waitingHintSpectator:'관전자로 보는 중입니다 — 관리자가 시작하면 게임이 시작됩니다',
+    waitingHintSpectator:'관전자로 보는 중입니다 — 게임은 다음 핸드부터 시작됩니다',
     waitingYou:'나',
     endGameTitleEnd:'토너먼트 종료',
     endGameTitleWin:'토너먼트에서 우승했습니다!',

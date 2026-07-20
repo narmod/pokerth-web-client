@@ -509,7 +509,7 @@ export const strings = {
     waitingNeedMore: 'Reikia dar {n} žaidėjų, kad pradėtumėte',
     waitingHintAdmin: 'Esate administratorius — pradėkite, kai būsite pasiruošę, arba užpildykite botais',
     waitingHintGuest: 'Administratorius pradės žaidimą, kai bus pakankamai žaidėjų',
-    waitingHintSpectator: 'Stebite kaip stebėtojas — žaidimas prasidės, kai administratorius jį pradės',
+    waitingHintSpectator: 'Stebite kaip stebėtojas — žaidimas prasidės nuo kito dalijimo',
     waitingYou: 'Jūs',
     endGameTitleEnd: 'Turnyras baigtas',
     endGameTitleWin: 'Laimėjote turnyrą!',

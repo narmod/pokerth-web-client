@@ -509,7 +509,7 @@ export const strings = {
     waitingNeedMore: 'Mai sunt necesari {n} jucători pentru a începe',
     waitingHintAdmin: 'Ești administrator — începe când ești gata sau completează cu boți',
     waitingHintGuest: 'Administratorul va începe jocul când sunt destui jucători',
-    waitingHintSpectator: 'Privești ca spectator — jocul va începe când administratorul îl pornește',
+    waitingHintSpectator: 'Privești ca spectator — jocul va începe la următoarea mână',
     waitingYou: 'Tu',
     endGameTitleEnd: 'Turneu încheiat',
     endGameTitleWin: 'Ai câștigat turneul!',

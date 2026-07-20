@@ -508,7 +508,7 @@ export const strings = {
     waitingNeedMore: 'Aloitukseen tarvitaan vielä {n} pelaajaa',
     waitingHintAdmin: 'Olet ylläpitäjä — aloita kun olet valmis tai täytä boteilla',
     waitingHintGuest: 'Ylläpitäjä aloittaa pelin, kun pelaajia on tarpeeksi',
-    waitingHintSpectator: 'Seuraat peliä katsojana — peli alkaa, kun ylläpitäjä aloittaa sen',
+    waitingHintSpectator: 'Seuraat peliä katsojana — peli alkaa seuraavasta jaosta',
     waitingYou: 'Sinä',
     endGameTitleEnd: 'Turnaus päättyi',
     endGameTitleWin: 'Voitit turnauksen!',

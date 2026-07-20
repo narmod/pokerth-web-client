@@ -509,7 +509,7 @@ export const strings = {
     waitingNeedMore: 'Még {n} játékos kell a kezdéshez',
     waitingHintAdmin: 'Te vagy az adminisztrátor — indítsd, ha kész vagy, vagy tölts fel botokkal',
     waitingHintGuest: 'Az adminisztrátor elindítja a játékot, ha elég játékos van',
-    waitingHintSpectator: 'Nézőként figyelsz — a játék akkor indul, amikor az adminisztrátor elindítja',
+    waitingHintSpectator: 'Nézőként figyelsz — a játék a következő leosztással indul',
     waitingYou: 'Te',
     endGameTitleEnd: 'A verseny véget ért',
     endGameTitleWin: 'Megnyerted a versenyt!',

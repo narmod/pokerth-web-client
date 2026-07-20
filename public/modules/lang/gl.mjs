@@ -509,7 +509,7 @@ export const strings = {
     waitingNeedMore: 'Cómpren {n} xogadores máis para comezar',
     waitingHintAdmin: 'Es o administrador — comeza cando esteas listo ou enche con bots',
     waitingHintGuest: 'O administrador comezará a partida cando haxa abondos xogadores',
-    waitingHintSpectator: 'Estás mirando como espectador — a partida comezará cando o administrador a inicie',
+    waitingHintSpectator: 'Estás mirando como espectador — a partida comezará na próxima man',
     waitingYou: 'Ti',
     endGameTitleEnd: 'O torneo rematou',
     endGameTitleWin: 'Gañaches o torneo!',
