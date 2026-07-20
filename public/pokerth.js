@@ -28,14 +28,29 @@ function _startIpBlockCountdown() {
 }
 
 function _showBanner(msg) {
+  // À table (écran jeu actif) : pastille rouge centrée sur les cartes communes
+  // (#g-conn-pill, dans le scaler → taille asservie au modèle générique de la
+  // table). Hors table (connexion / lobby / attente) : bandeau plein écran
+  // historique. Option avancée conn_pill (défaut ON) pour revenir au bandeau.
+  // Appelée en boucle pendant les comptes à rebours → le choix pastille/bandeau
+  // se réévalue à chaque tick (suit les changements d'écran en cours de reco).
+  var sg = document.getElementById('s-game');
+  var usePill = !!(sg && sg.classList.contains('active'));
+  try { usePill = usePill && _advGet('conn_pill', true); } catch (e) {}
+  var p = document.getElementById('g-conn-pill');
+  var pm = document.getElementById('g-conn-pill-msg');
+  if (pm) pm.textContent = msg;
+  if (p) p.style.display = usePill ? 'flex' : 'none';
   var b = document.getElementById('reconnect-banner');
   var m = document.getElementById('reconnect-msg');
-  if (b) b.classList.add('visible');
   if (m) m.textContent = msg;
+  if (b) b.classList.toggle('visible', !usePill);
 }
 function _hideBanner() {
   var b = document.getElementById('reconnect-banner');
   if (b) b.classList.remove('visible');
+  var p = document.getElementById('g-conn-pill');
+  if (p) p.style.display = 'none';
 }
 
 // ═══════════════════════════════════════════════════════════
@@ -348,6 +363,7 @@ function openAdvancedOptions() {
   sync('adv-fkeysalt', 'fkeys_alt', false);
   sync('adv-tablezoom', 'table_zoom', true);
   sync('adv-lobbychat', 'lobby_chat', true);
+  sync('adv-connpill', 'conn_pill', true);   // pastille de connexion sur le feutre (web)
   sync('adv-pausehands', 'pause_hands', false);
   sync('adv-createdialog', 'create_dialog', true);
   sync('adv-cfgsync', 'cfg_sync', true);
@@ -8575,7 +8591,7 @@ window.togglePlayersPanel = togglePlayersPanel;
 window.toggleReactionPanel = toggleReactionPanel;
 window.App = App;
 
-window.BUILD_VERSION='0.3.927-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='0.3.928-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
