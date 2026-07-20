@@ -296,6 +296,16 @@ function addChat(sender, text, cls='', spec) {
   const el = document.getElementById('chat');
   const d  = document.createElement('div');
   d.className = 'msg ' + cls;
+  // Surlignage de mention (parité QML LobbyHandler::onLobbyChatMessage) : quand
+  // le corps d'un message d'autrui contient mon pseudo (insensible à la casse),
+  // tout le corps passe en or gras via la classe « mention ». Comportement natif
+  // du client officiel — pas d'interrupteur (le QML n'en propose pas non plus).
+  try {
+    const _mn = (S.myName || '').trim();
+    if (_mn && sender && cls !== 'mine'
+        && String(text).toLowerCase().indexOf(_mn.toLowerCase()) !== -1)
+      d.className += ' mention';
+  } catch (_em) {}
   const emT = function (s) { var h = esc(s); if (!_noEmo && typeof window.applyChatEmoteShortcuts === 'function') { try { h = window.applyChatEmoteShortcuts(h); } catch (_e) {} } if (typeof window._linkifyChatHtml === 'function') { try { h = window._linkifyChatHtml(h); } catch (_e2) {} } return h; };
   if (sender) {
     d.innerHTML = `<span class="msg-time">${window._chatTs()}</span> <span class="who">${esc(sender)}</span>: <span class="txt">${emT(text)}</span>`

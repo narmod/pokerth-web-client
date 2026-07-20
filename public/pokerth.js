@@ -6464,6 +6464,14 @@ function addGameChat(sender, text, cls, spec) {
   if (sender && _noEmo) { try { text = _advStripEmoji(text); } catch (e) {} }
   var d = document.createElement('div');
   d.className = 'msg ' + (cls || '');
+  // Surlignage de mention (parité QML) — miroir de addChat (chat.mjs). Corps d'un
+  // message d'autrui contenant mon pseudo (insensible à la casse) → classe « mention ».
+  try {
+    var _mn = (window.PthState && window.PthState.myName ? window.PthState.myName : '').trim();
+    if (_mn && sender && cls !== 'mine'
+        && String(text).toLowerCase().indexOf(_mn.toLowerCase()) !== -1)
+      d.className += ' mention';
+  } catch (_em) {}
   function e(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
   // Corps du message : shortcodes :nom: + émoticônes ASCII (port officiel),
   // sauf en mode « chat sans emoji ». Le nom d'expéditeur n'est jamais converti.
@@ -8596,7 +8604,7 @@ window.togglePlayersPanel = togglePlayersPanel;
 window.toggleReactionPanel = toggleReactionPanel;
 window.App = App;
 
-window.BUILD_VERSION='0.3.934-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='0.3.935-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

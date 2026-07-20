@@ -1760,6 +1760,9 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
 .msg.reaction { font-size: 1.1rem; opacity: 0.85; font-style: italic; }
 .msg.bc     { color: var(--gold-dim); border-left: 2px solid var(--gold-dim); padding-left: 6px; }
 .msg.mine .who { color: var(--green); }
+/* Mention : mon pseudo cité dans un message d'autrui → corps en or gras
+   (parité QML LobbyHandler, colorAccent = --gold). */
+.msg.mention .txt { color: var(--gold); font-weight: 700; }
 
 .chat-input {
   padding: 8px 10px;
@@ -9144,6 +9147,7 @@ html[data-buttons="pokerth"] .btn-action[disabled] { filter: grayscale(0.55) bri
 #g-chat-msgs .msg.sys { color: var(--chatlog-text2, var(--chatlog-text, var(--text))); }
 #g-chat-msgs .msg .who { color: var(--box-accent, var(--gold)); }
 #g-chat-msgs .msg .msg-time { color: var(--chatlog-muted, var(--text-dim, #8b93a7)); }
+#g-chat-msgs .msg.mention .txt { color: var(--box-accent, var(--gold)); font-weight: 700; }
 html[data-box-accent][data-seat-struct="qml"] .seat-plate { border-color: var(--box-accent); }
 
 /* ═══════════════════════════════════════════════════════════════════════════
