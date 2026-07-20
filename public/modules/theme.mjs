@@ -73,6 +73,8 @@ const TABLES = [
   { id: 'tripsixes', key: 'tableTripSixes', fallback: "TripSixes", swatch: '#5a1010', feltUrl: '/table/tripsixes/felt.png', preview: '/table/tripsixes/preview.png', mode: 'fs', skin: true, align: 'center' },
   { id: 'wanted', key: 'tableWanted', fallback: "Wanted", swatch: '#6b4a1e', feltUrl: '/table/wanted/felt.png', preview: '/table/wanted/preview.png', mode: 'fs', skin: true, align: 'center' },
   { id: 'xanax', key: 'tableXanax', fallback: "Xanax", swatch: '#394150', feltUrl: '/table/xanax/felt.png', preview: '/table/xanax/preview.png', mode: 'fs', skin: true, align: 'center' },
+  { id: 'saloon', key: 'tableSaloon', fallback: "Saloon", swatch: '#c07f30', feltUrl: '/table/saloon/felt.png', preview: '/table/saloon/preview.png', mode: 'fs', skin: true, align: 'center' },
+  { id: 'discworld', key: 'tableDiscworld', fallback: "Discworld", swatch: '#c98d49', feltUrl: '/table/discworld/felt.png', preview: '/table/discworld/preview.png', mode: 'fs', skin: true, align: 'center', zoom: 1.3 },
 ];
 const DECKS = [
   { id: 'casino-vert', key: 'deckCasinoVert', fallback: 'Green Casino', swatch: '#1e6b1e', ext: 'svg' },
@@ -499,8 +501,19 @@ function _cardbackPickFile() {
   inp.onchange = function () { var f = inp.files && inp.files[0]; if (f) _cardbackImport(f); };
   inp.click();
 }
+// Dos de cartes autonomes (portes du client QML data/gfx/qml/backside/*, AGPL-3.0).
+// Chacun est un flipside.svg seul sous /cards/<id>/ (aucune face -> pas un deck).
+// Noms de style conserves tels quels (proper names), comme Star Trek / Xanax.
+var _STANDALONE_BACKS = [
+  { id: 'back-danuxi',      key: 'cardbackDanuxi',      fallback: 'Danuxi',              ext: 'svg' },
+  { id: 'back-matrix',      key: 'cardbackMatrix',      fallback: 'Matrix',              ext: 'svg' },
+  { id: 'back-nobus-black', key: 'cardbackNobusBlack',  fallback: 'Nobus Classic Black', ext: 'svg' },
+  { id: 'back-nobus-blue',  key: 'cardbackNobusBlue',   fallback: 'Nobus Classic Blue',  ext: 'svg' },
+  { id: 'back-nobus-green', key: 'cardbackNobusGreen',  fallback: 'Nobus Classic Green', ext: 'svg' },
+  { id: 'back-nobus-red',   key: 'cardbackNobusRed',    fallback: 'Nobus Classic Red',   ext: 'svg' },
+];
 // Options : Assorti au deck · dos de chaque deck connu (intégrés + galerie) ·
-// image importée (si présente) · « Importer une image… » (action).
+// dos autonomes QML · image importée (si présente) · « Importer une image… ».
 function _cardbackOptions() {
   var bust = '?v=' + (window.BUILD_VERSION || '0');
   var cd = deck.get();
@@ -509,6 +522,14 @@ function _cardbackOptions() {
   DECKS.concat(_galleryDecks).forEach(function (d) {
     opts.push({ id: d.id, name: (d.name || _t(d.key, d.fallback)), ext: d.ext || 'png',
                 backUrl: '/cards/' + d.id + '/flipside.' + (d.ext || 'png') + bust });
+  });
+  // Dos autonomes portes du client QML (data/gfx/qml/backside/*, AGPL-3.0) : pas
+  // de deck de faces associe, juste un flipside.svg dans /cards/<id>/ (donc ignore
+  // par decks-manifest, qui exige les 52 faces). Resolution via _deckBack comme
+  // n'importe quel override (/cards/<id>/flipside.<ext>).
+  _STANDALONE_BACKS.forEach(function (b) {
+    opts.push({ id: b.id, key: b.key, fallback: b.fallback, ext: b.ext,
+                backUrl: '/cards/' + b.id + '/flipside.' + b.ext + bust });
   });
   try {
     if (localStorage.getItem('pth_cardback_img'))
@@ -798,7 +819,9 @@ var _SKIN_TINT = {
   star_trek:{a:'#4d9cff',bg:'#080b12',su:'#161d2c',bo:'#527db5',tx:'#e9eef7',se:'#c8d3e6',mu:'#738eb5'},
   tripsixes:{a:'#4fae7a',bg:'#223033',su:'#3c5056',bo:'#538579',tx:'#eff1f5',se:'#cdd3e0',mu:'#6f8f9b'},
   wanted:{a:'#c08a3e',bg:'#2d2c2d',su:'#4c4b4d',bo:'#86755e',tx:'#eff1f5',se:'#cdd3e0',mu:'#86888f'},
-  xanax:{a:'#4a63c8',bg:'#22283b',su:'#3b4661',bo:'#51639c',tx:'#eff1f5',se:'#cdd3e0',mu:'#6e80aa'}
+  xanax:{a:'#4a63c8',bg:'#22283b',su:'#3b4661',bo:'#51639c',tx:'#eff1f5',se:'#cdd3e0',mu:'#6e80aa'},
+  saloon:{a:'#c07f30',bg:'#17110b',su:'#251c13',bo:'#7b5b2e',tx:'#f3e6cd',se:'#d6bd93',mu:'#9b8156'},
+  discworld:{a:'#c98d49',bg:'#150e08',su:'#241811',bo:'#7a5526',tx:'#f2e2c6',se:'#d9bd90',mu:'#9c7c50'}
 };
 function _injectTintObj(m){
   var el=document.documentElement;
@@ -1348,7 +1371,8 @@ var TABLE_AUTHORS = {
   '':'PokerTH Development Team', 'green':'PokerTH Development Team', 'casino':'PokerTH Development Team',
   danuxi:'Daniel Hammer', mute:'mute design', mute2:'mute design', teal:'Pinboc', lemming:'lemming',
   matrix:'PokerTH Development Team', star_trek:'PokerTH Development Team', tripsixes:'TripSixes',
-  wanted:'Etienne Graphic Designer', xanax:'Sebastien Kerguen'
+  wanted:'Etienne Graphic Designer', xanax:'Sebastien Kerguen',
+  saloon:'PokerTH Development Team', discworld:'PokerTH Development Team'
 };
 var _TABS = [
   { id:'table',    kind:'table',    titleKey:'sectionTable',    fallback:'Table' },
