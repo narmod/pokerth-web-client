@@ -289,7 +289,19 @@ A full appearance system, reached from the **Theme** button — a styles window 
 - **On-felt panels** — chat, emoji, hand log and a new **Hand-odds (Combinaisons)** window open as compact, movable and resizable floating windows anchored under their round on-felt button (on every device, instead of taking over the screen); a **↺** button in the header snaps every panel back to its docked spot, and the table zoom is collapsible everywhere. Window positions are remembered. On phone portrait the action bar hugs the bottom edge for a full-screen table.
 - **Built-in diagnostics via chat commands** — type `/help` in any chat for local commands (`/diag`, `/update`, `/netdbg`, `/carddbg`, `/msglog`, `/audiodbg`, `/storage`, `/logdump`, `/fps`, `/table`, `/lang`, `/sound`, `/zoom`, `/copy`, `/clear`…); replies are shown only to you (see [docs/DIAGNOSTIC.md](docs/DIAGNOSTIC.md))
 - Poker hand reference overlay (? button)
-- Exponential-backoff auto-reconnect with live countdown
+- **Resilient reconnection** — exponential-backoff auto-reconnect with a live countdown,
+  plus automatic resume when the tab returns to the foreground or the network path
+  changes (Wi-Fi ↔ cellular, airplane mode). Hardened in the `v0.3.927–931` series:
+  the liveness watchdog never fires in Training mode (it used to destroy the local
+  game), a healthy socket is no longer presumed dead after background throttling,
+  concurrent resume attempts can't race each other into a double login (which made
+  pokerth.net drop the session mid-game), and a **spectator** session resumes as a
+  spectator instead of trying to reclaim a seat it never had
+- **On-felt connection pill** — while at the table, *Reconnecting…* is shown as a red
+  pill centred on the community cards, sized by the table's generic scaling model
+  (`--comm-scale` + table scaler) so it grows and shrinks with the screen; the
+  full-width top banner remains on the connect / lobby screens, and an Advanced
+  option (*Connection status as a pill on the felt*) restores the banner everywhere
 
 ### Official client (QML) tracking
 The in-game screen is audited feature-by-feature against PokerTH's official QML client
