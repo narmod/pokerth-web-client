@@ -311,6 +311,16 @@ function addChat(sender, text, cls='', spec) {
     d.innerHTML = `<span class="txt">${cls === 'sys' ? esc(text) : emT(text)}</span>`;
   }
   if (spec && !sender) { try { d.dataset.sys = JSON.stringify(spec); } catch(e){} }
+  // Glossaire d'abréviations (gg, nh, utg…) : entoure les tokens connus d'un
+  // <span class="chat-abbr" title="sens"> pour une bulle au survol. Opère sur
+  // les nœuds texte de .txt (jamais dans les emotes/liens). Pont window.*
+  // (module chat/abbrev.mjs) ; no-op tant qu'il n'est pas chargé.
+  try {
+    if (typeof window._chatMarkAbbrev === 'function') {
+      var _txtEl = d.querySelector('.txt');
+      if (_txtEl) window._chatMarkAbbrev(_txtEl);
+    }
+  } catch (_ea) {}
   el.appendChild(d);
   el.scrollTop = el.scrollHeight;
 }

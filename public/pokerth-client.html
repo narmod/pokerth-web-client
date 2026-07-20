@@ -477,6 +477,7 @@ function onAvatarImageChosen(input) {
     '/modules/game/stats.mjs',
     '/modules/net/petitions.mjs',
     '/modules/ui/chat.mjs',
+    '/modules/chat/abbrev.mjs',
     '/modules/ui/player-popup.mjs',
     '/modules/ui/lobby.mjs',
     '/modules/game/showdown.mjs',
@@ -2074,6 +2075,7 @@ function onAvatarImageChosen(input) {
 <script type="module" src="modules/game/stats.mjs"></script>
 <script type="module" src="modules/net/petitions.mjs"></script>
 <script type="module" src="modules/ui/chat.mjs"></script>
+<script type="module" src="modules/chat/abbrev.mjs"></script>
 <script type="module" src="modules/ui/player-popup.mjs"></script>
 <script type="module" src="modules/ui/lobby.mjs"></script>
 <script type="module" src="modules/game/showdown.mjs"></script>
@@ -2464,6 +2466,7 @@ if ('serviceWorker' in navigator) {
       <label class="adv-row"><input type="checkbox" id="adv-noemoji" onchange="setAdvOpt('chat_noemoji',this.checked)"><span data-i18n="advNoChatEmoji">Disable emojis in chat</span></label>
       <label class="adv-row"><input type="checkbox" id="adv-chatts" onchange="setAdvOpt('chat_ts',this.checked)"><span data-i18n="advChatTimestamps">Show time in chat messages</span><em class="adv-webtag">web</em></label>
       <label class="adv-row"><input type="checkbox" id="adv-chattranslate" onchange="setChatTranslate(this.checked)"><span data-i18n="advChatTranslate">Chat translation (Google Translate, per-message button)</span><em class="adv-webtag">web</em></label>
+      <label class="adv-row"><input type="checkbox" id="adv-chatabbrev" onchange="setAdvOpt('chat_abbrev',this.checked)"><span data-i18n="advChatAbbrev">Explain chat abbreviations (gg, nh, utg…) on hover</span><em class="adv-webtag">web</em></label>
       </details>
       <details class="adv-fold"><summary class="adv-sec"><span class="adv-sec-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="3.5" width="17" height="17" rx="3"/><circle cx="12" cy="10" r="2.8"/><path d="M6.8 18a5.2 5.2 0 0 1 10.4 0"/></svg></span><span data-i18n="advSecAvatars">Avatars</span></summary>
       <label class="adv-row"><input type="checkbox" id="adv-flag" onchange="setAdvOpt('show_flag',this.checked)"><span data-i18n="advFlagAvatar">Country flag on avatar</span></label>

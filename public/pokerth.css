@@ -9225,6 +9225,9 @@ body.chat-tr-on .msg .chat-tr-btn { display: inline; }
 .chat-tr-btn.tr-busy { opacity: 0.3; cursor: wait; }
 .chat-tr-btn.tr-err { opacity: 0.7; filter: grayscale(1); }
 .chat-tr-btn.tr-same { opacity: 0.25; cursor: default; }
+/* Abréviations de chat (gg, nh, utg…) : soulignement pointillé discret + bulle
+   native au survol (title = sens localisé). Voir modules/chat/abbrev.mjs. */
+.chat-abbr { border-bottom: 1px dotted currentColor; cursor: help; }
 
 
 /* ── Barre d'action : panneau QML (GameActionBar 2.1.3) — desktop/tablette ──

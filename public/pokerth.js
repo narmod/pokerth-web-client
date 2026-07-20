@@ -204,6 +204,9 @@ function applyAdvOpts() {
     try { if (typeof window._refreshOwnCards === 'function') window._refreshOwnCards(); } catch (e) {}
     try { if (typeof window._renderOdds === 'function') window._renderOdds(); } catch (e) {}
     try { if (typeof window._renderSeats === 'function') window._renderSeats(); } catch (e) {}
+    // Glossaire d'abréviations de chat (option chat_abbrev) : re-marque /
+    // dé-marque les messages selon l'état de l'option (module chat/abbrev.mjs).
+    try { if (typeof window._chatAbbrevRefresh === 'function') window._chatAbbrevRefresh(); } catch (e) {}
   } catch (e) {}
 }
 window.applyAdvOpts = applyAdvOpts;
@@ -329,6 +332,7 @@ function openAdvancedOptions() {
   sync('adv-community', 'show_community', true);
   sync('adv-focusbet', 'focus_bet', false);
   sync('adv-noemoji', 'chat_noemoji', false);
+  sync('adv-chatabbrev', 'chat_abbrev', true);   // glossaire d'abréviations (gg, nh…), actif par défaut
   sync('adv-chatts', 'chat_ts', true);   // heure dans le chat, active par defaut (comportement historique)
   sync('adv-fadelosers', 'fade_losers', true);
   sync('adv-flag', 'show_flag', true);
@@ -914,7 +918,7 @@ var _CFG_WEB_SYNC_KEYS = [
   'pth_community_content', 'pth_sound_vol',
   'pth_log_on', 'pth_create_dialog', 'pth_status_bar', 'pth_blinds_badge',
   'pth_winner_popup', 'pth_remove_gone', 'pth_tooltips', 'pth_big_own_cards',
-  'pth_chat_translate', 'pth_pin_actionbar',
+  'pth_chat_translate', 'pth_chat_abbrev', 'pth_pin_actionbar',
   // Valeurs (thème web, sièges, clavier, langue, divers)
   'pth_theme', 'pth_buttons', 'pth_pucks', 'pth_seat', 'pth_seat_layout',
   'pth_seat_custom', 'pth_keys', 'pth_lang', 'pth_offline_skill',
@@ -1174,8 +1178,13 @@ window._chatTranslate = function (btn) {
   if (!orig.trim() || !window._chatTrSupported) return;
   btn.disabled = true; btn.classList.add('tr-busy');
   var tgt = _chatTrTarget();
+  // Pré-expansion des abréviations (gg → good game…) : Google ne développe pas
+  // le jargon, on lui donne donc la forme longue anglaise à traduire. Additif :
+  // no-op si le module chat/abbrev.mjs n'est pas chargé.
+  var forTr = orig;
+  try { if (typeof window._expandAbbrev === 'function') forTr = window._expandAbbrev(orig); } catch (_ex) {}
   var url = 'https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=' +
-    encodeURIComponent(tgt) + '&dt=t&q=' + encodeURIComponent(orig);
+    encodeURIComponent(tgt) + '&dt=t&q=' + encodeURIComponent(forTr);
   fetch(url).then(function (r) {
     if (!r.ok) throw new Error('http ' + r.status);
     return r.json();
@@ -8561,7 +8570,7 @@ window.togglePlayersPanel = togglePlayersPanel;
 window.toggleReactionPanel = toggleReactionPanel;
 window.App = App;
 
-window.BUILD_VERSION='0.3.922-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='0.3.923-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
