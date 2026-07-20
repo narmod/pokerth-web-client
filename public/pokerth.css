@@ -7811,17 +7811,26 @@ html[data-seat-edit="1"] #g-seats .seat.seat-ghost { outline: none; cursor: defa
 /* ── Ranking card as a floating window (desktop/tablet, >=900x600) ────────
    Reuses the shared floating-win drag/resize system (makeWin* in pokerth.js).
    The card is position:relative inside the modal, so pin it fixed + drop the
-   dark backdrop + let clicks through behind it. Mobile keeps the modal. */
-#ranking-modal.rk-floating { pointer-events: none; }
-#ranking-modal.rk-floating .rk-backdrop { display: none; }
-#ranking-modal.rk-floating .rk-card { pointer-events: auto; }
-#ranking-modal .rk-card.floating-win {
+   dark backdrop + let clicks through behind it. Mobile keeps the modal.
+   Applies to BOTH the lobby ranking (#ranking-modal) and the in-game table
+   ranking (#tableranking-modal) so they behave identically — draggable,
+   resizable, no dimming overlay, integrated into the app. */
+#ranking-modal.rk-floating,
+#tableranking-modal.rk-floating { pointer-events: none; }
+#ranking-modal.rk-floating .rk-backdrop,
+#tableranking-modal.rk-floating .rk-backdrop { display: none; }
+#ranking-modal.rk-floating .rk-card,
+#tableranking-modal.rk-floating .rk-card { pointer-events: auto; }
+#ranking-modal .rk-card.floating-win,
+#tableranking-modal .rk-card.floating-win {
   position: fixed; margin: 0; max-height: none;
   border: 1px solid var(--gold-dim); border-radius: 10px;
   box-shadow: 0 14px 36px rgba(0,0,0,0.62); overflow: hidden;
 }
-#ranking-modal .rk-card.floating-win .rk-title { cursor: move; touch-action: none; -webkit-user-select: none; user-select: none; }
-#ranking-modal .rk-card.floating-win .rk-title.win-dragging { cursor: grabbing; }
+#ranking-modal .rk-card.floating-win .rk-title,
+#tableranking-modal .rk-card.floating-win .rk-title { cursor: move; touch-action: none; -webkit-user-select: none; user-select: none; }
+#ranking-modal .rk-card.floating-win .rk-title.win-dragging,
+#tableranking-modal .rk-card.floating-win .rk-title.win-dragging { cursor: grabbing; }
 
 /* ── Player profile (clicking a name in the ranking) ─────────────────────── */
 .rk-name { background: none; border: none; padding: 0; margin: 0; font: inherit; letter-spacing: inherit; color: var(--gold-hi); cursor: pointer; }
