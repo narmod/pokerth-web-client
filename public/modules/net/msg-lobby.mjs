@@ -98,7 +98,10 @@ function onAnnounce(sub) {
     if (!S._pendingRejoin && !window._offlineMode) {
       try {
         var _rs0 = JSON.parse(localStorage.getItem('pth_resume') || 'null');
-        if (_rs0 && _rs0.n === S.myName && (Date.now() - _rs0.t) < 5 * 60 * 1000) S._pendingRejoin = _rs0.g;
+        if (_rs0 && _rs0.n === S.myName && (Date.now() - _rs0.t) < 5 * 60 * 1000) {
+          S._pendingRejoin = _rs0.g;
+          S._pendingRejoinSpec = !!_rs0.s;   // spectateur → re-spectate au resume
+        }
       } catch (e) {}
     }
     // Mot de passe serveur (optionnel, masqué sous « plus d'options »).
@@ -140,13 +143,26 @@ function onInitAck(sub) {
     if (!_rt) {
       try {
         var _rs = JSON.parse(localStorage.getItem('pth_resume') || 'null');
-        if (_rs && _rs.n === S.myName && (Date.now() - _rs.t) < 5 * 60 * 1000) _rt = _rs.g;
+        if (_rs && _rs.n === S.myName && (Date.now() - _rs.t) < 5 * 60 * 1000) {
+          _rt = _rs.g;
+          S._pendingRejoinSpec = !!_rs.s;
+        }
       } catch (e) {}
     }
     if (_rt) {
       S._pendingRejoin = _rt;
       window._showBanner(t('rejoinInProgress'));
-      try { send(MSG.buildRejoinGame(_rt)); } catch (e) {}
+      if (S._pendingRejoinSpec) {
+        // On était SPECTATEUR : aucun siège à réclamer côté serveur.
+        // RejoinExistingGame ferait retirer la session (RemovedFromGame
+        // reason=0 onRequest → éjection lobby, bug observé sur pokerth.net).
+        // → re-spectater proprement, même chemin que spectateGame().
+        S._amSpectator = true;
+        try { window.updateSpectatorStrip && window.updateSpectatorStrip(); } catch (e) {}
+        try { send(MSG.buildJoinGame(_rt, true)); } catch (e) {}
+      } else {
+        try { send(MSG.buildRejoinGame(_rt)); } catch (e) {}
+      }
       return;   // JoinGameAck → game screen; JoinGameFailed → lobby fallback
     }
     updateLobbyPill();
