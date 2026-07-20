@@ -8260,6 +8260,21 @@ html:not([data-seat-struct="qml"]) .seat:not(.me) .seat-foot { margin-top: 1px; 
 #gip-assist #hand-strength{position:static;left:auto;right:auto;top:auto;height:auto;pointer-events:none;margin-top:6px}
 #gip-assist .hs-track{display:block;position:static;left:auto;right:auto;top:auto;height:6px;border-radius:3px;background:rgba(var(--gold-rgb),.14)}
 #gip-assist .hs-fill{border-radius:3px}
+/* ── Assistance : rangée de titre + bouton détacher (v0.3.908) ── */
+.gip-assist-hd-row{display:flex;align-items:center;justify-content:space-between;gap:6px;margin:0 0 5px}
+.gip-assist-hd-row .odds-hd{margin:0}
+.gip-assist-pop{flex:0 0 auto;background:none;border:none;cursor:pointer;font-size:0.9rem;line-height:1;padding:0 2px;color:var(--chatlog-muted, var(--gold-dim))}
+.gip-assist-pop:hover{color:var(--chatlog-text, var(--gold))}
+/* ── Poignée de séparation Assistance / Cotes (drag vertical) ── */
+.gip-split{flex:0 0 auto;height:10px;cursor:row-resize;touch-action:none;display:flex;align-items:center;justify-content:center;background:var(--chatlog-bg, var(--field-bg));border-bottom:1px solid var(--chatlog-border,var(--border))}
+.gip-split-grip{width:34px;height:3px;border-radius:2px;background:rgba(var(--gold-rgb),.28)}
+.gip-split:hover .gip-split-grip{background:rgba(var(--gold-rgb),.55)}
+/* ── Fenêtre flottante « Assistance » détachée (chrome comme #g-log-panel) ── */
+#g-assist-panel{position:fixed;z-index:99;background:var(--panel);border:1px solid var(--border);box-shadow:0 4px 20px rgba(0,0,0,0.6);border-radius:8px;overflow:hidden}
+#g-assist-panel.floating-win{display:flex;flex-direction:column}
+#g-assist-panel .gip-assist-wtitle{flex:1;margin:0 6px;font-size:0.65rem;color:var(--gold-dim);letter-spacing:0.15em;text-transform:uppercase;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#g-assist-panel .gip-assist-dock{flex:0 0 auto;background:none;border:none;color:var(--chatlog-text2, var(--chatlog-text, var(--text)));cursor:pointer;font-size:0.9rem;padding:0 4px}
+#g-assist-panel #gip-assist{flex:1;min-height:0;overflow-y:auto;border-bottom:none;height:auto}
 /* Croix de fermeture des fenetres flottantes (odds + assistance). Suit --ws + le theme. */
 .win-x{position:absolute;top:calc(2px*var(--ws,1));right:calc(3px*var(--ws,1));width:calc(15px*var(--ws,1));height:calc(15px*var(--ws,1));line-height:calc(14px*var(--ws,1));text-align:center;border:0;background:transparent;color:var(--text);opacity:.5;font-size:calc(12px*var(--ws,1));cursor:pointer;padding:0;border-radius:calc(4px*var(--ws,1));z-index:3;font-family:inherit}
 .win-x:hover{opacity:1;color:var(--gold)}
