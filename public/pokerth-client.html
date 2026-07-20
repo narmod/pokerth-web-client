@@ -707,14 +707,14 @@ function onAvatarImageChosen(input) {
     <form id="login-form" autocomplete="on" onsubmit="App.connect(); return false;">
     <div class="f" id="f-nick">
       <label id="nick-label">Nickname</label>
-      <div style="display:flex;gap:8px;align-items:flex-end">
+      <div style="display:flex">
         <input id="nick" value="" maxlength="64" placeholder="YourName" data-i18n-placeholder="nickPlaceholder"
                autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"
                onkeydown="if(event.key==='Enter') App.connect()" style="flex:1">
-        <button type="button" id="av-trigger" onclick="toggleAvatarPopup()" title="Choose an avatar" data-i18n-title="chooseAvatar"
-                style="width:64px;height:64px;font-size:2rem;background:var(--inset);border:1px solid var(--border);border-radius:8px;cursor:pointer;flex-shrink:0;overflow:hidden;transition:border-color 0.2s">🎭</button>
-        <input type="file" id="avatar-file-input" accept="image/*" style="display:none" onchange="onAvatarImageChosen(this)">
       </div>
+      <button type="button" id="av-trigger" onclick="toggleAvatarPopup()" title="Choose an avatar" data-i18n-title="chooseAvatar"
+              style="width:64px;height:64px;font-size:2rem;background:var(--inset);border:1px solid var(--border);border-radius:8px;cursor:pointer;flex-shrink:0;overflow:hidden;transition:border-color 0.2s">🎭</button>
+      <input type="file" id="avatar-file-input" accept="image/*" style="display:none" onchange="onAvatarImageChosen(this)">
     </div>
     <!-- Popup sélection avatar -->
     <div id="avatar-popup" style="display:none">

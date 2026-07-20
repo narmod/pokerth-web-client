@@ -1335,6 +1335,25 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
    le bouton agrandi ; object-fit hérité de l'inline (contain pour le logo
    PokerTH, cover pour une photo) est préservé. */
 #av-trigger img { width: 100% !important; height: 100% !important; }
+/* Bloc pseudo en grille : le bouton avatar occupe la colonne droite sur
+   les deux rangées (libellé + champ), donc son HAUT s'aligne sur le haut
+   du libellé « PSEUDO » et son BAS sur le bas du champ. La colonne droite
+   est en `auto` = largeur propre du bouton (64px, 52px sur écran court). */
+#f-nick {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  column-gap: 8px;
+  row-gap: 5px;
+  align-items: end;
+}
+#f-nick > #nick-label { grid-column: 1; grid-row: 1; }
+#f-nick > div         { grid-column: 1; grid-row: 2; }
+#f-nick > #av-trigger {
+  grid-column: 2;
+  grid-row: 1 / 3;
+  align-self: stretch;
+  height: auto !important;
+}
 
 /* Emoji avatar dans le siège */
 .seat-avatar.emoji-av .seat-initial { font-size: 1.1em; line-height: 1; }
