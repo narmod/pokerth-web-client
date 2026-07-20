@@ -441,9 +441,13 @@ function openAvatarPickerFromLobby(opts) {
   // When the user picks an avatar, the existing selectAvatarPopup()
   // (attached as an inline onclick on each .avp-btn) sets the popup's
   // inline display:'none'. We piggy-back on that to also strip the
-  // modal class and put the popup back in its original place. Using
-  // capture phase + once:true so we run exactly once before the
-  // onclick attribute fires (or right after, both are fine here).
+  // modal class and put the popup back in its original place. Capture
+  // phase so we run before the inline onclick's bubble phase. We do NOT
+  // use once:true: a click on a category tab (.avp-cat) or the header
+  // would consume the one-shot handler (it fires, finds no .avp-btn, and
+  // returns) — then the real avatar click would no longer close the
+  // popup. Instead the handler stays until an actual .avp-btn is picked;
+  // closeAvatarPickerFromLobby() removes it on every close path.
   S._avatarPickerBtnHandler = function(e) {
     var btn = e.target.closest('.avp-btn');
     if (!btn) return;
@@ -457,7 +461,7 @@ function openAvatarPickerFromLobby(opts) {
       else { openPlayerInfoPopup(); window.updateLobbyPill(); }
     }, 0);
   };
-  picker.addEventListener('click', S._avatarPickerBtnHandler, { once: true, capture: true });
+  picker.addEventListener('click', S._avatarPickerBtnHandler, { capture: true });
 }
 
 function closeAvatarPickerFromLobby() {
