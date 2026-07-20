@@ -1322,7 +1322,10 @@ function clientIp(req) {
 function adminJson(res, code, obj) {
   // Penalize failed admin auth (brute-force guard). res._rlIp is attached by
   // the /admin routing in the HTTP handler; consume() is fire-and-forget.
-  if (code === 403 && _rlAdminFail && res._rlIp) { _rlAdminFail.consume(res._rlIp).catch(function () {}); }
+  // res._rlNoPenalty marks idempotent read-only polls (dashboard auto-refresh:
+  // /admin/status, /admin/logs) so a stale token in a still-open panel can't
+  // rack up "failed attempts" every few seconds and lock its own IP out.
+  if (code === 403 && _rlAdminFail && res._rlIp && !res._rlNoPenalty) { _rlAdminFail.consume(res._rlIp).catch(function () {}); }
   res.writeHead(code, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' });
   res.end(JSON.stringify(obj));
 }
@@ -2832,6 +2835,9 @@ const httpServer = http.createServer((req, res) => {
     if (_rlAdminFail) {
       const ip = clientIp(req);
       res._rlIp = ip;
+      // Read-only dashboard polls (auto-refreshed on a timer) are not credential
+      // submissions — never count their 403s toward the brute-force block.
+      if (req.method === 'GET' && (reqPathOnly === '/admin/status' || reqPathOnly === '/admin/logs')) res._rlNoPenalty = true;
       _rlAdminFail.get(ip).then(function (r) {
         if (r && r.remainingPoints <= 0 && r.msBeforeNext > 0) {
           res.writeHead(429, { 'Content-Type': 'application/json; charset=utf-8', 'Retry-After': String(Math.ceil(r.msBeforeNext / 1000)), 'Cache-Control': 'no-store' });

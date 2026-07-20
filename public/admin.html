@@ -518,9 +518,27 @@
   var TOKK='pth_admin_tok', $=function(id){return document.getElementById(id);};
   var login=$('login'), dash=$('dash');
   function tok(){ return (localStorage.getItem(TOKK)||'').trim(); }
+  // Terminal auth failure on a background poll (dead/rotated token, or the
+  // server's brute-force block). Stop every refresher and drop back to login,
+  // otherwise the auto-refresh loops keep hammering /admin — which renews the
+  // 15-min IP block forever and the panel never recovers without closing the tab.
+  var _authDeadGuard=false;
+  var _POLL_PATHS=/^\/admin\/(status|logs)\b/;
+  function _authDead(status){
+    if(_authDeadGuard) return; _authDeadGuard=true;
+    try{ srvStop(); }catch(e){}
+    doLogout(status===429
+      ? 'Trop de tentatives — attends ~15 min puis reconnecte-toi.'
+      : 'Session admin expirée — reconnecte-toi.');
+    setTimeout(function(){ _authDeadGuard=false; }, 3000);
+  }
   // Every admin call carries the token in the Authorization header (never the
   // URL), so it stays out of server access logs and browser history.
-  function api(path,opts){ opts=opts||{}; var h=Object.assign({},opts.headers||{}); var t=tok(); if(t) h.Authorization='Bearer '+t; opts.headers=h; return fetch(path,opts); }
+  function api(path,opts){ opts=opts||{}; var h=Object.assign({},opts.headers||{}); var t=tok(); if(t) h.Authorization='Bearer '+t; opts.headers=h;
+    return fetch(path,opts).then(function(r){
+      if((r.status===401||r.status===403||r.status===429) && _POLL_PATHS.test(path)) _authDead(r.status);
+      return r;
+    }); }
   function show(v){ login.style.display=v==='login'?'block':'none'; dash.style.display=v==='dash'?'block':'none'; }
 
   // ── Game servers (PokerTH dial registry + reachability) — master-only ──
@@ -1122,7 +1140,12 @@
     var msg=$('maintmsg'), tries=0; msg.textContent=label+' \u2014 server restarting, reconnecting\u2026'; msg.className='msg';
     var iv=setInterval(function(){
       tries++;
-      api('/admin/status',{cache:'no-store'}).then(function(r){return r.json();}).then(function(d){
+      api('/admin/status',{cache:'no-store'}).then(function(r){
+        // Auth dead/blocked: api() already stopped the refreshers and logged out;
+        // stop this reconnect poll too so it can't keep hitting /admin.
+        if(r.status===401||r.status===403||r.status===429){ clearInterval(iv); maintBusy(false); return {}; }
+        return r.json();
+      }).then(function(d){
         if(d&&d.ok){ clearInterval(iv); maintBusy(false); msg.textContent='Back online \u2014 v'+(d.version||'?')+'.'; msg.className='msg ok'; loadServer(); }
       }).catch(function(){});
       if(tries>24){ clearInterval(iv); maintBusy(false); msg.textContent='Still reconnecting\u2026 use Refresh in a moment.'; msg.className='msg err'; }
