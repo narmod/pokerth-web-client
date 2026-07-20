@@ -1768,6 +1768,8 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
 /* Le (chat bot) m'adresse directement → corps en rouge gras (parité QML colorDanger). */
 .msg.botwarn .txt { color: var(--red); font-weight: 700; }
 #g-chat-msgs .msg.botwarn .txt { color: var(--red); font-weight: 700; }
+/* Emojis unicode du chat agrandis ~22px (parité QML enlargeEmojis). */
+.chat-emoji-lg { font-size: 22px; line-height: 1; vertical-align: -0.15em; }
 
 .chat-input {
   padding: 8px 10px;

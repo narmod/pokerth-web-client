@@ -1422,6 +1422,24 @@ function _linkifyChatHtml(html) {
   });
 }
 window._linkifyChatHtml = _linkifyChatHtml;
+// ── Agrandissement des emojis unicode du chat (parité QML enlargeEmojis) ──
+// Enveloppe les séquences d'emojis (pictographiques + variation-selectors / ZWJ
+// / skin-tones / keycaps / tag-chars) dans un span ~22px. Opère sur du HTML DÉJÀ
+// formaté (après esc + shortcodes + liens) ; \p{Extended_Pictographic} = même
+// base de détection que _advStripEmoji. ©/®/™ isolés NON agrandis (parité QML :
+// ce sont aussi des caractères de texte). No-op si le moteur regex ne gère pas
+// les propriétés Unicode (fallback = HTML inchangé).
+function _enlargeChatEmojis(html) {
+  try {
+    var RE = /(?:[#*0-9]\uFE0F?\u20E3|\p{Extended_Pictographic}[\uFE0F\u200D\u20E3\u{1F3FB}-\u{1F3FF}\u{E0020}-\u{E007F}]*)+/gu;
+    return String(html == null ? '' : html).replace(RE, function (m) {
+      var bare = m.replace(/\uFE0F/g, '');
+      if (bare === '\u00A9' || bare === '\u00AE' || bare === '\u2122') return m;
+      return '<span class="chat-emoji-lg">' + m + '</span>';
+    });
+  } catch (e) { return html; }
+}
+window._enlargeChatEmojis = _enlargeChatEmojis;
 function hideInfoToast() { if (window._infoToastCdTimer) { clearInterval(window._infoToastCdTimer); window._infoToastCdTimer = null; } var el = document.getElementById('srv-info-toast'); if (el) el.remove(); }
 // Format compact d'un temps restant : '2d 03:04:05', '1:02:03' ou '12:34'.
 function _fmtCountdown(ms) {
@@ -6480,7 +6498,7 @@ function addGameChat(sender, text, cls, spec) {
   function e(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
   // Corps du message : shortcodes :nom: + émoticônes ASCII (port officiel),
   // sauf en mode « chat sans emoji ». Le nom d'expéditeur n'est jamais converti.
-  function emT(s) { var h = e(s); if (!_noEmo && typeof window.applyChatEmoteShortcuts === 'function') { try { h = window.applyChatEmoteShortcuts(h); } catch (_e) {} } if (typeof window._linkifyChatHtml === 'function') { try { h = window._linkifyChatHtml(h); } catch (_e2) {} } return h; }
+  function emT(s) { var h = e(s); if (!_noEmo && typeof window.applyChatEmoteShortcuts === 'function') { try { h = window.applyChatEmoteShortcuts(h); } catch (_e) {} } if (typeof window._linkifyChatHtml === 'function') { try { h = window._linkifyChatHtml(h); } catch (_e2) {} } if (!_noEmo && typeof window._enlargeChatEmojis === 'function') { try { h = window._enlargeChatEmojis(h); } catch (_e3) {} } return h; }
   if (sender) {
     // Traduction par message (API navigateur, opt-in Options avancees) :
     // bouton visible seulement si body.chat-tr-on (option + support).
@@ -8617,7 +8635,7 @@ window.togglePlayersPanel = togglePlayersPanel;
 window.toggleReactionPanel = toggleReactionPanel;
 window.App = App;
 
-window.BUILD_VERSION='0.3.937-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='0.3.938-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

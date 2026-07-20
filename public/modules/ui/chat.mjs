@@ -311,7 +311,7 @@ function addChat(sender, text, cls='', spec) {
         d.className += ' mention';
     }
   } catch (_em) {}
-  const emT = function (s) { var h = esc(s); if (!_noEmo && typeof window.applyChatEmoteShortcuts === 'function') { try { h = window.applyChatEmoteShortcuts(h); } catch (_e) {} } if (typeof window._linkifyChatHtml === 'function') { try { h = window._linkifyChatHtml(h); } catch (_e2) {} } return h; };
+  const emT = function (s) { var h = esc(s); if (!_noEmo && typeof window.applyChatEmoteShortcuts === 'function') { try { h = window.applyChatEmoteShortcuts(h); } catch (_e) {} } if (typeof window._linkifyChatHtml === 'function') { try { h = window._linkifyChatHtml(h); } catch (_e2) {} } if (!_noEmo && typeof window._enlargeChatEmojis === 'function') { try { h = window._enlargeChatEmojis(h); } catch (_e3) {} } return h; };
   if (sender) {
     // Bouton de traduction aussi dans le chat LOBBY (meme mecanique que
     // le chat de partie ; visible seulement si body.chat-tr-on).
