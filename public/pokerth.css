@@ -7748,9 +7748,16 @@ html[data-seat-edit="1"] #g-seats .seat.seat-ghost { outline: none; cursor: defa
    same-origin /api/ranking relay (see proxy.js). Self-contained so it
    is easy to restyle or move later. All colours via palette tokens.
    ═══════════════════════════════════════════════════════════════════ */
-#ranking-modal, #tableranking-modal { position: fixed; inset: 0; z-index: 1200; align-items: center; justify-content: center; }
+#ranking-modal, #tableranking-modal { position: fixed; inset: 0; z-index: 1200; align-items: center; justify-content: center; pointer-events: none; }
 .trk-sub { color: var(--text); opacity: 0.75; font-size: 0.78rem; margin-bottom: 10px; }
-.rk-backdrop { position: absolute; inset: 0; background: rgba(0,0,0,0.65); }
+/* Parité avec les options avancées (#adv-modal) : aucun voile sombre — le jeu /
+   le lobby restent visibles derrière et cliquables ; seule la carte capte les
+   clics. La carte (fond --modal-bg opaque + ombre portée) reste parfaitement
+   lisible sans backdrop. Fermeture par ✕ ou Échap (plus par clic extérieur,
+   comme les options avancées). Voir #adv-modal .km-backdrop{display:none}. */
+.rk-backdrop { display: none; }
+#ranking-modal .rk-card, #tableranking-modal .rk-card { pointer-events: auto; }
+#rk-awpop { pointer-events: auto; }
 .rk-card {
   position: relative;
   width: min(440px, calc(100vw - 32px));
