@@ -365,8 +365,20 @@ function onGamePlayerLeft(sub) {
 }
 
 function onRemovedFromGame(sub) {
-   S._gameMeta = null;
-    addChat(null, t('youWereRemoved'), 'sys', { key: 'youWereRemoved' });
+    // RemovedFromGameMessage: field 1 = gameId, field 2 = removedFromGameReason.
+    // Reason enum (pokerth.proto): 0 removedOnRequest · 1 kickedFromGame ·
+    // 2 gameIsFull · 3 gameIsRunning · 4 gameTimeout (inactivity) ·
+    // 5 removedStartFailed · 6 gameClosed. We surface it so the player (and the
+    // logs) know WHY they left — a timeout removal is a real bug to chase, a
+    // gameClosed is just the game ending. Unknown codes fall back to generic.
+    const reason = Proto.u32(sub, 2);
+    const _rk = { 0:'removedReason_onRequest', 1:'removedReason_kicked', 2:'removedReason_full',
+                  3:'removedReason_running', 4:'removedReason_timeout', 5:'removedReason_startFailed',
+                  6:'removedReason_closed' };
+    const key = _rk[reason] || 'youWereRemoved';
+    try { console.log('[RemovedFromGame] reason=' + reason + ' (' + key + ')'); } catch (e) {}
+    S._gameMeta = null;
+    addChat(null, t(key), 'sys', { key: key });
     S._pendingRejoin = 0; try { localStorage.removeItem('pth_resume'); } catch(e) {}
     App._resetGameState();
     show('s-lobby');
