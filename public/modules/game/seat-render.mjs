@@ -406,7 +406,13 @@ function renderSeatsImmediate() {
       //   - eliminated (money <= 0 and not playing this hand,
       //     i.e. active=false) — narmod reported SB chip landing
       //     on an OUT seat. The dealer chip should walk past them.
-      var __skip = !__sd2 || __sd2.gone || (__sd2.active === false) || (__sd2.money != null && __sd2.money <= 0);
+      // BUT an ALL-IN player has money 0 while STILL in the hand
+      // (active === true) and KEEPS their blind position — never skip
+      // them, otherwise the SB/BB puck walks past an all-in blind onto
+      // the next seat (narmod all-in in the big blind → BB puck landed
+      // on the next seat, and the self-seat BB badge went missing).
+      var __skip = !__sd2 || __sd2.gone || (__sd2.active === false)
+                 || (__sd2.active !== true && __sd2.money != null && __sd2.money <= 0);
       if (!__skip) {
         stepped++;
         if (stepped === offset) return S.seats[idx];
