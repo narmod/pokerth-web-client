@@ -274,6 +274,55 @@ function _qmlLandscapeLayout(oppCnt, zW, zH, compact, zoomMul, spectating) {
       _sl.x += (_dir < 0 ? Math.min(0, _dX) : Math.max(0, _dX));
     }
   }
+  // ── Remontée spectateur (demande narmod 2026-07-20) : le QML « pur » écrase
+  // les DEUX sièges qui encadrent la perle du bas (termes sideGravity +
+  // lowerGravity du slotVec) → trois boîtes alignées au ras du bas de l'écran.
+  // Ajustement WEB ADDITIF (base QML inchangée, comme flankWide/pairSpread) :
+  // on remonte slots[0] et slots[oppCnt-1] à leur position d'ellipse PURE
+  // (vFactor = sin de l'angle, sans la gravité vers le bas) → collier ouvert
+  // plus rond. Appliqué au RENDU seulement, spectateur + paysage, toutes
+  // résolutions. Symétrique (même y aux deux) + garde anti-chevauchement
+  // (bisection) contre tous les autres sièges, perle incluse : sur les configs
+  // denses (N=10, laptop) la remontée est réduite juste ce qu'il faut.
+  if (spectating && oppCnt >= 2) {
+    var _flk = [0, oppCnt - 1];
+    var _bwF = oppBaseW * sFin, _bhF = oppBaseH * sFin;
+    var _boxes = [];
+    if (seat0) _boxes.push(seat0);
+    for (var _bi = 0; _bi < slots.length; _bi++) _boxes.push(slots[_bi]);
+    var _pearlOff = seat0 ? 1 : 0;
+    var _hitAny = function (ax, ay, skipIdx) {
+      for (var _hi = 0; _hi < _boxes.length; _hi++) {
+        if (_hi === skipIdx) continue;
+        var o = _boxes[_hi];
+        var ox = Math.min(ax + _bwF / 2, o.x + _bwF / 2) - Math.max(ax - _bwF / 2, o.x - _bwF / 2);
+        var oy = Math.min(ay + _bhF / 2, o.y + _bhF / 2) - Math.max(ay - _bhF / 2, o.y - _bhF / 2);
+        if (ox > 2 && oy > 2) return true;
+      }
+      return false;
+    };
+    // y réalisable (le plus haut sans collision) pour un flanc donné.
+    var _liftedY = function (slotIdx) {
+      var boxIdx = _pearlOff + slotIdx, p = _boxes[boxIdx];
+      var dK = firstAngle + slotIdx * stepDeg;
+      var _sinT = Math.sin(dK * Math.PI / 180);
+      if (_sinT > 1) _sinT = 1; else if (_sinT < -1) _sinT = -1;
+      var tY = zH * (gF.centerY + gF.radiusY * _sinT);   // ellipse pure
+      if (tY >= p.y) return p.y;                          // jamais descendre
+      var lo = 0, hi = 1, okY = p.y;
+      for (var _it = 0; _it < 16; _it++) {
+        var mf = (lo + hi) / 2, cy = p.y + (tY - p.y) * mf;
+        if (_hitAny(p.x, cy, boxIdx)) hi = mf; else { lo = mf; okY = cy; }
+      }
+      return okY;
+    };
+    // Symétrie : on applique la remontée la plus faible (max y) aux deux flancs.
+    var _yLift = Math.max(_liftedY(_flk[0]), _liftedY(_flk[1]));
+    for (var _ri = 0; _ri < _flk.length; _ri++) {
+      var _s2 = slots[_flk[_ri]];
+      if (_s2 && _yLift < _s2.y) _s2.y = _yLift;
+    }
+  }
   return { s: sFin, slots: slots, raw: raw, seat0: seat0,
            // Ancre de la selfBox : QML = anchors.bottomMargin 12 en paysage
            // (wide) ; ajustement WEB (demande narmod 2026-07-17) : marge

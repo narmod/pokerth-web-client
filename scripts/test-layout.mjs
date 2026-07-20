@@ -109,5 +109,36 @@ const lp = seat(6, false);
 ok(lp && typeof lp._boxScale === 'number' && lp._boxScale >= 0.55, 'seatPix paysage: _boxScale publié');
 ok(typeof lp._zoomHeadroom === 'boolean', 'seatPix paysage: _zoomHeadroom booléen');
 
+// ── Spectateur paysage : remontée additive des flancs de la perle (narmod
+// 2026-07-20). Base QML inchangée pour les autres sièges ; slots[0] et
+// slots[oppCnt-1] remontés sur l'ellipse (symétriques, sans chevauchement). ──
+const oppBW = 114, oppBH = 84;
+function overlapsAny(boxes, s) {
+  const bw = oppBW * s, bh = oppBH * s;
+  for (let i = 0; i < boxes.length; i++)
+    for (let j = i + 1; j < boxes.length; j++) {
+      const a = boxes[i], b = boxes[j];
+      const ox = Math.min(a.x + bw / 2, b.x + bw / 2) - Math.max(a.x - bw / 2, b.x - bw / 2);
+      const oy = Math.min(a.y + bh / 2, b.y + bh / 2) - Math.max(a.y - bh / 2, b.y - bh / 2);
+      if (ox > 2 && oy > 2) return true;
+    }
+  return false;
+}
+[[7, 1920, 900, false], [9, 1920, 900, false], [7, 1366, 700, false], [7, 844, 390, true]].forEach(function (cfg) {
+  const N = cfg[0], W = cfg[1], H = cfg[2], C = cfg[3];
+  const sp = _qmlLandscapeLayout(N, W, H, C, 1, true);
+  const first = sp.slots[0], last = sp.slots[N - 1];
+  ok(sp.seat0 && близко(sp.seat0.x, W / 2, 2), 'spectateur N=' + N + ' @' + W + 'x' + H + ': perle centrée en bas');
+  ok(first.y < sp.seat0.y - 1 && last.y < sp.seat0.y - 1,
+     'spectateur N=' + N + ': flancs J1/J(N) remontés au-dessus de la perle');
+  ok(близко(first.y, last.y, 1) && близко(first.x + last.x, W, 2),
+     'spectateur N=' + N + ': remontée symétrique (même y, x miroirs)');
+  const boxes = [sp.seat0].concat(sp.slots.map(function (p) { return { x: p.x, y: p.y }; }));
+  ok(!overlapsAny(boxes, sp.s), 'spectateur N=' + N + ': aucun chevauchement après remontée');
+});
+// heads-up (2 joueurs) spectateur : l'unique adversaire est en haut, pas de remontée parasite
+const spHU = _qmlLandscapeLayout(1, 1280, 620, false, 1, true);
+ok(spHU.slots.length === 1 && spHU.slots[0].y < 0.5 * 620, 'spectateur heads-up: adversaire en haut, intact');
+
 if (fails) { console.error(fails + ' test(s) failed'); process.exit(1); }
 console.log('All layout tests passed.');
