@@ -3401,6 +3401,39 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
 }
 @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
 
+/* ── Pastille de connexion sur le feutre ──
+   Remplace le bandeau plein écran quand la table est affichée (voir
+   _showBanner). Ancrée comme .comm-row (centre des cartes communes,
+   --comm-shift-y compris) ; DANS #g-table-scaler → hérite du scale générique
+   de la table, et la police suit --comm-scale (même modèle que
+   .win-hand-badge / .pot-badge) → grossit/rétrécit avec la résolution. */
+.conn-pill {
+  position: absolute;
+  top: calc(50% + var(--comm-shift-y, 0px)); left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 60;                 /* au-dessus des cartes et du badge de main */
+  display: flex; align-items: center; justify-content: center;
+  gap: max(5px, calc(8px * var(--comm-scale, 1)));
+  padding: max(3px, calc(5px * var(--comm-scale, 1))) max(9px, calc(14px * var(--comm-scale, 1)));
+  border-radius: 999px;
+  background: rgba(var(--red-rgb), 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  box-shadow: 0 0 14px rgba(var(--red-rgb), 0.5), 0 4px 14px rgba(0, 0, 0, 0.45);
+  color: #fff;
+  font-family: var(--ff-display); letter-spacing: 0.08em;
+  font-size: max(10px, calc(12px * var(--comm-scale, 1)));
+  font-weight: 700;
+  white-space: nowrap;
+  pointer-events: none;        /* n'intercepte jamais un tap destiné au feutre */
+  animation: fadeIn 0.3s ease;
+}
+.conn-pill .rc-dot {
+  width: max(6px, calc(8px * var(--comm-scale, 1)));
+  height: max(6px, calc(8px * var(--comm-scale, 1)));
+  border-radius: 50%; background: #fff; animation: pulse 1s infinite;
+  flex: none;
+}
+
 /* ══ HANDS HELP OVERLAY ══ */
 #hands-overlay {
   position: fixed; inset: 0; z-index: 200;
