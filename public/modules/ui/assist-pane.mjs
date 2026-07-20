@@ -114,8 +114,12 @@ function detachAssist() {
   S._assistDetached = true; _lsSet(LS_DET, '1');
   ap.style.display = '';
   if (typeof window._enableFloating === 'function') {
+    // zoom:false → texte à taille normale ; defH bas = simple repli. La hauteur
+    // réelle est forcée en « auto » ci-dessous pour épouser le contenu (pas de
+    // vide), tout en conservant largeur + position mémorisées.
     window._enableFloating(ap, { key:'pth_winpos_assist', handle: ap._hd,
-      resizable:true, minW:180, minH:120, defW:260, defH:200, zoom:true });
+      resizable:true, minW:150, minH:70, defW:240, defH:110, zoom:false });
+    ap.style.height = 'auto';   // la fenêtre suit toujours la hauteur du contenu
   }
   try { if (typeof window._gipAssistSync === 'function') window._gipAssistSync(); } catch(e){}
 }
