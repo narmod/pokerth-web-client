@@ -3287,7 +3287,7 @@ if ('serviceWorker' in navigator) {
     }
     // Communaute par defaut = derniere source choisie (parite 2.1.2 defaultCommunity).
     var _achTab = document.querySelector('#ranking-modal .rk-tab-ach');
-    var _off = !!window._offlineMode;
+    var _off = _achAllowed();
     if (_achTab) _achTab.style.display = _off ? '' : 'none';
     var _rkDef = 'pth'; try { _rkDef = localStorage.getItem('pth_rank_src') || 'pth'; } catch (e) {}
     if (_off) _rkDef = 'ach';
@@ -3324,6 +3324,13 @@ if ('serviceWorker' in navigator) {
       else import('/modules/achievements/index.mjs').then(function (m) { _achMod = m; render(m); }).catch(function () {});
     } catch (e) {}
   };
+  function _achAllowed() {
+    try {
+      if (!window._offlineMode) return false;
+      var scr = document.querySelector('.screen.active');
+      return !!scr && scr.id !== 's-connect';   // pas sur l'ecran de login
+    } catch (e) { return false; }
+  }
   function rkAchRender() {
     var esc = rkEsc;
     if (!_achMod) return '<div class="rk-msg">' + esc(rkT('rankingLoading', 'Loading\u2026')) + '</div>';
@@ -3371,6 +3378,7 @@ if ('serviceWorker' in navigator) {
   } catch (e) {}
 
   window.rankingSelect = function (src) {
+    if (src === 'ach' && !_achAllowed()) src = 'pth';   // Trophees : entrainement connecte uniquement
     if (src === 'ach') { rankingSelectAch(); return; }
     var _aw = document.getElementById('rk-ach-wrap'); if (_aw) _aw.style.display = 'none';
     rkSetView('list');
