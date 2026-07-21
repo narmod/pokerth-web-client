@@ -829,6 +829,20 @@ export const strings = {
     "ach_collector": "Completista",
     "ach_collector_d": "Desbloqueja tots els altres assoliments",
     "achReqPlayers": "Requereix {n} jugadors",
+    // ── Succès formats PokerTH ──
+    "ach_style_ranking": "Ranking",
+    "ach_style_ranking_d": "Guanya una partida d'entrenament en format Ranking",
+    "ach_style_wecup": "WeCup",
+    "ach_style_wecup_d": "Guanya una partida en format WeCup",
+    "ach_style_bbc": "BBC",
+    "ach_style_bbc_d": "Guanya una partida en format BBC",
+    "ach_triple_crown": "Triple corona",
+    "ach_triple_crown_d": "Guanya una partida en els formats Ranking, WeCup i BBC",
+    "ach_style_fast": "Blitz",
+    "ach_style_fast_d": "Guanya una partida en format Ràpid",
+    "ach_blind_level": "Cegues a l'alça",
+    "ach_blind_level_d": "Assoleix el nivell de cegues 5 en una mateixa partida",
+    "achCatFormats": "Formats PokerTH",
 };
 
 export default { meta, strings };

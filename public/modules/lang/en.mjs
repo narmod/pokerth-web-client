@@ -554,6 +554,20 @@ export const strings = {
     "ach_collector": "Completionist",
     "ach_collector_d": "Unlock every other achievement",
     "achReqPlayers": "Requires {n} players",
+    // ── Succès formats PokerTH ──
+    "ach_style_ranking": "Ranking",
+    "ach_style_ranking_d": "Win a training game in the Ranking format",
+    "ach_style_wecup": "WeCup",
+    "ach_style_wecup_d": "Win a training game in the WeCup format",
+    "ach_style_bbc": "BBC",
+    "ach_style_bbc_d": "Win a training game in a BBC format",
+    "ach_triple_crown": "Triple Crown",
+    "ach_triple_crown_d": "Win a game in the Ranking, WeCup and BBC formats",
+    "ach_style_fast": "Blitz",
+    "ach_style_fast_d": "Win a training game in the Fast format",
+    "ach_blind_level": "Rising Stakes",
+    "ach_blind_level_d": "Reach blind level 5 in a single game",
+    "achCatFormats": "PokerTH formats",
 };
 
 export default { meta, strings };

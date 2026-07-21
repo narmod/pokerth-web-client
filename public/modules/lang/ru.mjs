@@ -929,6 +929,20 @@ export const strings = {
     "ach_collector": "Педант",
     "ach_collector_d": "Откройте все остальные достижения",
     "achReqPlayers": "Требуется {n} игроков",
+    // ── Succès formats PokerTH ──
+    "ach_style_ranking": "Ranking",
+    "ach_style_ranking_d": "Выиграйте тренировочную игру в формате Ranking",
+    "ach_style_wecup": "WeCup",
+    "ach_style_wecup_d": "Выиграйте игру в формате WeCup",
+    "ach_style_bbc": "BBC",
+    "ach_style_bbc_d": "Выиграйте игру в формате BBC",
+    "ach_triple_crown": "Тройная корона",
+    "ach_triple_crown_d": "Выиграйте игру в форматах Ranking, WeCup и BBC",
+    "ach_style_fast": "Blitz",
+    "ach_style_fast_d": "Выиграйте игру в Быстром формате",
+    "ach_blind_level": "Растущие блайнды",
+    "ach_blind_level_d": "Достигните уровня блайндов 5 в одной игре",
+    "achCatFormats": "Форматы PokerTH",
 };
 
 export default { meta, strings };

@@ -927,6 +927,20 @@ export const strings = {
     "ach_collector": "Täydentäjä",
     "ach_collector_d": "Avaa kaikki muut saavutukset",
     "achReqPlayers": "Vaatii {n} pelaajaa",
+    // ── Succès formats PokerTH ──
+    "ach_style_ranking": "Ranking",
+    "ach_style_ranking_d": "Voita harjoituspeli Ranking-muodossa",
+    "ach_style_wecup": "WeCup",
+    "ach_style_wecup_d": "Voita peli WeCup-muodossa",
+    "ach_style_bbc": "BBC",
+    "ach_style_bbc_d": "Voita peli BBC-muodossa",
+    "ach_triple_crown": "Kolmoiskruunu",
+    "ach_triple_crown_d": "Voita peli Ranking-, WeCup- ja BBC-muodoissa",
+    "ach_style_fast": "Blitz",
+    "ach_style_fast_d": "Voita peli nopeassa muodossa",
+    "ach_blind_level": "Nousevat blindit",
+    "ach_blind_level_d": "Saavuta blind-taso 5 yhdessä pelissä",
+    "achCatFormats": "PokerTH-muodot",
 };
 
 export default { meta, strings };

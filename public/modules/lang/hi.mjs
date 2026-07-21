@@ -637,6 +637,20 @@ export const strings = {
     "ach_collector": "पूर्णतावादी",
     "ach_collector_d": "बाक़ी सभी उपलब्धियाँ अनलॉक करें",
     "achReqPlayers": "{n} खिलाड़ी आवश्यक",
+    // ── Succès formats PokerTH ──
+    "ach_style_ranking": "Ranking",
+    "ach_style_ranking_d": "Ranking प्रारूप में एक अभ्यास खेल जीतें",
+    "ach_style_wecup": "WeCup",
+    "ach_style_wecup_d": "WeCup प्रारूप में एक खेल जीतें",
+    "ach_style_bbc": "BBC",
+    "ach_style_bbc_d": "BBC प्रारूप में एक खेल जीतें",
+    "ach_triple_crown": "ट्रिपल क्राउन",
+    "ach_triple_crown_d": "Ranking, WeCup और BBC प्रारूपों में एक-एक खेल जीतें",
+    "ach_style_fast": "Blitz",
+    "ach_style_fast_d": "तेज़ प्रारूप में एक खेल जीतें",
+    "ach_blind_level": "बढ़ते ब्लाइंड",
+    "ach_blind_level_d": "एक ही खेल में ब्लाइंड स्तर 5 तक पहुँचें",
+    "achCatFormats": "PokerTH प्रारूप",
 };
 
 export default { meta, strings };

@@ -827,6 +827,20 @@ export const strings = {
     "ach_collector": "Педант",
     "ach_collector_d": "Відкрийте всі інші досягнення",
     "achReqPlayers": "Потрібно {n} гравців",
+    // ── Succès formats PokerTH ──
+    "ach_style_ranking": "Ranking",
+    "ach_style_ranking_d": "Виграйте тренувальну гру у форматі Ranking",
+    "ach_style_wecup": "WeCup",
+    "ach_style_wecup_d": "Виграйте гру у форматі WeCup",
+    "ach_style_bbc": "BBC",
+    "ach_style_bbc_d": "Виграйте гру у форматі BBC",
+    "ach_triple_crown": "Потрійна корона",
+    "ach_triple_crown_d": "Виграйте гру у форматах Ranking, WeCup і BBC",
+    "ach_style_fast": "Blitz",
+    "ach_style_fast_d": "Виграйте гру у Швидкому форматі",
+    "ach_blind_level": "Зростаючі блайнди",
+    "ach_blind_level_d": "Досягніть рівня блайндів 5 в одній грі",
+    "achCatFormats": "Формати PokerTH",
 };
 
 export default { meta, strings };

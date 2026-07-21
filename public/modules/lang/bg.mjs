@@ -828,6 +828,20 @@ export const strings = {
     "ach_collector": "Пълнител",
     "ach_collector_d": "Отключете всички други постижения",
     "achReqPlayers": "Изисква {n} играчи",
+    // ── Succès formats PokerTH ──
+    "ach_style_ranking": "Ranking",
+    "ach_style_ranking_d": "Спечелете тренировъчна игра във формат Ranking",
+    "ach_style_wecup": "WeCup",
+    "ach_style_wecup_d": "Спечелете игра във формат WeCup",
+    "ach_style_bbc": "BBC",
+    "ach_style_bbc_d": "Спечелете игра във формат BBC",
+    "ach_triple_crown": "Тройна корона",
+    "ach_triple_crown_d": "Спечелете игра във форматите Ranking, WeCup и BBC",
+    "ach_style_fast": "Blitz",
+    "ach_style_fast_d": "Спечелете игра в Бързия формат",
+    "ach_blind_level": "Растящи блайндове",
+    "ach_blind_level_d": "Достигнете ниво на блайндове 5 в една игра",
+    "achCatFormats": "Формати PokerTH",
 };
 
 export default { meta, strings };

@@ -924,6 +924,20 @@ export const strings = {
     "ach_collector": "コンプリート",
     "ach_collector_d": "他のすべての実績を解除する",
     "achReqPlayers": "{n}人のプレイヤーが必要",
+    // ── Succès formats PokerTH ──
+    "ach_style_ranking": "Ranking",
+    "ach_style_ranking_d": "Ranking形式のトレーニングゲームに勝利する",
+    "ach_style_wecup": "WeCup",
+    "ach_style_wecup_d": "WeCup形式のゲームに勝利する",
+    "ach_style_bbc": "BBC",
+    "ach_style_bbc_d": "BBC形式のゲームに勝利する",
+    "ach_triple_crown": "トリプルクラウン",
+    "ach_triple_crown_d": "Ranking・WeCup・BBC形式でそれぞれ勝利する",
+    "ach_style_fast": "Blitz",
+    "ach_style_fast_d": "高速形式のゲームに勝利する",
+    "ach_blind_level": "ブラインド上昇",
+    "ach_blind_level_d": "1回のゲームでブラインドレベル5に到達する",
+    "achCatFormats": "PokerTH形式",
 };
 
 export default { meta, strings };

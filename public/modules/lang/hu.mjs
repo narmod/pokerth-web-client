@@ -828,6 +828,20 @@ export const strings = {
     "ach_collector": "Teljesítő",
     "ach_collector_d": "Oldd fel az összes többi teljesítményt",
     "achReqPlayers": "{n} játékost igényel",
+    // ── Succès formats PokerTH ──
+    "ach_style_ranking": "Ranking",
+    "ach_style_ranking_d": "Nyerj egy edzőjátékot Ranking formátumban",
+    "ach_style_wecup": "WeCup",
+    "ach_style_wecup_d": "Nyerj egy játékot WeCup formátumban",
+    "ach_style_bbc": "BBC",
+    "ach_style_bbc_d": "Nyerj egy játékot BBC formátumban",
+    "ach_triple_crown": "Hármas korona",
+    "ach_triple_crown_d": "Nyerj egy-egy játékot Ranking, WeCup és BBC formátumban",
+    "ach_style_fast": "Blitz",
+    "ach_style_fast_d": "Nyerj egy játékot Gyors formátumban",
+    "ach_blind_level": "Emelkedő vakok",
+    "ach_blind_level_d": "Érd el az 5. vak-szintet egyetlen játékon belül",
+    "achCatFormats": "PokerTH formátumok",
 };
 
 export default { meta, strings };

@@ -830,6 +830,20 @@ export const strings = {
     "ach_collector": "முழுமையாளர்",
     "ach_collector_d": "மற்ற அனைத்து சாதனைகளையும் திற",
     "achReqPlayers": "{n} வீரர்கள் தேவை",
+    // ── Succès formats PokerTH ──
+    "ach_style_ranking": "Ranking",
+    "ach_style_ranking_d": "Ranking வடிவத்தில் ஒரு பயிற்சி ஆட்டத்தில் வெல்",
+    "ach_style_wecup": "WeCup",
+    "ach_style_wecup_d": "WeCup வடிவத்தில் ஒரு ஆட்டத்தில் வெல்",
+    "ach_style_bbc": "BBC",
+    "ach_style_bbc_d": "BBC வடிவத்தில் ஒரு ஆட்டத்தில் வெல்",
+    "ach_triple_crown": "மூன்று கிரீடம்",
+    "ach_triple_crown_d": "Ranking, WeCup, BBC வடிவங்களில் தலா ஒரு ஆட்டத்தில் வெல்",
+    "ach_style_fast": "Blitz",
+    "ach_style_fast_d": "வேக வடிவத்தில் ஒரு ஆட்டத்தில் வெல்",
+    "ach_blind_level": "உயரும் ப்ளைண்ட்ஸ்",
+    "ach_blind_level_d": "ஒரே ஆட்டத்தில் ப்ளைண்ட் நிலை 5 அடை",
+    "achCatFormats": "PokerTH வடிவங்கள்",
 };
 
 export default { meta, strings };

@@ -926,6 +926,20 @@ export const strings = {
     "ach_collector": "Fullfører",
     "ach_collector_d": "Lås opp alle andre prestasjoner",
     "achReqPlayers": "Krever {n} spillere",
+    // ── Succès formats PokerTH ──
+    "ach_style_ranking": "Ranking",
+    "ach_style_ranking_d": "Vinn et treningsspill i Ranking-formatet",
+    "ach_style_wecup": "WeCup",
+    "ach_style_wecup_d": "Vinn et spill i WeCup-formatet",
+    "ach_style_bbc": "BBC",
+    "ach_style_bbc_d": "Vinn et spill i BBC-formatet",
+    "ach_triple_crown": "Triple Crown",
+    "ach_triple_crown_d": "Vinn et spill i Ranking-, WeCup- og BBC-formatene",
+    "ach_style_fast": "Blitz",
+    "ach_style_fast_d": "Vinn et spill i det raske formatet",
+    "ach_blind_level": "Stigende blinds",
+    "ach_blind_level_d": "Nå blindnivå 5 i ett enkelt spill",
+    "achCatFormats": "PokerTH-formater",
 };
 
 export default { meta, strings };

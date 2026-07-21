@@ -734,6 +734,20 @@ export const strings = {
     "ach_collector": "완벽주의자",
     "ach_collector_d": "다른 모든 업적 해제하기",
     "achReqPlayers": "{n}명의 플레이어 필요",
+    // ── Succès formats PokerTH ──
+    "ach_style_ranking": "Ranking",
+    "ach_style_ranking_d": "Ranking 형식의 연습 게임에서 승리하기",
+    "ach_style_wecup": "WeCup",
+    "ach_style_wecup_d": "WeCup 형식의 게임에서 승리하기",
+    "ach_style_bbc": "BBC",
+    "ach_style_bbc_d": "BBC 형식의 게임에서 승리하기",
+    "ach_triple_crown": "트리플 크라운",
+    "ach_triple_crown_d": "Ranking, WeCup, BBC 형식에서 각각 승리하기",
+    "ach_style_fast": "Blitz",
+    "ach_style_fast_d": "빠른 형식의 게임에서 승리하기",
+    "ach_blind_level": "블라인드 상승",
+    "ach_blind_level_d": "한 게임에서 블라인드 레벨 5에 도달하기",
+    "achCatFormats": "PokerTH 형식",
 };
 
 export default { meta, strings };

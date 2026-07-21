@@ -831,6 +831,20 @@ export const strings = {
     "ach_collector": "Coileanaiche",
     "ach_collector_d": "Fuasgail a h-uile coileanadh eile",
     "achReqPlayers": "Feumaidh e {n} cluicheadairean",
+    // ── Succès formats PokerTH ──
+    "ach_style_ranking": "Ranking",
+    "ach_style_ranking_d": "Buannaich geama trèanaidh ann an cruth Ranking",
+    "ach_style_wecup": "WeCup",
+    "ach_style_wecup_d": "Buannaich geama ann an cruth WeCup",
+    "ach_style_bbc": "BBC",
+    "ach_style_bbc_d": "Buannaich geama ann an cruth BBC",
+    "ach_triple_crown": "Crùn Trìoblaideach",
+    "ach_triple_crown_d": "Buannaich geama anns na cruthan Ranking, WeCup is BBC",
+    "ach_style_fast": "Blitz",
+    "ach_style_fast_d": "Buannaich geama ann an cruth Luath",
+    "ach_blind_level": "Blinds ag èirigh",
+    "ach_blind_level_d": "Ruig ìre blind 5 ann an aon gheama",
+    "achCatFormats": "Cruthan PokerTH",
 };
 
 export default { meta, strings };

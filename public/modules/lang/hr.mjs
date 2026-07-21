@@ -827,6 +827,20 @@ export const strings = {
     "ach_collector": "Kompletist",
     "ach_collector_d": "Otključaj sva ostala postignuća",
     "achReqPlayers": "Zahtijeva {n} igrača",
+    // ── Succès formats PokerTH ──
+    "ach_style_ranking": "Ranking",
+    "ach_style_ranking_d": "Pobijedi trening igru u Ranking formatu",
+    "ach_style_wecup": "WeCup",
+    "ach_style_wecup_d": "Pobijedi igru u WeCup formatu",
+    "ach_style_bbc": "BBC",
+    "ach_style_bbc_d": "Pobijedi igru u BBC formatu",
+    "ach_triple_crown": "Trostruka kruna",
+    "ach_triple_crown_d": "Pobijedi igru u Ranking, WeCup i BBC formatima",
+    "ach_style_fast": "Blitz",
+    "ach_style_fast_d": "Pobijedi igru u Brzom formatu",
+    "ach_blind_level": "Rastući blindovi",
+    "ach_blind_level_d": "Dosegni razinu blindova 5 u jednoj igri",
+    "achCatFormats": "PokerTH formati",
 };
 
 export default { meta, strings };

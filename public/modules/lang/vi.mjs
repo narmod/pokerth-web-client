@@ -828,6 +828,20 @@ export const strings = {
     "ach_collector": "Người hoàn thành",
     "ach_collector_d": "Mở khóa mọi thành tựu khác",
     "achReqPlayers": "Cần {n} người chơi",
+    // ── Succès formats PokerTH ──
+    "ach_style_ranking": "Ranking",
+    "ach_style_ranking_d": "Thắng một ván luyện tập ở định dạng Ranking",
+    "ach_style_wecup": "WeCup",
+    "ach_style_wecup_d": "Thắng một ván ở định dạng WeCup",
+    "ach_style_bbc": "BBC",
+    "ach_style_bbc_d": "Thắng một ván ở định dạng BBC",
+    "ach_triple_crown": "Tam vương miện",
+    "ach_triple_crown_d": "Thắng một ván ở các định dạng Ranking, WeCup và BBC",
+    "ach_style_fast": "Blitz",
+    "ach_style_fast_d": "Thắng một ván ở định dạng Nhanh",
+    "ach_blind_level": "Mù cược tăng dần",
+    "ach_blind_level_d": "Đạt mức mù cược 5 trong một ván đấu",
+    "achCatFormats": "Định dạng PokerTH",
 };
 
 export default { meta, strings };

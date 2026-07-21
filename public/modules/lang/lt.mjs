@@ -828,6 +828,20 @@ export const strings = {
     "ach_collector": "Užbaigėjas",
     "ach_collector_d": "Atrakink visus kitus pasiekimus",
     "achReqPlayers": "Reikia {n} žaidėjų",
+    // ── Succès formats PokerTH ──
+    "ach_style_ranking": "Ranking",
+    "ach_style_ranking_d": "Laimėk treniruočių žaidimą Ranking formatu",
+    "ach_style_wecup": "WeCup",
+    "ach_style_wecup_d": "Laimėk žaidimą WeCup formatu",
+    "ach_style_bbc": "BBC",
+    "ach_style_bbc_d": "Laimėk žaidimą BBC formatu",
+    "ach_triple_crown": "Trigubas vainikas",
+    "ach_triple_crown_d": "Laimėk žaidimą Ranking, WeCup ir BBC formatais",
+    "ach_style_fast": "Blitz",
+    "ach_style_fast_d": "Laimėk žaidimą Greitu formatu",
+    "ach_blind_level": "Kylantys blaindai",
+    "ach_blind_level_d": "Pasiek blaindų 5 lygį per vieną žaidimą",
+    "achCatFormats": "PokerTH formatai",
 };
 
 export default { meta, strings };

@@ -932,6 +932,20 @@ export const strings = {
     "ach_collector": "Completista",
     "ach_collector_d": "Desbloquea todos los demás logros",
     "achReqPlayers": "Requiere {n} jugadores",
+    // ── Succès formats PokerTH ──
+    "ach_style_ranking": "Ranking",
+    "ach_style_ranking_d": "Gana una partida de entrenamiento en formato Ranking",
+    "ach_style_wecup": "WeCup",
+    "ach_style_wecup_d": "Gana una partida en formato WeCup",
+    "ach_style_bbc": "BBC",
+    "ach_style_bbc_d": "Gana una partida en formato BBC",
+    "ach_triple_crown": "Triple corona",
+    "ach_triple_crown_d": "Gana una partida en los formatos Ranking, WeCup y BBC",
+    "ach_style_fast": "Blitz",
+    "ach_style_fast_d": "Gana una partida en formato Rápido",
+    "ach_blind_level": "Ciegas al alza",
+    "ach_blind_level_d": "Alcanza el nivel de ciegas 5 en una misma partida",
+    "achCatFormats": "Formatos PokerTH",
 };
 
 export default { meta, strings };

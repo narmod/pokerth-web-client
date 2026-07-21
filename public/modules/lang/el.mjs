@@ -828,6 +828,20 @@ export const strings = {
     "ach_collector": "Ολοκληρωτής",
     "ach_collector_d": "Ξεκλείδωσε όλα τα άλλα επιτεύγματα",
     "achReqPlayers": "Απαιτεί {n} παίκτες",
+    // ── Succès formats PokerTH ──
+    "ach_style_ranking": "Ranking",
+    "ach_style_ranking_d": "Κέρδισε ένα παιχνίδι εξάσκησης σε μορφή Ranking",
+    "ach_style_wecup": "WeCup",
+    "ach_style_wecup_d": "Κέρδισε ένα παιχνίδι σε μορφή WeCup",
+    "ach_style_bbc": "BBC",
+    "ach_style_bbc_d": "Κέρδισε ένα παιχνίδι σε μορφή BBC",
+    "ach_triple_crown": "Τριπλό στέμμα",
+    "ach_triple_crown_d": "Κέρδισε ένα παιχνίδι στις μορφές Ranking, WeCup και BBC",
+    "ach_style_fast": "Blitz",
+    "ach_style_fast_d": "Κέρδισε ένα παιχνίδι σε Γρήγορη μορφή",
+    "ach_blind_level": "Ανεβαίνοντα τυφλά",
+    "ach_blind_level_d": "Φτάσε στο επίπεδο τυφλών 5 σε ένα παιχνίδι",
+    "achCatFormats": "Μορφές PokerTH",
 };
 
 export default { meta, strings };

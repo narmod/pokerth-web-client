@@ -928,6 +928,20 @@ export const strings = {
     "ach_collector": "Kompletista",
     "ach_collector_d": "Odomkni všetky ostatné úspechy",
     "achReqPlayers": "Vyžaduje {n} hráčov",
+    // ── Succès formats PokerTH ──
+    "ach_style_ranking": "Ranking",
+    "ach_style_ranking_d": "Vyhraj tréningovú hru vo formáte Ranking",
+    "ach_style_wecup": "WeCup",
+    "ach_style_wecup_d": "Vyhraj hru vo formáte WeCup",
+    "ach_style_bbc": "BBC",
+    "ach_style_bbc_d": "Vyhraj hru vo formáte BBC",
+    "ach_triple_crown": "Trojitá koruna",
+    "ach_triple_crown_d": "Vyhraj hru vo formátoch Ranking, WeCup a BBC",
+    "ach_style_fast": "Blitz",
+    "ach_style_fast_d": "Vyhraj hru v Rýchlom formáte",
+    "ach_blind_level": "Rastúce blindy",
+    "ach_blind_level_d": "Dosiahni úroveň blindov 5 v jednej hre",
+    "achCatFormats": "Formáty PokerTH",
 };
 
 export default { meta, strings };

@@ -924,6 +924,20 @@ export const strings = {
     "ach_collector": "完成主义者",
     "ach_collector_d": "解锁所有其他成就",
     "achReqPlayers": "需要 {n} 名玩家",
+    // ── Succès formats PokerTH ──
+    "ach_style_ranking": "Ranking",
+    "ach_style_ranking_d": "在 Ranking 赛制中赢下一局训练游戏",
+    "ach_style_wecup": "WeCup",
+    "ach_style_wecup_d": "在 WeCup 赛制中赢下一局游戏",
+    "ach_style_bbc": "BBC",
+    "ach_style_bbc_d": "在 BBC 赛制中赢下一局游戏",
+    "ach_triple_crown": "三冠王",
+    "ach_triple_crown_d": "在 Ranking、WeCup 和 BBC 赛制中各赢一局",
+    "ach_style_fast": "Blitz",
+    "ach_style_fast_d": "在快速赛制中赢下一局游戏",
+    "ach_blind_level": "盲注上涨",
+    "ach_blind_level_d": "在一局游戏中达到盲注等级 5",
+    "achCatFormats": "PokerTH 赛制",
 };
 
 export default { meta, strings };

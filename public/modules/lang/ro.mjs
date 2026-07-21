@@ -928,6 +928,20 @@ export const strings = {
     "ach_collector": "Completist",
     "ach_collector_d": "Deblochează toate celelalte realizări",
     "achReqPlayers": "Necesită {n} jucători",
+    // ── Succès formats PokerTH ──
+    "ach_style_ranking": "Ranking",
+    "ach_style_ranking_d": "Câștigă un joc de antrenament în formatul Ranking",
+    "ach_style_wecup": "WeCup",
+    "ach_style_wecup_d": "Câștigă un joc în formatul WeCup",
+    "ach_style_bbc": "BBC",
+    "ach_style_bbc_d": "Câștigă un joc în formatul BBC",
+    "ach_triple_crown": "Tripla coroană",
+    "ach_triple_crown_d": "Câștigă un joc în formatele Ranking, WeCup și BBC",
+    "ach_style_fast": "Blitz",
+    "ach_style_fast_d": "Câștigă un joc în formatul Rapid",
+    "ach_blind_level": "Blinduri în creștere",
+    "ach_blind_level_d": "Atinge nivelul de blinduri 5 într-un singur joc",
+    "achCatFormats": "Formate PokerTH",
 };
 
 export default { meta, strings };

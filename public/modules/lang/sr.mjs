@@ -828,6 +828,20 @@ export const strings = {
     "ach_collector": "Комплетиста",
     "ach_collector_d": "Откључај сва остала достигнућа",
     "achReqPlayers": "Захтева {n} играча",
+    // ── Succès formats PokerTH ──
+    "ach_style_ranking": "Ranking",
+    "ach_style_ranking_d": "Победи тренинг игру у Ranking формату",
+    "ach_style_wecup": "WeCup",
+    "ach_style_wecup_d": "Победи игру у WeCup формату",
+    "ach_style_bbc": "BBC",
+    "ach_style_bbc_d": "Победи игру у BBC формату",
+    "ach_triple_crown": "Трострука круна",
+    "ach_triple_crown_d": "Победи игру у Ranking, WeCup и BBC форматима",
+    "ach_style_fast": "Blitz",
+    "ach_style_fast_d": "Победи игру у Брзом формату",
+    "ach_blind_level": "Растући блиндови",
+    "ach_blind_level_d": "Достигни ниво блиндова 5 у једној игри",
+    "achCatFormats": "PokerTH формати",
 };
 
 export default { meta, strings };

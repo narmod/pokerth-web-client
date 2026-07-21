@@ -828,6 +828,20 @@ export const strings = {
     "ach_collector": "Voltooier",
     "ach_collector_d": "Ontsluit al die ander prestasies",
     "achReqPlayers": "Vereis {n} spelers",
+    // ── Succès formats PokerTH ──
+    "ach_style_ranking": "Ranking",
+    "ach_style_ranking_d": "Wen 'n oefenspel in die Ranking-formaat",
+    "ach_style_wecup": "WeCup",
+    "ach_style_wecup_d": "Wen 'n spel in die WeCup-formaat",
+    "ach_style_bbc": "BBC",
+    "ach_style_bbc_d": "Wen 'n spel in die BBC-formaat",
+    "ach_triple_crown": "Driedubbele Kroon",
+    "ach_triple_crown_d": "Wen 'n spel in die Ranking-, WeCup- en BBC-formate",
+    "ach_style_fast": "Blitz",
+    "ach_style_fast_d": "Wen 'n spel in die Vinnige formaat",
+    "ach_blind_level": "Stygende blinds",
+    "ach_blind_level_d": "Bereik blindvlak 5 in 'n enkele spel",
+    "achCatFormats": "PokerTH-formate",
 };
 
 export default { meta, strings };

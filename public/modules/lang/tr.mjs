@@ -929,6 +929,20 @@ export const strings = {
     "ach_collector": "Tamamlayıcı",
     "ach_collector_d": "Diğer tüm başarımları aç",
     "achReqPlayers": "{n} oyuncu gerektirir",
+    // ── Succès formats PokerTH ──
+    "ach_style_ranking": "Ranking",
+    "ach_style_ranking_d": "Ranking formatında bir antrenman oyunu kazan",
+    "ach_style_wecup": "WeCup",
+    "ach_style_wecup_d": "WeCup formatında bir oyun kazan",
+    "ach_style_bbc": "BBC",
+    "ach_style_bbc_d": "BBC formatında bir oyun kazan",
+    "ach_triple_crown": "Üçlü Taç",
+    "ach_triple_crown_d": "Ranking, WeCup ve BBC formatlarında birer oyun kazan",
+    "ach_style_fast": "Blitz",
+    "ach_style_fast_d": "Hızlı formatında bir oyun kazan",
+    "ach_blind_level": "Yükselen blindler",
+    "ach_blind_level_d": "Tek bir oyunda blind seviyesi 5'e ulaş",
+    "achCatFormats": "PokerTH formatları",
 };
 
 export default { meta, strings };
