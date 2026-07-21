@@ -137,6 +137,19 @@ function _recenterAssist() {
   } catch (e) {}
 }
 
+// ── La fenêtre détachée d'Assistance ne s'affiche qu'EN JEU (écran #s-game
+//    actif). On garde l'état « détaché » mémorisé ; seul l'affichage suit
+//    l'écran courant, pour ne pas polluer le lobby / les autres pages. ──
+function _isGameScreenActive() {
+  var g = document.getElementById('s-game');
+  return !!(g && g.classList.contains('active'));
+}
+function _syncAssistWinScreen() {
+  var ap = document.getElementById('g-assist-panel');
+  if (!ap) return;
+  ap.style.display = (S._assistDetached && _isGameScreenActive()) ? '' : 'none';
+}
+
 // ── Détacher : déplace #gip-assist dans la fenêtre flottante ──
 function detachAssist() {
   var box = document.getElementById('gip-assist');
@@ -149,7 +162,7 @@ function detachAssist() {
   host.appendChild(box);
   box.style.display = '';
   S._assistDetached = true; _lsSet(LS_DET, '1');
-  ap.style.display = '';
+  ap.style.display = _isGameScreenActive() ? '' : 'none';   // n'apparaît qu'en jeu
   if (typeof window._enableFloating === 'function') {
     // zoom:true → le contenu (texte + barre) suit la taille de la fenêtre via
     // la propriété CSS `zoom: var(--wz)`. defW/defH ≈ taille réelle du contenu
@@ -229,6 +242,13 @@ function _initAssistPane() {
   _wireSplit();
   _ensureAssistPanel();
   _whenFloatingReady(_restoreDetached);
+  // La fenêtre détachée d'Assistance ne doit apparaître qu'en jeu : on suit
+  // l'activation/désactivation de l'écran #s-game.
+  var _g = document.getElementById('s-game');
+  if (_g && window.MutationObserver) {
+    new MutationObserver(_syncAssistWinScreen).observe(_g, { attributes: true, attributeFilter: ['class'] });
+  }
+  _syncAssistWinScreen();
 }
 
 if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', _initAssistPane, { once: true });
