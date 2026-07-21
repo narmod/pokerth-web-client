@@ -865,7 +865,7 @@ function onEndOfHandShow(sub) {
     // Animations de fin de main
     var iWon = winners.some(function(w){ return w.pid === S.myId; });
     var bigWin = winners.reduce(function(s,w){ return s + w.won; }, 0) > 500;
-    if (iWon) {
+    if (iWon && window._advGet('winner_popup', true)) {
       var ov = document.getElementById('g-winner-overlay');
       var cx = ov ? ov.getBoundingClientRect().left + ov.offsetWidth/2 : window.innerWidth/2;
       var cy = ov ? ov.getBoundingClientRect().top  + 80 : window.innerHeight * 0.3;
