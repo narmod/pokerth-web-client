@@ -462,7 +462,7 @@ body {
 /* ── Champs « Créer une partie » façon officiel (steppers / toggles / sections) ── */
 .cf-block { margin-bottom: 14px; }
 .cf-row { display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 9px 0; }
-.cf-row-col { flex-direction: column; align-items: stretch; gap: 6px; }
+.cf-row-col { flex-direction: column; align-items: stretch; gap: var(--sp-2); }
 .cf-lbl { font-size: var(--cf-fs-body); color: var(--text); font-weight: 500; }
 .cf-input, .cf-select {
   width: 100%; box-sizing: border-box;
@@ -494,7 +494,7 @@ body {
 /* Toggle switch */
 .cf-switch { position: relative; display: inline-block; width: 44px; height: 24px; cursor: pointer; flex: none; }
 .cf-switch input { position: absolute; opacity: 0; width: 0; height: 0; }
-.cf-switch-tr { position: absolute; inset: 0; background: var(--border); border-radius: 999px; transition: background 0.16s; }
+.cf-switch-tr { position: absolute; inset: 0; background: var(--border); border-radius: var(--r-pill); transition: background 0.16s; }
 .cf-switch-tr::before {
   content: ''; position: absolute; width: 18px; height: 18px; left: 3px; top: 3px;
   background: #fff; border-radius: 50%; transition: transform 0.16s; box-shadow: 0 1px 3px rgba(0,0,0,0.35);
@@ -502,10 +502,10 @@ body {
 .cf-switch input:checked + .cf-switch-tr { background: #2f81f7; }
 .cf-switch input:checked + .cf-switch-tr::before { transform: translateX(20px); }
 /* Intervalle blindes : radios + stepper */
-.cf-interval { display: flex; align-items: center; flex-wrap: wrap; gap: 16px; }
-.cf-radio { display: inline-flex; align-items: center; gap: 6px; font-size: var(--cf-fs-body); color: var(--text); cursor: pointer; }
+.cf-interval { display: flex; align-items: center; flex-wrap: wrap; gap: var(--sp-6); }
+.cf-radio { display: inline-flex; align-items: center; gap: var(--sp-2); font-size: var(--cf-fs-body); color: var(--text); cursor: pointer; }
 .cf-radio input { accent-color: #2f81f7; }
-.cf-create-btn { flex: 1; padding: 12px; }
+.cf-create-btn { flex: 1; padding: var(--sp-5); }
 
 /* ══════════════════════════════════════════
    CONNECT SCREEN
@@ -894,7 +894,7 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 16px;
+  padding: var(--sp-6);
 }
 .gim-backdrop {
   position: absolute;
@@ -1954,14 +1954,14 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
 :root[data-theme="pokerth-light"] .pl-sortbar .sel-wrap select { background:#dedfe2; border-color:transparent; border-radius:6px; color:#1d222b; }
 /* Champ Message du chat lobby : gris-bleu clair arrondi (pixel QML #d4d9e1). */
 :root[data-theme="pokerth-light"] #lobby-chat-panel .chat-input input {
-  background:#d4d9e1; border-color:transparent; border-radius:6px; color:#1d222b;
+  background:#d4d9e1; border-color:transparent; border-radius:var(--r-sm); color:#1d222b;
 }
 :root[data-theme="pokerth-light"] #lobby-chat-panel .chat-input input::placeholder { color:#687285; }
 /* Chat du LOBBY : icônes façon QML — envoi = avion en papier vert (chat send
    #4ade80 sombre / #16a34a clair), emoji = smiley nu ; aucun chrome de bouton. */
 #lobby-chat-panel .chat-send {
   background:none; border:none; padding:0 8px; color:var(--green);
-  display:flex; align-items:center; border-radius:6px; flex:0 0 auto;
+  display:flex; align-items:center; border-radius:var(--r-sm); flex:0 0 auto;
 }
 /* L'input du chat doit pouvoir rétrécir, sinon il pousse le bouton d'envoi
    hors du cadre quand la colonne est étroite. */
@@ -1972,7 +1972,7 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
 :root[data-theme="pokerth"] #lobby-chat-panel .chat-send { color:#4ade80; }
 :root[data-theme="pokerth-light"] #lobby-chat-panel .chat-send { color:#16a34a; }
 #lobby-chat-panel .chat-emoji-toggle {
-  background:none; border:none; padding:0 6px; font-size:1.15rem; border-radius:6px;
+  background:none; border:none; padding:0 6px; font-size:1.15rem; border-radius:var(--r-sm);
 }
 #lobby-chat-panel .chat-emoji-toggle:hover,
 #lobby-chat-panel .chat-emoji-toggle.active { background:var(--inset-hi); border:none; }
@@ -2999,7 +2999,7 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
   }
   #s-lobby #fs-btn-lobby,
   #s-lobby #lang-toggle-lobby { display: none; }
-  #s-lobby .header { gap: 6px; padding: 3px 8px; }
+  #s-lobby .header { gap: var(--sp-2); padding: 3px 8px; }
   /* Header du lobby aligné sur le header du jeu, pour une hauteur uniforme
      entre les écrans (demande narmod). Même variable que #s-game .header. */
   #s-lobby .header { padding-top: 4px; padding-bottom: 4px; min-height: var(--header-h, 38px); }
@@ -3788,7 +3788,7 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
   flex-shrink: 0;
 }
 .btn-join:hover { background: #384252; }
-.gl-guestlock { align-self: center; font-size: 0.64rem; color: var(--text); opacity: 0.55; white-space: nowrap; padding: 3px 6px; border: 1px dashed var(--border); border-radius: 6px; }
+.gl-guestlock { align-self: center; font-size: 0.64rem; color: var(--text); opacity: 0.55; white-space: nowrap; padding: 3px 6px; border: 1px dashed var(--border); border-radius: var(--r-sm); }
 .game-row { cursor: pointer; }
 
 /* ═══ MOBILE: compact buttons in the available-tables list ═══
@@ -3801,7 +3801,7 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
    container already has flex:1 + min-width:0 (line 438), so any
    space freed here is automatically given to the name. */
 @media (max-width: 599.98px) {
-  .game-row { gap: 8px; padding: 10px 12px; }
+  .game-row { gap: var(--sp-3); padding: 10px 12px; }
   .game-name { font-size: 0.82rem; }
   .game-meta { font-size: 0.66rem; gap: 6px; }
   .game-count { font-size: 0.78rem; }
@@ -3823,7 +3823,7 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
    The Rejoindre label has been "REJOINDRE / Partie rapide" stuff and
    risks dominating the row again. Just trim further. */
 @media (max-width: 400px) {
-  .game-row { padding: 9px 10px; gap: 6px; }
+  .game-row { padding: 9px 10px; gap: var(--sp-2); }
   .btn-join  { padding: 3px 6px; font-size: 0.58rem; }
   .btn-watch { padding: 3px 5px; font-size: 0.56rem; }
   .game-count { font-size: 0.7rem; }
@@ -5124,7 +5124,7 @@ html[data-table="pokerth-live"] .raise-slider { accent-color: #4CAF50; }
 }
 .wp-count b { color: var(--gold); font-weight: 700; }
 .wp-bar {
-  display: flex; gap: 6px; margin: 2px 0;
+  display: flex; gap: var(--sp-2); margin: 2px 0;
 }
 .wp-dot {
   width: 10px; height: 10px; border-radius: 50%;
@@ -5133,7 +5133,7 @@ html[data-table="pokerth-live"] .raise-slider { accent-color: #4CAF50; }
 .wp-dot-on  { background: var(--gold); box-shadow: 0 0 6px rgba(var(--gold-rgb), 0.7); }
 .wp-dot-off { background: transparent; }
 .wp-ok, .wp-need {
-  font-size: 0.78rem; font-weight: 600; letter-spacing: 0.04em;
+  font-size: var(--fs-sm); font-weight: 600; letter-spacing: 0.04em;
   padding: 2px 0;
 }
 .wp-ok   { color: rgb(var(--green2-rgb)); }
@@ -5144,20 +5144,20 @@ html[data-table="pokerth-live"] .raise-slider { accent-color: #4CAF50; }
   width: 100%;
 }
 .wp-player {
-  display: inline-flex; align-items: center; gap: 6px;
+  display: inline-flex; align-items: center; gap: var(--sp-2);
   background: var(--inset);
   border: 1px solid var(--border);
-  border-radius: 999px;
+  border-radius: var(--r-pill);
   padding: 3px 10px 3px 4px;
-  font-size: 0.78rem;
+  font-size: var(--fs-sm);
 }
 .wp-av {
   display: inline-flex; align-items: center; justify-content: center;
   width: 22px; height: 22px; border-radius: 50%;
   background: var(--inset);
 }
-.wp-av.emoji-av { font-size: 1.05rem; line-height: 1; }
-.wp-av-letter   { font-size: 0.7rem; font-weight: 700; color: var(--gold); }
+.wp-av.emoji-av { font-size: var(--fs-lg); line-height: 1; }
+.wp-av-letter   { font-size: var(--fs-xs); font-weight: 700; color: var(--gold); }
 
 /* ── Unified avatar-chip rules for compact UI lists ──
    The _avatarChipHtml helper produces <span class="<chipClass>
@@ -5191,7 +5191,7 @@ html[data-table="pokerth-live"] .raise-slider { accent-color: #4CAF50; }
 .wp-me    {
   font-size: 0.6rem; color: var(--gold);
   text-transform: uppercase; letter-spacing: 0.1em;
-  background: rgba(var(--gold-rgb), 0.12); padding: 1px 5px; border-radius: 3px;
+  background: rgba(var(--gold-rgb), 0.12); padding: 1px 5px; border-radius: var(--r-xs);
 }
 .wp-hint {
   font-size: 0.74rem; color: var(--gold-dim);
@@ -5212,7 +5212,7 @@ html[data-table="pokerth-live"] .raise-slider { accent-color: #4CAF50; }
 }
 .wait-page .wp-card {
   width: 100%; max-width: 440px;
-  display: flex; flex-direction: column; align-items: stretch; gap: 10px;
+  display: flex; flex-direction: column; align-items: stretch; gap: var(--sp-4);
 }
 .wait-page .wp-title {
   text-align: center; font-size: 1rem; font-weight: 700;
@@ -5220,14 +5220,14 @@ html[data-table="pokerth-live"] .raise-slider { accent-color: #4CAF50; }
 }
 .wp-info {
   background: var(--panel); border: 1px solid var(--border);
-  border-radius: 12px; padding: 12px 14px;
+  border-radius: var(--r-lg); padding: 12px 14px;
   display: flex; flex-direction: column; gap: 3px;
 }
-.wp-info-name { font-weight: 700; color: var(--cream); font-size: 0.95rem; margin-bottom: 3px; }
-.wp-info-row { font-size: 0.78rem; color: var(--gold-dim); }
+.wp-info-name { font-weight: 700; color: var(--cream); font-size: var(--fs-md); margin-bottom: 3px; }
+.wp-info-row { font-size: var(--fs-sm); color: var(--gold-dim); }
 .wp-info-row b { color: var(--gold); font-weight: 700; }
 .wp-players-hdr {
-  font-size: 0.7rem; color: var(--gold-dim); text-transform: uppercase;
+  font-size: var(--fs-xs); color: var(--gold-dim); text-transform: uppercase;
   letter-spacing: 0.12em; text-align: center; margin-top: 2px;
 }
 .wp-fillbots {
@@ -5235,9 +5235,9 @@ html[data-table="pokerth-live"] .raise-slider { accent-color: #4CAF50; }
   font-size: 0.82rem; color: var(--text); padding: 6px 2px; user-select: none;
 }
 .wp-fillbots input { width: 16px; height: 16px; accent-color: var(--green); cursor: pointer; flex: 0 0 auto; }
-.wp-actions { display: flex; gap: 8px; margin-top: 4px; }
+.wp-actions { display: flex; gap: var(--sp-3); margin-top: 4px; }
 .wp-actions .wp-btn {
-  flex: 1; padding: 12px 10px; border-radius: 9px;
+  flex: 1; padding: 12px 10px; border-radius: var(--r-md);
   font-weight: 700; letter-spacing: 0.4px; font-size: 0.88rem;
   cursor: pointer; border: 1px solid var(--border);
   background: var(--panel-hi, var(--panel)); color: var(--text);
@@ -5274,11 +5274,11 @@ html[data-table="pokerth-live"] .raise-slider { accent-color: #4CAF50; }
 /* Start-now banner — shown when the admin can launch with bots.
    Pulsing animation draws attention without being too noisy. */
 .wp-ready-row {
-  display: flex; flex-direction: column; align-items: center; gap: 6px;
+  display: flex; flex-direction: column; align-items: center; gap: var(--sp-2);
   margin-top: 8px; padding: 10px 14px;
   background: linear-gradient(180deg, rgba(var(--green2-rgb), 0.10), rgba(var(--green2-rgb), 0.04));
   border: 1px solid rgba(var(--green2-rgb), 0.4);
-  border-radius: 6px;
+  border-radius: var(--r-sm);
   animation: wpReadyAppear 0.4s ease-out;
 }
 @keyframes wpReadyAppear {
@@ -5286,7 +5286,7 @@ html[data-table="pokerth-live"] .raise-slider { accent-color: #4CAF50; }
   to   { opacity: 1; transform: translateY(0); }
 }
 .wp-ready-label {
-  font-size: 0.78rem; color: #88e4a3; font-weight: 600;
+  font-size: var(--fs-sm); color: #88e4a3; font-weight: 600;
   letter-spacing: 0.04em;
 }
 .wp-ready-btn {
@@ -5488,7 +5488,7 @@ html[data-table="pokerth-live"] .raise-slider { accent-color: #4CAF50; }
 .auto-switch input:checked + .auto-switch-track { background: rgba(var(--green-rgb), 0.5); border-color: var(--green); }
 .auto-switch input:checked + .auto-switch-track::before { transform: translateX(17px); background: var(--on-green); }
 @media (max-width: 599.98px) {
-  .auto-cf-row { padding: 6px 9px; margin-bottom: 5px; gap: 8px; }
+  .auto-cf-row { padding: 6px 9px; margin-bottom: 5px; gap: var(--sp-3); }
   .auto-cf-label { font-size: 0.68rem; }
   .auto-cf-hint { font-size: 0.54rem; }
 }
@@ -5743,16 +5743,16 @@ html[data-table="pokerth-live"] .raise-slider { accent-color: #4CAF50; }
    This rule keeps only the bits inline styles don't cover. */
 .players-list {
   font-family: var(--ff-mono);
-  font-size: 0.78rem;
+  font-size: var(--fs-sm);
 }
 .players-list .pl-row {
   display: grid;
   grid-template-columns: var(--pl-cols, 22px minmax(0,1fr) 16px 22px 48px 48px);
   align-items: center;
-  gap: 8px;
+  gap: var(--sp-3);
   padding: 4px 0;          /* container provides the 12px lateral padding now */
   font-family: var(--ff-mono);
-  font-size: 0.78rem;
+  font-size: var(--fs-sm);
   color: var(--cream);
   border-bottom: 1px solid var(--inset);
 }
@@ -5761,7 +5761,7 @@ html[data-table="pokerth-live"] .raise-slider { accent-color: #4CAF50; }
 .players-list .pl-name { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .players-list .pl-name-link { color: inherit; text-decoration: none; cursor: pointer; }
 .players-list .pl-name-link:hover, .players-list .pl-name-link:active { color: var(--gold-hi); }
-.players-list .pl-flag { flex: none; display: inline-flex; align-items: center; justify-content: flex-end; gap: 4px; font-size: 0.95rem; line-height: 1; }
+.players-list .pl-flag { flex: none; display: inline-flex; align-items: center; justify-content: flex-end; gap: var(--sp-1); font-size: var(--fs-md); line-height: 1; }
 .players-list .pl-cc { font-size: 0.6rem; color: var(--gold-dim); font-family: var(--ff-mono); letter-spacing: 0.04em; white-space: nowrap; }
 .players-list .pl-flag .cc-flag { width: 20px; height: 15px; }
 .players-list .pl-star { flex: none; width: 1.4em; text-align: center; font-size: 0.9rem; line-height: 1; color: var(--gold); }
@@ -5780,17 +5780,17 @@ html[data-table="pokerth-live"] .raise-slider { accent-color: #4CAF50; }
   height: 22px;
   border-radius: 50%;
   background: var(--inset);
-  font-size: 1.05rem;
+  font-size: var(--fs-lg);
   line-height: 1;
 }
-.pl-av.letter { font-size: 0.7rem; font-weight: 700; color: var(--gold); }
+.pl-av.letter { font-size: var(--fs-xs); font-weight: 700; color: var(--gold); }
 .pl-av.has-pth-avatar {
   background: rgba(0,0,0,0.2);
   padding: 0;
   overflow: visible;
 }
 .players-list .pl-empty {
-  padding: 12px;
+  padding: var(--sp-5);
   text-align: center;
   font-style: italic;
   color: var(--gold-dim);
@@ -5801,7 +5801,7 @@ html[data-table="pokerth-live"] .raise-slider { accent-color: #4CAF50; }
 .players-list::-webkit-scrollbar-track { background: transparent; }
 .players-list::-webkit-scrollbar-thumb {
   background: rgba(var(--gold-rgb), 0.18);
-  border-radius: 3px;
+  border-radius: var(--r-xs);
 }
 .players-list::-webkit-scrollbar-thumb:hover { background: rgba(var(--gold-rgb), 0.32); }
 /* ═══════════════════════════════════════════════════════════════════
@@ -6301,7 +6301,7 @@ html[data-table="pokerth-live"] .raise-slider { accent-color: #4CAF50; }
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 8px;
+  gap: var(--sp-3);
   width: 100%;
 }
 .wp-ready-btn-row .wp-ready-btn {
@@ -6517,10 +6517,10 @@ html[data-table="pokerth-live"] .raise-slider { accent-color: #4CAF50; }
 
 /* Bouton repliable "Créer une table" */
 .create-toggle {
-  width: 100%; display: flex; align-items: center; gap: 12px;
-  background: rgba(var(--gold-rgb), 0.07); border: 1px solid var(--border); border-radius: 10px;
+  width: 100%; display: flex; align-items: center; gap: var(--sp-5);
+  background: rgba(var(--gold-rgb), 0.07); border: 1px solid var(--border); border-radius: var(--r-bar);
   color: var(--gold); cursor: pointer; padding: 13px 16px;
-  font-family: var(--ff-display); font-size: 1.05rem; font-weight: 600; transition: background 0.2s;
+  font-family: var(--ff-display); font-size: var(--fs-lg); font-weight: 600; transition: background 0.2s;
 }
 .create-toggle:hover { background: rgba(var(--gold-rgb), 0.13); }
 .create-toggle .ct-ico { font-size: 1.25rem; }
@@ -6542,7 +6542,7 @@ html[data-table="pokerth-live"] .raise-slider { accent-color: #4CAF50; }
    colle sous le bouton toggle accordeon de la colonne lobby : on referme donc
    le cadre en haut (contour complet + coins arrondis), sinon le bord superieur
    apparait coupe juste sous le header. Deux ids => bat la regle de base. */
-#s-create #create-form { border-top: 1px solid var(--border); border-radius: 10px; }
+#s-create #create-form { border-top: 1px solid var(--border); border-radius: var(--r-bar); }
 
 /* ── PokerTH clair : corrections de contraste (clair uniquement) ──
    Plusieurs elements gardent des couleurs CLAIRES codees en dur (pensees pour le
@@ -6563,12 +6563,12 @@ html[data-table="pokerth-live"] .raise-slider { accent-color: #4CAF50; }
 /* Préréglages */
 .cf-presets-label { font-size: var(--cf-fs-xs); letter-spacing: 0.18em; text-transform: uppercase; color: var(--gold-dim); font-weight: 600; margin: 0 2px 8px; }
 /* Rangée label + bouton Développer/Réduire du bloc « Style de partie ». */
-.cf-style-label-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.cf-style-label-row { display: flex; align-items: center; justify-content: space-between; gap: var(--sp-3); }
 .cf-style-toggle {
   display: inline-flex; align-items: center; gap: 5px;
   background: rgba(255,255,255,0.03);
   border: 1px solid var(--border);
-  border-radius: 6px;
+  border-radius: var(--r-sm);
   color: var(--gold-dim);
   font-family: inherit; font-size: 0.6rem; font-weight: 600;
   letter-spacing: 0.1em; text-transform: uppercase;
@@ -6576,9 +6576,9 @@ html[data-table="pokerth-live"] .raise-slider { accent-color: #4CAF50; }
 }
 .cf-style-toggle:hover { border-color: var(--gold-dim); color: var(--gold); }
 .cf-style-toggle .cfs-arr { font-size: var(--cf-fs-xs); line-height: 1; }
-.cf-presets { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+.cf-presets { display: flex; flex-wrap: wrap; gap: var(--sp-3); margin-bottom: 16px; }
 .cf-preset {
-  flex: 1 1 104px; border: 1.5px solid var(--border); border-radius: 9px; background: var(--inset);
+  flex: 1 1 104px; border: 1.5px solid var(--border); border-radius: var(--r-md); background: var(--inset);
   color: var(--text); cursor: pointer; padding: 11px 6px; text-align: center;
   transition: border-color 0.2s, background 0.2s; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; gap: 3px;
 }
@@ -6593,11 +6593,11 @@ html[data-table="pokerth-live"] .raise-slider { accent-color: #4CAF50; }
    plat, radius 9, bordures discrètes. ⭐ Perso devient une barre fine
    horizontale sous la grille (action de chargement, pas un style). ── */
 .cf-presets-style { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); margin-bottom: 8px; }
-.cf-presets-style .cf-preset { padding: 8px 4px; gap: 2px; }
+.cf-presets-style .cf-preset { padding: 8px 4px; gap: var(--sp-0); }
 .cf-presets-style .cf-preset .cfp-ico { font-size: var(--cf-fs-ico); }
 .cf-presets-style .cf-preset .cfp-n { font-size: var(--cf-fs-body); }
 .cf-presets-style .cf-preset .cfp-d { font-size: var(--cf-fs-xs); }
-.cf-preset.cfp-bar { flex-direction: row; align-items: center; justify-content: center; width: 100%; padding: 8px 10px; gap: 8px; margin-bottom: 16px; }
+.cf-preset.cfp-bar { flex-direction: row; align-items: center; justify-content: center; width: 100%; padding: 8px 10px; gap: var(--sp-3); margin-bottom: 16px; }
 .cf-preset.cfp-bar .cfp-ico { font-size: var(--cf-fs-ico-sm); line-height: 1; }
 .cf-preset.cfp-bar .cfp-n { font-size: var(--cf-fs-body); }
 .cf-preset.cfp-bar .cfp-d { font-size: var(--cf-fs-xs); }
@@ -6669,7 +6669,7 @@ html[data-table="pokerth-live"] .raise-slider { accent-color: #4CAF50; }
 }
 .game-row.gcard:hover { border-color: var(--gold-dim); background: var(--inset-hi); }
 .gcard-main { min-width: 0; }
-.game-row.gcard .game-name { white-space: normal; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; font-size: 0.95rem; }
+.game-row.gcard .game-name { white-space: normal; display: flex; align-items: center; gap: var(--sp-2); flex-wrap: wrap; font-size: var(--fs-md); }
 .game-row.gcard .game-meta { flex-wrap: wrap; gap: 4px 10px; font-size: 0.74rem; }
 .game-badge { font-size: 0.6rem; font-weight: 700; letter-spacing: 0.05em; padding: 2px 7px; border-radius: 20px; text-transform: uppercase; white-space: nowrap; }
 .game-badge.live   { color: var(--red,#e05050); background: rgba(var(--red-rgb), 0.14); border: 1px solid rgba(var(--red-rgb), 0.4); }
@@ -6707,7 +6707,7 @@ html[data-table="pokerth-live"] .raise-slider { accent-color: #4CAF50; }
   background: rgba(var(--green-rgb), 0.12);
   color: var(--green);
   border-radius: 8px;
-  padding: 10px;
+  padding: var(--sp-4);
   font-family: var(--ff-display);
   font-weight: 600;
   font-size: 0.88rem;
@@ -6766,7 +6766,7 @@ html[data-table="pokerth-live"] .raise-slider { accent-color: #4CAF50; }
   color: var(--text);
   border-radius: 8px;
   padding: 10px 14px;
-  font-size: 1.05rem;
+  font-size: var(--fs-lg);
   line-height: 1;
   cursor: pointer;
 }
@@ -6775,7 +6775,7 @@ html[data-table="pokerth-live"] .raise-slider { accent-color: #4CAF50; }
 /* Mobile (cards stacked): make the Rejoindre / Regarder buttons shorter. */
 @media (max-width: 599.98px) {
   .game-row.gcard .btn-join  { padding: 5px 10px; font-size: 0.8rem; }
-  .game-row.gcard .btn-watch { padding: 5px 12px; font-size: 0.95rem; }
+  .game-row.gcard .btn-watch { padding: 5px 12px; font-size: var(--fs-md); }
 }
 
 /* ── Téléphone (base) : boutons SOUS la carte, texte lisible ──
@@ -6787,7 +6787,7 @@ html[data-table="pokerth-live"] .raise-slider { accent-color: #4CAF50; }
   .gcard-btns { flex: 0 0 auto; align-self: center; }
   .game-row.gcard .btn-join { flex: 0 0 auto; font-size: 0.92rem; }
   .game-row.gcard .game-name { font-size: 1.02rem; }
-  .game-row.gcard .game-meta { font-size: 0.78rem; }
+  .game-row.gcard .game-meta { font-size: var(--fs-sm); }
   .create-toggle { font-size: 1.15rem; }
 }
 @media (min-width: 900px) {
@@ -6798,7 +6798,7 @@ html[data-table="pokerth-live"] .raise-slider { accent-color: #4CAF50; }
   .game-row.gcard .btn-watch { font-size: 1.2rem; padding: 11px 16px; }
   .create-toggle { font-size: 1.32rem; padding: 16px 18px; }
   .seat-dot { width: 10px; height: 10px; }
-  #create-form .cf label { font-size: 0.62rem; }
+  #create-form .cf label { font-size: var(--fs-2xs); }
   #create-form .cf input, #create-form .cf select { font-size: 0.9rem; padding: 7px 9px; }
 }
 
@@ -6845,7 +6845,7 @@ html[data-table="pokerth-live"] .raise-slider { accent-color: #4CAF50; }
 .cf-actions {
   display: flex;
   align-items: stretch;
-  gap: 10px;
+  gap: var(--sp-4);
   margin-top: 4px;
 }
 .cf-actions > button {
@@ -7754,9 +7754,9 @@ html[data-seat-edit="1"] #g-seats .seat.seat-ghost { outline: none; cursor: defa
 .music-gamesnd-row.is-off .music-gs-range { opacity: 0.4; }
 .music-gamesnd-row.is-off .music-gs-val { opacity: 0.5; }
 /* ── Box jumelle « Lecteur » qui regroupe les commandes musique ── */
-.music-player-box { border: 1px solid var(--border-hi); background: rgba(var(--gold-rgb),0.06); border-radius: 10px; padding: 8px 10px 10px; display: flex; flex-direction: column; gap: 10px; }
-.music-player-hd { display: flex; align-items: center; gap: 6px; font-size: 0.58rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold-dim); }
-.music-player-ic { font-size: 0.85rem; }
+.music-player-box { border: 1px solid var(--border-hi); background: rgba(var(--gold-rgb),0.06); border-radius: var(--r-bar); padding: 8px 10px 10px; display: flex; flex-direction: column; gap: var(--sp-4); }
+.music-player-hd { display: flex; align-items: center; gap: var(--sp-2); font-size: 0.58rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold-dim); }
+.music-player-ic { font-size: var(--fs-base); }
 
 /* ══ Lecteur « esprit Winamp » — LCD, VU, marquee, playlist (palette de thème) ══ */
 .music-lcd {
@@ -7794,29 +7794,29 @@ html[data-seat-edit="1"] #g-seats .seat.seat-ghost { outline: none; cursor: defa
 }
 /* Playlist dépliable */
 .music-pl-toggle {
-  display: flex; align-items: center; gap: 8px; width: 100%;
+  display: flex; align-items: center; gap: var(--sp-3); width: 100%;
   background: var(--field-bg); color: var(--text);
-  border: 1px solid var(--border); border-radius: 9px;
+  border: 1px solid var(--border); border-radius: var(--r-md);
   padding: 7px 10px; font-size: 0.82rem; cursor: pointer; text-align: left;
 }
 .music-pl-toggle:hover { border-color: var(--gold-dim); }
-.music-pl-caret { flex: 0 0 auto; color: var(--gold-dim); font-size: 0.7rem; }
+.music-pl-caret { flex: 0 0 auto; color: var(--gold-dim); font-size: var(--fs-xs); }
 .music-pl-toggle > span[data-i18n] { flex: 1 1 auto; }
 .music-pl-count {
-  flex: 0 0 auto; font-size: 0.7rem; color: var(--gold-dim);
-  border: 1px solid var(--border); border-radius: 999px; padding: 1px 7px;
+  flex: 0 0 auto; font-size: var(--fs-xs); color: var(--gold-dim);
+  border: 1px solid var(--border); border-radius: var(--r-pill); padding: 1px 7px;
   font-variant-numeric: tabular-nums;
 }
 .music-pl {
-  list-style: none; margin: 0; padding: 4px;
-  border: 1px solid var(--border); border-radius: 9px;
+  list-style: none; margin: 0; padding: var(--sp-1);
+  border: 1px solid var(--border); border-radius: var(--r-md);
   max-height: 168px; overflow-y: auto;
-  display: flex; flex-direction: column; gap: 2px;
+  display: flex; flex-direction: column; gap: var(--sp-0);
 }
 .music-pl-item {
-  display: flex; align-items: center; gap: 8px;
+  display: flex; align-items: center; gap: var(--sp-3);
   padding: 6px 8px; border-radius: 7px; cursor: pointer;
-  color: var(--text); font-size: 0.85rem;
+  color: var(--text); font-size: var(--fs-base);
 }
 .music-pl-item:hover { background: rgba(var(--gold-rgb), 0.10); }
 .music-pl-item.is-cur {
@@ -8641,7 +8641,7 @@ html.reduce-fx .seat-action-badge {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 8px;
+  gap: var(--sp-3);
   padding: 5px 10px;
   font-size: 0.68rem;
   color: var(--text-dim, #8b93a7);
@@ -8757,7 +8757,7 @@ html.reduce-fx .seat-action-badge {
    redevient une sous-ligne discrète sous le pseudo. */
 .pl-row .pl-game {
   display: block;
-  font-size: 0.62rem;
+  font-size: var(--fs-2xs);
   color: var(--text-dim, #8b93a7);
   white-space: nowrap;
   overflow: hidden;
@@ -8871,14 +8871,14 @@ html[data-buttons="pokerth"] .btn-action[disabled] { filter: grayscale(0.55) bri
 /* ── Tri du panneau Joueurs (A–Z / pays) + 5e pastille de filtre ── */
 .players-search { display: flex; align-items: center; gap: 6px; }
 .players-search input { flex: 1; min-width: 0; }
-.pl-sort { display: flex; gap: 2px; flex: none; }
+.pl-sort { display: flex; gap: var(--sp-0); flex: none; }
 .pl-sort-btn {
   background: var(--inset, rgba(255,255,255,0.06));
   border: 1px solid var(--border, rgba(255,255,255,0.14));
   border-radius: 8px;
   color: var(--text-dim, #8b93a7);
   cursor: pointer;
-  font-size: 0.62rem;
+  font-size: var(--fs-2xs);
   font-weight: 700;
   padding: 5px 8px;
   line-height: 1;
@@ -8899,7 +8899,7 @@ html[data-buttons="pokerth"] .btn-action[disabled] { filter: grayscale(0.55) bri
 #s-lobby .lobby-grid > .create-col { display: none; }
 
 /* Barre du bas : Joueur + Créer une partie (les 2 modes, épinglée en pied) */
-.lobby-footbar { display:flex; align-items:center; gap:12px; padding:8px 14px;
+.lobby-footbar { display:flex; align-items:center; gap:var(--sp-5); padding:8px 14px;
   border-top:1px solid var(--border); background:var(--panel); flex-shrink:0;
   position:sticky; bottom:0; z-index:20; }
 .lobby-footbar .lfb-name { color:var(--text-hi); font-weight:700; font-size:0.82rem; white-space:nowrap; }
@@ -9049,7 +9049,7 @@ html[data-buttons="pokerth"] .btn-action[disabled] { filter: grayscale(0.55) bri
 @media (max-width: 899.98px) {
   #s-lobby { overflow:hidden; }
   #s-lobby .lobby-body { flex:1 1 auto; min-height:0; overflow:hidden; display:flex; flex-direction:column; padding:10px 10px; }
-  #s-lobby .lobby-grid { flex:1 1 auto; min-height:0; display:flex; flex-direction:column; gap:8px; align-items:stretch; }
+  #s-lobby .lobby-grid { flex:1 1 auto; min-height:0; display:flex; flex-direction:column; gap:var(--sp-3); align-items:stretch; }
   .lob-h { display:none !important; }
 
   #s-lobby .lobby-grid > .games-col { order:1; flex:0 0 clamp(120px, var(--m-games-h, 52%), 62%); min-height:0; display:flex; flex-direction:column; }
@@ -9098,17 +9098,17 @@ html[data-buttons="pokerth"] .btn-action[disabled] { filter: grayscale(0.55) bri
 }
 
 /* ── Barre du haut du lobby : recherche joueur + filtre parties, au-dessus des colonnes ── */
-.lobby-topbar { display:flex; align-items:center; gap:10px; flex-wrap:wrap; flex-shrink:0; padding:0 0 10px; }
+.lobby-topbar { display:flex; align-items:center; gap:var(--sp-4); flex-wrap:wrap; flex-shrink:0; padding:0 0 10px; }
 .lobby-topbar .players-search {
-  flex:1 1 280px; display:flex; align-items:center; gap:6px;
+  flex:1 1 280px; display:flex; align-items:center; gap:var(--sp-2);
   padding:0 !important; background:transparent !important; border:none !important;
 }
 .lobby-topbar .players-search input { flex:1 1 auto; width:auto; }
-.lobby-topbar #g-filter-bar { flex:1 1 260px; padding:0 !important; margin:0; display:flex; align-items:center; gap:8px; }
+.lobby-topbar #g-filter-bar { flex:1 1 260px; padding:0 !important; margin:0; display:flex; align-items:center; gap:var(--sp-3); }
 .lobby-topbar #g-filter-bar .gfilt-wrap { flex:1 1 auto; }
 /* En mobile la barre s'empile proprement (recherche puis filtre) */
 @media (max-width: 899.98px) {
-  .lobby-topbar { gap:8px; padding:0 0 8px; }
+  .lobby-topbar { gap:var(--sp-3); padding:0 0 8px; }
   .lobby-topbar .players-search { flex:1 1 100%; }
   .lobby-topbar #g-filter-bar { flex:1 1 100%; }
 }
@@ -9119,7 +9119,7 @@ html[data-buttons="pokerth"] .btn-action[disabled] { filter: grayscale(0.55) bri
   border: 1px solid var(--border);
   border-radius: 8px;
   background: var(--panel);
-  padding: 8px;
+  padding: var(--sp-3);
 }
 
 /* Header « Tables disponibles » : collé aux bords de la colonne (annule le
@@ -9149,8 +9149,8 @@ html[data-buttons="pokerth"] .btn-action[disabled] { filter: grayscale(0.55) bri
 #lobby-gameinfo .lgi-htitle { font-size:0.72rem; color:var(--gold-dim); letter-spacing:0.12em; text-transform:uppercase; font-weight:600; }
 .lgi-report { background:none; border:none; cursor:pointer; font-size:1rem; line-height:1; padding:0 2px; opacity:0.85; }
 .lgi-report:hover { opacity:1; transform:scale(1.05); }
-.lgi-scroll { flex:1 1 auto; min-height:0; overflow-y:auto; padding:10px 12px; display:flex; flex-direction:column; gap:6px; }
-.lgi-row { font-size:0.82rem; color:var(--text); display:flex; align-items:center; gap:6px; }
+.lgi-scroll { flex:1 1 auto; min-height:0; overflow-y:auto; padding:10px 12px; display:flex; flex-direction:column; gap:var(--sp-2); }
+.lgi-row { font-size:0.82rem; color:var(--text); display:flex; align-items:center; gap:var(--sp-2); }
 .lgi-row .lgi-ico { opacity:0.85; }
 .lgi-blinds { color:var(--text-dim,#8b93a7); }
 .lgi-ptitle { font-weight:700; color:var(--text); font-size:0.82rem; margin-top:6px; }
@@ -9166,11 +9166,11 @@ html[data-buttons="pokerth"] .btn-action[disabled] { filter: grayscale(0.55) bri
 /* En mode « ma partie en attente », la barre du bas (Joueur/Créer) n'a plus
    lieu d'être : les actions Démarrer/Quitter sont au centre, sous le chat. */
 #s-lobby.lobby-waiting .lobby-footbar { display:none; }
-#lobby-wait-actions .wp-fillbots { flex:1 1 100%; justify-content:center; padding:2px; }
-#lobby-wait-actions .wp-actions { flex:1 1 auto; display:flex; gap:10px; width:100%; }
+#lobby-wait-actions .wp-fillbots { flex:1 1 100%; justify-content:center; padding:var(--sp-0); }
+#lobby-wait-actions .wp-actions { flex:1 1 auto; display:flex; gap:var(--sp-4); width:100%; }
 #lobby-wait-actions .wp-actions .wp-btn { flex:1 1 auto; }
 #lobby-wait-actions .lfb-waithint { flex:1 1 100%; font-size:0.74rem; color:var(--gold-dim); font-style:italic; text-align:center; }
-.lgi-prow { display:flex; align-items:center; gap:8px; padding:6px 8px; border-radius:6px; background:var(--inset); border:1px solid var(--border); }
+.lgi-prow { display:flex; align-items:center; gap:var(--sp-3); padding:6px 8px; border-radius:var(--r-sm); background:var(--inset); border:1px solid var(--border); }
 .lgi-pname { flex:1 1 auto; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-size:0.82rem; color:var(--text); }
 .lgi-prow.lgi-pending { opacity:0.6; }
 /* Ligne joueur cliquable (popup joueur, comme la liste « Joueurs en ligne ») :
@@ -9180,7 +9180,7 @@ html[data-buttons="pokerth"] .btn-action[disabled] { filter: grayscale(0.55) bri
 .lgi-prow.lgi-click:hover .lgi-pname, .lgi-prow.lgi-click:active .lgi-pname { color:var(--gold-hi); }
 .lgi-prow.lgi-click:focus { outline:none; }
 .lgi-prow.lgi-click:focus-visible { border-color:var(--gold-hi); }
-.lgi-pempty { color:var(--text-dim,#8b93a7); font-size:0.78rem; padding:8px; }
+.lgi-pempty { color:var(--text-dim,#8b93a7); font-size:var(--fs-sm); padding:var(--sp-3); }
 
 /* Ligne de partie sélectionnée */
 .game-row.gcard.sel { border-color:var(--gold); box-shadow:0 0 0 1px var(--gold) inset; background:rgba(var(--gold-rgb),0.06); }
@@ -9196,7 +9196,7 @@ html[data-buttons="pokerth"] .btn-action[disabled] { filter: grayscale(0.55) bri
 .adv-no-chatts .msg .msg-time { display: none; } /* option « heure dans le chat » decochee */
 
 /* Icônes d'action par joueur (colonne Joueurs connectés) : ⊘ ignorer + 📊 stats */
-.players-list .pl-row .pl-acts { display:inline-flex; align-items:center; gap:2px; justify-self:end; margin-left:0; }
+.players-list .pl-row .pl-acts { display:inline-flex; align-items:center; gap:var(--sp-0); justify-self:end; margin-left:0; }
 .pl-act { background:none; border:none; padding:3px; cursor:pointer; color:var(--gold-dim,#9a824a); display:inline-flex; align-items:center; border-radius:4px; line-height:0; }
 /* Colonne « Inviter » (page d'attente) : icône verte, état envoyé estompé. */
 .pl-act-inv { color:var(--green); }
@@ -9217,7 +9217,7 @@ html[data-buttons="pokerth"] .btn-action[disabled] { filter: grayscale(0.55) bri
    (width:100%) → elle s'élargit avec la colonne. Le Nom = cellule vide. */
 .pl-colhead {
   position:sticky; top:0; z-index:2;
-  display:grid; align-items:center; gap:8px;
+  display:grid; align-items:center; gap:var(--sp-3);
   padding:4px 12px 6px; margin:0 -12px 2px;
   background:linear-gradient(var(--chrome-tint),var(--chrome-tint)),var(--panel); border-bottom:1px solid var(--border);
 }
@@ -9225,7 +9225,7 @@ html[data-buttons="pokerth"] .btn-action[disabled] { filter: grayscale(0.55) bri
 .pl-colh-chip {
   box-sizing:border-box; width:100%;
   display:inline-flex; align-items:center; justify-content:center;
-  background:var(--field-bg); border:1px solid var(--border); border-radius:3px;
+  background:var(--field-bg); border:1px solid var(--border); border-radius:var(--r-xs);
   padding:3px 0; cursor:pointer; line-height:0;
   color:var(--gold-dim); opacity:0.7;
 }
@@ -9233,7 +9233,7 @@ html[data-buttons="pokerth"] .btn-action[disabled] { filter: grayscale(0.55) bri
 .pl-colh-chip.on { color:var(--gold); opacity:1; border-color:rgba(var(--gold-rgb),0.35); background:rgba(var(--gold-rgb),0.10); }
 .pl-colh-lock { cursor:default; }
 .pl-colh-lock:hover { background:rgba(var(--gold-rgb),0.10); }
-.pl-colh-star { font-size:0.85rem; line-height:1; }
+.pl-colh-star { font-size:var(--fs-base); line-height:1; }
 
 /* Colonne statut « en partie » : manette allumée (vert) si le joueur joue, éteinte sinon */
 .players-list .pl-row .pl-status { flex:0 0 auto; display:inline-flex; align-items:center; justify-content:center; width:22px; color:var(--border); line-height:0; }

@@ -130,7 +130,10 @@ Ordre proposé, du plus visible au plus périphérique :
 - [x] **Lot 2 — Panneaux en jeu** : espacements/rayons + polices rem migrés (inerte,
       0.3.955) ; typo harmonisée (21 snaps ≤0,05rem) + entêtes odds/stats/assist px→rem
       (0.3.956-beta). Px fins HUD/range-grid conservés (trop fins pour le barème).
-- [ ] **Lot 3 — Lobby** : liste des parties, tri/recherche, chat lobby, stats bar.
+- [~] **Lot 3 — Lobby** : espacements/rayons + polices rem exactes migrés (inerte,
+      0.3.957-beta) — liste parties, tri/recherche, chat lobby, stats/foot bar, création
+      de table, wait-page, mini-lecteur musique. Reste **Lot 3b** : 37 polices rem à
+      snapper (≤0,05rem) — à valider.
 - [ ] **Lot 4 — Formulaires** : login, `#create-form` (déjà aliasé → généraliser),
       réglages / options avancées, modales de confirmation.
 - [ ] **Lot 5 — Ranking / profil** : `.rk-search`, `.rk-season`, pages de classement.
