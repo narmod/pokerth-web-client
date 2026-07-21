@@ -176,6 +176,34 @@ document.addEventListener("DOMContentLoaded", function () {
   if (sm) { sm.addEventListener("change", syncServerModeSeg); syncServerModeSeg(); }
 });
 
+// ── Wizard login en 2 étapes ──────────────────────────────────────────
+// Étape 1 = cartes de choix ; étape 2 = formulaire du mode (moteur existant
+// inchangé). La carte écrit #server-mode (source de vérité) et déclenche
+// 'change' → App.onServerOrGuestChange() configure les champs à afficher.
+var LOGIN_MODE_KEY = { "pokerthnet":"loginNetTitle", "offline":"loginOfflineTitle", "lan-dedi":"loginLanTitle" };
+function loginPickMode(card, value) {
+  var sm = document.getElementById("server-mode");
+  if (sm) { sm.value = value; sm.dispatchEvent(new Event("change", { bubbles: true })); }
+  // La barre retour reflète la carte choisie (déjà traduite dans le DOM) ;
+  // on repositionne aussi data-i18n pour rester correct après setLang().
+  try {
+    var ic = card.querySelector(".lc-ic"), t = card.querySelector(".lc-t");
+    var bi = document.getElementById("login-back-ico"), bn = document.getElementById("login-back-name");
+    if (ic && bi) bi.textContent = ic.textContent;
+    if (t && bn) { bn.textContent = t.textContent; if (LOGIN_MODE_KEY[value]) bn.setAttribute("data-i18n", LOGIN_MODE_KEY[value]); }
+  } catch (e) {}
+  var s1 = document.getElementById("login-step1"), s2 = document.getElementById("login-step2");
+  if (s1) s1.style.display = "none";
+  if (s2) s2.style.display = "";
+  try { window.scrollTo(0, 0); } catch (e) {}
+}
+function loginBackToStep1() {
+  var s1 = document.getElementById("login-step1"), s2 = document.getElementById("login-step2");
+  if (s2) s2.style.display = "none";
+  if (s1) s1.style.display = "";
+  try { window.scrollTo(0, 0); } catch (e) {}
+}
+
 function toggleAvatarPopup() {
   var p = document.getElementById("avatar-popup");
   if (!p) return;
@@ -667,15 +695,55 @@ function onAvatarImageChosen(input) {
       <div class="card-subtitle" style="font-size:0.65rem;margin-top:8px">Web Client</div>
     </div>
 
+    <!-- ÉTAPE 1 — choix du mode (cartes empilées). Chaque carte écrit la
+         valeur de #server-mode (source de vérité) puis affiche l'étape 2.
+         Palette : tokens du thème (QML). Textes : i18n. -->
+    <div id="login-step1">
+      <p class="login-lead" data-i18n="loginLead">How do you want to play?</p>
+      <p class="login-lead-sub" data-i18n="loginLeadSub">Pick a mode to continue.</p>
+      <div class="login-cards">
+        <button type="button" class="login-card" onclick="loginPickMode(this,'pokerthnet')">
+          <span class="lc-ic">🌐</span>
+          <span class="lc-tx"><span class="lc-t" data-i18n="loginNetTitle">Internet / PokerTH.net</span><span class="lc-d" data-i18n="loginNetDesc">Play online, ranked · pokerth.net account</span></span>
+          <span class="lc-go">›</span>
+        </button>
+        <button type="button" class="login-card" onclick="loginPickMode(this,'offline')">
+          <span class="lc-ic">🏋️</span>
+          <span class="lc-tx"><span class="lc-t" data-i18n="loginOfflineTitle">Local / training</span><span class="lc-d" data-i18n="loginOfflineDesc">Solo vs bots · no connection</span></span>
+          <span class="lc-go">›</span>
+        </button>
+        <button type="button" class="login-card" onclick="loginPickMode(this,'lan-dedi')">
+          <span class="lc-ic">🖥️</span>
+          <span class="lc-tx"><span class="lc-t" data-i18n="loginLanTitle">LAN / Dedicated server</span><span class="lc-d" data-i18n="loginLanDesc">Private server · local network</span></span>
+          <span class="lc-go">›</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- ÉTAPE 2 — formulaire du mode choisi. Enveloppe le bloc mode +
+         conn-advanced + form + tls/guest + connect + lien EXISTANTS (moteur
+         inchangé). Masquée par défaut ; révélée au clic d'une carte. -->
+    <div id="login-step2" style="display:none">
+      <button type="button" class="login-back" onclick="loginBackToStep1()">
+        <span class="lb-chev">‹</span>
+        <span class="lb-name"><span class="lb-ico" id="login-back-ico">🌐</span> <span id="login-back-name" data-i18n="loginNetTitle">Internet / PokerTH.net</span></span>
+        <span class="lb-edit" data-i18n="loginChange">Change</span>
+      </button>
+      <div class="login-avatar-top">
+        <button type="button" id="av-trigger" onclick="toggleAvatarPopup()" title="Choose an avatar" data-i18n-title="chooseAvatar">🎭</button>
+        <input type="file" id="avatar-file-input" accept="image/*" style="display:none" onchange="onAvatarImageChosen(this)">
+        <span class="login-avatar-cap" data-i18n="chooseAvatar">Choose an avatar</span>
+      </div>
+
     <div class="f">
-      <label data-i18n="loginMode">Login Mode</label>
+      <label data-i18n="loginMode" style="display:none">Login Mode</label>
       <div style="display:flex;gap:8px;align-items:stretch">
         <!-- Contrôle segmenté : remplace le <select> visuel. Le <select>
              #server-mode reste dans le DOM (masqué) comme SOURCE DE VÉRITÉ :
              chaque segment écrit sa valeur puis déclenche l'event 'change',
              donc App.onServerOrGuestChange() et toute la logique existante
              (restauration, connect, lien partagé) restent inchangées. -->
-        <div id="server-mode-seg" class="mode-seg" role="group" aria-label="Login Mode" style="flex:1">
+        <div id="server-mode-seg" class="mode-seg" role="group" aria-label="Login Mode" style="display:none">
           <button type="button" class="mode-seg-btn" data-value="pokerthnet" onclick="pickServerMode(this)">
             <span class="mode-seg-ic">🌐</span><span class="mode-seg-lb" data-i18n="srvSegNet">Internet</span>
           </button>
@@ -752,13 +820,10 @@ function onAvatarImageChosen(input) {
     <form id="login-form" autocomplete="on" onsubmit="App.connect(); return false;">
     <div class="f" id="f-nick">
       <label id="nick-label">Nickname</label>
-      <div style="display:flex;gap:8px;align-items:center">
+      <div style="display:flex">
         <input id="nick" value="" maxlength="64" placeholder="YourName" data-i18n-placeholder="nickPlaceholder"
                autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"
                onkeydown="if(event.key==='Enter') App.connect()" style="flex:1">
-        <button type="button" id="av-trigger" onclick="toggleAvatarPopup()" title="Choose an avatar" data-i18n-title="chooseAvatar"
-                style="width:42px;height:42px;font-size:1.5rem;background:var(--inset);border:1px solid var(--border);border-radius:4px;cursor:pointer;flex-shrink:0;transition:border-color 0.2s">🎭</button>
-        <input type="file" id="avatar-file-input" accept="image/*" style="display:none" onchange="onAvatarImageChosen(this)">
       </div>
     </div>
     <!-- Popup sélection avatar -->
@@ -1362,6 +1427,7 @@ function onAvatarImageChosen(input) {
          data-i18n="notRegisteredYet"
          style="color:var(--gold);font-size:0.8rem;font-weight:600;text-decoration:none;opacity:0.95">Not registered yet?</a>
     </div>
+    </div><!-- /#login-step2 -->
   </div>
   <!-- Credits footer (shown only on the connect screen; absent from
        lobby & game so it doesn't eat playable space). -->
