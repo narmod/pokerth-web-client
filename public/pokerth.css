@@ -391,7 +391,7 @@ body {
 :root[data-table-fs="1"] .my-zone .action-grid {
   background: var(--panel);
   border: 1px solid var(--border);
-  border-radius: 12px;
+  border-radius: var(--r-lg);
   padding: 8px 10px;
   box-shadow: 0 6px 20px rgba(0,0,0,0.38);
 }
@@ -401,7 +401,7 @@ body {
 :root[data-table-fs="1"] .my-zone .waiting-panel {
   background: var(--panel);
   border: 1px solid var(--border);
-  border-radius: 12px;
+  border-radius: var(--r-lg);
   box-shadow: 0 6px 20px rgba(0,0,0,0.38);
 }
 
@@ -2009,7 +2009,7 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 10px;
+  gap: var(--sp-4);
   padding: 0 16px;                /* marges QML 16 px */
   background: rgba(0,0,0,0.78);
   border-bottom: 1px solid rgba(255,255,255,0.08);
@@ -2041,7 +2041,7 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
   transform: translate(-50%, -50%);
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: var(--sp-2);
 }
 .gsb-row { display: inline-flex; align-items: baseline; gap: 5px; }
 .gsb-lbl { color: #9e9e9e; font-size: 13px; }
@@ -2591,11 +2591,11 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
      MORTES, battues par les règles de base plus bas dans le fichier (une
      @media n'augmente pas la spécificité — même leçon que le bloc paysage). */
   .my-zone .act-buttons-row .btn-action { min-height: 45px; padding: 0 8px; font-size: 15px; letter-spacing: 0.5px; border-radius: var(--act-btn-radius, 9px); min-width: 0; }
-  .my-zone .bet-row { gap: 6px; }
+  .my-zone .bet-row { gap: var(--sp-2); }
   .my-zone .bet-row .raise-amt-field { width: 78px; flex: 0 0 auto; height: 26px; min-height: 26px; padding: 1px 6px; font-size: 13px; }
   .my-zone .bet-row .raise-slider { flex: 1 1 auto; min-width: 60px; }
-  .my-zone .mid-row { gap: 4px; align-items: center; }
-  .my-zone .mid-row .pct-row { flex: 0 0 auto; width: auto; gap: 4px; }
+  .my-zone .mid-row { gap: var(--sp-1); align-items: center; }
+  .my-zone .mid-row .pct-row { flex: 0 0 auto; width: auto; gap: var(--sp-1); }
   .my-zone .mid-row .btn-pct { flex: 0 0 38px; width: 38px; min-width: 38px; height: 26px; min-height: 26px; padding: 0 2px; border-radius: 5px; font-size: 11px; font-weight: 700; }
   .my-zone .mid-row .btn-pct .pct-amt { display: none; }
   .my-zone .mid-row .btn-allin { flex: 0 0 52px; width: 52px; min-width: 52px; height: 26px; min-height: 26px; font-size: 12px; padding: 0 2px !important; white-space: nowrap; }
@@ -2611,7 +2611,7 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
     background-image: var(--btn-allin-img) !important;
     background-size: 100% 100% !important;
     background-repeat: no-repeat !important;
-    border-radius: 6px;
+    border-radius: var(--r-sm);
   }
   .my-zone { padding: 5px 8px; }
   .pot-bar { font-size: 0.7rem; }
@@ -2683,7 +2683,7 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
   .player-bar .pb-name { font-size: 0.58rem; }
   .player-bar .pb-money { font-size: 0.5rem; }
   .player-bar .pb-info { min-width: 45px; }
-  .player-bar .pb-cards .pk { width: 50px; height: 70px; font-size: 1.05rem; }
+  .player-bar .pb-cards .pk { width: 50px; height: 70px; font-size: var(--fs-lg); }
   .player-bar .pb-action { font-size: 0.56rem; min-width: 0; }
 
   /* Barre d'action — 2 rangees compactes et previsibles.
@@ -2701,13 +2701,13 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
      c'est elle qui rendait la barre geante en paysage). Meme organisation
      que le portrait/QML : quick-bets compacts a gauche, Tapis, mode a
      droite. */
-  .my-zone .action-grid { gap: 2px; width: 100%; max-width: 100%; }
+  .my-zone .action-grid { gap: var(--sp-0); width: 100%; max-width: 100%; }
   .my-zone .action-grid > * { min-width: 0; }
-  .my-zone .bet-row { gap: 6px; }
+  .my-zone .bet-row { gap: var(--sp-2); }
   /* Champ montant : 78 px (spec QML §5.2, conservee en compact). */
   .my-zone .bet-row .raise-amt-field { width: 78px; flex: 0 0 auto; height: 24px; min-height: 24px; padding: 1px 5px; font-size: 0.72rem; }
   .my-zone .bet-row .raise-slider { flex: 1 1 auto; min-width: 60px; }
-  .my-zone .mid-row { gap: 4px; align-items: center; }
+  .my-zone .mid-row { gap: var(--sp-1); align-items: center; }
   .my-zone .mid-row .pct-row { flex: 0 0 auto; gap: 3px; }
   .my-zone .mid-row .mode-sel-wrap { flex: 0 1 110px; min-width: 0; height: 24px; margin-left: auto; }
   /* Le select gardait son padding vertical de base dans un wrap de 24px ->
@@ -2724,7 +2724,7 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
     background: linear-gradient(180deg, #9e2a2a, #5c1111) !important;
     color: #fff !important;
     padding: 0 10px !important;
-    border-radius: 9px;
+    border-radius: var(--r-md);
   }
   /* Thème à SVG de boutons : le Tapis mobile garde l'image DU THÈME, étirée
      comme le QML (le hardcode ci-dessus n'est plus que le REPLI sans pack —
@@ -2736,11 +2736,11 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
     background-image: var(--btn-allin-img) !important;
     background-size: 100% 100% !important;
     background-repeat: no-repeat !important;
-    border-radius: 6px;
+    border-radius: var(--r-sm);
   }
-  .my-zone .act-buttons-row { gap: 4px; }
+  .my-zone .act-buttons-row { gap: var(--sp-1); }
   .my-zone .act-buttons-row .btn-action { min-height: 30px; padding: 0 8px; font-size: 0.72rem; letter-spacing: 0.5px; border-radius: var(--act-btn-radius, 9px); min-width: 0; }
-  .my-zone .mid-row .btn-pct { flex: 0 0 auto; min-width: 40px; height: 24px; min-height: 24px; padding: 0 8px; border-radius: 9px; font-size: 0.58rem; font-weight: 700; border-width: 1px; }
+  .my-zone .mid-row .btn-pct { flex: 0 0 auto; min-width: 40px; height: 24px; min-height: 24px; padding: 0 8px; border-radius: var(--r-md); font-size: 0.58rem; font-weight: 700; border-width: 1px; }
   .my-zone .mid-row .btn-pct .pct-p { font-size: 0.62rem; }
   .my-zone .mid-row .btn-pct .pct-amt { display: none; }
   /* Pas de badges de touches clavier sur mobile (parite QML), comme en portrait. */
@@ -3389,7 +3389,7 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
 .reaction-bar {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: var(--sp-2);
   padding: 5px 10px;
   background: var(--panel);
   border-top: 1px solid var(--border);
@@ -3415,7 +3415,7 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
   font-size: 1.1rem;
   cursor: pointer;
   transition: transform 0.12s ease, background 0.15s, border-color 0.15s;
-  display: flex; align-items: center; gap: 4px;
+  display: flex; align-items: center; gap: var(--sp-1);
   line-height: 1;
   position: relative;
   overflow: visible;
@@ -3744,11 +3744,11 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
 .board-net.pos { color: var(--pos); }
 .board-net.neg { color: var(--neg); }
 .board-sub  { grid-area: sub; font-size: 0.55rem; color: var(--gold-dim); font-family: var(--ff-mono); }
-.board-sort { display: flex; align-items: center; gap: 6px; margin-bottom: 6px; }
+.board-sort { display: flex; align-items: center; gap: var(--sp-2); margin-bottom: 6px; }
 .board-sort > span { color: var(--gold-dim); font-size: 0.7rem; }
 .board-sort select {
   flex: 1; background: var(--field-bg); border: 1px solid var(--border);
-  border-radius: 3px; color: var(--cream); padding: 3px 6px;
+  border-radius: var(--r-xs); color: var(--cream); padding: 3px 6px;
   font-family: var(--ff-mono); font-size: 0.66rem; outline: none; cursor: pointer;
 }
 .board-myrank {
@@ -4029,7 +4029,7 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 2px;
+  gap: var(--sp-0);
   min-width: 44px;
   max-width: 68px;
 }
@@ -4250,7 +4250,7 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
   white-space: nowrap;
   font-family: var(--ff-display);
   font-size: 0.6rem; font-weight: 700; letter-spacing: 0.03em;
-  padding: 2px 10px; border-radius: 999px;
+  padding: 2px 10px; border-radius: var(--r-pill);
   color: #fff;
   border: 1px solid rgba(0,0,0,0.35);
   box-shadow: 0 2px 6px rgba(0,0,0,0.45);
@@ -4360,7 +4360,7 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
   padding: 8px 12px;
   background: var(--panel);
   border-top: 1px solid var(--border);
-  gap: 8px;
+  gap: var(--sp-3);
   /* Nécessaire pour que #hand-strength se positionne par rapport à this */
   overflow: visible;
 }
@@ -4401,7 +4401,7 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
 }
 .action-bar {
   display: flex;
-  gap: 6px;
+  gap: var(--sp-2);
   align-items: center;
   flex-wrap: wrap;
   justify-content: flex-end;
@@ -4789,7 +4789,7 @@ body:not(.in-game) .my-zone {
   display: flex;
   flex-direction: row;
   align-items: center;
-  gap: 10px;
+  gap: var(--sp-4);
   width: 100%;
   max-width: var(--bottom-w);
   background: rgba(0,0,0,0.35);
@@ -4837,7 +4837,7 @@ body:not(.in-game) .my-zone {
 .action-grid {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: var(--sp-2);
   width: 100%;
   max-width: var(--bottom-w);
   margin: 0 auto;
@@ -4854,7 +4854,7 @@ body:not(.in-game) .my-zone {
   .my-zone .action-grid {
     background: var(--panel);
     border: 1px solid var(--border);
-    border-radius: 12px;
+    border-radius: var(--r-lg);
     padding: 8px 10px;
     box-shadow: 0 6px 20px rgba(0,0,0,0.38);
   }
@@ -4878,7 +4878,7 @@ body:not(.in-game) .my-zone {
    partout. .action-grid est recree a chaque tour -> le pop se rejoue seul.
    Fidelite QML §4.3 : « cadre or pulse (turn glow) quand c'est mon tour ». */
 .my-zone.my-turn-active .action-grid {
-  border-radius: 12px;
+  border-radius: var(--r-lg);
   animation: actBarTurnPop 0.55s cubic-bezier(.2,.9,.3,1.15) both,
              actBarTurnPulse 1.4s ease-in-out 0.5s infinite;
 }
@@ -4896,7 +4896,7 @@ body:not(.in-game) .my-zone {
 .act-narrator { display: none !important; }
 /* Layout officiel : 3 zones (montant+slider / pastilles+All-In+mode / Fold-Call-Raise) */
 /* Bas : Fold | Call/Check | Raise — trois boutons egaux */
-.act-buttons-row { display: flex; gap: 6px; }
+.act-buttons-row { display: flex; gap: var(--sp-2); }
 /* Echelle CONTINUE de la barre d'action avec la fenetre (--bar-k, posee par
    updateBottomLayout : 1 a partir de 1400x860, plancher 0.78) — la barre se
    redimensionne au fil du resize Safari/Chrome comme le client QML. Les
@@ -4904,7 +4904,7 @@ body:not(.in-game) .my-zone {
    fixes et ne sont pas affectes. */
 .act-buttons-row .btn-action { flex: 1; min-width: 0; padding: calc(10px * var(--bar-k, 1)) calc(12px * var(--bar-k, 1)); min-height: calc(54px * var(--bar-k, 1) - 10px); border-radius: var(--act-btn-radius, 9px); font-size: calc(0.9rem * var(--bar-kf, 1)); }
 /* Haut : champ montant editable + slider */
-.bet-row { display: flex; gap: 8px; align-items: center; }
+.bet-row { display: flex; gap: var(--sp-3); align-items: center; }
 .bet-row .raise-slider { flex: 1; }
 .raise-amt-field {
   flex: 0 0 auto; width: 78px; /* largeur QML fixe, conservee aussi en paysage -> continuite */
@@ -4938,8 +4938,8 @@ body:not(.in-game) .my-zone {
    plus petites que le client officiel à fenêtre égale. ── */
 html[data-abar="portrait"] .my-zone { padding-top: 0 !important; padding-bottom: 0 !important; }
 html[data-abar="portrait"] .my-zone .action-grid { padding: 4px 8px 2px !important; gap: 3px !important; }
-html[data-abar="portrait"] .my-zone .act-buttons-row { margin-top: 2px; margin-bottom: 6px; gap: 8px; }
-.mid-row { display: flex; gap: 6px; align-items: stretch; }
+html[data-abar="portrait"] .my-zone .act-buttons-row { margin-top: 2px; margin-bottom: 6px; gap: var(--sp-3); }
+.mid-row { display: flex; gap: var(--sp-2); align-items: stretch; }
 /* Parite QML GameActionBar : quick-bets a taille fixe, All-In colle juste
    apres Pot, seul le dropdown de mode est pousse a droite (margin-left auto).
    Avant, pct-row s'etirait (flex 1 1 auto) et poussait Tapis contre le
@@ -4950,7 +4950,7 @@ html[data-abar="portrait"] .my-zone .act-buttons-row { margin-top: 2px; margin-b
 .mid-row .mode-sel-wrap { flex: 0 1 calc(132px * var(--bar-kf, 1)); margin-left: auto; }
 /* First two buttons side by side */
 .action-top-row {
-  display: flex; gap: 6px;
+  display: flex; gap: var(--sp-2);
 }
 .action-top-row .btn-action:not(.btn-auto) { flex: 1; }
 
@@ -5037,7 +5037,7 @@ html[data-abar="portrait"] .my-zone .act-buttons-row { margin-top: 2px; margin-b
   margin-bottom: 4px;
   padding: 1px 5px;
   background: var(--timer-bg, rgba(0,0,0,0.62));
-  border-radius: 3px;
+  border-radius: var(--r-xs);
   border: 1px solid rgba(var(--gold-rgb), 0.35);
   text-shadow: var(--timer-glow, 0 1px 2px rgba(0,0,0,0.9));
   box-shadow: 0 1px 5px rgba(0,0,0,0.55);
@@ -5425,7 +5425,7 @@ html[data-table="pokerth-live"] .raise-slider { accent-color: #4CAF50; }
   margin: 6px 0;
 }
 .eg-actions {
-  display: flex; gap: 10px; margin-top: 4px;
+  display: flex; gap: var(--sp-4); margin-top: 4px;
 }
 .eg-btn {
   flex: 1; padding: 10px 14px;
@@ -6997,7 +6997,7 @@ html[data-seat-struct="qml"] .seat-plate {
   display: grid; grid-template-columns: auto auto;
   align-items: center; justify-content: center;
   column-gap: 4px; row-gap: 3px; position: relative;
-  padding: 4px; border-radius: 6px;   /* 4px symétrique : budget hauteur QML */
+  padding: var(--sp-1); border-radius: var(--r-sm);   /* 4px symétrique : budget hauteur QML */
   /* Degrade EXACT du QML (GamePlayerBox : col600 #394150 eclairci x1.18
      -> col700 #1d222b), FIXE — la plaque ne suit pas le --panel du theme
      de table (le client officiel garde sa plaque ardoise sur tous les
@@ -7031,7 +7031,7 @@ html[data-seat-struct="qml"] .seat.active .seat-avatar {
   box-shadow: none;
   animation: none !important;
 }
-html[data-seat-struct="qml"] .seat-holecards { grid-column: 2; grid-row: 1; display: flex; gap: 4px; flex: none; }
+html[data-seat-struct="qml"] .seat-holecards { grid-column: 2; grid-row: 1; display: flex; gap: var(--sp-1); flex: none; }
 /* PlayerActionBadge QML : centré sur la rangée de hole-cards (x/y = cardsCenter),
    hauteur 18, radius 9, padding H 7, texte #eaf1ff 12px bold, pop à l'apparition
    (0.6→1.12→1.0). Le badge est injecté DANS .seat-holecards par renderSeats. */
@@ -7040,7 +7040,7 @@ html[data-seat-struct="qml"] .seat-holecards .seat-action-badge {
   position: absolute; top: 50%; left: 50%;
   height: 18px; box-sizing: border-box;
   display: inline-flex; align-items: center;
-  padding: 0 7px; border-radius: 9px;
+  padding: 0 7px; border-radius: var(--r-md);
   font-size: 12px; font-weight: 700; letter-spacing: 0;
   color: #eaf1ff;
   box-shadow: none;
@@ -7070,7 +7070,7 @@ html[data-seat-struct="qml"] .seat-name {
 html[data-seat-struct="qml"] .seat-money { text-align: right; font-size: 15px !important; font-weight: 700; line-height: 16px; color: #E3C800; font-family: var(--ff-display); } /* accent or QML, 15px bold */
 /* Wide (infoBar QML) : ligne 2 = drapeau 22×15 en bas-GAUCHE + stack à droite. */
 html[data-seat-struct="qml"] .seat-info-row2 {
-  display: flex; align-items: flex-end; gap: 6px; min-width: 0;
+  display: flex; align-items: flex-end; gap: var(--sp-2); min-width: 0;
 }
 html[data-seat-struct="qml"] .seat-info-row2 .seat-money { margin-left: auto; }
 html[data-seat-struct="qml"] .seat-info-row2 .seat-flag {
@@ -7078,7 +7078,7 @@ html[data-seat-struct="qml"] .seat-info-row2 .seat-flag {
 }
 html[data-seat-struct="qml"] .seat-info-row2 .seat-flag .cc-flag { width: 22px !important; height: 15px !important; }
 /* Non-wide (hauteur scalée < 76 ou portrait) : « nom · tapis » sur UNE ligne. */
-html[data-seat-struct="qml"] .seat-narrow .seat-info { flex-direction: row; align-items: baseline; justify-content: space-between; gap: 6px; }
+html[data-seat-struct="qml"] .seat-narrow .seat-info { flex-direction: row; align-items: baseline; justify-content: space-between; gap: var(--sp-2); }
 html[data-seat-struct="qml"] .seat-narrow .seat-name { max-width: 62px; font-size: 12px !important; line-height: 13px; }
 html[data-seat-struct="qml"] .seat-narrow .seat-money { font-size: 12px !important; line-height: 13px; }
 /* Desktop : texte des sieges un peu plus discret (les boites sont deja scalees par boxScale). */
@@ -7178,14 +7178,14 @@ html[data-seat-struct="qml"] .seat.me .seat-self-strip {
   position: absolute; left: 0; right: 0;
   bottom: calc(100% + 6px);
   height: 18px;
-  display: flex; align-items: center; justify-content: flex-end; gap: 8px;
+  display: flex; align-items: center; justify-content: flex-end; gap: var(--sp-3);
   pointer-events: none; z-index: 26;
 }
 html[data-seat-struct="qml"] .seat.me .seat-self-strip .seat-action-badge {
   position: static; top: auto; left: auto; transform: none;
   height: 18px; box-sizing: border-box;
   display: inline-flex; align-items: center;
-  padding: 0 8px; border-radius: 9px;
+  padding: 0 8px; border-radius: var(--r-md);
   font-size: 12px; font-weight: 700; letter-spacing: 0;
   color: #eaf1ff; box-shadow: none;
   animation: stripPop 0.23s ease-out;
@@ -7226,7 +7226,7 @@ html[data-seat-struct="qml"] .seat.folded { opacity: 0.72; }
    Pop 0.5→1.15→1.0 via la propriété `scale` (indépendante du transform de
    positionnement betside-*). Icône surchargeable par thème (--bet-chip-img). */
 html[data-seat-struct="qml"] .seat-bet {
-  display: inline-flex; align-items: center; gap: 2px;
+  display: inline-flex; align-items: center; gap: var(--sp-0);
   padding: 0; background: none; border: none;
   color: #f0f0f0; font-family: var(--ff-display);
   font-size: 14px !important; font-weight: 700;
@@ -7255,7 +7255,7 @@ html[data-seat-struct="qml"] .seat.me .seat-bet { display: none; }
    mise. On remet à plat le positionnement coin-avatar des chips (qui utilise
    !important dans les media-queries) et on les met en ligne. */
 html[data-seat-struct="qml"] .seat-pucks {
-  position: absolute; z-index: 6; display: flex; gap: 2px; align-items: center;
+  position: absolute; z-index: 6; display: flex; gap: var(--sp-0); align-items: center;
   pointer-events: none;
 }
 html[data-seat-struct="qml"] .seat-pucks .dealer-chip,
@@ -7309,7 +7309,7 @@ html[data-seat-img] .seat-plate {
 }
 html[data-seat-img] .seat-name { text-align: left; max-width: 88px; }
 html[data-seat-img] .seat-foot {
-  display: flex; align-items: center; justify-content: center; gap: 6px; flex-wrap: wrap; margin-top: 3px;
+  display: flex; align-items: center; justify-content: center; gap: var(--sp-2); flex-wrap: wrap; margin-top: 3px;
 }
 html[data-seat-img] .seat.active .seat-plate {
   box-shadow: 0 0 0 1px var(--gold), 0 0 16px rgba(var(--gold-rgb), 0.45);
@@ -7327,7 +7327,7 @@ html[data-seat-img-self] .player-bar {
 @media (max-width: 600px) {
   html[data-seat-img] .seat-name { max-width: 46px; font-size: 0.6rem; }
   html[data-seat-img] .seat-money { font-size: 0.62rem; }
-  html[data-seat-img] .seat-foot { gap: 4px; margin-top: 2px; }
+  html[data-seat-img] .seat-foot { gap: var(--sp-1); margin-top: 2px; }
 }
 
 
@@ -7495,7 +7495,7 @@ html[data-seat-img-self] .player-bar {
   position: absolute; top: 3px; right: 4px;
   font-family: var(--ff-mono); font-size: 0.6rem; line-height: 1;
   font-weight: 600; letter-spacing: 0;
-  padding: 1px 4px; border: 1px solid currentColor; border-radius: 3px;
+  padding: 1px 4px; border: 1px solid currentColor; border-radius: var(--r-xs);
   opacity: 0.4; pointer-events: none;
 }
 /* Revele : (a) desktop a la souris (hover + pointeur fin), tout de suite */
@@ -7546,13 +7546,13 @@ body.has-keyboard .act-key { display: inline-block; }
 .zoom-btn:active { transform: scale(0.94); }
 .zoom-btn:disabled { opacity: 0.35; cursor: default; }
 /* Boutons ronds posés sur le tapis (chat+emoji haut-gauche, journal haut-droite) */
-.g-felt-corner { position:absolute; z-index:30; display:flex; gap:6px; }
+.g-felt-corner { position:absolute; z-index:30; display:flex; gap:var(--sp-2); }
 .g-felt-tl { top:8px; left:8px; }
 .g-felt-tr { top:8px; right:8px; }
 .g-felt-btn { position:relative; width:34px; height:34px; padding:0; border-radius:50%;
   display:flex; align-items:center; justify-content:center; cursor:pointer;
   background:rgba(20,28,24,0.72); color:#e8e8e8; border:1px solid rgba(255,255,255,0.18);
-  font-size:1.05rem; line-height:1; -webkit-backdrop-filter:blur(4px); backdrop-filter:blur(4px);
+  font-size:var(--fs-lg); line-height:1; -webkit-backdrop-filter:blur(4px); backdrop-filter:blur(4px);
   transition:background .15s, transform .1s; }
 .g-felt-btn:hover { background:rgba(40,52,46,0.9); }
 .g-felt-btn:active { transform:scale(0.94); }
@@ -7594,13 +7594,13 @@ body.has-keyboard .act-key { display: inline-block; }
 html[data-seat-layout="custom"] #g-seat-edit { display: flex; }
 #g-seat-edit.active { background: #E3C800; color: #1d222b; border-color: #E3C800; }
 html[data-seat-edit="1"] { -webkit-user-select: none; user-select: none; }
-html[data-seat-edit="1"] #g-seats .seat[data-pid] { cursor: grab; touch-action: none; outline: 2px dashed rgba(227, 200, 0, 0.75); outline-offset: 2px; border-radius: 10px; }
+html[data-seat-edit="1"] #g-seats .seat[data-pid] { cursor: grab; touch-action: none; outline: 2px dashed rgba(227, 200, 0, 0.75); outline-offset: 2px; border-radius: var(--r-bar); }
 html[data-seat-edit="1"] #g-seats .seat.seat-ghost { outline: none; cursor: default; }
 #g-seats .seat.seat-dragging { cursor: grabbing; z-index: 50; }
 .seat-edit-banner {
   position: fixed; left: 50%; bottom: 16px; transform: translateX(-50%);
-  z-index: 60; display: flex; align-items: center; gap: 10px;
-  padding: 8px 12px; border-radius: 12px; max-width: calc(100vw - 24px);
+  z-index: 60; display: flex; align-items: center; gap: var(--sp-4);
+  padding: 8px 12px; border-radius: var(--r-lg); max-width: calc(100vw - 24px);
   background: rgba(20, 28, 24, 0.92); color: #eff1f5;
   border: 1px solid rgba(227, 200, 0, 0.55);
   -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
@@ -8331,11 +8331,11 @@ html[data-seat-struct="qml"] .seat.me .seat-avatar {
 html:not([data-seat-struct="qml"]) body.adv-hide-pbar .seat.me { max-width: 190px !important; min-width: 0 !important; }
 html:not([data-seat-struct="qml"]) body.adv-hide-pbar .seat.me .seat-plate {
   display: flex !important; flex-wrap: wrap; max-width: 190px !important;
-  align-items: center; justify-content: center; gap: 6px;
+  align-items: center; justify-content: center; gap: var(--sp-2);
 }
 html:not([data-seat-struct="qml"]) body.adv-hide-pbar .seat.me .seat-avatar { order: 1; flex: none; }
 html:not([data-seat-struct="qml"]) body.adv-hide-pbar .seat.me .seat-holecards.shc-big {
-  order: 2; display: flex !important; gap: 4px; flex: none; grid-column: auto; grid-row: auto;
+  order: 2; display: flex !important; gap: var(--sp-1); flex: none; grid-column: auto; grid-row: auto;
 }
 html:not([data-seat-struct="qml"]) body.adv-hide-pbar .seat.me .seat-info {
   order: 3; flex-basis: 100%;
@@ -8348,7 +8348,7 @@ html:not([data-seat-struct="qml"]) .seat:not(.me) { max-width: 114px !important;
 html:not([data-seat-struct="qml"]) .seat:not(.me) .seat-avatar { width: 40px !important; height: 40px !important; font-size: 0.92rem !important; }
 html:not([data-seat-struct="qml"]) .seat:not(.me) .seat-name { font-size: 0.7rem !important; line-height: 1.15; max-width: 106px !important; }
 html:not([data-seat-struct="qml"]) .seat:not(.me) .seat-money { font-size: 0.72rem !important; line-height: 1.15; }
-html:not([data-seat-struct="qml"]) .seat:not(.me) .seat-foot { margin-top: 1px; gap: 4px; }
+html:not([data-seat-struct="qml"]) .seat:not(.me) .seat-foot { margin-top: 1px; gap: var(--sp-1); }
 /* Selecteur "Placement des sieges" dans Options avancees. */
 .adv-row .adv-sel{flex:0 0 auto;min-width:132px}
 .adv-lang-btn{-webkit-appearance:none;appearance:none;width:100%;display:flex;align-items:center;gap:8px;background:var(--field-bg);border:1px solid var(--border);border-radius:2px;color:var(--cream);padding:8px 32px 8px 11px;font-family:var(--ff-mono);font-size:0.88rem;text-align:left;outline:none;cursor:pointer}
@@ -8808,7 +8808,7 @@ html.reduce-fx .seat-action-badge {
    landscapeCompact), rangée 54px (40px landscapeCompact), press scale .96
    (90ms). « Call $X » passe sur 2 lignes en portrait (1 ligne en compact). */
 html[data-buttons="pokerth"] .btn-action {
-  border-radius: 9px;
+  border-radius: var(--r-md);
   font-weight: 700;
   letter-spacing: 0.5px;
   font-size: calc(15px * var(--bar-kf, 1));
@@ -9369,10 +9369,10 @@ html[data-box-accent][data-seat-struct="qml"] .seat-plate { border-color: var(--
      precedente ECRASAIENT les valeurs QML du bloc portrait historique
      (specificite egale, plus bas dans le fichier) -> rangee ~12 px trop
      haute sur tout telephone portrait. */
-  .my-zone .mid-row .pct-row { flex: 0 0 auto; gap: 4px; min-width: 0; }
+  .my-zone .mid-row .pct-row { flex: 0 0 auto; gap: var(--sp-1); min-width: 0; }
   .my-zone .mid-row .mode-sel-wrap { flex: 0 1 132px; min-width: 0; height: 26px; margin-left: auto; }
   .my-zone .mid-row .mode-sel-wrap select { height: 100%; padding-top: 0; padding-bottom: 0; line-height: 1.1; }
-  .my-zone .act-buttons-row { gap: 8px; }
+  .my-zone .act-buttons-row { gap: var(--sp-3); }
   /* Rangee Fold / Suivre / Relancer : rangee 56 px (Theme.compact QML) MAIS
      bouton visible 45 px (marges internes QML 5+6) — source 2.1.3. */
   .my-zone .act-buttons-row .btn-action { min-width: 0; min-height: 45px; font-size: 0.9375rem; letter-spacing: 0.5px; border-radius: var(--act-btn-radius, 9px); padding: 0 8px; }
@@ -9381,7 +9381,7 @@ html[data-box-accent][data-seat-struct="qml"] .seat-plate { border-color: var(--
   .my-zone .act-key { display: none !important; }
   /* Champ montant borné : non contraint, il faisait ~180px et elargissait la
      bet-row -> .action-grid -> tout debordait. (Le bloc paysage le bornait deja.) */
-  .my-zone .bet-row { gap: 6px; }
+  .my-zone .bet-row { gap: var(--sp-2); }
   /* Champ montant : 78 px de large, police 13 px (spec QML §5.2). */
   .my-zone .bet-row .raise-amt-field { width: 78px; min-width: 0; flex: 0 0 auto; height: 26px; min-height: 26px; padding: 1px 6px; font-size: 13px; }
   .my-zone .bet-row .raise-slider { flex: 1 1 auto; min-width: 40px; }
@@ -9397,7 +9397,7 @@ html[data-box-accent][data-seat-struct="qml"] .seat-plate { border-color: var(--
     background: linear-gradient(180deg, #9e2a2a, #5c1111) !important;
     color: #fff !important;
     padding: 0 2px !important;
-    border-radius: 9px;
+    border-radius: var(--r-md);
   }
 }
 
@@ -9448,14 +9448,14 @@ body.chat-tr-on .msg .chat-tr-btn { display: inline; }
   body.adv-hide-pbar .my-zone .action-grid {
     max-width: none; width: 100%;
     background: rgba(0, 0, 0, 0.82);
-    border-radius: 10px;
+    border-radius: var(--r-bar);
     /* Paddings QML exacts (raiseSection top 4 / cotes 8 / bas 2 ; la rangee
        d'action porte ses propres marges verticales 5/5 en dessous). */
     padding: 4px 8px 2px;
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
   }
   /* Rangée montant/slider QML : champ 78×26, police 13, spacing 6. */
-  body.adv-hide-pbar .my-zone .bet-row { gap: 6px; }
+  body.adv-hide-pbar .my-zone .bet-row { gap: var(--sp-2); }
   body.adv-hide-pbar .my-zone .bet-row .raise-amt-field {
     width: 78px; height: 26px; min-height: 26px; font-size: 13px; flex: 0 0 auto;
   }
@@ -9505,7 +9505,7 @@ body.chat-tr-on .msg .chat-tr-btn { display: inline; }
     background-image: var(--btn-allin-img) !important;
     background-size: 100% 100% !important;
     background-repeat: no-repeat !important;
-    border-radius: 6px;
+    border-radius: var(--r-sm);
     padding: 0 !important;
   }
   body.adv-hide-pbar .my-zone .mid-row .mode-sel-wrap select { font-size: 11px; }
@@ -9517,7 +9517,7 @@ body.chat-tr-on .msg .chat-tr-btn { display: inline; }
   }
   body.adv-hide-pbar .my-zone .bet-row input[type="range"]::-webkit-slider-thumb {
     -webkit-appearance: none; appearance: none;
-    width: 18px; height: 18px; border-radius: 9px;
+    width: 18px; height: 18px; border-radius: var(--r-md);
     background: #4CAF50; border: 1px solid rgba(255, 255, 255, 0.5);
     cursor: pointer;
   }
@@ -9525,7 +9525,7 @@ body.chat-tr-on .msg .chat-tr-btn { display: inline; }
     height: 4px; border-radius: 2px; background: rgba(255, 255, 255, 0.22);
   }
   body.adv-hide-pbar .my-zone .bet-row input[type="range"]::-moz-range-thumb {
-    width: 18px; height: 18px; border-radius: 9px;
+    width: 18px; height: 18px; border-radius: var(--r-md);
     background: #4CAF50; border: 1px solid rgba(255, 255, 255, 0.5);
     cursor: pointer;
   }
@@ -9579,7 +9579,7 @@ body.chat-tr-on .msg .chat-tr-btn { display: inline; }
     line-height: 1.05;
   }
   body.adv-hide-pbar .my-zone .action-grid { gap: 3px; }
-  body.adv-hide-pbar .my-zone .mid-row { gap: 4px; }
+  body.adv-hide-pbar .my-zone .mid-row { gap: var(--sp-1); }
   /* (liseré/ombre gérés sur .action-grid ci-dessus) */
 }
 
