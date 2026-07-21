@@ -9734,7 +9734,8 @@ html[data-seat-struct="qml"] .seat:not(.me) .seat-narrow .seat-holecards .pk { w
 
 /* ── Succès / Achievements — onglet « Trophées » du ranking modal (mode entraînement) ── */
 #rk-ach-wrap { display: flex; flex-direction: column; gap: 6px; padding: 4px 2px 2px; }
-.rk-ach-head { display: flex; justify-content: flex-end; margin: 2px 2px 2px; }
+.rk-ach-head { display: flex; align-items: baseline; justify-content: space-between; margin: 2px 2px 2px; }
+.rk-ach-mode { font-size: var(--fs-sm); letter-spacing: 0.06em; color: var(--text); opacity: 0.75; font-weight: 600; }
 .rk-ach-prog { font-size: var(--fs-sm); letter-spacing: 0.06em; color: var(--gold); font-weight: 700; }
 .rk-ach-cat { font-size: var(--fs-sm); letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold-dim); margin: 8px 2px 0; }
 .rk-ach-row { display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: 9px; background: rgba(var(--gold-rgb), 0.05); border: 1px solid var(--border); }

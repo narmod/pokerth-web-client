@@ -3325,11 +3325,7 @@ if ('serviceWorker' in navigator) {
     } catch (e) {}
   };
   function _achAllowed() {
-    try {
-      if (!window._offlineMode) return false;
-      var scr = document.querySelector('.screen.active');
-      return !!scr && scr.id !== 's-connect';   // pas sur l'ecran de login
-    } catch (e) { return false; }
+    try { return !!window._offlineMode; } catch (e) { return false; }
   }
   function rkAchRender() {
     var esc = rkEsc;
@@ -3340,7 +3336,7 @@ if ('serviceWorker' in navigator) {
     var prog = rkT('achProgress', '{n}/{total}').replace('{n}', nOn).replace('{total}', snap.length);
     var order = ['progress', 'skill', 'style', 'fun', 'formats'];
     var lbl = { progress: rkT('achCatProgress', 'Progress'), skill: rkT('achCatSkill', 'Skill'), style: rkT('achCatStyle', 'Playstyle'), fun: rkT('achCatFun', 'Fun'), formats: rkT('achCatFormats', 'PokerTH formats') };
-    var h = '<div class="rk-ach-head"><span class="rk-ach-prog">' + esc(prog) + '</span></div>';
+    var h = '<div class="rk-ach-head"><span class="rk-ach-mode">' + esc(rkT('loginOfflineTitle', 'Local / Training')) + '</span><span class="rk-ach-prog">' + esc(prog) + '</span></div>';
     order.forEach(function (cat) {
       var items = snap.filter(function (a) { return a.cat === cat; });
       if (!items.length) return;
