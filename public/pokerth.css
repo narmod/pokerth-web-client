@@ -876,7 +876,7 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
   30%      { opacity: 1; }
 }
 @media (max-width: 599.98px) {
-  .lobby-wait-status { max-width: 62vw; font-size: 0.72rem; gap: 5px; }
+  .lobby-wait-status { max-width: 62vw; font-size: var(--fs-xs); gap: 5px; }
 }
 @media (prefers-reduced-motion: reduce) {
   .lws-hourglass { animation: none; }
@@ -3788,7 +3788,7 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
   flex-shrink: 0;
 }
 .btn-join:hover { background: #384252; }
-.gl-guestlock { align-self: center; font-size: 0.64rem; color: var(--text); opacity: 0.55; white-space: nowrap; padding: 3px 6px; border: 1px dashed var(--border); border-radius: var(--r-sm); }
+.gl-guestlock { align-self: center; font-size: var(--fs-2xs); color: var(--text); opacity: 0.55; white-space: nowrap; padding: 3px 6px; border: 1px dashed var(--border); border-radius: var(--r-sm); }
 .game-row { cursor: pointer; }
 
 /* ═══ MOBILE: compact buttons in the available-tables list ═══
@@ -5116,11 +5116,11 @@ html[data-table="pokerth-live"] .raise-slider { accent-color: #4CAF50; }
   gap: 7px; padding: 10px 14px; max-width: 480px; margin: 0 auto;
 }
 .wp-title {
-  font-family: var(--ff-display); font-size: 0.9rem; letter-spacing: 0.1em;
+  font-family: var(--ff-display); font-size: var(--fs-md); letter-spacing: 0.1em;
   color: var(--text-hi); text-transform: uppercase;
 }
 .wp-count {
-  font-size: 0.88rem; color: var(--cream);
+  font-size: var(--fs-base); color: var(--cream);
 }
 .wp-count b { color: var(--gold); font-weight: 700; }
 .wp-bar {
@@ -5189,12 +5189,12 @@ html[data-table="pokerth-live"] .raise-slider { accent-color: #4CAF50; }
 }
 .wp-name  { color: var(--cream); }
 .wp-me    {
-  font-size: 0.6rem; color: var(--gold);
+  font-size: var(--fs-2xs); color: var(--gold);
   text-transform: uppercase; letter-spacing: 0.1em;
   background: rgba(var(--gold-rgb), 0.12); padding: 1px 5px; border-radius: var(--r-xs);
 }
 .wp-hint {
-  font-size: 0.74rem; color: var(--gold-dim);
+  font-size: var(--fs-xs); color: var(--gold-dim);
   font-style: italic; margin-top: 4px; text-align: center;
 }
 .wp-hint-admin { color: rgb(var(--green2-rgb)); font-style: normal; font-weight: 600; }
@@ -5215,7 +5215,7 @@ html[data-table="pokerth-live"] .raise-slider { accent-color: #4CAF50; }
   display: flex; flex-direction: column; align-items: stretch; gap: var(--sp-4);
 }
 .wait-page .wp-title {
-  text-align: center; font-size: 1rem; font-weight: 700;
+  text-align: center; font-size: var(--fs-md); font-weight: 700;
   color: var(--text-hi); letter-spacing: 0.02em; margin: 0;
 }
 .wp-info {
@@ -5232,13 +5232,13 @@ html[data-table="pokerth-live"] .raise-slider { accent-color: #4CAF50; }
 }
 .wp-fillbots {
   display: flex; align-items: center; gap: 9px; cursor: pointer;
-  font-size: 0.82rem; color: var(--text); padding: 6px 2px; user-select: none;
+  font-size: var(--fs-base); color: var(--text); padding: 6px 2px; user-select: none;
 }
 .wp-fillbots input { width: 16px; height: 16px; accent-color: var(--green); cursor: pointer; flex: 0 0 auto; }
 .wp-actions { display: flex; gap: var(--sp-3); margin-top: 4px; }
 .wp-actions .wp-btn {
   flex: 1; padding: 12px 10px; border-radius: var(--r-md);
-  font-weight: 700; letter-spacing: 0.4px; font-size: 0.88rem;
+  font-weight: 700; letter-spacing: 0.4px; font-size: var(--fs-base);
   cursor: pointer; border: 1px solid var(--border);
   background: var(--panel-hi, var(--panel)); color: var(--text);
   transition: transform .09s, filter .12s;
@@ -5296,7 +5296,7 @@ html[data-table="pokerth-live"] .raise-slider { accent-color: #4CAF50; }
   border-radius: 4px;
   color: #d0ffd8;
   font-family: var(--ff-display);
-  font-size: 0.82rem;
+  font-size: var(--fs-base);
   letter-spacing: 0.12em;
   text-transform: uppercase;
   cursor: pointer;
@@ -5323,10 +5323,10 @@ html[data-table="pokerth-live"] .raise-slider { accent-color: #4CAF50; }
 @media (max-width: 599.98px) {
   .waiting-panel { padding: 8px 10px; gap: 5px; }
   .wp-ready-row { padding: 8px 10px; gap: 5px; }
-  .wp-ready-label { font-size: 0.72rem; }
-  .wp-ready-btn { padding: 7px 14px; font-size: 0.74rem; }
-  .wp-title { font-size: 0.82rem; }
-  .wp-player { font-size: 0.72rem; padding: 2px 8px 2px 3px; }
+  .wp-ready-label { font-size: var(--fs-xs); }
+  .wp-ready-btn { padding: 7px 14px; font-size: var(--fs-xs); }
+  .wp-title { font-size: var(--fs-base); }
+  .wp-player { font-size: var(--fs-xs); padding: 2px 8px 2px 3px; }
   .wp-av { width: 20px; height: 20px; }
 }
 
@@ -5475,9 +5475,9 @@ html[data-table="pokerth-live"] .raise-slider { accent-color: #4CAF50; }
   transition: background 0.15s, border-color 0.15s;
 }
 .auto-cf-row:hover { background: rgba(var(--gold-rgb), 0.1); border-color: var(--gold-dim); }
-.auto-cf-label { font-size: 0.72rem; color: var(--gold-dim); font-weight: 500; font-family: var(--ff-mono); }
+.auto-cf-label { font-size: var(--fs-xs); color: var(--gold-dim); font-weight: 500; font-family: var(--ff-mono); }
 .auto-cf-row:has(input:checked) .auto-cf-label { color: var(--cream); font-weight: 700; }
-.auto-cf-hint { margin-left: auto; font-size: 0.58rem; color: var(--gold-dim); font-style: italic; }
+.auto-cf-hint { margin-left: auto; font-size: var(--fs-3xs); color: var(--gold-dim); font-style: italic; }
 /* iOS-style toggle switch */
 .auto-switch { position: relative; display: inline-block; width: 38px; height: 21px; flex-shrink: 0; }
 .auto-switch input { position: absolute; opacity: 0; width: 0; height: 0; }
@@ -5489,8 +5489,8 @@ html[data-table="pokerth-live"] .raise-slider { accent-color: #4CAF50; }
 .auto-switch input:checked + .auto-switch-track::before { transform: translateX(17px); background: var(--on-green); }
 @media (max-width: 599.98px) {
   .auto-cf-row { padding: 6px 9px; margin-bottom: 5px; gap: var(--sp-3); }
-  .auto-cf-label { font-size: 0.68rem; }
-  .auto-cf-hint { font-size: 0.54rem; }
+  .auto-cf-label { font-size: var(--fs-xs); }
+  .auto-cf-hint { font-size: var(--fs-3xs); }
 }
 
 
@@ -5762,10 +5762,10 @@ html[data-table="pokerth-live"] .raise-slider { accent-color: #4CAF50; }
 .players-list .pl-name-link { color: inherit; text-decoration: none; cursor: pointer; }
 .players-list .pl-name-link:hover, .players-list .pl-name-link:active { color: var(--gold-hi); }
 .players-list .pl-flag { flex: none; display: inline-flex; align-items: center; justify-content: flex-end; gap: var(--sp-1); font-size: var(--fs-md); line-height: 1; }
-.players-list .pl-cc { font-size: 0.6rem; color: var(--gold-dim); font-family: var(--ff-mono); letter-spacing: 0.04em; white-space: nowrap; }
+.players-list .pl-cc { font-size: var(--fs-2xs); color: var(--gold-dim); font-family: var(--ff-mono); letter-spacing: 0.04em; white-space: nowrap; }
 .players-list .pl-flag .cc-flag { width: 20px; height: 15px; }
-.players-list .pl-star { flex: none; width: 1.4em; text-align: center; font-size: 0.9rem; line-height: 1; color: var(--gold); }
-.players-list .pl-id   { flex: none; min-width: 4.2em; text-align: right; color: var(--gold-dim); font-size: 0.66rem; }
+.players-list .pl-star { flex: none; width: 1.4em; text-align: center; font-size: var(--fs-md); line-height: 1; color: var(--gold); }
+.players-list .pl-id   { flex: none; min-width: 4.2em; text-align: right; color: var(--gold-dim); font-size: var(--fs-xs); }
 .players-list .pl-row.pl-me { color: var(--gold); }
 /* ── Avatar chip in the players-online list ──
    Same priority order as everywhere else (real PokerTH image >
@@ -5794,7 +5794,7 @@ html[data-table="pokerth-live"] .raise-slider { accent-color: #4CAF50; }
   text-align: center;
   font-style: italic;
   color: var(--gold-dim);
-  font-size: 0.74rem;
+  font-size: var(--fs-xs);
 }
 /* Custom scrollbar matching chat/log */
 .players-list::-webkit-scrollbar { width: 6px; }
@@ -6570,7 +6570,7 @@ html[data-table="pokerth-live"] .raise-slider { accent-color: #4CAF50; }
   border: 1px solid var(--border);
   border-radius: var(--r-sm);
   color: var(--gold-dim);
-  font-family: inherit; font-size: 0.6rem; font-weight: 600;
+  font-family: inherit; font-size: var(--fs-2xs); font-weight: 600;
   letter-spacing: 0.1em; text-transform: uppercase;
   padding: 3px 8px; cursor: pointer;
 }
@@ -6670,7 +6670,7 @@ html[data-table="pokerth-live"] .raise-slider { accent-color: #4CAF50; }
 .game-row.gcard:hover { border-color: var(--gold-dim); background: var(--inset-hi); }
 .gcard-main { min-width: 0; }
 .game-row.gcard .game-name { white-space: normal; display: flex; align-items: center; gap: var(--sp-2); flex-wrap: wrap; font-size: var(--fs-md); }
-.game-row.gcard .game-meta { flex-wrap: wrap; gap: 4px 10px; font-size: 0.74rem; }
+.game-row.gcard .game-meta { flex-wrap: wrap; gap: 4px 10px; font-size: var(--fs-xs); }
 .game-badge { font-size: 0.6rem; font-weight: 700; letter-spacing: 0.05em; padding: 2px 7px; border-radius: 20px; text-transform: uppercase; white-space: nowrap; }
 .game-badge.live   { color: var(--red,#e05050); background: rgba(var(--red-rgb), 0.14); border: 1px solid rgba(var(--red-rgb), 0.4); }
 .game-badge.wait   { color: var(--green); background: rgba(var(--green-rgb), 0.15); border: 1px solid rgba(var(--green-rgb), 0.4); }
@@ -6710,7 +6710,7 @@ html[data-table="pokerth-live"] .raise-slider { accent-color: #4CAF50; }
   padding: var(--sp-4);
   font-family: var(--ff-display);
   font-weight: 600;
-  font-size: 0.88rem;
+  font-size: var(--fs-base);
 }
 .game-row.gcard .btn-join:hover { background: rgba(var(--green-rgb), 0.28); }
 
@@ -6774,7 +6774,7 @@ html[data-table="pokerth-live"] .raise-slider { accent-color: #4CAF50; }
 
 /* Mobile (cards stacked): make the Rejoindre / Regarder buttons shorter. */
 @media (max-width: 599.98px) {
-  .game-row.gcard .btn-join  { padding: 5px 10px; font-size: 0.8rem; }
+  .game-row.gcard .btn-join  { padding: 5px 10px; font-size: var(--fs-sm); }
   .game-row.gcard .btn-watch { padding: 5px 12px; font-size: var(--fs-md); }
 }
 
@@ -6785,21 +6785,21 @@ html[data-table="pokerth-live"] .raise-slider { accent-color: #4CAF50; }
   .game-row.gcard { flex-direction: row; align-items: center; gap: 14px; }
   .gcard-main { flex: 1 1 auto; }
   .gcard-btns { flex: 0 0 auto; align-self: center; }
-  .game-row.gcard .btn-join { flex: 0 0 auto; font-size: 0.92rem; }
-  .game-row.gcard .game-name { font-size: 1.02rem; }
+  .game-row.gcard .btn-join { flex: 0 0 auto; font-size: var(--fs-md); }
+  .game-row.gcard .game-name { font-size: var(--fs-lg); }
   .game-row.gcard .game-meta { font-size: var(--fs-sm); }
   .create-toggle { font-size: 1.15rem; }
 }
 @media (min-width: 900px) {
   .game-row.gcard .game-name { font-size: 1.16rem; }
-  .game-row.gcard .game-meta { font-size: 0.88rem; }
+  .game-row.gcard .game-meta { font-size: var(--fs-base); }
   .game-badge { font-size: 0.66rem; }
-  .game-row.gcard .btn-join { font-size: 1rem; padding: 11px 20px; }
+  .game-row.gcard .btn-join { font-size: var(--fs-md); padding: 11px 20px; }
   .game-row.gcard .btn-watch { font-size: 1.2rem; padding: 11px 16px; }
-  .create-toggle { font-size: 1.32rem; padding: 16px 18px; }
+  .create-toggle { font-size: var(--fs-xl); padding: 16px 18px; }
   .seat-dot { width: 10px; height: 10px; }
   #create-form .cf label { font-size: var(--fs-2xs); }
-  #create-form .cf input, #create-form .cf select { font-size: 0.9rem; padding: 7px 9px; }
+  #create-form .cf input, #create-form .cf select { font-size: var(--fs-md); padding: 7px 9px; }
 }
 
 /* ── PWA edge-to-edge: respect notch / status-bar in fullscreen mode ──
@@ -6826,7 +6826,7 @@ html[data-table="pokerth-live"] .raise-slider { accent-color: #4CAF50; }
   border: 1px solid var(--gold-dim);
   border-radius: 2px;
   font-family: var(--ff-display);
-  font-size: 0.74rem;
+  font-size: var(--fs-xs);
   font-weight: 600;
   letter-spacing: 0.1em;
   padding: 10px 14px;
@@ -6852,7 +6852,7 @@ html[data-table="pokerth-live"] .raise-slider { accent-color: #4CAF50; }
   flex: 1 1 0; min-width: 0; text-align: center;
   border: 1px solid transparent; border-radius: 8px; padding: 9px 14px;
   cursor: pointer; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-  font-family: var(--ff-display); font-weight: 600; font-size: 0.92rem; letter-spacing: 0.02em;
+  font-family: var(--ff-display); font-weight: 600; font-size: var(--fs-md); letter-spacing: 0.02em;
   transition: background 0.15s, border-color 0.15s, color 0.15s, transform 0.1s, box-shadow 0.15s;
 }
 .cf-actions > button:active { transform: scale(0.98); }
@@ -7755,7 +7755,7 @@ html[data-seat-edit="1"] #g-seats .seat.seat-ghost { outline: none; cursor: defa
 .music-gamesnd-row.is-off .music-gs-val { opacity: 0.5; }
 /* ── Box jumelle « Lecteur » qui regroupe les commandes musique ── */
 .music-player-box { border: 1px solid var(--border-hi); background: rgba(var(--gold-rgb),0.06); border-radius: var(--r-bar); padding: 8px 10px 10px; display: flex; flex-direction: column; gap: var(--sp-4); }
-.music-player-hd { display: flex; align-items: center; gap: var(--sp-2); font-size: 0.58rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold-dim); }
+.music-player-hd { display: flex; align-items: center; gap: var(--sp-2); font-size: var(--fs-3xs); letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold-dim); }
 .music-player-ic { font-size: var(--fs-base); }
 
 /* ══ Lecteur « esprit Winamp » — LCD, VU, marquee, playlist (palette de thème) ══ */
@@ -7797,7 +7797,7 @@ html[data-seat-edit="1"] #g-seats .seat.seat-ghost { outline: none; cursor: defa
   display: flex; align-items: center; gap: var(--sp-3); width: 100%;
   background: var(--field-bg); color: var(--text);
   border: 1px solid var(--border); border-radius: var(--r-md);
-  padding: 7px 10px; font-size: 0.82rem; cursor: pointer; text-align: left;
+  padding: 7px 10px; font-size: var(--fs-base); cursor: pointer; text-align: left;
 }
 .music-pl-toggle:hover { border-color: var(--gold-dim); }
 .music-pl-caret { flex: 0 0 auto; color: var(--gold-dim); font-size: var(--fs-xs); }
@@ -7823,9 +7823,9 @@ html[data-seat-edit="1"] #g-seats .seat.seat-ghost { outline: none; cursor: defa
   background: rgba(var(--sel-rgb, var(--gold-rgb)), 0.16);
   color: var(--sel, var(--gold));
 }
-.music-pl-num { flex: 0 0 auto; width: 1.4em; text-align: right; color: var(--gold-dim); font-variant-numeric: tabular-nums; font-size: 0.75rem; }
+.music-pl-num { flex: 0 0 auto; width: 1.4em; text-align: right; color: var(--gold-dim); font-variant-numeric: tabular-nums; font-size: var(--fs-sm); }
 .music-pl-ttl { flex: 1 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.music-pl-eq { flex: 0 0 auto; color: var(--sel, var(--gold)); font-size: 0.8rem; }
+.music-pl-eq { flex: 0 0 auto; color: var(--sel, var(--gold)); font-size: var(--fs-sm); }
 .music-pl-move { flex: 0 0 auto; display: inline-flex; flex-direction: column; margin-left: 2px; }
 .music-pl-mv { background: none; border: none; color: var(--gold-dim); cursor: pointer; padding: 0; display: inline-flex; line-height: 0.5; }
 .music-pl-mv:hover:not([disabled]) { color: var(--gold); }
@@ -8643,7 +8643,7 @@ html.reduce-fx .seat-action-badge {
   justify-content: space-between;
   gap: var(--sp-3);
   padding: 5px 10px;
-  font-size: 0.68rem;
+  font-size: var(--fs-xs);
   color: var(--text-dim, #8b93a7);
   border-top: 1px solid var(--line, #2c3548);
 }
@@ -8770,7 +8770,7 @@ html.reduce-fx .seat-action-badge {
   align-items: center;
   gap: 5px;
   padding: 6px 2px 4px;
-  font-size: 0.6rem;
+  font-size: var(--fs-2xs);
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -8902,7 +8902,7 @@ html[data-buttons="pokerth"] .btn-action[disabled] { filter: grayscale(0.55) bri
 .lobby-footbar { display:flex; align-items:center; gap:var(--sp-5); padding:8px 14px;
   border-top:1px solid var(--border); background:var(--panel); flex-shrink:0;
   position:sticky; bottom:0; z-index:20; }
-.lobby-footbar .lfb-name { color:var(--text-hi); font-weight:700; font-size:0.82rem; white-space:nowrap; }
+.lobby-footbar .lfb-name { color:var(--text-hi); font-weight:700; font-size:var(--fs-base); white-space:nowrap; }
 .lobby-footbar .lfb-name b { color:var(--gold); }
 /* Boutons de la barre du bas. Forme commune : largeurs ÉGALES et adaptatives —
    « Joueur : … » (nowrap) garde sa place et les boutons rétrécissent quand le
@@ -8913,7 +8913,7 @@ html[data-buttons="pokerth"] .btn-action[disabled] { filter: grayscale(0.55) bri
 .lobby-footbar .lfb-spectate {
   flex:1 1 0; min-width:0; text-align:center;
   border:1px solid transparent; border-radius:8px; padding:9px 14px; cursor:pointer;
-  font-family:var(--ff-display); font-weight:600; font-size:0.92rem;
+  font-family:var(--ff-display); font-weight:600; font-size:var(--fs-md);
   white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 /* Créer : palette QML (or/neutre) */
 .lobby-footbar .lfb-create { border-color:transparent; background:#2b3444; color:#ffffff; }
@@ -8955,7 +8955,7 @@ html[data-buttons="pokerth"] .btn-action[disabled] { filter: grayscale(0.55) bri
 /* Infos placeholder (rempli en Phase 2) */
 #lobby-gameinfo { display:none; flex-direction:column; }
 #lobby-gameinfo .lgi-empty { flex:1 1 auto; display:flex; align-items:center; justify-content:center;
-  color:var(--text-dim,#8b93a7); font-size:0.8rem; padding:18px; text-align:center; }
+  color:var(--text-dim,#8b93a7); font-size:var(--fs-sm); padding:18px; text-align:center; }
 
 /* Chat toujours présent → on masque son bouton de fermeture et son trigger header */
 #lobby-chat-panel .g-chat-panel-header button[onclick*="toggleLobbyChat"] { display:none; }
@@ -9146,16 +9146,16 @@ html[data-buttons="pokerth"] .btn-action[disabled] { filter: grayscale(0.55) bri
 
 /* ── Panneau « Infos de partie » (contenu, parité officielle) ── */
 #lobby-gameinfo .g-chat-panel-header { display:flex; align-items:center; justify-content:space-between; }
-#lobby-gameinfo .lgi-htitle { font-size:0.72rem; color:var(--gold-dim); letter-spacing:0.12em; text-transform:uppercase; font-weight:600; }
-.lgi-report { background:none; border:none; cursor:pointer; font-size:1rem; line-height:1; padding:0 2px; opacity:0.85; }
+#lobby-gameinfo .lgi-htitle { font-size:var(--fs-xs); color:var(--gold-dim); letter-spacing:0.12em; text-transform:uppercase; font-weight:600; }
+.lgi-report { background:none; border:none; cursor:pointer; font-size:var(--fs-md); line-height:1; padding:0 2px; opacity:0.85; }
 .lgi-report:hover { opacity:1; transform:scale(1.05); }
 .lgi-scroll { flex:1 1 auto; min-height:0; overflow-y:auto; padding:10px 12px; display:flex; flex-direction:column; gap:var(--sp-2); }
-.lgi-row { font-size:0.82rem; color:var(--text); display:flex; align-items:center; gap:var(--sp-2); }
+.lgi-row { font-size:var(--fs-base); color:var(--text); display:flex; align-items:center; gap:var(--sp-2); }
 .lgi-row .lgi-ico { opacity:0.85; }
 .lgi-blinds { color:var(--text-dim,#8b93a7); }
-.lgi-ptitle { font-weight:700; color:var(--text); font-size:0.82rem; margin-top:6px; }
+.lgi-ptitle { font-weight:700; color:var(--text); font-size:var(--fs-base); margin-top:6px; }
 .lgi-players { display:flex; flex-direction:column; gap:5px; }
-.lgi-gname { font-weight:700; color:var(--cream); font-size:0.9rem; }
+.lgi-gname { font-weight:700; color:var(--cream); font-size:var(--fs-md); }
 /* Barre du bas (centre) : options d'attente qui remplacent « + Créer une
    partie » quand je suis dans une partie non démarrée (parité officiel). */
 #lobby-wait-actions {
@@ -9169,9 +9169,9 @@ html[data-buttons="pokerth"] .btn-action[disabled] { filter: grayscale(0.55) bri
 #lobby-wait-actions .wp-fillbots { flex:1 1 100%; justify-content:center; padding:var(--sp-0); }
 #lobby-wait-actions .wp-actions { flex:1 1 auto; display:flex; gap:var(--sp-4); width:100%; }
 #lobby-wait-actions .wp-actions .wp-btn { flex:1 1 auto; }
-#lobby-wait-actions .lfb-waithint { flex:1 1 100%; font-size:0.74rem; color:var(--gold-dim); font-style:italic; text-align:center; }
+#lobby-wait-actions .lfb-waithint { flex:1 1 100%; font-size:var(--fs-xs); color:var(--gold-dim); font-style:italic; text-align:center; }
 .lgi-prow { display:flex; align-items:center; gap:var(--sp-3); padding:6px 8px; border-radius:var(--r-sm); background:var(--inset); border:1px solid var(--border); }
-.lgi-pname { flex:1 1 auto; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-size:0.82rem; color:var(--text); }
+.lgi-pname { flex:1 1 auto; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-size:var(--fs-base); color:var(--text); }
 .lgi-prow.lgi-pending { opacity:0.6; }
 /* Ligne joueur cliquable (popup joueur, comme la liste « Joueurs en ligne ») :
    curseur main, AUCUN soulignement/ligne, juste le pseudo qui passe or au survol. */
