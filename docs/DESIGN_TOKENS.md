@@ -127,8 +127,11 @@ Ordre proposé, du plus visible au plus périphérique :
 - [x] **Lot 1 — Table de jeu** : espacements/rayons → `--sp-*`/`--r-*` (inerte, 0.3.953)
       + typo harmonisée sur `--fs-*` (72 tailles snappées ≤ 0,05rem, 0.3.954-beta).
       Polices px QML conservées (documentées).
-- [ ] **Lot 2 — Panneaux en jeu** : chances/stats (`#g-odds-body`, `#g-stats-body`),
-      chat, log, panneaux flottants, HUD/range-grid.
+- [~] **Lot 2 — Panneaux en jeu** : espacements/rayons + polices rem exactes des
+      panneaux (chances/stats, info/assist, log, fenêtres flottantes, HUD) migrés
+      *(inerte, 0.3.955-beta)*. Reste **Lot 2b** : 21 polices rem à snapper (≤0,05rem)
+      + éventuelle conversion px→rem des entêtes odds/stats — à valider. Les px fins
+      du HUD/range-grid (5,5–8,5px) sont **conservés** (trop fins pour le barème).
 - [ ] **Lot 3 — Lobby** : liste des parties, tri/recherche, chat lobby, stats bar.
 - [ ] **Lot 4 — Formulaires** : login, `#create-form` (déjà aliasé → généraliser),
       réglages / options avancées, modales de confirmation.

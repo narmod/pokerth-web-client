@@ -2443,7 +2443,7 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
   .raise-row .raise-input { font-size: 0.85rem !important; }
 
   /* ── Vignette d'assistance ── */
-  .hs-txt { font-size: 0.7rem !important; }
+  .hs-txt { font-size: var(--fs-xs) !important; }
 
   /* ── Header ── */
   .header { min-height: var(--header-h, 38px) !important; }
@@ -3577,7 +3577,7 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
 .hands-card {
   background: var(--modal-bg);
   border: 1px solid var(--gold-dim); border-top: 3px solid var(--gold);
-  border-radius: 10px; padding: 16px 18px;
+  border-radius: var(--r-bar); padding: 16px 18px;
   max-width: min(460px, 96vw); max-height: 90dvh;
   overflow-y: auto; width: 100%;
   box-shadow: 0 0 60px rgba(var(--gold-rgb), 0.18), 0 20px 50px rgba(0,0,0,0.8);
@@ -4589,7 +4589,7 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
 }
 .log-panel-body::-webkit-scrollbar { width: 6px; }
 .log-panel-body::-webkit-scrollbar-track { background: transparent; }
-.log-panel-body::-webkit-scrollbar-thumb { background: rgba(var(--gold-rgb), 0.18); border-radius: 3px; }
+.log-panel-body::-webkit-scrollbar-thumb { background: rgba(var(--gold-rgb), 0.18); border-radius: var(--r-xs); }
 .log-panel-body::-webkit-scrollbar-thumb:hover { background: rgba(var(--gold-rgb), 0.32); }
 /* Log message rows — mirror the .chat-msgs basic look without the
    bubble-style backgrounds (log lines are denser, more like a
@@ -4624,7 +4624,7 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
   background: var(--chrome-tint); border-top: 1px solid var(--border);
 }
 .chat-resize-handle .crh-grip {
-  width: 42px; height: 4px; border-radius: 3px;
+  width: 42px; height: 4px; border-radius: var(--r-xs);
   background: var(--gold-dim); transition: background .15s, width .15s;
 }
 .chat-resize-handle:hover .crh-grip,
@@ -5405,10 +5405,10 @@ html[data-table="pokerth-live"] .raise-slider { accent-color: #4CAF50; }
 .eg-stats-section {
   background: rgba(0,0,0,0.35);
   border: 1px solid var(--border);
-  border-radius: 6px; padding: 12px 14px;
+  border-radius: var(--r-sm); padding: 12px 14px;
 }
 .eg-stats-title {
-  font-size: 0.62rem; color: var(--gold-dim);
+  font-size: var(--fs-2xs); color: var(--gold-dim);
   text-transform: uppercase; letter-spacing: 0.15em;
   margin-bottom: 8px;
 }
@@ -7344,7 +7344,7 @@ html[data-seat-img-self] .player-bar {
 #g-reaction-panel.floating-win,
 #hands-card-inner.floating-win {
   border: 1px solid var(--gold-dim);
-  border-radius: 10px;
+  border-radius: var(--r-bar);
   box-shadow: 0 14px 36px rgba(0,0,0,0.62);
   overflow: hidden;            /* coins arrondis nets + borne les poignees */
 }
@@ -7359,15 +7359,15 @@ html[data-seat-img-self] .player-bar {
    ResizeObserver JS — plus fiable qu'une container-query sur un élément fixed
    redimensionné). Surcharge les !important du media desktop via une spécificité
    plus élevée + !important. */
-#hands-card-inner.hands-cmp .hand-row { gap: 6px; padding: 6px 4px; }
+#hands-card-inner.hands-cmp .hand-row { gap: var(--sp-2); padding: 6px 4px; }
 #hands-card-inner.hands-cmp .hand-cards { gap: 1px; }
 #hands-card-inner.hands-cmp .hc { width: 17px !important; height: 25px !important; font-size: 0.46rem !important; border-radius: 2px; }
 #hands-card-inner.hands-cmp .hand-rank { width: 14px; font-size: 0.68rem !important; }
 #hands-card-inner.hands-cmp .hand-rail { width: 3px; }
-#hands-card-inner.hands-cmp .hand-name { font-size: 0.66rem !important; letter-spacing: 0.01em; gap: 4px; }
+#hands-card-inner.hands-cmp .hand-name { font-size: 0.66rem !important; letter-spacing: 0.01em; gap: var(--sp-1); }
 #hands-card-inner.hands-cmp .hand-ico { font-size: 0.82rem !important; }
 #hands-card-inner.hands-cmp .hand-desc { font-size: 0.56rem !important; }
-#hands-card-inner.hands-cmp .hands-legend { font-size: 0.54rem !important; gap: 6px; }
+#hands-card-inner.hands-cmp .hands-legend { font-size: 0.54rem !important; gap: var(--sp-2); }
 #hands-card-inner.hands-cmp-xs .hc { width: 14px !important; height: 21px !important; font-size: 0.4rem !important; }
 #hands-card-inner.hands-cmp-xs .hand-name { font-size: 0.6rem !important; }
 #hands-card-inner.hands-cmp-xs .hand-desc { font-size: 0.52rem !important; }
@@ -8004,7 +8004,7 @@ html[data-seat-edit="1"] #g-seats .seat.seat-ghost { outline: none; cursor: defa
 #ranking-modal .rk-card.floating-win,
 #tableranking-modal .rk-card.floating-win {
   position: fixed; margin: 0; max-height: none;
-  border: 1px solid var(--gold-dim); border-radius: 10px;
+  border: 1px solid var(--gold-dim); border-radius: var(--r-bar);
   box-shadow: 0 14px 36px rgba(0,0,0,0.62); overflow: hidden;
 }
 #ranking-modal .rk-card.floating-win .rk-title,
@@ -8380,10 +8380,10 @@ html:not([data-seat-struct="qml"]) .seat:not(.me) .seat-foot { margin-top: 1px; 
 #g-odds-body .odds-hd{font-weight:700;font-size:12px;color:var(--box-accent, var(--chatlog-text, var(--gold)));margin:2px 0 5px;letter-spacing:.3px}
 #g-odds-body .odds-approx{opacity:.65;font-weight:400}
 #g-odds-body .odds-wait{opacity:.6;padding:4px 0;font-size:12px}
-#g-odds-body .odds-row{display:flex;align-items:center;gap:6px;height:22px;font-size:12px}
+#g-odds-body .odds-row{display:flex;align-items:center;gap:var(--sp-2);height:22px;font-size:12px}
 #g-odds-body .odds-ico{width:26px;height:17px;object-fit:contain;flex:0 0 auto}
 #g-odds-body .odds-cat{flex:0 0 44%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;opacity:.9}
-#g-odds-body .odds-bar{flex:1;height:7px;background:rgba(var(--gold-rgb),.14);border-radius:3px;overflow:hidden}
+#g-odds-body .odds-bar{flex:1;height:7px;background:rgba(var(--gold-rgb),.14);border-radius:var(--r-xs);overflow:hidden}
 #g-odds-body .odds-bar>i{display:block;height:100%;width:0;background:linear-gradient(90deg,#8a93a6,#5a6478);border-radius:3px}
 #g-odds-body .odds-pct{flex:0 0 34px;text-align:right;font-variant-numeric:tabular-nums;opacity:.92}
 #g-odds-body .odds-row.warm .odds-bar>i{background:linear-gradient(90deg,#f0a020,#b36b00)}
@@ -8393,8 +8393,8 @@ html:not([data-seat-struct="qml"]) .seat:not(.me) .seat-foot { margin-top: 1px; 
 /* Onglet Stats (panneau info) : tableau VPIP/PFR/AF... des joueurs de la table. */
 #g-stats-body .odds-hd{font-weight:700;font-size:12px;color:var(--box-accent, var(--chatlog-text, var(--gold)));margin:2px 0 5px;letter-spacing:.3px}
 #g-stats-body .stats-wait{opacity:.6;padding:4px 0;font-size:12px}
-#g-stats-body .stats-scope{display:flex;gap:4px;margin:0 0 6px}
-#g-stats-body .stats-scope-btn{flex:0 0 auto;background:transparent;border:1px solid var(--border, rgba(255,255,255,.15));color:var(--chatlog-muted, var(--text-dim,#9aa3b5));font-size:0.6rem;letter-spacing:.1em;text-transform:uppercase;padding:2px 9px;border-radius:6px;cursor:pointer}
+#g-stats-body .stats-scope{display:flex;gap:var(--sp-1);margin:0 0 6px}
+#g-stats-body .stats-scope-btn{flex:0 0 auto;background:transparent;border:1px solid var(--border, rgba(255,255,255,.15));color:var(--chatlog-muted, var(--text-dim,#9aa3b5));font-size:0.6rem;letter-spacing:.1em;text-transform:uppercase;padding:2px 9px;border-radius:var(--r-sm);cursor:pointer}
 #g-stats-body .stats-scope-btn.on{color:var(--chatlog-text, var(--gold));border-color:var(--box-accent, var(--gold-dim));background:rgba(var(--gold-rgb),.12);font-weight:700}
 #g-stats-body .stats-scroll{overflow-x:auto}
 #g-stats-body .stats-table{border-collapse:collapse;width:100%;font-size:11px;font-variant-numeric:tabular-nums}
@@ -8405,7 +8405,7 @@ html:not([data-seat-struct="qml"]) .seat:not(.me) .seat-foot { margin-top: 1px; 
 #g-stats-body .stats-empty{text-align:center;opacity:.6;padding:10px 0}
 
 /* Bouton d'export .pdb dans l'onglet Stats. */
-#g-stats-body .stats-export-btn{margin-left:auto;background:transparent;border:1px solid var(--border, rgba(255,255,255,.15));color:var(--chatlog-muted, var(--text-dim,#9aa3b5));font-size:0.6rem;letter-spacing:.06em;padding:2px 9px;border-radius:6px;cursor:pointer}
+#g-stats-body .stats-export-btn{margin-left:auto;background:transparent;border:1px solid var(--border, rgba(255,255,255,.15));color:var(--chatlog-muted, var(--text-dim,#9aa3b5));font-size:0.6rem;letter-spacing:.06em;padding:2px 9px;border-radius:var(--r-sm);cursor:pointer}
 #g-stats-body .stats-export-btn:hover{color:var(--chatlog-text, var(--gold));border-color:var(--box-accent, var(--gold-dim))}
 #g-stats-body .stats-export-btn:disabled{opacity:.5;cursor:default}
 #g-stats-body .stats-scope{align-items:center}
@@ -8447,10 +8447,10 @@ html:not([data-seat-struct="qml"]) .seat:not(.me) .seat-foot { margin-top: 1px; 
 #gip-assist .hs-lbl{display:block;background:transparent;border:0;padding:0;max-width:none;overflow:hidden}
 #gip-assist .hs-txt{display:block;font-size:12px !important;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-shadow:none;color:var(--chatlog-text, var(--cream))}
 #gip-assist #hand-strength{position:static;left:auto;right:auto;top:auto;height:auto;pointer-events:none;margin-top:6px}
-#gip-assist .hs-track{display:block;position:static;left:auto;right:auto;top:auto;height:6px;border-radius:3px;background:rgba(var(--gold-rgb),.14)}
+#gip-assist .hs-track{display:block;position:static;left:auto;right:auto;top:auto;height:6px;border-radius:var(--r-xs);background:rgba(var(--gold-rgb),.14)}
 #gip-assist .hs-fill{border-radius:3px}
 /* ── Assistance : rangée de titre + bouton détacher (v0.3.908) ── */
-.gip-assist-hd-row{display:flex;align-items:center;justify-content:space-between;gap:6px;margin:0 0 5px}
+.gip-assist-hd-row{display:flex;align-items:center;justify-content:space-between;gap:var(--sp-2);margin:0 0 5px}
 .gip-assist-hd-row .odds-hd{margin:0}
 .gip-assist-pop{flex:0 0 auto;background:none;border:none;cursor:pointer;font-size:0.9rem;line-height:1;padding:0 2px;color:var(--chatlog-muted, var(--gold-dim))}
 .gip-assist-pop:hover{color:var(--chatlog-text, var(--gold))}
@@ -9604,7 +9604,7 @@ html[data-seat-struct="qml"] .seat:not(.me) .seat-narrow .seat-holecards .pk { w
 .hud-box:hover{border-color:var(--border-hi)}
 .hud-box{cursor:grab;touch-action:none}
 .hud-box.hud-dragging{cursor:grabbing;opacity:.92;z-index:11;box-shadow:0 6px 18px rgba(0,0,0,.6);transition:none}
-.hud-head{display:flex;align-items:baseline;gap:6px;margin-bottom:2px}
+.hud-head{display:flex;align-items:baseline;gap:var(--sp-2);margin-bottom:2px}
 .hud-name{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
   color:var(--gold);font-weight:700;letter-spacing:.02em;font-size:10.5px}
 .hud-hands{color:var(--text);font-variant-numeric:tabular-nums;font-size:9px;opacity:.8}
@@ -9616,33 +9616,33 @@ html[data-seat-struct="qml"] .seat:not(.me) .seat-narrow .seat-holecards .pk { w
 /* Grille de range (modale centrée) */
 #range-modal{position:fixed;inset:0;z-index:60;display:none;align-items:center;justify-content:center;
   background:rgba(0,0,0,.6);padding:16px}
-#range-modal .range-card{background:var(--panel-hi);border:1px solid var(--border);border-radius:12px;
+#range-modal .range-card{background:var(--panel-hi);border:1px solid var(--border);border-radius:var(--r-lg);
   box-shadow:0 12px 40px rgba(0,0,0,.55);max-width:min(96vw,720px);max-height:92vh;display:flex;flex-direction:column;overflow:hidden}
-#range-modal .range-head{display:flex;align-items:center;gap:12px;flex-wrap:wrap;
+#range-modal .range-head{display:flex;align-items:center;gap:var(--sp-5);flex-wrap:wrap;
   padding:9px 12px;border-bottom:1px solid var(--border)}
-#range-modal .range-title{flex:1;min-width:120px;color:var(--gold);font-weight:700;font-size:0.85rem}
+#range-modal .range-title{flex:1;min-width:120px;color:var(--gold);font-weight:700;font-size:var(--fs-base)}
 #range-modal .range-filters{display:flex;gap:10px}
-#range-modal .range-filters label{color:var(--text);font-size:0.62rem;text-transform:uppercase;letter-spacing:.08em;display:flex;align-items:center;gap:4px}
-#range-modal .range-filters select{background:var(--field-bg);color:var(--text-hi);border:1px solid var(--border);border-radius:5px;padding:1px 4px;font-size:0.7rem}
-#range-modal .range-close{background:none;border:none;color:var(--text);cursor:pointer;font-size:0.95rem;padding:0 4px}
+#range-modal .range-filters label{color:var(--text);font-size:var(--fs-2xs);text-transform:uppercase;letter-spacing:.08em;display:flex;align-items:center;gap:4px}
+#range-modal .range-filters select{background:var(--field-bg);color:var(--text-hi);border:1px solid var(--border);border-radius:5px;padding:1px 4px;font-size:var(--fs-xs)}
+#range-modal .range-close{background:none;border:none;color:var(--text);cursor:pointer;font-size:var(--fs-md);padding:0 4px}
 #range-modal .range-close:hover{color:var(--gold)}
 #range-modal .range-body{overflow:auto;padding:10px 12px}
-#range-modal .range-legend{padding:6px 12px 9px;color:var(--text);opacity:.7;font-size:0.62rem;border-top:1px solid var(--border)}
+#range-modal .range-legend{padding:6px 12px 9px;color:var(--text);opacity:.7;font-size:var(--fs-2xs);border-top:1px solid var(--border)}
 /* Panneau détaillé d'un joueur : prolongement de la boîte HUD (popover ancré,
    dans #hud-layer). S'ouvre au-dessus/en dessous selon la position du siège. */
 #hud-detail{position:absolute;z-index:9;pointer-events:auto;width:190px;max-width:72vw;
-  background:var(--panel-hi);border:1px solid var(--border-hi);border-radius:9px;
+  background:var(--panel-hi);border:1px solid var(--border-hi);border-radius:var(--r-md);
   box-shadow:0 8px 26px rgba(0,0,0,.55);backdrop-filter:blur(4px);padding:6px 8px 7px;
   font-size:11px;line-height:1.3;animation:hud-d-in .12s ease-out}
 @keyframes hud-d-in{from{opacity:0;transform:translateY(-3px)}to{opacity:1;transform:none}}
-#hud-detail .hud-d-head{display:flex;align-items:baseline;gap:8px;margin-bottom:4px;padding-bottom:4px;border-bottom:1px solid var(--border)}
+#hud-detail .hud-d-head{display:flex;align-items:baseline;gap:var(--sp-3);margin-bottom:4px;padding-bottom:4px;border-bottom:1px solid var(--border)}
 #hud-detail .hud-d-name{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--gold);font-weight:700;font-size:0.82rem}
-#hud-detail .hud-d-hands{color:var(--text);font-size:0.62rem;opacity:.8;font-variant-numeric:tabular-nums;flex-shrink:0}
+#hud-detail .hud-d-hands{color:var(--text);font-size:var(--fs-2xs);opacity:.8;font-variant-numeric:tabular-nums;flex-shrink:0}
 #hud-detail .hud-d-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px 12px}
-#hud-detail .hud-d-row{display:flex;align-items:baseline;justify-content:space-between;gap:6px;padding:1px 0}
+#hud-detail .hud-d-row{display:flex;align-items:baseline;justify-content:space-between;gap:var(--sp-2);padding:1px 0}
 #hud-detail .hud-d-lbl{color:var(--text);font-size:0.68rem;opacity:.85}
 #hud-detail .hud-d-val{color:var(--text-hi);font-weight:700;font-variant-numeric:tabular-nums;font-size:0.72rem}
-#hud-detail .hud-d-range{margin-top:6px;width:100%;background:rgba(var(--gold-rgb),.14);border:1px solid var(--border-hi);color:var(--gold);font-size:0.68rem;letter-spacing:.03em;padding:4px 8px;border-radius:6px;cursor:pointer}
+#hud-detail .hud-d-range{margin-top:6px;width:100%;background:rgba(var(--gold-rgb),.14);border:1px solid var(--border-hi);color:var(--gold);font-size:0.68rem;letter-spacing:.03em;padding:4px 8px;border-radius:var(--r-sm);cursor:pointer}
 #hud-detail .hud-d-range:hover{background:rgba(var(--gold-rgb),.22)}
 .range-grid{border-collapse:separate;border-spacing:2px;margin:0 auto}
 .range-grid td{width:38px;height:34px;text-align:center;vertical-align:middle;border-radius:4px;
@@ -9655,7 +9655,7 @@ html[data-seat-struct="qml"] .seat:not(.me) .seat-narrow .seat-holecards .pk { w
 @media (max-width:599.98px){
   .range-grid td{width:26px;height:26px;font-size:7.5px}
   .range-grid .rc-combo{font-size:8px}
-  .hud-box{min-width:0;width:auto;max-width:104px;font-size:7.5px;padding:2px 4px;border-radius:6px;line-height:1.12}
+  .hud-box{min-width:0;width:auto;max-width:104px;font-size:7.5px;padding:2px 4px;border-radius:var(--r-sm);line-height:1.12}
   .hud-head{gap:3px;margin-bottom:1px}
   .hud-name{font-size:8px;max-width:66px}
   .hud-hands{font-size:6.5px}
@@ -9675,7 +9675,7 @@ html[data-seat-struct="qml"] .seat:not(.me) .seat-narrow .seat-holecards .pk { w
 /* Mobile paysage (peu de hauteur) : même compacité qu'en portrait — n'affiche
    que VPIP/PFR/AF, indépendamment de la largeur. */
 @media (orientation:landscape) and (max-height:600px){
-  .hud-box{min-width:0;width:auto;max-width:112px;font-size:8px;padding:2px 4px;border-radius:6px;line-height:1.15}
+  .hud-box{min-width:0;width:auto;max-width:112px;font-size:8px;padding:2px 4px;border-radius:var(--r-sm);line-height:1.15}
   .hud-head{gap:3px;margin-bottom:1px}
   .hud-name{font-size:8.5px;max-width:72px}
   .hud-hands{font-size:7px}
