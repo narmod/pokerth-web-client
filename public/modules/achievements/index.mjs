@@ -22,11 +22,17 @@ export function createAchievements(opts = {}) {
   const S = createSession();
 
   const buildView = () => ({
-    counters: { hands: store.get('hands') || 0, beatenSkills: store.get('beatenSkills') || [] },
+    counters: {
+      hands: store.get('hands') || 0,
+      gamesWon: store.get('gamesWon') || 0,
+      beatenSkills: store.get('beatenSkills') || [],
+    },
     game: S.game,
     hand: S.hand,
     place: S.place,
     hour: S._hour,
+    unlocked: store.unlockedList().length,
+    total: ACHIEVEMENTS.length,
   });
 
   function evaluate(when) {
@@ -43,10 +49,12 @@ export function createAchievements(opts = {}) {
     observe(ev, ctx) {
       const moments = reduce(S, ev, ctx && ctx.meId, store, now);
       for (const w of moments) evaluate(w);
+      evaluate('always');   // méta-succès (ex. Collectionneur), après mise à jour du reste
     },
     snapshot() {
       return ACHIEVEMENTS.map(d => ({
-        id: d.id, icon: d.icon, cat: d.cat, unlocked: store.isUnlocked(d.id),
+        id: d.id, icon: d.icon, cat: d.cat, players: d.players || null,
+        unlocked: store.isUnlocked(d.id),
       }));
     },
     unlockedCount() { return store.unlockedList().length; },

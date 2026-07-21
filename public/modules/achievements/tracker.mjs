@@ -22,11 +22,12 @@ export function createSession() {
     bb: 0,
     myHole: null,
     myAllinThisHand: false,
+    myFoldedPreflopThisHand: false,
     place: null,
     hand: null,
     game: {
       numPlayers: 0, oppSkills: [], winStreak: 0, allinThisGame: false,
-      stackStart: 0, stackMin: Infinity,
+      stackStart: 0, stackMin: Infinity, seatsAtHandStart: 0, foldPreStreak: 0,
     },
   };
 }
@@ -46,10 +47,12 @@ export function reduce(S, ev, meId, store, now) {
         winStreak: 0, allinThisGame: false,
         stackStart: mine ? (mine.stack || 0) : 0,
         stackMin: mine ? (mine.stack || 0) : Infinity,
+        seatsAtHandStart: 0, foldPreStreak: 0,
       };
       const d = new Date(now());
       S._hour = d.getHours();
-      S.place = null; S.hand = null; S.bb = 0; S.myHole = null; S.myAllinThisHand = false;
+      S.place = null; S.hand = null; S.bb = 0; S.myHole = null;
+      S.myAllinThisHand = false; S.myFoldedPreflopThisHand = false;
       return ['gameStart'];
     }
 
@@ -57,6 +60,8 @@ export function reduce(S, ev, meId, store, now) {
       S.bb = ev.bb || S.bb;
       S.myHole = (ev.holeByPlayer && ev.holeByPlayer[me]) ? ev.holeByPlayer[me].slice() : null;
       S.myAllinThisHand = false;
+      S.myFoldedPreflopThisHand = false;
+      S.game.seatsAtHandStart = (ev.seats || []).length;
       const seat = (ev.seats || []).find(s => s.id === me);
       if (seat && seat.stack < S.game.stackMin) S.game.stackMin = seat.stack;
       store.bump('hands', 1);
@@ -68,6 +73,9 @@ export function reduce(S, ev, meId, store, now) {
         S.myAllinThisHand = true;
         S.game.allinThisGame = true;
       }
+      if (ev.playerId === me && ev.action === 'fold' && ev.gameState === 'preflop') {
+        S.myFoldedPreflopThisHand = true;
+      }
       return [];
     }
 
@@ -77,8 +85,11 @@ export function reduce(S, ev, meId, store, now) {
       const aggr = ev.aggressorId;          // absent tant que le moteur n'est pas patché
       const bluff = iWon && potBb >= BLUFF_MIN_POT_BB && (aggr == null || aggr === me);
       S.hand = { iWon, viaShowdown: false, potBb, myCards: S.myHole,
-                 wentAllin: S.myAllinThisHand, bluff };
+                 wentAllin: S.myAllinThisHand, bluff,
+                 foldPreBefore: S.game.foldPreStreak };
       if (iWon) S.game.winStreak++;         // un fold ne casse pas la série
+      if (S.myFoldedPreflopThisHand && !iWon) S.game.foldPreStreak++;
+      else S.game.foldPreStreak = 0;
       return ['hand'];
     }
 
@@ -90,14 +101,18 @@ export function reduce(S, ev, meId, store, now) {
         potBb: S.bb && mine ? (mine.won || 0) / S.bb : 0,
         myCards: mine ? mine.cards.slice() : S.myHole,
         wentAllin: S.myAllinThisHand, bluff: false,
+        foldPreBefore: S.game.foldPreStreak,
       };
       if (iWon) S.game.winStreak++;
       else if (mine) S.game.winStreak = 0;  // abattage disputé et perdu → série cassée
+      if (S.myFoldedPreflopThisHand && !iWon) S.game.foldPreStreak++;
+      else S.game.foldPreStreak = 0;
       return ['hand'];
     }
 
     case 'gameOver': {
       S.place = ev.winnerId === me ? 1 : null;
+      if (S.place === 1) store.bump('gamesWon', 1);
       if (S.place === 1 && S.game.oppSkills.length) {
         const prev = store.get('beatenSkills') || [];
         store.set('beatenSkills', [...new Set([...prev, ...S.game.oppSkills])]);
