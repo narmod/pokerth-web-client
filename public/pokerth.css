@@ -2483,7 +2483,7 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
   .eg-winner-av.letter { font-size: 1.35rem !important; }
   .eg-winner-label { font-size: 0.78rem !important; }
   .eg-winner-name { font-size: 1.28rem !important; }
-  .eg-stats-title { font-size: 0.74rem !important; }
+  .eg-stats-title { font-size: var(--fs-xs) !important; }
   .eg-stat-row { font-size: 0.95rem !important; }
   .eg-btn { font-size: 0.92rem !important; padding: 12px 14px !important; }
 
@@ -3215,7 +3215,7 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
 }
 .hs-txt {
   font-family: var(--ff-display);
-  font-size: 0.72rem;
+  font-size: var(--fs-xs);
   line-height: 1.15;
   letter-spacing: 0.01em;
   font-weight: 700;
@@ -4583,7 +4583,7 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
   overflow-y: auto;
   padding: 6px 12px;
   font-family: var(--ff-mono);
-  font-size: 0.74rem;
+  font-size: var(--fs-xs);
   line-height: 1.45;
   color: var(--cream);
 }
@@ -7362,15 +7362,15 @@ html[data-seat-img-self] .player-bar {
 #hands-card-inner.hands-cmp .hand-row { gap: var(--sp-2); padding: 6px 4px; }
 #hands-card-inner.hands-cmp .hand-cards { gap: 1px; }
 #hands-card-inner.hands-cmp .hc { width: 17px !important; height: 25px !important; font-size: 0.46rem !important; border-radius: 2px; }
-#hands-card-inner.hands-cmp .hand-rank { width: 14px; font-size: 0.68rem !important; }
+#hands-card-inner.hands-cmp .hand-rank { width: 14px; font-size: var(--fs-xs) !important; }
 #hands-card-inner.hands-cmp .hand-rail { width: 3px; }
-#hands-card-inner.hands-cmp .hand-name { font-size: 0.66rem !important; letter-spacing: 0.01em; gap: var(--sp-1); }
-#hands-card-inner.hands-cmp .hand-ico { font-size: 0.82rem !important; }
-#hands-card-inner.hands-cmp .hand-desc { font-size: 0.56rem !important; }
-#hands-card-inner.hands-cmp .hands-legend { font-size: 0.54rem !important; gap: var(--sp-2); }
+#hands-card-inner.hands-cmp .hand-name { font-size: var(--fs-xs) !important; letter-spacing: 0.01em; gap: var(--sp-1); }
+#hands-card-inner.hands-cmp .hand-ico { font-size: var(--fs-base) !important; }
+#hands-card-inner.hands-cmp .hand-desc { font-size: var(--fs-3xs) !important; }
+#hands-card-inner.hands-cmp .hands-legend { font-size: var(--fs-3xs) !important; gap: var(--sp-2); }
 #hands-card-inner.hands-cmp-xs .hc { width: 14px !important; height: 21px !important; font-size: 0.4rem !important; }
-#hands-card-inner.hands-cmp-xs .hand-name { font-size: 0.6rem !important; }
-#hands-card-inner.hands-cmp-xs .hand-desc { font-size: 0.52rem !important; }
+#hands-card-inner.hands-cmp-xs .hand-name { font-size: var(--fs-2xs) !important; }
+#hands-card-inner.hands-cmp-xs .hand-desc { font-size: var(--fs-3xs) !important; }
 #hands-card-inner.floating-win .hands-scroll {
   flex: 1 1 auto; min-height: 0; overflow-y: auto; overflow-x: hidden;
   -webkit-overflow-scrolling: touch; padding: 12px 14px;
@@ -8368,19 +8368,19 @@ html:not([data-seat-struct="qml"]) .seat:not(.me) .seat-foot { margin-top: 1px; 
 .gip-tabs { display:flex; flex:1; margin-right:6px; min-width:0; }
 /* Poignée de déplacement dédiée : les onglets couvrent presque toute la barre,
    le ⠿ garantit une prise visible (les onglets se traînent aussi, au seuil). */
-.gip-grip { flex:0 0 auto; color:var(--chatlog-muted, var(--text-dim,#9aa3b5)); font-size:0.72rem;
+.gip-grip { flex:0 0 auto; color:var(--chatlog-muted, var(--text-dim,#9aa3b5)); font-size:var(--fs-xs);
   padding:0 6px 0 2px; cursor:move; user-select:none; }
 .gip-tab { flex:0 1 auto; background:transparent; border:none; border-bottom:2px solid transparent;
-  color:var(--chatlog-muted, var(--text-dim, #9aa3b5)); font-size:0.65rem; letter-spacing:0.12em; text-transform:uppercase;
+  color:var(--chatlog-muted, var(--text-dim, #9aa3b5)); font-size:var(--fs-2xs); letter-spacing:0.12em; text-transform:uppercase;
   padding:3px 12px 4px; cursor:pointer; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
   touch-action:none; }
 .gip-tab.gip-on { color:var(--chatlog-text, var(--gold)); border-bottom-color:var(--box-accent, var(--chatlog-muted, var(--gold-dim))); font-weight:700; }
 .gip-tab:hover { color:var(--chatlog-text, var(--gold)); }
 /* Onglet Chances : mêmes classes que l'ancien moniteur, tailles panneau. */
-#g-odds-body .odds-hd{font-weight:700;font-size:12px;color:var(--box-accent, var(--chatlog-text, var(--gold)));margin:2px 0 5px;letter-spacing:.3px}
+#g-odds-body .odds-hd{font-weight:700;font-size:var(--fs-sm);color:var(--box-accent, var(--chatlog-text, var(--gold)));margin:2px 0 5px;letter-spacing:.3px}
 #g-odds-body .odds-approx{opacity:.65;font-weight:400}
-#g-odds-body .odds-wait{opacity:.6;padding:4px 0;font-size:12px}
-#g-odds-body .odds-row{display:flex;align-items:center;gap:var(--sp-2);height:22px;font-size:12px}
+#g-odds-body .odds-wait{opacity:.6;padding:4px 0;font-size:var(--fs-sm)}
+#g-odds-body .odds-row{display:flex;align-items:center;gap:var(--sp-2);height:22px;font-size:var(--fs-sm)}
 #g-odds-body .odds-ico{width:26px;height:17px;object-fit:contain;flex:0 0 auto}
 #g-odds-body .odds-cat{flex:0 0 44%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;opacity:.9}
 #g-odds-body .odds-bar{flex:1;height:7px;background:rgba(var(--gold-rgb),.14);border-radius:var(--r-xs);overflow:hidden}
@@ -8391,13 +8391,13 @@ html:not([data-seat-struct="qml"]) .seat:not(.me) .seat-foot { margin-top: 1px; 
 #g-odds-body .odds-row.hot .odds-pct{color:#7ce0a0;font-weight:700}
 
 /* Onglet Stats (panneau info) : tableau VPIP/PFR/AF... des joueurs de la table. */
-#g-stats-body .odds-hd{font-weight:700;font-size:12px;color:var(--box-accent, var(--chatlog-text, var(--gold)));margin:2px 0 5px;letter-spacing:.3px}
-#g-stats-body .stats-wait{opacity:.6;padding:4px 0;font-size:12px}
+#g-stats-body .odds-hd{font-weight:700;font-size:var(--fs-sm);color:var(--box-accent, var(--chatlog-text, var(--gold)));margin:2px 0 5px;letter-spacing:.3px}
+#g-stats-body .stats-wait{opacity:.6;padding:4px 0;font-size:var(--fs-sm)}
 #g-stats-body .stats-scope{display:flex;gap:var(--sp-1);margin:0 0 6px}
-#g-stats-body .stats-scope-btn{flex:0 0 auto;background:transparent;border:1px solid var(--border, rgba(255,255,255,.15));color:var(--chatlog-muted, var(--text-dim,#9aa3b5));font-size:0.6rem;letter-spacing:.1em;text-transform:uppercase;padding:2px 9px;border-radius:var(--r-sm);cursor:pointer}
+#g-stats-body .stats-scope-btn{flex:0 0 auto;background:transparent;border:1px solid var(--border, rgba(255,255,255,.15));color:var(--chatlog-muted, var(--text-dim,#9aa3b5));font-size:var(--fs-2xs);letter-spacing:.1em;text-transform:uppercase;padding:2px 9px;border-radius:var(--r-sm);cursor:pointer}
 #g-stats-body .stats-scope-btn.on{color:var(--chatlog-text, var(--gold));border-color:var(--box-accent, var(--gold-dim));background:rgba(var(--gold-rgb),.12);font-weight:700}
 #g-stats-body .stats-scroll{overflow-x:auto}
-#g-stats-body .stats-table{border-collapse:collapse;width:100%;font-size:11px;font-variant-numeric:tabular-nums}
+#g-stats-body .stats-table{border-collapse:collapse;width:100%;font-size:var(--fs-xs);font-variant-numeric:tabular-nums}
 #g-stats-body .stats-table th{color:var(--chatlog-muted, var(--text-dim,#9aa3b5));font-weight:700;text-align:right;padding:2px 5px;border-bottom:1px solid var(--border, rgba(255,255,255,.12));white-space:nowrap;cursor:help}
 #g-stats-body .stats-table td{text-align:right;padding:2px 5px;border-bottom:1px solid rgba(255,255,255,.05);white-space:nowrap}
 #g-stats-body .stats-table .stats-name{text-align:left;max-width:96px;overflow:hidden;text-overflow:ellipsis;color:var(--chatlog-text, var(--text));font-weight:600}
@@ -8405,7 +8405,7 @@ html:not([data-seat-struct="qml"]) .seat:not(.me) .seat-foot { margin-top: 1px; 
 #g-stats-body .stats-empty{text-align:center;opacity:.6;padding:10px 0}
 
 /* Bouton d'export .pdb dans l'onglet Stats. */
-#g-stats-body .stats-export-btn{margin-left:auto;background:transparent;border:1px solid var(--border, rgba(255,255,255,.15));color:var(--chatlog-muted, var(--text-dim,#9aa3b5));font-size:0.6rem;letter-spacing:.06em;padding:2px 9px;border-radius:var(--r-sm);cursor:pointer}
+#g-stats-body .stats-export-btn{margin-left:auto;background:transparent;border:1px solid var(--border, rgba(255,255,255,.15));color:var(--chatlog-muted, var(--text-dim,#9aa3b5));font-size:var(--fs-2xs);letter-spacing:.06em;padding:2px 9px;border-radius:var(--r-sm);cursor:pointer}
 #g-stats-body .stats-export-btn:hover{color:var(--chatlog-text, var(--gold));border-color:var(--box-accent, var(--gold-dim))}
 #g-stats-body .stats-export-btn:disabled{opacity:.5;cursor:default}
 #g-stats-body .stats-scope{align-items:center}
@@ -8443,16 +8443,16 @@ html:not([data-seat-struct="qml"]) .seat:not(.me) .seat-foot { margin-top: 1px; 
 /* Assistance (force de la main) integree en tete de l'onglet « Chances » du
    panneau info unifie : meme rendu que l'ancienne fenetre flottante, mais en flux. */
 #gip-assist{padding:6px 12px 7px;border-bottom:1px solid var(--chatlog-border,var(--border));background:var(--chatlog-bg, var(--field-bg))}
-#gip-assist .odds-hd{font-weight:700;font-size:12px;color:var(--box-accent, var(--chatlog-text, var(--gold)));margin:0 0 5px;letter-spacing:.3px}
+#gip-assist .odds-hd{font-weight:700;font-size:var(--fs-sm);color:var(--box-accent, var(--chatlog-text, var(--gold)));margin:0 0 5px;letter-spacing:.3px}
 #gip-assist .hs-lbl{display:block;background:transparent;border:0;padding:0;max-width:none;overflow:hidden}
-#gip-assist .hs-txt{display:block;font-size:12px !important;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-shadow:none;color:var(--chatlog-text, var(--cream))}
+#gip-assist .hs-txt{display:block;font-size:var(--fs-sm) !important;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-shadow:none;color:var(--chatlog-text, var(--cream))}
 #gip-assist #hand-strength{position:static;left:auto;right:auto;top:auto;height:auto;pointer-events:none;margin-top:6px}
 #gip-assist .hs-track{display:block;position:static;left:auto;right:auto;top:auto;height:6px;border-radius:var(--r-xs);background:rgba(var(--gold-rgb),.14)}
 #gip-assist .hs-fill{border-radius:3px}
 /* ── Assistance : rangée de titre + bouton détacher (v0.3.908) ── */
 .gip-assist-hd-row{display:flex;align-items:center;justify-content:space-between;gap:var(--sp-2);margin:0 0 5px}
 .gip-assist-hd-row .odds-hd{margin:0}
-.gip-assist-pop{flex:0 0 auto;background:none;border:none;cursor:pointer;font-size:0.9rem;line-height:1;padding:0 2px;color:var(--chatlog-muted, var(--gold-dim))}
+.gip-assist-pop{flex:0 0 auto;background:none;border:none;cursor:pointer;font-size:var(--fs-md);line-height:1;padding:0 2px;color:var(--chatlog-muted, var(--gold-dim))}
 .gip-assist-pop:hover{color:var(--chatlog-text, var(--gold))}
 /* ── Poignée de séparation Assistance / Cotes (drag vertical) ── */
 .gip-split{flex:0 0 auto;height:10px;cursor:row-resize;touch-action:none;display:flex;align-items:center;justify-content:center;background:var(--chatlog-bg, var(--field-bg));border-bottom:1px solid var(--chatlog-border,var(--border))}
@@ -8461,8 +8461,8 @@ html:not([data-seat-struct="qml"]) .seat:not(.me) .seat-foot { margin-top: 1px; 
 /* ── Fenêtre flottante « Assistance » détachée (chrome comme #g-log-panel) ── */
 #g-assist-panel{position:fixed;z-index:99;background:var(--panel);border:1px solid var(--border);box-shadow:0 4px 20px rgba(0,0,0,0.6);border-radius:8px;overflow:hidden}
 #g-assist-panel.floating-win{display:flex;flex-direction:column}
-#g-assist-panel .gip-assist-wtitle{flex:1;margin:0 6px;font-size:0.65rem;color:var(--gold-dim);letter-spacing:0.15em;text-transform:uppercase;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-#g-assist-panel .gip-assist-dock{flex:0 0 auto;background:none;border:none;color:var(--chatlog-text2, var(--chatlog-text, var(--text)));cursor:pointer;font-size:0.9rem;padding:0 4px}
+#g-assist-panel .gip-assist-wtitle{flex:1;margin:0 6px;font-size:var(--fs-2xs);color:var(--gold-dim);letter-spacing:0.15em;text-transform:uppercase;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#g-assist-panel .gip-assist-dock{flex:0 0 auto;background:none;border:none;color:var(--chatlog-text2, var(--chatlog-text, var(--text)));cursor:pointer;font-size:var(--fs-md);padding:0 4px}
 /* Détaché : le corps remplit la fenêtre et centre le contenu (fond uniforme →
    pas d'espace blanc). La mise à l'échelle du texte est gérée par zoom:var(--wz)
    posé sur les enfants directs de .floating-win.win-zoom (header + host). */
@@ -9636,13 +9636,13 @@ html[data-seat-struct="qml"] .seat:not(.me) .seat-narrow .seat-holecards .pk { w
   font-size:11px;line-height:1.3;animation:hud-d-in .12s ease-out}
 @keyframes hud-d-in{from{opacity:0;transform:translateY(-3px)}to{opacity:1;transform:none}}
 #hud-detail .hud-d-head{display:flex;align-items:baseline;gap:var(--sp-3);margin-bottom:4px;padding-bottom:4px;border-bottom:1px solid var(--border)}
-#hud-detail .hud-d-name{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--gold);font-weight:700;font-size:0.82rem}
+#hud-detail .hud-d-name{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--gold);font-weight:700;font-size:var(--fs-base)}
 #hud-detail .hud-d-hands{color:var(--text);font-size:var(--fs-2xs);opacity:.8;font-variant-numeric:tabular-nums;flex-shrink:0}
 #hud-detail .hud-d-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px 12px}
 #hud-detail .hud-d-row{display:flex;align-items:baseline;justify-content:space-between;gap:var(--sp-2);padding:1px 0}
-#hud-detail .hud-d-lbl{color:var(--text);font-size:0.68rem;opacity:.85}
-#hud-detail .hud-d-val{color:var(--text-hi);font-weight:700;font-variant-numeric:tabular-nums;font-size:0.72rem}
-#hud-detail .hud-d-range{margin-top:6px;width:100%;background:rgba(var(--gold-rgb),.14);border:1px solid var(--border-hi);color:var(--gold);font-size:0.68rem;letter-spacing:.03em;padding:4px 8px;border-radius:var(--r-sm);cursor:pointer}
+#hud-detail .hud-d-lbl{color:var(--text);font-size:var(--fs-xs);opacity:.85}
+#hud-detail .hud-d-val{color:var(--text-hi);font-weight:700;font-variant-numeric:tabular-nums;font-size:var(--fs-xs)}
+#hud-detail .hud-d-range{margin-top:6px;width:100%;background:rgba(var(--gold-rgb),.14);border:1px solid var(--border-hi);color:var(--gold);font-size:var(--fs-xs);letter-spacing:.03em;padding:4px 8px;border-radius:var(--r-sm);cursor:pointer}
 #hud-detail .hud-d-range:hover{background:rgba(var(--gold-rgb),.22)}
 .range-grid{border-collapse:separate;border-spacing:2px;margin:0 auto}
 .range-grid td{width:38px;height:34px;text-align:center;vertical-align:middle;border-radius:4px;
