@@ -2325,18 +2325,18 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
   .seat-avatar {
     width: 38px !important;
     height: 38px !important;
-    font-size: 0.95rem !important;
+    font-size: var(--fs-md) !important;
   }
   .seat-avatar.is-bot .seat-initial { font-size: 1.1em !important; }
-  .seat-name   { font-size: 0.72rem !important; max-width: 84px !important; }
-  .seat-money  { font-size: 0.7rem !important; }
-  .seat-bet    { font-size: 0.58rem !important; }
-  .seat-action-label { font-size: 0.56rem !important; }
+  .seat-name   { font-size: var(--fs-xs) !important; max-width: 84px !important; }
+  .seat-money  { font-size: var(--fs-xs) !important; }
+  .seat-bet    { font-size: var(--fs-3xs) !important; }
+  .seat-action-label { font-size: var(--fs-3xs) !important; }
   .seat { min-width: 54px !important; max-width: 86px !important; }
 
   .seat.dealer .seat-avatar::after {
     width: 16px !important; height: 16px !important;
-    font-size: 0.56rem !important;
+    font-size: var(--fs-3xs) !important;
     top: -5px !important; right: -5px !important;
   }
   .blind-badge {
@@ -2347,7 +2347,7 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
   .seat .pk.xsm {
     width: 24px !important;
     height: 34px !important;
-    font-size: 0.6rem !important;
+    font-size: var(--fs-2xs) !important;
   }
 
   /* ── Scaler : marge pour les sièges qui débordent ── */
@@ -2368,7 +2368,7 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
     top: -35% !important; left: -35% !important;
   }
   .seat-timer-badge {
-    font-size: 0.88rem !important;
+    font-size: var(--fs-base) !important;
     margin-top: 16px !important;
     padding: 2px 7px !important;
     min-width: 32px !important;
@@ -2386,16 +2386,16 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
   .seat-avatar {
     width: 52px !important;
     height: 52px !important;
-    font-size: 1.3rem !important;
+    font-size: var(--fs-xl) !important;
   }
-  .seat-name   { font-size: 0.98rem !important; max-width: 112px !important; }
-  .seat-money  { font-size: 0.96rem !important; }
-  .seat-bet    { font-size: 0.8rem !important; }
-  .seat-action-label { font-size: 0.78rem !important; }
+  .seat-name   { font-size: var(--fs-md) !important; max-width: 112px !important; }
+  .seat-money  { font-size: var(--fs-md) !important; }
+  .seat-bet    { font-size: var(--fs-sm) !important; }
+  .seat-action-label { font-size: var(--fs-sm) !important; }
   .seat { min-width: 72px !important; max-width: 116px !important; }
   .seat.dealer .seat-avatar::after {
     width: 22px !important; height: 22px !important;
-    font-size: 0.78rem !important;
+    font-size: var(--fs-sm) !important;
     top: -7px !important; right: -7px !important;
   }
   .blind-badge {
@@ -2406,7 +2406,7 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
   .seat .pk.xsm {
     width: 32px !important;
     height: 45px !important; /* ratio carte 120:168 (0.714) */
-    font-size: 0.8rem !important;
+    font-size: var(--fs-sm) !important;
   }
 
   /* ── Player bar ── */
@@ -2428,7 +2428,7 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
   /* Boutons d'action, police 15 px. Padding vertical 10 px pour egaler la
      hauteur des themes a boutons-image (skin : border 9 + padding 1 = chrome 20 ;
      ici border 0 + padding 10+10 = chrome 20). Horizontal 18 = meme largeur. */
-  .btn-action { font-size: 0.94rem !important; padding: 10px 18px !important; }
+  .btn-action { font-size: var(--fs-md) !important; padding: 10px 18px !important; }
   .btn-pct { padding: 7px 6px !important; }
   /* Mid-row facon QML : 1/3 · 1/2 · Pot · Tapis compacts groupes a gauche,
      dropdown pousse a droite. (Pas de width fixe sur le Tapis : 52 px cassait
@@ -2532,7 +2532,7 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
   /* Drapeaux agrandis UNIQUEMENT en mode pokerth.net (body.pth-net) */
   body.pth-net .seat-flag   { bottom: -3px !important; right: -12px !important; }
   body.pth-net .seat-flag .cc-flag { width: 20px !important; height: 15px !important; }
-  .seat-avatar { width: 28px; height: 28px; font-size: 0.7rem; }
+  .seat-avatar { width: 28px; height: 28px; font-size: var(--fs-xs); }
   .seat-name,.seat-money,.seat-action-label,.seat-bet { font-size: 0.48rem; }
 .pill { font-size: 0.6rem; padding: 2px 5px; }
   .pk { width: 36px; height: 52px; font-size: 0.86rem; }
@@ -2623,9 +2623,9 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
 /* Global action-bar layout (applies at all sizes). These flex containers
    are required for the FOLD / CALL / RAISE / ALL-IN buttons to lay out
    correctly. Previously orphaned after a stray closing brace. */
-.btn-action { padding: 12px 14px; font-size: 0.84rem; flex: 1; min-width: 80px; text-align: center; }
+.btn-action { padding: 12px 14px; font-size: var(--fs-base); flex: 1; min-width: 80px; text-align: center; }
 .pct-row { display: flex; gap: 5px; width: 100%; }
-.pct-row .btn-pct { flex: 1; padding: 7px 4px; font-size: 0.76rem; }
+.pct-row .btn-pct { flex: 1; padding: 7px 4px; font-size: var(--fs-sm); }
 .raise-row { display: flex; gap: 5px; flex: 2; min-width: 160px; }
 .raise-row .raise-input { flex: 1; padding: 10px 6px; font-size: 0.84rem; }
 .btn-allin { flex: 1.5; }
@@ -2659,7 +2659,7 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
   .pk { width: 28px; height: 40px; font-size: 0.68rem; }
   .pk.sm { width: 22px; height: 32px; font-size: 0.56rem; }
   .comm-row { gap: 2px; }
-  .seat-avatar { width: 24px; height: 24px; font-size: 0.62rem; }
+  .seat-avatar { width: 24px; height: 24px; font-size: var(--fs-2xs); }
   .seat-name,.seat-money,.seat-action-label { font-size: 0.42rem; }
 
   /* Fixed bars: very compact */
@@ -2679,12 +2679,12 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
      centre (justify-content du parent) -> pastille compacte, plus de grand
      vide en paysage. */
   .player-bar .player-bar-left { padding: 2px 8px; gap: 5px; flex: 0 1 auto; width: -webkit-fit-content; width: fit-content; max-width: 100%; }
-  .player-bar .pb-avatar { width: 22px; height: 22px; font-size: 0.58rem; }
-  .player-bar .pb-name { font-size: 0.58rem; }
-  .player-bar .pb-money { font-size: 0.5rem; }
+  .player-bar .pb-avatar { width: 22px; height: 22px; font-size: var(--fs-3xs); }
+  .player-bar .pb-name { font-size: var(--fs-3xs); }
+  .player-bar .pb-money { font-size: var(--fs-3xs); }
   .player-bar .pb-info { min-width: 45px; }
   .player-bar .pb-cards .pk { width: 50px; height: 70px; font-size: var(--fs-lg); }
-  .player-bar .pb-action { font-size: 0.56rem; min-width: 0; }
+  .player-bar .pb-action { font-size: var(--fs-3xs); min-width: 0; }
 
   /* Barre d'action — 2 rangees compactes et previsibles.
      Rangee 1 (pleine largeur) : Fold | Call | mode.
@@ -2705,7 +2705,7 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
   .my-zone .action-grid > * { min-width: 0; }
   .my-zone .bet-row { gap: var(--sp-2); }
   /* Champ montant : 78 px (spec QML §5.2, conservee en compact). */
-  .my-zone .bet-row .raise-amt-field { width: 78px; flex: 0 0 auto; height: 24px; min-height: 24px; padding: 1px 5px; font-size: 0.72rem; }
+  .my-zone .bet-row .raise-amt-field { width: 78px; flex: 0 0 auto; height: 24px; min-height: 24px; padding: 1px 5px; font-size: var(--fs-xs); }
   .my-zone .bet-row .raise-slider { flex: 1 1 auto; min-width: 60px; }
   .my-zone .mid-row { gap: var(--sp-1); align-items: center; }
   .my-zone .mid-row .pct-row { flex: 0 0 auto; gap: 3px; }
@@ -2718,7 +2718,7 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
      border-image 9-slice, qui se dechirait sur ce bouton etroit. Reste
      l'image DU THEME (pas une couleur en dur) -> chaque theme garde son Tapis. */
   .my-zone .mid-row .btn-allin {
-    flex: 0 0 auto; white-space: nowrap; min-width: 48px; height: 24px; min-height: 24px; font-size: 0.6rem;
+    flex: 0 0 auto; white-space: nowrap; min-width: 48px; height: 24px; min-height: 24px; font-size: var(--fs-2xs);
     border-image: none !important;
     border: 1px solid #ef5350 !important;
     background: linear-gradient(180deg, #9e2a2a, #5c1111) !important;
@@ -2739,9 +2739,9 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
     border-radius: var(--r-sm);
   }
   .my-zone .act-buttons-row { gap: var(--sp-1); }
-  .my-zone .act-buttons-row .btn-action { min-height: 30px; padding: 0 8px; font-size: 0.72rem; letter-spacing: 0.5px; border-radius: var(--act-btn-radius, 9px); min-width: 0; }
-  .my-zone .mid-row .btn-pct { flex: 0 0 auto; min-width: 40px; height: 24px; min-height: 24px; padding: 0 8px; border-radius: var(--r-md); font-size: 0.58rem; font-weight: 700; border-width: 1px; }
-  .my-zone .mid-row .btn-pct .pct-p { font-size: 0.62rem; }
+  .my-zone .act-buttons-row .btn-action { min-height: 30px; padding: 0 8px; font-size: var(--fs-xs); letter-spacing: 0.5px; border-radius: var(--act-btn-radius, 9px); min-width: 0; }
+  .my-zone .mid-row .btn-pct { flex: 0 0 auto; min-width: 40px; height: 24px; min-height: 24px; padding: 0 8px; border-radius: var(--r-md); font-size: var(--fs-3xs); font-weight: 700; border-width: 1px; }
+  .my-zone .mid-row .btn-pct .pct-p { font-size: var(--fs-2xs); }
   .my-zone .mid-row .btn-pct .pct-amt { display: none; }
   /* Pas de badges de touches clavier sur mobile (parite QML), comme en portrait. */
   .my-zone .act-key { display: none !important; }
@@ -3398,7 +3398,7 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
   flex-wrap: wrap;
 }
 .reaction-bar-label {
-  font-size: 0.55rem;
+  font-size: var(--fs-3xs);
   color: var(--text);
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -3412,7 +3412,7 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
   border: 1px solid var(--border);
   border-radius: 20px;
   padding: 4px 10px;
-  font-size: 1.1rem;
+  font-size: var(--fs-lg);
   cursor: pointer;
   transition: transform 0.12s ease, background 0.15s, border-color 0.15s;
   display: flex; align-items: center; gap: var(--sp-1);
@@ -3427,7 +3427,7 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
 }
 .reaction-btn:active { transform: scale(0.92); }
 .reaction-btn .react-count {
-  font-size: 0.6rem;
+  font-size: var(--fs-2xs);
   font-family: monospace;
   color: var(--gold);
   min-width: 10px;
@@ -3460,7 +3460,7 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
   position: absolute;
   top: -18px; left: 50%;
   transform: translateX(-50%);
-  font-size: 1.4rem;
+  font-size: var(--fs-xl);
   pointer-events: none;
   animation: reactionBadge 2.5s ease forwards;
   z-index: 10;
@@ -3737,22 +3737,22 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
   padding: 6px 0; border-bottom: 1px solid var(--border);
 }
 .board-row.me { background: rgba(var(--gold-rgb), 0.10); border-radius: 4px; padding-left: 4px; padding-right: 4px; }
-.board-rank { grid-area: rank; font-size: 0.8rem; text-align: center; }
-.board-av   { grid-area: av; font-size: 1rem; text-align: center; line-height: 1; }
-.board-name { grid-area: name; font-size: 0.66rem; color: var(--cream); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.board-net  { grid-area: net; font-size: 0.72rem; font-weight: 700; font-family: var(--ff-mono); }
+.board-rank { grid-area: rank; font-size: var(--fs-sm); text-align: center; }
+.board-av   { grid-area: av; font-size: var(--fs-md); text-align: center; line-height: 1; }
+.board-name { grid-area: name; font-size: var(--fs-xs); color: var(--cream); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.board-net  { grid-area: net; font-size: var(--fs-xs); font-weight: 700; font-family: var(--ff-mono); }
 .board-net.pos { color: var(--pos); }
 .board-net.neg { color: var(--neg); }
-.board-sub  { grid-area: sub; font-size: 0.55rem; color: var(--gold-dim); font-family: var(--ff-mono); }
+.board-sub  { grid-area: sub; font-size: var(--fs-3xs); color: var(--gold-dim); font-family: var(--ff-mono); }
 .board-sort { display: flex; align-items: center; gap: var(--sp-2); margin-bottom: 6px; }
-.board-sort > span { color: var(--gold-dim); font-size: 0.7rem; }
+.board-sort > span { color: var(--gold-dim); font-size: var(--fs-xs); }
 .board-sort select {
   flex: 1; background: var(--field-bg); border: 1px solid var(--border);
   border-radius: var(--r-xs); color: var(--cream); padding: 3px 6px;
-  font-family: var(--ff-mono); font-size: 0.66rem; outline: none; cursor: pointer;
+  font-family: var(--ff-mono); font-size: var(--fs-xs); outline: none; cursor: pointer;
 }
 .board-myrank {
-  font-size: 0.62rem; color: var(--gold); font-family: var(--ff-mono);
+  font-size: var(--fs-2xs); color: var(--gold); font-family: var(--ff-mono);
   text-align: center; padding: 2px 0 6px; letter-spacing: 0.04em;
 }
 .hand-hist-item {
@@ -4050,7 +4050,7 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
   background: rgba(0,0,0,0.5);
   border: 2px solid rgba(var(--gold-rgb), 0.3);
   display: flex; align-items: center; justify-content: center;
-  font-size: 0.68rem; color: var(--text-hi);
+  font-size: var(--fs-xs); color: var(--text-hi);
   font-family: var(--ff-display);
   position: relative;
   transition: border-color 0.3s, box-shadow 0.3s;
@@ -4173,7 +4173,7 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
 .seat.folded .seat-avatar::before {
   content: '✕';
   position: absolute;
-  font-size: 0.7rem;
+  font-size: var(--fs-xs);
   color: var(--neg);
   font-weight: 900;
   z-index: 3;
@@ -4204,7 +4204,7 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
   top: 50%; left: 50%;
   transform: translate(-50%, -50%) rotate(-10deg);
   font-family: var(--ff-display);
-  font-size: 0.7rem;
+  font-size: var(--fs-xs);
   font-weight: 800;
   letter-spacing: 0.12em;
   color: #fff;
@@ -4218,22 +4218,22 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
 }
 
 .seat-name {
-  font-size: 0.68rem; color: var(--text-hi);
+  font-size: var(--fs-xs); color: var(--text-hi);
   white-space: nowrap; text-overflow: ellipsis;
   max-width: 68px; overflow: hidden; text-align: center;
 }
 .seat-money {
-  font-size: 0.7rem; color: var(--gold);
+  font-size: var(--fs-xs); color: var(--gold);
   font-family: var(--ff-mono);
 }
 .seat-bet {
-  font-size: 0.52rem;
+  font-size: var(--fs-3xs);
   background: rgba(0,0,0,0.6); border: 1px solid var(--border);
   border-radius: 20px; padding: 1px 5px;
   color: var(--cream); white-space: nowrap;
 }
 .seat-action-label {
-  font-size: 0.5rem; letter-spacing: 0.06em;
+  font-size: var(--fs-3xs); letter-spacing: 0.06em;
   text-transform: uppercase; color: var(--text);
 }
 
@@ -4249,7 +4249,7 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
   z-index: 7;
   white-space: nowrap;
   font-family: var(--ff-display);
-  font-size: 0.6rem; font-weight: 700; letter-spacing: 0.03em;
+  font-size: var(--fs-2xs); font-weight: 700; letter-spacing: 0.03em;
   padding: 2px 10px; border-radius: var(--r-pill);
   color: #fff;
   border: 1px solid rgba(0,0,0,0.35);
@@ -4412,7 +4412,7 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
   padding: 8px 14px;
   border-radius: 8px;
   font-family: var(--ff-display);
-  font-size: 0.72rem;
+  font-size: var(--fs-xs);
   font-weight: 700;
   letter-spacing: 0.08em;
   cursor: pointer;
@@ -4509,7 +4509,7 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
   background: var(--btn-allin-bg, linear-gradient(180deg, #e08a2e, #b5651d));
   color: var(--btn-allin-fg, #fff);
   border: 1px solid var(--btn-allin-bd, #f0a350); outline: none;
-  padding: 8px 12px; font-size: 0.7rem; letter-spacing: 0.06em;
+  padding: 8px 12px; font-size: var(--fs-xs); letter-spacing: 0.06em;
 }
 .btn-allin:hover { filter: brightness(1.08); }
 .btn-allin b { color: var(--btn-allin-fg-b, #fff); }
@@ -4641,7 +4641,7 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
 /* Narrateur de tour ("X ●●●") ré-affiché au-dessus des boutons en mode masqué. */
 .act-narrator {
   display: flex; align-items: center; justify-content: center;
-  font-style: italic; font-size: 0.8rem; color: var(--text-dim, var(--gold-dim));
+  font-style: italic; font-size: var(--fs-sm); color: var(--text-dim, var(--gold-dim));
   padding: 0 0 5px; line-height: 1;
 }
 
@@ -5022,7 +5022,7 @@ html[data-abar="portrait"] .my-zone .act-buttons-row { margin-top: 2px; margin-b
 
 /* Badge timer sous le cercle avatar */
 .seat-timer-badge {
-  font-size: 0.72rem;
+  font-size: var(--fs-xs);
   font-family: var(--ff-mono);
   font-weight: 900;
   color: var(--timer-normal, #ffe234);
@@ -7020,7 +7020,7 @@ html[data-seat-struct="qml"] .seat-avatar {
   background: var(--seat-avatar-bg, rgba(29, 34, 43, 0.9));
   border: 1px solid var(--seat-avatar-border, rgba(205, 211, 224, 0.9));
 }
-html[data-seat-struct="qml"] .seat-holecards .pk { width: 29px; height: 40px; font-size: 0.6rem; }
+html[data-seat-struct="qml"] .seat-holecards .pk { width: 29px; height: 40px; font-size: var(--fs-2xs); }
 html[data-seat-struct="qml"] .seat-narrow .seat-avatar { width: 43px !important; height: 43px !important; }
 html[data-seat-struct="qml"] .seat-narrow .seat-holecards .pk { width: 31px; height: 43px; }
 /* QML : pas de bord vert (self) ni or (au tour) sur l'avatar — le tour est
@@ -7085,7 +7085,7 @@ html[data-seat-struct="qml"] .seat-narrow .seat-money { font-size: 12px !importa
 @media (min-width: 900px) and (hover: hover) and (pointer: fine) {
   /* Nom/tapis : tailles QML fixes (15/12 px) définies dans la base — plus
      d'override desktop, le boxScale de l'ellipse fait la mise à l'échelle. */
-  html[data-seat-struct="qml"] .seat-action-label { font-size: 0.64rem !important; }
+  html[data-seat-struct="qml"] .seat-action-label { font-size: var(--fs-2xs) !important; }
 }
 /* Joueur au tour : boîte « soulevée » scale 1.04 (playerBox.scale QML). Le
    cadre or est porté par ::after (PlayerTurnGlow) — la bordure blanche 6 % de
@@ -7325,8 +7325,8 @@ html[data-seat-img-self] .player-bar {
   border-image-repeat: stretch;
 }
 @media (max-width: 600px) {
-  html[data-seat-img] .seat-name { max-width: 46px; font-size: 0.6rem; }
-  html[data-seat-img] .seat-money { font-size: 0.62rem; }
+  html[data-seat-img] .seat-name { max-width: 46px; font-size: var(--fs-2xs); }
+  html[data-seat-img] .seat-money { font-size: var(--fs-2xs); }
   html[data-seat-img] .seat-foot { gap: var(--sp-1); margin-top: 2px; }
 }
 
@@ -7493,7 +7493,7 @@ html[data-seat-img-self] .player-bar {
 .act-key {
   display: none;
   position: absolute; top: 3px; right: 4px;
-  font-family: var(--ff-mono); font-size: 0.6rem; line-height: 1;
+  font-family: var(--ff-mono); font-size: var(--fs-2xs); line-height: 1;
   font-weight: 600; letter-spacing: 0;
   padding: 1px 4px; border: 1px solid currentColor; border-radius: var(--r-xs);
   opacity: 0.4; pointer-events: none;
@@ -7604,12 +7604,12 @@ html[data-seat-edit="1"] #g-seats .seat.seat-ghost { outline: none; cursor: defa
   background: rgba(20, 28, 24, 0.92); color: #eff1f5;
   border: 1px solid rgba(227, 200, 0, 0.55);
   -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
-  font-size: 0.9rem; box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+  font-size: var(--fs-md); box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
 }
 .seat-edit-banner .seb-hint { opacity: 0.92; }
 .seat-edit-banner button {
   border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 8px;
-  padding: 5px 10px; cursor: pointer; font-weight: 600; font-size: 0.85rem;
+  padding: 5px 10px; cursor: pointer; font-weight: 600; font-size: var(--fs-base);
   background: rgba(255, 255, 255, 0.08); color: #eff1f5;
 }
 .seat-edit-banner .seb-done { background: #E3C800; color: #1d222b; border-color: #E3C800; }
@@ -8303,7 +8303,7 @@ html[data-seat-struct="qml"] .seat.me .seat-holecards.shc-l1 .pk,
 html[data-seat-struct="qml"] .seat.me .seat-holecards.shc-l2 .pk,
 html[data-seat-struct="qml"] .seat.me .seat-holecards.shc-l3 .pk {
   width: 37px !important; height: 52px !important;
-  font-size: 0.8rem !important; border-radius: 3px !important;
+  font-size: var(--fs-sm) !important; border-radius: 3px !important;
 }
 html[data-seat-struct="qml"] .seat.me .seat-avatar {
   width: 52px !important; height: 52px !important;
@@ -8313,7 +8313,7 @@ html[data-seat-struct="qml"] .seat.me .seat-avatar {
   html[data-seat-struct="qml"] .seat.me .seat-holecards.shc-l1 .pk,
   html[data-seat-struct="qml"] .seat.me .seat-holecards.shc-l2 .pk,
   html[data-seat-struct="qml"] .seat.me .seat-holecards.shc-l3 .pk {
-    width: 36px !important; height: 50px !important; font-size: 0.78rem !important;
+    width: 36px !important; height: 50px !important; font-size: var(--fs-sm) !important;
   }
   html[data-seat-struct="qml"] .seat.me .seat-avatar {
     width: 50px !important; height: 50px !important;
@@ -8345,9 +8345,9 @@ html:not([data-seat-struct="qml"]) body.adv-hide-pbar .seat.me .seat-info {
    bisection (114×84 adversaires, self ~150×96) — même placement et mêmes
    tailles que le pack PokerTH, habillage du pack conservé (0.3.696). ── */
 html:not([data-seat-struct="qml"]) .seat:not(.me) { max-width: 114px !important; gap: 1px; }
-html:not([data-seat-struct="qml"]) .seat:not(.me) .seat-avatar { width: 40px !important; height: 40px !important; font-size: 0.92rem !important; }
-html:not([data-seat-struct="qml"]) .seat:not(.me) .seat-name { font-size: 0.7rem !important; line-height: 1.15; max-width: 106px !important; }
-html:not([data-seat-struct="qml"]) .seat:not(.me) .seat-money { font-size: 0.72rem !important; line-height: 1.15; }
+html:not([data-seat-struct="qml"]) .seat:not(.me) .seat-avatar { width: 40px !important; height: 40px !important; font-size: var(--fs-md) !important; }
+html:not([data-seat-struct="qml"]) .seat:not(.me) .seat-name { font-size: var(--fs-xs) !important; line-height: 1.15; max-width: 106px !important; }
+html:not([data-seat-struct="qml"]) .seat:not(.me) .seat-money { font-size: var(--fs-xs) !important; line-height: 1.15; }
 html:not([data-seat-struct="qml"]) .seat:not(.me) .seat-foot { margin-top: 1px; gap: var(--sp-1); }
 /* Selecteur "Placement des sieges" dans Options avancees. */
 .adv-row .adv-sel{flex:0 0 auto;min-width:132px}
@@ -9375,7 +9375,7 @@ html[data-box-accent][data-seat-struct="qml"] .seat-plate { border-color: var(--
   .my-zone .act-buttons-row { gap: var(--sp-3); }
   /* Rangee Fold / Suivre / Relancer : rangee 56 px (Theme.compact QML) MAIS
      bouton visible 45 px (marges internes QML 5+6) — source 2.1.3. */
-  .my-zone .act-buttons-row .btn-action { min-width: 0; min-height: 45px; font-size: 0.9375rem; letter-spacing: 0.5px; border-radius: var(--act-btn-radius, 9px); padding: 0 8px; }
+  .my-zone .act-buttons-row .btn-action { min-width: 0; min-height: 45px; font-size: var(--fs-md); letter-spacing: 0.5px; border-radius: var(--act-btn-radius, 9px); padding: 0 8px; }
   .my-zone .mid-row .btn-pct { flex: 0 0 38px; width: 38px; min-width: 38px; height: 26px; min-height: 26px; padding: 0 2px; border-radius: 5px; font-size: 11px; font-weight: 700; }
   /* Pas de badges de touches clavier sur mobile (le QML n'en affiche aucun). */
   .my-zone .act-key { display: none !important; }
@@ -9477,14 +9477,14 @@ body.chat-tr-on .msg .chat-tr-btn { display: inline; }
   body.adv-hide-pbar .my-zone .pct-row .btn-pct {
     height: 26px; min-height: 26px;
     padding: 0 8px;
-    font-size: 0.7rem;
+    font-size: var(--fs-xs);
     line-height: 1;
     display: inline-flex; align-items: center; justify-content: center;
   }
   body.adv-hide-pbar .my-zone .mid-row > .btn-action.btn-allin {
     height: 26px; min-height: 26px;
     padding: 0 10px !important;
-    font-size: 0.72rem !important;
+    font-size: var(--fs-xs) !important;
     letter-spacing: 0.3px;
     flex: 0 0 auto;
   }
@@ -9532,7 +9532,7 @@ body.chat-tr-on .msg .chat-tr-btn { display: inline; }
   /* Dropdown de mode : 132 px comme le QML, hauteur raccordée à la rangée. */
   body.adv-hide-pbar .my-zone .mid-row .mode-sel-wrap { flex: 0 0 132px; }
   body.adv-hide-pbar .my-zone .mid-row .mode-sel-wrap select {
-    padding-top: 4px; padding-bottom: 4px; font-size: 0.74rem;
+    padding-top: 4px; padding-bottom: 4px; font-size: var(--fs-xs);
   }
 }
 
@@ -9590,9 +9590,9 @@ body.chat-tr-on .msg .chat-tr-btn { display: inline; }
    niveau QML sans toucher aux formules (calibration narmod). ── */
 html[data-seat-struct="qml"] .seat-plate { padding: 3px 5px !important; gap: 2px !important; }
 html[data-seat-struct="qml"] .seat:not(.me) .seat-avatar { width: 34px !important; height: 34px !important; }
-html[data-seat-struct="qml"] .seat:not(.me) .seat-holecards .pk { width: 25px; height: 34px; font-size: 0.52rem; }
-html[data-seat-struct="qml"] .seat:not(.me) .seat-name { font-size: 0.6rem; line-height: 1.1; }
-html[data-seat-struct="qml"] .seat:not(.me) .seat-money { font-size: 0.66rem; line-height: 1.1; }
+html[data-seat-struct="qml"] .seat:not(.me) .seat-holecards .pk { width: 25px; height: 34px; font-size: var(--fs-3xs); }
+html[data-seat-struct="qml"] .seat:not(.me) .seat-name { font-size: var(--fs-2xs); line-height: 1.1; }
+html[data-seat-struct="qml"] .seat:not(.me) .seat-money { font-size: var(--fs-xs); line-height: 1.1; }
 html[data-seat-struct="qml"] .seat:not(.me) .seat-narrow .seat-avatar { width: 36px !important; height: 36px !important; }
 html[data-seat-struct="qml"] .seat:not(.me) .seat-narrow .seat-holecards .pk { width: 26px; height: 36px; }
 /* ── HUD par siège + grille de range (thème client) ─────────────────────── */

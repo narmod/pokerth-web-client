@@ -124,10 +124,9 @@ Chaque lot = un push additif, validé, revu, sans changement visuel non voulu.
 Ordre proposé, du plus visible au plus périphérique :
 
 - [ ] **Lot 0 — Fondation** *(fait, 0.3.952-beta)* : tokens `:root` + alias `--cf-fs-*`.
-- [~] **Lot 1 — Table de jeu** : espacements/rayons de la zone table migrés vers
-      `--sp-*` / `--r-*` *(inerte, 0.3.953-beta)*. Reste : **Lot 1b — harmonisation
-      typo** (72 tailles rem à snapper sur `--fs-*`, décalage ≤ 0,05rem — à valider,
-      change légèrement le rendu). Polices px QML conservées (documentées).
+- [x] **Lot 1 — Table de jeu** : espacements/rayons → `--sp-*`/`--r-*` (inerte, 0.3.953)
+      + typo harmonisée sur `--fs-*` (72 tailles snappées ≤ 0,05rem, 0.3.954-beta).
+      Polices px QML conservées (documentées).
 - [ ] **Lot 2 — Panneaux en jeu** : chances/stats (`#g-odds-body`, `#g-stats-body`),
       chat, log, panneaux flottants, HUD/range-grid.
 - [ ] **Lot 3 — Lobby** : liste des parties, tri/recherche, chat lobby, stats bar.
