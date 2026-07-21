@@ -3160,12 +3160,20 @@ function _destroySession(S) {
   S.sock = null; S.buf = []; S.bufBytes = 0;
 }
 
+// Résolution amont : IPv4 d'abord (comportement historique), repli IPv6 (AAAA)
+// si aucun enregistrement A — permet d'atteindre un serveur officiel IPv6-only.
+function _lookupPreferV4(host, cb) {
+  dns.lookup(host, { family: 4 }, (e4, a4) => {
+    if (!e4) return cb(a4);
+    dns.lookup(host, { family: 6 }, (e6, a6) => cb(e6 ? host : a6));
+  });
+}
+
 // Ouvre la connexion TCP/TLS amont vers PokerTH pour la session S.
 function _openUpstream(S) {
   _scheduleConn(() => {
-    dns.lookup(S.host, { family: 4 }, (err, addr) => {
-      addr = err ? S.host : addr;
-      const isIp = /^\d+\.\d+\.\d+\.\d+$/.test(addr);
+    _lookupPreferV4(S.host, (addr) => {
+      const isIp = net.isIP(addr) !== 0;
       const opts = { host: addr, port: S.port, ...(!isIp && { servername: S.host }) };
       const onConn = () => {
         S.connected = true;
