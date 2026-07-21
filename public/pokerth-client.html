@@ -3343,6 +3343,7 @@ if ('serviceWorker' in navigator) {
         h += '<div class="rk-ach-row ' + (a.unlocked ? 'on' : 'off') + '">'
           + '<span class="rk-ach-ico">' + a.icon + '</span>'
           + '<span class="rk-ach-txt"><b>' + esc(title) + '</b><small>' + esc(desc) + '</small></span>'
+          + (a.players ? '<span class="rk-ach-req" title="' + esc(rkT('achReqPlayers', 'Requires {n} players').replace('{n}', a.players)) + '">\ud83d\udc65\u00a0' + a.players + '</span>' : '')
           + '<span class="rk-ach-badge">' + (a.unlocked ? '\u2713' : '\ud83d\udd12') + '</span>'
           + '</div>';
       });

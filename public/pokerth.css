@@ -9753,3 +9753,4 @@ html[data-seat-struct="qml"] .seat:not(.me) .seat-narrow .seat-holecards .pk { w
 .ach-badge-lbl { font-weight: 600; color: var(--text-hi); flex: 1; }
 .ach-badge-val { font-weight: 700; color: var(--gold); font-variant-numeric: tabular-nums; }
 .ach-badge-endgame { margin-top: 12px; justify-content: center; }
+.rk-ach-req { flex: none; font-size: 0.66rem; color: var(--gold-dim); background: rgba(var(--gold-rgb), 0.10); border: 1px solid rgba(var(--gold-rgb), 0.25); border-radius: 999px; padding: 1px 7px; white-space: nowrap; }
