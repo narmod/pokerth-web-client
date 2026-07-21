@@ -3281,7 +3281,7 @@ if ('serviceWorker' in navigator) {
     var card = m.querySelector('.rk-card');
     if (card && rkWinGate()) {
       m.classList.add('rk-floating');
-      try { window._enableFloating(card, { handle: $('rk-title'), resizable: true, zoom: true, key: 'pth-rk-win', defW: 460, defH: 540, minW: 320, minH: 320, defLeft: 60, defTop: 70 }); } catch (e) {}
+      try { window._enableFloating(card, { handle: $('rk-title'), resizable: true, maxW: Math.min(1010, Math.round(window.innerWidth * 0.92)), maxH: Math.min(680, Math.round(window.innerHeight * 0.90)), zoom: true, key: 'pth-rk-win', defW: 460, defH: 540, minW: 320, minH: 320, defLeft: 60, defTop: 70 }); } catch (e) {}
     }
     // Communaute par defaut = derniere source choisie (parite 2.1.2 defaultCommunity).
     var _rkDef = 'pth'; try { _rkDef = localStorage.getItem('pth_rank_src') || 'pth'; } catch (e) {}
@@ -3502,7 +3502,7 @@ if ('serviceWorker' in navigator) {
     var card = m.querySelector('.rk-card');
     if (card && trWinGate()) {
       m.classList.add('rk-floating');
-      try { window._enableFloating(card, { handle: $('trk-title'), resizable: true, zoom: true, key: 'pth-trk-win', defW: 460, defH: 420, minW: 320, minH: 280, defLeft: 80, defTop: 90 }); } catch (e) {}
+      try { window._enableFloating(card, { handle: $('trk-title'), resizable: true, maxW: Math.min(1010, Math.round(window.innerWidth * 0.92)), maxH: Math.min(680, Math.round(window.innerHeight * 0.90)), zoom: true, key: 'pth-trk-win', defW: 460, defH: 420, minW: 320, minH: 280, defLeft: 80, defTop: 90 }); } catch (e) {}
     }
     var def = 'pth'; try { def = localStorage.getItem('pth_rank_src') || 'pth'; } catch (e) {}
     window.trSelect(def);
