@@ -8624,7 +8624,8 @@ html.reduce-fx .seat-action-badge {
 /* Anti-replay (sp0ck 2026-07-17) : un re-render SANS changement d'état pour ce
    siège ne rejoue pas les pops (pucks/drapeau/badge) — classe posée par
    renderSeats quand la signature du siège est identique au rendu précédent. */
-.dealer-chip.no-pop, .blind-chip.no-pop, .seat-flag.no-pop, .seat-action-badge.no-pop {
+.dealer-chip.no-pop, .blind-chip.no-pop, .seat-flag.no-pop, .seat-action-badge.no-pop,
+.seat-bet.no-pop {
   animation: none !important;
 }
 
