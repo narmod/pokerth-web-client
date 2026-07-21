@@ -595,6 +595,11 @@ function renderSeatsImmediate() {
       if (dealerChip) dealerChip = dealerChip.replace('dealer-chip', 'dealer-chip no-pop');
       if (blindBadge) blindBadge = blindBadge.replace('blind-chip', 'blind-chip no-pop');
     }
+    // Même anti-replay pour la mise (.seat-bet a `animation: betChipPop`) :
+    // sans ça le pop du BetChip rejoue à CHAQUE renderSeats (sp0ck 2026-07-21
+    // « the bet amounts still flicker, the pucks don't anymore »). On ne
+    // rejoue le pop QUE si la mise a réellement changé pour ce siège.
+    var _betNoPop = (_apPrev && _apPrev.b === sd.bet) ? ' no-pop' : '';
     // Packs PokerTH : pucks posés sur le CÔTÉ de la boîte -> hors de l'avatar.
     var _avPucks = _seatTr.pucksSide ? '' : (blindBadge + dealerChip);
     // Drapeau du pays sur l'avatar (coin bas-droite, comme un badge).
@@ -684,7 +689,7 @@ function renderSeatsImmediate() {
       var _acKey = ['','actBadgeFold','actBadgeCheck','actBadgeCall','actBadgeBet','actBadgeRaise','actBadgeAllin'][_acCode];
       _acBadge = '<div class="seat-action-badge' + (_apPrev && _apPrev.a === _acCode ? ' no-pop' : '') + ' act-c' + _acCode + '">' + esc(window.pkTerm(_acBase, _acKey)) + '</div>';
     }
-    _apNew[pid] = { p: _puckSig, f: !!seatFlag, a: _acCode }; // signature du rendu courant
+    _apNew[pid] = { p: _puckSig, f: !!seatFlag, a: _acCode, b: sd.bet }; // signature du rendu courant
     // Bloc F — PlayerTimeoutBar QML : visible tant que le siège est au tour
     // SANS badge d'action ni état gagnant. Adversaires : centrée sur les
     // cartes. SELF avec strip (pack pokerth) : dans le bandeau AU-DESSUS de
@@ -733,7 +738,7 @@ function renderSeatsImmediate() {
     // (sp0ck 2026-07-17, aligné QML 2.1.4 : les cartes propres restent
     // lisibles). La barre de décompte reste centrée sur les cartes.
     if (_seatTr.selfStrip && isMe) {
-      var _stripBet = (sd.bet > 0) ? '<div class="seat-bet strip-bet">' + fmtChips(sd.bet) + '</div>' : '';
+      var _stripBet = (sd.bet > 0) ? '<div class="seat-bet strip-bet' + _betNoPop + '">' + fmtChips(sd.bet) + '</div>' : '';
       // UNIQUEMENT pour les packs à structure pokerth/QML (badgeOnCards) :
       // c'est le badge qui était sur les cartes que sp0ck a déplacé vers le
       // strip. Les autres packs gardent leur badge dans le pied du siège
@@ -747,7 +752,7 @@ function renderSeatsImmediate() {
     }
     if (_seatTr.pucksSide && (blindBadge || dealerChip)) h += '<div class="seat-pucks">' + blindBadge + dealerChip + '</div>';
     h += '<div class="seat-foot">'; // pied : mise / action / cartes
-    if (sd.bet) h += '<div class="seat-bet">' + fmtChips(sd.bet) + '</div>';
+    if (sd.bet) h += '<div class="seat-bet' + _betNoPop + '">' + fmtChips(sd.bet) + '</div>';
     // Action → badge préparé plus haut (posé sur les cartes en pack pokerth,
     // sinon ici dans le pied). Le texte non-action (gains au showdown,
     // '+X'/'🏆') garde le libellé simple.
