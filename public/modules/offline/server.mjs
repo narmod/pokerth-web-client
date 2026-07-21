@@ -11,6 +11,7 @@
 import { OfflineTable, ACT, bestHand } from './engine.mjs';
 import { decide, pickArchetype } from './bots.mjs';
 import { buildMessage, parseClientFrame, encode, packed, readFields, TYPE } from './proto.mjs';
+import { createAchievements } from '../achievements/index.mjs';
 
 const GS  = { preflop:0, flop:1, turn:2, river:3 };
 const NPA = { fold:1, check:2, call:3, bet:4, raise:5, allin:6 };
@@ -284,6 +285,17 @@ export class FakeServer {
       raiseMode:this.cfg.raiseMode, endRaiseMode:this.cfg.endRaiseMode, endRaiseValue:this.cfg.endRaiseValue,
       manualBlinds:this.cfg.manualBlinds,
       rng:this.rng, gameId:this.gameId, onEvent:(ev)=>this._onEngine(ev) });
+    // Succès (mode entraînement, bots uniquement). Désactivable via l'option
+    // avancée 'pth_ach_enabled' ; onUnlock émet un event global que l'UI Trophées
+    // écoutera (ajout additif — aucun effet tant que l'UI n'est pas branchée).
+    this._ach = null;
+    try {
+      let en = true;
+      try { if (typeof localStorage !== 'undefined' && localStorage.getItem('pth_ach_enabled') === '0') en = false; } catch (e) {}
+      if (en) this._ach = createAchievements({ onUnlock: a => {
+        try { if (typeof window !== 'undefined' && window.dispatchEvent) window.dispatchEvent(new CustomEvent('pth-achievement', { detail: a })); } catch (e) {}
+      } });
+    } catch (e) { this._ach = null; }
     this.pace(()=>this.table.start(), 300);
   }
   _clearHumanTimer(){ if(this._humanTimer){ clearTimeout(this._humanTimer); this._humanTimer=null; } }
@@ -424,6 +436,7 @@ export class FakeServer {
 
   _onEngine(ev){
     if(this.stopped) return; const G=this.gameId;
+    if (this._ach) { try { this._ach.observe(ev, { meId: this.meId }); } catch (e) {} }
     switch(ev.type){
       case 'handStart': {
         this._roAcc = 0;   // nouvelle main : repartir d'un accumulateur vierge

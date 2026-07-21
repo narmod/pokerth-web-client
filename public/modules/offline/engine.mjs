@@ -87,7 +87,7 @@ export class OfflineTable {
   }
   livePlayers(){ return this.players.filter(p=>p.in); }
 
-  start(){ this.onEvent({type:'gameStart', players:this.players.map(p=>({id:p.id,name:p.name,stack:p.stack,isBot:p.isBot}))}); this.t0=this.now(); this.nextHand(); }
+  start(){ this.onEvent({type:'gameStart', players:this.players.map(p=>({id:p.id,name:p.name,stack:p.stack,isBot:p.isBot,skill:p.skill}))}); this.t0=this.now(); this.nextHand(); }
 
   // Small blind for a given (0-based) level — official Game::raiseBlinds parity:
   //   · manual list present: level 0 = baseSB, levels 1..N walk the list, then
@@ -315,7 +315,7 @@ export class OfflineTable {
     const pot=this._pot();
     winner.stack+=pot;
     this.h.results=[{playerId:winner.id, won:pot, cards:null}];
-    this.onEvent({type:'endOfHandHide', playerId:winner.id, moneyWon:pot, playerMoney:winner.stack});
+    this.onEvent({type:'endOfHandHide', playerId:winner.id, moneyWon:pot, playerMoney:winner.stack, aggressorId:this.h.aggressorId});
     this._finishHand();
   }
 
