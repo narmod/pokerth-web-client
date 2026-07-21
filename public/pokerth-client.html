@@ -2479,6 +2479,7 @@ if ('serviceWorker' in navigator) {
     <button class="rk-close" type="button" onclick="closeRankingModal()" title="Fermer" data-i18n-title="closeTooltip" aria-label="Fermer">✕</button>
     <div class="rk-title" id="rk-title">🏆 <span data-i18n="rankingTitle">Ranking</span></div>
     <div class="rk-tabs">
+      <button type="button" class="rk-tab rk-tab-ach" data-src="ach" onclick="rankingSelect('ach')" data-i18n="achTitle" style="display:none">Trophées</button>
       <button type="button" class="rk-tab" data-src="pth" onclick="rankingSelect('pth')" data-i18n="rankingPth">PokerTH</button>
       <button type="button" class="rk-tab" data-src="bbc" onclick="rankingSelect('bbc')" data-i18n="rankingBbc">BBC</button>
       <button type="button" class="rk-tab" data-src="wec" onclick="rankingSelect('wec')" data-i18n="rankingWec">WEC</button>
@@ -2501,6 +2502,7 @@ if ('serviceWorker' in navigator) {
       <div class="rk-msg" id="rk-empty" data-i18n="rankingEmpty" style="display:none">No entries.</div>
       <div class="rk-msg" id="rk-nomatch" data-i18n="rankingNoMatch" style="display:none">No player found.</div>
       <div id="rk-table-wrap" style="display:none"></div>
+      <div id="rk-ach-wrap" style="display:none"></div>
       <div id="rk-pager" class="rk-pager" style="display:none"></div>
     </div>
     <div id="rk-profile" style="display:none">
@@ -3284,7 +3286,11 @@ if ('serviceWorker' in navigator) {
       try { window._enableFloating(card, { handle: $('rk-title'), resizable: true, maxW: Math.min(1010, Math.round(window.innerWidth * 0.92)), maxH: Math.min(680, Math.round(window.innerHeight * 0.90)), zoom: true, key: 'pth-rk-win', defW: 460, defH: 540, minW: 320, minH: 320, defLeft: 60, defTop: 70 }); } catch (e) {}
     }
     // Communaute par defaut = derniere source choisie (parite 2.1.2 defaultCommunity).
+    var _achTab = document.querySelector('#ranking-modal .rk-tab-ach');
+    var _off = !!window._offlineMode;
+    if (_achTab) _achTab.style.display = _off ? '' : 'none';
     var _rkDef = 'pth'; try { _rkDef = localStorage.getItem('pth_rank_src') || 'pth'; } catch (e) {}
+    if (_off) _rkDef = 'ach';
     rankingSelect(_rkDef);
   };
   window.closeRankingModal = function () {
@@ -3295,7 +3301,57 @@ if ('serviceWorker' in navigator) {
     m.style.display = 'none';
   };
 
+  // -- Onglet Succes (mode entrainement) : lit le module achievements (store local).
+  var _achMod = null;
+  try { import('/modules/achievements/index.mjs').then(function (m) { _achMod = m; }).catch(function () {}); } catch (e) {}
+  function rkAchRender() {
+    var esc = rkEsc;
+    if (!_achMod) return '<div class="rk-msg">' + esc(rkT('rankingLoading', 'Loading\u2026')) + '</div>';
+    var snap = [];
+    try { snap = _achMod.createAchievements({}).snapshot(); } catch (e) { snap = []; }
+    var nOn = 0; for (var i = 0; i < snap.length; i++) if (snap[i].unlocked) nOn++;
+    var prog = rkT('achProgress', '{n}/{total}').replace('{n}', nOn).replace('{total}', snap.length);
+    var order = ['progress', 'skill', 'style', 'fun'];
+    var lbl = { progress: rkT('achCatProgress', 'Progress'), skill: rkT('achCatSkill', 'Skill'), style: rkT('achCatStyle', 'Playstyle'), fun: rkT('achCatFun', 'Fun') };
+    var h = '<div class="rk-ach-head"><span class="rk-ach-prog">' + esc(prog) + '</span></div>';
+    order.forEach(function (cat) {
+      var items = snap.filter(function (a) { return a.cat === cat; });
+      if (!items.length) return;
+      h += '<div class="rk-ach-cat">' + esc(lbl[cat] || cat) + '</div>';
+      items.forEach(function (a) {
+        var title = rkT('ach_' + a.id, a.id), desc = rkT('ach_' + a.id + '_d', '');
+        h += '<div class="rk-ach-row ' + (a.unlocked ? 'on' : 'off') + '">'
+          + '<span class="rk-ach-ico">' + a.icon + '</span>'
+          + '<span class="rk-ach-txt"><b>' + esc(title) + '</b><small>' + esc(desc) + '</small></span>'
+          + '<span class="rk-ach-badge">' + (a.unlocked ? '\u2713' : '\ud83d\udd12') + '</span>'
+          + '</div>';
+      });
+    });
+    return h;
+  }
+  window.rankingSelectAch = function () {
+    rkSetView('list');
+    var tabs = document.querySelectorAll('#ranking-modal .rk-tab');
+    for (var i = 0; i < tabs.length; i++) tabs[i].classList.toggle('active', tabs[i].dataset.src === 'ach');
+    ['rk-controls', 'rk-search-wrap', 'rk-loading', 'rk-soon', 'rk-error', 'rk-empty', 'rk-nomatch', 'rk-table-wrap', 'rk-pager'].forEach(function (id) { var e = document.getElementById(id); if (e) e.style.display = 'none'; });
+    var w = document.getElementById('rk-ach-wrap'); if (w) { w.innerHTML = rkAchRender(); w.style.display = ''; }
+  };
+  try {
+    window.addEventListener('pth-achievement', function (ev) {
+      try {
+        var id = ev && ev.detail && ev.detail.id; if (!id) return;
+        var head = rkT('achUnlocked', 'Achievement unlocked!');
+        var msg = (ev.detail.icon || '\ud83c\udfc6') + ' ' + head + ' \u2014 ' + rkT('ach_' + id, id);
+        if (typeof window.showToast === 'function') window.showToast(msg);
+        var w = document.getElementById('rk-ach-wrap');
+        if (w && w.style.display !== 'none') w.innerHTML = rkAchRender();
+      } catch (e) {}
+    });
+  } catch (e) {}
+
   window.rankingSelect = function (src) {
+    if (src === 'ach') { rankingSelectAch(); return; }
+    var _aw = document.getElementById('rk-ach-wrap'); if (_aw) _aw.style.display = 'none';
     rkSetView('list');
     if (RK_SRCS.indexOf(src) < 0) src = 'pth';
     RK_SRC = src; RK_ALLTIME = false; RK_PAGE = 1;
