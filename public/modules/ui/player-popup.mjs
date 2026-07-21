@@ -256,7 +256,17 @@ window._plOpenStats = function (pid) {
 window._toggleIgnore = function(pid){
   var nm = (typeof window.getPlayerName === 'function') ? window.getPlayerName(pid) : null;
   if (!nm) return;
-  _setIgnoredName(nm, !window._isIgnored(nm));
+  var _willIgnore = !window._isIgnored(nm);
+  try {
+    if (window._advGet && window._advGet('confirm_social', true)) {
+      var _ik = _willIgnore ? 'ignoreConfirm' : 'unignoreConfirm';
+      var _iq = (typeof t === 'function' && t(_ik, { name: nm }) !== _ik)
+        ? t(_ik, { name: nm })
+        : (_willIgnore ? ('Ignore ' + nm + '?') : ('Stop ignoring ' + nm + '?'));
+      if (!window.confirm(_iq)) return;
+    }
+  } catch (e) {}
+  _setIgnoredName(nm, _willIgnore);
   try { if (typeof window._renderSeats === 'function') window._renderSeats(); } catch (e) {}
   try { openPlayerInfoPopup(pid); } catch (e) {}
 };

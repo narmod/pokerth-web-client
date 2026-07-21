@@ -46,6 +46,7 @@ export const strings = {
     buttonsAuto:"Auto (table)",
     buttonsFlat:"Flat",
     advRemoveGone:"Remove departed players and re-seat the table",
+    advConfirmSocial:"Ask for confirmation before inviting or ignoring a player",
     advWinnerPopup:"Winner window at end of hand",
     // PlayerWinnerOverlay (badge gagnant sur la boîte, parité QML)
     winnerBadge:'WINNER',
@@ -414,7 +415,7 @@ export const strings = {
     piStatusEliminated:'Eliminated',
     piViewProfile:'View pokerth.net profile',
     piCups:'Cups',
-    piShowCups:'Show cups', piIgnore:'Ignore', piUnignore:'Unignore', piKickban:'Total kickban', kickbanConfirm:'Ban {name} from the server (total kickban)?', kickbanOk:'{name} has been kickbanned', kickbanFail:'Kickban failed',
+    piShowCups:'Show cups', piIgnore:'Ignore', piUnignore:'Unignore', piKickban:'Total kickban', kickbanConfirm:'Ban {name} from the server (total kickban)?', inviteConfirm:'Invite {name} to your game?', ignoreConfirm:'Ignore {name}?', unignoreConfirm:'Stop ignoring {name}?', kickbanOk:'{name} has been kickbanned', kickbanFail:'Kickban failed',
     piNoCupData:'No cup ranking for this player.',
     rankingTooltip:'Ranking', rankingTitle:'Ranking', rankingPth:'PokerTH', rankingBbc:'BBC', rankingWec:'WEC',
     rankingLoading:'Loading…', rankingSoon:'Ranking coming soon.', rankingError:'Could not load the ranking.', rankingEmpty:'No entries.',

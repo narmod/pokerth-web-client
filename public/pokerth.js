@@ -383,6 +383,7 @@ function openAdvancedOptions() {
   sync('adv-blindsbadge', 'blinds_badge', true);
   sync('adv-winnerpopup', 'winner_popup', true);
   sync('adv-removegone', 'remove_gone', false);
+  sync('adv-confirmsocial', 'confirm_social', true);   // confirmation avant inviter/ignorer (parité QML 2.1.4)
   try { var _dm = document.getElementById('adv-darkmode'); if (_dm && window.getTheme) _dm.value = window.getTheme() || 'auto'; } catch (e) {}
   sync('adv-pingavatar', 'ping_avatar', true); // défaut QML : ShowPingStateInAvatar=1
   sync('adv-autoleave', 'auto_leave', false);
@@ -933,7 +934,7 @@ var _CFG_WEB_SYNC_KEYS = [
   'pth_community_content', 'pth_sound_vol',
   'pth_log_on', 'pth_create_dialog', 'pth_status_bar', 'pth_blinds_badge',
   'pth_winner_popup', 'pth_remove_gone', 'pth_tooltips', 'pth_big_own_cards',
-  'pth_chat_translate', 'pth_chat_abbrev', 'pth_pin_actionbar',
+  'pth_chat_translate', 'pth_chat_abbrev', 'pth_pin_actionbar', 'pth_confirm_social',
   // Valeurs (thème web, sièges, clavier, langue, divers)
   'pth_theme', 'pth_buttons', 'pth_pucks', 'pth_seat', 'pth_seat_layout',
   'pth_seat_custom', 'pth_keys', 'pth_lang', 'pth_offline_skill',
@@ -4798,6 +4799,14 @@ const App = (() => {
     inviteSentTo(pid) { return !!S._invSent[pid]; },
     sendInvite(pid) {
       if (window._offlineMode || !S.gId || pid === S.myId) return;
+      try {
+        if (_advGet('confirm_social', true)) {
+          var _inm = S.players[pid] || ('#' + pid);
+          var _iq = t('inviteConfirm', { name: _inm });
+          if (_iq === 'inviteConfirm') _iq = 'Invite ' + _inm + ' to your game?';
+          if (!window.confirm(_iq)) return;
+        }
+      } catch (e) {}
       try { send(MSG.buildInvitePlayer(S.gId, pid)); } catch(e) {}
       S._invSent[pid] = true;
       App._renderInviteList(App._inviteEligiblePids());
@@ -8662,7 +8671,7 @@ window.togglePlayersPanel = togglePlayersPanel;
 window.toggleReactionPanel = toggleReactionPanel;
 window.App = App;
 
-window.BUILD_VERSION='0.3.966-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='0.3.967-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
