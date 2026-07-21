@@ -168,7 +168,9 @@ function openPlayerInfoPopup(pid, autoStats) {
     } else {
       url = (typeof _pthAvatarFor === 'function') ? _pthAvatarFor(targetPid) : null;
       if (S._playerImgAvatars[targetPid]) url = S._playerImgAvatars[targetPid];
-      if (!url) emoji = S._playerAvatars[targetPid] || (window.isBot(targetPid) ? '🤖' : '');
+      if (!url) emoji = S._playerAvatars[targetPid]
+                        || (window._offlineBotAv && window._offlineBotAv[targetPid])   // emoji des bots offline (mode entraînement), comme les sièges
+                        || (window.isBot(targetPid) ? '🤖' : '');
     }
     if (url) {
       avEl.innerHTML = '<img src="' + url + '" alt="" draggable="false">';
