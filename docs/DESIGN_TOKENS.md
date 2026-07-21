@@ -136,8 +136,10 @@ Ordre proposé, du plus visible au plus périphérique :
 - [x] **Lot 4 — Passe inerte finale sur `pokerth.css`** *(0.3.959-beta)* : 314
       correspondances exactes restantes tokenisées d'un coup (formulaires, options,
       modales, menus, contrôles partagés, divers). Tout `pokerth.css` est désormais
-      sur le barème pour les valeurs exactes ; ne restent que les **snaps visibles**
-      par surface (formulaires, ranking, divers) à valider.
+      sur le barème pour les valeurs exactes.
+- [x] **Lot 4b — Harmonisation typo globale** *(0.3.960-beta)* : 237 polices rem
+      restantes snappées sur `--fs-*` (≤ 0,05rem). Toute la typographie de
+      `pokerth.css` est désormais unifiée sur le barème.
 - [ ] **Lot 5 — Ranking / profil** : `.rk-search`, `.rk-season`, pages de classement.
 - [ ] **Lot 6 — Thèmes de sièges** (`public/seats/*/style.css`) : aligner sur les tokens.
 - [ ] **Lot 7 — Surcharges responsive** : poser les blocs `@media :root { … }` par
