@@ -133,8 +133,11 @@ Ordre proposé, du plus visible au plus périphérique :
 - [x] **Lot 3 — Lobby** : espacements/rayons + polices rem migrés (inerte, 0.3.957) ;
       typo harmonisée (50 snaps ≤0,05rem, 0.3.958-beta) — lobby, liste parties, chat,
       stats/foot bar, création, wait-page, lecteur musique.
-- [ ] **Lot 4 — Formulaires** : login, `#create-form` (déjà aliasé → généraliser),
-      réglages / options avancées, modales de confirmation.
+- [x] **Lot 4 — Passe inerte finale sur `pokerth.css`** *(0.3.959-beta)* : 314
+      correspondances exactes restantes tokenisées d'un coup (formulaires, options,
+      modales, menus, contrôles partagés, divers). Tout `pokerth.css` est désormais
+      sur le barème pour les valeurs exactes ; ne restent que les **snaps visibles**
+      par surface (formulaires, ranking, divers) à valider.
 - [ ] **Lot 5 — Ranking / profil** : `.rk-search`, `.rk-season`, pages de classement.
 - [ ] **Lot 6 — Thèmes de sièges** (`public/seats/*/style.css`) : aligner sur les tokens.
 - [ ] **Lot 7 — Surcharges responsive** : poser les blocs `@media :root { … }` par
