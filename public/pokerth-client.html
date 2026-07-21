@@ -3304,6 +3304,26 @@ if ('serviceWorker' in navigator) {
   // -- Onglet Succes (mode entrainement) : lit le module achievements (store local).
   var _achMod = null;
   try { import('/modules/achievements/index.mjs').then(function (m) { _achMod = m; }).catch(function () {}); } catch (e) {}
+  window._achMountBadge = function (container, where) {
+    try {
+      if (!container || !window._offlineMode) return;
+      var render = function (m) {
+        var snap; try { snap = m.createAchievements({}).snapshot(); } catch (e) { return; }
+        var on = 0; for (var i = 0; i < snap.length; i++) if (snap[i].unlocked) on++;
+        var lbl = rkT('achTitle', 'Troph\u00e9es');
+        var prog = rkT('achProgress', '{n}/{total}').replace('{n}', on).replace('{total}', snap.length);
+        var el = document.createElement('div');
+        el.className = 'ach-badge ach-badge-' + (where || 'profile');
+        el.setAttribute('role', 'button'); el.setAttribute('tabindex', '0'); el.title = lbl;
+        el.innerHTML = '<span class="ach-badge-ico">\ud83c\udfc6</span><span class="ach-badge-lbl">' + rkEsc(lbl) + '</span><span class="ach-badge-val">' + rkEsc(prog) + '</span>';
+        var open = function () { try { if (typeof window.openRankingModal === 'function') window.openRankingModal(); } catch (e) {} };
+        el.onclick = open; el.onkeydown = function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(); } };
+        container.appendChild(el);
+      };
+      if (_achMod) render(_achMod);
+      else import('/modules/achievements/index.mjs').then(function (m) { _achMod = m; render(m); }).catch(function () {});
+    } catch (e) {}
+  };
   function rkAchRender() {
     var esc = rkEsc;
     if (!_achMod) return '<div class="rk-msg">' + esc(rkT('rankingLoading', 'Loading\u2026')) + '</div>';

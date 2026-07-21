@@ -386,6 +386,7 @@ function _renderProfileStats() {
   else                          body = window._statsBodySession();
   box.innerHTML = tabs + body;
   if (S._pimTab === 'board') window.renderBoard('pim-board-body');
+  if (window._offlineMode && typeof window._achMountBadge === 'function') { try { window._achMountBadge(box, 'profile'); } catch (e) {} }
 }
 
 function closePlayerInfoPopup() {

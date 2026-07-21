@@ -127,6 +127,7 @@ function showEndGameOverlay(winnerPid, opts) {
         '<div class="eg-stat-row"><span class="eg-stat-label">' + t('endGameBestWin') + '</span><span class="eg-stat-val pos">+' + '$' + _groupThousands(s.bigWin)+'</span></div>' +
         '<div class="eg-stat-row"><span class="eg-stat-label">' + t('endGameWorstLoss') + '</span><span class="eg-stat-val neg">' + '$' + _groupThousands(s.bigLoss)+'</span></div>' +
       '</div>' +
+      '<div id="eg-ach"></div>' +
       '<div class="eg-actions">' +
         (window._offlineMode ? '<button class="eg-btn primary" onclick="App.offlineReplay()">' + t('endGameReplay') + '</button>' : '') +
         '<button class="eg-btn" onclick="App.endGameClose()">' + t('endGameClose') + '</button>' +
@@ -134,6 +135,7 @@ function showEndGameOverlay(winnerPid, opts) {
       '</div>' +
     '</div>';
   el.style.display = '';
+  if (window._offlineMode && typeof window._achMountBadge === 'function') { try { window._achMountBadge(document.getElementById('eg-ach'), 'endgame'); } catch (e) {} }
 
   // Audio cue: winner fanfare for the local player, neutral chime otherwise
   if (typeof window.notifyWinner === 'function') {

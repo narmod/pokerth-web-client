@@ -9745,3 +9745,11 @@ html[data-seat-struct="qml"] .seat:not(.me) .seat-narrow .seat-holecards .pk { w
 .rk-ach-txt b { font-size: var(--fs-base); color: var(--text-hi); }
 .rk-ach-txt small { font-size: var(--fs-sm); color: var(--text); opacity: 0.8; white-space: normal; }
 .rk-ach-badge { flex: none; font-size: 0.95rem; color: var(--gold); }
+
+/* ── Encart « Trophées X/10 » (popup Mon profil + overlay fin de partie, entraînement) ── */
+.ach-badge { display: flex; align-items: center; gap: 8px; margin-top: 10px; padding: 8px 12px; border-radius: 9px; background: rgba(var(--gold-rgb), 0.08); border: 1px solid rgba(var(--gold-rgb), 0.35); cursor: pointer; }
+.ach-badge:hover { background: rgba(var(--gold-rgb), 0.14); }
+.ach-badge-ico { font-size: 1.1rem; line-height: 1; }
+.ach-badge-lbl { font-weight: 600; color: var(--text-hi); flex: 1; }
+.ach-badge-val { font-weight: 700; color: var(--gold); font-variant-numeric: tabular-nums; }
+.ach-badge-endgame { margin-top: 12px; justify-content: center; }
