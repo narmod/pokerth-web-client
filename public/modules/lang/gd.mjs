@@ -35,6 +35,7 @@ export const strings = {
     buttonsAuto:"Auto (table)",
     buttonsFlat:"Flat",
     advRemoveGone:"Thoir air falbh cluicheadairean a dh'fhalbh agus suidhich am bòrd às ùr",
+    advConfirmSocial:"Iarr dearbhadh mus toir thu cuireadh do chluicheadair no mus leig thu seachad e",
     advWinnerPopup:"Uinneag buannaiche aig deireadh na làimhe",
     // PlayerWinnerOverlay (badge gagnant sur la boîte, parité QML)
     winnerBadge:'BUANNAICHE',
@@ -53,7 +54,7 @@ export const strings = {
   plRemaining: 'Cluicheadairean air fhàgail', showCards: 'Seall',
   emoFrequent: 'Cumanta', emoAll: 'Na h-uile', advPingAvatar: 'Taisbeanair ping air m\'avatar (uaine/buidhe/dearg)', advAutoLeave: 'Till dhan lobaidh gu fèin-obrachail nuair a thig an geama gu crìch',
   advReduceFx: 'Lùghdaich èifeachdan grafaigeach (sgàilean/deàrrsadh) — do dh\'uidheaman lag', avatarGallery: 'Gailearaidh avataran', avatarGalleryTooltip: 'Gailearaidh avataran', avgalPeople: 'Daoine', avgalMisc: 'Measgachadh', lsbRunning: 'a\' ruith', lsbOpen: 'fosgailte', statusBets: 'Geallan', advBlindsBadge:'Bràiste nan dall sa bhàr staid', advStatusBar: 'Bàr staid a\' gheama (àir. làimhe, poit, geallan, ìre)',
-  piKickban: 'Kickban iomlan', kickbanConfirm: 'A bheil thu airson {name} a thoirmeasg on fhrithealaiche (kickban iomlan)?', kickbanOk: 'Fhuair {name} kickban', kickbanFail: 'Dh\'fhàillig an kickban', advSecSndCats: 'Roinnean fuaime', advSndActions: 'Fuaimean ghnìomhan a\' gheama (Check, Call, Raise…)', advSndLobby: 'Brath cabadaich an lobaidh', advSndNet: 'Brathan geama lìonraidh (chaidh cluicheadair a-steach, geama deiseil)', advSndBlinds: 'Brath àrdachadh nan blinds', sectionCardback: 'Cùl nan cairtean', cardbackAuto: 'A rèir na paca', cardbackCustom: 'Dealbh air ion-phortadh', cardbackImport: 'Ion-phortaich dealbh…',
+  piKickban: 'Kickban iomlan', kickbanConfirm: 'A bheil thu airson {name} a thoirmeasg on fhrithealaiche (kickban iomlan)?', inviteConfirm:"A bheil thu airson cuireadh a thoirt do {name} dhan gheama agad?", ignoreConfirm:"A bheil thu airson {name} a leigeil seachad?", unignoreConfirm:"A bheil thu airson sgur de bhith a' leigeil seachad {name}?", kickbanOk: 'Fhuair {name} kickban', kickbanFail: 'Dh\'fhàillig an kickban', advSecSndCats: 'Roinnean fuaime', advSndActions: 'Fuaimean ghnìomhan a\' gheama (Check, Call, Raise…)', advSndLobby: 'Brath cabadaich an lobaidh', advSndNet: 'Brathan geama lìonraidh (chaidh cluicheadair a-steach, geama deiseil)', advSndBlinds: 'Brath àrdachadh nan blinds', sectionCardback: 'Cùl nan cairtean', cardbackAuto: 'A rèir na paca', cardbackCustom: 'Dealbh air ion-phortadh', cardbackImport: 'Ion-phortaich dealbh…',
   advFkeysAlt: 'Cuir òrdugh F1–F4 an comhair a chùil (F1 = All-In)',
   kbHintF: 'Obraichidh iuchraichean oifigeil PokerTH cuideachd: F1–F4 = Fold · Check/Call · Bet/Raise · All-In, F6/F7/F8 = Le làimh / Auto Check-Fold / Auto Check-Call, Alt+M/K/F = modhan, Alt+C cabadaich, Alt+L loga, Alt+I seansan.',
   advZoomFollow: 'Leanaidh an sùm an suidheachan gnìomhach (sealladh farsaing aig an showdown)',

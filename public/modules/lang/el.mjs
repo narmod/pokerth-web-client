@@ -34,6 +34,7 @@ export const strings = {
     buttonsAuto:"Auto (table)",
     buttonsFlat:"Flat",
     advRemoveGone:"Αφαίρεση παικτών που έφυγαν και ανακατανομή του τραπεζιού",
+    advConfirmSocial:"Να ζητείται επιβεβαίωση πριν από την πρόσκληση ή την αγνόηση παίκτη",
     advWinnerPopup:"Παράθυρο νικητή στο τέλος του χεριού",
     // PlayerWinnerOverlay (badge gagnant sur la boîte, parité QML)
     winnerBadge:'ΝΙΚΗΤΗΣ',
@@ -52,7 +53,7 @@ export const strings = {
   plRemaining: 'Εναπομείναντες παίκτες', showCards: 'Εμφάνιση',
   emoFrequent: 'Συχνά', emoAll: 'Όλα', advPingAvatar: 'Ένδειξη ping στο avatar μου (πράσινο/κίτρινο/κόκκινο)', advAutoLeave: 'Αυτόματη επιστροφή στο λόμπι όταν τελειώνει το παιχνίδι',
   advReduceFx: 'Μείωση γραφικών εφέ (σκιές/λάμψη) — για αδύναμες συσκευές', avatarGallery: 'Συλλογή avatar', avatarGalleryTooltip: 'Συλλογή avatar', avgalPeople: 'Άνθρωποι', avgalMisc: 'Διάφορα', lsbRunning: 'σε εξέλιξη', lsbOpen: 'ανοιχτά', statusBets: 'Στοιχήματα', advBlindsBadge:'Σήμα blinds στη γραμμή κατάστασης', advStatusBar: 'Γραμμή κατάστασης παιχνιδιού (αρ. χεριού, ποτ, στοιχήματα, φάση)',
-  piKickban: 'Πλήρες kickban', kickbanConfirm: 'Αποκλεισμός του {name} από τον διακομιστή (πλήρες kickban);', kickbanOk: 'Ο {name} αποκλείστηκε (kickban)', kickbanFail: 'Το kickban απέτυχε', advSecSndCats: 'Κατηγορίες ήχων', advSndActions: 'Ήχοι ενεργειών παιχνιδιού (Check, Call, Raise…)', advSndLobby: 'Ειδοποίηση συνομιλίας λόμπι', advSndNet: 'Ειδοποιήσεις δικτυακού παιχνιδιού (παίκτης συνδέθηκε, παιχνίδι έτοιμο)', advSndBlinds: 'Ειδοποίηση αύξησης blinds', sectionCardback: 'Πλάτη καρτών', cardbackAuto: 'Σύμφωνα με την τράπουλα', cardbackCustom: 'Εισηγμένη εικόνα', cardbackImport: 'Εισαγωγή εικόνας…',
+  piKickban: 'Πλήρες kickban', kickbanConfirm: 'Αποκλεισμός του {name} από τον διακομιστή (πλήρες kickban);', inviteConfirm:"Πρόσκληση του/της {name} στο παιχνίδι σας;", ignoreConfirm:"Αγνόηση του/της {name};", unignoreConfirm:"Κατάργηση αγνόησης του/της {name};", kickbanOk: 'Ο {name} αποκλείστηκε (kickban)', kickbanFail: 'Το kickban απέτυχε', advSecSndCats: 'Κατηγορίες ήχων', advSndActions: 'Ήχοι ενεργειών παιχνιδιού (Check, Call, Raise…)', advSndLobby: 'Ειδοποίηση συνομιλίας λόμπι', advSndNet: 'Ειδοποιήσεις δικτυακού παιχνιδιού (παίκτης συνδέθηκε, παιχνίδι έτοιμο)', advSndBlinds: 'Ειδοποίηση αύξησης blinds', sectionCardback: 'Πλάτη καρτών', cardbackAuto: 'Σύμφωνα με την τράπουλα', cardbackCustom: 'Εισηγμένη εικόνα', cardbackImport: 'Εισαγωγή εικόνας…',
   advFkeysAlt: 'Αντιστροφή σειράς F1–F4 (F1 = All-In)',
   kbHintF: 'Λειτουργούν και τα επίσημα πλήκτρα του PokerTH: F1–F4 = Fold · Check/Call · Bet/Raise · All-In, F6/F7/F8 = Χειροκίνητο / Auto Check-Fold / Auto Check-Call, Alt+M/K/F = λειτουργίες, Alt+C συνομιλία, Alt+L ημερολόγιο, Alt+I πιθανότητες.',
   advZoomFollow: 'Το ζουμ ακολουθεί την ενεργή θέση (γενική εικόνα στο showdown)',

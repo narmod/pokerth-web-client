@@ -40,6 +40,7 @@ export const strings = {
     buttonsAuto:"Auto (table)",
     buttonsFlat:"Flat",
     advRemoveGone:"Usuń graczy, którzy odeszli, i rozmieść stół na nowo",
+    advConfirmSocial:"Pytaj o potwierdzenie przed zaproszeniem lub zignorowaniem gracza",
     advWinnerPopup:"Okno zwycięzcy na koniec rozdania",
     // PlayerWinnerOverlay (badge gagnant sur la boîte, parité QML)
     winnerBadge:'ZWYCIĘZCA',
@@ -58,7 +59,7 @@ export const strings = {
   plRemaining: 'Pozostali gracze', showCards: 'Pokaż',
   emoFrequent: 'Częste', emoAll: 'Wszystkie', advPingAvatar: 'Wskaźnik pingu na moim awatarze (zielony/żółty/czerwony)', advAutoLeave: 'Automatyczny powrót do lobby po zakończeniu gry',
   advReduceFx: 'Ogranicz efekty graficzne (cienie/poświata) — dla słabszych urządzeń', avatarGallery: 'Galeria awatarów', avatarGalleryTooltip: 'Galeria awatarów', avgalPeople: 'Ludzie', avgalMisc: 'Różne', lsbRunning: 'w toku', lsbOpen: 'otwarte', statusBets: 'Zakłady', advBlindsBadge:'Odznaka blindów na pasku stanu', advStatusBar: 'Pasek stanu gry (nr rozdania, pula, zakłady, faza)',
-  piKickban: 'Pełny kickban', kickbanConfirm: 'Zbanować gracza {name} na serwerze (pełny kickban)?', kickbanOk: '{name} otrzymał kickbana', kickbanFail: 'Kickban się nie powiódł', advSecSndCats: 'Kategorie dźwięków', advSndActions: 'Dźwięki akcji w grze (Check, Call, Raise…)', advSndLobby: 'Powiadomienie czatu lobby', advSndNet: 'Powiadomienia gry sieciowej (gracz dołączył, gra gotowa)', advSndBlinds: 'Powiadomienie o podbiciu blindów', sectionCardback: 'Rewers kart', cardbackAuto: 'Dopasowany do talii', cardbackCustom: 'Zaimportowany obraz', cardbackImport: 'Importuj obraz…',
+  piKickban: 'Pełny kickban', kickbanConfirm: 'Zbanować gracza {name} na serwerze (pełny kickban)?', inviteConfirm:"Zaprosić gracza {name} do swojej gry?", ignoreConfirm:"Ignorować gracza {name}?", unignoreConfirm:"Przestać ignorować gracza {name}?", kickbanOk: '{name} otrzymał kickbana', kickbanFail: 'Kickban się nie powiódł', advSecSndCats: 'Kategorie dźwięków', advSndActions: 'Dźwięki akcji w grze (Check, Call, Raise…)', advSndLobby: 'Powiadomienie czatu lobby', advSndNet: 'Powiadomienia gry sieciowej (gracz dołączył, gra gotowa)', advSndBlinds: 'Powiadomienie o podbiciu blindów', sectionCardback: 'Rewers kart', cardbackAuto: 'Dopasowany do talii', cardbackCustom: 'Zaimportowany obraz', cardbackImport: 'Importuj obraz…',
   advFkeysAlt: 'Odwróć kolejność F1–F4 (F1 = All-In)',
   kbHintF: 'Działają też oficjalne klawisze PokerTH: F1–F4 = Fold · Check/Call · Bet/Raise · All-In, F6/F7/F8 = Ręcznie / Auto Check-Fold / Auto Check-Call, Alt+M/K/F = tryby, Alt+C czat, Alt+L dziennik, Alt+I szanse.',
   advZoomFollow: 'Zoom podąża za aktywnym miejscem (widok ogólny przy showdownie)',

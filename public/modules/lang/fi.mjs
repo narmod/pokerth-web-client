@@ -33,6 +33,7 @@ export const strings = {
     buttonsAuto:"Auto (table)",
     buttonsFlat:"Flat",
     advRemoveGone:"Poista poistuneet pelaajat ja järjestä pöytä uudelleen",
+    advConfirmSocial:"Pyydä vahvistus ennen pelaajan kutsumista tai ohittamista",
     advWinnerPopup:"Voittajaikkuna käden lopussa",
     // PlayerWinnerOverlay (badge gagnant sur la boîte, parité QML)
     winnerBadge:'VOITTAJA',
@@ -51,7 +52,7 @@ export const strings = {
   plRemaining: 'Jäljellä olevat pelaajat', showCards: 'Näytä',
   emoFrequent: 'Usein käytetyt', emoAll: 'Kaikki', advPingAvatar: 'Ping-ilmaisin avatarissani (vihreä/keltainen/punainen)', advAutoLeave: 'Palaa automaattisesti aulaan pelin päättyessä',
   advReduceFx: 'Vähennä grafiikkatehosteita (varjot/hehku) — heikoille laitteille', avatarGallery: 'Avatar-galleria', avatarGalleryTooltip: 'Avatar-galleria', avgalPeople: 'Ihmiset', avgalMisc: 'Sekalaiset', lsbRunning: 'käynnissä', lsbOpen: 'avoinna', statusBets: 'Panokset', advBlindsBadge:'Blindien merkki tilarivillä', advStatusBar: 'Pelin tilarivi (käsi nro, potti, panokset, vaihe)',
-  piKickban: 'Täysi kickban', kickbanConfirm: 'Estetäänkö {name} palvelimelta (täysi kickban)?', kickbanOk: '{name} sai kickbanin', kickbanFail: 'Kickban epäonnistui', advSecSndCats: 'Ääniluokat', advSndActions: 'Peliäänet (Check, Call, Raise…)', advSndLobby: 'Aulachatin ilmoitus', advSndNet: 'Verkkopelin ilmoitukset (pelaaja liittyi, peli valmis)', advSndBlinds: 'Ilmoitus blindien korotuksesta', sectionCardback: 'Korttien selkäpuoli', cardbackAuto: 'Pakan mukainen', cardbackCustom: 'Tuotu kuva', cardbackImport: 'Tuo kuva…',
+  piKickban: 'Täysi kickban', kickbanConfirm: 'Estetäänkö {name} palvelimelta (täysi kickban)?', inviteConfirm:"Kutsutaanko {name} peliisi?", ignoreConfirm:"Ohitetaanko {name}?", unignoreConfirm:"Lopetetaanko pelaajan {name} ohittaminen?", kickbanOk: '{name} sai kickbanin', kickbanFail: 'Kickban epäonnistui', advSecSndCats: 'Ääniluokat', advSndActions: 'Peliäänet (Check, Call, Raise…)', advSndLobby: 'Aulachatin ilmoitus', advSndNet: 'Verkkopelin ilmoitukset (pelaaja liittyi, peli valmis)', advSndBlinds: 'Ilmoitus blindien korotuksesta', sectionCardback: 'Korttien selkäpuoli', cardbackAuto: 'Pakan mukainen', cardbackCustom: 'Tuotu kuva', cardbackImport: 'Tuo kuva…',
   advFkeysAlt: 'Käännä F1–F4-järjestys (F1 = All-In)',
   kbHintF: 'Myös viralliset PokerTH-näppäimet toimivat: F1–F4 = Fold · Check/Call · Bet/Raise · All-In, F6/F7/F8 = Manuaalinen / Auto Check-Fold / Auto Check-Call, Alt+M/K/F = tilat, Alt+C chat, Alt+L loki, Alt+I todennäköisyydet.',
   advZoomFollow: 'Zoomaus seuraa aktiivista paikkaa (yleiskuva showdownissa)',

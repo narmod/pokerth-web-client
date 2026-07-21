@@ -34,6 +34,7 @@ export const strings = {
     buttonsAuto:"Auto (table)",
     buttonsFlat:"Flat",
     advRemoveGone:"Pašalinti išėjusius žaidėjus ir perstatyti stalą",
+    advConfirmSocial:"Prašyti patvirtinimo prieš pakviečiant ar ignoruojant žaidėją",
     advWinnerPopup:"Nugalėtojo langas rankos pabaigoje",
     // PlayerWinnerOverlay (badge gagnant sur la boîte, parité QML)
     winnerBadge:'NUGALĖTOJAS',
@@ -52,7 +53,7 @@ export const strings = {
   plRemaining: 'Likę žaidėjai', showCards: 'Rodyti',
   emoFrequent: 'Dažni', emoAll: 'Visi', advPingAvatar: 'Ping indikatorius mano avatare (žalia/geltona/raudona)', advAutoLeave: 'Automatiškai grįžti į vestibiulį pasibaigus žaidimui',
   advReduceFx: 'Sumažinti grafinius efektus (šešėliai/švytėjimas) — silpniems įrenginiams', avatarGallery: 'Avatarų galerija', avatarGalleryTooltip: 'Avatarų galerija', avgalPeople: 'Žmonės', avgalMisc: 'Įvairūs', lsbRunning: 'vyksta', lsbOpen: 'atviri', statusBets: 'Statymai', advBlindsBadge:'Blindų ženklelis būsenos juostoje', advStatusBar: 'Žaidimo būsenos juosta (rankos nr., bankas, statymai, fazė)',
-  piKickban: 'Visiškas kickban', kickbanConfirm: 'Užblokuoti {name} serveryje (visiškas kickban)?', kickbanOk: '{name} gavo kickban', kickbanFail: 'Kickban nepavyko', advSecSndCats: 'Garsų kategorijos', advSndActions: 'Žaidimo veiksmų garsai (Check, Call, Raise…)', advSndLobby: 'Vestibiulio pokalbio pranešimas', advSndNet: 'Tinklo žaidimo pranešimai (žaidėjas prisijungė, žaidimas paruoštas)', advSndBlinds: 'Pranešimas apie blind didinimą', sectionCardback: 'Kortų nugarėlė', cardbackAuto: 'Pagal kaladę', cardbackCustom: 'Importuotas paveikslėlis', cardbackImport: 'Importuoti paveikslėlį…',
+  piKickban: 'Visiškas kickban', kickbanConfirm: 'Užblokuoti {name} serveryje (visiškas kickban)?', inviteConfirm:"Pakviesti {name} į savo žaidimą?", ignoreConfirm:"Ignoruoti {name}?", unignoreConfirm:"Nebeignoruoti {name}?", kickbanOk: '{name} gavo kickban', kickbanFail: 'Kickban nepavyko', advSecSndCats: 'Garsų kategorijos', advSndActions: 'Žaidimo veiksmų garsai (Check, Call, Raise…)', advSndLobby: 'Vestibiulio pokalbio pranešimas', advSndNet: 'Tinklo žaidimo pranešimai (žaidėjas prisijungė, žaidimas paruoštas)', advSndBlinds: 'Pranešimas apie blind didinimą', sectionCardback: 'Kortų nugarėlė', cardbackAuto: 'Pagal kaladę', cardbackCustom: 'Importuotas paveikslėlis', cardbackImport: 'Importuoti paveikslėlį…',
   advFkeysAlt: 'Apversti F1–F4 tvarką (F1 = All-In)',
   kbHintF: 'Veikia ir oficialūs PokerTH klavišai: F1–F4 = Fold · Check/Call · Bet/Raise · All-In, F6/F7/F8 = Rankinis / Auto Check-Fold / Auto Check-Call, Alt+M/K/F = režimai, Alt+C pokalbis, Alt+L žurnalas, Alt+I tikimybės.',
   advZoomFollow: 'Mastelis seka aktyvią vietą (apžvalga per showdown)',

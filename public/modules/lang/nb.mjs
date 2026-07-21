@@ -33,6 +33,7 @@ export const strings = {
     buttonsAuto:"Auto (table)",
     buttonsFlat:"Flat",
     advRemoveGone:"Fjern spillere som har gått, og omplasser bordet",
+    advConfirmSocial:"Be om bekreftelse før du inviterer eller ignorerer en spiller",
     advWinnerPopup:"Vinnervindu ved slutten av hånden",
     // PlayerWinnerOverlay (badge gagnant sur la boîte, parité QML)
     winnerBadge:'VINNER',
@@ -51,7 +52,7 @@ export const strings = {
   plRemaining: 'Gjenværende spillere', showCards: 'Vis',
   emoFrequent: 'Ofte brukt', emoAll: 'Alle', advPingAvatar: 'Ping-indikator på avataren min (grønn/gul/rød)', advAutoLeave: 'Gå automatisk tilbake til lobbyen når spillet er slutt',
   advReduceFx: 'Reduser grafiske effekter (skygger/glød) — for svake enheter', avatarGallery: 'Avatargalleri', avatarGalleryTooltip: 'Avatargalleri', avgalPeople: 'Personer', avgalMisc: 'Diverse', lsbRunning: 'pågår', lsbOpen: 'åpne', statusBets: 'Innsatser', advBlindsBadge:'Blind-merke i statuslinjen', advStatusBar: 'Spillstatuslinje (hånd nr., pott, innsatser, fase)',
-  piKickban: 'Total kickban', kickbanConfirm: 'Utesteng {name} fra serveren (total kickban)?', kickbanOk: '{name} er kickbannet', kickbanFail: 'Kickban mislyktes', advSecSndCats: 'Lydkategorier', advSndActions: 'Lyder for spillhandlinger (Check, Call, Raise…)', advSndLobby: 'Varsel for lobbychat', advSndNet: 'Varsler for nettverksspill (spiller ble med, spill klart)', advSndBlinds: 'Varsel ved blindøkning', sectionCardback: 'Kortbakside', cardbackAuto: 'Tilpasset kortstokken', cardbackCustom: 'Importert bilde', cardbackImport: 'Importer et bilde…',
+  piKickban: 'Total kickban', kickbanConfirm: 'Utesteng {name} fra serveren (total kickban)?', inviteConfirm:"Invitere {name} til spillet ditt?", ignoreConfirm:"Ignorere {name}?", unignoreConfirm:"Slutt å ignorere {name}?", kickbanOk: '{name} er kickbannet', kickbanFail: 'Kickban mislyktes', advSecSndCats: 'Lydkategorier', advSndActions: 'Lyder for spillhandlinger (Check, Call, Raise…)', advSndLobby: 'Varsel for lobbychat', advSndNet: 'Varsler for nettverksspill (spiller ble med, spill klart)', advSndBlinds: 'Varsel ved blindøkning', sectionCardback: 'Kortbakside', cardbackAuto: 'Tilpasset kortstokken', cardbackCustom: 'Importert bilde', cardbackImport: 'Importer et bilde…',
   advFkeysAlt: 'Snu F1–F4-rekkefølgen (F1 = All-In)',
   kbHintF: 'De offisielle PokerTH-tastene virker også: F1–F4 = Fold · Check/Call · Bet/Raise · All-In, F6/F7/F8 = Manuell / Auto Check-Fold / Auto Check-Call, Alt+M/K/F = moduser, Alt+C chat, Alt+L logg, Alt+I odds.',
   advZoomFollow: 'Zoom følger det aktive setet (oversikt ved showdown)',

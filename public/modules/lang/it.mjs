@@ -41,6 +41,7 @@ export const strings = {
     gipTabLog:"Cronologia",
     gipTabOdds:"Probabilità",
     advRemoveGone:"Rimuovi i giocatori usciti e ridisponi il tavolo",
+    advConfirmSocial:"Chiedi conferma prima di invitare o ignorare un giocatore",
     advWinnerPopup:"Finestra del vincitore a fine mano",
     // PlayerWinnerOverlay (badge gagnant sur la boîte, parité QML)
     winnerBadge:'VINCITORE',
@@ -59,7 +60,7 @@ export const strings = {
   plRemaining: 'Giocatori rimanenti', showCards: 'Mostra',
   emoFrequent: 'Frequenti', emoAll: 'Tutti', advPingAvatar: 'Indicatore di ping sul mio avatar (verde/giallo/rosso)', advAutoLeave: 'Torna automaticamente alla lobby al termine della partita',
   advReduceFx: 'Riduci gli effetti grafici (ombre/bagliori) — per dispositivi modesti', avatarGallery: 'Galleria di avatar', avatarGalleryTooltip: 'Galleria di avatar', avgalPeople: 'Persone', avgalMisc: 'Varie', lsbRunning: 'in corso', lsbOpen:'Aperta', statusBets: 'Puntate', advBlindsBadge:'Indicatore dei bui nella barra di stato', advStatusBar: 'Barra di stato della partita (mano n., piatto, puntate, fase)',
-  piKickban: 'Kickban totale', kickbanConfirm: 'Bandire {name} dal server (kickban totale)?', kickbanOk: '{name} ha ricevuto un kickban', kickbanFail: 'Kickban non riuscito', advSecSndCats:'Categorie suoni ', advSndActions: 'Suoni delle azioni di gioco (Check, Call, Raise…)', advSndLobby: 'Notifica della chat della lobby', advSndNet: 'Notifiche della partita in rete (giocatore connesso, partita pronta)', advSndBlinds:'Notifica aumento buio', sectionCardback: 'Dorso delle carte', cardbackAuto: 'In tinta con il mazzo', cardbackCustom: 'Immagine importata', cardbackImport: 'Importa un\'immagine…',
+  piKickban: 'Kickban totale', kickbanConfirm: 'Bandire {name} dal server (kickban totale)?', inviteConfirm:"Invitare {name} alla tua partita?", ignoreConfirm:"Ignorare {name}?", unignoreConfirm:"Non ignorare più {name}?", kickbanOk: '{name} ha ricevuto un kickban', kickbanFail: 'Kickban non riuscito', advSecSndCats:'Categorie suoni ', advSndActions: 'Suoni delle azioni di gioco (Check, Call, Raise…)', advSndLobby: 'Notifica della chat della lobby', advSndNet: 'Notifiche della partita in rete (giocatore connesso, partita pronta)', advSndBlinds:'Notifica aumento buio', sectionCardback: 'Dorso delle carte', cardbackAuto: 'In tinta con il mazzo', cardbackCustom: 'Immagine importata', cardbackImport: 'Importa un\'immagine…',
   advFkeysAlt: 'Inverti l\'ordine F1–F4 (F1 = All-In)',
   kbHintF: 'Funzionano anche i tasti ufficiali di PokerTH: F1–F4 = Fold · Check/Call · Bet/Raise · All-In, F6/F7/F8 = Manuale / Auto Check-Fold / Auto Check-Call, Alt+M/K/F = modalità, Alt+C chat, Alt+L registro, Alt+I probabilità.',
   advZoomFollow: 'Lo zoom segue il posto attivo (panoramica allo showdown)',

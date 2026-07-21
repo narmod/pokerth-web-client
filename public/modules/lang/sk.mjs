@@ -34,6 +34,7 @@ export const strings = {
     buttonsAuto:"Auto (table)",
     buttonsFlat:"Flat",
     advRemoveGone:"Odstrániť odídených hráčov a preusporiadať stôl",
+    advConfirmSocial:"Pred pozvaním alebo ignorovaním hráča vyžiadať potvrdenie",
     advWinnerPopup:"Okno víťaza na konci rozdania",
     // PlayerWinnerOverlay (badge gagnant sur la boîte, parité QML)
     winnerBadge:'VÍŤAZ',
@@ -52,7 +53,7 @@ export const strings = {
   plRemaining: 'Zostávajúci hráči', showCards: 'Ukázať',
   emoFrequent: 'Časté', emoAll: 'Všetky', advPingAvatar: 'Indikátor pingu na mojom avatare (zelená/žltá/červená)', advAutoLeave: 'Automatický návrat do lobby po skončení hry',
   advReduceFx: 'Obmedziť grafické efekty (tiene/žiara) — pre slabšie zariadenia', avatarGallery: 'Galéria avatarov', avatarGalleryTooltip: 'Galéria avatarov', avgalPeople: 'Ľudia', avgalMisc: 'Rôzne', lsbRunning: 'prebieha', lsbOpen: 'otvorené', statusBets: 'Stávky', advBlindsBadge:'Odznak blindov v stavovom riadku', advStatusBar: 'Stavový riadok hry (č. ruky, pot, stávky, fáza)',
-  piKickban: 'Úplný kickban', kickbanConfirm: 'Zabanovať hráča {name} na serveri (úplný kickban)?', kickbanOk: '{name} dostal kickban', kickbanFail: 'Kickban zlyhal', advSecSndCats: 'Kategórie zvukov', advSndActions: 'Zvuky herných akcií (Check, Call, Raise…)', advSndLobby: 'Upozornenie na chat lobby', advSndNet: 'Upozornenia sieťovej hry (hráč sa pripojil, hra pripravená)', advSndBlinds: 'Upozornenie na zvýšenie blindov', sectionCardback: 'Rub kariet', cardbackAuto: 'Podľa balíčka', cardbackCustom: 'Importovaný obrázok', cardbackImport: 'Importovať obrázok…',
+  piKickban: 'Úplný kickban', kickbanConfirm: 'Zabanovať hráča {name} na serveri (úplný kickban)?', inviteConfirm:"Pozvať hráča {name} do svojej hry?", ignoreConfirm:"Ignorovať hráča {name}?", unignoreConfirm:"Prestať ignorovať hráča {name}?", kickbanOk: '{name} dostal kickban', kickbanFail: 'Kickban zlyhal', advSecSndCats: 'Kategórie zvukov', advSndActions: 'Zvuky herných akcií (Check, Call, Raise…)', advSndLobby: 'Upozornenie na chat lobby', advSndNet: 'Upozornenia sieťovej hry (hráč sa pripojil, hra pripravená)', advSndBlinds: 'Upozornenie na zvýšenie blindov', sectionCardback: 'Rub kariet', cardbackAuto: 'Podľa balíčka', cardbackCustom: 'Importovaný obrázok', cardbackImport: 'Importovať obrázok…',
   advFkeysAlt: 'Obrátiť poradie F1–F4 (F1 = All-In)',
   kbHintF: 'Fungujú aj oficiálne klávesy PokerTH: F1–F4 = Fold · Check/Call · Bet/Raise · All-In, F6/F7/F8 = Ručne / Auto Check-Fold / Auto Check-Call, Alt+M/K/F = režimy, Alt+C chat, Alt+L denník, Alt+I šance.',
   advZoomFollow: 'Zoom sleduje aktívne miesto (prehľad pri showdowne)',

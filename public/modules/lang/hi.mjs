@@ -38,6 +38,7 @@ export const strings = {
     buttonsAuto:"Auto (table)",
     buttonsFlat:"Flat",
     advRemoveGone:"जाने वाले खिलाड़ियों को हटाएं और टेबल को पुनर्व्यवस्थित करें",
+    advConfirmSocial:"किसी खिलाड़ी को आमंत्रित या अनदेखा करने से पहले पुष्टि पूछें",
     advWinnerPopup:"हाथ के अंत में विजेता विंडो",
     // PlayerWinnerOverlay (badge gagnant sur la boîte, parité QML)
     winnerBadge:'विजेता',
@@ -56,7 +57,7 @@ export const strings = {
   plRemaining: 'शेष खिलाड़ी', showCards: 'दिखाएँ',
   emoFrequent: 'अक्सर', emoAll: 'सभी', advPingAvatar: 'मेरे अवतार पर पिंग संकेतक (हरा/पीला/लाल)', advAutoLeave: 'खेल समाप्त होने पर स्वचालित रूप से लॉबी में वापसी',
   advReduceFx: 'ग्राफ़िक प्रभाव कम करें (छाया/चमक) — कमज़ोर उपकरणों के लिए', avatarGallery: 'अवतार गैलरी', avatarGalleryTooltip: 'अवतार गैलरी', avgalPeople: 'लोग', avgalMisc: 'विविध', lsbRunning: 'चालू', lsbOpen: 'खुली', statusBets: 'दांव', advBlindsBadge:'स्थिति पट्टी में ब्लाइंड बैज', advStatusBar: 'खेल स्थिति पट्टी (हाथ सं., पॉट, दांव, चरण)',
-  piKickban: 'पूर्ण किकबैन', kickbanConfirm: '{name} को सर्वर से प्रतिबंधित करें (पूर्ण किकबैन)?', kickbanOk: '{name} को किकबैन कर दिया गया', kickbanFail: 'किकबैन विफल रहा', advSecSndCats: 'ध्वनि श्रेणियाँ', advSndActions: 'खेल क्रियाओं की ध्वनियाँ (Check, Call, Raise…)', advSndLobby: 'लॉबी चैट सूचना', advSndNet: 'नेटवर्क गेम सूचनाएँ (खिलाड़ी जुड़ा, खेल तैयार)', advSndBlinds: 'ब्लाइंड बढ़ने की सूचना', sectionCardback: 'कार्ड का पिछला भाग', cardbackAuto: 'डेक से मेल', cardbackCustom: 'आयातित छवि', cardbackImport: 'छवि आयात करें…',
+  piKickban: 'पूर्ण किकबैन', kickbanConfirm: '{name} को सर्वर से प्रतिबंधित करें (पूर्ण किकबैन)?', inviteConfirm:"{name} को अपने खेल में आमंत्रित करें?", ignoreConfirm:"{name} को अनदेखा करें?", unignoreConfirm:"{name} को अनदेखा करना बंद करें?", kickbanOk: '{name} को किकबैन कर दिया गया', kickbanFail: 'किकबैन विफल रहा', advSecSndCats: 'ध्वनि श्रेणियाँ', advSndActions: 'खेल क्रियाओं की ध्वनियाँ (Check, Call, Raise…)', advSndLobby: 'लॉबी चैट सूचना', advSndNet: 'नेटवर्क गेम सूचनाएँ (खिलाड़ी जुड़ा, खेल तैयार)', advSndBlinds: 'ब्लाइंड बढ़ने की सूचना', sectionCardback: 'कार्ड का पिछला भाग', cardbackAuto: 'डेक से मेल', cardbackCustom: 'आयातित छवि', cardbackImport: 'छवि आयात करें…',
   advFkeysAlt: 'F1–F4 का क्रम उलटें (F1 = All-In)',
   kbHintF: 'PokerTH की आधिकारिक कुंजियाँ भी काम करती हैं: F1–F4 = Fold · Check/Call · Bet/Raise · All-In, F6/F7/F8 = मैनुअल / Auto Check-Fold / Auto Check-Call, Alt+M/K/F = मोड, Alt+C चैट, Alt+L लॉग, Alt+I संभावनाएँ.',
   advZoomFollow: 'ज़ूम सक्रिय सीट का अनुसरण करता है (showdown पर पूर्ण दृश्य)',

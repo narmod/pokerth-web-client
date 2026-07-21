@@ -34,6 +34,7 @@ export const strings = {
     buttonsAuto:"Auto (table)",
     buttonsFlat:"Flat",
     advRemoveGone:"Премахване на напусналите играчи и пренареждане на масата",
+    advConfirmSocial:"Искай потвърждение преди покана или игнориране на играч",
     advWinnerPopup:"Прозорец на победителя в края на ръката",
     // PlayerWinnerOverlay (badge gagnant sur la boîte, parité QML)
     winnerBadge:'ПОБЕДИТЕЛ',
@@ -52,7 +53,7 @@ export const strings = {
   plRemaining: 'Оставащи играчи', showCards: 'Покажи',
   emoFrequent: 'Често използвани', emoAll: 'Всички', advPingAvatar: 'Индикатор за пинг върху аватара ми (зелен/жълт/червен)', advAutoLeave: 'Автоматично връщане в лобито в края на играта',
   advReduceFx: 'Намалени графични ефекти (сенки/сияние) — за слаби устройства', avatarGallery: 'Галерия с аватари', avatarGalleryTooltip: 'Галерия с аватари', avgalPeople: 'Хора', avgalMisc: 'Разни', lsbRunning: 'в ход', lsbOpen: 'отворени', statusBets: 'Залози', advBlindsBadge:'Индикатор за блайндовете в лентата на състоянието', advStatusBar: 'Лента за състоянието на играта (ръка №, пот, залози, фаза)',
-  piKickban: 'Пълен кикбан', kickbanConfirm: 'Да се забрани {name} от сървъра (пълен кикбан)?', kickbanOk: '{name} беше кикбанат', kickbanFail: 'Кикбанът се провали', advSecSndCats: 'Категории звуци', advSndActions: 'Звуци на игровите действия (Check, Call, Raise…)', advSndLobby: 'Известие за лоби чата', advSndNet: 'Известия за мрежова игра (играч се присъедини, играта е готова)', advSndBlinds: 'Известие за вдигане на блиндовете', sectionCardback: 'Гръб на картите', cardbackAuto: 'Според тестето', cardbackCustom: 'Импортирано изображение', cardbackImport: 'Импортиране на изображение…',
+  piKickban: 'Пълен кикбан', kickbanConfirm: 'Да се забрани {name} от сървъра (пълен кикбан)?', inviteConfirm:"Да поканите ли {name} в играта си?", ignoreConfirm:"Да игнорирате ли {name}?", unignoreConfirm:"Да спрете ли да игнорирате {name}?", kickbanOk: '{name} беше кикбанат', kickbanFail: 'Кикбанът се провали', advSecSndCats: 'Категории звуци', advSndActions: 'Звуци на игровите действия (Check, Call, Raise…)', advSndLobby: 'Известие за лоби чата', advSndNet: 'Известия за мрежова игра (играч се присъедини, играта е готова)', advSndBlinds: 'Известие за вдигане на блиндовете', sectionCardback: 'Гръб на картите', cardbackAuto: 'Според тестето', cardbackCustom: 'Импортирано изображение', cardbackImport: 'Импортиране на изображение…',
   advFkeysAlt: 'Обърни реда на F1–F4 (F1 = All-In)',
   kbHintF: 'Официалните клавиши на PokerTH също работят: F1–F4 = Fold · Check/Call · Bet/Raise · All-In, F6/F7/F8 = Ръчно / Auto Check-Fold / Auto Check-Call, Alt+M/K/F = режими, Alt+C чат, Alt+L дневник, Alt+I шансове.',
   advZoomFollow: 'Мащабът следва активното място (общ изглед при showdown)',

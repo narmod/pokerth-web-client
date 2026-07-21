@@ -34,6 +34,7 @@ export const strings = {
     buttonsAuto:"Auto (table)",
     buttonsFlat:"Pla",
     advRemoveGone:"Elimina els jugadors que marxen i recol·loca la taula",
+    advConfirmSocial:"Demana confirmació abans de convidar o ignorar un jugador",
     advWinnerPopup:"Finestra del guanyador al final de la mà",
     // PlayerWinnerOverlay (badge gagnant sur la boîte, parité QML)
     winnerBadge:'GUANYADOR',
@@ -52,7 +53,7 @@ export const strings = {
   plRemaining: 'Jugadors restants', showCards: 'Mostra',
   emoFrequent: 'Freqüents', emoAll: 'Tots', advPingAvatar: 'Indicador de ping al meu avatar (verd/groc/vermell)', advAutoLeave: 'Torna automàticament al vestíbul quan acaba la partida',
   advReduceFx: 'Redueix els efectes gràfics (ombres/brillantor) — per a dispositius modestos', avatarGallery: 'Galeria d\'avatars', avatarGalleryTooltip: 'Galeria d\'avatars', avgalPeople: 'Persones', avgalMisc: 'Diversos', lsbRunning: 'en curs', lsbOpen: 'obertes', statusBets: 'Apostes', advBlindsBadge:'Distintiu de les cegues a la barra d\'estat', advStatusBar: 'Barra d\'estat de la partida (mà núm., pot, apostes, fase)',
-  piKickban: 'Kickban total', kickbanConfirm: 'Vols bandejar {name} del servidor (kickban total)?', kickbanOk: '{name} ha rebut un kickban', kickbanFail: 'El kickban ha fallat', advSecSndCats: 'Categories de sons', advSndActions: 'Sons de les accions de joc (Check, Call, Raise…)', advSndLobby: 'Notificació del xat del vestíbul', advSndNet: 'Notificacions de partida en xarxa (jugador connectat, partida a punt)', advSndBlinds: 'Notificació de pujada de blinds', sectionCardback: 'Dors de les cartes', cardbackAuto: 'Segons la baralla', cardbackCustom: 'Imatge importada', cardbackImport: 'Importa una imatge…',
+  piKickban: 'Kickban total', kickbanConfirm: 'Vols bandejar {name} del servidor (kickban total)?', inviteConfirm:"Vols convidar {name} a la teva partida?", ignoreConfirm:"Vols ignorar {name}?", unignoreConfirm:"Vols deixar d'ignorar {name}?", kickbanOk: '{name} ha rebut un kickban', kickbanFail: 'El kickban ha fallat', advSecSndCats: 'Categories de sons', advSndActions: 'Sons de les accions de joc (Check, Call, Raise…)', advSndLobby: 'Notificació del xat del vestíbul', advSndNet: 'Notificacions de partida en xarxa (jugador connectat, partida a punt)', advSndBlinds: 'Notificació de pujada de blinds', sectionCardback: 'Dors de les cartes', cardbackAuto: 'Segons la baralla', cardbackCustom: 'Imatge importada', cardbackImport: 'Importa una imatge…',
   advFkeysAlt: 'Inverteix l\'ordre F1–F4 (F1 = All-In)',
   kbHintF: 'Les tecles oficials de PokerTH també funcionen: F1–F4 = Fold · Check/Call · Bet/Raise · All-In, F6/F7/F8 = Manual / Auto Check-Fold / Auto Check-Call, Alt+M/K/F = modes, Alt+C xat, Alt+L registre, Alt+I probabilitats.',
   advZoomFollow: 'El zoom segueix el seient actiu (vista general al showdown)',

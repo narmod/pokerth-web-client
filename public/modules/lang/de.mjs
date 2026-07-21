@@ -41,6 +41,7 @@ export const strings = {
     gipTabLog:"Verlauf",
     gipTabOdds:"Chancen",
     advRemoveGone:"Gegangene Spieler entfernen und den Tisch neu setzen",
+    advConfirmSocial:"Vor dem Einladen oder Ignorieren eines Spielers nachfragen",
     advWinnerPopup:"Gewinner-Fenster am Ende der Hand",
     // PlayerWinnerOverlay (badge gagnant sur la boîte, parité QML)
     winnerBadge:'GEWINNER',
@@ -59,7 +60,7 @@ export const strings = {
   plRemaining: 'Verbleibende Spieler', showCards: 'Zeigen',
   emoFrequent: 'Häufig', emoAll: 'Alle', advPingAvatar: 'Ping-Anzeige auf meinem Avatar (grün/gelb/rot)', advAutoLeave: 'Automatisch zur Lobby zurückkehren, wenn das Spiel endet',
   advReduceFx: 'Grafikeffekte reduzieren (Schatten/Glow) — für schwache Geräte', avatarGallery: 'Avatar-Galerie', avatarGalleryTooltip: 'Avatar-Galerie', avgalPeople: 'Personen', avgalMisc: 'Verschiedenes', lsbRunning:'Läuft', lsbOpen: 'offen', statusBets: 'Einsätze', advBlindsBadge:'Blind-Anzeige in der Statusleiste', advStatusBar: 'Spielstatusleiste (Hand-Nr., Pot, Einsätze, Phase)',
-  piKickban:'Komplett kicken/bannen', kickbanConfirm: '{name} vom Server verbannen (totaler Kickban)?', kickbanOk: '{name} wurde gekickbannt', kickbanFail: 'Kickban fehlgeschlagen', advSecSndCats:'Klang-Kategorien', advSndActions: 'Klänge der Spielaktionen (Check, Call, Raise…)', advSndLobby: 'Benachrichtigung für Lobby-Chat', advSndNet: 'Netzwerkspiel-Benachrichtigungen (Spieler beigetreten, Spiel bereit)', advSndBlinds:'Blind-Erhöhungs-Benachrichtigung', sectionCardback: 'Kartenrückseite', cardbackAuto: 'Passend zum Kartenstapel', cardbackCustom: 'Importiertes Bild', cardbackImport: 'Bild importieren…',
+  piKickban:'Komplett kicken/bannen', kickbanConfirm: '{name} vom Server verbannen (totaler Kickban)?', inviteConfirm:"{name} zu deinem Spiel einladen?", ignoreConfirm:"{name} ignorieren?", unignoreConfirm:"{name} nicht mehr ignorieren?", kickbanOk: '{name} wurde gekickbannt', kickbanFail: 'Kickban fehlgeschlagen', advSecSndCats:'Klang-Kategorien', advSndActions: 'Klänge der Spielaktionen (Check, Call, Raise…)', advSndLobby: 'Benachrichtigung für Lobby-Chat', advSndNet: 'Netzwerkspiel-Benachrichtigungen (Spieler beigetreten, Spiel bereit)', advSndBlinds:'Blind-Erhöhungs-Benachrichtigung', sectionCardback: 'Kartenrückseite', cardbackAuto: 'Passend zum Kartenstapel', cardbackCustom: 'Importiertes Bild', cardbackImport: 'Bild importieren…',
   advFkeysAlt: 'F1–F4-Reihenfolge umkehren (F1 = All-In)',
   kbHintF: 'Die offiziellen PokerTH-Tasten funktionieren ebenfalls: F1–F4 = Fold · Check/Call · Bet/Raise · All-In, F6/F7/F8 = Manuell / Auto Check-Fold / Auto Check-Call, Alt+M/K/F = Modi, Alt+C Chat, Alt+L Verlauf, Alt+I Chancen.',
   advZoomFollow: 'Zoom folgt dem aktiven Sitz (Übersicht beim Showdown)',

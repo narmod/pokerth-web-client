@@ -33,6 +33,7 @@ export const strings = {
     buttonsAuto:"Auto (table)",
     buttonsFlat:"Flat",
     advRemoveGone:"退出したプレイヤーを外してテーブルを再配置",
+    advConfirmSocial:"プレイヤーを招待または無視する前に確認する",
     advWinnerPopup:"ハンド終了時の勝者ウィンドウ",
     // PlayerWinnerOverlay (badge gagnant sur la boîte, parité QML)
     winnerBadge:'勝者',
@@ -51,7 +52,7 @@ export const strings = {
   plRemaining: '残りプレイヤー', showCards: '公開',
   emoFrequent: 'よく使う', emoAll: 'すべて', advPingAvatar: '自分のアバターにピング表示（緑/黄/赤）', advAutoLeave: 'ゲーム終了時に自動でロビーへ戻る',
   advReduceFx: 'グラフィック効果を軽減（影/グロー）— 低性能端末向け', avatarGallery: 'アバターギャラリー', avatarGalleryTooltip: 'アバターギャラリー', avgalPeople: '人物', avgalMisc: 'その他', lsbRunning: '進行中', lsbOpen: '募集中', statusBets: 'ベット', advBlindsBadge:'ステータスバーのブラインド表示', advStatusBar: 'ゲームステータスバー（ハンド番号・ポット・ベット・フェーズ）',
-  piKickban: '完全キックバン', kickbanConfirm: '{name} をサーバーから追放しますか（完全キックバン）？', kickbanOk: '{name} をキックバンしました', kickbanFail: 'キックバンに失敗しました', advSecSndCats: 'サウンドのカテゴリ', advSndActions: 'ゲームアクションの音（Check、Call、Raise…）', advSndLobby: 'ロビーチャットの通知音', advSndNet: 'ネットワークゲームの通知音（プレイヤー参加、ゲーム準備完了）', advSndBlinds: 'ブラインド上昇の通知音', sectionCardback: 'カードの裏面', cardbackAuto: 'デッキに合わせる', cardbackCustom: 'インポートした画像', cardbackImport: '画像をインポート…',
+  piKickban: '完全キックバン', kickbanConfirm: '{name} をサーバーから追放しますか（完全キックバン）？', inviteConfirm:"{name} をあなたのゲームに招待しますか？", ignoreConfirm:"{name} を無視しますか？", unignoreConfirm:"{name} の無視を解除しますか？", kickbanOk: '{name} をキックバンしました', kickbanFail: 'キックバンに失敗しました', advSecSndCats: 'サウンドのカテゴリ', advSndActions: 'ゲームアクションの音（Check、Call、Raise…）', advSndLobby: 'ロビーチャットの通知音', advSndNet: 'ネットワークゲームの通知音（プレイヤー参加、ゲーム準備完了）', advSndBlinds: 'ブラインド上昇の通知音', sectionCardback: 'カードの裏面', cardbackAuto: 'デッキに合わせる', cardbackCustom: 'インポートした画像', cardbackImport: '画像をインポート…',
   advFkeysAlt: 'F1–F4の順序を反転（F1 = All-In）',
   kbHintF: 'PokerTH公式キーも使用できます：F1–F4 = Fold · Check/Call · Bet/Raise · All-In、F6/F7/F8 = 手動 / Auto Check-Fold / Auto Check-Call、Alt+M/K/F = モード、Alt+C チャット、Alt+L ログ、Alt+I 勝率。',
   advZoomFollow: 'ズームがアクティブな席を追従（showdown時は全体表示）',

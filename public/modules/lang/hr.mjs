@@ -34,6 +34,7 @@ export const strings = {
     buttonsAuto:"Auto (table)",
     buttonsFlat:"Flat",
     advRemoveGone:"Ukloni otišle igrače i preraspodijeli stol",
+    advConfirmSocial:"Zatraži potvrdu prije pozivanja ili ignoriranja igrača",
     advWinnerPopup:"Prozor pobjednika na kraju ruke",
     // PlayerWinnerOverlay (badge gagnant sur la boîte, parité QML)
     winnerBadge:'POBJEDNIK',
@@ -52,7 +53,7 @@ export const strings = {
   plRemaining: 'Preostali igrači', showCards: 'Pokaži',
   emoFrequent: 'Česti', emoAll: 'Svi', advPingAvatar: 'Indikator pinga na mom avataru (zeleno/žuto/crveno)', advAutoLeave: 'Automatski povratak u lobby po završetku igre',
   advReduceFx: 'Smanji grafičke efekte (sjene/sjaj) — za slabije uređaje', avatarGallery: 'Galerija avatara', avatarGalleryTooltip: 'Galerija avatara', avgalPeople: 'Ljudi', avgalMisc: 'Razno', lsbRunning: 'u tijeku', lsbOpen: 'otvorene', statusBets: 'Ulozi', advBlindsBadge:'Oznaka blindova u statusnoj traci', advStatusBar: 'Statusna traka igre (br. ruke, pot, ulozi, faza)',
-  piKickban: 'Potpuni kickban', kickbanConfirm: 'Zabraniti igrača {name} na poslužitelju (potpuni kickban)?', kickbanOk: '{name} je dobio kickban', kickbanFail: 'Kickban nije uspio', advSecSndCats: 'Kategorije zvukova', advSndActions: 'Zvukovi radnji u igri (Check, Call, Raise…)', advSndLobby: 'Obavijest lobby chata', advSndNet: 'Obavijesti mrežne igre (igrač se pridružio, igra spremna)', advSndBlinds: 'Obavijest o povećanju blindova', sectionCardback: 'Poleđina karata', cardbackAuto: 'Prema špilu', cardbackCustom: 'Uvezena slika', cardbackImport: 'Uvezi sliku…',
+  piKickban: 'Potpuni kickban', kickbanConfirm: 'Zabraniti igrača {name} na poslužitelju (potpuni kickban)?', inviteConfirm:"Pozvati igrača {name} u svoju igru?", ignoreConfirm:"Ignorirati igrača {name}?", unignoreConfirm:"Prestati ignorirati igrača {name}?", kickbanOk: '{name} je dobio kickban', kickbanFail: 'Kickban nije uspio', advSecSndCats: 'Kategorije zvukova', advSndActions: 'Zvukovi radnji u igri (Check, Call, Raise…)', advSndLobby: 'Obavijest lobby chata', advSndNet: 'Obavijesti mrežne igre (igrač se pridružio, igra spremna)', advSndBlinds: 'Obavijest o povećanju blindova', sectionCardback: 'Poleđina karata', cardbackAuto: 'Prema špilu', cardbackCustom: 'Uvezena slika', cardbackImport: 'Uvezi sliku…',
   advFkeysAlt: 'Obrni redoslijed F1–F4 (F1 = All-In)',
   kbHintF: 'Rade i službene PokerTH tipke: F1–F4 = Fold · Check/Call · Bet/Raise · All-In, F6/F7/F8 = Ručno / Auto Check-Fold / Auto Check-Call, Alt+M/K/F = načini, Alt+C chat, Alt+L dnevnik, Alt+I izgledi.',
   advZoomFollow: 'Zoom prati aktivno mjesto (pregled pri showdownu)',

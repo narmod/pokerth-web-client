@@ -33,6 +33,7 @@ export const strings = {
     buttonsAuto:"Auto (table)",
     buttonsFlat:"Flat",
     advRemoveGone:"Прибирати гравців, що пішли, і розсаджувати стіл заново",
+    advConfirmSocial:"Запитувати підтвердження перед запрошенням або ігноруванням гравця",
     advWinnerPopup:"Вікно переможця наприкінці роздачі",
     // PlayerWinnerOverlay (badge gagnant sur la boîte, parité QML)
     winnerBadge:'ПЕРЕМОЖЕЦЬ',
@@ -51,7 +52,7 @@ export const strings = {
   plRemaining: 'Гравців залишилося', showCards: 'Показати',
   emoFrequent: 'Часті', emoAll: 'Усі', advPingAvatar: 'Індикатор пінгу на моєму аватарі (зелений/жовтий/червоний)', advAutoLeave: 'Автоповернення до лобі після завершення гри',
   advReduceFx: 'Спростити графічні ефекти (тіні/світіння) — для слабких пристроїв', avatarGallery: 'Галерея аватарів', avatarGalleryTooltip: 'Галерея аватарів', avgalPeople: 'Люди', avgalMisc: 'Різне', lsbRunning: 'тривають', lsbOpen: 'відкриті', statusBets: 'Ставки', advBlindsBadge:'Значок блайндів у рядку стану', advStatusBar: 'Рядок стану гри (№ роздачі, банк, ставки, фаза)',
-  piKickban: 'Повний кікбан', kickbanConfirm: 'Забанити {name} на сервері (повний кікбан)?', kickbanOk: '{name} отримав кікбан', kickbanFail: 'Кікбан не вдався', advSecSndCats: 'Категорії звуків', advSndActions: 'Звуки ігрових дій (Check, Call, Raise…)', advSndLobby: 'Сповіщення чату лобі', advSndNet: 'Сповіщення мережевої гри (гравець приєднався, гра готова)', advSndBlinds: 'Сповіщення про підвищення блайндів', sectionCardback: 'Сорочка карт', cardbackAuto: 'Відповідно до колоди', cardbackCustom: 'Імпортоване зображення', cardbackImport: 'Імпортувати зображення…',
+  piKickban: 'Повний кікбан', kickbanConfirm: 'Забанити {name} на сервері (повний кікбан)?', inviteConfirm:"Запросити {name} до своєї гри?", ignoreConfirm:"Ігнорувати {name}?", unignoreConfirm:"Перестати ігнорувати {name}?", kickbanOk: '{name} отримав кікбан', kickbanFail: 'Кікбан не вдався', advSecSndCats: 'Категорії звуків', advSndActions: 'Звуки ігрових дій (Check, Call, Raise…)', advSndLobby: 'Сповіщення чату лобі', advSndNet: 'Сповіщення мережевої гри (гравець приєднався, гра готова)', advSndBlinds: 'Сповіщення про підвищення блайндів', sectionCardback: 'Сорочка карт', cardbackAuto: 'Відповідно до колоди', cardbackCustom: 'Імпортоване зображення', cardbackImport: 'Імпортувати зображення…',
   advFkeysAlt: 'Зворотний порядок F1–F4 (F1 = All-In)',
   kbHintF: 'Працюють і офіційні клавіші PokerTH: F1–F4 = Fold · Check/Call · Bet/Raise · All-In, F6/F7/F8 = Вручну / Auto Check-Fold / Auto Check-Call, Alt+M/K/F = режими, Alt+C чат, Alt+L журнал, Alt+I шанси.',
   advZoomFollow: 'Зум слідкує за активним місцем (загальний вигляд під час showdown)',

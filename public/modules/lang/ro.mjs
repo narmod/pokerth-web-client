@@ -34,6 +34,7 @@ export const strings = {
     buttonsAuto:"Auto (table)",
     buttonsFlat:"Plat",
     advRemoveGone:"Elimină jucătorii plecați și rearanjează masa",
+    advConfirmSocial:"Cere confirmare înainte de a invita sau ignora un jucător",
     advWinnerPopup:"Fereastra câștigătorului la finalul mâinii",
     // PlayerWinnerOverlay (badge gagnant sur la boîte, parité QML)
     winnerBadge:'CÂȘTIGĂTOR',
@@ -52,7 +53,7 @@ export const strings = {
   plRemaining: 'Jucători rămași', showCards: 'Arată',
   emoFrequent: 'Frecvente', emoAll: 'Toate', advPingAvatar: 'Indicator de ping pe avatarul meu (verde/galben/roșu)', advAutoLeave: 'Revenire automată în lobby la finalul jocului',
   advReduceFx: 'Reduce efectele grafice (umbre/strălucire) — pentru dispozitive modeste', avatarGallery: 'Galerie de avatare', avatarGalleryTooltip: 'Galerie de avatare', avgalPeople: 'Persoane', avgalMisc: 'Diverse', lsbRunning: 'în desfășurare', lsbOpen: 'deschise', statusBets: 'Pariuri', advBlindsBadge:'Insignă blind-uri în bara de stare', advStatusBar: 'Bară de stare a jocului (mâna nr., pot, pariuri, fază)',
-  piKickban: 'Kickban total', kickbanConfirm: 'Interzici {name} pe server (kickban total)?', kickbanOk: '{name} a primit kickban', kickbanFail: 'Kickban eșuat', advSecSndCats: 'Categorii de sunete', advSndActions: 'Sunetele acțiunilor de joc (Check, Call, Raise…)', advSndLobby: 'Notificare chat lobby', advSndNet: 'Notificări joc în rețea (jucător conectat, joc pregătit)', advSndBlinds: 'Notificare la creșterea blindurilor', sectionCardback: 'Spatele cărților', cardbackAuto: 'Asortat cu pachetul', cardbackCustom: 'Imagine importată', cardbackImport: 'Importă o imagine…',
+  piKickban: 'Kickban total', kickbanConfirm: 'Interzici {name} pe server (kickban total)?', inviteConfirm:"Inviți {name} în jocul tău?", ignoreConfirm:"Ignori {name}?", unignoreConfirm:"Nu mai ignori {name}?", kickbanOk: '{name} a primit kickban', kickbanFail: 'Kickban eșuat', advSecSndCats: 'Categorii de sunete', advSndActions: 'Sunetele acțiunilor de joc (Check, Call, Raise…)', advSndLobby: 'Notificare chat lobby', advSndNet: 'Notificări joc în rețea (jucător conectat, joc pregătit)', advSndBlinds: 'Notificare la creșterea blindurilor', sectionCardback: 'Spatele cărților', cardbackAuto: 'Asortat cu pachetul', cardbackCustom: 'Imagine importată', cardbackImport: 'Importă o imagine…',
   advFkeysAlt: 'Inversează ordinea F1–F4 (F1 = All-In)',
   kbHintF: 'Funcționează și tastele oficiale PokerTH: F1–F4 = Fold · Check/Call · Bet/Raise · All-In, F6/F7/F8 = Manual / Auto Check-Fold / Auto Check-Call, Alt+M/K/F = moduri, Alt+C chat, Alt+L jurnal, Alt+I șanse.',
   advZoomFollow: 'Zoomul urmărește locul activ (vedere de ansamblu la showdown)',

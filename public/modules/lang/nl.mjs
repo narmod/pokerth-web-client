@@ -39,6 +39,7 @@ export const strings = {
     buttonsAuto:"Auto (table)",
     buttonsFlat:"Vlak",
     advRemoveGone:"Vertrokken spelers verwijderen en de tafel herindelen",
+    advConfirmSocial:"Vraag bevestiging voordat je een speler uitnodigt of negeert",
     advWinnerPopup:"Winnaarvenster aan het einde van de hand",
     // PlayerWinnerOverlay (badge gagnant sur la boîte, parité QML)
     winnerBadge:'WINNAAR',
@@ -57,7 +58,7 @@ export const strings = {
   plRemaining: 'Resterende spelers', showCards: 'Tonen',
   emoFrequent: 'Vaak gebruikt', emoAll: 'Alle', advPingAvatar: 'Ping-indicator op mijn avatar (groen/geel/rood)', advAutoLeave: 'Automatisch terug naar de lobby als het spel eindigt',
   advReduceFx: 'Verminder grafische effecten (schaduwen/gloed) — voor zwakke apparaten', avatarGallery: 'Avatargalerij', avatarGalleryTooltip: 'Avatargalerij', avgalPeople: 'Personen', avgalMisc: 'Diversen', lsbRunning: 'bezig', lsbOpen: 'open', statusBets: 'Inzetten', advBlindsBadge:'Blind-badge in de statusbalk', advStatusBar: 'Spelstatusbalk (hand nr., pot, inzetten, fase)',
-  piKickban: 'Totale kickban', kickbanConfirm: '{name} van de server verbannen (totale kickban)?', kickbanOk: '{name} is gekickbanned', kickbanFail: 'Kickban mislukt', advSecSndCats: 'Geluidscategorieën', advSndActions: 'Geluiden van spelacties (Check, Call, Raise…)', advSndLobby: 'Melding voor lobbychat', advSndNet: 'Meldingen van netwerkspel (speler toegetreden, spel klaar)', advSndBlinds: 'Melding bij blindverhoging', sectionCardback: 'Achterkant van de kaarten', cardbackAuto: 'Passend bij het kaartspel', cardbackCustom: 'Geïmporteerde afbeelding', cardbackImport: 'Importeer een afbeelding…',
+  piKickban: 'Totale kickban', kickbanConfirm: '{name} van de server verbannen (totale kickban)?', inviteConfirm:"{name} uitnodigen voor je spel?", ignoreConfirm:"{name} negeren?", unignoreConfirm:"{name} niet meer negeren?", kickbanOk: '{name} is gekickbanned', kickbanFail: 'Kickban mislukt', advSecSndCats: 'Geluidscategorieën', advSndActions: 'Geluiden van spelacties (Check, Call, Raise…)', advSndLobby: 'Melding voor lobbychat', advSndNet: 'Meldingen van netwerkspel (speler toegetreden, spel klaar)', advSndBlinds: 'Melding bij blindverhoging', sectionCardback: 'Achterkant van de kaarten', cardbackAuto: 'Passend bij het kaartspel', cardbackCustom: 'Geïmporteerde afbeelding', cardbackImport: 'Importeer een afbeelding…',
   advFkeysAlt: 'Volgorde F1–F4 omkeren (F1 = All-In)',
   kbHintF: 'De officiële PokerTH-toetsen werken ook: F1–F4 = Fold · Check/Call · Bet/Raise · All-In, F6/F7/F8 = Handmatig / Auto Check-Fold / Auto Check-Call, Alt+M/K/F = modi, Alt+C chat, Alt+L logboek, Alt+I kansen.',
   advZoomFollow: 'Zoom volgt de actieve stoel (overzicht bij de showdown)',

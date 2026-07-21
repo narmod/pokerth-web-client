@@ -37,6 +37,7 @@ export const strings = {
     buttonsAuto:"Auto (table)",
     buttonsFlat:"Flat",
     advRemoveGone:"떠난 플레이어를 제거하고 테이블 재배치",
+    advConfirmSocial:"플레이어를 초대하거나 무시하기 전에 확인 요청",
     advWinnerPopup:"핸드 종료 시 승자 창",
     // PlayerWinnerOverlay (badge gagnant sur la boîte, parité QML)
     winnerBadge:'승자',
@@ -55,7 +56,7 @@ export const strings = {
   plRemaining: '남은 플레이어', showCards: '공개',
   emoFrequent: '자주 사용', emoAll: '전체', advPingAvatar: '내 아바타에 핑 표시 (녹색/노랑/빨강)', advAutoLeave: '게임 종료 시 자동으로 로비로 돌아가기',
   advReduceFx: '그래픽 효과 줄이기 (그림자/광채) — 저사양 기기용', avatarGallery: '아바타 갤러리', avatarGalleryTooltip: '아바타 갤러리', avgalPeople: '인물', avgalMisc: '기타', lsbRunning: '진행 중', lsbOpen: '열림', statusBets: '베팅', advBlindsBadge:'상태 표시줄의 블라인드 배지', advStatusBar: '게임 상태 표시줄 (핸드 번호, 팟, 베팅, 단계)',
-  piKickban: '완전 킥밴', kickbanConfirm: '{name}을(를) 서버에서 차단할까요 (완전 킥밴)?', kickbanOk: '{name}이(가) 킥밴되었습니다', kickbanFail: '킥밴에 실패했습니다', advSecSndCats: '소리 카테고리', advSndActions: '게임 액션 소리 (Check, Call, Raise…)', advSndLobby: '로비 채팅 알림', advSndNet: '네트워크 게임 알림 (플레이어 참가, 게임 준비 완료)', advSndBlinds: '블라인드 인상 알림', sectionCardback: '카드 뒷면', cardbackAuto: '덱과 일치', cardbackCustom: '가져온 이미지', cardbackImport: '이미지 가져오기…',
+  piKickban: '완전 킥밴', kickbanConfirm: '{name}을(를) 서버에서 차단할까요 (완전 킥밴)?', inviteConfirm:"{name} 님을 게임에 초대할까요?", ignoreConfirm:"{name} 님을 무시할까요?", unignoreConfirm:"{name} 님의 무시를 해제할까요?", kickbanOk: '{name}이(가) 킥밴되었습니다', kickbanFail: '킥밴에 실패했습니다', advSecSndCats: '소리 카테고리', advSndActions: '게임 액션 소리 (Check, Call, Raise…)', advSndLobby: '로비 채팅 알림', advSndNet: '네트워크 게임 알림 (플레이어 참가, 게임 준비 완료)', advSndBlinds: '블라인드 인상 알림', sectionCardback: '카드 뒷면', cardbackAuto: '덱과 일치', cardbackCustom: '가져온 이미지', cardbackImport: '이미지 가져오기…',
   advFkeysAlt: 'F1–F4 순서 반전 (F1 = All-In)',
   kbHintF: 'PokerTH 공식 키도 사용할 수 있습니다: F1–F4 = Fold · Check/Call · Bet/Raise · All-In, F6/F7/F8 = 수동 / Auto Check-Fold / Auto Check-Call, Alt+M/K/F = 모드, Alt+C 채팅, Alt+L 로그, Alt+I 확률.',
   advZoomFollow: '줌이 활성 좌석을 따라갑니다 (showdown 시 전체 보기)',
