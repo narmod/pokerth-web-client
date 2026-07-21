@@ -26,7 +26,7 @@ html[data-seat-struct="qml"] .seat-plate {
   padding: 3px 8px 3px 34px !important;        /* aile gauche réservée à l'avatar */
   background: linear-gradient(180deg, #2c313d 0%, #191c24 55%, #101218 100%);
   border: 1px solid #0a0b0e;
-  border-radius: 10px;
+  border-radius: var(--r-bar);
   box-shadow: 0 3px 9px rgba(0, 0, 0, 0.55);
   overflow: visible;
 }
@@ -53,7 +53,7 @@ html[data-seat-struct="qml"] .seat-holecards {
   grid-column: auto !important; grid-row: auto !important;
 }
 html[data-seat-struct="qml"] .seat-holecards .pk {
-  width: 26px; height: 36px; font-size: 0.56rem;
+  width: 26px; height: 36px; font-size: var(--fs-3xs);
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
 }
 html[data-seat-struct="qml"] .seat-holecards .pk + .pk {
@@ -80,7 +80,7 @@ html[data-seat-struct="qml"] .seat-money {
 html[data-seat-struct="qml"] .seat-foot .seat-action-badge {
   position: absolute; top: -9px; right: -6px; left: auto; transform: none;
   margin: 0; padding: 1px 9px 2px; border: 1px solid rgba(255, 255, 255, 0.25);
-  border-radius: 999px;
+  border-radius: var(--r-pill);
   font-size: 10px; font-weight: 800; letter-spacing: 0.4px;
   color: #ffffff; text-shadow: 0 1px 1px rgba(0, 0, 0, 0.45);
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.45);
@@ -123,6 +123,6 @@ html[data-seat-struct="qml"] .seat.me .seat-holecards.shc-big {
 }
 html[data-seat-struct="qml"] .seat.me .seat-holecards .pk,
 html[data-seat-struct="qml"] .seat.me .seat-holecards.shc-big .pk {
-  width: 38px !important; height: 53px !important; font-size: 0.84rem;
+  width: 38px !important; height: 53px !important; font-size: var(--fs-base);
 }
 html[data-seat-struct="qml"] .seat.me .seat-holecards .pk + .pk { margin-left: -12px; }

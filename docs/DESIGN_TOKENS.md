@@ -141,7 +141,9 @@ Ordre proposé, du plus visible au plus périphérique :
       restantes snappées sur `--fs-*` (≤ 0,05rem). Toute la typographie de
       `pokerth.css` est désormais unifiée sur le barème.
 - [ ] **Lot 5 — Ranking / profil** : `.rk-search`, `.rk-season`, pages de classement.
-- [ ] **Lot 6 — Thèmes de sièges** (`public/seats/*/style.css`) : aligner sur les tokens.
+- [x] **Lot 6 — Thèmes de sièges** *(0.3.961-beta)* : boardwalk/high-roller/onyx-pill
+      alignés sur `--r-*`/`--fs-*` (4 rayons inertes + 6 snaps ≤0,05rem). Polices px
+      spécifiques au thème conservées.
 - [ ] **Lot 7 — Surcharges responsive** : poser les blocs `@media :root { … }` par
       breakpoint une fois les surfaces migrées.
 - [ ] **Lot 8 — Surfaces annexes** : `admin.html`, `studio.html` (peu responsives —

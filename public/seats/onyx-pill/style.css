@@ -16,7 +16,7 @@ html[data-seat-struct="qml"] .seat-plate {
   padding: 3px 28px 4px 10px !important;   /* réserve avatar : JAMAIS écrasée */
   background: linear-gradient(180deg, #3d3d3f 0%, #232324 55%, #101011 100%);
   border: 1.5px solid #6f6f72;
-  border-radius: 999px;
+  border-radius: var(--r-pill);
   box-shadow: 0 3px 9px rgba(0, 0, 0, 0.55);
   overflow: visible;
 }
@@ -42,7 +42,7 @@ html[data-seat-struct="qml"] .seat-holecards {
   grid-column: auto !important; grid-row: auto !important;
 }
 html[data-seat-struct="qml"] .seat-holecards .pk {
-  width: 28px; height: 39px; font-size: 0.58rem;
+  width: 28px; height: 39px; font-size: var(--fs-3xs);
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
 }
 
@@ -89,7 +89,7 @@ html[data-seat-struct="qml"] .seat.me .seat-holecards.shc-big {
 }
 html[data-seat-struct="qml"] .seat.me .seat-holecards .pk,
 html[data-seat-struct="qml"] .seat.me .seat-holecards.shc-big .pk {
-  width: 42px !important; height: 59px !important; font-size: 0.9rem;
+  width: 42px !important; height: 59px !important; font-size: var(--fs-md);
 }
 
 /* ── v4 : formule de surbrillance + écarts (variables de la structure) ──── */

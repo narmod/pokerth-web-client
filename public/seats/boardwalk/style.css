@@ -53,7 +53,7 @@ html[data-seat-struct="qml"] .seat-holecards {
   grid-column: auto !important; grid-row: auto !important;
 }
 html[data-seat-struct="qml"] .seat-holecards .pk {
-  width: 26px; height: 36px; font-size: 0.56rem;
+  width: 26px; height: 36px; font-size: var(--fs-3xs);
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
 }
 html[data-seat-struct="qml"] .seat-holecards .pk + .pk {
@@ -84,7 +84,7 @@ html[data-seat-struct="qml"] .seat-money {
 html[data-seat-struct="qml"] .seat-foot .seat-action-badge {
   position: absolute; top: calc(100% + 2px); left: 50%; transform: translateX(-50%);
   width: 100%; box-sizing: border-box; margin: 0;
-  padding: 1px 0 2px; border: 0; border-radius: 3px;
+  padding: 1px 0 2px; border: 0; border-radius: var(--r-xs);
   font-size: 10px; font-weight: 800; letter-spacing: 0.6px; text-transform: uppercase;
   text-align: center; color: #ffffff; text-shadow: 0 1px 1px rgba(0, 0, 0, 0.45);
   z-index: 5;
@@ -132,6 +132,6 @@ html[data-seat-struct="qml"] .seat.me .seat-holecards.shc-big {
 }
 html[data-seat-struct="qml"] .seat.me .seat-holecards .pk,
 html[data-seat-struct="qml"] .seat.me .seat-holecards.shc-big .pk {
-  width: 38px !important; height: 53px !important; font-size: 0.84rem;
+  width: 38px !important; height: 53px !important; font-size: var(--fs-base);
 }
 html[data-seat-struct="qml"] .seat.me .seat-holecards .pk + .pk { margin-left: -14px; }
