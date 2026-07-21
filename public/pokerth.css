@@ -2327,7 +2327,10 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
     height: 38px !important;
     font-size: var(--fs-md) !important;
   }
-  .seat-avatar.is-bot .seat-initial { font-size: 1.5em !important; }
+  /* Emoji un peu plus petit sur desktop/tablette (le carré y est plus grand) ;
+     mobile garde 1.5em via la règle de base hors media. */
+  .seat-avatar.is-bot .seat-initial { font-size: 1.2em !important; }
+  .seat-avatar.emoji-av .seat-initial { font-size: 1.2em !important; }
   .seat-name   { font-size: var(--fs-xs) !important; max-width: 84px !important; }
   .seat-money  { font-size: var(--fs-xs) !important; }
   .seat-bet    { font-size: var(--fs-3xs) !important; }
