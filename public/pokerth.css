@@ -581,6 +581,7 @@ body {
   .f input { padding: 7px 10px; font-size: 0.85rem; }
   .sel-wrap select { padding: 7px 30px 7px 10px; }
   .login-avatar-top #av-trigger { width: 72px; height: 72px; font-size: 2.1rem; }
+  #login-step2 { gap: 8px; }
   .btn-primary { padding: 10px; }
   .tls-row { font-size: 0.66rem; }
 }
@@ -589,6 +590,7 @@ body {
   .card-title-big { font-size: 1.3rem !important; }
   .card-suits-row { display: none !important; }
   .card { gap: 6px; }
+  #login-step2 { gap: 6px; }
 }
 
 .sel-wrap { position: relative; }
@@ -1412,7 +1414,7 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .lc-go { font-size: 1.5rem; color: var(--gold-dim); flex: 0 0 auto; line-height: 1; }
 
-.login-back { display: flex; align-items: center; gap: 9px; width: 100%; margin: 0 0 14px; padding: 2px;
+.login-back { display: flex; align-items: center; gap: 9px; width: 100%; margin: 0; padding: 2px;
   background: none; border: 0; font-family: inherit; cursor: pointer; }
 .login-back:focus-visible { outline: 2px solid var(--gold-hi); outline-offset: 2px; border-radius: 6px; }
 .lb-chev { font-size: 1.35rem; color: var(--gold); line-height: 1; }
@@ -1420,7 +1422,7 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
 .lb-ico { font-size: 1.1rem; }
 .lb-edit { margin-left: auto; font-size: 0.72rem; font-weight: 700; color: var(--gold); }
 
-.login-avatar-top { display: flex; flex-direction: column; align-items: center; gap: 7px; margin: 2px 0 16px; }
+.login-avatar-top { display: flex; flex-direction: column; align-items: center; gap: 7px; margin: 2px 0 6px; }
 .login-avatar-top #av-trigger {
   width: 88px; height: 88px; border-radius: 16px; font-size: 2.6rem;
   background: var(--inset); border: 1px solid var(--border); cursor: pointer; overflow: hidden;
@@ -1431,6 +1433,12 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
   box-shadow: 0 6px 18px rgba(var(--gold-rgb), 0.2); transform: translateY(-1px); }
 .login-avatar-top #av-trigger img { width: 100% !important; height: 100% !important; }
 .login-avatar-cap { font-size: 0.72rem; font-weight: 700; color: var(--gold); }
+/* Le wrapping en étapes retirait aux champs le gap du .card parent : on
+   redonne à l'étape 2 le même rythme vertical (aéré comme avant). Le <form>
+   passe en display:contents pour que ses champs (pseudo, mots de passe,
+   options avancées) participent aussi à ce rythme. */
+#login-step2 { display: flex; flex-direction: column; gap: 11px; }
+#login-form { display: contents; }
 
 .conn-adv-gear {
   flex-shrink: 0;

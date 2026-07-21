@@ -735,7 +735,7 @@ function onAvatarImageChosen(input) {
         <span class="login-avatar-cap" data-i18n="chooseAvatar">Choose an avatar</span>
       </div>
 
-    <div class="f">
+    <div class="f" style="display:none">
       <label data-i18n="loginMode" style="display:none">Login Mode</label>
       <div style="display:flex;gap:8px;align-items:stretch">
         <!-- Contrôle segmenté : remplace le <select> visuel. Le <select>
@@ -773,6 +773,25 @@ function onAvatarImageChosen(input) {
              port), masqués par défaut pour simplifier l'écran aux novices. Les
              champs restent dans le DOM avec leurs valeurs, donc App.connect() et
              onLoginModeChange() fonctionnent à l'identique. -->
+      </div>
+    </div>
+
+
+    <!-- Login form wrapping nick + pass. Having a real <form> with
+         autocomplete attributes lets browsers offer their password
+         manager (keychain) integration for the 'pokerth.net Registered'
+         mode. The onsubmit handler bridges to App.connect() while
+         preventing the default form submission (no page reload). -->
+    <form id="login-form" autocomplete="on" onsubmit="App.connect(); return false;">
+    <div class="f" id="f-nick">
+      <label id="nick-label">Nickname</label>
+      <div style="display:flex;gap:8px;align-items:stretch">
+        <input id="nick" value="" maxlength="64" placeholder="YourName" data-i18n-placeholder="nickPlaceholder"
+               autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"
+               onkeydown="if(event.key==='Enter') App.connect()" style="flex:1">
+        <!-- Roue crantee : options avancees (mode LAN uniquement), a la fin du
+             champ pseudo. onLoginModeChange gere sa visibilite ; toggleConnAdvanced
+             deplie #conn-advanced juste en dessous. -->
         <button type="button" id="conn-adv-btn" class="conn-adv-gear" onclick="toggleConnAdvanced()"
                 aria-expanded="false" aria-controls="conn-advanced"
                 title="More options" data-i18n-title="moreOptions" aria-label="More options">
@@ -809,21 +828,6 @@ function onAvatarImageChosen(input) {
                data-i18n-placeholder="serverPassword" placeholder="Server password (optional)"
                autocomplete="off"
                onkeydown="if(event.key==='Enter') App.connect()">
-      </div>
-    </div>
-
-    <!-- Login form wrapping nick + pass. Having a real <form> with
-         autocomplete attributes lets browsers offer their password
-         manager (keychain) integration for the 'pokerth.net Registered'
-         mode. The onsubmit handler bridges to App.connect() while
-         preventing the default form submission (no page reload). -->
-    <form id="login-form" autocomplete="on" onsubmit="App.connect(); return false;">
-    <div class="f" id="f-nick">
-      <label id="nick-label">Nickname</label>
-      <div style="display:flex">
-        <input id="nick" value="" maxlength="64" placeholder="YourName" data-i18n-placeholder="nickPlaceholder"
-               autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"
-               onkeydown="if(event.key==='Enter') App.connect()" style="flex:1">
       </div>
     </div>
     <!-- Popup sélection avatar -->
