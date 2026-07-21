@@ -9710,3 +9710,16 @@ html[data-seat-struct="qml"] .seat:not(.me) .seat-narrow .seat-holecards .pk { w
 .km-card, .lobby-body, .chat-emoji-panel, .music-body, .rk-body,
 #rk-profile, .adv-body, #about-page, .pv-scroll, .avgal-body, .lgi-scroll
 { overflow-x: hidden; }
+
+/* ── Lot 7 — Adaptation petits écrans (≤380px) : réduction du barème
+   typographique uniquement, pour limiter les débordements sur très petits
+   téléphones. Bloc en fin de fichier → l'emporte sur les défauts :root quand il
+   matche. Les éléments ayant déjà leur propre override à ce breakpoint gardent
+   leur taille (leur règle gagne). Voir docs/DESIGN_TOKENS.md §Responsive. */
+@media (max-width: 380px) {
+  :root {
+    --fs-3xs: .52rem; --fs-2xs: .58rem; --fs-xs: .66rem;  --fs-sm: .74rem;
+    --fs-base: .80rem; --fs-md: .90rem; --fs-lg: 1.0rem;  --fs-xl: 1.28rem;
+    --fs-2xl: 1.5rem;  --fs-hero: 2.4rem;
+  }
+}

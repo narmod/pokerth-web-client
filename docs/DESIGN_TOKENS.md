@@ -144,8 +144,11 @@ Ordre proposé, du plus visible au plus périphérique :
 - [x] **Lot 6 — Thèmes de sièges** *(0.3.961-beta)* : boardwalk/high-roller/onyx-pill
       alignés sur `--r-*`/`--fs-*` (4 rayons inertes + 6 snaps ≤0,05rem). Polices px
       spécifiques au thème conservées.
-- [ ] **Lot 7 — Surcharges responsive** : poser les blocs `@media :root { … }` par
-      breakpoint une fois les surfaces migrées.
+- [x] **Lot 7 — Surcharge responsive ciblée** *(0.3.962-beta)* : un seul bloc
+      `@media (max-width:380px) { :root { --fs-* réduits ~6% } }` (fonts uniquement,
+      anti-débordement très petits écrans). Le `<600` existant reste intact ; les 24
+      éléments déjà réglés à ce breakpoint gardent leur taille. Inventaire : 369/393
+      sélecteurs affectés → réduction volontairement limitée à ≤380px.
 - [ ] **Lot 8 — Surfaces annexes** : `admin.html`, `studio.html` (peu responsives —
       décider si desktop-only assumé ou à harmoniser).
 
