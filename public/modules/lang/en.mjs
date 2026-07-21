@@ -66,6 +66,7 @@ export const strings = {
   sectionSeat: 'Seats',    guestHint:'🌐 Guest play on pokerth.net — no account needed.',
     srvOffline:'🏋️ Local / training', offlineHint:'🤖 Play against bots — no connection needed.',
     srvPokerthNet:'🌐 Internet',
+    srvSegNet:'Internet', srvSegOffline:'Training', srvSegLan:'LAN',
     botDifficulty:'Bot difficulty', botEasy:'Easy', botMixed:'Mixed', botNormal:'Normal', botHard:'Hard',
     blindsNextTip:'in {n} hand(s)', blindsEveryMin:'every {n} min', blindsUpHands:'{n} hands', blindsUpMins:'{n} min',
     connect:'Connect', disconnect:'✕ Disconnect', connecting:'Connecting…',

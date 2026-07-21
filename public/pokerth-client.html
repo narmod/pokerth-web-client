@@ -148,6 +148,34 @@ function toggleConnAdvanced() {
   }
 }
 
+// ── Contrôle segmenté du mode de connexion ────────────────────────────
+// Le <select id="server-mode"> reste la source de vérité (toute la logique
+// existante lit sa .value). Les segments écrivent sa valeur et déclenchent
+// 'change' ; un listener 'change' resynchronise l'état visuel des segments,
+// donc restauration / lien partagé / code tiers restent pris en charge.
+function pickServerMode(btn) {
+  var sm = document.getElementById("server-mode");
+  if (!sm || !btn) return;
+  var v = btn.getAttribute("data-value");
+  if (sm.value === v) return;              // déjà sélectionné : rien à faire
+  sm.value = v;
+  sm.dispatchEvent(new Event("change", { bubbles: true }));
+}
+function syncServerModeSeg() {
+  var sm = document.getElementById("server-mode");
+  var seg = document.getElementById("server-mode-seg");
+  if (!sm || !seg) return;
+  var v = sm.value;
+  var btns = seg.querySelectorAll(".mode-seg-btn");
+  for (var i = 0; i < btns.length; i++) {
+    btns[i].setAttribute("aria-pressed", btns[i].getAttribute("data-value") === v ? "true" : "false");
+  }
+}
+document.addEventListener("DOMContentLoaded", function () {
+  var sm = document.getElementById("server-mode");
+  if (sm) { sm.addEventListener("change", syncServerModeSeg); syncServerModeSeg(); }
+});
+
 function toggleAvatarPopup() {
   var p = document.getElementById("avatar-popup");
   if (!p) return;
@@ -642,14 +670,27 @@ function onAvatarImageChosen(input) {
     <div class="f">
       <label data-i18n="loginMode">Login Mode</label>
       <div style="display:flex;gap:8px;align-items:stretch">
-        <div class="sel-wrap" style="flex:1">
-          <select id="server-mode" autocomplete="off" onchange="App.onServerOrGuestChange()">
-            <option value="pokerthnet" selected data-i18n="srvPokerthNet">🌐 Internet / PokerTH.net</option>
-            <option value="offline" data-i18n="srvOffline">🏋️ Local / entraînement</option>
-            <option value="lan-dedi" data-i18n="srvDedicated">🖥️ LAN / Dedicated server</option>
-          </select>
-          <span class="sel-arr">▾</span>
+        <!-- Contrôle segmenté : remplace le <select> visuel. Le <select>
+             #server-mode reste dans le DOM (masqué) comme SOURCE DE VÉRITÉ :
+             chaque segment écrit sa valeur puis déclenche l'event 'change',
+             donc App.onServerOrGuestChange() et toute la logique existante
+             (restauration, connect, lien partagé) restent inchangées. -->
+        <div id="server-mode-seg" class="mode-seg" role="group" aria-label="Login Mode" style="flex:1">
+          <button type="button" class="mode-seg-btn" data-value="pokerthnet" onclick="pickServerMode(this)">
+            <span class="mode-seg-ic">🌐</span><span class="mode-seg-lb" data-i18n="srvSegNet">Internet</span>
+          </button>
+          <button type="button" class="mode-seg-btn" data-value="offline" onclick="pickServerMode(this)">
+            <span class="mode-seg-ic">🏋️</span><span class="mode-seg-lb" data-i18n="srvSegOffline">Training</span>
+          </button>
+          <button type="button" class="mode-seg-btn" data-value="lan-dedi" onclick="pickServerMode(this)">
+            <span class="mode-seg-ic">🖥️</span><span class="mode-seg-lb" data-i18n="srvSegLan">LAN</span>
+          </button>
         </div>
+        <select id="server-mode" autocomplete="off" onchange="App.onServerOrGuestChange()" style="display:none" aria-hidden="true" tabindex="-1">
+          <option value="pokerthnet" selected data-i18n="srvPokerthNet">🌐 Internet / PokerTH.net</option>
+          <option value="offline" data-i18n="srvOffline">🏋️ Local / entraînement</option>
+          <option value="lan-dedi" data-i18n="srvDedicated">🖥️ LAN / Dedicated server</option>
+        </select>
         <!-- Sélecteur de mode INTERNE (4 valeurs) — MASQUÉ. Piloté par
              #server-mode + #guest-mode-cb via App.onServerOrGuestChange().
              Conservé tel quel pour que TOUTE la logique existante qui lit
@@ -711,14 +752,14 @@ function onAvatarImageChosen(input) {
     <form id="login-form" autocomplete="on" onsubmit="App.connect(); return false;">
     <div class="f" id="f-nick">
       <label id="nick-label">Nickname</label>
-      <div style="display:flex">
+      <div style="display:flex;gap:8px;align-items:center">
         <input id="nick" value="" maxlength="64" placeholder="YourName" data-i18n-placeholder="nickPlaceholder"
                autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"
                onkeydown="if(event.key==='Enter') App.connect()" style="flex:1">
+        <button type="button" id="av-trigger" onclick="toggleAvatarPopup()" title="Choose an avatar" data-i18n-title="chooseAvatar"
+                style="width:42px;height:42px;font-size:1.5rem;background:var(--inset);border:1px solid var(--border);border-radius:4px;cursor:pointer;flex-shrink:0;transition:border-color 0.2s">🎭</button>
+        <input type="file" id="avatar-file-input" accept="image/*" style="display:none" onchange="onAvatarImageChosen(this)">
       </div>
-      <button type="button" id="av-trigger" onclick="toggleAvatarPopup()" title="Choose an avatar" data-i18n-title="chooseAvatar"
-              style="width:64px;height:64px;font-size:2rem;background:var(--inset);border:1px solid var(--border);border-radius:8px;cursor:pointer;flex-shrink:0;overflow:hidden;transition:border-color 0.2s">🎭</button>
-      <input type="file" id="avatar-file-input" accept="image/*" style="display:none" onchange="onAvatarImageChosen(this)">
     </div>
     <!-- Popup sélection avatar -->
     <div id="avatar-popup" style="display:none">
