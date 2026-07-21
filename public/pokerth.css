@@ -700,7 +700,7 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
 .av-btn.av-none { font-size: var(--fs-xs); font-family: var(--ff-display); color: var(--text); letter-spacing: 0.05em; }
 
 /* Emoji avatar dans le siège */
-.seat-avatar.emoji-av .seat-initial { font-size: 1.05em; line-height: 1; }
+.seat-avatar.emoji-av .seat-initial { font-size: 1.5em; line-height: 1; }
 
 
 /* ── Clickable pseudo pill in the lobby header ──
@@ -1356,7 +1356,7 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
 #av-trigger.has-avatar { border-color: var(--gold-dim); background: rgba(var(--gold-rgb), 0.1); }
 
 /* Emoji avatar dans le siège */
-.seat-avatar.emoji-av .seat-initial { font-size: 1.1em; line-height: 1; }
+.seat-avatar.emoji-av .seat-initial { font-size: 1.5em; line-height: 1; }
 
 .tls-row { display: flex; align-items: flex-start; gap: var(--sp-3); cursor: pointer; font-size: var(--fs-sm); color: var(--text); line-height: 1.4; }
 
@@ -2327,7 +2327,7 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
     height: 38px !important;
     font-size: var(--fs-md) !important;
   }
-  .seat-avatar.is-bot .seat-initial { font-size: 1.1em !important; }
+  .seat-avatar.is-bot .seat-initial { font-size: 1.5em !important; }
   .seat-name   { font-size: var(--fs-xs) !important; max-width: 84px !important; }
   .seat-money  { font-size: var(--fs-xs) !important; }
   .seat-bet    { font-size: var(--fs-3xs) !important; }
