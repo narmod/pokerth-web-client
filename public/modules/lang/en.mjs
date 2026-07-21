@@ -69,10 +69,10 @@ export const strings = {
     // Wizard login (2 etapes)
     loginLead:'How do you want to play?',
     loginLeadSub:'Pick a mode to continue.',
-    loginNetTitle:'Internet / PokerTH.net',
-    loginNetDesc:'Play online, ranked · pokerth.net account',
+    loginNetTitle:'Internet',
+    loginNetDesc:'Play online, ranked',
     loginOfflineTitle:'Local / training',
-    loginOfflineDesc:'Solo vs bots · no connection',
+    loginOfflineDesc:'Solo vs bots',
     loginLanTitle:'LAN / Dedicated server',
     loginLanDesc:'Private server · local network',
     loginChange:'Change',
