@@ -5681,10 +5681,10 @@ html[data-table="pokerth-live"] .raise-slider { accent-color: #4CAF50; }
 .qc-control input[type="number"] {
   width: 70px;
   padding: 8px 10px;
-  background: rgba(0,0,0,0.4);
+  background: var(--field-bg);
   border: 1px solid var(--gold-dim);
   border-radius: 4px;
-  color: var(--cream);
+  color: var(--text-hi);
   font-family: var(--ff-mono);
   font-size: var(--fs-lg);
   text-align: center;
