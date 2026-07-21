@@ -6047,6 +6047,19 @@ html[data-table="pokerth-live"] .raise-slider { accent-color: #4CAF50; }
   .connect-footer { display: none; }
 }
 
+/* Petit écran (mobile) : le panneau de login passe AU-DESSUS des raccourcis
+   et remplit la hauteur disponible, de sorte que les icônes sociales et les
+   crédits (footer inchangé) sont cachés DERRIÈRE le cadre — vue plus propre
+   qu'avec le footer posé sur les flammes. Desktop non affecté. */
+@media (max-width: 640px) {
+  #s-connect { justify-content: flex-start; }
+  #s-connect > .card {
+    position: relative;
+    z-index: 2;
+    flex: 1 0 auto;
+  }
+}
+
 
 
 /* ── Kick player modal (opened by admin from header) ──
