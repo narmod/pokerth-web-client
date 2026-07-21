@@ -5427,6 +5427,12 @@ html[data-table="pokerth-live"] .raise-slider { accent-color: #4CAF50; }
   border: none; border-top: 1px solid var(--border);
   margin: 6px 0;
 }
+/* Encart session : fond noir 0.35 pensé pour le sombre → en thème clair il vire au gris
+   moyen et écrase le contraste des libellés. On l'éclaircit en thème clair (palette QML). */
+:root[data-theme="pokerth-light"] .eg-stats-section {
+  background: rgba(0,0,0,0.05);
+  border-color: rgba(0,0,0,0.10);
+}
 .eg-actions {
   display: flex; gap: var(--sp-4); margin-top: 4px;
 }
