@@ -17,7 +17,7 @@
 //
 // Libellés via i18n (ailleurs) : t('ach_'+id) = titre, t('ach_'+id+'_d') = description.
 
-export const CATS = { progress: 'progress', skill: 'skill', style: 'style', fun: 'fun' };
+export const CATS = { progress: 'progress', skill: 'skill', style: 'style', fun: 'fun', formats: 'formats' };
 
 const rank = c => (((c % 13) + 13) % 13);              // 0 = Deux
 const isDeucePair = cs =>
@@ -75,4 +75,18 @@ export const ACHIEVEMENTS = [
     test: v => v.hand.iWon && isDeucePair(v.hand.myCards) },
   { id: 'after_midnight',icon: '🌙', cat: CATS.fun, when: 'gameStart',
     test: v => v.hour >= 0 && v.hour < 5 },
+
+  // — Formats PokerTH (style de partie choisi en entraînement) —
+  { id: 'style_ranking', icon: '🎖️', cat: CATS.formats, when: 'game',
+    test: v => v.place === 1 && v.game.style === 'ranking' },
+  { id: 'style_wecup',   icon: '🌍', cat: CATS.formats, when: 'game',
+    test: v => v.place === 1 && v.game.style === 'wecup' },
+  { id: 'style_bbc',     icon: '🧠', cat: CATS.formats, when: 'game',
+    test: v => v.place === 1 && v.game.style === 'bbc' },
+  { id: 'triple_crown',  icon: '🔱', cat: CATS.formats, when: 'game',
+    test: v => ['ranking', 'wecup', 'bbc'].every(s => (v.counters.wonStyles || []).includes(s)) },
+  { id: 'style_fast',    icon: '🚀', cat: CATS.formats, when: 'game',
+    test: v => v.place === 1 && v.game.style === 'rapide' },
+  { id: 'blind_level',   icon: '📈', cat: CATS.formats, when: 'handStart',
+    test: v => (v.game.maxBlindLevel || 0) >= 5 },
 ];

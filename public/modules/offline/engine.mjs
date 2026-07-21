@@ -149,7 +149,7 @@ export class OfflineTable {
     this._post(bbP, Math.min(bb, bbP.stack));
     this.h.currentBet = bb; this.h.minRaise = bb;
     this.onEvent({ type:'handStart', handNum:this.handNum, sb, bb, dealerId:order[0].id,
-      seats: order.map(p=>({id:p.id, stack:p.stack})), holeByPlayer: this.h.hole, sbId:sbP.id, bbId:bbP.id });
+      seats: order.map(p=>({id:p.id, stack:p.stack})), holeByPlayer: this.h.hole, sbId:sbP.id, bbId:bbP.id, level:this.level });
     // first to act
     const firstPos = n===2 ? 0 : (3 % n);   // HU: SB(button) acts first preflop; else UTG = left of BB
     this._beginStreet('preflop', order, firstPos);

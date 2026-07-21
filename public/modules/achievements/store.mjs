@@ -43,6 +43,6 @@ export function createStore(opts = {}) {
     get: k => rd(k, undefined),
     set: (k, v) => wr(k, v),
     bump: (k, d) => { const n = (rd(k, 0) || 0) + d; wr(k, n); return n; },
-    reset: () => { ['unlocked', 'hands', 'gamesWon', 'beatenSkills'].forEach(k => { try { be.removeItem(prefix + k); } catch (e) {} }); },
+    reset: () => { ['unlocked', 'hands', 'gamesWon', 'beatenSkills', 'wonStyles'].forEach(k => { try { be.removeItem(prefix + k); } catch (e) {} }); },
   };
 }

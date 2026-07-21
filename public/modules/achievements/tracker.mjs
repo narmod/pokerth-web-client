@@ -28,11 +28,12 @@ export function createSession() {
     game: {
       numPlayers: 0, oppSkills: [], winStreak: 0, allinThisGame: false,
       stackStart: 0, stackMin: Infinity, seatsAtHandStart: 0, foldPreStreak: 0,
+      style: null, maxBlindLevel: 0,
     },
   };
 }
 
-export function reduce(S, ev, meId, store, now) {
+export function reduce(S, ev, meId, store, now, style) {
   if (meId != null) S.meId = meId;
   const me = S.meId;
   if (!ev || !ev.type) return [];
@@ -48,6 +49,7 @@ export function reduce(S, ev, meId, store, now) {
         stackStart: mine ? (mine.stack || 0) : 0,
         stackMin: mine ? (mine.stack || 0) : Infinity,
         seatsAtHandStart: 0, foldPreStreak: 0,
+        style: style || null, maxBlindLevel: 0,
       };
       const d = new Date(now());
       S._hour = d.getHours();
@@ -62,6 +64,7 @@ export function reduce(S, ev, meId, store, now) {
       S.myAllinThisHand = false;
       S.myFoldedPreflopThisHand = false;
       S.game.seatsAtHandStart = (ev.seats || []).length;
+      if (typeof ev.level === 'number' && ev.level > S.game.maxBlindLevel) S.game.maxBlindLevel = ev.level;
       const seat = (ev.seats || []).find(s => s.id === me);
       if (seat && seat.stack < S.game.stackMin) S.game.stackMin = seat.stack;
       store.bump('hands', 1);
@@ -113,6 +116,10 @@ export function reduce(S, ev, meId, store, now) {
     case 'gameOver': {
       S.place = ev.winnerId === me ? 1 : null;
       if (S.place === 1) store.bump('gamesWon', 1);
+      if (S.place === 1 && S.game.style) {
+        const pv = store.get('wonStyles') || [];
+        store.set('wonStyles', [...new Set([...pv, S.game.style])]);
+      }
       if (S.place === 1 && S.game.oppSkills.length) {
         const prev = store.get('beatenSkills') || [];
         store.set('beatenSkills', [...new Set([...prev, ...S.game.oppSkills])]);

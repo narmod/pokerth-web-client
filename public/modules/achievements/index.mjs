@@ -26,6 +26,7 @@ export function createAchievements(opts = {}) {
       hands: store.get('hands') || 0,
       gamesWon: store.get('gamesWon') || 0,
       beatenSkills: store.get('beatenSkills') || [],
+      wonStyles: store.get('wonStyles') || [],
     },
     game: S.game,
     hand: S.hand,
@@ -47,7 +48,7 @@ export function createAchievements(opts = {}) {
 
   return {
     observe(ev, ctx) {
-      const moments = reduce(S, ev, ctx && ctx.meId, store, now);
+      const moments = reduce(S, ev, ctx && ctx.meId, store, now, ctx && ctx.style);
       for (const w of moments) evaluate(w);
       evaluate('always');   // méta-succès (ex. Collectionneur), après mise à jour du reste
     },

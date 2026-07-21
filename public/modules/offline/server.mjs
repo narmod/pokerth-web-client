@@ -288,6 +288,8 @@ export class FakeServer {
     // Succès (mode entraînement, bots uniquement). Désactivable via l'option
     // avancée 'pth_ach_enabled' ; onUnlock émet un event global que l'UI Trophées
     // écoutera (ajout additif — aucun effet tant que l'UI n'est pas branchée).
+    this._gameStyle = null;
+    try { if (typeof localStorage !== 'undefined') this._gameStyle = localStorage.getItem('pth_create_style') || null; } catch (e) {}
     this._ach = null;
     try {
       let en = true;
@@ -436,7 +438,7 @@ export class FakeServer {
 
   _onEngine(ev){
     if(this.stopped) return; const G=this.gameId;
-    if (this._ach) { try { this._ach.observe(ev, { meId: this.meId }); } catch (e) {} }
+    if (this._ach) { try { this._ach.observe(ev, { meId: this.meId, style: this._gameStyle }); } catch (e) {} }
     switch(ev.type){
       case 'handStart': {
         this._roAcc = 0;   // nouvelle main : repartir d'un accumulateur vierge

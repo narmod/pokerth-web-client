@@ -3338,8 +3338,8 @@ if ('serviceWorker' in navigator) {
     try { snap = _achMod.createAchievements({}).snapshot(); } catch (e) { snap = []; }
     var nOn = 0; for (var i = 0; i < snap.length; i++) if (snap[i].unlocked) nOn++;
     var prog = rkT('achProgress', '{n}/{total}').replace('{n}', nOn).replace('{total}', snap.length);
-    var order = ['progress', 'skill', 'style', 'fun'];
-    var lbl = { progress: rkT('achCatProgress', 'Progress'), skill: rkT('achCatSkill', 'Skill'), style: rkT('achCatStyle', 'Playstyle'), fun: rkT('achCatFun', 'Fun') };
+    var order = ['progress', 'skill', 'style', 'fun', 'formats'];
+    var lbl = { progress: rkT('achCatProgress', 'Progress'), skill: rkT('achCatSkill', 'Skill'), style: rkT('achCatStyle', 'Playstyle'), fun: rkT('achCatFun', 'Fun'), formats: rkT('achCatFormats', 'PokerTH formats') };
     var h = '<div class="rk-ach-head"><span class="rk-ach-prog">' + esc(prog) + '</span></div>';
     order.forEach(function (cat) {
       var items = snap.filter(function (a) { return a.cat === cat; });
