@@ -44,7 +44,7 @@ use too. Items are grouped by status rather than fixed phases.
   on strong draws, and barrelling that carries the story across streets — value bets on made
   hands, busted-draw bluffs and medium-hand check-downs on the river — with barrel frequency
   and give-up tuned by difficulty and archetype.
-- **Achievements / Trophies.** A **Trophées** tab in the ranking window (Training mode only, once connected) with 21 achievements across Progress, Skill, Play-style and Fun — hand and game milestones, win-streaks, comeback, heads-up, patience, bluff, all-in, "the three schools" and a completionist meta. Locked entries greyed out, a 👥 badge for player-count requirements, an unlock toast, and an "X/21" counter on the profile card and end-of-game screen. Localised in all 36 languages. Built as a mode-agnostic module (`public/modules/achievements/`) consuming the engine's event stream.
+- **Achievements / Trophies.** A **Trophées** tab in the ranking window (Training mode only, once connected) with 27 achievements across Progress, Skill, Play-style, Fun and PokerTH formats — hand and game milestones, win-streaks, comeback, heads-up, patience, bluff, all-in, "the three schools", a completionist meta, and PokerTH-format wins (Ranking / WeCup / BBC / Triple Crown / Blitz / rising blinds). Locked entries greyed out, a 👥 badge for player-count requirements, an unlock toast, and an "X/27" counter on the profile card and end-of-game screen. Localised in all 36 languages. Built as a mode-agnostic module (`public/modules/achievements/`) consuming the engine's event stream.
 
 **Appearance & theming**
 - A QML-style styles window with four tabs — Table · Cards · Card back · Seats — each
