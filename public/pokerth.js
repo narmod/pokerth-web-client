@@ -7612,8 +7612,9 @@ function toggleHandsHelp() {
       card._cmpObs = new ResizeObserver(function(){
         var w = card.offsetWidth;
         if (!w) return;
-        card.classList.toggle('hands-cmp', w <= 380);
-        card.classList.toggle('hands-cmp-xs', w <= 250);
+        card.classList.toggle('hands-cmp', w <= 400);
+        card.classList.toggle('hands-cmp-xs', w <= 300);
+        card.classList.toggle('hands-lg', w >= 520);
       });
       card._cmpObs.observe(card);
     }
@@ -8643,7 +8644,7 @@ window.togglePlayersPanel = togglePlayersPanel;
 window.toggleReactionPanel = toggleReactionPanel;
 window.App = App;
 
-window.BUILD_VERSION='0.3.996-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='0.3.997-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

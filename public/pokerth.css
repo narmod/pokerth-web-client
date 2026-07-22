@@ -2503,12 +2503,6 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
   .pim-name { font-size: 1.28rem !important; }
   .pim-flag { font-size: var(--fs-md) !important; }
 
-  .hand-rank { font-size: var(--fs-sm) !important; }
-  .hand-name { font-size: var(--fs-md) !important; }
-  .hand-desc { font-size: var(--fs-sm) !important; }
-  .hand-ico { font-size: 1.15rem !important; }
-  .hands-legend { font-size: var(--fs-xs) !important; }
-
   .km-card:not(.adv-card):not(.jr-card) { width: min(460px, 100%) !important; max-height: min(82vh, 680px) !important; }
   .km-title { font-size: var(--fs-xl) !important; }
   .km-subtitle { font-size: var(--fs-base) !important; }
@@ -7353,9 +7347,18 @@ html[data-seat-img-self] .player-bar {
 #hands-card-inner.hands-cmp-xs .hc { width: 14px !important; height: 21px !important; font-size: 0.4rem !important; }
 #hands-card-inner.hands-cmp-xs .hand-name { font-size: var(--fs-2xs) !important; }
 #hands-card-inner.hands-cmp-xs .hand-desc { font-size: var(--fs-3xs) !important; }
+/* Palier LARGE — typo genereuse quand la FENETRE est large. Remplace les
+   anciens bumps @media qui se declenchaient sur la taille de l'ECRAN : une
+   fenetre etroite sur grand ecran heritait d'une typo trop grosse et les
+   libelles passaient a la ligne (hauteurs de lignes irregulieres). */
+#hands-card-inner.hands-lg .hand-rank    { font-size: var(--fs-sm); }
+#hands-card-inner.hands-lg .hand-name    { font-size: var(--fs-md); }
+#hands-card-inner.hands-lg .hand-desc    { font-size: var(--fs-sm); }
+#hands-card-inner.hands-lg .hand-ico     { font-size: 1.15rem; }
+#hands-card-inner.hands-lg .hands-legend { font-size: var(--fs-xs); }
 #hands-card-inner.floating-win .hands-scroll {
   flex: 1 1 auto; min-height: 0; overflow-y: auto; overflow-x: hidden;
-  -webkit-overflow-scrolling: touch; padding: 12px 14px;
+  -webkit-overflow-scrolling: touch; padding: 10px 12px;   /* = .chat-msgs */
 }
 /* Chat du lobby flottant : la zone messages remplit la fenetre (annule le
    max-height:120px inline du mode accroche). */
