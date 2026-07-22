@@ -1894,13 +1894,21 @@ window.refreshMyAvatar = function() {
   // PokerTH avatar UPLOAD: render WHATEVER avatar was picked (custom image,
   // emoji, or initial letter) to a PNG so official clients see it. '__pth__'
   // uploads nothing -> the official default avatar is kept.
-  try { _pthRefreshUpload(stored, (typeof myName !== 'undefined' ? (myName || '') : '')); } catch(e) {}
+  try {
+    var _upNm = (window.S && window.S.myName) ? window.S.myName
+              : ((document.getElementById('nick') && document.getElementById('nick').value) || '');
+    _pthRefreshUpload(stored, String(_upNm).trim());
+  } catch(e) {}
   // Effective choice: 'pth' | 'img' | 'initial' | 'emoji-xxx'
   var usePth   = (stored === '__pth__') && !!pthUrl;
   var emojiAv  = (stored && stored !== '__pth__' && stored !== '__img__') ? stored : '';
   var av = emojiAv; // back-compat var name used in the rest of the function
   window._myAvatarCache = av; // global implicite historique (écrit-seul, ≠ cache S de l'IIFE — hors portée de S)
-  var display = av || (typeof myName !== 'undefined' ? (myName||'').charAt(0).toUpperCase() : '?');
+  var display = av || (function(){
+    var _nm = (window.S && window.S.myName) ? window.S.myName
+            : ((document.getElementById('nick') && document.getElementById('nick').value) || '');
+    return String(_nm).trim().charAt(0).toUpperCase() || '?';
+  })();
   // Player-bar
   var pbAv = document.getElementById('g-myseat-av');
   if (pbAv) {
@@ -4543,6 +4551,8 @@ const App = (() => {
         $('nick').value = S.myName;
       }
       if (!S.myName) { setStatus(t('enterNick'), 'err'); return; }
+      // Ré-aligne l'avatar-upload (initiale) sur le pseudo définitif AVANT l'Init.
+      try { if (window.refreshMyAvatar) window.refreshMyAvatar(); } catch(e) {}
       if (S.myName.length < 3) { setStatus(t('nickTooShort'), 'err'); return; }
       if (!_off && (!proxyUrl || !host)) { setStatus(t('fillFields'), 'err'); return; }
 
@@ -8839,7 +8849,7 @@ window.togglePlayersPanel = togglePlayersPanel;
 window.toggleReactionPanel = toggleReactionPanel;
 window.App = App;
 
-window.BUILD_VERSION='2.1.4-web.1'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.4-web.2'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
