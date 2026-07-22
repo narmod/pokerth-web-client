@@ -127,7 +127,7 @@ export class FakeServer {
       case TYPE.LeaveGame:        return this._onLeave();
       case 30 /*KickPlayer req*/: return this._onKick(m.fields);
       case 23 /*RejoinExistingGame*/: return this._onRejoin(m.fields);
-      case TYPE.Chat:             return this._onChat(m.fields);
+      case TYPE.ChatRequest:      return this._onChat(m.fields);
       default: return;
     }
   }

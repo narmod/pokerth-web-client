@@ -29,7 +29,7 @@ export const TYPE = {
   EndOfHandShow:49, EndOfHandHide:50, EndOfGame:53,
   JoinExisting:21, JoinNew:22, PlayerInfoRequest:18, LeaveGame:31,
   GameListUpdate:14, RemovedFromGame:29,
-  Chat:64,
+  Chat:64, ChatRequest:63,   // 63 = ChatRequest (client→serveur) · 64 = ChatMessage (serveur→client)
 };
 
 function varintBytes(n){ const o=[]; n=n>>>0 ? n : Math.max(0,Math.floor(n)); let v=n; do{ let b=v&0x7f; v=Math.floor(v/128); if(v>0) b|=0x80; o.push(b);}while(v>0); return o; }
