@@ -7607,17 +7607,6 @@ function toggleHandsHelp() {
     var btn = document.getElementById('hands-toggle-btn');
     // Même système de fenêtre que chat/journal/réactions (déplaçable + redimensionnable partout).
     _openFloatingNearBtn(card, btn, { key:'pth_winpos_hands', handle: card.querySelector('.g-chat-panel-header'), resizable:true, minW:280, minH:220, defW:380, defH:440, zoom:true }, 'right');
-    // Mode compact selon la largeur réelle de la fenêtre (ResizeObserver).
-    if (!card._cmpObs && typeof ResizeObserver !== 'undefined') {
-      card._cmpObs = new ResizeObserver(function(){
-        var w = card.offsetWidth;
-        if (!w) return;
-        card.classList.toggle('hands-cmp', w <= 400);
-        card.classList.toggle('hands-cmp-xs', w <= 300);
-        card.classList.toggle('hands-lg', w >= 520);
-      });
-      card._cmpObs.observe(card);
-    }
   } else {
     if (card.classList.contains('floating-win')) _saveWin(card, 'pth_winpos_hands');
     ov.style.display = 'none';
@@ -8644,7 +8633,7 @@ window.togglePlayersPanel = togglePlayersPanel;
 window.toggleReactionPanel = toggleReactionPanel;
 window.App = App;
 
-window.BUILD_VERSION='0.3.997-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='0.3.998-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

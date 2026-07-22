@@ -7331,31 +7331,14 @@ html[data-seat-img-self] .player-bar {
   display: flex; flex-direction: column; background: var(--modal-bg);
   z-index: 201;
 }
-/* Mode compact quand la fenêtre Combinaisons est réduite (classe posée par un
-   ResizeObserver JS — plus fiable qu'une container-query sur un élément fixed
-   redimensionné). Surcharge les !important du media desktop via une spécificité
-   plus élevée + !important. */
-#hands-card-inner.hands-cmp .hand-row { gap: var(--sp-2); padding: 6px 4px; }
-#hands-card-inner.hands-cmp .hand-cards { gap: 1px; }
-#hands-card-inner.hands-cmp .hc { width: 17px !important; height: 25px !important; font-size: 0.46rem !important; border-radius: 2px; }
-#hands-card-inner.hands-cmp .hand-rank { width: 14px; font-size: var(--fs-xs) !important; }
-#hands-card-inner.hands-cmp .hand-rail { width: 3px; }
-#hands-card-inner.hands-cmp .hand-name { font-size: var(--fs-xs) !important; letter-spacing: 0.01em; gap: var(--sp-1); }
-#hands-card-inner.hands-cmp .hand-ico { font-size: var(--fs-base) !important; }
-#hands-card-inner.hands-cmp .hand-desc { font-size: var(--fs-3xs) !important; }
-#hands-card-inner.hands-cmp .hands-legend { font-size: var(--fs-3xs) !important; gap: var(--sp-2); }
-#hands-card-inner.hands-cmp-xs .hc { width: 14px !important; height: 21px !important; font-size: 0.4rem !important; }
-#hands-card-inner.hands-cmp-xs .hand-name { font-size: var(--fs-2xs) !important; }
-#hands-card-inner.hands-cmp-xs .hand-desc { font-size: var(--fs-3xs) !important; }
-/* Palier LARGE — typo genereuse quand la FENETRE est large. Remplace les
-   anciens bumps @media qui se declenchaient sur la taille de l'ECRAN : une
-   fenetre etroite sur grand ecran heritait d'une typo trop grosse et les
-   libelles passaient a la ligne (hauteurs de lignes irregulieres). */
-#hands-card-inner.hands-lg .hand-rank    { font-size: var(--fs-sm); }
-#hands-card-inner.hands-lg .hand-name    { font-size: var(--fs-md); }
-#hands-card-inner.hands-lg .hand-desc    { font-size: var(--fs-sm); }
-#hands-card-inner.hands-lg .hand-ico     { font-size: 1.15rem; }
-#hands-card-inner.hands-lg .hands-legend { font-size: var(--fs-xs); }
+/* Aucun palier de taille ici : l'echelle du contenu est assuree UNIQUEMENT par
+   le zoom generique des fenetres flottantes (.win-zoom / --wz), continu et
+   recalcule a chaque mouvement du redimensionnement — comme le chat, le journal
+   et les reactions. Empiler des paliers discrets par-dessus ce zoom produisait
+   une « marche d'escalier » : les seuils se comparaient a offsetWidth (largeur
+   EXTERIEURE) alors que le contenu est rendu en coordonnees locales divisees
+   par z, si bien qu'un redimensionnement diagonal laissait la place locale
+   quasi constante (~380 px) tout en faisant sauter la typo trois fois. */
 #hands-card-inner.floating-win .hands-scroll {
   flex: 1 1 auto; min-height: 0; overflow-y: auto; overflow-x: hidden;
   -webkit-overflow-scrolling: touch; padding: 10px 12px;   /* = .chat-msgs */
