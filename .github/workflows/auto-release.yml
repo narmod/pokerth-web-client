@@ -38,16 +38,21 @@ jobs:
         id: decide
         run: |
           set -euo pipefail
-          CACHE=$(grep -E "^const CACHE_VERSION" public/sw.js | grep -oE "pokerth-v[0-9]+\.[0-9]+\.[0-9]+" | head -1 || true)
+          # Le suffixe de phase (-beta, -rc.1...) fait partie de la version : il
+          # doit se retrouver dans le tag (convention projet : le tag vaut la
+          # valeur exacte des 3 fichiers de version, suffixe inclus).
+          CACHE=$(grep -E "^const CACHE_VERSION" public/sw.js | grep -oE "pokerth-v[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z.]+)?" | head -1 || true)
           if [ -z "${CACHE}" ]; then
-            echo "::warning::CACHE_VERSION not in 'pokerth-v{MAJOR}.{MINOR}.{N}' format — skipping."
+            echo "::warning::CACHE_VERSION not in 'pokerth-v{MAJOR}.{MINOR}.{N}[-suffix]' format — skipping."
             echo "release=false" >> "$GITHUB_OUTPUT"; exit 0
           fi
-          VER=${CACHE#pokerth-v}                 # e.g. 0.2.91
+          VER=${CACHE#pokerth-v}                 # e.g. 0.3.1002-beta
           MAJOR=$(echo "$VER" | cut -d. -f1)
           MINOR=$(echo "$VER" | cut -d. -f2)
-          N=$(echo "$VER" | cut -d. -f3)
-          TAG="v${MAJOR}.${MINOR}.${N}"
+          PATCH=$(echo "$VER" | cut -d. -f3-)    # 1002-beta
+          N=${PATCH%%-*}                         # 1002  (compteur numerique seul)
+          SUFFIX=${PATCH#"$N"}                   # -beta (vide si absent)
+          TAG="v${MAJOR}.${MINOR}.${N}${SUFFIX}"
           echo "Cache version: ${VER}  (candidate tag ${TAG})"
 
           if git rev-parse -q --verify "refs/tags/${TAG}" >/dev/null; then

@@ -5638,8 +5638,6 @@ const App = (() => {
       set('cf-raise-every', d.raiseEvery);
       set('cf-gui-speed',   d.guiSpeed);
       set('cf-delay',       d.delayHands);
-      set('cf-bots',        d.bots);
-      set('cf-min-humans',  d.minHumans);
       // Advanced options: only present in `d` when restored from a saved
       // session (withSaved copies them in). Apply them when available so the
       // "More options" panel also reflects the last-used config.
@@ -5661,9 +5659,6 @@ const App = (() => {
       // Bornes QML : re-clampe les valeurs restaurées depuis une sauvegarde
       // antérieure aux nouvelles bornes (ex. délai 3 < min 5).
       var _dl = document.getElementById('cf-delay'); if (_dl) this.clampNum(_dl);
-      // Sync the "min humans before bots" row visibility with the checkbox.
-      var mhRow = document.getElementById('cf-min-humans-row');
-      if (mhRow) mhRow.style.display = d.bots ? 'flex' : 'none';
       // Same for the QuickGame dialog default
       var qc = document.getElementById('qc-players');
       if (qc) {
@@ -6169,11 +6164,6 @@ const App = (() => {
       if (arrow) arrow.textContent = open ? '▼' : '▶';
       if (lbl) lbl.textContent = open ? (t('lessOptions')||'Less options') : (t('moreOptions')||'More options');
     },
-    toggleMinHumans() {
-      var cb = document.getElementById('cf-bots');
-      var row = document.getElementById('cf-min-humans-row');
-      if (row) row.style.display = (cb && cb.checked) ? 'flex' : 'none';
-    },
     // ── Préférences personnelles de création, PAR MODE depuis la passe G :
     //    trois emplacements pth_prefs_local / pth_prefs_lan / pth_prefs_internet
     //    (parité QML LocalGameSettings / NetworkGameSettings / InternetGameSettings),
@@ -6214,8 +6204,6 @@ const App = (() => {
         allowSpectators: (function(){ var e = g('cf-allow-spectators'); if (!e) return true; return e.type === 'checkbox' ? e.checked : e.value !== '0'; })(),
         usePassword:     !!(g('cf-use-password') && g('cf-use-password').checked),
         password:        (g('cf-use-password') && g('cf-use-password').checked && g('cf-password')) ? g('cf-password').value : '',
-        bots:            !!(g('cf-bots') && g('cf-bots').checked),
-        minHumans:       iv('cf-min-humans', 2),
       };
     },
     saveCreatePrefs() {
@@ -6259,9 +6247,6 @@ const App = (() => {
       if (pwr) pwr.style.display = d.usePassword ? '' : 'none';
       var pwv = document.getElementById('cf-password');
       if (pwv) pwv.value = d.usePassword ? (d.password || '') : '';
-      var bt = document.getElementById('cf-bots');
-      if (bt && d.bots != null) { bt.checked = !!d.bots; try { this.toggleMinHumans(); } catch (e) {} }
-      set('cf-min-humans', d.minHumans);
       // Les préférences remplacent tout style prédéfini : seule la pastille
       // « Perso » reste allumée.
       var presets = document.querySelectorAll('.cf-preset[data-preset]');
@@ -6393,11 +6378,6 @@ const App = (() => {
       const blind   = _isRank ? 50    : iv('cf-blind',   10);
       const stack   = _isRank ? 10000 : iv('cf-stack',   3000);
       const timeout = iv('cf-timeout', 30);
-      const bots    = g('cf-bots')?.checked || false;
-      const minHuman= iv('cf-min-humans', 1);
-      window._createWithBots  = bots;
-      window._minHumansNeeded = bots ? minHuman : 0;
-      window._humansJoined    = 1;
       S.gameTimeout = timeout; // mémoriser le timeout pour le timer
       S.gameStartMoney = stack;  // same idea for the starting stack: the
                                // GameListNew message will eventually echo
@@ -7402,49 +7382,6 @@ function toggleLobbyChat() {
   // Chat intégré au lobby (colonne en wide, sous les tables en compact)
   // → plus de fenêtre flottante ni d'overlay. No-op dans les deux modes.
   return;
-  var panel = document.getElementById('lobby-chat-panel');
-  var btn   = document.getElementById('lobby-chat-btn');
-  if (!panel) return;
-  var open = panel.style.display === 'none';
-  panel.style.display = open ? 'flex' : 'none';
-  if (btn) {
-    btn.style.background  = open ? 'rgba(var(--gold-rgb),0.2)' : '';
-    btn.style.borderColor = open ? 'var(--gold-dim)' : '';
-    btn.style.color       = open ? 'var(--gold)' : '';
-  }
-  var _lb = document.querySelector('#s-lobby .lobby-body');
-  if (open) {
-    var _pp = document.getElementById('players-panel');
-    if (_pp) _pp.style.display = 'none';          // un seul panneau ouvert à la fois
-    var _hdr = document.querySelector('#s-lobby .header');
-    if (_hdr) panel.style.top = Math.round(_hdr.getBoundingClientRect().bottom) + 'px';
-    var _chat = document.getElementById('chat');
-    if (_chatGate()) {
-      // Desktop souris : fenetre flottante (drag + resize + detachement), comme le
-      // chat en jeu. Pas de reservation d'espace : elle flotte au-dessus des tables.
-      if (_lb) _lb.style.paddingTop = '';
-      _attachFloatControls(panel, { key:'pth_winpos_lobbychat', handle: panel.querySelector('.g-chat-panel-header'), resizable:true, minW:240, minH:160, defW:300, defH:280, zoom:true });
-      if (typeof clearUnreadChat === 'function') clearUnreadChat();
-      if (_chat) _chat.scrollTop = _chat.scrollHeight;
-      setTimeout(function(){ var ci = document.getElementById('chat-in'); if(ci) ci.focus(); }, 80);
-      return;
-    }
-    _disableFloating(panel);
-    var _defReserve = 0;
-    // Overlay : les tables suivent le panneau quand il rétrécit, mais restent
-    // en place (recouvertes) quand il dépasse sa taille d'ouverture.
-    makeChatResizable(panel, _chat, function(){
-      if (_lb) _lb.style.paddingTop = (Math.min(panel.offsetHeight, _defReserve) + LOBBY_PANEL_GAP) + 'px';
-    });
-    resetChatSize(panel, _chat);              // toujours rouvrir à la taille par défaut
-    _defReserve = panel.offsetHeight;
-    if (_lb) _lb.style.paddingTop = (_defReserve + LOBBY_PANEL_GAP) + 'px';
-    if (typeof clearUnreadChat === 'function') clearUnreadChat();
-    if (_chat) _chat.scrollTop = _chat.scrollHeight;
-    setTimeout(function(){ var ci = document.getElementById('chat-in'); if(ci) ci.focus(); }, 80);
-  } else {
-    if (_lb) _lb.style.paddingTop = '';        // libère l'espace
-  }
 }
 
 
@@ -8642,7 +8579,7 @@ window.togglePlayersPanel = togglePlayersPanel;
 window.toggleReactionPanel = toggleReactionPanel;
 window.App = App;
 
-window.BUILD_VERSION='0.3.1002-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='0.3.1003-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
