@@ -54,7 +54,13 @@ function onAnnounce(sub) {
       S.ws.close(); return;
     }
     let loginType;
-    if (loginMode === 'unauth' || loginMode === 'guest') loginType = 2;
+    // Mode invité pokerth.net : VRAI guestLogin (0) — le serveur attribue les
+    // droits invité (badge « Invité » correct partout). Conséquence assumée,
+    // identique au client officiel : chat lobby/partie/PM rejetés (ChatReject
+    // déjà géré → note discrète), parties Normal uniquement. Les réactions
+    // web↔web survivent via le canal REACT: du proxy.
+    if (loginMode === 'guest') loginType = 0;
+    else if (loginMode === 'unauth') loginType = 2;
     else if (loginMode === 'auth') loginType = 1;
     else loginType = 0; // lan
     if (useAcctAuth) loginType = 1; // mot de passe utilisateur saisi ⇒ authenticatedLogin
