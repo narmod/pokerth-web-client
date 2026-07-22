@@ -657,6 +657,101 @@ function appModes() { var m = (_adminConfig && _adminConfig.modes) || {}; return
 // First-visit welcome / rules message (operator-authored, per language).
 function _welcomeAdmin() { var w = _adminConfig.welcome || {}; return { enabled: !!w.enabled, updatedAt: w.updatedAt || 0, 'default': w['default'] || 'fr', langs: w.langs || {} }; }
 function _welcomePublic() { var w = _adminConfig.welcome; if (!w || !w.enabled) return null; return { enabled: true, updatedAt: w.updatedAt || 0, 'default': w['default'] || 'fr', langs: w.langs || {} }; }
+
+// ── Product polls (web-only feature; no QML counterpart) ───────────────────
+// The admin authors a short multiple-choice poll ("which feature next?"). Web
+// clients that OPTED IN (advanced options, off by default) see the active one
+// in a lobby card and may answer once per device. Definitions and tallies live
+// in polls.json beside admin-config.json — untracked, preserved across updates.
+// Anti-double-vote reuses the same anonymous, client-minted visit id (`vid`)
+// already posted to /__visit, kept only as a salted SHA-256 hash: no PII, and
+// the raw id never touches disk. It is a fair-use guard, not a secure ballot —
+// a determined user can still answer again from another browser.
+const POLLS_FILE = process.env.POLLS_FILE || path.join(__dirname, 'polls.json');
+let _polls = [];
+try {
+  const _pl = JSON.parse(fs.readFileSync(POLLS_FILE, 'utf8'));
+  if (Array.isArray(_pl)) _polls = _pl;
+} catch (e) { /* first run — no poll authored yet */ }
+let _pollsSaveTimer = null;
+function savePollsSoon() {
+  if (_pollsSaveTimer) return;
+  _pollsSaveTimer = setTimeout(function () {
+    _pollsSaveTimer = null;
+    fs.writeFile(POLLS_FILE, JSON.stringify(_polls), function (err) {
+      if (err) console.error('[polls] write failed:', err.message);
+    });
+  }, 1500);
+}
+// Voter hash salted with the poll id, so the stored data alone cannot correlate
+// the same device across two different polls.
+function _pollVoterHash(pollId, rawVid) {
+  return crypto.createHash('sha256').update(String(pollId) + '|' + String(rawVid)).digest('hex').slice(0, 16);
+}
+function _pollById(id) { return _polls.find(function (p) { return p && p.id === id; }) || null; }
+function _pollActive() { return _polls.find(function (p) { return p && p.enabled; }) || null; }
+// Count the stored ballots, ignoring choices whose option no longer exists.
+function _pollTally(p) {
+  const out = {}, opts = (p && p.options) || [];
+  opts.forEach(function (o) { out[o.id] = 0; });
+  const v = (p && p.voters) || {};
+  let total = 0;
+  Object.keys(v).forEach(function (h) {
+    if (out[v[h]] !== undefined) { out[v[h]]++; total++; }
+  });
+  return { tally: out, total: total };
+}
+// Public projection: question + options in every authored language, and NOT the
+// counts — results are revealed only once the client has answered, so figures on
+// screen cannot bias the answer.
+function _pollPublic() {
+  const p = _pollActive();
+  if (!p) return null;
+  return {
+    id: p.id, updatedAt: p.updatedAt || 0, 'default': p['default'] || 'en',
+    question: p.question || {},
+    options: (p.options || []).map(function (o) { return { id: o.id, label: o.label || {} }; })
+  };
+}
+// Admin projection: the same, plus live counts.
+function _pollAdmin(p) {
+  const t = _pollTally(p);
+  return {
+    id: p.id, enabled: !!p.enabled, 'default': p['default'] || 'en',
+    question: p.question || {},
+    options: (p.options || []).map(function (o) { return { id: o.id, label: o.label || {} }; }),
+    tally: t.tally, total: t.total, createdAt: p.createdAt || 0, updatedAt: p.updatedAt || 0
+  };
+}
+// Multilingual map { lang: text }, trimmed exactly like the welcome message.
+function _pollLangMap(src, max) {
+  const out = {};
+  if (!src || typeof src !== 'object') return out;
+  Object.keys(src).slice(0, 60).forEach(function (k) {
+    const s = (typeof src[k] === 'string' ? src[k] : '').trim().slice(0, max);
+    if (s) out[String(k).slice(0, 10)] = s;
+  });
+  return out;
+}
+// 2..10 options, each with at least one label; ids stay unique (a duplicate id
+// would silently merge two options' counts). Returns null when invalid.
+function _pollParseOptions(src) {
+  if (!Array.isArray(src)) return null;
+  const out = [], seen = {};
+  src.slice(0, 10).forEach(function (o, i) {
+    if (!o || typeof o !== 'object') return;
+    const label = _pollLangMap(o.label, 120);
+    if (!Object.keys(label).length) return;
+    const id = (typeof o.id === 'string' && /^[a-z0-9_]{1,16}$/.test(o.id)) ? o.id : ('o' + (i + 1));
+    out.push({ id: id, label: label });
+  });
+  for (let i = 0; i < out.length; i++) {
+    if (seen[out[i].id]) return null;
+    seen[out[i].id] = 1;
+  }
+  return out.length >= 2 ? out : null;
+}
+
 const STATS_META_FILE = process.env.STATS_META_FILE || path.join(__dirname, 'stats.meta.json');
 const STATS_ADMIN_TOKEN = process.env.STATS_ADMIN_TOKEN || '';
 // Master visibility switch for the admin panel, toggled via `pokerth-web admin on|off`.
@@ -1259,7 +1354,7 @@ function adminAuthed(query, bodyToken) {
 // The file is hot-reloaded (mtime check), so adding/revoking a key needs no
 // restart. To scope another section later (e.g. "music"): add it to ADMIN_SCOPES
 // and wrap that section's routes with hasScope('music', …) instead of adminAuthed.
-const ADMIN_SCOPES = ['broadcast', 'music', 'packages', 'leaderboard'];
+const ADMIN_SCOPES = ['broadcast', 'music', 'packages', 'leaderboard', 'polls'];
 const SCOPED_TOKENS_FILE = process.env.SCOPED_TOKENS_FILE || path.join(__dirname, 'scoped-tokens.json');
 let _scopedTokens = [], _scopedMtime = -1;
 function _loadScopedTokens() {
@@ -2224,6 +2319,73 @@ function handleAdmin(req, res, reqPathOnly, query) {
     if (_wr) return adminJson(res, 200, { ok: true, master: false, scopes: (_wr.scopes || []).filter(function (s) { return ADMIN_SCOPES.indexOf(s) >= 0; }) });
     return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
   }
+  // ── Product polls (admin) — store and helpers defined near _pollPublic() ──
+  if (reqPathOnly === '/admin/polls' && req.method === 'GET') {
+    if (!hasScope('polls', query, null)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
+    return adminJson(res, 200, { ok: true, polls: _polls.map(_pollAdmin) });
+  }
+  // Create, or update in place when an existing id is supplied.
+  if (reqPathOnly === '/admin/polls' && req.method === 'POST') {
+    return readJsonBody(req, function (d) {
+      if (!hasScope('polls', query, d && d.token)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
+      const question = _pollLangMap(d && d.question, 300);
+      if (!Object.keys(question).length) return adminJson(res, 400, { ok: false, error: 'question required' });
+      const options = _pollParseOptions(d && d.options);
+      if (!options) return adminJson(res, 400, { ok: false, error: 'need 2-10 options with unique ids and a label' });
+      const def = (d && typeof d['default'] === 'string' && d['default']) ? d['default'].slice(0, 10) : 'en';
+      const existing = (d && typeof d.id === 'string') ? _pollById(d.id) : null;
+      if (existing) {
+        // Reshaping the option set would orphan the ballots cast on the old ids,
+        // so a changed set clears the tally instead of reporting a wrong total.
+        const before = JSON.stringify((existing.options || []).map(function (o) { return o.id; }));
+        const after = JSON.stringify(options.map(function (o) { return o.id; }));
+        existing.question = question; existing.options = options; existing['default'] = def;
+        if (after !== before) existing.voters = {};
+        existing.updatedAt = Date.now(); savePollsSoon();
+        return adminJson(res, 200, { ok: true, id: existing.id, poll: _pollAdmin(existing) });
+      }
+      const poll = {
+        id: 'pl_' + Date.now().toString(36) + Math.random().toString(36).slice(2, 7),
+        question: question, options: options, 'default': def,
+        enabled: false, voters: {}, createdAt: Date.now(), updatedAt: Date.now()
+      };
+      _polls.push(poll); savePollsSoon();
+      console.log('[polls] created ' + poll.id + ' (' + options.length + ' options)');
+      return adminJson(res, 200, { ok: true, id: poll.id, poll: _pollAdmin(poll) });
+    });
+  }
+  if (reqPathOnly === '/admin/polls/activate' && req.method === 'POST') {
+    return readJsonBody(req, function (d) {
+      if (!hasScope('polls', query, d && d.token)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
+      const p = _pollById(d && d.id);
+      if (!p) return adminJson(res, 404, { ok: false, error: 'not found' });
+      // Exactly one poll is exposed at a time: activating one retires the others,
+      // so /app-config never has to arbitrate between two live questions.
+      if (d && d.enabled) _polls.forEach(function (q) { q.enabled = (q.id === p.id); });
+      else p.enabled = false;
+      p.updatedAt = Date.now(); savePollsSoon();
+      console.log('[polls] ' + p.id + (p.enabled ? ' activated' : ' deactivated'));
+      return adminJson(res, 200, { ok: true, enabled: !!p.enabled });
+    });
+  }
+  if (reqPathOnly === '/admin/polls/reset' && req.method === 'POST') {
+    return readJsonBody(req, function (d) {
+      if (!hasScope('polls', query, d && d.token)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
+      const p = _pollById(d && d.id);
+      if (!p) return adminJson(res, 404, { ok: false, error: 'not found' });
+      p.voters = {}; p.updatedAt = Date.now(); savePollsSoon();
+      return adminJson(res, 200, { ok: true, poll: _pollAdmin(p) });
+    });
+  }
+  if (reqPathOnly === '/admin/polls/delete' && req.method === 'POST') {
+    return readJsonBody(req, function (d) {
+      if (!hasScope('polls', query, d && d.token)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
+      const i = _polls.findIndex(function (p) { return p && p.id === (d && d.id); });
+      if (i < 0) return adminJson(res, 404, { ok: false, error: 'not found' });
+      _polls.splice(i, 1); savePollsSoon();
+      return adminJson(res, 200, { ok: true });
+    });
+  }
   if (reqPathOnly === '/admin/broadcasts' && req.method === 'GET') {
     if (!hasScope('broadcast', query, null)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
     const now = Date.now();
@@ -2944,9 +3106,38 @@ const httpServer = http.createServer((req, res) => {
   }
 
   // Public app config the client reads on load: which entry "modes" are enabled.
+  // Product poll vote (web-only, opt-in client side). One answer per device per
+  // poll, deduped on a salted hash of the same anonymous `vid` already posted to
+  // /__visit. Idempotent: re-posting returns the stored choice instead of
+  // counting twice, which is also how a returning client re-reads the results.
+  if (reqPathOnly === '/__poll-vote') {
+    if (req.method !== 'POST') { res.writeHead(405); res.end('Method not allowed'); return; }
+    readJsonBody(req, function (d) {
+      function j(code, obj) {
+        res.writeHead(code, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' });
+        res.end(JSON.stringify(obj));
+      }
+      const p = _pollActive();
+      if (!p) return j(404, { ok: false, error: 'no active poll' });
+      // The admin may have switched polls while this page was open.
+      if (!d || d.id !== p.id) return j(409, { ok: false, error: 'stale poll', id: p.id });
+      const vid = (typeof d.vid === 'string') ? d.vid.slice(0, 128) : '';
+      if (!vid) return j(400, { ok: false, error: 'vid required' });
+      const choice = (typeof d.choice === 'string') ? d.choice : '';
+      if (!(p.options || []).some(function (o) { return o.id === choice; })) return j(400, { ok: false, error: 'unknown choice' });
+      const h = _pollVoterHash(p.id, vid);
+      p.voters = p.voters || {};
+      const already = p.voters[h] !== undefined;
+      if (!already) { p.voters[h] = choice; savePollsSoon(); }
+      const t = _pollTally(p);
+      return j(200, { ok: true, already: already, choice: p.voters[h], tally: t.tally, total: t.total });
+    });
+    return;
+  }
+
   if (reqPathOnly === '/app-config') {
     res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' });
-    res.end(JSON.stringify({ ok: true, modes: appModes(), welcome: _welcomePublic(), showLoginTitle: !!_adminConfig.showLoginTitle, defaultTheme: _adminConfig.defaultTheme || '', defaults: _adminConfig.defaults || {}, loginDefaults: _adminConfig.loginDefaults || {}, tableDefaults: _adminConfig.tableDefaults || {}, tableNames: _adminConfig.tableNames || {}, serverName: _adminConfig.serverName || '', serverTagline: _adminConfig.serverTagline || '', pokerthnetServer: _activePokerthnetServer(), pokerthnetSource: _pokerthnetSource(), internetTransport: _internetTransport() }));
+    res.end(JSON.stringify({ ok: true, modes: appModes(), welcome: _welcomePublic(), poll: _pollPublic(), showLoginTitle: !!_adminConfig.showLoginTitle, defaultTheme: _adminConfig.defaultTheme || '', defaults: _adminConfig.defaults || {}, loginDefaults: _adminConfig.loginDefaults || {}, tableDefaults: _adminConfig.tableDefaults || {}, tableNames: _adminConfig.tableNames || {}, serverName: _adminConfig.serverName || '', serverTagline: _adminConfig.serverTagline || '', pokerthnetServer: _activePokerthnetServer(), pokerthnetSource: _pokerthnetSource(), internetTransport: _internetTransport() }));
     return;
   }
 
