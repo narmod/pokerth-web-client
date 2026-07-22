@@ -39,6 +39,27 @@ non-root user. It is idempotent — re-running updates an existing install. Pref
 first? Download `install.sh`, read it, then run it. Non-interactive installs are driven by
 environment variables (`PORT`, `RUN_USER`, `INSTALL_DIR`…) — see the README.
 
+### Recommended invocation on a shared server
+
+On a machine that already hosts other services (the game server, a PHP site, MySQL…),
+pin the three knobs that matter instead of relying on defaults:
+
+```bash
+curl -sSL https://raw.githubusercontent.com/narmod/pokerth-web-client/HEAD/install.sh -o install.sh
+PORT=8081 RUN_USER=pokerth-web INSTALL_DIR=/opt/pokerth-web-client bash install.sh
+```
+
+- `PORT` — pick one that is free; the installer now **checks the port** and refuses to
+  proceed non-interactively if it is busy.
+- `RUN_USER=pokerth-web` — a dedicated account, separate from the user running the game
+  server. If the chosen user already runs other processes, the installer warns and asks.
+- `INSTALL_DIR` — keeps the checkout out of the game server's home.
+
+The installer **never replaces an existing system Node.js silently**: if the installed
+Node is older than 20 it asks for explicit confirmation (interactive), aborts otherwise,
+and `SKIP_NODE_UPGRADE=1` keeps the current Node untouched at your own risk. It does not
+touch PHP, MySQL, or the web server already present on the machine.
+
 ## 3. HTTPS
 
 Put Nginx + Let's Encrypt in front of the proxy (full walkthrough in the README's
