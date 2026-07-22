@@ -16,6 +16,9 @@ const dom = new JSDOM(`<!doctype html><body>
   <div id="music-panel" style="display:none"></div>
   <div id="g-overflow-menu" style="display:none"><button id="ovf-btn">x</button></div>
   <div id="players-panel"></div>
+  <!-- Fenêtres flottantes imbriquées : le z effectif est porté par le conteneur -->
+  <div id="ranking-modal" style="display:none"><div class="rk-card"><div id="rk-title"></div></div></div>
+  <div id="adv-modal" style="display:none"><div class="km-card"></div></div>
 </body>`, { pretendToBeVisual: true, url: 'https://pokerth.local/' });
 
 const w = dom.window;
@@ -67,6 +70,41 @@ const vals = ['g-chat-panel', 'g-log-panel', 'music-panel', 'g-overflow-menu'].m
 ok(vals.every(v => v >= 300 && v <= 390), 'après 120 remontées : tout reste dans la bande 300–390');
 ok(z('g-log-panel') > z('g-chat-panel'),
    'renumérotation : l\'ordre relatif est conservé (dernière remontée devant)');
+
+// ── Fenêtres imbriquées (audit du 22/07 : classement, classement de table,
+//    options avancées — le z effectif est celui du conteneur, pas de la carte) ──
+const rk = $('ranking-modal'), rkCard = rk.querySelector('.rk-card');
+rk.style.display = 'flex';
+rkCard.classList.add('floating-win');          // mode fenêtre (desktop/tablette)
+await tick();
+ok(z('ranking-modal') > z('g-chat-panel'),
+   'classement ouvert en fenêtre : le CONTENEUR passe devant les autres fenêtres');
+ok(!rkCard.style.zIndex, 'classement : aucun z posé sur la carte (sans effet)');
+
+Z.raise($('g-chat-panel'));
+ok(z('g-chat-panel') > z('ranking-modal'), 'chat sélectionné : repasse devant le classement');
+Z.raise(rkCard);
+ok(z('ranking-modal') > z('g-chat-panel'),
+   'toucher la carte du classement remonte le conteneur');
+
+// Options avancées : même mécanique.
+const adv = $('adv-modal'), advCard = adv.querySelector('.km-card');
+adv.style.display = 'flex';
+advCard.classList.add('floating-win');
+await tick();
+ok(z('adv-modal') > z('ranking-modal'), 'options avancées ouvertes après : devant le classement');
+
+// Fermeture → le conteneur récupère son z-index CSS de dialogue.
+adv.style.display = 'none';
+await tick();
+ok(!$('adv-modal').style.zIndex, 'fermeture : le conteneur rend son z-index CSS (priorité dialogue)');
+
+// Mode modale (mobile, pas de .floating-win) : jamais touché.
+rkCard.classList.remove('floating-win');
+rk.style.display = 'none'; await tick();
+rk.style.display = 'flex'; await tick();
+ok(!$('ranking-modal').style.zIndex,
+   'mode modale (sans .floating-win) : le conteneur garde son z CSS 1200');
 
 console.log(fail ? `\nFAIL ${pass}/${pass + fail}` : `\nPASS ${pass}/${pass}`);
 process.exit(fail ? 1 : 0);
