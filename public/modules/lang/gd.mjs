@@ -85,7 +85,7 @@ export const strings = {
   advSecChat: "Cabadaich",
   advSecCommunity: "Coimhearsnachd",
   advSecAvatars: "Avatars",
-  advSecHelp: "Cobhair", advHandsBtn: "Seall ìomhaigheag làmhan a' phòcair air a' bhòrd",
+  advSecHelp: "Cobhair", advWinOpen: 'Soillsich am putan ann an òr fhad \u2019s a tha an uinneag aige fosgailte', advHandsBtn: "Seall ìomhaigheag làmhan a' phòcair air a' bhòrd",
   advSecSeats: "Suidheachain",
   advSecKeys: "Ath-ghoiridean meur-chlàir",
   advAnimCards: "Beòthachadh chairtean",

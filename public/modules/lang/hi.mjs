@@ -88,7 +88,7 @@ export const strings = {
   advSecChat: "चैट",
   advSecCommunity: "समुदाय",
   advSecAvatars: "अवतार",
-  advSecHelp: "सहायता", advHandsBtn: "टेबल पर पोकर हैंड आइकन दिखाएँ",
+  advSecHelp: "सहायता", advWinOpen: 'जब तक उसकी विंडो खुली है, बटन को सुनहरा दिखाएँ', advHandsBtn: "टेबल पर पोकर हैंड आइकन दिखाएँ",
   advSecSeats: "सीटें",
   advSecKeys: "कीबोर्ड शॉर्टकट",
   advAnimCards: "पत्तों के एनिमेशन",

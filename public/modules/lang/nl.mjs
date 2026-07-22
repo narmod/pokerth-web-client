@@ -89,7 +89,7 @@ export const strings = {
   advSecChat: "Chat",
   advSecCommunity: "Community",
   advSecAvatars: "Avatars",
-  advSecHelp: "Help", advHandsBtn: "Pictogram met pokerhanden op tafel tonen",
+  advSecHelp: "Help", advWinOpen: 'Markeer de knop goudkleurig zolang het venster open is', advHandsBtn: "Pictogram met pokerhanden op tafel tonen",
   advSecSeats: "Plaatsen",
   advSecKeys: "Sneltoetsen",
   advAnimCards: "Kaartanimaties",

@@ -84,7 +84,7 @@ export const strings = {
   advSecChat: "Ћаскање",
   advSecCommunity: "Заједница",
   advSecAvatars: "Аватари",
-  advSecHelp: "Помоћ", advHandsBtn: "Прикажи икону покер комбинација на столу",
+  advSecHelp: "Помоћ", advWinOpen: 'Истакни дугме златном бојом док је његов прозор отворен', advHandsBtn: "Прикажи икону покер комбинација на столу",
   advSecSeats: "Места",
   advSecKeys: "Пречице тастатуре",
   advAnimCards: "Анимације карата",

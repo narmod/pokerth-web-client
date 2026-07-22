@@ -84,7 +84,7 @@ export const strings = {
   advSecChat: "Trò chuyện",
   advSecCommunity: "Cộng đồng",
   advSecAvatars: "Ảnh đại diện",
-  advSecHelp: "Trợ giúp", advHandsBtn: "Hiện biểu tượng các bộ bài poker trên bàn",
+  advSecHelp: "Trợ giúp", advWinOpen: 'Làm nổi bật nút bằng màu vàng khi cửa sổ của nó đang mở', advHandsBtn: "Hiện biểu tượng các bộ bài poker trên bàn",
   advSecSeats: "Chỗ ngồi",
   advSecKeys: "Phím tắt",
   advAnimCards: "Hoạt ảnh lá bài",

@@ -84,7 +84,7 @@ export const strings = {
   advSecChat: "Συνομιλία",
   advSecCommunity: "Κοινότητα",
   advSecAvatars: "Άβαταρ",
-  advSecHelp: "Βοήθεια", advHandsBtn: "Εμφάνιση εικονιδίου συνδυασμών πόκερ στο τραπέζι",
+  advSecHelp: "Βοήθεια", advWinOpen: 'Επισήμανση του κουμπιού με χρυσό όσο το παράθυρό του είναι ανοιχτό', advHandsBtn: "Εμφάνιση εικονιδίου συνδυασμών πόκερ στο τραπέζι",
   advSecSeats: "Θέσεις",
   advSecKeys: "Συντομεύσεις πληκτρολογίου",
   advAnimCards: "Κινούμενα φύλλα",

@@ -84,7 +84,7 @@ export const strings = {
   advSecChat: "Xat",
   advSecCommunity: "Comunitat",
   advSecAvatars: "Avatars",
-  advSecHelp: "Ajuda", advHandsBtn: "Mostra la icona de les mans de pòquer",
+  advSecHelp: "Ajuda", advWinOpen: 'Ressalta el botó en daurat mentre la seva finestra és oberta', advHandsBtn: "Mostra la icona de les mans de pòquer",
   advSecSeats: "Seients",
   advSecKeys: "Dreceres de teclat",
   advAnimCards: "Animacions de les cartes",

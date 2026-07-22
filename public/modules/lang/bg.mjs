@@ -84,7 +84,7 @@ export const strings = {
   advSecChat: "Чат",
   advSecCommunity: "Общност",
   advSecAvatars: "Аватари",
-  advSecHelp: "Помощ", advHandsBtn: "Показвай иконата с покер комбинациите на масата",
+  advSecHelp: "Помощ", advWinOpen: 'Оцветяване на бутона в златисто, докато прозорецът му е отворен', advHandsBtn: "Показвай иконата с покер комбинациите на масата",
   advSecSeats: "Места",
   advSecKeys: "Клавишни комбинации",
   advAnimCards: "Анимации на картите",

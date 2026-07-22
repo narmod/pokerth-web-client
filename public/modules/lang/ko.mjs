@@ -87,7 +87,7 @@ export const strings = {
   advSecChat: "채팅",
   advSecCommunity: "커뮤니티",
   advSecAvatars: "아바타",
-  advSecHelp: "도움말", advHandsBtn: "테이블에 포커 족보 아이콘 표시",
+  advSecHelp: "도움말", advWinOpen: '창이 열려 있는 동안 버튼을 금색으로 강조', advHandsBtn: "테이블에 포커 족보 아이콘 표시",
   advSecSeats: "좌석",
   advSecKeys: "키보드 단축키",
   advAnimCards: "카드 애니메이션",

@@ -84,7 +84,7 @@ export const strings = {
   advSecChat: "Chat",
   advSecCommunity: "Komunita",
   advSecAvatars: "Avatary",
-  advSecHelp: "Pomocník", advHandsBtn: "Zobraziť ikonu pokrových kombinácií na stole",
+  advSecHelp: "Pomocník", advWinOpen: 'Zvýrazniť tlačidlo zlatou, kým je jeho okno otvorené', advHandsBtn: "Zobraziť ikonu pokrových kombinácií na stole",
   advSecSeats: "Miesta",
   advSecKeys: "Klávesové skratky",
   advAnimCards: "Animácie kariet",

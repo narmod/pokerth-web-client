@@ -85,7 +85,7 @@ export const strings = {
   advSecChat: "அரட்டை",
   advSecCommunity: "சமூகம்",
   advSecAvatars: "அவதாரங்கள்",
-  advSecHelp: "உதவி", advHandsBtn: "மேசையில் போக்கர் கை ஐகானைக் காட்டு",
+  advSecHelp: "உதவி", advWinOpen: 'சாளரம் திறந்திருக்கும் வரை பொத்தானைத் தங்க நிறத்தில் காட்டு', advHandsBtn: "மேசையில் போக்கர் கை ஐகானைக் காட்டு",
   advSecSeats: "இருக்கைகள்",
   advSecKeys: "விசைப்பலகை குறுக்குவழிகள்",
   advAnimCards: "சீட்டு அசைவூட்டங்கள்",

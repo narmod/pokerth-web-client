@@ -83,7 +83,7 @@ export const strings = {
   advSecChat: "Чат",
   advSecCommunity: "Спільнота",
   advSecAvatars: "Аватари",
-  advSecHelp: "Довідка", advHandsBtn: "Показувати значок покерних комбінацій на столі",
+  advSecHelp: "Довідка", advWinOpen: 'Підсвічувати кнопку золотим, доки її вікно відкрите', advHandsBtn: "Показувати значок покерних комбінацій на столі",
   advSecSeats: "Місця",
   advSecKeys: "Гарячі клавіші",
   advAnimCards: "Анімації карт",

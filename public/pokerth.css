@@ -7524,6 +7524,36 @@ body.has-keyboard .act-key { display: inline-block; }
 .zoom-ctrl .zoom-btn:not(.zoom-toggle) { display:flex; }
 .zoom-btn.active { background: var(--accent, #E3C800); color: #1a1205; border-color: var(--accent, #E3C800); }
 
+/* ═══ État « fenêtre ouverte » — convention unique de toute l'app ═══════
+   Tout bouton qui a ouvert une fenêtre, un panneau ou un menu reste en or
+   tant que celle-ci est visible (registre + observers : _WIN_BTN dans
+   pokerth.js). Trois rendus :
+     · .win-open           frameless (en-têtes, ☰, ⛶, ⚙/⋮) → icône en or,
+                           aucun cadre ajouté (demande narmod : lisible sur
+                           les systèmes où l'icône neutre se voit mal)
+     · .g-felt-btn/.zoom-btn.win-open  boutons ronds du feutre → aplat or,
+                           même rendu que .active (💬 📋 😊 harmonisés)
+     · .win-open-ring      🏆 Classement, dont le SVG est déjà or au repos
+                           → anneau + halo or au lieu d'un aplat
+   Désactivable : Options avancées → body.adv-no-winopen. */
+.win-open { color: var(--sel, var(--gold, #E3C800)) !important; }
+.g-felt-btn.win-open,
+.zoom-btn.win-open {
+  background: var(--sel, var(--gold, #E3C800)) !important;
+  border-color: var(--sel, var(--gold, #E3C800)) !important;
+  color: #1a1205 !important;
+}
+.win-open-ring {
+  box-shadow: 0 0 0 2px var(--sel, var(--gold, #E3C800)),
+              0 0 10px rgba(var(--gold-rgb, 227,200,0), 0.45) !important;
+  border-radius: 8px;
+}
+body.adv-no-winopen .win-open,
+body.adv-no-winopen .win-open-ring {
+  color: inherit !important; background: none !important;
+  border-color: transparent !important; box-shadow: none !important;
+}
+
 /* -- Bouton "editer le placement" (mode custom) + edition glisser-deposer -- */
 #g-seat-edit { display: none; }
 html[data-seat-layout="custom"] #g-seat-edit { display: flex; }

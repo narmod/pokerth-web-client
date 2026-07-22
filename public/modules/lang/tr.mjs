@@ -86,7 +86,7 @@ export const strings = {
   advSecChat: "Sohbet",
   advSecCommunity: "Topluluk",
   advSecAvatars: "Avatarlar",
-  advSecHelp: "Yardım", advHandsBtn: "Poker el sıralaması simgesini masada göster",
+  advSecHelp: "Yardım", advWinOpen: 'Penceresi açıkken düğmeyi altın renginde vurgula', advHandsBtn: "Poker el sıralaması simgesini masada göster",
   advSecSeats: "Koltuklar",
   advSecKeys: "Klavye kısayolları",
   advAnimCards: "Kart animasyonları",

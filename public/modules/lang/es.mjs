@@ -92,7 +92,7 @@ export const strings = {
   advSecChat: "Chat",
   advSecCommunity: "Comunidad",
   advSecAvatars: "Avatares",
-  advSecHelp: "Ayuda", advHandsBtn: "Mostrar el icono de las manos de póker",
+  advSecHelp: "Ayuda", advWinOpen: 'Resaltar el botón en dorado mientras su ventana está abierta', advHandsBtn: "Mostrar el icono de las manos de póker",
   advSecSeats: "Asientos",
   advSecKeys: "Atajos de teclado",
   advAnimCards: "Animaciones de cartas",

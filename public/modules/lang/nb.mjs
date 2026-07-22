@@ -83,7 +83,7 @@ export const strings = {
   advSecChat: "Chat",
   advSecCommunity: "Fellesskap",
   advSecAvatars: "Avatarer",
-  advSecHelp: "Hjelp", advHandsBtn: "Vis ikonet med pokerhender på bordet",
+  advSecHelp: "Hjelp", advWinOpen: 'Uthev knappen i gull mens vinduet er åpent', advHandsBtn: "Vis ikonet med pokerhender på bordet",
   advSecSeats: "Plasser",
   advSecKeys: "Hurtigtaster",
   advAnimCards: "Kortanimasjoner",

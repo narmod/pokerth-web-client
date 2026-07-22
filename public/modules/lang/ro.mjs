@@ -84,7 +84,7 @@ export const strings = {
   advSecChat: "Chat",
   advSecCommunity: "Comunitate",
   advSecAvatars: "Avataruri",
-  advSecHelp: "Ajutor", advHandsBtn: "Afișează pictograma mâinilor de poker pe masă",
+  advSecHelp: "Ajutor", advWinOpen: 'Evidențiază butonul în auriu cât timp fereastra sa este deschisă', advHandsBtn: "Afișează pictograma mâinilor de poker pe masă",
   advSecSeats: "Locuri",
   advSecKeys: "Scurtături de tastatură",
   advAnimCards: "Animații ale cărților",

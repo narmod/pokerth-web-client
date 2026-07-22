@@ -91,7 +91,7 @@ export const strings = {
   advSecChat: "Chat",
   advSecCommunity: "Comunità",
   advSecAvatars: "Avatar",
-  advSecHelp: "Aiuto", advHandsBtn: "Mostra l'icona delle combinazioni di poker",
+  advSecHelp: "Aiuto", advWinOpen: 'Evidenzia il pulsante in oro finché la sua finestra è aperta', advHandsBtn: "Mostra l'icona delle combinazioni di poker",
   advSecSeats: "Posti",
   advSecKeys: "Scorciatoie da tastiera",
   advAnimCards: "Animazioni delle carte",

@@ -84,7 +84,7 @@ export const strings = {
   advSecChat: "Pokalbiai",
   advSecCommunity: "Bendruomenė",
   advSecAvatars: "Avatarai",
-  advSecHelp: "Pagalba", advHandsBtn: "Rodyti pokerio kombinacijų piktogramą ant stalo",
+  advSecHelp: "Pagalba", advWinOpen: 'Paryškinti mygtuką auksine spalva, kol jo langas atidarytas', advHandsBtn: "Rodyti pokerio kombinacijų piktogramą ant stalo",
   advSecSeats: "Vietos",
   advSecKeys: "Spartieji klavišai",
   advAnimCards: "Kortų animacijos",

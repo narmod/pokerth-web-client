@@ -91,7 +91,7 @@ export const strings = {
   advSecChat: "Chat",
   advSecCommunity: "Community",
   advSecAvatars: "Avatare",
-  advSecHelp: "Hilfe", advHandsBtn: "Symbol der Pokerblätter auf dem Tisch anzeigen",
+  advSecHelp: "Hilfe", advWinOpen: 'Schaltfläche golden hervorheben, solange ihr Fenster offen ist', advHandsBtn: "Symbol der Pokerblätter auf dem Tisch anzeigen",
   advSecSeats: "Plätze",
   advSecKeys: "Tastenkürzel",
   advAnimCards: "Kartenanimationen",

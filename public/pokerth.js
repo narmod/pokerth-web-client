@@ -214,6 +214,8 @@ function applyAdvOpts() {
     try { if (typeof window._applyBrowserZoomOpt === 'function') window._applyBrowserZoomOpt(); } catch (e) {}   // zoom navigateur (option browser_zoom)
     b.classList.toggle('adv-no-lobbychat', !_advGet('lobby_chat', true)); // chat du lobby (parite QML UseLobbyChat)
     b.classList.toggle('adv-no-chatts', !_advGet('chat_ts', true)); // heure [HH:MM:SS] devant les messages de chat (demande forum, extension web)
+    b.classList.toggle('adv-no-winopen', !_advGet('win_open', true)); // bouton dore quand sa fenetre est ouverte (extension web)
+    try { if (typeof window._syncWinBtns === 'function') window._syncWinBtns(); } catch (e) {}
     b.classList.toggle('adv-no-handsbtn', !_advGet('hands_btn', true)); // icone combinaisons de poker sur le tapis (extension web)
     try { if (typeof window.applyTableZoom === 'function') window.applyTableZoom(); } catch (e) {}
     try { var _slm = localStorage.getItem('pth_seat_layout'); _slm = (_slm === 'pokerth-official' || _slm === 'pokerth-ellipse' || _slm === 'custom') ? _slm : 'auto'; document.documentElement.setAttribute('data-seat-layout', _slm); } catch (e) {}
@@ -357,6 +359,7 @@ function openAdvancedOptions() {
   sync('adv-assist', 'assist', true);
   sync('adv-showodds', 'show_odds', true);
   sync('adv-handsbtn', 'hands_btn', true);
+  sync('adv-winopen', 'win_open', true);   // bouton dore tant que sa fenetre est ouverte
   sync('adv-voice', 'voice', false);
   sync('adv-haptic', 'haptic', true);
   sync('adv-displaybb', 'display_bb', false);
@@ -1085,6 +1088,7 @@ var _CFG_WEB_SYNC_KEYS = [
   'pth_log_on', 'pth_create_dialog', 'pth_status_bar', 'pth_blinds_badge',
   'pth_winner_popup', 'pth_remove_gone', 'pth_tooltips', 'pth_big_own_cards',
   'pth_chat_translate', 'pth_chat_abbrev', 'pth_pin_actionbar', 'pth_confirm_social',
+  'pth_win_open',
   // Valeurs (thème web, sièges, clavier, langue, divers)
   'pth_theme', 'pth_buttons', 'pth_pucks', 'pth_seat', 'pth_seat_layout',
   'pth_seat_custom', 'pth_keys', 'pth_lang', 'pth_offline_skill',
@@ -7870,6 +7874,107 @@ function toggleHandsHelp() {
   }
 }
 
+// ── État « fenêtre ouverte » : le bouton déclencheur passe en or ────────
+// Convention unique de toute l'application : un bouton qui a ouvert une
+// fenêtre, un panneau ou un menu reste en or tant que celle-ci est visible.
+// Rendu : .win-open / .win-open-ring / body.adv-no-winopen (pokerth.css).
+// Le registre est DÉCLARATIF et aucun toggle existant n'est modifié : un
+// MutationObserver par fenêtre resynchronise les boutons, ce qui couvre
+// aussi les fermetures indirectes (clic hors menu, Escape, back-guard).
+// Hors périmètre volontaire : 📳 vibration, 🤐 voix, coupure du son et les
+// ✕ de fermeture (états propres), onglets internes (.rk-tab/.gip-tab ont
+// déjà leur .active). ⛶ plein écran est inclus (demande narmod).
+var _WIN_BTN = [
+  { win: 'ranking-modal',         mode: 'display', btns: ['ranking-btn-connect', 'ranking-btn-lobby', 'ranking-btn-create', 'ranking-btn-game'] },
+  { win: 'tableranking-modal',    mode: 'display', btns: ['tableranking-btn-game'] },
+  { win: 'adv-modal',             mode: 'display', btns: ['adv-opts-connect-mob', 'adv-opts-lobby-mob', 'adv-opts-create-mob', 'adv-opts-mob'] },
+  { win: 'music-panel',           mode: 'display', btns: ['music-toggle-connect-mob', 'music-toggle-lobby-mob', 'music-toggle-create-mob', 'music-toggle-game-mob'] },
+  { win: 'g-chat-panel',          mode: 'display', btns: ['chat-toggle-btn', 'gchat-fab'] },
+  { win: 'g-log-panel',           mode: 'display', btns: ['log-toggle-btn'] },
+  { win: 'g-reaction-panel',      mode: 'display', btns: ['react-toggle-btn'] },
+  { win: 'hands-overlay',         mode: 'display', btns: ['hands-toggle-btn'] },
+  { win: 'players-panel',         mode: 'display', btns: ['h-players'], sel: ['.fbar-players'] },
+  { win: 'avatar-popup',          mode: 'display', btns: ['av-trigger'] },
+  { win: 'l-chat-emoji-panel',    mode: 'display', btns: ['l-chat-emoji-toggle'] },
+  { win: 'g-chat-emoji-panel',    mode: 'display', btns: ['g-chat-emoji-toggle'] },
+  { win: 'connect-overflow-menu', mode: 'open',    btns: ['connect-overflow-btn'] },
+  { win: 'l-overflow-menu',       mode: 'open',    btns: ['l-overflow-btn'] },
+  { win: 'cr-overflow-menu',      mode: 'open',    btns: ['cr-overflow-btn'] },
+  { win: 'g-overflow-menu',       mode: 'open',    btns: ['g-overflow-btn'] },
+  { win: 'pv-overflow-menu',      mode: 'open',    btns: ['pv-overflow-btn'] },
+  { win: 'cl-links-connect',      mode: 'details', sel: ['#cl-links-connect > summary'] }
+];
+// 🏆 : son SVG est déjà or au repos (fill #E3C800) -> anneau plutôt qu'aplat.
+window._winBtn = function (btn, open) {
+  if (!btn || !btn.classList) return;
+  var ring = !!(btn.querySelector && btn.querySelector('.rk-trophy'));
+  btn.classList.toggle(ring ? 'win-open-ring' : 'win-open', !!open);
+};
+function _winBtnEls(e) {
+  var out = [], i;
+  var ids = e.btns || [];
+  for (i = 0; i < ids.length; i++) { var b = document.getElementById(ids[i]); if (b) out.push(b); }
+  var sels = e.sel || [];
+  for (i = 0; i < sels.length; i++) {
+    try { var n = document.querySelectorAll(sels[i]); for (var j = 0; j < n.length; j++) out.push(n[j]); } catch (_e) {}
+  }
+  return out;
+}
+function _winIsOpen(e) {
+  var w = document.getElementById(e.win);
+  if (!w) return false;
+  if (e.mode === 'open')    return w.classList.contains('open');
+  if (e.mode === 'details') return !!w.open;
+  return w.style.display !== 'none' && !w.hidden;
+}
+function _syncWinBtns() {
+  var off = false;
+  try { off = document.body.classList.contains('adv-no-winopen'); } catch (e) {}
+  var i, j, els;
+  for (i = 0; i < _WIN_BTN.length; i++) {
+    els = _winBtnEls(_WIN_BTN[i]);
+    var on = !off && _winIsOpen(_WIN_BTN[i]);
+    for (j = 0; j < els.length; j++) window._winBtn(els[j], on);
+  }
+  // ⛶ plein écran : bascule sans fenêtre, dorée à la demande (visibilité).
+  var fs = !off && !!(document.fullscreenElement || document.webkitFullscreenElement);
+  window._winBtn(document.getElementById('fs-btn-lobby'), fs);
+  window._winBtn(document.getElementById('fs-btn-game'), fs);
+  // 🔊 popover son : créé / détruit dynamiquement dans <body>.
+  var sp = false; try { sp = !off && !!document.querySelector('.sound-pop'); } catch (e) {}
+  window._winBtn(document.getElementById('sound-toggle-btn'), sp);
+  window._winBtn(document.getElementById('adv-sound-btn'), sp);
+}
+window._syncWinBtns = _syncWinBtns;
+var _winSyncQueued = false;
+function _winSyncSoon() {
+  if (_winSyncQueued) return;
+  _winSyncQueued = true;
+  var run = function () { _winSyncQueued = false; _syncWinBtns(); };
+  if (window.requestAnimationFrame) window.requestAnimationFrame(run); else setTimeout(run, 16);
+}
+window._winSyncSoon = _winSyncSoon;
+function _winBtnWire() {
+  var obs = null;
+  try { obs = new MutationObserver(_winSyncSoon); } catch (e) { _syncWinBtns(); return; }
+  var seen = {};
+  for (var i = 0; i < _WIN_BTN.length; i++) {
+    var id = _WIN_BTN[i].win;
+    if (seen[id]) continue; seen[id] = 1;
+    var w = document.getElementById(id);
+    if (w) { try { obs.observe(w, { attributes: true, attributeFilter: ['style', 'class', 'open', 'hidden'] }); } catch (e) {} }
+  }
+  // Popover son : seul cas où l'élément n'existe pas en permanence.
+  try { obs.observe(document.body, { childList: true }); } catch (e) {}
+  try {
+    document.addEventListener('fullscreenchange', _winSyncSoon);
+    document.addEventListener('webkitfullscreenchange', _winSyncSoon);
+  } catch (e) {}
+  _syncWinBtns();
+}
+if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', _winBtnWire);
+else _winBtnWire();
+
 // ── Unread-chat badge ──────────────────────────────────────────────
 // A small red counter on the 💬 buttons (game header, lobby header, and
 // the floating FAB) so a closed chat panel never hides incoming messages.
@@ -8974,7 +9079,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.4-web.25'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.4-web.26'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

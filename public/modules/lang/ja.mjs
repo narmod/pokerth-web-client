@@ -83,7 +83,7 @@ export const strings = {
   advSecChat: "チャット",
   advSecCommunity: "コミュニティ",
   advSecAvatars: "アバター",
-  advSecHelp: "ヘルプ", advHandsBtn: "テーブルにポーカー役アイコンを表示",
+  advSecHelp: "ヘルプ", advWinOpen: 'ウィンドウが開いている間、ボタンを金色で強調表示', advHandsBtn: "テーブルにポーカー役アイコンを表示",
   advSecSeats: "席",
   advSecKeys: "キーボードショートカット",
   advAnimCards: "カードアニメーション",
