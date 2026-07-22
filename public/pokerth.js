@@ -8887,8 +8887,15 @@ window.App = App;
    pinch multi-doigts (loupe), contrôles natifs (sliders/champs), et toute
    zone avec overflow auto/scroll qui déborde (listes, chat, réglages). */
 (function(){
+  // Pinch-zoom du navigateur : Safari iOS ignore user-scalable=no du meta
+  // viewport → on annule les gestes de zoom. Sans perte : la loupe de table
+  // est un bouton +/- dédié (parité QML zoomLayer), jamais un pinch.
+  ['gesturestart','gesturechange','gestureend'].forEach(function(ev){
+    document.addEventListener(ev, function(e){ if (e.cancelable) e.preventDefault(); }, { passive:false });
+  });
   document.addEventListener('touchmove', function(e){
-    if (e.touches && e.touches.length > 1) return;
+    // Multi-doigts = tentative de pinch : bloquée (voir ci-dessus).
+    if (e.touches && e.touches.length > 1){ if (e.cancelable) e.preventDefault(); return; }
     var el = e.target;
     if (el && el.closest && el.closest('input,textarea,select')) return;
     while (el && el !== document.documentElement){
@@ -8902,7 +8909,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.4-web.14'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.4-web.15'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
