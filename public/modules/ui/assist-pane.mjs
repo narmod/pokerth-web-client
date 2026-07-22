@@ -107,7 +107,13 @@ function _ensureAssistPanel() {
   mini.addEventListener('click', dockAssist);
   ap.appendChild(mini);
   // Recentrage par double-clic aussi hors en-tête (utile quand il est masqué).
-  ap.addEventListener('dblclick', function(e){ if (e.target && e.target.closest && e.target.closest('button')) return; _recenterAssist(); });
+  // SOURIS uniquement : au doigt, saisir-relâcher-ressaisir vite = double-tap
+  // → la fenêtre « sautait » en 16/56 au début du drag (bug Android/iPad).
+  ap.addEventListener('dblclick', function(e){
+    if (e.target && e.target.closest && e.target.closest('button')) return;
+    try { if (window.matchMedia('(pointer: coarse)').matches) return; } catch(_){}
+    _recenterAssist();
+  });
   document.body.appendChild(ap);
   ap._hd = hd;
   return ap;
