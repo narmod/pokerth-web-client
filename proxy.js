@@ -1857,6 +1857,12 @@ function handleAdmin(req, res, reqPathOnly, query) {
           var ld = d.loginDefaults, lout = {};
           lout.mode = (['offline', 'lan-dedi', 'pokerthnet'].indexOf(ld.mode) >= 0) ? ld.mode : '';
           lout.host = (typeof ld.host === 'string') ? ld.host.trim().slice(0, 120) : '';
+          // URL de proxy imposée à tous les clients (vide = auto-détection depuis
+          // l'adresse de la page, comportement historique). Schéma ws/wss exigé.
+          var _pu = (typeof ld.proxyUrl === 'string') ? ld.proxyUrl.trim().slice(0, 180) : '';
+          lout.proxyUrl = /^wss?:\/\/[^\s]+$/i.test(_pu) ? _pu : '';
+          // Masquer le champ « URL du proxy WebSocket » et son libellé.
+          lout.hideProxy = !!ld.hideProxy;
           _adminConfig.loginDefaults = lout;
         }
         if (d.proxyCfg && typeof d.proxyCfg === 'object') {
