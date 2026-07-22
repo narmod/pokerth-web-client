@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="pokerth">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PokerTH Web — démo de faisabilité Vue 3</title>
+<!-- La CSS RÉELLE de l'app : les composants Vue réutilisent les classes existantes
+     (cf-preset, cf-block…) sans rien réinventer. -->
+<link rel="stylesheet" href="../pokerth.css">
+<style>
+  /* Coquille de la démo uniquement — tout le reste vient de pokerth.css */
+  .vd-wrap { max-width: 720px; margin: 24px auto; padding: 0 16px; }
+  .vd-card { background: var(--panel, #232936); border: 1px solid var(--line, #394150);
+             border-radius: 12px; padding: 18px 20px; margin-bottom: 16px; }
+  .vd-h { display: flex; align-items: baseline; gap: 10px; margin-bottom: 10px; }
+  .vd-h h2 { margin: 0; font-size: 16px; }
+  .vd-note { opacity: .7; font-size: 12.5px; line-height: 1.5; }
+  .vd-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+  .vd-badge { font-size: 11px; padding: 2px 8px; border-radius: 99px;
+              border: 1px solid var(--gold, #E3C800); color: var(--gold, #E3C800); }
+  .vd-kv { font-size: 13px; opacity: .85; margin-top: 8px; }
+</style>
+</head>
+<body>
+<div id="app" class="vd-wrap">
+
+  <div class="vd-card">
+    <div class="vd-h">
+      <h2>Vue 3 × PokerTH Web — preuve de faisabilité</h2>
+      <span class="vd-badge">labs</span>
+    </div>
+    <p class="vd-note">
+      Cette page monte <strong>Vue {{ vueVersion }}</strong> (vendorisé, sans build tooling)
+      et importe les <strong>modules ESM réels</strong> de l'app :
+      <code>modules/i18n.mjs</code> ({{ langCount }} langues) et
+      <code>modules/theme.mjs</code> ({{ presetCount }} presets).
+      Le rendu est déclaratif/réactif — même modèle mental que le QML —
+      mais la logique reste 100 % dans les modules existants.
+    </p>
+  </div>
+
+  <!-- ── i18n : le vrai t()/setLang, rendu réactif par Vue ─────────────── -->
+  <div class="vd-card">
+    <div class="vd-h"><h2>Langues (module i18n.mjs)</h2></div>
+    <div class="cf-presets vd-row">
+      <button v-for="code in langs" :key="code"
+              class="cf-preset" :class="{ active: code === currentLang }"
+              @click="pickLang(code)">{{ code }}</button>
+    </div>
+    <div class="vd-kv">
+      t('connect') → « {{ tr('connect') }} » ·
+      t('advTitle') → « {{ tr('advTitle') }} » ·
+      t('oddsTitle') → « {{ tr('oddsTitle') }} » ·
+      t('showCards') → « {{ tr('showCards') }} »
+    </div>
+    <p class="vd-note">Chaque clic appelle le <code>setLang()</code> du module ;
+      les libellés ci-dessus sont des bindings Vue sur le vrai <code>t()</code>.</p>
+  </div>
+
+  <!-- ── Thème : les vrais axes palette/table de theme.mjs ─────────────── -->
+  <div class="vd-card">
+    <div class="vd-h"><h2>Presets de thème (module theme.mjs)</h2></div>
+    <div class="cf-presets vd-row">
+      <button v-for="p in presets" :key="p.id"
+              class="cf-preset" :class="{ active: p.id === activePresetId }"
+              @click="pickPreset(p.id)">{{ tr(p.key) !== p.key ? tr(p.key) : p.fallback }}</button>
+    </div>
+    <p class="vd-note">Chaque clic appelle le <code>applyPreset()</code> du module —
+      les attributs <code>data-theme</code>/<code>data-table</code> sont posés sur
+      cette page et la CSS réelle réagit. <code>activePreset()</code> pilote la
+      surbrillance en retour.</p>
+  </div>
+
+  <!-- ── Réactivité pure Vue (v-model) ─────────────────────────────────── -->
+  <div class="vd-card">
+    <div class="vd-h"><h2>Réactivité (v-model)</h2></div>
+    <label style="display:flex;align-items:center;gap:8px;font-size:14px">
+      <input type="checkbox" v-model="demoToggle">
+      Option de démonstration : <strong>{{ demoToggle ? 'ON' : 'OFF' }}</strong>
+    </label>
+    <p class="vd-note">Zéro <code>addEventListener</code>, zéro
+      <code>getElementById</code> : l'état pilote le DOM. C'est ce qui remplacerait
+      les manipulations manuelles dans une migration écran par écran.</p>
+  </div>
+
+  <div class="vd-card vd-note">
+    Périmètre volontairement minimal : cette page ne touche à rien de l'app
+    (aucun impact sur <code>pokerth-client.html</code>). Migration envisageable
+    écran par écran — lobby/réglages d'abord, table de jeu en dernier.
+  </div>
+
+</div>
+
+<script type="module">
+  import { createApp, ref, computed, version as vueVersion } from './vue.esm-browser.prod.js';
+  import { LANG, t, setLang, getLang } from '../modules/i18n.mjs';
+  import { PRESETS, applyPreset, activePreset } from '../modules/theme.mjs';
+
+  createApp({
+    setup() {
+      // Tick d'invalidation : t()/activePreset() sont des fonctions externes à
+      // Vue ; on force la ré-évaluation des computed après chaque mutation.
+      const tick = ref(0);
+      const currentLang = computed(() => (tick.value, getLang()));
+      const activePresetId = computed(() => (tick.value, activePreset()));
+      const tr = (k) => (tick.value, t(k));
+
+      const pickLang = (code) => { setLang(code); tick.value++; };
+      const pickPreset = (id) => { applyPreset(id); tick.value++; };
+
+      return {
+        vueVersion,
+        langs: Object.keys(LANG),
+        langCount: Object.keys(LANG).length,
+        presets: PRESETS,
+        presetCount: PRESETS.length,
+        currentLang, activePresetId, tr,
+        pickLang, pickPreset,
+        demoToggle: ref(false),
+      };
+    },
+  }).mount('#app');
+</script>
+</body>
+</html>
