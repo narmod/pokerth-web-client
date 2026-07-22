@@ -2503,8 +2503,6 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
   .pim-name { font-size: 1.28rem !important; }
   .pim-flag { font-size: var(--fs-md) !important; }
 
-  .hands-card { max-width: min(580px, 90vw) !important; }
-  .hands-title { font-size: var(--fs-md) !important; }
   .hand-rank { font-size: var(--fs-sm) !important; }
   .hand-name { font-size: var(--fs-md) !important; }
   .hand-desc { font-size: var(--fs-sm) !important; }
@@ -3577,21 +3575,6 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
   padding: var(--sp-5);
 }
 #hands-card-inner { pointer-events: auto; }
-.hands-card {
-  background: var(--modal-bg);
-  border: 1px solid var(--gold-dim); border-top: 3px solid var(--gold);
-  border-radius: var(--r-bar); padding: 16px 18px;
-  max-width: min(460px, 96vw); max-height: 90dvh;
-  overflow-y: auto; width: 100%;
-  box-shadow: 0 0 60px rgba(var(--gold-rgb), 0.18), 0 20px 50px rgba(0,0,0,0.8);
-}
-.hands-title {
-  font-family: var(--ff-display); font-size: var(--fs-sm);
-  letter-spacing: 0.25em; text-transform: uppercase;
-  color: var(--text-hi); text-align: center;
-  padding-bottom: 12px; border-bottom: 1px solid var(--border);
-  margin-bottom: 10px;
-}
 .hand-row {
   display: flex; align-items: center; gap: var(--sp-4);
   padding: 7px 6px; border-bottom: 1px solid rgba(var(--gold-rgb), 0.07);
@@ -3612,7 +3595,6 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
   color: #111; box-shadow: 0 1px 3px rgba(0,0,0,0.4);
 }
 .hc.r { color: #c0392b; }
-.hc.hi { background: linear-gradient(135deg,#fff9e6,#f5e6b0); border-color: var(--gold); box-shadow: 0 0 5px rgba(var(--gold-rgb), 0.5); }
 .hand-info { flex: 1; min-width: 0; }
 .hand-name {
   font-size: var(--fs-sm); color: var(--text-hi); font-weight: 600;
@@ -3640,15 +3622,6 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
 .hl-mini.dim { opacity: 0.34; filter: grayscale(0.5); }
 .hl-grad { width: 46px; height: 7px; border-radius: 4px; display: inline-block;
   background: linear-gradient(90deg,#2ecc71,#c9b144,#6f6353); }
-.hands-close {
-  display: block; width: 100%; margin-top: 14px;
-  background: rgba(var(--gold-rgb), 0.12); border: 1px solid var(--gold-dim);
-  color: var(--gold); padding: 9px; border-radius: 4px;
-  font-family: var(--ff-display); font-size: var(--fs-sm);
-  letter-spacing: 0.1em; cursor: pointer; text-align: center;
-  transition: background 0.15s;
-}
-.hands-close:hover { background: rgba(var(--gold-rgb), 0.22); }
 
 /* ══ ANIMATIONS — Distribution, jetons, flip, stats ══ */
 
@@ -7443,16 +7416,7 @@ html[data-seat-img-self] .player-bar {
    Ouverture EN BANDEAU + detachement au 1er drag/resize : geree cote JS
    (_attachFloatControls / _ensureFloating). Les styles .floating-win et
    .win-rsz sont definis plus haut (v0.2.385) et s'appliquent au detachement.
-
-   Carte des COMBINAISONS (memo des mains) : deplacable + redimensionnable sur
-   tablette/desktop (>=900px). En dessous : modale centree classique (inchange).
    ════════════════════════════════════════════════════════════════════════ */
-.hands-floatable {
-  position: fixed;
-  width: min(460px, 96vw);
-  overflow: hidden;            /* les poignees de resize ne defilent pas */
-}
-.hands-floatable .hands-title { cursor: move; touch-action: none; -webkit-user-select: none; user-select: none; }
 
 /* Bouton "reset des fenetres" du header : visible seulement tablette + desktop.
    Selecteur sur-specifie (#s-game .header .btn-sm.win-reset-only) pour battre
@@ -7467,29 +7431,8 @@ html[data-seat-img-self] .player-bar {
 @media (min-width: 900px) and (hover: hover) and (pointer: fine) { #s-lobby .header .btn-sm.win-reset-lobby { display: inline-flex; } }
 
 
-/* ════════════════════════════════════════════════════════════════════════
-   Combinaisons (memo des mains) : sur tablette/desktop l'overlay ne fait plus
-   ecran. Pas d'assombrissement ni de capture de clic -> la carte (qui y flotte
-   deja, deplacable/redimensionnable) reste ouverte et la barre d'action reste
-   visible + cliquable meme quand une action joueur est requise. Fermeture via
-   le bouton X de la carte ou le 🃏. Mobile (<900px de large ou <600px de haut) :
-   modale assombrie + clic-exterieur ferme (inchange).
-   ════════════════════════════════════════════════════════════════════════ */
-@media (min-width: 900px) and (min-height: 600px) {
-  #hands-overlay { background: transparent; pointer-events: none; }
-  #hands-overlay .hands-card { pointer-events: auto; }
-}
 
 
-/* Combinaisons en mode flottant (tablette/desktop) : titre epingle en haut, et
-   le reste (legende + lignes + bouton fermer) dans une zone scrollable interne,
-   pour que TOUT le contenu defile quand la carte est plus petite que son contenu.
-   Les poignees de resize restent enfants directs de la carte (hors .hands-scroll),
-   donc fixees aux bords sans defiler. Mobile : la carte scrolle nativement (la
-   classe .hands-floatable est absente, ces regles ne s'appliquent pas). */
-.hands-floatable { display: flex; flex-direction: column; }
-.hands-floatable .hands-title { flex: 0 0 auto; }
-.hands-floatable .hands-scroll { flex: 1 1 auto; min-height: 0; overflow-y: auto; overflow-x: hidden; -webkit-overflow-scrolling: touch; }
 
 
 /* ════════════════════════════════════════════════════════════════════════
@@ -9715,7 +9658,7 @@ html[data-seat-struct="qml"] .seat:not(.me) .seat-narrow .seat-holecards .pk { w
    .rk-pr-tw, #g-stats-body .stats-scroll, .adv-nav (mobile), .st-tabbar,
    #range-modal .range-body (grille 2D). */
 .cp-scroll, #s-connect, .gim-card, .pim-card, .avp-grid, #s-lobby,
-.games-scroll, .chat-msgs, .emote-suggest, .react-grid, .hands-card,
+.games-scroll, .chat-msgs, .emote-suggest, .react-grid,
 #stats-overlay, .log-panel-body, .wc-players, .game-log, .wait-page,
 .km-card, .lobby-body, .chat-emoji-panel, .music-body, .rk-body,
 #rk-profile, .adv-body, #about-page, .pv-scroll, .avgal-body, .lgi-scroll

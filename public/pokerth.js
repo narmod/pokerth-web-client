@@ -7304,34 +7304,6 @@ function _musicShadeFloat(shaded){
   }
 }
 window.pthMusicShadeFloat = _musicShadeFloat;
-function _makeHandsDraggable(card){
-  // Carte des combinaisons (memo des mains) : deplacable via son titre. Le
-  // listener est pose sur la carte (persistante) car renderHandsHelp reconstruit
-  // son innerHTML a chaque ouverture.
-  if (!card || card._handsDragWired) return;
-  card._handsDragWired=true;
-  var sx=0, sy=0, sl=0, st=0, drag=false;
-  card.addEventListener('pointerdown', function(e){
-    if (!card.classList.contains('hands-floatable')) return;
-    if (!(e.target.closest && e.target.closest('.hands-title'))) return;
-    drag=true;
-    var r=card.getBoundingClientRect();
-    sx=e.clientX; sy=e.clientY; sl=r.left; st=r.top;
-    try{ card.setPointerCapture(e.pointerId); }catch(_){}
-    e.preventDefault();
-  });
-  card.addEventListener('pointermove', function(e){
-    if(!drag) return;
-    _placeWin(card, sl+(e.clientX-sx), st+(e.clientY-sy));
-  });
-  function end(e){
-    if(!drag) return; drag=false;
-    try{ card.releasePointerCapture(e.pointerId); }catch(_){}
-    _saveWin(card, 'pth_winpos_hands');
-  }
-  card.addEventListener('pointerup', end);
-  card.addEventListener('pointercancel', end);
-}
 function resetWindows(){
   // Bouton reset du header (≥900px) : efface TOUTES les positions/tailles
   // memorisees et remet chaque fenetre a son etat par defaut (bandeau, ou
@@ -7342,7 +7314,6 @@ function resetWindows(){
   ['odds-monitor','assist-win'].forEach(function(id){ var el=document.getElementById(id); if(el){ ['left','top','right','bottom','width'].forEach(function(pr){ el.style[pr]=''; }); el.style.removeProperty('--ws'); } });
   var card=document.getElementById('hands-card-inner');
   if(card){
-    card.classList.remove('hands-floatable');
     card._winResizable=false;
     var hs=card.querySelectorAll('.win-rsz'); for(var i=0;i<hs.length;i++) hs[i].remove();
     card._winRszWired=false;
@@ -8672,7 +8643,7 @@ window.togglePlayersPanel = togglePlayersPanel;
 window.toggleReactionPanel = toggleReactionPanel;
 window.App = App;
 
-window.BUILD_VERSION='0.3.995-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='0.3.996-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
