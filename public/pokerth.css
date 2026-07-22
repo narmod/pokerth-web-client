@@ -8138,7 +8138,9 @@ body.adv-no-blindsbadge .blinds-next{display:none !important}
 body.adv-no-handsbtn #hands-toggle-btn{display:none !important}
 body.adv-no-community #ranking-btn-connect,body.adv-no-community #ranking-btn-lobby,body.adv-no-community #ranking-btn-game{display:none !important}
 body.adv-no-tablezoom #g-zoom-ctrl{display:none !important}
-body.adv-no-lobbychat #lobby-chat-panel,body.adv-no-lobbychat #lobby-chat-btn{display:none !important}
+body.adv-no-lobbychat #lobby-chat-btn{display:none !important}
+body.adv-no-lobbychat #lobby-chat-panel,
+body.adv-no-lobbychat #s-lobby .lobby-grid > #lobby-chat-panel{display:none !important}
 #g-next-hand-btn{position:fixed;left:50%;bottom:150px;transform:translateX(-50%);z-index:950;padding:10px 22px;font-size:var(--fs-md);font-weight:700;letter-spacing:0.04em;color:#fff;background:linear-gradient(#50b840,#1e6614);border:1px solid #7ad06a;border-radius:var(--r-md);cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,0.45)}
 #g-next-hand-btn:active{transform:translateX(-50%) scale(0.96)}
 .adv-ign-desc{font-size:var(--fs-sm);color:var(--text);opacity:0.7;margin:2px 2px 8px}
@@ -8147,7 +8149,8 @@ body.adv-no-lobbychat #lobby-chat-panel,body.adv-no-lobbychat #lobby-chat-btn{di
 .adv-ign-rm{font-size:var(--fs-xs);letter-spacing:0.05em;color:var(--text);background:none;border:1px solid var(--border);border-radius:var(--r-bar);padding:2px 10px;cursor:pointer}
 .adv-ign-rm:hover{color:var(--gold);border-color:var(--gold-dim)}
 .adv-ign-empty{font-size:var(--fs-sm);color:var(--text);opacity:0.55;padding:4px 2px}
-@media (min-width:900px){body.adv-no-lobbychat #s-lobby .lobby-grid{grid-template-rows:minmax(0,1fr) 0 0}body.adv-no-lobbychat #s-lobby .lob-h-v{display:none}}
+@media (min-width:900px){body.adv-no-lobbychat #s-lobby .lobby-grid{grid-template-rows:minmax(0,1fr) 0 0 auto}body.adv-no-lobbychat #s-lobby .lob-h-v{display:none}}
+@media (max-width:899.98px){body.adv-no-lobbychat #s-lobby .lobby-grid > .games-col{flex:1 1 auto !important}}
 
 /* Estompage des cartes des perdants au showdown (fadeOutLosingCards). Le marquage
    .loser-fade est pose sur le siege par renderSeatsImmediate quand le pid est dans
