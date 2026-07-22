@@ -6064,12 +6064,13 @@ html[data-table="pokerth-live"] .raise-slider { accent-color: #4CAF50; }
   .connect-footer { display: none; }
 }
 
-/* Petit écran (mobile) : là où le cadre de login chevauche le footer, le
-   cadre passe AU-DESSUS (z-index) et recouvre les raccourcis/crédits. Aucune
-   modification de taille du cadre ni du footer — simple ordre d'empilement. */
-@media (max-width: 640px) {
-  #s-connect > .card { position: relative; z-index: 2; }
-}
+/* Là où le cadre de login chevauche le footer, le cadre passe AU-DESSUS
+   (z-index) et recouvre les raccourcis/crédits. Aucune modification de taille
+   du cadre ni du footer — simple ordre d'empilement.
+   Était limité à @media (max-width:640px) : sur desktop/tablette le footer
+   repassait devant le bas du cadre (constaté narmod 22/07). Règle désormais
+   valable sur toutes les tailles. */
+#s-connect > .card { position: relative; z-index: 2; }
 
 
 
