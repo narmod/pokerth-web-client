@@ -211,6 +211,7 @@ function applyAdvOpts() {
     } catch (e) {}
     b.classList.add('adv-hide-pbar'); // mode PokerTH permanent — option « barre joueur masquée » retirée (narmod 2026-07-17), le CSS reste keyé sur la classe
     b.classList.toggle('adv-no-tablezoom', !_advGet('table_zoom', true)); // interrupteur zoom (parite QML tableZoomEnabled)
+    try { if (typeof window._applyBrowserZoomOpt === 'function') window._applyBrowserZoomOpt(); } catch (e) {}   // zoom navigateur (option browser_zoom)
     b.classList.toggle('adv-no-lobbychat', !_advGet('lobby_chat', true)); // chat du lobby (parite QML UseLobbyChat)
     b.classList.toggle('adv-no-chatts', !_advGet('chat_ts', true)); // heure [HH:MM:SS] devant les messages de chat (demande forum, extension web)
     b.classList.toggle('adv-no-handsbtn', !_advGet('hands_btn', true)); // icone combinaisons de poker sur le tapis (extension web)
@@ -363,6 +364,7 @@ function openAdvancedOptions() {
   sync('adv-fkeysalt', 'fkeys_alt', false);
   sync('adv-keynav', 'keynav', true);   // Esc = annuler / Enter = valider (defaut on)
   sync('adv-tablezoom', 'table_zoom', true);
+  sync('adv-browserzoom', 'browser_zoom', false);   // zoom navigateur : bloqué par défaut sur tactile
   sync('adv-lobbychat', 'lobby_chat', true);
   sync('adv-polls', 'polls', true);   // sondages produit : visible par defaut, decochable ici
   sync('adv-connpill', 'conn_pill', true);   // pastille de connexion sur le feutre (web)
@@ -8890,12 +8892,36 @@ window.App = App;
   // Pinch-zoom du navigateur : Safari iOS ignore user-scalable=no du meta
   // viewport → on annule les gestes de zoom. Sans perte : la loupe de table
   // est un bouton +/- dédié (parité QML zoomLayer), jamais un pinch.
+  // Option « browser_zoom » (Options avancées, DÉSACTIVÉE par défaut) : la
+  // cocher rend le zoom natif au navigateur — recours d'accessibilité.
+  window._applyBrowserZoomOpt = function(){
+    try{
+      var on = _advGet('browser_zoom', false);
+      window._browserZoomOn = !!on;
+      var m = document.querySelector('meta[name="viewport"]');
+      if (!m) return;
+      // On repart du content courant : la largeur peut avoir été réécrite au
+      // boot (téléphones larges → width=393), il ne faut pas l'écraser.
+      var c = (m.getAttribute('content') || '')
+        .replace(/,?\s*(maximum-scale|user-scalable)\s*=\s*[^,]*/g, '')
+        .replace(/^\s*,\s*/, '').trim();
+      if (!on) c += ', maximum-scale=1, user-scalable=no';
+      m.setAttribute('content', c);
+    }catch(e){}
+  };
+  window._applyBrowserZoomOpt();
   ['gesturestart','gesturechange','gestureend'].forEach(function(ev){
-    document.addEventListener(ev, function(e){ if (e.cancelable) e.preventDefault(); }, { passive:false });
+    document.addEventListener(ev, function(e){
+      if (window._browserZoomOn) return;
+      if (e.cancelable) e.preventDefault();
+    }, { passive:false });
   });
   document.addEventListener('touchmove', function(e){
-    // Multi-doigts = tentative de pinch : bloquée (voir ci-dessus).
-    if (e.touches && e.touches.length > 1){ if (e.cancelable) e.preventDefault(); return; }
+    // Multi-doigts = tentative de pinch : bloquée sauf si l'option est cochée.
+    if (e.touches && e.touches.length > 1){
+      if (!window._browserZoomOn && e.cancelable) e.preventDefault();
+      return;
+    }
     var el = e.target;
     if (el && el.closest && el.closest('input,textarea,select')) return;
     while (el && el !== document.documentElement){
@@ -8909,7 +8935,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.4-web.15'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.4-web.16'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
