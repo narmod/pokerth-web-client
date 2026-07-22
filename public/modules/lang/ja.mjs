@@ -9,6 +9,12 @@ export const meta = {
 };
 
 export const strings = {
+  advPolls: "製品アンケートに参加する",
+  pollTitle: "アンケート",
+  pollThanks: "ご回答ありがとうございます！",
+  pollAnswers: "{n} 件の回答",
+  pollSeeResults: "結果を見る",
+  pollErr: "回答を送信できませんでした。",
     // ── Stats / HUD / range (session) ──
     gipTabStats:"Stats",
     advStatsTrack:"ハンド統計を記録",

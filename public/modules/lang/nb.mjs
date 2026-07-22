@@ -9,6 +9,12 @@ export const meta = {
 };
 
 export const strings = {
+  advPolls: "Delta i produktundersøkelser",
+  pollTitle: "Undersøkelse",
+  pollThanks: "Takk for svaret ditt!",
+  pollAnswers: "{n} svar",
+  pollSeeResults: "Se resultater",
+  pollErr: "Kunne ikke sende svaret ditt.",
     // ── Stats / HUD / range (session) ──
     gipTabStats:"Stats",
     advStatsTrack:"Registrer håndstatistikk",

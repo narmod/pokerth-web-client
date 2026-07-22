@@ -10,6 +10,12 @@ export const meta = {
 };
 
 export const strings = {
+  advPolls: "Participă la sondajele despre produs",
+  pollTitle: "Sondaj",
+  pollThanks: "Mulțumim pentru răspuns!",
+  pollAnswers: "{n} răspuns(uri)",
+  pollSeeResults: "Vezi rezultatele",
+  pollErr: "Răspunsul nu a putut fi trimis.",
     // ── Stats / HUD / range (session) ──
     gipTabStats:"Stats",
     advStatsTrack:"Înregistrează statisticile mâinilor",

@@ -10,6 +10,12 @@ export const meta = {
 };
 
 export const strings = {
+  advPolls: "Συμμετοχή στις δημοσκοπήσεις προϊόντος",
+  pollTitle: "Δημοσκόπηση",
+  pollThanks: "Ευχαριστούμε για την απάντησή σας!",
+  pollAnswers: "{n} απάντηση(εις)",
+  pollSeeResults: "Δείτε τα αποτελέσματα",
+  pollErr: "Δεν ήταν δυνατή η αποστολή της απάντησής σας.",
     // ── Stats / HUD / range (session) ──
     gipTabStats:"Stats",
     advStatsTrack:"Καταγραφή στατιστικών χεριών",

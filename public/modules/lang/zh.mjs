@@ -11,6 +11,12 @@ export const meta = {
 };
 
 export const strings = {
+  advPolls: "参与产品调查",
+  pollTitle: "调查",
+  pollThanks: "感谢你的回答！",
+  pollAnswers: "{n} 个回答",
+  pollSeeResults: "查看结果",
+  pollErr: "无法发送你的回答。",
     // ── Stats / HUD / range (session) ──
     gipTabStats:"Stats",
     advStatsTrack:"记录手牌统计",

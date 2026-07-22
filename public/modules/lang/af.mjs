@@ -10,6 +10,12 @@ export const meta = {
 };
 
 export const strings = {
+  advPolls: "Neem deel aan produkpeilings",
+  pollTitle: "Peiling",
+  pollThanks: "Dankie vir jou antwoord!",
+  pollAnswers: "{n} antwoord(e)",
+  pollSeeResults: "Wys resultate",
+  pollErr: "Kon nie jou antwoord stuur nie.",
     // ── Stats / HUD / range (session) ──
     gipTabStats:"Stats",
     advStatsTrack:"Teken handstatistiek aan",

@@ -14,6 +14,12 @@ export const meta = {
 };
 
 export const strings = {
+  advPolls: "उत्पाद सर्वेक्षणों में भाग लें",
+  pollTitle: "सर्वेक्षण",
+  pollThanks: "आपके उत्तर के लिए धन्यवाद!",
+  pollAnswers: "{n} उत्तर",
+  pollSeeResults: "परिणाम देखें",
+  pollErr: "आपका उत्तर नहीं भेजा जा सका।",
     // ── Stats / HUD / range (session) ──
     gipTabStats:"Stats",
     advStatsTrack:"हैंड आँकड़े रिकॉर्ड करें",

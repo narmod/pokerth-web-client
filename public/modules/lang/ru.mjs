@@ -15,6 +15,12 @@ export const meta = {
 };
 
 export const strings = {
+  advPolls: "Участвовать в опросах о продукте",
+  pollTitle: "Опрос",
+  pollThanks: "Спасибо за ваш ответ!",
+  pollAnswers: "Ответов: {n}",
+  pollSeeResults: "Посмотреть результаты",
+  pollErr: "Не удалось отправить ваш ответ.",
     // ── Stats / HUD / range (session) ──
     gipTabStats:"Stats",
     advStatsTrack:"Записывать статистику рук",

@@ -11,6 +11,12 @@ export const meta = {
 };
 
 export const strings = {
+  advPolls: "Gabh pàirt ann an cunntasan-bheachd",
+  pollTitle: "Cunntas-bheachd",
+  pollThanks: "Tapadh leat airson do fhreagairt!",
+  pollAnswers: "{n} freagairt",
+  pollSeeResults: "Seall na toraidhean",
+  pollErr: "Cha b' urrainn dhuinn do fhreagairt a chur.",
     // ── Stats / HUD / range (session) ──
     gipTabStats:"Stats",
     advStatsTrack:"Clàraich staitistig làmhan",

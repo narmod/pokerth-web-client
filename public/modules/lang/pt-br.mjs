@@ -9,6 +9,12 @@ export const meta = {
 };
 
 export const strings = {
+  advPolls: "Participar das pesquisas do produto",
+  pollTitle: "Pesquisa",
+  pollThanks: "Obrigado pela sua resposta!",
+  pollAnswers: "{n} resposta(s)",
+  pollSeeResults: "Ver resultados",
+  pollErr: "Não foi possível enviar sua resposta.",
     // ── Stats / HUD / range (session) ──
     gipTabStats:"Stats",
     advStatsTrack:"Registrar estatísticas das mãos",

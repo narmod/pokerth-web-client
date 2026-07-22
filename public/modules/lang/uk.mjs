@@ -9,6 +9,12 @@ export const meta = {
 };
 
 export const strings = {
+  advPolls: "Брати участь в опитуваннях про продукт",
+  pollTitle: "Опитування",
+  pollThanks: "Дякуємо за вашу відповідь!",
+  pollAnswers: "Відповідей: {n}",
+  pollSeeResults: "Переглянути результати",
+  pollErr: "Не вдалося надіслати вашу відповідь.",
     // ── Stats / HUD / range (session) ──
     gipTabStats:"Stats",
     advStatsTrack:"Записувати статистику рук",

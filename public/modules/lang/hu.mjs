@@ -10,6 +10,12 @@ export const meta = {
 };
 
 export const strings = {
+  advPolls: "Részvétel a termékkel kapcsolatos szavazásokban",
+  pollTitle: "Szavazás",
+  pollThanks: "Köszönjük a válaszod!",
+  pollAnswers: "{n} válasz",
+  pollSeeResults: "Eredmények megtekintése",
+  pollErr: "Nem sikerült elküldeni a válaszod.",
     // ── Stats / HUD / range (session) ──
     gipTabStats:"Stats",
     advStatsTrack:"Kézstatisztikák rögzítése",

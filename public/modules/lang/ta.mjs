@@ -11,6 +11,12 @@ export const meta = {
 };
 
 export const strings = {
+  advPolls: "தயாரிப்பு கருத்துக்கணிப்புகளில் பங்கேற்கவும்",
+  pollTitle: "கருத்துக்கணிப்பு",
+  pollThanks: "உங்கள் பதிலுக்கு நன்றி!",
+  pollAnswers: "{n} பதில்கள்",
+  pollSeeResults: "முடிவுகளைப் பார்க்கவும்",
+  pollErr: "உங்கள் பதிலை அனுப்ப முடியவில்லை.",
     // ── Stats / HUD / range (session) ──
     gipTabStats:"Stats",
     advStatsTrack:"கை புள்ளிவிவரங்களைப் பதிவு செய்க",

@@ -16,6 +16,12 @@ export const meta = {
 };
 
 export const strings = {
+  advPolls: "Participer aux sondages produit",
+  pollTitle: "Sondage",
+  pollThanks: "Merci pour votre réponse !",
+  pollAnswers: "{n} réponse(s)",
+  pollSeeResults: "Voir les résultats",
+  pollErr: "Impossible d'envoyer votre réponse.",
     // ── Stats / HUD / range (session) ──
     gipTabStats:"Stats",
     advStatsTrack:"Enregistrer les statistiques",

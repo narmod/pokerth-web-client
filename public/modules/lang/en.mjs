@@ -16,6 +16,12 @@ export const meta = {
 };
 
 export const strings = {
+  advPolls: "Take part in product polls",
+  pollTitle: "Poll",
+  pollThanks: "Thanks for your answer!",
+  pollAnswers: "{n} answer(s)",
+  pollSeeResults: "See results",
+  pollErr: "Could not send your answer.",
     // ── Stats / HUD / range (session) ──
     gipTabStats:"Stats",
     advStatsTrack:"Record hand statistics",

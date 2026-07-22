@@ -10,6 +10,12 @@ export const meta = {
 };
 
 export const strings = {
+  advPolls: "Dalyvauti produkto apklausose",
+  pollTitle: "Apklausa",
+  pollThanks: "Ačiū už atsakymą!",
+  pollAnswers: "Atsakymų: {n}",
+  pollSeeResults: "Peržiūrėti rezultatus",
+  pollErr: "Nepavyko išsiųsti atsakymo.",
     // ── Stats / HUD / range (session) ──
     gipTabStats:"Stats",
     advStatsTrack:"Įrašyti rankuų statistiką",

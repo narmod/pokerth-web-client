@@ -10,6 +10,12 @@ export const meta = {
 };
 
 export const strings = {
+  advPolls: "Tham gia khảo sát sản phẩm",
+  pollTitle: "Khảo sát",
+  pollThanks: "Cảm ơn câu trả lời của bạn!",
+  pollAnswers: "{n} câu trả lời",
+  pollSeeResults: "Xem kết quả",
+  pollErr: "Không thể gửi câu trả lời của bạn.",
     // ── Stats / HUD / range (session) ──
     gipTabStats:"Stats",
     advStatsTrack:"Ghi lại thống kê các ván bài",

@@ -9,6 +9,12 @@ export const meta = {
 };
 
 export const strings = {
+  advPolls: "Osallistu tuotekyselyihin",
+  pollTitle: "Kysely",
+  pollThanks: "Kiitos vastauksestasi!",
+  pollAnswers: "{n} vastausta",
+  pollSeeResults: "Näytä tulokset",
+  pollErr: "Vastausta ei voitu lähettää.",
     // ── Stats / HUD / range (session) ──
     gipTabStats:"Stats",
     advStatsTrack:"Tallenna käsitilastot",

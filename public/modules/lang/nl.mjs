@@ -15,6 +15,12 @@ export const meta = {
 };
 
 export const strings = {
+  advPolls: "Deelnemen aan productenquêtes",
+  pollTitle: "Enquête",
+  pollThanks: "Bedankt voor je antwoord!",
+  pollAnswers: "{n} antwoord(en)",
+  pollSeeResults: "Resultaten bekijken",
+  pollErr: "Kon je antwoord niet versturen.",
     // ── Stats / HUD / range (session) ──
     gipTabStats:"Stats",
     advStatsTrack:"Handstatistieken opnemen",
