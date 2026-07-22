@@ -61,7 +61,7 @@ const MSG = (() => {
     GameListAdminChanged:17,
     PlayerInfoRequest:18, PlayerInfoReply:19,
     JoinExisting:21, JoinNew:22, RejoinExisting:23,
-    JoinNew:22, JoinGameAck:24, JoinGameFailed:25,
+    JoinGameAck:24, JoinGameFailed:25,
     GamePlayerJoined:26, GamePlayerLeft:27, GameAdminChanged:28, RemovedFromGame:29,
     InvitePlayerToGame:32, InviteNotify:33, RejectGameInvitation:34, RejectInvNotify:35,
     StartEvent:36, StartEventAck:37, GameStartInitial:38, GameStartRejoin:39,

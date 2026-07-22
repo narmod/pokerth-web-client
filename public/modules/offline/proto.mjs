@@ -27,7 +27,7 @@ export const TYPE = {
   HandStart:40, PlayersTurn:41, MyActionRequest:42, PlayersActionDone:44,
   DealFlop:45, DealTurn:46, DealRiver:47, AllInShowCards:48,
   EndOfHandShow:49, EndOfHandHide:50, EndOfGame:53,
-  JoinExisting:21, JoinNew:22, StartEventAck:37, PlayerInfoRequest:18, LeaveGame:31,
+  JoinExisting:21, JoinNew:22, PlayerInfoRequest:18, LeaveGame:31,
   GameListUpdate:14, RemovedFromGame:29,
   Chat:64,
 };
