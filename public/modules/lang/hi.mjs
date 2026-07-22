@@ -757,6 +757,7 @@ export const strings = {
     "backupExported": "बैकअप निर्यात हुआ",
     "backupImported": "बैकअप आयात हुआ",
     "backupImportErr": "आयात विफल — अमान्य बैकअप फ़ाइल",
+    "syncBusy": "सिंक हो रहा है…",
 };
 
 export default { meta, strings };

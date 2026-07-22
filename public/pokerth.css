@@ -9693,3 +9693,10 @@ html[data-seat-struct="qml"] .seat:not(.me) .seat-narrow .seat-holecards .pk { w
 .ach-badge-val { font-weight: 700; color: var(--gold); font-variant-numeric: tabular-nums; }
 .ach-badge-endgame { margin-top: 12px; justify-content: center; }
 .rk-ach-req { flex: none; font-size: 0.66rem; color: var(--gold-dim); background: rgba(var(--gold-rgb), 0.10); border: 1px solid rgba(var(--gold-rgb), 0.25); border-radius: 999px; padding: 1px 7px; white-space: nowrap; }
+
+/* ── Indicateur « disquette » de synchronisation (headers) ─────────────────── */
+.hdr-sync { display: none; align-items: center; justify-content: center; width: 24px; height: 24px; flex: none; color: var(--gold-dim); }
+.hdr-sync.on { display: inline-flex; animation: hdrSyncPulse 1.15s ease-in-out infinite; }
+.hdr-sync svg { width: 17px; height: 17px; display: block; }
+@keyframes hdrSyncPulse { 0%, 100% { opacity: 0.32; } 50% { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .hdr-sync.on { animation: none; opacity: 0.85; } }

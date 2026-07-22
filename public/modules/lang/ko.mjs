@@ -754,6 +754,7 @@ export const strings = {
     "backupExported": "백업을 내보냈습니다",
     "backupImported": "백업을 가져왔습니다",
     "backupImportErr": "가져오기 실패 — 올바른 백업 파일이 아닙니다",
+    "syncBusy": "동기화 중…",
 };
 
 export default { meta, strings };

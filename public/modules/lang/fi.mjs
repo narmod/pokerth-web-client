@@ -949,6 +949,7 @@ export const strings = {
     "backupExported": "Varmuuskopio viety",
     "backupImported": "Varmuuskopio tuotu",
     "backupImportErr": "Tuonti epäonnistui — virheellinen varmuuskopiotiedosto",
+    "syncBusy": "Synkronoidaan…",
 };
 
 export default { meta, strings };

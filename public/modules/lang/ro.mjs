@@ -950,6 +950,7 @@ export const strings = {
     "backupExported": "Copie exportată",
     "backupImported": "Copie importată",
     "backupImportErr": "Import eșuat — fișier de copie nevalid",
+    "syncBusy": "Se sincronizează…",
 };
 
 export default { meta, strings };

@@ -950,6 +950,7 @@ export const strings = {
     "backupExported": "Đã xuất bản sao",
     "backupImported": "Đã nhập bản sao",
     "backupImportErr": "Nhập thất bại — tệp sao lưu không hợp lệ",
+    "syncBusy": "Đang đồng bộ…",
 };
 
 export default { meta, strings };

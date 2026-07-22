@@ -574,6 +574,7 @@ export const strings = {
     "backupExported": "Backup exported",
     "backupImported": "Backup imported",
     "backupImportErr": "Import failed — not a valid backup file",
+    "syncBusy": "Syncing…",
 };
 
 export default { meta, strings };

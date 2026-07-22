@@ -951,6 +951,7 @@ export const strings = {
     "backupExported": "Yedek dışa aktarıldı",
     "backupImported": "Yedek içe aktarıldı",
     "backupImportErr": "İçe aktarma başarısız — geçersiz yedek dosyası",
+    "syncBusy": "Eşitleniyor…",
 };
 
 export default { meta, strings };

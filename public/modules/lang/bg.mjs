@@ -950,6 +950,7 @@ export const strings = {
     "backupExported": "Копието е експортирано",
     "backupImported": "Копието е импортирано",
     "backupImportErr": "Неуспешен импорт — невалиден файл",
+    "syncBusy": "Синхронизиране…",
 };
 
 export default { meta, strings };

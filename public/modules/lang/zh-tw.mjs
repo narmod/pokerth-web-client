@@ -946,6 +946,7 @@ export const strings = {
     "backupExported": "備份已匯出",
     "backupImported": "備份已匯入",
     "backupImportErr": "匯入失敗 — 備份檔案無效",
+    "syncBusy": "正在同步…",
 };
 
 export default { meta, strings };

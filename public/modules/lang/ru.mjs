@@ -951,6 +951,7 @@ export const strings = {
     "backupExported": "Копия экспортирована",
     "backupImported": "Копия импортирована",
     "backupImportErr": "Ошибка импорта — неверный файл копии",
+    "syncBusy": "Синхронизация…",
 };
 
 export default { meta, strings };

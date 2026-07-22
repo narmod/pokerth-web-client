@@ -950,6 +950,7 @@ export const strings = {
     "backupExported": "Záloha exportovaná",
     "backupImported": "Záloha importovaná",
     "backupImportErr": "Import zlyhal — neplatný súbor zálohy",
+    "syncBusy": "Synchronizácia…",
 };
 
 export default { meta, strings };

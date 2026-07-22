@@ -952,6 +952,7 @@ export const strings = {
     "backupExported": "காப்புப்பிரதி ஏற்றுமதியானது",
     "backupImported": "காப்புப்பிரதி இறக்குமதியானது",
     "backupImportErr": "இறக்குமதி தோல்வி — தவறான கோப்பு",
+    "syncBusy": "ஒத்திசைக்கிறது…",
 };
 
 export default { meta, strings };

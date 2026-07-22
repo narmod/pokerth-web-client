@@ -950,6 +950,7 @@ export const strings = {
     "backupExported": "Mentés exportálva",
     "backupImported": "Mentés importálva",
     "backupImportErr": "Az importálás sikertelen — érvénytelen mentésfájl",
+    "syncBusy": "Szinkronizálás…",
 };
 
 export default { meta, strings };

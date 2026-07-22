@@ -950,6 +950,7 @@ export const strings = {
     "backupExported": "Rugsteun uitgevoer",
     "backupImported": "Rugsteun ingevoer",
     "backupImportErr": "Invoer het misluk — ongeldige rugsteunlêer",
+    "syncBusy": "Sinchroniseer…",
 };
 
 export default { meta, strings };

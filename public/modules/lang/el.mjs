@@ -950,6 +950,7 @@ export const strings = {
     "backupExported": "Το αντίγραφο εξήχθη",
     "backupImported": "Το αντίγραφο εισήχθη",
     "backupImportErr": "Η εισαγωγή απέτυχε — μη έγκυρο αρχείο",
+    "syncBusy": "Συγχρονισμός…",
 };
 
 export default { meta, strings };

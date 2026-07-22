@@ -953,6 +953,7 @@ export const strings = {
     "backupExported": "Chaidh an lethbhreac às-phortadh",
     "backupImported": "Chaidh an lethbhreac ion-phortadh",
     "backupImportErr": "Dh'fhàillig an ion-phortadh — faidhle mì-dhligheach",
+    "syncBusy": "A' sioncronachadh…",
 };
 
 export default { meta, strings };

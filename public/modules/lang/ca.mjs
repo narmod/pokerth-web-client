@@ -951,6 +951,7 @@ export const strings = {
     "backupExported": "Còpia exportada",
     "backupImported": "Còpia importada",
     "backupImportErr": "Ha fallat la importació — fitxer de còpia no vàlid",
+    "syncBusy": "Sincronitzant…",
 };
 
 export default { meta, strings };

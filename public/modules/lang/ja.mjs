@@ -946,6 +946,7 @@ export const strings = {
     "backupExported": "バックアップを書き出しました",
     "backupImported": "バックアップを読み込みました",
     "backupImportErr": "読み込み失敗 — 有効なバックアップファイルではありません",
+    "syncBusy": "同期中…",
 };
 
 export default { meta, strings };

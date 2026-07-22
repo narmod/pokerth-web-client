@@ -954,6 +954,7 @@ export const strings = {
     "backupExported": "Backup esportato",
     "backupImported": "Backup importato",
     "backupImportErr": "Importazione fallita — file di backup non valido",
+    "syncBusy": "Sincronizzazione…",
 };
 
 export default { meta, strings };

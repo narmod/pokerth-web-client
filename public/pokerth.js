@@ -1011,6 +1011,50 @@ window.importPokerthConfigPick = importPokerthConfigPick;
 // serveur plus récent → on applique ; local modifié (drapeau dirty posé par
 // les hooks setAdvOpt/advPrefSet/saveCreatePrefs) → on pousse (debounce 5 s,
 // et au pagehide en best-effort keepalive).
+// ── Indicateur « disquette » de synchronisation (tous les headers) ──────────
+// Visible uniquement pendant un echange reel avec le proxy ; comme toutes les
+// requetes de synchro exigent un jeton, il ne peut pas s'allumer hors compte.
+var _syncBusy = 0, _syncHideTimer = null;
+var _SYNC_ICON = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">'
+  + '<path d="M17 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V7l-4-4zm-5 16a3 3 0 1 1 0-6 3 3 0 0 1 0 6zm3-10H7V5h8v4z"/></svg>';
+function _syncBadgeMount() {
+  try {
+    // Un .hdr-ovf-wrap par header (connexion, lobby, creation, jeu, confidentialite).
+    var wraps = document.querySelectorAll('.hdr-ovf-wrap');
+    for (var i = 0; i < wraps.length; i++) {
+      var w = wraps[i], prev = w.previousElementSibling;
+      if (prev && prev.classList && prev.classList.contains('hdr-sync')) continue;
+      var el = document.createElement('span');
+      el.className = 'hdr-sync';
+      el.setAttribute('role', 'status');
+      el.innerHTML = _SYNC_ICON;
+      try { el.title = t('syncBusy') || 'Syncing\u2026'; } catch (e) { el.title = 'Syncing\u2026'; }
+      if (_syncBusy > 0) el.classList.add('on');
+      w.parentNode.insertBefore(el, w);
+    }
+  } catch (e) {}
+}
+window._syncBadgeMount = _syncBadgeMount;
+function _syncBadgeApply() {
+  var on = _syncBusy > 0;
+  try {
+    var els = document.querySelectorAll('.hdr-sync');
+    for (var i = 0; i < els.length; i++) els[i].classList.toggle('on', on);
+  } catch (e) {}
+}
+function _syncBusyBegin() { _syncBusy++; clearTimeout(_syncHideTimer); _syncBadgeMount(); _syncBadgeApply(); }
+function _syncBusyEnd() {
+  _syncBusy = Math.max(0, _syncBusy - 1);
+  clearTimeout(_syncHideTimer);
+  // Une requete tres rapide ne doit pas produire un clignotement illisible :
+  // on laisse la disquette ~500 ms de plus avant de l'eteindre.
+  if (_syncBusy > 0) _syncBadgeApply();
+  else _syncHideTimer = setTimeout(_syncBadgeApply, 500);
+}
+try {
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', _syncBadgeMount);
+  else _syncBadgeMount();
+} catch (e) {}
 var _cfgSyncToken = null;
 var _cfgSyncPushTimer = null;
 function _cfgSyncEnabled() { return _advGet('cfg_sync', true); }
@@ -1121,7 +1165,8 @@ function _cfgWebPushNow(keepalive) {
         try { localStorage.setItem('pth_cfg_sync_weblast', body); } catch (e) {}
         try { localStorage.setItem('pth_cfg_sync_webts', String(d.updatedAt || Date.now())); } catch (e) {}
       }
-    }).catch(function () {});
+    }).catch(function () {}).finally(function () { _syncBusyEnd(); });
+  _syncBusyBegin();
 }
 // Application silencieuse du blob reçu (mêmes chemins que les setters : les
 // toggles avancés sont ré-appliqués live ; thème/langue prennent effet au
@@ -1174,7 +1219,8 @@ function _cfgSyncPushNow(keepalive) {
         try { localStorage.setItem('pth_cfg_sync_ts', String(d.updatedAt || Date.now())); } catch (e) {}
         try { localStorage.removeItem('pth_cfg_sync_dirty'); } catch (e) {}
       }
-    }).catch(function () {});
+    }).catch(function () {}).finally(function () { _syncBusyEnd(); });
+  _syncBusyBegin();
   _cfgWebPushNow(keepalive);
 }
 function _cfgSyncPull() {
@@ -1210,7 +1256,8 @@ function _cfgSyncPull() {
       } else if (_cfgWebDirty()) {
         _cfgSyncPushSoon(500);
       }
-    }).catch(function () {});
+    }).catch(function () {}).finally(function () { _syncBusyEnd(); });
+  _syncBusyBegin();
 }
 // Jeton reçu du proxy (trame SYNCTOK:) — appelé par le handler WS.
 window._cfgSyncOnToken = function (tok) {
@@ -8780,7 +8827,7 @@ window.togglePlayersPanel = togglePlayersPanel;
 window.toggleReactionPanel = toggleReactionPanel;
 window.App = App;
 
-window.BUILD_VERSION='0.3.1011-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='0.3.1012-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

@@ -953,6 +953,7 @@ export const strings = {
     "backupExported": "Sicherung exportiert",
     "backupImported": "Sicherung importiert",
     "backupImportErr": "Import fehlgeschlagen — keine gültige Sicherungsdatei",
+    "syncBusy": "Synchronisierung…",
 };
 
 export default { meta, strings };

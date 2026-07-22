@@ -949,6 +949,7 @@ export const strings = {
     "backupExported": "Копію експортовано",
     "backupImported": "Копію імпортовано",
     "backupImportErr": "Помилка імпорту — некоректний файл копії",
+    "syncBusy": "Синхронізація…",
 };
 
 export default { meta, strings };

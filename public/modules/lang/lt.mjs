@@ -950,6 +950,7 @@ export const strings = {
     "backupExported": "Kopija eksportuota",
     "backupImported": "Kopija importuota",
     "backupImportErr": "Importas nepavyko — netinkamas kopijos failas",
+    "syncBusy": "Sinchronizuojama…",
 };
 
 export default { meta, strings };

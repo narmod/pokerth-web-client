@@ -949,6 +949,7 @@ export const strings = {
     "backupExported": "Sikkerhedskopi eksporteret",
     "backupImported": "Sikkerhedskopi importeret",
     "backupImportErr": "Import mislykkedes — ugyldig sikkerhedskopifil",
+    "syncBusy": "Synkroniserer…",
 };
 
 export default { meta, strings };

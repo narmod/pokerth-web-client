@@ -950,6 +950,7 @@ export const strings = {
     "backupExported": "Backup exportado",
     "backupImported": "Backup importado",
     "backupImportErr": "Falha na importação — arquivo de backup inválido",
+    "syncBusy": "Sincronizando…",
 };
 
 export default { meta, strings };

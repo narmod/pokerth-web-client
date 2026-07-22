@@ -948,6 +948,7 @@ export const strings = {
     "backupExported": "Säkerhetskopia exporterad",
     "backupImported": "Säkerhetskopia importerad",
     "backupImportErr": "Importen misslyckades — ogiltig säkerhetskopia",
+    "syncBusy": "Synkroniserar…",
 };
 
 export default { meta, strings };
