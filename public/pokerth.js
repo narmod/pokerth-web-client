@@ -1016,7 +1016,7 @@ window.importPokerthConfigPick = importPokerthConfigPick;
 // ── Indicateur « disquette » de synchronisation (tous les headers) ──────────
 // Visible uniquement pendant un echange reel avec le proxy ; comme toutes les
 // requetes de synchro exigent un jeton, il ne peut pas s'allumer hors compte.
-var _syncBusy = 0, _syncHideTimer = null;
+var _syncBusy = 0, _syncHideTimer = null, _syncPending = false;
 var _SYNC_ICON = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">'
   + '<path d="M17 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V7l-4-4zm-5 16a3 3 0 1 1 0-6 3 3 0 0 1 0 6zm3-10H7V5h8v4z"/></svg>';
 function _syncBadgeMount() {
@@ -1038,20 +1038,29 @@ function _syncBadgeMount() {
 }
 window._syncBadgeMount = _syncBadgeMount;
 function _syncBadgeApply() {
-  var on = _syncBusy > 0;
+  // Visible tant qu'il reste quelque chose a envoyer (attente) OU qu'un echange
+  // est en vol : l'icone couvre donc toute la fenetre de temporisation (~5 s).
+  var on = _syncBusy > 0 || _syncPending;
   try {
     var els = document.querySelectorAll('.hdr-sync');
     for (var i = 0; i < els.length; i++) els[i].classList.toggle('on', on);
   } catch (e) {}
 }
 function _syncBusyBegin() { _syncBusy++; clearTimeout(_syncHideTimer); _syncBadgeMount(); _syncBadgeApply(); }
+function _syncPendingSet(on) {
+  _syncPending = !!on;
+  clearTimeout(_syncHideTimer);
+  if (_syncPending) { _syncBadgeMount(); _syncBadgeApply(); }
+  else _syncHideTimer = setTimeout(_syncBadgeApply, 1200);
+}
 function _syncBusyEnd() {
   _syncBusy = Math.max(0, _syncBusy - 1);
   clearTimeout(_syncHideTimer);
-  // Une requete tres rapide ne doit pas produire un clignotement illisible :
-  // on laisse la disquette ~500 ms de plus avant de l'eteindre.
-  if (_syncBusy > 0) _syncBadgeApply();
-  else _syncHideTimer = setTimeout(_syncBadgeApply, 500);
+  if (_syncBusy > 0) { _syncBadgeApply(); return; }
+  // Plus rien en vol : le cycle de push est termine, donc plus rien en attente.
+  _syncPending = false;
+  // Maintien avant extinction pour qu'un echange rapide reste lisible.
+  _syncHideTimer = setTimeout(_syncBadgeApply, 1200);
 }
 try {
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', _syncBadgeMount);
@@ -1202,11 +1211,12 @@ function _cfgSyncMark(key) {
 }
 function _cfgSyncPushSoon(ms) {
   if (!_cfgSyncToken || !_cfgSyncEnabled()) return;
+  _syncPendingSet(true);            // modifications en attente d'envoi
   clearTimeout(_cfgSyncPushTimer);
   _cfgSyncPushTimer = setTimeout(function () { _cfgSyncPushNow(); }, ms == null ? 5000 : ms);
 }
 function _cfgSyncPushNow(keepalive) {
-  if (!_cfgSyncToken || !_cfgSyncEnabled()) return;
+  if (!_cfgSyncToken || !_cfgSyncEnabled()) { _syncPendingSet(false); return; }
   var xml; try { xml = _cfgBuildXml(); } catch (e) { return; }
   fetch('/prefs',
         { method: 'PUT', headers: { 'Content-Type': 'application/xml', 'Authorization': 'Bearer ' + _cfgSyncToken }, body: xml, keepalive: !!keepalive })
@@ -8829,7 +8839,7 @@ window.togglePlayersPanel = togglePlayersPanel;
 window.toggleReactionPanel = toggleReactionPanel;
 window.App = App;
 
-window.BUILD_VERSION='0.3.1020-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='0.3.1021-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
