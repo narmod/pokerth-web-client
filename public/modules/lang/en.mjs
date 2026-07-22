@@ -572,6 +572,9 @@ export const strings = {
     "ach_blind_level": "Rising Stakes",
     "ach_blind_level_d": "Reach blind level 5 in a single game",
     "achCatFormats": "PokerTH formats",
+    "achCatSecret": "Secret",
+    "ach_egg": "The Egg",
+    "ach_egg_d": "You found the Konami code",
     // ── Sauvegarde complète du client web ──
     "advBackupSec": "Full backup (web client)",
     "advBackupDesc": "Save everything this browser holds into one file: web options, themes, decks, custom seats, avatar image, achievements and stats — including what is too large to sync with your account. Your password and session are never included, and importing merges achievements instead of replacing them, so progress is never lost.",

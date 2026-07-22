@@ -17,7 +17,7 @@
 //
 // Libellés via i18n (ailleurs) : t('ach_'+id) = titre, t('ach_'+id+'_d') = description.
 
-export const CATS = { progress: 'progress', skill: 'skill', style: 'style', fun: 'fun', formats: 'formats' };
+export const CATS = { progress: 'progress', skill: 'skill', style: 'style', fun: 'fun', formats: 'formats', secret: 'secret' };
 
 const rank = c => (((c % 13) + 13) % 13);              // 0 = Deux
 const isDeucePair = cs =>
@@ -89,4 +89,10 @@ export const ACHIEVEMENTS = [
     test: v => v.place === 1 && v.game.style === 'rapide' },
   { id: 'blind_level',   icon: '📈', cat: CATS.formats, when: 'handStart',
     test: v => (v.game.maxBlindLevel || 0) >= 5 },
+
+  // — Secret (easter eggs) : jamais listé tant que verrouillé, hors progression.
+  // Débloqué DIRECTEMENT par grantSecret('egg') (code Konami dans le chat de
+  // partie, tous modes) — le tracker ne l'évalue jamais (test toujours faux).
+  { id: 'egg',           icon: '🥚', cat: CATS.secret, when: 'always',
+    test: () => false },
 ];

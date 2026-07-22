@@ -948,6 +948,9 @@ export const strings = {
     "ach_blind_level": "Yükselen blindler",
     "ach_blind_level_d": "Tek bir oyunda blind seviyesi 5'e ulaş",
     "achCatFormats": "PokerTH formatları",
+    "achCatSecret": "Gizli",
+    "ach_egg": "Yumurta",
+    "ach_egg_d": "Konami kodunu buldun",
     // ── Sauvegarde complète du client web ──
     "advBackupSec": "Tam yedek (web istemcisi)",
     "advBackupDesc": "Bu tarayıcının tuttuğu her şeyi tek bir dosyaya kaydeder: web seçenekleri, temalar, desteler, özel koltuklar, avatar görseli, başarımlar ve istatistikler — hesapla eşitlenemeyecek kadar büyük olanlar dahil. Parolanız ve oturumunuz asla dahil edilmez; içe aktarma başarımları değiştirmek yerine birleştirir, böylece ilerleme kaybolmaz.",

@@ -950,6 +950,9 @@ export const strings = {
     "ach_blind_level": "Stijgende blinds",
     "ach_blind_level_d": "Bereik blindniveau 5 in één spel",
     "achCatFormats": "PokerTH-formaten",
+    "achCatSecret": "Geheim",
+    "ach_egg": "Het ei",
+    "ach_egg_d": "Je hebt de Konami-code gevonden",
     // ── Sauvegarde complète du client web ──
     "advBackupSec": "Volledige back-up (webclient)",
     "advBackupDesc": "Slaat alles op wat deze browser bevat in één bestand: webopties, thema's, kaartsets, eigen zitplaatsen, avatarafbeelding, prestaties en statistieken — ook wat te groot is om met je account te synchroniseren. Je wachtwoord en sessie worden nooit meegenomen, en bij het importeren worden prestaties samengevoegd in plaats van vervangen, zodat voortgang nooit verloren gaat.",

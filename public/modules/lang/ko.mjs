@@ -751,6 +751,9 @@ export const strings = {
     "ach_blind_level": "블라인드 상승",
     "ach_blind_level_d": "한 게임에서 블라인드 레벨 5에 도달하기",
     "achCatFormats": "PokerTH 형식",
+    "achCatSecret": "시크릿",
+    "ach_egg": "달걀",
+    "ach_egg_d": "코나미 코드를 발견했습니다",
     // ── Sauvegarde complète du client web ──
     "advBackupSec": "전체 백업 (웹 클라이언트)",
     "advBackupDesc": "이 브라우저가 보관한 모든 것을 파일 하나에 저장합니다: 웹 옵션, 테마, 덱, 사용자 좌석, 아바타 이미지, 업적, 통계 — 계정 동기화에는 너무 큰 항목까지 포함합니다. 비밀번호와 세션은 절대 포함되지 않으며, 가져오기는 업적을 대체하지 않고 병합하므로 진행 상황이 사라지지 않습니다.",

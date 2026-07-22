@@ -946,6 +946,9 @@ export const strings = {
     "ach_blind_level": "Nousevat blindit",
     "ach_blind_level_d": "Saavuta blind-taso 5 yhdessä pelissä",
     "achCatFormats": "PokerTH-muodot",
+    "achCatSecret": "Salainen",
+    "ach_egg": "Muna",
+    "ach_egg_d": "Löysit Konami-koodin",
     // ── Sauvegarde complète du client web ──
     "advBackupSec": "Täysi varmuuskopio (verkkoasiakas)",
     "advBackupDesc": "Tallentaa yhteen tiedostoon kaiken, mitä tämä selain sisältää: verkkoasetukset, teemat, korttipakat, omat istumapaikat, avatarkuvan, saavutukset ja tilastot — myös sen, mikä on liian suurta tilin synkronointiin. Salasanaa ja istuntoa ei koskaan sisällytetä, ja tuonti yhdistää saavutukset korvaamisen sijaan, joten edistyminen ei katoa.",

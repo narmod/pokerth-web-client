@@ -69,6 +69,9 @@ export class FakeServer {
     this._reactedHand = new Set();   // bots ayant déjà réagi dans la main courante
     this._reactN = 0;                // nombre de réactions dans la main (plafond)
     this._lastEmoji = '';            // éviter de répéter le même emoji
+    this._eggAces = false;           // easter egg /dealmeaces : AA à la prochaine main
+    this._eggAcesUsed = false;       // une seule fois par partie
+    this._chatKwTs = 0;              // anti-spam des réponses aux mots-clés du chat
   }
 
   _send(name, spec){ if(!this.stopped) this.deliver(buildMessage(name, spec)); }
@@ -124,6 +127,7 @@ export class FakeServer {
       case TYPE.LeaveGame:        return this._onLeave();
       case 30 /*KickPlayer req*/: return this._onKick(m.fields);
       case 23 /*RejoinExistingGame*/: return this._onRejoin(m.fields);
+      case TYPE.Chat:             return this._onChat(m.fields);
       default: return;
     }
   }
@@ -278,6 +282,7 @@ export class FakeServer {
   _onStartAck(){
     if(this.started) return; this.started=true;
     this._meBusted = false; this._roAcc = 0;
+    this._eggAces = false; this._eggAcesUsed = false;
     this.seatIds = this.players.map(p=>p.id);
     this._send('GameStartInitial',[[1,0,this.gameId],[2,0,this.seatIds[0]],[3,2,packed(this.seatIds)]]);
     const ps = this.players.map(p=>({ id:p.id, name:p.name, isBot:p.isBot, stack:this.cfg.startMoney }));
@@ -412,6 +417,43 @@ export class FakeServer {
       else { this._react(r.playerId, 'sad', 0.18, _step(),0); }
     }
   }
+  // ── Chat entrant (mode entraînement) — easter eggs uniquement ───────────
+  // Le texte est déjà affiché en optimiste côté client ; ici on ne fait que
+  // réagir. rng dédié (_rrng) exclusivement — le flux de jeu reste intact.
+  _onChat(f){
+    if(this.stopped) return;
+    let text=''; try{ const b=f[3]&&f[3][0]; if(b instanceof Uint8Array) text=new TextDecoder().decode(b); }catch(e){ return; }
+    text=(text||'').trim(); if(!text || text.startsWith('[R]') || text.startsWith('/emoji')) return;
+    const low=text.toLowerCase();
+    // /dealmeaces : la prochaine main sert AA au joueur — une seule fois par
+    // partie. Réponse d'un bot : « 🤫 » (chat) ; retenté → réaction « 🤨 ».
+    if(low==='/dealmeaces'){
+      const bs=(this.players||[]).filter(p=>p.isBot);
+      const bot=bs.length?bs[Math.floor(this._rrng()*bs.length)]:null;
+      if(!this._eggAcesUsed && this.started && this.table){
+        this._eggAces=true; this._eggAcesUsed=true;
+        if(bot) this.pace(()=>{ if(!this.stopped) this._send('Chat',[[1,0,this.gameId],[2,0,bot.id],[3,0,1],[4,2,'🤫']]); }, 900);
+      } else if(bot) this._botReact(bot.id,'🤨',0,600);
+      return;
+    }
+    if(low.charAt(0)==='/') return;   // autres commandes : rien à faire ici
+    // Mots-clés : les bots répondent par une réaction (canal [R] existant —
+    // respecte donc l'option DisableEmojiReactions). Anti-spam : 8 s.
+    const nw=Date.now(); if(nw-this._chatKwTs<8000) return;
+    const bots=(this.players||[]).filter(p=>p.isBot && !(this._kickPending&&this._kickPending.has(p.id)));
+    if(!bots.length) return;
+    // 1) Nom d'un bot cité (≥3 caractères) → il salue.
+    const hit=bots.find(p=>p.name && p.name.length>=3 && low.includes(p.name.toLowerCase()));
+    if(hit){ this._chatKwTs=nw; const w=['👋','🫡','😎']; this._botReact(hit.id, w[Math.floor(this._rrng()*w.length)], 0, 700); return; }
+    // 2) « gg » / « nh » / « wp » (mot isolé) → 1-2 bots approuvent.
+    if(/(^|\s)(gg|nh|wp)($|\s)/.test(low)){
+      this._chatKwTs=nw;
+      const n=Math.min(bots.length, 1+(this._rrng()<0.4?1:0));
+      const pool=['🤝','👍','🫡','😎'];
+      for(let i=0;i<n;i++){ const b=bots[Math.floor(this._rrng()*bots.length)]; this._botReact(b.id, pool[Math.floor(this._rrng()*pool.length)], i*400, 700); }
+    }
+  }
+
   _onMyAction(f){
     if(!this.table || this.stopped) return;
     this._clearHumanTimer();
@@ -446,6 +488,22 @@ export class FakeServer {
         // Reset de l'état de barrel par-main pour chaque bot (compteur + street).
         for (const _id in this.botCfg){ const _c = this.botCfg[_id]; if (_c){ _c._barrels = 0; _c._barrelStreet = null; _c._hadDraw = false; } }
         this._reactAmbient();   // chit-chat d'ambiance (rare, cosmétique)
+        // Easter egg /dealmeaces : troquer la main du joueur contre des as
+        // restés dans le deck. Les mains des bots et l'ordre des tirages rng
+        // ne bougent pas ; le board sortira du deck ainsi modifié. Rappel :
+        // rang = carte % 13, 12 = As (0 = Deux — jamais falsy).
+        if(this._eggAces){
+          this._eggAces=false;
+          try{
+            const H=this.table && this.table.h; const mine=H && H.hole[this.meId];
+            if(mine) for(let k=0;k<2;k++){
+              if(mine[k]%13===12) continue;                    // déjà un as
+              const di=H.deck.findIndex(c=>c%13===12);         // un as encore au deck
+              if(di<0) break;
+              const tmp=mine[k]; mine[k]=H.deck[di]; H.deck[di]=tmp;
+            }
+          }catch(e){}
+        }
         const hole = ev.holeByPlayer[this.meId] || [0,0];
         const spec=[[1,0,G],[2,2, encode([[1,0,hole[0]],[2,0,hole[1]]])],[4,0,ev.sb]];
         ev.seats.forEach(()=>spec.push([5,0,0]));

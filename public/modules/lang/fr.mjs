@@ -575,6 +575,9 @@ export const strings = {
     "ach_blind_level": "Montée des blinds",
     "ach_blind_level_d": "Atteindre le niveau de blinds 5 dans une même partie",
     "achCatFormats": "Formats PokerTH",
+    "achCatSecret": "Secret",
+    "ach_egg": "L'œuf",
+    "ach_egg_d": "Tu as trouvé le code Konami",
     // ── Sauvegarde complète du client web ──
     "advBackupSec": "Sauvegarde complète (client web)",
     "advBackupDesc": "Enregistre dans un seul fichier tout ce que ce navigateur contient : options web, thèmes, decks, sièges personnalisés, image d'avatar, succès et statistiques — y compris ce qui est trop volumineux pour la synchro du compte. Le mot de passe et la session ne sont jamais inclus, et l'import fusionne les succès au lieu de les remplacer : la progression n'est jamais perdue.",

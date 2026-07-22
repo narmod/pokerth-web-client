@@ -947,6 +947,9 @@ export const strings = {
     "ach_blind_level": "Blinduri în creștere",
     "ach_blind_level_d": "Atinge nivelul de blinduri 5 într-un singur joc",
     "achCatFormats": "Formate PokerTH",
+    "achCatSecret": "Secret",
+    "ach_egg": "Oul",
+    "ach_egg_d": "Ai găsit codul Konami",
     // ── Sauvegarde complète du client web ──
     "advBackupSec": "Copie de rezervă completă (client web)",
     "advBackupDesc": "Salvează într-un singur fișier tot ce conține acest browser: opțiuni web, teme, pachete de cărți, locuri personalizate, imaginea avatarului, realizări și statistici — inclusiv ce este prea mare pentru sincronizarea cu contul. Parola și sesiunea nu sunt niciodată incluse, iar importul îmbină realizările în loc să le înlocuiască, așa că progresul nu se pierde.",

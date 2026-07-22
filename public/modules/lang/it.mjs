@@ -951,6 +951,9 @@ export const strings = {
     "ach_blind_level": "Bui crescenti",
     "ach_blind_level_d": "Raggiungi il livello di bui 5 in una singola partita",
     "achCatFormats": "Formati PokerTH",
+    "achCatSecret": "Segreto",
+    "ach_egg": "L'uovo",
+    "ach_egg_d": "Hai trovato il codice Konami",
     // ── Sauvegarde complète du client web ──
     "advBackupSec": "Backup completo (client web)",
     "advBackupDesc": "Salva in un unico file tutto ciò che contiene questo browser: opzioni web, temi, mazzi, posti personalizzati, immagine avatar, obiettivi e statistiche — compreso ciò che è troppo grande per la sincronizzazione con l'account. Password e sessione non sono mai inclusi e l'importazione unisce gli obiettivi invece di sostituirli, così i progressi non vanno persi.",

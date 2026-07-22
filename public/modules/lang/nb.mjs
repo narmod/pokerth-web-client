@@ -945,6 +945,9 @@ export const strings = {
     "ach_blind_level": "Stigende blinds",
     "ach_blind_level_d": "Nå blindnivå 5 i ett enkelt spill",
     "achCatFormats": "PokerTH-formater",
+    "achCatSecret": "Hemmelig",
+    "ach_egg": "Egget",
+    "ach_egg_d": "Du fant Konami-koden",
     // ── Sauvegarde complète du client web ──
     "advBackupSec": "Full sikkerhetskopi (webklient)",
     "advBackupDesc": "Lagrer alt denne nettleseren inneholder i én fil: webalternativer, temaer, kortstokker, egne plasser, avatarbilde, prestasjoner og statistikk — også det som er for stort til å synkroniseres med kontoen din. Passord og økt tas aldri med, og import slår sammen prestasjoner i stedet for å erstatte dem, så fremgang går aldri tapt.",

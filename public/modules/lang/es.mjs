@@ -951,6 +951,9 @@ export const strings = {
     "ach_blind_level": "Ciegas al alza",
     "ach_blind_level_d": "Alcanza el nivel de ciegas 5 en una misma partida",
     "achCatFormats": "Formatos PokerTH",
+    "achCatSecret": "Secreto",
+    "ach_egg": "El huevo",
+    "ach_egg_d": "Has encontrado el código Konami",
     // ── Sauvegarde complète du client web ──
     "advBackupSec": "Copia de seguridad completa (cliente web)",
     "advBackupDesc": "Guarda en un solo archivo todo lo que contiene este navegador: opciones web, temas, barajas, asientos personalizados, imagen de avatar, logros y estadísticas — incluido lo que es demasiado grande para sincronizar con tu cuenta. La contraseña y la sesión nunca se incluyen, y al importar los logros se fusionan en lugar de reemplazarse, así que nunca se pierde progreso.",

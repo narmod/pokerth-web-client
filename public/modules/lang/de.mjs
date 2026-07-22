@@ -950,6 +950,9 @@ export const strings = {
     "ach_blind_level": "Steigende Blinds",
     "ach_blind_level_d": "Erreiche Blind-Level 5 in einem Spiel",
     "achCatFormats": "PokerTH-Formate",
+    "achCatSecret": "Geheim",
+    "ach_egg": "Das Ei",
+    "ach_egg_d": "Du hast den Konami-Code gefunden",
     // ── Sauvegarde complète du client web ──
     "advBackupSec": "Vollständige Sicherung (Web-Client)",
     "advBackupDesc": "Speichert alles aus diesem Browser in einer Datei: Web-Optionen, Themes, Decks, eigene Sitzplätze, Avatarbild, Erfolge und Statistiken — auch das, was für die Kontosynchronisierung zu groß ist. Passwort und Sitzung werden nie mitgespeichert, und beim Import werden Erfolge zusammengeführt statt ersetzt, sodass kein Fortschritt verloren geht.",

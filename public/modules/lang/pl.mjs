@@ -949,6 +949,9 @@ export const strings = {
     "ach_blind_level": "Rosnące blindy",
     "ach_blind_level_d": "Osiągnij poziom blindów 5 w jednej grze",
     "achCatFormats": "Formaty PokerTH",
+    "achCatSecret": "Sekret",
+    "ach_egg": "Jajko",
+    "ach_egg_d": "Znaleziono kod Konami",
     // ── Sauvegarde complète du client web ──
     "advBackupSec": "Pełna kopia zapasowa (klient web)",
     "advBackupDesc": "Zapisuje w jednym pliku wszystko, co przechowuje ta przeglądarka: opcje web, motywy, talie, własne miejsca, obrazek awatara, osiągnięcia i statystyki — także to, co jest zbyt duże do synchronizacji z kontem. Hasło i sesja nigdy nie są zapisywane, a import scala osiągnięcia zamiast je zastępować, więc postęp nigdy nie ginie.",

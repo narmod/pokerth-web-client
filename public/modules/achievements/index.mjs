@@ -15,6 +15,10 @@ import { createStore } from './store.mjs';
 
 export { ACHIEVEMENTS, CATS } from './defs.mjs';
 
+// Succès « secret » (easter eggs) : exclus des compteurs unlocked/total pour
+// que le méta-succès Collectionneur garde exactement sa sémantique d'avant.
+const SECRET_IDS = new Set(ACHIEVEMENTS.filter(d => d.cat === 'secret').map(d => d.id));
+
 export function createAchievements(opts = {}) {
   const store = opts.store || createStore(opts.storeOpts);
   const onUnlock = typeof opts.onUnlock === 'function' ? opts.onUnlock : () => {};
@@ -32,8 +36,8 @@ export function createAchievements(opts = {}) {
     hand: S.hand,
     place: S.place,
     hour: S._hour,
-    unlocked: store.unlockedList().length,
-    total: ACHIEVEMENTS.length,
+    unlocked: store.unlockedList().filter(id => !SECRET_IDS.has(id)).length,
+    total: ACHIEVEMENTS.length - SECRET_IDS.size,
   });
 
   function evaluate(when) {
@@ -62,4 +66,14 @@ export function createAchievements(opts = {}) {
     total() { return ACHIEVEMENTS.length; },
     reset() { store.reset(); Object.assign(S, createSession()); },
   };
+}
+
+// Déblocage direct d'un succès SECRET (easter eggs — ex. code Konami), hors
+// tracker : fonctionne dans TOUS les modes (le store est purement local).
+// Renvoie { id, icon, cat } si le succès vient d'être débloqué, sinon null.
+export function grantSecret(id, opts = {}) {
+  const def = ACHIEVEMENTS.find(d => d.id === id && d.cat === 'secret');
+  if (!def) return null;
+  const store = opts.store || createStore(opts.storeOpts);
+  return store.unlock(def.id) ? { id: def.id, icon: def.icon, cat: def.cat } : null;
 }

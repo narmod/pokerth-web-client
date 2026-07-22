@@ -943,6 +943,9 @@ export const strings = {
     "ach_blind_level": "ブラインド上昇",
     "ach_blind_level_d": "1回のゲームでブラインドレベル5に到達する",
     "achCatFormats": "PokerTH形式",
+    "achCatSecret": "シークレット",
+    "ach_egg": "たまご",
+    "ach_egg_d": "コナミコマンドを発見した",
     // ── Sauvegarde complète du client web ──
     "advBackupSec": "完全バックアップ（Webクライアント）",
     "advBackupDesc": "このブラウザが保持しているすべてを1つのファイルに保存します：Web設定、テーマ、デッキ、カスタム座席、アバター画像、実績、統計 — アカウント同期には大きすぎるものも含みます。パスワードとセッションは決して含まれず、インポート時は実績を置き換えずに統合するため、進行状況が失われることはありません。",

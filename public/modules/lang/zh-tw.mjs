@@ -943,6 +943,9 @@ export const strings = {
     "ach_blind_level": "盲注上漲",
     "ach_blind_level_d": "在一局遊戲中達到盲注等級 5",
     "achCatFormats": "PokerTH 賽制",
+    "achCatSecret": "秘密",
+    "ach_egg": "彩蛋",
+    "ach_egg_d": "你發現了 Konami 秘技",
     // ── Sauvegarde complète du client web ──
     "advBackupSec": "完整備份（網頁用戶端）",
     "advBackupDesc": "將此瀏覽器儲存的所有內容存入單一檔案：網頁選項、佈景主題、牌組、自訂座位、頭像圖片、成就和統計 — 包括因過大而無法與帳號同步的內容。密碼和工作階段絕不會包含在內；匯入時會合併成就而非取代，因此進度不會遺失。",

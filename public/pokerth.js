@@ -7942,6 +7942,36 @@ function _attachChatKeys(id, gameScope) {
   var inp = document.getElementById(id);
   if (!inp || inp._keysAttached) return;
   inp._keysAttached = true;
+  // ── Easter egg : code Konami (↑↑↓↓←→←→BA) dans le chat de PARTIE, tous
+  // modes. Détection passive via addEventListener (n'interfère ni avec
+  // l'historique ↑/↓ ni avec la saisie) ; le « ba » final est retiré du champ.
+  // Effet : confettis (Reactions.playReactionFx) + trophée secret « L'œuf »
+  // (grantSecret — catégorie cachée, visible seulement une fois débloqué).
+  if (gameScope) {
+    var _kSeq = ['ArrowUp','ArrowUp','ArrowDown','ArrowDown','ArrowLeft','ArrowRight','ArrowLeft','ArrowRight','b','a'];
+    var _kPos = 0, _kLast = 0;
+    inp.addEventListener('keydown', function (e) {
+      var k = (e.key && e.key.length === 1) ? e.key.toLowerCase() : e.key;
+      _kPos = (k === _kSeq[_kPos]) ? _kPos + 1 : (k === _kSeq[0] ? 1 : 0);
+      if (_kPos < _kSeq.length) return;
+      _kPos = 0;
+      var _nw = Date.now(); if (_nw - _kLast < 5000) return; _kLast = _nw;
+      try { inp.value = inp.value.replace(/ba$/i, ''); } catch (e2) {}
+      try {
+        var _fx = window.Reactions && window.Reactions.playReactionFx;
+        if (_fx) {
+          _fx('\u{1F95A}', window.innerWidth * 0.5, window.innerHeight * 0.45);
+          setTimeout(function () { try { _fx('\u{1F389}', window.innerWidth * 0.5, window.innerHeight * 0.45); } catch (e3) {} }, 180);
+        }
+      } catch (e4) {}
+      try {
+        import('/modules/achievements/index.mjs').then(function (m) {
+          var a = (m && m.grantSecret) ? m.grantSecret('egg') : null;
+          if (a) { try { window.dispatchEvent(new CustomEvent('pth-achievement', { detail: a })); } catch (e5) {} }
+        }).catch(function () {});
+      } catch (e6) {}
+    });
+  }
   var tabMatches = null, tabIdx = 0, tabStart = 0, tabTail = '';
   var histIdx = -1, draft = '';
   function caretEnd() { try { inp.setSelectionRange(inp.value.length, inp.value.length); } catch (e) {} }
@@ -8849,7 +8879,7 @@ window.togglePlayersPanel = togglePlayersPanel;
 window.toggleReactionPanel = toggleReactionPanel;
 window.App = App;
 
-window.BUILD_VERSION='2.1.4-web.4'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.4-web.5'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
