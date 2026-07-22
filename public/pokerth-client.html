@@ -2606,10 +2606,6 @@ if ('serviceWorker' in navigator) {
       <label class="adv-row"><input type="checkbox" id="adv-chattranslate" onchange="setChatTranslate(this.checked)"><span data-i18n="advChatTranslate">Chat translation (Google Translate, per-message button)</span></label>
       <label class="adv-row"><input type="checkbox" id="adv-chatabbrev" onchange="setAdvOpt('chat_abbrev',this.checked)"><span data-i18n="advChatAbbrev">Explain chat abbreviations (gg, nh, utg…) on hover</span><em class="adv-webtag">web</em></label>
       </details>
-      <details class="adv-fold"><summary class="adv-sec"><span class="adv-sec-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="3.5" width="17" height="17" rx="3"/><circle cx="12" cy="10" r="2.8"/><path d="M6.8 18a5.2 5.2 0 0 1 10.4 0"/></svg></span><span data-i18n="advSecAvatars">Avatars</span></summary>
-      <label class="adv-row"><input type="checkbox" id="adv-flag" onchange="setAdvOpt('show_flag',this.checked)"><span data-i18n="advFlagAvatar">Country flag on avatar</span></label>
-      <label class="adv-row"><input type="checkbox" id="adv-nohideignored" onchange="setAdvOpt('no_hide_ignored',this.checked)"><span data-i18n="advNoHideIgnored">Don't hide ignored players' avatars</span></label>
-      </details>
       <details class="adv-fold"><summary class="adv-sec"><span class="adv-sec-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.4 2.3c-.8.3-.9 1-.9 1.7M12 16.6h.01"/></svg></span><span data-i18n="advSecHelp">Assistance</span></summary>
       <label class="adv-row"><input type="checkbox" id="adv-assist" onchange="setAssist(this.checked)"><span data-i18n="assist">Assistance</span><em class="adv-webtag">web</em></label>
       <label class="adv-row"><input type="checkbox" id="adv-showodds" onchange="setAdvOpt('show_odds',this.checked)"><span data-i18n="advShowOdds">Show odds in the Chances panel</span></label>
@@ -2637,7 +2633,9 @@ if ('serviceWorker' in navigator) {
       </div>
       <div class="adv-body adv-uipanel" data-uitab="network">
       <details class="adv-fold"><summary class="adv-sec"><span class="adv-sec-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="3.5" width="17" height="17" rx="3"/><circle cx="12" cy="10" r="2.8"/><path d="M6.8 18a5.2 5.2 0 0 1 10.4 0"/></svg></span><span data-i18n="advSecAvatars">Avatars</span></summary>
+      <label class="adv-row"><input type="checkbox" id="adv-flag" onchange="setAdvOpt('show_flag',this.checked)"><span data-i18n="advFlagAvatar">Country flag on avatar</span></label>
       <label class="adv-row"><input type="checkbox" id="adv-pingavatar" onchange="setAdvOpt('ping_avatar',this.checked);try{window._pingTick&&window._pingTick()}catch(e){}"><span data-i18n="advNetStateColor">Show network status colour in the avatar corner</span></label>
+      <label class="adv-row"><input type="checkbox" id="adv-nohideignored" onchange="setAdvOpt('no_hide_ignored',this.checked)"><span data-i18n="advNoHideIgnored">Don't hide ignored players' avatars</span></label>
       </details>
       <details class="adv-fold"><summary class="adv-sec"><span class="adv-sec-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3.4"/><path d="M12 4v3M12 17v3M4 12h3M17 12h3"/></svg></span><span data-i18n="advSecBet">Betting &amp; turn</span></summary>
       <label class="adv-row"><input type="checkbox" id="adv-focusbet" onchange="setAdvOpt('focus_bet',this.checked)"><span data-i18n="advFocusBet">Focus bet field on my turn</span></label>
