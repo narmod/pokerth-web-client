@@ -62,6 +62,14 @@ function onRejectInvNotify(sub) {
   // sortantes ne sont pas encore une fonctionnalité web : rien à afficher.
 }
 
+// Sommes-nous assis à une table ? (écran de jeu affiché)
+function _inGameScreen() {
+  try {
+    const el = document.getElementById('s-game');
+    return !!(el && el.classList && el.classList.contains('active'));
+  } catch (e) { return false; }
+}
+
 function onChat(sub) {
   const pid  = Proto.u32(sub, 2);
   const ctype= Proto.u32(sub, 3);
@@ -81,9 +89,12 @@ function onChat(sub) {
       // Pas d'affichage dans le chat — animation seule
     }
   } else if (!(pid === S.myId && ctype !== 3)) {
-    // Son de notification du chat LOBBY (lobbychatnotify.wav) —
-    // messages d'autrui uniquement (chatTypeLobby = 0)
-    if (ctype === 0 && pid && pid !== S.myId) {
+    // Son de notification du chat LOBBY (lobbychatnotify.wav) — messages
+    // d'autrui uniquement (chatTypeLobby = 0) et SEULEMENT hors partie :
+    // assis à une table, le panneau lobby n'est pas visible, le son n'avait
+    // donc aucun référent à l'écran (remonté narmod 22/07). Le chat de partie
+    // et les broadcasts (ctype 1 / 3) ne passent pas par ici.
+    if (ctype === 0 && pid && pid !== S.myId && !_inGameScreen()) {
       try { if (typeof notifyLobbyChat === 'function') notifyLobbyChat(); } catch (_e) {}
     }
     // Mon propre message : déjà affiché en optimiste à l'envoi (classe 'mine').

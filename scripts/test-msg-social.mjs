@@ -5,7 +5,9 @@ globalThis.window = globalThis;
 globalThis.localStorage = { getItem: () => null, setItem() {}, removeItem() {} };
 function makeEl() { return { style: {}, children: [], textContent: '', innerHTML: '',
   appendChild(c) { this.children.push(c); }, remove() {}, addEventListener() {},
-  classList: { add() {}, remove() {} }, querySelector: () => null, querySelectorAll: () => [] }; }
+  classList: { _on: {}, add(c) { this._on[c] = 1; }, remove(c) { delete this._on[c]; },
+    contains(c) { return !!this._on[c]; } },
+  querySelector: () => null, querySelectorAll: () => [] }; }
 const els = {};
 globalThis.document = { readyState: 'complete', addEventListener() {}, removeEventListener() {},
   querySelectorAll: () => [], querySelector: () => null,
@@ -70,6 +72,17 @@ function chatSub(pid, ctype, text) {
 }
 M.onChat(chatSub(9, 0, 'salut'));
 ok(lobbyDings === 1, 'onChat : message lobby d\'autrui → notifyLobbyChat');
+
+// Assis à une table : le panneau lobby n'est pas visible → pas de son.
+els['s-game'] = makeEl(); els['s-game'].classList.add('active');
+lobbyDings = 0;
+M.onChat(chatSub(9, 0, 'salut pendant la partie'));
+ok(lobbyDings === 0, 'onChat : en partie, aucun son de chat lobby');
+els['s-game'].classList.remove('active');
+lobbyDings = 0;
+M.onChat(chatSub(9, 0, 'de retour au lobby'));
+ok(lobbyDings === 1, 'onChat : de retour au lobby, le son revient');
+lobbyDings = 1;
 ok(els['chat'].children.length >= 1, 'onChat : ligne ajoutée au chat');
 
 // Écho de mon propre message (ctype ≠ 3) → ignoré (déjà affiché en optimiste)
