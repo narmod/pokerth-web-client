@@ -178,16 +178,32 @@ const MSG = (() => {
   // precedente sont acceptees. En 2.1.3 : min Qt-Widget = 0x01020102 (2.1.2).
   // => A CHAQUE release PokerTH, bumper BUILD_ID ci-dessous sinon
   // ERR_NET_VERSION_NOT_SUPPORTED (« Version incompatible »").
-  // On s'identifie comme le client officiel Qt-Widget courant,
-  // exactement comme le client QML le fait (CLIENT_TYPE_QT_WIDGET tant que
-  // pokerth.net n'expose pas de type dédié). TODO sp0ck : demander un
-  // CLIENT_TYPE_WEB (0x03) officiel.
+  // TYPE DE CLIENT : par défaut on s'identifie comme le client officiel
+  // Qt-Widget courant (comme le client QML). Le jour où sp0ck ajoute
+  // CLIENT_TYPE_WEB (0x03) côté serveur (game_defs.h + MIN_BUILD_ID_WEB),
+  // passer USE_CLIENT_TYPE_WEB à true ci-dessous — rien d'autre à toucher.
   // Auth (loginType=1) : password en clair dans clientUserData (tag 7),
   //   sécurisé par TLS (mandatory côté serveur v2.0+).
   //   Ref: pokerth/src/net/clientstate.cpp:1465-1469 + serverlobbythread.cpp:1255-1256
   function buildInit(nick, major, minor, loginType, password, serverPass) {
     loginType = loginType !== undefined ? loginType : 0;
-    const BUILD_ID = 16908547; // 0x01020103 = Qt-Widget 2.1.3 (min serveur 2.1.3 : 0x01020102 = 2.1.2)
+    // --- Identification client auprès du serveur --------------------------
+    // Version upstream annoncée = dérivée de BUILD_VERSION ('MAJ.MIN.PATCH-web.N',
+    // ex. 2.1.4-web.0) : bumper la version de build suffit à suivre les releases
+    // PokerTH (politique serveur : release courante ou précédente uniquement,
+    // sinon ERR_NET_VERSION_NOT_SUPPORTED). Repli : triple en dur ci-dessous.
+    let UPSTREAM_MAJOR = 2, UPSTREAM_MINOR = 1, UPSTREAM_PATCH = 4;
+    try {
+      const _bv = /^(\d+)\.(\d+)\.(\d+)-web\.\d+$/.exec(window.BUILD_VERSION || '');
+      if (_bv) { UPSTREAM_MAJOR = +_bv[1]; UPSTREAM_MINOR = +_bv[2]; UPSTREAM_PATCH = +_bv[3]; }
+    } catch (e) {}
+    const CLIENT_TYPE_QT_WIDGET = 0x01; // client officiel Qt-Widgets
+    const CLIENT_TYPE_WEB       = 0x03; // demandé à sp0ck — pas encore côté serveur
+    const USE_CLIENT_TYPE_WEB   = false; // ← basculer à true quand sp0ck confirme 0x03
+    const clientType = USE_CLIENT_TYPE_WEB ? CLIENT_TYPE_WEB : CLIENT_TYPE_QT_WIDGET;
+    // buildId composite (type<<24)|(major<<16)|(minor<<8)|patch.
+    // Aujourd'hui : 0x01020104 (Qt-Widget 2.1.4 ; accepté dès serveur 2.1.3, min >= 0x01020102).
+    const BUILD_ID = ((clientType << 24) | (UPSTREAM_MAJOR << 16) | (UPSTREAM_MINOR << 8) | UPSTREAM_PATCH) >>> 0;
     const ver = Proto.encode([[1,0,major],[2,0,minor]]);
     const fields = [
       [1,2,ver],       // requestedVersion (= protocolVersion from Announce)
