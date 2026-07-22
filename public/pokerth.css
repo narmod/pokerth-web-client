@@ -8420,7 +8420,7 @@ html:not([data-seat-struct="qml"]) .seat:not(.me) .seat-foot { margin-top: 1px; 
 .gip-split-grip{width:34px;height:3px;border-radius:2px;background:rgba(var(--gold-rgb),.28)}
 .gip-split:hover .gip-split-grip{background:rgba(var(--gold-rgb),.55)}
 /* ── Fenêtre flottante « Assistance » détachée (chrome comme #g-log-panel) ── */
-#g-assist-panel{position:fixed;z-index:99;background:var(--panel);border:1px solid var(--border);box-shadow:0 4px 20px rgba(0,0,0,0.6);border-radius:8px;overflow:hidden}
+#g-assist-panel{position:fixed;z-index:99;background:var(--panel);border:1px solid var(--border);box-shadow:0 4px 20px rgba(0,0,0,0.6);border-radius:8px;overflow:hidden;-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}
 #g-assist-panel.floating-win{display:flex;flex-direction:column}
 #g-assist-panel .gip-assist-wtitle{flex:1;margin:0 6px;font-size:var(--fs-2xs);color:var(--gold-dim);letter-spacing:0.15em;text-transform:uppercase;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 #g-assist-panel .gip-assist-dock{flex:0 0 auto;background:none;border:none;color:var(--chatlog-text2, var(--chatlog-text, var(--text)));cursor:pointer;font-size:var(--fs-md);padding:0 4px}
@@ -8432,6 +8432,14 @@ html:not([data-seat-struct="qml"]) .seat:not(.me) .seat-foot { margin-top: 1px; 
 #g-assist-panel #g-assist-host{flex:1;min-height:0;display:flex}
 #g-assist-panel #gip-assist{flex:1;min-height:0;display:flex;flex-direction:column;justify-content:center;border-bottom:none;overflow:hidden;height:auto}
 #g-assist-panel #gip-assist .hs-txt{white-space:normal;overflow:visible;text-overflow:clip}
+/* Tactile (pointer:coarse) : sur la pastille (~44px de haut), les 8 poignées
+   de resize mangeaient les bords (n+s = 12px, coins 13px) et volaient le drag
+   au doigt → Android/iPad « du mal à déplacer ». On ne garde que le coin SE
+   (celui qui porte le grip visuel), agrandi à 24px. */
+@media (pointer: coarse){
+  #g-assist-panel .win-rsz{display:none}
+  #g-assist-panel .win-rsz-se{display:block;width:24px;height:24px}
+}
 /* « Mode pastille » sur TOUTES les plateformes (mobile, tablette, desktop) :
    en-tête masqué, ↩ en overlay dans le coin, drag via toute la fenêtre
    (handle = fenêtre, câblé dans assist-pane.mjs), double-clic n'importe où
