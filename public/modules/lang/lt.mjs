@@ -942,6 +942,14 @@ export const strings = {
     plColMe: "Aš",
     plColActions: "Veiksmai",
     abThanks1: "Ačiū PokerTH komandai — Felix Hammer, Florian Thauer, Lothar May — ir visiems projekto talkininkams nuo 2006 m.",
+    // ── Sauvegarde complète du client web ──
+    "advBackupSec": "Visa atsarginė kopija (interneto klientas)",
+    "advBackupDesc": "Į vieną failą įrašo viską, ką saugo ši naršyklė: interneto parinktis, temas, kaladės, pasirinktines vietas, avataro paveikslėlį, pasiekimus ir statistiką — įskaitant tai, kas per didelė sinchronizuoti su paskyra. Slaptažodis ir seansas niekada neįtraukiami, o importuojant pasiekimai sujungiami, o ne pakeičiami, todėl pažanga neprarandama.",
+    "advBackupExport": "Eksportuoti kopiją",
+    "advBackupImport": "Importuoti kopiją",
+    "backupExported": "Kopija eksportuota",
+    "backupImported": "Kopija importuota",
+    "backupImportErr": "Importas nepavyko — netinkamas kopijos failas",
 };
 
 export default { meta, strings };

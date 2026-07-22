@@ -942,6 +942,14 @@ export const strings = {
     plColMe: "Ek",
     plColActions: "Aksies",
     abThanks1: "Dankie aan die PokerTH-span — Felix Hammer, Florian Thauer, Lothar May — en aan alle projekbydraers sedert 2006.",
+    // ── Sauvegarde complète du client web ──
+    "advBackupSec": "Volledige rugsteun (webkliënt)",
+    "advBackupDesc": "Stoor alles wat hierdie blaaier bevat in een lêer: webopsies, temas, kaartstelle, eie sitplekke, avatarprent, prestasies en statistieke — insluitend wat te groot is om met jou rekening te sinchroniseer. Jou wagwoord en sessie word nooit ingesluit nie, en invoer voeg prestasies saam in plaas van hulle te vervang, sodat vordering nooit verlore gaan nie.",
+    "advBackupExport": "Voer rugsteun uit",
+    "advBackupImport": "Voer rugsteun in",
+    "backupExported": "Rugsteun uitgevoer",
+    "backupImported": "Rugsteun ingevoer",
+    "backupImportErr": "Invoer het misluk — ongeldige rugsteunlêer",
 };
 
 export default { meta, strings };

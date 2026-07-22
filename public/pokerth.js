@@ -793,6 +793,98 @@ function exportPokerthConfig() {
   if (typeof showToast === 'function') showToast(t('cfgXmlExported') || 'config.xml exported');
 }
 window.exportPokerthConfig = exportPokerthConfig;
+// ── Sauvegarde COMPLÈTE du client web ────────────────────────────────────────
+// Contrairement à config.xml (qui ne porte que les réglages partagés avec les
+// clients officiels), ce fichier emporte TOUT l'état local : options web, thèmes,
+// decks, sièges custom, image d'avatar, succès, stats… Aucune limite de 20 000
+// caractères ici, donc l'avatar et les dos de cartes personnalisés sont inclus
+// (eux ne peuvent pas passer par la synchro compte).
+// JAMAIS exportés : identifiants et session (mot de passe, jetons) + comptabilité
+// interne de la synchro, qui ne doit pas voyager d'un appareil à l'autre.
+var _BACKUP_SKIP = {
+  pth_auth_login: 1, pth_pass: 1, pth_sid: 1, pth_vid: 1, pth_resume: 1,
+  pth_cfg_sync_dirty: 1, pth_cfg_sync_ts: 1, pth_cfg_sync_weblast: 1, pth_cfg_sync_webts: 1
+};
+function exportWebBackup() {
+  var keys = {}, n = 0;
+  try {
+    for (var i = 0; i < localStorage.length; i++) {
+      var k = localStorage.key(i);
+      if (!k || k.indexOf('pth_') !== 0 || _BACKUP_SKIP[k]) continue;
+      var v = localStorage.getItem(k);
+      if (v != null) { keys[k] = v; n++; }
+    }
+  } catch (e) {}
+  var rec = {
+    format: 'pokerth-web-client', kind: 'full-backup', version: 1,
+    app: window.BUILD_VERSION || '', exportedAt: new Date().toISOString(), keys: keys
+  };
+  // config.xml officiel conservé tel quel : la sauvegarde reste un sur-ensemble.
+  try { var x = localStorage.getItem(PTH_CFG_XML_KEY); if (x) rec.xml = x; } catch (e) {}
+  try {
+    var blob = new Blob([JSON.stringify(rec)], { type: 'application/json' });
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'pokerth-web-backup.json';
+    document.body.appendChild(a); a.click();
+    setTimeout(function () { try { URL.revokeObjectURL(a.href); a.remove(); } catch (e) {} }, 2000);
+  } catch (e) {
+    if (typeof showToast === 'function') showToast('Export failed: ' + e.message, { tone: 'error' });
+    return;
+  }
+  if (typeof showToast === 'function') showToast((t('backupExported') || 'Backup exported') + ' (' + n + ')');
+}
+window.exportWebBackup = exportWebBackup;
+function importWebBackupPick() {
+  var inp = document.getElementById('adv-backup-file');
+  if (!inp) return;
+  inp.value = '';
+  inp.onchange = function () {
+    var f = inp.files && inp.files[0];
+    if (!f) return;
+    var fail = function () {
+      if (typeof showToast === 'function') showToast(t('backupImportErr') || 'Import failed', { tone: 'error' });
+    };
+    if (f.size > 8 * 1024 * 1024) return fail();
+    var r = new FileReader();
+    r.onload = function () {
+      var rec = null;
+      try { rec = JSON.parse(String(r.result || '')); } catch (e) {}
+      if (!rec || rec.format !== 'pokerth-web-client' || !rec.keys || typeof rec.keys !== 'object') return fail();
+      var n = 0;
+      // Succès : FUSION cumulative — importer une vieille sauvegarde ne doit
+      // jamais faire reculer la progression déjà acquise sur cet appareil.
+      try { _achMergeIn(rec.keys); } catch (e) {}
+      try {
+        Object.keys(rec.keys).forEach(function (k) {
+          if (!/^pth_[A-Za-z0-9_]{1,60}$/.test(k) || _BACKUP_SKIP[k]) return;
+          if (_ACH_SYNC_KEYS.indexOf(k) >= 0) return;            // déjà fusionné
+          var v = rec.keys[k];
+          if (typeof v !== 'string') return;
+          try { localStorage.setItem(k, v); n++; } catch (e) {}
+        });
+      } catch (e) { return fail(); }
+      // config.xml embarqué : même chemin que l'import config.xml classique.
+      try {
+        if (typeof rec.xml === 'string' && rec.xml.indexOf('<PokerTH') >= 0) {
+          localStorage.setItem(PTH_CFG_XML_KEY, rec.xml.slice(0, 400000));
+          _cfgApplyImported(_cfgParseXml(rec.xml));
+        }
+      } catch (e) {}
+      try { localStorage.setItem('pth_cfg_sync_dirty', '1'); _cfgSyncPushSoon(1500); } catch (e) {}
+      var msg = (t('backupImported') || 'Backup imported') + ' (' + n + ')';
+      if (typeof showToast === 'function') showToast(msg);
+      setTimeout(function () {
+        var q = t('cfgXmlReload') || 'Reload now to apply everything?';
+        if (window.confirm(msg + '\n\n' + q)) { try { location.reload(); } catch (e) {} }
+      }, 300);
+    };
+    r.onerror = fail;
+    r.readAsText(f);
+  };
+  inp.click();
+}
+window.importWebBackupPick = importWebBackupPick;
 // Import : applique les clés mappées à l'état web, conserve le XML complet
 // pour le round-trip, puis propose de recharger (comme le redémarrage demandé
 // par l'officiel après un reset).
@@ -8688,7 +8780,7 @@ window.togglePlayersPanel = togglePlayersPanel;
 window.toggleReactionPanel = toggleReactionPanel;
 window.App = App;
 
-window.BUILD_VERSION='0.3.1010-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='0.3.1011-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

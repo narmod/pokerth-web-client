@@ -941,6 +941,14 @@ export const strings = {
     plColMe: "Ja",
     plColActions: "Radnje",
     abThanks1: "Hvala timu PokerTH — Felix Hammer, Florian Thauer, Lothar May — i svim suradnicima na projektu od 2006. godine.",
+    // ── Sauvegarde complète du client web ──
+    "advBackupSec": "Potpuna sigurnosna kopija (web klijent)",
+    "advBackupDesc": "Sprema u jednu datoteku sve što ovaj preglednik sadrži: web opcije, teme, špilove, prilagođena mjesta, sliku avatara, postignuća i statistiku — uključujući ono što je preveliko za sinkronizaciju s računom. Lozinka i sesija nikada nisu uključeni, a uvoz spaja postignuća umjesto da ih zamijeni, pa se napredak nikada ne gubi.",
+    "advBackupExport": "Izvezi kopiju",
+    "advBackupImport": "Uvezi kopiju",
+    "backupExported": "Kopija izvezena",
+    "backupImported": "Kopija uvezena",
+    "backupImportErr": "Uvoz nije uspio — neispravna datoteka kopije",
 };
 
 export default { meta, strings };

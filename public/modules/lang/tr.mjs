@@ -943,6 +943,14 @@ export const strings = {
     "ach_blind_level": "Yükselen blindler",
     "ach_blind_level_d": "Tek bir oyunda blind seviyesi 5'e ulaş",
     "achCatFormats": "PokerTH formatları",
+    // ── Sauvegarde complète du client web ──
+    "advBackupSec": "Tam yedek (web istemcisi)",
+    "advBackupDesc": "Bu tarayıcının tuttuğu her şeyi tek bir dosyaya kaydeder: web seçenekleri, temalar, desteler, özel koltuklar, avatar görseli, başarımlar ve istatistikler — hesapla eşitlenemeyecek kadar büyük olanlar dahil. Parolanız ve oturumunuz asla dahil edilmez; içe aktarma başarımları değiştirmek yerine birleştirir, böylece ilerleme kaybolmaz.",
+    "advBackupExport": "Yedeği dışa aktar",
+    "advBackupImport": "Yedeği içe aktar",
+    "backupExported": "Yedek dışa aktarıldı",
+    "backupImported": "Yedek içe aktarıldı",
+    "backupImportErr": "İçe aktarma başarısız — geçersiz yedek dosyası",
 };
 
 export default { meta, strings };

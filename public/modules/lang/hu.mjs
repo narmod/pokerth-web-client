@@ -942,6 +942,14 @@ export const strings = {
     plColMe: "Én",
     plColActions: "Műveletek",
     abThanks1: "Köszönet a PokerTH csapatának — Felix Hammer, Florian Thauer, Lothar May — és a projekt összes közreműködőjének 2006 óta.",
+    // ── Sauvegarde complète du client web ──
+    "advBackupSec": "Teljes mentés (webkliens)",
+    "advBackupDesc": "Egyetlen fájlba menti mindazt, amit ez a böngésző tárol: webes beállítások, témák, paklik, egyéni ülőhelyek, avatarkép, teljesítmények és statisztikák — azt is, ami túl nagy a fiókkal való szinkronizáláshoz. A jelszó és a munkamenet soha nem kerül bele, az importálás pedig egyesíti a teljesítményeket ahelyett, hogy felülírná őket, így a haladás sosem vész el.",
+    "advBackupExport": "Mentés exportálása",
+    "advBackupImport": "Mentés importálása",
+    "backupExported": "Mentés exportálva",
+    "backupImported": "Mentés importálva",
+    "backupImportErr": "Az importálás sikertelen — érvénytelen mentésfájl",
 };
 
 export default { meta, strings };

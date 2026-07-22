@@ -945,6 +945,14 @@ export const strings = {
     "ach_blind_level": "Stijgende blinds",
     "ach_blind_level_d": "Bereik blindniveau 5 in één spel",
     "achCatFormats": "PokerTH-formaten",
+    // ── Sauvegarde complète du client web ──
+    "advBackupSec": "Volledige back-up (webclient)",
+    "advBackupDesc": "Slaat alles op wat deze browser bevat in één bestand: webopties, thema's, kaartsets, eigen zitplaatsen, avatarafbeelding, prestaties en statistieken — ook wat te groot is om met je account te synchroniseren. Je wachtwoord en sessie worden nooit meegenomen, en bij het importeren worden prestaties samengevoegd in plaats van vervangen, zodat voortgang nooit verloren gaat.",
+    "advBackupExport": "Back-up exporteren",
+    "advBackupImport": "Back-up importeren",
+    "backupExported": "Back-up geëxporteerd",
+    "backupImported": "Back-up geïmporteerd",
+    "backupImportErr": "Import mislukt — geen geldig back-upbestand",
 };
 
 export default { meta, strings };

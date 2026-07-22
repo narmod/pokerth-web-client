@@ -749,6 +749,14 @@ export const strings = {
     plColMe: "मैं",
     plColActions: "क्रियाएँ",
     abThanks1: "PokerTH टीम — Felix Hammer, Florian Thauer, Lothar May — और 2006 से परियोजना के सभी योगदानकर्ताओं का धन्यवाद।",
+    // ── Sauvegarde complète du client web ──
+    "advBackupSec": "पूर्ण बैकअप (वेब क्लाइंट)",
+    "advBackupDesc": "इस ब्राउज़र में मौजूद सब कुछ एक ही फ़ाइल में सहेजता है: वेब विकल्प, थीम, डेक, कस्टम सीटें, अवतार छवि, उपलब्धियाँ और आँकड़े — वह भी जो खाते के साथ सिंक करने के लिए बहुत बड़ा है। आपका पासवर्ड और सत्र कभी शामिल नहीं होते, और आयात उपलब्धियों को बदलने के बजाय मिलाता है, इसलिए प्रगति कभी नहीं खोती।",
+    "advBackupExport": "बैकअप निर्यात करें",
+    "advBackupImport": "बैकअप आयात करें",
+    "backupExported": "बैकअप निर्यात हुआ",
+    "backupImported": "बैकअप आयात हुआ",
+    "backupImportErr": "आयात विफल — अमान्य बैकअप फ़ाइल",
 };
 
 export default { meta, strings };

@@ -942,6 +942,14 @@ export const strings = {
     "ach_blind_level": "Rostoucí blindy",
     "ach_blind_level_d": "Dosáhni úrovně blindů 5 v jedné hře",
     "achCatFormats": "Formáty PokerTH",
+    // ── Sauvegarde complète du client web ──
+    "advBackupSec": "Úplná záloha (webový klient)",
+    "advBackupDesc": "Uloží do jediného souboru vše, co tento prohlížeč obsahuje: webové volby, motivy, balíčky, vlastní místa, obrázek avatara, úspěchy a statistiky — včetně toho, co je příliš velké pro synchronizaci s účtem. Heslo ani relace se nikdy nepřidávají a import úspěchy slučuje místo nahrazení, takže o postup nikdy nepřijdete.",
+    "advBackupExport": "Exportovat zálohu",
+    "advBackupImport": "Importovat zálohu",
+    "backupExported": "Záloha exportována",
+    "backupImported": "Záloha importována",
+    "backupImportErr": "Import selhal — neplatný soubor zálohy",
 };
 
 export default { meta, strings };

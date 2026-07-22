@@ -2766,6 +2766,13 @@ if ('serviceWorker' in navigator) {
             </div>
             <input type="file" id="adv-cfgxml-file" accept=".xml,text/xml" style="display:none">
             <label class="adv-row"><input type="checkbox" id="adv-cfgsync" onchange="cfgSyncToggle(this)"><span data-i18n="advCfgSync">Auto-sync these settings with my account (registered login only — stored on this server, opt-in)</span><em class="adv-webtag">web</em></label>
+            <div class="adv-sec" data-i18n="advBackupSec">Full backup (web client)</div>
+            <div class="adv-ign-desc" data-i18n="advBackupDesc">Save everything this browser holds into one file: web options, themes, decks, custom seats, avatar image, achievements and stats — including what is too large to sync with your account. Your password and session are never included, and importing merges achievements instead of replacing them, so progress is never lost.</div>
+            <div class="adv-link">
+              <button type="button" class="adv-link-btn" onclick="exportWebBackup()"><span data-i18n="advBackupExport">Export backup</span></button>
+              <button type="button" class="adv-link-btn" onclick="importWebBackupPick()"><span data-i18n="advBackupImport">Import backup</span></button>
+            </div>
+            <input type="file" id="adv-backup-file" accept=".json,application/json" style="display:none">
           </div>
         </section>
       </div>

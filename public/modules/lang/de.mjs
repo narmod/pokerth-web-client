@@ -945,6 +945,14 @@ export const strings = {
     "ach_blind_level": "Steigende Blinds",
     "ach_blind_level_d": "Erreiche Blind-Level 5 in einem Spiel",
     "achCatFormats": "PokerTH-Formate",
+    // ── Sauvegarde complète du client web ──
+    "advBackupSec": "Vollständige Sicherung (Web-Client)",
+    "advBackupDesc": "Speichert alles aus diesem Browser in einer Datei: Web-Optionen, Themes, Decks, eigene Sitzplätze, Avatarbild, Erfolge und Statistiken — auch das, was für die Kontosynchronisierung zu groß ist. Passwort und Sitzung werden nie mitgespeichert, und beim Import werden Erfolge zusammengeführt statt ersetzt, sodass kein Fortschritt verloren geht.",
+    "advBackupExport": "Sicherung exportieren",
+    "advBackupImport": "Sicherung importieren",
+    "backupExported": "Sicherung exportiert",
+    "backupImported": "Sicherung importiert",
+    "backupImportErr": "Import fehlgeschlagen — keine gültige Sicherungsdatei",
 };
 
 export default { meta, strings };

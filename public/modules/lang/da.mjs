@@ -941,6 +941,14 @@ export const strings = {
     "ach_blind_level": "Stigende blinds",
     "ach_blind_level_d": "Nå blind-niveau 5 i et enkelt spil",
     "achCatFormats": "PokerTH-formater",
+    // ── Sauvegarde complète du client web ──
+    "advBackupSec": "Fuld sikkerhedskopi (webklient)",
+    "advBackupDesc": "Gemmer alt, hvad denne browser indeholder, i én fil: webindstillinger, temaer, kortsæt, egne pladser, avatarbillede, præstationer og statistik — også det, der er for stort til at synkronisere med din konto. Din adgangskode og session medtages aldrig, og import fletter præstationer i stedet for at erstatte dem, så fremgang aldrig går tabt.",
+    "advBackupExport": "Eksportér sikkerhedskopi",
+    "advBackupImport": "Importér sikkerhedskopi",
+    "backupExported": "Sikkerhedskopi eksporteret",
+    "backupImported": "Sikkerhedskopi importeret",
+    "backupImportErr": "Import mislykkedes — ugyldig sikkerhedskopifil",
 };
 
 export default { meta, strings };

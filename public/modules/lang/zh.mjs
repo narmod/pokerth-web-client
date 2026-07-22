@@ -938,6 +938,14 @@ export const strings = {
     "ach_blind_level": "盲注上涨",
     "ach_blind_level_d": "在一局游戏中达到盲注等级 5",
     "achCatFormats": "PokerTH 赛制",
+    // ── Sauvegarde complète du client web ──
+    "advBackupSec": "完整备份（网页客户端）",
+    "advBackupDesc": "将此浏览器保存的所有内容存入单个文件：网页选项、主题、牌组、自定义座位、头像图片、成就和统计 — 包括因过大而无法与账号同步的内容。密码和会话绝不会包含在内；导入时会合并成就而非替换，因此进度不会丢失。",
+    "advBackupExport": "导出备份",
+    "advBackupImport": "导入备份",
+    "backupExported": "备份已导出",
+    "backupImported": "备份已导入",
+    "backupImportErr": "导入失败 — 备份文件无效",
 };
 
 export default { meta, strings };

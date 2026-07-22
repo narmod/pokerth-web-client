@@ -942,6 +942,14 @@ export const strings = {
     plColMe: "Tôi",
     plColActions: "Hành động",
     abThanks1: "Cảm ơn nhóm PokerTH — Felix Hammer, Florian Thauer, Lothar May — và tất cả những người đóng góp cho dự án từ năm 2006.",
+    // ── Sauvegarde complète du client web ──
+    "advBackupSec": "Sao lưu đầy đủ (ứng dụng web)",
+    "advBackupDesc": "Lưu mọi thứ trình duyệt này đang giữ vào một tệp duy nhất: tùy chọn web, giao diện, bộ bài, chỗ ngồi tùy chỉnh, ảnh đại diện, thành tựu và thống kê — kể cả những gì quá lớn để đồng bộ với tài khoản. Mật khẩu và phiên đăng nhập không bao giờ được đưa vào, và khi nhập, thành tựu được hợp nhất thay vì thay thế nên tiến trình không bị mất.",
+    "advBackupExport": "Xuất bản sao",
+    "advBackupImport": "Nhập bản sao",
+    "backupExported": "Đã xuất bản sao",
+    "backupImported": "Đã nhập bản sao",
+    "backupImportErr": "Nhập thất bại — tệp sao lưu không hợp lệ",
 };
 
 export default { meta, strings };

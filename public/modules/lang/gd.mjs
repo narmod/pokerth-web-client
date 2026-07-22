@@ -945,6 +945,14 @@ export const strings = {
     plColMe: "Mise",
     plColActions: "Gnìomhan",
     abThanks1: "Taing do sgioba PokerTH — Felix Hammer, Florian Thauer, Lothar May — agus don a h-uile neach-cuideachaidh air a' phròiseact bho 2006.",
+    // ── Sauvegarde complète du client web ──
+    "advBackupSec": "Lethbhreac slàn (cliant-lìn)",
+    "advBackupDesc": "Sàbhalaidh e a h-uile càil a tha sa bhrabhsair seo ann an aon fhaidhle: roghainnean-lìn, ùrlaran, pacaidean chairtean, suidheachain gnàthaichte, dealbh avatar, coileanaidhean is staitistig — a' gabhail a-steach na tha ro mhòr airson sioncronachadh leis a' chunntas agad. Cha tèid am facal-faire no an t-seisean a ghabhail a-steach idir, agus bidh an ion-phortadh a' co-mheasgachadh nan coileanaidhean an àite an cur nan àite, mar sin cha chaill thu adhartas.",
+    "advBackupExport": "Às-phortaich an lethbhreac",
+    "advBackupImport": "Ion-phortaich lethbhreac",
+    "backupExported": "Chaidh an lethbhreac às-phortadh",
+    "backupImported": "Chaidh an lethbhreac ion-phortadh",
+    "backupImportErr": "Dh'fhàillig an ion-phortadh — faidhle mì-dhligheach",
 };
 
 export default { meta, strings };

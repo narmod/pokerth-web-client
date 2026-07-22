@@ -943,6 +943,14 @@ export const strings = {
     plColMe: "Jo",
     plColActions: "Accions",
     abThanks1: "Gràcies a l'equip de PokerTH — Felix Hammer, Florian Thauer, Lothar May — i a tots els col·laboradors del projecte des del 2006.",
+    // ── Sauvegarde complète du client web ──
+    "advBackupSec": "Còpia de seguretat completa (client web)",
+    "advBackupDesc": "Desa en un sol fitxer tot el que conté aquest navegador: opcions web, temes, baralles, seients personalitzats, imatge d'avatar, assoliments i estadístiques — inclòs allò massa gran per sincronitzar amb el teu compte. La contrasenya i la sessió mai s'hi inclouen, i en importar els assoliments es fusionen en lloc de substituir-se, així que no es perd progrés.",
+    "advBackupExport": "Exporta la còpia",
+    "advBackupImport": "Importa una còpia",
+    "backupExported": "Còpia exportada",
+    "backupImported": "Còpia importada",
+    "backupImportErr": "Ha fallat la importació — fitxer de còpia no vàlid",
 };
 
 export default { meta, strings };
