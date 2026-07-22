@@ -688,12 +688,12 @@ function onAvatarImageChosen(input) {
     </div>
     <div class="hdr-group hdr-right">
       <button class="btn-sm btn-icon" id="install-btn" onclick="pwaInstall()" title="Install app" data-i18n-title="installTooltip" aria-label="Install app" style="display:none"><svg viewBox="0 0 24 24" style="display:block;width:22px;height:22px" fill="currentColor" aria-hidden="true"><path d="M17 1.01 7 1c-1.1 0-1.99.9-1.99 2L5 21c0 1.1.89 2 1.99 2H17c1.1 0 2-.9 2-2V3c0-1.1-.9-1.99-2-1.99zM17 19H7V5h10v14zm-4.2-8V7h-1.6v4H9l3 3 3-3h-2.2z"/></svg></button>
-      <button class="btn-sm btn-icon" id="ranking-btn-connect" onclick="openRankingModal()" title="Ranking" data-i18n-title="rankingTooltip" aria-label="Ranking"><svg class="rk-trophy" viewBox="0 0 24 24" style="display:block;width:22px;height:22px" fill="#E3C800" aria-hidden="true"><path d="M19 5h-2V3H7v2H5C3.9 5 3 5.9 3 7v1c0 2.55 1.92 4.63 4.39 4.94.63 1.5 1.98 2.63 3.61 2.96V19H7v2h10v-2h-4v-3.1c1.63-.33 2.98-1.46 3.61-2.96C19.08 12.63 21 10.55 21 8V7c0-1.1-.9-2-2-2zM5 8V7h2v3.82C5.84 10.4 5 9.3 5 8zm14 0c0 1.3-.84 2.4-2 2.82V7h2v1z"/></svg></button>
+      <button class="btn-sm btn-icon" id="ranking-btn-connect" onclick="toggleRankingModal()" title="Ranking" data-i18n-title="rankingTooltip" aria-label="Ranking"><svg class="rk-trophy" viewBox="0 0 24 24" style="display:block;width:22px;height:22px" fill="currentColor" aria-hidden="true"><path d="M19 5h-2V3H7v2H5C3.9 5 3 5.9 3 7v1c0 2.55 1.92 4.63 4.39 4.94.63 1.5 1.98 2.63 3.61 2.96V19H7v2h10v-2h-4v-3.1c1.63-.33 2.98-1.46 3.61-2.96C19.08 12.63 21 10.55 21 8V7c0-1.1-.9-2-2-2zM5 8V7h2v3.82C5.84 10.4 5 9.3 5 8zm14 0c0 1.3-.84 2.4-2 2.82V7h2v1z"/></svg></button>
       <span class="hdr-ovf-wrap"><button class="btn-sm btn-icon" id="connect-overflow-btn" onclick="toggleConnectOverflow(event)" title="More" data-i18n-title="moreTooltip" aria-label="More"><svg viewBox="0 0 24 24" style="display:block;width:22px;height:22px" fill="currentColor" aria-hidden="true"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58a.49.49 0 0 0 .12-.61l-1.92-3.32a.488.488 0 0 0-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54a.484.484 0 0 0-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58a.49.49 0 0 0-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg></button>
       <div id="connect-overflow-menu">
       <button class="btn-sm" onclick="toggleFullscreen();closeConnectOverflow()"><span style="margin-right:7px">⛶</span><span data-i18n="fullscreenTooltip">Fullscreen</span></button>
       <button class="btn-sm" id="music-toggle-connect-mob" onclick="closeConnectOverflow();toggleMusicPanel()"><span style="margin-right:7px">🎵</span><span data-i18n="musicPanelTitle">Music player</span></button>
-      <button class="btn-sm" id="adv-opts-connect-mob" onclick="closeConnectOverflow();openAdvancedOptions()"><span style="margin-right:7px">⚙️</span><span data-i18n="advTitle">Advanced options</span></button>
+      <button class="btn-sm" id="adv-opts-connect-mob" onclick="closeConnectOverflow();toggleAdvancedOptions()"><span style="margin-right:7px">⚙️</span><span data-i18n="advTitle">Advanced options</span></button>
       <button class="btn-sm" onclick="location.reload()"><span style="margin-right:5px">↺</span><span data-i18n="refreshTooltip">Refresh</span></button>
     </div></span>
     </div>
@@ -1478,12 +1478,12 @@ function onAvatarImageChosen(input) {
     </div>
     <button class="btn-sm btn-icon" id="fs-btn-lobby" onclick="toggleFullscreen()" title="Fullscreen" data-i18n-title="fullscreenTooltip">⛶</button>
     <button class="btn-sm btn-icon" id="lobby-chat-btn" onclick="toggleLobbyChat()" title="Chat" data-i18n-title="chatTooltip"><svg viewBox="0 0 24 24" style="display:block;width:22px;height:22px" fill="currentColor" aria-hidden="true"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg></button>
-    <button class="btn-sm btn-icon" id="ranking-btn-lobby" onclick="openRankingModal()" title="Ranking" data-i18n-title="rankingTooltip" aria-label="Ranking" style="display:none"><svg class="rk-trophy" viewBox="0 0 24 24" style="display:block;width:22px;height:22px" fill="#E3C800" aria-hidden="true"><path d="M19 5h-2V3H7v2H5C3.9 5 3 5.9 3 7v1c0 2.55 1.92 4.63 4.39 4.94.63 1.5 1.98 2.63 3.61 2.96V19H7v2h10v-2h-4v-3.1c1.63-.33 2.98-1.46 3.61-2.96C19.08 12.63 21 10.55 21 8V7c0-1.1-.9-2-2-2zM5 8V7h2v3.82C5.84 10.4 5 9.3 5 8zm14 0c0 1.3-.84 2.4-2 2.82V7h2v1z"/></svg></button>
+    <button class="btn-sm btn-icon" id="ranking-btn-lobby" onclick="toggleRankingModal()" title="Ranking" data-i18n-title="rankingTooltip" aria-label="Ranking" style="display:none"><svg class="rk-trophy" viewBox="0 0 24 24" style="display:block;width:22px;height:22px" fill="currentColor" aria-hidden="true"><path d="M19 5h-2V3H7v2H5C3.9 5 3 5.9 3 7v1c0 2.55 1.92 4.63 4.39 4.94.63 1.5 1.98 2.63 3.61 2.96V19H7v2h10v-2h-4v-3.1c1.63-.33 2.98-1.46 3.61-2.96C19.08 12.63 21 10.55 21 8V7c0-1.1-.9-2-2-2zM5 8V7h2v3.82C5.84 10.4 5 9.3 5 8zm14 0c0 1.3-.84 2.4-2 2.82V7h2v1z"/></svg></button>
     <span class="hdr-ovf-wrap"><button class="btn-sm btn-icon" id="l-overflow-btn" onclick="toggleLobbyOverflow(event)" title="Plus" data-i18n-title="moreTooltip"><svg viewBox="0 0 24 24" style="display:block;width:22px;height:22px" fill="currentColor" aria-hidden="true"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58a.49.49 0 0 0 .12-.61l-1.92-3.32a.488.488 0 0 0-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54a.484.484 0 0 0-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58a.49.49 0 0 0-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg></button>
     <div id="l-overflow-menu">
       <button class="btn-sm" onclick="toggleFullscreen();closeLobbyOverflow()"><span style="margin-right:7px">⛶</span><span data-i18n="fullscreenTooltip">Fullscreen</span></button>
       <button class="btn-sm" id="music-toggle-lobby-mob" onclick="closeLobbyOverflow();toggleMusicPanel()"><span style="margin-right:7px">🎵</span><span data-i18n="musicPanelTitle">Music player</span></button>
-      <button class="btn-sm" id="adv-opts-lobby-mob" onclick="closeLobbyOverflow();openAdvancedOptions()"><span style="margin-right:7px">⚙️</span><span data-i18n="advTitle">Advanced options</span></button>
+      <button class="btn-sm" id="adv-opts-lobby-mob" onclick="closeLobbyOverflow();toggleAdvancedOptions()"><span style="margin-right:7px">⚙️</span><span data-i18n="advTitle">Advanced options</span></button>
     </div></span>
   </div>
 
@@ -1800,12 +1800,12 @@ function onAvatarImageChosen(input) {
     <button class="btn-sm btn-icon cp-back" type="button" onclick="App.closeCreatePage()" title="Retour" data-i18n-title="navBack" aria-label="Retour"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor" style="vertical-align:middle" aria-hidden="true"><path d="M12 3c-1.11 0-2 .89-2 2H3v14H2v2h20v-2h-1V5c0-1.11-.89-2-2-2zm0 2h7v14h-7zm-7 6h2v2H5z"/></svg></button>
     <span class="cp-title" data-i18n="createTableHdr">Créer une partie</span>
     <span class="cp-head-spacer" aria-hidden="true"></span>
-    <button class="btn-sm btn-icon" id="ranking-btn-create" onclick="openRankingModal()" title="Ranking" data-i18n-title="rankingTooltip" aria-label="Ranking"><svg class="rk-trophy" viewBox="0 0 24 24" style="display:block;width:22px;height:22px" fill="#E3C800" aria-hidden="true"><path d="M19 5h-2V3H7v2H5C3.9 5 3 5.9 3 7v1c0 2.55 1.92 4.63 4.39 4.94.63 1.5 1.98 2.63 3.61 2.96V19H7v2h10v-2h-4v-3.1c1.63-.33 2.98-1.46 3.61-2.96C19.08 12.63 21 10.55 21 8V7c0-1.1-.9-2-2-2zM5 8V7h2v3.82C5.84 10.4 5 9.3 5 8zm14 0c0 1.3-.84 2.4-2 2.82V7h2v1z"/></svg></button>
+    <button class="btn-sm btn-icon" id="ranking-btn-create" onclick="toggleRankingModal()" title="Ranking" data-i18n-title="rankingTooltip" aria-label="Ranking"><svg class="rk-trophy" viewBox="0 0 24 24" style="display:block;width:22px;height:22px" fill="currentColor" aria-hidden="true"><path d="M19 5h-2V3H7v2H5C3.9 5 3 5.9 3 7v1c0 2.55 1.92 4.63 4.39 4.94.63 1.5 1.98 2.63 3.61 2.96V19H7v2h10v-2h-4v-3.1c1.63-.33 2.98-1.46 3.61-2.96C19.08 12.63 21 10.55 21 8V7c0-1.1-.9-2-2-2zM5 8V7h2v3.82C5.84 10.4 5 9.3 5 8zm14 0c0 1.3-.84 2.4-2 2.82V7h2v1z"/></svg></button>
     <span class="hdr-ovf-wrap"><button class="btn-sm btn-icon" id="cr-overflow-btn" onclick="toggleCreateOverflow(event)" title="Plus" data-i18n-title="moreTooltip"><svg viewBox="0 0 24 24" style="display:block;width:22px;height:22px" fill="currentColor" aria-hidden="true"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58a.49.49 0 0 0 .12-.61l-1.92-3.32a.488.488 0 0 0-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54a.484.484 0 0 0-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58a.49.49 0 0 0-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg></button>
     <div id="cr-overflow-menu">
       <button class="btn-sm" onclick="toggleFullscreen();closeCreateOverflow()"><span style="margin-right:7px">⛶</span><span data-i18n="fullscreenTooltip">Fullscreen</span></button>
       <button class="btn-sm" id="music-toggle-create-mob" onclick="closeCreateOverflow();toggleMusicPanel()"><span style="margin-right:7px">🎵</span><span data-i18n="musicPanelTitle">Music player</span></button>
-      <button class="btn-sm" id="adv-opts-create-mob" onclick="closeCreateOverflow();openAdvancedOptions()"><span style="margin-right:7px">⚙️</span><span data-i18n="advTitle">Advanced options</span></button>
+      <button class="btn-sm" id="adv-opts-create-mob" onclick="closeCreateOverflow();toggleAdvancedOptions()"><span style="margin-right:7px">⚙️</span><span data-i18n="advTitle">Advanced options</span></button>
     </div></span>
   </div>
   <div class="cp-scroll">
@@ -1820,8 +1820,8 @@ function onAvatarImageChosen(input) {
     <div class="header-pills"></div>
     <button class="btn-sm btn-icon" id="fs-btn-game" onclick="toggleFullscreen()" title="Fullscreen" data-i18n-title="fullscreenTooltip">⛶</button>
     <button class="btn-sm btn-icon" id="sound-toggle-btn" onclick="toggleSoundPopover(this)" title="Couper/Unmute" data-i18n-title="soundTooltip"><svg viewBox="0 0 24 24" style="display:block;width:22px;height:22px" fill="currentColor" aria-hidden="true"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg></button>
-    <button class="btn-sm btn-icon" id="ranking-btn-game" onclick="openRankingModal()" title="Ranking" data-i18n-title="rankingTooltip" aria-label="Ranking" style="display:none"><svg class="rk-trophy" viewBox="0 0 24 24" style="display:block;width:22px;height:22px" fill="#E3C800" aria-hidden="true"><path d="M19 5h-2V3H7v2H5C3.9 5 3 5.9 3 7v1c0 2.55 1.92 4.63 4.39 4.94.63 1.5 1.98 2.63 3.61 2.96V19H7v2h10v-2h-4v-3.1c1.63-.33 2.98-1.46 3.61-2.96C19.08 12.63 21 10.55 21 8V7c0-1.1-.9-2-2-2zM5 8V7h2v3.82C5.84 10.4 5 9.3 5 8zm14 0c0 1.3-.84 2.4-2 2.82V7h2v1z"/></svg></button>
-    <button class="btn-sm btn-icon" id="tableranking-btn-game" onclick="openTableRanking()" title="Table ranking" data-i18n-title="tableRankTooltip" aria-label="Table ranking" style="display:none"><svg viewBox="0 0 24 24" style="display:block;width:22px;height:22px" fill="currentColor" aria-hidden="true"><path d="M9 3h6v18H9V3zm2 2v14h2V5h-2zM2 11h5v10H2V11zm2 2v6h1v-6H4zm13 -2h5v10h-5V11zm2 2v6h1v-6h-1z"/></svg></button>
+    <button class="btn-sm btn-icon" id="ranking-btn-game" onclick="toggleRankingModal()" title="Ranking" data-i18n-title="rankingTooltip" aria-label="Ranking" style="display:none"><svg class="rk-trophy" viewBox="0 0 24 24" style="display:block;width:22px;height:22px" fill="currentColor" aria-hidden="true"><path d="M19 5h-2V3H7v2H5C3.9 5 3 5.9 3 7v1c0 2.55 1.92 4.63 4.39 4.94.63 1.5 1.98 2.63 3.61 2.96V19H7v2h10v-2h-4v-3.1c1.63-.33 2.98-1.46 3.61-2.96C19.08 12.63 21 10.55 21 8V7c0-1.1-.9-2-2-2zM5 8V7h2v3.82C5.84 10.4 5 9.3 5 8zm14 0c0 1.3-.84 2.4-2 2.82V7h2v1z"/></svg></button>
+    <button class="btn-sm btn-icon" id="tableranking-btn-game" onclick="toggleTableRanking()" title="Table ranking" data-i18n-title="tableRankTooltip" aria-label="Table ranking" style="display:none"><svg viewBox="0 0 24 24" style="display:block;width:22px;height:22px" fill="currentColor" aria-hidden="true"><path d="M9 3h6v18H9V3zm2 2v14h2V5h-2zM2 11h5v10H2V11zm2 2v6h1v-6H4zm13 -2h5v10h-5V11zm2 2v6h1v-6h-1z"/></svg></button>
     <button class="btn-sm btn-icon" id="haptic-toggle-btn" onclick="toggleHaptic()" title="Vibration" data-i18n-title="hapticLabel" aria-label="Vibration">📳</button>
     <button class="btn-sm btn-icon" id="voice-toggle-btn" onclick="toggleVoice()" title="Annonce vocale" data-i18n-title="voiceLabel" aria-label="Annonce vocale">🤐</button>
     <button class="btn-sm" id="admin-startnobots-btn" onclick="App.startNoBots()" style="display:none;color:var(--green);border-color:rgba(var(--green-rgb),0.4)" title="Start without bots (humans only)" data-i18n-title="wpStartHumansTip"><span data-i18n="startNoBots">▶ Start (no bots)</span></button>
@@ -1835,7 +1835,7 @@ function onAvatarImageChosen(input) {
       <div class="menu-sep"></div>
       <!-- Réglages -->
       <button class="btn-sm" id="music-toggle-game-mob" onclick="closeHeaderOverflow();toggleMusicPanel()"><span style="margin-right:7px">🎵</span><span data-i18n="musicPanelTitle">Music player</span></button>
-      <button class="btn-sm" id="adv-opts-mob" onclick="closeHeaderOverflow();openAdvancedOptions()"><span style="margin-right:7px">⚙️</span><span data-i18n="advTitle">Advanced options</span></button>
+      <button class="btn-sm" id="adv-opts-mob" onclick="closeHeaderOverflow();toggleAdvancedOptions()"><span style="margin-right:7px">⚙️</span><span data-i18n="advTitle">Advanced options</span></button>
       <!-- Admin (séparateur + boutons révélés ensemble) -->
       <div class="menu-sep menu-sep-admin" id="admin-sep-mob" style="display:none"><span data-i18n="menuAdmin">Admin</span></div>
       <button class="btn-sm" id="admin-close-mob" onclick="App.closeTable();closeHeaderOverflow()" style="display:none"><span style="margin-right:7px">🔒</span><span data-i18n="closeTableTooltip">Close table</span></button>
@@ -2119,7 +2119,7 @@ function onAvatarImageChosen(input) {
     <span class="hdr-ovf-wrap"><button class="btn-sm btn-icon" id="pv-overflow-btn" onclick="window.togglePrivacyOverflow(event)" title="Plus" data-i18n-title="moreTooltip"><svg viewBox="0 0 24 24" style="display:block;width:22px;height:22px" fill="currentColor" aria-hidden="true"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58a.49.49 0 0 0 .12-.61l-1.92-3.32a.488.488 0 0 0-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54a.484.484 0 0 0-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58a.49.49 0 0 0-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg></button>
     <div id="pv-overflow-menu">
       <button class="btn-sm" onclick="toggleFullscreen();window.closePrivacyOverflow()"><span style="margin-right:7px">⛶</span><span data-i18n="fullscreenTooltip">Fullscreen</span></button>
-      <button class="btn-sm" onclick="window.closePrivacyOverflow();openAdvancedOptions()"><span style="margin-right:7px">⚙️</span><span data-i18n="advTitle">Advanced options</span></button>
+      <button class="btn-sm" onclick="window.closePrivacyOverflow();toggleAdvancedOptions()"><span style="margin-right:7px">⚙️</span><span data-i18n="advTitle">Advanced options</span></button>
     </div></span>
   </div>
   <div class="pv-scroll">
@@ -3309,6 +3309,14 @@ if ('serviceWorker' in navigator) {
     if (_off) _rkDef = 'ach';
     rankingSelect(_rkDef);
   };
+  // Re-clic sur le bouton declencheur = fermer (parite des autres boutons a
+  // fenetre : chat, journal, reactions, menus...). openRankingModal reste
+  // l'entree "ouvrir" utilisee par le badge Trophees et les liens internes.
+  window.toggleRankingModal = function () {
+    var m = $('ranking-modal');
+    if (m && m.style.display && m.style.display !== 'none') { window.closeRankingModal(); return; }
+    window.openRankingModal();
+  };
   window.closeRankingModal = function () {
     var m = $('ranking-modal'); if (!m) return;
     var card = m.querySelector('.rk-card');
@@ -3607,6 +3615,11 @@ if ('serviceWorker' in navigator) {
     }
     var def = 'pth'; try { def = localStorage.getItem('pth_rank_src') || 'pth'; } catch (e) {}
     window.trSelect(def);
+  };
+  window.toggleTableRanking = function () {
+    var m = $('tableranking-modal');
+    if (m && m.style.display && m.style.display !== 'none') { window.closeTableRanking(); return; }
+    window.openTableRanking();
   };
   window.closeTableRanking = function () {
     var m = $('tableranking-modal'); if (!m) return;

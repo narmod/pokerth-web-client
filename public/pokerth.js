@@ -436,6 +436,12 @@ function closeAdvancedOptions() {
   window._rebindAction = null;
 }
 window.closeAdvancedOptions = closeAdvancedOptions;
+// Re-clic sur l'entree du menu = fermer (parite des autres boutons a fenetre).
+window.toggleAdvancedOptions = function () {
+  var m = document.getElementById('adv-modal');
+  if (m && m.style.display && m.style.display !== 'none') { closeAdvancedOptions(); return; }
+  openAdvancedOptions();
+};
 // Options avancées : navigation par catégories (parité du dialogue officiel
 // PokerTH QML). Sidebar icône+texte en tablette/desktop ; barre d'icônes seules
 // en haut sur téléphone (géré en CSS). Les catégories hors « Interface » relient
@@ -7877,7 +7883,7 @@ function toggleHandsHelp() {
 // ── État « fenêtre ouverte » : le bouton déclencheur passe en or ────────
 // Convention unique de toute l'application : un bouton qui a ouvert une
 // fenêtre, un panneau ou un menu reste en or tant que celle-ci est visible.
-// Rendu : .win-open / .win-open-ring / body.adv-no-winopen (pokerth.css).
+// Rendu : .win-open / body.adv-no-winopen (pokerth.css).
 // Le registre est DÉCLARATIF et aucun toggle existant n'est modifié : un
 // MutationObserver par fenêtre resynchronise les boutons, ce qui couvre
 // aussi les fermetures indirectes (clic hors menu, Escape, back-guard).
@@ -7904,11 +7910,12 @@ var _WIN_BTN = [
   { win: 'pv-overflow-menu',      mode: 'open',    btns: ['pv-overflow-btn'] },
   { win: 'cl-links-connect',      mode: 'details', sel: ['#cl-links-connect > summary'] }
 ];
-// 🏆 : son SVG est déjà or au repos (fill #E3C800) -> anneau plutôt qu'aplat.
+// 🏆 Classement : traite exactement comme les autres boutons d'en-tete
+// (.rk-trophy suit currentColor -> neutre au repos, or quand la fenetre est
+// ouverte). Plus de variante anneau (demande narmod 23/07).
 window._winBtn = function (btn, open) {
   if (!btn || !btn.classList) return;
-  var ring = !!(btn.querySelector && btn.querySelector('.rk-trophy'));
-  btn.classList.toggle(ring ? 'win-open-ring' : 'win-open', !!open);
+  btn.classList.toggle('win-open', !!open);
 };
 function _winBtnEls(e) {
   var out = [], i;
@@ -9079,7 +9086,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.4-web.26'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.4-web.27'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

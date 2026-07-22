@@ -7533,8 +7533,6 @@ body.has-keyboard .act-key { display: inline-block; }
                            les systèmes où l'icône neutre se voit mal)
      · .g-felt-btn/.zoom-btn.win-open  boutons ronds du feutre → aplat or,
                            même rendu que .active (💬 📋 😊 harmonisés)
-     · .win-open-ring      🏆 Classement, dont le SVG est déjà or au repos
-                           → anneau + halo or au lieu d'un aplat
    Désactivable : Options avancées → body.adv-no-winopen. */
 .win-open { color: var(--sel, var(--gold, #E3C800)) !important; }
 .g-felt-btn.win-open,
@@ -7543,13 +7541,7 @@ body.has-keyboard .act-key { display: inline-block; }
   border-color: var(--sel, var(--gold, #E3C800)) !important;
   color: #1a1205 !important;
 }
-.win-open-ring {
-  box-shadow: 0 0 0 2px var(--sel, var(--gold, #E3C800)),
-              0 0 10px rgba(var(--gold-rgb, 227,200,0), 0.45) !important;
-  border-radius: 8px;
-}
-body.adv-no-winopen .win-open,
-body.adv-no-winopen .win-open-ring {
+body.adv-no-winopen .win-open {
   color: inherit !important; background: none !important;
   border-color: transparent !important; box-shadow: none !important;
 }
@@ -9765,8 +9757,9 @@ html[data-seat-struct="qml"] .seat:not(.me) .seat-narrow .seat-holecards .pk { w
 }
 
 /* Trophée classement : or vif en thème sombre, or foncé en thème clair (lisibilité). */
-.rk-trophy{fill:#E3C800}
-:root[data-theme$="light"] .rk-trophy{fill:#b8860b}
+/* Le trophee suit la couleur de l'icone du bouton (neutre au repos, or sous
+   .win-open) — meme traitement que les autres icones d'en-tete. */
+.rk-trophy{fill:currentColor}
 
 /* ── Succès / Achievements — onglet « Trophées » du ranking modal (mode entraînement) ── */
 #rk-ach-wrap { display: flex; flex-direction: column; gap: 6px; padding: 4px 2px 2px; }
