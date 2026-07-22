@@ -5483,15 +5483,20 @@ html[data-table="pokerth-live"] .raise-slider { accent-color: #4CAF50; }
 #g-spec-badge {
   display: none;               /* activé par JS via .on quand _amSpectator */
   align-items: center;
-  height: 18px;                /* hauteur partagée avec .blinds-next */
+  /* Modele generique --comm-scale (comme .blinds-next / .conn-pill /
+     .win-hand-badge) : le badge est COLLE au badge des blindes dans .gsb-mid,
+     il doit donc grandir avec lui. Valeurs strictement identiques a
+     .blinds-next, sinon les deux pastilles voisines divergent des que
+     --comm-scale quitte 1 (desktop = 1.35). */
+  height: clamp(18px, calc(19px * var(--comm-scale, 1)), 28px);
   box-sizing: border-box;
-  padding: 0 9px;
+  padding: 0 clamp(8px, calc(9px * var(--comm-scale, 1)), 14px);
   margin-right: 8px;
   border-radius: var(--r-pill);
   border: 1px solid var(--sel, #E3C800);
   background: rgba(var(--sel-rgb, 227,200,0), 0.22);
   color: var(--sel, #E3C800);
-  font-size: clamp(0.54rem, 1.3vw, 0.66rem);
+  font-size: clamp(10px, calc(11px * var(--comm-scale, 1)), 16px);
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -5505,7 +5510,7 @@ html[data-table="pokerth-live"] .raise-slider { accent-color: #4CAF50; }
   gap: 3px;
   margin-right: 8px;
   color: #eff1f5;
-  font-size: clamp(0.58rem, 1.4vw, 0.72rem);
+  font-size: clamp(10px, calc(11px * var(--comm-scale, 1)), 16px);
   font-weight: 700;
   flex-shrink: 0;
   cursor: default;
