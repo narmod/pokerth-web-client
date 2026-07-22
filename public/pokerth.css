@@ -5871,10 +5871,11 @@ html[data-table="pokerth-live"] .raise-slider { accent-color: #4CAF50; }
   background:rgba(255,255,255,0.07);
   border-color:transparent;
 }
-/* Couleurs des icônes (Option B) : ☰ + trophée dorés, install vert,
-   engrenage acier. Les SVG utilisent currentColor -> on colore le bouton. */
+/* Couleurs des icônes : neutres au repos (le trophée aussi — narmod 23/07,
+   il ne passe en or doré que fenêtre ouverte, cf. .win-open), install vert.
+   Les SVG utilisent currentColor -> on colore le bouton. */
 #s-connect .connect-header #cl-links-connect > summary{ color:var(--text-hi); }
-#s-connect .connect-header #ranking-btn-connect{ color:#E3C800; }
+#s-connect .connect-header #ranking-btn-connect{ color:var(--text-hi); }
 #s-connect .connect-header #install-btn{ color:#3ba55d; }
 #s-connect .connect-header #connect-overflow-btn{ color:var(--text-hi); }
 
@@ -5924,15 +5925,15 @@ html[data-table="pokerth-live"] .raise-slider { accent-color: #4CAF50; }
   border-color:transparent;
   box-shadow:none;
 }
-#s-lobby .header #ranking-btn-lobby{ color:#E3C800; }
-/* Page « Créer une partie » : flèche retour + roue crantée neutres, globe or. */
+#s-lobby .header #ranking-btn-lobby{ color:var(--text-hi); }
+/* Page « Créer une partie » : flèche retour + roue crantée neutres. */
 #s-create .cp-header #cr-overflow-btn{ color:var(--text-hi); }
 #privacy-page .cp-header #pv-overflow-btn{ color:var(--text-hi); }
-#s-create .cp-header #ranking-btn-create{ color:#E3C800; }
+#s-create .cp-header #ranking-btn-create{ color:var(--text-hi); }
 #s-lobby .header #lobby-chat-btn{ color:var(--text-hi); }
 #s-lobby .header #l-overflow-btn{ color:var(--text-hi); }
 #s-game .header #sound-toggle-btn{ color:var(--text-hi); }
-#s-game .header #ranking-btn-game{ color:#E3C800; }
+#s-game .header #ranking-btn-game{ color:var(--text-hi); }
 #s-game .header #g-overflow-btn{ color:var(--text-hi); }
 
 /* Mode clair : les icônes acier #c3ccda deviennent quasi invisibles sur la
@@ -5942,9 +5943,15 @@ html[data-table="pokerth-live"] .raise-slider { accent-color: #4CAF50; }
 :root[data-theme="pokerth-light"] #s-lobby .header #lobby-chat-btn,
 :root[data-theme="pokerth-light"] #s-lobby .header #l-overflow-btn,
 :root[data-theme="pokerth-light"] #s-game .header #sound-toggle-btn,
-:root[data-theme="pokerth-light"] #s-game .header #g-overflow-btn{
+:root[data-theme="pokerth-light"] #s-game .header #g-overflow-btn,
+:root[data-theme="pokerth-light"] #s-connect .connect-header #ranking-btn-connect,
+:root[data-theme="pokerth-light"] #s-lobby .header #ranking-btn-lobby,
+:root[data-theme="pokerth-light"] #s-create .cp-header #ranking-btn-create,
+:root[data-theme="pokerth-light"] #s-game .header #ranking-btn-game{
   color:#1d222b;
 }
+/* ... sauf quand leur fenêtre est ouverte : l'or doré reprend la main. */
+:root[data-theme="pokerth-light"] .btn-icon.win-open{ color:var(--sel, #9a7d0a) !important; }
 #s-connect .corner-links .btn-icon img{ display:block; width:18px; height:18px; }
 
 /* ═══════════════════════════════════════════════════════════════════
