@@ -2681,28 +2681,39 @@ document.addEventListener("DOMContentLoaded", function() {
     //           them on every (re)connect, so the proxy auto-follows the host and can
     //           never go stale — the client always reconnects to this server.
     // A share link still wins; we re-derive the connect UI once at the end.
+    // Politique d'instance sur le champ proxy, RÉÉVALUÉE à chaque changement de
+    // mode : elle ne vaut qu'en LAN / serveur dédié. En Internet (pokerth.net)
+    // et en entraînement, le proxy n'est pas un choix d'infra locale — on ne
+    // force rien et on ne masque rien (demande narmod 22/07).
+    //   url  : adresse imposée, champ verrouillé (vide = auto-détection) ;
+    //   hide : champ + libellé (#f-proxy) masqués.
+    window._applyProxyPolicy = function () {
+      var pol = window._pthProxyPolicy || {};
+      var sm = document.getElementById('server-mode');
+      var isLan = !!(sm && sm.value === 'lan-dedi');
+      var px = document.getElementById('proxy');
+      if (px) {
+        if (isLan && pol.url) {
+          if (px.value !== pol.url) px.value = pol.url;
+          px.readOnly = true;
+          px.dataset.forced = '1';
+        } else if (px.dataset && px.dataset.forced === '1') {
+          px.readOnly = false;
+          delete px.dataset.forced;
+        }
+      }
+      var fp = document.getElementById('f-proxy');
+      if (fp) fp.style.display = (isLan && pol.hide) ? 'none' : '';
+    };
+
     function _applyLoginDefaults(login) {
       if (!login || typeof login !== 'object') return;
-      // Réglages d'INSTANCE sur le champ « URL du proxy WebSocket » : ils
+      // Réglages d'INSTANCE sur le champ « URL du proxy WebSocket ». Ils
       // s'appliquent même via un lien de partage, car ils décrivent l'infra du
-      // serveur qui sert la page (et non le choix du joueur).
-      // - proxyUrl : adresse imposée à tous les clients (champ verrouillé) ;
-      // - hideProxy : champ + libellé masqués (#f-proxy).
-      if (login.proxyUrl) {
-        try {
-          var _px = document.getElementById('proxy');
-          if (_px) {
-            _px.value = login.proxyUrl;
-            _px.readOnly = true;
-            _px.dataset.forced = '1';
-            try { localStorage.setItem('pth_proxy', login.proxyUrl); } catch (e) {}
-          }
-        } catch (e) {}
-      }
-      try {
-        var _fp = document.getElementById('f-proxy');
-        if (_fp) _fp.style.display = login.hideProxy ? 'none' : '';
-      } catch (e) {}
+      // serveur qui sert la page (et non le choix du joueur) — mais UNIQUEMENT
+      // en mode LAN / serveur dédié (voir _applyProxyPolicy).
+      window._pthProxyPolicy = { url: login.proxyUrl || '', hide: !!login.hideProxy };
+      try { window._applyProxyPolicy(); } catch (e) {}
       if (window._shareLinkActive) return;
       if (login.host) { try { var _hi = document.getElementById('host'); if (_hi) _hi.dataset.autoHost = login.host; } catch (e) {} }
       // Default entry mode: pre-select it on a first visit only if it's an enabled option.
@@ -4204,6 +4215,8 @@ const App = (() => {
         if (gearBtn) { gearBtn.style.display = 'none'; gearBtn.classList.remove('open'); gearBtn.setAttribute('aria-expanded', 'false'); }
         if (advBlock) advBlock.style.display = 'none';
       }
+      // Politique d'instance sur le champ proxy : ne vaut qu'en LAN / dédié.
+      try { if (typeof window._applyProxyPolicy === 'function') window._applyProxyPolicy(); } catch (e) {}
 
       // Case « Mode invité » : en Internet (guest/auth) elle reste toujours
       // visible (c'est le sélecteur invité/compte). En LAN / dédié c'est une
@@ -8957,7 +8970,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.4-web.20'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.4-web.21'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
