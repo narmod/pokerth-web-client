@@ -1004,7 +1004,15 @@ function renderSeatsImmediate() {
       // barre QML affleurante). Une self placée à la main (custom) garde la
       // simple garde anti-débordement QML à 4 px. La réserve interne des
       // bisections reste à -4 (identique au QML), comme en paysage.
-      var _fm2 = _selfHasCustom ? 4 : 24;
+      // AJUSTEMENT WEB (narmod 22/07) — PAYSAGE MOBILE UNIQUEMENT (fenetre
+      // paysage ET hauteur < 600, = landscapeCompact mobile bible §2) : la
+      // zone de table est minuscule et le panneau d'action flotte juste
+      // dessous ; les 24 px laissaient un trou visible entre la self-box et
+      // la barre d'action. On descend a 8 px DANS CETTE VUE SEULEMENT.
+      // Portrait, tablette, desktop et self custom gardent 24 / 4 a l'identique.
+      var _lsCompactSelf = (typeof window !== 'undefined')
+        && window.innerWidth > window.innerHeight && window.innerHeight < 600;
+      var _fm2 = _selfHasCustom ? 4 : (_lsCompactSelf ? 8 : 24);
       var _floor2 = zone.clientHeight - _fm2 - _bh2 / 2;
       // Portrait : la self est ANCRÉE bas-centre comme le QML (pas seulement
       // une garde anti-débordement) — pour TOUS les styles de sièges, plus
