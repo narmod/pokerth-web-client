@@ -938,7 +938,10 @@ var _CFG_WEB_SYNC_KEYS = [
   // Valeurs (thème web, sièges, clavier, langue, divers)
   'pth_theme', 'pth_buttons', 'pth_pucks', 'pth_seat', 'pth_seat_layout',
   'pth_seat_custom', 'pth_keys', 'pth_lang', 'pth_offline_skill',
-  'pth_log_interval', 'pth_avatar', 'pth_ignored', 'pth_prefs_lan'
+  'pth_log_interval', 'pth_avatar', 'pth_ignored', 'pth_prefs_lan',
+  // Web-only sans equivalent config.xml : elles appelaient _cfgSyncMark() mais
+  // n'etaient collectees par aucun canal (donc jamais synchronisees).
+  'pth_conn_pill', 'pth_stats_track'
 ];
 // Succès (mode entraînement) : mêmes transport et compte que les réglages, mais
 // réconciliation par FUSION et non par écrasement — la progression est cumulative,
@@ -8685,7 +8688,7 @@ window.togglePlayersPanel = togglePlayersPanel;
 window.toggleReactionPanel = toggleReactionPanel;
 window.App = App;
 
-window.BUILD_VERSION='0.3.1009-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='0.3.1010-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
