@@ -95,7 +95,7 @@ setInterval(_pingTick, 15000);
 setTimeout(_pingTick, 3000);
 
 // [Phase 2] Animations de jeu (updatePotSize, animateDealerMove, animateAllIn,
-// fadeOutAllActions, animateShowdownCards, thinkingHtml, burstStars, animatePot,
+// fadeOutAllActions, animateShowdownCards, burstStars, animatePot,
 // setMyTurnActive) déplacées dans public/modules/ui/anim.mjs (toujours
 // globales via window.*).
 // Réglages persistés en localStorage (pth_*). Les bascules « présentation »
@@ -3794,6 +3794,10 @@ const App = (() => {
     try { var _mzL = document.querySelector('.my-zone'); _liveTurn = !!(_mzL && _mzL.classList.contains('my-turn-active')); } catch (e) {}
     var _pinShow = !S._amSpectator && S._gameStarted; // barre toujours affichée (mode masqué permanent)
     if ((S._preActionOpen || _pinShow) && !(S.turnPid === S.myId && _liveTurn)) { _renderPreActionPanel(); updateBottomLayout(); return; }
+    // Message vide = narrateur de tour retiré (fidélité QML : l'officiel
+    // n'affiche aucun texte, le tour est signalé par la surbrillance du
+    // siège). On vide #g-actions au lieu d'y laisser un bloc creux.
+    if (!msg) { $('g-actions').innerHTML = ''; updateBottomLayout(); return; }
     // isHtml=true : msg contient du HTML interne sûr (généré par notre code)
     $('g-actions').innerHTML = '<div class="waiting-msg">' + (isHtml ? msg : esc(msg)) + '</div>';
     updateBottomLayout();
@@ -8970,7 +8974,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.4-web.23'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.4-web.24'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

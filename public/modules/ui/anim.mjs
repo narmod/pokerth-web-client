@@ -184,12 +184,6 @@ function animateShowdownCards() {
   });
 }
 
-// Thinking dots (remplace le texte "réfléchit")
-function thinkingHtml(name) {
-  return name + '<span class="thinking-dots"><span></span><span></span><span></span></span>';
-}
-
-
 // Explosion d'étoiles sur victoire
 function burstStars(x, y, count) {
   count = count || 12;
@@ -279,7 +273,7 @@ function flashActionLabel(pid) {
 export {
   launchConfetti, animateTableEnter, setUrgentMode, animatePlayerEliminated,
   updatePotSize, animateDealerMove, animateAllIn, fadeOutAllActions,
-  animateShowdownCards, thinkingHtml, burstStars, animatePot, setMyTurnActive,
+  animateShowdownCards, burstStars, animatePot, setMyTurnActive,
   animateDealMyCards, flashActionLabel,
 };
 if (typeof window !== 'undefined') {
@@ -292,7 +286,6 @@ if (typeof window !== 'undefined') {
   window.animateAllIn = animateAllIn;
   window.fadeOutAllActions = fadeOutAllActions;
   window.animateShowdownCards = animateShowdownCards;
-  window.thinkingHtml = thinkingHtml;
   window.burstStars = burstStars;
   window.animatePot = animatePot;
   window.setMyTurnActive = setMyTurnActive;

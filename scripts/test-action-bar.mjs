@@ -70,7 +70,8 @@ S.turnPid = 2;
 A.renderMyTurnActions(true);
 ok(ga.innerHTML.includes('actions-preview'), 'aperçu : classe actions-preview');
 ok(ga.innerHTML.includes("armPreAction('fold')"), 'aperçu : Fold arme une pré-action');
-ok(ga.innerHTML.includes('act-narrator'), 'aperçu : narrateur de tour (J2 réfléchit)');
+ok(!ga.innerHTML.includes('act-narrator') && !ga.innerHTML.includes('thinking-dots'),
+   'aperçu : aucun narrateur de tour (fidélité QML)');
 
 // Call avec mise à suivre + montant
 S.highestBet = 50;

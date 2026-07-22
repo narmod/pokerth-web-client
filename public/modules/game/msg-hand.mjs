@@ -632,11 +632,11 @@ function onPlayersTurn(sub) {
       window.setMyTurnActive(false);
       // Zoom-follow : planifie le cadrage du siège actif (parité QML §3.4)
       try { if (window._zoomFollowTurn) window._zoomFollowTurn(S.turnPid, S.gameTimeout); } catch (_e) {}
-      // isHtml=true : HTML interne sûr, pas du contenu utilisateur
-      window.renderGameWaiting(
-        '<span style="font-family:inherit">' + esc(window.getPlayerName(S.turnPid)) + '</span>'
-        + '<span class="thinking-dots"><span></span><span></span><span></span></span>',
-        true);
+      // Narrateur de tour retiré (fidélité QML : aucun texte sous la table,
+      // le tour est signalé par la surbrillance du siège). Chaîne vide =>
+      // renderGameWaiting conserve sa logique aperçu/pin côté joueur et
+      // vide simplement #g-actions côté spectateur.
+      window.renderGameWaiting('', true);
     }
     return;
 }

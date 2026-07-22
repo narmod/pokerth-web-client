@@ -75,9 +75,9 @@ M.setMyTurnActive(true);
 M.setMyTurnActive(false);
 ok(true, 'setMyTurnActive on/on/off runs without throwing (idempotence)');
 
-// 4) thinkingHtml retourne un fragment HTML non vide
-const th = M.thinkingHtml();
-ok(typeof th === 'string' && th.length > 0 && th.indexOf('<') !== -1, 'thinkingHtml returns HTML');
+// 4) thinkingHtml retiré (narrateur de tour supprimé — fidélité QML)
+ok(typeof M.thinkingHtml === 'undefined' && typeof globalThis.thinkingHtml === 'undefined',
+   'thinkingHtml removed (no turn narrator)');
 
 // 5) updatePotSize sans DOM du pot: no-op silencieux
 M.updatePotSize(1234);

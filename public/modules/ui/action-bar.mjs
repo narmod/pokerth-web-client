@@ -64,14 +64,10 @@ function _renderPreActionPanel() {
 // Ferme le panneau et restaure le message d'attente du tour courant.
 function _closePreActionPanel() {
   S._preActionOpen = false;
-  if (S.turnPid && S.turnPid !== S.myId && S.seatData[S.turnPid]) {
-    window.renderGameWaiting(
-      '<span style="font-family:inherit">' + esc(window.getPlayerName(S.turnPid)) + '</span>'
-      + '<span class="thinking-dots"><span></span><span></span><span></span></span>', true);
-  } else {
-    document.getElementById('g-actions').innerHTML = '';
-    window.updateBottomLayout();
-  }
+  // Narrateur de tour retiré (fidélité QML) : plus de texte « X ... », on
+  // repasse par renderGameWaiting avec un message vide pour conserver la
+  // logique aperçu/pin côté joueur.
+  window.renderGameWaiting('', true);
 }
 
 // ── Notification + titre dynamique quand c'est mon tour ──
@@ -316,16 +312,9 @@ function renderMyTurnActions(preview) {
     // Aperçu hors-tour : EXACTEMENT le même panneau, mais non interactif
     // (la classe .actions-preview coupe pointer-events sauf sur AUTO).
     // Aucun son, aucune vibration, aucun keepalive serveur.
-    // Mode masqué (player-bar cachée) : le narrateur de tour ("X ●●●"),
-    // normalement affiché À LA PLACE de l'aperçu, est ré-injecté AU-DESSUS
-    // des boutons pour conserver l'info "à qui le tour".
-    var _narr = '';
-    if (S.turnPid && S.turnPid !== S.myId && S.seatData[S.turnPid]) {
-      _narr = '<div class="act-narrator"><span style="font-family:inherit">'
-            + esc(window.getPlayerName(S.turnPid)) + '</span>'
-            + '<span class="thinking-dots"><span></span><span></span><span></span></span></div>';
-    }
-    document.getElementById('g-actions').innerHTML = _narr +
+    // (Narrateur de tour "X ●●●" retiré — fidélité QML : le tour est
+    // signalé uniquement par la surbrillance du siège.)
+    document.getElementById('g-actions').innerHTML =
       '<div class="actions-preview" data-cap="' + esc(t('preActionTitle')) + '">' + h + '</div>';
     window.updateBottomLayout();
     _wireRaiseBtn();
