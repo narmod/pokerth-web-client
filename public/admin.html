@@ -152,6 +152,7 @@
       <button class="tab" data-t="traffic">Traffic</button>
       <button class="tab" data-t="clients">Clients</button>
       <button class="tab" data-t="broadcast" data-scope="broadcast">Broadcasts</button>
+      <button class="tab" data-t="polls" data-scope="polls">Polls</button>
       <button class="tab" data-t="board" data-scope="leaderboard">Leaderboard</button>
       <button class="tab" data-t="packages" data-scope="packages">Packages</button>
       <button class="tab" data-t="music" data-scope="music">Music</button>
@@ -490,6 +491,26 @@
       </div>
     </div>
 
+    <div id="panel-polls" style="display:none">
+      <div class="card">
+        <div class="boardhead" style="margin-bottom:6px"><h2 style="margin:0" id="plFormTitle">New poll</h2><button id="plNew" class="use">+ New poll</button></div>
+        <p class="muted" style="margin:2px 0 10px">Ask the players what to build next. Only clients that opted in (Advanced options &rarr; “Product polls”) see the active poll, as a lobby card, and answer once per device. The counts stay hidden until they have answered, so the figures on screen cannot sway the vote. One poll is live at a time: activating a poll retires the previous one.</p>
+        <div class="periodrow" style="margin-bottom:8px">
+          <label class="muted">Edit language <select id="plLang" class="filter" style="margin:0;flex:none;width:auto"></select></label>
+          <label class="muted">Fallback <select id="plDefault" class="filter" style="margin:0;flex:none;width:auto"></select></label>
+        </div>
+        <div id="plFilled" class="muted" style="margin:0 0 8px;font-size:.8rem"></div>
+        <input id="plQuestion" class="filter" maxlength="300" placeholder="Question in this language…" style="width:100%;margin-bottom:8px">
+        <div id="plOpts"></div>
+        <div class="periodrow" style="margin-top:8px"><button id="plAddOpt" class="use">+ Add option</button><button id="plSave" class="use">Save poll</button></div>
+        <div id="plState" class="msg"></div>
+      </div>
+      <div class="card">
+        <div class="boardhead"><h2 style="margin:0">Polls</h2><button id="plRefresh" class="use">Refresh</button></div>
+        <div id="plList"><div class="empty">Loading…</div></div>
+      </div>
+    </div>
+
     <div id="panel-servers" style="display:none">
       <div class="card">
         <div class="boardhead" style="margin-bottom:6px"><h2 style="margin:0">Game servers</h2><button id="srvAddBtn" class="use">+ Add server</button></div>
@@ -709,12 +730,14 @@
     $('panel-keys').style.display=t==='keys'?'block':'none';
     $('panel-traffic').style.display=t==='traffic'?'block':'none';
     $('panel-servers').style.display=t==='servers'?'block':'none';
+    $('panel-polls').style.display=t==='polls'?'block':'none';
     if(t==='music')mzRefresh();
     if(t==='keys') loadKeys();
     if(t==='board') loadBoard();
     if(t==='packages') api('/admin/pkg-list').then(function(r){return r.json();}).then(function(d){ if(d&&d.ok) renderPkgs(d); }).catch(function(){});
     if(t==='traffic') loadTraffic();
     if(t==='servers') loadServers();
+    if(t==='polls') loadPolls();
     if(t==='broadcast'){ loadBroadcasts(); if(_isMaster) loadWelcome(); }
     if(t==='clients'){ loadStatus(true); loadThemes(); }
     if(t==='server'){ loadServer(); srvStart(); } else { srvStop(); }
@@ -1300,7 +1323,7 @@
   ['bcMsg','bcIcon'].forEach(function(id){ if($(id)){ $(id).addEventListener('input',bcPrevSched); $(id).addEventListener('change',bcPrevSched); } });
   ['bcNowMsg','bcNowIcon'].forEach(function(id){ if($(id)){ $(id).addEventListener('input',bcPrevNow); $(id).addEventListener('change',bcPrevNow); } });
   // -- Delegate keys (master only): create scoped API keys per category --------
-  var _kySC={broadcast:'Broadcasts',music:'Music',packages:'Packages',leaderboard:'Leaderboard'};
+  var _kySC={broadcast:'Broadcasts',music:'Music',packages:'Packages',leaderboard:'Leaderboard',polls:'Polls'};
   function _kyLabel(s){ return _kySC[s]||s; }
   function loadKeys(){
     api('/admin/tokens').then(function(r){return r.json();}).then(function(d){
@@ -1390,6 +1413,126 @@
   if($('wcLang')) $('wcLang').addEventListener('change', function(){ wcCommit(); wcShow($('wcLang').value); });
   ['wcTitle','wcBody'].forEach(function(id){ if($(id)) $(id).addEventListener('input',function(){ wcCommit(); wcPreview(); wcUpdateFilled(); }); });
   if($('wcSave')) $('wcSave').addEventListener('click',saveWelcome);
+
+  // ── Product polls (web-only feature) ────────────────────────────────────
+  // Same multilingual editor shape as the welcome message above: one draft kept
+  // in memory, the visible fields committed into the language being edited
+  // before any language switch, so nothing typed is ever lost.
+  var pollDraft={ id:null, 'default':'fr', question:{}, options:[] };
+  var plEdit='fr';
+  (function(){ var a=$('plLang'), b=$('plDefault'); if(a&&b){ WC_LANGS.forEach(function(c){ var o1=document.createElement('option'); o1.value=c; o1.textContent=c; a.appendChild(o1); var o2=document.createElement('option'); o2.value=c; o2.textContent=c; b.appendChild(o2); }); a.value='fr'; b.value='fr'; } })();
+  // Pick the best available text: the poll's fallback language, then English,
+  // then whatever was authored — an admin list should never render blank.
+  function plText(map,def){ if(!map) return ''; if(map[def]) return map[def]; if(map.en) return map.en; var k=Object.keys(map); return k.length?map[k[0]]:''; }
+  function plFilledLangs(){ var s={}; Object.keys(pollDraft.question).forEach(function(k){s[k]=1;}); pollDraft.options.forEach(function(o){ Object.keys(o.label||{}).forEach(function(k){s[k]=1;}); }); return Object.keys(s); }
+  function plUpdateFilled(){ var el=$('plFilled'); if(!el) return; var f=plFilledLangs(); el.textContent=f.length?('Filled languages: '+f.join(', ')):'No language filled yet.'; }
+  function plCommit(){
+    if(!$('plQuestion')) return;
+    var q=($('plQuestion').value||'').trim();
+    if(q) pollDraft.question[plEdit]=q; else delete pollDraft.question[plEdit];
+    pollDraft.options.forEach(function(o,i){
+      var inp=$('plOpt'+i); if(!inp) return;
+      var v=(inp.value||'').trim(); o.label=o.label||{};
+      if(v) o.label[plEdit]=v; else delete o.label[plEdit];
+    });
+  }
+  function plRenderOpts(){
+    var box=$('plOpts'); if(!box) return; box.innerHTML='';
+    pollDraft.options.forEach(function(o,i){
+      var row=document.createElement('div'); row.className='periodrow'; row.style.cssText='margin-bottom:6px';
+      var inp=document.createElement('input'); inp.className='filter'; inp.id='plOpt'+i; inp.maxLength=120;
+      inp.placeholder='Option '+(i+1); inp.value=(o.label&&o.label[plEdit])||''; inp.style.cssText='margin:0;flex:1;min-width:0';
+      inp.addEventListener('input',function(){ plCommit(); plUpdateFilled(); });
+      row.appendChild(inp);
+      var del=document.createElement('button'); del.className='use danger'; del.textContent='\u00d7'; del.title='Remove this option';
+      del.addEventListener('click',function(){ plCommit(); pollDraft.options.splice(i,1); plRenderOpts(); plUpdateFilled(); });
+      row.appendChild(del); box.appendChild(row);
+    });
+  }
+  // New rows get an id above every existing one: reusing a freed id would hand a
+  // fresh option the ballots cast on the old one.
+  function plNextOptId(){ var n=0; pollDraft.options.forEach(function(o){ var m=/^o(\d+)$/.exec(o.id||''); if(m) n=Math.max(n,+m[1]); }); return 'o'+(n+1); }
+  function plShow(code){ plEdit=code; if($('plLang')) $('plLang').value=code; if($('plQuestion')) $('plQuestion').value=pollDraft.question[code]||''; plRenderOpts(); plUpdateFilled(); }
+  function plResetForm(){
+    pollDraft={ id:null, 'default':($('plDefault')?$('plDefault').value:'fr'), question:{}, options:[{id:'o1',label:{}},{id:'o2',label:{}}] };
+    if($('plFormTitle')) $('plFormTitle').textContent='New poll';
+    plShow(plEdit); bcSay('plState','');
+  }
+  // Editing keeps each option's id, so relabelling or translating a live poll
+  // leaves the ballots already cast intact (the server only clears the tally
+  // when the set of ids actually changes).
+  function plLoadIntoForm(p){
+    pollDraft={ id:p.id, 'default':p['default']||'fr', question:Object.assign({},p.question||{}),
+                options:(p.options||[]).map(function(o){ return { id:o.id, label:Object.assign({},o.label||{}) }; }) };
+    if($('plDefault')) $('plDefault').value=pollDraft['default'];
+    if($('plFormTitle')) $('plFormTitle').textContent='Edit poll';
+    plShow(pollDraft['default']);
+    bcSay('plState','Editing an existing poll \u2014 saving keeps the answers unless you add or remove an option.');
+    if($('panel-polls')) $('panel-polls').scrollIntoView({block:'start'});
+  }
+  function plSavePoll(){
+    plCommit();
+    if(!Object.keys(pollDraft.question).length){ bcSay('plState','Write the question in at least one language.','err'); return; }
+    var opts=pollDraft.options.filter(function(o){ return Object.keys(o.label||{}).length; });
+    if(opts.length<2){ bcSay('plState','Give at least two options a label.','err'); return; }
+    var body={ 'default':$('plDefault').value, question:pollDraft.question, options:opts, token:tok() };
+    if(pollDraft.id) body.id=pollDraft.id;
+    var editing=!!pollDraft.id;
+    bcSay('plState','Saving\u2026');
+    api('/admin/polls',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)})
+      .then(function(r){return r.json();}).then(function(d){
+        if(d&&d.ok){ bcSay('plState',editing?'Saved.':'Created \u2014 activate it below to show it to players.','ok'); plResetForm(); loadPolls(); }
+        else bcSay('plState','Failed: '+((d&&d.error)||'error'),'err');
+      }).catch(function(){ bcSay('plState','Network error.','err'); });
+  }
+  function plPost(path,body){ body=body||{}; body.token=tok();
+    return api(path,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)})
+      .then(function(r){return r.json();}).then(function(d){ loadPolls(); return d; }).catch(function(){}); }
+  function loadPolls(){
+    api('/admin/polls').then(function(r){return r.json();}).then(function(d){
+      var el=$('plList'); if(!el) return; el.innerHTML='';
+      if(!d||!d.ok){ el.innerHTML='<div class="empty err">'+((d&&d.error)||'error')+'</div>'; return; }
+      if(!d.polls||!d.polls.length){ el.innerHTML='<div class="empty">No poll yet.</div>'; return; }
+      d.polls.forEach(function(p){
+        var def=p['default']||'en';
+        var row=document.createElement('div'); row.className='srow'; row.style.cssText='flex-direction:column;align-items:stretch;gap:6px;padding:10px 0';
+        var q=document.createElement('div'); q.style.cssText='font-weight:600'; q.textContent=(p.enabled?'\u25cf ':'')+plText(p.question,def); row.appendChild(q);
+        var meta=document.createElement('div'); meta.className='muted'; meta.style.fontSize='.8rem';
+        meta.textContent=[(p.enabled?'live':'inactive'), p.total+(p.total===1?' answer':' answers'),
+                          Object.keys(p.question||{}).length+' language(s)'].join(' \u00b7 ');
+        row.appendChild(meta);
+        (p.options||[]).forEach(function(o){
+          var c=(p.tally&&p.tally[o.id])||0, pct=p.total?Math.round(c*100/p.total):0;
+          var line=document.createElement('div'); line.style.cssText='display:flex;align-items:center;gap:8px;font-size:.82rem';
+          var lb=document.createElement('span'); lb.style.cssText='flex:0 0 38%;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap';
+          lb.textContent=plText(o.label,def); line.appendChild(lb);
+          var track=document.createElement('span'); track.style.cssText='flex:1;min-width:0;height:8px;border-radius:4px;background:rgba(0,0,0,.28);overflow:hidden';
+          var fill=document.createElement('i'); fill.style.cssText='display:block;height:100%;border-radius:4px;width:'+pct+'%;background:linear-gradient(90deg,#4080d8,#1a3d8b)';
+          track.appendChild(fill); line.appendChild(track);
+          var num=document.createElement('span'); num.className='muted'; num.style.cssText='flex:0 0 72px;text-align:right';
+          num.textContent=c+' ('+pct+'%)'; line.appendChild(num);
+          row.appendChild(line);
+        });
+        var btns=document.createElement('div'); btns.className='btnrow';
+        var ba=document.createElement('button'); ba.className='use'; ba.textContent=p.enabled?'Deactivate':'Activate';
+        ba.addEventListener('click',function(){ plPost('/admin/polls/activate',{id:p.id,enabled:!p.enabled}); }); btns.appendChild(ba);
+        var be=document.createElement('button'); be.className='use'; be.textContent='Edit';
+        be.addEventListener('click',function(){ plLoadIntoForm(p); }); btns.appendChild(be);
+        var br=document.createElement('button'); br.className='use'; br.textContent='Reset answers';
+        br.addEventListener('click',function(){ if(!confirm('Clear every answer for this poll? This cannot be undone.'))return; plPost('/admin/polls/reset',{id:p.id}); }); btns.appendChild(br);
+        var bd=document.createElement('button'); bd.className='use danger'; bd.textContent='Delete';
+        bd.addEventListener('click',function(){ if(!confirm('Delete this poll and its answers?'))return; plPost('/admin/polls/delete',{id:p.id}); }); btns.appendChild(bd);
+        row.appendChild(btns); el.appendChild(row);
+      });
+    }).catch(function(){ var el=$('plList'); if(el) el.innerHTML='<div class="empty err">Could not load.</div>'; });
+  }
+  if($('plLang')) $('plLang').addEventListener('change',function(){ plCommit(); plShow($('plLang').value); });
+  if($('plQuestion')) $('plQuestion').addEventListener('input',function(){ plCommit(); plUpdateFilled(); });
+  if($('plAddOpt')) $('plAddOpt').addEventListener('click',function(){ plCommit(); if(pollDraft.options.length>=10){ bcSay('plState','Ten options is the maximum.','err'); return; } pollDraft.options.push({id:plNextOptId(),label:{}}); plRenderOpts(); });
+  if($('plSave')) $('plSave').addEventListener('click',plSavePoll);
+  if($('plNew')) $('plNew').addEventListener('click',plResetForm);
+  if($('plRefresh')) $('plRefresh').addEventListener('click',loadPolls);
+  plResetForm();
 
   // Collapsible cards: any card whose first child is its <h2> becomes foldable —
   // click (or Enter/Space) the title to fold/unfold. We wrap the body once so the
