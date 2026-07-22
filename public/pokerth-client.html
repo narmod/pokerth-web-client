@@ -2238,6 +2238,7 @@ function onAvatarImageChosen(input) {
 <script type="module" src="modules/ui/deck.mjs"></script>
 <script type="module" src="modules/net/avatar-cache.mjs"></script>
 <script type="module" src="modules/ui/misc.mjs"></script>
+<script type="module" src="modules/ui/keynav.mjs"></script>
 <!-- Quit-game confirmation dialog: 2 buttons (Quit / Cancel).
      Shown when the user clicks the ✕ button in the header from inside
      a game. Driven by App.confirmLeaveGame() (open) and
@@ -2256,7 +2257,7 @@ function onAvatarImageChosen(input) {
       <input id="qc-players" type="number" min="2" max="10" value="10" />
     </div>
     <div class="ld-buttons">
-      <button class="ld-btn ld-create" onclick="App.confirmQuickCreate()" data-i18n="quickCreateBtn">Create</button>
+      <button class="ld-btn ld-create" onclick="App.confirmQuickCreate()" data-kn-primary data-i18n="quickCreateBtn">Create</button>
       <button class="ld-btn ld-cancel" onclick="App.cancelQuickCreate()"  data-i18n="leaveCancel">Cancel</button>
     </div>
   </div>
@@ -2619,6 +2620,7 @@ if ('serviceWorker' in navigator) {
       <div class="adv-row"><span data-i18n="advDefCommunity">Default community</span><div class="sel-wrap adv-sel"><select id="adv-defcommunity" onchange="setDefaultCommunity(this.value)"><option value="pth">PokerTH</option><option value="bbc">BBC</option><option value="wec">WEC</option></select><span class="sel-arr">▾</span></div></div>
       </details>
       <details class="adv-fold"><summary class="adv-sec"><span class="adv-sec-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="18" height="10" rx="2"/><path d="M7 10.5h.01M11 10.5h.01M15 10.5h.01M7 13.5h10"/></svg></span><span data-i18n="advSecKeys">Keyboard shortcuts</span></summary>
+      <label class="adv-row"><input type="checkbox" id="adv-keynav" onchange="setAdvOpt('keynav',this.checked)"><span data-i18n="advKeyNav">Esc closes/cancels, Enter confirms (outside the table)</span></label>
       <div class="adv-keys" id="adv-keys">
         <div class="adv-keyrow" data-act="fold"><span>Fold</span><button type="button" class="kb-btn" onclick="rebindKey('fold')">F</button></div>
         <div class="adv-keyrow" data-act="call"><span>Check / Call</span><button type="button" class="kb-btn" onclick="rebindKey('call')">C</button></div>
