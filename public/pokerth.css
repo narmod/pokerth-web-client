@@ -48,6 +48,13 @@ html { touch-action: manipulation; -webkit-text-size-adjust: 100%; text-size-adj
   --sp-4: 10px; --sp-5: 12px; --sp-6: 16px; --sp-7: 20px;
   /* Rayons (QML : bouton 9, barre 10) */
   --r-xs: 3px; --r-sm: 6px; --r-md: 9px; --r-lg: 12px; --r-bar: 10px; --r-pill: 999px;
+  /* Accent des pastilles du bandeau de jeu. #pot-strip est un bandeau NOIR
+     rgba(0,0,0,0.78) dans TOUS les modes (parite QML §7), donc son accent doit
+     rester lisible sur du sombre : il suit le theme par defaut, mais la palette
+     claire le ramene a l'or QML (Theme.colorAccent #E3C800 n'a qu'UNE valeur
+     dans la bible §13.2, pas de variante claire). */
+  --sel-bar: var(--sel, #E3C800);
+  --sel-bar-rgb: var(--sel-rgb, 227,200,0);
   /* Hauteurs de contrôle (QML : barre 54, landscapeCompact 40, All-In 52) */
   --ctrl-sm: 26px; --ctrl-md: 34px; --ctrl-lg: 40px; --ctrl-xl: 54px; --ctrl-allin: 52px;
 
@@ -189,6 +196,10 @@ html { touch-action: manipulation; -webkit-text-size-adjust: 100%; text-size-adj
   --gold-dim:   #576378;
   --sel:        #9a7d0a;
   --sel-rgb:    154,125,10;
+  /* Bandeau noir meme en clair -> on garde l'or QML (sinon 3,7:1 sur le texte,
+     sous le seuil AA, et bordure a 2,1:1 quasi invisible). */
+  --sel-bar:     #E3C800;
+  --sel-bar-rgb: 227,200,0;
   --sel-hi:     #c2a02e;
   --timer-normal: #394150;
   --timer-glow: 0 1px 1px rgba(0,0,0,0.22);
@@ -2085,9 +2096,9 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
      fige : --sel vaut #E3C800 en sombre et #9a7d0a en clair, et suit le theme
      de table choisi. Meme source que #g-spec-badge, les deux pastilles du
      bandeau restent donc assorties. */
-  background: rgba(var(--sel-rgb, 227,200,0), 0.14);
-  border: 1px solid rgba(var(--sel-rgb, 227,200,0), 0.55);
-  color: var(--sel, #E3C800);
+  background: rgba(var(--sel-bar-rgb), 0.22);
+  border: 1px solid var(--sel-bar);
+  color: var(--sel-bar);
   font-family: var(--ff-mono);
   font-weight: 700;
   font-size: clamp(10px, calc(11px * var(--comm-scale, 1)), 16px);
@@ -2099,7 +2110,7 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
    devient enfant flex DIRECT de .gsb-mid et se centre verticalement
    exactement comme #g-spec-badge (même offset depuis le haut de la barre). */
 #g-blinds-slot { display: contents; }
-.blinds-next:hover, .blinds-next:focus { background: rgba(var(--sel-rgb, 227,200,0), 0.26); border-color: var(--sel, #E3C800); outline: none; }
+.blinds-next:hover, .blinds-next:focus { background: rgba(var(--sel-bar-rgb), 0.32); border-color: var(--sel-bar); outline: none; }
 /* Bandeau d'info/alerte blinds. Centré en haut, masqué par défaut, révélé
    via .show (transition). Affiche : ↑ Blinds  cur → next  · quand. */
 .blinds-up-toast {
@@ -5497,9 +5508,9 @@ html[data-table="pokerth-live"] .raise-slider { accent-color: #4CAF50; }
   padding: 0 clamp(8px, calc(9px * var(--comm-scale, 1)), 14px);
   margin-right: 8px;
   border-radius: var(--r-pill);
-  border: 1px solid var(--sel, #E3C800);
-  background: rgba(var(--sel-rgb, 227,200,0), 0.22);
-  color: var(--sel, #E3C800);
+  border: 1px solid var(--sel-bar);
+  background: rgba(var(--sel-bar-rgb), 0.22);
+  color: var(--sel-bar);
   font-size: clamp(10px, calc(11px * var(--comm-scale, 1)), 16px);
   font-weight: 700;
   letter-spacing: 0.08em;
@@ -5539,9 +5550,9 @@ html[data-table="pokerth-live"] .raise-slider { accent-color: #4CAF50; }
   #g-spec-count.me {
     height: 18px; box-sizing: border-box; padding: 0 7px;
     border-radius: var(--r-pill);
-    border: 1px solid var(--sel, #E3C800);
-    background: rgba(var(--sel-rgb, 227,200,0), 0.22);
-    color: var(--sel, #E3C800);
+    border: 1px solid var(--sel-bar);
+    background: rgba(var(--sel-bar-rgb), 0.22);
+    color: var(--sel-bar);
   }
 }
 
