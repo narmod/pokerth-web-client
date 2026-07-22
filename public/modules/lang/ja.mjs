@@ -13,7 +13,6 @@ export const strings = {
   pollTitle: "アンケート",
   pollThanks: "ご回答ありがとうございます！",
   pollAnswers: "{n} 件の回答",
-  pollSeeResults: "結果を見る",
   pollErr: "回答を送信できませんでした。",
     // ── Stats / HUD / range (session) ──
     gipTabStats:"Stats",

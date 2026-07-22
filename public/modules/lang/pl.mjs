@@ -20,7 +20,6 @@ export const strings = {
   pollTitle: "Ankieta",
   pollThanks: "Dziękujemy za odpowiedź!",
   pollAnswers: "Odpowiedzi: {n}",
-  pollSeeResults: "Zobacz wyniki",
   pollErr: "Nie udało się wysłać odpowiedzi.",
     // ── Stats / HUD / range (session) ──
     gipTabStats:"Stats",

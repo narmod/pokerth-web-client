@@ -14,7 +14,6 @@ export const strings = {
   pollTitle: "Peiling",
   pollThanks: "Dankie vir jou antwoord!",
   pollAnswers: "{n} antwoord(e)",
-  pollSeeResults: "Wys resultate",
   pollErr: "Kon nie jou antwoord stuur nie.",
     // ── Stats / HUD / range (session) ──
     gipTabStats:"Stats",

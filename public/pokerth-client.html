@@ -2230,6 +2230,7 @@ function onAvatarImageChosen(input) {
 <script type="module" src="modules/net/crypto.mjs"></script>
 <script type="module" src="modules/net/messages.mjs"></script>
 <script type="module" src="modules/ui/shortcuts.mjs"></script>
+<script type="module" src="modules/ui/poll.mjs"></script>
 <script type="module" src="modules/ui/reactions.mjs"></script>
 <script type="module" src="modules/ui/anim.mjs"></script>
 <script type="module" src="modules/game/seats.mjs"></script>
@@ -2614,6 +2615,7 @@ if ('serviceWorker' in navigator) {
       </details>
       <details class="adv-fold"><summary class="adv-sec"><span class="adv-sec-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="9" r="3"/><path d="M3.5 19a5.5 5.5 0 0 1 11 0"/><path d="M15.5 6.5a3 3 0 0 1 0 5.4M17 13.6a5.5 5.5 0 0 1 3.5 5.4"/></svg></span><span data-i18n="advSecCommunity">Community</span></summary>
       <label class="adv-row"><input type="checkbox" id="adv-community" onchange="setAdvOpt('show_community',this.checked)"><span data-i18n="advShowCommunity">Show Ranking entry</span></label>
+      <label class="adv-row"><input type="checkbox" id="adv-polls" onchange="setAdvOpt('polls',this.checked);try{_pollRefresh()}catch(e){}"><span data-i18n="advPolls">Take part in product polls</span><em class="adv-webtag">web</em></label>
       <div class="adv-row"><span data-i18n="advDefCommunity">Default community</span><div class="sel-wrap adv-sel"><select id="adv-defcommunity" onchange="setDefaultCommunity(this.value)"><option value="pth">PokerTH</option><option value="bbc">BBC</option><option value="wec">WEC</option></select><span class="sel-arr">▾</span></div></div>
       </details>
       <details class="adv-fold"><summary class="adv-sec"><span class="adv-sec-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="18" height="10" rx="2"/><path d="M7 10.5h.01M11 10.5h.01M15 10.5h.01M7 13.5h10"/></svg></span><span data-i18n="advSecKeys">Keyboard shortcuts</span></summary>

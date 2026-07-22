@@ -14,7 +14,6 @@ export const strings = {
   pollTitle: "Enquisa",
   pollThanks: "Grazas pola túa resposta!",
   pollAnswers: "{n} resposta(s)",
-  pollSeeResults: "Ver os resultados",
   pollErr: "Non foi posible enviar a túa resposta.",
     // ── Stats / HUD / range (session) ──
     gipTabStats:"Stats",

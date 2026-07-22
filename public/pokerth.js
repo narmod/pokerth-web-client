@@ -363,6 +363,7 @@ function openAdvancedOptions() {
   sync('adv-fkeysalt', 'fkeys_alt', false);
   sync('adv-tablezoom', 'table_zoom', true);
   sync('adv-lobbychat', 'lobby_chat', true);
+  sync('adv-polls', 'polls', false);   // sondages produit : opt-in strict, jamais par defaut
   sync('adv-connpill', 'conn_pill', true);   // pastille de connexion sur le feutre (web)
   sync('adv-pausehands', 'pause_hands', false);
   sync('adv-createdialog', 'create_dialog', true);
@@ -2712,7 +2713,7 @@ document.addEventListener("DOMContentLoaded", function() {
     function go() {
       fetch('/app-config', { cache: 'no-store' })
         .then(function (r) { return r.json(); })
-        .then(function (c) { if (c) { window._pthNetServer = (c.pokerthnetServer && c.pokerthnetServer.host) ? c.pokerthnetServer : null; window._pthNetSource = (c.pokerthnetSource === 'auto') ? 'auto' : 'manual'; window._pthNetTransport = (c.internetTransport === 'proxy') ? 'proxy' : 'direct'; } if (c && c.modes) applyModes(c.modes); if (c && c.loginDefaults) _applyLoginDefaults(c.loginDefaults); if (c && c.welcome && c.welcome.enabled && typeof window.maybeShowWelcome === 'function') window.maybeShowWelcome(c.welcome); if (c && typeof c.defaultTheme === 'string') _applyDefaultTheme(c.defaultTheme); if (c && typeof c.showLoginTitle === 'boolean') { try { document.body.classList.toggle('adv-show-title', c.showLoginTitle); } catch (e) {} } if (c && c.defaults) _applyDefaultSettings(c.defaults); _applyBranding(c); try { if (!window._shareLinkActive && window.App && App.onServerOrGuestChange) App.onServerOrGuestChange(); } catch (e) {} })
+        .then(function (c) { if (c) { window._pthNetServer = (c.pokerthnetServer && c.pokerthnetServer.host) ? c.pokerthnetServer : null; window._pthNetSource = (c.pokerthnetSource === 'auto') ? 'auto' : 'manual'; window._pthNetTransport = (c.internetTransport === 'proxy') ? 'proxy' : 'direct'; } if (c && c.modes) applyModes(c.modes); if (c && c.loginDefaults) _applyLoginDefaults(c.loginDefaults); if (c && c.welcome && c.welcome.enabled && typeof window.maybeShowWelcome === 'function') window.maybeShowWelcome(c.welcome); if (typeof window._pollSetConfig === 'function') window._pollSetConfig(c && c.poll); if (c && typeof c.defaultTheme === 'string') _applyDefaultTheme(c.defaultTheme); if (c && typeof c.showLoginTitle === 'boolean') { try { document.body.classList.toggle('adv-show-title', c.showLoginTitle); } catch (e) {} } if (c && c.defaults) _applyDefaultSettings(c.defaults); _applyBranding(c); try { if (!window._shareLinkActive && window.App && App.onServerOrGuestChange) App.onServerOrGuestChange(); } catch (e) {} })
         .catch(function () {});
     }
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', go); else go();
@@ -8827,7 +8828,7 @@ window.togglePlayersPanel = togglePlayersPanel;
 window.toggleReactionPanel = toggleReactionPanel;
 window.App = App;
 
-window.BUILD_VERSION='0.3.1013-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='0.3.1014-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

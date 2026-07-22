@@ -14,7 +14,6 @@ export const strings = {
   pollTitle: "Szavazás",
   pollThanks: "Köszönjük a válaszod!",
   pollAnswers: "{n} válasz",
-  pollSeeResults: "Eredmények megtekintése",
   pollErr: "Nem sikerült elküldeni a válaszod.",
     // ── Stats / HUD / range (session) ──
     gipTabStats:"Stats",

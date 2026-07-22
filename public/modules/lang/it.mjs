@@ -19,7 +19,6 @@ export const strings = {
   pollTitle: "Sondaggio",
   pollThanks: "Grazie per la tua risposta!",
   pollAnswers: "{n} risposta/e",
-  pollSeeResults: "Vedi i risultati",
   pollErr: "Impossibile inviare la tua risposta.",
     // ── Stats / HUD / range (session) ──
     gipTabStats:"Stats",

@@ -13,7 +13,6 @@ export const strings = {
   pollTitle: "Undersøgelse",
   pollThanks: "Tak for dit svar!",
   pollAnswers: "{n} svar",
-  pollSeeResults: "Se resultater",
   pollErr: "Dit svar kunne ikke sendes.",
     // ── Stats / HUD / range (session) ──
     gipTabStats:"Stats",

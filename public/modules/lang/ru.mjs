@@ -19,7 +19,6 @@ export const strings = {
   pollTitle: "Опрос",
   pollThanks: "Спасибо за ваш ответ!",
   pollAnswers: "Ответов: {n}",
-  pollSeeResults: "Посмотреть результаты",
   pollErr: "Не удалось отправить ваш ответ.",
     // ── Stats / HUD / range (session) ──
     gipTabStats:"Stats",

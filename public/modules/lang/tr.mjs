@@ -16,7 +16,6 @@ export const strings = {
   pollTitle: "Anket",
   pollThanks: "Yanıtın için teşekkürler!",
   pollAnswers: "{n} yanıt",
-  pollSeeResults: "Sonuçları gör",
   pollErr: "Yanıtın gönderilemedi.",
     // ── Stats / HUD / range (session) ──
     gipTabStats:"Stats",

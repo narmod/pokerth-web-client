@@ -15,7 +15,6 @@ export const strings = {
   pollTitle: "Cunntas-bheachd",
   pollThanks: "Tapadh leat airson do fhreagairt!",
   pollAnswers: "{n} freagairt",
-  pollSeeResults: "Seall na toraidhean",
   pollErr: "Cha b' urrainn dhuinn do fhreagairt a chur.",
     // ── Stats / HUD / range (session) ──
     gipTabStats:"Stats",

@@ -63,6 +63,7 @@ function show(id) {
   // entrainement, LAN) — le classement passe par le relais /api/ranking,
   // independant du mode de connexion (restriction pokerth.net levee).
   if (window.closeRankingModal) window.closeRankingModal();
+  if (window._pollOnScreen) window._pollOnScreen(id);
   if (window.closeTableRanking) window.closeTableRanking();
   try {
     var _rkb = document.getElementById('ranking-btn-lobby');

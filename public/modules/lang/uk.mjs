@@ -13,7 +13,6 @@ export const strings = {
   pollTitle: "Опитування",
   pollThanks: "Дякуємо за вашу відповідь!",
   pollAnswers: "Відповідей: {n}",
-  pollSeeResults: "Переглянути результати",
   pollErr: "Не вдалося надіслати вашу відповідь.",
     // ── Stats / HUD / range (session) ──
     gipTabStats:"Stats",

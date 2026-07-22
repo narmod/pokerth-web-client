@@ -18,7 +18,6 @@ export const strings = {
   pollTitle: "सर्वेक्षण",
   pollThanks: "आपके उत्तर के लिए धन्यवाद!",
   pollAnswers: "{n} उत्तर",
-  pollSeeResults: "परिणाम देखें",
   pollErr: "आपका उत्तर नहीं भेजा जा सका।",
     // ── Stats / HUD / range (session) ──
     gipTabStats:"Stats",

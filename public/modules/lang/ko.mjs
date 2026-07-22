@@ -17,7 +17,6 @@ export const strings = {
   pollTitle: "설문",
   pollThanks: "답변해 주셔서 감사합니다!",
   pollAnswers: "답변 {n}개",
-  pollSeeResults: "결과 보기",
   pollErr: "답변을 보내지 못했습니다.",
     // ── Stats / HUD / range (session) ──
     gipTabStats:"Stats",

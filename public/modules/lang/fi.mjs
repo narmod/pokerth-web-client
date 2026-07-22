@@ -13,7 +13,6 @@ export const strings = {
   pollTitle: "Kysely",
   pollThanks: "Kiitos vastauksestasi!",
   pollAnswers: "{n} vastausta",
-  pollSeeResults: "Näytä tulokset",
   pollErr: "Vastausta ei voitu lähettää.",
     // ── Stats / HUD / range (session) ──
     gipTabStats:"Stats",

@@ -14,7 +14,6 @@ export const strings = {
   pollTitle: "Анкета",
   pollThanks: "Благодарим за отговора!",
   pollAnswers: "Отговори: {n}",
-  pollSeeResults: "Виж резултатите",
   pollErr: "Отговорът не можа да бъде изпратен.",
     // ── Stats / HUD / range (session) ──
     gipTabStats:"Stats",

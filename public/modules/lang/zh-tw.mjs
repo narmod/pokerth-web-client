@@ -15,7 +15,6 @@ export const strings = {
   pollTitle: "問卷",
   pollThanks: "感謝你的回答！",
   pollAnswers: "{n} 個回答",
-  pollSeeResults: "查看結果",
   pollErr: "無法送出你的回答。",
     // ── Stats / HUD / range (session) ──
     gipTabStats:"Stats",

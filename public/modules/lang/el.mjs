@@ -14,7 +14,6 @@ export const strings = {
   pollTitle: "Δημοσκόπηση",
   pollThanks: "Ευχαριστούμε για την απάντησή σας!",
   pollAnswers: "{n} απάντηση(εις)",
-  pollSeeResults: "Δείτε τα αποτελέσματα",
   pollErr: "Δεν ήταν δυνατή η αποστολή της απάντησής σας.",
     // ── Stats / HUD / range (session) ──
     gipTabStats:"Stats",
