@@ -1,34 +1,34 @@
 // ═══════════════════════════════════════════════════════════════════
-// Sondages produit (encart lobby) — extension web, sans equivalent QML.
-// L'admin redige un sondage (panneau admin, onglet Polls) ; seuls les clients
-// ayant coche « Participer aux sondages produit » (options avancees →
-// Communaute, DECOCHEE par defaut) le voient, juste au-dessus de la
-// LobbyStatsBar.
+// Sondages produit (modale lobby) — extension web, sans equivalent QML.
+// L'admin redige un sondage (panneau admin, onglet Polls) ; il s'affiche en
+// modale a l'arrivee dans le lobby, dans le meme moule que la modale de
+// bienvenue (fond assombri, carte centree, tokens de theme).
 //
 // Une reponse par appareil, dedupliquee cote proxy sur un hachage sale du meme
 // `pth_vid` anonyme que le beacon /__visit. Les compteurs n'arrivent qu'AVEC la
 // reponse au vote : tant que l'utilisateur n'a pas repondu, aucun chiffre
 // affiche ne peut l'influencer.
 //
+// Desactivable dans les options avancees → Communaute (cochee par defaut).
+//
 // Ponts avec le monolithe :
-//   window._pollSetConfig(p) — /app-config a repondu (p = c.poll, ou null)
-//   window._pollOnScreen(id) — show() a bascule d'ecran (net/session.mjs)
-//   window._pollRefresh()    — la case des options avancees a change
+//   window._pollSetConfig(p)  — /app-config a repondu (p = c.poll, ou null)
+//   window._pollOnScreen(id)  — show() a bascule d'ecran (net/session.mjs)
+//   window._pollRefresh()     — la case des options avancees a change
+//   window.closePollModal()   — fermeture (croix, et Escape via ui/keynav.mjs)
 // ═══════════════════════════════════════════════════════════════════
 import { t, getLang } from '../i18n.mjs';
 
-const CARD_ID = 'lobby-poll-card';
-const DONE_KEY = 'pth_poll_done';   // ids deja repondus (CSV, plafonne)
+const MODAL_ID = 'poll-modal';
+const DONE_KEY = 'pth_poll_done';   // ids deja vus (repondus ou fermes), CSV plafonne
 const DONE_MAX = 20;
 
-let _poll = null;               // sondage actif publie par /app-config
-const _hiddenThisSession = {};  // ferme SANS repondre : revient a la session suivante
+let _poll = null;       // sondage actif publie par /app-config
+let _waitTimer = null;  // attente de la fermeture de la modale de bienvenue
 
 // Option avancee normale (setAdvOpt('polls', …) ecrit ici). Miroir exact de
 // _advGet(key, defOn) cote monolithe : cle absente = valeur par defaut, sinon
-// '1'/'0'. Defaut ACTIF — l'encart est visible sans demarche, et se decoche
-// dans les options avancees. Afficher ne transmet rien : le vid ne part qu'au
-// clic sur une option.
+// '1'/'0'. Defaut ACTIF ; afficher ne transmet rien, le vid ne part qu'au clic.
 function _optOn() {
   try {
     const v = localStorage.getItem('pth_polls');
@@ -80,47 +80,53 @@ function _lobbyActive() {
   const s = document.getElementById('s-lobby');
   return !!(s && s.classList.contains('active'));
 }
-function _remove() { const el = document.getElementById(CARD_ID); if (el) el.remove(); }
+function _open() { return document.getElementById(MODAL_ID); }
+function _close() {
+  const el = _open();
+  if (el) el.remove();
+  if (_waitTimer) { clearTimeout(_waitTimer); _waitTimer = null; }
+}
 
-// Coque commune aux deux etats (question puis resultats) : le titre et la croix
-// ne changent pas, seul le corps est remplace.
+// Coque commune aux deux etats (question puis resultats) : fond assombri, carte
+// centree, entete + croix. Calquee sur showWelcomeModal du monolithe.
 function _shell(titleText) {
+  _close();
+  const back = document.createElement('div');
+  back.id = MODAL_ID;
+  back.className = 'poll-back';
+
   const card = document.createElement('div');
-  card.id = CARD_ID;
-  card.className = 'lobby-poll';
+  card.className = 'poll-card';
 
   const head = document.createElement('div');
-  head.className = 'lobby-poll-head';
+  head.className = 'poll-head';
   const ttl = document.createElement('span');
-  ttl.className = 'lobby-poll-title';
+  ttl.className = 'poll-title';
   ttl.textContent = titleText;
   head.appendChild(ttl);
 
-  const close = document.createElement('button');
-  close.type = 'button';
-  close.className = 'lobby-poll-x';
-  close.textContent = '\u2715';
-  close.setAttribute('aria-label', t('closeTooltip') || 'Close');
-  close.title = t('closeTooltip') || 'Close';
-  // Fermer SANS repondre ne vaut pas reponse : on masque pour cette session
-  // seulement, le sondage revient au prochain chargement. Repondre, en
-  // revanche, est definitif (_markDone).
-  close.addEventListener('click', function () {
-    if (_poll) _hiddenThisSession[_poll.id] = true;
-    _remove();
-  });
-  head.appendChild(close);
-
+  const x = document.createElement('button');
+  x.type = 'button';
+  x.className = 'poll-x';
+  x.textContent = '\u2715';
+  x.setAttribute('aria-label', t('closeTooltip') || 'Close');
+  x.title = t('closeTooltip') || 'Close';
+  // Une modale ne se rate pas : si elle est fermee, c'est un choix. On ne la
+  // represente donc plus pour ce sondage, repondu ou non.
+  x.addEventListener('click', function () { if (_poll) _markDone(_poll.id); _close(); });
+  head.appendChild(x);
   card.appendChild(head);
+
   const body = document.createElement('div');
-  body.className = 'lobby-poll-body';
+  body.className = 'poll-body';
   card.appendChild(body);
-  return { card: card, body: body };
+  back.appendChild(card);
+  return { back: back, body: body };
 }
 
 function _question(body) {
   const q = document.createElement('div');
-  q.className = 'lobby-poll-q';
+  q.className = 'poll-q';
   q.textContent = _pick(_poll.question);
   body.appendChild(q);
 }
@@ -131,12 +137,12 @@ function _renderVote() {
   _question(sh.body);
 
   const list = document.createElement('div');
-  list.className = 'lobby-poll-opts';
+  list.className = 'poll-opts';
   const btns = [];
   (_poll.options || []).forEach(function (o) {
     const b = document.createElement('button');
     b.type = 'button';
-    b.className = 'lobby-poll-opt';
+    b.className = 'poll-opt';
     b.textContent = _pick(o.label);
     b.addEventListener('click', function () { _vote(o.id, btns); });
     btns.push(b);
@@ -145,42 +151,41 @@ function _renderVote() {
   sh.body.appendChild(list);
 
   const err = document.createElement('div');
-  err.className = 'lobby-poll-err';
-  err.id = 'lobby-poll-err';
+  err.className = 'poll-err';
+  err.id = 'poll-err';
   sh.body.appendChild(err);
-  return sh.card;
+  document.body.appendChild(sh.back);
 }
 
 // Etat 2 : les resultats, affiches une seule fois juste apres la reponse.
-// L'encart ne reviendra plus pour ce sondage (cf. _markDone).
+// La modale ne reviendra plus pour ce sondage (cf. _markDone).
 function _renderResults(d) {
-  _remove();
   const sh = _shell(t('results') || 'Results');
   _question(sh.body);
 
   const total = Math.max(0, d.total || 0);
   const list = document.createElement('div');
-  list.className = 'lobby-poll-res';
+  list.className = 'poll-res';
   (_poll.options || []).forEach(function (o) {
     const c = (d.tally && d.tally[o.id]) || 0;
     const pct = total ? Math.round(c * 100 / total) : 0;
     const row = document.createElement('div');
-    row.className = 'lobby-poll-row' + (o.id === d.choice ? ' is-mine' : '');
+    row.className = 'poll-row' + (o.id === d.choice ? ' is-mine' : '');
 
     const lb = document.createElement('span');
-    lb.className = 'lobby-poll-lb';
+    lb.className = 'poll-lb';
     lb.textContent = _pick(o.label);
     row.appendChild(lb);
 
     const track = document.createElement('span');
-    track.className = 'lobby-poll-track';
+    track.className = 'poll-track';
     const fill = document.createElement('i');
     fill.style.width = pct + '%';
     track.appendChild(fill);
     row.appendChild(track);
 
     const num = document.createElement('span');
-    num.className = 'lobby-poll-pct';
+    num.className = 'poll-pct';
     num.textContent = pct + '%';
     row.appendChild(num);
 
@@ -189,17 +194,16 @@ function _renderResults(d) {
   sh.body.appendChild(list);
 
   const foot = document.createElement('div');
-  foot.className = 'lobby-poll-foot';
+  foot.className = 'poll-foot';
   foot.textContent = (t('pollThanks') || '') + ' \u00b7 ' +
                      (t('pollAnswers') || '{n}').replace('{n}', String(total));
   sh.body.appendChild(foot);
 
-  const bar = document.getElementById('lobby-statsbar');
-  if (bar && bar.parentNode) bar.parentNode.insertBefore(sh.card, bar);
+  document.body.appendChild(sh.back);
 }
 
 function _fail() {
-  const e = document.getElementById('lobby-poll-err');
+  const e = document.getElementById('poll-err');
   if (e) e.textContent = t('pollErr') || 'Could not send your answer.';
 }
 
@@ -215,9 +219,8 @@ function _vote(optId, btns) {
     .then(function (d) {
       if (d && d.ok) { _markDone(_poll.id); _renderResults(d); return; }
       // L'admin a change de sondage depuis le chargement de la page : celui-ci
-      // n'existe plus, inutile d'insister — le suivant arrivera au prochain
-      // /app-config.
-      if (d && d.error === 'stale poll') { _remove(); return; }
+      // n'existe plus, inutile d'insister.
+      if (d && d.error === 'stale poll') { _close(); return; }
       _fail();
       btns.forEach(function (b) { b.disabled = false; });
     })
@@ -228,13 +231,17 @@ function _vote(optId, btns) {
 }
 
 function _render() {
-  _remove();
-  if (!_poll || !_poll.id || !(_poll.options || []).length) return;
-  if (!_optOn() || !_lobbyActive()) return;
-  if (_isDone(_poll.id) || _hiddenThisSession[_poll.id]) return;
-  const bar = document.getElementById('lobby-statsbar');
-  if (!bar || !bar.parentNode) return;
-  bar.parentNode.insertBefore(_renderVote(), bar);
+  if (_waitTimer) { clearTimeout(_waitTimer); _waitTimer = null; }
+  if (!_poll || !_poll.id || !(_poll.options || []).length) { _close(); return; }
+  if (!_optOn() || !_lobbyActive() || _isDone(_poll.id)) { _close(); return; }
+  if (_open()) return;                       // deja ouverte, ne pas la reconstruire
+  // Le message de bienvenue de l'operateur passe avant : empiler deux modales
+  // au premier lancement serait illisible. On reessaie tant qu'elle est la.
+  if (document.getElementById('welcome-modal')) {
+    _waitTimer = setTimeout(_render, 800);
+    return;
+  }
+  _renderVote();
 }
 
 // ── Ponts ──────────────────────────────────────────────────────────
@@ -242,5 +249,8 @@ window._pollSetConfig = function (p) {
   _poll = (p && p.id && Array.isArray(p.options) && p.options.length >= 2) ? p : null;
   _render();
 };
-window._pollOnScreen = function (id) { if (id === 's-lobby') _render(); else _remove(); };
+window._pollOnScreen = function (id) { if (id === 's-lobby') _render(); else _close(); };
 window._pollRefresh = function () { _render(); };
+// Escape : enregistree dans le registre de ui/keynav.mjs. Fermer vaut « vu »,
+// comme la croix.
+window.closePollModal = function () { if (_poll) _markDone(_poll.id); _close(); };

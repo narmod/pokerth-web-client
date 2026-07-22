@@ -8612,55 +8612,60 @@ html.reduce-fx .seat-action-badge {
 .lobby-statsbar a { color: var(--gold-dim, #9a824a); text-decoration: none; }
 .lobby-statsbar a:hover { text-decoration: underline; }
 
-/* ── Sondages produit (encart lobby, extension web) ───────────────────────
-   Carte discrete posee juste au-dessus de la LobbyStatsBar, dans le meme
-   registre visuel : bordure haute, texte attenue, accent or reserve au titre.
-   Visible seulement pour les clients ayant coche l'option (voir ui/poll.mjs). */
-.lobby-poll {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  padding: 8px 10px;
-  border-top: 1px solid var(--line, #2c3548);
-  background: rgba(var(--gold-rgb, 227, 200, 0), 0.04);
+/* ── Sondages produit (modale lobby, extension web) ───────────────────────
+   Meme moule que la modale de bienvenue du monolithe : fond assombri, carte
+   centree, tokens de theme. Voir modules/ui/poll.mjs. */
+.poll-back {
+  position: fixed; inset: 0; z-index: 10000;
+  display: flex; align-items: center; justify-content: center; padding: 18px;
+  background: rgba(0, 0, 0, .55);
 }
-.lobby-poll-head { display: flex; align-items: center; justify-content: space-between; gap: var(--sp-3, 8px); }
-.lobby-poll-title {
-  font-size: var(--fs-3xs, .6rem);
-  letter-spacing: .15em;
-  text-transform: uppercase;
+.poll-card {
+  max-width: 420px; width: 100%; max-height: 84vh;
+  display: flex; flex-direction: column;
+  background: var(--modal-bg); color: var(--text);
+  border: 1px solid var(--border); border-radius: 14px;
+  box-shadow: 0 18px 48px rgba(0, 0, 0, .5);
+}
+.poll-head {
+  display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  padding: 13px 18px; border-bottom: 1px solid var(--border);
+}
+.poll-title {
+  font-family: var(--ff-display); font-weight: 700;
+  font-size: var(--fs-3xs, .6rem); letter-spacing: .15em; text-transform: uppercase;
   color: var(--gold-dim, #9a824a);
 }
-.lobby-poll-x {
+.poll-x {
   border: 0; background: none; cursor: pointer; padding: 0 2px; line-height: 1;
-  font-size: var(--fs-xs, .72rem); color: var(--text-dim, #8b93a7);
+  font-size: .85rem; color: var(--text-dim, #8b93a7);
 }
-.lobby-poll-x:hover { color: var(--text-hi, #e8ecf5); }
-.lobby-poll-body { display: flex; flex-direction: column; gap: 6px; }
-.lobby-poll-q { font-size: var(--fs-sm, .82rem); color: var(--text, #c3cad9); }
-.lobby-poll-opts { display: flex; flex-wrap: wrap; gap: 6px; }
-.lobby-poll-opt {
-  flex: 1 1 auto; min-width: 0;
-  padding: 6px 10px; border-radius: var(--r-xs, 6px);
+.poll-x:hover { color: var(--text-hi, #e8ecf5); }
+.poll-body { padding: 16px 18px; overflow: auto; display: flex; flex-direction: column; gap: 12px; }
+.poll-q { font-size: .95rem; line-height: 1.45; color: var(--text-hi, #e8ecf5); }
+.poll-opts { display: flex; flex-direction: column; gap: 7px; }
+.poll-opt {
+  width: 100%; text-align: left;
+  padding: 10px 12px; border-radius: 10px;
   border: 1px solid var(--border, #39435a);
   background: var(--panel, #232b3b); color: var(--text, #c3cad9);
-  font-size: var(--fs-xs, .72rem); cursor: pointer;
+  font-size: .88rem; cursor: pointer;
 }
-.lobby-poll-opt:hover:not(:disabled) { border-color: var(--gold-dim, #9a824a); color: var(--text-hi, #e8ecf5); }
-.lobby-poll-opt:disabled { opacity: .5; cursor: default; }
-.lobby-poll-err:empty { display: none; }
-.lobby-poll-err { font-size: var(--fs-xs, .72rem); color: var(--red, #d94040); }
+.poll-opt:hover:not(:disabled) { border-color: var(--gold-dim, #9a824a); color: var(--text-hi, #e8ecf5); }
+.poll-opt:disabled { opacity: .5; cursor: default; }
+.poll-err:empty { display: none; }
+.poll-err { font-size: var(--fs-xs, .72rem); color: var(--red, #d94040); }
 /* Resultats : une ligne par option, barre proportionnelle, choix de
    l'utilisateur souligne par l'accent or. */
-.lobby-poll-res { display: flex; flex-direction: column; gap: 4px; }
-.lobby-poll-row { display: flex; align-items: center; gap: 8px; font-size: var(--fs-xs, .72rem); }
-.lobby-poll-lb { flex: 0 0 38%; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--text, #c3cad9); }
-.lobby-poll-row.is-mine .lobby-poll-lb { color: var(--gold, #e3c800); }
-.lobby-poll-track { flex: 1; min-width: 0; height: 6px; border-radius: 3px; background: var(--inset, rgba(0,0,0,.28)); overflow: hidden; }
-.lobby-poll-track i { display: block; height: 100%; border-radius: 3px; background: var(--gold-dim, #9a824a); }
-.lobby-poll-row.is-mine .lobby-poll-track i { background: var(--gold, #e3c800); }
-.lobby-poll-pct { flex: 0 0 34px; text-align: right; color: var(--text-dim, #8b93a7); }
-.lobby-poll-foot { font-size: var(--fs-3xs, .6rem); color: var(--text-dim, #8b93a7); }
+.poll-res { display: flex; flex-direction: column; gap: 6px; }
+.poll-row { display: flex; align-items: center; gap: 8px; font-size: .82rem; }
+.poll-lb { flex: 0 0 38%; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--text, #c3cad9); }
+.poll-row.is-mine .poll-lb { color: var(--gold, #e3c800); }
+.poll-track { flex: 1; min-width: 0; height: 7px; border-radius: 4px; background: var(--inset, rgba(0,0,0,.28)); overflow: hidden; }
+.poll-track i { display: block; height: 100%; border-radius: 4px; background: var(--gold-dim, #9a824a); }
+.poll-row.is-mine .poll-track i { background: var(--gold, #e3c800); }
+.poll-pct { flex: 0 0 34px; text-align: right; color: var(--text-dim, #8b93a7); }
+.poll-foot { font-size: var(--fs-3xs, .6rem); color: var(--text-dim, #8b93a7); }
 
 /* Palettes officielles : pas de trait au-dessus de la statsbar (parite QML). */
 :root[data-theme^="pokerth"] .lobby-statsbar { border-top: none; }

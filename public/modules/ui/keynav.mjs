@@ -40,6 +40,7 @@ const SURFACES = [
   ['avatar-popup',         'toggleAvatarPopup'],
   ['install-popup',        'pwaInstallClose'],
   ['adv-modal',            'closeAdvancedOptions'],
+  ['poll-modal',           'closePollModal'],
   ['about-page',           'closeAboutPage'],
   ['privacy-page',         'closePrivacyPage'],
   // — panneaux flottants —
