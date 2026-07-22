@@ -8879,7 +8879,30 @@ window.togglePlayersPanel = togglePlayersPanel;
 window.toggleReactionPanel = toggleReactionPanel;
 window.App = App;
 
-window.BUILD_VERSION='2.1.4-web.13'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+/* ── Anti-défilement tactile de la PAGE (téléphone / tablette) ─────────────
+   html/body sont déjà overflow:hidden + overscroll-behavior:none, mais les
+   vieux Safari iOS (< 16) les ignorent et laissent la page entière panner /
+   rebondir au doigt (rubber-band constaté sur iPad, login inclus). Garde JS :
+   un touchmove sans ancêtre réellement défilant est annulé. Restent intacts :
+   pinch multi-doigts (loupe), contrôles natifs (sliders/champs), et toute
+   zone avec overflow auto/scroll qui déborde (listes, chat, réglages). */
+(function(){
+  document.addEventListener('touchmove', function(e){
+    if (e.touches && e.touches.length > 1) return;
+    var el = e.target;
+    if (el && el.closest && el.closest('input,textarea,select')) return;
+    while (el && el !== document.documentElement){
+      if (el.scrollHeight > el.clientHeight + 1 || el.scrollWidth > el.clientWidth + 1){
+        var cs; try{ cs = getComputedStyle(el); }catch(_){ break; }
+        if (/(auto|scroll)/.test(cs.overflowY + ' ' + cs.overflowX)) return;
+      }
+      el = el.parentElement;
+    }
+    if (e.cancelable) e.preventDefault();
+  }, { passive:false });
+})();
+
+window.BUILD_VERSION='2.1.4-web.14'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
