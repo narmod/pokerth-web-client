@@ -409,7 +409,36 @@ function onGameAdminChanged(sub) {
     return;
 }
 
-export { onGameSpectatorJoined, onGameSpectatorLeft, onJoinGameAck, onJoinGameFailed, onGamePlayerJoined, onGamePlayerLeft, onRemovedFromGame, onStartEvent, onGameAdminChanged };
+function onPlayerIdChanged(sub) {
+    // PlayerIdChangedMessage (type 54) : oldPlayerId=1, newPlayerId=2.
+    // Envoye aux clients d'une partie quand un joueur reprend sa place
+    // (RejoinExistingGame) avec une nouvelle session : son ancien pid
+    // devient le nouveau. On remappe TOUTES les structures indexees par
+    // pid pour que siege, nom, avatar et stack suivent — sinon le joueur
+    // revenu apparait en double / en '#id' et son ancien siege reste
+    // fige « parti ».
+    const oldPid = Proto.u32(sub, 1);
+    const newPid = Proto.u32(sub, 2);
+    if (!oldPid || !newPid || oldPid === newPid) return;
+    const idx = S.seats.indexOf(oldPid);
+    if (idx !== -1) S.seats[idx] = newPid;
+    if (S.players[oldPid] !== undefined) { S.players[newPid] = S.players[oldPid]; delete S.players[oldPid]; }
+    if (S.seatData[oldPid]) { S.seatData[newPid] = S.seatData[oldPid]; delete S.seatData[oldPid]; S.seatData[newPid].gone = false; }
+    if (S._playerAvatars[oldPid]) { S._playerAvatars[newPid] = S._playerAvatars[oldPid]; delete S._playerAvatars[oldPid]; }
+    if (S._playerImgAvatars[oldPid]) { S._playerImgAvatars[newPid] = S._playerImgAvatars[oldPid]; delete S._playerImgAvatars[oldPid]; }
+    if (S._seatStackAtHandStart && S._seatStackAtHandStart[oldPid] != null) {
+      S._seatStackAtHandStart[newPid] = S._seatStackAtHandStart[oldPid];
+      delete S._seatStackAtHandStart[oldPid];
+    }
+    if (S.dealerPid === oldPid) S.dealerPid = newPid;
+    if (S.turnPid === oldPid) S.turnPid = newPid;
+    if (S.myId === oldPid) S.myId = newPid; // defensif — normalement jamais nous
+    try { if (window._prevDealerPid === oldPid) window._prevDealerPid = newPid; } catch (e) {}
+    try { window.renderSeats(); } catch (e) {}
+    return;
+}
 
-for (const [k, v] of Object.entries({ onGameSpectatorJoined, onGameSpectatorLeft, onJoinGameAck, onJoinGameFailed, onGamePlayerJoined, onGamePlayerLeft, onRemovedFromGame, onStartEvent, onGameAdminChanged }))
+export { onGameSpectatorJoined, onGameSpectatorLeft, onJoinGameAck, onJoinGameFailed, onGamePlayerJoined, onGamePlayerLeft, onRemovedFromGame, onStartEvent, onGameAdminChanged, onPlayerIdChanged };
+
+for (const [k, v] of Object.entries({ onGameSpectatorJoined, onGameSpectatorLeft, onJoinGameAck, onJoinGameFailed, onGamePlayerJoined, onGamePlayerLeft, onRemovedFromGame, onStartEvent, onGameAdminChanged, onPlayerIdChanged }))
   window[k] = v;

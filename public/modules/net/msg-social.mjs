@@ -137,11 +137,27 @@ function onChatReject(sub) {
   }
 }
 
+function onDialog(sub) {
+  // DialogMessage (type 66) : notificationText=1 — message d'information
+  // libre du serveur (MOTD, annonces d'admin). Le client officiel l'affiche
+  // dans une boite de dialogue ; cote web on le route vers le chat courant
+  // (partie ou lobby) en ligne systeme + toast.
+  const text = Proto.str(sub, 1);
+  if (!text) return;
+  if (S.amInGame && typeof window.addGameChat === 'function') {
+    window.addGameChat(null, text, 'sys');
+  } else {
+    addChat(null, text, 'sys');
+  }
+  try { if (typeof window.showToast === 'function') window.showToast(text, { icon: '\u2139' }); } catch (e) {}
+  return;
+}
+
 export { onStartKickPetition, onKickPetitionUpdate, onVoteKickReply,
          onEndKickPetition, onAskKickDenied, onInviteNotify,
-         onRejectInvNotify, onChat, onTimeoutWarning, onChatReject };
+         onRejectInvNotify, onChat, onTimeoutWarning, onChatReject, onDialog };
 
 for (const [k, v] of Object.entries({ onStartKickPetition,
   onKickPetitionUpdate, onVoteKickReply, onEndKickPetition,
   onAskKickDenied, onInviteNotify, onRejectInvNotify, onChat,
-  onTimeoutWarning, onChatReject })) window[k] = v;
+  onTimeoutWarning, onChatReject, onDialog })) window[k] = v;

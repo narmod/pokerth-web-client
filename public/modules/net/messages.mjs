@@ -32,13 +32,13 @@ const MSG = (() => {
     21:22, 22:23, 23:24, 24:25, 25:26,        // Join*
     26:27, 27:28, 28:29, 29:30,               // GamePlayer*
     32:33, 33:34, 34:35, 35:36,                // Invite*: InvitePlayerToGame, InviteNotify, RejectGameInvitation, RejectInvNotify
-    36:37, 37:38, 38:39,                       // StartEvent, StartEventAck, GameStartInitial
+    36:37, 37:38, 38:39, 39:40,                // StartEvent, StartEventAck, GameStartInitial, GameStartRejoin
     40:41, 41:42, 42:43,                       // HandStart, PlayersTurn, MyActionRequest
     43:44,                                     // YourActionRejected
     44:45,                                     // PlayersActionDone
     45:46, 46:47, 47:48,                       // DealFlop, DealTurn, DealRiver
     48:49,                                     // AllInShowCards
-    49:50, 50:51, 53:54,                       // EndOfHandShow, EndOfHandHide, EndOfGame
+    49:50, 50:51, 53:54, 54:55, 66:67,         // EndOfHandShow, EndOfHandHide, EndOfGame, PlayerIdChanged, Dialog
     51:52, 52:53,                              // ShowMyCardsRequest + AfterHandShowCards
     62:63, 63:64, 64:65, 65:66,               // Statistics, Chat*
     67:68, 68:69,                              // TimeoutWarning, ResetTimeout
@@ -64,11 +64,12 @@ const MSG = (() => {
     JoinNew:22, JoinGameAck:24, JoinGameFailed:25,
     GamePlayerJoined:26, GamePlayerLeft:27, GameAdminChanged:28, RemovedFromGame:29,
     InvitePlayerToGame:32, InviteNotify:33, RejectGameInvitation:34, RejectInvNotify:35,
-    StartEvent:36, StartEventAck:37, GameStartInitial:38,
+    StartEvent:36, StartEventAck:37, GameStartInitial:38, GameStartRejoin:39,
     HandStart:40, PlayersTurn:41, MyActionRequest:42,
     YourActionRejected:43,
     PlayersActionDone:44, DealFlop:45, DealTurn:46, DealRiver:47,
     AllInShowCards:48, EndOfHandShow:49, EndOfHandHide:50, EndOfGame:53,
+    PlayerIdChanged:54, Dialog:66,
     ShowMyCardsRequest:51, AfterHandShowCards:52,
     Statistics:62, ChatRequest:63, Chat:64, ChatReject:65,
     TimeoutWarning:67, ResetTimeout:68, Error:73,

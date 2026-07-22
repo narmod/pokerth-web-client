@@ -3295,6 +3295,9 @@ const App = (() => {
 
       case T.ChatReject: { onChatReject(sub); break; } // [9g-C2] → net/msg-social.mjs
 
+      // Message d'information libre du serveur (MOTD / annonce admin)
+      case T.Dialog: { onDialog(sub); break; } // → net/msg-social.mjs
+
       case T.JoinGameAck: { onJoinGameAck(sub); break; } // [9g-C4] → net/msg-game-join.mjs
 
       case T.JoinGameFailed: { onJoinGameFailed(sub); break; } // [9g-C4] → net/msg-game-join.mjs
@@ -3303,11 +3306,17 @@ const App = (() => {
 
       case T.GamePlayerLeft: { onGamePlayerLeft(sub); break; } // [9g-C4] → net/msg-game-join.mjs
 
+      // Un joueur a repris sa place avec un nouveau pid → remap complet
+      case T.PlayerIdChanged: { onPlayerIdChanged(sub); break; } // → net/msg-game-join.mjs
+
       case T.RemovedFromGame: { onRemovedFromGame(sub); break; } // [9g-C4] → net/msg-game-join.mjs
 
       case T.StartEvent: { onStartEvent(sub); break; } // [9g-C4] → net/msg-game-join.mjs
 
       case T.GameStartInitial: { onGameStartInitial(sub); break; } // [9g-C5a] → game/msg-hand.mjs
+
+      // Reprise de partie : reponse a notre RejoinExistingGame (sieges + stacks reels)
+      case T.GameStartRejoin: { onGameStartRejoin(sub); break; } // → game/msg-hand.mjs
 
       case T.HandStart: { onHandStart(sub); break; } // [9g-C5a] → game/msg-hand.mjs
 
@@ -8633,7 +8642,7 @@ window.togglePlayersPanel = togglePlayersPanel;
 window.toggleReactionPanel = toggleReactionPanel;
 window.App = App;
 
-window.BUILD_VERSION='0.3.998-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='0.3.999-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

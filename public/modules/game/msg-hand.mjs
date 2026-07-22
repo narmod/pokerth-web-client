@@ -203,6 +203,81 @@ function onGameStartInitial(sub) {
     return;
 }
 
+function onGameStartRejoin(sub) {
+    // GameStartRejoinMessage (type 39) : gameId=1, startDealerPlayerId=2,
+    // handNum=3, rejoinPlayerData=4 (repeated {playerId=1, playerMoney=2}).
+    // Envoye A LA PLACE de GameStartInitial quand notre RejoinExistingGame
+    // aboutit en cours de partie : il porte l'ordre des sieges ET les stacks
+    // reels (le serveur ne rejoue pas les PlayersActionDone passes). Sans ce
+    // handler, la reprise restait bloquee sur la wait-page (bug historique :
+    // on emettait Rejoin sans jamais ecouter la reponse).
+    S._gameStarted = true;
+    try { _updateLobbyWaitStatus(); } catch(e) {}
+    try { show('s-game'); } catch(e) {}
+    try { _renderLobbyWaitActions(); } catch(e) {}
+    if (typeof window.resetBlindRaises === 'function') window.resetBlindRaises();
+    var _ga = document.getElementById('g-actions');
+    if (_ga) _ga.innerHTML = '';
+    try { window._wpHide(); } catch(e) {}
+    ['admin-start-btn','admin-start-mob','admin-startnobots-btn','admin-startnobots-mob'].forEach(function(id){
+      var el = document.getElementById(id);
+      if (el) el.style.display = 'none';
+    });
+    S.gId       = Proto.u32(sub, 1);
+    S.dealerPid = Proto.u32(sub, 2);
+    // handNum serveur = main courante ; la reprise prend effet a la main
+    // suivante (comme le client officiel) : le prochain onHandStart fera ++.
+    S.handNum   = Proto.u32(sub, 3);
+
+    // Sieges + stacks reels depuis rejoinPlayerData (ordre serveur).
+    const newSeats = [];
+    const stacks = {};
+    if (sub[4]) {
+      for (const raw of sub[4]) {
+        if (!(raw instanceof Uint8Array)) continue;
+        const d = Proto.decode(raw);
+        const pid = Proto.u32(d, 1);
+        if (!newSeats.includes(pid)) newSeats.push(pid);
+        stacks[pid] = Proto.u32(d, 2);
+      }
+    }
+    // Meme politique de gel qu'onGameStartInitial : figer l'ordre recu.
+    if (newSeats.length) {
+      S.seats = newSeats.slice();
+      S._seatsFrozen = true;
+    }
+    for (const pid of S.seats) {
+      if (!S.seatData[pid]) S.seatData[pid] = {};
+      Object.assign(S.seatData[pid], {
+        money: stacks[pid] != null ? stacks[pid] : (S.gameStartMoney || 3000),
+        bet: 0, action: '', active: true, folded: false, gone: false
+      });
+    }
+    S._seatStackAtHandStart = {};
+    for (const _sp of S.seats) {
+      if (S.seatData[_sp] && S.seatData[_sp].money != null) S._seatStackAtHandStart[_sp] = S.seatData[_sp].money;
+    }
+    S._myStackAtHandStart = (S._seatStackAtHandStart[S.myId] != null) ? S._seatStackAtHandStart[S.myId] : null;
+
+    S.commCards = [null, null, null, null, null];
+    S.amInGame  = true;
+    var _gr = document.getElementById('g-round');
+    if (_gr) _gr.textContent = t('gameStart');
+
+    // Demander les infos des joueurs inconnus
+    for (const pid of S.seats) {
+      if (!S.players[pid]) {
+        const req = Proto.encode([[1,0,pid]]);
+        send(Proto.encode([[1,0,T.PlayerInfoRequest],[19,2,req]]));
+      }
+    }
+    window._rebroadcastAvatar();
+    window._prevDealerPid = S.dealerPid;
+    setTimeout(function(){ window.renderSeats(); }, 120);
+    window.renderGameWaiting(t('gameStartedWaitHand'));
+    return;
+}
+
 function onHandStart(sub) {
     // HandStartMessage: gameId=1, plainCards=2 {card1:1, card2:2}, smallBlind=4, seatStates=5, dealerPlayerId=6
     S.handNum++;
@@ -1026,7 +1101,7 @@ function onEndOfGame(sub) {
     return;
 }
 
-export { onGameStartInitial, onHandStart, onPlayersTurn, onPlayersActionDone, onDealFlop, onDealTurn, onDealRiver, onAllInShowCards, onEndOfHandShow, onEndOfHandHide, onYourActionRejected, onAfterHandShowCards, onEndOfGame };
+export { onGameStartInitial, onGameStartRejoin, onHandStart, onPlayersTurn, onPlayersActionDone, onDealFlop, onDealTurn, onDealRiver, onAllInShowCards, onEndOfHandShow, onEndOfHandHide, onYourActionRejected, onAfterHandShowCards, onEndOfGame };
 
-for (const [k, v] of Object.entries({ onGameStartInitial, onHandStart, onPlayersTurn, onPlayersActionDone, onDealFlop, onDealTurn, onDealRiver, onAllInShowCards, onEndOfHandShow, onEndOfHandHide, onYourActionRejected, onAfterHandShowCards, onEndOfGame }))
+for (const [k, v] of Object.entries({ onGameStartInitial, onGameStartRejoin, onHandStart, onPlayersTurn, onPlayersActionDone, onDealFlop, onDealTurn, onDealRiver, onAllInShowCards, onEndOfHandShow, onEndOfHandHide, onYourActionRejected, onAfterHandShowCards, onEndOfGame }))
   window[k] = v;
