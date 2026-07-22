@@ -8430,6 +8430,15 @@ html:not([data-seat-struct="qml"]) .seat:not(.me) .seat-foot { margin-top: 1px; 
 #g-assist-panel #g-assist-host{flex:1;min-height:0;display:flex}
 #g-assist-panel #gip-assist{flex:1;min-height:0;display:flex;flex-direction:column;justify-content:center;border-bottom:none;overflow:hidden;height:auto}
 #g-assist-panel #gip-assist .hs-txt{white-space:normal;overflow:visible;text-overflow:clip}
+/* Compact (mobile) : en-tête minimal — titre masqué, ⠿ + ↩ seuls, padding
+   réduit (~26px → ~20px). Drag (toute la barre) et double-clic recentrage
+   inchangés ; ↩ garde une cible tactile correcte via son padding. */
+@media (max-width:599.98px), (max-height:599.98px){
+  #g-assist-panel .g-chat-panel-header{padding:0 4px;min-height:20px}
+  #g-assist-panel .gip-assist-wtitle{display:none}
+  #g-assist-panel .gip-grip{font-size:var(--fs-2xs)}
+  #g-assist-panel .gip-assist-dock{padding:3px 10px;font-size:var(--fs-base);line-height:1}
+}
 /* Croix de fermeture des fenetres flottantes (odds + assistance). Suit --ws + le theme. */
 .win-x{position:absolute;top:calc(2px*var(--ws,1));right:calc(3px*var(--ws,1));width:calc(15px*var(--ws,1));height:calc(15px*var(--ws,1));line-height:calc(14px*var(--ws,1));text-align:center;border:0;background:transparent;color:var(--text);opacity:.5;font-size:calc(12px*var(--ws,1));cursor:pointer;padding:0;border-radius:calc(4px*var(--ws,1));z-index:3;font-family:inherit}
 .win-x:hover{opacity:1;color:var(--gold)}
