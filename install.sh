@@ -28,7 +28,7 @@
 #
 # Environment overrides (all optional):
 #   PORT NO_TLS INSTALL_DIR RUN_USER APP_NAME SETUP_FIREWALL ASSUME_YES
-#   REPO_URL BRANCH NODE_MAJOR
+#   REPO_URL BRANCH NODE_MAJOR SKIP_NODE_UPGRADE
 #
 # Licensed under AGPL-3.0-or-later, same as the project.
 
@@ -38,6 +38,7 @@ set -euo pipefail
 REPO_URL="${REPO_URL:-https://github.com/narmod/pokerth-web-client.git}"
 BRANCH="${BRANCH:-}"
 NODE_MAJOR="${NODE_MAJOR:-20}"
+SKIP_NODE_UPGRADE="${SKIP_NODE_UPGRADE:-}"
 PORT="${PORT:-}"
 NO_TLS="${NO_TLS:-}"
 INSTALL_DIR="${INSTALL_DIR:-}"
@@ -114,6 +115,17 @@ require_apt() {
 }
 
 run_home_of() { getent passwd "$1" 2>/dev/null | cut -d: -f6; }
+
+# True if a local TCP listener already uses the given port (best effort).
+port_in_use() {
+  if command -v ss >/dev/null 2>&1; then
+    ss -ltnH 2>/dev/null | awk '{print $4}' | grep -Eq "[:.]${1}\$"
+  elif command -v netstat >/dev/null 2>&1; then
+    netstat -ltn 2>/dev/null | awk '{print $4}' | grep -Eq "[:.]${1}\$"
+  else
+    return 1
+  fi
+}
 
 # ── State file (written on install, read on update/uninstall) ─────────────────
 conf_get() { sed -n "s/^$1=//p" "$CONF" 2>/dev/null | head -n1; }
@@ -233,6 +245,17 @@ BANNER
   [ -n "$PORT" ] || PORT="$(ask 'HTTP/WebSocket port' '8080')"
   case "$PORT" in ''|*[!0-9]*) warn "Invalid port, using 8080"; PORT=8080 ;; esac
   { [ "$PORT" -ge 1 ] && [ "$PORT" -le 65535 ]; } || { warn "Port out of range, using 8080"; PORT=8080; }
+  while port_in_use "$PORT"; do
+    warn "Port ${PORT} is already in use by another process on this server."
+    if [ "$HAS_TTY" -eq 1 ] && [ -z "$ASSUME_YES" ]; then
+      if ask_yn "Use port ${PORT} anyway (the proxy will fail to bind while it stays busy)?" 'N'; then break; fi
+      PORT="$(ask 'Choose another port' '8081')"
+      case "$PORT" in ''|*[!0-9]*) warn "Invalid port, using 8081"; PORT=8081 ;; esac
+    else
+      errln "Port ${PORT} is busy. Re-run with PORT=<free-port> (non-interactive mode)."
+      exit 1
+    fi
+  done
   if [ -z "$NO_TLS" ]; then ask_yn 'LAN-only mode (disable TLS)?' 'N' && NO_TLS=1 || NO_TLS=""; fi
   INSTALL_DIR="$(ask 'Install directory' "$INSTALL_DIR")"
   if [ -z "$SETUP_FIREWALL" ] && command -v ufw >/dev/null 2>&1; then
@@ -267,6 +290,18 @@ SUMMARY
   step "Ensuring user '${RUN_USER}' exists"
   if id -u "$RUN_USER" >/dev/null 2>&1; then
     ok "User '${RUN_USER}' already exists."
+    if [ "$RUN_USER" != "${SUDO_USER:-$(id -un)}" ] && pgrep -u "$RUN_USER" >/dev/null 2>&1; then
+      warn "User '${RUN_USER}' is already running processes — it likely operates another service"
+      warn "(e.g. a PokerTH game server). Installing under it mixes responsibilities."
+      if [ "$HAS_TTY" -eq 1 ] && [ -z "$ASSUME_YES" ]; then
+        if ! ask_yn "Continue with user '${RUN_USER}' anyway?" 'N'; then
+          errln "Aborted. Re-run with RUN_USER=<dedicated-user> (e.g. RUN_USER=pokerth-web) to use a separate account."
+          exit 1
+        fi
+      else
+        warn "Non-interactive mode — continuing. Set RUN_USER=<dedicated-user> to use a separate account."
+      fi
+    fi
   else
     info "Creating system user '${RUN_USER}'"
     as_root useradd --create-home --shell /bin/bash "$RUN_USER"
@@ -280,7 +315,24 @@ SUMMARY
   if command -v node >/dev/null 2>&1; then
     cur="$(node -p 'process.versions.node.split(".")[0]' 2>/dev/null || echo 0)"
     if [ "$cur" -ge "$NODE_MAJOR" ] 2>/dev/null; then ok "Node.js $(node -v) already installed."; need_node=0
-    else warn "Node.js $(node -v) older than v${NODE_MAJOR}; upgrading."; fi
+    elif [ -n "$SKIP_NODE_UPGRADE" ]; then
+      warn "Node.js $(node -v) is older than v${NODE_MAJOR}, but SKIP_NODE_UPGRADE is set — keeping it as is."
+      warn "The proxy is tested on Node ${NODE_MAJOR}+; older versions may not work."
+      need_node=0
+    elif [ "$HAS_TTY" -eq 1 ] && [ -z "$ASSUME_YES" ]; then
+      warn "Node.js $(node -v) (system-wide) is older than v${NODE_MAJOR}."
+      warn "Upgrading replaces the distro 'nodejs' package via the NodeSource apt repo,"
+      warn "which may affect OTHER services on this server that depend on the current Node."
+      if ! ask_yn "Replace system Node.js with v${NODE_MAJOR} (NodeSource)?" 'N'; then
+        errln "Aborted: Node.js was left untouched. Install Node ${NODE_MAJOR}+ yourself (e.g. nvm),"
+        errln "or re-run with SKIP_NODE_UPGRADE=1 to try with the current version."
+        exit 1
+      fi
+    else
+      errln "Node.js $(node -v) is older than v${NODE_MAJOR}. Refusing to replace the system Node non-interactively."
+      errln "Re-run with SKIP_NODE_UPGRADE=1 to keep it, or upgrade Node yourself, or run interactively to confirm."
+      exit 1
+    fi
   fi
   if [ "$need_node" -eq 1 ]; then
     if [ "$(id -u)" -eq 0 ]; then
