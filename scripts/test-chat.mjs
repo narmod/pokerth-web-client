@@ -16,6 +16,7 @@ window._isIgnored = (name) => name === 'Ignoré';
 window.addGameChat = () => {};
 window._advStripEmoji = (s) => s;
 window._chatTs = () => '12:00';
+window.renderHandsHelp = () => {};   // défini dans le monolithe en prod (appelé par i18n.setLang)
 
 const { S } = await import('../public/modules/game/state.mjs');
 const C = await import('../public/modules/ui/chat.mjs');
@@ -36,10 +37,14 @@ ok(chatEl.children.length === before + 1, 'message d\'un joueur ignoré filtré'
 // messages système : volontairement retirés du chat (demande narmod)
 C.addChat(null, 'info', 'sys');
 ok(chatEl.children.length === before + 1, "message 'sys' filtré (comportement voulu)");
-// garde addGameChat adaptée à la portée module : le hook window est bien appelé
+// addChat ne forwarde PLUS vers le chat de partie : le routage lobby/partie est
+// décidé par l'appelant (onChat, msg-social.mjs), comme le client QML
+// (LobbyHandler ↔ GameHandler séparés). Le test vérifiait l'ancien forward
+// automatique et échouait donc depuis ce changement.
 let hooked = 0; window.addGameChat = () => hooked++;
 C.addChat('Bob', 'yo', '');
-ok(hooked === 1 && chatEl.children.length === before + 2, 'hook window.addGameChat appelé');
+ok(chatEl.children.length === before + 2, 'addChat ajoute la ligne au panneau lobby');
+ok(hooked === 0, 'addChat ne forwarde pas vers le chat de partie (routage à l\'appelant)');
 
 // _chatLocalCmd(text, echo) : echo(name, text) rend la réponse localement
 const echoed = [];
