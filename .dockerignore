@@ -13,9 +13,12 @@ npm-debug.log*
 .env.example
 stats.json
 
-# Dev-only / docs (not needed at runtime)
+# Dev-only / docs (not needed at runtime). scripts/ itself IS needed: the
+# admin panel spawns scripts/*-manifest.mjs when importing deck/theme/table
+# packs — only the test suites are dev-only.
 docs
-scripts
+scripts/test-*.mjs
+scripts/build-proto.mjs
 install.sh
 README.md
 

@@ -7,14 +7,24 @@ COPY package*.json ./
 RUN npm install --omit=dev
 
 # Copy the application source (node_modules is excluded via .dockerignore,
-# so the clean production install above is preserved).
-COPY . .
+# so the clean production install above is preserved). --chown so the runtime
+# user can write under /app (gallery deck/theme/table imports land in public/).
+COPY --chown=node:node . .
 
-# Writable directory for the persisted session-stats file. A named volume is
-# mounted here by docker-compose so stats survive container recreation.
+# Writable directory for ALL persisted state. A named volume is mounted here
+# by docker-compose so everything survives container recreation: leaderboard,
+# admin-panel config, broadcasts, polls, visit counters, MySQL mirror config,
+# delegate API keys and per-player preferences.
 RUN mkdir -p /data && chown -R node:node /data
 ENV STATS_FILE=/data/stats.json
 ENV STATS_META_FILE=/data/stats.meta.json
+ENV ADMIN_CONFIG_FILE=/data/admin-config.json
+ENV BROADCASTS_FILE=/data/broadcasts.json
+ENV POLLS_FILE=/data/polls.json
+ENV VISITS_FILE=/data/visits.json
+ENV DB_CONFIG_FILE=/data/db-config.json
+ENV SCOPED_TOKENS_FILE=/data/scoped-tokens.json
+ENV PREFS_DIR=/data/prefs
 
 # Drop root privileges.
 USER node

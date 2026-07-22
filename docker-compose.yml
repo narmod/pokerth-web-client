@@ -17,9 +17,18 @@ services:
       # host.docker.internal (Docker Desktop) or the host's LAN IP — NOT
       # "localhost", which points to the container itself.
       - ALLOWED_HOSTS=${ALLOWED_HOSTS:-pokerth.net,www.pokerth.net}
+      # Optional knobs (empty = feature default). Set them in a .env file next
+      # to this compose file, or inline. Same semantics as the bare-metal
+      # installer's settings.
+      - ADMIN_ENABLED=${ADMIN_ENABLED:-}
+      - STATS_ADMIN_TOKEN=${STATS_ADMIN_TOKEN:-}
+      - STATS_RESET_PERIOD=${STATS_RESET_PERIOD:-}
+      - PROXY_LOG_LEVEL=${PROXY_LOG_LEVEL:-}
+      - PROXY_MAX_CLIENTS=${PROXY_MAX_CLIENTS:-}
     volumes:
-      # Persist the shared family leaderboard (/data/stats.json + the reset
-      # marker stats.meta.json) across container recreation.
+      # Persist ALL server-side state across container recreation: leaderboard,
+      # admin-panel config, broadcasts, polls, visit counters, MySQL mirror
+      # config, delegate API keys and per-player preferences (see Dockerfile).
       - pokerth-stats:/data
     restart: unless-stopped
     healthcheck:
@@ -31,3 +40,36 @@ services:
 
 volumes:
   pokerth-stats:
+
+# ── CasaOS metadata (ignored by plain `docker compose`) ──────────────────────
+# Lets this exact file be pasted into CasaOS → App Store → Custom install →
+# "Import" to install the web client as a CasaOS app. See docs/CASAOS.md.
+x-casaos:
+  architectures:
+    - amd64
+    - arm64
+    - arm
+  main: pokerth-web-client
+  store_app_id: pokerth-web-client
+  category: Games
+  author: narmod
+  developer: narmod
+  icon: https://raw.githubusercontent.com/narmod/pokerth-web-client/HEAD/public/icon-192.png
+  title:
+    en_us: PokerTH Web Client
+  tagline:
+    en_us: Play PokerTH from any browser — phone, tablet or desktop.
+    fr_fr: Jouez à PokerTH depuis n'importe quel navigateur.
+  description:
+    en_us: >-
+      Modern web client for the open-source poker game PokerTH. Bridges browser
+      WebSockets to any PokerTH server (pokerth.net by default), with offline
+      bot training, 36 languages, themes, achievements and a family leaderboard.
+    fr_fr: >-
+      Client web moderne pour le jeu de poker open source PokerTH. Relie le
+      navigateur à n'importe quel serveur PokerTH (pokerth.net par défaut),
+      avec entraînement hors ligne contre des bots, 36 langues, thèmes,
+      trophées et classement familial.
+  scheme: http
+  port_map: "8080"
+  index: /
