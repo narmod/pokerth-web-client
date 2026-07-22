@@ -50,7 +50,6 @@ function _seatCustomReset(n){
     try { localStorage.setItem('pth_seat_custom', JSON.stringify(all)); } catch (e) {} }
 }
 
-var _seatEditPrevZoom = null;
 window._seatEditMode = false;
 
 function _seatEditActive(){
@@ -85,8 +84,10 @@ window._seatEditExit = _seatEditExit;
 
 function _seatEditEnter(){
   // Rendu propre a zoom 1 AVANT de geler (drag 1:1, sieges alignes sur le feutre)
-  try { _seatEditPrevZoom = window._getTableZoom ? window._getTableZoom() : 1; } catch (e) { _seatEditPrevZoom = 1; }
-  try { localStorage.setItem('pth_table_zoom', '1'); } catch (e) {}  // TABLE_ZOOM_DEFAULT du monolithe
+  // NE PAS toucher a 'pth_table_zoom' : c'est l'interrupteur de l'option
+  // « Activer le zoom de table », pas une valeur de zoom (celle-ci vit sous
+  // _tableZoomKey() -> pth_tz2_*). L'y ecrire rallumait l'option a chaque
+  // entree en edition. Le monolithe force deja le rendu a zoom 1.
   _applyTableZoomSafe();
   window._seatEditMode = true;                           // gele les re-rendus
   document.documentElement.setAttribute('data-seat-edit', '1');
@@ -99,10 +100,6 @@ function _seatEditExit(){
   document.documentElement.removeAttribute('data-seat-edit');
   var b = document.getElementById('g-seat-edit'); if (b) b.classList.remove('active');
   _seatEditBanner(false);
-  if (_seatEditPrevZoom != null) {
-    try { localStorage.setItem('pth_table_zoom', String(_seatEditPrevZoom)); } catch (e) {}
-    _seatEditPrevZoom = null;
-  }
   _applyTableZoomSafe();                                  // rend + transforms au zoom restaure
 }
 
