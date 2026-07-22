@@ -126,8 +126,13 @@ function _gipAssistSync() {
   // visible tant que l'assistance est active, indépendamment du panneau info.
   if (S._assistDetached) {
     box.style.display = S._assistOn ? '' : 'none';
+    // La fenêtre détachée ne s'affiche qu'EN JEU (écran #s-game actif) :
+    // _gipAssistSync peut être appelé depuis n'importe quel écran (boot, i18n,
+    // options) et ré-affichait la fenêtre sur la page de login (bug remonté).
     var ap = document.getElementById('g-assist-panel');
-    if (ap) ap.style.display = S._assistOn ? '' : 'none';
+    var _sg = document.getElementById('s-game');
+    var _inGame = !!(_sg && _sg.classList.contains('active'));
+    if (ap) ap.style.display = (S._assistOn && _inGame) ? '' : 'none';
     try { if (typeof window._assistPaneSync === 'function') window._assistPaneSync(); } catch (e) {}
     return;
   }
