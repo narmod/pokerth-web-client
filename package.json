@@ -1,6 +1,6 @@
 {
   "name": "pokerth-web-client",
-  "version": "2.1.4-web.8",
+  "version": "2.1.4-web.9",
   "description": "Experimental modern web client for PokerTH using a WebSocket-to-TCP proxy.",
   "main": "proxy.js",
   "private": false,
@@ -69,9 +69,9 @@
     "ws": "^8.21.0"
   },
   "devDependencies": {
+    "jsdom": "^25.0.1",
     "protobufjs": "^8.4.2",
-    "protobufjs-cli": "^2.4.2",
-    "jsdom": "^25.0.0"
+    "protobufjs-cli": "^2.4.2"
   },
   "engines": {
     "node": ">=18"

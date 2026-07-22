@@ -99,6 +99,15 @@ function _ensureAssistPanel() {
   host.className = 'log-msgs';
   host.style.cssText = 'flex:1;min-height:0;overflow-y:auto;background:var(--chatlog-bg, var(--field-bg))';
   ap.appendChild(hd); ap.appendChild(host);
+  // Mobile (« mode pastille », CSS ≤600px) : l'en-tête est masqué → petit ↩
+  // overlay en coin pour rattacher ; le drag passe par toute la fenêtre.
+  var mini = document.createElement('button');
+  mini.type = 'button'; mini.className = 'gip-assist-dock-mini';
+  mini.setAttribute('data-i18n-title','assistDock'); mini.title = t('assistDock'); mini.textContent = '↩';
+  mini.addEventListener('click', dockAssist);
+  ap.appendChild(mini);
+  // Recentrage par double-clic aussi hors en-tête (utile quand il est masqué).
+  ap.addEventListener('dblclick', function(e){ if (e.target && e.target.closest && e.target.closest('button')) return; _recenterAssist(); });
   document.body.appendChild(ap);
   ap._hd = hd;
   return ap;
@@ -168,8 +177,12 @@ function detachAssist() {
     // la propriété CSS `zoom: var(--wz)`. defW/defH ≈ taille réelle du contenu
     // pour que le zoom parte de 1× ; le contenu remplit + centré (CSS) évite
     // tout espace blanc quand on agrandit. Largeur/position/hauteur mémorisées.
-    window._enableFloating(ap, { key:'pth_winpos_assist', handle: ap._hd,
-      resizable:true, minW:150, minH:64, defW:240, defH:88, zoom:true });
+    // handle = la fenêtre entière : drag depuis n'importe où (en-tête inclus,
+    // il « bubble ») — nécessaire sur mobile où l'en-tête est masqué. Les
+    // boutons sont exclus par makeWinDraggable ; les poignées de resize font
+    // stopPropagation. minH abaissé à 44 pour pouvoir réduire davantage.
+    window._enableFloating(ap, { key:'pth_winpos_assist', handle: ap,
+      resizable:true, minW:150, minH:44, defW:240, defH:88, zoom:true });
   } else {
     // Garde-fou : système de fenêtres pas encore prêt → position visible.
     ap.style.position = 'fixed'; ap.style.right = 'auto'; ap.style.bottom = 'auto';

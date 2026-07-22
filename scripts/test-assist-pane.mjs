@@ -35,10 +35,15 @@ ok(w.document.querySelector('#gip-assist-hd-row .odds-hd') != null, 'init : .odd
 ok(!!$('gip-split'), 'init : poignée de séparation #gip-split créée');
 ok($('gip-split').style.display === 'none', 'init : poignée masquée par défaut');
 ok(!!$('g-assist-panel') && $('g-assist-panel').style.display === 'none', 'init : fenêtre #g-assist-panel créée et masquée');
+ok(!!w.document.querySelector('#g-assist-panel .gip-assist-dock-mini'), 'init : bouton \u21a9 overlay (mode pastille mobile) présent');
 ok($('gip-split').previousElementSibling === $('gip-assist'), 'init : ordre DOM [gip-assist, gip-split]');
 ok($('gip-split').nextElementSibling === $('g-odds-body'), 'init : ordre DOM [gip-split, g-odds-body]');
 
 // ── Détachement ──
+// La fenêtre détachée n'est visible qu'EN JEU (#s-game.active) : activer
+// l'écran de jeu comme en conditions réelles.
+w.document.getElementById('s-connect').classList.remove('active');
+w.document.getElementById('s-game').classList.add('active');
 S._assistOn = true;
 AP.detachAssist();
 ok(S._assistDetached === true, 'détach : S._assistDetached = true');
@@ -57,6 +62,17 @@ S._assistOn = false; w._gipAssistSync();
 ok($('gip-assist').style.display === 'none' && $('g-assist-panel').style.display === 'none', 'détaché : assist off → fenêtre masquée');
 S._assistOn = true; w._gipAssistSync();
 ok($('gip-assist').style.display === '' && $('g-assist-panel').style.display === '', 'détaché : assist on → fenêtre affichée');
+
+// Régression (v2.1.4-web.6) : hors écran de jeu, _gipAssistSync ne doit PAS
+// ré-afficher la fenêtre (bug « assistance visible sur le login »).
+w.document.getElementById('s-game').classList.remove('active');
+w.document.getElementById('s-connect').classList.add('active');
+w._gipAssistSync();
+ok($('g-assist-panel').style.display === 'none', 'détaché : hors jeu → fenêtre masquée (régression login)');
+w.document.getElementById('s-connect').classList.remove('active');
+w.document.getElementById('s-game').classList.add('active');
+w._gipAssistSync();
+ok($('g-assist-panel').style.display === '', 'détaché : retour en jeu → fenêtre ré-affichée');
 
 // ── Rattachement ──
 AP.dockAssist();
