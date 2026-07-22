@@ -37,8 +37,14 @@ export const ServerType  = pb.AnnounceMessage.ServerType;          // serverType
 export const PlayerAction = pb.NetPlayerAction;                    // netActionFold=1, netActionCheck=2, ...
 export const ErrorReason = pb.ErrorMessage.ErrorReason;            // initAuthFailure=3, initPlayerNameInUse=4, ...
 
-// PokerTH 2.0.6 build id: (CLIENT_TYPE_QT_WIDGET<<24)|(2<<16)|(0<<8)|6
-export const BUILD_ID = 0x01020006; // 16908294
+// PokerTH build id composite : (clientType<<24)|(major<<16)|(minor<<8)|patch.
+// ⚠ SOURCE DE VERITE : public/modules/net/proto.mjs + net/messages.mjs
+// (buildInit y definit le BUILD_ID reellement envoye au serveur). Cette
+// facade protobuf.js n'est PAS utilisee par le client en production —
+// seulement par /proto/test.html. On la garde alignee pour eviter deux
+// verites divergentes (elle affichait 2.0.6 alors que le client emettait
+// 2.1.3, source de confusion en audit).
+export const BUILD_ID = 0x01020103; // 16908547 = Qt-Widget 2.1.3 (= net/messages.mjs)
 
 // ─────────────────────────────────────────────────────────────────────────
 // Encoders — drop-in replacements for the manual builders in pokerth.js
