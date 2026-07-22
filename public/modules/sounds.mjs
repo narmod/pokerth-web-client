@@ -52,6 +52,10 @@ function getSoundVolume() {
 function setSoundVolume(v) {
   v = parseFloat(v); if (isNaN(v)) v = 0.8; v = Math.max(0, Math.min(1, v));
   try { localStorage.setItem('pth_sound_vol', String(v)); } catch(e) {}
+  // Le GainNode maitre existe deja des le premier son joue : sans cette ligne
+  // le curseur n'agissait qu'apres recreation du contexte (donc au reload).
+  if (_master) try { _master.gain.value = v; } catch(e) {}
+  return v;
 }
 
 // ─── Catégories de sons (parité réglages Sound du client QML, bible §14) ──
@@ -63,8 +67,6 @@ function setSoundVolume(v) {
 // Écrits par setAdvOpt('snd_*') dans Options avancées → Son.
 function sndCat(key) {
   try { return localStorage.getItem('pth_snd_' + key) !== '0'; } catch(e) { return true; }
-  if (_master) try { _master.gain.value = v; } catch(e) {}
-  return v;
 }
 // Destination des nœuds sonores = le gain maître (créé à la volée sur le
 // contexte courant). Fallback direct sur la sortie si la création échoue.

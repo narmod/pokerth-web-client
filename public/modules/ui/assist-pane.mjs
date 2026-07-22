@@ -246,7 +246,7 @@ function _initAssistPane() {
   // l'activation/désactivation de l'écran #s-game.
   var _g = document.getElementById('s-game');
   if (_g && window.MutationObserver) {
-    new MutationObserver(_syncAssistWinScreen).observe(_g, { attributes: true, attributeFilter: ['class'] });
+    new window.MutationObserver(_syncAssistWinScreen).observe(_g, { attributes: true, attributeFilter: ['class'] });
   }
   _syncAssistWinScreen();
 }

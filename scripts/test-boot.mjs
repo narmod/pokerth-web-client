@@ -12,7 +12,10 @@ const html = readFileSync('public/pokerth-client.html', 'utf8');
 const dom = new JSDOM(html, { url: 'https://pokerth.ddns.net/', pretendToBeVisual: true, runScripts: 'outside-only' });
 const w = dom.window;
 globalThis.window = w;
-for (const k of ['document','localStorage','location','requestAnimationFrame','getComputedStyle','CustomEvent','Event']) {
+// Classes DOM utilisees NUES par les modules (resolues via window en vrai
+// navigateur) : sans elles, l'import du module leve des le top-level.
+for (const k of ['document','localStorage','location','requestAnimationFrame','getComputedStyle','CustomEvent','Event',
+                 'MutationObserver','IntersectionObserver','ResizeObserver','NodeFilter','Node','HTMLElement']) {
   try { globalThis[k] = w[k]; } catch (e) {}
 }
 w.matchMedia = w.matchMedia || (() => ({ matches: false, addListener() {}, addEventListener() {} }));
@@ -46,6 +49,13 @@ try {
   // module (strict + déclarations top-level NON globales) par IIFE stricte.
   vm.runInContext("(function(){'use strict';\n" + readFileSync('public/pokerth.js', 'utf8') + "\n})();", ctx, { filename: 'pokerth.js' });
 } catch (e) { bootErr = e; }
+// Re-pont : pokerth.js pose SES globaux (applyTableZoom, MSG, esc...) sur
+// window pendant son evaluation. Sans cette seconde passe, les modules charges
+// par node ne les voient pas et tout listener non garde casse le test.
+for (const k of Object.getOwnPropertyNames(w)) {
+  if (k === 'performance' || k in globalThis) continue;
+  try { globalThis[k] = w[k]; } catch (e) {}
+}
 ok(!bootErr, 'pokerth.js évalué sans exception' + (bootErr ? ' — ' + bootErr.message : ''));
 ok(vm.runInContext("typeof window.App === 'object' && window.App !== null", ctx),
    'window.App défini (pont 9g-A1 — les handlers inline le résolvent via window)');

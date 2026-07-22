@@ -939,6 +939,12 @@ function statColor(id, v) {
   return 'hsl(' + hue + ',64%,58%)';
 }
 
+// Rangs de la grille 13x13, du plus FORT au plus faible (A en haut a gauche,
+// convention des range charts). L'ordre decroissant garantit que cellCombo
+// produit le rang fort en premier ('AKs', pas 'KAs') — meme convention que
+// cardsToCombo, sinon aucune cellule ne matcherait les combos comptes.
+const GRID_RANKS = ['A', 'K', 'Q', 'J', 'T', '9', '8', '7', '6', '5', '4', '3', '2'];
+
 // Combo d'une cellule (row,col) : diagonale = paires, haut-droite = suited,
 // bas-gauche = offsuit.
 function cellCombo(row, col) {

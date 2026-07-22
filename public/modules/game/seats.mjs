@@ -85,9 +85,9 @@ window._seatEditExit = _seatEditExit;
 
 function _seatEditEnter(){
   // Rendu propre a zoom 1 AVANT de geler (drag 1:1, sieges alignes sur le feutre)
-  _seatEditPrevZoom = _getTableZoom();
-  try { localStorage.setItem('pth_table_zoom', String(TABLE_ZOOM_DEFAULT)); } catch (e) {}
-  try { applyTableZoom(); } catch (e) {}
+  try { _seatEditPrevZoom = window._getTableZoom ? window._getTableZoom() : 1; } catch (e) { _seatEditPrevZoom = 1; }
+  try { localStorage.setItem('pth_table_zoom', '1'); } catch (e) {}  // TABLE_ZOOM_DEFAULT du monolithe
+  _applyTableZoomSafe();
   window._seatEditMode = true;                           // gele les re-rendus
   document.documentElement.setAttribute('data-seat-edit', '1');
   var b = document.getElementById('g-seat-edit'); if (b) b.classList.add('active');
@@ -103,7 +103,7 @@ function _seatEditExit(){
     try { localStorage.setItem('pth_table_zoom', String(_seatEditPrevZoom)); } catch (e) {}
     _seatEditPrevZoom = null;
   }
-  try { applyTableZoom(); } catch (e) {}                  // rend + transforms au zoom restaure
+  _applyTableZoomSafe();                                  // rend + transforms au zoom restaure
 }
 
 // Glisser un siege (self comprise). Delegation posee une seule fois sur
@@ -177,8 +177,14 @@ function _seatEditBanner(show){
   document.body.appendChild(el);
 }
 
-document.addEventListener('DOMContentLoaded', function() { setTimeout(applyTableZoom, 500); });
-window.addEventListener('resize', function() { applyTableZoom(); });
+// applyTableZoom vit dans le monolithe (window.applyTableZoom, pose a la fin de
+// pokerth.js). Meme garde que les 4 autres appels du fichier : sans elle, un
+// echec d'evaluation du monolithe transformait CHAQUE resize en ReferenceError.
+function _applyTableZoomSafe() {
+  try { if (typeof window.applyTableZoom === 'function') window.applyTableZoom(); } catch (e) {}
+}
+document.addEventListener('DOMContentLoaded', function() { setTimeout(_applyTableZoomSafe, 500); });
+window.addEventListener('resize', _applyTableZoomSafe);
 
 function autoScaleTable() {
   var tz = document.getElementById('g-table-zone');
