@@ -89,7 +89,15 @@ function onChat(sub) {
     // Mon propre message : déjà affiché en optimiste à l'envoi (classe 'mine').
     // Le serveur le rediffuse à tous, expéditeur compris → on ignore l'écho
     // pour ne pas afficher la ligne en double (broadcast ctype===3 conservé).
-    addChat(who, text, cls);
+    // ── Routage par chatType (parité QML LobbyHandler ↔ GameHandler) ──
+    //   0 lobby → panneau lobby seul · 1 partie → chat de partie seul ·
+    //   2 bot → chat de partie si gameId présent (field 1), sinon lobby ·
+    //   3 broadcast → les deux panneaux · autres (privé…) → lobby.
+    const gid    = Proto.u32(sub, 1);
+    const toGame = ctype === 1 || ctype === 3 || (ctype === 2 && gid > 0);
+    const toLobby = !toGame || ctype === 3;
+    if (toGame && typeof window.addGameChat === 'function') window.addGameChat(who, text, cls);
+    if (toLobby) addChat(who, text, cls);
   }
 }
 

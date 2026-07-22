@@ -281,7 +281,9 @@ function addChat(sender, text, cls='', spec) {
   // joueur sache pourquoi il a été retiré, et le chat est le bon endroit.
   if (cls === 'sys' && !(spec && spec.force)) return;
   if (sender && cls !== 'mine' && window._isIgnored(sender)) return; // joueur ignoré : aucun rendu
-  if (typeof window.addGameChat === 'function') window.addGameChat(sender, text, cls, spec);
+  // NB : plus de forward automatique vers addGameChat — le routage
+  // lobby/partie est décidé par l'appelant (onChat, msg-social.mjs),
+  // comme le client QML (LobbyHandler ↔ GameHandler séparés).
   // Flash lobby chat button on new message
   var lcp = document.getElementById('lobby-chat-panel');
   var lcb = document.getElementById('lobby-chat-btn');
