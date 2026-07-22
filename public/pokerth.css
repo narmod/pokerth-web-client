@@ -8424,7 +8424,7 @@ html:not([data-seat-struct="qml"]) .seat:not(.me) .seat-foot { margin-top: 1px; 
 #g-assist-panel.floating-win{display:flex;flex-direction:column}
 #g-assist-panel .gip-assist-wtitle{flex:1;margin:0 6px;font-size:var(--fs-2xs);color:var(--gold-dim);letter-spacing:0.15em;text-transform:uppercase;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 #g-assist-panel .gip-assist-dock{flex:0 0 auto;background:none;border:none;color:var(--chatlog-text2, var(--chatlog-text, var(--text)));cursor:pointer;font-size:var(--fs-md);padding:0 4px}
-#g-assist-panel .gip-assist-dock-mini{display:none;position:absolute;top:1px;right:2px;z-index:3;background:none;border:none;color:var(--chatlog-text2, var(--chatlog-text, var(--text)));opacity:.7;cursor:pointer;font-size:var(--fs-base);padding:2px 7px;line-height:1;border-radius:4px}
+#g-assist-panel .gip-assist-dock-mini{display:block;position:absolute;top:1px;right:2px;z-index:3;background:none;border:none;color:var(--chatlog-text2, var(--chatlog-text, var(--text)));opacity:.7;cursor:pointer;font-size:var(--fs-base);padding:2px 7px;line-height:1;border-radius:4px}
 #g-assist-panel .gip-assist-dock-mini:hover{opacity:1;color:var(--gold)}
 /* Détaché : le corps remplit la fenêtre et centre le contenu (fond uniforme →
    pas d'espace blanc). La mise à l'échelle du texte est gérée par zoom:var(--wz)
@@ -8432,13 +8432,11 @@ html:not([data-seat-struct="qml"]) .seat:not(.me) .seat-foot { margin-top: 1px; 
 #g-assist-panel #g-assist-host{flex:1;min-height:0;display:flex}
 #g-assist-panel #gip-assist{flex:1;min-height:0;display:flex;flex-direction:column;justify-content:center;border-bottom:none;overflow:hidden;height:auto}
 #g-assist-panel #gip-assist .hs-txt{white-space:normal;overflow:visible;text-overflow:clip}
-/* Mobile : « mode pastille » — en-tête masqué, ↩ en overlay dans le coin,
-   drag via toute la fenêtre (handle = fenêtre, câblé dans assist-pane.mjs),
-   double-clic n'importe où pour recentrer. */
-@media (max-width:599.98px), (max-height:599.98px){
-  #g-assist-panel .g-chat-panel-header{display:none}
-  #g-assist-panel .gip-assist-dock-mini{display:block}
-}
+/* « Mode pastille » sur TOUTES les plateformes (mobile, tablette, desktop) :
+   en-tête masqué, ↩ en overlay dans le coin, drag via toute la fenêtre
+   (handle = fenêtre, câblé dans assist-pane.mjs), double-clic n'importe où
+   pour recentrer. */
+#g-assist-panel .g-chat-panel-header{display:none}
 /* Croix de fermeture des fenetres flottantes (odds + assistance). Suit --ws + le theme. */
 .win-x{position:absolute;top:calc(2px*var(--ws,1));right:calc(3px*var(--ws,1));width:calc(15px*var(--ws,1));height:calc(15px*var(--ws,1));line-height:calc(14px*var(--ws,1));text-align:center;border:0;background:transparent;color:var(--text);opacity:.5;font-size:calc(12px*var(--ws,1));cursor:pointer;padding:0;border-radius:calc(4px*var(--ws,1));z-index:3;font-family:inherit}
 .win-x:hover{opacity:1;color:var(--gold)}

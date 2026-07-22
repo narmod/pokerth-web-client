@@ -99,8 +99,8 @@ function _ensureAssistPanel() {
   host.className = 'log-msgs';
   host.style.cssText = 'flex:1;min-height:0;overflow-y:auto;background:var(--chatlog-bg, var(--field-bg))';
   ap.appendChild(hd); ap.appendChild(host);
-  // Mobile (« mode pastille », CSS ≤600px) : l'en-tête est masqué → petit ↩
-  // overlay en coin pour rattacher ; le drag passe par toute la fenêtre.
+  // « Mode pastille » (toutes plateformes, CSS) : l'en-tête est masqué → petit
+  // ↩ overlay en coin pour rattacher ; le drag passe par toute la fenêtre.
   var mini = document.createElement('button');
   mini.type = 'button'; mini.className = 'gip-assist-dock-mini';
   mini.setAttribute('data-i18n-title','assistDock'); mini.title = t('assistDock'); mini.textContent = '↩';
