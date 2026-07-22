@@ -24,9 +24,18 @@ const DONE_MAX = 20;
 let _poll = null;               // sondage actif publie par /app-config
 const _hiddenThisSession = {};  // ferme SANS repondre : revient a la session suivante
 
-// L'opt-in est une option avancee normale (setAdvOpt('polls', …) ecrit ici).
-// Absente = desactivee : personne ne voit un sondage sans l'avoir demande.
-function _optOn() { try { return localStorage.getItem('pth_polls') === '1'; } catch (e) { return false; } }
+// Option avancee normale (setAdvOpt('polls', …) ecrit ici). Miroir exact de
+// _advGet(key, defOn) cote monolithe : cle absente = valeur par defaut, sinon
+// '1'/'0'. Defaut ACTIF — l'encart est visible sans demarche, et se decoche
+// dans les options avancees. Afficher ne transmet rien : le vid ne part qu'au
+// clic sur une option.
+function _optOn() {
+  try {
+    const v = localStorage.getItem('pth_polls');
+    if (v === null) return true;
+    return v === '1';
+  } catch (e) { return true; }
+}
 
 function _doneList() {
   try { return (localStorage.getItem(DONE_KEY) || '').split(',').filter(Boolean); } catch (e) { return []; }

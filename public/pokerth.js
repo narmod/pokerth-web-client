@@ -364,7 +364,7 @@ function openAdvancedOptions() {
   sync('adv-keynav', 'keynav', true);   // Esc = annuler / Enter = valider (defaut on)
   sync('adv-tablezoom', 'table_zoom', true);
   sync('adv-lobbychat', 'lobby_chat', true);
-  sync('adv-polls', 'polls', false);   // sondages produit : opt-in strict, jamais par defaut
+  sync('adv-polls', 'polls', true);   // sondages produit : visible par defaut, decochable ici
   sync('adv-connpill', 'conn_pill', true);   // pastille de connexion sur le feutre (web)
   sync('adv-pausehands', 'pause_hands', false);
   sync('adv-createdialog', 'create_dialog', true);
@@ -8829,7 +8829,7 @@ window.togglePlayersPanel = togglePlayersPanel;
 window.toggleReactionPanel = toggleReactionPanel;
 window.App = App;
 
-window.BUILD_VERSION='0.3.1018-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='0.3.1019-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
