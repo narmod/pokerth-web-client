@@ -560,6 +560,7 @@ function onAvatarImageChosen(input) {
     '/modules/ui/game-info.mjs',
     '/modules/ui/odds-panel.mjs',
     '/modules/ui/assist-pane.mjs',
+    '/modules/ui/back-guard.mjs',
     '/modules/ui/table-cards.mjs',
     '/modules/ui/action-bar.mjs',
     '/modules/net/msg-avatars.mjs',
@@ -2239,6 +2240,7 @@ function onAvatarImageChosen(input) {
 <script type="module" src="modules/net/avatar-cache.mjs"></script>
 <script type="module" src="modules/ui/misc.mjs"></script>
 <script type="module" src="modules/ui/keynav.mjs"></script>
+<script type="module" src="modules/ui/back-guard.mjs"></script>
 <!-- Quit-game confirmation dialog: 2 buttons (Quit / Cancel).
      Shown when the user clicks the ✕ button in the header from inside
      a game. Driven by App.confirmLeaveGame() (open) and
@@ -2572,6 +2574,7 @@ if ('serviceWorker' in navigator) {
       <label class="adv-row"><input type="checkbox" id="adv-tooltips" onchange="setTooltips(this.checked)"><span data-i18n="advShowTooltips">Show tooltips</span><em class="adv-webtag">web</em></label>
       <label class="adv-row"><input type="checkbox" id="adv-pokeren" onchange="setAdvOpt('poker_en',this.checked)"><span data-i18n="advPokerTerms">Do not translate international poker terms (Check, Call, Raise)</span></label>
       <label class="adv-row"><input type="checkbox" id="adv-browserzoom" onchange="setAdvOpt('browser_zoom',this.checked)"><span data-i18n="advBrowserZoom">Allow browser zoom (pinch) on phone / tablet</span><em class="adv-webtag">web</em></label>
+      <label class="adv-row"><input type="checkbox" id="adv-backguard" onchange="setAdvOpt('back_guard',this.checked);if(window.refreshBackGuard)window.refreshBackGuard()"><span data-i18n="advBackGuard">Back button closes windows instead of leaving the game (Android)</span></label>
       <label class="adv-row adv-soon"><input type="checkbox" disabled><span data-i18n="advDisableSplash">Disable the splash screen on startup</span><em data-i18n="advNA">n/a</em></label>
       </details>
       <details class="adv-fold"><summary class="adv-sec"><span class="adv-sec-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="12" rx="8.5" ry="5.5"/><ellipse cx="12" cy="12" rx="4.8" ry="2.7"/></svg></span><span data-i18n="advSecTable">Table</span></summary>

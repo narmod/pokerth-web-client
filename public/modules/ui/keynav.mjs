@@ -134,6 +134,17 @@ function _onKey(e) {
   }
 }
 
+// Ferme la surface ouverte la plus prioritaire. Renvoie true si quelque chose
+// a été fermé. Utilisé par Escape (ci-dessus) ET par le bouton Retour Android
+// (ui/back-guard.mjs) : parité QML « Escape, Back (Android) » (bible §6). Ne
+// dépend PAS de l'option pth_keynav, qui ne concerne que le clavier.
+export function closeTop() {
+  var s = _topSurface();
+  if (!s) return false;
+  try { s.close(); } catch (err) { return false; }
+  return true;
+}
+
 // Enregistrement à chaud, pour les surfaces créées dynamiquement.
 // close() doit ANNULER (jamais valider).
 export function registerOverlay(el, close) {
@@ -149,3 +160,4 @@ export function registerOverlay(el, close) {
 document.addEventListener('keydown', _onKey, true);   // capture : avant les
                                                       // handlers locaux
 window.keynavRegisterOverlay = registerOverlay;
+window.keynavCloseTop = closeTop;

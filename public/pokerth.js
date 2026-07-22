@@ -365,6 +365,7 @@ function openAdvancedOptions() {
   sync('adv-keynav', 'keynav', true);   // Esc = annuler / Enter = valider (defaut on)
   sync('adv-tablezoom', 'table_zoom', true);
   sync('adv-browserzoom', 'browser_zoom', false);   // zoom navigateur : bloqué par défaut sur tactile
+  sync('adv-backguard', 'back_guard', true);        // bouton Retour Android = Escape (parité QML §6)
   sync('adv-lobbychat', 'lobby_chat', true);
   sync('adv-polls', 'polls', true);   // sondages produit : visible par defaut, decochable ici
   sync('adv-connpill', 'conn_pill', true);   // pastille de connexion sur le feutre (web)
@@ -8935,7 +8936,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.4-web.16'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.4-web.17'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
