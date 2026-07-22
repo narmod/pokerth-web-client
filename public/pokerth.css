@@ -2081,8 +2081,12 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
   box-sizing: border-box;
   padding: 0 clamp(8px, calc(9px * var(--comm-scale, 1)), 14px);
   border-radius: var(--r-pill);
-  background: rgba(227,200,0,0.14);          /* teinte accent or QML, stable clair/sombre */
-  border: 1px solid rgba(227,200,0,0.55);
+  /* Accent du THEME (equivalent web de Theme.colorAccent cote QML), pas un or
+     fige : --sel vaut #E3C800 en sombre et #9a7d0a en clair, et suit le theme
+     de table choisi. Meme source que #g-spec-badge, les deux pastilles du
+     bandeau restent donc assorties. */
+  background: rgba(var(--sel-rgb, 227,200,0), 0.14);
+  border: 1px solid rgba(var(--sel-rgb, 227,200,0), 0.55);
   color: var(--sel, #E3C800);
   font-family: var(--ff-mono);
   font-weight: 700;
@@ -2095,7 +2099,7 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
    devient enfant flex DIRECT de .gsb-mid et se centre verticalement
    exactement comme #g-spec-badge (même offset depuis le haut de la barre). */
 #g-blinds-slot { display: contents; }
-.blinds-next:hover, .blinds-next:focus { background: rgba(227,200,0,0.26); border-color: var(--sel, #E3C800); outline: none; }
+.blinds-next:hover, .blinds-next:focus { background: rgba(var(--sel-rgb, 227,200,0), 0.26); border-color: var(--sel, #E3C800); outline: none; }
 /* Bandeau d'info/alerte blinds. Centré en haut, masqué par défaut, révélé
    via .show (transition). Affiche : ↑ Blinds  cur → next  · quand. */
 .blinds-up-toast {
