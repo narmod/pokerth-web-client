@@ -940,11 +940,69 @@ var _CFG_WEB_SYNC_KEYS = [
   'pth_seat_custom', 'pth_keys', 'pth_lang', 'pth_offline_skill',
   'pth_log_interval', 'pth_avatar', 'pth_ignored', 'pth_prefs_lan'
 ];
+// Succès (mode entraînement) : mêmes transport et compte que les réglages, mais
+// réconciliation par FUSION et non par écrasement — la progression est cumulative,
+// donc deux appareils ne peuvent pas se contredire : union des succès débloqués
+// (on garde le déblocage le plus ancien) et maximum des compteurs.
+var _ACH_SYNC_KEYS = ['pth_ach_unlocked', 'pth_ach_hands', 'pth_ach_gamesWon',
+                     'pth_ach_beatenSkills', 'pth_ach_wonStyles'];
+var _cfgWebForcePush = false;   // le local était plus riche : repousser après fusion
+function _achNorm(k, v) {       // sérialisation stable (comparaisons fiables)
+  try {
+    if (k === 'pth_ach_unlocked') {
+      var o = v || {}, out = {};
+      Object.keys(o).sort().forEach(function (id) { out[id] = o[id]; });
+      return JSON.stringify(out);
+    }
+    if (k === 'pth_ach_hands' || k === 'pth_ach_gamesWon') return JSON.stringify(v || 0);
+    return JSON.stringify((v || []).slice().sort());
+  } catch (e) { return ''; }
+}
+function _achMergeOne(k, mine, theirs) {
+  if (k === 'pth_ach_unlocked') {
+    var out = {}, a = mine || {}, b = theirs || {};
+    Object.keys(a).forEach(function (id) { out[id] = a[id]; });
+    Object.keys(b).forEach(function (id) {
+      out[id] = (out[id] == null) ? b[id] : Math.min(out[id], b[id]);   // 1er déblocage
+    });
+    return out;
+  }
+  if (k === 'pth_ach_hands' || k === 'pth_ach_gamesWon') {
+    return Math.max(parseInt(mine, 10) || 0, parseInt(theirs, 10) || 0);
+  }
+  var set = {};
+  (Array.isArray(mine) ? mine : []).concat(Array.isArray(theirs) ? theirs : [])
+    .forEach(function (x) { if (x != null) set[x] = 1; });
+  return Object.keys(set);
+}
+// Fusionne le blob distant dans le local. Renvoie true si le local est un
+// sur-ensemble du distant (⇒ il faut repousser pour que le compte rattrape).
+function _achMergeIn(o) {
+  var needPush = false;
+  _ACH_SYNC_KEYS.forEach(function (k) {
+    var raw = o ? (o[k.toLowerCase()] != null ? o[k.toLowerCase()] : o[k]) : null;
+    if (typeof raw !== 'string' || raw.length > 20000) return;
+    var theirs = null, mine = null;
+    try { theirs = JSON.parse(raw); } catch (e) { return; }
+    try { var lv = _cfgLs(k); mine = lv == null ? null : JSON.parse(lv); } catch (e) { mine = null; }
+    var merged = _achMergeOne(k, mine, theirs);
+    var sm = _achNorm(k, merged);
+    if (sm !== _achNorm(k, theirs)) needPush = true;          // on a plus qu'eux
+    try { if (_cfgLs(k) !== sm) localStorage.setItem(k, sm); } catch (e) {}
+  });
+  return needPush;
+}
 function _cfgWebCollect() {
   var o = {};
   _CFG_WEB_SYNC_KEYS.forEach(function (k) {
     var v = _cfgLs(k);
     if (v != null && v.length <= 20000) o[k] = v;   // skippe les valeurs énormes (ex. avatar image)
+  });
+  _ACH_SYNC_KEYS.forEach(function (k) {
+    var v = _cfgLs(k);
+    // Le proxy ne retient que /^pth_[a-z0-9_]+$/ : on transmet en minuscules
+    // (les clés locales gardent leur casse d'origine).
+    if (v != null && v.length <= 20000) o[k.toLowerCase()] = v;
   });
   return o;
 }
@@ -955,7 +1013,8 @@ function _cfgWebDirty() {
 function _cfgWebPushNow(keepalive) {
   if (!_cfgSyncToken || !_cfgSyncEnabled()) return;
   var body; try { body = JSON.stringify(_cfgWebCollect()); } catch (e) { return; }
-  if (body === (_cfgLs('pth_cfg_sync_weblast') || '')) return;   // rien de neuf
+  if (body === (_cfgLs('pth_cfg_sync_weblast') || '') && !_cfgWebForcePush) return;   // rien de neuf
+  _cfgWebForcePush = false;
   fetch('/prefs-web',
         { method: 'PUT', headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + _cfgSyncToken }, body: body, keepalive: !!keepalive })
     .then(function (r) {
@@ -975,6 +1034,9 @@ function _cfgWebPushNow(keepalive) {
 function _cfgWebApply(o) {
   if (!o || typeof o !== 'object') return;
   var changed = false;
+  try {
+    if (_achMergeIn(o)) { _cfgWebForcePush = true; _cfgSyncPushSoon(1500); }
+  } catch (e) {}
   _CFG_WEB_SYNC_KEYS.forEach(function (k) {
     if (typeof o[k] === 'string' && o[k].length <= 20000) {
       try {
@@ -1067,6 +1129,12 @@ window.cfgSyncToggle = function (el) {
   if (el && el.checked) _cfgSyncPull();
 };
 // Dernière chance avant fermeture/onglet caché : push best-effort.
+// Un succès vient d'être débloqué : programmer une remontée vers le compte
+// (no-op hors ligne — la progression partira à la prochaine connexion).
+window.addEventListener('pth-achievement', function () {
+  try { localStorage.setItem('pth_cfg_sync_dirty', '1'); } catch (e) {}
+  try { _cfgSyncPushSoon(3000); } catch (e) {}
+});
 window.addEventListener('pagehide', function () {
   try { if (_cfgLs('pth_cfg_sync_dirty') === '1' || _cfgWebDirty()) _cfgSyncPushNow(true); } catch (e) {}
 });
@@ -8617,7 +8685,7 @@ window.togglePlayersPanel = togglePlayersPanel;
 window.toggleReactionPanel = toggleReactionPanel;
 window.App = App;
 
-window.BUILD_VERSION='0.3.1008-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='0.3.1009-beta'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
