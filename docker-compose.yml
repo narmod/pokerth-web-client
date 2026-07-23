@@ -29,9 +29,14 @@ services:
       - STATS_RESET_PERIOD=${STATS_RESET_PERIOD:-}
       - PROXY_LOG_LEVEL=${PROXY_LOG_LEVEL:-}
       - PROXY_MAX_CLIENTS=${PROXY_MAX_CLIENTS:-}
-      # Self-updating mode (see the volumes section below and
-      # docker-compose.selfupdate.example.yml). Empty = classic immutable image.
-      - SELF_UPDATE=${SELF_UPDATE:-}
+      # Self-updating install — DEFAULT. On first start the entrypoint
+      # provisions a git checkout of this repo into the pokerth-app volume and
+      # runs the app from it; the /admin "Update" button then works out of the
+      # box (install mode "docker-git"). Set SELF_UPDATE=0 in .env for the
+      # classic immutable image (updates via docker compose pull && up -d).
+      # Fully fail-safe: offline or volume problems fall back to the baked-in
+      # image code — the container always starts.
+      - SELF_UPDATE=${SELF_UPDATE:-1}
       - GIT_BRANCH=${GIT_BRANCH:-}
       - GIT_REPO=${GIT_REPO:-}
     volumes:
@@ -39,22 +44,20 @@ services:
       # admin-panel config, broadcasts, polls, visit counters, MySQL mirror
       # config, delegate API keys and per-player preferences (see Dockerfile).
       - pokerth-stats:/data
-      # Working copy for the optional self-updating mode. Empty and unused
-      # unless SELF_UPDATE=1, so it costs nothing to keep mounted — and it
-      # means turning self-update on later needs NO change to this file.
+      # Working copy for the self-updating mode (default). Only used when
+      # SELF_UPDATE=1; costs nothing otherwise.
       - pokerth-app:/srv/app
       #
       # SELF-UPDATE FROM THE ADMIN PAGE (optional). Install mode then reads
       # "docker-git" in /admin → Status and the "Update" button pulls,
       # reinstalls deps and restarts in place. Two ways to get it:
       #
-      # (a) RECOMMENDED — nothing to clone, nothing to edit here. Put
-      #     SELF_UPDATE=1 in the .env file next to this compose file, then
-      #     `docker compose up -d`. On first start the entrypoint provisions a
-      #     git checkout into the pokerth-app volume above and runs the app
-      #     from it. Note: the code then comes from git, so `docker compose
-      #     pull` alone no longer changes the running version — update from
-      #     /admin (or `docker compose restart`, which re-syncs on boot).
+      # (a) DEFAULT (SELF_UPDATE=1 above) — nothing to do. The entrypoint
+      #     provisions a git checkout into the pokerth-app volume above and
+      #     runs the app from it. Note: the code then comes from git, so
+      #     `docker compose pull` alone no longer changes the running version
+      #     — update from /admin (or `docker compose restart`, which
+      #     re-syncs on boot). Opt out with SELF_UPDATE=0 in .env.
       #
       # (b) Bind-mount your own git clone over the baked-in code. The directory
       #     must be a real clone (NOT a submodule of another repo — its .git

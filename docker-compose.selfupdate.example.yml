@@ -1,38 +1,20 @@
-# ── Self-updating install — EXAMPLE (usually NOT needed) ────────────────────
+# ── Immutable-image install — EXAMPLE (opt-out of self-update) ────────────# Self-update from the admin page is now the DEFAULT (see docker-compose.yml):
+# the container provisions its own git checkout and the /admin "Update" button
+# works out of the box. You do NOT need this file for that.
 #
-# ⚠ Do NOT copy this file over an existing `docker-compose.override.yml`.
-#   That file is where site-specific settings live (external network for a
-#   reverse proxy, extra ports…) and overwriting it will drop them.
+# Copy this file to `docker-compose.override.yml` only if you want the classic
+# IMMUTABLE image instead — the running code always matches the pulled image,
+# and updates are done from the host:
 #
-# In almost every case you do not need this file at all. `docker-compose.yml`
-# already mounts the `pokerth-app` volume on /srv/app, so enabling the
-# self-updating mode is a single line in the `.env` file next to it:
+#     docker compose pull && docker compose up -d
 #
-#     SELF_UPDATE=1
-#
-# then `docker compose up -d`. On first start the entrypoint provisions a
-# shallow git checkout into that volume and runs the app from it; install mode
-# becomes "docker-git" and the admin "Update" button pulls, reinstalls runtime
-# deps and restarts in place. Every boot re-syncs, so `docker compose restart`
-# is also a valid update.
-#
-# TRADE-OFF: the running code then comes from git, not from the image, so
-# `docker compose pull` alone no longer changes the version. The image stays
-# the safety net — if the clone or fetch fails, the container starts on the
-# baked-in code instead of refusing to boot.
-#
-# Requirements: outbound HTTPS to github.com, ~60 MB in the volume for the
-# checkout plus node_modules.
-#
-# Use the snippet below ONLY if you cannot use a .env file. MERGE it into your
-# existing docker-compose.override.yml (keep whatever is already in there) —
-# Compose merges the override with docker-compose.yml automatically.
+# You can also use it to pin a branch while keeping self-update on.
 
 services:
   pokerth-web-client:
     environment:
-      - SELF_UPDATE=1
-      # Branch to track. Leave unset for `main`.
-      # - GIT_BRANCH=main
-      # Clone URL — point it at a fork if needed.
-      # - GIT_REPO=https://github.com/narmod/pokerth-web-client.git
+      # Classic immutable image (disables the self-provisioned checkout):
+      - SELF_UPDATE=0
+      # … OR keep self-update but track another branch:
+      # - SELF_UPDATE=1
+      # - GIT_BRANCH=my-branch
