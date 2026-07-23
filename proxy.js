@@ -1214,6 +1214,17 @@ const GIT_UPDATABLE = (function () {
     return probe.status === 0 && String(probe.stdout || '').trim() === 'true';
   } catch (e) { return false; }
 })();
+// Un checkout provisionne par le conteneur (docker-entrypoint.sh) est shallow :
+// pas d'historique commun a fast-forwarder apres un fetch, d'ou une strategie de
+// mise a jour differente (resync dur au lieu de merge --ff-only).
+const GIT_SHALLOW = (function () {
+  if (!GIT_UPDATABLE) return false;
+  try {
+    const probe = spawnSync('git', ['rev-parse', '--is-shallow-repository'],
+      { cwd: __dirname, encoding: 'utf8', env: Object.assign({}, process.env, { PATH: SAFE_PATH }) });
+    return probe.status === 0 && String(probe.stdout || '').trim() === 'true';
+  } catch (e) { return false; }
+})();
 function installKind() {
   if (IS_PM2) return IS_DOCKER ? 'docker-pm2' : 'pm2';
   if (IS_DOCKER) return GIT_UPDATABLE ? 'docker-git' : 'docker-image';
@@ -1230,8 +1241,15 @@ function restartSegment() {
 // Pull robuste : fetch explicite de la branche puis merge ff-only de FETCH_HEAD.
 // (Un simple `git pull --ff-only` échoue si le refspec du clone est cassé ou
 // single-branch — vu en production : « no such ref was fetched ».)
+// Deux manifestes SUIVIS par git sont regeneres au runtime (themes/seats) : on
+// les remet a l'etat du depot avant le fetch, sinon le merge refuse d'ecraser
+// des « local changes » — meme precaution que install.sh.
 function gitPullSegment() {
-  return "git fetch origin '" + GIT_BRANCH + "' && git merge --ff-only FETCH_HEAD";
+  const clean = "git checkout -- public/themes/themes.json public/seats/seats.json 2>/dev/null || true";
+  if (GIT_SHALLOW) {
+    return clean + "; git fetch --depth 1 origin '" + GIT_BRANCH + "' && git checkout -q -f -B '" + GIT_BRANCH + "' FETCH_HEAD";
+  }
+  return clean + "; git fetch origin '" + GIT_BRANCH + "' && git merge --ff-only FETCH_HEAD";
 }
 // Run a fixed shell command detached from this process, logging to `logPath`.
 // Used for self-update / restart: the spawned shell outlives the proxy when PM2

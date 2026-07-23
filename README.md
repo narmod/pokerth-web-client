@@ -627,6 +627,19 @@ Notes:
 - `PORT` only changes the **published host port** — the container always listens on `8080` internally.
 - Prefer to build the image yourself? Comment out `image:` in `docker-compose.yml` and uncomment `build: .`.
 
+**Self-updating install (optional) — the admin *Update* button under Docker**
+
+A container image is immutable, so by default the admin panel reports install mode `docker-image` and refuses to self-update: you update from the host with `docker compose pull && docker compose up -d`. If you would rather click **Update** in `/admin`, enable the self-updating mode — there is nothing to clone on the host:
+
+```bash
+cp docker-compose.selfupdate.example.yml docker-compose.override.yml
+docker compose up -d
+```
+
+On first start the entrypoint clones the repository into the `pokerth-app` volume (mounted on `/srv/app`) and runs the app from there. Install mode becomes `docker-git`, and one click pulls the newest code, reinstalls runtime dependencies and restarts the process — `restart: unless-stopped` brings it back on the new version. Every boot re-syncs too, so `docker compose restart` is also a valid update.
+
+Trade-off: the running code now comes from git, not from the image, so `docker compose pull` alone no longer changes the version. The image remains the safety net — if the clone or fetch fails (no network on first boot), the container starts on the baked-in code instead of refusing to boot.
+
 </details>
 
 ---
@@ -649,6 +662,9 @@ These configure the **proxy** at runtime (read by `proxy.js`). They are separate
 | `STATS_ADMIN_TOKEN` | _(unset)_ | Token that unlocks the admin panel and the remote `/stats` reset; with no token, both are off. |
 | `MYSQL_HOST` · `MYSQL_PORT` · `MYSQL_USER` · `MYSQL_PASSWORD` · `MYSQL_DATABASE` | _(unset)_ · `3306` | Optional **MySQL/MariaDB mirror**. Set `MYSQL_HOST` + `MYSQL_DATABASE` to enable; these override the admin-panel / `db-config` settings. See [Optional MySQL mirror](#mysql-mirror). |
 | `PM2_NAME` | `pokerth-web` | PM2 process name the proxy targets for its self-update / restart actions. |
+| `SELF_UPDATE` | `0` | **Docker only** — `1` makes the entrypoint provision a git checkout in `/srv/app` (mount a volume there) and run the app from it, so the admin **Update** button works. See [Docker](#docker). |
+| `GIT_BRANCH` | `main` | Branch tracked by the self-update (both the Docker entrypoint and the admin Update button). |
+| `GIT_REPO` | _(this repo)_ | **Docker only** — clone URL used when `SELF_UPDATE=1` provisions the checkout. Point it at a fork if needed. |
 | `STATS_FILE` · `STATS_META_FILE` · `VISITS_FILE` · `BROADCASTS_FILE` · `ADMIN_CONFIG_FILE` · `DB_CONFIG_FILE` · `SCOPED_TOKENS_FILE` | _(install dir)_ | **Advanced** — relocate the JSON state files (e.g. onto a persistent volume); each defaults to that filename in the install directory. |
 
 </details>

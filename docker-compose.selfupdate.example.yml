@@ -1,0 +1,36 @@
+# ── Self-updating install — EXAMPLE ─────────────────────────────────────────
+# Copy this file to `docker-compose.override.yml` (same directory) and run
+# `docker compose up -d`. Compose merges the override automatically, and the
+# file is NOT tracked by git, so updates never touch it.
+#
+#     cp docker-compose.selfupdate.example.yml docker-compose.override.yml
+#     docker compose up -d
+#
+# What it does: on first start the entrypoint clones this repository into the
+# `pokerth-app` volume (mounted on /srv/app) and runs the app from there. The
+# admin page then reports install mode "docker-git" and its **Update** button
+# works — one click pulls the newest code, reinstalls runtime deps and restarts
+# the process, which `restart: unless-stopped` brings straight back up.
+#
+# Nothing to clone, chown or maintain on the host.
+#
+# TRADE-OFF: the running code now comes from git, not from the image. So
+# `docker compose pull` alone no longer changes the version — update from
+# /admin, or `docker compose restart` (the entrypoint re-syncs on every boot).
+# The image is still the fallback: if the clone or fetch fails, the container
+# starts on the baked-in code instead of refusing to boot.
+#
+# Requirements: outbound HTTPS to github.com. Roughly 60 MB for the shallow
+# checkout plus node_modules in the volume.
+
+services:
+  pokerth-web-client:
+    environment:
+      - SELF_UPDATE=1
+      # Branch to track. Leave unset for `main`.
+      # - GIT_BRANCH=main
+    volumes:
+      - pokerth-app:/srv/app
+
+volumes:
+  pokerth-app:

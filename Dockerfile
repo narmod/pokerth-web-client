@@ -31,6 +31,15 @@ ENV DB_CONFIG_FILE=/data/db-config.json
 ENV SCOPED_TOKENS_FILE=/data/scoped-tokens.json
 ENV PREFS_DIR=/data/prefs
 
+# Live directory for the optional self-updating mode (SELF_UPDATE=1): the
+# entrypoint provisions a git checkout here and runs the app from it, so the
+# admin "Update" button can pull in place. Mount a named volume on it to make
+# updates persistent (see docker-compose.selfupdate.example.yml). Unused —
+# and untouched — in the default image-baked mode.
+RUN mkdir -p /srv/app && chown node:node /srv/app
+COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
+RUN chmod 755 /usr/local/bin/docker-entrypoint.sh
+
 # Drop root privileges.
 USER node
 
@@ -38,4 +47,5 @@ USER node
 # in docker-compose if you need a different external port.
 EXPOSE 8080
 
+ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
 CMD ["npm", "start"]

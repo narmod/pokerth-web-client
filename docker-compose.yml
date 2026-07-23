@@ -29,19 +29,36 @@ services:
       - STATS_RESET_PERIOD=${STATS_RESET_PERIOD:-}
       - PROXY_LOG_LEVEL=${PROXY_LOG_LEVEL:-}
       - PROXY_MAX_CLIENTS=${PROXY_MAX_CLIENTS:-}
+      # Self-updating mode (see the volumes section below and
+      # docker-compose.selfupdate.example.yml). Empty = classic immutable image.
+      - SELF_UPDATE=${SELF_UPDATE:-}
+      - GIT_BRANCH=${GIT_BRANCH:-}
     volumes:
       # Persist ALL server-side state across container recreation: leaderboard,
       # admin-panel config, broadcasts, polls, visit counters, MySQL mirror
       # config, delegate API keys and per-player preferences (see Dockerfile).
       - pokerth-stats:/data
-      # SELF-UPDATE FROM THE ADMIN PAGE (optional): bind-mount a git checkout
-      # of this repo over the baked-in code. The admin "Update" button then
-      # runs git pull + npm install + restart in place (install mode
-      # "docker-git" in /admin → Status). Requirements: this directory is a
-      # git clone of the repo, writable by uid 1000 (the container's `node`
-      # user). Without this mount the image stays immutable and updates are
-      # done from the host: docker compose pull && docker compose up -d.
+      # SELF-UPDATE FROM THE ADMIN PAGE (optional). Two ways to get it — both
+      # give install mode "docker-git" in /admin → Status, where the "Update"
+      # button pulls + reinstalls deps + restarts in place.
+      #
+      # (a) RECOMMENDED — nothing to clone on the host. Set SELF_UPDATE=1 and
+      #     mount a named volume on /srv/app; the entrypoint provisions a git
+      #     checkout there on first start and runs the app from it:
+      #       cp docker-compose.selfupdate.example.yml docker-compose.override.yml
+      #       docker compose up -d
+      #     Note: the code then comes from git, so `docker compose pull` alone
+      #     no longer changes the running version — update from /admin (or
+      #     `docker compose restart`, which re-syncs on boot).
+      #
+      # (b) Bind-mount your own git clone over the baked-in code. The directory
+      #     must be a real clone (NOT a submodule of another repo — its .git
+      #     would point outside the mount) and writable by uid 1000, the
+      #     container's `node` user.
       # - .:/app
+      #
+      # Without either, the image stays immutable and updates are done from the
+      # host: docker compose pull && docker compose up -d.
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "wget", "-qO-", "http://127.0.0.1:8080/"]
