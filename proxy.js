@@ -1201,7 +1201,17 @@ const GIT_BRANCH = (process.env.GIT_BRANCH || 'main').replace(/[^A-Za-z0-9._\/-]
 const GIT_UPDATABLE = (function () {
   try {
     if (!fs.existsSync(path.join(__dirname, '.git'))) return false;
-    return spawnSync('git', ['--version'], { stdio: 'ignore', env: Object.assign({}, process.env, { PATH: SAFE_PATH }) }).status === 0;
+    const genv = Object.assign({}, process.env, { PATH: SAFE_PATH });
+    if (spawnSync('git', ['--version'], { stdio: 'ignore', env: genv }).status !== 0) return false;
+    // `.git` peut etre un *gitfile* (submodule / worktree) qui pointe hors de
+    // l'arborescence visible : le fichier existe, mais git ne peut pas ouvrir le
+    // depot. Vu en prod sur un bind-mount de submodule dans un conteneur :
+    //   fatal: not a git repository: /app/../.git/modules/webclient
+    // On verifie donc que git resout reellement le depot depuis le dossier app,
+    // sinon on retombe sur 'docker-image' (self-update refuse proprement).
+    const probe = spawnSync('git', ['rev-parse', '--is-inside-work-tree'],
+      { cwd: __dirname, encoding: 'utf8', env: genv });
+    return probe.status === 0 && String(probe.stdout || '').trim() === 'true';
   } catch (e) { return false; }
 })();
 function installKind() {
