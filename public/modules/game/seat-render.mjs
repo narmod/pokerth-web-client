@@ -75,7 +75,11 @@ function renderSeatsImmediate() {
       var seat = (ev.target && ev.target.closest) ? ev.target.closest('.seat[data-pid]') : null;
       if (!seat || seat.classList.contains('seat-ghost')) return; // siège vide / joueur parti
       var sp = parseInt(seat.getAttribute('data-pid'), 10);
-      if (!isNaN(sp)) openPlayerInfoPopup(sp);
+      // autoStats = true : le popup ouvert depuis un avatar DE LA TABLE affiche
+      // directement les classements (demande narmod), sans passer par le bouton
+      // 🏆. Sans effet pour un bot, un invité ou hors pokerth.net ; les appels
+      // sont mémoïsés 5 min côté rkLoadPlayerCups.
+      if (!isNaN(sp)) openPlayerInfoPopup(sp, true);
     });
   }
   if (!S.seats.length) { el.innerHTML = ''; return; }

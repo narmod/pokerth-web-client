@@ -3225,6 +3225,9 @@ if ('serviceWorker' in navigator) {
   // grouped per cup. Auto-loaded inline; only called for registered pokerth.net
   // players. Reuses the ranking renderers so there is a single source of truth.
   var RK_CUPS_ORDER = ['pth', 'bbc', 'wec'];
+  // Cache mémoire des profils de coupes (par source + pseudo). 5 min : un
+  // classement de saison ne bouge pas d'une main à l'autre.
+  var RK_CUPS_CACHE = {}, RK_CUPS_TTL = 300000;
   var RK_CUPS_LBL = { pth: 'rankingPth', bbc: 'rankingBbc', wec: 'rankingWec' };
   var RK_CUPS_FB = { pth: 'PokerTH', bbc: 'BBC', wec: 'WEC' };
   window.rkLoadPlayerCups = function (nick, containerId) {
@@ -3266,9 +3269,19 @@ if ('serviceWorker' in navigator) {
       box.innerHTML = html; rkPaintPies(box);
     }
     RK_CUPS_ORDER.forEach(function (s) {
+      // Mémo court : les popups d'avatars de la table chargent les coupes
+      // automatiquement, et un joueur clique souvent les mêmes sièges pendant
+      // une partie. Sans ce cache, chaque ouverture = 3 appels à pokerth.net.
+      var ck = s + '|' + nick.toLowerCase();
+      var hit = RK_CUPS_CACHE[ck];
+      if (hit && (Date.now() - hit.t) < RK_CUPS_TTL) {
+        results[s] = hit.d;
+        if (--pending === 0) done();
+        return;
+      }
       fetch('/api/player?src=' + encodeURIComponent(s) + '&nick=' + encodeURIComponent(nick), { headers: { 'Accept': 'application/json' } })
         .then(function (r) { return r.text(); })
-        .then(function (t) { var d; try { d = JSON.parse(t); } catch (e) { d = null; } results[s] = d; })
+        .then(function (t) { var d; try { d = JSON.parse(t); } catch (e) { d = null; } results[s] = d; RK_CUPS_CACHE[ck] = { t: Date.now(), d: d }; })
         .catch(function () { results[s] = null; })
         .then(function () { if (--pending === 0) done(); });
     });

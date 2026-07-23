@@ -83,6 +83,15 @@ cupsFor = null;
 window._plOpenStats(7);
 ok(cupsFor === 'Alice', '_plOpenStats(pid) : charge les coupes de l\'adversaire');
 
+// Avatar de la table : seat-render appelle openPlayerInfoPopup(pid, true) —
+// les classements doivent se charger sans passer par le bouton 🏆.
+cupsFor = null;
+P.openPlayerInfoPopup(7, true);
+ok(cupsFor === 'Alice', 'popup depuis un avatar de la table : coupes chargées directement');
+cupsFor = null;
+P.openPlayerInfoPopup(7);
+ok(cupsFor === null, 'popup sans autoStats : rien n\'est chargé (bouton 🏆 requis)');
+
 // _pimSetTab pilote l'onglet du popup
 S._statsEligible = true; S._pimTab = 'session';
 P._pimSetTab('life');
