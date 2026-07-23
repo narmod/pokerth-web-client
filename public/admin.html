@@ -926,7 +926,7 @@
       var el=$('status');
       if(!d.ok){ el.innerHTML='<div class="empty err">'+(d.error||'error')+'</div>'; return; }
       el.innerHTML='';
-      var items=[['Build version',d.version||'\u2014'],['Node',d.node||'\u2014'],['Uptime',fmtUptime(d.uptimeSec)],['Connected sockets',d.sockets==null?'\u2014':String(d.sockets)],['Players on board',String(d.players)],['Reset period',d.resetPeriod||'\u2014']];
+      var items=[['Build version',d.version||'\u2014'],['Install',(d.installKind||'\u2014')+(d.gitUpdatable===false?' (self-update off)':'')],['Node',d.node||'\u2014'],['Uptime',fmtUptime(d.uptimeSec)],['Connected sockets',d.sockets==null?'\u2014':String(d.sockets)],['Players on board',String(d.players)],['Reset period',d.resetPeriod||'\u2014']];
       items.forEach(function(it){ var r=document.createElement('div');r.className='srow';var s=document.createElement('span');s.textContent=it[0];var b=document.createElement('b');b.textContent=it[1];r.appendChild(s);r.appendChild(b);el.appendChild(r); });
       // Only explicit (re)loads sync the editable controls, so auto-refresh never
       // resets the period dropdown or modes toggles while you're using them.

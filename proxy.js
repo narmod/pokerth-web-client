@@ -1189,6 +1189,40 @@ const MAX_UPLOAD = 25 * 1024 * 1024; // 25 MB
 const SAFE_PATH = '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin';
 const PM2_NAME = process.env.PM2_NAME || 'pokerth-web';
 const UPDATE_LOG = path.join(os.tmpdir(), 'pokerth-web-update.log');
+// ── Détection du type d'installation (pm2 / docker / plain) ──
+// Le self-update doit s'adapter : pm2 restart n'existe pas dans un conteneur,
+// et une image Docker sans git ne peut pas se `git pull` elle-même.
+const IS_DOCKER = (function () {
+  try { if (fs.existsSync('/.dockerenv')) return true; } catch (e) {}
+  try { return /docker|containerd|kubepods/.test(fs.readFileSync('/proc/1/cgroup', 'utf8')); } catch (e) { return false; }
+})();
+const IS_PM2 = process.env.pm_id !== undefined || !!process.env.PM2_HOME;
+const GIT_BRANCH = (process.env.GIT_BRANCH || 'main').replace(/[^A-Za-z0-9._\/-]/g, '');
+const GIT_UPDATABLE = (function () {
+  try {
+    if (!fs.existsSync(path.join(__dirname, '.git'))) return false;
+    return spawnSync('git', ['--version'], { stdio: 'ignore', env: Object.assign({}, process.env, { PATH: SAFE_PATH }) }).status === 0;
+  } catch (e) { return false; }
+})();
+function installKind() {
+  if (IS_PM2) return IS_DOCKER ? 'docker-pm2' : 'pm2';
+  if (IS_DOCKER) return GIT_UPDATABLE ? 'docker-git' : 'docker-image';
+  return 'plain';
+}
+// Segment de redémarrage adapté : pm2 si présent, sinon SIGTERM au process —
+// la politique de relance (docker `restart:` / systemd `Restart=`) fait le reste.
+// Surcharge possible : UPDATE_RESTART_CMD.
+function restartSegment() {
+  if (process.env.UPDATE_RESTART_CMD) return process.env.UPDATE_RESTART_CMD;
+  if (IS_PM2) return 'pm2 restart ' + PM2_NAME + ' --update-env';
+  return 'kill -TERM ' + process.pid + ' 2>/dev/null || kill -TERM 1 2>/dev/null';
+}
+// Pull robuste : fetch explicite de la branche puis merge ff-only de FETCH_HEAD.
+// (Un simple `git pull --ff-only` échoue si le refspec du clone est cassé ou
+// single-branch — vu en production : « no such ref was fetched ».)
+function gitPullSegment() {
+  return "git fetch origin '" + GIT_BRANCH + "' && git merge --ff-only FETCH_HEAD";
+}
 // Run a fixed shell command detached from this process, logging to `logPath`.
 // Used for self-update / restart: the spawned shell outlives the proxy when PM2
 // cycles it, so it can issue `pm2 restart` against ourselves. PATH is forced so
@@ -1210,8 +1244,9 @@ function runDetached(cmd, logPath) {
 // gallery items, built-ins live in code); the full `sudo pokerth-web update`
 // covers Node/wrapper refreshes.
 function updateCmd() {
+  if (process.env.UPDATE_CMD) return process.env.UPDATE_CMD; // surcharge totale (hooks custom)
   const dir = __dirname.replace(/'/g, "'\\''");
-  return "sleep 1; cd '" + dir + "' && git pull --ff-only && npm install --omit=dev --no-audit --no-fund && pm2 restart " + PM2_NAME + " --update-env";
+  return "sleep 1; cd '" + dir + "' && " + gitPullSegment() + " && npm install --omit=dev --no-audit --no-fund && " + restartSegment();
 }
 // Static-only self-update: just `git pull` so the served public/ files (client
 // build) go live immediately. No npm, no pm2 restart, so open connections are
@@ -1219,7 +1254,7 @@ function updateCmd() {
 // restart — this is meant for static (public/) deploys.
 function updateCmdStatic() {
   const dir = __dirname.replace(/'/g, "'\\''");
-  return "cd '" + dir + "' && git pull --ff-only";
+  return "cd '" + dir + "' && " + gitPullSegment();
 }
 
 // ── Scheduled restart/update with advance notice to connected clients ──
@@ -1228,7 +1263,7 @@ let _restartAt = 0;         // epoch ms when the action fires (0 = none)
 let _restartKind = '';      // 'update' | 'restart'
 let _restartNotice = '';    // the NOTICE:… frame, replayed to clients that join the window
 function restartOnlyCmd() {
-  return "sleep 1; pm2 restart " + PM2_NAME + " --update-env";
+  return "sleep 1; " + restartSegment();
 }
 // Broadcast a text control frame to every connected client — out-of-band, on the
 // same channel the reaction/avatar relay already uses. Returns how many got it.
@@ -1680,7 +1715,7 @@ function handleAdmin(req, res, reqPathOnly, query) {
     let version = '';
     try { version = (JSON.parse(fs.readFileSync(path.join(__dirname, 'package.json'), 'utf8')).version) || ''; } catch (e) {}
     let sockets = null; try { sockets = wss.clients.size; } catch (e) {}
-    return adminJson(res, 200, { ok: true, version: version, node: process.version, uptimeSec: Math.floor(process.uptime()), sockets: sockets, players: Object.keys(statsStore).length, resetPeriod: STATS_RESET_PERIOD, modes: appModes(), showLoginTitle: !!_adminConfig.showLoginTitle, defaultTheme: _adminConfig.defaultTheme || '', defaults: _adminConfig.defaults || {}, loginDefaults: _adminConfig.loginDefaults || {}, proxyCfg: _adminConfig.proxyCfg || {}, logLevel: _logLevelName(), maxClients: _maxClients(), fd: _fdInfo(), tableDefaults: _adminConfig.tableDefaults || {}, tableNames: _adminConfig.tableNames || {}, serverName: _adminConfig.serverName || '', serverTagline: _adminConfig.serverTagline || '', restartAt: (_restartAt > Date.now() ? _restartAt : null), restartKind: (_restartAt > Date.now() ? _restartKind : null) });
+    return adminJson(res, 200, { ok: true, version: version, node: process.version, uptimeSec: Math.floor(process.uptime()), installKind: installKind(), gitUpdatable: GIT_UPDATABLE, sockets: sockets, players: Object.keys(statsStore).length, resetPeriod: STATS_RESET_PERIOD, modes: appModes(), showLoginTitle: !!_adminConfig.showLoginTitle, defaultTheme: _adminConfig.defaultTheme || '', defaults: _adminConfig.defaults || {}, loginDefaults: _adminConfig.loginDefaults || {}, proxyCfg: _adminConfig.proxyCfg || {}, logLevel: _logLevelName(), maxClients: _maxClients(), fd: _fdInfo(), tableDefaults: _adminConfig.tableDefaults || {}, tableNames: _adminConfig.tableNames || {}, serverName: _adminConfig.serverName || '', serverTagline: _adminConfig.serverTagline || '', restartAt: (_restartAt > Date.now() ? _restartAt : null), restartKind: (_restartAt > Date.now() ? _restartKind : null) });
   }
   if (reqPathOnly === '/admin/visits/export') {
     if (!adminAuthed(query)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
@@ -2190,14 +2225,16 @@ function handleAdmin(req, res, reqPathOnly, query) {
   if (reqPathOnly === '/admin/update' && req.method === 'POST') {
     return readJsonBody(req, function (d) {
       if (!adminAuthed(query, d && d.token)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
+      if (!GIT_UPDATABLE && !process.env.UPDATE_CMD) return adminJson(res, 409, { ok: false, error: 'this install cannot self-update (' + installKind() + ": no git checkout in the app dir). Update from the host: docker compose pull (or build) && docker compose up -d \u2014 or set UPDATE_CMD." });
       const started = runDetached(updateCmd(), UPDATE_LOG);
-      console.log('[admin] self-update requested (git pull + npm + restart)');
+      console.log('[admin] self-update requested (' + installKind() + ': pull + deps + restart)');
       return adminJson(res, started ? 200 : 500, { ok: started, started: started });
     });
   }
   if (reqPathOnly === '/admin/update-nr' && req.method === 'POST') {
     return readJsonBody(req, function (d) {
       if (!adminAuthed(query, d && d.token)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
+      if (!GIT_UPDATABLE) return adminJson(res, 409, { ok: false, error: 'this install cannot self-update (' + installKind() + ': no git checkout in the app dir).' });
       const started = runDetached(updateCmdStatic(), UPDATE_LOG);
       console.log('[admin] static self-update requested (git pull, no restart)');
       return adminJson(res, started ? 200 : 500, { ok: started, started: started });
