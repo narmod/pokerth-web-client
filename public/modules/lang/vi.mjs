@@ -138,7 +138,7 @@ export const strings = {
   installIosStep3: "Xác nhận bằng <b>Thêm</b> — ứng dụng xuất hiện trên màn hình chính.",
   piCups: "Cúp",
   piNoCupData: "Không có bảng xếp hạng cúp cho người chơi này.",
-  piShowCups: "Xem cúp",
+  piShowCups: "Xem cúp", piHideCups: "Ẩn cúp",
   pinActionBar: "Giữ thanh thao tác mở",
   rankingCurrentSeason: "Mùa hiện tại",
   tablePlayersEmpty: "Không có người chơi ngồi.",

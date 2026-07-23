@@ -138,7 +138,7 @@ export const strings = {
   installIosStep3: "Επιβεβαιώστε με <b>Προσθήκη</b> — η εφαρμογή εμφανίζεται στην αρχική οθόνη.",
   piCups: "Κύπελλα",
   piNoCupData: "Καμία κατάταξη κυπέλλων για αυτόν τον παίκτη.",
-  piShowCups: "Εμφάνιση κυπέλλων",
+  piShowCups: "Εμφάνιση κυπέλλων", piHideCups: "Απόκρυψη κυπέλλων",
   pinActionBar: "Διατήρηση ανοιχτής της μπάρας ενεργειών",
   rankingCurrentSeason: "Τρέχουσα σεζόν",
   tablePlayersEmpty: "Κανείς παίκτης στο τραπέζι.",

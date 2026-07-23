@@ -1424,6 +1424,7 @@ function playerStatsFor(name) {
   return { stats: s, scope: scope, recentWindow: RECENT_HANDS, trendMinBase: _TREND_MIN_BASE };
 }
 if (typeof window !== 'undefined') {
+  window._statColor = statColor;
   window._playerStatsFor = playerStatsFor;
   window._statsTrendArrow = (id, rec, glob) => _trendArrow(id, rec, glob);
 }

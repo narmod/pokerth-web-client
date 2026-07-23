@@ -139,7 +139,7 @@ export const strings = {
   installIosStep3: "<b>சேர்</b> மூலம் உறுதிசெய் — செயலி உங்கள் முகப்புத் திரையில் தோன்றும்.",
   piCups: "கோப்பைகள்",
   piNoCupData: "இந்த ஆட்டக்காரருக்கு கோப்பை தரவரிசை இல்லை.",
-  piShowCups: "கோப்பைகளைக் காட்டு",
+  piShowCups: "கோப்பைகளைக் காட்டு", piHideCups: "கோப்பைகளை மறை",
   pinActionBar: "செயல் பட்டியைத் திறந்து வை",
   rankingCurrentSeason: "தற்போதைய சீசன்",
   tablePlayersEmpty: "மேசையில் ஆட்டக்காரர்கள் இல்லை.",

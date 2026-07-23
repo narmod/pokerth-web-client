@@ -139,7 +139,7 @@ export const strings = {
   installIosStep3: "Confirme com <b>Adicionar</b> — a app aparece no ecrã principal.",
   piCups: "Taças",
   piNoCupData: "Sem classificação de taças para este jogador.",
-  piShowCups: "Ver taças",
+  piShowCups: "Ver taças", piHideCups: "Ocultar taças",
   pinActionBar: "Manter a barra de ações aberta",
   rankingCurrentSeason: "Época atual",
   tablePlayersEmpty: "Nenhum jogador sentado.",

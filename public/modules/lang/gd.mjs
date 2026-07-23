@@ -139,7 +139,7 @@ export const strings = {
   installIosStep3: "Dearbh le <b>Cuir ris</b> — nochdaidh an aplacaid air an sgrìn-dhachaigh agad.",
   piCups: "Cupaichean",
   piNoCupData: "Chan eil rangachadh chupaichean ann don chluicheadair seo.",
-  piShowCups: "Seall na cupaichean",
+  piShowCups: "Seall na cupaichean", piHideCups: "Falaich na cupannan",
   pinActionBar: "Cum am bàr-gnìomh fosgailte",
   rankingCurrentSeason: "An ràith làithreach",
   tablePlayersEmpty: "Chan eil cluicheadair sam bith aig a' bhòrd.",

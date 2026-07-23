@@ -142,7 +142,7 @@ export const strings = {
   installIosStep3: "<b>जोड़ें</b> से पुष्टि करें — ऐप आपकी होम स्क्रीन पर आ जाएगा।",
   piCups: "कप",
   piNoCupData: "इस खिलाड़ी के लिए कोई कप रैंकिंग नहीं।",
-  piShowCups: "कप देखें",
+  piShowCups: "कप देखें", piHideCups: "ट्रॉफ़ी छिपाएँ",
   pinActionBar: "एक्शन बार खुली रखें",
   rankingCurrentSeason: "वर्तमान सीज़न",
   tablePlayersEmpty: "कोई खिलाड़ी नहीं बैठा।",

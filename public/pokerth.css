@@ -9737,22 +9737,34 @@ html[data-seat-struct="qml"] .seat:not(.me) .seat-narrow .seat-holecards .pk { w
 /* Portee des stats limitee a la session courante (joueurs invites) : le pseudo
    d'un invite peut etre repris par une autre personne d'une session a l'autre. */
 /* Bloc stats de comportement dans la fenetre d'avatar (popup profil joueur).
-   Independant du HUD flottant : visible meme HUD desactive. */
-.pim-stat-box{margin-top:10px;padding:8px 10px;border:1px solid var(--border);border-radius:8px;background:rgba(0,0,0,.18)}
-.pim-stat-head{display:flex;align-items:baseline;gap:var(--sp-2);margin-bottom:6px;padding-bottom:5px;border-bottom:1px solid var(--border)}
-.pim-stat-title{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--gold);font-weight:700;font-size:var(--fs-sm,13px)}
-.pim-stat-scope{flex-shrink:0;color:var(--text-dim,#a0acc4);font-size:var(--fs-3xs,10px);opacity:.75;border:1px solid var(--border);border-radius:6px;padding:0 5px;line-height:1.5}
-.pim-stat-hands{flex-shrink:0;color:var(--text);font-size:var(--fs-2xs);opacity:.8;font-variant-numeric:tabular-nums}
-/* Grille auto-ajustable : tient en 2 colonnes sur un ecran etroit, plus au large. */
-.pim-stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(74px,1fr));gap:4px 8px}
-.pim-stat{display:flex;align-items:baseline;justify-content:space-between;gap:4px;min-width:0;font-size:var(--fs-2xs)}
-.pim-stat i{font-style:normal;color:var(--text-dim,#a0acc4);opacity:.85;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.pim-stat b{color:var(--text);font-variant-numeric:tabular-nums;flex-shrink:0}
-.pim-trend{display:flex;align-items:center;gap:var(--sp-2);margin-top:6px;padding-top:5px;border-top:1px solid var(--border);font-size:var(--fs-2xs)}
-.pim-t-lbl{flex:1;min-width:0;color:var(--text-dim,#a0acc4);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.pim-t-cell{display:inline-flex;align-items:baseline;gap:3px;flex-shrink:0}
-.pim-t-cell i{font-style:normal;color:var(--text-dim,#a0acc4);opacity:.85}
-.pim-t-cell b{color:var(--text);font-variant-numeric:tabular-nums}
+   Independant du HUD flottant : visible meme HUD desactive.
+   Calque sur .pim-ig (le cadre Stack/Miser) : meme largeur pleine, meme fond,
+   meme bordure, memes tokens de couleur. --text-dim n'existe pas dans le
+   theme : les libelles utilisent --gold-dim comme .pim-ig-k, les valeurs
+   --cream comme .pim-ig-v (la colorisation par seuils passe en style inline). */
+.pim-stat-box{
+  width: 100%;
+  margin-top: var(--sp-2);
+  padding: 10px 12px;
+  background: var(--field-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+}
+.pim-stat-head{display:flex;align-items:baseline;gap:var(--sp-2);margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid var(--border)}
+.pim-stat-title{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--gold-dim);font-family:var(--ff-mono);font-size:var(--fs-base);letter-spacing:.04em;text-transform:uppercase}
+.pim-stat-scope{flex-shrink:0;color:var(--gold-dim);font-family:var(--ff-mono);font-size:var(--fs-sm);border:1px solid var(--gold-dim);border-radius:6px;padding:0 5px;line-height:1.6}
+.pim-stat-hands{flex-shrink:0;color:var(--cream);font-family:var(--ff-mono);font-size:var(--fs-sm);opacity:.9}
+/* Deux colonnes fixes : les libelles restent alignes et la valeur colle a sa
+   propre etiquette, comme les lignes du cadre Stack juste au-dessus. */
+.pim-stat-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:5px var(--sp-5)}
+.pim-stat{display:flex;align-items:baseline;justify-content:space-between;gap:var(--sp-2);min-width:0;font-size:var(--fs-base)}
+.pim-stat i{font-style:normal;color:var(--gold-dim);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pim-stat b{color:var(--cream);font-family:var(--ff-mono);font-weight:700;flex-shrink:0}
+.pim-trend{display:flex;align-items:baseline;gap:var(--sp-2);margin-top:8px;padding-top:6px;border-top:1px solid var(--border);font-size:var(--fs-base)}
+.pim-t-lbl{flex:1;min-width:0;color:var(--gold-dim);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pim-t-cell{display:inline-flex;align-items:baseline;gap:4px;flex-shrink:0}
+.pim-t-cell i{font-style:normal;color:var(--gold-dim)}
+.pim-t-cell b{color:var(--cream);font-family:var(--ff-mono);font-weight:700}
 .pim-t-cell u{text-decoration:none;color:var(--gold);font-weight:700}
 /* Tendance recente : VPIP/AF sur les 20 dernieres mains vs la moyenne globale.
    La fleche marque un ecart significatif (cf. _TREND_EPS), la double barre un

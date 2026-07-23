@@ -138,7 +138,7 @@ export const strings = {
   installIosStep3: "Confirma amb <b>Afegeix</b> — l'app apareix a la pantalla d'inici.",
   piCups: "Copes",
   piNoCupData: "Sense classificació de copes per a aquest jugador.",
-  piShowCups: "Mostra les copes",
+  piShowCups: "Mostra les copes", piHideCups: "Amaga les copes",
   pinActionBar: "Mantén la barra d'accions oberta",
   rankingCurrentSeason: "Temporada actual",
   tablePlayersEmpty: "Cap jugador assegut.",

@@ -138,7 +138,7 @@ export const strings = {
   installIosStep3: "Potvrďte tlačidlom <b>Pridať</b> — aplikácia sa objaví na ploche.",
   piCups: "Poháre",
   piNoCupData: "Pre tohto hráča nie je rebríček pohárov.",
-  piShowCups: "Zobraziť poháre",
+  piShowCups: "Zobraziť poháre", piHideCups: "Skryť poháre",
   pinActionBar: "Ponechať panel akcií otvorený",
   rankingCurrentSeason: "Aktuálna sezóna",
   tablePlayersEmpty: "Pri stole nie sú hráči.",

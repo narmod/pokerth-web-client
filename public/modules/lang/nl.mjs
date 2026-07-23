@@ -143,7 +143,7 @@ export const strings = {
   installIosStep3: "Bevestig met <b>Voeg toe</b> — de app verschijnt op je beginscherm.",
   piCups: "Bekers",
   piNoCupData: "Geen bekerklassement voor deze speler.",
-  piShowCups: "Bekers tonen",
+  piShowCups: "Bekers tonen", piHideCups: "Bekers verbergen",
   pinActionBar: "Actiebalk open houden",
   rankingCurrentSeason: "Huidig seizoen",
   tablePlayersEmpty: "Geen spelers aan tafel.",

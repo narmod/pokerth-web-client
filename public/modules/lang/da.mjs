@@ -137,7 +137,7 @@ export const strings = {
   installIosStep3: "Bekræft med <b>Tilføj</b> — appen lander på din hjemmeskærm.",
   piCups: "Pokaler",
   piNoCupData: "Ingen pokalrangliste for denne spiller.",
-  piShowCups: "Vis pokaler",
+  piShowCups: "Vis pokaler", piHideCups: "Skjul pokaler",
   pinActionBar: "Hold handlingslinjen åben",
   rankingCurrentSeason: "Aktuel sæson",
   tablePlayersEmpty: "Ingen spillere ved bordet.",

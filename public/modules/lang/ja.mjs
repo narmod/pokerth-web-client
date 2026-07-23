@@ -137,7 +137,7 @@ export const strings = {
   installIosStep3: "<b>追加</b>で確定すると、アプリがホーム画面に表示されます。",
   piCups: "カップ",
   piNoCupData: "このプレイヤーのカップ順位はありません。",
-  piShowCups: "カップを表示",
+  piShowCups: "カップを表示", piHideCups: "カップを隠す",
   pinActionBar: "アクションバーを開いたままにする",
   rankingCurrentSeason: "現在のシーズン",
   tablePlayersEmpty: "着席プレイヤーなし。",

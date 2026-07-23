@@ -138,7 +138,7 @@ export const strings = {
   installIosStep3: "Bevestig met <b>Voeg by</b> — die app verskyn op jou tuisskerm.",
   piCups: "Bekers",
   piNoCupData: "Geen bekerranglys vir hierdie speler nie.",
-  piShowCups: "Wys bekers",
+  piShowCups: "Wys bekers", piHideCups: "Versteek bekers",
   pinActionBar: "Hou die aksiebalk oop",
   rankingCurrentSeason: "Huidige seisoen",
   tablePlayersEmpty: "Geen spelers gesit nie.",

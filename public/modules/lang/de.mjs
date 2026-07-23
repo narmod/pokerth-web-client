@@ -145,7 +145,7 @@ export const strings = {
   installIosStep3: "Bestätige mit <b>Hinzufügen</b> — die App erscheint auf dem Startbildschirm.",
   piCups: "Pokale",
   piNoCupData: "Keine Pokal-Rangliste für diesen Spieler.",
-  piShowCups: "Pokale anzeigen",
+  piShowCups: "Pokale anzeigen", piHideCups: "Pokale ausblenden",
   pinActionBar: "Aktionsleiste offen halten",
   rankingCurrentSeason: "Aktuelle Saison",
   tablePlayersEmpty: "Keine Spieler am Tisch.",

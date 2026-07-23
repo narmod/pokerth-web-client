@@ -138,7 +138,7 @@ export const strings = {
   installIosStep3: "Потвърдете с <b>Добави</b> — приложението се появява на началния екран.",
   piCups: "Купи",
   piNoCupData: "Няма класиране по купи за този играч.",
-  piShowCups: "Покажи купите",
+  piShowCups: "Покажи купите", piHideCups: "Скрий купите",
   pinActionBar: "Дръж лентата с действия отворена",
   rankingCurrentSeason: "Текущ сезон",
   tablePlayersEmpty: "Няма седнали играчи.",

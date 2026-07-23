@@ -139,7 +139,7 @@ export const strings = {
   installIosStep3: "以 <b>加入</b> 確認 — 應用程式會出現在主畫面。",
   piCups: "獎盃",
   piNoCupData: "此玩家沒有獎盃排名。",
-  piShowCups: "顯示獎盃",
+  piShowCups: "顯示獎盃", piHideCups: "隱藏獎盃",
   pinActionBar: "保持動作列開啟",
   rankingCurrentSeason: "本賽季",
   tablePlayersEmpty: "沒有玩家就座。",

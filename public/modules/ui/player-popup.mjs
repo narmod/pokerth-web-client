@@ -317,7 +317,7 @@ function _cupsBlockHtml(pid) {
   // window._pimLoadCups(pid) → rkLoadPlayerCups remplit #pim-cups (1 fois).
   return '<button type="button" id="pim-cups-btn" class="pim-cups-btn" onclick="window._pimLoadCups(' + pid + ')">🏆 '
        + esc(tt('piShowCups', 'Show cups')) + '</button>'
-       + '<div id="pim-cups" class="pim-cups"></div>'
+       + '<div id="pim-cups" class="pim-cups" data-shown="0" style="display:none"></div>'
        + '<a class="pim-profile-link" href="https://www.pokerth.net/app.php/player?u='
        + encodeURIComponent(nm) + '" target="_blank" rel="noopener noreferrer">'
        + esc(tt('piViewProfile', 'View pokerth.net profile')) + '</a>';
@@ -464,8 +464,13 @@ function _pimRenderPlayerStats(pid) {
   var s = res.stats, rows = '', i, id, lbl, key;
   for (i = 0; i < _PIM_STAT_ROWS.length; i++) {
     id = _PIM_STAT_ROWS[i][0]; lbl = _PIM_STAT_ROWS[i][1]; key = _PIM_STAT_ROWS[i][2];
+    // Meme colorisation par seuils que le HUD (vert -> rouge) : c'est elle qui
+    // rend la valeur lisible d'un coup d'oeil, pas le simple chiffre.
+    var col = '';
+    try { if (typeof window._statColor === 'function') col = window._statColor(id, s[id]) || ''; } catch (e) {}
     rows += '<span class="pim-stat"><i>' + esc(key ? tt(key, lbl) : lbl) + '</i>'
-          + '<b>' + esc(_pimStatFmt(id, s[id])) + '</b></span>';
+          + '<b' + (col ? ' style="color:' + col + '"' : '') + '>'
+          + esc(_pimStatFmt(id, s[id])) + '</b></span>';
   }
   // Tendance : VPIP/AF de la fenetre courte vs la moyenne globale du joueur.
   var trend = '';
@@ -499,11 +504,29 @@ function _pimLoadPlayerStats(pid) {
 }
 window._pimLoadPlayerStats = _pimLoadPlayerStats;
 
+// Bouton BASCULE : les coupes rallongent beaucoup le popup, on doit pouvoir
+// les replier apres les avoir consultees. Le chargement reseau reste fait UNE
+// SEULE fois (marqueur data-loaded) ; les bascules suivantes ne touchent qu'au
+// display.
 function _pimLoadCups(pid) {
+  var box = document.getElementById('pim-cups');
   var btn = document.getElementById('pim-cups-btn');
-  if (btn) btn.style.display = 'none';
-  if (document.getElementById('pim-cups') && typeof window.rkLoadPlayerCups === 'function') {
-    try { window.rkLoadPlayerCups(_pimNameFor(pid), 'pim-cups'); } catch(e) {}
+  if (!box) return;
+  function tt(k, fb) { var v = (typeof t === 'function') ? t(k) : null; return (v && v !== k) ? v : fb; }
+  var shown = box.getAttribute('data-shown') === '1';
+  if (shown) {
+    box.style.display = 'none';
+    box.setAttribute('data-shown', '0');
+    if (btn) btn.innerHTML = '\uD83C\uDFC6 ' + esc(tt('piShowCups', 'Show cups'));
+    return;
+  }
+  box.style.display = '';
+  box.setAttribute('data-shown', '1');
+  if (btn) btn.innerHTML = '\uD83C\uDFC6 ' + esc(tt('piHideCups', 'Hide cups'));
+  if (box.getAttribute('data-loaded') === '1') return;
+  box.setAttribute('data-loaded', '1');
+  if (typeof window.rkLoadPlayerCups === 'function') {
+    try { window.rkLoadPlayerCups(_pimNameFor(pid), 'pim-cups'); } catch (e) {}
   }
 }
 window._pimLoadCups = _pimLoadCups;

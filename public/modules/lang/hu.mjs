@@ -138,7 +138,7 @@ export const strings = {
   installIosStep3: "Erősítsd meg a <b>Hozzáadás</b> gombbal — az alkalmazás megjelenik a kezdőképernyőn.",
   piCups: "Kupák",
   piNoCupData: "Nincs kuparangsor ehhez a játékoshoz.",
-  piShowCups: "Kupák mutatása",
+  piShowCups: "Kupák mutatása", piHideCups: "Kupák elrejtése",
   pinActionBar: "Műveletsáv nyitva tartása",
   rankingCurrentSeason: "Jelenlegi szezon",
   tablePlayersEmpty: "Nincs játékos az asztalnál.",

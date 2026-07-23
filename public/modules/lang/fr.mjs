@@ -425,7 +425,7 @@ export const strings = {
     piStatusEliminated:'Éliminé',
     piViewProfile:'Voir le profil pokerth.net',
     piCups:'Coupes',
-    piShowCups:'Voir les coupes', piIgnore:'Ignorer', piUnignore:'Réafficher', piKickban:'Kick/ban total', kickbanConfirm:'Bannir {name} du serveur (kickban total) ?', inviteConfirm:'Inviter {name} à votre partie ?', ignoreConfirm:'Ignorer {name} ?', unignoreConfirm:'Réafficher {name} ?', kickbanOk:'{name} a été kickban', kickbanFail:'Échec du kickban',
+    piShowCups:'Voir les coupes', piHideCups:'Masquer les coupes', piIgnore:'Ignorer', piUnignore:'Réafficher', piKickban:'Kick/ban total', kickbanConfirm:'Bannir {name} du serveur (kickban total) ?', inviteConfirm:'Inviter {name} à votre partie ?', ignoreConfirm:'Ignorer {name} ?', unignoreConfirm:'Réafficher {name} ?', kickbanOk:'{name} a été kickban', kickbanFail:'Échec du kickban',
     piNoCupData:'Pas de classement de coupe pour ce joueur.',
     rankingTooltip:'Classement', rankingTitle:'Classement', rankingPth:'PokerTH', rankingBbc:'BBC', rankingWec:'WEC',
     rankingLoading:'Chargement…', rankingSoon:'Classement bientôt disponible.', rankingError:'Impossible de charger le classement.', rankingEmpty:'Aucune entrée.',

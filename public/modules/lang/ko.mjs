@@ -141,7 +141,7 @@ export const strings = {
   installIosStep3: "<b>추가</b>로 확정하면 앱이 홈 화면에 표시됩니다.",
   piCups: "컵",
   piNoCupData: "이 플레이어의 컵 순위가 없습니다.",
-  piShowCups: "컵 보기",
+  piShowCups: "컵 보기", piHideCups: "컵 숨기기",
   pinActionBar: "액션 바 열어 두기",
   rankingCurrentSeason: "현재 시즌",
   tablePlayersEmpty: "착석한 플레이어 없음.",

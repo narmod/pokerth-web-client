@@ -140,7 +140,7 @@ export const strings = {
   installIosStep3: "<b>Ekle</b> ile onaylayın — uygulama ana ekranınıza gelir.",
   piCups: "Kupalar",
   piNoCupData: "Bu oyuncu için kupa sıralaması yok.",
-  piShowCups: "Kupaları göster",
+  piShowCups: "Kupaları göster", piHideCups: "Kupaları gizle",
   pinActionBar: "Eylem çubuğunu açık tut",
   rankingCurrentSeason: "Geçerli sezon",
   tablePlayersEmpty: "Masada oyuncu yok.",

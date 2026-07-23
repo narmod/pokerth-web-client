@@ -138,7 +138,7 @@ export const strings = {
   installIosStep3: "Потврдите са <b>Додај</b> — апликација се појављује на почетном екрану.",
   piCups: "Пехари",
   piNoCupData: "Нема ранг-листе пехара за овог играча.",
-  piShowCups: "Прикажи пехаре",
+  piShowCups: "Прикажи пехаре", piHideCups: "Сакриј пехаре",
   pinActionBar: "Држи траку акција отвореном",
   rankingCurrentSeason: "Тренутна сезона",
   tablePlayersEmpty: "Нема играча за столом.",

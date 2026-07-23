@@ -137,7 +137,7 @@ export const strings = {
   installIosStep3: "Підтвердьте кнопкою <b>Додати</b> — застосунок з'явиться на головному екрані.",
   piCups: "Кубки",
   piNoCupData: "Немає рейтингу кубків для цього гравця.",
-  piShowCups: "Показати кубки",
+  piShowCups: "Показати кубки", piHideCups: "Сховати кубки",
   pinActionBar: "Тримати панель дій відкритою",
   rankingCurrentSeason: "Поточний сезон",
   tablePlayersEmpty: "За столом немає гравців.",

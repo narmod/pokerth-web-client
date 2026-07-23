@@ -138,7 +138,7 @@ export const strings = {
   installIosStep3: "Patvirtinkite <b>Pridėti</b> — programėlė atsiranda pradžios ekrane.",
   piCups: "Taurės",
   piNoCupData: "Šiam žaidėjui taurių reitingo nėra.",
-  piShowCups: "Rodyti taures",
+  piShowCups: "Rodyti taures", piHideCups: "Slėpti taures",
   pinActionBar: "Laikyti veiksmų juostą atvertą",
   rankingCurrentSeason: "Dabartinis sezonas",
   tablePlayersEmpty: "Prie stalo nėra žaidėjų.",

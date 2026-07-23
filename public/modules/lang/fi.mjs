@@ -137,7 +137,7 @@ export const strings = {
   installIosStep3: "Vahvista painikkeella <b>Lisää</b> — sovellus ilmestyy aloitusnäyttöön.",
   piCups: "Pokaalit",
   piNoCupData: "Ei pokaalisijoituksia tälle pelaajalle.",
-  piShowCups: "Näytä pokaalit",
+  piShowCups: "Näytä pokaalit", piHideCups: "Piilota pokaalit",
   pinActionBar: "Pidä toimintopalkki auki",
   rankingCurrentSeason: "Nykyinen kausi",
   tablePlayersEmpty: "Ei pelaajia pöydässä.",

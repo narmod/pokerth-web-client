@@ -138,7 +138,7 @@ export const strings = {
   installIosStep3: "Confirmă cu <b>Adaugă</b> — aplicația apare pe ecranul principal.",
   piCups: "Cupe",
   piNoCupData: "Niciun clasament de cupe pentru acest jucător.",
-  piShowCups: "Arată cupele",
+  piShowCups: "Arată cupele", piHideCups: "Ascunde cupele",
   pinActionBar: "Ține bara de acțiuni deschisă",
   rankingCurrentSeason: "Sezonul curent",
   tablePlayersEmpty: "Niciun jucător la masă.",

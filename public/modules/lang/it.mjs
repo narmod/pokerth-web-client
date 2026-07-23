@@ -145,7 +145,7 @@ export const strings = {
   installIosStep3: "Conferma con <b>Aggiungi</b> — l'app compare nella schermata Home.",
   piCups: "Coppe",
   piNoCupData: "Nessuna classifica coppe per questo giocatore.",
-  piShowCups: "Mostra le coppe",
+  piShowCups: "Mostra le coppe", piHideCups: "Nascondi le coppe",
   pinActionBar: "Tieni aperta la barra delle azioni",
   rankingCurrentSeason: "Stagione attuale",
   tablePlayersEmpty: "Nessun giocatore al tavolo.",

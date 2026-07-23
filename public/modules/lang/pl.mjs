@@ -144,7 +144,7 @@ export const strings = {
   installIosStep3: "Potwierdź przyciskiem <b>Dodaj</b> — aplikacja pojawi się na ekranie głównym.",
   piCups: "Puchary",
   piNoCupData: "Brak rankingu pucharów dla tego gracza.",
-  piShowCups: "Pokaż puchary",
+  piShowCups: "Pokaż puchary", piHideCups: "Ukryj puchary",
   pinActionBar: "Trzymaj pasek akcji otwarty",
   rankingCurrentSeason: "Bieżący sezon",
   tablePlayersEmpty: "Brak graczy przy stole.",
