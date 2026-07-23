@@ -26,6 +26,8 @@ export const strings = {
     hlHistory:"履歴",
     hlExportPdbTip:".pdb でエクスポート（PokerTH Tracker にインポート可）",
     hlNoData:"まだデータがありません。",
+    hlStatsTitle:"統計",
+    hlWon:"勝率",
     hlTrend:"傾向",
     hlScopeSession:"セッション",
     hlSeeRange:"レンジを見る ▸",

@@ -28,6 +28,8 @@ export const strings = {
     hlHistory:"Eachdraidh",
     hlExportPdbTip:"Às-phortaich mar .pdb (a ghabhas ion-phortadh do PokerTH Tracker)",
     hlNoData:"Chan eil dàta ann fhathast.",
+    hlStatsTitle:"Stadastaireachd",
+    hlWon:"Buannaichte",
     hlTrend:"Claonadh",
     hlScopeSession:"seisean",
     hlSeeRange:"Seall an raon ▸",

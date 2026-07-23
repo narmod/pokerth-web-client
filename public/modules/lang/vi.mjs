@@ -27,6 +27,8 @@ export const strings = {
     hlHistory:"Lịch sử",
     hlExportPdbTip:"Xuất dưới dạng .pdb (có thể nhập vào PokerTH Tracker)",
     hlNoData:"Chưa có dữ liệu.",
+    hlStatsTitle:"Thống kê",
+    hlWon:"Thắng",
     hlTrend:"Xu hướng",
     hlScopeSession:"phiên",
     hlSeeRange:"Xem range ▸",

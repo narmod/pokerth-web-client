@@ -28,6 +28,8 @@ export const strings = {
     hlHistory:"历史",
     hlExportPdbTip:"导出为 .pdb（可导入 PokerTH Tracker）",
     hlNoData:"暂无数据。",
+    hlStatsTitle:"统计",
+    hlWon:"胜率",
     hlTrend:"趋势",
     hlScopeSession:"会话",
     hlSeeRange:"查看范围 ▸",

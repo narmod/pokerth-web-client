@@ -27,6 +27,8 @@ export const strings = {
     hlHistory:"Ιστορικό",
     hlExportPdbTip:"Εξαγωγή ως .pdb (εισαγώγιμο στο PokerTH Tracker)",
     hlNoData:"Δεν υπάρχουν ακόμη δεδομένα.",
+    hlStatsTitle:"Στατιστικά",
+    hlWon:"Κερδισμένα",
     hlTrend:"Τάση",
     hlScopeSession:"συνεδρία",
     hlSeeRange:"Δείτε το range ▸",

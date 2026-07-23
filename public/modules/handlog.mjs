@@ -1389,18 +1389,41 @@ function _refreshScopes() {
   const map = {};
   for (const p of tp) {
     if (!p || !p.name) continue;
-    map[p.name] = (p.rights === 1 && !p.me && !p.bot) ? 'session' : 'all';
+    map[p.name] = (p.me || p.bot) ? 'all'
+                : (p.rights === 1) ? 'session'
+                : (p.rights >= 2)  ? 'all'
+                : 'pending';
   }
   _scopeOfName = map;
 }
 
 // Accesseur unique aux stats d'un joueur : applique la portee ci-dessus.
+// 'pending' (droits pas encore recus) se comporte comme 'all' — le HUD flottant
+// garde ainsi son comportement historique et se corrige seul au recalcul
+// suivant. Seul le popup de profil attend les droits, via playerStatsFor().
 function _statsFor(name) {
   return (_scopeOfName[name] === 'session') ? _statsCacheSession[name] : _statsCache[name];
 }
 
 // Vrai si les stats affichees pour ce joueur sont limitees a la session.
 function _statsIsSessionScoped(name) { return _scopeOfName[name] === 'session'; }
+
+// API destinee au popup de profil joueur (ui/player-popup.mjs).
+// Retourne null tant que les droits serveur ne sont pas connus : afficher une
+// portee complete puis basculer en portee session sous les yeux de
+// l'utilisateur serait trompeur, autant ne rien montrer jusque-la.
+function playerStatsFor(name) {
+  if (!_trackingEnabled()) return null;
+  const scope = _scopeOfName[name];
+  if (!scope || scope === 'pending') return null;
+  const s = _statsFor(name);
+  if (!s || !s.hands) return null;
+  return { stats: s, scope: scope, recentWindow: RECENT_HANDS, trendMinBase: _TREND_MIN_BASE };
+}
+if (typeof window !== 'undefined') {
+  window._playerStatsFor = playerStatsFor;
+  window._statsTrendArrow = (id, rec, glob) => _trendArrow(id, rec, glob);
+}
 
 // Écrit le CONTENU d'une boîte (sans la positionner).
 // Offsets de déplacement manuel des boîtes (par siège), persistés. Permet à
@@ -1690,6 +1713,17 @@ async function refreshHud() {
 }
 if (typeof window !== 'undefined') window._hudRefresh = refreshHud;
 
+// Calcul a la demande SANS toucher au HUD : le popup de profil doit afficher
+// les stats meme quand le HUD flottant est desactive.
+async function ensureStatsComputed() {
+  if (!_trackingEnabled()) return;
+  if (_computing) return;
+  if (Object.keys(_statsCache).length && (Date.now() - _lastComputeAt) < 2500) return;
+  _computing = true;
+  try { await _computeStats(); _lastComputeAt = Date.now(); } finally { _computing = false; }
+}
+if (typeof window !== 'undefined') window._statsEnsure = ensureStatsComputed;
+
 // ── Panneau détaillé d'un joueur (tap sur une boîte HUD) ────────────────────
 // Se déroule comme un PROLONGEMENT de la boîte : ancré à celle-ci, il s'ouvre
 // EN DESSOUS pour les joueurs du haut, AU-DESSUS pour ceux du bas (selon la
@@ -1704,7 +1738,7 @@ const _DETAIL_ROWS = [
   ['fold_to_cbet', 'Fold CB', 'Fold to C-Bet %'],
   ['wtsd', 'WTSD', 'Went To Showdown %'],
   ['wsd', 'W$SD', 'Won $ at Showdown %'],
-  ['won', 'Won', 'Hands won %'],
+  ['won', 'Won', 'Hands won %', 'hlWon'],
   ['allin', 'All-in', 'All-in count'],
 ];
 // Seuils de bruit : sur une fenetre de 20 mains, un ecart plus petit que ca
@@ -1764,11 +1798,11 @@ function openHudDetail(name, boxEl) {
   pop._player = name;
   const s = _statsFor(name);
   let rows = '';
-  for (const [id, lbl, title] of _DETAIL_ROWS) {
+  for (const [id, lbl, title, i18nKey] of _DETAIL_ROWS) {
     const val = s ? _detailFmt(id, s[id]) : '–';
     const col = s ? statColor(id, s[id]) : '';
     rows += '<div class="hud-d-row" title="' + _hudEsc(title) + '">'
-      + '<span class="hud-d-lbl">' + lbl + '</span>'
+      + '<span class="hud-d-lbl">' + _hudEsc(i18nKey ? _ht(i18nKey, lbl) : lbl) + '</span>'
       + '<span class="hud-d-val"' + (col ? ' style="color:' + col + '"' : '') + '>' + val + '</span></div>';
   }
   const _scopeTag = _statsIsSessionScoped(name)

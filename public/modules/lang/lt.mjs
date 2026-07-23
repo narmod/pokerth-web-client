@@ -27,6 +27,8 @@ export const strings = {
     hlHistory:"Istorija",
     hlExportPdbTip:"Eksportuoti kaip .pdb (importuojama į PokerTH Tracker)",
     hlNoData:"Kol kas duomenų nėra.",
+    hlStatsTitle:"Statistika",
+    hlWon:"Laimėta",
     hlTrend:"Tendencija",
     hlScopeSession:"sesija",
     hlSeeRange:"Rodyti diapazoną ▸",

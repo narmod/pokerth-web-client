@@ -27,6 +27,8 @@ export const strings = {
     hlHistory:"Povijest",
     hlExportPdbTip:"Izvezi kao .pdb (uvozivo u PokerTH Tracker)",
     hlNoData:"Još nema podataka.",
+    hlStatsTitle:"Statistika",
+    hlWon:"Dobivene",
     hlTrend:"Trend",
     hlScopeSession:"sesija",
     hlSeeRange:"Prikaži raspon ▸",

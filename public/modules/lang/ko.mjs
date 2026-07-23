@@ -30,6 +30,8 @@ export const strings = {
     hlHistory:"기록",
     hlExportPdbTip:".pdb로 내보내기 (PokerTH Tracker에서 가져오기 가능)",
     hlNoData:"아직 데이터가 없습니다.",
+    hlStatsTitle:"통계",
+    hlWon:"승률",
     hlTrend:"추세",
     hlScopeSession:"세션",
     hlSeeRange:"레인지 보기 ▸",

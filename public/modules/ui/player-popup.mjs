@@ -254,6 +254,7 @@ function openPlayerInfoPopup(pid, autoStats) {
   // Sans effet si le bloc n'existe pas (bot, invité, hors réseau).
   if (autoStats && document.getElementById('pim-cups-btn')) {
     try { _pimLoadCups(targetPid); } catch (e) {}
+    try { _pimLoadPlayerStats(targetPid); } catch (e) {}
   }
   modal.style.display = 'flex';
 }
@@ -369,6 +370,8 @@ function _otherPlayerInfoHtml(pid) {
     if (pos) foot += '<span class="pim-pos-wrap">' + pos + '</span>';
     html += '<div class="pim-ig">' + rows + (foot ? ('<div class="pim-ig-foot">' + foot + '</div>') : '') + '</div>';
   }
+  // Stats de comportement (rempli en asynchrone par _pimLoadPlayerStats).
+  html += '<div id="pim-stats-hud" class="pim-stat-box" data-pid="' + pid + '" style="display:none"></div>';
   // Coupes + lien profil pokerth.net (identique pour moi et pour les autres).
   html += _cupsBlockHtml(pid);
   var _ignNm = window.getPlayerName(pid);
@@ -425,6 +428,77 @@ function closePlayerInfoPopup() {
 // Coupes à la demande : appelé par le bouton « Voir les coupes » du popup.
 // Masque le bouton et lance le chargement (3 requêtes /api/player) une seule
 // fois, sur action explicite — jamais en automatique à l'ouverture.
+// ── Stats de comportement d'un adversaire (VPIP / PFR / AF / ...) ─────────
+// Donnees fournies par handlog.mjs (window._playerStatsFor), independamment
+// du HUD flottant : le bloc s'affiche meme HUD desactive.
+//
+// Rendu en DEUX TEMPS : _otherPlayerInfoHtml pose un conteneur vide, puis
+// _pimLoadPlayerStats le remplit quand le calcul (IndexedDB, asynchrone) est
+// termine. Le bloc reste masque si le suivi est desactive, si le joueur n'a
+// aucune main enregistree, ou tant que les droits serveur sont inconnus
+// (rights === 0) — afficher une portee complete puis basculer en portee
+// session sous les yeux de l'utilisateur serait trompeur.
+var _PIM_STAT_ROWS = [
+  ['vpip', 'VPIP'], ['pfr', 'PFR'], ['af', 'AF'],
+  ['three_bet', '3B'], ['cbet', 'CB'], ['fold_to_3bet', 'F3B'],
+  ['fold_to_cbet', 'FCB'], ['wtsd', 'WTSD'], ['wsd', 'W$SD'],
+  ['won', 'Won', 'hlWon'], ['allin', 'All-in'],
+];
+
+function _pimStatFmt(id, v) {
+  if (v == null) return '\u2013';
+  if (id === 'af') return v === 'inf' ? '\u221e' : String(v);
+  if (id === 'allin') return String(v);
+  return v + '%';
+}
+
+function _pimRenderPlayerStats(pid) {
+  var box = document.getElementById('pim-stats-hud');
+  if (!box) return;
+  var res = null;
+  try {
+    if (typeof window._playerStatsFor === 'function') res = window._playerStatsFor(_pimNameFor(pid));
+  } catch (e) {}
+  if (!res || !res.stats) { box.style.display = 'none'; box.innerHTML = ''; return; }
+  function tt(k, fb) { var v = (typeof t === 'function') ? t(k) : null; return (v && v !== k) ? v : fb; }
+  var s = res.stats, rows = '', i, id, lbl, key;
+  for (i = 0; i < _PIM_STAT_ROWS.length; i++) {
+    id = _PIM_STAT_ROWS[i][0]; lbl = _PIM_STAT_ROWS[i][1]; key = _PIM_STAT_ROWS[i][2];
+    rows += '<span class="pim-stat"><i>' + esc(key ? tt(key, lbl) : lbl) + '</i>'
+          + '<b>' + esc(_pimStatFmt(id, s[id])) + '</b></span>';
+  }
+  // Tendance : VPIP/AF de la fenetre courte vs la moyenne globale du joueur.
+  var trend = '';
+  if (s.recent && s.hands >= res.trendMinBase && typeof window._statsTrendArrow === 'function') {
+    var cell = function (cid, clbl) {
+      return '<span class="pim-t-cell"><i>' + clbl + '</i><b>' + esc(_pimStatFmt(cid, s.recent[cid])) + '</b>'
+           + '<u>' + esc(window._statsTrendArrow(cid, s.recent[cid], s[cid])) + '</u></span>';
+    };
+    trend = '<div class="pim-trend" title="' + esc(res.recentWindow + ' ' + tt('hlHandPlur', 'hands')) + '">'
+          + '<span class="pim-t-lbl">' + esc(tt('hlTrend', 'Trend')) + '</span>'
+          + cell('vpip', 'VPIP') + cell('af', 'AF') + '</div>';
+  }
+  var scopeTag = (res.scope === 'session')
+    ? '<span class="pim-stat-scope">' + esc(tt('hlScopeSession', 'session')) + '</span>' : '';
+  var handsTxt = s.hands + ' ' + tt(s.hands === 1 ? 'hlHandSing' : 'hlHandPlur', s.hands === 1 ? 'hand' : 'hands');
+  box.innerHTML = '<div class="pim-stat-head">'
+      + '<span class="pim-stat-title">' + esc(tt('hlStatsTitle', 'Stats')) + '</span>' + scopeTag
+      + '<span class="pim-stat-hands">' + esc(handsTxt) + '</span></div>'
+    + '<div class="pim-stat-grid">' + rows + '</div>' + trend;
+  box.style.display = '';
+}
+
+function _pimLoadPlayerStats(pid) {
+  _pimRenderPlayerStats(pid); // immediat si le cache est deja chaud
+  if (typeof window._statsEnsure !== 'function') return;
+  Promise.resolve(window._statsEnsure()).catch(function () {}).then(function () {
+    // Le popup a pu etre ferme, ou rouvert sur un AUTRE joueur, entre-temps.
+    var box = document.getElementById('pim-stats-hud');
+    if (box && String(box.getAttribute('data-pid')) === String(pid)) _pimRenderPlayerStats(pid);
+  });
+}
+window._pimLoadPlayerStats = _pimLoadPlayerStats;
+
 function _pimLoadCups(pid) {
   var btn = document.getElementById('pim-cups-btn');
   if (btn) btn.style.display = 'none';
@@ -538,10 +612,12 @@ function closeAvatarPickerFromLobby() {
 export { _pthAvatarFor, _myAvatarDisplay, _myAvatarToBroadcast, _avatarChipHtml,
          _ccToFlag, openPlayerInfoPopup, _otherPlayerInfoHtml, _cupsBlockHtml, _pimSetTab,
          _renderProfileStats, closePlayerInfoPopup, _pimLoadCups,
+         _pimLoadPlayerStats, _pimRenderPlayerStats,
          openAvatarPickerFromLobby, closeAvatarPickerFromLobby };
 
 for (const [k, v] of Object.entries({ _pthAvatarFor, _myAvatarDisplay,
   _myAvatarToBroadcast, _avatarChipHtml, _ccToFlag, openPlayerInfoPopup,
   _otherPlayerInfoHtml, _cupsBlockHtml, _pimSetTab, _renderProfileStats, closePlayerInfoPopup,
-  _pimLoadCups, openAvatarPickerFromLobby, closeAvatarPickerFromLobby }))
+  _pimLoadCups, _pimLoadPlayerStats, _pimRenderPlayerStats,
+  openAvatarPickerFromLobby, closeAvatarPickerFromLobby }))
   window[k] = v;

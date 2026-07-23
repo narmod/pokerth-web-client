@@ -27,6 +27,8 @@ export const strings = {
     hlHistory:"Istoric",
     hlExportPdbTip:"Exportă ca .pdb (importabil în PokerTH Tracker)",
     hlNoData:"Încă nu există date.",
+    hlStatsTitle:"Statistici",
+    hlWon:"Câștigate",
     hlTrend:"Tendință",
     hlScopeSession:"sesiune",
     hlSeeRange:"Vezi range ▸",

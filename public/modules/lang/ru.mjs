@@ -32,6 +32,8 @@ export const strings = {
     hlHistory:"История",
     hlExportPdbTip:"Экспорт в .pdb (импорт в PokerTH Tracker)",
     hlNoData:"Пока нет данных.",
+    hlStatsTitle:"Статистика",
+    hlWon:"Выигранные",
     hlTrend:"Тренд",
     hlScopeSession:"сессия",
     hlSeeRange:"Показать рендж ▸",

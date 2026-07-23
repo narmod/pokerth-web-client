@@ -31,6 +31,8 @@ export const strings = {
     hlHistory:"इतिहास",
     hlExportPdbTip:".pdb के रूप में निर्यात करें (PokerTH Tracker में आयात योग्य)",
     hlNoData:"अभी कोई डेटा नहीं।",
+    hlStatsTitle:"आँकड़े",
+    hlWon:"जीती",
     hlTrend:"रुझान",
     hlScopeSession:"सत्र",
     hlSeeRange:"रेंज देखें ▸",

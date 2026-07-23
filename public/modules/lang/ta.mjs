@@ -28,6 +28,8 @@ export const strings = {
     hlHistory:"வரலாறு",
     hlExportPdbTip:".pdb ஆக ஏற்றுமதி (PokerTH Trackerஇல் இறக்கலாம்)",
     hlNoData:"இன்னும் தரவு இல்லை.",
+    hlStatsTitle:"புள்ளிவிவரங்கள்",
+    hlWon:"வென்றவை",
     hlTrend:"போக்கு",
     hlScopeSession:"அமர்வு",
     hlSeeRange:"வரம்பைக் காண்க ▸",
