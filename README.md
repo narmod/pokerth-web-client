@@ -100,17 +100,17 @@ Want to try with **no server or connection at all**? Pick **🏋️ Training mod
 
 ## Why this project exists
 
-I have been playing PokerTH for years and have a deep appreciation for the incredible work the PokerTH team has put into this game over so many years. **Thank you** to every contributor who built and maintained it. ❤️
+I've been playing PokerTH for years, and I have deep respect for the work the PokerTH team has poured into this game over so long. **Thank you** to every contributor who built and maintained it. ❤️
 
-One day I wanted to play a family LAN game with my wife and teach poker to my kids — on tablets and phones, without installing anything. The problem: **there is no official web client for PokerTH**. You need the native desktop app, which does not run on iOS or Android.
+One day I wanted to run a family LAN game — play with my wife, teach my kids poker — on the tablets and phones already lying around the house. There was an Android build, but **nothing for iOS**, and even on Android it meant asking everyone to download and set up an app before a single card was dealt. What I wanted was something dead simple: send a link, tap it, sit down at the table.
 
 So I sat down and built one.
 
-It started as a very simple interface — just enough to deal a hand around the table. But every family game brought new feedback ("I can't tell the suits apart on my phone", "whose turn is it?", "can we have avatars?"), and little by little those suggestions grew the bare-bones prototype into the much more complete client it is today.
+It started as a very simple interface, just enough to deal a hand around the table. But every family game brought new feedback — *"I can't tell the suits apart on my phone"*, *"whose turn is it?"*, *"can we have avatars?"* — and little by little those suggestions turned a bare-bones prototype into something far more complete. I put it on GitHub, figuring that if I wanted a web client, someone else probably did too.
 
-Then something wonderful happened: I showed the project to the PokerTH team — they liked the idea, and I was welcomed into the project so that this client can become an **official PokerTH client**. The layout is now based on the team's next-generation **QML client**, and the goal is a faithful web clone of that app: same seat placement, same action bar, same colors, same behaviour — kept in sync as the official client evolves.
+Then something wonderful happened: I showed the project to the PokerTH team. They liked the idea, and **I'm now part of the PokerTH development team**, working on this client so it can become an **official PokerTH client**. The project changed shape — the layout is now based on the team's next-generation **QML client**, and the goal is a faithful web clone of that app: same seat placement, same action bar, same colors, same behaviour, kept in sync as the official client evolves.
 
-This project is a **web frontend** that connects to any PokerTH server directly from the browser, with no app installation needed. It is designed to work great on phones and tablets so that family poker nights are just a URL away.
+This project is a **web frontend** that connects to any PokerTH server straight from the browser, with no app to install. It's built to work well on phones and tablets, so family poker night is just a URL away.
 
 ---
 
