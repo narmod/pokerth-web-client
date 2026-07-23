@@ -213,11 +213,17 @@ function openPlayerInfoPopup(pid, autoStats) {
     }
   }
   if (isSelf) {
-    // Mon profil : onglets stats (l'avatar du popup est cliquable pour le changer).
-    if (infoEl)    { infoEl.style.display = 'none'; infoEl.innerHTML = ''; }
+    // Mon profil : stats de session locales, PUIS mes coupes pokerth.net —
+    // #pim-info est placé après #pim-stats dans le DOM, l'ordre est donc
+    // « ma partie en cours » avant « ma saison ». Vide hors réseau / invité.
     if (statsEl)   statsEl.style.display = '';
     S._pimTab = 'session';
     _renderProfileStats();
+    if (infoEl) {
+      var _selfCups = _cupsBlockHtml(targetPid);
+      infoEl.innerHTML = _selfCups;
+      infoEl.style.display = _selfCups ? '' : 'none';
+    }
   } else {
     // Adversaire : rôle + infos en jeu, pas de stats ni de bouton avatar.
     if (statsEl)   { statsEl.style.display = 'none'; statsEl.innerHTML = ''; }
@@ -243,9 +249,12 @@ function openPlayerInfoPopup(pid, autoStats) {
     }
   }
   // Ouverture directe sur les stats (bouton 📊 de la liste) : charge le
-  // profil de saison du joueur (memes stats que « Voir les coupes »), sans
-  // clic supplémentaire. Sans effet pour moi / joueur sans profil réseau.
-  if (autoStats && !isSelf) { try { _pimLoadCups(targetPid); } catch (e) {} }
+  // profil de saison du joueur (mêmes stats que « Voir les coupes »), sans
+  // clic supplémentaire — moi compris depuis que mes coupes sont rendues.
+  // Sans effet si le bloc n'existe pas (bot, invité, hors réseau).
+  if (autoStats && document.getElementById('pim-cups-btn')) {
+    try { _pimLoadCups(targetPid); } catch (e) {}
+  }
   modal.style.display = 'flex';
 }
 // Bouton 📊 de la liste : ouvre le popup et charge directement les stats
@@ -288,6 +297,36 @@ window._adminBanPlayer = function (pid) {
 // / Admin), puis — s'il est attablé — ses jetons / mise / statut / position
 // (pastilles D-SB-BB), et un lien vers son profil pokerth.net s'il est
 // enregistré et qu'on est bien sur pokerth.net. Tout passe par t() → traduit.
+// Bloc « coupes » (classements PokerTH / BBC / WEC) + lien profil pokerth.net.
+// Rendu pour tout joueur ENREGISTRÉ en mode réseau — y compris MOI : mon propre
+// popup n'affichait que les stats de session locales, alors que les autres
+// joueurs montraient leurs classements (remonté narmod). Chaîne vide sinon
+// (bot, invité, hors réseau).
+function _cupsBlockHtml(pid) {
+  function tt(k, fb) { var v = (typeof t === 'function') ? t(k) : null; return (v && v !== k) ? v : fb; }
+  var rg = S._playerRights[pid] || 0;
+  var modeEl = document.getElementById('login-mode');
+  var onNet = !!(modeEl && (modeEl.value === 'guest' || modeEl.value === 'auth'));
+  if (window.isBot(pid) || !onNet || (rg !== 2 && rg !== 3)) return '';
+  var nm = _pimNameFor(pid);
+  if (!nm) return '';
+  // Coupes À LA DEMANDE : aucun réseau à l'ouverture. Le bouton déclenche
+  // window._pimLoadCups(pid) → rkLoadPlayerCups remplit #pim-cups (1 fois).
+  return '<button type="button" id="pim-cups-btn" class="pim-cups-btn" onclick="window._pimLoadCups(' + pid + ')">🏆 '
+       + esc(tt('piShowCups', 'Show cups')) + '</button>'
+       + '<div id="pim-cups" class="pim-cups"></div>'
+       + '<a class="pim-profile-link" href="https://www.pokerth.net/app.php/player?u='
+       + encodeURIComponent(nm) + '" target="_blank" rel="noopener noreferrer">'
+       + esc(tt('piViewProfile', 'View pokerth.net profile')) + '</a>';
+}
+
+// Nom à interroger sur pokerth.net. Pour moi, S.myName fait foi : je ne suis pas
+// forcément présent dans la liste des joueurs consultée par getPlayerName.
+function _pimNameFor(pid) {
+  if (pid === S.myId && S.myName) return S.myName;
+  try { return window.getPlayerName(pid) || null; } catch (e) { return null; }
+}
+
 function _otherPlayerInfoHtml(pid) {
   function tt(k, fb) { var v = (typeof t === 'function') ? t(k) : null; return (v && v !== k) ? v : fb; }
   var html = '';
@@ -328,21 +367,8 @@ function _otherPlayerInfoHtml(pid) {
     if (pos) foot += '<span class="pim-pos-wrap">' + pos + '</span>';
     html += '<div class="pim-ig">' + rows + (foot ? ('<div class="pim-ig-foot">' + foot + '</div>') : '') + '</div>';
   }
-  // Lien vers le profil pokerth.net (joueurs enregistrés, mode guest/auth).
-  var rg2 = S._playerRights[pid] || 0;
-  var modeEl = document.getElementById('login-mode');
-  var onNet = !!(modeEl && (modeEl.value === 'guest' || modeEl.value === 'auth'));
-  if (!window.isBot(pid) && onNet && (rg2 === 2 || rg2 === 3)) {
-    // Coupes À LA DEMANDE : aucun réseau à l'ouverture. Le bouton déclenche
-    // window._pimLoadCups(pid) → rkLoadPlayerCups remplit #pim-cups (1 fois).
-    html += '<button type="button" id="pim-cups-btn" class="pim-cups-btn" onclick="window._pimLoadCups(' + pid + ')">🏆 '
-          + esc(tt('piShowCups', 'Show cups')) + '</button>';
-    html += '<div id="pim-cups" class="pim-cups"></div>';
-    var nm = window.getPlayerName(pid);
-    html += '<a class="pim-profile-link" href="https://www.pokerth.net/app.php/player?u='
-          + encodeURIComponent(nm) + '" target="_blank" rel="noopener noreferrer">'
-          + esc(tt('piViewProfile', 'View pokerth.net profile')) + '</a>';
-  }
+  // Coupes + lien profil pokerth.net (identique pour moi et pour les autres).
+  html += _cupsBlockHtml(pid);
   var _ignNm = window.getPlayerName(pid);
   html += '<button type="button" class="pim-ignore-btn" onclick="window._toggleIgnore(' + pid + ')" '
         + 'style="display:block;width:100%;margin-top:10px;padding:8px 0;border:1px solid var(--border-hi,rgba(200,168,74,.4));border-radius:8px;cursor:pointer;background:transparent;color:var(--text,#eff1f5);font-weight:600">'
@@ -401,7 +427,7 @@ function _pimLoadCups(pid) {
   var btn = document.getElementById('pim-cups-btn');
   if (btn) btn.style.display = 'none';
   if (document.getElementById('pim-cups') && typeof window.rkLoadPlayerCups === 'function') {
-    try { window.rkLoadPlayerCups(window.getPlayerName(pid), 'pim-cups'); } catch(e) {}
+    try { window.rkLoadPlayerCups(_pimNameFor(pid), 'pim-cups'); } catch(e) {}
   }
 }
 window._pimLoadCups = _pimLoadCups;
@@ -508,12 +534,12 @@ function closeAvatarPickerFromLobby() {
 }
 
 export { _pthAvatarFor, _myAvatarDisplay, _myAvatarToBroadcast, _avatarChipHtml,
-         _ccToFlag, openPlayerInfoPopup, _otherPlayerInfoHtml, _pimSetTab,
+         _ccToFlag, openPlayerInfoPopup, _otherPlayerInfoHtml, _cupsBlockHtml, _pimSetTab,
          _renderProfileStats, closePlayerInfoPopup, _pimLoadCups,
          openAvatarPickerFromLobby, closeAvatarPickerFromLobby };
 
 for (const [k, v] of Object.entries({ _pthAvatarFor, _myAvatarDisplay,
   _myAvatarToBroadcast, _avatarChipHtml, _ccToFlag, openPlayerInfoPopup,
-  _otherPlayerInfoHtml, _pimSetTab, _renderProfileStats, closePlayerInfoPopup,
+  _otherPlayerInfoHtml, _cupsBlockHtml, _pimSetTab, _renderProfileStats, closePlayerInfoPopup,
   _pimLoadCups, openAvatarPickerFromLobby, closeAvatarPickerFromLobby }))
   window[k] = v;

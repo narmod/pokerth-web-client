@@ -53,6 +53,24 @@ S.players = { 7: 'Alice' };
 const html = P._otherPlayerInfoHtml(7);
 ok(html.includes('_toggleIgnore(7)'), '_otherPlayerInfoHtml câble le bouton ignorer');
 
+// _cupsBlockHtml : mes coupes doivent être rendues comme celles des autres
+// (bug remonté 23/07 : mon popup n'affichait que les stats de session).
+els['login-mode'].value = 'auth';
+S.myId = 3; S.myName = 'narmod';
+S._playerRights = { 3: 2, 7: 2, 8: 1, 901: 2 };
+const mine = P._cupsBlockHtml(3);
+ok(mine.includes('pim-cups-btn') && mine.includes('_pimLoadCups(3)'),
+   '_cupsBlockHtml : bouton « coupes » rendu pour MOI (joueur enregistré)');
+ok(mine.includes('player?u=narmod'),
+   '_cupsBlockHtml : le lien profil utilise S.myName (absent de getPlayerName)');
+ok(P._cupsBlockHtml(7).includes('player?u=Alice'),
+   '_cupsBlockHtml : adversaire enregistré inchangé');
+ok(P._cupsBlockHtml(8) === '', '_cupsBlockHtml : invité (droits 1) → aucun bloc');
+ok(P._cupsBlockHtml(901) === '', '_cupsBlockHtml : bot → aucun bloc');
+els['login-mode'].value = 'lan-dedi';
+ok(P._cupsBlockHtml(3) === '', '_cupsBlockHtml : hors réseau pokerth.net → aucun bloc');
+els['login-mode'].value = 'auth';
+
 // _pimSetTab pilote l'onglet du popup
 S._statsEligible = true; S._pimTab = 'session';
 P._pimSetTab('life');
