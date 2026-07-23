@@ -1,0 +1,54 @@
+# ── PokerTH Web Client — pokerth.net deployment ──────────────────────────────
+# Single-file install, no repo checkout needed on the host. From any empty
+# directory:
+#
+#   curl -O https://raw.githubusercontent.com/narmod/pokerth-web-client/main/docker-compose.pokerth-net.yml
+#   printf 'ADMIN_ENABLED=1\nSTATS_ADMIN_TOKEN=%s\n' "$(head -c 24 /dev/urandom | base64 | tr -dc A-Za-z0-9 | head -c 32)" > .env
+#   docker network create pokerth_web_net 2>/dev/null || true
+#   docker compose -f docker-compose.pokerth-net.yml up -d
+#
+# That's it. The container provisions its own git checkout (SELF_UPDATE) into
+# a named volume, so ALL future updates are one click in /admin → Update.
+# Updating this compose file itself is never needed for routine releases.
+#
+# nginx (in the pokerth_web_net network) reaches it at:
+#   proxy_pass http://pokerth-web-client:8080;
+
+services:
+  pokerth-web-client:
+    container_name: pokerth-web-client
+    image: ghcr.io/narmod/pokerth-web-client:latest
+    ports:
+      - "${PORT:-8080}:8080"
+    environment:
+      # Game servers of pokerth.net (production TLS 7236 + test 7234).
+      - ALLOWED_HOSTS=${ALLOWED_HOSTS:-pthsrv.pokerth.net}
+      - ALLOWED_PORTS=${ALLOWED_PORTS:-7234,7236}
+      # Admin panel — set STATS_ADMIN_TOKEN in .env (see header).
+      - ADMIN_ENABLED=${ADMIN_ENABLED:-1}
+      - STATS_ADMIN_TOKEN=${STATS_ADMIN_TOKEN:-}
+      - STATS_RESET_PERIOD=${STATS_RESET_PERIOD:-monthly}
+      # Self-updating install (default): checkout lives in the pokerth-app
+      # volume, admin Update button works out of the box.
+      - SELF_UPDATE=${SELF_UPDATE:-1}
+      - GIT_BRANCH=${GIT_BRANCH:-}
+    volumes:
+      - pokerth-stats:/data      # all persisted state (config, leaderboard…)
+      - pokerth-app:/srv/app     # self-provisioned git checkout
+    networks:
+      - pokerth_web_net
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1:8080/"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+volumes:
+  pokerth-stats:
+  pokerth-app:
+
+networks:
+  pokerth_web_net:
+    external: true
