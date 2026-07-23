@@ -1,0 +1,18 @@
+# ── Site-specific overrides — EXAMPLE ────────────────────────────────────────
+# Copy this file to `docker-compose.override.yml` (same directory) and adjust.
+# `docker compose up -d` merges the override automatically; the file is NOT
+# tracked by git, so `git pull` / the admin Update button never touch it.
+#
+# This example joins the container to a pre-existing (external) Docker network
+# so a reverse proxy container (nginx, traefik…) can reach it BY NAME
+# (http://pokerth-web-client:8080) without publishing extra host ports.
+# The network must already exist: `docker network create pokerth_web_net`.
+
+services:
+  pokerth-web-client:
+    networks:
+      - pokerth_web_net
+
+networks:
+  pokerth_web_net:
+    external: true
