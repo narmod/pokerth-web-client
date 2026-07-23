@@ -67,17 +67,24 @@
     },
     {
       "src": "/screenshots/game.png",
-      "sizes": "480x1039",
+      "sizes": "480x982",
       "type": "image/png",
       "form_factor": "narrow",
-      "label": "At the table on a phone"
+      "label": "At the table on a phone \u2014 full 10-seat layout"
     },
     {
-      "src": "/screenshots/lobby.png",
-      "sizes": "480x1039",
+      "src": "/screenshots/home.png",
+      "sizes": "480x982",
       "type": "image/png",
       "form_factor": "narrow",
-      "label": "Lobby \u2014 available tables"
+      "label": "Pick a mode \u2014 online, training vs bots or LAN"
+    },
+    {
+      "src": "/screenshots/create.png",
+      "sizes": "480x982",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Create a table \u2014 game styles and tournament presets"
     }
   ],
   "lang": "en"
