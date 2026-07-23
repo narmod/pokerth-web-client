@@ -110,7 +110,7 @@ It started as a very simple interface, just enough to deal a hand around the tab
 
 Then something wonderful happened: I showed the project to the PokerTH team. They liked the idea, and **I'm now part of the PokerTH development team**, working on this client so it can become an **official PokerTH client**. The project changed shape — the layout is now based on the team's next-generation **QML client**, and the goal is a faithful web clone of that app: same seat placement, same action bar, same colors, same behaviour, kept in sync as the official client evolves.
 
-This project is a **web frontend** that connects to any PokerTH server straight from the browser, with no app to install. It's built to work well on phones and tablets, so family poker night is just a URL away.
+This project is a **web frontend** that connects to any PokerTH server straight from the browser, with no app to install. It's built to work well on phones and tablets, so a family **PokerTH** night is only ever a URL away.
 
 ---
 
