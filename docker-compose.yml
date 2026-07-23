@@ -1,5 +1,9 @@
 services:
   pokerth-web-client:
+    # Fixed container name so external tooling (nginx upstream by name,
+    # scripts, `docker logs pokerth-web-client`) doesn't depend on the
+    # compose project name / directory.
+    container_name: pokerth-web-client
     # Prebuilt multi-arch image (amd64 / arm64 / armv7 — runs on Raspberry Pi).
     # `docker compose up -d` pulls it; `docker compose pull` updates it.
     # To build locally instead, comment out `image:` and uncomment `build: .`.
