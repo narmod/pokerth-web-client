@@ -67,14 +67,14 @@
     },
     {
       "src": "/screenshots/game.png",
-      "sizes": "480x982",
+      "sizes": "480x1039",
       "type": "image/png",
       "form_factor": "narrow",
       "label": "At the table on a phone"
     },
     {
       "src": "/screenshots/lobby.png",
-      "sizes": "480x982",
+      "sizes": "480x1039",
       "type": "image/png",
       "form_factor": "narrow",
       "label": "Lobby \u2014 available tables"
