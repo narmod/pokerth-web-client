@@ -7982,6 +7982,96 @@ function _winBtnWire() {
 if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', _winBtnWire);
 else _winBtnWire();
 
+// ── Ordre d'empilement des fenetres (« la derniere ouverte passe dessus ») ──
+// Avant : chaque panneau portait un z-index CONSTANT en CSS (chat 100, journal
+// et joueurs 99, reactions 101, Combinaisons 200, musique 900). Le classement
+// etait donc fige par identite : le chat restait au-dessus du panneau Joueurs
+// meme ouvert apres lui, et aucun clic ne pouvait le faire passer devant.
+// Desormais tous partent de la meme base CSS (100) et c'est ce compteur partage
+// qui les differencie : une fenetre remonte quand elle s'ouvre ET quand on la
+// touche (comportement fenetre standard). Bande bornee a _WS_TOP pour rester
+// SOUS les dialogues et pages plein ecran (z-index 120+).
+var _WS_BASE = 100, _WS_TOP = 118, _wsZ = _WS_BASE;
+// cls : tiroirs du lobby, ouverts par une classe sur #s-lobby (pas par display).
+var _WIN_STACK = [
+  { id: 'g-chat-panel' },
+  { id: 'lobby-chat-panel' },
+  { id: 'g-log-panel' },
+  { id: 'g-reaction-panel' },
+  { id: 'g-assist-panel' },
+  { id: 'music-panel' },
+  { id: 'hands-overlay' },
+  { id: 'players-panel',  cls: 'pl-open' },
+  { id: 'lobby-gameinfo', cls: 'gi-open' }
+];
+function _wsOpen(e) {
+  var el = document.getElementById(e.id);
+  if (!el) return false;
+  if (e.cls) {
+    // En lobby, le tiroir est toujours display:flex et coulisse par transform :
+    // seule la classe dit s'il est ouvert.
+    var sl = document.getElementById('s-lobby');
+    try { if (sl && getComputedStyle(sl).display !== 'none') return sl.classList.contains(e.cls); } catch (x) {}
+  }
+  try { return getComputedStyle(el).display !== 'none' && !el.hidden; } catch (x) { return false; }
+}
+// Renormalise la bande quand le compteur atteint le plafond : on reattribue
+// _WS_BASE+1.. en conservant l'ordre relatif courant.
+function _wsNormalize() {
+  var arr = [], i, el, z;
+  for (i = 0; i < _WIN_STACK.length; i++) {
+    el = document.getElementById(_WIN_STACK[i].id); if (!el) continue;
+    z = parseInt(el.style.zIndex, 10); if (!z) continue;
+    arr.push({ el: el, z: z });
+  }
+  arr.sort(function (a, b) { return a.z - b.z; });
+  _wsZ = _WS_BASE;
+  for (i = 0; i < arr.length; i++) arr[i].el.style.zIndex = (++_wsZ);
+}
+function _winRaise(id) {
+  var el = document.getElementById(id); if (!el) return;
+  if (parseInt(el.style.zIndex, 10) === _wsZ) return;   // deja au sommet
+  if (_wsZ >= _WS_TOP) _wsNormalize();
+  el.style.zIndex = (++_wsZ);
+}
+window._winRaise = _winRaise;
+var _wsWas = {};
+function _wsSync() {
+  for (var i = 0; i < _WIN_STACK.length; i++) {
+    var e = _WIN_STACK[i], op = _wsOpen(e);
+    if (op && !_wsWas[e.id]) _winRaise(e.id);          // transition ferme -> ouvert
+    _wsWas[e.id] = op;
+  }
+}
+var _wsQueued = false;
+function _wsSyncSoon() {
+  if (_wsQueued) return;
+  _wsQueued = true;
+  var run = function () { _wsQueued = false; _wsSync(); };
+  if (window.requestAnimationFrame) window.requestAnimationFrame(run); else setTimeout(run, 16);
+}
+function _winStackWire() {
+  var i, el;
+  for (i = 0; i < _WIN_STACK.length; i++) {
+    el = document.getElementById(_WIN_STACK[i].id); if (!el) continue;
+    // Capture : la fenetre remonte meme si un enfant stoppe la propagation.
+    (function (id, node) {
+      try { node.addEventListener('pointerdown', function () { _winRaise(id); }, true); } catch (x) {}
+    })(_WIN_STACK[i].id, el);
+  }
+  var obs = null;
+  try { obs = new MutationObserver(_wsSyncSoon); } catch (x) { _wsSync(); return; }
+  for (i = 0; i < _WIN_STACK.length; i++) {
+    el = document.getElementById(_WIN_STACK[i].id);
+    if (el) { try { obs.observe(el, { attributes: true, attributeFilter: ['style', 'class', 'hidden'] }); } catch (x) {} }
+  }
+  var sl = document.getElementById('s-lobby');
+  if (sl) { try { obs.observe(sl, { attributes: true, attributeFilter: ['class'] }); } catch (x) {} }
+  _wsSync();
+}
+if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', _winStackWire);
+else _winStackWire();
+
 // ── Unread-chat badge ──────────────────────────────────────────────
 // A small red counter on the 💬 buttons (game header, lobby header, and
 // the floating FAB) so a closed chat panel never hides incoming messages.
@@ -9086,7 +9176,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.4-web.28'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.4-web.29'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

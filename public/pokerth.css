@@ -3564,7 +3564,7 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
 
 /* ══ HANDS HELP OVERLAY ══ */
 #hands-overlay {
-  position: fixed; inset: 0; z-index: 200;
+  position: fixed; inset: 0; z-index: 100;
   display: flex; align-items: center; justify-content: center;
   background: transparent; pointer-events: none;  /* fenêtre flottante, pas de backdrop */
   padding: var(--sp-5);
@@ -4523,7 +4523,7 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
   position: fixed !important;
   top: var(--ovl-top, 48px);
   left: 0; right: 0;
-  z-index: 101;
+  z-index: 100;
   background: var(--panel);
   border-bottom: 1px solid var(--border);
   box-shadow: 0 4px 20px rgba(0,0,0,0.6);
@@ -4536,7 +4536,7 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
   position: fixed !important;
   top: var(--ovl-top, 48px);
   left: 0; right: 0;
-  z-index: 99;
+  z-index: 100;
   max-height: min(140px, 22dvh) !important;
   background: var(--panel);
   border-bottom: 1px solid var(--border);
@@ -5676,7 +5676,7 @@ html[data-table="pokerth-live"] .raise-slider { accent-color: #4CAF50; }
   position: fixed !important;
   top: var(--ovl-top, 48px);
   left: 0; right: 0;
-  z-index: 99;
+  z-index: 100;
   max-height: min(360px, 50dvh) !important;
   background: var(--panel);
   border-bottom: 1px solid var(--border);
@@ -7625,7 +7625,7 @@ html[data-seat-edit="1"] #g-seats .seat.seat-ghost { outline: none; cursor: defa
    ════════════════════════════════════════════════════════════════════════ */
 #music-panel {
   position: fixed;
-  z-index: 900;
+  z-index: 100;
   top: 58px;
   right: 14px;
   width: min(340px, 92vw);
@@ -8426,7 +8426,7 @@ html:not([data-seat-struct="qml"]) .seat:not(.me) .seat-foot { margin-top: 1px; 
 .gip-split-grip{width:34px;height:3px;border-radius:2px;background:rgba(var(--gold-rgb),.28)}
 .gip-split:hover .gip-split-grip{background:rgba(var(--gold-rgb),.55)}
 /* ── Fenêtre flottante « Assistance » détachée (chrome comme #g-log-panel) ── */
-#g-assist-panel{position:fixed;z-index:99;background:var(--panel);border:1px solid var(--border);box-shadow:0 4px 20px rgba(0,0,0,0.6);border-radius:8px;overflow:hidden;-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}
+#g-assist-panel{position:fixed;z-index:100;background:var(--panel);border:1px solid var(--border);box-shadow:0 4px 20px rgba(0,0,0,0.6);border-radius:8px;overflow:hidden;-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}
 #g-assist-panel.floating-win{display:flex;flex-direction:column}
 #g-assist-panel .gip-assist-wtitle{flex:1;margin:0 6px;font-size:var(--fs-2xs);color:var(--gold-dim);letter-spacing:0.15em;text-transform:uppercase;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 #g-assist-panel .gip-assist-dock{flex:0 0 auto;background:none;border:none;color:var(--chatlog-text2, var(--chatlog-text, var(--text)));cursor:pointer;font-size:var(--fs-md);padding:0 4px}
@@ -9106,7 +9106,7 @@ html[data-buttons="pokerth"] .btn-action[disabled] { filter: grayscale(0.55) bri
   #s-lobby .lobby-grid > #players-panel {
     position:fixed !important; top:var(--ovl-top,48px); bottom:0; left:0; right:auto !important;
     width:min(320px,84vw); max-height:none !important; display:flex !important;
-    transform:translateX(-100%); transition:transform .22s ease; z-index:99; border-radius:0;
+    transform:translateX(-100%); transition:transform .22s ease; z-index:100; border-radius:0;
     box-shadow:none; background:var(--panel);
   }
   #s-lobby.pl-open .lobby-grid > #players-panel { transform:translateX(0); box-shadow:2px 0 22px rgba(0,0,0,0.55); }
@@ -9115,7 +9115,7 @@ html[data-buttons="pokerth"] .btn-action[disabled] { filter: grayscale(0.55) bri
   #s-lobby .lobby-grid > #lobby-gameinfo {
     position:fixed !important; top:var(--ovl-top,48px); bottom:0; right:0; left:auto;
     width:min(340px,88vw); display:flex !important; max-height:none !important; border-radius:0;
-    transform:translateX(100%); transition:transform .22s ease; z-index:99;
+    transform:translateX(100%); transition:transform .22s ease; z-index:100;
     box-shadow:none; border-left:1px solid var(--border); background:var(--panel);
   }
   #s-lobby.gi-open .lobby-grid > #lobby-gameinfo { transform:translateX(0); box-shadow:-2px 0 22px rgba(0,0,0,0.55); }
