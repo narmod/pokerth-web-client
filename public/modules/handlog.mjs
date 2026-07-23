@@ -1408,6 +1408,9 @@ function _statsFor(name) {
 // Vrai si les stats affichees pour ce joueur sont limitees a la session.
 function _statsIsSessionScoped(name) { return _scopeOfName[name] === 'session'; }
 
+// Lecteur de portee (tests). Retourne 'all' | 'session' | 'pending' | undefined.
+function _scopeOf(name) { return _scopeOfName[name]; }
+
 // API destinee au popup de profil joueur (ui/player-popup.mjs).
 // Retourne null tant que les droits serveur ne sont pas connus : afficher une
 // portee complete puis basculer en portee session sous les yeux de
@@ -1952,3 +1955,11 @@ function _renderRange(modal) {
     if (typeof window !== 'undefined') { window._handlog = rec; window._handlogStore = store; }
   } catch (_e) {}
 })();
+
+// ── Exports ESM ────────────────────────────────────────────────────────────
+// Uniquement pour les tests deterministes (scripts/test-handlog.mjs). En
+// navigateur le module reste charge par <script type="module"> et continue de
+// ne communiquer que par window.* : ces exports n'ont aucun effet a l'execution.
+export { StatsData, StatsCalculator, RECENT_HANDS,
+         _trendArrow, _TREND_MIN_BASE, _TREND_EPS,
+         _refreshScopes, _scopeOf, playerStatsFor };
