@@ -32,6 +32,7 @@ export const strings = {
     hlHistory:"Cronologia",
     hlExportPdbTip:"Esporta come .pdb (importabile in PokerTH Tracker)",
     hlNoData:"Ancora nessun dato.",
+    hlTrend:"Tendenza",
     hlScopeSession:"sessione",
     hlSeeRange:"Vedi range ▸",
     hlRangeLegend:"Diagonale = coppie · in alto a dx = suited · in basso a sx = offsuit",

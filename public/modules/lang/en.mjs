@@ -33,6 +33,7 @@ export const strings = {
     hlHistory:"History",
     hlExportPdbTip:"Export as .pdb (importable in PokerTH Tracker)",
     hlNoData:"No data yet.",
+    hlTrend:"Trend",
     hlScopeSession:"session",
     hlSeeRange:"See range ▸",
     hlRangeLegend:"Diagonal = pairs · top-right = suited · bottom-left = offsuit",

@@ -523,6 +523,8 @@ const AGGRESSIVE_ACTIONS = ['bets', 'is all in with'];
 const PASSIVE_ACTIONS = ['calls'];
 const RAISE_ACTIONS = ['bets', 'is all in with'];
 const FOLD_ACTIONS = ['folds'];
+// Fenetre de la tendance recente (nombre de dernieres mains du joueur).
+const RECENT_HANDS = 20;
 const SKIP_PATTERNS = ['blind', 'starts as dealer', 'shows', 'wins'];
 
 const containsAny = (str, list) => { const l = (str || '').toLowerCase(); return list.some((x) => l.indexOf(x) !== -1); };
@@ -864,9 +866,35 @@ class StatsCalculator {
     };
   }
 
+  // Tendance recente : LES MEMES stats, recalculees sur les RECENT_HANDS
+  // dernieres mains du joueur seulement. On reconstruit une StatsData reduite
+  // a ces mains ENTIERES (actions des adversaires comprises) plutot que de
+  // dupliquer la logique : aucune divergence de definition possible avec les
+  // stats globales, et celles qui dependent des adversaires (3-Bet, C-Bet,
+  // Fold to C-Bet...) restent correctes.
+  recentStatsFor(name) {
+    const d = this.d;
+    const hands = d.getHandsPlayedByPlayer(name); // ordre chronologique
+    if (hands.length === 0) return null;
+    const last = hands.slice(-RECENT_HANDS);
+    const keepHand = new Set(last.map(([ug, h]) => ug + ':' + h));
+    const keepGame = new Set(last.map(([ug]) => ug));
+    const sub = new StatsData({
+      games:   d.games.filter((g) => keepGame.has(g.uniqueGameID)),
+      players: d.players.filter((p) => keepGame.has(p.uniqueGameID)),
+      hands:   d.hands.filter((h) => keepHand.has(h.uniqueGameID + ':' + h.handID)),
+      actions: d.actions.filter((a) => keepHand.has(a.uniqueGameID + ':' + a.handID)),
+    });
+    return new StatsCalculator(sub).calculatePlayerStats(name);
+  }
+
   calculateAllPlayersStats() {
     const out = {};
-    for (const name of this.d.getPlayers()) out[name] = this.calculatePlayerStats(name);
+    for (const name of this.d.getPlayers()) {
+      const s = this.calculatePlayerStats(name);
+      s.recent = this.recentStatsFor(name);
+      out[name] = s;
+    }
     return out;
   }
 }
@@ -1679,6 +1707,21 @@ const _DETAIL_ROWS = [
   ['won', 'Won', 'Hands won %'],
   ['allin', 'All-in', 'All-in count'],
 ];
+// Seuils de bruit : sur une fenetre de 20 mains, un ecart plus petit que ca
+// n'est pas significatif et ne merite pas de fleche. En dessous de
+// _TREND_MIN_BASE mains au total, la moyenne de reference est trop faible pour
+// qu'une comparaison ait un sens : la ligne n'est pas affichee du tout.
+const _TREND_MIN_BASE = 30;
+const _TREND_EPS = { vpip: 8, pfr: 8, af: 0.8 };
+
+function _trendArrow(id, rec, glob) {
+  if (rec == null || glob == null || rec === 'inf' || glob === 'inf') return '';
+  const delta = rec - glob;
+  if (!isFinite(delta)) return '';
+  if (Math.abs(delta) < (_TREND_EPS[id] || 0)) return '\u2192';
+  return delta > 0 ? '\u2191' : '\u2193';
+}
+
 function _detailFmt(id, v) {
   if (v == null) return '–';
   if (id === 'af') return v === 'inf' ? '∞' : String(v);
@@ -1730,9 +1773,22 @@ function openHudDetail(name, boxEl) {
   }
   const _scopeTag = _statsIsSessionScoped(name)
     ? '<span class="hud-d-scope">' + _hudEsc(_ht('hlScopeSession', 'session')) + '</span>' : '';
+  // Tendance recente : VPIP / AF de la fenetre courte compares a la moyenne
+  // globale du joueur. Sert a reperer un changement de rythme (tilt, ouverture
+  // du jeu en fin de partie...) que les moyennes globales lissent.
+  let trend = '';
+  if (s && s.recent && s.hands >= _TREND_MIN_BASE) {
+    const r = s.recent;
+    const cell = (id, lbl) => '<span class="hud-d-t-cell"><i>' + lbl + '</i>'
+      + '<b>' + _detailFmt(id, r[id]) + '</b>'
+      + '<u>' + _trendArrow(id, r[id], s[id]) + '</u></span>';
+    trend = '<div class="hud-d-trend" title="' + _hudEsc(RECENT_HANDS + ' ' + _ht('hlHandPlur', 'hands')) + '">'
+      + '<span class="hud-d-t-lbl">' + _hudEsc(_ht('hlTrend', 'Trend')) + '</span>'
+      + cell('vpip', 'VPIP') + cell('af', 'AF') + '</div>';
+  }
   pop.innerHTML = '<div class="hud-d-head"><span class="hud-d-name">' + _hudEsc(name) + '</span>' + _scopeTag
     + '<span class="hud-d-hands">' + (s ? (s.hands + ' ' + _ht(s.hands === 1 ? 'hlHandSing' : 'hlHandPlur', s.hands === 1 ? 'hand' : 'hands')) : '—') + '</span></div>'
-    + '<div class="hud-d-grid">' + rows + '</div>'
+    + '<div class="hud-d-grid">' + rows + '</div>' + trend
     + '<button type="button" class="hud-d-range">' + _ht('hlSeeRange','See range ▸') + '</button>';
   pop.querySelector('.hud-d-range').addEventListener('click', (e) => {
     e.stopPropagation(); const p = pop._player; _closeDetail(); openRangeGrid(p);

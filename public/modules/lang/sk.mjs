@@ -27,6 +27,7 @@ export const strings = {
     hlHistory:"História",
     hlExportPdbTip:"Exportovať ako .pdb (importovateľný do PokerTH Tracker)",
     hlNoData:"Zatiaľ žiadne údaje.",
+    hlTrend:"Trend",
     hlScopeSession:"relácia",
     hlSeeRange:"Zobraziť rozsah ▸",
     hlRangeLegend:"Diagonála = páry · vpravo hore = suited · vľavo dole = offsuit",

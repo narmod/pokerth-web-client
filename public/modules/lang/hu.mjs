@@ -27,6 +27,7 @@ export const strings = {
     hlHistory:"Előzmények",
     hlExportPdbTip:"Exportálás .pdb formátumban (PokerTH Trackerbe importálható)",
     hlNoData:"Még nincs adat.",
+    hlTrend:"Trend",
     hlScopeSession:"munkamenet",
     hlSeeRange:"Tartomány megtekintése ▸",
     hlRangeLegend:"Átló = párok · jobb fent = suited · bal lent = offsuit",

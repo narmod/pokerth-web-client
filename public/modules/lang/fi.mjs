@@ -26,6 +26,7 @@ export const strings = {
     hlHistory:"Historia",
     hlExportPdbTip:"Vie muodossa .pdb (tuotavissa PokerTH Trackeriin)",
     hlNoData:"Ei vielä tietoja.",
+    hlTrend:"Suuntaus",
     hlScopeSession:"istunto",
     hlSeeRange:"Näytä range ▸",
     hlRangeLegend:"Lävistäjä = parit · oikea ylä = suited · vasen ala = offsuit",

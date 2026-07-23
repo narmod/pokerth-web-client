@@ -27,6 +27,7 @@ export const strings = {
     hlHistory:"Lịch sử",
     hlExportPdbTip:"Xuất dưới dạng .pdb (có thể nhập vào PokerTH Tracker)",
     hlNoData:"Chưa có dữ liệu.",
+    hlTrend:"Xu hướng",
     hlScopeSession:"phiên",
     hlSeeRange:"Xem range ▸",
     hlRangeLegend:"Đường chéo = đôi · trên phải = suited · dưới trái = offsuit",

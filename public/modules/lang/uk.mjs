@@ -26,6 +26,7 @@ export const strings = {
     hlHistory:"Історія",
     hlExportPdbTip:"Експорт як .pdb (імпорт у PokerTH Tracker)",
     hlNoData:"Ще немає даних.",
+    hlTrend:"Тренд",
     hlScopeSession:"сесія",
     hlSeeRange:"Переглянути рендж ▸",
     hlRangeLegend:"Діагональ = пари · вгорі праворуч = suited · внизу ліворуч = offsuit",
