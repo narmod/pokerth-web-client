@@ -6,6 +6,7 @@ globalThis.localStorage = { getItem: () => null, setItem() {}, removeItem() {} }
 function makeEl() { return { style: {}, children: [], textContent: '', innerHTML: '',
   className: '', dataset: {}, classList: { add() {}, remove() {}, toggle() {} },
   appendChild(c) { this.children.push(c); }, removeEventListener() {}, addEventListener() {},
+  setAttribute() {}, removeAttribute() {}, getAttribute: () => null,
   querySelectorAll: () => [], querySelector: () => null, remove() {}, parentNode: null }; }
 const els = {};
 globalThis.document = { readyState: 'complete', addEventListener() {},
@@ -70,6 +71,17 @@ ok(P._cupsBlockHtml(901) === '', '_cupsBlockHtml : bot → aucun bloc');
 els['login-mode'].value = 'lan-dedi';
 ok(P._cupsBlockHtml(3) === '', '_cupsBlockHtml : hors réseau pokerth.net → aucun bloc');
 els['login-mode'].value = 'auth';
+
+// Bouton 📊 de la liste : la liste passe '' pour moi — mes coupes doivent
+// quand meme se charger, comme pour les autres joueurs.
+let cupsFor = null;
+window.rkLoadPlayerCups = (nm) => { cupsFor = nm; };
+cupsFor = null;
+window._plOpenStats('');
+ok(cupsFor === 'narmod', "_plOpenStats('') : charge MES coupes (bouton 📊 de la liste)");
+cupsFor = null;
+window._plOpenStats(7);
+ok(cupsFor === 'Alice', '_plOpenStats(pid) : charge les coupes de l\'adversaire');
 
 // _pimSetTab pilote l'onglet du popup
 S._statsEligible = true; S._pimTab = 'session';

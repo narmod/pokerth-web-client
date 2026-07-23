@@ -257,11 +257,13 @@ function openPlayerInfoPopup(pid, autoStats) {
   }
   modal.style.display = 'flex';
 }
-// Bouton 📊 de la liste : ouvre le popup et charge directement les stats
-// de saison. Sans pid -> mon profil (deja en mode stats).
+// Bouton 📊 de la liste : ouvre le popup et charge directement les stats de
+// saison. Sans pid -> mon profil. La liste passe '' pour moi (_ppArg dans
+// renderPlayerList) : on normalise en null, mais autoStats reste VRAI dans les
+// deux cas — sinon mon propre bouton ouvrait le popup sans charger mes coupes,
+// contrairement a celui des autres joueurs (remonte narmod).
 window._plOpenStats = function (pid) {
-  if (pid == null || pid === '') { openPlayerInfoPopup(); return; }
-  openPlayerInfoPopup(pid, true);
+  openPlayerInfoPopup((pid == null || pid === '') ? null : pid, true);
 };
 // Basculer l'ignorance d'un joueur (par nom) puis rafraîchir sièges + popup.
 window._toggleIgnore = function(pid){
