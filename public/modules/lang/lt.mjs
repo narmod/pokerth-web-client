@@ -27,6 +27,7 @@ export const strings = {
     hlHistory:"Istorija",
     hlExportPdbTip:"Eksportuoti kaip .pdb (importuojama į PokerTH Tracker)",
     hlNoData:"Kol kas duomenų nėra.",
+    hlScopeSession:"sesija",
     hlSeeRange:"Rodyti diapazoną ▸",
     hlRangeLegend:"Įstriźinė = poros · viršuje dešinėje = suited · apačioje kairėje = offsuit",
     hlRangeShowdown:"Showdown diapazonas",

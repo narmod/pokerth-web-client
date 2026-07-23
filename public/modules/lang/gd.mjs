@@ -28,6 +28,7 @@ export const strings = {
     hlHistory:"Eachdraidh",
     hlExportPdbTip:"Às-phortaich mar .pdb (a ghabhas ion-phortadh do PokerTH Tracker)",
     hlNoData:"Chan eil dàta ann fhathast.",
+    hlScopeSession:"seisean",
     hlSeeRange:"Seall an raon ▸",
     hlRangeLegend:"Trastan = paidhrichean · gu h-àrd deas = suited · gu h-ìosal clì = offsuit",
     hlRangeShowdown:"Raon showdown",

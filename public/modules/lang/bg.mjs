@@ -27,6 +27,7 @@ export const strings = {
     hlHistory:"История",
     hlExportPdbTip:"Експорт като .pdb (вносим в PokerTH Tracker)",
     hlNoData:"Още няма данни.",
+    hlScopeSession:"сесия",
     hlSeeRange:"Виж рейндж ▸",
     hlRangeLegend:"Диагонал = чифтове · горе дясно = suited · долу ляво = offsuit",
     hlRangeShowdown:"Рейндж на шоудаун",

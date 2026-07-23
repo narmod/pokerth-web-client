@@ -29,6 +29,7 @@ export const strings = {
     hlHistory:"Geçmiş",
     hlExportPdbTip:".pdb olarak dışa aktar (PokerTH Tracker'a aktarılabilir)",
     hlNoData:"Henüz veri yok.",
+    hlScopeSession:"oturum",
     hlSeeRange:"Aralığı gör ▸",
     hlRangeLegend:"Köşegen = çiftler · sağ üst = suited · sol alt = offsuit",
     hlRangeShowdown:"Showdown aralığı",

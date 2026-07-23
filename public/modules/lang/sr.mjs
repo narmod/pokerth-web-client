@@ -27,6 +27,7 @@ export const strings = {
     hlHistory:"Историја",
     hlExportPdbTip:"Извези као .pdb (увозиво у PokerTH Tracker)",
     hlNoData:"Још нема података.",
+    hlScopeSession:"сесија",
     hlSeeRange:"Прикажи распон ▸",
     hlRangeLegend:"Дијагонала = парови · горе десно = suited · доле лево = offsuit",
     hlRangeShowdown:"Распон на шоудауну",

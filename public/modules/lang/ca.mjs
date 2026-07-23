@@ -27,6 +27,7 @@ export const strings = {
     hlHistory:"Historial",
     hlExportPdbTip:"Exporta com a .pdb (importable a PokerTH Tracker)",
     hlNoData:"Encara no hi ha dades.",
+    hlScopeSession:"sessió",
     hlSeeRange:"Mostra el rang ▸",
     hlRangeLegend:"Diagonal = parelles · dalt dreta = suited · baix esquerra = offsuit",
     hlRangeShowdown:"Rang al showdown",

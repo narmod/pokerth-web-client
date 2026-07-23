@@ -28,6 +28,7 @@ export const strings = {
     hlHistory:"歷史",
     hlExportPdbTip:"匯出為 .pdb（可匯入 PokerTH Tracker）",
     hlNoData:"尚無資料。",
+    hlScopeSession:"工作階段",
     hlSeeRange:"查看範圍 ▸",
     hlRangeLegend:"對角線 = 對子 · 右上 = 同花 · 左下 = 不同花",
     hlRangeShowdown:"攝牌範圍",

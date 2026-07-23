@@ -666,6 +666,7 @@ class StatsCalculator {
       fold_to_3bet_made: 0, fold_to_3bet_opportunities: 0,
       fold_to_cbet_made: 0, fold_to_cbet_opportunities: 0,
       hands_saw_flop: 0, hands_went_to_showdown: 0, showdowns_won: 0,
+      allin_count: 0, hands_won: 0,
     };
 
     const handsPlayed = d.getHandsPlayedByPlayer(name);
@@ -674,6 +675,20 @@ class StatsCalculator {
 
     const playerSeats = d.getPlayerSeats(name);
     const playerHandStacks = d.getPlayerHandStacks(name);
+
+    // All-in et mains remportees, comptes sur toutes les streets.
+    // `wins` et `wins (side pot)` valent un pot gagne ; `wins game` marque la
+    // fin de partie et non une main, il est donc exclu. Le Set evite de
+    // compter deux fois une main ou le joueur rafle pot principal + side pot.
+    const _wonHands = new Set();
+    for (const a of d.allActionsOfPlayer(name)) {
+      const at = (a.action || '').toLowerCase();
+      if (at.indexOf('is all in with') !== -1) S.allin_count += 1;
+      if (at.indexOf('wins') === 0 && at.indexOf('wins game') !== 0) {
+        _wonHands.add(a.uniqueGameID + ':' + a.handID);
+      }
+    }
+    S.hands_won = _wonHands.size;
 
     // preflop du joueur groupé par main
     const preflopByHand = new Map();
@@ -844,6 +859,8 @@ class StatsCalculator {
       fold_to_cbet: round1(pct(S.fold_to_cbet_made, S.fold_to_cbet_opportunities)),
       wtsd: round1(pct(S.hands_went_to_showdown, S.hands_saw_flop)),
       wsd: round1(pct(S.showdowns_won, S.hands_went_to_showdown)),
+      allin: S.allin_count,
+      won: round1(pct(S.hands_won, S.total_hands)),
     };
   }
 
@@ -1296,6 +1313,11 @@ function _hudFmt(id, v) {
 
 // Cache stats/combos calculés (recalcul à chaque main via _hudRefresh).
 let _statsCache = {};
+// Meme calcul restreint a la SESSION courante : sert aux joueurs invites, dont
+// le pseudo n'est pas une identite stable (un invite peut reprendre le pseudo
+// libere par quelqu'un d'autre entre deux sessions). Voir _refreshScopes.
+let _statsCacheSession = {};
+let _scopeOfName = {};
 let _dataCache = null;
 let _lastComputeAt = 0;
 let _computing = false;
@@ -1307,7 +1329,50 @@ async function _computeStats() {
   const data = new StatsData({ games: all.games, players: all.players, hands: all.hands, actions: all.actions });
   _dataCache = data;
   _statsCache = new StatsCalculator(data).calculateAllPlayersStats();
+  // Second jeu, restreint a la session courante (portee des invites).
+  const sid = (window._handlog && window._handlog.sessionId) || null;
+  if (sid) {
+    const keep = (r) => r.sessionId === sid;
+    const sData = new StatsData({
+      games:   all.games.filter(keep),
+      players: all.players.filter(keep),
+      hands:   all.hands.filter(keep),
+      actions: all.actions.filter(keep),
+    });
+    _statsCacheSession = new StatsCalculator(sData).calculateAllPlayersStats();
+  } else {
+    _statsCacheSession = _statsCache;
+  }
+  _refreshScopes();
 }
+
+// Determine la portee d'agregation de chaque joueur attable, d'apres les droits
+// serveur remontes par la glue (_statsTablePlayers). Exemptions volontaires :
+//   - moi-meme : mes stats restent completes meme si je joue en invite ;
+//   - les bots : aucun droit serveur, et l'entrainement offline doit rester
+//     mesurable ;
+//   - droits pas encore recus (rights absent / 0) : traites comme INCONNUS et
+//     non comme invites, sinon le bloc s'afficherait puis changerait de valeur
+//     quand la reponse PlayerInfo arrive.
+// Seul rights === 1 (invite confirme) bascule en portee session.
+function _refreshScopes() {
+  let tp = [];
+  try { if (typeof window._statsTablePlayers === 'function') tp = window._statsTablePlayers() || []; } catch (_e) {}
+  const map = {};
+  for (const p of tp) {
+    if (!p || !p.name) continue;
+    map[p.name] = (p.rights === 1 && !p.me && !p.bot) ? 'session' : 'all';
+  }
+  _scopeOfName = map;
+}
+
+// Accesseur unique aux stats d'un joueur : applique la portee ci-dessus.
+function _statsFor(name) {
+  return (_scopeOfName[name] === 'session') ? _statsCacheSession[name] : _statsCache[name];
+}
+
+// Vrai si les stats affichees pour ce joueur sont limitees a la session.
+function _statsIsSessionScoped(name) { return _scopeOfName[name] === 'session'; }
 
 // Écrit le CONTENU d'une boîte (sans la positionner).
 // Offsets de déplacement manuel des boîtes (par siège), persistés. Permet à
@@ -1401,7 +1466,7 @@ function _autoPosFor(pid) {
 }
 
 function _buildBox(pid, name, layer) {
-  const s = _statsCache[name];
+  const s = _statsFor(name);
   const id = 'hud-box-' + pid;
   let box = document.getElementById(id);
   if (!box) {
@@ -1539,6 +1604,7 @@ function renderHud() {
   lay.style.display = '';
   let tablePlayers = [];
   try { if (typeof window._statsTablePlayers === 'function') tablePlayers = window._statsTablePlayers() || []; } catch (_e) {}
+  _refreshScopes();
   const seen = new Set();
   tablePlayers.forEach((p) => {
     seen.add('hud-box-' + p.pid);
@@ -1610,10 +1676,13 @@ const _DETAIL_ROWS = [
   ['fold_to_cbet', 'Fold CB', 'Fold to C-Bet %'],
   ['wtsd', 'WTSD', 'Went To Showdown %'],
   ['wsd', 'W$SD', 'Won $ at Showdown %'],
+  ['won', 'Won', 'Hands won %'],
+  ['allin', 'All-in', 'All-in count'],
 ];
 function _detailFmt(id, v) {
   if (v == null) return '–';
   if (id === 'af') return v === 'inf' ? '∞' : String(v);
+  if (id === 'allin') return String(v);
   return v + '%';
 }
 function _ensureDetail() {
@@ -1650,7 +1719,7 @@ function openHudDetail(name, boxEl) {
   if (pop.style.display !== 'none' && pop._forBox === boxEl) { _closeDetail(); return; }
   pop._forBox = boxEl;
   pop._player = name;
-  const s = _statsCache[name];
+  const s = _statsFor(name);
   let rows = '';
   for (const [id, lbl, title] of _DETAIL_ROWS) {
     const val = s ? _detailFmt(id, s[id]) : '–';
@@ -1659,7 +1728,9 @@ function openHudDetail(name, boxEl) {
       + '<span class="hud-d-lbl">' + lbl + '</span>'
       + '<span class="hud-d-val"' + (col ? ' style="color:' + col + '"' : '') + '>' + val + '</span></div>';
   }
-  pop.innerHTML = '<div class="hud-d-head"><span class="hud-d-name">' + _hudEsc(name) + '</span>'
+  const _scopeTag = _statsIsSessionScoped(name)
+    ? '<span class="hud-d-scope">' + _hudEsc(_ht('hlScopeSession', 'session')) + '</span>' : '';
+  pop.innerHTML = '<div class="hud-d-head"><span class="hud-d-name">' + _hudEsc(name) + '</span>' + _scopeTag
     + '<span class="hud-d-hands">' + (s ? (s.hands + ' ' + _ht(s.hands === 1 ? 'hlHandSing' : 'hlHandPlur', s.hands === 1 ? 'hand' : 'hands')) : '—') + '</span></div>'
     + '<div class="hud-d-grid">' + rows + '</div>'
     + '<button type="button" class="hud-d-range">' + _ht('hlSeeRange','See range ▸') + '</button>';

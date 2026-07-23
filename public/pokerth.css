@@ -9706,6 +9706,9 @@ html[data-seat-struct="qml"] .seat:not(.me) .seat-narrow .seat-holecards .pk { w
 #hud-detail .hud-d-head{display:flex;align-items:baseline;gap:var(--sp-3);margin-bottom:4px;padding-bottom:4px;border-bottom:1px solid var(--border)}
 #hud-detail .hud-d-name{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--gold);font-weight:700;font-size:var(--fs-base)}
 #hud-detail .hud-d-hands{color:var(--text);font-size:var(--fs-2xs);opacity:.8;font-variant-numeric:tabular-nums;flex-shrink:0}
+/* Portee des stats limitee a la session courante (joueurs invites) : le pseudo
+   d'un invite peut etre repris par une autre personne d'une session a l'autre. */
+#hud-detail .hud-d-scope{flex-shrink:0;color:var(--text-dim,#a0acc4);font-size:var(--fs-3xs,10px);opacity:.75;border:1px solid var(--border);border-radius:6px;padding:0 5px;line-height:1.5}
 #hud-detail .hud-d-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px 12px}
 #hud-detail .hud-d-row{display:flex;align-items:baseline;justify-content:space-between;gap:var(--sp-2);padding:1px 0}
 #hud-detail .hud-d-lbl{color:var(--text);font-size:var(--fs-xs);opacity:.85}

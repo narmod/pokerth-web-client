@@ -27,6 +27,7 @@ export const strings = {
     hlHistory:"Ιστορικό",
     hlExportPdbTip:"Εξαγωγή ως .pdb (εισαγώγιμο στο PokerTH Tracker)",
     hlNoData:"Δεν υπάρχουν ακόμη δεδομένα.",
+    hlScopeSession:"συνεδρία",
     hlSeeRange:"Δείτε το range ▸",
     hlRangeLegend:"Διαγώνιος = ζευγάρια · επάνω δεξιά = suited · κάτω αριστερά = offsuit",
     hlRangeShowdown:"Range στο showdown",

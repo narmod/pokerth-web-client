@@ -30,6 +30,7 @@ export const strings = {
     hlHistory:"기록",
     hlExportPdbTip:".pdb로 내보내기 (PokerTH Tracker에서 가져오기 가능)",
     hlNoData:"아직 데이터가 없습니다.",
+    hlScopeSession:"세션",
     hlSeeRange:"레인지 보기 ▸",
     hlRangeLegend:"대각선 = 페어 · 오른쪽 위 = 수티드 · 왼쪽 아래 = 오프수트",
     hlRangeShowdown:"쇼다운 레인지",

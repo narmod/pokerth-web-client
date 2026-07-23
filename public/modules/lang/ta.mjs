@@ -28,6 +28,7 @@ export const strings = {
     hlHistory:"வரலாறு",
     hlExportPdbTip:".pdb ஆக ஏற்றுமதி (PokerTH Trackerஇல் இறக்கலாம்)",
     hlNoData:"இன்னும் தரவு இல்லை.",
+    hlScopeSession:"அமர்வு",
     hlSeeRange:"வரம்பைக் காண்க ▸",
     hlRangeLegend:"மூலைவிட்டம் = ஜோடிகள் · மேல் வலம் = suited · கீழ் இடம் = offsuit",
     hlRangeShowdown:"ஷோட௎ன் வரம்பு",

@@ -3755,7 +3755,17 @@ const App = (() => {
   // Liste des joueurs actuellement à la table (pour le panneau stats).
   window._statsTablePlayers = function () {
     try {
-      return (S.seats || []).map(function (pid) { return { pid: pid, name: getPlayerName(pid) }; });
+      return (S.seats || []).map(function (pid) {
+        return {
+          pid: pid,
+          name: getPlayerName(pid),
+          // Droits serveur (PlayerInfo champ 3) : 1=invite, 2=enregistre,
+          // 3=admin. Absent tant que la reponse n'est pas arrivee -> 0.
+          rights: (S._playerRights && S._playerRights[pid]) || 0,
+          me: pid === S.myId,
+          bot: (typeof isBot === 'function') ? !!isBot(pid) : false,
+        };
+      });
     } catch (_e) { return []; }
   };
   // URLs du moteur SQLite vendored (pour l'export .pdb).
@@ -9192,7 +9202,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.4-web.33'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.4-web.34'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
