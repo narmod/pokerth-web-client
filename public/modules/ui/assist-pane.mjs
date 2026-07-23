@@ -188,7 +188,7 @@ function detachAssist() {
     // boutons sont exclus par makeWinDraggable ; les poignées de resize font
     // stopPropagation. minH abaissé à 44 pour pouvoir réduire davantage.
     window._enableFloating(ap, { key:'pth_winpos_assist', handle: ap,
-      resizable:true, minW:150, minH:44, defW:240, defH:88, zoom:true });
+      resizable:true, minW:150, minH:44, defW:230, defH:62, zoom:true });
   } else {
     // Garde-fou : système de fenêtres pas encore prêt → position visible.
     ap.style.position = 'fixed'; ap.style.right = 'auto'; ap.style.bottom = 'auto';

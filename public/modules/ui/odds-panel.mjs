@@ -101,6 +101,18 @@ function _hsSet(el, text, pct, col) {
   var p = (pct == null || isNaN(pct)) ? 0 : Math.max(0, Math.min(100, pct));
   var fill = el.querySelector('.hs-fill');
   if (fill) { fill.style.width = p + '%'; if (col) fill.style.background = col; }
+  // Style « Segments » : 10 blocs, un par tranche de 10 %. La couleur passe par
+  // une variable CSS pour que le style actif (data-assist-style) decide seul de
+  // ce qui s'affiche — le calcul reste unique quel que soit le rendu.
+  var gip = document.getElementById('gip-assist');
+  if (gip) {
+    if (col) gip.style.setProperty('--hs-col', col);
+    var segs = gip.querySelectorAll('.hs-segs i');
+    var lit = Math.round(p / 10);
+    for (var i = 0; i < segs.length; i++) {
+      if (i < lit) segs[i].classList.add('on'); else segs[i].classList.remove('on');
+    }
+  }
   var lbl = document.getElementById('hs-lbl');
   if (lbl) { var txt = lbl.querySelector('.hs-txt') || lbl; txt.textContent = text; txt.style.color = ''; lbl.style.display = ''; }
   // L'assistance vit dans l'onglet « Chances » du panneau info : on met juste

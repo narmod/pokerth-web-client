@@ -5,10 +5,17 @@ globalThis.window = globalThis;
 const store = {};
 globalThis.localStorage = { getItem: (k) => (k in store ? store[k] : null),
   setItem(k, v) { store[k] = String(v); }, removeItem(k) { delete store[k]; } };
-function makeEl() { return { style: {}, children: [], textContent: '', innerHTML: '',
-  className: '', dataset: {}, classList: { add() {}, remove() {}, toggle() {} },
+function makeEl() { return { style: { _v: {}, setProperty(k, v) { this._v[k] = v; },
+    getPropertyValue(k) { return this._v[k] || ''; } },
+  children: [], textContent: '', innerHTML: '',
+  className: '', dataset: {}, _cls: {},
+  classList: { add(c) { this._o._cls[c] = 1; }, remove(c) { delete this._o._cls[c]; },
+    contains(c) { return !!this._o._cls[c]; }, toggle() {} },
   appendChild(c) { this.children.push(c); }, addEventListener() {}, remove() {},
   querySelector: () => null, querySelectorAll: () => [] }; }
+// classList a besoin de remonter à son élément (stub minimal, pas de proto).
+const _mk = makeEl;
+makeEl = function () { const e = _mk(); e.classList._o = e; return e; };
 const els = {};
 globalThis.document = { readyState: 'complete', addEventListener() {},
   querySelectorAll: () => [], querySelector: () => null,
@@ -48,6 +55,22 @@ els['hs-lbl'].querySelector = (sel) => (sel === '.hs-txt' ? txtEl : null);
 O._hsSet(hsEl, 'Flush · 62%', 62, '#50b840');
 ok(fillEl.style.width === '62%', '_hsSet : largeur de barre 62%');
 ok(txtEl.textContent === 'Flush · 62%', '_hsSet : label écrit');
+
+// Style « Segments » : 10 blocs alimentés par le même calcul que la barre.
+const segs = Array.from({ length: 10 }, () => makeEl());
+els['gip-assist'].querySelectorAll = (sel) => (sel === '.hs-segs i' ? segs : []);
+O._hsSet(hsEl, 'Flush · 62%', 62, '#50b840');
+ok(segs.filter((x) => x.classList.contains('on')).length === 6,
+   '_hsSet : segments — 62 % allume 6 blocs sur 10');
+ok(els['gip-assist'].style.getPropertyValue('--hs-col') === '#50b840',
+   '_hsSet : segments — couleur passée par --hs-col');
+O._hsSet(hsEl, 'Hauteur As', 4, '#a0acc4');
+ok(segs.filter((x) => x.classList.contains('on')).length === 0,
+   '_hsSet : segments — 4 % n\'allume aucun bloc (arrondi)');
+O._hsSet(hsEl, 'Quinte flush', 100, '#e05050');
+ok(segs.filter((x) => x.classList.contains('on')).length === 10,
+   '_hsSet : segments — 100 % allume les 10 blocs');
+O._hsSet(hsEl, 'Flush · 62%', 62, '#50b840');
 ok(els['gip-assist'].style.display === '', '_gipAssistSync : bloc visible (panneau ouvert, onglet odds, contenu)');
 O._hsHide(hsEl);
 ok(hsEl.style.display === 'none' && txtEl.textContent === '', '_hsHide masque et vide');

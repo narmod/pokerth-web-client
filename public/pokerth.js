@@ -404,6 +404,12 @@ function openAdvancedOptions() {
   // le CSS coupe ombres / glow / backdrop-filter.
   try { document.documentElement.classList.toggle('reduce-fx', _advGet('reduce_fx', false)); } catch (e) {}
   try { var _sv = document.getElementById('adv-sndvol'); if (_sv && window.getSoundVolume) _sv.value = Math.round(window.getSoundVolume() * 10); } catch (e) {}
+  try {
+    var _as = localStorage.getItem('pth_assist_style');
+    _as = (_as === 'bar') ? 'bar' : 'segs';
+    document.documentElement.setAttribute('data-assist-style', _as);
+    var _ase = document.getElementById('adv-assiststyle'); if (_ase) _ase.value = _as;
+  } catch (e) {}
   try { var _sl = document.getElementById('adv-seatlayout'); if (_sl) { var _slv = localStorage.getItem('pth_seat_layout'); _sl.value = (_slv === 'pokerth-official' || _slv === 'pokerth-ellipse' || _slv === 'custom') ? _slv : 'auto'; } } catch (e) {}
   try { var _ctr = document.getElementById('adv-chattranslate'); if (_ctr) { _ctr.checked = (localStorage.getItem('pth_chat_translate') !== '0'); if (!window._chatTrSupported) { var _ctl = _ctr.closest('label'); if (_ctl) _ctl.style.opacity = '0.55'; } } } catch (e) {}
   try { window._rebindAction = null; _renderKeyButtons(); } catch (e) {}
@@ -1307,6 +1313,16 @@ window.addEventListener('pagehide', function () {
 });
 // Placement des sièges (Options avancées) : 'auto' | 'pokerth-official' | 'pokerth-ellipse'. Persiste +
 // re-rend les sièges via le hook global window._renderSeats.
+// Style du widget d'assistance : « segs » (10 blocs, defaut) ou « bar » (barre
+// de progression historique). Porte par <html data-assist-style> ; le calcul de
+// la force est identique dans les deux cas (cf. _hsSet, odds-panel.mjs).
+function setAssistStyle(v) {
+  v = (v === 'bar') ? 'bar' : 'segs';
+  try { localStorage.setItem('pth_assist_style', v); } catch (e) {}
+  try { document.documentElement.setAttribute('data-assist-style', v); } catch (e) {}
+}
+window.setAssistStyle = setAssistStyle;
+
 function setSeatLayout(v) {
   v = (v === 'pokerth-official' || v === 'pokerth-ellipse' || v === 'custom') ? v : 'auto';
   try { localStorage.setItem('pth_seat_layout', v); } catch (e) {}
@@ -9176,7 +9192,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.4-web.29'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.4-web.30'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
