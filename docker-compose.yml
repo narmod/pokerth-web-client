@@ -33,23 +33,28 @@ services:
       # docker-compose.selfupdate.example.yml). Empty = classic immutable image.
       - SELF_UPDATE=${SELF_UPDATE:-}
       - GIT_BRANCH=${GIT_BRANCH:-}
+      - GIT_REPO=${GIT_REPO:-}
     volumes:
       # Persist ALL server-side state across container recreation: leaderboard,
       # admin-panel config, broadcasts, polls, visit counters, MySQL mirror
       # config, delegate API keys and per-player preferences (see Dockerfile).
       - pokerth-stats:/data
-      # SELF-UPDATE FROM THE ADMIN PAGE (optional). Two ways to get it — both
-      # give install mode "docker-git" in /admin → Status, where the "Update"
-      # button pulls + reinstalls deps + restarts in place.
+      # Working copy for the optional self-updating mode. Empty and unused
+      # unless SELF_UPDATE=1, so it costs nothing to keep mounted — and it
+      # means turning self-update on later needs NO change to this file.
+      - pokerth-app:/srv/app
       #
-      # (a) RECOMMENDED — nothing to clone on the host. Set SELF_UPDATE=1 and
-      #     mount a named volume on /srv/app; the entrypoint provisions a git
-      #     checkout there on first start and runs the app from it:
-      #       cp docker-compose.selfupdate.example.yml docker-compose.override.yml
-      #       docker compose up -d
-      #     Note: the code then comes from git, so `docker compose pull` alone
-      #     no longer changes the running version — update from /admin (or
-      #     `docker compose restart`, which re-syncs on boot).
+      # SELF-UPDATE FROM THE ADMIN PAGE (optional). Install mode then reads
+      # "docker-git" in /admin → Status and the "Update" button pulls,
+      # reinstalls deps and restarts in place. Two ways to get it:
+      #
+      # (a) RECOMMENDED — nothing to clone, nothing to edit here. Put
+      #     SELF_UPDATE=1 in the .env file next to this compose file, then
+      #     `docker compose up -d`. On first start the entrypoint provisions a
+      #     git checkout into the pokerth-app volume above and runs the app
+      #     from it. Note: the code then comes from git, so `docker compose
+      #     pull` alone no longer changes the running version — update from
+      #     /admin (or `docker compose restart`, which re-syncs on boot).
       #
       # (b) Bind-mount your own git clone over the baked-in code. The directory
       #     must be a real clone (NOT a submodule of another repo — its .git
@@ -69,6 +74,7 @@ services:
 
 volumes:
   pokerth-stats:
+  pokerth-app:
 
 # ── CasaOS metadata (ignored by plain `docker compose`) ──────────────────────
 # Lets this exact file be pasted into CasaOS → App Store → Custom install →

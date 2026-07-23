@@ -629,16 +629,18 @@ Notes:
 
 **Self-updating install (optional) — the admin *Update* button under Docker**
 
-A container image is immutable, so by default the admin panel reports install mode `docker-image` and refuses to self-update: you update from the host with `docker compose pull && docker compose up -d`. If you would rather click **Update** in `/admin`, enable the self-updating mode — there is nothing to clone on the host:
+A container image is immutable, so by default the admin panel reports install mode `docker-image` and refuses to self-update: you update from the host with `docker compose pull && docker compose up -d`. If you would rather click **Update** in `/admin`, enable the self-updating mode — there is nothing to clone on the host and no compose file to edit, just one line in `.env`:
 
 ```bash
-cp docker-compose.selfupdate.example.yml docker-compose.override.yml
+echo SELF_UPDATE=1 >> .env
 docker compose up -d
 ```
 
-On first start the entrypoint clones the repository into the `pokerth-app` volume (mounted on `/srv/app`) and runs the app from there. Install mode becomes `docker-git`, and one click pulls the newest code, reinstalls runtime dependencies and restarts the process — `restart: unless-stopped` brings it back on the new version. Every boot re-syncs too, so `docker compose restart` is also a valid update.
+On first start the entrypoint clones the repository into the `pokerth-app` volume (already mounted on `/srv/app` by `docker-compose.yml`) and runs the app from there. Install mode becomes `docker-git`, and one click pulls the newest code, reinstalls runtime dependencies and restarts the process — `restart: unless-stopped` brings it back on the new version. Every boot re-syncs too, so `docker compose restart` is also a valid update.
 
 Trade-off: the running code now comes from git, not from the image, so `docker compose pull` alone no longer changes the version. The image remains the safety net — if the clone or fetch fails (no network on first boot), the container starts on the baked-in code instead of refusing to boot.
+
+> Already using a `docker-compose.override.yml` (reverse-proxy network, extra ports…)? Leave it alone — `SELF_UPDATE=1` in `.env` is all you need. `docker-compose.selfupdate.example.yml` is only a snippet to **merge** into an override if you cannot use `.env`; never copy it over an existing override.
 
 </details>
 
