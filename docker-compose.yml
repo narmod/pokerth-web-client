@@ -30,6 +30,14 @@ services:
       # admin-panel config, broadcasts, polls, visit counters, MySQL mirror
       # config, delegate API keys and per-player preferences (see Dockerfile).
       - pokerth-stats:/data
+      # SELF-UPDATE FROM THE ADMIN PAGE (optional): bind-mount a git checkout
+      # of this repo over the baked-in code. The admin "Update" button then
+      # runs git pull + npm install + restart in place (install mode
+      # "docker-git" in /admin → Status). Requirements: this directory is a
+      # git clone of the repo, writable by uid 1000 (the container's `node`
+      # user). Without this mount the image stays immutable and updates are
+      # done from the host: docker compose pull && docker compose up -d.
+      # - .:/app
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "wget", "-qO-", "http://127.0.0.1:8080/"]

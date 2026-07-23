@@ -1,6 +1,11 @@
 FROM node:20-alpine
 WORKDIR /app
 
+# git enables in-place self-update from the admin page when the app dir is a
+# bind-mounted git checkout (compose volume `.:/app` — mode "docker-git").
+# Harmless for the default image-baked install.
+RUN apk add --no-cache git
+
 # Install production dependencies only. The Protobuf bundle is pre-generated
 # under public/proto/, so the proxy runtime needs just "ws" — no dev deps.
 COPY package*.json ./
