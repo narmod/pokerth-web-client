@@ -8424,11 +8424,25 @@ html:not([data-seat-struct="qml"]) .seat:not(.me) .seat-foot { margin-top: 1px; 
 #gip-assist .hs-segs i{flex:1;height:9px;border-radius:2px;background:rgba(var(--gold-rgb),.14);transition:background .18s ease}
 #gip-assist .hs-segs i.on{background:var(--hs-col, var(--gold))}
 :root[data-assist-style="segs"] #gip-assist .hs-segs{display:flex}
-:root[data-assist-style="segs"] #gip-assist #hand-strength{display:none}
+/* On masque la PISTE, pas #hand-strength : ce dernier recoit un display
+   INLINE depuis le JS (_hsHide / renderPreFlopStrength), qui l'emporte sur
+   toute regle CSS — d'ou la double barre constatee en web.30. La piste, elle,
+   n'est jamais touchee en inline. margin/height a zero pour ne pas laisser de
+   creux a la place de la barre. */
+:root[data-assist-style="segs"] #gip-assist .hs-track{display:none}
+:root[data-assist-style="segs"] #gip-assist #hand-strength{margin:0;height:0}
 /* Fenêtre détachée : le ↩ est en overlay au coin haut-droit. On lui RÉSERVE une
    gouttière sur la ligne de libellé pour qu'il ne recouvre jamais le texte
    (demande narmod), et on resserre les marges pour gagner de la place. */
 #g-assist-panel #gip-assist{padding:6px 9px 7px}
+/* Reduction maximale : sous 52 px de haut, la fenetre ne garde que la rangee de
+   segments — la couleur et le nombre de blocs suffisent a lire la force, et le
+   libelle revient des qu'on agrandit. La classe est posee par un ResizeObserver
+   (assist-pane.mjs) : PAS de container query ici, car #g-assist-panel n'a pas de
+   taille CSS explicite et `container-type:size` la ferait collapser a 0. */
+:root[data-assist-style="segs"] #g-assist-panel.assist-tiny #gip-assist{padding:4px 7px;justify-content:center}
+:root[data-assist-style="segs"] #g-assist-panel.assist-tiny #gip-assist .hs-lbl{display:none}
+:root[data-assist-style="segs"] #g-assist-panel.assist-tiny #gip-assist .hs-segs{margin-top:0}
 #g-assist-panel #gip-assist .hs-lbl{padding-right:22px}
 :root[data-assist-style="segs"] #g-assist-panel #gip-assist .hs-segs{margin-top:5px}
 /* ── Assistance : rangée de titre + bouton détacher (v0.3.908) ── */

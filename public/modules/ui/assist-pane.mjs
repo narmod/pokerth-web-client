@@ -114,6 +114,18 @@ function _ensureAssistPanel() {
     try { if (window.matchMedia('(pointer: coarse)').matches) return; } catch(_){}
     _recenterAssist();
   });
+  // Repli « pastille » : sous 52 px de haut, le libellé s'efface et il ne reste
+  // que la rangée de segments (styles dans pokerth.css). ResizeObserver plutôt
+  // que container query : la fenêtre n'a pas de taille CSS explicite tant qu'une
+  // taille n'a pas été sauvegardée, et `container-type:size` la collapserait.
+  try {
+    new ResizeObserver(function (entries) {
+      for (var i = 0; i < entries.length; i++) {
+        var h = entries[i].contentRect && entries[i].contentRect.height;
+        if (typeof h === 'number') ap.classList.toggle('assist-tiny', h < 52);
+      }
+    }).observe(ap);
+  } catch (e) {}
   document.body.appendChild(ap);
   ap._hd = hd;
   return ap;
@@ -186,9 +198,11 @@ function detachAssist() {
     // handle = la fenêtre entière : drag depuis n'importe où (en-tête inclus,
     // il « bubble ») — nécessaire sur mobile où l'en-tête est masqué. Les
     // boutons sont exclus par makeWinDraggable ; les poignées de resize font
-    // stopPropagation. minH abaissé à 44 pour pouvoir réduire davantage.
+    // stopPropagation. minW/minH 104×28 : en style « Segments », sous 52 px de
+    // haut le libellé s'efface (cf. pokerth.css) et il ne reste que la rangée
+    // de blocs — la fenêtre peut donc descendre à la taille d'une pastille.
     window._enableFloating(ap, { key:'pth_winpos_assist', handle: ap,
-      resizable:true, minW:150, minH:44, defW:230, defH:62, zoom:true });
+      resizable:true, minW:104, minH:28, defW:230, defH:62, zoom:true });
   } else {
     // Garde-fou : système de fenêtres pas encore prêt → position visible.
     ap.style.position = 'fixed'; ap.style.right = 'auto'; ap.style.bottom = 'auto';
