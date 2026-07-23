@@ -7185,6 +7185,34 @@ html[data-seat-struct="qml"] .seat.me .seat-self-strip .seat-bet {
 html[data-seat-struct="qml"] .seat.me .seat-self-strip.has-tb .seat-bet {
   margin-right: calc(50% + 36px);
 }
+/* ── Bandeau « cartes a decouvert » (.seat-open-strip) ─────────────────────
+   Des que les hole-cards d'un siege sont face visible (showdown, spectateur,
+   entrainement offline), le badge d'action et la barre de decompte quittent
+   la rangee de cartes pour ce bandeau, 4 px AU-DESSUS de la box — ou 4 px en
+   DESSOUS (.below) pour les sieges hauts, comme le badge winner. Aucune
+   surcouche ne recouvre donc jamais une carte lisible.
+   Regles posees APRES le bloc timeout-bar : specificite egale, on gagne. */
+.seat-open-strip {
+  position: absolute; left: 0; right: 0;
+  bottom: calc(100% + 4px);
+  height: 16px;
+  display: flex; align-items: center; justify-content: center; gap: var(--sp-2);
+  pointer-events: none; z-index: 26;
+}
+.seat-open-strip.below { bottom: auto; top: calc(100% + 4px); }
+.seat-open-strip .seat-action-badge {
+  position: static; top: auto; left: auto; transform: none;
+  height: 16px; box-sizing: border-box;
+  display: inline-flex; align-items: center;
+  padding: 0 7px; border-radius: var(--r-md);
+  font-size: 11px; font-weight: 700; letter-spacing: 0;
+  color: #eaf1ff; box-shadow: none;
+  animation: stripPop 0.23s ease-out;
+}
+.seat-open-strip .seat-timeout-bar {
+  position: static; top: auto; left: auto; transform: none;
+  width: 44px; height: 7px; border-radius: 4px;
+}
 /* Puck self : HORS du siège — ancre QML exacte du GamePlayerSelfBox
    (anchors.left = bord droit de la box + 6, aligné au haut). !important
    requis : les règles betside-* arrivent PLUS BAS dans le fichier à

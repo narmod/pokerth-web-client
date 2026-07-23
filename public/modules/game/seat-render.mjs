@@ -701,6 +701,9 @@ function renderSeatsImmediate() {
       _tbar = '<div class="seat-timeout-bar' + (isMe ? ' me' : '') + '"><div class="stb-fill" style="width:' + (_tfrac * 100).toFixed(1) + '%"></div></div>';
     }
     var _tbarInStrip = !!_tbar && isMe && _seatTr.selfStrip; // self pokerth : barre hors box
+    // Surcouches deportees quand les cartes du siege sont A DECOUVERT
+    // (declarees ici : le bandeau est emis APRES la fermeture de .seat-plate).
+    var _openBadge = '', _openTb = '';
     if ((_pkHole || _selfBig) && !isGone && !isOut) {
       var _ownHide = isMe && _ownCardsHidden();
       var _phc1 = isMe ? (_ownHide ? null : S.myCards[0]) : sd.card1;
@@ -713,8 +716,17 @@ function renderSeatsImmediate() {
       // la box (strip) pour ne pas masquer ses propres cartes — le self est
       // donc exclu ici quand le pack a un strip (repli cartes sinon).
       var _hcBadge = (_seatTr.badgeOnCards && _acBadge && !(isMe && _seatTr.selfStrip) && !(window._sdWinners && window._sdWinners.has(pid))) ? _acBadge : ''; // visible: actionText && !isWinner (QML)
+      var _hcTb = _tbarInStrip ? '' : _tbar;
+      // Cartes A DECOUVERT (showdown, spectateur, entrainement offline) : on
+      // ne pose RIEN dessus — le badge d'action et la barre de decompte sont
+      // deportes dans un bandeau AU-DESSUS de la box (demande narmod
+      // 2026-07-23), meme traitement que le strip self de sp0ck du 17/07.
+      // Rappel piege : la carte 0 = 2 carreau -> comparer a null, pas falsy.
+      var _cardsOpen = (_phc1 != null && _phc2 != null) && !(isMe && _seatTr.selfStrip);
+      if (_cardsOpen && _hcBadge) { _openBadge = _hcBadge; _hcBadge = ''; _acInCards = true; }
+      if (_cardsOpen && _hcTb)    { _openTb = _hcTb; _hcTb = ''; }
       if (_hcBadge) _acInCards = true;
-      h += '<div class="' + _hcCls + '">' + cardHtml(_phc1,_hcSz) + cardHtml(_phc2,_hcSz) + _hcBadge + (_tbarInStrip ? '' : _tbar) + '</div>';
+      h += '<div class="' + _hcCls + '">' + cardHtml(_phc1,_hcSz) + cardHtml(_phc2,_hcSz) + _hcBadge + _hcTb + '</div>';
     }
     // Badge timer sous l'avatar (visible et non confondu avec l'emoji)
     if (isActive) h += '<div class="seat-timer-badge" id="stb-'+pid+'">'
@@ -733,6 +745,12 @@ function renderSeatsImmediate() {
     // au-dessus de la boîte (au-dessous via .winner-below pour la plus haute).
     if (_seatTr.winnerBadge && window._sdWinners && window._sdWinners.has(pid)) {
       h += '<div class="seat-winner-badge">' + esc(t('winnerBadge')) + '</div>';
+    }
+    // Bandeau « cartes a decouvert » : badge d'action + barre de decompte
+    // hors de la box (au-dessus ; en dessous pour les sieges du haut, meme
+    // bascule que le badge winner) pour laisser les cartes lisibles.
+    if (_openBadge || _openTb) {
+      h += '<div class="seat-open-strip' + (px.top < 70 ? ' below' : '') + (_openTb ? ' has-tb' : '') + '">' + _openBadge + _openTb + '</div>';
     }
     // ── Strip self : mise (BetChip) + badge d'action au-dessus de la box
     // (sp0ck 2026-07-17, aligné QML 2.1.4 : les cartes propres restent
@@ -1058,6 +1076,7 @@ function renderSeatsImmediate() {
         // (dims 164×101 au lieu de ~116×85 → commScale au plancher).
         if (kc.indexOf('seat-action-badge') !== -1 || kc.indexOf('seat-action-label') !== -1 || kc.indexOf('seat-timer-badge') !== -1
             || kc.indexOf('seat-pucks') !== -1 || kc.indexOf('seat-self-strip') !== -1 || kc.indexOf('seat-winner-badge') !== -1
+            || kc.indexOf('seat-open-strip') !== -1
             // Jeton de mise (.seat-bet dans .seat-foot) : surplomb LATÉRAL
             // absolu (~40 px) budgété par la bisection via sideBadgeGapBase
             // (48, xNeeded STRICT QML). Le mesurer le comptait DEUX fois →
