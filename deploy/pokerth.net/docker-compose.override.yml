@@ -1,0 +1,11 @@
+# pokerth.net deployment — joins the shared Docker network so the site's
+# nginx container can reach the webclient by name (pokerth-web-client:8080).
+# Installed by deploy/pokerth.net/install.sh (copied to the repo root).
+services:
+  pokerth-web-client:
+    networks:
+      - pokerth_web_net
+
+networks:
+  pokerth_web_net:
+    external: true
