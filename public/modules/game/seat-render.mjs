@@ -649,7 +649,11 @@ function renderSeatsImmediate() {
     if (!pthAvUrl && !_hasEmojiAv && !_ignHide) { pthAvUrl = '/favicon.svg'; _isDefaultChip = true; }
     // Couleur unique par joueur — neutralisée pour le jeton par défaut
     // (fond neutre derrière le jeton, comme mon siège / l'officiel).
-    const aColor = (isMe || _isDefaultChip) ? null : window.getAvatarColor(pid);
+    // Pack QML (qmlStruct) : AUCUNE couleur d'identite par joueur — tous les
+    // avatars adoptent le style neutre de la self-box (tokens --seat-avatar-bg
+    // / --seat-avatar-border), comme GamePlayerBox du client officiel.
+    // Les autres packs de sieges gardent la palette par pid.
+    const aColor = (isMe || _isDefaultChip || _seatTr.qmlStruct) ? null : window.getAvatarColor(pid);
     const avatarStyle = aColor
       ? 'position:relative;background:' + aColor.bg + ';border-color:' + aColor.border + ';color:' + aColor.text + ';box-shadow:0 0 0 2px ' + aColor.border + '44'
       : 'position:relative';
