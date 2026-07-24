@@ -518,6 +518,33 @@ function _pokerthnetSource() { var s = _adminConfig && _adminConfig.pokerthnetSo
 function _internetTransport() { var t = _adminConfig && _adminConfig.internetTransport; return t === 'proxy' ? 'proxy' : 'direct'; }
 function _serverlistUrl() { var u = _adminConfig && _adminConfig.serverlistUrl; u = String(u || '').trim(); return u || DEFAULT_SERVERLIST_URL; }
 
+// ── LAN / dedicated server policy (admin -> "Default login form") ──────────
+// lanMode 'auto'   : the client keeps the address it remembers (falling back to
+//                    the page's own address) — historical behavior;
+// lanMode 'forced' : host / port / TLS chosen here are pre-filled on every load.
+// In BOTH cases the fields stay editable: a player can always dial elsewhere.
+// Backward compatibility: configs written before this setting existed only had
+// `host`, whose "non-empty means impose it" semantics map to 'forced'.
+// `pub` = the /app-config (client) view: nothing is exposed while in 'auto',
+// so a stale address left in the admin form can never leak into the client.
+function _loginDefaults(pub) {
+  var L = (_adminConfig && _adminConfig.loginDefaults) || {};
+  var lanMode = (L.lanMode === 'forced' || L.lanMode === 'auto') ? L.lanMode : (L.host ? 'forced' : 'auto');
+  var forced = (lanMode === 'forced');
+  var port = parseInt(L.lanPort, 10);
+  if (!(Number.isInteger(port) && port >= 1 && port <= 65535)) port = 0;
+  var show = forced || !pub;
+  return {
+    mode: L.mode || '',
+    proxyUrl: L.proxyUrl || '',
+    hideProxy: !!L.hideProxy,
+    lanMode: lanMode,
+    host: show ? (L.host || '') : '',
+    lanPort: show ? port : 0,
+    lanTls: show ? !!L.lanTls : false
+  };
+}
+
 function _parseServerlist(xml) {
   // Minimal regex parse (no XML dep). Returns the first <Server> or null.
   var blocks = xml.match(/<Server\b[\s\S]*?<\/Server>/gi);
@@ -1786,7 +1813,7 @@ function handleAdmin(req, res, reqPathOnly, query) {
     let version = '';
     try { version = (JSON.parse(fs.readFileSync(path.join(__dirname, 'package.json'), 'utf8')).version) || ''; } catch (e) {}
     let sockets = null; try { sockets = wss.clients.size; } catch (e) {}
-    return adminJson(res, 200, { ok: true, version: version, node: process.version, uptimeSec: Math.floor(process.uptime()), installKind: installKind(), gitUpdatable: GIT_UPDATABLE, sockets: sockets, players: Object.keys(statsStore).length, resetPeriod: STATS_RESET_PERIOD, modes: appModes(), showLoginTitle: !!_adminConfig.showLoginTitle, defaultTheme: _adminConfig.defaultTheme || '', defaults: _adminConfig.defaults || {}, loginDefaults: _adminConfig.loginDefaults || {}, proxyCfg: _adminConfig.proxyCfg || {}, logLevel: _logLevelName(), maxClients: _maxClients(), fd: _fdInfo(), tableDefaults: _adminConfig.tableDefaults || {}, tableNames: _adminConfig.tableNames || {}, serverName: _adminConfig.serverName || '', serverTagline: _adminConfig.serverTagline || '', restartAt: (_restartAt > Date.now() ? _restartAt : null), restartKind: (_restartAt > Date.now() ? _restartKind : null) });
+    return adminJson(res, 200, { ok: true, version: version, node: process.version, uptimeSec: Math.floor(process.uptime()), installKind: installKind(), gitUpdatable: GIT_UPDATABLE, sockets: sockets, players: Object.keys(statsStore).length, resetPeriod: STATS_RESET_PERIOD, modes: appModes(), showLoginTitle: !!_adminConfig.showLoginTitle, defaultTheme: _adminConfig.defaultTheme || '', defaults: _adminConfig.defaults || {}, loginDefaults: _loginDefaults(false), proxyCfg: _adminConfig.proxyCfg || {}, logLevel: _logLevelName(), maxClients: _maxClients(), fd: _fdInfo(), tableDefaults: _adminConfig.tableDefaults || {}, tableNames: _adminConfig.tableNames || {}, serverName: _adminConfig.serverName || '', serverTagline: _adminConfig.serverTagline || '', restartAt: (_restartAt > Date.now() ? _restartAt : null), restartKind: (_restartAt > Date.now() ? _restartKind : null) });
   }
   if (reqPathOnly === '/admin/visits/export') {
     if (!adminAuthed(query)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
@@ -1918,7 +1945,7 @@ function handleAdmin(req, res, reqPathOnly, query) {
   if (reqPathOnly === '/admin/config') {
     if (req.method === 'GET') {
       if (!adminAuthed(query)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
-      return adminJson(res, 200, { ok: true, resetPeriod: STATS_RESET_PERIOD, modes: appModes(), welcome: _welcomeAdmin(), showLoginTitle: !!_adminConfig.showLoginTitle, defaultTheme: _adminConfig.defaultTheme || '', defaults: _adminConfig.defaults || {}, loginDefaults: _adminConfig.loginDefaults || {}, proxyCfg: _adminConfig.proxyCfg || {}, tableDefaults: _adminConfig.tableDefaults || {}, tableNames: _adminConfig.tableNames || {}, serverName: _adminConfig.serverName || '', serverTagline: _adminConfig.serverTagline || '', discordChatWebhookUrl: _adminConfig.discordChatWebhookUrl || '', musicEnabled: musicEnabled() });
+      return adminJson(res, 200, { ok: true, resetPeriod: STATS_RESET_PERIOD, modes: appModes(), welcome: _welcomeAdmin(), showLoginTitle: !!_adminConfig.showLoginTitle, defaultTheme: _adminConfig.defaultTheme || '', defaults: _adminConfig.defaults || {}, loginDefaults: _loginDefaults(false), proxyCfg: _adminConfig.proxyCfg || {}, tableDefaults: _adminConfig.tableDefaults || {}, tableNames: _adminConfig.tableNames || {}, serverName: _adminConfig.serverName || '', serverTagline: _adminConfig.serverTagline || '', discordChatWebhookUrl: _adminConfig.discordChatWebhookUrl || '', musicEnabled: musicEnabled() });
     }
     if (req.method === 'POST') {
       return readJsonBody(req, function (d) {
@@ -1969,6 +1996,14 @@ function handleAdmin(req, res, reqPathOnly, query) {
           lout.proxyUrl = /^wss?:\/\/[^\s]+$/i.test(_pu) ? _pu : '';
           // Masquer le champ « URL du proxy WebSocket » et son libellé.
           lout.hideProxy = !!ld.hideProxy;
+          // Politique du serveur LAN / dédié : 'auto' (adresse mémorisée par le
+          // joueur, repli sur l'adresse de la page) ou 'forced' (hôte, port et
+          // TLS imposés ci-dessus, champs restant éditables côté joueur).
+          // Absent = déduit de l'ancien réglage `host` (compat ascendante).
+          lout.lanMode = (ld.lanMode === 'forced' || ld.lanMode === 'auto') ? ld.lanMode : (lout.host ? 'forced' : 'auto');
+          var _lnp = parseInt(ld.lanPort, 10);
+          lout.lanPort = (Number.isInteger(_lnp) && _lnp >= 1 && _lnp <= 65535) ? _lnp : 0;
+          lout.lanTls = !!ld.lanTls;
           _adminConfig.loginDefaults = lout;
         }
         if (d.proxyCfg && typeof d.proxyCfg === 'object') {
@@ -2021,7 +2056,7 @@ function handleAdmin(req, res, reqPathOnly, query) {
         if (typeof d.serverTagline === 'string') _adminConfig.serverTagline = d.serverTagline.trim().slice(0, 60);
         if (typeof d.showLoginTitle === 'boolean') _adminConfig.showLoginTitle = d.showLoginTitle;
         saveAdminConfig();
-        return adminJson(res, 200, { ok: true, resetPeriod: STATS_RESET_PERIOD, modes: appModes(), welcome: _welcomeAdmin(), showLoginTitle: !!_adminConfig.showLoginTitle, defaultTheme: _adminConfig.defaultTheme || '', defaults: _adminConfig.defaults || {}, loginDefaults: _adminConfig.loginDefaults || {}, proxyCfg: _adminConfig.proxyCfg || {}, tableDefaults: _adminConfig.tableDefaults || {}, tableNames: _adminConfig.tableNames || {}, serverName: _adminConfig.serverName || '', serverTagline: _adminConfig.serverTagline || '', discordChatWebhookUrl: _adminConfig.discordChatWebhookUrl || '', musicEnabled: musicEnabled() });
+        return adminJson(res, 200, { ok: true, resetPeriod: STATS_RESET_PERIOD, modes: appModes(), welcome: _welcomeAdmin(), showLoginTitle: !!_adminConfig.showLoginTitle, defaultTheme: _adminConfig.defaultTheme || '', defaults: _adminConfig.defaults || {}, loginDefaults: _loginDefaults(false), proxyCfg: _adminConfig.proxyCfg || {}, tableDefaults: _adminConfig.tableDefaults || {}, tableNames: _adminConfig.tableNames || {}, serverName: _adminConfig.serverName || '', serverTagline: _adminConfig.serverTagline || '', discordChatWebhookUrl: _adminConfig.discordChatWebhookUrl || '', musicEnabled: musicEnabled() });
       });
     }
     res.writeHead(405); res.end('Method not allowed'); return;
@@ -3262,7 +3297,7 @@ const httpServer = http.createServer((req, res) => {
 
   if (reqPathOnly === '/app-config') {
     res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' });
-    res.end(JSON.stringify({ ok: true, modes: appModes(), welcome: _welcomePublic(), poll: _pollPublic(), showLoginTitle: !!_adminConfig.showLoginTitle, defaultTheme: _adminConfig.defaultTheme || '', defaults: _adminConfig.defaults || {}, loginDefaults: _adminConfig.loginDefaults || {}, tableDefaults: _adminConfig.tableDefaults || {}, tableNames: _adminConfig.tableNames || {}, serverName: _adminConfig.serverName || '', serverTagline: _adminConfig.serverTagline || '', pokerthnetServer: _activePokerthnetServer(), pokerthnetSource: _pokerthnetSource(), internetTransport: _internetTransport(), musicEnabled: musicEnabled() }));
+    res.end(JSON.stringify({ ok: true, modes: appModes(), welcome: _welcomePublic(), poll: _pollPublic(), showLoginTitle: !!_adminConfig.showLoginTitle, defaultTheme: _adminConfig.defaultTheme || '', defaults: _adminConfig.defaults || {}, loginDefaults: _loginDefaults(true), tableDefaults: _adminConfig.tableDefaults || {}, tableNames: _adminConfig.tableNames || {}, serverName: _adminConfig.serverName || '', serverTagline: _adminConfig.serverTagline || '', pokerthnetServer: _activePokerthnetServer(), pokerthnetSource: _pokerthnetSource(), internetTransport: _internetTransport(), musicEnabled: musicEnabled() }));
     return;
   }
 

@@ -306,9 +306,12 @@
       </div>
       <div class="card">
         <h2>Default login form (new visitors)</h2>
-        <p class="muted" style="margin:0 0 8px">Default entry screen for new visitors, plus (for LAN / dedicated) which server to connect to. The proxy auto-follows the host and is rebuilt on every reconnect, so the client always reconnects. Leave host blank to keep the page's own address. The mode applies on a first visit only. A forced proxy URL (ws:// or wss://) is pushed to every client and locks the field; hiding the field removes it and its label from the login form. Both apply to the LAN / dedicated mode only — the Internet (pokerth.net) mode is never affected.</p>
+        <p class="muted" style="margin:0 0 8px">Default entry screen for new visitors, plus (for LAN / dedicated) which server to connect to. The mode applies on a first visit only. <b>LAN server</b>: <i>Automatic</i> restores the address each player last used (falling back to the page's own address); <i>Forced</i> pre-fills the host, port and TLS set below on every load. Either way the fields stay editable — a player can always dial another server. With <i>Forced</i>, the proxy auto-follows the host and is rebuilt on every reconnect, so the client always reconnects. A forced proxy URL (ws:// or wss://) is pushed to every client and locks the field; hiding the field removes it and its label from the login form. All of this applies to the LAN / dedicated mode only — the Internet (pokerth.net) mode is never affected.</p>
         <div class="defrow" style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin:5px 0"><span>Default mode</span><select id="defMode"><option value="">App default</option><option value="offline">Training (bots)</option><option value="lan-dedi">LAN / private server</option><option value="pokerthnet">pokerth.net</option></select></div>
-        <div class="defrow" style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin:5px 0"><span>Server host (LAN / dedicated)</span><input id="defHost" placeholder="(page address)" maxlength="120" autocomplete="off" style="flex:1;min-width:0"></div>
+        <div class="defrow" style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin:5px 0"><span>LAN server <span class="muted">(LAN / dedicated only)</span></span><select id="defLanMode"><option value="auto">Automatic (page address / player's choice)</option><option value="forced">Forced (pre-fill the values below)</option></select></div>
+        <div class="defrow" style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin:5px 0"><span>Server host</span><input id="defHost" placeholder="(page address)" maxlength="120" autocomplete="off" style="flex:1;min-width:0"></div>
+        <div class="defrow" style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin:5px 0"><span>Server port <span class="muted">(blank = 7234)</span></span><input id="defLanPort" type="number" min="1" max="65535" placeholder="7234" autocomplete="off" style="width:110px"></div>
+        <div class="defrow" style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin:5px 0"><span>Server uses TLS</span><select id="defLanTls"><option value="0">No</option><option value="1">Yes</option></select></div>
         <div class="defrow" style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin:5px 0"><span>Force WebSocket proxy URL <span class="muted">(LAN / dedicated only)</span></span><input id="defProxyUrl" placeholder="(auto: page address)" maxlength="180" autocomplete="off" style="flex:1;min-width:0"></div>
         <div class="defrow" style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin:5px 0"><span>Hide the proxy URL field <span class="muted">(LAN / dedicated only)</span></span><select id="defHideProxy"><option value="0">No</option><option value="1">Yes</option></select></div>
         <div style="margin-top:8px"><button id="saveLogin" class="use">Save</button></div>
@@ -949,7 +952,7 @@
         if(d.modes){ modesState=Object.assign({offline:true,lan:true,pokerthnet:true},d.modes); renderModes(); }
         if($('defTheme') && typeof d.defaultTheme==='string'){ window._defThemeVal=d.defaultTheme; $('defTheme').value=d.defaultTheme; }
         if(d.defaults && typeof d.defaults==='object'){ var _DM={defHaptic:'haptic',defVoice:'voice',defAssist:'assist',defBB:'displaybb'}; Object.keys(_DM).forEach(function(id){ var el=$(id); if(el){ var dv=d.defaults[_DM[id]]; el.value=(dv==='0'||dv==='1')?dv:''; } }); }
-        if(d.loginDefaults && typeof d.loginDefaults==='object'){ var L=d.loginDefaults; if($('defMode'))$('defMode').value=(['offline','lan-dedi','pokerthnet'].indexOf(L.mode)>=0)?L.mode:''; if($('defHost'))$('defHost').value=L.host||''; if($('defProxyUrl'))$('defProxyUrl').value=L.proxyUrl||''; if($('defHideProxy'))$('defHideProxy').value=(L.hideProxy?'1':'0'); }
+        if(d.loginDefaults && typeof d.loginDefaults==='object'){ var L=d.loginDefaults; if($('defMode'))$('defMode').value=(['offline','lan-dedi','pokerthnet'].indexOf(L.mode)>=0)?L.mode:''; if($('defLanMode'))$('defLanMode').value=(L.lanMode==='forced')?'forced':'auto'; if($('defHost'))$('defHost').value=L.host||''; if($('defLanPort'))$('defLanPort').value=(L.lanPort>0)?String(L.lanPort):''; if($('defLanTls'))$('defLanTls').value=(L.lanTls?'1':'0'); if(window.syncLanMode)window.syncLanMode(); if($('defProxyUrl'))$('defProxyUrl').value=L.proxyUrl||''; if($('defHideProxy'))$('defHideProxy').value=(L.hideProxy?'1':'0'); }
         if(d.tableDefaults && typeof d.tableDefaults==='object'){ var T=d.tableDefaults; var _tm={tdPlayers:'players',tdBlind:'blind',tdStack:'stack',tdTimeout:'timeout'}; Object.keys(_tm).forEach(function(id){ var el=$(id); if(el){ var v=T[_tm[id]]; el.value=(v==null)?'':v; } }); }
         if(d.tableNames && typeof d.tableNames==='object'){ var TN=d.tableNames; [['tnNetMode','tnNetName','pokerthnet'],['tnLanMode','tnLanName','lan'],['tnOffMode','tnOffName','offline']].forEach(function(t){ var sel=$(t[0]), inp=$(t[1]), v=TN[t[2]], has=(typeof v==='string'&&v.trim()); if(sel) sel.value=has?'custom':'auto'; if(inp){ inp.value=has?v:''; inp.style.display=has?'':'none'; } }); }
         if($('srvName') && typeof d.serverName==='string') $('srvName').value=d.serverName;
@@ -1117,8 +1120,22 @@
       .then(function(r){return r.json();}).then(function(d){ if(d&&d.ok){ m.textContent='Saved.'; m.className='msg ok'; } else { m.textContent='Failed: '+((d&&d.error)||'error'); m.className='msg err'; } })
       .catch(function(){ m.textContent='Network error.'; m.className='msg err'; });
   }); })();
+  // Host / port / TLS only mean something in "Forced" mode: dim and disable them
+  // in "Automatic" so the form can't suggest an address that is never applied.
+  function syncLanMode(){
+    var m=$('defLanMode'); if(!m) return;
+    var on=(m.value==='forced');
+    ['defHost','defLanPort','defLanTls'].forEach(function(id){
+      var el=$(id); if(!el) return;
+      el.disabled=!on;
+      var row=el.parentNode; if(row) row.style.opacity=on?'':'0.5';
+    });
+  }
+  window.syncLanMode=syncLanMode;
+  (function(){ var m=$('defLanMode'); if(m) m.addEventListener('change', syncLanMode); syncLanMode(); })();
   (function(){ var sl=$('saveLogin'); if(!sl) return; sl.addEventListener('click', function(){
-    var L={ mode:($('defMode')?$('defMode').value:''), host:($('defHost')?$('defHost').value.trim():''), proxyUrl:($('defProxyUrl')?$('defProxyUrl').value.trim():''), hideProxy:($('defHideProxy')?$('defHideProxy').value==='1':false) };
+    var L={ mode:($('defMode')?$('defMode').value:''), host:($('defHost')?$('defHost').value.trim():''), proxyUrl:($('defProxyUrl')?$('defProxyUrl').value.trim():''), hideProxy:($('defHideProxy')?$('defHideProxy').value==='1':false),
+            lanMode:($('defLanMode')?$('defLanMode').value:'auto'), lanPort:($('defLanPort')?$('defLanPort').value.trim():''), lanTls:($('defLanTls')?$('defLanTls').value==='1':false) };
     var m=$('loginMsg');
     api('/admin/config',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({loginDefaults:L,token:tok()})})
       .then(function(r){return r.json();}).then(function(d){ if(d&&d.ok){ m.textContent='Saved.'; m.className='msg ok'; } else { m.textContent='Failed: '+((d&&d.error)||'error'); m.className='msg err'; } })

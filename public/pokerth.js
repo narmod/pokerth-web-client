@@ -615,7 +615,7 @@ function resetAdvDefaults() {
   var KEEP = {
     pth_auth_login: 1, pth_pass: 1, pth_sid: 1, pth_vid: 1, pth_resume: 1,
     pth_host: 1, pth_port: 1, pth_proxy: 1, pth_server_mode: 1, pth_login_mode: 1,
-    pth_nick: 1, pth_lan_nick: 1, pth_lan_port: 1, pth_unauth_nick: 1, pth_offline_nick: 1,
+    pth_nick: 1, pth_lan_nick: 1, pth_lan_host: 1, pth_lan_port: 1, pth_unauth_nick: 1, pth_offline_nick: 1,
     pth_avatar: 1, pth_avatar_img: 1
   };
   try {
@@ -2740,8 +2740,25 @@ document.addEventListener("DOMContentLoaded", function() {
       // en mode LAN / serveur dédié (voir _applyProxyPolicy).
       window._pthProxyPolicy = { url: login.proxyUrl || '', hide: !!login.hideProxy };
       try { window._applyProxyPolicy(); } catch (e) {}
+      // Politique d'INSTANCE sur le serveur LAN / dédié (admin → « Default login
+      // form »), lue à chaque changement de mode par _lanFields() :
+      //   forced : l'hôte, le port et le TLS de l'admin sont reposés à chaque
+      //            chargement — le champ reste ÉDITABLE, le joueur peut viser
+      //            un autre serveur du réseau ;
+      //   auto   : on rend la main au joueur — l'adresse qu'il a utilisée en
+      //            dernier (pth_lan_host) est restaurée, à défaut l'adresse de
+      //            la page. C'était l'ancien comportement forcé implicite.
+      window._pthLanPolicy = {
+        forced: (login.lanMode === 'forced'),
+        host: login.host || '',
+        port: (login.lanPort > 0) ? String(login.lanPort) : '',
+        tls: !!login.lanTls
+      };
       if (window._shareLinkActive) return;
-      if (login.host) { try { var _hi = document.getElementById('host'); if (_hi) _hi.dataset.autoHost = login.host; } catch (e) {} }
+      // En mode forcé seulement : l'hôte de l'admin devient aussi l'« autoHost »,
+      // dont l'URL du proxy WebSocket est dérivée — le proxy suit donc le serveur
+      // et ne peut pas rester périmé (comportement historique conservé).
+      if (login.host && login.lanMode === 'forced') { try { var _hi = document.getElementById('host'); if (_hi) _hi.dataset.autoHost = login.host; } catch (e) {} }
       // Default entry mode: pre-select it on a first visit only if it's an enabled option.
       if (login.mode) {
         var hadMode = (window._pthHadServerMode !== false); // snapshot pris au chargement, avant que load n'écrive la clé
@@ -4326,25 +4343,39 @@ const App = (() => {
       // Always reset the readonly flag first; only Guest re-applies it.
       if (nickEl) nickEl.removeAttribute('readonly');
 
+      // Champs « serveur » des modes LAN / serveur dédié. Deux politiques
+      // d'instance (admin → /app-config.loginDefaults.lanMode) :
+      //   auto   → on restaure l'adresse et le port mémorisés par le joueur
+      //            (repli : adresse de la page, port 7234) ;
+      //   forced → on repose l'adresse, le port et le TLS choisis par l'admin.
+      // Dans les DEUX cas les champs restent éditables jusqu'à la connexion.
+      var _lanFields = function () {
+        var pol = window._pthLanPolicy || {};
+        if (proxyInput) proxyInput.value = proto + '//' + (autoHost || 'localhost') + ':' + port;
+        if (pol.forced) {
+          if (hostInput) hostInput.value = pol.host || autoHost || hostInput.value;
+          if ($('port')) $('port').value = (pol.port || lsGet('pth_lan_port') || '7234');
+          if ($('use-tls')) $('use-tls').checked = !!pol.tls;
+        } else {
+          if (hostInput) hostInput.value = (lsGet('pth_lan_host') || autoHost || hostInput.value);
+          if ($('port')) $('port').value = (lsGet('pth_lan_port') || '7234');
+          if ($('use-tls')) $('use-tls').checked = false;
+        }
+      };
+
       if (mode === 'lan') {
         $('nick-label').textContent = t('enterNickFree');
         $('nick').placeholder = t('nickPlaceholder');
         // Restore the per-mode saved pseudo (overrides whatever was
         // typed under another mode — same UX as switching profiles).
         if (nickEl) nickEl.value = window._pthNick.get();
-        $('use-tls').checked = false;
-        if (proxyInput) proxyInput.value = proto + '//' + (autoHost||'localhost') + ':' + port;
-        if (hostInput && autoHost) hostInput.value = autoHost;
-        if ($('port')) $('port').value = (lsGet('pth_lan_port') || '7234');
+        _lanFields();
         setStatus(t('lanModeNote'), '', 'lanModeNote');
       } else if (mode === 'unauth') {
         $('nick-label').textContent = t('enterNickFree');
         $('nick').placeholder = t('nickPlaceholder');
         if (nickEl) nickEl.value = window._pthNick.get();
-        $('use-tls').checked = false;
-        if (proxyInput) proxyInput.value = proto + '//' + (autoHost||'localhost') + ':' + port;
-        if (hostInput && autoHost) hostInput.value = autoHost;
-        if ($('port')) $('port').value = (lsGet('pth_lan_port') || '7234');
+        _lanFields();
         setStatus(t('chatAvailPrivate'), '', 'chatAvailPrivate');
       } else if (mode === 'guest') {
         $('nick-label').textContent = t('enterNickGuest');
@@ -4621,6 +4652,9 @@ const App = (() => {
         if (hv)  localStorage.setItem('pth_host',  hv.value.trim());
         if (pv)  localStorage.setItem('pth_port',  pv.value.trim());
         if (pv && lm2 && (lm2.value === 'lan' || lm2.value === 'unauth')) localStorage.setItem('pth_lan_port', pv.value.trim());
+        // Adresse LAN propre au joueur : relue par _lanFields() quand l'instance
+        // est en politique « auto » (pth_host, lui, suit tous les modes).
+        if (hv && lm2 && (lm2.value === 'lan' || lm2.value === 'unauth')) localStorage.setItem('pth_lan_host', hv.value.trim());
         if (xv)  localStorage.setItem('pth_proxy', xv.value.trim());
         // Auto-save the nickname per-mode (no Remember-me checkbox
         // needed — silent persistence is the new default). Guest is
@@ -9239,7 +9273,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.4-web.51'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.4-web.52'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
