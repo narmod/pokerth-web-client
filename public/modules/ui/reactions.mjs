@@ -155,6 +155,24 @@ function showSeatReaction(pid, emoji) {
   showFloatingReaction(emoji, sr.left + sr.width/2, sr.top);
 }
 
+// Réaction d'un expéditeur NON assis (spectateur) : animation au centre de la
+// table, un peu au-dessus des cartes communes — parité QML §10
+// (communityCenterY − 40). Pas de badge de siège, faute de siège. Le plancher
+// vertical évite que le grand emoji et ses particules soient coupés en haut
+// (le QML impose un départ ≥ 205 px du haut pour la même raison).
+function showTableCenterReaction(emoji) {
+  var x = null, y = null;
+  try {
+    var el = document.getElementById('g-comm') || document.getElementById('g-table-zone');
+    if (el) {
+      var r = el.getBoundingClientRect();
+      if (r.width || r.height) { x = r.left + r.width / 2; y = r.top + r.height / 2 - 40; }
+    }
+  } catch (e) {}
+  if (x == null) { x = window.innerWidth * 0.5; y = window.innerHeight * 0.45; }
+  showFloatingReaction(emoji, x, Math.max(y, 96));
+}
+
 // Mettre à jour les compteurs affichés sur les boutons
 function updateReactionCount(emoji) {
   var EMOJIS = ["🎉", "🥳", "👏", "🙌", "💪", "🤣", "😂", "😬", "🤦", "😴", "👍", "😎", "🤩", "👀", "🤔", "😱", "😡", "😤", "🔥", "😮", "💰", "💎", "🎰", "🍀", "🃏", "💀", "🤑", "🫵", "🫡", "🤫"];
@@ -186,14 +204,26 @@ function updateReactionCount(emoji) {
 // which is what the user reported hearing.
 function handleIncomingReaction(pid, emoji, via) {
   if (_reactMuted) return;                       // reactions coupees localement : aucun rendu, badge ni son
-  if (!window.seats || seats.indexOf(pid) < 0) return;
   via = via || 'react';
+  // Expéditeur assis ? Sinon c'est un SPECTATEUR de notre table : parité QML
+  // §10 — la réaction s'anime au centre de la table au lieu d'un siège
+  // (demande sp0ck 24/07/2026 : le spectateur n'a plus le chat, mais garde
+  // les réactions). Réservé aux canaux table-scopés :
+  //   · 'chat' = /emoji, routé par le serveur PokerTH sur la table courante ;
+  //   · 'self' = ma propre réaction (je peux moi-même être spectateur).
+  // Le canal 'react' (trame REACT: du proxy) est diffusé à TOUS les clients
+  // connectés, toutes tables confondues : sans siège on ne peut pas savoir
+  // s'il vient de notre table → on l'ignore, exactement comme avant.
+  if (!window.seats) return;                     // pas (encore) à une table : rien à animer
+  var _seated = seats.indexOf(pid) >= 0;
+  if (!_seated && via !== 'chat' && via !== 'self') return;
   var _k = pid + '|' + emoji, _now = Date.now(), _p = _reactSeen[_k];
   if (_p && _p.via !== via && _now - _p.t < 1500) { _reactSeen[_k] = { t: _now, via: via }; return; }
   _reactSeen[_k] = { t: _now, via: via };
   _reactionCounts[emoji] = (_reactionCounts[emoji] || 0) + 1;
   updateReactionCount(emoji);
-  showSeatReaction(pid, emoji);
+  if (_seated) showSeatReaction(pid, emoji);
+  else showTableCenterReaction(emoji);
   // Notif sonore légère
   if (typeof playTone === 'function') playTone(800, 0.05, 0.08);
 }
