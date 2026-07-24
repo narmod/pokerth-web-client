@@ -36,12 +36,12 @@
 - 🎨 **Deep theming** — a QML-style styles window: table felt × card deck × card back × seats (buttons & pucks follow the table style)
 - ☁️ **Settings that follow you** — sign in with a registered account on your dedicated server and **every** option syncs automatically across your devices: the official settings travel as a standard PokerTH `config.xml`, and the web-only extras (theme, seats, keyboard, voice…) as a separate blob — on by default, one tap to turn off
 - 🌍 **36 languages**
-- 🤝 **Tracks the official QML client** — F-key shortcuts, admin tools, sounds, full chat and more, kept in sync as the official client evolves (currently the 2.1.3 build)
+- 🤝 **Tracks the official QML client** — F-key shortcuts, admin tools, sounds, full chat and more, kept in sync as the official client evolves (currently the 2.1.4 build)
 
 <p align="center">
-  <img src="docs/screenshots/08-desktop-game-light.png" alt="In-game desktop view — full table, live theming, reactions, chat, action bar and hand log" width="860"/>
+  <img src="docs/screenshots/20-desktop-game-saloon.png" alt="In-game desktop view — full ten-seat table on a custom felt, status bar, action bar and hand log" width="860"/>
   <br/>
-  <em>The web client in action — full table with the emoji reactions picker, in-game chat, the action bar with quick-bets and auto-modes, and the hand log</em>
+  <em>The web client in action — a ten-seat table on a custom felt, with the game status bar, dealer and blind pucks, per-seat action badges and the action bar with quick-bets and auto-modes</em>
 </p>
 
 <!-- 🎞️ HERO GIF SLOT — once docs/screenshots/00-hero.gif is recorded, add it just above the screenshot above:
@@ -178,15 +178,28 @@ This project is a **web frontend** that connects to any PokerTH server straight 
 </div>
 
 <p align="center">
+  <img src="docs/screenshots/21-desktop-lobby.png" alt="Lobby on desktop — online players, available tables, game info and chat side by side" width="860"/>
+  <br/>
+  <em>The lobby on a wide screen — players online with country flags and stats on the left, tables in the middle, game info and chat on the right</em>
+</p>
+
+<p align="center">
   <img src="docs/screenshots/09-desktop-game-dark.png" alt="In-game desktop view — dark theme, full table against nine bots" width="860"/>
   <br/>
   <em>A full 10-seat table in the dark theme — training mode against nine bots, glossy action buttons and quick-bets</em>
 </p>
 
+<div align="center">
+<table>
+  <tr>
+    <td align="center"><img src="docs/screenshots/23-desktop-connect-dark.png" alt="Connect screen on desktop (dark theme)" width="420"/></td>
+    <td align="center"><img src="docs/screenshots/22-desktop-connect-light.png" alt="Connect screen on desktop (light theme)" width="420"/></td>
+  </tr>
+</table>
+</div>
+
 <p align="center">
-  <img src="docs/screenshots/10-connect-desktop.png" alt="Connect screen on desktop" width="860"/>
-  <br/>
-  <em>The connect screen on desktop — pick a login mode, type a nickname and you're in</em>
+  <em>The connect screen on desktop, dark and light — pick a mode, type a nickname and you're in</em>
 </p>
 
 ---
