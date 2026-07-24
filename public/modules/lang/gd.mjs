@@ -11,6 +11,9 @@ export const meta = {
 };
 
 export const strings = {
+    // — i18n gap-fill (backup / trophies / back tooltip) —
+    advKeyNav:'Bidh Esc a’ dùnadh/a’ sgur dheth, Enter a’ dearbhadh (taobh a-muigh a’ bhùird)',
+    achTitle:'Duaisean', advBackupSec:'Lethbhreac-glèidhidh slàn (cliant-lìn)', advBackupDesc:'Sàbhail anns an aon fhaidhle a h-uile càil a tha sa bhrabhsair seo: roghainnean lìn, ùrlaran, cairtean, suidheachain gnàthaichte, dealbh avatar, duaisean agus staitistig — a’ gabhail a-steach na tha ro mhòr airson sioncronachadh leis a’ chunntas agad. Cha tèid am facal-faire no an seisean a ghabhail a-steach idir, agus bidh an ion-phortadh a’ co-mheasgachadh nan duaisean seach an cur nan àite, agus mar sin cha tèid adhartas air chall.', advBackupExport:'Às-phortaich an lethbhreac', advBackupImport:'Ion-phortaich lethbhreac', advWinOpen:'Soillsich am putan ann an òr fhad ’s a tha an uinneag aige fosgailte', backTooltip:'Air ais',
   advPolls: "Gabh pàirt ann an cunntasan-bheachd",
   pollTitle: "Cunntas-bheachd",
   pollThanks: "Tapadh leat airson do fhreagairt!",

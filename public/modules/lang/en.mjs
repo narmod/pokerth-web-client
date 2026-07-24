@@ -16,6 +16,8 @@ export const meta = {
 };
 
 export const strings = {
+    // — i18n gap-fill (backup / trophies / back tooltip) —
+    achTitle:'Trophies', advBackupSec:'Full backup (web client)', advBackupDesc:'Save everything this browser holds into one file: web options, themes, decks, custom seats, avatar image, achievements and stats — including what is too large to sync with your account. Your password and session are never included, and importing merges achievements instead of replacing them, so progress is never lost.', advBackupExport:'Export backup', advBackupImport:'Import backup', advWinOpen:'Highlight the button in gold while its window is open', backTooltip:'Back',
   advPolls: "Take part in product polls",
   pollTitle: "Poll",
   pollThanks: "Thanks for your answer!",

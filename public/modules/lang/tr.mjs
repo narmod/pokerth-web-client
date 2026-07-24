@@ -12,6 +12,9 @@ export const meta = {
 };
 
 export const strings = {
+    // — i18n gap-fill (backup / trophies / back tooltip) —
+    advKeyNav:'Esc kapatır/iptal eder, Enter onaylar (masa dışında)',
+    achTitle:'Kupalar', advBackupSec:'Tam yedek (web istemcisi)', advBackupDesc:'Bu tarayıcıdaki her şeyi tek bir dosyaya kaydeder: web seçenekleri, temalar, desteler, özel koltuklar, avatar görseli, kupalar ve istatistikler — hesabınla eşitlenemeyecek kadar büyük olanlar dahil. Parolan ve oturumun asla dahil edilmez; içe aktarma kupaları değiştirmek yerine birleştirir, böylece ilerleme kaybolmaz.', advBackupExport:'Yedeği dışa aktar', advBackupImport:'Yedeği içe aktar', advWinOpen:'Penceresi açıkken düğmeyi altın renkle vurgula', backTooltip:'Geri',
   advPolls: "Ürün anketlerine katıl",
   pollTitle: "Anket",
   pollThanks: "Yanıtın için teşekkürler!",

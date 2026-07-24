@@ -15,6 +15,9 @@ export const meta = {
 };
 
 export const strings = {
+    // — i18n gap-fill (backup / trophies / back tooltip) —
+    advKeyNav:'Esc sluit/annuleert, Enter bevestigt (buiten de tafel)',
+    achTitle:'Trofeeën', advBackupSec:'Volledige back-up (webclient)', advBackupDesc:'Slaat alles wat deze browser bevat op in één bestand: webopties, thema’s, decks, aangepaste zitplaatsen, avatarafbeelding, trofeeën en statistieken — ook wat te groot is om met je account te synchroniseren. Je wachtwoord en sessie worden nooit meegenomen, en bij het importeren worden trofeeën samengevoegd in plaats van vervangen, zodat er nooit voortgang verloren gaat.', advBackupExport:'Back-up exporteren', advBackupImport:'Back-up importeren', advWinOpen:'Markeer de knop in goud zolang het venster open is', backTooltip:'Terug',
   advPolls: "Deelnemen aan productenquêtes",
   pollTitle: "Enquête",
   pollThanks: "Bedankt voor je antwoord!",

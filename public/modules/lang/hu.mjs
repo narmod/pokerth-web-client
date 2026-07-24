@@ -10,6 +10,9 @@ export const meta = {
 };
 
 export const strings = {
+    // — i18n gap-fill (backup / trophies / back tooltip) —
+    advKeyNav:'Az Esc bezár/megszakít, az Enter megerősít (az asztalon kívül)',
+    achTitle:'Trófeák', advBackupSec:'Teljes biztonsági mentés (webkliens)', advBackupDesc:'Egyetlen fájlba menti mindazt, amit ez a böngésző tárol: webes beállítások, témák, kártyapaklik, egyéni ülőhelyek, avatárkép, trófeák és statisztikák — azt is, ami túl nagy a fiókkal való szinkronizáláshoz. A jelszó és a munkamenet soha nem kerül bele, az importálás pedig egyesíti a trófeákat ahelyett, hogy felülírná őket, így a haladás nem vész el.', advBackupExport:'Mentés exportálása', advBackupImport:'Mentés importálása', advWinOpen:'A gomb arany kiemelése, amíg az ablaka nyitva van', backTooltip:'Vissza',
   advPolls: "Részvétel a termékkel kapcsolatos szavazásokban",
   pollTitle: "Szavazás",
   pollThanks: "Köszönjük a válaszod!",

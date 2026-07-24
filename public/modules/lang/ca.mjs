@@ -10,6 +10,9 @@ export const meta = {
 };
 
 export const strings = {
+    // — i18n gap-fill (backup / trophies / back tooltip) —
+    advKeyNav:'Esc tanca/cancel·la, Retorn confirma (fora de la taula)',
+    achTitle:'Trofeus', advBackupSec:'Còpia de seguretat completa (client web)', advBackupDesc:'Desa en un sol fitxer tot el que conté aquest navegador: opcions web, temes, baralles, seients personalitzats, imatge d’avatar, trofeus i estadístiques — inclòs allò que és massa gran per sincronitzar amb el teu compte. La contrasenya i la sessió no s’hi inclouen mai, i la importació fusiona els trofeus en comptes de substituir-los, així que mai no es perd el progrés.', advBackupExport:'Exporta la còpia', advBackupImport:'Importa una còpia', advWinOpen:'Ressalta el botó en daurat mentre la seva finestra és oberta', backTooltip:'Enrere',
   advPolls: "Participa en les enquestes del producte",
   pollTitle: "Enquesta",
   pollThanks: "Gràcies per la teva resposta!",

@@ -16,6 +16,8 @@ export const meta = {
 };
 
 export const strings = {
+    // — i18n gap-fill (backup / trophies / back tooltip) —
+    achTitle:'Trophées', advBackupSec:'Sauvegarde complète (client web)', advBackupDesc:'Enregistre dans un seul fichier tout ce que ce navigateur contient : options web, thèmes, decks, sièges personnalisés, image d’avatar, trophées et statistiques — y compris ce qui est trop volumineux pour être synchronisé avec ton compte. Ton mot de passe et ta session ne sont jamais inclus, et l’import fusionne les trophées au lieu de les remplacer : aucune progression n’est perdue.', advBackupExport:'Exporter la sauvegarde', advBackupImport:'Importer une sauvegarde', advWinOpen:'Surligner le bouton en or tant que sa fenêtre est ouverte', backTooltip:'Retour',
   advPolls: "Participer aux sondages produit",
   pollTitle: "Sondage",
   pollThanks: "Merci pour votre réponse !",

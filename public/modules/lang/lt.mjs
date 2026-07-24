@@ -10,6 +10,9 @@ export const meta = {
 };
 
 export const strings = {
+    // — i18n gap-fill (backup / trophies / back tooltip) —
+    advKeyNav:'Esc uždaro/atšaukia, Enter patvirtina (ne prie stalo)',
+    achTitle:'Trofėjai', advBackupSec:'Visa atsarginė kopija (saityno klientas)', advBackupDesc:'Įrašo į vieną failą viską, ką saugo ši naršyklė: žiniatinklio parinktis, temas, kaladžių dizainus, savas vietas, avataro paveikslėlį, trofėjus ir statistiką — įskaitant tai, kas per didelė sinchronizuoti su paskyra. Slaptažodis ir seansas niekada neįtraukiami, o importuojant trofėjai sujungiami, o ne pakeičiami, todėl pažanga niekada neprarandama.', advBackupExport:'Eksportuoti kopiją', advBackupImport:'Importuoti kopiją', advWinOpen:'Paryškinti mygtuką auksine spalva, kol jo langas atidarytas', backTooltip:'Atgal',
   advPolls: "Dalyvauti produkto apklausose",
   pollTitle: "Apklausa",
   pollThanks: "Ačiū už atsakymą!",

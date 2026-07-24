@@ -9,6 +9,9 @@ export const meta = {
 };
 
 export const strings = {
+    // — i18n gap-fill (backup / trophies / back tooltip) —
+    advKeyNav:'Esc stänger/avbryter, Enter bekräftar (utanför bordet)',
+    achTitle:'Troféer', advBackupSec:'Fullständig säkerhetskopia (webbklient)', advBackupDesc:'Sparar allt som den här webbläsaren innehåller i en enda fil: webbalternativ, teman, kortlekar, egna platser, avatarbild, troféer och statistik — även det som är för stort för att synkas med ditt konto. Lösenord och session inkluderas aldrig, och import slår ihop troféer i stället för att ersätta dem, så framsteg går aldrig förlorade.', advBackupExport:'Exportera säkerhetskopia', advBackupImport:'Importera säkerhetskopia', advWinOpen:'Markera knappen i guld medan dess fönster är öppet', backTooltip:'Tillbaka',
   advPolls: "Delta i produktundersökningar",
   pollTitle: "Undersökning",
   pollThanks: "Tack för ditt svar!",

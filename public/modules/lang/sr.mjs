@@ -10,6 +10,9 @@ export const meta = {
 };
 
 export const strings = {
+    // — i18n gap-fill (backup / trophies / back tooltip) —
+    advKeyNav:'Esc затвара/отказује, Enter потврђује (ван стола)',
+    achTitle:'Трофеји', advBackupSec:'Потпуна резервна копија (веб клијент)', advBackupDesc:'Чува у једну датотеку све што овај прегледач садржи: веб подешавања, теме, шпилове, прилагођена места, слику аватара, трофеје и статистику — укључујући и оно што је превелико за синхронизацију са налогом. Лозинка и сесија се никада не укључују, а увоз спаја трофеје уместо да их замени, па се напредак никада не губи.', advBackupExport:'Извези копију', advBackupImport:'Увези копију', advWinOpen:'Истакни дугме златном бојом док је његов прозор отворен', backTooltip:'Назад',
   advPolls: "Učestvuj u anketama o proizvodu",
   pollTitle: "Anketa",
   pollThanks: "Hvala na odgovoru!",

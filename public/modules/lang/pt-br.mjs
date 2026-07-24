@@ -9,6 +9,9 @@ export const meta = {
 };
 
 export const strings = {
+    // — i18n gap-fill (backup / trophies / back tooltip) —
+    advKeyNav:'Esc fecha/cancela, Enter confirma (fora da mesa)',
+    achTitle:'Troféus', advBackupSec:'Backup completo (cliente web)', advBackupDesc:'Salva em um único arquivo tudo o que este navegador contém: opções web, temas, baralhos, assentos personalizados, imagem de avatar, troféus e estatísticas — incluindo o que é grande demais para sincronizar com sua conta. Sua senha e sua sessão nunca são incluídas, e a importação mescla os troféus em vez de substituí-los, então o progresso nunca é perdido.', advBackupExport:'Exportar backup', advBackupImport:'Importar backup', advWinOpen:'Destacar o botão em dourado enquanto a janela estiver aberta', backTooltip:'Voltar',
   advPolls: "Participar das pesquisas do produto",
   pollTitle: "Pesquisa",
   pollThanks: "Obrigado pela sua resposta!",

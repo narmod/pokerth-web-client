@@ -16,6 +16,9 @@ export const meta = {
 };
 
 export const strings = {
+    // — i18n gap-fill (backup / trophies / back tooltip) —
+    advKeyNav:'Esc zamyka/anuluje, Enter zatwierdza (poza stołem)',
+    achTitle:'Trofea', advBackupSec:'Pełna kopia zapasowa (klient webowy)', advBackupDesc:'Zapisuje w jednym pliku wszystko, co przechowuje ta przeglądarka: opcje sieciowe, motywy, talie, własne miejsca, obraz awatara, trofea i statystyki — także to, co jest zbyt duże, by zsynchronizować z kontem. Hasło i sesja nigdy nie są zapisywane, a import scala trofea zamiast je zastępować, więc postęp nigdy nie przepada.', advBackupExport:'Eksportuj kopię', advBackupImport:'Importuj kopię', advWinOpen:'Podświetl przycisk na złoto, gdy jego okno jest otwarte', backTooltip:'Wstecz',
   advPolls: "Bierz udział w ankietach o produkcie",
   pollTitle: "Ankieta",
   pollThanks: "Dziękujemy za odpowiedź!",

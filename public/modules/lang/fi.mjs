@@ -9,6 +9,9 @@ export const meta = {
 };
 
 export const strings = {
+    // — i18n gap-fill (backup / trophies / back tooltip) —
+    advKeyNav:'Esc sulkee/peruuttaa, Enter vahvistaa (pöydän ulkopuolella)',
+    achTitle:'Palkinnot', advBackupSec:'Täysi varmuuskopio (verkkoasiakas)', advBackupDesc:'Tallentaa kaiken, mitä tämä selain sisältää, yhteen tiedostoon: verkkoasetukset, teemat, korttipakat, mukautetut paikat, avatar-kuvan, palkinnot ja tilastot — myös sen, mikä on liian suuri synkronoitavaksi tilillesi. Salasanaa ja istuntoa ei koskaan sisällytetä, ja tuonti yhdistää palkinnot niiden korvaamisen sijaan, joten edistyminen ei katoa.', advBackupExport:'Vie varmuuskopio', advBackupImport:'Tuo varmuuskopio', advWinOpen:'Korosta painike kullalla, kun sen ikkuna on auki', backTooltip:'Takaisin',
   advPolls: "Osallistu tuotekyselyihin",
   pollTitle: "Kysely",
   pollThanks: "Kiitos vastauksestasi!",
