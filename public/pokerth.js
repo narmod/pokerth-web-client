@@ -615,7 +615,7 @@ function resetAdvDefaults() {
   var KEEP = {
     pth_auth_login: 1, pth_pass: 1, pth_sid: 1, pth_vid: 1, pth_resume: 1,
     pth_host: 1, pth_port: 1, pth_proxy: 1, pth_server_mode: 1, pth_login_mode: 1,
-    pth_nick: 1, pth_lan_nick: 1, pth_lan_host: 1, pth_lan_port: 1, pth_unauth_nick: 1, pth_offline_nick: 1,
+    pth_nick: 1, pth_lan_nick: 1, pth_lan_host: 1, pth_lan_port: 1, pth_lan_tls: 1, pth_unauth_nick: 1, pth_offline_nick: 1,
     pth_avatar: 1, pth_avatar_img: 1
   };
   try {
@@ -2732,6 +2732,42 @@ document.addEventListener("DOMContentLoaded", function() {
       if (fp) fp.style.display = (isLan && pol.hide) ? 'none' : '';
     };
 
+    // Mémoire LAN du joueur, écrite à chaque connexion en LAN / serveur dédié.
+    // On ne retient QUE ce qu'il a délibérément changé par rapport à la valeur
+    // par défaut de l'instance : si sa saisie correspond à cette valeur, la clé
+    // est effacée. Sans cette règle, la première connexion figerait l'adresse
+    // du moment dans le navigateur et un déménagement du serveur (côté admin)
+    // ne serait plus jamais suivi par les joueurs déjà venus.
+    window._pthLanRemember = function () {
+      try {
+        var lm = document.getElementById('login-mode');
+        if (!lm || (lm.value !== 'lan' && lm.value !== 'unauth')) return;
+        var d = window._pthLanDefaults ? window._pthLanDefaults() : null;
+        if (!d) return;
+        var put = function (k, v, dflt) {
+          try { if (v === dflt) localStorage.removeItem(k); else localStorage.setItem(k, v); } catch (e) {}
+        };
+        var hi = document.getElementById('host');
+        var pi = document.getElementById('port');
+        var ti = document.getElementById('use-tls');
+        if (hi) put('pth_lan_host', hi.value.trim(), d.host);
+        if (pi) put('pth_lan_port', pi.value.trim(), d.port);
+        if (ti) put('pth_lan_tls', ti.checked ? '1' : '0', d.tls ? '1' : '0');
+      } catch (e) {}
+    };
+    // Valeurs par défaut des champs serveur en LAN / dédié, dérivées de la
+    // politique d'instance. Partagées par _lanFields() (remplissage) et
+    // _pthLanRemember() (mémorisation) pour que les deux ne divergent jamais.
+    window._pthLanDefaults = function () {
+      var pol = window._pthLanPolicy || {};
+      var hi = document.getElementById('host');
+      var auto = (hi && hi.dataset && hi.dataset.autoHost) || window.location.hostname || '';
+      return {
+        host: (pol.forced && pol.host) ? pol.host : auto,
+        port: (pol.forced && pol.port) ? pol.port : '7234',
+        tls: !!(pol.forced && pol.tls)
+      };
+    };
     function _applyLoginDefaults(login) {
       if (!login || typeof login !== 'object') return;
       // Réglages d'INSTANCE sur le champ « URL du proxy WebSocket ». Ils
@@ -2741,13 +2777,12 @@ document.addEventListener("DOMContentLoaded", function() {
       window._pthProxyPolicy = { url: login.proxyUrl || '', hide: !!login.hideProxy };
       try { window._applyProxyPolicy(); } catch (e) {}
       // Politique d'INSTANCE sur le serveur LAN / dédié (admin → « Default login
-      // form »), lue à chaque changement de mode par _lanFields() :
-      //   forced : l'hôte, le port et le TLS de l'admin sont reposés à chaque
-      //            chargement — le champ reste ÉDITABLE, le joueur peut viser
-      //            un autre serveur du réseau ;
-      //   auto   : on rend la main au joueur — l'adresse qu'il a utilisée en
-      //            dernier (pth_lan_host) est restaurée, à défaut l'adresse de
-      //            la page. C'était l'ancien comportement forcé implicite.
+      // form »). Elle ne fixe que la VALEUR PAR DÉFAUT des champs serveur :
+      //   forced : l'hôte, le port et le TLS choisis par l'admin ;
+      //   auto   : l'adresse de la page, le port 7234, sans TLS.
+      // Dans les DEUX cas, ce que le joueur a saisi en dernier (pth_lan_host /
+      // pth_lan_port / pth_lan_tls) est prioritaire et les champs restent
+      // éditables — la politique n'impose jamais rien, elle propose.
       window._pthLanPolicy = {
         forced: (login.lanMode === 'forced'),
         host: login.host || '',
@@ -4343,23 +4378,21 @@ const App = (() => {
       // Always reset the readonly flag first; only Guest re-applies it.
       if (nickEl) nickEl.removeAttribute('readonly');
 
-      // Champs « serveur » des modes LAN / serveur dédié. Deux politiques
-      // d'instance (admin → /app-config.loginDefaults.lanMode) :
-      //   auto   → on restaure l'adresse et le port mémorisés par le joueur
-      //            (repli : adresse de la page, port 7234) ;
-      //   forced → on repose l'adresse, le port et le TLS choisis par l'admin.
-      // Dans les DEUX cas les champs restent éditables jusqu'à la connexion.
+      // Champs « serveur » des modes LAN / serveur dédié. Règle unique, quelle
+      // que soit la politique d'instance (admin → loginDefaults.lanMode) :
+      //   1. ce que le joueur a saisi en dernier (pth_lan_host/port/tls) gagne ;
+      //   2. à défaut, la valeur de l'instance — l'adresse de l'admin en
+      //      « forced », l'adresse de la page en « automatic ».
+      // Les champs restent éditables : le joueur peut toujours viser un autre
+      // serveur du réseau, et son choix est retenu par _pthLanRemember().
       var _lanFields = function () {
-        var pol = window._pthLanPolicy || {};
+        var d = window._pthLanDefaults ? window._pthLanDefaults() : { host: autoHost, port: '7234', tls: false };
         if (proxyInput) proxyInput.value = proto + '//' + (autoHost || 'localhost') + ':' + port;
-        if (pol.forced) {
-          if (hostInput) hostInput.value = pol.host || autoHost || hostInput.value;
-          if ($('port')) $('port').value = (pol.port || lsGet('pth_lan_port') || '7234');
-          if ($('use-tls')) $('use-tls').checked = !!pol.tls;
-        } else {
-          if (hostInput) hostInput.value = (lsGet('pth_lan_host') || autoHost || hostInput.value);
-          if ($('port')) $('port').value = (lsGet('pth_lan_port') || '7234');
-          if ($('use-tls')) $('use-tls').checked = false;
+        if (hostInput) hostInput.value = (lsGet('pth_lan_host') || d.host || hostInput.value);
+        if ($('port')) $('port').value = (lsGet('pth_lan_port') || d.port || '7234');
+        if ($('use-tls')) {
+          var _t = lsGet('pth_lan_tls');
+          $('use-tls').checked = (_t === '1' || _t === '0') ? (_t === '1') : !!d.tls;
         }
       };
 
@@ -4651,10 +4684,10 @@ const App = (() => {
         if (lm2) localStorage.setItem('pth_login_mode', lm2.value);
         if (hv)  localStorage.setItem('pth_host',  hv.value.trim());
         if (pv)  localStorage.setItem('pth_port',  pv.value.trim());
-        if (pv && lm2 && (lm2.value === 'lan' || lm2.value === 'unauth')) localStorage.setItem('pth_lan_port', pv.value.trim());
-        // Adresse LAN propre au joueur : relue par _lanFields() quand l'instance
-        // est en politique « auto » (pth_host, lui, suit tous les modes).
-        if (hv && lm2 && (lm2.value === 'lan' || lm2.value === 'unauth')) localStorage.setItem('pth_lan_host', hv.value.trim());
+        // Mémoire propre aux modes LAN / dédié (adresse, port, TLS) : ne retient
+        // que ce qui s'écarte de la valeur d'instance (cf. _pthLanRemember).
+        // pth_host / pth_port, eux, suivent tous les modes sans condition.
+        if (window._pthLanRemember) window._pthLanRemember();
         if (xv)  localStorage.setItem('pth_proxy', xv.value.trim());
         // Auto-save the nickname per-mode (no Remember-me checkbox
         // needed — silent persistence is the new default). Guest is
@@ -9273,7 +9306,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.4-web.52'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.4-web.53'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
