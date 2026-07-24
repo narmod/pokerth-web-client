@@ -5461,6 +5461,15 @@ html[data-table="pokerth-live"] .raise-slider { accent-color: #4CAF50; }
 }
 
 
+/* ══ SPECTATEUR : chat de partie masqué ══
+   Marqueur posé par updateSpectatorStrip : un spectateur ne doit ni envoyer
+   ni lire le chat de la table (demande sp0ck 24/07/2026). Le bouton 💬 du
+   feutre, le FAB mobile et le panneau lui-même disparaissent. Les réactions
+   emoji (bouton 😊 + animations) restent intactes. */
+body.spectator-nochat #chat-toggle-btn,
+body.spectator-nochat #gchat-fab,
+body.spectator-nochat #g-chat-panel { display: none !important; }
+
 /* ══ SPECTATOR BANNER ══
    Shown at the top of the game screen (just below the header,
    above the pot strip) when the user is watching as a spectator.

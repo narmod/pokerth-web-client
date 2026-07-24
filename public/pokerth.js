@@ -3229,6 +3229,22 @@ const App = (() => {
         cnt.title = names.join('\n');
       }
     } catch (e) {}
+    // ── Chat de partie interdit aux spectateurs (demande sp0ck 24/07/2026) ──
+    // Un spectateur ne doit ni envoyer ni LIRE le chat de la table. Marqueur
+    // <body class="spectator-nochat"> : le CSS masque le bouton 💬, le FAB et
+    // le panneau ; toggleGameChat / sendGameChat / addGameChat sont gardés en
+    // JS. Les réactions emoji restent actives : elles sont interceptées dans
+    // onChat (msg-social) AVANT tout routage vers addGameChat.
+    try {
+      var _noChat = !!S._amSpectator;
+      document.body.classList.toggle('spectator-nochat', _noChat);
+      if (_noChat) {
+        var _cp = document.getElementById('g-chat-panel');
+        if (_cp && _cp.style.display !== 'none') _cp.style.display = 'none';
+        var _cm = document.getElementById('g-chat-msgs');
+        if (_cm && _cm.firstChild) _cm.innerHTML = '';
+      }
+    } catch (e) {}
   }
   window.updateSpectatorStrip = updateSpectatorStrip;
 
@@ -5481,6 +5497,8 @@ const App = (() => {
     sendGameChat() {
       var input = document.getElementById('g-chat-in');
       if (!input) return;
+      // Spectateur : aucun envoi de chat de partie (demande sp0ck 24/07/2026).
+      if (S._amSpectator) { input.value = ''; return; }
       var text = input.value.trim();
       if (!text || !S.ws) return;
       input.value = '';
@@ -6817,6 +6835,9 @@ function _chatTs() {
 }
 
 function addGameChat(sender, text, cls, spec) {
+  // Spectateur : ni envoi ni LECTURE du chat de partie (demande sp0ck 24/07).
+  // Les réactions emoji ne passent pas par ici (interceptées dans onChat).
+  try { if (window.PthState && window.PthState._amSpectator) return; } catch (e) {}
   if (cls === 'sys') return; // messages systeme retires du chat (demande narmod)
   if (sender && cls !== 'mine' && _isIgnored(sender)) return; // joueur ignoré
   var el = document.getElementById('g-chat-msgs');
@@ -8460,6 +8481,9 @@ function _openFloatingNearBtn(panel, btn, opt, side) {
 }
 
 function toggleGameChat() {
+  // Spectateur : panneau inaccessible (bouton/FAB masqués par le CSS, Alt+C
+  // neutralisé ici — parité QML, où le spectateur est exclu de Alt+C/L/I).
+  try { if (window.PthState && window.PthState._amSpectator) return; } catch (e) {}
   var panel = document.getElementById('g-chat-panel');
   var btn   = document.getElementById('chat-toggle-btn');
   if (!panel) return;
@@ -9215,7 +9239,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.4-web.48'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.4-web.49'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
