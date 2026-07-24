@@ -232,6 +232,13 @@
 
         <div id="panel-music" style="display:none">
       <div class="card">
+        <h2>Music player</h2>
+        <div class="defrow" style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin:5px 0"><span>Available to players</span><select id="mzEnabled"><option value="1">On</option><option value="0">Off</option></select></div>
+        <div style="margin-top:8px"><button id="mzSaveEnabled" class="use">Save</button></div>
+        <div id="mzEnMsg" class="msg"></div>
+        <p class="muted" style="margin:8px 0 0">Off removes the 🎵 entry from every player menu and makes <code>/music/*</code> answer 404 (manifest and MP3s). The track list below stays fully editable. Players already in a session keep the player until they reload.</p>
+      </div>
+      <div class="card">
         <label>Add a track (.mp3)</label>
         <div class="defrow" style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin:5px 0"><span>Title</span><input id="mzTitle" maxlength="120" placeholder="Track title (required)" autocomplete="off" style="flex:1;min-width:0"></div>
         <div class="defrow" style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin:5px 0"><span>Artist</span><input id="mzArtist" maxlength="120" placeholder="Artist / composer" autocomplete="off" style="flex:1;min-width:0"></div>
@@ -876,8 +883,15 @@
       var dn=document.createElement('button'); dn.className='use'; dn.textContent='\u25BC'; dn.title='Move down'; dn.style.cssText='padding:6px 9px'; if(pi===arr.length-1)dn.disabled=true; dn.addEventListener('click',function(){ mzMove(p.id,1,arr); }); row.appendChild(dn);
       if(!p.builtin){ var ed=document.createElement('button'); ed.className='use'; ed.textContent='Edit'; ed.addEventListener('click',function(){ mzEditId=p.id; mzRenderList(arr); }); row.appendChild(ed); var del=document.createElement('button'); del.className='del'; del.textContent='Remove'; del.addEventListener('click',function(){mzRemove(p.id,p.title||p.id);}); row.appendChild(del); }
       el.appendChild(row); }); }
-  function mzRefresh(){ api('/admin/music-list?t='+Date.now()).then(function(r){return r.json();}).then(function(d){ if(d.ok)mzRenderList(d.tracks); else mzRenderList([]); }).catch(function(){ var el=$('mzList'); if(el)el.innerHTML='<div class="empty">Could not load tracks.</div>'; }); }
+  function mzRefresh(){ api('/admin/music-list?t='+Date.now()).then(function(r){return r.json();}).then(function(d){ if($('mzEnabled')&&d&&typeof d.enabled==='boolean')$('mzEnabled').value=d.enabled?'1':'0'; if(d.ok)mzRenderList(d.tracks); else mzRenderList([]); }).catch(function(){ var el=$('mzList'); if(el)el.innerHTML='<div class="empty">Could not load tracks.</div>'; }); }
   (function(){ var d=$('mzDrop'), f=$('mzFile'); if(d&&f){ d.addEventListener('click',function(){f.click();}); d.addEventListener('dragover',function(e){e.preventDefault();d.classList.add('hot');}); d.addEventListener('dragleave',function(){d.classList.remove('hot');}); d.addEventListener('drop',function(e){e.preventDefault();d.classList.remove('hot');if(e.dataTransfer.files[0])mzUpload(e.dataTransfer.files[0]);}); f.addEventListener('change',function(){if(f.files[0])mzUpload(f.files[0]);}); } })();
+
+  (function(){ var b=$('mzSaveEnabled'); if(!b) return; b.addEventListener('click', function(){
+    var m=$('mzEnMsg'), on=($('mzEnabled')?$('mzEnabled').value==='1':true);
+    api('/admin/music-enable',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({enabled:on,token:tok()})})
+      .then(function(r){return r.json();}).then(function(d){ if(d&&d.ok){ m.textContent=on?'Saved. The music player is available to players.':'Saved. The music player is hidden and /music/* now answers 404.'; m.className='msg ok'; } else { m.textContent='Failed: '+((d&&d.error)||'error'); m.className='msg err'; } })
+      .catch(function(){ m.textContent='Network error.'; m.className='msg err'; });
+  }); })();
 
   function bmsg(t,cls){ $('boardmsg').textContent=t; $('boardmsg').className='msg '+(cls||''); }
   function fmtSigned(n){ n=Math.round(Number(n)||0); return (n>0?'+':'')+n.toLocaleString(); }

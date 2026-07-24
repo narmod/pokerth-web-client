@@ -2790,10 +2790,20 @@ document.addEventListener("DOMContentLoaded", function() {
         el.title = 'Serverlist unreachable — using the built-in pokerth.net fallback';
       }
     };
+    // Lecteur MP3 : interrupteur d'instance (admin -> onglet Music). Coupe, les 4
+    // entrees 🎵 des menus ••• disparaissent et le panneau se referme s'il etait
+    // ouvert. Les menus ••• sont fermes au boot, donc l'arrivee asynchrone de
+    // /app-config ne provoque aucun clignotement visible. Cle absente = actif.
+    function _applyMusicFlag(on) {
+      window._musicOff = !on;
+      ['music-toggle-connect-mob', 'music-toggle-lobby-mob', 'music-toggle-create-mob', 'music-toggle-game-mob']
+        .forEach(function (id) { var el = document.getElementById(id); if (el) el.style.display = on ? '' : 'none'; });
+      if (!on) { var mp = document.getElementById('music-panel'); if (mp) mp.style.display = 'none'; }
+    }
     function go() {
       fetch('/app-config', { cache: 'no-store' })
         .then(function (r) { return r.json(); })
-        .then(function (c) { if (c) { window._pthNetServer = (c.pokerthnetServer && c.pokerthnetServer.host) ? c.pokerthnetServer : null; window._pthNetSource = (c.pokerthnetSource === 'auto') ? 'auto' : 'manual'; window._pthNetTransport = (c.internetTransport === 'proxy') ? 'proxy' : 'direct'; } if (c && c.modes) applyModes(c.modes); if (c && c.loginDefaults) _applyLoginDefaults(c.loginDefaults); if (c && c.welcome && c.welcome.enabled && typeof window.maybeShowWelcome === 'function') window.maybeShowWelcome(c.welcome); if (typeof window._pollSetConfig === 'function') window._pollSetConfig(c && c.poll); if (c && typeof c.defaultTheme === 'string') _applyDefaultTheme(c.defaultTheme); if (c && typeof c.showLoginTitle === 'boolean') { try { document.body.classList.toggle('adv-show-title', c.showLoginTitle); } catch (e) {} } if (c && c.defaults) _applyDefaultSettings(c.defaults); _applyBranding(c); try { if (!window._shareLinkActive && window.App && App.onServerOrGuestChange) App.onServerOrGuestChange(); } catch (e) {} })
+        .then(function (c) { if (c) { window._pthNetServer = (c.pokerthnetServer && c.pokerthnetServer.host) ? c.pokerthnetServer : null; window._pthNetSource = (c.pokerthnetSource === 'auto') ? 'auto' : 'manual'; window._pthNetTransport = (c.internetTransport === 'proxy') ? 'proxy' : 'direct'; } if (c && c.modes) applyModes(c.modes); if (c) _applyMusicFlag(c.musicEnabled !== false); if (c && c.loginDefaults) _applyLoginDefaults(c.loginDefaults); if (c && c.welcome && c.welcome.enabled && typeof window.maybeShowWelcome === 'function') window.maybeShowWelcome(c.welcome); if (typeof window._pollSetConfig === 'function') window._pollSetConfig(c && c.poll); if (c && typeof c.defaultTheme === 'string') _applyDefaultTheme(c.defaultTheme); if (c && typeof c.showLoginTitle === 'boolean') { try { document.body.classList.toggle('adv-show-title', c.showLoginTitle); } catch (e) {} } if (c && c.defaults) _applyDefaultSettings(c.defaults); _applyBranding(c); try { if (!window._shareLinkActive && window.App && App.onServerOrGuestChange) App.onServerOrGuestChange(); } catch (e) {} })
         .catch(function () {});
     }
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', go); else go();
@@ -8482,6 +8492,9 @@ function joinWithPassword() {
 }
 
 function toggleMusicPanel() {
+  // Lecteur coupe par l'admin (/app-config.musicEnabled) : no-op defensif, au cas
+  // ou un appel externe atteindrait la fonction malgre les entrees de menu masquees.
+  if (window._musicOff) return;
   var panel = document.getElementById('music-panel');
   if (!panel) return;
   var open = panel.style.display === 'none' || panel.style.display === '';
@@ -9202,7 +9215,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.4-web.47'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.4-web.48'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

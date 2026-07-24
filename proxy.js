@@ -654,6 +654,9 @@ const _bcTimers = {}; // job id -> setTimeout handle
 function saveBroadcasts() { try { fs.writeFileSync(BROADCASTS_FILE, JSON.stringify(_broadcasts)); } catch (e) { console.error('[broadcast] write failed:', e.message); } dbFlushBroadcasts(); }
 let STATS_RESET_PERIOD = ((_adminConfig.resetPeriod || process.env.STATS_RESET_PERIOD || 'monthly') + '').toLowerCase();
 function appModes() { var m = (_adminConfig && _adminConfig.modes) || {}; return { offline: m.offline !== false, lan: m.lan !== false, pokerthnet: m.pokerthnet !== false }; }
+// Lecteur MP3 : interrupteur d'instance (admin -> onglet Music). Cle absente =
+// actif, pour qu'une instance existante ne perde pas son lecteur a la mise a jour.
+function musicEnabled() { return !(_adminConfig && _adminConfig.musicEnabled === false); }
 // First-visit welcome / rules message (operator-authored, per language).
 function _welcomeAdmin() { var w = _adminConfig.welcome || {}; return { enabled: !!w.enabled, updatedAt: w.updatedAt || 0, 'default': w['default'] || 'fr', langs: w.langs || {} }; }
 function _welcomePublic() { var w = _adminConfig.welcome; if (!w || !w.enabled) return null; return { enabled: true, updatedAt: w.updatedAt || 0, 'default': w['default'] || 'fr', langs: w.langs || {} }; }
@@ -1875,7 +1878,7 @@ function handleAdmin(req, res, reqPathOnly, query) {
   if (reqPathOnly === '/admin/config') {
     if (req.method === 'GET') {
       if (!adminAuthed(query)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
-      return adminJson(res, 200, { ok: true, resetPeriod: STATS_RESET_PERIOD, modes: appModes(), welcome: _welcomeAdmin(), showLoginTitle: !!_adminConfig.showLoginTitle, defaultTheme: _adminConfig.defaultTheme || '', defaults: _adminConfig.defaults || {}, loginDefaults: _adminConfig.loginDefaults || {}, proxyCfg: _adminConfig.proxyCfg || {}, tableDefaults: _adminConfig.tableDefaults || {}, tableNames: _adminConfig.tableNames || {}, serverName: _adminConfig.serverName || '', serverTagline: _adminConfig.serverTagline || '', discordChatWebhookUrl: _adminConfig.discordChatWebhookUrl || '' });
+      return adminJson(res, 200, { ok: true, resetPeriod: STATS_RESET_PERIOD, modes: appModes(), welcome: _welcomeAdmin(), showLoginTitle: !!_adminConfig.showLoginTitle, defaultTheme: _adminConfig.defaultTheme || '', defaults: _adminConfig.defaults || {}, loginDefaults: _adminConfig.loginDefaults || {}, proxyCfg: _adminConfig.proxyCfg || {}, tableDefaults: _adminConfig.tableDefaults || {}, tableNames: _adminConfig.tableNames || {}, serverName: _adminConfig.serverName || '', serverTagline: _adminConfig.serverTagline || '', discordChatWebhookUrl: _adminConfig.discordChatWebhookUrl || '', musicEnabled: musicEnabled() });
     }
     if (req.method === 'POST') {
       return readJsonBody(req, function (d) {
@@ -1978,7 +1981,7 @@ function handleAdmin(req, res, reqPathOnly, query) {
         if (typeof d.serverTagline === 'string') _adminConfig.serverTagline = d.serverTagline.trim().slice(0, 60);
         if (typeof d.showLoginTitle === 'boolean') _adminConfig.showLoginTitle = d.showLoginTitle;
         saveAdminConfig();
-        return adminJson(res, 200, { ok: true, resetPeriod: STATS_RESET_PERIOD, modes: appModes(), welcome: _welcomeAdmin(), showLoginTitle: !!_adminConfig.showLoginTitle, defaultTheme: _adminConfig.defaultTheme || '', defaults: _adminConfig.defaults || {}, loginDefaults: _adminConfig.loginDefaults || {}, proxyCfg: _adminConfig.proxyCfg || {}, tableDefaults: _adminConfig.tableDefaults || {}, tableNames: _adminConfig.tableNames || {}, serverName: _adminConfig.serverName || '', serverTagline: _adminConfig.serverTagline || '', discordChatWebhookUrl: _adminConfig.discordChatWebhookUrl || '' });
+        return adminJson(res, 200, { ok: true, resetPeriod: STATS_RESET_PERIOD, modes: appModes(), welcome: _welcomeAdmin(), showLoginTitle: !!_adminConfig.showLoginTitle, defaultTheme: _adminConfig.defaultTheme || '', defaults: _adminConfig.defaults || {}, loginDefaults: _adminConfig.loginDefaults || {}, proxyCfg: _adminConfig.proxyCfg || {}, tableDefaults: _adminConfig.tableDefaults || {}, tableNames: _adminConfig.tableNames || {}, serverName: _adminConfig.serverName || '', serverTagline: _adminConfig.serverTagline || '', discordChatWebhookUrl: _adminConfig.discordChatWebhookUrl || '', musicEnabled: musicEnabled() });
       });
     }
     res.writeHead(405); res.end('Method not allowed'); return;
@@ -2166,7 +2169,18 @@ function handleAdmin(req, res, reqPathOnly, query) {
   }
   if (reqPathOnly === '/admin/music-list') {
     if (!hasScope('music', query)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
-    return adminJson(res, 200, { ok: true, tracks: musicListForAdmin() });
+    return adminJson(res, 200, { ok: true, enabled: musicEnabled(), tracks: musicListForAdmin() });
+  }
+  // Interrupteur global du lecteur. Portee 'music' : un token delegue a la musique
+  // peut couper le lecteur sans avoir le token maitre.
+  if (reqPathOnly === '/admin/music-enable' && req.method === 'POST') {
+    return readJsonBody(req, function (d) {
+      if (!hasScope('music', query, d && d.token)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
+      if (!d || typeof d.enabled !== 'boolean') return adminJson(res, 400, { ok: false, error: 'enabled (boolean) required' });
+      _adminConfig.musicEnabled = d.enabled;
+      saveAdminConfig();
+      return adminJson(res, 200, { ok: true, enabled: musicEnabled() });
+    });
   }
   if (reqPathOnly === '/admin/music-upload' && req.method === 'POST') {
     if (!hasScope('music', query)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
@@ -3208,7 +3222,7 @@ const httpServer = http.createServer((req, res) => {
 
   if (reqPathOnly === '/app-config') {
     res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' });
-    res.end(JSON.stringify({ ok: true, modes: appModes(), welcome: _welcomePublic(), poll: _pollPublic(), showLoginTitle: !!_adminConfig.showLoginTitle, defaultTheme: _adminConfig.defaultTheme || '', defaults: _adminConfig.defaults || {}, loginDefaults: _adminConfig.loginDefaults || {}, tableDefaults: _adminConfig.tableDefaults || {}, tableNames: _adminConfig.tableNames || {}, serverName: _adminConfig.serverName || '', serverTagline: _adminConfig.serverTagline || '', pokerthnetServer: _activePokerthnetServer(), pokerthnetSource: _pokerthnetSource(), internetTransport: _internetTransport() }));
+    res.end(JSON.stringify({ ok: true, modes: appModes(), welcome: _welcomePublic(), poll: _pollPublic(), showLoginTitle: !!_adminConfig.showLoginTitle, defaultTheme: _adminConfig.defaultTheme || '', defaults: _adminConfig.defaults || {}, loginDefaults: _adminConfig.loginDefaults || {}, tableDefaults: _adminConfig.tableDefaults || {}, tableNames: _adminConfig.tableNames || {}, serverName: _adminConfig.serverName || '', serverTagline: _adminConfig.serverTagline || '', pokerthnetServer: _activePokerthnetServer(), pokerthnetSource: _pokerthnetSource(), internetTransport: _internetTransport(), musicEnabled: musicEnabled() }));
     return;
   }
 
@@ -3226,6 +3240,15 @@ const httpServer = http.createServer((req, res) => {
     if (_pkgKind === 'table') { var _full = pkgFullSet('table'), _fscr = pkgFullscreenSet('table'), _alg = pkgAlignMap('table'); if (_full.length || _fscr.length || Object.keys(_alg).length) _list = _list.map(function (x) { if (!x) return x; var y = Object.assign({}, x); if (_fscr.indexOf(x.id) >= 0) { y.fullscreen = true; y.full = false; y.mode = 'fullscreen'; } else if (_full.indexOf(x.id) >= 0) { y.full = true; y.fullscreen = false; y.mode = 'full'; } if (_alg[x.id]) y.align = _alg[x.id]; return y; }); }
     res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' });
     res.end(JSON.stringify(_list));
+    return;
+  }
+
+  // Lecteur coupe par l'admin : TOUT /music/* repond 404 (manifeste ET .mp3), pour
+  // que masquer l'entree de menu ne laisse pas les fichiers accessibles a qui
+  // connait l'URL. Les routes /admin/music-* restent ouvertes (gestion des pistes).
+  if (reqPathOnly.indexOf('/music/') === 0 && !musicEnabled()) {
+    res.writeHead(404, { 'Content-Type': 'text/plain; charset=utf-8' });
+    res.end('Not found');
     return;
   }
 
