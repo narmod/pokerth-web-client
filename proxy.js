@@ -76,6 +76,12 @@ const INSECURE_TLS = args.includes('--insecure');
 const DEFAULT_ALLOWED_HOSTS = [
   'pokerth.net',
   'www.pokerth.net',
+  // Serveur de jeu officiel : 'pokerth.net' n'est que la façade web (derrière
+  // Cloudflare, aucun serveur de jeu n'y écoute) — le serveur de partie est sur
+  // pthsrv.pokerth.net (7234 clair / 7236 TLS), ce que confirme la serverlist
+  // officielle. Sans lui ici, le mode « Internet / PokerTH.net » via proxy est
+  // refusé d'office sur toute installation neuve.
+  'pthsrv.pokerth.net',
   'pokerth.ddns.net',
   'localhost',
   '127.0.0.1',
@@ -115,7 +121,10 @@ function isHostAllowed(h) {
 // proxy pourrait etre invoque avec host=127.0.0.1&port=22 (SSH), 3306 (MySQL),
 // 6379 (Redis)... La liste de ports limite les connexions au(x) port(s) du
 // service PokerTH. 7234 est toujours autorise ; l'admin peut en ajouter.
-const DEFAULT_ALLOWED_PORTS = [7234];
+// 7234 = serveur PokerTH en clair, 7236 = même serveur en TLS (celui que
+// publie la serverlist officielle). Les deux sont nécessaires pour joindre
+// pthsrv.pokerth.net sans configuration manuelle.
+const DEFAULT_ALLOWED_PORTS = [7234, 7236];
 const ALLOWED_PORTS = (process.env.ALLOWED_PORTS
   ? process.env.ALLOWED_PORTS.split(',').map(s => parseInt(s.trim(), 10)).filter(n => n > 0)
   : DEFAULT_ALLOWED_PORTS
@@ -490,6 +499,12 @@ function _activeManualServer() {
 // PokerTH.net target — so a server move on pokerth.net is followed automatically.
 // The browser can't do this itself (CORS + zlib), hence server-side here.
 var DEFAULT_SERVERLIST_URL = 'https://pokerth.net/serverlist.xml.z';
+// pokerth.net est servi derrière Cloudflare, qui renvoie un challenge 403 à
+// tout client sans User-Agent plausible — or https.get n'en envoie aucun par
+// défaut. Résultat observé : « Last fetch: http 403 » dans /admin, la source
+// « auto » ne résolvait plus rien et le client retombait sur son défaut intégré.
+var SERVERLIST_UA = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36 PokerTH-WebClient';
+var SERVERLIST_MAX_HOPS = 3;                     // redirections suivies (301/302/307/308)
 var SERVERLIST_TTL_MS = 30 * 60 * 1000;          // refetch cadence while 'auto'
 var SERVERLIST_MAX_BYTES = 256 * 1024;           // raw download cap (anti-bomb)
 var SERVERLIST_MAX_INFLATED = 1024 * 1024;       // inflated cap (anti-bomb)
@@ -517,22 +532,47 @@ function _parseServerlist(xml) {
   return { name: name.slice(0, 60), host: host.slice(0, 255), port: port, tls: tls };
 }
 
-function _doFetchServerlist(u, cb) {
+function _doFetchServerlist(u, cb, _hops) {
   cb = cb || function () {};
-  var mod, opts;
+  var hops = _hops | 0;
+  var mod, opts, raw0 = '';
   try {
-    var raw0 = String(u || '').trim();
+    raw0 = String(u || '').trim();
     if (raw0 && !/^https?:\/\//i.test(raw0)) raw0 = 'https://' + raw0;
     var parsed = new url.URL(raw0);
     if (parsed.protocol !== 'https:' && parsed.protocol !== 'http:') return cb({ ok: false, error: 'bad url scheme' });
     mod = parsed.protocol === 'https:' ? https : http;
-    opts = parsed;
+    // En-têtes explicites (cf. SERVERLIST_UA) : sans User-Agent, Cloudflare
+    // répond 403. 'identity' évite un double décodage (gzip HTTP + zlib du
+    // .xml.z) qui casserait l'inflate plus bas.
+    opts = {
+      protocol: parsed.protocol,
+      hostname: parsed.hostname,
+      port: parsed.port || undefined,
+      path: parsed.pathname + (parsed.search || ''),
+      headers: {
+        'User-Agent': SERVERLIST_UA,
+        'Accept': '*/*',
+        'Accept-Encoding': 'identity'
+      }
+    };
   } catch (e) { return cb({ ok: false, error: 'bad url' }); }
   var done = false;
   function finish(err, server) { if (done) return; done = true; if (err) return cb({ ok: false, error: err }); return cb({ ok: true, server: server }); }
   var rq;
   try {
     rq = mod.get(opts, function (resp) {
+      // pokerth.net peut rediriger (http→https, apex→www) : suivre quelques
+      // sauts, sinon un 301 remontait tel quel en « http 301 ».
+      if (resp.statusCode >= 300 && resp.statusCode < 400 && resp.headers && resp.headers.location && hops < SERVERLIST_MAX_HOPS) {
+        var next = '';
+        try { next = new url.URL(resp.headers.location, raw0).href; } catch (e) { next = ''; }
+        resp.resume();
+        if (!next) return finish('bad redirect');
+        if (done) return;
+        done = true;                                   // la suite est portée par le saut suivant
+        return _doFetchServerlist(next, cb, hops + 1);
+      }
       if (resp.statusCode !== 200) { resp.resume(); return finish('http ' + resp.statusCode); }
       var chunks = [], total = 0, aborted = false;
       resp.on('data', function (c) { total += c.length; if (total > SERVERLIST_MAX_BYTES) { aborted = true; try { resp.destroy(); } catch (e) {} return; } chunks.push(c); });
