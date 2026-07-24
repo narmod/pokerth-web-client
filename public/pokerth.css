@@ -6792,10 +6792,15 @@ html[data-table="pokerth-live"] .raise-slider { accent-color: #4CAF50; }
      black-translucent) dessine SOUS la barre d'etat -> memes insets.
      Android standalone sans notch : env() = 0, no-op. */
   #s-game .header,
-  #s-lobby .header {
-    padding-top: max(4px, env(safe-area-inset-top));
-    padding-left: max(8px, env(safe-area-inset-left));
-    padding-right: max(8px, env(safe-area-inset-right));
+  #s-lobby .header,
+  #s-connect .connect-header {
+    /* !important : le palier paysage telephone (max-height:500px) pose
+       `.header{padding:2px 6px !important}` — un shorthand qui ecrasait ces
+       longhands et supprimait les insets la ou l'encoche est sur le cote.
+       Specificite id > classe, donc ces trois lignes gagnent. */
+    padding-top: max(4px, env(safe-area-inset-top)) !important;
+    padding-left: max(8px, env(safe-area-inset-left)) !important;
+    padding-right: max(8px, env(safe-area-inset-right)) !important;
   }
 }
 
