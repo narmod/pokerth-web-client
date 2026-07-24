@@ -452,7 +452,10 @@ function toggleSoundPopover(btn) {
   pop.setAttribute('aria-label', lbl);
   var musicRow = '';
   try {
-    if (window.Music && typeof window.Music.getVolume === 'function') {
+    // Lecteur MP3 coupe par l'admin (/app-config.musicEnabled -> window._musicOff) :
+    // pas de curseur musique dans le menu rapide du son, il ne piloterait plus rien
+    // de joignable (les entrees de menu sont masquees et /music/* repond 404).
+    if (!window._musicOff && window.Music && typeof window.Music.getVolume === 'function') {
       var mvol = Math.round((window.Music.getVolume() || 0) * 100);
       var mlbl = _stxt('musicVolume', 'Music');
       musicRow =
