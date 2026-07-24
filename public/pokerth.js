@@ -317,12 +317,17 @@ function _advSetupFloat() {
     }
     localStorage.removeItem('pth_adv_pos'); localStorage.removeItem('pth_adv_size');
   } catch (e) {}
-  var defW = Math.min(620, window.innerWidth - 16);
-  var defH = Math.min(640, window.innerHeight - 16);
   // Plafond proportionne a l'ecran : la fenetre reste redimensionnable mais bornee
   // (marges qui s'adaptent — petit ecran => plus petite, grand ecran => plafonne).
   var maxW = Math.min(1010, Math.round(window.innerWidth * 0.92));
   var maxH = Math.min(680, Math.round(window.innerHeight * 0.90));
+  // Nouvel utilisateur (aucune geometrie memorisee sous pth_win_adv) : on ouvre a
+  // la taille MAXIMALE possible — le plafond ci-dessus, borne par le viewport —
+  // et centree. Des que l'utilisateur deplace ou redimensionne, sa geometrie est
+  // memorisee et prime aux ouvertures suivantes. Desktop + tablette seulement :
+  // sous 600 px on n'est pas en fenetre flottante (sortie plus haut).
+  var openW = Math.max(380, Math.min(maxW, window.innerWidth - 16));
+  var openH = Math.max(360, Math.min(maxH, window.innerHeight - 16));
   _enableFloating(card, {
     key: 'pth_win_adv',
     handle: card.querySelector('.km-title'),
@@ -330,9 +335,10 @@ function _advSetupFloat() {
     maxW: maxW, maxH: maxH,   // plafond proportionne (fenetre bornee)
     zoom: true,
     defW: 620, defH: 640,          // base du zoom (inchangee vs _advApplyZoom)
+    openW: openW, openH: openH,    // 1re ouverture : taille maxi possible
     minW: 380, minH: 360,   // 524→380 : sous 600 px la sidebar devient barre d'icônes (container query), une fenêtre étroite « portrait » est légitime
-    defLeft: Math.max(8, Math.round((window.innerWidth - defW) / 2)),
-    defTop: Math.max(8, Math.round((window.innerHeight - defH) / 2)),
+    defLeft: Math.max(8, Math.round((window.innerWidth - openW) / 2)),
+    defTop: Math.max(8, Math.round((window.innerHeight - openH) / 2)),
   });
 }
 function openAdvancedOptions() {
@@ -7642,8 +7648,10 @@ function _enableFloating(panel, opt){
   }
   if(!restored){
     if(opt.resizable){
-      if(!panel.style.width) panel.style.width=(opt.defW||340)+'px';
-      panel.style.height=(opt.defH||300)+'px';
+      // openW/openH : taille de PREMIERE ouverture, distincte de defW/defH qui
+      // restent la base du zoom de contenu (_applyWinZoom). Absents => defW/defH.
+      if(!panel.style.width) panel.style.width=(opt.openW||opt.defW||340)+'px';
+      panel.style.height=(opt.openH||opt.defH||300)+'px';
     }
     _placeWin(panel, (opt.defLeft!=null?opt.defLeft:16), (opt.defTop!=null?opt.defTop:56));
   }
@@ -9306,7 +9314,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.4-web.53'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.4-web.54'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
